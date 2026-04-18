@@ -22,22 +22,29 @@ CATEGORY_CODES = {
     # UOMINI
     ("Esordienti", "M", "1"): "ES1_M",
     ("Esordienti", "M", "2"): "ES2_M",
-    ("Allievi", "M", "1"):    "AL1_M",
-    ("Allievi", "M", "2"):    "AL2_M",
+    ("Esordienti", "M", ""):  "ES2_M", # Fallback generico
+    ("Allievi", "M", "1"):    "AL_M",
+    ("Allievi", "M", "2"):    "AL_M",
+    ("Allievi", "M", ""):     "AL_M",
     ("Juniores", "M", "1"):   "JUN_M",
     ("Juniores", "M", "2"):   "JUN_M",
-    ("Under23", "M", ""):     "U23_M",
+    ("Juniores", "M", ""):    "JUN_M",
+    ("Under23", "M", ""):     "ELI_M",  # Unificato in Elite-U23 per ranking
     ("Elite", "M", ""):       "ELI_M",
     ("Elite-Under23", "M", ""): "ELI_M",
     # DONNE
     ("Esordienti", "F", "1"): "ES1_F",
     ("Esordienti", "F", "2"): "ES2_F",
-    ("Allievi", "F", "1"):    "AL1_F",
-    ("Allievi", "F", "2"):    "AL2_F",
+    ("Esordienti", "F", ""):  "ES2_F",
+    ("Allievi", "F", "1"):    "AL_F",
+    ("Allievi", "F", "2"):    "AL_F",
+    ("Allievi", "F", ""):     "AL_F",
     ("Juniores", "F", "1"):   "JUN_F",
     ("Juniores", "F", "2"):   "JUN_F",
+    ("Juniores", "F", ""):    "JUN_F",
     ("Donne", "F", ""):       "ELI_F",
     ("Elite", "F", ""):       "ELI_F",
+    ("Elite-Under23", "F", ""): "ELI_F",
 }
 
 BIRTH_YEAR_RANGES = {

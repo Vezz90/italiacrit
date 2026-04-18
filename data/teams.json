@@ -2504,7 +2504,7 @@
   "PC_BAIX_EBRE_TORTOSA": {
     "id": "PC_BAIX_EBRE_TORTOSA",
     "nome": "PC BAIX EBRE TORTOSA",
-    "punti_totali": 62,
+    "punti_totali": 84,
     "atleti": [
       "VESHNIAKOV_DANIL",
       "IAKOVLEV_MATVEL",
@@ -2577,6 +2577,28 @@
         "posizione": 8,
         "punti_base": 3,
         "punti_effettivi": 3
+      },
+      {
+        "gara_id": "TROFEO_MICHELE_SCARPONI_DUE_GIORNI_2026-04-04",
+        "nome_gara": "TROFEO MICHELE SCARPONI - DUE GIORNI",
+        "data": "2026-04-04",
+        "atleta_id": "IAKOVLEV_MATVEL",
+        "atleta_cognome": "IAKOVLEV",
+        "atleta_nome": "MATVEL",
+        "posizione": 5,
+        "punti_base": 6,
+        "punti_effettivi": 12
+      },
+      {
+        "gara_id": "TROFEO_MICHELE_SCARPONI_DUE_GIORNI_2026-04-04",
+        "nome_gara": "TROFEO MICHELE SCARPONI - DUE GIORNI",
+        "data": "2026-04-04",
+        "atleta_id": "NOVOLODSKII_ROSTISLAV",
+        "atleta_cognome": "NOVOLODSKII",
+        "atleta_nome": "ROSTISLAV",
+        "posizione": 6,
+        "punti_base": 5,
+        "punti_effettivi": 10
       }
     ]
   },
@@ -2604,7 +2626,7 @@
   "G_S_GIOVANI_GIUSSANESI_A_S_D": {
     "id": "G_S_GIOVANI_GIUSSANESI_A_S_D",
     "nome": "G.S.GIOVANI GIUSSANESI A.S.D.",
-    "punti_totali": 50,
+    "punti_totali": 70,
     "atleti": [
       "BRUSTIA_SAMUELE",
       "PARIANOTTI_EMANUELE",
@@ -2665,6 +2687,17 @@
         "posizione": 9,
         "punti_base": 2,
         "punti_effettivi": 2
+      },
+      {
+        "gara_id": "TROFEO_MICHELE_SCARPONI_DUE_GIORNI_2026-04-04",
+        "nome_gara": "TROFEO MICHELE SCARPONI - DUE GIORNI",
+        "data": "2026-04-04",
+        "atleta_id": "BRUSTIA_SAMUELE",
+        "atleta_cognome": "BRUSTIA",
+        "atleta_nome": "SAMUELE",
+        "posizione": 3,
+        "punti_base": 10,
+        "punti_effettivi": 20
       }
     ]
   },
@@ -2943,7 +2976,7 @@
   "POOL_CANTU_GB_TEAM_A_S_D": {
     "id": "POOL_CANTU_GB_TEAM_A_S_D",
     "nome": "POOL CANTU' GB TEAM A.S.D.",
-    "punti_totali": 105,
+    "punti_totali": 121,
     "atleti": [
       "FRONTINI_LUCA",
       "ALESSIANI_ANDREA_GABRIELE",
@@ -3073,6 +3106,28 @@
         "posizione": 7,
         "punti_base": 4,
         "punti_effettivi": 4
+      },
+      {
+        "gara_id": "TROFEO_MICHELE_SCARPONI_DUE_GIORNI_2026-04-04",
+        "nome_gara": "TROFEO MICHELE SCARPONI - DUE GIORNI",
+        "data": "2026-04-04",
+        "atleta_id": "ALESSIANI_ANDREA_GABRIELE",
+        "atleta_cognome": "ALESSIANI",
+        "atleta_nome": "ANDREA GABRIELE",
+        "posizione": 7,
+        "punti_base": 4,
+        "punti_effettivi": 8
+      },
+      {
+        "gara_id": "TROFEO_MICHELE_SCARPONI_DUE_GIORNI_2026-04-04",
+        "nome_gara": "TROFEO MICHELE SCARPONI - DUE GIORNI",
+        "data": "2026-04-04",
+        "atleta_id": "BATTISTONI_ALESSANDRO",
+        "atleta_cognome": "BATTISTONI",
+        "atleta_nome": "ALESSANDRO",
+        "posizione": 7,
+        "punti_base": 4,
+        "punti_effettivi": 8
       }
     ]
   },
@@ -3100,7 +3155,7 @@
   "TEAM_GUERRINI_SENAGHESE": {
     "id": "TEAM_GUERRINI_SENAGHESE",
     "nome": "TEAM GUERRINI SENAGHESE",
-    "punti_totali": 139,
+    "punti_totali": 173,
     "atleti": [
       "ROTA_MARCO",
       "MARANGON_PAOLO_GRAZIANO",
@@ -3220,6 +3275,28 @@
         "posizione": 6,
         "punti_base": 5,
         "punti_effettivi": 5
+      },
+      {
+        "gara_id": "TROFEO_MICHELE_SCARPONI_DUE_GIORNI_2026-04-04",
+        "nome_gara": "TROFEO MICHELE SCARPONI - DUE GIORNI",
+        "data": "2026-04-04",
+        "atleta_id": "VESCO_RICCARDO",
+        "atleta_cognome": "VESCO",
+        "atleta_nome": "RICCARDO",
+        "posizione": 2,
+        "punti_base": 12,
+        "punti_effettivi": 24
+      },
+      {
+        "gara_id": "TROFEO_MICHELE_SCARPONI_DUE_GIORNI_2026-04-04",
+        "nome_gara": "TROFEO MICHELE SCARPONI - DUE GIORNI",
+        "data": "2026-04-04",
+        "atleta_id": "CACCHIO_MICHELE_PIO",
+        "atleta_cognome": "CACCHIO",
+        "atleta_nome": "MICHELE PIO",
+        "posizione": 6,
+        "punti_base": 5,
+        "punti_effettivi": 10
       }
     ]
   },
@@ -3326,7 +3403,7 @@
   "TEAM_VANGI_TOMMASINI_IL_PIRATA": {
     "id": "TEAM_VANGI_TOMMASINI_IL_PIRATA",
     "nome": "TEAM VANGI TOMMASINI IL PIRATA",
-    "punti_totali": 219,
+    "punti_totali": 265,
     "atleti": [
       "CASCIONE_RAFFAELE",
       "VERDIRAME_MATTEO",
@@ -3592,6 +3669,28 @@
         "posizione": 4,
         "punti_base": 8,
         "punti_effettivi": 8
+      },
+      {
+        "gara_id": "TROFEO_MICHELE_SCARPONI_DUE_GIORNI_2026-04-04",
+        "nome_gara": "TROFEO MICHELE SCARPONI - DUE GIORNI",
+        "data": "2026-04-04",
+        "atleta_id": "MARTINEZ_GROSET_AITOR",
+        "atleta_cognome": "MARTINEZ",
+        "atleta_nome": "GROSET AITOR",
+        "posizione": 1,
+        "punti_base": 15,
+        "punti_effettivi": 30
+      },
+      {
+        "gara_id": "TROFEO_MICHELE_SCARPONI_DUE_GIORNI_2026-04-04",
+        "nome_gara": "TROFEO MICHELE SCARPONI - DUE GIORNI",
+        "data": "2026-04-04",
+        "atleta_id": "CASCIONE_RAFFAELE",
+        "atleta_cognome": "CASCIONE",
+        "atleta_nome": "RAFFAELE",
+        "posizione": 4,
+        "punti_base": 8,
+        "punti_effettivi": 16
       }
     ]
   },
@@ -3787,7 +3886,7 @@
   "POLISPORTIVA_MONSUMMANESE": {
     "id": "POLISPORTIVA_MONSUMMANESE",
     "nome": "POLISPORTIVA MONSUMMANESE",
-    "punti_totali": 56,
+    "punti_totali": 60,
     "atleti": [
       "BIANCU_LUCA",
       "BONCIANI_ANDREA",
@@ -3882,6 +3981,17 @@
         "atleta_nome": "NICCOLO'",
         "posizione": 7,
         "punti_base": 4,
+        "punti_effettivi": 4
+      },
+      {
+        "gara_id": "TROFEO_MICHELE_SCARPONI_DUE_GIORNI_2026-04-04",
+        "nome_gara": "TROFEO MICHELE SCARPONI - DUE GIORNI",
+        "data": "2026-04-04",
+        "atleta_id": "CIANTI_NICCOLO",
+        "atleta_cognome": "CIANTI",
+        "atleta_nome": "NICCOLO'",
+        "posizione": 9,
+        "punti_base": 2,
         "punti_effettivi": 4
       }
     ]
@@ -4185,7 +4295,7 @@
   "TEAM_NERI_SOTTOLI_LUCCHINI_ENERGY": {
     "id": "TEAM_NERI_SOTTOLI_LUCCHINI_ENERGY",
     "nome": "TEAM NERI SOTTOLI LUCCHINI ENERGY",
-    "punti_totali": 67,
+    "punti_totali": 71,
     "atleti": [
       "GILENO_DAVIDE",
       "COLELLA_FILIPPO",
@@ -4315,6 +4425,17 @@
         "posizione": 10,
         "punti_base": 1,
         "punti_effettivi": 1
+      },
+      {
+        "gara_id": "TROFEO_MICHELE_SCARPONI_DUE_GIORNI_2026-04-04",
+        "nome_gara": "TROFEO MICHELE SCARPONI - DUE GIORNI",
+        "data": "2026-04-04",
+        "atleta_id": "BELLATO_ACHILLE",
+        "atleta_cognome": "BELLATO",
+        "atleta_nome": "ACHILLE",
+        "posizione": 9,
+        "punti_base": 2,
+        "punti_effettivi": 4
       }
     ]
   },
@@ -4476,7 +4597,7 @@
   "BORGO_MOLINO_VIGNA_FIORITA": {
     "id": "BORGO_MOLINO_VIGNA_FIORITA",
     "nome": "BORGO MOLINO-VIGNA FIORITA",
-    "punti_totali": 97,
+    "punti_totali": 109,
     "atleti": [
       "FEDRIZZI_BRANDON_DAVIDE",
       "CAMPAGNOLO_LORENZO",
@@ -4607,13 +4728,24 @@
         "posizione": 10,
         "punti_base": 1,
         "punti_effettivi": 1
+      },
+      {
+        "gara_id": "36_GRAN_PREMIO_CITTA_DI_SAN_MAURO_PASCOLI_DONNE_ALLIEVE_2026-04-06",
+        "nome_gara": "36° GRAN PREMIO CITTA' DI SAN MAURO PASCOLI - DONNE ALLIEVE",
+        "data": "2026-04-06",
+        "atleta_id": "BOLCATO_GIANMARCO",
+        "atleta_cognome": "BOLCATO",
+        "atleta_nome": "GIANMARCO",
+        "posizione": 2,
+        "punti_base": 12,
+        "punti_effettivi": 12
       }
     ]
   },
   "A_R_MONEX_PRO_CYCLING_TEAM": {
     "id": "A_R_MONEX_PRO_CYCLING_TEAM",
     "nome": "A.R.MONEX PRO CYCLING TEAM",
-    "punti_totali": 66,
+    "punti_totali": 76,
     "atleti": [
       "MORENO_GARCIA_DANIEL_SANTIAGO",
       "RODRIGUEZ_DELGADO_JOSE_EMILIO",
@@ -4675,13 +4807,24 @@
         "posizione": 4,
         "punti_base": 8,
         "punti_effettivi": 8
+      },
+      {
+        "gara_id": "36_GRAN_PREMIO_CITTA_DI_SAN_MAURO_PASCOLI_DONNE_ALLIEVE_2026-04-06",
+        "nome_gara": "36° GRAN PREMIO CITTA' DI SAN MAURO PASCOLI - DONNE ALLIEVE",
+        "data": "2026-04-06",
+        "atleta_id": "VALDOVINOS_BORBON_CARLOS_OMAR",
+        "atleta_cognome": "VALDOVINOS",
+        "atleta_nome": "BORBON CARLOS OMAR",
+        "posizione": 3,
+        "punti_base": 10,
+        "punti_effettivi": 10
       }
     ]
   },
   "AUTOZAI_CONTRI": {
     "id": "AUTOZAI_CONTRI",
     "nome": "AUTOZAI-CONTRI",
-    "punti_totali": 48,
+    "punti_totali": 60,
     "atleti": [
       "MARIOTTO_THOMAS",
       "BORDIGNON_XAVIER"
@@ -4741,13 +4884,24 @@
         "posizione": 9,
         "punti_base": 2,
         "punti_effettivi": 4
+      },
+      {
+        "gara_id": "TROFEO_MICHELE_SCARPONI_DUE_GIORNI_2026-04-04",
+        "nome_gara": "TROFEO MICHELE SCARPONI - DUE GIORNI",
+        "data": "2026-04-04",
+        "atleta_id": "MARIOTTO_THOMAS",
+        "atleta_cognome": "MARIOTTO",
+        "atleta_nome": "THOMAS",
+        "posizione": 5,
+        "punti_base": 6,
+        "punti_effettivi": 12
       }
     ]
   },
   "A_S_D_CICLISTICA_MONSELICE": {
     "id": "A_S_D_CICLISTICA_MONSELICE",
     "nome": "A.S.D. CICLISTICA MONSELICE",
-    "punti_totali": 153,
+    "punti_totali": 190,
     "atleti": [
       "CECCARELLO_LORENZO",
       "SALMASO_MANUEL",
@@ -4924,6 +5078,39 @@
         "posizione": 5,
         "punti_base": 6,
         "punti_effettivi": 6
+      },
+      {
+        "gara_id": "TROFEO_MICHELE_SCARPONI_DUE_GIORNI_2026-04-04",
+        "nome_gara": "TROFEO MICHELE SCARPONI - DUE GIORNI",
+        "data": "2026-04-04",
+        "atleta_id": "CECCARELLO_LORENZO",
+        "atleta_cognome": "CECCARELLO",
+        "atleta_nome": "LORENZO",
+        "posizione": 3,
+        "punti_base": 10,
+        "punti_effettivi": 20
+      },
+      {
+        "gara_id": "36_GRAN_PREMIO_CITTA_DI_SAN_MAURO_PASCOLI_DONNE_ALLIEVE_2026-04-06",
+        "nome_gara": "36° GRAN PREMIO CITTA' DI SAN MAURO PASCOLI - DONNE ALLIEVE",
+        "data": "2026-04-06",
+        "atleta_id": "COLTRO_DAVIDE",
+        "atleta_cognome": "COLTRO",
+        "atleta_nome": "DAVIDE",
+        "posizione": 1,
+        "punti_base": 15,
+        "punti_effettivi": 15
+      },
+      {
+        "gara_id": "36_GRAN_PREMIO_CITTA_DI_SAN_MAURO_PASCOLI_DONNE_ALLIEVE_2026-04-06",
+        "nome_gara": "36° GRAN PREMIO CITTA' DI SAN MAURO PASCOLI - DONNE ALLIEVE",
+        "data": "2026-04-06",
+        "atleta_id": "CECCARELLO_CARLO",
+        "atleta_cognome": "CECCARELLO",
+        "atleta_nome": "CARLO",
+        "posizione": 9,
+        "punti_base": 2,
+        "punti_effettivi": 2
       }
     ]
   },
@@ -4972,7 +5159,7 @@
   "TEAM_GENERAL_SYSTEM": {
     "id": "TEAM_GENERAL_SYSTEM",
     "nome": "TEAM GENERAL SYSTEM",
-    "punti_totali": 80,
+    "punti_totali": 98,
     "atleti": [
       "POSTPISCHL_FILIPPO",
       "BANDINI_FILIPPO",
@@ -5079,13 +5266,35 @@
         "posizione": 8,
         "punti_base": 3,
         "punti_effettivi": 3
+      },
+      {
+        "gara_id": "TROFEO_MICHELE_SCARPONI_DUE_GIORNI_2026-04-04",
+        "nome_gara": "TROFEO MICHELE SCARPONI - DUE GIORNI",
+        "data": "2026-04-04",
+        "atleta_id": "BANDINI_FILIPPO",
+        "atleta_cognome": "BANDINI",
+        "atleta_nome": "FILIPPO",
+        "posizione": 4,
+        "punti_base": 8,
+        "punti_effettivi": 16
+      },
+      {
+        "gara_id": "TROFEO_MICHELE_SCARPONI_DUE_GIORNI_2026-04-04",
+        "nome_gara": "TROFEO MICHELE SCARPONI - DUE GIORNI",
+        "data": "2026-04-04",
+        "atleta_id": "UGUCCIONI_SAMUELE",
+        "atleta_cognome": "UGUCCIONI",
+        "atleta_nome": "SAMUELE",
+        "posizione": 10,
+        "punti_base": 1,
+        "punti_effettivi": 2
       }
     ]
   },
   "A_S_D_POSTUMIA_73_D_L_CICLISMO": {
     "id": "A_S_D_POSTUMIA_73_D_L_CICLISMO",
     "nome": "A.S.D. POSTUMIA 73 D.L. CICLISMO",
-    "punti_totali": 39,
+    "punti_totali": 45,
     "atleti": [
       "ENDRIZZI_ANDREA",
       "DI_BERNARDO_FABIO",
@@ -5135,6 +5344,17 @@
         "posizione": 1,
         "punti_base": 15,
         "punti_effettivi": 15
+      },
+      {
+        "gara_id": "TROFEO_MICHELE_SCARPONI_DUE_GIORNI_2026-04-04",
+        "nome_gara": "TROFEO MICHELE SCARPONI - DUE GIORNI",
+        "data": "2026-04-04",
+        "atleta_id": "DI_BERNARDO_FABIO",
+        "atleta_cognome": "DI",
+        "atleta_nome": "BERNARDO FABIO",
+        "posizione": 8,
+        "punti_base": 3,
+        "punti_effettivi": 6
       }
     ]
   },
@@ -5339,7 +5559,7 @@
   "CPS_PROFESSIONAL_TEAM": {
     "id": "CPS_PROFESSIONAL_TEAM",
     "nome": "CPS PROFESSIONAL TEAM",
-    "punti_totali": 34,
+    "punti_totali": 40,
     "atleti": [
       "POSADA_FRANCO_JOSE_MANUEL",
       "PALADINI_GUIDO",
@@ -5413,13 +5633,24 @@
         "posizione": 8,
         "punti_base": 3,
         "punti_effettivi": 3
+      },
+      {
+        "gara_id": "TROFEO_MICHELE_SCARPONI_DUE_GIORNI_2026-04-04",
+        "nome_gara": "TROFEO MICHELE SCARPONI - DUE GIORNI",
+        "data": "2026-04-04",
+        "atleta_id": "POSADA_FRANCO_JOSE_MANUEL",
+        "atleta_cognome": "POSADA",
+        "atleta_nome": "FRANCO JOSE MANUEL",
+        "posizione": 8,
+        "punti_base": 3,
+        "punti_effettivi": 6
       }
     ]
   },
   "TEAM_CORATTI": {
     "id": "TEAM_CORATTI",
     "nome": "TEAM CORATTI",
-    "punti_totali": 92,
+    "punti_totali": 118,
     "atleti": [
       "BANINI_TOMMASO",
       "FERRARO_LORENZO",
@@ -5504,13 +5735,35 @@
         "posizione": 5,
         "punti_base": 6,
         "punti_effettivi": 6
+      },
+      {
+        "gara_id": "TROFEO_MICHELE_SCARPONI_DUE_GIORNI_2026-04-04",
+        "nome_gara": "TROFEO MICHELE SCARPONI - DUE GIORNI",
+        "data": "2026-04-04",
+        "atleta_id": "BANINI_TOMMASO",
+        "atleta_cognome": "BANINI",
+        "atleta_nome": "TOMMASO",
+        "posizione": 10,
+        "punti_base": 1,
+        "punti_effettivi": 2
+      },
+      {
+        "gara_id": "TROFEO_MICHELE_SCARPONI_DUE_GIORNI_2026-04-04",
+        "nome_gara": "TROFEO MICHELE SCARPONI - DUE GIORNI",
+        "data": "2026-04-04",
+        "atleta_id": "FERRARO_LORENZO",
+        "atleta_cognome": "FERRARO",
+        "atleta_nome": "LORENZO",
+        "posizione": 2,
+        "punti_base": 12,
+        "punti_effettivi": 24
       }
     ]
   },
   "ETHICA_ZERO24_CYCLING_TEAM": {
     "id": "ETHICA_ZERO24_CYCLING_TEAM",
     "nome": "ETHICA ZERO24 CYCLING TEAM",
-    "punti_totali": 94,
+    "punti_totali": 129,
     "atleti": [
       "CINGOLANI_TOMMASO",
       "FIORINI_EDOARDO",
@@ -5630,6 +5883,28 @@
         "posizione": 9,
         "punti_base": 2,
         "punti_effettivi": 2
+      },
+      {
+        "gara_id": "TROFEO_MICHELE_SCARPONI_DUE_GIORNI_2026-04-04",
+        "nome_gara": "TROFEO MICHELE SCARPONI - DUE GIORNI",
+        "data": "2026-04-04",
+        "atleta_id": "CINGOLANI_TOMMASO",
+        "atleta_cognome": "CINGOLANI",
+        "atleta_nome": "TOMMASO",
+        "posizione": 1,
+        "punti_base": 15,
+        "punti_effettivi": 30
+      },
+      {
+        "gara_id": "36_GRAN_PREMIO_CITTA_DI_SAN_MAURO_PASCOLI_DONNE_ALLIEVE_2026-04-06",
+        "nome_gara": "36° GRAN PREMIO CITTA' DI SAN MAURO PASCOLI - DONNE ALLIEVE",
+        "data": "2026-04-06",
+        "atleta_id": "MANONI_ANDREA",
+        "atleta_cognome": "MANONI",
+        "atleta_nome": "ANDREA",
+        "posizione": 6,
+        "punti_base": 5,
+        "punti_effettivi": 5
       }
     ]
   },
@@ -7573,7 +7848,7 @@
   "VELO_CLUB_CATTOLICA": {
     "id": "VELO_CLUB_CATTOLICA",
     "nome": "VELO CLUB CATTOLICA",
-    "punti_totali": 14,
+    "punti_totali": 28,
     "atleti": [
       "FERRETTI_ANDREA",
       "URBINATI_THOMAS"
@@ -7600,13 +7875,35 @@
         "posizione": 5,
         "punti_base": 6,
         "punti_effettivi": 6
+      },
+      {
+        "gara_id": "36_GRAN_PREMIO_CITTA_DI_SAN_MAURO_PASCOLI_DONNE_ALLIEVE_2026-04-06",
+        "nome_gara": "36° GRAN PREMIO CITTA' DI SAN MAURO PASCOLI - DONNE ALLIEVE",
+        "data": "2026-04-06",
+        "atleta_id": "FERRETTI_ANDREA",
+        "atleta_cognome": "FERRETTI",
+        "atleta_nome": "ANDREA",
+        "posizione": 4,
+        "punti_base": 8,
+        "punti_effettivi": 8
+      },
+      {
+        "gara_id": "36_GRAN_PREMIO_CITTA_DI_SAN_MAURO_PASCOLI_DONNE_ALLIEVE_2026-04-06",
+        "nome_gara": "36° GRAN PREMIO CITTA' DI SAN MAURO PASCOLI - DONNE ALLIEVE",
+        "data": "2026-04-06",
+        "atleta_id": "URBINATI_THOMAS",
+        "atleta_cognome": "URBINATI",
+        "atleta_nome": "THOMAS",
+        "posizione": 5,
+        "punti_base": 6,
+        "punti_effettivi": 6
       }
     ]
   },
   "S_C_COTIGNOLESE": {
     "id": "S_C_COTIGNOLESE",
     "nome": "S.C.COTIGNOLESE",
-    "punti_totali": 39,
+    "punti_totali": 44,
     "atleti": [
       "MUNTEANU_DAVID_ALEXANDRU",
       "BACCINI_LUCIO",
@@ -7680,13 +7977,35 @@
         "posizione": 7,
         "punti_base": 4,
         "punti_effettivi": 4
+      },
+      {
+        "gara_id": "36_GRAN_PREMIO_CITTA_DI_SAN_MAURO_PASCOLI_DONNE_ALLIEVE_2026-04-06",
+        "nome_gara": "36° GRAN PREMIO CITTA' DI SAN MAURO PASCOLI - DONNE ALLIEVE",
+        "data": "2026-04-06",
+        "atleta_id": "MUNTEANU_DAVID_ALEXANDRU",
+        "atleta_cognome": "MUNTEANU",
+        "atleta_nome": "DAVID ALEXANDRU",
+        "posizione": 7,
+        "punti_base": 4,
+        "punti_effettivi": 4
+      },
+      {
+        "gara_id": "36_GRAN_PREMIO_CITTA_DI_SAN_MAURO_PASCOLI_DONNE_ALLIEVE_2026-04-06",
+        "nome_gara": "36° GRAN PREMIO CITTA' DI SAN MAURO PASCOLI - DONNE ALLIEVE",
+        "data": "2026-04-06",
+        "atleta_id": "BACCINI_LUCIO",
+        "atleta_cognome": "BACCINI",
+        "atleta_nome": "LUCIO",
+        "posizione": 10,
+        "punti_base": 1,
+        "punti_effettivi": 1
       }
     ]
   },
   "U_S_CALCARA": {
     "id": "U_S_CALCARA",
     "nome": "U.S. CALCARA",
-    "punti_totali": 3,
+    "punti_totali": 6,
     "atleti": [
       "MASONI_GIACOMO"
     ],
@@ -7694,6 +8013,17 @@
       {
         "gara_id": "36_GRAN_PREMIO_CITTA_DI_SAN_MAURO_PASCOLI_ALLIEVI_2026-04-06",
         "nome_gara": "36° GRAN PREMIO CITTA' DI SAN MAURO PASCOLI - ALLIEVI",
+        "data": "2026-04-06",
+        "atleta_id": "MASONI_GIACOMO",
+        "atleta_cognome": "MASONI",
+        "atleta_nome": "GIACOMO",
+        "posizione": 8,
+        "punti_base": 3,
+        "punti_effettivi": 3
+      },
+      {
+        "gara_id": "36_GRAN_PREMIO_CITTA_DI_SAN_MAURO_PASCOLI_DONNE_ALLIEVE_2026-04-06",
+        "nome_gara": "36° GRAN PREMIO CITTA' DI SAN MAURO PASCOLI - DONNE ALLIEVE",
         "data": "2026-04-06",
         "atleta_id": "MASONI_GIACOMO",
         "atleta_cognome": "MASONI",

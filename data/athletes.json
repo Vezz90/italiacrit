@@ -3185,7 +3185,7 @@
     "cognome": "VESHNIAKOV",
     "team_attuale": "PC BAIX EBRE TORTOSA",
     "team_id": "PC_BAIX_EBRE_TORTOSA",
-    "categoria": "ELI_M",
+    "categoria": "JUN_M",
     "genere": "M",
     "punti_totali": 15,
     "risultati": [
@@ -3208,7 +3208,7 @@
     "cognome": "LINGENHAG",
     "team_attuale": "AXION FUTURE TEAM",
     "team_id": "AXION_FUTURE_TEAM",
-    "categoria": "ELI_M",
+    "categoria": "JUN_M",
     "genere": "M",
     "punti_totali": 12,
     "risultati": [
@@ -3231,9 +3231,9 @@
     "cognome": "BRUSTIA",
     "team_attuale": "G.S.GIOVANI GIUSSANESI A.S.D.",
     "team_id": "G_S_GIOVANI_GIUSSANESI_A_S_D",
-    "categoria": "ELI_M",
+    "categoria": "JUN_M",
     "genere": "M",
-    "punti_totali": 40,
+    "punti_totali": 60,
     "risultati": [
       {
         "gara_id": "RINVIATA_4_MEMORIAL_GERMANO_VITTONI_2026-03-22",
@@ -3267,6 +3267,17 @@
         "punti_base": 10,
         "punti_effettivi": 20,
         "team": "G.S.GIOVANI GIUSSANESI A.S.D."
+      },
+      {
+        "gara_id": "TROFEO_MICHELE_SCARPONI_DUE_GIORNI_2026-04-04",
+        "nome_gara": "TROFEO MICHELE SCARPONI - DUE GIORNI",
+        "data": "2026-04-04",
+        "posizione": 3,
+        "tipo_gara": "nazionale",
+        "moltiplicatore": 2,
+        "punti_base": 10,
+        "punti_effettivi": 20,
+        "team": "G.S.GIOVANI GIUSSANESI A.S.D."
       }
     ]
   },
@@ -3276,7 +3287,7 @@
     "cognome": "GUGNINO",
     "team_attuale": "U.C. PIASCO",
     "team_id": "U_C_PIASCO",
-    "categoria": "ELI_M",
+    "categoria": "JUN_M",
     "genere": "M",
     "punti_totali": 53,
     "risultati": [
@@ -3321,7 +3332,7 @@
     "cognome": "GAMBA",
     "team_attuale": "CICLISTICA TREVIGLIESE",
     "team_id": "CICLISTICA_TREVIGLIESE",
-    "categoria": "ELI_M",
+    "categoria": "JUN_M",
     "genere": "M",
     "punti_totali": 20,
     "risultati": [
@@ -3366,7 +3377,7 @@
     "cognome": "SOLAVAGGIONE",
     "team_attuale": "CANNIBAL BAHRAIN VICTORIUS",
     "team_id": "CANNIBAL_BAHRAIN_VICTORIUS",
-    "categoria": "ELI_M",
+    "categoria": "JUN_M",
     "genere": "M",
     "punti_totali": 5,
     "risultati": [
@@ -3389,7 +3400,7 @@
     "cognome": "FRONTINI",
     "team_attuale": "POOL CANTU' GB TEAM A.S.D.",
     "team_id": "POOL_CANTU_GB_TEAM_A_S_D",
-    "categoria": "ELI_M",
+    "categoria": "JUN_M",
     "genere": "M",
     "punti_totali": 28,
     "risultati": [
@@ -3423,7 +3434,7 @@
     "cognome": "COLOMBO",
     "team_attuale": "ENERGY TEAM A.S.D.",
     "team_id": "ENERGY_TEAM_A_S_D",
-    "categoria": "ELI_M",
+    "categoria": "JUN_M",
     "genere": "M",
     "punti_totali": 3,
     "risultati": [
@@ -3446,7 +3457,7 @@
     "cognome": "ROTA",
     "team_attuale": "TEAM GUERRINI SENAGHESE",
     "team_id": "TEAM_GUERRINI_SENAGHESE",
-    "categoria": "ELI_M",
+    "categoria": "JUN_M",
     "genere": "M",
     "punti_totali": 2,
     "risultati": [
@@ -3469,7 +3480,7 @@
     "cognome": "BERTOLA",
     "team_attuale": "CICLISTICA TREVIGLIESE",
     "team_id": "CICLISTICA_TREVIGLIESE",
-    "categoria": "ELI_M",
+    "categoria": "JUN_M",
     "genere": "M",
     "punti_totali": 1,
     "risultati": [
@@ -3492,7 +3503,7 @@
     "cognome": "CARNEVALI",
     "team_attuale": "VINI FANTINI - TRALFO",
     "team_id": "VINI_FANTINI_TRALFO",
-    "categoria": "ELI_M",
+    "categoria": "JUN_M",
     "genere": "M",
     "punti_totali": 19,
     "risultati": [
@@ -3526,7 +3537,7 @@
     "cognome": "SHISHKIN",
     "team_attuale": "VINI FANTINI - TRALFO",
     "team_id": "VINI_FANTINI_TRALFO",
-    "categoria": "ELI_M",
+    "categoria": "JUN_M",
     "genere": "M",
     "punti_totali": 12,
     "risultati": [
@@ -3549,7 +3560,7 @@
     "cognome": "LILLO",
     "team_attuale": "TEAM BELVEDERE",
     "team_id": "TEAM_BELVEDERE",
-    "categoria": "ELI_M",
+    "categoria": "JUN_M",
     "genere": "M",
     "punti_totali": 16,
     "risultati": [
@@ -3583,9 +3594,9 @@
     "cognome": "CASCIONE",
     "team_attuale": "TEAM VANGI TOMMASINI IL PIRATA",
     "team_id": "TEAM_VANGI_TOMMASINI_IL_PIRATA",
-    "categoria": "ELI_M",
+    "categoria": "JUN_M",
     "genere": "M",
-    "punti_totali": 24,
+    "punti_totali": 40,
     "risultati": [
       {
         "gara_id": "72_COPPA_MARIA_SS_DELLA_STELLA_2026-04-12",
@@ -3608,6 +3619,17 @@
         "punti_base": 8,
         "punti_effettivi": 16,
         "team": "TEAM VANGI TOMMASINI IL PIRATA"
+      },
+      {
+        "gara_id": "TROFEO_MICHELE_SCARPONI_DUE_GIORNI_2026-04-04",
+        "nome_gara": "TROFEO MICHELE SCARPONI - DUE GIORNI",
+        "data": "2026-04-04",
+        "posizione": 4,
+        "tipo_gara": "nazionale",
+        "moltiplicatore": 2,
+        "punti_base": 8,
+        "punti_effettivi": 16,
+        "team": "TEAM VANGI TOMMASINI IL PIRATA"
       }
     ]
   },
@@ -3617,7 +3639,7 @@
     "cognome": "ARENA",
     "team_attuale": "VINI FANTINI - TRALFO",
     "team_id": "VINI_FANTINI_TRALFO",
-    "categoria": "ELI_M",
+    "categoria": "JUN_M",
     "genere": "M",
     "punti_totali": 6,
     "risultati": [
@@ -3640,7 +3662,7 @@
     "cognome": "BATTISTELLI",
     "team_attuale": "TRIS STAMPI FIOR DI GRANO",
     "team_id": "TRIS_STAMPI_FIOR_DI_GRANO",
-    "categoria": "ELI_M",
+    "categoria": "JUN_M",
     "genere": "M",
     "punti_totali": 5,
     "risultati": [
@@ -3663,7 +3685,7 @@
     "cognome": "DI",
     "team_attuale": "TRIS STAMPI FIOR DI GRANO",
     "team_id": "TRIS_STAMPI_FIOR_DI_GRANO",
-    "categoria": "ELI_M",
+    "categoria": "JUN_M",
     "genere": "M",
     "punti_totali": 12,
     "risultati": [
@@ -3697,7 +3719,7 @@
     "cognome": "ROTINI",
     "team_attuale": "TEAM BELVEDERE",
     "team_id": "TEAM_BELVEDERE",
-    "categoria": "ELI_M",
+    "categoria": "JUN_M",
     "genere": "M",
     "punti_totali": 3,
     "risultati": [
@@ -3720,7 +3742,7 @@
     "cognome": "SPINOZZI",
     "team_attuale": "AUDAX FIORMONTI",
     "team_id": "AUDAX_FIORMONTI",
-    "categoria": "ELI_M",
+    "categoria": "JUN_M",
     "genere": "M",
     "punti_totali": 2,
     "risultati": [
@@ -3743,7 +3765,7 @@
     "cognome": "ANTONACCI",
     "team_attuale": "AUDAX FIORMONTI",
     "team_id": "AUDAX_FIORMONTI",
-    "categoria": "ELI_M",
+    "categoria": "JUN_M",
     "genere": "M",
     "punti_totali": 1,
     "risultati": [
@@ -3766,7 +3788,7 @@
     "cognome": "BALLIANA",
     "team_attuale": "TEAM ECOTEK ZERO24",
     "team_id": "TEAM_ECOTEK_ZERO24",
-    "categoria": "ELI_M",
+    "categoria": "JUN_M",
     "genere": "M",
     "punti_totali": 15,
     "risultati": [
@@ -3789,7 +3811,7 @@
     "cognome": "SANTAMARIA",
     "team_attuale": "S.C. MONTEPONI A.S.D.",
     "team_id": "S_C_MONTEPONI_A_S_D",
-    "categoria": "ELI_M",
+    "categoria": "JUN_M",
     "genere": "M",
     "punti_totali": 12,
     "risultati": [
@@ -3812,7 +3834,7 @@
     "cognome": "BIANCU",
     "team_attuale": "POLISPORTIVA MONSUMMANESE",
     "team_id": "POLISPORTIVA_MONSUMMANESE",
-    "categoria": "ELI_M",
+    "categoria": "JUN_M",
     "genere": "M",
     "punti_totali": 10,
     "risultati": [
@@ -3835,7 +3857,7 @@
     "cognome": "MARROCU",
     "team_attuale": "ARKITANO MTB CLUB",
     "team_id": "ARKITANO_MTB_CLUB",
-    "categoria": "ELI_M",
+    "categoria": "JUN_M",
     "genere": "M",
     "punti_totali": 8,
     "risultati": [
@@ -3858,7 +3880,7 @@
     "cognome": "MURA",
     "team_attuale": "POOL BIKE SERRAMANNA",
     "team_id": "POOL_BIKE_SERRAMANNA",
-    "categoria": "ELI_M",
+    "categoria": "JUN_M",
     "genere": "M",
     "punti_totali": 6,
     "risultati": [
@@ -3881,7 +3903,7 @@
     "cognome": "VENDRAMIN",
     "team_attuale": "IND. FORNITURE MORO-C&G CAPITAL",
     "team_id": "IND_FORNITURE_MORO_C_G_CAPITAL",
-    "categoria": "ELI_M",
+    "categoria": "JUN_M",
     "genere": "M",
     "punti_totali": 53,
     "risultati": [
@@ -3926,7 +3948,7 @@
     "cognome": "GILENO",
     "team_attuale": "TEAM NERI SOTTOLI LUCCHINI ENERGY",
     "team_id": "TEAM_NERI_SOTTOLI_LUCCHINI_ENERGY",
-    "categoria": "ELI_M",
+    "categoria": "JUN_M",
     "genere": "M",
     "punti_totali": 23,
     "risultati": [
@@ -3971,7 +3993,7 @@
     "cognome": "VERDIRAME",
     "team_attuale": "TEAM VANGI TOMMASINI IL PIRATA",
     "team_id": "TEAM_VANGI_TOMMASINI_IL_PIRATA",
-    "categoria": "ELI_M",
+    "categoria": "JUN_M",
     "genere": "M",
     "punti_totali": 14,
     "risultati": [
@@ -4005,7 +4027,7 @@
     "cognome": "KOLARSKI",
     "team_attuale": "SS AQUILA",
     "team_id": "SS_AQUILA",
-    "categoria": "ELI_M",
+    "categoria": "JUN_M",
     "genere": "M",
     "punti_totali": 13,
     "risultati": [
@@ -4039,7 +4061,7 @@
     "cognome": "GAGGIOLI",
     "team_attuale": "TEAM VANGI TOMMASINI IL PIRATA",
     "team_id": "TEAM_VANGI_TOMMASINI_IL_PIRATA",
-    "categoria": "ELI_M",
+    "categoria": "JUN_M",
     "genere": "M",
     "punti_totali": 33,
     "risultati": [
@@ -4095,7 +4117,7 @@
     "cognome": "FEDERICI",
     "team_attuale": "TEAM VANGI TOMMASINI IL PIRATA",
     "team_id": "TEAM_VANGI_TOMMASINI_IL_PIRATA",
-    "categoria": "ELI_M",
+    "categoria": "JUN_M",
     "genere": "M",
     "punti_totali": 6,
     "risultati": [
@@ -4129,7 +4151,7 @@
     "cognome": "COLELLA",
     "team_attuale": "TEAM NERI SOTTOLI LUCCHINI ENERGY",
     "team_id": "TEAM_NERI_SOTTOLI_LUCCHINI_ENERGY",
-    "categoria": "ELI_M",
+    "categoria": "JUN_M",
     "genere": "M",
     "punti_totali": 6,
     "risultati": [
@@ -4163,7 +4185,7 @@
     "cognome": "BONCIANI",
     "team_attuale": "POLISPORTIVA MONSUMMANESE",
     "team_id": "POLISPORTIVA_MONSUMMANESE",
-    "categoria": "ELI_M",
+    "categoria": "JUN_M",
     "genere": "M",
     "punti_totali": 25,
     "risultati": [
@@ -4208,7 +4230,7 @@
     "cognome": "CAPUZZO",
     "team_attuale": "IND. FORNITURE MORO-C&G CAPITAL",
     "team_id": "IND_FORNITURE_MORO_C_G_CAPITAL",
-    "categoria": "ELI_M",
+    "categoria": "JUN_M",
     "genere": "M",
     "punti_totali": 8,
     "risultati": [
@@ -4242,7 +4264,7 @@
     "cognome": "PIERAZZUOLI",
     "team_attuale": "MASTROMARCO FC NIBALI",
     "team_id": "MASTROMARCO_FC_NIBALI",
-    "categoria": "ELI_M",
+    "categoria": "JUN_M",
     "genere": "M",
     "punti_totali": 1,
     "risultati": [
@@ -4265,7 +4287,7 @@
     "cognome": "PEZZO",
     "team_attuale": "NORDEST PETRUCCI ASSALI STEFEN",
     "team_id": "NORDEST_PETRUCCI_ASSALI_STEFEN",
-    "categoria": "ELI_M",
+    "categoria": "JUN_M",
     "genere": "M",
     "punti_totali": 45,
     "risultati": [
@@ -4299,7 +4321,7 @@
     "cognome": "FEDRIZZI",
     "team_attuale": "BORGO MOLINO-VIGNA FIORITA",
     "team_id": "BORGO_MOLINO_VIGNA_FIORITA",
-    "categoria": "ELI_M",
+    "categoria": "JUN_M",
     "genere": "M",
     "punti_totali": 39,
     "risultati": [
@@ -4333,7 +4355,7 @@
     "cognome": "MORENO",
     "team_attuale": "A.R.MONEX PRO CYCLING TEAM",
     "team_id": "A_R_MONEX_PRO_CYCLING_TEAM",
-    "categoria": "ELI_M",
+    "categoria": "JUN_M",
     "genere": "M",
     "punti_totali": 20,
     "risultati": [
@@ -4356,7 +4378,7 @@
     "cognome": "RODRIGUEZ",
     "team_attuale": "A.R.MONEX PRO CYCLING TEAM",
     "team_id": "A_R_MONEX_PRO_CYCLING_TEAM",
-    "categoria": "ELI_M",
+    "categoria": "JUN_M",
     "genere": "M",
     "punti_totali": 28,
     "risultati": [
@@ -4390,7 +4412,7 @@
     "cognome": "FRANCESCHINI",
     "team_attuale": "CICLISTICA TREVIGLIESE",
     "team_id": "CICLISTICA_TREVIGLIESE",
-    "categoria": "ELI_M",
+    "categoria": "JUN_M",
     "genere": "M",
     "punti_totali": 44,
     "risultati": [
@@ -4435,9 +4457,9 @@
     "cognome": "MARIOTTO",
     "team_attuale": "AUTOZAI-CONTRI",
     "team_id": "AUTOZAI_CONTRI",
-    "categoria": "ELI_M",
+    "categoria": "JUN_M",
     "genere": "M",
-    "punti_totali": 42,
+    "punti_totali": 54,
     "risultati": [
       {
         "gara_id": "4_PICCOLA_LIEGI_DELLE_BREGONZE_CASA_ENRICO_2026-04-12",
@@ -4482,6 +4504,17 @@
         "punti_base": 2,
         "punti_effettivi": 4,
         "team": "AUTOZAI-CONTRI"
+      },
+      {
+        "gara_id": "TROFEO_MICHELE_SCARPONI_DUE_GIORNI_2026-04-04",
+        "nome_gara": "TROFEO MICHELE SCARPONI - DUE GIORNI",
+        "data": "2026-04-04",
+        "posizione": 5,
+        "tipo_gara": "nazionale",
+        "moltiplicatore": 2,
+        "punti_base": 6,
+        "punti_effettivi": 12,
+        "team": "AUTOZAI-CONTRI"
       }
     ]
   },
@@ -4491,7 +4524,7 @@
     "cognome": "ZANOLINI",
     "team_attuale": "NORDEST PETRUCCI ASSALI STEFEN",
     "team_id": "NORDEST_PETRUCCI_ASSALI_STEFEN",
-    "categoria": "ELI_M",
+    "categoria": "JUN_M",
     "genere": "M",
     "punti_totali": 21,
     "risultati": [
@@ -4536,7 +4569,7 @@
     "cognome": "ARCHETTI",
     "team_attuale": "CAMPANA IMBALLAGGI MORBIATO TRENTINO",
     "team_id": "CAMPANA_IMBALLAGGI_MORBIATO_TRENTINO",
-    "categoria": "ELI_M",
+    "categoria": "JUN_M",
     "genere": "M",
     "punti_totali": 6,
     "risultati": [
@@ -4559,7 +4592,7 @@
     "cognome": "NEMBRINI",
     "team_attuale": "CICLISTICA TREVIGLIESE",
     "team_id": "CICLISTICA_TREVIGLIESE",
-    "categoria": "ELI_M",
+    "categoria": "JUN_M",
     "genere": "M",
     "punti_totali": 4,
     "risultati": [
@@ -4582,7 +4615,7 @@
     "cognome": "ZAGO",
     "team_attuale": "IND. FORNITURE MORO-C&G CAPITAL",
     "team_id": "IND_FORNITURE_MORO_C_G_CAPITAL",
-    "categoria": "ELI_M",
+    "categoria": "JUN_M",
     "genere": "M",
     "punti_totali": 8,
     "risultati": [
@@ -4616,7 +4649,7 @@
     "cognome": "BALLIANA",
     "team_attuale": "TEAM ECOTEK ZERO24",
     "team_id": "TEAM_ECOTEK_ZERO24",
-    "categoria": "ELI_M",
+    "categoria": "JUN_M",
     "genere": "M",
     "punti_totali": 11,
     "risultati": [
@@ -4650,7 +4683,7 @@
     "cognome": "CAVALLI",
     "team_attuale": "TEAM NERI SOTTOLI LUCCHINI ENERGY",
     "team_id": "TEAM_NERI_SOTTOLI_LUCCHINI_ENERGY",
-    "categoria": "ELI_M",
+    "categoria": "JUN_M",
     "genere": "M",
     "punti_totali": 7,
     "risultati": [
@@ -4684,7 +4717,7 @@
     "cognome": "CANCHON",
     "team_attuale": "CICLISTICA TREVIGLIESE",
     "team_id": "CICLISTICA_TREVIGLIESE",
-    "categoria": "ELI_M",
+    "categoria": "JUN_M",
     "genere": "M",
     "punti_totali": 2,
     "risultati": [
@@ -4707,7 +4740,7 @@
     "cognome": "MARANGON",
     "team_attuale": "TEAM GUERRINI SENAGHESE",
     "team_id": "TEAM_GUERRINI_SENAGHESE",
-    "categoria": "ELI_M",
+    "categoria": "JUN_M",
     "genere": "M",
     "punti_totali": 45,
     "risultati": [
@@ -4730,9 +4763,9 @@
     "cognome": "CECCARELLO",
     "team_attuale": "A.S.D. CICLISTICA MONSELICE",
     "team_id": "A_S_D_CICLISTICA_MONSELICE",
-    "categoria": "ELI_M",
+    "categoria": "JUN_M",
     "genere": "M",
-    "punti_totali": 64,
+    "punti_totali": 84,
     "risultati": [
       {
         "gara_id": "GRAN_PREMIO_DEL_PERDONO_2026-04-06",
@@ -4766,6 +4799,17 @@
         "punti_base": 8,
         "punti_effettivi": 8,
         "team": "A.S.D. CICLISTICA MONSELICE"
+      },
+      {
+        "gara_id": "TROFEO_MICHELE_SCARPONI_DUE_GIORNI_2026-04-04",
+        "nome_gara": "TROFEO MICHELE SCARPONI - DUE GIORNI",
+        "data": "2026-04-04",
+        "posizione": 3,
+        "tipo_gara": "nazionale",
+        "moltiplicatore": 2,
+        "punti_base": 10,
+        "punti_effettivi": 20,
+        "team": "A.S.D. CICLISTICA MONSELICE"
       }
     ]
   },
@@ -4775,7 +4819,7 @@
     "cognome": "MAGGIONI",
     "team_attuale": "TEAM GUERRINI SENAGHESE",
     "team_id": "TEAM_GUERRINI_SENAGHESE",
-    "categoria": "ELI_M",
+    "categoria": "JUN_M",
     "genere": "M",
     "punti_totali": 28,
     "risultati": [
@@ -4809,9 +4853,9 @@
     "cognome": "IAKOVLEV",
     "team_attuale": "PC BAIX EBRE TORTOSA",
     "team_id": "PC_BAIX_EBRE_TORTOSA",
-    "categoria": "ELI_M",
+    "categoria": "JUN_M",
     "genere": "M",
-    "punti_totali": 30,
+    "punti_totali": 42,
     "risultati": [
       {
         "gara_id": "GRAN_PREMIO_DEL_PERDONO_2026-04-06",
@@ -4834,6 +4878,17 @@
         "punti_base": 6,
         "punti_effettivi": 12,
         "team": "PC BAIX EBRE TORTOSA"
+      },
+      {
+        "gara_id": "TROFEO_MICHELE_SCARPONI_DUE_GIORNI_2026-04-04",
+        "nome_gara": "TROFEO MICHELE SCARPONI - DUE GIORNI",
+        "data": "2026-04-04",
+        "posizione": 5,
+        "tipo_gara": "nazionale",
+        "moltiplicatore": 2,
+        "punti_base": 6,
+        "punti_effettivi": 12,
+        "team": "PC BAIX EBRE TORTOSA"
       }
     ]
   },
@@ -4843,7 +4898,7 @@
     "cognome": "KLACAR",
     "team_attuale": "NOVO MESTO CYCLING ACADEMY",
     "team_id": "NOVO_MESTO_CYCLING_ACADEMY",
-    "categoria": "ELI_M",
+    "categoria": "JUN_M",
     "genere": "M",
     "punti_totali": 15,
     "risultati": [
@@ -4866,7 +4921,7 @@
     "cognome": "VIERO",
     "team_attuale": "NORDEST PETRUCCI ASSALI STEFEN",
     "team_id": "NORDEST_PETRUCCI_ASSALI_STEFEN",
-    "categoria": "ELI_M",
+    "categoria": "JUN_M",
     "genere": "M",
     "punti_totali": 12,
     "risultati": [
@@ -4889,7 +4944,7 @@
     "cognome": "DOBERSCHUTZ",
     "team_attuale": "TEAM NEO SOLUTIONS",
     "team_id": "TEAM_NEO_SOLUTIONS",
-    "categoria": "ELI_M",
+    "categoria": "JUN_M",
     "genere": "M",
     "punti_totali": 6,
     "risultati": [
@@ -4912,7 +4967,7 @@
     "cognome": "SALMASO",
     "team_attuale": "A.S.D. CICLISTICA MONSELICE",
     "team_id": "A_S_D_CICLISTICA_MONSELICE",
-    "categoria": "ELI_M",
+    "categoria": "JUN_M",
     "genere": "M",
     "punti_totali": 5,
     "risultati": [
@@ -4946,7 +5001,7 @@
     "cognome": "POSTPISCHL",
     "team_attuale": "TEAM GENERAL SYSTEM",
     "team_id": "TEAM_GENERAL_SYSTEM",
-    "categoria": "ELI_M",
+    "categoria": "JUN_M",
     "genere": "M",
     "punti_totali": 15,
     "risultati": [
@@ -4969,7 +5024,7 @@
     "cognome": "ENDRIZZI",
     "team_attuale": "A.S.D. POSTUMIA 73 D.L. CICLISMO",
     "team_id": "A_S_D_POSTUMIA_73_D_L_CICLISMO",
-    "categoria": "ELI_M",
+    "categoria": "JUN_M",
     "genere": "M",
     "punti_totali": 12,
     "risultati": [
@@ -4992,7 +5047,7 @@
     "cognome": "GONZA",
     "team_attuale": "MEBLO JOGI PRO-CONCRETE",
     "team_id": "MEBLO_JOGI_PRO_CONCRETE",
-    "categoria": "ELI_M",
+    "categoria": "JUN_M",
     "genere": "M",
     "punti_totali": 10,
     "risultati": [
@@ -5015,7 +5070,7 @@
     "cognome": "CAMPIDELLI",
     "team_attuale": "SIDERMEC - SLP",
     "team_id": "SIDERMEC_SLP",
-    "categoria": "ELI_M",
+    "categoria": "JUN_M",
     "genere": "M",
     "punti_totali": 12,
     "risultati": [
@@ -5049,7 +5104,7 @@
     "cognome": "BERARDI",
     "team_attuale": "SIDERMEC - SLP",
     "team_id": "SIDERMEC_SLP",
-    "categoria": "ELI_M",
+    "categoria": "JUN_M",
     "genere": "M",
     "punti_totali": 6,
     "risultati": [
@@ -5072,7 +5127,7 @@
     "cognome": "CIBIN",
     "team_attuale": "IND. FORNITURE MORO-C&G CAPITAL",
     "team_id": "IND_FORNITURE_MORO_C_G_CAPITAL",
-    "categoria": "ELI_M",
+    "categoria": "JUN_M",
     "genere": "M",
     "punti_totali": 5,
     "risultati": [
@@ -5095,7 +5150,7 @@
     "cognome": "MORO",
     "team_attuale": "VIGNA FIORITA-BORGO MOLINO",
     "team_id": "VIGNA_FIORITA_BORGO_MOLINO",
-    "categoria": "ELI_M",
+    "categoria": "JUN_M",
     "genere": "M",
     "punti_totali": 5,
     "risultati": [
@@ -5129,7 +5184,7 @@
     "cognome": "MARINETTO",
     "team_attuale": "IND. FORNITURE MORO-C&G CAPITAL",
     "team_id": "IND_FORNITURE_MORO_C_G_CAPITAL",
-    "categoria": "ELI_M",
+    "categoria": "JUN_M",
     "genere": "M",
     "punti_totali": 3,
     "risultati": [
@@ -5152,7 +5207,7 @@
     "cognome": "GHIDINI",
     "team_attuale": "FDB SPORT CLUB",
     "team_id": "FDB_SPORT_CLUB",
-    "categoria": "ELI_M",
+    "categoria": "JUN_M",
     "genere": "M",
     "punti_totali": 2,
     "risultati": [
@@ -5175,7 +5230,7 @@
     "cognome": "VERONI",
     "team_attuale": "CYCLING TEAM NIAL NIZZOLI ALMO",
     "team_id": "CYCLING_TEAM_NIAL_NIZZOLI_ALMO",
-    "categoria": "ELI_M",
+    "categoria": "JUN_M",
     "genere": "M",
     "punti_totali": 3,
     "risultati": [
@@ -5209,9 +5264,9 @@
     "cognome": "MARTINEZ",
     "team_attuale": "TEAM VANGI TOMMASINI IL PIRATA",
     "team_id": "TEAM_VANGI_TOMMASINI_IL_PIRATA",
-    "categoria": "ELI_M",
+    "categoria": "JUN_M",
     "genere": "M",
-    "punti_totali": 45,
+    "punti_totali": 75,
     "risultati": [
       {
         "gara_id": "TROFEO_MICHELE_SCARPONI_DUE_GIORNI_2026-04-03",
@@ -5234,6 +5289,17 @@
         "punti_base": 15,
         "punti_effettivi": 15,
         "team": "TEAM VANGI TOMMASINI IL PIRATA"
+      },
+      {
+        "gara_id": "TROFEO_MICHELE_SCARPONI_DUE_GIORNI_2026-04-04",
+        "nome_gara": "TROFEO MICHELE SCARPONI - DUE GIORNI",
+        "data": "2026-04-04",
+        "posizione": 1,
+        "tipo_gara": "nazionale",
+        "moltiplicatore": 2,
+        "punti_base": 15,
+        "punti_effettivi": 30,
+        "team": "TEAM VANGI TOMMASINI IL PIRATA"
       }
     ]
   },
@@ -5243,9 +5309,9 @@
     "cognome": "VESCO",
     "team_attuale": "TEAM GUERRINI SENAGHESE",
     "team_id": "TEAM_GUERRINI_SENAGHESE",
-    "categoria": "ELI_M",
+    "categoria": "JUN_M",
     "genere": "M",
-    "punti_totali": 34,
+    "punti_totali": 58,
     "risultati": [
       {
         "gara_id": "TROFEO_MICHELE_SCARPONI_DUE_GIORNI_2026-04-03",
@@ -5279,6 +5345,17 @@
         "punti_base": 4,
         "punti_effettivi": 8,
         "team": "TEAM GUERRINI SENAGHESE"
+      },
+      {
+        "gara_id": "TROFEO_MICHELE_SCARPONI_DUE_GIORNI_2026-04-04",
+        "nome_gara": "TROFEO MICHELE SCARPONI - DUE GIORNI",
+        "data": "2026-04-04",
+        "posizione": 2,
+        "tipo_gara": "nazionale",
+        "moltiplicatore": 2,
+        "punti_base": 12,
+        "punti_effettivi": 24,
+        "team": "TEAM GUERRINI SENAGHESE"
       }
     ]
   },
@@ -5288,14 +5365,25 @@
     "cognome": "CACCHIO",
     "team_attuale": "TEAM GUERRINI SENAGHESE",
     "team_id": "TEAM_GUERRINI_SENAGHESE",
-    "categoria": "ELI_M",
+    "categoria": "JUN_M",
     "genere": "M",
-    "punti_totali": 10,
+    "punti_totali": 20,
     "risultati": [
       {
         "gara_id": "TROFEO_MICHELE_SCARPONI_DUE_GIORNI_2026-04-03",
         "nome_gara": "TROFEO MICHELE SCARPONI - DUE GIORNI",
         "data": "2026-04-03",
+        "posizione": 6,
+        "tipo_gara": "nazionale",
+        "moltiplicatore": 2,
+        "punti_base": 5,
+        "punti_effettivi": 10,
+        "team": "TEAM GUERRINI SENAGHESE"
+      },
+      {
+        "gara_id": "TROFEO_MICHELE_SCARPONI_DUE_GIORNI_2026-04-04",
+        "nome_gara": "TROFEO MICHELE SCARPONI - DUE GIORNI",
+        "data": "2026-04-04",
         "posizione": 6,
         "tipo_gara": "nazionale",
         "moltiplicatore": 2,
@@ -5311,9 +5399,9 @@
     "cognome": "ALESSIANI",
     "team_attuale": "POOL CANTU' GB TEAM A.S.D.",
     "team_id": "POOL_CANTU_GB_TEAM_A_S_D",
-    "categoria": "ELI_M",
+    "categoria": "JUN_M",
     "genere": "M",
-    "punti_totali": 12,
+    "punti_totali": 20,
     "risultati": [
       {
         "gara_id": "TROFEO_MICHELE_SCARPONI_DUE_GIORNI_2026-04-03",
@@ -5336,6 +5424,17 @@
         "punti_base": 4,
         "punti_effettivi": 4,
         "team": "POOL CANTU' GB TEAM A.S.D."
+      },
+      {
+        "gara_id": "TROFEO_MICHELE_SCARPONI_DUE_GIORNI_2026-04-04",
+        "nome_gara": "TROFEO MICHELE SCARPONI - DUE GIORNI",
+        "data": "2026-04-04",
+        "posizione": 7,
+        "tipo_gara": "nazionale",
+        "moltiplicatore": 2,
+        "punti_base": 4,
+        "punti_effettivi": 8,
+        "team": "POOL CANTU' GB TEAM A.S.D."
       }
     ]
   },
@@ -5345,14 +5444,25 @@
     "cognome": "POSADA",
     "team_attuale": "CPS PROFESSIONAL TEAM",
     "team_id": "CPS_PROFESSIONAL_TEAM",
-    "categoria": "ELI_M",
+    "categoria": "JUN_M",
     "genere": "M",
-    "punti_totali": 6,
+    "punti_totali": 12,
     "risultati": [
       {
         "gara_id": "TROFEO_MICHELE_SCARPONI_DUE_GIORNI_2026-04-03",
         "nome_gara": "TROFEO MICHELE SCARPONI - DUE GIORNI",
         "data": "2026-04-03",
+        "posizione": 8,
+        "tipo_gara": "nazionale",
+        "moltiplicatore": 2,
+        "punti_base": 3,
+        "punti_effettivi": 6,
+        "team": "CPS PROFESSIONAL TEAM"
+      },
+      {
+        "gara_id": "TROFEO_MICHELE_SCARPONI_DUE_GIORNI_2026-04-04",
+        "nome_gara": "TROFEO MICHELE SCARPONI - DUE GIORNI",
+        "data": "2026-04-04",
         "posizione": 8,
         "tipo_gara": "nazionale",
         "moltiplicatore": 2,
@@ -5368,9 +5478,9 @@
     "cognome": "CIANTI",
     "team_attuale": "POLISPORTIVA MONSUMMANESE",
     "team_id": "POLISPORTIVA_MONSUMMANESE",
-    "categoria": "ELI_M",
+    "categoria": "JUN_M",
     "genere": "M",
-    "punti_totali": 8,
+    "punti_totali": 12,
     "risultati": [
       {
         "gara_id": "TROFEO_MICHELE_SCARPONI_DUE_GIORNI_2026-04-03",
@@ -5393,6 +5503,17 @@
         "punti_base": 4,
         "punti_effettivi": 4,
         "team": "POLISPORTIVA MONSUMMANESE"
+      },
+      {
+        "gara_id": "TROFEO_MICHELE_SCARPONI_DUE_GIORNI_2026-04-04",
+        "nome_gara": "TROFEO MICHELE SCARPONI - DUE GIORNI",
+        "data": "2026-04-04",
+        "posizione": 9,
+        "tipo_gara": "nazionale",
+        "moltiplicatore": 2,
+        "punti_base": 2,
+        "punti_effettivi": 4,
+        "team": "POLISPORTIVA MONSUMMANESE"
       }
     ]
   },
@@ -5402,14 +5523,25 @@
     "cognome": "BANINI",
     "team_attuale": "TEAM CORATTI",
     "team_id": "TEAM_CORATTI",
-    "categoria": "ELI_M",
+    "categoria": "JUN_M",
     "genere": "M",
-    "punti_totali": 2,
+    "punti_totali": 4,
     "risultati": [
       {
         "gara_id": "TROFEO_MICHELE_SCARPONI_DUE_GIORNI_2026-04-03",
         "nome_gara": "TROFEO MICHELE SCARPONI - DUE GIORNI",
         "data": "2026-04-03",
+        "posizione": 10,
+        "tipo_gara": "nazionale",
+        "moltiplicatore": 2,
+        "punti_base": 1,
+        "punti_effettivi": 2,
+        "team": "TEAM CORATTI"
+      },
+      {
+        "gara_id": "TROFEO_MICHELE_SCARPONI_DUE_GIORNI_2026-04-04",
+        "nome_gara": "TROFEO MICHELE SCARPONI - DUE GIORNI",
+        "data": "2026-04-04",
         "posizione": 10,
         "tipo_gara": "nazionale",
         "moltiplicatore": 2,
@@ -5425,9 +5557,9 @@
     "cognome": "CINGOLANI",
     "team_attuale": "ETHICA ZERO24 CYCLING TEAM",
     "team_id": "ETHICA_ZERO24_CYCLING_TEAM",
-    "categoria": "ELI_M",
+    "categoria": "JUN_M",
     "genere": "M",
-    "punti_totali": 54,
+    "punti_totali": 84,
     "risultati": [
       {
         "gara_id": "TROFEO_MICHELE_SCARPONI_DUE_GIORNI_2026-04-03",
@@ -5450,6 +5582,17 @@
         "punti_base": 12,
         "punti_effettivi": 24,
         "team": "ETHICA ZERO24 CYCLING TEAM"
+      },
+      {
+        "gara_id": "TROFEO_MICHELE_SCARPONI_DUE_GIORNI_2026-04-04",
+        "nome_gara": "TROFEO MICHELE SCARPONI - DUE GIORNI",
+        "data": "2026-04-04",
+        "posizione": 1,
+        "tipo_gara": "nazionale",
+        "moltiplicatore": 2,
+        "punti_base": 15,
+        "punti_effettivi": 30,
+        "team": "ETHICA ZERO24 CYCLING TEAM"
       }
     ]
   },
@@ -5459,9 +5602,9 @@
     "cognome": "FERRARO",
     "team_attuale": "TEAM CORATTI",
     "team_id": "TEAM_CORATTI",
-    "categoria": "ELI_M",
+    "categoria": "JUN_M",
     "genere": "M",
-    "punti_totali": 36,
+    "punti_totali": 60,
     "risultati": [
       {
         "gara_id": "TROFEO_MICHELE_SCARPONI_DUE_GIORNI_2026-04-03",
@@ -5484,6 +5627,17 @@
         "punti_base": 12,
         "punti_effettivi": 12,
         "team": "TEAM CORATTI"
+      },
+      {
+        "gara_id": "TROFEO_MICHELE_SCARPONI_DUE_GIORNI_2026-04-04",
+        "nome_gara": "TROFEO MICHELE SCARPONI - DUE GIORNI",
+        "data": "2026-04-04",
+        "posizione": 2,
+        "tipo_gara": "nazionale",
+        "moltiplicatore": 2,
+        "punti_base": 12,
+        "punti_effettivi": 24,
+        "team": "TEAM CORATTI"
       }
     ]
   },
@@ -5493,9 +5647,9 @@
     "cognome": "BANDINI",
     "team_attuale": "TEAM GENERAL SYSTEM",
     "team_id": "TEAM_GENERAL_SYSTEM",
-    "categoria": "ELI_M",
+    "categoria": "JUN_M",
     "genere": "M",
-    "punti_totali": 22,
+    "punti_totali": 38,
     "risultati": [
       {
         "gara_id": "TROFEO_MICHELE_SCARPONI_DUE_GIORNI_2026-04-03",
@@ -5518,6 +5672,17 @@
         "punti_base": 6,
         "punti_effettivi": 6,
         "team": "TEAM GENERAL SYSTEM"
+      },
+      {
+        "gara_id": "TROFEO_MICHELE_SCARPONI_DUE_GIORNI_2026-04-04",
+        "nome_gara": "TROFEO MICHELE SCARPONI - DUE GIORNI",
+        "data": "2026-04-04",
+        "posizione": 4,
+        "tipo_gara": "nazionale",
+        "moltiplicatore": 2,
+        "punti_base": 8,
+        "punti_effettivi": 16,
+        "team": "TEAM GENERAL SYSTEM"
       }
     ]
   },
@@ -5527,14 +5692,25 @@
     "cognome": "NOVOLODSKII",
     "team_attuale": "PC BAIX EBRE TORTOSA",
     "team_id": "PC_BAIX_EBRE_TORTOSA",
-    "categoria": "ELI_M",
+    "categoria": "JUN_M",
     "genere": "M",
-    "punti_totali": 10,
+    "punti_totali": 20,
     "risultati": [
       {
         "gara_id": "TROFEO_MICHELE_SCARPONI_DUE_GIORNI_2026-04-03",
         "nome_gara": "TROFEO MICHELE SCARPONI - DUE GIORNI",
         "data": "2026-04-03",
+        "posizione": 6,
+        "tipo_gara": "nazionale",
+        "moltiplicatore": 2,
+        "punti_base": 5,
+        "punti_effettivi": 10,
+        "team": "PC BAIX EBRE TORTOSA"
+      },
+      {
+        "gara_id": "TROFEO_MICHELE_SCARPONI_DUE_GIORNI_2026-04-04",
+        "nome_gara": "TROFEO MICHELE SCARPONI - DUE GIORNI",
+        "data": "2026-04-04",
         "posizione": 6,
         "tipo_gara": "nazionale",
         "moltiplicatore": 2,
@@ -5550,9 +5726,9 @@
     "cognome": "BATTISTONI",
     "team_attuale": "POOL CANTU' GB TEAM A.S.D.",
     "team_id": "POOL_CANTU_GB_TEAM_A_S_D",
-    "categoria": "ELI_M",
+    "categoria": "JUN_M",
     "genere": "M",
-    "punti_totali": 38,
+    "punti_totali": 46,
     "risultati": [
       {
         "gara_id": "TROFEO_MICHELE_SCARPONI_DUE_GIORNI_2026-04-03",
@@ -5575,6 +5751,17 @@
         "punti_base": 15,
         "punti_effettivi": 30,
         "team": "POOL CANTU' GB TEAM A.S.D."
+      },
+      {
+        "gara_id": "TROFEO_MICHELE_SCARPONI_DUE_GIORNI_2026-04-04",
+        "nome_gara": "TROFEO MICHELE SCARPONI - DUE GIORNI",
+        "data": "2026-04-04",
+        "posizione": 7,
+        "tipo_gara": "nazionale",
+        "moltiplicatore": 2,
+        "punti_base": 4,
+        "punti_effettivi": 8,
+        "team": "POOL CANTU' GB TEAM A.S.D."
       }
     ]
   },
@@ -5584,14 +5771,25 @@
     "cognome": "DI",
     "team_attuale": "A.S.D. POSTUMIA 73 D.L. CICLISMO",
     "team_id": "A_S_D_POSTUMIA_73_D_L_CICLISMO",
-    "categoria": "ELI_M",
+    "categoria": "JUN_M",
     "genere": "M",
-    "punti_totali": 6,
+    "punti_totali": 12,
     "risultati": [
       {
         "gara_id": "TROFEO_MICHELE_SCARPONI_DUE_GIORNI_2026-04-03",
         "nome_gara": "TROFEO MICHELE SCARPONI - DUE GIORNI",
         "data": "2026-04-03",
+        "posizione": 8,
+        "tipo_gara": "nazionale",
+        "moltiplicatore": 2,
+        "punti_base": 3,
+        "punti_effettivi": 6,
+        "team": "A.S.D. POSTUMIA 73 D.L. CICLISMO"
+      },
+      {
+        "gara_id": "TROFEO_MICHELE_SCARPONI_DUE_GIORNI_2026-04-04",
+        "nome_gara": "TROFEO MICHELE SCARPONI - DUE GIORNI",
+        "data": "2026-04-04",
         "posizione": 8,
         "tipo_gara": "nazionale",
         "moltiplicatore": 2,
@@ -5607,14 +5805,25 @@
     "cognome": "BELLATO",
     "team_attuale": "TEAM NERI SOTTOLI LUCCHINI ENERGY",
     "team_id": "TEAM_NERI_SOTTOLI_LUCCHINI_ENERGY",
-    "categoria": "ELI_M",
+    "categoria": "JUN_M",
     "genere": "M",
-    "punti_totali": 4,
+    "punti_totali": 8,
     "risultati": [
       {
         "gara_id": "TROFEO_MICHELE_SCARPONI_DUE_GIORNI_2026-04-03",
         "nome_gara": "TROFEO MICHELE SCARPONI - DUE GIORNI",
         "data": "2026-04-03",
+        "posizione": 9,
+        "tipo_gara": "nazionale",
+        "moltiplicatore": 2,
+        "punti_base": 2,
+        "punti_effettivi": 4,
+        "team": "TEAM NERI SOTTOLI LUCCHINI ENERGY"
+      },
+      {
+        "gara_id": "TROFEO_MICHELE_SCARPONI_DUE_GIORNI_2026-04-04",
+        "nome_gara": "TROFEO MICHELE SCARPONI - DUE GIORNI",
+        "data": "2026-04-04",
         "posizione": 9,
         "tipo_gara": "nazionale",
         "moltiplicatore": 2,
@@ -5630,9 +5839,9 @@
     "cognome": "UGUCCIONI",
     "team_attuale": "TEAM GENERAL SYSTEM",
     "team_id": "TEAM_GENERAL_SYSTEM",
-    "categoria": "ELI_M",
+    "categoria": "JUN_M",
     "genere": "M",
-    "punti_totali": 22,
+    "punti_totali": 24,
     "risultati": [
       {
         "gara_id": "TROFEO_MICHELE_SCARPONI_DUE_GIORNI_2026-04-03",
@@ -5666,6 +5875,17 @@
         "punti_base": 5,
         "punti_effettivi": 5,
         "team": "TEAM GENERAL SYSTEM"
+      },
+      {
+        "gara_id": "TROFEO_MICHELE_SCARPONI_DUE_GIORNI_2026-04-04",
+        "nome_gara": "TROFEO MICHELE SCARPONI - DUE GIORNI",
+        "data": "2026-04-04",
+        "posizione": 10,
+        "tipo_gara": "nazionale",
+        "moltiplicatore": 2,
+        "punti_base": 1,
+        "punti_effettivi": 2,
+        "team": "TEAM GENERAL SYSTEM"
       }
     ]
   },
@@ -5675,7 +5895,7 @@
     "cognome": "POLIUSHKO",
     "team_attuale": "VELEKA TEAM",
     "team_id": "VELEKA_TEAM",
-    "categoria": "ELI_M",
+    "categoria": "JUN_M",
     "genere": "M",
     "punti_totali": 20,
     "risultati": [
@@ -5698,7 +5918,7 @@
     "cognome": "MORETTI",
     "team_attuale": "TEAM NERI SOTTOLI LUCCHINI ENERGY",
     "team_id": "TEAM_NERI_SOTTOLI_LUCCHINI_ENERGY",
-    "categoria": "ELI_M",
+    "categoria": "JUN_M",
     "genere": "M",
     "punti_totali": 19,
     "risultati": [
@@ -5732,7 +5952,7 @@
     "cognome": "RENZI",
     "team_attuale": "TEAM GENERAL SYSTEM",
     "team_id": "TEAM_GENERAL_SYSTEM",
-    "categoria": "ELI_M",
+    "categoria": "JUN_M",
     "genere": "M",
     "punti_totali": 18,
     "risultati": [
@@ -5766,7 +5986,7 @@
     "cognome": "PALADINI",
     "team_attuale": "CPS PROFESSIONAL TEAM",
     "team_id": "CPS_PROFESSIONAL_TEAM",
-    "categoria": "ELI_M",
+    "categoria": "JUN_M",
     "genere": "M",
     "punti_totali": 11,
     "risultati": [
@@ -5800,7 +6020,7 @@
     "cognome": "PINNA",
     "team_attuale": "SIDERMEC - SLP",
     "team_id": "SIDERMEC_SLP",
-    "categoria": "ELI_M",
+    "categoria": "JUN_M",
     "genere": "M",
     "punti_totali": 6,
     "risultati": [
@@ -5823,7 +6043,7 @@
     "cognome": "FERRARI",
     "team_attuale": "POOL CANTU' GB TEAM A.S.D.",
     "team_id": "POOL_CANTU_GB_TEAM_A_S_D",
-    "categoria": "ELI_M",
+    "categoria": "JUN_M",
     "genere": "M",
     "punti_totali": 22,
     "risultati": [
@@ -5868,7 +6088,7 @@
     "cognome": "ARNOLDI",
     "team_attuale": "TEAM ECOTEK ZERO24",
     "team_id": "TEAM_ECOTEK_ZERO24",
-    "categoria": "ELI_M",
+    "categoria": "JUN_M",
     "genere": "M",
     "punti_totali": 24,
     "risultati": [
@@ -5902,7 +6122,7 @@
     "cognome": "CHINELLATO",
     "team_attuale": "TRIS STAMPI FIOR DI GRANO",
     "team_id": "TRIS_STAMPI_FIOR_DI_GRANO",
-    "categoria": "ELI_M",
+    "categoria": "JUN_M",
     "genere": "M",
     "punti_totali": 10,
     "risultati": [
@@ -5925,7 +6145,7 @@
     "cognome": "MARZOCCHI",
     "team_attuale": "BIESSE - CARRERA - PREMAC",
     "team_id": "BIESSE_CARRERA_PREMAC",
-    "categoria": "ELI_M",
+    "categoria": "JUN_M",
     "genere": "M",
     "punti_totali": 6,
     "risultati": [
@@ -5948,7 +6168,7 @@
     "cognome": "CAVATORTA",
     "team_attuale": "GRUPPO SPORTIVO PARMENSE",
     "team_id": "GRUPPO_SPORTIVO_PARMENSE",
-    "categoria": "ELI_M",
+    "categoria": "JUN_M",
     "genere": "M",
     "punti_totali": 5,
     "risultati": [
@@ -5971,7 +6191,7 @@
     "cognome": "FIUMARA",
     "team_attuale": "ITALIA NUOVA BOLOGNA",
     "team_id": "ITALIA_NUOVA_BOLOGNA",
-    "categoria": "ELI_M",
+    "categoria": "JUN_M",
     "genere": "M",
     "punti_totali": 9,
     "risultati": [
@@ -6005,7 +6225,7 @@
     "cognome": "BRAMBILLA",
     "team_attuale": "POOL CANTU' GB TEAM A.S.D.",
     "team_id": "POOL_CANTU_GB_TEAM_A_S_D",
-    "categoria": "ELI_M",
+    "categoria": "JUN_M",
     "genere": "M",
     "punti_totali": 3,
     "risultati": [
@@ -6028,7 +6248,7 @@
     "cognome": "VEGLIA",
     "team_attuale": "POOL CANTU' GB TEAM A.S.D.",
     "team_id": "POOL_CANTU_GB_TEAM_A_S_D",
-    "categoria": "ELI_M",
+    "categoria": "JUN_M",
     "genere": "M",
     "punti_totali": 2,
     "risultati": [
@@ -6051,7 +6271,7 @@
     "cognome": "FIORINI",
     "team_attuale": "ETHICA ZERO24 CYCLING TEAM",
     "team_id": "ETHICA_ZERO24_CYCLING_TEAM",
-    "categoria": "ELI_M",
+    "categoria": "JUN_M",
     "genere": "M",
     "punti_totali": 1,
     "risultati": [
@@ -6074,7 +6294,7 @@
     "cognome": "TARALLO",
     "team_attuale": "TEAM VANGI TOMMASINI IL PIRATA",
     "team_id": "TEAM_VANGI_TOMMASINI_IL_PIRATA",
-    "categoria": "ELI_M",
+    "categoria": "JUN_M",
     "genere": "M",
     "punti_totali": 32,
     "risultati": [
@@ -6119,7 +6339,7 @@
     "cognome": "MELONI",
     "team_attuale": "TEAM VANGI TOMMASINI IL PIRATA",
     "team_id": "TEAM_VANGI_TOMMASINI_IL_PIRATA",
-    "categoria": "ELI_M",
+    "categoria": "JUN_M",
     "genere": "M",
     "punti_totali": 47,
     "risultati": [
@@ -6175,7 +6395,7 @@
     "cognome": "CERAME",
     "team_attuale": "TEAM NERI SOTTOLI LUCCHINI ENERGY",
     "team_id": "TEAM_NERI_SOTTOLI_LUCCHINI_ENERGY",
-    "categoria": "ELI_M",
+    "categoria": "JUN_M",
     "genere": "M",
     "punti_totali": 8,
     "risultati": [
@@ -6198,7 +6418,7 @@
     "cognome": "TOMASSINI",
     "team_attuale": "TEAM VANGI TOMMASINI IL PIRATA",
     "team_id": "TEAM_VANGI_TOMMASINI_IL_PIRATA",
-    "categoria": "ELI_M",
+    "categoria": "JUN_M",
     "genere": "M",
     "punti_totali": 14,
     "risultati": [
@@ -6232,7 +6452,7 @@
     "cognome": "PARIS",
     "team_attuale": "TEAM CORATTI",
     "team_id": "TEAM_CORATTI",
-    "categoria": "ELI_M",
+    "categoria": "JUN_M",
     "genere": "M",
     "punti_totali": 45,
     "risultati": [
@@ -6266,7 +6486,7 @@
     "cognome": "ROGGI",
     "team_attuale": "CPS PROFESSIONAL TEAM",
     "team_id": "CPS_PROFESSIONAL_TEAM",
-    "categoria": "ELI_M",
+    "categoria": "JUN_M",
     "genere": "M",
     "punti_totali": 10,
     "risultati": [
@@ -6289,7 +6509,7 @@
     "cognome": "MICANTI",
     "team_attuale": "TRIS STAMPI FIOR DI GRANO",
     "team_id": "TRIS_STAMPI_FIOR_DI_GRANO",
-    "categoria": "ELI_M",
+    "categoria": "JUN_M",
     "genere": "M",
     "punti_totali": 5,
     "risultati": [
@@ -6312,7 +6532,7 @@
     "cognome": "GRAZIANI",
     "team_attuale": "TEAM CORATTI",
     "team_id": "TEAM_CORATTI",
-    "categoria": "ELI_M",
+    "categoria": "JUN_M",
     "genere": "M",
     "punti_totali": 3,
     "risultati": [
@@ -6335,7 +6555,7 @@
     "cognome": "POLIUSHKO",
     "team_attuale": "VELEKA TEAM",
     "team_id": "VELEKA_TEAM",
-    "categoria": "ELI_M",
+    "categoria": "JUN_M",
     "genere": "M",
     "punti_totali": 2,
     "risultati": [
@@ -6358,7 +6578,7 @@
     "cognome": "CARUSO",
     "team_attuale": "CPS PROFESSIONAL TEAM",
     "team_id": "CPS_PROFESSIONAL_TEAM",
-    "categoria": "ELI_M",
+    "categoria": "JUN_M",
     "genere": "M",
     "punti_totali": 1,
     "risultati": [
@@ -6381,7 +6601,7 @@
     "cognome": "STETSIV",
     "team_attuale": "NAZIONALE UCRAINA",
     "team_id": "NAZIONALE_UCRAINA",
-    "categoria": "ELI_M",
+    "categoria": "JUN_M",
     "genere": "M",
     "punti_totali": 10,
     "risultati": [
@@ -6404,7 +6624,7 @@
     "cognome": "SANI",
     "team_attuale": "POLISPORTIVA MONSUMMANESE",
     "team_id": "POLISPORTIVA_MONSUMMANESE",
-    "categoria": "ELI_M",
+    "categoria": "JUN_M",
     "genere": "M",
     "punti_totali": 8,
     "risultati": [
@@ -6427,7 +6647,7 @@
     "cognome": "SERINI",
     "team_attuale": "ASD PEDALE CASALESE ARMOFER",
     "team_id": "ASD_PEDALE_CASALESE_ARMOFER",
-    "categoria": "ELI_M",
+    "categoria": "JUN_M",
     "genere": "M",
     "punti_totali": 6,
     "risultati": [
@@ -6450,7 +6670,7 @@
     "cognome": "MUGNAI",
     "team_attuale": "POLISPORTIVA MONSUMMANESE",
     "team_id": "POLISPORTIVA_MONSUMMANESE",
-    "categoria": "ELI_M",
+    "categoria": "JUN_M",
     "genere": "M",
     "punti_totali": 5,
     "risultati": [
@@ -6473,7 +6693,7 @@
     "cognome": "ASTORRI",
     "team_attuale": "DAL RISO AL ROSA",
     "team_id": "DAL_RISO_AL_ROSA",
-    "categoria": "ELI_M",
+    "categoria": "JUN_M",
     "genere": "M",
     "punti_totali": 4,
     "risultati": [
@@ -6496,7 +6716,7 @@
     "cognome": "COMETTO",
     "team_attuale": "U.C. PIASCO",
     "team_id": "U_C_PIASCO",
-    "categoria": "ELI_M",
+    "categoria": "JUN_M",
     "genere": "M",
     "punti_totali": 3,
     "risultati": [
@@ -6519,7 +6739,7 @@
     "cognome": "RADRIZZANI",
     "team_attuale": "CANTURINO 1902 A.S.D.",
     "team_id": "CANTURINO_1902_A_S_D",
-    "categoria": "ELI_M",
+    "categoria": "JUN_M",
     "genere": "M",
     "punti_totali": 2,
     "risultati": [
@@ -6542,7 +6762,7 @@
     "cognome": "MARCHESE",
     "team_attuale": "CASANO",
     "team_id": "CASANO",
-    "categoria": "ELI_M",
+    "categoria": "JUN_M",
     "genere": "M",
     "punti_totali": 1,
     "risultati": [
@@ -6565,7 +6785,7 @@
     "cognome": "BORDIGNON",
     "team_attuale": "AUTOZAI-CONTRI",
     "team_id": "AUTOZAI_CONTRI",
-    "categoria": "ELI_M",
+    "categoria": "JUN_M",
     "genere": "M",
     "punti_totali": 6,
     "risultati": [
@@ -6588,7 +6808,7 @@
     "cognome": "PADOVAN",
     "team_attuale": "ACCADEMIA CICLISTICA",
     "team_id": "ACCADEMIA_CICLISTICA",
-    "categoria": "ELI_M",
+    "categoria": "JUN_M",
     "genere": "M",
     "punti_totali": 25,
     "risultati": [
@@ -6622,7 +6842,7 @@
     "cognome": "BENOZZATO",
     "team_attuale": "ACCADEMIA CICLISTICA",
     "team_id": "ACCADEMIA_CICLISTICA",
-    "categoria": "ELI_M",
+    "categoria": "JUN_M",
     "genere": "M",
     "punti_totali": 17,
     "risultati": [
@@ -6656,7 +6876,7 @@
     "cognome": "GIROTTO",
     "team_attuale": "IND. FORNITURE MORO-C&G CAPITAL",
     "team_id": "IND_FORNITURE_MORO_C_G_CAPITAL",
-    "categoria": "ELI_M",
+    "categoria": "JUN_M",
     "genere": "M",
     "punti_totali": 4,
     "risultati": [
@@ -6679,7 +6899,7 @@
     "cognome": "OCCOFFER",
     "team_attuale": "U.S. MONTECORONA",
     "team_id": "U_S_MONTECORONA",
-    "categoria": "ELI_M",
+    "categoria": "JUN_M",
     "genere": "M",
     "punti_totali": 3,
     "risultati": [
@@ -6702,7 +6922,7 @@
     "cognome": "BATTISTUTTA",
     "team_attuale": "GOTTARDO GIOCHI CANEVA",
     "team_id": "GOTTARDO_GIOCHI_CANEVA",
-    "categoria": "ELI_M",
+    "categoria": "JUN_M",
     "genere": "M",
     "punti_totali": 2,
     "risultati": [
@@ -6725,7 +6945,7 @@
     "cognome": "MARTINELLI",
     "team_attuale": "BUSTESE OLONIA A.S.D.",
     "team_id": "BUSTESE_OLONIA_A_S_D",
-    "categoria": "ELI_M",
+    "categoria": "JUN_M",
     "genere": "M",
     "punti_totali": 8,
     "risultati": [
@@ -6748,7 +6968,7 @@
     "cognome": "CAMPAGNOLO",
     "team_attuale": "BORGO MOLINO-VIGNA FIORITA",
     "team_id": "BORGO_MOLINO_VIGNA_FIORITA",
-    "categoria": "ELI_M",
+    "categoria": "JUN_M",
     "genere": "M",
     "punti_totali": 6,
     "risultati": [
@@ -6771,7 +6991,7 @@
     "cognome": "AGNINI",
     "team_attuale": "TEAM VANGI TOMMASINI IL PIRATA",
     "team_id": "TEAM_VANGI_TOMMASINI_IL_PIRATA",
-    "categoria": "ELI_M",
+    "categoria": "JUN_M",
     "genere": "M",
     "punti_totali": 2,
     "risultati": [
@@ -6794,7 +7014,7 @@
     "cognome": "MITORAJ",
     "team_attuale": "SALUS CICLISTICA SEREGNO DE ROSA",
     "team_id": "SALUS_CICLISTICA_SEREGNO_DE_ROSA",
-    "categoria": "ELI_M",
+    "categoria": "JUN_M",
     "genere": "M",
     "punti_totali": 1,
     "risultati": [
@@ -6817,7 +7037,7 @@
     "cognome": "GARGIULO",
     "team_attuale": "CPS PROFESSIONAL TEAM",
     "team_id": "CPS_PROFESSIONAL_TEAM",
-    "categoria": "ELI_M",
+    "categoria": "JUN_M",
     "genere": "M",
     "punti_totali": 6,
     "risultati": [
@@ -6840,7 +7060,7 @@
     "cognome": "PUCCI",
     "team_attuale": "MASTROMARCO FC NIBALI",
     "team_id": "MASTROMARCO_FC_NIBALI",
-    "categoria": "ELI_M",
+    "categoria": "JUN_M",
     "genere": "M",
     "punti_totali": 5,
     "risultati": [
@@ -6863,7 +7083,7 @@
     "cognome": "FABBRI",
     "team_attuale": "TEAM VANGI TOMMASINI IL PIRATA",
     "team_id": "TEAM_VANGI_TOMMASINI_IL_PIRATA",
-    "categoria": "ELI_M",
+    "categoria": "JUN_M",
     "genere": "M",
     "punti_totali": 2,
     "risultati": [
@@ -6886,7 +7106,7 @@
     "cognome": "ARMANASCO",
     "team_attuale": "CICLISTICA TREVIGLIESE",
     "team_id": "CICLISTICA_TREVIGLIESE",
-    "categoria": "ELI_M",
+    "categoria": "JUN_M",
     "genere": "M",
     "punti_totali": 24,
     "risultati": [
@@ -6909,7 +7129,7 @@
     "cognome": "MURRO",
     "team_attuale": "LIBERTAS CERESETTO",
     "team_id": "LIBERTAS_CERESETTO",
-    "categoria": "ELI_M",
+    "categoria": "JUN_M",
     "genere": "M",
     "punti_totali": 20,
     "risultati": [
@@ -6932,7 +7152,7 @@
     "cognome": "MAKSIMOVIC",
     "team_attuale": "POGI TEAM UAE GENERALI",
     "team_id": "POGI_TEAM_UAE_GENERALI",
-    "categoria": "ELI_M",
+    "categoria": "JUN_M",
     "genere": "M",
     "punti_totali": 16,
     "risultati": [
@@ -6955,7 +7175,7 @@
     "cognome": "AGOSTINO",
     "team_attuale": "CICLISTICA TREVIGLIESE",
     "team_id": "CICLISTICA_TREVIGLIESE",
-    "categoria": "ELI_M",
+    "categoria": "JUN_M",
     "genere": "M",
     "punti_totali": 12,
     "risultati": [
@@ -6978,7 +7198,7 @@
     "cognome": "RIGON",
     "team_attuale": "FAIZANE' CSZ SANDRIGO BIKE",
     "team_id": "FAIZANE_CSZ_SANDRIGO_BIKE",
-    "categoria": "ELI_M",
+    "categoria": "JUN_M",
     "genere": "M",
     "punti_totali": 10,
     "risultati": [
@@ -7001,7 +7221,7 @@
     "cognome": "ROSSETTO",
     "team_attuale": "BORGO MOLINO-VIGNA FIORITA",
     "team_id": "BORGO_MOLINO_VIGNA_FIORITA",
-    "categoria": "ELI_M",
+    "categoria": "JUN_M",
     "genere": "M",
     "punti_totali": 2,
     "risultati": [
@@ -7024,7 +7244,7 @@
     "cognome": "MELINI",
     "team_attuale": "TEAM GENERAL SYSTEM",
     "team_id": "TEAM_GENERAL_SYSTEM",
-    "categoria": "ELI_M",
+    "categoria": "JUN_M",
     "genere": "M",
     "punti_totali": 3,
     "risultati": [
@@ -7047,7 +7267,7 @@
     "cognome": "BOLZONI",
     "team_attuale": "CYCLING TEAM NIAL NIZZOLI ALMO",
     "team_id": "CYCLING_TEAM_NIAL_NIZZOLI_ALMO",
-    "categoria": "ELI_M",
+    "categoria": "JUN_M",
     "genere": "M",
     "punti_totali": 1,
     "risultati": [
@@ -7070,7 +7290,7 @@
     "cognome": "COLOSIO",
     "team_attuale": "TEAM GUERRINI SENAGHESE",
     "team_id": "TEAM_GUERRINI_SENAGHESE",
-    "categoria": "ELI_M",
+    "categoria": "JUN_M",
     "genere": "M",
     "punti_totali": 15,
     "risultati": [
@@ -7093,7 +7313,7 @@
     "cognome": "DALLA",
     "team_attuale": "FDB SPORT CLUB",
     "team_id": "FDB_SPORT_CLUB",
-    "categoria": "ELI_M",
+    "categoria": "JUN_M",
     "genere": "M",
     "punti_totali": 10,
     "risultati": [
@@ -7116,7 +7336,7 @@
     "cognome": "PARIANOTTI",
     "team_attuale": "G.S.GIOVANI GIUSSANESI A.S.D.",
     "team_id": "G_S_GIOVANI_GIUSSANESI_A_S_D",
-    "categoria": "ELI_M",
+    "categoria": "JUN_M",
     "genere": "M",
     "punti_totali": 8,
     "risultati": [
@@ -7139,7 +7359,7 @@
     "cognome": "ORENGO",
     "team_attuale": "S.C. ROMANESE ASD",
     "team_id": "S_C_ROMANESE_ASD",
-    "categoria": "ELI_M",
+    "categoria": "JUN_M",
     "genere": "M",
     "punti_totali": 6,
     "risultati": [
@@ -7162,7 +7382,7 @@
     "cognome": "MAZZOLENI",
     "team_attuale": "TEAM GUERRINI SENAGHESE",
     "team_id": "TEAM_GUERRINI_SENAGHESE",
-    "categoria": "ELI_M",
+    "categoria": "JUN_M",
     "genere": "M",
     "punti_totali": 5,
     "risultati": [
@@ -7185,7 +7405,7 @@
     "cognome": "PRIMAVESI",
     "team_attuale": "BUSTESE OLONIA A.S.D.",
     "team_id": "BUSTESE_OLONIA_A_S_D",
-    "categoria": "ELI_M",
+    "categoria": "JUN_M",
     "genere": "M",
     "punti_totali": 4,
     "risultati": [
@@ -7208,7 +7428,7 @@
     "cognome": "BOSIO",
     "team_attuale": "CICLISTICA TREVIGLIESE",
     "team_id": "CICLISTICA_TREVIGLIESE",
-    "categoria": "ELI_M",
+    "categoria": "JUN_M",
     "genere": "M",
     "punti_totali": 3,
     "risultati": [
@@ -7231,7 +7451,7 @@
     "cognome": "ZOCO",
     "team_attuale": "BUSTESE OLONIA A.S.D.",
     "team_id": "BUSTESE_OLONIA_A_S_D",
-    "categoria": "ELI_M",
+    "categoria": "JUN_M",
     "genere": "M",
     "punti_totali": 1,
     "risultati": [
@@ -7254,7 +7474,7 @@
     "cognome": "D'AIUTO",
     "team_attuale": "GCD PEDALE MANZANESE",
     "team_id": "GCD_PEDALE_MANZANESE",
-    "categoria": "ELI_M",
+    "categoria": "AL_M",
     "genere": "M",
     "punti_totali": 15,
     "risultati": [
@@ -7277,7 +7497,7 @@
     "cognome": "BIRDAHAN",
     "team_attuale": "BORGO MOLINO-VIGNA FIORITA",
     "team_id": "BORGO_MOLINO_VIGNA_FIORITA",
-    "categoria": "ELI_M",
+    "categoria": "AL_M",
     "genere": "M",
     "punti_totali": 12,
     "risultati": [
@@ -7300,7 +7520,7 @@
     "cognome": "LIBERTANI",
     "team_attuale": "BORGO MOLINO-VIGNA FIORITA",
     "team_id": "BORGO_MOLINO_VIGNA_FIORITA",
-    "categoria": "ELI_M",
+    "categoria": "AL_M",
     "genere": "M",
     "punti_totali": 19,
     "risultati": [
@@ -7345,7 +7565,7 @@
     "cognome": "CASETTA",
     "team_attuale": "A.S.D. SACILESE",
     "team_id": "A_S_D_SACILESE",
-    "categoria": "ELI_M",
+    "categoria": "AL_M",
     "genere": "M",
     "punti_totali": 22,
     "risultati": [
@@ -7390,7 +7610,7 @@
     "cognome": "CASCIO",
     "team_attuale": "LIBERTAS CERESETTO",
     "team_id": "LIBERTAS_CERESETTO",
-    "categoria": "ELI_M",
+    "categoria": "AL_M",
     "genere": "M",
     "punti_totali": 6,
     "risultati": [
@@ -7413,7 +7633,7 @@
     "cognome": "FAMEA",
     "team_attuale": "CICLISTICA PIERIS",
     "team_id": "CICLISTICA_PIERIS",
-    "categoria": "ELI_M",
+    "categoria": "AL_M",
     "genere": "M",
     "punti_totali": 5,
     "risultati": [
@@ -7436,7 +7656,7 @@
     "cognome": "COLAUTTI",
     "team_attuale": "A.S.D. PEDALE RONCHESE",
     "team_id": "A_S_D_PEDALE_RONCHESE",
-    "categoria": "ELI_M",
+    "categoria": "AL_M",
     "genere": "M",
     "punti_totali": 4,
     "risultati": [
@@ -7459,7 +7679,7 @@
     "cognome": "NOSELLA",
     "team_attuale": "SOC. SPORT.SANFIORESE",
     "team_id": "SOC_SPORT_SANFIORESE",
-    "categoria": "ELI_M",
+    "categoria": "AL_M",
     "genere": "M",
     "punti_totali": 3,
     "risultati": [
@@ -7482,7 +7702,7 @@
     "cognome": "CARCANGIU",
     "team_attuale": "CICLISTICA BUJESE - DIGAS",
     "team_id": "CICLISTICA_BUJESE_DIGAS",
-    "categoria": "ELI_M",
+    "categoria": "AL_M",
     "genere": "M",
     "punti_totali": 2,
     "risultati": [
@@ -7505,7 +7725,7 @@
     "cognome": "MAZZOCCATO",
     "team_attuale": "ACCADEMIA CICLISTICA",
     "team_id": "ACCADEMIA_CICLISTICA",
-    "categoria": "ELI_M",
+    "categoria": "AL_M",
     "genere": "M",
     "punti_totali": 1,
     "risultati": [
@@ -7528,7 +7748,7 @@
     "cognome": "PREVISDOMINI",
     "team_attuale": "E' VALTELLINA PEDALE MORBEGNESE",
     "team_id": "E_VALTELLINA_PEDALE_MORBEGNESE",
-    "categoria": "ELI_M",
+    "categoria": "AL_M",
     "genere": "M",
     "punti_totali": 15,
     "risultati": [
@@ -7551,7 +7771,7 @@
     "cognome": "LONGO",
     "team_attuale": "ALBA OROBIA - BIASSONO",
     "team_id": "ALBA_OROBIA_BIASSONO",
-    "categoria": "ELI_M",
+    "categoria": "AL_M",
     "genere": "M",
     "punti_totali": 24,
     "risultati": [
@@ -7585,7 +7805,7 @@
     "cognome": "SOLDARINI",
     "team_attuale": "POOL CANTU' - SOVICO - GB TEAM",
     "team_id": "POOL_CANTU_SOVICO_GB_TEAM",
-    "categoria": "ELI_M",
+    "categoria": "AL_M",
     "genere": "M",
     "punti_totali": 13,
     "risultati": [
@@ -7619,7 +7839,7 @@
     "cognome": "RESCA",
     "team_attuale": "S.C. ROMANESE ASD",
     "team_id": "S_C_ROMANESE_ASD",
-    "categoria": "ELI_M",
+    "categoria": "AL_M",
     "genere": "M",
     "punti_totali": 26,
     "risultati": [
@@ -7664,7 +7884,7 @@
     "cognome": "GUALTIERI",
     "team_attuale": "SALUS CICLISTICA SEREGNO DE ROSA",
     "team_id": "SALUS_CICLISTICA_SEREGNO_DE_ROSA",
-    "categoria": "ELI_M",
+    "categoria": "AL_M",
     "genere": "M",
     "punti_totali": 7,
     "risultati": [
@@ -7698,7 +7918,7 @@
     "cognome": "MATTEINI",
     "team_attuale": "ALBA OROBIA - BIASSONO",
     "team_id": "ALBA_OROBIA_BIASSONO",
-    "categoria": "ELI_M",
+    "categoria": "AL_M",
     "genere": "M",
     "punti_totali": 20,
     "risultati": [
@@ -7732,7 +7952,7 @@
     "cognome": "CASALICCHIO",
     "team_attuale": "MADONNA DI CAMPAGNA",
     "team_id": "MADONNA_DI_CAMPAGNA",
-    "categoria": "ELI_M",
+    "categoria": "AL_M",
     "genere": "M",
     "punti_totali": 9,
     "risultati": [
@@ -7766,7 +7986,7 @@
     "cognome": "LANTERMINO",
     "team_attuale": "VIGOR - CYCLING TEAM",
     "team_id": "VIGOR_CYCLING_TEAM",
-    "categoria": "ELI_M",
+    "categoria": "AL_M",
     "genere": "M",
     "punti_totali": 3,
     "risultati": [
@@ -7789,7 +8009,7 @@
     "cognome": "MARCONI",
     "team_attuale": "POOL CANTU' - SOVICO - GB TEAM",
     "team_id": "POOL_CANTU_SOVICO_GB_TEAM",
-    "categoria": "ELI_M",
+    "categoria": "AL_M",
     "genere": "M",
     "punti_totali": 20,
     "risultati": [
@@ -7834,7 +8054,7 @@
     "cognome": "PHILIPPOT",
     "team_attuale": "G.S. LUPI VALLE D'AOSTA",
     "team_id": "G_S_LUPI_VALLE_D_AOSTA",
-    "categoria": "ELI_M",
+    "categoria": "AL_M",
     "genere": "M",
     "punti_totali": 2,
     "risultati": [
@@ -7868,7 +8088,7 @@
     "cognome": "ONIDA",
     "team_attuale": "U.C. GUSPINI A.S.D.",
     "team_id": "U_C_GUSPINI_A_S_D",
-    "categoria": "ELI_M",
+    "categoria": "AL_M",
     "genere": "M",
     "punti_totali": 15,
     "risultati": [
@@ -7891,7 +8111,7 @@
     "cognome": "MEZZANO",
     "team_attuale": "S.C. PATTADA",
     "team_id": "S_C_PATTADA",
-    "categoria": "ELI_M",
+    "categoria": "AL_M",
     "genere": "M",
     "punti_totali": 12,
     "risultati": [
@@ -7914,7 +8134,7 @@
     "cognome": "PIRAS",
     "team_attuale": "FABIO ARU ACADEMY S.R.L. A.R.L.",
     "team_id": "FABIO_ARU_ACADEMY_S_R_L_A_R_L",
-    "categoria": "ELI_M",
+    "categoria": "AL_M",
     "genere": "M",
     "punti_totali": 10,
     "risultati": [
@@ -7937,7 +8157,7 @@
     "cognome": "PIGA",
     "team_attuale": "FABIO ARU ACADEMY S.R.L. A.R.L.",
     "team_id": "FABIO_ARU_ACADEMY_S_R_L_A_R_L",
-    "categoria": "ELI_M",
+    "categoria": "AL_M",
     "genere": "M",
     "punti_totali": 8,
     "risultati": [
@@ -7960,7 +8180,7 @@
     "cognome": "CARGNELUTTI",
     "team_attuale": "JAM'S BIKE TEAM BUJA",
     "team_id": "JAM_S_BIKE_TEAM_BUJA",
-    "categoria": "ELI_M",
+    "categoria": "AL_M",
     "genere": "M",
     "punti_totali": 6,
     "risultati": [
@@ -7983,7 +8203,7 @@
     "cognome": "PISTIS",
     "team_attuale": "SESTU BIKE A.S.D.",
     "team_id": "SESTU_BIKE_A_S_D",
-    "categoria": "ELI_M",
+    "categoria": "AL_M",
     "genere": "M",
     "punti_totali": 5,
     "risultati": [
@@ -8006,7 +8226,7 @@
     "cognome": "URSELLA",
     "team_attuale": "JAM'S BIKE TEAM BUJA",
     "team_id": "JAM_S_BIKE_TEAM_BUJA",
-    "categoria": "ELI_M",
+    "categoria": "AL_M",
     "genere": "M",
     "punti_totali": 4,
     "risultati": [
@@ -8029,7 +8249,7 @@
     "cognome": "GALASSO",
     "team_attuale": "JAM'S BIKE TEAM BUJA",
     "team_id": "JAM_S_BIKE_TEAM_BUJA",
-    "categoria": "ELI_M",
+    "categoria": "AL_M",
     "genere": "M",
     "punti_totali": 3,
     "risultati": [
@@ -8052,7 +8272,7 @@
     "cognome": "RUGGERI",
     "team_attuale": "POOL BIKE SERRAMANNA",
     "team_id": "POOL_BIKE_SERRAMANNA",
-    "categoria": "ELI_M",
+    "categoria": "AL_M",
     "genere": "M",
     "punti_totali": 2,
     "risultati": [
@@ -8075,7 +8295,7 @@
     "cognome": "CAPPEDDU",
     "team_attuale": "CRAZY WHEELS - CYCLING ACADEMY",
     "team_id": "CRAZY_WHEELS_CYCLING_ACADEMY",
-    "categoria": "ELI_M",
+    "categoria": "AL_M",
     "genere": "M",
     "punti_totali": 1,
     "risultati": [
@@ -8098,7 +8318,7 @@
     "cognome": "SCOTTONI",
     "team_attuale": "PIESSE CYCLING TEAM",
     "team_id": "PIESSE_CYCLING_TEAM",
-    "categoria": "ELI_M",
+    "categoria": "AL_M",
     "genere": "M",
     "punti_totali": 15,
     "risultati": [
@@ -8121,7 +8341,7 @@
     "cognome": "ARTIGLIERI",
     "team_attuale": "TEAM VALDINIEVOLE A.S.D.",
     "team_id": "TEAM_VALDINIEVOLE_A_S_D",
-    "categoria": "ELI_M",
+    "categoria": "AL_M",
     "genere": "M",
     "punti_totali": 12,
     "risultati": [
@@ -8144,7 +8364,7 @@
     "cognome": "FROSINI",
     "team_attuale": "AC F. BESSI CALENZANO DONORATICO",
     "team_id": "AC_F_BESSI_CALENZANO_DONORATICO",
-    "categoria": "ELI_M",
+    "categoria": "AL_M",
     "genere": "M",
     "punti_totali": 10,
     "risultati": [
@@ -8167,7 +8387,7 @@
     "cognome": "MORI",
     "team_attuale": "G.S. IPERFINISH STABBIA",
     "team_id": "G_S_IPERFINISH_STABBIA",
-    "categoria": "ELI_M",
+    "categoria": "AL_M",
     "genere": "M",
     "punti_totali": 8,
     "risultati": [
@@ -8190,7 +8410,7 @@
     "cognome": "CERONE",
     "team_attuale": "TEAM VALDINIEVOLE A.S.D.",
     "team_id": "TEAM_VALDINIEVOLE_A_S_D",
-    "categoria": "ELI_M",
+    "categoria": "AL_M",
     "genere": "M",
     "punti_totali": 6,
     "risultati": [
@@ -8213,7 +8433,7 @@
     "cognome": "LONGARI",
     "team_attuale": "U.C. CITTA' DI CASTELLO A.S.D.",
     "team_id": "U_C_CITTA_DI_CASTELLO_A_S_D",
-    "categoria": "ELI_M",
+    "categoria": "AL_M",
     "genere": "M",
     "punti_totali": 5,
     "risultati": [
@@ -8236,7 +8456,7 @@
     "cognome": "GLIOTTONE",
     "team_attuale": "TEAM CESARO-NERI-LUCCHINI",
     "team_id": "TEAM_CESARO_NERI_LUCCHINI",
-    "categoria": "ELI_M",
+    "categoria": "AL_M",
     "genere": "M",
     "punti_totali": 4,
     "risultati": [
@@ -8259,7 +8479,7 @@
     "cognome": "GIRALDI",
     "team_attuale": "GIUSFREDI",
     "team_id": "GIUSFREDI",
-    "categoria": "ELI_M",
+    "categoria": "AL_M",
     "genere": "M",
     "punti_totali": 3,
     "risultati": [
@@ -8282,7 +8502,7 @@
     "cognome": "MARINI",
     "team_attuale": "UC COLTANO GRUBE COSTRUZIONI",
     "team_id": "UC_COLTANO_GRUBE_COSTRUZIONI",
-    "categoria": "ELI_M",
+    "categoria": "AL_M",
     "genere": "M",
     "punti_totali": 2,
     "risultati": [
@@ -8305,7 +8525,7 @@
     "cognome": "CAPPELLI",
     "team_attuale": "AC F. BESSI CALENZANO DONORATICO",
     "team_id": "AC_F_BESSI_CALENZANO_DONORATICO",
-    "categoria": "ELI_M",
+    "categoria": "AL_M",
     "genere": "M",
     "punti_totali": 1,
     "risultati": [
@@ -8328,7 +8548,7 @@
     "cognome": "GREGORI",
     "team_attuale": "ACCADEMIA CICLISTICA",
     "team_id": "ACCADEMIA_CICLISTICA",
-    "categoria": "ELI_M",
+    "categoria": "AL_M",
     "genere": "M",
     "punti_totali": 19,
     "risultati": [
@@ -8362,9 +8582,9 @@
     "cognome": "CECCARELLO",
     "team_attuale": "A.S.D. CICLISTICA MONSELICE",
     "team_id": "A_S_D_CICLISTICA_MONSELICE",
-    "categoria": "ELI_M",
+    "categoria": "AL_M",
     "genere": "M",
-    "punti_totali": 29,
+    "punti_totali": 31,
     "risultati": [
       {
         "gara_id": "GARDOLO_IN_BICI_2026-04-12",
@@ -8398,6 +8618,17 @@
         "punti_base": 15,
         "punti_effettivi": 15,
         "team": "A.S.D. CICLISTICA MONSELICE"
+      },
+      {
+        "gara_id": "36_GRAN_PREMIO_CITTA_DI_SAN_MAURO_PASCOLI_DONNE_ALLIEVE_2026-04-06",
+        "nome_gara": "36° GRAN PREMIO CITTA' DI SAN MAURO PASCOLI - DONNE ALLIEVE",
+        "data": "2026-04-06",
+        "posizione": 9,
+        "tipo_gara": "regionale",
+        "moltiplicatore": 1,
+        "punti_base": 2,
+        "punti_effettivi": 2,
+        "team": "A.S.D. CICLISTICA MONSELICE"
       }
     ]
   },
@@ -8407,7 +8638,7 @@
     "cognome": "MACAS",
     "team_attuale": "LIBERTAS RAIFFEISEN LAIVES ASD",
     "team_id": "LIBERTAS_RAIFFEISEN_LAIVES_ASD",
-    "categoria": "ELI_M",
+    "categoria": "AL_M",
     "genere": "M",
     "punti_totali": 10,
     "risultati": [
@@ -8430,9 +8661,9 @@
     "cognome": "COLTRO",
     "team_attuale": "A.S.D. CICLISTICA MONSELICE",
     "team_id": "A_S_D_CICLISTICA_MONSELICE",
-    "categoria": "ELI_M",
+    "categoria": "AL_M",
     "genere": "M",
-    "punti_totali": 23,
+    "punti_totali": 38,
     "risultati": [
       {
         "gara_id": "GARDOLO_IN_BICI_2026-04-12",
@@ -8455,6 +8686,17 @@
         "punti_base": 15,
         "punti_effettivi": 15,
         "team": "A.S.D. CICLISTICA MONSELICE"
+      },
+      {
+        "gara_id": "36_GRAN_PREMIO_CITTA_DI_SAN_MAURO_PASCOLI_DONNE_ALLIEVE_2026-04-06",
+        "nome_gara": "36° GRAN PREMIO CITTA' DI SAN MAURO PASCOLI - DONNE ALLIEVE",
+        "data": "2026-04-06",
+        "posizione": 1,
+        "tipo_gara": "regionale",
+        "moltiplicatore": 1,
+        "punti_base": 15,
+        "punti_effettivi": 15,
+        "team": "A.S.D. CICLISTICA MONSELICE"
       }
     ]
   },
@@ -8464,7 +8706,7 @@
     "cognome": "BARBON",
     "team_attuale": "ACCADEMIA CICLISTICA",
     "team_id": "ACCADEMIA_CICLISTICA",
-    "categoria": "ELI_M",
+    "categoria": "AL_M",
     "genere": "M",
     "punti_totali": 6,
     "risultati": [
@@ -8487,7 +8729,7 @@
     "cognome": "DONANZAN",
     "team_attuale": "ASD VELOCE CLUB BORGO",
     "team_id": "ASD_VELOCE_CLUB_BORGO",
-    "categoria": "ELI_M",
+    "categoria": "AL_M",
     "genere": "M",
     "punti_totali": 18,
     "risultati": [
@@ -8532,7 +8774,7 @@
     "cognome": "MAGAGNOTTI",
     "team_attuale": "A.S.D. CICLISTICA MONSELICE",
     "team_id": "A_S_D_CICLISTICA_MONSELICE",
-    "categoria": "ELI_M",
+    "categoria": "AL_M",
     "genere": "M",
     "punti_totali": 4,
     "risultati": [
@@ -8555,7 +8797,7 @@
     "cognome": "GHIOTTO",
     "team_attuale": "U.S. MONTECORONA",
     "team_id": "U_S_MONTECORONA",
-    "categoria": "ELI_M",
+    "categoria": "AL_M",
     "genere": "M",
     "punti_totali": 3,
     "risultati": [
@@ -8578,7 +8820,7 @@
     "cognome": "FORADORI",
     "team_attuale": "U.S. MONTECORONA",
     "team_id": "U_S_MONTECORONA",
-    "categoria": "ELI_M",
+    "categoria": "AL_M",
     "genere": "M",
     "punti_totali": 2,
     "risultati": [
@@ -8601,7 +8843,7 @@
     "cognome": "MACAS",
     "team_attuale": "LIBERTAS RAIFFEISEN LAIVES ASD",
     "team_id": "LIBERTAS_RAIFFEISEN_LAIVES_ASD",
-    "categoria": "ELI_M",
+    "categoria": "AL_M",
     "genere": "M",
     "punti_totali": 1,
     "risultati": [
@@ -8624,13 +8866,24 @@
     "cognome": "BOLCATO",
     "team_attuale": "BORGO MOLINO-VIGNA FIORITA",
     "team_id": "BORGO_MOLINO_VIGNA_FIORITA",
-    "categoria": "ELI_M",
+    "categoria": "AL_M",
     "genere": "M",
-    "punti_totali": 12,
+    "punti_totali": 24,
     "risultati": [
       {
         "gara_id": "36_GRAN_PREMIO_CITTA_DI_SAN_MAURO_PASCOLI_ALLIEVI_2026-04-06",
         "nome_gara": "36° GRAN PREMIO CITTA' DI SAN MAURO PASCOLI - ALLIEVI",
+        "data": "2026-04-06",
+        "posizione": 2,
+        "tipo_gara": "regionale",
+        "moltiplicatore": 1,
+        "punti_base": 12,
+        "punti_effettivi": 12,
+        "team": "BORGO MOLINO-VIGNA FIORITA"
+      },
+      {
+        "gara_id": "36_GRAN_PREMIO_CITTA_DI_SAN_MAURO_PASCOLI_DONNE_ALLIEVE_2026-04-06",
+        "nome_gara": "36° GRAN PREMIO CITTA' DI SAN MAURO PASCOLI - DONNE ALLIEVE",
         "data": "2026-04-06",
         "posizione": 2,
         "tipo_gara": "regionale",
@@ -8647,13 +8900,24 @@
     "cognome": "VALDOVINOS",
     "team_attuale": "A.R.MONEX PRO CYCLING TEAM",
     "team_id": "A_R_MONEX_PRO_CYCLING_TEAM",
-    "categoria": "ELI_M",
+    "categoria": "AL_M",
     "genere": "M",
-    "punti_totali": 10,
+    "punti_totali": 20,
     "risultati": [
       {
         "gara_id": "36_GRAN_PREMIO_CITTA_DI_SAN_MAURO_PASCOLI_ALLIEVI_2026-04-06",
         "nome_gara": "36° GRAN PREMIO CITTA' DI SAN MAURO PASCOLI - ALLIEVI",
+        "data": "2026-04-06",
+        "posizione": 3,
+        "tipo_gara": "regionale",
+        "moltiplicatore": 1,
+        "punti_base": 10,
+        "punti_effettivi": 10,
+        "team": "A.R.MONEX PRO CYCLING TEAM"
+      },
+      {
+        "gara_id": "36_GRAN_PREMIO_CITTA_DI_SAN_MAURO_PASCOLI_DONNE_ALLIEVE_2026-04-06",
+        "nome_gara": "36° GRAN PREMIO CITTA' DI SAN MAURO PASCOLI - DONNE ALLIEVE",
         "data": "2026-04-06",
         "posizione": 3,
         "tipo_gara": "regionale",
@@ -8670,13 +8934,24 @@
     "cognome": "FERRETTI",
     "team_attuale": "VELO CLUB CATTOLICA",
     "team_id": "VELO_CLUB_CATTOLICA",
-    "categoria": "ELI_M",
+    "categoria": "AL_M",
     "genere": "M",
-    "punti_totali": 8,
+    "punti_totali": 16,
     "risultati": [
       {
         "gara_id": "36_GRAN_PREMIO_CITTA_DI_SAN_MAURO_PASCOLI_ALLIEVI_2026-04-06",
         "nome_gara": "36° GRAN PREMIO CITTA' DI SAN MAURO PASCOLI - ALLIEVI",
+        "data": "2026-04-06",
+        "posizione": 4,
+        "tipo_gara": "regionale",
+        "moltiplicatore": 1,
+        "punti_base": 8,
+        "punti_effettivi": 8,
+        "team": "VELO CLUB CATTOLICA"
+      },
+      {
+        "gara_id": "36_GRAN_PREMIO_CITTA_DI_SAN_MAURO_PASCOLI_DONNE_ALLIEVE_2026-04-06",
+        "nome_gara": "36° GRAN PREMIO CITTA' DI SAN MAURO PASCOLI - DONNE ALLIEVE",
         "data": "2026-04-06",
         "posizione": 4,
         "tipo_gara": "regionale",
@@ -8693,13 +8968,24 @@
     "cognome": "URBINATI",
     "team_attuale": "VELO CLUB CATTOLICA",
     "team_id": "VELO_CLUB_CATTOLICA",
-    "categoria": "ELI_M",
+    "categoria": "AL_M",
     "genere": "M",
-    "punti_totali": 6,
+    "punti_totali": 12,
     "risultati": [
       {
         "gara_id": "36_GRAN_PREMIO_CITTA_DI_SAN_MAURO_PASCOLI_ALLIEVI_2026-04-06",
         "nome_gara": "36° GRAN PREMIO CITTA' DI SAN MAURO PASCOLI - ALLIEVI",
+        "data": "2026-04-06",
+        "posizione": 5,
+        "tipo_gara": "regionale",
+        "moltiplicatore": 1,
+        "punti_base": 6,
+        "punti_effettivi": 6,
+        "team": "VELO CLUB CATTOLICA"
+      },
+      {
+        "gara_id": "36_GRAN_PREMIO_CITTA_DI_SAN_MAURO_PASCOLI_DONNE_ALLIEVE_2026-04-06",
+        "nome_gara": "36° GRAN PREMIO CITTA' DI SAN MAURO PASCOLI - DONNE ALLIEVE",
         "data": "2026-04-06",
         "posizione": 5,
         "tipo_gara": "regionale",
@@ -8716,13 +9002,24 @@
     "cognome": "MANONI",
     "team_attuale": "ETHICA ZERO24 CYCLING TEAM",
     "team_id": "ETHICA_ZERO24_CYCLING_TEAM",
-    "categoria": "ELI_M",
+    "categoria": "AL_M",
     "genere": "M",
-    "punti_totali": 5,
+    "punti_totali": 10,
     "risultati": [
       {
         "gara_id": "36_GRAN_PREMIO_CITTA_DI_SAN_MAURO_PASCOLI_ALLIEVI_2026-04-06",
         "nome_gara": "36° GRAN PREMIO CITTA' DI SAN MAURO PASCOLI - ALLIEVI",
+        "data": "2026-04-06",
+        "posizione": 6,
+        "tipo_gara": "regionale",
+        "moltiplicatore": 1,
+        "punti_base": 5,
+        "punti_effettivi": 5,
+        "team": "ETHICA ZERO24 CYCLING TEAM"
+      },
+      {
+        "gara_id": "36_GRAN_PREMIO_CITTA_DI_SAN_MAURO_PASCOLI_DONNE_ALLIEVE_2026-04-06",
+        "nome_gara": "36° GRAN PREMIO CITTA' DI SAN MAURO PASCOLI - DONNE ALLIEVE",
         "data": "2026-04-06",
         "posizione": 6,
         "tipo_gara": "regionale",
@@ -8739,13 +9036,24 @@
     "cognome": "MUNTEANU",
     "team_attuale": "S.C.COTIGNOLESE",
     "team_id": "S_C_COTIGNOLESE",
-    "categoria": "ELI_M",
+    "categoria": "AL_M",
     "genere": "M",
-    "punti_totali": 4,
+    "punti_totali": 8,
     "risultati": [
       {
         "gara_id": "36_GRAN_PREMIO_CITTA_DI_SAN_MAURO_PASCOLI_ALLIEVI_2026-04-06",
         "nome_gara": "36° GRAN PREMIO CITTA' DI SAN MAURO PASCOLI - ALLIEVI",
+        "data": "2026-04-06",
+        "posizione": 7,
+        "tipo_gara": "regionale",
+        "moltiplicatore": 1,
+        "punti_base": 4,
+        "punti_effettivi": 4,
+        "team": "S.C.COTIGNOLESE"
+      },
+      {
+        "gara_id": "36_GRAN_PREMIO_CITTA_DI_SAN_MAURO_PASCOLI_DONNE_ALLIEVE_2026-04-06",
+        "nome_gara": "36° GRAN PREMIO CITTA' DI SAN MAURO PASCOLI - DONNE ALLIEVE",
         "data": "2026-04-06",
         "posizione": 7,
         "tipo_gara": "regionale",
@@ -8762,13 +9070,24 @@
     "cognome": "MASONI",
     "team_attuale": "U.S. CALCARA",
     "team_id": "U_S_CALCARA",
-    "categoria": "ELI_M",
+    "categoria": "AL_M",
     "genere": "M",
-    "punti_totali": 3,
+    "punti_totali": 6,
     "risultati": [
       {
         "gara_id": "36_GRAN_PREMIO_CITTA_DI_SAN_MAURO_PASCOLI_ALLIEVI_2026-04-06",
         "nome_gara": "36° GRAN PREMIO CITTA' DI SAN MAURO PASCOLI - ALLIEVI",
+        "data": "2026-04-06",
+        "posizione": 8,
+        "tipo_gara": "regionale",
+        "moltiplicatore": 1,
+        "punti_base": 3,
+        "punti_effettivi": 3,
+        "team": "U.S. CALCARA"
+      },
+      {
+        "gara_id": "36_GRAN_PREMIO_CITTA_DI_SAN_MAURO_PASCOLI_DONNE_ALLIEVE_2026-04-06",
+        "nome_gara": "36° GRAN PREMIO CITTA' DI SAN MAURO PASCOLI - DONNE ALLIEVE",
         "data": "2026-04-06",
         "posizione": 8,
         "tipo_gara": "regionale",
@@ -8785,13 +9104,24 @@
     "cognome": "BACCINI",
     "team_attuale": "S.C.COTIGNOLESE",
     "team_id": "S_C_COTIGNOLESE",
-    "categoria": "ELI_M",
+    "categoria": "AL_M",
     "genere": "M",
-    "punti_totali": 1,
+    "punti_totali": 2,
     "risultati": [
       {
         "gara_id": "36_GRAN_PREMIO_CITTA_DI_SAN_MAURO_PASCOLI_ALLIEVI_2026-04-06",
         "nome_gara": "36° GRAN PREMIO CITTA' DI SAN MAURO PASCOLI - ALLIEVI",
+        "data": "2026-04-06",
+        "posizione": 10,
+        "tipo_gara": "regionale",
+        "moltiplicatore": 1,
+        "punti_base": 1,
+        "punti_effettivi": 1,
+        "team": "S.C.COTIGNOLESE"
+      },
+      {
+        "gara_id": "36_GRAN_PREMIO_CITTA_DI_SAN_MAURO_PASCOLI_DONNE_ALLIEVE_2026-04-06",
+        "nome_gara": "36° GRAN PREMIO CITTA' DI SAN MAURO PASCOLI - DONNE ALLIEVE",
         "data": "2026-04-06",
         "posizione": 10,
         "tipo_gara": "regionale",
@@ -8808,7 +9138,7 @@
     "cognome": "ROMAN",
     "team_attuale": "IND. FORNITURE MORO-C&G CAPITAL",
     "team_id": "IND_FORNITURE_MORO_C_G_CAPITAL",
-    "categoria": "ELI_M",
+    "categoria": "AL_M",
     "genere": "M",
     "punti_totali": 27,
     "risultati": [
@@ -8842,7 +9172,7 @@
     "cognome": "MENEGHELLO",
     "team_attuale": "IND. FORNITURE MORO-C&G CAPITAL",
     "team_id": "IND_FORNITURE_MORO_C_G_CAPITAL",
-    "categoria": "ELI_M",
+    "categoria": "AL_M",
     "genere": "M",
     "punti_totali": 18,
     "risultati": [
@@ -8876,7 +9206,7 @@
     "cognome": "BORILE",
     "team_attuale": "ASD DP66 PINARELLO",
     "team_id": "ASD_DP66_PINARELLO",
-    "categoria": "ELI_M",
+    "categoria": "AL_M",
     "genere": "M",
     "punti_totali": 6,
     "risultati": [
@@ -8899,7 +9229,7 @@
     "cognome": "CARLIN",
     "team_attuale": "C.C. FORTI E VELOCI",
     "team_id": "C_C_FORTI_E_VELOCI",
-    "categoria": "ELI_M",
+    "categoria": "AL_M",
     "genere": "M",
     "punti_totali": 5,
     "risultati": [
@@ -8922,7 +9252,7 @@
     "cognome": "FACCIN",
     "team_attuale": "IND. FORNITURE MORO-C&G CAPITAL",
     "team_id": "IND_FORNITURE_MORO_C_G_CAPITAL",
-    "categoria": "ELI_M",
+    "categoria": "AL_M",
     "genere": "M",
     "punti_totali": 3,
     "risultati": [
@@ -8945,7 +9275,7 @@
     "cognome": "ZUCCHIATTI",
     "team_attuale": "LIBERTAS CERESETTO",
     "team_id": "LIBERTAS_CERESETTO",
-    "categoria": "ELI_M",
+    "categoria": "AL_M",
     "genere": "M",
     "punti_totali": 2,
     "risultati": [
@@ -8968,7 +9298,7 @@
     "cognome": "HVASTIJA",
     "team_attuale": "POGI TEAM UAE GENERALI",
     "team_id": "POGI_TEAM_UAE_GENERALI",
-    "categoria": "ELI_M",
+    "categoria": "AL_M",
     "genere": "M",
     "punti_totali": 1,
     "risultati": [
@@ -8991,7 +9321,7 @@
     "cognome": "MONTESIN",
     "team_attuale": "FERALPI MONTECLARENSE ASD",
     "team_id": "FERALPI_MONTECLARENSE_ASD",
-    "categoria": "ELI_M",
+    "categoria": "AL_M",
     "genere": "M",
     "punti_totali": 16,
     "risultati": [
@@ -9025,7 +9355,7 @@
     "cognome": "RONDA",
     "team_attuale": "FERALPI MONTECLARENSE ASD",
     "team_id": "FERALPI_MONTECLARENSE_ASD",
-    "categoria": "ELI_M",
+    "categoria": "AL_M",
     "genere": "M",
     "punti_totali": 23,
     "risultati": [
@@ -9059,7 +9389,7 @@
     "cognome": "IAZZI",
     "team_attuale": "MADIGNANESE CICLISMO A.S.D",
     "team_id": "MADIGNANESE_CICLISMO_A_S_D",
-    "categoria": "ELI_M",
+    "categoria": "AL_M",
     "genere": "M",
     "punti_totali": 15,
     "risultati": [
@@ -9093,7 +9423,7 @@
     "cognome": "BALDUZZI",
     "team_attuale": "BUSTESE OLONIA A.S.D.",
     "team_id": "BUSTESE_OLONIA_A_S_D",
-    "categoria": "ELI_M",
+    "categoria": "AL_M",
     "genere": "M",
     "punti_totali": 4,
     "risultati": [
@@ -9116,7 +9446,7 @@
     "cognome": "BELANI",
     "team_attuale": "S.C. ROMANESE ASD",
     "team_id": "S_C_ROMANESE_ASD",
-    "categoria": "ELI_M",
+    "categoria": "AL_M",
     "genere": "M",
     "punti_totali": 3,
     "risultati": [
@@ -9139,7 +9469,7 @@
     "cognome": "FERRO",
     "team_attuale": "BUSTESE OLONIA A.S.D.",
     "team_id": "BUSTESE_OLONIA_A_S_D",
-    "categoria": "ELI_M",
+    "categoria": "AL_M",
     "genere": "M",
     "punti_totali": 2,
     "risultati": [
@@ -9162,7 +9492,7 @@
     "cognome": "MAGGIONI",
     "team_attuale": "TEAM SENAGHESE GUERRINI",
     "team_id": "TEAM_SENAGHESE_GUERRINI",
-    "categoria": "ELI_M",
+    "categoria": "AL_M",
     "genere": "M",
     "punti_totali": 1,
     "risultati": [
@@ -9185,7 +9515,7 @@
     "cognome": "ASTARA",
     "team_attuale": "S.C.COTIGNOLESE",
     "team_id": "S_C_COTIGNOLESE",
-    "categoria": "ELI_M",
+    "categoria": "AL_M",
     "genere": "M",
     "punti_totali": 12,
     "risultati": [
@@ -9208,7 +9538,7 @@
     "cognome": "VITALI",
     "team_attuale": "ETHICA ZERO24 CYCLING TEAM",
     "team_id": "ETHICA_ZERO24_CYCLING_TEAM",
-    "categoria": "ELI_M",
+    "categoria": "AL_M",
     "genere": "M",
     "punti_totali": 22,
     "risultati": [
@@ -9242,7 +9572,7 @@
     "cognome": "TASSINARI",
     "team_attuale": "A. D.PED. AZZURRO.RINASCITA",
     "team_id": "A_D_PED_AZZURRO_RINASCITA",
-    "categoria": "ELI_M",
+    "categoria": "AL_M",
     "genere": "M",
     "punti_totali": 6,
     "risultati": [
@@ -9265,7 +9595,7 @@
     "cognome": "BERLINI",
     "team_attuale": "POL. FIUMICINESE FA.I.T. ADRIATICA",
     "team_id": "POL_FIUMICINESE_FA_I_T_ADRIATICA",
-    "categoria": "ELI_M",
+    "categoria": "AL_M",
     "genere": "M",
     "punti_totali": 13,
     "risultati": [
@@ -9299,7 +9629,7 @@
     "cognome": "DANIELE",
     "team_attuale": "BORGO MOLINO-VIGNA FIORITA",
     "team_id": "BORGO_MOLINO_VIGNA_FIORITA",
-    "categoria": "ELI_M",
+    "categoria": "AL_M",
     "genere": "M",
     "punti_totali": 7,
     "risultati": [
@@ -9333,7 +9663,7 @@
     "cognome": "SDRUCCIOLI",
     "team_attuale": "S.C.RECANATI MARINELLI CANTARINI",
     "team_id": "S_C_RECANATI_MARINELLI_CANTARINI",
-    "categoria": "ELI_M",
+    "categoria": "AL_M",
     "genere": "M",
     "punti_totali": 3,
     "risultati": [
@@ -9356,7 +9686,7 @@
     "cognome": "SENESI",
     "team_attuale": "ETHICA ZERO24 CYCLING TEAM",
     "team_id": "ETHICA_ZERO24_CYCLING_TEAM",
-    "categoria": "ELI_M",
+    "categoria": "AL_M",
     "genere": "M",
     "punti_totali": 7,
     "risultati": [
@@ -9390,7 +9720,7 @@
     "cognome": "SILVA",
     "team_attuale": "POL. FIUMICINESE FA.I.T. ADRIATICA",
     "team_id": "POL_FIUMICINESE_FA_I_T_ADRIATICA",
-    "categoria": "ELI_M",
+    "categoria": "AL_M",
     "genere": "M",
     "punti_totali": 3,
     "risultati": [
@@ -9424,7 +9754,7 @@
     "cognome": "CHIARINI",
     "team_attuale": "FERALPI MONTECLARENSE ASD",
     "team_id": "FERALPI_MONTECLARENSE_ASD",
-    "categoria": "ELI_M",
+    "categoria": "AL_M",
     "genere": "M",
     "punti_totali": 8,
     "risultati": [
@@ -9447,7 +9777,7 @@
     "cognome": "BUSCA",
     "team_attuale": "MAZZANO A.S.D.",
     "team_id": "MAZZANO_A_S_D",
-    "categoria": "ELI_M",
+    "categoria": "AL_M",
     "genere": "M",
     "punti_totali": 4,
     "risultati": [
@@ -9470,7 +9800,7 @@
     "cognome": "MANNA",
     "team_attuale": "ETHICA ZERO24 CYCLING TEAM",
     "team_id": "ETHICA_ZERO24_CYCLING_TEAM",
-    "categoria": "ELI_M",
+    "categoria": "AL_M",
     "genere": "M",
     "punti_totali": 3,
     "risultati": [
@@ -9493,7 +9823,7 @@
     "cognome": "GRIMALDI",
     "team_attuale": "ETHICA ZERO24 CYCLING TEAM",
     "team_id": "ETHICA_ZERO24_CYCLING_TEAM",
-    "categoria": "ELI_M",
+    "categoria": "AL_M",
     "genere": "M",
     "punti_totali": 2,
     "risultati": [
@@ -9516,7 +9846,7 @@
     "cognome": "GHIROLDI",
     "team_attuale": "FERALPI MONTECLARENSE ASD",
     "team_id": "FERALPI_MONTECLARENSE_ASD",
-    "categoria": "ELI_M",
+    "categoria": "AL_M",
     "genere": "M",
     "punti_totali": 1,
     "risultati": [
@@ -9539,7 +9869,7 @@
     "cognome": "SOLENNE",
     "team_attuale": "MADONNA DI CAMPAGNA",
     "team_id": "MADONNA_DI_CAMPAGNA",
-    "categoria": "ELI_M",
+    "categoria": "AL_M",
     "genere": "M",
     "punti_totali": 15,
     "risultati": [
@@ -9562,7 +9892,7 @@
     "cognome": "TREMBLAN",
     "team_attuale": "G.S. LUPI VALLE D'AOSTA",
     "team_id": "G_S_LUPI_VALLE_D_AOSTA",
-    "categoria": "ELI_M",
+    "categoria": "AL_M",
     "genere": "M",
     "punti_totali": 10,
     "risultati": [
@@ -9585,7 +9915,7 @@
     "cognome": "DI",
     "team_attuale": "POOL CANTU' - SOVICO - GB TEAM",
     "team_id": "POOL_CANTU_SOVICO_GB_TEAM",
-    "categoria": "ELI_M",
+    "categoria": "AL_M",
     "genere": "M",
     "punti_totali": 8,
     "risultati": [
@@ -9608,7 +9938,7 @@
     "cognome": "MARTI",
     "team_attuale": "ASD PEDALE CASALESE ARMOFER",
     "team_id": "ASD_PEDALE_CASALESE_ARMOFER",
-    "categoria": "ELI_M",
+    "categoria": "AL_M",
     "genere": "M",
     "punti_totali": 16,
     "risultati": [
@@ -9642,7 +9972,7 @@
     "cognome": "OSTINELLI",
     "team_attuale": "G.S. ALZATE BRIANZA - SYSTEM CAR",
     "team_id": "G_S_ALZATE_BRIANZA_SYSTEM_CAR",
-    "categoria": "ELI_M",
+    "categoria": "AL_M",
     "genere": "M",
     "punti_totali": 4,
     "risultati": [
@@ -9665,7 +9995,7 @@
     "cognome": "FOSSATI",
     "team_attuale": "I CINGHIALI EVO",
     "team_id": "I_CINGHIALI_EVO",
-    "categoria": "ELI_M",
+    "categoria": "AL_M",
     "genere": "M",
     "punti_totali": 2,
     "risultati": [
@@ -9688,7 +10018,7 @@
     "cognome": "DONATO",
     "team_attuale": "A.S.D. CICLISTICA MONSELICE",
     "team_id": "A_S_D_CICLISTICA_MONSELICE",
-    "categoria": "ELI_M",
+    "categoria": "AL_M",
     "genere": "M",
     "punti_totali": 15,
     "risultati": [
@@ -9711,7 +10041,7 @@
     "cognome": "BORTOLAZZI",
     "team_attuale": "ASD TEAM PETRUCCI",
     "team_id": "ASD_TEAM_PETRUCCI",
-    "categoria": "ELI_M",
+    "categoria": "AL_M",
     "genere": "M",
     "punti_totali": 12,
     "risultati": [
@@ -9734,7 +10064,7 @@
     "cognome": "IASCI",
     "team_attuale": "A.S.D. CICLISTICA MONSELICE",
     "team_id": "A_S_D_CICLISTICA_MONSELICE",
-    "categoria": "ELI_M",
+    "categoria": "AL_M",
     "genere": "M",
     "punti_totali": 6,
     "risultati": [
@@ -9757,7 +10087,7 @@
     "cognome": "TINAZZI",
     "team_attuale": "BRUNO GAIGA C.A.M.P.I.",
     "team_id": "BRUNO_GAIGA_C_A_M_P_I",
-    "categoria": "ELI_M",
+    "categoria": "AL_M",
     "genere": "M",
     "punti_totali": 5,
     "risultati": [
@@ -9780,7 +10110,7 @@
     "cognome": "GIORGI",
     "team_attuale": "GS CARTURA NALIN",
     "team_id": "GS_CARTURA_NALIN",
-    "categoria": "ELI_M",
+    "categoria": "AL_M",
     "genere": "M",
     "punti_totali": 4,
     "risultati": [
@@ -9803,7 +10133,7 @@
     "cognome": "SCAMPERLE",
     "team_attuale": "ASD TEAM PETRUCCI",
     "team_id": "ASD_TEAM_PETRUCCI",
-    "categoria": "ELI_M",
+    "categoria": "AL_M",
     "genere": "M",
     "punti_totali": 3,
     "risultati": [
@@ -9826,7 +10156,7 @@
     "cognome": "VIERO",
     "team_attuale": "ROTOGAL GUADENSE",
     "team_id": "ROTOGAL_GUADENSE",
-    "categoria": "ELI_M",
+    "categoria": "AL_M",
     "genere": "M",
     "punti_totali": 1,
     "risultati": [
@@ -9849,7 +10179,7 @@
     "cognome": "DALOLA",
     "team_attuale": "TEAM SENAGHESE GUERRINI",
     "team_id": "TEAM_SENAGHESE_GUERRINI",
-    "categoria": "ELI_M",
+    "categoria": "AL_M",
     "genere": "M",
     "punti_totali": 15,
     "risultati": [
@@ -9872,7 +10202,7 @@
     "cognome": "SEGATO",
     "team_attuale": "BUSTESE OLONIA A.S.D.",
     "team_id": "BUSTESE_OLONIA_A_S_D",
-    "categoria": "ELI_M",
+    "categoria": "AL_M",
     "genere": "M",
     "punti_totali": 12,
     "risultati": [
@@ -9895,7 +10225,7 @@
     "cognome": "ZUNINO",
     "team_attuale": "QUILIANO BIKE SPEED WHEEL",
     "team_id": "QUILIANO_BIKE_SPEED_WHEEL",
-    "categoria": "ELI_M",
+    "categoria": "AL_M",
     "genere": "M",
     "punti_totali": 6,
     "risultati": [
@@ -9918,7 +10248,7 @@
     "cognome": "CARERI",
     "team_attuale": "A.S.D. ORANGE BIKE TEAM",
     "team_id": "A_S_D_ORANGE_BIKE_TEAM",
-    "categoria": "ELI_M",
+    "categoria": "AL_M",
     "genere": "M",
     "punti_totali": 4,
     "risultati": [
@@ -9941,7 +10271,7 @@
     "cognome": "PONTI",
     "team_attuale": "PEDALE OSSOLANO",
     "team_id": "PEDALE_OSSOLANO",
-    "categoria": "ELI_M",
+    "categoria": "AL_M",
     "genere": "M",
     "punti_totali": 3,
     "risultati": [
@@ -9964,7 +10294,7 @@
     "cognome": "MENGA",
     "team_attuale": "POOL CANTU' - SOVICO - GB TEAM",
     "team_id": "POOL_CANTU_SOVICO_GB_TEAM",
-    "categoria": "ELI_M",
+    "categoria": "AL_M",
     "genere": "M",
     "punti_totali": 2,
     "risultati": [
@@ -9987,7 +10317,7 @@
     "cognome": "PUPPO",
     "team_attuale": "ACCADEMIA CICLISTICA",
     "team_id": "ACCADEMIA_CICLISTICA",
-    "categoria": "ELI_M",
+    "categoria": "AL_M",
     "genere": "M",
     "punti_totali": 15,
     "risultati": [
@@ -10010,7 +10340,7 @@
     "cognome": "FOFFANO",
     "team_attuale": "IND. FORNITURE MORO-C&G CAPITAL",
     "team_id": "IND_FORNITURE_MORO_C_G_CAPITAL",
-    "categoria": "ELI_M",
+    "categoria": "AL_M",
     "genere": "M",
     "punti_totali": 10,
     "risultati": [
@@ -10033,7 +10363,7 @@
     "cognome": "SKILJA",
     "team_attuale": "ACCADEMIA CICLISTICA",
     "team_id": "ACCADEMIA_CICLISTICA",
-    "categoria": "ELI_M",
+    "categoria": "AL_M",
     "genere": "M",
     "punti_totali": 6,
     "risultati": [
@@ -10056,7 +10386,7 @@
     "cognome": "MAZZUCCO",
     "team_attuale": "GS CARTURA NALIN",
     "team_id": "GS_CARTURA_NALIN",
-    "categoria": "ELI_M",
+    "categoria": "AL_M",
     "genere": "M",
     "punti_totali": 5,
     "risultati": [
@@ -10079,7 +10409,7 @@
     "cognome": "FLORIAN",
     "team_attuale": "A.S.D. VELODROME MARCON",
     "team_id": "A_S_D_VELODROME_MARCON",
-    "categoria": "ELI_M",
+    "categoria": "AL_M",
     "genere": "M",
     "punti_totali": 4,
     "risultati": [
@@ -10102,7 +10432,7 @@
     "cognome": "FRAGUGLIA",
     "team_attuale": "TEAM SENAGHESE GUERRINI",
     "team_id": "TEAM_SENAGHESE_GUERRINI",
-    "categoria": "ELI_M",
+    "categoria": "ES2_M",
     "genere": "M",
     "punti_totali": 15,
     "risultati": [
@@ -10125,7 +10455,7 @@
     "cognome": "VANELLI",
     "team_attuale": "BUSTO GAROLFO",
     "team_id": "BUSTO_GAROLFO",
-    "categoria": "ELI_M",
+    "categoria": "ES2_M",
     "genere": "M",
     "punti_totali": 12,
     "risultati": [
@@ -10148,7 +10478,7 @@
     "cognome": "PUPILLO",
     "team_attuale": "TEAM SENAGHESE GUERRINI",
     "team_id": "TEAM_SENAGHESE_GUERRINI",
-    "categoria": "ELI_M",
+    "categoria": "ES2_M",
     "genere": "M",
     "punti_totali": 10,
     "risultati": [
@@ -10171,7 +10501,7 @@
     "cognome": "PEDROTTI",
     "team_attuale": "TEAM SENAGHESE GUERRINI",
     "team_id": "TEAM_SENAGHESE_GUERRINI",
-    "categoria": "ELI_M",
+    "categoria": "ES2_M",
     "genere": "M",
     "punti_totali": 20,
     "risultati": [
@@ -10205,7 +10535,7 @@
     "cognome": "ZANARDINI",
     "team_attuale": "MAZZANO A.S.D.",
     "team_id": "MAZZANO_A_S_D",
-    "categoria": "ELI_M",
+    "categoria": "ES2_M",
     "genere": "M",
     "punti_totali": 6,
     "risultati": [
@@ -10228,7 +10558,7 @@
     "cognome": "GERVASONI",
     "team_attuale": "CICLISTICA TREVIGLIESE",
     "team_id": "CICLISTICA_TREVIGLIESE",
-    "categoria": "ELI_M",
+    "categoria": "ES2_M",
     "genere": "M",
     "punti_totali": 11,
     "risultati": [
@@ -10262,7 +10592,7 @@
     "cognome": "SEVRIUGIN",
     "team_attuale": "V CYCLING - ARICI CLAUDIA - PITON",
     "team_id": "V_CYCLING_ARICI_CLAUDIA_PITON",
-    "categoria": "ELI_M",
+    "categoria": "ES2_M",
     "genere": "M",
     "punti_totali": 9,
     "risultati": [
@@ -10296,7 +10626,7 @@
     "cognome": "PEDRAZZI",
     "team_attuale": "A.S.D. PEDALE CASTELLANO",
     "team_id": "A_S_D_PEDALE_CASTELLANO",
-    "categoria": "ELI_M",
+    "categoria": "ES2_M",
     "genere": "M",
     "punti_totali": 3,
     "risultati": [
@@ -10319,7 +10649,7 @@
     "cognome": "TANZINI",
     "team_attuale": "FERALPI MONTECLARENSE ASD",
     "team_id": "FERALPI_MONTECLARENSE_ASD",
-    "categoria": "ELI_M",
+    "categoria": "ES2_M",
     "genere": "M",
     "punti_totali": 2,
     "risultati": [
@@ -10342,7 +10672,7 @@
     "cognome": "BOLPAGNI",
     "team_attuale": "G.S. RONCO MAURIGI DELIO GALLINA",
     "team_id": "G_S_RONCO_MAURIGI_DELIO_GALLINA",
-    "categoria": "ELI_M",
+    "categoria": "ES2_M",
     "genere": "M",
     "punti_totali": 4,
     "risultati": [
@@ -10376,7 +10706,7 @@
     "cognome": "AVIDANO",
     "team_attuale": "VIGOR - CYCLING TEAM",
     "team_id": "VIGOR_CYCLING_TEAM",
-    "categoria": "ELI_M",
+    "categoria": "ES2_M",
     "genere": "M",
     "punti_totali": 15,
     "risultati": [
@@ -10399,7 +10729,7 @@
     "cognome": "ROSATO",
     "team_attuale": "MAZZANO A.S.D.",
     "team_id": "MAZZANO_A_S_D",
-    "categoria": "ELI_M",
+    "categoria": "ES2_M",
     "genere": "M",
     "punti_totali": 24,
     "risultati": [
@@ -10433,7 +10763,7 @@
     "cognome": "CASCIANO",
     "team_attuale": "MAZZANO A.S.D.",
     "team_id": "MAZZANO_A_S_D",
-    "categoria": "ELI_M",
+    "categoria": "ES2_M",
     "genere": "M",
     "punti_totali": 10,
     "risultati": [
@@ -10456,7 +10786,7 @@
     "cognome": "CEPPI",
     "team_attuale": "BUSTO GAROLFO",
     "team_id": "BUSTO_GAROLFO",
-    "categoria": "ELI_M",
+    "categoria": "ES2_M",
     "genere": "M",
     "punti_totali": 16,
     "risultati": [
@@ -10490,7 +10820,7 @@
     "cognome": "FIGNON",
     "team_attuale": "ASD PEDALE CASALESE ARMOFER",
     "team_id": "ASD_PEDALE_CASALESE_ARMOFER",
-    "categoria": "ELI_M",
+    "categoria": "ES2_M",
     "genere": "M",
     "punti_totali": 8,
     "risultati": [
@@ -10524,7 +10854,7 @@
     "cognome": "RIGAMONTI",
     "team_attuale": "V CYCLING - ARICI CLAUDIA - PITON",
     "team_id": "V_CYCLING_ARICI_CLAUDIA_PITON",
-    "categoria": "ELI_M",
+    "categoria": "ES2_M",
     "genere": "M",
     "punti_totali": 11,
     "risultati": [
@@ -10558,7 +10888,7 @@
     "cognome": "PAVESI",
     "team_attuale": "POL. GHISALBESE A.S.D.",
     "team_id": "POL_GHISALBESE_A_S_D",
-    "categoria": "ELI_M",
+    "categoria": "ES2_M",
     "genere": "M",
     "punti_totali": 4,
     "risultati": [
@@ -10581,7 +10911,7 @@
     "cognome": "RIVA",
     "team_attuale": "G.S. ALZATE BRIANZA - SYSTEM CAR",
     "team_id": "G_S_ALZATE_BRIANZA_SYSTEM_CAR",
-    "categoria": "ELI_M",
+    "categoria": "ES2_M",
     "genere": "M",
     "punti_totali": 8,
     "risultati": [
@@ -10615,7 +10945,7 @@
     "cognome": "GAVAZZI",
     "team_attuale": "V CYCLING - ARICI CLAUDIA - PITON",
     "team_id": "V_CYCLING_ARICI_CLAUDIA_PITON",
-    "categoria": "ELI_M",
+    "categoria": "ES2_M",
     "genere": "M",
     "punti_totali": 4,
     "risultati": [
@@ -10649,7 +10979,7 @@
     "cognome": "DEL",
     "team_attuale": "S.C. BRUGHERIO SPORTIVA ASD",
     "team_id": "S_C_BRUGHERIO_SPORTIVA_ASD",
-    "categoria": "ELI_M",
+    "categoria": "ES2_M",
     "genere": "M",
     "punti_totali": 4,
     "risultati": [
@@ -10683,7 +11013,7 @@
     "cognome": "MORICONI",
     "team_attuale": "UC DONORATICO",
     "team_id": "UC_DONORATICO",
-    "categoria": "ELI_M",
+    "categoria": "ES2_M",
     "genere": "M",
     "punti_totali": 27,
     "risultati": [
@@ -10717,7 +11047,7 @@
     "cognome": "GARSI",
     "team_attuale": "TEAM PIU'SPORT",
     "team_id": "TEAM_PIU_SPORT",
-    "categoria": "ELI_M",
+    "categoria": "ES2_M",
     "genere": "M",
     "punti_totali": 42,
     "risultati": [
@@ -10762,7 +11092,7 @@
     "cognome": "CIPOLLA",
     "team_attuale": "IL PIRATA SAMA RICAMBI OTC",
     "team_id": "IL_PIRATA_SAMA_RICAMBI_OTC",
-    "categoria": "ELI_M",
+    "categoria": "ES2_M",
     "genere": "M",
     "punti_totali": 10,
     "risultati": [
@@ -10785,7 +11115,7 @@
     "cognome": "NENCINI",
     "team_attuale": "A.S.D. CASTIGLIONESE",
     "team_id": "A_S_D_CASTIGLIONESE",
-    "categoria": "ELI_M",
+    "categoria": "ES2_M",
     "genere": "M",
     "punti_totali": 8,
     "risultati": [
@@ -10808,7 +11138,7 @@
     "cognome": "BARTOLI",
     "team_attuale": "SS AQUILA",
     "team_id": "SS_AQUILA",
-    "categoria": "ELI_M",
+    "categoria": "ES2_M",
     "genere": "M",
     "punti_totali": 6,
     "risultati": [
@@ -10831,7 +11161,7 @@
     "cognome": "LOMBARDI",
     "team_attuale": "HG CYCLING TEAM",
     "team_id": "HG_CYCLING_TEAM",
-    "categoria": "ELI_M",
+    "categoria": "ES2_M",
     "genere": "M",
     "punti_totali": 13,
     "risultati": [
@@ -10865,7 +11195,7 @@
     "cognome": "GROSSO",
     "team_attuale": "CICLISTICA BORDIGHERA",
     "team_id": "CICLISTICA_BORDIGHERA",
-    "categoria": "ELI_M",
+    "categoria": "ES2_M",
     "genere": "M",
     "punti_totali": 4,
     "risultati": [
@@ -10888,7 +11218,7 @@
     "cognome": "ARCUDI",
     "team_attuale": "ARDENS CYCLING TEAM",
     "team_id": "ARDENS_CYCLING_TEAM",
-    "categoria": "ELI_M",
+    "categoria": "ES2_M",
     "genere": "M",
     "punti_totali": 3,
     "risultati": [
@@ -10911,7 +11241,7 @@
     "cognome": "MUSIANI",
     "team_attuale": "A.S.D. S.C. CERETOLESE 1969",
     "team_id": "A_S_D_S_C_CERETOLESE_1969",
-    "categoria": "ELI_M",
+    "categoria": "ES2_M",
     "genere": "M",
     "punti_totali": 4,
     "risultati": [
@@ -10945,7 +11275,7 @@
     "cognome": "BARBERO",
     "team_attuale": "CONTRABAND CYCLING TEAM ASD",
     "team_id": "CONTRABAND_CYCLING_TEAM_ASD",
-    "categoria": "ELI_M",
+    "categoria": "ES2_M",
     "genere": "M",
     "punti_totali": 3,
     "risultati": [
@@ -10979,7 +11309,7 @@
     "cognome": "VITO",
     "team_attuale": "TEAM CESARO-NERI-LUCCHINI",
     "team_id": "TEAM_CESARO_NERI_LUCCHINI",
-    "categoria": "ELI_M",
+    "categoria": "ES2_M",
     "genere": "M",
     "punti_totali": 23,
     "risultati": [
@@ -11013,7 +11343,7 @@
     "cognome": "MALERBA",
     "team_attuale": "IL PIRATA SAMA RICAMBI OTC",
     "team_id": "IL_PIRATA_SAMA_RICAMBI_OTC",
-    "categoria": "ELI_M",
+    "categoria": "ES2_M",
     "genere": "M",
     "punti_totali": 22,
     "risultati": [
@@ -11047,7 +11377,7 @@
     "cognome": "DELLA",
     "team_attuale": "UC COLTANO GRUBE COSTRUZIONI",
     "team_id": "UC_COLTANO_GRUBE_COSTRUZIONI",
-    "categoria": "ELI_M",
+    "categoria": "ES2_M",
     "genere": "M",
     "punti_totali": 22,
     "risultati": [
@@ -11081,7 +11411,7 @@
     "cognome": "COLETTA",
     "team_attuale": "TEAM CESARO-NERI-LUCCHINI",
     "team_id": "TEAM_CESARO_NERI_LUCCHINI",
-    "categoria": "ELI_M",
+    "categoria": "ES2_M",
     "genere": "M",
     "punti_totali": 23,
     "risultati": [
@@ -11115,7 +11445,7 @@
     "cognome": "BELLETTINI",
     "team_attuale": "S.C.COTIGNOLESE",
     "team_id": "S_C_COTIGNOLESE",
-    "categoria": "ELI_M",
+    "categoria": "ES2_M",
     "genere": "M",
     "punti_totali": 18,
     "risultati": [
@@ -11149,7 +11479,7 @@
     "cognome": "BATTISTELLI",
     "team_attuale": "ASD GUBBIO CICLISMO MOCAIANA",
     "team_id": "ASD_GUBBIO_CICLISMO_MOCAIANA",
-    "categoria": "ELI_M",
+    "categoria": "ES2_M",
     "genere": "M",
     "punti_totali": 5,
     "risultati": [
@@ -11172,7 +11502,7 @@
     "cognome": "NICOLINI",
     "team_attuale": "PEDALE SARZANESE",
     "team_id": "PEDALE_SARZANESE",
-    "categoria": "ELI_M",
+    "categoria": "ES2_M",
     "genere": "M",
     "punti_totali": 7,
     "risultati": [
@@ -11206,7 +11536,7 @@
     "cognome": "CAVALLINI",
     "team_attuale": "UC EMPOLESE",
     "team_id": "UC_EMPOLESE",
-    "categoria": "ELI_M",
+    "categoria": "ES2_M",
     "genere": "M",
     "punti_totali": 3,
     "risultati": [
@@ -11229,7 +11559,7 @@
     "cognome": "GALLO",
     "team_attuale": "ASD GUBBIO CICLISMO MOCAIANA",
     "team_id": "ASD_GUBBIO_CICLISMO_MOCAIANA",
-    "categoria": "ELI_M",
+    "categoria": "ES2_M",
     "genere": "M",
     "punti_totali": 2,
     "risultati": [
@@ -11252,7 +11582,7 @@
     "cognome": "SIMI",
     "team_attuale": "UC EMPOLESE",
     "team_id": "UC_EMPOLESE",
-    "categoria": "ELI_M",
+    "categoria": "ES2_M",
     "genere": "M",
     "punti_totali": 1,
     "risultati": [
@@ -11275,7 +11605,7 @@
     "cognome": "VITALONI",
     "team_attuale": "A.S.D. CICLISTICA 2000",
     "team_id": "A_S_D_CICLISTICA_2000",
-    "categoria": "ELI_M",
+    "categoria": "ES2_M",
     "genere": "M",
     "punti_totali": 15,
     "risultati": [
@@ -11298,7 +11628,7 @@
     "cognome": "SICHERI",
     "team_attuale": "C.C. FORTI E VELOCI",
     "team_id": "C_C_FORTI_E_VELOCI",
-    "categoria": "ELI_M",
+    "categoria": "ES2_M",
     "genere": "M",
     "punti_totali": 12,
     "risultati": [
@@ -11321,7 +11651,7 @@
     "cognome": "CUMAN",
     "team_attuale": "MST CYCLING - SANDRIGO BIKE",
     "team_id": "MST_CYCLING_SANDRIGO_BIKE",
-    "categoria": "ELI_M",
+    "categoria": "ES2_M",
     "genere": "M",
     "punti_totali": 16,
     "risultati": [
@@ -11355,7 +11685,7 @@
     "cognome": "BOLTIC",
     "team_attuale": "ASD TEAM PETRUCCI",
     "team_id": "ASD_TEAM_PETRUCCI",
-    "categoria": "ELI_M",
+    "categoria": "ES2_M",
     "genere": "M",
     "punti_totali": 13,
     "risultati": [
@@ -11389,7 +11719,7 @@
     "cognome": "D'AQUILIO",
     "team_attuale": "ASD VELOCE CLUB BORGO",
     "team_id": "ASD_VELOCE_CLUB_BORGO",
-    "categoria": "ELI_M",
+    "categoria": "ES2_M",
     "genere": "M",
     "punti_totali": 6,
     "risultati": [
@@ -11412,7 +11742,7 @@
     "cognome": "SALVATI",
     "team_attuale": "ASD VELOCE CLUB BORGO",
     "team_id": "ASD_VELOCE_CLUB_BORGO",
-    "categoria": "ELI_M",
+    "categoria": "ES2_M",
     "genere": "M",
     "punti_totali": 20,
     "risultati": [
@@ -11446,7 +11776,7 @@
     "cognome": "QUINTERO",
     "team_attuale": "LIBERTAS RAIFFEISEN LAIVES ASD",
     "team_id": "LIBERTAS_RAIFFEISEN_LAIVES_ASD",
-    "categoria": "ELI_M",
+    "categoria": "ES2_M",
     "genere": "M",
     "punti_totali": 4,
     "risultati": [
@@ -11469,7 +11799,7 @@
     "cognome": "STRAPPAZZON",
     "team_attuale": "UC FOEN MICTU",
     "team_id": "UC_FOEN_MICTU",
-    "categoria": "ELI_M",
+    "categoria": "ES2_M",
     "genere": "M",
     "punti_totali": 3,
     "risultati": [
@@ -11492,7 +11822,7 @@
     "cognome": "RICCI",
     "team_attuale": "G.C. SOSSANO 1975",
     "team_id": "G_C_SOSSANO_1975",
-    "categoria": "ELI_M",
+    "categoria": "ES2_M",
     "genere": "M",
     "punti_totali": 6,
     "risultati": [
@@ -11526,7 +11856,7 @@
     "cognome": "RICCAMBONI",
     "team_attuale": "C.C. FORTI E VELOCI",
     "team_id": "C_C_FORTI_E_VELOCI",
-    "categoria": "ELI_M",
+    "categoria": "ES2_M",
     "genere": "M",
     "punti_totali": 1,
     "risultati": [
@@ -11549,7 +11879,7 @@
     "cognome": "BELLONI",
     "team_attuale": "TEAM SERIO",
     "team_id": "TEAM_SERIO",
-    "categoria": "ELI_M",
+    "categoria": "ES2_M",
     "genere": "M",
     "punti_totali": 30,
     "risultati": [
@@ -11583,7 +11913,7 @@
     "cognome": "TOIGO",
     "team_attuale": "UC FOEN MICTU",
     "team_id": "UC_FOEN_MICTU",
-    "categoria": "ELI_M",
+    "categoria": "ES2_M",
     "genere": "M",
     "punti_totali": 12,
     "risultati": [
@@ -11606,7 +11936,7 @@
     "cognome": "FONTANARI",
     "team_attuale": "ASD VELOCE CLUB BORGO",
     "team_id": "ASD_VELOCE_CLUB_BORGO",
-    "categoria": "ELI_M",
+    "categoria": "ES2_M",
     "genere": "M",
     "punti_totali": 12,
     "risultati": [
@@ -11640,7 +11970,7 @@
     "cognome": "TAGLIAFERRO",
     "team_attuale": "G.C. SOSSANO 1975",
     "team_id": "G_C_SOSSANO_1975",
-    "categoria": "ELI_M",
+    "categoria": "ES2_M",
     "genere": "M",
     "punti_totali": 10,
     "risultati": [
@@ -11674,7 +12004,7 @@
     "cognome": "FRANCHIN",
     "team_attuale": "FDB SPORT CLUB",
     "team_id": "FDB_SPORT_CLUB",
-    "categoria": "ELI_M",
+    "categoria": "ES2_M",
     "genere": "M",
     "punti_totali": 6,
     "risultati": [
@@ -11697,7 +12027,7 @@
     "cognome": "ZANOLINI",
     "team_attuale": "G.S. ALTO ADIGE - SUDTIROLPOST",
     "team_id": "G_S_ALTO_ADIGE_SUDTIROLPOST",
-    "categoria": "ELI_M",
+    "categoria": "ES2_M",
     "genere": "M",
     "punti_totali": 23,
     "risultati": [
@@ -11742,7 +12072,7 @@
     "cognome": "TIRAPELLE",
     "team_attuale": "ASD TEAM PETRUCCI",
     "team_id": "ASD_TEAM_PETRUCCI",
-    "categoria": "ELI_M",
+    "categoria": "ES2_M",
     "genere": "M",
     "punti_totali": 4,
     "risultati": [
@@ -11765,7 +12095,7 @@
     "cognome": "CHIANESE",
     "team_attuale": "ASD TEAM PETRUCCI",
     "team_id": "ASD_TEAM_PETRUCCI",
-    "categoria": "ELI_M",
+    "categoria": "ES2_M",
     "genere": "M",
     "punti_totali": 3,
     "risultati": [
@@ -11788,7 +12118,7 @@
     "cognome": "CORDIOLI",
     "team_attuale": "ASD TEAM PETRUCCI",
     "team_id": "ASD_TEAM_PETRUCCI",
-    "categoria": "ELI_M",
+    "categoria": "ES2_M",
     "genere": "M",
     "punti_totali": 2,
     "risultati": [
@@ -11811,7 +12141,7 @@
     "cognome": "BASSO",
     "team_attuale": "MST CYCLING - SANDRIGO BIKE",
     "team_id": "MST_CYCLING_SANDRIGO_BIKE",
-    "categoria": "ELI_M",
+    "categoria": "ES2_M",
     "genere": "M",
     "punti_totali": 1,
     "risultati": [
@@ -11834,7 +12164,7 @@
     "cognome": "ZUNICA",
     "team_attuale": "S. C. MINCIO-CHIESE A.S.D",
     "team_id": "S_C_MINCIO_CHIESE_A_S_D",
-    "categoria": "ELI_M",
+    "categoria": "ES2_M",
     "genere": "M",
     "punti_totali": 27,
     "risultati": [
@@ -11868,7 +12198,7 @@
     "cognome": "VERZIERA",
     "team_attuale": "ASD PEDALE CASALESE ARMOFER",
     "team_id": "ASD_PEDALE_CASALESE_ARMOFER",
-    "categoria": "ELI_M",
+    "categoria": "ES2_M",
     "genere": "M",
     "punti_totali": 14,
     "risultati": [
@@ -11902,7 +12232,7 @@
     "cognome": "BIANCINI",
     "team_attuale": "GS PIANELLO",
     "team_id": "GS_PIANELLO",
-    "categoria": "ELI_M",
+    "categoria": "ES2_M",
     "genere": "M",
     "punti_totali": 8,
     "risultati": [
@@ -11925,7 +12255,7 @@
     "cognome": "DELVECCHIO",
     "team_attuale": "ASD G. C. FAUSTO COPPI",
     "team_id": "ASD_G_C_FAUSTO_COPPI",
-    "categoria": "ELI_M",
+    "categoria": "ES2_M",
     "genere": "M",
     "punti_totali": 6,
     "risultati": [
@@ -11948,7 +12278,7 @@
     "cognome": "CATALANI",
     "team_attuale": "GS PIANELLO",
     "team_id": "GS_PIANELLO",
-    "categoria": "ELI_M",
+    "categoria": "ES2_M",
     "genere": "M",
     "punti_totali": 5,
     "risultati": [
@@ -11971,7 +12301,7 @@
     "cognome": "BELLAGAMBA",
     "team_attuale": "S.C.COTIGNOLESE",
     "team_id": "S_C_COTIGNOLESE",
-    "categoria": "ELI_M",
+    "categoria": "ES2_M",
     "genere": "M",
     "punti_totali": 4,
     "risultati": [
@@ -11994,7 +12324,7 @@
     "cognome": "CONSIGLI",
     "team_attuale": "MADIGNANESE CICLISMO A.S.D",
     "team_id": "MADIGNANESE_CICLISMO_A_S_D",
-    "categoria": "ELI_M",
+    "categoria": "ES2_M",
     "genere": "M",
     "punti_totali": 3,
     "risultati": [
@@ -12017,7 +12347,7 @@
     "cognome": "BRASOLIN",
     "team_attuale": "A.S.D. CICLISTICA MONSELICE",
     "team_id": "A_S_D_CICLISTICA_MONSELICE",
-    "categoria": "ELI_M",
+    "categoria": "ES2_M",
     "genere": "M",
     "punti_totali": 1,
     "risultati": [
@@ -12040,7 +12370,7 @@
     "cognome": "PARA",
     "team_attuale": "PEDALE RIMINESE FRECCE ROSSE",
     "team_id": "PEDALE_RIMINESE_FRECCE_ROSSE",
-    "categoria": "ELI_M",
+    "categoria": "ES2_M",
     "genere": "M",
     "punti_totali": 15,
     "risultati": [
@@ -12063,7 +12393,7 @@
     "cognome": "BALDERI",
     "team_attuale": "S.C. CAVRIAGO",
     "team_id": "S_C_CAVRIAGO",
-    "categoria": "ELI_M",
+    "categoria": "ES2_M",
     "genere": "M",
     "punti_totali": 12,
     "risultati": [
@@ -12086,7 +12416,7 @@
     "cognome": "ROMANELLI",
     "team_attuale": "SC POTENTIA-RINASCITA ASD",
     "team_id": "SC_POTENTIA_RINASCITA_ASD",
-    "categoria": "ELI_M",
+    "categoria": "ES2_M",
     "genere": "M",
     "punti_totali": 10,
     "risultati": [
@@ -12109,7 +12439,7 @@
     "cognome": "DI",
     "team_attuale": "POL. FIUMICINESE FA.I.T. ADRIATICA",
     "team_id": "POL_FIUMICINESE_FA_I_T_ADRIATICA",
-    "categoria": "ELI_M",
+    "categoria": "ES2_M",
     "genere": "M",
     "punti_totali": 20,
     "risultati": [
@@ -12143,7 +12473,7 @@
     "cognome": "STOCCO",
     "team_attuale": "A.S.D. CICLISTICA MONSELICE",
     "team_id": "A_S_D_CICLISTICA_MONSELICE",
-    "categoria": "ELI_M",
+    "categoria": "ES2_M",
     "genere": "M",
     "punti_totali": 6,
     "risultati": [
@@ -12166,7 +12496,7 @@
     "cognome": "ANELLI",
     "team_attuale": "PEDALE RIMINESE FRECCE ROSSE",
     "team_id": "PEDALE_RIMINESE_FRECCE_ROSSE",
-    "categoria": "ELI_M",
+    "categoria": "ES2_M",
     "genere": "M",
     "punti_totali": 5,
     "risultati": [
@@ -12189,7 +12519,7 @@
     "cognome": "SCACCIATELLI",
     "team_attuale": "FOLIGNO CYCLING TEAM ASD",
     "team_id": "FOLIGNO_CYCLING_TEAM_ASD",
-    "categoria": "ELI_M",
+    "categoria": "ES2_M",
     "genere": "M",
     "punti_totali": 4,
     "risultati": [
@@ -12212,7 +12542,7 @@
     "cognome": "PASERI",
     "team_attuale": "GS PIANELLO",
     "team_id": "GS_PIANELLO",
-    "categoria": "ELI_M",
+    "categoria": "ES2_M",
     "genere": "M",
     "punti_totali": 3,
     "risultati": [
@@ -12235,7 +12565,7 @@
     "cognome": "TUDISCO",
     "team_attuale": "FOLIGNO CYCLING TEAM ASD",
     "team_id": "FOLIGNO_CYCLING_TEAM_ASD",
-    "categoria": "ELI_M",
+    "categoria": "ES2_M",
     "genere": "M",
     "punti_totali": 1,
     "risultati": [
@@ -12258,7 +12588,7 @@
     "cognome": "GAMBA",
     "team_attuale": "CICLISTICA TREVIGLIESE",
     "team_id": "CICLISTICA_TREVIGLIESE",
-    "categoria": "ELI_M",
+    "categoria": "ES2_M",
     "genere": "M",
     "punti_totali": 12,
     "risultati": [
@@ -12281,7 +12611,7 @@
     "cognome": "MANESSI",
     "team_attuale": "G.S. RONCO MAURIGI DELIO GALLINA",
     "team_id": "G_S_RONCO_MAURIGI_DELIO_GALLINA",
-    "categoria": "ELI_M",
+    "categoria": "ES2_M",
     "genere": "M",
     "punti_totali": 10,
     "risultati": [
@@ -12304,7 +12634,7 @@
     "cognome": "DIXON",
     "team_attuale": "FERALPI MONTECLARENSE ASD",
     "team_id": "FERALPI_MONTECLARENSE_ASD",
-    "categoria": "ELI_M",
+    "categoria": "ES2_M",
     "genere": "M",
     "punti_totali": 8,
     "risultati": [
@@ -12327,7 +12657,7 @@
     "cognome": "PERSONELLI",
     "team_attuale": "CICLISTICA TREVIGLIESE",
     "team_id": "CICLISTICA_TREVIGLIESE",
-    "categoria": "ELI_M",
+    "categoria": "ES2_M",
     "genere": "M",
     "punti_totali": 4,
     "risultati": [
@@ -12350,7 +12680,7 @@
     "cognome": "TURATI",
     "team_attuale": "G.S.GIOVANI GIUSSANESI A.S.D.",
     "team_id": "G_S_GIOVANI_GIUSSANESI_A_S_D",
-    "categoria": "ELI_M",
+    "categoria": "ES2_M",
     "genere": "M",
     "punti_totali": 2,
     "risultati": [
@@ -12373,7 +12703,7 @@
     "cognome": "VALENTI",
     "team_attuale": "G.S. RONCO MAURIGI DELIO GALLINA",
     "team_id": "G_S_RONCO_MAURIGI_DELIO_GALLINA",
-    "categoria": "ELI_M",
+    "categoria": "ES2_M",
     "genere": "M",
     "punti_totali": 1,
     "risultati": [
@@ -12396,7 +12726,7 @@
     "cognome": "MARCHESI",
     "team_attuale": "V CYCLING - ARICI CLAUDIA - PITON",
     "team_id": "V_CYCLING_ARICI_CLAUDIA_PITON",
-    "categoria": "ELI_M",
+    "categoria": "ES2_M",
     "genere": "M",
     "punti_totali": 15,
     "risultati": [
@@ -12419,7 +12749,7 @@
     "cognome": "BONINI",
     "team_attuale": "G.S. RONCO MAURIGI DELIO GALLINA",
     "team_id": "G_S_RONCO_MAURIGI_DELIO_GALLINA",
-    "categoria": "ELI_M",
+    "categoria": "ES2_M",
     "genere": "M",
     "punti_totali": 10,
     "risultati": [
@@ -12442,7 +12772,7 @@
     "cognome": "CANALI",
     "team_attuale": "OXYGEN EBIKE STORE BRESCIA",
     "team_id": "OXYGEN_EBIKE_STORE_BRESCIA",
-    "categoria": "ELI_M",
+    "categoria": "ES2_M",
     "genere": "M",
     "punti_totali": 8,
     "risultati": [
@@ -12465,7 +12795,7 @@
     "cognome": "COLOMBO",
     "team_attuale": "SAN GEO A.S.D.",
     "team_id": "SAN_GEO_A_S_D",
-    "categoria": "ELI_M",
+    "categoria": "ES2_M",
     "genere": "M",
     "punti_totali": 5,
     "risultati": [
@@ -12488,7 +12818,7 @@
     "cognome": "CORNALI",
     "team_attuale": "OROBICI",
     "team_id": "OROBICI",
-    "categoria": "ELI_M",
+    "categoria": "ES2_M",
     "genere": "M",
     "punti_totali": 4,
     "risultati": [
@@ -12511,7 +12841,7 @@
     "cognome": "COLOMBO",
     "team_attuale": "S.C. BRUGHERIO SPORTIVA ASD",
     "team_id": "S_C_BRUGHERIO_SPORTIVA_ASD",
-    "categoria": "ELI_M",
+    "categoria": "ES2_M",
     "genere": "M",
     "punti_totali": 1,
     "risultati": [
@@ -12534,7 +12864,7 @@
     "cognome": "BENEDINI",
     "team_attuale": "G.S. ALZATE BRIANZA - SYSTEM CAR",
     "team_id": "G_S_ALZATE_BRIANZA_SYSTEM_CAR",
-    "categoria": "ELI_M",
+    "categoria": "ES2_M",
     "genere": "M",
     "punti_totali": 10,
     "risultati": [
@@ -12557,7 +12887,7 @@
     "cognome": "MORI",
     "team_attuale": "BUSTESE OLONIA A.S.D.",
     "team_id": "BUSTESE_OLONIA_A_S_D",
-    "categoria": "ELI_M",
+    "categoria": "ES2_M",
     "genere": "M",
     "punti_totali": 6,
     "risultati": [
@@ -12580,7 +12910,7 @@
     "cognome": "IULIANO",
     "team_attuale": "BUSTESE OLONIA A.S.D.",
     "team_id": "BUSTESE_OLONIA_A_S_D",
-    "categoria": "ELI_M",
+    "categoria": "ES2_M",
     "genere": "M",
     "punti_totali": 5,
     "risultati": [
@@ -12603,7 +12933,7 @@
     "cognome": "GARAVAGLIA",
     "team_attuale": "BUSTO GAROLFO",
     "team_id": "BUSTO_GAROLFO",
-    "categoria": "ELI_M",
+    "categoria": "ES2_M",
     "genere": "M",
     "punti_totali": 4,
     "risultati": [
@@ -12626,7 +12956,7 @@
     "cognome": "PIOLETTI",
     "team_attuale": "PEDALE OSSOLANO",
     "team_id": "PEDALE_OSSOLANO",
-    "categoria": "ELI_M",
+    "categoria": "ES2_M",
     "genere": "M",
     "punti_totali": 3,
     "risultati": [
@@ -12649,7 +12979,7 @@
     "cognome": "COGO",
     "team_attuale": "G.S. PREALPINO A.S.D.",
     "team_id": "G_S_PREALPINO_A_S_D",
-    "categoria": "ELI_M",
+    "categoria": "ES2_M",
     "genere": "M",
     "punti_totali": 1,
     "risultati": [
@@ -12672,7 +13002,7 @@
     "cognome": "RACCA",
     "team_attuale": "ARDENS CYCLING TEAM",
     "team_id": "ARDENS_CYCLING_TEAM",
-    "categoria": "ELI_M",
+    "categoria": "ES2_M",
     "genere": "M",
     "punti_totali": 15,
     "risultati": [
@@ -12695,7 +13025,7 @@
     "cognome": "ALTARE",
     "team_attuale": "VIGOR - CYCLING TEAM",
     "team_id": "VIGOR_CYCLING_TEAM",
-    "categoria": "ELI_M",
+    "categoria": "ES2_M",
     "genere": "M",
     "punti_totali": 12,
     "risultati": [
@@ -12718,7 +13048,7 @@
     "cognome": "MILANI",
     "team_attuale": "BUSTESE OLONIA A.S.D.",
     "team_id": "BUSTESE_OLONIA_A_S_D",
-    "categoria": "ELI_M",
+    "categoria": "ES2_M",
     "genere": "M",
     "punti_totali": 10,
     "risultati": [
@@ -12741,7 +13071,7 @@
     "cognome": "RANZINI",
     "team_attuale": "BUSTO GAROLFO",
     "team_id": "BUSTO_GAROLFO",
-    "categoria": "ELI_M",
+    "categoria": "ES2_M",
     "genere": "M",
     "punti_totali": 6,
     "risultati": [
@@ -12764,7 +13094,7 @@
     "cognome": "ARATARI",
     "team_attuale": "V.C. LUGANO",
     "team_id": "V_C_LUGANO",
-    "categoria": "ELI_M",
+    "categoria": "ES2_M",
     "genere": "M",
     "punti_totali": 3,
     "risultati": [
@@ -12787,7 +13117,7 @@
     "cognome": "SALVI",
     "team_attuale": "G.S. ALZATE BRIANZA - SYSTEM CAR",
     "team_id": "G_S_ALZATE_BRIANZA_SYSTEM_CAR",
-    "categoria": "ELI_M",
+    "categoria": "ES2_M",
     "genere": "M",
     "punti_totali": 2,
     "risultati": [
@@ -12810,7 +13140,7 @@
     "cognome": "PISARRA",
     "team_attuale": "G.S. PREALPINO A.S.D.",
     "team_id": "G_S_PREALPINO_A_S_D",
-    "categoria": "ELI_M",
+    "categoria": "ES2_M",
     "genere": "M",
     "punti_totali": 4,
     "risultati": [
@@ -12844,7 +13174,7 @@
     "cognome": "SALVIATO",
     "team_attuale": "G.S. TAVO BONIN BIKE",
     "team_id": "G_S_TAVO_BONIN_BIKE",
-    "categoria": "ELI_M",
+    "categoria": "ES2_M",
     "genere": "M",
     "punti_totali": 20,
     "risultati": [
@@ -12878,7 +13208,7 @@
     "cognome": "RHAZZALI",
     "team_attuale": "IND. FORNITURE MORO-C&G CAPITAL",
     "team_id": "IND_FORNITURE_MORO_C_G_CAPITAL",
-    "categoria": "ELI_M",
+    "categoria": "ES2_M",
     "genere": "M",
     "punti_totali": 16,
     "risultati": [
@@ -12912,7 +13242,7 @@
     "cognome": "MORO",
     "team_attuale": "G.S. MOSOLE",
     "team_id": "G_S_MOSOLE",
-    "categoria": "ELI_M",
+    "categoria": "ES2_M",
     "genere": "M",
     "punti_totali": 16,
     "risultati": [
@@ -12946,7 +13276,7 @@
     "cognome": "ARITON",
     "team_attuale": "A.S.D. POSTUMIA 73 D.L. CICLISMO",
     "team_id": "A_S_D_POSTUMIA_73_D_L_CICLISMO",
-    "categoria": "ELI_M",
+    "categoria": "ES2_M",
     "genere": "M",
     "punti_totali": 21,
     "risultati": [
@@ -12980,7 +13310,7 @@
     "cognome": "BOTTAZZO",
     "team_attuale": "UC GODIGESE ABRA IRIDE",
     "team_id": "UC_GODIGESE_ABRA_IRIDE",
-    "categoria": "ELI_M",
+    "categoria": "ES2_M",
     "genere": "M",
     "punti_totali": 6,
     "risultati": [
@@ -13014,7 +13344,7 @@
     "cognome": "BARBIERO",
     "team_attuale": "U.S.SCUOLA CICLISMO VO'",
     "team_id": "U_S_SCUOLA_CICLISMO_VO",
-    "categoria": "ELI_M",
+    "categoria": "ES2_M",
     "genere": "M",
     "punti_totali": 12,
     "risultati": [
@@ -13048,7 +13378,7 @@
     "cognome": "DONEDDU",
     "team_attuale": "U.S.SCUOLA CICLISMO VO'",
     "team_id": "U_S_SCUOLA_CICLISMO_VO",
-    "categoria": "ELI_M",
+    "categoria": "ES2_M",
     "genere": "M",
     "punti_totali": 3,
     "risultati": [
@@ -13071,7 +13401,7 @@
     "cognome": "PONCATO",
     "team_attuale": "RICHEZE ACADEMY",
     "team_id": "RICHEZE_ACADEMY",
-    "categoria": "ELI_M",
+    "categoria": "ES2_M",
     "genere": "M",
     "punti_totali": 1,
     "risultati": [
@@ -13094,7 +13424,7 @@
     "cognome": "BACCHIN",
     "team_attuale": "IND. FORNITURE MORO-C&G CAPITAL",
     "team_id": "IND_FORNITURE_MORO_C_G_CAPITAL",
-    "categoria": "ELI_M",
+    "categoria": "ES2_M",
     "genere": "M",
     "punti_totali": 10,
     "risultati": [
@@ -13117,7 +13447,7 @@
     "cognome": "SPOLVERATO",
     "team_attuale": "U.S.SCUOLA CICLISMO VO'",
     "team_id": "U_S_SCUOLA_CICLISMO_VO",
-    "categoria": "ELI_M",
+    "categoria": "ES2_M",
     "genere": "M",
     "punti_totali": 23,
     "risultati": [
@@ -13151,7 +13481,7 @@
     "cognome": "FASOLI",
     "team_attuale": "OFF.ALBERTI U.C. VAL D'ILLASI",
     "team_id": "OFF_ALBERTI_U_C_VAL_D_ILLASI",
-    "categoria": "ELI_M",
+    "categoria": "ES2_M",
     "genere": "M",
     "punti_totali": 4,
     "risultati": [
@@ -13174,7 +13504,7 @@
     "cognome": "DA",
     "team_attuale": "OFF.ALBERTI U.C. VAL D'ILLASI",
     "team_id": "OFF_ALBERTI_U_C_VAL_D_ILLASI",
-    "categoria": "ELI_M",
+    "categoria": "ES2_M",
     "genere": "M",
     "punti_totali": 3,
     "risultati": [
@@ -13197,7 +13527,7 @@
     "cognome": "DE",
     "team_attuale": "G.C.POSTIOMA",
     "team_id": "G_C_POSTIOMA",
-    "categoria": "ELI_M",
+    "categoria": "ES2_M",
     "genere": "M",
     "punti_totali": 2,
     "risultati": [
@@ -13220,7 +13550,7 @@
     "cognome": "MARTINELLI",
     "team_attuale": "ASD TEAM PETRUCCI",
     "team_id": "ASD_TEAM_PETRUCCI",
-    "categoria": "ELI_M",
+    "categoria": "ES2_M",
     "genere": "M",
     "punti_totali": 1,
     "risultati": [
@@ -13243,7 +13573,7 @@
     "cognome": "DI",
     "team_attuale": "UC EMPOLESE",
     "team_id": "UC_EMPOLESE",
-    "categoria": "ELI_M",
+    "categoria": "ES2_M",
     "genere": "M",
     "punti_totali": 10,
     "risultati": [
@@ -13266,7 +13596,7 @@
     "cognome": "PITEO",
     "team_attuale": "TEAM CESARO-NERI-LUCCHINI",
     "team_id": "TEAM_CESARO_NERI_LUCCHINI",
-    "categoria": "ELI_M",
+    "categoria": "ES2_M",
     "genere": "M",
     "punti_totali": 8,
     "risultati": [
@@ -13289,7 +13619,7 @@
     "cognome": "BOLOGNESI",
     "team_attuale": "UC COLTANO GRUBE COSTRUZIONI",
     "team_id": "UC_COLTANO_GRUBE_COSTRUZIONI",
-    "categoria": "ELI_M",
+    "categoria": "ES2_M",
     "genere": "M",
     "punti_totali": 6,
     "risultati": [
@@ -13312,7 +13642,7 @@
     "cognome": "CIUCCI",
     "team_attuale": "UC COLTANO GRUBE COSTRUZIONI",
     "team_id": "UC_COLTANO_GRUBE_COSTRUZIONI",
-    "categoria": "ELI_M",
+    "categoria": "ES2_M",
     "genere": "M",
     "punti_totali": 5,
     "risultati": [
@@ -13335,7 +13665,7 @@
     "cognome": "ORLANDINI",
     "team_attuale": "UC EMPOLESE",
     "team_id": "UC_EMPOLESE",
-    "categoria": "ELI_M",
+    "categoria": "ES2_M",
     "genere": "M",
     "punti_totali": 4,
     "risultati": [
@@ -13358,7 +13688,7 @@
     "cognome": "FIORILLO",
     "team_attuale": "TEAM CESARO-NERI-LUCCHINI",
     "team_id": "TEAM_CESARO_NERI_LUCCHINI",
-    "categoria": "ELI_M",
+    "categoria": "ES2_M",
     "genere": "M",
     "punti_totali": 3,
     "risultati": [
@@ -13381,7 +13711,7 @@
     "cognome": "RISTORI",
     "team_attuale": "AC F. BESSI CALENZANO DONORATICO",
     "team_id": "AC_F_BESSI_CALENZANO_DONORATICO",
-    "categoria": "ELI_M",
+    "categoria": "ES2_M",
     "genere": "M",
     "punti_totali": 2,
     "risultati": [
@@ -13404,7 +13734,7 @@
     "cognome": "VELAJ",
     "team_attuale": "C.C. APPENNINICO 1907",
     "team_id": "C_C_APPENNINICO_1907",
-    "categoria": "ELI_M",
+    "categoria": "ES2_M",
     "genere": "M",
     "punti_totali": 1,
     "risultati": [
@@ -13427,7 +13757,7 @@
     "cognome": "VARINI",
     "team_attuale": "TEAM CORATTI",
     "team_id": "TEAM_CORATTI",
-    "categoria": "ELI_M",
+    "categoria": "ES2_M",
     "genere": "M",
     "punti_totali": 6,
     "risultati": [
@@ -13450,7 +13780,7 @@
     "cognome": "BONUCCELLI",
     "team_attuale": "UC PIANO DI MOMMIO - SPEEDY BIKE",
     "team_id": "UC_PIANO_DI_MOMMIO_SPEEDY_BIKE",
-    "categoria": "ELI_M",
+    "categoria": "ES2_M",
     "genere": "M",
     "punti_totali": 5,
     "risultati": [
@@ -13473,7 +13803,7 @@
     "cognome": "PUCCI",
     "team_attuale": "GS BERTI MOBILI BENASSI",
     "team_id": "GS_BERTI_MOBILI_BENASSI",
-    "categoria": "ELI_M",
+    "categoria": "ES2_M",
     "genere": "M",
     "punti_totali": 4,
     "risultati": [
@@ -13496,7 +13826,7 @@
     "cognome": "AURICCHIO",
     "team_attuale": "TEAM GIUNIGOR - B.BIKE",
     "team_id": "TEAM_GIUNIGOR_B_BIKE",
-    "categoria": "ELI_M",
+    "categoria": "ES2_M",
     "genere": "M",
     "punti_totali": 2,
     "risultati": [
@@ -13519,7 +13849,7 @@
     "cognome": "RAYADI",
     "team_attuale": "UC EMPOLESE",
     "team_id": "UC_EMPOLESE",
-    "categoria": "ELI_M",
+    "categoria": "ES2_M",
     "genere": "M",
     "punti_totali": 1,
     "risultati": [
@@ -13542,7 +13872,7 @@
     "cognome": "BIFFIS",
     "team_attuale": "U.C.S. OTTAVIO ZULIANI A.S.D.",
     "team_id": "U_C_S_OTTAVIO_ZULIANI_A_S_D",
-    "categoria": "ELI_M",
+    "categoria": "ES2_M",
     "genere": "M",
     "punti_totali": 12,
     "risultati": [
@@ -13565,7 +13895,7 @@
     "cognome": "GHIRARDO",
     "team_attuale": "TEAM BOSCO DI ORSAGO",
     "team_id": "TEAM_BOSCO_DI_ORSAGO",
-    "categoria": "ELI_M",
+    "categoria": "ES2_M",
     "genere": "M",
     "punti_totali": 10,
     "risultati": [
@@ -13588,7 +13918,7 @@
     "cognome": "RIGHETTO",
     "team_attuale": "IND. FORNITURE MORO-C&G CAPITAL",
     "team_id": "IND_FORNITURE_MORO_C_G_CAPITAL",
-    "categoria": "ELI_M",
+    "categoria": "ES2_M",
     "genere": "M",
     "punti_totali": 8,
     "risultati": [
@@ -13611,7 +13941,7 @@
     "cognome": "BINO",
     "team_attuale": "G.S. RONCO MAURIGI DELIO GALLINA",
     "team_id": "G_S_RONCO_MAURIGI_DELIO_GALLINA",
-    "categoria": "ELI_M",
+    "categoria": "ES2_M",
     "genere": "M",
     "punti_totali": 6,
     "risultati": [
@@ -13634,7 +13964,7 @@
     "cognome": "CASTELLAN",
     "team_attuale": "UC GODIGESE ABRA IRIDE",
     "team_id": "UC_GODIGESE_ABRA_IRIDE",
-    "categoria": "ELI_M",
+    "categoria": "ES2_M",
     "genere": "M",
     "punti_totali": 5,
     "risultati": [
@@ -13657,7 +13987,7 @@
     "cognome": "PESSOTTO",
     "team_attuale": "TEAM BOSCO DI ORSAGO",
     "team_id": "TEAM_BOSCO_DI_ORSAGO",
-    "categoria": "ELI_M",
+    "categoria": "ES2_M",
     "genere": "M",
     "punti_totali": 2,
     "risultati": [
@@ -13680,7 +14010,7 @@
     "cognome": "SCALDAFERRO",
     "team_attuale": "VELO JUNIOR NOVE",
     "team_id": "VELO_JUNIOR_NOVE",
-    "categoria": "ELI_M",
+    "categoria": "ES2_M",
     "genere": "M",
     "punti_totali": 1,
     "risultati": [
@@ -13703,7 +14033,7 @@
     "cognome": "SPESSOTTO",
     "team_attuale": "VC SAN VENDEMIANO",
     "team_id": "VC_SAN_VENDEMIANO",
-    "categoria": "ELI_M",
+    "categoria": "ES2_M",
     "genere": "M",
     "punti_totali": 12,
     "risultati": [
@@ -13726,7 +14056,7 @@
     "cognome": "MARINO",
     "team_attuale": "TEAM SENAGHESE GUERRINI",
     "team_id": "TEAM_SENAGHESE_GUERRINI",
-    "categoria": "ELI_M",
+    "categoria": "ES2_M",
     "genere": "M",
     "punti_totali": 3,
     "risultati": [

@@ -29,13 +29,18 @@ def load_calendar_from_excel(file_path):
             "tipo": ["Tipo", "tipo", "Categoria (Regionale, Nazionale, ecc)", "Classe"],
             "genere": ["Genere", "Uomini/Donne", "Sesso"],
             "categoria": ["Categoria", "cat"],
+            "regione": ["Regione", "regione", "REG"],
             "reginale": ["Campionato Regionale?", "Campionato Regionale", "CR"],
             "italiano": ["Campionato Italiano?", "Campionato Italiano", "CI"]
         }
 
         def find_col(key):
+            targets = [t.lower() for t in col_map[key]]
             for c in df.columns:
-                if c in col_map[key]: return c
+                c_clean = str(c).lower().strip()
+                # Match esatto o la colonna contiene uno dei target
+                for t in targets:
+                    if t == c_clean or t in c_clean: return c
             return None
 
         c_nome = find_col("nome")
@@ -43,6 +48,7 @@ def load_calendar_from_excel(file_path):
         c_tipo = find_col("tipo")
         c_gen = find_col("genere")
         c_cat = find_col("categoria")
+        c_reg = find_col("regione")
         c_cr = find_col("reginale")
         c_ci = find_col("italiano")
 
@@ -77,6 +83,7 @@ def load_calendar_from_excel(file_path):
             genere = "F" if "F" in gen_raw or "DON" in gen_raw else "M"
             
             cat = str(row.get(c_cat, "Elite-Under23")).strip()
+            regione = str(row.get(c_reg, "ITALIA")).strip()
             
             is_cr = str(row.get(c_cr, "")).lower() in ["si", "sì", "1", "true", "x"]
             is_ci = str(row.get(c_ci, "")).lower() in ["si", "sì", "1", "true", "x"]
@@ -90,6 +97,7 @@ def load_calendar_from_excel(file_path):
                 "mese": int(date_iso.split("-")[1]),
                 "anno": int(date_iso.split("-")[0]),
                 "categoria": cat,
+                "regione": regione,
                 "genere": genere,
                 "tipo": tipo,
                 "campionato_regionale": is_cr,

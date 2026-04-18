@@ -129,6 +129,7 @@ def parse_page_results(html_content, category, calendar):
                         "gara_id": gara_id,
                         "nome_gara": final_race_name,
                         "data": final_race_date,
+                        "regione": matched.get("regione", "ITALIA"),
                         "categoria": category,
                         "posizione": position,
                         "nome": nome,
