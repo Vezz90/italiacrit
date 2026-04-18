@@ -1,0 +1,112 @@
+[
+  {
+    "id": "SOLENNE_MANUEL",
+    "cognome": "SOLENNE",
+    "nome": "MANUEL",
+    "team": "MADONNA DI CAMPAGNA",
+    "pts": 15,
+    "p1": 1,
+    "p2": 0,
+    "p3": 0,
+    "pos": 1
+  },
+  {
+    "id": "MARCONI_SIMONE",
+    "cognome": "MARCONI",
+    "nome": "SIMONE",
+    "team": "POOL CANTU' - SOVICO - GB TEAM",
+    "pts": 12,
+    "p1": 0,
+    "p2": 1,
+    "p3": 0,
+    "pos": 2
+  },
+  {
+    "id": "TREMBLAN_RAPHAEL",
+    "cognome": "TREMBLAN",
+    "nome": "RAPHAEL",
+    "team": "G.S. LUPI VALLE D'AOSTA",
+    "pts": 10,
+    "p1": 0,
+    "p2": 0,
+    "p3": 1,
+    "pos": 3
+  },
+  {
+    "id": "DI_LEO_FABIO",
+    "cognome": "DI",
+    "nome": "LEO FABIO",
+    "team": "POOL CANTU' - SOVICO - GB TEAM",
+    "pts": 8,
+    "p1": 0,
+    "p2": 0,
+    "p3": 0,
+    "pos": 4
+  },
+  {
+    "id": "MARTI_GIUSEPPE",
+    "cognome": "MARTI",
+    "nome": "GIUSEPPE",
+    "team": "ASD PEDALE CASALESE ARMOFER",
+    "pts": 6,
+    "p1": 0,
+    "p2": 0,
+    "p3": 0,
+    "pos": 5
+  },
+  {
+    "id": "CASALICCHIO_NICOLO",
+    "cognome": "CASALICCHIO",
+    "nome": "NICOLO'",
+    "team": "MADONNA DI CAMPAGNA",
+    "pts": 5,
+    "p1": 0,
+    "p2": 0,
+    "p3": 0,
+    "pos": 6
+  },
+  {
+    "id": "OSTINELLI_MATTIA",
+    "cognome": "OSTINELLI",
+    "nome": "MATTIA",
+    "team": "G.S. ALZATE BRIANZA - SYSTEM CAR",
+    "pts": 4,
+    "p1": 0,
+    "p2": 0,
+    "p3": 0,
+    "pos": 7
+  },
+  {
+    "id": "SOLDARINI_LORENZO",
+    "cognome": "SOLDARINI",
+    "nome": "LORENZO",
+    "team": "POOL CANTU' - SOVICO - GB TEAM",
+    "pts": 3,
+    "p1": 0,
+    "p2": 0,
+    "p3": 0,
+    "pos": 8
+  },
+  {
+    "id": "FOSSATI_TOMMASO",
+    "cognome": "FOSSATI",
+    "nome": "TOMMASO",
+    "team": "I CINGHIALI EVO",
+    "pts": 2,
+    "p1": 0,
+    "p2": 0,
+    "p3": 0,
+    "pos": 9
+  },
+  {
+    "id": "PHILIPPOT_JOEL",
+    "cognome": "PHILIPPOT",
+    "nome": "JOEL",
+    "team": "G.S. LUPI VALLE D'AOSTA",
+    "pts": 1,
+    "p1": 0,
+    "p2": 0,
+    "p3": 0,
+    "pos": 10
+  }
+]

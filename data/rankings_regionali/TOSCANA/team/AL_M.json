@@ -1,0 +1,262 @@
+[
+  {
+    "id": "AC_F_BESSI_CALENZANO_DONORATICO_AL_M",
+    "nome": "AC F. BESSI CALENZANO DONORATICO",
+    "pts": 58,
+    "p1": 1,
+    "p2": 1,
+    "p3": 1,
+    "pos": 1,
+    "prev_pos": 1
+  },
+  {
+    "id": "GS_IPERFINISH_STABBIA_AL_M",
+    "nome": "G.S. IPERFINISH STABBIA",
+    "pts": 47,
+    "p1": 0,
+    "p2": 0,
+    "p3": 1,
+    "pos": 2,
+    "prev_pos": 2
+  },
+  {
+    "id": "TEAM_CORATTI_AL_M",
+    "nome": "TEAM CORATTI",
+    "pts": 36,
+    "p1": 2,
+    "p2": 0,
+    "p3": 0,
+    "pos": 3,
+    "prev_pos": 3
+  },
+  {
+    "id": "TEAM_VALDINIEVOLE_ASD_AL_M",
+    "nome": "TEAM VALDINIEVOLE A.S.D.",
+    "pts": 34,
+    "p1": 0,
+    "p2": 1,
+    "p3": 1,
+    "pos": 4,
+    "prev_pos": 7
+  },
+  {
+    "id": "PIESSE_CYCLING_TEAM_AL_M",
+    "nome": "PIESSE CYCLING TEAM",
+    "pts": 25,
+    "p1": 1,
+    "p2": 0,
+    "p3": 1,
+    "pos": 5,
+    "prev_pos": 12
+  },
+  {
+    "id": "GIUSFREDI_AL_M",
+    "nome": "GIUSFREDI",
+    "pts": 25,
+    "p1": 1,
+    "p2": 0,
+    "p3": 0,
+    "pos": 6,
+    "prev_pos": 4
+  },
+  {
+    "id": "SCRECANATI_MARINELLI_CANTARINI_AL_M",
+    "nome": "S.C.RECANATI MARINELLI CANTARINI",
+    "pts": 21,
+    "p1": 0,
+    "p2": 1,
+    "p3": 0,
+    "pos": 7,
+    "prev_pos": 5
+  },
+  {
+    "id": "IL_PIRATA_VANGI_OTC_AL_M",
+    "nome": "IL PIRATA VANGI OTC",
+    "pts": 18,
+    "p1": 0,
+    "p2": 0,
+    "p3": 1,
+    "pos": 8,
+    "prev_pos": 6
+  },
+  {
+    "id": "QUILIANO_BIKE_SPEED_WHEEL_AL_M",
+    "nome": "QUILIANO BIKE SPEED WHEEL",
+    "pts": 15,
+    "p1": 1,
+    "p2": 0,
+    "p3": 0,
+    "pos": 9,
+    "prev_pos": 8
+  },
+  {
+    "id": "UC_CITTA_DI_CASTELLO_ASD_AL_M",
+    "nome": "U.C. CITTA' DI CASTELLO A.S.D.",
+    "pts": 13,
+    "p1": 0,
+    "p2": 0,
+    "p3": 0,
+    "pos": 10,
+    "prev_pos": 15
+  },
+  {
+    "id": "ASD_PEDALE_CASALESE_ARMOFER_AL_M",
+    "nome": "ASD PEDALE CASALESE ARMOFER",
+    "pts": 12,
+    "p1": 0,
+    "p2": 1,
+    "p3": 0,
+    "pos": 11,
+    "prev_pos": 9
+  },
+  {
+    "id": "TEAM_FACT_ACADEMY_AL_M",
+    "nome": "TEAM FACT ACADEMY",
+    "pts": 12,
+    "p1": 0,
+    "p2": 1,
+    "p3": 0,
+    "pos": 12,
+    "prev_pos": 10
+  },
+  {
+    "id": "MADONNA_DI_CAMPAGNA_AL_M",
+    "nome": "MADONNA DI CAMPAGNA",
+    "pts": 12,
+    "p1": 0,
+    "p2": 1,
+    "p3": 0,
+    "pos": 13,
+    "prev_pos": 11
+  },
+  {
+    "id": "ETHICA_ZERO24_CYCLING_TEAM_AL_M",
+    "nome": "ETHICA ZERO24 CYCLING TEAM",
+    "pts": 10,
+    "p1": 0,
+    "p2": 0,
+    "p3": 1,
+    "pos": 14,
+    "prev_pos": 13
+  },
+  {
+    "id": "UC_COLTANO_GRUBE_COSTRUZIONI_AL_M",
+    "nome": "UC COLTANO GRUBE COSTRUZIONI",
+    "pts": 10,
+    "p1": 0,
+    "p2": 0,
+    "p3": 0,
+    "pos": 15,
+    "prev_pos": 14
+  },
+  {
+    "id": "V_CYCLING_ARICI_CLAUDIA_PITON_AL_M",
+    "nome": "V CYCLING - ARICI CLAUDIA - PITON",
+    "pts": 8,
+    "p1": 0,
+    "p2": 0,
+    "p3": 0,
+    "pos": 16,
+    "prev_pos": 16
+  },
+  {
+    "id": "SALUS_CICLISTICA_SEREGNO_DE_ROSA_AL_M",
+    "nome": "SALUS CICLISTICA SEREGNO DE ROSA",
+    "pts": 7,
+    "p1": 0,
+    "p2": 0,
+    "p3": 0,
+    "pos": 17,
+    "prev_pos": 17
+  },
+  {
+    "id": "TEAM_CESARONERILUCCHINI_AL_M",
+    "nome": "TEAM CESARO-NERI-LUCCHINI",
+    "pts": 5,
+    "p1": 0,
+    "p2": 0,
+    "p3": 0,
+    "pos": 18,
+    "prev_pos": 26
+  },
+  {
+    "id": "SS_AQUILA_AL_M",
+    "nome": "SS AQUILA",
+    "pts": 5,
+    "p1": 0,
+    "p2": 0,
+    "p3": 0,
+    "pos": 19,
+    "prev_pos": 18
+  },
+  {
+    "id": "ASD_CICLISTICA_2000_AL_M",
+    "nome": "A.S.D. CICLISTICA 2000",
+    "pts": 5,
+    "p1": 0,
+    "p2": 0,
+    "p3": 0,
+    "pos": 20,
+    "prev_pos": 19
+  },
+  {
+    "id": "SAN_MINIATO_CICLISMO_ASD_AL_M",
+    "nome": "SAN MINIATO CICLISMO A.S.D.",
+    "pts": 5,
+    "p1": 0,
+    "p2": 0,
+    "p3": 0,
+    "pos": 21,
+    "prev_pos": 20
+  },
+  {
+    "id": "SC_CAVRIAGO_AL_M",
+    "nome": "S.C. CAVRIAGO",
+    "pts": 3,
+    "p1": 0,
+    "p2": 0,
+    "p3": 0,
+    "pos": 22,
+    "prev_pos": 21
+  },
+  {
+    "id": "ASD_EFFETTO_CICLISMO_NOI_SPORT_AL_M",
+    "nome": "ASD EFFETTO CICLISMO - NOI SPORT",
+    "pts": 3,
+    "p1": 0,
+    "p2": 0,
+    "p3": 0,
+    "pos": 23,
+    "prev_pos": 22
+  },
+  {
+    "id": "CAMBKE_AL_M",
+    "nome": "CAMB!KE",
+    "pts": 3,
+    "p1": 0,
+    "p2": 0,
+    "p3": 0,
+    "pos": 24,
+    "prev_pos": 23
+  },
+  {
+    "id": "ARMONEX_PRO_CYCLING_TEAM_AL_M",
+    "nome": "A.R.MONEX PRO CYCLING TEAM",
+    "pts": 2,
+    "p1": 0,
+    "p2": 0,
+    "p3": 0,
+    "pos": 25,
+    "prev_pos": 24
+  },
+  {
+    "id": "GS_BUTESE_AL_M",
+    "nome": "GS BUTESE",
+    "pts": 2,
+    "p1": 0,
+    "p2": 0,
+    "p3": 0,
+    "pos": 26,
+    "prev_pos": 25
+  }
+]

@@ -1,0 +1,82 @@
+[
+  {
+    "id": "SAMABIKE_ES2_M",
+    "nome": "SAMABIKE",
+    "pts": 47,
+    "p1": 1,
+    "p2": 1,
+    "p3": 2,
+    "pos": 1,
+    "prev_pos": 1
+  },
+  {
+    "id": "DUEPPI_CYCLING_PROJECT_ES2_M",
+    "nome": "DUEPPI CYCLING PROJECT",
+    "pts": 23,
+    "p1": 1,
+    "p2": 0,
+    "p3": 0,
+    "pos": 2,
+    "prev_pos": 2
+  },
+  {
+    "id": "CRAZY_WHEELS_CYCLING_ACADEMY_ES2_M",
+    "nome": "CRAZY WHEELS - CYCLING ACADEMY",
+    "pts": 19,
+    "p1": 0,
+    "p2": 1,
+    "p3": 0,
+    "pos": 3,
+    "prev_pos": 5
+  },
+  {
+    "id": "SESTU_BIKE_ASD_ES2_M",
+    "nome": "SESTU BIKE A.S.D.",
+    "pts": 13,
+    "p1": 0,
+    "p2": 0,
+    "p3": 0,
+    "pos": 4,
+    "prev_pos": 4
+  },
+  {
+    "id": "CANNEDU_ITTIRI_A_MANCA_ASD_ES2_M",
+    "nome": "CANNEDU ITTIRI \"A. MANCA\" ASD",
+    "pts": 12,
+    "p1": 0,
+    "p2": 0,
+    "p3": 0,
+    "pos": 5,
+    "prev_pos": 7
+  },
+  {
+    "id": "SC_TERRANOVA_FANCELLO_CICLI_ES2_M",
+    "nome": "S.C. TERRANOVA FANCELLO CICLI",
+    "pts": 9,
+    "p1": 0,
+    "p2": 0,
+    "p3": 0,
+    "pos": 6,
+    "prev_pos": 6
+  },
+  {
+    "id": "VELO_CLUB_SARROCH_ES2_M",
+    "nome": "VELO CLUB SARROCH",
+    "pts": 8,
+    "p1": 0,
+    "p2": 0,
+    "p3": 0,
+    "pos": 7,
+    "prev_pos": 3
+  },
+  {
+    "id": "SC_OZIERESE_ES2_M",
+    "nome": "S.C. OZIERESE",
+    "pts": 1,
+    "p1": 0,
+    "p2": 0,
+    "p3": 0,
+    "pos": 8,
+    "prev_pos": 8
+  }
+]

@@ -1,0 +1,112 @@
+[
+  {
+    "id": "FIACCO_ANDREA",
+    "cognome": "FIACCO",
+    "nome": "ANDREA",
+    "team": "TEAM CORATTI",
+    "pts": 15,
+    "p1": 1,
+    "p2": 0,
+    "p3": 0,
+    "pos": 1
+  },
+  {
+    "id": "SOLENNE_MANUEL",
+    "cognome": "SOLENNE",
+    "nome": "MANUEL",
+    "team": "MADONNA DI CAMPAGNA",
+    "pts": 12,
+    "p1": 0,
+    "p2": 1,
+    "p3": 0,
+    "pos": 2
+  },
+  {
+    "id": "VITALI_GIULIO",
+    "cognome": "VITALI",
+    "nome": "GIULIO",
+    "team": "ETHICA ZERO24 CYCLING TEAM",
+    "pts": 10,
+    "p1": 0,
+    "p2": 0,
+    "p3": 1,
+    "pos": 3
+  },
+  {
+    "id": "FROSINI_RICCARDO",
+    "cognome": "FROSINI",
+    "nome": "RICCARDO",
+    "team": "AC F. BESSI CALENZANO DONORATICO",
+    "pts": 8,
+    "p1": 0,
+    "p2": 0,
+    "p3": 0,
+    "pos": 4
+  },
+  {
+    "id": "SDRUCCIOLI_DAVIDE",
+    "cognome": "SDRUCCIOLI",
+    "nome": "DAVIDE",
+    "team": "S.C.RECANATI MARINELLI CANTARINI",
+    "pts": 6,
+    "p1": 0,
+    "p2": 0,
+    "p3": 0,
+    "pos": 5
+  },
+  {
+    "id": "MORI_ANDREA",
+    "cognome": "MORI",
+    "nome": "ANDREA",
+    "team": "G.S. IPERFINISH STABBIA",
+    "pts": 5,
+    "p1": 0,
+    "p2": 0,
+    "p3": 0,
+    "pos": 6
+  },
+  {
+    "id": "GINESI_DANIELE",
+    "cognome": "GINESI",
+    "nome": "DANIELE",
+    "team": "G.S. IPERFINISH STABBIA",
+    "pts": 4,
+    "p1": 0,
+    "p2": 0,
+    "p3": 0,
+    "pos": 7
+  },
+  {
+    "id": "PIERANGELINI_RICCARDO",
+    "cognome": "PIERANGELINI",
+    "nome": "RICCARDO",
+    "team": "S.C.RECANATI MARINELLI CANTARINI",
+    "pts": 3,
+    "p1": 0,
+    "p2": 0,
+    "p3": 0,
+    "pos": 8
+  },
+  {
+    "id": "GALLO_GIUSEPPE",
+    "cognome": "GALLO",
+    "nome": "GIUSEPPE",
+    "team": "TEAM CORATTI",
+    "pts": 2,
+    "p1": 0,
+    "p2": 0,
+    "p3": 0,
+    "pos": 9
+  },
+  {
+    "id": "CEROFOLINI_LEONARDO",
+    "cognome": "CEROFOLINI",
+    "nome": "LEONARDO",
+    "team": "SS AQUILA",
+    "pts": 1,
+    "p1": 0,
+    "p2": 0,
+    "p3": 0,
+    "pos": 10
+  }
+]

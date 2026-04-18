@@ -1,0 +1,112 @@
+[
+  {
+    "id": "VITALONI_THOMAS",
+    "cognome": "VITALONI",
+    "nome": "THOMAS",
+    "team": "A.S.D. CICLISTICA 2000",
+    "pts": 15,
+    "p1": 1,
+    "p2": 0,
+    "p3": 0,
+    "pos": 1
+  },
+  {
+    "id": "SICHERI_YURI",
+    "cognome": "SICHERI",
+    "nome": "YURI",
+    "team": "C.C. FORTI E VELOCI",
+    "pts": 12,
+    "p1": 0,
+    "p2": 1,
+    "p3": 0,
+    "pos": 2
+  },
+  {
+    "id": "CUMAN_DAVIDE",
+    "cognome": "CUMAN",
+    "nome": "DAVIDE",
+    "team": "MST CYCLING - SANDRIGO BIKE",
+    "pts": 10,
+    "p1": 0,
+    "p2": 0,
+    "p3": 1,
+    "pos": 3
+  },
+  {
+    "id": "BOLTIC_VLADIMIR",
+    "cognome": "BOLTIC",
+    "nome": "VLADIMIR",
+    "team": "ASD TEAM PETRUCCI",
+    "pts": 8,
+    "p1": 0,
+    "p2": 0,
+    "p3": 0,
+    "pos": 4
+  },
+  {
+    "id": "DAQUILIO_JACOPO",
+    "cognome": "D'AQUILIO",
+    "nome": "JACOPO",
+    "team": "ASD VELOCE CLUB BORGO",
+    "pts": 6,
+    "p1": 0,
+    "p2": 0,
+    "p3": 0,
+    "pos": 5
+  },
+  {
+    "id": "SALVATI_GABRIELE_GERARDO",
+    "cognome": "SALVATI",
+    "nome": "GABRIELE GERARDO",
+    "team": "ASD VELOCE CLUB BORGO",
+    "pts": 5,
+    "p1": 0,
+    "p2": 0,
+    "p3": 0,
+    "pos": 6
+  },
+  {
+    "id": "QUINTERO_TORRES_THOMAS",
+    "cognome": "QUINTERO",
+    "nome": "TORRES THOMAS",
+    "team": "LIBERTAS RAIFFEISEN LAIVES ASD",
+    "pts": 4,
+    "p1": 0,
+    "p2": 0,
+    "p3": 0,
+    "pos": 7
+  },
+  {
+    "id": "STRAPPAZZON_RICCARDO",
+    "cognome": "STRAPPAZZON",
+    "nome": "RICCARDO",
+    "team": "UC FOEN MICTU",
+    "pts": 3,
+    "p1": 0,
+    "p2": 0,
+    "p3": 0,
+    "pos": 8
+  },
+  {
+    "id": "RICCI_RICCARDO",
+    "cognome": "RICCI",
+    "nome": "RICCARDO",
+    "team": "G.C. SOSSANO 1975",
+    "pts": 2,
+    "p1": 0,
+    "p2": 0,
+    "p3": 0,
+    "pos": 9
+  },
+  {
+    "id": "RICCAMBONI_LORENZO",
+    "cognome": "RICCAMBONI",
+    "nome": "LORENZO",
+    "team": "C.C. FORTI E VELOCI",
+    "pts": 1,
+    "p1": 0,
+    "p2": 0,
+    "p3": 0,
+    "pos": 10
+  }
+]

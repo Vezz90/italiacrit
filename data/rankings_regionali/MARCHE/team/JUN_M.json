@@ -1,0 +1,136 @@
+[
+  {
+    "id": "TEAM_VANGI_TOMMASINI_IL_PIRATA_JUN_M",
+    "nome": "TEAM VANGI TOMMASINI IL PIRATA",
+    "pts": 46,
+    "p1": 1,
+    "p2": 0,
+    "p3": 0,
+    "pos": 1
+  },
+  {
+    "id": "TEAM_GUERRINI_SENAGHESE_JUN_M",
+    "nome": "TEAM GUERRINI SENAGHESE",
+    "pts": 34,
+    "p1": 0,
+    "p2": 1,
+    "p3": 0,
+    "pos": 2
+  },
+  {
+    "id": "ETHICA_ZERO24_CYCLING_TEAM_JUN_M",
+    "nome": "ETHICA ZERO24 CYCLING TEAM",
+    "pts": 30,
+    "p1": 1,
+    "p2": 0,
+    "p3": 0,
+    "pos": 3,
+    "prev_pos": 1
+  },
+  {
+    "id": "TEAM_CORATTI_JUN_M",
+    "nome": "TEAM CORATTI",
+    "pts": 26,
+    "p1": 0,
+    "p2": 1,
+    "p3": 0,
+    "pos": 4,
+    "prev_pos": 2
+  },
+  {
+    "id": "PC_BAIX_EBRE_TORTOSA_JUN_M",
+    "nome": "PC BAIX EBRE TORTOSA",
+    "pts": 22,
+    "p1": 0,
+    "p2": 0,
+    "p3": 0,
+    "pos": 5,
+    "prev_pos": 3
+  },
+  {
+    "id": "GSGIOVANI_GIUSSANESI_ASD_JUN_M",
+    "nome": "G.S.GIOVANI GIUSSANESI A.S.D.",
+    "pts": 20,
+    "p1": 0,
+    "p2": 0,
+    "p3": 1,
+    "pos": 6
+  },
+  {
+    "id": "ASD_CICLISTICA_MONSELICE_JUN_M",
+    "nome": "A.S.D. CICLISTICA MONSELICE",
+    "pts": 20,
+    "p1": 0,
+    "p2": 0,
+    "p3": 1,
+    "pos": 7,
+    "prev_pos": 4
+  },
+  {
+    "id": "TEAM_GENERAL_SYSTEM_JUN_M",
+    "nome": "TEAM GENERAL SYSTEM",
+    "pts": 18,
+    "p1": 0,
+    "p2": 0,
+    "p3": 0,
+    "pos": 8,
+    "prev_pos": 5
+  },
+  {
+    "id": "POOL_CANTU_GB_TEAM_ASD_JUN_M",
+    "nome": "POOL CANTU' GB TEAM A.S.D.",
+    "pts": 16,
+    "p1": 0,
+    "p2": 0,
+    "p3": 0,
+    "pos": 9,
+    "prev_pos": 6
+  },
+  {
+    "id": "AUTOZAICONTRI_JUN_M",
+    "nome": "AUTOZAI-CONTRI",
+    "pts": 12,
+    "p1": 0,
+    "p2": 0,
+    "p3": 0,
+    "pos": 10
+  },
+  {
+    "id": "CPS_PROFESSIONAL_TEAM_JUN_M",
+    "nome": "CPS PROFESSIONAL TEAM",
+    "pts": 6,
+    "p1": 0,
+    "p2": 0,
+    "p3": 0,
+    "pos": 11
+  },
+  {
+    "id": "ASD_POSTUMIA_73_DL_CICLISMO_JUN_M",
+    "nome": "A.S.D. POSTUMIA 73 D.L. CICLISMO",
+    "pts": 6,
+    "p1": 0,
+    "p2": 0,
+    "p3": 0,
+    "pos": 12,
+    "prev_pos": 7
+  },
+  {
+    "id": "POLISPORTIVA_MONSUMMANESE_JUN_M",
+    "nome": "POLISPORTIVA MONSUMMANESE",
+    "pts": 4,
+    "p1": 0,
+    "p2": 0,
+    "p3": 0,
+    "pos": 13
+  },
+  {
+    "id": "TEAM_NERI_SOTTOLI_LUCCHINI_ENERGY_JUN_M",
+    "nome": "TEAM NERI SOTTOLI LUCCHINI ENERGY",
+    "pts": 4,
+    "p1": 0,
+    "p2": 0,
+    "p3": 0,
+    "pos": 14,
+    "prev_pos": 8
+  }
+]

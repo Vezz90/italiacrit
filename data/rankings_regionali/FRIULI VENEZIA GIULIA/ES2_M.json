@@ -1,0 +1,112 @@
+[
+  {
+    "id": "MEH_TEVZ",
+    "cognome": "MEH",
+    "nome": "TEVZ",
+    "team": "NOVO MESTO CYCLING ACADEMY",
+    "pts": 15,
+    "p1": 1,
+    "p2": 0,
+    "p3": 0,
+    "pos": 1
+  },
+  {
+    "id": "PIVA_GIACOMO",
+    "cognome": "PIVA",
+    "nome": "GIACOMO",
+    "team": "U.C.S. OTTAVIO ZULIANI A.S.D.",
+    "pts": 12,
+    "p1": 0,
+    "p2": 1,
+    "p3": 0,
+    "pos": 2
+  },
+  {
+    "id": "QUAIA_FILIPPO",
+    "cognome": "QUAIA",
+    "nome": "FILIPPO",
+    "team": "GOTTARDO GIOCHI CANEVA",
+    "pts": 10,
+    "p1": 0,
+    "p2": 0,
+    "p3": 1,
+    "pos": 3
+  },
+  {
+    "id": "GUERRA_NICOLO",
+    "cognome": "GUERRA",
+    "nome": "NICOLO'",
+    "team": "BANNIA ASS.SPORT.DILETT.",
+    "pts": 8,
+    "p1": 0,
+    "p2": 0,
+    "p3": 0,
+    "pos": 4
+  },
+  {
+    "id": "PREZELJ_JAKOB",
+    "cognome": "PREZELJ",
+    "nome": "JAKOB",
+    "team": "KD SLOGA 1902 IDRIJA",
+    "pts": 6,
+    "p1": 0,
+    "p2": 0,
+    "p3": 0,
+    "pos": 5
+  },
+  {
+    "id": "CARLET_SEBASTIANO",
+    "cognome": "CARLET",
+    "nome": "SEBASTIANO",
+    "team": "GOTTARDO GIOCHI CANEVA",
+    "pts": 5,
+    "p1": 0,
+    "p2": 0,
+    "p3": 0,
+    "pos": 6
+  },
+  {
+    "id": "TINE_MARINIC",
+    "cognome": "TINE",
+    "nome": "MARINIC",
+    "team": "KK PANTAL",
+    "pts": 4,
+    "p1": 0,
+    "p2": 0,
+    "p3": 0,
+    "pos": 7
+  },
+  {
+    "id": "CARLET_MATTIA",
+    "cognome": "CARLET",
+    "nome": "MATTIA",
+    "team": "SOC. SPORT.SANFIORESE",
+    "pts": 3,
+    "p1": 0,
+    "p2": 0,
+    "p3": 0,
+    "pos": 8
+  },
+  {
+    "id": "RUI_ALESSANDRO_VITTORE",
+    "cognome": "RUI",
+    "nome": "ALESSANDRO VITTORE",
+    "team": "A.S.D. SACILESE",
+    "pts": 2,
+    "p1": 0,
+    "p2": 0,
+    "p3": 0,
+    "pos": 9
+  },
+  {
+    "id": "PUST_NIK",
+    "cognome": "PUST",
+    "nome": "NIK",
+    "team": "NOVO MESTO CYCLING ACADEMY",
+    "pts": 1,
+    "p1": 0,
+    "p2": 0,
+    "p3": 0,
+    "pos": 10
+  }
+]

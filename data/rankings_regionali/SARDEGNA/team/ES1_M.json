@@ -1,0 +1,91 @@
+[
+  {
+    "id": "CRAZY_WHEELS_CYCLING_ACADEMY_ES1_M",
+    "nome": "CRAZY WHEELS - CYCLING ACADEMY",
+    "pts": 61,
+    "p1": 1,
+    "p2": 2,
+    "p3": 1,
+    "pos": 1,
+    "prev_pos": 1
+  },
+  {
+    "id": "SC_PATTADA_ES1_M",
+    "nome": "S.C. PATTADA",
+    "pts": 21,
+    "p1": 1,
+    "p2": 0,
+    "p3": 0,
+    "pos": 2,
+    "prev_pos": 2
+  },
+  {
+    "id": "SC_TERRANOVA_FANCELLO_CICLI_ES1_M",
+    "nome": "S.C. TERRANOVA FANCELLO CICLI",
+    "pts": 15,
+    "p1": 0,
+    "p2": 0,
+    "p3": 1,
+    "pos": 3,
+    "prev_pos": 4
+  },
+  {
+    "id": "POOL_BIKE_SERRAMANNA_ES1_M",
+    "nome": "POOL BIKE SERRAMANNA",
+    "pts": 12,
+    "p1": 0,
+    "p2": 0,
+    "p3": 0,
+    "pos": 4,
+    "prev_pos": 5
+  },
+  {
+    "id": "SAMABIKE_ES1_M",
+    "nome": "SAMABIKE",
+    "pts": 11,
+    "p1": 0,
+    "p2": 0,
+    "p3": 0,
+    "pos": 5,
+    "prev_pos": 3
+  },
+  {
+    "id": "JAMS_BIKE_TEAM_BUJA_ES1_M",
+    "nome": "JAM'S BIKE TEAM BUJA",
+    "pts": 4,
+    "p1": 0,
+    "p2": 0,
+    "p3": 0,
+    "pos": 6
+  },
+  {
+    "id": "VELO_CLUB_SARROCH_ES1_M",
+    "nome": "VELO CLUB SARROCH",
+    "pts": 3,
+    "p1": 0,
+    "p2": 0,
+    "p3": 0,
+    "pos": 7,
+    "prev_pos": 8
+  },
+  {
+    "id": "ALGHERO_BIKE_ASD_ES1_M",
+    "nome": "ALGHERO BIKE A.S.D.",
+    "pts": 3,
+    "p1": 0,
+    "p2": 0,
+    "p3": 0,
+    "pos": 8,
+    "prev_pos": 6
+  },
+  {
+    "id": "UC_GUSPINI_ASD_ES1_M",
+    "nome": "U.C. GUSPINI A.S.D.",
+    "pts": 2,
+    "p1": 0,
+    "p2": 0,
+    "p3": 0,
+    "pos": 9,
+    "prev_pos": 7
+  }
+]

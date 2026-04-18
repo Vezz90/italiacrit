@@ -1,0 +1,56 @@
+[
+  {
+    "id": "TEAM_CORATTI_AL_M",
+    "nome": "TEAM CORATTI",
+    "pts": 35,
+    "p1": 1,
+    "p2": 1,
+    "p3": 0,
+    "pos": 1
+  },
+  {
+    "id": "ASD_MORENO_DI_BIASE_AL_M",
+    "nome": "ASD MORENO DI BIASE",
+    "pts": 12,
+    "p1": 0,
+    "p2": 0,
+    "p3": 0,
+    "pos": 2
+  },
+  {
+    "id": "ASD_1D_UN_DENTE_IN_PIU_AL_M",
+    "nome": "ASD 1D+ UN DENTE IN PIU'",
+    "pts": 10,
+    "p1": 0,
+    "p2": 0,
+    "p3": 1,
+    "pos": 3
+  },
+  {
+    "id": "ASD_AMICISUPERSKI_AL_M",
+    "nome": "A.S.D. AMICISUPERSKI",
+    "pts": 4,
+    "p1": 0,
+    "p2": 0,
+    "p3": 0,
+    "pos": 4
+  },
+  {
+    "id": "ASD_FUSION_BIKE_AL_M",
+    "nome": "ASD FUSION BIKE",
+    "pts": 3,
+    "p1": 0,
+    "p2": 0,
+    "p3": 0,
+    "pos": 5
+  },
+  {
+    "id": "CAMBKE_AL_M",
+    "nome": "CAMB!KE",
+    "pts": 2,
+    "p1": 0,
+    "p2": 0,
+    "p3": 0,
+    "pos": 6
+  }
+]

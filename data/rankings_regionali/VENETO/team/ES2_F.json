@@ -1,0 +1,110 @@
+[
+  {
+    "id": "OFFALBERTI_UC_VAL_DILLASI_ES2_F",
+    "nome": "OFF.ALBERTI U.C. VAL D'ILLASI",
+    "pts": 27,
+    "p1": 1,
+    "p2": 1,
+    "p3": 0,
+    "pos": 1,
+    "prev_pos": 1
+  },
+  {
+    "id": "SCUOLA_CICLISMO_VERSO_LIRIDE_ES2_F",
+    "nome": "SCUOLA CICLISMO VERSO L'IRIDE",
+    "pts": 25,
+    "p1": 1,
+    "p2": 0,
+    "p3": 0,
+    "pos": 2,
+    "prev_pos": 6
+  },
+  {
+    "id": "ASD_VELOCE_CLUB_BORGO_ES2_F",
+    "nome": "ASD VELOCE CLUB BORGO",
+    "pts": 13,
+    "p1": 0,
+    "p2": 0,
+    "p3": 0,
+    "pos": 3,
+    "prev_pos": 4
+  },
+  {
+    "id": "MARY_J_SWEET_ANGEL_ASD_ES2_F",
+    "nome": "MARY J SWEET ANGEL ASD",
+    "pts": 12,
+    "p1": 0,
+    "p2": 1,
+    "p3": 0,
+    "pos": 4,
+    "prev_pos": 2
+  },
+  {
+    "id": "UC_GIORGIONE_ES2_F",
+    "nome": "U.C. GIORGIONE",
+    "pts": 12,
+    "p1": 0,
+    "p2": 0,
+    "p3": 1,
+    "pos": 5,
+    "prev_pos": 9
+  },
+  {
+    "id": "BREGANZE_MILLENIUM_ES2_F",
+    "nome": "BREGANZE MILLENIUM",
+    "pts": 12,
+    "p1": 0,
+    "p2": 0,
+    "p3": 0,
+    "pos": 6,
+    "prev_pos": 7
+  },
+  {
+    "id": "UCCONSCIO_PEDALE_DEL_SILE_ES2_F",
+    "nome": "U.C.CONSCIO PEDALE DEL SILE",
+    "pts": 12,
+    "p1": 0,
+    "p2": 0,
+    "p3": 0,
+    "pos": 7,
+    "prev_pos": 5
+  },
+  {
+    "id": "SPORT_CLUB_BRESCIA_FLANDRES_LOVE_ES2_F",
+    "nome": "SPORT CLUB BRESCIA - FLANDRES LOVE",
+    "pts": 10,
+    "p1": 0,
+    "p2": 0,
+    "p3": 1,
+    "pos": 8,
+    "prev_pos": 3
+  },
+  {
+    "id": "GC_SOSSANO_1975_ES2_F",
+    "nome": "G.C. SOSSANO 1975",
+    "pts": 6,
+    "p1": 0,
+    "p2": 0,
+    "p3": 0,
+    "pos": 9,
+    "prev_pos": 8
+  },
+  {
+    "id": "GS_LUPI_VALLE_DAOSTA_ES2_F",
+    "nome": "G.S. LUPI VALLE D'AOSTA",
+    "pts": 2,
+    "p1": 0,
+    "p2": 0,
+    "p3": 0,
+    "pos": 10
+  },
+  {
+    "id": "ASD_TEAM_PETRUCCI_ES2_F",
+    "nome": "ASD TEAM PETRUCCI",
+    "pts": 1,
+    "p1": 0,
+    "p2": 0,
+    "p3": 0,
+    "pos": 11
+  }
+]

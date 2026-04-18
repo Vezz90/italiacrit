@@ -1,0 +1,83 @@
+[
+  {
+    "id": "TEAM_PIUSPORT_ES1_M",
+    "nome": "TEAM PIU'SPORT",
+    "pts": 15,
+    "p1": 1,
+    "p2": 0,
+    "p3": 0,
+    "pos": 1
+  },
+  {
+    "id": "TEAM_SENAGHESE_GUERRINI_ES1_M",
+    "nome": "TEAM SENAGHESE GUERRINI",
+    "pts": 12,
+    "p1": 0,
+    "p2": 1,
+    "p3": 0,
+    "pos": 2
+  },
+  {
+    "id": "BUSTESE_OLONIA_ASD_ES1_M",
+    "nome": "BUSTESE OLONIA A.S.D.",
+    "pts": 11,
+    "p1": 0,
+    "p2": 0,
+    "p3": 0,
+    "pos": 3
+  },
+  {
+    "id": "GS_ALZATE_BRIANZA_SYSTEM_CAR_ES1_M",
+    "nome": "G.S. ALZATE BRIANZA - SYSTEM CAR",
+    "pts": 10,
+    "p1": 0,
+    "p2": 0,
+    "p3": 1,
+    "pos": 4
+  },
+  {
+    "id": "HG_CYCLING_TEAM_ES1_M",
+    "nome": "HG CYCLING TEAM",
+    "pts": 8,
+    "p1": 0,
+    "p2": 0,
+    "p3": 0,
+    "pos": 5
+  },
+  {
+    "id": "BUSTO_GAROLFO_ES1_M",
+    "nome": "BUSTO GAROLFO",
+    "pts": 4,
+    "p1": 0,
+    "p2": 0,
+    "p3": 0,
+    "pos": 6
+  },
+  {
+    "id": "PEDALE_OSSOLANO_ES1_M",
+    "nome": "PEDALE OSSOLANO",
+    "pts": 3,
+    "p1": 0,
+    "p2": 0,
+    "p3": 0,
+    "pos": 7
+  },
+  {
+    "id": "CONTRABAND_CYCLING_TEAM_ASD_ES1_M",
+    "nome": "CONTRABAND CYCLING TEAM ASD",
+    "pts": 2,
+    "p1": 0,
+    "p2": 0,
+    "p3": 0,
+    "pos": 8
+  },
+  {
+    "id": "GS_PREALPINO_ASD_ES1_M",
+    "nome": "G.S. PREALPINO A.S.D.",
+    "pts": 1,
+    "p1": 0,
+    "p2": 0,
+    "p3": 0,
+    "pos": 9
+  }
+]

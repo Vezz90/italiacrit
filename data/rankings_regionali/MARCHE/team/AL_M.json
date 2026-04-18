@@ -1,0 +1,65 @@
+[
+  {
+    "id": "TEAM_CORATTI_AL_M",
+    "nome": "TEAM CORATTI",
+    "pts": 17,
+    "p1": 1,
+    "p2": 0,
+    "p3": 0,
+    "pos": 1
+  },
+  {
+    "id": "MADONNA_DI_CAMPAGNA_AL_M",
+    "nome": "MADONNA DI CAMPAGNA",
+    "pts": 12,
+    "p1": 0,
+    "p2": 1,
+    "p3": 0,
+    "pos": 2
+  },
+  {
+    "id": "ETHICA_ZERO24_CYCLING_TEAM_AL_M",
+    "nome": "ETHICA ZERO24 CYCLING TEAM",
+    "pts": 10,
+    "p1": 0,
+    "p2": 0,
+    "p3": 1,
+    "pos": 3
+  },
+  {
+    "id": "SCRECANATI_MARINELLI_CANTARINI_AL_M",
+    "nome": "S.C.RECANATI MARINELLI CANTARINI",
+    "pts": 9,
+    "p1": 0,
+    "p2": 0,
+    "p3": 0,
+    "pos": 4
+  },
+  {
+    "id": "GS_IPERFINISH_STABBIA_AL_M",
+    "nome": "G.S. IPERFINISH STABBIA",
+    "pts": 9,
+    "p1": 0,
+    "p2": 0,
+    "p3": 0,
+    "pos": 5
+  },
+  {
+    "id": "AC_F_BESSI_CALENZANO_DONORATICO_AL_M",
+    "nome": "AC F. BESSI CALENZANO DONORATICO",
+    "pts": 8,
+    "p1": 0,
+    "p2": 0,
+    "p3": 0,
+    "pos": 6
+  },
+  {
+    "id": "SS_AQUILA_AL_M",
+    "nome": "SS AQUILA",
+    "pts": 1,
+    "p1": 0,
+    "p2": 0,
+    "p3": 0,
+    "pos": 7
+  }
+]

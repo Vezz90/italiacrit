@@ -1,0 +1,29 @@
+[
+  {
+    "id": "MULTICAR_GRUPPO_AMARU_ELI_M",
+    "nome": "MULTICAR GRUPPO AMARU'",
+    "pts": 15,
+    "p1": 1,
+    "p2": 0,
+    "p3": 0,
+    "pos": 1
+  },
+  {
+    "id": "ASD_CAMPOBELLO_RUNNING_BIKE_ELI_M",
+    "nome": "ASD CAMPOBELLO RUNNING & BIKE",
+    "pts": 12,
+    "p1": 0,
+    "p2": 1,
+    "p3": 0,
+    "pos": 2
+  },
+  {
+    "id": "MADONETEAM_BIKE_SICILIA_ELI_M",
+    "nome": "MADONE-TEAM BIKE SICILIA",
+    "pts": 10,
+    "p1": 0,
+    "p2": 0,
+    "p3": 1,
+    "pos": 3
+  }
+]

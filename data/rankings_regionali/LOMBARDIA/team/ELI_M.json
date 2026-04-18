@@ -1,0 +1,231 @@
+[
+  {
+    "id": "SOLME_OLMO_ARVEDI_ELI_M",
+    "nome": "SOLME - OLMO - ARVEDI",
+    "pts": 92,
+    "p1": 2,
+    "p2": 1,
+    "p3": 0,
+    "pos": 1,
+    "prev_pos": 1
+  },
+  {
+    "id": "GENERAL_STORE_ESSEGIBIFLLI_CURIA_ELI_M",
+    "nome": "GENERAL STORE -ESSEGIBI-F.LLI CURIA",
+    "pts": 60,
+    "p1": 1,
+    "p2": 1,
+    "p3": 0,
+    "pos": 2,
+    "prev_pos": 2
+  },
+  {
+    "id": "BELTRAMI_TSA_TRE_COLLI_ELI_M",
+    "nome": "BELTRAMI TSA TRE COLLI",
+    "pts": 55,
+    "p1": 0,
+    "p2": 0,
+    "p3": 1,
+    "pos": 3,
+    "prev_pos": 3
+  },
+  {
+    "id": "UCRAINA_ELI_M",
+    "nome": "UCRAINA",
+    "pts": 27,
+    "p1": 0,
+    "p2": 0,
+    "p3": 1,
+    "pos": 4,
+    "prev_pos": 4
+  },
+  {
+    "id": "OVERALL_TRE_COLLI_CYCLING_TEAM_ELI_M",
+    "nome": "OVERALL TRE COLLI CYCLING TEAM",
+    "pts": 24,
+    "p1": 0,
+    "p2": 1,
+    "p3": 0,
+    "pos": 5,
+    "prev_pos": 15
+  },
+  {
+    "id": "VCMENDRISIO_ELI_M",
+    "nome": "V.C.MENDRISIO",
+    "pts": 24,
+    "p1": 0,
+    "p2": 1,
+    "p3": 0,
+    "pos": 6,
+    "prev_pos": 5
+  },
+  {
+    "id": "GRAGNANO_SPORTING_CLUB_ELI_M",
+    "nome": "GRAGNANO SPORTING CLUB",
+    "pts": 24,
+    "p1": 0,
+    "p2": 0,
+    "p3": 0,
+    "pos": 7,
+    "prev_pos": 6
+  },
+  {
+    "id": "UC_TREVIGIANI_ENERGIAPURA_MARCHIOL_ELI_M",
+    "nome": "U.C TREVIGIANI ENERGIAPURA MARCHIOL",
+    "pts": 23,
+    "p1": 0,
+    "p2": 0,
+    "p3": 1,
+    "pos": 8,
+    "prev_pos": 7
+  },
+  {
+    "id": "ASD_SC_PADOVANI_ELI_M",
+    "nome": "A.S.D. S.C. PADOVANI",
+    "pts": 22,
+    "p1": 0,
+    "p2": 0,
+    "p3": 0,
+    "pos": 9,
+    "prev_pos": 11
+  },
+  {
+    "id": "MENTECORPO_TEAM_ELI_M",
+    "nome": "MENTECORPO TEAM",
+    "pts": 21,
+    "p1": 1,
+    "p2": 0,
+    "p3": 0,
+    "pos": 10,
+    "prev_pos": 8
+  },
+  {
+    "id": "CICLISTICA_ROSTESE_ELI_M",
+    "nome": "CICLISTICA ROSTESE",
+    "pts": 20,
+    "p1": 0,
+    "p2": 0,
+    "p3": 1,
+    "pos": 11,
+    "prev_pos": 9
+  },
+  {
+    "id": "VEGA_VITALCARE_DYNATEK_ELI_M",
+    "nome": "VEGA VITALCARE DYNATEK",
+    "pts": 20,
+    "p1": 0,
+    "p2": 0,
+    "p3": 0,
+    "pos": 12,
+    "prev_pos": 10
+  },
+  {
+    "id": "ASD_GC_SISSIO_TEAM_ELI_M",
+    "nome": "ASD G.C. SISSIO TEAM",
+    "pts": 17,
+    "p1": 0,
+    "p2": 0,
+    "p3": 0,
+    "pos": 13,
+    "prev_pos": 18
+  },
+  {
+    "id": "GOODSHOP_YOYOGURT_ELI_M",
+    "nome": "GOODSHOP YOYOGURT",
+    "pts": 15,
+    "p1": 1,
+    "p2": 0,
+    "p3": 0,
+    "pos": 14
+  },
+  {
+    "id": "RIME_DRALI_ELI_M",
+    "nome": "RIME DRALI",
+    "pts": 14,
+    "p1": 0,
+    "p2": 0,
+    "p3": 1,
+    "pos": 15,
+    "prev_pos": 12
+  },
+  {
+    "id": "TEAM_TECHNIPES_INEMILIAROMAGNA_ELI_M",
+    "nome": "TEAM TECHNIPES #INEMILIAROMAGNA",
+    "pts": 14,
+    "p1": 0,
+    "p2": 0,
+    "p3": 0,
+    "pos": 16,
+    "prev_pos": 13
+  },
+  {
+    "id": "ASD_TEAM_MOOVEO_ELI_M",
+    "nome": "ASD TEAM MOOVEO",
+    "pts": 12,
+    "p1": 0,
+    "p2": 1,
+    "p3": 0,
+    "pos": 17,
+    "prev_pos": 14
+  },
+  {
+    "id": "BELTRAMI_TSALA_RISORSA_UMANAVC_RE_ELI_M",
+    "nome": "BELTRAMI TSA-LA RISORSA UMANA-VC RE",
+    "pts": 12,
+    "p1": 0,
+    "p2": 0,
+    "p3": 0,
+    "pos": 18,
+    "prev_pos": 16
+  },
+  {
+    "id": "CAMPANA_IMBALLAGGI_MORBIATO_TRENTINO_ELI_M",
+    "nome": "CAMPANA IMBALLAGGI MORBIATO TRENTINO",
+    "pts": 11,
+    "p1": 0,
+    "p2": 0,
+    "p3": 0,
+    "pos": 19,
+    "prev_pos": 19
+  },
+  {
+    "id": "SC_VALLE_SERIANA_CENE_ASD_ELI_M",
+    "nome": "S.C. VALLE SERIANA - CENE A.S.D.",
+    "pts": 10,
+    "p1": 0,
+    "p2": 0,
+    "p3": 0,
+    "pos": 20,
+    "prev_pos": 17
+  },
+  {
+    "id": "GALLINA_LUCCHINI_ECOTEK_ELI_M",
+    "nome": "GALLINA LUCCHINI ECOTEK",
+    "pts": 6,
+    "p1": 0,
+    "p2": 0,
+    "p3": 0,
+    "pos": 21,
+    "prev_pos": 20
+  },
+  {
+    "id": "VPM_MORETTI_SCS_ELI_M",
+    "nome": "VPM MORETTI SCS",
+    "pts": 3,
+    "p1": 0,
+    "p2": 0,
+    "p3": 0,
+    "pos": 22,
+    "prev_pos": 21
+  },
+  {
+    "id": "SLOVENIA_NATIONAL_TEAM_ELI_M",
+    "nome": "SLOVENIA NATIONAL TEAM",
+    "pts": 2,
+    "p1": 0,
+    "p2": 0,
+    "p3": 0,
+    "pos": 23,
+    "prev_pos": 22
+  }
+]

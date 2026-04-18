@@ -1,0 +1,112 @@
+[
+  {
+    "id": "GARSI_NICOLA",
+    "cognome": "GARSI",
+    "nome": "NICOLA",
+    "team": "TEAM PIU'SPORT",
+    "pts": 15,
+    "p1": 1,
+    "p2": 0,
+    "p3": 0,
+    "pos": 1
+  },
+  {
+    "id": "PEDROTTI_IAGO",
+    "cognome": "PEDROTTI",
+    "nome": "IAGO",
+    "team": "TEAM SENAGHESE GUERRINI",
+    "pts": 12,
+    "p1": 0,
+    "p2": 1,
+    "p3": 0,
+    "pos": 2
+  },
+  {
+    "id": "BENEDINI_GIULIO",
+    "cognome": "BENEDINI",
+    "nome": "GIULIO",
+    "team": "G.S. ALZATE BRIANZA - SYSTEM CAR",
+    "pts": 10,
+    "p1": 0,
+    "p2": 0,
+    "p3": 1,
+    "pos": 3
+  },
+  {
+    "id": "LOMBARDI_SAMUELE",
+    "cognome": "LOMBARDI",
+    "nome": "SAMUELE",
+    "team": "HG CYCLING TEAM",
+    "pts": 8,
+    "p1": 0,
+    "p2": 0,
+    "p3": 0,
+    "pos": 4
+  },
+  {
+    "id": "MORI_EDOARDO_VITTORIO",
+    "cognome": "MORI",
+    "nome": "EDOARDO VITTORIO",
+    "team": "BUSTESE OLONIA A.S.D.",
+    "pts": 6,
+    "p1": 0,
+    "p2": 0,
+    "p3": 0,
+    "pos": 5
+  },
+  {
+    "id": "IULIANO_LORENZO",
+    "cognome": "IULIANO",
+    "nome": "LORENZO",
+    "team": "BUSTESE OLONIA A.S.D.",
+    "pts": 5,
+    "p1": 0,
+    "p2": 0,
+    "p3": 0,
+    "pos": 6
+  },
+  {
+    "id": "GARAVAGLIA_LEONARDO",
+    "cognome": "GARAVAGLIA",
+    "nome": "LEONARDO",
+    "team": "BUSTO GAROLFO",
+    "pts": 4,
+    "p1": 0,
+    "p2": 0,
+    "p3": 0,
+    "pos": 7
+  },
+  {
+    "id": "PIOLETTI_NIKOLAS",
+    "cognome": "PIOLETTI",
+    "nome": "NIKOLAS",
+    "team": "PEDALE OSSOLANO",
+    "pts": 3,
+    "p1": 0,
+    "p2": 0,
+    "p3": 0,
+    "pos": 8
+  },
+  {
+    "id": "BARBERO_ALESSANDRO",
+    "cognome": "BARBERO",
+    "nome": "ALESSANDRO",
+    "team": "CONTRABAND CYCLING TEAM ASD",
+    "pts": 2,
+    "p1": 0,
+    "p2": 0,
+    "p3": 0,
+    "pos": 9
+  },
+  {
+    "id": "COGO_ACHILLE",
+    "cognome": "COGO",
+    "nome": "ACHILLE",
+    "team": "G.S. PREALPINO A.S.D.",
+    "pts": 1,
+    "p1": 0,
+    "p2": 0,
+    "p3": 0,
+    "pos": 10
+  }
+]

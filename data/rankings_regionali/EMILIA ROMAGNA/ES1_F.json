@@ -1,0 +1,112 @@
+[
+  {
+    "id": "MANNELLI_MATILDE",
+    "cognome": "MANNELLI",
+    "nome": "MATILDE",
+    "team": "GS CAPANNORI",
+    "pts": 15,
+    "p1": 1,
+    "p2": 0,
+    "p3": 0,
+    "pos": 1
+  },
+  {
+    "id": "DI_PARDO_BEATRICE",
+    "cognome": "DI",
+    "nome": "PARDO BEATRICE",
+    "team": "POL. FIUMICINESE FA.I.T. ADRIATICA",
+    "pts": 12,
+    "p1": 0,
+    "p2": 1,
+    "p3": 0,
+    "pos": 2
+  },
+  {
+    "id": "SAMBI_CORINNA",
+    "cognome": "SAMBI",
+    "nome": "CORINNA",
+    "team": "POL. FIUMICINESE FA.I.T. ADRIATICA",
+    "pts": 10,
+    "p1": 0,
+    "p2": 0,
+    "p3": 1,
+    "pos": 3
+  },
+  {
+    "id": "NERI_SARA",
+    "cognome": "NERI",
+    "nome": "SARA",
+    "team": "BICIFESTIVAL",
+    "pts": 8,
+    "p1": 0,
+    "p2": 0,
+    "p3": 0,
+    "pos": 4
+  },
+  {
+    "id": "GORGA_GRETA",
+    "cognome": "GORGA",
+    "nome": "GRETA",
+    "team": "UC DONORATICO",
+    "pts": 6,
+    "p1": 0,
+    "p2": 0,
+    "p3": 0,
+    "pos": 5
+  },
+  {
+    "id": "NARDELLI_GIORGIA",
+    "cognome": "NARDELLI",
+    "nome": "GIORGIA",
+    "team": "BUSTO GAROLFO",
+    "pts": 5,
+    "p1": 0,
+    "p2": 0,
+    "p3": 0,
+    "pos": 6
+  },
+  {
+    "id": "PIN_MATILDE",
+    "cognome": "PIN",
+    "nome": "MATILDE",
+    "team": "U.C.CONSCIO PEDALE DEL SILE",
+    "pts": 4,
+    "p1": 0,
+    "p2": 0,
+    "p3": 0,
+    "pos": 7
+  },
+  {
+    "id": "LODI_ATENA",
+    "cognome": "LODI",
+    "nome": "ATENA",
+    "team": "A.S.D CICLISTICA G.BONZAGNI",
+    "pts": 3,
+    "p1": 0,
+    "p2": 0,
+    "p3": 0,
+    "pos": 8
+  },
+  {
+    "id": "VOLLERO_SUSANNA",
+    "cognome": "VOLLERO",
+    "nome": "SUSANNA",
+    "team": "GS CAPANNORI",
+    "pts": 2,
+    "p1": 0,
+    "p2": 0,
+    "p3": 0,
+    "pos": 9
+  },
+  {
+    "id": "SFORZINI_SELENE",
+    "cognome": "SFORZINI",
+    "nome": "SELENE",
+    "team": "S.C. CESANO MADERNO",
+    "pts": 1,
+    "p1": 0,
+    "p2": 0,
+    "p3": 0,
+    "pos": 10
+  }
+]

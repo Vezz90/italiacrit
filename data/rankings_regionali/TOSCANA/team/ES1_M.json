@@ -1,0 +1,259 @@
+[
+  {
+    "id": "TEAM_SENAGHESE_GUERRINI_ES1_M",
+    "nome": "TEAM SENAGHESE GUERRINI",
+    "pts": 61,
+    "p1": 2,
+    "p2": 1,
+    "p3": 0,
+    "pos": 1,
+    "prev_pos": 1
+  },
+  {
+    "id": "UC_DONORATICO_ES1_M",
+    "nome": "UC DONORATICO",
+    "pts": 54,
+    "p1": 2,
+    "p2": 2,
+    "p3": 0,
+    "pos": 2,
+    "prev_pos": 2
+  },
+  {
+    "id": "CICLISTICA_TREVIGLIESE_ES1_M",
+    "nome": "CICLISTICA TREVIGLIESE",
+    "pts": 39,
+    "p1": 0,
+    "p2": 1,
+    "p3": 1,
+    "pos": 3,
+    "prev_pos": 3
+  },
+  {
+    "id": "UC_EMPOLESE_ES1_M",
+    "nome": "UC EMPOLESE",
+    "pts": 34,
+    "p1": 0,
+    "p2": 0,
+    "p3": 3,
+    "pos": 4,
+    "prev_pos": 4
+  },
+  {
+    "id": "TEAM_PIUSPORT_ES1_M",
+    "nome": "TEAM PIU'SPORT",
+    "pts": 27,
+    "p1": 1,
+    "p2": 1,
+    "p3": 0,
+    "pos": 5,
+    "prev_pos": 9
+  },
+  {
+    "id": "IL_PIRATA_SAMA_RICAMBI_OTC_ES1_M",
+    "nome": "IL PIRATA SAMA RICAMBI OTC",
+    "pts": 21,
+    "p1": 0,
+    "p2": 0,
+    "p3": 1,
+    "pos": 6,
+    "prev_pos": 11
+  },
+  {
+    "id": "TEAM_CESARONERILUCCHINI_ES1_M",
+    "nome": "TEAM CESARO-NERI-LUCCHINI",
+    "pts": 20,
+    "p1": 0,
+    "p2": 0,
+    "p3": 0,
+    "pos": 7,
+    "prev_pos": 5
+  },
+  {
+    "id": "GS_AVIS_BIKE_AMELIA_ES1_M",
+    "nome": "G.S. AVIS BIKE AMELIA",
+    "pts": 19,
+    "p1": 1,
+    "p2": 0,
+    "p3": 0,
+    "pos": 8,
+    "prev_pos": 6
+  },
+  {
+    "id": "UC_COLTANO_GRUBE_COSTRUZIONI_ES1_M",
+    "nome": "UC COLTANO GRUBE COSTRUZIONI",
+    "pts": 19,
+    "p1": 0,
+    "p2": 0,
+    "p3": 0,
+    "pos": 9,
+    "prev_pos": 7
+  },
+  {
+    "id": "CONTRABAND_CYCLING_TEAM_ASD_ES1_M",
+    "nome": "CONTRABAND CYCLING TEAM ASD",
+    "pts": 17,
+    "p1": 0,
+    "p2": 0,
+    "p3": 1,
+    "pos": 10,
+    "prev_pos": 8
+  },
+  {
+    "id": "GS_RONCO_MAURIGI_DELIO_GALLINA_ES1_M",
+    "nome": "G.S. RONCO MAURIGI DELIO GALLINA",
+    "pts": 12,
+    "p1": 0,
+    "p2": 1,
+    "p3": 0,
+    "pos": 11,
+    "prev_pos": 10
+  },
+  {
+    "id": "HG_CYCLING_TEAM_ES1_M",
+    "nome": "HG CYCLING TEAM",
+    "pts": 10,
+    "p1": 0,
+    "p2": 0,
+    "p3": 0,
+    "pos": 12,
+    "prev_pos": 14
+  },
+  {
+    "id": "ASD_CASTIGLIONESE_ES1_M",
+    "nome": "A.S.D. CASTIGLIONESE",
+    "pts": 8,
+    "p1": 0,
+    "p2": 0,
+    "p3": 0,
+    "pos": 13
+  },
+  {
+    "id": "AC_F_BESSI_CALENZANO_DONORATICO_ES1_M",
+    "nome": "AC F. BESSI CALENZANO DONORATICO",
+    "pts": 8,
+    "p1": 0,
+    "p2": 0,
+    "p3": 0,
+    "pos": 14,
+    "prev_pos": 12
+  },
+  {
+    "id": "SS_AQUILA_ES1_M",
+    "nome": "SS AQUILA",
+    "pts": 6,
+    "p1": 0,
+    "p2": 0,
+    "p3": 0,
+    "pos": 15
+  },
+  {
+    "id": "ASD_SC_CERETOLESE_1969_ES1_M",
+    "nome": "A.S.D. S.C. CERETOLESE 1969",
+    "pts": 6,
+    "p1": 0,
+    "p2": 0,
+    "p3": 0,
+    "pos": 16,
+    "prev_pos": 17
+  },
+  {
+    "id": "SCCOTIGNOLESE_ES1_M",
+    "nome": "S.C.COTIGNOLESE",
+    "pts": 6,
+    "p1": 0,
+    "p2": 0,
+    "p3": 0,
+    "pos": 17,
+    "prev_pos": 13
+  },
+  {
+    "id": "CICLISTICA_BORDIGHERA_ES1_M",
+    "nome": "CICLISTICA BORDIGHERA",
+    "pts": 5,
+    "p1": 0,
+    "p2": 0,
+    "p3": 0,
+    "pos": 18,
+    "prev_pos": 22
+  },
+  {
+    "id": "V_CYCLING_ARICI_CLAUDIA_PITON_ES1_M",
+    "nome": "V CYCLING - ARICI CLAUDIA - PITON",
+    "pts": 5,
+    "p1": 0,
+    "p2": 0,
+    "p3": 0,
+    "pos": 19,
+    "prev_pos": 15
+  },
+  {
+    "id": "CAMBKE_ES1_M",
+    "nome": "CAMB!KE",
+    "pts": 5,
+    "p1": 0,
+    "p2": 0,
+    "p3": 0,
+    "pos": 20,
+    "prev_pos": 16
+  },
+  {
+    "id": "CC_APPENNINICO_1907_ES1_M",
+    "nome": "C.C. APPENNINICO 1907",
+    "pts": 4,
+    "p1": 0,
+    "p2": 0,
+    "p3": 0,
+    "pos": 21,
+    "prev_pos": 18
+  },
+  {
+    "id": "ARDENS_CYCLING_TEAM_ES1_M",
+    "nome": "ARDENS CYCLING TEAM",
+    "pts": 3,
+    "p1": 0,
+    "p2": 0,
+    "p3": 0,
+    "pos": 22
+  },
+  {
+    "id": "TEAM_CORATTI_ES1_M",
+    "nome": "TEAM CORATTI",
+    "pts": 2,
+    "p1": 0,
+    "p2": 0,
+    "p3": 0,
+    "pos": 23,
+    "prev_pos": 19
+  },
+  {
+    "id": "BUSTO_GAROLFO_ES1_M",
+    "nome": "BUSTO GAROLFO",
+    "pts": 2,
+    "p1": 0,
+    "p2": 0,
+    "p3": 0,
+    "pos": 24,
+    "prev_pos": 20
+  },
+  {
+    "id": "GS_BERTI_MOBILI_BENASSI_ES1_M",
+    "nome": "GS BERTI MOBILI BENASSI",
+    "pts": 2,
+    "p1": 0,
+    "p2": 0,
+    "p3": 0,
+    "pos": 25,
+    "prev_pos": 21
+  },
+  {
+    "id": "VELO_CLUB_SC_EMPOLI_ES1_M",
+    "nome": "VELO CLUB S.C. EMPOLI",
+    "pts": 1,
+    "p1": 0,
+    "p2": 0,
+    "p3": 0,
+    "pos": 26,
+    "prev_pos": 23
+  }
+]

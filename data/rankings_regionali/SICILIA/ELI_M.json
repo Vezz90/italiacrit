@@ -1,0 +1,35 @@
+[
+  {
+    "id": "ROCCELLA_MARCO",
+    "cognome": "ROCCELLA",
+    "nome": "MARCO",
+    "team": "MULTICAR GRUPPO AMARU'",
+    "pts": 15,
+    "p1": 1,
+    "p2": 0,
+    "p3": 0,
+    "pos": 1
+  },
+  {
+    "id": "GIOIA_FRANCESCO",
+    "cognome": "GIOIA",
+    "nome": "FRANCESCO",
+    "team": "ASD CAMPOBELLO RUNNING & BIKE",
+    "pts": 12,
+    "p1": 0,
+    "p2": 1,
+    "p3": 0,
+    "pos": 2
+  },
+  {
+    "id": "MARETTA_GABRIELE",
+    "cognome": "MARETTA",
+    "nome": "GABRIELE",
+    "team": "MADONE-TEAM BIKE SICILIA",
+    "pts": 10,
+    "p1": 0,
+    "p2": 0,
+    "p3": 1,
+    "pos": 3
+  }
+]

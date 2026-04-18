@@ -1,0 +1,112 @@
+[
+  {
+    "id": "BELLONI_MARTINO",
+    "cognome": "BELLONI",
+    "nome": "MARTINO",
+    "team": "TEAM SERIO",
+    "pts": 15,
+    "p1": 1,
+    "p2": 0,
+    "p3": 0,
+    "pos": 1
+  },
+  {
+    "id": "TOIGO_GIORGIO",
+    "cognome": "TOIGO",
+    "nome": "GIORGIO",
+    "team": "UC FOEN MICTU",
+    "pts": 12,
+    "p1": 0,
+    "p2": 1,
+    "p3": 0,
+    "pos": 2
+  },
+  {
+    "id": "FONTANARI_LORENZO",
+    "cognome": "FONTANARI",
+    "nome": "LORENZO",
+    "team": "ASD VELOCE CLUB BORGO",
+    "pts": 10,
+    "p1": 0,
+    "p2": 0,
+    "p3": 1,
+    "pos": 3
+  },
+  {
+    "id": "TAGLIAFERRO_FRANCESCO",
+    "cognome": "TAGLIAFERRO",
+    "nome": "FRANCESCO",
+    "team": "G.C. SOSSANO 1975",
+    "pts": 8,
+    "p1": 0,
+    "p2": 0,
+    "p3": 0,
+    "pos": 4
+  },
+  {
+    "id": "FRANCHIN_EDOARDO",
+    "cognome": "FRANCHIN",
+    "nome": "EDOARDO",
+    "team": "FDB SPORT CLUB",
+    "pts": 6,
+    "p1": 0,
+    "p2": 0,
+    "p3": 0,
+    "pos": 5
+  },
+  {
+    "id": "ZANOLINI_PABLO",
+    "cognome": "ZANOLINI",
+    "nome": "PABLO",
+    "team": "G.S. ALTO ADIGE - SUDTIROLPOST",
+    "pts": 5,
+    "p1": 0,
+    "p2": 0,
+    "p3": 0,
+    "pos": 6
+  },
+  {
+    "id": "TIRAPELLE_SERGIO",
+    "cognome": "TIRAPELLE",
+    "nome": "SERGIO",
+    "team": "ASD TEAM PETRUCCI",
+    "pts": 4,
+    "p1": 0,
+    "p2": 0,
+    "p3": 0,
+    "pos": 7
+  },
+  {
+    "id": "CHIANESE_ALESSANDRO",
+    "cognome": "CHIANESE",
+    "nome": "ALESSANDRO",
+    "team": "ASD TEAM PETRUCCI",
+    "pts": 3,
+    "p1": 0,
+    "p2": 0,
+    "p3": 0,
+    "pos": 8
+  },
+  {
+    "id": "CORDIOLI_LUCAS",
+    "cognome": "CORDIOLI",
+    "nome": "LUCAS",
+    "team": "ASD TEAM PETRUCCI",
+    "pts": 2,
+    "p1": 0,
+    "p2": 0,
+    "p3": 0,
+    "pos": 9
+  },
+  {
+    "id": "BASSO_FILIPPO",
+    "cognome": "BASSO",
+    "nome": "FILIPPO",
+    "team": "MST CYCLING - SANDRIGO BIKE",
+    "pts": 1,
+    "p1": 0,
+    "p2": 0,
+    "p3": 0,
+    "pos": 10
+  }
+]

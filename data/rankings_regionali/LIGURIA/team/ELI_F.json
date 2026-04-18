@@ -1,0 +1,90 @@
+[
+  {
+    "id": "UAE_TEAM_ADQ_ELI_F",
+    "nome": "UAE TEAM ADQ",
+    "pts": 102,
+    "p1": 1,
+    "p2": 0,
+    "p3": 1,
+    "pos": 1,
+    "prev_pos": 2
+  },
+  {
+    "id": "LIDL_TREK_ELI_F",
+    "nome": "LIDL - TREK",
+    "pts": 63,
+    "p1": 0,
+    "p2": 1,
+    "p3": 0,
+    "pos": 2,
+    "prev_pos": 6
+  },
+  {
+    "id": "TEAM_SD_WORXPROTIME_ELI_F",
+    "nome": "TEAM SD WORX-PROTIME",
+    "pts": 60,
+    "p1": 1,
+    "p2": 0,
+    "p3": 0,
+    "pos": 3,
+    "prev_pos": 1
+  },
+  {
+    "id": "TEAM_VISMA_LEASE_A_BIKE_ELI_F",
+    "nome": "TEAM VISMA LEASE A BIKE",
+    "pts": 51,
+    "p1": 0,
+    "p2": 0,
+    "p3": 1,
+    "pos": 4
+  },
+  {
+    "id": "FDJ_UNITED_SUEZ_ELI_F",
+    "nome": "FDJ UNITED - SUEZ",
+    "pts": 39,
+    "p1": 0,
+    "p2": 0,
+    "p3": 0,
+    "pos": 5,
+    "prev_pos": 5
+  },
+  {
+    "id": "EF_EDUCATION_OATLY_ELI_F",
+    "nome": "EF EDUCATION OATLY",
+    "pts": 36,
+    "p1": 0,
+    "p2": 1,
+    "p3": 0,
+    "pos": 6,
+    "prev_pos": 3
+  },
+  {
+    "id": "FENIXPREMIER_TECH_ELI_F",
+    "nome": "FENIX-PREMIER TECH",
+    "pts": 30,
+    "p1": 0,
+    "p2": 0,
+    "p3": 0,
+    "pos": 7,
+    "prev_pos": 4
+  },
+  {
+    "id": "LIVALULA_JAYCO_ELI_F",
+    "nome": "LIV-ALULA JAYCO",
+    "pts": 12,
+    "p1": 0,
+    "p2": 0,
+    "p3": 0,
+    "pos": 8
+  },
+  {
+    "id": "CANYON_SRAM_ZONDACRYPTO_ELI_F",
+    "nome": "CANYON SRAM ZONDACRYPTO",
+    "pts": 3,
+    "p1": 0,
+    "p2": 0,
+    "p3": 0,
+    "pos": 9,
+    "prev_pos": 7
+  }
+]

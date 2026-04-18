@@ -1,0 +1,112 @@
+[
+  {
+    "id": "ROSSIGNOLI_MATILDE",
+    "cognome": "ROSSIGNOLI",
+    "nome": "MATILDE",
+    "team": "BFT BURZONI",
+    "pts": 45,
+    "p1": 1,
+    "p2": 0,
+    "p3": 0,
+    "pos": 1
+  },
+  {
+    "id": "BIEBERLE_EDDA",
+    "cognome": "BIEBERLE",
+    "nome": "EDDA",
+    "team": "AIRTOX - CARL RAS",
+    "pts": 36,
+    "p1": 0,
+    "p2": 1,
+    "p3": 0,
+    "pos": 2
+  },
+  {
+    "id": "OKRUCINSKA_MARIA",
+    "cognome": "OKRUCINSKA",
+    "nome": "MARIA",
+    "team": "GROUWELS - WATERSLEY R&D",
+    "pts": 30,
+    "p1": 0,
+    "p2": 0,
+    "p3": 1,
+    "pos": 3
+  },
+  {
+    "id": "ROCHE_ZOE",
+    "cognome": "ROCHE",
+    "nome": "ZOE",
+    "team": "CAMS MAJACO",
+    "pts": 24,
+    "p1": 0,
+    "p2": 0,
+    "p3": 0,
+    "pos": 4
+  },
+  {
+    "id": "DRHOVA_EVA",
+    "cognome": "DRHOVA'",
+    "nome": "EVA",
+    "team": "REPUBBLICA CECA",
+    "pts": 18,
+    "p1": 0,
+    "p2": 0,
+    "p3": 0,
+    "pos": 5
+  },
+  {
+    "id": "DE_BRUYN_ELISE",
+    "cognome": "DE BRUYN",
+    "nome": "ELISE",
+    "team": "AIRTOX - CARL RAS",
+    "pts": 15,
+    "p1": 0,
+    "p2": 0,
+    "p3": 0,
+    "pos": 6
+  },
+  {
+    "id": "DE_ANGELIS_ISABELLA",
+    "cognome": "DE",
+    "nome": "ANGELIS ISABELLA",
+    "team": "PETRUCCI GAUSS CYCLING TEAM",
+    "pts": 12,
+    "p1": 0,
+    "p2": 0,
+    "p3": 0,
+    "pos": 7
+  },
+  {
+    "id": "DOMINGUEZ_NEIRA_ALEJANDRA",
+    "cognome": "DOMINGUEZ",
+    "nome": "NEIRA ALEJANDRA",
+    "team": "SPAGNA",
+    "pts": 9,
+    "p1": 0,
+    "p2": 0,
+    "p3": 0,
+    "pos": 8
+  },
+  {
+    "id": "NOVOLODSKAIA_ANGELINA",
+    "cognome": "NOVOLODSKAIA",
+    "nome": "ANGELINA",
+    "team": "PETRUCCI GAUSS CYCLING TEAM",
+    "pts": 6,
+    "p1": 0,
+    "p2": 0,
+    "p3": 0,
+    "pos": 9
+  },
+  {
+    "id": "POIRIER_THAIS",
+    "cognome": "POIRIER",
+    "nome": "THAIS",
+    "team": "FRANCIA",
+    "pts": 3,
+    "p1": 0,
+    "p2": 0,
+    "p3": 0,
+    "pos": 10
+  }
+]

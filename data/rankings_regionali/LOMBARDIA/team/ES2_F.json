@@ -1,0 +1,100 @@
+[
+  {
+    "id": "SC_CESANO_MADERNO_ES2_F",
+    "nome": "S.C. CESANO MADERNO",
+    "pts": 39,
+    "p1": 1,
+    "p2": 1,
+    "p3": 0,
+    "pos": 1,
+    "prev_pos": 1
+  },
+  {
+    "id": "OFFALBERTI_UC_VAL_DILLASI_ES2_F",
+    "nome": "OFF.ALBERTI U.C. VAL D'ILLASI",
+    "pts": 27,
+    "p1": 1,
+    "p2": 1,
+    "p3": 0,
+    "pos": 2,
+    "prev_pos": 2
+  },
+  {
+    "id": "SCUOLA_CICLISMO_VERSO_LIRIDE_ES2_F",
+    "nome": "SCUOLA CICLISMO VERSO L'IRIDE",
+    "pts": 16,
+    "p1": 0,
+    "p2": 0,
+    "p3": 1,
+    "pos": 3,
+    "prev_pos": 3
+  },
+  {
+    "id": "ALLGOR_TATOBIKE_ES2_F",
+    "nome": "ALLGOR TATOBIKE",
+    "pts": 14,
+    "p1": 0,
+    "p2": 0,
+    "p3": 1,
+    "pos": 4
+  },
+  {
+    "id": "GS_LUPI_VALLE_DAOSTA_ES2_F",
+    "nome": "G.S. LUPI VALLE D'AOSTA",
+    "pts": 12,
+    "p1": 0,
+    "p2": 0,
+    "p3": 0,
+    "pos": 5,
+    "prev_pos": 5
+  },
+  {
+    "id": "UC_GIORGIONE_ES2_F",
+    "nome": "U.C. GIORGIONE",
+    "pts": 9,
+    "p1": 0,
+    "p2": 0,
+    "p3": 0,
+    "pos": 6,
+    "prev_pos": 7
+  },
+  {
+    "id": "MARY_J_SWEET_ANGEL_ASD_ES2_F",
+    "nome": "MARY J SWEET ANGEL ASD",
+    "pts": 8,
+    "p1": 0,
+    "p2": 0,
+    "p3": 0,
+    "pos": 7,
+    "prev_pos": 4
+  },
+  {
+    "id": "UC_DONORATICO_ES2_F",
+    "nome": "UC DONORATICO",
+    "pts": 5,
+    "p1": 0,
+    "p2": 0,
+    "p3": 0,
+    "pos": 8,
+    "prev_pos": 6
+  },
+  {
+    "id": "GS_CICLI_FIORIN_CYCLING_TEAM_ASD_ES2_F",
+    "nome": "G.S. CICLI FIORIN CYCLING TEAM ASD",
+    "pts": 1,
+    "p1": 0,
+    "p2": 0,
+    "p3": 0,
+    "pos": 9
+  },
+  {
+    "id": "BUSTO_GAROLFO_ES2_F",
+    "nome": "BUSTO GAROLFO",
+    "pts": 1,
+    "p1": 0,
+    "p2": 0,
+    "p3": 0,
+    "pos": 10,
+    "prev_pos": 8
+  }
+]

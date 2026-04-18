@@ -1,0 +1,53 @@
+name: Scrape FCI Results
+
+on:
+  schedule:
+    # Ogni 30 minuti, marzo (3) → ottobre (10)
+    - cron: '*/30 * * 3-10 *'
+  workflow_dispatch:
+    inputs:
+      seed:
+        description: 'Genera dati seed demo invece di scraping reale'
+        required: false
+        default: 'false'
+
+jobs:
+  scrape:
+    runs-on: ubuntu-latest
+    timeout-minutes: 25
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+        with:
+          token: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Setup Python 3.11
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+          cache: 'pip'
+
+      - name: Install Python dependencies
+        run: pip install -r requirements.txt
+
+      - name: Install Playwright Chromium
+        run: playwright install chromium --with-deps
+
+      - name: Run scraper (real)
+        if: ${{ github.event.inputs.seed != 'true' }}
+        run: python scraper/main.py
+        env:
+          PYTHONUNBUFFERED: '1'
+
+      - name: Run scraper (seed mode)
+        if: ${{ github.event.inputs.seed == 'true' }}
+        run: python scraper/main.py --seed
+
+      - name: Commit & push data
+        run: |
+          git config user.email "bot@italiacrit.it"
+          git config user.name "ItaliacritBot"
+          git add data/
+          git diff --staged --quiet || git commit -m "update: $(date -u '+%Y-%m-%d %H:%M') UTC"
+          git push

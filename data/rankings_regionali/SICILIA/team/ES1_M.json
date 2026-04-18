@@ -1,0 +1,82 @@
+[
+  {
+    "id": "STAR_CYCLING_LAB_ES1_M",
+    "nome": "STAR CYCLING LAB",
+    "pts": 44,
+    "p1": 0,
+    "p2": 1,
+    "p3": 0,
+    "pos": 1,
+    "prev_pos": 4
+  },
+  {
+    "id": "TEAM_NIBALI_ES1_M",
+    "nome": "TEAM NIBALI",
+    "pts": 38,
+    "p1": 1,
+    "p2": 0,
+    "p3": 0,
+    "pos": 2,
+    "prev_pos": 5
+  },
+  {
+    "id": "ASD_PROBIKE_ERICE_ES1_M",
+    "nome": "A.S.D. PROBIKE ERICE",
+    "pts": 34,
+    "p1": 0,
+    "p2": 0,
+    "p3": 2,
+    "pos": 3,
+    "prev_pos": 1
+  },
+  {
+    "id": "ASD_GDS_TEAM_COMPETITION_ES1_M",
+    "nome": "A.S.D. GDS TEAM COMPETITION",
+    "pts": 30,
+    "p1": 2,
+    "p2": 0,
+    "p3": 0,
+    "pos": 4,
+    "prev_pos": 2
+  },
+  {
+    "id": "ASD_CICLOTOUR_ES1_M",
+    "nome": "ASD CICLOTOUR",
+    "pts": 24,
+    "p1": 0,
+    "p2": 2,
+    "p3": 0,
+    "pos": 5,
+    "prev_pos": 3
+  },
+  {
+    "id": "CYCLING_TEAM_NIAL_NIZZOLI_ALMO_ES1_M",
+    "nome": "CYCLING TEAM NIAL NIZZOLI ALMO",
+    "pts": 16,
+    "p1": 0,
+    "p2": 0,
+    "p3": 1,
+    "pos": 6,
+    "prev_pos": 6
+  },
+  {
+    "id": "ASD_LE_FRECCE_DELLETNA_ES1_M",
+    "nome": "ASD LE FRECCE DELL'ETNA",
+    "pts": 1,
+    "p1": 0,
+    "p2": 0,
+    "p3": 0,
+    "pos": 7,
+    "prev_pos": 7
+  },
+  {
+    "id": "TEAM_BIKE_SIRACUSA_ES1_M",
+    "nome": "TEAM BIKE SIRACUSA",
+    "pts": 1,
+    "p1": 0,
+    "p2": 0,
+    "p3": 0,
+    "pos": 8,
+    "prev_pos": 8
+  }
+]

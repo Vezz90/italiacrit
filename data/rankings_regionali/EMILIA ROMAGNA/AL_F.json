@@ -1,0 +1,112 @@
+[
+  {
+    "id": "MARININI_NINA",
+    "cognome": "MARININI",
+    "nome": "NINA",
+    "team": "BIESSE - CARRERA - PREMAC",
+    "pts": 30,
+    "p1": 1,
+    "p2": 0,
+    "p3": 0,
+    "pos": 1
+  },
+  {
+    "id": "CARRETTA_MATILDE",
+    "cognome": "CARRETTA",
+    "nome": "MATILDE",
+    "team": "U.C.CONSCIO PEDALE DEL SILE",
+    "pts": 24,
+    "p1": 0,
+    "p2": 1,
+    "p3": 0,
+    "pos": 2
+  },
+  {
+    "id": "SETTI_SCAPUZZI_VIOLA",
+    "cognome": "SETTI",
+    "nome": "SCAPUZZI VIOLA",
+    "team": "A.S.D. GIOCA IN BICI OGLIO PO",
+    "pts": 20,
+    "p1": 0,
+    "p2": 0,
+    "p3": 1,
+    "pos": 3
+  },
+  {
+    "id": "SAMBI_GINEVRA",
+    "cognome": "SAMBI",
+    "nome": "GINEVRA",
+    "team": "POL. FIUMICINESE FA.I.T. ADRIATICA",
+    "pts": 16,
+    "p1": 0,
+    "p2": 0,
+    "p3": 0,
+    "pos": 4
+  },
+  {
+    "id": "BATTAGLIN_SARA",
+    "cognome": "BATTAGLIN",
+    "nome": "SARA",
+    "team": "TEAM WILIER BREGANZE",
+    "pts": 12,
+    "p1": 0,
+    "p2": 0,
+    "p3": 0,
+    "pos": 5
+  },
+  {
+    "id": "MASINI_GRETA",
+    "cognome": "MASINI",
+    "nome": "GRETA",
+    "team": "POL. FIUMICINESE FA.I.T. ADRIATICA",
+    "pts": 10,
+    "p1": 0,
+    "p2": 0,
+    "p3": 0,
+    "pos": 6
+  },
+  {
+    "id": "BOGA_MELISSA_MAIA",
+    "cognome": "BOGA",
+    "nome": "MELISSA MAIA",
+    "team": "BICIFESTIVAL",
+    "pts": 8,
+    "p1": 0,
+    "p2": 0,
+    "p3": 0,
+    "pos": 7
+  },
+  {
+    "id": "LOMBARDI_GIULIA",
+    "cognome": "LOMBARDI",
+    "nome": "GIULIA",
+    "team": "S.C. CESANO MADERNO",
+    "pts": 6,
+    "p1": 0,
+    "p2": 0,
+    "p3": 0,
+    "pos": 8
+  },
+  {
+    "id": "SANSOTTERA_PAIUSCO_ELISA",
+    "cognome": "SANSOTTERA",
+    "nome": "PAIUSCO ELISA",
+    "team": "JU GREEN A.S.D. GORLA MINORE",
+    "pts": 4,
+    "p1": 0,
+    "p2": 0,
+    "p3": 0,
+    "pos": 9
+  },
+  {
+    "id": "GIOVANNETTI_OLIVIA",
+    "cognome": "GIOVANNETTI",
+    "nome": "OLIVIA",
+    "team": "TEAM FABIANA LUPERINI ASD",
+    "pts": 2,
+    "p1": 0,
+    "p2": 0,
+    "p3": 0,
+    "pos": 10
+  }
+]

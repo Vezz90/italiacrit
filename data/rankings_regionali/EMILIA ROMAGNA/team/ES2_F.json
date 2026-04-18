@@ -1,0 +1,83 @@
+[
+  {
+    "id": "HG_CYCLING_TEAM_ES2_F",
+    "nome": "HG CYCLING TEAM",
+    "pts": 21,
+    "p1": 1,
+    "p2": 0,
+    "p3": 0,
+    "pos": 1
+  },
+  {
+    "id": "SCUOLA_CICLISMO_VERSO_LIRIDE_ES2_F",
+    "nome": "SCUOLA CICLISMO VERSO L'IRIDE",
+    "pts": 12,
+    "p1": 0,
+    "p2": 1,
+    "p3": 0,
+    "pos": 2
+  },
+  {
+    "id": "OFFALBERTI_UC_VAL_DILLASI_ES2_F",
+    "nome": "OFF.ALBERTI U.C. VAL D'ILLASI",
+    "pts": 10,
+    "p1": 0,
+    "p2": 0,
+    "p3": 1,
+    "pos": 3
+  },
+  {
+    "id": "CC_APPENNINICO_1907_ES2_F",
+    "nome": "C.C. APPENNINICO 1907",
+    "pts": 8,
+    "p1": 0,
+    "p2": 0,
+    "p3": 0,
+    "pos": 4
+  },
+  {
+    "id": "UCCONSCIO_PEDALE_DEL_SILE_ES2_F",
+    "nome": "U.C.CONSCIO PEDALE DEL SILE",
+    "pts": 5,
+    "p1": 0,
+    "p2": 0,
+    "p3": 0,
+    "pos": 5
+  },
+  {
+    "id": "BREGANZE_MILLENIUM_ES2_F",
+    "nome": "BREGANZE MILLENIUM",
+    "pts": 4,
+    "p1": 0,
+    "p2": 0,
+    "p3": 0,
+    "pos": 6
+  },
+  {
+    "id": "GC_NOVENTANA_ES2_F",
+    "nome": "G.C. NOVENTANA",
+    "pts": 3,
+    "p1": 0,
+    "p2": 0,
+    "p3": 0,
+    "pos": 7
+  },
+  {
+    "id": "POL_FIUMICINESE_FAIT_ADRIATICA_ES2_F",
+    "nome": "POL. FIUMICINESE FA.I.T. ADRIATICA",
+    "pts": 2,
+    "p1": 0,
+    "p2": 0,
+    "p3": 0,
+    "pos": 8
+  },
+  {
+    "id": "UC_DONORATICO_ES2_F",
+    "nome": "UC DONORATICO",
+    "pts": 1,
+    "p1": 0,
+    "p2": 0,
+    "p3": 0,
+    "pos": 9
+  }
+]

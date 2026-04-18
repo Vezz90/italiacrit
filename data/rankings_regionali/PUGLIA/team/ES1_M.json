@@ -1,0 +1,92 @@
+[
+  {
+    "id": "LEO_CONSTRUCTIONS_SSD_ES1_M",
+    "nome": "LEO CONSTRUCTIONS SSD",
+    "pts": 15,
+    "p1": 1,
+    "p2": 0,
+    "p3": 0,
+    "pos": 1
+  },
+  {
+    "id": "SEI_SPORT_ES1_M",
+    "nome": "SEI SPORT",
+    "pts": 12,
+    "p1": 0,
+    "p2": 1,
+    "p3": 0,
+    "pos": 2
+  },
+  {
+    "id": "REATE_CYCLING_TEAM_ES1_M",
+    "nome": "REATE CYCLING TEAM",
+    "pts": 10,
+    "p1": 0,
+    "p2": 0,
+    "p3": 1,
+    "pos": 3
+  },
+  {
+    "id": "ABRUZZO_CYCLING_TEAM_ES1_M",
+    "nome": "ABRUZZO CYCLING TEAM",
+    "pts": 8,
+    "p1": 0,
+    "p2": 0,
+    "p3": 0,
+    "pos": 4
+  },
+  {
+    "id": "CAMBKE_ES1_M",
+    "nome": "CAMB!KE",
+    "pts": 6,
+    "p1": 0,
+    "p2": 0,
+    "p3": 0,
+    "pos": 5
+  },
+  {
+    "id": "ASACI_EVONACICLI_ES1_M",
+    "nome": "A.S.A.C.I. - EVONACICLI",
+    "pts": 5,
+    "p1": 0,
+    "p2": 0,
+    "p3": 0,
+    "pos": 6
+  },
+  {
+    "id": "ASD_FUSION_BIKE_ES1_M",
+    "nome": "ASD FUSION BIKE",
+    "pts": 4,
+    "p1": 0,
+    "p2": 0,
+    "p3": 0,
+    "pos": 7
+  },
+  {
+    "id": "HG_CYCLING_TEAM_ES1_M",
+    "nome": "HG CYCLING TEAM",
+    "pts": 3,
+    "p1": 0,
+    "p2": 0,
+    "p3": 0,
+    "pos": 8
+  },
+  {
+    "id": "TEAM_CORATTI_ES1_M",
+    "nome": "TEAM CORATTI",
+    "pts": 2,
+    "p1": 0,
+    "p2": 0,
+    "p3": 0,
+    "pos": 9
+  },
+  {
+    "id": "ASD_GS_GULP_POOL_VAL_VIBRATA_ES1_M",
+    "nome": "A.S.D. G.S. GULP! POOL VAL VIBRATA",
+    "pts": 1,
+    "p1": 0,
+    "p2": 0,
+    "p3": 0,
+    "pos": 10
+  }
+]

@@ -1,0 +1,181 @@
+[
+  {
+    "id": "MAZZANO_ASD_ES2_M",
+    "nome": "MAZZANO A.S.D.",
+    "pts": 57,
+    "p1": 1,
+    "p2": 2,
+    "p3": 1,
+    "pos": 1,
+    "prev_pos": 1
+  },
+  {
+    "id": "BUSTO_GAROLFO_ES2_M",
+    "nome": "BUSTO GAROLFO",
+    "pts": 37,
+    "p1": 1,
+    "p2": 0,
+    "p3": 0,
+    "pos": 2,
+    "prev_pos": 2
+  },
+  {
+    "id": "V_CYCLING_ARICI_CLAUDIA_PITON_ES2_M",
+    "nome": "V CYCLING - ARICI CLAUDIA - PITON",
+    "pts": 33,
+    "p1": 1,
+    "p2": 0,
+    "p3": 0,
+    "pos": 3,
+    "prev_pos": 3
+  },
+  {
+    "id": "VIGOR_CYCLING_TEAM_ES2_M",
+    "nome": "VIGOR - CYCLING TEAM",
+    "pts": 29,
+    "p1": 1,
+    "p2": 0,
+    "p3": 1,
+    "pos": 4,
+    "prev_pos": 5
+  },
+  {
+    "id": "OFFALBERTI_UC_VAL_DILLASI_ES2_M",
+    "nome": "OFF.ALBERTI U.C. VAL D'ILLASI",
+    "pts": 20,
+    "p1": 0,
+    "p2": 1,
+    "p3": 0,
+    "pos": 5,
+    "prev_pos": 4
+  },
+  {
+    "id": "SC_BRUGHERIO_SPORTIVA_ASD_ES2_M",
+    "nome": "S.C. BRUGHERIO SPORTIVA ASD",
+    "pts": 13,
+    "p1": 0,
+    "p2": 0,
+    "p3": 0,
+    "pos": 6,
+    "prev_pos": 7
+  },
+  {
+    "id": "PEDALE_OSSOLANO_ES2_M",
+    "nome": "PEDALE OSSOLANO",
+    "pts": 12,
+    "p1": 0,
+    "p2": 1,
+    "p3": 0,
+    "pos": 7,
+    "prev_pos": 6
+  },
+  {
+    "id": "GS_RONCO_MAURIGI_DELIO_GALLINA_ES2_M",
+    "nome": "G.S. RONCO MAURIGI DELIO GALLINA",
+    "pts": 10,
+    "p1": 0,
+    "p2": 0,
+    "p3": 1,
+    "pos": 8,
+    "prev_pos": 8
+  },
+  {
+    "id": "CC_FORTI_E_VELOCI_ES2_M",
+    "nome": "C.C. FORTI E VELOCI",
+    "pts": 10,
+    "p1": 0,
+    "p2": 0,
+    "p3": 1,
+    "pos": 9,
+    "prev_pos": 9
+  },
+  {
+    "id": "ASD_PEDALE_CASALESE_ARMOFER_ES2_M",
+    "nome": "ASD PEDALE CASALESE ARMOFER",
+    "pts": 10,
+    "p1": 0,
+    "p2": 0,
+    "p3": 0,
+    "pos": 10,
+    "prev_pos": 14
+  },
+  {
+    "id": "OXYGEN_EBIKE_STORE_BRESCIA_ES2_M",
+    "nome": "OXYGEN EBIKE STORE BRESCIA",
+    "pts": 8,
+    "p1": 0,
+    "p2": 0,
+    "p3": 0,
+    "pos": 11,
+    "prev_pos": 10
+  },
+  {
+    "id": "GS_PREALPINO_ASD_ES2_M",
+    "nome": "G.S. PREALPINO A.S.D.",
+    "pts": 5,
+    "p1": 0,
+    "p2": 0,
+    "p3": 0,
+    "pos": 12,
+    "prev_pos": 11
+  },
+  {
+    "id": "SAN_GEO_ASD_ES2_M",
+    "nome": "SAN GEO A.S.D.",
+    "pts": 5,
+    "p1": 0,
+    "p2": 0,
+    "p3": 0,
+    "pos": 13,
+    "prev_pos": 12
+  },
+  {
+    "id": "POL_GHISALBESE_ASD_ES2_M",
+    "nome": "POL. GHISALBESE A.S.D.",
+    "pts": 4,
+    "p1": 0,
+    "p2": 0,
+    "p3": 0,
+    "pos": 14
+  },
+  {
+    "id": "GS_ALZATE_BRIANZA_SYSTEM_CAR_ES2_M",
+    "nome": "G.S. ALZATE BRIANZA - SYSTEM CAR",
+    "pts": 4,
+    "p1": 0,
+    "p2": 0,
+    "p3": 0,
+    "pos": 15,
+    "prev_pos": 17
+  },
+  {
+    "id": "OROBICI_ES2_M",
+    "nome": "OROBICI",
+    "pts": 4,
+    "p1": 0,
+    "p2": 0,
+    "p3": 0,
+    "pos": 16,
+    "prev_pos": 13
+  },
+  {
+    "id": "VC_LUGANO_ES2_M",
+    "nome": "V.C. LUGANO",
+    "pts": 2,
+    "p1": 0,
+    "p2": 0,
+    "p3": 0,
+    "pos": 17,
+    "prev_pos": 15
+  },
+  {
+    "id": "US_PEDALE_ARCORESE_ASD_ES2_M",
+    "nome": "U.S. PEDALE ARCORESE ASD",
+    "pts": 1,
+    "p1": 0,
+    "p2": 0,
+    "p3": 0,
+    "pos": 18,
+    "prev_pos": 16
+  }
+]

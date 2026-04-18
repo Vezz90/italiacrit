@@ -1,0 +1,74 @@
+[
+  {
+    "id": "ASD_CICLISTICA_MONSELICE_AL_M",
+    "nome": "A.S.D. CICLISTICA MONSELICE",
+    "pts": 38,
+    "p1": 0,
+    "p2": 2,
+    "p3": 0,
+    "pos": 1
+  },
+  {
+    "id": "ALBA_OROBIA_BIASSONO_AL_M",
+    "nome": "ALBA OROBIA - BIASSONO",
+    "pts": 32,
+    "p1": 2,
+    "p2": 0,
+    "p3": 0,
+    "pos": 2
+  },
+  {
+    "id": "CC_FORTI_E_VELOCI_AL_M",
+    "nome": "C.C. FORTI E VELOCI",
+    "pts": 31,
+    "p1": 0,
+    "p2": 0,
+    "p3": 1,
+    "pos": 3
+  },
+  {
+    "id": "LIBERTAS_RAIFFEISEN_LAIVES_ASD_AL_M",
+    "nome": "LIBERTAS RAIFFEISEN LAIVES ASD",
+    "pts": 11,
+    "p1": 0,
+    "p2": 0,
+    "p3": 1,
+    "pos": 4
+  },
+  {
+    "id": "ASD_VELOCE_CLUB_BORGO_AL_M",
+    "nome": "ASD VELOCE CLUB BORGO",
+    "pts": 10,
+    "p1": 0,
+    "p2": 0,
+    "p3": 0,
+    "pos": 5
+  },
+  {
+    "id": "US_MONTECORONA_AL_M",
+    "nome": "U.S. MONTECORONA",
+    "pts": 6,
+    "p1": 0,
+    "p2": 0,
+    "p3": 0,
+    "pos": 6
+  },
+  {
+    "id": "CICLISTICA_DRO_AL_M",
+    "nome": "CICLISTICA DRO",
+    "pts": 3,
+    "p1": 0,
+    "p2": 0,
+    "p3": 0,
+    "pos": 7
+  },
+  {
+    "id": "FAIZANE_CSZ_SANDRIGO_BIKE_AL_M",
+    "nome": "FAIZANE' CSZ SANDRIGO BIKE",
+    "pts": 1,
+    "p1": 0,
+    "p2": 0,
+    "p3": 0,
+    "pos": 8
+  }
+]

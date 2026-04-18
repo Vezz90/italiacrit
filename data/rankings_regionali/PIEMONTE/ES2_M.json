@@ -1,0 +1,112 @@
+[
+  {
+    "id": "RACCA_ANDREA",
+    "cognome": "RACCA",
+    "nome": "ANDREA",
+    "team": "ARDENS CYCLING TEAM",
+    "pts": 15,
+    "p1": 1,
+    "p2": 0,
+    "p3": 0,
+    "pos": 1
+  },
+  {
+    "id": "ALTARE_JACOPO",
+    "cognome": "ALTARE",
+    "nome": "JACOPO",
+    "team": "VIGOR - CYCLING TEAM",
+    "pts": 12,
+    "p1": 0,
+    "p2": 1,
+    "p3": 0,
+    "pos": 2
+  },
+  {
+    "id": "MILANI_GABRIELE",
+    "cognome": "MILANI",
+    "nome": "GABRIELE",
+    "team": "BUSTESE OLONIA A.S.D.",
+    "pts": 10,
+    "p1": 0,
+    "p2": 0,
+    "p3": 1,
+    "pos": 3
+  },
+  {
+    "id": "CEPPI_OLIVER",
+    "cognome": "CEPPI",
+    "nome": "OLIVER",
+    "team": "BUSTO GAROLFO",
+    "pts": 8,
+    "p1": 0,
+    "p2": 0,
+    "p3": 0,
+    "pos": 4
+  },
+  {
+    "id": "RANZINI_RICCARDO",
+    "cognome": "RANZINI",
+    "nome": "RICCARDO",
+    "team": "BUSTO GAROLFO",
+    "pts": 6,
+    "p1": 0,
+    "p2": 0,
+    "p3": 0,
+    "pos": 5
+  },
+  {
+    "id": "RIVA_FRANCESCO",
+    "cognome": "RIVA",
+    "nome": "FRANCESCO",
+    "team": "G.S. ALZATE BRIANZA - SYSTEM CAR",
+    "pts": 5,
+    "p1": 0,
+    "p2": 0,
+    "p3": 0,
+    "pos": 6
+  },
+  {
+    "id": "VERZIERA_MARCO",
+    "cognome": "VERZIERA",
+    "nome": "MARCO",
+    "team": "ASD PEDALE CASALESE ARMOFER",
+    "pts": 4,
+    "p1": 0,
+    "p2": 0,
+    "p3": 0,
+    "pos": 7
+  },
+  {
+    "id": "ARATARI_LORENZO",
+    "cognome": "ARATARI",
+    "nome": "LORENZO",
+    "team": "V.C. LUGANO",
+    "pts": 3,
+    "p1": 0,
+    "p2": 0,
+    "p3": 0,
+    "pos": 8
+  },
+  {
+    "id": "SALVI_CHRISTIAN",
+    "cognome": "SALVI",
+    "nome": "CHRISTIAN",
+    "team": "G.S. ALZATE BRIANZA - SYSTEM CAR",
+    "pts": 2,
+    "p1": 0,
+    "p2": 0,
+    "p3": 0,
+    "pos": 9
+  },
+  {
+    "id": "PISARRA_FABIO",
+    "cognome": "PISARRA",
+    "nome": "FABIO",
+    "team": "G.S. PREALPINO A.S.D.",
+    "pts": 1,
+    "p1": 0,
+    "p2": 0,
+    "p3": 0,
+    "pos": 10
+  }
+]

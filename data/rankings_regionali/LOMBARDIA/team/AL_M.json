@@ -1,0 +1,249 @@
+[
+  {
+    "id": "ALBA_OROBIA_BIASSONO_AL_M",
+    "nome": "ALBA OROBIA - BIASSONO",
+    "pts": 111,
+    "p1": 2,
+    "p2": 3,
+    "p3": 1,
+    "pos": 1,
+    "prev_pos": 1
+  },
+  {
+    "id": "FERALPI_MONTECLARENSE_ASD_AL_M",
+    "nome": "FERALPI MONTECLARENSE ASD",
+    "pts": 59,
+    "p1": 1,
+    "p2": 0,
+    "p3": 2,
+    "pos": 2,
+    "prev_pos": 2
+  },
+  {
+    "id": "BUSTESE_OLONIA_ASD_AL_M",
+    "nome": "BUSTESE OLONIA A.S.D.",
+    "pts": 42,
+    "p1": 1,
+    "p2": 1,
+    "p3": 0,
+    "pos": 3,
+    "prev_pos": 3
+  },
+  {
+    "id": "TEAM_SENAGHESE_GUERRINI_AL_M",
+    "nome": "TEAM SENAGHESE GUERRINI",
+    "pts": 38,
+    "p1": 1,
+    "p2": 1,
+    "p3": 0,
+    "pos": 4,
+    "prev_pos": 4
+  },
+  {
+    "id": "POOL_CANTU_SOVICO_GB_TEAM_AL_M",
+    "nome": "POOL CANTU' - SOVICO - GB TEAM",
+    "pts": 30,
+    "p1": 0,
+    "p2": 0,
+    "p3": 2,
+    "pos": 5,
+    "prev_pos": 8
+  },
+  {
+    "id": "SC_ROMANESE_ASD_AL_M",
+    "nome": "S.C. ROMANESE ASD",
+    "pts": 29,
+    "p1": 0,
+    "p2": 0,
+    "p3": 1,
+    "pos": 6,
+    "prev_pos": 6
+  },
+  {
+    "id": "ETHICA_ZERO24_CYCLING_TEAM_AL_M",
+    "nome": "ETHICA ZERO24 CYCLING TEAM",
+    "pts": 22,
+    "p1": 0,
+    "p2": 1,
+    "p3": 0,
+    "pos": 7,
+    "prev_pos": 5
+  },
+  {
+    "id": "MAZZANO_ASD_AL_M",
+    "nome": "MAZZANO A.S.D.",
+    "pts": 19,
+    "p1": 1,
+    "p2": 0,
+    "p3": 0,
+    "pos": 8,
+    "prev_pos": 7
+  },
+  {
+    "id": "SALUS_CICLISTICA_SEREGNO_DE_ROSA_AL_M",
+    "nome": "SALUS CICLISTICA SEREGNO DE ROSA",
+    "pts": 19,
+    "p1": 0,
+    "p2": 1,
+    "p3": 0,
+    "pos": 9,
+    "prev_pos": 9
+  },
+  {
+    "id": "E_VALTELLINA_PEDALE_MORBEGNESE_AL_M",
+    "nome": "E' VALTELLINA PEDALE MORBEGNESE",
+    "pts": 15,
+    "p1": 1,
+    "p2": 0,
+    "p3": 0,
+    "pos": 10
+  },
+  {
+    "id": "ASD_PEDALE_CASALESE_ARMOFER_AL_M",
+    "nome": "ASD PEDALE CASALESE ARMOFER",
+    "pts": 12,
+    "p1": 0,
+    "p2": 0,
+    "p3": 1,
+    "pos": 11,
+    "prev_pos": 10
+  },
+  {
+    "id": "PEDALE_BREMBILLESE_AL_M",
+    "nome": "PEDALE BREMBILLESE",
+    "pts": 8,
+    "p1": 0,
+    "p2": 0,
+    "p3": 0,
+    "pos": 12,
+    "prev_pos": 11
+  },
+  {
+    "id": "GS_LUPI_VALLE_DAOSTA_AL_M",
+    "nome": "G.S. LUPI VALLE D'AOSTA",
+    "pts": 6,
+    "p1": 0,
+    "p2": 0,
+    "p3": 0,
+    "pos": 13,
+    "prev_pos": 15
+  },
+  {
+    "id": "CC_FORTI_E_VELOCI_AL_M",
+    "nome": "C.C. FORTI E VELOCI",
+    "pts": 6,
+    "p1": 0,
+    "p2": 0,
+    "p3": 0,
+    "pos": 14,
+    "prev_pos": 12
+  },
+  {
+    "id": "QUILIANO_BIKE_SPEED_WHEEL_AL_M",
+    "nome": "QUILIANO BIKE SPEED WHEEL",
+    "pts": 6,
+    "p1": 0,
+    "p2": 0,
+    "p3": 0,
+    "pos": 15,
+    "prev_pos": 13
+  },
+  {
+    "id": "ASD_CICLISTICA_MONSELICE_AL_M",
+    "nome": "A.S.D. CICLISTICA MONSELICE",
+    "pts": 6,
+    "p1": 0,
+    "p2": 0,
+    "p3": 0,
+    "pos": 16,
+    "prev_pos": 14
+  },
+  {
+    "id": "MADIGNANESE_CICLISMO_ASD_AL_M",
+    "nome": "MADIGNANESE CICLISMO A.S.D",
+    "pts": 5,
+    "p1": 0,
+    "p2": 0,
+    "p3": 0,
+    "pos": 17,
+    "prev_pos": 16
+  },
+  {
+    "id": "ASD_VELOCE_CLUB_BORGO_AL_M",
+    "nome": "ASD VELOCE CLUB BORGO",
+    "pts": 5,
+    "p1": 0,
+    "p2": 0,
+    "p3": 0,
+    "pos": 18,
+    "prev_pos": 17
+  },
+  {
+    "id": "US_MONTECORONA_AL_M",
+    "nome": "U.S. MONTECORONA",
+    "pts": 5,
+    "p1": 0,
+    "p2": 0,
+    "p3": 0,
+    "pos": 19,
+    "prev_pos": 18
+  },
+  {
+    "id": "MADONNA_DI_CAMPAGNA_AL_M",
+    "nome": "MADONNA DI CAMPAGNA",
+    "pts": 4,
+    "p1": 0,
+    "p2": 0,
+    "p3": 0,
+    "pos": 20
+  },
+  {
+    "id": "ASD_ORANGE_BIKE_TEAM_AL_M",
+    "nome": "A.S.D. ORANGE BIKE TEAM",
+    "pts": 4,
+    "p1": 0,
+    "p2": 0,
+    "p3": 0,
+    "pos": 21,
+    "prev_pos": 19
+  },
+  {
+    "id": "LIBERTAS_RAIFFEISEN_LAIVES_ASD_AL_M",
+    "nome": "LIBERTAS RAIFFEISEN LAIVES ASD",
+    "pts": 4,
+    "p1": 0,
+    "p2": 0,
+    "p3": 0,
+    "pos": 22,
+    "prev_pos": 20
+  },
+  {
+    "id": "VIGOR_CYCLING_TEAM_AL_M",
+    "nome": "VIGOR - CYCLING TEAM",
+    "pts": 3,
+    "p1": 0,
+    "p2": 0,
+    "p3": 0,
+    "pos": 23
+  },
+  {
+    "id": "PEDALE_OSSOLANO_AL_M",
+    "nome": "PEDALE OSSOLANO",
+    "pts": 3,
+    "p1": 0,
+    "p2": 0,
+    "p3": 0,
+    "pos": 24,
+    "prev_pos": 21
+  },
+  {
+    "id": "GS_ALZATE_BRIANZA_SYSTEM_CAR_AL_M",
+    "nome": "G.S. ALZATE BRIANZA - SYSTEM CAR",
+    "pts": 1,
+    "p1": 0,
+    "p2": 0,
+    "p3": 0,
+    "pos": 25,
+    "prev_pos": 22
+  }
+]

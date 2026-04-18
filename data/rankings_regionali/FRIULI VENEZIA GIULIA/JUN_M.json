@@ -1,0 +1,112 @@
+[
+  {
+    "id": "VESHNIAKOV_DANIL",
+    "cognome": "VESHNIAKOV",
+    "nome": "DANIL",
+    "team": "PC BAIX EBRE TORTOSA",
+    "pts": 15,
+    "p1": 1,
+    "p2": 0,
+    "p3": 0,
+    "pos": 1
+  },
+  {
+    "id": "LINGENHAG_LAURIN",
+    "cognome": "LINGENHAG",
+    "nome": "LAURIN",
+    "team": "AXION FUTURE TEAM",
+    "pts": 12,
+    "p1": 0,
+    "p2": 1,
+    "p3": 0,
+    "pos": 2
+  },
+  {
+    "id": "BRUSTIA_SAMUELE",
+    "cognome": "BRUSTIA",
+    "nome": "SAMUELE",
+    "team": "G.S.GIOVANI GIUSSANESI A.S.D.",
+    "pts": 10,
+    "p1": 0,
+    "p2": 0,
+    "p3": 1,
+    "pos": 3
+  },
+  {
+    "id": "GUGNINO_LUCA",
+    "cognome": "GUGNINO",
+    "nome": "LUCA",
+    "team": "U.C. PIASCO",
+    "pts": 8,
+    "p1": 0,
+    "p2": 0,
+    "p3": 0,
+    "pos": 4
+  },
+  {
+    "id": "GAMBA_CHRISTIAN",
+    "cognome": "GAMBA",
+    "nome": "CHRISTIAN",
+    "team": "CICLISTICA TREVIGLIESE",
+    "pts": 6,
+    "p1": 0,
+    "p2": 0,
+    "p3": 0,
+    "pos": 5
+  },
+  {
+    "id": "SOLAVAGGIONE_PIETRO",
+    "cognome": "SOLAVAGGIONE",
+    "nome": "PIETRO",
+    "team": "CANNIBAL BAHRAIN VICTORIUS",
+    "pts": 5,
+    "p1": 0,
+    "p2": 0,
+    "p3": 0,
+    "pos": 6
+  },
+  {
+    "id": "FRONTINI_LUCA",
+    "cognome": "FRONTINI",
+    "nome": "LUCA",
+    "team": "POOL CANTU' GB TEAM A.S.D.",
+    "pts": 4,
+    "p1": 0,
+    "p2": 0,
+    "p3": 0,
+    "pos": 7
+  },
+  {
+    "id": "COLOMBO_IVAN",
+    "cognome": "COLOMBO",
+    "nome": "IVAN",
+    "team": "ENERGY TEAM A.S.D.",
+    "pts": 3,
+    "p1": 0,
+    "p2": 0,
+    "p3": 0,
+    "pos": 8
+  },
+  {
+    "id": "ROTA_MARCO",
+    "cognome": "ROTA",
+    "nome": "MARCO",
+    "team": "TEAM GUERRINI SENAGHESE",
+    "pts": 2,
+    "p1": 0,
+    "p2": 0,
+    "p3": 0,
+    "pos": 9
+  },
+  {
+    "id": "BERTOLA_LUCA",
+    "cognome": "BERTOLA",
+    "nome": "LUCA",
+    "team": "CICLISTICA TREVIGLIESE",
+    "pts": 1,
+    "p1": 0,
+    "p2": 0,
+    "p3": 0,
+    "pos": 10
+  }
+]

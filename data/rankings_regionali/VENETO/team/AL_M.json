@@ -1,0 +1,178 @@
+[
+  {
+    "id": "IND_FORNITURE_MOROCG_CAPITAL_AL_M",
+    "nome": "IND. FORNITURE MORO-C&G CAPITAL",
+    "pts": 58,
+    "p1": 1,
+    "p2": 2,
+    "p3": 1,
+    "pos": 1,
+    "prev_pos": 1
+  },
+  {
+    "id": "ACCADEMIA_CICLISTICA_AL_M",
+    "nome": "ACCADEMIA CICLISTICA",
+    "pts": 34,
+    "p1": 1,
+    "p2": 0,
+    "p3": 1,
+    "pos": 2,
+    "prev_pos": 2
+  },
+  {
+    "id": "ASD_CICLISTICA_MONSELICE_AL_M",
+    "nome": "A.S.D. CICLISTICA MONSELICE",
+    "pts": 29,
+    "p1": 1,
+    "p2": 0,
+    "p3": 0,
+    "pos": 3,
+    "prev_pos": 3
+  },
+  {
+    "id": "FERALPI_MONTECLARENSE_ASD_AL_M",
+    "nome": "FERALPI MONTECLARENSE ASD",
+    "pts": 27,
+    "p1": 1,
+    "p2": 1,
+    "p3": 0,
+    "pos": 4
+  },
+  {
+    "id": "ASD_TEAM_PETRUCCI_AL_M",
+    "nome": "ASD TEAM PETRUCCI",
+    "pts": 21,
+    "p1": 0,
+    "p2": 1,
+    "p3": 0,
+    "pos": 5,
+    "prev_pos": 4
+  },
+  {
+    "id": "MADIGNANESE_CICLISMO_ASD_AL_M",
+    "nome": "MADIGNANESE CICLISMO A.S.D",
+    "pts": 20,
+    "p1": 0,
+    "p2": 0,
+    "p3": 2,
+    "pos": 6,
+    "prev_pos": 6
+  },
+  {
+    "id": "GS_CARTURA_NALIN_AL_M",
+    "nome": "GS CARTURA NALIN",
+    "pts": 13,
+    "p1": 0,
+    "p2": 0,
+    "p3": 0,
+    "pos": 7,
+    "prev_pos": 9
+  },
+  {
+    "id": "BORGO_MOLINOVIGNA_FIORITA_AL_M",
+    "nome": "BORGO MOLINO-VIGNA FIORITA",
+    "pts": 12,
+    "p1": 0,
+    "p2": 0,
+    "p3": 0,
+    "pos": 8,
+    "prev_pos": 5
+  },
+  {
+    "id": "POL_FIUMICINESE_FAIT_ADRIATICA_AL_M",
+    "nome": "POL. FIUMICINESE FA.I.T. ADRIATICA",
+    "pts": 10,
+    "p1": 0,
+    "p2": 0,
+    "p3": 0,
+    "pos": 9,
+    "prev_pos": 7
+  },
+  {
+    "id": "ASD_SACILESE_AL_M",
+    "nome": "A.S.D. SACILESE",
+    "pts": 9,
+    "p1": 0,
+    "p2": 0,
+    "p3": 0,
+    "pos": 10,
+    "prev_pos": 8
+  },
+  {
+    "id": "GCD_PEDALE_MANZANESE_AL_M",
+    "nome": "GCD PEDALE MANZANESE",
+    "pts": 6,
+    "p1": 0,
+    "p2": 0,
+    "p3": 0,
+    "pos": 11,
+    "prev_pos": 10
+  },
+  {
+    "id": "FDB_SPORT_CLUB_AL_M",
+    "nome": "FDB SPORT CLUB",
+    "pts": 5,
+    "p1": 0,
+    "p2": 0,
+    "p3": 0,
+    "pos": 12
+  },
+  {
+    "id": "BRUNO_GAIGA_CAMPI_AL_M",
+    "nome": "BRUNO GAIGA C.A.M.P.I.",
+    "pts": 5,
+    "p1": 0,
+    "p2": 0,
+    "p3": 0,
+    "pos": 13,
+    "prev_pos": 11
+  },
+  {
+    "id": "SC_TORRILE_PR_AL_M",
+    "nome": "S.C. TORRILE PR",
+    "pts": 4,
+    "p1": 0,
+    "p2": 0,
+    "p3": 0,
+    "pos": 14
+  },
+  {
+    "id": "POGI_TEAM_UAE_GENERALI_AL_M",
+    "nome": "POGI TEAM UAE GENERALI",
+    "pts": 4,
+    "p1": 0,
+    "p2": 0,
+    "p3": 0,
+    "pos": 15,
+    "prev_pos": 12
+  },
+  {
+    "id": "ASD_VELODROME_MARCON_AL_M",
+    "nome": "A.S.D. VELODROME MARCON",
+    "pts": 4,
+    "p1": 0,
+    "p2": 0,
+    "p3": 0,
+    "pos": 16,
+    "prev_pos": 13
+  },
+  {
+    "id": "INFOCARSESTEMOTOR_AL_M",
+    "nome": "INFOCARS-ESTEMOTOR",
+    "pts": 2,
+    "p1": 0,
+    "p2": 0,
+    "p3": 0,
+    "pos": 17
+  },
+  {
+    "id": "ROTOGAL_GUADENSE_AL_M",
+    "nome": "ROTOGAL GUADENSE",
+    "pts": 1,
+    "p1": 0,
+    "p2": 0,
+    "p3": 0,
+    "pos": 18,
+    "prev_pos": 14
+  }
+]

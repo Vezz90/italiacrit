@@ -1,0 +1,109 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>ItaliacritResultati — Ciclismo Italiano Agonistico</title>
+  <meta name="description" content="Classifiche, risultati e statistiche del ciclismo agonistico italiano su strada. Esordienti, Allievi, Juniores, Under23 ed Elite — uomini e donne." />
+  <meta name="keywords" content="ciclismo italiano, classifiche ciclismo, risultati gare ciclismo, FCI, juniores, allievi, esordienti, elite under23" />
+  <meta property="og:title" content="ItaliacritResultati" />
+  <meta property="og:description" content="Classifiche e risultati del ciclismo agonistico italiano su strada" />
+  <meta property="og:type" content="website" />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link rel="manifest" href="manifest.json" />
+  <link rel="stylesheet" href="style.css" />
+  <!-- Applica il tema salvato PRIMA del render per evitare flash -->
+  <script>try { const t = localStorage.getItem('italiacrit-theme'); if (t) document.documentElement.setAttribute('data-theme', t); } catch(e){}</script>
+</head>
+<body>
+
+<!-- ══════════════════════════════════════════════════════════ -->
+<!--  NAVBAR                                                    -->
+<!-- ══════════════════════════════════════════════════════════ -->
+<nav id="navbar" role="navigation" aria-label="Navigazione principale">
+  <a href="#/" class="nav-logo" id="nav-logo-link">
+    ITALIA<span class="red">CRIT</span>
+  </a>
+  <div class="nav-sep" aria-hidden="true"></div>
+  <div class="nav-links" role="list">
+    <a href="#/"           class="nav-link" id="nav-home"      role="listitem">Home</a>
+    <a href="#/classifica" class="nav-link" id="nav-class"     role="listitem">Classifica</a>
+    <a href="#/risultati"  class="nav-link" id="nav-risultati" role="listitem">Risultati</a>
+    <a href="#/calendario" class="nav-link" id="nav-cal"       role="listitem">Calendario</a>
+    <a href="#/atleti"     class="nav-link" id="nav-atleti"    role="listitem">Atleti</a>
+    <a href="#/squadre"    class="nav-link" id="nav-squadre"   role="listitem">Squadre</a>
+    <a href="#/statistiche" class="nav-link" id="nav-stats"    role="listitem">Statistiche</a>
+  </div>
+  <div class="nav-search-wrap">
+    <span class="nav-search-icon" aria-hidden="true">
+      <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
+    </span>
+    <input
+      type="search"
+      id="nav-search"
+      placeholder="Cerca atleta o team…"
+      autocomplete="off"
+      aria-label="Cerca atleta o team"
+    />
+    <div id="search-results-dropdown" role="listbox" aria-label="Risultati ricerca" style="display:none"></div>
+  </div>
+  <div class="badge-live" id="badge-live" role="status" aria-live="polite">
+    <span class="dot" aria-hidden="true"></span> LIVE
+  </div>
+  <button id="theme-toggle" aria-label="Cambia tema" title="Cambia tema chiaro/scuro">
+    🌙
+  </button>
+  <button id="nav-hamburger" aria-label="Apri menu" aria-expanded="false">
+    <span></span><span></span><span></span>
+  </button>
+</nav>
+
+<!-- Mobile drawer -->
+<div id="nav-drawer" role="dialog" aria-label="Menu mobile">
+  <a href="#/"           class="nav-link" id="drawer-home">Home</a>
+  <a href="#/classifica" class="nav-link" id="drawer-class">Classifica</a>
+  <a href="#/risultati"  class="nav-link" id="drawer-risultati">Risultati</a>
+  <a href="#/calendario" class="nav-link" id="drawer-cal">Calendario</a>
+  <a href="#/atleti"     class="nav-link" id="drawer-atleti">Atleti</a>
+  <a href="#/squadre"    class="nav-link" id="drawer-squadre">Squadre</a>
+  <a href="#/statistiche" class="nav-link" id="drawer-stats">Statistiche</a>
+</div>
+
+<!-- ══════════════════════════════════════════════════════════ -->
+<!--  APP ROOT                                                  -->
+<!-- ══════════════════════════════════════════════════════════ -->
+<div id="app">
+  <div class="loading-bar" id="initial-loader"></div>
+</div>
+
+<!-- Tooltip sparkline -->
+<div class="sparkline-tooltip" id="sparkline-tooltip"></div>
+
+<!-- ══════════════════════════════════════════════════════════ -->
+<!--  FOOTER                                                    -->
+<!-- ══════════════════════════════════════════════════════════ -->
+<footer role="contentinfo">
+  <strong>ITALIACRIT</strong> — Risultati Ciclismo Italiano
+  <span class="footer-sep">|</span>
+  Dati: Federazione Ciclistica Italiana
+  <span class="footer-sep">•</span>
+  Aggiornato: <span id="footer-update">—</span>
+  <br/>
+  <span style="font-size:0.75rem;margin-top:4px;display:block">
+    Non affiliato a FCI &nbsp;•&nbsp; Progetto indipendente
+  </span>
+</footer>
+
+<div id="export-card-wrapper" style="position: absolute; left:-9999px; top:-9999px; width:400px; height:711px; background:var(--bg-black); color:#fff; overflow:hidden;"></div>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js" defer></script>
+<script src="app.js?v=25" defer></script>
+<script>
+  if ('serviceWorker' in navigator) {
+    window.addEventListener('load', () => {
+      navigator.serviceWorker.register('./sw.js').then(r => console.log('SW registered')).catch(e => console.log('SW failed', e));
+    });
+  }
+</script>
+</body>
+</html>

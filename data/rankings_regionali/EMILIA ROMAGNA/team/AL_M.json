@@ -1,0 +1,181 @@
+[
+  {
+    "id": "SCCOTIGNOLESE_AL_M",
+    "nome": "S.C.COTIGNOLESE",
+    "pts": 58,
+    "p1": 1,
+    "p2": 1,
+    "p3": 1,
+    "pos": 1,
+    "prev_pos": 1
+  },
+  {
+    "id": "ASD_CICLISTICA_MONSELICE_AL_M",
+    "nome": "A.S.D. CICLISTICA MONSELICE",
+    "pts": 32,
+    "p1": 2,
+    "p2": 0,
+    "p3": 0,
+    "pos": 2,
+    "prev_pos": 2
+  },
+  {
+    "id": "POL_FIUMICINESE_FAIT_ADRIATICA_AL_M",
+    "nome": "POL. FIUMICINESE FA.I.T. ADRIATICA",
+    "pts": 30,
+    "p1": 0,
+    "p2": 2,
+    "p3": 0,
+    "pos": 3,
+    "prev_pos": 8
+  },
+  {
+    "id": "TEAM_CICLISTICO_PALETTI_AL_M",
+    "nome": "TEAM CICLISTICO PALETTI",
+    "pts": 27,
+    "p1": 1,
+    "p2": 1,
+    "p3": 0,
+    "pos": 4,
+    "prev_pos": 3
+  },
+  {
+    "id": "ARMONEX_PRO_CYCLING_TEAM_AL_M",
+    "nome": "A.R.MONEX PRO CYCLING TEAM",
+    "pts": 27,
+    "p1": 1,
+    "p2": 0,
+    "p3": 1,
+    "pos": 5,
+    "prev_pos": 4
+  },
+  {
+    "id": "VELO_CLUB_CATTOLICA_AL_M",
+    "nome": "VELO CLUB CATTOLICA",
+    "pts": 25,
+    "p1": 0,
+    "p2": 0,
+    "p3": 0,
+    "pos": 6,
+    "prev_pos": 5
+  },
+  {
+    "id": "BORGO_MOLINOVIGNA_FIORITA_AL_M",
+    "nome": "BORGO MOLINO-VIGNA FIORITA",
+    "pts": 24,
+    "p1": 0,
+    "p2": 1,
+    "p3": 0,
+    "pos": 7,
+    "prev_pos": 6
+  },
+  {
+    "id": "TEAM_CORATTI_AL_M",
+    "nome": "TEAM CORATTI",
+    "pts": 21,
+    "p1": 0,
+    "p2": 0,
+    "p3": 1,
+    "pos": 8,
+    "prev_pos": 9
+  },
+  {
+    "id": "ETHICA_ZERO24_CYCLING_TEAM_AL_M",
+    "nome": "ETHICA ZERO24 CYCLING TEAM",
+    "pts": 19,
+    "p1": 0,
+    "p2": 0,
+    "p3": 1,
+    "pos": 9,
+    "prev_pos": 7
+  },
+  {
+    "id": "A_DPED_AZZURRORINASCITA_AL_M",
+    "nome": "A. D.PED. AZZURRO.RINASCITA",
+    "pts": 19,
+    "p1": 0,
+    "p2": 0,
+    "p3": 0,
+    "pos": 10,
+    "prev_pos": 10
+  },
+  {
+    "id": "IND_FORNITURE_MOROCG_CAPITAL_AL_M",
+    "nome": "IND. FORNITURE MORO-C&G CAPITAL",
+    "pts": 14,
+    "p1": 0,
+    "p2": 0,
+    "p3": 0,
+    "pos": 11
+  },
+  {
+    "id": "CS_LIBERTAS_SCORZE_AL_M",
+    "nome": "C.S. LIBERTAS SCORZE'",
+    "pts": 10,
+    "p1": 0,
+    "p2": 0,
+    "p3": 1,
+    "pos": 12,
+    "prev_pos": 11
+  },
+  {
+    "id": "SCRECANATI_MARINELLI_CANTARINI_AL_M",
+    "nome": "S.C.RECANATI MARINELLI CANTARINI",
+    "pts": 10,
+    "p1": 0,
+    "p2": 0,
+    "p3": 0,
+    "pos": 13,
+    "prev_pos": 12
+  },
+  {
+    "id": "IL_PIRATA_VANGI_OTC_AL_M",
+    "nome": "IL PIRATA VANGI OTC",
+    "pts": 5,
+    "p1": 0,
+    "p2": 0,
+    "p3": 0,
+    "pos": 14,
+    "prev_pos": 16
+  },
+  {
+    "id": "US_CALCARA_AL_M",
+    "nome": "U.S. CALCARA",
+    "pts": 3,
+    "p1": 0,
+    "p2": 0,
+    "p3": 0,
+    "pos": 15,
+    "prev_pos": 13
+  },
+  {
+    "id": "ASD_CICLISTICA_2000_AL_M",
+    "nome": "A.S.D. CICLISTICA 2000",
+    "pts": 3,
+    "p1": 0,
+    "p2": 0,
+    "p3": 0,
+    "pos": 16,
+    "prev_pos": 14
+  },
+  {
+    "id": "UC_CITTA_DI_CASTELLO_ASD_AL_M",
+    "nome": "U.C. CITTA' DI CASTELLO A.S.D.",
+    "pts": 2,
+    "p1": 0,
+    "p2": 0,
+    "p3": 0,
+    "pos": 17,
+    "prev_pos": 15
+  },
+  {
+    "id": "GIUSFREDI_AL_M",
+    "nome": "GIUSFREDI",
+    "pts": 1,
+    "p1": 0,
+    "p2": 0,
+    "p3": 0,
+    "pos": 18,
+    "prev_pos": 17
+  }
+]

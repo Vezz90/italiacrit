@@ -1,0 +1,112 @@
+[
+  {
+    "id": "MONTANARO_NICOLO",
+    "cognome": "MONTANARO",
+    "nome": "NICOLO'",
+    "team": "TEAM CORATTI",
+    "pts": 15,
+    "p1": 1,
+    "p2": 0,
+    "p3": 0,
+    "pos": 1
+  },
+  {
+    "id": "FIACCO_ANDREA",
+    "cognome": "FIACCO",
+    "nome": "ANDREA",
+    "team": "TEAM CORATTI",
+    "pts": 12,
+    "p1": 0,
+    "p2": 1,
+    "p3": 0,
+    "pos": 2
+  },
+  {
+    "id": "LIPPOLIS_ANTONIO",
+    "cognome": "LIPPOLIS",
+    "nome": "ANTONIO",
+    "team": "ASD 1D+ UN DENTE IN PIU'",
+    "pts": 10,
+    "p1": 0,
+    "p2": 0,
+    "p3": 1,
+    "pos": 3
+  },
+  {
+    "id": "FESTUCCIA_MATTIA",
+    "cognome": "FESTUCCIA",
+    "nome": "MATTIA",
+    "team": "TEAM CORATTI",
+    "pts": 8,
+    "p1": 0,
+    "p2": 0,
+    "p3": 0,
+    "pos": 4
+  },
+  {
+    "id": "MAZZOCCHETTI_RICCARDO",
+    "cognome": "MAZZOCCHETTI",
+    "nome": "RICCARDO",
+    "team": "ASD MORENO DI BIASE",
+    "pts": 6,
+    "p1": 0,
+    "p2": 0,
+    "p3": 0,
+    "pos": 5
+  },
+  {
+    "id": "POLLUTRI_LEONARDO",
+    "cognome": "POLLUTRI",
+    "nome": "LEONARDO",
+    "team": "ASD MORENO DI BIASE",
+    "pts": 5,
+    "p1": 0,
+    "p2": 0,
+    "p3": 0,
+    "pos": 6
+  },
+  {
+    "id": "SORVILLO_SAMUELE",
+    "cognome": "SORVILLO",
+    "nome": "SAMUELE",
+    "team": "A.S.D. AMICISUPERSKI",
+    "pts": 4,
+    "p1": 0,
+    "p2": 0,
+    "p3": 0,
+    "pos": 7
+  },
+  {
+    "id": "CARRER_OSCAR",
+    "cognome": "CARRER",
+    "nome": "OSCAR",
+    "team": "ASD FUSION BIKE",
+    "pts": 3,
+    "p1": 0,
+    "p2": 0,
+    "p3": 0,
+    "pos": 8
+  },
+  {
+    "id": "APRILE_MICHELE",
+    "cognome": "APRILE",
+    "nome": "MICHELE",
+    "team": "CAMB!KE",
+    "pts": 2,
+    "p1": 0,
+    "p2": 0,
+    "p3": 0,
+    "pos": 9
+  },
+  {
+    "id": "TRABUCCO_NICOLO",
+    "cognome": "TRABUCCO",
+    "nome": "NICOLO'",
+    "team": "ASD MORENO DI BIASE",
+    "pts": 1,
+    "p1": 0,
+    "p2": 0,
+    "p3": 0,
+    "pos": 10
+  }
+]

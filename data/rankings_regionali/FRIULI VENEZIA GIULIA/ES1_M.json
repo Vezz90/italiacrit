@@ -1,0 +1,112 @@
+[
+  {
+    "id": "CAMPANER_FRANCESCO",
+    "cognome": "CAMPANER",
+    "nome": "FRANCESCO",
+    "team": "U.C.S. OTTAVIO ZULIANI A.S.D.",
+    "pts": 15,
+    "p1": 1,
+    "p2": 0,
+    "p3": 0,
+    "pos": 1
+  },
+  {
+    "id": "BRAIT_EDOARDO",
+    "cognome": "BRAIT",
+    "nome": "EDOARDO",
+    "team": "A.S.D. SACILESE",
+    "pts": 12,
+    "p1": 0,
+    "p2": 1,
+    "p3": 0,
+    "pos": 2
+  },
+  {
+    "id": "TONEL_MATTIA",
+    "cognome": "TONEL",
+    "nome": "MATTIA",
+    "team": "GOTTARDO GIOCHI CANEVA",
+    "pts": 10,
+    "p1": 0,
+    "p2": 0,
+    "p3": 1,
+    "pos": 3
+  },
+  {
+    "id": "FRESCHI_ANDREA",
+    "cognome": "FRESCHI",
+    "nome": "ANDREA",
+    "team": "A.S.D. SACILESE",
+    "pts": 8,
+    "p1": 0,
+    "p2": 0,
+    "p3": 0,
+    "pos": 4
+  },
+  {
+    "id": "DELLANNA_MICHAEL",
+    "cognome": "DELL'ANNA",
+    "nome": "MICHAEL",
+    "team": "CICLISTICA BUJESE - DIGAS",
+    "pts": 6,
+    "p1": 0,
+    "p2": 0,
+    "p3": 0,
+    "pos": 5
+  },
+  {
+    "id": "JANC_ZAN",
+    "cognome": "JANC",
+    "nome": "ZAN",
+    "team": "NOVO MESTO CYCLING ACADEMY",
+    "pts": 5,
+    "p1": 0,
+    "p2": 0,
+    "p3": 0,
+    "pos": 6
+  },
+  {
+    "id": "CIGOLOTTO_GIOELE",
+    "cognome": "CIGOLOTTO",
+    "nome": "GIOELE",
+    "team": "LIBERTAS CERESETTO",
+    "pts": 4,
+    "p1": 0,
+    "p2": 0,
+    "p3": 0,
+    "pos": 7
+  },
+  {
+    "id": "COSATTI_TOMMASO",
+    "cognome": "COSATTI",
+    "nome": "TOMMASO",
+    "team": "JAM'S BIKE TEAM BUJA",
+    "pts": 3,
+    "p1": 0,
+    "p2": 0,
+    "p3": 0,
+    "pos": 8
+  },
+  {
+    "id": "COSTALONGA_DIEGO",
+    "cognome": "COSTALONGA",
+    "nome": "DIEGO",
+    "team": "S. C. FONTANAFREDDA",
+    "pts": 2,
+    "p1": 0,
+    "p2": 0,
+    "p3": 0,
+    "pos": 9
+  },
+  {
+    "id": "TONELLI_MARCO",
+    "cognome": "TONELLI",
+    "nome": "MARCO",
+    "team": "JAM'S BIKE TEAM BUJA",
+    "pts": 1,
+    "p1": 0,
+    "p2": 0,
+    "p3": 0,
+    "pos": 10
+  }
+]

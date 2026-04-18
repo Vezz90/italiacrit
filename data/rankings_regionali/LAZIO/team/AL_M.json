@@ -1,0 +1,38 @@
+[
+  {
+    "id": "BUSTESE_OLONIA_ASD_AL_M",
+    "nome": "BUSTESE OLONIA A.S.D.",
+    "pts": 24,
+    "p1": 1,
+    "p2": 0,
+    "p3": 0,
+    "pos": 1
+  },
+  {
+    "id": "ALBA_OROBIA_BIASSONO_AL_M",
+    "nome": "ALBA OROBIA - BIASSONO",
+    "pts": 18,
+    "p1": 0,
+    "p2": 0,
+    "p3": 1,
+    "pos": 2
+  },
+  {
+    "id": "TEAM_SENAGHESE_GUERRINI_AL_M",
+    "nome": "TEAM SENAGHESE GUERRINI",
+    "pts": 16,
+    "p1": 0,
+    "p2": 1,
+    "p3": 0,
+    "pos": 3
+  },
+  {
+    "id": "PEDALE_BREMBILLESE_AL_M",
+    "nome": "PEDALE BREMBILLESE",
+    "pts": 8,
+    "p1": 0,
+    "p2": 0,
+    "p3": 0,
+    "pos": 4
+  }
+]

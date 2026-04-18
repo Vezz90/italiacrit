@@ -1,0 +1,212 @@
+[
+  {
+    "id": "TEAM_VANGI_TOMMASINI_IL_PIRATA_JUN_M",
+    "nome": "TEAM VANGI TOMMASINI IL PIRATA",
+    "pts": 202,
+    "p1": 4,
+    "p2": 4,
+    "p3": 3,
+    "pos": 1,
+    "prev_pos": 1
+  },
+  {
+    "id": "POOL_CANTU_GB_TEAM_ASD_JUN_M",
+    "nome": "POOL CANTU' GB TEAM A.S.D.",
+    "pts": 67,
+    "p1": 0,
+    "p2": 1,
+    "p3": 2,
+    "pos": 2,
+    "prev_pos": 2
+  },
+  {
+    "id": "TEAM_NERI_SOTTOLI_LUCCHINI_ENERGY_JUN_M",
+    "nome": "TEAM NERI SOTTOLI LUCCHINI ENERGY",
+    "pts": 48,
+    "p1": 0,
+    "p2": 1,
+    "p3": 1,
+    "pos": 3,
+    "prev_pos": 4
+  },
+  {
+    "id": "BORGO_MOLINOVIGNA_FIORITA_JUN_M",
+    "nome": "BORGO MOLINO-VIGNA FIORITA",
+    "pts": 36,
+    "p1": 1,
+    "p2": 0,
+    "p3": 0,
+    "pos": 4,
+    "prev_pos": 3
+  },
+  {
+    "id": "IND_FORNITURE_MOROCG_CAPITAL_JUN_M",
+    "nome": "IND. FORNITURE MORO-C&G CAPITAL",
+    "pts": 27,
+    "p1": 1,
+    "p2": 0,
+    "p3": 0,
+    "pos": 5,
+    "prev_pos": 12
+  },
+  {
+    "id": "POLISPORTIVA_MONSUMMANESE_JUN_M",
+    "nome": "POLISPORTIVA MONSUMMANESE",
+    "pts": 21,
+    "p1": 0,
+    "p2": 0,
+    "p3": 1,
+    "pos": 6,
+    "prev_pos": 5
+  },
+  {
+    "id": "SS_AQUILA_JUN_M",
+    "nome": "SS AQUILA",
+    "pts": 19,
+    "p1": 0,
+    "p2": 0,
+    "p3": 0,
+    "pos": 7,
+    "prev_pos": 10
+  },
+  {
+    "id": "NORDEST_PETRUCCI_ASSALI_STEFEN_JUN_M",
+    "nome": "NORDEST PETRUCCI ASSALI STEFEN",
+    "pts": 16,
+    "p1": 1,
+    "p2": 0,
+    "p3": 0,
+    "pos": 8,
+    "prev_pos": 6
+  },
+  {
+    "id": "TEAM_GENERAL_SYSTEM_JUN_M",
+    "nome": "TEAM GENERAL SYSTEM",
+    "pts": 13,
+    "p1": 0,
+    "p2": 0,
+    "p3": 0,
+    "pos": 9,
+    "prev_pos": 7
+  },
+  {
+    "id": "ARMONEX_PRO_CYCLING_TEAM_JUN_M",
+    "nome": "A.R.MONEX PRO CYCLING TEAM",
+    "pts": 12,
+    "p1": 0,
+    "p2": 1,
+    "p3": 0,
+    "pos": 10,
+    "prev_pos": 8
+  },
+  {
+    "id": "TEAM_CORATTI_JUN_M",
+    "nome": "TEAM CORATTI",
+    "pts": 12,
+    "p1": 0,
+    "p2": 0,
+    "p3": 0,
+    "pos": 11,
+    "prev_pos": 9
+  },
+  {
+    "id": "ASD_CICLISTICA_MONSELICE_JUN_M",
+    "nome": "A.S.D. CICLISTICA MONSELICE",
+    "pts": 10,
+    "p1": 0,
+    "p2": 0,
+    "p3": 0,
+    "pos": 12,
+    "prev_pos": 11
+  },
+  {
+    "id": "CPS_PROFESSIONAL_TEAM_JUN_M",
+    "nome": "CPS PROFESSIONAL TEAM",
+    "pts": 9,
+    "p1": 0,
+    "p2": 0,
+    "p3": 0,
+    "pos": 13,
+    "prev_pos": 13
+  },
+  {
+    "id": "BUSTESE_OLONIA_ASD_JUN_M",
+    "nome": "BUSTESE OLONIA A.S.D.",
+    "pts": 8,
+    "p1": 0,
+    "p2": 0,
+    "p3": 0,
+    "pos": 14,
+    "prev_pos": 14
+  },
+  {
+    "id": "MASTROMARCO_FC_NIBALI_JUN_M",
+    "nome": "MASTROMARCO FC NIBALI",
+    "pts": 6,
+    "p1": 0,
+    "p2": 0,
+    "p3": 0,
+    "pos": 15,
+    "prev_pos": 17
+  },
+  {
+    "id": "AUTOZAICONTRI_JUN_M",
+    "nome": "AUTOZAI-CONTRI",
+    "pts": 6,
+    "p1": 0,
+    "p2": 0,
+    "p3": 0,
+    "pos": 16,
+    "prev_pos": 15
+  },
+  {
+    "id": "TEAM_TIEPOLO_U19_DEVO_JUN_M",
+    "nome": "TEAM TIEPOLO U19 DEVO",
+    "pts": 6,
+    "p1": 0,
+    "p2": 0,
+    "p3": 0,
+    "pos": 17,
+    "prev_pos": 16
+  },
+  {
+    "id": "TEAM_GUERRINI_SENAGHESE_JUN_M",
+    "nome": "TEAM GUERRINI SENAGHESE",
+    "pts": 4,
+    "p1": 0,
+    "p2": 0,
+    "p3": 0,
+    "pos": 18,
+    "prev_pos": 18
+  },
+  {
+    "id": "TEAM_ECOTEK_ZERO24_JUN_M",
+    "nome": "TEAM ECOTEK ZERO24",
+    "pts": 3,
+    "p1": 0,
+    "p2": 0,
+    "p3": 0,
+    "pos": 19,
+    "prev_pos": 19
+  },
+  {
+    "id": "TRIS_STAMPI_FIOR_DI_GRANO_JUN_M",
+    "nome": "TRIS STAMPI FIOR DI GRANO",
+    "pts": 2,
+    "p1": 0,
+    "p2": 0,
+    "p3": 0,
+    "pos": 20,
+    "prev_pos": 20
+  },
+  {
+    "id": "SALUS_CICLISTICA_SEREGNO_DE_ROSA_JUN_M",
+    "nome": "SALUS CICLISTICA SEREGNO DE ROSA",
+    "pts": 1,
+    "p1": 0,
+    "p2": 0,
+    "p3": 0,
+    "pos": 21,
+    "prev_pos": 21
+  }
+]

@@ -1,0 +1,57 @@
+[
+  {
+    "id": "PITEO_FRANCESCO_PIO",
+    "cognome": "PITEO",
+    "nome": "FRANCESCO PIO",
+    "team": "TEAM CESARO-NERI-LUCCHINI",
+    "pts": 15,
+    "p1": 1,
+    "p2": 0,
+    "p3": 0,
+    "pos": 1
+  },
+  {
+    "id": "VALLIFUOCO_SALVATORE",
+    "cognome": "VALLIFUOCO",
+    "nome": "SALVATORE",
+    "team": "MARY J SWEET ANGEL ASD",
+    "pts": 12,
+    "p1": 0,
+    "p2": 1,
+    "p3": 0,
+    "pos": 2
+  },
+  {
+    "id": "IOVINO_ANTONINO",
+    "cognome": "IOVINO",
+    "nome": "ANTONINO",
+    "team": "TEAM GIUNIGOR - B.BIKE",
+    "pts": 10,
+    "p1": 0,
+    "p2": 0,
+    "p3": 1,
+    "pos": 3
+  },
+  {
+    "id": "MILO_ANDREA",
+    "cognome": "MILO",
+    "nome": "ANDREA",
+    "team": "PROFBIKE ANGRI CYCLING TEAM",
+    "pts": 8,
+    "p1": 0,
+    "p2": 0,
+    "p3": 0,
+    "pos": 4
+  },
+  {
+    "id": "FABBRICATORE_DAVIDE",
+    "cognome": "FABBRICATORE",
+    "nome": "DAVIDE",
+    "team": "FLESSOFAB",
+    "pts": 6,
+    "p1": 0,
+    "p2": 0,
+    "p3": 0,
+    "pos": 5
+  }
+]

@@ -1,0 +1,128 @@
+[
+  {
+    "id": "SC_CESANO_MADERNO_AL_F",
+    "nome": "S.C. CESANO MADERNO",
+    "pts": 26,
+    "p1": 1,
+    "p2": 0,
+    "p3": 0,
+    "pos": 1,
+    "prev_pos": 5
+  },
+  {
+    "id": "UC_GIORGIONE_AL_F",
+    "nome": "U.C. GIORGIONE",
+    "pts": 20,
+    "p1": 0,
+    "p2": 1,
+    "p3": 0,
+    "pos": 2,
+    "prev_pos": 4
+  },
+  {
+    "id": "GS_CICLI_FIORIN_ASD_AL_F",
+    "nome": "GS CICLI FIORIN ASD",
+    "pts": 20,
+    "p1": 0,
+    "p2": 0,
+    "p3": 1,
+    "pos": 3,
+    "prev_pos": 8
+  },
+  {
+    "id": "BIESSE_CARRERA_PREMAC_AL_F",
+    "nome": "BIESSE - CARRERA - PREMAC",
+    "pts": 15,
+    "p1": 1,
+    "p2": 0,
+    "p3": 0,
+    "pos": 4,
+    "prev_pos": 1
+  },
+  {
+    "id": "SPORT_CLUB_BRESCIA_FLANDRES_LOVE_AL_F",
+    "nome": "SPORT CLUB BRESCIA - FLANDRES LOVE",
+    "pts": 15,
+    "p1": 0,
+    "p2": 1,
+    "p3": 0,
+    "pos": 5,
+    "prev_pos": 2
+  },
+  {
+    "id": "TEAM_FABIANA_LUPERINI_ASD_AL_F",
+    "nome": "TEAM FABIANA LUPERINI ASD",
+    "pts": 10,
+    "p1": 0,
+    "p2": 0,
+    "p3": 1,
+    "pos": 6,
+    "prev_pos": 3
+  },
+  {
+    "id": "JU_GREEN_ASD_GORLA_MINORE_AL_F",
+    "nome": "JU GREEN A.S.D. GORLA MINORE",
+    "pts": 6,
+    "p1": 0,
+    "p2": 0,
+    "p3": 0,
+    "pos": 7
+  },
+  {
+    "id": "GS_CICLI_FIORIN_CYCLING_TEAM_ASD_AL_F",
+    "nome": "G.S. CICLI FIORIN CYCLING TEAM ASD",
+    "pts": 5,
+    "p1": 0,
+    "p2": 0,
+    "p3": 0,
+    "pos": 8
+  },
+  {
+    "id": "ASD_GIOCA_IN_BICI_OGLIO_PO_AL_F",
+    "nome": "A.S.D. GIOCA IN BICI OGLIO PO",
+    "pts": 5,
+    "p1": 0,
+    "p2": 0,
+    "p3": 0,
+    "pos": 9,
+    "prev_pos": 6
+  },
+  {
+    "id": "TEAM_WILIER_BREGANZE_AL_F",
+    "nome": "TEAM WILIER BREGANZE",
+    "pts": 4,
+    "p1": 0,
+    "p2": 0,
+    "p3": 0,
+    "pos": 10,
+    "prev_pos": 7
+  },
+  {
+    "id": "GS_LUPI_VALLE_DAOSTA_AL_F",
+    "nome": "G.S. LUPI VALLE D'AOSTA",
+    "pts": 3,
+    "p1": 0,
+    "p2": 0,
+    "p3": 0,
+    "pos": 11
+  },
+  {
+    "id": "SCUOLA_CICLISMO_VERSO_LIRIDE_AL_F",
+    "nome": "SCUOLA CICLISMO VERSO L'IRIDE",
+    "pts": 2,
+    "p1": 0,
+    "p2": 0,
+    "p3": 0,
+    "pos": 12
+  },
+  {
+    "id": "VANGI_LADIES_CYCLING_TEAM_AL_F",
+    "nome": "VANGI LADIES CYCLING TEAM",
+    "pts": 1,
+    "p1": 0,
+    "p2": 0,
+    "p3": 0,
+    "pos": 13,
+    "prev_pos": 9
+  }
+]
