@@ -163,9 +163,10 @@ async def scrape_race_results(page, race_url: str, race_name: str, race_date: st
     return results
 
 
-async def scrape_all_results(calendar: list) -> list[dict]:
+async def scrape_all_results(calendar: list, existing_gara_ids: set = None) -> list[dict]:
     """Scarica tutti i risultati dalle pagine FCI risultati-strada."""
     all_results = []
+    existing_gara_ids = existing_gara_ids or set()
 
     async with async_playwright() as p:
         browser = await p.chromium.launch(headless=True)
@@ -189,27 +190,31 @@ async def scrape_all_results(calendar: list) -> list[dict]:
                     text = (await link.inner_text()).strip()
                     if href and href not in seen_hrefs:
                         seen_hrefs.add(href)
-                        # Cerca data nel testo circostante
                         full_url = href if href.startswith("http") else BASE_URL.rstrip("/") + "/" + href.lstrip("/")
                         races_to_scrape.append((text, full_url))
 
                 print(f"      → {len(races_to_scrape)} gare trovate")
 
-                for race_name, race_url in races_to_scrape[:50]:  # limite sicurezza
-                    # Estrai data dall'URL o testo
+                for race_name, race_url in races_to_scrape:
+                    # 1. Estrai data dall'URL o testo per ID
                     date_match = re.search(r"(\d{4})[_\-](\d{2})[_\-](\d{2})", race_url)
-                    if date_match:
-                        race_date = f"{date_match.group(1)}-{date_match.group(2)}-{date_match.group(3)}"
-                    else:
-                        race_date = f"{CURRENT_YEAR}-01-01"  # fallback
+                    race_date = f"{date_match.group(1)}-{date_match.group(2)}-{date_match.group(3)}" if date_match else f"{CURRENT_YEAR}-01-01"
 
-                    # Salta gare non dell'anno corrente
+                    # 2. Verifica se la gara \u00e8 dell'anno corrente
                     if not race_date.startswith(str(CURRENT_YEAR)):
                         continue
 
+                    # 3. Costruisci gara_id e verifica se dobbiamo scraparla
+                    gara_id = f"{slugify(race_name)}_{race_date}"
+                    
+                    if gara_id in existing_gara_ids:
+                        # Gi\u00e0 presente nel database locale, salta immediatamente
+                        continue
+                    
+                    print(f"      Scraping: {race_name} ({race_date}) \u2026")
                     results = await scrape_race_results(page, race_url, race_name, race_date, cat_name)
                     all_results.extend(results)
-                    await asyncio.sleep(2)  # rate limiting
+                    await asyncio.sleep(1)  # rate limiting per gare nuove
 
             except Exception as e:
                 print(f"      WARN {cat_name}: {e}")

@@ -365,6 +365,10 @@ function route() {
   if (match('/calendario')) return renderCalendario();
   if (match('/statistiche')) return renderStats();
   if (match('/mensile')) return renderClassificaMensile();
+  if (match('/info')) {
+    document.getElementById('nav-info')?.classList.add('active');
+    return renderInfo();
+  }
   if (match('/atleti')) {
     document.getElementById('nav-atleti')?.classList.add('active');
     return renderDirectoryAtleti();
@@ -388,13 +392,14 @@ function route() {
 }
 
 function updateNavActive(hash) {
-  ['nav-home','nav-class','nav-cal','nav-risultati','nav-stats','nav-atleti','nav-squadre'].forEach(id => {
+  ['nav-home','nav-class','nav-cal','nav-risultati','nav-stats','nav-atleti','nav-squadre','nav-info'].forEach(id => {
     document.getElementById(id)?.classList.remove('active');
   });
   if (hash === '#/' || hash === '#') document.getElementById('nav-home')?.classList.add('active');
   else if (hash.startsWith('#/classifica')) document.getElementById('nav-class')?.classList.add('active');
   else if (hash.startsWith('#/risultati')) document.getElementById('nav-risultati')?.classList.add('active');
   else if (hash.startsWith('#/calendario')) document.getElementById('nav-cal')?.classList.add('active');
+  else if (hash.startsWith('#/info')) document.getElementById('nav-info')?.classList.add('active');
 }
 
 function setPage(html) {
@@ -3190,4 +3195,105 @@ function renderClassificaMensile() {
   };
 
   setTimeout(() => window.switchMensileMonth(allMonths[0]), 50);
+}
+
+// ── REGOLAMENTO ───────────────────────────────────────────────
+function renderInfo() {
+  setPage(`
+    <style>
+      .grid-regole b { color: var(--yellow-race); }
+    </style>
+    <div style="max-width:900px;margin:0 auto;padding:40px 20px;animation:fadeIn 0.4s ease;">
+      <div style="text-align:center;margin-bottom:60px;">
+        <h1 style="font-family:var(--font-display);font-size:3.5rem;text-transform:uppercase;margin:0;color:var(--text-primary);">
+          REGOLAMENTO <span class="red">PUNTEGGI</span>
+        </h1>
+        <div style="width:60px;height:4px;background:var(--red-hot);margin:20px auto;"></div>
+        <p style="color:var(--text-muted);font-size:1.1rem;max-width:600px;margin:10px auto;">
+          Scopri come vengono calcolate le classifiche ufficiali di Italiacrit per ogni categoria e tipologia di gara.
+        </p>
+      </div>
+
+      <div class="grid-regole" style="display:grid;grid-template-columns:repeat(auto-fit, minmax(300px, 1fr));gap:30px;margin-bottom:60px;">
+        
+        <!-- Punti Base -->
+        <div style="background:var(--bg-card);border:1px solid var(--border-subtle);padding:30px;border-radius:16px;">
+          <h2 style="font-family:var(--font-display);font-size:1.5rem;margin-bottom:20px;color:var(--red-hot);">PUNTEGGI BASE</h2>
+          <table style="width:100%;font-family:var(--font-heading);border-collapse:collapse;">
+            <thead>
+              <tr style="border-bottom:1px solid var(--border-subtle);color:var(--text-muted);font-size:0.8rem;">
+                <th style="text-align:left;padding-bottom:10px;">POSIZIONE</th>
+                <th style="text-align:right;padding-bottom:10px;">PUNTI</th>
+              </tr>
+            </thead>
+            <tbody>
+              ${Object.entries(BASEPTS).map(([pos, pts]) => `
+                <tr style="border-bottom:1px solid rgba(255,255,255,0.03);">
+                  <td style="padding:10px 0;font-weight:700;">${pos}\u00b0 Posto</td>
+                  <td style="padding:10px 0;text-align:right;color:var(--yellow-race);font-size:1.2rem;font-weight:700;">${pts}</td>
+                </tr>
+              `).join('')}
+            </tbody>
+          </table>
+          <p style="margin-top:20px;font-size:0.85rem;color:var(--text-muted);line-height:1.4;">
+            I punti vengono assegnati ai primi 10 atleti classificati per ogni categoria presente in gara.
+          </p>
+        </div>
+
+        <!-- Moltiplicatori -->
+        <div style="display:flex;flex-direction:column;gap:30px;">
+          <div style="background:var(--bg-card);border:1px solid var(--border-subtle);padding:30px;border-radius:16px;">
+            <h2 style="font-family:var(--font-display);font-size:1.5rem;margin-bottom:20px;color:var(--red-hot);">LIVELLO GARA</h2>
+            <div style="display:flex;flex-direction:column;gap:15px;">
+              <div style="display:flex;justify-content:space-between;align-items:center;">
+                <div>
+                  <div style="font-weight:700;font-size:1rem;color:var(--text-primary);">REGIONALE / LOCALE</div>
+                  <div style="font-size:0.8rem;color:var(--text-muted);">Gare standard da calendario</div>
+                </div>
+                <div class="badge-cat badge-mult-x1" style="font-size:1rem;padding:6px 12px;">\u00d71</div>
+              </div>
+              <div style="display:flex;justify-content:space-between;align-items:center;">
+                <div>
+                  <div style="font-weight:700;font-size:1rem;color:var(--text-primary);">CAMP. REGIONALE / NAZIONALE</div>
+                  <div style="font-size:0.8rem;color:var(--text-muted);">Gare di rilevanza superiore</div>
+                </div>
+                <div class="badge-cat badge-mult-x2" style="font-size:1rem;padding:6px 12px;">\u00d72</div>
+              </div>
+              <div style="display:flex;justify-content:space-between;align-items:center;">
+                <div>
+                  <div style="font-weight:700;font-size:1rem;color:var(--text-primary);">CAMP. ITALIANO / INTERNAZ.</div>
+                  <div style="font-size:0.8rem;color:var(--text-muted);">Le massime competizioni</div>
+                </div>
+                <div class="badge-cat badge-mult-x3" style="font-size:1rem;padding:6px 12px;">\u00d73</div>
+              </div>
+            </div>
+          </div>
+
+          <div style="background:var(--bg-card);border:1px solid var(--border-subtle);padding:30px;border-radius:16px;">
+            <h2 style="font-family:var(--font-display);font-size:1.4rem;margin-bottom:15px;color:var(--text-primary);">NOTE TECNICHE</h2>
+            <ul style="padding-left:20px;color:var(--text-muted);font-size:0.9rem;line-height:1.6;margin:0;">
+              <li>Le classifiche vengono aggiornate settimanalmente.</li>
+              <li>Per le classifiche di squadra, sommiamo i punti di tutti gli atleti del team.</li>
+              <li>In caso di parit\u00e0 di punti totale, prevale l'atleta con il miglior piazzamento individuale pi\u00f9 recente.</li>
+              <li>La classifica <b>Mensile</b> conta solo i punti presi in quel mese solare.</li>
+            </ul>
+          </div>
+        </div>
+
+      </div>
+
+      <div style="text-align:center;padding:40px;border-top:1px solid var(--border-subtle);color:var(--text-muted);font-size:0.9rem;">
+        ITALIACRIT \u2014 Performance Analytics per il Ciclismo Giovanile.
+      </div>
+    </div>
+  `);
+}
+
+function renderNotFound() {
+  setPage(`
+    <div style="text-align:center;padding:100px 20px; animation:fadeIn 0.5s ease;">
+      <h1 style="font-family:var(--font-display);font-size:6rem;color:var(--red-hot);margin:0">404</h1>
+      <p style="color:var(--text-muted);font-size:1.2rem;margin-bottom:40px;">Pagina non trovata &mdash; <a href="#/" style="color:var(--red-hot)">Torna alla home</a></p>
+    </div>
+  `);
 }

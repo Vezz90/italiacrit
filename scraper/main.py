@@ -43,11 +43,44 @@ async def run_pipeline(seed: bool = False):
     else:
         print("[1/4] Scraping calendario FCI...")
         calendar = await scrape_calendar()
-        print("[2/4] Scraping risultati gare FCI...")
-        results_raw = await scrape_all_results(calendar)
+        
+        # 1. Carica risultati esistenti
+        existing_results = []
+        existing_gara_ids = set()
+        results_path = DATA_DIR / "results_raw.json"
+        
+        if results_path.exists():
+            try:
+                with open(results_path, "r", encoding="utf-8") as f:
+                    existing_results = json.load(f)
+                    # Estrae ID univoci delle gare gi\u00e0 presenti
+                    existing_gara_ids = {r["gara_id"] for r in existing_results if "gara_id" in r}
+                print(f"       → Database esistente caricato: {len(existing_results)} risultati ({len(existing_gara_ids)} gare)")
+            except Exception as e:
+                print(f"       WARN caricamento results_raw.json: {e}")
 
-    print(f"       → {len(calendar)} gare in calendario")
-    print(f"       → {len(results_raw)} risultati grezzi\n")
+        # 2. Filtra il calendario (solo gare passate/odierne non nel database)
+        today = datetime.now().strftime("%Y-%m-%d")
+        missing_races = [
+            g for g in calendar 
+            if g["id"] not in existing_gara_ids and g["data"] <= today
+        ]
+        
+        print(f"       → Gare totali in calendario: {len(calendar)}")
+        print(f"       → Gare mancanti da analizzare: {len(missing_races)}")
+
+        # 3. Scraping mirato dei risultati
+        print("[2/4] Scraping risultati per le gare mancanti...")
+        new_results = await scrape_all_results(missing_races, existing_gara_ids=existing_gara_ids)
+        
+        # 4. Fusione (Append)
+        results_raw = existing_results + new_results
+        if new_results:
+            print(f"       → {len(new_results)} nuovi risultati aggiunti")
+        else:
+            print("       → Nessun nuovo risultato da aggiungere")
+
+    print(f"       → Totale risultati grezzi disponibili: {len(results_raw)}\n")
 
     print("[3/4] Calcolo punti e classifiche...")
     athletes, teams, rankings = calculate_all(calendar, results_raw)
