@@ -14,7 +14,7 @@ from datetime import datetime
 # Aggiungi la cartella scraper al path
 sys.path.insert(0, str(Path(__file__).parent))
 
-from calendar_scraper import scrape_calendar
+from excel_loader import load_calendar_from_excel
 from results_scraper import scrape_all_results
 from points_calculator import calculate_all
 from json_builder import write_all_json
@@ -41,8 +41,13 @@ async def run_pipeline(seed: bool = False):
         print("[2/4] Generazione dati seed (risultati)...")
         results_raw = seed_data.make_results_raw(calendar)
     else:
-        print("[1/4] Scraping calendario FCI...")
-        calendar = await scrape_calendar()
+        print("[1/4] Caricamento calendario da Excel...")
+        excel_path = DATA_DIR / "calendario_manuale_v2.xlsx"
+        if not excel_path.exists():
+            print(f"       WARN: {excel_path.name} non trovato, lo scraper del calendario FCI \u00e8 disattivato.")
+            calendar = []
+        else:
+            calendar = load_calendar_from_excel(excel_path)
         
         # 1. Carica risultati esistenti
         existing_results = []
