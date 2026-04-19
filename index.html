@@ -11,10 +11,7 @@
   <meta property="og:type" content="website" />
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-  <link rel="manifest" href="manifest.json" />
   <link rel="stylesheet" href="style.css" />
-  <!-- Applica il tema salvato PRIMA del render per evitare flash -->
-  <script>try { const t = localStorage.getItem('italiacrit-theme'); if (t) document.documentElement.setAttribute('data-theme', t); } catch(e){}</script>
 </head>
 <body>
 
@@ -29,12 +26,11 @@
   <div class="nav-links" role="list">
     <a href="#/"           class="nav-link" id="nav-home"      role="listitem">Home</a>
     <a href="#/classifica" class="nav-link" id="nav-class"     role="listitem">Classifica</a>
+    <a href="#/atleti"     class="nav-link" id="nav-atleti"    role="listitem">Atleti</a>
+    <a href="#/team"       class="nav-link" id="nav-team"      role="listitem">Team</a>
     <a href="#/risultati"  class="nav-link" id="nav-risultati" role="listitem">Risultati</a>
     <a href="#/calendario" class="nav-link" id="nav-cal"       role="listitem">Calendario</a>
-    <a href="#/atleti"     class="nav-link" id="nav-atleti"    role="listitem">Atleti</a>
-    <a href="#/squadre"    class="nav-link" id="nav-squadre"   role="listitem">Squadre</a>
-    <a href="#/statistiche" class="nav-link" id="nav-stats"    role="listitem">Statistiche</a>
-    <a href="#/info"       class="nav-link" id="nav-info"     role="listitem">Info</a>
+    <a href="#/regolamento" class="nav-link" id="nav-reg"      role="listitem">Regolamento</a>
   </div>
   <div class="nav-search-wrap">
     <span class="nav-search-icon" aria-hidden="true">
@@ -52,8 +48,9 @@
   <div class="badge-live" id="badge-live" role="status" aria-live="polite">
     <span class="dot" aria-hidden="true"></span> LIVE
   </div>
-  <button id="theme-toggle" aria-label="Cambia tema" title="Cambia tema chiaro/scuro">
-    🌙
+  <button class="theme-toggle" id="theme-toggle" aria-label="Cambia tema">
+    <svg class="theme-icon-sun" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 3v1m0 16v1m9-9h-1M4 9H3m15.364-6.364l-.707.707M6.343 17.657l-.707.707M16.243 17.243l.707.707M7.757 7.757l.707-.707M12 8a4 4 0 100 8 4 4 0 000-8z"/></svg>
+    <svg class="theme-icon-moon" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20.354 15.354A9 9 0 018.646 3.646 9.003 9.003 0 0012 21a9.003 9.003 0 008.354-5.646z"/></svg>
   </button>
   <button id="nav-hamburger" aria-label="Apri menu" aria-expanded="false">
     <span></span><span></span><span></span>
@@ -64,11 +61,11 @@
 <div id="nav-drawer" role="dialog" aria-label="Menu mobile">
   <a href="#/"           class="nav-link" id="drawer-home">Home</a>
   <a href="#/classifica" class="nav-link" id="drawer-class">Classifica</a>
+  <a href="#/atleti"     class="nav-link" id="drawer-atleti">Atleti</a>
+  <a href="#/team"       class="nav-link" id="drawer-team">Team</a>
   <a href="#/risultati"  class="nav-link" id="drawer-risultati">Risultati</a>
   <a href="#/calendario" class="nav-link" id="drawer-cal">Calendario</a>
-  <a href="#/atleti"     class="nav-link" id="drawer-atleti">Atleti</a>
-  <a href="#/squadre"    class="nav-link" id="drawer-squadre">Squadre</a>
-  <a href="#/statistiche" class="nav-link" id="drawer-stats">Statistiche</a>
+  <a href="#/regolamento" class="nav-link" id="drawer-reg">Regolamento</a>
 </div>
 
 <!-- ══════════════════════════════════════════════════════════ -->
@@ -96,15 +93,6 @@
   </span>
 </footer>
 
-<div id="export-card-wrapper" style="position: absolute; left:-9999px; top:-9999px; width:400px; height:711px; background:var(--bg-black); color:#fff; overflow:hidden;"></div>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js" defer></script>
-<script src="app.js?v=25" defer></script>
-<script>
-  if ('serviceWorker' in navigator) {
-    window.addEventListener('load', () => {
-      navigator.serviceWorker.register('./sw.js').then(r => console.log('SW registered')).catch(e => console.log('SW failed', e));
-    });
-  }
-</script>
+<script src="app.js?v=18" defer></script>
 </body>
 </html>

@@ -1,0 +1,366 @@
+[
+  {
+    "team_id": "ASD_SC_PADOVANI",
+    "team_nome": "A.S.D. S.C. PADOVANI",
+    "punti": 195,
+    "vittorie": 4,
+    "pos": 1
+  },
+  {
+    "team_id": "TEAM_TECHNIPES_INEMILIAROMAGNA",
+    "team_nome": "TEAM TECHNIPES #INEMILIAROMAGNA",
+    "punti": 136,
+    "vittorie": 2,
+    "pos": 2
+  },
+  {
+    "team_id": "TEAM_HOPPLA",
+    "team_nome": "TEAM HOPPLA'",
+    "punti": 135,
+    "vittorie": 3,
+    "pos": 3
+  },
+  {
+    "team_id": "SOLME_OLMO_ARVEDI",
+    "team_nome": "SOLME - OLMO - ARVEDI",
+    "punti": 125,
+    "vittorie": 3,
+    "pos": 4
+  },
+  {
+    "team_id": "BELTRAMI_TSA_TRE_COLLI",
+    "team_nome": "BELTRAMI TSA TRE COLLI",
+    "punti": 118,
+    "vittorie": 1,
+    "pos": 5
+  },
+  {
+    "team_id": "GENERAL_STORE_ESSEGIBIFLLI_CURIA",
+    "team_nome": "GENERAL STORE -ESSEGIBI-F.LLI CURIA",
+    "punti": 101,
+    "vittorie": 2,
+    "pos": 6
+  },
+  {
+    "team_id": "CAMPANA_IMBALLAGGI_MORBIATO_TRENTINO",
+    "team_nome": "CAMPANA IMBALLAGGI MORBIATO TRENTINO",
+    "punti": 60,
+    "vittorie": 0,
+    "pos": 7
+  },
+  {
+    "team_id": "MG_KVIS_COSTRUZIONI_E_AMBIENTE",
+    "team_nome": "MG K-VIS COSTRUZIONI E AMBIENTE",
+    "punti": 54,
+    "vittorie": 1,
+    "pos": 8
+  },
+  {
+    "team_id": "UC_TREVIGIANI_ENERGIAPURA_MARCHIOL",
+    "team_nome": "U.C TREVIGIANI ENERGIAPURA MARCHIOL",
+    "punti": 51,
+    "vittorie": 1,
+    "pos": 9
+  },
+  {
+    "team_id": "BIESSE_CARRERA_PREMAC",
+    "team_nome": "BIESSE - CARRERA - PREMAC",
+    "punti": 51,
+    "vittorie": 0,
+    "pos": 10
+  },
+  {
+    "team_id": "VPM_MORETTI_SCS",
+    "team_nome": "VPM MORETTI SCS",
+    "punti": 42,
+    "vittorie": 1,
+    "pos": 11
+  },
+  {
+    "team_id": "BAHRAIN_VICTORIOUS_DEVELOPMENT_TEAM",
+    "team_nome": "BAHRAIN VICTORIOUS DEVELOPMENT TEAM",
+    "punti": 41,
+    "vittorie": 1,
+    "pos": 12
+  },
+  {
+    "team_id": "VCMENDRISIO",
+    "team_nome": "V.C.MENDRISIO",
+    "punti": 39,
+    "vittorie": 1,
+    "pos": 13
+  },
+  {
+    "team_id": "RED_BULLBORAHANSGROHE_ROOKIES",
+    "team_nome": "RED BULL-BORA-HANSGROHE ROOKIES",
+    "punti": 37,
+    "vittorie": 2,
+    "pos": 14
+  },
+  {
+    "team_id": "XDS_ASTANA_DEVELOPMENT_TEAM",
+    "team_nome": "XDS ASTANA DEVELOPMENT TEAM",
+    "punti": 34,
+    "vittorie": 0,
+    "pos": 15
+  },
+  {
+    "team_id": "GRAGNANO_SPORTING_CLUB",
+    "team_nome": "GRAGNANO SPORTING CLUB",
+    "punti": 34,
+    "vittorie": 0,
+    "pos": 16
+  },
+  {
+    "team_id": "VEGA_VITALCARE_DYNATEK",
+    "team_nome": "VEGA VITALCARE DYNATEK",
+    "punti": 33,
+    "vittorie": 0,
+    "pos": 17
+  },
+  {
+    "team_id": "CICLISTICA_ROSTESE",
+    "team_nome": "CICLISTICA ROSTESE",
+    "punti": 31,
+    "vittorie": 0,
+    "pos": 18
+  },
+  {
+    "team_id": "ASD_GC_SISSIO_TEAM",
+    "team_nome": "ASD G.C. SISSIO TEAM",
+    "punti": 26,
+    "vittorie": 0,
+    "pos": 19
+  },
+  {
+    "team_id": "MENTECORPO_TEAM",
+    "team_nome": "MENTECORPO TEAM",
+    "punti": 25,
+    "vittorie": 1,
+    "pos": 20
+  },
+  {
+    "team_id": "UCRAINA",
+    "team_nome": "UCRAINA",
+    "punti": 24,
+    "vittorie": 0,
+    "pos": 21
+  },
+  {
+    "team_id": "NIPPO_NUOVACOMAUTO_OBOR",
+    "team_nome": "NIPPO NUOVACOMAUTO OBOR",
+    "punti": 24,
+    "vittorie": 0,
+    "pos": 22
+  },
+  {
+    "team_id": "OVERALL_TRE_COLLI_CYCLING_TEAM",
+    "team_nome": "OVERALL TRE COLLI CYCLING TEAM",
+    "punti": 24,
+    "vittorie": 0,
+    "pos": 23
+  },
+  {
+    "team_id": "EQUIPE_CORBETTESE",
+    "team_nome": "EQUIPE CORBETTESE",
+    "punti": 23,
+    "vittorie": 1,
+    "pos": 24
+  },
+  {
+    "team_id": "POLISPORTIVA_TRIPETETOLO_SEANESE",
+    "team_nome": "POLISPORTIVA TRIPETETOLO SEANESE",
+    "punti": 21,
+    "vittorie": 0,
+    "pos": 25
+  },
+  {
+    "team_id": "GALLINA_LUCCHINI_ECOTEK",
+    "team_nome": "GALLINA LUCCHINI ECOTEK",
+    "punti": 21,
+    "vittorie": 0,
+    "pos": 26
+  },
+  {
+    "team_id": "RIME_DRALI",
+    "team_nome": "RIME DRALI",
+    "punti": 21,
+    "vittorie": 0,
+    "pos": 27
+  },
+  {
+    "team_id": "MBH_BANK_CSB_TELECOM_FORT",
+    "team_nome": "MBH BANK CSB TELECOM FORT",
+    "punti": 20,
+    "vittorie": 1,
+    "pos": 28
+  },
+  {
+    "team_id": "GOODSHOP_YOYOGURT",
+    "team_nome": "GOODSHOP YOYOGURT",
+    "punti": 19,
+    "vittorie": 1,
+    "pos": 29
+  },
+  {
+    "team_id": "TEAM_VISMA_LEASE_A_BIKE_DEVELOPMENT",
+    "team_nome": "TEAM VISMA | LEASE A BIKE DEVELOPMENT",
+    "punti": 16,
+    "vittorie": 0,
+    "pos": 30
+  },
+  {
+    "team_id": "MULTICAR_GRUPPO_AMARU",
+    "team_nome": "MULTICAR GRUPPO AMARU'",
+    "punti": 15,
+    "vittorie": 1,
+    "pos": 31
+  },
+  {
+    "team_id": "PETROLIKE",
+    "team_nome": "PETROLIKE",
+    "punti": 13,
+    "vittorie": 0,
+    "pos": 32
+  },
+  {
+    "team_id": "ASD_UC_PISTOIESE_TEAM",
+    "team_nome": "A.S.D. U.C. PISTOIESE TEAM",
+    "punti": 12,
+    "vittorie": 0,
+    "pos": 33
+  },
+  {
+    "team_id": "ASD_VELO_CLUB_AVEZZANO_BIKE_LINEAORO",
+    "team_nome": "ASD VELO CLUB AVEZZANO BIKE LINEAORO",
+    "punti": 12,
+    "vittorie": 0,
+    "pos": 34
+  },
+  {
+    "team_id": "ARAN_CUCINE_VEJUS",
+    "team_nome": "ARAN CUCINE VEJUS",
+    "punti": 12,
+    "vittorie": 0,
+    "pos": 35
+  },
+  {
+    "team_id": "ASD_CAMPOBELLO_RUNNING_BIKE",
+    "team_nome": "ASD CAMPOBELLO RUNNING & BIKE",
+    "punti": 12,
+    "vittorie": 0,
+    "pos": 36
+  },
+  {
+    "team_id": "ASD_TEAM_MOOVEO",
+    "team_nome": "ASD TEAM MOOVEO",
+    "punti": 12,
+    "vittorie": 0,
+    "pos": 37
+  },
+  {
+    "team_id": "UAE_TEAM_EMIRATES_GENZ",
+    "team_nome": "UAE TEAM EMIRATES GEN-Z",
+    "punti": 11,
+    "vittorie": 0,
+    "pos": 38
+  },
+  {
+    "team_id": "DECATHLON_CMA_CGM_DEVELOPMENT_TEAM",
+    "team_nome": "DECATHLON CMA CGM DEVELOPMENT TEAM",
+    "punti": 10,
+    "vittorie": 0,
+    "pos": 39
+  },
+  {
+    "team_id": "MADONETEAM_BIKE_SICILIA",
+    "team_nome": "MADONE-TEAM BIKE SICILIA",
+    "punti": 10,
+    "vittorie": 0,
+    "pos": 40
+  },
+  {
+    "team_id": "TEAM_POLTI_VISITMALTA",
+    "team_nome": "TEAM POLTI VISITMALTA",
+    "punti": 10,
+    "vittorie": 0,
+    "pos": 41
+  },
+  {
+    "team_id": "TEAM_PROMOTECH_MG_KVIS",
+    "team_nome": "TEAM PROMOTECH - MG K-VIS",
+    "punti": 8,
+    "vittorie": 0,
+    "pos": 42
+  },
+  {
+    "team_id": "UC_PREGNANA",
+    "team_nome": "U.C. PREGNANA",
+    "punti": 7,
+    "vittorie": 0,
+    "pos": 43
+  },
+  {
+    "team_id": "TIROL_KTM_CYCLING_TEAM",
+    "team_nome": "TIROL KTM CYCLING TEAM",
+    "punti": 6,
+    "vittorie": 0,
+    "pos": 44
+  },
+  {
+    "team_id": "BELTRAMI_TSALA_RISORSA_UMANAVC_RE",
+    "team_nome": "BELTRAMI TSA-LA RISORSA UMANA-VC RE",
+    "punti": 6,
+    "vittorie": 0,
+    "pos": 45
+  },
+  {
+    "team_id": "GS_MALTINTI_LAMPADARI_BANCA_CAMBIANO",
+    "team_nome": "GS MALTINTI LAMPADARI BANCA CAMBIANO",
+    "punti": 5,
+    "vittorie": 0,
+    "pos": 46
+  },
+  {
+    "team_id": "SC_VALLE_SERIANA_CENE_ASD",
+    "team_nome": "S.C. VALLE SERIANA - CENE A.S.D.",
+    "punti": 5,
+    "vittorie": 0,
+    "pos": 47
+  },
+  {
+    "team_id": "PROGIT_CYCLING_TEAM",
+    "team_nome": "PRO.GI.T. CYCLING TEAM",
+    "punti": 2,
+    "vittorie": 0,
+    "pos": 48
+  },
+  {
+    "team_id": "AVC_AIX_EN_PROVENCE",
+    "team_nome": "AVC AIX EN PROVENCE",
+    "punti": 1,
+    "vittorie": 0,
+    "pos": 49
+  },
+  {
+    "team_id": "VPT_WHY_SPORT",
+    "team_nome": "VPT WHY SPORT",
+    "punti": 1,
+    "vittorie": 0,
+    "pos": 50
+  },
+  {
+    "team_id": "TEAM_GAIAPLAST_BIBANESE",
+    "team_nome": "TEAM GAIAPLAST BIBANESE",
+    "punti": 1,
+    "vittorie": 0,
+    "pos": 51
+  },
+  {
+    "team_id": "SLOVENIA_NATIONAL_TEAM",
+    "team_nome": "SLOVENIA NATIONAL TEAM",
+    "punti": 1,
+    "vittorie": 0,
+    "pos": 52
+  }
+]

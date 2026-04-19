@@ -1,0 +1,142 @@
+[
+  {
+    "team_id": "BFT_BURZONI",
+    "team_nome": "BFT BURZONI",
+    "punti": 109,
+    "vittorie": 3,
+    "pos": 1
+  },
+  {
+    "team_id": "BIESSE_CARRERA_PREMAC",
+    "team_nome": "BIESSE - CARRERA - PREMAC",
+    "punti": 108,
+    "vittorie": 1,
+    "pos": 2
+  },
+  {
+    "team_id": "LIBERTAS_CERESETTO",
+    "team_nome": "LIBERTAS CERESETTO",
+    "punti": 90,
+    "vittorie": 0,
+    "pos": 3
+  },
+  {
+    "team_id": "BREGANZE_MILLENIUM",
+    "team_nome": "BREGANZE MILLENIUM",
+    "punti": 67,
+    "vittorie": 2,
+    "pos": 4
+  },
+  {
+    "team_id": "PETRUCCI_GAUSS_CYCLING_TEAM",
+    "team_nome": "PETRUCCI GAUSS CYCLING TEAM",
+    "punti": 51,
+    "vittorie": 1,
+    "pos": 5
+  },
+  {
+    "team_id": "BRESCIA_F_MAGNI_FLANDRES_LOVE",
+    "team_nome": "BRESCIA - F. MAGNI - FLANDRES LOVE",
+    "punti": 34,
+    "vittorie": 0,
+    "pos": 6
+  },
+  {
+    "team_id": "UCCONSCIO_PEDALE_DEL_SILE",
+    "team_nome": "U.C.CONSCIO PEDALE DEL SILE",
+    "punti": 27,
+    "vittorie": 1,
+    "pos": 7
+  },
+  {
+    "team_id": "ARMONEX_PRO_CYCLING_TEAM",
+    "team_nome": "A.R.MONEX PRO CYCLING TEAM",
+    "punti": 24,
+    "vittorie": 0,
+    "pos": 8
+  },
+  {
+    "team_id": "AIRTOX_CARL_RAS",
+    "team_nome": "AIRTOX - CARL RAS",
+    "punti": 17,
+    "vittorie": 0,
+    "pos": 9
+  },
+  {
+    "team_id": "PC_BAIX_EBRE_TORTOSA",
+    "team_nome": "PC BAIX EBRE TORTOSA",
+    "punti": 15,
+    "vittorie": 0,
+    "pos": 10
+  },
+  {
+    "team_id": "GROUWELS_WATERSLEY_RD",
+    "team_nome": "GROUWELS - WATERSLEY R&D",
+    "punti": 10,
+    "vittorie": 0,
+    "pos": 11
+  },
+  {
+    "team_id": "CICLISTICA_OMNIA_IMOLA",
+    "team_nome": "CICLISTICA OMNIA IMOLA",
+    "punti": 8,
+    "vittorie": 0,
+    "pos": 12
+  },
+  {
+    "team_id": "CAMS_MAJACO",
+    "team_nome": "CAMS MAJACO",
+    "punti": 8,
+    "vittorie": 0,
+    "pos": 13
+  },
+  {
+    "team_id": "TEAM_WILIER_BREGANZE",
+    "team_nome": "TEAM WILIER BREGANZE",
+    "punti": 6,
+    "vittorie": 0,
+    "pos": 14
+  },
+  {
+    "team_id": "REPUBBLICA_CECA",
+    "team_nome": "REPUBBLICA CECA",
+    "punti": 6,
+    "vittorie": 0,
+    "pos": 15
+  },
+  {
+    "team_id": "TEAM_MENDELSPECK_EWORK",
+    "team_nome": "TEAM MENDELSPECK E-WORK",
+    "punti": 5,
+    "vittorie": 0,
+    "pos": 16
+  },
+  {
+    "team_id": "POLISH_CYCLING_FEDERATION",
+    "team_nome": "POLISH CYCLING FEDERATION",
+    "punti": 4,
+    "vittorie": 0,
+    "pos": 17
+  },
+  {
+    "team_id": "SPAGNA",
+    "team_nome": "SPAGNA",
+    "punti": 3,
+    "vittorie": 0,
+    "pos": 18
+  },
+  {
+    "team_id": "FRANCIA",
+    "team_nome": "FRANCIA",
+    "punti": 1,
+    "vittorie": 0,
+    "pos": 19
+  },
+  {
+    "team_id": "ZHIRAF",
+    "team_nome": "ZHIRAF",
+    "punti": 1,
+    "vittorie": 0,
+    "pos": 20
+  }
+]

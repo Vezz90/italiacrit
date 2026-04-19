@@ -1,0 +1,233 @@
+[
+  {
+    "team_id": "UC_GIORGIONE",
+    "team_nome": "U.C. GIORGIONE",
+    "punti": 118,
+    "vittorie": 2,
+    "pos": 1
+  },
+  {
+    "team_id": "SCUOLA_CICLISMO_VERSO_LIRIDE",
+    "team_nome": "SCUOLA CICLISMO VERSO L'IRIDE",
+    "punti": 111,
+    "vittorie": 3,
+    "pos": 2
+  },
+  {
+    "team_id": "SC_CESANO_MADERNO",
+    "team_nome": "S.C. CESANO MADERNO",
+    "punti": 111,
+    "vittorie": 1,
+    "pos": 3
+  },
+  {
+    "team_id": "GS_CAPANNORI",
+    "team_nome": "GS CAPANNORI",
+    "punti": 107,
+    "vittorie": 2,
+    "pos": 4
+  },
+  {
+    "team_id": "POL_FIUMICINESE_FAIT_ADRIATICA",
+    "team_nome": "POL. FIUMICINESE FA.I.T. ADRIATICA",
+    "punti": 73,
+    "vittorie": 1,
+    "pos": 5
+  },
+  {
+    "team_id": "OFFALBERTI_UC_VAL_DILLASI",
+    "team_nome": "OFF.ALBERTI U.C. VAL D'ILLASI",
+    "punti": 68,
+    "vittorie": 2,
+    "pos": 6
+  },
+  {
+    "team_id": "UC_DONORATICO",
+    "team_nome": "UC DONORATICO",
+    "punti": 61,
+    "vittorie": 1,
+    "pos": 7
+  },
+  {
+    "team_id": "HG_CYCLING_TEAM",
+    "team_nome": "HG CYCLING TEAM",
+    "punti": 60,
+    "vittorie": 3,
+    "pos": 8
+  },
+  {
+    "team_id": "ALLGOR_TATOBIKE",
+    "team_nome": "ALLGOR TATOBIKE",
+    "punti": 46,
+    "vittorie": 0,
+    "pos": 9
+  },
+  {
+    "team_id": "GS_CICLI_FIORIN_ASD",
+    "team_nome": "GS CICLI FIORIN ASD",
+    "punti": 41,
+    "vittorie": 0,
+    "pos": 10
+  },
+  {
+    "team_id": "ASD_VELOCE_CLUB_BORGO",
+    "team_nome": "ASD VELOCE CLUB BORGO",
+    "punti": 36,
+    "vittorie": 1,
+    "pos": 11
+  },
+  {
+    "team_id": "BICIFESTIVAL",
+    "team_nome": "BICIFESTIVAL",
+    "punti": 29,
+    "vittorie": 0,
+    "pos": 12
+  },
+  {
+    "team_id": "MARY_J_SWEET_ANGEL_ASD",
+    "team_nome": "MARY J SWEET ANGEL ASD",
+    "punti": 25,
+    "vittorie": 0,
+    "pos": 13
+  },
+  {
+    "team_id": "UCCONSCIO_PEDALE_DEL_SILE",
+    "team_nome": "U.C.CONSCIO PEDALE DEL SILE",
+    "punti": 22,
+    "vittorie": 0,
+    "pos": 14
+  },
+  {
+    "team_id": "MADIGNANESE_CICLISMO_ASD",
+    "team_nome": "MADIGNANESE CICLISMO A.S.D",
+    "punti": 20,
+    "vittorie": 0,
+    "pos": 15
+  },
+  {
+    "team_id": "CC_APPENNINICO_1907",
+    "team_nome": "C.C. APPENNINICO 1907",
+    "punti": 18,
+    "vittorie": 0,
+    "pos": 16
+  },
+  {
+    "team_id": "BREGANZE_MILLENIUM",
+    "team_nome": "BREGANZE MILLENIUM",
+    "punti": 16,
+    "vittorie": 0,
+    "pos": 17
+  },
+  {
+    "team_id": "GS_MOSOLE",
+    "team_nome": "G.S. MOSOLE",
+    "punti": 15,
+    "vittorie": 0,
+    "pos": 18
+  },
+  {
+    "team_id": "SPORT_CLUB_BRESCIA_FLANDRES_LOVE",
+    "team_nome": "SPORT CLUB BRESCIA - FLANDRES LOVE",
+    "punti": 15,
+    "vittorie": 0,
+    "pos": 19
+  },
+  {
+    "team_id": "BUSTO_GAROLFO",
+    "team_nome": "BUSTO GAROLFO",
+    "punti": 14,
+    "vittorie": 0,
+    "pos": 20
+  },
+  {
+    "team_id": "GS_LUPI_VALLE_DAOSTA",
+    "team_nome": "G.S. LUPI VALLE D'AOSTA",
+    "punti": 14,
+    "vittorie": 0,
+    "pos": 21
+  },
+  {
+    "team_id": "GC_SOSSANO_1975",
+    "team_nome": "G.C. SOSSANO 1975",
+    "punti": 8,
+    "vittorie": 0,
+    "pos": 22
+  },
+  {
+    "team_id": "BTEAM_CYCLING_PROJECT",
+    "team_nome": "B-TEAM CYCLING PROJECT",
+    "punti": 5,
+    "vittorie": 0,
+    "pos": 23
+  },
+  {
+    "team_id": "KTM_ACADEMY_LE_MARMOTTE",
+    "team_nome": "KTM ACADEMY LE MARMOTTE",
+    "punti": 4,
+    "vittorie": 0,
+    "pos": 24
+  },
+  {
+    "team_id": "TEAM_FABIANA_LUPERINI_ASD",
+    "team_nome": "TEAM FABIANA LUPERINI ASD",
+    "punti": 4,
+    "vittorie": 0,
+    "pos": 25
+  },
+  {
+    "team_id": "ASD_TEAM_FEMMINILE_TRENTINO",
+    "team_nome": "ASD TEAM FEMMINILE TRENTINO",
+    "punti": 4,
+    "vittorie": 0,
+    "pos": 26
+  },
+  {
+    "team_id": "ASD_CICLISTICA_GBONZAGNI",
+    "team_nome": "A.S.D CICLISTICA G.BONZAGNI",
+    "punti": 3,
+    "vittorie": 0,
+    "pos": 27
+  },
+  {
+    "team_id": "GC_NOVENTANA",
+    "team_nome": "G.C. NOVENTANA",
+    "punti": 3,
+    "vittorie": 0,
+    "pos": 28
+  },
+  {
+    "team_id": "ASD_EFFETTO_CICLISMO_NOI_SPORT",
+    "team_nome": "ASD EFFETTO CICLISMO - NOI SPORT",
+    "punti": 1,
+    "vittorie": 0,
+    "pos": 29
+  },
+  {
+    "team_id": "ASD_TEAM_PETRUCCI",
+    "team_nome": "ASD TEAM PETRUCCI",
+    "punti": 1,
+    "vittorie": 0,
+    "pos": 30
+  },
+  {
+    "team_id": "SALUS_CICLISTICA_SEREGNO_DE_ROSA",
+    "team_nome": "SALUS CICLISTICA SEREGNO DE ROSA",
+    "punti": 1,
+    "vittorie": 0,
+    "pos": 31
+  },
+  {
+    "team_id": "GS_CICLI_FIORIN_CYCLING_TEAM_ASD",
+    "team_nome": "G.S. CICLI FIORIN CYCLING TEAM ASD",
+    "punti": 1,
+    "vittorie": 0,
+    "pos": 32
+  },
+  {
+    "team_id": "SAMABIKE",
+    "team_nome": "SAMABIKE",
+    "punti": 1,
+    "vittorie": 0,
+    "pos": 33
+  }
+]

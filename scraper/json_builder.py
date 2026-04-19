@@ -27,14 +27,5 @@ def write_all_json(
     write_json(data_dir / "athletes.json", athletes)
     write_json(data_dir / "teams.json", teams)
 
-    # Genera meta.json
-    from datetime import datetime
-    meta = {
-        "last_update": datetime.now().isoformat(),
-        "season": CURRENT_YEAR if 'CURRENT_YEAR' in globals() else datetime.now().year,
-        "results_count": len(results_raw)
-    }
-    write_json(data_dir / "meta.json", meta)
-
     for cat_code, rows in rankings.items():
         write_json(rankings_dir / f"{cat_code}.json", rows)

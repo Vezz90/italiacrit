@@ -1,1 +1,442 @@
-[]
+[
+  {
+    "atleta_id": "ROSSIGNOLI_MATILDE",
+    "cognome": "ROSSIGNOLI",
+    "nome": "MATILDE",
+    "team_id": "BFT_BURZONI",
+    "team_nome": "BFT BURZONI",
+    "punti": 59,
+    "vittorie": 1,
+    "pos": 1
+  },
+  {
+    "atleta_id": "BALLAN_AZZURRA",
+    "cognome": "BALLAN",
+    "nome": "AZZURRA",
+    "team_id": "BREGANZE_MILLENIUM",
+    "team_nome": "BREGANZE MILLENIUM",
+    "punti": 53,
+    "vittorie": 2,
+    "pos": 2
+  },
+  {
+    "atleta_id": "BIANCHI_ELISA",
+    "cognome": "BIANCHI",
+    "nome": "ELISA",
+    "team_id": "BIESSE_CARRERA_PREMAC",
+    "team_nome": "BIESSE - CARRERA - PREMAC",
+    "punti": 46,
+    "vittorie": 0,
+    "pos": 3
+  },
+  {
+    "atleta_id": "CAMPANA_AGATA",
+    "cognome": "CAMPANA",
+    "nome": "AGATA",
+    "team_id": "BFT_BURZONI",
+    "team_nome": "BFT BURZONI",
+    "punti": 45,
+    "vittorie": 2,
+    "pos": 4
+  },
+  {
+    "atleta_id": "SAVORGNANO_AMBRA",
+    "cognome": "SAVORGNANO",
+    "nome": "AMBRA",
+    "team_id": "LIBERTAS_CERESETTO",
+    "team_nome": "LIBERTAS CERESETTO",
+    "punti": 30,
+    "vittorie": 0,
+    "pos": 5
+  },
+  {
+    "atleta_id": "MINICHINO_MELANIA",
+    "cognome": "MINICHINO",
+    "nome": "MELANIA",
+    "team_id": "BIESSE_CARRERA_PREMAC",
+    "team_nome": "BIESSE - CARRERA - PREMAC",
+    "punti": 29,
+    "vittorie": 1,
+    "pos": 6
+  },
+  {
+    "atleta_id": "NOVOLODSKAIA_ANGELINA",
+    "cognome": "NOVOLODSKAIA",
+    "nome": "ANGELINA",
+    "team_id": "PETRUCCI_GAUSS_CYCLING_TEAM",
+    "team_nome": "PETRUCCI GAUSS CYCLING TEAM",
+    "punti": 29,
+    "vittorie": 1,
+    "pos": 7
+  },
+  {
+    "atleta_id": "PETRIS_CARLOTTA",
+    "cognome": "PETRIS",
+    "nome": "CARLOTTA",
+    "team_id": "LIBERTAS_CERESETTO",
+    "team_nome": "LIBERTAS CERESETTO",
+    "punti": 27,
+    "vittorie": 0,
+    "pos": 8
+  },
+  {
+    "atleta_id": "BONASSI_ANNA",
+    "cognome": "BONASSI",
+    "nome": "ANNA",
+    "team_id": "BRESCIA_F_MAGNI_FLANDRES_LOVE",
+    "team_nome": "BRESCIA - F. MAGNI - FLANDRES LOVE",
+    "punti": 24,
+    "vittorie": 0,
+    "pos": 9
+  },
+  {
+    "atleta_id": "FERRANTE_MAYA",
+    "cognome": "FERRANTE",
+    "nome": "MAYA",
+    "team_id": "UCCONSCIO_PEDALE_DEL_SILE",
+    "team_nome": "U.C.CONSCIO PEDALE DEL SILE",
+    "punti": 22,
+    "vittorie": 1,
+    "pos": 10
+  },
+  {
+    "atleta_id": "MURRO_CAMILLA",
+    "cognome": "MURRO",
+    "nome": "CAMILLA",
+    "team_id": "LIBERTAS_CERESETTO",
+    "team_nome": "LIBERTAS CERESETTO",
+    "punti": 17,
+    "vittorie": 0,
+    "pos": 11
+  },
+  {
+    "atleta_id": "CAFUERI_RACHELE",
+    "cognome": "CAFUERI",
+    "nome": "RACHELE",
+    "team_id": "LIBERTAS_CERESETTO",
+    "team_nome": "LIBERTAS CERESETTO",
+    "punti": 16,
+    "vittorie": 0,
+    "pos": 12
+  },
+  {
+    "atleta_id": "ZAMUDIO_GARCIA_MAYTE",
+    "cognome": "ZAMUDIO GARCIA",
+    "nome": "MAYTE",
+    "team_id": "ARMONEX_PRO_CYCLING_TEAM",
+    "team_nome": "A.R.MONEX PRO CYCLING TEAM",
+    "punti": 16,
+    "vittorie": 0,
+    "pos": 13
+  },
+  {
+    "atleta_id": "KOSTINA_OLGA",
+    "cognome": "KOSTINA",
+    "nome": "OLGA",
+    "team_id": "PC_BAIX_EBRE_TORTOSA",
+    "team_nome": "PC BAIX EBRE TORTOSA",
+    "punti": 15,
+    "vittorie": 0,
+    "pos": 14
+  },
+  {
+    "atleta_id": "BONISSI_EMMA",
+    "cognome": "BONISSI",
+    "nome": "EMMA",
+    "team_id": "PETRUCCI_GAUSS_CYCLING_TEAM",
+    "team_nome": "PETRUCCI GAUSS CYCLING TEAM",
+    "punti": 15,
+    "vittorie": 0,
+    "pos": 15
+  },
+  {
+    "atleta_id": "ZAMBELLI_GIULIA",
+    "cognome": "ZAMBELLI",
+    "nome": "GIULIA",
+    "team_id": "BIESSE_CARRERA_PREMAC",
+    "team_nome": "BIESSE - CARRERA - PREMAC",
+    "punti": 13,
+    "vittorie": 0,
+    "pos": 16
+  },
+  {
+    "atleta_id": "ACUTI_MARIA",
+    "cognome": "ACUTI",
+    "nome": "MARIA",
+    "team_id": "BIESSE_CARRERA_PREMAC",
+    "team_nome": "BIESSE - CARRERA - PREMAC",
+    "punti": 13,
+    "vittorie": 0,
+    "pos": 17
+  },
+  {
+    "atleta_id": "BIEBERLE_EDDA",
+    "cognome": "BIEBERLE",
+    "nome": "EDDA",
+    "team_id": "AIRTOX_CARL_RAS",
+    "team_nome": "AIRTOX - CARL RAS",
+    "punti": 12,
+    "vittorie": 0,
+    "pos": 18
+  },
+  {
+    "atleta_id": "MASI_AURORA",
+    "cognome": "MASI",
+    "nome": "AURORA",
+    "team_id": "BRESCIA_F_MAGNI_FLANDRES_LOVE",
+    "team_nome": "BRESCIA - F. MAGNI - FLANDRES LOVE",
+    "punti": 10,
+    "vittorie": 0,
+    "pos": 19
+  },
+  {
+    "atleta_id": "OKRUCINSKA_MARIA",
+    "cognome": "OKRUCINSKA",
+    "nome": "MARIA",
+    "team_id": "GROUWELS_WATERSLEY_RD",
+    "team_nome": "GROUWELS - WATERSLEY R&D",
+    "punti": 10,
+    "vittorie": 0,
+    "pos": 20
+  },
+  {
+    "atleta_id": "LAGHI_CLARISSA",
+    "cognome": "LAGHI",
+    "nome": "CLARISSA",
+    "team_id": "BREGANZE_MILLENIUM",
+    "team_nome": "BREGANZE MILLENIUM",
+    "punti": 9,
+    "vittorie": 0,
+    "pos": 21
+  },
+  {
+    "atleta_id": "BERNI_NICOLETTA",
+    "cognome": "BERNI",
+    "nome": "NICOLETTA",
+    "team_id": "BIESSE_CARRERA_PREMAC",
+    "team_nome": "BIESSE - CARRERA - PREMAC",
+    "punti": 8,
+    "vittorie": 0,
+    "pos": 22
+  },
+  {
+    "atleta_id": "ROCHE_ZOE",
+    "cognome": "ROCHE",
+    "nome": "ZOE",
+    "team_id": "CAMS_MAJACO",
+    "team_nome": "CAMS MAJACO",
+    "punti": 8,
+    "vittorie": 0,
+    "pos": 23
+  },
+  {
+    "atleta_id": "ZANDRI_EVA",
+    "cognome": "ZANDRI",
+    "nome": "EVA",
+    "team_id": "CICLISTICA_OMNIA_IMOLA",
+    "team_nome": "CICLISTICA OMNIA IMOLA",
+    "punti": 6,
+    "vittorie": 0,
+    "pos": 24
+  },
+  {
+    "atleta_id": "DRHOVA_EVA",
+    "cognome": "DRHOVA'",
+    "nome": "EVA",
+    "team_id": "REPUBBLICA_CECA",
+    "team_nome": "REPUBBLICA CECA",
+    "punti": 6,
+    "vittorie": 0,
+    "pos": 25
+  },
+  {
+    "atleta_id": "ORSI_ALESSIA",
+    "cognome": "ORSI",
+    "nome": "ALESSIA",
+    "team_id": "BFT_BURZONI",
+    "team_nome": "BFT BURZONI",
+    "punti": 5,
+    "vittorie": 0,
+    "pos": 26
+  },
+  {
+    "atleta_id": "DAPOLLONIO_REBECCA",
+    "cognome": "D'APOLLONIO",
+    "nome": "REBECCA",
+    "team_id": "UCCONSCIO_PEDALE_DEL_SILE",
+    "team_nome": "U.C.CONSCIO PEDALE DEL SILE",
+    "punti": 5,
+    "vittorie": 0,
+    "pos": 27
+  },
+  {
+    "atleta_id": "BEZZONE_CAMILLA",
+    "cognome": "BEZZONE",
+    "nome": "CAMILLA",
+    "team_id": "TEAM_MENDELSPECK_EWORK",
+    "team_nome": "TEAM MENDELSPECK E-WORK",
+    "punti": 5,
+    "vittorie": 0,
+    "pos": 28
+  },
+  {
+    "atleta_id": "DE_BRUYN_ELISE",
+    "cognome": "DE BRUYN",
+    "nome": "ELISE",
+    "team_id": "AIRTOX_CARL_RAS",
+    "team_nome": "AIRTOX - CARL RAS",
+    "punti": 5,
+    "vittorie": 0,
+    "pos": 29
+  },
+  {
+    "atleta_id": "TOSIN_NOEMI",
+    "cognome": "TOSIN",
+    "nome": "NOEMI",
+    "team_id": "BREGANZE_MILLENIUM",
+    "team_nome": "BREGANZE MILLENIUM",
+    "punti": 5,
+    "vittorie": 0,
+    "pos": 30
+  },
+  {
+    "atleta_id": "PENEDA_SOTO_NATALIA",
+    "cognome": "PENEDA SOTO",
+    "nome": "NATALIA",
+    "team_id": "ARMONEX_PRO_CYCLING_TEAM",
+    "team_nome": "A.R.MONEX PRO CYCLING TEAM",
+    "punti": 4,
+    "vittorie": 0,
+    "pos": 31
+  },
+  {
+    "atleta_id": "DE_ANGELIS_ISABELLA",
+    "cognome": "DE",
+    "nome": "ANGELIS ISABELLA",
+    "team_id": "PETRUCCI_GAUSS_CYCLING_TEAM",
+    "team_nome": "PETRUCCI GAUSS CYCLING TEAM",
+    "punti": 4,
+    "vittorie": 0,
+    "pos": 32
+  },
+  {
+    "atleta_id": "SLOMKA_KINGA",
+    "cognome": "SLOMKA",
+    "nome": "KINGA",
+    "team_id": "POLISH_CYCLING_FEDERATION",
+    "team_nome": "POLISH CYCLING FEDERATION",
+    "punti": 4,
+    "vittorie": 0,
+    "pos": 33
+  },
+  {
+    "atleta_id": "PELLIZOTTI_GIORGIA",
+    "cognome": "PELLIZOTTI",
+    "nome": "GIORGIA",
+    "team_id": "TEAM_WILIER_BREGANZE",
+    "team_nome": "TEAM WILIER BREGANZE",
+    "punti": 4,
+    "vittorie": 0,
+    "pos": 34
+  },
+  {
+    "atleta_id": "CRUZ_SALGADO_FERNANDA_GUADALUPE",
+    "cognome": "CRUZ SALGADO",
+    "nome": "FERNANDA GUADALUPE",
+    "team_id": "ARMONEX_PRO_CYCLING_TEAM",
+    "team_nome": "A.R.MONEX PRO CYCLING TEAM",
+    "punti": 3,
+    "vittorie": 0,
+    "pos": 35
+  },
+  {
+    "atleta_id": "INVERNIZZI_VIOLA",
+    "cognome": "INVERNIZZI",
+    "nome": "VIOLA",
+    "team_id": "PETRUCCI_GAUSS_CYCLING_TEAM",
+    "team_nome": "PETRUCCI GAUSS CYCLING TEAM",
+    "punti": 3,
+    "vittorie": 0,
+    "pos": 36
+  },
+  {
+    "atleta_id": "DOMINGUEZ_NEIRA_ALEJANDRA",
+    "cognome": "DOMINGUEZ",
+    "nome": "NEIRA ALEJANDRA",
+    "team_id": "SPAGNA",
+    "team_nome": "SPAGNA",
+    "punti": 3,
+    "vittorie": 0,
+    "pos": 37
+  },
+  {
+    "atleta_id": "ANNIBALLI_AURORA",
+    "cognome": "ANNIBALLI",
+    "nome": "AURORA",
+    "team_id": "CICLISTICA_OMNIA_IMOLA",
+    "team_nome": "CICLISTICA OMNIA IMOLA",
+    "punti": 2,
+    "vittorie": 0,
+    "pos": 38
+  },
+  {
+    "atleta_id": "IZOTOVA_ANNA",
+    "cognome": "IZOTOVA",
+    "nome": "ANNA",
+    "team_id": "BIESSE_CARRERA_PREMAC",
+    "team_nome": "BIESSE - CARRERA - PREMAC",
+    "punti": 2,
+    "vittorie": 0,
+    "pos": 39
+  },
+  {
+    "atleta_id": "ALHACH_SJOGREN_GAETTANA",
+    "cognome": "ALHACH",
+    "nome": "SJOGREN GAETTANA",
+    "team_id": "ARMONEX_PRO_CYCLING_TEAM",
+    "team_nome": "A.R.MONEX PRO CYCLING TEAM",
+    "punti": 1,
+    "vittorie": 0,
+    "pos": 40
+  },
+  {
+    "atleta_id": "PASCUT_MADDALENA",
+    "cognome": "PASCUT",
+    "nome": "MADDALENA",
+    "team_id": "TEAM_WILIER_BREGANZE",
+    "team_nome": "TEAM WILIER BREGANZE",
+    "punti": 1,
+    "vittorie": 0,
+    "pos": 41
+  },
+  {
+    "atleta_id": "POIRIER_THAIS",
+    "cognome": "POIRIER",
+    "nome": "THAIS",
+    "team_id": "FRANCIA",
+    "team_nome": "FRANCIA",
+    "punti": 1,
+    "vittorie": 0,
+    "pos": 42
+  },
+  {
+    "atleta_id": "BACCI_GINEVRA",
+    "cognome": "BACCI",
+    "nome": "GINEVRA",
+    "team_id": "ZHIRAF",
+    "team_nome": "ZHIRAF",
+    "punti": 1,
+    "vittorie": 0,
+    "pos": 43
+  },
+  {
+    "atleta_id": "GOTTOLI_EMMA",
+    "cognome": "GOTTOLI",
+    "nome": "EMMA",
+    "team_id": "TEAM_WILIER_BREGANZE",
+    "team_nome": "TEAM WILIER BREGANZE",
+    "punti": 1,
+    "vittorie": 0,
+    "pos": 44
+  }
+]

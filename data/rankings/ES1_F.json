@@ -1,1 +1,692 @@
-[]
+[
+  {
+    "atleta_id": "CASAROTTI_CARLOTTA",
+    "cognome": "CASAROTTI",
+    "nome": "CARLOTTA",
+    "team_id": "OFFALBERTI_UC_VAL_DILLASI",
+    "team_nome": "OFF.ALBERTI U.C. VAL D'ILLASI",
+    "punti": 68,
+    "vittorie": 2,
+    "pos": 1
+  },
+  {
+    "atleta_id": "LUNA_ALESSANDRA",
+    "cognome": "LUNA",
+    "nome": "ALESSANDRA",
+    "team_id": "SCUOLA_CICLISMO_VERSO_LIRIDE",
+    "team_nome": "SCUOLA CICLISMO VERSO L'IRIDE",
+    "punti": 52,
+    "vittorie": 1,
+    "pos": 2
+  },
+  {
+    "atleta_id": "MOCELLIN_GRETA",
+    "cognome": "MOCELLIN",
+    "nome": "GRETA",
+    "team_id": "UC_GIORGIONE",
+    "team_nome": "U.C. GIORGIONE",
+    "punti": 47,
+    "vittorie": 2,
+    "pos": 3
+  },
+  {
+    "atleta_id": "DI_PARDO_BEATRICE",
+    "cognome": "DI",
+    "nome": "PARDO BEATRICE",
+    "team_id": "POL_FIUMICINESE_FAIT_ADRIATICA",
+    "team_nome": "POL. FIUMICINESE FA.I.T. ADRIATICA",
+    "punti": 47,
+    "vittorie": 1,
+    "pos": 4
+  },
+  {
+    "atleta_id": "CERAME_AURORA",
+    "cognome": "CERAME",
+    "nome": "AURORA",
+    "team_id": "SC_CESANO_MADERNO",
+    "team_nome": "S.C. CESANO MADERNO",
+    "punti": 45,
+    "vittorie": 1,
+    "pos": 5
+  },
+  {
+    "atleta_id": "KUCHYNSKAYA_EVA",
+    "cognome": "KUCHYNSKAYA",
+    "nome": "EVA",
+    "team_id": "SCUOLA_CICLISMO_VERSO_LIRIDE",
+    "team_nome": "SCUOLA CICLISMO VERSO L'IRIDE",
+    "punti": 44,
+    "vittorie": 2,
+    "pos": 6
+  },
+  {
+    "atleta_id": "MANNELLI_MATILDE",
+    "cognome": "MANNELLI",
+    "nome": "MATILDE",
+    "team_id": "GS_CAPANNORI",
+    "team_nome": "GS CAPANNORI",
+    "punti": 40,
+    "vittorie": 1,
+    "pos": 7
+  },
+  {
+    "atleta_id": "VOLLERO_SUSANNA",
+    "cognome": "VOLLERO",
+    "nome": "SUSANNA",
+    "team_id": "GS_CAPANNORI",
+    "team_nome": "GS CAPANNORI",
+    "punti": 39,
+    "vittorie": 1,
+    "pos": 8
+  },
+  {
+    "atleta_id": "DAZZANI_MYA",
+    "cognome": "DAZZANI",
+    "nome": "MYA",
+    "team_id": "HG_CYCLING_TEAM",
+    "team_nome": "HG CYCLING TEAM",
+    "punti": 30,
+    "vittorie": 2,
+    "pos": 9
+  },
+  {
+    "atleta_id": "AFFINI_GIULIA",
+    "cognome": "AFFINI",
+    "nome": "GIULIA",
+    "team_id": "ALLGOR_TATOBIKE",
+    "team_nome": "ALLGOR TATOBIKE",
+    "punti": 30,
+    "vittorie": 0,
+    "pos": 10
+  },
+  {
+    "atleta_id": "BASSO_GAIA",
+    "cognome": "BASSO",
+    "nome": "GAIA",
+    "team_id": "UC_GIORGIONE",
+    "team_nome": "U.C. GIORGIONE",
+    "punti": 30,
+    "vittorie": 0,
+    "pos": 11
+  },
+  {
+    "atleta_id": "MARIANI_MARGHERITA",
+    "cognome": "MARIANI",
+    "nome": "MARGHERITA",
+    "team_id": "SC_CESANO_MADERNO",
+    "team_nome": "S.C. CESANO MADERNO",
+    "punti": 27,
+    "vittorie": 0,
+    "pos": 12
+  },
+  {
+    "atleta_id": "SFERRAGATTA_EMANUELA",
+    "cognome": "SFERRAGATTA",
+    "nome": "EMANUELA",
+    "team_id": "HG_CYCLING_TEAM",
+    "team_nome": "HG CYCLING TEAM",
+    "punti": 25,
+    "vittorie": 1,
+    "pos": 13
+  },
+  {
+    "atleta_id": "ZUCCOTTI_EMMA",
+    "cognome": "ZUCCOTTI",
+    "nome": "EMMA",
+    "team_id": "MARY_J_SWEET_ANGEL_ASD",
+    "team_nome": "MARY J SWEET ANGEL ASD",
+    "punti": 25,
+    "vittorie": 0,
+    "pos": 14
+  },
+  {
+    "atleta_id": "GORGA_GRETA",
+    "cognome": "GORGA",
+    "nome": "GRETA",
+    "team_id": "UC_DONORATICO",
+    "team_nome": "UC DONORATICO",
+    "punti": 24,
+    "vittorie": 1,
+    "pos": 15
+  },
+  {
+    "atleta_id": "NERI_SARA",
+    "cognome": "NERI",
+    "nome": "SARA",
+    "team_id": "BICIFESTIVAL",
+    "team_nome": "BICIFESTIVAL",
+    "punti": 23,
+    "vittorie": 0,
+    "pos": 16
+  },
+  {
+    "atleta_id": "SPINONI_MICHELLE",
+    "cognome": "SPINONI",
+    "nome": "MICHELLE",
+    "team_id": "SC_CESANO_MADERNO",
+    "team_nome": "S.C. CESANO MADERNO",
+    "punti": 22,
+    "vittorie": 0,
+    "pos": 17
+  },
+  {
+    "atleta_id": "CACCIA_BEATRICE",
+    "cognome": "CACCIA",
+    "nome": "BEATRICE",
+    "team_id": "GS_CICLI_FIORIN_ASD",
+    "team_nome": "GS CICLI FIORIN ASD",
+    "punti": 21,
+    "vittorie": 0,
+    "pos": 18
+  },
+  {
+    "atleta_id": "DONANZAN_MARGHERITA",
+    "cognome": "DONANZAN",
+    "nome": "MARGHERITA",
+    "team_id": "ASD_VELOCE_CLUB_BORGO",
+    "team_nome": "ASD VELOCE CLUB BORGO",
+    "punti": 21,
+    "vittorie": 0,
+    "pos": 19
+  },
+  {
+    "atleta_id": "CAMPOLI_AURORA",
+    "cognome": "CAMPOLI",
+    "nome": "AURORA",
+    "team_id": "MADIGNANESE_CICLISMO_ASD",
+    "team_nome": "MADIGNANESE CICLISMO A.S.D",
+    "punti": 20,
+    "vittorie": 0,
+    "pos": 20
+  },
+  {
+    "atleta_id": "SAMBI_CORINNA",
+    "cognome": "SAMBI",
+    "nome": "CORINNA",
+    "team_id": "POL_FIUMICINESE_FAIT_ADRIATICA",
+    "team_nome": "POL. FIUMICINESE FA.I.T. ADRIATICA",
+    "punti": 20,
+    "vittorie": 0,
+    "pos": 21
+  },
+  {
+    "atleta_id": "PELLEGRINI_LETIZIA",
+    "cognome": "PELLEGRINI",
+    "nome": "LETIZIA",
+    "team_id": "UC_DONORATICO",
+    "team_nome": "UC DONORATICO",
+    "punti": 20,
+    "vittorie": 0,
+    "pos": 22
+  },
+  {
+    "atleta_id": "CIANTI_NOEMI",
+    "cognome": "CIANTI",
+    "nome": "NOEMI",
+    "team_id": "GS_CAPANNORI",
+    "team_nome": "GS CAPANNORI",
+    "punti": 19,
+    "vittorie": 0,
+    "pos": 23
+  },
+  {
+    "atleta_id": "GUIDOLIN_GIORGIA",
+    "cognome": "GUIDOLIN",
+    "nome": "GIORGIA",
+    "team_id": "UC_GIORGIONE",
+    "team_nome": "U.C. GIORGIONE",
+    "punti": 19,
+    "vittorie": 0,
+    "pos": 24
+  },
+  {
+    "atleta_id": "CECCARELLI_ILARY",
+    "cognome": "CECCARELLI",
+    "nome": "ILARY",
+    "team_id": "CC_APPENNINICO_1907",
+    "team_nome": "C.C. APPENNINICO 1907",
+    "punti": 18,
+    "vittorie": 0,
+    "pos": 25
+  },
+  {
+    "atleta_id": "STELLA_AURORA",
+    "cognome": "STELLA",
+    "nome": "AURORA",
+    "team_id": "UC_GIORGIONE",
+    "team_nome": "U.C. GIORGIONE",
+    "punti": 17,
+    "vittorie": 0,
+    "pos": 26
+  },
+  {
+    "atleta_id": "BARONE_MAELA",
+    "cognome": "BARONE",
+    "nome": "MAELA",
+    "team_id": "ALLGOR_TATOBIKE",
+    "team_nome": "ALLGOR TATOBIKE",
+    "punti": 16,
+    "vittorie": 0,
+    "pos": 27
+  },
+  {
+    "atleta_id": "CRESTANI_ELISA",
+    "cognome": "CRESTANI",
+    "nome": "ELISA",
+    "team_id": "BREGANZE_MILLENIUM",
+    "team_nome": "BREGANZE MILLENIUM",
+    "punti": 16,
+    "vittorie": 0,
+    "pos": 28
+  },
+  {
+    "atleta_id": "PELLEGRINI_GIULIA",
+    "cognome": "PELLEGRINI",
+    "nome": "GIULIA",
+    "team_id": "ASD_VELOCE_CLUB_BORGO",
+    "team_nome": "ASD VELOCE CLUB BORGO",
+    "punti": 15,
+    "vittorie": 1,
+    "pos": 29
+  },
+  {
+    "atleta_id": "MOINO_ALESSIA",
+    "cognome": "MOINO",
+    "nome": "ALESSIA",
+    "team_id": "GS_MOSOLE",
+    "team_nome": "G.S. MOSOLE",
+    "punti": 14,
+    "vittorie": 0,
+    "pos": 30
+  },
+  {
+    "atleta_id": "RENZULLI_GIULIA",
+    "cognome": "RENZULLI",
+    "nome": "GIULIA",
+    "team_id": "GS_LUPI_VALLE_DAOSTA",
+    "team_nome": "G.S. LUPI VALLE D'AOSTA",
+    "punti": 14,
+    "vittorie": 0,
+    "pos": 31
+  },
+  {
+    "atleta_id": "ANDREOLI_ALICE",
+    "cognome": "ANDREOLI",
+    "nome": "ALICE",
+    "team_id": "POL_FIUMICINESE_FAIT_ADRIATICA",
+    "team_nome": "POL. FIUMICINESE FA.I.T. ADRIATICA",
+    "punti": 14,
+    "vittorie": 0,
+    "pos": 32
+  },
+  {
+    "atleta_id": "GALLI_MARTINA",
+    "cognome": "GALLI",
+    "nome": "MARTINA",
+    "team_id": "GS_CICLI_FIORIN_ASD",
+    "team_nome": "GS CICLI FIORIN ASD",
+    "punti": 13,
+    "vittorie": 0,
+    "pos": 33
+  },
+  {
+    "atleta_id": "CONSOLI_FRANCESCA",
+    "cognome": "CONSOLI",
+    "nome": "FRANCESCA",
+    "team_id": "SCUOLA_CICLISMO_VERSO_LIRIDE",
+    "team_nome": "SCUOLA CICLISMO VERSO L'IRIDE",
+    "punti": 11,
+    "vittorie": 0,
+    "pos": 34
+  },
+  {
+    "atleta_id": "FERRARI_LUCREZIA",
+    "cognome": "FERRARI",
+    "nome": "LUCREZIA",
+    "team_id": "SPORT_CLUB_BRESCIA_FLANDRES_LOVE",
+    "team_nome": "SPORT CLUB BRESCIA - FLANDRES LOVE",
+    "punti": 10,
+    "vittorie": 0,
+    "pos": 35
+  },
+  {
+    "atleta_id": "GIUSTI_NORA",
+    "cognome": "GIUSTI",
+    "nome": "NORA",
+    "team_id": "UC_DONORATICO",
+    "team_nome": "UC DONORATICO",
+    "punti": 10,
+    "vittorie": 0,
+    "pos": 36
+  },
+  {
+    "atleta_id": "SFORZINI_SELENE",
+    "cognome": "SFORZINI",
+    "nome": "SELENE",
+    "team_id": "SC_CESANO_MADERNO",
+    "team_nome": "S.C. CESANO MADERNO",
+    "punti": 9,
+    "vittorie": 0,
+    "pos": 37
+  },
+  {
+    "atleta_id": "TERIACA_ANNA",
+    "cognome": "TERIACA",
+    "nome": "ANNA",
+    "team_id": "GS_CAPANNORI",
+    "team_nome": "GS CAPANNORI",
+    "punti": 9,
+    "vittorie": 0,
+    "pos": 38
+  },
+  {
+    "atleta_id": "FARIAS_NICOLE",
+    "cognome": "FARIAS",
+    "nome": "NICOLE",
+    "team_id": "GS_CICLI_FIORIN_ASD",
+    "team_nome": "GS CICLI FIORIN ASD",
+    "punti": 7,
+    "vittorie": 0,
+    "pos": 39
+  },
+  {
+    "atleta_id": "NARDELLI_GIORGIA",
+    "cognome": "NARDELLI",
+    "nome": "GIORGIA",
+    "team_id": "BUSTO_GAROLFO",
+    "team_nome": "BUSTO GAROLFO",
+    "punti": 7,
+    "vittorie": 0,
+    "pos": 40
+  },
+  {
+    "atleta_id": "GEROLI_MAIRA",
+    "cognome": "GEROLI",
+    "nome": "MAIRA",
+    "team_id": "BUSTO_GAROLFO",
+    "team_nome": "BUSTO GAROLFO",
+    "punti": 7,
+    "vittorie": 0,
+    "pos": 41
+  },
+  {
+    "atleta_id": "LEPORE_EMMA",
+    "cognome": "LEPORE",
+    "nome": "EMMA",
+    "team_id": "UC_DONORATICO",
+    "team_nome": "UC DONORATICO",
+    "punti": 7,
+    "vittorie": 0,
+    "pos": 42
+  },
+  {
+    "atleta_id": "VETTORELLO_GAIA",
+    "cognome": "VETTORELLO",
+    "nome": "GAIA",
+    "team_id": "UCCONSCIO_PEDALE_DEL_SILE",
+    "team_nome": "U.C.CONSCIO PEDALE DEL SILE",
+    "punti": 6,
+    "vittorie": 0,
+    "pos": 43
+  },
+  {
+    "atleta_id": "MURARI_EMMA",
+    "cognome": "MURARI",
+    "nome": "EMMA",
+    "team_id": "UCCONSCIO_PEDALE_DEL_SILE",
+    "team_nome": "U.C.CONSCIO PEDALE DEL SILE",
+    "punti": 6,
+    "vittorie": 0,
+    "pos": 44
+  },
+  {
+    "atleta_id": "DAPOLLONIO_ALESSIA",
+    "cognome": "D'APOLLONIO",
+    "nome": "ALESSIA",
+    "team_id": "UCCONSCIO_PEDALE_DEL_SILE",
+    "team_nome": "U.C.CONSCIO PEDALE DEL SILE",
+    "punti": 6,
+    "vittorie": 0,
+    "pos": 45
+  },
+  {
+    "atleta_id": "DONATI_MATILDE",
+    "cognome": "DONATI",
+    "nome": "MATILDE",
+    "team_id": "HG_CYCLING_TEAM",
+    "team_nome": "HG CYCLING TEAM",
+    "punti": 5,
+    "vittorie": 0,
+    "pos": 46
+  },
+  {
+    "atleta_id": "BANDIZIOL_DILETTA",
+    "cognome": "BANDIZIOL",
+    "nome": "DILETTA",
+    "team_id": "BTEAM_CYCLING_PROJECT",
+    "team_nome": "B-TEAM CYCLING PROJECT",
+    "punti": 5,
+    "vittorie": 0,
+    "pos": 47
+  },
+  {
+    "atleta_id": "BICELLI_EMMA",
+    "cognome": "BICELLI",
+    "nome": "EMMA",
+    "team_id": "SPORT_CLUB_BRESCIA_FLANDRES_LOVE",
+    "team_nome": "SPORT CLUB BRESCIA - FLANDRES LOVE",
+    "punti": 5,
+    "vittorie": 0,
+    "pos": 48
+  },
+  {
+    "atleta_id": "LOMBARDI_ELEONORA",
+    "cognome": "LOMBARDI",
+    "nome": "ELEONORA",
+    "team_id": "KTM_ACADEMY_LE_MARMOTTE",
+    "team_nome": "KTM ACADEMY LE MARMOTTE",
+    "punti": 4,
+    "vittorie": 0,
+    "pos": 49
+  },
+  {
+    "atleta_id": "BACCI_SOFIA",
+    "cognome": "BACCI",
+    "nome": "SOFIA",
+    "team_id": "TEAM_FABIANA_LUPERINI_ASD",
+    "team_nome": "TEAM FABIANA LUPERINI ASD",
+    "punti": 4,
+    "vittorie": 0,
+    "pos": 50
+  },
+  {
+    "atleta_id": "STEFANI_GIULIA",
+    "cognome": "STEFANI",
+    "nome": "GIULIA",
+    "team_id": "ASD_TEAM_FEMMINILE_TRENTINO",
+    "team_nome": "ASD TEAM FEMMINILE TRENTINO",
+    "punti": 4,
+    "vittorie": 0,
+    "pos": 51
+  },
+  {
+    "atleta_id": "BURGER_FENNA",
+    "cognome": "BURGER",
+    "nome": "FENNA",
+    "team_id": "SCUOLA_CICLISMO_VERSO_LIRIDE",
+    "team_nome": "SCUOLA CICLISMO VERSO L'IRIDE",
+    "punti": 4,
+    "vittorie": 0,
+    "pos": 52
+  },
+  {
+    "atleta_id": "ZAVATTERO_MARTINA",
+    "cognome": "ZAVATTERO",
+    "nome": "MARTINA",
+    "team_id": "SC_CESANO_MADERNO",
+    "team_nome": "S.C. CESANO MADERNO",
+    "punti": 4,
+    "vittorie": 0,
+    "pos": 53
+  },
+  {
+    "atleta_id": "PIN_MATILDE",
+    "cognome": "PIN",
+    "nome": "MATILDE",
+    "team_id": "UCCONSCIO_PEDALE_DEL_SILE",
+    "team_nome": "U.C.CONSCIO PEDALE DEL SILE",
+    "punti": 4,
+    "vittorie": 0,
+    "pos": 54
+  },
+  {
+    "atleta_id": "MOTTA_LUCREZIA",
+    "cognome": "MOTTA",
+    "nome": "LUCREZIA",
+    "team_id": "SC_CESANO_MADERNO",
+    "team_nome": "S.C. CESANO MADERNO",
+    "punti": 4,
+    "vittorie": 0,
+    "pos": 55
+  },
+  {
+    "atleta_id": "PAGANELLI_ANITA",
+    "cognome": "PAGANELLI",
+    "nome": "ANITA",
+    "team_id": "BICIFESTIVAL",
+    "team_nome": "BICIFESTIVAL",
+    "punti": 4,
+    "vittorie": 0,
+    "pos": 56
+  },
+  {
+    "atleta_id": "BORDIGNON_NAMI_LUCE",
+    "cognome": "BORDIGNON",
+    "nome": "NAMI LUCE",
+    "team_id": "UC_GIORGIONE",
+    "team_nome": "U.C. GIORGIONE",
+    "punti": 3,
+    "vittorie": 0,
+    "pos": 57
+  },
+  {
+    "atleta_id": "SCARABELLO_SOFIA",
+    "cognome": "SCARABELLO",
+    "nome": "SOFIA",
+    "team_id": "GC_SOSSANO_1975",
+    "team_nome": "G.C. SOSSANO 1975",
+    "punti": 3,
+    "vittorie": 0,
+    "pos": 58
+  },
+  {
+    "atleta_id": "LODI_ATENA",
+    "cognome": "LODI",
+    "nome": "ATENA",
+    "team_id": "ASD_CICLISTICA_GBONZAGNI",
+    "team_nome": "A.S.D CICLISTICA G.BONZAGNI",
+    "punti": 3,
+    "vittorie": 0,
+    "pos": 59
+  },
+  {
+    "atleta_id": "CLEMENTE_GINEVRA",
+    "cognome": "CLEMENTE",
+    "nome": "GINEVRA",
+    "team_id": "GC_NOVENTANA",
+    "team_nome": "G.C. NOVENTANA",
+    "punti": 3,
+    "vittorie": 0,
+    "pos": 60
+  },
+  {
+    "atleta_id": "SELLA_ANNA",
+    "cognome": "SELLA",
+    "nome": "ANNA",
+    "team_id": "GC_SOSSANO_1975",
+    "team_nome": "G.C. SOSSANO 1975",
+    "punti": 3,
+    "vittorie": 0,
+    "pos": 61
+  },
+  {
+    "atleta_id": "BOTTARO_SOFIA",
+    "cognome": "BOTTARO",
+    "nome": "SOFIA",
+    "team_id": "GC_SOSSANO_1975",
+    "team_nome": "G.C. SOSSANO 1975",
+    "punti": 2,
+    "vittorie": 0,
+    "pos": 62
+  },
+  {
+    "atleta_id": "PARETTA_AURORA",
+    "cognome": "PARETTA",
+    "nome": "AURORA",
+    "team_id": "UC_GIORGIONE",
+    "team_nome": "U.C. GIORGIONE",
+    "punti": 2,
+    "vittorie": 0,
+    "pos": 63
+  },
+  {
+    "atleta_id": "BULDORINI_ISABEL",
+    "cognome": "BULDORINI",
+    "nome": "ISABEL",
+    "team_id": "BICIFESTIVAL",
+    "team_nome": "BICIFESTIVAL",
+    "punti": 2,
+    "vittorie": 0,
+    "pos": 64
+  },
+  {
+    "atleta_id": "GENTILI_PAOLA",
+    "cognome": "GENTILI",
+    "nome": "PAOLA",
+    "team_id": "ASD_EFFETTO_CICLISMO_NOI_SPORT",
+    "team_nome": "ASD EFFETTO CICLISMO - NOI SPORT",
+    "punti": 1,
+    "vittorie": 0,
+    "pos": 65
+  },
+  {
+    "atleta_id": "NEGRENTE_VANIA",
+    "cognome": "NEGRENTE",
+    "nome": "VANIA",
+    "team_id": "ASD_TEAM_PETRUCCI",
+    "team_nome": "ASD TEAM PETRUCCI",
+    "punti": 1,
+    "vittorie": 0,
+    "pos": 66
+  },
+  {
+    "atleta_id": "TESTA_CAROLINA",
+    "cognome": "TESTA",
+    "nome": "CAROLINA",
+    "team_id": "SALUS_CICLISTICA_SEREGNO_DE_ROSA",
+    "team_nome": "SALUS CICLISTICA SEREGNO DE ROSA",
+    "punti": 1,
+    "vittorie": 0,
+    "pos": 67
+  },
+  {
+    "atleta_id": "MARTENSINI_MATILDE",
+    "cognome": "MARTENSINI",
+    "nome": "MATILDE",
+    "team_id": "GS_CICLI_FIORIN_CYCLING_TEAM_ASD",
+    "team_nome": "G.S. CICLI FIORIN CYCLING TEAM ASD",
+    "punti": 1,
+    "vittorie": 0,
+    "pos": 68
+  },
+  {
+    "atleta_id": "GUIDOLIN_GIOIA",
+    "cognome": "GUIDOLIN",
+    "nome": "GIOIA",
+    "team_id": "GS_MOSOLE",
+    "team_nome": "G.S. MOSOLE",
+    "punti": 1,
+    "vittorie": 0,
+    "pos": 69
+  }
+]

@@ -18,7 +18,7 @@ def slugify(s):
     return re.sub(r"\s+", "_", s).upper()
 
 def load_calendar_from_excel(file_path):
-    print(f"      → Caricamento calendario da {os.path.basename(file_path)}...")
+    print(f"      -> Caricamento calendario da {os.path.basename(file_path)}...")
     try:
         df = pd.read_excel(file_path)
         
@@ -35,12 +35,8 @@ def load_calendar_from_excel(file_path):
         }
 
         def find_col(key):
-            targets = [t.lower() for t in col_map[key]]
             for c in df.columns:
-                c_clean = str(c).lower().strip()
-                # Match esatto o la colonna contiene uno dei target
-                for t in targets:
-                    if t == c_clean or t in c_clean: return c
+                if c in col_map[key]: return c
             return None
 
         c_nome = find_col("nome")
@@ -90,6 +86,11 @@ def load_calendar_from_excel(file_path):
 
             gara_id = f"{slugify(nome)}_{date_iso}"
 
+            # Moltiplicatore
+            mult = 1
+            if tipo == "internazionale": mult = 3
+            elif tipo == "nazionale":    mult = 2
+
             calendar.append({
                 "id": gara_id,
                 "nome": nome,
@@ -100,12 +101,13 @@ def load_calendar_from_excel(file_path):
                 "regione": regione,
                 "genere": genere,
                 "tipo": tipo,
+                "moltiplicatore": mult,
                 "campionato_regionale": is_cr,
                 "campionato_italiano": is_ci,
                 "url": None
             })
 
-        print(f"      ✓ Caricate {len(calendar)} gare dall'Excel")
+        print(f"      [V] Caricate {len(calendar)} gare dall'Excel")
         return calendar
 
     except Exception as e:

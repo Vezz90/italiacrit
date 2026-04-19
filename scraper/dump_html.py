@@ -1,17 +1,13 @@
-import asyncio
-from playwright.async_api import async_playwright
+import requests, re
+from bs4 import BeautifulSoup
 
-async def dump():
-    async with async_playwright() as p:
-        browser = await p.chromium.launch()
-        page = await browser.new_page()
-        print("Navigating...")
-        await page.goto("https://risultati-strada.federciclismo.it/risultati_gare_juniores.htm")
-        await asyncio.sleep(3)
-        html = await page.content()
-        with open("scraper/debug_page.html", "w", encoding="utf-8") as f:
-            f.write(html)
-        print("Dumped to scraper/debug_page.html")
-        await browser.close()
+soup = BeautifulSoup(requests.get('https://risultati-strada.federciclismo.it/').text, 'html.parser')
+races = soup.find_all('h4', style=re.compile(r'color\s*:\s*#1a8ad8', re.I))
 
-asyncio.run(dump())
+with open('scraper/html_dump.txt', 'w', encoding='utf-8') as f:
+    for h in races[:25]:
+        prev = h.find_previous_sibling()
+        prev_text = prev.get_text(strip=True) if prev else "None"
+        f.write(f"CONTEXT: {prev_text}\n")
+        f.write(f"RACE: {h.get_text(strip=True)}\n")
+        f.write("-" * 40 + "\n")
