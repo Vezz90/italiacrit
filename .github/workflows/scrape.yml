@@ -13,7 +13,6 @@ on:
 
 jobs:
   scrape:
-    runs-on: ubuntu-22.04
     timeout-minutes: 25
 
     steps:
