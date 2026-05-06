@@ -308,6 +308,7 @@ function route() {
     return renderRisultati();
   }
   if (match('/calendario')) return renderCalendario();
+  if (match('/statistiche')) return renderStatistiche();
   if (match('/regolamento')) return renderRegolamento();
   if (match('/admin')) return renderAdmin();
   const m_atleta = match('/atleta/:id');
@@ -329,7 +330,7 @@ function updateNavActive(hash) {
   else if (hash.startsWith('#/atleti')) document.getElementById('nav-atleti')?.classList.add('active');
   else if (hash.startsWith('#/team')) document.getElementById('nav-team')?.classList.add('active');
   else if (hash.startsWith('#/risultati')) document.getElementById('nav-risultati')?.classList.add('active');
-  else if (hash.startsWith('#/regolamento')) document.getElementById('nav-reg')?.classList.add('active');
+  else if (hash.startsWith('#/statistiche')) document.getElementById('nav-stats')?.classList.add('active');
   else if (hash.startsWith('#/admin')) document.getElementById('nav-admin')?.classList.add('active');
 }
 
@@ -1669,6 +1670,260 @@ async function renderTeamList() {
     `;
   };
   window.filterTeamList(teamSearch);
+}
+
+// ── STATISTICHE ───────────────────────────────────────────────
+let statsCompA = '';
+let statsCompB = '';
+
+async function renderStatistiche() {
+  if (!globalData) return;
+  const { resultsRaw, athletes, calendar } = globalData;
+
+  // ── Calcolo Stats Globali ─────────────────────────────────
+  const totalRaces = new Set(resultsRaw.map(r => r.gara_id)).size;
+  const totalAthletes = Object.keys(athletes).length;
+  const totalResults = resultsRaw.length;
+  const totalKm = resultsRaw.reduce((s, r) => s + (parseFloat(r.km) || 0), 0);
+  const totalVittorie = resultsRaw.filter(r => r.posizione === 1).length;
+  const kmRounded = Math.round(totalKm).toLocaleString('it-IT');
+
+  // ── Top 5 per Vittorie ────────────────────────────────────
+  const winsMap = {};
+  resultsRaw.filter(r => r.posizione === 1).forEach(r => {
+    if (!winsMap[r.atleta_id]) winsMap[r.atleta_id] = { id: r.atleta_id, nome: r.cognome + ' ' + r.nome, team: r.team, wins: 0, cat: r.categoria };
+    winsMap[r.atleta_id].wins++;
+  });
+  const topWinners = Object.values(winsMap).sort((a,b) => b.wins - a.wins).slice(0, 5);
+
+  // ── Top 5 per Punti ───────────────────────────────────────
+  const ptsMap = {};
+  resultsRaw.forEach(r => {
+    if (!ptsMap[r.atleta_id]) ptsMap[r.atleta_id] = { id: r.atleta_id, nome: r.cognome + ' ' + r.nome, team: r.team, pts: 0, gare: 0 };
+    ptsMap[r.atleta_id].pts += (r.punti_effettivi || 0);
+    ptsMap[r.atleta_id].gare++;
+  });
+  const topScorers = Object.values(ptsMap).sort((a,b) => b.pts - a.pts).slice(0, 5);
+
+  // ── Regioni più attive ────────────────────────────────────
+  const regionMap = {};
+  resultsRaw.forEach(r => {
+    const reg = normalizeRegion(r.regione);
+    if (!reg || reg === 'ITALIA') return;
+    if (!regionMap[reg]) regionMap[reg] = { regione: reg, gare: new Set(), risultati: 0 };
+    regionMap[reg].gare.add(r.gara_id);
+    regionMap[reg].risultati++;
+  });
+  const topRegions = Object.values(regionMap)
+    .map(r => ({ ...r, n_gare: r.gare.size }))
+    .sort((a, b) => b.n_gare - a.n_gare)
+    .slice(0, 10);
+  const maxGare = topRegions[0]?.n_gare || 1;
+
+  // ── Categorie più rappresentate ───────────────────────────
+  const catMap = {};
+  resultsRaw.forEach(r => {
+    const c = r.categoria || 'N/A';
+    if (!catMap[c]) catMap[c] = 0;
+    catMap[c]++;
+  });
+  const topCats = Object.entries(catMap).sort((a,b) => b[1]-a[1]);
+
+  // ── Comparatore ──────────────────────────────────────────
+  const renderComparator = () => {
+    const aList = Object.values(athletes).slice(0, 50).map(a =>
+      `<option value="${a.id}" ${a.id === statsCompA ? 'selected' : ''}>${esc(a.cognome)} ${esc(a.nome)} (${catLabel(a.categoria)})</option>`
+    ).join('');
+
+    let compHtml = '';
+    if (statsCompA && statsCompB && statsCompA !== statsCompB) {
+      const aData = athletes[statsCompA];
+      const bData = athletes[statsCompB];
+      if (aData && bData) {
+        const aRes = resultsRaw.filter(r => r.atleta_id === statsCompA);
+        const bRes = resultsRaw.filter(r => r.atleta_id === statsCompB);
+        const aWins = aRes.filter(r => r.posizione === 1).length;
+        const bWins = bRes.filter(r => r.posizione === 1).length;
+        const aPts = aRes.reduce((s,r) => s + (r.punti_effettivi||0), 0);
+        const bPts = bRes.reduce((s,r) => s + (r.punti_effettivi||0), 0);
+        const aKm = Math.round(aRes.reduce((s,r) => s + (parseFloat(r.km)||0), 0));
+        const bKm = Math.round(bRes.reduce((s,r) => s + (parseFloat(r.km)||0), 0));
+        const aMedia = aRes.filter(r => r.media).length ? (aRes.reduce((s,r) => s+(parseFloat(r.media)||0),0)/aRes.filter(r=>r.media).length).toFixed(1) : '—';
+        const bMedia = bRes.filter(r => r.media).length ? (bRes.reduce((s,r) => s+(parseFloat(r.media)||0),0)/bRes.filter(r=>r.media).length).toFixed(1) : '—';
+        const aPodi = aRes.filter(r => r.posizione <= 3).length;
+        const bPodi = bRes.filter(r => r.posizione <= 3).length;
+
+        const bar = (a, b, fmt='') => {
+          const tot = a + b || 1;
+          const pA = Math.round(a/tot*100);
+          const pB = 100 - pA;
+          return `
+            <div style="display:flex;align-items:center;gap:8px;margin:8px 0">
+              <span style="font-family:var(--font-display);font-size:1.3rem;color:var(--red-hot);min-width:60px;text-align:right">${a}${fmt}</span>
+              <div style="flex:1;height:10px;border-radius:5px;overflow:hidden;display:flex">
+                <div style="width:${pA}%;background:var(--red-hot);transition:width 0.6s"></div>
+                <div style="width:${pB}%;background:var(--cat-juniores);transition:width 0.6s"></div>
+              </div>
+              <span style="font-family:var(--font-display);font-size:1.3rem;color:var(--cat-juniores);min-width:60px">${b}${fmt}</span>
+            </div>`;
+        };
+
+        compHtml = `
+          <div style="display:grid;grid-template-columns:1fr 1fr;gap:0;margin-top:20px;background:var(--bg-card);border:1px solid var(--border-subtle);border-radius:8px;overflow:hidden">
+            <div style="padding:20px;background:rgba(232,0,29,0.05);border-right:1px solid var(--border-subtle)">
+              <div style="font-family:var(--font-display);font-size:1.8rem;color:var(--red-hot)">${esc(aData.cognome)}</div>
+              <div style="color:var(--text-secondary);font-size:0.85rem">${esc(aData.nome)} • ${catLabel(aData.categoria)}</div>
+            </div>
+            <div style="padding:20px;background:rgba(16,185,129,0.05)">
+              <div style="font-family:var(--font-display);font-size:1.8rem;color:var(--cat-juniores)">${esc(bData.cognome)}</div>
+              <div style="color:var(--text-secondary);font-size:0.85rem">${esc(bData.nome)} • ${catLabel(bData.categoria)}</div>
+            </div>
+          </div>
+          <div style="background:var(--bg-card);border:1px solid var(--border-subtle);border-top:none;border-radius:0 0 8px 8px;padding:20px">
+            <div class="category-divider" style="margin-top:0">PUNTI TOTALI</div>
+            ${bar(aPts, bPts)}
+            <div class="category-divider">VITTORIE</div>
+            ${bar(aWins, bWins)}
+            <div class="category-divider">PODI (TOP 3)</div>
+            ${bar(aPodi, bPodi)}
+            <div class="category-divider">GARE DISPUTATE</div>
+            ${bar(aRes.length, bRes.length)}
+            <div class="category-divider">KM PERCORSI</div>
+            ${bar(aKm, bKm, ' km')}
+            <div class="category-divider" style="margin-bottom:8px">VELOCITÀ MEDIA</div>
+            <div style="display:flex;justify-content:space-between;font-family:var(--font-display);font-size:1.6rem">
+              <span style="color:var(--red-hot)">${aMedia} km/h</span>
+              <span style="color:var(--cat-juniores)">${bMedia} km/h</span>
+            </div>
+          </div>`;
+      }
+    }
+
+    const allAthleteOpts = Object.values(athletes)
+      .sort((a,b) => (a.cognome||'').localeCompare(b.cognome||''))
+      .map(a => `<option value="${a.id}" ${a.id === statsCompA ? 'selected' : ''}>${esc(a.cognome)} ${esc(a.nome)} (${catLabel(a.categoria)})</option>`)
+      .join('');
+    const allAthleteOpts2 = Object.values(athletes)
+      .sort((a,b) => (a.cognome||'').localeCompare(b.cognome||''))
+      .map(a => `<option value="${a.id}" ${a.id === statsCompB ? 'selected' : ''}>${esc(a.cognome)} ${esc(a.nome)} (${catLabel(a.categoria)})</option>`)
+      .join('');
+
+    return `
+      <div style="background:var(--bg-card);border:1px solid var(--border-subtle);border-radius:8px;padding:20px;margin-bottom:32px">
+        <div style="font-family:var(--font-heading);font-weight:700;letter-spacing:0.1em;text-transform:uppercase;color:var(--text-muted);font-size:0.75rem;margin-bottom:16px">⚔️ COMPARATORE ATLETI</div>
+        <div style="display:flex;gap:16px;flex-wrap:wrap;align-items:center">
+          <select id="comp-a" class="cal-filter-select" style="flex:1;min-width:200px" onchange="window.statsSetCompA(this.value)">
+            <option value="">— Seleziona Atleta A —</option>
+            ${allAthleteOpts}
+          </select>
+          <span style="font-family:var(--font-display);font-size:2rem;color:var(--red-hot)">VS</span>
+          <select id="comp-b" class="cal-filter-select" style="flex:1;min-width:200px" onchange="window.statsSetCompB(this.value)">
+            <option value="">— Seleziona Atleta B —</option>
+            ${allAthleteOpts2}
+          </select>
+        </div>
+        ${compHtml}
+      </div>`;
+  };
+
+  const regionsHtml = topRegions.map(r => {
+    const pct = Math.round(r.n_gare / maxGare * 100);
+    return `
+      <div style="display:flex;align-items:center;gap:12px;padding:10px 0;border-bottom:1px solid var(--border-subtle)">
+        <div style="min-width:160px;font-family:var(--font-heading);font-weight:700;font-size:0.9rem">${esc(r.regione)}</div>
+        <div style="flex:1;height:8px;background:var(--bg-elevated);border-radius:4px;overflow:hidden">
+          <div style="height:100%;width:${pct}%;background:linear-gradient(90deg,var(--red-hot),var(--yellow-race));border-radius:4px;transition:width 0.6s"></div>
+        </div>
+        <div style="min-width:80px;text-align:right;font-family:var(--font-mono);font-size:0.85rem;color:var(--text-muted)">${r.n_gare} gare</div>
+      </div>`;
+  }).join('');
+
+  setPage(`
+    <h1 style="font-family:var(--font-display);font-size:var(--size-h1);margin-bottom:28px">STATISTICHE</h1>
+
+    <!-- KPI GLOBALI -->
+    <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:16px;margin-bottom:40px">
+      ${[
+        ['🏁', totalRaces, 'Gare Totali'],
+        ['🏆', totalVittorie, 'Vittorie'],
+        ['👤', totalAthletes, 'Atleti'],
+        ['📋', totalResults, 'Classifiche'],
+        ['🛣️', kmRounded, 'Km Percorsi'],
+        ['📅', calendar.length, 'Gare in Calendario']
+      ].map(([icon, val, label]) => `
+        <div style="background:var(--bg-card);border:1px solid var(--border-subtle);border-radius:8px;padding:20px;text-align:center;transition:border-color 0.2s" onmouseover="this.style.borderColor='var(--red-hot)'" onmouseout="this.style.borderColor='var(--border-subtle)'">
+          <div style="font-size:1.8rem;margin-bottom:6px">${icon}</div>
+          <div style="font-family:var(--font-display);font-size:2rem;color:var(--red-hot);line-height:1">${val}</div>
+          <div style="font-family:var(--font-heading);font-size:0.7rem;color:var(--text-muted);text-transform:uppercase;letter-spacing:0.1em;margin-top:6px">${label}</div>
+        </div>`).join('')}
+    </div>
+
+    <!-- COMPARATORE -->
+    <div id="stats-comparator">${renderComparator()}</div>
+
+    <!-- TOP SCORERS + TOP WINNERS -->
+    <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(320px,1fr));gap:24px;margin-bottom:40px">
+      
+      <div style="background:var(--bg-card);border:1px solid var(--border-subtle);border-radius:8px;overflow:hidden">
+        <div style="padding:16px;background:var(--bg-secondary);border-bottom:1px solid var(--border-subtle)">
+          <div style="font-family:var(--font-heading);font-weight:700;text-transform:uppercase;letter-spacing:0.08em">🥇 Top Vincitori 2026</div>
+        </div>
+        <div>
+          ${topWinners.map((a, i) => `
+            <div style="display:flex;align-items:center;gap:12px;padding:12px 16px;border-bottom:1px solid var(--border-subtle);transition:background 0.12s" onmouseover="this.style.background='var(--bg-elevated)'" onmouseout="this.style.background=''">
+              <span style="font-family:var(--font-display);font-size:1.8rem;color:${['var(--gold)','var(--silver)','var(--bronze)','var(--text-muted)','var(--text-muted)'][i]};min-width:36px">${i+1}</span>
+              <div style="flex:1">
+                <div><a href="#/atleta/${esc(a.id)}" style="font-family:var(--font-heading);font-weight:700;font-size:0.95rem;text-transform:uppercase">${esc(a.nome)}</a></div>
+                <div style="font-size:0.75rem;color:var(--text-muted)">${esc(a.team)}</div>
+              </div>
+              <div style="font-family:var(--font-display);font-size:1.5rem;color:var(--yellow-race)">${a.wins} 🏆</div>
+            </div>`).join('')}
+        </div>
+      </div>
+
+      <div style="background:var(--bg-card);border:1px solid var(--border-subtle);border-radius:8px;overflow:hidden">
+        <div style="padding:16px;background:var(--bg-secondary);border-bottom:1px solid var(--border-subtle)">
+          <div style="font-family:var(--font-heading);font-weight:700;text-transform:uppercase;letter-spacing:0.08em">🔥 Top Marcatori 2026</div>
+        </div>
+        <div>
+          ${topScorers.map((a, i) => `
+            <div style="display:flex;align-items:center;gap:12px;padding:12px 16px;border-bottom:1px solid var(--border-subtle);transition:background 0.12s" onmouseover="this.style.background='var(--bg-elevated)'" onmouseout="this.style.background=''">
+              <span style="font-family:var(--font-display);font-size:1.8rem;color:${['var(--gold)','var(--silver)','var(--bronze)','var(--text-muted)','var(--text-muted)'][i]};min-width:36px">${i+1}</span>
+              <div style="flex:1">
+                <div><a href="#/atleta/${esc(a.id)}" style="font-family:var(--font-heading);font-weight:700;font-size:0.95rem;text-transform:uppercase">${esc(a.nome)}</a></div>
+                <div style="font-size:0.75rem;color:var(--text-muted)">${a.gare} gare</div>
+              </div>
+              <div style="font-family:var(--font-display);font-size:1.5rem;color:var(--red-hot)">${a.pts} pt</div>
+            </div>`).join('')}
+        </div>
+      </div>
+    </div>
+
+    <!-- REGIONI + CATEGORIE -->
+    <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(320px,1fr));gap:24px;margin-bottom:40px">
+      <div style="background:var(--bg-card);border:1px solid var(--border-subtle);border-radius:8px;padding:20px">
+        <div style="font-family:var(--font-heading);font-weight:700;text-transform:uppercase;letter-spacing:0.08em;margin-bottom:16px">📍 Attività per Regione</div>
+        ${regionsHtml}
+      </div>
+      <div style="background:var(--bg-card);border:1px solid var(--border-subtle);border-radius:8px;padding:20px">
+        <div style="font-family:var(--font-heading);font-weight:700;text-transform:uppercase;letter-spacing:0.08em;margin-bottom:16px">🏅 Risultati per Categoria</div>
+        ${topCats.map(([cat, count]) => {
+          const pct = Math.round(count / totalResults * 100);
+          return `
+            <div style="display:flex;align-items:center;gap:12px;padding:10px 0;border-bottom:1px solid var(--border-subtle)">
+              <div style="min-width:130px;font-size:0.85rem;font-family:var(--font-heading);font-weight:600">${esc(cat)}</div>
+              <div style="flex:1;height:8px;background:var(--bg-elevated);border-radius:4px;overflow:hidden">
+                <div style="height:100%;width:${pct}%;background:linear-gradient(90deg,var(--cat-juniores),var(--cat-u23));border-radius:4px"></div>
+              </div>
+              <div style="min-width:50px;text-align:right;font-family:var(--font-mono);font-size:0.8rem;color:var(--text-muted)">${count}</div>
+            </div>`;
+        }).join('')}
+      </div>
+    </div>
+  `);
+
+  window.statsSetCompA = (v) => { statsCompA = v; document.getElementById('stats-comparator').innerHTML = renderComparator(); };
+  window.statsSetCompB = (v) => { statsCompB = v; document.getElementById('stats-comparator').innerHTML = renderComparator(); };
 }
 
 function renderRegolamento() {
