@@ -143,13 +143,25 @@ img { max-width: 100%; display: block; }
   gap: 0;
 }
 .nav-logo {
-  font-family: var(--font-display);
-  font-size: 1.75rem;
-  letter-spacing: 0.02em;
-  white-space: nowrap;
+  display: flex;
+  align-items: center;
   flex-shrink: 0;
+  padding: 2px 0;
 }
-.nav-logo span.red { color: var(--red-hot); }
+.nav-logo-img {
+  height: 44px;
+  width: auto;
+  object-fit: contain;
+  /* Sfondo nero del PNG sparisce su dark mode con lighten */
+  mix-blend-mode: lighten;
+  transition: opacity 0.2s;
+}
+.nav-logo:hover .nav-logo-img { opacity: 0.85; }
+/* Light mode: inverte l'immagine per essere visibile su sfondo chiaro */
+body.light-mode .nav-logo-img {
+  mix-blend-mode: normal;
+  filter: invert(1) hue-rotate(180deg);
+}
 .nav-sep {
   width: 1px;
   height: 28px;
