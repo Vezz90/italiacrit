@@ -9,6 +9,23 @@
 // ── CONSTANTS ─────────────────────────────────────────────────
 const BASEPTS = { 1:15, 2:12, 3:10, 4:8, 5:6, 6:5, 7:4, 8:3, 9:2, 10:1 };
 
+// ── REGION NORMALIZATION ───────────────────────────────────────
+const ITALIAN_REGIONS = [
+  "TRENTINO ALTO ADIGE", "FRIULI VENEZIA GIULIA", "VALLE D AOSTA", "EMILIA ROMAGNA",
+  "ABRUZZO","BASILICATA","CALABRIA","CAMPANIA","LAZIO","LIGURIA","LOMBARDIA",
+  "MARCHE","MOLISE","PIEMONTE","PUGLIA","SARDEGNA","SICILIA","TOSCANA",
+  "UMBRIA","VENETO","BOLZANO","TRENTO"
+];
+function normalizeRegion(s) {
+  if (!s) return '';
+  const t = s.toUpperCase().trim();
+  // Ordina per lunghezza discendente: le più lunghe prima (EMILIA ROMAGNA prima di EMILIA)
+  for (const reg of ITALIAN_REGIONS) {
+    if (t.startsWith(reg)) return reg;
+  }
+  return t;
+}
+
 // ── DATA CACHE ────────────────────────────────────────────────
 const cache = {};
 async function loadJson(path) {
@@ -496,7 +513,7 @@ async function renderClassifica() {
       <button class="tab-btn ${rankView==='team'?'active-cat':''}" onclick="setRankView('team')">🏢 TEAM</button>
     </div>`;
 
-  const regions = [...new Set(globalData.calendar.map(g => g.regione).filter(Boolean))].sort();
+  const regions = [...new Set(globalData.resultsRaw.map(r => normalizeRegion(r.regione)).filter(Boolean))].sort();
   const regionOptions = regions.map(r => `<option value="${r}" ${rankRegion===r?'selected':''}>${esc(r)}</option>`).join('');
   
   const monthNames = ['Gennaio','Febbraio','Marzo','Aprile','Maggio','Giugno','Luglio','Agosto','Settembre','Ottobre','Novembre','Dicembre'];
@@ -587,7 +604,7 @@ async function updateRankTable() {
         if (rCat !== rankCat) return;
 
         const calEntry = calMap[r.gara_id];
-        const resolvedRegion = r.regione || (calEntry ? calEntry.regione : '');
+        const resolvedRegion = normalizeRegion(r.regione || (calEntry ? calEntry.regione : ''));
 
         if (rankRegion && resolvedRegion !== rankRegion) return;
         if (rankMonth && r.data && r.data.split('-')[1] !== rankMonth) return;
@@ -671,7 +688,7 @@ async function updateRankTable() {
         if (rCat !== rankCat) return;
 
         const calEntry = calMap[r.gara_id];
-        const resolvedRegion = r.regione || (calEntry ? calEntry.regione : '');
+        const resolvedRegion = normalizeRegion(r.regione || (calEntry ? calEntry.regione : ''));
 
         if (rankRegion && resolvedRegion !== rankRegion) return;
         if (rankMonth && r.data && r.data.split('-')[1] !== rankMonth) return;

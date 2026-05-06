@@ -5,8 +5,10 @@ from datetime import datetime
 from difflib import SequenceMatcher
 try:
     from .calendar_scraper import scrape_calendar_fci
+    from ._regions import extract_region
 except (ImportError, ValueError):
     from calendar_scraper import scrape_calendar_fci
+    from _regions import extract_region
 
 CURRENT_YEAR = 2026
 DATA_DIR = Path(__file__).parent.parent / "data"
@@ -250,10 +252,13 @@ def parse_risultati_page(soup: BeautifulSoup, calendar_map: dict, existing_ids: 
         # ── Determina moltiplicatore base (Robust Matching con Calendario) ──
         mult, tipo, is_cr, is_ci, reg, match_type = resolve_multiplier(race_name_raw, race_date, calendar_map)
         
-        # Fallback regione
+        # Normalizza regione (es. 'ABRUZZO TOSSICIA' -> 'ABRUZZO')
+        reg = extract_region(reg)
+        
+        # Fallback regione dal testo di contesto
         if not reg and context_text:
             m_reg = re.search(r"-\s*([A-Za-z\s\']+)", context_text)
-            if m_reg: reg = m_reg.group(1).strip()
+            if m_reg: reg = extract_region(m_reg.group(1).strip())
         reg = reg or "ITALIA"
 
         race_gender = "F" if "DONNE" in (cat_tag.get_text().upper() if cat_tag else "") or any(k in race_name_raw.lower() for k in ["donne","femm"]) else "M"
@@ -574,6 +579,9 @@ async def run_cycle():
                     r["moltiplicatore"] = m
                     r["tipo"] = t
                     r["punti_effettivi"] = r["punti_base"] * m
+                # Normalizza regione nei risultati esistenti
+                if r.get("regione"):
+                    r["regione"] = extract_region(r["regione"])
         except Exception as e:
             print(f"Errore caricamento risultati: {e}, inizio da zero.")
 
