@@ -5,7 +5,7 @@
     "nome": "BRANDON DAVIDE",
     "team_id": "BORGO_MOLINO_VIGNA_FIORITA",
     "team_nome": "BORGO MOLINO-VIGNA FIORITA",
-    "punti": 309,
+    "punti": 294,
     "vittorie": 7,
     "gare": 11,
     "p1": 7,
@@ -21,7 +21,7 @@
     "nome": "ALESSANDRO",
     "team_id": "POOL_CANTU_GB_TEAM_A_S_D",
     "team_nome": "POOL CANTU' GB TEAM A.S.D.",
-    "punti": 166,
+    "punti": 154,
     "vittorie": 3,
     "gare": 6,
     "p1": 3,
@@ -37,7 +37,7 @@
     "nome": "NICOLA",
     "team_id": "ACCADEMIA_CICLISTICA",
     "team_nome": "ACCADEMIA CICLISTICA",
-    "punti": 134,
+    "punti": 133,
     "vittorie": 2,
     "gare": 9,
     "p1": 2,
@@ -85,7 +85,7 @@
     "nome": "THOMAS",
     "team_id": "AUTOZAI_CONTRI",
     "team_nome": "AUTOZAI-CONTRI",
-    "punti": 105,
+    "punti": 102,
     "vittorie": 0,
     "gare": 10,
     "p1": 0,
@@ -160,22 +160,6 @@
     "trend": 0
   },
   {
-    "atleta_id": "CAMPAGNOLO_LORENZO",
-    "cognome": "CAMPAGNOLO",
-    "nome": "LORENZO",
-    "team_id": "BORGO_MOLINO_VIGNA_FIORITA",
-    "team_nome": "BORGO MOLINO-VIGNA FIORITA",
-    "punti": 95,
-    "vittorie": 0,
-    "gare": 7,
-    "p1": 0,
-    "p2": 1,
-    "p3": 1,
-    "pout": 5,
-    "pos": 11,
-    "trend": 2
-  },
-  {
     "atleta_id": "DE_SMET_VIC",
     "cognome": "DE",
     "nome": "SMET VIC",
@@ -188,8 +172,8 @@
     "p2": 1,
     "p3": 0,
     "pout": 1,
-    "pos": 12,
-    "trend": -1
+    "pos": 11,
+    "trend": 1
   },
   {
     "atleta_id": "BALLIANA_ENRICO",
@@ -204,8 +188,24 @@
     "p2": 2,
     "p3": 0,
     "pout": 5,
+    "pos": 12,
+    "trend": 1
+  },
+  {
+    "atleta_id": "CAMPAGNOLO_LORENZO",
+    "cognome": "CAMPAGNOLO",
+    "nome": "LORENZO",
+    "team_id": "BORGO_MOLINO_VIGNA_FIORITA",
+    "team_nome": "BORGO MOLINO-VIGNA FIORITA",
+    "punti": 85,
+    "vittorie": 0,
+    "gare": 7,
+    "p1": 0,
+    "p2": 1,
+    "p3": 1,
+    "pout": 5,
     "pos": 13,
-    "trend": -1
+    "trend": -2
   },
   {
     "atleta_id": "CECCARELLO_LORENZO",
@@ -272,38 +272,6 @@
     "trend": 0
   },
   {
-    "atleta_id": "ZAGO_GABRIELE",
-    "cognome": "ZAGO",
-    "nome": "GABRIELE",
-    "team_id": "IND_FORNITURE_MORO_C_G_CAPITAL",
-    "team_nome": "IND. FORNITURE MORO-C&G CAPITAL",
-    "punti": 64,
-    "vittorie": 0,
-    "gare": 7,
-    "p1": 0,
-    "p2": 1,
-    "p3": 0,
-    "pout": 6,
-    "pos": 18,
-    "trend": 2
-  },
-  {
-    "atleta_id": "RENZI_NICCOLO",
-    "cognome": "RENZI",
-    "nome": "NICCOLO'",
-    "team_id": "TEAM_GENERAL_SYSTEM",
-    "team_nome": "TEAM GENERAL SYSTEM",
-    "punti": 64,
-    "vittorie": 0,
-    "gare": 6,
-    "p1": 0,
-    "p2": 0,
-    "p3": 0,
-    "pout": 6,
-    "pos": 19,
-    "trend": 2
-  },
-  {
     "atleta_id": "RODRIGUEZ_DELGADO_JOSE_EMILIO",
     "cognome": "RODRIGUEZ",
     "nome": "DELGADO JOSE EMILIO",
@@ -316,8 +284,8 @@
     "p2": 2,
     "p3": 0,
     "pout": 1,
-    "pos": 20,
-    "trend": -2
+    "pos": 18,
+    "trend": 2
   },
   {
     "atleta_id": "ARNOLDI_MATTIA",
@@ -332,24 +300,40 @@
     "p2": 4,
     "p3": 0,
     "pout": 3,
-    "pos": 21,
-    "trend": -2
+    "pos": 19,
+    "trend": 2
   },
   {
-    "atleta_id": "FRONTINI_LUCA",
-    "cognome": "FRONTINI",
-    "nome": "LUCA",
-    "team_id": "POOL_CANTU_GB_TEAM_A_S_D",
-    "team_nome": "POOL CANTU' GB TEAM A.S.D.",
-    "punti": 58,
+    "atleta_id": "ZAGO_GABRIELE",
+    "cognome": "ZAGO",
+    "nome": "GABRIELE",
+    "team_id": "IND_FORNITURE_MORO_C_G_CAPITAL",
+    "team_nome": "IND. FORNITURE MORO-C&G CAPITAL",
+    "punti": 59,
     "vittorie": 0,
-    "gare": 5,
+    "gare": 7,
     "p1": 0,
     "p2": 1,
     "p3": 0,
-    "pout": 4,
-    "pos": 22,
-    "trend": 2
+    "pout": 6,
+    "pos": 20,
+    "trend": -2
+  },
+  {
+    "atleta_id": "RENZI_NICCOLO",
+    "cognome": "RENZI",
+    "nome": "NICCOLO'",
+    "team_id": "TEAM_GENERAL_SYSTEM",
+    "team_nome": "TEAM GENERAL SYSTEM",
+    "punti": 58,
+    "vittorie": 0,
+    "gare": 6,
+    "p1": 0,
+    "p2": 0,
+    "p3": 0,
+    "pout": 6,
+    "pos": 21,
+    "trend": -2
   },
   {
     "atleta_id": "MARANGON_PAOLO_GRAZIANO",
@@ -364,8 +348,8 @@
     "p2": 1,
     "p3": 0,
     "pout": 0,
-    "pos": 23,
-    "trend": -1
+    "pos": 22,
+    "trend": 1
   },
   {
     "atleta_id": "COLELLA_FILIPPO",
@@ -380,8 +364,24 @@
     "p2": 0,
     "p3": 1,
     "pout": 4,
+    "pos": 23,
+    "trend": 1
+  },
+  {
+    "atleta_id": "FRONTINI_LUCA",
+    "cognome": "FRONTINI",
+    "nome": "LUCA",
+    "team_id": "POOL_CANTU_GB_TEAM_A_S_D",
+    "team_nome": "POOL CANTU' GB TEAM A.S.D.",
+    "punti": 54,
+    "vittorie": 0,
+    "gare": 5,
+    "p1": 0,
+    "p2": 1,
+    "p3": 0,
+    "pout": 4,
     "pos": 24,
-    "trend": -1
+    "trend": -2
   },
   {
     "atleta_id": "MORETTI_MATTIA",
@@ -389,7 +389,7 @@
     "nome": "MATTIA",
     "team_id": "TEAM_NERI_SOTTOLI_LUCCHINI_ENERGY",
     "team_nome": "TEAM NERI SOTTOLI LUCCHINI ENERGY",
-    "punti": 55,
+    "punti": 53,
     "vittorie": 0,
     "gare": 5,
     "p1": 0,
@@ -464,22 +464,6 @@
     "trend": 0
   },
   {
-    "atleta_id": "ORENGO_EDOARDO",
-    "cognome": "ORENGO",
-    "nome": "EDOARDO",
-    "team_id": "S_C_ROMANESE_ASD",
-    "team_nome": "S.C. ROMANESE ASD",
-    "punti": 48,
-    "vittorie": 0,
-    "gare": 6,
-    "p1": 0,
-    "p2": 0,
-    "p3": 0,
-    "pout": 6,
-    "pos": 30,
-    "trend": 10
-  },
-  {
     "atleta_id": "ALESSIANI_ANDREA_GABRIELE",
     "cognome": "ALESSIANI",
     "nome": "ANDREA GABRIELE",
@@ -492,8 +476,8 @@
     "p2": 1,
     "p3": 0,
     "pout": 3,
-    "pos": 31,
-    "trend": -1
+    "pos": 30,
+    "trend": 1
   },
   {
     "atleta_id": "PARIS_BRIAN",
@@ -508,8 +492,8 @@
     "p2": 0,
     "p3": 0,
     "pout": 1,
-    "pos": 32,
-    "trend": -1
+    "pos": 31,
+    "trend": 1
   },
   {
     "atleta_id": "TOMASSINI_NICOLO",
@@ -524,8 +508,8 @@
     "p2": 0,
     "p3": 1,
     "pout": 4,
-    "pos": 33,
-    "trend": -1
+    "pos": 32,
+    "trend": 1
   },
   {
     "atleta_id": "MELONI_ANDREA",
@@ -540,8 +524,8 @@
     "p2": 1,
     "p3": 2,
     "pout": 0,
-    "pos": 34,
-    "trend": -1
+    "pos": 33,
+    "trend": 1
   },
   {
     "atleta_id": "IAKOVLEV_MATVEL",
@@ -556,8 +540,8 @@
     "p2": 0,
     "p3": 0,
     "pout": 5,
-    "pos": 35,
-    "trend": -1
+    "pos": 34,
+    "trend": 1
   },
   {
     "atleta_id": "BONCIANI_ANDREA",
@@ -572,8 +556,8 @@
     "p2": 1,
     "p3": 2,
     "pout": 3,
-    "pos": 36,
-    "trend": -1
+    "pos": 35,
+    "trend": 1
   },
   {
     "atleta_id": "ROGGI_TOMMASO",
@@ -588,8 +572,8 @@
     "p2": 0,
     "p3": 1,
     "pout": 2,
-    "pos": 37,
-    "trend": -1
+    "pos": 36,
+    "trend": 1
   },
   {
     "atleta_id": "AGNINI_EDOARDO",
@@ -604,8 +588,8 @@
     "p2": 0,
     "p3": 0,
     "pout": 3,
-    "pos": 38,
-    "trend": -1
+    "pos": 37,
+    "trend": 1
   },
   {
     "atleta_id": "GAMBA_CHRISTIAN",
@@ -620,8 +604,8 @@
     "p2": 0,
     "p3": 1,
     "pout": 5,
-    "pos": 39,
-    "trend": -1
+    "pos": 38,
+    "trend": 1
   },
   {
     "atleta_id": "CAPUZZO_MARCO",
@@ -636,8 +620,24 @@
     "p2": 1,
     "p3": 0,
     "pout": 3,
+    "pos": 39,
+    "trend": 1
+  },
+  {
+    "atleta_id": "ORENGO_EDOARDO",
+    "cognome": "ORENGO",
+    "nome": "EDOARDO",
+    "team_id": "S_C_ROMANESE_ASD",
+    "team_nome": "S.C. ROMANESE ASD",
+    "punti": 40,
+    "vittorie": 0,
+    "gare": 6,
+    "p1": 0,
+    "p2": 0,
+    "p3": 0,
+    "pout": 6,
     "pos": 40,
-    "trend": -1
+    "trend": -10
   },
   {
     "atleta_id": "BRUSTIA_SAMUELE",

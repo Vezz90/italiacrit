@@ -236,7 +236,7 @@
     "categoria": "Juniores",
     "genere": "M",
     "tipo": "nazionale",
-    "moltiplicatore": 4,
+    "moltiplicatore": 3,
     "campionato_regionale": false,
     "campionato_italiano": false,
     "regione": "ABRUZZO COLLEDARA",
@@ -250,7 +250,7 @@
     "km": "201.500",
     "media": "39.916",
     "punti_base": 15,
-    "punti_effettivi": 60
+    "punti_effettivi": 45
   },
   {
     "gara_id": "GIRO_D_ABRUZZO_JUNIORES_2026_CLASSIFICA_GENERALE_2026-05-03_JUN_M",
@@ -259,7 +259,7 @@
     "categoria": "Juniores",
     "genere": "M",
     "tipo": "nazionale",
-    "moltiplicatore": 4,
+    "moltiplicatore": 3,
     "campionato_regionale": false,
     "campionato_italiano": false,
     "regione": "ABRUZZO COLLEDARA",
@@ -273,7 +273,7 @@
     "km": "201.500",
     "media": "39.916",
     "punti_base": 12,
-    "punti_effettivi": 48
+    "punti_effettivi": 36
   },
   {
     "gara_id": "GIRO_D_ABRUZZO_JUNIORES_2026_CLASSIFICA_GENERALE_2026-05-03_JUN_M",
@@ -282,7 +282,7 @@
     "categoria": "Juniores",
     "genere": "M",
     "tipo": "nazionale",
-    "moltiplicatore": 4,
+    "moltiplicatore": 3,
     "campionato_regionale": false,
     "campionato_italiano": false,
     "regione": "ABRUZZO COLLEDARA",
@@ -296,7 +296,7 @@
     "km": "201.500",
     "media": "39.916",
     "punti_base": 10,
-    "punti_effettivi": 40
+    "punti_effettivi": 30
   },
   {
     "gara_id": "GIRO_D_ABRUZZO_JUNIORES_2026_CLASSIFICA_GENERALE_2026-05-03_JUN_M",
@@ -305,7 +305,7 @@
     "categoria": "Juniores",
     "genere": "M",
     "tipo": "nazionale",
-    "moltiplicatore": 4,
+    "moltiplicatore": 3,
     "campionato_regionale": false,
     "campionato_italiano": false,
     "regione": "ABRUZZO COLLEDARA",
@@ -319,7 +319,7 @@
     "km": "201.500",
     "media": "39.916",
     "punti_base": 8,
-    "punti_effettivi": 32
+    "punti_effettivi": 24
   },
   {
     "gara_id": "GIRO_D_ABRUZZO_JUNIORES_2026_CLASSIFICA_GENERALE_2026-05-03_JUN_M",
@@ -328,7 +328,7 @@
     "categoria": "Juniores",
     "genere": "M",
     "tipo": "nazionale",
-    "moltiplicatore": 4,
+    "moltiplicatore": 3,
     "campionato_regionale": false,
     "campionato_italiano": false,
     "regione": "ABRUZZO COLLEDARA",
@@ -342,7 +342,7 @@
     "km": "201.500",
     "media": "39.916",
     "punti_base": 6,
-    "punti_effettivi": 24
+    "punti_effettivi": 18
   },
   {
     "gara_id": "GIRO_D_ABRUZZO_JUNIORES_2026_CLASSIFICA_GENERALE_2026-05-03_JUN_M",
@@ -351,7 +351,7 @@
     "categoria": "Juniores",
     "genere": "M",
     "tipo": "nazionale",
-    "moltiplicatore": 4,
+    "moltiplicatore": 3,
     "campionato_regionale": false,
     "campionato_italiano": false,
     "regione": "ABRUZZO COLLEDARA",
@@ -365,7 +365,7 @@
     "km": "201.500",
     "media": "39.916",
     "punti_base": 5,
-    "punti_effettivi": 20
+    "punti_effettivi": 15
   },
   {
     "gara_id": "GIRO_D_ABRUZZO_JUNIORES_2026_CLASSIFICA_GENERALE_2026-05-03_JUN_M",
@@ -374,7 +374,7 @@
     "categoria": "Juniores",
     "genere": "M",
     "tipo": "nazionale",
-    "moltiplicatore": 4,
+    "moltiplicatore": 3,
     "campionato_regionale": false,
     "campionato_italiano": false,
     "regione": "ABRUZZO COLLEDARA",
@@ -388,7 +388,7 @@
     "km": "201.500",
     "media": "39.916",
     "punti_base": 4,
-    "punti_effettivi": 16
+    "punti_effettivi": 12
   },
   {
     "gara_id": "GIRO_D_ABRUZZO_JUNIORES_2026_CLASSIFICA_GENERALE_2026-05-03_JUN_M",
@@ -397,7 +397,7 @@
     "categoria": "Juniores",
     "genere": "M",
     "tipo": "nazionale",
-    "moltiplicatore": 4,
+    "moltiplicatore": 3,
     "campionato_regionale": false,
     "campionato_italiano": false,
     "regione": "ABRUZZO COLLEDARA",
@@ -411,7 +411,7 @@
     "km": "201.500",
     "media": "39.916",
     "punti_base": 3,
-    "punti_effettivi": 12
+    "punti_effettivi": 9
   },
   {
     "gara_id": "GIRO_D_ABRUZZO_JUNIORES_2026_CLASSIFICA_GENERALE_2026-05-03_JUN_M",
@@ -420,7 +420,7 @@
     "categoria": "Juniores",
     "genere": "M",
     "tipo": "nazionale",
-    "moltiplicatore": 4,
+    "moltiplicatore": 3,
     "campionato_regionale": false,
     "campionato_italiano": false,
     "regione": "ABRUZZO COLLEDARA",
@@ -434,7 +434,7 @@
     "km": "201.500",
     "media": "39.916",
     "punti_base": 2,
-    "punti_effettivi": 8
+    "punti_effettivi": 6
   },
   {
     "gara_id": "GIRO_D_ABRUZZO_JUNIORES_2026_CLASSIFICA_GENERALE_2026-05-03_JUN_M",
@@ -443,7 +443,7 @@
     "categoria": "Juniores",
     "genere": "M",
     "tipo": "nazionale",
-    "moltiplicatore": 4,
+    "moltiplicatore": 3,
     "campionato_regionale": false,
     "campionato_italiano": false,
     "regione": "ABRUZZO COLLEDARA",
@@ -457,7 +457,7 @@
     "km": "201.500",
     "media": "39.916",
     "punti_base": 1,
-    "punti_effettivi": 4
+    "punti_effettivi": 3
   },
   {
     "gara_id": "12_MEMORIAL_DANIELE_TORTOLI_2026-05-03_ELI_M",
@@ -9803,8 +9803,8 @@
     "data": "2026-05-01",
     "categoria": "Elite-Under23",
     "genere": "M",
-    "tipo": "regionale",
-    "moltiplicatore": 1,
+    "tipo": "nazionale",
+    "moltiplicatore": 2,
     "campionato_regionale": false,
     "campionato_italiano": false,
     "regione": "UNDER",
@@ -9818,7 +9818,7 @@
     "km": "160.900",
     "media": "42.296",
     "punti_base": 15,
-    "punti_effettivi": 15
+    "punti_effettivi": 30
   },
   {
     "gara_id": "7_GRAN_PREMIO_GENERAL_STORE_2026-05-01_ELI_M",
@@ -9826,8 +9826,8 @@
     "data": "2026-05-01",
     "categoria": "Elite-Under23",
     "genere": "M",
-    "tipo": "regionale",
-    "moltiplicatore": 1,
+    "tipo": "nazionale",
+    "moltiplicatore": 2,
     "campionato_regionale": false,
     "campionato_italiano": false,
     "regione": "UNDER",
@@ -9841,7 +9841,7 @@
     "km": "160.900",
     "media": "42.296",
     "punti_base": 12,
-    "punti_effettivi": 12
+    "punti_effettivi": 24
   },
   {
     "gara_id": "7_GRAN_PREMIO_GENERAL_STORE_2026-05-01_ELI_M",
@@ -9849,8 +9849,8 @@
     "data": "2026-05-01",
     "categoria": "Elite-Under23",
     "genere": "M",
-    "tipo": "regionale",
-    "moltiplicatore": 1,
+    "tipo": "nazionale",
+    "moltiplicatore": 2,
     "campionato_regionale": false,
     "campionato_italiano": false,
     "regione": "UNDER",
@@ -9864,7 +9864,7 @@
     "km": "160.900",
     "media": "42.296",
     "punti_base": 10,
-    "punti_effettivi": 10
+    "punti_effettivi": 20
   },
   {
     "gara_id": "7_GRAN_PREMIO_GENERAL_STORE_2026-05-01_ELI_M",
@@ -9872,8 +9872,8 @@
     "data": "2026-05-01",
     "categoria": "Elite-Under23",
     "genere": "M",
-    "tipo": "regionale",
-    "moltiplicatore": 1,
+    "tipo": "nazionale",
+    "moltiplicatore": 2,
     "campionato_regionale": false,
     "campionato_italiano": false,
     "regione": "UNDER",
@@ -9887,7 +9887,7 @@
     "km": "160.900",
     "media": "42.296",
     "punti_base": 8,
-    "punti_effettivi": 8
+    "punti_effettivi": 16
   },
   {
     "gara_id": "7_GRAN_PREMIO_GENERAL_STORE_2026-05-01_ELI_M",
@@ -9895,8 +9895,8 @@
     "data": "2026-05-01",
     "categoria": "Elite-Under23",
     "genere": "M",
-    "tipo": "regionale",
-    "moltiplicatore": 1,
+    "tipo": "nazionale",
+    "moltiplicatore": 2,
     "campionato_regionale": false,
     "campionato_italiano": false,
     "regione": "UNDER",
@@ -9910,7 +9910,7 @@
     "km": "160.900",
     "media": "42.296",
     "punti_base": 6,
-    "punti_effettivi": 6
+    "punti_effettivi": 12
   },
   {
     "gara_id": "7_GRAN_PREMIO_GENERAL_STORE_2026-05-01_ELI_M",
@@ -9918,8 +9918,8 @@
     "data": "2026-05-01",
     "categoria": "Elite-Under23",
     "genere": "M",
-    "tipo": "regionale",
-    "moltiplicatore": 1,
+    "tipo": "nazionale",
+    "moltiplicatore": 2,
     "campionato_regionale": false,
     "campionato_italiano": false,
     "regione": "UNDER",
@@ -9933,7 +9933,7 @@
     "km": "160.900",
     "media": "42.296",
     "punti_base": 5,
-    "punti_effettivi": 5
+    "punti_effettivi": 10
   },
   {
     "gara_id": "7_GRAN_PREMIO_GENERAL_STORE_2026-05-01_ELI_M",
@@ -9941,8 +9941,8 @@
     "data": "2026-05-01",
     "categoria": "Elite-Under23",
     "genere": "M",
-    "tipo": "regionale",
-    "moltiplicatore": 1,
+    "tipo": "nazionale",
+    "moltiplicatore": 2,
     "campionato_regionale": false,
     "campionato_italiano": false,
     "regione": "UNDER",
@@ -9956,7 +9956,7 @@
     "km": "160.900",
     "media": "42.296",
     "punti_base": 4,
-    "punti_effettivi": 4
+    "punti_effettivi": 8
   },
   {
     "gara_id": "7_GRAN_PREMIO_GENERAL_STORE_2026-05-01_ELI_M",
@@ -9964,8 +9964,8 @@
     "data": "2026-05-01",
     "categoria": "Elite-Under23",
     "genere": "M",
-    "tipo": "regionale",
-    "moltiplicatore": 1,
+    "tipo": "nazionale",
+    "moltiplicatore": 2,
     "campionato_regionale": false,
     "campionato_italiano": false,
     "regione": "UNDER",
@@ -9979,7 +9979,7 @@
     "km": "160.900",
     "media": "42.296",
     "punti_base": 3,
-    "punti_effettivi": 3
+    "punti_effettivi": 6
   },
   {
     "gara_id": "7_GRAN_PREMIO_GENERAL_STORE_2026-05-01_ELI_M",
@@ -9987,8 +9987,8 @@
     "data": "2026-05-01",
     "categoria": "Elite-Under23",
     "genere": "M",
-    "tipo": "regionale",
-    "moltiplicatore": 1,
+    "tipo": "nazionale",
+    "moltiplicatore": 2,
     "campionato_regionale": false,
     "campionato_italiano": false,
     "regione": "UNDER",
@@ -10002,7 +10002,7 @@
     "km": "160.900",
     "media": "42.296",
     "punti_base": 2,
-    "punti_effettivi": 2
+    "punti_effettivi": 4
   },
   {
     "gara_id": "7_GRAN_PREMIO_GENERAL_STORE_2026-05-01_ELI_M",
@@ -10010,8 +10010,8 @@
     "data": "2026-05-01",
     "categoria": "Elite-Under23",
     "genere": "M",
-    "tipo": "regionale",
-    "moltiplicatore": 1,
+    "tipo": "nazionale",
+    "moltiplicatore": 2,
     "campionato_regionale": false,
     "campionato_italiano": false,
     "regione": "UNDER",
@@ -10025,7 +10025,7 @@
     "km": "160.900",
     "media": "42.296",
     "punti_base": 1,
-    "punti_effettivi": 1
+    "punti_effettivi": 2
   },
   {
     "gara_id": "50_TROFEO_PAPA_CERVI_2026-05-01_ELI_M",

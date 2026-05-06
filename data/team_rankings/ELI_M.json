@@ -2,7 +2,7 @@
   {
     "team_id": "A_S_D_S_C_PADOVANI",
     "team_nome": "A.S.D. S.C. PADOVANI",
-    "punti": 637,
+    "punti": 655,
     "vittorie": 7,
     "p1": 7,
     "p2": 8,
@@ -14,7 +14,7 @@
   {
     "team_id": "TEAM_TECHNIPES_INEMILIAROMAGNA",
     "team_nome": "TEAM TECHNIPES #INEMILIAROMAGNA",
-    "punti": 405,
+    "punti": 431,
     "vittorie": 4,
     "p1": 4,
     "p2": 2,
@@ -26,7 +26,7 @@
   {
     "team_id": "GENERAL_STORE_ESSEGIBI_F_LLI_CURIA",
     "team_nome": "GENERAL STORE -ESSEGIBI-F.LLI CURIA",
-    "punti": 287,
+    "punti": 302,
     "vittorie": 2,
     "p1": 2,
     "p2": 2,
@@ -74,7 +74,7 @@
   {
     "team_id": "BIESSE_CARRERA_PREMAC",
     "team_nome": "BIESSE - CARRERA - PREMAC",
-    "punti": 169,
+    "punti": 174,
     "vittorie": 0,
     "p1": 0,
     "p2": 0,
@@ -612,6 +612,18 @@
     "pos": 51
   },
   {
+    "team_id": "SLOVENIA_NATIONAL_TEAM",
+    "team_nome": "SLOVENIA NATIONAL TEAM",
+    "punti": 6,
+    "vittorie": 0,
+    "p1": 0,
+    "p2": 0,
+    "p3": 0,
+    "pout": 2,
+    "n_atleti": 1,
+    "pos": 52
+  },
+  {
     "team_id": "GS_MALTINTI_LAMPADARI_BANCA_CAMBIANO",
     "team_nome": "GS MALTINTI LAMPADARI BANCA CAMBIANO",
     "punti": 6,
@@ -621,18 +633,6 @@
     "p3": 0,
     "pout": 2,
     "n_atleti": 2,
-    "pos": 52
-  },
-  {
-    "team_id": "SLOVENIA_NATIONAL_TEAM",
-    "team_nome": "SLOVENIA NATIONAL TEAM",
-    "punti": 4,
-    "vittorie": 0,
-    "p1": 0,
-    "p2": 0,
-    "p3": 0,
-    "pout": 2,
-    "n_atleti": 1,
     "pos": 53
   },
   {

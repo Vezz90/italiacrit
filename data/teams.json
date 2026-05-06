@@ -2,7 +2,7 @@
   "BORGO_MOLINO_VIGNA_FIORITA": {
     "id": "BORGO_MOLINO_VIGNA_FIORITA",
     "nome": "BORGO MOLINO-VIGNA FIORITA",
-    "punti_totali": 538,
+    "punti_totali": 513,
     "atleti": [
       "FEDRIZZI_BRANDON_DAVIDE",
       "CAMPAGNOLO_LORENZO",
@@ -52,8 +52,8 @@
         "atleta_cognome": "FEDRIZZI",
         "atleta_nome": "BRANDON DAVIDE",
         "posizione": 1,
-        "punti_effettivi": 60,
-        "moltiplicatore": 4,
+        "punti_effettivi": 45,
+        "moltiplicatore": 3,
         "tipo": "nazionale",
         "regione": "ABRUZZO COLLEDARA",
         "km": "201.500",
@@ -67,8 +67,8 @@
         "atleta_cognome": "CAMPAGNOLO",
         "atleta_nome": "LORENZO",
         "posizione": 3,
-        "punti_effettivi": 40,
-        "moltiplicatore": 4,
+        "punti_effettivi": 30,
+        "moltiplicatore": 3,
         "tipo": "nazionale",
         "regione": "ABRUZZO COLLEDARA",
         "km": "201.500",
@@ -541,14 +541,14 @@
       }
     ],
     "punti_per_cat": {
-      "JUN_M": 361,
+      "JUN_M": 336,
       "AL_M": 177
     }
   },
   "ACCADEMIA_CICLISTICA": {
     "id": "ACCADEMIA_CICLISTICA",
     "nome": "ACCADEMIA CICLISTICA",
-    "punti_totali": 320,
+    "punti_totali": 319,
     "atleti": [
       "PADOVAN_NICOLA",
       "BARBON_GIACOMO",
@@ -586,8 +586,8 @@
         "atleta_cognome": "PADOVAN",
         "atleta_nome": "NICOLA",
         "posizione": 10,
-        "punti_effettivi": 4,
-        "moltiplicatore": 4,
+        "punti_effettivi": 3,
+        "moltiplicatore": 3,
         "tipo": "nazionale",
         "regione": "ABRUZZO COLLEDARA",
         "km": "201.500",
@@ -1015,14 +1015,14 @@
       }
     ],
     "punti_per_cat": {
-      "JUN_M": 203,
+      "JUN_M": 202,
       "AL_M": 117
     }
   },
   "POOL_CANTU_GB_TEAM_A_S_D": {
     "id": "POOL_CANTU_GB_TEAM_A_S_D",
     "nome": "POOL CANTU' GB TEAM A.S.D.",
-    "punti_totali": 388,
+    "punti_totali": 372,
     "atleti": [
       "BATTISTONI_ALESSANDRO",
       "FRONTINI_LUCA",
@@ -1059,8 +1059,8 @@
         "atleta_cognome": "BATTISTONI",
         "atleta_nome": "ALESSANDRO",
         "posizione": 2,
-        "punti_effettivi": 48,
-        "moltiplicatore": 4,
+        "punti_effettivi": 36,
+        "moltiplicatore": 3,
         "tipo": "nazionale",
         "regione": "ABRUZZO COLLEDARA",
         "km": "201.500",
@@ -1074,8 +1074,8 @@
         "atleta_cognome": "FRONTINI",
         "atleta_nome": "LUCA",
         "posizione": 7,
-        "punti_effettivi": 16,
-        "moltiplicatore": 4,
+        "punti_effettivi": 12,
+        "moltiplicatore": 3,
         "tipo": "nazionale",
         "regione": "ABRUZZO COLLEDARA",
         "km": "201.500",
@@ -1518,13 +1518,13 @@
       }
     ],
     "punti_per_cat": {
-      "JUN_M": 388
+      "JUN_M": 372
     }
   },
   "AUTOZAI_CONTRI": {
     "id": "AUTOZAI_CONTRI",
     "nome": "AUTOZAI-CONTRI",
-    "punti_totali": 150,
+    "punti_totali": 147,
     "atleti": [
       "MARIOTTO_THOMAS",
       "PIEROTTO_MARCO_ANDREA",
@@ -1571,8 +1571,8 @@
         "atleta_cognome": "MARIOTTO",
         "atleta_nome": "THOMAS",
         "posizione": 8,
-        "punti_effettivi": 12,
-        "moltiplicatore": 4,
+        "punti_effettivi": 9,
+        "moltiplicatore": 3,
         "tipo": "nazionale",
         "regione": "ABRUZZO COLLEDARA",
         "km": "201.500",
@@ -1775,13 +1775,13 @@
       }
     ],
     "punti_per_cat": {
-      "JUN_M": 150
+      "JUN_M": 147
     }
   },
   "IND_FORNITURE_MORO_C_G_CAPITAL": {
     "id": "IND_FORNITURE_MORO_C_G_CAPITAL",
     "nome": "IND. FORNITURE MORO-C&G CAPITAL",
-    "punti_totali": 602,
+    "punti_totali": 597,
     "atleti": [
       "ZAGO_GABRIELE",
       "MENEGHELLO_RICCARDO",
@@ -1829,8 +1829,8 @@
         "atleta_cognome": "ZAGO",
         "atleta_nome": "GABRIELE",
         "posizione": 6,
-        "punti_effettivi": 20,
-        "moltiplicatore": 4,
+        "punti_effettivi": 15,
+        "moltiplicatore": 3,
         "tipo": "nazionale",
         "regione": "ABRUZZO COLLEDARA",
         "km": "201.500",
@@ -2843,7 +2843,7 @@
       }
     ],
     "punti_per_cat": {
-      "JUN_M": 241,
+      "JUN_M": 236,
       "AL_M": 206,
       "ES1_M": 78,
       "ES2_M": 77
@@ -3752,7 +3752,7 @@
   "TEAM_GENERAL_SYSTEM": {
     "id": "TEAM_GENERAL_SYSTEM",
     "nome": "TEAM GENERAL SYSTEM",
-    "punti_totali": 130,
+    "punti_totali": 124,
     "atleti": [
       "RENZI_NICCOLO",
       "UGUCCIONI_SAMUELE",
@@ -3784,8 +3784,8 @@
         "atleta_cognome": "RENZI",
         "atleta_nome": "NICCOLO'",
         "posizione": 5,
-        "punti_effettivi": 24,
-        "moltiplicatore": 4,
+        "punti_effettivi": 18,
+        "moltiplicatore": 3,
         "tipo": "nazionale",
         "regione": "ABRUZZO COLLEDARA",
         "km": "201.500",
@@ -3973,7 +3973,7 @@
       }
     ],
     "punti_per_cat": {
-      "JUN_M": 130
+      "JUN_M": 124
     }
   },
   "TEAM_CORATTI": {
@@ -4545,7 +4545,7 @@
   "S_C_ROMANESE_ASD": {
     "id": "S_C_ROMANESE_ASD",
     "nome": "S.C. ROMANESE ASD",
-    "punti_totali": 162,
+    "punti_totali": 154,
     "atleti": [
       "ORENGO_EDOARDO",
       "BELANI_TOMMASO",
@@ -4563,8 +4563,8 @@
         "atleta_cognome": "ORENGO",
         "atleta_nome": "EDOARDO",
         "posizione": 4,
-        "punti_effettivi": 32,
-        "moltiplicatore": 4,
+        "punti_effettivi": 24,
+        "moltiplicatore": 3,
         "tipo": "nazionale",
         "regione": "ABRUZZO COLLEDARA",
         "km": "201.500",
@@ -4872,14 +4872,14 @@
       }
     ],
     "punti_per_cat": {
-      "JUN_M": 52,
+      "JUN_M": 44,
       "AL_M": 110
     }
   },
   "TEAM_NERI_SOTTOLI_LUCCHINI_ENERGY": {
     "id": "TEAM_NERI_SOTTOLI_LUCCHINI_ENERGY",
     "nome": "TEAM NERI SOTTOLI LUCCHINI ENERGY",
-    "punti_totali": 208,
+    "punti_totali": 206,
     "atleti": [
       "MORETTI_MATTIA",
       "CAVALLI_STEFANO",
@@ -4897,8 +4897,8 @@
         "atleta_cognome": "MORETTI",
         "atleta_nome": "MATTIA",
         "posizione": 9,
-        "punti_effettivi": 8,
-        "moltiplicatore": 4,
+        "punti_effettivi": 6,
+        "moltiplicatore": 3,
         "tipo": "nazionale",
         "regione": "ABRUZZO COLLEDARA",
         "km": "201.500",
@@ -5251,13 +5251,13 @@
       }
     ],
     "punti_per_cat": {
-      "JUN_M": 208
+      "JUN_M": 206
     }
   },
   "A_S_D_S_C_PADOVANI": {
     "id": "A_S_D_S_C_PADOVANI",
     "nome": "A.S.D. S.C. PADOVANI",
-    "punti_totali": 637,
+    "punti_totali": 655,
     "atleti": [
       "BOZZOLA_MIRKO",
       "PALOMBA_MARCO",
@@ -5339,9 +5339,9 @@
         "atleta_cognome": "BOZZOLA",
         "atleta_nome": "MIRKO",
         "posizione": 2,
-        "punti_effettivi": 12,
-        "moltiplicatore": 1,
-        "tipo": "regionale",
+        "punti_effettivi": 24,
+        "moltiplicatore": 2,
+        "tipo": "nazionale",
         "regione": "UNDER",
         "km": "160.900",
         "media": "42.296"
@@ -5354,9 +5354,9 @@
         "atleta_cognome": "PALOMBA",
         "atleta_nome": "MARCO",
         "posizione": 5,
-        "punti_effettivi": 6,
-        "moltiplicatore": 1,
-        "tipo": "regionale",
+        "punti_effettivi": 12,
+        "moltiplicatore": 2,
+        "tipo": "nazionale",
         "regione": "UNDER",
         "km": "160.900",
         "media": "42.296"
@@ -5828,7 +5828,7 @@
       }
     ],
     "punti_per_cat": {
-      "ELI_M": 637
+      "ELI_M": 655
     }
   },
   "CICLISTICA_ROSTESE": {
@@ -6218,7 +6218,7 @@
   "BIESSE_CARRERA_PREMAC": {
     "id": "BIESSE_CARRERA_PREMAC",
     "nome": "BIESSE - CARRERA - PREMAC",
-    "punti_totali": 187,
+    "punti_totali": 192,
     "atleti": [
       "AGOSTINACCHIO_FILIPPO",
       "VESCO_LEONARDO",
@@ -6256,9 +6256,9 @@
         "atleta_cognome": "VESCO",
         "atleta_nome": "LEONARDO",
         "posizione": 6,
-        "punti_effettivi": 5,
-        "moltiplicatore": 1,
-        "tipo": "regionale",
+        "punti_effettivi": 10,
+        "moltiplicatore": 2,
+        "tipo": "nazionale",
         "regione": "UNDER",
         "km": "160.900",
         "media": "42.296"
@@ -6520,7 +6520,7 @@
       }
     ],
     "punti_per_cat": {
-      "ELI_M": 169,
+      "ELI_M": 174,
       "JUN_M": 18
     }
   },
@@ -46517,7 +46517,7 @@
   "TEAM_TECHNIPES_INEMILIAROMAGNA": {
     "id": "TEAM_TECHNIPES_INEMILIAROMAGNA",
     "nome": "TEAM TECHNIPES #INEMILIAROMAGNA",
-    "punti_totali": 405,
+    "punti_totali": 431,
     "atleti": [
       "BAMBAGIONI_TOMMASO",
       "ANSALONI_EMANUELE",
@@ -46538,9 +46538,9 @@
         "atleta_cognome": "BAMBAGIONI",
         "atleta_nome": "TOMMASO",
         "posizione": 1,
-        "punti_effettivi": 15,
-        "moltiplicatore": 1,
-        "tipo": "regionale",
+        "punti_effettivi": 30,
+        "moltiplicatore": 2,
+        "tipo": "nazionale",
         "regione": "UNDER",
         "km": "160.900",
         "media": "42.296"
@@ -46553,9 +46553,9 @@
         "atleta_cognome": "ANSALONI",
         "atleta_nome": "EMANUELE",
         "posizione": 4,
-        "punti_effettivi": 8,
-        "moltiplicatore": 1,
-        "tipo": "regionale",
+        "punti_effettivi": 16,
+        "moltiplicatore": 2,
+        "tipo": "nazionale",
         "regione": "UNDER",
         "km": "160.900",
         "media": "42.296"
@@ -46568,9 +46568,9 @@
         "atleta_cognome": "MARTINI",
         "atleta_nome": "MARCO",
         "posizione": 8,
-        "punti_effettivi": 3,
-        "moltiplicatore": 1,
-        "tipo": "regionale",
+        "punti_effettivi": 6,
+        "moltiplicatore": 2,
+        "tipo": "nazionale",
         "regione": "UNDER",
         "km": "160.900",
         "media": "42.296"
@@ -46922,13 +46922,13 @@
       }
     ],
     "punti_per_cat": {
-      "ELI_M": 405
+      "ELI_M": 431
     }
   },
   "GENERAL_STORE_ESSEGIBI_F_LLI_CURIA": {
     "id": "GENERAL_STORE_ESSEGIBI_F_LLI_CURIA",
     "nome": "GENERAL STORE -ESSEGIBI-F.LLI CURIA",
-    "punti_totali": 287,
+    "punti_totali": 302,
     "atleti": [
       "REMELLI_CRISTIAN",
       "NEMBRINI_DIEGO",
@@ -46947,9 +46947,9 @@
         "atleta_cognome": "REMELLI",
         "atleta_nome": "CRISTIAN",
         "posizione": 3,
-        "punti_effettivi": 10,
-        "moltiplicatore": 1,
-        "tipo": "regionale",
+        "punti_effettivi": 20,
+        "moltiplicatore": 2,
+        "tipo": "nazionale",
         "regione": "UNDER",
         "km": "160.900",
         "media": "42.296"
@@ -46962,9 +46962,9 @@
         "atleta_cognome": "NEMBRINI",
         "atleta_nome": "DIEGO",
         "posizione": 7,
-        "punti_effettivi": 4,
-        "moltiplicatore": 1,
-        "tipo": "regionale",
+        "punti_effettivi": 8,
+        "moltiplicatore": 2,
+        "tipo": "nazionale",
         "regione": "UNDER",
         "km": "160.900",
         "media": "42.296"
@@ -46977,9 +46977,9 @@
         "atleta_cognome": "MENSHOV",
         "atleta_nome": "IVAN",
         "posizione": 10,
-        "punti_effettivi": 1,
-        "moltiplicatore": 1,
-        "tipo": "regionale",
+        "punti_effettivi": 2,
+        "moltiplicatore": 2,
+        "tipo": "nazionale",
         "regione": "UNDER",
         "km": "160.900",
         "media": "42.296"
@@ -47226,13 +47226,13 @@
       }
     ],
     "punti_per_cat": {
-      "ELI_M": 287
+      "ELI_M": 302
     }
   },
   "SLOVENIA_NATIONAL_TEAM": {
     "id": "SLOVENIA_NATIONAL_TEAM",
     "nome": "SLOVENIA NATIONAL TEAM",
-    "punti_totali": 4,
+    "punti_totali": 6,
     "atleti": [
       "PETERLIN_NEJC"
     ],
@@ -47245,9 +47245,9 @@
         "atleta_cognome": "PETERLIN",
         "atleta_nome": "NEJC",
         "posizione": 9,
-        "punti_effettivi": 2,
-        "moltiplicatore": 1,
-        "tipo": "regionale",
+        "punti_effettivi": 4,
+        "moltiplicatore": 2,
+        "tipo": "nazionale",
         "regione": "UNDER",
         "km": "160.900",
         "media": "42.296"
@@ -47269,7 +47269,7 @@
       }
     ],
     "punti_per_cat": {
-      "ELI_M": 4
+      "ELI_M": 6
     }
   },
   "GOODSHOP_YOYOGURT": {
