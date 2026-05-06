@@ -31,23 +31,15 @@ jobs:
       - name: Install Python dependencies
         run: pip install -r requirements.txt
 
-      - name: Install Playwright Chromium
-        run: playwright install chromium --with-deps
-
-      - name: Run scraper (real)
-        if: ${{ github.event.inputs.seed != 'true' }}
-        run: python scraper/main.py
+      - name: Run scraper
+        run: python scraper/fci_complete_scraper.py
         env:
           PYTHONUNBUFFERED: '1'
-
-      - name: Run scraper (seed mode)
-        if: ${{ github.event.inputs.seed == 'true' }}
-        run: python scraper/main.py --seed
 
       - name: Commit & push data
         run: |
           git config user.email "bot@italiacrit.it"
           git config user.name "ItaliacritBot"
-          git add data/
+          git add -f data/
           git diff --staged --quiet || git commit -m "update: $(date -u '+%Y-%m-%d %H:%M') UTC"
           git push
