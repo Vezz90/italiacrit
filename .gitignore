@@ -5,3 +5,13 @@ __pycache__/
 .playwright/
 node_modules/
 *.log
+
+# Dati scaricati dal bot
+data/*.json
+data/*.html
+data/rankings/
+data/rankings_regionali/
+data/team_rankings/
+
+# Eccezioni per i dati manuali
+!data/user_overrides.json

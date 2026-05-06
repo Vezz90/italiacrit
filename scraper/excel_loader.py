@@ -1,115 +1,71 @@
 import pandas as pd
 import re
-import os
-from pathlib import Path
-from datetime import datetime
 import unicodedata
+from pathlib import Path
 
-def normalize_str(s):
-    if not isinstance(s, str): return str(s)
-    s = unicodedata.normalize("NFD", s)
+def slug(s):
+    if not s: return "SCONOSCIUTO"
+    s = unicodedata.normalize("NFD", str(s).lower())
     s = "".join(c for c in s if unicodedata.category(c) != "Mn")
-    s = s.lower()
-    s = re.sub(r"[^\w\s]", " ", s)
-    return re.sub(r"\s+", " ", s).strip()
+    s = re.sub(r"[^a-z0-9]", " ", s)
+    return re.sub(r"\s+", "_", s).strip("_").upper() or "SCONOSCIUTO"
 
-def slugify(s):
-    s = normalize_str(s)
-    return re.sub(r"\s+", "_", s).upper()
-
-def load_calendar_from_excel(file_path):
-    print(f"      -> Caricamento calendario da {os.path.basename(file_path)}...")
+def load_calendar_from_excel(filepath):
+    if not Path(filepath).exists():
+        return []
+    
     try:
-        df = pd.read_excel(file_path)
-        
-        # Mapping flessibile delle colonne
-        col_map = {
-            "nome": ["Nome Gara", "Gara", "nome", "Nome"],
-            "data": ["Data", "data", "Data (GG-MM-YYYY)"],
-            "tipo": ["Tipo", "tipo", "Categoria (Regionale, Nazionale, ecc)", "Classe"],
-            "genere": ["Genere", "Uomini/Donne", "Sesso"],
-            "categoria": ["Categoria", "cat"],
-            "regione": ["Regione", "regione", "REG"],
-            "reginale": ["Campionato Regionale?", "Campionato Regionale", "CR"],
-            "italiano": ["Campionato Italiano?", "Campionato Italiano", "CI"]
-        }
-
-        def find_col(key):
-            for c in df.columns:
-                if c in col_map[key]: return c
-            return None
-
-        c_nome = find_col("nome")
-        c_data = find_col("data")
-        c_tipo = find_col("tipo")
-        c_gen = find_col("genere")
-        c_cat = find_col("categoria")
-        c_reg = find_col("regione")
-        c_cr = find_col("reginale")
-        c_ci = find_col("italiano")
-
+        df = pd.read_excel(filepath)
         calendar = []
         for _, row in df.iterrows():
-            nome = str(row.get(c_nome, "")).strip()
-            if not nome or nome == "nan": continue
+            nome = str(row.get("Nome Gara", "")).strip()
+            if not nome or nome == "nan":
+                continue
             
-            # Gestione data
-            raw_data = row.get(c_data)
-            date_iso = ""
-            if isinstance(raw_data, datetime):
-                date_iso = raw_data.strftime("%Y-%m-%d")
+            data_raw = str(row.get("Data (GG-MM-YYYY)", "")).strip()
+            # Convert DD-MM-YYYY to YYYY-MM-DD
+            data_iso = ""
+            if len(data_raw) >= 10:
+                parts = data_raw.split("-")
+                if len(parts) == 3:
+                    if len(parts[0]) == 4: # Already YYYY-MM-DD
+                        data_iso = data_raw
+                    else:
+                        data_iso = f"{parts[2]}-{parts[1]}-{parts[0]}"
+            
+            if not data_iso:
+                continue
+
+            tipo_raw = str(row.get("Categoria (Regionale, Nazionale, ecc)", "regionale")).lower()
+            if "internazionale" in tipo_raw:
+                tipo = "internazionale"
+                molt = 3
+            elif "nazionale" in tipo_raw:
+                tipo = "nazionale"
+                molt = 2
             else:
-                # Prova a parseare stringa
-                d_str = str(raw_data).strip()
-                for fmt in ["%d-%m-%Y", "%Y-%m-%d", "%d/%m/%Y"]:
-                    try:
-                        date_iso = datetime.strptime(d_str, fmt).strftime("%Y-%m-%d")
-                        break
-                    except: continue
+                tipo = "regionale"
+                molt = 1
+                
+            is_cr = "campionato regionale" in nome.lower()
+            is_ci = "campionato italiano" in nome.lower()
             
-            if not date_iso: continue
-
-            # Mapping valori
-            tipo_raw = str(row.get(c_tipo, "regionale")).lower()
-            tipo = "regionale"
-            if "inter" in tipo_raw: tipo = "internazionale"
-            elif "naz" in tipo_raw: tipo = "nazionale"
-
-            gen_raw = str(row.get(c_gen, "M")).upper()
-            genere = "F" if "F" in gen_raw or "DON" in gen_raw else "M"
+            regione = str(row.get("Regione", "")).strip()
+            if regione == "nan": regione = ""
             
-            cat = str(row.get(c_cat, "Elite-Under23")).strip()
-            regione = str(row.get(c_reg, "ITALIA")).strip()
+            gara_id = f"{slug(nome)}_{data_iso}"
             
-            is_cr = str(row.get(c_cr, "")).lower() in ["si", "sì", "1", "true", "x"]
-            is_ci = str(row.get(c_ci, "")).lower() in ["si", "sì", "1", "true", "x"]
-
-            gara_id = f"{slugify(nome)}_{date_iso}"
-
-            # Moltiplicatore
-            mult = 1
-            if tipo == "internazionale": mult = 3
-            elif tipo == "nazionale":    mult = 2
-
             calendar.append({
                 "id": gara_id,
                 "nome": nome,
-                "data": date_iso,
-                "mese": int(date_iso.split("-")[1]),
-                "anno": int(date_iso.split("-")[0]),
-                "categoria": cat,
-                "regione": regione,
-                "genere": genere,
+                "data": data_iso,
                 "tipo": tipo,
-                "moltiplicatore": mult,
+                "moltiplicatore": molt,
                 "campionato_regionale": is_cr,
                 "campionato_italiano": is_ci,
-                "url": None
+                "regione": regione
             })
-
-        print(f"      [V] Caricate {len(calendar)} gare dall'Excel")
         return calendar
-
     except Exception as e:
-        print(f"      ERR caricamento Excel: {e}")
+        print(f"Error loading excel: {e}")
         return []

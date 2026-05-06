@@ -1212,3 +1212,27 @@ footer .footer-sep { color: var(--red-hot); margin: 0 8px; }
 @media (min-width: 1025px) {
   .cat-grid { grid-template-columns: repeat(3, 1fr); }
 }
+
+/* --- Trend Indicators --- */
+.trend-indicator {
+    font-size: 0.75rem;
+    font-weight: 800;
+    margin-left: 6px;
+    display: inline-flex;
+    align-items: center;
+    gap: 2px;
+    vertical-align: middle;
+}
+.trend-up { color: #10b981; } /* Emerald */
+.trend-down { color: #ef4444; } /* Red */
+.trend-stable { color: var(--text-dim); font-size: 0.6rem; opacity: 0.5; }
+.trend-new {
+    background: var(--accent);
+    color: white;
+    font-size: 0.6rem;
+    padding: 1px 4px;
+    border-radius: 4px;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    line-height: 1.2;
+}

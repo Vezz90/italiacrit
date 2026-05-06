@@ -1,4 +1,4 @@
-import asyncio, requests, json, re, sys, time, unicodedata, html as HTMLMOD, argparse
+import asyncio, requests, json, re, sys, time, unicodedata, html as HTMLMOD, argparse, logging
 from bs4 import BeautifulSoup
 from pathlib import Path
 from datetime import datetime
@@ -14,18 +14,138 @@ DATA_DIR = Path(__file__).parent.parent / "data"
 # ═══════════════════════════════════════════════════════════════
 # UTILITY
 # ═══════════════════════════════════════════════════════════════
-def norm(s):
-    s = unicodedata.normalize("NFD", str(s))
+def setup_unmatched_log():
+    log_path = DATA_DIR / "unmatched_races.log"
+    for handler in logging.root.handlers[:]:
+        logging.root.removeHandler(handler)
+    logging.basicConfig(
+        filename=log_path,
+        level=logging.INFO,
+        format='%(message)s',
+        encoding='utf-8',
+        force=True
+    )
+
+def robust_norm(s):
+    """Normalizzazione base per generare slug stabili."""
+    if not s: return ""
+    s = unicodedata.normalize("NFD", str(s).lower())
     s = "".join(c for c in s if unicodedata.category(c) != "Mn")
-    return re.sub(r"\s+", " ", s.lower()).strip()
+    s = re.sub(r"[^\w\s]", " ", s)
+    return re.sub(r"\s+", " ", s).strip()
+
+def match_norm(s):
+    """Normalizzazione estesa per il matching scraper<->excel (include GP alias)."""
+    s = robust_norm(s)
+    s = re.sub(r"\bgran premio\b", "gp", s)
+    s = re.sub(r"\bg\.p\.\b", "gp", s)
+    # Rimuovi stop words per il matching e la deduplicazione
+    stop_words = {"di", "del", "della", "dei", "degli", "le", "la", "il", "a", "e", "da", "in", "con"}
+    words = s.split()
+    return " ".join([w for w in words if w not in stop_words]).strip()
 
 def slug(s):
-    s = norm(s)
-    s = re.sub(r"[^\w\s]", "", s)
+    if not s: return "SCONOSCIUTO"
+    s = robust_norm(s)
+    # Sostituisci tutto ciò che non è lettera o numero con uno SPAZIO
+    s = re.sub(r"[^a-z0-9]", " ", s.lower())
+    # Collassa spazi e trasforma in underscore
     return re.sub(r"\s+", "_", s).strip("_").upper() or "SCONOSCIUTO"
 
-def fuzzy(a, b, thr=0.78):
-    return SequenceMatcher(None, norm(a), norm(b)).ratio() >= thr
+# Caricamento Overrides da JSON (per Admin Dashboard)
+def load_user_overrides():
+    path = DATA_DIR / "user_overrides.json"
+    if path.exists():
+        try:
+            with open(path, "r", encoding="utf-8") as f:
+                return json.load(f)
+        except: return {}
+    return {}
+
+def resolve_multiplier(race_name_raw, race_date, cal_map):
+    """Matching gerarchico: Overrides -> Exact -> Fuzzy -> Keywords."""
+    
+    # 0. Check User Overrides (Priorità massima)
+    overrides = load_user_overrides()
+    # Cerchiamo per slug del nome + data
+    o_key = slug(race_name_raw) + "_" + race_date
+    if o_key in overrides:
+        o = overrides[o_key]
+        return (o.get("mult", 1), o.get("tipo", "regionale"), 
+                o.get("is_cr", False), o.get("is_ci", False), 
+                o.get("reg", ""), "user_override")
+
+    scraped_norm = match_norm(race_name_raw)
+    candidates = cal_map.get(race_date, [])
+    
+    m, t, cr, ci, reg, reason = 1, "regionale", False, False, "", "keyword_match"
+    best_match = None
+
+    # 1. Exact Match
+    for entry in candidates:
+        if scraped_norm == match_norm(entry["nome"]):
+            best_match = entry
+            reason = "exact_match"
+            break
+
+    # 2. Fuzzy Match (>= 70%) or Substring Match
+    if not best_match:
+        max_ratio = 0
+        for entry in candidates:
+            excel_norm = match_norm(entry["nome"])
+            ratio = SequenceMatcher(None, scraped_norm, excel_norm).ratio()
+            if scraped_norm in excel_norm or excel_norm in scraped_norm:
+                ratio = 1.0 # Force exact match if it's a perfect substring
+            if ratio >= 0.70 and ratio > max_ratio:
+                max_ratio = ratio
+                best_match = entry
+        if best_match:
+            reason = "fuzzy_match"
+
+    if best_match:
+        m = best_match["moltiplicatore"]
+        t = best_match["tipo"]
+        cr = best_match.get("campionato_regionale", False)
+        ci = best_match.get("campionato_italiano", False)
+        reg = best_match.get("regione", "")
+    else:
+        # 3. Keyword Match (Fallback)
+        n = scraped_norm
+        if any(k in n for k in ["internazionale", "world", "uci", "giro d italia", "saxo", "classic", "proseries", "worldtour"]):
+            m, t = 3, "internazionale"
+        elif any(k in n for k in ["campionato italiano", "coppa italia"]):
+            m, t, ci = 3, "nazionale", True
+        elif any(k in n for k in ["nazionale", "giro d abruzzo"]):
+            m, t = 2, "nazionale"
+        elif any(k in n for k in ["campionato regionale", "camp reg"]):
+            m, t, cr = 2, "regionale", True
+        elif "regionale" in n:
+            m, t = 1, "regionale"
+        else:
+            reason = "no_match"
+
+    # 4. EXPLICIT OVERRIDES (Overrides Excel if Excel was wrong/default)
+    n = race_name_raw.lower()
+    if any(k in n for k in ["campionato regionale", "camp reg", "prova valida campionato", "valida campionato", "campione regionale", "titolo regionale"]):
+        if not cr or m < 2:
+            m = max(m, 2)
+            t = "regionale"
+            cr = True
+            reason += "+cr_override"
+            
+    if "giro d abruzzo" in n or "tappa" in n:
+        if m < 2:
+            m = 2
+            t = "nazionale"
+            reason += "+nazionale_override"
+
+    # 5. CLASSIFICA GENERALE MODIFIER
+    if any(k in n for k in ["classifica generale", "classifica finale"]):
+        m += 1
+        reason += "+classifica_finale"
+
+    logging.info(f"{race_name_raw} | {race_date} | x{m} | {reason}")
+    return m, t, cr, ci, reg, reason
 
 def get_page(url, session, retries=3):
     for i in range(retries):
@@ -62,13 +182,27 @@ def _map_cat_from_tag(tag_text: str) -> str:
 # Sostituito lo scraper automatico con il caricamento da Excel
 
 
-# Mapping categoria FCI + genere → codice interno
-CAT_CODES = {
-    ("Elite-Under23","M"): "ELI_M", ("Juniores","M"): "JUN_M", ("Allievi","M"): "AL1_M", ("Esordienti","M"): "ES1_M",
-    ("Donne","F"): "ELI_F", ("Elite-Under23","F"): "ELI_F", ("Juniores","F"): "JUN_F", ("Allievi","F"): "AL1_F", ("Esordienti","F"): "ES1_F",
-    ("Esordienti 1° Anno","M"): "ES1_M", ("Esordienti 2° Anno","M"): "ES2_M", ("Allievi 1° Anno","M"): "AL1_M", ("Allievi 2° Anno","M"): "AL2_M",
+# Versione normalizzata per matching sicuro
+def norm_cat(s):
+    if not s: return ""
+    return robust_norm(s).upper()
+
+# Mapping categoria normalizzata + genere → codice interno
+CAT_CODES_RAW = {
+    ("ELITE UNDER23","M"): "ELI_M", ("JUNIORES","M"): "JUN_M", ("ALLIEVI","M"): "AL_M", 
+    ("ESORDIENTI","M"): "ES1_M", ("ESORDIENTI 1 ANNO","M"): "ES1_M", ("ESORDIENTI 2 ANNO","M"): "ES2_M",
+    ("ALLIEVI 1 ANNO","M"): "AL_M", ("ALLIEVI 2 ANNO","M"): "AL_M",
+    ("DONNE","F"): "ELI_F", ("ELITE UNDER23","F"): "ELI_F", ("JUNIORES","F"): "JUN_F", 
+    ("ALLIEVI","F"): "AL_F", ("ESORDIENTI","F"): "ES1_F",
+    ("ESORDIENTI 1 ANNO","F"): "ES1_F", ("ESORDIENTI 2 ANNO","F"): "ES2_F", 
+    ("ALLIEVI 1 ANNO","F"): "AL_F", ("ALLIEVI 2 ANNO","F"): "AL_F",
+    # Alias comuni
+    ("ALLIEVI","M"): "AL_M", ("ALLIEVI","F"): "AL_F",
+    ("JUNIORES","M"): "JUN_M", ("JUNIORES","F"): "JUN_F",
 }
-ALL_CODES = list(dict.fromkeys(CAT_CODES.values()))  # mantiene ordine, dedup
+# Costruiamo il dizionario con chiavi normalizzate
+CAT_CODES = { (norm_cat(k), g): v for (k, g), v in CAT_CODES_RAW.items() }
+ALL_CODES = ["ELI_M","JUN_M","AL_M","ES1_M","ES2_M","ELI_F","JUN_F","AL_F","ES1_F","ES2_F"]
 
 # ═══════════════════════════════════════════════════════════════
 # 2. RISULTATI GARE via requests (pagine statiche)
@@ -89,7 +223,17 @@ def parse_risultati_page(soup: BeautifulSoup, calendar_map: dict, existing_ids: 
 
         # Trova la categoria (tag b > font color=#1a8ad8 sopra h4)
         cat_tag = h4.find_previous(["b", "font"], string=re.compile(r"ELITE|JUN|ALL|ESO|DONNE|GARA", re.I))
-        extracted_cat = _map_cat_from_tag(cat_tag.get_text() if cat_tag else "Elite-Under23")
+        cat_text = cat_tag.get_text() if cat_tag else "Elite-Under23"
+        extracted_cat = _map_cat_from_tag(cat_text)
+
+        # Refine Age Group based on title and category text
+        c_text = (cat_text + " " + race_name_raw).upper()
+        if extracted_cat == "Esordienti":
+            if any(x in c_text for x in ["1°", "1 ^", "PRIMO ANNO", "ESORDIENTI1"]): extracted_cat = "Esordienti 1° Anno"
+            elif any(x in c_text for x in ["2°", "2 ^", "SECONDO ANNO", "ESORDIENTI2"]): extracted_cat = "Esordienti 2° Anno"
+        elif extracted_cat == "Allievi":
+            if any(x in c_text for x in ["1°", "1 ^", "PRIMO ANNO", "ALLIEVI1"]): extracted_cat = "Allievi 1° Anno"
+            elif any(x in c_text for x in ["2°", "2 ^", "SECONDO ANNO", "ALLIEVI2"]): extracted_cat = "Allievi 2° Anno"
 
         # Trova data nel contesto
         race_date = ""
@@ -103,23 +247,58 @@ def parse_risultati_page(soup: BeautifulSoup, calendar_map: dict, existing_ids: 
         if not race_date or not race_date.startswith(str(CURRENT_YEAR)):
             continue
 
-        # ── Determina moltiplicatore ──────────────────────────
-        cal_entry = _find_in_calendar(race_name_raw, race_date, calendar_map)
-        if cal_entry:
-            mult, tipo, is_cr, is_ci = cal_entry["moltiplicatore"], cal_entry["tipo"], cal_entry.get("campionato_regionale",False), cal_entry.get("campionato_italiano",False)
-        else:
-            mult, tipo, is_cr, is_ci = _infer_mult_from_name(race_name_raw, context_text)
+        # ── Determina moltiplicatore base (Robust Matching con Calendario) ──
+        mult, tipo, is_cr, is_ci, reg, match_type = resolve_multiplier(race_name_raw, race_date, calendar_map)
+        
+        # Fallback regione
+        if not reg and context_text:
+            m_reg = re.search(r"-\s*([A-Za-z\s\']+)", context_text)
+            if m_reg: reg = m_reg.group(1).strip()
+        reg = reg or "ITALIA"
 
         race_gender = "F" if "DONNE" in (cat_tag.get_text().upper() if cat_tag else "") or any(k in race_name_raw.lower() for k in ["donne","femm"]) else "M"
-        cat_code = CAT_CODES.get((extracted_cat, race_gender), "ELI_M" if race_gender=="M" else "ELI_F")
+
+        # ─── Detect CR/CI direttamente dal testo FCI (massima priorità) ────────
+        n_fci = robust_norm(race_name_raw + " " + context_text)
+        fci_is_cr = any(k in n_fci for k in [
+            "campionato regionale", "camp reg", "camp reg",
+            "prova valida campionato", "valida per il campionato",
+            "prova valida per", "valida campionato"
+        ])
+        fci_is_ci = any(k in n_fci for k in [
+            "campionato italiano", "campionati italiani", "camp ital"
+        ])
+
+        if fci_is_ci and not is_ci:
+            mult, tipo, is_cr, is_ci = 3, "nazionale", False, True
+            print(f"  [FCI-CI] {race_name_raw[:60]} -> Campionato Italiano forzato x3")
+        elif fci_is_cr and not is_cr:
+            mult, tipo, is_cr, is_ci = 2, "regionale", True, False
+            print(f"  [FCI-CR] {race_name_raw[:60]} -> Campionato Regionale forzato x2")
+
+        # Forza Esordienti e Allievi a x1 Regionale (no NAZ/INT), tranne CR/CI espliciti
+        if extracted_cat in ["Esordienti", "Allievi", "Esordienti 1° Anno", "Esordienti 2° Anno", "Allievi 1° Anno", "Allievi 2° Anno"]:
+            if not is_cr and not is_ci:
+                mult, tipo = 1, "regionale"
+
+        n_cat_key = norm_cat(extracted_cat)
+        cat_code = CAT_CODES.get((n_cat_key, race_gender))
+        if not cat_code:
+            # Fallback secco per non perdere dati
+            if "ELITE" in n_cat_key or "UNDER" in n_cat_key: cat_code = "ELI_M" if race_gender=="M" else "ELI_F"
+            elif "JUN" in n_cat_key: cat_code = "JUN_M" if race_gender=="M" else "JUN_F"
+            elif "ALL" in n_cat_key: cat_code = "AL_M" if race_gender=="M" else "AL_F"
+            elif "ESO" in n_cat_key: cat_code = "ES1_M" if race_gender=="M" else "ES1_F"
+            else: cat_code = "ELI_M" if race_gender=="M" else "ELI_F"
         gara_id = slug(race_name_raw) + "_" + race_date + "_" + cat_code
 
         if gara_id in existing_ids:
-            # print(f"  [Skip] {race_name_raw} ({cat_code})")
             continue
+            
+        existing_ids.add(gara_id)
 
         new_races_count += 1
-        print(f"  [Nuova Gara] {race_name_raw} ({cat_code})")
+        print(f"  [Nuova Gara] {race_name_raw} ({cat_code}) -> x{mult}")
 
         # ── Estrazione Km e Media ────────────────────────────
         km, media, tech_text = "", "", ""
@@ -190,6 +369,7 @@ def parse_risultati_page(soup: BeautifulSoup, calendar_map: dict, existing_ids: 
                 "moltiplicatore":      mult,
                 "campionato_regionale": is_cr,
                 "campionato_italiano":  is_ci,
+                "regione": reg,
                 "posizione": pos,
                 "cognome":   cognome,
                 "nome":      nome,
@@ -206,22 +386,6 @@ def parse_risultati_page(soup: BeautifulSoup, calendar_map: dict, existing_ids: 
     return results
 
 
-def _find_in_calendar(race_name: str, race_date: str, cal_map: dict) -> dict | None:
-    """Cerca nel calendario per data esatta, poi fuzzy match sul nome."""
-    for entry in cal_map.get(race_date, []):
-        if SequenceMatcher(None, norm(race_name), norm(entry["nome"])).ratio() >= 0.70:
-            return entry
-    return None
-
-
-def _infer_mult_from_name(race_name: str, context: str) -> tuple[int, str, bool, bool]:
-    """Inferisce moltiplicatore dal nome e contesto della gara."""
-    n = norm(race_name + " " + context)
-    is_ci = any(k in n for k in ["campionato italiano","campionati italiani"])
-    is_cr = any(k in n for k in ["campionato regionale","camp. reg"])
-    if is_ci: return 3, "internazionale", False, True
-    if is_cr: return 2, "nazionale", True, False
-    return 1, "regionale", False, False
 
 
 # ═══════════════════════════════════════════════════════════════
@@ -231,11 +395,44 @@ def _infer_mult_from_name(race_name: str, context: str) -> tuple[int, str, bool,
 def aggregate(results: list[dict]) -> tuple[dict, dict, dict, dict]:
     athletes, teams = {}, {}
     team_by_cat: dict[str, dict[str, dict]] = {c: {} for c in ALL_CODES}
+    
+    # Deduplicazione: data + slug_nome_base + categoria + atleta_id
+    seen_results = set()
+    unique_results = []
+    for r in results:
+        # Generiamo una chiave di deduplicazione robusta
+        # Usiamo match_norm per ignorare stop words (di, a, il...) e differenze "GP" vs "Gran Premio"
+        nome_key = match_norm(r["nome_gara"])
+        
+        # Normalizziamo anche la categoria per la chiave di deduplicazione
+        cat_val = r["categoria"]
+        if cat_val in ALL_CODES:
+            cc_key = cat_val
+        else:
+            cc_key = CAT_CODES.get((norm_cat(cat_val), r["genere"]), "ELI_M" if r["genere"]=="M" else "ELI_F")
+            
+        # Normalizziamo l'atleta_id per la chiave (gestione apostrofi/doppi underscore)
+        aid_key = r["atleta_id"].replace("__", "_").strip("_")
+            
+        key = (r["data"], nome_key, cc_key, aid_key)
+        
+        if key in seen_results:
+            continue
+        seen_results.add(key)
+        unique_results.append(r)
+    
+    results = unique_results
 
     for r in results:
         if not str(r["data"]).startswith(str(CURRENT_YEAR)): continue
         aid, tid, pts, pos = r["atleta_id"], r["team_id"], r["punti_effettivi"], r["posizione"]
-        cc = CAT_CODES.get((r["categoria"], r["genere"]), "ELI_M" if r["genere"]=="M" else "ELI_F")
+        
+        # Gestione categoria: se è già un codice (es. ELI_M) lo usiamo, altrimenti mappiamo
+        cat_val = r["categoria"]
+        if cat_val in ALL_CODES:
+            cc = cat_val
+        else:
+            cc = CAT_CODES.get((norm_cat(cat_val), r["genere"]), "ELI_M" if r["genere"]=="M" else "ELI_F")
 
         # ── Atleta
         if aid not in athletes:
@@ -250,6 +447,10 @@ def aggregate(results: list[dict]) -> tuple[dict, dict, dict, dict]:
             "gara_id": r["gara_id"], "nome_gara": r["nome_gara"],
             "data": r["data"], "posizione": pos,
             "punti_effettivi": pts, "team": r["team"],
+            "moltiplicatore": r.get("moltiplicatore", 1),
+            "tipo": r.get("tipo", "regionale"),
+            "regione": r.get("regione", "ITALIA"),
+            "km": r.get("km", ""), "media": r.get("media", "")
         })
 
         # ── Team globale
@@ -263,8 +464,13 @@ def aggregate(results: list[dict]) -> tuple[dict, dict, dict, dict]:
         if aid not in teams[tid]["atleti"]:
             teams[tid]["atleti"].append(aid)
         teams[tid]["risultati"].append({
-            "gara_id": r["gara_id"], "atleta_id": aid,
+            "gara_id": r["gara_id"], "nome_gara": r["nome_gara"], "data": r["data"], "atleta_id": aid,
+            "atleta_cognome": r["cognome"], "atleta_nome": r["nome"],
             "posizione": pos, "punti_effettivi": pts,
+            "moltiplicatore": r.get("moltiplicatore", 1),
+            "tipo": r.get("tipo", "regionale"),
+            "regione": r.get("regione", "ITALIA"),
+            "km": r.get("km", ""), "media": r.get("media", "")
         })
         teams[tid]["punti_per_cat"][cc] = teams[tid]["punti_per_cat"].get(cc, 0) + pts
 
@@ -273,23 +479,30 @@ def aggregate(results: list[dict]) -> tuple[dict, dict, dict, dict]:
             if tid not in team_by_cat[cc]:
                 team_by_cat[cc][tid] = {
                     "team_id": tid, "team_nome": r["team"],
-                    "punti": 0, "vittorie": 0, "podi": 0, "atleti": set(),
+                    "punti": 0, "p1": 0, "p2": 0, "p3": 0, "pout": 0, "atleti": set(),
                 }
             team_by_cat[cc][tid]["punti"] += pts
-            if pos == 1: team_by_cat[cc][tid]["vittorie"] += 1
-            if pos <= 3: team_by_cat[cc][tid]["podi"]    += 1
+            if pos == 1: team_by_cat[cc][tid]["p1"] += 1
+            elif pos == 2: team_by_cat[cc][tid]["p2"] += 1
+            elif pos == 3: team_by_cat[cc][tid]["p3"] += 1
+            elif 4 <= pos <= 10: team_by_cat[cc][tid]["pout"] += 1
             team_by_cat[cc][tid]["atleti"].add(aid)
 
     # ── Classifiche
     athlete_rankings: dict[str, list] = {c: [] for c in ALL_CODES}
     for aid, a in athletes.items():
         cc  = a["categoria"]
-        vit = sum(1 for x in a["risultati"] if x["posizione"]==1)
+        v1 = sum(1 for x in a["risultati"] if x["posizione"]==1)
+        v2 = sum(1 for x in a["risultati"] if x["posizione"]==2)
+        v3 = sum(1 for x in a["risultati"] if x["posizione"]==3)
+        vout = sum(1 for x in a["risultati"] if 4 <= x["posizione"]<=10)
+        gare = len(a["risultati"])
         if cc in athlete_rankings:
             athlete_rankings[cc].append({
                 "atleta_id": aid, "cognome": a["cognome"], "nome": a["nome"],
                 "team_id": a["team_id"], "team_nome": a["team_attuale"],
-                "punti": a["punti_totali"], "vittorie": vit,
+                "punti": a["punti_totali"], "vittorie": v1, "gare": gare,
+                "p1": v1, "p2": v2, "p3": v3, "pout": vout
             })
     for cc in athlete_rankings:
         athlete_rankings[cc].sort(key=lambda x: (-x["punti"],-x["vittorie"]))
@@ -301,13 +514,15 @@ def aggregate(results: list[dict]) -> tuple[dict, dict, dict, dict]:
         for tid, t in tdict.items():
             rows.append({
                 "team_id": tid, "team_nome": t["team_nome"],
-                "punti": t["punti"], "vittorie": t["vittorie"],
+                "punti": t["punti"], "vittorie": t["p1"],
+                "p1": t["p1"], "p2": t["p2"], "p3": t["p3"], "pout": t["pout"],
+                "n_atleti": len(t["atleti"])
             })
         rows.sort(key=lambda x: (-x["punti"], -x["vittorie"]))
         for i, row in enumerate(rows): row["pos"] = i+1
         team_rankings[cc] = rows
 
-    return athletes, teams, athlete_rankings, team_rankings
+    return athletes, teams, athlete_rankings, team_rankings, unique_results
 
 
 # ═══════════════════════════════════════════════════════════════
@@ -319,6 +534,7 @@ async def run_cycle():
     (DATA_DIR / "team_rankings").mkdir(exist_ok=True)
 
     print(f"\n--- SCRAPER COMPLETATO ---")
+    setup_unmatched_log()
     # Caricamento calendario da Excel manuale (come richiesto)
     calendar = load_calendar_from_excel(DATA_DIR / "calendario_manuale_v2.xlsx")
     cal_by_date = {}
@@ -334,9 +550,21 @@ async def run_cycle():
         try:
             with open(results_path, "r", encoding="utf-8") as f:
                 all_results = json.load(f)
-            print(f"Caricati {len(all_results)} risultati esistenti.")
-        except:
-            print("Errore caricamento risultati, inizio da zero.")
+            print(f"Caricati {len(all_results)} risultati esistenti. Ricalcolo moltiplicatori...")
+            # Riapplica le regole di moltiplicatore e normalizza ID (unificazione doppioni)
+            for r in all_results:
+                # Forza ricalcolo ID con la nuova logica stabile
+                r["atleta_id"] = slug(r["cognome"] + " " + r["nome"])
+                r["team_id"] = slug(r["team"])
+                if r["genere"] == "F": r["team_id"] += "_F" # preserva distinzione genere se presente
+                
+                m, t, cr, ci, reg, reason = resolve_multiplier(r["nome_gara"], r["data"], cal_by_date)
+                if r.get("moltiplicatore") != m or r.get("tipo") != t:
+                    r["moltiplicatore"] = m
+                    r["tipo"] = t
+                    r["punti_effettivi"] = r["punti_base"] * m
+        except Exception as e:
+            print(f"Errore caricamento risultati: {e}, inizio da zero.")
 
     existing_ids = {r["gara_id"] for r in all_results}
     races_map = {}
@@ -370,20 +598,51 @@ async def run_cycle():
                 }
 
     for g in calendar:
-        if g["id"] not in races_map: races_map[g["id"]] = g
+        if g["id"] not in races_map:
+            m, t, cr, ci, reg, reason = resolve_multiplier(g["nome"], g["data"], cal_by_date)
+            g["moltiplicatore"] = m
+            g["tipo"] = t
+            g["campionato_regionale"] = cr
+            g["campionato_italiano"] = ci
+            races_map[g["id"]] = g
 
-    athletes, teams, a_rank, t_rank = aggregate(all_results)
+    athletes, teams, a_rank, t_rank, clean_results = aggregate(all_results)
     
     def wj(path, data):
         with open(path, "w", encoding="utf-8") as f:
             json.dump(data, f, ensure_ascii=False, indent=2)
 
-    wj(DATA_DIR/"results_raw.json", all_results)
+    wj(DATA_DIR/"results_raw.json", clean_results)
     wj(DATA_DIR/"calendar.json", sorted(races_map.values(), key=lambda g: g["data"], reverse=True))
     wj(DATA_DIR/"athletes.json", athletes)
     wj(DATA_DIR/"teams.json", teams)
+    # ─── Calcolo Trend (confronto con classifiche precedenti) ───
+    for code, rows in a_rank.items():
+        old_path = DATA_DIR/f"rankings/{code}.json"
+        old_map = {}
+        if old_path.exists():
+            try:
+                with open(old_path, "r", encoding="utf-8") as f:
+                    old_data = json.load(f)
+                    for r_old in old_data:
+                        if "atleta_id" in r_old:
+                            old_map[r_old["atleta_id"]] = r_old.get("pos", 9999)
+            except: pass
+        
+        for row in rows:
+            aid = row["atleta_id"]
+            new_pos = row["pos"]
+            if aid in old_map:
+                old_pos = old_map[aid]
+                row["trend"] = old_pos - new_pos  # pos diminuita = trend positivo (sale)
+            else:
+                row["trend"] = None # NEW
+
     for code, rows in a_rank.items(): wj(DATA_DIR/f"rankings/{code}.json", rows)
     for code, rows in t_rank.items(): wj(DATA_DIR/f"team_rankings/{code}.json", rows)
+    
+    meta_info = {"last_update": datetime.now().isoformat()}
+    wj(DATA_DIR/"meta.json", meta_info)
     
     print(f"\nCiclo completato: {len(all_results)} risultati totali.")
 

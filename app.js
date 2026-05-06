@@ -14,7 +14,9 @@ const cache = {};
 async function loadJson(path) {
   if (cache[path]) return cache[path];
   try {
-    const r = await fetch(path, { cache: 'no-store' });
+    const ts = Date.now();
+    const fetchPath = path.includes('?') ? `${path}&_t=${ts}` : `${path}?_t=${ts}`;
+    const r = await fetch(fetchPath, { cache: 'no-store' });
     if (!r.ok) throw new Error(`HTTP ${r.status}`);
     const data = await r.json();
     cache[path] = data;
@@ -110,9 +112,18 @@ function badgeCat(code) {
   return `<span class="badge-cat badge-${cls}">${esc(label)}</span>`;
 }
 
-function badgeMult(m) {
-  const cls = m === 3 ? 'mult-x3' : m === 2 ? 'mult-x2' : 'mult-x1';
-  return `<span class="badge-cat badge-${cls}">×${m}</span>`;
+function badgeMult(m, tipo, isCR = false, isCI = false) {
+  isCR = isCR || (tipo === 'campionato_regionale');
+  isCI = isCI || (tipo === 'campionato_italiano');
+  const isNat = (m === 2 || tipo === 'nazionale');
+  const isInt = (m === 3 || tipo === 'internazionale');
+  
+  if (isCI) return `<span class="res-badge blue-badge">Campionato Italiano (x3)</span>`;
+  if (isCR) return `<span class="res-badge orange-badge">Campionato Regionale (x2)</span>`;
+  
+  const cls = isInt ? 'blue-badge' : (isNat ? 'orange-badge' : 'gray-badge');
+  const label = isInt ? 'Int.le' : (isNat ? 'Naz.le' : 'Reg.le');
+  return `<span class="res-badge ${cls}">${label} (x${m})</span>`;
 }
 
 function catLabel(code) {
@@ -137,28 +148,40 @@ function catLabel(code) {
   return map[code] || code;
 }
 
-function getRankingFileCode(cat) {
-  if (!cat) return null;
-  // Accorpiamo Allievi 1 e 2 in 'AL' per i file di classifica
-  if (cat.startsWith('AL')) return 'AL_' + (cat.endsWith('_F') ? 'F' : 'M');
-  return cat;
+function getRankingFileCode(obj) {
+  if (!obj) return null;
+  // If it's just a string like 'AL1_M' or 'JUN_M'
+  if (typeof obj === 'string') {
+    if (obj.startsWith('AL')) return 'AL_' + (obj.endsWith('_F') ? 'F' : 'M');
+    return obj;
+  }
+  // If it's an object with gara_id
+  if (obj.gara_id) {
+    const m = obj.gara_id.match(/_([A-Z0-9]+_[MF])$/);
+    if (m) {
+      let code = m[1];
+      if (code.startsWith('AL')) code = 'AL_' + (code.endsWith('_F') ? 'F' : 'M');
+      return code;
+    }
+  }
+  // If it already has the backend code
+  if (obj.categoria && /^[A-Z0-9]+_[MF]$/.test(obj.categoria)) return obj.categoria;
+  
+  return null;
 }
 
 function renderTrend(r) {
   if (!r) return '';
-  const currentPos = r.pos;
-  const prevRank = r.prev_pos;
+  const t = r.trend;
   
-  if (!prevRank) {
-    // Se non abbiamo prev_pos ma abbiamo gare, potrebbe essere un nuovo ingresso
-    if (r.gare === 1 || r.n_atleti === 1) return `<span class="trend-new">NEW</span>`;
-    return '';
+  if (t === undefined || t === null) {
+    // Se è la prima volta che appare (o non ha storico)
+    return `<span class="trend-indicator trend-new">NEW</span>`;
   }
   
-  const diff = prevRank - currentPos;
-  if (diff > 0) return `<span class="trend trend-up">▲${diff}</span>`;
-  if (diff < 0) return `<span class="trend trend-down">▼${Math.abs(diff)}</span>`;
-  return `<span class="trend trend-stable">●</span>`;
+  if (t > 0) return `<span class="trend-indicator trend-up">▲${t}</span>`;
+  if (t < 0) return `<span class="trend-indicator trend-down">▼${Math.abs(t)}</span>`;
+  return `<span class="trend-indicator trend-stable">●</span>`;
 }
 
 function posClass(p) {
@@ -205,27 +228,50 @@ let globalData = null;
 window.addEventListener('hashchange', route);
 window.addEventListener('load', async () => {
   globalData = await loadAll();
-
-  // Footer update
-  if (globalData.meta?.last_update) {
-    const d = new Date(globalData.meta.last_update);
-    footer_update.textContent = d.toLocaleString('it-IT', { day:'2-digit', month:'2-digit', hour:'2-digit', minute:'2-digit' });
-  }
-
-  // Live badge: se aggiornato nelle ultime 2 ore
-  if (globalData.meta?.last_update) {
-    const ageMs = Date.now() - new Date(globalData.meta.last_update).getTime();
-    if (ageMs < 2 * 3600 * 1000) {
-      document.getElementById('badge-live').classList.add('visible');
-    }
-  }
+  updateMetaUI();
 
   document.getElementById('initial-loader')?.remove();
   initTheme();
   route();
   initSearch();
   initMobileMenu();
+
+  // --- Sistema di AUTO-POLLING ---
+  setInterval(async () => {
+    try {
+      const r = await fetch('data/meta.json', { cache: 'no-store' });
+      const newMeta = await r.json();
+      if (newMeta && newMeta.last_update) {
+        if (!globalData.meta || newMeta.last_update !== globalData.meta.last_update) {
+          console.log("Novità dal backend! Ricarico i dati silenziosamente...");
+          // Invalida cache in memoria
+          for (let k in cache) delete cache[k];
+          
+          globalData = await loadAll();
+          updateMetaUI();
+          route(); // Ri-renderizza la dashboard corrente con i nuovi dati
+        }
+      }
+    } catch (e) {
+      console.warn("Auto-polling fallito:", e);
+    }
+  }, 180000); // 3 minuti
 });
+
+function updateMetaUI() {
+  if (globalData.meta?.last_update) {
+    const d = new Date(globalData.meta.last_update);
+    if(footer_update) footer_update.textContent = d.toLocaleString('it-IT', { day:'2-digit', month:'2-digit', hour:'2-digit', minute:'2-digit' });
+    
+    // Live badge se l'update è recente (< 2 ore)
+    const ageMs = Date.now() - d.getTime();
+    const badge = document.getElementById('badge-live');
+    if (badge) {
+      if (ageMs < 2 * 3600 * 1000) badge.classList.add('visible');
+      else badge.classList.remove('visible');
+    }
+  }
+}
 
 function route() {
   const hash = window.location.hash || '#/';
@@ -240,9 +286,13 @@ function route() {
   if (match('/classifica')) return renderClassifica();
   if (match('/atleti')) return renderAtletiList();
   if (match('/team')) return renderTeamList();
-  if (match('/risultati')) return renderRisultati();
+  if (match('/risultati')) {
+    risSearchQuery = ''; risQueryCat = ''; risQueryMonth = ''; risQueryRegion = ''; risQueryGenere = '';
+    return renderRisultati();
+  }
   if (match('/calendario')) return renderCalendario();
   if (match('/regolamento')) return renderRegolamento();
+  if (match('/admin')) return renderAdmin();
   const m_atleta = match('/atleta/:id');
   if (m_atleta) return renderAtleta(m_atleta[1]);
   const m_team = match('/team/:id');
@@ -262,8 +312,8 @@ function updateNavActive(hash) {
   else if (hash.startsWith('#/atleti')) document.getElementById('nav-atleti')?.classList.add('active');
   else if (hash.startsWith('#/team')) document.getElementById('nav-team')?.classList.add('active');
   else if (hash.startsWith('#/risultati')) document.getElementById('nav-risultati')?.classList.add('active');
-  else if (hash.startsWith('#/calendario')) document.getElementById('nav-cal')?.classList.add('active');
   else if (hash.startsWith('#/regolamento')) document.getElementById('nav-reg')?.classList.add('active');
+  else if (hash.startsWith('#/admin')) document.getElementById('nav-admin')?.classList.add('active');
 }
 
 function setPage(html) {
@@ -282,7 +332,7 @@ async function renderHome() {
   // Ultime 5 gare (per data desc)
   const raceMap = {};
   for (const r of resultsRaw) {
-    if (!raceMap[r.gara_id]) raceMap[r.gara_id] = { id: r.gara_id, nome: r.nome_gara, data: r.data, categoria: r.categoria, genere: r.genere, tipo: r.tipo, results: [] };
+    if (!raceMap[r.gara_id]) raceMap[r.gara_id] = { id: r.gara_id, nome: r.nome_gara, data: r.data, categoria: r.categoria, genere: r.genere, tipo: r.tipo, isCR: r.campionato_regionale, isCI: r.campionato_italiano, results: [] };
     raceMap[r.gara_id].results.push(r);
   }
   // Aumenta moltiplicatori
@@ -320,7 +370,7 @@ async function renderHome() {
               <div class="hero-race-meta">
                 <span>${fmtDate(lr.data)}</span>
                 <span>${esc(catLabel(lr.categoria) || '')}</span>
-                ${badgeMult(mult)}
+                ${badgeMult(mult, lr.tipo, lr.isCR, lr.isCI)}
               </div>
               <div class="hero-divider"></div>
               <div class="hero-podio">
@@ -365,7 +415,7 @@ async function renderHome() {
   let carouselHtml = ''; // rimosso il carousel vecchio come da richiesta
 
   // Top 3 per categoria
-  const catOrder = ['JUN_M','ELI_M','AL_M','ES2_M','ES1_M','ELI_F','JUN_F','AL_F','ES2_F','ES1_F'];
+  const catOrder = ['ELI_M','JUN_M','AL_M','ES2_M','ES1_M','ELI_F','JUN_F','AL_F','ES2_F','ES1_F'];
   const catCardsHtml = await (async () => {
     const cards = [];
     for (const code of catOrder) {
@@ -387,6 +437,7 @@ async function renderHome() {
                 <div>
                   <div class="cat-rider-name">
                     <a href="#/atleta/${esc(r.atleta_id)}">${esc(r.cognome)} ${esc(r.nome)}</a>
+                    ${renderTrend(r)}
                   </div>
                   <div class="cat-rider-team">
                     <a href="#/team/${esc(r.team_id)}" style="color:var(--text-secondary)">${esc(r.team_nome)}</a>
@@ -523,22 +574,23 @@ async function updateRankTable() {
       ranking = await loadRanking(rankCat);
     } else {
       // Calcolo dinamico
-      const { resultsRaw, calendar } = globalData;
-      const calMap = {};
-      calendar.forEach(g => calMap[g.id] = g);
-
+      const { resultsRaw } = globalData;
       const agg = {};
+      // Precompute calendar mapping to resolve regions missing in resultsRaw
+      const calMap = {};
+      globalData.calendar.forEach(g => calMap[g.id] = g);
+
       resultsRaw.forEach(r => {
-        const cal = calMap[r.gara_id];
-        if (!cal) return;
-        if (cal.genere !== rankGender) return;
-        // Check categoria (semplificato: se rankCat=ELI_M, cerchiamo corrispondenza o se r.categoria è Eli/U23)
-        // Usiamo la logica di mapping interna per sicurezza
-        const rCat = getRankingFileCode(r.categoria); 
+        if (r.genere !== rankGender) return;
+        // Check categoria
+        const rCat = getRankingFileCode(r); 
         if (rCat !== rankCat) return;
 
-        if (rankRegion && cal.regione !== rankRegion) return;
-        if (rankMonth && cal.data && cal.data.split('-')[1] !== rankMonth) return;
+        const calEntry = calMap[r.gara_id];
+        const resolvedRegion = r.regione || (calEntry ? calEntry.regione : '');
+
+        if (rankRegion && resolvedRegion !== rankRegion) return;
+        if (rankMonth && r.data && r.data.split('-')[1] !== rankMonth) return;
 
         if (!agg[r.atleta_id]) {
           agg[r.atleta_id] = { 
@@ -571,6 +623,7 @@ async function updateRankTable() {
       const pClass = posClass(r.pos);
       return `<tr class="ranking-row" style="animation-delay:${Math.min(i,20)*30}ms">
         <td><span class="rank-num ${pClass}">${r.pos}</span></td>
+        <td style="text-align:center;width:40px">${renderTrend(r)}</td>
         <td><span class="rank-name"><a href="#/atleta/${esc(r.atleta_id)}">${esc(r.cognome)} ${esc(r.nome)}</a></span></td>
         <td class="hide-mobile"><a href="#/team/${esc(r.team_id)}" style="color:var(--text-secondary);font-size:.85rem">${esc(r.team_nome)}</a></td>
         <td class="r"><span class="rank-pts">${r.punti}</span></td>
@@ -590,13 +643,14 @@ async function updateRankTable() {
       <table class="ranking-table">
         <thead><tr>
           <th style="width:50px">POS</th>
+          <th style="width:40px" title="Trend (Progressione in classifica)">↕</th>
           <th>ATLETA</th>
           <th class="hide-mobile">TEAM</th>
           <th class="r">PUNTI</th>
           <th class="r hide-mobile">GARE</th>
           <th class="hide-mobile">PODI / TOP10</th>
         </tr></thead>
-        <tbody>${rows || '<tr><td colspan="6" class="empty-state">Nessun dato</td></tr>'}</tbody>
+        <tbody>${rows || '<tr><td colspan="7" class="empty-state">Nessun dato</td></tr>'}</tbody>
       </table>`;
 
   } else {
@@ -606,20 +660,21 @@ async function updateRankTable() {
       teamRanking = await loadTeamRanking(rankCat);
     } else {
       // Calcolo dinamico team
-      const { resultsRaw, calendar } = globalData;
-      const calMap = {};
-      calendar.forEach(g => calMap[g.id] = g);
-
+      const { resultsRaw } = globalData;
       const agg = {};
+      const calMap = {};
+      globalData.calendar.forEach(g => calMap[g.id] = g);
+
       resultsRaw.forEach(r => {
-        const cal = calMap[r.gara_id];
-        if (!cal) return;
-        if (cal.genere !== rankGender) return;
-        const rCat = getRankingFileCode(r.categoria); 
+        if (r.genere !== rankGender) return;
+        const rCat = getRankingFileCode(r); 
         if (rCat !== rankCat) return;
 
-        if (rankRegion && cal.regione !== rankRegion) return;
-        if (rankMonth && cal.data && cal.data.split('-')[1] !== rankMonth) return;
+        const calEntry = calMap[r.gara_id];
+        const resolvedRegion = r.regione || (calEntry ? calEntry.regione : '');
+
+        if (rankRegion && resolvedRegion !== rankRegion) return;
+        if (rankMonth && r.data && r.data.split('-')[1] !== rankMonth) return;
 
         if (!agg[r.team_id]) {
           agg[r.team_id] = { team_id: r.team_id, team_nome: r.team, punti: 0, p1:0, p2:0, p3:0, pout:0, atleti: new Set() };
@@ -676,6 +731,197 @@ async function updateRankTable() {
   countSpan.textContent = countLabel;
 }
 
+// ── ADMIN DASHBOARD ──────────────────────────────────────────
+async function renderAdmin() {
+  if (!globalData) return;
+  
+  // Carichiamo gli override salvati
+  const overrides = await loadJson('data/user_overrides.json') || {};
+  const { resultsRaw } = globalData;
+  
+  // Raggruppa per GARA EVENTO (Nome + Data), ignorando la categoria
+  const raceMap = {};
+  resultsRaw.forEach(r => {
+    const eventId = slug(r.nome_gara) + "_" + r.data;
+    if (!raceMap[eventId]) {
+      const ov = overrides[eventId] || {};
+      raceMap[eventId] = { 
+        id: eventId, // ID EVENTO (Usato per l'override)
+        nome: r.nome_gara, 
+        data: r.data, 
+        mult: ov.mult || r.moltiplicatore, 
+        tipo: ov.tipo || r.tipo,
+        cats: new Set(),
+        pos_base: r.posizione
+      };
+    }
+    raceMap[eventId].cats.add(r.categoria);
+  });
+  
+  const races = Object.values(raceMap).sort((a,b) => (b.data||'').localeCompare(a.data||''));
+
+  setPage(`
+    <h1 style="font-family:var(--font-display);font-size:var(--size-h1);margin-bottom:8px">ADMIN DASHBOARD</h1>
+    <p style="color:var(--text-muted);margin-bottom:32px">Gestione centralizzata per evento (tutte le categorie della stessa gara).</p>
+
+    <div class="ranking-controls" style="margin-bottom:24px">
+      <div style="display:flex; gap:16px; align-items:center">
+        <div class="ranking-filter-bar" style="margin:0; flex-grow:1">
+          <input type="search" id="admin-search" placeholder="Cerca gara per nome..." oninput="filterAdminRaces(this.value)" />
+        </div>
+        <button class="btn-action" onclick="triggerSync()" id="btn-sync" style="background:var(--accent); color:white; border:none">
+          🔄 SINCRONIZZA & RICALCOLA
+        </button>
+      </div>
+    </div>
+
+    <div id="admin-races-container">
+      <table class="ranking-table">
+        <thead>
+          <tr>
+            <th>DATA</th>
+            <th>GARA</th>
+            <th>CAT</th>
+            <th class="r">PUNTI (Simulati)</th>
+            <th class="r">MOLTIPLICATORE</th>
+            <th>TIPO</th>
+          </tr>
+        </thead>
+        <tbody id="admin-table-body">
+          ${renderAdminRows(races.slice(0, 50))}
+        </tbody>
+      </table>
+      ${races.length > 50 ? `<div style="text-align:center;padding:20px;color:var(--text-muted)">Filtra per vedere altre gare...</div>` : ''}
+    </div>
+  `);
+}
+
+function renderAdminRows(races) {
+  return races.map(r => {
+    const basePts = (r.pos_base === 1) ? 15 : (r.pos_base <= 10 ? (BASEPTS[r.pos_base] || 0) : 0);
+    const simulatedPts = basePts * r.mult;
+    const catList = Array.from(r.cats).map(c => badgeCat(c)).join(' ');
+    
+    return `
+    <tr>
+      <td style="font-family:var(--font-mono);font-size:0.8rem">${r.data}</td>
+      <td>
+        <div style="font-weight:700;font-size:0.9rem">${esc(r.nome)}</div>
+        <div style="font-size:0.7rem;color:var(--text-muted)">${r.id}</div>
+      </td>
+      <td><div style="display:flex; flex-wrap:wrap; gap:4px">${catList}</div></td>
+      <td class="r">
+        <span style="font-weight:800; color:var(--red-hot); font-size:1.1rem">${simulatedPts}</span>
+        <div style="font-size:0.6rem; color:var(--text-muted)">(${basePts} x ${r.mult})</div>
+      </td>
+      <td class="r">
+        <div class="tab-group" style="justify-content:flex-end">
+          <button class="tab-btn ${r.mult===1?'active-cat':''}" onclick="setOverride('${r.id}', 1, '${r.tipo}')">x1</button>
+          <button class="tab-btn ${r.mult===2?'active-cat':''}" onclick="setOverride('${r.id}', 2, '${r.tipo}')">x2</button>
+          <button class="tab-btn ${r.mult===3?'active-cat':''}" onclick="setOverride('${r.id}', 3, '${r.tipo}')">x3</button>
+        </div>
+      </td>
+      <td>
+        <select class="cal-filter-select" style="padding:4px 8px;font-size:0.8rem" onchange="setOverride('${r.id}', null, this.value)">
+          <option value="regionale" ${r.tipo==='regionale'?'selected':''}>Regionale</option>
+          <option value="nazionale" ${r.tipo==='nazionale'?'selected':''}>Nazionale</option>
+          <option value="internazionale" ${r.tipo==='internazionale'?'selected':''}>Internazionale</option>
+          <option value="campionato_regionale" ${r.tipo==='campionato_regionale'?'selected':''}>Campionato Regionale (x2)</option>
+          <option value="campionato_italiano" ${r.tipo==='campionato_italiano'?'selected':''}>Campionato Italiano (x3)</option>
+        </select>
+      </td>
+    </tr>
+  `}).join('');
+}
+
+window.filterAdminRaces = (val) => {
+  const q = val.toLowerCase();
+  const { resultsRaw } = globalData;
+  const raceMap = {};
+  
+  resultsRaw.forEach(r => {
+    const eventId = slug(r.nome_gara) + "_" + r.data;
+    if (r.nome_gara.toLowerCase().includes(q) && !raceMap[eventId]) {
+      raceMap[eventId] = { 
+        id: eventId, 
+        nome: r.nome_gara, 
+        data: r.data, 
+        mult: r.moltiplicatore, 
+        tipo: r.tipo, 
+        cats: new Set(),
+        pos_base: r.posizione
+      };
+    }
+    if (raceMap[eventId]) raceMap[eventId].cats.add(r.categoria);
+  });
+  
+  const filtered = Object.values(raceMap).sort((a,b) => (b.data||'').localeCompare(a.data||'')).slice(0, 50);
+  const container = document.getElementById('admin-table-body');
+  if (container) container.innerHTML = renderAdminRows(filtered);
+};
+
+window.setOverride = async (id, mult, tipo) => {
+  const btnSync = document.getElementById('btn-sync');
+  const originalText = btnSync.textContent;
+  btnSync.textContent = "💾 SALVATAGGIO...";
+  
+  // Se il moltiplicatore è null, lo determiniamo in base al tipo
+  if (mult === null) {
+    if (tipo === 'campionato_regionale') mult = 2;
+    else if (tipo === 'campionato_italiano') mult = 3;
+    else {
+      // Cerca il record attuale nei dati globali
+      const race = globalData.resultsRaw.find(rx => rx.gara_id === id);
+      mult = race ? race.moltiplicatore : 1;
+    }
+  }
+
+  console.log("Saving override:", id, mult, tipo);
+  try {
+    const response = await fetch('/api/save_override', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ id, mult, tipo })
+    });
+    
+    if (response.ok) {
+      // Aggiorna UI locale per TUTTI i record che appartengono a questo evento
+      globalData.resultsRaw.forEach(row => {
+        const rowEventId = slug(row.nome_gara) + "_" + row.data;
+        if (rowEventId === id) {
+          row.moltiplicatore = mult;
+          row.tipo = tipo;
+        }
+      });
+      // Forza re-render della riga
+      const q = document.getElementById('admin-search')?.value || '';
+      window.filterAdminRaces(q);
+      btnSync.textContent = "✅ SALVATO!";
+      setTimeout(() => { btnSync.textContent = originalText; }, 2000);
+    }
+  } catch (e) {
+    alert("Errore nel salvataggio: " + e.message);
+    btnSync.textContent = originalText;
+  }
+};
+
+window.triggerSync = async () => {
+  const btn = document.getElementById('btn-sync');
+  btn.disabled = true;
+  btn.textContent = "⌛ ELABORAZIONE IN CORSO...";
+  try {
+    const r = await fetch('/api/trigger_scraper', { method: 'POST' });
+    if (r.ok) {
+      alert("Sincronizzazione avviata! I dati si aggiorneranno tra circa 1-2 minuti.");
+    }
+  } catch (e) {
+    alert("Errore: " + e.message);
+  } finally {
+    btn.disabled = false;
+    btn.textContent = "🔄 SINCRONIZZA & RICALCOLA";
+  }
+};
+
 window.setRankGender = (g) => { rankGender = g; rankFilter = ''; rankRegion = ''; rankMonth = ''; renderClassifica(); };
 window.setRankCat    = (c) => { rankCat = c; rankFilter = ''; rankRegion = ''; rankMonth = ''; renderClassifica(); };
 window.setRankFilter = (v) => { rankFilter = v; updateRankTable(); };
@@ -705,7 +951,7 @@ async function renderParallelRankings() {
       const rMonth = r.data.split('-')[1];
       if (rMonth !== currentMonth) return;
 
-      const catCode = getRankingFileCode(r.categoria);
+      const catCode = getRankingFileCode(r);
       if (leaders[catCode]) {
         if (!leaders[catCode].agg) leaders[catCode].agg = {};
         const aid = r.atleta_id;
@@ -849,7 +1095,7 @@ async function renderAtleta(atleta_id) {
       <td class="td-race"><a href="#/gara/${esc(r.gara_id)}">${esc(r.nome_gara)}</a></td>
       <td>${badgeCat(a.categoria)}</td>
       <td class="td-pos ${pClass} ${r.posizione===1?'win':''}">${r.posizione}°</td>
-      <td>${badgeMult(mult)}</td>
+      <td>${badgeMult(mult, r.tipo)}</td>
       <td style="text-align:right">${esc(r.km || '—')}</td>
       <td style="text-align:right">${esc(r.media || '—')}</td>
       <td class="td-pts">${r.punti_effettivi||0}</td>
@@ -967,6 +1213,9 @@ async function renderTeam(team_id) {
         <td class="td-race"><a href="#/gara/${esc(r.gara_id)}">${esc(r.nome_gara)}</a></td>
         <td><a href="#/atleta/${esc(r.atleta_id)}" style="color:var(--text-primary);font-family:var(--font-heading);font-weight:700">${esc(r.atleta_cognome)} ${esc(r.atleta_nome)}</a></td>
         <td class="td-pos ${posClass(r.posizione)}">${r.posizione}°</td>
+        <td style="text-align:center">${badgeMult(r.moltiplicatore || 1, r.tipo)}</td>
+        <td style="text-align:right">${esc(r.km || '—')}</td>
+        <td style="text-align:right">${esc(r.media || '—')}</td>
         <td style="text-align:right">${rankVal ? `<span class="rank-badge" style="font-size:0.75rem; font-weight:normal; color:var(--text-muted)">Team Rank: <span class="b-num">${rankVal}°</span></span>` : ''}</td>
         <td class="td-pts">${r.punti_effettivi||0}</td>
       </tr>`;
@@ -1038,9 +1287,9 @@ async function renderTeam(team_id) {
     <div class="results-table-wrap">
       <table class="results-table">
         <thead><tr>
-          <th>DATA</th><th>GARA</th><th>ATLETA</th><th>POS</th><th style="text-align:right">RNK</th><th>PTS</th>
+          <th>DATA</th><th>GARA</th><th>ATLETA</th><th>POS</th><th style="text-align:center">MOLT</th><th style="text-align:right">KM</th><th style="text-align:right">MEDIA</th><th style="text-align:right">RNK</th><th>PTS</th>
         </tr></thead>
-        <tbody>${risultatiRows || '<tr><td colspan="5" class="empty-state">Nessun risultato</td></tr>'}</tbody>
+        <tbody>${risultatiRows || '<tr><td colspan="9" class="empty-state">Nessun risultato</td></tr>'}</tbody>
       </table>
     </div>
   `);
@@ -1095,7 +1344,7 @@ async function renderGara(gara_id) {
         <span class="race-meta-sep">|</span>
         <span style="text-transform:capitalize">${esc(tipo)}</span>
         <span class="race-meta-sep">|</span>
-        ${badgeMult(mult)}
+        ${badgeMult(mult, tipo, results[0]?.campionato_regionale || calEntry?.campionato_regionale, results[0]?.campionato_italiano || calEntry?.campionato_italiano)}
         ${results[0]?.km ? `<span class="race-meta-sep">|</span><span>${esc(results[0].km)} Km</span>` : ''}
         ${results[0]?.media ? `<span class="race-meta-sep">|</span><span>Media: ${esc(results[0].media)} Km/h</span>` : ''}
       </div>
@@ -1146,7 +1395,7 @@ async function renderCalendario() {
     const past   = filtered.filter(g => (g.data || '') < today).sort((a,b) => (b.data||'').localeCompare(a.data||''));
 
     const renderItem = (g) => {
-      const mult = multFromType(g.tipo, g.campionato_regionale, g.campionato_italiano);
+      const mult = g.moltiplicatore || multFromType(g.tipo, g.campionato_regionale, g.campionato_italiano);
       const day = g.data ? g.data.split('-')[2] : '—';
       const mon = g.data ? (['GEN','FEB','MAR','APR','MAG','GIU','LUG','AGO','SET','OTT','NOV','DIC'][parseInt(g.data.split('-')[1])-1]||'') : '';
       const isPast = (g.data || '') < today;
@@ -1160,7 +1409,7 @@ async function renderCalendario() {
           <div class="cal-cat">${esc(catLabel(g.categoria)||'')} — <span style="text-transform:capitalize;color:var(--text-muted)">${esc(g.tipo)}</span></div>
         </div>
         <div class="cal-badges" style="${isPast?'opacity:0.5':''}">
-          ${badgeMult(mult)}
+          ${badgeMult(mult, g.tipo, g.campionato_regionale, g.campionato_italiano)}
           ${g.genere==='F'?'<span class="badge-cat badge-genere-f">♀</span>':''}
           ${g.campionato_italiano?'<span class="badge-cat badge-mult-x3">CI</span>':''}
           ${g.campionato_regionale?'<span class="badge-cat badge-mult-x2">CR</span>':''}
@@ -1363,26 +1612,29 @@ async function renderTeamList() {
 
   window.filterTeamList = (q) => {
     const container = document.getElementById('team-list-container');
-    // For teams, they are technically grouped by first category we encounter, 
-    // but the user wants to filter them. Since teams can have results in multiple cats, 
-    // we'll show teams that have at least one athlete in that category.
-    const teamsList = Object.values(teams).filter(t => t.id.endsWith('_' + teamCat));
+    // Filter teams that have results in the selected category via punti_per_cat
+    const teamsList = Object.values(teams).filter(t => t.punti_per_cat && t.punti_per_cat[teamCat]);
     const ql = q.toLowerCase();
-    const filtered = teamsList.filter(t => t.nome.toLowerCase().includes(ql))
-                              .sort((a,b) => (a.nome || '').localeCompare(b.nome || ''));
+    const filtered = teamsList
+      .filter(t => (t.nome || '').toLowerCase().includes(ql))
+      .sort((a,b) => (b.punti_per_cat[teamCat] || 0) - (a.punti_per_cat[teamCat] || 0));
 
     container.innerHTML = `
       <div class="ranking-table-wrap">
         <table class="ranking-table">
-          <thead><tr><th>TEAM</th><th class="r" style="width:100px">ATLETI</th><th class="r" style="width:120px">PUNTI TOT</th></tr></thead>
+          <thead><tr>
+            <th>TEAM</th>
+            <th class="r" style="width:80px">ATLETI</th>
+            <th class="r" style="width:120px">PUNTI ${catLabel(teamCat)}</th>
+          </tr></thead>
           <tbody>
-            ${filtered.slice(0, 100).map(t => `
-              <tr class="ranking-row">
+            ${filtered.slice(0, 150).map((t, i) => `
+              <tr class="ranking-row" style="animation-delay:${Math.min(i,20)*30}ms">
                 <td><a href="#/team/${esc(t.id)}"><strong>${esc(t.nome)}</strong></a></td>
                 <td class="r" style="color:var(--text-muted);font-size:0.85rem">${t.atleti ? t.atleti.length : 0}</td>
-                <td class="r"><span class="rank-pts">${t.punti_totali}</span></td>
+                <td class="r"><span class="rank-pts">${t.punti_per_cat[teamCat] || 0}</span></td>
               </tr>
-            `).join('') || '<tr><td colspan="3" class="empty-state">Nessun team trovato in questa categoria</td></tr>'}
+            `).join('') || '<tr><td colspan="3" class="empty-state">Nessun team in questa categoria</td></tr>'}
           </tbody>
         </table>
       </div>
@@ -1538,143 +1790,200 @@ function initMobileMenu() {
 let risQueryGenere = '';
 let risQueryCat = '';
 let risQueryMonth = '';
-let risLimit = 10;
+let risQueryRegion = '';
+let risSearchQuery = '';
+let _risSearchTimer = null;
 
-window.risSetGenere = (v) => { risQueryGenere = v; risLimit = 10; renderRisultati(); };
-window.risSetCat    = (v) => { risQueryCat = v; risLimit = 10; renderRisultati(); };
-window.risSetMonth  = (v) => { risQueryMonth = v; risLimit = 10; renderRisultati(); };
-window.risLoadMore  = () => { risLimit += 10; renderRisultati(); };
+window.risSetGenere = (v) => { risQueryGenere = v; renderRisultati(); };
+window.risSetCat    = (v) => { risQueryCat = v; renderRisultati(); };
+window.risSetMonth  = (v) => { risQueryMonth = v; renderRisultati(); };
+window.risSetRegion = (v) => { risQueryRegion = v; renderRisultati(); };
+window.risSetSearch = (v) => { 
+  clearTimeout(_risSearchTimer); 
+  _risSearchTimer = setTimeout(() => { risSearchQuery = v; renderRisultati(); }, 300);
+};
 
 async function renderRisultati() {
   if (!globalData) return;
   const { resultsRaw, calendar } = globalData;
   
-  const raceMap = {};
+  // Raggruppa per EVENTO: (nome_gara normalizzato, data, genere)
+  // Questo evita che la stessa gara con categorie diverse appaia come doppia
+  const eventMap = {};
   for (const r of resultsRaw) {
-    if (!raceMap[r.gara_id]) {
-      raceMap[r.gara_id] = { 
-        id: r.gara_id, nome: r.nome_gara, data: r.data, 
-        categoria: r.categoria, genere: r.genere, tipo: r.tipo, 
-        results: [] 
+    const eventKey = r.nome_gara.trim().toUpperCase() + '|' + r.data + '|' + (r.genere||'M');
+    if (!eventMap[eventKey]) {
+      eventMap[eventKey] = {
+        id: r.gara_id,          // gara_id del primo risultato (per link gara)
+        nome: r.nome_gara,
+        data: r.data,
+        genere: r.genere,
+        tipo: r.tipo,
+        regione: r.regione,
+        byCategory: {}          // risultati raggruppati per categoria
       };
     }
-    raceMap[r.gara_id].results.push(r);
+    const cat = r.categoria || 'N/D';
+    if (!eventMap[eventKey].byCategory[cat]) {
+      eventMap[eventKey].byCategory[cat] = { gara_id: r.gara_id, results: [] };
+    }
+    eventMap[eventKey].byCategory[cat].results.push(r);
   }
 
-  for (const g of calendar) {
-    if (raceMap[g.id]) raceMap[g.id].mult = multFromType(g.tipo, g.campionato_regionale, g.campionato_italiano);
+  for (const ev of Object.values(eventMap)) {
+    const firstCat = Object.values(ev.byCategory)[0];
+    const firstRes = firstCat ? firstCat.results[0] : null;
+    ev.mult = firstRes?.moltiplicatore || 1;
+    ev.tipo = firstRes?.tipo || 'regionale';
+    ev.campionato_regionale = firstRes?.campionato_regionale || false;
+    ev.campionato_italiano = firstRes?.campionato_italiano || false;
   }
 
-  let races = Object.values(raceMap).sort((a,b) => (b.data||'').localeCompare(a.data||''));
+  let races = Object.values(eventMap).sort((a,b) => (b.data||'').localeCompare(a.data||''));
   
-  if (risQueryGenere) {
-    races = races.filter(r => r.genere === risQueryGenere);
+  // Extract all regions, filtering out category false positives
+  const badRegions = ['JUNIORES', 'ALLIEVE', 'ESORDIENTI', 'UNDER', 'ELITE', 'DONNE', 'UOMINI', 'ITALIA', 'PROVA', 'CAMPIONATO'];
+  const allRegions = [...new Set(races.map(r => r.regione).filter(Boolean))].filter(r => !badRegions.includes(r.toUpperCase())).sort();
+
+  // Apply filters
+  if (risSearchQuery) {
+    const q = risSearchQuery.toLowerCase();
+    races = races.filter(r => r.nome.toLowerCase().includes(q) || (r.regione || '').toLowerCase().includes(q));
   }
-  if (risQueryMonth) {
-    races = races.filter(r => r.data && r.data.split('-')[1] === risQueryMonth);
-  }
+  if (risQueryGenere) races = races.filter(r => r.genere === risQueryGenere);
+  if (risQueryMonth)  races = races.filter(r => r.data && r.data.split('-')[1] === risQueryMonth);
+  if (risQueryRegion) races = races.filter(r => r.regione === risQueryRegion);
+  const allCatsSet = new Set();
+  races.forEach(r => Object.keys(r.byCategory||{}).forEach(c => allCatsSet.add(c)));
+  const allCats = [...allCatsSet].sort();
+  if (risQueryCat) races = races.filter(r => r.byCategory && r.byCategory[risQueryCat]);
 
-  // Estrai le categorie uniche per il filtro (considerando il genere corrente)
-  const allCats = [...new Set(races.map(r => r.categoria).filter(Boolean))].sort();
-
-  if (risQueryCat) {
-    races = races.filter(r => r.categoria === risQueryCat);
-  }
-
-  const shownRaces = races.slice(0, risLimit);
-
-  const filterHtml = `
-    <div class="calendar-controls">
-      <select class="cal-filter-select" onchange="window.risSetMonth(this.value)" aria-label="Filtra per mese">
+  // ── First render: build the persistent shell ──────────────────
+  const appEl = document.getElementById('app');
+  if (!appEl) return;
+  const isFirstRender = !document.getElementById('ris-cards');
+  if (isFirstRender) {
+    const selectsHtml = `
+      <select class="cal-filter-select" id="ris-sel-month" onchange="window.risSetMonth(this.value)" aria-label="Filtra per mese">
         <option value="">Tutti i mesi</option>
-        <option value="01" ${risQueryMonth==='01'?'selected':''}>Gennaio</option>
-        <option value="02" ${risQueryMonth==='02'?'selected':''}>Febbraio</option>
-        <option value="03" ${risQueryMonth==='03'?'selected':''}>Marzo</option>
-        <option value="04" ${risQueryMonth==='04'?'selected':''}>Aprile</option>
-        <option value="05" ${risQueryMonth==='05'?'selected':''}>Maggio</option>
-        <option value="06" ${risQueryMonth==='06'?'selected':''}>Giugno</option>
-        <option value="07" ${risQueryMonth==='07'?'selected':''}>Luglio</option>
-        <option value="08" ${risQueryMonth==='08'?'selected':''}>Agosto</option>
-        <option value="09" ${risQueryMonth==='09'?'selected':''}>Settembre</option>
-        <option value="10" ${risQueryMonth==='10'?'selected':''}>Ottobre</option>
-        <option value="11" ${risQueryMonth==='11'?'selected':''}>Novembre</option>
-        <option value="12" ${risQueryMonth==='12'?'selected':''}>Dicembre</option>
+        ${['01','02','03','04','05','06','07','08','09','10','11','12'].map((m,i) =>
+          `<option value="${m}">${['Gennaio','Febbraio','Marzo','Aprile','Maggio','Giugno','Luglio','Agosto','Settembre','Ottobre','Novembre','Dicembre'][i]}</option>`
+        ).join('')}
       </select>
-      <select class="cal-filter-select" onchange="window.risSetGenere(this.value)" aria-label="Filtra per genere">
+      <select class="cal-filter-select" id="ris-sel-genere" onchange="window.risSetGenere(this.value)" aria-label="Filtra per genere">
         <option value="">Tutti i generi</option>
-        <option value="M" ${risQueryGenere === 'M' ? 'selected' : ''}>Uomini</option>
-        <option value="F" ${risQueryGenere === 'F' ? 'selected' : ''}>Donne</option>
+        <option value="M">Uomini</option>
+        <option value="F">Donne</option>
       </select>
-      <select class="cal-filter-select" onchange="window.risSetCat(this.value)" aria-label="Filtra per categoria">
+      <select class="cal-filter-select" id="ris-sel-region" onchange="window.risSetRegion(this.value)" aria-label="Filtra per regione">
+        <option value="">Tutte le regioni</option>
+        ${allRegions.map(r => `<option value="${r}">${esc(r)}</option>`).join('')}
+      </select>
+      <select class="cal-filter-select" id="ris-sel-cat" onchange="window.risSetCat(this.value)" aria-label="Filtra per categoria">
         <option value="">Tutte le categorie</option>
-        ${allCats.map(c => `<option value="${c}" ${c === risQueryCat ? 'selected' : ''}>${catLabel(c)}</option>`).join('')}
-      </select>
-      <span class="ranking-count">${races.length} gare trovate</span>
-    </div>
-  `;
+      </select>`;
 
-  const cardsHtml = shownRaces.map(race => {
-    const top3 = race.results.sort((a,b)=>a.posizione-b.posizione).slice(0,3);
-    const mult = race.mult || 1;
-    return `
-      <div class="hero-band" style="margin-bottom:24px; padding:24px;">
-        <div class="hero-label" style="font-size:0.6rem">RISULTATI GARA</div>
-        <div class="hero-race-name" style="font-size: clamp(1.6rem, 3vw, 2.4rem);"><a href="#/gara/${esc(race.id)}">${esc(race.nome)}</a></div>
-        <div class="hero-race-meta" style="margin-bottom:16px;">
-          <span>${fmtDate(race.data)}</span>
-          <span>${esc(catLabel(race.categoria) || '')}</span>
-          ${badgeMult(mult)}
+    setPage(`
+      <div class="content-wrapper">
+        <div class="section-header">
+          <h1 style="font-family:var(--font-display);font-size:var(--size-h1);margin-bottom:0">RISULTATI GARE</h1>
+          <span class="section-line"></span>
         </div>
-        <div class="hero-divider" style="margin-bottom:12px;"></div>
-        <div class="hero-podio">
-          ${top3.map((r,i) => {
-            const pClass = ['p1','p2','p3'][i] || 'pout';
-            const pts = r.punti_effettivi;
-            const techStr = (r.km || r.media) ? `
-              <div class="rank-badge" style="font-size:0.7rem; color:var(--text-muted)">
-                ${r.km ? `${esc(r.km)} Km` : ''} 
-                ${(r.km && r.media) ? '|' : ''} 
-                ${r.media ? `${esc(r.media)} Km/h` : ''}
-              </div>` : '';
-            return `<div class="hero-podio-row" style="animation-delay:${i*60}ms; grid-template-columns: 40px 1fr auto;">
-              <div class="hero-pos ${pClass}" style="font-size:2rem">${r.posizione}°</div>
-              <div style="display:flex; flex-wrap:wrap; align-items:center; gap:8px">
-                <div class="hero-name">
-                  <a href="#/atleta/${esc(r.atleta_id)}">${esc(r.cognome)} ${esc(r.nome)}</a>
-                </div>
-                <div class="hero-team" style="margin-right:auto">
-                  <a href="#/team/${esc(r.team_id)}" style="color:var(--text-secondary)">${esc(r.team)}</a>
-                </div>
-                ${techStr}
-              </div>
-              <div class="hero-pts" style="font-size:1.3rem">${pts} pt</div>
-            </div>`;
-          }).join('')}
+        <div class="calendar-controls">
+          <input type="text" id="ris-search-input" class="cal-filter-select" placeholder="Cerca gara o regione..."
+            style="width:100%;box-sizing:border-box;padding:12px 16px;margin-bottom:12px;"
+            oninput="window.risSetSearch(this.value)" autocomplete="off">
+          <div id="ris-selects">${selectsHtml}</div>
+          <span class="ranking-count" id="ris-count"></span>
         </div>
-        <div style="padding-top: 16px; margin-top: 16px; border-top: 1px solid var(--border-subtle);">
-           <a href="#/gara/${esc(race.id)}" class="btn-action full" style="font-size:0.75rem; text-align:center;">VAI ALLA CLASSIFICA COMPLETA &rarr;</a>
-        </div>
+        <div class="risultati-feed" style="margin-top:20px;" id="ris-cards"></div>
       </div>
-    `;
-  }).join('');
+    `);
+  }
 
-  setPage(`
-    <div class="content-wrapper">
-      <div class="section-header">
-        <h1 style="font-family:var(--font-display);font-size:var(--size-h1);margin-bottom:0">RISULTATI GARE</h1>
-        <span class="section-line"></span>
-      </div>
-      ${filterHtml}
-      
-      <div class="risultati-feed" style="margin-top:20px;">
-        ${cardsHtml || '<div class="empty-state">Nessuna gara trovata</div>'}
-      </div>
+  // ── Always: update selects state ──────────────────────────────
+  const selMonth  = document.getElementById('ris-sel-month');
+  const selGenere = document.getElementById('ris-sel-genere');
+  const selRegion = document.getElementById('ris-sel-region');
+  const selCat    = document.getElementById('ris-sel-cat');
+  const countEl   = document.getElementById('ris-count');
+  const cardsEl   = document.getElementById('ris-cards');
 
-      ${risLimit < races.length ? `
-        <div style="text-align:center; margin-top:32px;">
-          <button class="btn-action" onclick="window.risLoadMore()">CARICA ALTRE GARE</button>
-        </div>
-      ` : ''}
-    </div>
-  `);
+  if (selMonth)  selMonth.value  = risQueryMonth  || '';
+  if (selGenere) selGenere.value = risQueryGenere || '';
+  if (selRegion) {
+    // Rebuild region options (they can change with filters)
+    selRegion.innerHTML = `<option value="">Tutte le regioni</option>` +
+      allRegions.map(r => `<option value="${r}"${r === risQueryRegion ? ' selected' : ''}>${esc(r)}</option>`).join('');
+  }
+  if (selCat) {
+    selCat.innerHTML = `<option value="">Tutte le categorie</option>` +
+      allCats.map(c => `<option value="${c}"${c === risQueryCat ? ' selected' : ''}>${catLabel(c)}</option>`).join('');
+  }
+  if (countEl) countEl.textContent = `${races.length} gare trovate`;
+
+  // Always: rebuild only the cards area
+  if (cardsEl) {
+    cardsEl.innerHTML = races.map(race => {
+      const mult = race.mult || 1;
+      const categories = Object.entries(race.byCategory || {});
+
+      // Una sezione per ogni categoria dell'evento
+      const catSections = categories.map(([catName, catData]) => {
+        const top3 = (catData.results || []).sort((a,b) => a.posizione - b.posizione).slice(0,3);
+        const catGaraId = catData.gara_id;
+        const cLabel = catLabel(catName) || catName;
+
+        // km/media specifici di questa categoria
+        const firstRes = catData.results?.[0];
+        const kmVal    = firstRes?.km    || '';
+        const mediaVal = firstRes?.media || '';
+        const techBit  = (kmVal || mediaVal)
+          ? ' &nbsp;|&nbsp; ' +
+            (kmVal ? '&#128205; ' + esc(kmVal) + ' km' : '') +
+            (kmVal && mediaVal ? ' &nbsp;|&nbsp; ' : '') +
+            (mediaVal ? '&#9889; ' + esc(mediaVal) + ' km/h' : '')
+          : '';
+
+        const podioRows = top3.map((r,i) => {
+          const pClass = ['p1','p2','p3'][i] || 'pout';
+          return '<div class="hero-podio-row" style="animation-delay:' + (i*60) + 'ms;grid-template-columns:40px 1fr auto;">' +
+            '<div class="hero-pos ' + pClass + '" style="font-size:2rem">' + r.posizione + '&#176;</div>' +
+            '<div>' +
+              '<div class="hero-name"><a href="#/atleta/' + esc(r.atleta_id) + '">' + esc(r.cognome) + ' ' + esc(r.nome) + '</a></div>' +
+              '<div class="hero-team"><a href="#/team/' + esc(r.team_id) + '" style="color:var(--text-secondary)">' + esc(r.team) + '</a></div>' +
+            '</div>' +
+            '<div class="hero-pts" style="font-size:1.3rem">' + r.punti_effettivi + ' pt</div>' +
+          '</div>';
+        }).join('');
+
+        return `
+          <div style="margin-bottom:16px;">
+            <div style="display:flex;align-items:center;gap:12px;margin-bottom:8px;flex-wrap:wrap;">
+              ${categories.length > 1 ? '<span style="font-size:0.65rem;font-family:var(--font-mono);color:var(--accent);text-transform:uppercase;letter-spacing:1px;">' + cLabel + '</span>' : ''}
+              <span style="font-size:0.75rem;color:var(--text-muted);font-family:var(--font-mono)">${techBit}</span>
+            </div>
+            ${podioRows}
+            <div style="padding-top:10px;margin-top:10px;border-top:1px solid var(--border-subtle);">
+              <a href="#/gara/${esc(catGaraId)}" class="btn-action full" style="font-size:0.75rem;text-align:center;">VAI ALLA CLASSIFICA COMPLETA &rarr;</a>
+            </div>
+          </div>`;
+      }).join(categories.length > 1 ? '<div style="border-top:2px solid var(--border-subtle);margin:16px 0;"></div>' : '');
+
+      return `
+        <div class="hero-band" style="margin-bottom:24px;padding:24px;">
+          <div class="hero-label" style="font-size:0.6rem">RISULTATI GARA</div>
+          <div class="hero-race-name" style="font-size:clamp(1.6rem,3vw,2.4rem);"><a href="#/gara/${esc(race.id)}">${esc(race.nome)}</a></div>
+          <div class="hero-race-meta" style="margin-bottom:16px;">
+            <span>${fmtDate(race.data)}</span>
+            ${badgeMult(race.mult, race.tipo, race.campionato_regionale, race.campionato_italiano)}
+          </div>
+          <div class="hero-divider" style="margin-bottom:12px;"></div>
+          <div class="hero-podio">${catSections}</div>
+        </div>`;
+    }).join('') || '<div class="empty-state">Nessuna gara trovata</div>';
+  }
 }
+
+
+
