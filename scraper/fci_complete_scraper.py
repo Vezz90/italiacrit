@@ -38,7 +38,7 @@ def match_norm(s):
     """Normalizzazione estesa per il matching scraper<->excel (include GP alias)."""
     s = robust_norm(s)
     s = re.sub(r"\bgran premio\b", "gp", s)
-    s = re.sub(r"\bg\.p\.\b", "gp", s)
+    s = re.sub(r"\bg p\b", "gp", s)
     # Rimuovi stop words per il matching e la deduplicazione
     stop_words = {"di", "del", "della", "dei", "degli", "le", "la", "il", "a", "e", "da", "in", "con"}
     words = s.split()
@@ -547,6 +547,8 @@ async def run_cycle():
         calendar = scrape_calendar_fci(CURRENT_YEAR)
         with open(calendar_file, "w", encoding="utf-8") as f:
             json.dump(calendar, f, indent=4, ensure_ascii=False)
+    
+    cal_by_date = {}
     for g in calendar: cal_by_date.setdefault(g["data"], []).append(g)
 
     SESSION = requests.Session()
@@ -622,7 +624,6 @@ async def run_cycle():
             json.dump(data, f, ensure_ascii=False, indent=2)
 
     wj(DATA_DIR/"results_raw.json", clean_results)
-    wj(DATA_DIR/"calendar.json", sorted(races_map.values(), key=lambda g: g["data"], reverse=True))
     wj(DATA_DIR/"athletes.json", athletes)
     wj(DATA_DIR/"teams.json", teams)
     # ─── Calcolo Trend (confronto con classifiche precedenti) ───

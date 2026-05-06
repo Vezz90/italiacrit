@@ -2,7 +2,7 @@
   "BORGO_MOLINO_VIGNA_FIORITA": {
     "id": "BORGO_MOLINO_VIGNA_FIORITA",
     "nome": "BORGO MOLINO-VIGNA FIORITA",
-    "punti_totali": 513,
+    "punti_totali": 538,
     "atleti": [
       "FEDRIZZI_BRANDON_DAVIDE",
       "CAMPAGNOLO_LORENZO",
@@ -52,8 +52,8 @@
         "atleta_cognome": "FEDRIZZI",
         "atleta_nome": "BRANDON DAVIDE",
         "posizione": 1,
-        "punti_effettivi": 45,
-        "moltiplicatore": 3,
+        "punti_effettivi": 60,
+        "moltiplicatore": 4,
         "tipo": "nazionale",
         "regione": "ABRUZZO COLLEDARA",
         "km": "201.500",
@@ -67,8 +67,8 @@
         "atleta_cognome": "CAMPAGNOLO",
         "atleta_nome": "LORENZO",
         "posizione": 3,
-        "punti_effettivi": 30,
-        "moltiplicatore": 3,
+        "punti_effettivi": 40,
+        "moltiplicatore": 4,
         "tipo": "nazionale",
         "regione": "ABRUZZO COLLEDARA",
         "km": "201.500",
@@ -541,14 +541,14 @@
       }
     ],
     "punti_per_cat": {
-      "JUN_M": 336,
+      "JUN_M": 361,
       "AL_M": 177
     }
   },
   "ACCADEMIA_CICLISTICA": {
     "id": "ACCADEMIA_CICLISTICA",
     "nome": "ACCADEMIA CICLISTICA",
-    "punti_totali": 319,
+    "punti_totali": 320,
     "atleti": [
       "PADOVAN_NICOLA",
       "BARBON_GIACOMO",
@@ -586,8 +586,8 @@
         "atleta_cognome": "PADOVAN",
         "atleta_nome": "NICOLA",
         "posizione": 10,
-        "punti_effettivi": 3,
-        "moltiplicatore": 3,
+        "punti_effettivi": 4,
+        "moltiplicatore": 4,
         "tipo": "nazionale",
         "regione": "ABRUZZO COLLEDARA",
         "km": "201.500",
@@ -1015,14 +1015,14 @@
       }
     ],
     "punti_per_cat": {
-      "JUN_M": 202,
+      "JUN_M": 203,
       "AL_M": 117
     }
   },
   "POOL_CANTU_GB_TEAM_A_S_D": {
     "id": "POOL_CANTU_GB_TEAM_A_S_D",
     "nome": "POOL CANTU' GB TEAM A.S.D.",
-    "punti_totali": 372,
+    "punti_totali": 388,
     "atleti": [
       "BATTISTONI_ALESSANDRO",
       "FRONTINI_LUCA",
@@ -1059,8 +1059,8 @@
         "atleta_cognome": "BATTISTONI",
         "atleta_nome": "ALESSANDRO",
         "posizione": 2,
-        "punti_effettivi": 36,
-        "moltiplicatore": 3,
+        "punti_effettivi": 48,
+        "moltiplicatore": 4,
         "tipo": "nazionale",
         "regione": "ABRUZZO COLLEDARA",
         "km": "201.500",
@@ -1074,8 +1074,8 @@
         "atleta_cognome": "FRONTINI",
         "atleta_nome": "LUCA",
         "posizione": 7,
-        "punti_effettivi": 12,
-        "moltiplicatore": 3,
+        "punti_effettivi": 16,
+        "moltiplicatore": 4,
         "tipo": "nazionale",
         "regione": "ABRUZZO COLLEDARA",
         "km": "201.500",
@@ -1518,13 +1518,13 @@
       }
     ],
     "punti_per_cat": {
-      "JUN_M": 372
+      "JUN_M": 388
     }
   },
   "AUTOZAI_CONTRI": {
     "id": "AUTOZAI_CONTRI",
     "nome": "AUTOZAI-CONTRI",
-    "punti_totali": 147,
+    "punti_totali": 150,
     "atleti": [
       "MARIOTTO_THOMAS",
       "PIEROTTO_MARCO_ANDREA",
@@ -1571,8 +1571,8 @@
         "atleta_cognome": "MARIOTTO",
         "atleta_nome": "THOMAS",
         "posizione": 8,
-        "punti_effettivi": 9,
-        "moltiplicatore": 3,
+        "punti_effettivi": 12,
+        "moltiplicatore": 4,
         "tipo": "nazionale",
         "regione": "ABRUZZO COLLEDARA",
         "km": "201.500",
@@ -1775,13 +1775,13 @@
       }
     ],
     "punti_per_cat": {
-      "JUN_M": 147
+      "JUN_M": 150
     }
   },
   "IND_FORNITURE_MORO_C_G_CAPITAL": {
     "id": "IND_FORNITURE_MORO_C_G_CAPITAL",
     "nome": "IND. FORNITURE MORO-C&G CAPITAL",
-    "punti_totali": 597,
+    "punti_totali": 602,
     "atleti": [
       "ZAGO_GABRIELE",
       "MENEGHELLO_RICCARDO",
@@ -1829,8 +1829,8 @@
         "atleta_cognome": "ZAGO",
         "atleta_nome": "GABRIELE",
         "posizione": 6,
-        "punti_effettivi": 15,
-        "moltiplicatore": 3,
+        "punti_effettivi": 20,
+        "moltiplicatore": 4,
         "tipo": "nazionale",
         "regione": "ABRUZZO COLLEDARA",
         "km": "201.500",
@@ -2843,7 +2843,7 @@
       }
     ],
     "punti_per_cat": {
-      "JUN_M": 236,
+      "JUN_M": 241,
       "AL_M": 206,
       "ES1_M": 78,
       "ES2_M": 77
@@ -3752,7 +3752,7 @@
   "TEAM_GENERAL_SYSTEM": {
     "id": "TEAM_GENERAL_SYSTEM",
     "nome": "TEAM GENERAL SYSTEM",
-    "punti_totali": 124,
+    "punti_totali": 130,
     "atleti": [
       "RENZI_NICCOLO",
       "UGUCCIONI_SAMUELE",
@@ -3784,8 +3784,8 @@
         "atleta_cognome": "RENZI",
         "atleta_nome": "NICCOLO'",
         "posizione": 5,
-        "punti_effettivi": 18,
-        "moltiplicatore": 3,
+        "punti_effettivi": 24,
+        "moltiplicatore": 4,
         "tipo": "nazionale",
         "regione": "ABRUZZO COLLEDARA",
         "km": "201.500",
@@ -3973,7 +3973,7 @@
       }
     ],
     "punti_per_cat": {
-      "JUN_M": 124
+      "JUN_M": 130
     }
   },
   "TEAM_CORATTI": {
@@ -4545,7 +4545,7 @@
   "S_C_ROMANESE_ASD": {
     "id": "S_C_ROMANESE_ASD",
     "nome": "S.C. ROMANESE ASD",
-    "punti_totali": 154,
+    "punti_totali": 162,
     "atleti": [
       "ORENGO_EDOARDO",
       "BELANI_TOMMASO",
@@ -4563,8 +4563,8 @@
         "atleta_cognome": "ORENGO",
         "atleta_nome": "EDOARDO",
         "posizione": 4,
-        "punti_effettivi": 24,
-        "moltiplicatore": 3,
+        "punti_effettivi": 32,
+        "moltiplicatore": 4,
         "tipo": "nazionale",
         "regione": "ABRUZZO COLLEDARA",
         "km": "201.500",
@@ -4872,14 +4872,14 @@
       }
     ],
     "punti_per_cat": {
-      "JUN_M": 44,
+      "JUN_M": 52,
       "AL_M": 110
     }
   },
   "TEAM_NERI_SOTTOLI_LUCCHINI_ENERGY": {
     "id": "TEAM_NERI_SOTTOLI_LUCCHINI_ENERGY",
     "nome": "TEAM NERI SOTTOLI LUCCHINI ENERGY",
-    "punti_totali": 206,
+    "punti_totali": 208,
     "atleti": [
       "MORETTI_MATTIA",
       "CAVALLI_STEFANO",
@@ -4897,8 +4897,8 @@
         "atleta_cognome": "MORETTI",
         "atleta_nome": "MATTIA",
         "posizione": 9,
-        "punti_effettivi": 6,
-        "moltiplicatore": 3,
+        "punti_effettivi": 8,
+        "moltiplicatore": 4,
         "tipo": "nazionale",
         "regione": "ABRUZZO COLLEDARA",
         "km": "201.500",
@@ -5251,7 +5251,7 @@
       }
     ],
     "punti_per_cat": {
-      "JUN_M": 206
+      "JUN_M": 208
     }
   },
   "A_S_D_S_C_PADOVANI": {

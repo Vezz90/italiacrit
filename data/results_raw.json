@@ -236,7 +236,7 @@
     "categoria": "Juniores",
     "genere": "M",
     "tipo": "nazionale",
-    "moltiplicatore": 3,
+    "moltiplicatore": 4,
     "campionato_regionale": false,
     "campionato_italiano": false,
     "regione": "ABRUZZO COLLEDARA",
@@ -250,7 +250,7 @@
     "km": "201.500",
     "media": "39.916",
     "punti_base": 15,
-    "punti_effettivi": 45
+    "punti_effettivi": 60
   },
   {
     "gara_id": "GIRO_D_ABRUZZO_JUNIORES_2026_CLASSIFICA_GENERALE_2026-05-03_JUN_M",
@@ -259,7 +259,7 @@
     "categoria": "Juniores",
     "genere": "M",
     "tipo": "nazionale",
-    "moltiplicatore": 3,
+    "moltiplicatore": 4,
     "campionato_regionale": false,
     "campionato_italiano": false,
     "regione": "ABRUZZO COLLEDARA",
@@ -273,7 +273,7 @@
     "km": "201.500",
     "media": "39.916",
     "punti_base": 12,
-    "punti_effettivi": 36
+    "punti_effettivi": 48
   },
   {
     "gara_id": "GIRO_D_ABRUZZO_JUNIORES_2026_CLASSIFICA_GENERALE_2026-05-03_JUN_M",
@@ -282,7 +282,7 @@
     "categoria": "Juniores",
     "genere": "M",
     "tipo": "nazionale",
-    "moltiplicatore": 3,
+    "moltiplicatore": 4,
     "campionato_regionale": false,
     "campionato_italiano": false,
     "regione": "ABRUZZO COLLEDARA",
@@ -296,7 +296,7 @@
     "km": "201.500",
     "media": "39.916",
     "punti_base": 10,
-    "punti_effettivi": 30
+    "punti_effettivi": 40
   },
   {
     "gara_id": "GIRO_D_ABRUZZO_JUNIORES_2026_CLASSIFICA_GENERALE_2026-05-03_JUN_M",
@@ -305,7 +305,7 @@
     "categoria": "Juniores",
     "genere": "M",
     "tipo": "nazionale",
-    "moltiplicatore": 3,
+    "moltiplicatore": 4,
     "campionato_regionale": false,
     "campionato_italiano": false,
     "regione": "ABRUZZO COLLEDARA",
@@ -319,7 +319,7 @@
     "km": "201.500",
     "media": "39.916",
     "punti_base": 8,
-    "punti_effettivi": 24
+    "punti_effettivi": 32
   },
   {
     "gara_id": "GIRO_D_ABRUZZO_JUNIORES_2026_CLASSIFICA_GENERALE_2026-05-03_JUN_M",
@@ -328,7 +328,7 @@
     "categoria": "Juniores",
     "genere": "M",
     "tipo": "nazionale",
-    "moltiplicatore": 3,
+    "moltiplicatore": 4,
     "campionato_regionale": false,
     "campionato_italiano": false,
     "regione": "ABRUZZO COLLEDARA",
@@ -342,7 +342,7 @@
     "km": "201.500",
     "media": "39.916",
     "punti_base": 6,
-    "punti_effettivi": 18
+    "punti_effettivi": 24
   },
   {
     "gara_id": "GIRO_D_ABRUZZO_JUNIORES_2026_CLASSIFICA_GENERALE_2026-05-03_JUN_M",
@@ -351,7 +351,7 @@
     "categoria": "Juniores",
     "genere": "M",
     "tipo": "nazionale",
-    "moltiplicatore": 3,
+    "moltiplicatore": 4,
     "campionato_regionale": false,
     "campionato_italiano": false,
     "regione": "ABRUZZO COLLEDARA",
@@ -365,7 +365,7 @@
     "km": "201.500",
     "media": "39.916",
     "punti_base": 5,
-    "punti_effettivi": 15
+    "punti_effettivi": 20
   },
   {
     "gara_id": "GIRO_D_ABRUZZO_JUNIORES_2026_CLASSIFICA_GENERALE_2026-05-03_JUN_M",
@@ -374,7 +374,7 @@
     "categoria": "Juniores",
     "genere": "M",
     "tipo": "nazionale",
-    "moltiplicatore": 3,
+    "moltiplicatore": 4,
     "campionato_regionale": false,
     "campionato_italiano": false,
     "regione": "ABRUZZO COLLEDARA",
@@ -388,7 +388,7 @@
     "km": "201.500",
     "media": "39.916",
     "punti_base": 4,
-    "punti_effettivi": 12
+    "punti_effettivi": 16
   },
   {
     "gara_id": "GIRO_D_ABRUZZO_JUNIORES_2026_CLASSIFICA_GENERALE_2026-05-03_JUN_M",
@@ -397,7 +397,7 @@
     "categoria": "Juniores",
     "genere": "M",
     "tipo": "nazionale",
-    "moltiplicatore": 3,
+    "moltiplicatore": 4,
     "campionato_regionale": false,
     "campionato_italiano": false,
     "regione": "ABRUZZO COLLEDARA",
@@ -411,7 +411,7 @@
     "km": "201.500",
     "media": "39.916",
     "punti_base": 3,
-    "punti_effettivi": 9
+    "punti_effettivi": 12
   },
   {
     "gara_id": "GIRO_D_ABRUZZO_JUNIORES_2026_CLASSIFICA_GENERALE_2026-05-03_JUN_M",
@@ -420,7 +420,7 @@
     "categoria": "Juniores",
     "genere": "M",
     "tipo": "nazionale",
-    "moltiplicatore": 3,
+    "moltiplicatore": 4,
     "campionato_regionale": false,
     "campionato_italiano": false,
     "regione": "ABRUZZO COLLEDARA",
@@ -434,7 +434,7 @@
     "km": "201.500",
     "media": "39.916",
     "punti_base": 2,
-    "punti_effettivi": 6
+    "punti_effettivi": 8
   },
   {
     "gara_id": "GIRO_D_ABRUZZO_JUNIORES_2026_CLASSIFICA_GENERALE_2026-05-03_JUN_M",
@@ -443,7 +443,7 @@
     "categoria": "Juniores",
     "genere": "M",
     "tipo": "nazionale",
-    "moltiplicatore": 3,
+    "moltiplicatore": 4,
     "campionato_regionale": false,
     "campionato_italiano": false,
     "regione": "ABRUZZO COLLEDARA",
@@ -457,7 +457,7 @@
     "km": "201.500",
     "media": "39.916",
     "punti_base": 1,
-    "punti_effettivi": 3
+    "punti_effettivi": 4
   },
   {
     "gara_id": "12_MEMORIAL_DANIELE_TORTOLI_2026-05-03_ELI_M",
