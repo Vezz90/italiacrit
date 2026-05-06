@@ -78,6 +78,11 @@ body.light-mode {
   --gradient-male: linear-gradient(135deg, #f1f3f5, #e9ecef);
   --gradient-female: linear-gradient(135deg, #ffffff, #f8f9fa);
 }
+/* Navbar sempre nera in qualsiasi tema */
+#navbar {
+  background: #0a0a0a !important;
+  border-color: var(--red-hot) !important;
+}
 
 /* ── RESET ───────────────────────────────────────────────────── */
 *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
@@ -134,9 +139,9 @@ img { max-width: 100%; display: block; }
   position: fixed;
   top: 0; left: 0; right: 0;
   z-index: 100;
-  background: var(--bg-primary);
+  background: #0a0a0a;
   border-bottom: 2px solid var(--red-hot);
-  height: 58px;
+  height: 72px;
   display: flex;
   align-items: center;
   padding: 0 24px;
@@ -150,16 +155,13 @@ img { max-width: 100%; display: block; }
   height: 100%;
 }
 .nav-logo-img {
-  height: 52px;
+  height: 68px;
   width: auto;
   object-fit: contain;
   display: block;
   transition: opacity 0.2s;
 }
 .nav-logo:hover .nav-logo-img { opacity: 0.8; }
-body.light-mode .nav-logo-img {
-  filter: brightness(0.85);
-}
 .nav-sep {
   width: 1px;
   height: 28px;
@@ -259,7 +261,7 @@ body.light-mode .nav-logo-img {
 #nav-drawer {
   display: none;
   position: fixed;
-  top: 58px; right: 0;
+  top: 72px; right: 0;
   bottom: 0; width: 260px;
   background: var(--bg-secondary);
   border-left: 1px solid var(--border-subtle);
@@ -297,7 +299,7 @@ body:not(.light-mode) .theme-icon-moon { display: none; }
 
 /* ── LAYOUT ──────────────────────────────────────────────────── */
 #app {
-  padding-top: 58px;
+  padding-top: 72px;
   min-height: 100vh;
   display: flex;
   flex-direction: column;
