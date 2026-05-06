@@ -4,9 +4,9 @@ from pathlib import Path
 from datetime import datetime
 from difflib import SequenceMatcher
 try:
-    from .excel_loader import load_calendar_from_excel
+    from .calendar_scraper import scrape_calendar_fci
 except (ImportError, ValueError):
-    from excel_loader import load_calendar_from_excel
+    from calendar_scraper import scrape_calendar_fci
 
 CURRENT_YEAR = 2026
 DATA_DIR = Path(__file__).parent.parent / "data"
@@ -537,7 +537,7 @@ async def run_cycle():
     print(f"\n--- SCRAPER COMPLETATO ---")
     setup_unmatched_log()
     # Caricamento calendario da Excel manuale (come richiesto)
-    calendar = load_calendar_from_excel(DATA_DIR / "calendario_manuale_v2.xlsx")
+    calendar = scrape_calendar_fci(CURRENT_YEAR)
     cal_by_date = {}
     for g in calendar: cal_by_date.setdefault(g["data"], []).append(g)
 
