@@ -536,9 +536,17 @@ async def run_cycle():
 
     print(f"\n--- SCRAPER COMPLETATO ---")
     setup_unmatched_log()
-    # Caricamento calendario da Excel manuale (come richiesto)
-    calendar = scrape_calendar_fci(CURRENT_YEAR)
-    cal_by_date = {}
+    # Caricamento calendario (con cache per evitare richieste continue alla FCI)
+    calendar_file = DATA_DIR / "calendar.json"
+    if calendar_file.exists():
+        print("Caricamento calendario da cache locale (calendar.json)...")
+        with open(calendar_file, "r", encoding="utf-8") as f:
+            calendar = json.load(f)
+    else:
+        print("Scaricamento calendario automatico dalla FCI...")
+        calendar = scrape_calendar_fci(CURRENT_YEAR)
+        with open(calendar_file, "w", encoding="utf-8") as f:
+            json.dump(calendar, f, indent=4, ensure_ascii=False)
     for g in calendar: cal_by_date.setdefault(g["data"], []).append(g)
 
     SESSION = requests.Session()
