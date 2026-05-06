@@ -65,12 +65,23 @@ def scrape_calendar_fci(year=2026):
                         details_span = race.find('span', class_='wp-race-details')
                         nome = details_span.get_text(strip=True) if details_span else ""
                         
+                        id_class_div = race.find('div', class_='wp-race-id-class')
+                        categoria = ""
+                        if id_class_div:
+                            text = id_class_div.get_text(strip=True)
+                            m = re.search(r"Classe:\s*(?:\([^)]+\))?\s*(.*)", text)
+                            if m: categoria = m.group(1).strip()
+                            
                         loc_div = race.find('div', class_='wp-race-location')
                         regione = ""
+                        luogo = ""
                         if loc_div:
                             b_tag = loc_div.find('b')
                             if b_tag:
                                 regione = b_tag.get_text(strip=True).upper()
+                            full_text = loc_div.get_text(strip=True)
+                            if full_text.startswith(regione):
+                                luogo = full_text[len(regione):].strip(" -").strip()
                                 
                         is_cr = "campionato regionale" in nome.lower()
                         is_ci = "campionato italiano" in nome.lower()
@@ -85,7 +96,9 @@ def scrape_calendar_fci(year=2026):
                             "moltiplicatore": mult,
                             "campionato_regionale": is_cr,
                             "campionato_italiano": is_ci,
-                            "regione": regione
+                            "regione": regione,
+                            "categoria": categoria,
+                            "luogo": luogo
                         })
                         
                     # print(f"Mese {mese:02d} | Geo {geo} | Pagina {pagina} -> Trovate {len(races)} gare.")

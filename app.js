@@ -1365,12 +1365,14 @@ let calQTipo   = '';
 let calQSearch = '';
 let calQCat    = '';
 let calQMonth  = new Date().toISOString().slice(5, 7); // Default mese corrente = '04' ad es.
+let calQRegione = '';
 
 async function renderCalendario() {
   if (!globalData) return;
   const { calendar } = globalData;
 
   const allCats = [...new Set(calendar.map(g => g.categoria).filter(Boolean))].sort();
+  const allRegions = [...new Set(calendar.map(g => g.regione).filter(Boolean))].sort();
 
   const render = () => {
     const today = new Date().toISOString().split('T')[0];
@@ -1378,6 +1380,7 @@ async function renderCalendario() {
     let filtered = calendar
       .filter(g => !calQGenere || g.genere === calQGenere)
       .filter(g => !calQCat    || g.categoria === calQCat)
+      .filter(g => !calQRegione || g.regione === calQRegione)
       .filter(g => {
          if (!calQTipo) return true;
          if (calQTipo === 'campionato_regionale') return g.campionato_regionale;
@@ -1406,7 +1409,10 @@ async function renderCalendario() {
         </div>
         <div style="flex:1">
           <div class="cal-name"><a href="#/gara/${esc(g.id)}">${esc(g.nome)}</a></div>
-          <div class="cal-cat">${esc(catLabel(g.categoria)||'')} — <span style="text-transform:capitalize;color:var(--text-muted)">${esc(g.tipo)}</span></div>
+          <div class="cal-cat">
+            ${esc(catLabel(g.categoria)||'')} — <span style="text-transform:capitalize;color:var(--text-muted)">${esc(g.tipo)}</span>
+            ${g.luogo || g.regione ? `<div style="font-size:0.8rem;color:var(--text-muted);margin-top:2px;">📍 ${esc(g.luogo || '')} ${g.regione ? '('+esc(g.regione)+')' : ''}</div>` : ''}
+          </div>
         </div>
         <div class="cal-badges" style="${isPast?'opacity:0.5':''}">
           ${badgeMult(mult, g.tipo, g.campionato_regionale, g.campionato_italiano)}
@@ -1466,6 +1472,10 @@ async function renderCalendario() {
         <option value="campionato_regionale" ${calQTipo==='campionato_regionale'?'selected':''}>Campionati Regionali</option>
         <option value="campionato_italiano" ${calQTipo==='campionato_italiano'?'selected':''}>Campionati Italiani</option>
       </select>
+      <select class="cal-filter-select" id="cal-regione" onchange="calSetRegione(this.value)" aria-label="Filtra per regione">
+        <option value="" ${calQRegione===''?'selected':''}>Tutte le Regioni</option>
+        ${allRegions.map(r => `<option value="${r}" ${r === calQRegione ? 'selected' : ''}>${esc(r)}</option>`).join('')}
+      </select>
       <input type="search" class="cal-filter-select" id="cal-search" placeholder="Cerca gara…" oninput="calSetSearch(this.value)" aria-label="Cerca gara" style="width:200px" value="${calQSearch.replace(/"/g, '&quot;')}"/>
       <span class="ranking-count" id="cal-count">${calendar.length} gare</span>
     </div>
@@ -1477,6 +1487,7 @@ async function renderCalendario() {
   window.calSetCat    = (v) => { calQCat = v; render(); };
   window.calSetTipo   = (v) => { calQTipo = v; render(); };
   window.calSetSearch = (v) => { calQSearch = v; render(); };
+  window.calSetRegione = (v) => { calQRegione = v; render(); };
   render();
 }
 
