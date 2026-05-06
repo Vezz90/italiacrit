@@ -276,9 +276,10 @@ def parse_risultati_page(soup: BeautifulSoup, calendar_map: dict, existing_ids: 
             mult, tipo, is_cr, is_ci = 2, "regionale", True, False
             print(f"  [FCI-CR] {race_name_raw[:60]} -> Campionato Regionale forzato x2")
 
-        # Forza Esordienti e Allievi a x1 Regionale (no NAZ/INT), tranne CR/CI espliciti
+        # Forza Esordienti e Allievi a x1 Regionale, tranne se provengono da Excel, Override o sono CR/CI
         if extracted_cat in ["Esordienti", "Allievi", "Esordienti 1° Anno", "Esordienti 2° Anno", "Allievi 1° Anno", "Allievi 2° Anno"]:
-            if not is_cr and not is_ci:
+            is_excel_or_override = any(x in match_type for x in ["exact_match", "fuzzy_match", "user_override"])
+            if not is_cr and not is_ci and not is_excel_or_override:
                 mult, tipo = 1, "regionale"
 
         n_cat_key = norm_cat(extracted_cat)
