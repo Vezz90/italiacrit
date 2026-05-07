@@ -7,7 +7,7 @@
     "team_id": "BORGO_MOLINO_VIGNA_FIORITA",
     "categoria": "JUN_M",
     "genere": "M",
-    "punti_totali": 294,
+    "punti_totali": 324,
     "risultati": [
       {
         "gara_id": "GIRO_D_ABRUZZO_JUNIORES_2026_TERZA_TAPPA_2026-05-03_JUN_M",
@@ -151,6 +151,19 @@
         "regione": "TOSCANA",
         "km": "123.000",
         "media": "41.403"
+      },
+      {
+        "gara_id": "CORSA_DELLA_PACE_JUNIORES_PRIMA_TAPPA_2026-05-07_JUN_M",
+        "nome_gara": "CORSA DELLA PACE JUNIORES PRIMA TAPPA",
+        "data": "2026-05-07",
+        "posizione": 1,
+        "punti_effettivi": 30,
+        "team": "ITALIA",
+        "moltiplicatore": 2,
+        "tipo": "nazionale",
+        "regione": "LITOMERICE",
+        "km": "110.200",
+        "media": "41.273"
       }
     ]
   },
@@ -49054,7 +49067,7 @@
     "team_id": "ETHICA_ZERO24_CYCLING_TEAM_ECOTEK",
     "categoria": "JUN_M",
     "genere": "M",
-    "punti_totali": 95,
+    "punti_totali": 97,
     "risultati": [
       {
         "gara_id": "62_TROFEO_CADUTI_E_DISPERSI_COMUNE_DI_PASSIRANO_2026-04-25_JUN_M",
@@ -49120,6 +49133,19 @@
         "regione": "LAZIO",
         "km": "103.000",
         "media": "44.138"
+      },
+      {
+        "gara_id": "CORSA_DELLA_PACE_JUNIORES_PRIMA_TAPPA_2026-05-07_JUN_M",
+        "nome_gara": "CORSA DELLA PACE JUNIORES PRIMA TAPPA",
+        "data": "2026-05-07",
+        "posizione": 10,
+        "punti_effettivi": 2,
+        "team": "ITALIA",
+        "moltiplicatore": 2,
+        "tipo": "nazionale",
+        "regione": "LITOMERICE",
+        "km": "110.200",
+        "media": "41.273"
       }
     ]
   },
@@ -69832,6 +69858,206 @@
         "regione": "UNDER",
         "km": "83.920",
         "media": "38.422"
+      }
+    ]
+  },
+  "FURENES_MADS": {
+    "id": "FURENES_MADS",
+    "nome": "MADS",
+    "cognome": "FURENES",
+    "team_attuale": "NORVEGIA",
+    "team_id": "NORVEGIA",
+    "categoria": "JUN_M",
+    "genere": "M",
+    "punti_totali": 24,
+    "risultati": [
+      {
+        "gara_id": "CORSA_DELLA_PACE_JUNIORES_PRIMA_TAPPA_2026-05-07_JUN_M",
+        "nome_gara": "CORSA DELLA PACE JUNIORES PRIMA TAPPA",
+        "data": "2026-05-07",
+        "posizione": 2,
+        "punti_effettivi": 24,
+        "team": "NORVEGIA",
+        "moltiplicatore": 2,
+        "tipo": "nazionale",
+        "regione": "LITOMERICE",
+        "km": "110.200",
+        "media": "41.273"
+      }
+    ]
+  },
+  "SCOTT_BOURIS_AMOS": {
+    "id": "SCOTT_BOURIS_AMOS",
+    "nome": "BOURIS AMOS",
+    "cognome": "SCOTT",
+    "team_attuale": "CANADA",
+    "team_id": "CANADA",
+    "categoria": "JUN_M",
+    "genere": "M",
+    "punti_totali": 20,
+    "risultati": [
+      {
+        "gara_id": "CORSA_DELLA_PACE_JUNIORES_PRIMA_TAPPA_2026-05-07_JUN_M",
+        "nome_gara": "CORSA DELLA PACE JUNIORES PRIMA TAPPA",
+        "data": "2026-05-07",
+        "posizione": 3,
+        "punti_effettivi": 20,
+        "team": "CANADA",
+        "moltiplicatore": 2,
+        "tipo": "nazionale",
+        "regione": "LITOMERICE",
+        "km": "110.200",
+        "media": "41.273"
+      }
+    ]
+  },
+  "VERNAILLEN_STAN": {
+    "id": "VERNAILLEN_STAN",
+    "nome": "STAN",
+    "cognome": "VERNAILLEN",
+    "team_attuale": "BELGIO",
+    "team_id": "BELGIO",
+    "categoria": "JUN_M",
+    "genere": "M",
+    "punti_totali": 16,
+    "risultati": [
+      {
+        "gara_id": "CORSA_DELLA_PACE_JUNIORES_PRIMA_TAPPA_2026-05-07_JUN_M",
+        "nome_gara": "CORSA DELLA PACE JUNIORES PRIMA TAPPA",
+        "data": "2026-05-07",
+        "posizione": 4,
+        "punti_effettivi": 16,
+        "team": "BELGIO",
+        "moltiplicatore": 2,
+        "tipo": "nazionale",
+        "regione": "LITOMERICE",
+        "km": "110.200",
+        "media": "41.273"
+      }
+    ]
+  },
+  "VAN_DEN_BIGGELAAR": {
+    "id": "VAN_DEN_BIGGELAAR",
+    "nome": "BIGGELAAR",
+    "cognome": "VAN DEN",
+    "team_attuale": "OLANDA",
+    "team_id": "OLANDA",
+    "categoria": "JUN_M",
+    "genere": "M",
+    "punti_totali": 12,
+    "risultati": [
+      {
+        "gara_id": "CORSA_DELLA_PACE_JUNIORES_PRIMA_TAPPA_2026-05-07_JUN_M",
+        "nome_gara": "CORSA DELLA PACE JUNIORES PRIMA TAPPA",
+        "data": "2026-05-07",
+        "posizione": 5,
+        "punti_effettivi": 12,
+        "team": "OLANDA",
+        "moltiplicatore": 2,
+        "tipo": "nazionale",
+        "regione": "LITOMERICE",
+        "km": "110.200",
+        "media": "41.273"
+      }
+    ]
+  },
+  "BIEBERLE_ONNO": {
+    "id": "BIEBERLE_ONNO",
+    "nome": "ONNO",
+    "cognome": "BIEBERLE",
+    "team_attuale": "GERMANIA",
+    "team_id": "GERMANIA",
+    "categoria": "JUN_M",
+    "genere": "M",
+    "punti_totali": 10,
+    "risultati": [
+      {
+        "gara_id": "CORSA_DELLA_PACE_JUNIORES_PRIMA_TAPPA_2026-05-07_JUN_M",
+        "nome_gara": "CORSA DELLA PACE JUNIORES PRIMA TAPPA",
+        "data": "2026-05-07",
+        "posizione": 6,
+        "punti_effettivi": 10,
+        "team": "GERMANIA",
+        "moltiplicatore": 2,
+        "tipo": "nazionale",
+        "regione": "LITOMERICE",
+        "km": "110.200",
+        "media": "41.273"
+      }
+    ]
+  },
+  "KUBENA_DANIEL": {
+    "id": "KUBENA_DANIEL",
+    "nome": "DANIEL",
+    "cognome": "KUBENA",
+    "team_attuale": "RKC ROMAN KREUZIGER",
+    "team_id": "RKC_ROMAN_KREUZIGER",
+    "categoria": "JUN_M",
+    "genere": "M",
+    "punti_totali": 8,
+    "risultati": [
+      {
+        "gara_id": "CORSA_DELLA_PACE_JUNIORES_PRIMA_TAPPA_2026-05-07_JUN_M",
+        "nome_gara": "CORSA DELLA PACE JUNIORES PRIMA TAPPA",
+        "data": "2026-05-07",
+        "posizione": 7,
+        "punti_effettivi": 8,
+        "team": "RKC ROMAN KREUZIGER",
+        "moltiplicatore": 2,
+        "tipo": "nazionale",
+        "regione": "LITOMERICE",
+        "km": "110.200",
+        "media": "41.273"
+      }
+    ]
+  },
+  "ORHOLM_LONSETH_SIND": {
+    "id": "ORHOLM_LONSETH_SIND",
+    "nome": "SIND",
+    "cognome": "ORHOLM-LONSETH",
+    "team_attuale": "NORVEGIA",
+    "team_id": "NORVEGIA",
+    "categoria": "JUN_M",
+    "genere": "M",
+    "punti_totali": 6,
+    "risultati": [
+      {
+        "gara_id": "CORSA_DELLA_PACE_JUNIORES_PRIMA_TAPPA_2026-05-07_JUN_M",
+        "nome_gara": "CORSA DELLA PACE JUNIORES PRIMA TAPPA",
+        "data": "2026-05-07",
+        "posizione": 8,
+        "punti_effettivi": 6,
+        "team": "NORVEGIA",
+        "moltiplicatore": 2,
+        "tipo": "nazionale",
+        "regione": "LITOMERICE",
+        "km": "110.200",
+        "media": "41.273"
+      }
+    ]
+  },
+  "SUPI_SEBASTIAN": {
+    "id": "SUPI_SEBASTIAN",
+    "nome": "SEBASTIAN",
+    "cognome": "SUPI",
+    "team_attuale": "ESTONIA",
+    "team_id": "ESTONIA",
+    "categoria": "JUN_M",
+    "genere": "M",
+    "punti_totali": 4,
+    "risultati": [
+      {
+        "gara_id": "CORSA_DELLA_PACE_JUNIORES_PRIMA_TAPPA_2026-05-07_JUN_M",
+        "nome_gara": "CORSA DELLA PACE JUNIORES PRIMA TAPPA",
+        "data": "2026-05-07",
+        "posizione": 9,
+        "punti_effettivi": 4,
+        "team": "ESTONIA",
+        "moltiplicatore": 2,
+        "tipo": "nazionale",
+        "regione": "LITOMERICE",
+        "km": "110.200",
+        "media": "41.273"
       }
     ]
   }
