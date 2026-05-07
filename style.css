@@ -1190,8 +1190,15 @@ footer .footer-sep { color: var(--red-hot); margin: 0 8px; }
   .page { padding: 20px 16px; }
   .nav-links { display: none; }
   #nav-hamburger { display: flex; }
-  #nav-search { width: 140px; }
-  #nav-search:focus { width: 160px; }
+  /* Logo ridotto su mobile */
+  #navbar { height: 60px; padding: 0 12px; }
+  .nav-logo-img { height: 50px; }
+  #app { padding-top: 60px; }
+  #nav-drawer { top: 60px; }
+  /* Searchbar nascosta su mobile (c'è il drawer) */
+  .nav-search-wrap { display: none; }
+  /* Separatore rimosso su mobile */
+  .nav-sep { display: none; }
   .cat-grid { grid-template-columns: 1fr; }
   .athlete-header { padding: 20px; }
   .team-header { padding: 20px; }
@@ -1209,6 +1216,10 @@ footer .footer-sep { color: var(--red-hot); margin: 0 8px; }
   .hero-pos { font-size: 2.2rem; }
 }
 @media (min-width: 641px) and (max-width: 1024px) {
+  #navbar { height: 70px; }
+  .nav-logo-img { height: 64px; }
+  #app { padding-top: 70px; }
+  #nav-drawer { top: 70px; }
   .cat-grid { grid-template-columns: repeat(2, 1fr); }
 }
 @media (min-width: 1025px) {
