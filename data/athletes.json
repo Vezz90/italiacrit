@@ -49106,7 +49106,7 @@
     "team_id": "ETHICA_ZERO24_CYCLING_TEAM_ECOTEK",
     "categoria": "JUN_M",
     "genere": "M",
-    "punti_totali": 97,
+    "punti_totali": 127,
     "risultati": [
       {
         "gara_id": "62_TROFEO_CADUTI_E_DISPERSI_COMUNE_DI_PASSIRANO_2026-04-25_JUN_M",
@@ -49185,6 +49185,19 @@
         "regione": "LITOMERICE",
         "km": "110.200",
         "media": "41.273"
+      },
+      {
+        "gara_id": "CORSA_DELLA_PACE_JUNIORES_SECONDA_TAPPA_SECONDA_SEMITAPPA_2026-05-08_JUN_M",
+        "nome_gara": "CORSA DELLA PACE JUNIORES SECONDA TAPPA SECONDA SEMITAPPA",
+        "data": "2026-05-08",
+        "posizione": 1,
+        "punti_effettivi": 30,
+        "team": "ITALIA",
+        "moltiplicatore": 2,
+        "tipo": "nazionale",
+        "regione": "SJLNJENI ZAVOD",
+        "km": "63.800",
+        "media": "48.353"
       }
     ]
   },
@@ -58976,7 +58989,7 @@
     "team_id": "CANNIBAL_BAHRAIN_VICTORIUS",
     "categoria": "JUN_M",
     "genere": "M",
-    "punti_totali": 5,
+    "punti_totali": 9,
     "risultati": [
       {
         "gara_id": "4_MEMORIAL_GERMANO_VITTONI_2026-04-12_JUN_M",
@@ -58990,6 +59003,19 @@
         "regione": "PIEMONTE",
         "km": "93.700",
         "media": "42.516"
+      },
+      {
+        "gara_id": "CORSA_DELLA_PACE_JUNIORES_SECONDA_TAPPA_SECONDA_SEMITAPPA_2026-05-08_JUN_M",
+        "nome_gara": "CORSA DELLA PACE JUNIORES SECONDA TAPPA SECONDA SEMITAPPA",
+        "data": "2026-05-08",
+        "posizione": 9,
+        "punti_effettivi": 4,
+        "team": "ITALIA",
+        "moltiplicatore": 2,
+        "tipo": "nazionale",
+        "regione": "SJLNJENI ZAVOD",
+        "km": "63.800",
+        "media": "48.353"
       }
     ]
   },
@@ -69946,7 +69972,7 @@
     "team_id": "CANADA",
     "categoria": "JUN_M",
     "genere": "M",
-    "punti_totali": 20,
+    "punti_totali": 36,
     "risultati": [
       {
         "gara_id": "CORSA_DELLA_PACE_JUNIORES_PRIMA_TAPPA_2026-05-07_JUN_M",
@@ -69960,6 +69986,19 @@
         "regione": "LITOMERICE",
         "km": "110.200",
         "media": "41.273"
+      },
+      {
+        "gara_id": "CORSA_DELLA_PACE_JUNIORES_SECONDA_TAPPA_SECONDA_SEMITAPPA_2026-05-08_JUN_M",
+        "nome_gara": "CORSA DELLA PACE JUNIORES SECONDA TAPPA SECONDA SEMITAPPA",
+        "data": "2026-05-08",
+        "posizione": 4,
+        "punti_effettivi": 16,
+        "team": "CANADA",
+        "moltiplicatore": 2,
+        "tipo": "nazionale",
+        "regione": "SJLNJENI ZAVOD",
+        "km": "63.800",
+        "media": "48.353"
       }
     ]
   },
@@ -70071,7 +70110,7 @@
     "team_id": "NORVEGIA",
     "categoria": "JUN_M",
     "genere": "M",
-    "punti_totali": 22,
+    "punti_totali": 28,
     "risultati": [
       {
         "gara_id": "CORSA_DELLA_PACE_JUNIORES_PRIMA_TAPPA_2026-05-07_JUN_M",
@@ -70098,6 +70137,19 @@
         "regione": "CASOVKA",
         "km": "8.800",
         "media": "50.139"
+      },
+      {
+        "gara_id": "CORSA_DELLA_PACE_JUNIORES_SECONDA_TAPPA_SECONDA_SEMITAPPA_2026-05-08_JUN_M",
+        "nome_gara": "CORSA DELLA PACE JUNIORES SECONDA TAPPA SECONDA SEMITAPPA",
+        "data": "2026-05-08",
+        "posizione": 8,
+        "punti_effettivi": 6,
+        "team": "NORVEGIA",
+        "moltiplicatore": 2,
+        "tipo": "nazionale",
+        "regione": "SJLNJENI ZAVOD",
+        "km": "63.800",
+        "media": "48.353"
       }
     ]
   },
@@ -70248,6 +70300,156 @@
         "regione": "CASOVKA",
         "km": "8.800",
         "media": "50.139"
+      }
+    ]
+  },
+  "TESARIK_JAKUB": {
+    "id": "TESARIK_JAKUB",
+    "nome": "JAKUB",
+    "cognome": "TESARIK",
+    "team_attuale": "REPUBBLICA CECA",
+    "team_id": "REPUBBLICA_CECA",
+    "categoria": "JUN_M",
+    "genere": "M",
+    "punti_totali": 24,
+    "risultati": [
+      {
+        "gara_id": "CORSA_DELLA_PACE_JUNIORES_SECONDA_TAPPA_SECONDA_SEMITAPPA_2026-05-08_JUN_M",
+        "nome_gara": "CORSA DELLA PACE JUNIORES SECONDA TAPPA SECONDA SEMITAPPA",
+        "data": "2026-05-08",
+        "posizione": 2,
+        "punti_effettivi": 24,
+        "team": "REPUBBLICA CECA",
+        "moltiplicatore": 2,
+        "tipo": "nazionale",
+        "regione": "SJLNJENI ZAVOD",
+        "km": "63.800",
+        "media": "48.353"
+      }
+    ]
+  },
+  "LOGINS_ARVIDS": {
+    "id": "LOGINS_ARVIDS",
+    "nome": "ARVIDS",
+    "cognome": "LOGINS",
+    "team_attuale": "LETTONIA",
+    "team_id": "LETTONIA",
+    "categoria": "JUN_M",
+    "genere": "M",
+    "punti_totali": 20,
+    "risultati": [
+      {
+        "gara_id": "CORSA_DELLA_PACE_JUNIORES_SECONDA_TAPPA_SECONDA_SEMITAPPA_2026-05-08_JUN_M",
+        "nome_gara": "CORSA DELLA PACE JUNIORES SECONDA TAPPA SECONDA SEMITAPPA",
+        "data": "2026-05-08",
+        "posizione": 3,
+        "punti_effettivi": 20,
+        "team": "LETTONIA",
+        "moltiplicatore": 2,
+        "tipo": "nazionale",
+        "regione": "SJLNJENI ZAVOD",
+        "km": "63.800",
+        "media": "48.353"
+      }
+    ]
+  },
+  "OUTLET_MAXMILIEN": {
+    "id": "OUTLET_MAXMILIEN",
+    "nome": "MAXMILIEN",
+    "cognome": "OUTLET",
+    "team_attuale": "LUSSEMBURGO",
+    "team_id": "LUSSEMBURGO",
+    "categoria": "JUN_M",
+    "genere": "M",
+    "punti_totali": 12,
+    "risultati": [
+      {
+        "gara_id": "CORSA_DELLA_PACE_JUNIORES_SECONDA_TAPPA_SECONDA_SEMITAPPA_2026-05-08_JUN_M",
+        "nome_gara": "CORSA DELLA PACE JUNIORES SECONDA TAPPA SECONDA SEMITAPPA",
+        "data": "2026-05-08",
+        "posizione": 5,
+        "punti_effettivi": 12,
+        "team": "LUSSEMBURGO",
+        "moltiplicatore": 2,
+        "tipo": "nazionale",
+        "regione": "SJLNJENI ZAVOD",
+        "km": "63.800",
+        "media": "48.353"
+      }
+    ]
+  },
+  "KILLEEN_FIONN": {
+    "id": "KILLEEN_FIONN",
+    "nome": "FIONN",
+    "cognome": "KILLEEN",
+    "team_attuale": "IRLANDA",
+    "team_id": "IRLANDA",
+    "categoria": "JUN_M",
+    "genere": "M",
+    "punti_totali": 10,
+    "risultati": [
+      {
+        "gara_id": "CORSA_DELLA_PACE_JUNIORES_SECONDA_TAPPA_SECONDA_SEMITAPPA_2026-05-08_JUN_M",
+        "nome_gara": "CORSA DELLA PACE JUNIORES SECONDA TAPPA SECONDA SEMITAPPA",
+        "data": "2026-05-08",
+        "posizione": 6,
+        "punti_effettivi": 10,
+        "team": "IRLANDA",
+        "moltiplicatore": 2,
+        "tipo": "nazionale",
+        "regione": "SJLNJENI ZAVOD",
+        "km": "63.800",
+        "media": "48.353"
+      }
+    ]
+  },
+  "MOREAU_ZACHARI": {
+    "id": "MOREAU_ZACHARI",
+    "nome": "ZACHARI",
+    "cognome": "MOREAU",
+    "team_attuale": "CANADA",
+    "team_id": "CANADA",
+    "categoria": "JUN_M",
+    "genere": "M",
+    "punti_totali": 8,
+    "risultati": [
+      {
+        "gara_id": "CORSA_DELLA_PACE_JUNIORES_SECONDA_TAPPA_SECONDA_SEMITAPPA_2026-05-08_JUN_M",
+        "nome_gara": "CORSA DELLA PACE JUNIORES SECONDA TAPPA SECONDA SEMITAPPA",
+        "data": "2026-05-08",
+        "posizione": 7,
+        "punti_effettivi": 8,
+        "team": "CANADA",
+        "moltiplicatore": 2,
+        "tipo": "nazionale",
+        "regione": "SJLNJENI ZAVOD",
+        "km": "63.800",
+        "media": "48.353"
+      }
+    ]
+  },
+  "LINDEN_ARVID": {
+    "id": "LINDEN_ARVID",
+    "nome": "ARVID",
+    "cognome": "LINDEN",
+    "team_attuale": "SVEZIA",
+    "team_id": "SVEZIA",
+    "categoria": "JUN_M",
+    "genere": "M",
+    "punti_totali": 2,
+    "risultati": [
+      {
+        "gara_id": "CORSA_DELLA_PACE_JUNIORES_SECONDA_TAPPA_SECONDA_SEMITAPPA_2026-05-08_JUN_M",
+        "nome_gara": "CORSA DELLA PACE JUNIORES SECONDA TAPPA SECONDA SEMITAPPA",
+        "data": "2026-05-08",
+        "posizione": 10,
+        "punti_effettivi": 2,
+        "team": "SVEZIA",
+        "moltiplicatore": 2,
+        "tipo": "nazionale",
+        "regione": "SJLNJENI ZAVOD",
+        "km": "63.800",
+        "media": "48.353"
       }
     ]
   }

@@ -64991,11 +64991,12 @@
   "ITALIA": {
     "id": "ITALIA",
     "nome": "ITALIA",
-    "punti_totali": 87,
+    "punti_totali": 121,
     "atleti": [
       "FEDRIZZI_BRANDON_DAVIDE",
       "CINGOLANI_TOMMASO",
-      "PEZZO_ROSOLA_PATRIK"
+      "PEZZO_ROSOLA_PATRIK",
+      "SOLAVAGGIONE_PIETRO"
     ],
     "risultati": [
       {
@@ -65057,10 +65058,40 @@
         "regione": "CASOVKA",
         "km": "8.800",
         "media": "50.139"
+      },
+      {
+        "gara_id": "CORSA_DELLA_PACE_JUNIORES_SECONDA_TAPPA_SECONDA_SEMITAPPA_2026-05-08_JUN_M",
+        "nome_gara": "CORSA DELLA PACE JUNIORES SECONDA TAPPA SECONDA SEMITAPPA",
+        "data": "2026-05-08",
+        "atleta_id": "CINGOLANI_TOMMASO",
+        "atleta_cognome": "CINGOLANI",
+        "atleta_nome": "TOMMASO",
+        "posizione": 1,
+        "punti_effettivi": 30,
+        "moltiplicatore": 2,
+        "tipo": "nazionale",
+        "regione": "SJLNJENI ZAVOD",
+        "km": "63.800",
+        "media": "48.353"
+      },
+      {
+        "gara_id": "CORSA_DELLA_PACE_JUNIORES_SECONDA_TAPPA_SECONDA_SEMITAPPA_2026-05-08_JUN_M",
+        "nome_gara": "CORSA DELLA PACE JUNIORES SECONDA TAPPA SECONDA SEMITAPPA",
+        "data": "2026-05-08",
+        "atleta_id": "SOLAVAGGIONE_PIETRO",
+        "atleta_cognome": "SOLAVAGGIONE",
+        "atleta_nome": "PIETRO",
+        "posizione": 9,
+        "punti_effettivi": 4,
+        "moltiplicatore": 2,
+        "tipo": "nazionale",
+        "regione": "SJLNJENI ZAVOD",
+        "km": "63.800",
+        "media": "48.353"
       }
     ],
     "punti_per_cat": {
-      "JUN_M": 87
+      "JUN_M": 121
     }
   },
   "SVIZZERA": {
@@ -66704,7 +66735,7 @@
   "NORVEGIA": {
     "id": "NORVEGIA",
     "nome": "NORVEGIA",
-    "punti_totali": 46,
+    "punti_totali": 52,
     "atleti": [
       "FURENES_MADS",
       "ORHOLM_LONSETH_SIND"
@@ -66754,18 +66785,34 @@
         "regione": "CASOVKA",
         "km": "8.800",
         "media": "50.139"
+      },
+      {
+        "gara_id": "CORSA_DELLA_PACE_JUNIORES_SECONDA_TAPPA_SECONDA_SEMITAPPA_2026-05-08_JUN_M",
+        "nome_gara": "CORSA DELLA PACE JUNIORES SECONDA TAPPA SECONDA SEMITAPPA",
+        "data": "2026-05-08",
+        "atleta_id": "ORHOLM_LONSETH_SIND",
+        "atleta_cognome": "ORHOLM-LONSETH",
+        "atleta_nome": "SIND",
+        "posizione": 8,
+        "punti_effettivi": 6,
+        "moltiplicatore": 2,
+        "tipo": "nazionale",
+        "regione": "SJLNJENI ZAVOD",
+        "km": "63.800",
+        "media": "48.353"
       }
     ],
     "punti_per_cat": {
-      "JUN_M": 46
+      "JUN_M": 52
     }
   },
   "CANADA": {
     "id": "CANADA",
     "nome": "CANADA",
-    "punti_totali": 20,
+    "punti_totali": 44,
     "atleti": [
-      "SCOTT_BOURIS_AMOS"
+      "SCOTT_BOURIS_AMOS",
+      "MOREAU_ZACHARI"
     ],
     "risultati": [
       {
@@ -66782,10 +66829,40 @@
         "regione": "LITOMERICE",
         "km": "110.200",
         "media": "41.273"
+      },
+      {
+        "gara_id": "CORSA_DELLA_PACE_JUNIORES_SECONDA_TAPPA_SECONDA_SEMITAPPA_2026-05-08_JUN_M",
+        "nome_gara": "CORSA DELLA PACE JUNIORES SECONDA TAPPA SECONDA SEMITAPPA",
+        "data": "2026-05-08",
+        "atleta_id": "SCOTT_BOURIS_AMOS",
+        "atleta_cognome": "SCOTT",
+        "atleta_nome": "BOURIS AMOS",
+        "posizione": 4,
+        "punti_effettivi": 16,
+        "moltiplicatore": 2,
+        "tipo": "nazionale",
+        "regione": "SJLNJENI ZAVOD",
+        "km": "63.800",
+        "media": "48.353"
+      },
+      {
+        "gara_id": "CORSA_DELLA_PACE_JUNIORES_SECONDA_TAPPA_SECONDA_SEMITAPPA_2026-05-08_JUN_M",
+        "nome_gara": "CORSA DELLA PACE JUNIORES SECONDA TAPPA SECONDA SEMITAPPA",
+        "data": "2026-05-08",
+        "atleta_id": "MOREAU_ZACHARI",
+        "atleta_cognome": "MOREAU",
+        "atleta_nome": "ZACHARI",
+        "posizione": 7,
+        "punti_effettivi": 8,
+        "moltiplicatore": 2,
+        "tipo": "nazionale",
+        "regione": "SJLNJENI ZAVOD",
+        "km": "63.800",
+        "media": "48.353"
       }
     ],
     "punti_per_cat": {
-      "JUN_M": 20
+      "JUN_M": 44
     }
   },
   "RKC_ROMAN_KREUZIGER": {
@@ -66886,6 +66963,146 @@
     ],
     "punti_per_cat": {
       "JUN_M": 28
+    }
+  },
+  "REPUBBLICA_CECA": {
+    "id": "REPUBBLICA_CECA",
+    "nome": "REPUBBLICA CECA",
+    "punti_totali": 24,
+    "atleti": [
+      "TESARIK_JAKUB"
+    ],
+    "risultati": [
+      {
+        "gara_id": "CORSA_DELLA_PACE_JUNIORES_SECONDA_TAPPA_SECONDA_SEMITAPPA_2026-05-08_JUN_M",
+        "nome_gara": "CORSA DELLA PACE JUNIORES SECONDA TAPPA SECONDA SEMITAPPA",
+        "data": "2026-05-08",
+        "atleta_id": "TESARIK_JAKUB",
+        "atleta_cognome": "TESARIK",
+        "atleta_nome": "JAKUB",
+        "posizione": 2,
+        "punti_effettivi": 24,
+        "moltiplicatore": 2,
+        "tipo": "nazionale",
+        "regione": "SJLNJENI ZAVOD",
+        "km": "63.800",
+        "media": "48.353"
+      }
+    ],
+    "punti_per_cat": {
+      "JUN_M": 24
+    }
+  },
+  "LETTONIA": {
+    "id": "LETTONIA",
+    "nome": "LETTONIA",
+    "punti_totali": 20,
+    "atleti": [
+      "LOGINS_ARVIDS"
+    ],
+    "risultati": [
+      {
+        "gara_id": "CORSA_DELLA_PACE_JUNIORES_SECONDA_TAPPA_SECONDA_SEMITAPPA_2026-05-08_JUN_M",
+        "nome_gara": "CORSA DELLA PACE JUNIORES SECONDA TAPPA SECONDA SEMITAPPA",
+        "data": "2026-05-08",
+        "atleta_id": "LOGINS_ARVIDS",
+        "atleta_cognome": "LOGINS",
+        "atleta_nome": "ARVIDS",
+        "posizione": 3,
+        "punti_effettivi": 20,
+        "moltiplicatore": 2,
+        "tipo": "nazionale",
+        "regione": "SJLNJENI ZAVOD",
+        "km": "63.800",
+        "media": "48.353"
+      }
+    ],
+    "punti_per_cat": {
+      "JUN_M": 20
+    }
+  },
+  "LUSSEMBURGO": {
+    "id": "LUSSEMBURGO",
+    "nome": "LUSSEMBURGO",
+    "punti_totali": 12,
+    "atleti": [
+      "OUTLET_MAXMILIEN"
+    ],
+    "risultati": [
+      {
+        "gara_id": "CORSA_DELLA_PACE_JUNIORES_SECONDA_TAPPA_SECONDA_SEMITAPPA_2026-05-08_JUN_M",
+        "nome_gara": "CORSA DELLA PACE JUNIORES SECONDA TAPPA SECONDA SEMITAPPA",
+        "data": "2026-05-08",
+        "atleta_id": "OUTLET_MAXMILIEN",
+        "atleta_cognome": "OUTLET",
+        "atleta_nome": "MAXMILIEN",
+        "posizione": 5,
+        "punti_effettivi": 12,
+        "moltiplicatore": 2,
+        "tipo": "nazionale",
+        "regione": "SJLNJENI ZAVOD",
+        "km": "63.800",
+        "media": "48.353"
+      }
+    ],
+    "punti_per_cat": {
+      "JUN_M": 12
+    }
+  },
+  "IRLANDA": {
+    "id": "IRLANDA",
+    "nome": "IRLANDA",
+    "punti_totali": 10,
+    "atleti": [
+      "KILLEEN_FIONN"
+    ],
+    "risultati": [
+      {
+        "gara_id": "CORSA_DELLA_PACE_JUNIORES_SECONDA_TAPPA_SECONDA_SEMITAPPA_2026-05-08_JUN_M",
+        "nome_gara": "CORSA DELLA PACE JUNIORES SECONDA TAPPA SECONDA SEMITAPPA",
+        "data": "2026-05-08",
+        "atleta_id": "KILLEEN_FIONN",
+        "atleta_cognome": "KILLEEN",
+        "atleta_nome": "FIONN",
+        "posizione": 6,
+        "punti_effettivi": 10,
+        "moltiplicatore": 2,
+        "tipo": "nazionale",
+        "regione": "SJLNJENI ZAVOD",
+        "km": "63.800",
+        "media": "48.353"
+      }
+    ],
+    "punti_per_cat": {
+      "JUN_M": 10
+    }
+  },
+  "SVEZIA": {
+    "id": "SVEZIA",
+    "nome": "SVEZIA",
+    "punti_totali": 2,
+    "atleti": [
+      "LINDEN_ARVID"
+    ],
+    "risultati": [
+      {
+        "gara_id": "CORSA_DELLA_PACE_JUNIORES_SECONDA_TAPPA_SECONDA_SEMITAPPA_2026-05-08_JUN_M",
+        "nome_gara": "CORSA DELLA PACE JUNIORES SECONDA TAPPA SECONDA SEMITAPPA",
+        "data": "2026-05-08",
+        "atleta_id": "LINDEN_ARVID",
+        "atleta_cognome": "LINDEN",
+        "atleta_nome": "ARVID",
+        "posizione": 10,
+        "punti_effettivi": 2,
+        "moltiplicatore": 2,
+        "tipo": "nazionale",
+        "regione": "SJLNJENI ZAVOD",
+        "km": "63.800",
+        "media": "48.353"
+      }
+    ],
+    "punti_per_cat": {
+      "JUN_M": 2
     }
   }
 }
