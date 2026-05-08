@@ -56057,7 +56057,7 @@
   "JEGG_SKIL_DJR": {
     "id": "JEGG_SKIL_DJR",
     "nome": "JEGG SKIL DJR",
-    "punti_totali": 54,
+    "punti_totali": 86,
     "atleti": [
       "WANDEL_ELIAS",
       "RISBJERG_MALTHE"
@@ -56107,10 +56107,40 @@
         "regione": "FRIULI VENEZIA GIULIA",
         "km": "119.000",
         "media": "42.930"
+      },
+      {
+        "gara_id": "CORSA_DELLA_PACE_JUNIORES_SECONDA_TAPPA_PRIMA_SEMITAPPA_CRONOMETRO_2026-05-08_JUN_M",
+        "nome_gara": "CORSA DELLA PACE JUNIORES SECONDA TAPPA PRIMA SEMITAPPA CRONOMETRO",
+        "data": "2026-05-08",
+        "atleta_id": "RISBJERG_MALTHE",
+        "atleta_cognome": "RISBJERG",
+        "atleta_nome": "MALTHE",
+        "posizione": 1,
+        "punti_effettivi": 30,
+        "moltiplicatore": 2,
+        "tipo": "nazionale",
+        "regione": "CASOVKA",
+        "km": "8.800",
+        "media": "50.139"
+      },
+      {
+        "gara_id": "CORSA_DELLA_PACE_JUNIORES_SECONDA_TAPPA_PRIMA_SEMITAPPA_CRONOMETRO_2026-05-08_JUN_M",
+        "nome_gara": "CORSA DELLA PACE JUNIORES SECONDA TAPPA PRIMA SEMITAPPA CRONOMETRO",
+        "data": "2026-05-08",
+        "atleta_id": "WANDEL_ELIAS",
+        "atleta_cognome": "WANDEL",
+        "atleta_nome": "ELIAS",
+        "posizione": 10,
+        "punti_effettivi": 2,
+        "moltiplicatore": 2,
+        "tipo": "nazionale",
+        "regione": "CASOVKA",
+        "km": "8.800",
+        "media": "50.139"
       }
     ],
     "punti_per_cat": {
-      "JUN_M": 54
+      "JUN_M": 86
     }
   },
   "WWV_HAGENS_BERMAN_JAYCO": {
@@ -64961,10 +64991,11 @@
   "ITALIA": {
     "id": "ITALIA",
     "nome": "ITALIA",
-    "punti_totali": 77,
+    "punti_totali": 87,
     "atleti": [
       "FEDRIZZI_BRANDON_DAVIDE",
-      "CINGOLANI_TOMMASO"
+      "CINGOLANI_TOMMASO",
+      "PEZZO_ROSOLA_PATRIK"
     ],
     "risultati": [
       {
@@ -65011,10 +65042,25 @@
         "regione": "LITOMERICE",
         "km": "110.200",
         "media": "41.273"
+      },
+      {
+        "gara_id": "CORSA_DELLA_PACE_JUNIORES_SECONDA_TAPPA_PRIMA_SEMITAPPA_CRONOMETRO_2026-05-08_JUN_M",
+        "nome_gara": "CORSA DELLA PACE JUNIORES SECONDA TAPPA PRIMA SEMITAPPA CRONOMETRO",
+        "data": "2026-05-08",
+        "atleta_id": "PEZZO_ROSOLA_PATRIK",
+        "atleta_cognome": "PEZZO ROSOLA",
+        "atleta_nome": "PATRIK",
+        "posizione": 6,
+        "punti_effettivi": 10,
+        "moltiplicatore": 2,
+        "tipo": "nazionale",
+        "regione": "CASOVKA",
+        "km": "8.800",
+        "media": "50.139"
       }
     ],
     "punti_per_cat": {
-      "JUN_M": 77
+      "JUN_M": 87
     }
   },
   "SVIZZERA": {
@@ -65048,11 +65094,12 @@
   "OLANDA": {
     "id": "OLANDA",
     "nome": "OLANDA",
-    "punti_totali": 39,
+    "punti_totali": 51,
     "atleti": [
       "BASTIAANSSEN_FINN",
       "WIERSMA_THIJS",
-      "VAN_DEN_BIGGELAAR"
+      "VAN_DEN_BIGGELAAR",
+      "WINTERS_GIJS"
     ],
     "risultati": [
       {
@@ -65099,18 +65146,34 @@
         "regione": "LITOMERICE",
         "km": "110.200",
         "media": "41.273"
+      },
+      {
+        "gara_id": "CORSA_DELLA_PACE_JUNIORES_SECONDA_TAPPA_PRIMA_SEMITAPPA_CRONOMETRO_2026-05-08_JUN_M",
+        "nome_gara": "CORSA DELLA PACE JUNIORES SECONDA TAPPA PRIMA SEMITAPPA CRONOMETRO",
+        "data": "2026-05-08",
+        "atleta_id": "WINTERS_GIJS",
+        "atleta_cognome": "WINTERS",
+        "atleta_nome": "GIJS",
+        "posizione": 5,
+        "punti_effettivi": 12,
+        "moltiplicatore": 2,
+        "tipo": "nazionale",
+        "regione": "CASOVKA",
+        "km": "8.800",
+        "media": "50.139"
       }
     ],
     "punti_per_cat": {
-      "JUN_M": 39
+      "JUN_M": 51
     }
   },
   "FRANCIA": {
     "id": "FRANCIA",
     "nome": "FRANCIA",
-    "punti_totali": 18,
+    "punti_totali": 26,
     "atleti": [
-      "PICARD_ALBAN"
+      "PICARD_ALBAN",
+      "LE_PANN_SOEN"
     ],
     "risultati": [
       {
@@ -65127,10 +65190,25 @@
         "regione": "HARELBEKE",
         "km": "135.800",
         "media": "41.906"
+      },
+      {
+        "gara_id": "CORSA_DELLA_PACE_JUNIORES_SECONDA_TAPPA_PRIMA_SEMITAPPA_CRONOMETRO_2026-05-08_JUN_M",
+        "nome_gara": "CORSA DELLA PACE JUNIORES SECONDA TAPPA PRIMA SEMITAPPA CRONOMETRO",
+        "data": "2026-05-08",
+        "atleta_id": "LE_PANN_SOEN",
+        "atleta_cognome": "LE",
+        "atleta_nome": "PANN SOEN",
+        "posizione": 7,
+        "punti_effettivi": 8,
+        "moltiplicatore": 2,
+        "tipo": "nazionale",
+        "regione": "CASOVKA",
+        "km": "8.800",
+        "media": "50.139"
       }
     ],
     "punti_per_cat": {
-      "JUN_M": 18
+      "JUN_M": 26
     }
   },
   "CRABBE_DSTNY": {
@@ -65164,7 +65242,7 @@
   "STATI_UNITI": {
     "id": "STATI_UNITI",
     "nome": "STATI UNITI",
-    "punti_totali": 12,
+    "punti_totali": 32,
     "atleti": [
       "HINCAPIE_ENZO"
     ],
@@ -65183,19 +65261,35 @@
         "regione": "HARELBEKE",
         "km": "135.800",
         "media": "41.906"
+      },
+      {
+        "gara_id": "CORSA_DELLA_PACE_JUNIORES_SECONDA_TAPPA_PRIMA_SEMITAPPA_CRONOMETRO_2026-05-08_JUN_M",
+        "nome_gara": "CORSA DELLA PACE JUNIORES SECONDA TAPPA PRIMA SEMITAPPA CRONOMETRO",
+        "data": "2026-05-08",
+        "atleta_id": "HINCAPIE_ENZO",
+        "atleta_cognome": "HINCAPIE",
+        "atleta_nome": "ENZO",
+        "posizione": 3,
+        "punti_effettivi": 20,
+        "moltiplicatore": 2,
+        "tipo": "nazionale",
+        "regione": "CASOVKA",
+        "km": "8.800",
+        "media": "50.139"
       }
     ],
     "punti_per_cat": {
-      "JUN_M": 12
+      "JUN_M": 32
     }
   },
   "BELGIO": {
     "id": "BELGIO",
     "nome": "BELGIO",
-    "punti_totali": 25,
+    "punti_totali": 31,
     "atleti": [
       "DE_SMET_VIC",
-      "VERNAILLEN_STAN"
+      "VERNAILLEN_STAN",
+      "VAN_KERCKHOVE_SEFF"
     ],
     "risultati": [
       {
@@ -65227,10 +65321,25 @@
         "regione": "LITOMERICE",
         "km": "110.200",
         "media": "41.273"
+      },
+      {
+        "gara_id": "CORSA_DELLA_PACE_JUNIORES_SECONDA_TAPPA_PRIMA_SEMITAPPA_CRONOMETRO_2026-05-08_JUN_M",
+        "nome_gara": "CORSA DELLA PACE JUNIORES SECONDA TAPPA PRIMA SEMITAPPA CRONOMETRO",
+        "data": "2026-05-08",
+        "atleta_id": "VAN_KERCKHOVE_SEFF",
+        "atleta_cognome": "VAN KERCKHOVE",
+        "atleta_nome": "SEFF",
+        "posizione": 8,
+        "punti_effettivi": 6,
+        "moltiplicatore": 2,
+        "tipo": "nazionale",
+        "regione": "CASOVKA",
+        "km": "8.800",
+        "media": "50.139"
       }
     ],
     "punti_per_cat": {
-      "JUN_M": 25
+      "JUN_M": 31
     }
   },
   "GERMANIA": {
@@ -66595,7 +66704,7 @@
   "NORVEGIA": {
     "id": "NORVEGIA",
     "nome": "NORVEGIA",
-    "punti_totali": 30,
+    "punti_totali": 46,
     "atleti": [
       "FURENES_MADS",
       "ORHOLM_LONSETH_SIND"
@@ -66630,10 +66739,25 @@
         "regione": "LITOMERICE",
         "km": "110.200",
         "media": "41.273"
+      },
+      {
+        "gara_id": "CORSA_DELLA_PACE_JUNIORES_SECONDA_TAPPA_PRIMA_SEMITAPPA_CRONOMETRO_2026-05-08_JUN_M",
+        "nome_gara": "CORSA DELLA PACE JUNIORES SECONDA TAPPA PRIMA SEMITAPPA CRONOMETRO",
+        "data": "2026-05-08",
+        "atleta_id": "ORHOLM_LONSETH_SIND",
+        "atleta_cognome": "ORHOLM-LONSETH",
+        "atleta_nome": "SIND",
+        "posizione": 4,
+        "punti_effettivi": 16,
+        "moltiplicatore": 2,
+        "tipo": "nazionale",
+        "regione": "CASOVKA",
+        "km": "8.800",
+        "media": "50.139"
       }
     ],
     "punti_per_cat": {
-      "JUN_M": 30
+      "JUN_M": 46
     }
   },
   "CANADA": {
@@ -66718,6 +66842,50 @@
     ],
     "punti_per_cat": {
       "JUN_M": 4
+    }
+  },
+  "DANIMARCA": {
+    "id": "DANIMARCA",
+    "nome": "DANIMARCA",
+    "punti_totali": 28,
+    "atleti": [
+      "BIRKEDAL_JULIUS",
+      "HANSEN_RASMUS"
+    ],
+    "risultati": [
+      {
+        "gara_id": "CORSA_DELLA_PACE_JUNIORES_SECONDA_TAPPA_PRIMA_SEMITAPPA_CRONOMETRO_2026-05-08_JUN_M",
+        "nome_gara": "CORSA DELLA PACE JUNIORES SECONDA TAPPA PRIMA SEMITAPPA CRONOMETRO",
+        "data": "2026-05-08",
+        "atleta_id": "BIRKEDAL_JULIUS",
+        "atleta_cognome": "BIRKEDAL",
+        "atleta_nome": "JULIUS",
+        "posizione": 2,
+        "punti_effettivi": 24,
+        "moltiplicatore": 2,
+        "tipo": "nazionale",
+        "regione": "CASOVKA",
+        "km": "8.800",
+        "media": "50.139"
+      },
+      {
+        "gara_id": "CORSA_DELLA_PACE_JUNIORES_SECONDA_TAPPA_PRIMA_SEMITAPPA_CRONOMETRO_2026-05-08_JUN_M",
+        "nome_gara": "CORSA DELLA PACE JUNIORES SECONDA TAPPA PRIMA SEMITAPPA CRONOMETRO",
+        "data": "2026-05-08",
+        "atleta_id": "HANSEN_RASMUS",
+        "atleta_cognome": "HANSEN",
+        "atleta_nome": "RASMUS",
+        "posizione": 9,
+        "punti_effettivi": 4,
+        "moltiplicatore": 2,
+        "tipo": "nazionale",
+        "regione": "CASOVKA",
+        "km": "8.800",
+        "media": "50.139"
+      }
+    ],
+    "punti_per_cat": {
+      "JUN_M": 28
     }
   }
 }
