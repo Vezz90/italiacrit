@@ -6264,7 +6264,7 @@
   "BIESSE_CARRERA_PREMAC": {
     "id": "BIESSE_CARRERA_PREMAC",
     "nome": "BIESSE - CARRERA - PREMAC",
-    "punti_totali": 228,
+    "punti_totali": 208,
     "atleti": [
       "AGOSTINACCHIO_FILIPPO",
       "VESCO_LEONARDO",
@@ -6277,9 +6277,7 @@
       "MINOIA_ALESSANDRO",
       "MILESI_ALESSANDRO",
       "TRAVELLA_NICHOLAS",
-      "ZUMSTEG_NICOLA",
-      "BIANCHI_ELISA",
-      "ACUTI_MARIA"
+      "ZUMSTEG_NICOLA"
     ],
     "risultati": [
       {
@@ -6583,36 +6581,6 @@
         "media": "43.448"
       },
       {
-        "gara_id": "GIRO_DELLE_MARCHE_IN_ROSA_2026-05-09_JUN_F",
-        "nome_gara": "GIRO DELLE MARCHE IN ROSA",
-        "data": "2026-05-09",
-        "atleta_id": "BIANCHI_ELISA",
-        "atleta_cognome": "BIANCHI",
-        "atleta_nome": "ELISA",
-        "posizione": 2,
-        "punti_effettivi": 12,
-        "moltiplicatore": 1,
-        "tipo": "regionale",
-        "regione": "MARCHE",
-        "km": "90.000",
-        "media": "36.986"
-      },
-      {
-        "gara_id": "GIRO_DELLE_MARCHE_IN_ROSA_2026-05-09_JUN_F",
-        "nome_gara": "GIRO DELLE MARCHE IN ROSA",
-        "data": "2026-05-09",
-        "atleta_id": "ACUTI_MARIA",
-        "atleta_cognome": "ACUTI",
-        "atleta_nome": "MARIA",
-        "posizione": 4,
-        "punti_effettivi": 8,
-        "moltiplicatore": 1,
-        "tipo": "regionale",
-        "regione": "MARCHE",
-        "km": "90.000",
-        "media": "36.986"
-      },
-      {
         "gara_id": "2_TROFEO_EDIL_GROUP_COSTRUZIONI_PICCOLO_FIANDRE_2026-05-09_JUN_M",
         "nome_gara": "2 TROFEO EDIL GROUP COSTRUZIONI PICCOLO FIANDRE",
         "data": "2026-05-09",
@@ -6630,8 +6598,7 @@
     ],
     "punti_per_cat": {
       "ELI_M": 184,
-      "JUN_M": 24,
-      "JUN_F": 20
+      "JUN_M": 24
     }
   },
   "ZAPPI_RACING_TEAM": {
@@ -7029,15 +6996,14 @@
   "PC_BAIX_EBRE_TORTOSA": {
     "id": "PC_BAIX_EBRE_TORTOSA",
     "nome": "PC BAIX EBRE TORTOSA",
-    "punti_totali": 142,
+    "punti_totali": 140,
     "atleti": [
       "GRECHISHKIN_VADIM",
       "NOVOLODSKII_ROSTISLAV",
       "VESHNIAKOV_DANIIL",
       "IAKOVLEV_MATVEL",
       "PROSANDEEV_IAROSLAV",
-      "SKORNIAKOV_BORIS",
-      "KOSTINA_OLGA"
+      "SKORNIAKOV_BORIS"
     ],
     "risultati": [
       {
@@ -7279,27 +7245,11 @@
         "regione": "PIEMONTE",
         "km": "96.700",
         "media": "43.148"
-      },
-      {
-        "gara_id": "GIRO_DELLE_MARCHE_IN_ROSA_2026-05-09_JUN_F",
-        "nome_gara": "GIRO DELLE MARCHE IN ROSA",
-        "data": "2026-05-09",
-        "atleta_id": "KOSTINA_OLGA",
-        "atleta_cognome": "KOSTINA",
-        "atleta_nome": "OLGA",
-        "posizione": 9,
-        "punti_effettivi": 2,
-        "moltiplicatore": 1,
-        "tipo": "regionale",
-        "regione": "MARCHE",
-        "km": "90.000",
-        "media": "36.986"
       }
     ],
     "punti_per_cat": {
       "ELI_M": 20,
-      "JUN_M": 120,
-      "JUN_F": 2
+      "JUN_M": 120
     }
   },
   "VPM_MORETTI_SCS": {
@@ -12290,7 +12240,7 @@
   "BFT_BURZONI_F": {
     "id": "BFT_BURZONI_F",
     "nome": "BFT BURZONI",
-    "punti_totali": 166,
+    "punti_totali": 177,
     "atleti": [
       "CAMPANA_AGATA",
       "COSTA_STARICCO_GIULIA",
@@ -12493,10 +12443,40 @@
         "regione": "JUNIORES",
         "km": "76.000",
         "media": "41.912"
+      },
+      {
+        "gara_id": "GIRO_DELLE_MARCHE_IN_ROSA_2026-05-09_JUN_F",
+        "nome_gara": "GIRO DELLE MARCHE IN ROSA",
+        "data": "2026-05-09",
+        "atleta_id": "ROSSIGNOLI_MATILDE",
+        "atleta_cognome": "ROSSIGNOLI",
+        "atleta_nome": "MATILDE",
+        "posizione": 3,
+        "punti_effettivi": 10,
+        "moltiplicatore": 1,
+        "tipo": "regionale",
+        "regione": "MARCHE",
+        "km": "90.000",
+        "media": "36.986"
+      },
+      {
+        "gara_id": "GIRO_DELLE_MARCHE_IN_ROSA_2026-05-09_JUN_F",
+        "nome_gara": "GIRO DELLE MARCHE IN ROSA",
+        "data": "2026-05-09",
+        "atleta_id": "ORSI_ALESSIA",
+        "atleta_cognome": "ORSI",
+        "atleta_nome": "ALESSIA",
+        "posizione": 10,
+        "punti_effettivi": 1,
+        "moltiplicatore": 1,
+        "tipo": "regionale",
+        "regione": "MARCHE",
+        "km": "90.000",
+        "media": "36.986"
       }
     ],
     "punti_per_cat": {
-      "JUN_F": 166
+      "JUN_F": 177
     }
   },
   "BRESCIA_F_MAGNI_FLANDRES_LOVE_F": {
@@ -12685,7 +12665,7 @@
   "BIESSE_CARRERA_PREMAC_F": {
     "id": "BIESSE_CARRERA_PREMAC_F",
     "nome": "BIESSE - CARRERA - PREMAC",
-    "punti_totali": 378,
+    "punti_totali": 398,
     "atleti": [
       "BIANCHI_ELISA",
       "MINICHINO_MELANIA",
@@ -13298,10 +13278,40 @@
         "regione": "JUNIORES",
         "km": "76.000",
         "media": "41.912"
+      },
+      {
+        "gara_id": "GIRO_DELLE_MARCHE_IN_ROSA_2026-05-09_JUN_F",
+        "nome_gara": "GIRO DELLE MARCHE IN ROSA",
+        "data": "2026-05-09",
+        "atleta_id": "BIANCHI_ELISA",
+        "atleta_cognome": "BIANCHI",
+        "atleta_nome": "ELISA",
+        "posizione": 2,
+        "punti_effettivi": 12,
+        "moltiplicatore": 1,
+        "tipo": "regionale",
+        "regione": "MARCHE",
+        "km": "90.000",
+        "media": "36.986"
+      },
+      {
+        "gara_id": "GIRO_DELLE_MARCHE_IN_ROSA_2026-05-09_JUN_F",
+        "nome_gara": "GIRO DELLE MARCHE IN ROSA",
+        "data": "2026-05-09",
+        "atleta_id": "ACUTI_MARIA",
+        "atleta_cognome": "ACUTI",
+        "atleta_nome": "MARIA",
+        "posizione": 4,
+        "punti_effettivi": 8,
+        "moltiplicatore": 1,
+        "tipo": "regionale",
+        "regione": "MARCHE",
+        "km": "90.000",
+        "media": "36.986"
       }
     ],
     "punti_per_cat": {
-      "JUN_F": 215,
+      "JUN_F": 235,
       "ELI_F": 63,
       "AL_F": 100
     }
@@ -13644,7 +13654,7 @@
   "TEAM_WILIER_BREGANZE_F": {
     "id": "TEAM_WILIER_BREGANZE_F",
     "nome": "TEAM WILIER BREGANZE",
-    "punti_totali": 72,
+    "punti_totali": 76,
     "atleti": [
       "LUISOTTO_BIANCA",
       "LANARO_EMMA",
@@ -13864,10 +13874,25 @@
         "regione": "ALLIEVE",
         "km": "49.500",
         "media": "34.329"
+      },
+      {
+        "gara_id": "GIRO_DELLE_MARCHE_IN_ROSA_2026-05-09_JUN_F",
+        "nome_gara": "GIRO DELLE MARCHE IN ROSA",
+        "data": "2026-05-09",
+        "atleta_id": "PASCUT_MADDALENA",
+        "atleta_cognome": "PASCUT",
+        "atleta_nome": "MADDALENA",
+        "posizione": 7,
+        "punti_effettivi": 4,
+        "moltiplicatore": 1,
+        "tipo": "regionale",
+        "regione": "MARCHE",
+        "km": "90.000",
+        "media": "36.986"
       }
     ],
     "punti_per_cat": {
-      "JUN_F": 16,
+      "JUN_F": 20,
       "AL_F": 56
     }
   },
@@ -16274,7 +16299,7 @@
   "U_C_CONSCIO_PEDALE_DEL_SILE_F": {
     "id": "U_C_CONSCIO_PEDALE_DEL_SILE_F",
     "nome": "U.C.CONSCIO PEDALE DEL SILE",
-    "punti_totali": 238,
+    "punti_totali": 244,
     "atleti": [
       "PIN_MATILDE",
       "MURARI_EMMA",
@@ -16751,12 +16776,27 @@
         "regione": "JUNIORES",
         "km": "76.000",
         "media": "41.912"
+      },
+      {
+        "gara_id": "GIRO_DELLE_MARCHE_IN_ROSA_2026-05-09_JUN_F",
+        "nome_gara": "GIRO DELLE MARCHE IN ROSA",
+        "data": "2026-05-09",
+        "atleta_id": "D_APOLLONIO_REBECCA",
+        "atleta_cognome": "D'APOLLONIO",
+        "atleta_nome": "REBECCA",
+        "posizione": 5,
+        "punti_effettivi": 6,
+        "moltiplicatore": 1,
+        "tipo": "regionale",
+        "regione": "MARCHE",
+        "km": "90.000",
+        "media": "36.986"
       }
     ],
     "punti_per_cat": {
       "ES1_F": 30,
       "ES2_F": 39,
-      "JUN_F": 44,
+      "JUN_F": 50,
       "AL_F": 125
     }
   },
@@ -43592,7 +43632,7 @@
   "ISOLMANT_PREMAC_VITTORIA_F": {
     "id": "ISOLMANT_PREMAC_VITTORIA_F",
     "nome": "ISOLMANT - PREMAC - VITTORIA",
-    "punti_totali": 130,
+    "punti_totali": 132,
     "atleti": [
       "CRESTANELLO_LARA",
       "CURNIS_VALERIA",
@@ -43750,16 +43790,31 @@
         "regione": "UNDER",
         "km": "83.920",
         "media": "38.422"
+      },
+      {
+        "gara_id": "GIRO_DELLE_MARCHE_IN_ROSA_2026-05-09_ELI_F",
+        "nome_gara": "GIRO DELLE MARCHE IN ROSA",
+        "data": "2026-05-09",
+        "atleta_id": "PEGOLO_CHANTAL",
+        "atleta_cognome": "PEGOLO",
+        "atleta_nome": "CHANTAL",
+        "posizione": 9,
+        "punti_effettivi": 2,
+        "moltiplicatore": 1,
+        "tipo": "regionale",
+        "regione": "MARCHE",
+        "km": "90.000",
+        "media": "36.986"
       }
     ],
     "punti_per_cat": {
-      "ELI_F": 130
+      "ELI_F": 132
     }
   },
   "TOP_GIRLS_FASSA_BORTOLO_F": {
     "id": "TOP_GIRLS_FASSA_BORTOLO_F",
     "nome": "TOP GIRLS - FASSA BORTOLO",
-    "punti_totali": 61,
+    "punti_totali": 82,
     "atleti": [
       "SIRI_IRMA",
       "REGHINI_CHIARA",
@@ -43842,10 +43897,40 @@
         "regione": "UNDER",
         "km": "83.920",
         "media": "38.422"
+      },
+      {
+        "gara_id": "GIRO_DELLE_MARCHE_IN_ROSA_2026-05-09_ELI_F",
+        "nome_gara": "GIRO DELLE MARCHE IN ROSA",
+        "data": "2026-05-09",
+        "atleta_id": "SIRI_IRMA",
+        "atleta_cognome": "SIRI",
+        "atleta_nome": "IRMA",
+        "posizione": 1,
+        "punti_effettivi": 15,
+        "moltiplicatore": 1,
+        "tipo": "regionale",
+        "regione": "MARCHE",
+        "km": "90.000",
+        "media": "36.986"
+      },
+      {
+        "gara_id": "GIRO_DELLE_MARCHE_IN_ROSA_2026-05-09_ELI_F",
+        "nome_gara": "GIRO DELLE MARCHE IN ROSA",
+        "data": "2026-05-09",
+        "atleta_id": "ZAMBELLI_ALESSIA",
+        "atleta_cognome": "ZAMBELLI",
+        "atleta_nome": "ALESSIA",
+        "posizione": 5,
+        "punti_effettivi": 6,
+        "moltiplicatore": 1,
+        "tipo": "regionale",
+        "regione": "MARCHE",
+        "km": "90.000",
+        "media": "36.986"
       }
     ],
     "punti_per_cat": {
-      "ELI_F": 61
+      "ELI_F": 82
     }
   },
   "AROMITALIA_VAIANO_F": {
@@ -50504,7 +50589,7 @@
   "BREGANZE_MILLENIUM_F": {
     "id": "BREGANZE_MILLENIUM_F",
     "nome": "BREGANZE MILLENIUM",
-    "punti_totali": 160,
+    "punti_totali": 168,
     "atleti": [
       "RAPPORTI_LINDA",
       "SBRISSA_ILARIA",
@@ -50771,10 +50856,40 @@
         "regione": "JUNIORES",
         "km": "76.000",
         "media": "41.912"
+      },
+      {
+        "gara_id": "GIRO_DELLE_MARCHE_IN_ROSA_2026-05-09_JUN_F",
+        "nome_gara": "GIRO DELLE MARCHE IN ROSA",
+        "data": "2026-05-09",
+        "atleta_id": "BALLAN_AZZURRA",
+        "atleta_cognome": "BALLAN",
+        "atleta_nome": "AZZURRA",
+        "posizione": 6,
+        "punti_effettivi": 5,
+        "moltiplicatore": 1,
+        "tipo": "regionale",
+        "regione": "MARCHE",
+        "km": "90.000",
+        "media": "36.986"
+      },
+      {
+        "gara_id": "GIRO_DELLE_MARCHE_IN_ROSA_2026-05-09_JUN_F",
+        "nome_gara": "GIRO DELLE MARCHE IN ROSA",
+        "data": "2026-05-09",
+        "atleta_id": "RAPPORTI_LINDA",
+        "atleta_cognome": "RAPPORTI",
+        "atleta_nome": "LINDA",
+        "posizione": 8,
+        "punti_effettivi": 3,
+        "moltiplicatore": 1,
+        "tipo": "regionale",
+        "regione": "MARCHE",
+        "km": "90.000",
+        "media": "36.986"
       }
     ],
     "punti_per_cat": {
-      "JUN_F": 117,
+      "JUN_F": 125,
       "ES1_F": 2,
       "ES2_F": 33,
       "AL_F": 8
@@ -50783,7 +50898,7 @@
   "PETRUCCI_GAUSS_CYCLING_TEAM_F": {
     "id": "PETRUCCI_GAUSS_CYCLING_TEAM_F",
     "nome": "PETRUCCI GAUSS CYCLING TEAM",
-    "punti_totali": 97,
+    "punti_totali": 120,
     "atleti": [
       "MASSARI_GIORGIA",
       "DANSHINA_POLINA",
@@ -50973,11 +51088,41 @@
         "regione": "JUNIORES",
         "km": "72.700",
         "media": "35.921"
+      },
+      {
+        "gara_id": "GIRO_DELLE_MARCHE_IN_ROSA_2026-05-09_ELI_F",
+        "nome_gara": "GIRO DELLE MARCHE IN ROSA",
+        "data": "2026-05-09",
+        "atleta_id": "DANSHINA_POLINA",
+        "atleta_cognome": "DANSHINA",
+        "atleta_nome": "POLINA",
+        "posizione": 4,
+        "punti_effettivi": 8,
+        "moltiplicatore": 1,
+        "tipo": "regionale",
+        "regione": "MARCHE",
+        "km": "90.000",
+        "media": "36.986"
+      },
+      {
+        "gara_id": "GIRO_DELLE_MARCHE_IN_ROSA_2026-05-09_JUN_F",
+        "nome_gara": "GIRO DELLE MARCHE IN ROSA",
+        "data": "2026-05-09",
+        "atleta_id": "NOVOLODSKAIA_ANGELINA",
+        "atleta_cognome": "NOVOLODSKAIA",
+        "atleta_nome": "ANGELINA",
+        "posizione": 1,
+        "punti_effettivi": 15,
+        "moltiplicatore": 1,
+        "tipo": "regionale",
+        "regione": "MARCHE",
+        "km": "90.000",
+        "media": "36.986"
       }
     ],
     "punti_per_cat": {
-      "JUN_F": 75,
-      "ELI_F": 22
+      "JUN_F": 90,
+      "ELI_F": 30
     }
   },
   "ASD_GS_SORGENTE_PRADIPOZZO_F": {
@@ -57859,7 +58004,7 @@
   "PC_BAIX_EBRE_TORTOSA_F": {
     "id": "PC_BAIX_EBRE_TORTOSA_F",
     "nome": "PC BAIX EBRE TORTOSA",
-    "punti_totali": 31,
+    "punti_totali": 33,
     "atleti": [
       "KOSTINA_OLGA"
     ],
@@ -57923,10 +58068,25 @@
         "regione": "JUNIORES",
         "km": "63.800",
         "media": "41.102"
+      },
+      {
+        "gara_id": "GIRO_DELLE_MARCHE_IN_ROSA_2026-05-09_JUN_F",
+        "nome_gara": "GIRO DELLE MARCHE IN ROSA",
+        "data": "2026-05-09",
+        "atleta_id": "KOSTINA_OLGA",
+        "atleta_cognome": "KOSTINA",
+        "atleta_nome": "OLGA",
+        "posizione": 9,
+        "punti_effettivi": 2,
+        "moltiplicatore": 1,
+        "tipo": "regionale",
+        "regione": "MARCHE",
+        "km": "90.000",
+        "media": "36.986"
       }
     ],
     "punti_per_cat": {
-      "JUN_F": 31
+      "JUN_F": 33
     }
   },
   "GS_CARTURA_NALIN": {
@@ -63749,7 +63909,7 @@
   "TOYOTA_VALENCIA_SAV_F": {
     "id": "TOYOTA_VALENCIA_SAV_F",
     "nome": "TOYOTA VALENCIA SAV",
-    "punti_totali": 33,
+    "punti_totali": 43,
     "atleti": [
       "VALGONEN_VALERIA"
     ],
@@ -63798,10 +63958,25 @@
         "regione": "UNDER",
         "km": "63.800",
         "media": "41.102"
+      },
+      {
+        "gara_id": "GIRO_DELLE_MARCHE_IN_ROSA_2026-05-09_ELI_F",
+        "nome_gara": "GIRO DELLE MARCHE IN ROSA",
+        "data": "2026-05-09",
+        "atleta_id": "VALGONEN_VALERIA",
+        "atleta_cognome": "VALGONEN",
+        "atleta_nome": "VALERIA",
+        "posizione": 3,
+        "punti_effettivi": 10,
+        "moltiplicatore": 1,
+        "tipo": "regionale",
+        "regione": "MARCHE",
+        "km": "90.000",
+        "media": "36.986"
       }
     ],
     "punti_per_cat": {
-      "ELI_F": 33
+      "ELI_F": 43
     }
   },
   "AR_MONEX_WMN_PRO_CYCLING_TEAM_F": {
@@ -63835,7 +64010,7 @@
   "BORN_TO_WIN_F": {
     "id": "BORN_TO_WIN_F",
     "nome": "BORN TO WIN",
-    "punti_totali": 15,
+    "punti_totali": 18,
     "atleti": [
       "BASILICO_VALENTINA",
       "LAUDI_IRENE"
@@ -63885,10 +64060,25 @@
         "regione": "UNDER",
         "km": "63.800",
         "media": "41.102"
+      },
+      {
+        "gara_id": "GIRO_DELLE_MARCHE_IN_ROSA_2026-05-09_ELI_F",
+        "nome_gara": "GIRO DELLE MARCHE IN ROSA",
+        "data": "2026-05-09",
+        "atleta_id": "BASILICO_VALENTINA",
+        "atleta_cognome": "BASILICO",
+        "atleta_nome": "VALENTINA",
+        "posizione": 8,
+        "punti_effettivi": 3,
+        "moltiplicatore": 1,
+        "tipo": "regionale",
+        "regione": "MARCHE",
+        "km": "90.000",
+        "media": "36.986"
       }
     ],
     "punti_per_cat": {
-      "ELI_F": 15
+      "ELI_F": 18
     }
   },
   "FANINI_PRO_CYCLING_F": {
@@ -64385,10 +64575,11 @@
   "TEAM_MENDELSPECK_E_WORK_F": {
     "id": "TEAM_MENDELSPECK_E_WORK_F",
     "nome": "TEAM MENDELSPECK E-WORK",
-    "punti_totali": 15,
+    "punti_totali": 31,
     "atleti": [
       "GIULIANI_GIULIA",
-      "BEZZONE_CAMILLA"
+      "BEZZONE_CAMILLA",
+      "NICHOLSON_KATELYN_MARIE_JANETTE"
     ],
     "risultati": [
       {
@@ -64420,10 +64611,40 @@
         "regione": "JUNIORES",
         "km": "78.400",
         "media": "40.137"
+      },
+      {
+        "gara_id": "GIRO_DELLE_MARCHE_IN_ROSA_2026-05-09_ELI_F",
+        "nome_gara": "GIRO DELLE MARCHE IN ROSA",
+        "data": "2026-05-09",
+        "atleta_id": "NICHOLSON_KATELYN_MARIE_JANETTE",
+        "atleta_cognome": "NICHOLSON",
+        "atleta_nome": "KATELYN MARIE JANETTE",
+        "posizione": 2,
+        "punti_effettivi": 12,
+        "moltiplicatore": 1,
+        "tipo": "regionale",
+        "regione": "MARCHE",
+        "km": "90.000",
+        "media": "36.986"
+      },
+      {
+        "gara_id": "GIRO_DELLE_MARCHE_IN_ROSA_2026-05-09_ELI_F",
+        "nome_gara": "GIRO DELLE MARCHE IN ROSA",
+        "data": "2026-05-09",
+        "atleta_id": "GIULIANI_GIULIA",
+        "atleta_cognome": "GIULIANI",
+        "atleta_nome": "GIULIA",
+        "posizione": 7,
+        "punti_effettivi": 4,
+        "moltiplicatore": 1,
+        "tipo": "regionale",
+        "regione": "MARCHE",
+        "km": "90.000",
+        "media": "36.986"
       }
     ],
     "punti_per_cat": {
-      "ELI_F": 10,
+      "ELI_F": 26,
       "JUN_F": 5
     }
   },
@@ -67599,169 +67820,8 @@
       "JUN_M": 2
     }
   },
-  "TOP_GIRLS_FASSA_BORTOLO": {
-    "id": "TOP_GIRLS_FASSA_BORTOLO",
-    "nome": "TOP GIRLS - FASSA BORTOLO",
-    "punti_totali": 21,
-    "atleti": [
-      "SIRI_IRMA",
-      "ZAMBELLI_ALESSIA"
-    ],
-    "risultati": [
-      {
-        "gara_id": "GIRO_DELLE_MARCHE_IN_ROSA_2026-05-09_ELI_F",
-        "nome_gara": "GIRO DELLE MARCHE IN ROSA",
-        "data": "2026-05-09",
-        "atleta_id": "SIRI_IRMA",
-        "atleta_cognome": "SIRI",
-        "atleta_nome": "IRMA",
-        "posizione": 1,
-        "punti_effettivi": 15,
-        "moltiplicatore": 1,
-        "tipo": "regionale",
-        "regione": "MARCHE",
-        "km": "90.000",
-        "media": "36.986"
-      },
-      {
-        "gara_id": "GIRO_DELLE_MARCHE_IN_ROSA_2026-05-09_ELI_F",
-        "nome_gara": "GIRO DELLE MARCHE IN ROSA",
-        "data": "2026-05-09",
-        "atleta_id": "ZAMBELLI_ALESSIA",
-        "atleta_cognome": "ZAMBELLI",
-        "atleta_nome": "ALESSIA",
-        "posizione": 5,
-        "punti_effettivi": 6,
-        "moltiplicatore": 1,
-        "tipo": "regionale",
-        "regione": "MARCHE",
-        "km": "90.000",
-        "media": "36.986"
-      }
-    ],
-    "punti_per_cat": {
-      "ELI_F": 21
-    }
-  },
-  "TEAM_MENDELSPECK_E_WORK": {
-    "id": "TEAM_MENDELSPECK_E_WORK",
-    "nome": "TEAM MENDELSPECK E-WORK",
-    "punti_totali": 16,
-    "atleti": [
-      "NICHOLSON_KATELYN_MARIE_JANETTE",
-      "GIULIANI_GIULIA"
-    ],
-    "risultati": [
-      {
-        "gara_id": "GIRO_DELLE_MARCHE_IN_ROSA_2026-05-09_ELI_F",
-        "nome_gara": "GIRO DELLE MARCHE IN ROSA",
-        "data": "2026-05-09",
-        "atleta_id": "NICHOLSON_KATELYN_MARIE_JANETTE",
-        "atleta_cognome": "NICHOLSON",
-        "atleta_nome": "KATELYN MARIE JANETTE",
-        "posizione": 2,
-        "punti_effettivi": 12,
-        "moltiplicatore": 1,
-        "tipo": "regionale",
-        "regione": "MARCHE",
-        "km": "90.000",
-        "media": "36.986"
-      },
-      {
-        "gara_id": "GIRO_DELLE_MARCHE_IN_ROSA_2026-05-09_ELI_F",
-        "nome_gara": "GIRO DELLE MARCHE IN ROSA",
-        "data": "2026-05-09",
-        "atleta_id": "GIULIANI_GIULIA",
-        "atleta_cognome": "GIULIANI",
-        "atleta_nome": "GIULIA",
-        "posizione": 7,
-        "punti_effettivi": 4,
-        "moltiplicatore": 1,
-        "tipo": "regionale",
-        "regione": "MARCHE",
-        "km": "90.000",
-        "media": "36.986"
-      }
-    ],
-    "punti_per_cat": {
-      "ELI_F": 16
-    }
-  },
-  "TOYOTA_VALENCIA_SAV": {
-    "id": "TOYOTA_VALENCIA_SAV",
-    "nome": "TOYOTA VALENCIA SAV",
-    "punti_totali": 10,
-    "atleti": [
-      "VALGONEN_VALERIA"
-    ],
-    "risultati": [
-      {
-        "gara_id": "GIRO_DELLE_MARCHE_IN_ROSA_2026-05-09_ELI_F",
-        "nome_gara": "GIRO DELLE MARCHE IN ROSA",
-        "data": "2026-05-09",
-        "atleta_id": "VALGONEN_VALERIA",
-        "atleta_cognome": "VALGONEN",
-        "atleta_nome": "VALERIA",
-        "posizione": 3,
-        "punti_effettivi": 10,
-        "moltiplicatore": 1,
-        "tipo": "regionale",
-        "regione": "MARCHE",
-        "km": "90.000",
-        "media": "36.986"
-      }
-    ],
-    "punti_per_cat": {
-      "ELI_F": 10
-    }
-  },
-  "PETRUCCI_GAUSS_CYCLING_TEAM": {
-    "id": "PETRUCCI_GAUSS_CYCLING_TEAM",
-    "nome": "PETRUCCI GAUSS CYCLING TEAM",
-    "punti_totali": 23,
-    "atleti": [
-      "DANSHINA_POLINA",
-      "NOVOLODSKAIA_ANGELINA"
-    ],
-    "risultati": [
-      {
-        "gara_id": "GIRO_DELLE_MARCHE_IN_ROSA_2026-05-09_ELI_F",
-        "nome_gara": "GIRO DELLE MARCHE IN ROSA",
-        "data": "2026-05-09",
-        "atleta_id": "DANSHINA_POLINA",
-        "atleta_cognome": "DANSHINA",
-        "atleta_nome": "POLINA",
-        "posizione": 4,
-        "punti_effettivi": 8,
-        "moltiplicatore": 1,
-        "tipo": "regionale",
-        "regione": "MARCHE",
-        "km": "90.000",
-        "media": "36.986"
-      },
-      {
-        "gara_id": "GIRO_DELLE_MARCHE_IN_ROSA_2026-05-09_JUN_F",
-        "nome_gara": "GIRO DELLE MARCHE IN ROSA",
-        "data": "2026-05-09",
-        "atleta_id": "NOVOLODSKAIA_ANGELINA",
-        "atleta_cognome": "NOVOLODSKAIA",
-        "atleta_nome": "ANGELINA",
-        "posizione": 1,
-        "punti_effettivi": 15,
-        "moltiplicatore": 1,
-        "tipo": "regionale",
-        "regione": "MARCHE",
-        "km": "90.000",
-        "media": "36.986"
-      }
-    ],
-    "punti_per_cat": {
-      "ELI_F": 8,
-      "JUN_F": 15
-    }
-  },
-  "WCC_UCI_WORLD_CYCLING_CENTRE": {
-    "id": "WCC_UCI_WORLD_CYCLING_CENTRE",
+  "WCC_UCI_WORLD_CYCLING_CENTRE_F": {
+    "id": "WCC_UCI_WORLD_CYCLING_CENTRE_F",
     "nome": "WCC - UCI WORLD CYCLING CENTRE",
     "punti_totali": 5,
     "atleti": [
@@ -67788,64 +67848,8 @@
       "ELI_F": 5
     }
   },
-  "BORN_TO_WIN": {
-    "id": "BORN_TO_WIN",
-    "nome": "BORN TO WIN",
-    "punti_totali": 3,
-    "atleti": [
-      "BASILICO_VALENTINA"
-    ],
-    "risultati": [
-      {
-        "gara_id": "GIRO_DELLE_MARCHE_IN_ROSA_2026-05-09_ELI_F",
-        "nome_gara": "GIRO DELLE MARCHE IN ROSA",
-        "data": "2026-05-09",
-        "atleta_id": "BASILICO_VALENTINA",
-        "atleta_cognome": "BASILICO",
-        "atleta_nome": "VALENTINA",
-        "posizione": 8,
-        "punti_effettivi": 3,
-        "moltiplicatore": 1,
-        "tipo": "regionale",
-        "regione": "MARCHE",
-        "km": "90.000",
-        "media": "36.986"
-      }
-    ],
-    "punti_per_cat": {
-      "ELI_F": 3
-    }
-  },
-  "ISOLMANT_PREMAC_VITTORIA": {
-    "id": "ISOLMANT_PREMAC_VITTORIA",
-    "nome": "ISOLMANT - PREMAC - VITTORIA",
-    "punti_totali": 2,
-    "atleti": [
-      "PEGOLO_CHANTAL"
-    ],
-    "risultati": [
-      {
-        "gara_id": "GIRO_DELLE_MARCHE_IN_ROSA_2026-05-09_ELI_F",
-        "nome_gara": "GIRO DELLE MARCHE IN ROSA",
-        "data": "2026-05-09",
-        "atleta_id": "PEGOLO_CHANTAL",
-        "atleta_cognome": "PEGOLO",
-        "atleta_nome": "CHANTAL",
-        "posizione": 9,
-        "punti_effettivi": 2,
-        "moltiplicatore": 1,
-        "tipo": "regionale",
-        "regione": "MARCHE",
-        "km": "90.000",
-        "media": "36.986"
-      }
-    ],
-    "punti_per_cat": {
-      "ELI_F": 2
-    }
-  },
-  "TIROL_WOMEN_CYCLING": {
-    "id": "TIROL_WOMEN_CYCLING",
+  "TIROL_WOMEN_CYCLING_F": {
+    "id": "TIROL_WOMEN_CYCLING_F",
     "nome": "TIROL WOMEN CYCLING",
     "punti_totali": 1,
     "atleti": [
@@ -67870,150 +67874,6 @@
     ],
     "punti_per_cat": {
       "ELI_F": 1
-    }
-  },
-  "BFT_BURZONI": {
-    "id": "BFT_BURZONI",
-    "nome": "BFT BURZONI",
-    "punti_totali": 11,
-    "atleti": [
-      "ROSSIGNOLI_MATILDE",
-      "ORSI_ALESSIA"
-    ],
-    "risultati": [
-      {
-        "gara_id": "GIRO_DELLE_MARCHE_IN_ROSA_2026-05-09_JUN_F",
-        "nome_gara": "GIRO DELLE MARCHE IN ROSA",
-        "data": "2026-05-09",
-        "atleta_id": "ROSSIGNOLI_MATILDE",
-        "atleta_cognome": "ROSSIGNOLI",
-        "atleta_nome": "MATILDE",
-        "posizione": 3,
-        "punti_effettivi": 10,
-        "moltiplicatore": 1,
-        "tipo": "regionale",
-        "regione": "MARCHE",
-        "km": "90.000",
-        "media": "36.986"
-      },
-      {
-        "gara_id": "GIRO_DELLE_MARCHE_IN_ROSA_2026-05-09_JUN_F",
-        "nome_gara": "GIRO DELLE MARCHE IN ROSA",
-        "data": "2026-05-09",
-        "atleta_id": "ORSI_ALESSIA",
-        "atleta_cognome": "ORSI",
-        "atleta_nome": "ALESSIA",
-        "posizione": 10,
-        "punti_effettivi": 1,
-        "moltiplicatore": 1,
-        "tipo": "regionale",
-        "regione": "MARCHE",
-        "km": "90.000",
-        "media": "36.986"
-      }
-    ],
-    "punti_per_cat": {
-      "JUN_F": 11
-    }
-  },
-  "U_C_CONSCIO_PEDALE_DEL_SILE": {
-    "id": "U_C_CONSCIO_PEDALE_DEL_SILE",
-    "nome": "U.C.CONSCIO PEDALE DEL SILE",
-    "punti_totali": 6,
-    "atleti": [
-      "D_APOLLONIO_REBECCA"
-    ],
-    "risultati": [
-      {
-        "gara_id": "GIRO_DELLE_MARCHE_IN_ROSA_2026-05-09_JUN_F",
-        "nome_gara": "GIRO DELLE MARCHE IN ROSA",
-        "data": "2026-05-09",
-        "atleta_id": "D_APOLLONIO_REBECCA",
-        "atleta_cognome": "D'APOLLONIO",
-        "atleta_nome": "REBECCA",
-        "posizione": 5,
-        "punti_effettivi": 6,
-        "moltiplicatore": 1,
-        "tipo": "regionale",
-        "regione": "MARCHE",
-        "km": "90.000",
-        "media": "36.986"
-      }
-    ],
-    "punti_per_cat": {
-      "JUN_F": 6
-    }
-  },
-  "BREGANZE_MILLENIUM": {
-    "id": "BREGANZE_MILLENIUM",
-    "nome": "BREGANZE MILLENIUM",
-    "punti_totali": 8,
-    "atleti": [
-      "BALLAN_AZZURRA",
-      "RAPPORTI_LINDA"
-    ],
-    "risultati": [
-      {
-        "gara_id": "GIRO_DELLE_MARCHE_IN_ROSA_2026-05-09_JUN_F",
-        "nome_gara": "GIRO DELLE MARCHE IN ROSA",
-        "data": "2026-05-09",
-        "atleta_id": "BALLAN_AZZURRA",
-        "atleta_cognome": "BALLAN",
-        "atleta_nome": "AZZURRA",
-        "posizione": 6,
-        "punti_effettivi": 5,
-        "moltiplicatore": 1,
-        "tipo": "regionale",
-        "regione": "MARCHE",
-        "km": "90.000",
-        "media": "36.986"
-      },
-      {
-        "gara_id": "GIRO_DELLE_MARCHE_IN_ROSA_2026-05-09_JUN_F",
-        "nome_gara": "GIRO DELLE MARCHE IN ROSA",
-        "data": "2026-05-09",
-        "atleta_id": "RAPPORTI_LINDA",
-        "atleta_cognome": "RAPPORTI",
-        "atleta_nome": "LINDA",
-        "posizione": 8,
-        "punti_effettivi": 3,
-        "moltiplicatore": 1,
-        "tipo": "regionale",
-        "regione": "MARCHE",
-        "km": "90.000",
-        "media": "36.986"
-      }
-    ],
-    "punti_per_cat": {
-      "JUN_F": 8
-    }
-  },
-  "TEAM_WILIER_BREGANZE": {
-    "id": "TEAM_WILIER_BREGANZE",
-    "nome": "TEAM WILIER BREGANZE",
-    "punti_totali": 4,
-    "atleti": [
-      "PASCUT_MADDALENA"
-    ],
-    "risultati": [
-      {
-        "gara_id": "GIRO_DELLE_MARCHE_IN_ROSA_2026-05-09_JUN_F",
-        "nome_gara": "GIRO DELLE MARCHE IN ROSA",
-        "data": "2026-05-09",
-        "atleta_id": "PASCUT_MADDALENA",
-        "atleta_cognome": "PASCUT",
-        "atleta_nome": "MADDALENA",
-        "posizione": 7,
-        "punti_effettivi": 4,
-        "moltiplicatore": 1,
-        "tipo": "regionale",
-        "regione": "MARCHE",
-        "km": "90.000",
-        "media": "36.986"
-      }
-    ],
-    "punti_per_cat": {
-      "JUN_F": 4
     }
   },
   "ST_KILDA_CYCLING_CLUB": {
