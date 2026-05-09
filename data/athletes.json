@@ -3358,7 +3358,7 @@
     "team_id": "FAIZANE_CSZ_SANDRIGO_BIKE",
     "categoria": "JUN_M",
     "genere": "M",
-    "punti_totali": 14,
+    "punti_totali": 22,
     "risultati": [
       {
         "gara_id": "67_GRAN_PREMIO_U_C_A_T_2026-05-03_JUN_M",
@@ -3398,6 +3398,19 @@
         "regione": "VENETO",
         "km": "96.000",
         "media": "43.598"
+      },
+      {
+        "gara_id": "2_TROFEO_EDIL_GROUP_COSTRUZIONI_PICCOLO_FIANDRE_2026-05-09_JUN_M",
+        "nome_gara": "2 TROFEO EDIL GROUP COSTRUZIONI PICCOLO FIANDRE",
+        "data": "2026-05-09",
+        "posizione": 4,
+        "punti_effettivi": 8,
+        "team": "FAIZANE' CSZ SANDRIGO BIKE",
+        "moltiplicatore": 1,
+        "tipo": "regionale",
+        "regione": "LOMBARDIA",
+        "km": "114.000",
+        "media": "38.816"
       }
     ]
   },
@@ -3576,7 +3589,7 @@
     "team_id": "BIESSE_CARRERA_PREMAC_F",
     "categoria": "JUN_F",
     "genere": "F",
-    "punti_totali": 89,
+    "punti_totali": 101,
     "risultati": [
       {
         "gara_id": "24_GRAN_PREMIO_ROSA_CITTA_DI_BOVOLONE_2026-05-03_JUN_F",
@@ -3681,6 +3694,19 @@
         "regione": "JUNIORES",
         "km": "78.400",
         "media": "40.137"
+      },
+      {
+        "gara_id": "GIRO_DELLE_MARCHE_IN_ROSA_2026-05-09_JUN_F",
+        "nome_gara": "GIRO DELLE MARCHE IN ROSA",
+        "data": "2026-05-09",
+        "posizione": 2,
+        "punti_effettivi": 12,
+        "team": "BIESSE - CARRERA - PREMAC",
+        "moltiplicatore": 1,
+        "tipo": "regionale",
+        "regione": "MARCHE",
+        "km": "90.000",
+        "media": "36.986"
       }
     ]
   },
@@ -3807,7 +3833,7 @@
     "team_id": "BFT_BURZONI_F",
     "categoria": "JUN_F",
     "genere": "F",
-    "punti_totali": 10,
+    "punti_totali": 11,
     "risultati": [
       {
         "gara_id": "24_GRAN_PREMIO_ROSA_CITTA_DI_BOVOLONE_2026-05-03_JUN_F",
@@ -3834,6 +3860,19 @@
         "regione": "JUNIORES",
         "km": "76.300",
         "media": "41.606"
+      },
+      {
+        "gara_id": "GIRO_DELLE_MARCHE_IN_ROSA_2026-05-09_JUN_F",
+        "nome_gara": "GIRO DELLE MARCHE IN ROSA",
+        "data": "2026-05-09",
+        "posizione": 10,
+        "punti_effettivi": 1,
+        "team": "BFT BURZONI",
+        "moltiplicatore": 1,
+        "tipo": "regionale",
+        "regione": "MARCHE",
+        "km": "90.000",
+        "media": "36.986"
       }
     ]
   },
@@ -24803,7 +24842,7 @@
     "team_id": "TOP_GIRLS_FASSA_BORTOLO_F",
     "categoria": "ELI_F",
     "genere": "F",
-    "punti_totali": 16,
+    "punti_totali": 31,
     "risultati": [
       {
         "gara_id": "2_TROFEO_ROSA_MONTALTO_PROVA_VALIDA_CAMPIONATO_REGIONALE_2026-05-02_ELI_F",
@@ -24817,6 +24856,19 @@
         "regione": "UNDER",
         "km": "87.700",
         "media": "35.861"
+      },
+      {
+        "gara_id": "GIRO_DELLE_MARCHE_IN_ROSA_2026-05-09_ELI_F",
+        "nome_gara": "GIRO DELLE MARCHE IN ROSA",
+        "data": "2026-05-09",
+        "posizione": 1,
+        "punti_effettivi": 15,
+        "team": "TOP GIRLS - FASSA BORTOLO",
+        "moltiplicatore": 1,
+        "tipo": "regionale",
+        "regione": "MARCHE",
+        "km": "90.000",
+        "media": "36.986"
       }
     ]
   },
@@ -28406,7 +28458,7 @@
     "team_id": "CICLISTICA_ROSTESE",
     "categoria": "ELI_M",
     "genere": "M",
-    "punti_totali": 57,
+    "punti_totali": 72,
     "risultati": [
       {
         "gara_id": "57_COPPA_PENNA_2026-05-01_ELI_M",
@@ -28459,6 +28511,19 @@
         "regione": "UNDER",
         "km": "164.600",
         "media": "40.051"
+      },
+      {
+        "gara_id": "2_MEMORIAL_GIORDANO_MIGNOLLI_2026-05-09_ELI_M",
+        "nome_gara": "2 MEMORIAL GIORDANO MIGNOLLI",
+        "data": "2026-05-09",
+        "posizione": 1,
+        "punti_effettivi": 15,
+        "team": "CICLISTICA ROSTESE",
+        "moltiplicatore": 1,
+        "tipo": "regionale",
+        "regione": "VENETO",
+        "km": "137.900",
+        "media": "43.448"
       }
     ]
   },
@@ -28687,7 +28752,7 @@
     "team_id": "TEAM_HOPPLA",
     "categoria": "ELI_M",
     "genere": "M",
-    "punti_totali": 43,
+    "punti_totali": 51,
     "risultati": [
       {
         "gara_id": "57_COPPA_PENNA_2026-05-01_ELI_M",
@@ -28753,6 +28818,19 @@
         "regione": "UNDER",
         "km": "149.000",
         "media": "42.393"
+      },
+      {
+        "gara_id": "2_MEMORIAL_GIORDANO_MIGNOLLI_2026-05-09_ELI_M",
+        "nome_gara": "2 MEMORIAL GIORDANO MIGNOLLI",
+        "data": "2026-05-09",
+        "posizione": 4,
+        "punti_effettivi": 8,
+        "team": "TEAM HOPPLA'",
+        "moltiplicatore": 1,
+        "tipo": "regionale",
+        "regione": "VENETO",
+        "km": "137.900",
+        "media": "43.448"
       }
     ]
   },
@@ -29401,7 +29479,7 @@
     "team_id": "A_S_D_CICLISTICA_MONSELICE",
     "categoria": "JUN_M",
     "genere": "M",
-    "punti_totali": 17,
+    "punti_totali": 27,
     "risultati": [
       {
         "gara_id": "57_GRAN_PREMIO_SPORTIVI_DI_BADOERE_2026-05-01_JUN_M",
@@ -29441,6 +29519,19 @@
         "regione": "TOSCANA",
         "km": "77.000",
         "media": "43.030"
+      },
+      {
+        "gara_id": "2_TROFEO_EDIL_GROUP_COSTRUZIONI_PICCOLO_FIANDRE_2026-05-09_JUN_M",
+        "nome_gara": "2 TROFEO EDIL GROUP COSTRUZIONI PICCOLO FIANDRE",
+        "data": "2026-05-09",
+        "posizione": 3,
+        "punti_effettivi": 10,
+        "team": "A.S.D. CICLISTICA MONSELICE",
+        "moltiplicatore": 1,
+        "tipo": "regionale",
+        "regione": "LOMBARDIA",
+        "km": "114.000",
+        "media": "38.816"
       }
     ]
   },
@@ -29691,7 +29782,7 @@
     "team_id": "TEAM_ECOTEK_ZERO24",
     "categoria": "JUN_M",
     "genere": "M",
-    "punti_totali": 87,
+    "punti_totali": 102,
     "risultati": [
       {
         "gara_id": "46_COPPA_CITTA_DI_CANTU_2026-05-01_JUN_M",
@@ -29809,6 +29900,19 @@
         "regione": "EMILIA ROMAGNA",
         "km": "85.500",
         "media": "46.978"
+      },
+      {
+        "gara_id": "2_TROFEO_EDIL_GROUP_COSTRUZIONI_PICCOLO_FIANDRE_2026-05-09_JUN_M",
+        "nome_gara": "2 TROFEO EDIL GROUP COSTRUZIONI PICCOLO FIANDRE",
+        "data": "2026-05-09",
+        "posizione": 1,
+        "punti_effettivi": 15,
+        "team": "TEAM ECOTEK ZERO24",
+        "moltiplicatore": 1,
+        "tipo": "regionale",
+        "regione": "LOMBARDIA",
+        "km": "114.000",
+        "media": "38.816"
       }
     ]
   },
@@ -30546,7 +30650,7 @@
     "team_id": "TEAM_ECOTEK_ZERO24",
     "categoria": "JUN_M",
     "genere": "M",
-    "punti_totali": 1,
+    "punti_totali": 2,
     "risultati": [
       {
         "gara_id": "69_COPPA_1_MAGGIO_2026-05-01_JUN_M",
@@ -30560,6 +30664,19 @@
         "regione": "LOMBARDIA",
         "km": "74.000",
         "media": "44.341"
+      },
+      {
+        "gara_id": "2_TROFEO_EDIL_GROUP_COSTRUZIONI_PICCOLO_FIANDRE_2026-05-09_JUN_M",
+        "nome_gara": "2 TROFEO EDIL GROUP COSTRUZIONI PICCOLO FIANDRE",
+        "data": "2026-05-09",
+        "posizione": 10,
+        "punti_effettivi": 1,
+        "team": "TEAM ECOTEK ZERO24",
+        "moltiplicatore": 1,
+        "tipo": "regionale",
+        "regione": "LOMBARDIA",
+        "km": "114.000",
+        "media": "38.816"
       }
     ]
   },
@@ -30571,7 +30688,7 @@
     "team_id": "U_C_CONSCIO_PEDALE_DEL_SILE_F",
     "categoria": "JUN_F",
     "genere": "F",
-    "punti_totali": 20,
+    "punti_totali": 26,
     "risultati": [
       {
         "gara_id": "4_TROFEO_ROSA_CITTA_DI_CANTU_2026-05-01_JUN_F",
@@ -30611,6 +30728,19 @@
         "regione": "JUNIORES",
         "km": "94.000",
         "media": "39.929"
+      },
+      {
+        "gara_id": "GIRO_DELLE_MARCHE_IN_ROSA_2026-05-09_JUN_F",
+        "nome_gara": "GIRO DELLE MARCHE IN ROSA",
+        "data": "2026-05-09",
+        "posizione": 5,
+        "punti_effettivi": 6,
+        "team": "U.C.CONSCIO PEDALE DEL SILE",
+        "moltiplicatore": 1,
+        "tipo": "regionale",
+        "regione": "MARCHE",
+        "km": "90.000",
+        "media": "36.986"
       }
     ]
   },
@@ -30622,7 +30752,7 @@
     "team_id": "BREGANZE_MILLENIUM_F",
     "categoria": "JUN_F",
     "genere": "F",
-    "punti_totali": 12,
+    "punti_totali": 15,
     "risultati": [
       {
         "gara_id": "4_TROFEO_ROSA_CITTA_DI_CANTU_2026-05-01_JUN_F",
@@ -30636,6 +30766,19 @@
         "regione": "JUNIORES",
         "km": "72.600",
         "media": "37.151"
+      },
+      {
+        "gara_id": "GIRO_DELLE_MARCHE_IN_ROSA_2026-05-09_JUN_F",
+        "nome_gara": "GIRO DELLE MARCHE IN ROSA",
+        "data": "2026-05-09",
+        "posizione": 8,
+        "punti_effettivi": 3,
+        "team": "BREGANZE MILLENIUM",
+        "moltiplicatore": 1,
+        "tipo": "regionale",
+        "regione": "MARCHE",
+        "km": "90.000",
+        "media": "36.986"
       }
     ]
   },
@@ -30798,7 +30941,7 @@
     "team_id": "PETRUCCI_GAUSS_CYCLING_TEAM_F",
     "categoria": "JUN_F",
     "genere": "F",
-    "punti_totali": 19,
+    "punti_totali": 27,
     "risultati": [
       {
         "gara_id": "4_TROFEO_ROSA_CITTA_DI_CANTU_2026-05-01_JUN_F",
@@ -30838,6 +30981,19 @@
         "regione": "UNDER",
         "km": "81.000",
         "media": "41.134"
+      },
+      {
+        "gara_id": "GIRO_DELLE_MARCHE_IN_ROSA_2026-05-09_ELI_F",
+        "nome_gara": "GIRO DELLE MARCHE IN ROSA",
+        "data": "2026-05-09",
+        "posizione": 4,
+        "punti_effettivi": 8,
+        "team": "PETRUCCI GAUSS CYCLING TEAM",
+        "moltiplicatore": 1,
+        "tipo": "regionale",
+        "regione": "MARCHE",
+        "km": "90.000",
+        "media": "36.986"
       }
     ]
   },
@@ -40347,7 +40503,7 @@
     "team_id": "NORDEST_PETRUCCI_ASSALI_STEFEN",
     "categoria": "JUN_M",
     "genere": "M",
-    "punti_totali": 106,
+    "punti_totali": 136,
     "risultati": [
       {
         "gara_id": "15_GIRO_DI_PRIMAVERA_2026-04-26_JUN_M",
@@ -40413,6 +40569,19 @@
         "regione": "CASOVKA",
         "km": "8.800",
         "media": "50.139"
+      },
+      {
+        "gara_id": "CORSA_DELLA_PACE_JUNIORES_TERZA_TAPPA_2026-05-09_JUN_M",
+        "nome_gara": "CORSA DELLA PACE JUNIORES TERZA TAPPA",
+        "data": "2026-05-09",
+        "posizione": 1,
+        "punti_effettivi": 30,
+        "team": "ITALIA",
+        "moltiplicatore": 2,
+        "tipo": "nazionale",
+        "regione": "TEPLICE",
+        "km": "112.100",
+        "media": "45.791"
       }
     ]
   },
@@ -40501,7 +40670,7 @@
     "team_id": "JEGG_SKIL_DJR",
     "categoria": "JUN_M",
     "genere": "M",
-    "punti_totali": 26,
+    "punti_totali": 50,
     "risultati": [
       {
         "gara_id": "15_GIRO_DI_PRIMAVERA_2026-04-26_JUN_M",
@@ -40528,6 +40697,19 @@
         "regione": "CASOVKA",
         "km": "8.800",
         "media": "50.139"
+      },
+      {
+        "gara_id": "CORSA_DELLA_PACE_JUNIORES_TERZA_TAPPA_2026-05-09_JUN_M",
+        "nome_gara": "CORSA DELLA PACE JUNIORES TERZA TAPPA",
+        "data": "2026-05-09",
+        "posizione": 2,
+        "punti_effettivi": 24,
+        "team": "JEGG SKIL DJR",
+        "moltiplicatore": 2,
+        "tipo": "nazionale",
+        "regione": "TEPLICE",
+        "km": "112.100",
+        "media": "45.791"
       }
     ]
   },
@@ -40577,7 +40759,7 @@
     "team_id": "JEGG_SKIL_DJR",
     "categoria": "JUN_M",
     "genere": "M",
-    "punti_totali": 60,
+    "punti_totali": 76,
     "risultati": [
       {
         "gara_id": "15_GIRO_DI_PRIMAVERA_2026-04-26_JUN_M",
@@ -40617,6 +40799,19 @@
         "regione": "CASOVKA",
         "km": "8.800",
         "media": "50.139"
+      },
+      {
+        "gara_id": "CORSA_DELLA_PACE_JUNIORES_TERZA_TAPPA_2026-05-09_JUN_M",
+        "nome_gara": "CORSA DELLA PACE JUNIORES TERZA TAPPA",
+        "data": "2026-05-09",
+        "posizione": 4,
+        "punti_effettivi": 16,
+        "team": "JEGG SKIL DJR",
+        "moltiplicatore": 2,
+        "tipo": "nazionale",
+        "regione": "TEPLICE",
+        "km": "112.100",
+        "media": "45.791"
       }
     ]
   },
@@ -42305,7 +42500,7 @@
     "team_id": "BREGANZE_MILLENIUM_F",
     "categoria": "JUN_F",
     "genere": "F",
-    "punti_totali": 83,
+    "punti_totali": 88,
     "risultati": [
       {
         "gara_id": "GRAN_REMIO_PRIMAVERA_A_MASER_PROVA_VALIDA_CAMPIONATO_REGIONALE_2026-04-26_JUN_F",
@@ -42358,6 +42553,19 @@
         "regione": "JUNIORES",
         "km": "76.000",
         "media": "41.912"
+      },
+      {
+        "gara_id": "GIRO_DELLE_MARCHE_IN_ROSA_2026-05-09_JUN_F",
+        "nome_gara": "GIRO DELLE MARCHE IN ROSA",
+        "data": "2026-05-09",
+        "posizione": 6,
+        "punti_effettivi": 5,
+        "team": "BREGANZE MILLENIUM",
+        "moltiplicatore": 1,
+        "tipo": "regionale",
+        "regione": "MARCHE",
+        "km": "90.000",
+        "media": "36.986"
       }
     ]
   },
@@ -42433,7 +42641,7 @@
     "team_id": "PC_BAIX_EBRE_TORTOSA_F",
     "categoria": "JUN_F",
     "genere": "F",
-    "punti_totali": 31,
+    "punti_totali": 33,
     "risultati": [
       {
         "gara_id": "GRAN_REMIO_PRIMAVERA_A_MASER_PROVA_VALIDA_CAMPIONATO_REGIONALE_2026-04-26_JUN_F",
@@ -42486,6 +42694,19 @@
         "regione": "JUNIORES",
         "km": "63.800",
         "media": "41.102"
+      },
+      {
+        "gara_id": "GIRO_DELLE_MARCHE_IN_ROSA_2026-05-09_JUN_F",
+        "nome_gara": "GIRO DELLE MARCHE IN ROSA",
+        "data": "2026-05-09",
+        "posizione": 9,
+        "punti_effettivi": 2,
+        "team": "PC BAIX EBRE TORTOSA",
+        "moltiplicatore": 1,
+        "tipo": "regionale",
+        "regione": "MARCHE",
+        "km": "90.000",
+        "media": "36.986"
       }
     ]
   },
@@ -42561,7 +42782,7 @@
     "team_id": "BIESSE_CARRERA_PREMAC_F",
     "categoria": "JUN_F",
     "genere": "F",
-    "punti_totali": 24,
+    "punti_totali": 32,
     "risultati": [
       {
         "gara_id": "GRAN_REMIO_PRIMAVERA_A_MASER_PROVA_VALIDA_CAMPIONATO_REGIONALE_2026-04-26_JUN_F",
@@ -42627,6 +42848,19 @@
         "regione": "JUNIORES",
         "km": "76.000",
         "media": "41.912"
+      },
+      {
+        "gara_id": "GIRO_DELLE_MARCHE_IN_ROSA_2026-05-09_JUN_F",
+        "nome_gara": "GIRO DELLE MARCHE IN ROSA",
+        "data": "2026-05-09",
+        "posizione": 4,
+        "punti_effettivi": 8,
+        "team": "BIESSE - CARRERA - PREMAC",
+        "moltiplicatore": 1,
+        "tipo": "regionale",
+        "regione": "MARCHE",
+        "km": "90.000",
+        "media": "36.986"
       }
     ]
   },
@@ -42638,7 +42872,7 @@
     "team_id": "TEAM_WILIER_BREGANZE_F",
     "categoria": "JUN_F",
     "genere": "F",
-    "punti_totali": 5,
+    "punti_totali": 9,
     "risultati": [
       {
         "gara_id": "GRAN_REMIO_PRIMAVERA_A_MASER_PROVA_VALIDA_CAMPIONATO_REGIONALE_2026-04-26_JUN_F",
@@ -42665,6 +42899,19 @@
         "regione": "JUNIORES",
         "km": "78.400",
         "media": "40.137"
+      },
+      {
+        "gara_id": "GIRO_DELLE_MARCHE_IN_ROSA_2026-05-09_JUN_F",
+        "nome_gara": "GIRO DELLE MARCHE IN ROSA",
+        "data": "2026-05-09",
+        "posizione": 7,
+        "punti_effettivi": 4,
+        "team": "TEAM WILIER BREGANZE",
+        "moltiplicatore": 1,
+        "tipo": "regionale",
+        "regione": "MARCHE",
+        "km": "90.000",
+        "media": "36.986"
       }
     ]
   },
@@ -48136,7 +48383,7 @@
     "team_id": "ISOLMANT_PREMAC_VITTORIA_F",
     "categoria": "ELI_F",
     "genere": "F",
-    "punti_totali": 39,
+    "punti_totali": 41,
     "risultati": [
       {
         "gara_id": "GRAN_PREMIO_DELLA_LIBERAZIONE_DONNE_2026-04-25_ELI_F",
@@ -48163,6 +48410,19 @@
         "regione": "UNDER",
         "km": "81.000",
         "media": "41.134"
+      },
+      {
+        "gara_id": "GIRO_DELLE_MARCHE_IN_ROSA_2026-05-09_ELI_F",
+        "nome_gara": "GIRO DELLE MARCHE IN ROSA",
+        "data": "2026-05-09",
+        "posizione": 9,
+        "punti_effettivi": 2,
+        "team": "ISOLMANT - PREMAC - VITTORIA",
+        "moltiplicatore": 1,
+        "tipo": "regionale",
+        "regione": "MARCHE",
+        "km": "90.000",
+        "media": "36.986"
       }
     ]
   },
@@ -53455,7 +53715,7 @@
     "team_id": "TEAM_HOPPLA",
     "categoria": "ELI_M",
     "genere": "M",
-    "punti_totali": 8,
+    "punti_totali": 9,
     "risultati": [
       {
         "gara_id": "71_GRAN_PREMIO_PRETOLA_PROVA_VALIDA_CAMPIONATO_REGIONALE_2026-04-19_ELI_M",
@@ -53469,6 +53729,19 @@
         "regione": "UNDER",
         "km": "143.000",
         "media": "43.116"
+      },
+      {
+        "gara_id": "2_MEMORIAL_GIORDANO_MIGNOLLI_2026-05-09_ELI_M",
+        "nome_gara": "2 MEMORIAL GIORDANO MIGNOLLI",
+        "data": "2026-05-09",
+        "posizione": 10,
+        "punti_effettivi": 1,
+        "team": "TEAM HOPPLA'",
+        "moltiplicatore": 1,
+        "tipo": "regionale",
+        "regione": "VENETO",
+        "km": "137.900",
+        "media": "43.448"
       }
     ]
   },
@@ -53858,7 +54131,7 @@
     "team_id": "FAIZANE_CSZ_SANDRIGO_BIKE",
     "categoria": "JUN_M",
     "genere": "M",
-    "punti_totali": 3,
+    "punti_totali": 15,
     "risultati": [
       {
         "gara_id": "COPPA_SPORTIVI_COMUNE_DI_TRICESIMO_2026-04-19_JUN_M",
@@ -53872,6 +54145,19 @@
         "regione": "FRIULI VENEZIA GIULIA",
         "km": "100.500",
         "media": "44.404"
+      },
+      {
+        "gara_id": "2_TROFEO_EDIL_GROUP_COSTRUZIONI_PICCOLO_FIANDRE_2026-05-09_JUN_M",
+        "nome_gara": "2 TROFEO EDIL GROUP COSTRUZIONI PICCOLO FIANDRE",
+        "data": "2026-05-09",
+        "posizione": 2,
+        "punti_effettivi": 12,
+        "team": "FAIZANE' CSZ SANDRIGO BIKE",
+        "moltiplicatore": 1,
+        "tipo": "regionale",
+        "regione": "LOMBARDIA",
+        "km": "114.000",
+        "media": "38.816"
       }
     ]
   },
@@ -54151,7 +54437,7 @@
     "team_id": "BFT_BURZONI_F",
     "categoria": "JUN_F",
     "genere": "F",
-    "punti_totali": 89,
+    "punti_totali": 99,
     "risultati": [
       {
         "gara_id": "5_TROFEO_CITTA_DI_GOSSOLENGO_2026-04-19_JUN_F",
@@ -54204,6 +54490,19 @@
         "regione": "JUNIORES",
         "km": "72.700",
         "media": "35.921"
+      },
+      {
+        "gara_id": "GIRO_DELLE_MARCHE_IN_ROSA_2026-05-09_JUN_F",
+        "nome_gara": "GIRO DELLE MARCHE IN ROSA",
+        "data": "2026-05-09",
+        "posizione": 3,
+        "punti_effettivi": 10,
+        "team": "BFT BURZONI",
+        "moltiplicatore": 1,
+        "tipo": "regionale",
+        "regione": "MARCHE",
+        "km": "90.000",
+        "media": "36.986"
       }
     ]
   },
@@ -58989,7 +59288,7 @@
     "team_id": "CANNIBAL_BAHRAIN_VICTORIUS",
     "categoria": "JUN_M",
     "genere": "M",
-    "punti_totali": 9,
+    "punti_totali": 21,
     "risultati": [
       {
         "gara_id": "4_MEMORIAL_GERMANO_VITTONI_2026-04-12_JUN_M",
@@ -59016,6 +59315,19 @@
         "regione": "SJLNJENI ZAVOD",
         "km": "63.800",
         "media": "48.353"
+      },
+      {
+        "gara_id": "CORSA_DELLA_PACE_JUNIORES_TERZA_TAPPA_2026-05-09_JUN_M",
+        "nome_gara": "CORSA DELLA PACE JUNIORES TERZA TAPPA",
+        "data": "2026-05-09",
+        "posizione": 5,
+        "punti_effettivi": 12,
+        "team": "ITALIA",
+        "moltiplicatore": 2,
+        "tipo": "nazionale",
+        "regione": "TEPLICE",
+        "km": "112.100",
+        "media": "45.791"
       }
     ]
   },
@@ -59052,7 +59364,7 @@
     "team_id": "TOYOTA_VALENCIA_SAV_F",
     "categoria": "ELI_F",
     "genere": "F",
-    "punti_totali": 33,
+    "punti_totali": 43,
     "risultati": [
       {
         "gara_id": "2_TROFEO_CASSA_DI_RISPARMIO_DI_FOSSANO_2026-04-12_ELI_F",
@@ -59092,6 +59404,19 @@
         "regione": "UNDER",
         "km": "63.800",
         "media": "41.102"
+      },
+      {
+        "gara_id": "GIRO_DELLE_MARCHE_IN_ROSA_2026-05-09_ELI_F",
+        "nome_gara": "GIRO DELLE MARCHE IN ROSA",
+        "data": "2026-05-09",
+        "posizione": 3,
+        "punti_effettivi": 10,
+        "team": "TOYOTA VALENCIA SAV",
+        "moltiplicatore": 1,
+        "tipo": "regionale",
+        "regione": "MARCHE",
+        "km": "90.000",
+        "media": "36.986"
       }
     ]
   },
@@ -59128,7 +59453,7 @@
     "team_id": "BORN_TO_WIN_F",
     "categoria": "ELI_F",
     "genere": "F",
-    "punti_totali": 12,
+    "punti_totali": 15,
     "risultati": [
       {
         "gara_id": "2_TROFEO_CASSA_DI_RISPARMIO_DI_FOSSANO_2026-04-12_ELI_F",
@@ -59155,6 +59480,19 @@
         "regione": "UNDER",
         "km": "63.800",
         "media": "41.102"
+      },
+      {
+        "gara_id": "GIRO_DELLE_MARCHE_IN_ROSA_2026-05-09_ELI_F",
+        "nome_gara": "GIRO DELLE MARCHE IN ROSA",
+        "data": "2026-05-09",
+        "posizione": 8,
+        "punti_effettivi": 3,
+        "team": "BORN TO WIN",
+        "moltiplicatore": 1,
+        "tipo": "regionale",
+        "regione": "MARCHE",
+        "km": "90.000",
+        "media": "36.986"
       }
     ]
   },
@@ -60862,7 +61200,7 @@
     "team_id": "TEAM_MENDELSPECK_E_WORK_F",
     "categoria": "ELI_F",
     "genere": "F",
-    "punti_totali": 10,
+    "punti_totali": 14,
     "risultati": [
       {
         "gara_id": "DONNE_OPEN_2026-04-11_ELI_F",
@@ -60876,6 +61214,19 @@
         "regione": "UNDER",
         "km": "81.000",
         "media": "41.134"
+      },
+      {
+        "gara_id": "GIRO_DELLE_MARCHE_IN_ROSA_2026-05-09_ELI_F",
+        "nome_gara": "GIRO DELLE MARCHE IN ROSA",
+        "data": "2026-05-09",
+        "posizione": 7,
+        "punti_effettivi": 4,
+        "team": "TEAM MENDELSPECK E-WORK",
+        "moltiplicatore": 1,
+        "tipo": "regionale",
+        "regione": "MARCHE",
+        "km": "90.000",
+        "media": "36.986"
       }
     ]
   },
@@ -62009,7 +62360,7 @@
     "team_id": "GALLINA_LUCCHINI_ECOTEK",
     "categoria": "ELI_M",
     "genere": "M",
-    "punti_totali": 7,
+    "punti_totali": 13,
     "risultati": [
       {
         "gara_id": "79_TROFEO_VISENTINI_2026-04-06_ELI_M",
@@ -62036,6 +62387,19 @@
         "regione": "UNDER",
         "km": "101.200",
         "media": ""
+      },
+      {
+        "gara_id": "2_MEMORIAL_GIORDANO_MIGNOLLI_2026-05-09_ELI_M",
+        "nome_gara": "2 MEMORIAL GIORDANO MIGNOLLI",
+        "data": "2026-05-09",
+        "posizione": 5,
+        "punti_effettivi": 6,
+        "team": "GALLINA LUCCHINI ECOTEK",
+        "moltiplicatore": 1,
+        "tipo": "regionale",
+        "regione": "VENETO",
+        "km": "137.900",
+        "media": "43.448"
       }
     ]
   },
@@ -63269,7 +63633,7 @@
     "team_id": "PETRUCCI_GAUSS_CYCLING_TEAM_F",
     "categoria": "JUN_F",
     "genere": "F",
-    "punti_totali": 33,
+    "punti_totali": 48,
     "risultati": [
       {
         "gara_id": "PASQUALANDO_2026-04-05_JUN_F",
@@ -63309,6 +63673,19 @@
         "regione": "JUNIORES",
         "km": "72.700",
         "media": "35.921"
+      },
+      {
+        "gara_id": "GIRO_DELLE_MARCHE_IN_ROSA_2026-05-09_JUN_F",
+        "nome_gara": "GIRO DELLE MARCHE IN ROSA",
+        "data": "2026-05-09",
+        "posizione": 1,
+        "punti_effettivi": 15,
+        "team": "PETRUCCI GAUSS CYCLING TEAM",
+        "moltiplicatore": 1,
+        "tipo": "regionale",
+        "regione": "MARCHE",
+        "km": "90.000",
+        "media": "36.986"
       }
     ]
   },
@@ -64616,7 +64993,7 @@
     "team_id": "CICLISTICA_ROSTESE",
     "categoria": "ELI_M",
     "genere": "M",
-    "punti_totali": 9,
+    "punti_totali": 14,
     "risultati": [
       {
         "gara_id": "64_COPPA_FIERA_DI_MERCATALE_2026-03-31_ELI_M",
@@ -64643,6 +65020,19 @@
         "regione": "UNDER",
         "km": "146.000",
         "media": "40.534"
+      },
+      {
+        "gara_id": "2_MEMORIAL_GIORDANO_MIGNOLLI_2026-05-09_ELI_M",
+        "nome_gara": "2 MEMORIAL GIORDANO MIGNOLLI",
+        "data": "2026-05-09",
+        "posizione": 6,
+        "punti_effettivi": 5,
+        "team": "CICLISTICA ROSTESE",
+        "moltiplicatore": 1,
+        "tipo": "regionale",
+        "regione": "VENETO",
+        "km": "137.900",
+        "media": "43.448"
       }
     ]
   },
@@ -64679,7 +65069,7 @@
     "team_id": "BELTRAMI_TSA_TRE_COLLI",
     "categoria": "ELI_M",
     "genere": "M",
-    "punti_totali": 13,
+    "punti_totali": 25,
     "risultati": [
       {
         "gara_id": "64_COPPA_FIERA_DI_MERCATALE_2026-03-31_ELI_M",
@@ -64706,6 +65096,19 @@
         "regione": "UNDER",
         "km": "153.000",
         "media": "40.281"
+      },
+      {
+        "gara_id": "2_MEMORIAL_GIORDANO_MIGNOLLI_2026-05-09_ELI_M",
+        "nome_gara": "2 MEMORIAL GIORDANO MIGNOLLI",
+        "data": "2026-05-09",
+        "posizione": 2,
+        "punti_effettivi": 12,
+        "team": "BELTRAMI TSA TRE COLLI",
+        "moltiplicatore": 1,
+        "tipo": "regionale",
+        "regione": "VENETO",
+        "km": "137.900",
+        "media": "43.448"
       }
     ]
   },
@@ -66211,7 +66614,7 @@
     "team_id": "STATI_UNITI",
     "categoria": "JUN_M",
     "genere": "M",
-    "punti_totali": 32,
+    "punti_totali": 42,
     "risultati": [
       {
         "gara_id": "E3_SAXO_CLASSIC_2026-03-27_JUN_M",
@@ -66238,6 +66641,19 @@
         "regione": "CASOVKA",
         "km": "8.800",
         "media": "50.139"
+      },
+      {
+        "gara_id": "CORSA_DELLA_PACE_JUNIORES_TERZA_TAPPA_2026-05-09_JUN_M",
+        "nome_gara": "CORSA DELLA PACE JUNIORES TERZA TAPPA",
+        "data": "2026-05-09",
+        "posizione": 6,
+        "punti_effettivi": 10,
+        "team": "STATI UNITI",
+        "moltiplicatore": 2,
+        "tipo": "nazionale",
+        "regione": "TEPLICE",
+        "km": "112.100",
+        "media": "45.791"
       }
     ]
   },
@@ -67781,7 +68197,7 @@
     "team_id": "BIESSE_CARRERA_PREMAC",
     "categoria": "JUN_M",
     "genere": "M",
-    "punti_totali": 6,
+    "punti_totali": 12,
     "risultati": [
       {
         "gara_id": "46_PICCOLA_SAN_GEO_2026-03-15_JUN_M",
@@ -67795,6 +68211,19 @@
         "regione": "LOMBARDIA",
         "km": "99.200",
         "media": "40.744"
+      },
+      {
+        "gara_id": "2_TROFEO_EDIL_GROUP_COSTRUZIONI_PICCOLO_FIANDRE_2026-05-09_JUN_M",
+        "nome_gara": "2 TROFEO EDIL GROUP COSTRUZIONI PICCOLO FIANDRE",
+        "data": "2026-05-09",
+        "posizione": 5,
+        "punti_effettivi": 6,
+        "team": "BIESSE - CARRERA - PREMAC",
+        "moltiplicatore": 1,
+        "tipo": "regionale",
+        "regione": "LOMBARDIA",
+        "km": "114.000",
+        "media": "38.816"
       }
     ]
   },
@@ -67806,7 +68235,7 @@
     "team_id": "TEAM_ECOTEK_ZERO24",
     "categoria": "JUN_M",
     "genere": "M",
-    "punti_totali": 5,
+    "punti_totali": 9,
     "risultati": [
       {
         "gara_id": "46_PICCOLA_SAN_GEO_2026-03-15_JUN_M",
@@ -67820,6 +68249,19 @@
         "regione": "LOMBARDIA",
         "km": "99.200",
         "media": "40.744"
+      },
+      {
+        "gara_id": "2_TROFEO_EDIL_GROUP_COSTRUZIONI_PICCOLO_FIANDRE_2026-05-09_JUN_M",
+        "nome_gara": "2 TROFEO EDIL GROUP COSTRUZIONI PICCOLO FIANDRE",
+        "data": "2026-05-09",
+        "posizione": 7,
+        "punti_effettivi": 4,
+        "team": "TEAM ECOTEK ZERO24",
+        "moltiplicatore": 1,
+        "tipo": "regionale",
+        "regione": "LOMBARDIA",
+        "km": "114.000",
+        "media": "38.816"
       }
     ]
   },
@@ -69697,7 +70139,7 @@
     "team_id": "S_C_VALLE_SERIANA_CENE_A_S_D",
     "categoria": "ELI_M",
     "genere": "M",
-    "punti_totali": 10,
+    "punti_totali": 12,
     "risultati": [
       {
         "gara_id": "102_COPPA_SAN_GEO_2026-02-14_ELI_M",
@@ -69711,6 +70153,19 @@
         "regione": "UNDER",
         "km": "164.600",
         "media": "40.051"
+      },
+      {
+        "gara_id": "2_MEMORIAL_GIORDANO_MIGNOLLI_2026-05-09_ELI_M",
+        "nome_gara": "2 MEMORIAL GIORDANO MIGNOLLI",
+        "data": "2026-05-09",
+        "posizione": 9,
+        "punti_effettivi": 2,
+        "team": "S.C. VALLE SERIANA - CENE A.S.D.",
+        "moltiplicatore": 1,
+        "tipo": "regionale",
+        "regione": "VENETO",
+        "km": "137.900",
+        "media": "43.448"
       }
     ]
   },
@@ -69822,7 +70277,7 @@
     "team_id": "TOP_GIRLS_FASSA_BORTOLO_F",
     "categoria": "ELI_F",
     "genere": "F",
-    "punti_totali": 12,
+    "punti_totali": 18,
     "risultati": [
       {
         "gara_id": "TROFEO_ARTI_E_MESTIERI_DELLA_TRADIZIONE_MUGELLANA_2026-02-14_ELI_F",
@@ -69836,6 +70291,19 @@
         "regione": "UNDER",
         "km": "83.920",
         "media": "38.422"
+      },
+      {
+        "gara_id": "GIRO_DELLE_MARCHE_IN_ROSA_2026-05-09_ELI_F",
+        "nome_gara": "GIRO DELLE MARCHE IN ROSA",
+        "data": "2026-05-09",
+        "posizione": 5,
+        "punti_effettivi": 6,
+        "team": "TOP GIRLS - FASSA BORTOLO",
+        "moltiplicatore": 1,
+        "tipo": "regionale",
+        "regione": "MARCHE",
+        "km": "90.000",
+        "media": "36.986"
       }
     ]
   },
@@ -70161,7 +70629,7 @@
     "team_id": "ESTONIA",
     "categoria": "JUN_M",
     "genere": "M",
-    "punti_totali": 4,
+    "punti_totali": 10,
     "risultati": [
       {
         "gara_id": "CORSA_DELLA_PACE_JUNIORES_PRIMA_TAPPA_2026-05-07_JUN_M",
@@ -70175,6 +70643,19 @@
         "regione": "LITOMERICE",
         "km": "110.200",
         "media": "41.273"
+      },
+      {
+        "gara_id": "CORSA_DELLA_PACE_JUNIORES_TERZA_TAPPA_2026-05-09_JUN_M",
+        "nome_gara": "CORSA DELLA PACE JUNIORES TERZA TAPPA",
+        "data": "2026-05-09",
+        "posizione": 8,
+        "punti_effettivi": 6,
+        "team": "ESTONIA",
+        "moltiplicatore": 2,
+        "tipo": "nazionale",
+        "regione": "TEPLICE",
+        "km": "112.100",
+        "media": "45.791"
       }
     ]
   },
@@ -70236,7 +70717,7 @@
     "team_id": "FRANCIA",
     "categoria": "JUN_M",
     "genere": "M",
-    "punti_totali": 8,
+    "punti_totali": 16,
     "risultati": [
       {
         "gara_id": "CORSA_DELLA_PACE_JUNIORES_SECONDA_TAPPA_PRIMA_SEMITAPPA_CRONOMETRO_2026-05-08_JUN_M",
@@ -70250,6 +70731,19 @@
         "regione": "CASOVKA",
         "km": "8.800",
         "media": "50.139"
+      },
+      {
+        "gara_id": "CORSA_DELLA_PACE_JUNIORES_TERZA_TAPPA_2026-05-09_JUN_M",
+        "nome_gara": "CORSA DELLA PACE JUNIORES TERZA TAPPA",
+        "data": "2026-05-09",
+        "posizione": 7,
+        "punti_effettivi": 8,
+        "team": "FRANCIA",
+        "moltiplicatore": 2,
+        "tipo": "nazionale",
+        "regione": "TEPLICE",
+        "km": "112.100",
+        "media": "45.791"
       }
     ]
   },
@@ -70450,6 +70944,306 @@
         "regione": "SJLNJENI ZAVOD",
         "km": "63.800",
         "media": "48.353"
+      }
+    ]
+  },
+  "ZUMSTEG_NICOLA": {
+    "id": "ZUMSTEG_NICOLA",
+    "nome": "NICOLA",
+    "cognome": "ZUMSTEG",
+    "team_attuale": "BIESSE - CARRERA - PREMAC",
+    "team_id": "BIESSE_CARRERA_PREMAC",
+    "categoria": "ELI_M",
+    "genere": "M",
+    "punti_totali": 10,
+    "risultati": [
+      {
+        "gara_id": "2_MEMORIAL_GIORDANO_MIGNOLLI_2026-05-09_ELI_M",
+        "nome_gara": "2 MEMORIAL GIORDANO MIGNOLLI",
+        "data": "2026-05-09",
+        "posizione": 3,
+        "punti_effettivi": 10,
+        "team": "BIESSE - CARRERA - PREMAC",
+        "moltiplicatore": 1,
+        "tipo": "regionale",
+        "regione": "VENETO",
+        "km": "137.900",
+        "media": "43.448"
+      }
+    ]
+  },
+  "CRANAGE_JOSHUA_JAMES": {
+    "id": "CRANAGE_JOSHUA_JAMES",
+    "nome": "JOSHUA JAMES",
+    "cognome": "CRANAGE",
+    "team_attuale": "CICLISTICA ROSTESE",
+    "team_id": "CICLISTICA_ROSTESE",
+    "categoria": "ELI_M",
+    "genere": "M",
+    "punti_totali": 4,
+    "risultati": [
+      {
+        "gara_id": "2_MEMORIAL_GIORDANO_MIGNOLLI_2026-05-09_ELI_M",
+        "nome_gara": "2 MEMORIAL GIORDANO MIGNOLLI",
+        "data": "2026-05-09",
+        "posizione": 7,
+        "punti_effettivi": 4,
+        "team": "CICLISTICA ROSTESE",
+        "moltiplicatore": 1,
+        "tipo": "regionale",
+        "regione": "VENETO",
+        "km": "137.900",
+        "media": "43.448"
+      }
+    ]
+  },
+  "BONOMETTI_MICHELE": {
+    "id": "BONOMETTI_MICHELE",
+    "nome": "MICHELE",
+    "cognome": "BONOMETTI",
+    "team_attuale": "GALLINA LUCCHINI ECOTEK",
+    "team_id": "GALLINA_LUCCHINI_ECOTEK",
+    "categoria": "ELI_M",
+    "genere": "M",
+    "punti_totali": 3,
+    "risultati": [
+      {
+        "gara_id": "2_MEMORIAL_GIORDANO_MIGNOLLI_2026-05-09_ELI_M",
+        "nome_gara": "2 MEMORIAL GIORDANO MIGNOLLI",
+        "data": "2026-05-09",
+        "posizione": 8,
+        "punti_effettivi": 3,
+        "team": "GALLINA LUCCHINI ECOTEK",
+        "moltiplicatore": 1,
+        "tipo": "regionale",
+        "regione": "VENETO",
+        "km": "137.900",
+        "media": "43.448"
+      }
+    ]
+  },
+  "NICHOLSON_KATELYN_MARIE_JANETTE": {
+    "id": "NICHOLSON_KATELYN_MARIE_JANETTE",
+    "nome": "KATELYN MARIE JANETTE",
+    "cognome": "NICHOLSON",
+    "team_attuale": "TEAM MENDELSPECK E-WORK",
+    "team_id": "TEAM_MENDELSPECK_E_WORK",
+    "categoria": "ELI_F",
+    "genere": "F",
+    "punti_totali": 12,
+    "risultati": [
+      {
+        "gara_id": "GIRO_DELLE_MARCHE_IN_ROSA_2026-05-09_ELI_F",
+        "nome_gara": "GIRO DELLE MARCHE IN ROSA",
+        "data": "2026-05-09",
+        "posizione": 2,
+        "punti_effettivi": 12,
+        "team": "TEAM MENDELSPECK E-WORK",
+        "moltiplicatore": 1,
+        "tipo": "regionale",
+        "regione": "MARCHE",
+        "km": "90.000",
+        "media": "36.986"
+      }
+    ]
+  },
+  "MONSALVEZ_FLORENCIA": {
+    "id": "MONSALVEZ_FLORENCIA",
+    "nome": "FLORENCIA",
+    "cognome": "MONSALVEZ",
+    "team_attuale": "WCC - UCI WORLD CYCLING CENTRE",
+    "team_id": "WCC_UCI_WORLD_CYCLING_CENTRE",
+    "categoria": "ELI_F",
+    "genere": "F",
+    "punti_totali": 5,
+    "risultati": [
+      {
+        "gara_id": "GIRO_DELLE_MARCHE_IN_ROSA_2026-05-09_ELI_F",
+        "nome_gara": "GIRO DELLE MARCHE IN ROSA",
+        "data": "2026-05-09",
+        "posizione": 6,
+        "punti_effettivi": 5,
+        "team": "WCC - UCI WORLD CYCLING CENTRE",
+        "moltiplicatore": 1,
+        "tipo": "regionale",
+        "regione": "MARCHE",
+        "km": "90.000",
+        "media": "36.986"
+      }
+    ]
+  },
+  "COOPER_AMALIE": {
+    "id": "COOPER_AMALIE",
+    "nome": "AMALIE",
+    "cognome": "COOPER",
+    "team_attuale": "TIROL WOMEN CYCLING",
+    "team_id": "TIROL_WOMEN_CYCLING",
+    "categoria": "ELI_F",
+    "genere": "F",
+    "punti_totali": 1,
+    "risultati": [
+      {
+        "gara_id": "GIRO_DELLE_MARCHE_IN_ROSA_2026-05-09_ELI_F",
+        "nome_gara": "GIRO DELLE MARCHE IN ROSA",
+        "data": "2026-05-09",
+        "posizione": 10,
+        "punti_effettivi": 1,
+        "team": "TIROL WOMEN CYCLING",
+        "moltiplicatore": 1,
+        "tipo": "regionale",
+        "regione": "MARCHE",
+        "km": "90.000",
+        "media": "36.986"
+      }
+    ]
+  },
+  "TASSI_CESARE": {
+    "id": "TASSI_CESARE",
+    "nome": "CESARE",
+    "cognome": "TASSI",
+    "team_attuale": "S. C. CENE A. S. D.",
+    "team_id": "S_C_CENE_A_S_D",
+    "categoria": "JUN_M",
+    "genere": "M",
+    "punti_totali": 5,
+    "risultati": [
+      {
+        "gara_id": "2_TROFEO_EDIL_GROUP_COSTRUZIONI_PICCOLO_FIANDRE_2026-05-09_JUN_M",
+        "nome_gara": "2 TROFEO EDIL GROUP COSTRUZIONI PICCOLO FIANDRE",
+        "data": "2026-05-09",
+        "posizione": 6,
+        "punti_effettivi": 5,
+        "team": "S. C. CENE A. S. D.",
+        "moltiplicatore": 1,
+        "tipo": "regionale",
+        "regione": "LOMBARDIA",
+        "km": "114.000",
+        "media": "38.816"
+      }
+    ]
+  },
+  "DOUGLAS_SAVAGE_ZACHARY": {
+    "id": "DOUGLAS_SAVAGE_ZACHARY",
+    "nome": "ZACHARY",
+    "cognome": "DOUGLAS-SAVAGE",
+    "team_attuale": "ST KILDA CYCLING CLUB",
+    "team_id": "ST_KILDA_CYCLING_CLUB",
+    "categoria": "JUN_M",
+    "genere": "M",
+    "punti_totali": 3,
+    "risultati": [
+      {
+        "gara_id": "2_TROFEO_EDIL_GROUP_COSTRUZIONI_PICCOLO_FIANDRE_2026-05-09_JUN_M",
+        "nome_gara": "2 TROFEO EDIL GROUP COSTRUZIONI PICCOLO FIANDRE",
+        "data": "2026-05-09",
+        "posizione": 8,
+        "punti_effettivi": 3,
+        "team": "ST KILDA CYCLING CLUB",
+        "moltiplicatore": 1,
+        "tipo": "regionale",
+        "regione": "LOMBARDIA",
+        "km": "114.000",
+        "media": "38.816"
+      }
+    ]
+  },
+  "CHITO_ALESSANDRO": {
+    "id": "CHITO_ALESSANDRO",
+    "nome": "ALESSANDRO",
+    "cognome": "CHITO'",
+    "team_attuale": "FERALPI MONTECLARENSE ASD",
+    "team_id": "FERALPI_MONTECLARENSE_ASD",
+    "categoria": "JUN_M",
+    "genere": "M",
+    "punti_totali": 2,
+    "risultati": [
+      {
+        "gara_id": "2_TROFEO_EDIL_GROUP_COSTRUZIONI_PICCOLO_FIANDRE_2026-05-09_JUN_M",
+        "nome_gara": "2 TROFEO EDIL GROUP COSTRUZIONI PICCOLO FIANDRE",
+        "data": "2026-05-09",
+        "posizione": 9,
+        "punti_effettivi": 2,
+        "team": "FERALPI MONTECLARENSE ASD",
+        "moltiplicatore": 1,
+        "tipo": "regionale",
+        "regione": "LOMBARDIA",
+        "km": "114.000",
+        "media": "38.816"
+      }
+    ]
+  },
+  "STARE_GAL": {
+    "id": "STARE_GAL",
+    "nome": "GAL",
+    "cognome": "STARE",
+    "team_attuale": "SLOVENIA NATIONAL TEAM",
+    "team_id": "SLOVENIA_NATIONAL_TEAM",
+    "categoria": "JUN_M",
+    "genere": "M",
+    "punti_totali": 20,
+    "risultati": [
+      {
+        "gara_id": "CORSA_DELLA_PACE_JUNIORES_TERZA_TAPPA_2026-05-09_JUN_M",
+        "nome_gara": "CORSA DELLA PACE JUNIORES TERZA TAPPA",
+        "data": "2026-05-09",
+        "posizione": 3,
+        "punti_effettivi": 20,
+        "team": "SLOVENIA NATIONAL TEAM",
+        "moltiplicatore": 2,
+        "tipo": "nazionale",
+        "regione": "TEPLICE",
+        "km": "112.100",
+        "media": "45.791"
+      }
+    ]
+  },
+  "SVOBODA_DAVID": {
+    "id": "SVOBODA_DAVID",
+    "nome": "DAVID",
+    "cognome": "SVOBODA",
+    "team_attuale": "REPUBBLICA CECA",
+    "team_id": "REPUBBLICA_CECA",
+    "categoria": "JUN_M",
+    "genere": "M",
+    "punti_totali": 4,
+    "risultati": [
+      {
+        "gara_id": "CORSA_DELLA_PACE_JUNIORES_TERZA_TAPPA_2026-05-09_JUN_M",
+        "nome_gara": "CORSA DELLA PACE JUNIORES TERZA TAPPA",
+        "data": "2026-05-09",
+        "posizione": 9,
+        "punti_effettivi": 4,
+        "team": "REPUBBLICA CECA",
+        "moltiplicatore": 2,
+        "tipo": "nazionale",
+        "regione": "TEPLICE",
+        "km": "112.100",
+        "media": "45.791"
+      }
+    ]
+  },
+  "HERZOG_KARL": {
+    "id": "HERZOG_KARL",
+    "nome": "KARL",
+    "cognome": "HERZOG",
+    "team_attuale": "GERMANIA",
+    "team_id": "GERMANIA",
+    "categoria": "JUN_M",
+    "genere": "M",
+    "punti_totali": 2,
+    "risultati": [
+      {
+        "gara_id": "CORSA_DELLA_PACE_JUNIORES_TERZA_TAPPA_2026-05-09_JUN_M",
+        "nome_gara": "CORSA DELLA PACE JUNIORES TERZA TAPPA",
+        "data": "2026-05-09",
+        "posizione": 10,
+        "punti_effettivi": 2,
+        "team": "GERMANIA",
+        "moltiplicatore": 2,
+        "tipo": "nazionale",
+        "regione": "TEPLICE",
+        "km": "112.100",
+        "media": "45.791"
       }
     ]
   }

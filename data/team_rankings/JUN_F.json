@@ -156,6 +156,18 @@
     "pos": 13
   },
   {
+    "team_id": "BIESSE_CARRERA_PREMAC",
+    "team_nome": "BIESSE - CARRERA - PREMAC",
+    "punti": 20,
+    "vittorie": 0,
+    "p1": 0,
+    "p2": 1,
+    "p3": 0,
+    "pout": 1,
+    "n_atleti": 2,
+    "pos": 14
+  },
+  {
     "team_id": "ZHIRAF_F",
     "team_nome": "ZHIRAF",
     "punti": 19,
@@ -165,7 +177,7 @@
     "p3": 0,
     "pout": 3,
     "n_atleti": 3,
-    "pos": 14
+    "pos": 15
   },
   {
     "team_id": "REPUBBLICA_CECA_F",
@@ -177,7 +189,7 @@
     "p3": 0,
     "pout": 1,
     "n_atleti": 1,
-    "pos": 15
+    "pos": 16
   },
   {
     "team_id": "TEAM_WILIER_BREGANZE_F",
@@ -189,7 +201,31 @@
     "p3": 0,
     "pout": 6,
     "n_atleti": 5,
-    "pos": 16
+    "pos": 17
+  },
+  {
+    "team_id": "PETRUCCI_GAUSS_CYCLING_TEAM",
+    "team_nome": "PETRUCCI GAUSS CYCLING TEAM",
+    "punti": 15,
+    "vittorie": 1,
+    "p1": 1,
+    "p2": 0,
+    "p3": 0,
+    "pout": 0,
+    "n_atleti": 1,
+    "pos": 18
+  },
+  {
+    "team_id": "BFT_BURZONI",
+    "team_nome": "BFT BURZONI",
+    "punti": 11,
+    "vittorie": 0,
+    "p1": 0,
+    "p2": 0,
+    "p3": 1,
+    "pout": 1,
+    "n_atleti": 2,
+    "pos": 19
   },
   {
     "team_id": "SPAGNA_F",
@@ -201,7 +237,31 @@
     "p3": 0,
     "pout": 1,
     "n_atleti": 1,
-    "pos": 17
+    "pos": 20
+  },
+  {
+    "team_id": "BREGANZE_MILLENIUM",
+    "team_nome": "BREGANZE MILLENIUM",
+    "punti": 8,
+    "vittorie": 0,
+    "p1": 0,
+    "p2": 0,
+    "p3": 0,
+    "pout": 2,
+    "n_atleti": 2,
+    "pos": 21
+  },
+  {
+    "team_id": "U_C_CONSCIO_PEDALE_DEL_SILE",
+    "team_nome": "U.C.CONSCIO PEDALE DEL SILE",
+    "punti": 6,
+    "vittorie": 0,
+    "p1": 0,
+    "p2": 0,
+    "p3": 0,
+    "pout": 1,
+    "n_atleti": 1,
+    "pos": 22
   },
   {
     "team_id": "TEAM_MENDELSPECK_E_WORK_F",
@@ -213,7 +273,7 @@
     "p3": 0,
     "pout": 1,
     "n_atleti": 1,
-    "pos": 18
+    "pos": 23
   },
   {
     "team_id": "POLISH_CYCLING_FEDERATION_F",
@@ -225,7 +285,19 @@
     "p3": 0,
     "pout": 1,
     "n_atleti": 1,
-    "pos": 19
+    "pos": 24
+  },
+  {
+    "team_id": "TEAM_WILIER_BREGANZE",
+    "team_nome": "TEAM WILIER BREGANZE",
+    "punti": 4,
+    "vittorie": 0,
+    "p1": 0,
+    "p2": 0,
+    "p3": 0,
+    "pout": 1,
+    "n_atleti": 1,
+    "pos": 25
   },
   {
     "team_id": "GIFU_DAIICHI_HIGH_SCHOOL_F",
@@ -237,7 +309,7 @@
     "p3": 0,
     "pout": 1,
     "n_atleti": 1,
-    "pos": 20
+    "pos": 26
   },
   {
     "team_id": "FRANCIA_F",
@@ -249,6 +321,18 @@
     "p3": 0,
     "pout": 1,
     "n_atleti": 1,
-    "pos": 21
+    "pos": 27
+  },
+  {
+    "team_id": "PC_BAIX_EBRE_TORTOSA",
+    "team_nome": "PC BAIX EBRE TORTOSA",
+    "punti": 2,
+    "vittorie": 0,
+    "p1": 0,
+    "p2": 0,
+    "p3": 0,
+    "pout": 1,
+    "n_atleti": 1,
+    "pos": 28
   }
 ]
