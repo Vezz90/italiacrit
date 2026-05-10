@@ -7,7 +7,7 @@
     "team_id": "BORGO_MOLINO_VIGNA_FIORITA",
     "categoria": "JUN_M",
     "genere": "M",
-    "punti_totali": 324,
+    "punti_totali": 348,
     "risultati": [
       {
         "gara_id": "GIRO_D_ABRUZZO_JUNIORES_2026_TERZA_TAPPA_2026-05-03_JUN_M",
@@ -164,6 +164,19 @@
         "regione": "LITOMERICE",
         "km": "110.200",
         "media": "41.273"
+      },
+      {
+        "gara_id": "CORSA_DELLA_PACE_JUNIORES_QUARTA_TAPPA_2026-05-10_JUN_M",
+        "nome_gara": "CORSA DELLA PACE JUNIORES QUARTA TAPPA",
+        "data": "2026-05-10",
+        "posizione": 2,
+        "punti_effettivi": 24,
+        "team": "ITALIA",
+        "moltiplicatore": 2,
+        "tipo": "nazionale",
+        "regione": "TEREZIN",
+        "km": "102.400",
+        "media": "44.355"
       }
     ]
   },
@@ -2106,7 +2119,7 @@
     "team_id": "POLISPORTIVA_MONSUMMANESE",
     "categoria": "JUN_M",
     "genere": "M",
-    "punti_totali": 70,
+    "punti_totali": 80,
     "risultati": [
       {
         "gara_id": "1_COPPA_DELLE_BORGATE_2026-05-03_JUN_M",
@@ -2172,6 +2185,19 @@
         "regione": "SARDEGNA",
         "km": "57.200",
         "media": "40.376"
+      },
+      {
+        "gara_id": "MEMORIAL_FARRIS_QUIRINO_2026-05-10_JUN_M",
+        "nome_gara": "MEMORIAL FARRIS QUIRINO",
+        "data": "2026-05-10",
+        "posizione": 3,
+        "punti_effettivi": 10,
+        "team": "POLISPORTIVA MONSUMMANESE",
+        "moltiplicatore": 1,
+        "tipo": "regionale",
+        "regione": "SARDEGNA",
+        "km": "53.000",
+        "media": "37.685"
       }
     ]
   },
@@ -2221,7 +2247,7 @@
     "team_id": "DUEPPI_CYCLING_PROJECT",
     "categoria": "JUN_M",
     "genere": "M",
-    "punti_totali": 10,
+    "punti_totali": 22,
     "risultati": [
       {
         "gara_id": "1_COPPA_DELLE_BORGATE_2026-05-03_JUN_M",
@@ -2235,6 +2261,19 @@
         "regione": "SARDEGNA",
         "km": "53.100",
         "media": "41.920"
+      },
+      {
+        "gara_id": "MEMORIAL_FARRIS_QUIRINO_2026-05-10_JUN_M",
+        "nome_gara": "MEMORIAL FARRIS QUIRINO",
+        "data": "2026-05-10",
+        "posizione": 2,
+        "punti_effettivi": 12,
+        "team": "DUEPPI CYCLING PROJECT",
+        "moltiplicatore": 1,
+        "tipo": "regionale",
+        "regione": "SARDEGNA",
+        "km": "53.000",
+        "media": "37.685"
       }
     ]
   },
@@ -2246,7 +2285,7 @@
     "team_id": "FABIO_ARU_ACADEMY_S_R_L_A_R_L",
     "categoria": "AL_M",
     "genere": "M",
-    "punti_totali": 64,
+    "punti_totali": 76,
     "risultati": [
       {
         "gara_id": "1_COPPA_DELLE_BORGATE_2026-05-03_AL_M",
@@ -2299,6 +2338,19 @@
         "regione": "SARDEGNA",
         "km": "57.200",
         "media": "40.376"
+      },
+      {
+        "gara_id": "MEMORIAL_FARRIS_QUIRINO_2026-05-10_AL_M",
+        "nome_gara": "MEMORIAL FARRIS QUIRINO",
+        "data": "2026-05-10",
+        "posizione": 2,
+        "punti_effettivi": 12,
+        "team": "FABIO ARU ACADEMY S.R.L. A.R.L.",
+        "moltiplicatore": 1,
+        "tipo": "regionale",
+        "regione": "SARDEGNA",
+        "km": "53.000",
+        "media": "37.685"
       }
     ]
   },
@@ -2502,7 +2554,7 @@
     "team_id": "POOL_BIKE_SERRAMANNA",
     "categoria": "AL_M",
     "genere": "M",
-    "punti_totali": 20,
+    "punti_totali": 25,
     "risultati": [
       {
         "gara_id": "1_COPPA_DELLE_BORGATE_2026-05-03_AL_M",
@@ -2568,6 +2620,19 @@
         "regione": "SARDEGNA",
         "km": "57.200",
         "media": "40.376"
+      },
+      {
+        "gara_id": "MEMORIAL_FARRIS_QUIRINO_2026-05-10_AL_M",
+        "nome_gara": "MEMORIAL FARRIS QUIRINO",
+        "data": "2026-05-10",
+        "posizione": 6,
+        "punti_effettivi": 5,
+        "team": "POOL BIKE SERRAMANNA",
+        "moltiplicatore": 1,
+        "tipo": "regionale",
+        "regione": "SARDEGNA",
+        "km": "53.000",
+        "media": "37.685"
       }
     ]
   },
@@ -2579,7 +2644,7 @@
     "team_id": "S_C_TERRANOVA_FANCELLO_CICLI",
     "categoria": "AL_M",
     "genere": "M",
-    "punti_totali": 10,
+    "punti_totali": 11,
     "risultati": [
       {
         "gara_id": "1_COPPA_DELLE_BORGATE_2026-05-03_AL_M",
@@ -2619,6 +2684,19 @@
         "regione": "SARDEGNA",
         "km": "10.000",
         "media": ""
+      },
+      {
+        "gara_id": "MEMORIAL_FARRIS_QUIRINO_2026-05-10_AL_M",
+        "nome_gara": "MEMORIAL FARRIS QUIRINO",
+        "data": "2026-05-10",
+        "posizione": 10,
+        "punti_effettivi": 1,
+        "team": "S.C. TERRANOVA FANCELLO CICLI",
+        "moltiplicatore": 1,
+        "tipo": "regionale",
+        "regione": "SARDEGNA",
+        "km": "53.000",
+        "media": "37.685"
       }
     ]
   },
@@ -2668,7 +2746,7 @@
     "team_id": "CRAZY_WHEELS_CYCLING_ACADEMY",
     "categoria": "AL_M",
     "genere": "M",
-    "punti_totali": 22,
+    "punti_totali": 26,
     "risultati": [
       {
         "gara_id": "1_COPPA_DELLE_BORGATE_2026-05-03_AL_M",
@@ -2721,6 +2799,19 @@
         "regione": "SARDEGNA",
         "km": "57.200",
         "media": "40.376"
+      },
+      {
+        "gara_id": "MEMORIAL_FARRIS_QUIRINO_2026-05-10_AL_M",
+        "nome_gara": "MEMORIAL FARRIS QUIRINO",
+        "data": "2026-05-10",
+        "posizione": 7,
+        "punti_effettivi": 4,
+        "team": "CRAZY WHEELS - CYCLING ACADEMY",
+        "moltiplicatore": 1,
+        "tipo": "regionale",
+        "regione": "SARDEGNA",
+        "km": "53.000",
+        "media": "37.685"
       }
     ]
   },
@@ -2732,7 +2823,7 @@
     "team_id": "SESTU_BIKE_A_S_D",
     "categoria": "AL_M",
     "genere": "M",
-    "punti_totali": 14,
+    "punti_totali": 24,
     "risultati": [
       {
         "gara_id": "1_COPPA_DELLE_BORGATE_2026-05-03_AL_M",
@@ -2785,6 +2876,19 @@
         "regione": "SARDEGNA",
         "km": "57.200",
         "media": "40.376"
+      },
+      {
+        "gara_id": "MEMORIAL_FARRIS_QUIRINO_2026-05-10_AL_M",
+        "nome_gara": "MEMORIAL FARRIS QUIRINO",
+        "data": "2026-05-10",
+        "posizione": 3,
+        "punti_effettivi": 10,
+        "team": "SESTU BIKE A.S.D.",
+        "moltiplicatore": 1,
+        "tipo": "regionale",
+        "regione": "SARDEGNA",
+        "km": "53.000",
+        "media": "37.685"
       }
     ]
   },
@@ -7166,7 +7270,7 @@
     "team_id": "MADIGNANESE_CICLISMO_A_S_D",
     "categoria": "AL_M",
     "genere": "M",
-    "punti_totali": 52,
+    "punti_totali": 54,
     "risultati": [
       {
         "gara_id": "38_GRAN_PREMIO_CITTA_DI_ZOLA_DIECI_COLLI_GIOVANI_2026-05-03_AL_M",
@@ -7271,6 +7375,19 @@
         "regione": "VENETO",
         "km": "55.200",
         "media": "42.680"
+      },
+      {
+        "gara_id": "44_TROFEO_FERALPI_2026-05-10_AL_M",
+        "nome_gara": "44 TROFEO FERALPI",
+        "data": "2026-05-10",
+        "posizione": 9,
+        "punti_effettivi": 2,
+        "team": "MADIGNANESE CICLISMO A.S.D",
+        "moltiplicatore": 1,
+        "tipo": "regionale",
+        "regione": "LOMBARDIA",
+        "km": "61.850",
+        "media": "40.447"
       }
     ]
   },
@@ -7833,7 +7950,7 @@
     "team_id": "BORGO_MOLINO_VIGNA_FIORITA",
     "categoria": "AL_M",
     "genere": "M",
-    "punti_totali": 98,
+    "punti_totali": 113,
     "risultati": [
       {
         "gara_id": "6_GRAN_PREMIO_IMPRESA_SERGIO_ZANETTE_2026-05-03_AL_M",
@@ -7938,6 +8055,19 @@
         "regione": "VENETO",
         "km": "60.000",
         "media": "45.075"
+      },
+      {
+        "gara_id": "44_TROFEO_FERALPI_2026-05-10_AL_M",
+        "nome_gara": "44 TROFEO FERALPI",
+        "data": "2026-05-10",
+        "posizione": 1,
+        "punti_effettivi": 15,
+        "team": "BORGO MOLINO-VIGNA FIORITA",
+        "moltiplicatore": 1,
+        "tipo": "regionale",
+        "regione": "LOMBARDIA",
+        "km": "61.850",
+        "media": "40.447"
       }
     ]
   },
@@ -7987,7 +8117,7 @@
     "team_id": "BORGO_MOLINO_VIGNA_FIORITA",
     "categoria": "AL_M",
     "genere": "M",
-    "punti_totali": 8,
+    "punti_totali": 9,
     "risultati": [
       {
         "gara_id": "6_GRAN_PREMIO_IMPRESA_SERGIO_ZANETTE_2026-05-03_AL_M",
@@ -8001,6 +8131,19 @@
         "regione": "VENETO",
         "km": "57.000",
         "media": "43.291"
+      },
+      {
+        "gara_id": "44_TROFEO_FERALPI_2026-05-10_AL_M",
+        "nome_gara": "44 TROFEO FERALPI",
+        "data": "2026-05-10",
+        "posizione": 10,
+        "punti_effettivi": 1,
+        "team": "BORGO MOLINO-VIGNA FIORITA",
+        "moltiplicatore": 1,
+        "tipo": "regionale",
+        "regione": "LOMBARDIA",
+        "km": "61.850",
+        "media": "40.447"
       }
     ]
   },
@@ -9613,7 +9756,7 @@
     "team_id": "FERALPI_MONTECLARENSE_ASD",
     "categoria": "AL_M",
     "genere": "M",
-    "punti_totali": 34,
+    "punti_totali": 39,
     "risultati": [
       {
         "gara_id": "51_TROFEO_COMUNE_DI_GUSSAGO_STRADE_BIANCHE_DELLA_CONTEA_2026-05-03_AL_M",
@@ -9679,6 +9822,19 @@
         "regione": "LOMBARDIA",
         "km": "63.000",
         "media": "41.478"
+      },
+      {
+        "gara_id": "44_TROFEO_FERALPI_2026-05-10_AL_M",
+        "nome_gara": "44 TROFEO FERALPI",
+        "data": "2026-05-10",
+        "posizione": 6,
+        "punti_effettivi": 5,
+        "team": "FERALPI MONTECLARENSE ASD",
+        "moltiplicatore": 1,
+        "tipo": "regionale",
+        "regione": "LOMBARDIA",
+        "km": "61.850",
+        "media": "40.447"
       }
     ]
   },
@@ -9999,7 +10155,7 @@
     "team_id": "I_CINGHIALI_EVO",
     "categoria": "AL_M",
     "genere": "M",
-    "punti_totali": 18,
+    "punti_totali": 23,
     "risultati": [
       {
         "gara_id": "TROFEO_AUTOFFICINA_GALBIATI_2026-05-03_AL_M",
@@ -10026,6 +10182,19 @@
         "regione": "LOMBARDIA",
         "km": "50.000",
         "media": "45.409"
+      },
+      {
+        "gara_id": "1_TROFEO_CITTA_DI_GATTINARA_2026-05-10_AL_M",
+        "nome_gara": "1 TROFEO CITTA' DI GATTINARA",
+        "data": "2026-05-10",
+        "posizione": 6,
+        "punti_effettivi": 5,
+        "team": "I CINGHIALI EVO",
+        "moltiplicatore": 1,
+        "tipo": "regionale",
+        "regione": "PIEMONTE",
+        "km": "70.000",
+        "media": "39.480"
       }
     ]
   },
@@ -10037,7 +10206,7 @@
     "team_id": "S_C_ROMANESE_ASD",
     "categoria": "AL_M",
     "genere": "M",
-    "punti_totali": 34,
+    "punti_totali": 40,
     "risultati": [
       {
         "gara_id": "TROFEO_AUTOFFICINA_GALBIATI_2026-05-03_AL_M",
@@ -10090,6 +10259,19 @@
         "regione": "LOMBARDIA",
         "km": "57.750",
         "media": "44.262"
+      },
+      {
+        "gara_id": "44_TROFEO_FERALPI_2026-05-10_AL_M",
+        "nome_gara": "44 TROFEO FERALPI",
+        "data": "2026-05-10",
+        "posizione": 5,
+        "punti_effettivi": 6,
+        "team": "S.C. ROMANESE ASD",
+        "moltiplicatore": 1,
+        "tipo": "regionale",
+        "regione": "LOMBARDIA",
+        "km": "61.850",
+        "media": "40.447"
       }
     ]
   },
@@ -10409,7 +10591,7 @@
     "team_id": "S_C_ROMANESE_ASD",
     "categoria": "AL_M",
     "genere": "M",
-    "punti_totali": 65,
+    "punti_totali": 75,
     "risultati": [
       {
         "gara_id": "TROFEO_AUTOFFICINA_GALBIATI_2026-05-03_AL_M",
@@ -10501,6 +10683,19 @@
         "regione": "LOMBARDIA",
         "km": "60.000",
         "media": "43.470"
+      },
+      {
+        "gara_id": "44_TROFEO_FERALPI_2026-05-10_AL_M",
+        "nome_gara": "44 TROFEO FERALPI",
+        "data": "2026-05-10",
+        "posizione": 3,
+        "punti_effettivi": 10,
+        "team": "S.C. ROMANESE ASD",
+        "moltiplicatore": 1,
+        "tipo": "regionale",
+        "regione": "LOMBARDIA",
+        "km": "61.850",
+        "media": "40.447"
       }
     ]
   },
@@ -10704,7 +10899,7 @@
     "team_id": "AC_F_BESSI_CALENZANO_DONORATICO",
     "categoria": "AL_M",
     "genere": "M",
-    "punti_totali": 107,
+    "punti_totali": 111,
     "risultati": [
       {
         "gara_id": "LA_STORICA_COPPA_DE_LE_POGGIOLA_2026-05-03_AL_M",
@@ -10835,6 +11030,19 @@
         "regione": "TOSCANA",
         "km": "68.000",
         "media": "42.666"
+      },
+      {
+        "gara_id": "44_TROFEO_FERALPI_2026-05-10_AL_M",
+        "nome_gara": "44 TROFEO FERALPI",
+        "data": "2026-05-10",
+        "posizione": 7,
+        "punti_effettivi": 4,
+        "team": "AC F. BESSI CALENZANO DONORATICO",
+        "moltiplicatore": 1,
+        "tipo": "regionale",
+        "regione": "LOMBARDIA",
+        "km": "61.850",
+        "media": "40.447"
       }
     ]
   },
@@ -11025,7 +11233,7 @@
     "team_id": "TEAM_CORATTI",
     "categoria": "AL_M",
     "genere": "M",
-    "punti_totali": 20,
+    "punti_totali": 23,
     "risultati": [
       {
         "gara_id": "LA_STORICA_COPPA_DE_LE_POGGIOLA_2026-05-03_AL_M",
@@ -11104,6 +11312,19 @@
         "regione": "TOSCANA",
         "km": "68.000",
         "media": "42.666"
+      },
+      {
+        "gara_id": "44_TROFEO_FERALPI_2026-05-10_AL_M",
+        "nome_gara": "44 TROFEO FERALPI",
+        "data": "2026-05-10",
+        "posizione": 8,
+        "punti_effettivi": 3,
+        "team": "TEAM CORATTI",
+        "moltiplicatore": 1,
+        "tipo": "regionale",
+        "regione": "LOMBARDIA",
+        "km": "61.850",
+        "media": "40.447"
       }
     ]
   },
@@ -14987,7 +15208,7 @@
     "team_id": "ARDENS_CYCLING_TEAM",
     "categoria": "ES1_M",
     "genere": "M",
-    "punti_totali": 38,
+    "punti_totali": 46,
     "risultati": [
       {
         "gara_id": "2_TROFEO_CITTA_DI_OVADA_GARA_UNICA_2026-05-03_ES1_M",
@@ -15040,6 +15261,19 @@
         "regione": "TOSCANA",
         "km": "24.250",
         "media": "38.039"
+      },
+      {
+        "gara_id": "1_TROFEO_CITTA_DI_GATTINARA_GARA_UNICA_2026-05-10_ES1_M",
+        "nome_gara": "1 TROFEO CITTA' DI GATTINARA GARA UNICA",
+        "data": "2026-05-10",
+        "posizione": 4,
+        "punti_effettivi": 8,
+        "team": "ARDENS CYCLING TEAM",
+        "moltiplicatore": 1,
+        "tipo": "regionale",
+        "regione": "PIEMONTE",
+        "km": "25.000",
+        "media": "34.117"
       }
     ]
   },
@@ -15051,7 +15285,7 @@
     "team_id": "I_CINGHIALI_EVO",
     "categoria": "ES1_M",
     "genere": "M",
-    "punti_totali": 12,
+    "punti_totali": 16,
     "risultati": [
       {
         "gara_id": "2_TROFEO_CITTA_DI_OVADA_GARA_UNICA_2026-05-03_ES1_M",
@@ -15078,6 +15312,19 @@
         "regione": "LOMBARDIA",
         "km": "25.000",
         "media": "38.650"
+      },
+      {
+        "gara_id": "1_TROFEO_CITTA_DI_GATTINARA_GARA_UNICA_2026-05-10_ES1_M",
+        "nome_gara": "1 TROFEO CITTA' DI GATTINARA GARA UNICA",
+        "data": "2026-05-10",
+        "posizione": 7,
+        "punti_effettivi": 4,
+        "team": "I CINGHIALI EVO",
+        "moltiplicatore": 1,
+        "tipo": "regionale",
+        "regione": "PIEMONTE",
+        "km": "25.000",
+        "media": "34.117"
       }
     ]
   },
@@ -15295,7 +15542,7 @@
     "team_id": "CICLISTICA_ROSTESE",
     "categoria": "ES1_M",
     "genere": "M",
-    "punti_totali": 12,
+    "punti_totali": 18,
     "risultati": [
       {
         "gara_id": "2_TROFEO_CITTA_DI_OVADA_GARA_UNICA_2026-05-03_ES1_M",
@@ -15322,6 +15569,19 @@
         "regione": "PIEMONTE",
         "km": "29.000",
         "media": "40.154"
+      },
+      {
+        "gara_id": "1_TROFEO_CITTA_DI_GATTINARA_GARA_UNICA_2026-05-10_ES1_M",
+        "nome_gara": "1 TROFEO CITTA' DI GATTINARA GARA UNICA",
+        "data": "2026-05-10",
+        "posizione": 5,
+        "punti_effettivi": 6,
+        "team": "CICLISTICA ROSTESE",
+        "moltiplicatore": 1,
+        "tipo": "regionale",
+        "regione": "PIEMONTE",
+        "km": "25.000",
+        "media": "34.117"
       }
     ]
   },
@@ -15333,7 +15593,7 @@
     "team_id": "I_CINGHIALI_EVO",
     "categoria": "ES1_M",
     "genere": "M",
-    "punti_totali": 7,
+    "punti_totali": 17,
     "risultati": [
       {
         "gara_id": "2_TROFEO_CITTA_DI_OVADA_GARA_UNICA_2026-05-03_ES1_M",
@@ -15373,6 +15633,19 @@
         "regione": "LOMBARDIA",
         "km": "29.200",
         "media": "33.266"
+      },
+      {
+        "gara_id": "1_TROFEO_CITTA_DI_GATTINARA_GARA_UNICA_2026-05-10_ES1_M",
+        "nome_gara": "1 TROFEO CITTA' DI GATTINARA GARA UNICA",
+        "data": "2026-05-10",
+        "posizione": 3,
+        "punti_effettivi": 10,
+        "team": "I CINGHIALI EVO",
+        "moltiplicatore": 1,
+        "tipo": "regionale",
+        "regione": "PIEMONTE",
+        "km": "25.000",
+        "media": "34.117"
       }
     ]
   },
@@ -15589,7 +15862,7 @@
     "team_id": "VIGOR_CYCLING_TEAM",
     "categoria": "ES2_M",
     "genere": "M",
-    "punti_totali": 59,
+    "punti_totali": 71,
     "risultati": [
       {
         "gara_id": "2_TROFEO_CITTA_DI_OVADA_GARA_UNICA_2026-05-03_ES2_M",
@@ -15681,6 +15954,19 @@
         "regione": "PIEMONTE",
         "km": "39.000",
         "media": "37.915"
+      },
+      {
+        "gara_id": "1_TROFEO_CITTA_DI_GATTINARA_GARA_UNICA_2026-05-10_ES2_M",
+        "nome_gara": "1 TROFEO CITTA' DI GATTINARA GARA UNICA",
+        "data": "2026-05-10",
+        "posizione": 2,
+        "punti_effettivi": 12,
+        "team": "VIGOR - CYCLING TEAM",
+        "moltiplicatore": 1,
+        "tipo": "regionale",
+        "regione": "PIEMONTE",
+        "km": "25.000",
+        "media": "34.117"
       }
     ]
   },
@@ -16271,7 +16557,7 @@
     "team_id": "PEDALE_OSSOLANO",
     "categoria": "ES2_M",
     "genere": "M",
-    "punti_totali": 15,
+    "punti_totali": 25,
     "risultati": [
       {
         "gara_id": "2_TROFEO_CITTA_DI_OVADA_GARA_UNICA_2026-05-03_ES2_M",
@@ -16311,6 +16597,19 @@
         "regione": "LOMBARDIA",
         "km": "2.400",
         "media": "42.560"
+      },
+      {
+        "gara_id": "1_TROFEO_CITTA_DI_GATTINARA_GARA_UNICA_2026-05-10_ES2_M",
+        "nome_gara": "1 TROFEO CITTA' DI GATTINARA GARA UNICA",
+        "data": "2026-05-10",
+        "posizione": 3,
+        "punti_effettivi": 10,
+        "team": "PEDALE OSSOLANO",
+        "moltiplicatore": 1,
+        "tipo": "regionale",
+        "regione": "PIEMONTE",
+        "km": "25.000",
+        "media": "34.117"
       }
     ]
   },
@@ -17350,7 +17649,7 @@
     "team_id": "BUSTESE_OLONIA_A_S_D",
     "categoria": "ES2_M",
     "genere": "M",
-    "punti_totali": 43,
+    "punti_totali": 46,
     "risultati": [
       {
         "gara_id": "TROFEO_UNA_VITA_PER_LA_BRUGHERIO_SPORTIVA_GARA_UNICA_2026-05-03_ES2_M",
@@ -17416,6 +17715,19 @@
         "regione": "PIEMONTE",
         "km": "39.000",
         "media": "37.915"
+      },
+      {
+        "gara_id": "1_TROFEO_CITTA_DI_GATTINARA_GARA_UNICA_2026-05-10_ES2_M",
+        "nome_gara": "1 TROFEO CITTA' DI GATTINARA GARA UNICA",
+        "data": "2026-05-10",
+        "posizione": 8,
+        "punti_effettivi": 3,
+        "team": "BUSTESE OLONIA A.S.D.",
+        "moltiplicatore": 1,
+        "tipo": "regionale",
+        "regione": "PIEMONTE",
+        "km": "25.000",
+        "media": "34.117"
       }
     ]
   },
@@ -17465,7 +17777,7 @@
     "team_id": "S_C_BRUGHERIO_SPORTIVA_ASD",
     "categoria": "ES2_M",
     "genere": "M",
-    "punti_totali": 16,
+    "punti_totali": 21,
     "risultati": [
       {
         "gara_id": "TROFEO_UNA_VITA_PER_LA_BRUGHERIO_SPORTIVA_GARA_UNICA_2026-05-03_ES2_M",
@@ -17518,6 +17830,19 @@
         "regione": "LOMBARDIA",
         "km": "38.300",
         "media": "38.353"
+      },
+      {
+        "gara_id": "1_TROFEO_CITTA_DI_GATTINARA_GARA_UNICA_2026-05-10_ES2_M",
+        "nome_gara": "1 TROFEO CITTA' DI GATTINARA GARA UNICA",
+        "data": "2026-05-10",
+        "posizione": 6,
+        "punti_effettivi": 5,
+        "team": "S.C. BRUGHERIO SPORTIVA ASD",
+        "moltiplicatore": 1,
+        "tipo": "regionale",
+        "regione": "PIEMONTE",
+        "km": "25.000",
+        "media": "34.117"
       }
     ]
   },
@@ -17630,7 +17955,7 @@
     "team_id": "U_S_PEDALE_ARCORESE_ASD",
     "categoria": "ES2_M",
     "genere": "M",
-    "punti_totali": 6,
+    "punti_totali": 8,
     "risultati": [
       {
         "gara_id": "TROFEO_UNA_VITA_PER_LA_BRUGHERIO_SPORTIVA_GARA_UNICA_2026-05-03_ES2_M",
@@ -17670,6 +17995,19 @@
         "regione": "LOMBARDIA",
         "km": "2.400",
         "media": "42.560"
+      },
+      {
+        "gara_id": "1_TROFEO_CITTA_DI_GATTINARA_GARA_UNICA_2026-05-10_ES2_M",
+        "nome_gara": "1 TROFEO CITTA' DI GATTINARA GARA UNICA",
+        "data": "2026-05-10",
+        "posizione": 9,
+        "punti_effettivi": 2,
+        "team": "U.S. PEDALE ARCORESE ASD",
+        "moltiplicatore": 1,
+        "tipo": "regionale",
+        "regione": "PIEMONTE",
+        "km": "25.000",
+        "media": "34.117"
       }
     ]
   },
@@ -21471,7 +21809,7 @@
     "team_id": "TEAM_SENAGHESE_GUERRINI",
     "categoria": "ES1_M",
     "genere": "M",
-    "punti_totali": 154,
+    "punti_totali": 169,
     "risultati": [
       {
         "gara_id": "14_TROFEO_MAURIGI_2026-05-03_ES1_M",
@@ -21615,6 +21953,19 @@
         "regione": "LOMBARDIA",
         "km": "25.800",
         "media": "37.680"
+      },
+      {
+        "gara_id": "1_TROFEO_CITTA_DI_GATTINARA_GARA_UNICA_2026-05-10_ES1_M",
+        "nome_gara": "1 TROFEO CITTA' DI GATTINARA GARA UNICA",
+        "data": "2026-05-10",
+        "posizione": 1,
+        "punti_effettivi": 15,
+        "team": "TEAM SENAGHESE GUERRINI",
+        "moltiplicatore": 1,
+        "tipo": "regionale",
+        "regione": "PIEMONTE",
+        "km": "25.000",
+        "media": "34.117"
       }
     ]
   },
@@ -22050,7 +22401,7 @@
     "team_id": "TEAM_SENAGHESE_GUERRINI",
     "categoria": "ES1_M",
     "genere": "M",
-    "punti_totali": 31,
+    "punti_totali": 43,
     "risultati": [
       {
         "gara_id": "14_TROFEO_MAURIGI_2026-05-03_ES1_M",
@@ -22129,6 +22480,19 @@
         "regione": "TOSCANA",
         "km": "24.200",
         "media": "39.546"
+      },
+      {
+        "gara_id": "1_TROFEO_CITTA_DI_GATTINARA_GARA_UNICA_2026-05-10_ES1_M",
+        "nome_gara": "1 TROFEO CITTA' DI GATTINARA GARA UNICA",
+        "data": "2026-05-10",
+        "posizione": 2,
+        "punti_effettivi": 12,
+        "team": "TEAM SENAGHESE GUERRINI",
+        "moltiplicatore": 1,
+        "tipo": "regionale",
+        "regione": "PIEMONTE",
+        "km": "25.000",
+        "media": "34.117"
       }
     ]
   },
@@ -22462,7 +22826,7 @@
     "team_id": "G_S_PREALPINO_A_S_D",
     "categoria": "ES2_M",
     "genere": "M",
-    "punti_totali": 51,
+    "punti_totali": 66,
     "risultati": [
       {
         "gara_id": "14_TROFEO_MAURIGI_2026-05-03_ES2_M",
@@ -22567,6 +22931,19 @@
         "regione": "VENETO",
         "km": "39.200",
         "media": "39.167"
+      },
+      {
+        "gara_id": "1_TROFEO_CITTA_DI_GATTINARA_GARA_UNICA_2026-05-10_ES2_M",
+        "nome_gara": "1 TROFEO CITTA' DI GATTINARA GARA UNICA",
+        "data": "2026-05-10",
+        "posizione": 1,
+        "punti_effettivi": 15,
+        "team": "G.S. PREALPINO A.S.D.",
+        "moltiplicatore": 1,
+        "tipo": "regionale",
+        "regione": "PIEMONTE",
+        "km": "25.000",
+        "media": "34.117"
       }
     ]
   },
@@ -34351,7 +34728,7 @@
     "team_id": "FERALPI_MONTECLARENSE_ASD",
     "categoria": "AL_M",
     "genere": "M",
-    "punti_totali": 23,
+    "punti_totali": 35,
     "risultati": [
       {
         "gara_id": "TROFEO_COMUNE_DI_ILLASI_2026-05-01_AL_M",
@@ -34391,6 +34768,19 @@
         "regione": "LOMBARDIA",
         "km": "55.600",
         "media": "40.257"
+      },
+      {
+        "gara_id": "44_TROFEO_FERALPI_2026-05-10_AL_M",
+        "nome_gara": "44 TROFEO FERALPI",
+        "data": "2026-05-10",
+        "posizione": 2,
+        "punti_effettivi": 12,
+        "team": "FERALPI MONTECLARENSE ASD",
+        "moltiplicatore": 1,
+        "tipo": "regionale",
+        "regione": "LOMBARDIA",
+        "km": "61.850",
+        "media": "40.447"
       }
     ]
   },
@@ -35316,7 +35706,7 @@
     "team_id": "VIGOR_CYCLING_TEAM",
     "categoria": "AL_M",
     "genere": "M",
-    "punti_totali": 8,
+    "punti_totali": 20,
     "risultati": [
       {
         "gara_id": "11_MEMORIAL_MARIO_BIANCO_2026-05-01_AL_M",
@@ -35356,6 +35746,19 @@
         "regione": "LOMBARDIA",
         "km": "60.000",
         "media": "42.934"
+      },
+      {
+        "gara_id": "1_TROFEO_CITTA_DI_GATTINARA_2026-05-10_AL_M",
+        "nome_gara": "1 TROFEO CITTA' DI GATTINARA",
+        "data": "2026-05-10",
+        "posizione": 2,
+        "punti_effettivi": 12,
+        "team": "VIGOR - CYCLING TEAM",
+        "moltiplicatore": 1,
+        "tipo": "regionale",
+        "regione": "PIEMONTE",
+        "km": "70.000",
+        "media": "39.480"
       }
     ]
   },
@@ -35367,7 +35770,7 @@
     "team_id": "MADONNA_DI_CAMPAGNA",
     "categoria": "AL_M",
     "genere": "M",
-    "punti_totali": 44,
+    "punti_totali": 59,
     "risultati": [
       {
         "gara_id": "11_MEMORIAL_MARIO_BIANCO_2026-05-01_AL_M",
@@ -35420,6 +35823,19 @@
         "regione": "TOSCANA",
         "km": "68.000",
         "media": "42.666"
+      },
+      {
+        "gara_id": "1_TROFEO_CITTA_DI_GATTINARA_2026-05-10_AL_M",
+        "nome_gara": "1 TROFEO CITTA' DI GATTINARA",
+        "data": "2026-05-10",
+        "posizione": 1,
+        "punti_effettivi": 15,
+        "team": "MADONNA DI CAMPAGNA",
+        "moltiplicatore": 1,
+        "tipo": "regionale",
+        "regione": "PIEMONTE",
+        "km": "70.000",
+        "media": "39.480"
       }
     ]
   },
@@ -36000,7 +36416,7 @@
     "team_id": "G_S_IPERFINISH_STABBIA",
     "categoria": "AL_M",
     "genere": "M",
-    "punti_totali": 55,
+    "punti_totali": 63,
     "risultati": [
       {
         "gara_id": "78_COPPA_LAVORATORI_2026-05-01_AL_M",
@@ -36079,6 +36495,19 @@
         "regione": "TOSCANA",
         "km": "68.000",
         "media": "42.666"
+      },
+      {
+        "gara_id": "44_TROFEO_FERALPI_2026-05-10_AL_M",
+        "nome_gara": "44 TROFEO FERALPI",
+        "data": "2026-05-10",
+        "posizione": 4,
+        "punti_effettivi": 8,
+        "team": "G.S. IPERFINISH STABBIA",
+        "moltiplicatore": 1,
+        "tipo": "regionale",
+        "regione": "LOMBARDIA",
+        "km": "61.850",
+        "media": "40.447"
       }
     ]
   },
@@ -37856,7 +38285,7 @@
     "team_id": "CONTRABAND_CYCLING_TEAM_ASD",
     "categoria": "ES1_M",
     "genere": "M",
-    "punti_totali": 37,
+    "punti_totali": 40,
     "risultati": [
       {
         "gara_id": "11_MEMORIAL_MARIO_BIANCO_GARA_UNICA_2026-05-01_ES1_M",
@@ -37961,6 +38390,19 @@
         "regione": "LOMBARDIA",
         "km": "25.800",
         "media": "37.680"
+      },
+      {
+        "gara_id": "1_TROFEO_CITTA_DI_GATTINARA_GARA_UNICA_2026-05-10_ES1_M",
+        "nome_gara": "1 TROFEO CITTA' DI GATTINARA GARA UNICA",
+        "data": "2026-05-10",
+        "posizione": 8,
+        "punti_effettivi": 3,
+        "team": "CONTRABAND CYCLING TEAM ASD",
+        "moltiplicatore": 1,
+        "tipo": "regionale",
+        "regione": "PIEMONTE",
+        "km": "25.000",
+        "media": "34.117"
       }
     ]
   },
@@ -38227,7 +38669,7 @@
     "team_id": "CICLISTICA_ROSTESE",
     "categoria": "ES2_M",
     "genere": "M",
-    "punti_totali": 4,
+    "punti_totali": 10,
     "risultati": [
       {
         "gara_id": "11_MEMORIAL_MARIO_BIANCO_GARA_UNICA_2026-05-01_ES2_M",
@@ -38241,6 +38683,19 @@
         "regione": "PIEMONTE",
         "km": "29.000",
         "media": "40.154"
+      },
+      {
+        "gara_id": "1_TROFEO_CITTA_DI_GATTINARA_GARA_UNICA_2026-05-10_ES2_M",
+        "nome_gara": "1 TROFEO CITTA' DI GATTINARA GARA UNICA",
+        "data": "2026-05-10",
+        "posizione": 5,
+        "punti_effettivi": 6,
+        "team": "CICLISTICA ROSTESE",
+        "moltiplicatore": 1,
+        "tipo": "regionale",
+        "regione": "PIEMONTE",
+        "km": "25.000",
+        "media": "34.117"
       }
     ]
   },
@@ -41413,7 +41868,7 @@
     "team_id": "NORDEST_PETRUCCI_ASSALI_STEFEN",
     "categoria": "JUN_M",
     "genere": "M",
-    "punti_totali": 136,
+    "punti_totali": 166,
     "risultati": [
       {
         "gara_id": "15_GIRO_DI_PRIMAVERA_2026-04-26_JUN_M",
@@ -41492,6 +41947,19 @@
         "regione": "TEPLICE",
         "km": "112.100",
         "media": "45.791"
+      },
+      {
+        "gara_id": "CORSA_DELLA_PACE_JUNIORES_CLASSIFICA_GENERALE_2026-05-10_JUN_M",
+        "nome_gara": "CORSA DELLA PACE JUNIORES CLASSIFICA GENERALE",
+        "data": "2026-05-10",
+        "posizione": 1,
+        "punti_effettivi": 30,
+        "team": "ITALIA",
+        "moltiplicatore": 2,
+        "tipo": "regionale",
+        "regione": "TEREZIN",
+        "km": "397.300",
+        "media": "44.514"
       }
     ]
   },
@@ -41580,7 +42048,7 @@
     "team_id": "JEGG_SKIL_DJR",
     "categoria": "JUN_M",
     "genere": "M",
-    "punti_totali": 50,
+    "punti_totali": 66,
     "risultati": [
       {
         "gara_id": "15_GIRO_DI_PRIMAVERA_2026-04-26_JUN_M",
@@ -41620,6 +42088,19 @@
         "regione": "TEPLICE",
         "km": "112.100",
         "media": "45.791"
+      },
+      {
+        "gara_id": "CORSA_DELLA_PACE_JUNIORES_CLASSIFICA_GENERALE_2026-05-10_JUN_M",
+        "nome_gara": "CORSA DELLA PACE JUNIORES CLASSIFICA GENERALE",
+        "data": "2026-05-10",
+        "posizione": 4,
+        "punti_effettivi": 16,
+        "team": "JEGG SKIL DJR",
+        "moltiplicatore": 2,
+        "tipo": "regionale",
+        "regione": "TEREZIN",
+        "km": "397.300",
+        "media": "44.514"
       }
     ]
   },
@@ -41669,7 +42150,7 @@
     "team_id": "JEGG_SKIL_DJR",
     "categoria": "JUN_M",
     "genere": "M",
-    "punti_totali": 76,
+    "punti_totali": 100,
     "risultati": [
       {
         "gara_id": "15_GIRO_DI_PRIMAVERA_2026-04-26_JUN_M",
@@ -41722,6 +42203,19 @@
         "regione": "TEPLICE",
         "km": "112.100",
         "media": "45.791"
+      },
+      {
+        "gara_id": "CORSA_DELLA_PACE_JUNIORES_CLASSIFICA_GENERALE_2026-05-10_JUN_M",
+        "nome_gara": "CORSA DELLA PACE JUNIORES CLASSIFICA GENERALE",
+        "data": "2026-05-10",
+        "posizione": 2,
+        "punti_effettivi": 24,
+        "team": "JEGG SKIL DJR",
+        "moltiplicatore": 2,
+        "tipo": "regionale",
+        "regione": "TEREZIN",
+        "km": "397.300",
+        "media": "44.514"
       }
     ]
   },
@@ -42243,7 +42737,7 @@
     "team_id": "U_C_GUSPINI_A_S_D",
     "categoria": "AL_M",
     "genere": "M",
-    "punti_totali": 70,
+    "punti_totali": 85,
     "risultati": [
       {
         "gara_id": "19_TROFEO_MG_TUNING_2026-04-26_AL_M",
@@ -42296,6 +42790,19 @@
         "regione": "SARDEGNA",
         "km": "57.200",
         "media": "40.376"
+      },
+      {
+        "gara_id": "MEMORIAL_FARRIS_QUIRINO_2026-05-10_AL_M",
+        "nome_gara": "MEMORIAL FARRIS QUIRINO",
+        "data": "2026-05-10",
+        "posizione": 1,
+        "punti_effettivi": 15,
+        "team": "U.C. GUSPINI A.S.D.",
+        "moltiplicatore": 1,
+        "tipo": "regionale",
+        "regione": "SARDEGNA",
+        "km": "53.000",
+        "media": "37.685"
       }
     ]
   },
@@ -42357,7 +42864,7 @@
     "team_id": "POOL_BIKE_SERRAMANNA",
     "categoria": "JUN_M",
     "genere": "M",
-    "punti_totali": 26,
+    "punti_totali": 31,
     "risultati": [
       {
         "gara_id": "19_TROFEO_MG_TUNING_2026-04-26_JUN_M",
@@ -42397,6 +42904,19 @@
         "regione": "SARDEGNA",
         "km": "66.000",
         "media": ""
+      },
+      {
+        "gara_id": "MEMORIAL_FARRIS_QUIRINO_2026-05-10_JUN_M",
+        "nome_gara": "MEMORIAL FARRIS QUIRINO",
+        "data": "2026-05-10",
+        "posizione": 6,
+        "punti_effettivi": 5,
+        "team": "POOL BIKE SERRAMANNA",
+        "moltiplicatore": 1,
+        "tipo": "regionale",
+        "regione": "SARDEGNA",
+        "km": "53.000",
+        "media": "37.685"
       }
     ]
   },
@@ -42408,7 +42928,7 @@
     "team_id": "CANNEDU_ITTIRI_A_MANCA_ASD",
     "categoria": "JUN_M",
     "genere": "M",
-    "punti_totali": 20,
+    "punti_totali": 26,
     "risultati": [
       {
         "gara_id": "19_TROFEO_MG_TUNING_2026-04-26_JUN_M",
@@ -42435,6 +42955,19 @@
         "regione": "SARDEGNA",
         "km": "12.500",
         "media": ""
+      },
+      {
+        "gara_id": "MEMORIAL_FARRIS_QUIRINO_2026-05-10_JUN_M",
+        "nome_gara": "MEMORIAL FARRIS QUIRINO",
+        "data": "2026-05-10",
+        "posizione": 5,
+        "punti_effettivi": 6,
+        "team": "CANNEDU ITTIRI \"A. MANCA\" ASD",
+        "moltiplicatore": 1,
+        "tipo": "regionale",
+        "regione": "SARDEGNA",
+        "km": "53.000",
+        "media": "37.685"
       }
     ]
   },
@@ -44469,7 +45002,7 @@
     "team_id": "PEDALE_OSSOLANO",
     "categoria": "AL_M",
     "genere": "M",
-    "punti_totali": 9,
+    "punti_totali": 11,
     "risultati": [
       {
         "gara_id": "6_MEMORIAL_CLAUDIA_2026-04-26_AL_M",
@@ -44496,6 +45029,19 @@
         "regione": "LOMBARDIA",
         "km": "60.000",
         "media": "43.470"
+      },
+      {
+        "gara_id": "1_TROFEO_CITTA_DI_GATTINARA_2026-05-10_AL_M",
+        "nome_gara": "1 TROFEO CITTA' DI GATTINARA",
+        "data": "2026-05-10",
+        "posizione": 9,
+        "punti_effettivi": 2,
+        "team": "PEDALE OSSOLANO",
+        "moltiplicatore": 1,
+        "tipo": "regionale",
+        "regione": "PIEMONTE",
+        "km": "70.000",
+        "media": "39.480"
       }
     ]
   },
@@ -47352,7 +47898,7 @@
     "team_id": "CICLISTICA_BORDIGHERA",
     "categoria": "ES1_M",
     "genere": "M",
-    "punti_totali": 4,
+    "punti_totali": 5,
     "risultati": [
       {
         "gara_id": "3_TROFEO_BACCI_FABIO_ALLA_MEMORIA_2026-04-26_ES1_M",
@@ -47379,6 +47925,19 @@
         "regione": "TOSCANA",
         "km": "30.500",
         "media": "36.600"
+      },
+      {
+        "gara_id": "1_TROFEO_CITTA_DI_GATTINARA_GARA_UNICA_2026-05-10_ES1_M",
+        "nome_gara": "1 TROFEO CITTA' DI GATTINARA GARA UNICA",
+        "data": "2026-05-10",
+        "posizione": 10,
+        "punti_effettivi": 1,
+        "team": "CICLISTICA BORDIGHERA",
+        "moltiplicatore": 1,
+        "tipo": "regionale",
+        "regione": "PIEMONTE",
+        "km": "25.000",
+        "media": "34.117"
       }
     ]
   },
@@ -53160,7 +53719,7 @@
     "team_id": "POL_MOLINELLO",
     "categoria": "ES1_M",
     "genere": "M",
-    "punti_totali": 1,
+    "punti_totali": 6,
     "risultati": [
       {
         "gara_id": "7_GRAN_PREMIO_DI_CRENNA_2026-04-25_ES1_M",
@@ -53174,6 +53733,19 @@
         "regione": "LOMBARDIA",
         "km": "28.000",
         "media": "38.182"
+      },
+      {
+        "gara_id": "1_TROFEO_CITTA_DI_GATTINARA_GARA_UNICA_2026-05-10_ES1_M",
+        "nome_gara": "1 TROFEO CITTA' DI GATTINARA GARA UNICA",
+        "data": "2026-05-10",
+        "posizione": 6,
+        "punti_effettivi": 5,
+        "team": "POL. MOLINELLO",
+        "moltiplicatore": 1,
+        "tipo": "regionale",
+        "regione": "PIEMONTE",
+        "km": "25.000",
+        "media": "34.117"
       }
     ]
   },
@@ -53707,7 +54279,7 @@
     "team_id": "ARKITANO_MTB_CLUB",
     "categoria": "JUN_M",
     "genere": "M",
-    "punti_totali": 28,
+    "punti_totali": 43,
     "risultati": [
       {
         "gara_id": "CAMPIONATO_REGIONALE_CRONOMETRO_MEMORIAL_MARIO_CERVO_2026-04-25_JUN_M",
@@ -53734,6 +54306,19 @@
         "regione": "SARDEGNA",
         "km": "66.000",
         "media": ""
+      },
+      {
+        "gara_id": "MEMORIAL_FARRIS_QUIRINO_2026-05-10_JUN_M",
+        "nome_gara": "MEMORIAL FARRIS QUIRINO",
+        "data": "2026-05-10",
+        "posizione": 1,
+        "punti_effettivi": 15,
+        "team": "ARKITANO MTB CLUB",
+        "moltiplicatore": 1,
+        "tipo": "regionale",
+        "regione": "SARDEGNA",
+        "km": "53.000",
+        "media": "37.685"
       }
     ]
   },
@@ -58518,7 +59103,7 @@
     "team_id": "VIGOR_CYCLING_TEAM",
     "categoria": "ES2_M",
     "genere": "M",
-    "punti_totali": 37,
+    "punti_totali": 45,
     "risultati": [
       {
         "gara_id": "COPPA_STRADE_BIANCHE_DI_GUSSOLA_2026-04-19_ES2_M",
@@ -58571,6 +59156,19 @@
         "regione": "LOMBARDIA",
         "km": "2.400",
         "media": "42.560"
+      },
+      {
+        "gara_id": "1_TROFEO_CITTA_DI_GATTINARA_GARA_UNICA_2026-05-10_ES2_M",
+        "nome_gara": "1 TROFEO CITTA' DI GATTINARA GARA UNICA",
+        "data": "2026-05-10",
+        "posizione": 4,
+        "punti_effettivi": 8,
+        "team": "VIGOR - CYCLING TEAM",
+        "moltiplicatore": 1,
+        "tipo": "regionale",
+        "regione": "PIEMONTE",
+        "km": "25.000",
+        "media": "34.117"
       }
     ]
   },
@@ -60928,7 +61526,7 @@
     "team_id": "FABIO_ARU_ACADEMY_S_R_L_A_R_L",
     "categoria": "AL_M",
     "genere": "M",
-    "punti_totali": 12,
+    "punti_totali": 20,
     "risultati": [
       {
         "gara_id": "TROFEO_CITTA_DI_GUSPINI_2026-04-12_AL_M",
@@ -60955,6 +61553,19 @@
         "regione": "SARDEGNA",
         "km": "57.200",
         "media": "40.376"
+      },
+      {
+        "gara_id": "MEMORIAL_FARRIS_QUIRINO_2026-05-10_AL_M",
+        "nome_gara": "MEMORIAL FARRIS QUIRINO",
+        "data": "2026-05-10",
+        "posizione": 4,
+        "punti_effettivi": 8,
+        "team": "FABIO ARU ACADEMY S.R.L. A.R.L.",
+        "moltiplicatore": 1,
+        "tipo": "regionale",
+        "regione": "SARDEGNA",
+        "km": "53.000",
+        "media": "37.685"
       }
     ]
   },
@@ -60966,7 +61577,7 @@
     "team_id": "FABIO_ARU_ACADEMY_S_R_L_A_R_L",
     "categoria": "AL_M",
     "genere": "M",
-    "punti_totali": 11,
+    "punti_totali": 17,
     "risultati": [
       {
         "gara_id": "TROFEO_CITTA_DI_GUSPINI_2026-04-12_AL_M",
@@ -60993,6 +61604,19 @@
         "regione": "SARDEGNA",
         "km": "57.200",
         "media": "40.376"
+      },
+      {
+        "gara_id": "MEMORIAL_FARRIS_QUIRINO_2026-05-10_AL_M",
+        "nome_gara": "MEMORIAL FARRIS QUIRINO",
+        "data": "2026-05-10",
+        "posizione": 5,
+        "punti_effettivi": 6,
+        "team": "FABIO ARU ACADEMY S.R.L. A.R.L.",
+        "moltiplicatore": 1,
+        "tipo": "regionale",
+        "regione": "SARDEGNA",
+        "km": "53.000",
+        "media": "37.685"
       }
     ]
   },
@@ -65008,7 +65632,7 @@
     "team_id": "QUILIANO_BIKE_SPEED_WHEEL",
     "categoria": "AL_M",
     "genere": "M",
-    "punti_totali": 21,
+    "punti_totali": 31,
     "risultati": [
       {
         "gara_id": "PASQUALANDO_2026-04-05_AL_M",
@@ -65035,6 +65659,19 @@
         "regione": "LOMBARDIA",
         "km": "60.000",
         "media": "43.470"
+      },
+      {
+        "gara_id": "1_TROFEO_CITTA_DI_GATTINARA_2026-05-10_AL_M",
+        "nome_gara": "1 TROFEO CITTA' DI GATTINARA",
+        "data": "2026-05-10",
+        "posizione": 3,
+        "punti_effettivi": 10,
+        "team": "QUILIANO BIKE SPEED WHEEL",
+        "moltiplicatore": 1,
+        "tipo": "regionale",
+        "regione": "PIEMONTE",
+        "km": "70.000",
+        "media": "39.480"
       }
     ]
   },
@@ -66861,7 +67498,7 @@
     "team_id": "CANNEDU_ITTIRI_A_MANCA_ASD",
     "categoria": "JUN_M",
     "genere": "M",
-    "punti_totali": 5,
+    "punti_totali": 13,
     "risultati": [
       {
         "gara_id": "61_COPPA_D_DENTONI_2026-03-29_JUN_M",
@@ -66875,6 +67512,19 @@
         "regione": "SARDEGNA",
         "km": "57.200",
         "media": "40.376"
+      },
+      {
+        "gara_id": "MEMORIAL_FARRIS_QUIRINO_2026-05-10_JUN_M",
+        "nome_gara": "MEMORIAL FARRIS QUIRINO",
+        "data": "2026-05-10",
+        "posizione": 4,
+        "punti_effettivi": 8,
+        "team": "CANNEDU ITTIRI \"A. MANCA\" ASD",
+        "moltiplicatore": 1,
+        "tipo": "regionale",
+        "regione": "SARDEGNA",
+        "km": "53.000",
+        "media": "37.685"
       }
     ]
   },
@@ -66886,7 +67536,7 @@
     "team_id": "VELO_CLUB_SARROCH",
     "categoria": "AL_M",
     "genere": "M",
-    "punti_totali": 5,
+    "punti_totali": 7,
     "risultati": [
       {
         "gara_id": "61_COPPA_D_DENTONI_2026-03-29_AL_M",
@@ -66900,6 +67550,19 @@
         "regione": "SARDEGNA",
         "km": "57.200",
         "media": "40.376"
+      },
+      {
+        "gara_id": "MEMORIAL_FARRIS_QUIRINO_2026-05-10_AL_M",
+        "nome_gara": "MEMORIAL FARRIS QUIRINO",
+        "data": "2026-05-10",
+        "posizione": 9,
+        "punti_effettivi": 2,
+        "team": "VELO CLUB SARROCH",
+        "moltiplicatore": 1,
+        "tipo": "regionale",
+        "regione": "SARDEGNA",
+        "km": "53.000",
+        "media": "37.685"
       }
     ]
   },
@@ -67888,7 +68551,7 @@
     "team_id": "STATI_UNITI",
     "categoria": "JUN_M",
     "genere": "M",
-    "punti_totali": 42,
+    "punti_totali": 52,
     "risultati": [
       {
         "gara_id": "E3_SAXO_CLASSIC_2026-03-27_JUN_M",
@@ -67928,6 +68591,19 @@
         "regione": "TEPLICE",
         "km": "112.100",
         "media": "45.791"
+      },
+      {
+        "gara_id": "CORSA_DELLA_PACE_JUNIORES_CLASSIFICA_GENERALE_2026-05-10_JUN_M",
+        "nome_gara": "CORSA DELLA PACE JUNIORES CLASSIFICA GENERALE",
+        "data": "2026-05-10",
+        "posizione": 6,
+        "punti_effettivi": 10,
+        "team": "STATI UNITI",
+        "moltiplicatore": 2,
+        "tipo": "regionale",
+        "regione": "TEREZIN",
+        "km": "397.300",
+        "media": "44.514"
       }
     ]
   },
@@ -71714,7 +72390,7 @@
     "team_id": "CANADA",
     "categoria": "JUN_M",
     "genere": "M",
-    "punti_totali": 36,
+    "punti_totali": 52,
     "risultati": [
       {
         "gara_id": "CORSA_DELLA_PACE_JUNIORES_PRIMA_TAPPA_2026-05-07_JUN_M",
@@ -71741,6 +72417,19 @@
         "regione": "SJLNJENI ZAVOD",
         "km": "63.800",
         "media": "48.353"
+      },
+      {
+        "gara_id": "CORSA_DELLA_PACE_JUNIORES_QUARTA_TAPPA_2026-05-10_JUN_M",
+        "nome_gara": "CORSA DELLA PACE JUNIORES QUARTA TAPPA",
+        "data": "2026-05-10",
+        "posizione": 4,
+        "punti_effettivi": 16,
+        "team": "CANADA",
+        "moltiplicatore": 2,
+        "tipo": "nazionale",
+        "regione": "TEREZIN",
+        "km": "102.400",
+        "media": "44.355"
       }
     ]
   },
@@ -71752,7 +72441,7 @@
     "team_id": "BELGIO",
     "categoria": "JUN_M",
     "genere": "M",
-    "punti_totali": 16,
+    "punti_totali": 26,
     "risultati": [
       {
         "gara_id": "CORSA_DELLA_PACE_JUNIORES_PRIMA_TAPPA_2026-05-07_JUN_M",
@@ -71766,6 +72455,19 @@
         "regione": "LITOMERICE",
         "km": "110.200",
         "media": "41.273"
+      },
+      {
+        "gara_id": "CORSA_DELLA_PACE_JUNIORES_QUARTA_TAPPA_2026-05-10_JUN_M",
+        "nome_gara": "CORSA DELLA PACE JUNIORES QUARTA TAPPA",
+        "data": "2026-05-10",
+        "posizione": 6,
+        "punti_effettivi": 10,
+        "team": "BELGIO",
+        "moltiplicatore": 2,
+        "tipo": "nazionale",
+        "regione": "TEREZIN",
+        "km": "102.400",
+        "media": "44.355"
       }
     ]
   },
@@ -71802,7 +72504,7 @@
     "team_id": "GERMANIA",
     "categoria": "JUN_M",
     "genere": "M",
-    "punti_totali": 10,
+    "punti_totali": 12,
     "risultati": [
       {
         "gara_id": "CORSA_DELLA_PACE_JUNIORES_PRIMA_TAPPA_2026-05-07_JUN_M",
@@ -71816,6 +72518,19 @@
         "regione": "LITOMERICE",
         "km": "110.200",
         "media": "41.273"
+      },
+      {
+        "gara_id": "CORSA_DELLA_PACE_JUNIORES_QUARTA_TAPPA_2026-05-10_JUN_M",
+        "nome_gara": "CORSA DELLA PACE JUNIORES QUARTA TAPPA",
+        "data": "2026-05-10",
+        "posizione": 10,
+        "punti_effettivi": 2,
+        "team": "GERMANIA",
+        "moltiplicatore": 2,
+        "tipo": "nazionale",
+        "regione": "TEREZIN",
+        "km": "102.400",
+        "media": "44.355"
       }
     ]
   },
@@ -71827,7 +72542,7 @@
     "team_id": "RKC_ROMAN_KREUZIGER",
     "categoria": "JUN_M",
     "genere": "M",
-    "punti_totali": 8,
+    "punti_totali": 38,
     "risultati": [
       {
         "gara_id": "CORSA_DELLA_PACE_JUNIORES_PRIMA_TAPPA_2026-05-07_JUN_M",
@@ -71841,6 +72556,19 @@
         "regione": "LITOMERICE",
         "km": "110.200",
         "media": "41.273"
+      },
+      {
+        "gara_id": "CORSA_DELLA_PACE_JUNIORES_QUARTA_TAPPA_2026-05-10_JUN_M",
+        "nome_gara": "CORSA DELLA PACE JUNIORES QUARTA TAPPA",
+        "data": "2026-05-10",
+        "posizione": 1,
+        "punti_effettivi": 30,
+        "team": "RKC ROMAN KREUZIGER",
+        "moltiplicatore": 2,
+        "tipo": "nazionale",
+        "regione": "TEREZIN",
+        "km": "102.400",
+        "media": "44.355"
       }
     ]
   },
@@ -71852,7 +72580,7 @@
     "team_id": "NORVEGIA",
     "categoria": "JUN_M",
     "genere": "M",
-    "punti_totali": 28,
+    "punti_totali": 36,
     "risultati": [
       {
         "gara_id": "CORSA_DELLA_PACE_JUNIORES_PRIMA_TAPPA_2026-05-07_JUN_M",
@@ -71892,6 +72620,19 @@
         "regione": "SJLNJENI ZAVOD",
         "km": "63.800",
         "media": "48.353"
+      },
+      {
+        "gara_id": "CORSA_DELLA_PACE_JUNIORES_CLASSIFICA_GENERALE_2026-05-10_JUN_M",
+        "nome_gara": "CORSA DELLA PACE JUNIORES CLASSIFICA GENERALE",
+        "data": "2026-05-10",
+        "posizione": 7,
+        "punti_effettivi": 8,
+        "team": "NORVEGIA",
+        "moltiplicatore": 2,
+        "tipo": "regionale",
+        "regione": "TEREZIN",
+        "km": "397.300",
+        "media": "44.514"
       }
     ]
   },
@@ -71941,7 +72682,7 @@
     "team_id": "DANIMARCA",
     "categoria": "JUN_M",
     "genere": "M",
-    "punti_totali": 24,
+    "punti_totali": 44,
     "risultati": [
       {
         "gara_id": "CORSA_DELLA_PACE_JUNIORES_SECONDA_TAPPA_PRIMA_SEMITAPPA_CRONOMETRO_2026-05-08_JUN_M",
@@ -71955,6 +72696,19 @@
         "regione": "CASOVKA",
         "km": "8.800",
         "media": "50.139"
+      },
+      {
+        "gara_id": "CORSA_DELLA_PACE_JUNIORES_CLASSIFICA_GENERALE_2026-05-10_JUN_M",
+        "nome_gara": "CORSA DELLA PACE JUNIORES CLASSIFICA GENERALE",
+        "data": "2026-05-10",
+        "posizione": 3,
+        "punti_effettivi": 20,
+        "team": "DANIMARCA",
+        "moltiplicatore": 2,
+        "tipo": "regionale",
+        "regione": "TEREZIN",
+        "km": "397.300",
+        "media": "44.514"
       }
     ]
   },
@@ -71991,7 +72745,7 @@
     "team_id": "FRANCIA",
     "categoria": "JUN_M",
     "genere": "M",
-    "punti_totali": 16,
+    "punti_totali": 28,
     "risultati": [
       {
         "gara_id": "CORSA_DELLA_PACE_JUNIORES_SECONDA_TAPPA_PRIMA_SEMITAPPA_CRONOMETRO_2026-05-08_JUN_M",
@@ -72018,6 +72772,19 @@
         "regione": "TEPLICE",
         "km": "112.100",
         "media": "45.791"
+      },
+      {
+        "gara_id": "CORSA_DELLA_PACE_JUNIORES_CLASSIFICA_GENERALE_2026-05-10_JUN_M",
+        "nome_gara": "CORSA DELLA PACE JUNIORES CLASSIFICA GENERALE",
+        "data": "2026-05-10",
+        "posizione": 5,
+        "punti_effettivi": 12,
+        "team": "FRANCIA",
+        "moltiplicatore": 2,
+        "tipo": "regionale",
+        "regione": "TEREZIN",
+        "km": "397.300",
+        "media": "44.514"
       }
     ]
   },
@@ -72079,7 +72846,7 @@
     "team_id": "REPUBBLICA_CECA",
     "categoria": "JUN_M",
     "genere": "M",
-    "punti_totali": 24,
+    "punti_totali": 28,
     "risultati": [
       {
         "gara_id": "CORSA_DELLA_PACE_JUNIORES_SECONDA_TAPPA_SECONDA_SEMITAPPA_2026-05-08_JUN_M",
@@ -72093,6 +72860,19 @@
         "regione": "SJLNJENI ZAVOD",
         "km": "63.800",
         "media": "48.353"
+      },
+      {
+        "gara_id": "CORSA_DELLA_PACE_JUNIORES_QUARTA_TAPPA_2026-05-10_JUN_M",
+        "nome_gara": "CORSA DELLA PACE JUNIORES QUARTA TAPPA",
+        "data": "2026-05-10",
+        "posizione": 9,
+        "punti_effettivi": 4,
+        "team": "REPUBBLICA CECA",
+        "moltiplicatore": 2,
+        "tipo": "nazionale",
+        "regione": "TEREZIN",
+        "km": "102.400",
+        "media": "44.355"
       }
     ]
   },
@@ -72454,7 +73234,7 @@
     "team_id": "SLOVENIA_NATIONAL_TEAM",
     "categoria": "JUN_M",
     "genere": "M",
-    "punti_totali": 20,
+    "punti_totali": 26,
     "risultati": [
       {
         "gara_id": "CORSA_DELLA_PACE_JUNIORES_TERZA_TAPPA_2026-05-09_JUN_M",
@@ -72468,6 +73248,19 @@
         "regione": "TEPLICE",
         "km": "112.100",
         "media": "45.791"
+      },
+      {
+        "gara_id": "CORSA_DELLA_PACE_JUNIORES_CLASSIFICA_GENERALE_2026-05-10_JUN_M",
+        "nome_gara": "CORSA DELLA PACE JUNIORES CLASSIFICA GENERALE",
+        "data": "2026-05-10",
+        "posizione": 8,
+        "punti_effettivi": 6,
+        "team": "SLOVENIA NATIONAL TEAM",
+        "moltiplicatore": 2,
+        "tipo": "regionale",
+        "regione": "TEREZIN",
+        "km": "397.300",
+        "media": "44.514"
       }
     ]
   },
@@ -73043,6 +73836,369 @@
         "regione": "LOMBARDIA",
         "km": "30.000",
         "media": "41.221"
+      }
+    ]
+  },
+  "SCHINTU_EDOARDO_ANTONIO": {
+    "id": "SCHINTU_EDOARDO_ANTONIO",
+    "nome": "EDOARDO ANTONIO",
+    "cognome": "SCHINTU",
+    "team_attuale": "DUEPPI CYCLING PROJECT",
+    "team_id": "DUEPPI_CYCLING_PROJECT",
+    "categoria": "AL_M",
+    "genere": "M",
+    "punti_totali": 3,
+    "risultati": [
+      {
+        "gara_id": "MEMORIAL_FARRIS_QUIRINO_2026-05-10_AL_M",
+        "nome_gara": "MEMORIAL FARRIS QUIRINO",
+        "data": "2026-05-10",
+        "posizione": 8,
+        "punti_effettivi": 3,
+        "team": "DUEPPI CYCLING PROJECT",
+        "moltiplicatore": 1,
+        "tipo": "regionale",
+        "regione": "SARDEGNA",
+        "km": "53.000",
+        "media": "37.685"
+      }
+    ]
+  },
+  "BONAVIA_MATTIA": {
+    "id": "BONAVIA_MATTIA",
+    "nome": "MATTIA",
+    "cognome": "BONAVIA",
+    "team_attuale": "MTB ACADEMY GIAVENO",
+    "team_id": "MTB_ACADEMY_GIAVENO",
+    "categoria": "AL_M",
+    "genere": "M",
+    "punti_totali": 8,
+    "risultati": [
+      {
+        "gara_id": "1_TROFEO_CITTA_DI_GATTINARA_2026-05-10_AL_M",
+        "nome_gara": "1 TROFEO CITTA' DI GATTINARA",
+        "data": "2026-05-10",
+        "posizione": 4,
+        "punti_effettivi": 8,
+        "team": "MTB ACADEMY GIAVENO",
+        "moltiplicatore": 1,
+        "tipo": "regionale",
+        "regione": "PIEMONTE",
+        "km": "70.000",
+        "media": "39.480"
+      }
+    ]
+  },
+  "MAZZONI_MIRCO": {
+    "id": "MAZZONI_MIRCO",
+    "nome": "MIRCO",
+    "cognome": "MAZZONI",
+    "team_attuale": "ESPERIA PIASCO",
+    "team_id": "ESPERIA_PIASCO",
+    "categoria": "AL_M",
+    "genere": "M",
+    "punti_totali": 6,
+    "risultati": [
+      {
+        "gara_id": "1_TROFEO_CITTA_DI_GATTINARA_2026-05-10_AL_M",
+        "nome_gara": "1 TROFEO CITTA' DI GATTINARA",
+        "data": "2026-05-10",
+        "posizione": 5,
+        "punti_effettivi": 6,
+        "team": "ESPERIA PIASCO",
+        "moltiplicatore": 1,
+        "tipo": "regionale",
+        "regione": "PIEMONTE",
+        "km": "70.000",
+        "media": "39.480"
+      }
+    ]
+  },
+  "MARTINO_JACOPO": {
+    "id": "MARTINO_JACOPO",
+    "nome": "JACOPO",
+    "cognome": "MARTINO",
+    "team_attuale": "VIGOR - CYCLING TEAM",
+    "team_id": "VIGOR_CYCLING_TEAM",
+    "categoria": "AL_M",
+    "genere": "M",
+    "punti_totali": 4,
+    "risultati": [
+      {
+        "gara_id": "1_TROFEO_CITTA_DI_GATTINARA_2026-05-10_AL_M",
+        "nome_gara": "1 TROFEO CITTA' DI GATTINARA",
+        "data": "2026-05-10",
+        "posizione": 7,
+        "punti_effettivi": 4,
+        "team": "VIGOR - CYCLING TEAM",
+        "moltiplicatore": 1,
+        "tipo": "regionale",
+        "regione": "PIEMONTE",
+        "km": "70.000",
+        "media": "39.480"
+      }
+    ]
+  },
+  "LA_FATA_VITTORIO": {
+    "id": "LA_FATA_VITTORIO",
+    "nome": "FATA VITTORIO",
+    "cognome": "LA",
+    "team_attuale": "PEDALE OSSOLANO",
+    "team_id": "PEDALE_OSSOLANO",
+    "categoria": "AL_M",
+    "genere": "M",
+    "punti_totali": 3,
+    "risultati": [
+      {
+        "gara_id": "1_TROFEO_CITTA_DI_GATTINARA_2026-05-10_AL_M",
+        "nome_gara": "1 TROFEO CITTA' DI GATTINARA",
+        "data": "2026-05-10",
+        "posizione": 8,
+        "punti_effettivi": 3,
+        "team": "PEDALE OSSOLANO",
+        "moltiplicatore": 1,
+        "tipo": "regionale",
+        "regione": "PIEMONTE",
+        "km": "70.000",
+        "media": "39.480"
+      }
+    ]
+  },
+  "TASSISTRO_LORENZO": {
+    "id": "TASSISTRO_LORENZO",
+    "nome": "LORENZO",
+    "cognome": "TASSISTRO",
+    "team_attuale": "I CINGHIALI EVO",
+    "team_id": "I_CINGHIALI_EVO",
+    "categoria": "AL_M",
+    "genere": "M",
+    "punti_totali": 1,
+    "risultati": [
+      {
+        "gara_id": "1_TROFEO_CITTA_DI_GATTINARA_2026-05-10_AL_M",
+        "nome_gara": "1 TROFEO CITTA' DI GATTINARA",
+        "data": "2026-05-10",
+        "posizione": 10,
+        "punti_effettivi": 1,
+        "team": "I CINGHIALI EVO",
+        "moltiplicatore": 1,
+        "tipo": "regionale",
+        "regione": "PIEMONTE",
+        "km": "70.000",
+        "media": "39.480"
+      }
+    ]
+  },
+  "BISTERZO_MANUEL": {
+    "id": "BISTERZO_MANUEL",
+    "nome": "MANUEL",
+    "cognome": "BISTERZO",
+    "team_attuale": "CICLISTICA ROSTESE",
+    "team_id": "CICLISTICA_ROSTESE",
+    "categoria": "ES1_M",
+    "genere": "M",
+    "punti_totali": 2,
+    "risultati": [
+      {
+        "gara_id": "1_TROFEO_CITTA_DI_GATTINARA_GARA_UNICA_2026-05-10_ES1_M",
+        "nome_gara": "1 TROFEO CITTA' DI GATTINARA GARA UNICA",
+        "data": "2026-05-10",
+        "posizione": 9,
+        "punti_effettivi": 2,
+        "team": "CICLISTICA ROSTESE",
+        "moltiplicatore": 1,
+        "tipo": "regionale",
+        "regione": "PIEMONTE",
+        "km": "25.000",
+        "media": "34.117"
+      }
+    ]
+  },
+  "TASCA_GIOVANNI": {
+    "id": "TASCA_GIOVANNI",
+    "nome": "GIOVANNI",
+    "cognome": "TASCA",
+    "team_attuale": "G.S. PREALPINO A.S.D.",
+    "team_id": "G_S_PREALPINO_A_S_D",
+    "categoria": "ES2_M",
+    "genere": "M",
+    "punti_totali": 4,
+    "risultati": [
+      {
+        "gara_id": "1_TROFEO_CITTA_DI_GATTINARA_GARA_UNICA_2026-05-10_ES2_M",
+        "nome_gara": "1 TROFEO CITTA' DI GATTINARA GARA UNICA",
+        "data": "2026-05-10",
+        "posizione": 7,
+        "punti_effettivi": 4,
+        "team": "G.S. PREALPINO A.S.D.",
+        "moltiplicatore": 1,
+        "tipo": "regionale",
+        "regione": "PIEMONTE",
+        "km": "25.000",
+        "media": "34.117"
+      }
+    ]
+  },
+  "DE_LUCA_MICHELE": {
+    "id": "DE_LUCA_MICHELE",
+    "nome": "LUCA MICHELE",
+    "cognome": "DE",
+    "team_attuale": "S.C. ORINESE A.S.D.",
+    "team_id": "S_C_ORINESE_A_S_D",
+    "categoria": "ES2_M",
+    "genere": "M",
+    "punti_totali": 1,
+    "risultati": [
+      {
+        "gara_id": "1_TROFEO_CITTA_DI_GATTINARA_GARA_UNICA_2026-05-10_ES2_M",
+        "nome_gara": "1 TROFEO CITTA' DI GATTINARA GARA UNICA",
+        "data": "2026-05-10",
+        "posizione": 10,
+        "punti_effettivi": 1,
+        "team": "S.C. ORINESE A.S.D.",
+        "moltiplicatore": 1,
+        "tipo": "regionale",
+        "regione": "PIEMONTE",
+        "km": "25.000",
+        "media": "34.117"
+      }
+    ]
+  },
+  "BAUMANN_ELIAS": {
+    "id": "BAUMANN_ELIAS",
+    "nome": "ELIAS",
+    "cognome": "BAUMANN",
+    "team_attuale": "AUSTRIA",
+    "team_id": "AUSTRIA",
+    "categoria": "JUN_M",
+    "genere": "M",
+    "punti_totali": 20,
+    "risultati": [
+      {
+        "gara_id": "CORSA_DELLA_PACE_JUNIORES_QUARTA_TAPPA_2026-05-10_JUN_M",
+        "nome_gara": "CORSA DELLA PACE JUNIORES QUARTA TAPPA",
+        "data": "2026-05-10",
+        "posizione": 3,
+        "punti_effettivi": 20,
+        "team": "AUSTRIA",
+        "moltiplicatore": 2,
+        "tipo": "nazionale",
+        "regione": "TEREZIN",
+        "km": "102.400",
+        "media": "44.355"
+      }
+    ]
+  },
+  "KUNTARIC_ZIBERT_VANJA": {
+    "id": "KUNTARIC_ZIBERT_VANJA",
+    "nome": "ZIBERT VANJA",
+    "cognome": "KUNTARIC",
+    "team_attuale": "SLOVENIA NATIONAL TEAM",
+    "team_id": "SLOVENIA_NATIONAL_TEAM",
+    "categoria": "JUN_M",
+    "genere": "M",
+    "punti_totali": 16,
+    "risultati": [
+      {
+        "gara_id": "CORSA_DELLA_PACE_JUNIORES_QUARTA_TAPPA_2026-05-10_JUN_M",
+        "nome_gara": "CORSA DELLA PACE JUNIORES QUARTA TAPPA",
+        "data": "2026-05-10",
+        "posizione": 5,
+        "punti_effettivi": 12,
+        "team": "SLOVENIA NATIONAL TEAM",
+        "moltiplicatore": 2,
+        "tipo": "nazionale",
+        "regione": "TEREZIN",
+        "km": "102.400",
+        "media": "44.355"
+      },
+      {
+        "gara_id": "CORSA_DELLA_PACE_JUNIORES_CLASSIFICA_GENERALE_2026-05-10_JUN_M",
+        "nome_gara": "CORSA DELLA PACE JUNIORES CLASSIFICA GENERALE",
+        "data": "2026-05-10",
+        "posizione": 9,
+        "punti_effettivi": 4,
+        "team": "SLOVENIA NATIONAL TEAM",
+        "moltiplicatore": 2,
+        "tipo": "regionale",
+        "regione": "TEREZIN",
+        "km": "397.300",
+        "media": "44.514"
+      }
+    ]
+  },
+  "GAYANT_LANCELOT": {
+    "id": "GAYANT_LANCELOT",
+    "nome": "LANCELOT",
+    "cognome": "GAYANT",
+    "team_attuale": "FRANCIA",
+    "team_id": "FRANCIA",
+    "categoria": "JUN_M",
+    "genere": "M",
+    "punti_totali": 8,
+    "risultati": [
+      {
+        "gara_id": "CORSA_DELLA_PACE_JUNIORES_QUARTA_TAPPA_2026-05-10_JUN_M",
+        "nome_gara": "CORSA DELLA PACE JUNIORES QUARTA TAPPA",
+        "data": "2026-05-10",
+        "posizione": 7,
+        "punti_effettivi": 8,
+        "team": "FRANCIA",
+        "moltiplicatore": 2,
+        "tipo": "nazionale",
+        "regione": "TEREZIN",
+        "km": "102.400",
+        "media": "44.355"
+      }
+    ]
+  },
+  "KLAU_JACKSON": {
+    "id": "KLAU_JACKSON",
+    "nome": "JACKSON",
+    "cognome": "KLAU",
+    "team_attuale": "STATI UNITI",
+    "team_id": "STATI_UNITI",
+    "categoria": "JUN_M",
+    "genere": "M",
+    "punti_totali": 6,
+    "risultati": [
+      {
+        "gara_id": "CORSA_DELLA_PACE_JUNIORES_QUARTA_TAPPA_2026-05-10_JUN_M",
+        "nome_gara": "CORSA DELLA PACE JUNIORES QUARTA TAPPA",
+        "data": "2026-05-10",
+        "posizione": 8,
+        "punti_effettivi": 6,
+        "team": "STATI UNITI",
+        "moltiplicatore": 2,
+        "tipo": "nazionale",
+        "regione": "TEREZIN",
+        "km": "102.400",
+        "media": "44.355"
+      }
+    ]
+  },
+  "BREUCKERS_WINAND": {
+    "id": "BREUCKERS_WINAND",
+    "nome": "WINAND",
+    "cognome": "BREUCKERS",
+    "team_attuale": "OLANDA",
+    "team_id": "OLANDA",
+    "categoria": "JUN_M",
+    "genere": "M",
+    "punti_totali": 2,
+    "risultati": [
+      {
+        "gara_id": "CORSA_DELLA_PACE_JUNIORES_CLASSIFICA_GENERALE_2026-05-10_JUN_M",
+        "nome_gara": "CORSA DELLA PACE JUNIORES CLASSIFICA GENERALE",
+        "data": "2026-05-10",
+        "posizione": 10,
+        "punti_effettivi": 2,
+        "team": "OLANDA",
+        "moltiplicatore": 2,
+        "tipo": "regionale",
+        "regione": "TEREZIN",
+        "km": "397.300",
+        "media": "44.514"
       }
     ]
   }

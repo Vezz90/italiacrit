@@ -381,7 +381,7 @@
     "p3": 1,
     "pout": 2,
     "pos": 24,
-    "trend": 5
+    "trend": 0
   },
   {
     "atleta_id": "GENTILI_PAOLA",
@@ -397,7 +397,7 @@
     "p3": 0,
     "pout": 2,
     "pos": 25,
-    "trend": -1
+    "trend": 0
   },
   {
     "atleta_id": "SANNA_ELISA",
@@ -413,7 +413,7 @@
     "p3": 1,
     "pout": 3,
     "pos": 26,
-    "trend": -1
+    "trend": 0
   },
   {
     "atleta_id": "BUTTARAZZI_GIULIA",
@@ -429,7 +429,7 @@
     "p3": 0,
     "pout": 0,
     "pos": 27,
-    "trend": -1
+    "trend": 0
   },
   {
     "atleta_id": "BOTTARO_SOFIA",
@@ -445,7 +445,7 @@
     "p3": 0,
     "pout": 4,
     "pos": 28,
-    "trend": -1
+    "trend": 0
   },
   {
     "atleta_id": "TERIACA_ANNA",
@@ -461,7 +461,7 @@
     "p3": 0,
     "pout": 4,
     "pos": 29,
-    "trend": -1
+    "trend": 0
   },
   {
     "atleta_id": "GALLI_MARTINA",
