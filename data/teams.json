@@ -2,7 +2,7 @@
   "BORGO_MOLINO_VIGNA_FIORITA": {
     "id": "BORGO_MOLINO_VIGNA_FIORITA",
     "nome": "BORGO MOLINO-VIGNA FIORITA",
-    "punti_totali": 529,
+    "punti_totali": 531,
     "atleti": [
       "FEDRIZZI_BRANDON_DAVIDE",
       "CAMPAGNOLO_LORENZO",
@@ -568,17 +568,32 @@
         "regione": "LOMBARDIA",
         "km": "61.850",
         "media": "40.447"
+      },
+      {
+        "gara_id": "GRAN_PREMIO_MAGGIO_FIASCHETTANO_PROVA_VALIDA_CAMPIONATO_REGIONALE_2026-05-10_JUN_M",
+        "nome_gara": "GRAN PREMIO MAGGIO FIASCHETTANO PROVA VALIDA CAMPIONATO REGIONALE",
+        "data": "2026-05-10",
+        "atleta_id": "ROSSETTO_MATTEO",
+        "atleta_cognome": "ROSSETTO",
+        "atleta_nome": "MATTEO",
+        "posizione": 10,
+        "punti_effettivi": 2,
+        "moltiplicatore": 2,
+        "tipo": "regionale",
+        "regione": "FRIULI VENEZIA GIULIA",
+        "km": "80.400",
+        "media": "42.291"
       }
     ],
     "punti_per_cat": {
-      "JUN_M": 336,
+      "JUN_M": 338,
       "AL_M": 193
     }
   },
   "ACCADEMIA_CICLISTICA": {
     "id": "ACCADEMIA_CICLISTICA",
     "nome": "ACCADEMIA CICLISTICA",
-    "punti_totali": 319,
+    "punti_totali": 369,
     "atleti": [
       "PADOVAN_NICOLA",
       "BARBON_GIACOMO",
@@ -1042,17 +1057,47 @@
         "regione": "EMILIA ROMAGNA",
         "km": "91.800",
         "media": "44.629"
+      },
+      {
+        "gara_id": "GRAN_PREMIO_MAGGIO_FIASCHETTANO_PROVA_VALIDA_CAMPIONATO_REGIONALE_2026-05-10_JUN_M",
+        "nome_gara": "GRAN PREMIO MAGGIO FIASCHETTANO PROVA VALIDA CAMPIONATO REGIONALE",
+        "data": "2026-05-10",
+        "atleta_id": "PADOVAN_NICOLA",
+        "atleta_cognome": "PADOVAN",
+        "atleta_nome": "NICOLA",
+        "posizione": 1,
+        "punti_effettivi": 30,
+        "moltiplicatore": 2,
+        "tipo": "regionale",
+        "regione": "FRIULI VENEZIA GIULIA",
+        "km": "80.400",
+        "media": "42.291"
+      },
+      {
+        "gara_id": "GRAN_PREMIO_MAGGIO_FIASCHETTANO_PROVA_VALIDA_CAMPIONATO_REGIONALE_2026-05-10_JUN_M",
+        "nome_gara": "GRAN PREMIO MAGGIO FIASCHETTANO PROVA VALIDA CAMPIONATO REGIONALE",
+        "data": "2026-05-10",
+        "atleta_id": "BENOZZATO_RICCARDO",
+        "atleta_cognome": "BENOZZATO",
+        "atleta_nome": "RICCARDO",
+        "posizione": 3,
+        "punti_effettivi": 20,
+        "moltiplicatore": 2,
+        "tipo": "regionale",
+        "regione": "FRIULI VENEZIA GIULIA",
+        "km": "80.400",
+        "media": "42.291"
       }
     ],
     "punti_per_cat": {
-      "JUN_M": 202,
+      "JUN_M": 252,
       "AL_M": 117
     }
   },
   "POOL_CANTU_GB_TEAM_A_S_D": {
     "id": "POOL_CANTU_GB_TEAM_A_S_D",
     "nome": "POOL CANTU' GB TEAM A.S.D.",
-    "punti_totali": 408,
+    "punti_totali": 416,
     "atleti": [
       "BATTISTONI_ALESSANDRO",
       "FRONTINI_LUCA",
@@ -1575,16 +1620,31 @@
         "regione": "LOMBARDIA",
         "km": ".86.650",
         "media": "41.142"
+      },
+      {
+        "gara_id": "8_CHALLENGE_NAZIONALE_BRESCIANA_GIANCARLO_OTELLI_RICORDANDO_GIANCARLO_CRONOMETRO_2026-05-10_JUN_M",
+        "nome_gara": "8 CHALLENGE NAZIONALE BRESCIANA GIANCARLO OTELLI RICORDANDO GIANCARLO CRONOMETRO",
+        "data": "2026-05-10",
+        "atleta_id": "FERRARI_RUBEN",
+        "atleta_cognome": "FERRARI",
+        "atleta_nome": "RUBEN",
+        "posizione": 7,
+        "punti_effettivi": 8,
+        "moltiplicatore": 2,
+        "tipo": "nazionale",
+        "regione": "LOMBARDIA",
+        "km": "5.600",
+        "media": "29.779"
       }
     ],
     "punti_per_cat": {
-      "JUN_M": 408
+      "JUN_M": 416
     }
   },
   "AUTOZAI_CONTRI": {
     "id": "AUTOZAI_CONTRI",
     "nome": "AUTOZAI-CONTRI",
-    "punti_totali": 171,
+    "punti_totali": 201,
     "atleti": [
       "MARIOTTO_THOMAS",
       "PIEROTTO_MARCO_ANDREA",
@@ -1847,16 +1907,31 @@
         "regione": "LOMBARDIA",
         "km": ".86.650",
         "media": "41.142"
+      },
+      {
+        "gara_id": "8_CHALLENGE_NAZIONALE_BRESCIANA_GIANCARLO_OTELLI_RICORDANDO_GIANCARLO_CRONOMETRO_2026-05-10_JUN_M",
+        "nome_gara": "8 CHALLENGE NAZIONALE BRESCIANA GIANCARLO OTELLI RICORDANDO GIANCARLO CRONOMETRO",
+        "data": "2026-05-10",
+        "atleta_id": "MARIOTTO_THOMAS",
+        "atleta_cognome": "MARIOTTO",
+        "atleta_nome": "THOMAS",
+        "posizione": 1,
+        "punti_effettivi": 30,
+        "moltiplicatore": 2,
+        "tipo": "nazionale",
+        "regione": "LOMBARDIA",
+        "km": "5.600",
+        "media": "29.779"
       }
     ],
     "punti_per_cat": {
-      "JUN_M": 171
+      "JUN_M": 201
     }
   },
   "IND_FORNITURE_MORO_C_G_CAPITAL": {
     "id": "IND_FORNITURE_MORO_C_G_CAPITAL",
     "nome": "IND. FORNITURE MORO-C&G CAPITAL",
-    "punti_totali": 597,
+    "punti_totali": 618,
     "atleti": [
       "ZAGO_GABRIELE",
       "MENEGHELLO_RICCARDO",
@@ -1878,7 +1953,8 @@
       "CIBIN_NICOLO",
       "MARINETTO_LORENZO",
       "FACCIN_NICCOLO",
-      "GIROTTO_VITTORIO"
+      "GIROTTO_VITTORIO",
+      "BONATO_TOMMASO"
     ],
     "risultati": [
       {
@@ -2915,10 +2991,55 @@
         "regione": "VENETO",
         "km": "102.200",
         "media": "44.424"
+      },
+      {
+        "gara_id": "10_GRAN_PREMIO_AMICI_DEL_CICLISMO_2026-05-10_JUN_M",
+        "nome_gara": "10 GRAN PREMIO AMICI DEL CICLISMO",
+        "data": "2026-05-10",
+        "atleta_id": "BONATO_TOMMASO",
+        "atleta_cognome": "BONATO",
+        "atleta_nome": "TOMMASO",
+        "posizione": 3,
+        "punti_effettivi": 10,
+        "moltiplicatore": 1,
+        "tipo": "regionale",
+        "regione": "VENETO",
+        "km": "114.000",
+        "media": "42.790"
+      },
+      {
+        "gara_id": "10_GRAN_PREMIO_AMICI_DEL_CICLISMO_2026-05-10_JUN_M",
+        "nome_gara": "10 GRAN PREMIO AMICI DEL CICLISMO",
+        "data": "2026-05-10",
+        "atleta_id": "VENDRAMIN_JACOPO",
+        "atleta_cognome": "VENDRAMIN",
+        "atleta_nome": "JACOPO",
+        "posizione": 4,
+        "punti_effettivi": 8,
+        "moltiplicatore": 1,
+        "tipo": "regionale",
+        "regione": "VENETO",
+        "km": "114.000",
+        "media": "42.790"
+      },
+      {
+        "gara_id": "10_GRAN_PREMIO_AMICI_DEL_CICLISMO_2026-05-10_JUN_M",
+        "nome_gara": "10 GRAN PREMIO AMICI DEL CICLISMO",
+        "data": "2026-05-10",
+        "atleta_id": "MARINETTO_LORENZO",
+        "atleta_cognome": "MARINETTO",
+        "atleta_nome": "LORENZO",
+        "posizione": 8,
+        "punti_effettivi": 3,
+        "moltiplicatore": 1,
+        "tipo": "regionale",
+        "regione": "VENETO",
+        "km": "114.000",
+        "media": "42.790"
       }
     ],
     "punti_per_cat": {
-      "JUN_M": 236,
+      "JUN_M": 257,
       "AL_M": 206,
       "ES1_M": 78,
       "ES2_M": 77
@@ -2927,7 +3048,7 @@
   "CICLISTICA_TREVIGLIESE": {
     "id": "CICLISTICA_TREVIGLIESE",
     "nome": "CICLISTICA TREVIGLIESE",
-    "punti_totali": 452,
+    "punti_totali": 508,
     "atleti": [
       "BOSIO_GIOVANNI",
       "BUZZI_FRANCESCO",
@@ -3831,10 +3952,55 @@
         "regione": "LOMBARDIA",
         "km": ".86.650",
         "media": "41.142"
+      },
+      {
+        "gara_id": "8_CHALLENGE_NAZIONALE_BRESCIANA_GIANCARLO_OTELLI_RICORDANDO_GIANCARLO_CRONOMETRO_2026-05-10_JUN_M",
+        "nome_gara": "8 CHALLENGE NAZIONALE BRESCIANA GIANCARLO OTELLI RICORDANDO GIANCARLO CRONOMETRO",
+        "data": "2026-05-10",
+        "atleta_id": "FRANCESCHINI_GIULIO",
+        "atleta_cognome": "FRANCESCHINI",
+        "atleta_nome": "GIULIO",
+        "posizione": 2,
+        "punti_effettivi": 24,
+        "moltiplicatore": 2,
+        "tipo": "nazionale",
+        "regione": "LOMBARDIA",
+        "km": "5.600",
+        "media": "29.779"
+      },
+      {
+        "gara_id": "8_CHALLENGE_NAZIONALE_BRESCIANA_GIANCARLO_OTELLI_RICORDANDO_GIANCARLO_CRONOMETRO_2026-05-10_JUN_M",
+        "nome_gara": "8 CHALLENGE NAZIONALE BRESCIANA GIANCARLO OTELLI RICORDANDO GIANCARLO CRONOMETRO",
+        "data": "2026-05-10",
+        "atleta_id": "GAMBA_CHRISTIAN",
+        "atleta_cognome": "GAMBA",
+        "atleta_nome": "CHRISTIAN",
+        "posizione": 3,
+        "punti_effettivi": 20,
+        "moltiplicatore": 2,
+        "tipo": "nazionale",
+        "regione": "LOMBARDIA",
+        "km": "5.600",
+        "media": "29.779"
+      },
+      {
+        "gara_id": "8_CHALLENGE_NAZIONALE_BRESCIANA_GIANCARLO_OTELLI_RICORDANDO_GIANCARLO_CRONOMETRO_2026-05-10_JUN_M",
+        "nome_gara": "8 CHALLENGE NAZIONALE BRESCIANA GIANCARLO OTELLI RICORDANDO GIANCARLO CRONOMETRO",
+        "data": "2026-05-10",
+        "atleta_id": "CANCHON_GIL_JUAN_ESTEBAN",
+        "atleta_cognome": "CANCHON",
+        "atleta_nome": "GIL JUAN ESTEBAN",
+        "posizione": 5,
+        "punti_effettivi": 12,
+        "moltiplicatore": 2,
+        "tipo": "nazionale",
+        "regione": "LOMBARDIA",
+        "km": "5.600",
+        "media": "29.779"
       }
     ],
     "punti_per_cat": {
-      "JUN_M": 196,
+      "JUN_M": 252,
       "AL_M": 5,
       "ES1_M": 251
     }
@@ -5014,7 +5180,7 @@
   "TEAM_NERI_SOTTOLI_LUCCHINI_ENERGY": {
     "id": "TEAM_NERI_SOTTOLI_LUCCHINI_ENERGY",
     "nome": "TEAM NERI SOTTOLI LUCCHINI ENERGY",
-    "punti_totali": 218,
+    "punti_totali": 224,
     "atleti": [
       "MORETTI_MATTIA",
       "CAVALLI_STEFANO",
@@ -5413,10 +5579,25 @@
         "regione": "LOMBARDIA",
         "km": ".86.650",
         "media": "41.142"
+      },
+      {
+        "gara_id": "8_CHALLENGE_NAZIONALE_BRESCIANA_GIANCARLO_OTELLI_RICORDANDO_GIANCARLO_CRONOMETRO_2026-05-10_JUN_M",
+        "nome_gara": "8 CHALLENGE NAZIONALE BRESCIANA GIANCARLO OTELLI RICORDANDO GIANCARLO CRONOMETRO",
+        "data": "2026-05-10",
+        "atleta_id": "CERAME_NICOLA",
+        "atleta_cognome": "CERAME",
+        "atleta_nome": "NICOLA",
+        "posizione": 8,
+        "punti_effettivi": 6,
+        "moltiplicatore": 2,
+        "tipo": "nazionale",
+        "regione": "LOMBARDIA",
+        "km": "5.600",
+        "media": "29.779"
       }
     ],
     "punti_per_cat": {
-      "JUN_M": 218
+      "JUN_M": 224
     }
   },
   "A_S_D_S_C_PADOVANI": {
@@ -9154,7 +9335,7 @@
   "DUEPPI_CYCLING_PROJECT": {
     "id": "DUEPPI_CYCLING_PROJECT",
     "nome": "DUEPPI CYCLING PROJECT",
-    "punti_totali": 109,
+    "punti_totali": 119,
     "atleti": [
       "FOLEGANI_MATTIA",
       "SANTORU_ALESSANDRO",
@@ -9311,11 +9492,26 @@
         "regione": "SARDEGNA",
         "km": "53.000",
         "media": "37.685"
+      },
+      {
+        "gara_id": "MEMORIAL_QUIRINO_FARRIS_GARA_UNICA_2026-05-10_ES2_M",
+        "nome_gara": "MEMORIAL QUIRINO FARRIS GARA UNICA",
+        "data": "2026-05-10",
+        "atleta_id": "DONAPAI_DAVIDE",
+        "atleta_cognome": "DONAPAI",
+        "atleta_nome": "DAVIDE",
+        "posizione": 3,
+        "punti_effettivi": 10,
+        "moltiplicatore": 1,
+        "tipo": "regionale",
+        "regione": "SARDEGNA",
+        "km": "23.800",
+        "media": "34.000"
       }
     ],
     "punti_per_cat": {
       "JUN_M": 49,
-      "ES2_M": 57,
+      "ES2_M": 67,
       "AL_M": 3
     }
   },
@@ -9502,7 +9698,7 @@
   "S_C_PATTADA": {
     "id": "S_C_PATTADA",
     "nome": "S.C. PATTADA",
-    "punti_totali": 141,
+    "punti_totali": 147,
     "atleti": [
       "MEZZANO_GIUSEPPE",
       "SPANO_EDOARDO",
@@ -9704,17 +9900,32 @@
         "regione": "SARDEGNA",
         "km": "28.600",
         "media": "35.565"
+      },
+      {
+        "gara_id": "MEMORIAL_QUIRINO_FARRIS_GARA_UNICA_2026-05-10_ES1_M",
+        "nome_gara": "MEMORIAL QUIRINO FARRIS GARA UNICA",
+        "data": "2026-05-10",
+        "atleta_id": "SPANO_GABRIELE",
+        "atleta_cognome": "SPANO",
+        "atleta_nome": "GABRIELE",
+        "posizione": 5,
+        "punti_effettivi": 6,
+        "moltiplicatore": 1,
+        "tipo": "regionale",
+        "regione": "SARDEGNA",
+        "km": "23.800",
+        "media": "34.000"
       }
     ],
     "punti_per_cat": {
       "AL_M": 80,
-      "ES1_M": 61
+      "ES1_M": 67
     }
   },
   "S_C_TERRANOVA_FANCELLO_CICLI": {
     "id": "S_C_TERRANOVA_FANCELLO_CICLI",
     "nome": "S.C. TERRANOVA FANCELLO CICLI",
-    "punti_totali": 167,
+    "punti_totali": 175,
     "atleti": [
       "CASULA_MICHELE",
       "FARINA_EMANUELE",
@@ -10070,11 +10281,26 @@
         "regione": "SARDEGNA",
         "km": "53.000",
         "media": "37.685"
+      },
+      {
+        "gara_id": "MEMORIAL_QUIRINO_FARRIS_GARA_UNICA_2026-05-10_ES1_M",
+        "nome_gara": "MEMORIAL QUIRINO FARRIS GARA UNICA",
+        "data": "2026-05-10",
+        "atleta_id": "BRANDANO_ALBERTO",
+        "atleta_cognome": "BRANDANO",
+        "atleta_nome": "ALBERTO",
+        "posizione": 4,
+        "punti_effettivi": 8,
+        "moltiplicatore": 1,
+        "tipo": "regionale",
+        "regione": "SARDEGNA",
+        "km": "23.800",
+        "media": "34.000"
       }
     ],
     "punti_per_cat": {
       "AL_M": 81,
-      "ES1_M": 50,
+      "ES1_M": 58,
       "ES2_M": 20,
       "JUN_M": 16
     }
@@ -10082,7 +10308,7 @@
   "POOL_BIKE_SERRAMANNA": {
     "id": "POOL_BIKE_SERRAMANNA",
     "nome": "POOL BIKE SERRAMANNA",
-    "punti_totali": 135,
+    "punti_totali": 145,
     "atleti": [
       "RUGGERI_CORRADO",
       "CORDA_FRANCESCO",
@@ -10375,11 +10601,26 @@
         "regione": "SARDEGNA",
         "km": "53.000",
         "media": "37.685"
+      },
+      {
+        "gara_id": "MEMORIAL_QUIRINO_FARRIS_GARA_UNICA_2026-05-10_ES1_M",
+        "nome_gara": "MEMORIAL QUIRINO FARRIS GARA UNICA",
+        "data": "2026-05-10",
+        "atleta_id": "CORDA_FRANCESCO",
+        "atleta_cognome": "CORDA",
+        "atleta_nome": "FRANCESCO",
+        "posizione": 3,
+        "punti_effettivi": 10,
+        "moltiplicatore": 1,
+        "tipo": "regionale",
+        "regione": "SARDEGNA",
+        "km": "23.800",
+        "media": "34.000"
       }
     ],
     "punti_per_cat": {
       "AL_M": 25,
-      "ES1_M": 77,
+      "ES1_M": 87,
       "ES2_M": 2,
       "JUN_M": 31
     }
@@ -10387,7 +10628,7 @@
   "CRAZY_WHEELS_CYCLING_ACADEMY": {
     "id": "CRAZY_WHEELS_CYCLING_ACADEMY",
     "nome": "CRAZY WHEELS - CYCLING ACADEMY",
-    "punti_totali": 192,
+    "punti_totali": 233,
     "atleti": [
       "CAPPEDDU_DIEGO",
       "VIDILI_FABIO",
@@ -10772,18 +11013,93 @@
         "regione": "SARDEGNA",
         "km": "53.000",
         "media": "37.685"
+      },
+      {
+        "gara_id": "MEMORIAL_QUIRINO_FARRIS_GARA_UNICA_2026-05-10_ES1_M",
+        "nome_gara": "MEMORIAL QUIRINO FARRIS GARA UNICA",
+        "data": "2026-05-10",
+        "atleta_id": "VIDILI_FABIO",
+        "atleta_cognome": "VIDILI",
+        "atleta_nome": "FABIO",
+        "posizione": 1,
+        "punti_effettivi": 15,
+        "moltiplicatore": 1,
+        "tipo": "regionale",
+        "regione": "SARDEGNA",
+        "km": "23.800",
+        "media": "34.000"
+      },
+      {
+        "gara_id": "MEMORIAL_QUIRINO_FARRIS_GARA_UNICA_2026-05-10_ES1_M",
+        "nome_gara": "MEMORIAL QUIRINO FARRIS GARA UNICA",
+        "data": "2026-05-10",
+        "atleta_id": "SANNA_FRANCESCO",
+        "atleta_cognome": "SANNA",
+        "atleta_nome": "FRANCESCO",
+        "posizione": 2,
+        "punti_effettivi": 12,
+        "moltiplicatore": 1,
+        "tipo": "regionale",
+        "regione": "SARDEGNA",
+        "km": "23.800",
+        "media": "34.000"
+      },
+      {
+        "gara_id": "MEMORIAL_QUIRINO_FARRIS_GARA_UNICA_2026-05-10_ES1_M",
+        "nome_gara": "MEMORIAL QUIRINO FARRIS GARA UNICA",
+        "data": "2026-05-10",
+        "atleta_id": "SOLLA_LINDA",
+        "atleta_cognome": "SOLLA",
+        "atleta_nome": "LINDA",
+        "posizione": 6,
+        "punti_effettivi": 5,
+        "moltiplicatore": 1,
+        "tipo": "regionale",
+        "regione": "SARDEGNA",
+        "km": "23.800",
+        "media": "34.000"
+      },
+      {
+        "gara_id": "MEMORIAL_QUIRINO_FARRIS_GARA_UNICA_2026-05-10_ES2_M",
+        "nome_gara": "MEMORIAL QUIRINO FARRIS GARA UNICA",
+        "data": "2026-05-10",
+        "atleta_id": "SERRA_FEDERICO",
+        "atleta_cognome": "SERRA",
+        "atleta_nome": "FEDERICO",
+        "posizione": 5,
+        "punti_effettivi": 6,
+        "moltiplicatore": 1,
+        "tipo": "regionale",
+        "regione": "SARDEGNA",
+        "km": "23.800",
+        "media": "34.000"
+      },
+      {
+        "gara_id": "MEMORIAL_QUIRINO_FARRIS_GARA_UNICA_2026-05-10_ES2_M",
+        "nome_gara": "MEMORIAL QUIRINO FARRIS GARA UNICA",
+        "data": "2026-05-10",
+        "atleta_id": "CORRIGA_CARLO",
+        "atleta_cognome": "CORRIGA",
+        "atleta_nome": "CARLO",
+        "posizione": 8,
+        "punti_effettivi": 3,
+        "moltiplicatore": 1,
+        "tipo": "regionale",
+        "regione": "SARDEGNA",
+        "km": "23.800",
+        "media": "34.000"
       }
     ],
     "punti_per_cat": {
       "AL_M": 26,
-      "ES1_M": 113,
-      "ES2_M": 53
+      "ES1_M": 145,
+      "ES2_M": 62
     }
   },
   "SESTU_BIKE_A_S_D": {
     "id": "SESTU_BIKE_A_S_D",
     "nome": "SESTU BIKE A.S.D.",
-    "punti_totali": 71,
+    "punti_totali": 77,
     "atleti": [
       "PISTIS_GIACOMO_ISIDORO",
       "DELOGU_GIULIA",
@@ -11001,18 +11317,48 @@
         "regione": "SARDEGNA",
         "km": "53.000",
         "media": "37.685"
+      },
+      {
+        "gara_id": "MEMORIAL_QUIRINO_FARRIS_GARA_UNICA_2026-05-10_ES2_M",
+        "nome_gara": "MEMORIAL QUIRINO FARRIS GARA UNICA",
+        "data": "2026-05-10",
+        "atleta_id": "LODDO_RUBEN",
+        "atleta_cognome": "LODDO",
+        "atleta_nome": "RUBEN",
+        "posizione": 7,
+        "punti_effettivi": 4,
+        "moltiplicatore": 1,
+        "tipo": "regionale",
+        "regione": "SARDEGNA",
+        "km": "23.800",
+        "media": "34.000"
+      },
+      {
+        "gara_id": "MEMORIAL_QUIRINO_FARRIS_GARA_UNICA_2026-05-10_ES2_M",
+        "nome_gara": "MEMORIAL QUIRINO FARRIS GARA UNICA",
+        "data": "2026-05-10",
+        "atleta_id": "COCCO_EMANUELE",
+        "atleta_cognome": "COCCO",
+        "atleta_nome": "EMANUELE",
+        "posizione": 9,
+        "punti_effettivi": 2,
+        "moltiplicatore": 1,
+        "tipo": "regionale",
+        "regione": "SARDEGNA",
+        "km": "23.800",
+        "media": "34.000"
       }
     ],
     "punti_per_cat": {
       "AL_M": 24,
-      "ES2_M": 35,
+      "ES2_M": 41,
       "JUN_M": 12
     }
   },
   "ALGHERO_BIKE_A_S_D": {
     "id": "ALGHERO_BIKE_A_S_D",
     "nome": "ALGHERO BIKE A.S.D.",
-    "punti_totali": 18,
+    "punti_totali": 20,
     "atleti": [
       "NIEDDU_PIETRO",
       "DOPPIU_FRANCESCO",
@@ -11078,18 +11424,48 @@
         "regione": "SARDEGNA",
         "km": "28.600",
         "media": "35.565"
+      },
+      {
+        "gara_id": "MEMORIAL_QUIRINO_FARRIS_GARA_UNICA_2026-05-10_ES1_M",
+        "nome_gara": "MEMORIAL QUIRINO FARRIS GARA UNICA",
+        "data": "2026-05-10",
+        "atleta_id": "DOPPIU_FRANCESCO",
+        "atleta_cognome": "DOPPIU",
+        "atleta_nome": "FRANCESCO",
+        "posizione": 10,
+        "punti_effettivi": 1,
+        "moltiplicatore": 1,
+        "tipo": "regionale",
+        "regione": "SARDEGNA",
+        "km": "23.800",
+        "media": "34.000"
+      },
+      {
+        "gara_id": "MEMORIAL_QUIRINO_FARRIS_GARA_UNICA_2026-05-10_ES2_M",
+        "nome_gara": "MEMORIAL QUIRINO FARRIS GARA UNICA",
+        "data": "2026-05-10",
+        "atleta_id": "FARINELLI_FABIO",
+        "atleta_cognome": "FARINELLI",
+        "atleta_nome": "FABIO",
+        "posizione": 10,
+        "punti_effettivi": 1,
+        "moltiplicatore": 1,
+        "tipo": "regionale",
+        "regione": "SARDEGNA",
+        "km": "23.800",
+        "media": "34.000"
       }
     ],
     "punti_per_cat": {
       "AL_M": 1,
-      "ES1_M": 5,
-      "ES2_M": 12
+      "ES1_M": 6,
+      "ES2_M": 13
     }
   },
   "TEAM_GUERRINI_SENAGHESE": {
     "id": "TEAM_GUERRINI_SENAGHESE",
     "nome": "TEAM GUERRINI SENAGHESE",
-    "punti_totali": 301,
+    "punti_totali": 318,
     "atleti": [
       "ZANESI_FILIPPO",
       "GATTA_GABRIELE",
@@ -11100,7 +11476,8 @@
       "COLOSIO_FRANCESCO",
       "PETRALIA_LEONARDO",
       "MARANGON_PAOLO_GRAZIANO",
-      "MAZZOLENI_CRISTIAN"
+      "MAZZOLENI_CRISTIAN",
+      "AYALA_ARELLANO_EDUARD_EMANUEL"
     ],
     "risultati": [
       {
@@ -11507,10 +11884,55 @@
         "regione": "LOMBARDIA",
         "km": ".86.650",
         "media": "41.142"
+      },
+      {
+        "gara_id": "8_CHALLENGE_NAZIONALE_BRESCIANA_GIANCARLO_OTELLI_RICORDANDO_GIANCARLO_CRONOMETRO_2026-05-10_JUN_M",
+        "nome_gara": "8 CHALLENGE NAZIONALE BRESCIANA GIANCARLO OTELLI RICORDANDO GIANCARLO CRONOMETRO",
+        "data": "2026-05-10",
+        "atleta_id": "ZANESI_FILIPPO",
+        "atleta_cognome": "ZANESI",
+        "atleta_nome": "FILIPPO",
+        "posizione": 6,
+        "punti_effettivi": 10,
+        "moltiplicatore": 2,
+        "tipo": "nazionale",
+        "regione": "LOMBARDIA",
+        "km": "5.600",
+        "media": "29.779"
+      },
+      {
+        "gara_id": "10_GRAN_PREMIO_AMICI_DEL_CICLISMO_2026-05-10_JUN_M",
+        "nome_gara": "10 GRAN PREMIO AMICI DEL CICLISMO",
+        "data": "2026-05-10",
+        "atleta_id": "AYALA_ARELLANO_EDUARD_EMANUEL",
+        "atleta_cognome": "AYALA ARELLANO",
+        "atleta_nome": "EDUARD EMANUEL",
+        "posizione": 6,
+        "punti_effettivi": 5,
+        "moltiplicatore": 1,
+        "tipo": "regionale",
+        "regione": "VENETO",
+        "km": "114.000",
+        "media": "42.790"
+      },
+      {
+        "gara_id": "10_GRAN_PREMIO_AMICI_DEL_CICLISMO_2026-05-10_JUN_M",
+        "nome_gara": "10 GRAN PREMIO AMICI DEL CICLISMO",
+        "data": "2026-05-10",
+        "atleta_id": "MAGGIONI_MATTEO",
+        "atleta_cognome": "MAGGIONI",
+        "atleta_nome": "MATTEO",
+        "posizione": 9,
+        "punti_effettivi": 2,
+        "moltiplicatore": 1,
+        "tipo": "regionale",
+        "regione": "VENETO",
+        "km": "114.000",
+        "media": "42.790"
       }
     ],
     "punti_per_cat": {
-      "JUN_M": 301
+      "JUN_M": 318
     }
   },
   "U_C_PIASCO": {
@@ -11665,7 +12087,7 @@
   "BUSTESE_OLONIA_A_S_D": {
     "id": "BUSTESE_OLONIA_A_S_D",
     "nome": "BUSTESE OLONIA A.S.D.",
-    "punti_totali": 296,
+    "punti_totali": 316,
     "atleti": [
       "ZANINI_ANDREA_MATTEO",
       "FERRO_LUCA",
@@ -12407,10 +12829,40 @@
         "regione": "PIEMONTE",
         "km": "25.000",
         "media": "34.117"
+      },
+      {
+        "gara_id": "8_CHALLENGE_NAZIONALE_BRESCIANA_GIANCARLO_OTELLI_RICORDANDO_GIANCARLO_CRONOMETRO_2026-05-10_JUN_M",
+        "nome_gara": "8 CHALLENGE NAZIONALE BRESCIANA GIANCARLO OTELLI RICORDANDO GIANCARLO CRONOMETRO",
+        "data": "2026-05-10",
+        "atleta_id": "MARTINELLI_ETTORE",
+        "atleta_cognome": "MARTINELLI",
+        "atleta_nome": "ETTORE",
+        "posizione": 4,
+        "punti_effettivi": 16,
+        "moltiplicatore": 2,
+        "tipo": "nazionale",
+        "regione": "LOMBARDIA",
+        "km": "5.600",
+        "media": "29.779"
+      },
+      {
+        "gara_id": "8_CHALLENGE_NAZIONALE_BRESCIANA_GIANCARLO_OTELLI_RICORDANDO_GIANCARLO_CRONOMETRO_2026-05-10_JUN_M",
+        "nome_gara": "8 CHALLENGE NAZIONALE BRESCIANA GIANCARLO OTELLI RICORDANDO GIANCARLO CRONOMETRO",
+        "data": "2026-05-10",
+        "atleta_id": "ZOCO_MARCO",
+        "atleta_cognome": "ZOCO",
+        "atleta_nome": "MARCO",
+        "posizione": 9,
+        "punti_effettivi": 4,
+        "moltiplicatore": 2,
+        "tipo": "nazionale",
+        "regione": "LOMBARDIA",
+        "km": "5.600",
+        "media": "29.779"
       }
     ],
     "punti_per_cat": {
-      "JUN_M": 92,
+      "JUN_M": 112,
       "AL_M": 121,
       "ES1_M": 24,
       "ES2_M": 59
@@ -12419,7 +12871,7 @@
   "ENERGY_TEAM_A_S_D": {
     "id": "ENERGY_TEAM_A_S_D",
     "nome": "ENERGY TEAM A.S.D.",
-    "punti_totali": 25,
+    "punti_totali": 27,
     "atleti": [
       "COLOMBO_IVAN"
     ],
@@ -12483,16 +12935,31 @@
         "regione": "LOMBARDIA",
         "km": ".86.650",
         "media": "41.142"
+      },
+      {
+        "gara_id": "8_CHALLENGE_NAZIONALE_BRESCIANA_GIANCARLO_OTELLI_RICORDANDO_GIANCARLO_CRONOMETRO_2026-05-10_JUN_M",
+        "nome_gara": "8 CHALLENGE NAZIONALE BRESCIANA GIANCARLO OTELLI RICORDANDO GIANCARLO CRONOMETRO",
+        "data": "2026-05-10",
+        "atleta_id": "COLOMBO_IVAN",
+        "atleta_cognome": "COLOMBO",
+        "atleta_nome": "IVAN",
+        "posizione": 10,
+        "punti_effettivi": 2,
+        "moltiplicatore": 2,
+        "tipo": "nazionale",
+        "regione": "LOMBARDIA",
+        "km": "5.600",
+        "media": "29.779"
       }
     ],
     "punti_per_cat": {
-      "JUN_M": 25
+      "JUN_M": 27
     }
   },
   "FAIZANE_CSZ_SANDRIGO_BIKE": {
     "id": "FAIZANE_CSZ_SANDRIGO_BIKE",
     "nome": "FAIZANE' CSZ SANDRIGO BIKE",
-    "punti_totali": 82,
+    "punti_totali": 83,
     "atleti": [
       "DALLA_PRIA_GIACOMO",
       "BERNARDINELLO_MATTEO",
@@ -12759,10 +13226,25 @@
         "regione": "VENETO",
         "km": "56.800",
         "media": "40.347"
+      },
+      {
+        "gara_id": "10_GRAN_PREMIO_AMICI_DEL_CICLISMO_2026-05-10_JUN_M",
+        "nome_gara": "10 GRAN PREMIO AMICI DEL CICLISMO",
+        "data": "2026-05-10",
+        "atleta_id": "CECCATO_EDOARDO",
+        "atleta_cognome": "CECCATO",
+        "atleta_nome": "EDOARDO",
+        "posizione": 10,
+        "punti_effettivi": 1,
+        "moltiplicatore": 1,
+        "tipo": "regionale",
+        "regione": "VENETO",
+        "km": "114.000",
+        "media": "42.790"
       }
     ],
     "punti_per_cat": {
-      "JUN_M": 65,
+      "JUN_M": 66,
       "AL_M": 17
     }
   },
@@ -23803,14 +24285,15 @@
   "LIBERTAS_CERESETTO": {
     "id": "LIBERTAS_CERESETTO",
     "nome": "LIBERTAS CERESETTO",
-    "punti_totali": 66,
+    "punti_totali": 82,
     "atleti": [
       "CASCIO_DORIAN",
       "MARCHIOL_ERIC",
       "CIGOLOTTO_GIOELE",
       "ZUCCHIATTI_ALESSIO",
       "MURRO_NICHOLAS",
-      "PODO_MASSIMO"
+      "PODO_MASSIMO",
+      "GIACOMEL_RICCARDO"
     ],
     "risultati": [
       {
@@ -24007,12 +24490,27 @@
         "regione": "VENETO",
         "km": "102.200",
         "media": "44.424"
+      },
+      {
+        "gara_id": "GRAN_PREMIO_MAGGIO_FIASCHETTANO_PROVA_VALIDA_CAMPIONATO_REGIONALE_2026-05-10_JUN_M",
+        "nome_gara": "GRAN PREMIO MAGGIO FIASCHETTANO PROVA VALIDA CAMPIONATO REGIONALE",
+        "data": "2026-05-10",
+        "atleta_id": "GIACOMEL_RICCARDO",
+        "atleta_cognome": "GIACOMEL",
+        "atleta_nome": "RICCARDO",
+        "posizione": 4,
+        "punti_effettivi": 16,
+        "moltiplicatore": 2,
+        "tipo": "regionale",
+        "regione": "FRIULI VENEZIA GIULIA",
+        "km": "80.400",
+        "media": "42.291"
       }
     ],
     "punti_per_cat": {
       "AL_M": 17,
       "ES1_M": 27,
-      "JUN_M": 22
+      "JUN_M": 38
     }
   },
   "A_S_D_CICLISTICA_MONSELICE": {
@@ -30028,7 +30526,7 @@
   "G_S_IPERFINISH_STABBIA": {
     "id": "G_S_IPERFINISH_STABBIA",
     "nome": "G.S. IPERFINISH STABBIA",
-    "punti_totali": 158,
+    "punti_totali": 179,
     "atleti": [
       "IACOPI_NICCOLO",
       "SCAPPINI_LAERTE",
@@ -30350,16 +30848,61 @@
         "regione": "LOMBARDIA",
         "km": "61.850",
         "media": "40.447"
+      },
+      {
+        "gara_id": "74_COPPA_SPORTIVI_MONTEMARCIANESI_2026-05-10_AL_M",
+        "nome_gara": "74 COPPA SPORTIVI MONTEMARCIANESI",
+        "data": "2026-05-10",
+        "atleta_id": "MORI_ANDREA",
+        "atleta_cognome": "MORI",
+        "atleta_nome": "ANDREA",
+        "posizione": 2,
+        "punti_effettivi": 12,
+        "moltiplicatore": 1,
+        "tipo": "regionale",
+        "regione": "TOSCANA",
+        "km": "66.300",
+        "media": "39.386"
+      },
+      {
+        "gara_id": "74_COPPA_SPORTIVI_MONTEMARCIANESI_2026-05-10_AL_M",
+        "nome_gara": "74 COPPA SPORTIVI MONTEMARCIANESI",
+        "data": "2026-05-10",
+        "atleta_id": "IACOPI_NICCOLO",
+        "atleta_cognome": "IACOPI",
+        "atleta_nome": "NICCOLO'",
+        "posizione": 6,
+        "punti_effettivi": 5,
+        "moltiplicatore": 1,
+        "tipo": "regionale",
+        "regione": "TOSCANA",
+        "km": "66.300",
+        "media": "39.386"
+      },
+      {
+        "gara_id": "74_COPPA_SPORTIVI_MONTEMARCIANESI_2026-05-10_AL_M",
+        "nome_gara": "74 COPPA SPORTIVI MONTEMARCIANESI",
+        "data": "2026-05-10",
+        "atleta_id": "SCAPPINI_LAERTE",
+        "atleta_cognome": "SCAPPINI",
+        "atleta_nome": "LAERTE",
+        "posizione": 7,
+        "punti_effettivi": 4,
+        "moltiplicatore": 1,
+        "tipo": "regionale",
+        "regione": "TOSCANA",
+        "km": "66.300",
+        "media": "39.386"
       }
     ],
     "punti_per_cat": {
-      "AL_M": 158
+      "AL_M": 179
     }
   },
   "U_C_CITTA_DI_CASTELLO_A_S_D": {
     "id": "U_C_CITTA_DI_CASTELLO_A_S_D",
     "nome": "U.C. CITTA' DI CASTELLO A.S.D.",
-    "punti_totali": 57,
+    "punti_totali": 72,
     "atleti": [
       "LONGARI_VITTORIO",
       "LONGARI_ROMANO",
@@ -30530,17 +31073,32 @@
         "regione": "EMILIA ROMAGNA",
         "km": "49.000",
         "media": "43.674"
+      },
+      {
+        "gara_id": "74_COPPA_SPORTIVI_MONTEMARCIANESI_2026-05-10_AL_M",
+        "nome_gara": "74 COPPA SPORTIVI MONTEMARCIANESI",
+        "data": "2026-05-10",
+        "atleta_id": "LONGARI_VITTORIO",
+        "atleta_cognome": "LONGARI",
+        "atleta_nome": "VITTORIO",
+        "posizione": 1,
+        "punti_effettivi": 15,
+        "moltiplicatore": 1,
+        "tipo": "regionale",
+        "regione": "TOSCANA",
+        "km": "66.300",
+        "media": "39.386"
       }
     ],
     "punti_per_cat": {
-      "AL_M": 43,
+      "AL_M": 58,
       "ES1_M": 14
     }
   },
   "AC_F_BESSI_CALENZANO_DONORATICO": {
     "id": "AC_F_BESSI_CALENZANO_DONORATICO",
     "nome": "AC F. BESSI CALENZANO DONORATICO",
-    "punti_totali": 181,
+    "punti_totali": 189,
     "atleti": [
       "FROSINI_RICCARDO",
       "CAPPELLI_TOMMASO",
@@ -31003,10 +31561,25 @@
         "regione": "LOMBARDIA",
         "km": "61.850",
         "media": "40.447"
+      },
+      {
+        "gara_id": "74_COPPA_SPORTIVI_MONTEMARCIANESI_2026-05-10_AL_M",
+        "nome_gara": "74 COPPA SPORTIVI MONTEMARCIANESI",
+        "data": "2026-05-10",
+        "atleta_id": "GABBRIELLESCHI_GIOELE",
+        "atleta_cognome": "GABBRIELLESCHI",
+        "atleta_nome": "GIOELE",
+        "posizione": 4,
+        "punti_effettivi": 8,
+        "moltiplicatore": 1,
+        "tipo": "regionale",
+        "regione": "TOSCANA",
+        "km": "66.300",
+        "media": "39.386"
       }
     ],
     "punti_per_cat": {
-      "AL_M": 153,
+      "AL_M": 161,
       "ES2_M": 10,
       "ES1_M": 18
     }
@@ -31014,7 +31587,7 @@
   "ASD_EFFETTO_CICLISMO_NOI_SPORT": {
     "id": "ASD_EFFETTO_CICLISMO_NOI_SPORT",
     "nome": "ASD EFFETTO CICLISMO - NOI SPORT",
-    "punti_totali": 34,
+    "punti_totali": 50,
     "atleti": [
       "CECCONI_PIETRO",
       "DI_ROSA_CHRISTIAN"
@@ -31109,18 +31682,49 @@
         "regione": "TOSCANA",
         "km": "52.700",
         "media": "38.798"
+      },
+      {
+        "gara_id": "74_COPPA_SPORTIVI_MONTEMARCIANESI_2026-05-10_AL_M",
+        "nome_gara": "74 COPPA SPORTIVI MONTEMARCIANESI",
+        "data": "2026-05-10",
+        "atleta_id": "CECCONI_PIETRO",
+        "atleta_cognome": "CECCONI",
+        "atleta_nome": "PIETRO",
+        "posizione": 3,
+        "punti_effettivi": 10,
+        "moltiplicatore": 1,
+        "tipo": "regionale",
+        "regione": "TOSCANA",
+        "km": "66.300",
+        "media": "39.386"
+      },
+      {
+        "gara_id": "74_COPPA_SPORTIVI_MONTEMARCIANESI_2026-05-10_AL_M",
+        "nome_gara": "74 COPPA SPORTIVI MONTEMARCIANESI",
+        "data": "2026-05-10",
+        "atleta_id": "DI_ROSA_CHRISTIAN",
+        "atleta_cognome": "DI",
+        "atleta_nome": "ROSA CHRISTIAN",
+        "posizione": 5,
+        "punti_effettivi": 6,
+        "moltiplicatore": 1,
+        "tipo": "regionale",
+        "regione": "TOSCANA",
+        "km": "66.300",
+        "media": "39.386"
       }
     ],
     "punti_per_cat": {
-      "AL_M": 34
+      "AL_M": 50
     }
   },
   "TEAM_FACT_ACADEMY": {
     "id": "TEAM_FACT_ACADEMY",
     "nome": "TEAM FACT ACADEMY",
-    "punti_totali": 15,
+    "punti_totali": 16,
     "atleti": [
-      "CAMICIOTTOLI_FILIPPO"
+      "CAMICIOTTOLI_FILIPPO",
+      "BROCCHI_DANIELE"
     ],
     "risultati": [
       {
@@ -31167,16 +31771,31 @@
         "regione": "TOSCANA",
         "km": "50.000",
         "media": "42.383"
+      },
+      {
+        "gara_id": "74_COPPA_SPORTIVI_MONTEMARCIANESI_2026-05-10_AL_M",
+        "nome_gara": "74 COPPA SPORTIVI MONTEMARCIANESI",
+        "data": "2026-05-10",
+        "atleta_id": "BROCCHI_DANIELE",
+        "atleta_cognome": "BROCCHI",
+        "atleta_nome": "DANIELE",
+        "posizione": 10,
+        "punti_effettivi": 1,
+        "moltiplicatore": 1,
+        "tipo": "regionale",
+        "regione": "TOSCANA",
+        "km": "66.300",
+        "media": "39.386"
       }
     ],
     "punti_per_cat": {
-      "AL_M": 15
+      "AL_M": 16
     }
   },
   "MULTICAR_GRUPPO_AMARU": {
     "id": "MULTICAR_GRUPPO_AMARU",
     "nome": "MULTICAR GRUPPO AMARU'",
-    "punti_totali": 230,
+    "punti_totali": 231,
     "atleti": [
       "OCCHIPINTI_FEDERICO",
       "SANFILIPPO_DENIS_PIO",
@@ -31487,10 +32106,25 @@
         "regione": "UNDER",
         "km": "77.000",
         "media": ""
+      },
+      {
+        "gara_id": "108_COPPA_ASCENSIONE_2026-05-10_AL_M",
+        "nome_gara": "108 COPPA ASCENSIONE",
+        "data": "2026-05-10",
+        "atleta_id": "SANFILIPPO_DENIS_PIO",
+        "atleta_cognome": "SANFILIPPO",
+        "atleta_nome": "DENIS PIO",
+        "posizione": 10,
+        "punti_effettivi": 1,
+        "moltiplicatore": 1,
+        "tipo": "regionale",
+        "regione": "SICILIA",
+        "km": "70.000",
+        "media": ""
       }
     ],
     "punti_per_cat": {
-      "AL_M": 104,
+      "AL_M": 105,
       "ES2_M": 67,
       "JUN_M": 22,
       "ES1_M": 22,
@@ -32157,7 +32791,7 @@
   "ASD_CICLOTOUR": {
     "id": "ASD_CICLOTOUR",
     "nome": "ASD CICLOTOUR",
-    "punti_totali": 81,
+    "punti_totali": 98,
     "atleti": [
       "MANISCALCO_ELIA",
       "ALBA_GIOVANNI_MARCO",
@@ -32328,17 +32962,47 @@
         "regione": "SICILIA",
         "km": "32.000",
         "media": "35.606"
+      },
+      {
+        "gara_id": "108_COPPA_ASCENSIONE_2026-05-10_AL_M",
+        "nome_gara": "108 COPPA ASCENSIONE",
+        "data": "2026-05-10",
+        "atleta_id": "MANISCALCO_ELIA",
+        "atleta_cognome": "MANISCALCO",
+        "atleta_nome": "ELIA",
+        "posizione": 2,
+        "punti_effettivi": 12,
+        "moltiplicatore": 1,
+        "tipo": "regionale",
+        "regione": "SICILIA",
+        "km": "70.000",
+        "media": ""
+      },
+      {
+        "gara_id": "108_COPPA_ASCENSIONE_2026-05-10_AL_M",
+        "nome_gara": "108 COPPA ASCENSIONE",
+        "data": "2026-05-10",
+        "atleta_id": "ALBA_GIOVANNI_MARCO",
+        "atleta_cognome": "ALBA",
+        "atleta_nome": "GIOVANNI MARCO",
+        "posizione": 6,
+        "punti_effettivi": 5,
+        "moltiplicatore": 1,
+        "tipo": "regionale",
+        "regione": "SICILIA",
+        "km": "70.000",
+        "media": ""
       }
     ],
     "punti_per_cat": {
-      "AL_M": 36,
+      "AL_M": 53,
       "ES1_M": 45
     }
   },
   "TEAM_BIKE_SIRACUSA": {
     "id": "TEAM_BIKE_SIRACUSA",
     "nome": "TEAM BIKE SIRACUSA",
-    "punti_totali": 38,
+    "punti_totali": 48,
     "atleti": [
       "GIONFRIDDO_GABRIELE",
       "GIONFRIDDO_MATTEO",
@@ -32479,10 +33143,40 @@
         "regione": "SICILIA",
         "km": "32.000",
         "media": "35.606"
+      },
+      {
+        "gara_id": "108_COPPA_ASCENSIONE_2026-05-10_AL_M",
+        "nome_gara": "108 COPPA ASCENSIONE",
+        "data": "2026-05-10",
+        "atleta_id": "GIONFRIDDO_GABRIELE",
+        "atleta_cognome": "GIONFRIDDO",
+        "atleta_nome": "GABRIELE",
+        "posizione": 5,
+        "punti_effettivi": 6,
+        "moltiplicatore": 1,
+        "tipo": "regionale",
+        "regione": "SICILIA",
+        "km": "70.000",
+        "media": ""
+      },
+      {
+        "gara_id": "108_COPPA_ASCENSIONE_2026-05-10_AL_M",
+        "nome_gara": "108 COPPA ASCENSIONE",
+        "data": "2026-05-10",
+        "atleta_id": "IACONO_GABRIELE",
+        "atleta_cognome": "IACONO",
+        "atleta_nome": "GABRIELE",
+        "posizione": 7,
+        "punti_effettivi": 4,
+        "moltiplicatore": 1,
+        "tipo": "regionale",
+        "regione": "SICILIA",
+        "km": "70.000",
+        "media": ""
       }
     ],
     "punti_per_cat": {
-      "AL_M": 30,
+      "AL_M": 40,
       "ES1_M": 8
     }
   },
@@ -34688,12 +35382,14 @@
   "G_C_SOSSANO_1975": {
     "id": "G_C_SOSSANO_1975",
     "nome": "G.C. SOSSANO 1975",
-    "punti_totali": 92,
+    "punti_totali": 99,
     "atleti": [
       "TAGLIAFERRO_FRANCESCO",
       "RICCI_RICCARDO",
       "DAL_POZZOLO_MARCO",
-      "STOPAZZOLA_ELIA"
+      "STOPAZZOLA_ELIA",
+      "BOTTARO_SOFIA",
+      "PAVIN_LAVINIA_MARIA_GIOVANNA"
     ],
     "risultati": [
       {
@@ -34935,22 +35631,55 @@
         "regione": "VENETO",
         "km": "30.700",
         "media": "38.738"
+      },
+      {
+        "gara_id": "TROFEO_MERCURY_DONNE_ESORDIENTI_PRIMO_ANNO_2026-05-10_ES1_F",
+        "nome_gara": "TROFEO MERCURY DONNE ESORDIENTI PRIMO ANNO",
+        "data": "2026-05-10",
+        "atleta_id": "BOTTARO_SOFIA",
+        "atleta_cognome": "BOTTARO",
+        "atleta_nome": "SOFIA",
+        "posizione": 7,
+        "punti_effettivi": 4,
+        "moltiplicatore": 1,
+        "tipo": "regionale",
+        "regione": "ESORDIENTI",
+        "km": "23.800",
+        "media": "35.970"
+      },
+      {
+        "gara_id": "TROFEO_MERCURY_DONNE_ESORDIENTI_SECONDO_ANNO_2026-05-10_ES2_F",
+        "nome_gara": "TROFEO MERCURY DONNE ESORDIENTI SECONDO ANNO",
+        "data": "2026-05-10",
+        "atleta_id": "PAVIN_LAVINIA_MARIA_GIOVANNA",
+        "atleta_cognome": "PAVIN",
+        "atleta_nome": "LAVINIA MARIA GIOVANNA",
+        "posizione": 8,
+        "punti_effettivi": 3,
+        "moltiplicatore": 1,
+        "tipo": "regionale",
+        "regione": "ESORDIENTI",
+        "km": "23.800",
+        "media": "35.970"
       }
     ],
     "punti_per_cat": {
       "ES1_M": 48,
-      "ES2_M": 44
+      "ES2_M": 44,
+      "ES1_F": 4,
+      "ES2_F": 3
     }
   },
   "OFF_ALBERTI_U_C_VAL_D_ILLASI": {
     "id": "OFF_ALBERTI_U_C_VAL_D_ILLASI",
     "nome": "OFF.ALBERTI U.C. VAL D'ILLASI",
-    "punti_totali": 126,
+    "punti_totali": 141,
     "atleti": [
       "DA_CAMPO_THOMAS",
       "FASOLI_TOMMASO",
       "MONTEBIANCO_ALESSANDRO",
-      "FASOLI_TOMMASO_6_EXEQUO"
+      "FASOLI_TOMMASO_6_EXEQUO",
+      "CASAROTTI_CARLOTTA"
     ],
     "risultati": [
       {
@@ -35192,10 +35921,26 @@
         "regione": "VENETO",
         "km": "30.700",
         "media": "38.779"
+      },
+      {
+        "gara_id": "TROFEO_MERCURY_DONNE_ESORDIENTI_SECONDO_ANNO_2026-05-10_ES2_F",
+        "nome_gara": "TROFEO MERCURY DONNE ESORDIENTI SECONDO ANNO",
+        "data": "2026-05-10",
+        "atleta_id": "CASAROTTI_CARLOTTA",
+        "atleta_cognome": "CASAROTTI",
+        "atleta_nome": "CARLOTTA",
+        "posizione": 1,
+        "punti_effettivi": 15,
+        "moltiplicatore": 1,
+        "tipo": "regionale",
+        "regione": "ESORDIENTI",
+        "km": "23.800",
+        "media": "35.970"
       }
     ],
     "punti_per_cat": {
-      "ES2_M": 126
+      "ES2_M": 126,
+      "ES2_F": 15
     }
   },
   "A_S_D_PEDALE_CASTELLANO": {
@@ -37698,7 +38443,7 @@
   "SAMABIKE": {
     "id": "SAMABIKE",
     "nome": "SAMABIKE",
-    "punti_totali": 149,
+    "punti_totali": 180,
     "atleti": [
       "PODDA_MATILDE",
       "PILERI_SALVATORE",
@@ -37914,17 +38659,62 @@
         "regione": "SARDEGNA",
         "km": "28.600",
         "media": "35.565"
+      },
+      {
+        "gara_id": "MEMORIAL_QUIRINO_FARRIS_GARA_UNICA_2026-05-10_ES1_M",
+        "nome_gara": "MEMORIAL QUIRINO FARRIS GARA UNICA",
+        "data": "2026-05-10",
+        "atleta_id": "PODDA_MATILDE",
+        "atleta_cognome": "PODDA",
+        "atleta_nome": "MATILDE",
+        "posizione": 7,
+        "punti_effettivi": 4,
+        "moltiplicatore": 1,
+        "tipo": "regionale",
+        "regione": "SARDEGNA",
+        "km": "23.800",
+        "media": "34.000"
+      },
+      {
+        "gara_id": "MEMORIAL_QUIRINO_FARRIS_GARA_UNICA_2026-05-10_ES2_M",
+        "nome_gara": "MEMORIAL QUIRINO FARRIS GARA UNICA",
+        "data": "2026-05-10",
+        "atleta_id": "PILERI_SALVATORE",
+        "atleta_cognome": "PILERI",
+        "atleta_nome": "SALVATORE",
+        "posizione": 1,
+        "punti_effettivi": 15,
+        "moltiplicatore": 1,
+        "tipo": "regionale",
+        "regione": "SARDEGNA",
+        "km": "23.800",
+        "media": "34.000"
+      },
+      {
+        "gara_id": "MEMORIAL_QUIRINO_FARRIS_GARA_UNICA_2026-05-10_ES2_M",
+        "nome_gara": "MEMORIAL QUIRINO FARRIS GARA UNICA",
+        "data": "2026-05-10",
+        "atleta_id": "SANNA_DARIO",
+        "atleta_cognome": "SANNA",
+        "atleta_nome": "DARIO",
+        "posizione": 2,
+        "punti_effettivi": 12,
+        "moltiplicatore": 1,
+        "tipo": "regionale",
+        "regione": "SARDEGNA",
+        "km": "23.800",
+        "media": "34.000"
       }
     ],
     "punti_per_cat": {
-      "ES1_M": 16,
-      "ES2_M": 133
+      "ES1_M": 20,
+      "ES2_M": 160
     }
   },
   "S_C_OZIERESE": {
     "id": "S_C_OZIERESE",
     "nome": "S.C. OZIERESE",
-    "punti_totali": 42,
+    "punti_totali": 44,
     "atleti": [
       "PIZZI_ALESSANDRO",
       "SANNA_ANTONIO"
@@ -37989,10 +38779,25 @@
         "regione": "SARDEGNA",
         "km": "28.600",
         "media": "35.565"
+      },
+      {
+        "gara_id": "MEMORIAL_QUIRINO_FARRIS_GARA_UNICA_2026-05-10_ES1_M",
+        "nome_gara": "MEMORIAL QUIRINO FARRIS GARA UNICA",
+        "data": "2026-05-10",
+        "atleta_id": "PIZZI_ALESSANDRO",
+        "atleta_cognome": "PIZZI",
+        "atleta_nome": "ALESSANDRO",
+        "posizione": 9,
+        "punti_effettivi": 2,
+        "moltiplicatore": 1,
+        "tipo": "regionale",
+        "regione": "SARDEGNA",
+        "km": "23.800",
+        "media": "34.000"
       }
     ],
     "punti_per_cat": {
-      "ES1_M": 11,
+      "ES1_M": 13,
       "ES2_M": 31
     }
   },
@@ -39091,7 +39896,7 @@
   "A_S_D_POSTUMIA_73_D_L_CICLISMO": {
     "id": "A_S_D_POSTUMIA_73_D_L_CICLISMO",
     "nome": "A.S.D. POSTUMIA 73 D.L. CICLISMO",
-    "punti_totali": 137,
+    "punti_totali": 149,
     "atleti": [
       "ARITON_MATIAS_ANDREI",
       "ANTONINI_MATTEO",
@@ -39101,7 +39906,8 @@
       "BRESOLIN_FEDERICO",
       "CERCHIARO_ENRICO",
       "DI_BERNARDO_FABIO",
-      "MARTINELLO_SAMUELE"
+      "MARTINELLO_SAMUELE",
+      "ROVERETTO_SIMONE"
     ],
     "risultati": [
       {
@@ -39448,12 +40254,27 @@
         "regione": "TRENTINO ALTO ADIGE",
         "km": "25.800",
         "media": "36.916"
+      },
+      {
+        "gara_id": "GRAN_PREMIO_MAGGIO_FIASCHETTANO_PROVA_VALIDA_CAMPIONATO_REGIONALE_2026-05-10_JUN_M",
+        "nome_gara": "GRAN PREMIO MAGGIO FIASCHETTANO PROVA VALIDA CAMPIONATO REGIONALE",
+        "data": "2026-05-10",
+        "atleta_id": "ROVERETTO_SIMONE",
+        "atleta_cognome": "ROVERETTO",
+        "atleta_nome": "SIMONE",
+        "posizione": 5,
+        "punti_effettivi": 12,
+        "moltiplicatore": 2,
+        "tipo": "regionale",
+        "regione": "FRIULI VENEZIA GIULIA",
+        "km": "80.400",
+        "media": "42.291"
       }
     ],
     "punti_per_cat": {
       "ES1_M": 89,
       "ES2_M": 11,
-      "JUN_M": 37
+      "JUN_M": 49
     }
   },
   "G_S_TAVO_BONIN_BIKE": {
@@ -44641,7 +45462,7 @@
   "UC_COLTANO_GRUBE_COSTRUZIONI": {
     "id": "UC_COLTANO_GRUBE_COSTRUZIONI",
     "nome": "UC COLTANO GRUBE COSTRUZIONI",
-    "punti_totali": 249,
+    "punti_totali": 251,
     "atleti": [
       "DELLA_POLLA_DIEGO",
       "STEFANINI_EDOARDO",
@@ -44650,7 +45471,8 @@
       "CIUCCI_MATTEO",
       "BOTTAI_GABRIELE",
       "SANTINI_SAMUELE",
-      "DE_ANGELI_GIULIO"
+      "DE_ANGELI_GIULIO",
+      "BELLONI_FILIPPO"
     ],
     "risultati": [
       {
@@ -45117,11 +45939,26 @@
         "regione": "TOSCANA",
         "km": "34.000",
         "media": "37.091"
+      },
+      {
+        "gara_id": "74_COPPA_SPORTIVI_MONTEMARCIANESI_2026-05-10_AL_M",
+        "nome_gara": "74 COPPA SPORTIVI MONTEMARCIANESI",
+        "data": "2026-05-10",
+        "atleta_id": "BELLONI_FILIPPO",
+        "atleta_cognome": "BELLONI",
+        "atleta_nome": "FILIPPO",
+        "posizione": 9,
+        "punti_effettivi": 2,
+        "moltiplicatore": 1,
+        "tipo": "regionale",
+        "regione": "TOSCANA",
+        "km": "66.300",
+        "media": "39.386"
       }
     ],
     "punti_per_cat": {
       "ES2_M": 204,
-      "AL_M": 12,
+      "AL_M": 14,
       "ES1_M": 33
     }
   },
@@ -45546,12 +46383,13 @@
   "TEAM_TIEPOLO_U19_DEVO": {
     "id": "TEAM_TIEPOLO_U19_DEVO",
     "nome": "TEAM TIEPOLO U19 DEVO",
-    "punti_totali": 38,
+    "punti_totali": 48,
     "atleti": [
       "DANDREA_CRISTIAN",
       "SCARPIELLO_ANDREA",
       "BARDIERU_CRISTIAN",
-      "PITTA_JACOPO"
+      "PITTA_JACOPO",
+      "LOVER_MEDEOT_TOMAZ"
     ],
     "risultati": [
       {
@@ -45658,10 +46496,40 @@
         "regione": "VENETO",
         "km": "102.200",
         "media": "44.424"
+      },
+      {
+        "gara_id": "GRAN_PREMIO_MAGGIO_FIASCHETTANO_PROVA_VALIDA_CAMPIONATO_REGIONALE_2026-05-10_JUN_M",
+        "nome_gara": "GRAN PREMIO MAGGIO FIASCHETTANO PROVA VALIDA CAMPIONATO REGIONALE",
+        "data": "2026-05-10",
+        "atleta_id": "DANDREA_CRISTIAN",
+        "atleta_cognome": "DANDREA",
+        "atleta_nome": "CRISTIAN",
+        "posizione": 8,
+        "punti_effettivi": 6,
+        "moltiplicatore": 2,
+        "tipo": "regionale",
+        "regione": "FRIULI VENEZIA GIULIA",
+        "km": "80.400",
+        "media": "42.291"
+      },
+      {
+        "gara_id": "GRAN_PREMIO_MAGGIO_FIASCHETTANO_PROVA_VALIDA_CAMPIONATO_REGIONALE_2026-05-10_JUN_M",
+        "nome_gara": "GRAN PREMIO MAGGIO FIASCHETTANO PROVA VALIDA CAMPIONATO REGIONALE",
+        "data": "2026-05-10",
+        "atleta_id": "LOVER_MEDEOT_TOMAZ",
+        "atleta_cognome": "LOVER MEDEOT",
+        "atleta_nome": "TOMAZ",
+        "posizione": 9,
+        "punti_effettivi": 4,
+        "moltiplicatore": 2,
+        "tipo": "regionale",
+        "regione": "FRIULI VENEZIA GIULIA",
+        "km": "80.400",
+        "media": "42.291"
       }
     ],
     "punti_per_cat": {
-      "JUN_M": 38
+      "JUN_M": 48
     }
   },
   "TORELLI_CYCLING_TEAM_F": {
@@ -50187,7 +51055,7 @@
   "NORDEST_PETRUCCI_ASSALI_STEFEN": {
     "id": "NORDEST_PETRUCCI_ASSALI_STEFEN",
     "nome": "NORDEST PETRUCCI ASSALI STEFEN",
-    "punti_totali": 222,
+    "punti_totali": 247,
     "atleti": [
       "DALCANALE_MICHELE",
       "SCAMPERLE_NICOLO",
@@ -50499,10 +51367,55 @@
         "regione": "VENETO",
         "km": "102.200",
         "media": "44.424"
+      },
+      {
+        "gara_id": "10_GRAN_PREMIO_AMICI_DEL_CICLISMO_2026-05-10_JUN_M",
+        "nome_gara": "10 GRAN PREMIO AMICI DEL CICLISMO",
+        "data": "2026-05-10",
+        "atleta_id": "VIERO_GUIDO",
+        "atleta_cognome": "VIERO",
+        "atleta_nome": "GUIDO",
+        "posizione": 1,
+        "punti_effettivi": 15,
+        "moltiplicatore": 1,
+        "tipo": "regionale",
+        "regione": "VENETO",
+        "km": "114.000",
+        "media": "42.790"
+      },
+      {
+        "gara_id": "10_GRAN_PREMIO_AMICI_DEL_CICLISMO_2026-05-10_JUN_M",
+        "nome_gara": "10 GRAN PREMIO AMICI DEL CICLISMO",
+        "data": "2026-05-10",
+        "atleta_id": "SCAMPERLE_NICOLO",
+        "atleta_cognome": "SCAMPERLE",
+        "atleta_nome": "NICOLO'",
+        "posizione": 5,
+        "punti_effettivi": 6,
+        "moltiplicatore": 1,
+        "tipo": "regionale",
+        "regione": "VENETO",
+        "km": "114.000",
+        "media": "42.790"
+      },
+      {
+        "gara_id": "10_GRAN_PREMIO_AMICI_DEL_CICLISMO_2026-05-10_JUN_M",
+        "nome_gara": "10 GRAN PREMIO AMICI DEL CICLISMO",
+        "data": "2026-05-10",
+        "atleta_id": "ZANOLINI_ERIC",
+        "atleta_cognome": "ZANOLINI",
+        "atleta_nome": "ERIC",
+        "posizione": 7,
+        "punti_effettivi": 4,
+        "moltiplicatore": 1,
+        "tipo": "regionale",
+        "regione": "VENETO",
+        "km": "114.000",
+        "media": "42.790"
       }
     ],
     "punti_per_cat": {
-      "JUN_M": 222
+      "JUN_M": 247
     }
   },
   "MASTROMARCO_FC_NIBALI": {
@@ -51614,7 +52527,7 @@
   "POGI_TEAM_UAE_GENERALI": {
     "id": "POGI_TEAM_UAE_GENERALI",
     "nome": "POGI TEAM UAE GENERALI",
-    "punti_totali": 62,
+    "punti_totali": 72,
     "atleti": [
       "ALBREHT_BLAZ",
       "LINKE_MAKS",
@@ -51622,7 +52535,8 @@
       "SMERC_ANDI",
       "MORI_NIK",
       "HVASTIJA_URBAN",
-      "MAKSIMOVIC_LUKA"
+      "MAKSIMOVIC_LUKA",
+      "MAJNIC_MAKS"
     ],
     "risultati": [
       {
@@ -51774,10 +52688,25 @@
         "regione": "VENETO",
         "km": "103.300",
         "media": "43.343"
+      },
+      {
+        "gara_id": "GRAN_PREMIO_MAGGIO_FIASCHETTANO_PROVA_VALIDA_CAMPIONATO_REGIONALE_2026-05-10_JUN_M",
+        "nome_gara": "GRAN PREMIO MAGGIO FIASCHETTANO PROVA VALIDA CAMPIONATO REGIONALE",
+        "data": "2026-05-10",
+        "atleta_id": "MAJNIC_MAKS",
+        "atleta_cognome": "MAJNIC",
+        "atleta_nome": "MAKS",
+        "posizione": 6,
+        "punti_effettivi": 10,
+        "moltiplicatore": 2,
+        "tipo": "regionale",
+        "regione": "FRIULI VENEZIA GIULIA",
+        "km": "80.400",
+        "media": "42.291"
       }
     ],
     "punti_per_cat": {
-      "JUN_M": 32,
+      "JUN_M": 42,
       "AL_M": 11,
       "ES1_M": 13,
       "ES2_M": 6
@@ -52470,7 +53399,7 @@
   "FDB_SPORT_CLUB": {
     "id": "FDB_SPORT_CLUB",
     "nome": "FDB SPORT CLUB",
-    "punti_totali": 132,
+    "punti_totali": 144,
     "atleti": [
       "DALLA_BONA_THOMAS",
       "CORNELLA_DANIEL",
@@ -52765,10 +53694,25 @@
         "regione": "VENETO",
         "km": "30.700",
         "media": "38.738"
+      },
+      {
+        "gara_id": "10_GRAN_PREMIO_AMICI_DEL_CICLISMO_2026-05-10_JUN_M",
+        "nome_gara": "10 GRAN PREMIO AMICI DEL CICLISMO",
+        "data": "2026-05-10",
+        "atleta_id": "DALLA_BONA_THOMAS",
+        "atleta_cognome": "DALLA",
+        "atleta_nome": "BONA THOMAS",
+        "posizione": 2,
+        "punti_effettivi": 12,
+        "moltiplicatore": 1,
+        "tipo": "regionale",
+        "regione": "VENETO",
+        "km": "114.000",
+        "media": "42.790"
       }
     ],
     "punti_per_cat": {
-      "JUN_M": 65,
+      "JUN_M": 77,
       "ES1_M": 62,
       "AL_M": 5
     }
@@ -58403,14 +59347,15 @@
   "NOVO_MESTO_CYCLING_ACADEMY": {
     "id": "NOVO_MESTO_CYCLING_ACADEMY",
     "nome": "NOVO MESTO CYCLING ACADEMY",
-    "punti_totali": 107,
+    "punti_totali": 115,
     "atleti": [
       "JANC_ZAN",
       "MEH_TEVZ",
       "PUST_NIK",
       "LORGER_NIK",
       "DEJAK_LENART",
-      "KLACAR_JOAKIM"
+      "KLACAR_JOAKIM",
+      "DERGANC_ANTON"
     ],
     "risultati": [
       {
@@ -58577,21 +59522,38 @@
         "regione": "LOMBARDIA",
         "km": "129.440",
         "media": "46.501"
+      },
+      {
+        "gara_id": "GRAN_PREMIO_MAGGIO_FIASCHETTANO_PROVA_VALIDA_CAMPIONATO_REGIONALE_2026-05-10_JUN_M",
+        "nome_gara": "GRAN PREMIO MAGGIO FIASCHETTANO PROVA VALIDA CAMPIONATO REGIONALE",
+        "data": "2026-05-10",
+        "atleta_id": "DERGANC_ANTON",
+        "atleta_cognome": "DERGANC",
+        "atleta_nome": "ANTON",
+        "posizione": 7,
+        "punti_effettivi": 8,
+        "moltiplicatore": 2,
+        "tipo": "regionale",
+        "regione": "FRIULI VENEZIA GIULIA",
+        "km": "80.400",
+        "media": "42.291"
       }
     ],
     "punti_per_cat": {
       "ES1_M": 25,
       "ES2_M": 55,
-      "JUN_M": 27
+      "JUN_M": 35
     }
   },
   "G_S_MOSOLE": {
     "id": "G_S_MOSOLE",
     "nome": "G.S. MOSOLE",
-    "punti_totali": 50,
+    "punti_totali": 57,
     "atleti": [
       "MORO_LUDOVICO",
-      "GENOVESE_CARLO"
+      "GENOVESE_CARLO",
+      "MOINO_ALESSIA",
+      "GUIDOLIN_GIOIA"
     ],
     "risultati": [
       {
@@ -58728,11 +59690,42 @@
         "regione": "TRENTINO ALTO ADIGE",
         "km": "25.800",
         "media": "36.960"
+      },
+      {
+        "gara_id": "TROFEO_MERCURY_DONNE_ESORDIENTI_PRIMO_ANNO_2026-05-10_ES1_F",
+        "nome_gara": "TROFEO MERCURY DONNE ESORDIENTI PRIMO ANNO",
+        "data": "2026-05-10",
+        "atleta_id": "MOINO_ALESSIA",
+        "atleta_cognome": "MOINO",
+        "atleta_nome": "ALESSIA",
+        "posizione": 5,
+        "punti_effettivi": 6,
+        "moltiplicatore": 1,
+        "tipo": "regionale",
+        "regione": "ESORDIENTI",
+        "km": "23.800",
+        "media": "35.970"
+      },
+      {
+        "gara_id": "TROFEO_MERCURY_DONNE_ESORDIENTI_PRIMO_ANNO_2026-05-10_ES1_F",
+        "nome_gara": "TROFEO MERCURY DONNE ESORDIENTI PRIMO ANNO",
+        "data": "2026-05-10",
+        "atleta_id": "GUIDOLIN_GIOIA",
+        "atleta_cognome": "GUIDOLIN",
+        "atleta_nome": "GIOIA",
+        "posizione": 10,
+        "punti_effettivi": 1,
+        "moltiplicatore": 1,
+        "tipo": "regionale",
+        "regione": "ESORDIENTI",
+        "km": "23.800",
+        "media": "35.970"
       }
     ],
     "punti_per_cat": {
       "ES1_M": 44,
-      "ES2_M": 6
+      "ES2_M": 6,
+      "ES1_F": 7
     }
   },
   "KD_SLOGA_1902_IDRIJA": {
@@ -59650,7 +60643,7 @@
   "U_C_GUSPINI_A_S_D": {
     "id": "U_C_GUSPINI_A_S_D",
     "nome": "U.C. GUSPINI A.S.D.",
-    "punti_totali": 127,
+    "punti_totali": 130,
     "atleti": [
       "ONIDA_LEONARDO",
       "SABA_ALBERTO",
@@ -59791,11 +60784,26 @@
         "regione": "SARDEGNA",
         "km": "53.000",
         "media": "37.685"
+      },
+      {
+        "gara_id": "MEMORIAL_QUIRINO_FARRIS_GARA_UNICA_2026-05-10_ES1_M",
+        "nome_gara": "MEMORIAL QUIRINO FARRIS GARA UNICA",
+        "data": "2026-05-10",
+        "atleta_id": "SABA_ALBERTO",
+        "atleta_cognome": "SABA",
+        "atleta_nome": "ALBERTO",
+        "posizione": 8,
+        "punti_effettivi": 3,
+        "moltiplicatore": 1,
+        "tipo": "regionale",
+        "regione": "SARDEGNA",
+        "km": "23.800",
+        "media": "34.000"
       }
     ],
     "punti_per_cat": {
       "AL_M": 85,
-      "ES1_M": 42
+      "ES1_M": 45
     }
   },
   "ASD_DONORI_BIKE_TEAM": {
@@ -59829,7 +60837,7 @@
   "CANNEDU_ITTIRI_A_MANCA_ASD": {
     "id": "CANNEDU_ITTIRI_A_MANCA_ASD",
     "nome": "CANNEDU ITTIRI \"A. MANCA\" ASD",
-    "punti_totali": 55,
+    "punti_totali": 63,
     "atleti": [
       "MANNU_FRANCESCO",
       "SPIGA_EMANUELE",
@@ -59986,11 +60994,26 @@
         "regione": "SARDEGNA",
         "km": "53.000",
         "media": "37.685"
+      },
+      {
+        "gara_id": "MEMORIAL_QUIRINO_FARRIS_GARA_UNICA_2026-05-10_ES2_M",
+        "nome_gara": "MEMORIAL QUIRINO FARRIS GARA UNICA",
+        "data": "2026-05-10",
+        "atleta_id": "SPIGA_EMANUELE",
+        "atleta_cognome": "SPIGA",
+        "atleta_nome": "EMANUELE",
+        "posizione": 4,
+        "punti_effettivi": 8,
+        "moltiplicatore": 1,
+        "tipo": "regionale",
+        "regione": "SARDEGNA",
+        "km": "23.800",
+        "media": "34.000"
       }
     ],
     "punti_per_cat": {
       "JUN_M": 39,
-      "ES2_M": 16
+      "ES2_M": 24
     }
   },
   "G_S_MASSI_SUPERMERCATI_PONTIDA": {
@@ -60703,7 +61726,7 @@
   "CYCLING_TEAM_NIAL_NIZZOLI_ALMO": {
     "id": "CYCLING_TEAM_NIAL_NIZZOLI_ALMO",
     "nome": "CYCLING TEAM NIAL NIZZOLI ALMO",
-    "punti_totali": 216,
+    "punti_totali": 246,
     "atleti": [
       "GIANNETTI_VINCENZO",
       "CASSIBBA_LORENZO",
@@ -60717,7 +61740,8 @@
       "COPPOLINO_EDOARDO_JOE",
       "BRUGALETTA_ANGELO",
       "OCCHIPINTI_GIANMARCO",
-      "BOLZONI_SIMONE"
+      "BOLZONI_SIMONE",
+      "ADORNO_LUCA"
     ],
     "risultati": [
       {
@@ -61199,10 +62223,70 @@
         "regione": "EMILIA ROMAGNA",
         "km": "91.800",
         "media": "44.629"
+      },
+      {
+        "gara_id": "108_COPPA_ASCENSIONE_2026-05-10_AL_M",
+        "nome_gara": "108 COPPA ASCENSIONE",
+        "data": "2026-05-10",
+        "atleta_id": "CARUSO_NICOLO",
+        "atleta_cognome": "CARUSO",
+        "atleta_nome": "NICOLO'",
+        "posizione": 1,
+        "punti_effettivi": 15,
+        "moltiplicatore": 1,
+        "tipo": "regionale",
+        "regione": "SICILIA",
+        "km": "70.000",
+        "media": ""
+      },
+      {
+        "gara_id": "108_COPPA_ASCENSIONE_2026-05-10_AL_M",
+        "nome_gara": "108 COPPA ASCENSIONE",
+        "data": "2026-05-10",
+        "atleta_id": "SPADA_MATTEO",
+        "atleta_cognome": "SPADA",
+        "atleta_nome": "MATTEO",
+        "posizione": 3,
+        "punti_effettivi": 10,
+        "moltiplicatore": 1,
+        "tipo": "regionale",
+        "regione": "SICILIA",
+        "km": "70.000",
+        "media": ""
+      },
+      {
+        "gara_id": "108_COPPA_ASCENSIONE_2026-05-10_AL_M",
+        "nome_gara": "108 COPPA ASCENSIONE",
+        "data": "2026-05-10",
+        "atleta_id": "GIANNETTI_VINCENZO",
+        "atleta_cognome": "GIANNETTI",
+        "atleta_nome": "VINCENZO",
+        "posizione": 8,
+        "punti_effettivi": 3,
+        "moltiplicatore": 1,
+        "tipo": "regionale",
+        "regione": "SICILIA",
+        "km": "70.000",
+        "media": ""
+      },
+      {
+        "gara_id": "108_COPPA_ASCENSIONE_2026-05-10_AL_M",
+        "nome_gara": "108 COPPA ASCENSIONE",
+        "data": "2026-05-10",
+        "atleta_id": "ADORNO_LUCA",
+        "atleta_cognome": "ADORNO",
+        "atleta_nome": "LUCA",
+        "posizione": 9,
+        "punti_effettivi": 2,
+        "moltiplicatore": 1,
+        "tipo": "regionale",
+        "regione": "SICILIA",
+        "km": "70.000",
+        "media": ""
       }
     ],
     "punti_per_cat": {
-      "AL_M": 182,
+      "AL_M": 212,
       "ES1_M": 21,
       "JUN_M": 13
     }
@@ -61621,7 +62705,7 @@
   "VELO_CLUB_SARROCH": {
     "id": "VELO_CLUB_SARROCH",
     "nome": "VELO CLUB SARROCH",
-    "punti_totali": 42,
+    "punti_totali": 47,
     "atleti": [
       "PINNA_FEDERICO",
       "CAPPAI_ARIANNA",
@@ -61779,11 +62863,26 @@
         "regione": "SARDEGNA",
         "km": "53.000",
         "media": "37.685"
+      },
+      {
+        "gara_id": "MEMORIAL_QUIRINO_FARRIS_GARA_UNICA_2026-05-10_ES2_M",
+        "nome_gara": "MEMORIAL QUIRINO FARRIS GARA UNICA",
+        "data": "2026-05-10",
+        "atleta_id": "CANCEDDA_SORAYA",
+        "atleta_cognome": "CANCEDDA",
+        "atleta_nome": "SORAYA",
+        "posizione": 6,
+        "punti_effettivi": 5,
+        "moltiplicatore": 1,
+        "tipo": "regionale",
+        "regione": "SARDEGNA",
+        "km": "23.800",
+        "media": "34.000"
       }
     ],
     "punti_per_cat": {
       "ES1_M": 19,
-      "ES2_M": 14,
+      "ES2_M": 19,
       "AL_M": 9
     }
   },
@@ -63565,10 +64664,11 @@
   "TEAM_VALDINIEVOLE_A_S_D": {
     "id": "TEAM_VALDINIEVOLE_A_S_D",
     "nome": "TEAM VALDINIEVOLE A.S.D.",
-    "punti_totali": 40,
+    "punti_totali": 43,
     "atleti": [
       "CERONE_ANTONIO",
-      "ARTIGLIERI_MATTIA"
+      "ARTIGLIERI_MATTIA",
+      "MENICI_DUCCIO"
     ],
     "risultati": [
       {
@@ -63660,10 +64760,25 @@
         "regione": "TOSCANA",
         "km": "50.000",
         "media": "42.383"
+      },
+      {
+        "gara_id": "74_COPPA_SPORTIVI_MONTEMARCIANESI_2026-05-10_AL_M",
+        "nome_gara": "74 COPPA SPORTIVI MONTEMARCIANESI",
+        "data": "2026-05-10",
+        "atleta_id": "MENICI_DUCCIO",
+        "atleta_cognome": "MENICI",
+        "atleta_nome": "DUCCIO",
+        "posizione": 8,
+        "punti_effettivi": 3,
+        "moltiplicatore": 1,
+        "tipo": "regionale",
+        "regione": "TOSCANA",
+        "km": "66.300",
+        "media": "39.386"
       }
     ],
     "punti_per_cat": {
-      "AL_M": 40
+      "AL_M": 43
     }
   },
   "CICLI_PERACCHI_SOVERE_A_S_D": {
@@ -64893,7 +66008,7 @@
   "VIGNA_FIORITA_BORGO_MOLINO": {
     "id": "VIGNA_FIORITA_BORGO_MOLINO",
     "nome": "VIGNA FIORITA-BORGO MOLINO",
-    "punti_totali": 8,
+    "punti_totali": 32,
     "atleti": [
       "TABOGA_GIOELE",
       "MORO_NICOLO"
@@ -64958,10 +66073,25 @@
         "regione": "VENETO",
         "km": "80.850",
         "media": "48.349"
+      },
+      {
+        "gara_id": "GRAN_PREMIO_MAGGIO_FIASCHETTANO_PROVA_VALIDA_CAMPIONATO_REGIONALE_2026-05-10_JUN_M",
+        "nome_gara": "GRAN PREMIO MAGGIO FIASCHETTANO PROVA VALIDA CAMPIONATO REGIONALE",
+        "data": "2026-05-10",
+        "atleta_id": "TABOGA_GIOELE",
+        "atleta_cognome": "TABOGA",
+        "atleta_nome": "GIOELE",
+        "posizione": 2,
+        "punti_effettivi": 24,
+        "moltiplicatore": 2,
+        "tipo": "regionale",
+        "regione": "FRIULI VENEZIA GIULIA",
+        "km": "80.400",
+        "media": "42.291"
       }
     ],
     "punti_per_cat": {
-      "JUN_M": 8
+      "JUN_M": 32
     }
   },
   "A_S_D_AVIS_BIKE_RUVO_F": {
@@ -67002,9 +68132,10 @@
   "MARY_J_SWEET_ANGEL_ASD": {
     "id": "MARY_J_SWEET_ANGEL_ASD",
     "nome": "MARY J SWEET ANGEL ASD",
-    "punti_totali": 12,
+    "punti_totali": 24,
     "atleti": [
-      "VALLIFUOCO_SALVATORE"
+      "VALLIFUOCO_SALVATORE",
+      "ZUCCOTTI_EMMA"
     ],
     "risultati": [
       {
@@ -67021,10 +68152,26 @@
         "regione": "CAMPANIA",
         "km": "2.280",
         "media": ""
+      },
+      {
+        "gara_id": "TROFEO_MERCURY_DONNE_ESORDIENTI_SECONDO_ANNO_2026-05-10_ES2_F",
+        "nome_gara": "TROFEO MERCURY DONNE ESORDIENTI SECONDO ANNO",
+        "data": "2026-05-10",
+        "atleta_id": "ZUCCOTTI_EMMA",
+        "atleta_cognome": "ZUCCOTTI",
+        "atleta_nome": "EMMA",
+        "posizione": 2,
+        "punti_effettivi": 12,
+        "moltiplicatore": 1,
+        "tipo": "regionale",
+        "regione": "ESORDIENTI",
+        "km": "23.800",
+        "media": "35.970"
       }
     ],
     "punti_per_cat": {
-      "ES1_M": 12
+      "ES1_M": 12,
+      "ES2_F": 12
     }
   },
   "PROFBIKE_ANGRI_CYCLING_TEAM": {
@@ -67142,7 +68289,7 @@
   "ASD_ROBUR_BARCELLONA": {
     "id": "ASD_ROBUR_BARCELLONA",
     "nome": "ASD ROBUR BARCELLONA",
-    "punti_totali": 15,
+    "punti_totali": 23,
     "atleti": [
       "FALLO_CARLO",
       "MIRABILE_FILIPPO"
@@ -67207,10 +68354,25 @@
         "regione": "SICILIA",
         "km": "52.000",
         "media": "40.463"
+      },
+      {
+        "gara_id": "108_COPPA_ASCENSIONE_2026-05-10_AL_M",
+        "nome_gara": "108 COPPA ASCENSIONE",
+        "data": "2026-05-10",
+        "atleta_id": "FALLO_CARLO",
+        "atleta_cognome": "FALLO",
+        "atleta_nome": "CARLO",
+        "posizione": 4,
+        "punti_effettivi": 8,
+        "moltiplicatore": 1,
+        "tipo": "regionale",
+        "regione": "SICILIA",
+        "km": "70.000",
+        "media": ""
       }
     ],
     "punti_per_cat": {
-      "AL_M": 15
+      "AL_M": 23
     }
   },
   "TEAM_MENDELSPECK_E_WORK_F": {
@@ -70939,6 +72101,521 @@
     ],
     "punti_per_cat": {
       "JUN_M": 20
+    }
+  },
+  "U_C_GIORGIONE": {
+    "id": "U_C_GIORGIONE",
+    "nome": "U.C. GIORGIONE",
+    "punti_totali": 36,
+    "atleti": [
+      "TIMIS_GIORGIA_VALENTINA",
+      "MOCELLIN_GRETA",
+      "GUIDOLIN_GIORGIA"
+    ],
+    "risultati": [
+      {
+        "gara_id": "TROFEO_CARROZZERIA_LA_PERFETTA_2026-05-10_AL_F",
+        "nome_gara": "TROFEO CARROZZERIA LA PERFETTA",
+        "data": "2026-05-10",
+        "atleta_id": "TIMIS_GIORGIA_VALENTINA",
+        "atleta_cognome": "TIMIS",
+        "atleta_nome": "GIORGIA VALENTINA",
+        "posizione": 1,
+        "punti_effettivi": 15,
+        "moltiplicatore": 1,
+        "tipo": "regionale",
+        "regione": "ALLIEVE",
+        "km": "50.000",
+        "media": "33.513"
+      },
+      {
+        "gara_id": "TROFEO_MERCURY_DONNE_ESORDIENTI_PRIMO_ANNO_2026-05-10_ES1_F",
+        "nome_gara": "TROFEO MERCURY DONNE ESORDIENTI PRIMO ANNO",
+        "data": "2026-05-10",
+        "atleta_id": "MOCELLIN_GRETA",
+        "atleta_cognome": "MOCELLIN",
+        "atleta_nome": "GRETA",
+        "posizione": 1,
+        "punti_effettivi": 15,
+        "moltiplicatore": 1,
+        "tipo": "regionale",
+        "regione": "ESORDIENTI",
+        "km": "23.800",
+        "media": "35.970"
+      },
+      {
+        "gara_id": "TROFEO_MERCURY_DONNE_ESORDIENTI_SECONDO_ANNO_2026-05-10_ES2_F",
+        "nome_gara": "TROFEO MERCURY DONNE ESORDIENTI SECONDO ANNO",
+        "data": "2026-05-10",
+        "atleta_id": "GUIDOLIN_GIORGIA",
+        "atleta_cognome": "GUIDOLIN",
+        "atleta_nome": "GIORGIA",
+        "posizione": 5,
+        "punti_effettivi": 6,
+        "moltiplicatore": 1,
+        "tipo": "regionale",
+        "regione": "ESORDIENTI",
+        "km": "23.800",
+        "media": "35.970"
+      }
+    ],
+    "punti_per_cat": {
+      "AL_F": 15,
+      "ES1_F": 15,
+      "ES2_F": 6
+    }
+  },
+  "U_C_CONSCIO_PEDALE_DEL_SILE": {
+    "id": "U_C_CONSCIO_PEDALE_DEL_SILE",
+    "nome": "U.C.CONSCIO PEDALE DEL SILE",
+    "punti_totali": 40,
+    "atleti": [
+      "GRASSI_MARTA",
+      "CARRETTA_MATILDE",
+      "PIN_MATILDE",
+      "D_APOLLONIO_ALESSIA",
+      "VETTORELLO_GAIA"
+    ],
+    "risultati": [
+      {
+        "gara_id": "TROFEO_CARROZZERIA_LA_PERFETTA_2026-05-10_AL_F",
+        "nome_gara": "TROFEO CARROZZERIA LA PERFETTA",
+        "data": "2026-05-10",
+        "atleta_id": "GRASSI_MARTA",
+        "atleta_cognome": "GRASSI",
+        "atleta_nome": "MARTA",
+        "posizione": 2,
+        "punti_effettivi": 12,
+        "moltiplicatore": 1,
+        "tipo": "regionale",
+        "regione": "ALLIEVE",
+        "km": "50.000",
+        "media": "33.513"
+      },
+      {
+        "gara_id": "TROFEO_CARROZZERIA_LA_PERFETTA_2026-05-10_AL_F",
+        "nome_gara": "TROFEO CARROZZERIA LA PERFETTA",
+        "data": "2026-05-10",
+        "atleta_id": "CARRETTA_MATILDE",
+        "atleta_cognome": "CARRETTA",
+        "atleta_nome": "MATILDE",
+        "posizione": 3,
+        "punti_effettivi": 10,
+        "moltiplicatore": 1,
+        "tipo": "regionale",
+        "regione": "ALLIEVE",
+        "km": "50.000",
+        "media": "33.513"
+      },
+      {
+        "gara_id": "TROFEO_MERCURY_DONNE_ESORDIENTI_PRIMO_ANNO_2026-05-10_ES1_F",
+        "nome_gara": "TROFEO MERCURY DONNE ESORDIENTI PRIMO ANNO",
+        "data": "2026-05-10",
+        "atleta_id": "PIN_MATILDE",
+        "atleta_cognome": "PIN",
+        "atleta_nome": "MATILDE",
+        "posizione": 2,
+        "punti_effettivi": 12,
+        "moltiplicatore": 1,
+        "tipo": "regionale",
+        "regione": "ESORDIENTI",
+        "km": "23.800",
+        "media": "35.970"
+      },
+      {
+        "gara_id": "TROFEO_MERCURY_DONNE_ESORDIENTI_SECONDO_ANNO_2026-05-10_ES2_F",
+        "nome_gara": "TROFEO MERCURY DONNE ESORDIENTI SECONDO ANNO",
+        "data": "2026-05-10",
+        "atleta_id": "D_APOLLONIO_ALESSIA",
+        "atleta_cognome": "D'APOLLONIO",
+        "atleta_nome": "ALESSIA",
+        "posizione": 6,
+        "punti_effettivi": 5,
+        "moltiplicatore": 1,
+        "tipo": "regionale",
+        "regione": "ESORDIENTI",
+        "km": "23.800",
+        "media": "35.970"
+      },
+      {
+        "gara_id": "TROFEO_MERCURY_DONNE_ESORDIENTI_SECONDO_ANNO_2026-05-10_ES2_F",
+        "nome_gara": "TROFEO MERCURY DONNE ESORDIENTI SECONDO ANNO",
+        "data": "2026-05-10",
+        "atleta_id": "VETTORELLO_GAIA",
+        "atleta_cognome": "VETTORELLO",
+        "atleta_nome": "GAIA",
+        "posizione": 10,
+        "punti_effettivi": 1,
+        "moltiplicatore": 1,
+        "tipo": "regionale",
+        "regione": "ESORDIENTI",
+        "km": "23.800",
+        "media": "35.970"
+      }
+    ],
+    "punti_per_cat": {
+      "AL_F": 22,
+      "ES1_F": 12,
+      "ES2_F": 6
+    }
+  },
+  "G_C_NOVENTANA": {
+    "id": "G_C_NOVENTANA",
+    "nome": "G.C. NOVENTANA",
+    "punti_totali": 8,
+    "atleti": [
+      "BACCHIN_VANESSA"
+    ],
+    "risultati": [
+      {
+        "gara_id": "TROFEO_CARROZZERIA_LA_PERFETTA_2026-05-10_AL_F",
+        "nome_gara": "TROFEO CARROZZERIA LA PERFETTA",
+        "data": "2026-05-10",
+        "atleta_id": "BACCHIN_VANESSA",
+        "atleta_cognome": "BACCHIN",
+        "atleta_nome": "VANESSA",
+        "posizione": 4,
+        "punti_effettivi": 8,
+        "moltiplicatore": 1,
+        "tipo": "regionale",
+        "regione": "ALLIEVE",
+        "km": "50.000",
+        "media": "33.513"
+      }
+    ],
+    "punti_per_cat": {
+      "AL_F": 8
+    }
+  },
+  "SPORT_CLUB_BRESCIA_FLANDRES_LOVE": {
+    "id": "SPORT_CLUB_BRESCIA_FLANDRES_LOVE",
+    "nome": "SPORT CLUB BRESCIA - FLANDRES LOVE",
+    "punti_totali": 16,
+    "atleti": [
+      "TRABUCCHI_BEATRICE",
+      "BICELLI_EMMA",
+      "FERRARI_LUCREZIA"
+    ],
+    "risultati": [
+      {
+        "gara_id": "TROFEO_CARROZZERIA_LA_PERFETTA_2026-05-10_AL_F",
+        "nome_gara": "TROFEO CARROZZERIA LA PERFETTA",
+        "data": "2026-05-10",
+        "atleta_id": "TRABUCCHI_BEATRICE",
+        "atleta_cognome": "TRABUCCHI",
+        "atleta_nome": "BEATRICE",
+        "posizione": 5,
+        "punti_effettivi": 6,
+        "moltiplicatore": 1,
+        "tipo": "regionale",
+        "regione": "ALLIEVE",
+        "km": "50.000",
+        "media": "33.513"
+      },
+      {
+        "gara_id": "TROFEO_MERCURY_DONNE_ESORDIENTI_PRIMO_ANNO_2026-05-10_ES1_F",
+        "nome_gara": "TROFEO MERCURY DONNE ESORDIENTI PRIMO ANNO",
+        "data": "2026-05-10",
+        "atleta_id": "BICELLI_EMMA",
+        "atleta_cognome": "BICELLI",
+        "atleta_nome": "EMMA",
+        "posizione": 4,
+        "punti_effettivi": 8,
+        "moltiplicatore": 1,
+        "tipo": "regionale",
+        "regione": "ESORDIENTI",
+        "km": "23.800",
+        "media": "35.970"
+      },
+      {
+        "gara_id": "TROFEO_MERCURY_DONNE_ESORDIENTI_SECONDO_ANNO_2026-05-10_ES2_F",
+        "nome_gara": "TROFEO MERCURY DONNE ESORDIENTI SECONDO ANNO",
+        "data": "2026-05-10",
+        "atleta_id": "FERRARI_LUCREZIA",
+        "atleta_cognome": "FERRARI",
+        "atleta_nome": "LUCREZIA",
+        "posizione": 9,
+        "punti_effettivi": 2,
+        "moltiplicatore": 1,
+        "tipo": "regionale",
+        "regione": "ESORDIENTI",
+        "km": "23.800",
+        "media": "35.970"
+      }
+    ],
+    "punti_per_cat": {
+      "AL_F": 6,
+      "ES1_F": 8,
+      "ES2_F": 2
+    }
+  },
+  "COMAL_TRENTINO_CYCLING_ACADEMY": {
+    "id": "COMAL_TRENTINO_CYCLING_ACADEMY",
+    "nome": "COMAL TRENTINO CYCLING ACADEMY",
+    "punti_totali": 11,
+    "atleti": [
+      "TOSI_LAVINIA",
+      "CASASSA_BEATRICE",
+      "CAVADA_ANNA"
+    ],
+    "risultati": [
+      {
+        "gara_id": "TROFEO_CARROZZERIA_LA_PERFETTA_2026-05-10_AL_F",
+        "nome_gara": "TROFEO CARROZZERIA LA PERFETTA",
+        "data": "2026-05-10",
+        "atleta_id": "TOSI_LAVINIA",
+        "atleta_cognome": "TOSI",
+        "atleta_nome": "LAVINIA",
+        "posizione": 6,
+        "punti_effettivi": 5,
+        "moltiplicatore": 1,
+        "tipo": "regionale",
+        "regione": "ALLIEVE",
+        "km": "50.000",
+        "media": "33.513"
+      },
+      {
+        "gara_id": "TROFEO_CARROZZERIA_LA_PERFETTA_2026-05-10_AL_F",
+        "nome_gara": "TROFEO CARROZZERIA LA PERFETTA",
+        "data": "2026-05-10",
+        "atleta_id": "CASASSA_BEATRICE",
+        "atleta_cognome": "CASASSA",
+        "atleta_nome": "BEATRICE",
+        "posizione": 10,
+        "punti_effettivi": 1,
+        "moltiplicatore": 1,
+        "tipo": "regionale",
+        "regione": "ALLIEVE",
+        "km": "50.000",
+        "media": "33.513"
+      },
+      {
+        "gara_id": "TROFEO_MERCURY_DONNE_ESORDIENTI_PRIMO_ANNO_2026-05-10_ES1_F",
+        "nome_gara": "TROFEO MERCURY DONNE ESORDIENTI PRIMO ANNO",
+        "data": "2026-05-10",
+        "atleta_id": "CAVADA_ANNA",
+        "atleta_cognome": "CAVADA",
+        "atleta_nome": "ANNA",
+        "posizione": 6,
+        "punti_effettivi": 5,
+        "moltiplicatore": 1,
+        "tipo": "regionale",
+        "regione": "ESORDIENTI",
+        "km": "23.800",
+        "media": "35.970"
+      }
+    ],
+    "punti_per_cat": {
+      "AL_F": 6,
+      "ES1_F": 5
+    }
+  },
+  "SCUOLA_CICLISMO_VERSO_L_IRIDE": {
+    "id": "SCUOLA_CICLISMO_VERSO_L_IRIDE",
+    "nome": "SCUOLA CICLISMO VERSO L'IRIDE",
+    "punti_totali": 22,
+    "atleti": [
+      "DRESCO_LAYLA",
+      "KUCHYNSKAYA_EVA",
+      "CONSOLI_FRANCESCA"
+    ],
+    "risultati": [
+      {
+        "gara_id": "TROFEO_CARROZZERIA_LA_PERFETTA_2026-05-10_AL_F",
+        "nome_gara": "TROFEO CARROZZERIA LA PERFETTA",
+        "data": "2026-05-10",
+        "atleta_id": "DRESCO_LAYLA",
+        "atleta_cognome": "DRESCO",
+        "atleta_nome": "LAYLA",
+        "posizione": 7,
+        "punti_effettivi": 4,
+        "moltiplicatore": 1,
+        "tipo": "regionale",
+        "regione": "ALLIEVE",
+        "km": "50.000",
+        "media": "33.513"
+      },
+      {
+        "gara_id": "TROFEO_MERCURY_DONNE_ESORDIENTI_PRIMO_ANNO_2026-05-10_ES1_F",
+        "nome_gara": "TROFEO MERCURY DONNE ESORDIENTI PRIMO ANNO",
+        "data": "2026-05-10",
+        "atleta_id": "KUCHYNSKAYA_EVA",
+        "atleta_cognome": "KUCHYNSKAYA",
+        "atleta_nome": "EVA",
+        "posizione": 3,
+        "punti_effettivi": 10,
+        "moltiplicatore": 1,
+        "tipo": "regionale",
+        "regione": "ESORDIENTI",
+        "km": "23.800",
+        "media": "35.970"
+      },
+      {
+        "gara_id": "TROFEO_MERCURY_DONNE_ESORDIENTI_SECONDO_ANNO_2026-05-10_ES2_F",
+        "nome_gara": "TROFEO MERCURY DONNE ESORDIENTI SECONDO ANNO",
+        "data": "2026-05-10",
+        "atleta_id": "CONSOLI_FRANCESCA",
+        "atleta_cognome": "CONSOLI",
+        "atleta_nome": "FRANCESCA",
+        "posizione": 4,
+        "punti_effettivi": 8,
+        "moltiplicatore": 1,
+        "tipo": "regionale",
+        "regione": "ESORDIENTI",
+        "km": "23.800",
+        "media": "35.970"
+      }
+    ],
+    "punti_per_cat": {
+      "AL_F": 4,
+      "ES1_F": 10,
+      "ES2_F": 8
+    }
+  },
+  "ASD_GS_SORGENTE_PRADIPOZZO": {
+    "id": "ASD_GS_SORGENTE_PRADIPOZZO",
+    "nome": "ASD GS SORGENTE PRADIPOZZO",
+    "punti_totali": 3,
+    "atleti": [
+      "MIGLIORANZA_ELENA"
+    ],
+    "risultati": [
+      {
+        "gara_id": "TROFEO_CARROZZERIA_LA_PERFETTA_2026-05-10_AL_F",
+        "nome_gara": "TROFEO CARROZZERIA LA PERFETTA",
+        "data": "2026-05-10",
+        "atleta_id": "MIGLIORANZA_ELENA",
+        "atleta_cognome": "MIGLIORANZA",
+        "atleta_nome": "ELENA",
+        "posizione": 8,
+        "punti_effettivi": 3,
+        "moltiplicatore": 1,
+        "tipo": "regionale",
+        "regione": "ALLIEVE",
+        "km": "50.000",
+        "media": "33.513"
+      }
+    ],
+    "punti_per_cat": {
+      "AL_F": 3
+    }
+  },
+  "S_C_CESANO_MADERNO": {
+    "id": "S_C_CESANO_MADERNO",
+    "nome": "S.C. CESANO MADERNO",
+    "punti_totali": 15,
+    "atleti": [
+      "CANU_NICOLE",
+      "MARIANI_MARGHERITA",
+      "CERAME_AURORA"
+    ],
+    "risultati": [
+      {
+        "gara_id": "TROFEO_CARROZZERIA_LA_PERFETTA_2026-05-10_AL_F",
+        "nome_gara": "TROFEO CARROZZERIA LA PERFETTA",
+        "data": "2026-05-10",
+        "atleta_id": "CANU_NICOLE",
+        "atleta_cognome": "CANU",
+        "atleta_nome": "NICOLE",
+        "posizione": 9,
+        "punti_effettivi": 2,
+        "moltiplicatore": 1,
+        "tipo": "regionale",
+        "regione": "ALLIEVE",
+        "km": "50.000",
+        "media": "33.513"
+      },
+      {
+        "gara_id": "TROFEO_MERCURY_DONNE_ESORDIENTI_PRIMO_ANNO_2026-05-10_ES1_F",
+        "nome_gara": "TROFEO MERCURY DONNE ESORDIENTI PRIMO ANNO",
+        "data": "2026-05-10",
+        "atleta_id": "MARIANI_MARGHERITA",
+        "atleta_cognome": "MARIANI",
+        "atleta_nome": "MARGHERITA",
+        "posizione": 8,
+        "punti_effettivi": 3,
+        "moltiplicatore": 1,
+        "tipo": "regionale",
+        "regione": "ESORDIENTI",
+        "km": "23.800",
+        "media": "35.970"
+      },
+      {
+        "gara_id": "TROFEO_MERCURY_DONNE_ESORDIENTI_SECONDO_ANNO_2026-05-10_ES2_F",
+        "nome_gara": "TROFEO MERCURY DONNE ESORDIENTI SECONDO ANNO",
+        "data": "2026-05-10",
+        "atleta_id": "CERAME_AURORA",
+        "atleta_cognome": "CERAME",
+        "atleta_nome": "AURORA",
+        "posizione": 3,
+        "punti_effettivi": 10,
+        "moltiplicatore": 1,
+        "tipo": "regionale",
+        "regione": "ESORDIENTI",
+        "km": "23.800",
+        "media": "35.970"
+      }
+    ],
+    "punti_per_cat": {
+      "AL_F": 2,
+      "ES1_F": 3,
+      "ES2_F": 10
+    }
+  },
+  "CALDERARA_STM_RIDUTTORI": {
+    "id": "CALDERARA_STM_RIDUTTORI",
+    "nome": "CALDERARA STM RIDUTTORI",
+    "punti_totali": 2,
+    "atleti": [
+      "PETRUCCI_AURORA"
+    ],
+    "risultati": [
+      {
+        "gara_id": "TROFEO_MERCURY_DONNE_ESORDIENTI_PRIMO_ANNO_2026-05-10_ES1_F",
+        "nome_gara": "TROFEO MERCURY DONNE ESORDIENTI PRIMO ANNO",
+        "data": "2026-05-10",
+        "atleta_id": "PETRUCCI_AURORA",
+        "atleta_cognome": "PETRUCCI",
+        "atleta_nome": "AURORA",
+        "posizione": 9,
+        "punti_effettivi": 2,
+        "moltiplicatore": 1,
+        "tipo": "regionale",
+        "regione": "ESORDIENTI",
+        "km": "23.800",
+        "media": "35.970"
+      }
+    ],
+    "punti_per_cat": {
+      "ES1_F": 2
+    }
+  },
+  "BREGANZE_MILLENIUM": {
+    "id": "BREGANZE_MILLENIUM",
+    "nome": "BREGANZE MILLENIUM",
+    "punti_totali": 4,
+    "atleti": [
+      "CRESTANI_ELISA"
+    ],
+    "risultati": [
+      {
+        "gara_id": "TROFEO_MERCURY_DONNE_ESORDIENTI_SECONDO_ANNO_2026-05-10_ES2_F",
+        "nome_gara": "TROFEO MERCURY DONNE ESORDIENTI SECONDO ANNO",
+        "data": "2026-05-10",
+        "atleta_id": "CRESTANI_ELISA",
+        "atleta_cognome": "CRESTANI",
+        "atleta_nome": "ELISA",
+        "posizione": 7,
+        "punti_effettivi": 4,
+        "moltiplicatore": 1,
+        "tipo": "regionale",
+        "regione": "ESORDIENTI",
+        "km": "23.800",
+        "media": "35.970"
+      }
+    ],
+    "punti_per_cat": {
+      "ES2_F": 4
     }
   }
 }

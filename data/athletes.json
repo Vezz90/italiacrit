@@ -188,7 +188,7 @@
     "team_id": "ACCADEMIA_CICLISTICA",
     "categoria": "JUN_M",
     "genere": "M",
-    "punti_totali": 133,
+    "punti_totali": 163,
     "risultati": [
       {
         "gara_id": "GIRO_D_ABRUZZO_JUNIORES_2026_TERZA_TAPPA_2026-05-03_JUN_M",
@@ -306,6 +306,19 @@
         "regione": "EMILIA ROMAGNA",
         "km": "91.800",
         "media": "44.629"
+      },
+      {
+        "gara_id": "GRAN_PREMIO_MAGGIO_FIASCHETTANO_PROVA_VALIDA_CAMPIONATO_REGIONALE_2026-05-10_JUN_M",
+        "nome_gara": "GRAN PREMIO MAGGIO FIASCHETTANO PROVA VALIDA CAMPIONATO REGIONALE",
+        "data": "2026-05-10",
+        "posizione": 1,
+        "punti_effettivi": 30,
+        "team": "ACCADEMIA CICLISTICA",
+        "moltiplicatore": 2,
+        "tipo": "regionale",
+        "regione": "FRIULI VENEZIA GIULIA",
+        "km": "80.400",
+        "media": "42.291"
       }
     ]
   },
@@ -407,7 +420,7 @@
     "team_id": "AUTOZAI_CONTRI",
     "categoria": "JUN_M",
     "genere": "M",
-    "punti_totali": 102,
+    "punti_totali": 132,
     "risultati": [
       {
         "gara_id": "GIRO_D_ABRUZZO_JUNIORES_2026_TERZA_TAPPA_2026-05-03_JUN_M",
@@ -538,6 +551,19 @@
         "regione": "VENETO",
         "km": "103.300",
         "media": "43.343"
+      },
+      {
+        "gara_id": "8_CHALLENGE_NAZIONALE_BRESCIANA_GIANCARLO_OTELLI_RICORDANDO_GIANCARLO_CRONOMETRO_2026-05-10_JUN_M",
+        "nome_gara": "8 CHALLENGE NAZIONALE BRESCIANA GIANCARLO OTELLI RICORDANDO GIANCARLO CRONOMETRO",
+        "data": "2026-05-10",
+        "posizione": 1,
+        "punti_effettivi": 30,
+        "team": "AUTOZAI-CONTRI",
+        "moltiplicatore": 2,
+        "tipo": "nazionale",
+        "regione": "LOMBARDIA",
+        "km": "5.600",
+        "media": "29.779"
       }
     ]
   },
@@ -2925,7 +2951,7 @@
     "team_id": "TEAM_GUERRINI_SENAGHESE",
     "categoria": "JUN_M",
     "genere": "M",
-    "punti_totali": 27,
+    "punti_totali": 37,
     "risultati": [
       {
         "gara_id": "67_GRAN_PREMIO_U_C_A_T_2026-05-03_JUN_M",
@@ -2965,6 +2991,19 @@
         "regione": "EMILIA ROMAGNA",
         "km": "100.000",
         "media": "43.705"
+      },
+      {
+        "gara_id": "8_CHALLENGE_NAZIONALE_BRESCIANA_GIANCARLO_OTELLI_RICORDANDO_GIANCARLO_CRONOMETRO_2026-05-10_JUN_M",
+        "nome_gara": "8 CHALLENGE NAZIONALE BRESCIANA GIANCARLO OTELLI RICORDANDO GIANCARLO CRONOMETRO",
+        "data": "2026-05-10",
+        "posizione": 6,
+        "punti_effettivi": 10,
+        "team": "TEAM GUERRINI SENAGHESE",
+        "moltiplicatore": 2,
+        "tipo": "nazionale",
+        "regione": "LOMBARDIA",
+        "km": "5.600",
+        "media": "29.779"
       }
     ]
   },
@@ -3219,7 +3258,7 @@
     "team_id": "ENERGY_TEAM_A_S_D",
     "categoria": "JUN_M",
     "genere": "M",
-    "punti_totali": 25,
+    "punti_totali": 27,
     "risultati": [
       {
         "gara_id": "67_GRAN_PREMIO_U_C_A_T_2026-05-03_JUN_M",
@@ -3272,6 +3311,19 @@
         "regione": "LOMBARDIA",
         "km": ".86.650",
         "media": "41.142"
+      },
+      {
+        "gara_id": "8_CHALLENGE_NAZIONALE_BRESCIANA_GIANCARLO_OTELLI_RICORDANDO_GIANCARLO_CRONOMETRO_2026-05-10_JUN_M",
+        "nome_gara": "8 CHALLENGE NAZIONALE BRESCIANA GIANCARLO OTELLI RICORDANDO GIANCARLO CRONOMETRO",
+        "data": "2026-05-10",
+        "posizione": 10,
+        "punti_effettivi": 2,
+        "team": "ENERGY TEAM A.S.D.",
+        "moltiplicatore": 2,
+        "tipo": "nazionale",
+        "regione": "LOMBARDIA",
+        "km": "5.600",
+        "media": "29.779"
       }
     ]
   },
@@ -3411,7 +3463,7 @@
     "team_id": "POOL_CANTU_GB_TEAM_A_S_D",
     "categoria": "JUN_M",
     "genere": "M",
-    "punti_totali": 66,
+    "punti_totali": 74,
     "risultati": [
       {
         "gara_id": "67_GRAN_PREMIO_U_C_A_T_2026-05-03_JUN_M",
@@ -3503,6 +3555,19 @@
         "regione": "LOMBARDIA",
         "km": ".86.650",
         "media": "41.142"
+      },
+      {
+        "gara_id": "8_CHALLENGE_NAZIONALE_BRESCIANA_GIANCARLO_OTELLI_RICORDANDO_GIANCARLO_CRONOMETRO_2026-05-10_JUN_M",
+        "nome_gara": "8 CHALLENGE NAZIONALE BRESCIANA GIANCARLO OTELLI RICORDANDO GIANCARLO CRONOMETRO",
+        "data": "2026-05-10",
+        "posizione": 7,
+        "punti_effettivi": 8,
+        "team": "POOL CANTU' GB TEAM A.S.D.",
+        "moltiplicatore": 2,
+        "tipo": "nazionale",
+        "regione": "LOMBARDIA",
+        "km": "5.600",
+        "media": "29.779"
       }
     ]
   },
@@ -4373,7 +4438,7 @@
     "team_id": "U_C_GIORGIONE_F",
     "categoria": "AL_F",
     "genere": "F",
-    "punti_totali": 70,
+    "punti_totali": 85,
     "risultati": [
       {
         "gara_id": "24_GRAN_PREMIO_ROSA_CITTA_DI_BOVOLONE_2026-05-03_AL_F",
@@ -4465,6 +4530,19 @@
         "regione": "ALLIEVE",
         "km": "49.500",
         "media": "34.329"
+      },
+      {
+        "gara_id": "TROFEO_CARROZZERIA_LA_PERFETTA_2026-05-10_AL_F",
+        "nome_gara": "TROFEO CARROZZERIA LA PERFETTA",
+        "data": "2026-05-10",
+        "posizione": 1,
+        "punti_effettivi": 15,
+        "team": "U.C. GIORGIONE",
+        "moltiplicatore": 1,
+        "tipo": "regionale",
+        "regione": "ALLIEVE",
+        "km": "50.000",
+        "media": "33.513"
       }
     ]
   },
@@ -4884,7 +4962,7 @@
     "team_id": "U_C_CONSCIO_PEDALE_DEL_SILE_F",
     "categoria": "ES1_F",
     "genere": "F",
-    "punti_totali": 30,
+    "punti_totali": 42,
     "risultati": [
       {
         "gara_id": "24_GRAN_PREMIO_ROSA_CITTA_DI_BOVOLONE_DONNE_ESORDIENTI_PRIMO_ANNO_2026-05-03_ES1_F",
@@ -4937,6 +5015,19 @@
         "regione": "ESORDIENTI",
         "km": "25.000",
         "media": "32.154"
+      },
+      {
+        "gara_id": "TROFEO_MERCURY_DONNE_ESORDIENTI_PRIMO_ANNO_2026-05-10_ES1_F",
+        "nome_gara": "TROFEO MERCURY DONNE ESORDIENTI PRIMO ANNO",
+        "data": "2026-05-10",
+        "posizione": 2,
+        "punti_effettivi": 12,
+        "team": "U.C.CONSCIO PEDALE DEL SILE",
+        "moltiplicatore": 1,
+        "tipo": "regionale",
+        "regione": "ESORDIENTI",
+        "km": "23.800",
+        "media": "35.970"
       }
     ]
   },
@@ -4948,7 +5039,7 @@
     "team_id": "SPORT_CLUB_BRESCIA_FLANDRES_LOVE_F",
     "categoria": "ES1_F",
     "genere": "F",
-    "punti_totali": 33,
+    "punti_totali": 41,
     "risultati": [
       {
         "gara_id": "24_GRAN_PREMIO_ROSA_CITTA_DI_BOVOLONE_DONNE_ESORDIENTI_PRIMO_ANNO_2026-05-03_ES1_F",
@@ -5014,6 +5105,19 @@
         "regione": "ESORDIENTI",
         "km": "29.000",
         "media": "37.021"
+      },
+      {
+        "gara_id": "TROFEO_MERCURY_DONNE_ESORDIENTI_PRIMO_ANNO_2026-05-10_ES1_F",
+        "nome_gara": "TROFEO MERCURY DONNE ESORDIENTI PRIMO ANNO",
+        "data": "2026-05-10",
+        "posizione": 4,
+        "punti_effettivi": 8,
+        "team": "SPORT CLUB BRESCIA - FLANDRES LOVE",
+        "moltiplicatore": 1,
+        "tipo": "regionale",
+        "regione": "ESORDIENTI",
+        "km": "23.800",
+        "media": "35.970"
       }
     ]
   },
@@ -5089,7 +5193,7 @@
     "team_id": "S_C_CESANO_MADERNO_F",
     "categoria": "ES1_F",
     "genere": "F",
-    "punti_totali": 47,
+    "punti_totali": 50,
     "risultati": [
       {
         "gara_id": "24_GRAN_PREMIO_ROSA_CITTA_DI_BOVOLONE_DONNE_ESORDIENTI_PRIMO_ANNO_2026-05-03_ES1_F",
@@ -5194,6 +5298,19 @@
         "regione": "ESORDIENTI",
         "km": "24.000",
         "media": "36.486"
+      },
+      {
+        "gara_id": "TROFEO_MERCURY_DONNE_ESORDIENTI_PRIMO_ANNO_2026-05-10_ES1_F",
+        "nome_gara": "TROFEO MERCURY DONNE ESORDIENTI PRIMO ANNO",
+        "data": "2026-05-10",
+        "posizione": 8,
+        "punti_effettivi": 3,
+        "team": "S.C. CESANO MADERNO",
+        "moltiplicatore": 1,
+        "tipo": "regionale",
+        "regione": "ESORDIENTI",
+        "km": "23.800",
+        "media": "35.970"
       }
     ]
   },
@@ -5230,7 +5347,7 @@
     "team_id": "SCUOLA_CICLISMO_VERSO_L_IRIDE_F",
     "categoria": "ES1_F",
     "genere": "F",
-    "punti_totali": 87,
+    "punti_totali": 97,
     "risultati": [
       {
         "gara_id": "24_GRAN_PREMIO_ROSA_CITTA_DI_BOVOLONE_DONNE_ESORDIENTI_PRIMO_ANNO_2026-05-03_ES1_F",
@@ -5335,6 +5452,19 @@
         "regione": "ESORDIENTI",
         "km": "27.300",
         "media": "34.484"
+      },
+      {
+        "gara_id": "TROFEO_MERCURY_DONNE_ESORDIENTI_PRIMO_ANNO_2026-05-10_ES1_F",
+        "nome_gara": "TROFEO MERCURY DONNE ESORDIENTI PRIMO ANNO",
+        "data": "2026-05-10",
+        "posizione": 3,
+        "punti_effettivi": 10,
+        "team": "SCUOLA CICLISMO VERSO L'IRIDE",
+        "moltiplicatore": 1,
+        "tipo": "regionale",
+        "regione": "ESORDIENTI",
+        "km": "23.800",
+        "media": "35.970"
       }
     ]
   },
@@ -5487,7 +5617,7 @@
     "team_id": "COMAL_TRENTINO_CYCLING_ACADEMY_F",
     "categoria": "ES1_F",
     "genere": "F",
-    "punti_totali": 8,
+    "punti_totali": 13,
     "risultati": [
       {
         "gara_id": "24_GRAN_PREMIO_ROSA_CITTA_DI_BOVOLONE_DONNE_ESORDIENTI_PRIMO_ANNO_2026-05-03_ES1_F",
@@ -5540,6 +5670,19 @@
         "regione": "ESORDIENTI",
         "km": "28.700",
         "media": "33.318"
+      },
+      {
+        "gara_id": "TROFEO_MERCURY_DONNE_ESORDIENTI_PRIMO_ANNO_2026-05-10_ES1_F",
+        "nome_gara": "TROFEO MERCURY DONNE ESORDIENTI PRIMO ANNO",
+        "data": "2026-05-10",
+        "posizione": 6,
+        "punti_effettivi": 5,
+        "team": "COMAL TRENTINO CYCLING ACADEMY",
+        "moltiplicatore": 1,
+        "tipo": "regionale",
+        "regione": "ESORDIENTI",
+        "km": "23.800",
+        "media": "35.970"
       }
     ]
   },
@@ -5551,7 +5694,7 @@
     "team_id": "CALDERARA_STM_RIDUTTORI_F",
     "categoria": "ES1_F",
     "genere": "F",
-    "punti_totali": 4,
+    "punti_totali": 6,
     "risultati": [
       {
         "gara_id": "24_GRAN_PREMIO_ROSA_CITTA_DI_BOVOLONE_DONNE_ESORDIENTI_PRIMO_ANNO_2026-05-03_ES1_F",
@@ -5578,6 +5721,19 @@
         "regione": "ESORDIENTI",
         "km": "30.000",
         "media": "37.216"
+      },
+      {
+        "gara_id": "TROFEO_MERCURY_DONNE_ESORDIENTI_PRIMO_ANNO_2026-05-10_ES1_F",
+        "nome_gara": "TROFEO MERCURY DONNE ESORDIENTI PRIMO ANNO",
+        "data": "2026-05-10",
+        "posizione": 9,
+        "punti_effettivi": 2,
+        "team": "CALDERARA STM RIDUTTORI",
+        "moltiplicatore": 1,
+        "tipo": "regionale",
+        "regione": "ESORDIENTI",
+        "km": "23.800",
+        "media": "35.970"
       }
     ]
   },
@@ -5589,7 +5745,7 @@
     "team_id": "OFF_ALBERTI_U_C_VAL_D_ILLASI_F",
     "categoria": "ES2_F",
     "genere": "F",
-    "punti_totali": 128,
+    "punti_totali": 143,
     "risultati": [
       {
         "gara_id": "24_GRAN_PREMIO_ROSA_CITTA_DI_BOVOLONE_DONNE_ESORDIENTI_SECONDO_ANNO_2026-05-03_ES2_F",
@@ -5720,6 +5876,19 @@
         "regione": "ESORDIENTI",
         "km": "27.300",
         "media": "34.484"
+      },
+      {
+        "gara_id": "TROFEO_MERCURY_DONNE_ESORDIENTI_SECONDO_ANNO_2026-05-10_ES2_F",
+        "nome_gara": "TROFEO MERCURY DONNE ESORDIENTI SECONDO ANNO",
+        "data": "2026-05-10",
+        "posizione": 1,
+        "punti_effettivi": 15,
+        "team": "OFF.ALBERTI U.C. VAL D'ILLASI",
+        "moltiplicatore": 1,
+        "tipo": "regionale",
+        "regione": "ESORDIENTI",
+        "km": "23.800",
+        "media": "35.970"
       }
     ]
   },
@@ -5873,7 +6042,7 @@
     "team_id": "S_C_CESANO_MADERNO_F",
     "categoria": "ES2_F",
     "genere": "F",
-    "punti_totali": 96,
+    "punti_totali": 106,
     "risultati": [
       {
         "gara_id": "24_GRAN_PREMIO_ROSA_CITTA_DI_BOVOLONE_DONNE_ESORDIENTI_SECONDO_ANNO_2026-05-03_ES2_F",
@@ -5991,6 +6160,19 @@
         "regione": "ESORDIENTI",
         "km": "29.000",
         "media": "37.021"
+      },
+      {
+        "gara_id": "TROFEO_MERCURY_DONNE_ESORDIENTI_SECONDO_ANNO_2026-05-10_ES2_F",
+        "nome_gara": "TROFEO MERCURY DONNE ESORDIENTI SECONDO ANNO",
+        "data": "2026-05-10",
+        "posizione": 3,
+        "punti_effettivi": 10,
+        "team": "S.C. CESANO MADERNO",
+        "moltiplicatore": 1,
+        "tipo": "regionale",
+        "regione": "ESORDIENTI",
+        "km": "23.800",
+        "media": "35.970"
       }
     ]
   },
@@ -6002,7 +6184,7 @@
     "team_id": "MARY_J_SWEET_ANGEL_ASD_F",
     "categoria": "ES2_F",
     "genere": "F",
-    "punti_totali": 46,
+    "punti_totali": 58,
     "risultati": [
       {
         "gara_id": "24_GRAN_PREMIO_ROSA_CITTA_DI_BOVOLONE_DONNE_ESORDIENTI_SECONDO_ANNO_2026-05-03_ES2_F",
@@ -6094,6 +6276,19 @@
         "regione": "ESORDIENTI",
         "km": "27.300",
         "media": "34.484"
+      },
+      {
+        "gara_id": "TROFEO_MERCURY_DONNE_ESORDIENTI_SECONDO_ANNO_2026-05-10_ES2_F",
+        "nome_gara": "TROFEO MERCURY DONNE ESORDIENTI SECONDO ANNO",
+        "data": "2026-05-10",
+        "posizione": 2,
+        "punti_effettivi": 12,
+        "team": "MARY J SWEET ANGEL ASD",
+        "moltiplicatore": 1,
+        "tipo": "regionale",
+        "regione": "ESORDIENTI",
+        "km": "23.800",
+        "media": "35.970"
       }
     ]
   },
@@ -6207,7 +6402,7 @@
     "team_id": "SPORT_CLUB_BRESCIA_FLANDRES_LOVE_F",
     "categoria": "ES2_F",
     "genere": "F",
-    "punti_totali": 32,
+    "punti_totali": 34,
     "risultati": [
       {
         "gara_id": "24_GRAN_PREMIO_ROSA_CITTA_DI_BOVOLONE_DONNE_ESORDIENTI_SECONDO_ANNO_2026-05-03_ES2_F",
@@ -6286,6 +6481,19 @@
         "regione": "ESORDIENTI",
         "km": "27.300",
         "media": "34.484"
+      },
+      {
+        "gara_id": "TROFEO_MERCURY_DONNE_ESORDIENTI_SECONDO_ANNO_2026-05-10_ES2_F",
+        "nome_gara": "TROFEO MERCURY DONNE ESORDIENTI SECONDO ANNO",
+        "data": "2026-05-10",
+        "posizione": 9,
+        "punti_effettivi": 2,
+        "team": "SPORT CLUB BRESCIA - FLANDRES LOVE",
+        "moltiplicatore": 1,
+        "tipo": "regionale",
+        "regione": "ESORDIENTI",
+        "km": "23.800",
+        "media": "35.970"
       }
     ]
   },
@@ -6348,7 +6556,7 @@
     "team_id": "U_C_CONSCIO_PEDALE_DEL_SILE_F",
     "categoria": "ES2_F",
     "genere": "F",
-    "punti_totali": 8,
+    "punti_totali": 13,
     "risultati": [
       {
         "gara_id": "24_GRAN_PREMIO_ROSA_CITTA_DI_BOVOLONE_DONNE_ESORDIENTI_SECONDO_ANNO_2026-05-03_ES2_F",
@@ -6375,6 +6583,19 @@
         "regione": "ESORDIENTI",
         "km": "27.300",
         "media": "34.484"
+      },
+      {
+        "gara_id": "TROFEO_MERCURY_DONNE_ESORDIENTI_SECONDO_ANNO_2026-05-10_ES2_F",
+        "nome_gara": "TROFEO MERCURY DONNE ESORDIENTI SECONDO ANNO",
+        "data": "2026-05-10",
+        "posizione": 6,
+        "punti_effettivi": 5,
+        "team": "U.C.CONSCIO PEDALE DEL SILE",
+        "moltiplicatore": 1,
+        "tipo": "regionale",
+        "regione": "ESORDIENTI",
+        "km": "23.800",
+        "media": "35.970"
       }
     ]
   },
@@ -10758,7 +10979,7 @@
     "team_id": "G_S_IPERFINISH_STABBIA",
     "categoria": "AL_M",
     "genere": "M",
-    "punti_totali": 16,
+    "punti_totali": 21,
     "risultati": [
       {
         "gara_id": "LA_STORICA_COPPA_DE_LE_POGGIOLA_2026-05-03_AL_M",
@@ -10785,6 +11006,19 @@
         "regione": "TOSCANA",
         "km": "58.600",
         "media": "37.404"
+      },
+      {
+        "gara_id": "74_COPPA_SPORTIVI_MONTEMARCIANESI_2026-05-10_AL_M",
+        "nome_gara": "74 COPPA SPORTIVI MONTEMARCIANESI",
+        "data": "2026-05-10",
+        "posizione": 6,
+        "punti_effettivi": 5,
+        "team": "G.S. IPERFINISH STABBIA",
+        "moltiplicatore": 1,
+        "tipo": "regionale",
+        "regione": "TOSCANA",
+        "km": "66.300",
+        "media": "39.386"
       }
     ]
   },
@@ -10796,7 +11030,7 @@
     "team_id": "U_C_CITTA_DI_CASTELLO_A_S_D",
     "categoria": "AL_M",
     "genere": "M",
-    "punti_totali": 43,
+    "punti_totali": 58,
     "risultati": [
       {
         "gara_id": "LA_STORICA_COPPA_DE_LE_POGGIOLA_2026-05-03_AL_M",
@@ -10888,6 +11122,19 @@
         "regione": "EMILIA ROMAGNA",
         "km": "49.000",
         "media": "43.674"
+      },
+      {
+        "gara_id": "74_COPPA_SPORTIVI_MONTEMARCIANESI_2026-05-10_AL_M",
+        "nome_gara": "74 COPPA SPORTIVI MONTEMARCIANESI",
+        "data": "2026-05-10",
+        "posizione": 1,
+        "punti_effettivi": 15,
+        "team": "U.C. CITTA' DI CASTELLO A.S.D.",
+        "moltiplicatore": 1,
+        "tipo": "regionale",
+        "regione": "TOSCANA",
+        "km": "66.300",
+        "media": "39.386"
       }
     ]
   },
@@ -11054,7 +11301,7 @@
     "team_id": "ASD_EFFETTO_CICLISMO_NOI_SPORT",
     "categoria": "AL_M",
     "genere": "M",
-    "punti_totali": 18,
+    "punti_totali": 28,
     "risultati": [
       {
         "gara_id": "LA_STORICA_COPPA_DE_LE_POGGIOLA_2026-05-03_AL_M",
@@ -11081,6 +11328,19 @@
         "regione": "TOSCANA",
         "km": "59.400",
         "media": "38.641"
+      },
+      {
+        "gara_id": "74_COPPA_SPORTIVI_MONTEMARCIANESI_2026-05-10_AL_M",
+        "nome_gara": "74 COPPA SPORTIVI MONTEMARCIANESI",
+        "data": "2026-05-10",
+        "posizione": 3,
+        "punti_effettivi": 10,
+        "team": "ASD EFFETTO CICLISMO - NOI SPORT",
+        "moltiplicatore": 1,
+        "tipo": "regionale",
+        "regione": "TOSCANA",
+        "km": "66.300",
+        "media": "39.386"
       }
     ]
   },
@@ -11143,7 +11403,7 @@
     "team_id": "G_S_IPERFINISH_STABBIA",
     "categoria": "AL_M",
     "genere": "M",
-    "punti_totali": 44,
+    "punti_totali": 48,
     "risultati": [
       {
         "gara_id": "LA_STORICA_COPPA_DE_LE_POGGIOLA_2026-05-03_AL_M",
@@ -11222,6 +11482,19 @@
         "regione": "TOSCANA",
         "km": "49.000",
         "media": "42.722"
+      },
+      {
+        "gara_id": "74_COPPA_SPORTIVI_MONTEMARCIANESI_2026-05-10_AL_M",
+        "nome_gara": "74 COPPA SPORTIVI MONTEMARCIANESI",
+        "data": "2026-05-10",
+        "posizione": 7,
+        "punti_effettivi": 4,
+        "team": "G.S. IPERFINISH STABBIA",
+        "moltiplicatore": 1,
+        "tipo": "regionale",
+        "regione": "TOSCANA",
+        "km": "66.300",
+        "media": "39.386"
       }
     ]
   },
@@ -11336,7 +11609,7 @@
     "team_id": "AC_F_BESSI_CALENZANO_DONORATICO",
     "categoria": "AL_M",
     "genere": "M",
-    "punti_totali": 18,
+    "punti_totali": 26,
     "risultati": [
       {
         "gara_id": "LA_STORICA_COPPA_DE_LE_POGGIOLA_2026-05-03_AL_M",
@@ -11415,6 +11688,19 @@
         "regione": "TOSCANA",
         "km": "50.000",
         "media": "42.383"
+      },
+      {
+        "gara_id": "74_COPPA_SPORTIVI_MONTEMARCIANESI_2026-05-10_AL_M",
+        "nome_gara": "74 COPPA SPORTIVI MONTEMARCIANESI",
+        "data": "2026-05-10",
+        "posizione": 4,
+        "punti_effettivi": 8,
+        "team": "AC F. BESSI CALENZANO DONORATICO",
+        "moltiplicatore": 1,
+        "tipo": "regionale",
+        "regione": "TOSCANA",
+        "km": "66.300",
+        "media": "39.386"
       }
     ]
   },
@@ -11426,7 +11712,7 @@
     "team_id": "ASD_EFFETTO_CICLISMO_NOI_SPORT",
     "categoria": "AL_M",
     "genere": "M",
-    "punti_totali": 16,
+    "punti_totali": 22,
     "risultati": [
       {
         "gara_id": "LA_STORICA_COPPA_DE_LE_POGGIOLA_2026-05-03_AL_M",
@@ -11479,6 +11765,19 @@
         "regione": "TOSCANA",
         "km": "52.700",
         "media": "38.798"
+      },
+      {
+        "gara_id": "74_COPPA_SPORTIVI_MONTEMARCIANESI_2026-05-10_AL_M",
+        "nome_gara": "74 COPPA SPORTIVI MONTEMARCIANESI",
+        "data": "2026-05-10",
+        "posizione": 5,
+        "punti_effettivi": 6,
+        "team": "ASD EFFETTO CICLISMO - NOI SPORT",
+        "moltiplicatore": 1,
+        "tipo": "regionale",
+        "regione": "TOSCANA",
+        "km": "66.300",
+        "media": "39.386"
       }
     ]
   },
@@ -11631,7 +11930,7 @@
     "team_id": "MULTICAR_GRUPPO_AMARU",
     "categoria": "AL_M",
     "genere": "M",
-    "punti_totali": 20,
+    "punti_totali": 21,
     "risultati": [
       {
         "gara_id": "MEDIO_FONDO_ALCAMO_GIBELLINA_2026-05-03_AL_M",
@@ -11670,6 +11969,19 @@
         "tipo": "regionale",
         "regione": "SICILIA",
         "km": "50.000",
+        "media": ""
+      },
+      {
+        "gara_id": "108_COPPA_ASCENSIONE_2026-05-10_AL_M",
+        "nome_gara": "108 COPPA ASCENSIONE",
+        "data": "2026-05-10",
+        "posizione": 10,
+        "punti_effettivi": 1,
+        "team": "MULTICAR GRUPPO AMARU'",
+        "moltiplicatore": 1,
+        "tipo": "regionale",
+        "regione": "SICILIA",
+        "km": "70.000",
         "media": ""
       }
     ]
@@ -11899,7 +12211,7 @@
     "team_id": "ASD_CICLOTOUR",
     "categoria": "AL_M",
     "genere": "M",
-    "punti_totali": 32,
+    "punti_totali": 44,
     "risultati": [
       {
         "gara_id": "MEDIO_FONDO_ALCAMO_GIBELLINA_2026-05-03_AL_M",
@@ -11952,6 +12264,19 @@
         "regione": "SICILIA",
         "km": "52.000",
         "media": "40.463"
+      },
+      {
+        "gara_id": "108_COPPA_ASCENSIONE_2026-05-10_AL_M",
+        "nome_gara": "108 COPPA ASCENSIONE",
+        "data": "2026-05-10",
+        "posizione": 2,
+        "punti_effettivi": 12,
+        "team": "ASD CICLOTOUR",
+        "moltiplicatore": 1,
+        "tipo": "regionale",
+        "regione": "SICILIA",
+        "km": "70.000",
+        "media": ""
       }
     ]
   },
@@ -11963,7 +12288,7 @@
     "team_id": "TEAM_BIKE_SIRACUSA",
     "categoria": "AL_M",
     "genere": "M",
-    "punti_totali": 26,
+    "punti_totali": 32,
     "risultati": [
       {
         "gara_id": "MEDIO_FONDO_ALCAMO_GIBELLINA_2026-05-03_AL_M",
@@ -12016,6 +12341,19 @@
         "regione": "SICILIA",
         "km": "52.000",
         "media": "40.463"
+      },
+      {
+        "gara_id": "108_COPPA_ASCENSIONE_2026-05-10_AL_M",
+        "nome_gara": "108 COPPA ASCENSIONE",
+        "data": "2026-05-10",
+        "posizione": 5,
+        "punti_effettivi": 6,
+        "team": "TEAM BIKE SIRACUSA",
+        "moltiplicatore": 1,
+        "tipo": "regionale",
+        "regione": "SICILIA",
+        "km": "70.000",
+        "media": ""
       }
     ]
   },
@@ -12091,7 +12429,7 @@
     "team_id": "ASD_CICLOTOUR",
     "categoria": "AL_M",
     "genere": "M",
-    "punti_totali": 4,
+    "punti_totali": 9,
     "risultati": [
       {
         "gara_id": "MEDIO_FONDO_ALCAMO_GIBELLINA_2026-05-03_AL_M",
@@ -12131,6 +12469,19 @@
         "regione": "SICILIA",
         "km": "52.000",
         "media": "40.463"
+      },
+      {
+        "gara_id": "108_COPPA_ASCENSIONE_2026-05-10_AL_M",
+        "nome_gara": "108 COPPA ASCENSIONE",
+        "data": "2026-05-10",
+        "posizione": 6,
+        "punti_effettivi": 5,
+        "team": "ASD CICLOTOUR",
+        "moltiplicatore": 1,
+        "tipo": "regionale",
+        "regione": "SICILIA",
+        "km": "70.000",
+        "media": ""
       }
     ]
   },
@@ -18082,7 +18433,7 @@
     "team_id": "CRAZY_WHEELS_CYCLING_ACADEMY",
     "categoria": "ES1_M",
     "genere": "M",
-    "punti_totali": 42,
+    "punti_totali": 57,
     "risultati": [
       {
         "gara_id": "1_COPPA_DELLE_BORGATE_GARA_UNICA_2026-05-03_ES1_M",
@@ -18122,6 +18473,19 @@
         "regione": "SARDEGNA",
         "km": "28.600",
         "media": "35.565"
+      },
+      {
+        "gara_id": "MEMORIAL_QUIRINO_FARRIS_GARA_UNICA_2026-05-10_ES1_M",
+        "nome_gara": "MEMORIAL QUIRINO FARRIS GARA UNICA",
+        "data": "2026-05-10",
+        "posizione": 1,
+        "punti_effettivi": 15,
+        "team": "CRAZY WHEELS - CYCLING ACADEMY",
+        "moltiplicatore": 1,
+        "tipo": "regionale",
+        "regione": "SARDEGNA",
+        "km": "23.800",
+        "media": "34.000"
       }
     ]
   },
@@ -18133,7 +18497,7 @@
     "team_id": "POOL_BIKE_SERRAMANNA",
     "categoria": "ES1_M",
     "genere": "M",
-    "punti_totali": 68,
+    "punti_totali": 78,
     "risultati": [
       {
         "gara_id": "1_COPPA_DELLE_BORGATE_GARA_UNICA_2026-05-03_ES1_M",
@@ -18212,6 +18576,19 @@
         "regione": "SARDEGNA",
         "km": "28.600",
         "media": "35.565"
+      },
+      {
+        "gara_id": "MEMORIAL_QUIRINO_FARRIS_GARA_UNICA_2026-05-10_ES1_M",
+        "nome_gara": "MEMORIAL QUIRINO FARRIS GARA UNICA",
+        "data": "2026-05-10",
+        "posizione": 3,
+        "punti_effettivi": 10,
+        "team": "POOL BIKE SERRAMANNA",
+        "moltiplicatore": 1,
+        "tipo": "regionale",
+        "regione": "SARDEGNA",
+        "km": "23.800",
+        "media": "34.000"
       }
     ]
   },
@@ -18223,7 +18600,7 @@
     "team_id": "S_C_PATTADA",
     "categoria": "ES1_M",
     "genere": "M",
-    "punti_totali": 59,
+    "punti_totali": 65,
     "risultati": [
       {
         "gara_id": "1_COPPA_DELLE_BORGATE_GARA_UNICA_2026-05-03_ES1_M",
@@ -18289,6 +18666,19 @@
         "regione": "SARDEGNA",
         "km": "28.600",
         "media": "35.565"
+      },
+      {
+        "gara_id": "MEMORIAL_QUIRINO_FARRIS_GARA_UNICA_2026-05-10_ES1_M",
+        "nome_gara": "MEMORIAL QUIRINO FARRIS GARA UNICA",
+        "data": "2026-05-10",
+        "posizione": 5,
+        "punti_effettivi": 6,
+        "team": "S.C. PATTADA",
+        "moltiplicatore": 1,
+        "tipo": "regionale",
+        "regione": "SARDEGNA",
+        "km": "23.800",
+        "media": "34.000"
       }
     ]
   },
@@ -18300,7 +18690,7 @@
     "team_id": "CRAZY_WHEELS_CYCLING_ACADEMY",
     "categoria": "ES1_M",
     "genere": "M",
-    "punti_totali": 31,
+    "punti_totali": 43,
     "risultati": [
       {
         "gara_id": "1_COPPA_DELLE_BORGATE_GARA_UNICA_2026-05-03_ES1_M",
@@ -18353,6 +18743,19 @@
         "regione": "SARDEGNA",
         "km": "28.600",
         "media": "35.565"
+      },
+      {
+        "gara_id": "MEMORIAL_QUIRINO_FARRIS_GARA_UNICA_2026-05-10_ES1_M",
+        "nome_gara": "MEMORIAL QUIRINO FARRIS GARA UNICA",
+        "data": "2026-05-10",
+        "posizione": 2,
+        "punti_effettivi": 12,
+        "team": "CRAZY WHEELS - CYCLING ACADEMY",
+        "moltiplicatore": 1,
+        "tipo": "regionale",
+        "regione": "SARDEGNA",
+        "km": "23.800",
+        "media": "34.000"
       }
     ]
   },
@@ -18364,7 +18767,7 @@
     "team_id": "CRAZY_WHEELS_CYCLING_ACADEMY",
     "categoria": "ES1_M",
     "genere": "M",
-    "punti_totali": 38,
+    "punti_totali": 43,
     "risultati": [
       {
         "gara_id": "1_COPPA_DELLE_BORGATE_GARA_UNICA_2026-05-03_ES1_M",
@@ -18417,6 +18820,19 @@
         "regione": "SARDEGNA",
         "km": "28.600",
         "media": "35.565"
+      },
+      {
+        "gara_id": "MEMORIAL_QUIRINO_FARRIS_GARA_UNICA_2026-05-10_ES1_M",
+        "nome_gara": "MEMORIAL QUIRINO FARRIS GARA UNICA",
+        "data": "2026-05-10",
+        "posizione": 6,
+        "punti_effettivi": 5,
+        "team": "CRAZY WHEELS - CYCLING ACADEMY",
+        "moltiplicatore": 1,
+        "tipo": "regionale",
+        "regione": "SARDEGNA",
+        "km": "23.800",
+        "media": "34.000"
       }
     ]
   },
@@ -18428,7 +18844,7 @@
     "team_id": "SAMABIKE",
     "categoria": "ES1_M",
     "genere": "M",
-    "punti_totali": 47,
+    "punti_totali": 51,
     "risultati": [
       {
         "gara_id": "1_COPPA_DELLE_BORGATE_GARA_UNICA_2026-05-03_ES1_M",
@@ -18494,6 +18910,19 @@
         "regione": "ESORDIENTI",
         "km": "24.000",
         "media": "38.486"
+      },
+      {
+        "gara_id": "MEMORIAL_QUIRINO_FARRIS_GARA_UNICA_2026-05-10_ES1_M",
+        "nome_gara": "MEMORIAL QUIRINO FARRIS GARA UNICA",
+        "data": "2026-05-10",
+        "posizione": 7,
+        "punti_effettivi": 4,
+        "team": "SAMABIKE",
+        "moltiplicatore": 1,
+        "tipo": "regionale",
+        "regione": "SARDEGNA",
+        "km": "23.800",
+        "media": "34.000"
       }
     ]
   },
@@ -18505,7 +18934,7 @@
     "team_id": "S_C_TERRANOVA_FANCELLO_CICLI",
     "categoria": "ES1_M",
     "genere": "M",
-    "punti_totali": 50,
+    "punti_totali": 58,
     "risultati": [
       {
         "gara_id": "1_COPPA_DELLE_BORGATE_GARA_UNICA_2026-05-03_ES1_M",
@@ -18571,6 +19000,19 @@
         "regione": "SARDEGNA",
         "km": "28.600",
         "media": "35.565"
+      },
+      {
+        "gara_id": "MEMORIAL_QUIRINO_FARRIS_GARA_UNICA_2026-05-10_ES1_M",
+        "nome_gara": "MEMORIAL QUIRINO FARRIS GARA UNICA",
+        "data": "2026-05-10",
+        "posizione": 4,
+        "punti_effettivi": 8,
+        "team": "S.C. TERRANOVA FANCELLO CICLI",
+        "moltiplicatore": 1,
+        "tipo": "regionale",
+        "regione": "SARDEGNA",
+        "km": "23.800",
+        "media": "34.000"
       }
     ]
   },
@@ -18582,7 +19024,7 @@
     "team_id": "S_C_OZIERESE",
     "categoria": "ES1_M",
     "genere": "M",
-    "punti_totali": 11,
+    "punti_totali": 13,
     "risultati": [
       {
         "gara_id": "1_COPPA_DELLE_BORGATE_GARA_UNICA_2026-05-03_ES1_M",
@@ -18609,6 +19051,19 @@
         "regione": "SARDEGNA",
         "km": "10.000",
         "media": ""
+      },
+      {
+        "gara_id": "MEMORIAL_QUIRINO_FARRIS_GARA_UNICA_2026-05-10_ES1_M",
+        "nome_gara": "MEMORIAL QUIRINO FARRIS GARA UNICA",
+        "data": "2026-05-10",
+        "posizione": 9,
+        "punti_effettivi": 2,
+        "team": "S.C. OZIERESE",
+        "moltiplicatore": 1,
+        "tipo": "regionale",
+        "regione": "SARDEGNA",
+        "km": "23.800",
+        "media": "34.000"
       }
     ]
   },
@@ -18620,7 +19075,7 @@
     "team_id": "ALGHERO_BIKE_A_S_D",
     "categoria": "ES1_M",
     "genere": "M",
-    "punti_totali": 5,
+    "punti_totali": 6,
     "risultati": [
       {
         "gara_id": "1_COPPA_DELLE_BORGATE_GARA_UNICA_2026-05-03_ES1_M",
@@ -18647,6 +19102,19 @@
         "regione": "SARDEGNA",
         "km": "28.600",
         "media": "35.565"
+      },
+      {
+        "gara_id": "MEMORIAL_QUIRINO_FARRIS_GARA_UNICA_2026-05-10_ES1_M",
+        "nome_gara": "MEMORIAL QUIRINO FARRIS GARA UNICA",
+        "data": "2026-05-10",
+        "posizione": 10,
+        "punti_effettivi": 1,
+        "team": "ALGHERO BIKE A.S.D.",
+        "moltiplicatore": 1,
+        "tipo": "regionale",
+        "regione": "SARDEGNA",
+        "km": "23.800",
+        "media": "34.000"
       }
     ]
   },
@@ -18696,7 +19164,7 @@
     "team_id": "SAMABIKE",
     "categoria": "ES2_M",
     "genere": "M",
-    "punti_totali": 79,
+    "punti_totali": 94,
     "risultati": [
       {
         "gara_id": "1_COPPA_DELLE_BORGATE_GARA_UNICA_2026-05-03_ES2_M",
@@ -18775,6 +19243,19 @@
         "regione": "SARDEGNA",
         "km": "28.600",
         "media": "35.565"
+      },
+      {
+        "gara_id": "MEMORIAL_QUIRINO_FARRIS_GARA_UNICA_2026-05-10_ES2_M",
+        "nome_gara": "MEMORIAL QUIRINO FARRIS GARA UNICA",
+        "data": "2026-05-10",
+        "posizione": 1,
+        "punti_effettivi": 15,
+        "team": "SAMABIKE",
+        "moltiplicatore": 1,
+        "tipo": "regionale",
+        "regione": "SARDEGNA",
+        "km": "23.800",
+        "media": "34.000"
       }
     ]
   },
@@ -18786,7 +19267,7 @@
     "team_id": "ALGHERO_BIKE_A_S_D",
     "categoria": "ES2_M",
     "genere": "M",
-    "punti_totali": 12,
+    "punti_totali": 13,
     "risultati": [
       {
         "gara_id": "1_COPPA_DELLE_BORGATE_GARA_UNICA_2026-05-03_ES2_M",
@@ -18800,6 +19281,19 @@
         "regione": "SARDEGNA",
         "km": "27.800",
         "media": "37.070"
+      },
+      {
+        "gara_id": "MEMORIAL_QUIRINO_FARRIS_GARA_UNICA_2026-05-10_ES2_M",
+        "nome_gara": "MEMORIAL QUIRINO FARRIS GARA UNICA",
+        "data": "2026-05-10",
+        "posizione": 10,
+        "punti_effettivi": 1,
+        "team": "ALGHERO BIKE A.S.D.",
+        "moltiplicatore": 1,
+        "tipo": "regionale",
+        "regione": "SARDEGNA",
+        "km": "23.800",
+        "media": "34.000"
       }
     ]
   },
@@ -18811,7 +19305,7 @@
     "team_id": "CRAZY_WHEELS_CYCLING_ACADEMY",
     "categoria": "ES2_M",
     "genere": "M",
-    "punti_totali": 43,
+    "punti_totali": 49,
     "risultati": [
       {
         "gara_id": "1_COPPA_DELLE_BORGATE_GARA_UNICA_2026-05-03_ES2_M",
@@ -18864,6 +19358,19 @@
         "regione": "SARDEGNA",
         "km": "28.600",
         "media": "35.565"
+      },
+      {
+        "gara_id": "MEMORIAL_QUIRINO_FARRIS_GARA_UNICA_2026-05-10_ES2_M",
+        "nome_gara": "MEMORIAL QUIRINO FARRIS GARA UNICA",
+        "data": "2026-05-10",
+        "posizione": 5,
+        "punti_effettivi": 6,
+        "team": "CRAZY WHEELS - CYCLING ACADEMY",
+        "moltiplicatore": 1,
+        "tipo": "regionale",
+        "regione": "SARDEGNA",
+        "km": "23.800",
+        "media": "34.000"
       }
     ]
   },
@@ -18875,7 +19382,7 @@
     "team_id": "DUEPPI_CYCLING_PROJECT",
     "categoria": "ES2_M",
     "genere": "M",
-    "punti_totali": 57,
+    "punti_totali": 67,
     "risultati": [
       {
         "gara_id": "1_COPPA_DELLE_BORGATE_GARA_UNICA_2026-05-03_ES2_M",
@@ -18941,6 +19448,19 @@
         "regione": "SARDEGNA",
         "km": "28.600",
         "media": "35.565"
+      },
+      {
+        "gara_id": "MEMORIAL_QUIRINO_FARRIS_GARA_UNICA_2026-05-10_ES2_M",
+        "nome_gara": "MEMORIAL QUIRINO FARRIS GARA UNICA",
+        "data": "2026-05-10",
+        "posizione": 3,
+        "punti_effettivi": 10,
+        "team": "DUEPPI CYCLING PROJECT",
+        "moltiplicatore": 1,
+        "tipo": "regionale",
+        "regione": "SARDEGNA",
+        "km": "23.800",
+        "media": "34.000"
       }
     ]
   },
@@ -18952,7 +19472,7 @@
     "team_id": "SAMABIKE",
     "categoria": "ES2_M",
     "genere": "M",
-    "punti_totali": 54,
+    "punti_totali": 66,
     "risultati": [
       {
         "gara_id": "1_COPPA_DELLE_BORGATE_GARA_UNICA_2026-05-03_ES2_M",
@@ -19018,6 +19538,19 @@
         "regione": "SARDEGNA",
         "km": "28.600",
         "media": "35.565"
+      },
+      {
+        "gara_id": "MEMORIAL_QUIRINO_FARRIS_GARA_UNICA_2026-05-10_ES2_M",
+        "nome_gara": "MEMORIAL QUIRINO FARRIS GARA UNICA",
+        "data": "2026-05-10",
+        "posizione": 2,
+        "punti_effettivi": 12,
+        "team": "SAMABIKE",
+        "moltiplicatore": 1,
+        "tipo": "regionale",
+        "regione": "SARDEGNA",
+        "km": "23.800",
+        "media": "34.000"
       }
     ]
   },
@@ -19093,7 +19626,7 @@
     "team_id": "CRAZY_WHEELS_CYCLING_ACADEMY",
     "categoria": "ES2_M",
     "genere": "M",
-    "punti_totali": 10,
+    "punti_totali": 13,
     "risultati": [
       {
         "gara_id": "1_COPPA_DELLE_BORGATE_GARA_UNICA_2026-05-03_ES2_M",
@@ -19133,6 +19666,19 @@
         "regione": "SARDEGNA",
         "km": "33.000",
         "media": "33.000"
+      },
+      {
+        "gara_id": "MEMORIAL_QUIRINO_FARRIS_GARA_UNICA_2026-05-10_ES2_M",
+        "nome_gara": "MEMORIAL QUIRINO FARRIS GARA UNICA",
+        "data": "2026-05-10",
+        "posizione": 8,
+        "punti_effettivi": 3,
+        "team": "CRAZY WHEELS - CYCLING ACADEMY",
+        "moltiplicatore": 1,
+        "tipo": "regionale",
+        "regione": "SARDEGNA",
+        "km": "23.800",
+        "media": "34.000"
       }
     ]
   },
@@ -19144,7 +19690,7 @@
     "team_id": "SESTU_BIKE_A_S_D",
     "categoria": "ES2_M",
     "genere": "M",
-    "punti_totali": 19,
+    "punti_totali": 23,
     "risultati": [
       {
         "gara_id": "1_COPPA_DELLE_BORGATE_GARA_UNICA_2026-05-03_ES2_M",
@@ -19197,6 +19743,19 @@
         "regione": "SARDEGNA",
         "km": "28.600",
         "media": "35.565"
+      },
+      {
+        "gara_id": "MEMORIAL_QUIRINO_FARRIS_GARA_UNICA_2026-05-10_ES2_M",
+        "nome_gara": "MEMORIAL QUIRINO FARRIS GARA UNICA",
+        "data": "2026-05-10",
+        "posizione": 7,
+        "punti_effettivi": 4,
+        "team": "SESTU BIKE A.S.D.",
+        "moltiplicatore": 1,
+        "tipo": "regionale",
+        "regione": "SARDEGNA",
+        "km": "23.800",
+        "media": "34.000"
       }
     ]
   },
@@ -25614,7 +26173,7 @@
     "team_id": "BUSTESE_OLONIA_A_S_D",
     "categoria": "JUN_M",
     "genere": "M",
-    "punti_totali": 16,
+    "punti_totali": 32,
     "risultati": [
       {
         "gara_id": "GIRO_D_ABRUZZO_JUNIORES_2026_SECONDA_TAPPA_2026-05-02_JUN_M",
@@ -25641,6 +26200,19 @@
         "regione": "TOSCANA",
         "km": "11.500",
         "media": "51.957"
+      },
+      {
+        "gara_id": "8_CHALLENGE_NAZIONALE_BRESCIANA_GIANCARLO_OTELLI_RICORDANDO_GIANCARLO_CRONOMETRO_2026-05-10_JUN_M",
+        "nome_gara": "8 CHALLENGE NAZIONALE BRESCIANA GIANCARLO OTELLI RICORDANDO GIANCARLO CRONOMETRO",
+        "data": "2026-05-10",
+        "posizione": 4,
+        "punti_effettivi": 16,
+        "team": "BUSTESE OLONIA A.S.D.",
+        "moltiplicatore": 2,
+        "tipo": "nazionale",
+        "regione": "LOMBARDIA",
+        "km": "5.600",
+        "media": "29.779"
       }
     ]
   },
@@ -25652,7 +26224,7 @@
     "team_id": "TEAM_TIEPOLO_U19_DEVO",
     "categoria": "JUN_M",
     "genere": "M",
-    "punti_totali": 10,
+    "punti_totali": 16,
     "risultati": [
       {
         "gara_id": "GIRO_D_ABRUZZO_JUNIORES_2026_SECONDA_TAPPA_2026-05-02_JUN_M",
@@ -25679,6 +26251,19 @@
         "regione": "TOSCANA",
         "km": "123.000",
         "media": "41.403"
+      },
+      {
+        "gara_id": "GRAN_PREMIO_MAGGIO_FIASCHETTANO_PROVA_VALIDA_CAMPIONATO_REGIONALE_2026-05-10_JUN_M",
+        "nome_gara": "GRAN PREMIO MAGGIO FIASCHETTANO PROVA VALIDA CAMPIONATO REGIONALE",
+        "data": "2026-05-10",
+        "posizione": 8,
+        "punti_effettivi": 6,
+        "team": "TEAM TIEPOLO U19 DEVO",
+        "moltiplicatore": 2,
+        "tipo": "regionale",
+        "regione": "FRIULI VENEZIA GIULIA",
+        "km": "80.400",
+        "media": "42.291"
       }
     ]
   },
@@ -30238,7 +30823,7 @@
     "team_id": "NORDEST_PETRUCCI_ASSALI_STEFEN",
     "categoria": "JUN_M",
     "genere": "M",
-    "punti_totali": 12,
+    "punti_totali": 18,
     "risultati": [
       {
         "gara_id": "69_GRAN_PREMIO_DI_SAN_PROSPERO_2026-05-01_JUN_M",
@@ -30265,6 +30850,19 @@
         "regione": "LOMBARDIA",
         "km": "97.300",
         "media": "43.378"
+      },
+      {
+        "gara_id": "10_GRAN_PREMIO_AMICI_DEL_CICLISMO_2026-05-10_JUN_M",
+        "nome_gara": "10 GRAN PREMIO AMICI DEL CICLISMO",
+        "data": "2026-05-10",
+        "posizione": 5,
+        "punti_effettivi": 6,
+        "team": "NORDEST PETRUCCI ASSALI STEFEN",
+        "moltiplicatore": 1,
+        "tipo": "regionale",
+        "regione": "VENETO",
+        "km": "114.000",
+        "media": "42.790"
       }
     ]
   },
@@ -30377,7 +30975,7 @@
     "team_id": "IND_FORNITURE_MORO_C_G_CAPITAL",
     "categoria": "JUN_M",
     "genere": "M",
-    "punti_totali": 101,
+    "punti_totali": 109,
     "risultati": [
       {
         "gara_id": "57_GRAN_PREMIO_SPORTIVI_DI_BADOERE_2026-05-01_JUN_M",
@@ -30469,6 +31067,19 @@
         "regione": "VENETO",
         "km": "102.200",
         "media": "44.424"
+      },
+      {
+        "gara_id": "10_GRAN_PREMIO_AMICI_DEL_CICLISMO_2026-05-10_JUN_M",
+        "nome_gara": "10 GRAN PREMIO AMICI DEL CICLISMO",
+        "data": "2026-05-10",
+        "posizione": 4,
+        "punti_effettivi": 8,
+        "team": "IND. FORNITURE MORO-C&G CAPITAL",
+        "moltiplicatore": 1,
+        "tipo": "regionale",
+        "regione": "VENETO",
+        "km": "114.000",
+        "media": "42.790"
       }
     ]
   },
@@ -31191,7 +31802,7 @@
     "team_id": "FDB_SPORT_CLUB",
     "categoria": "JUN_M",
     "genere": "M",
-    "punti_totali": 38,
+    "punti_totali": 50,
     "risultati": [
       {
         "gara_id": "69_COPPA_1_MAGGIO_2026-05-01_JUN_M",
@@ -31244,6 +31855,19 @@
         "regione": "LOMBARDIA",
         "km": "88.000",
         "media": "40.331"
+      },
+      {
+        "gara_id": "10_GRAN_PREMIO_AMICI_DEL_CICLISMO_2026-05-10_JUN_M",
+        "nome_gara": "10 GRAN PREMIO AMICI DEL CICLISMO",
+        "data": "2026-05-10",
+        "posizione": 2,
+        "punti_effettivi": 12,
+        "team": "FDB SPORT CLUB",
+        "moltiplicatore": 1,
+        "tipo": "regionale",
+        "regione": "VENETO",
+        "km": "114.000",
+        "media": "42.790"
       }
     ]
   },
@@ -31524,7 +32148,7 @@
     "team_id": "TEAM_GUERRINI_SENAGHESE",
     "categoria": "JUN_M",
     "genere": "M",
-    "punti_totali": 33,
+    "punti_totali": 35,
     "risultati": [
       {
         "gara_id": "69_COPPA_1_MAGGIO_2026-05-01_JUN_M",
@@ -31577,6 +32201,19 @@
         "regione": "TOSCANA",
         "km": "80.000",
         "media": "46.625"
+      },
+      {
+        "gara_id": "10_GRAN_PREMIO_AMICI_DEL_CICLISMO_2026-05-10_JUN_M",
+        "nome_gara": "10 GRAN PREMIO AMICI DEL CICLISMO",
+        "data": "2026-05-10",
+        "posizione": 9,
+        "punti_effettivi": 2,
+        "team": "TEAM GUERRINI SENAGHESE",
+        "moltiplicatore": 1,
+        "tipo": "regionale",
+        "regione": "VENETO",
+        "km": "114.000",
+        "media": "42.790"
       }
     ]
   },
@@ -32006,7 +32643,7 @@
     "team_id": "U_C_CONSCIO_PEDALE_DEL_SILE_F",
     "categoria": "AL_F",
     "genere": "F",
-    "punti_totali": 104,
+    "punti_totali": 114,
     "risultati": [
       {
         "gara_id": "TROFEO_COMUNE_DI_ILLASI_2026-05-01_AL_F",
@@ -32111,6 +32748,19 @@
         "regione": "ALLIEVE",
         "km": "49.500",
         "media": "34.329"
+      },
+      {
+        "gara_id": "TROFEO_CARROZZERIA_LA_PERFETTA_2026-05-10_AL_F",
+        "nome_gara": "TROFEO CARROZZERIA LA PERFETTA",
+        "data": "2026-05-10",
+        "posizione": 3,
+        "punti_effettivi": 10,
+        "team": "U.C.CONSCIO PEDALE DEL SILE",
+        "moltiplicatore": 1,
+        "tipo": "regionale",
+        "regione": "ALLIEVE",
+        "km": "50.000",
+        "media": "33.513"
       }
     ]
   },
@@ -32122,7 +32772,7 @@
     "team_id": "ASD_GS_SORGENTE_PRADIPOZZO_F",
     "categoria": "AL_F",
     "genere": "F",
-    "punti_totali": 12,
+    "punti_totali": 15,
     "risultati": [
       {
         "gara_id": "TROFEO_COMUNE_DI_ILLASI_2026-05-01_AL_F",
@@ -32149,6 +32799,19 @@
         "regione": "ALLIEVE",
         "km": "59.500",
         "media": "32.445"
+      },
+      {
+        "gara_id": "TROFEO_CARROZZERIA_LA_PERFETTA_2026-05-10_AL_F",
+        "nome_gara": "TROFEO CARROZZERIA LA PERFETTA",
+        "data": "2026-05-10",
+        "posizione": 8,
+        "punti_effettivi": 3,
+        "team": "ASD GS SORGENTE PRADIPOZZO",
+        "moltiplicatore": 1,
+        "tipo": "regionale",
+        "regione": "ALLIEVE",
+        "km": "50.000",
+        "media": "33.513"
       }
     ]
   },
@@ -32875,7 +33538,7 @@
     "team_id": "G_S_MOSOLE_F",
     "categoria": "ES1_F",
     "genere": "F",
-    "punti_totali": 28,
+    "punti_totali": 29,
     "risultati": [
       {
         "gara_id": "TROFEO_COMUNE_DI_ILLASI_DONNE_ESORDIENTI_PRIMO_ANNO_2026-05-01_ES1_F",
@@ -32941,6 +33604,19 @@
         "regione": "ESORDIENTI",
         "km": "27.300",
         "media": "34.484"
+      },
+      {
+        "gara_id": "TROFEO_MERCURY_DONNE_ESORDIENTI_PRIMO_ANNO_2026-05-10_ES1_F",
+        "nome_gara": "TROFEO MERCURY DONNE ESORDIENTI PRIMO ANNO",
+        "data": "2026-05-10",
+        "posizione": 10,
+        "punti_effettivi": 1,
+        "team": "G.S. MOSOLE",
+        "moltiplicatore": 1,
+        "tipo": "regionale",
+        "regione": "ESORDIENTI",
+        "km": "23.800",
+        "media": "35.970"
       }
     ]
   },
@@ -32990,7 +33666,7 @@
     "team_id": "G_S_MOSOLE_F",
     "categoria": "ES1_F",
     "genere": "F",
-    "punti_totali": 37,
+    "punti_totali": 43,
     "risultati": [
       {
         "gara_id": "TROFEO_COMUNE_DI_ILLASI_DONNE_ESORDIENTI_PRIMO_ANNO_2026-05-01_ES1_F",
@@ -33069,6 +33745,19 @@
         "regione": "ESORDIENTI",
         "km": "27.300",
         "media": "34.484"
+      },
+      {
+        "gara_id": "TROFEO_MERCURY_DONNE_ESORDIENTI_PRIMO_ANNO_2026-05-10_ES1_F",
+        "nome_gara": "TROFEO MERCURY DONNE ESORDIENTI PRIMO ANNO",
+        "data": "2026-05-10",
+        "posizione": 5,
+        "punti_effettivi": 6,
+        "team": "G.S. MOSOLE",
+        "moltiplicatore": 1,
+        "tipo": "regionale",
+        "regione": "ESORDIENTI",
+        "km": "23.800",
+        "media": "35.970"
       }
     ]
   },
@@ -33080,7 +33769,7 @@
     "team_id": "G_C_SOSSANO_1975_F",
     "categoria": "ES1_F",
     "genere": "F",
-    "punti_totali": 15,
+    "punti_totali": 19,
     "risultati": [
       {
         "gara_id": "TROFEO_COMUNE_DI_ILLASI_DONNE_ESORDIENTI_PRIMO_ANNO_2026-05-01_ES1_F",
@@ -33133,6 +33822,19 @@
         "regione": "ESORDIENTI",
         "km": "27.000",
         "media": "36.762"
+      },
+      {
+        "gara_id": "TROFEO_MERCURY_DONNE_ESORDIENTI_PRIMO_ANNO_2026-05-10_ES1_F",
+        "nome_gara": "TROFEO MERCURY DONNE ESORDIENTI PRIMO ANNO",
+        "data": "2026-05-10",
+        "posizione": 7,
+        "punti_effettivi": 4,
+        "team": "G.C. SOSSANO 1975",
+        "moltiplicatore": 1,
+        "tipo": "regionale",
+        "regione": "ESORDIENTI",
+        "km": "23.800",
+        "media": "35.970"
       }
     ]
   },
@@ -33348,7 +34050,7 @@
     "team_id": "U_C_CONSCIO_PEDALE_DEL_SILE_F",
     "categoria": "ES2_F",
     "genere": "F",
-    "punti_totali": 14,
+    "punti_totali": 15,
     "risultati": [
       {
         "gara_id": "TROFEO_COMUNE_DI_ILLASI_DONNE_ESORDIENTI_SECONDO_ANNO_2026-05-01_ES2_F",
@@ -33401,6 +34103,19 @@
         "regione": "ESORDIENTI",
         "km": "25.000",
         "media": "33.321"
+      },
+      {
+        "gara_id": "TROFEO_MERCURY_DONNE_ESORDIENTI_SECONDO_ANNO_2026-05-10_ES2_F",
+        "nome_gara": "TROFEO MERCURY DONNE ESORDIENTI SECONDO ANNO",
+        "data": "2026-05-10",
+        "posizione": 10,
+        "punti_effettivi": 1,
+        "team": "U.C.CONSCIO PEDALE DEL SILE",
+        "moltiplicatore": 1,
+        "tipo": "regionale",
+        "regione": "ESORDIENTI",
+        "km": "23.800",
+        "media": "35.970"
       }
     ]
   },
@@ -33412,7 +34127,7 @@
     "team_id": "U_C_GIORGIONE_F",
     "categoria": "ES2_F",
     "genere": "F",
-    "punti_totali": 54,
+    "punti_totali": 60,
     "risultati": [
       {
         "gara_id": "TROFEO_COMUNE_DI_ILLASI_DONNE_ESORDIENTI_SECONDO_ANNO_2026-05-01_ES2_F",
@@ -33517,6 +34232,19 @@
         "regione": "ESORDIENTI",
         "km": "27.300",
         "media": "34.484"
+      },
+      {
+        "gara_id": "TROFEO_MERCURY_DONNE_ESORDIENTI_SECONDO_ANNO_2026-05-10_ES2_F",
+        "nome_gara": "TROFEO MERCURY DONNE ESORDIENTI SECONDO ANNO",
+        "data": "2026-05-10",
+        "posizione": 5,
+        "punti_effettivi": 6,
+        "team": "U.C. GIORGIONE",
+        "moltiplicatore": 1,
+        "tipo": "regionale",
+        "regione": "ESORDIENTI",
+        "km": "23.800",
+        "media": "35.970"
       }
     ]
   },
@@ -33642,7 +34370,7 @@
     "team_id": "G_C_SOSSANO_1975_F",
     "categoria": "ES2_F",
     "genere": "F",
-    "punti_totali": 19,
+    "punti_totali": 22,
     "risultati": [
       {
         "gara_id": "TROFEO_COMUNE_DI_ILLASI_DONNE_ESORDIENTI_SECONDO_ANNO_2026-05-01_ES2_F",
@@ -33695,6 +34423,19 @@
         "regione": "ESORDIENTI",
         "km": "28.700",
         "media": "33.545"
+      },
+      {
+        "gara_id": "TROFEO_MERCURY_DONNE_ESORDIENTI_SECONDO_ANNO_2026-05-10_ES2_F",
+        "nome_gara": "TROFEO MERCURY DONNE ESORDIENTI SECONDO ANNO",
+        "data": "2026-05-10",
+        "posizione": 8,
+        "punti_effettivi": 3,
+        "team": "G.C. SOSSANO 1975",
+        "moltiplicatore": 1,
+        "tipo": "regionale",
+        "regione": "ESORDIENTI",
+        "km": "23.800",
+        "media": "35.970"
       }
     ]
   },
@@ -34077,7 +34818,7 @@
     "team_id": "SCUOLA_CICLISMO_VERSO_L_IRIDE_F",
     "categoria": "ES2_F",
     "genere": "F",
-    "punti_totali": 30,
+    "punti_totali": 38,
     "risultati": [
       {
         "gara_id": "3_TROFEO_P_E_K_NEW_ELECTRIC_DONNE_ESORDIENTI_SECONDO_ANNO_2026-05-01_ES2_F",
@@ -34169,6 +34910,19 @@
         "regione": "ESORDIENTI",
         "km": "27.300",
         "media": "34.484"
+      },
+      {
+        "gara_id": "TROFEO_MERCURY_DONNE_ESORDIENTI_SECONDO_ANNO_2026-05-10_ES2_F",
+        "nome_gara": "TROFEO MERCURY DONNE ESORDIENTI SECONDO ANNO",
+        "data": "2026-05-10",
+        "posizione": 4,
+        "punti_effettivi": 8,
+        "team": "SCUOLA CICLISMO VERSO L'IRIDE",
+        "moltiplicatore": 1,
+        "tipo": "regionale",
+        "regione": "ESORDIENTI",
+        "km": "23.800",
+        "media": "35.970"
       }
     ]
   },
@@ -42277,7 +43031,7 @@
     "team_id": "CICLISTICA_TREVIGLIESE",
     "categoria": "JUN_M",
     "genere": "M",
-    "punti_totali": 41,
+    "punti_totali": 61,
     "risultati": [
       {
         "gara_id": "15_GIRO_DI_PRIMAVERA_2026-04-26_JUN_M",
@@ -42356,6 +43110,19 @@
         "regione": "LOMBARDIA",
         "km": "88.000",
         "media": "40.331"
+      },
+      {
+        "gara_id": "8_CHALLENGE_NAZIONALE_BRESCIANA_GIANCARLO_OTELLI_RICORDANDO_GIANCARLO_CRONOMETRO_2026-05-10_JUN_M",
+        "nome_gara": "8 CHALLENGE NAZIONALE BRESCIANA GIANCARLO OTELLI RICORDANDO GIANCARLO CRONOMETRO",
+        "data": "2026-05-10",
+        "posizione": 3,
+        "punti_effettivi": 20,
+        "team": "CICLISTICA TREVIGLIESE",
+        "moltiplicatore": 2,
+        "tipo": "nazionale",
+        "regione": "LOMBARDIA",
+        "km": "5.600",
+        "media": "29.779"
       }
     ]
   },
@@ -43450,7 +44217,7 @@
     "team_id": "TEAM_NERI_SOTTOLI_LUCCHINI_ENERGY",
     "categoria": "JUN_M",
     "genere": "M",
-    "punti_totali": 30,
+    "punti_totali": 36,
     "risultati": [
       {
         "gara_id": "4_GRAN_PREMIO_SAN_LEOLINO_2026-04-26_JUN_M",
@@ -43516,6 +44283,19 @@
         "regione": "LOMBARDIA",
         "km": ".86.650",
         "media": "41.142"
+      },
+      {
+        "gara_id": "8_CHALLENGE_NAZIONALE_BRESCIANA_GIANCARLO_OTELLI_RICORDANDO_GIANCARLO_CRONOMETRO_2026-05-10_JUN_M",
+        "nome_gara": "8 CHALLENGE NAZIONALE BRESCIANA GIANCARLO OTELLI RICORDANDO GIANCARLO CRONOMETRO",
+        "data": "2026-05-10",
+        "posizione": 8,
+        "punti_effettivi": 6,
+        "team": "TEAM NERI SOTTOLI LUCCHINI ENERGY",
+        "moltiplicatore": 2,
+        "tipo": "nazionale",
+        "regione": "LOMBARDIA",
+        "km": "5.600",
+        "media": "29.779"
       }
     ]
   },
@@ -45217,7 +45997,7 @@
     "team_id": "CYCLING_TEAM_NIAL_NIZZOLI_ALMO",
     "categoria": "AL_M",
     "genere": "M",
-    "punti_totali": 71,
+    "punti_totali": 74,
     "risultati": [
       {
         "gara_id": "2_MEDIOFONDO_DI_BISACQUINO_2026-04-26_AL_M",
@@ -45283,6 +46063,19 @@
         "regione": "SICILIA",
         "km": "52.000",
         "media": "40.463"
+      },
+      {
+        "gara_id": "108_COPPA_ASCENSIONE_2026-05-10_AL_M",
+        "nome_gara": "108 COPPA ASCENSIONE",
+        "data": "2026-05-10",
+        "posizione": 8,
+        "punti_effettivi": 3,
+        "team": "CYCLING TEAM NIAL NIZZOLI ALMO",
+        "moltiplicatore": 1,
+        "tipo": "regionale",
+        "regione": "SICILIA",
+        "km": "70.000",
+        "media": ""
       }
     ]
   },
@@ -45409,7 +46202,7 @@
     "team_id": "CYCLING_TEAM_NIAL_NIZZOLI_ALMO",
     "categoria": "AL_M",
     "genere": "M",
-    "punti_totali": 38,
+    "punti_totali": 48,
     "risultati": [
       {
         "gara_id": "2_MEDIOFONDO_DI_BISACQUINO_2026-04-26_AL_M",
@@ -45488,6 +46281,19 @@
         "regione": "SICILIA",
         "km": "52.000",
         "media": "40.463"
+      },
+      {
+        "gara_id": "108_COPPA_ASCENSIONE_2026-05-10_AL_M",
+        "nome_gara": "108 COPPA ASCENSIONE",
+        "data": "2026-05-10",
+        "posizione": 3,
+        "punti_effettivi": 10,
+        "team": "CYCLING TEAM NIAL NIZZOLI ALMO",
+        "moltiplicatore": 1,
+        "tipo": "regionale",
+        "regione": "SICILIA",
+        "km": "70.000",
+        "media": ""
       }
     ]
   },
@@ -45919,7 +46725,7 @@
     "team_id": "G_S_IPERFINISH_STABBIA",
     "categoria": "AL_M",
     "genere": "M",
-    "punti_totali": 35,
+    "punti_totali": 47,
     "risultati": [
       {
         "gara_id": "3_TROFEO_RAGGIO_DI_SOLE_2026-04-26_AL_M",
@@ -45998,6 +46804,19 @@
         "regione": "TOSCANA",
         "km": "68.000",
         "media": "42.666"
+      },
+      {
+        "gara_id": "74_COPPA_SPORTIVI_MONTEMARCIANESI_2026-05-10_AL_M",
+        "nome_gara": "74 COPPA SPORTIVI MONTEMARCIANESI",
+        "data": "2026-05-10",
+        "posizione": 2,
+        "punti_effettivi": 12,
+        "team": "G.S. IPERFINISH STABBIA",
+        "moltiplicatore": 1,
+        "tipo": "regionale",
+        "regione": "TOSCANA",
+        "km": "66.300",
+        "media": "39.386"
       }
     ]
   },
@@ -46679,7 +47498,7 @@
     "team_id": "U_C_GUSPINI_A_S_D",
     "categoria": "ES1_M",
     "genere": "M",
-    "punti_totali": 30,
+    "punti_totali": 33,
     "risultati": [
       {
         "gara_id": "19_TROFEO_MG_TUNING_GARA_UNICA_2026-04-26_ES1_M",
@@ -46719,6 +47538,19 @@
         "regione": "SARDEGNA",
         "km": "28.600",
         "media": "35.565"
+      },
+      {
+        "gara_id": "MEMORIAL_QUIRINO_FARRIS_GARA_UNICA_2026-05-10_ES1_M",
+        "nome_gara": "MEMORIAL QUIRINO FARRIS GARA UNICA",
+        "data": "2026-05-10",
+        "posizione": 8,
+        "punti_effettivi": 3,
+        "team": "U.C. GUSPINI A.S.D.",
+        "moltiplicatore": 1,
+        "tipo": "regionale",
+        "regione": "SARDEGNA",
+        "km": "23.800",
+        "media": "34.000"
       }
     ]
   },
@@ -46857,7 +47689,7 @@
     "team_id": "VELO_CLUB_SARROCH",
     "categoria": "ES2_M",
     "genere": "M",
-    "punti_totali": 44,
+    "punti_totali": 49,
     "risultati": [
       {
         "gara_id": "19_TROFEO_MG_TUNING_GARA_UNICA_2026-04-26_ES2_M",
@@ -46897,6 +47729,19 @@
         "regione": "SARDEGNA",
         "km": "28.600",
         "media": "35.565"
+      },
+      {
+        "gara_id": "MEMORIAL_QUIRINO_FARRIS_GARA_UNICA_2026-05-10_ES2_M",
+        "nome_gara": "MEMORIAL QUIRINO FARRIS GARA UNICA",
+        "data": "2026-05-10",
+        "posizione": 6,
+        "punti_effettivi": 5,
+        "team": "VELO CLUB SARROCH",
+        "moltiplicatore": 1,
+        "tipo": "regionale",
+        "regione": "SARDEGNA",
+        "km": "23.800",
+        "media": "34.000"
       }
     ]
   },
@@ -46908,7 +47753,7 @@
     "team_id": "SESTU_BIKE_A_S_D",
     "categoria": "ES2_M",
     "genere": "M",
-    "punti_totali": 4,
+    "punti_totali": 6,
     "risultati": [
       {
         "gara_id": "19_TROFEO_MG_TUNING_GARA_UNICA_2026-04-26_ES2_M",
@@ -46922,6 +47767,19 @@
         "regione": "SARDEGNA",
         "km": "26.400",
         "media": "32.330"
+      },
+      {
+        "gara_id": "MEMORIAL_QUIRINO_FARRIS_GARA_UNICA_2026-05-10_ES2_M",
+        "nome_gara": "MEMORIAL QUIRINO FARRIS GARA UNICA",
+        "data": "2026-05-10",
+        "posizione": 9,
+        "punti_effettivi": 2,
+        "team": "SESTU BIKE A.S.D.",
+        "moltiplicatore": 1,
+        "tipo": "regionale",
+        "regione": "SARDEGNA",
+        "km": "23.800",
+        "media": "34.000"
       }
     ]
   },
@@ -46933,7 +47791,7 @@
     "team_id": "CANNEDU_ITTIRI_A_MANCA_ASD",
     "categoria": "ES2_M",
     "genere": "M",
-    "punti_totali": 11,
+    "punti_totali": 19,
     "risultati": [
       {
         "gara_id": "19_TROFEO_MG_TUNING_GARA_UNICA_2026-04-26_ES2_M",
@@ -46973,6 +47831,19 @@
         "regione": "SARDEGNA",
         "km": "28.600",
         "media": "35.565"
+      },
+      {
+        "gara_id": "MEMORIAL_QUIRINO_FARRIS_GARA_UNICA_2026-05-10_ES2_M",
+        "nome_gara": "MEMORIAL QUIRINO FARRIS GARA UNICA",
+        "data": "2026-05-10",
+        "posizione": 4,
+        "punti_effettivi": 8,
+        "team": "CANNEDU ITTIRI \"A. MANCA\" ASD",
+        "moltiplicatore": 1,
+        "tipo": "regionale",
+        "regione": "SARDEGNA",
+        "km": "23.800",
+        "media": "34.000"
       }
     ]
   },
@@ -48762,7 +49633,7 @@
     "team_id": "G_C_NOVENTANA_F",
     "categoria": "AL_F",
     "genere": "F",
-    "punti_totali": 5,
+    "punti_totali": 13,
     "risultati": [
       {
         "gara_id": "GRAN_PREMIO_PRIMAVERA_A_MASER_2026-04-26_AL_F",
@@ -48776,6 +49647,19 @@
         "regione": "ALLIEVE",
         "km": "61.300",
         "media": "36.567"
+      },
+      {
+        "gara_id": "TROFEO_CARROZZERIA_LA_PERFETTA_2026-05-10_AL_F",
+        "nome_gara": "TROFEO CARROZZERIA LA PERFETTA",
+        "data": "2026-05-10",
+        "posizione": 4,
+        "punti_effettivi": 8,
+        "team": "G.C. NOVENTANA",
+        "moltiplicatore": 1,
+        "tipo": "regionale",
+        "regione": "ALLIEVE",
+        "km": "50.000",
+        "media": "33.513"
       }
     ]
   },
@@ -48926,7 +49810,7 @@
     "team_id": "U_C_GIORGIONE_F",
     "categoria": "ES1_F",
     "genere": "F",
-    "punti_totali": 69,
+    "punti_totali": 84,
     "risultati": [
       {
         "gara_id": "GRAN_PREMIO_PRIMAVERA_A_MASER_DONNE_ESORDIENTI_PRIMO_ANNO_2026-04-26_ES1_F",
@@ -49018,6 +49902,19 @@
         "regione": "ESORDIENTI",
         "km": "27.300",
         "media": "34.484"
+      },
+      {
+        "gara_id": "TROFEO_MERCURY_DONNE_ESORDIENTI_PRIMO_ANNO_2026-05-10_ES1_F",
+        "nome_gara": "TROFEO MERCURY DONNE ESORDIENTI PRIMO ANNO",
+        "data": "2026-05-10",
+        "posizione": 1,
+        "punti_effettivi": 15,
+        "team": "U.C. GIORGIONE",
+        "moltiplicatore": 1,
+        "tipo": "regionale",
+        "regione": "ESORDIENTI",
+        "km": "23.800",
+        "media": "35.970"
       }
     ]
   },
@@ -49182,7 +50079,7 @@
     "team_id": "BREGANZE_MILLENIUM_F",
     "categoria": "ES2_F",
     "genere": "F",
-    "punti_totali": 19,
+    "punti_totali": 23,
     "risultati": [
       {
         "gara_id": "GRAN_PREMIO_PRIMAVERA_A_MASER_DONNE_ESORDIENTI_SECONDO_ANNO_2026-04-26_ES2_F",
@@ -49235,6 +50132,19 @@
         "regione": "ESORDIENTI",
         "km": "27.300",
         "media": "34.484"
+      },
+      {
+        "gara_id": "TROFEO_MERCURY_DONNE_ESORDIENTI_SECONDO_ANNO_2026-05-10_ES2_F",
+        "nome_gara": "TROFEO MERCURY DONNE ESORDIENTI SECONDO ANNO",
+        "data": "2026-05-10",
+        "posizione": 7,
+        "punti_effettivi": 4,
+        "team": "BREGANZE MILLENIUM",
+        "moltiplicatore": 1,
+        "tipo": "regionale",
+        "regione": "ESORDIENTI",
+        "km": "23.800",
+        "media": "35.970"
       }
     ]
   },
@@ -50107,7 +51017,7 @@
     "team_id": "BUSTESE_OLONIA_A_S_D",
     "categoria": "JUN_M",
     "genere": "M",
-    "punti_totali": 42,
+    "punti_totali": 46,
     "risultati": [
       {
         "gara_id": "50_GRAN_PREMIO_LIBERAZIONE_CITTA_DI_MASSA_2026-04-25_JUN_M",
@@ -50186,6 +51096,19 @@
         "regione": "LOMBARDIA",
         "km": ".86.650",
         "media": "41.142"
+      },
+      {
+        "gara_id": "8_CHALLENGE_NAZIONALE_BRESCIANA_GIANCARLO_OTELLI_RICORDANDO_GIANCARLO_CRONOMETRO_2026-05-10_JUN_M",
+        "nome_gara": "8 CHALLENGE NAZIONALE BRESCIANA GIANCARLO OTELLI RICORDANDO GIANCARLO CRONOMETRO",
+        "data": "2026-05-10",
+        "posizione": 9,
+        "punti_effettivi": 4,
+        "team": "BUSTESE OLONIA A.S.D.",
+        "moltiplicatore": 2,
+        "tipo": "nazionale",
+        "regione": "LOMBARDIA",
+        "km": "5.600",
+        "media": "29.779"
       }
     ]
   },
@@ -51144,7 +52067,7 @@
     "team_id": "SPORT_CLUB_BRESCIA_FLANDRES_LOVE_F",
     "categoria": "AL_F",
     "genere": "F",
-    "punti_totali": 9,
+    "punti_totali": 15,
     "risultati": [
       {
         "gara_id": "CRITERIUM_LIBERAZIONE_6_MEMORIAL_GIANCARLO_CERUTI_2026-04-25_AL_F",
@@ -51171,6 +52094,19 @@
         "regione": "ALLIEVE",
         "km": "60.800",
         "media": "36.480"
+      },
+      {
+        "gara_id": "TROFEO_CARROZZERIA_LA_PERFETTA_2026-05-10_AL_F",
+        "nome_gara": "TROFEO CARROZZERIA LA PERFETTA",
+        "data": "2026-05-10",
+        "posizione": 5,
+        "punti_effettivi": 6,
+        "team": "SPORT CLUB BRESCIA - FLANDRES LOVE",
+        "moltiplicatore": 1,
+        "tipo": "regionale",
+        "regione": "ALLIEVE",
+        "km": "50.000",
+        "media": "33.513"
       }
     ]
   },
@@ -54696,7 +55632,7 @@
     "team_id": "ACCADEMIA_CICLISTICA",
     "categoria": "JUN_M",
     "genere": "M",
-    "punti_totali": 20,
+    "punti_totali": 40,
     "risultati": [
       {
         "gara_id": "LIBERAZIONE_JUNIOR_2026-04-24_JUN_M",
@@ -54736,6 +55672,19 @@
         "regione": "EMILIA ROMAGNA",
         "km": "91.800",
         "media": "44.629"
+      },
+      {
+        "gara_id": "GRAN_PREMIO_MAGGIO_FIASCHETTANO_PROVA_VALIDA_CAMPIONATO_REGIONALE_2026-05-10_JUN_M",
+        "nome_gara": "GRAN PREMIO MAGGIO FIASCHETTANO PROVA VALIDA CAMPIONATO REGIONALE",
+        "data": "2026-05-10",
+        "posizione": 3,
+        "punti_effettivi": 20,
+        "team": "ACCADEMIA CICLISTICA",
+        "moltiplicatore": 2,
+        "tipo": "regionale",
+        "regione": "FRIULI VENEZIA GIULIA",
+        "km": "80.400",
+        "media": "42.291"
       }
     ]
   },
@@ -55075,7 +56024,7 @@
     "team_id": "CICLISTICA_TREVIGLIESE",
     "categoria": "JUN_M",
     "genere": "M",
-    "punti_totali": 96,
+    "punti_totali": 120,
     "risultati": [
       {
         "gara_id": "3_TROFEO_PROTECH_MEMORIAL_RODOLFO_BARDELLONI_2026-04-19_JUN_M",
@@ -55154,6 +56103,19 @@
         "regione": "LOMBARDIA",
         "km": ".86.650",
         "media": "41.142"
+      },
+      {
+        "gara_id": "8_CHALLENGE_NAZIONALE_BRESCIANA_GIANCARLO_OTELLI_RICORDANDO_GIANCARLO_CRONOMETRO_2026-05-10_JUN_M",
+        "nome_gara": "8 CHALLENGE NAZIONALE BRESCIANA GIANCARLO OTELLI RICORDANDO GIANCARLO CRONOMETRO",
+        "data": "2026-05-10",
+        "posizione": 2,
+        "punti_effettivi": 24,
+        "team": "CICLISTICA TREVIGLIESE",
+        "moltiplicatore": 2,
+        "tipo": "nazionale",
+        "regione": "LOMBARDIA",
+        "km": "5.600",
+        "media": "29.779"
       }
     ]
   },
@@ -55190,7 +56152,7 @@
     "team_id": "NORDEST_PETRUCCI_ASSALI_STEFEN",
     "categoria": "JUN_M",
     "genere": "M",
-    "punti_totali": 31,
+    "punti_totali": 35,
     "risultati": [
       {
         "gara_id": "3_TROFEO_PROTECH_MEMORIAL_RODOLFO_BARDELLONI_2026-04-19_JUN_M",
@@ -55243,6 +56205,19 @@
         "regione": "LOMBARDIA",
         "km": "129.440",
         "media": "46.501"
+      },
+      {
+        "gara_id": "10_GRAN_PREMIO_AMICI_DEL_CICLISMO_2026-05-10_JUN_M",
+        "nome_gara": "10 GRAN PREMIO AMICI DEL CICLISMO",
+        "data": "2026-05-10",
+        "posizione": 7,
+        "punti_effettivi": 4,
+        "team": "NORDEST PETRUCCI ASSALI STEFEN",
+        "moltiplicatore": 1,
+        "tipo": "regionale",
+        "regione": "VENETO",
+        "km": "114.000",
+        "media": "42.790"
       }
     ]
   },
@@ -55848,7 +56823,7 @@
     "team_id": "FAIZANE_CSZ_SANDRIGO_BIKE",
     "categoria": "JUN_M",
     "genere": "M",
-    "punti_totali": 7,
+    "punti_totali": 8,
     "risultati": [
       {
         "gara_id": "COPPA_SPORTIVI_COMUNE_DI_TRICESIMO_2026-04-19_JUN_M",
@@ -55875,6 +56850,19 @@
         "regione": "VENETO",
         "km": "98.000",
         "media": "48.508"
+      },
+      {
+        "gara_id": "10_GRAN_PREMIO_AMICI_DEL_CICLISMO_2026-05-10_JUN_M",
+        "nome_gara": "10 GRAN PREMIO AMICI DEL CICLISMO",
+        "data": "2026-05-10",
+        "posizione": 10,
+        "punti_effettivi": 1,
+        "team": "FAIZANE' CSZ SANDRIGO BIKE",
+        "moltiplicatore": 1,
+        "tipo": "regionale",
+        "regione": "VENETO",
+        "km": "114.000",
+        "media": "42.790"
       }
     ]
   },
@@ -56014,7 +57002,7 @@
     "team_id": "VIGNA_FIORITA_BORGO_MOLINO",
     "categoria": "JUN_M",
     "genere": "M",
-    "punti_totali": 1,
+    "punti_totali": 25,
     "risultati": [
       {
         "gara_id": "COPPA_SPORTIVI_COMUNE_DI_TRICESIMO_2026-04-19_JUN_M",
@@ -56028,6 +57016,19 @@
         "regione": "FRIULI VENEZIA GIULIA",
         "km": "100.500",
         "media": "44.404"
+      },
+      {
+        "gara_id": "GRAN_PREMIO_MAGGIO_FIASCHETTANO_PROVA_VALIDA_CAMPIONATO_REGIONALE_2026-05-10_JUN_M",
+        "nome_gara": "GRAN PREMIO MAGGIO FIASCHETTANO PROVA VALIDA CAMPIONATO REGIONALE",
+        "data": "2026-05-10",
+        "posizione": 2,
+        "punti_effettivi": 24,
+        "team": "VIGNA FIORITA-BORGO MOLINO",
+        "moltiplicatore": 2,
+        "tipo": "regionale",
+        "regione": "FRIULI VENEZIA GIULIA",
+        "km": "80.400",
+        "media": "42.291"
       }
     ]
   },
@@ -57690,7 +58691,7 @@
     "team_id": "CYCLING_TEAM_NIAL_NIZZOLI_ALMO",
     "categoria": "AL_M",
     "genere": "M",
-    "punti_totali": 3,
+    "punti_totali": 18,
     "risultati": [
       {
         "gara_id": "TROFEO_CITTA_DI_ROSOLINI_2026-04-19_AL_M",
@@ -57717,6 +58718,19 @@
         "regione": "SICILIA",
         "km": "52.000",
         "media": "40.463"
+      },
+      {
+        "gara_id": "108_COPPA_ASCENSIONE_2026-05-10_AL_M",
+        "nome_gara": "108 COPPA ASCENSIONE",
+        "data": "2026-05-10",
+        "posizione": 1,
+        "punti_effettivi": 15,
+        "team": "CYCLING TEAM NIAL NIZZOLI ALMO",
+        "moltiplicatore": 1,
+        "tipo": "regionale",
+        "regione": "SICILIA",
+        "km": "70.000",
+        "media": ""
       }
     ]
   },
@@ -62131,7 +63145,7 @@
     "team_id": "U_C_CONSCIO_PEDALE_DEL_SILE_F",
     "categoria": "AL_F",
     "genere": "F",
-    "punti_totali": 21,
+    "punti_totali": 33,
     "risultati": [
       {
         "gara_id": "GRAN_PREMIO_RESANA_2026-04-12_AL_F",
@@ -62158,6 +63172,19 @@
         "regione": "ALLIEVE",
         "km": "49.500",
         "media": "34.329"
+      },
+      {
+        "gara_id": "TROFEO_CARROZZERIA_LA_PERFETTA_2026-05-10_AL_F",
+        "nome_gara": "TROFEO CARROZZERIA LA PERFETTA",
+        "data": "2026-05-10",
+        "posizione": 2,
+        "punti_effettivi": 12,
+        "team": "U.C.CONSCIO PEDALE DEL SILE",
+        "moltiplicatore": 1,
+        "tipo": "regionale",
+        "regione": "ALLIEVE",
+        "km": "50.000",
+        "media": "33.513"
       }
     ]
   },
@@ -62796,7 +63823,7 @@
     "team_id": "ASD_ROBUR_BARCELLONA",
     "categoria": "AL_M",
     "genere": "M",
-    "punti_totali": 13,
+    "punti_totali": 21,
     "risultati": [
       {
         "gara_id": "TROFEO_CICLOTOUR_2026-04-12_AL_M",
@@ -62836,6 +63863,19 @@
         "regione": "SICILIA",
         "km": "52.000",
         "media": "40.463"
+      },
+      {
+        "gara_id": "108_COPPA_ASCENSIONE_2026-05-10_AL_M",
+        "nome_gara": "108 COPPA ASCENSIONE",
+        "data": "2026-05-10",
+        "posizione": 4,
+        "punti_effettivi": 8,
+        "team": "ASD ROBUR BARCELLONA",
+        "moltiplicatore": 1,
+        "tipo": "regionale",
+        "regione": "SICILIA",
+        "km": "70.000",
+        "media": ""
       }
     ]
   },
@@ -63035,7 +64075,7 @@
     "team_id": "CICLISTICA_TREVIGLIESE",
     "categoria": "JUN_M",
     "genere": "M",
-    "punti_totali": 2,
+    "punti_totali": 14,
     "risultati": [
       {
         "gara_id": "62_GIRO_DELLA_CASTELLANIA_2026-04-11_JUN_M",
@@ -63049,6 +64089,19 @@
         "regione": "PIEMONTE",
         "km": "114.800",
         "media": "43.829"
+      },
+      {
+        "gara_id": "8_CHALLENGE_NAZIONALE_BRESCIANA_GIANCARLO_OTELLI_RICORDANDO_GIANCARLO_CRONOMETRO_2026-05-10_JUN_M",
+        "nome_gara": "8 CHALLENGE NAZIONALE BRESCIANA GIANCARLO OTELLI RICORDANDO GIANCARLO CRONOMETRO",
+        "data": "2026-05-10",
+        "posizione": 5,
+        "punti_effettivi": 12,
+        "team": "CICLISTICA TREVIGLIESE",
+        "moltiplicatore": 2,
+        "tipo": "nazionale",
+        "regione": "LOMBARDIA",
+        "km": "5.600",
+        "media": "29.779"
       }
     ]
   },
@@ -63964,7 +65017,7 @@
     "team_id": "NORDEST_PETRUCCI_ASSALI_STEFEN",
     "categoria": "JUN_M",
     "genere": "M",
-    "punti_totali": 35,
+    "punti_totali": 50,
     "risultati": [
       {
         "gara_id": "GRAN_PREMIO_DEL_PERDONO_2026-04-06_JUN_M",
@@ -64017,6 +65070,19 @@
         "regione": "VENETO",
         "km": "102.200",
         "media": "44.424"
+      },
+      {
+        "gara_id": "10_GRAN_PREMIO_AMICI_DEL_CICLISMO_2026-05-10_JUN_M",
+        "nome_gara": "10 GRAN PREMIO AMICI DEL CICLISMO",
+        "data": "2026-05-10",
+        "posizione": 1,
+        "punti_effettivi": 15,
+        "team": "NORDEST PETRUCCI ASSALI STEFEN",
+        "moltiplicatore": 1,
+        "tipo": "regionale",
+        "regione": "VENETO",
+        "km": "114.000",
+        "media": "42.790"
       }
     ]
   },
@@ -64524,7 +65590,7 @@
     "team_id": "IND_FORNITURE_MORO_C_G_CAPITAL",
     "categoria": "JUN_M",
     "genere": "M",
-    "punti_totali": 3,
+    "punti_totali": 6,
     "risultati": [
       {
         "gara_id": "71_GRAN_PREMIO_MARTIRI_DELLA_LIBERTA_2026-04-06_JUN_M",
@@ -64538,6 +65604,19 @@
         "regione": "VENETO",
         "km": "97.200",
         "media": "46.470"
+      },
+      {
+        "gara_id": "10_GRAN_PREMIO_AMICI_DEL_CICLISMO_2026-05-10_JUN_M",
+        "nome_gara": "10 GRAN PREMIO AMICI DEL CICLISMO",
+        "data": "2026-05-10",
+        "posizione": 8,
+        "punti_effettivi": 3,
+        "team": "IND. FORNITURE MORO-C&G CAPITAL",
+        "moltiplicatore": 1,
+        "tipo": "regionale",
+        "regione": "VENETO",
+        "km": "114.000",
+        "media": "42.790"
       }
     ]
   },
@@ -66563,7 +67642,7 @@
     "team_id": "TEAM_BIKE_SIRACUSA",
     "categoria": "AL_M",
     "genere": "M",
-    "punti_totali": 4,
+    "punti_totali": 8,
     "risultati": [
       {
         "gara_id": "TROFEO_DI_PASQUA_2026-04-04_AL_M",
@@ -66577,6 +67656,19 @@
         "regione": "SICILIA",
         "km": "45.000",
         "media": "36.748"
+      },
+      {
+        "gara_id": "108_COPPA_ASCENSIONE_2026-05-10_AL_M",
+        "nome_gara": "108 COPPA ASCENSIONE",
+        "data": "2026-05-10",
+        "posizione": 7,
+        "punti_effettivi": 4,
+        "team": "TEAM BIKE SIRACUSA",
+        "moltiplicatore": 1,
+        "tipo": "regionale",
+        "regione": "SICILIA",
+        "km": "70.000",
+        "media": ""
       }
     ]
   },
@@ -69671,7 +70763,7 @@
     "team_id": "S_C_CESANO_MADERNO_F",
     "categoria": "AL_F",
     "genere": "F",
-    "punti_totali": 8,
+    "punti_totali": 10,
     "risultati": [
       {
         "gara_id": "MEMORIAL_MICHELA_FANINI_2026-03-15_AL_F",
@@ -69685,6 +70777,19 @@
         "regione": "ALLIEVE",
         "km": "49.000",
         "media": "35.035"
+      },
+      {
+        "gara_id": "TROFEO_CARROZZERIA_LA_PERFETTA_2026-05-10_AL_F",
+        "nome_gara": "TROFEO CARROZZERIA LA PERFETTA",
+        "data": "2026-05-10",
+        "posizione": 9,
+        "punti_effettivi": 2,
+        "team": "S.C. CESANO MADERNO",
+        "moltiplicatore": 1,
+        "tipo": "regionale",
+        "regione": "ALLIEVE",
+        "km": "50.000",
+        "media": "33.513"
       }
     ]
   },
@@ -70673,7 +71778,7 @@
     "team_id": "BORGO_MOLINO_VIGNA_FIORITA",
     "categoria": "JUN_M",
     "genere": "M",
-    "punti_totali": 2,
+    "punti_totali": 4,
     "risultati": [
       {
         "gara_id": "CIRCUITO_DELLE_CONCHE_2026-03-08_JUN_M",
@@ -70687,6 +71792,19 @@
         "regione": "VENETO",
         "km": "103.300",
         "media": "43.343"
+      },
+      {
+        "gara_id": "GRAN_PREMIO_MAGGIO_FIASCHETTANO_PROVA_VALIDA_CAMPIONATO_REGIONALE_2026-05-10_JUN_M",
+        "nome_gara": "GRAN PREMIO MAGGIO FIASCHETTANO PROVA VALIDA CAMPIONATO REGIONALE",
+        "data": "2026-05-10",
+        "posizione": 10,
+        "punti_effettivi": 2,
+        "team": "BORGO MOLINO-VIGNA FIORITA",
+        "moltiplicatore": 2,
+        "tipo": "regionale",
+        "regione": "FRIULI VENEZIA GIULIA",
+        "km": "80.400",
+        "media": "42.291"
       }
     ]
   },
@@ -74199,6 +75317,356 @@
         "regione": "TEREZIN",
         "km": "397.300",
         "media": "44.514"
+      }
+    ]
+  },
+  "BONATO_TOMMASO": {
+    "id": "BONATO_TOMMASO",
+    "nome": "TOMMASO",
+    "cognome": "BONATO",
+    "team_attuale": "IND. FORNITURE MORO-C&G CAPITAL",
+    "team_id": "IND_FORNITURE_MORO_C_G_CAPITAL",
+    "categoria": "JUN_M",
+    "genere": "M",
+    "punti_totali": 10,
+    "risultati": [
+      {
+        "gara_id": "10_GRAN_PREMIO_AMICI_DEL_CICLISMO_2026-05-10_JUN_M",
+        "nome_gara": "10 GRAN PREMIO AMICI DEL CICLISMO",
+        "data": "2026-05-10",
+        "posizione": 3,
+        "punti_effettivi": 10,
+        "team": "IND. FORNITURE MORO-C&G CAPITAL",
+        "moltiplicatore": 1,
+        "tipo": "regionale",
+        "regione": "VENETO",
+        "km": "114.000",
+        "media": "42.790"
+      }
+    ]
+  },
+  "AYALA_ARELLANO_EDUARD_EMANUEL": {
+    "id": "AYALA_ARELLANO_EDUARD_EMANUEL",
+    "nome": "EDUARD EMANUEL",
+    "cognome": "AYALA ARELLANO",
+    "team_attuale": "TEAM GUERRINI SENAGHESE",
+    "team_id": "TEAM_GUERRINI_SENAGHESE",
+    "categoria": "JUN_M",
+    "genere": "M",
+    "punti_totali": 5,
+    "risultati": [
+      {
+        "gara_id": "10_GRAN_PREMIO_AMICI_DEL_CICLISMO_2026-05-10_JUN_M",
+        "nome_gara": "10 GRAN PREMIO AMICI DEL CICLISMO",
+        "data": "2026-05-10",
+        "posizione": 6,
+        "punti_effettivi": 5,
+        "team": "TEAM GUERRINI SENAGHESE",
+        "moltiplicatore": 1,
+        "tipo": "regionale",
+        "regione": "VENETO",
+        "km": "114.000",
+        "media": "42.790"
+      }
+    ]
+  },
+  "GIACOMEL_RICCARDO": {
+    "id": "GIACOMEL_RICCARDO",
+    "nome": "RICCARDO",
+    "cognome": "GIACOMEL",
+    "team_attuale": "LIBERTAS CERESETTO",
+    "team_id": "LIBERTAS_CERESETTO",
+    "categoria": "JUN_M",
+    "genere": "M",
+    "punti_totali": 16,
+    "risultati": [
+      {
+        "gara_id": "GRAN_PREMIO_MAGGIO_FIASCHETTANO_PROVA_VALIDA_CAMPIONATO_REGIONALE_2026-05-10_JUN_M",
+        "nome_gara": "GRAN PREMIO MAGGIO FIASCHETTANO PROVA VALIDA CAMPIONATO REGIONALE",
+        "data": "2026-05-10",
+        "posizione": 4,
+        "punti_effettivi": 16,
+        "team": "LIBERTAS CERESETTO",
+        "moltiplicatore": 2,
+        "tipo": "regionale",
+        "regione": "FRIULI VENEZIA GIULIA",
+        "km": "80.400",
+        "media": "42.291"
+      }
+    ]
+  },
+  "ROVERETTO_SIMONE": {
+    "id": "ROVERETTO_SIMONE",
+    "nome": "SIMONE",
+    "cognome": "ROVERETTO",
+    "team_attuale": "A.S.D. POSTUMIA 73 D.L. CICLISMO",
+    "team_id": "A_S_D_POSTUMIA_73_D_L_CICLISMO",
+    "categoria": "JUN_M",
+    "genere": "M",
+    "punti_totali": 12,
+    "risultati": [
+      {
+        "gara_id": "GRAN_PREMIO_MAGGIO_FIASCHETTANO_PROVA_VALIDA_CAMPIONATO_REGIONALE_2026-05-10_JUN_M",
+        "nome_gara": "GRAN PREMIO MAGGIO FIASCHETTANO PROVA VALIDA CAMPIONATO REGIONALE",
+        "data": "2026-05-10",
+        "posizione": 5,
+        "punti_effettivi": 12,
+        "team": "A.S.D. POSTUMIA 73 D.L. CICLISMO",
+        "moltiplicatore": 2,
+        "tipo": "regionale",
+        "regione": "FRIULI VENEZIA GIULIA",
+        "km": "80.400",
+        "media": "42.291"
+      }
+    ]
+  },
+  "MAJNIC_MAKS": {
+    "id": "MAJNIC_MAKS",
+    "nome": "MAKS",
+    "cognome": "MAJNIC",
+    "team_attuale": "POGI TEAM UAE GENERALI",
+    "team_id": "POGI_TEAM_UAE_GENERALI",
+    "categoria": "JUN_M",
+    "genere": "M",
+    "punti_totali": 10,
+    "risultati": [
+      {
+        "gara_id": "GRAN_PREMIO_MAGGIO_FIASCHETTANO_PROVA_VALIDA_CAMPIONATO_REGIONALE_2026-05-10_JUN_M",
+        "nome_gara": "GRAN PREMIO MAGGIO FIASCHETTANO PROVA VALIDA CAMPIONATO REGIONALE",
+        "data": "2026-05-10",
+        "posizione": 6,
+        "punti_effettivi": 10,
+        "team": "POGI TEAM UAE GENERALI",
+        "moltiplicatore": 2,
+        "tipo": "regionale",
+        "regione": "FRIULI VENEZIA GIULIA",
+        "km": "80.400",
+        "media": "42.291"
+      }
+    ]
+  },
+  "DERGANC_ANTON": {
+    "id": "DERGANC_ANTON",
+    "nome": "ANTON",
+    "cognome": "DERGANC",
+    "team_attuale": "NOVO MESTO CYCLING ACADEMY",
+    "team_id": "NOVO_MESTO_CYCLING_ACADEMY",
+    "categoria": "JUN_M",
+    "genere": "M",
+    "punti_totali": 8,
+    "risultati": [
+      {
+        "gara_id": "GRAN_PREMIO_MAGGIO_FIASCHETTANO_PROVA_VALIDA_CAMPIONATO_REGIONALE_2026-05-10_JUN_M",
+        "nome_gara": "GRAN PREMIO MAGGIO FIASCHETTANO PROVA VALIDA CAMPIONATO REGIONALE",
+        "data": "2026-05-10",
+        "posizione": 7,
+        "punti_effettivi": 8,
+        "team": "NOVO MESTO CYCLING ACADEMY",
+        "moltiplicatore": 2,
+        "tipo": "regionale",
+        "regione": "FRIULI VENEZIA GIULIA",
+        "km": "80.400",
+        "media": "42.291"
+      }
+    ]
+  },
+  "LOVER_MEDEOT_TOMAZ": {
+    "id": "LOVER_MEDEOT_TOMAZ",
+    "nome": "TOMAZ",
+    "cognome": "LOVER MEDEOT",
+    "team_attuale": "TEAM TIEPOLO U19 DEVO",
+    "team_id": "TEAM_TIEPOLO_U19_DEVO",
+    "categoria": "JUN_M",
+    "genere": "M",
+    "punti_totali": 4,
+    "risultati": [
+      {
+        "gara_id": "GRAN_PREMIO_MAGGIO_FIASCHETTANO_PROVA_VALIDA_CAMPIONATO_REGIONALE_2026-05-10_JUN_M",
+        "nome_gara": "GRAN PREMIO MAGGIO FIASCHETTANO PROVA VALIDA CAMPIONATO REGIONALE",
+        "data": "2026-05-10",
+        "posizione": 9,
+        "punti_effettivi": 4,
+        "team": "TEAM TIEPOLO U19 DEVO",
+        "moltiplicatore": 2,
+        "tipo": "regionale",
+        "regione": "FRIULI VENEZIA GIULIA",
+        "km": "80.400",
+        "media": "42.291"
+      }
+    ]
+  },
+  "TOSI_LAVINIA": {
+    "id": "TOSI_LAVINIA",
+    "nome": "LAVINIA",
+    "cognome": "TOSI",
+    "team_attuale": "COMAL TRENTINO CYCLING ACADEMY",
+    "team_id": "COMAL_TRENTINO_CYCLING_ACADEMY",
+    "categoria": "AL_F",
+    "genere": "F",
+    "punti_totali": 5,
+    "risultati": [
+      {
+        "gara_id": "TROFEO_CARROZZERIA_LA_PERFETTA_2026-05-10_AL_F",
+        "nome_gara": "TROFEO CARROZZERIA LA PERFETTA",
+        "data": "2026-05-10",
+        "posizione": 6,
+        "punti_effettivi": 5,
+        "team": "COMAL TRENTINO CYCLING ACADEMY",
+        "moltiplicatore": 1,
+        "tipo": "regionale",
+        "regione": "ALLIEVE",
+        "km": "50.000",
+        "media": "33.513"
+      }
+    ]
+  },
+  "DRESCO_LAYLA": {
+    "id": "DRESCO_LAYLA",
+    "nome": "LAYLA",
+    "cognome": "DRESCO",
+    "team_attuale": "SCUOLA CICLISMO VERSO L'IRIDE",
+    "team_id": "SCUOLA_CICLISMO_VERSO_L_IRIDE",
+    "categoria": "AL_F",
+    "genere": "F",
+    "punti_totali": 4,
+    "risultati": [
+      {
+        "gara_id": "TROFEO_CARROZZERIA_LA_PERFETTA_2026-05-10_AL_F",
+        "nome_gara": "TROFEO CARROZZERIA LA PERFETTA",
+        "data": "2026-05-10",
+        "posizione": 7,
+        "punti_effettivi": 4,
+        "team": "SCUOLA CICLISMO VERSO L'IRIDE",
+        "moltiplicatore": 1,
+        "tipo": "regionale",
+        "regione": "ALLIEVE",
+        "km": "50.000",
+        "media": "33.513"
+      }
+    ]
+  },
+  "CASASSA_BEATRICE": {
+    "id": "CASASSA_BEATRICE",
+    "nome": "BEATRICE",
+    "cognome": "CASASSA",
+    "team_attuale": "COMAL TRENTINO CYCLING ACADEMY",
+    "team_id": "COMAL_TRENTINO_CYCLING_ACADEMY",
+    "categoria": "AL_F",
+    "genere": "F",
+    "punti_totali": 1,
+    "risultati": [
+      {
+        "gara_id": "TROFEO_CARROZZERIA_LA_PERFETTA_2026-05-10_AL_F",
+        "nome_gara": "TROFEO CARROZZERIA LA PERFETTA",
+        "data": "2026-05-10",
+        "posizione": 10,
+        "punti_effettivi": 1,
+        "team": "COMAL TRENTINO CYCLING ACADEMY",
+        "moltiplicatore": 1,
+        "tipo": "regionale",
+        "regione": "ALLIEVE",
+        "km": "50.000",
+        "media": "33.513"
+      }
+    ]
+  },
+  "ADORNO_LUCA": {
+    "id": "ADORNO_LUCA",
+    "nome": "LUCA",
+    "cognome": "ADORNO",
+    "team_attuale": "CYCLING TEAM NIAL NIZZOLI ALMO",
+    "team_id": "CYCLING_TEAM_NIAL_NIZZOLI_ALMO",
+    "categoria": "AL_M",
+    "genere": "M",
+    "punti_totali": 2,
+    "risultati": [
+      {
+        "gara_id": "108_COPPA_ASCENSIONE_2026-05-10_AL_M",
+        "nome_gara": "108 COPPA ASCENSIONE",
+        "data": "2026-05-10",
+        "posizione": 9,
+        "punti_effettivi": 2,
+        "team": "CYCLING TEAM NIAL NIZZOLI ALMO",
+        "moltiplicatore": 1,
+        "tipo": "regionale",
+        "regione": "SICILIA",
+        "km": "70.000",
+        "media": ""
+      }
+    ]
+  },
+  "MENICI_DUCCIO": {
+    "id": "MENICI_DUCCIO",
+    "nome": "DUCCIO",
+    "cognome": "MENICI",
+    "team_attuale": "TEAM VALDINIEVOLE A.S.D.",
+    "team_id": "TEAM_VALDINIEVOLE_A_S_D",
+    "categoria": "AL_M",
+    "genere": "M",
+    "punti_totali": 3,
+    "risultati": [
+      {
+        "gara_id": "74_COPPA_SPORTIVI_MONTEMARCIANESI_2026-05-10_AL_M",
+        "nome_gara": "74 COPPA SPORTIVI MONTEMARCIANESI",
+        "data": "2026-05-10",
+        "posizione": 8,
+        "punti_effettivi": 3,
+        "team": "TEAM VALDINIEVOLE A.S.D.",
+        "moltiplicatore": 1,
+        "tipo": "regionale",
+        "regione": "TOSCANA",
+        "km": "66.300",
+        "media": "39.386"
+      }
+    ]
+  },
+  "BELLONI_FILIPPO": {
+    "id": "BELLONI_FILIPPO",
+    "nome": "FILIPPO",
+    "cognome": "BELLONI",
+    "team_attuale": "UC COLTANO GRUBE COSTRUZIONI",
+    "team_id": "UC_COLTANO_GRUBE_COSTRUZIONI",
+    "categoria": "AL_M",
+    "genere": "M",
+    "punti_totali": 2,
+    "risultati": [
+      {
+        "gara_id": "74_COPPA_SPORTIVI_MONTEMARCIANESI_2026-05-10_AL_M",
+        "nome_gara": "74 COPPA SPORTIVI MONTEMARCIANESI",
+        "data": "2026-05-10",
+        "posizione": 9,
+        "punti_effettivi": 2,
+        "team": "UC COLTANO GRUBE COSTRUZIONI",
+        "moltiplicatore": 1,
+        "tipo": "regionale",
+        "regione": "TOSCANA",
+        "km": "66.300",
+        "media": "39.386"
+      }
+    ]
+  },
+  "BROCCHI_DANIELE": {
+    "id": "BROCCHI_DANIELE",
+    "nome": "DANIELE",
+    "cognome": "BROCCHI",
+    "team_attuale": "TEAM FACT ACADEMY",
+    "team_id": "TEAM_FACT_ACADEMY",
+    "categoria": "AL_M",
+    "genere": "M",
+    "punti_totali": 1,
+    "risultati": [
+      {
+        "gara_id": "74_COPPA_SPORTIVI_MONTEMARCIANESI_2026-05-10_AL_M",
+        "nome_gara": "74 COPPA SPORTIVI MONTEMARCIANESI",
+        "data": "2026-05-10",
+        "posizione": 10,
+        "punti_effettivi": 1,
+        "team": "TEAM FACT ACADEMY",
+        "moltiplicatore": 1,
+        "tipo": "regionale",
+        "regione": "TOSCANA",
+        "km": "66.300",
+        "media": "39.386"
       }
     ]
   }

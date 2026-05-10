@@ -252,6 +252,18 @@
     "pos": 21
   },
   {
+    "team_id": "OFF_ALBERTI_U_C_VAL_D_ILLASI",
+    "team_nome": "OFF.ALBERTI U.C. VAL D'ILLASI",
+    "punti": 15,
+    "vittorie": 1,
+    "p1": 1,
+    "p2": 0,
+    "p3": 0,
+    "pout": 0,
+    "n_atleti": 1,
+    "pos": 22
+  },
+  {
     "team_id": "CARISMA_TEAM_F",
     "team_nome": "CARISMA TEAM",
     "punti": 12,
@@ -261,7 +273,19 @@
     "p3": 0,
     "pout": 0,
     "n_atleti": 1,
-    "pos": 22
+    "pos": 23
+  },
+  {
+    "team_id": "MARY_J_SWEET_ANGEL_ASD",
+    "team_nome": "MARY J SWEET ANGEL ASD",
+    "punti": 12,
+    "vittorie": 0,
+    "p1": 0,
+    "p2": 1,
+    "p3": 0,
+    "pout": 0,
+    "n_atleti": 1,
+    "pos": 24
   },
   {
     "team_id": "BICIFESTIVAL_F",
@@ -273,7 +297,19 @@
     "p3": 0,
     "pout": 3,
     "n_atleti": 2,
-    "pos": 23
+    "pos": 25
+  },
+  {
+    "team_id": "S_C_CESANO_MADERNO",
+    "team_nome": "S.C. CESANO MADERNO",
+    "punti": 10,
+    "vittorie": 0,
+    "p1": 0,
+    "p2": 0,
+    "p3": 1,
+    "pout": 0,
+    "n_atleti": 1,
+    "pos": 26
   },
   {
     "team_id": "LIBERTAS_CERESETTO_F",
@@ -285,7 +321,19 @@
     "p3": 0,
     "pout": 2,
     "n_atleti": 1,
-    "pos": 24
+    "pos": 27
+  },
+  {
+    "team_id": "SCUOLA_CICLISMO_VERSO_L_IRIDE",
+    "team_nome": "SCUOLA CICLISMO VERSO L'IRIDE",
+    "punti": 8,
+    "vittorie": 0,
+    "p1": 0,
+    "p2": 0,
+    "p3": 0,
+    "pout": 1,
+    "n_atleti": 1,
+    "pos": 28
   },
   {
     "team_id": "COMAL_TRENTINO_CYCLING_ACADEMY_F",
@@ -297,7 +345,43 @@
     "p3": 0,
     "pout": 2,
     "n_atleti": 1,
-    "pos": 25
+    "pos": 29
+  },
+  {
+    "team_id": "U_C_GIORGIONE",
+    "team_nome": "U.C. GIORGIONE",
+    "punti": 6,
+    "vittorie": 0,
+    "p1": 0,
+    "p2": 0,
+    "p3": 0,
+    "pout": 1,
+    "n_atleti": 1,
+    "pos": 30
+  },
+  {
+    "team_id": "U_C_CONSCIO_PEDALE_DEL_SILE",
+    "team_nome": "U.C.CONSCIO PEDALE DEL SILE",
+    "punti": 6,
+    "vittorie": 0,
+    "p1": 0,
+    "p2": 0,
+    "p3": 0,
+    "pout": 2,
+    "n_atleti": 2,
+    "pos": 31
+  },
+  {
+    "team_id": "BREGANZE_MILLENIUM",
+    "team_nome": "BREGANZE MILLENIUM",
+    "punti": 4,
+    "vittorie": 0,
+    "p1": 0,
+    "p2": 0,
+    "p3": 0,
+    "pout": 1,
+    "n_atleti": 1,
+    "pos": 32
   },
   {
     "team_id": "U_S_SCUOLA_CICLISMO_VO_F",
@@ -309,7 +393,19 @@
     "p3": 0,
     "pout": 1,
     "n_atleti": 1,
-    "pos": 26
+    "pos": 33
+  },
+  {
+    "team_id": "G_C_SOSSANO_1975",
+    "team_nome": "G.C. SOSSANO 1975",
+    "punti": 3,
+    "vittorie": 0,
+    "p1": 0,
+    "p2": 0,
+    "p3": 0,
+    "pout": 1,
+    "n_atleti": 1,
+    "pos": 34
   },
   {
     "team_id": "GS_CAPANNORI_F",
@@ -321,7 +417,19 @@
     "p3": 0,
     "pout": 1,
     "n_atleti": 1,
-    "pos": 27
+    "pos": 35
+  },
+  {
+    "team_id": "SPORT_CLUB_BRESCIA_FLANDRES_LOVE",
+    "team_nome": "SPORT CLUB BRESCIA - FLANDRES LOVE",
+    "punti": 2,
+    "vittorie": 0,
+    "p1": 0,
+    "p2": 0,
+    "p3": 0,
+    "pout": 1,
+    "n_atleti": 1,
+    "pos": 36
   },
   {
     "team_id": "UNIONE_CICLISTICA_OSSANESGA_F",
@@ -333,7 +441,7 @@
     "p3": 0,
     "pout": 1,
     "n_atleti": 1,
-    "pos": 28
+    "pos": 37
   },
   {
     "team_id": "G_S_CICLI_FIORIN_CYCLING_TEAM_ASD_F",
@@ -345,7 +453,7 @@
     "p3": 0,
     "pout": 1,
     "n_atleti": 1,
-    "pos": 29
+    "pos": 38
   },
   {
     "team_id": "SAMABIKE_F",
@@ -357,6 +465,6 @@
     "p3": 0,
     "pout": 1,
     "n_atleti": 1,
-    "pos": 30
+    "pos": 39
   }
 ]
