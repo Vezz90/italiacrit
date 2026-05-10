@@ -240,6 +240,22 @@
     "trend": 0
   },
   {
+    "atleta_id": "ANDREOLI_ALICE",
+    "cognome": "ANDREOLI",
+    "nome": "ALICE",
+    "team_id": "POL_FIUMICINESE_FA_I_T_ADRIATICA_F",
+    "team_nome": "POL. FIUMICINESE FA.I.T. ADRIATICA",
+    "punti": 28,
+    "vittorie": 0,
+    "gare": 4,
+    "p1": 0,
+    "p2": 1,
+    "p3": 1,
+    "pout": 2,
+    "pos": 16,
+    "trend": 1
+  },
+  {
     "atleta_id": "CLEMENTE_GINEVRA",
     "cognome": "CLEMENTE",
     "nome": "GINEVRA",
@@ -252,24 +268,8 @@
     "p2": 0,
     "p3": 1,
     "pout": 3,
-    "pos": 16,
-    "trend": 0
-  },
-  {
-    "atleta_id": "ANDREOLI_ALICE",
-    "cognome": "ANDREOLI",
-    "nome": "ALICE",
-    "team_id": "POL_FIUMICINESE_FA_I_T_ADRIATICA_F",
-    "team_nome": "POL. FIUMICINESE FA.I.T. ADRIATICA",
-    "punti": 24,
-    "vittorie": 0,
-    "gare": 3,
-    "p1": 0,
-    "p2": 1,
-    "p3": 1,
-    "pout": 1,
     "pos": 17,
-    "trend": 0
+    "trend": -1
   },
   {
     "atleta_id": "CRESTANI_ELISA",

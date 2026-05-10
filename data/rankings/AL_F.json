@@ -112,6 +112,22 @@
     "trend": 0
   },
   {
+    "atleta_id": "MASINI_GRETA",
+    "cognome": "MASINI",
+    "nome": "GRETA",
+    "team_id": "POL_FIUMICINESE_FA_I_T_ADRIATICA_F",
+    "team_nome": "POL. FIUMICINESE FA.I.T. ADRIATICA",
+    "punti": 49,
+    "vittorie": 1,
+    "gare": 5,
+    "p1": 1,
+    "p2": 0,
+    "p3": 0,
+    "pout": 4,
+    "pos": 8,
+    "trend": 4
+  },
+  {
     "atleta_id": "CASTELLI_TEODORA",
     "cognome": "CASTELLI",
     "nome": "TEODORA",
@@ -124,8 +140,8 @@
     "p2": 2,
     "p3": 1,
     "pout": 3,
-    "pos": 8,
-    "trend": 0
+    "pos": 9,
+    "trend": -1
   },
   {
     "atleta_id": "SANSOTTERA_PAIUSCO_ELISA",
@@ -140,8 +156,8 @@
     "p2": 1,
     "p3": 1,
     "pout": 4,
-    "pos": 9,
-    "trend": 0
+    "pos": 10,
+    "trend": -1
   },
   {
     "atleta_id": "ZAVATTIERO_REBECCA",
@@ -156,8 +172,8 @@
     "p2": 0,
     "p3": 1,
     "pout": 4,
-    "pos": 10,
-    "trend": 0
+    "pos": 11,
+    "trend": -1
   },
   {
     "atleta_id": "BATTAGLIN_SARA",
@@ -172,24 +188,8 @@
     "p2": 0,
     "p3": 0,
     "pout": 5,
-    "pos": 11,
-    "trend": 0
-  },
-  {
-    "atleta_id": "MASINI_GRETA",
-    "cognome": "MASINI",
-    "nome": "GRETA",
-    "team_id": "POL_FIUMICINESE_FA_I_T_ADRIATICA_F",
-    "team_nome": "POL. FIUMICINESE FA.I.T. ADRIATICA",
-    "punti": 34,
-    "vittorie": 0,
-    "gare": 4,
-    "p1": 0,
-    "p2": 0,
-    "p3": 0,
-    "pout": 4,
     "pos": 12,
-    "trend": 0
+    "trend": -1
   },
   {
     "atleta_id": "GRASSI_MARTA",
