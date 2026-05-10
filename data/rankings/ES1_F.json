@@ -368,6 +368,22 @@
     "trend": 0
   },
   {
+    "atleta_id": "LOMBARDI_ELEONORA",
+    "cognome": "LOMBARDI",
+    "nome": "ELEONORA",
+    "team_id": "KTM_ACADEMY_LE_MARMOTTE_F",
+    "team_nome": "KTM ACADEMY LE MARMOTTE",
+    "punti": 18,
+    "vittorie": 0,
+    "gare": 3,
+    "p1": 0,
+    "p2": 0,
+    "p3": 1,
+    "pout": 2,
+    "pos": 24,
+    "trend": 5
+  },
+  {
     "atleta_id": "GENTILI_PAOLA",
     "cognome": "GENTILI",
     "nome": "PAOLA",
@@ -380,8 +396,8 @@
     "p2": 0,
     "p3": 0,
     "pout": 2,
-    "pos": 24,
-    "trend": 0
+    "pos": 25,
+    "trend": -1
   },
   {
     "atleta_id": "SANNA_ELISA",
@@ -396,8 +412,8 @@
     "p2": 0,
     "p3": 1,
     "pout": 3,
-    "pos": 25,
-    "trend": 0
+    "pos": 26,
+    "trend": -1
   },
   {
     "atleta_id": "BUTTARAZZI_GIULIA",
@@ -412,8 +428,8 @@
     "p2": 0,
     "p3": 0,
     "pout": 0,
-    "pos": 26,
-    "trend": 0
+    "pos": 27,
+    "trend": -1
   },
   {
     "atleta_id": "BOTTARO_SOFIA",
@@ -428,8 +444,8 @@
     "p2": 0,
     "p3": 0,
     "pout": 4,
-    "pos": 27,
-    "trend": 0
+    "pos": 28,
+    "trend": -1
   },
   {
     "atleta_id": "TERIACA_ANNA",
@@ -444,24 +460,8 @@
     "p2": 0,
     "p3": 0,
     "pout": 4,
-    "pos": 28,
-    "trend": 0
-  },
-  {
-    "atleta_id": "LOMBARDI_ELEONORA",
-    "cognome": "LOMBARDI",
-    "nome": "ELEONORA",
-    "team_id": "KTM_ACADEMY_LE_MARMOTTE_F",
-    "team_nome": "KTM ACADEMY LE MARMOTTE",
-    "punti": 14,
-    "vittorie": 0,
-    "gare": 2,
-    "p1": 0,
-    "p2": 0,
-    "p3": 1,
-    "pout": 1,
     "pos": 29,
-    "trend": 0
+    "trend": -1
   },
   {
     "atleta_id": "GALLI_MARTINA",

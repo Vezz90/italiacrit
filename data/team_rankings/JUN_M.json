@@ -14,12 +14,12 @@
   {
     "team_id": "POOL_CANTU_GB_TEAM_A_S_D",
     "team_nome": "POOL CANTU' GB TEAM A.S.D.",
-    "punti": 372,
-    "vittorie": 4,
-    "p1": 4,
+    "punti": 408,
+    "vittorie": 5,
+    "p1": 5,
     "p2": 3,
     "p3": 3,
-    "pout": 22,
+    "pout": 23,
     "n_atleti": 10,
     "pos": 2
   },
@@ -38,11 +38,11 @@
   {
     "team_id": "TEAM_GUERRINI_SENAGHESE",
     "team_nome": "TEAM GUERRINI SENAGHESE",
-    "punti": 281,
+    "punti": 301,
     "vittorie": 4,
     "p1": 4,
     "p2": 3,
-    "p3": 3,
+    "p3": 4,
     "pout": 16,
     "n_atleti": 10,
     "pos": 4
@@ -72,6 +72,18 @@
     "pos": 6
   },
   {
+    "team_id": "TEAM_NERI_SOTTOLI_LUCCHINI_ENERGY",
+    "team_nome": "TEAM NERI SOTTOLI LUCCHINI ENERGY",
+    "punti": 218,
+    "vittorie": 0,
+    "p1": 0,
+    "p2": 4,
+    "p3": 2,
+    "pout": 20,
+    "n_atleti": 6,
+    "pos": 7
+  },
+  {
     "team_id": "TEAM_ECOTEK_ZERO24",
     "team_nome": "TEAM ECOTEK ZERO24",
     "punti": 212,
@@ -80,18 +92,6 @@
     "p2": 7,
     "p3": 1,
     "pout": 12,
-    "n_atleti": 6,
-    "pos": 7
-  },
-  {
-    "team_id": "TEAM_NERI_SOTTOLI_LUCCHINI_ENERGY",
-    "team_nome": "TEAM NERI SOTTOLI LUCCHINI ENERGY",
-    "punti": 206,
-    "vittorie": 0,
-    "p1": 0,
-    "p2": 4,
-    "p3": 2,
-    "pout": 18,
     "n_atleti": 6,
     "pos": 8
   },
@@ -110,12 +110,12 @@
   {
     "team_id": "CICLISTICA_TREVIGLIESE",
     "team_nome": "CICLISTICA TREVIGLIESE",
-    "punti": 180,
+    "punti": 196,
     "vittorie": 1,
     "p1": 1,
     "p2": 2,
     "p3": 2,
-    "pout": 15,
+    "pout": 16,
     "n_atleti": 9,
     "pos": 10
   },
@@ -132,6 +132,18 @@
     "pos": 11
   },
   {
+    "team_id": "AUTOZAI_CONTRI",
+    "team_nome": "AUTOZAI-CONTRI",
+    "punti": 171,
+    "vittorie": 0,
+    "p1": 0,
+    "p2": 1,
+    "p3": 0,
+    "pout": 16,
+    "n_atleti": 5,
+    "pos": 12
+  },
+  {
     "team_id": "TEAM_CORATTI",
     "team_nome": "TEAM CORATTI",
     "punti": 166,
@@ -141,7 +153,7 @@
     "p3": 1,
     "pout": 7,
     "n_atleti": 5,
-    "pos": 12
+    "pos": 13
   },
   {
     "team_id": "ITALIA",
@@ -153,7 +165,7 @@
     "p3": 0,
     "pout": 4,
     "n_atleti": 4,
-    "pos": 13
+    "pos": 14
   },
   {
     "team_id": "POLISPORTIVA_MONSUMMANESE",
@@ -165,18 +177,6 @@
     "p3": 3,
     "pout": 11,
     "n_atleti": 6,
-    "pos": 14
-  },
-  {
-    "team_id": "AUTOZAI_CONTRI",
-    "team_nome": "AUTOZAI-CONTRI",
-    "punti": 147,
-    "vittorie": 0,
-    "p1": 0,
-    "p2": 0,
-    "p3": 0,
-    "pout": 16,
-    "n_atleti": 5,
     "pos": 15
   },
   {
@@ -252,6 +252,18 @@
     "pos": 21
   },
   {
+    "team_id": "BUSTESE_OLONIA_A_S_D",
+    "team_nome": "BUSTESE OLONIA A.S.D.",
+    "punti": 92,
+    "vittorie": 0,
+    "p1": 0,
+    "p2": 0,
+    "p3": 1,
+    "pout": 14,
+    "n_atleti": 7,
+    "pos": 22
+  },
+  {
     "team_id": "SOUDAL_QUICK_STEP_JUNIOR_TEAM",
     "team_nome": "SOUDAL QUICK-STEP JUNIOR TEAM",
     "punti": 90,
@@ -261,7 +273,7 @@
     "p3": 0,
     "pout": 1,
     "n_atleti": 2,
-    "pos": 22
+    "pos": 23
   },
   {
     "team_id": "A_R_MONEX_PRO_CYCLING_TEAM",
@@ -273,18 +285,6 @@
     "p3": 1,
     "pout": 2,
     "n_atleti": 2,
-    "pos": 23
-  },
-  {
-    "team_id": "BUSTESE_OLONIA_A_S_D",
-    "team_nome": "BUSTESE OLONIA A.S.D.",
-    "punti": 70,
-    "vittorie": 0,
-    "p1": 0,
-    "p2": 0,
-    "p3": 1,
-    "pout": 12,
-    "n_atleti": 6,
     "pos": 24
   },
   {
@@ -648,6 +648,18 @@
     "pos": 54
   },
   {
+    "team_id": "ENERGY_TEAM_A_S_D",
+    "team_nome": "ENERGY TEAM A.S.D.",
+    "punti": 25,
+    "vittorie": 0,
+    "p1": 0,
+    "p2": 0,
+    "p3": 0,
+    "pout": 4,
+    "n_atleti": 1,
+    "pos": 55
+  },
+  {
     "team_id": "CANNEDU_ITTIRI_A_MANCA_ASD",
     "team_nome": "CANNEDU ITTIRI \"A. MANCA\" ASD",
     "punti": 25,
@@ -657,7 +669,7 @@
     "p3": 0,
     "pout": 3,
     "n_atleti": 2,
-    "pos": 55
+    "pos": 56
   },
   {
     "team_id": "MASTROMARCO_FC_NIBALI",
@@ -669,7 +681,7 @@
     "p3": 0,
     "pout": 3,
     "n_atleti": 2,
-    "pos": 56
+    "pos": 57
   },
   {
     "team_id": "ITALIA_NUOVA_BOLOGNA",
@@ -681,7 +693,7 @@
     "p3": 0,
     "pout": 6,
     "n_atleti": 3,
-    "pos": 57
+    "pos": 58
   },
   {
     "team_id": "VELEKA_TEAM",
@@ -693,7 +705,7 @@
     "p3": 1,
     "pout": 2,
     "n_atleti": 3,
-    "pos": 58
+    "pos": 59
   },
   {
     "team_id": "BIESSE_CARRERA_PREMAC",
@@ -705,18 +717,6 @@
     "p3": 0,
     "pout": 4,
     "n_atleti": 3,
-    "pos": 59
-  },
-  {
-    "team_id": "ENERGY_TEAM_A_S_D",
-    "team_nome": "ENERGY TEAM A.S.D.",
-    "punti": 23,
-    "vittorie": 0,
-    "p1": 0,
-    "p2": 0,
-    "p3": 0,
-    "pout": 3,
-    "n_atleti": 1,
     "pos": 60
   },
   {
