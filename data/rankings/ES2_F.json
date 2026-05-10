@@ -253,7 +253,7 @@
     "p3": 1,
     "pout": 2,
     "pos": 16,
-    "trend": 1
+    "trend": 0
   },
   {
     "atleta_id": "CLEMENTE_GINEVRA",
@@ -269,7 +269,7 @@
     "p3": 1,
     "pout": 3,
     "pos": 17,
-    "trend": -1
+    "trend": 0
   },
   {
     "atleta_id": "CRESTANI_ELISA",
