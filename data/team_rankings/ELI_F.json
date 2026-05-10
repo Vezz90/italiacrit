@@ -276,6 +276,42 @@
     "pos": 23
   },
   {
+    "team_id": "TIROL_WOMEN_CYCLING",
+    "team_nome": "TIROL WOMEN CYCLING",
+    "punti": 18,
+    "vittorie": 0,
+    "p1": 0,
+    "p2": 0,
+    "p3": 1,
+    "pout": 1,
+    "n_atleti": 2,
+    "pos": 24
+  },
+  {
+    "team_id": "TOYOTA_VALENCIA_SAV",
+    "team_nome": "TOYOTA VALENCIA SAV",
+    "punti": 15,
+    "vittorie": 1,
+    "p1": 1,
+    "p2": 0,
+    "p3": 0,
+    "pout": 0,
+    "n_atleti": 1,
+    "pos": 25
+  },
+  {
+    "team_id": "WCC_UCI_WORLD_CYCLING_CENTRE",
+    "team_nome": "WCC - UCI WORLD CYCLING CENTRE",
+    "punti": 12,
+    "vittorie": 0,
+    "p1": 0,
+    "p2": 1,
+    "p3": 0,
+    "pout": 0,
+    "n_atleti": 1,
+    "pos": 26
+  },
+  {
     "team_id": "AR_MONEX_WMN_PRO_CYCLING_TEAM_F",
     "team_nome": "AR MONEX WMN PRO CYCLING TEAM",
     "punti": 10,
@@ -285,7 +321,7 @@
     "p3": 1,
     "pout": 0,
     "n_atleti": 1,
-    "pos": 24
+    "pos": 27
   },
   {
     "team_id": "BRESCIA_F_MAGNI_FLANDRES_LOVE_F",
@@ -297,7 +333,7 @@
     "p3": 1,
     "pout": 0,
     "n_atleti": 1,
-    "pos": 25
+    "pos": 28
   },
   {
     "team_id": "UNO_X_MOBILITY_F",
@@ -309,7 +345,19 @@
     "p3": 0,
     "pout": 1,
     "n_atleti": 1,
-    "pos": 26
+    "pos": 29
+  },
+  {
+    "team_id": "TOP_GIRLS_FASSA_BORTOLO",
+    "team_nome": "TOP GIRLS - FASSA BORTOLO",
+    "punti": 8,
+    "vittorie": 0,
+    "p1": 0,
+    "p2": 0,
+    "p3": 0,
+    "pout": 3,
+    "n_atleti": 3,
+    "pos": 30
   },
   {
     "team_id": "A_R_MONEX_PRO_CYCLING_TEAM_F",
@@ -321,7 +369,19 @@
     "p3": 0,
     "pout": 1,
     "n_atleti": 1,
-    "pos": 27
+    "pos": 31
+  },
+  {
+    "team_id": "ISOLMANT_PREMAC_VITTORIA",
+    "team_nome": "ISOLMANT - PREMAC - VITTORIA",
+    "punti": 6,
+    "vittorie": 0,
+    "p1": 0,
+    "p2": 0,
+    "p3": 0,
+    "pout": 1,
+    "n_atleti": 1,
+    "pos": 32
   },
   {
     "team_id": "WCC_UCI_WORLD_CYCLING_CENTRE_F",
@@ -333,7 +393,7 @@
     "p3": 0,
     "pout": 1,
     "n_atleti": 1,
-    "pos": 28
+    "pos": 33
   },
   {
     "team_id": "FANINI_PRO_CYCLING_F",
@@ -345,7 +405,31 @@
     "p3": 0,
     "pout": 1,
     "n_atleti": 1,
-    "pos": 29
+    "pos": 34
+  },
+  {
+    "team_id": "TEAM_MENDELSPECK_E_WORK",
+    "team_nome": "TEAM MENDELSPECK E-WORK",
+    "punti": 4,
+    "vittorie": 0,
+    "p1": 0,
+    "p2": 0,
+    "p3": 0,
+    "pout": 1,
+    "n_atleti": 1,
+    "pos": 35
+  },
+  {
+    "team_id": "BORN_TO_WIN",
+    "team_nome": "BORN TO WIN",
+    "punti": 3,
+    "vittorie": 0,
+    "p1": 0,
+    "p2": 0,
+    "p3": 0,
+    "pout": 1,
+    "n_atleti": 1,
+    "pos": 36
   },
   {
     "team_id": "NAZIONALE_UCRAINA_F",
@@ -357,7 +441,7 @@
     "p3": 0,
     "pout": 1,
     "n_atleti": 1,
-    "pos": 30
+    "pos": 37
   },
   {
     "team_id": "A_S_D_CLUB_CORRIDONIA_S_C_F",
@@ -369,7 +453,7 @@
     "p3": 0,
     "pout": 1,
     "n_atleti": 1,
-    "pos": 31
+    "pos": 38
   },
   {
     "team_id": "TIROL_WOMEN_CYCLING_F",
@@ -381,6 +465,6 @@
     "p3": 0,
     "pout": 1,
     "n_atleti": 1,
-    "pos": 32
+    "pos": 39
   }
 ]

@@ -330,7 +330,7 @@
     "team_id": "POOL_CANTU_GB_TEAM_A_S_D",
     "categoria": "JUN_M",
     "genere": "M",
-    "punti_totali": 154,
+    "punti_totali": 169,
     "risultati": [
       {
         "gara_id": "GIRO_D_ABRUZZO_JUNIORES_2026_TERZA_TAPPA_2026-05-03_JUN_M",
@@ -409,6 +409,19 @@
         "regione": "LAZIO",
         "km": "103.000",
         "media": "44.138"
+      },
+      {
+        "gara_id": "40_MEMORIAL_SAURO_DREI_2026-05-10_JUN_M",
+        "nome_gara": "40 MEMORIAL SAURO DREI",
+        "data": "2026-05-10",
+        "posizione": 1,
+        "punti_effettivi": 15,
+        "team": "POOL CANTU' GB TEAM A.S.D.",
+        "moltiplicatore": 1,
+        "tipo": "regionale",
+        "regione": "EMILIA ROMAGNA",
+        "km": "100.200",
+        "media": "40.241"
       }
     ]
   },
@@ -883,7 +896,7 @@
     "team_id": "TEAM_GENERAL_SYSTEM",
     "categoria": "JUN_M",
     "genere": "M",
-    "punti_totali": 58,
+    "punti_totali": 70,
     "risultati": [
       {
         "gara_id": "GIRO_D_ABRUZZO_JUNIORES_2026_TERZA_TAPPA_2026-05-03_JUN_M",
@@ -962,6 +975,19 @@
         "regione": "TOSCANA",
         "km": "115.000",
         "media": "40.588"
+      },
+      {
+        "gara_id": "40_MEMORIAL_SAURO_DREI_2026-05-10_JUN_M",
+        "nome_gara": "40 MEMORIAL SAURO DREI",
+        "data": "2026-05-10",
+        "posizione": 2,
+        "punti_effettivi": 12,
+        "team": "TEAM GENERAL SYSTEM",
+        "moltiplicatore": 1,
+        "tipo": "regionale",
+        "regione": "EMILIA ROMAGNA",
+        "km": "100.200",
+        "media": "40.241"
       }
     ]
   },
@@ -1522,7 +1548,7 @@
     "team_id": "PC_BAIX_EBRE_TORTOSA",
     "categoria": "ELI_M",
     "genere": "M",
-    "punti_totali": 8,
+    "punti_totali": 38,
     "risultati": [
       {
         "gara_id": "12_MEMORIAL_DANIELE_TORTOLI_2026-05-03_ELI_M",
@@ -1536,6 +1562,19 @@
         "regione": "UNDER",
         "km": "176.600",
         "media": "41.134"
+      },
+      {
+        "gara_id": "37_GRAN_PREMIO_INDUSTRIE_DEL_MARMO_UNDER23_2026-05-10_ELI_M",
+        "nome_gara": "37 GRAN PREMIO INDUSTRIE DEL MARMO UNDER23",
+        "data": "2026-05-10",
+        "posizione": 3,
+        "punti_effettivi": 30,
+        "team": "PC BAIX EBRE TORTOSA",
+        "moltiplicatore": 3,
+        "tipo": "internazionale",
+        "regione": "TOSCANA",
+        "km": "179.500",
+        "media": "41.527"
       }
     ]
   },
@@ -3810,7 +3849,7 @@
     "team_id": "BIESSE_CARRERA_PREMAC_F",
     "categoria": "JUN_F",
     "genere": "F",
-    "punti_totali": 101,
+    "punti_totali": 113,
     "risultati": [
       {
         "gara_id": "24_GRAN_PREMIO_ROSA_CITTA_DI_BOVOLONE_2026-05-03_JUN_F",
@@ -3928,6 +3967,19 @@
         "regione": "MARCHE",
         "km": "90.000",
         "media": "36.986"
+      },
+      {
+        "gara_id": "GIRO_DELLE_MARCHE_IN_ROSA_2026-05-10_JUN_F",
+        "nome_gara": "GIRO DELLE MARCHE IN ROSA",
+        "data": "2026-05-10",
+        "posizione": 2,
+        "punti_effettivi": 12,
+        "team": "BIESSE - CARRERA - PREMAC",
+        "moltiplicatore": 1,
+        "tipo": "regionale",
+        "regione": "MARCHE",
+        "km": "100.000",
+        "media": "35.294"
       }
     ]
   },
@@ -6838,7 +6890,7 @@
     "team_id": "IL_PIRATA_VANGI_OTC",
     "categoria": "AL_M",
     "genere": "M",
-    "punti_totali": 31,
+    "punti_totali": 43,
     "risultati": [
       {
         "gara_id": "65_GRAN_PREMIO_ALESSANDRO_FANTINI_2026-05-03_AL_M",
@@ -6904,6 +6956,19 @@
         "regione": "EMILIA ROMAGNA",
         "km": "49.000",
         "media": "43.674"
+      },
+      {
+        "gara_id": "5_EDIZIONE_DELLA_CORSA_DI_SANDRO_PROVA_VALIDA_CAMPIONATO_REGIONALE_2026-05-10_AL_M",
+        "nome_gara": "5 EDIZIONE DELLA CORSA DI SANDRO PROVA VALIDA CAMPIONATO REGIONALE",
+        "data": "2026-05-10",
+        "posizione": 5,
+        "punti_effettivi": 12,
+        "team": "IL PIRATA VANGI OTC",
+        "moltiplicatore": 2,
+        "tipo": "regionale",
+        "regione": "ABRUZZO",
+        "km": "67.000",
+        "media": "40.200"
       }
     ]
   },
@@ -6915,7 +6980,7 @@
     "team_id": "A_R_MONEX_PRO_CYCLING_TEAM",
     "categoria": "AL_M",
     "genere": "M",
-    "punti_totali": 18,
+    "punti_totali": 42,
     "risultati": [
       {
         "gara_id": "65_GRAN_PREMIO_ALESSANDRO_FANTINI_2026-05-03_AL_M",
@@ -6955,6 +7020,19 @@
         "regione": "TOSCANA",
         "km": "58.500",
         "media": "41.877"
+      },
+      {
+        "gara_id": "5_EDIZIONE_DELLA_CORSA_DI_SANDRO_PROVA_VALIDA_CAMPIONATO_REGIONALE_2026-05-10_AL_M",
+        "nome_gara": "5 EDIZIONE DELLA CORSA DI SANDRO PROVA VALIDA CAMPIONATO REGIONALE",
+        "data": "2026-05-10",
+        "posizione": 2,
+        "punti_effettivi": 24,
+        "team": "A.R.MONEX PRO CYCLING TEAM",
+        "moltiplicatore": 2,
+        "tipo": "regionale",
+        "regione": "ABRUZZO",
+        "km": "67.000",
+        "media": "40.200"
       }
     ]
   },
@@ -7107,7 +7185,7 @@
     "team_id": "A_R_MONEX_PRO_CYCLING_TEAM",
     "categoria": "AL_M",
     "genere": "M",
-    "punti_totali": 22,
+    "punti_totali": 38,
     "risultati": [
       {
         "gara_id": "65_GRAN_PREMIO_ALESSANDRO_FANTINI_2026-05-03_AL_M",
@@ -7173,6 +7251,19 @@
         "regione": "TOSCANA",
         "km": "55.000",
         "media": "44.949"
+      },
+      {
+        "gara_id": "5_EDIZIONE_DELLA_CORSA_DI_SANDRO_PROVA_VALIDA_CAMPIONATO_REGIONALE_2026-05-10_AL_M",
+        "nome_gara": "5 EDIZIONE DELLA CORSA DI SANDRO PROVA VALIDA CAMPIONATO REGIONALE",
+        "data": "2026-05-10",
+        "posizione": 4,
+        "punti_effettivi": 16,
+        "team": "A.R.MONEX PRO CYCLING TEAM",
+        "moltiplicatore": 2,
+        "tipo": "regionale",
+        "regione": "ABRUZZO",
+        "km": "67.000",
+        "media": "40.200"
       }
     ]
   },
@@ -7440,7 +7531,7 @@
     "team_id": "VELO_CLUB_CATTOLICA",
     "categoria": "AL_M",
     "genere": "M",
-    "punti_totali": 26,
+    "punti_totali": 32,
     "risultati": [
       {
         "gara_id": "38_GRAN_PREMIO_CITTA_DI_ZOLA_DIECI_COLLI_GIOVANI_2026-05-03_AL_M",
@@ -7480,6 +7571,19 @@
         "regione": "EMILIA ROMAGNA",
         "km": "52.650",
         "media": "42.689"
+      },
+      {
+        "gara_id": "5_EDIZIONE_DELLA_CORSA_DI_SANDRO_PROVA_VALIDA_CAMPIONATO_REGIONALE_2026-05-10_AL_M",
+        "nome_gara": "5 EDIZIONE DELLA CORSA DI SANDRO PROVA VALIDA CAMPIONATO REGIONALE",
+        "data": "2026-05-10",
+        "posizione": 8,
+        "punti_effettivi": 6,
+        "team": "VELO CLUB CATTOLICA",
+        "moltiplicatore": 2,
+        "tipo": "regionale",
+        "regione": "ABRUZZO",
+        "km": "67.000",
+        "media": "40.200"
       }
     ]
   },
@@ -7620,7 +7724,7 @@
     "team_id": "A_S_D_CICLISTICA_2000",
     "categoria": "AL_M",
     "genere": "M",
-    "punti_totali": 32,
+    "punti_totali": 37,
     "risultati": [
       {
         "gara_id": "38_GRAN_PREMIO_CITTA_DI_ZOLA_DIECI_COLLI_GIOVANI_2026-05-03_AL_M",
@@ -7686,6 +7790,19 @@
         "regione": "EMILIA ROMAGNA",
         "km": "52.650",
         "media": "42.689"
+      },
+      {
+        "gara_id": "MARANO_OSPITALETTO_2026-05-10_AL_M",
+        "nome_gara": "MARANO OSPITALETTO",
+        "data": "2026-05-10",
+        "posizione": 6,
+        "punti_effettivi": 5,
+        "team": "A.S.D. CICLISTICA 2000",
+        "moltiplicatore": 1,
+        "tipo": "regionale",
+        "regione": "EMILIA ROMAGNA",
+        "km": "53.800",
+        "media": "37.096"
       }
     ]
   },
@@ -7838,7 +7955,7 @@
     "team_id": "S_C_COTIGNOLESE",
     "categoria": "AL_M",
     "genere": "M",
-    "punti_totali": 53,
+    "punti_totali": 56,
     "risultati": [
       {
         "gara_id": "38_GRAN_PREMIO_CITTA_DI_ZOLA_DIECI_COLLI_GIOVANI_2026-05-03_AL_M",
@@ -7930,6 +8047,19 @@
         "regione": "EMILIA ROMAGNA",
         "km": "49.000",
         "media": "43.674"
+      },
+      {
+        "gara_id": "MARANO_OSPITALETTO_2026-05-10_AL_M",
+        "nome_gara": "MARANO OSPITALETTO",
+        "data": "2026-05-10",
+        "posizione": 8,
+        "punti_effettivi": 3,
+        "team": "S.C.COTIGNOLESE",
+        "moltiplicatore": 1,
+        "tipo": "regionale",
+        "regione": "EMILIA ROMAGNA",
+        "km": "53.800",
+        "media": "37.096"
       }
     ]
   },
@@ -7966,7 +8096,7 @@
     "team_id": "POL_FIUMICINESE_FA_I_T_ADRIATICA",
     "categoria": "AL_M",
     "genere": "M",
-    "punti_totali": 8,
+    "punti_totali": 10,
     "risultati": [
       {
         "gara_id": "38_GRAN_PREMIO_CITTA_DI_ZOLA_DIECI_COLLI_GIOVANI_2026-05-03_AL_M",
@@ -7993,6 +8123,19 @@
         "regione": "TOSCANA",
         "km": "69.100",
         "media": "39.113"
+      },
+      {
+        "gara_id": "MARANO_OSPITALETTO_2026-05-10_AL_M",
+        "nome_gara": "MARANO OSPITALETTO",
+        "data": "2026-05-10",
+        "posizione": 9,
+        "punti_effettivi": 2,
+        "team": "POL. FIUMICINESE FA.I.T. ADRIATICA",
+        "moltiplicatore": 1,
+        "tipo": "regionale",
+        "regione": "EMILIA ROMAGNA",
+        "km": "53.800",
+        "media": "37.096"
       }
     ]
   },
@@ -8004,7 +8147,7 @@
     "team_id": "UC_EMPOLESE",
     "categoria": "AL_M",
     "genere": "M",
-    "punti_totali": 26,
+    "punti_totali": 30,
     "risultati": [
       {
         "gara_id": "38_GRAN_PREMIO_CITTA_DI_ZOLA_DIECI_COLLI_GIOVANI_2026-05-03_AL_M",
@@ -8070,6 +8213,19 @@
         "regione": "TOSCANA",
         "km": "50.400",
         "media": "39.607"
+      },
+      {
+        "gara_id": "MARANO_OSPITALETTO_2026-05-10_AL_M",
+        "nome_gara": "MARANO OSPITALETTO",
+        "data": "2026-05-10",
+        "posizione": 7,
+        "punti_effettivi": 4,
+        "team": "UC EMPOLESE",
+        "moltiplicatore": 1,
+        "tipo": "regionale",
+        "regione": "EMILIA ROMAGNA",
+        "km": "53.800",
+        "media": "37.096"
       }
     ]
   },
@@ -16329,7 +16485,7 @@
     "team_id": "BUSTO_GAROLFO",
     "categoria": "ES2_M",
     "genere": "M",
-    "punti_totali": 90,
+    "punti_totali": 102,
     "risultati": [
       {
         "gara_id": "2_TROFEO_CITTA_DI_OVADA_GARA_UNICA_2026-05-03_ES2_M",
@@ -16447,6 +16603,19 @@
         "regione": "LOMBARDIA",
         "km": "30.100",
         "media": "39.620"
+      },
+      {
+        "gara_id": "TROFEO_CITTA_DI_SANGIULIANO_MILANESE_2026-05-10_ES2_M",
+        "nome_gara": "TROFEO CITTA' DI SANGIULIANO MILANESE",
+        "data": "2026-05-10",
+        "posizione": 2,
+        "punti_effettivi": 12,
+        "team": "BUSTO GAROLFO",
+        "moltiplicatore": 1,
+        "tipo": "regionale",
+        "regione": "LOMBARDIA",
+        "km": "33.600",
+        "media": "40.213"
       }
     ]
   },
@@ -16458,7 +16627,7 @@
     "team_id": "BUSTO_GAROLFO",
     "categoria": "ES2_M",
     "genere": "M",
-    "punti_totali": 54,
+    "punti_totali": 69,
     "risultati": [
       {
         "gara_id": "2_TROFEO_CITTA_DI_OVADA_GARA_UNICA_2026-05-03_ES2_M",
@@ -16563,6 +16732,19 @@
         "regione": "PIEMONTE",
         "km": "39.000",
         "media": "37.915"
+      },
+      {
+        "gara_id": "TROFEO_CITTA_DI_SANGIULIANO_MILANESE_2026-05-10_ES2_M",
+        "nome_gara": "TROFEO CITTA' DI SANGIULIANO MILANESE",
+        "data": "2026-05-10",
+        "posizione": 1,
+        "punti_effettivi": 15,
+        "team": "BUSTO GAROLFO",
+        "moltiplicatore": 1,
+        "tipo": "regionale",
+        "regione": "LOMBARDIA",
+        "km": "33.600",
+        "media": "40.213"
       }
     ]
   },
@@ -16574,7 +16756,7 @@
     "team_id": "BUSTO_GAROLFO",
     "categoria": "ES2_M",
     "genere": "M",
-    "punti_totali": 45,
+    "punti_totali": 53,
     "risultati": [
       {
         "gara_id": "2_TROFEO_CITTA_DI_OVADA_GARA_UNICA_2026-05-03_ES2_M",
@@ -16666,6 +16848,19 @@
         "regione": "TOSCANA",
         "km": "24.200",
         "media": "40.352"
+      },
+      {
+        "gara_id": "TROFEO_CITTA_DI_SANGIULIANO_MILANESE_2026-05-10_ES2_M",
+        "nome_gara": "TROFEO CITTA' DI SANGIULIANO MILANESE",
+        "data": "2026-05-10",
+        "posizione": 4,
+        "punti_effettivi": 8,
+        "team": "BUSTO GAROLFO",
+        "moltiplicatore": 1,
+        "tipo": "regionale",
+        "regione": "LOMBARDIA",
+        "km": "33.600",
+        "media": "40.213"
       }
     ]
   },
@@ -16677,7 +16872,7 @@
     "team_id": "ASD_PEDALE_CASALESE_ARMOFER",
     "categoria": "ES2_M",
     "genere": "M",
-    "punti_totali": 36,
+    "punti_totali": 38,
     "risultati": [
       {
         "gara_id": "2_TROFEO_CITTA_DI_OVADA_GARA_UNICA_2026-05-03_ES2_M",
@@ -16769,6 +16964,19 @@
         "regione": "EMILIA ROMAGNA",
         "km": "34.100",
         "media": "37.473"
+      },
+      {
+        "gara_id": "TROFEO_CITTA_DI_SANGIULIANO_MILANESE_2026-05-10_ES2_M",
+        "nome_gara": "TROFEO CITTA' DI SANGIULIANO MILANESE",
+        "data": "2026-05-10",
+        "posizione": 9,
+        "punti_effettivi": 2,
+        "team": "ASD PEDALE CASALESE ARMOFER",
+        "moltiplicatore": 1,
+        "tipo": "regionale",
+        "regione": "LOMBARDIA",
+        "km": "33.600",
+        "media": "40.213"
       }
     ]
   },
@@ -16972,7 +17180,7 @@
     "team_id": "ASD_PEDALE_CASALESE_ARMOFER",
     "categoria": "ES2_M",
     "genere": "M",
-    "punti_totali": 32,
+    "punti_totali": 38,
     "risultati": [
       {
         "gara_id": "2_TROFEO_CITTA_DI_OVADA_GARA_UNICA_2026-05-03_ES2_M",
@@ -17064,6 +17272,19 @@
         "regione": "LOMBARDIA",
         "km": "30.100",
         "media": "39.620"
+      },
+      {
+        "gara_id": "TROFEO_CITTA_DI_SANGIULIANO_MILANESE_2026-05-10_ES2_M",
+        "nome_gara": "TROFEO CITTA' DI SANGIULIANO MILANESE",
+        "data": "2026-05-10",
+        "posizione": 5,
+        "punti_effettivi": 6,
+        "team": "ASD PEDALE CASALESE ARMOFER",
+        "moltiplicatore": 1,
+        "tipo": "regionale",
+        "regione": "LOMBARDIA",
+        "km": "33.600",
+        "media": "40.213"
       }
     ]
   },
@@ -17075,7 +17296,7 @@
     "team_id": "CICLISTICA_TREVIGLIESE",
     "categoria": "ES1_M",
     "genere": "M",
-    "punti_totali": 63,
+    "punti_totali": 78,
     "risultati": [
       {
         "gara_id": "TROFEO_UNA_VITA_PER_LA_BRUGHERIO_SPORTIVA_GARA_UNICA_2026-05-03_ES1_M",
@@ -17167,6 +17388,19 @@
         "regione": "LOMBARDIA",
         "km": "25.500",
         "media": "33.022"
+      },
+      {
+        "gara_id": "TROFEO_CITTA_DI_SANGIULIANO_MILANESE_2026-05-10_ES1_M",
+        "nome_gara": "TROFEO CITTA' DI SANGIULIANO MILANESE",
+        "data": "2026-05-10",
+        "posizione": 1,
+        "punti_effettivi": 15,
+        "team": "CICLISTICA TREVIGLIESE",
+        "moltiplicatore": 1,
+        "tipo": "regionale",
+        "regione": "LOMBARDIA",
+        "km": "25.200",
+        "media": "38.604"
       }
     ]
   },
@@ -17178,7 +17412,7 @@
     "team_id": "TEAM_SENAGHESE_GUERRINI",
     "categoria": "ES1_M",
     "genere": "M",
-    "punti_totali": 99,
+    "punti_totali": 111,
     "risultati": [
       {
         "gara_id": "TROFEO_UNA_VITA_PER_LA_BRUGHERIO_SPORTIVA_GARA_UNICA_2026-05-03_ES1_M",
@@ -17322,6 +17556,19 @@
         "regione": "LOMBARDIA",
         "km": "25.800",
         "media": "37.680"
+      },
+      {
+        "gara_id": "TROFEO_CITTA_DI_SANGIULIANO_MILANESE_2026-05-10_ES1_M",
+        "nome_gara": "TROFEO CITTA' DI SANGIULIANO MILANESE",
+        "data": "2026-05-10",
+        "posizione": 2,
+        "punti_effettivi": 12,
+        "team": "TEAM SENAGHESE GUERRINI",
+        "moltiplicatore": 1,
+        "tipo": "regionale",
+        "regione": "LOMBARDIA",
+        "km": "25.200",
+        "media": "38.604"
       }
     ]
   },
@@ -17333,7 +17580,7 @@
     "team_id": "CICLISTICA_TREVIGLIESE",
     "categoria": "ES1_M",
     "genere": "M",
-    "punti_totali": 95,
+    "punti_totali": 105,
     "risultati": [
       {
         "gara_id": "TROFEO_UNA_VITA_PER_LA_BRUGHERIO_SPORTIVA_GARA_UNICA_2026-05-03_ES1_M",
@@ -17464,6 +17711,19 @@
         "regione": "LOMBARDIA",
         "km": "25.800",
         "media": "37.680"
+      },
+      {
+        "gara_id": "TROFEO_CITTA_DI_SANGIULIANO_MILANESE_2026-05-10_ES1_M",
+        "nome_gara": "TROFEO CITTA' DI SANGIULIANO MILANESE",
+        "data": "2026-05-10",
+        "posizione": 3,
+        "punti_effettivi": 10,
+        "team": "CICLISTICA TREVIGLIESE",
+        "moltiplicatore": 1,
+        "tipo": "regionale",
+        "regione": "LOMBARDIA",
+        "km": "25.200",
+        "media": "38.604"
       }
     ]
   },
@@ -17475,7 +17735,7 @@
     "team_id": "CICLISTICA_TREVIGLIESE",
     "categoria": "ES1_M",
     "genere": "M",
-    "punti_totali": 67,
+    "punti_totali": 72,
     "risultati": [
       {
         "gara_id": "TROFEO_UNA_VITA_PER_LA_BRUGHERIO_SPORTIVA_GARA_UNICA_2026-05-03_ES1_M",
@@ -17619,6 +17879,19 @@
         "regione": "LOMBARDIA",
         "km": "25.800",
         "media": "37.680"
+      },
+      {
+        "gara_id": "TROFEO_CITTA_DI_SANGIULIANO_MILANESE_2026-05-10_ES1_M",
+        "nome_gara": "TROFEO CITTA' DI SANGIULIANO MILANESE",
+        "data": "2026-05-10",
+        "posizione": 6,
+        "punti_effettivi": 5,
+        "team": "CICLISTICA TREVIGLIESE",
+        "moltiplicatore": 1,
+        "tipo": "regionale",
+        "regione": "LOMBARDIA",
+        "km": "25.200",
+        "media": "38.604"
       }
     ]
   },
@@ -17630,7 +17903,7 @@
     "team_id": "TEAM_SENAGHESE_GUERRINI",
     "categoria": "ES1_M",
     "genere": "M",
-    "punti_totali": 21,
+    "punti_totali": 25,
     "risultati": [
       {
         "gara_id": "TROFEO_UNA_VITA_PER_LA_BRUGHERIO_SPORTIVA_GARA_UNICA_2026-05-03_ES1_M",
@@ -17670,6 +17943,19 @@
         "regione": "VENETO",
         "km": "28.000",
         "media": "36.641"
+      },
+      {
+        "gara_id": "TROFEO_CITTA_DI_SANGIULIANO_MILANESE_2026-05-10_ES1_M",
+        "nome_gara": "TROFEO CITTA' DI SANGIULIANO MILANESE",
+        "data": "2026-05-10",
+        "posizione": 7,
+        "punti_effettivi": 4,
+        "team": "TEAM SENAGHESE GUERRINI",
+        "moltiplicatore": 1,
+        "tipo": "regionale",
+        "regione": "LOMBARDIA",
+        "km": "25.200",
+        "media": "38.604"
       }
     ]
   },
@@ -17681,7 +17967,7 @@
     "team_id": "CICLISTICA_TREVIGLIESE",
     "categoria": "ES1_M",
     "genere": "M",
-    "punti_totali": 14,
+    "punti_totali": 15,
     "risultati": [
       {
         "gara_id": "TROFEO_UNA_VITA_PER_LA_BRUGHERIO_SPORTIVA_GARA_UNICA_2026-05-03_ES1_M",
@@ -17734,6 +18020,19 @@
         "regione": "LOMBARDIA",
         "km": "25.800",
         "media": "37.680"
+      },
+      {
+        "gara_id": "TROFEO_CITTA_DI_SANGIULIANO_MILANESE_2026-05-10_ES1_M",
+        "nome_gara": "TROFEO CITTA' DI SANGIULIANO MILANESE",
+        "data": "2026-05-10",
+        "posizione": 10,
+        "punti_effettivi": 1,
+        "team": "CICLISTICA TREVIGLIESE",
+        "moltiplicatore": 1,
+        "tipo": "regionale",
+        "regione": "LOMBARDIA",
+        "km": "25.200",
+        "media": "38.604"
       }
     ]
   },
@@ -18205,7 +18504,7 @@
     "team_id": "U_C_PESSANO_A_S_D",
     "categoria": "ES2_M",
     "genere": "M",
-    "punti_totali": 11,
+    "punti_totali": 12,
     "risultati": [
       {
         "gara_id": "TROFEO_UNA_VITA_PER_LA_BRUGHERIO_SPORTIVA_GARA_UNICA_2026-05-03_ES2_M",
@@ -18232,6 +18531,19 @@
         "regione": "LOMBARDIA",
         "km": "28.200",
         "media": "41.035"
+      },
+      {
+        "gara_id": "TROFEO_CITTA_DI_SANGIULIANO_MILANESE_2026-05-10_ES2_M",
+        "nome_gara": "TROFEO CITTA' DI SANGIULIANO MILANESE",
+        "data": "2026-05-10",
+        "posizione": 10,
+        "punti_effettivi": 1,
+        "team": "U.C.PESSANO A.S.D.",
+        "moltiplicatore": 1,
+        "tipo": "regionale",
+        "regione": "LOMBARDIA",
+        "km": "33.600",
+        "media": "40.213"
       }
     ]
   },
@@ -22741,7 +23053,7 @@
     "team_id": "G_S_RONCO_MAURIGI_DELIO_GALLINA",
     "categoria": "ES1_M",
     "genere": "M",
-    "punti_totali": 41,
+    "punti_totali": 47,
     "risultati": [
       {
         "gara_id": "14_TROFEO_MAURIGI_2026-05-03_ES1_M",
@@ -22820,6 +23132,19 @@
         "regione": "LOMBARDIA",
         "km": "25.500",
         "media": "33.022"
+      },
+      {
+        "gara_id": "TROFEO_CITTA_DI_SANGIULIANO_MILANESE_2026-05-10_ES1_M",
+        "nome_gara": "TROFEO CITTA' DI SANGIULIANO MILANESE",
+        "data": "2026-05-10",
+        "posizione": 5,
+        "punti_effettivi": 6,
+        "team": "G.S. RONCO MAURIGI DELIO GALLINA",
+        "moltiplicatore": 1,
+        "tipo": "regionale",
+        "regione": "LOMBARDIA",
+        "km": "25.200",
+        "media": "38.604"
       }
     ]
   },
@@ -23746,7 +24071,7 @@
     "team_id": "G_S_RONCO_MAURIGI_DELIO_GALLINA",
     "categoria": "ES2_M",
     "genere": "M",
-    "punti_totali": 51,
+    "punti_totali": 61,
     "risultati": [
       {
         "gara_id": "14_TROFEO_MAURIGI_2026-05-03_ES2_M",
@@ -23812,6 +24137,19 @@
         "regione": "LOMBARDIA",
         "km": "38.300",
         "media": "38.353"
+      },
+      {
+        "gara_id": "TROFEO_CITTA_DI_SANGIULIANO_MILANESE_2026-05-10_ES2_M",
+        "nome_gara": "TROFEO CITTA' DI SANGIULIANO MILANESE",
+        "data": "2026-05-10",
+        "posizione": 3,
+        "punti_effettivi": 10,
+        "team": "G.S. RONCO MAURIGI DELIO GALLINA",
+        "moltiplicatore": 1,
+        "tipo": "regionale",
+        "regione": "LOMBARDIA",
+        "km": "33.600",
+        "media": "40.213"
       }
     ]
   },
@@ -26122,7 +26460,7 @@
     "team_id": "TEAM_NERI_SOTTOLI_LUCCHINI_ENERGY",
     "categoria": "JUN_M",
     "genere": "M",
-    "punti_totali": 19,
+    "punti_totali": 43,
     "risultati": [
       {
         "gara_id": "GIRO_D_ABRUZZO_JUNIORES_2026_SECONDA_TAPPA_2026-05-02_JUN_M",
@@ -26162,6 +26500,19 @@
         "regione": "TOSCANA",
         "km": "115.000",
         "media": "40.588"
+      },
+      {
+        "gara_id": "GRAN_PREMIO_CITTA_DI_CORTONA_PROVA_VALIDA_CAMPIONATO_REGIONALE_2026-05-10_JUN_M",
+        "nome_gara": "GRAN PREMIO CITTA' DI CORTONA PROVA VALIDA CAMPIONATO REGIONALE",
+        "data": "2026-05-10",
+        "posizione": 2,
+        "punti_effettivi": 24,
+        "team": "TEAM NERI SOTTOLI LUCCHINI ENERGY",
+        "moltiplicatore": 2,
+        "tipo": "regionale",
+        "regione": "TOSCANA",
+        "km": "111.000",
+        "media": "41.599"
       }
     ]
   },
@@ -29098,7 +29449,7 @@
     "team_id": "TEAM_TECHNIPES_INEMILIAROMAGNA",
     "categoria": "ELI_M",
     "genere": "M",
-    "punti_totali": 137,
+    "punti_totali": 146,
     "risultati": [
       {
         "gara_id": "7_GRAN_PREMIO_GENERAL_STORE_2026-05-01_ELI_M",
@@ -29190,6 +29541,19 @@
         "regione": "UNDER",
         "km": "164.600",
         "media": "40.051"
+      },
+      {
+        "gara_id": "37_GRAN_PREMIO_INDUSTRIE_DEL_MARMO_UNDER23_2026-05-10_ELI_M",
+        "nome_gara": "37 GRAN PREMIO INDUSTRIE DEL MARMO UNDER23",
+        "data": "2026-05-10",
+        "posizione": 8,
+        "punti_effettivi": 9,
+        "team": "TEAM TECHNIPES #INEMILIAROMAGNA",
+        "moltiplicatore": 3,
+        "tipo": "internazionale",
+        "regione": "TOSCANA",
+        "km": "179.500",
+        "media": "41.527"
       }
     ]
   },
@@ -29393,7 +29757,7 @@
     "team_id": "GENERAL_STORE_ESSEGIBI_F_LLI_CURIA",
     "categoria": "ELI_M",
     "genere": "M",
-    "punti_totali": 48,
+    "punti_totali": 60,
     "risultati": [
       {
         "gara_id": "7_GRAN_PREMIO_GENERAL_STORE_2026-05-01_ELI_M",
@@ -29433,6 +29797,19 @@
         "regione": "UNDER",
         "km": "138.000",
         "media": "47.032"
+      },
+      {
+        "gara_id": "37_GRAN_PREMIO_INDUSTRIE_DEL_MARMO_UNDER23_2026-05-10_ELI_M",
+        "nome_gara": "37 GRAN PREMIO INDUSTRIE DEL MARMO UNDER23",
+        "data": "2026-05-10",
+        "posizione": 7,
+        "punti_effettivi": 12,
+        "team": "GENERAL STORE -ESSEGIBI-F.LLI CURIA",
+        "moltiplicatore": 3,
+        "tipo": "internazionale",
+        "regione": "TOSCANA",
+        "km": "179.500",
+        "media": "41.527"
       }
     ]
   },
@@ -30159,7 +30536,7 @@
     "team_id": "TEAM_HOPPLA",
     "categoria": "ELI_M",
     "genere": "M",
-    "punti_totali": 18,
+    "punti_totali": 63,
     "risultati": [
       {
         "gara_id": "57_COPPA_PENNA_2026-05-01_ELI_M",
@@ -30186,6 +30563,19 @@
         "regione": "UNDER",
         "km": "168.080",
         "media": "43.466"
+      },
+      {
+        "gara_id": "37_GRAN_PREMIO_INDUSTRIE_DEL_MARMO_UNDER23_2026-05-10_ELI_M",
+        "nome_gara": "37 GRAN PREMIO INDUSTRIE DEL MARMO UNDER23",
+        "data": "2026-05-10",
+        "posizione": 1,
+        "punti_effettivi": 45,
+        "team": "TEAM HOPPLA'",
+        "moltiplicatore": 3,
+        "tipo": "internazionale",
+        "regione": "TOSCANA",
+        "km": "179.500",
+        "media": "41.527"
       }
     ]
   },
@@ -31777,7 +32167,7 @@
     "team_id": "POLISPORTIVA_MONSUMMANESE",
     "categoria": "JUN_M",
     "genere": "M",
-    "punti_totali": 15,
+    "punti_totali": 19,
     "risultati": [
       {
         "gara_id": "69_COPPA_1_MAGGIO_2026-05-01_JUN_M",
@@ -31791,6 +32181,19 @@
         "regione": "LOMBARDIA",
         "km": "74.000",
         "media": "44.341"
+      },
+      {
+        "gara_id": "GRAN_PREMIO_CITTA_DI_CORTONA_PROVA_VALIDA_CAMPIONATO_REGIONALE_2026-05-10_JUN_M",
+        "nome_gara": "GRAN PREMIO CITTA' DI CORTONA PROVA VALIDA CAMPIONATO REGIONALE",
+        "data": "2026-05-10",
+        "posizione": 9,
+        "punti_effettivi": 4,
+        "team": "POLISPORTIVA MONSUMMANESE",
+        "moltiplicatore": 2,
+        "tipo": "regionale",
+        "regione": "TOSCANA",
+        "km": "111.000",
+        "media": "41.599"
       }
     ]
   },
@@ -32326,7 +32729,7 @@
     "team_id": "U_C_CONSCIO_PEDALE_DEL_SILE_F",
     "categoria": "JUN_F",
     "genere": "F",
-    "punti_totali": 26,
+    "punti_totali": 29,
     "risultati": [
       {
         "gara_id": "4_TROFEO_ROSA_CITTA_DI_CANTU_2026-05-01_JUN_F",
@@ -32379,6 +32782,19 @@
         "regione": "MARCHE",
         "km": "90.000",
         "media": "36.986"
+      },
+      {
+        "gara_id": "GIRO_DELLE_MARCHE_IN_ROSA_2026-05-10_JUN_F",
+        "nome_gara": "GIRO DELLE MARCHE IN ROSA",
+        "data": "2026-05-10",
+        "posizione": 8,
+        "punti_effettivi": 3,
+        "team": "U.C.CONSCIO PEDALE DEL SILE",
+        "moltiplicatore": 1,
+        "tipo": "regionale",
+        "regione": "MARCHE",
+        "km": "100.000",
+        "media": "35.294"
       }
     ]
   },
@@ -32390,7 +32806,7 @@
     "team_id": "BREGANZE_MILLENIUM_F",
     "categoria": "JUN_F",
     "genere": "F",
-    "punti_totali": 15,
+    "punti_totali": 21,
     "risultati": [
       {
         "gara_id": "4_TROFEO_ROSA_CITTA_DI_CANTU_2026-05-01_JUN_F",
@@ -32417,6 +32833,19 @@
         "regione": "MARCHE",
         "km": "90.000",
         "media": "36.986"
+      },
+      {
+        "gara_id": "GIRO_DELLE_MARCHE_IN_ROSA_2026-05-10_JUN_F",
+        "nome_gara": "GIRO DELLE MARCHE IN ROSA",
+        "data": "2026-05-10",
+        "posizione": 5,
+        "punti_effettivi": 6,
+        "team": "BREGANZE MILLENIUM",
+        "moltiplicatore": 1,
+        "tipo": "regionale",
+        "regione": "MARCHE",
+        "km": "100.000",
+        "media": "35.294"
       }
     ]
   },
@@ -35164,7 +35593,7 @@
     "team_id": "A_R_MONEX_PRO_CYCLING_TEAM",
     "categoria": "AL_M",
     "genere": "M",
-    "punti_totali": 30,
+    "punti_totali": 60,
     "risultati": [
       {
         "gara_id": "81_GRAN_PREMIO_CADUTI_LIBERAZIONE_2026-05-01_AL_M",
@@ -35204,6 +35633,19 @@
         "regione": "EMILIA ROMAGNA",
         "km": "49.000",
         "media": "43.674"
+      },
+      {
+        "gara_id": "5_EDIZIONE_DELLA_CORSA_DI_SANDRO_PROVA_VALIDA_CAMPIONATO_REGIONALE_2026-05-10_AL_M",
+        "nome_gara": "5 EDIZIONE DELLA CORSA DI SANDRO PROVA VALIDA CAMPIONATO REGIONALE",
+        "data": "2026-05-10",
+        "posizione": 1,
+        "punti_effettivi": 30,
+        "team": "A.R.MONEX PRO CYCLING TEAM",
+        "moltiplicatore": 2,
+        "tipo": "regionale",
+        "regione": "ABRUZZO",
+        "km": "67.000",
+        "media": "40.200"
       }
     ]
   },
@@ -35597,7 +36039,7 @@
     "team_id": "A_S_D_S_C_CERETOLESE_1969",
     "categoria": "AL_M",
     "genere": "M",
-    "punti_totali": 2,
+    "punti_totali": 8,
     "risultati": [
       {
         "gara_id": "TROFEO_COMUNE_DI_ILLASI_2026-05-01_AL_M",
@@ -35611,6 +36053,19 @@
         "regione": "VENETO",
         "km": "63.600",
         "media": "37.049"
+      },
+      {
+        "gara_id": "MARANO_OSPITALETTO_2026-05-10_AL_M",
+        "nome_gara": "MARANO OSPITALETTO",
+        "data": "2026-05-10",
+        "posizione": 5,
+        "punti_effettivi": 6,
+        "team": "A.S.D. S.C. CERETOLESE 1969",
+        "moltiplicatore": 1,
+        "tipo": "regionale",
+        "regione": "EMILIA ROMAGNA",
+        "km": "53.800",
+        "media": "37.096"
       }
     ]
   },
@@ -37132,7 +37587,7 @@
     "team_id": "IL_PIRATA_VANGI_OTC",
     "categoria": "AL_M",
     "genere": "M",
-    "punti_totali": 22,
+    "punti_totali": 42,
     "risultati": [
       {
         "gara_id": "78_COPPA_LAVORATORI_2026-05-01_AL_M",
@@ -37159,6 +37614,19 @@
         "regione": "TOSCANA",
         "km": "57.300",
         "media": "39.517"
+      },
+      {
+        "gara_id": "5_EDIZIONE_DELLA_CORSA_DI_SANDRO_PROVA_VALIDA_CAMPIONATO_REGIONALE_2026-05-10_AL_M",
+        "nome_gara": "5 EDIZIONE DELLA CORSA DI SANDRO PROVA VALIDA CAMPIONATO REGIONALE",
+        "data": "2026-05-10",
+        "posizione": 3,
+        "punti_effettivi": 20,
+        "team": "IL PIRATA VANGI OTC",
+        "moltiplicatore": 2,
+        "tipo": "regionale",
+        "regione": "ABRUZZO",
+        "km": "67.000",
+        "media": "40.200"
       }
     ]
   },
@@ -37452,7 +37920,7 @@
     "team_id": "POL_FIUMICINESE_FA_I_T_ADRIATICA",
     "categoria": "AL_M",
     "genere": "M",
-    "punti_totali": 15,
+    "punti_totali": 25,
     "risultati": [
       {
         "gara_id": "57_COPPA_CIRCOLO_ARCI_RENZINO_2026-05-01_AL_M",
@@ -37492,6 +37960,19 @@
         "regione": "TOSCANA",
         "km": "50.400",
         "media": "39.607"
+      },
+      {
+        "gara_id": "MARANO_OSPITALETTO_2026-05-10_AL_M",
+        "nome_gara": "MARANO OSPITALETTO",
+        "data": "2026-05-10",
+        "posizione": 3,
+        "punti_effettivi": 10,
+        "team": "POL. FIUMICINESE FA.I.T. ADRIATICA",
+        "moltiplicatore": 1,
+        "tipo": "regionale",
+        "regione": "EMILIA ROMAGNA",
+        "km": "53.800",
+        "media": "37.096"
       }
     ]
   },
@@ -37669,7 +38150,7 @@
     "team_id": "ETHICA_ZERO24_CYCLING_TEAM_ECOTEK",
     "categoria": "AL_M",
     "genere": "M",
-    "punti_totali": 42,
+    "punti_totali": 54,
     "risultati": [
       {
         "gara_id": "57_COPPA_CIRCOLO_ARCI_RENZINO_2026-05-01_AL_M",
@@ -37735,6 +38216,19 @@
         "regione": "TOSCANA",
         "km": "68.000",
         "media": "42.666"
+      },
+      {
+        "gara_id": "MARANO_OSPITALETTO_2026-05-10_AL_M",
+        "nome_gara": "MARANO OSPITALETTO",
+        "data": "2026-05-10",
+        "posizione": 2,
+        "punti_effettivi": 12,
+        "team": "ETHICA ZERO24 CYCLING TEAM ECOTEK",
+        "moltiplicatore": 1,
+        "tipo": "regionale",
+        "regione": "EMILIA ROMAGNA",
+        "km": "53.800",
+        "media": "37.096"
       }
     ]
   },
@@ -40060,7 +40554,7 @@
     "team_id": "BUSTO_GAROLFO",
     "categoria": "ES1_M",
     "genere": "M",
-    "punti_totali": 30,
+    "punti_totali": 32,
     "risultati": [
       {
         "gara_id": "2_TROFEO_TORRETTA_PAOLO_A_M_GARA_UNICA_2026-05-01_ES1_M",
@@ -40126,6 +40620,19 @@
         "regione": "LOMBARDIA",
         "km": "2.400",
         "media": "40.560"
+      },
+      {
+        "gara_id": "TROFEO_CITTA_DI_SANGIULIANO_MILANESE_2026-05-10_ES1_M",
+        "nome_gara": "TROFEO CITTA' DI SANGIULIANO MILANESE",
+        "data": "2026-05-10",
+        "posizione": 9,
+        "punti_effettivi": 2,
+        "team": "BUSTO GAROLFO",
+        "moltiplicatore": 1,
+        "tipo": "regionale",
+        "regione": "LOMBARDIA",
+        "km": "25.200",
+        "media": "38.604"
       }
     ]
   },
@@ -40289,7 +40796,7 @@
     "team_id": "BUSTO_GAROLFO",
     "categoria": "ES2_M",
     "genere": "M",
-    "punti_totali": 8,
+    "punti_totali": 11,
     "risultati": [
       {
         "gara_id": "2_TROFEO_TORRETTA_PAOLO_A_M_GARA_UNICA_2026-05-01_ES2_M",
@@ -40303,6 +40810,19 @@
         "regione": "LOMBARDIA",
         "km": "28.200",
         "media": "41.035"
+      },
+      {
+        "gara_id": "TROFEO_CITTA_DI_SANGIULIANO_MILANESE_2026-05-10_ES2_M",
+        "nome_gara": "TROFEO CITTA' DI SANGIULIANO MILANESE",
+        "data": "2026-05-10",
+        "posizione": 8,
+        "punti_effettivi": 3,
+        "team": "BUSTO GAROLFO",
+        "moltiplicatore": 1,
+        "tipo": "regionale",
+        "regione": "LOMBARDIA",
+        "km": "33.600",
+        "media": "40.213"
       }
     ]
   },
@@ -42725,7 +43245,7 @@
     "team_id": "TEAM_VANGI_TOMMASINI_IL_PIRATA",
     "categoria": "JUN_M",
     "genere": "M",
-    "punti_totali": 107,
+    "punti_totali": 137,
     "risultati": [
       {
         "gara_id": "15_GIRO_DI_PRIMAVERA_2026-04-26_JUN_M",
@@ -42791,6 +43311,19 @@
         "regione": "TOSCANA",
         "km": "77.000",
         "media": "43.030"
+      },
+      {
+        "gara_id": "GRAN_PREMIO_CITTA_DI_CORTONA_PROVA_VALIDA_CAMPIONATO_REGIONALE_2026-05-10_JUN_M",
+        "nome_gara": "GRAN PREMIO CITTA' DI CORTONA PROVA VALIDA CAMPIONATO REGIONALE",
+        "data": "2026-05-10",
+        "posizione": 1,
+        "punti_effettivi": 30,
+        "team": "TEAM VANGI TOMMASINI IL PIRATA",
+        "moltiplicatore": 2,
+        "tipo": "regionale",
+        "regione": "TOSCANA",
+        "km": "111.000",
+        "media": "41.599"
       }
     ]
   },
@@ -43326,7 +43859,7 @@
     "team_id": "A_S_D_S_C_PADOVANI",
     "categoria": "ELI_M",
     "genere": "M",
-    "punti_totali": 124,
+    "punti_totali": 148,
     "risultati": [
       {
         "gara_id": "82_VICENZA_BIONDE_UNDER23_2026-04-26_ELI_M",
@@ -43405,6 +43938,19 @@
         "regione": "UNDER",
         "km": "149.000",
         "media": "42.393"
+      },
+      {
+        "gara_id": "37_GRAN_PREMIO_INDUSTRIE_DEL_MARMO_UNDER23_2026-05-10_ELI_M",
+        "nome_gara": "37 GRAN PREMIO INDUSTRIE DEL MARMO UNDER23",
+        "data": "2026-05-10",
+        "posizione": 4,
+        "punti_effettivi": 24,
+        "team": "A.S.D. S.C. PADOVANI",
+        "moltiplicatore": 3,
+        "tipo": "internazionale",
+        "regione": "TOSCANA",
+        "km": "179.500",
+        "media": "41.527"
       }
     ]
   },
@@ -43873,7 +44419,7 @@
     "team_id": "SS_AQUILA",
     "categoria": "JUN_M",
     "genere": "M",
-    "punti_totali": 2,
+    "punti_totali": 10,
     "risultati": [
       {
         "gara_id": "COPPA_1_MAGGIO_DEL_CERAMISTA_2026-04-26_JUN_M",
@@ -43887,6 +44433,19 @@
         "regione": "LIGURIA",
         "km": "105.000",
         "media": "36.635"
+      },
+      {
+        "gara_id": "GRAN_PREMIO_CITTA_DI_CORTONA_PROVA_VALIDA_CAMPIONATO_REGIONALE_2026-05-10_JUN_M",
+        "nome_gara": "GRAN PREMIO CITTA' DI CORTONA PROVA VALIDA CAMPIONATO REGIONALE",
+        "data": "2026-05-10",
+        "posizione": 7,
+        "punti_effettivi": 8,
+        "team": "SS AQUILA",
+        "moltiplicatore": 2,
+        "tipo": "regionale",
+        "regione": "TOSCANA",
+        "km": "111.000",
+        "media": "41.599"
       }
     ]
   },
@@ -43923,7 +44482,7 @@
     "team_id": "TEAM_VANGI_TOMMASINI_IL_PIRATA",
     "categoria": "JUN_M",
     "genere": "M",
-    "punti_totali": 18,
+    "punti_totali": 38,
     "risultati": [
       {
         "gara_id": "4_GRAN_PREMIO_SAN_LEOLINO_2026-04-26_JUN_M",
@@ -43963,6 +44522,19 @@
         "regione": "TOSCANA",
         "km": "80.000",
         "media": "46.625"
+      },
+      {
+        "gara_id": "GRAN_PREMIO_CITTA_DI_CORTONA_PROVA_VALIDA_CAMPIONATO_REGIONALE_2026-05-10_JUN_M",
+        "nome_gara": "GRAN PREMIO CITTA' DI CORTONA PROVA VALIDA CAMPIONATO REGIONALE",
+        "data": "2026-05-10",
+        "posizione": 3,
+        "punti_effettivi": 20,
+        "team": "TEAM VANGI TOMMASINI IL PIRATA",
+        "moltiplicatore": 2,
+        "tipo": "regionale",
+        "regione": "TOSCANA",
+        "km": "111.000",
+        "media": "41.599"
       }
     ]
   },
@@ -44307,7 +44879,7 @@
     "team_id": "ITALIA_NUOVA_BOLOGNA",
     "categoria": "JUN_M",
     "genere": "M",
-    "punti_totali": 22,
+    "punti_totali": 24,
     "risultati": [
       {
         "gara_id": "4_GRAN_PREMIO_SAN_LEOLINO_2026-04-26_JUN_M",
@@ -44360,6 +44932,19 @@
         "regione": "EMILIA ROMAGNA",
         "km": "91.800",
         "media": "44.629"
+      },
+      {
+        "gara_id": "40_MEMORIAL_SAURO_DREI_2026-05-10_JUN_M",
+        "nome_gara": "40 MEMORIAL SAURO DREI",
+        "data": "2026-05-10",
+        "posizione": 9,
+        "punti_effettivi": 2,
+        "team": "ITALIA NUOVA BOLOGNA",
+        "moltiplicatore": 1,
+        "tipo": "regionale",
+        "regione": "EMILIA ROMAGNA",
+        "km": "100.200",
+        "media": "40.241"
       }
     ]
   },
@@ -44736,7 +45321,7 @@
     "team_id": "BREGANZE_MILLENIUM_F",
     "categoria": "JUN_F",
     "genere": "F",
-    "punti_totali": 88,
+    "punti_totali": 93,
     "risultati": [
       {
         "gara_id": "GRAN_REMIO_PRIMAVERA_A_MASER_PROVA_VALIDA_CAMPIONATO_REGIONALE_2026-04-26_JUN_F",
@@ -44802,6 +45387,19 @@
         "regione": "MARCHE",
         "km": "90.000",
         "media": "36.986"
+      },
+      {
+        "gara_id": "GIRO_DELLE_MARCHE_IN_ROSA_2026-05-10_JUN_F",
+        "nome_gara": "GIRO DELLE MARCHE IN ROSA",
+        "data": "2026-05-10",
+        "posizione": 6,
+        "punti_effettivi": 5,
+        "team": "BREGANZE MILLENIUM",
+        "moltiplicatore": 1,
+        "tipo": "regionale",
+        "regione": "MARCHE",
+        "km": "100.000",
+        "media": "35.294"
       }
     ]
   },
@@ -44877,7 +45475,7 @@
     "team_id": "PC_BAIX_EBRE_TORTOSA_F",
     "categoria": "JUN_F",
     "genere": "F",
-    "punti_totali": 33,
+    "punti_totali": 37,
     "risultati": [
       {
         "gara_id": "GRAN_REMIO_PRIMAVERA_A_MASER_PROVA_VALIDA_CAMPIONATO_REGIONALE_2026-04-26_JUN_F",
@@ -44943,6 +45541,19 @@
         "regione": "MARCHE",
         "km": "90.000",
         "media": "36.986"
+      },
+      {
+        "gara_id": "GIRO_DELLE_MARCHE_IN_ROSA_2026-05-10_JUN_F",
+        "nome_gara": "GIRO DELLE MARCHE IN ROSA",
+        "data": "2026-05-10",
+        "posizione": 7,
+        "punti_effettivi": 4,
+        "team": "PC BAIX EBRE TORTOSA",
+        "moltiplicatore": 1,
+        "tipo": "regionale",
+        "regione": "MARCHE",
+        "km": "100.000",
+        "media": "35.294"
       }
     ]
   },
@@ -45108,7 +45719,7 @@
     "team_id": "TEAM_WILIER_BREGANZE_F",
     "categoria": "JUN_F",
     "genere": "F",
-    "punti_totali": 9,
+    "punti_totali": 11,
     "risultati": [
       {
         "gara_id": "GRAN_REMIO_PRIMAVERA_A_MASER_PROVA_VALIDA_CAMPIONATO_REGIONALE_2026-04-26_JUN_F",
@@ -45148,6 +45759,19 @@
         "regione": "MARCHE",
         "km": "90.000",
         "media": "36.986"
+      },
+      {
+        "gara_id": "GIRO_DELLE_MARCHE_IN_ROSA_2026-05-10_JUN_F",
+        "nome_gara": "GIRO DELLE MARCHE IN ROSA",
+        "data": "2026-05-10",
+        "posizione": 9,
+        "punti_effettivi": 2,
+        "team": "TEAM WILIER BREGANZE",
+        "moltiplicatore": 1,
+        "tipo": "regionale",
+        "regione": "MARCHE",
+        "km": "100.000",
+        "media": "35.294"
       }
     ]
   },
@@ -45959,7 +46583,7 @@
     "team_id": "IL_PIRATA_VANGI_OTC",
     "categoria": "AL_M",
     "genere": "M",
-    "punti_totali": 28,
+    "punti_totali": 36,
     "risultati": [
       {
         "gara_id": "2_MEDIOFONDO_DI_BISACQUINO_2026-04-26_AL_M",
@@ -45986,6 +46610,19 @@
         "regione": "SICILIA",
         "km": "80.000",
         "media": ""
+      },
+      {
+        "gara_id": "5_EDIZIONE_DELLA_CORSA_DI_SANDRO_PROVA_VALIDA_CAMPIONATO_REGIONALE_2026-05-10_AL_M",
+        "nome_gara": "5 EDIZIONE DELLA CORSA DI SANDRO PROVA VALIDA CAMPIONATO REGIONALE",
+        "data": "2026-05-10",
+        "posizione": 7,
+        "punti_effettivi": 8,
+        "team": "IL PIRATA VANGI OTC",
+        "moltiplicatore": 2,
+        "tipo": "regionale",
+        "regione": "ABRUZZO",
+        "km": "67.000",
+        "media": "40.200"
       }
     ]
   },
@@ -46853,7 +47490,7 @@
     "team_id": "VELO_CLUB_CATTOLICA",
     "categoria": "AL_M",
     "genere": "M",
-    "punti_totali": 10,
+    "punti_totali": 14,
     "risultati": [
       {
         "gara_id": "3_TROFEO_RAGGIO_DI_SOLE_2026-04-26_AL_M",
@@ -46880,6 +47517,19 @@
         "regione": "EMILIA ROMAGNA",
         "km": "46.200",
         "media": "45.717"
+      },
+      {
+        "gara_id": "5_EDIZIONE_DELLA_CORSA_DI_SANDRO_PROVA_VALIDA_CAMPIONATO_REGIONALE_2026-05-10_AL_M",
+        "nome_gara": "5 EDIZIONE DELLA CORSA DI SANDRO PROVA VALIDA CAMPIONATO REGIONALE",
+        "data": "2026-05-10",
+        "posizione": 9,
+        "punti_effettivi": 4,
+        "team": "VELO CLUB CATTOLICA",
+        "moltiplicatore": 2,
+        "tipo": "regionale",
+        "regione": "ABRUZZO",
+        "km": "67.000",
+        "media": "40.200"
       }
     ]
   },
@@ -46891,7 +47541,7 @@
     "team_id": "POL_FIUMICINESE_FA_I_T_ADRIATICA",
     "categoria": "AL_M",
     "genere": "M",
-    "punti_totali": 25,
+    "punti_totali": 27,
     "risultati": [
       {
         "gara_id": "3_TROFEO_RAGGIO_DI_SOLE_2026-04-26_AL_M",
@@ -46944,6 +47594,19 @@
         "regione": "EMILIA ROMAGNA",
         "km": "60.000",
         "media": "42.562"
+      },
+      {
+        "gara_id": "5_EDIZIONE_DELLA_CORSA_DI_SANDRO_PROVA_VALIDA_CAMPIONATO_REGIONALE_2026-05-10_AL_M",
+        "nome_gara": "5 EDIZIONE DELLA CORSA DI SANDRO PROVA VALIDA CAMPIONATO REGIONALE",
+        "data": "2026-05-10",
+        "posizione": 10,
+        "punti_effettivi": 2,
+        "team": "POL. FIUMICINESE FA.I.T. ADRIATICA",
+        "moltiplicatore": 2,
+        "tipo": "regionale",
+        "regione": "ABRUZZO",
+        "km": "67.000",
+        "media": "40.200"
       }
     ]
   },
@@ -48095,7 +48758,7 @@
     "team_id": "S_C_CAVRIAGO",
     "categoria": "ES1_M",
     "genere": "M",
-    "punti_totali": 35,
+    "punti_totali": 43,
     "risultati": [
       {
         "gara_id": "4_TROFEO_PECSO_CAVI_2026-04-26_ES1_M",
@@ -48161,6 +48824,19 @@
         "regione": "EMILIA ROMAGNA",
         "km": "24.300",
         "media": "37.068"
+      },
+      {
+        "gara_id": "TROFEO_CITTA_DI_SANGIULIANO_MILANESE_2026-05-10_ES1_M",
+        "nome_gara": "TROFEO CITTA' DI SANGIULIANO MILANESE",
+        "data": "2026-05-10",
+        "posizione": 4,
+        "punti_effettivi": 8,
+        "team": "S.C. CAVRIAGO",
+        "moltiplicatore": 1,
+        "tipo": "regionale",
+        "regione": "LOMBARDIA",
+        "km": "25.200",
+        "media": "38.604"
       }
     ]
   },
@@ -50866,7 +51542,7 @@
     "team_id": "ISOLMANT_PREMAC_VITTORIA_F",
     "categoria": "ELI_F",
     "genere": "F",
-    "punti_totali": 41,
+    "punti_totali": 47,
     "risultati": [
       {
         "gara_id": "GRAN_PREMIO_DELLA_LIBERAZIONE_DONNE_2026-04-25_ELI_F",
@@ -50906,6 +51582,19 @@
         "regione": "MARCHE",
         "km": "90.000",
         "media": "36.986"
+      },
+      {
+        "gara_id": "GIRO_DELLE_MARCHE_IN_ROSA_2026-05-10_ELI_F",
+        "nome_gara": "GIRO DELLE MARCHE IN ROSA",
+        "data": "2026-05-10",
+        "posizione": 5,
+        "punti_effettivi": 6,
+        "team": "ISOLMANT - PREMAC - VITTORIA",
+        "moltiplicatore": 1,
+        "tipo": "regionale",
+        "regione": "MARCHE",
+        "km": "100.000",
+        "media": "35.294"
       }
     ]
   },
@@ -53780,7 +54469,7 @@
     "team_id": "S_C_TORRILE_PR",
     "categoria": "ES2_M",
     "genere": "M",
-    "punti_totali": 2,
+    "punti_totali": 6,
     "risultati": [
       {
         "gara_id": "CRITERIUM_LIBERAZIONE_GARA_UNICA_2026-04-25_ES2_M",
@@ -53794,6 +54483,19 @@
         "regione": "LOMBARDIA",
         "km": "25.000",
         "media": "38.843"
+      },
+      {
+        "gara_id": "TROFEO_CITTA_DI_SANGIULIANO_MILANESE_2026-05-10_ES2_M",
+        "nome_gara": "TROFEO CITTA' DI SANGIULIANO MILANESE",
+        "data": "2026-05-10",
+        "posizione": 7,
+        "punti_effettivi": 4,
+        "team": "S.C. TORRILE PR",
+        "moltiplicatore": 1,
+        "tipo": "regionale",
+        "regione": "LOMBARDIA",
+        "km": "33.600",
+        "media": "40.213"
       }
     ]
   },
@@ -55568,7 +56270,7 @@
     "team_id": "TEAM_VANGI_TOMMASINI_IL_PIRATA",
     "categoria": "JUN_M",
     "genere": "M",
-    "punti_totali": 41,
+    "punti_totali": 57,
     "risultati": [
       {
         "gara_id": "LIBERAZIONE_JUNIOR_2026-04-24_JUN_M",
@@ -55621,6 +56323,19 @@
         "regione": "TOSCANA",
         "km": "11.500",
         "media": "51.957"
+      },
+      {
+        "gara_id": "GRAN_PREMIO_CITTA_DI_CORTONA_PROVA_VALIDA_CAMPIONATO_REGIONALE_2026-05-10_JUN_M",
+        "nome_gara": "GRAN PREMIO CITTA' DI CORTONA PROVA VALIDA CAMPIONATO REGIONALE",
+        "data": "2026-05-10",
+        "posizione": 4,
+        "punti_effettivi": 16,
+        "team": "TEAM VANGI TOMMASINI IL PIRATA",
+        "moltiplicatore": 2,
+        "tipo": "regionale",
+        "regione": "TOSCANA",
+        "km": "111.000",
+        "media": "41.599"
       }
     ]
   },
@@ -57168,7 +57883,7 @@
     "team_id": "ITALIA_NUOVA_BOLOGNA",
     "categoria": "JUN_M",
     "genere": "M",
-    "punti_totali": 1,
+    "punti_totali": 2,
     "risultati": [
       {
         "gara_id": "23_GIRO_DELLA_VALDIGREVE_2026-04-19_JUN_M",
@@ -57182,6 +57897,19 @@
         "regione": "TOSCANA",
         "km": "78.000",
         "media": "41.246"
+      },
+      {
+        "gara_id": "40_MEMORIAL_SAURO_DREI_2026-05-10_JUN_M",
+        "nome_gara": "40 MEMORIAL SAURO DREI",
+        "data": "2026-05-10",
+        "posizione": 10,
+        "punti_effettivi": 1,
+        "team": "ITALIA NUOVA BOLOGNA",
+        "moltiplicatore": 1,
+        "tipo": "regionale",
+        "regione": "EMILIA ROMAGNA",
+        "km": "100.200",
+        "media": "40.241"
       }
     ]
   },
@@ -57193,7 +57921,7 @@
     "team_id": "BFT_BURZONI_F",
     "categoria": "JUN_F",
     "genere": "F",
-    "punti_totali": 99,
+    "punti_totali": 107,
     "risultati": [
       {
         "gara_id": "5_TROFEO_CITTA_DI_GOSSOLENGO_2026-04-19_JUN_F",
@@ -57259,6 +57987,19 @@
         "regione": "MARCHE",
         "km": "90.000",
         "media": "36.986"
+      },
+      {
+        "gara_id": "GIRO_DELLE_MARCHE_IN_ROSA_2026-05-10_JUN_F",
+        "nome_gara": "GIRO DELLE MARCHE IN ROSA",
+        "data": "2026-05-10",
+        "posizione": 4,
+        "punti_effettivi": 8,
+        "team": "BFT BURZONI",
+        "moltiplicatore": 1,
+        "tipo": "regionale",
+        "regione": "MARCHE",
+        "km": "100.000",
+        "media": "35.294"
       }
     ]
   },
@@ -57270,7 +58011,7 @@
     "team_id": "BREGANZE_MILLENIUM_F",
     "categoria": "JUN_F",
     "genere": "F",
-    "punti_totali": 9,
+    "punti_totali": 10,
     "risultati": [
       {
         "gara_id": "5_TROFEO_CITTA_DI_GOSSOLENGO_2026-04-19_JUN_F",
@@ -57297,6 +58038,19 @@
         "regione": "JUNIORES",
         "km": "81.000",
         "media": "41.094"
+      },
+      {
+        "gara_id": "GIRO_DELLE_MARCHE_IN_ROSA_2026-05-10_JUN_F",
+        "nome_gara": "GIRO DELLE MARCHE IN ROSA",
+        "data": "2026-05-10",
+        "posizione": 10,
+        "punti_effettivi": 1,
+        "team": "BREGANZE MILLENIUM",
+        "moltiplicatore": 1,
+        "tipo": "regionale",
+        "regione": "MARCHE",
+        "km": "100.000",
+        "media": "35.294"
       }
     ]
   },
@@ -57308,7 +58062,7 @@
     "team_id": "TEAM_WILIER_BREGANZE_F",
     "categoria": "JUN_F",
     "genere": "F",
-    "punti_totali": 4,
+    "punti_totali": 14,
     "risultati": [
       {
         "gara_id": "5_TROFEO_CITTA_DI_GOSSOLENGO_2026-04-19_JUN_F",
@@ -57322,6 +58076,19 @@
         "regione": "JUNIORES",
         "km": "84.000",
         "media": "37.164"
+      },
+      {
+        "gara_id": "GIRO_DELLE_MARCHE_IN_ROSA_2026-05-10_JUN_F",
+        "nome_gara": "GIRO DELLE MARCHE IN ROSA",
+        "data": "2026-05-10",
+        "posizione": 3,
+        "punti_effettivi": 10,
+        "team": "TEAM WILIER BREGANZE",
+        "moltiplicatore": 1,
+        "tipo": "regionale",
+        "regione": "MARCHE",
+        "km": "100.000",
+        "media": "35.294"
       }
     ]
   },
@@ -60676,7 +61443,7 @@
     "team_id": "SALUS_CICLISTICA_SEREGNO_DE_ROSA",
     "categoria": "AL_M",
     "genere": "M",
-    "punti_totali": 23,
+    "punti_totali": 38,
     "risultati": [
       {
         "gara_id": "CRONOGUSSOLA_2026-04-18_AL_M",
@@ -60729,6 +61496,19 @@
         "regione": "LOMBARDIA",
         "km": "60.000",
         "media": "43.470"
+      },
+      {
+        "gara_id": "MARANO_OSPITALETTO_2026-05-10_AL_M",
+        "nome_gara": "MARANO OSPITALETTO",
+        "data": "2026-05-10",
+        "posizione": 1,
+        "punti_effettivi": 15,
+        "team": "SALUS CICLISTICA SEREGNO DE ROSA",
+        "moltiplicatore": 1,
+        "tipo": "regionale",
+        "regione": "EMILIA ROMAGNA",
+        "km": "53.800",
+        "media": "37.096"
       }
     ]
   },
@@ -61258,7 +62038,7 @@
     "team_id": "VINI_FANTINI_TRALFO",
     "categoria": "JUN_M",
     "genere": "M",
-    "punti_totali": 19,
+    "punti_totali": 22,
     "risultati": [
       {
         "gara_id": "72_COPPA_MARIA_SS_DELLA_STELLA_2026-04-12_JUN_M",
@@ -61285,6 +62065,19 @@
         "regione": "LAZIO",
         "km": "98.000",
         "media": "41.846"
+      },
+      {
+        "gara_id": "40_MEMORIAL_SAURO_DREI_2026-05-10_JUN_M",
+        "nome_gara": "40 MEMORIAL SAURO DREI",
+        "data": "2026-05-10",
+        "posizione": 8,
+        "punti_effettivi": 3,
+        "team": "VINI FANTINI - TRALFO",
+        "moltiplicatore": 1,
+        "tipo": "regionale",
+        "regione": "EMILIA ROMAGNA",
+        "km": "100.200",
+        "media": "40.241"
       }
     ]
   },
@@ -61296,7 +62089,7 @@
     "team_id": "VINI_FANTINI_TRALFO",
     "categoria": "JUN_M",
     "genere": "M",
-    "punti_totali": 12,
+    "punti_totali": 16,
     "risultati": [
       {
         "gara_id": "72_COPPA_MARIA_SS_DELLA_STELLA_2026-04-12_JUN_M",
@@ -61310,6 +62103,19 @@
         "regione": "PUGLIA",
         "km": "107.000",
         "media": "45.110"
+      },
+      {
+        "gara_id": "40_MEMORIAL_SAURO_DREI_2026-05-10_JUN_M",
+        "nome_gara": "40 MEMORIAL SAURO DREI",
+        "data": "2026-05-10",
+        "posizione": 7,
+        "punti_effettivi": 4,
+        "team": "VINI FANTINI - TRALFO",
+        "moltiplicatore": 1,
+        "tipo": "regionale",
+        "regione": "EMILIA ROMAGNA",
+        "km": "100.200",
+        "media": "40.241"
       }
     ]
   },
@@ -61321,7 +62127,7 @@
     "team_id": "TEAM_BELVEDERE",
     "categoria": "JUN_M",
     "genere": "M",
-    "punti_totali": 16,
+    "punti_totali": 26,
     "risultati": [
       {
         "gara_id": "72_COPPA_MARIA_SS_DELLA_STELLA_2026-04-12_JUN_M",
@@ -61348,6 +62154,19 @@
         "regione": "LAZIO",
         "km": "98.000",
         "media": "41.846"
+      },
+      {
+        "gara_id": "GRAN_PREMIO_CITTA_DI_CORTONA_PROVA_VALIDA_CAMPIONATO_REGIONALE_2026-05-10_JUN_M",
+        "nome_gara": "GRAN PREMIO CITTA' DI CORTONA PROVA VALIDA CAMPIONATO REGIONALE",
+        "data": "2026-05-10",
+        "posizione": 6,
+        "punti_effettivi": 10,
+        "team": "TEAM BELVEDERE",
+        "moltiplicatore": 2,
+        "tipo": "regionale",
+        "regione": "TOSCANA",
+        "km": "111.000",
+        "media": "41.599"
       }
     ]
   },
@@ -61674,7 +62493,7 @@
     "team_id": "TEAM_VANGI_TOMMASINI_IL_PIRATA",
     "categoria": "JUN_M",
     "genere": "M",
-    "punti_totali": 49,
+    "punti_totali": 61,
     "risultati": [
       {
         "gara_id": "SAGRA_DEL_CICLISMO_MEMORIAL_MARTELLINI_LIDO_2026-04-12_JUN_M",
@@ -61740,6 +62559,19 @@
         "regione": "TOSCANA",
         "km": "123.000",
         "media": "41.403"
+      },
+      {
+        "gara_id": "GRAN_PREMIO_CITTA_DI_CORTONA_PROVA_VALIDA_CAMPIONATO_REGIONALE_2026-05-10_JUN_M",
+        "nome_gara": "GRAN PREMIO CITTA' DI CORTONA PROVA VALIDA CAMPIONATO REGIONALE",
+        "data": "2026-05-10",
+        "posizione": 5,
+        "punti_effettivi": 12,
+        "team": "TEAM VANGI TOMMASINI IL PIRATA",
+        "moltiplicatore": 2,
+        "tipo": "regionale",
+        "regione": "TOSCANA",
+        "km": "111.000",
+        "media": "41.599"
       }
     ]
   },
@@ -61995,7 +62827,7 @@
     "team_id": "TEAM_GENERAL_SYSTEM",
     "categoria": "JUN_M",
     "genere": "M",
-    "punti_totali": 26,
+    "punti_totali": 34,
     "risultati": [
       {
         "gara_id": "25_GRAN_PREMIO_COLLI_MARIGNANESI_PROVA_VALIDA_CAMPIONATO_REGIONALE_2026-04-12_JUN_M",
@@ -62048,6 +62880,19 @@
         "regione": "TOSCANA",
         "km": "11.500",
         "media": "51.957"
+      },
+      {
+        "gara_id": "40_MEMORIAL_SAURO_DREI_2026-05-10_JUN_M",
+        "nome_gara": "40 MEMORIAL SAURO DREI",
+        "data": "2026-05-10",
+        "posizione": 4,
+        "punti_effettivi": 8,
+        "team": "TEAM GENERAL SYSTEM",
+        "moltiplicatore": 1,
+        "tipo": "regionale",
+        "regione": "EMILIA ROMAGNA",
+        "km": "100.200",
+        "media": "40.241"
       }
     ]
   },
@@ -62211,7 +63056,7 @@
     "team_id": "TOYOTA_VALENCIA_SAV_F",
     "categoria": "ELI_F",
     "genere": "F",
-    "punti_totali": 43,
+    "punti_totali": 58,
     "risultati": [
       {
         "gara_id": "2_TROFEO_CASSA_DI_RISPARMIO_DI_FOSSANO_2026-04-12_ELI_F",
@@ -62264,6 +63109,19 @@
         "regione": "MARCHE",
         "km": "90.000",
         "media": "36.986"
+      },
+      {
+        "gara_id": "GIRO_DELLE_MARCHE_IN_ROSA_2026-05-10_ELI_F",
+        "nome_gara": "GIRO DELLE MARCHE IN ROSA",
+        "data": "2026-05-10",
+        "posizione": 1,
+        "punti_effettivi": 15,
+        "team": "TOYOTA VALENCIA SAV",
+        "moltiplicatore": 1,
+        "tipo": "regionale",
+        "regione": "MARCHE",
+        "km": "100.000",
+        "media": "35.294"
       }
     ]
   },
@@ -62300,7 +63158,7 @@
     "team_id": "BORN_TO_WIN_F",
     "categoria": "ELI_F",
     "genere": "F",
-    "punti_totali": 15,
+    "punti_totali": 18,
     "risultati": [
       {
         "gara_id": "2_TROFEO_CASSA_DI_RISPARMIO_DI_FOSSANO_2026-04-12_ELI_F",
@@ -62340,6 +63198,19 @@
         "regione": "MARCHE",
         "km": "90.000",
         "media": "36.986"
+      },
+      {
+        "gara_id": "GIRO_DELLE_MARCHE_IN_ROSA_2026-05-10_ELI_F",
+        "nome_gara": "GIRO DELLE MARCHE IN ROSA",
+        "data": "2026-05-10",
+        "posizione": 8,
+        "punti_effettivi": 3,
+        "team": "BORN TO WIN",
+        "moltiplicatore": 1,
+        "tipo": "regionale",
+        "regione": "MARCHE",
+        "km": "100.000",
+        "media": "35.294"
       }
     ]
   },
@@ -64113,7 +64984,7 @@
     "team_id": "TOP_GIRLS_FASSA_BORTOLO_F",
     "categoria": "ELI_F",
     "genere": "F",
-    "punti_totali": 12,
+    "punti_totali": 17,
     "risultati": [
       {
         "gara_id": "DONNE_OPEN_2026-04-11_ELI_F",
@@ -64127,6 +64998,19 @@
         "regione": "UNDER",
         "km": "81.000",
         "media": "41.134"
+      },
+      {
+        "gara_id": "GIRO_DELLE_MARCHE_IN_ROSA_2026-05-10_ELI_F",
+        "nome_gara": "GIRO DELLE MARCHE IN ROSA",
+        "data": "2026-05-10",
+        "posizione": 6,
+        "punti_effettivi": 5,
+        "team": "TOP GIRLS - FASSA BORTOLO",
+        "moltiplicatore": 1,
+        "tipo": "regionale",
+        "regione": "MARCHE",
+        "km": "100.000",
+        "media": "35.294"
       }
     ]
   },
@@ -64138,7 +65022,7 @@
     "team_id": "TEAM_MENDELSPECK_E_WORK_F",
     "categoria": "ELI_F",
     "genere": "F",
-    "punti_totali": 14,
+    "punti_totali": 18,
     "risultati": [
       {
         "gara_id": "DONNE_OPEN_2026-04-11_ELI_F",
@@ -64165,6 +65049,19 @@
         "regione": "MARCHE",
         "km": "90.000",
         "media": "36.986"
+      },
+      {
+        "gara_id": "GIRO_DELLE_MARCHE_IN_ROSA_2026-05-10_ELI_F",
+        "nome_gara": "GIRO DELLE MARCHE IN ROSA",
+        "data": "2026-05-10",
+        "posizione": 7,
+        "punti_effettivi": 4,
+        "team": "TEAM MENDELSPECK E-WORK",
+        "moltiplicatore": 1,
+        "tipo": "regionale",
+        "regione": "MARCHE",
+        "km": "100.000",
+        "media": "35.294"
       }
     ]
   },
@@ -64640,7 +65537,7 @@
     "team_id": "BIESSE_CARRERA_PREMAC",
     "categoria": "ELI_M",
     "genere": "M",
-    "punti_totali": 36,
+    "punti_totali": 72,
     "risultati": [
       {
         "gara_id": "63_GRAN_PREMIO_PALIO_DEL_RECIOTO_UNDER23_2026-04-07_ELI_M",
@@ -64667,6 +65564,19 @@
         "regione": "UNDER",
         "km": "179.800",
         "media": "40.304"
+      },
+      {
+        "gara_id": "37_GRAN_PREMIO_INDUSTRIE_DEL_MARMO_UNDER23_2026-05-10_ELI_M",
+        "nome_gara": "37 GRAN PREMIO INDUSTRIE DEL MARMO UNDER23",
+        "data": "2026-05-10",
+        "posizione": 2,
+        "punti_effettivi": 36,
+        "team": "BIESSE - CARRERA - PREMAC",
+        "moltiplicatore": 3,
+        "tipo": "internazionale",
+        "regione": "TOSCANA",
+        "km": "179.500",
+        "media": "41.527"
       }
     ]
   },
@@ -64904,7 +65814,7 @@
     "team_id": "XDS_ASTANA_DEVELOPMENT_TEAM",
     "categoria": "ELI_M",
     "genere": "M",
-    "punti_totali": 9,
+    "punti_totali": 27,
     "risultati": [
       {
         "gara_id": "87_GIRO_DEL_BELVEDERE_UNDER23_2026-04-06_ELI_M",
@@ -64918,6 +65828,19 @@
         "regione": "UNDER",
         "km": "168.000",
         "media": "43.065"
+      },
+      {
+        "gara_id": "37_GRAN_PREMIO_INDUSTRIE_DEL_MARMO_UNDER23_2026-05-10_ELI_M",
+        "nome_gara": "37 GRAN PREMIO INDUSTRIE DEL MARMO UNDER23",
+        "data": "2026-05-10",
+        "posizione": 5,
+        "punti_effettivi": 18,
+        "team": "XDS ASTANA DEVELOPMENT TEAM",
+        "moltiplicatore": 3,
+        "tipo": "internazionale",
+        "regione": "TOSCANA",
+        "km": "179.500",
+        "media": "41.527"
       }
     ]
   },
@@ -66157,7 +67080,7 @@
     "team_id": "S_C_CAVRIAGO",
     "categoria": "AL_M",
     "genere": "M",
-    "punti_totali": 3,
+    "punti_totali": 11,
     "risultati": [
       {
         "gara_id": "78_COPPA_COMUNE_DI_CALENZANO_2026-04-06_AL_M",
@@ -66171,6 +67094,19 @@
         "regione": "TOSCANA",
         "km": "49.000",
         "media": "42.722"
+      },
+      {
+        "gara_id": "MARANO_OSPITALETTO_2026-05-10_AL_M",
+        "nome_gara": "MARANO OSPITALETTO",
+        "data": "2026-05-10",
+        "posizione": 4,
+        "punti_effettivi": 8,
+        "team": "S.C. CAVRIAGO",
+        "moltiplicatore": 1,
+        "tipo": "regionale",
+        "regione": "EMILIA ROMAGNA",
+        "km": "53.800",
+        "media": "37.096"
       }
     ]
   },
@@ -66597,7 +67533,7 @@
     "team_id": "PETRUCCI_GAUSS_CYCLING_TEAM_F",
     "categoria": "JUN_F",
     "genere": "F",
-    "punti_totali": 48,
+    "punti_totali": 63,
     "risultati": [
       {
         "gara_id": "PASQUALANDO_2026-04-05_JUN_F",
@@ -66650,6 +67586,19 @@
         "regione": "MARCHE",
         "km": "90.000",
         "media": "36.986"
+      },
+      {
+        "gara_id": "GIRO_DELLE_MARCHE_IN_ROSA_2026-05-10_JUN_F",
+        "nome_gara": "GIRO DELLE MARCHE IN ROSA",
+        "data": "2026-05-10",
+        "posizione": 1,
+        "punti_effettivi": 15,
+        "team": "PETRUCCI GAUSS CYCLING TEAM",
+        "moltiplicatore": 1,
+        "tipo": "regionale",
+        "regione": "MARCHE",
+        "km": "100.000",
+        "media": "35.294"
       }
     ]
   },
@@ -70084,7 +71033,7 @@
     "team_id": "GHEDI_CICLISMO_ASD_BIESSE_CARRERA",
     "categoria": "ES2_M",
     "genere": "M",
-    "punti_totali": 8,
+    "punti_totali": 13,
     "risultati": [
       {
         "gara_id": "2_GRAN_PREMIO_CADELBOSCO_DI_SOPRA_2026-03-22_ES2_M",
@@ -70098,6 +71047,19 @@
         "regione": "EMILIA ROMAGNA",
         "km": "32.400",
         "media": "39.075"
+      },
+      {
+        "gara_id": "TROFEO_CITTA_DI_SANGIULIANO_MILANESE_2026-05-10_ES2_M",
+        "nome_gara": "TROFEO CITTA' DI SANGIULIANO MILANESE",
+        "data": "2026-05-10",
+        "posizione": 6,
+        "punti_effettivi": 5,
+        "team": "GHEDI CICLISMO ASD - BIESSE CARRERA",
+        "moltiplicatore": 1,
+        "tipo": "regionale",
+        "regione": "LOMBARDIA",
+        "km": "33.600",
+        "media": "40.213"
       }
     ]
   },
@@ -73107,7 +74069,7 @@
     "team_id": "BIESSE_CARRERA_PREMAC",
     "categoria": "ELI_M",
     "genere": "M",
-    "punti_totali": 2,
+    "punti_totali": 8,
     "risultati": [
       {
         "gara_id": "39_FIRENZE_EMPOLI_2026-02-21_ELI_M",
@@ -73121,6 +74083,19 @@
         "regione": "UNDER",
         "km": "149.000",
         "media": "42.393"
+      },
+      {
+        "gara_id": "37_GRAN_PREMIO_INDUSTRIE_DEL_MARMO_UNDER23_2026-05-10_ELI_M",
+        "nome_gara": "37 GRAN PREMIO INDUSTRIE DEL MARMO UNDER23",
+        "data": "2026-05-10",
+        "posizione": 9,
+        "punti_effettivi": 6,
+        "team": "BIESSE - CARRERA - PREMAC",
+        "moltiplicatore": 3,
+        "tipo": "internazionale",
+        "regione": "TOSCANA",
+        "km": "179.500",
+        "media": "41.527"
       }
     ]
   },
@@ -73345,7 +74320,7 @@
     "team_id": "TOP_GIRLS_FASSA_BORTOLO_F",
     "categoria": "ELI_F",
     "genere": "F",
-    "punti_totali": 18,
+    "punti_totali": 20,
     "risultati": [
       {
         "gara_id": "TROFEO_ARTI_E_MESTIERI_DELLA_TRADIZIONE_MUGELLANA_2026-02-14_ELI_F",
@@ -73372,6 +74347,19 @@
         "regione": "MARCHE",
         "km": "90.000",
         "media": "36.986"
+      },
+      {
+        "gara_id": "GIRO_DELLE_MARCHE_IN_ROSA_2026-05-10_ELI_F",
+        "nome_gara": "GIRO DELLE MARCHE IN ROSA",
+        "data": "2026-05-10",
+        "posizione": 9,
+        "punti_effettivi": 2,
+        "team": "TOP GIRLS - FASSA BORTOLO",
+        "moltiplicatore": 1,
+        "tipo": "regionale",
+        "regione": "MARCHE",
+        "km": "100.000",
+        "media": "35.294"
       }
     ]
   },
@@ -74227,7 +75215,7 @@
     "team_id": "WCC_UCI_WORLD_CYCLING_CENTRE_F",
     "categoria": "ELI_F",
     "genere": "F",
-    "punti_totali": 5,
+    "punti_totali": 17,
     "risultati": [
       {
         "gara_id": "GIRO_DELLE_MARCHE_IN_ROSA_2026-05-09_ELI_F",
@@ -74241,6 +75229,19 @@
         "regione": "MARCHE",
         "km": "90.000",
         "media": "36.986"
+      },
+      {
+        "gara_id": "GIRO_DELLE_MARCHE_IN_ROSA_2026-05-10_ELI_F",
+        "nome_gara": "GIRO DELLE MARCHE IN ROSA",
+        "data": "2026-05-10",
+        "posizione": 2,
+        "punti_effettivi": 12,
+        "team": "WCC - UCI WORLD CYCLING CENTRE",
+        "moltiplicatore": 1,
+        "tipo": "regionale",
+        "regione": "MARCHE",
+        "km": "100.000",
+        "media": "35.294"
       }
     ]
   },
@@ -74252,7 +75253,7 @@
     "team_id": "TIROL_WOMEN_CYCLING_F",
     "categoria": "ELI_F",
     "genere": "F",
-    "punti_totali": 1,
+    "punti_totali": 9,
     "risultati": [
       {
         "gara_id": "GIRO_DELLE_MARCHE_IN_ROSA_2026-05-09_ELI_F",
@@ -74266,6 +75267,19 @@
         "regione": "MARCHE",
         "km": "90.000",
         "media": "36.986"
+      },
+      {
+        "gara_id": "GIRO_DELLE_MARCHE_IN_ROSA_2026-05-10_ELI_F",
+        "nome_gara": "GIRO DELLE MARCHE IN ROSA",
+        "data": "2026-05-10",
+        "posizione": 4,
+        "punti_effettivi": 8,
+        "team": "TIROL WOMEN CYCLING",
+        "moltiplicatore": 1,
+        "tipo": "regionale",
+        "regione": "MARCHE",
+        "km": "100.000",
+        "media": "35.294"
       }
     ]
   },
@@ -75500,7 +76514,7 @@
     "nome": "LAVINIA",
     "cognome": "TOSI",
     "team_attuale": "COMAL TRENTINO CYCLING ACADEMY",
-    "team_id": "COMAL_TRENTINO_CYCLING_ACADEMY",
+    "team_id": "COMAL_TRENTINO_CYCLING_ACADEMY_F",
     "categoria": "AL_F",
     "genere": "F",
     "punti_totali": 5,
@@ -75525,7 +76539,7 @@
     "nome": "LAYLA",
     "cognome": "DRESCO",
     "team_attuale": "SCUOLA CICLISMO VERSO L'IRIDE",
-    "team_id": "SCUOLA_CICLISMO_VERSO_L_IRIDE",
+    "team_id": "SCUOLA_CICLISMO_VERSO_L_IRIDE_F",
     "categoria": "AL_F",
     "genere": "F",
     "punti_totali": 4,
@@ -75550,7 +76564,7 @@
     "nome": "BEATRICE",
     "cognome": "CASASSA",
     "team_attuale": "COMAL TRENTINO CYCLING ACADEMY",
-    "team_id": "COMAL_TRENTINO_CYCLING_ACADEMY",
+    "team_id": "COMAL_TRENTINO_CYCLING_ACADEMY_F",
     "categoria": "AL_F",
     "genere": "F",
     "punti_totali": 1,
@@ -75667,6 +76681,306 @@
         "regione": "TOSCANA",
         "km": "66.300",
         "media": "39.386"
+      }
+    ]
+  },
+  "POPOV_MARK": {
+    "id": "POPOV_MARK",
+    "nome": "MARK",
+    "cognome": "POPOV",
+    "team_attuale": "PC BAIX EBRE TORTOSA",
+    "team_id": "PC_BAIX_EBRE_TORTOSA",
+    "categoria": "ELI_M",
+    "genere": "M",
+    "punti_totali": 15,
+    "risultati": [
+      {
+        "gara_id": "37_GRAN_PREMIO_INDUSTRIE_DEL_MARMO_UNDER23_2026-05-10_ELI_M",
+        "nome_gara": "37 GRAN PREMIO INDUSTRIE DEL MARMO UNDER23",
+        "data": "2026-05-10",
+        "posizione": 6,
+        "punti_effettivi": 15,
+        "team": "PC BAIX EBRE TORTOSA",
+        "moltiplicatore": 3,
+        "tipo": "internazionale",
+        "regione": "TOSCANA",
+        "km": "179.500",
+        "media": "41.527"
+      }
+    ]
+  },
+  "HOLZKNECHT_JONAS": {
+    "id": "HOLZKNECHT_JONAS",
+    "nome": "JONAS",
+    "cognome": "HOLZKNECHT",
+    "team_attuale": "TIROL KTM CYCLING TEAM",
+    "team_id": "TIROL_KTM_CYCLING_TEAM",
+    "categoria": "ELI_M",
+    "genere": "M",
+    "punti_totali": 3,
+    "risultati": [
+      {
+        "gara_id": "37_GRAN_PREMIO_INDUSTRIE_DEL_MARMO_UNDER23_2026-05-10_ELI_M",
+        "nome_gara": "37 GRAN PREMIO INDUSTRIE DEL MARMO UNDER23",
+        "data": "2026-05-10",
+        "posizione": 10,
+        "punti_effettivi": 3,
+        "team": "TIROL KTM CYCLING TEAM",
+        "moltiplicatore": 3,
+        "tipo": "internazionale",
+        "regione": "TOSCANA",
+        "km": "179.500",
+        "media": "41.527"
+      }
+    ]
+  },
+  "WENZEL_LIV": {
+    "id": "WENZEL_LIV",
+    "nome": "LIV",
+    "cognome": "WENZEL",
+    "team_attuale": "TIROL WOMEN CYCLING",
+    "team_id": "TIROL_WOMEN_CYCLING",
+    "categoria": "ELI_F",
+    "genere": "F",
+    "punti_totali": 10,
+    "risultati": [
+      {
+        "gara_id": "GIRO_DELLE_MARCHE_IN_ROSA_2026-05-10_ELI_F",
+        "nome_gara": "GIRO DELLE MARCHE IN ROSA",
+        "data": "2026-05-10",
+        "posizione": 3,
+        "punti_effettivi": 10,
+        "team": "TIROL WOMEN CYCLING",
+        "moltiplicatore": 1,
+        "tipo": "regionale",
+        "regione": "MARCHE",
+        "km": "100.000",
+        "media": "35.294"
+      }
+    ]
+  },
+  "BORTOLI_VIRGINIA": {
+    "id": "BORTOLI_VIRGINIA",
+    "nome": "VIRGINIA",
+    "cognome": "BORTOLI",
+    "team_attuale": "TOP GIRLS - FASSA BORTOLO",
+    "team_id": "TOP_GIRLS_FASSA_BORTOLO",
+    "categoria": "ELI_F",
+    "genere": "F",
+    "punti_totali": 1,
+    "risultati": [
+      {
+        "gara_id": "GIRO_DELLE_MARCHE_IN_ROSA_2026-05-10_ELI_F",
+        "nome_gara": "GIRO DELLE MARCHE IN ROSA",
+        "data": "2026-05-10",
+        "posizione": 10,
+        "punti_effettivi": 1,
+        "team": "TOP GIRLS - FASSA BORTOLO",
+        "moltiplicatore": 1,
+        "tipo": "regionale",
+        "regione": "MARCHE",
+        "km": "100.000",
+        "media": "35.294"
+      }
+    ]
+  },
+  "ZOPPAS_EROS": {
+    "id": "ZOPPAS_EROS",
+    "nome": "EROS",
+    "cognome": "ZOPPAS",
+    "team_attuale": "CICLISTICA OMNIA IMOLA",
+    "team_id": "CICLISTICA_OMNIA_IMOLA",
+    "categoria": "JUN_M",
+    "genere": "M",
+    "punti_totali": 10,
+    "risultati": [
+      {
+        "gara_id": "40_MEMORIAL_SAURO_DREI_2026-05-10_JUN_M",
+        "nome_gara": "40 MEMORIAL SAURO DREI",
+        "data": "2026-05-10",
+        "posizione": 3,
+        "punti_effettivi": 10,
+        "team": "CICLISTICA OMNIA IMOLA",
+        "moltiplicatore": 1,
+        "tipo": "regionale",
+        "regione": "EMILIA ROMAGNA",
+        "km": "100.200",
+        "media": "40.241"
+      }
+    ]
+  },
+  "MILANI_LORENZO": {
+    "id": "MILANI_LORENZO",
+    "nome": "LORENZO",
+    "cognome": "MILANI",
+    "team_attuale": "POOL CANTU' GB TEAM A.S.D.",
+    "team_id": "POOL_CANTU_GB_TEAM_A_S_D",
+    "categoria": "JUN_M",
+    "genere": "M",
+    "punti_totali": 6,
+    "risultati": [
+      {
+        "gara_id": "40_MEMORIAL_SAURO_DREI_2026-05-10_JUN_M",
+        "nome_gara": "40 MEMORIAL SAURO DREI",
+        "data": "2026-05-10",
+        "posizione": 5,
+        "punti_effettivi": 6,
+        "team": "POOL CANTU' GB TEAM A.S.D.",
+        "moltiplicatore": 1,
+        "tipo": "regionale",
+        "regione": "EMILIA ROMAGNA",
+        "km": "100.200",
+        "media": "40.241"
+      }
+    ]
+  },
+  "RAPISARDA_SEBASTIANO": {
+    "id": "RAPISARDA_SEBASTIANO",
+    "nome": "SEBASTIANO",
+    "cognome": "RAPISARDA",
+    "team_attuale": "CYCLING TEAM NIAL NIZZOLI ALMO",
+    "team_id": "CYCLING_TEAM_NIAL_NIZZOLI_ALMO",
+    "categoria": "JUN_M",
+    "genere": "M",
+    "punti_totali": 5,
+    "risultati": [
+      {
+        "gara_id": "40_MEMORIAL_SAURO_DREI_2026-05-10_JUN_M",
+        "nome_gara": "40 MEMORIAL SAURO DREI",
+        "data": "2026-05-10",
+        "posizione": 6,
+        "punti_effettivi": 5,
+        "team": "CYCLING TEAM NIAL NIZZOLI ALMO",
+        "moltiplicatore": 1,
+        "tipo": "regionale",
+        "regione": "EMILIA ROMAGNA",
+        "km": "100.200",
+        "media": "40.241"
+      }
+    ]
+  },
+  "WARD_OLIVER": {
+    "id": "WARD_OLIVER",
+    "nome": "OLIVER",
+    "cognome": "WARD",
+    "team_attuale": "POLISPORTIVA MONSUMMANESE",
+    "team_id": "POLISPORTIVA_MONSUMMANESE",
+    "categoria": "JUN_M",
+    "genere": "M",
+    "punti_totali": 6,
+    "risultati": [
+      {
+        "gara_id": "GRAN_PREMIO_CITTA_DI_CORTONA_PROVA_VALIDA_CAMPIONATO_REGIONALE_2026-05-10_JUN_M",
+        "nome_gara": "GRAN PREMIO CITTA' DI CORTONA PROVA VALIDA CAMPIONATO REGIONALE",
+        "data": "2026-05-10",
+        "posizione": 8,
+        "punti_effettivi": 6,
+        "team": "POLISPORTIVA MONSUMMANESE",
+        "moltiplicatore": 2,
+        "tipo": "regionale",
+        "regione": "TOSCANA",
+        "km": "111.000",
+        "media": "41.599"
+      }
+    ]
+  },
+  "PARIGI_MARCO": {
+    "id": "PARIGI_MARCO",
+    "nome": "MARCO",
+    "cognome": "PARIGI",
+    "team_attuale": "POLISPORTIVA MONSUMMANESE",
+    "team_id": "POLISPORTIVA_MONSUMMANESE",
+    "categoria": "JUN_M",
+    "genere": "M",
+    "punti_totali": 2,
+    "risultati": [
+      {
+        "gara_id": "GRAN_PREMIO_CITTA_DI_CORTONA_PROVA_VALIDA_CAMPIONATO_REGIONALE_2026-05-10_JUN_M",
+        "nome_gara": "GRAN PREMIO CITTA' DI CORTONA PROVA VALIDA CAMPIONATO REGIONALE",
+        "data": "2026-05-10",
+        "posizione": 10,
+        "punti_effettivi": 2,
+        "team": "POLISPORTIVA MONSUMMANESE",
+        "moltiplicatore": 2,
+        "tipo": "regionale",
+        "regione": "TOSCANA",
+        "km": "111.000",
+        "media": "41.599"
+      }
+    ]
+  },
+  "PROBERT_GONZALES_PAUL": {
+    "id": "PROBERT_GONZALES_PAUL",
+    "nome": "GONZALES PAUL",
+    "cognome": "PROBERT",
+    "team_attuale": "A.R.MONEX PRO CYCLING TEAM",
+    "team_id": "A_R_MONEX_PRO_CYCLING_TEAM",
+    "categoria": "AL_M",
+    "genere": "M",
+    "punti_totali": 10,
+    "risultati": [
+      {
+        "gara_id": "5_EDIZIONE_DELLA_CORSA_DI_SANDRO_PROVA_VALIDA_CAMPIONATO_REGIONALE_2026-05-10_AL_M",
+        "nome_gara": "5 EDIZIONE DELLA CORSA DI SANDRO PROVA VALIDA CAMPIONATO REGIONALE",
+        "data": "2026-05-10",
+        "posizione": 6,
+        "punti_effettivi": 10,
+        "team": "A.R.MONEX PRO CYCLING TEAM",
+        "moltiplicatore": 2,
+        "tipo": "regionale",
+        "regione": "ABRUZZO",
+        "km": "67.000",
+        "media": "40.200"
+      }
+    ]
+  },
+  "RAIMONDI_NICOLO": {
+    "id": "RAIMONDI_NICOLO",
+    "nome": "NICOLO'",
+    "cognome": "RAIMONDI",
+    "team_attuale": "SALUS CICLISTICA SEREGNO DE ROSA",
+    "team_id": "SALUS_CICLISTICA_SEREGNO_DE_ROSA",
+    "categoria": "AL_M",
+    "genere": "M",
+    "punti_totali": 1,
+    "risultati": [
+      {
+        "gara_id": "MARANO_OSPITALETTO_2026-05-10_AL_M",
+        "nome_gara": "MARANO OSPITALETTO",
+        "data": "2026-05-10",
+        "posizione": 10,
+        "punti_effettivi": 1,
+        "team": "SALUS CICLISTICA SEREGNO DE ROSA",
+        "moltiplicatore": 1,
+        "tipo": "regionale",
+        "regione": "EMILIA ROMAGNA",
+        "km": "53.800",
+        "media": "37.096"
+      }
+    ]
+  },
+  "SALERI_MATIAS": {
+    "id": "SALERI_MATIAS",
+    "nome": "MATIAS",
+    "cognome": "SALERI",
+    "team_attuale": "GHEDI CICLISMO ASD - BIESSE CARRERA",
+    "team_id": "GHEDI_CICLISMO_ASD_BIESSE_CARRERA",
+    "categoria": "ES1_M",
+    "genere": "M",
+    "punti_totali": 3,
+    "risultati": [
+      {
+        "gara_id": "TROFEO_CITTA_DI_SANGIULIANO_MILANESE_2026-05-10_ES1_M",
+        "nome_gara": "TROFEO CITTA' DI SANGIULIANO MILANESE",
+        "data": "2026-05-10",
+        "posizione": 8,
+        "punti_effettivi": 3,
+        "team": "GHEDI CICLISMO ASD - BIESSE CARRERA",
+        "moltiplicatore": 1,
+        "tipo": "regionale",
+        "regione": "LOMBARDIA",
+        "km": "25.200",
+        "media": "38.604"
       }
     ]
   }

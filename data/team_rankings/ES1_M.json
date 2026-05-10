@@ -2,24 +2,24 @@
   {
     "team_id": "TEAM_SENAGHESE_GUERRINI",
     "team_nome": "TEAM SENAGHESE GUERRINI",
-    "punti": 399,
+    "punti": 415,
     "vittorie": 12,
     "p1": 12,
-    "p2": 8,
+    "p2": 9,
     "p3": 5,
-    "pout": 16,
+    "pout": 17,
     "n_atleti": 6,
     "pos": 1
   },
   {
     "team_id": "CICLISTICA_TREVIGLIESE",
     "team_nome": "CICLISTICA TREVIGLIESE",
-    "punti": 251,
-    "vittorie": 2,
-    "p1": 2,
+    "punti": 282,
+    "vittorie": 3,
+    "p1": 3,
     "p2": 5,
-    "p3": 5,
-    "pout": 24,
+    "p3": 6,
+    "pout": 26,
     "n_atleti": 6,
     "pos": 2
   },
@@ -288,6 +288,18 @@
     "pos": 24
   },
   {
+    "team_id": "G_S_RONCO_MAURIGI_DELIO_GALLINA",
+    "team_nome": "G.S. RONCO MAURIGI DELIO GALLINA",
+    "punti": 66,
+    "vittorie": 0,
+    "p1": 0,
+    "p2": 1,
+    "p3": 1,
+    "pout": 12,
+    "n_atleti": 3,
+    "pos": 25
+  },
+  {
     "team_id": "UC_GODIGESE_ABRA_IRIDE",
     "team_nome": "UC GODIGESE ABRA IRIDE",
     "punti": 65,
@@ -297,7 +309,7 @@
     "p3": 3,
     "pout": 6,
     "n_atleti": 3,
-    "pos": 25
+    "pos": 26
   },
   {
     "team_id": "TEAM_SERIO",
@@ -309,7 +321,7 @@
     "p3": 2,
     "pout": 2,
     "n_atleti": 1,
-    "pos": 26
+    "pos": 27
   },
   {
     "team_id": "ARDENS_CYCLING_TEAM",
@@ -321,7 +333,7 @@
     "p3": 2,
     "pout": 4,
     "n_atleti": 2,
-    "pos": 27
+    "pos": 28
   },
   {
     "team_id": "V_CYCLING_ARICI_CLAUDIA_PITON",
@@ -333,7 +345,7 @@
     "p3": 0,
     "pout": 7,
     "n_atleti": 1,
-    "pos": 28
+    "pos": 29
   },
   {
     "team_id": "FDB_SPORT_CLUB",
@@ -345,7 +357,7 @@
     "p3": 0,
     "pout": 4,
     "n_atleti": 1,
-    "pos": 29
+    "pos": 30
   },
   {
     "team_id": "A_S_D_SACILESE",
@@ -357,7 +369,7 @@
     "p3": 1,
     "pout": 3,
     "n_atleti": 3,
-    "pos": 30
+    "pos": 31
   },
   {
     "team_id": "A_S_D_GDS_TEAM_COMPETITION",
@@ -369,18 +381,6 @@
     "p3": 0,
     "pout": 0,
     "n_atleti": 1,
-    "pos": 31
-  },
-  {
-    "team_id": "G_S_RONCO_MAURIGI_DELIO_GALLINA",
-    "team_nome": "G.S. RONCO MAURIGI DELIO GALLINA",
-    "punti": 60,
-    "vittorie": 0,
-    "p1": 0,
-    "p2": 1,
-    "p3": 1,
-    "pout": 11,
-    "n_atleti": 3,
     "pos": 32
   },
   {
@@ -468,6 +468,18 @@
     "pos": 39
   },
   {
+    "team_id": "S_C_CAVRIAGO",
+    "team_nome": "S.C. CAVRIAGO",
+    "punti": 49,
+    "vittorie": 0,
+    "p1": 0,
+    "p2": 1,
+    "p3": 1,
+    "pout": 7,
+    "n_atleti": 2,
+    "pos": 40
+  },
+  {
     "team_id": "G_C_SOSSANO_1975",
     "team_nome": "G.C. SOSSANO 1975",
     "punti": 48,
@@ -477,7 +489,7 @@
     "p3": 0,
     "pout": 5,
     "n_atleti": 1,
-    "pos": 40
+    "pos": 41
   },
   {
     "team_id": "A_S_D_PEDALE_CASTELLANO",
@@ -489,7 +501,7 @@
     "p3": 0,
     "pout": 6,
     "n_atleti": 2,
-    "pos": 41
+    "pos": 42
   },
   {
     "team_id": "ASD_CICLOTOUR",
@@ -501,7 +513,7 @@
     "p3": 0,
     "pout": 1,
     "n_atleti": 1,
-    "pos": 42
+    "pos": 43
   },
   {
     "team_id": "ASD_VELOCE_CLUB_BORGO",
@@ -513,7 +525,7 @@
     "p3": 2,
     "pout": 6,
     "n_atleti": 1,
-    "pos": 43
+    "pos": 44
   },
   {
     "team_id": "U_C_GUSPINI_A_S_D",
@@ -525,7 +537,7 @@
     "p3": 0,
     "pout": 4,
     "n_atleti": 2,
-    "pos": 44
+    "pos": 45
   },
   {
     "team_id": "G_S_MOSOLE",
@@ -537,7 +549,7 @@
     "p3": 1,
     "pout": 5,
     "n_atleti": 1,
-    "pos": 45
+    "pos": 46
   },
   {
     "team_id": "LEO_CONSTRUCTIONS_SSD",
@@ -549,7 +561,19 @@
     "p3": 0,
     "pout": 0,
     "n_atleti": 1,
-    "pos": 46
+    "pos": 47
+  },
+  {
+    "team_id": "BUSTO_GAROLFO",
+    "team_nome": "BUSTO GAROLFO",
+    "punti": 42,
+    "vittorie": 0,
+    "p1": 0,
+    "p2": 1,
+    "p3": 0,
+    "pout": 9,
+    "n_atleti": 3,
+    "pos": 48
   },
   {
     "team_id": "UC_FOEN_MICTU",
@@ -561,19 +585,7 @@
     "p3": 0,
     "pout": 3,
     "n_atleti": 2,
-    "pos": 47
-  },
-  {
-    "team_id": "S_C_CAVRIAGO",
-    "team_nome": "S.C. CAVRIAGO",
-    "punti": 41,
-    "vittorie": 0,
-    "p1": 0,
-    "p2": 1,
-    "p3": 1,
-    "pout": 6,
-    "n_atleti": 2,
-    "pos": 48
+    "pos": 49
   },
   {
     "team_id": "CONTRABAND_CYCLING_TEAM_ASD",
@@ -585,18 +597,6 @@
     "p3": 1,
     "pout": 7,
     "n_atleti": 1,
-    "pos": 49
-  },
-  {
-    "team_id": "BUSTO_GAROLFO",
-    "team_nome": "BUSTO GAROLFO",
-    "punti": 40,
-    "vittorie": 0,
-    "p1": 0,
-    "p2": 1,
-    "p3": 0,
-    "pout": 8,
-    "n_atleti": 3,
     "pos": 50
   },
   {
@@ -1500,6 +1500,18 @@
     "pos": 125
   },
   {
+    "team_id": "GHEDI_CICLISMO_ASD_BIESSE_CARRERA",
+    "team_nome": "GHEDI CICLISMO ASD - BIESSE CARRERA",
+    "punti": 3,
+    "vittorie": 0,
+    "p1": 0,
+    "p2": 0,
+    "p3": 0,
+    "pout": 1,
+    "n_atleti": 1,
+    "pos": 126
+  },
+  {
     "team_id": "A_S_D_V_C_MONTEBELLUNA",
     "team_nome": "A.S.D.- V.C.MONTEBELLUNA",
     "punti": 2,
@@ -1509,7 +1521,7 @@
     "p3": 0,
     "pout": 1,
     "n_atleti": 1,
-    "pos": 126
+    "pos": 127
   },
   {
     "team_id": "PROGETTO_CICLISMO_RODENGO_S_ASD",
@@ -1521,7 +1533,7 @@
     "p3": 0,
     "pout": 1,
     "n_atleti": 1,
-    "pos": 127
+    "pos": 128
   },
   {
     "team_id": "V_C_CITTA_DI_MAROSTICA",
@@ -1533,7 +1545,7 @@
     "p3": 0,
     "pout": 1,
     "n_atleti": 1,
-    "pos": 128
+    "pos": 129
   },
   {
     "team_id": "S_C_FONTANAFREDDA",
@@ -1545,7 +1557,7 @@
     "p3": 0,
     "pout": 1,
     "n_atleti": 1,
-    "pos": 129
+    "pos": 130
   },
   {
     "team_id": "G_S_GIOVANI_GIUSSANESI_A_S_D",
@@ -1557,7 +1569,7 @@
     "p3": 0,
     "pout": 1,
     "n_atleti": 1,
-    "pos": 130
+    "pos": 131
   },
   {
     "team_id": "SAN_GEO_A_S_D",
@@ -1569,6 +1581,6 @@
     "p3": 0,
     "pout": 1,
     "n_atleti": 1,
-    "pos": 131
+    "pos": 132
   }
 ]

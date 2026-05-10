@@ -2,45 +2,45 @@
   {
     "team_id": "SPORT_CLUB_BRESCIA_FLANDRES_LOVE_F",
     "team_nome": "SPORT CLUB BRESCIA - FLANDRES LOVE",
-    "punti": 149,
+    "punti": 155,
     "vittorie": 5,
     "p1": 5,
     "p2": 2,
     "p3": 1,
-    "pout": 6,
+    "pout": 7,
     "n_atleti": 5,
     "pos": 1
   },
   {
+    "team_id": "U_C_CONSCIO_PEDALE_DEL_SILE_F",
+    "team_nome": "U.C.CONSCIO PEDALE DEL SILE",
+    "punti": 147,
+    "vittorie": 3,
+    "p1": 3,
+    "p2": 5,
+    "p3": 2,
+    "pout": 2,
+    "n_atleti": 2,
+    "pos": 2
+  },
+  {
     "team_id": "S_C_CESANO_MADERNO_F",
     "team_nome": "S.C. CESANO MADERNO",
-    "punti": 135,
+    "punti": 137,
     "vittorie": 4,
     "p1": 4,
     "p2": 1,
     "p3": 0,
-    "pout": 15,
+    "pout": 16,
     "n_atleti": 6,
-    "pos": 2
-  },
-  {
-    "team_id": "U_C_CONSCIO_PEDALE_DEL_SILE_F",
-    "team_nome": "U.C.CONSCIO PEDALE DEL SILE",
-    "punti": 125,
-    "vittorie": 3,
-    "p1": 3,
-    "p2": 4,
-    "p3": 1,
-    "pout": 2,
-    "n_atleti": 2,
     "pos": 3
   },
   {
     "team_id": "U_C_GIORGIONE_F",
     "team_nome": "U.C. GIORGIONE",
-    "punti": 106,
-    "vittorie": 1,
-    "p1": 1,
+    "punti": 121,
+    "vittorie": 2,
+    "p1": 2,
     "p2": 2,
     "p3": 4,
     "pout": 4,
@@ -216,18 +216,6 @@
     "pos": 18
   },
   {
-    "team_id": "U_C_CONSCIO_PEDALE_DEL_SILE",
-    "team_nome": "U.C.CONSCIO PEDALE DEL SILE",
-    "punti": 22,
-    "vittorie": 0,
-    "p1": 0,
-    "p2": 1,
-    "p3": 1,
-    "pout": 0,
-    "n_atleti": 2,
-    "pos": 19
-  },
-  {
     "team_id": "SAMABIKE_F",
     "team_nome": "SAMABIKE",
     "punti": 20,
@@ -237,6 +225,18 @@
     "p3": 1,
     "pout": 0,
     "n_atleti": 1,
+    "pos": 19
+  },
+  {
+    "team_id": "COMAL_TRENTINO_CYCLING_ACADEMY_F",
+    "team_nome": "COMAL TRENTINO CYCLING ACADEMY",
+    "punti": 17,
+    "vittorie": 0,
+    "p1": 0,
+    "p2": 0,
+    "p3": 0,
+    "pout": 4,
+    "n_atleti": 3,
     "pos": 20
   },
   {
@@ -252,16 +252,28 @@
     "pos": 21
   },
   {
-    "team_id": "U_C_GIORGIONE",
-    "team_nome": "U.C. GIORGIONE",
+    "team_id": "ASD_GS_SORGENTE_PRADIPOZZO_F",
+    "team_nome": "ASD GS SORGENTE PRADIPOZZO",
     "punti": 15,
-    "vittorie": 1,
-    "p1": 1,
+    "vittorie": 0,
+    "p1": 0,
     "p2": 0,
-    "p3": 0,
-    "pout": 0,
+    "p3": 1,
+    "pout": 2,
     "n_atleti": 1,
     "pos": 22
+  },
+  {
+    "team_id": "G_C_NOVENTANA_F",
+    "team_nome": "G.C. NOVENTANA",
+    "punti": 13,
+    "vittorie": 0,
+    "p1": 0,
+    "p2": 0,
+    "p3": 0,
+    "pout": 2,
+    "n_atleti": 1,
+    "pos": 23
   },
   {
     "team_id": "ASD_FUSION_BIKE_F",
@@ -273,7 +285,7 @@
     "p3": 0,
     "pout": 2,
     "n_atleti": 2,
-    "pos": 23
+    "pos": 24
   },
   {
     "team_id": "A_S_D_G_C_EMIC_F",
@@ -285,7 +297,7 @@
     "p3": 0,
     "pout": 3,
     "n_atleti": 1,
-    "pos": 24
+    "pos": 25
   },
   {
     "team_id": "GS_CAPANNORI_F",
@@ -295,18 +307,6 @@
     "p1": 0,
     "p2": 0,
     "p3": 0,
-    "pout": 1,
-    "n_atleti": 1,
-    "pos": 25
-  },
-  {
-    "team_id": "ASD_GS_SORGENTE_PRADIPOZZO_F",
-    "team_nome": "ASD GS SORGENTE PRADIPOZZO",
-    "punti": 12,
-    "vittorie": 0,
-    "p1": 0,
-    "p2": 0,
-    "p3": 1,
     "pout": 1,
     "n_atleti": 1,
     "pos": 26
@@ -324,18 +324,6 @@
     "pos": 27
   },
   {
-    "team_id": "COMAL_TRENTINO_CYCLING_ACADEMY_F",
-    "team_nome": "COMAL TRENTINO CYCLING ACADEMY",
-    "punti": 11,
-    "vittorie": 0,
-    "p1": 0,
-    "p2": 0,
-    "p3": 0,
-    "pout": 2,
-    "n_atleti": 1,
-    "pos": 28
-  },
-  {
     "team_id": "BICIFESTIVAL_F",
     "team_nome": "BICIFESTIVAL",
     "punti": 10,
@@ -345,7 +333,7 @@
     "p3": 0,
     "pout": 2,
     "n_atleti": 2,
-    "pos": 29
+    "pos": 28
   },
   {
     "team_id": "ASD_VELOCE_CLUB_BORGO_F",
@@ -357,7 +345,7 @@
     "p3": 0,
     "pout": 4,
     "n_atleti": 2,
-    "pos": 30
+    "pos": 29
   },
   {
     "team_id": "HG_CYCLING_TEAM_F",
@@ -369,7 +357,7 @@
     "p3": 0,
     "pout": 2,
     "n_atleti": 1,
-    "pos": 31
+    "pos": 30
   },
   {
     "team_id": "BREGANZE_MILLENIUM_F",
@@ -381,19 +369,7 @@
     "p3": 0,
     "pout": 1,
     "n_atleti": 1,
-    "pos": 32
-  },
-  {
-    "team_id": "G_C_NOVENTANA",
-    "team_nome": "G.C. NOVENTANA",
-    "punti": 8,
-    "vittorie": 0,
-    "p1": 0,
-    "p2": 0,
-    "p3": 0,
-    "pout": 1,
-    "n_atleti": 1,
-    "pos": 33
+    "pos": 31
   },
   {
     "team_id": "ACS_OLIMPIC_ZARNESTI_F",
@@ -405,7 +381,7 @@
     "p3": 0,
     "pout": 1,
     "n_atleti": 1,
-    "pos": 34
+    "pos": 32
   },
   {
     "team_id": "TEAM_CESARO_NERI_LUCCHINI_F",
@@ -417,23 +393,11 @@
     "p3": 0,
     "pout": 1,
     "n_atleti": 1,
-    "pos": 35
+    "pos": 33
   },
   {
-    "team_id": "SPORT_CLUB_BRESCIA_FLANDRES_LOVE",
-    "team_nome": "SPORT CLUB BRESCIA - FLANDRES LOVE",
-    "punti": 6,
-    "vittorie": 0,
-    "p1": 0,
-    "p2": 0,
-    "p3": 0,
-    "pout": 1,
-    "n_atleti": 1,
-    "pos": 36
-  },
-  {
-    "team_id": "COMAL_TRENTINO_CYCLING_ACADEMY",
-    "team_nome": "COMAL TRENTINO CYCLING ACADEMY",
+    "team_id": "SCUOLA_CICLISMO_VERSO_L_IRIDE_F",
+    "team_nome": "SCUOLA CICLISMO VERSO L'IRIDE",
     "punti": 6,
     "vittorie": 0,
     "p1": 0,
@@ -441,19 +405,7 @@
     "p3": 0,
     "pout": 2,
     "n_atleti": 2,
-    "pos": 37
-  },
-  {
-    "team_id": "G_C_NOVENTANA_F",
-    "team_nome": "G.C. NOVENTANA",
-    "punti": 5,
-    "vittorie": 0,
-    "p1": 0,
-    "p2": 0,
-    "p3": 0,
-    "pout": 1,
-    "n_atleti": 1,
-    "pos": 38
+    "pos": 34
   },
   {
     "team_id": "G_S_CICLI_FIORIN_CYCLING_TEAM_ASD_F",
@@ -465,7 +417,7 @@
     "p3": 0,
     "pout": 1,
     "n_atleti": 1,
-    "pos": 39
+    "pos": 35
   },
   {
     "team_id": "A_S_D_G_S_LUC_BOVOLONE_F",
@@ -477,7 +429,7 @@
     "p3": 0,
     "pout": 2,
     "n_atleti": 1,
-    "pos": 40
+    "pos": 36
   },
   {
     "team_id": "LIBERTAS_CERESETTO_F",
@@ -489,7 +441,7 @@
     "p3": 0,
     "pout": 2,
     "n_atleti": 1,
-    "pos": 41
+    "pos": 37
   },
   {
     "team_id": "A_S_A_C_I_EVONACICLI_F",
@@ -501,19 +453,7 @@
     "p3": 0,
     "pout": 1,
     "n_atleti": 1,
-    "pos": 42
-  },
-  {
-    "team_id": "SCUOLA_CICLISMO_VERSO_L_IRIDE",
-    "team_nome": "SCUOLA CICLISMO VERSO L'IRIDE",
-    "punti": 4,
-    "vittorie": 0,
-    "p1": 0,
-    "p2": 0,
-    "p3": 0,
-    "pout": 1,
-    "n_atleti": 1,
-    "pos": 43
+    "pos": 38
   },
   {
     "team_id": "CALDERARA_STM_RIDUTTORI_F",
@@ -525,7 +465,7 @@
     "p3": 0,
     "pout": 1,
     "n_atleti": 1,
-    "pos": 44
+    "pos": 39
   },
   {
     "team_id": "G_S_LUPI_VALLE_D_AOSTA_F",
@@ -537,19 +477,7 @@
     "p3": 0,
     "pout": 1,
     "n_atleti": 1,
-    "pos": 45
-  },
-  {
-    "team_id": "ASD_GS_SORGENTE_PRADIPOZZO",
-    "team_nome": "ASD GS SORGENTE PRADIPOZZO",
-    "punti": 3,
-    "vittorie": 0,
-    "p1": 0,
-    "p2": 0,
-    "p3": 0,
-    "pout": 1,
-    "n_atleti": 1,
-    "pos": 46
+    "pos": 40
   },
   {
     "team_id": "G_C_SOSSANO_1975_F",
@@ -561,30 +489,6 @@
     "p3": 0,
     "pout": 1,
     "n_atleti": 1,
-    "pos": 47
-  },
-  {
-    "team_id": "SCUOLA_CICLISMO_VERSO_L_IRIDE_F",
-    "team_nome": "SCUOLA CICLISMO VERSO L'IRIDE",
-    "punti": 2,
-    "vittorie": 0,
-    "p1": 0,
-    "p2": 0,
-    "p3": 0,
-    "pout": 1,
-    "n_atleti": 1,
-    "pos": 48
-  },
-  {
-    "team_id": "S_C_CESANO_MADERNO",
-    "team_nome": "S.C. CESANO MADERNO",
-    "punti": 2,
-    "vittorie": 0,
-    "p1": 0,
-    "p2": 0,
-    "p3": 0,
-    "pout": 1,
-    "n_atleti": 1,
-    "pos": 49
+    "pos": 41
   }
 ]

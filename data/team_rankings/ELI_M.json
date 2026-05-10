@@ -2,38 +2,50 @@
   {
     "team_id": "A_S_D_S_C_PADOVANI",
     "team_nome": "A.S.D. S.C. PADOVANI",
-    "punti": 655,
+    "punti": 679,
     "vittorie": 7,
     "p1": 7,
     "p2": 8,
     "p3": 4,
-    "pout": 18,
+    "pout": 19,
     "n_atleti": 10,
     "pos": 1
   },
   {
     "team_id": "TEAM_TECHNIPES_INEMILIAROMAGNA",
     "team_nome": "TEAM TECHNIPES #INEMILIAROMAGNA",
-    "punti": 431,
+    "punti": 440,
     "vittorie": 4,
     "p1": 4,
     "p2": 2,
     "p3": 5,
-    "pout": 15,
+    "pout": 16,
     "n_atleti": 9,
     "pos": 2
   },
   {
     "team_id": "GENERAL_STORE_ESSEGIBI_F_LLI_CURIA",
     "team_nome": "GENERAL STORE -ESSEGIBI-F.LLI CURIA",
-    "punti": 302,
+    "punti": 314,
     "vittorie": 2,
     "p1": 2,
     "p2": 2,
     "p3": 3,
-    "pout": 12,
+    "pout": 13,
     "n_atleti": 7,
     "pos": 3
+  },
+  {
+    "team_id": "TEAM_HOPPLA",
+    "team_nome": "TEAM HOPPLA'",
+    "punti": 301,
+    "vittorie": 4,
+    "p1": 4,
+    "p2": 3,
+    "p3": 3,
+    "pout": 14,
+    "n_atleti": 7,
+    "pos": 4
   },
   {
     "team_id": "SOLME_OLMO_ARVEDI",
@@ -45,7 +57,7 @@
     "p3": 2,
     "pout": 13,
     "n_atleti": 7,
-    "pos": 4
+    "pos": 5
   },
   {
     "team_id": "BELTRAMI_TSA_TRE_COLLI",
@@ -57,29 +69,17 @@
     "p3": 1,
     "pout": 17,
     "n_atleti": 7,
-    "pos": 5
-  },
-  {
-    "team_id": "TEAM_HOPPLA",
-    "team_nome": "TEAM HOPPLA'",
-    "punti": 256,
-    "vittorie": 3,
-    "p1": 3,
-    "p2": 3,
-    "p3": 3,
-    "pout": 14,
-    "n_atleti": 7,
     "pos": 6
   },
   {
     "team_id": "BIESSE_CARRERA_PREMAC",
     "team_nome": "BIESSE - CARRERA - PREMAC",
-    "punti": 184,
+    "punti": 226,
     "vittorie": 0,
     "p1": 0,
-    "p2": 0,
+    "p2": 1,
     "p3": 1,
-    "pout": 16,
+    "pout": 17,
     "n_atleti": 9,
     "pos": 7
   },
@@ -108,6 +108,18 @@
     "pos": 9
   },
   {
+    "team_id": "XDS_ASTANA_DEVELOPMENT_TEAM",
+    "team_nome": "XDS ASTANA DEVELOPMENT TEAM",
+    "punti": 138,
+    "vittorie": 0,
+    "p1": 0,
+    "p2": 1,
+    "p3": 0,
+    "pout": 6,
+    "n_atleti": 5,
+    "pos": 10
+  },
+  {
     "team_id": "VEGA_VITALCARE_DYNATEK",
     "team_nome": "VEGA VITALCARE DYNATEK",
     "punti": 130,
@@ -117,7 +129,7 @@
     "p3": 0,
     "pout": 8,
     "n_atleti": 6,
-    "pos": 10
+    "pos": 11
   },
   {
     "team_id": "BAHRAIN_VICTORIOUS_DEVELOPMENT_TEAM",
@@ -129,7 +141,7 @@
     "p3": 1,
     "pout": 2,
     "n_atleti": 5,
-    "pos": 11
+    "pos": 12
   },
   {
     "team_id": "CICLISTICA_ROSTESE",
@@ -141,18 +153,6 @@
     "p3": 2,
     "pout": 6,
     "n_atleti": 4,
-    "pos": 12
-  },
-  {
-    "team_id": "XDS_ASTANA_DEVELOPMENT_TEAM",
-    "team_nome": "XDS ASTANA DEVELOPMENT TEAM",
-    "punti": 120,
-    "vittorie": 0,
-    "p1": 0,
-    "p2": 1,
-    "p3": 0,
-    "pout": 5,
-    "n_atleti": 5,
     "pos": 13
   },
   {
@@ -240,6 +240,18 @@
     "pos": 20
   },
   {
+    "team_id": "PC_BAIX_EBRE_TORTOSA",
+    "team_nome": "PC BAIX EBRE TORTOSA",
+    "punti": 65,
+    "vittorie": 0,
+    "p1": 0,
+    "p2": 0,
+    "p3": 1,
+    "pout": 3,
+    "n_atleti": 3,
+    "pos": 21
+  },
+  {
     "team_id": "POLISPORTIVA_TRIPETETOLO_SEANESE",
     "team_nome": "POLISPORTIVA TRIPETETOLO SEANESE",
     "punti": 63,
@@ -249,7 +261,7 @@
     "p3": 1,
     "pout": 7,
     "n_atleti": 4,
-    "pos": 21
+    "pos": 22
   },
   {
     "team_id": "UAE_TEAM_EMIRATES_GEN_Z",
@@ -261,7 +273,7 @@
     "p3": 0,
     "pout": 5,
     "n_atleti": 4,
-    "pos": 22
+    "pos": 23
   },
   {
     "team_id": "GRAGNANO_SPORTING_CLUB",
@@ -273,7 +285,7 @@
     "p3": 1,
     "pout": 4,
     "n_atleti": 3,
-    "pos": 23
+    "pos": 24
   },
   {
     "team_id": "UCRAINA",
@@ -285,7 +297,7 @@
     "p3": 1,
     "pout": 5,
     "n_atleti": 4,
-    "pos": 24
+    "pos": 25
   },
   {
     "team_id": "PETROLIKE",
@@ -297,7 +309,7 @@
     "p3": 0,
     "pout": 5,
     "n_atleti": 3,
-    "pos": 25
+    "pos": 26
   },
   {
     "team_id": "TEAM_VISMA_LEASE_A_BIKE_DEVELOPMENT",
@@ -309,7 +321,7 @@
     "p3": 0,
     "pout": 1,
     "n_atleti": 2,
-    "pos": 26
+    "pos": 27
   },
   {
     "team_id": "ASD_G_C_SISSIO_TEAM",
@@ -321,7 +333,7 @@
     "p3": 0,
     "pout": 9,
     "n_atleti": 7,
-    "pos": 27
+    "pos": 28
   },
   {
     "team_id": "OVERALL_TRE_COLLI_CYCLING_TEAM",
@@ -333,7 +345,7 @@
     "p3": 0,
     "pout": 3,
     "n_atleti": 3,
-    "pos": 28
+    "pos": 29
   },
   {
     "team_id": "GALLINA_LUCCHINI_ECOTEK",
@@ -345,7 +357,7 @@
     "p3": 0,
     "pout": 10,
     "n_atleti": 5,
-    "pos": 29
+    "pos": 30
   },
   {
     "team_id": "RIME_DRALI",
@@ -357,7 +369,7 @@
     "p3": 1,
     "pout": 7,
     "n_atleti": 4,
-    "pos": 30
+    "pos": 31
   },
   {
     "team_id": "BELTRAMI_TSA_LA_RISORSA_UMANA_VC_RE",
@@ -369,7 +381,7 @@
     "p3": 1,
     "pout": 1,
     "n_atleti": 3,
-    "pos": 31
+    "pos": 32
   },
   {
     "team_id": "DECATHLON_CMA_CGM_DEVELOPMENT_TEAM",
@@ -381,7 +393,7 @@
     "p3": 0,
     "pout": 2,
     "n_atleti": 2,
-    "pos": 32
+    "pos": 33
   },
   {
     "team_id": "TEAM_POLTI_VISITMALTA",
@@ -393,7 +405,7 @@
     "p3": 1,
     "pout": 0,
     "n_atleti": 1,
-    "pos": 33
+    "pos": 34
   },
   {
     "team_id": "NIPPO_NUOVACOMAUTO_OBOR",
@@ -405,7 +417,7 @@
     "p3": 0,
     "pout": 5,
     "n_atleti": 3,
-    "pos": 34
+    "pos": 35
   },
   {
     "team_id": "GOODSHOP_YOYOGURT",
@@ -417,7 +429,7 @@
     "p3": 0,
     "pout": 3,
     "n_atleti": 3,
-    "pos": 35
+    "pos": 36
   },
   {
     "team_id": "MENTECORPO_TEAM",
@@ -429,7 +441,7 @@
     "p3": 0,
     "pout": 2,
     "n_atleti": 3,
-    "pos": 36
+    "pos": 37
   },
   {
     "team_id": "NAZIONALE_PARALIMPICA",
@@ -441,7 +453,7 @@
     "p3": 1,
     "pout": 1,
     "n_atleti": 2,
-    "pos": 37
+    "pos": 38
   },
   {
     "team_id": "EQUIPE_CORBETTESE",
@@ -453,7 +465,7 @@
     "p3": 0,
     "pout": 1,
     "n_atleti": 1,
-    "pos": 38
+    "pos": 39
   },
   {
     "team_id": "A_S_D_U_C_PISTOIESE_TEAM",
@@ -465,30 +477,18 @@
     "p3": 0,
     "pout": 1,
     "n_atleti": 1,
-    "pos": 39
+    "pos": 40
   },
   {
-    "team_id": "PC_BAIX_EBRE_TORTOSA",
-    "team_nome": "PC BAIX EBRE TORTOSA",
-    "punti": 20,
+    "team_id": "TIROL_KTM_CYCLING_TEAM",
+    "team_nome": "TIROL KTM CYCLING TEAM",
+    "punti": 21,
     "vittorie": 0,
     "p1": 0,
     "p2": 0,
     "p3": 0,
     "pout": 2,
     "n_atleti": 2,
-    "pos": 40
-  },
-  {
-    "team_id": "TIROL_KTM_CYCLING_TEAM",
-    "team_nome": "TIROL KTM CYCLING TEAM",
-    "punti": 18,
-    "vittorie": 0,
-    "p1": 0,
-    "p2": 0,
-    "p3": 0,
-    "pout": 1,
-    "n_atleti": 1,
     "pos": 41
   },
   {

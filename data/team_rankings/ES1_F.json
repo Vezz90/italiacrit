@@ -1,5 +1,17 @@
 [
   {
+    "team_id": "U_C_GIORGIONE_F",
+    "team_nome": "U.C. GIORGIONE",
+    "punti": 191,
+    "vittorie": 5,
+    "p1": 5,
+    "p2": 4,
+    "p3": 3,
+    "pout": 10,
+    "n_atleti": 4,
+    "pos": 1
+  },
+  {
     "team_id": "GS_CAPANNORI_F",
     "team_nome": "GS CAPANNORI",
     "punti": 182,
@@ -9,18 +21,6 @@
     "p3": 2,
     "pout": 13,
     "n_atleti": 5,
-    "pos": 1
-  },
-  {
-    "team_id": "U_C_GIORGIONE_F",
-    "team_nome": "U.C. GIORGIONE",
-    "punti": 176,
-    "vittorie": 4,
-    "p1": 4,
-    "p2": 4,
-    "p3": 3,
-    "pout": 10,
-    "n_atleti": 4,
     "pos": 2
   },
   {
@@ -38,11 +38,11 @@
   {
     "team_id": "SCUOLA_CICLISMO_VERSO_L_IRIDE_F",
     "team_nome": "SCUOLA CICLISMO VERSO L'IRIDE",
-    "punti": 103,
+    "punti": 113,
     "vittorie": 4,
     "p1": 4,
     "p2": 0,
-    "p3": 0,
+    "p3": 1,
     "pout": 9,
     "n_atleti": 3,
     "pos": 4
@@ -50,12 +50,12 @@
   {
     "team_id": "S_C_CESANO_MADERNO_F",
     "team_nome": "S.C. CESANO MADERNO",
-    "punti": 102,
+    "punti": 105,
     "vittorie": 0,
     "p1": 0,
     "p2": 1,
     "p3": 2,
-    "pout": 19,
+    "pout": 20,
     "n_atleti": 5,
     "pos": 5
   },
@@ -74,12 +74,12 @@
   {
     "team_id": "G_S_MOSOLE_F",
     "team_nome": "G.S. MOSOLE",
-    "punti": 65,
+    "punti": 72,
     "vittorie": 0,
     "p1": 0,
     "p2": 1,
     "p3": 3,
-    "pout": 7,
+    "pout": 9,
     "n_atleti": 2,
     "pos": 7
   },
@@ -120,6 +120,18 @@
     "pos": 10
   },
   {
+    "team_id": "U_C_CONSCIO_PEDALE_DEL_SILE_F",
+    "team_nome": "U.C.CONSCIO PEDALE DEL SILE",
+    "punti": 42,
+    "vittorie": 1,
+    "p1": 1,
+    "p2": 1,
+    "p3": 0,
+    "pout": 3,
+    "n_atleti": 1,
+    "pos": 11
+  },
+  {
     "team_id": "A_S_A_C_I_EVONACICLI_F",
     "team_nome": "A.S.A.C.I. - EVONACICLI",
     "punti": 41,
@@ -129,29 +141,17 @@
     "p3": 1,
     "pout": 1,
     "n_atleti": 4,
-    "pos": 11
+    "pos": 12
   },
   {
     "team_id": "SPORT_CLUB_BRESCIA_FLANDRES_LOVE_F",
     "team_nome": "SPORT CLUB BRESCIA - FLANDRES LOVE",
-    "punti": 33,
+    "punti": 41,
     "vittorie": 0,
     "p1": 0,
     "p2": 1,
     "p3": 0,
-    "pout": 4,
-    "n_atleti": 1,
-    "pos": 12
-  },
-  {
-    "team_id": "U_C_CONSCIO_PEDALE_DEL_SILE_F",
-    "team_nome": "U.C.CONSCIO PEDALE DEL SILE",
-    "punti": 30,
-    "vittorie": 1,
-    "p1": 1,
-    "p2": 0,
-    "p3": 0,
-    "pout": 3,
+    "pout": 5,
     "n_atleti": 1,
     "pos": 13
   },
@@ -216,6 +216,18 @@
     "pos": 18
   },
   {
+    "team_id": "G_C_SOSSANO_1975_F",
+    "team_nome": "G.C. SOSSANO 1975",
+    "punti": 19,
+    "vittorie": 0,
+    "p1": 0,
+    "p2": 0,
+    "p3": 0,
+    "pout": 5,
+    "n_atleti": 1,
+    "pos": 19
+  },
+  {
     "team_id": "ASD_EFFETTO_CICLISMO_NOI_SPORT_F",
     "team_nome": "ASD EFFETTO CICLISMO - NOI SPORT",
     "punti": 17,
@@ -225,31 +237,7 @@
     "p3": 0,
     "pout": 2,
     "n_atleti": 1,
-    "pos": 19
-  },
-  {
-    "team_id": "U_C_GIORGIONE",
-    "team_nome": "U.C. GIORGIONE",
-    "punti": 15,
-    "vittorie": 1,
-    "p1": 1,
-    "p2": 0,
-    "p3": 0,
-    "pout": 0,
-    "n_atleti": 1,
     "pos": 20
-  },
-  {
-    "team_id": "G_C_SOSSANO_1975_F",
-    "team_nome": "G.C. SOSSANO 1975",
-    "punti": 15,
-    "vittorie": 0,
-    "p1": 0,
-    "p2": 0,
-    "p3": 0,
-    "pout": 4,
-    "n_atleti": 1,
-    "pos": 21
   },
   {
     "team_id": "A_S_D_AMICISUPERSKI_F",
@@ -261,7 +249,7 @@
     "p3": 0,
     "pout": 2,
     "n_atleti": 2,
-    "pos": 22
+    "pos": 21
   },
   {
     "team_id": "KTM_ACADEMY_LE_MARMOTTE_F",
@@ -273,31 +261,19 @@
     "p3": 1,
     "pout": 1,
     "n_atleti": 1,
-    "pos": 23
+    "pos": 22
   },
   {
-    "team_id": "U_C_CONSCIO_PEDALE_DEL_SILE",
-    "team_nome": "U.C.CONSCIO PEDALE DEL SILE",
-    "punti": 12,
-    "vittorie": 0,
-    "p1": 0,
-    "p2": 1,
-    "p3": 0,
-    "pout": 0,
-    "n_atleti": 1,
-    "pos": 24
-  },
-  {
-    "team_id": "SCUOLA_CICLISMO_VERSO_L_IRIDE",
-    "team_nome": "SCUOLA CICLISMO VERSO L'IRIDE",
-    "punti": 10,
+    "team_id": "COMAL_TRENTINO_CYCLING_ACADEMY_F",
+    "team_nome": "COMAL TRENTINO CYCLING ACADEMY",
+    "punti": 13,
     "vittorie": 0,
     "p1": 0,
     "p2": 0,
-    "p3": 1,
-    "pout": 0,
+    "p3": 0,
+    "pout": 5,
     "n_atleti": 1,
-    "pos": 25
+    "pos": 23
   },
   {
     "team_id": "ASD_TEAM_FEMMINILE_TRENTINO_F",
@@ -309,19 +285,7 @@
     "p3": 0,
     "pout": 2,
     "n_atleti": 1,
-    "pos": 26
-  },
-  {
-    "team_id": "COMAL_TRENTINO_CYCLING_ACADEMY_F",
-    "team_nome": "COMAL TRENTINO CYCLING ACADEMY",
-    "punti": 8,
-    "vittorie": 0,
-    "p1": 0,
-    "p2": 0,
-    "p3": 0,
-    "pout": 4,
-    "n_atleti": 1,
-    "pos": 27
+    "pos": 24
   },
   {
     "team_id": "A_S_D_CICLISTICA_G_BONZAGNI_F",
@@ -333,31 +297,19 @@
     "p3": 0,
     "pout": 2,
     "n_atleti": 1,
-    "pos": 28
+    "pos": 25
   },
   {
-    "team_id": "SPORT_CLUB_BRESCIA_FLANDRES_LOVE",
-    "team_nome": "SPORT CLUB BRESCIA - FLANDRES LOVE",
-    "punti": 8,
+    "team_id": "CALDERARA_STM_RIDUTTORI_F",
+    "team_nome": "CALDERARA STM RIDUTTORI",
+    "punti": 6,
     "vittorie": 0,
     "p1": 0,
     "p2": 0,
     "p3": 0,
-    "pout": 1,
+    "pout": 3,
     "n_atleti": 1,
-    "pos": 29
-  },
-  {
-    "team_id": "G_S_MOSOLE",
-    "team_nome": "G.S. MOSOLE",
-    "punti": 7,
-    "vittorie": 0,
-    "p1": 0,
-    "p2": 0,
-    "p3": 0,
-    "pout": 2,
-    "n_atleti": 2,
-    "pos": 30
+    "pos": 26
   },
   {
     "team_id": "U_S_C_S_I_RUBANO_F",
@@ -369,7 +321,7 @@
     "p3": 0,
     "pout": 1,
     "n_atleti": 1,
-    "pos": 31
+    "pos": 27
   },
   {
     "team_id": "SCUOLA_DI_CICLISMO_FRANCO_BALLERINI_F",
@@ -381,31 +333,7 @@
     "p3": 0,
     "pout": 1,
     "n_atleti": 1,
-    "pos": 32
-  },
-  {
-    "team_id": "COMAL_TRENTINO_CYCLING_ACADEMY",
-    "team_nome": "COMAL TRENTINO CYCLING ACADEMY",
-    "punti": 5,
-    "vittorie": 0,
-    "p1": 0,
-    "p2": 0,
-    "p3": 0,
-    "pout": 1,
-    "n_atleti": 1,
-    "pos": 33
-  },
-  {
-    "team_id": "CALDERARA_STM_RIDUTTORI_F",
-    "team_nome": "CALDERARA STM RIDUTTORI",
-    "punti": 4,
-    "vittorie": 0,
-    "p1": 0,
-    "p2": 0,
-    "p3": 0,
-    "pout": 2,
-    "n_atleti": 1,
-    "pos": 34
+    "pos": 28
   },
   {
     "team_id": "SALUS_CICLISTICA_SEREGNO_DE_ROSA_F",
@@ -417,31 +345,7 @@
     "p3": 0,
     "pout": 2,
     "n_atleti": 2,
-    "pos": 35
-  },
-  {
-    "team_id": "G_C_SOSSANO_1975",
-    "team_nome": "G.C. SOSSANO 1975",
-    "punti": 4,
-    "vittorie": 0,
-    "p1": 0,
-    "p2": 0,
-    "p3": 0,
-    "pout": 1,
-    "n_atleti": 1,
-    "pos": 36
-  },
-  {
-    "team_id": "S_C_CESANO_MADERNO",
-    "team_nome": "S.C. CESANO MADERNO",
-    "punti": 3,
-    "vittorie": 0,
-    "p1": 0,
-    "p2": 0,
-    "p3": 0,
-    "pout": 1,
-    "n_atleti": 1,
-    "pos": 37
+    "pos": 29
   },
   {
     "team_id": "BREGANZE_MILLENIUM_F",
@@ -453,19 +357,7 @@
     "p3": 0,
     "pout": 1,
     "n_atleti": 1,
-    "pos": 38
-  },
-  {
-    "team_id": "CALDERARA_STM_RIDUTTORI",
-    "team_nome": "CALDERARA STM RIDUTTORI",
-    "punti": 2,
-    "vittorie": 0,
-    "p1": 0,
-    "p2": 0,
-    "p3": 0,
-    "pout": 1,
-    "n_atleti": 1,
-    "pos": 39
+    "pos": 30
   },
   {
     "team_id": "ASS_NE_CICLISTICA_DILETT_VALVASONE_F",
@@ -477,6 +369,6 @@
     "p3": 0,
     "pout": 1,
     "n_atleti": 1,
-    "pos": 40
+    "pos": 31
   }
 ]
