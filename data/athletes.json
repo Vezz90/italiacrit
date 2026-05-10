@@ -8237,7 +8237,7 @@
     "team_id": "GCD_PEDALE_MANZANESE",
     "categoria": "AL_M",
     "genere": "M",
-    "punti_totali": 68,
+    "punti_totali": 73,
     "risultati": [
       {
         "gara_id": "6_GRAN_PREMIO_IMPRESA_SERGIO_ZANETTE_2026-05-03_AL_M",
@@ -8316,6 +8316,19 @@
         "regione": "VENETO",
         "km": "58.800",
         "media": "44.847"
+      },
+      {
+        "gara_id": "41_GRAN_PREMIO_FESTA_DELLA_MAMMA_2026-05-10_AL_M",
+        "nome_gara": "41 GRAN PREMIO FESTA DELLA MAMMA",
+        "data": "2026-05-10",
+        "posizione": 6,
+        "punti_effettivi": 5,
+        "team": "GCD PEDALE MANZANESE",
+        "moltiplicatore": 1,
+        "tipo": "regionale",
+        "regione": "FRIULI VENEZIA GIULIA",
+        "km": "65.400",
+        "media": "41.960"
       }
     ]
   },
@@ -8608,7 +8621,7 @@
     "team_id": "A_S_D_SACILESE",
     "categoria": "AL_M",
     "genere": "M",
-    "punti_totali": 32,
+    "punti_totali": 44,
     "risultati": [
       {
         "gara_id": "6_GRAN_PREMIO_IMPRESA_SERGIO_ZANETTE_2026-05-03_AL_M",
@@ -8687,6 +8700,19 @@
         "regione": "VENETO",
         "km": "60.000",
         "media": "45.075"
+      },
+      {
+        "gara_id": "41_GRAN_PREMIO_FESTA_DELLA_MAMMA_2026-05-10_AL_M",
+        "nome_gara": "41 GRAN PREMIO FESTA DELLA MAMMA",
+        "data": "2026-05-10",
+        "posizione": 2,
+        "punti_effettivi": 12,
+        "team": "A.S.D. SACILESE",
+        "moltiplicatore": 1,
+        "tipo": "regionale",
+        "regione": "FRIULI VENEZIA GIULIA",
+        "km": "65.400",
+        "media": "41.960"
       }
     ]
   },
@@ -8748,7 +8774,7 @@
     "team_id": "LIBERTAS_CERESETTO",
     "categoria": "AL_M",
     "genere": "M",
-    "punti_totali": 15,
+    "punti_totali": 18,
     "risultati": [
       {
         "gara_id": "6_GRAN_PREMIO_IMPRESA_SERGIO_ZANETTE_2026-05-03_AL_M",
@@ -8801,6 +8827,19 @@
         "regione": "FRIULI VENEZIA GIULIA",
         "km": "56.800",
         "media": "47.333"
+      },
+      {
+        "gara_id": "41_GRAN_PREMIO_FESTA_DELLA_MAMMA_2026-05-10_AL_M",
+        "nome_gara": "41 GRAN PREMIO FESTA DELLA MAMMA",
+        "data": "2026-05-10",
+        "posizione": 8,
+        "punti_effettivi": 3,
+        "team": "LIBERTAS CERESETTO",
+        "moltiplicatore": 1,
+        "tipo": "regionale",
+        "regione": "FRIULI VENEZIA GIULIA",
+        "km": "65.400",
+        "media": "41.960"
       }
     ]
   },
@@ -8812,7 +8851,7 @@
     "team_id": "A_S_D_CICLISTICA_MONSELICE",
     "categoria": "AL_M",
     "genere": "M",
-    "punti_totali": 101,
+    "punti_totali": 113,
     "risultati": [
       {
         "gara_id": "GRAN_PREMIO_CAMPI_ENERGIE_2026_MEMORIAL_FORTUNA_2026_2026-05-03_AL_M",
@@ -8930,6 +8969,19 @@
         "regione": "LOMBARDIA",
         "km": "55.600",
         "media": "40.257"
+      },
+      {
+        "gara_id": "5_GRAN_PREMIO_EUROTERMOIDRAULICA_2026-05-10_AL_M",
+        "nome_gara": "5 GRAN PREMIO EUROTERMOIDRAULICA",
+        "data": "2026-05-10",
+        "posizione": 2,
+        "punti_effettivi": 12,
+        "team": "A.S.D. CICLISTICA MONSELICE",
+        "moltiplicatore": 1,
+        "tipo": "regionale",
+        "regione": "VENETO",
+        "km": "70.200",
+        "media": "41.614"
       }
     ]
   },
@@ -8941,7 +8993,7 @@
     "team_id": "IND_FORNITURE_MORO_C_G_CAPITAL",
     "categoria": "AL_M",
     "genere": "M",
-    "punti_totali": 82,
+    "punti_totali": 97,
     "risultati": [
       {
         "gara_id": "GRAN_PREMIO_CAMPI_ENERGIE_2026_MEMORIAL_FORTUNA_2026_2026-05-03_AL_M",
@@ -9046,6 +9098,19 @@
         "regione": "VENETO",
         "km": "60.000",
         "media": "45.075"
+      },
+      {
+        "gara_id": "41_GRAN_PREMIO_FESTA_DELLA_MAMMA_2026-05-10_AL_M",
+        "nome_gara": "41 GRAN PREMIO FESTA DELLA MAMMA",
+        "data": "2026-05-10",
+        "posizione": 1,
+        "punti_effettivi": 15,
+        "team": "IND. FORNITURE MORO-C&G CAPITAL",
+        "moltiplicatore": 1,
+        "tipo": "regionale",
+        "regione": "FRIULI VENEZIA GIULIA",
+        "km": "65.400",
+        "media": "41.960"
       }
     ]
   },
@@ -9186,7 +9251,7 @@
     "team_id": "IND_FORNITURE_MORO_C_G_CAPITAL",
     "categoria": "AL_M",
     "genere": "M",
-    "punti_totali": 66,
+    "punti_totali": 76,
     "risultati": [
       {
         "gara_id": "GRAN_PREMIO_CAMPI_ENERGIE_2026_MEMORIAL_FORTUNA_2026_2026-05-03_AL_M",
@@ -9265,6 +9330,19 @@
         "regione": "VENETO",
         "km": "60.000",
         "media": "45.075"
+      },
+      {
+        "gara_id": "5_GRAN_PREMIO_EUROTERMOIDRAULICA_2026-05-10_AL_M",
+        "nome_gara": "5 GRAN PREMIO EUROTERMOIDRAULICA",
+        "data": "2026-05-10",
+        "posizione": 3,
+        "punti_effettivi": 10,
+        "team": "IND. FORNITURE MORO-C&G CAPITAL",
+        "moltiplicatore": 1,
+        "tipo": "regionale",
+        "regione": "VENETO",
+        "km": "70.200",
+        "media": "41.614"
       }
     ]
   },
@@ -12739,7 +12817,7 @@
     "team_id": "IL_PIRATA_SAMA_RICAMBI_OTC",
     "categoria": "ES1_M",
     "genere": "M",
-    "punti_totali": 89,
+    "punti_totali": 104,
     "risultati": [
       {
         "gara_id": "65_GRAN_PREMIO_A_FANTINI_GARA_UNICA_2026-05-03_ES1_M",
@@ -12831,6 +12909,19 @@
         "regione": "TOSCANA",
         "km": "28.000",
         "media": "39.070"
+      },
+      {
+        "gara_id": "ASPETTANDO_LA_CORSA_DI_SANDRO_GARA_UNICA_2026-05-10_ES1_M",
+        "nome_gara": "ASPETTANDO LA CORSA DI SANDRO GARA UNICA",
+        "data": "2026-05-10",
+        "posizione": 1,
+        "punti_effettivi": 15,
+        "team": "IL PIRATA SAMA RICAMBI OTC",
+        "moltiplicatore": 1,
+        "tipo": "regionale",
+        "regione": "ABRUZZO",
+        "km": "30.000",
+        "media": "35.294"
       }
     ]
   },
@@ -12842,7 +12933,7 @@
     "team_id": "HG_CYCLING_TEAM",
     "categoria": "ES1_M",
     "genere": "M",
-    "punti_totali": 53,
+    "punti_totali": 61,
     "risultati": [
       {
         "gara_id": "65_GRAN_PREMIO_A_FANTINI_GARA_UNICA_2026-05-03_ES1_M",
@@ -12934,6 +13025,19 @@
         "regione": "PIEMONTE",
         "km": "29.000",
         "media": "36.995"
+      },
+      {
+        "gara_id": "ASPETTANDO_LA_CORSA_DI_SANDRO_GARA_UNICA_2026-05-10_ES1_M",
+        "nome_gara": "ASPETTANDO LA CORSA DI SANDRO GARA UNICA",
+        "data": "2026-05-10",
+        "posizione": 4,
+        "punti_effettivi": 8,
+        "team": "HG CYCLING TEAM",
+        "moltiplicatore": 1,
+        "tipo": "regionale",
+        "regione": "ABRUZZO",
+        "km": "30.000",
+        "media": "35.294"
       }
     ]
   },
@@ -12945,7 +13049,7 @@
     "team_id": "ABRUZZO_CYCLING_TEAM",
     "categoria": "ES1_M",
     "genere": "M",
-    "punti_totali": 16,
+    "punti_totali": 19,
     "risultati": [
       {
         "gara_id": "65_GRAN_PREMIO_A_FANTINI_GARA_UNICA_2026-05-03_ES1_M",
@@ -12972,6 +13076,19 @@
         "regione": "PUGLIA",
         "km": "32.000",
         "media": ""
+      },
+      {
+        "gara_id": "ASPETTANDO_LA_CORSA_DI_SANDRO_GARA_UNICA_2026-05-10_ES1_M",
+        "nome_gara": "ASPETTANDO LA CORSA DI SANDRO GARA UNICA",
+        "data": "2026-05-10",
+        "posizione": 8,
+        "punti_effettivi": 3,
+        "team": "ABRUZZO CYCLING TEAM",
+        "moltiplicatore": 1,
+        "tipo": "regionale",
+        "regione": "ABRUZZO",
+        "km": "30.000",
+        "media": "35.294"
       }
     ]
   },
@@ -12983,7 +13100,7 @@
     "team_id": "IL_PIRATA_SAMA_RICAMBI_OTC",
     "categoria": "ES1_M",
     "genere": "M",
-    "punti_totali": 19,
+    "punti_totali": 21,
     "risultati": [
       {
         "gara_id": "65_GRAN_PREMIO_A_FANTINI_GARA_UNICA_2026-05-03_ES1_M",
@@ -13036,6 +13153,19 @@
         "regione": "TOSCANA",
         "km": "28.000",
         "media": "39.070"
+      },
+      {
+        "gara_id": "ASPETTANDO_LA_CORSA_DI_SANDRO_GARA_UNICA_2026-05-10_ES1_M",
+        "nome_gara": "ASPETTANDO LA CORSA DI SANDRO GARA UNICA",
+        "data": "2026-05-10",
+        "posizione": 9,
+        "punti_effettivi": 2,
+        "team": "IL PIRATA SAMA RICAMBI OTC",
+        "moltiplicatore": 1,
+        "tipo": "regionale",
+        "regione": "ABRUZZO",
+        "km": "30.000",
+        "media": "35.294"
       }
     ]
   },
@@ -13149,7 +13279,7 @@
     "team_id": "TEAM_CESARO_NERI_LUCCHINI",
     "categoria": "ES1_M",
     "genere": "M",
-    "punti_totali": 46,
+    "punti_totali": 51,
     "risultati": [
       {
         "gara_id": "65_GRAN_PREMIO_A_FANTINI_GARA_UNICA_2026-05-03_ES1_M",
@@ -13254,6 +13384,19 @@
         "regione": "TOSCANA",
         "km": "25.000",
         "media": "35.280"
+      },
+      {
+        "gara_id": "ASPETTANDO_LA_CORSA_DI_SANDRO_GARA_UNICA_2026-05-10_ES1_M",
+        "nome_gara": "ASPETTANDO LA CORSA DI SANDRO GARA UNICA",
+        "data": "2026-05-10",
+        "posizione": 6,
+        "punti_effettivi": 5,
+        "team": "TEAM CESARO-NERI-LUCCHINI",
+        "moltiplicatore": 1,
+        "tipo": "regionale",
+        "regione": "ABRUZZO",
+        "km": "30.000",
+        "media": "35.294"
       }
     ]
   },
@@ -13303,7 +13446,7 @@
     "team_id": "TEAM_CESARO_NERI_LUCCHINI",
     "categoria": "ES2_M",
     "genere": "M",
-    "punti_totali": 113,
+    "punti_totali": 125,
     "risultati": [
       {
         "gara_id": "65_GRAN_PREMIO_A_FANTINI_GARA_UNICA_2026-05-03_ES2_M",
@@ -13421,6 +13564,19 @@
         "regione": "TOSCANA",
         "km": "30.000",
         "media": "38.933"
+      },
+      {
+        "gara_id": "ASPETTANDO_LA_CORSA_DI_SANDRO_GARA_UNICA_2026-05-10_ES2_M",
+        "nome_gara": "ASPETTANDO LA CORSA DI SANDRO GARA UNICA",
+        "data": "2026-05-10",
+        "posizione": 2,
+        "punti_effettivi": 12,
+        "team": "TEAM CESARO-NERI-LUCCHINI",
+        "moltiplicatore": 1,
+        "tipo": "regionale",
+        "regione": "ABRUZZO",
+        "km": "30.000",
+        "media": "35.294"
       }
     ]
   },
@@ -13432,7 +13588,7 @@
     "team_id": "IL_PIRATA_SAMA_RICAMBI_OTC",
     "categoria": "ES2_M",
     "genere": "M",
-    "punti_totali": 112,
+    "punti_totali": 127,
     "risultati": [
       {
         "gara_id": "65_GRAN_PREMIO_A_FANTINI_GARA_UNICA_2026-05-03_ES2_M",
@@ -13563,6 +13719,19 @@
         "regione": "TOSCANA",
         "km": "30.000",
         "media": "38.933"
+      },
+      {
+        "gara_id": "ASPETTANDO_LA_CORSA_DI_SANDRO_GARA_UNICA_2026-05-10_ES2_M",
+        "nome_gara": "ASPETTANDO LA CORSA DI SANDRO GARA UNICA",
+        "data": "2026-05-10",
+        "posizione": 1,
+        "punti_effettivi": 15,
+        "team": "IL PIRATA SAMA RICAMBI OTC",
+        "moltiplicatore": 1,
+        "tipo": "regionale",
+        "regione": "ABRUZZO",
+        "km": "30.000",
+        "media": "35.294"
       }
     ]
   },
@@ -13574,7 +13743,7 @@
     "team_id": "TEAM_CESARO_NERI_LUCCHINI",
     "categoria": "ES2_M",
     "genere": "M",
-    "punti_totali": 127,
+    "punti_totali": 135,
     "risultati": [
       {
         "gara_id": "65_GRAN_PREMIO_A_FANTINI_GARA_UNICA_2026-05-03_ES2_M",
@@ -13705,6 +13874,19 @@
         "regione": "TOSCANA",
         "km": "30.000",
         "media": "38.933"
+      },
+      {
+        "gara_id": "ASPETTANDO_LA_CORSA_DI_SANDRO_GARA_UNICA_2026-05-10_ES2_M",
+        "nome_gara": "ASPETTANDO LA CORSA DI SANDRO GARA UNICA",
+        "data": "2026-05-10",
+        "posizione": 4,
+        "punti_effettivi": 8,
+        "team": "TEAM CESARO-NERI-LUCCHINI",
+        "moltiplicatore": 1,
+        "tipo": "regionale",
+        "regione": "ABRUZZO",
+        "km": "30.000",
+        "media": "35.294"
       }
     ]
   },
@@ -13716,7 +13898,7 @@
     "team_id": "S_C_VILLA_S_ANTONIO_CICLI_COCCI",
     "categoria": "ES2_M",
     "genere": "M",
-    "punti_totali": 31,
+    "punti_totali": 41,
     "risultati": [
       {
         "gara_id": "65_GRAN_PREMIO_A_FANTINI_GARA_UNICA_2026-05-03_ES2_M",
@@ -13769,6 +13951,19 @@
         "regione": "MARCHE",
         "km": "37.800",
         "media": "33.029"
+      },
+      {
+        "gara_id": "ASPETTANDO_LA_CORSA_DI_SANDRO_GARA_UNICA_2026-05-10_ES2_M",
+        "nome_gara": "ASPETTANDO LA CORSA DI SANDRO GARA UNICA",
+        "data": "2026-05-10",
+        "posizione": 3,
+        "punti_effettivi": 10,
+        "team": "S.C. VILLA S.ANTONIO CICLI COCCI",
+        "moltiplicatore": 1,
+        "tipo": "regionale",
+        "regione": "ABRUZZO",
+        "km": "30.000",
+        "media": "35.294"
       }
     ]
   },
@@ -13780,7 +13975,7 @@
     "team_id": "IL_PIRATA_SAMA_RICAMBI_OTC",
     "categoria": "ES2_M",
     "genere": "M",
-    "punti_totali": 18,
+    "punti_totali": 22,
     "risultati": [
       {
         "gara_id": "65_GRAN_PREMIO_A_FANTINI_GARA_UNICA_2026-05-03_ES2_M",
@@ -13820,6 +14015,19 @@
         "regione": "MARCHE",
         "km": "37.800",
         "media": "33.029"
+      },
+      {
+        "gara_id": "ASPETTANDO_LA_CORSA_DI_SANDRO_GARA_UNICA_2026-05-10_ES2_M",
+        "nome_gara": "ASPETTANDO LA CORSA DI SANDRO GARA UNICA",
+        "data": "2026-05-10",
+        "posizione": 7,
+        "punti_effettivi": 4,
+        "team": "IL PIRATA SAMA RICAMBI OTC",
+        "moltiplicatore": 1,
+        "tipo": "regionale",
+        "regione": "ABRUZZO",
+        "km": "30.000",
+        "media": "35.294"
       }
     ]
   },
@@ -13831,7 +14039,7 @@
     "team_id": "ASD_TEAM_MMBIKE_ANDRIA_RESTO_AL_SUD",
     "categoria": "ES2_M",
     "genere": "M",
-    "punti_totali": 19,
+    "punti_totali": 24,
     "risultati": [
       {
         "gara_id": "65_GRAN_PREMIO_A_FANTINI_GARA_UNICA_2026-05-03_ES2_M",
@@ -13884,6 +14092,19 @@
         "regione": "PUGLIA",
         "km": "32.000",
         "media": "35.186"
+      },
+      {
+        "gara_id": "ASPETTANDO_LA_CORSA_DI_SANDRO_GARA_UNICA_2026-05-10_ES2_M",
+        "nome_gara": "ASPETTANDO LA CORSA DI SANDRO GARA UNICA",
+        "data": "2026-05-10",
+        "posizione": 6,
+        "punti_effettivi": 5,
+        "team": "ASD TEAM MMBIKE ANDRIA RESTO AL SUD",
+        "moltiplicatore": 1,
+        "tipo": "regionale",
+        "regione": "ABRUZZO",
+        "km": "30.000",
+        "media": "35.294"
       }
     ]
   },
@@ -14035,7 +14256,7 @@
     "team_id": "TEAM_CESARO_NERI_LUCCHINI",
     "categoria": "ES2_M",
     "genere": "M",
-    "punti_totali": 21,
+    "punti_totali": 22,
     "risultati": [
       {
         "gara_id": "65_GRAN_PREMIO_A_FANTINI_GARA_UNICA_2026-05-03_ES2_M",
@@ -14088,6 +14309,19 @@
         "regione": "PUGLIA",
         "km": "24.000",
         "media": "40.928"
+      },
+      {
+        "gara_id": "ASPETTANDO_LA_CORSA_DI_SANDRO_GARA_UNICA_2026-05-10_ES2_M",
+        "nome_gara": "ASPETTANDO LA CORSA DI SANDRO GARA UNICA",
+        "data": "2026-05-10",
+        "posizione": 10,
+        "punti_effettivi": 1,
+        "team": "TEAM CESARO-NERI-LUCCHINI",
+        "moltiplicatore": 1,
+        "tipo": "regionale",
+        "regione": "ABRUZZO",
+        "km": "30.000",
+        "media": "35.294"
       }
     ]
   },
@@ -25009,7 +25243,7 @@
     "team_id": "FOLIGNO_CYCLING_TEAM_ASD",
     "categoria": "ES1_M",
     "genere": "M",
-    "punti_totali": 27,
+    "punti_totali": 39,
     "risultati": [
       {
         "gara_id": "LA_STORICA_COPPA_DE_LE_POGGIOLA_2026-05-03_ES1_M",
@@ -25075,6 +25309,19 @@
         "regione": "EMILIA ROMAGNA",
         "km": "24.800",
         "media": "33.006"
+      },
+      {
+        "gara_id": "ASPETTANDO_LA_CORSA_DI_SANDRO_GARA_UNICA_2026-05-10_ES1_M",
+        "nome_gara": "ASPETTANDO LA CORSA DI SANDRO GARA UNICA",
+        "data": "2026-05-10",
+        "posizione": 2,
+        "punti_effettivi": 12,
+        "team": "FOLIGNO CYCLING TEAM ASD",
+        "moltiplicatore": 1,
+        "tipo": "regionale",
+        "regione": "ABRUZZO",
+        "km": "30.000",
+        "media": "35.294"
       }
     ]
   },
@@ -25394,7 +25641,7 @@
     "team_id": "FOLIGNO_CYCLING_TEAM_ASD",
     "categoria": "ES1_M",
     "genere": "M",
-    "punti_totali": 31,
+    "punti_totali": 37,
     "risultati": [
       {
         "gara_id": "LA_STORICA_COPPA_DE_LE_POGGIOLA_2026-05-03_ES1_M",
@@ -25473,6 +25720,19 @@
         "regione": "EMILIA ROMAGNA",
         "km": "24.300",
         "media": "37.068"
+      },
+      {
+        "gara_id": "ASPETTANDO_LA_CORSA_DI_SANDRO_GARA_UNICA_2026-05-10_ES1_M",
+        "nome_gara": "ASPETTANDO LA CORSA DI SANDRO GARA UNICA",
+        "data": "2026-05-10",
+        "posizione": 5,
+        "punti_effettivi": 6,
+        "team": "FOLIGNO CYCLING TEAM ASD",
+        "moltiplicatore": 1,
+        "tipo": "regionale",
+        "regione": "ABRUZZO",
+        "km": "30.000",
+        "media": "35.294"
       }
     ]
   },
@@ -36102,7 +36362,7 @@
     "team_id": "IND_FORNITURE_MORO_C_G_CAPITAL",
     "categoria": "AL_M",
     "genere": "M",
-    "punti_totali": 35,
+    "punti_totali": 39,
     "risultati": [
       {
         "gara_id": "12_MEMORIAL_NICOLA_TINCANI_2026-05-01_AL_M",
@@ -36168,6 +36428,19 @@
         "regione": "VENETO",
         "km": "60.000",
         "media": "45.075"
+      },
+      {
+        "gara_id": "41_GRAN_PREMIO_FESTA_DELLA_MAMMA_2026-05-10_AL_M",
+        "nome_gara": "41 GRAN PREMIO FESTA DELLA MAMMA",
+        "data": "2026-05-10",
+        "posizione": 7,
+        "punti_effettivi": 4,
+        "team": "IND. FORNITURE MORO-C&G CAPITAL",
+        "moltiplicatore": 1,
+        "tipo": "regionale",
+        "regione": "FRIULI VENEZIA GIULIA",
+        "km": "65.400",
+        "media": "41.960"
       }
     ]
   },
@@ -36243,7 +36516,7 @@
     "team_id": "CAMPANA_IMBALLAGGI_MORBIATO_TRENTINO",
     "categoria": "AL_M",
     "genere": "M",
-    "punti_totali": 6,
+    "punti_totali": 11,
     "risultati": [
       {
         "gara_id": "12_MEMORIAL_NICOLA_TINCANI_2026-05-01_AL_M",
@@ -36257,6 +36530,19 @@
         "regione": "VENETO",
         "km": "64.500",
         "media": "41.119"
+      },
+      {
+        "gara_id": "5_GRAN_PREMIO_EUROTERMOIDRAULICA_2026-05-10_AL_M",
+        "nome_gara": "5 GRAN PREMIO EUROTERMOIDRAULICA",
+        "data": "2026-05-10",
+        "posizione": 6,
+        "punti_effettivi": 5,
+        "team": "CAMPANA IMBALLAGGI MORBIATO TRENTINO",
+        "moltiplicatore": 1,
+        "tipo": "regionale",
+        "regione": "VENETO",
+        "km": "70.200",
+        "media": "41.614"
       }
     ]
   },
@@ -39980,7 +40266,7 @@
     "team_id": "TEAM_CORATTI",
     "categoria": "ES1_M",
     "genere": "M",
-    "punti_totali": 25,
+    "punti_totali": 29,
     "risultati": [
       {
         "gara_id": "26_TROFEO_PADRE_GIUSEPPE_GARA_UNICA_PROVA_VALIDA_CAMPIONATO_REGIONALE_2026-05-01_ES1_M",
@@ -40033,6 +40319,19 @@
         "regione": "PUGLIA",
         "km": "32.000",
         "media": ""
+      },
+      {
+        "gara_id": "ASPETTANDO_LA_CORSA_DI_SANDRO_GARA_UNICA_2026-05-10_ES1_M",
+        "nome_gara": "ASPETTANDO LA CORSA DI SANDRO GARA UNICA",
+        "data": "2026-05-10",
+        "posizione": 7,
+        "punti_effettivi": 4,
+        "team": "TEAM CORATTI",
+        "moltiplicatore": 1,
+        "tipo": "regionale",
+        "regione": "ABRUZZO",
+        "km": "30.000",
+        "media": "35.294"
       }
     ]
   },
@@ -40236,7 +40535,7 @@
     "team_id": "A_S_A_C_I_EVONACICLI",
     "categoria": "ES1_M",
     "genere": "M",
-    "punti_totali": 9,
+    "punti_totali": 10,
     "risultati": [
       {
         "gara_id": "26_TROFEO_PADRE_GIUSEPPE_GARA_UNICA_PROVA_VALIDA_CAMPIONATO_REGIONALE_2026-05-01_ES1_M",
@@ -40263,6 +40562,19 @@
         "regione": "PUGLIA",
         "km": "32.000",
         "media": ""
+      },
+      {
+        "gara_id": "ASPETTANDO_LA_CORSA_DI_SANDRO_GARA_UNICA_2026-05-10_ES1_M",
+        "nome_gara": "ASPETTANDO LA CORSA DI SANDRO GARA UNICA",
+        "data": "2026-05-10",
+        "posizione": 10,
+        "punti_effettivi": 1,
+        "team": "A.S.A.C.I. - EVONACICLI",
+        "moltiplicatore": 1,
+        "tipo": "regionale",
+        "regione": "ABRUZZO",
+        "km": "30.000",
+        "media": "35.294"
       }
     ]
   },
@@ -40388,7 +40700,7 @@
     "team_id": "IL_PIRATA_SAMA_RICAMBI_OTC",
     "categoria": "ES2_M",
     "genere": "M",
-    "punti_totali": 5,
+    "punti_totali": 7,
     "risultati": [
       {
         "gara_id": "26_TROFEO_PADRE_GIUSEPPE_GARA_UNICA_PROVA_VALIDA_CAMPIONATO_REGIONALE_2026-05-01_ES2_M",
@@ -40415,6 +40727,19 @@
         "regione": "MARCHE",
         "km": "37.800",
         "media": "33.029"
+      },
+      {
+        "gara_id": "ASPETTANDO_LA_CORSA_DI_SANDRO_GARA_UNICA_2026-05-10_ES2_M",
+        "nome_gara": "ASPETTANDO LA CORSA DI SANDRO GARA UNICA",
+        "data": "2026-05-10",
+        "posizione": 9,
+        "punti_effettivi": 2,
+        "team": "IL PIRATA SAMA RICAMBI OTC",
+        "moltiplicatore": 1,
+        "tipo": "regionale",
+        "regione": "ABRUZZO",
+        "km": "30.000",
+        "media": "35.294"
       }
     ]
   },
@@ -41573,7 +41898,7 @@
     "team_id": "ASD_GUBBIO_CICLISMO_MOCAIANA",
     "categoria": "ES1_M",
     "genere": "M",
-    "punti_totali": 25,
+    "punti_totali": 35,
     "risultati": [
       {
         "gara_id": "42_COPPA_DEI_LAVORATORI_2026-05-01_ES1_M",
@@ -41626,6 +41951,19 @@
         "regione": "EMILIA ROMAGNA",
         "km": "24.500",
         "media": "36.296"
+      },
+      {
+        "gara_id": "ASPETTANDO_LA_CORSA_DI_SANDRO_GARA_UNICA_2026-05-10_ES1_M",
+        "nome_gara": "ASPETTANDO LA CORSA DI SANDRO GARA UNICA",
+        "data": "2026-05-10",
+        "posizione": 3,
+        "punti_effettivi": 10,
+        "team": "ASD GUBBIO CICLISMO MOCAIANA",
+        "moltiplicatore": 1,
+        "tipo": "regionale",
+        "regione": "ABRUZZO",
+        "km": "30.000",
+        "media": "35.294"
       }
     ]
   },
@@ -46164,7 +46502,7 @@
     "team_id": "GS_CARTURA_NALIN",
     "categoria": "AL_M",
     "genere": "M",
-    "punti_totali": 18,
+    "punti_totali": 26,
     "risultati": [
       {
         "gara_id": "44_CIRCUITO_DEL_BOSCO_2026-04-26_AL_M",
@@ -46217,6 +46555,19 @@
         "regione": "VENETO",
         "km": "55.200",
         "media": "42.680"
+      },
+      {
+        "gara_id": "5_GRAN_PREMIO_EUROTERMOIDRAULICA_2026-05-10_AL_M",
+        "nome_gara": "5 GRAN PREMIO EUROTERMOIDRAULICA",
+        "data": "2026-05-10",
+        "posizione": 4,
+        "punti_effettivi": 8,
+        "team": "GS CARTURA NALIN",
+        "moltiplicatore": 1,
+        "tipo": "regionale",
+        "regione": "VENETO",
+        "km": "70.200",
+        "media": "41.614"
       }
     ]
   },
@@ -47032,7 +47383,7 @@
     "team_id": "INFOCARS_ESTEMOTOR",
     "categoria": "AL_M",
     "genere": "M",
-    "punti_totali": 4,
+    "punti_totali": 6,
     "risultati": [
       {
         "gara_id": "4_TROFEO_PECSO_CAVI_2026-04-26_AL_M",
@@ -47059,6 +47410,19 @@
         "regione": "VENETO",
         "km": "60.000",
         "media": "43.636"
+      },
+      {
+        "gara_id": "5_GRAN_PREMIO_EUROTERMOIDRAULICA_2026-05-10_AL_M",
+        "nome_gara": "5 GRAN PREMIO EUROTERMOIDRAULICA",
+        "data": "2026-05-10",
+        "posizione": 9,
+        "punti_effettivi": 2,
+        "team": "INFOCARS-ESTEMOTOR",
+        "moltiplicatore": 1,
+        "tipo": "regionale",
+        "regione": "VENETO",
+        "km": "70.200",
+        "media": "41.614"
       }
     ]
   },
@@ -53619,7 +53983,7 @@
     "team_id": "GCD_PEDALE_MANZANESE",
     "categoria": "AL_M",
     "genere": "M",
-    "punti_totali": 12,
+    "punti_totali": 20,
     "risultati": [
       {
         "gara_id": "68_TROFEO_DELLA_VITTORIA_CAMPIONATO_TRENTINO_2026-04-25_AL_M",
@@ -53633,6 +53997,19 @@
         "regione": "TRENTINO ALTO ADIGE",
         "km": "51.800",
         "media": "41.887"
+      },
+      {
+        "gara_id": "41_GRAN_PREMIO_FESTA_DELLA_MAMMA_2026-05-10_AL_M",
+        "nome_gara": "41 GRAN PREMIO FESTA DELLA MAMMA",
+        "data": "2026-05-10",
+        "posizione": 4,
+        "punti_effettivi": 8,
+        "team": "GCD PEDALE MANZANESE",
+        "moltiplicatore": 1,
+        "tipo": "regionale",
+        "regione": "FRIULI VENEZIA GIULIA",
+        "km": "65.400",
+        "media": "41.960"
       }
     ]
   },
@@ -54900,7 +55277,7 @@
     "team_id": "TEAM_CESARO_NERI_LUCCHINI",
     "categoria": "ES2_M",
     "genere": "M",
-    "punti_totali": 40,
+    "punti_totali": 46,
     "risultati": [
       {
         "gara_id": "22_GRAN_PREMIO_DELLA_LIBERAZIONE_GARA_UNICA_2026-04-25_ES2_M",
@@ -54966,6 +55343,19 @@
         "regione": "TOSCANA",
         "km": "30.000",
         "media": "38.298"
+      },
+      {
+        "gara_id": "ASPETTANDO_LA_CORSA_DI_SANDRO_GARA_UNICA_2026-05-10_ES2_M",
+        "nome_gara": "ASPETTANDO LA CORSA DI SANDRO GARA UNICA",
+        "data": "2026-05-10",
+        "posizione": 5,
+        "punti_effettivi": 6,
+        "team": "TEAM CESARO-NERI-LUCCHINI",
+        "moltiplicatore": 1,
+        "tipo": "regionale",
+        "regione": "ABRUZZO",
+        "km": "30.000",
+        "media": "35.294"
       }
     ]
   },
@@ -58979,7 +59369,7 @@
     "team_id": "A_S_D_CICLISTICA_MONSELICE",
     "categoria": "AL_M",
     "genere": "M",
-    "punti_totali": 6,
+    "punti_totali": 21,
     "risultati": [
       {
         "gara_id": "2_MEMORIAL_EDOARDO_BERNARDI_2026-04-19_AL_M",
@@ -58993,6 +59383,19 @@
         "regione": "VENETO",
         "km": "61.200",
         "media": "44.464"
+      },
+      {
+        "gara_id": "5_GRAN_PREMIO_EUROTERMOIDRAULICA_2026-05-10_AL_M",
+        "nome_gara": "5 GRAN PREMIO EUROTERMOIDRAULICA",
+        "data": "2026-05-10",
+        "posizione": 1,
+        "punti_effettivi": 15,
+        "team": "A.S.D. CICLISTICA MONSELICE",
+        "moltiplicatore": 1,
+        "tipo": "regionale",
+        "regione": "VENETO",
+        "km": "70.200",
+        "media": "41.614"
       }
     ]
   },
@@ -59925,7 +60328,7 @@
     "team_id": "TEAM_GIUNIGOR_B_BIKE",
     "categoria": "ES2_M",
     "genere": "M",
-    "punti_totali": 30,
+    "punti_totali": 33,
     "risultati": [
       {
         "gara_id": "TROFEO_VALLE_D_OFANTO_2026_GARA_UNICA_2026-04-19_ES2_M",
@@ -59978,6 +60381,19 @@
         "regione": "TOSCANA",
         "km": "30.000",
         "media": "38.933"
+      },
+      {
+        "gara_id": "ASPETTANDO_LA_CORSA_DI_SANDRO_GARA_UNICA_2026-05-10_ES2_M",
+        "nome_gara": "ASPETTANDO LA CORSA DI SANDRO GARA UNICA",
+        "data": "2026-05-10",
+        "posizione": 8,
+        "punti_effettivi": 3,
+        "team": "TEAM GIUNIGOR - B.BIKE",
+        "moltiplicatore": 1,
+        "tipo": "regionale",
+        "regione": "ABRUZZO",
+        "km": "30.000",
+        "media": "35.294"
       }
     ]
   },
@@ -63626,7 +64042,7 @@
     "team_id": "A_S_D_PEDALE_RONCHESE",
     "categoria": "AL_M",
     "genere": "M",
-    "punti_totali": 4,
+    "punti_totali": 5,
     "risultati": [
       {
         "gara_id": "7_MEMORIAL_MORATTI_2026-04-12_AL_M",
@@ -63640,6 +64056,19 @@
         "regione": "FRIULI VENEZIA GIULIA",
         "km": "56.800",
         "media": "47.333"
+      },
+      {
+        "gara_id": "41_GRAN_PREMIO_FESTA_DELLA_MAMMA_2026-05-10_AL_M",
+        "nome_gara": "41 GRAN PREMIO FESTA DELLA MAMMA",
+        "data": "2026-05-10",
+        "posizione": 10,
+        "punti_effettivi": 1,
+        "team": "A.S.D. PEDALE RONCHESE",
+        "moltiplicatore": 1,
+        "tipo": "regionale",
+        "regione": "FRIULI VENEZIA GIULIA",
+        "km": "65.400",
+        "media": "41.960"
       }
     ]
   },
@@ -69879,7 +70308,7 @@
     "team_id": "A_S_D_CICLISTICA_MONSELICE",
     "categoria": "AL_M",
     "genere": "M",
-    "punti_totali": 15,
+    "punti_totali": 21,
     "risultati": [
       {
         "gara_id": "16_TROFEO_COMUNE_DI_SALIZZOLE_2026-03-29_AL_M",
@@ -69893,6 +70322,19 @@
         "regione": "VENETO",
         "km": "55.200",
         "media": "42.680"
+      },
+      {
+        "gara_id": "5_GRAN_PREMIO_EUROTERMOIDRAULICA_2026-05-10_AL_M",
+        "nome_gara": "5 GRAN PREMIO EUROTERMOIDRAULICA",
+        "data": "2026-05-10",
+        "posizione": 5,
+        "punti_effettivi": 6,
+        "team": "A.S.D. CICLISTICA MONSELICE",
+        "moltiplicatore": 1,
+        "tipo": "regionale",
+        "regione": "VENETO",
+        "km": "70.200",
+        "media": "41.614"
       }
     ]
   },
@@ -69979,7 +70421,7 @@
     "team_id": "ROTOGAL_GUADENSE",
     "categoria": "AL_M",
     "genere": "M",
-    "punti_totali": 1,
+    "punti_totali": 5,
     "risultati": [
       {
         "gara_id": "16_TROFEO_COMUNE_DI_SALIZZOLE_2026-03-29_AL_M",
@@ -69993,6 +70435,19 @@
         "regione": "VENETO",
         "km": "55.200",
         "media": "42.680"
+      },
+      {
+        "gara_id": "5_GRAN_PREMIO_EUROTERMOIDRAULICA_2026-05-10_AL_M",
+        "nome_gara": "5 GRAN PREMIO EUROTERMOIDRAULICA",
+        "data": "2026-05-10",
+        "posizione": 7,
+        "punti_effettivi": 4,
+        "team": "ROTOGAL GUADENSE",
+        "moltiplicatore": 1,
+        "tipo": "regionale",
+        "regione": "VENETO",
+        "km": "70.200",
+        "media": "41.614"
       }
     ]
   },
@@ -76739,7 +77194,7 @@
     "nome": "LIV",
     "cognome": "WENZEL",
     "team_attuale": "TIROL WOMEN CYCLING",
-    "team_id": "TIROL_WOMEN_CYCLING",
+    "team_id": "TIROL_WOMEN_CYCLING_F",
     "categoria": "ELI_F",
     "genere": "F",
     "punti_totali": 10,
@@ -76764,7 +77219,7 @@
     "nome": "VIRGINIA",
     "cognome": "BORTOLI",
     "team_attuale": "TOP GIRLS - FASSA BORTOLO",
-    "team_id": "TOP_GIRLS_FASSA_BORTOLO",
+    "team_id": "TOP_GIRLS_FASSA_BORTOLO_F",
     "categoria": "ELI_F",
     "genere": "F",
     "punti_totali": 1,
@@ -76981,6 +77436,131 @@
         "regione": "LOMBARDIA",
         "km": "25.200",
         "media": "38.604"
+      }
+    ]
+  },
+  "CECCHIN_GIACOMO": {
+    "id": "CECCHIN_GIACOMO",
+    "nome": "GIACOMO",
+    "cognome": "CECCHIN",
+    "team_attuale": "V.C. BASSANO 1892",
+    "team_id": "V_C_BASSANO_1892",
+    "categoria": "AL_M",
+    "genere": "M",
+    "punti_totali": 3,
+    "risultati": [
+      {
+        "gara_id": "5_GRAN_PREMIO_EUROTERMOIDRAULICA_2026-05-10_AL_M",
+        "nome_gara": "5 GRAN PREMIO EUROTERMOIDRAULICA",
+        "data": "2026-05-10",
+        "posizione": 8,
+        "punti_effettivi": 3,
+        "team": "V.C. BASSANO 1892",
+        "moltiplicatore": 1,
+        "tipo": "regionale",
+        "regione": "VENETO",
+        "km": "70.200",
+        "media": "41.614"
+      }
+    ]
+  },
+  "GUIDOLIN_RICCARDO": {
+    "id": "GUIDOLIN_RICCARDO",
+    "nome": "RICCARDO",
+    "cognome": "GUIDOLIN",
+    "team_attuale": "CAMPANA IMBALLAGGI MORBIATO TRENTINO",
+    "team_id": "CAMPANA_IMBALLAGGI_MORBIATO_TRENTINO",
+    "categoria": "AL_M",
+    "genere": "M",
+    "punti_totali": 1,
+    "risultati": [
+      {
+        "gara_id": "5_GRAN_PREMIO_EUROTERMOIDRAULICA_2026-05-10_AL_M",
+        "nome_gara": "5 GRAN PREMIO EUROTERMOIDRAULICA",
+        "data": "2026-05-10",
+        "posizione": 10,
+        "punti_effettivi": 1,
+        "team": "CAMPANA IMBALLAGGI MORBIATO TRENTINO",
+        "moltiplicatore": 1,
+        "tipo": "regionale",
+        "regione": "VENETO",
+        "km": "70.200",
+        "media": "41.614"
+      }
+    ]
+  },
+  "TOFFUL_RICCARDO": {
+    "id": "TOFFUL_RICCARDO",
+    "nome": "RICCARDO",
+    "cognome": "TOFFUL",
+    "team_attuale": "GCD PEDALE MANZANESE",
+    "team_id": "GCD_PEDALE_MANZANESE",
+    "categoria": "AL_M",
+    "genere": "M",
+    "punti_totali": 10,
+    "risultati": [
+      {
+        "gara_id": "41_GRAN_PREMIO_FESTA_DELLA_MAMMA_2026-05-10_AL_M",
+        "nome_gara": "41 GRAN PREMIO FESTA DELLA MAMMA",
+        "data": "2026-05-10",
+        "posizione": 3,
+        "punti_effettivi": 10,
+        "team": "GCD PEDALE MANZANESE",
+        "moltiplicatore": 1,
+        "tipo": "regionale",
+        "regione": "FRIULI VENEZIA GIULIA",
+        "km": "65.400",
+        "media": "41.960"
+      }
+    ]
+  },
+  "MONTAGNER_LUCA": {
+    "id": "MONTAGNER_LUCA",
+    "nome": "LUCA",
+    "cognome": "MONTAGNER",
+    "team_attuale": "LIBERTAS CERESETTO",
+    "team_id": "LIBERTAS_CERESETTO",
+    "categoria": "AL_M",
+    "genere": "M",
+    "punti_totali": 6,
+    "risultati": [
+      {
+        "gara_id": "41_GRAN_PREMIO_FESTA_DELLA_MAMMA_2026-05-10_AL_M",
+        "nome_gara": "41 GRAN PREMIO FESTA DELLA MAMMA",
+        "data": "2026-05-10",
+        "posizione": 5,
+        "punti_effettivi": 6,
+        "team": "LIBERTAS CERESETTO",
+        "moltiplicatore": 1,
+        "tipo": "regionale",
+        "regione": "FRIULI VENEZIA GIULIA",
+        "km": "65.400",
+        "media": "41.960"
+      }
+    ]
+  },
+  "RUVOLETTO_ALBERTO": {
+    "id": "RUVOLETTO_ALBERTO",
+    "nome": "ALBERTO",
+    "cognome": "RUVOLETTO",
+    "team_attuale": "IND. FORNITURE MORO-C&G CAPITAL",
+    "team_id": "IND_FORNITURE_MORO_C_G_CAPITAL",
+    "categoria": "AL_M",
+    "genere": "M",
+    "punti_totali": 2,
+    "risultati": [
+      {
+        "gara_id": "41_GRAN_PREMIO_FESTA_DELLA_MAMMA_2026-05-10_AL_M",
+        "nome_gara": "41 GRAN PREMIO FESTA DELLA MAMMA",
+        "data": "2026-05-10",
+        "posizione": 9,
+        "punti_effettivi": 2,
+        "team": "IND. FORNITURE MORO-C&G CAPITAL",
+        "moltiplicatore": 1,
+        "tipo": "regionale",
+        "regione": "FRIULI VENEZIA GIULIA",
+        "km": "65.400",
+        "media": "41.960"
       }
     ]
   }

@@ -2,12 +2,12 @@
   {
     "team_id": "TEAM_CESARO_NERI_LUCCHINI",
     "team_nome": "TEAM CESARO-NERI-LUCCHINI",
-    "punti": 312,
+    "punti": 339,
     "vittorie": 8,
     "p1": 8,
-    "p2": 4,
+    "p2": 5,
     "p3": 3,
-    "pout": 15,
+    "pout": 18,
     "n_atleti": 5,
     "pos": 1
   },
@@ -48,6 +48,18 @@
     "pos": 4
   },
   {
+    "team_id": "IL_PIRATA_SAMA_RICAMBI_OTC",
+    "team_nome": "IL PIRATA SAMA RICAMBI OTC",
+    "punti": 156,
+    "vittorie": 2,
+    "p1": 2,
+    "p2": 3,
+    "p3": 3,
+    "pout": 10,
+    "n_atleti": 3,
+    "pos": 5
+  },
+  {
     "team_id": "TEAM_NIBALI",
     "team_nome": "TEAM NIBALI",
     "punti": 149,
@@ -57,7 +69,7 @@
     "p3": 4,
     "pout": 12,
     "n_atleti": 5,
-    "pos": 5
+    "pos": 6
   },
   {
     "team_id": "S_C_COTIGNOLESE",
@@ -69,7 +81,7 @@
     "p3": 1,
     "pout": 7,
     "n_atleti": 2,
-    "pos": 6
+    "pos": 7
   },
   {
     "team_id": "UC_EMPOLESE",
@@ -81,18 +93,6 @@
     "p3": 2,
     "pout": 21,
     "n_atleti": 4,
-    "pos": 7
-  },
-  {
-    "team_id": "IL_PIRATA_SAMA_RICAMBI_OTC",
-    "team_nome": "IL PIRATA SAMA RICAMBI OTC",
-    "punti": 135,
-    "vittorie": 1,
-    "p1": 1,
-    "p2": 3,
-    "p3": 3,
-    "pout": 8,
-    "n_atleti": 3,
     "pos": 8
   },
   {
@@ -516,6 +516,18 @@
     "pos": 43
   },
   {
+    "team_id": "S_C_VILLA_S_ANTONIO_CICLI_COCCI",
+    "team_nome": "S.C. VILLA S.ANTONIO CICLI COCCI",
+    "punti": 41,
+    "vittorie": 0,
+    "p1": 0,
+    "p2": 0,
+    "p3": 1,
+    "pout": 4,
+    "n_atleti": 1,
+    "pos": 44
+  },
+  {
     "team_id": "SESTU_BIKE_A_S_D",
     "team_nome": "SESTU BIKE A.S.D.",
     "punti": 41,
@@ -525,7 +537,7 @@
     "p3": 0,
     "pout": 10,
     "n_atleti": 3,
-    "pos": 44
+    "pos": 45
   },
   {
     "team_id": "UC_GODIGESE_ABRA_IRIDE",
@@ -537,7 +549,7 @@
     "p3": 0,
     "pout": 7,
     "n_atleti": 2,
-    "pos": 45
+    "pos": 46
   },
   {
     "team_id": "TEAM_BOSCO_DI_ORSAGO",
@@ -549,7 +561,7 @@
     "p3": 2,
     "pout": 5,
     "n_atleti": 4,
-    "pos": 46
+    "pos": 47
   },
   {
     "team_id": "GOTTARDO_GIOCHI_CANEVA",
@@ -561,7 +573,7 @@
     "p3": 1,
     "pout": 4,
     "n_atleti": 2,
-    "pos": 47
+    "pos": 48
   },
   {
     "team_id": "POL_MILLELUCI_CICLISMO",
@@ -573,7 +585,7 @@
     "p3": 1,
     "pout": 4,
     "n_atleti": 2,
-    "pos": 48
+    "pos": 49
   },
   {
     "team_id": "POL_ALBERGO_OLIVETO",
@@ -585,7 +597,7 @@
     "p3": 1,
     "pout": 2,
     "n_atleti": 1,
-    "pos": 49
+    "pos": 50
   },
   {
     "team_id": "PEDALE_TOSCANO_PONTICINO",
@@ -597,7 +609,7 @@
     "p3": 0,
     "pout": 6,
     "n_atleti": 3,
-    "pos": 50
+    "pos": 51
   },
   {
     "team_id": "UC_PIANO_DI_MOMMIO_SPEEDY_BIKE",
@@ -609,7 +621,7 @@
     "p3": 0,
     "pout": 6,
     "n_atleti": 3,
-    "pos": 51
+    "pos": 52
   },
   {
     "team_id": "A_S_D_CICLI_TONTI_CATTOLICA",
@@ -621,7 +633,19 @@
     "p3": 1,
     "pout": 0,
     "n_atleti": 1,
-    "pos": 52
+    "pos": 53
+  },
+  {
+    "team_id": "TEAM_GIUNIGOR_B_BIKE",
+    "team_nome": "TEAM GIUNIGOR - B.BIKE",
+    "punti": 33,
+    "vittorie": 1,
+    "p1": 1,
+    "p2": 0,
+    "p3": 1,
+    "pout": 3,
+    "n_atleti": 1,
+    "pos": 54
   },
   {
     "team_id": "UC_FOEN_MICTU",
@@ -633,7 +657,7 @@
     "p3": 1,
     "pout": 2,
     "n_atleti": 2,
-    "pos": 53
+    "pos": 55
   },
   {
     "team_id": "GS_PIANELLO",
@@ -645,7 +669,7 @@
     "p3": 1,
     "pout": 5,
     "n_atleti": 2,
-    "pos": 54
+    "pos": 56
   },
   {
     "team_id": "S_C_OZIERESE",
@@ -656,30 +680,6 @@
     "p2": 0,
     "p3": 0,
     "pout": 1,
-    "n_atleti": 1,
-    "pos": 55
-  },
-  {
-    "team_id": "S_C_VILLA_S_ANTONIO_CICLI_COCCI",
-    "team_nome": "S.C. VILLA S.ANTONIO CICLI COCCI",
-    "punti": 31,
-    "vittorie": 0,
-    "p1": 0,
-    "p2": 0,
-    "p3": 0,
-    "pout": 4,
-    "n_atleti": 1,
-    "pos": 56
-  },
-  {
-    "team_id": "TEAM_GIUNIGOR_B_BIKE",
-    "team_nome": "TEAM GIUNIGOR - B.BIKE",
-    "punti": 30,
-    "vittorie": 1,
-    "p1": 1,
-    "p2": 0,
-    "p3": 1,
-    "pout": 2,
     "n_atleti": 1,
     "pos": 57
   },
@@ -744,6 +744,18 @@
     "pos": 62
   },
   {
+    "team_id": "ASD_TEAM_MMBIKE_ANDRIA_RESTO_AL_SUD",
+    "team_nome": "ASD TEAM MMBIKE ANDRIA RESTO AL SUD",
+    "punti": 24,
+    "vittorie": 0,
+    "p1": 0,
+    "p2": 0,
+    "p3": 0,
+    "pout": 5,
+    "n_atleti": 1,
+    "pos": 63
+  },
+  {
     "team_id": "S_C_SAN_FELICE_A_S_D",
     "team_nome": "S.C.SAN FELICE A.S.D.",
     "punti": 24,
@@ -753,7 +765,7 @@
     "p3": 0,
     "pout": 5,
     "n_atleti": 1,
-    "pos": 63
+    "pos": 64
   },
   {
     "team_id": "CANNEDU_ITTIRI_A_MANCA_ASD",
@@ -765,7 +777,7 @@
     "p3": 0,
     "pout": 6,
     "n_atleti": 2,
-    "pos": 64
+    "pos": 65
   },
   {
     "team_id": "A_S_D_CICLISTICA_MONSELICE",
@@ -777,7 +789,7 @@
     "p3": 0,
     "pout": 4,
     "n_atleti": 2,
-    "pos": 65
+    "pos": 66
   },
   {
     "team_id": "UC_DONORATICO",
@@ -789,7 +801,7 @@
     "p3": 1,
     "pout": 4,
     "n_atleti": 3,
-    "pos": 66
+    "pos": 67
   },
   {
     "team_id": "VELO_CLUB_CATTOLICA",
@@ -801,7 +813,7 @@
     "p3": 0,
     "pout": 5,
     "n_atleti": 3,
-    "pos": 67
+    "pos": 68
   },
   {
     "team_id": "PEDALE_MARENESE_GINO_BARTALI",
@@ -813,7 +825,7 @@
     "p3": 0,
     "pout": 5,
     "n_atleti": 2,
-    "pos": 68
+    "pos": 69
   },
   {
     "team_id": "C_S_LIBERTAS_SCORZE",
@@ -825,7 +837,7 @@
     "p3": 0,
     "pout": 1,
     "n_atleti": 2,
-    "pos": 69
+    "pos": 70
   },
   {
     "team_id": "S_C_TERRANOVA_FANCELLO_CICLI",
@@ -837,7 +849,7 @@
     "p3": 0,
     "pout": 5,
     "n_atleti": 2,
-    "pos": 70
+    "pos": 71
   },
   {
     "team_id": "KD_SLOGA_1902_IDRIJA",
@@ -849,7 +861,7 @@
     "p3": 0,
     "pout": 3,
     "n_atleti": 1,
-    "pos": 71
+    "pos": 72
   },
   {
     "team_id": "SAN_GEO_A_S_D",
@@ -861,7 +873,7 @@
     "p3": 0,
     "pout": 4,
     "n_atleti": 1,
-    "pos": 72
+    "pos": 73
   },
   {
     "team_id": "BANNIA_ASS_SPORT_DILETT",
@@ -872,18 +884,6 @@
     "p2": 1,
     "p3": 0,
     "pout": 1,
-    "n_atleti": 1,
-    "pos": 73
-  },
-  {
-    "team_id": "ASD_TEAM_MMBIKE_ANDRIA_RESTO_AL_SUD",
-    "team_nome": "ASD TEAM MMBIKE ANDRIA RESTO AL SUD",
-    "punti": 19,
-    "vittorie": 0,
-    "p1": 0,
-    "p2": 0,
-    "p3": 0,
-    "pout": 4,
     "n_atleti": 1,
     "pos": 74
   },

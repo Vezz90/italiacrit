@@ -2,10 +2,10 @@
   {
     "team_id": "BIESSE_CARRERA_PREMAC_F",
     "team_nome": "BIESSE - CARRERA - PREMAC",
-    "punti": 235,
+    "punti": 247,
     "vittorie": 2,
     "p1": 2,
-    "p2": 3,
+    "p2": 4,
     "p3": 5,
     "pout": 20,
     "n_atleti": 8,
@@ -14,14 +14,26 @@
   {
     "team_id": "BFT_BURZONI_F",
     "team_nome": "BFT BURZONI",
-    "punti": 177,
+    "punti": 185,
     "vittorie": 4,
     "p1": 4,
     "p2": 3,
     "p3": 1,
-    "pout": 7,
+    "pout": 8,
     "n_atleti": 5,
     "pos": 2
+  },
+  {
+    "team_id": "BREGANZE_MILLENIUM_F",
+    "team_nome": "BREGANZE MILLENIUM",
+    "punti": 137,
+    "vittorie": 3,
+    "p1": 3,
+    "p2": 1,
+    "p3": 0,
+    "pout": 10,
+    "n_atleti": 5,
+    "pos": 3
   },
   {
     "team_id": "LIBERTAS_CERESETTO_F",
@@ -33,19 +45,19 @@
     "p3": 2,
     "pout": 13,
     "n_atleti": 4,
-    "pos": 3
+    "pos": 4
   },
   {
-    "team_id": "BREGANZE_MILLENIUM_F",
-    "team_nome": "BREGANZE MILLENIUM",
-    "punti": 125,
+    "team_id": "PETRUCCI_GAUSS_CYCLING_TEAM_F",
+    "team_nome": "PETRUCCI GAUSS CYCLING TEAM",
+    "punti": 105,
     "vittorie": 3,
     "p1": 3,
     "p2": 1,
-    "p3": 0,
-    "pout": 7,
-    "n_atleti": 5,
-    "pos": 4
+    "p3": 1,
+    "pout": 6,
+    "n_atleti": 6,
+    "pos": 5
   },
   {
     "team_id": "BRESCIA_F_MAGNI_FLANDRES_LOVE_F",
@@ -57,18 +69,6 @@
     "p3": 3,
     "pout": 5,
     "n_atleti": 4,
-    "pos": 5
-  },
-  {
-    "team_id": "PETRUCCI_GAUSS_CYCLING_TEAM_F",
-    "team_nome": "PETRUCCI GAUSS CYCLING TEAM",
-    "punti": 90,
-    "vittorie": 2,
-    "p1": 2,
-    "p2": 1,
-    "p3": 1,
-    "pout": 6,
-    "n_atleti": 6,
     "pos": 6
   },
   {
@@ -96,6 +96,18 @@
     "pos": 8
   },
   {
+    "team_id": "U_C_CONSCIO_PEDALE_DEL_SILE_F",
+    "team_nome": "U.C.CONSCIO PEDALE DEL SILE",
+    "punti": 53,
+    "vittorie": 2,
+    "p1": 2,
+    "p2": 0,
+    "p3": 0,
+    "pout": 7,
+    "n_atleti": 2,
+    "pos": 9
+  },
+  {
     "team_id": "AIRTOX_CARL_RAS_F",
     "team_nome": "AIRTOX - CARL RAS",
     "punti": 51,
@@ -105,31 +117,31 @@
     "p3": 0,
     "pout": 1,
     "n_atleti": 2,
-    "pos": 9
-  },
-  {
-    "team_id": "U_C_CONSCIO_PEDALE_DEL_SILE_F",
-    "team_nome": "U.C.CONSCIO PEDALE DEL SILE",
-    "punti": 50,
-    "vittorie": 2,
-    "p1": 2,
-    "p2": 0,
-    "p3": 0,
-    "pout": 6,
-    "n_atleti": 2,
     "pos": 10
   },
   {
     "team_id": "PC_BAIX_EBRE_TORTOSA_F",
     "team_nome": "PC BAIX EBRE TORTOSA",
-    "punti": 33,
+    "punti": 37,
     "vittorie": 0,
     "p1": 0,
     "p2": 0,
     "p3": 0,
-    "pout": 5,
+    "pout": 6,
     "n_atleti": 1,
     "pos": 11
+  },
+  {
+    "team_id": "TEAM_WILIER_BREGANZE_F",
+    "team_nome": "TEAM WILIER BREGANZE",
+    "punti": 32,
+    "vittorie": 0,
+    "p1": 0,
+    "p2": 0,
+    "p3": 1,
+    "pout": 8,
+    "n_atleti": 5,
+    "pos": 12
   },
   {
     "team_id": "GROUWELS_WATERSLEY_R_D_F",
@@ -141,7 +153,7 @@
     "p3": 1,
     "pout": 0,
     "n_atleti": 1,
-    "pos": 12
+    "pos": 13
   },
   {
     "team_id": "CAMS_MAJACO_F",
@@ -153,18 +165,6 @@
     "p3": 0,
     "pout": 1,
     "n_atleti": 1,
-    "pos": 13
-  },
-  {
-    "team_id": "TEAM_WILIER_BREGANZE_F",
-    "team_nome": "TEAM WILIER BREGANZE",
-    "punti": 20,
-    "vittorie": 0,
-    "p1": 0,
-    "p2": 0,
-    "p3": 0,
-    "pout": 7,
-    "n_atleti": 5,
     "pos": 14
   },
   {
@@ -192,54 +192,6 @@
     "pos": 16
   },
   {
-    "team_id": "PETRUCCI_GAUSS_CYCLING_TEAM",
-    "team_nome": "PETRUCCI GAUSS CYCLING TEAM",
-    "punti": 15,
-    "vittorie": 1,
-    "p1": 1,
-    "p2": 0,
-    "p3": 0,
-    "pout": 0,
-    "n_atleti": 1,
-    "pos": 17
-  },
-  {
-    "team_id": "BIESSE_CARRERA_PREMAC",
-    "team_nome": "BIESSE - CARRERA - PREMAC",
-    "punti": 12,
-    "vittorie": 0,
-    "p1": 0,
-    "p2": 1,
-    "p3": 0,
-    "pout": 0,
-    "n_atleti": 1,
-    "pos": 18
-  },
-  {
-    "team_id": "TEAM_WILIER_BREGANZE",
-    "team_nome": "TEAM WILIER BREGANZE",
-    "punti": 12,
-    "vittorie": 0,
-    "p1": 0,
-    "p2": 0,
-    "p3": 1,
-    "pout": 1,
-    "n_atleti": 2,
-    "pos": 19
-  },
-  {
-    "team_id": "BREGANZE_MILLENIUM",
-    "team_nome": "BREGANZE MILLENIUM",
-    "punti": 12,
-    "vittorie": 0,
-    "p1": 0,
-    "p2": 0,
-    "p3": 0,
-    "pout": 3,
-    "n_atleti": 3,
-    "pos": 20
-  },
-  {
     "team_id": "SPAGNA_F",
     "team_nome": "SPAGNA",
     "punti": 9,
@@ -249,19 +201,7 @@
     "p3": 0,
     "pout": 1,
     "n_atleti": 1,
-    "pos": 21
-  },
-  {
-    "team_id": "BFT_BURZONI",
-    "team_nome": "BFT BURZONI",
-    "punti": 8,
-    "vittorie": 0,
-    "p1": 0,
-    "p2": 0,
-    "p3": 0,
-    "pout": 1,
-    "n_atleti": 1,
-    "pos": 22
+    "pos": 17
   },
   {
     "team_id": "TEAM_MENDELSPECK_E_WORK_F",
@@ -273,7 +213,7 @@
     "p3": 0,
     "pout": 1,
     "n_atleti": 1,
-    "pos": 23
+    "pos": 18
   },
   {
     "team_id": "POLISH_CYCLING_FEDERATION_F",
@@ -285,19 +225,7 @@
     "p3": 0,
     "pout": 1,
     "n_atleti": 1,
-    "pos": 24
-  },
-  {
-    "team_id": "PC_BAIX_EBRE_TORTOSA",
-    "team_nome": "PC BAIX EBRE TORTOSA",
-    "punti": 4,
-    "vittorie": 0,
-    "p1": 0,
-    "p2": 0,
-    "p3": 0,
-    "pout": 1,
-    "n_atleti": 1,
-    "pos": 25
+    "pos": 19
   },
   {
     "team_id": "GIFU_DAIICHI_HIGH_SCHOOL_F",
@@ -309,7 +237,7 @@
     "p3": 0,
     "pout": 1,
     "n_atleti": 1,
-    "pos": 26
+    "pos": 20
   },
   {
     "team_id": "FRANCIA_F",
@@ -321,18 +249,6 @@
     "p3": 0,
     "pout": 1,
     "n_atleti": 1,
-    "pos": 27
-  },
-  {
-    "team_id": "U_C_CONSCIO_PEDALE_DEL_SILE",
-    "team_nome": "U.C.CONSCIO PEDALE DEL SILE",
-    "punti": 3,
-    "vittorie": 0,
-    "p1": 0,
-    "p2": 0,
-    "p3": 0,
-    "pout": 1,
-    "n_atleti": 1,
-    "pos": 28
+    "pos": 21
   }
 ]

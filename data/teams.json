@@ -1962,7 +1962,7 @@
   "IND_FORNITURE_MORO_C_G_CAPITAL": {
     "id": "IND_FORNITURE_MORO_C_G_CAPITAL",
     "nome": "IND. FORNITURE MORO-C&G CAPITAL",
-    "punti_totali": 618,
+    "punti_totali": 649,
     "atleti": [
       "ZAGO_GABRIELE",
       "MENEGHELLO_RICCARDO",
@@ -1985,7 +1985,8 @@
       "MARINETTO_LORENZO",
       "FACCIN_NICCOLO",
       "GIROTTO_VITTORIO",
-      "BONATO_TOMMASO"
+      "BONATO_TOMMASO",
+      "RUVOLETTO_ALBERTO"
     ],
     "risultati": [
       {
@@ -3067,11 +3068,71 @@
         "regione": "VENETO",
         "km": "114.000",
         "media": "42.790"
+      },
+      {
+        "gara_id": "5_GRAN_PREMIO_EUROTERMOIDRAULICA_2026-05-10_AL_M",
+        "nome_gara": "5 GRAN PREMIO EUROTERMOIDRAULICA",
+        "data": "2026-05-10",
+        "atleta_id": "ROMAN_RICCARDO",
+        "atleta_cognome": "ROMAN",
+        "atleta_nome": "RICCARDO",
+        "posizione": 3,
+        "punti_effettivi": 10,
+        "moltiplicatore": 1,
+        "tipo": "regionale",
+        "regione": "VENETO",
+        "km": "70.200",
+        "media": "41.614"
+      },
+      {
+        "gara_id": "41_GRAN_PREMIO_FESTA_DELLA_MAMMA_2026-05-10_AL_M",
+        "nome_gara": "41 GRAN PREMIO FESTA DELLA MAMMA",
+        "data": "2026-05-10",
+        "atleta_id": "MENEGHELLO_RICCARDO",
+        "atleta_cognome": "MENEGHELLO",
+        "atleta_nome": "RICCARDO",
+        "posizione": 1,
+        "punti_effettivi": 15,
+        "moltiplicatore": 1,
+        "tipo": "regionale",
+        "regione": "FRIULI VENEZIA GIULIA",
+        "km": "65.400",
+        "media": "41.960"
+      },
+      {
+        "gara_id": "41_GRAN_PREMIO_FESTA_DELLA_MAMMA_2026-05-10_AL_M",
+        "nome_gara": "41 GRAN PREMIO FESTA DELLA MAMMA",
+        "data": "2026-05-10",
+        "atleta_id": "FOFFANO_PIETRO",
+        "atleta_cognome": "FOFFANO",
+        "atleta_nome": "PIETRO",
+        "posizione": 7,
+        "punti_effettivi": 4,
+        "moltiplicatore": 1,
+        "tipo": "regionale",
+        "regione": "FRIULI VENEZIA GIULIA",
+        "km": "65.400",
+        "media": "41.960"
+      },
+      {
+        "gara_id": "41_GRAN_PREMIO_FESTA_DELLA_MAMMA_2026-05-10_AL_M",
+        "nome_gara": "41 GRAN PREMIO FESTA DELLA MAMMA",
+        "data": "2026-05-10",
+        "atleta_id": "RUVOLETTO_ALBERTO",
+        "atleta_cognome": "RUVOLETTO",
+        "atleta_nome": "ALBERTO",
+        "posizione": 9,
+        "punti_effettivi": 2,
+        "moltiplicatore": 1,
+        "tipo": "regionale",
+        "regione": "FRIULI VENEZIA GIULIA",
+        "km": "65.400",
+        "media": "41.960"
       }
     ],
     "punti_per_cat": {
       "JUN_M": 257,
-      "AL_M": 206,
+      "AL_M": 237,
       "ES1_M": 78,
       "ES2_M": 77
     }
@@ -4356,7 +4417,7 @@
   "TEAM_CORATTI": {
     "id": "TEAM_CORATTI",
     "nome": "TEAM CORATTI",
-    "punti_totali": 341,
+    "punti_totali": 345,
     "atleti": [
       "PARIS_BRIAN",
       "GALLO_GIUSEPPE",
@@ -4925,12 +4986,27 @@
         "regione": "LOMBARDIA",
         "km": "61.850",
         "media": "40.447"
+      },
+      {
+        "gara_id": "ASPETTANDO_LA_CORSA_DI_SANDRO_GARA_UNICA_2026-05-10_ES1_M",
+        "nome_gara": "ASPETTANDO LA CORSA DI SANDRO GARA UNICA",
+        "data": "2026-05-10",
+        "atleta_id": "ANTONELLI_ROCCO_VINCENZO",
+        "atleta_cognome": "ANTONELLI",
+        "atleta_nome": "ROCCO VINCENZO",
+        "posizione": 7,
+        "punti_effettivi": 4,
+        "moltiplicatore": 1,
+        "tipo": "regionale",
+        "regione": "ABRUZZO",
+        "km": "30.000",
+        "media": "35.294"
       }
     ],
     "punti_per_cat": {
       "JUN_M": 166,
       "AL_M": 132,
-      "ES1_M": 25,
+      "ES1_M": 29,
       "ES2_M": 18
     }
   },
@@ -6807,7 +6883,7 @@
   "BIESSE_CARRERA_PREMAC": {
     "id": "BIESSE_CARRERA_PREMAC",
     "nome": "BIESSE - CARRERA - PREMAC",
-    "punti_totali": 262,
+    "punti_totali": 250,
     "atleti": [
       "AGOSTINACCHIO_FILIPPO",
       "VESCO_LEONARDO",
@@ -6820,8 +6896,7 @@
       "MINOIA_ALESSANDRO",
       "MILESI_ALESSANDRO",
       "TRAVELLA_NICHOLAS",
-      "ZUMSTEG_NICOLA",
-      "BIANCHI_ELISA"
+      "ZUMSTEG_NICOLA"
     ],
     "risultati": [
       {
@@ -7168,27 +7243,11 @@
         "regione": "TOSCANA",
         "km": "179.500",
         "media": "41.527"
-      },
-      {
-        "gara_id": "GIRO_DELLE_MARCHE_IN_ROSA_2026-05-10_JUN_F",
-        "nome_gara": "GIRO DELLE MARCHE IN ROSA",
-        "data": "2026-05-10",
-        "atleta_id": "BIANCHI_ELISA",
-        "atleta_cognome": "BIANCHI",
-        "atleta_nome": "ELISA",
-        "posizione": 2,
-        "punti_effettivi": 12,
-        "moltiplicatore": 1,
-        "tipo": "regionale",
-        "regione": "MARCHE",
-        "km": "100.000",
-        "media": "35.294"
       }
     ],
     "punti_per_cat": {
       "ELI_M": 226,
-      "JUN_M": 24,
-      "JUN_F": 12
+      "JUN_M": 24
     }
   },
   "ZAPPI_RACING_TEAM": {
@@ -7586,7 +7645,7 @@
   "PC_BAIX_EBRE_TORTOSA": {
     "id": "PC_BAIX_EBRE_TORTOSA",
     "nome": "PC BAIX EBRE TORTOSA",
-    "punti_totali": 189,
+    "punti_totali": 185,
     "atleti": [
       "GRECHISHKIN_VADIM",
       "NOVOLODSKII_ROSTISLAV",
@@ -7594,8 +7653,7 @@
       "IAKOVLEV_MATVEL",
       "PROSANDEEV_IAROSLAV",
       "SKORNIAKOV_BORIS",
-      "POPOV_MARK",
-      "KOSTINA_OLGA"
+      "POPOV_MARK"
     ],
     "risultati": [
       {
@@ -7867,27 +7925,11 @@
         "regione": "TOSCANA",
         "km": "179.500",
         "media": "41.527"
-      },
-      {
-        "gara_id": "GIRO_DELLE_MARCHE_IN_ROSA_2026-05-10_JUN_F",
-        "nome_gara": "GIRO DELLE MARCHE IN ROSA",
-        "data": "2026-05-10",
-        "atleta_id": "KOSTINA_OLGA",
-        "atleta_cognome": "KOSTINA",
-        "atleta_nome": "OLGA",
-        "posizione": 7,
-        "punti_effettivi": 4,
-        "moltiplicatore": 1,
-        "tipo": "regionale",
-        "regione": "MARCHE",
-        "km": "100.000",
-        "media": "35.294"
       }
     ],
     "punti_per_cat": {
       "ELI_M": 65,
-      "JUN_M": 120,
-      "JUN_F": 4
+      "JUN_M": 120
     }
   },
   "VPM_MORETTI_SCS": {
@@ -8927,14 +8969,15 @@
   "CAMPANA_IMBALLAGGI_MORBIATO_TRENTINO": {
     "id": "CAMPANA_IMBALLAGGI_MORBIATO_TRENTINO",
     "nome": "CAMPANA IMBALLAGGI MORBIATO TRENTINO",
-    "punti_totali": 96,
+    "punti_totali": 102,
     "atleti": [
       "BUSANELLO_ROBERTO",
       "MORBIATO_JAKE",
       "BASSANI_TOMMY",
       "DE_LONGHI_LORENZO",
       "TESSARO_MANUEL",
-      "ARCHETTI_GIANLUCA"
+      "ARCHETTI_GIANLUCA",
+      "GUIDOLIN_RICCARDO"
     ],
     "risultati": [
       {
@@ -9146,11 +9189,41 @@
         "regione": "UNDER",
         "km": "120.635",
         "media": "44.911"
+      },
+      {
+        "gara_id": "5_GRAN_PREMIO_EUROTERMOIDRAULICA_2026-05-10_AL_M",
+        "nome_gara": "5 GRAN PREMIO EUROTERMOIDRAULICA",
+        "data": "2026-05-10",
+        "atleta_id": "MORBIATO_JAKE",
+        "atleta_cognome": "MORBIATO",
+        "atleta_nome": "JAKE",
+        "posizione": 6,
+        "punti_effettivi": 5,
+        "moltiplicatore": 1,
+        "tipo": "regionale",
+        "regione": "VENETO",
+        "km": "70.200",
+        "media": "41.614"
+      },
+      {
+        "gara_id": "5_GRAN_PREMIO_EUROTERMOIDRAULICA_2026-05-10_AL_M",
+        "nome_gara": "5 GRAN PREMIO EUROTERMOIDRAULICA",
+        "data": "2026-05-10",
+        "atleta_id": "GUIDOLIN_RICCARDO",
+        "atleta_cognome": "GUIDOLIN",
+        "atleta_nome": "RICCARDO",
+        "posizione": 10,
+        "punti_effettivi": 1,
+        "moltiplicatore": 1,
+        "tipo": "regionale",
+        "regione": "VENETO",
+        "km": "70.200",
+        "media": "41.614"
       }
     ],
     "punti_per_cat": {
       "ELI_M": 84,
-      "AL_M": 6,
+      "AL_M": 12,
       "JUN_M": 6
     }
   },
@@ -13544,7 +13617,7 @@
   "BFT_BURZONI_F": {
     "id": "BFT_BURZONI_F",
     "nome": "BFT BURZONI",
-    "punti_totali": 177,
+    "punti_totali": 185,
     "atleti": [
       "CAMPANA_AGATA",
       "COSTA_STARICCO_GIULIA",
@@ -13777,10 +13850,25 @@
         "regione": "MARCHE",
         "km": "90.000",
         "media": "36.986"
+      },
+      {
+        "gara_id": "GIRO_DELLE_MARCHE_IN_ROSA_2026-05-10_JUN_F",
+        "nome_gara": "GIRO DELLE MARCHE IN ROSA",
+        "data": "2026-05-10",
+        "atleta_id": "ROSSIGNOLI_MATILDE",
+        "atleta_cognome": "ROSSIGNOLI",
+        "atleta_nome": "MATILDE",
+        "posizione": 4,
+        "punti_effettivi": 8,
+        "moltiplicatore": 1,
+        "tipo": "regionale",
+        "regione": "MARCHE",
+        "km": "100.000",
+        "media": "35.294"
       }
     ],
     "punti_per_cat": {
-      "JUN_F": 177
+      "JUN_F": 185
     }
   },
   "BRESCIA_F_MAGNI_FLANDRES_LOVE_F": {
@@ -13969,7 +14057,7 @@
   "BIESSE_CARRERA_PREMAC_F": {
     "id": "BIESSE_CARRERA_PREMAC_F",
     "nome": "BIESSE - CARRERA - PREMAC",
-    "punti_totali": 398,
+    "punti_totali": 410,
     "atleti": [
       "BIANCHI_ELISA",
       "MINICHINO_MELANIA",
@@ -14612,10 +14700,25 @@
         "regione": "MARCHE",
         "km": "90.000",
         "media": "36.986"
+      },
+      {
+        "gara_id": "GIRO_DELLE_MARCHE_IN_ROSA_2026-05-10_JUN_F",
+        "nome_gara": "GIRO DELLE MARCHE IN ROSA",
+        "data": "2026-05-10",
+        "atleta_id": "BIANCHI_ELISA",
+        "atleta_cognome": "BIANCHI",
+        "atleta_nome": "ELISA",
+        "posizione": 2,
+        "punti_effettivi": 12,
+        "moltiplicatore": 1,
+        "tipo": "regionale",
+        "regione": "MARCHE",
+        "km": "100.000",
+        "media": "35.294"
       }
     ],
     "punti_per_cat": {
-      "JUN_F": 235,
+      "JUN_F": 247,
       "ELI_F": 63,
       "AL_F": 100
     }
@@ -14958,7 +15061,7 @@
   "TEAM_WILIER_BREGANZE_F": {
     "id": "TEAM_WILIER_BREGANZE_F",
     "nome": "TEAM WILIER BREGANZE",
-    "punti_totali": 76,
+    "punti_totali": 88,
     "atleti": [
       "LUISOTTO_BIANCA",
       "LANARO_EMMA",
@@ -15193,10 +15296,40 @@
         "regione": "MARCHE",
         "km": "90.000",
         "media": "36.986"
+      },
+      {
+        "gara_id": "GIRO_DELLE_MARCHE_IN_ROSA_2026-05-10_JUN_F",
+        "nome_gara": "GIRO DELLE MARCHE IN ROSA",
+        "data": "2026-05-10",
+        "atleta_id": "PELLIZOTTI_GIORGIA",
+        "atleta_cognome": "PELLIZOTTI",
+        "atleta_nome": "GIORGIA",
+        "posizione": 3,
+        "punti_effettivi": 10,
+        "moltiplicatore": 1,
+        "tipo": "regionale",
+        "regione": "MARCHE",
+        "km": "100.000",
+        "media": "35.294"
+      },
+      {
+        "gara_id": "GIRO_DELLE_MARCHE_IN_ROSA_2026-05-10_JUN_F",
+        "nome_gara": "GIRO DELLE MARCHE IN ROSA",
+        "data": "2026-05-10",
+        "atleta_id": "PASCUT_MADDALENA",
+        "atleta_cognome": "PASCUT",
+        "atleta_nome": "MADDALENA",
+        "posizione": 9,
+        "punti_effettivi": 2,
+        "moltiplicatore": 1,
+        "tipo": "regionale",
+        "regione": "MARCHE",
+        "km": "100.000",
+        "media": "35.294"
       }
     ],
     "punti_per_cat": {
-      "JUN_F": 20,
+      "JUN_F": 32,
       "AL_F": 56
     }
   },
@@ -17738,7 +17871,7 @@
   "U_C_CONSCIO_PEDALE_DEL_SILE_F": {
     "id": "U_C_CONSCIO_PEDALE_DEL_SILE_F",
     "nome": "U.C.CONSCIO PEDALE DEL SILE",
-    "punti_totali": 284,
+    "punti_totali": 287,
     "atleti": [
       "PIN_MATILDE",
       "MURARI_EMMA",
@@ -18305,12 +18438,27 @@
         "regione": "ESORDIENTI",
         "km": "23.800",
         "media": "35.970"
+      },
+      {
+        "gara_id": "GIRO_DELLE_MARCHE_IN_ROSA_2026-05-10_JUN_F",
+        "nome_gara": "GIRO DELLE MARCHE IN ROSA",
+        "data": "2026-05-10",
+        "atleta_id": "D_APOLLONIO_REBECCA",
+        "atleta_cognome": "D'APOLLONIO",
+        "atleta_nome": "REBECCA",
+        "posizione": 8,
+        "punti_effettivi": 3,
+        "moltiplicatore": 1,
+        "tipo": "regionale",
+        "regione": "MARCHE",
+        "km": "100.000",
+        "media": "35.294"
       }
     ],
     "punti_per_cat": {
       "ES1_F": 42,
       "ES2_F": 45,
-      "JUN_F": 50,
+      "JUN_F": 53,
       "AL_F": 147
     }
   },
@@ -20752,7 +20900,7 @@
   "TEAM_CESARO_NERI_LUCCHINI": {
     "id": "TEAM_CESARO_NERI_LUCCHINI",
     "nome": "TEAM CESARO-NERI-LUCCHINI",
-    "punti_totali": 478,
+    "punti_totali": 510,
     "atleti": [
       "GLIOTTONE_GIOVANNI",
       "PITEO_FRANCESCO_PIO",
@@ -21593,12 +21741,87 @@
         "regione": "TOSCANA",
         "km": "30.000",
         "media": "38.933"
+      },
+      {
+        "gara_id": "ASPETTANDO_LA_CORSA_DI_SANDRO_GARA_UNICA_2026-05-10_ES1_M",
+        "nome_gara": "ASPETTANDO LA CORSA DI SANDRO GARA UNICA",
+        "data": "2026-05-10",
+        "atleta_id": "PITEO_FRANCESCO_PIO",
+        "atleta_cognome": "PITEO",
+        "atleta_nome": "FRANCESCO PIO",
+        "posizione": 6,
+        "punti_effettivi": 5,
+        "moltiplicatore": 1,
+        "tipo": "regionale",
+        "regione": "ABRUZZO",
+        "km": "30.000",
+        "media": "35.294"
+      },
+      {
+        "gara_id": "ASPETTANDO_LA_CORSA_DI_SANDRO_GARA_UNICA_2026-05-10_ES2_M",
+        "nome_gara": "ASPETTANDO LA CORSA DI SANDRO GARA UNICA",
+        "data": "2026-05-10",
+        "atleta_id": "VITO_VINCENZO",
+        "atleta_cognome": "VITO",
+        "atleta_nome": "VINCENZO",
+        "posizione": 2,
+        "punti_effettivi": 12,
+        "moltiplicatore": 1,
+        "tipo": "regionale",
+        "regione": "ABRUZZO",
+        "km": "30.000",
+        "media": "35.294"
+      },
+      {
+        "gara_id": "ASPETTANDO_LA_CORSA_DI_SANDRO_GARA_UNICA_2026-05-10_ES2_M",
+        "nome_gara": "ASPETTANDO LA CORSA DI SANDRO GARA UNICA",
+        "data": "2026-05-10",
+        "atleta_id": "COLETTA_FRANCESCO",
+        "atleta_cognome": "COLETTA",
+        "atleta_nome": "FRANCESCO",
+        "posizione": 4,
+        "punti_effettivi": 8,
+        "moltiplicatore": 1,
+        "tipo": "regionale",
+        "regione": "ABRUZZO",
+        "km": "30.000",
+        "media": "35.294"
+      },
+      {
+        "gara_id": "ASPETTANDO_LA_CORSA_DI_SANDRO_GARA_UNICA_2026-05-10_ES2_M",
+        "nome_gara": "ASPETTANDO LA CORSA DI SANDRO GARA UNICA",
+        "data": "2026-05-10",
+        "atleta_id": "COLETTA_NICCOLO_GIOVANNI",
+        "atleta_cognome": "COLETTA",
+        "atleta_nome": "NICCOLO GIOVANNI",
+        "posizione": 5,
+        "punti_effettivi": 6,
+        "moltiplicatore": 1,
+        "tipo": "regionale",
+        "regione": "ABRUZZO",
+        "km": "30.000",
+        "media": "35.294"
+      },
+      {
+        "gara_id": "ASPETTANDO_LA_CORSA_DI_SANDRO_GARA_UNICA_2026-05-10_ES2_M",
+        "nome_gara": "ASPETTANDO LA CORSA DI SANDRO GARA UNICA",
+        "data": "2026-05-10",
+        "atleta_id": "CESARO_ALESSANDRO",
+        "atleta_cognome": "CESARO",
+        "atleta_nome": "ALESSANDRO",
+        "posizione": 10,
+        "punti_effettivi": 1,
+        "moltiplicatore": 1,
+        "tipo": "regionale",
+        "regione": "ABRUZZO",
+        "km": "30.000",
+        "media": "35.294"
       }
     ],
     "punti_per_cat": {
       "AL_M": 89,
-      "ES1_M": 77,
-      "ES2_M": 312
+      "ES1_M": 82,
+      "ES2_M": 339
     }
   },
   "ASD_FUSION_BIKE": {
@@ -24590,10 +24813,11 @@
   "GCD_PEDALE_MANZANESE": {
     "id": "GCD_PEDALE_MANZANESE",
     "nome": "GCD PEDALE MANZANESE",
-    "punti_totali": 80,
+    "punti_totali": 103,
     "atleti": [
       "D_AIUTO_SEBASTIANO",
-      "TODARO_ALBERTO"
+      "TODARO_ALBERTO",
+      "TOFFUL_RICCARDO"
     ],
     "risultati": [
       {
@@ -24700,10 +24924,55 @@
         "regione": "VENETO",
         "km": "58.800",
         "media": "44.847"
+      },
+      {
+        "gara_id": "41_GRAN_PREMIO_FESTA_DELLA_MAMMA_2026-05-10_AL_M",
+        "nome_gara": "41 GRAN PREMIO FESTA DELLA MAMMA",
+        "data": "2026-05-10",
+        "atleta_id": "TOFFUL_RICCARDO",
+        "atleta_cognome": "TOFFUL",
+        "atleta_nome": "RICCARDO",
+        "posizione": 3,
+        "punti_effettivi": 10,
+        "moltiplicatore": 1,
+        "tipo": "regionale",
+        "regione": "FRIULI VENEZIA GIULIA",
+        "km": "65.400",
+        "media": "41.960"
+      },
+      {
+        "gara_id": "41_GRAN_PREMIO_FESTA_DELLA_MAMMA_2026-05-10_AL_M",
+        "nome_gara": "41 GRAN PREMIO FESTA DELLA MAMMA",
+        "data": "2026-05-10",
+        "atleta_id": "TODARO_ALBERTO",
+        "atleta_cognome": "TODARO",
+        "atleta_nome": "ALBERTO",
+        "posizione": 4,
+        "punti_effettivi": 8,
+        "moltiplicatore": 1,
+        "tipo": "regionale",
+        "regione": "FRIULI VENEZIA GIULIA",
+        "km": "65.400",
+        "media": "41.960"
+      },
+      {
+        "gara_id": "41_GRAN_PREMIO_FESTA_DELLA_MAMMA_2026-05-10_AL_M",
+        "nome_gara": "41 GRAN PREMIO FESTA DELLA MAMMA",
+        "data": "2026-05-10",
+        "atleta_id": "D_AIUTO_SEBASTIANO",
+        "atleta_cognome": "D'AIUTO",
+        "atleta_nome": "SEBASTIANO",
+        "posizione": 6,
+        "punti_effettivi": 5,
+        "moltiplicatore": 1,
+        "tipo": "regionale",
+        "regione": "FRIULI VENEZIA GIULIA",
+        "km": "65.400",
+        "media": "41.960"
       }
     ],
     "punti_per_cat": {
-      "AL_M": 80
+      "AL_M": 103
     }
   },
   "CICLISTICA_BUJESE_DIGAS": {
@@ -24784,7 +25053,7 @@
   "A_S_D_SACILESE": {
     "id": "A_S_D_SACILESE",
     "nome": "A.S.D. SACILESE",
-    "punti_totali": 141,
+    "punti_totali": 153,
     "atleti": [
       "CASETTA_MARCO",
       "BREDA_JUSTYN_MICHELE",
@@ -25063,10 +25332,25 @@
         "regione": "VENETO",
         "km": "60.000",
         "media": "45.075"
+      },
+      {
+        "gara_id": "41_GRAN_PREMIO_FESTA_DELLA_MAMMA_2026-05-10_AL_M",
+        "nome_gara": "41 GRAN PREMIO FESTA DELLA MAMMA",
+        "data": "2026-05-10",
+        "atleta_id": "CASETTA_MARCO",
+        "atleta_cognome": "CASETTA",
+        "atleta_nome": "MARCO",
+        "posizione": 2,
+        "punti_effettivi": 12,
+        "moltiplicatore": 1,
+        "tipo": "regionale",
+        "regione": "FRIULI VENEZIA GIULIA",
+        "km": "65.400",
+        "media": "41.960"
       }
     ],
     "punti_per_cat": {
-      "AL_M": 67,
+      "AL_M": 79,
       "ES1_M": 62,
       "ES2_M": 12
     }
@@ -25182,7 +25466,7 @@
   "LIBERTAS_CERESETTO": {
     "id": "LIBERTAS_CERESETTO",
     "nome": "LIBERTAS CERESETTO",
-    "punti_totali": 82,
+    "punti_totali": 91,
     "atleti": [
       "CASCIO_DORIAN",
       "MARCHIOL_ERIC",
@@ -25190,7 +25474,8 @@
       "ZUCCHIATTI_ALESSIO",
       "MURRO_NICHOLAS",
       "PODO_MASSIMO",
-      "GIACOMEL_RICCARDO"
+      "GIACOMEL_RICCARDO",
+      "MONTAGNER_LUCA"
     ],
     "risultati": [
       {
@@ -25402,10 +25687,40 @@
         "regione": "FRIULI VENEZIA GIULIA",
         "km": "80.400",
         "media": "42.291"
+      },
+      {
+        "gara_id": "41_GRAN_PREMIO_FESTA_DELLA_MAMMA_2026-05-10_AL_M",
+        "nome_gara": "41 GRAN PREMIO FESTA DELLA MAMMA",
+        "data": "2026-05-10",
+        "atleta_id": "MONTAGNER_LUCA",
+        "atleta_cognome": "MONTAGNER",
+        "atleta_nome": "LUCA",
+        "posizione": 5,
+        "punti_effettivi": 6,
+        "moltiplicatore": 1,
+        "tipo": "regionale",
+        "regione": "FRIULI VENEZIA GIULIA",
+        "km": "65.400",
+        "media": "41.960"
+      },
+      {
+        "gara_id": "41_GRAN_PREMIO_FESTA_DELLA_MAMMA_2026-05-10_AL_M",
+        "nome_gara": "41 GRAN PREMIO FESTA DELLA MAMMA",
+        "data": "2026-05-10",
+        "atleta_id": "CASCIO_DORIAN",
+        "atleta_cognome": "CASCIO",
+        "atleta_nome": "DORIAN",
+        "posizione": 8,
+        "punti_effettivi": 3,
+        "moltiplicatore": 1,
+        "tipo": "regionale",
+        "regione": "FRIULI VENEZIA GIULIA",
+        "km": "65.400",
+        "media": "41.960"
       }
     ],
     "punti_per_cat": {
-      "AL_M": 17,
+      "AL_M": 26,
       "ES1_M": 27,
       "JUN_M": 38
     }
@@ -25413,7 +25728,7 @@
   "A_S_D_CICLISTICA_MONSELICE": {
     "id": "A_S_D_CICLISTICA_MONSELICE",
     "nome": "A.S.D. CICLISTICA MONSELICE",
-    "punti_totali": 433,
+    "punti_totali": 466,
     "atleti": [
       "CECCARELLO_CARLO",
       "MAGAGNOTTI_ERIK",
@@ -26224,10 +26539,55 @@
         "regione": "VENETO",
         "km": "30.700",
         "media": "38.738"
+      },
+      {
+        "gara_id": "5_GRAN_PREMIO_EUROTERMOIDRAULICA_2026-05-10_AL_M",
+        "nome_gara": "5 GRAN PREMIO EUROTERMOIDRAULICA",
+        "data": "2026-05-10",
+        "atleta_id": "FACCIO_DANIELE",
+        "atleta_cognome": "FACCIO",
+        "atleta_nome": "DANIELE",
+        "posizione": 1,
+        "punti_effettivi": 15,
+        "moltiplicatore": 1,
+        "tipo": "regionale",
+        "regione": "VENETO",
+        "km": "70.200",
+        "media": "41.614"
+      },
+      {
+        "gara_id": "5_GRAN_PREMIO_EUROTERMOIDRAULICA_2026-05-10_AL_M",
+        "nome_gara": "5 GRAN PREMIO EUROTERMOIDRAULICA",
+        "data": "2026-05-10",
+        "atleta_id": "CECCARELLO_CARLO",
+        "atleta_cognome": "CECCARELLO",
+        "atleta_nome": "CARLO",
+        "posizione": 2,
+        "punti_effettivi": 12,
+        "moltiplicatore": 1,
+        "tipo": "regionale",
+        "regione": "VENETO",
+        "km": "70.200",
+        "media": "41.614"
+      },
+      {
+        "gara_id": "5_GRAN_PREMIO_EUROTERMOIDRAULICA_2026-05-10_AL_M",
+        "nome_gara": "5 GRAN PREMIO EUROTERMOIDRAULICA",
+        "data": "2026-05-10",
+        "atleta_id": "DONATO_NICOLO",
+        "atleta_cognome": "DONATO",
+        "atleta_nome": "NICOLO'",
+        "posizione": 5,
+        "punti_effettivi": 6,
+        "moltiplicatore": 1,
+        "tipo": "regionale",
+        "regione": "VENETO",
+        "km": "70.200",
+        "media": "41.614"
       }
     ],
     "punti_per_cat": {
-      "AL_M": 276,
+      "AL_M": 309,
       "ES1_M": 23,
       "ES2_M": 23,
       "JUN_M": 111
@@ -34396,7 +34756,7 @@
   "IL_PIRATA_SAMA_RICAMBI_OTC": {
     "id": "IL_PIRATA_SAMA_RICAMBI_OTC",
     "nome": "IL PIRATA SAMA RICAMBI OTC",
-    "punti_totali": 243,
+    "punti_totali": 281,
     "atleti": [
       "CIPOLLA_JONATHAN",
       "BAGGI_GABRIELE",
@@ -34794,17 +35154,92 @@
         "regione": "TOSCANA",
         "km": "30.000",
         "media": "38.933"
+      },
+      {
+        "gara_id": "ASPETTANDO_LA_CORSA_DI_SANDRO_GARA_UNICA_2026-05-10_ES1_M",
+        "nome_gara": "ASPETTANDO LA CORSA DI SANDRO GARA UNICA",
+        "data": "2026-05-10",
+        "atleta_id": "CIPOLLA_JONATHAN",
+        "atleta_cognome": "CIPOLLA",
+        "atleta_nome": "JONATHAN",
+        "posizione": 1,
+        "punti_effettivi": 15,
+        "moltiplicatore": 1,
+        "tipo": "regionale",
+        "regione": "ABRUZZO",
+        "km": "30.000",
+        "media": "35.294"
+      },
+      {
+        "gara_id": "ASPETTANDO_LA_CORSA_DI_SANDRO_GARA_UNICA_2026-05-10_ES1_M",
+        "nome_gara": "ASPETTANDO LA CORSA DI SANDRO GARA UNICA",
+        "data": "2026-05-10",
+        "atleta_id": "BAGGI_GABRIELE",
+        "atleta_cognome": "BAGGI",
+        "atleta_nome": "GABRIELE",
+        "posizione": 9,
+        "punti_effettivi": 2,
+        "moltiplicatore": 1,
+        "tipo": "regionale",
+        "regione": "ABRUZZO",
+        "km": "30.000",
+        "media": "35.294"
+      },
+      {
+        "gara_id": "ASPETTANDO_LA_CORSA_DI_SANDRO_GARA_UNICA_2026-05-10_ES2_M",
+        "nome_gara": "ASPETTANDO LA CORSA DI SANDRO GARA UNICA",
+        "data": "2026-05-10",
+        "atleta_id": "MALERBA_ALBERTO_ANTONIO",
+        "atleta_cognome": "MALERBA",
+        "atleta_nome": "ALBERTO ANTONIO",
+        "posizione": 1,
+        "punti_effettivi": 15,
+        "moltiplicatore": 1,
+        "tipo": "regionale",
+        "regione": "ABRUZZO",
+        "km": "30.000",
+        "media": "35.294"
+      },
+      {
+        "gara_id": "ASPETTANDO_LA_CORSA_DI_SANDRO_GARA_UNICA_2026-05-10_ES2_M",
+        "nome_gara": "ASPETTANDO LA CORSA DI SANDRO GARA UNICA",
+        "data": "2026-05-10",
+        "atleta_id": "SALIMBENI_GIULIANO",
+        "atleta_cognome": "SALIMBENI",
+        "atleta_nome": "GIULIANO",
+        "posizione": 7,
+        "punti_effettivi": 4,
+        "moltiplicatore": 1,
+        "tipo": "regionale",
+        "regione": "ABRUZZO",
+        "km": "30.000",
+        "media": "35.294"
+      },
+      {
+        "gara_id": "ASPETTANDO_LA_CORSA_DI_SANDRO_GARA_UNICA_2026-05-10_ES2_M",
+        "nome_gara": "ASPETTANDO LA CORSA DI SANDRO GARA UNICA",
+        "data": "2026-05-10",
+        "atleta_id": "SCACCHI_ANDREA",
+        "atleta_cognome": "SCACCHI",
+        "atleta_nome": "ANDREA",
+        "posizione": 9,
+        "punti_effettivi": 2,
+        "moltiplicatore": 1,
+        "tipo": "regionale",
+        "regione": "ABRUZZO",
+        "km": "30.000",
+        "media": "35.294"
       }
     ],
     "punti_per_cat": {
-      "ES1_M": 108,
-      "ES2_M": 135
+      "ES1_M": 125,
+      "ES2_M": 156
     }
   },
   "HG_CYCLING_TEAM": {
     "id": "HG_CYCLING_TEAM",
     "nome": "HG CYCLING TEAM",
-    "punti_totali": 53,
+    "punti_totali": 61,
     "atleti": [
       "LOMBARDI_SAMUELE"
     ],
@@ -34913,16 +35348,31 @@
         "regione": "PIEMONTE",
         "km": "29.000",
         "media": "36.995"
+      },
+      {
+        "gara_id": "ASPETTANDO_LA_CORSA_DI_SANDRO_GARA_UNICA_2026-05-10_ES1_M",
+        "nome_gara": "ASPETTANDO LA CORSA DI SANDRO GARA UNICA",
+        "data": "2026-05-10",
+        "atleta_id": "LOMBARDI_SAMUELE",
+        "atleta_cognome": "LOMBARDI",
+        "atleta_nome": "SAMUELE",
+        "posizione": 4,
+        "punti_effettivi": 8,
+        "moltiplicatore": 1,
+        "tipo": "regionale",
+        "regione": "ABRUZZO",
+        "km": "30.000",
+        "media": "35.294"
       }
     ],
     "punti_per_cat": {
-      "ES1_M": 53
+      "ES1_M": 61
     }
   },
   "ABRUZZO_CYCLING_TEAM": {
     "id": "ABRUZZO_CYCLING_TEAM",
     "nome": "ABRUZZO CYCLING TEAM",
-    "punti_totali": 16,
+    "punti_totali": 19,
     "atleti": [
       "MARINELLI_FRANCESCO"
     ],
@@ -34956,10 +35406,25 @@
         "regione": "PUGLIA",
         "km": "32.000",
         "media": ""
+      },
+      {
+        "gara_id": "ASPETTANDO_LA_CORSA_DI_SANDRO_GARA_UNICA_2026-05-10_ES1_M",
+        "nome_gara": "ASPETTANDO LA CORSA DI SANDRO GARA UNICA",
+        "data": "2026-05-10",
+        "atleta_id": "MARINELLI_FRANCESCO",
+        "atleta_cognome": "MARINELLI",
+        "atleta_nome": "FRANCESCO",
+        "posizione": 8,
+        "punti_effettivi": 3,
+        "moltiplicatore": 1,
+        "tipo": "regionale",
+        "regione": "ABRUZZO",
+        "km": "30.000",
+        "media": "35.294"
       }
     ],
     "punti_per_cat": {
-      "ES1_M": 16
+      "ES1_M": 19
     }
   },
   "GS_PIANELLO": {
@@ -35116,7 +35581,7 @@
   "S_C_VILLA_S_ANTONIO_CICLI_COCCI": {
     "id": "S_C_VILLA_S_ANTONIO_CICLI_COCCI",
     "nome": "S.C. VILLA S.ANTONIO CICLI COCCI",
-    "punti_totali": 31,
+    "punti_totali": 41,
     "atleti": [
       "DAMIANI_DANILO"
     ],
@@ -35180,16 +35645,31 @@
         "regione": "MARCHE",
         "km": "37.800",
         "media": "33.029"
+      },
+      {
+        "gara_id": "ASPETTANDO_LA_CORSA_DI_SANDRO_GARA_UNICA_2026-05-10_ES2_M",
+        "nome_gara": "ASPETTANDO LA CORSA DI SANDRO GARA UNICA",
+        "data": "2026-05-10",
+        "atleta_id": "DAMIANI_DANILO",
+        "atleta_cognome": "DAMIANI",
+        "atleta_nome": "DANILO",
+        "posizione": 3,
+        "punti_effettivi": 10,
+        "moltiplicatore": 1,
+        "tipo": "regionale",
+        "regione": "ABRUZZO",
+        "km": "30.000",
+        "media": "35.294"
       }
     ],
     "punti_per_cat": {
-      "ES2_M": 31
+      "ES2_M": 41
     }
   },
   "ASD_TEAM_MMBIKE_ANDRIA_RESTO_AL_SUD": {
     "id": "ASD_TEAM_MMBIKE_ANDRIA_RESTO_AL_SUD",
     "nome": "ASD TEAM MMBIKE ANDRIA RESTO AL SUD",
-    "punti_totali": 19,
+    "punti_totali": 24,
     "atleti": [
       "MURAGLIA_MATTIA"
     ],
@@ -35253,10 +35733,25 @@
         "regione": "PUGLIA",
         "km": "32.000",
         "media": "35.186"
+      },
+      {
+        "gara_id": "ASPETTANDO_LA_CORSA_DI_SANDRO_GARA_UNICA_2026-05-10_ES2_M",
+        "nome_gara": "ASPETTANDO LA CORSA DI SANDRO GARA UNICA",
+        "data": "2026-05-10",
+        "atleta_id": "MURAGLIA_MATTIA",
+        "atleta_cognome": "MURAGLIA",
+        "atleta_nome": "MATTIA",
+        "posizione": 6,
+        "punti_effettivi": 5,
+        "moltiplicatore": 1,
+        "tipo": "regionale",
+        "regione": "ABRUZZO",
+        "km": "30.000",
+        "media": "35.294"
       }
     ],
     "punti_per_cat": {
-      "ES2_M": 19
+      "ES2_M": 24
     }
   },
   "S_C_D_ALMA_JUVENTUS_FANO": {
@@ -45975,7 +46470,7 @@
   "FOLIGNO_CYCLING_TEAM_ASD": {
     "id": "FOLIGNO_CYCLING_TEAM_ASD",
     "nome": "FOLIGNO CYCLING TEAM ASD",
-    "punti_totali": 65,
+    "punti_totali": 83,
     "atleti": [
       "SCACCIATELLI_LEONARDO",
       "TUDISCO_LUDOVICO",
@@ -46177,10 +46672,40 @@
         "regione": "EMILIA ROMAGNA",
         "km": "24.300",
         "media": "37.068"
+      },
+      {
+        "gara_id": "ASPETTANDO_LA_CORSA_DI_SANDRO_GARA_UNICA_2026-05-10_ES1_M",
+        "nome_gara": "ASPETTANDO LA CORSA DI SANDRO GARA UNICA",
+        "data": "2026-05-10",
+        "atleta_id": "SCACCIATELLI_LEONARDO",
+        "atleta_cognome": "SCACCIATELLI",
+        "atleta_nome": "LEONARDO",
+        "posizione": 2,
+        "punti_effettivi": 12,
+        "moltiplicatore": 1,
+        "tipo": "regionale",
+        "regione": "ABRUZZO",
+        "km": "30.000",
+        "media": "35.294"
+      },
+      {
+        "gara_id": "ASPETTANDO_LA_CORSA_DI_SANDRO_GARA_UNICA_2026-05-10_ES1_M",
+        "nome_gara": "ASPETTANDO LA CORSA DI SANDRO GARA UNICA",
+        "data": "2026-05-10",
+        "atleta_id": "TUDISCO_LUDOVICO",
+        "atleta_cognome": "TUDISCO",
+        "atleta_nome": "LUDOVICO",
+        "posizione": 5,
+        "punti_effettivi": 6,
+        "moltiplicatore": 1,
+        "tipo": "regionale",
+        "regione": "ABRUZZO",
+        "km": "30.000",
+        "media": "35.294"
       }
     ],
     "punti_per_cat": {
-      "ES1_M": 60,
+      "ES1_M": 78,
       "ES2_M": 5
     }
   },
@@ -47037,7 +47562,7 @@
   "ASD_GUBBIO_CICLISMO_MOCAIANA": {
     "id": "ASD_GUBBIO_CICLISMO_MOCAIANA",
     "nome": "ASD GUBBIO CICLISMO MOCAIANA",
-    "punti_totali": 96,
+    "punti_totali": 106,
     "atleti": [
       "BATTISTELLI_FILIPPO",
       "CESARINI_LORENZO",
@@ -47268,11 +47793,26 @@
         "regione": "EMILIA ROMAGNA",
         "km": "32.400",
         "media": "39.075"
+      },
+      {
+        "gara_id": "ASPETTANDO_LA_CORSA_DI_SANDRO_GARA_UNICA_2026-05-10_ES1_M",
+        "nome_gara": "ASPETTANDO LA CORSA DI SANDRO GARA UNICA",
+        "data": "2026-05-10",
+        "atleta_id": "CESARINI_LORENZO",
+        "atleta_cognome": "CESARINI",
+        "atleta_nome": "LORENZO",
+        "posizione": 3,
+        "punti_effettivi": 10,
+        "moltiplicatore": 1,
+        "tipo": "regionale",
+        "regione": "ABRUZZO",
+        "km": "30.000",
+        "media": "35.294"
       }
     ],
     "punti_per_cat": {
       "ES2_M": 71,
-      "ES1_M": 25
+      "ES1_M": 35
     }
   },
   "POL_ALBERGO_OLIVETO": {
@@ -47650,7 +48190,7 @@
   "ISOLMANT_PREMAC_VITTORIA_F": {
     "id": "ISOLMANT_PREMAC_VITTORIA_F",
     "nome": "ISOLMANT - PREMAC - VITTORIA",
-    "punti_totali": 132,
+    "punti_totali": 138,
     "atleti": [
       "CRESTANELLO_LARA",
       "CURNIS_VALERIA",
@@ -47823,22 +48363,38 @@
         "regione": "MARCHE",
         "km": "90.000",
         "media": "36.986"
+      },
+      {
+        "gara_id": "GIRO_DELLE_MARCHE_IN_ROSA_2026-05-10_ELI_F",
+        "nome_gara": "GIRO DELLE MARCHE IN ROSA",
+        "data": "2026-05-10",
+        "atleta_id": "PEGOLO_CHANTAL",
+        "atleta_cognome": "PEGOLO",
+        "atleta_nome": "CHANTAL",
+        "posizione": 5,
+        "punti_effettivi": 6,
+        "moltiplicatore": 1,
+        "tipo": "regionale",
+        "regione": "MARCHE",
+        "km": "100.000",
+        "media": "35.294"
       }
     ],
     "punti_per_cat": {
-      "ELI_F": 132
+      "ELI_F": 138
     }
   },
   "TOP_GIRLS_FASSA_BORTOLO_F": {
     "id": "TOP_GIRLS_FASSA_BORTOLO_F",
     "nome": "TOP GIRLS - FASSA BORTOLO",
-    "punti_totali": 82,
+    "punti_totali": 90,
     "atleti": [
       "SIRI_IRMA",
       "REGHINI_CHIARA",
       "SPIMI_SHARON",
       "PAVESI_MARTA",
-      "ZAMBELLI_ALESSIA"
+      "ZAMBELLI_ALESSIA",
+      "BORTOLI_VIRGINIA"
     ],
     "risultati": [
       {
@@ -47945,10 +48501,55 @@
         "regione": "MARCHE",
         "km": "90.000",
         "media": "36.986"
+      },
+      {
+        "gara_id": "GIRO_DELLE_MARCHE_IN_ROSA_2026-05-10_ELI_F",
+        "nome_gara": "GIRO DELLE MARCHE IN ROSA",
+        "data": "2026-05-10",
+        "atleta_id": "REGHINI_CHIARA",
+        "atleta_cognome": "REGHINI",
+        "atleta_nome": "CHIARA",
+        "posizione": 6,
+        "punti_effettivi": 5,
+        "moltiplicatore": 1,
+        "tipo": "regionale",
+        "regione": "MARCHE",
+        "km": "100.000",
+        "media": "35.294"
+      },
+      {
+        "gara_id": "GIRO_DELLE_MARCHE_IN_ROSA_2026-05-10_ELI_F",
+        "nome_gara": "GIRO DELLE MARCHE IN ROSA",
+        "data": "2026-05-10",
+        "atleta_id": "ZAMBELLI_ALESSIA",
+        "atleta_cognome": "ZAMBELLI",
+        "atleta_nome": "ALESSIA",
+        "posizione": 9,
+        "punti_effettivi": 2,
+        "moltiplicatore": 1,
+        "tipo": "regionale",
+        "regione": "MARCHE",
+        "km": "100.000",
+        "media": "35.294"
+      },
+      {
+        "gara_id": "GIRO_DELLE_MARCHE_IN_ROSA_2026-05-10_ELI_F",
+        "nome_gara": "GIRO DELLE MARCHE IN ROSA",
+        "data": "2026-05-10",
+        "atleta_id": "BORTOLI_VIRGINIA",
+        "atleta_cognome": "BORTOLI",
+        "atleta_nome": "VIRGINIA",
+        "posizione": 10,
+        "punti_effettivi": 1,
+        "moltiplicatore": 1,
+        "tipo": "regionale",
+        "regione": "MARCHE",
+        "km": "100.000",
+        "media": "35.294"
       }
     ],
     "punti_per_cat": {
-      "ELI_F": 82
+      "ELI_F": 90
     }
   },
   "AROMITALIA_VAIANO_F": {
@@ -53642,7 +54243,7 @@
   "ROTOGAL_GUADENSE": {
     "id": "ROTOGAL_GUADENSE",
     "nome": "ROTOGAL GUADENSE",
-    "punti_totali": 25,
+    "punti_totali": 29,
     "atleti": [
       "GENOVESE_PIETRO",
       "GROTTO_RICCARDO",
@@ -53724,11 +54325,26 @@
         "regione": "TRENTO",
         "km": "65.400",
         "media": "38.832"
+      },
+      {
+        "gara_id": "5_GRAN_PREMIO_EUROTERMOIDRAULICA_2026-05-10_AL_M",
+        "nome_gara": "5 GRAN PREMIO EUROTERMOIDRAULICA",
+        "data": "2026-05-10",
+        "atleta_id": "VIERO_ALBERTO",
+        "atleta_cognome": "VIERO",
+        "atleta_nome": "ALBERTO",
+        "posizione": 7,
+        "punti_effettivi": 4,
+        "moltiplicatore": 1,
+        "tipo": "regionale",
+        "regione": "VENETO",
+        "km": "70.200",
+        "media": "41.614"
       }
     ],
     "punti_per_cat": {
       "JUN_M": 10,
-      "AL_M": 15
+      "AL_M": 19
     }
   },
   "POGI_TEAM_UAE_GENERALI": {
@@ -54927,7 +55543,7 @@
   "BREGANZE_MILLENIUM_F": {
     "id": "BREGANZE_MILLENIUM_F",
     "nome": "BREGANZE MILLENIUM",
-    "punti_totali": 172,
+    "punti_totali": 184,
     "atleti": [
       "RAPPORTI_LINDA",
       "SBRISSA_ILARIA",
@@ -55239,10 +55855,55 @@
         "regione": "ESORDIENTI",
         "km": "23.800",
         "media": "35.970"
+      },
+      {
+        "gara_id": "GIRO_DELLE_MARCHE_IN_ROSA_2026-05-10_JUN_F",
+        "nome_gara": "GIRO DELLE MARCHE IN ROSA",
+        "data": "2026-05-10",
+        "atleta_id": "RAPPORTI_LINDA",
+        "atleta_cognome": "RAPPORTI",
+        "atleta_nome": "LINDA",
+        "posizione": 5,
+        "punti_effettivi": 6,
+        "moltiplicatore": 1,
+        "tipo": "regionale",
+        "regione": "MARCHE",
+        "km": "100.000",
+        "media": "35.294"
+      },
+      {
+        "gara_id": "GIRO_DELLE_MARCHE_IN_ROSA_2026-05-10_JUN_F",
+        "nome_gara": "GIRO DELLE MARCHE IN ROSA",
+        "data": "2026-05-10",
+        "atleta_id": "BALLAN_AZZURRA",
+        "atleta_cognome": "BALLAN",
+        "atleta_nome": "AZZURRA",
+        "posizione": 6,
+        "punti_effettivi": 5,
+        "moltiplicatore": 1,
+        "tipo": "regionale",
+        "regione": "MARCHE",
+        "km": "100.000",
+        "media": "35.294"
+      },
+      {
+        "gara_id": "GIRO_DELLE_MARCHE_IN_ROSA_2026-05-10_JUN_F",
+        "nome_gara": "GIRO DELLE MARCHE IN ROSA",
+        "data": "2026-05-10",
+        "atleta_id": "LAGHI_CLARISSA",
+        "atleta_cognome": "LAGHI",
+        "atleta_nome": "CLARISSA",
+        "posizione": 10,
+        "punti_effettivi": 1,
+        "moltiplicatore": 1,
+        "tipo": "regionale",
+        "regione": "MARCHE",
+        "km": "100.000",
+        "media": "35.294"
       }
     ],
     "punti_per_cat": {
-      "JUN_F": 125,
+      "JUN_F": 137,
       "ES1_F": 2,
       "ES2_F": 37,
       "AL_F": 8
@@ -55251,7 +55912,7 @@
   "PETRUCCI_GAUSS_CYCLING_TEAM_F": {
     "id": "PETRUCCI_GAUSS_CYCLING_TEAM_F",
     "nome": "PETRUCCI GAUSS CYCLING TEAM",
-    "punti_totali": 120,
+    "punti_totali": 135,
     "atleti": [
       "MASSARI_GIORGIA",
       "DANSHINA_POLINA",
@@ -55471,10 +56132,25 @@
         "regione": "MARCHE",
         "km": "90.000",
         "media": "36.986"
+      },
+      {
+        "gara_id": "GIRO_DELLE_MARCHE_IN_ROSA_2026-05-10_JUN_F",
+        "nome_gara": "GIRO DELLE MARCHE IN ROSA",
+        "data": "2026-05-10",
+        "atleta_id": "NOVOLODSKAIA_ANGELINA",
+        "atleta_cognome": "NOVOLODSKAIA",
+        "atleta_nome": "ANGELINA",
+        "posizione": 1,
+        "punti_effettivi": 15,
+        "moltiplicatore": 1,
+        "tipo": "regionale",
+        "regione": "MARCHE",
+        "km": "100.000",
+        "media": "35.294"
       }
     ],
     "punti_per_cat": {
-      "JUN_F": 90,
+      "JUN_F": 105,
       "ELI_F": 30
     }
   },
@@ -57292,9 +57968,10 @@
   "V_C_BASSANO_1892": {
     "id": "V_C_BASSANO_1892",
     "nome": "V.C. BASSANO 1892",
-    "punti_totali": 3,
+    "punti_totali": 6,
     "atleti": [
-      "CAVALLI_ALVISE"
+      "CAVALLI_ALVISE",
+      "CECCHIN_GIACOMO"
     ],
     "risultati": [
       {
@@ -57311,10 +57988,25 @@
         "regione": "VENETO",
         "km": "64.500",
         "media": "41.119"
+      },
+      {
+        "gara_id": "5_GRAN_PREMIO_EUROTERMOIDRAULICA_2026-05-10_AL_M",
+        "nome_gara": "5 GRAN PREMIO EUROTERMOIDRAULICA",
+        "data": "2026-05-10",
+        "atleta_id": "CECCHIN_GIACOMO",
+        "atleta_cognome": "CECCHIN",
+        "atleta_nome": "GIACOMO",
+        "posizione": 8,
+        "punti_effettivi": 3,
+        "moltiplicatore": 1,
+        "tipo": "regionale",
+        "regione": "VENETO",
+        "km": "70.200",
+        "media": "41.614"
       }
     ],
     "punti_per_cat": {
-      "AL_M": 3
+      "AL_M": 6
     }
   },
   "POOL_CANTU_SOVICO_GB_TEAM": {
@@ -59370,7 +60062,7 @@
   "A_S_A_C_I_EVONACICLI": {
     "id": "A_S_A_C_I_EVONACICLI",
     "nome": "A.S.A.C.I. - EVONACICLI",
-    "punti_totali": 10,
+    "punti_totali": 11,
     "atleti": [
       "DI_STEFANO_LEONARDO",
       "RECCHIA_ALESSANDRO"
@@ -59420,10 +60112,25 @@
         "regione": "PUGLIA",
         "km": "32.000",
         "media": ""
+      },
+      {
+        "gara_id": "ASPETTANDO_LA_CORSA_DI_SANDRO_GARA_UNICA_2026-05-10_ES1_M",
+        "nome_gara": "ASPETTANDO LA CORSA DI SANDRO GARA UNICA",
+        "data": "2026-05-10",
+        "atleta_id": "DI_STEFANO_LEONARDO",
+        "atleta_cognome": "DI",
+        "atleta_nome": "STEFANO LEONARDO",
+        "posizione": 10,
+        "punti_effettivi": 1,
+        "moltiplicatore": 1,
+        "tipo": "regionale",
+        "regione": "ABRUZZO",
+        "km": "30.000",
+        "media": "35.294"
       }
     ],
     "punti_per_cat": {
-      "ES1_M": 10
+      "ES1_M": 11
     }
   },
   "ASS_CICLISTICA_RECANATI": {
@@ -62857,7 +63564,7 @@
   "PC_BAIX_EBRE_TORTOSA_F": {
     "id": "PC_BAIX_EBRE_TORTOSA_F",
     "nome": "PC BAIX EBRE TORTOSA",
-    "punti_totali": 33,
+    "punti_totali": 37,
     "atleti": [
       "KOSTINA_OLGA"
     ],
@@ -62936,16 +63643,31 @@
         "regione": "MARCHE",
         "km": "90.000",
         "media": "36.986"
+      },
+      {
+        "gara_id": "GIRO_DELLE_MARCHE_IN_ROSA_2026-05-10_JUN_F",
+        "nome_gara": "GIRO DELLE MARCHE IN ROSA",
+        "data": "2026-05-10",
+        "atleta_id": "KOSTINA_OLGA",
+        "atleta_cognome": "KOSTINA",
+        "atleta_nome": "OLGA",
+        "posizione": 7,
+        "punti_effettivi": 4,
+        "moltiplicatore": 1,
+        "tipo": "regionale",
+        "regione": "MARCHE",
+        "km": "100.000",
+        "media": "35.294"
       }
     ],
     "punti_per_cat": {
-      "JUN_F": 33
+      "JUN_F": 37
     }
   },
   "GS_CARTURA_NALIN": {
     "id": "GS_CARTURA_NALIN",
     "nome": "GS CARTURA NALIN",
-    "punti_totali": 24,
+    "punti_totali": 32,
     "atleti": [
       "GIORGI_EMANUELE",
       "BRUNETTO_GIACOMO",
@@ -63041,10 +63763,25 @@
         "regione": "VENETO",
         "km": "60.000",
         "media": "45.075"
+      },
+      {
+        "gara_id": "5_GRAN_PREMIO_EUROTERMOIDRAULICA_2026-05-10_AL_M",
+        "nome_gara": "5 GRAN PREMIO EUROTERMOIDRAULICA",
+        "data": "2026-05-10",
+        "atleta_id": "GIORGI_EMANUELE",
+        "atleta_cognome": "GIORGI",
+        "atleta_nome": "EMANUELE",
+        "posizione": 4,
+        "punti_effettivi": 8,
+        "moltiplicatore": 1,
+        "tipo": "regionale",
+        "regione": "VENETO",
+        "km": "70.200",
+        "media": "41.614"
       }
     ],
     "punti_per_cat": {
-      "AL_M": 24
+      "AL_M": 32
     }
   },
   "CYCLING_TEAM_NIAL_NIZZOLI_ALMO": {
@@ -63634,7 +64371,7 @@
   "INFOCARS_ESTEMOTOR": {
     "id": "INFOCARS_ESTEMOTOR",
     "nome": "INFOCARS-ESTEMOTOR",
-    "punti_totali": 4,
+    "punti_totali": 6,
     "atleti": [
       "FONTANA_LUCA"
     ],
@@ -63668,10 +64405,25 @@
         "regione": "VENETO",
         "km": "60.000",
         "media": "43.636"
+      },
+      {
+        "gara_id": "5_GRAN_PREMIO_EUROTERMOIDRAULICA_2026-05-10_AL_M",
+        "nome_gara": "5 GRAN PREMIO EUROTERMOIDRAULICA",
+        "data": "2026-05-10",
+        "atleta_id": "FONTANA_LUCA",
+        "atleta_cognome": "FONTANA",
+        "atleta_nome": "LUCA",
+        "posizione": 9,
+        "punti_effettivi": 2,
+        "moltiplicatore": 1,
+        "tipo": "regionale",
+        "regione": "VENETO",
+        "km": "70.200",
+        "media": "41.614"
       }
     ],
     "punti_per_cat": {
-      "AL_M": 4
+      "AL_M": 6
     }
   },
   "GS_BUTESE": {
@@ -68174,7 +68926,7 @@
   "TEAM_GIUNIGOR_B_BIKE": {
     "id": "TEAM_GIUNIGOR_B_BIKE",
     "nome": "TEAM GIUNIGOR - B.BIKE",
-    "punti_totali": 48,
+    "punti_totali": 51,
     "atleti": [
       "IOVINO_ANTONINO",
       "AURICCHIO_DANIEL_ALEANDRO",
@@ -68285,11 +69037,26 @@
         "regione": "TOSCANA",
         "km": "30.000",
         "media": "38.933"
+      },
+      {
+        "gara_id": "ASPETTANDO_LA_CORSA_DI_SANDRO_GARA_UNICA_2026-05-10_ES2_M",
+        "nome_gara": "ASPETTANDO LA CORSA DI SANDRO GARA UNICA",
+        "data": "2026-05-10",
+        "atleta_id": "AURICCHIO_DANIEL_ALEANDRO",
+        "atleta_cognome": "AURICCHIO",
+        "atleta_nome": "DANIEL ALEANDRO",
+        "posizione": 8,
+        "punti_effettivi": 3,
+        "moltiplicatore": 1,
+        "tipo": "regionale",
+        "regione": "ABRUZZO",
+        "km": "30.000",
+        "media": "35.294"
       }
     ],
     "punti_per_cat": {
       "ES1_M": 12,
-      "ES2_M": 30,
+      "ES2_M": 33,
       "AL_M": 6
     }
   },
@@ -69112,7 +69879,7 @@
   "TOYOTA_VALENCIA_SAV_F": {
     "id": "TOYOTA_VALENCIA_SAV_F",
     "nome": "TOYOTA VALENCIA SAV",
-    "punti_totali": 43,
+    "punti_totali": 58,
     "atleti": [
       "VALGONEN_VALERIA"
     ],
@@ -69176,10 +69943,25 @@
         "regione": "MARCHE",
         "km": "90.000",
         "media": "36.986"
+      },
+      {
+        "gara_id": "GIRO_DELLE_MARCHE_IN_ROSA_2026-05-10_ELI_F",
+        "nome_gara": "GIRO DELLE MARCHE IN ROSA",
+        "data": "2026-05-10",
+        "atleta_id": "VALGONEN_VALERIA",
+        "atleta_cognome": "VALGONEN",
+        "atleta_nome": "VALERIA",
+        "posizione": 1,
+        "punti_effettivi": 15,
+        "moltiplicatore": 1,
+        "tipo": "regionale",
+        "regione": "MARCHE",
+        "km": "100.000",
+        "media": "35.294"
       }
     ],
     "punti_per_cat": {
-      "ELI_F": 43
+      "ELI_F": 58
     }
   },
   "AR_MONEX_WMN_PRO_CYCLING_TEAM_F": {
@@ -69213,7 +69995,7 @@
   "BORN_TO_WIN_F": {
     "id": "BORN_TO_WIN_F",
     "nome": "BORN TO WIN",
-    "punti_totali": 18,
+    "punti_totali": 21,
     "atleti": [
       "BASILICO_VALENTINA",
       "LAUDI_IRENE"
@@ -69278,10 +70060,25 @@
         "regione": "MARCHE",
         "km": "90.000",
         "media": "36.986"
+      },
+      {
+        "gara_id": "GIRO_DELLE_MARCHE_IN_ROSA_2026-05-10_ELI_F",
+        "nome_gara": "GIRO DELLE MARCHE IN ROSA",
+        "data": "2026-05-10",
+        "atleta_id": "BASILICO_VALENTINA",
+        "atleta_cognome": "BASILICO",
+        "atleta_nome": "VALENTINA",
+        "posizione": 8,
+        "punti_effettivi": 3,
+        "moltiplicatore": 1,
+        "tipo": "regionale",
+        "regione": "MARCHE",
+        "km": "100.000",
+        "media": "35.294"
       }
     ],
     "punti_per_cat": {
-      "ELI_F": 18
+      "ELI_F": 21
     }
   },
   "FANINI_PRO_CYCLING_F": {
@@ -69480,7 +70277,7 @@
   "A_S_D_PEDALE_RONCHESE": {
     "id": "A_S_D_PEDALE_RONCHESE",
     "nome": "A.S.D. PEDALE RONCHESE",
-    "punti_totali": 4,
+    "punti_totali": 5,
     "atleti": [
       "COLAUTTI_MATTIA"
     ],
@@ -69499,10 +70296,25 @@
         "regione": "FRIULI VENEZIA GIULIA",
         "km": "56.800",
         "media": "47.333"
+      },
+      {
+        "gara_id": "41_GRAN_PREMIO_FESTA_DELLA_MAMMA_2026-05-10_AL_M",
+        "nome_gara": "41 GRAN PREMIO FESTA DELLA MAMMA",
+        "data": "2026-05-10",
+        "atleta_id": "COLAUTTI_MATTIA",
+        "atleta_cognome": "COLAUTTI",
+        "atleta_nome": "MATTIA",
+        "posizione": 10,
+        "punti_effettivi": 1,
+        "moltiplicatore": 1,
+        "tipo": "regionale",
+        "regione": "FRIULI VENEZIA GIULIA",
+        "km": "65.400",
+        "media": "41.960"
       }
     ],
     "punti_per_cat": {
-      "AL_M": 4
+      "AL_M": 5
     }
   },
   "TEAM_CICLI_SCOTTO_ISCHIA": {
@@ -69793,7 +70605,7 @@
   "TEAM_MENDELSPECK_E_WORK_F": {
     "id": "TEAM_MENDELSPECK_E_WORK_F",
     "nome": "TEAM MENDELSPECK E-WORK",
-    "punti_totali": 31,
+    "punti_totali": 35,
     "atleti": [
       "GIULIANI_GIULIA",
       "BEZZONE_CAMILLA",
@@ -69859,10 +70671,25 @@
         "regione": "MARCHE",
         "km": "90.000",
         "media": "36.986"
+      },
+      {
+        "gara_id": "GIRO_DELLE_MARCHE_IN_ROSA_2026-05-10_ELI_F",
+        "nome_gara": "GIRO DELLE MARCHE IN ROSA",
+        "data": "2026-05-10",
+        "atleta_id": "GIULIANI_GIULIA",
+        "atleta_cognome": "GIULIANI",
+        "atleta_nome": "GIULIA",
+        "posizione": 7,
+        "punti_effettivi": 4,
+        "moltiplicatore": 1,
+        "tipo": "regionale",
+        "regione": "MARCHE",
+        "km": "100.000",
+        "media": "35.294"
       }
     ],
     "punti_per_cat": {
-      "ELI_F": 26,
+      "ELI_F": 30,
       "JUN_F": 5
     }
   },
@@ -73285,7 +74112,7 @@
   "WCC_UCI_WORLD_CYCLING_CENTRE_F": {
     "id": "WCC_UCI_WORLD_CYCLING_CENTRE_F",
     "nome": "WCC - UCI WORLD CYCLING CENTRE",
-    "punti_totali": 5,
+    "punti_totali": 17,
     "atleti": [
       "MONSALVEZ_FLORENCIA"
     ],
@@ -73304,18 +74131,34 @@
         "regione": "MARCHE",
         "km": "90.000",
         "media": "36.986"
+      },
+      {
+        "gara_id": "GIRO_DELLE_MARCHE_IN_ROSA_2026-05-10_ELI_F",
+        "nome_gara": "GIRO DELLE MARCHE IN ROSA",
+        "data": "2026-05-10",
+        "atleta_id": "MONSALVEZ_FLORENCIA",
+        "atleta_cognome": "MONSALVEZ",
+        "atleta_nome": "FLORENCIA",
+        "posizione": 2,
+        "punti_effettivi": 12,
+        "moltiplicatore": 1,
+        "tipo": "regionale",
+        "regione": "MARCHE",
+        "km": "100.000",
+        "media": "35.294"
       }
     ],
     "punti_per_cat": {
-      "ELI_F": 5
+      "ELI_F": 17
     }
   },
   "TIROL_WOMEN_CYCLING_F": {
     "id": "TIROL_WOMEN_CYCLING_F",
     "nome": "TIROL WOMEN CYCLING",
-    "punti_totali": 1,
+    "punti_totali": 19,
     "atleti": [
-      "COOPER_AMALIE"
+      "COOPER_AMALIE",
+      "WENZEL_LIV"
     ],
     "risultati": [
       {
@@ -73332,10 +74175,40 @@
         "regione": "MARCHE",
         "km": "90.000",
         "media": "36.986"
+      },
+      {
+        "gara_id": "GIRO_DELLE_MARCHE_IN_ROSA_2026-05-10_ELI_F",
+        "nome_gara": "GIRO DELLE MARCHE IN ROSA",
+        "data": "2026-05-10",
+        "atleta_id": "WENZEL_LIV",
+        "atleta_cognome": "WENZEL",
+        "atleta_nome": "LIV",
+        "posizione": 3,
+        "punti_effettivi": 10,
+        "moltiplicatore": 1,
+        "tipo": "regionale",
+        "regione": "MARCHE",
+        "km": "100.000",
+        "media": "35.294"
+      },
+      {
+        "gara_id": "GIRO_DELLE_MARCHE_IN_ROSA_2026-05-10_ELI_F",
+        "nome_gara": "GIRO DELLE MARCHE IN ROSA",
+        "data": "2026-05-10",
+        "atleta_id": "COOPER_AMALIE",
+        "atleta_cognome": "COOPER",
+        "atleta_nome": "AMALIE",
+        "posizione": 4,
+        "punti_effettivi": 8,
+        "moltiplicatore": 1,
+        "tipo": "regionale",
+        "regione": "MARCHE",
+        "km": "100.000",
+        "media": "35.294"
       }
     ],
     "punti_per_cat": {
-      "ELI_F": 1
+      "ELI_F": 19
     }
   },
   "ST_KILDA_CYCLING_CLUB": {
@@ -73532,438 +74405,6 @@
     ],
     "punti_per_cat": {
       "JUN_M": 20
-    }
-  },
-  "TOYOTA_VALENCIA_SAV": {
-    "id": "TOYOTA_VALENCIA_SAV",
-    "nome": "TOYOTA VALENCIA SAV",
-    "punti_totali": 15,
-    "atleti": [
-      "VALGONEN_VALERIA"
-    ],
-    "risultati": [
-      {
-        "gara_id": "GIRO_DELLE_MARCHE_IN_ROSA_2026-05-10_ELI_F",
-        "nome_gara": "GIRO DELLE MARCHE IN ROSA",
-        "data": "2026-05-10",
-        "atleta_id": "VALGONEN_VALERIA",
-        "atleta_cognome": "VALGONEN",
-        "atleta_nome": "VALERIA",
-        "posizione": 1,
-        "punti_effettivi": 15,
-        "moltiplicatore": 1,
-        "tipo": "regionale",
-        "regione": "MARCHE",
-        "km": "100.000",
-        "media": "35.294"
-      }
-    ],
-    "punti_per_cat": {
-      "ELI_F": 15
-    }
-  },
-  "WCC_UCI_WORLD_CYCLING_CENTRE": {
-    "id": "WCC_UCI_WORLD_CYCLING_CENTRE",
-    "nome": "WCC - UCI WORLD CYCLING CENTRE",
-    "punti_totali": 12,
-    "atleti": [
-      "MONSALVEZ_FLORENCIA"
-    ],
-    "risultati": [
-      {
-        "gara_id": "GIRO_DELLE_MARCHE_IN_ROSA_2026-05-10_ELI_F",
-        "nome_gara": "GIRO DELLE MARCHE IN ROSA",
-        "data": "2026-05-10",
-        "atleta_id": "MONSALVEZ_FLORENCIA",
-        "atleta_cognome": "MONSALVEZ",
-        "atleta_nome": "FLORENCIA",
-        "posizione": 2,
-        "punti_effettivi": 12,
-        "moltiplicatore": 1,
-        "tipo": "regionale",
-        "regione": "MARCHE",
-        "km": "100.000",
-        "media": "35.294"
-      }
-    ],
-    "punti_per_cat": {
-      "ELI_F": 12
-    }
-  },
-  "TIROL_WOMEN_CYCLING": {
-    "id": "TIROL_WOMEN_CYCLING",
-    "nome": "TIROL WOMEN CYCLING",
-    "punti_totali": 18,
-    "atleti": [
-      "WENZEL_LIV",
-      "COOPER_AMALIE"
-    ],
-    "risultati": [
-      {
-        "gara_id": "GIRO_DELLE_MARCHE_IN_ROSA_2026-05-10_ELI_F",
-        "nome_gara": "GIRO DELLE MARCHE IN ROSA",
-        "data": "2026-05-10",
-        "atleta_id": "WENZEL_LIV",
-        "atleta_cognome": "WENZEL",
-        "atleta_nome": "LIV",
-        "posizione": 3,
-        "punti_effettivi": 10,
-        "moltiplicatore": 1,
-        "tipo": "regionale",
-        "regione": "MARCHE",
-        "km": "100.000",
-        "media": "35.294"
-      },
-      {
-        "gara_id": "GIRO_DELLE_MARCHE_IN_ROSA_2026-05-10_ELI_F",
-        "nome_gara": "GIRO DELLE MARCHE IN ROSA",
-        "data": "2026-05-10",
-        "atleta_id": "COOPER_AMALIE",
-        "atleta_cognome": "COOPER",
-        "atleta_nome": "AMALIE",
-        "posizione": 4,
-        "punti_effettivi": 8,
-        "moltiplicatore": 1,
-        "tipo": "regionale",
-        "regione": "MARCHE",
-        "km": "100.000",
-        "media": "35.294"
-      }
-    ],
-    "punti_per_cat": {
-      "ELI_F": 18
-    }
-  },
-  "ISOLMANT_PREMAC_VITTORIA": {
-    "id": "ISOLMANT_PREMAC_VITTORIA",
-    "nome": "ISOLMANT - PREMAC - VITTORIA",
-    "punti_totali": 6,
-    "atleti": [
-      "PEGOLO_CHANTAL"
-    ],
-    "risultati": [
-      {
-        "gara_id": "GIRO_DELLE_MARCHE_IN_ROSA_2026-05-10_ELI_F",
-        "nome_gara": "GIRO DELLE MARCHE IN ROSA",
-        "data": "2026-05-10",
-        "atleta_id": "PEGOLO_CHANTAL",
-        "atleta_cognome": "PEGOLO",
-        "atleta_nome": "CHANTAL",
-        "posizione": 5,
-        "punti_effettivi": 6,
-        "moltiplicatore": 1,
-        "tipo": "regionale",
-        "regione": "MARCHE",
-        "km": "100.000",
-        "media": "35.294"
-      }
-    ],
-    "punti_per_cat": {
-      "ELI_F": 6
-    }
-  },
-  "TOP_GIRLS_FASSA_BORTOLO": {
-    "id": "TOP_GIRLS_FASSA_BORTOLO",
-    "nome": "TOP GIRLS - FASSA BORTOLO",
-    "punti_totali": 8,
-    "atleti": [
-      "REGHINI_CHIARA",
-      "ZAMBELLI_ALESSIA",
-      "BORTOLI_VIRGINIA"
-    ],
-    "risultati": [
-      {
-        "gara_id": "GIRO_DELLE_MARCHE_IN_ROSA_2026-05-10_ELI_F",
-        "nome_gara": "GIRO DELLE MARCHE IN ROSA",
-        "data": "2026-05-10",
-        "atleta_id": "REGHINI_CHIARA",
-        "atleta_cognome": "REGHINI",
-        "atleta_nome": "CHIARA",
-        "posizione": 6,
-        "punti_effettivi": 5,
-        "moltiplicatore": 1,
-        "tipo": "regionale",
-        "regione": "MARCHE",
-        "km": "100.000",
-        "media": "35.294"
-      },
-      {
-        "gara_id": "GIRO_DELLE_MARCHE_IN_ROSA_2026-05-10_ELI_F",
-        "nome_gara": "GIRO DELLE MARCHE IN ROSA",
-        "data": "2026-05-10",
-        "atleta_id": "ZAMBELLI_ALESSIA",
-        "atleta_cognome": "ZAMBELLI",
-        "atleta_nome": "ALESSIA",
-        "posizione": 9,
-        "punti_effettivi": 2,
-        "moltiplicatore": 1,
-        "tipo": "regionale",
-        "regione": "MARCHE",
-        "km": "100.000",
-        "media": "35.294"
-      },
-      {
-        "gara_id": "GIRO_DELLE_MARCHE_IN_ROSA_2026-05-10_ELI_F",
-        "nome_gara": "GIRO DELLE MARCHE IN ROSA",
-        "data": "2026-05-10",
-        "atleta_id": "BORTOLI_VIRGINIA",
-        "atleta_cognome": "BORTOLI",
-        "atleta_nome": "VIRGINIA",
-        "posizione": 10,
-        "punti_effettivi": 1,
-        "moltiplicatore": 1,
-        "tipo": "regionale",
-        "regione": "MARCHE",
-        "km": "100.000",
-        "media": "35.294"
-      }
-    ],
-    "punti_per_cat": {
-      "ELI_F": 8
-    }
-  },
-  "TEAM_MENDELSPECK_E_WORK": {
-    "id": "TEAM_MENDELSPECK_E_WORK",
-    "nome": "TEAM MENDELSPECK E-WORK",
-    "punti_totali": 4,
-    "atleti": [
-      "GIULIANI_GIULIA"
-    ],
-    "risultati": [
-      {
-        "gara_id": "GIRO_DELLE_MARCHE_IN_ROSA_2026-05-10_ELI_F",
-        "nome_gara": "GIRO DELLE MARCHE IN ROSA",
-        "data": "2026-05-10",
-        "atleta_id": "GIULIANI_GIULIA",
-        "atleta_cognome": "GIULIANI",
-        "atleta_nome": "GIULIA",
-        "posizione": 7,
-        "punti_effettivi": 4,
-        "moltiplicatore": 1,
-        "tipo": "regionale",
-        "regione": "MARCHE",
-        "km": "100.000",
-        "media": "35.294"
-      }
-    ],
-    "punti_per_cat": {
-      "ELI_F": 4
-    }
-  },
-  "BORN_TO_WIN": {
-    "id": "BORN_TO_WIN",
-    "nome": "BORN TO WIN",
-    "punti_totali": 3,
-    "atleti": [
-      "BASILICO_VALENTINA"
-    ],
-    "risultati": [
-      {
-        "gara_id": "GIRO_DELLE_MARCHE_IN_ROSA_2026-05-10_ELI_F",
-        "nome_gara": "GIRO DELLE MARCHE IN ROSA",
-        "data": "2026-05-10",
-        "atleta_id": "BASILICO_VALENTINA",
-        "atleta_cognome": "BASILICO",
-        "atleta_nome": "VALENTINA",
-        "posizione": 8,
-        "punti_effettivi": 3,
-        "moltiplicatore": 1,
-        "tipo": "regionale",
-        "regione": "MARCHE",
-        "km": "100.000",
-        "media": "35.294"
-      }
-    ],
-    "punti_per_cat": {
-      "ELI_F": 3
-    }
-  },
-  "PETRUCCI_GAUSS_CYCLING_TEAM": {
-    "id": "PETRUCCI_GAUSS_CYCLING_TEAM",
-    "nome": "PETRUCCI GAUSS CYCLING TEAM",
-    "punti_totali": 15,
-    "atleti": [
-      "NOVOLODSKAIA_ANGELINA"
-    ],
-    "risultati": [
-      {
-        "gara_id": "GIRO_DELLE_MARCHE_IN_ROSA_2026-05-10_JUN_F",
-        "nome_gara": "GIRO DELLE MARCHE IN ROSA",
-        "data": "2026-05-10",
-        "atleta_id": "NOVOLODSKAIA_ANGELINA",
-        "atleta_cognome": "NOVOLODSKAIA",
-        "atleta_nome": "ANGELINA",
-        "posizione": 1,
-        "punti_effettivi": 15,
-        "moltiplicatore": 1,
-        "tipo": "regionale",
-        "regione": "MARCHE",
-        "km": "100.000",
-        "media": "35.294"
-      }
-    ],
-    "punti_per_cat": {
-      "JUN_F": 15
-    }
-  },
-  "TEAM_WILIER_BREGANZE": {
-    "id": "TEAM_WILIER_BREGANZE",
-    "nome": "TEAM WILIER BREGANZE",
-    "punti_totali": 12,
-    "atleti": [
-      "PELLIZOTTI_GIORGIA",
-      "PASCUT_MADDALENA"
-    ],
-    "risultati": [
-      {
-        "gara_id": "GIRO_DELLE_MARCHE_IN_ROSA_2026-05-10_JUN_F",
-        "nome_gara": "GIRO DELLE MARCHE IN ROSA",
-        "data": "2026-05-10",
-        "atleta_id": "PELLIZOTTI_GIORGIA",
-        "atleta_cognome": "PELLIZOTTI",
-        "atleta_nome": "GIORGIA",
-        "posizione": 3,
-        "punti_effettivi": 10,
-        "moltiplicatore": 1,
-        "tipo": "regionale",
-        "regione": "MARCHE",
-        "km": "100.000",
-        "media": "35.294"
-      },
-      {
-        "gara_id": "GIRO_DELLE_MARCHE_IN_ROSA_2026-05-10_JUN_F",
-        "nome_gara": "GIRO DELLE MARCHE IN ROSA",
-        "data": "2026-05-10",
-        "atleta_id": "PASCUT_MADDALENA",
-        "atleta_cognome": "PASCUT",
-        "atleta_nome": "MADDALENA",
-        "posizione": 9,
-        "punti_effettivi": 2,
-        "moltiplicatore": 1,
-        "tipo": "regionale",
-        "regione": "MARCHE",
-        "km": "100.000",
-        "media": "35.294"
-      }
-    ],
-    "punti_per_cat": {
-      "JUN_F": 12
-    }
-  },
-  "BFT_BURZONI": {
-    "id": "BFT_BURZONI",
-    "nome": "BFT BURZONI",
-    "punti_totali": 8,
-    "atleti": [
-      "ROSSIGNOLI_MATILDE"
-    ],
-    "risultati": [
-      {
-        "gara_id": "GIRO_DELLE_MARCHE_IN_ROSA_2026-05-10_JUN_F",
-        "nome_gara": "GIRO DELLE MARCHE IN ROSA",
-        "data": "2026-05-10",
-        "atleta_id": "ROSSIGNOLI_MATILDE",
-        "atleta_cognome": "ROSSIGNOLI",
-        "atleta_nome": "MATILDE",
-        "posizione": 4,
-        "punti_effettivi": 8,
-        "moltiplicatore": 1,
-        "tipo": "regionale",
-        "regione": "MARCHE",
-        "km": "100.000",
-        "media": "35.294"
-      }
-    ],
-    "punti_per_cat": {
-      "JUN_F": 8
-    }
-  },
-  "BREGANZE_MILLENIUM": {
-    "id": "BREGANZE_MILLENIUM",
-    "nome": "BREGANZE MILLENIUM",
-    "punti_totali": 12,
-    "atleti": [
-      "RAPPORTI_LINDA",
-      "BALLAN_AZZURRA",
-      "LAGHI_CLARISSA"
-    ],
-    "risultati": [
-      {
-        "gara_id": "GIRO_DELLE_MARCHE_IN_ROSA_2026-05-10_JUN_F",
-        "nome_gara": "GIRO DELLE MARCHE IN ROSA",
-        "data": "2026-05-10",
-        "atleta_id": "RAPPORTI_LINDA",
-        "atleta_cognome": "RAPPORTI",
-        "atleta_nome": "LINDA",
-        "posizione": 5,
-        "punti_effettivi": 6,
-        "moltiplicatore": 1,
-        "tipo": "regionale",
-        "regione": "MARCHE",
-        "km": "100.000",
-        "media": "35.294"
-      },
-      {
-        "gara_id": "GIRO_DELLE_MARCHE_IN_ROSA_2026-05-10_JUN_F",
-        "nome_gara": "GIRO DELLE MARCHE IN ROSA",
-        "data": "2026-05-10",
-        "atleta_id": "BALLAN_AZZURRA",
-        "atleta_cognome": "BALLAN",
-        "atleta_nome": "AZZURRA",
-        "posizione": 6,
-        "punti_effettivi": 5,
-        "moltiplicatore": 1,
-        "tipo": "regionale",
-        "regione": "MARCHE",
-        "km": "100.000",
-        "media": "35.294"
-      },
-      {
-        "gara_id": "GIRO_DELLE_MARCHE_IN_ROSA_2026-05-10_JUN_F",
-        "nome_gara": "GIRO DELLE MARCHE IN ROSA",
-        "data": "2026-05-10",
-        "atleta_id": "LAGHI_CLARISSA",
-        "atleta_cognome": "LAGHI",
-        "atleta_nome": "CLARISSA",
-        "posizione": 10,
-        "punti_effettivi": 1,
-        "moltiplicatore": 1,
-        "tipo": "regionale",
-        "regione": "MARCHE",
-        "km": "100.000",
-        "media": "35.294"
-      }
-    ],
-    "punti_per_cat": {
-      "JUN_F": 12
-    }
-  },
-  "U_C_CONSCIO_PEDALE_DEL_SILE": {
-    "id": "U_C_CONSCIO_PEDALE_DEL_SILE",
-    "nome": "U.C.CONSCIO PEDALE DEL SILE",
-    "punti_totali": 3,
-    "atleti": [
-      "D_APOLLONIO_REBECCA"
-    ],
-    "risultati": [
-      {
-        "gara_id": "GIRO_DELLE_MARCHE_IN_ROSA_2026-05-10_JUN_F",
-        "nome_gara": "GIRO DELLE MARCHE IN ROSA",
-        "data": "2026-05-10",
-        "atleta_id": "D_APOLLONIO_REBECCA",
-        "atleta_cognome": "D'APOLLONIO",
-        "atleta_nome": "REBECCA",
-        "posizione": 8,
-        "punti_effettivi": 3,
-        "moltiplicatore": 1,
-        "tipo": "regionale",
-        "regione": "MARCHE",
-        "km": "100.000",
-        "media": "35.294"
-      }
-    ],
-    "punti_per_cat": {
-      "JUN_F": 3
     }
   },
   "CICLISTICA_OMNIA_IMOLA": {
