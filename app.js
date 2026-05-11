@@ -352,14 +352,8 @@ async function renderHome() {
   // Ultime 5 gare (per data desc)
   const raceMap = {};
   for (const r of resultsRaw) {
-    if (!raceMap[r.gara_id]) raceMap[r.gara_id] = { id: r.gara_id, nome: r.nome_gara, data: r.data, categoria: r.categoria, genere: r.genere, tipo: r.tipo, isCR: r.campionato_regionale, isCI: r.campionato_italiano, results: [] };
+    if (!raceMap[r.gara_id]) raceMap[r.gara_id] = { id: r.gara_id, nome: r.nome_gara, data: r.data, categoria: r.categoria, genere: r.genere, tipo: r.tipo, isCR: r.campionato_regionale, isCI: r.campionato_italiano, mult: r.moltiplicatore, results: [] };
     raceMap[r.gara_id].results.push(r);
-  }
-  // Aumenta moltiplicatori
-  for (const g of calendar) {
-    if (raceMap[g.id]) {
-      raceMap[g.id].mult = multFromType(g.tipo, g.campionato_regionale, g.campionato_italiano);
-    }
   }
 
   const races = Object.values(raceMap)
@@ -467,7 +461,7 @@ async function renderHome() {
               </div>`).join('')}
           </div>
           <div style="padding: 10px 16px; border-top: 1px solid var(--border-subtle); background: var(--bg-secondary);">
-             <a href="#/classifica" onclick="window.rankCat='${code}'; window.rankGender='${isF ? 'F' : 'M'}'; window.rankFilter='';" class="btn-action full" style="font-size:0.7rem;">VAI ALLA CLASSIFICA &rarr;</a>
+             <a href="#/classifica" onclick="window.navigateToRank('${code}', '${isF ? 'F' : 'M'}')" class="btn-action full" style="font-size:0.7rem;">VAI ALLA CLASSIFICA &rarr;</a>
           </div>
         </div>`);
     }
@@ -488,7 +482,7 @@ async function renderHome() {
 
 // ── CLASSIFICA ────────────────────────────────────────────────
 let rankGender = 'M';
-let rankCat    = 'JUN_M';
+let rankCat    = 'ES1_M';
 let rankFilter = '';
 let rankView   = 'atleti'; // 'atleti' | 'team'
 let rankRegion = '';
@@ -497,7 +491,7 @@ let rankMonth  = '';
 async function renderClassifica() {
   if ((rankGender === 'M' && rankCat.endsWith('_F')) ||
       (rankGender === 'F' && !rankCat.endsWith('_F'))) {
-    rankCat = rankGender === 'M' ? 'JUN_M' : 'ELI_F';
+    rankCat = rankGender === 'M' ? 'ES1_M' : 'ES1_F';
   }
 
   const catsMale   = ['ES1_M','ES2_M','AL_M','JUN_M','ELI_M'];
