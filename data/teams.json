@@ -13484,14 +13484,14 @@
   "NORDEST_PETRUCCI_ASSALI_STEFEN": {
     "id": "NORDEST_PETRUCCI_ASSALI_STEFEN",
     "nome": "NORDEST PETRUCCI ASSALI STEFEN",
-    "punti_totali": 247,
+    "punti_totali": 317,
     "atleti": [
       "VIERO_GUIDO",
       "SCAMPERLE_NICOLO",
       "ZANOLINI_ERIC",
+      "PEZZO_ROSOLA_PATRIK",
       "DALCANALE_MICHELE",
       "CORRADINI_ALESSANDRO",
-      "PEZZO_ROSOLA_PATRIK",
       "FERRONATO_PIETRO",
       "MILETO_LUCA",
       "LISORINI_LEONE"
@@ -13541,6 +13541,51 @@
         "regione": "VENETO",
         "km": "114.000",
         "media": "42.790"
+      },
+      {
+        "gara_id": "CORSA_DELLA_PACE_JUNIORES_CLASSIFICA_GENERALE_2026-05-10_JUN_M",
+        "nome_gara": "CORSA DELLA PACE JUNIORES CLASSIFICA GENERALE",
+        "data": "2026-05-10",
+        "atleta_id": "PEZZO_ROSOLA_PATRIK",
+        "atleta_cognome": "PEZZO ROSOLA",
+        "atleta_nome": "PATRIK",
+        "posizione": 1,
+        "punti_effettivi": 30,
+        "moltiplicatore": 2,
+        "tipo": "regionale",
+        "regione": "TEREZIN",
+        "km": "397.300",
+        "media": "44.514"
+      },
+      {
+        "gara_id": "CORSA_DELLA_PACE_JUNIORES_TERZA_TAPPA_2026-05-09_JUN_M",
+        "nome_gara": "CORSA DELLA PACE JUNIORES TERZA TAPPA",
+        "data": "2026-05-09",
+        "atleta_id": "PEZZO_ROSOLA_PATRIK",
+        "atleta_cognome": "PEZZO ROSOLA",
+        "atleta_nome": "PATRIK",
+        "posizione": 1,
+        "punti_effettivi": 30,
+        "moltiplicatore": 2,
+        "tipo": "nazionale",
+        "regione": "TEPLICE",
+        "km": "112.100",
+        "media": "45.791"
+      },
+      {
+        "gara_id": "CORSA_DELLA_PACE_JUNIORES_SECONDA_TAPPA_PRIMA_SEMITAPPA_CRONOMETRO_2026-05-08_JUN_M",
+        "nome_gara": "CORSA DELLA PACE JUNIORES SECONDA TAPPA PRIMA SEMITAPPA CRONOMETRO",
+        "data": "2026-05-08",
+        "atleta_id": "PEZZO_ROSOLA_PATRIK",
+        "atleta_cognome": "PEZZO ROSOLA",
+        "atleta_nome": "PATRIK",
+        "posizione": 6,
+        "punti_effettivi": 10,
+        "moltiplicatore": 2,
+        "tipo": "nazionale",
+        "regione": "CASOVKA",
+        "km": "8.800",
+        "media": "50.139"
       },
       {
         "gara_id": "69_GRAN_PREMIO_DI_SAN_PROSPERO_2026-05-01_JUN_M",
@@ -13844,7 +13889,7 @@
       }
     ],
     "punti_per_cat": {
-      "JUN_M": 247
+      "JUN_M": 317
     }
   },
   "FDB_SPORT_CLUB": {
@@ -17805,7 +17850,7 @@
   "BORGO_MOLINO_VIGNA_FIORITA": {
     "id": "BORGO_MOLINO_VIGNA_FIORITA",
     "nome": "BORGO MOLINO-VIGNA FIORITA",
-    "punti_totali": 531,
+    "punti_totali": 630,
     "atleti": [
       "ROSSETTO_MATTEO",
       "LIBERTANI_GIOELE_ANGELO",
@@ -17861,6 +17906,36 @@
         "regione": "LOMBARDIA",
         "km": "61.850",
         "media": "40.447"
+      },
+      {
+        "gara_id": "CORSA_DELLA_PACE_JUNIORES_QUARTA_TAPPA_2026-05-10_JUN_M",
+        "nome_gara": "CORSA DELLA PACE JUNIORES QUARTA TAPPA",
+        "data": "2026-05-10",
+        "atleta_id": "FEDRIZZI_BRANDON_DAVIDE",
+        "atleta_cognome": "FEDRIZZI",
+        "atleta_nome": "BRANDON DAVIDE",
+        "posizione": 2,
+        "punti_effettivi": 24,
+        "moltiplicatore": 2,
+        "tipo": "nazionale",
+        "regione": "TEREZIN",
+        "km": "102.400",
+        "media": "44.355"
+      },
+      {
+        "gara_id": "CORSA_DELLA_PACE_JUNIORES_PRIMA_TAPPA_2026-05-07_JUN_M",
+        "nome_gara": "CORSA DELLA PACE JUNIORES PRIMA TAPPA",
+        "data": "2026-05-07",
+        "atleta_id": "FEDRIZZI_BRANDON_DAVIDE",
+        "atleta_cognome": "FEDRIZZI",
+        "atleta_nome": "BRANDON DAVIDE",
+        "posizione": 1,
+        "punti_effettivi": 30,
+        "moltiplicatore": 2,
+        "tipo": "nazionale",
+        "regione": "LITOMERICE",
+        "km": "110.200",
+        "media": "41.273"
       },
       {
         "gara_id": "GIRO_D_ABRUZZO_JUNIORES_2026_TERZA_TAPPA_2026-05-03_JUN_M",
@@ -18283,6 +18358,21 @@
         "media": "44.847"
       },
       {
+        "gara_id": "E3_SAXO_CLASSIC_2026-03-27_JUN_M",
+        "nome_gara": "E3 SAXO CLASSIC",
+        "data": "2026-03-27",
+        "atleta_id": "FEDRIZZI_BRANDON_DAVIDE",
+        "atleta_cognome": "FEDRIZZI",
+        "atleta_nome": "BRANDON DAVIDE",
+        "posizione": 1,
+        "punti_effettivi": 45,
+        "moltiplicatore": 3,
+        "tipo": "internazionale",
+        "regione": "HARELBEKE",
+        "km": "135.800",
+        "media": "41.906"
+      },
+      {
         "gara_id": "22_TROFEO_RISTORANTE_ALLA_COLOMBERA_2026-03-22_JUN_M",
         "nome_gara": "22 TROFEO RISTORANTE ALLA COLOMBERA",
         "data": "2026-03-22",
@@ -18389,7 +18479,7 @@
       }
     ],
     "punti_per_cat": {
-      "JUN_M": 338,
+      "JUN_M": 437,
       "AL_M": 193
     }
   },
@@ -26172,14 +26262,14 @@
   "ETHICA_ZERO24_CYCLING_TEAM_ECOTEK": {
     "id": "ETHICA_ZERO24_CYCLING_TEAM_ECOTEK",
     "nome": "ETHICA ZERO24 CYCLING TEAM ECOTEK",
-    "punti_totali": 237,
+    "punti_totali": 269,
     "atleti": [
       "VITALI_GIULIO",
+      "CINGOLANI_TOMMASO",
       "ALESSIANI_STEFANO_MARIA",
       "MANONI_ANDREA",
       "MANNA_MATTEO",
       "CINGOLANI_FILIPPO",
-      "CINGOLANI_TOMMASO",
       "SENESI_ALESSANDRO",
       "PAOLINELLI_GIANMARCO",
       "GRIMALDI_LEONARDO",
@@ -26200,6 +26290,36 @@
         "regione": "EMILIA ROMAGNA",
         "km": "53.800",
         "media": "37.096"
+      },
+      {
+        "gara_id": "CORSA_DELLA_PACE_JUNIORES_SECONDA_TAPPA_SECONDA_SEMITAPPA_2026-05-08_JUN_M",
+        "nome_gara": "CORSA DELLA PACE JUNIORES SECONDA TAPPA SECONDA SEMITAPPA",
+        "data": "2026-05-08",
+        "atleta_id": "CINGOLANI_TOMMASO",
+        "atleta_cognome": "CINGOLANI",
+        "atleta_nome": "TOMMASO",
+        "posizione": 1,
+        "punti_effettivi": 30,
+        "moltiplicatore": 2,
+        "tipo": "nazionale",
+        "regione": "SJLNJENI ZAVOD",
+        "km": "63.800",
+        "media": "48.353"
+      },
+      {
+        "gara_id": "CORSA_DELLA_PACE_JUNIORES_PRIMA_TAPPA_2026-05-07_JUN_M",
+        "nome_gara": "CORSA DELLA PACE JUNIORES PRIMA TAPPA",
+        "data": "2026-05-07",
+        "atleta_id": "CINGOLANI_TOMMASO",
+        "atleta_cognome": "CINGOLANI",
+        "atleta_nome": "TOMMASO",
+        "posizione": 10,
+        "punti_effettivi": 2,
+        "moltiplicatore": 2,
+        "tipo": "nazionale",
+        "regione": "LITOMERICE",
+        "km": "110.200",
+        "media": "41.273"
       },
       {
         "gara_id": "57_COPPA_CIRCOLO_ARCI_RENZINO_2026-05-01_AL_M",
@@ -26579,7 +26699,7 @@
     ],
     "punti_per_cat": {
       "AL_M": 106,
-      "JUN_M": 131
+      "JUN_M": 163
     }
   },
   "S_C_CAVRIAGO": {
@@ -55906,172 +56026,6 @@
       "JUN_M": 38
     }
   },
-  "ITALIA": {
-    "id": "ITALIA",
-    "nome": "ITALIA",
-    "punti_totali": 217,
-    "atleti": [
-      "FEDRIZZI_BRANDON_DAVIDE",
-      "PEZZO_ROSOLA_PATRIK",
-      "SOLAVAGGIONE_PIETRO",
-      "CINGOLANI_TOMMASO"
-    ],
-    "risultati": [
-      {
-        "gara_id": "CORSA_DELLA_PACE_JUNIORES_QUARTA_TAPPA_2026-05-10_JUN_M",
-        "nome_gara": "CORSA DELLA PACE JUNIORES QUARTA TAPPA",
-        "data": "2026-05-10",
-        "atleta_id": "FEDRIZZI_BRANDON_DAVIDE",
-        "atleta_cognome": "FEDRIZZI",
-        "atleta_nome": "BRANDON DAVIDE",
-        "posizione": 2,
-        "punti_effettivi": 24,
-        "moltiplicatore": 2,
-        "tipo": "nazionale",
-        "regione": "TEREZIN",
-        "km": "102.400",
-        "media": "44.355"
-      },
-      {
-        "gara_id": "CORSA_DELLA_PACE_JUNIORES_CLASSIFICA_GENERALE_2026-05-10_JUN_M",
-        "nome_gara": "CORSA DELLA PACE JUNIORES CLASSIFICA GENERALE",
-        "data": "2026-05-10",
-        "atleta_id": "PEZZO_ROSOLA_PATRIK",
-        "atleta_cognome": "PEZZO ROSOLA",
-        "atleta_nome": "PATRIK",
-        "posizione": 1,
-        "punti_effettivi": 30,
-        "moltiplicatore": 2,
-        "tipo": "regionale",
-        "regione": "TEREZIN",
-        "km": "397.300",
-        "media": "44.514"
-      },
-      {
-        "gara_id": "CORSA_DELLA_PACE_JUNIORES_TERZA_TAPPA_2026-05-09_JUN_M",
-        "nome_gara": "CORSA DELLA PACE JUNIORES TERZA TAPPA",
-        "data": "2026-05-09",
-        "atleta_id": "PEZZO_ROSOLA_PATRIK",
-        "atleta_cognome": "PEZZO ROSOLA",
-        "atleta_nome": "PATRIK",
-        "posizione": 1,
-        "punti_effettivi": 30,
-        "moltiplicatore": 2,
-        "tipo": "nazionale",
-        "regione": "TEPLICE",
-        "km": "112.100",
-        "media": "45.791"
-      },
-      {
-        "gara_id": "CORSA_DELLA_PACE_JUNIORES_TERZA_TAPPA_2026-05-09_JUN_M",
-        "nome_gara": "CORSA DELLA PACE JUNIORES TERZA TAPPA",
-        "data": "2026-05-09",
-        "atleta_id": "SOLAVAGGIONE_PIETRO",
-        "atleta_cognome": "SOLAVAGGIONE",
-        "atleta_nome": "PIETRO",
-        "posizione": 5,
-        "punti_effettivi": 12,
-        "moltiplicatore": 2,
-        "tipo": "nazionale",
-        "regione": "TEPLICE",
-        "km": "112.100",
-        "media": "45.791"
-      },
-      {
-        "gara_id": "CORSA_DELLA_PACE_JUNIORES_SECONDA_TAPPA_PRIMA_SEMITAPPA_CRONOMETRO_2026-05-08_JUN_M",
-        "nome_gara": "CORSA DELLA PACE JUNIORES SECONDA TAPPA PRIMA SEMITAPPA CRONOMETRO",
-        "data": "2026-05-08",
-        "atleta_id": "PEZZO_ROSOLA_PATRIK",
-        "atleta_cognome": "PEZZO ROSOLA",
-        "atleta_nome": "PATRIK",
-        "posizione": 6,
-        "punti_effettivi": 10,
-        "moltiplicatore": 2,
-        "tipo": "nazionale",
-        "regione": "CASOVKA",
-        "km": "8.800",
-        "media": "50.139"
-      },
-      {
-        "gara_id": "CORSA_DELLA_PACE_JUNIORES_SECONDA_TAPPA_SECONDA_SEMITAPPA_2026-05-08_JUN_M",
-        "nome_gara": "CORSA DELLA PACE JUNIORES SECONDA TAPPA SECONDA SEMITAPPA",
-        "data": "2026-05-08",
-        "atleta_id": "CINGOLANI_TOMMASO",
-        "atleta_cognome": "CINGOLANI",
-        "atleta_nome": "TOMMASO",
-        "posizione": 1,
-        "punti_effettivi": 30,
-        "moltiplicatore": 2,
-        "tipo": "nazionale",
-        "regione": "SJLNJENI ZAVOD",
-        "km": "63.800",
-        "media": "48.353"
-      },
-      {
-        "gara_id": "CORSA_DELLA_PACE_JUNIORES_SECONDA_TAPPA_SECONDA_SEMITAPPA_2026-05-08_JUN_M",
-        "nome_gara": "CORSA DELLA PACE JUNIORES SECONDA TAPPA SECONDA SEMITAPPA",
-        "data": "2026-05-08",
-        "atleta_id": "SOLAVAGGIONE_PIETRO",
-        "atleta_cognome": "SOLAVAGGIONE",
-        "atleta_nome": "PIETRO",
-        "posizione": 9,
-        "punti_effettivi": 4,
-        "moltiplicatore": 2,
-        "tipo": "nazionale",
-        "regione": "SJLNJENI ZAVOD",
-        "km": "63.800",
-        "media": "48.353"
-      },
-      {
-        "gara_id": "CORSA_DELLA_PACE_JUNIORES_PRIMA_TAPPA_2026-05-07_JUN_M",
-        "nome_gara": "CORSA DELLA PACE JUNIORES PRIMA TAPPA",
-        "data": "2026-05-07",
-        "atleta_id": "FEDRIZZI_BRANDON_DAVIDE",
-        "atleta_cognome": "FEDRIZZI",
-        "atleta_nome": "BRANDON DAVIDE",
-        "posizione": 1,
-        "punti_effettivi": 30,
-        "moltiplicatore": 2,
-        "tipo": "nazionale",
-        "regione": "LITOMERICE",
-        "km": "110.200",
-        "media": "41.273"
-      },
-      {
-        "gara_id": "CORSA_DELLA_PACE_JUNIORES_PRIMA_TAPPA_2026-05-07_JUN_M",
-        "nome_gara": "CORSA DELLA PACE JUNIORES PRIMA TAPPA",
-        "data": "2026-05-07",
-        "atleta_id": "CINGOLANI_TOMMASO",
-        "atleta_cognome": "CINGOLANI",
-        "atleta_nome": "TOMMASO",
-        "posizione": 10,
-        "punti_effettivi": 2,
-        "moltiplicatore": 2,
-        "tipo": "nazionale",
-        "regione": "LITOMERICE",
-        "km": "110.200",
-        "media": "41.273"
-      },
-      {
-        "gara_id": "E3_SAXO_CLASSIC_2026-03-27_JUN_M",
-        "nome_gara": "E3 SAXO CLASSIC",
-        "data": "2026-03-27",
-        "atleta_id": "FEDRIZZI_BRANDON_DAVIDE",
-        "atleta_cognome": "FEDRIZZI",
-        "atleta_nome": "BRANDON DAVIDE",
-        "posizione": 1,
-        "punti_effettivi": 45,
-        "moltiplicatore": 3,
-        "tipo": "internazionale",
-        "regione": "HARELBEKE",
-        "km": "135.800",
-        "media": "41.906"
-      }
-    ],
-    "punti_per_cat": {
-      "JUN_M": 217
-    }
-  },
   "AUSTRIA": {
     "id": "AUSTRIA",
     "nome": "AUSTRIA",
@@ -56283,11 +56237,10 @@
   "BELGIO": {
     "id": "BELGIO",
     "nome": "BELGIO",
-    "punti_totali": 41,
+    "punti_totali": 32,
     "atleti": [
       "VERNAILLEN_STAN",
-      "VAN_KERCKHOVE_SEFF",
-      "DE_SMET_VIC"
+      "VAN_KERCKHOVE_SEFF"
     ],
     "risultati": [
       {
@@ -56334,25 +56287,10 @@
         "regione": "LITOMERICE",
         "km": "110.200",
         "media": "41.273"
-      },
-      {
-        "gara_id": "E3_SAXO_CLASSIC_2026-03-27_JUN_M",
-        "nome_gara": "E3 SAXO CLASSIC",
-        "data": "2026-03-27",
-        "atleta_id": "DE_SMET_VIC",
-        "atleta_cognome": "DE SMET",
-        "atleta_nome": "VIC",
-        "posizione": 8,
-        "punti_effettivi": 9,
-        "moltiplicatore": 3,
-        "tipo": "internazionale",
-        "regione": "HARELBEKE",
-        "km": "135.800",
-        "media": "41.906"
       }
     ],
     "punti_per_cat": {
-      "JUN_M": 41
+      "JUN_M": 32
     }
   },
   "FRANCIA": {
@@ -59532,6 +59470,80 @@
     ],
     "punti_per_cat": {
       "JUN_M": 3
+    }
+  },
+  "CANNIBAL_BAHRAIN_VICTORIUS": {
+    "id": "CANNIBAL_BAHRAIN_VICTORIUS",
+    "nome": "CANNIBAL BAHRAIN VICTORIUS",
+    "punti_totali": 51,
+    "atleti": [
+      "SOLAVAGGIONE_PIETRO",
+      "LEGIEC_MIKOLAJ"
+    ],
+    "risultati": [
+      {
+        "gara_id": "CORSA_DELLA_PACE_JUNIORES_TERZA_TAPPA_2026-05-09_JUN_M",
+        "nome_gara": "CORSA DELLA PACE JUNIORES TERZA TAPPA",
+        "data": "2026-05-09",
+        "atleta_id": "SOLAVAGGIONE_PIETRO",
+        "atleta_cognome": "SOLAVAGGIONE",
+        "atleta_nome": "PIETRO",
+        "posizione": 5,
+        "punti_effettivi": 12,
+        "moltiplicatore": 2,
+        "tipo": "nazionale",
+        "regione": "TEPLICE",
+        "km": "112.100",
+        "media": "45.791"
+      },
+      {
+        "gara_id": "CORSA_DELLA_PACE_JUNIORES_SECONDA_TAPPA_SECONDA_SEMITAPPA_2026-05-08_JUN_M",
+        "nome_gara": "CORSA DELLA PACE JUNIORES SECONDA TAPPA SECONDA SEMITAPPA",
+        "data": "2026-05-08",
+        "atleta_id": "SOLAVAGGIONE_PIETRO",
+        "atleta_cognome": "SOLAVAGGIONE",
+        "atleta_nome": "PIETRO",
+        "posizione": 9,
+        "punti_effettivi": 4,
+        "moltiplicatore": 2,
+        "tipo": "nazionale",
+        "regione": "SJLNJENI ZAVOD",
+        "km": "63.800",
+        "media": "48.353"
+      },
+      {
+        "gara_id": "4_MEMORIAL_GERMANO_VITTONI_2026-04-12_JUN_M",
+        "nome_gara": "4 MEMORIAL GERMANO VITTONI",
+        "data": "2026-04-12",
+        "atleta_id": "SOLAVAGGIONE_PIETRO",
+        "atleta_cognome": "SOLAVAGGIONE",
+        "atleta_nome": "PIETRO",
+        "posizione": 6,
+        "punti_effettivi": 5,
+        "moltiplicatore": 1,
+        "tipo": "regionale",
+        "regione": "PIEMONTE",
+        "km": "93.700",
+        "media": "42.516"
+      },
+      {
+        "gara_id": "E3_SAXO_CLASSIC_2026-03-27_JUN_M",
+        "nome_gara": "E3 SAXO CLASSIC",
+        "data": "2026-03-27",
+        "atleta_id": "LEGIEC_MIKOLAJ",
+        "atleta_cognome": "LEGIEC",
+        "atleta_nome": "MIKOLAJ",
+        "posizione": 3,
+        "punti_effettivi": 30,
+        "moltiplicatore": 3,
+        "tipo": "internazionale",
+        "regione": "HARELBEKE",
+        "km": "135.800",
+        "media": "41.906"
+      }
+    ],
+    "punti_per_cat": {
+      "JUN_M": 51
     }
   },
   "ESTONIA": {
@@ -68706,7 +68718,7 @@
   "SOUDAL_QUICK_STEP_JUNIOR_TEAM": {
     "id": "SOUDAL_QUICK_STEP_JUNIOR_TEAM",
     "nome": "SOUDAL QUICK-STEP JUNIOR TEAM",
-    "punti_totali": 90,
+    "punti_totali": 99,
     "atleti": [
       "DE_SMET_VIC",
       "MATYASIK_MAKSYMILIAN"
@@ -68756,10 +68768,25 @@
         "regione": "FRIULI VENEZIA GIULIA",
         "km": "119.000",
         "media": "42.930"
+      },
+      {
+        "gara_id": "E3_SAXO_CLASSIC_2026-03-27_JUN_M",
+        "nome_gara": "E3 SAXO CLASSIC",
+        "data": "2026-03-27",
+        "atleta_id": "DE_SMET_VIC",
+        "atleta_cognome": "DE SMET",
+        "atleta_nome": "VIC",
+        "posizione": 8,
+        "punti_effettivi": 9,
+        "moltiplicatore": 3,
+        "tipo": "internazionale",
+        "regione": "HARELBEKE",
+        "km": "135.800",
+        "media": "41.906"
       }
     ],
     "punti_per_cat": {
-      "JUN_M": 90
+      "JUN_M": 99
     }
   },
   "WWV_HAGENS_BERMAN_JAYCO": {
@@ -72440,50 +72467,6 @@
     ],
     "punti_per_cat": {
       "JUN_M": 3
-    }
-  },
-  "CANNIBAL_BAHRAIN_VICTORIUS": {
-    "id": "CANNIBAL_BAHRAIN_VICTORIUS",
-    "nome": "CANNIBAL BAHRAIN VICTORIUS",
-    "punti_totali": 35,
-    "atleti": [
-      "SOLAVAGGIONE_PIETRO",
-      "LEGIEC_MIKOLAJ"
-    ],
-    "risultati": [
-      {
-        "gara_id": "4_MEMORIAL_GERMANO_VITTONI_2026-04-12_JUN_M",
-        "nome_gara": "4 MEMORIAL GERMANO VITTONI",
-        "data": "2026-04-12",
-        "atleta_id": "SOLAVAGGIONE_PIETRO",
-        "atleta_cognome": "SOLAVAGGIONE",
-        "atleta_nome": "PIETRO",
-        "posizione": 6,
-        "punti_effettivi": 5,
-        "moltiplicatore": 1,
-        "tipo": "regionale",
-        "regione": "PIEMONTE",
-        "km": "93.700",
-        "media": "42.516"
-      },
-      {
-        "gara_id": "E3_SAXO_CLASSIC_2026-03-27_JUN_M",
-        "nome_gara": "E3 SAXO CLASSIC",
-        "data": "2026-03-27",
-        "atleta_id": "LEGIEC_MIKOLAJ",
-        "atleta_cognome": "LEGIEC",
-        "atleta_nome": "MIKOLAJ",
-        "posizione": 3,
-        "punti_effettivi": 30,
-        "moltiplicatore": 3,
-        "tipo": "internazionale",
-        "regione": "HARELBEKE",
-        "km": "135.800",
-        "media": "41.906"
-      }
-    ],
-    "punti_per_cat": {
-      "JUN_M": 35
     }
   },
   "AR_MONEX_WMN_PRO_CYCLING_TEAM": {

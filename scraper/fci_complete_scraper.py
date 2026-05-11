@@ -429,6 +429,44 @@ def aggregate(results: list[dict]) -> tuple[dict, dict, dict, dict]:
     
     results = unique_results
 
+    # 1. Trova il team principale per ogni atleta (escludendo le nazionali/rappresentative)
+    def is_national(t_name):
+        t_up = str(t_name).upper()
+        keywords = ["ITALIA", "NAZIONALE", "RAPPRESENTATIVA", "COMITATO", "SELEZIONE", "REPUBBLICA", "SVIZZERA", "FRANCIA", "GERMANIA", "SPAGNA", "SLOVENIA", "AUSTRIA", "BELGIO", "OLANDA", "DANIMARCA", "GRAN BRETAGNA", "POLONIA", "UCRAINA"]
+        for k in keywords:
+            if k in t_up: return True
+        return False
+
+    athlete_teams_freq = {}
+    for r in results:
+        aid = r["atleta_id"]
+        t = r["team"]
+        tid = r["team_id"]
+        if aid not in athlete_teams_freq:
+            athlete_teams_freq[aid] = {"all": {}}
+        if tid not in athlete_teams_freq[aid]["all"]:
+            athlete_teams_freq[aid]["all"][tid] = {"count": 0, "name": t}
+        athlete_teams_freq[aid]["all"][tid]["count"] += 1
+
+    for aid, data in athlete_teams_freq.items():
+        valid_tids = [tid for tid in data["all"].keys() if not is_national(data["all"][tid]["name"])]
+        if valid_tids:
+            primary_tid = max(valid_tids, key=lambda tid: data["all"][tid]["count"])
+        else:
+            primary_tid = max(data["all"].keys(), key=lambda tid: data["all"][tid]["count"])
+        data["primary_tid"] = primary_tid
+        data["primary_name"] = data["all"][primary_tid]["name"]
+
+    # 2. Sostituisci il team con il team principale se l'attuale è una nazionale
+    for r in results:
+        aid = r["atleta_id"]
+        if is_national(r["team"]):
+            p_tid = athlete_teams_freq[aid].get("primary_tid")
+            p_name = athlete_teams_freq[aid].get("primary_name")
+            if p_tid and p_tid != r["team_id"]:
+                r["team"] = p_name
+                r["team_id"] = p_tid
+
     for r in results:
         if not str(r["data"]).startswith(str(CURRENT_YEAR)): continue
         aid, tid, pts, pos = r["atleta_id"], r["team_id"], r["punti_effettivi"], r["posizione"]
