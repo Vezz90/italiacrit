@@ -323,7 +323,7 @@ function route() {
 }
 
 function updateNavActive(hash) {
-  ['nav-home','nav-class','nav-atleti','nav-team','nav-cal','nav-risultati','nav-reg','nav-stats'].forEach(id => {
+  ['nav-home','nav-class','nav-atleti','nav-team','nav-cal','nav-risultati','nav-reg','nav-stats','nav-comp'].forEach(id => {
     document.getElementById(id)?.classList.remove('active');
   });
   if (hash === '#/' || hash === '#') document.getElementById('nav-home')?.classList.add('active');
@@ -331,7 +331,8 @@ function updateNavActive(hash) {
   else if (hash.startsWith('#/atleti')) document.getElementById('nav-atleti')?.classList.add('active');
   else if (hash.startsWith('#/team')) document.getElementById('nav-team')?.classList.add('active');
   else if (hash.startsWith('#/risultati')) document.getElementById('nav-risultati')?.classList.add('active');
-  else if (hash.startsWith('#/statistiche') || hash.startsWith('#/comparatore')) document.getElementById('nav-stats')?.classList.add('active');
+  else if (hash.startsWith('#/statistiche')) document.getElementById('nav-stats')?.classList.add('active');
+  else if (hash.startsWith('#/comparatore')) document.getElementById('nav-comp')?.classList.add('active');
   else if (hash.startsWith('#/admin')) document.getElementById('nav-admin')?.classList.add('active');
 }
 
@@ -1799,7 +1800,7 @@ async function renderStatistiche() {
   let activeRegTab = 'M';
   setPage(`
     <h1 style="font-family:var(--font-display);font-size:var(--size-h1);margin-bottom:8px">STATISTICHE</h1>
-    <p style="color:var(--text-muted);margin-bottom:28px">Stagione 2026 — <a href="#/comparatore" style="color:var(--red-hot);font-weight:700">⚔️ Vai al Comparatore →</a></p>
+    <p style="color:var(--text-muted);margin-bottom:28px">Stagione 2026</p>
 
     <!-- KPI -->
     <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(160px,1fr));gap:16px;margin-bottom:40px">
@@ -1867,7 +1868,235 @@ async function renderComparatore() {
   if (!globalData) return;
   const { resultsRaw, athletes, teams } = globalData;
 
-  const cats = [...new Set(resultsRaw.map(r=>r.categoria))].sort();
+  // Categorie disponibili per il genere selezionato
+  const availCats = [...new Set(
+    resultsRaw.filter(r => r.genere === compGender).map(r => r.categoria)
+  )].sort();
+
+  const catOpts = availCats.map(c =>
+    `<option value="${esc(c)}" ${c === compCat ? 'selected' : ''}>${esc(c)}</option>`
+  ).join('');
+
+  // ── ATLETI ──────────────────────────────────────────────────
+  const buildAthleteResult = () => {
+    // Filtra atleti per categoria e genere (usa i risultati per match)
+    const validIds = new Set(
+      resultsRaw
+        .filter(r => r.genere === compGender && (!compCat || r.categoria === compCat))
+        .map(r => r.atleta_id)
+    );
+    const filteredAthletes = Object.values(athletes)
+      .filter(a => validIds.has(a.id))
+      .sort((a, b) => (a.cognome || '').localeCompare(b.cognome || ''));
+
+    const aOpts = filteredAthletes.map(a =>
+      `<option value="${a.id}" ${a.id === compA ? 'selected' : ''}>${esc(a.cognome)} ${esc(a.nome)}</option>`
+    ).join('');
+    const bOpts = filteredAthletes.map(a =>
+      `<option value="${a.id}" ${a.id === compB ? 'selected' : ''}>${esc(a.cognome)} ${esc(a.nome)}</option>`
+    ).join('');
+
+    let resultHtml = '';
+    if (compA && compB && compA !== compB) {
+      const aData = athletes[compA], bData = athletes[compB];
+      if (aData && bData) {
+        const catFilter = r => r.genere === compGender && (!compCat || r.categoria === compCat);
+        const aRes = resultsRaw.filter(r => r.atleta_id === compA && catFilter(r));
+        const bRes = resultsRaw.filter(r => r.atleta_id === compB && catFilter(r));
+        const st = arr => ({
+          pts:  arr.reduce((s, r) => s + (r.punti_effettivi || 0), 0),
+          wins: arr.filter(r => r.posizione === 1).length,
+          podi: arr.filter(r => r.posizione <= 3).length,
+          gare: new Set(arr.map(r => r.gara_id)).size,
+          km:   Math.round(arr.reduce((s, r) => s + (parseFloat(r.km) || 0), 0)),
+          media: arr.filter(r => r.media).length
+            ? (arr.reduce((s, r) => s + (parseFloat(r.media) || 0), 0) / arr.filter(r => r.media).length).toFixed(1)
+            : '—',
+        });
+        const sA = st(aRes), sB = st(bRes);
+        resultHtml = compBars(aData.cognome, bData.cognome, sA, sB, 'atleta');
+      }
+    }
+
+    return `
+      <div style="display:flex;align-items:center;gap:16px;flex-wrap:wrap;margin-bottom:20px">
+        <div style="flex:1;min-width:200px">
+          <label class="comp-label">Atleta A</label>
+          <select class="cal-filter-select" style="width:100%" onchange="window.setCompA(this.value)">
+            <option value="">— Seleziona —</option>${aOpts}
+          </select>
+        </div>
+        <div style="font-family:var(--font-display);font-size:2.5rem;color:var(--red-hot);align-self:flex-end;padding-bottom:4px">VS</div>
+        <div style="flex:1;min-width:200px">
+          <label class="comp-label">Atleta B</label>
+          <select class="cal-filter-select" style="width:100%" onchange="window.setCompB(this.value)">
+            <option value="">— Seleziona —</option>${bOpts}
+          </select>
+        </div>
+      </div>
+      ${resultHtml || '<div style="text-align:center;padding:32px;color:var(--text-muted);font-style:italic">Seleziona due atleti per confrontarli</div>'}`;
+  };
+
+  // ── TEAM ────────────────────────────────────────────────────
+  const buildTeamResult = () => {
+    // Team attivi nella categoria/genere selezionati
+    const teamPts = {};
+    resultsRaw
+      .filter(r => r.genere === compGender && (!compCat || r.categoria === compCat))
+      .forEach(r => {
+        if (!r.team_id) return;
+        if (!teamPts[r.team_id]) teamPts[r.team_id] = { id: r.team_id, nome: r.team };
+      });
+    const filteredTeams = Object.values(teamPts).sort((a, b) => (a.nome || '').localeCompare(b.nome || ''));
+
+    const aOpts = filteredTeams.map(t =>
+      `<option value="${t.id}" ${t.id === compA ? 'selected' : ''}>${esc(t.nome)}</option>`
+    ).join('');
+    const bOpts = filteredTeams.map(t =>
+      `<option value="${t.id}" ${t.id === compB ? 'selected' : ''}>${esc(t.nome)}</option>`
+    ).join('');
+
+    let resultHtml = '';
+    if (compA && compB && compA !== compB) {
+      const aNome = filteredTeams.find(t => t.id === compA)?.nome || compA;
+      const bNome = filteredTeams.find(t => t.id === compB)?.nome || compB;
+      const catFilter = r => r.genere === compGender && (!compCat || r.categoria === compCat);
+      const aRes = resultsRaw.filter(r => r.team_id === compA && catFilter(r));
+      const bRes = resultsRaw.filter(r => r.team_id === compB && catFilter(r));
+      const st = arr => ({
+        pts:  arr.reduce((s, r) => s + (r.punti_effettivi || 0), 0),
+        wins: arr.filter(r => r.posizione === 1).length,
+        podi: arr.filter(r => r.posizione <= 3).length,
+        gare: new Set(arr.map(r => r.gara_id)).size,
+        km:   Math.round(arr.reduce((s, r) => s + (parseFloat(r.km) || 0), 0)),
+        atleti: new Set(arr.map(r => r.atleta_id)).size,
+      });
+      const sA = st(aRes), sB = st(bRes);
+      resultHtml = compBars(aNome, bNome, sA, sB, 'team');
+    }
+
+    return `
+      <div style="display:flex;align-items:center;gap:16px;flex-wrap:wrap;margin-bottom:20px">
+        <div style="flex:1;min-width:200px">
+          <label class="comp-label">Team A</label>
+          <select class="cal-filter-select" style="width:100%" onchange="window.setCompA(this.value)">
+            <option value="">— Seleziona —</option>${aOpts}
+          </select>
+        </div>
+        <div style="font-family:var(--font-display);font-size:2.5rem;color:var(--red-hot);align-self:flex-end;padding-bottom:4px">VS</div>
+        <div style="flex:1;min-width:200px">
+          <label class="comp-label">Team B</label>
+          <select class="cal-filter-select" style="width:100%" onchange="window.setCompB(this.value)">
+            <option value="">— Seleziona —</option>${bOpts}
+          </select>
+        </div>
+      </div>
+      ${resultHtml || '<div style="text-align:center;padding:32px;color:var(--text-muted);font-style:italic">Seleziona due team per confrontarli</div>'}`;
+  };
+
+  setPage(`
+    <h1 style="font-family:var(--font-display);font-size:var(--size-h1);margin-bottom:8px">COMPARATORE</h1>
+    <p style="color:var(--text-muted);margin-bottom:24px">Confronta atleti o team della stessa categoria e genere</p>
+
+    <!-- FILTRI -->
+    <div style="background:var(--bg-card);border:1px solid var(--border-subtle);border-radius:8px;padding:20px;margin-bottom:24px">
+      <div style="display:flex;gap:12px;flex-wrap:wrap;margin-bottom:20px">
+
+        <!-- Tab Atleti / Team -->
+        <div style="display:flex;gap:6px;align-items:center">
+          <button id="comp-tab-atleta" onclick="window.setCompMode('atleta')"
+            style="font-family:var(--font-heading);font-weight:700;font-size:0.85rem;padding:6px 18px;border-radius:20px;
+            border:1px solid ${compMode === 'atleta' ? 'var(--red-hot)' : 'var(--border-subtle)'};
+            background:${compMode === 'atleta' ? 'var(--red-hot)' : 'none'};
+            color:${compMode === 'atleta' ? '#fff' : 'var(--text-muted)'};cursor:pointer">
+            👤 Atleti
+          </button>
+          <button id="comp-tab-team" onclick="window.setCompMode('team')"
+            style="font-family:var(--font-heading);font-weight:700;font-size:0.85rem;padding:6px 18px;border-radius:20px;
+            border:1px solid ${compMode === 'team' ? 'var(--yellow-race)' : 'var(--border-subtle)'};
+            background:${compMode === 'team' ? 'var(--yellow-race)' : 'none'};
+            color:${compMode === 'team' ? '#000' : 'var(--text-muted)'};cursor:pointer">
+            🚴 Team
+          </button>
+        </div>
+
+        <!-- Genere -->
+        <div style="flex:1;min-width:140px">
+          <label class="comp-label">Genere</label>
+          <select class="cal-filter-select" style="width:100%" onchange="window.setCompGender(this.value)">
+            <option value="M" ${compGender === 'M' ? 'selected' : ''}>♂ Uomini</option>
+            <option value="F" ${compGender === 'F' ? 'selected' : ''}>♀ Donne</option>
+          </select>
+        </div>
+
+        <!-- Categoria -->
+        <div style="flex:2;min-width:200px">
+          <label class="comp-label">Categoria</label>
+          <select class="cal-filter-select" style="width:100%" onchange="window.setCompCat(this.value)">
+            <option value="">— Tutte —</option>${catOpts}
+          </select>
+        </div>
+      </div>
+
+      <!-- Selettori A vs B -->
+      <div id="comp-selectors">
+        ${compMode === 'atleta' ? buildAthleteResult() : buildTeamResult()}
+      </div>
+    </div>
+  `);
+
+  window.setCompMode   = v => { compMode = v; compA = ''; compB = ''; renderComparatore(); };
+  window.setCompGender = v => { compGender = v; compA = ''; compB = ''; renderComparatore(); };
+  window.setCompCat    = v => { compCat = v; compA = ''; compB = ''; renderComparatore(); };
+  window.setCompA      = v => { compA = v; renderComparatore(); };
+  window.setCompB      = v => { compB = v; renderComparatore(); };
+}
+
+function compBars(labelA, labelB, sA, sB, mode) {
+  const bar = (vA, vB, label, fmt = '') => {
+    const tot = (parseFloat(vA) || 0) + (parseFloat(vB) || 0) || 1;
+    const pA = Math.round((parseFloat(vA) || 0) / tot * 100);
+    const winsA = pA > 50;
+    return `
+      <div style="margin:14px 0">
+        <div style="font-family:var(--font-heading);font-size:0.7rem;text-transform:uppercase;letter-spacing:0.1em;color:var(--text-muted);margin-bottom:5px">${label}</div>
+        <div style="display:flex;align-items:center;gap:10px">
+          <span style="font-family:var(--font-display);font-size:${winsA ? '1.6' : '1.3'}rem;color:var(--red-hot);min-width:90px;text-align:right">${vA}${fmt}</span>
+          <div style="flex:1;height:12px;border-radius:6px;overflow:hidden;display:flex">
+            <div style="width:${pA}%;background:var(--red-hot);transition:width 0.7s ease"></div>
+            <div style="width:${100 - pA}%;background:var(--cat-juniores);transition:width 0.7s ease"></div>
+          </div>
+          <span style="font-family:var(--font-display);font-size:${!winsA ? '1.6' : '1.3'}rem;color:var(--cat-juniores);min-width:90px">${vB}${fmt}</span>
+        </div>
+      </div>`;
+  };
+
+  const extraRow = mode === 'team'
+    ? bar(sA.atleti, sB.atleti, 'Atleti Schierati')
+    : `<div style="margin-top:14px;display:flex;justify-content:space-between;align-items:center">
+         <span style="font-family:var(--font-display);font-size:1.5rem;color:var(--red-hot)">${sA.media} km/h</span>
+         <span style="font-family:var(--font-heading);font-size:0.7rem;text-transform:uppercase;color:var(--text-muted)">Velocità Media</span>
+         <span style="font-family:var(--font-display);font-size:1.5rem;color:var(--cat-juniores)">${sB.media} km/h</span>
+       </div>`;
+
+  return `
+    <div style="display:grid;grid-template-columns:1fr 1fr;border:1px solid var(--border-subtle);border-radius:8px 8px 0 0;overflow:hidden;margin-top:16px">
+      <div style="padding:16px 20px;background:rgba(232,0,29,0.07);border-right:1px solid var(--border-subtle)">
+        <div style="font-family:var(--font-display);font-size:1.8rem;color:var(--red-hot);line-height:1.1">${esc(labelA)}</div>
+      </div>
+      <div style="padding:16px 20px;background:rgba(16,185,129,0.07)">
+        <div style="font-family:var(--font-display);font-size:1.8rem;color:var(--cat-juniores);line-height:1.1">${esc(labelB)}</div>
+      </div>
+    </div>
+    <div style="border:1px solid var(--border-subtle);border-top:none;border-radius:0 0 8px 8px;padding:20px;background:var(--bg-card)">
+      ${bar(sA.pts, sB.pts, 'Punti Totali', ' pt')}
+      ${bar(sA.wins, sB.wins, 'Vittorie')}
+      ${bar(sA.podi, sB.podi, 'Podi (Top 3)')}
+      ${bar(sA.gare, sB.gare, 'Gare Disputate')}
+      ${bar(sA.km, sB.km, 'Km Percorsi', ' km')}
+      ${extraRow}
+    </div>`;
+}  const cats = [...new Set(resultsRaw.map(r=>r.categoria))].sort();
   const catOpts = cats.map(c=>`<option value="${esc(c)}" ${c===compCat?'selected':''}>${esc(c)}</option>`).join('');
 
   const filteredAthletes = Object.values(athletes)
