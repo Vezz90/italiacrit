@@ -481,6 +481,12 @@ async function renderHome() {
 }
 
 // ── CLASSIFICA ────────────────────────────────────────────────
+window.navigateToRank = (cat, gender) => {
+  rankGender = gender;
+  rankCat = cat;
+  rankFilter = '';
+};
+
 let rankGender = 'M';
 let rankCat    = 'ES1_M';
 let rankFilter = '';
