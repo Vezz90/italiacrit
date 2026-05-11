@@ -585,7 +585,8 @@ async def run_cycle():
         except Exception as e:
             print(f"Errore caricamento risultati: {e}, inizio da zero.")
 
-    existing_ids = {r["gara_id"] for r in all_results}
+    # NON riempiamo existing_ids con le vecchie gare, altrimenti le gare aggiornate verrebbero ignorate!
+    existing_ids = set()
     races_map = {}
     
     # Ricostruisce races_map dai risultati esistenti
@@ -605,6 +606,11 @@ async def run_cycle():
         if not soup: continue
 
         new_results = parse_risultati_page(soup, cal_by_date, existing_ids)
+        
+        # Rimuove i vecchi risultati per le gare appena scaricate (così da aggiornare chi è stato inserito in un secondo momento)
+        new_gara_ids = {r["gara_id"] for r in new_results}
+        all_results = [r for r in all_results if r["gara_id"] not in new_gara_ids]
+        
         all_results.extend(new_results)
         for res in new_results:
             gid = res["gara_id"]

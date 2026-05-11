@@ -1,6 +1,6 @@
 [
   {
-    "team_id": "UAE_TEAM_ADQ_F",
+    "team_id": "UAE_TEAM_ADQ",
     "team_nome": "UAE TEAM ADQ",
     "punti": 270,
     "vittorie": 2,
@@ -12,7 +12,7 @@
     "pos": 1
   },
   {
-    "team_id": "ISOLMANT_PREMAC_VITTORIA_F",
+    "team_id": "ISOLMANT_PREMAC_VITTORIA",
     "team_nome": "ISOLMANT - PREMAC - VITTORIA",
     "punti": 138,
     "vittorie": 2,
@@ -24,7 +24,7 @@
     "pos": 2
   },
   {
-    "team_id": "FDJ_UNITED_SUEZ_F",
+    "team_id": "FDJ_UNITED_SUEZ",
     "team_nome": "FDJ UNITED - SUEZ",
     "punti": 114,
     "vittorie": 1,
@@ -36,7 +36,7 @@
     "pos": 3
   },
   {
-    "team_id": "TOP_GIRLS_FASSA_BORTOLO_F",
+    "team_id": "TOP_GIRLS_FASSA_BORTOLO",
     "team_nome": "TOP GIRLS - FASSA BORTOLO",
     "punti": 90,
     "vittorie": 1,
@@ -48,7 +48,7 @@
     "pos": 4
   },
   {
-    "team_id": "NEXETIS_TEAM_F",
+    "team_id": "NEXETIS_TEAM",
     "team_nome": "NEXETIS TEAM",
     "punti": 87,
     "vittorie": 1,
@@ -60,7 +60,7 @@
     "pos": 5
   },
   {
-    "team_id": "FENIX_PREMIER_TECH_F",
+    "team_id": "FENIX_PREMIER_TECH",
     "team_nome": "FENIX-PREMIER TECH",
     "punti": 78,
     "vittorie": 0,
@@ -72,7 +72,7 @@
     "pos": 6
   },
   {
-    "team_id": "LIDL_TREK_F",
+    "team_id": "LIDL_TREK",
     "team_nome": "LIDL - TREK",
     "punti": 72,
     "vittorie": 0,
@@ -84,7 +84,7 @@
     "pos": 7
   },
   {
-    "team_id": "EF_EDUCATION_OATLY_F",
+    "team_id": "EF_EDUCATION_OATLY",
     "team_nome": "EF EDUCATION OATLY",
     "punti": 66,
     "vittorie": 0,
@@ -96,7 +96,7 @@
     "pos": 8
   },
   {
-    "team_id": "BIESSE_CARRERA_PREMAC_F",
+    "team_id": "BIESSE_CARRERA_PREMAC",
     "team_nome": "BIESSE - CARRERA - PREMAC",
     "punti": 63,
     "vittorie": 1,
@@ -108,7 +108,7 @@
     "pos": 9
   },
   {
-    "team_id": "TEAM_VISMA_LEASE_A_BIKE_F",
+    "team_id": "TEAM_VISMA_LEASE_A_BIKE",
     "team_nome": "TEAM VISMA LEASE A BIKE",
     "punti": 63,
     "vittorie": 0,
@@ -120,7 +120,7 @@
     "pos": 10
   },
   {
-    "team_id": "AROMITALIA_VAIANO_F",
+    "team_id": "AROMITALIA_VAIANO",
     "team_nome": "AROMITALIA VAIANO",
     "punti": 61,
     "vittorie": 1,
@@ -132,7 +132,7 @@
     "pos": 11
   },
   {
-    "team_id": "TEAM_SD_WORX_PROTIME_F",
+    "team_id": "TEAM_SD_WORX_PROTIME",
     "team_nome": "TEAM SD WORX-PROTIME",
     "punti": 60,
     "vittorie": 1,
@@ -144,7 +144,7 @@
     "pos": 12
   },
   {
-    "team_id": "TOYOTA_VALENCIA_SAV_F",
+    "team_id": "TOYOTA_VALENCIA_SAV",
     "team_nome": "TOYOTA VALENCIA SAV",
     "punti": 58,
     "vittorie": 2,
@@ -156,7 +156,7 @@
     "pos": 13
   },
   {
-    "team_id": "UAE_DEVELOPMENT_TEAM_F",
+    "team_id": "UAE_DEVELOPMENT_TEAM",
     "team_nome": "UAE DEVELOPMENT TEAM",
     "punti": 39,
     "vittorie": 0,
@@ -168,7 +168,7 @@
     "pos": 14
   },
   {
-    "team_id": "CANYON_SRAM_ZONDACRYPTO_F",
+    "team_id": "CANYON_SRAM_ZONDACRYPTO",
     "team_nome": "CANYON SRAM ZONDACRYPTO",
     "punti": 39,
     "vittorie": 0,
@@ -180,19 +180,7 @@
     "pos": 15
   },
   {
-    "team_id": "PETRUCCI_GAUSS_CYCLING_TEAM_F",
-    "team_nome": "PETRUCCI GAUSS CYCLING TEAM",
-    "punti": 30,
-    "vittorie": 0,
-    "p1": 0,
-    "p2": 0,
-    "p3": 0,
-    "pout": 4,
-    "n_atleti": 2,
-    "pos": 16
-  },
-  {
-    "team_id": "TEAM_MENDELSPECK_E_WORK_F",
+    "team_id": "TEAM_MENDELSPECK_E_WORK",
     "team_nome": "TEAM MENDELSPECK E-WORK",
     "punti": 30,
     "vittorie": 0,
@@ -201,10 +189,22 @@
     "p3": 1,
     "pout": 2,
     "n_atleti": 2,
+    "pos": 16
+  },
+  {
+    "team_id": "PETRUCCI_GAUSS_CYCLING_TEAM",
+    "team_nome": "PETRUCCI GAUSS CYCLING TEAM",
+    "punti": 30,
+    "vittorie": 0,
+    "p1": 0,
+    "p2": 0,
+    "p3": 0,
+    "pout": 4,
+    "n_atleti": 2,
     "pos": 17
   },
   {
-    "team_id": "TORELLI_CYCLING_TEAM_F",
+    "team_id": "TORELLI_CYCLING_TEAM",
     "team_nome": "TORELLI CYCLING TEAM",
     "punti": 29,
     "vittorie": 0,
@@ -216,7 +216,7 @@
     "pos": 18
   },
   {
-    "team_id": "HORIZONS_CYCLING_CLUB_F",
+    "team_id": "HORIZONS_CYCLING_CLUB",
     "team_nome": "HORIZONS CYCLING CLUB",
     "punti": 28,
     "vittorie": 0,
@@ -228,7 +228,7 @@
     "pos": 19
   },
   {
-    "team_id": "VINI_FANTINI_BEPINK_F",
+    "team_id": "VINI_FANTINI_BEPINK",
     "team_nome": "VINI FANTINI - BEPINK",
     "punti": 25,
     "vittorie": 0,
@@ -240,7 +240,7 @@
     "pos": 20
   },
   {
-    "team_id": "ZHIRAF_F",
+    "team_id": "ZHIRAF",
     "team_nome": "ZHIRAF",
     "punti": 24,
     "vittorie": 0,
@@ -252,7 +252,7 @@
     "pos": 21
   },
   {
-    "team_id": "BORN_TO_WIN_F",
+    "team_id": "BORN_TO_WIN",
     "team_nome": "BORN TO WIN",
     "punti": 21,
     "vittorie": 0,
@@ -264,7 +264,7 @@
     "pos": 22
   },
   {
-    "team_id": "LIV_ALULA_JAYCO_F",
+    "team_id": "LIV_ALULA_JAYCO",
     "team_nome": "LIV-ALULA JAYCO",
     "punti": 21,
     "vittorie": 0,
@@ -276,7 +276,7 @@
     "pos": 23
   },
   {
-    "team_id": "TIROL_WOMEN_CYCLING_F",
+    "team_id": "TIROL_WOMEN_CYCLING",
     "team_nome": "TIROL WOMEN CYCLING",
     "punti": 19,
     "vittorie": 0,
@@ -288,7 +288,7 @@
     "pos": 24
   },
   {
-    "team_id": "WCC_UCI_WORLD_CYCLING_CENTRE_F",
+    "team_id": "WCC_UCI_WORLD_CYCLING_CENTRE",
     "team_nome": "WCC - UCI WORLD CYCLING CENTRE",
     "punti": 17,
     "vittorie": 0,
@@ -300,7 +300,7 @@
     "pos": 25
   },
   {
-    "team_id": "AR_MONEX_WMN_PRO_CYCLING_TEAM_F",
+    "team_id": "AR_MONEX_WMN_PRO_CYCLING_TEAM",
     "team_nome": "AR MONEX WMN PRO CYCLING TEAM",
     "punti": 10,
     "vittorie": 0,
@@ -312,7 +312,7 @@
     "pos": 26
   },
   {
-    "team_id": "BRESCIA_F_MAGNI_FLANDRES_LOVE_F",
+    "team_id": "BRESCIA_F_MAGNI_FLANDRES_LOVE",
     "team_nome": "BRESCIA - F. MAGNI - FLANDRES LOVE",
     "punti": 10,
     "vittorie": 0,
@@ -324,7 +324,7 @@
     "pos": 27
   },
   {
-    "team_id": "UNO_X_MOBILITY_F",
+    "team_id": "UNO_X_MOBILITY",
     "team_nome": "UNO-X MOBILITY",
     "punti": 9,
     "vittorie": 0,
@@ -336,7 +336,7 @@
     "pos": 28
   },
   {
-    "team_id": "A_R_MONEX_PRO_CYCLING_TEAM_F",
+    "team_id": "A_R_MONEX_PRO_CYCLING_TEAM",
     "team_nome": "A.R.MONEX PRO CYCLING TEAM",
     "punti": 6,
     "vittorie": 0,
@@ -348,7 +348,7 @@
     "pos": 29
   },
   {
-    "team_id": "FANINI_PRO_CYCLING_F",
+    "team_id": "FANINI_PRO_CYCLING",
     "team_nome": "FANINI PRO CYCLING",
     "punti": 4,
     "vittorie": 0,
@@ -360,7 +360,7 @@
     "pos": 30
   },
   {
-    "team_id": "NAZIONALE_UCRAINA_F",
+    "team_id": "NAZIONALE_UCRAINA",
     "team_nome": "NAZIONALE UCRAINA",
     "punti": 2,
     "vittorie": 0,
@@ -372,7 +372,7 @@
     "pos": 31
   },
   {
-    "team_id": "A_S_D_CLUB_CORRIDONIA_S_C_F",
+    "team_id": "A_S_D_CLUB_CORRIDONIA_S_C",
     "team_nome": "A.S.D. CLUB CORRIDONIA S.C.",
     "punti": 1,
     "vittorie": 0,
