@@ -1216,7 +1216,14 @@ async function renderTeam(team_id) {
     const c = getRankingFileCode(r) || r.categoria;
     if(c) catPoints[c] = (catPoints[c]||0) + (r.punti_effettivi||0);
   });
-  const teamCats = Object.keys(catPoints).sort((a,b) => catPoints[b] - catPoints[a]);
+  const SORT_ORDER = ['ES1_M','ES1_F','ES2_M','ES2_F','AL_M','AL_F','JUN_M','JUN_F','ELI_M','ELI_F'];
+  const teamCats = Object.keys(catPoints).sort((a,b) => {
+    let ia = SORT_ORDER.indexOf(a);
+    let ib = SORT_ORDER.indexOf(b);
+    if(ia === -1) ia = 99;
+    if(ib === -1) ib = 99;
+    return ia - ib;
+  });
   
   if (!teamViewCat || !teamCats.includes(teamViewCat)) {
     teamViewCat = teamCats[0] || '';
