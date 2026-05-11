@@ -1187,6 +1187,9 @@ window.hideSparkTip = () => {
   document.getElementById('sparkline-tooltip').style.display = 'none';
 };
 
+let teamViewCat = '';
+let teamViewId = '';
+
 // ── TEAM ──────────────────────────────────────────────────────
 async function renderTeam(team_id) {
   if (!globalData) return;
@@ -1195,16 +1198,56 @@ async function renderTeam(team_id) {
   const t = teams[team_id];
   if (!t) return renderNotFound();
 
-  // Atleti con punti
-  const atletiList = (t.atleti || [])
-    .map(id => ({ id, ...athletes[id] }))
-    .filter(a => a.punti_totali > 0)
-    .sort((a,b) => (b.punti_totali||0) - (a.punti_totali||0));
+  // Reset category view if switching team
+  if (teamViewId !== team_id) {
+    teamViewId = team_id;
+    teamViewCat = '';
+  }
 
-  const p1 = (t.risultati||[]).filter(r=>r.posizione===1).length;
-  const p2 = (t.risultati||[]).filter(r=>r.posizione===2).length;
-  const p3 = (t.risultati||[]).filter(r=>r.posizione===3).length;
-  const pout = (t.risultati||[]).filter(r=>r.posizione>=4 && r.posizione<=10).length;
+  // Find all distinct categories this team participated in
+  const catPoints = {};
+  (t.risultati||[]).forEach(r => {
+    const c = getRankingFileCode(r) || r.categoria;
+    if(c) catPoints[c] = (catPoints[c]||0) + (r.punti_effettivi||0);
+  });
+  const teamCats = Object.keys(catPoints).sort((a,b) => catPoints[b] - catPoints[a]);
+  
+  if (!teamViewCat || !teamCats.includes(teamViewCat)) {
+    teamViewCat = teamCats[0] || '';
+  }
+
+  const catRisultati = (t.risultati||[]).filter(r => (getRankingFileCode(r) || r.categoria) === teamViewCat);
+  const catPuntiTotali = catRisultati.reduce((sum, r) => sum + (r.punti_effettivi||0), 0);
+
+  window.setTeamCat = (cat) => {
+    teamViewCat = cat;
+    renderTeam(team_id);
+  };
+
+  const catTabsHtml = teamCats.length > 1 ? `
+    <div class="tab-group" role="tablist" style="margin-top:24px; margin-bottom: 24px; display: flex; flex-wrap: wrap; gap: 8px;">
+      ${teamCats.map(c => `
+        <button class="tab-btn ${teamViewCat===c?'active-cat':''}" onclick="setTeamCat('${c}')">${catLabel(c)}</button>
+      `).join('')}
+    </div>
+  ` : '';
+
+  // Atleti con punti (nella categoria selezionata)
+  const atletiMap = {};
+  catRisultati.forEach(r => {
+    if (!atletiMap[r.atleta_id]) {
+      atletiMap[r.atleta_id] = { id: r.atleta_id, ...athletes[r.atleta_id], puntiCat: 0 };
+    }
+    atletiMap[r.atleta_id].puntiCat += (r.punti_effettivi||0);
+  });
+  const atletiList = Object.values(atletiMap)
+    .filter(a => a.puntiCat > 0)
+    .sort((a,b) => b.puntiCat - a.puntiCat);
+
+  const p1 = catRisultati.filter(r=>r.posizione===1).length;
+  const p2 = catRisultati.filter(r=>r.posizione===2).length;
+  const p3 = catRisultati.filter(r=>r.posizione===3).length;
+  const pout = catRisultati.filter(r=>r.posizione>=4 && r.posizione<=10).length;
 
   const atletiRows = atletiList.map((a,i) => `
     <div class="cat-card-row">
@@ -1213,10 +1256,10 @@ async function renderTeam(team_id) {
         <div class="cat-rider-name"><a href="#/atleta/${esc(a.id)}">${esc(a.cognome)} ${esc(a.nome)}</a></div>
         <div class="cat-rider-team">${catLabel(a.categoria||'')}</div>
       </div>
-      <span class="cat-pts">${a.punti_totali||0}</span>
+      <span class="cat-pts">${a.puntiCat||0}</span>
     </div>`).join('');
 
-  const risultatiRows = (t.risultati||[])
+  const risultatiRows = catRisultati
     .sort((a,b) => (b.data||'').localeCompare(a.data||''))
     .slice(0, 30)
     .map(r => {
@@ -1246,15 +1289,18 @@ async function renderTeam(team_id) {
   const topC = tCatRanks.sort((a,b)=>b.pts - a.pts)[0];
 
   // Header stats
+  const currentRank = tCatRanks.find(rk => rk.cat === teamViewCat);
+  const rankHtml = currentRank ? `
+      <div class="team-stat" style="border-right:1px solid var(--border-subtle); padding-right:16px; margin-right:6px">
+        <span class="team-stat-val" style="color:var(--accent)">${currentRank.pos}°</span>
+        <span class="team-stat-label">Cl. Gen. ${catLabel(teamViewCat)}</span>
+      </div>` : '';
+
   const headerStats = `
     <div class="team-stats-row">
-      ${tCatRanks.map(rk => `
-      <div class="team-stat" style="border-right:1px solid var(--border-subtle); padding-right:16px; margin-right:6px">
-        <span class="team-stat-val" style="color:var(--accent)">${rk.pos}°</span>
-        <span class="team-stat-label">Cl. Gen. ${catLabel(rk.cat)}</span>
-      </div>`).join('')}
+      ${rankHtml}
       <div class="team-stat">
-        <span class="team-stat-val">${t.punti_totali||0}</span>
+        <span class="team-stat-val">${catPuntiTotali}</span>
         <span class="team-stat-label">Punti Stagionali</span>
       </div>
       <div class="team-stat">
@@ -1286,6 +1332,7 @@ async function renderTeam(team_id) {
         ${headerStats}
       </div>
     </div>
+    ${catTabsHtml}
     <div class="section-header">
       <span class="section-title">ATLETI</span>
       <span class="section-line"></span>
