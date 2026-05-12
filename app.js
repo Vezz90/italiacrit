@@ -46,12 +46,13 @@ async function loadJson(path) {
 
 // Preload tutto in parallelo
 async function loadAll() {
-  const [calendar, resultsRaw, athletes, teams, meta] = await Promise.all([
+  const [calendar, resultsRaw, athletes, teams, meta, raceDetails] = await Promise.all([
     loadJson('data/calendar.json'),
     loadJson('data/results_raw.json'),
     loadJson('data/athletes.json'),
     loadJson('data/teams.json'),
     loadJson('data/meta.json'),
+    loadJson('data/race_details.json'),
   ]);
 
   // Indicizzazione per calcolo trend rapidi
@@ -81,6 +82,7 @@ async function loadAll() {
     athletes: athletes || {}, 
     teams: teams || {}, 
     meta: meta || {},
+    raceDetails: raceDetails || {},
     resultsByAtleta,
     resultsByTeam
   };
@@ -1408,6 +1410,20 @@ async function renderGara(gara_id) {
     </tr>`;
   }).join('');
 
+  let detailsHtml = '';
+  if (globalData.raceDetails && globalData.raceDetails[gara_id] && globalData.raceDetails[gara_id].info) {
+    const infoBlocks = globalData.raceDetails[gara_id].info.map(t => `<div style="margin-bottom:8px; font-size:0.9rem; color:var(--text-secondary); line-height:1.5;">${t}</div>`).join('');
+    detailsHtml = `
+      <div class="card" style="margin-top:24px; padding:24px;">
+        <h3 style="margin-top:0; margin-bottom:16px; font-size:1.1rem; color:var(--primary);">Informazioni e Dettagli Tecnici</h3>
+        ${infoBlocks}
+        <div style="margin-top:16px;">
+          <a href="${esc(globalData.raceDetails[gara_id].fci_url)}" target="_blank" class="btn-action" style="font-size:0.8rem; display:inline-block;">VAI ALLA SCHEDA FCI &rarr;</a>
+        </div>
+      </div>
+    `;
+  }
+
   setPage(`
     <div class="race-header">
       <div class="race-name-display">${esc(name)}</div>
@@ -1431,6 +1447,7 @@ async function renderGara(gara_id) {
         <tbody>${tableRows || '<tr><td colspan="7" class="empty-state">Nessuna classifica disponibile</td></tr>'}</tbody>
       </table>
     </div>
+    ${detailsHtml}
   `);
 }
 
