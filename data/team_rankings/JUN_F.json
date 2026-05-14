@@ -1,6 +1,6 @@
 [
   {
-    "team_id": "BIESSE_CARRERA_PREMAC_F",
+    "team_id": "BIESSE_CARRERA_PREMAC",
     "team_nome": "BIESSE - CARRERA - PREMAC",
     "punti": 247,
     "vittorie": 2,
@@ -12,7 +12,7 @@
     "pos": 1
   },
   {
-    "team_id": "BFT_BURZONI_F",
+    "team_id": "BFT_BURZONI",
     "team_nome": "BFT BURZONI",
     "punti": 185,
     "vittorie": 4,
@@ -24,7 +24,7 @@
     "pos": 2
   },
   {
-    "team_id": "BREGANZE_MILLENIUM_F",
+    "team_id": "BREGANZE_MILLENIUM",
     "team_nome": "BREGANZE MILLENIUM",
     "punti": 137,
     "vittorie": 3,
@@ -36,7 +36,7 @@
     "pos": 3
   },
   {
-    "team_id": "LIBERTAS_CERESETTO_F",
+    "team_id": "LIBERTAS_CERESETTO",
     "team_nome": "LIBERTAS CERESETTO",
     "punti": 133,
     "vittorie": 0,
@@ -48,7 +48,7 @@
     "pos": 4
   },
   {
-    "team_id": "PETRUCCI_GAUSS_CYCLING_TEAM_F",
+    "team_id": "PETRUCCI_GAUSS_CYCLING_TEAM",
     "team_nome": "PETRUCCI GAUSS CYCLING TEAM",
     "punti": 105,
     "vittorie": 3,
@@ -60,7 +60,7 @@
     "pos": 5
   },
   {
-    "team_id": "BRESCIA_F_MAGNI_FLANDRES_LOVE_F",
+    "team_id": "BRESCIA_F_MAGNI_FLANDRES_LOVE",
     "team_nome": "BRESCIA - F. MAGNI - FLANDRES LOVE",
     "punti": 102,
     "vittorie": 0,
@@ -72,7 +72,7 @@
     "pos": 6
   },
   {
-    "team_id": "CICLISTICA_OMNIA_IMOLA_F",
+    "team_id": "CICLISTICA_OMNIA_IMOLA",
     "team_nome": "CICLISTICA OMNIA IMOLA",
     "punti": 63,
     "vittorie": 0,
@@ -84,7 +84,7 @@
     "pos": 7
   },
   {
-    "team_id": "A_R_MONEX_PRO_CYCLING_TEAM_F",
+    "team_id": "A_R_MONEX_PRO_CYCLING_TEAM",
     "team_nome": "A.R.MONEX PRO CYCLING TEAM",
     "punti": 54,
     "vittorie": 1,
@@ -96,7 +96,7 @@
     "pos": 8
   },
   {
-    "team_id": "U_C_CONSCIO_PEDALE_DEL_SILE_F",
+    "team_id": "U_C_CONSCIO_PEDALE_DEL_SILE",
     "team_nome": "U.C.CONSCIO PEDALE DEL SILE",
     "punti": 53,
     "vittorie": 2,
@@ -108,7 +108,7 @@
     "pos": 9
   },
   {
-    "team_id": "AIRTOX_CARL_RAS_F",
+    "team_id": "AIRTOX_CARL_RAS",
     "team_nome": "AIRTOX - CARL RAS",
     "punti": 51,
     "vittorie": 0,
@@ -120,7 +120,7 @@
     "pos": 10
   },
   {
-    "team_id": "PC_BAIX_EBRE_TORTOSA_F",
+    "team_id": "PC_BAIX_EBRE_TORTOSA",
     "team_nome": "PC BAIX EBRE TORTOSA",
     "punti": 37,
     "vittorie": 0,
@@ -132,7 +132,7 @@
     "pos": 11
   },
   {
-    "team_id": "TEAM_WILIER_BREGANZE_F",
+    "team_id": "TEAM_WILIER_BREGANZE",
     "team_nome": "TEAM WILIER BREGANZE",
     "punti": 32,
     "vittorie": 0,
@@ -144,7 +144,7 @@
     "pos": 12
   },
   {
-    "team_id": "GROUWELS_WATERSLEY_R_D_F",
+    "team_id": "GROUWELS_WATERSLEY_R_D",
     "team_nome": "GROUWELS - WATERSLEY R&D",
     "punti": 30,
     "vittorie": 0,
@@ -156,7 +156,7 @@
     "pos": 13
   },
   {
-    "team_id": "CAMS_MAJACO_F",
+    "team_id": "CAMS_MAJACO",
     "team_nome": "CAMS MAJACO",
     "punti": 24,
     "vittorie": 0,
@@ -168,7 +168,7 @@
     "pos": 14
   },
   {
-    "team_id": "ZHIRAF_F",
+    "team_id": "ZHIRAF",
     "team_nome": "ZHIRAF",
     "punti": 19,
     "vittorie": 0,
@@ -180,7 +180,7 @@
     "pos": 15
   },
   {
-    "team_id": "REPUBBLICA_CECA_F",
+    "team_id": "REPUBBLICA_CECA",
     "team_nome": "REPUBBLICA CECA",
     "punti": 18,
     "vittorie": 0,
@@ -192,7 +192,7 @@
     "pos": 16
   },
   {
-    "team_id": "SPAGNA_F",
+    "team_id": "SPAGNA",
     "team_nome": "SPAGNA",
     "punti": 9,
     "vittorie": 0,
@@ -204,7 +204,7 @@
     "pos": 17
   },
   {
-    "team_id": "TEAM_MENDELSPECK_E_WORK_F",
+    "team_id": "TEAM_MENDELSPECK_E_WORK",
     "team_nome": "TEAM MENDELSPECK E-WORK",
     "punti": 5,
     "vittorie": 0,
@@ -216,7 +216,7 @@
     "pos": 18
   },
   {
-    "team_id": "POLISH_CYCLING_FEDERATION_F",
+    "team_id": "POLISH_CYCLING_FEDERATION",
     "team_nome": "POLISH CYCLING FEDERATION",
     "punti": 4,
     "vittorie": 0,
@@ -228,7 +228,7 @@
     "pos": 19
   },
   {
-    "team_id": "GIFU_DAIICHI_HIGH_SCHOOL_F",
+    "team_id": "GIFU_DAIICHI_HIGH_SCHOOL",
     "team_nome": "GIFU DAIICHI HIGH SCHOOL",
     "punti": 3,
     "vittorie": 0,
@@ -240,7 +240,7 @@
     "pos": 20
   },
   {
-    "team_id": "FRANCIA_F",
+    "team_id": "FRANCIA",
     "team_nome": "FRANCIA",
     "punti": 3,
     "vittorie": 0,
