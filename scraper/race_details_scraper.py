@@ -76,11 +76,41 @@ def extract_race_details(raceid):
                 info_utili.append(clean_block)
                 
     # Uniamo tutte le info in un formato leggibile
-    # Cerchiamo di dare un po' di struttura, ma per ora teniamo un array di testi rilevanti
+    # Filtro social e spazzatura
+    cleaned_info = []
+    for blk in info_utili:
+        if "BICIMPARO" in blk or "Twitter feed" in blk or "Retweet on Twitter" in blk:
+            continue
+        blk = blk.replace("Home / Ricerca Gare / Dettaglio Gara / Dettaglio Gara", "")
+        blk = blk.replace("📅 AGGIUNGI QUESTA GARA AL CALENDARIO", "")
+        
+        # Inserisci <b> prima dei label noti
+        labels = [
+            'Località:', 'Provincia:', 'Categoria:', 'Categorie Ammesse:', 'Categoria Geografica:',
+            'Specifica Gara:', 'Tipo di Gara:', 'Tipo di Programma:', 'Direttore di Corsa:', 
+            'Vice Direttore di Corsa:', 'Approvazione:', 'Nome:', 'Indirizzo:', 'CAP:', 'Città:', 
+            'Telefono:', 'Email:', 'Luogo:', 'Iscrizioni Dal - Al:', 'Tipo:', 'Prova:', 'Data:', 
+            'Descrizione:', 'Luogo Ritrovo:', 'Indirizzo Ritrovo:', 'Orario Ritrovo:', 
+            'Luogo Partenza:', 'Orario Partenza:', 'Luogo Arrivo:', 'Orario Arrivo:', 
+            'Luogo Verifica:', 'Punto Incontro DS:', 'Lunghezza KM:', 'Note:'
+        ]
+        
+        for lbl in labels:
+            blk = re.sub(rf'\b({lbl})', r'<br><b>\1</b>', blk)
+            
+        blk = re.sub(r'<br>\s*<br>', '<br>', blk)
+        cleaned_info.append(blk.strip())
+
+    if cleaned_info:
+        best_block = max(cleaned_info, key=len)
+        final_info = [best_block]
+    else:
+        final_info = []
+
     return {
         "raceid": raceid,
         "fci_url": url,
-        "info": info_utili
+        "info": final_info
     }
 
 def scrape_all_details():

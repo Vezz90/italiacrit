@@ -1412,7 +1412,14 @@ async function renderGara(gara_id) {
 
   let detailsHtml = '';
   if (globalData.raceDetails && globalData.raceDetails[gara_id] && globalData.raceDetails[gara_id].info) {
-    const infoBlocks = globalData.raceDetails[gara_id].info.map(t => `<div style="margin-bottom:8px; font-size:0.9rem; color:var(--text-secondary); line-height:1.5;">${t}</div>`).join('');
+    const infoBlocks = globalData.raceDetails[gara_id].info.map(t => {
+      let ft = t
+        .replace(/(INFORMAZIONI GENERALI)/g, '<strong style="color:var(--primary); font-size:1.05rem; display:block; margin-top:12px; margin-bottom:6px;">$1</strong>')
+        .replace(/(ORGANIZZATORE)/g, '<strong style="color:var(--primary); font-size:1.05rem; display:block; margin-top:20px; margin-bottom:6px;">$1</strong>')
+        .replace(/(ISCRIZIONI)/g, '<strong style="color:var(--primary); font-size:1.05rem; display:block; margin-top:20px; margin-bottom:6px;">$1</strong>')
+        .replace(/(RITROVO PROVE( \d+)?|RITROVO)/g, '<strong style="color:var(--primary); font-size:1.05rem; display:block; margin-top:20px; margin-bottom:6px;">$1 E PERCORSO</strong>');
+      return `<div style="margin-bottom:8px; font-size:0.9rem; color:var(--text-secondary); line-height:1.6;">${ft}</div>`;
+    }).join('');
     detailsHtml = `
       <div class="card" style="margin-top:24px; padding:24px;">
         <h3 style="margin-top:0; margin-bottom:16px; font-size:1.1rem; color:var(--primary);">Informazioni e Dettagli Tecnici</h3>
