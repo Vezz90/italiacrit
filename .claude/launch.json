@@ -1,0 +1,11 @@
+{
+  "version": "0.0.1",
+  "configurations": [
+    {
+      "name": "italiacrit",
+      "runtimeExecutable": "npx",
+      "runtimeArgs": ["serve", "-l", "8001", "."],
+      "port": 8001
+    }
+  ]
+}
