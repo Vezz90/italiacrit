@@ -1720,8 +1720,8 @@ async function renderTeam(team_id) {
   const teamInitials = t.nome.split(/\s+/).map(w=>w[0]||'').join('').toUpperCase().slice(0,3);
   const teamPhotoHtml = photoAreaHtml('team', team_id, teamOv.photo_url || null, teamInitials, 'square');
 
-  setPage(`
   window._shareTeamData = {nome:t.nome,cat:catLabel(teamViewCat),punti:catPuntiTotali,pos:currentRank?currentRank.pos:null,p1:p1,atleti:atletiList.slice(0,5)};
+  setPage(`
     <div class="team-header">
       <div style="display:flex;gap:20px;align-items:center">
         ${teamPhotoHtml}
