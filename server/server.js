@@ -238,6 +238,27 @@ app.get('/api/admin/gara-overrides/:gara_id', requireAdmin, (req, res) => {
   res.json({ overrides: queries.getGaraOverrides.all(req.params.gara_id) });
 });
 
+// POST /api/admin/override/entity  { entity_type, entity_id, field, new_value }
+app.post('/api/admin/override/entity', requireAdmin, (req, res) => {
+  const { entity_type, entity_id, field, new_value } = req.body;
+  if (!entity_type || !entity_id || !field) return res.status(400).json({ error: 'Campi mancanti' });
+  queries.setEntityOverride.run({ entity_type, entity_id, field, new_value, edited_by: req.user.id });
+  res.json({ ok: true });
+});
+
+// GET /api/admin/override/entity/:type/:id
+app.get('/api/admin/override/entity/:type/:id', (req, res) => {
+  const overrides = queries.getEntityOverrides.all(req.params.type, req.params.id);
+  const map = {};
+  overrides.forEach(o => { map[o.field] = o.new_value; });
+  res.json({ overrides: map });
+});
+
+// GET /api/admin/all-entity-overrides
+app.get('/api/admin/all-entity-overrides', requireAdmin, (req, res) => {
+  res.json({ overrides: queries.getAllEntityOverrides.all() });
+});
+
 // ── Health ───────────────────────────────────────────────────────────────────
 
 app.get('/api/health', (req, res) => res.json({ ok: true, ts: new Date().toISOString() }));

@@ -22,6 +22,17 @@ db.exec(`
     last_login  TEXT
   );
 
+  CREATE TABLE IF NOT EXISTS entity_overrides (
+    id          INTEGER PRIMARY KEY AUTOINCREMENT,
+    entity_type TEXT    NOT NULL,   -- 'gara' | 'atleta' | 'team' | 'risultato'
+    entity_id   TEXT    NOT NULL,
+    field       TEXT    NOT NULL,
+    new_value   TEXT,
+    edited_by   INTEGER REFERENCES users(id),
+    created_at  TEXT    NOT NULL DEFAULT (datetime('now')),
+    UNIQUE(entity_type, entity_id, field)
+  );
+
   CREATE TABLE IF NOT EXISTS athlete_profiles (
     id            INTEGER PRIMARY KEY AUTOINCREMENT,
     user_id       INTEGER NOT NULL REFERENCES users(id) ON DELETE CASCADE,
@@ -145,6 +156,14 @@ const queries = {
   rejectTeamProfile:     db.prepare("UPDATE team_profiles SET status = 'rejected' WHERE id = ?"),
   approveFamilyLink:     db.prepare("UPDATE family_links SET status = 'active' WHERE id = ?"),
   rejectFamilyLink:      db.prepare("UPDATE family_links SET status = 'rejected' WHERE id = ?"),
+
+  setEntityOverride: db.prepare(`
+    INSERT INTO entity_overrides (entity_type, entity_id, field, new_value, edited_by)
+    VALUES (@entity_type, @entity_id, @field, @new_value, @edited_by)
+    ON CONFLICT(entity_type, entity_id, field) DO UPDATE SET new_value = @new_value, edited_by = @edited_by, created_at = datetime('now')
+  `),
+  getEntityOverrides: db.prepare('SELECT field, new_value FROM entity_overrides WHERE entity_type = ? AND entity_id = ?'),
+  getAllEntityOverrides: db.prepare('SELECT * FROM entity_overrides ORDER BY created_at DESC'),
 
   setGaraOverride: db.prepare(`
     INSERT INTO gara_overrides (gara_id, field, old_value, new_value, edited_by)

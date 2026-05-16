@@ -1556,3 +1556,21 @@ body.light-mode .auth-input { background: #f5f5f5; border-color: #ddd; color: #1
 body.light-mode .auth-input:focus { border-color: var(--red-hot); }
 body.light-mode .link-result-row { background: #f0f0f0; }
 body.light-mode .link-result-row:hover { background: #e5e5e5; }
+
+/* Calendar home rows */
+a.hcal-row:hover { border-color: var(--red-hot) !important; }
+
+/* Admin edit button */
+.admin-edit-btn {
+  background: transparent;
+  border: 1px solid var(--yellow-race);
+  color: var(--yellow-race);
+  border-radius: 4px;
+  padding: 5px 12px;
+  font-family: var(--font-display);
+  font-size: 0.8rem;
+  letter-spacing: 0.08em;
+  cursor: pointer;
+  transition: background .15s, color .15s;
+}
+.admin-edit-btn:hover { background: var(--yellow-race); color: #000; }

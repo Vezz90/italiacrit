@@ -268,6 +268,101 @@ function multFromType(tipo, isCR, isCI) {
   return 1;
 }
 
+// ── ADMIN EDIT SYSTEM ─────────────────────────────────────────
+const ADMIN_EDIT_FIELDS = {
+  gara: [
+    { key: 'nome_gara',     label: 'Nome gara',     type: 'text' },
+    { key: 'tipo',          label: 'Tipo gara',      type: 'select',
+      options: ['regionale','nazionale','internazionale','campionato_regionale','campionato_italiano'] },
+    { key: 'moltiplicatore', label: 'Moltiplicatore', type: 'select', options: ['1','2','3'] },
+  ],
+  atleta: [
+    { key: 'nome',    label: 'Nome',    type: 'text' },
+    { key: 'cognome', label: 'Cognome', type: 'text' },
+    { key: 'team',    label: 'Team',    type: 'text' },
+  ],
+  team: [
+    { key: 'nome', label: 'Nome team', type: 'text' },
+  ],
+};
+
+function adminEditBtn(entityType, entityId) {
+  if (authUser()?.role !== 'admin') return '';
+  return `<button class="admin-edit-btn" onclick="openAdminEdit('${esc(entityType)}','${esc(entityId)}')">✏ Modifica</button>`;
+}
+
+window.openAdminEdit = async function(entityType, entityId) {
+  const fields = ADMIN_EDIT_FIELDS[entityType] || [];
+  // Load existing overrides
+  let current = {};
+  try {
+    const { overrides } = await apiCall(`/admin/override/entity/${entityType}/${encodeURIComponent(entityId)}`);
+    current = overrides || {};
+  } catch(_) {}
+
+  const fieldsHtml = fields.map(f => {
+    const val = esc(current[f.key] || '');
+    if (f.type === 'select') {
+      const opts = f.options.map(o => `<option value="${o}" ${current[f.key] === o ? 'selected' : ''}>${o}</option>`).join('');
+      return `<label class="auth-label">${f.label}<select id="aedit-${f.key}" class="auth-input">${opts}</select></label>`;
+    }
+    return `<label class="auth-label">${f.label}<input type="text" id="aedit-${f.key}" class="auth-input" value="${val}" placeholder="${f.label}" /></label>`;
+  }).join('');
+
+  const labelMap = { gara: 'Gara', atleta: 'Atleta', team: 'Team' };
+  const overlay = document.createElement('div');
+  overlay.id = 'admin-edit-overlay';
+  overlay.style.cssText = 'position:fixed;inset:0;background:rgba(0,0,0,.7);z-index:9999;display:flex;align-items:center;justify-content:center;padding:16px';
+  overlay.innerHTML = `
+    <div style="background:var(--bg-card);border:1px solid var(--border);border-radius:12px;padding:32px;width:100%;max-width:420px;max-height:90vh;overflow-y:auto">
+      <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:20px">
+        <h2 style="font-family:var(--font-display);font-size:1.4rem;color:var(--red-hot);margin:0">MODIFICA ${esc(labelMap[entityType]||entityType).toUpperCase()}</h2>
+        <button onclick="document.getElementById('admin-edit-overlay').remove()" style="background:none;border:none;color:var(--text-muted);font-size:1.4rem;cursor:pointer;padding:4px">✕</button>
+      </div>
+      <p style="font-size:0.78rem;color:var(--text-muted);margin:0 0 16px;font-family:var(--font-mono)">${esc(entityId)}</p>
+      <div id="aedit-error" style="display:none;color:var(--red-hot);font-size:0.85rem;margin-bottom:12px"></div>
+      <div style="display:flex;flex-direction:column;gap:14px">
+        ${fieldsHtml}
+      </div>
+      <div style="display:flex;gap:12px;margin-top:24px">
+        <button class="auth-btn" id="aedit-save-btn" onclick="saveAdminEdit('${esc(entityType)}','${esc(entityId)}')">SALVA</button>
+        <button class="auth-btn auth-btn-outline" onclick="document.getElementById('admin-edit-overlay').remove()">Annulla</button>
+      </div>
+      <p style="font-size:0.72rem;color:var(--text-muted);margin-top:12px">Le modifiche sovrascrivono i dati dello scraper localmente.</p>
+    </div>`;
+  document.body.appendChild(overlay);
+  overlay.addEventListener('click', e => { if (e.target === overlay) overlay.remove(); });
+};
+
+window.saveAdminEdit = async function(entityType, entityId) {
+  const fields = ADMIN_EDIT_FIELDS[entityType] || [];
+  const errEl = document.getElementById('aedit-error');
+  const btn   = document.getElementById('aedit-save-btn');
+  btn.disabled = true; btn.textContent = 'Salvataggio…';
+  errEl.style.display = 'none';
+  try {
+    for (const f of fields) {
+      const el = document.getElementById('aedit-' + f.key);
+      if (!el) continue;
+      const val = el.value.trim();
+      await apiCall('/admin/override/entity', {
+        method: 'POST',
+        body: { entity_type: entityType, entity_id: entityId, field: f.key, new_value: val }
+      });
+    }
+    document.getElementById('admin-edit-overlay')?.remove();
+    // Show brief confirmation
+    const toast = document.createElement('div');
+    toast.style.cssText = 'position:fixed;bottom:24px;left:50%;transform:translateX(-50%);background:var(--red-hot);color:#fff;padding:10px 24px;border-radius:6px;font-family:var(--font-display);font-size:1rem;letter-spacing:.06em;z-index:9999';
+    toast.textContent = 'Modifiche salvate ✓';
+    document.body.appendChild(toast);
+    setTimeout(() => toast.remove(), 2500);
+  } catch (err) {
+    errEl.textContent = 'Errore: ' + err.message; errEl.style.display = 'block';
+    btn.disabled = false; btn.textContent = 'SALVA';
+  }
+};
+
 function slug(s) {
   if (!s) return '';
   return String(s).toLowerCase()
@@ -539,16 +634,16 @@ async function renderHome() {
         const d = new Date(g.data);
         const dayStr = `${DAYS_IT[d.getDay()]} ${d.getDate()} ${MONTHS_SHORT[d.getMonth()]}`;
         return `
-          <div class="hcal-row" data-date="${g.data}" style="display:flex;align-items:center;gap:12px;padding:8px 14px;background:var(--bg-card);border:1px solid var(--border-subtle);border-radius:4px;flex-wrap:wrap">
+          <a href="#/gara/${esc(g.id)}" class="hcal-row" data-date="${g.data}" style="display:flex;align-items:center;gap:8px;padding:8px 14px;background:var(--bg-card);border:1px solid var(--border-subtle);border-radius:4px;flex-wrap:wrap;text-decoration:none;color:inherit;transition:border-color .15s">
             <span style="font-family:var(--font-mono);font-size:0.75rem;color:var(--red-hot);flex-shrink:0;min-width:72px">${dayStr}</span>
-            <span style="font-family:var(--font-heading);font-weight:700;font-size:0.88rem;text-transform:uppercase;flex:1;min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap">${esc(g.nome)}</span>
+            <span style="font-family:var(--font-heading);font-weight:700;font-size:0.88rem;text-transform:uppercase;flex:1;min-width:120px;word-break:break-word">${esc(g.nome)}</span>
             ${g.luogo ? `<span style="font-size:0.73rem;color:var(--text-secondary);flex-shrink:0">${esc(g.luogo)}</span>` : ''}
-            <div style="display:flex;gap:4px;flex-shrink:0;align-items:center">
+            <div style="display:flex;gap:4px;flex-shrink:0;align-items:center;flex-wrap:wrap">
               ${g.campionato_italiano ? '<span class="badge-cat" style="color:var(--red-hot);border-color:var(--red-hot);font-size:0.55rem;padding:1px 5px">CI</span>' : ''}
               ${g.campionato_regionale ? '<span class="badge-cat" style="color:var(--cat-u23);border-color:var(--cat-u23);font-size:0.55rem;padding:1px 5px">CR</span>' : ''}
               ${badgeMult(g.moltiplicatore, g.tipo, g.campionato_regionale, g.campionato_italiano)}
             </div>
-          </div>`;
+          </a>`;
       }).join('')}
     </div>
   ` : '';
@@ -595,7 +690,6 @@ async function renderHome() {
         <div style="padding:12px 16px 10px">
           <div style="display:flex;align-items:center;gap:6px;margin-bottom:10px">
             ${badgeCat(code)}
-            <span style="font-family:var(--font-heading);font-weight:700;font-size:0.85rem;text-transform:uppercase">${catLabel(code)}</span>
             ${isF ? '<span class="badge-cat badge-genere-f">♀</span>' : ''}
           </div>
           <div style="display:flex;flex-direction:column;gap:4px;margin-bottom:8px">
@@ -1298,8 +1392,9 @@ async function renderAtleta(atleta_id) {
   setPage(`
     ${headerHtml}
     ${sparkHtml ? `<div class="sparkline-wrap"><div class="sparkline-title">ANDAMENTO PUNTI — STAGIONE ${new Date().getFullYear()}</div>${sparkHtml}</div>` : ''}
-    <div style="margin: 8px 0 20px">
+    <div style="margin: 8px 0 20px;display:flex;gap:10px;align-items:center;flex-wrap:wrap">
       <button class="btn-share" onclick="window.triggerShareAtleta()"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="18" cy="5" r="3"/><circle cx="6" cy="12" r="3"/><circle cx="18" cy="19" r="3"/><line x1="8.59" y1="13.51" x2="15.42" y2="17.49"/><line x1="15.41" y1="6.51" x2="8.59" y2="10.49"/></svg> Condividi Profilo</button>
+      ${adminEditBtn('atleta', atleta_id)}
     </div>
     <div class="section-header" style="margin-top:24px">
       <span class="section-title">RISULTATI STAGIONE</span>
@@ -1521,8 +1616,9 @@ async function renderTeam(team_id) {
         ${headerStats}
       </div>
     </div>
-      <div style="margin-top:12px">
+      <div style="margin-top:12px;display:flex;gap:10px;align-items:center;flex-wrap:wrap">
         <button class="btn-share" onclick="window.triggerShareTeam()"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="18" cy="5" r="3"/><circle cx="6" cy="12" r="3"/><circle cx="18" cy="19" r="3"/><line x1="8.59" y1="13.51" x2="15.42" y2="17.49"/><line x1="15.41" y1="6.51" x2="8.59" y2="10.49"/></svg> Condividi Team</button>
+        ${adminEditBtn('team', team_id)}
       </div>
     ${catTabsHtml}
     <div class="section-header">
@@ -1624,8 +1720,9 @@ async function renderGara(gara_id) {
         ${results[0]?.media ? `<span class="race-meta-sep">|</span><span>Media: ${esc(results[0].media)} Km/h</span>` : ''}
       </div>
     </div>
-      <div style="margin-top:12px">
+      <div style="margin-top:12px;display:flex;gap:10px;align-items:center;flex-wrap:wrap">
         <button class="btn-share" onclick="window.triggerShareGara()"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="18" cy="5" r="3"/><circle cx="6" cy="12" r="3"/><circle cx="18" cy="19" r="3"/><line x1="8.59" y1="13.51" x2="15.42" y2="17.49"/><line x1="15.41" y1="6.51" x2="8.59" y2="10.49"/></svg> Condividi Risultati</button>
+        ${adminEditBtn('gara', gara_id)}
       </div>
     <div class="results-table-wrap">
       <table class="results-table">
