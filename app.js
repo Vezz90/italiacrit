@@ -472,17 +472,9 @@ function slug(s) {
 
 // ── THEME LOGIC ───────────────────────────────────────────────
 function initTheme() {
-  const saved = localStorage.getItem('italiacrit-theme') || 'dark';
-  if (saved === 'light') {
-    document.body.classList.add('light-mode');
-  }
+  document.body.classList.add('light-mode');
   const btn = document.getElementById('theme-toggle');
-  if (btn) btn.onclick = toggleTheme;
-}
-
-function toggleTheme() {
-  const isLight = document.body.classList.toggle('light-mode');
-  localStorage.setItem('italiacrit-theme', isLight ? 'light' : 'dark');
+  if (btn) btn.style.display = 'none';
 }
 
 // ── ROUTER ────────────────────────────────────────────────────
@@ -779,7 +771,7 @@ async function renderHome() {
       <div style="display:flex;align-items:center;justify-content:space-between;gap:6px">
         <div style="min-width:0;overflow:hidden">
           <span style="font-family:var(--font-display);font-size:1.05rem;color:${color}">${pos}° </span>
-          <a href="#/atleta/${esc(entry.atleta_id)}" style="font-family:var(--font-heading);font-weight:700;font-size:0.83rem;text-transform:uppercase">${esc(entry.cognome)} ${esc(entry.nome)}</a>
+          <a href="#/atleta/${esc(entry.atleta_id)}" style="font-family:var(--font-heading);font-weight:600;font-size:0.875rem">${esc(entry.cognome)} ${esc(entry.nome)}</a>
         </div>
         <span style="font-family:var(--font-display);font-size:1.05rem;color:${ptColor};flex-shrink:0">${entry.punti}</span>
       </div>` : '';
@@ -871,7 +863,7 @@ async function renderClassifica() {
   }).join('');
 
   setPage(`
-    <h1 style="font-family:var(--font-display);font-size:var(--size-h1);margin-bottom:28px">CLASSIFICHE</h1>
+    <h1 style="font-family:var(--font-display);font-size:var(--size-h1);margin-bottom:28px">Classifiche</h1>
 
     <!-- Parallel Leaderboards Section -->
     <div style="display:grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap:24px; margin-bottom:40px;">
@@ -1929,7 +1921,7 @@ async function renderCalendario() {
   };
 
   setPage(`
-    <h1 style="font-family:var(--font-display);font-size:var(--size-h1);margin-bottom:28px">CALENDARIO</h1>
+    <h1 style="font-family:var(--font-display);font-size:var(--size-h1);margin-bottom:28px">Calendario</h1>
     <div class="calendar-controls">
       <select class="cal-filter-select" id="cal-month" onchange="window.calSetMonth(this.value)" aria-label="Filtra per mese">
         <option value="">Tutti i mesi</option>
@@ -2022,7 +2014,7 @@ async function renderAtletiList() {
   setPage(`
     <div class="content-wrapper">
       <div class="section-header">
-        <h1 style="font-family:var(--font-display);font-size:var(--size-h1);margin-bottom:0">DIRECTORY ATLETI</h1>
+        <h1 style="font-family:var(--font-display);font-size:var(--size-h1);margin-bottom:0">Atleti</h1>
         <span class="section-line"></span>
       </div>
 
@@ -2092,7 +2084,7 @@ async function renderTeamList() {
   setPage(`
     <div class="content-wrapper">
       <div class="section-header">
-        <h1 style="font-family:var(--font-display);font-size:var(--size-h1);margin-bottom:0">DIRECTORY TEAM</h1>
+        <h1 style="font-family:var(--font-display);font-size:var(--size-h1);margin-bottom:0">Team</h1>
         <span class="section-line"></span>
       </div>
 
@@ -2270,7 +2262,7 @@ async function renderStatistiche() {
 
   let activeRegTab = 'M';
   setPage(`
-    <h1 style="font-family:var(--font-display);font-size:var(--size-h1);margin-bottom:8px">STATISTICHE</h1>
+    <h1 style="font-family:var(--font-display);font-size:var(--size-h1);margin-bottom:8px">Statistiche</h1>
     <p style="color:var(--text-muted);margin-bottom:28px">Stagione 2026</p>
 
     <!-- KPI -->
@@ -2466,7 +2458,7 @@ async function renderComparatore() {
   };
 
   setPage(`
-    <h1 style="font-family:var(--font-display);font-size:var(--size-h1);margin-bottom:8px">COMPARATORE</h1>
+    <h1 style="font-family:var(--font-display);font-size:var(--size-h1);margin-bottom:8px">Comparatore</h1>
     <p style="color:var(--text-muted);margin-bottom:24px">Confronta atleti o team della stessa categoria e genere</p>
 
     <!-- FILTRI -->
@@ -2573,7 +2565,7 @@ function renderRegolamento() {
   setPage(`
     <div class="content-wrapper">
       <div class="section-header">
-        <h1 style="font-family:var(--font-display);font-size:var(--size-h1);margin-bottom:0">REGOLAMENTO</h1>
+        <h1 style="font-family:var(--font-display);font-size:var(--size-h1);margin-bottom:0">Regolamento</h1>
         <span class="section-line"></span>
       </div>
       <div style="max-width:800px; margin:0 auto; line-height:1.6; color:var(--text-primary)">
@@ -2822,7 +2814,7 @@ async function renderRisultati() {
     setPage(`
       <div class="content-wrapper">
         <div class="section-header">
-          <h1 style="font-family:var(--font-display);font-size:var(--size-h1);margin-bottom:0">RISULTATI GARE</h1>
+          <h1 style="font-family:var(--font-display);font-size:var(--size-h1);margin-bottom:0">Risultati</h1>
           <span class="section-line"></span>
         </div>
         <div class="calendar-controls">
