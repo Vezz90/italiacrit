@@ -972,6 +972,20 @@ async function updateRankTable() {
       ranking.forEach((r, i) => r.pos = i+1);
     }
 
+    // Ricalcola trend dinamicamente dall'ultima gara scrapata
+    const { resultsByAtleta } = globalData;
+    ranking.forEach(entry => {
+      const res = resultsByAtleta[entry.atleta_id] || []; // già ordinati per data desc
+      const r0 = res[0], r1 = res[1];
+      if (r0?.rank_dopo_gara != null && r1?.rank_dopo_gara != null) {
+        entry.trend = r1.rank_dopo_gara - r0.rank_dopo_gara; // positivo = migliorato
+      } else if (r0?.rank_dopo_gara != null && !r1) {
+        entry.trend = null; // prima apparizione → NEW
+      } else {
+        entry.trend = 0;
+      }
+    });
+
     const filtered = ranking.filter(r => {
       if (!rankFilter) return true;
       const q = rankFilter.toLowerCase();
@@ -1417,7 +1431,7 @@ async function renderAtleta(atleta_id) {
         ${a.genere === 'F' ? '<span class="badge-cat badge-genere-f">♀</span>' : ''}
         ${a.team_id ? `<a href="#/team/${esc(a.team_id)}" style="font-family:var(--font-heading);font-size:.8rem;color:var(--text-secondary);border:1px solid var(--border-subtle);padding:2px 10px;border-radius:2px">${esc(a.team_attuale)} →</a>` : ''}
       </div>
-      <div style="display:flex;gap:20px;align-items:center;flex-wrap:wrap;margin-bottom:4px">
+      <div class="profile-photo-row" style="display:flex;gap:20px;align-items:center;flex-wrap:wrap;margin-bottom:4px">
         ${photoHtml}
         <div class="athlete-header-name">
           <span class="athlete-cognome">${esc(a.cognome)}</span>
@@ -1498,7 +1512,7 @@ async function renderAtleta(atleta_id) {
       <span class="section-title">RISULTATI STAGIONE</span>
       <span class="section-line"></span>
     </div>
-      <table class="results-table">
+      <table class="results-table atleta-results">
         <thead><tr>
           <th>DATA</th><th>GARA</th><th>CAT</th><th>POS</th><th>MOLT</th><th style="text-align:right">KM</th><th style="text-align:right">MEDIA</th><th>PTS</th>
         </tr></thead>
@@ -1715,7 +1729,7 @@ async function renderTeam(team_id) {
   window._shareTeamData = {nome:t.nome,cat:catLabel(teamViewCat),punti:catPuntiTotali,pos:currentRank?currentRank.pos:null,p1:p1,atleti:atletiList.slice(0,5)};
   setPage(`
     <div class="team-header">
-      <div style="display:flex;gap:20px;align-items:center">
+      <div class="profile-photo-row" style="display:flex;gap:20px;align-items:center">
         ${teamPhotoHtml}
         <div>
         <div class="team-name-display">${esc(t.nome)}</div>
@@ -1741,7 +1755,7 @@ async function renderTeam(team_id) {
       <span class="section-line"></span>
     </div>
     <div class="results-table-wrap">
-      <table class="results-table">
+      <table class="results-table team-results">
         <thead><tr>
           <th>DATA</th><th>GARA</th><th>ATLETA</th><th>POS</th><th style="text-align:center">MOLT</th><th style="text-align:right">KM</th><th style="text-align:right">MEDIA</th><th style="text-align:right">RNK</th><th>PTS</th>
         </tr></thead>
@@ -2329,236 +2343,435 @@ let compA = '', compB = '', compMode = 'atleta', compCat = '', compGender = 'M';
 
 async function renderComparatore() {
   if (!globalData) return;
-  const { resultsRaw, athletes, teams } = globalData;
+  const { resultsRaw, athletes } = globalData;
 
-  // Categorie disponibili per il genere selezionato
   const availCats = [...new Set(
     resultsRaw.filter(r => r.genere === compGender).map(r => r.categoria)
   )].sort();
-
   const catOpts = availCats.map(c =>
     `<option value="${esc(c)}" ${c === compCat ? 'selected' : ''}>${esc(c)}</option>`
   ).join('');
+  const catFilter = r => r.genere === compGender && (!compCat || r.categoria === compCat);
 
-  // ── ATLETI ──────────────────────────────────────────────────
-  const buildAthleteResult = () => {
-    // Filtra atleti per categoria e genere (usa i risultati per match)
-    const validIds = new Set(
-      resultsRaw
-        .filter(r => r.genere === compGender && (!compCat || r.categoria === compCat))
-        .map(r => r.atleta_id)
-    );
-    const filteredAthletes = Object.values(athletes)
-      .filter(a => validIds.has(a.id))
-      .sort((a, b) => (a.cognome || '').localeCompare(b.cognome || ''));
-
-    const aOpts = filteredAthletes.map(a =>
-      `<option value="${a.id}" ${a.id === compA ? 'selected' : ''}>${esc(a.cognome)} ${esc(a.nome)}</option>`
-    ).join('');
-    const bOpts = filteredAthletes.map(a =>
-      `<option value="${a.id}" ${a.id === compB ? 'selected' : ''}>${esc(a.cognome)} ${esc(a.nome)}</option>`
-    ).join('');
-
-    let resultHtml = '';
-    if (compA && compB && compA !== compB) {
-      const aData = athletes[compA], bData = athletes[compB];
-      if (aData && bData) {
-        const catFilter = r => r.genere === compGender && (!compCat || r.categoria === compCat);
-        const aRes = resultsRaw.filter(r => r.atleta_id === compA && catFilter(r));
-        const bRes = resultsRaw.filter(r => r.atleta_id === compB && catFilter(r));
-        const st = arr => ({
-          pts:  arr.reduce((s, r) => s + (r.punti_effettivi || 0), 0),
-          wins: arr.filter(r => r.posizione === 1).length,
-          podi: arr.filter(r => r.posizione <= 3).length,
-          gare: new Set(arr.map(r => r.gara_id)).size,
-          km:   Math.round(arr.reduce((s, r) => s + (parseFloat(r.km) || 0), 0)),
-          media: arr.filter(r => r.media).length
-            ? (arr.reduce((s, r) => s + (parseFloat(r.media) || 0), 0) / arr.filter(r => r.media).length).toFixed(1)
-            : '—',
-        });
-        const sA = st(aRes), sB = st(bRes);
-        resultHtml = compBars(aData.cognome, bData.cognome, sA, sB, 'atleta');
-      }
-    }
-
-    return `
-      <div style="display:flex;align-items:center;gap:16px;flex-wrap:wrap;margin-bottom:20px">
-        <div style="flex:1;min-width:200px">
-          <label class="comp-label">Atleta A</label>
-          <select class="cal-filter-select" style="width:100%" onchange="window.setCompA(this.value)">
-            <option value="">— Seleziona —</option>${aOpts}
-          </select>
-        </div>
-        <div style="font-family:var(--font-display);font-size:2.5rem;color:var(--red-hot);align-self:flex-end;padding-bottom:4px">VS</div>
-        <div style="flex:1;min-width:200px">
-          <label class="comp-label">Atleta B</label>
-          <select class="cal-filter-select" style="width:100%" onchange="window.setCompB(this.value)">
-            <option value="">— Seleziona —</option>${bOpts}
-          </select>
-        </div>
-      </div>
-      ${resultHtml || '<div style="text-align:center;padding:32px;color:var(--text-muted);font-style:italic">Seleziona due atleti per confrontarli</div>'}`;
+  // ── STATS CALCULATOR ──────────────────────────────────────────
+  const calcStats = arr => {
+    const sorted = [...arr].sort((a,b) => (b.data||'').localeCompare(a.data||''));
+    const wins  = arr.filter(r => r.posizione === 1).length;
+    const podi  = arr.filter(r => r.posizione <= 3).length;
+    const top5  = arr.filter(r => r.posizione <= 5).length;
+    const gare  = new Set(arr.map(r => r.gara_id)).size;
+    const pts   = arr.reduce((s,r) => s + (r.punti_effettivi||0), 0);
+    const km    = Math.round(arr.reduce((s,r) => s + (parseFloat(r.km)||0), 0));
+    const mArr  = arr.filter(r => r.media);
+    const mediaKm = mArr.length
+      ? (mArr.reduce((s,r) => s+(parseFloat(r.media)||0),0)/mArr.length).toFixed(1) : '—';
+    const avgPos = arr.length
+      ? (arr.reduce((s,r)=>s+r.posizione,0)/arr.length).toFixed(1) : '—';
+    const recent8 = sorted.slice(0,8);
+    const recentPts = sorted.slice(0,5).reduce((s,r)=>s+(r.punti_effettivi||0),0);
+    const ptsPerRace = gare ? +(pts/gare).toFixed(1) : 0;
+    const winRate    = gare ? +(wins/gare*100).toFixed(1) : 0;
+    const podiumRate = gare ? +(podi/gare*100).toFixed(1) : 0;
+    const ptsArr = arr.map(r=>r.punti_effettivi||0);
+    const mean   = ptsArr.length ? ptsArr.reduce((s,v)=>s+v,0)/ptsArr.length : 0;
+    const stdev  = ptsArr.length>1 ? Math.sqrt(ptsArr.reduce((s,v)=>s+(v-mean)**2,0)/ptsArr.length) : 0;
+    const cv     = mean>0 ? stdev/mean : 1;
+    const consistencyScore = Math.max(0, Math.round((1-Math.min(cv,1))*100));
+    const aggressionIdx    = gare ? +((wins*3+podi*2+top5)/gare*10).toFixed(1) : 0;
+    return { pts, wins, podi, top5, gare, km, mediaKm, avgPos, recent8, recentPts,
+             ptsPerRace, winRate, podiumRate, consistencyScore, aggressionIdx };
   };
 
-  // ── TEAM ────────────────────────────────────────────────────
-  const buildTeamResult = () => {
-    // Team attivi nella categoria/genere selezionati
-    const teamPts = {};
-    resultsRaw
-      .filter(r => r.genere === compGender && (!compCat || r.categoria === compCat))
-      .forEach(r => {
-        if (!r.team_id) return;
-        if (!teamPts[r.team_id]) teamPts[r.team_id] = { id: r.team_id, nome: r.team };
-      });
-    const filteredTeams = Object.values(teamPts).sort((a, b) => (a.nome || '').localeCompare(b.nome || ''));
+  // ── FORM PILLS ────────────────────────────────────────────────
+  const formPills = results => {
+    if (!results.length) return '<span style="color:var(--text-muted);font-size:0.8rem">—</span>';
+    return results.map(r => {
+      const p = r.posizione;
+      let bg='#EEF1F4', col='#6B7280';
+      if (p===1)      { bg='#D97706'; col='#fff'; }
+      else if (p<=3)  { bg='#6B7280'; col='#fff'; }
+      else if (p<=5)  { bg='rgba(255,107,0,0.75)'; col='#fff'; }
+      return `<span class="form-pill" style="background:${bg};color:${col}">${p}°</span>`;
+    }).join('');
+  };
 
-    const aOpts = filteredTeams.map(t =>
-      `<option value="${t.id}" ${t.id === compA ? 'selected' : ''}>${esc(t.nome)}</option>`
+  // ── METRIC BAR ────────────────────────────────────────────────
+  const mBar = (vA, vB, label, fmt='', hl=false) => {
+    const nA=parseFloat(vA)||0, nB=parseFloat(vB)||0, tot=nA+nB||1;
+    const pA=Math.round(nA/tot*100);
+    const wA=nA>nB, wB=nB>nA;
+    return `<div class="comp-bar-row${hl?' comp-bar-highlight':''}">
+      <span class="comp-bar-val comp-bar-val-a${wA?' comp-bar-winner':''}">${vA}${fmt}</span>
+      <div class="comp-bar-center">
+        <div class="comp-bar-label">${label}</div>
+        <div class="comp-bar-track">
+          <div class="comp-bar-fill-a" style="width:${pA}%"></div>
+          <div class="comp-bar-fill-b" style="width:${100-pA}%"></div>
+        </div>
+      </div>
+      <span class="comp-bar-val comp-bar-val-b${wB?' comp-bar-winner':''}">${vB}${fmt}</span>
+    </div>`;
+  };
+
+  // ── RADAR SVG ─────────────────────────────────────────────────
+  const buildRadar = (sA, sB, nA, nB) => {
+    const axes = [
+      { label:'Vittorie',   vA:sA.wins,           vB:sB.wins           },
+      { label:'Podi',       vA:sA.podi,           vB:sB.podi           },
+      { label:'Costanza',   vA:sA.consistencyScore, vB:sB.consistencyScore },
+      { label:'Attività',   vA:sA.gare,           vB:sB.gare           },
+      { label:'Efficienza', vA:sA.ptsPerRace,     vB:sB.ptsPerRace     },
+      { label:'Forma',      vA:sA.recentPts,      vB:sB.recentPts      },
+    ];
+    const N=axes.length, cx=130, cy=130, R=95;
+    const norm = axes.map(a => { const mx=Math.max(a.vA,a.vB,1); return {label:a.label,nA:a.vA/mx,nB:a.vB/mx}; });
+    const pt = (i,r) => { const a=i*(2*Math.PI/N)-Math.PI/2; return [cx+r*Math.cos(a), cy+r*Math.sin(a)]; };
+    const circles = [0.25,0.5,0.75,1].map(f=>`<circle cx="${cx}" cy="${cy}" r="${R*f}" fill="none" stroke="rgba(0,0,0,0.06)" stroke-width="1"/>`).join('');
+    const axLines = Array.from({length:N}).map((_,i)=>{ const [x,y]=pt(i,R); return `<line x1="${cx}" y1="${cy}" x2="${x.toFixed(1)}" y2="${y.toFixed(1)}" stroke="rgba(0,0,0,0.07)" stroke-width="1"/>`; }).join('');
+    const poly = key => norm.map((_,i)=>{ const [x,y]=pt(i,R*norm[i][key]); return `${x.toFixed(1)},${y.toFixed(1)}`; }).join(' ');
+    const lbls = norm.map((m,i)=>{ const [x,y]=pt(i,R+20); return `<text x="${x.toFixed(1)}" y="${y.toFixed(1)}" text-anchor="middle" dominant-baseline="middle" font-family="Inter,system-ui,sans-serif" font-size="9" fill="#9CA3AF" font-weight="600" letter-spacing="0.05em">${m.label.toUpperCase()}</text>`; }).join('');
+    const dotsA = norm.map((_,i)=>{ const [x,y]=pt(i,R*norm[i].nA); return `<circle cx="${x.toFixed(1)}" cy="${y.toFixed(1)}" r="3" fill="#FF6B00"/>`; }).join('');
+    const dotsB = norm.map((_,i)=>{ const [x,y]=pt(i,R*norm[i].nB); return `<circle cx="${x.toFixed(1)}" cy="${y.toFixed(1)}" r="3" fill="#10B981"/>`; }).join('');
+    return `<div class="comp-section">
+      <div class="comp-section-title">Radar Analitico</div>
+      <div class="comp-radar-wrap">
+        <svg viewBox="0 0 260 260" width="240" height="240" style="overflow:visible;flex-shrink:0">
+          ${circles}${axLines}
+          <polygon points="${poly('nB')}" fill="rgba(16,185,129,0.1)" stroke="#10B981" stroke-width="1.5"/>
+          <polygon points="${poly('nA')}" fill="rgba(255,107,0,0.1)" stroke="#FF6B00" stroke-width="1.5"/>
+          ${dotsA}${dotsB}${lbls}
+        </svg>
+        <div class="comp-radar-legend">
+          <div class="comp-radar-leg-item"><span class="comp-radar-dot" style="background:#FF6B00"></span>${esc(nA)}</div>
+          <div class="comp-radar-leg-item"><span class="comp-radar-dot" style="background:#10B981"></span>${esc(nB)}</div>
+        </div>
+      </div>
+    </div>`;
+  };
+
+  // ── HEAD TO HEAD ──────────────────────────────────────────────
+  const buildH2H = (aRes, bRes, nA, nB) => {
+    const shared = aRes.filter(r => bRes.some(s => s.gara_id===r.gara_id));
+    if (!shared.length) return `<div class="comp-section">
+      <div class="comp-section-title">Testa a Testa Diretto</div>
+      <div class="comp-empty">Nessuna gara in comune nel periodo selezionato</div>
+    </div>`;
+    let wA=0, wB=0;
+    const rows = shared.map(r => {
+      const br = bRes.find(s=>s.gara_id===r.gara_id);
+      const w = r.posizione<br.posizione?'A':r.posizione>br.posizione?'B':'D';
+      if(w==='A')wA++; else if(w==='B')wB++;
+      return {gara:r.nome_gara,garaId:r.gara_id,data:r.data,posA:r.posizione,posB:br.posizione,w};
+    }).sort((a,b)=>(b.data||'').localeCompare(a.data||''));
+    const pA = Math.round(wA/shared.length*100);
+    return `<div class="comp-section">
+      <div class="comp-section-title">Testa a Testa Diretto</div>
+      <div class="h2h-score-bar">
+        <div class="h2h-score-side">
+          <span class="h2h-score-num" style="color:#FF6B00">${wA}</span>
+          <span class="h2h-score-label">${esc(nA)}</span>
+        </div>
+        <div class="h2h-score-center">
+          <div class="h2h-bar-track"><div class="h2h-bar-fill" style="width:${pA}%"></div></div>
+          <div class="h2h-score-sub">${shared.length} gare in comune</div>
+        </div>
+        <div class="h2h-score-side h2h-score-right">
+          <span class="h2h-score-num" style="color:#10B981">${wB}</span>
+          <span class="h2h-score-label">${esc(nB)}</span>
+        </div>
+      </div>
+      <div class="results-table-wrap" style="margin-top:16px">
+        <table class="results-table h2h-table">
+          <thead><tr><th>DATA</th><th>GARA</th><th style="text-align:center">${esc(nA)}</th><th></th><th style="text-align:center">${esc(nB)}</th></tr></thead>
+          <tbody>${rows.map(r=>`<tr class="${r.w==='A'?'h2h-win-a':r.w==='B'?'h2h-win-b':''}">
+            <td class="td-date">${fmtDateShort(r.data)}</td>
+            <td class="td-race"><a href="#/gara/${esc(r.garaId)}">${esc(r.gara)}</a></td>
+            <td class="td-pos ${posClass(r.posA)}${r.w==='A'?' win':''}" style="text-align:center;font-weight:${r.w==='A'?700:400}">${r.posA}°</td>
+            <td style="text-align:center;color:var(--text-muted);font-size:0.7rem">vs</td>
+            <td class="td-pos ${posClass(r.posB)}${r.w==='B'?' win':''}" style="text-align:center;font-weight:${r.w==='B'?700:400}">${r.posB}°</td>
+          </tr>`).join('')}</tbody>
+        </table>
+      </div>
+    </div>`;
+  };
+
+  // ── INSIGHTS ──────────────────────────────────────────────────
+  const buildInsights = (sA, sB, nA, nB) => {
+    const ins = [];
+    const add = (cond, icon, text, side) => { if(cond) ins.push({icon,text,side}); };
+    add(sA.winRate>sB.winRate*1.2,   '🏆', `<strong>${esc(nA)}</strong> ha un tasso vittorie superiore (${sA.winRate}% vs ${sB.winRate}%)`, 'a');
+    add(sB.winRate>sA.winRate*1.2,   '🏆', `<strong>${esc(nB)}</strong> ha un tasso vittorie superiore (${sB.winRate}% vs ${sA.winRate}%)`, 'b');
+    add(sA.consistencyScore>sB.consistencyScore+10, '📊', `<strong>${esc(nA)}</strong> è più costante nelle prestazioni (indice ${sA.consistencyScore} vs ${sB.consistencyScore})`, 'a');
+    add(sB.consistencyScore>sA.consistencyScore+10, '📊', `<strong>${esc(nB)}</strong> è più costante nelle prestazioni (indice ${sB.consistencyScore} vs ${sA.consistencyScore})`, 'b');
+    add(sA.recentPts>sB.recentPts*1.3, '🔥', `<strong>${esc(nA)}</strong> è in forma migliore nelle ultime 5 gare (${sA.recentPts} vs ${sB.recentPts} pt)`, 'a');
+    add(sB.recentPts>sA.recentPts*1.3, '🔥', `<strong>${esc(nB)}</strong> è in forma migliore nelle ultime 5 gare (${sB.recentPts} vs ${sA.recentPts} pt)`, 'b');
+    add(sA.podiumRate>sB.podiumRate*1.2, '🥇', `<strong>${esc(nA)}</strong> sale sul podio più frequentemente (${sA.podiumRate}% vs ${sB.podiumRate}%)`, 'a');
+    add(sB.podiumRate>sA.podiumRate*1.2, '🥇', `<strong>${esc(nB)}</strong> sale sul podio più frequentemente (${sB.podiumRate}% vs ${sA.podiumRate}%)`, 'b');
+    add(sA.ptsPerRace>sB.ptsPerRace*1.2, '⚡', `<strong>${esc(nA)}</strong> produce più punti per gara (${sA.ptsPerRace} vs ${sB.ptsPerRace} pt/gara)`, 'a');
+    add(sB.ptsPerRace>sA.ptsPerRace*1.2, '⚡', `<strong>${esc(nB)}</strong> produce più punti per gara (${sB.ptsPerRace} vs ${sA.ptsPerRace} pt/gara)`, 'b');
+    if (!ins.length) ins.push({icon:'⚖️', text:'Le statistiche dei due atleti sono molto equilibrate in questa stagione.', side:'n'});
+    return `<div class="comp-section">
+      <div class="comp-section-title">Analisi Intelligente</div>
+      <div class="comp-insights">
+        ${ins.map(i=>`<div class="comp-insight-item comp-insight-${i.side}">
+          <span class="comp-insight-icon">${i.icon}</span>
+          <span class="comp-insight-text">${i.text}</span>
+        </div>`).join('')}
+      </div>
+    </div>`;
+  };
+
+  // ── ATHLETE BLOCK ─────────────────────────────────────────────
+  const buildAthleteResult = () => {
+    const validIds = new Set(
+      resultsRaw.filter(r => r.genere===compGender && (!compCat||r.categoria===compCat)).map(r=>r.atleta_id)
+    );
+    const list = Object.values(athletes).filter(a=>validIds.has(a.id))
+      .sort((a,b)=>(a.cognome||'').localeCompare(b.cognome||''));
+    const opts = (sel) => list.map(a=>
+      `<option value="${a.id}" ${a.id===sel?'selected':''}>${esc(a.cognome)} ${esc(a.nome)}</option>`
     ).join('');
-    const bOpts = filteredTeams.map(t =>
-      `<option value="${t.id}" ${t.id === compB ? 'selected' : ''}>${esc(t.nome)}</option>`
-    ).join('');
 
-    let resultHtml = '';
-    if (compA && compB && compA !== compB) {
-      const aNome = filteredTeams.find(t => t.id === compA)?.nome || compA;
-      const bNome = filteredTeams.find(t => t.id === compB)?.nome || compB;
-      const catFilter = r => r.genere === compGender && (!compCat || r.categoria === compCat);
-      const aRes = resultsRaw.filter(r => r.team_id === compA && catFilter(r));
-      const bRes = resultsRaw.filter(r => r.team_id === compB && catFilter(r));
-      const st = arr => ({
-        pts:  arr.reduce((s, r) => s + (r.punti_effettivi || 0), 0),
-        wins: arr.filter(r => r.posizione === 1).length,
-        podi: arr.filter(r => r.posizione <= 3).length,
-        gare: new Set(arr.map(r => r.gara_id)).size,
-        km:   Math.round(arr.reduce((s, r) => s + (parseFloat(r.km) || 0), 0)),
-        atleti: new Set(arr.map(r => r.atleta_id)).size,
-      });
-      const sA = st(aRes), sB = st(bRes);
-      resultHtml = compBars(aNome, bNome, sA, sB, 'team');
-    }
-
-    return `
-      <div style="display:flex;align-items:center;gap:16px;flex-wrap:wrap;margin-bottom:20px">
-        <div style="flex:1;min-width:200px">
-          <label class="comp-label">Team A</label>
-          <select class="cal-filter-select" style="width:100%" onchange="window.setCompA(this.value)">
-            <option value="">— Seleziona —</option>${aOpts}
+    if (!compA || !compB || compA===compB) return `
+      <div class="comp-selectors">
+        <div class="comp-selector-group">
+          <label class="comp-label">Atleta A</label>
+          <select class="cal-filter-select comp-select" onchange="window.setCompA(this.value)">
+            <option value="">— Seleziona —</option>${opts(compA)}
           </select>
         </div>
-        <div style="font-family:var(--font-display);font-size:2.5rem;color:var(--red-hot);align-self:flex-end;padding-bottom:4px">VS</div>
-        <div style="flex:1;min-width:200px">
-          <label class="comp-label">Team B</label>
-          <select class="cal-filter-select" style="width:100%" onchange="window.setCompB(this.value)">
-            <option value="">— Seleziona —</option>${bOpts}
+        <div class="comp-vs-badge">VS</div>
+        <div class="comp-selector-group">
+          <label class="comp-label">Atleta B</label>
+          <select class="cal-filter-select comp-select" onchange="window.setCompB(this.value)">
+            <option value="">— Seleziona —</option>${opts(compB)}
           </select>
         </div>
       </div>
-      ${resultHtml || '<div style="text-align:center;padding:32px;color:var(--text-muted);font-style:italic">Seleziona due team per confrontarli</div>'}`;
+      <div class="comp-empty-state">
+        <div class="comp-empty-icon">⚔️</div>
+        <div class="comp-empty-text">Seleziona due atleti per avviare il confronto</div>
+      </div>`;
+
+    const aD=athletes[compA], bD=athletes[compB];
+    if (!aD||!bD) return '<div class="comp-empty">Dati non disponibili</div>';
+    const aRes=resultsRaw.filter(r=>r.atleta_id===compA&&catFilter(r));
+    const bRes=resultsRaw.filter(r=>r.atleta_id===compB&&catFilter(r));
+    const sA=calcStats(aRes), sB=calcStats(bRes);
+    const nA=`${aD.cognome} ${aD.nome}`, nB=`${bD.cognome} ${bD.nome}`;
+    const iA=((aD.cognome||'?')[0]+(aD.nome||'?')[0]).toUpperCase();
+    const iB=((bD.cognome||'?')[0]+(bD.nome||'?')[0]).toUpperCase();
+
+    const advRows = [
+      {l:'Tasso Vittorie',      vA:sA.winRate+'%',       vB:sB.winRate+'%',       nA:+sA.winRate,       nB:+sB.winRate},
+      {l:'Tasso Podi',          vA:sA.podiumRate+'%',    vB:sB.podiumRate+'%',    nA:+sA.podiumRate,    nB:+sB.podiumRate},
+      {l:'Indice Costanza',     vA:sA.consistencyScore,  vB:sB.consistencyScore,  nA:sA.consistencyScore, nB:sB.consistencyScore},
+      {l:'Indice Aggressività', vA:sA.aggressionIdx,     vB:sB.aggressionIdx,     nA:sA.aggressionIdx,  nB:sB.aggressionIdx},
+      {l:'Punti / Gara',        vA:sA.ptsPerRace,        vB:sB.ptsPerRace,        nA:sA.ptsPerRace,     nB:sB.ptsPerRace},
+      {l:'Posizione Media',     vA:sA.avgPos+'°',        vB:sB.avgPos+'°',        nA:10-(+sA.avgPos||10), nB:10-(+sB.avgPos||10)},
+      {l:'Forma Recente (5g)',  vA:sA.recentPts+' pt',   vB:sB.recentPts+' pt',   nA:sA.recentPts,      nB:sB.recentPts},
+    ].map(m => {
+      const tot=(m.nA||0)+(m.nB||0)||1, pA=Math.round((m.nA||0)/tot*100);
+      const wA=m.nA>m.nB, wB=m.nB>m.nA;
+      return `<div class="comp-bar-row">
+        <span class="comp-bar-val comp-bar-val-a${wA?' comp-bar-winner':''}">${m.vA}</span>
+        <div class="comp-bar-center">
+          <div class="comp-bar-label">${m.l}</div>
+          <div class="comp-bar-track">
+            <div class="comp-bar-fill-a" style="width:${pA}%"></div>
+            <div class="comp-bar-fill-b" style="width:${100-pA}%"></div>
+          </div>
+        </div>
+        <span class="comp-bar-val comp-bar-val-b${wB?' comp-bar-winner':''}">${m.vB}</span>
+      </div>`;
+    }).join('');
+
+    return `
+      <div class="comp-selectors-compact">
+        <select class="cal-filter-select comp-select-inline" onchange="window.setCompA(this.value)">
+          <option value="">— Atleta A —</option>${opts(compA)}
+        </select>
+        <span class="comp-vs-sm">VS</span>
+        <select class="cal-filter-select comp-select-inline" onchange="window.setCompB(this.value)">
+          <option value="">— Atleta B —</option>${opts(compB)}
+        </select>
+      </div>
+      <div class="comp-hero">
+        <div class="comp-hero-side comp-hero-a">
+          <div class="comp-hero-avatar comp-hero-avatar-a">${iA}</div>
+          <div class="comp-hero-name">${esc(nA)}</div>
+          <div class="comp-hero-meta">${esc(aD.team_attuale||'—')} · ${esc(aD.categoria||'—')}</div>
+          <div class="comp-hero-form">${formPills(sA.recent8)}</div>
+        </div>
+        <div class="comp-hero-center"><div class="comp-vs-text">VS</div></div>
+        <div class="comp-hero-side comp-hero-b">
+          <div class="comp-hero-avatar comp-hero-avatar-b">${iB}</div>
+          <div class="comp-hero-name">${esc(nB)}</div>
+          <div class="comp-hero-meta">${esc(bD.team_attuale||'—')} · ${esc(bD.categoria||'—')}</div>
+          <div class="comp-hero-form">${formPills(sB.recent8)}</div>
+        </div>
+      </div>
+      <div class="comp-section">
+        <div class="comp-section-title">Statistiche Stagionali</div>
+        <div class="comp-stats-grid">
+          ${mBar(sA.pts,  sB.pts,  'PUNTI',  ' pt', true)}
+          ${mBar(sA.wins, sB.wins, 'VITTORIE')}
+          ${mBar(sA.podi, sB.podi, 'PODI (TOP 3)')}
+          ${mBar(sA.gare, sB.gare, 'GARE')}
+          ${mBar(sA.km,   sB.km,   'KM', ' km')}
+          ${mBar(sA.mediaKm, sB.mediaKm, 'VELOCITÀ MEDIA', ' km/h')}
+        </div>
+      </div>
+      <div class="comp-section">
+        <div class="comp-section-title">Metriche Avanzate</div>
+        <div class="comp-stats-grid">${advRows}</div>
+      </div>
+      ${buildH2H(aRes, bRes, nA, nB)}
+      ${buildRadar(sA, sB, nA, nB)}
+      ${buildInsights(sA, sB, nA, nB)}`;
+  };
+
+  // ── TEAM BLOCK ────────────────────────────────────────────────
+  const buildTeamResult = () => {
+    const teamMap = {};
+    resultsRaw.filter(r=>r.genere===compGender&&(!compCat||r.categoria===compCat))
+      .forEach(r=>{ if(r.team_id) teamMap[r.team_id]={id:r.team_id,nome:r.team}; });
+    const list = Object.values(teamMap).sort((a,b)=>(a.nome||'').localeCompare(b.nome||''));
+    const opts = (sel) => list.map(t=>
+      `<option value="${t.id}" ${t.id===sel?'selected':''}>${esc(t.nome)}</option>`
+    ).join('');
+
+    if (!compA||!compB||compA===compB) return `
+      <div class="comp-selectors">
+        <div class="comp-selector-group">
+          <label class="comp-label">Team A</label>
+          <select class="cal-filter-select comp-select" onchange="window.setCompA(this.value)">
+            <option value="">— Seleziona —</option>${opts(compA)}
+          </select>
+        </div>
+        <div class="comp-vs-badge">VS</div>
+        <div class="comp-selector-group">
+          <label class="comp-label">Team B</label>
+          <select class="cal-filter-select comp-select" onchange="window.setCompB(this.value)">
+            <option value="">— Seleziona —</option>${opts(compB)}
+          </select>
+        </div>
+      </div>
+      <div class="comp-empty-state">
+        <div class="comp-empty-icon">⚔️</div>
+        <div class="comp-empty-text">Seleziona due team per avviare il confronto</div>
+      </div>`;
+
+    const nA=list.find(t=>t.id===compA)?.nome||compA;
+    const nB=list.find(t=>t.id===compB)?.nome||compB;
+    const aRes=resultsRaw.filter(r=>r.team_id===compA&&catFilter(r));
+    const bRes=resultsRaw.filter(r=>r.team_id===compB&&catFilter(r));
+    const stT = arr => {
+      const wins=arr.filter(r=>r.posizione===1).length, podi=arr.filter(r=>r.posizione<=3).length;
+      const gare=new Set(arr.map(r=>r.gara_id)).size, pts=arr.reduce((s,r)=>s+(r.punti_effettivi||0),0);
+      const km=Math.round(arr.reduce((s,r)=>s+(parseFloat(r.km)||0),0));
+      const atleti=new Set(arr.map(r=>r.atleta_id)).size;
+      const ptsPerRace=gare?+(pts/gare).toFixed(1):0;
+      const winRate=gare?+(wins/gare*100).toFixed(1):0;
+      const podiumRate=gare?+(podi/gare*100).toFixed(1):0;
+      const ptsArr=arr.map(r=>r.punti_effettivi||0), mean=ptsArr.length?ptsArr.reduce((s,v)=>s+v,0)/ptsArr.length:0;
+      const stdev=ptsArr.length>1?Math.sqrt(ptsArr.reduce((s,v)=>s+(v-mean)**2,0)/ptsArr.length):0;
+      const cv=mean>0?stdev/mean:1, consistencyScore=Math.max(0,Math.round((1-Math.min(cv,1))*100));
+      const recent5pts=[...arr].sort((a,b)=>(b.data||'').localeCompare(a.data||'')).slice(0,5).reduce((s,r)=>s+(r.punti_effettivi||0),0);
+      return {pts,wins,podi,gare,km,atleti,ptsPerRace,winRate,podiumRate,consistencyScore,recent5pts};
+    };
+    const sA=stT(aRes), sB=stT(bRes);
+    const iA=nA.split(/\s+/).map(w=>w[0]||'').join('').toUpperCase().slice(0,3);
+    const iB=nB.split(/\s+/).map(w=>w[0]||'').join('').toUpperCase().slice(0,3);
+
+    const advRows = [
+      {l:'Tasso Vittorie',    vA:sA.winRate+'%',    vB:sB.winRate+'%',    nA:+sA.winRate,       nB:+sB.winRate},
+      {l:'Tasso Podi',        vA:sA.podiumRate+'%', vB:sB.podiumRate+'%', nA:+sA.podiumRate,    nB:+sB.podiumRate},
+      {l:'Indice Costanza',   vA:sA.consistencyScore, vB:sB.consistencyScore, nA:sA.consistencyScore, nB:sB.consistencyScore},
+      {l:'Punti / Gara',      vA:sA.ptsPerRace,     vB:sB.ptsPerRace,     nA:sA.ptsPerRace,     nB:sB.ptsPerRace},
+      {l:'Forma Recente (5g)',vA:sA.recent5pts+' pt',vB:sB.recent5pts+' pt',nA:sA.recent5pts,   nB:sB.recent5pts},
+    ].map(m=>{
+      const tot=(m.nA||0)+(m.nB||0)||1, pA=Math.round((m.nA||0)/tot*100);
+      const wA=m.nA>m.nB, wB=m.nB>m.nA;
+      return `<div class="comp-bar-row">
+        <span class="comp-bar-val comp-bar-val-a${wA?' comp-bar-winner':''}">${m.vA}</span>
+        <div class="comp-bar-center"><div class="comp-bar-label">${m.l}</div>
+          <div class="comp-bar-track"><div class="comp-bar-fill-a" style="width:${pA}%"></div><div class="comp-bar-fill-b" style="width:${100-pA}%"></div></div>
+        </div>
+        <span class="comp-bar-val comp-bar-val-b${wB?' comp-bar-winner':''}">${m.vB}</span>
+      </div>`;
+    }).join('');
+
+    return `
+      <div class="comp-selectors-compact">
+        <select class="cal-filter-select comp-select-inline" onchange="window.setCompA(this.value)">
+          <option value="">— Team A —</option>${opts(compA)}
+        </select>
+        <span class="comp-vs-sm">VS</span>
+        <select class="cal-filter-select comp-select-inline" onchange="window.setCompB(this.value)">
+          <option value="">— Team B —</option>${opts(compB)}
+        </select>
+      </div>
+      <div class="comp-hero">
+        <div class="comp-hero-side comp-hero-a">
+          <div class="comp-hero-avatar comp-hero-avatar-a" style="border-radius:8px;font-size:1.1rem">${iA}</div>
+          <div class="comp-hero-name">${esc(nA)}</div>
+          <div class="comp-hero-meta">${sA.atleti} atleti · ${sA.gare} gare</div>
+        </div>
+        <div class="comp-hero-center"><div class="comp-vs-text">VS</div></div>
+        <div class="comp-hero-side comp-hero-b">
+          <div class="comp-hero-avatar comp-hero-avatar-b" style="border-radius:8px;font-size:1.1rem">${iB}</div>
+          <div class="comp-hero-name">${esc(nB)}</div>
+          <div class="comp-hero-meta">${sB.atleti} atleti · ${sB.gare} gare</div>
+        </div>
+      </div>
+      <div class="comp-section">
+        <div class="comp-section-title">Statistiche Team</div>
+        <div class="comp-stats-grid">
+          ${mBar(sA.pts,    sB.pts,    'PUNTI',              ' pt', true)}
+          ${mBar(sA.wins,   sB.wins,   'VITTORIE')}
+          ${mBar(sA.podi,   sB.podi,   'PODI')}
+          ${mBar(sA.gare,   sB.gare,   'GARE')}
+          ${mBar(sA.km,     sB.km,     'KM',                 ' km')}
+          ${mBar(sA.atleti, sB.atleti, 'ATLETI SCHIERATI')}
+        </div>
+      </div>
+      <div class="comp-section">
+        <div class="comp-section-title">Metriche Avanzate</div>
+        <div class="comp-stats-grid">${advRows}</div>
+      </div>`;
   };
 
   setPage(`
     <h1 style="font-family:var(--font-display);font-size:var(--size-h1);margin-bottom:8px">Comparatore</h1>
     <p style="color:var(--text-muted);margin-bottom:24px">Confronta atleti o team della stessa categoria e genere</p>
-
-    <!-- FILTRI -->
-    <div style="background:var(--bg-card);border:1px solid var(--border-subtle);border-radius:8px;padding:20px;margin-bottom:24px">
-      <div style="display:flex;gap:12px;flex-wrap:wrap;margin-bottom:20px">
-
-        <!-- Tab Atleti / Team -->
-        <div style="display:flex;gap:6px;align-items:center">
-          <button id="comp-tab-atleta" onclick="window.setCompMode('atleta')"
-            style="font-family:var(--font-heading);font-weight:700;font-size:0.85rem;padding:6px 18px;border-radius:20px;
-            border:1px solid ${compMode === 'atleta' ? 'var(--red-hot)' : 'var(--border-subtle)'};
-            background:${compMode === 'atleta' ? 'var(--red-hot)' : 'none'};
-            color:${compMode === 'atleta' ? '#fff' : 'var(--text-muted)'};cursor:pointer">
-            👤 Atleti
-          </button>
-          <button id="comp-tab-team" onclick="window.setCompMode('team')"
-            style="font-family:var(--font-heading);font-weight:700;font-size:0.85rem;padding:6px 18px;border-radius:20px;
-            border:1px solid ${compMode === 'team' ? 'var(--yellow-race)' : 'var(--border-subtle)'};
-            background:${compMode === 'team' ? 'var(--yellow-race)' : 'none'};
-            color:${compMode === 'team' ? '#000' : 'var(--text-muted)'};cursor:pointer">
-            🚴 Team
-          </button>
-        </div>
-
-        <!-- Genere -->
-        <div style="flex:1;min-width:140px">
-          <label class="comp-label">Genere</label>
-          <select class="cal-filter-select" style="width:100%" onchange="window.setCompGender(this.value)">
-            <option value="M" ${compGender === 'M' ? 'selected' : ''}>♂ Uomini</option>
-            <option value="F" ${compGender === 'F' ? 'selected' : ''}>♀ Donne</option>
-          </select>
-        </div>
-
-        <!-- Categoria -->
-        <div style="flex:2;min-width:200px">
-          <label class="comp-label">Categoria</label>
-          <select class="cal-filter-select" style="width:100%" onchange="window.setCompCat(this.value)">
-            <option value="">— Tutte —</option>${catOpts}
-          </select>
-        </div>
+    <div class="comp-filter-bar">
+      <div class="comp-mode-tabs">
+        <button class="comp-tab ${compMode==='atleta'?'comp-tab-active-a':''}" onclick="window.setCompMode('atleta')">Atleti</button>
+        <button class="comp-tab ${compMode==='team'?'comp-tab-active-b':''}" onclick="window.setCompMode('team')">Team</button>
       </div>
-
-      <!-- Selettori A vs B -->
-      <div id="comp-selectors">
-        ${compMode === 'atleta' ? buildAthleteResult() : buildTeamResult()}
+      <div style="flex:1;min-width:120px">
+        <label class="comp-label">Genere</label>
+        <select class="cal-filter-select" style="width:100%" onchange="window.setCompGender(this.value)">
+          <option value="M" ${compGender==='M'?'selected':''}>♂ Uomini</option>
+          <option value="F" ${compGender==='F'?'selected':''}>♀ Donne</option>
+        </select>
+      </div>
+      <div style="flex:2;min-width:160px">
+        <label class="comp-label">Categoria</label>
+        <select class="cal-filter-select" style="width:100%" onchange="window.setCompCat(this.value)">
+          <option value="">— Tutte —</option>${catOpts}
+        </select>
       </div>
     </div>
+    <div id="comp-content">${compMode==='atleta'?buildAthleteResult():buildTeamResult()}</div>
   `);
 
-  window.setCompMode   = v => { compMode = v; compA = ''; compB = ''; renderComparatore(); };
-  window.setCompGender = v => { compGender = v; compA = ''; compB = ''; renderComparatore(); };
-  window.setCompCat    = v => { compCat = v; compA = ''; compB = ''; renderComparatore(); };
-  window.setCompA      = v => { compA = v; renderComparatore(); };
-  window.setCompB      = v => { compB = v; renderComparatore(); };
-}
-
-function compBars(labelA, labelB, sA, sB, mode) {
-  const bar = (vA, vB, label, fmt = '') => {
-    const tot = (parseFloat(vA) || 0) + (parseFloat(vB) || 0) || 1;
-    const pA = Math.round((parseFloat(vA) || 0) / tot * 100);
-    const winsA = pA > 50;
-    return `
-      <div style="margin:14px 0">
-        <div style="font-family:var(--font-heading);font-size:0.7rem;text-transform:uppercase;letter-spacing:0.1em;color:var(--text-muted);margin-bottom:5px">${label}</div>
-        <div style="display:flex;align-items:center;gap:10px">
-          <span style="font-family:var(--font-display);font-size:${winsA ? '1.6' : '1.3'}rem;color:var(--red-hot);min-width:90px;text-align:right">${vA}${fmt}</span>
-          <div style="flex:1;height:12px;border-radius:6px;overflow:hidden;display:flex">
-            <div style="width:${pA}%;background:var(--red-hot);transition:width 0.7s ease"></div>
-            <div style="width:${100 - pA}%;background:var(--cat-juniores);transition:width 0.7s ease"></div>
-          </div>
-          <span style="font-family:var(--font-display);font-size:${!winsA ? '1.6' : '1.3'}rem;color:var(--cat-juniores);min-width:90px">${vB}${fmt}</span>
-        </div>
-      </div>`;
-  };
-
-  const extraRow = mode === 'team'
-    ? bar(sA.atleti, sB.atleti, 'Atleti Schierati')
-    : `<div style="margin-top:14px;display:flex;justify-content:space-between;align-items:center">
-         <span style="font-family:var(--font-display);font-size:1.5rem;color:var(--red-hot)">${sA.media} km/h</span>
-         <span style="font-family:var(--font-heading);font-size:0.7rem;text-transform:uppercase;color:var(--text-muted)">Velocità Media</span>
-         <span style="font-family:var(--font-display);font-size:1.5rem;color:var(--cat-juniores)">${sB.media} km/h</span>
-       </div>`;
-
-  return `
-    <div style="display:grid;grid-template-columns:1fr 1fr;border:1px solid var(--border-subtle);border-radius:8px 8px 0 0;overflow:hidden;margin-top:16px">
-      <div style="padding:16px 20px;background:rgba(232,0,29,0.07);border-right:1px solid var(--border-subtle)">
-        <div style="font-family:var(--font-display);font-size:1.8rem;color:var(--red-hot);line-height:1.1">${esc(labelA)}</div>
-      </div>
-      <div style="padding:16px 20px;background:rgba(16,185,129,0.07)">
-        <div style="font-family:var(--font-display);font-size:1.8rem;color:var(--cat-juniores);line-height:1.1">${esc(labelB)}</div>
-      </div>
-    </div>
-    <div style="border:1px solid var(--border-subtle);border-top:none;border-radius:0 0 8px 8px;padding:20px;background:var(--bg-card)">
-      ${bar(sA.pts, sB.pts, 'Punti Totali', ' pt')}
-      ${bar(sA.wins, sB.wins, 'Vittorie')}
-      ${bar(sA.podi, sB.podi, 'Podi (Top 3)')}
-      ${bar(sA.gare, sB.gare, 'Gare Disputate')}
-      ${bar(sA.km, sB.km, 'Km Percorsi', ' km')}
-      ${extraRow}
-    </div>`;
+  window.setCompMode   = v => { compMode=v; compA=''; compB=''; renderComparatore(); };
+  window.setCompGender = v => { compGender=v; compA=''; compB=''; renderComparatore(); };
+  window.setCompCat    = v => { compCat=v; compA=''; compB=''; renderComparatore(); };
+  window.setCompA      = v => { compA=v; renderComparatore(); };
+  window.setCompB      = v => { compB=v; renderComparatore(); };
 }
 
 function renderRegolamento() {
