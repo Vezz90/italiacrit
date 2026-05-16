@@ -29,7 +29,7 @@ const storage = multer.diskStorage({
 });
 const upload = multer({
   storage,
-  limits: { fileSize: 5 * 1024 * 1024 },
+  limits: { fileSize: 50 * 1024 * 1024 },
   fileFilter: (req, file, cb) => {
     if (/^image\/(jpeg|png|webp|gif)$/.test(file.mimetype)) cb(null, true);
     else cb(new Error('Solo immagini JPEG, PNG, WebP o GIF'));
@@ -390,6 +390,12 @@ app.delete('/api/admin/race-photos/:id', requireAdmin, (req, res) => {
 // ── Health ───────────────────────────────────────────────────────────────────
 
 app.get('/api/health', (req, res) => res.json({ ok: true, ts: new Date().toISOString() }));
+
+// Global JSON error handler — catches multer errors, unhandled exceptions
+app.use((err, req, res, next) => {
+  console.error('[error]', err.message);
+  res.status(err.status || 500).json({ error: err.message || 'Errore interno del server' });
+});
 
 app.listen(PORT, () => {
   console.log(`[server] ItaliacritAuth in ascolto su http://localhost:${PORT}`);

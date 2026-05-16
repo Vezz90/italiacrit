@@ -2229,12 +2229,14 @@ async function renderGara(gara_id) {
     try {
       const token = authToken();
       const res = await fetch(`${API_BASE}/race-photos/upload`, { method:'POST', headers:{ Authorization:`Bearer ${token}` }, body:fd });
-      const data = await res.json();
-      if (!res.ok) throw new Error(data.error || 'Errore');
+      const text = await res.text();
+      let data;
+      try { data = JSON.parse(text); } catch { throw new Error(`Errore HTTP ${res.status}`); }
+      if (!res.ok) throw new Error(data.error || `Errore ${res.status}`);
       document.querySelector('[style*="position:fixed"][style*="9999"]')?.remove();
       if (data.status === 'approved') {
         alert('Foto pubblicata!');
-        navigate(location.hash); // ricarica la pagina gara per mostrare subito la foto
+        renderGara(window._currentGaraId);
       } else {
         alert('Foto inviata! Sarà visibile dopo approvazione.');
       }
