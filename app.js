@@ -8,7 +8,8 @@
 
 // ── CONSTANTS ─────────────────────────────────────────────────
 const BASEPTS = { 1:15, 2:12, 3:10, 4:8, 5:6, 6:5, 7:4, 8:3, 9:2, 10:1 };
-const API_BASE = 'http://localhost:8002/api';
+const API_BASE   = 'http://localhost:8002/api';
+const MEDIA_BASE = 'http://localhost:8002';
 
 // ── AUTH HELPERS ──────────────────────────────────────────────
 function authToken() { return localStorage.getItem('italiacrit-token'); }
@@ -23,6 +24,104 @@ function authClear() {
   localStorage.removeItem('italiacrit-token');
   localStorage.removeItem('italiacrit-user');
 }
+
+// ── ENTITY OVERRIDES / PHOTO ──────────────────────────────────
+const _ovCache = {};
+async function getEntityOverrides(type, id) {
+  const key = `${type}:${id}`;
+  if (_ovCache[key]) return _ovCache[key];
+  try {
+    const { overrides } = await apiCall(`/admin/override/entity/${type}/${encodeURIComponent(id)}`);
+    _ovCache[key] = overrides || {};
+  } catch { _ovCache[key] = {}; }
+  return _ovCache[key];
+}
+
+function canUploadPhoto(entityType) {
+  const user = authUser();
+  if (!user) return false;
+  if (user.role === 'admin') return true;
+  if (entityType === 'atleta' && user.role === 'atleta') return true;
+  if (entityType === 'team'   && user.role === 'team')   return true;
+  return false;
+}
+
+function photoAreaHtml(entityType, entityId, photoUrl, initials, shape = 'circle') {
+  const size   = shape === 'circle' ? 96 : 88;
+  const radius = shape === 'circle' ? '50%' : '10px';
+  const canUp  = canUploadPhoto(entityType);
+  const imgEl  = photoUrl
+    ? `<img data-photo-id="${esc(entityId)}" src="${MEDIA_BASE}${esc(photoUrl)}"
+           alt="Foto" style="width:100%;height:100%;object-fit:cover;border-radius:${radius};display:block">`
+    : `<div data-photo-id="${esc(entityId)}" style="width:100%;height:100%;border-radius:${radius};
+           background:var(--bg-elevated);display:flex;align-items:center;justify-content:center;
+           font-family:var(--font-display);font-size:${shape==='circle'?'1.8':'1.6'}rem;
+           color:var(--text-muted);letter-spacing:.04em">${esc(initials)}</div>`;
+  const camBtn = canUp ? `
+    <button class="photo-cam-btn" title="Carica foto"
+      onclick="triggerPhotoUpload('${esc(entityType)}','${esc(entityId)}')">
+      <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+        <path d="M23 19a2 2 0 0 1-2 2H3a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h4l2-3h6l2 3h4a2 2 0 0 1 2 2z"/>
+        <circle cx="12" cy="13" r="4"/>
+      </svg>
+    </button>
+    <input type="file" id="photo-file-${esc(entityId)}" accept="image/jpeg,image/png,image/webp"
+      style="display:none" onchange="handlePhotoUpload(event,'${esc(entityType)}','${esc(entityId)}')">` : '';
+  return `<div class="photo-area" style="width:${size}px;height:${size}px;flex-shrink:0;position:relative">
+    ${imgEl}${camBtn}
+  </div>`;
+}
+
+window.triggerPhotoUpload = function(entityType, entityId) {
+  document.getElementById(`photo-file-${entityId}`)?.click();
+};
+
+window.handlePhotoUpload = async function(evt, entityType, entityId) {
+  const file = evt.target.files[0];
+  if (!file) return;
+
+  // Cambia icona per feedback visivo
+  const btn = document.querySelector(`.photo-cam-btn`);
+  if (btn) { btn.style.opacity = '0.5'; btn.style.pointerEvents = 'none'; }
+
+  const fd = new FormData();
+  // I campi testo devono venire PRIMA del file per essere disponibili in multer
+  fd.append('entity_type', entityType);
+  fd.append('entity_id', entityId);
+  fd.append('photo', file);
+  try {
+    const token = authToken();
+    const res  = await fetch(`${API_BASE}/upload/photo`, {
+      method: 'POST',
+      headers: token ? { Authorization: `Bearer ${token}` } : {},
+      body: fd,
+    });
+    let data;
+    try { data = await res.json(); } catch { throw new Error('Risposta non valida dal server — è in esecuzione?'); }
+    if (!res.ok) throw new Error(data.error || `HTTP ${res.status}`);
+    // Update cache and DOM without full re-render
+    const key = `${entityType}:${entityId}`;
+    if (_ovCache[key]) _ovCache[key].photo_url = data.photo_url;
+    const target = document.querySelector(`[data-photo-id="${entityId}"]`);
+    if (target) {
+      const radius = entityType === 'team' ? '10px' : '50%';
+      const newImg = document.createElement('img');
+      newImg.src = `${MEDIA_BASE}${data.photo_url}`;
+      newImg.setAttribute('data-photo-id', entityId);
+      newImg.style.cssText = `width:100%;height:100%;object-fit:cover;border-radius:${radius};display:block`;
+      target.replaceWith(newImg);
+    }
+    const toast = document.createElement('div');
+    toast.className = 'upload-toast';
+    toast.textContent = 'Foto aggiornata ✓';
+    document.body.appendChild(toast);
+    setTimeout(() => toast.remove(), 2500);
+  } catch (err) {
+    alert('Errore upload: ' + err.message);
+  } finally {
+    if (btn) { btn.style.opacity = ''; btn.style.pointerEvents = ''; }
+  }
+};
 
 async function apiCall(path, opts = {}) {
   const token = authToken();
@@ -1309,9 +1408,15 @@ async function renderAtleta(atleta_id) {
 
   // Recupero ranking asincrono per evitare crash
   const rCode = getRankingFileCode(a.categoria);
-  const currentRanking = rCode ? await loadRanking(rCode) : [];
+  const [currentRanking, atletaOv] = await Promise.all([
+    rCode ? loadRanking(rCode) : Promise.resolve([]),
+    getEntityOverrides('atleta', atleta_id),
+  ]);
   const aRankObj = currentRanking.find(x => x.atleta_id === a.id);
   const globalPos = aRankObj ? aRankObj.pos : '-';
+
+  const initials = ((a.cognome||'?')[0] + (a.nome||'?')[0]).toUpperCase();
+  const photoHtml = photoAreaHtml('atleta', atleta_id, atletaOv.photo_url || null, initials, 'circle');
 
   const headerHtml = `
     <div class="athlete-header">
@@ -1320,7 +1425,8 @@ async function renderAtleta(atleta_id) {
         ${a.genere === 'F' ? '<span class="badge-cat badge-genere-f">♀</span>' : ''}
         ${a.team_id ? `<a href="#/team/${esc(a.team_id)}" style="font-family:var(--font-heading);font-size:.8rem;color:var(--text-secondary);border:1px solid var(--border-subtle);padding:2px 10px;border-radius:2px">${esc(a.team_attuale)} →</a>` : ''}
       </div>
-      <div style="display:flex;gap:40px;align-items:flex-end;flex-wrap:wrap">
+      <div style="display:flex;gap:20px;align-items:center;flex-wrap:wrap;margin-bottom:4px">
+        ${photoHtml}
         <div class="athlete-header-name">
           <span class="athlete-cognome">${esc(a.cognome)}</span>
           <span class="athlete-nome">${esc(a.nome)}</span>
@@ -1561,8 +1667,11 @@ async function renderTeam(team_id) {
       </tr>`;
     }).join('');
 
-  // Caricamento classifiche team per mostrare posizione generale
-  const teamRankings = await Promise.all(RANKING_CODES.map(c => loadTeamRanking(c)));
+  // Caricamento classifiche team + override foto in parallelo
+  const [teamRankings, teamOv] = await Promise.all([
+    Promise.all(RANKING_CODES.map(c => loadTeamRanking(c))),
+    getEntityOverrides('team', team_id),
+  ]);
   const tCatRanks = [];
   teamRankings.forEach((rlist, idx) => {
     const code = RANKING_CODES[idx];
@@ -1608,12 +1717,18 @@ async function renderTeam(team_id) {
       </div>
     </div>`;
 
+  const teamInitials = t.nome.split(/\s+/).map(w=>w[0]||'').join('').toUpperCase().slice(0,3);
+  const teamPhotoHtml = photoAreaHtml('team', team_id, teamOv.photo_url || null, teamInitials, 'square');
+
   setPage(`
   window._shareTeamData = {nome:t.nome,cat:catLabel(teamViewCat),punti:catPuntiTotali,pos:currentRank?currentRank.pos:null,p1:p1,atleti:atletiList.slice(0,5)};
     <div class="team-header">
-      <div>
+      <div style="display:flex;gap:20px;align-items:center">
+        ${teamPhotoHtml}
+        <div>
         <div class="team-name-display">${esc(t.nome)}</div>
         ${headerStats}
+        </div>
       </div>
     </div>
       <div style="margin-top:12px;display:flex;gap:10px;align-items:center;flex-wrap:wrap">

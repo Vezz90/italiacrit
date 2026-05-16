@@ -1560,6 +1560,46 @@ body.light-mode .link-result-row:hover { background: #e5e5e5; }
 /* Calendar home rows */
 a.hcal-row:hover { border-color: var(--red-hot) !important; }
 
+/* ── PHOTO AREA ──────────────────────────────────────────────── */
+.photo-area { position: relative; flex-shrink: 0; }
+
+.photo-cam-btn {
+  position: absolute;
+  bottom: 3px;
+  right: 3px;
+  width: 26px;
+  height: 26px;
+  border-radius: 50%;
+  background: var(--red-hot);
+  border: 2px solid var(--bg-card);
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: #fff;
+  padding: 0;
+  transition: background .15s, transform .15s;
+}
+.photo-cam-btn:hover { background: var(--red-deep); transform: scale(1.1); }
+
+.upload-toast {
+  position: fixed;
+  bottom: 28px;
+  left: 50%;
+  transform: translateX(-50%);
+  background: var(--red-hot);
+  color: #fff;
+  padding: 10px 24px;
+  border-radius: 6px;
+  font-family: var(--font-display);
+  font-size: 0.95rem;
+  letter-spacing: .06em;
+  z-index: 9999;
+  pointer-events: none;
+  animation: toastIn .2s ease;
+}
+@keyframes toastIn { from { opacity:0; transform: translateX(-50%) translateY(8px); } to { opacity:1; transform: translateX(-50%) translateY(0); } }
+
 /* Admin edit button */
 .admin-edit-btn {
   background: transparent;
