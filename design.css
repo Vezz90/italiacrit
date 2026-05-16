@@ -2138,6 +2138,219 @@ div[style*="grid-template-columns: repeat(auto-fit"] {
   font-weight: 700;
 }
 
+/* ── COMPARATORE AUTOCOMPLETE ────────────────────────────────── */
+.comp-ac {
+  position: relative;
+  flex: 1;
+  min-width: 0;
+}
+
+.comp-ac-input {
+  width: 100%;
+  box-sizing: border-box;
+}
+
+.comp-ac-dropdown {
+  display: none;
+  position: absolute;
+  top: calc(100% + 4px);
+  left: 0;
+  right: 0;
+  background: var(--bg-card);
+  border: 1px solid var(--border-subtle);
+  border-radius: var(--r-md);
+  box-shadow: 0 4px 16px rgba(0,0,0,0.1);
+  z-index: 200;
+  max-height: 260px;
+  overflow-y: auto;
+  overscroll-behavior: contain;
+}
+
+.comp-ac-item {
+  display: flex;
+  flex-direction: column;
+  gap: 1px;
+  padding: 8px 12px;
+  cursor: pointer;
+  border-bottom: 1px solid rgba(0,0,0,0.04);
+  transition: background 0.1s;
+}
+
+.comp-ac-item:last-child { border-bottom: none; }
+
+.comp-ac-item:hover {
+  background: rgba(255,107,0,0.06);
+}
+
+.comp-ac-name {
+  font-family: 'Inter', system-ui, sans-serif;
+  font-size: 0.875rem;
+  font-weight: 600;
+  color: var(--text-primary);
+}
+
+.comp-ac-sub {
+  font-size: 0.6875rem;
+  color: var(--text-muted);
+  font-weight: 400;
+}
+
+.comp-ac-empty {
+  padding: 12px;
+  text-align: center;
+  color: var(--text-muted);
+  font-size: 0.8125rem;
+}
+
+/* ── RACE PHOTO GALLERY ───────────────────────────────────────── */
+.race-gallery {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
+  gap: 8px;
+  margin-top: 12px;
+}
+
+.race-gallery-item {
+  position: relative;
+  aspect-ratio: 4/3;
+  border-radius: var(--r-md);
+  overflow: hidden;
+  background: var(--bg-elevated);
+  cursor: pointer;
+}
+
+.race-gallery-item img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+  transition: transform 0.2s;
+}
+
+.race-gallery-item:hover img { transform: scale(1.03); }
+
+.race-gallery-caption {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  padding: 6px 8px;
+  background: linear-gradient(transparent, rgba(0,0,0,0.55));
+  font-size: 0.6875rem;
+  color: #fff;
+  font-weight: 500;
+}
+
+.race-photo-upload-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 7px 14px;
+  background: var(--bg-elevated);
+  border: 1px solid var(--border-subtle);
+  border-radius: var(--r-md);
+  font-family: 'Inter', system-ui, sans-serif;
+  font-size: 0.8125rem;
+  font-weight: 600;
+  color: var(--text-secondary);
+  cursor: pointer;
+  transition: all 0.15s;
+}
+
+.race-photo-upload-btn:hover {
+  background: rgba(255,107,0,0.06);
+  border-color: var(--red-hot);
+  color: var(--red-hot);
+}
+
+/* Lightbox overlay */
+#photo-lightbox {
+  position: fixed;
+  inset: 0;
+  background: rgba(0,0,0,0.85);
+  z-index: 9000;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 16px;
+}
+
+#photo-lightbox img {
+  max-width: 100%;
+  max-height: 90vh;
+  border-radius: var(--r-md);
+  box-shadow: 0 8px 40px rgba(0,0,0,0.4);
+}
+
+/* Admin pending photos */
+.admin-photo-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+  gap: 12px;
+  margin-top: 12px;
+}
+
+.admin-photo-card {
+  background: var(--bg-card);
+  border: 1px solid var(--border-subtle);
+  border-radius: var(--r-md);
+  overflow: hidden;
+}
+
+.admin-photo-card img {
+  width: 100%;
+  aspect-ratio: 4/3;
+  object-fit: cover;
+  display: block;
+}
+
+.admin-photo-card-body {
+  padding: 10px 12px;
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.admin-photo-meta {
+  font-size: 0.6875rem;
+  color: var(--text-muted);
+  font-weight: 500;
+}
+
+.admin-photo-actions {
+  display: flex;
+  gap: 6px;
+  margin-top: 4px;
+}
+
+.btn-approve {
+  flex: 1;
+  padding: 5px;
+  background: rgba(16,185,129,0.1);
+  border: 1px solid rgba(16,185,129,0.3);
+  border-radius: var(--r-sm);
+  color: #10B981;
+  font-size: 0.75rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: background 0.15s;
+}
+.btn-approve:hover { background: rgba(16,185,129,0.2); }
+
+.btn-reject {
+  flex: 1;
+  padding: 5px;
+  background: rgba(239,68,68,0.08);
+  border: 1px solid rgba(239,68,68,0.25);
+  border-radius: var(--r-sm);
+  color: #EF4444;
+  font-size: 0.75rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: background 0.15s;
+}
+.btn-reject:hover { background: rgba(239,68,68,0.15); }
+
 /* ── MOBILE COMPARATORE ───────────────────────────────────────── */
 @media (max-width: 640px) {
   .comp-filter-bar { padding: 12px 14px; gap: 10px; }
@@ -2164,4 +2377,49 @@ div[style*="grid-template-columns: repeat(auto-fit"] {
 
   .comp-selectors-compact { gap: 8px; }
   .comp-select-inline { min-width: 120px; font-size: 0.8125rem; }
+}
+
+/* ── Risultati card con foto ─────────────────────────────── */
+.ris-card {
+  display: flex;
+  overflow: hidden;
+  margin-bottom: 24px;
+  padding: 0;
+}
+
+.ris-card-photo {
+  flex-shrink: 0;
+  width: clamp(160px, 25%, 240px);
+  overflow: hidden;
+  border-radius: var(--r-lg) 0 0 var(--r-lg);
+}
+
+.ris-card-photo img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+  transition: transform 0.3s;
+}
+
+.ris-card-photo:hover img { transform: scale(1.04); }
+
+.ris-card-body {
+  flex: 1;
+  padding: 24px;
+  min-width: 0;
+}
+
+@media (max-width: 600px) {
+  .ris-card { flex-direction: column; }
+
+  .ris-card-photo {
+    width: 100%;
+    height: 180px;
+    border-radius: var(--r-lg) var(--r-lg) 0 0;
+  }
+
+  .ris-card-body { padding: 16px; }
+
+  .ris-card .hero-race-name { font-size: 1.25rem !important; }
 }

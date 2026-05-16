@@ -20,8 +20,10 @@ const storage = multer.diskStorage({
   destination: UPLOADS_DIR,
   filename: (req, file, cb) => {
     const ext  = path.extname(file.originalname).toLowerCase() || '.jpg';
-    const safe = (req.body.entity_type + '_' + req.body.entity_id)
-                   .replace(/[^a-zA-Z0-9_-]/g, '_').slice(0, 120);
+    const base = req.body.entity_type && req.body.entity_id
+      ? (req.body.entity_type + '_' + req.body.entity_id)
+      : ('photo_' + Date.now() + '_' + Math.random().toString(36).slice(2, 7));
+    const safe = base.replace(/[^a-zA-Z0-9_-]/g, '_').slice(0, 120);
     cb(null, safe + ext);
   },
 });
@@ -314,6 +316,71 @@ app.post('/api/upload/photo', requireAuth, upload.single('photo'), (req, res) =>
     entity_type, entity_id, field: 'photo_url', new_value: photo_url, edited_by: user.id,
   });
   res.json({ ok: true, photo_url });
+});
+
+// ── Race Photos ──────────────────────────────────────────────────────────────
+
+// POST /api/race-photos/upload  — qualsiasi utente loggato
+app.post('/api/race-photos/upload', requireAuth, upload.single('photo'), (req, res) => {
+  const { gara_id, caption, photographer } = req.body;
+  if (!gara_id) return res.status(400).json({ error: 'gara_id mancante' });
+  if (!req.file) return res.status(400).json({ error: 'Nessun file ricevuto' });
+  const display_name = req.user.display_name || req.user.email;
+  const status = req.user.role === 'admin' ? 'approved' : 'pending';
+  queries.insertRacePhoto.run({
+    gara_id, user_id: req.user.id, display_name,
+    filename: req.file.filename,
+    caption: caption || '',
+    photographer: photographer || '',
+    status,
+  });
+  res.json({ ok: true, status });
+});
+
+// GET /api/race-photos  — tutte le approvate (per Risultati page)
+app.get('/api/race-photos', (req, res) => {
+  res.json({ photos: queries.getAllApprovedRacePhotos.all() });
+});
+
+// GET /api/race-photos/:gara_id  — pubblico, solo approvate
+app.get('/api/race-photos/:gara_id', (req, res) => {
+  const photos = queries.getApprovedRacePhotos.all(req.params.gara_id);
+  res.json({ photos });
+});
+
+// GET /api/admin/race-photos/pending
+app.get('/api/admin/race-photos/pending', requireAdmin, (req, res) => {
+  res.json({ photos: queries.getPendingRacePhotos.all() });
+});
+
+// POST /api/admin/race-photos/:id/approve
+app.post('/api/admin/race-photos/:id/approve', requireAdmin, (req, res) => {
+  queries.approveRacePhoto.run(req.params.id);
+  res.json({ ok: true });
+});
+
+// POST /api/admin/race-photos/:id/reject
+app.post('/api/admin/race-photos/:id/reject', requireAdmin, (req, res) => {
+  queries.rejectRacePhoto.run(req.params.id);
+  res.json({ ok: true });
+});
+
+// PATCH /api/admin/race-photos/:id  { caption, photographer }
+app.patch('/api/admin/race-photos/:id', requireAdmin, (req, res) => {
+  const { caption, photographer } = req.body;
+  queries.updateRacePhoto.run({ id: req.params.id, caption: caption || '', photographer: photographer || '' });
+  res.json({ ok: true });
+});
+
+// DELETE /api/admin/race-photos/:id
+app.delete('/api/admin/race-photos/:id', requireAdmin, (req, res) => {
+  const photo = queries.getRacePhotoById.get(req.params.id);
+  if (!photo) return res.status(404).json({ error: 'Foto non trovata' });
+  queries.deleteRacePhoto.run(req.params.id);
+  // Remove file from disk
+  const filePath = path.join(UPLOADS_DIR, photo.filename);
+  try { if (fs.existsSync(filePath)) fs.unlinkSync(filePath); } catch {}
+  res.json({ ok: true });
 });
 
 // ── Health ───────────────────────────────────────────────────────────────────

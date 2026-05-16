@@ -8,7 +8,8 @@
 
 // ── CONSTANTS ─────────────────────────────────────────────────
 const BASEPTS = { 1:15, 2:12, 3:10, 4:8, 5:6, 6:5, 7:4, 8:3, 9:2, 10:1 };
-const API_BASE   = 'http://localhost:8002/api';
+const API_BASE    = 'http://localhost:8002/api';
+const PHOTOS_BASE = 'http://localhost:8002';
 const MEDIA_BASE = 'http://localhost:8002';
 
 // ── AUTH HELPERS ──────────────────────────────────────────────
@@ -1186,8 +1187,175 @@ async function renderAdmin() {
       </table>
       ${races.length > 50 ? `<div style="text-align:center;padding:20px;color:var(--text-muted)">Filtra per vedere altre gare...</div>` : ''}
     </div>
+
+    <div style="margin-top:48px">
+      <h2 style="font-family:var(--font-display);font-size:1.2rem;margin-bottom:16px;border-bottom:2px solid var(--accent);padding-bottom:8px">
+        📷 FOTO IN ATTESA DI APPROVAZIONE
+      </h2>
+      <div id="admin-photos-pending">
+        <div style="color:var(--text-muted);padding:20px 0">Caricamento...</div>
+      </div>
+    </div>
+
   `);
+
+  loadPendingRacePhotos();
 }
+
+async function loadPendingRacePhotos() {
+  const container = document.getElementById('admin-photos-pending');
+  if (!container) return;
+  try {
+    const token = authToken();
+    const resp = await fetch(`${API_BASE}/admin/race-photos/pending`, {
+      headers: { Authorization: `Bearer ${token}` }
+    });
+    if (!resp.ok) throw new Error(`HTTP ${resp.status} — riavvia il server`);
+    const data = await resp.json();
+    const photos = data.photos || [];
+    if (!photos.length) {
+      container.innerHTML = `<div style="color:var(--text-muted);padding:20px 0">Nessuna foto in attesa.</div>`;
+      return;
+    }
+    container.innerHTML = `<div class="admin-photo-grid">${photos.map(p => `
+      <div class="admin-photo-card" id="admin-photo-${p.id}">
+        <img src="${PHOTOS_BASE}/photos/${esc(p.filename)}" alt="${esc(p.caption||'foto')}" onclick="openPhotoLightbox('${PHOTOS_BASE}/photos/${esc(p.filename)}')" style="cursor:zoom-in" />
+        <div class="admin-photo-card-body">
+          <div class="admin-photo-meta">
+            <a href="#/gara/${encodeURIComponent(p.gara_id)}" style="color:var(--accent);font-weight:600;font-size:0.8rem">${esc(p.gara_id)}</a>
+            <span style="color:var(--text-muted);font-size:0.75rem">${esc(p.display_name||p.email)} &mdash; ${(p.created_at||'').slice(0,10)}</span>
+            ${p.photographer ? `<span style="font-size:0.8rem">📷 ${esc(p.photographer)}</span>` : ''}
+            ${p.caption ? `<span style="font-size:0.8rem;font-style:italic">${esc(p.caption)}</span>` : ''}
+          </div>
+          <div class="admin-photo-actions">
+            <button class="btn-approve" onclick="adminPhotoAction(${p.id},'approve')">✓ Approva</button>
+            <button class="btn-reject"  onclick="adminPhotoAction(${p.id},'reject')">✗ Rifiuta</button>
+          </div>
+        </div>
+      </div>
+    `).join('')}</div>`;
+  } catch(e) {
+    container.innerHTML = `<div style="color:var(--red-hot);padding:20px 0">Errore caricamento foto: ${esc(e.message)}</div>`;
+  }
+}
+
+async function loadApprovedRacePhotos() {
+  const container = document.getElementById('admin-photos-approved');
+  if (!container) return;
+  try {
+    const token = authToken();
+    const data = await fetch(`${API_BASE}/race-photos`, {
+      headers: { Authorization: `Bearer ${token}` }
+    }).then(r => r.json());
+    const photos = data.photos || [];
+    if (!photos.length) {
+      container.innerHTML = `<div style="color:var(--text-muted);padding:20px 0">Nessuna foto approvata.</div>`;
+      return;
+    }
+    container.innerHTML = `<div class="admin-photo-grid">${photos.map(p => `
+      <div class="admin-photo-card" id="admin-approved-${p.id}">
+        <img src="${PHOTOS_BASE}/photos/${esc(p.filename)}" alt="${esc(p.caption||'foto')}" onclick="window.adminOpenLightbox('${PHOTOS_BASE}/photos/${esc(p.filename)}')" style="cursor:zoom-in" />
+        <div class="admin-photo-card-body">
+          <div class="admin-photo-meta">
+            <a href="#/gara/${encodeURIComponent(p.gara_id)}" style="color:var(--accent);font-weight:600;font-size:0.8rem">${esc(p.gara_id)}</a>
+            <span style="color:var(--text-muted);font-size:0.75rem">${esc(p.display_name||'')} &mdash; ${(p.created_at||'').slice(0,10)}</span>
+            ${p.photographer ? `<span style="font-size:0.8rem">📷 ${esc(p.photographer)}</span>` : ''}
+            ${p.caption ? `<span style="font-size:0.8rem;font-style:italic">${esc(p.caption)}</span>` : ''}
+          </div>
+          <div class="admin-photo-actions">
+            <button class="btn-approve" onclick="window.adminPanelEditPhoto(${p.id},'${esc(p.caption||'')}','${esc(p.photographer||'')}')">✏️ Modifica</button>
+            <button class="btn-reject"  onclick="window.adminPanelDeletePhoto(${p.id})">🗑 Elimina</button>
+          </div>
+        </div>
+      </div>
+    `).join('')}</div>`;
+  } catch(e) {
+    container.innerHTML = `<div style="color:var(--red-hot);padding:20px 0">Errore: ${esc(e.message)}</div>`;
+  }
+}
+
+window.adminPanelEditPhoto = (id, caption, photographer) => {
+  const inpStyle = 'width:100%;box-sizing:border-box;padding:8px 10px;border:1px solid var(--border-subtle);border-radius:var(--r-sm);font-size:0.875rem;background:var(--bg-primary);color:var(--text-primary);margin-bottom:10px';
+  const overlay = document.createElement('div');
+  overlay.style.cssText = 'position:fixed;inset:0;background:rgba(0,0,0,.6);z-index:9999;display:flex;align-items:center;justify-content:center;padding:16px';
+  overlay.innerHTML = `
+    <div style="background:var(--bg-card);border-radius:var(--r-lg);padding:24px;width:100%;max-width:400px;box-shadow:0 8px 32px rgba(0,0,0,.25)">
+      <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:16px">
+        <strong>Modifica foto</strong>
+        <button onclick="this.closest('[style*=fixed]').remove()" style="background:none;border:none;font-size:1.3rem;cursor:pointer;color:var(--text-muted)">✕</button>
+      </div>
+      <input id="ap-caption" type="text" placeholder="Didascalia" value="${esc(caption)}" style="${inpStyle}"/>
+      <input id="ap-photographer" type="text" placeholder="Credit fotografo" value="${esc(photographer)}" style="${inpStyle}"/>
+      <div id="ap-err" style="color:#EF4444;font-size:0.8rem;margin-bottom:8px;display:none"></div>
+      <button onclick="window._adminSavePhoto(${id})" style="width:100%;padding:9px;background:var(--accent);color:#fff;border:none;border-radius:var(--r-sm);font-weight:600;cursor:pointer">Salva</button>
+    </div>`;
+  document.body.appendChild(overlay);
+};
+
+window._adminSavePhoto = async (id) => {
+  const caption      = document.getElementById('ap-caption')?.value || '';
+  const photographer = document.getElementById('ap-photographer')?.value || '';
+  const errEl = document.getElementById('ap-err');
+  try {
+    const res = await fetch(`${API_BASE}/admin/race-photos/${id}`, {
+      method: 'PATCH',
+      headers: { 'Content-Type': 'application/json', Authorization: `Bearer ${authToken()}` },
+      body: JSON.stringify({ caption, photographer }),
+    });
+    if (!res.ok) throw new Error((await res.json()).error || 'Errore');
+    document.querySelector('[style*="position:fixed"][style*="9999"]')?.remove();
+    loadApprovedRacePhotos();
+  } catch(e) {
+    if (errEl) { errEl.textContent = e.message; errEl.style.display = 'block'; }
+  }
+};
+
+window.adminPanelDeletePhoto = async (id) => {
+  if (!confirm('Eliminare questa foto? L\'operazione non è reversibile.')) return;
+  try {
+    const res = await fetch(`${API_BASE}/admin/race-photos/${id}`, {
+      method: 'DELETE',
+      headers: { Authorization: `Bearer ${authToken()}` },
+    });
+    if (!res.ok) throw new Error((await res.json()).error || 'Errore');
+    const card = document.getElementById(`admin-approved-${id}`);
+    if (card) { card.style.transition = 'opacity .3s'; card.style.opacity = '0'; setTimeout(() => card.remove(), 320); }
+    _risPhotosMap = null; // invalida cache risultati
+  } catch(e) { alert('Errore: ' + e.message); }
+};
+
+window.adminOpenLightbox = (src) => {
+  const lb = document.createElement('div');
+  lb.id = 'photo-lightbox';
+  lb.onclick = () => lb.remove();
+  lb.innerHTML = `<img src="${src}" alt="Foto gara"/>`;
+  document.body.appendChild(lb);
+};
+
+window.adminPhotoAction = async function(id, action) {
+  const token = authToken();
+  try {
+    await fetch(`${API_BASE}/admin/race-photos/${id}/${action}`, {
+      method: 'POST',
+      headers: { Authorization: `Bearer ${token}` }
+    });
+    const card = document.getElementById(`admin-photo-${id}`);
+    if (card) {
+      card.style.transition = 'opacity 0.3s';
+      card.style.opacity = '0';
+      setTimeout(() => card.remove(), 320);
+    }
+    const grid = document.querySelector('.admin-photo-grid');
+    if (grid && !grid.querySelector('.admin-photo-card:not([style*="opacity: 0"])')) {
+      setTimeout(() => {
+        const c = document.getElementById('admin-photos-pending');
+        if (c) c.innerHTML = `<div style="color:var(--text-muted);padding:20px 0">Nessuna foto in attesa.</div>`;
+      }, 400);
+    }
+  } catch(e) {
+    alert('Errore: ' + e.message);
+  }
+};
 
 function renderAdminRows(races) {
   return races.map(r => {
@@ -1767,6 +1935,119 @@ async function renderTeam(team_id) {
   `);
 }
 
+// ── Photo helpers (top-level so always available) ────────────
+function openPhotoLightbox(src) {
+  const lb = document.createElement('div');
+  lb.id = 'photo-lightbox';
+  lb.onclick = () => lb.remove();
+  lb.innerHTML = `<img src="${src}" alt="Foto gara"/>`;
+  document.body.appendChild(lb);
+}
+window.openPhotoLightbox = openPhotoLightbox;
+
+function adminEditPhoto(id) {
+  const card = document.getElementById(`gal-photo-${id}`);
+  const caption      = card?.dataset.caption      || '';
+  const photographer = card?.dataset.photographer || '';
+
+  const overlay = document.createElement('div');
+  overlay.style.cssText = 'position:fixed;inset:0;background:rgba(0,0,0,.65);z-index:9999;display:flex;align-items:center;justify-content:center;padding:20px;box-sizing:border-box';
+
+  const box = document.createElement('div');
+  box.style.cssText = 'background:#1e293b;color:#f1f5f9;border-radius:12px;padding:24px;width:100%;max-width:400px;box-shadow:0 8px 40px rgba(0,0,0,.5)';
+  box.innerHTML = `
+    <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:18px">
+      <strong style="font-size:1rem">Modifica foto</strong>
+      <button id="ep-close" style="background:none;border:none;font-size:1.4rem;cursor:pointer;color:#94a3b8;line-height:1">✕</button>
+    </div>
+    <label style="display:block;font-size:0.8rem;color:#94a3b8;margin-bottom:4px">Didascalia</label>
+    <input id="ep-caption" type="text" style="display:block;width:100%;box-sizing:border-box;padding:9px 11px;border:1px solid #334155;border-radius:6px;font-size:0.875rem;background:#0f172a;color:#f1f5f9;margin-bottom:12px"/>
+    <label style="display:block;font-size:0.8rem;color:#94a3b8;margin-bottom:4px">Credit fotografo</label>
+    <input id="ep-photographer" type="text" style="display:block;width:100%;box-sizing:border-box;padding:9px 11px;border:1px solid #334155;border-radius:6px;font-size:0.875rem;background:#0f172a;color:#f1f5f9;margin-bottom:16px"/>
+    <div id="ep-err" style="color:#f87171;font-size:0.8rem;margin-bottom:10px;display:none"></div>
+    <button id="ep-save" style="display:block;width:100%;padding:10px;background:#2563eb;color:#fff;border:none;border-radius:6px;font-weight:700;font-size:0.9rem;cursor:pointer">Salva modifiche</button>`;
+
+  overlay.appendChild(box);
+  document.body.appendChild(overlay);
+
+  document.getElementById('ep-caption').value      = caption;
+  document.getElementById('ep-photographer').value = photographer;
+  document.getElementById('ep-close').onclick = () => overlay.remove();
+  document.getElementById('ep-save').onclick = async () => {
+    const newCaption      = document.getElementById('ep-caption').value || '';
+    const newPhotographer = document.getElementById('ep-photographer').value || '';
+    const errEl  = document.getElementById('ep-err');
+    const saveBtn = document.getElementById('ep-save');
+    saveBtn.textContent = 'Salvataggio...';
+    saveBtn.disabled = true;
+    try {
+      const res = await fetch(`${API_BASE}/admin/race-photos/${id}`, {
+        method: 'PATCH',
+        headers: { 'Content-Type': 'application/json', Authorization: `Bearer ${authToken()}` },
+        body: JSON.stringify({ caption: newCaption, photographer: newPhotographer }),
+      });
+      const data = await res.json().catch(() => ({}));
+      if (!res.ok) throw new Error(data.error || `HTTP ${res.status}`);
+      overlay.remove();
+      if (window._currentGaraId) renderGara(window._currentGaraId);
+    } catch(e) {
+      errEl.textContent = e.message;
+      errEl.style.display = 'block';
+      saveBtn.textContent = 'Salva modifiche';
+      saveBtn.disabled = false;
+    }
+  };
+}
+window.adminEditPhoto = adminEditPhoto;
+
+function adminDeletePhoto(id) {
+  const overlay = document.createElement('div');
+  overlay.style.cssText = 'position:fixed;inset:0;background:rgba(0,0,0,.65);z-index:9999;display:flex;align-items:center;justify-content:center;padding:20px;box-sizing:border-box';
+  const box = document.createElement('div');
+  box.style.cssText = 'background:#1e293b;color:#f1f5f9;border-radius:12px;padding:28px;width:100%;max-width:360px;box-shadow:0 8px 40px rgba(0,0,0,.5);text-align:center';
+  box.innerHTML = `
+    <div style="font-size:2rem;margin-bottom:12px">🗑</div>
+    <strong style="font-size:1rem;display:block;margin-bottom:8px">Eliminare questa foto?</strong>
+    <p style="font-size:0.85rem;color:#94a3b8;margin:0 0 20px">L'operazione non è reversibile.</p>
+    <div style="display:flex;gap:10px">
+      <button id="del-cancel" style="flex:1;padding:10px;background:#334155;color:#f1f5f9;border:none;border-radius:6px;font-weight:600;cursor:pointer">Annulla</button>
+      <button id="del-confirm" style="flex:1;padding:10px;background:#dc2626;color:#fff;border:none;border-radius:6px;font-weight:600;cursor:pointer">Elimina</button>
+    </div>
+    <div id="del-err" style="color:#f87171;font-size:0.8rem;margin-top:10px;display:none"></div>`;
+  overlay.appendChild(box);
+  document.body.appendChild(overlay);
+
+  document.getElementById('del-cancel').onclick  = () => overlay.remove();
+  document.getElementById('del-confirm').onclick = async () => {
+    const btn = document.getElementById('del-confirm');
+    const errEl = document.getElementById('del-err');
+    btn.textContent = 'Eliminazione...';
+    btn.disabled = true;
+    try {
+      const res = await fetch(`${API_BASE}/admin/race-photos/${id}`, {
+        method: 'DELETE',
+        headers: { Authorization: `Bearer ${authToken()}` },
+      });
+      const data = await res.json().catch(() => ({}));
+      if (!res.ok) throw new Error(data.error || `HTTP ${res.status}`);
+      overlay.remove();
+      const card = document.getElementById(`gal-photo-${id}`);
+      if (card) {
+        card.style.transition = 'opacity .3s';
+        card.style.opacity = '0';
+        setTimeout(() => card.remove(), 320);
+      }
+      _risPhotosMap = null;
+    } catch(e) {
+      errEl.textContent = 'Errore: ' + e.message;
+      errEl.style.display = 'block';
+      btn.textContent = 'Elimina';
+      btn.disabled = false;
+    }
+  };
+}
+window.adminDeletePhoto = adminDeletePhoto;
+
 // ── GARA ──────────────────────────────────────────────────────
 async function renderGara(gara_id) {
   if (!globalData) return;
@@ -1827,7 +2108,45 @@ async function renderGara(gara_id) {
     `;
   }
 
+  // Carica foto approvate in parallelo con il render
+  let racePhotosHtml = '';
+  try {
+    const photosData = await fetch(`${API_BASE}/race-photos/${encodeURIComponent(gara_id)}`).then(r=>r.json()).catch(()=>({photos:[]}));
+    const photos = photosData.photos || [];
+    const user = authUser();
+    const uploadBtn = user
+      ? `<button class="race-photo-upload-btn" onclick="window.openRacePhotoUpload('${esc(gara_id)}')">
+           <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="17 8 12 3 7 8"/><line x1="12" y1="3" x2="12" y2="15"/></svg>
+           Carica foto
+         </button>`
+      : `<span style="font-size:0.8rem;color:var(--text-muted)">Accedi per caricare una foto</span>`;
+    const isAdmin = user?.role === 'admin';
+    const gallery = photos.length
+      ? `<div class="race-gallery">${photos.map(p=>`
+          <div class="race-gallery-item" id="gal-photo-${p.id}"
+            data-caption="${esc(p.caption||'')}"
+            data-photographer="${esc(p.photographer||'')}">
+            <img src="${PHOTOS_BASE}/photos/${esc(p.filename)}" alt="${esc(p.caption||'Foto gara')}" loading="lazy" onclick="window.openPhotoLightbox('${PHOTOS_BASE}/photos/${esc(p.filename)}')" style="cursor:zoom-in"/>
+            <div class="race-gallery-caption">${[p.caption, p.photographer ? '📷 '+p.photographer : '', p.display_name].filter(Boolean).join(' — ')}</div>
+            ${isAdmin ? `<div style="position:absolute;top:4px;right:4px;display:flex;flex-direction:column;gap:3px;z-index:10">
+              <button onclick="event.stopPropagation();window.adminEditPhoto(${p.id})" style="padding:3px 7px;font-size:0.68rem;background:#2563eb;color:#fff;border:none;border-radius:4px;cursor:pointer;white-space:nowrap;box-shadow:0 1px 4px rgba(0,0,0,.5)">✏️ Modifica</button>
+              <button onclick="event.stopPropagation();window.adminDeletePhoto(${p.id})" style="padding:3px 7px;font-size:0.68rem;background:#dc2626;color:#fff;border:none;border-radius:4px;cursor:pointer;white-space:nowrap;box-shadow:0 1px 4px rgba(0,0,0,.5)">🗑 Elimina</button>
+            </div>` : ''}
+          </div>`).join('')}
+        </div>`
+      : `<p style="color:var(--text-muted);font-size:0.875rem;margin:8px 0 0">Nessuna foto ancora. Sii il primo a condividerne una!</p>`;
+    racePhotosHtml = `
+      <div class="comp-section" style="margin-top:16px">
+        <div style="display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:8px;margin-bottom:0">
+          <div class="comp-section-title" style="margin-bottom:0;border:none;padding:0">Foto Gara</div>
+          ${uploadBtn}
+        </div>
+        ${gallery}
+      </div>`;
+  } catch(e) { /* silent */ }
+
   window._shareGaraData = {name:name,date:fmtDate(data),cat:catLabel(cat),mult:mult,tipo:tipo,results:results.slice(0,10).map(r=>({cognome:r.cognome,nome:r.nome,team:r.team,punti_effettivi:r.punti_effettivi}))};
+  window._currentGaraId = gara_id;
   setPage(`
     <div class="race-header">
       <div class="race-name-display">${esc(name)}</div>
@@ -1847,6 +2166,7 @@ async function renderGara(gara_id) {
         <button class="btn-share" onclick="window.triggerShareGara()"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="18" cy="5" r="3"/><circle cx="6" cy="12" r="3"/><circle cx="18" cy="19" r="3"/><line x1="8.59" y1="13.51" x2="15.42" y2="17.49"/><line x1="15.41" y1="6.51" x2="8.59" y2="10.49"/></svg> Condividi Risultati</button>
         ${adminEditBtn('gara', gara_id)}
       </div>
+    ${racePhotosHtml}
     <div class="results-table-wrap">
       <table class="results-table">
         <thead><tr>
@@ -1857,6 +2177,63 @@ async function renderGara(gara_id) {
     </div>
     ${detailsHtml}
   `);
+
+  // Upload foto gara
+  window.openRacePhotoUpload = (garaId) => {
+    const user = authUser();
+    if (!user) return;
+    const overlay = document.createElement('div');
+    overlay.style.cssText = 'position:fixed;inset:0;background:rgba(0,0,0,.6);z-index:9999;display:flex;align-items:center;justify-content:center;padding:16px';
+    const isAdmin = user.role === 'admin';
+    const inpStyle = 'width:100%;box-sizing:border-box;padding:8px 10px;border:1px solid var(--border-subtle);border-radius:var(--r-sm);font-size:0.875rem;background:var(--bg-primary);color:var(--text-primary);margin-bottom:10px';
+    overlay.innerHTML = `
+      <div style="background:var(--bg-card);border-radius:var(--r-lg);padding:24px;width:100%;max-width:420px;box-shadow:0 8px 32px rgba(0,0,0,.2)">
+        <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:16px">
+          <strong style="font-size:1rem">Carica Foto Gara</strong>
+          <button onclick="this.closest('[style*=fixed]').remove()" style="background:none;border:none;font-size:1.3rem;cursor:pointer;color:var(--text-muted)">✕</button>
+        </div>
+        ${!isAdmin ? `<p style="font-size:0.8rem;color:var(--text-muted);margin:0 0 14px">La foto sarà visibile dopo approvazione dell'amministratore.</p>` : ''}
+        <input type="file" id="rp-file" accept="image/jpeg,image/png,image/webp" style="${inpStyle}"/>
+        <input type="text" id="rp-caption" placeholder="Didascalia (facoltativa)" style="${inpStyle}"/>
+        <input type="text" id="rp-photographer" placeholder="Credit fotografo (es. Mario Rossi)" style="${inpStyle}"/>
+        <div id="rp-err" style="color:#EF4444;font-size:0.8rem;margin-bottom:8px;display:none"></div>
+        <button id="rp-submit" onclick="window.submitRacePhoto('${esc(garaId)}')" style="width:100%;padding:9px;background:var(--red-hot);color:#fff;border:none;border-radius:var(--r-sm);font-weight:600;cursor:pointer">Invia</button>
+      </div>`;
+    document.body.appendChild(overlay);
+  };
+
+  window.submitRacePhoto = async (garaId) => {
+    const file = document.getElementById('rp-file')?.files[0];
+    const caption = document.getElementById('rp-caption')?.value || '';
+    const photographer = document.getElementById('rp-photographer')?.value || '';
+    const errEl = document.getElementById('rp-err');
+    if (!file) { errEl.textContent='Seleziona un file'; errEl.style.display='block'; return; }
+    const btn = document.getElementById('rp-submit');
+    btn.disabled = true; btn.textContent = 'Invio…';
+    const fd = new FormData();
+    // gara_id e altri campi testo PRIMA del file, così multer li ha nel filename callback
+    fd.append('gara_id', garaId);
+    fd.append('caption', caption);
+    fd.append('photographer', photographer);
+    fd.append('photo', file);
+    try {
+      const token = authToken();
+      const res = await fetch(`${API_BASE}/race-photos/upload`, { method:'POST', headers:{ Authorization:`Bearer ${token}` }, body:fd });
+      const data = await res.json();
+      if (!res.ok) throw new Error(data.error || 'Errore');
+      document.querySelector('[style*="position:fixed"][style*="9999"]')?.remove();
+      if (data.status === 'approved') {
+        alert('Foto pubblicata!');
+        navigate(location.hash); // ricarica la pagina gara per mostrare subito la foto
+      } else {
+        alert('Foto inviata! Sarà visibile dopo approvazione.');
+      }
+    } catch(e) {
+      errEl.textContent = e.message; errEl.style.display = 'block';
+      btn.disabled = false; btn.textContent = 'Invia';
+    }
+  };
+
 }
 
 let calQGenere = '';
@@ -2343,6 +2720,61 @@ async function renderStatistiche() {
 // ── COMPARATORE ───────────────────────────────────────────────
 let compA = '', compB = '', compMode = 'atleta', compCat = '', compGender = 'M';
 
+// ── COMPARATORE AUTOCOMPLETE HELPERS ──────────────────────────
+function buildCompAc(side, items, selectedId) {
+  const sel = items.find(i => i.id === selectedId);
+  const selLabel = sel ? sel.label : '';
+  const htmlItems = items.map(item =>
+    `<div class="comp-ac-item" data-id="${esc(item.id)}" data-label="${String(item.label).replace(/"/g,'&quot;')}"
+       onclick="window.compAcPick('${side}',this)">
+      <span class="comp-ac-name">${esc(item.label)}</span>
+      ${item.sub ? `<span class="comp-ac-sub">${esc(item.sub)}</span>` : ''}
+    </div>`
+  ).join('');
+  return `<div class="comp-ac" id="comp-ac-${side}">
+    <input type="text" id="comp-ac-input-${side}" class="comp-ac-input cal-filter-select"
+      placeholder="Cerca nome…" value="${String(selLabel).replace(/"/g,'&quot;')}" autocomplete="off"
+      oninput="window.compAcFilter('${side}',this.value)"
+      onfocus="window.compAcOpen('${side}')"
+      onblur="setTimeout(()=>{var l=document.getElementById('comp-ac-list-${side}');if(l)l.style.display='none';},180)"
+    />
+    <div class="comp-ac-dropdown" id="comp-ac-list-${side}">
+      ${htmlItems || '<div class="comp-ac-empty">Nessun risultato</div>'}
+    </div>
+  </div>`;
+}
+
+window.compAcFilter = (side, query) => {
+  const list = document.getElementById(`comp-ac-list-${side}`);
+  if (!list) return;
+  const q = query.toLowerCase().trim();
+  let vis = 0;
+  list.querySelectorAll('.comp-ac-item').forEach(el => {
+    const match = !q || (el.dataset.label||'').toLowerCase().includes(q);
+    el.style.display = match ? '' : 'none';
+    if (match) vis++;
+  });
+  list.style.display = vis > 0 ? 'block' : 'none';
+};
+
+window.compAcOpen = (side) => {
+  const input = document.getElementById(`comp-ac-input-${side}`);
+  const list  = document.getElementById(`comp-ac-list-${side}`);
+  if (!list) return;
+  window.compAcFilter(side, input?.value || '');
+};
+
+window.compAcPick = (side, el) => {
+  const id    = el.dataset.id;
+  const label = el.dataset.label;
+  const input = document.getElementById(`comp-ac-input-${side}`);
+  if (input) input.value = label;
+  const list = document.getElementById(`comp-ac-list-${side}`);
+  if (list) list.style.display = 'none';
+  if (side === 'a') window.setCompA(id);
+  else              window.setCompB(id);
+};
+
 async function renderComparatore() {
   if (!globalData) return;
   const { resultsRaw, athletes } = globalData;
@@ -2534,20 +2966,18 @@ async function renderComparatore() {
       `<option value="${a.id}" ${a.id===sel?'selected':''}>${esc(a.cognome)} ${esc(a.nome)}</option>`
     ).join('');
 
+    const acItems = list.map(a => ({ id: a.id, label: `${a.cognome} ${a.nome}`, sub: a.team_attuale||'' }));
+
     if (!compA || !compB || compA===compB) return `
       <div class="comp-selectors">
         <div class="comp-selector-group">
           <label class="comp-label">Atleta A</label>
-          <select class="cal-filter-select comp-select" onchange="window.setCompA(this.value)">
-            <option value="">— Seleziona —</option>${opts(compA)}
-          </select>
+          ${buildCompAc('a', acItems, compA)}
         </div>
         <div class="comp-vs-badge">VS</div>
         <div class="comp-selector-group">
           <label class="comp-label">Atleta B</label>
-          <select class="cal-filter-select comp-select" onchange="window.setCompB(this.value)">
-            <option value="">— Seleziona —</option>${opts(compB)}
-          </select>
+          ${buildCompAc('b', acItems, compB)}
         </div>
       </div>
       <div class="comp-empty-state">
@@ -2590,13 +3020,9 @@ async function renderComparatore() {
 
     return `
       <div class="comp-selectors-compact">
-        <select class="cal-filter-select comp-select-inline" onchange="window.setCompA(this.value)">
-          <option value="">— Atleta A —</option>${opts(compA)}
-        </select>
+        ${buildCompAc('a', acItems, compA)}
         <span class="comp-vs-sm">VS</span>
-        <select class="cal-filter-select comp-select-inline" onchange="window.setCompB(this.value)">
-          <option value="">— Atleta B —</option>${opts(compB)}
-        </select>
+        ${buildCompAc('b', acItems, compB)}
       </div>
       <div class="comp-hero">
         <div class="comp-hero-side comp-hero-a">
@@ -2643,20 +3069,18 @@ async function renderComparatore() {
       `<option value="${t.id}" ${t.id===sel?'selected':''}>${esc(t.nome)}</option>`
     ).join('');
 
+    const acItemsT = list.map(t => ({ id: t.id, label: t.nome, sub: '' }));
+
     if (!compA||!compB||compA===compB) return `
       <div class="comp-selectors">
         <div class="comp-selector-group">
           <label class="comp-label">Team A</label>
-          <select class="cal-filter-select comp-select" onchange="window.setCompA(this.value)">
-            <option value="">— Seleziona —</option>${opts(compA)}
-          </select>
+          ${buildCompAc('a', acItemsT, compA)}
         </div>
         <div class="comp-vs-badge">VS</div>
         <div class="comp-selector-group">
           <label class="comp-label">Team B</label>
-          <select class="cal-filter-select comp-select" onchange="window.setCompB(this.value)">
-            <option value="">— Seleziona —</option>${opts(compB)}
-          </select>
+          ${buildCompAc('b', acItemsT, compB)}
         </div>
       </div>
       <div class="comp-empty-state">
@@ -2706,13 +3130,9 @@ async function renderComparatore() {
 
     return `
       <div class="comp-selectors-compact">
-        <select class="cal-filter-select comp-select-inline" onchange="window.setCompA(this.value)">
-          <option value="">— Team A —</option>${opts(compA)}
-        </select>
+        ${buildCompAc('a', acItemsT, compA)}
         <span class="comp-vs-sm">VS</span>
-        <select class="cal-filter-select comp-select-inline" onchange="window.setCompB(this.value)">
-          <option value="">— Team B —</option>${opts(compB)}
-        </select>
+        ${buildCompAc('b', acItemsT, compB)}
       </div>
       <div class="comp-hero">
         <div class="comp-hero-side comp-hero-a">
@@ -2946,9 +3366,21 @@ window.risSetSearch = (v) => {
   _risSearchTimer = setTimeout(() => { risSearchQuery = v; renderRisultati(); }, 300);
 };
 
+let _risPhotosMap = null;
+async function loadRisPhotos() {
+  if (_risPhotosMap) return _risPhotosMap;
+  try {
+    const d = await fetch(`${API_BASE}/race-photos`).then(r => r.json()).catch(() => ({photos:[]}));
+    _risPhotosMap = {};
+    (d.photos || []).forEach(p => { if (!_risPhotosMap[p.gara_id]) _risPhotosMap[p.gara_id] = p; });
+  } catch { _risPhotosMap = {}; }
+  return _risPhotosMap;
+}
+
 async function renderRisultati() {
   if (!globalData) return;
   const { resultsRaw, calendar } = globalData;
+  const photosMap = await loadRisPhotos();
   
   // Raggruppa per EVENTO: (nome_gara normalizzato, data, genere)
   // Questo evita che la stessa gara con categorie diverse appaia come doppia
@@ -3072,12 +3504,15 @@ async function renderRisultati() {
       const categories = Object.entries(race.byCategory || {});
 
       // Una sezione per ogni categoria dell'evento
+      // Foto featured a livello card (prima categoria che ha una foto)
+      const featuredPhoto = Object.values(race.byCategory || {})
+        .map(c => photosMap[c.gara_id]).find(Boolean);
+
       const catSections = categories.map(([catName, catData]) => {
         const top3 = (catData.results || []).sort((a,b) => a.posizione - b.posizione).slice(0,3);
         const catGaraId = catData.gara_id;
         const cLabel = catLabel(catName) || catName;
 
-        // km/media specifici di questa categoria
         const firstRes = catData.results?.[0];
         const kmVal    = firstRes?.km    || '';
         const mediaVal = firstRes?.media || '';
@@ -3113,16 +3548,25 @@ async function renderRisultati() {
           </div>`;
       }).join(categories.length > 1 ? '<div style="border-top:2px solid var(--border-subtle);margin:16px 0;"></div>' : '');
 
+      const photoPanel = featuredPhoto
+        ? `<a href="#/gara/${esc(race.id)}" class="ris-card-photo">
+             <img src="${PHOTOS_BASE}/photos/${esc(featuredPhoto.filename)}" alt="Foto gara" loading="lazy"/>
+           </a>`
+        : '';
+
       return `
-        <div class="hero-band" style="margin-bottom:24px;padding:24px;">
-          <div class="hero-label" style="font-size:0.6rem">RISULTATI GARA</div>
-          <div class="hero-race-name" style="font-size:clamp(1.6rem,3vw,2.4rem);"><a href="#/gara/${esc(race.id)}">${esc(race.nome)}</a></div>
-          <div class="hero-race-meta" style="margin-bottom:16px;">
-            <span>${fmtDate(race.data)}</span>
-            ${badgeMult(race.mult, race.tipo, race.campionato_regionale, race.campionato_italiano)}
+        <div class="hero-band ris-card">
+          ${photoPanel}
+          <div class="ris-card-body">
+            <div class="hero-label" style="font-size:0.6rem">RISULTATI GARA</div>
+            <div class="hero-race-name" style="font-size:clamp(1.4rem,3vw,2.2rem);"><a href="#/gara/${esc(race.id)}">${esc(race.nome)}</a></div>
+            <div class="hero-race-meta" style="margin-bottom:16px;">
+              <span>${fmtDate(race.data)}</span>
+              ${badgeMult(race.mult, race.tipo, race.campionato_regionale, race.campionato_italiano)}
+            </div>
+            <div class="hero-divider" style="margin-bottom:12px;"></div>
+            <div class="hero-podio">${catSections}</div>
           </div>
-          <div class="hero-divider" style="margin-bottom:12px;"></div>
-          <div class="hero-podio">${catSections}</div>
         </div>`;
     }).join('') || '<div class="empty-state">Nessuna gara trovata</div>';
   }

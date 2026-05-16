@@ -90,7 +90,22 @@ db.exec(`
     created_at    TEXT NOT NULL DEFAULT (datetime('now')),
     UNIQUE(risultato_key, field)
   );
+
+  CREATE TABLE IF NOT EXISTS race_photos (
+    id           INTEGER PRIMARY KEY AUTOINCREMENT,
+    gara_id      TEXT    NOT NULL,
+    user_id      INTEGER NOT NULL REFERENCES users(id),
+    display_name TEXT,
+    filename     TEXT    NOT NULL,
+    caption      TEXT    DEFAULT '',
+    photographer TEXT    DEFAULT '',
+    status       TEXT    NOT NULL DEFAULT 'pending',
+    created_at   TEXT    NOT NULL DEFAULT (datetime('now'))
+  );
 `);
+
+// Migration: add photographer column if it doesn't exist yet
+try { db.exec(`ALTER TABLE race_photos ADD COLUMN photographer TEXT DEFAULT ''`); } catch {}
 
 // ── Seed admin user ──────────────────────────────────────────────────────────
 
@@ -164,6 +179,27 @@ const queries = {
   `),
   getEntityOverrides: db.prepare('SELECT field, new_value FROM entity_overrides WHERE entity_type = ? AND entity_id = ?'),
   getAllEntityOverrides: db.prepare('SELECT * FROM entity_overrides ORDER BY created_at DESC'),
+
+  insertRacePhoto: db.prepare(`
+    INSERT INTO race_photos (gara_id, user_id, display_name, filename, caption, photographer, status)
+    VALUES (@gara_id, @user_id, @display_name, @filename, @caption, @photographer, @status)
+  `),
+  getApprovedRacePhotos: db.prepare(
+    `SELECT * FROM race_photos WHERE gara_id = ? AND status = 'approved' ORDER BY created_at DESC`
+  ),
+  getAllApprovedRacePhotos: db.prepare(
+    `SELECT * FROM race_photos WHERE status = 'approved' ORDER BY created_at DESC`
+  ),
+  getPendingRacePhotos: db.prepare(`
+    SELECT rp.*, u.email FROM race_photos rp
+    JOIN users u ON rp.user_id = u.id
+    WHERE rp.status = 'pending' ORDER BY rp.created_at DESC
+  `),
+  approveRacePhoto:  db.prepare(`UPDATE race_photos SET status = 'approved' WHERE id = ?`),
+  rejectRacePhoto:   db.prepare(`UPDATE race_photos SET status = 'rejected'  WHERE id = ?`),
+  getRacePhotoById:  db.prepare(`SELECT * FROM race_photos WHERE id = ?`),
+  updateRacePhoto:   db.prepare(`UPDATE race_photos SET caption = @caption, photographer = @photographer WHERE id = @id`),
+  deleteRacePhoto:   db.prepare(`DELETE FROM race_photos WHERE id = ?`),
 
   setGaraOverride: db.prepare(`
     INSERT INTO gara_overrides (gara_id, field, old_value, new_value, edited_by)
