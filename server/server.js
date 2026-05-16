@@ -37,6 +37,7 @@ const upload = multer({
 });
 
 app.use(cors({ origin: '*' }));
+app.options('*', cors());   // preflight per tutte le route
 app.use(express.json());
 app.use('/photos', express.static(UPLOADS_DIR));
 
