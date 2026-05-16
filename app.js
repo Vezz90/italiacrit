@@ -972,18 +972,20 @@ async function updateRankTable() {
       ranking.forEach((r, i) => r.pos = i+1);
     }
 
-    // Ricalcola trend dinamicamente dall'ultima gara scrapata
+    // Ricalcola trend dinamicamente solo se rank_dopo_gara è disponibile nei risultati
     const { resultsByAtleta } = globalData;
     ranking.forEach(entry => {
-      const res = resultsByAtleta[entry.atleta_id] || []; // già ordinati per data desc
+      const res = resultsByAtleta[entry.atleta_id] || [];
       const r0 = res[0], r1 = res[1];
-      if (r0?.rank_dopo_gara != null && r1?.rank_dopo_gara != null) {
-        entry.trend = r1.rank_dopo_gara - r0.rank_dopo_gara; // positivo = migliorato
-      } else if (r0?.rank_dopo_gara != null && !r1) {
-        entry.trend = null; // prima apparizione → NEW
-      } else {
-        entry.trend = 0;
+      const rk0 = r0?.rank_dopo_gara, rk1 = r1?.rank_dopo_gara;
+      if (rk0 != null && rk1 != null) {
+        // entrambi disponibili: calcola differenza tra le ultime due gare
+        entry.trend = rk1 - rk0;
+      } else if (rk0 != null && !r1) {
+        // solo una gara: prima apparizione
+        entry.trend = null;
       }
+      // altrimenti lascia invariato il trend del JSON
     });
 
     const filtered = ranking.filter(r => {
