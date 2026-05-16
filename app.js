@@ -8,10 +8,9 @@
 
 // ── CONSTANTS ─────────────────────────────────────────────────
 const BASEPTS = { 1:15, 2:12, 3:10, 4:8, 5:6, 6:5, 7:4, 8:3, 9:2, 10:1 };
-const _serverHost = window.location.hostname;
-const API_BASE    = `http://${_serverHost}:8002/api`;
-const PHOTOS_BASE = `http://${_serverHost}:8002`;
-const MEDIA_BASE  = `http://${_serverHost}:8002`;
+const API_BASE    = '/api';
+const PHOTOS_BASE = '';
+const MEDIA_BASE  = '';
 
 // ── AUTH HELPERS ──────────────────────────────────────────────
 function authToken() { return localStorage.getItem('italiacrit-token'); }

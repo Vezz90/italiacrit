@@ -40,6 +40,10 @@ app.use(cors({ origin: '*' }));
 app.use(express.json());
 app.use('/photos', express.static(UPLOADS_DIR));
 
+// Serve frontend statico dalla directory padre
+const FRONTEND_DIR = path.join(__dirname, '..');
+app.use(express.static(FRONTEND_DIR));
+
 // ── Auth middleware ──────────────────────────────────────────────────────────
 
 function requireAuth(req, res, next) {
