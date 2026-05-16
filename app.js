@@ -8,9 +8,10 @@
 
 // ── CONSTANTS ─────────────────────────────────────────────────
 const BASEPTS = { 1:15, 2:12, 3:10, 4:8, 5:6, 6:5, 7:4, 8:3, 9:2, 10:1 };
-const API_BASE    = 'http://localhost:8002/api';
-const PHOTOS_BASE = 'http://localhost:8002';
-const MEDIA_BASE = 'http://localhost:8002';
+const _serverHost = window.location.hostname;
+const API_BASE    = `http://${_serverHost}:8002/api`;
+const PHOTOS_BASE = `http://${_serverHost}:8002`;
+const MEDIA_BASE  = `http://${_serverHost}:8002`;
 
 // ── AUTH HELPERS ──────────────────────────────────────────────
 function authToken() { return localStorage.getItem('italiacrit-token'); }
@@ -2200,6 +2201,16 @@ async function renderGara(gara_id) {
         <button id="rp-submit" onclick="window.submitRacePhoto('${esc(garaId)}')" style="width:100%;padding:9px;background:var(--red-hot);color:#fff;border:none;border-radius:var(--r-sm);font-weight:600;cursor:pointer">Invia</button>
       </div>`;
     document.body.appendChild(overlay);
+
+    // Auto-compila la caption con vincitore, società e nome gara
+    const gd = window._shareGaraData;
+    if (gd) {
+      const winner = gd.results?.[0];
+      const autoCaption = winner
+        ? `${winner.cognome} ${winner.nome} - ${winner.team} | ${gd.name}`
+        : gd.name || '';
+      document.getElementById('rp-caption').value = autoCaption;
+    }
   };
 
   window.submitRacePhoto = async (garaId) => {
