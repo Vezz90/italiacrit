@@ -3481,7 +3481,7 @@ async function renderRisultati() {
           <div id="ris-selects">${selectsHtml}</div>
           <span class="ranking-count" id="ris-count"></span>
         </div>
-        <div class="risultati-feed" style="margin-top:20px;" id="ris-cards"></div>
+        <div class="risultati-feed" style="margin-top:20px" id="ris-cards"></div>
       </div>
     `);
   }

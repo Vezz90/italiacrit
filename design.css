@@ -2379,19 +2379,30 @@ div[style*="grid-template-columns: repeat(auto-fit"] {
   .comp-select-inline { min-width: 120px; font-size: 0.8125rem; }
 }
 
+/* ── Risultati feed grid ─────────────────────────────────── */
+.risultati-feed {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 20px;
+  align-items: start;
+}
+
 /* ── Risultati card con foto ─────────────────────────────── */
 .ris-card {
   display: flex;
+  flex-direction: column;
   overflow: hidden;
-  margin-bottom: 24px;
+  margin-bottom: 0;
   padding: 0;
 }
 
 .ris-card-photo {
-  flex-shrink: 0;
-  width: clamp(160px, 25%, 240px);
+  width: 100%;
+  height: 200px;
   overflow: hidden;
-  border-radius: var(--r-lg) 0 0 var(--r-lg);
+  border-radius: var(--r-lg) var(--r-lg) 0 0;
+  display: block;
+  flex-shrink: 0;
 }
 
 .ris-card-photo img {
@@ -2406,20 +2417,17 @@ div[style*="grid-template-columns: repeat(auto-fit"] {
 
 .ris-card-body {
   flex: 1;
-  padding: 24px;
+  padding: 20px;
   min-width: 0;
 }
 
-@media (max-width: 600px) {
-  .ris-card { flex-direction: column; }
-
-  .ris-card-photo {
-    width: 100%;
-    height: 180px;
-    border-radius: var(--r-lg) var(--r-lg) 0 0;
+@media (max-width: 700px) {
+  .risultati-feed {
+    grid-template-columns: 1fr;
+    gap: 16px;
   }
 
-  .ris-card-body { padding: 16px; }
-
-  .ris-card .hero-race-name { font-size: 1.25rem !important; }
+  .ris-card-photo { height: 160px; }
+  .ris-card-body  { padding: 16px; }
+  .ris-card .hero-race-name { font-size: 1.2rem !important; }
 }
