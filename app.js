@@ -349,9 +349,9 @@ function setPage(html) {
 // ── HOME ──────────────────────────────────────────────────────
 async function renderHome() {
   if (!globalData) return;
-  const { calendar, resultsRaw } = globalData;
+  const { calendar, resultsRaw, resultsByAtleta } = globalData;
 
-  // Ultime 5 gare (per data desc)
+  // ── HERO CAROUSEL (ultime gare) ───────────────────────────────
   const raceMap = {};
   for (const r of resultsRaw) {
     if (!raceMap[r.gara_id]) raceMap[r.gara_id] = { id: r.gara_id, nome: r.nome_gara, data: r.data, categoria: r.categoria, genere: r.genere, tipo: r.tipo, isCR: r.campionato_regionale, isCI: r.campionato_italiano, mult: r.moltiplicatore, results: [] };
@@ -362,10 +362,9 @@ async function renderHome() {
     .sort((a,b) => (b.data || '').localeCompare(a.data || ''))
     .slice(0, 20);
 
-  // Ultime gare della "Settimana" (Ultimi 7 giorni a partire dall'ultima gara in assoluto)
   const lastDateStr = races[0]?.data || '';
   const lastDateTs = lastDateStr ? new Date(lastDateStr).getTime() : 0;
-  
+
   const heroRaces = races.filter(r => {
     if (!r.data) return false;
     const rTs = new Date(r.data).getTime();
@@ -412,8 +411,6 @@ async function renderHome() {
         }).join('')}
       </div>
     `;
-    
-    // Attivazione carosello automatico
     if (heroRaces.length > 1) {
       setTimeout(() => {
         let currentSlide = 0;
@@ -428,57 +425,153 @@ async function renderHome() {
     }
   }
 
-  let carouselHtml = ''; // rimosso il carousel vecchio come da richiesta
+  // ── 1. PROSSIME GARE DELLA SETTIMANA ─────────────────────────
+  const MONTHS_SHORT = ['GEN','FEB','MAR','APR','MAG','GIU','LUG','AGO','SET','OTT','NOV','DIC'];
+  const todayStr = new Date().toISOString().split('T')[0];
+  const todayDate = new Date(todayStr);
+  const dayOfWeek = todayDate.getDay(); // 0=dom, 6=sab
+  const daysToSunday = dayOfWeek === 0 ? 0 : 7 - dayOfWeek;
+  const thisSunday = new Date(todayDate);
+  thisSunday.setDate(thisSunday.getDate() + daysToSunday);
+  const thisSundayStr = thisSunday.toISOString().split('T')[0];
 
-  // Top 3 per categoria
+  let nextRaces = calendar
+    .filter(g => g.data >= todayStr && g.data <= thisSundayStr)
+    .sort((a,b) => a.data.localeCompare(b.data));
+  let weekLabel = 'QUESTA SETTIMANA';
+
+  if (nextRaces.length === 0) {
+    const nextSunday = new Date(thisSunday);
+    nextSunday.setDate(nextSunday.getDate() + 7);
+    const nextSundayStr = nextSunday.toISOString().split('T')[0];
+    nextRaces = calendar
+      .filter(g => g.data > thisSundayStr && g.data <= nextSundayStr)
+      .sort((a,b) => a.data.localeCompare(b.data));
+    weekLabel = 'PROSSIMA SETTIMANA';
+  }
+
+  // ── 1. PROSSIME GARE — filtrate per giorno ────────────────────
+  const uniqueDates = [...new Set(nextRaces.map(g => g.data))].sort();
+  const DAYS_IT = ['Dom','Lun','Mar','Mer','Gio','Ven','Sab'];
+
+  window.filterHomeCalendar = (dateStr) => {
+    document.querySelectorAll('.hcal-row').forEach(el => {
+      el.style.display = (!dateStr || el.dataset.date === dateStr) ? 'flex' : 'none';
+    });
+    document.querySelectorAll('.hcal-btn').forEach(el => {
+      el.classList.toggle('active-cat', el.dataset.date === dateStr);
+    });
+  };
+
+  const prossimeHtml = nextRaces.length ? `
+    <div class="section-header">
+      <span class="section-title">${weekLabel}</span>
+      <span class="section-line"></span>
+      <span class="section-subtitle">Gare in programma</span>
+    </div>
+    <div style="display:flex;gap:6px;flex-wrap:wrap;margin-bottom:8px">
+      <button class="tab-btn hcal-btn active-cat" data-date="" onclick="window.filterHomeCalendar('')">Tutte</button>
+      ${uniqueDates.map(d => {
+        const dt = new Date(d);
+        const label = `${DAYS_IT[dt.getDay()]} ${dt.getDate()} ${MONTHS_SHORT[dt.getMonth()]}`;
+        return `<button class="tab-btn hcal-btn" data-date="${d}" onclick="window.filterHomeCalendar('${d}')">${label}</button>`;
+      }).join('')}
+    </div>
+    <div style="display:flex;flex-direction:column;gap:4px;margin-bottom:40px">
+      ${nextRaces.map(g => {
+        const d = new Date(g.data);
+        const dayStr = `${DAYS_IT[d.getDay()]} ${d.getDate()} ${MONTHS_SHORT[d.getMonth()]}`;
+        return `
+          <div class="hcal-row" data-date="${g.data}" style="display:flex;align-items:center;gap:12px;padding:8px 14px;background:var(--bg-card);border:1px solid var(--border-subtle);border-radius:4px;flex-wrap:wrap">
+            <span style="font-family:var(--font-mono);font-size:0.75rem;color:var(--red-hot);flex-shrink:0;min-width:72px">${dayStr}</span>
+            <span style="font-family:var(--font-heading);font-weight:700;font-size:0.88rem;text-transform:uppercase;flex:1;min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap">${esc(g.nome)}</span>
+            ${g.luogo ? `<span style="font-size:0.73rem;color:var(--text-secondary);flex-shrink:0">${esc(g.luogo)}</span>` : ''}
+            <div style="display:flex;gap:4px;flex-shrink:0;align-items:center">
+              ${g.campionato_italiano ? '<span class="badge-cat" style="color:var(--red-hot);border-color:var(--red-hot);font-size:0.55rem;padding:1px 5px">CI</span>' : ''}
+              ${g.campionato_regionale ? '<span class="badge-cat" style="color:var(--cat-u23);border-color:var(--cat-u23);font-size:0.55rem;padding:1px 5px">CR</span>' : ''}
+              ${badgeMult(g.moltiplicatore, g.tipo, g.campionato_regionale, g.campionato_italiano)}
+            </div>
+          </div>`;
+      }).join('')}
+    </div>
+  ` : '';
+
+  // ── 2+3. PANORAMICA CATEGORIE (forma + battaglia in un'unica card) ──
   const catOrder = ['ELI_M','JUN_M','AL_M','ES2_M','ES1_M','ELI_F','JUN_F','AL_F','ES2_F','ES1_F'];
-  const catCardsHtml = await (async () => {
-    const cards = [];
-    for (const code of catOrder) {
-      const ranking = await loadRanking(code);
-      const top3 = ranking.slice(0, 3);
-      if (!top3.length) continue;
-      const isF = code.endsWith('_F');
-      cards.push(`
-        <div class="cat-card">
-          <div class="cat-card-header">
+  const allRankings = await Promise.all(catOrder.map(c => loadRanking(c)));
+
+  // Cutoff: 28 giorni prima dell'ULTIMA GARA nel dataset (non da oggi)
+  const lastRaceDate = resultsRaw.reduce((max, r) => (r.data || '') > max ? r.data : max, '');
+  const cutoffDate = new Date(lastRaceDate || new Date());
+  cutoffDate.setDate(cutoffDate.getDate() - 28);
+  const cutoffStr = cutoffDate.toISOString().split('T')[0];
+
+  const panoramicaCards = catOrder.map((code, i) => {
+    const ranking = allRankings[i];
+    if (!ranking || ranking.length < 1) return '';
+    const isF = code.endsWith('_F');
+    const first  = ranking[0];
+    const second = ranking[1] || null;
+    const third  = ranking[2] || null;
+    const gap = second ? first.punti - second.punti : null;
+    const gapColor = gap === null ? 'var(--text-muted)' : gap <= 10 ? 'var(--red-hot)' : gap <= 30 ? 'var(--yellow-race)' : 'var(--text-muted)';
+
+    // Miglior atleta per punti nell'ultimo mese (punti_effettivi include il moltiplicatore)
+    let best = null, bestPts = -1;
+    for (const entry of ranking) {
+      const recenti = (resultsByAtleta[entry.atleta_id] || []).filter(r => r.data >= cutoffStr);
+      const pts = recenti.reduce((s, r) => s + (r.punti_effettivi || 0), 0);
+      if (recenti.length > 0 && pts > bestPts) { bestPts = pts; best = { ...entry, pts4w: pts, nGare: recenti.length }; }
+    }
+
+    const podioRow = (pos, entry, color, ptColor) => entry ? `
+      <div style="display:flex;align-items:center;justify-content:space-between;gap:6px">
+        <div style="min-width:0;overflow:hidden">
+          <span style="font-family:var(--font-display);font-size:1.05rem;color:${color}">${pos}° </span>
+          <a href="#/atleta/${esc(entry.atleta_id)}" style="font-family:var(--font-heading);font-weight:700;font-size:0.83rem;text-transform:uppercase">${esc(entry.cognome)} ${esc(entry.nome)}</a>
+        </div>
+        <span style="font-family:var(--font-display);font-size:1.05rem;color:${ptColor};flex-shrink:0">${entry.punti}</span>
+      </div>` : '';
+
+    return `
+      <div class="cat-card" style="border-top:2px solid ${gapColor}">
+        <div style="padding:12px 16px 10px">
+          <div style="display:flex;align-items:center;gap:6px;margin-bottom:10px">
             ${badgeCat(code)}
-            <span class="cat-card-title">${esc(catLabel(code))}</span>
+            <span style="font-family:var(--font-heading);font-weight:700;font-size:0.85rem;text-transform:uppercase">${catLabel(code)}</span>
             ${isF ? '<span class="badge-cat badge-genere-f">♀</span>' : ''}
           </div>
-          <div class="cat-card-body">
-            ${top3.map((r,i) => `
-              <div class="cat-card-row">
-                <span class="cat-pos ${posClass(i+1)}">${i+1}</span>
-                <div>
-                  <div class="cat-rider-name">
-                    <a href="#/atleta/${esc(r.atleta_id)}">${esc(r.cognome)} ${esc(r.nome)}</a>
-                    ${renderTrend(r)}
-                  </div>
-                  <div class="cat-rider-team">
-                    <a href="#/team/${esc(r.team_id)}" style="color:var(--text-secondary)">${esc(r.team_nome)}</a>
-                  </div>
-                </div>
-                <span class="cat-pts">${r.punti}</span>
-              </div>`).join('')}
+          <div style="display:flex;flex-direction:column;gap:4px;margin-bottom:8px">
+            ${podioRow(1, first,  'var(--gold)',   'var(--yellow-race)')}
+            ${podioRow(2, second, 'var(--silver)', 'var(--text-secondary)')}
+            ${podioRow(3, third,  'var(--bronze)', 'var(--text-muted)')}
+            ${gap !== null ? `<div style="text-align:right;margin-top:2px">
+              <span style="font-family:var(--font-mono);font-size:0.68rem;color:${gapColor}">1°→2° +${gap} pt</span>
+            </div>` : ''}
           </div>
-          <div style="padding: 10px 16px; border-top: 1px solid var(--border-subtle); background: var(--bg-secondary);">
-             <a href="#/classifica" onclick="window.navigateToRank('${code}', '${isF ? 'F' : 'M'}')" class="btn-action full" style="font-size:0.7rem;">VAI ALLA CLASSIFICA &rarr;</a>
-          </div>
-        </div>`);
-    }
-    return cards.join('');
-  })();
+          ${best ? `
+          <div style="border-top:1px solid var(--border-subtle);padding-top:8px;display:flex;align-items:center;justify-content:space-between;gap:6px">
+            <div style="min-width:0;overflow:hidden">
+              <div style="font-size:0.58rem;color:var(--text-muted);font-family:var(--font-mono);margin-bottom:2px">🔥 IN FORMA · ${best.nGare} gar${best.nGare===1?'a':'e'} · ultimo mese</div>
+              <a href="#/atleta/${esc(best.atleta_id)}" style="font-family:var(--font-heading);font-weight:700;font-size:0.82rem;text-transform:uppercase;color:var(--text-primary)">${esc(best.cognome)} ${esc(best.nome)}</a>
+            </div>
+            <span style="font-family:var(--font-display);font-size:1.4rem;color:var(--yellow-race);flex-shrink:0">${best.pts4w}</span>
+          </div>` : ''}
+        </div>
+      </div>`;
+  }).join('');
 
   setPage(`
     ${heroHtml}
-    ${carouselHtml}
+    ${prossimeHtml}
     <div class="section-header">
-      <span class="section-title">CLASSIFICHE</span>
+      <span class="section-title">PANORAMICA CATEGORIE</span>
       <span class="section-line"></span>
-      <span class="section-subtitle">Top 3 per categoria</span>
+      <span class="section-subtitle">Leader stagionale · distacco · 🔥 in forma (4 settimane)</span>
     </div>
-    <div class="cat-grid">${catCardsHtml}</div>
+    <div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(240px,1fr));gap:12px;margin-bottom:48px">
+      ${panoramicaCards}
+    </div>
   `);
 }
 
@@ -2249,24 +2342,34 @@ function renderNotFound() {
 }
 
 // ── SEARCH GLOBALE ────────────────────────────────────────────
-function initSearch() {
-  const input = document.getElementById('nav-search');
-  const dropdown = document.getElementById('search-results-dropdown');
-  if (!input || !dropdown) return;
-
-  let debounceTimer;
-  input.addEventListener('input', () => {
-    clearTimeout(debounceTimer);
-    debounceTimer = setTimeout(() => doSearch(input.value), 250);
+window.closeAllSearchDropdowns = () => {
+  ['search-results-dropdown','drawer-search-dropdown'].forEach(id => {
+    const el = document.getElementById(id);
+    if (el) el.style.display = 'none';
   });
+};
 
+function bindSearch(inputId, dropdownId) {
+  const input = document.getElementById(inputId);
+  const dropdown = document.getElementById(dropdownId);
+  if (!input || !dropdown) return;
+  let timer;
+  input.addEventListener('input', () => {
+    clearTimeout(timer);
+    timer = setTimeout(() => doSearch(input.value, dropdown), 250);
+  });
   input.addEventListener('blur', () => {
     setTimeout(() => { dropdown.style.display = 'none'; }, 200);
   });
 }
 
-function doSearch(q) {
-  const dropdown = document.getElementById('search-results-dropdown');
+function initSearch() {
+  bindSearch('nav-search', 'search-results-dropdown');
+  bindSearch('drawer-search', 'drawer-search-dropdown');
+}
+
+function doSearch(q, dropdown) {
+  if (!dropdown) dropdown = document.getElementById('search-results-dropdown');
   if (!q.trim() || !globalData) {
     dropdown.style.display = 'none';
     return;
@@ -2300,7 +2403,7 @@ function doSearch(q) {
   }
 
   dropdown.innerHTML = results.map(r => `
-    <div class="search-result-item" onclick="goTo('#/${r.type}/${r.id}'); document.getElementById('search-results-dropdown').style.display='none'">
+    <div class="search-result-item" onclick="goTo('#/${r.type}/${r.id}'); window.closeAllSearchDropdowns()">
       <div>
         <div class="search-result-label">${r.type === 'atleta' ? 'ATLETA' : 'TEAM'}</div>
         <div class="search-result-name">${esc(r.display)}</div>

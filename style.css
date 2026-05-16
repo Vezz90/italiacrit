@@ -243,7 +243,7 @@ img { max-width: 100%; display: block; }
 }
 #nav-hamburger span {
   width: 22px; height: 2px;
-  background: var(--text-primary);
+  background: #f0f0f0;
   border-radius: 1px;
   transition: all 0.2s;
 }
@@ -1190,13 +1190,29 @@ footer .footer-sep { color: var(--red-hot); margin: 0 8px; }
   .page { padding: 20px 16px; }
   .nav-links { display: none; }
   #nav-hamburger { display: flex; }
-  /* Logo ridotto su mobile */
-  #navbar { height: 60px; padding: 0 12px; }
-  .nav-logo-img { height: 50px; }
+  /* Navbar mobile: riga singola — logo | (spazio) | search | tema | hamburger */
+  #navbar { height: 60px; padding: 0 12px; flex-wrap: nowrap; }
+  .nav-logo-img { height: 48px; }
+  /* Spinge tutto il gruppo di destra a fine riga */
+  .nav-search-wrap {
+    display: flex;
+    margin-left: auto;
+    flex-shrink: 1;
+    min-width: 0;
+    max-width: 140px;
+    order: 5;
+  }
+  .theme-toggle { order: 6; margin-left: 8px; flex-shrink: 0; }
+  #nav-hamburger { order: 7; margin-left: 8px; flex-shrink: 0; }
+  #nav-search {
+    width: 100% !important;
+    font-size: 0.78rem;
+    padding: 5px 8px 5px 26px;
+  }
+  /* Dropdown allineato a destra per non uscire dallo schermo */
+  #search-results-dropdown { right: 0; left: auto; width: 260px; }
   #app { padding-top: 60px; }
   #nav-drawer { top: 60px; }
-  /* Searchbar nascosta su mobile (c'è il drawer) */
-  .nav-search-wrap { display: none; }
   /* Separatore rimosso su mobile */
   .nav-sep { display: none; }
   .cat-grid { grid-template-columns: 1fr; }
