@@ -8,6 +8,51 @@
 
 // ── CONSTANTS ─────────────────────────────────────────────────
 const BASEPTS = { 1:15, 2:12, 3:10, 4:8, 5:6, 6:5, 7:4, 8:3, 9:2, 10:1 };
+const API_BASE = 'http://localhost:8002/api';
+
+// ── AUTH HELPERS ──────────────────────────────────────────────
+function authToken() { return localStorage.getItem('italiacrit-token'); }
+function authUser()  {
+  try { return JSON.parse(localStorage.getItem('italiacrit-user') || 'null'); } catch { return null; }
+}
+function authSave(token, user) {
+  localStorage.setItem('italiacrit-token', token);
+  localStorage.setItem('italiacrit-user', JSON.stringify(user));
+}
+function authClear() {
+  localStorage.removeItem('italiacrit-token');
+  localStorage.removeItem('italiacrit-user');
+}
+
+async function apiCall(path, opts = {}) {
+  const token = authToken();
+  const res = await fetch(API_BASE + path, {
+    ...opts,
+    headers: {
+      'Content-Type': 'application/json',
+      ...(token ? { Authorization: `Bearer ${token}` } : {}),
+      ...(opts.headers || {}),
+    },
+    body: opts.body ? JSON.stringify(opts.body) : undefined,
+  });
+  const data = await res.json().catch(() => ({}));
+  if (!res.ok) throw new Error(data.error || `HTTP ${res.status}`);
+  return data;
+}
+
+function updateNavLoginState() {
+  const user = authUser();
+  const link = document.getElementById('nav-login');
+  const drawerLink = document.getElementById('drawer-login');
+  if (user) {
+    const label = user.display_name?.split(' ')[0] || 'Profilo';
+    if (link)       { link.textContent = label; link.href = '#/profilo'; link.id = 'nav-login'; }
+    if (drawerLink) { drawerLink.textContent = label; drawerLink.href = '#/profilo'; }
+  } else {
+    if (link)       { link.textContent = 'Login'; link.href = '#/login'; }
+    if (drawerLink) { drawerLink.textContent = 'Login'; drawerLink.href = '#/login'; }
+  }
+}
 
 // ── REGION NORMALIZATION ───────────────────────────────────────
 const ITALIAN_REGIONS = [
@@ -223,6 +268,14 @@ function multFromType(tipo, isCR, isCI) {
   return 1;
 }
 
+function slug(s) {
+  if (!s) return '';
+  return String(s).toLowerCase()
+    .normalize('NFD').replace(/[̀-ͯ]/g, '') // rimuove accenti
+    .replace(/[^a-z0-9]+/g, '_')
+    .replace(/^_+|_+$/g, '');
+}
+
 // ── THEME LOGIC ───────────────────────────────────────────────
 function initTheme() {
   const saved = localStorage.getItem('italiacrit-theme') || 'dark';
@@ -313,6 +366,9 @@ function route() {
   if (match('/statistiche')) return renderStatistiche();
   if (match('/comparatore')) return renderComparatore();
   if (match('/regolamento')) return renderRegolamento();
+  if (match('/login')) return renderLogin();
+  if (match('/register')) return renderRegister();
+  if (match('/profilo')) return renderMyProfile();
   if (match('/admin')) return renderAdmin();
   const m_atleta = match('/atleta/:id');
   if (m_atleta) return renderAtleta(m_atleta[1]);
@@ -325,9 +381,10 @@ function route() {
 }
 
 function updateNavActive(hash) {
-  ['nav-home','nav-class','nav-atleti','nav-team','nav-cal','nav-risultati','nav-reg','nav-stats','nav-comp'].forEach(id => {
+  ['nav-home','nav-class','nav-atleti','nav-team','nav-cal','nav-risultati','nav-reg','nav-stats','nav-comp','nav-login'].forEach(id => {
     document.getElementById(id)?.classList.remove('active');
   });
+  updateNavLoginState();
   if (hash === '#/' || hash === '#') document.getElementById('nav-home')?.classList.add('active');
   else if (hash.startsWith('#/classifica')) document.getElementById('nav-class')?.classList.add('active');
   else if (hash.startsWith('#/atleti')) document.getElementById('nav-atleti')?.classList.add('active');
@@ -335,7 +392,7 @@ function updateNavActive(hash) {
   else if (hash.startsWith('#/risultati')) document.getElementById('nav-risultati')?.classList.add('active');
   else if (hash.startsWith('#/statistiche')) document.getElementById('nav-stats')?.classList.add('active');
   else if (hash.startsWith('#/comparatore')) document.getElementById('nav-comp')?.classList.add('active');
-  else if (hash.startsWith('#/admin')) document.getElementById('nav-admin')?.classList.add('active');
+  else if (hash.startsWith('#/login') || hash.startsWith('#/register') || hash.startsWith('#/profilo')) document.getElementById('nav-login')?.classList.add('active');
 }
 
 function setPage(html) {
@@ -854,11 +911,26 @@ async function updateRankTable() {
 // ── ADMIN DASHBOARD ──────────────────────────────────────────
 async function renderAdmin() {
   if (!globalData) return;
-  
+  const user = authUser();
+  if (!user || user.role !== 'admin') {
+    setPage(`<div style="text-align:center;padding:80px 20px">
+      <h2 style="font-family:var(--font-display);color:var(--red-hot)">Accesso negato</h2>
+      <p style="color:var(--text-muted);margin:16px 0">Questa sezione è riservata agli amministratori.</p>
+      <a href="#/login" class="btn-action" style="background:var(--accent);color:white;text-decoration:none;padding:10px 24px;border-radius:6px">Vai al Login</a>
+    </div>`);
+    return;
+  }
+
   // Carichiamo gli override salvati
-  const overrides = await loadJson('data/user_overrides.json') || {};
-  const { resultsRaw } = globalData;
-  
+  let overrides, resultsRaw;
+  try {
+    overrides = await loadJson('data/user_overrides.json') || {};
+    resultsRaw = globalData.resultsRaw;
+  } catch(e) {
+    setPage(`<div style="padding:40px;color:var(--red-hot)">Errore caricamento admin: ${esc(e.message)}</div>`);
+    return;
+  }
+
   // Raggruppa per GARA EVENTO (Nome + Data), ignorando la categoria
   const raceMap = {};
   resultsRaw.forEach(r => {
@@ -2999,5 +3071,295 @@ window.shareClassifica=async function(){
     region:rankRegion||'',
     rows:ranking.slice(0,10).map(r=>({pos:r.pos,cognome:r.cognome||r.atleta_id,nome:r.nome||'',team:r.team||'',punti:r.punti}))
   });
+};
+
+// ── LOGIN ─────────────────────────────────────────────────────
+function renderLogin() {
+  if (authUser()) { window.location.hash = '/profilo'; return; }
+  setPage(`
+    <div class="auth-wrap">
+      <div class="auth-card">
+        <h1 class="auth-title">ACCEDI</h1>
+        <p class="auth-sub">Bentornato su ItaliacritResultati</p>
+        <div id="auth-error" class="auth-error" style="display:none"></div>
+        <form id="login-form" class="auth-form" onsubmit="submitLogin(event)">
+          <label class="auth-label">Email
+            <input type="email" id="login-email" class="auth-input" placeholder="tua@email.it" required autocomplete="email" />
+          </label>
+          <label class="auth-label">Password
+            <input type="password" id="login-pwd" class="auth-input" placeholder="••••••••" required autocomplete="current-password" />
+          </label>
+          <button type="submit" class="auth-btn" id="login-submit">ENTRA</button>
+        </form>
+        <p class="auth-switch">Non hai un account? <a href="#/register">Registrati</a></p>
+      </div>
+    </div>
+  `);
+}
+
+window.submitLogin = async function(e) {
+  e.preventDefault();
+  const email = document.getElementById('login-email').value.trim();
+  const pwd   = document.getElementById('login-pwd').value;
+  const errEl = document.getElementById('auth-error');
+  const btn   = document.getElementById('login-submit');
+  errEl.style.display = 'none';
+  btn.disabled = true; btn.textContent = 'Accesso in corso…';
+  try {
+    const { token, user } = await apiCall('/auth/login', { method: 'POST', body: { email, password: pwd } });
+    authSave(token, user);
+    updateNavLoginState();
+    window.location.hash = user.role === 'admin' ? '/admin' : '/profilo';
+  } catch (err) {
+    errEl.textContent = err.message; errEl.style.display = 'block';
+    btn.disabled = false; btn.textContent = 'ENTRA';
+  }
+};
+
+// ── REGISTER ──────────────────────────────────────────────────
+function renderRegister() {
+  if (authUser()) { window.location.hash = '/profilo'; return; }
+  setPage(`
+    <div class="auth-wrap">
+      <div class="auth-card">
+        <h1 class="auth-title">REGISTRATI</h1>
+        <p class="auth-sub">Crea il tuo account ItaliacritResultati</p>
+        <div id="auth-error" class="auth-error" style="display:none"></div>
+        <form id="reg-form" class="auth-form" onsubmit="submitRegister(event)">
+          <label class="auth-label">Nome visualizzato
+            <input type="text" id="reg-name" class="auth-input" placeholder="Es. Mario Rossi" required />
+          </label>
+          <label class="auth-label">Email
+            <input type="email" id="reg-email" class="auth-input" placeholder="tua@email.it" required autocomplete="email" />
+          </label>
+          <label class="auth-label">Password
+            <input type="password" id="reg-pwd" class="auth-input" placeholder="Minimo 6 caratteri" required autocomplete="new-password" minlength="6" />
+          </label>
+          <label class="auth-label">Tipo di account
+            <select id="reg-role" class="auth-input">
+              <option value="appassionato">Appassionato — seguo le gare</option>
+              <option value="atleta">Atleta — voglio collegare il mio profilo</option>
+              <option value="team">Team — gestisco una squadra</option>
+              <option value="genitore">Genitore — seguo mio/a figlio/a</option>
+              <option value="parente">Parente / Tifoso — seguo un atleta</option>
+            </select>
+          </label>
+          <button type="submit" class="auth-btn" id="reg-submit">CREA ACCOUNT</button>
+        </form>
+        <p class="auth-switch">Hai già un account? <a href="#/login">Accedi</a></p>
+      </div>
+    </div>
+  `);
+}
+
+window.submitRegister = async function(e) {
+  e.preventDefault();
+  const display_name = document.getElementById('reg-name').value.trim();
+  const email = document.getElementById('reg-email').value.trim();
+  const password = document.getElementById('reg-pwd').value;
+  const role  = document.getElementById('reg-role').value;
+  const errEl = document.getElementById('auth-error');
+  const btn   = document.getElementById('reg-submit');
+  errEl.style.display = 'none';
+  btn.disabled = true; btn.textContent = 'Registrazione…';
+  try {
+    const { token, user } = await apiCall('/auth/register', { method: 'POST', body: { email, password, role, display_name } });
+    authSave(token, user);
+    updateNavLoginState();
+    window.location.hash = '/profilo';
+  } catch (err) {
+    errEl.textContent = err.message; errEl.style.display = 'block';
+    btn.disabled = false; btn.textContent = 'CREA ACCOUNT';
+  }
+};
+
+// ── MY PROFILE ────────────────────────────────────────────────
+async function renderMyProfile() {
+  const user = authUser();
+  if (!user) { window.location.hash = '/login'; return; }
+
+  const roleLabels = {
+    atleta:'Atleta', team:'Team', genitore:'Genitore', parente:'Parente / Tifoso', appassionato:'Appassionato', admin:'Amministratore'
+  };
+
+  let profileHtml = '';
+  try {
+    const { profile } = await apiCall('/profile');
+    if (user.role === 'atleta') {
+      if (!profile) {
+        profileHtml = `
+          <div class="auth-section">
+            <h3 class="auth-section-title">Collega il tuo profilo atleta</h3>
+            <p style="color:var(--text-muted);margin-bottom:16px;font-size:0.9rem">
+              Cerca il tuo nome nelle classifiche e collegati per seguire facilmente i tuoi risultati.
+            </p>
+            <form onsubmit="submitLinkAthlete(event)" class="auth-form">
+              <label class="auth-label">Cerca atleta nel DB
+                <input type="text" id="link-search" class="auth-input" placeholder="Digita cognome…" oninput="searchAtletaForLink(this.value)" autocomplete="off" />
+                <div id="link-results" style="margin-top:6px"></div>
+                <input type="hidden" id="link-atleta-id" />
+              </label>
+              <label class="auth-label">Oppure inserisci codice FCI
+                <input type="text" id="link-fci" class="auth-input" placeholder="Codice tessera FCI (opzionale)" />
+              </label>
+              <label class="auth-label">Nome
+                <input type="text" id="link-fname" class="auth-input" placeholder="Nome" />
+              </label>
+              <label class="auth-label">Cognome
+                <input type="text" id="link-lname" class="auth-input" placeholder="Cognome" />
+              </label>
+              <button type="submit" class="auth-btn">COLLEGA PROFILO</button>
+            </form>
+            <p style="font-size:0.8rem;color:var(--text-muted);margin-top:8px">
+              Se non trovi il tuo profilo, compila comunque il form: verrà revisionato dall'admin.
+            </p>
+          </div>`;
+      } else {
+        const statusMap = { active:'✅ Verificato', pending:'⏳ In attesa di verifica', rejected:'❌ Rifiutato' };
+        profileHtml = `
+          <div class="auth-section">
+            <h3 class="auth-section-title">Il tuo profilo atleta</h3>
+            <div class="profile-info-row"><span>Stato</span><span>${statusMap[profile.status] || profile.status}</span></div>
+            ${profile.atleta_id ? `<div class="profile-info-row"><span>Profilo</span><a href="#/atleta/${esc(profile.atleta_id)}">${esc(profile.first_name)} ${esc(profile.last_name)}</a></div>` : ''}
+            ${profile.fci_code ? `<div class="profile-info-row"><span>Codice FCI</span><span>${esc(profile.fci_code)}</span></div>` : ''}
+            ${profile.team ? `<div class="profile-info-row"><span>Team</span><span>${esc(profile.team)}</span></div>` : ''}
+          </div>`;
+      }
+    } else if (user.role === 'team') {
+      if (!profile) {
+        profileHtml = `
+          <div class="auth-section">
+            <h3 class="auth-section-title">Collega il tuo team</h3>
+            <form onsubmit="submitLinkTeam(event)" class="auth-form">
+              <label class="auth-label">Nome team
+                <input type="text" id="link-team-name" class="auth-input" placeholder="Nome squadra" required />
+              </label>
+              <button type="submit" class="auth-btn">COLLEGA TEAM</button>
+            </form>
+          </div>`;
+      } else {
+        const statusMap = { active:'✅ Verificato', pending:'⏳ In attesa di verifica', rejected:'❌ Rifiutato' };
+        profileHtml = `
+          <div class="auth-section">
+            <h3 class="auth-section-title">Il tuo team</h3>
+            <div class="profile-info-row"><span>Stato</span><span>${statusMap[profile.status] || profile.status}</span></div>
+            ${profile.team_id ? `<div class="profile-info-row"><span>Profilo</span><a href="#/team/${esc(profile.team_id)}">${esc(profile.team_name)}</a></div>` : `<div class="profile-info-row"><span>Nome</span><span>${esc(profile.team_name)}</span></div>`}
+          </div>`;
+      }
+    } else if (user.role === 'genitore' || user.role === 'parente') {
+      const links = Array.isArray(profile) ? profile : [];
+      const statusMap = { active:'✅', pending:'⏳', rejected:'❌' };
+      profileHtml = `
+        <div class="auth-section">
+          <h3 class="auth-section-title">Atleti seguiti</h3>
+          ${links.length ? links.map(l => `
+            <div class="profile-info-row">
+              <a href="#/atleta/${esc(l.linked_atleta_id)}">${esc(l.linked_atleta_id)}</a>
+              <span>${statusMap[l.status] || l.status} ${esc(l.relation)}</span>
+            </div>`).join('') : '<p style="color:var(--text-muted)">Nessun atleta collegato.</p>'}
+          <form onsubmit="submitLinkFamily(event)" class="auth-form" style="margin-top:16px">
+            <label class="auth-label">Cerca atleta
+              <input type="text" id="link-search" class="auth-input" placeholder="Digita cognome…" oninput="searchAtletaForLink(this.value)" autocomplete="off" />
+              <div id="link-results" style="margin-top:6px"></div>
+              <input type="hidden" id="link-atleta-id" />
+            </label>
+            <button type="submit" class="auth-btn" style="margin-top:8px">AGGIUNGI ATLETA</button>
+          </form>
+        </div>`;
+    }
+  } catch (err) {
+    profileHtml = `<p style="color:var(--text-muted)">Impossibile caricare il profilo: ${esc(err.message)}</p>`;
+  }
+
+  setPage(`
+    <div class="auth-wrap">
+      <div class="auth-card" style="max-width:560px">
+        <h1 class="auth-title">IL MIO PROFILO</h1>
+        <div class="auth-section">
+          <div class="profile-info-row"><span>Nome</span><span>${esc(user.display_name)}</span></div>
+          <div class="profile-info-row"><span>Email</span><span>${esc(user.email)}</span></div>
+          <div class="profile-info-row"><span>Tipo</span><span>${roleLabels[user.role] || user.role}</span></div>
+        </div>
+        ${profileHtml}
+        <div style="margin-top:24px;display:flex;gap:12px;flex-wrap:wrap">
+          ${user.role === 'admin' ? `<a href="#/admin" class="auth-btn" style="text-decoration:none;text-align:center">PANNELLO ADMIN</a>` : ''}
+          <button class="auth-btn auth-btn-outline" onclick="doLogout()">ESCI</button>
+        </div>
+      </div>
+    </div>
+  `);
+}
+
+window.doLogout = function() {
+  authClear();
+  updateNavLoginState();
+  window.location.hash = '/';
+};
+
+window.searchAtletaForLink = function(q) {
+  const container = document.getElementById('link-results');
+  if (!container) return;
+  if (!q || q.length < 2) { container.innerHTML = ''; return; }
+  const { athletes } = globalData;
+  const matches = Object.entries(athletes)
+    .filter(([id, a]) => {
+      const name = ((a.cognome || '') + ' ' + (a.nome || '')).toLowerCase();
+      return name.includes(q.toLowerCase());
+    })
+    .slice(0, 8);
+  container.innerHTML = matches.length
+    ? matches.map(([id, a]) => `
+        <div class="link-result-row" onclick="selectAtletaLink('${esc(id)}','${esc(a.cognome)} ${esc(a.nome)}')">
+          <strong>${esc(a.cognome)} ${esc(a.nome)}</strong>
+          <span style="color:var(--text-muted);font-size:0.8rem">${esc(a.team || '')}</span>
+        </div>`).join('')
+    : `<div style="padding:8px;color:var(--text-muted);font-size:0.85rem">Nessun risultato</div>`;
+};
+
+window.selectAtletaLink = function(id, label) {
+  const inp = document.getElementById('link-search');
+  const hid = document.getElementById('link-atleta-id');
+  const res = document.getElementById('link-results');
+  if (inp) inp.value = label;
+  if (hid) hid.value = id;
+  if (res) res.innerHTML = '';
+};
+
+window.submitLinkAthlete = async function(e) {
+  e.preventDefault();
+  const atleta_id = document.getElementById('link-atleta-id')?.value || null;
+  const fci_code  = document.getElementById('link-fci')?.value.trim() || null;
+  const first_name = document.getElementById('link-fname')?.value.trim() || null;
+  const last_name  = document.getElementById('link-lname')?.value.trim() || null;
+  try {
+    await apiCall('/profile/link-athlete', { method: 'POST', body: { atleta_id, fci_code, first_name, last_name } });
+    alert('Profilo collegato! ' + (atleta_id ? 'Attivo immediatamente.' : 'In attesa di verifica admin.'));
+    renderMyProfile();
+  } catch (err) { alert('Errore: ' + err.message); }
+};
+
+window.submitLinkTeam = async function(e) {
+  e.preventDefault();
+  const team_name = document.getElementById('link-team-name')?.value.trim();
+  const { teams } = globalData;
+  const match = Object.entries(teams).find(([id, t]) =>
+    (t.nome || '').toLowerCase() === team_name.toLowerCase()
+  );
+  try {
+    await apiCall('/profile/link-team', { method: 'POST', body: { team_id: match ? match[0] : null, team_name } });
+    alert('Team collegato! ' + (match ? 'Attivo immediatamente.' : 'In attesa di verifica admin.'));
+    renderMyProfile();
+  } catch (err) { alert('Errore: ' + err.message); }
+};
+
+window.submitLinkFamily = async function(e) {
+  e.preventDefault();
+  const linked_atleta_id = document.getElementById('link-atleta-id')?.value;
+  if (!linked_atleta_id) { alert('Seleziona prima un atleta dalla lista.'); return; }
+  try {
+    await apiCall('/profile/link-family', { method: 'POST', body: { linked_atleta_id } });
+    alert('Atleta aggiunto! In attesa di verifica admin.');
+    renderMyProfile();
+  } catch (err) { alert('Errore: ' + err.message); }
 };
 
