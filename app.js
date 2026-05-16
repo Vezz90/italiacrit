@@ -8,9 +8,11 @@
 
 // ── CONSTANTS ─────────────────────────────────────────────────
 const BASEPTS = { 1:15, 2:12, 3:10, 4:8, 5:6, 6:5, 7:4, 8:3, 9:2, 10:1 };
-const API_BASE    = '/api';
-const PHOTOS_BASE = '';
-const MEDIA_BASE  = '';
+const RENDER_BASE  = 'https://italiacrit.onrender.com';
+const IS_LOCAL     = location.hostname === 'localhost' || location.hostname === '127.0.0.1';
+const API_BASE     = IS_LOCAL ? '/api' : `${RENDER_BASE}/api`;
+const PHOTOS_BASE  = IS_LOCAL ? '' : RENDER_BASE;
+const MEDIA_BASE   = IS_LOCAL ? '' : RENDER_BASE;
 
 // ── AUTH HELPERS ──────────────────────────────────────────────
 function authToken() { return localStorage.getItem('italiacrit-token'); }
