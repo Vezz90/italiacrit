@@ -805,308 +805,146 @@ async function renderHome() {
   if (upcoming[0]) { const d = Math.round((new Date(upcoming[0].data)-new Date(todayStr))/86400000); tickerItems.push(`📅 <strong>PROSSIMA GARA${d===0?' OGGI':d===1?' DOMANI':''}:</strong> ${upcoming[0].nome}`); }
   if (formaBest.length > 1) { const f = formaBest[1]; tickerItems.push(`⬆ <strong>EMERGENTE:</strong> ${f.cognome} ${f.nome} — ${f.pts} pt · ${catLabel(f.code)}`); }
 
-  // ── HTML SECTIONS ─────────────────────────────────────────────
-
+  // ── HTML SECTIONS (editorial v2) ──────────────────────────────
   const MONTHS_SHORT = ['GEN','FEB','MAR','APR','MAG','GIU','LUG','AGO','SET','OTT','NOV','DIC'];
 
-  // ══ 1. CINEMATIC HERO ═══════════════════════════════════════════
-  const ciSlides = heroRaces.slice(0, 6).map((lr, idx) => {
-    const sorted = (lr.results||[]).slice().sort((a,b)=>a.posizione-b.posizione);
-    const winner = sorted[0];
-    const p2 = sorted[1];
-    const p3 = sorted[2];
-    const mult = lr.mult || 1;
-    const wPts = winner ? (winner.punti_effettivi || (BASEPTS[1]||0)*mult) : 0;
-    const p2Pts = p2 ? (p2.punti_effettivi || (BASEPTS[2]||0)*mult) : 0;
-    const p3Pts = p3 ? (p3.punti_effettivi || (BASEPTS[3]||0)*mult) : 0;
-    return `<div class="ci-slide${idx===0?' ci-slide-active':''}" id="ci-slide-${idx}">
-      <div class="ci-slide-meta">
-        ${badgeMult(mult, lr.tipo, lr.isCR, lr.isCI)}
-        ${lr.genere==='F'?'<span class="badge-cat badge-genere-f">♀</span>':''}
-        <span class="ci-slide-cat">${esc(catLabel(lr.categoria)||'')}</span>
-        <span class="ci-slide-sep">·</span>
-        <span class="ci-slide-date">${fmtDate(lr.data)}</span>
-        ${lr.regione ? `<span class="ci-slide-sep">·</span><span class="ci-slide-reg">${esc(lr.regione)}</span>` : ''}
+  // ── 1. HERO ──────────────────────────────────────────────────
+  const latestRace = heroRaces[0];
+  const latestWinner = latestRace?.results?.find(r => r.posizione === 1);
+
+  const recentRacesHtml = heroRaces.slice(0, 6).map((r, i) => {
+    const w = r.results?.find(x => x.posizione === 1);
+    const d = r.data ? new Date(r.data) : null;
+    const dateStr = d ? `${d.getDate()} ${MONTHS_SHORT[d.getMonth()]}` : '';
+    const rcCode = getRankingFileCode({categoria:r.categoria, genere:r.genere, tipo:r.tipo});
+    return `<div class="em-race-row${i===0?' em-race-row--latest':''}" onclick="location.hash='#/risultati/${encodeURIComponent(r.id)}'">
+      <span class="em-race-date">${dateStr}</span>
+      <div class="em-race-info">
+        <span class="em-race-name">${esc(r.nome)}</span>
+        <span class="em-race-cat">${catLabel(rcCode||'')}</span>
       </div>
-      <h2 class="ci-slide-race"><a href="#/gara/${esc(lr.id)}" style="color:inherit;text-decoration:none">${esc(lr.nome)}</a></h2>
-      ${winner ? `<div class="ci-winner-block">
-        <div class="ci-winner-label">🥇 VINCITORE</div>
-        <div class="ci-winner-name">
-          <a href="#/atleta/${esc(winner.atleta_id)}" style="color:inherit;text-decoration:none">
-            ${esc(winner.cognome)} <span class="ci-winner-first">${esc(winner.nome)}</span>
-          </a>
-        </div>
-        <div class="ci-winner-sub">
-          <a href="#/team/${esc(winner.team_id)}" style="color:rgba(255,255,255,.5);text-decoration:none">${esc(winner.team)}</a>
-          <span style="color:var(--red-hot);font-weight:700;margin-left:10px">${wPts} pt</span>
-        </div>
-      </div>` : ''}
-      <div class="ci-podio">
-        ${p2 ? `<div class="ci-podio-row"><span class="ci-p2">2°</span><a href="#/atleta/${esc(p2.atleta_id)}" class="ci-podio-name">${esc(p2.cognome)} ${esc(p2.nome)}</a><span class="ci-podio-pts">${p2Pts}pt</span></div>` : ''}
-        ${p3 ? `<div class="ci-podio-row"><span class="ci-p3">3°</span><a href="#/atleta/${esc(p3.atleta_id)}" class="ci-podio-name">${esc(p3.cognome)} ${esc(p3.nome)}</a><span class="ci-podio-pts">${p3Pts}pt</span></div>` : ''}
-      </div>
+      ${w ? `<span class="em-race-winner">🥇 ${esc(w.cognome)}</span>` : ''}
     </div>`;
   }).join('');
 
-  const ciDotsHtml = heroRaces.length > 1
-    ? heroRaces.slice(0,6).map((_,i) => `<button class="ci-dot${i===0?' ci-dot-active':''}" id="ci-dot-${i}" onclick="window.heroGoTo(${i})" aria-label="Gara ${i+1}"></button>`).join('')
-    : '';
-
-  const ciHeroHtml = `
-    <section class="ci-hero">
-      <div class="ci-hero-bg"></div>
-      <div class="ci-hero-left">
-        <div class="ci-hero-eyebrow">IL PORTALE DEL CICLISMO AGONISTICO ITALIANO</div>
-        <h1 class="ci-hero-title">ITALIA<span class="ci-hero-accent">CRIT</span></h1>
-        <p class="ci-hero-desc">Classifiche · Risultati · Storie · Statistiche</p>
-        <div class="ci-hero-actions">
-          <a href="#/classifica" class="ci-btn-primary">Classifiche</a>
-          <a href="#/risultati" class="ci-btn-ghost">Risultati</a>
-        </div>
-      </div>
-      <div class="ci-hero-right">
-        <div class="ci-results-label">ULTIMI RISULTATI</div>
-        <div class="ci-slides-wrap">
-          ${ciSlides}
-        </div>
-        ${heroRaces.length > 1 ? `<div class="ci-hero-nav">
-          <button class="ci-nav-btn" onclick="window.heroPrev()" aria-label="Precedente">←</button>
-          <div class="ci-dots">${ciDotsHtml}</div>
-          <button class="ci-nav-btn" onclick="window.heroNext()" aria-label="Successivo">→</button>
+  const heroHtml = `<section class="em-hero">
+    <div class="em-hero-content">
+      <div class="em-hero-left">
+        <div class="em-eyebrow">IL CICLISMO AGONISTICO ITALIANO</div>
+        <h1 class="em-title">ITALIA<span class="em-title-red">CRIT</span></h1>
+        <p class="em-subtitle">Classifiche · Risultati · Storie · Statistiche</p>
+        ${latestWinner ? `<div class="em-hero-winner">
+          <span class="em-winner-label">ULTIMA VITTORIA</span>
+          <span class="em-winner-name">${esc(latestWinner.cognome)} ${esc(latestWinner.nome)}</span>
+          <span class="em-winner-race">${esc(latestRace.nome)}</span>
         </div>` : ''}
-      </div>
-    </section>`;
-
-  // ══ 2. LIVE TICKER ══════════════════════════════════════════════
-  const tickerHtml = tickerItems.length ? `
-    <div class="ci-ticker">
-      <div class="ci-ticker-badge">LIVE</div>
-      <div class="ci-ticker-outer"><div class="ci-ticker-track">
-        ${[...tickerItems,...tickerItems].map(t=>`<span class="ci-ticker-item">${t}</span>`).join('<span class="ci-ticker-sep" aria-hidden="true">·</span>')}
-      </div></div>
-    </div>` : '';
-
-  // ══ 3. CORRIDORE IN EVIDENZA ════════════════════════════════════
-  const riderOfWeek = topScalatori[0] || formaBest[0] || null;
-  let rowHtml = '';
-  if (riderOfWeek) {
-    const isScal = !!topScalatori[0];
-    const rf = riderOfWeek;
-    const wins14 = isScal ? 0 : (formaBest[0]?.vittorie||0);
-    const podio14 = isScal ? 0 : (formaBest[0]?.podio||0);
-    rowHtml = `
-      <section class="ci-row-section">
-        <div class="ci-row-label-outer">CORRIDORE IN EVIDENZA</div>
-        <div class="ci-row-inner">
-          <div class="ci-row-left">
-            <div class="ci-row-badge">${badgeCat(rf.code)}</div>
-            <div class="ci-row-surname">${esc(rf.cognome)}</div>
-            <div class="ci-row-firstname">${esc(rf.nome)}</div>
-            <a href="#/team/${esc(rf.team_id)}" class="ci-row-team">${esc(rf.team)}</a>
-          </div>
-          <div class="ci-row-stats">
-            ${isScal ? `
-              <div class="ci-stat-block ci-stat-hot"><div class="ci-stat-num">+${rf.gain}</div><div class="ci-stat-lbl">posizioni guadagnate</div></div>
-              <div class="ci-stat-block"><div class="ci-stat-num">${rf.newPos}°</div><div class="ci-stat-lbl">posizione attuale</div></div>
-              <div class="ci-stat-block"><div class="ci-stat-num">${rf.recentPts}</div><div class="ci-stat-lbl">pt settimana</div></div>
-            ` : `
-              <div class="ci-stat-block ci-stat-hot"><div class="ci-stat-num">${rf.pts}</div><div class="ci-stat-lbl">punti (14 gg)</div></div>
-              <div class="ci-stat-block"><div class="ci-stat-num">${wins14}</div><div class="ci-stat-lbl">vittorie</div></div>
-              <div class="ci-stat-block"><div class="ci-stat-num">${podio14}</div><div class="ci-stat-lbl">podi</div></div>
-            `}
-            <a href="#/atleta/${esc(rf.atleta_id)}" class="ci-row-cta">Scheda Atleta →</a>
-          </div>
+        <div class="em-hero-ctas">
+          <a href="#/classifica" class="em-btn-primary">Classifiche</a>
+          <a href="#/risultati" class="em-btn-ghost">Risultati</a>
         </div>
-      </section>`;
-  }
+      </div>
+      <div class="em-hero-right">
+        <div class="em-right-label">ULTIMI RISULTATI</div>
+        <div class="em-race-feed">${recentRacesHtml}</div>
+        <a href="#/risultati" class="em-all-link">Tutti i risultati →</a>
+      </div>
+    </div>
+    ${tickerItems.length ? `<div class="em-ticker-bar"><div class="em-ticker-inner"><span class="em-ticker-track">${[...tickerItems,...tickerItems].join(' &nbsp;·&nbsp; ')}</span></div></div>` : ''}
+  </section>`;
 
-  // ══ 4. PROSSIME GARE ════════════════════════════════════════════
-  const upcomingCiHtml = upcoming.length ? `
-    <section class="ci-light-section ci-upcoming-section">
-      <div class="ci-section-hd">
-        <span class="ci-section-title">PROSSIME GARE</span>
-        <a href="#/calendario" class="ci-section-link">Calendario →</a>
+  // ── 2. UOMO DEL MOMENTO ───────────────────────────────────────
+  const star = formaBest[0];
+  const spotlightHtml = star ? `<section class="em-spotlight">
+    <div class="em-spotlight-bg-name">${esc(star.cognome)}</div>
+    <div class="em-spotlight-body">
+      <div class="em-spot-meta">
+        <span class="em-spot-badge">🔥 UOMO DEL MOMENTO</span>
+        <span class="em-spot-cat">${catLabel(star.code)}</span>
       </div>
-      <div class="ci-upcoming-list">
-        ${upcoming.map(g => {
-          const d = new Date(g.data);
-          const daysTo = Math.round((d - new Date(todayStr))/86400000);
-          const label = daysTo===0?'OGGI':daysTo===1?'DOMANI':`+${daysTo}g`;
-          const urgClass = daysTo===0?'ci-up-today':daysTo<=3?'ci-up-soon':'';
-          return `<a href="#/gara/${esc(g.id)}" class="ci-upcoming-row ${urgClass}">
-            <div class="ci-up-date">
-              <span class="ci-up-day">${d.getDate()}</span>
-              <span class="ci-up-mon">${MONTHS_SHORT[d.getMonth()]}</span>
-            </div>
-            <div class="ci-up-info">
-              <div class="ci-up-name">${esc(g.nome)}</div>
-              <div class="ci-up-loc">${[g.luogo,g.regione].filter(Boolean).join(' · ')}</div>
-            </div>
-            <div class="ci-up-right">
-              <span class="ci-up-label">${label}</span>
-              ${badgeMult(g.moltiplicatore, g.tipo, g.campionato_regionale, g.campionato_italiano)}
-            </div>
-          </a>`;
-        }).join('')}
+      <h2 class="em-spot-name">${esc(star.cognome)}<br><span class="em-spot-firstname">${esc(star.nome)}</span></h2>
+      <a href="#/team/${encodeURIComponent(star.team_id)}" class="em-spot-team">${esc(star.team||'')}</a>
+      <div class="em-spot-stats">
+        <div class="em-stat"><span class="em-stat-val">${star.pts}</span><span class="em-stat-lbl">punti 14gg</span></div>
+        <div class="em-stat"><span class="em-stat-val">${star.vittorie}</span><span class="em-stat-lbl">vittorie</span></div>
+        <div class="em-stat"><span class="em-stat-val">${star.podio}</span><span class="em-stat-lbl">podi</span></div>
+        <div class="em-stat"><span class="em-stat-val">${star.gare}</span><span class="em-stat-lbl">gare</span></div>
       </div>
-    </section>` : '';
+      <a href="#/atleta/${encodeURIComponent(star.atleta_id)}" class="em-spot-cta">Scheda atleta →</a>
+    </div>
+  </section>` : '';
 
-  // ══ 5. CHI SALE ═════════════════════════════════════════════════
-  const chiSaleHtml = topScalatori.length ? `
-    <section class="ci-dark-section">
-      <div class="ci-section-hd ci-section-hd-dark">
-        <span class="ci-section-title">⬆ CHI SALE</span>
-        <span class="ci-section-sub">Maggiori guadagni di posizione nell'ultima settimana</span>
+  // ── 3. SFIDA DELLA SETTIMANA ──────────────────────────────────
+  const vsIdx = allRankings[1]?.length >= 2 ? 1 : (allRankings[0]?.length >= 2 ? 0 : -1);
+  const vsRk = vsIdx >= 0 ? allRankings[vsIdx] : null;
+  const vsCode = vsIdx >= 0 ? catOrder[vsIdx] : '';
+  const vsA = vsRk?.[0], vsB = vsRk?.[1];
+  const versusHtml = (vsA && vsB) ? `<section class="em-versus">
+    <div class="em-versus-label">⚔ SFIDA DELLA SETTIMANA · ${catLabel(vsCode)}</div>
+    <div class="em-versus-ring">
+      <div class="em-vs-side em-vs-a">
+        <div class="em-vs-pos">1°</div>
+        <a href="#/atleta/${encodeURIComponent(vsA.atleta_id)}" class="em-vs-name">${esc(vsA.cognome)}<br><small>${esc(vsA.nome)}</small></a>
+        <div class="em-vs-pts">${vsA.punti} <span>pt</span></div>
+        <div class="em-vs-team">${esc(vsA.team_attuale||vsA.team||'')}</div>
       </div>
-      <div class="ci-scalatori-scroll">
-        ${topScalatori.slice(0,8).map((a,i) => `
-          <a href="#/atleta/${esc(a.atleta_id)}" class="ci-scalatore-card">
-            <div class="ci-sc-rank">${String(i+1).padStart(2,'0')}</div>
-            <div class="ci-sc-cat">${badgeCat(a.code)}</div>
-            <div class="ci-sc-surname">${esc(a.cognome)}</div>
-            <div class="ci-sc-firstname">${esc(a.nome)}</div>
-            <div class="ci-sc-team">${esc(a.team)}</div>
-            <div class="ci-sc-gain">+${a.gain}<span class="ci-sc-gainlbl"> pos</span></div>
-            <div class="ci-sc-arrow">${a.oldPos}° <span class="ci-sc-arrowglyph">→</span> <strong class="ci-sc-newpos">${a.newPos}°</strong></div>
-          </a>`).join('')}
+      <div class="em-vs-center">
+        <div class="em-vs-vs">VS</div>
+        <div class="em-vs-gap">+${vsA.punti - vsB.punti} pt</div>
       </div>
-    </section>` : '';
+      <div class="em-vs-side em-vs-b">
+        <div class="em-vs-pos">2°</div>
+        <a href="#/atleta/${encodeURIComponent(vsB.atleta_id)}" class="em-vs-name">${esc(vsB.cognome)}<br><small>${esc(vsB.nome)}</small></a>
+        <div class="em-vs-pts">${vsB.punti} <span>pt</span></div>
+        <div class="em-vs-team">${esc(vsB.team_attuale||vsB.team||'')}</div>
+      </div>
+    </div>
+  </section>` : '';
 
-  // ══ 6. SFIDA DELLA SETTIMANA ════════════════════════════════════
-  let matchupHtml = '';
-  if (topScalatori.length >= 2) {
-    const s1 = topScalatori[0];
-    const s2 = topScalatori.find(a => a.atleta_id !== s1.atleta_id && a.code === s1.code) || topScalatori[1];
-    if (s1 && s2 && s1.atleta_id !== s2.atleta_id) {
-      matchupHtml = `
-        <section class="ci-light-section ci-matchup-section">
-          <div class="ci-section-hd">
-            <span class="ci-section-title">SFIDA DELLA SETTIMANA</span>
-            <span class="ci-section-sub" style="color:var(--text-secondary)">${catLabel(s1.code)}</span>
-          </div>
-          <div class="ci-matchup">
-            <a href="#/atleta/${esc(s1.atleta_id)}" class="ci-mu-athlete ci-mu-left">
-              <div class="ci-mu-pos">${s1.newPos}°</div>
-              <div class="ci-mu-surname">${esc(s1.cognome)}</div>
-              <div class="ci-mu-firstname">${esc(s1.nome)}</div>
-              <div class="ci-mu-team">${esc(s1.team)}</div>
-              <div class="ci-mu-stat"><span class="ci-mu-gain">+${s1.gain}</span> pos · +${s1.recentPts}pt</div>
-            </a>
-            <div class="ci-mu-vs">
-              <div class="ci-vs-text">VS</div>
-              <div class="ci-vs-cat">${badgeCat(s1.code)}</div>
-            </div>
-            <a href="#/atleta/${esc(s2.atleta_id)}" class="ci-mu-athlete ci-mu-right">
-              <div class="ci-mu-pos">${s2.newPos}°</div>
-              <div class="ci-mu-surname">${esc(s2.cognome)}</div>
-              <div class="ci-mu-firstname">${esc(s2.nome)}</div>
-              <div class="ci-mu-team">${esc(s2.team)}</div>
-              <div class="ci-mu-stat"><span class="ci-mu-gain">+${s2.gain}</span> pos · +${s2.recentPts}pt</div>
-            </a>
-          </div>
-        </section>`;
-    }
-  }
+  // ── 4. CHI STA VOLANDO ────────────────────────────────────────
+  const volandoHtml = topScalatori.length ? `<section class="em-volando">
+    <div class="em-section-header">
+      <span class="em-section-badge">📈 CHI STA VOLANDO</span>
+      <span class="em-section-sub">Guadagni di posizione nell'ultima settimana</span>
+    </div>
+    <div class="em-volando-scroll">
+      ${topScalatori.map(a => `<div class="em-vol-card" onclick="location.hash='#/atleta/${encodeURIComponent(a.atleta_id)}'">
+        <div class="em-vol-gain">+${a.gain}</div>
+        <div class="em-vol-name">${esc(a.cognome)} ${esc(a.nome)}</div>
+        <div class="em-vol-team">${esc(a.team||'')}</div>
+        <div class="em-vol-cat">${catLabel(a.code)}</div>
+        <div class="em-vol-pts">${a.recentPts} pt</div>
+      </div>`).join('')}
+    </div>
+  </section>` : '';
 
-  // ══ 7. INSIGHTS EDITORIALI ══════════════════════════════════════
-  const insightsList = [];
-  if (formaBest[0]) insightsList.push(`<strong>${esc(formaBest[0].cognome)} ${esc(formaBest[0].nome)}</strong> domina la categoria ${catLabel(formaBest[0].code)} con ${formaBest[0].pts} punti e ${formaBest[0].vittorie} vittori${formaBest[0].vittorie===1?'a':'e'} negli ultimi 14 giorni.`);
-  if (topScalatori[0]) insightsList.push(`<strong>${esc(topScalatori[0].cognome)} ${esc(topScalatori[0].nome)}</strong> è l'atleta in ascesa della settimana: +${topScalatori[0].gain} posizioni in ${catLabel(topScalatori[0].code)}, passando dal ${topScalatori[0].oldPos}° al ${topScalatori[0].newPos}° posto.`);
-  if (topTeamTicker) insightsList.push(`<strong>${esc(topTeamTicker.team)}</strong> è il team più in forma con ${topTeamTicker.pts} punti e ${topTeamTicker.vittorie} vittori${topTeamTicker.vittorie===1?'a':'e'} recenti.`);
-  if (heroRaces[0]) { const w = heroRaces[0].results?.find(r=>r.posizione===1); if (w) insightsList.push(`Vittoria di <strong>${esc(w.cognome)} ${esc(w.nome)}</strong> alla ${esc(heroRaces[0].nome)}: un risultato che consolida la sua posizione in classifica.`); }
-  const critici = rischioPerCat.flatMap(c=>c.top5.filter(p=>p.risk==='critico')).slice(0,1);
-  critici.forEach(p => insightsList.push(`La posizione di <strong>${esc(p.cognome)} ${esc(p.nome)}</strong> è a rischio critico: distacco di soli ${p.gapBelow}pt con chi insegue in forma migliore.`));
+  // ── 5. PROSSIME GARE ─────────────────────────────────────────
+  const upcomingHtml = upcoming.length ? `<section class="em-upcoming">
+    <div class="em-section-header">
+      <span class="em-section-badge">🗓 PROSSIME GARE</span>
+    </div>
+    <div class="em-upcoming-list">
+      ${upcoming.map(g => {
+        const d = new Date(g.data);
+        const days = Math.round((d - new Date(todayStr)) / 86400000);
+        const daysStr = days === 0 ? 'OGGI' : days === 1 ? 'DOMANI' : `fra ${days}gg`;
+        return `<div class="em-ug-row" onclick="location.hash='#/calendario/${encodeURIComponent(g.id)}'">
+          <span class="em-ug-days${days===0?' em-ug-oggi':''}">${daysStr}</span>
+          <span class="em-ug-date">${d.getDate()} ${MONTHS_SHORT[d.getMonth()]}</span>
+          <span class="em-ug-name">${esc(g.nome)}</span>
+          <span class="em-ug-cat">${esc(g.categoria||'')}</span>
+        </div>`;
+      }).join('')}
+    </div>
+  </section>` : '';
 
-  const insightsHtml = insightsList.length ? `
-    <section class="ci-dark-section">
-      <div class="ci-section-hd ci-section-hd-dark">
-        <span class="ci-section-title">📰 INSIGHTS</span>
-        <span class="ci-section-sub">Analisi automatica dai dati più recenti</span>
-      </div>
-      <div class="ci-insights-grid">
-        ${insightsList.slice(0,4).map((txt,i) => `
-          <div class="ci-insight-card">
-            <div class="ci-insight-num">0${i+1}</div>
-            <p class="ci-insight-text">${txt}</p>
-          </div>`).join('')}
-      </div>
-    </section>` : '';
-
-  // ══ 8. FORMA DEL MOMENTO ════════════════════════════════════════
-  const formaCiHtml = formaBest.length ? `
-    <section class="ci-light-section ci-forma-section">
-      <div class="ci-section-hd">
-        <span class="ci-section-title">FORMA DEL MOMENTO</span>
-        <span class="ci-section-sub">Miglior atleta per categoria · ultimi 14 giorni · clicca per la lista</span>
-      </div>
-      <div class="ci-forma-scroll">
-        ${formaBest.map(item => `
-          <a href="#/forma/${esc(item.code)}" class="ci-forma-card">
-            <div class="ci-forma-cat">${badgeCat(item.code)}</div>
-            <div class="ci-forma-surname">${esc(item.cognome)}</div>
-            <div class="ci-forma-firstname">${esc(item.nome)}</div>
-            <div class="ci-forma-team">${esc(item.team)}</div>
-            <div class="ci-forma-pts">${item.pts}<span class="ci-forma-pt-lbl">pt</span></div>
-            <div class="ci-forma-sub">${item.vittorie}V · ${item.podio}P · ${item.gare}G</div>
-          </a>`).join('')}
-      </div>
-    </section>` : '';
-
-  // ══ 9. POSIZIONI A RISCHIO ══════════════════════════════════════
-  const rischioNewHtml = rischioPerCat.length ? `
-    <section class="ci-dark-section">
-      <div class="ci-section-hd ci-section-hd-dark">
-        <span class="ci-section-title">🎯 POSIZIONI A RISCHIO</span>
-        <span class="ci-section-sub">Dinamiche calcolate su forma 28 giorni e distacco</span>
-      </div>
-      <div class="ci-rischio-scroll">
-        ${rischioPerCat.map(({code, top5}) => `
-          <div class="ci-rischio-card">
-            <div class="ci-rischio-head">${badgeCat(code)}</div>
-            ${top5.map(p => {
-              const col = p.pos===1?'var(--gold)':p.pos===2?'var(--silver)':p.pos===3?'var(--bronze)':'rgba(255,255,255,.35)';
-              const ri = p.risk==='critico'?'🔴':p.risk==='alto'?'🟠':p.risk==='medio'?'🟡':'🟢';
-              return `<div class="ci-rischio-row">
-                <span style="color:${col};font-weight:700;min-width:22px">${p.pos}°</span>
-                <a href="#/atleta/${esc(p.atleta_id)}" class="ci-rischio-name">${esc(p.cognome)} ${esc(p.nome)}</a>
-                <span class="ci-rischio-pts">${p.punti}</span>
-                <span>${ri}</span>
-              </div>`;
-            }).join('')}
-          </div>`).join('')}
-      </div>
-    </section>` : '';
-
-  // ══ ASSEMBLE ════════════════════════════════════════════════════
+  // ══ ASSEMBLE ═════════════════════════════════════════════════
   setPage(`
-    ${ciHeroHtml}
-    ${tickerHtml}
-    ${rowHtml}
-    ${upcomingCiHtml}
-    ${chiSaleHtml}
-    ${matchupHtml}
-    ${insightsHtml}
-    ${formaCiHtml}
-    ${rischioNewHtml}
+    ${heroHtml}
+    ${spotlightHtml}
+    ${versusHtml}
+    ${volandoHtml}
+    ${upcomingHtml}
   `);
-
-  // Hero carousel controller
-  // Hero carousel controller
-  if (heroRaces.length > 1) {
-    let current = 0;
-    const total = Math.min(heroRaces.length, 6);
-    const goTo = (idx) => {
-      document.getElementById(`ci-slide-${current}`)?.classList.remove('ci-slide-active');
-      document.getElementById(`ci-dot-${current}`)?.classList.remove('ci-dot-active');
-      current = (idx + total) % total;
-      document.getElementById(`ci-slide-${current}`)?.classList.add('ci-slide-active');
-      document.getElementById(`ci-dot-${current}`)?.classList.add('ci-dot-active');
-    };
-    window.heroGoTo = goTo;
-    window.heroNext = () => { clearInterval(window.homeHeroInterval); goTo(current+1); window.homeHeroInterval = setInterval(()=>goTo(current+1), 7000); };
-    window.heroPrev = () => { clearInterval(window.homeHeroInterval); goTo(current-1); window.homeHeroInterval = setInterval(()=>goTo(current+1), 7000); };
-    window.homeHeroInterval = setInterval(() => goTo(current+1), 7000);
-  }
 }
 
 // ── FORMA DEL MOMENTO — pagina completa per categoria ─────────
