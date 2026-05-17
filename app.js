@@ -2307,15 +2307,17 @@ async function renderCalendario() {
          return gm === calQMonth;
       });
 
-    const future = filtered.filter(g => (g.data || '') >= today).sort((a,b) => (a.data||'').localeCompare(b.data||''));
-    const past   = filtered.filter(g => (g.data || '') < today).sort((a,b) => (b.data||'').localeCompare(a.data||''));
+    // Gare di oggi con risultati già disponibili → trattate come concluse
+    const hasRes = (g) => !!(garaResultsMap[g.id] && Object.keys(garaResultsMap[g.id]).length);
+    const future = filtered.filter(g => (g.data || '') > today || ((g.data||'') === today && !hasRes(g))).sort((a,b) => (a.data||'').localeCompare(b.data||''));
+    const past   = filtered.filter(g => (g.data || '') < today || ((g.data||'') === today && hasRes(g))).sort((a,b) => (b.data||'').localeCompare(a.data||''));
 
     const renderItem = (g) => {
       const mult = g.moltiplicatore || multFromType(g.tipo, g.campionato_regionale, g.campionato_italiano);
       const day = g.data ? g.data.split('-')[2] : '—';
       const mon = g.data ? (['GEN','FEB','MAR','APR','MAG','GIU','LUG','AGO','SET','OTT','NOV','DIC'][parseInt(g.data.split('-')[1])-1]||'') : '';
       const isPast = (g.data || '') < today;
-      const byCategory = isPast ? (garaResultsMap[g.id] || null) : null;
+      const byCategory = garaResultsMap[g.id] || null;
       const hasResults = byCategory && Object.keys(byCategory).length > 0;
 
       let podioHtml = '';
