@@ -2078,14 +2078,15 @@ async function renderGara(gara_id) {
     const pts = r.punti_effettivi || (BASEPTS[r.posizione]||0) * mult;
     const pClass = posClass(r.posizione);
     return `<tr>
-      <td class="td-pos ${pClass} ${r.posizione===1?'win':''}" style="font-family:var(--font-display);font-size:1.5rem">${r.posizione}°</td>
+      <td class="td-pos ${pClass} ${r.posizione===1?'win':''}">${r.posizione}°</td>
       <td style="font-family:var(--font-heading);font-weight:700">
         <a href="#/atleta/${esc(r.atleta_id)}">${esc(r.cognome)} ${esc(r.nome)}</a>
+        <div class="td-team-mobile"><a href="#/team/${esc(r.team_id)}" style="color:var(--text-secondary)">${esc(r.team)}</a></div>
       </td>
-      <td><a href="#/team/${esc(r.team_id)}" style="color:var(--text-secondary)">${esc(r.team)}</a></td>
+      <td class="td-hide-mobile"><a href="#/team/${esc(r.team_id)}" style="color:var(--text-secondary)">${esc(r.team)}</a></td>
       <td class="td-time">${esc(r.tempo||'S.T.')}</td>
-      <td style="text-align:right">${esc(r.km || '—')}</td>
-      <td style="text-align:right">${esc(r.media || '—')}</td>
+      <td class="td-hide-mobile" style="text-align:right">${esc(r.km || '—')}</td>
+      <td class="td-hide-mobile" style="text-align:right">${esc(r.media || '—')}</td>
       <td class="td-pts">${pts > 0 ? pts : '—'}</td>
     </tr>`;
   }).join('');
@@ -2173,7 +2174,7 @@ async function renderGara(gara_id) {
     <div class="results-table-wrap">
       <table class="results-table">
         <thead><tr>
-          <th>POS</th><th>ATLETA</th><th>TEAM</th><th>TEMPO</th><th style="text-align:right">KM</th><th style="text-align:right">MEDIA</th><th class="td-pts">PTS</th>
+          <th>POS</th><th>ATLETA</th><th class="td-hide-mobile">TEAM</th><th>TEMPO</th><th class="td-hide-mobile" style="text-align:right">KM</th><th class="td-hide-mobile" style="text-align:right">MEDIA</th><th class="td-pts">PTS</th>
         </tr></thead>
         <tbody>${tableRows || '<tr><td colspan="7" class="empty-state">Nessuna classifica disponibile</td></tr>'}</tbody>
       </table>
