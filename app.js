@@ -192,6 +192,20 @@ async function loadJson(path) {
   }
 }
 
+// Correzioni genere/categoria per atlete classificate erroneamente
+const ATHLETE_GENDER_FIXES = {
+  'ANDREOLI_ALICE':       { genere:'F', categoria:'ES1_F' },
+  'MASINI_GRETA':         { genere:'F', categoria:'ES2_F' },
+  'DELOGU_GIULIA':        { genere:'F', categoria:'ES2_F' },
+  'RENZULLI_GIULIA':      { genere:'F', categoria:'ES1_F' },
+  'ABRIONI_ALESSIA':      { genere:'F', categoria:'ES1_F' },
+  'CINQUEGRANI_FEDERICA': { genere:'F', categoria:'ES1_F' },
+  'POIDOMANI_ELENA':      { genere:'F', categoria:'ES1_F' },
+  'FONTANA_GIULIA_MARIA': { genere:'F', categoria:'ES1_F' },
+  'SGROI_GIADA':          { genere:'F', categoria:'ES1_F' },
+  'DI_PARDO_BEATRICE':    { genere:'F', categoria:'ES1_F' },
+};
+
 // Preload tutto in parallelo
 async function loadAll() {
   const [calendar, resultsRaw, athletes, teams, meta, raceDetails] = await Promise.all([
@@ -202,6 +216,19 @@ async function loadAll() {
     loadJson('data/meta.json'),
     loadJson('data/race_details.json'),
   ]);
+
+  // Applica correzioni genere
+  if (athletes) {
+    for (const [id, fix] of Object.entries(ATHLETE_GENDER_FIXES)) {
+      if (athletes[id]) Object.assign(athletes[id], fix);
+    }
+  }
+  if (resultsRaw) {
+    for (const r of resultsRaw) {
+      const fix = ATHLETE_GENDER_FIXES[r.atleta_id];
+      if (fix) { r.genere = fix.genere; if (r.categoria?.endsWith('_M')) r.categoria = r.categoria.replace('_M','_F'); }
+    }
+  }
 
   // Indicizzazione per calcolo trend rapidi
   const resultsByAtleta = {};
