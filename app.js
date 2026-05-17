@@ -666,20 +666,35 @@ async function renderHome() {
     .filter(code => formaPerCat[code])
     .map(code => ({ code, ...Object.values(formaPerCat[code]).sort((a,b)=>b.pts-a.pts)[0] }));
 
-  // Team hot — due classifiche separate
-  const teamTrend = {};
+  // Team hot — separato per genere, con categorie
+  const teamTrendM = {}, teamTrendF = {};
+  const catShort = c => ({ ELI_M:'Elite', JUN_M:'Jun', AL_M:'All', ES2_M:'ES2', ES1_M:'ES1', ELI_F:'Elite', JUN_F:'Jun', AL_F:'All', ES2_F:'ES2', ES1_F:'ES1' }[c] || c.split('_')[0]);
   for (const r of resultsRaw) {
     if (!r.data || r.data < trendCutStr) continue;
+    const tMap = r.genere === 'F' ? teamTrendF : teamTrendM;
     const k = r.team_id;
-    if (!teamTrend[k]) teamTrend[k] = { team_id:k, team:r.team, vittorie:0, podio:0, pts:0, garaSet:new Set() };
-    if (r.posizione === 1) teamTrend[k].vittorie++;
-    if (r.posizione <= 3) teamTrend[k].podio++;
-    teamTrend[k].pts += r.punti_effettivi || 0;
-    teamTrend[k].garaSet.add(r.gara_id);
+    if (!tMap[k]) tMap[k] = { team_id:k, team:r.team, vittorie:0, podio:0, pts:0, garaSet:new Set(), cats:{} };
+    if (r.posizione === 1) tMap[k].vittorie++;
+    if (r.posizione <= 3) tMap[k].podio++;
+    tMap[k].pts += r.punti_effettivi || 0;
+    tMap[k].garaSet.add(r.gara_id);
+    const code = getRankingFileCode(r);
+    if (code) {
+      if (!tMap[k].cats[code]) tMap[k].cats[code] = 0;
+      tMap[k].cats[code] += r.punti_effettivi || 0;
+    }
   }
-  const allTeamsArr = Object.values(teamTrend).map(t=>({...t,gare:t.garaSet.size}));
-  const topTeamsByPts  = allTeamsArr.slice().sort((a,b)=>b.pts-a.pts||b.vittorie-a.vittorie).slice(0,5);
-  const topTeamsByWins = allTeamsArr.slice().sort((a,b)=>b.vittorie-a.vittorie||b.pts-a.pts).slice(0,5);
+  const toTeamArr = tMap => Object.values(tMap).map(t => ({
+    ...t,
+    gare: t.garaSet.size,
+    topCats: Object.entries(t.cats).sort((a,b)=>b[1]-a[1]).slice(0,3).map(([c])=>catShort(c))
+  }));
+  const teamsM = toTeamArr(teamTrendM);
+  const teamsF = toTeamArr(teamTrendF);
+  const teamsMByPts  = teamsM.slice().sort((a,b)=>b.pts-a.pts||b.vittorie-a.vittorie).slice(0,5);
+  const teamsMByWins = teamsM.slice().sort((a,b)=>b.vittorie-a.vittorie||b.pts-a.pts).slice(0,5);
+  const teamsFByPts  = teamsF.slice().sort((a,b)=>b.pts-a.pts||b.vittorie-a.vittorie).slice(0,5);
+  const teamsFByWins = teamsF.slice().sort((a,b)=>b.vittorie-a.vittorie||b.pts-a.pts).slice(0,5);
 
   // Upcoming
   const todayStr = new Date().toISOString().split('T')[0];
@@ -837,33 +852,46 @@ async function renderHome() {
       <div class="team-hot-pos" style="color:${i===0?'var(--gold)':i===1?'var(--silver)':i===2?'var(--bronze)':'var(--text-muted)'}">${i+1}</div>
       <div style="flex:1;min-width:0">
         <div class="team-hot-name">${esc(t.team)}</div>
-        <div class="team-hot-sub">${t.gare} gare · ${t.podio} podi</div>
+        <div class="team-hot-sub">
+          ${t.gare} gare · ${t.podio} podi
+          ${t.topCats?.length ? `<span class="team-hot-cats">${t.topCats.map(c=>`<span class="team-hot-cat">${c}</span>`).join('')}</span>` : ''}
+        </div>
       </div>
       ${valueHtml}
     </a>`;
 
-  const teamHotHtml = (topTeamsByPts.length || topTeamsByWins.length) ? `
-    <div class="home-section" style="margin-bottom:0">
-      <div class="section-header" style="margin-bottom:12px">
+  const teamHotBlock = (byPts, byWins) => `
+    <div class="home-2col" style="margin-bottom:0">
+      <div>
+        <div class="team-hot-col-label" style="color:var(--yellow-race)">Per Punti</div>
+        <div style="display:flex;flex-direction:column;gap:4px">
+          ${byPts.map((t,i)=>teamRowHtml(t,i,`<div style="text-align:right;flex-shrink:0"><div class="team-hot-wins-num">${t.pts}</div><div class="team-hot-wins-label">pt</div></div>`)).join('')}
+        </div>
+      </div>
+      <div>
+        <div class="team-hot-col-label" style="color:var(--red-hot)">Per Vittorie</div>
+        <div style="display:flex;flex-direction:column;gap:4px">
+          ${byWins.map((t,i)=>teamRowHtml(t,i,`<div style="text-align:right;flex-shrink:0"><div class="team-hot-wins-num">${t.vittorie}</div><div class="team-hot-wins-label">vitt.</div></div>`)).join('')}
+        </div>
+      </div>
+    </div>`;
+
+  const teamHotHtml = `
+    <div class="home-section">
+      <div class="section-header" style="margin-bottom:16px">
         <span class="section-title">TEAM HOT 🔥</span>
         <span class="section-line"></span>
-        <span class="section-subtitle">Tutte le categorie · 14 giorni</span>
+        <span class="section-subtitle">14 giorni · per punti e vittorie</span>
       </div>
-      <div class="home-2col" style="margin-bottom:0">
-        <div>
-          <div class="team-hot-col-label" style="color:var(--yellow-race)">Per Punti</div>
-          <div style="display:flex;flex-direction:column;gap:4px">
-            ${topTeamsByPts.map((t,i)=>teamRowHtml(t,i,`<div style="text-align:right;flex-shrink:0"><div class="team-hot-wins-num">${t.pts}</div><div class="team-hot-wins-label">pt</div></div>`)).join('')}
-          </div>
-        </div>
-        <div>
-          <div class="team-hot-col-label" style="color:var(--red-hot)">Per Vittorie</div>
-          <div style="display:flex;flex-direction:column;gap:4px">
-            ${topTeamsByWins.map((t,i)=>teamRowHtml(t,i,`<div style="text-align:right;flex-shrink:0"><div class="team-hot-wins-num">${t.vittorie}</div><div class="team-hot-wins-label">vitt.</div></div>`)).join('')}
-          </div>
-        </div>
-      </div>
-    </div>` : '';
+      ${teamsMByPts.length ? `
+        <div class="team-hot-gender-label">♂ Maschile</div>
+        ${teamHotBlock(teamsMByPts, teamsMByWins)}
+      ` : ''}
+      ${teamsFByPts.length ? `
+        <div class="team-hot-gender-label" style="margin-top:20px">♀ Femminile</div>
+        ${teamHotBlock(teamsFByPts, teamsFByWins)}
+      ` : ''}
+    </div>`;
 
 
   // MATCHUP DELLA SETTIMANA

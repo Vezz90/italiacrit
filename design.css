@@ -2496,6 +2496,9 @@ div[style*="grid-template-columns: repeat(auto-fit"] {
 
 /* Team hot col label */
 .team-hot-col-label { font-size:0.65rem; font-family:var(--font-mono); text-transform:uppercase; letter-spacing:0.1em; margin-bottom:8px; }
+.team-hot-gender-label { font-family:var(--font-heading); font-size:0.72rem; font-weight:700; color:var(--text-muted); text-transform:uppercase; letter-spacing:0.08em; margin-bottom:10px; padding-bottom:6px; border-bottom:1px solid var(--border-subtle); }
+.team-hot-cats { display:inline-flex; gap:3px; margin-left:6px; }
+.team-hot-cat { font-size:0.58rem; font-family:var(--font-mono); background:var(--bg-elevated); color:var(--text-muted); border-radius:2px; padding:1px 4px; }
 
 /* Matchup card */
 .matchup-card { display:flex; background:var(--bg-card); border:1px solid var(--border-subtle); border-radius:6px; overflow:hidden; margin-bottom:40px; }
