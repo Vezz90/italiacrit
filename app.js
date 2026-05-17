@@ -344,25 +344,22 @@ function catLabel(code) {
 
 function getRankingFileCode(obj) {
   if (!obj) return null;
-  // Se è una stringa
   if (typeof obj === 'string') {
     if (obj.startsWith('AL')) return 'AL_' + (obj.endsWith('_F') ? 'F' : 'M');
     return obj;
   }
-  // Correzione genere: se l'atleta è nei fix, la categoria è sempre quella corretta
-  if (obj.atleta_id && ATHLETE_GENDER_FIXES[obj.atleta_id]) {
-    return ATHLETE_GENDER_FIXES[obj.atleta_id].categoria;
-  }
-  // Estrae dal gara_id
+  // r.genere è autorevole — già corretto da ATHLETE_GENDER_FIXES in loadAll()
+  const gender = obj.genere === 'F' ? 'F' : 'M';
+  // Estrae solo il TIPO di categoria da gara_id, usa r.genere per il suffisso genere
   if (obj.gara_id) {
-    const m = obj.gara_id.match(/_([A-Z0-9]+_[MF])$/);
+    const m = obj.gara_id.match(/_([A-Z0-9]+)_[MF]$/);
     if (m) {
-      let code = m[1];
-      if (code.startsWith('AL')) code = 'AL_' + (code.endsWith('_F') ? 'F' : 'M');
-      return code;
+      let base = m[1];
+      if (base.startsWith('AL')) base = 'AL';
+      return `${base}_${gender}`;
     }
   }
-  // Se già ha il codice diretto
+  // Fallback: usa categoria (già corretta al caricamento)
   if (obj.categoria && /^[A-Z0-9]+_[MF]$/.test(obj.categoria)) return obj.categoria;
   return null;
 }
