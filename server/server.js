@@ -450,6 +450,42 @@ function runYoutubeScraper() {
   });
 }
 
+// ── ADMIN VIDEO MANAGEMENT ────────────────────────────────────────────────
+const VIDEOS_PATH = path.join(__dirname, '../data/videos.json');
+
+function readVideos() {
+  try { return JSON.parse(fs.readFileSync(VIDEOS_PATH, 'utf8')); } catch { return {}; }
+}
+function writeVideos(data) {
+  fs.writeFileSync(VIDEOS_PATH, JSON.stringify(data, null, 2));
+}
+
+app.delete('/api/admin/videos/:calId/:idx', requireAdmin, (req, res) => {
+  try {
+    const { calId, idx } = req.params;
+    const videos = readVideos();
+    if (!videos[calId]) return res.status(404).json({ error: 'Gara non trovata' });
+    videos[calId].splice(parseInt(idx), 1);
+    if (!videos[calId].length) delete videos[calId];
+    writeVideos(videos);
+    res.json({ ok: true });
+  } catch(e) { res.status(500).json({ error: e.message }); }
+});
+
+app.patch('/api/admin/videos/:calId/:idx', requireAdmin, (req, res) => {
+  try {
+    const { calId, idx } = req.params;
+    const { url, title } = req.body;
+    const videos = readVideos();
+    if (!videos[calId]?.[parseInt(idx)]) return res.status(404).json({ error: 'Video non trovato' });
+    const v = videos[calId][parseInt(idx)];
+    if (url) v.url = url;
+    if (title !== undefined) v.title = title;
+    writeVideos(videos);
+    res.json({ ok: true });
+  } catch(e) { res.status(500).json({ error: e.message }); }
+});
+
 // Endpoint manuale (admin)
 app.post('/api/trigger_scraper', requireAdmin, (req, res) => {
   if (scraperRunning) return res.json({ ok: false, msg: 'Scraper già in esecuzione' });

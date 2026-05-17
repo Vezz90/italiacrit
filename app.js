@@ -2311,6 +2311,28 @@ function adminDeletePhoto(id) {
 }
 window.adminDeletePhoto = adminDeletePhoto;
 
+// ── ADMIN VIDEO ────────────────────────────────────────────────
+window.adminDeleteVideo = async function(calId, idx) {
+  if (!confirm('Eliminare questo video dalla gara?')) return;
+  try {
+    await apiCall(`/admin/videos/${encodeURIComponent(calId)}/${idx}`, { method: 'DELETE' });
+    if (window._currentGaraId) renderGara(window._currentGaraId);
+  } catch(e) { alert('Errore: ' + e.message); }
+};
+
+window.adminEditVideo = async function(calId, idx) {
+  const newUrl = prompt('Inserisci il nuovo URL YouTube:');
+  if (!newUrl) return;
+  const newTitle = prompt('Titolo (lascia vuoto per non cambiarlo):') || undefined;
+  try {
+    await apiCall(`/admin/videos/${encodeURIComponent(calId)}/${idx}`, {
+      method: 'PATCH',
+      body: JSON.stringify({ url: newUrl, ...(newTitle ? { title: newTitle } : {}) })
+    });
+    if (window._currentGaraId) renderGara(window._currentGaraId);
+  } catch(e) { alert('Errore: ' + e.message); }
+};
+
 // ── GARA ──────────────────────────────────────────────────────
 async function renderGara(gara_id) {
   if (!globalData) return;
@@ -2396,16 +2418,25 @@ async function renderGara(gara_id) {
 
     // Hero: first photo + first video side by side (or full-width if only one)
     const featuredPhoto = photos[0] || null;
+    const adminBtnStyle = 'padding:3px 7px;font-size:0.68rem;color:#fff;border:none;border-radius:4px;cursor:pointer;white-space:nowrap;box-shadow:0 1px 4px rgba(0,0,0,.5)';
     const heroPhotoEl = featuredPhoto
       ? `<div class="gara-media-half gara-media-photo" onclick="window.openPhotoLightbox('${PHOTOS_BASE}/photos/${esc(featuredPhoto.filename)}')" style="cursor:zoom-in">
            <img src="${PHOTOS_BASE}/photos/${esc(featuredPhoto.filename)}" alt="${esc(featuredPhoto.caption||'Foto gara')}" loading="lazy"/>
+           ${isAdmin ? `<div style="position:absolute;top:4px;right:4px;display:flex;flex-direction:column;gap:3px;z-index:10">
+             <button onclick="event.stopPropagation();window.adminEditPhoto(${featuredPhoto.id})" style="${adminBtnStyle};background:#2563eb">✏️ Modifica</button>
+             <button onclick="event.stopPropagation();window.adminDeletePhoto(${featuredPhoto.id})" style="${adminBtnStyle};background:#dc2626">🗑 Elimina</button>
+           </div>` : ''}
          </div>`
       : '';
     const heroVideoEl = featuredVideoId
-      ? `<div class="gara-media-half gara-media-video" onclick="window.openVideoModal('${featuredVideoId}','${esc((featuredVideo.title||'').replace(/'/g, "\\'"))}')"> 
+      ? `<div class="gara-media-half gara-media-video" onclick="window.openVideoModal('${featuredVideoId}','${esc((featuredVideo.title||'').replace(/'/g, "\\'"))}')">
            <img src="https://img.youtube.com/vi/${featuredVideoId}/hqdefault.jpg" alt="${esc(featuredVideo.title||'Video')}" loading="lazy"/>
            <div class="gara-media-play"><span>&#9658;</span></div>
            <div class="gara-media-channel">${esc(featuredVideo.channel||'')}</div>
+           ${isAdmin ? `<div style="position:absolute;top:4px;right:4px;display:flex;flex-direction:column;gap:3px;z-index:10">
+             <button onclick="event.stopPropagation();window.adminEditVideo('${esc(_calId)}',0)" style="${adminBtnStyle};background:#2563eb">✏️ Modifica</button>
+             <button onclick="event.stopPropagation();window.adminDeleteVideo('${esc(_calId)}',0)" style="${adminBtnStyle};background:#dc2626">🗑 Elimina</button>
+           </div>` : ''}
          </div>`
       : '';
     const heroMedia = (heroPhotoEl || heroVideoEl)
@@ -2443,11 +2474,12 @@ async function renderGara(gara_id) {
         <div class="comp-section" style="margin-top:12px">
           <div class="comp-section-title">Altri Video</div>
           <div class="gara-videos-grid">
-            ${extraVideos.map(v => {
+            ${extraVideos.map((v, i) => {
               const vidId = (v.url.match(/[?&]v=([^&]+)/) || [])[1] || '';
               const thumb = vidId ? `https://img.youtube.com/vi/${vidId}/mqdefault.jpg` : '';
+              const realIdx = i + 1;
               return `
-                <div class="gara-video-card" style="cursor:pointer" onclick="window.openVideoModal('${vidId}','${esc((v.title||'').replace(/'/g, "\\'"))}')">
+                <div class="gara-video-card" style="cursor:pointer;position:relative" onclick="window.openVideoModal('${vidId}','${esc((v.title||'').replace(/'/g, "\\'"))}')">
                   ${thumb ? `<div class="gara-video-thumb">
                     <img src="${thumb}" alt="${esc(v.title)}" loading="lazy"/>
                     <div class="gara-video-play">&#9658;</div>
@@ -2456,6 +2488,10 @@ async function renderGara(gara_id) {
                     <div class="gara-video-title">${esc(v.title)}</div>
                     <div class="gara-video-meta">${esc(v.channel)}</div>
                   </div>
+                  ${isAdmin ? `<div style="position:absolute;top:4px;right:4px;display:flex;gap:3px;z-index:10">
+                    <button onclick="event.stopPropagation();window.adminEditVideo('${esc(_calId)}',${realIdx})" style="${adminBtnStyle};background:#2563eb">✏️</button>
+                    <button onclick="event.stopPropagation();window.adminDeleteVideo('${esc(_calId)}',${realIdx})" style="${adminBtnStyle};background:#dc2626">🗑</button>
+                  </div>` : ''}
                 </div>`;
             }).join('')}
           </div>
