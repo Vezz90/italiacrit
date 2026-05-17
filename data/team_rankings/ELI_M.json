@@ -122,13 +122,13 @@
   {
     "team_id": "MG_K_VIS_COSTRUZIONI_E_AMBIENTE",
     "team_nome": "MG K-VIS COSTRUZIONI E AMBIENTE",
-    "punti": 146,
+    "punti": 148,
     "vittorie": 1,
     "p1": 1,
     "p2": 3,
     "p3": 1,
-    "pout": 5,
-    "n_atleti": 7,
+    "pout": 6,
+    "n_atleti": 8,
     "pos": 11
   },
   {
@@ -240,6 +240,18 @@
     "pos": 20
   },
   {
+    "team_id": "MULTICAR_GRUPPO_AMARU",
+    "team_nome": "MULTICAR GRUPPO AMARU'",
+    "punti": 71,
+    "vittorie": 3,
+    "p1": 3,
+    "p2": 0,
+    "p3": 2,
+    "pout": 1,
+    "n_atleti": 3,
+    "pos": 21
+  },
+  {
     "team_id": "ASD_SWATT_CLUB",
     "team_nome": "ASD SWATT CLUB",
     "punti": 69,
@@ -249,7 +261,7 @@
     "p3": 0,
     "pout": 2,
     "n_atleti": 3,
-    "pos": 21
+    "pos": 22
   },
   {
     "team_id": "PC_BAIX_EBRE_TORTOSA",
@@ -261,7 +273,7 @@
     "p3": 1,
     "pout": 3,
     "n_atleti": 3,
-    "pos": 22
+    "pos": 23
   },
   {
     "team_id": "POLISPORTIVA_TRIPETETOLO_SEANESE",
@@ -273,7 +285,7 @@
     "p3": 1,
     "pout": 7,
     "n_atleti": 4,
-    "pos": 23
+    "pos": 24
   },
   {
     "team_id": "UAE_TEAM_EMIRATES_GEN_Z",
@@ -285,7 +297,7 @@
     "p3": 0,
     "pout": 5,
     "n_atleti": 4,
-    "pos": 24
+    "pos": 25
   },
   {
     "team_id": "GRAGNANO_SPORTING_CLUB",
@@ -297,7 +309,7 @@
     "p3": 1,
     "pout": 4,
     "n_atleti": 3,
-    "pos": 25
+    "pos": 26
   },
   {
     "team_id": "UCRAINA",
@@ -309,7 +321,7 @@
     "p3": 1,
     "pout": 5,
     "n_atleti": 4,
-    "pos": 26
+    "pos": 27
   },
   {
     "team_id": "PETROLIKE",
@@ -321,7 +333,7 @@
     "p3": 0,
     "pout": 5,
     "n_atleti": 3,
-    "pos": 27
+    "pos": 28
   },
   {
     "team_id": "TEAM_VISMA_LEASE_A_BIKE_DEVELOPMENT",
@@ -333,18 +345,6 @@
     "p3": 0,
     "pout": 1,
     "n_atleti": 2,
-    "pos": 28
-  },
-  {
-    "team_id": "MULTICAR_GRUPPO_AMARU",
-    "team_nome": "MULTICAR GRUPPO AMARU'",
-    "punti": 46,
-    "vittorie": 2,
-    "p1": 2,
-    "p2": 0,
-    "p3": 1,
-    "pout": 1,
-    "n_atleti": 3,
     "pos": 29
   },
   {
@@ -396,6 +396,30 @@
     "pos": 33
   },
   {
+    "team_id": "PRO_GI_T_CYCLING_TEAM",
+    "team_nome": "PRO.GI.T. CYCLING TEAM",
+    "punti": 30,
+    "vittorie": 0,
+    "p1": 0,
+    "p2": 1,
+    "p3": 0,
+    "pout": 4,
+    "n_atleti": 4,
+    "pos": 34
+  },
+  {
+    "team_id": "ASD_CAMPOBELLO_RUNNING_BIKE",
+    "team_nome": "ASD CAMPOBELLO RUNNING & BIKE",
+    "punti": 30,
+    "vittorie": 0,
+    "p1": 0,
+    "p2": 2,
+    "p3": 0,
+    "pout": 1,
+    "n_atleti": 1,
+    "pos": 35
+  },
+  {
     "team_id": "DECATHLON_CMA_CGM_DEVELOPMENT_TEAM",
     "team_nome": "DECATHLON CMA CGM DEVELOPMENT TEAM",
     "punti": 30,
@@ -405,7 +429,7 @@
     "p3": 0,
     "pout": 2,
     "n_atleti": 2,
-    "pos": 34
+    "pos": 36
   },
   {
     "team_id": "TEAM_POLTI_VISITMALTA",
@@ -417,7 +441,7 @@
     "p3": 1,
     "pout": 0,
     "n_atleti": 1,
-    "pos": 35
+    "pos": 37
   },
   {
     "team_id": "NIPPO_NUOVACOMAUTO_OBOR",
@@ -429,7 +453,7 @@
     "p3": 0,
     "pout": 5,
     "n_atleti": 3,
-    "pos": 36
+    "pos": 38
   },
   {
     "team_id": "GOODSHOP_YOYOGURT",
@@ -441,7 +465,7 @@
     "p3": 0,
     "pout": 3,
     "n_atleti": 3,
-    "pos": 37
+    "pos": 39
   },
   {
     "team_id": "MENTECORPO_TEAM",
@@ -453,19 +477,7 @@
     "p3": 0,
     "pout": 2,
     "n_atleti": 3,
-    "pos": 38
-  },
-  {
-    "team_id": "ASD_CAMPOBELLO_RUNNING_BIKE",
-    "team_nome": "ASD CAMPOBELLO RUNNING & BIKE",
-    "punti": 24,
-    "vittorie": 0,
-    "p1": 0,
-    "p2": 2,
-    "p3": 0,
-    "pout": 0,
-    "n_atleti": 1,
-    "pos": 39
+    "pos": 40
   },
   {
     "team_id": "NAZIONALE_PARALIMPICA",
@@ -477,7 +489,7 @@
     "p3": 1,
     "pout": 1,
     "n_atleti": 2,
-    "pos": 40
+    "pos": 41
   },
   {
     "team_id": "EQUIPE_CORBETTESE",
@@ -489,7 +501,7 @@
     "p3": 0,
     "pout": 1,
     "n_atleti": 1,
-    "pos": 41
+    "pos": 42
   },
   {
     "team_id": "ASD_VELO_CLUB_AVEZZANO_BIKE_LINEAORO",
@@ -501,7 +513,7 @@
     "p3": 0,
     "pout": 3,
     "n_atleti": 3,
-    "pos": 42
+    "pos": 43
   },
   {
     "team_id": "A_S_D_U_C_PISTOIESE_TEAM",
@@ -513,7 +525,7 @@
     "p3": 0,
     "pout": 1,
     "n_atleti": 1,
-    "pos": 43
+    "pos": 44
   },
   {
     "team_id": "TIROL_KTM_CYCLING_TEAM",
@@ -525,7 +537,19 @@
     "p3": 0,
     "pout": 2,
     "n_atleti": 2,
-    "pos": 44
+    "pos": 45
+  },
+  {
+    "team_id": "MADONE_TEAM_BIKE_SICILIA",
+    "team_nome": "MADONE-TEAM BIKE SICILIA",
+    "punti": 19,
+    "vittorie": 0,
+    "p1": 0,
+    "p2": 0,
+    "p3": 1,
+    "pout": 3,
+    "n_atleti": 2,
+    "pos": 46
   },
   {
     "team_id": "ZAPPI_RACING_TEAM",
@@ -537,7 +561,7 @@
     "p3": 0,
     "pout": 2,
     "n_atleti": 2,
-    "pos": 45
+    "pos": 47
   },
   {
     "team_id": "ARAN_CUCINE_VEJUS",
@@ -549,19 +573,7 @@
     "p3": 0,
     "pout": 2,
     "n_atleti": 1,
-    "pos": 46
-  },
-  {
-    "team_id": "MADONE_TEAM_BIKE_SICILIA",
-    "team_nome": "MADONE-TEAM BIKE SICILIA",
-    "punti": 15,
-    "vittorie": 0,
-    "p1": 0,
-    "p2": 0,
-    "p3": 1,
-    "pout": 1,
-    "n_atleti": 1,
-    "pos": 47
+    "pos": 48
   },
   {
     "team_id": "S_C_VALLE_SERIANA_CENE_A_S_D",
@@ -573,7 +585,7 @@
     "p3": 0,
     "pout": 2,
     "n_atleti": 1,
-    "pos": 48
+    "pos": 49
   },
   {
     "team_id": "ASD_TEAM_MOOVEO",
@@ -585,7 +597,7 @@
     "p3": 0,
     "pout": 0,
     "n_atleti": 1,
-    "pos": 49
+    "pos": 50
   },
   {
     "team_id": "U_C_PREGNANA",
@@ -597,7 +609,7 @@
     "p3": 0,
     "pout": 3,
     "n_atleti": 3,
-    "pos": 50
+    "pos": 51
   },
   {
     "team_id": "TEAM_PROMOTECH_MG_K_VIS",
@@ -609,18 +621,6 @@
     "p3": 0,
     "pout": 2,
     "n_atleti": 1,
-    "pos": 51
-  },
-  {
-    "team_id": "PRO_GI_T_CYCLING_TEAM",
-    "team_nome": "PRO.GI.T. CYCLING TEAM",
-    "punti": 6,
-    "vittorie": 0,
-    "p1": 0,
-    "p2": 0,
-    "p3": 0,
-    "pout": 2,
-    "n_atleti": 2,
     "pos": 52
   },
   {
@@ -648,6 +648,18 @@
     "pos": 54
   },
   {
+    "team_id": "DEKA_RIDERS_TEAM_ASD",
+    "team_nome": "DEKA RIDERS TEAM ASD",
+    "punti": 5,
+    "vittorie": 0,
+    "p1": 0,
+    "p2": 0,
+    "p3": 0,
+    "pout": 1,
+    "n_atleti": 1,
+    "pos": 55
+  },
+  {
     "team_id": "TEAM_MAZZOLA_P_G_C_U23",
     "team_nome": "TEAM MAZZOLA P.G.C. U23",
     "punti": 3,
@@ -657,7 +669,7 @@
     "p3": 0,
     "pout": 1,
     "n_atleti": 1,
-    "pos": 55
+    "pos": 56
   },
   {
     "team_id": "AVC_AIX_EN_PROVENCE",
@@ -669,7 +681,7 @@
     "p3": 0,
     "pout": 1,
     "n_atleti": 1,
-    "pos": 56
+    "pos": 57
   },
   {
     "team_id": "TEAM_GAIAPLAST_BIBANESE",
@@ -681,7 +693,7 @@
     "p3": 0,
     "pout": 1,
     "n_atleti": 1,
-    "pos": 57
+    "pos": 58
   },
   {
     "team_id": "VPT_WHY_SPORT",
@@ -693,6 +705,6 @@
     "p3": 0,
     "pout": 1,
     "n_atleti": 1,
-    "pos": 58
+    "pos": 59
   }
 ]
