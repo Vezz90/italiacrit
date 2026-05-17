@@ -128,6 +128,34 @@
     "trend": 0
   },
   {
+    "atleta_id": "CANCEDDA_SORAYA",
+    "cognome": "CANCEDDA",
+    "nome": "SORAYA",
+    "team": "VELO CLUB SARROCH",
+    "team_id": "VELO_CLUB_SARROCH",
+    "punti": 49,
+    "gare": 4,
+    "p1": 1,
+    "p2": 0,
+    "p3": 0,
+    "pout": 3,
+    "pos": 9
+  },
+  {
+    "atleta_id": "MASINI_GRETA",
+    "cognome": "MASINI",
+    "nome": "GRETA",
+    "team": "POL. FIUMICINESE FA.I.T. ADRIATICA",
+    "team_id": "POL_FIUMICINESE_FA_I_T_ADRIATICA",
+    "punti": 49,
+    "gare": 5,
+    "p1": 1,
+    "p2": 0,
+    "p3": 0,
+    "pout": 4,
+    "pos": 10
+  },
+  {
     "atleta_id": "CECCARELLI_ILARY",
     "cognome": "CECCARELLI",
     "nome": "ILARY",
@@ -140,7 +168,7 @@
     "p2": 0,
     "p3": 1,
     "pout": 1,
-    "pos": 9,
+    "pos": 11,
     "trend": 0
   },
   {
@@ -156,7 +184,7 @@
     "p2": 0,
     "p3": 0,
     "pout": 5,
-    "pos": 10,
+    "pos": 12,
     "trend": 0
   },
   {
@@ -172,7 +200,7 @@
     "p2": 2,
     "p3": 0,
     "pout": 1,
-    "pos": 11,
+    "pos": 13,
     "trend": 0
   },
   {
@@ -188,7 +216,7 @@
     "p2": 0,
     "p3": 1,
     "pout": 7,
-    "pos": 12,
+    "pos": 14,
     "trend": 0
   },
   {
@@ -204,8 +232,22 @@
     "p2": 1,
     "p3": 1,
     "pout": 2,
-    "pos": 13,
+    "pos": 15,
     "trend": 0
+  },
+  {
+    "atleta_id": "DELOGU_GIULIA",
+    "cognome": "DELOGU",
+    "nome": "GIULIA",
+    "team": "SESTU BIKE A.S.D.",
+    "team_id": "SESTU_BIKE_A_S_D",
+    "punti": 36,
+    "gare": 4,
+    "p1": 0,
+    "p2": 1,
+    "p3": 0,
+    "pout": 3,
+    "pos": 16
   },
   {
     "atleta_id": "FERRARI_LUCREZIA",
@@ -220,7 +262,7 @@
     "p2": 1,
     "p3": 1,
     "pout": 5,
-    "pos": 14,
+    "pos": 17,
     "trend": 0
   },
   {
@@ -236,7 +278,7 @@
     "p2": 0,
     "p3": 1,
     "pout": 3,
-    "pos": 15,
+    "pos": 18,
     "trend": 0
   },
   {
@@ -252,7 +294,7 @@
     "p2": 0,
     "p3": 1,
     "pout": 3,
-    "pos": 16,
+    "pos": 19,
     "trend": 0
   },
   {
@@ -268,7 +310,7 @@
     "p2": 0,
     "p3": 0,
     "pout": 5,
-    "pos": 17,
+    "pos": 20,
     "trend": 0
   },
   {
@@ -284,7 +326,7 @@
     "p2": 0,
     "p3": 1,
     "pout": 4,
-    "pos": 18,
+    "pos": 21,
     "trend": 0
   },
   {
@@ -300,7 +342,7 @@
     "p2": 0,
     "p3": 0,
     "pout": 1,
-    "pos": 19,
+    "pos": 22,
     "trend": 0
   },
   {
@@ -316,7 +358,7 @@
     "p2": 0,
     "p3": 0,
     "pout": 2,
-    "pos": 20,
+    "pos": 23,
     "trend": 0
   },
   {
@@ -332,7 +374,7 @@
     "p2": 0,
     "p3": 0,
     "pout": 2,
-    "pos": 21,
+    "pos": 24,
     "trend": 0
   },
   {
@@ -348,7 +390,7 @@
     "p2": 0,
     "p3": 0,
     "pout": 3,
-    "pos": 22,
+    "pos": 25,
     "trend": 0
   },
   {
@@ -364,7 +406,7 @@
     "p2": 0,
     "p3": 0,
     "pout": 4,
-    "pos": 23,
+    "pos": 26,
     "trend": 0
   },
   {
@@ -380,7 +422,7 @@
     "p2": 0,
     "p3": 0,
     "pout": 4,
-    "pos": 24,
+    "pos": 27,
     "trend": 0
   },
   {
@@ -396,7 +438,7 @@
     "p2": 0,
     "p3": 0,
     "pout": 4,
-    "pos": 25,
+    "pos": 28,
     "trend": 0
   },
   {
@@ -412,7 +454,7 @@
     "p2": 0,
     "p3": 0,
     "pout": 5,
-    "pos": 26,
+    "pos": 29,
     "trend": 0
   },
   {
@@ -428,7 +470,7 @@
     "p2": 0,
     "p3": 1,
     "pout": 1,
-    "pos": 27,
+    "pos": 30,
     "trend": 0
   },
   {
@@ -444,7 +486,7 @@
     "p2": 0,
     "p3": 0,
     "pout": 3,
-    "pos": 28,
+    "pos": 31,
     "trend": 0
   },
   {
@@ -460,7 +502,7 @@
     "p2": 1,
     "p3": 0,
     "pout": 0,
-    "pos": 29,
+    "pos": 32,
     "trend": 0
   },
   {
@@ -476,7 +518,7 @@
     "p2": 1,
     "p3": 0,
     "pout": 0,
-    "pos": 30,
+    "pos": 33,
     "trend": 0
   },
   {
@@ -492,7 +534,7 @@
     "p2": 0,
     "p3": 0,
     "pout": 3,
-    "pos": 31,
+    "pos": 34,
     "trend": 0
   },
   {
@@ -508,7 +550,7 @@
     "p2": 0,
     "p3": 0,
     "pout": 2,
-    "pos": 32,
+    "pos": 35,
     "trend": 0
   },
   {
@@ -524,7 +566,7 @@
     "p2": 0,
     "p3": 0,
     "pout": 3,
-    "pos": 33,
+    "pos": 36,
     "trend": 0
   },
   {
@@ -540,7 +582,7 @@
     "p2": 0,
     "p3": 0,
     "pout": 4,
-    "pos": 34,
+    "pos": 37,
     "trend": 0
   },
   {
@@ -556,7 +598,7 @@
     "p2": 0,
     "p3": 1,
     "pout": 0,
-    "pos": 35,
+    "pos": 38,
     "trend": 0
   },
   {
@@ -572,7 +614,7 @@
     "p2": 0,
     "p3": 0,
     "pout": 3,
-    "pos": 36,
+    "pos": 39,
     "trend": 0
   },
   {
@@ -588,7 +630,7 @@
     "p2": 0,
     "p3": 0,
     "pout": 2,
-    "pos": 37,
+    "pos": 40,
     "trend": 0
   },
   {
@@ -604,7 +646,7 @@
     "p2": 0,
     "p3": 0,
     "pout": 2,
-    "pos": 38,
+    "pos": 41,
     "trend": 0
   },
   {
@@ -620,7 +662,7 @@
     "p2": 0,
     "p3": 0,
     "pout": 2,
-    "pos": 39,
+    "pos": 42,
     "trend": 0
   },
   {
@@ -636,7 +678,7 @@
     "p2": 0,
     "p3": 0,
     "pout": 2,
-    "pos": 40,
+    "pos": 43,
     "trend": 0
   },
   {
@@ -652,7 +694,7 @@
     "p2": 0,
     "p3": 0,
     "pout": 1,
-    "pos": 41,
+    "pos": 44,
     "trend": 0
   },
   {
@@ -668,7 +710,7 @@
     "p2": 0,
     "p3": 0,
     "pout": 1,
-    "pos": 42,
+    "pos": 45,
     "trend": 0
   },
   {
@@ -684,7 +726,7 @@
     "p2": 0,
     "p3": 0,
     "pout": 1,
-    "pos": 43,
+    "pos": 46,
     "trend": 0
   },
   {
@@ -700,7 +742,7 @@
     "p2": 0,
     "p3": 0,
     "pout": 1,
-    "pos": 44,
+    "pos": 47,
     "trend": 0
   },
   {
@@ -716,7 +758,7 @@
     "p2": 0,
     "p3": 0,
     "pout": 1,
-    "pos": 45,
+    "pos": 48,
     "trend": 0
   },
   {
@@ -732,7 +774,7 @@
     "p2": 0,
     "p3": 0,
     "pout": 1,
-    "pos": 46,
+    "pos": 49,
     "trend": 0
   },
   {
@@ -748,7 +790,7 @@
     "p2": 0,
     "p3": 0,
     "pout": 1,
-    "pos": 47,
+    "pos": 50,
     "trend": 0
   },
   {
@@ -764,7 +806,7 @@
     "p2": 0,
     "p3": 0,
     "pout": 1,
-    "pos": 48,
+    "pos": 51,
     "trend": 0
   },
   {
@@ -780,7 +822,7 @@
     "p2": 0,
     "p3": 0,
     "pout": 1,
-    "pos": 49,
+    "pos": 52,
     "trend": 0
   },
   {
@@ -796,7 +838,7 @@
     "p2": 0,
     "p3": 0,
     "pout": 1,
-    "pos": 50,
+    "pos": 53,
     "trend": 0
   }
 ]

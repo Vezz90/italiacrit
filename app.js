@@ -251,15 +251,19 @@ async function loadAll() {
     list.sort((a,b) => (b.data||'').localeCompare(a.data||''));
   });
 
-  return { 
-    calendar: calendar || [], 
-    resultsRaw: resultsRaw || [], 
-    athletes: athletes || {}, 
-    teams: teams || {}, 
+  // Set IDs atlete — usato per filtrare ranking pre-costruiti
+  const _femaleIds = new Set((resultsRaw || []).filter(r => r.genere === 'F').map(r => r.atleta_id));
+
+  return {
+    calendar: calendar || [],
+    resultsRaw: resultsRaw || [],
+    athletes: athletes || {},
+    teams: teams || {},
     meta: meta || {},
     raceDetails: raceDetails || {},
     resultsByAtleta,
-    resultsByTeam
+    resultsByTeam,
+    _femaleIds
   };
 }
 
@@ -270,7 +274,12 @@ const RANKING_CODES = [
 
 async function loadRanking(code) {
   const data = await loadJson(`data/rankings/${code}.json`) || [];
-  return data;
+  // Protezione: filtra atleti del genere sbagliato (possibile errore scraper)
+  if (!globalData) return data;
+  const isFemale = code.endsWith('_F');
+  const femaleSet = globalData._femaleIds;
+  if (!femaleSet) return data;
+  return data.filter(a => isFemale ? femaleSet.has(a.atleta_id) : !femaleSet.has(a.atleta_id));
 }
 
 async function loadTeamRanking(code) {
