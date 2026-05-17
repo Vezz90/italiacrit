@@ -2410,9 +2410,9 @@ div[style*="grid-template-columns: repeat(auto-fit"] {
 
 .ris-card-body { flex:1; padding:20px; min-width:0; }
 
-/* Titolo gara più leggero nelle card Risultati */
+/* Titolo gara nelle card Risultati — stesso stile del calendario */
 .ris-card .hero-race-name {
-  font-size: 1rem;
+  font-size: 0.875rem;
   font-weight: 600;
   letter-spacing: 0.04em;
   line-height: 1.25;
