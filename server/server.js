@@ -5,14 +5,14 @@ const jwt     = require('jsonwebtoken');
 const multer  = require('multer');
 const path    = require('path');
 const fs      = require('fs');
-const { queries } = require('./db');
+const { queries, init } = require('./db');
 
 const app  = express();
 const PORT = 8002;
-const JWT_SECRET = process.env.JWT_SECRET || 'italiacrit-dev-secret-2026';
+const JWT_SECRET  = process.env.JWT_SECRET || 'italiacrit-dev-secret-2026';
 const JWT_EXPIRES = '30d';
 
-// ── Supabase Storage (produzione) o disco locale (sviluppo) ─────────────────
+// ── Supabase Storage ──────────────────────────────────────────────────────────
 const SUPABASE_URL    = process.env.SUPABASE_URL;
 const SUPABASE_SECRET = process.env.SUPABASE_SECRET;
 let supabase = null;
@@ -67,15 +67,14 @@ async function deletePhoto(filename) {
 }
 
 app.use(cors({ origin: '*' }));
-app.options('*', cors());   // preflight per tutte le route
+app.options('*', cors());
 app.use(express.json());
 app.use('/photos', express.static(UPLOADS_DIR));
 
-// Serve frontend statico dalla directory padre
 const FRONTEND_DIR = path.join(__dirname, '..');
 app.use(express.static(FRONTEND_DIR));
 
-// ── Auth middleware ──────────────────────────────────────────────────────────
+// ── Auth middleware ───────────────────────────────────────────────────────────
 
 function requireAuth(req, res, next) {
   const auth = req.headers.authorization;
@@ -103,87 +102,85 @@ function makeToken(user) {
   );
 }
 
-// ── Auth routes ──────────────────────────────────────────────────────────────
+// ── Auth routes ───────────────────────────────────────────────────────────────
 
-// POST /api/auth/register
-app.post('/api/auth/register', (req, res) => {
-  const { email, password, role, display_name } = req.body;
-
-  const ALLOWED_ROLES = ['atleta', 'team', 'genitore', 'parente', 'appassionato'];
-  if (!email || !password) return res.status(400).json({ error: 'Email e password obbligatorie' });
-  if (password.length < 6)  return res.status(400).json({ error: 'Password minimo 6 caratteri' });
-  if (!ALLOWED_ROLES.includes(role)) return res.status(400).json({ error: 'Tipo utente non valido' });
-
-  const existing = queries.getUserByEmail.get(email);
-  if (existing) return res.status(409).json({ error: 'Email già registrata' });
-
-  const hash = bcrypt.hashSync(password, 10);
+app.post('/api/auth/register', async (req, res) => {
   try {
-    const result = queries.createUser.run({
+    const { email, password, role, display_name } = req.body;
+    const ALLOWED_ROLES = ['atleta', 'team', 'genitore', 'parente', 'appassionato'];
+    if (!email || !password) return res.status(400).json({ error: 'Email e password obbligatorie' });
+    if (password.length < 6)  return res.status(400).json({ error: 'Password minimo 6 caratteri' });
+    if (!ALLOWED_ROLES.includes(role)) return res.status(400).json({ error: 'Tipo utente non valido' });
+
+    const existing = await queries.getUserByEmail(email);
+    if (existing) return res.status(409).json({ error: 'Email già registrata' });
+
+    const hash = bcrypt.hashSync(password, 10);
+    const user = await queries.createUser({
       email:        email.trim().toLowerCase(),
       password:     hash,
-      role:         role,
+      role,
       display_name: display_name?.trim() || email.split('@')[0],
     });
-    const user = queries.getUserById.get(result.lastInsertRowid);
     res.status(201).json({ token: makeToken(user), user });
   } catch (e) {
     res.status(500).json({ error: 'Errore durante la registrazione' });
   }
 });
 
-// POST /api/auth/login
-app.post('/api/auth/login', (req, res) => {
-  const { email, password } = req.body;
-  if (!email || !password) return res.status(400).json({ error: 'Email e password obbligatorie' });
-
-  const user = queries.getUserByEmail.get(email.trim());
-  if (!user) return res.status(401).json({ error: 'Credenziali non valide' });
-
-  const ok = bcrypt.compareSync(password, user.password);
-  if (!ok) return res.status(401).json({ error: 'Credenziali non valide' });
-
-  queries.updateLastLogin.run(user.id);
-  const safe = queries.getUserById.get(user.id);
-  res.json({ token: makeToken(safe), user: safe });
-});
-
-// GET /api/auth/me
-app.get('/api/auth/me', requireAuth, (req, res) => {
-  const user = queries.getUserById.get(req.user.id);
-  if (!user) return res.status(404).json({ error: 'Utente non trovato' });
-  res.json({ user });
-});
-
-// ── Profile routes ───────────────────────────────────────────────────────────
-
-// GET /api/profile
-app.get('/api/profile', requireAuth, (req, res) => {
-  const uid = req.user.id;
-  const role = req.user.role;
-  let profile = null;
-
-  if (role === 'atleta') {
-    profile = queries.getAthleteProfile.get(uid);
-  } else if (role === 'team') {
-    profile = queries.getTeamProfile.get(uid);
-  } else if (role === 'genitore' || role === 'parente') {
-    profile = queries.getFamilyLinks.all(uid);
-  }
-
-  res.json({ profile });
-});
-
-// POST /api/profile/link-athlete  — collega atleta esistente
-app.post('/api/profile/link-athlete', requireAuth, (req, res) => {
-  if (req.user.role !== 'atleta') return res.status(403).json({ error: 'Solo per atleti' });
-  const { atleta_id, fci_code, first_name, last_name, team, birth_year } = req.body;
-
-  const existing = queries.getAthleteProfile.get(req.user.id);
-  if (existing) return res.status(409).json({ error: 'Profilo già presente' });
-
+app.post('/api/auth/login', async (req, res) => {
   try {
-    queries.createAthleteProfile.run({
+    const { email, password } = req.body;
+    if (!email || !password) return res.status(400).json({ error: 'Email e password obbligatorie' });
+
+    const user = await queries.getUserByEmail(email.trim());
+    if (!user) return res.status(401).json({ error: 'Credenziali non valide' });
+
+    const ok = bcrypt.compareSync(password, user.password);
+    if (!ok) return res.status(401).json({ error: 'Credenziali non valide' });
+
+    await queries.updateLastLogin(user.id);
+    const safe = await queries.getUserById(user.id);
+    res.json({ token: makeToken(safe), user: safe });
+  } catch (e) {
+    res.status(500).json({ error: 'Errore durante il login' });
+  }
+});
+
+app.get('/api/auth/me', requireAuth, async (req, res) => {
+  try {
+    const user = await queries.getUserById(req.user.id);
+    if (!user) return res.status(404).json({ error: 'Utente non trovato' });
+    res.json({ user });
+  } catch (e) {
+    res.status(500).json({ error: e.message });
+  }
+});
+
+// ── Profile routes ────────────────────────────────────────────────────────────
+
+app.get('/api/profile', requireAuth, async (req, res) => {
+  try {
+    const { id, role } = req.user;
+    let profile = null;
+    if (role === 'atleta')                        profile = await queries.getAthleteProfile(id);
+    else if (role === 'team')                     profile = await queries.getTeamProfile(id);
+    else if (role === 'genitore' || role === 'parente') profile = await queries.getFamilyLinks(id);
+    res.json({ profile });
+  } catch (e) {
+    res.status(500).json({ error: e.message });
+  }
+});
+
+app.post('/api/profile/link-athlete', requireAuth, async (req, res) => {
+  try {
+    if (req.user.role !== 'atleta') return res.status(403).json({ error: 'Solo per atleti' });
+    const { atleta_id, fci_code, first_name, last_name, team, birth_year } = req.body;
+
+    const existing = await queries.getAthleteProfile(req.user.id);
+    if (existing) return res.status(409).json({ error: 'Profilo già presente' });
+
+    await queries.createAthleteProfile({
       user_id: req.user.id,
       atleta_id: atleta_id || null,
       fci_code: fci_code || null,
@@ -199,16 +196,15 @@ app.post('/api/profile/link-athlete', requireAuth, (req, res) => {
   }
 });
 
-// POST /api/profile/link-team
-app.post('/api/profile/link-team', requireAuth, (req, res) => {
-  if (req.user.role !== 'team') return res.status(403).json({ error: 'Solo per team' });
-  const { team_id, team_name } = req.body;
-
-  const existing = queries.getTeamProfile.get(req.user.id);
-  if (existing) return res.status(409).json({ error: 'Profilo già presente' });
-
+app.post('/api/profile/link-team', requireAuth, async (req, res) => {
   try {
-    queries.createTeamProfile.run({
+    if (req.user.role !== 'team') return res.status(403).json({ error: 'Solo per team' });
+    const { team_id, team_name } = req.body;
+
+    const existing = await queries.getTeamProfile(req.user.id);
+    if (existing) return res.status(409).json({ error: 'Profilo già presente' });
+
+    await queries.createTeamProfile({
       user_id: req.user.id,
       team_id: team_id || null,
       team_name: team_name || null,
@@ -220,15 +216,14 @@ app.post('/api/profile/link-team', requireAuth, (req, res) => {
   }
 });
 
-// POST /api/profile/link-family
-app.post('/api/profile/link-family', requireAuth, (req, res) => {
-  if (!['genitore', 'parente'].includes(req.user.role))
-    return res.status(403).json({ error: 'Solo per genitore/parente' });
-  const { linked_atleta_id } = req.body;
-  if (!linked_atleta_id) return res.status(400).json({ error: 'atleta_id obbligatorio' });
-
+app.post('/api/profile/link-family', requireAuth, async (req, res) => {
   try {
-    queries.createFamilyLink.run({
+    if (!['genitore', 'parente'].includes(req.user.role))
+      return res.status(403).json({ error: 'Solo per genitore/parente' });
+    const { linked_atleta_id } = req.body;
+    if (!linked_atleta_id) return res.status(400).json({ error: 'atleta_id obbligatorio' });
+
+    await queries.createFamilyLink({
       user_id: req.user.id,
       linked_atleta_id,
       relation: req.user.role,
@@ -240,89 +235,96 @@ app.post('/api/profile/link-family', requireAuth, (req, res) => {
   }
 });
 
-// ── Admin routes ─────────────────────────────────────────────────────────────
+// ── Admin routes ──────────────────────────────────────────────────────────────
 
-// GET /api/admin/users
-app.get('/api/admin/users', requireAdmin, (req, res) => {
-  res.json({ users: queries.getAllUsers.all() });
+app.get('/api/admin/users', requireAdmin, async (req, res) => {
+  try { res.json({ users: await queries.getAllUsers() }); }
+  catch (e) { res.status(500).json({ error: e.message }); }
 });
 
-// GET /api/admin/pending
-app.get('/api/admin/pending', requireAdmin, (req, res) => {
-  res.json({ pending: queries.getPendingProfiles.all() });
+app.get('/api/admin/pending', requireAdmin, async (req, res) => {
+  try { res.json({ pending: await queries.getPendingProfiles() }); }
+  catch (e) { res.status(500).json({ error: e.message }); }
 });
 
-// POST /api/admin/approve  { type, id }
-app.post('/api/admin/approve', requireAdmin, (req, res) => {
-  const { type, id } = req.body;
-  if (type === 'athlete') queries.approveAthleteProfile.run(id);
-  else if (type === 'team') queries.approveTeamProfile.run(id);
-  else if (type === 'family') queries.approveFamilyLink.run(id);
-  else return res.status(400).json({ error: 'Tipo non valido' });
-  res.json({ ok: true });
+app.post('/api/admin/approve', requireAdmin, async (req, res) => {
+  try {
+    const { type, id } = req.body;
+    if      (type === 'athlete') await queries.approveAthleteProfile(id);
+    else if (type === 'team')    await queries.approveTeamProfile(id);
+    else if (type === 'family')  await queries.approveFamilyLink(id);
+    else return res.status(400).json({ error: 'Tipo non valido' });
+    res.json({ ok: true });
+  } catch (e) { res.status(500).json({ error: e.message }); }
 });
 
-// POST /api/admin/reject  { type, id }
-app.post('/api/admin/reject', requireAdmin, (req, res) => {
-  const { type, id } = req.body;
-  if (type === 'athlete') queries.rejectAthleteProfile.run(id);
-  else if (type === 'team') queries.rejectTeamProfile.run(id);
-  else if (type === 'family') queries.rejectFamilyLink.run(id);
-  else return res.status(400).json({ error: 'Tipo non valido' });
-  res.json({ ok: true });
+app.post('/api/admin/reject', requireAdmin, async (req, res) => {
+  try {
+    const { type, id } = req.body;
+    if      (type === 'athlete') await queries.rejectAthleteProfile(id);
+    else if (type === 'team')    await queries.rejectTeamProfile(id);
+    else if (type === 'family')  await queries.rejectFamilyLink(id);
+    else return res.status(400).json({ error: 'Tipo non valido' });
+    res.json({ ok: true });
+  } catch (e) { res.status(500).json({ error: e.message }); }
 });
 
-// GET /api/admin/overrides
-app.get('/api/admin/overrides', requireAdmin, (req, res) => {
-  res.json({
-    gare: queries.getAllGaraOverrides.all(),
-    risultati: queries.getAllRisultatoOverrides.all(),
-  });
+app.get('/api/admin/overrides', requireAdmin, async (req, res) => {
+  try {
+    res.json({
+      gare:      await queries.getAllGaraOverrides(),
+      risultati: await queries.getAllRisultatoOverrides(),
+    });
+  } catch (e) { res.status(500).json({ error: e.message }); }
 });
 
-// POST /api/admin/override/gara
-app.post('/api/admin/override/gara', requireAdmin, (req, res) => {
-  const { gara_id, field, old_value, new_value } = req.body;
-  if (!gara_id || !field) return res.status(400).json({ error: 'Campi mancanti' });
-  queries.setGaraOverride.run({ gara_id, field, old_value: old_value ?? null, new_value, edited_by: req.user.id });
-  res.json({ ok: true });
+app.post('/api/admin/override/gara', requireAdmin, async (req, res) => {
+  try {
+    const { gara_id, field, old_value, new_value } = req.body;
+    if (!gara_id || !field) return res.status(400).json({ error: 'Campi mancanti' });
+    await queries.setGaraOverride({ gara_id, field, old_value: old_value ?? null, new_value, edited_by: req.user.id });
+    res.json({ ok: true });
+  } catch (e) { res.status(500).json({ error: e.message }); }
 });
 
-// POST /api/admin/override/risultato
-app.post('/api/admin/override/risultato', requireAdmin, (req, res) => {
-  const { risultato_key, field, old_value, new_value } = req.body;
-  if (!risultato_key || !field) return res.status(400).json({ error: 'Campi mancanti' });
-  queries.setRisultatoOverride.run({ risultato_key, field, old_value: old_value ?? null, new_value, edited_by: req.user.id });
-  res.json({ ok: true });
+app.post('/api/admin/override/risultato', requireAdmin, async (req, res) => {
+  try {
+    const { risultato_key, field, old_value, new_value } = req.body;
+    if (!risultato_key || !field) return res.status(400).json({ error: 'Campi mancanti' });
+    await queries.setRisultatoOverride({ risultato_key, field, old_value: old_value ?? null, new_value, edited_by: req.user.id });
+    res.json({ ok: true });
+  } catch (e) { res.status(500).json({ error: e.message }); }
 });
 
-// GET /api/admin/gara-overrides/:gara_id
-app.get('/api/admin/gara-overrides/:gara_id', requireAdmin, (req, res) => {
-  res.json({ overrides: queries.getGaraOverrides.all(req.params.gara_id) });
+app.get('/api/admin/gara-overrides/:gara_id', requireAdmin, async (req, res) => {
+  try { res.json({ overrides: await queries.getGaraOverrides(req.params.gara_id) }); }
+  catch (e) { res.status(500).json({ error: e.message }); }
 });
 
-// POST /api/admin/override/entity  { entity_type, entity_id, field, new_value }
-app.post('/api/admin/override/entity', requireAdmin, (req, res) => {
-  const { entity_type, entity_id, field, new_value } = req.body;
-  if (!entity_type || !entity_id || !field) return res.status(400).json({ error: 'Campi mancanti' });
-  queries.setEntityOverride.run({ entity_type, entity_id, field, new_value, edited_by: req.user.id });
-  res.json({ ok: true });
+app.post('/api/admin/override/entity', requireAdmin, async (req, res) => {
+  try {
+    const { entity_type, entity_id, field, new_value } = req.body;
+    if (!entity_type || !entity_id || !field) return res.status(400).json({ error: 'Campi mancanti' });
+    await queries.setEntityOverride({ entity_type, entity_id, field, new_value, edited_by: req.user.id });
+    res.json({ ok: true });
+  } catch (e) { res.status(500).json({ error: e.message }); }
 });
 
-// GET /api/admin/override/entity/:type/:id
-app.get('/api/admin/override/entity/:type/:id', (req, res) => {
-  const overrides = queries.getEntityOverrides.all(req.params.type, req.params.id);
-  const map = {};
-  overrides.forEach(o => { map[o.field] = o.new_value; });
-  res.json({ overrides: map });
+app.get('/api/admin/override/entity/:type/:id', async (req, res) => {
+  try {
+    const overrides = await queries.getEntityOverrides(req.params.type, req.params.id);
+    const map = {};
+    overrides.forEach(o => { map[o.field] = o.new_value; });
+    res.json({ overrides: map });
+  } catch (e) { res.status(500).json({ error: e.message }); }
 });
 
-// GET /api/admin/all-entity-overrides
-app.get('/api/admin/all-entity-overrides', requireAdmin, (req, res) => {
-  res.json({ overrides: queries.getAllEntityOverrides.all() });
+app.get('/api/admin/all-entity-overrides', requireAdmin, async (req, res) => {
+  try { res.json({ overrides: await queries.getAllEntityOverrides() }); }
+  catch (e) { res.status(500).json({ error: e.message }); }
 });
 
-// ── Photo upload ─────────────────────────────────────────────────────────────
+// ── Photo upload ──────────────────────────────────────────────────────────────
 
 app.post('/api/upload/photo', requireAuth, upload.single('photo'), async (req, res) => {
   try {
@@ -331,15 +333,13 @@ app.post('/api/upload/photo', requireAuth, upload.single('photo'), async (req, r
     if (!req.file) return res.status(400).json({ error: 'Nessun file ricevuto' });
 
     const user = req.user;
-
-    // Ownership check (admin bypasses)
     if (user.role !== 'admin') {
       if (entity_type === 'atleta' && user.role === 'atleta') {
-        const profile = queries.getAthleteProfile.get(user.id);
+        const profile = await queries.getAthleteProfile(user.id);
         if (!profile || profile.atleta_id !== entity_id || profile.status !== 'active')
           return res.status(403).json({ error: 'Profilo atleta non collegato o non verificato' });
       } else if (entity_type === 'team' && user.role === 'team') {
-        const profile = queries.getTeamProfile.get(user.id);
+        const profile = await queries.getTeamProfile(user.id);
         if (!profile || profile.team_id !== entity_id || profile.status !== 'active')
           return res.status(403).json({ error: 'Profilo team non collegato o non verificato' });
       } else {
@@ -349,7 +349,7 @@ app.post('/api/upload/photo', requireAuth, upload.single('photo'), async (req, r
 
     const filename  = await savePhoto(req, req.file);
     const photo_url = `/photos/${filename}`;
-    queries.setEntityOverride.run({
+    await queries.setEntityOverride({
       entity_type, entity_id, field: 'photo_url', new_value: photo_url, edited_by: user.id,
     });
     res.json({ ok: true, photo_url });
@@ -358,9 +358,8 @@ app.post('/api/upload/photo', requireAuth, upload.single('photo'), async (req, r
   }
 });
 
-// ── Race Photos ──────────────────────────────────────────────────────────────
+// ── Race Photos ───────────────────────────────────────────────────────────────
 
-// POST /api/race-photos/upload  — qualsiasi utente loggato
 app.post('/api/race-photos/upload', requireAuth, upload.single('photo'), async (req, res) => {
   try {
     const { gara_id, caption, photographer } = req.body;
@@ -369,12 +368,9 @@ app.post('/api/race-photos/upload', requireAuth, upload.single('photo'), async (
     const filename     = await savePhoto(req, req.file);
     const display_name = req.user.display_name || req.user.email;
     const status       = req.user.role === 'admin' ? 'approved' : 'pending';
-    queries.insertRacePhoto.run({
+    await queries.insertRacePhoto({
       gara_id, user_id: req.user.id, display_name,
-      filename,
-      caption: caption || '',
-      photographer: photographer || '',
-      status,
+      filename, caption: caption || '', photographer: photographer || '', status,
     });
     res.json({ ok: true, status });
   } catch (e) {
@@ -382,60 +378,68 @@ app.post('/api/race-photos/upload', requireAuth, upload.single('photo'), async (
   }
 });
 
-// GET /api/race-photos  — tutte le approvate (per Risultati page)
-app.get('/api/race-photos', (req, res) => {
-  res.json({ photos: queries.getAllApprovedRacePhotos.all() });
+app.get('/api/race-photos', async (req, res) => {
+  try { res.json({ photos: await queries.getAllApprovedRacePhotos() }); }
+  catch (e) { res.status(500).json({ error: e.message }); }
 });
 
-// GET /api/race-photos/:gara_id  — pubblico, solo approvate
-app.get('/api/race-photos/:gara_id', (req, res) => {
-  const photos = queries.getApprovedRacePhotos.all(req.params.gara_id);
-  res.json({ photos });
+app.get('/api/race-photos/:gara_id', async (req, res) => {
+  try { res.json({ photos: await queries.getApprovedRacePhotos(req.params.gara_id) }); }
+  catch (e) { res.status(500).json({ error: e.message }); }
 });
 
-// GET /api/admin/race-photos/pending
-app.get('/api/admin/race-photos/pending', requireAdmin, (req, res) => {
-  res.json({ photos: queries.getPendingRacePhotos.all() });
+app.get('/api/admin/race-photos/pending', requireAdmin, async (req, res) => {
+  try { res.json({ photos: await queries.getPendingRacePhotos() }); }
+  catch (e) { res.status(500).json({ error: e.message }); }
 });
 
-// POST /api/admin/race-photos/:id/approve
-app.post('/api/admin/race-photos/:id/approve', requireAdmin, (req, res) => {
-  queries.approveRacePhoto.run(req.params.id);
-  res.json({ ok: true });
+app.post('/api/admin/race-photos/:id/approve', requireAdmin, async (req, res) => {
+  try { await queries.approveRacePhoto(req.params.id); res.json({ ok: true }); }
+  catch (e) { res.status(500).json({ error: e.message }); }
 });
 
-// POST /api/admin/race-photos/:id/reject
-app.post('/api/admin/race-photos/:id/reject', requireAdmin, (req, res) => {
-  queries.rejectRacePhoto.run(req.params.id);
-  res.json({ ok: true });
+app.post('/api/admin/race-photos/:id/reject', requireAdmin, async (req, res) => {
+  try { await queries.rejectRacePhoto(req.params.id); res.json({ ok: true }); }
+  catch (e) { res.status(500).json({ error: e.message }); }
 });
 
-// PATCH /api/admin/race-photos/:id  { caption, photographer }
-app.patch('/api/admin/race-photos/:id', requireAdmin, (req, res) => {
-  const { caption, photographer } = req.body;
-  queries.updateRacePhoto.run({ id: req.params.id, caption: caption || '', photographer: photographer || '' });
-  res.json({ ok: true });
+app.patch('/api/admin/race-photos/:id', requireAdmin, async (req, res) => {
+  try {
+    const { caption, photographer } = req.body;
+    await queries.updateRacePhoto({ id: req.params.id, caption: caption || '', photographer: photographer || '' });
+    res.json({ ok: true });
+  } catch (e) { res.status(500).json({ error: e.message }); }
 });
 
-// DELETE /api/admin/race-photos/:id
 app.delete('/api/admin/race-photos/:id', requireAdmin, async (req, res) => {
-  const photo = queries.getRacePhotoById.get(req.params.id);
-  if (!photo) return res.status(404).json({ error: 'Foto non trovata' });
-  queries.deleteRacePhoto.run(req.params.id);
-  await deletePhoto(photo.filename);
-  res.json({ ok: true });
+  try {
+    const photo = await queries.getRacePhotoById(req.params.id);
+    if (!photo) return res.status(404).json({ error: 'Foto non trovata' });
+    await queries.deleteRacePhoto(req.params.id);
+    await deletePhoto(photo.filename);
+    res.json({ ok: true });
+  } catch (e) { res.status(500).json({ error: e.message }); }
 });
 
-// ── Health ───────────────────────────────────────────────────────────────────
+// ── Health ────────────────────────────────────────────────────────────────────
 
 app.get('/api/health', (req, res) => res.json({ ok: true, ts: new Date().toISOString() }));
 
-// Global JSON error handler — catches multer errors, unhandled exceptions
+// Global error handler
 app.use((err, req, res, next) => {
   console.error('[error]', err.message);
   res.status(err.status || 500).json({ error: err.message || 'Errore interno del server' });
 });
 
-app.listen(PORT, () => {
-  console.log(`[server] ItaliacritAuth in ascolto su http://localhost:${PORT}`);
-});
+// ── Startup ───────────────────────────────────────────────────────────────────
+
+init()
+  .then(() => {
+    app.listen(PORT, () => {
+      console.log(`[server] ItaliacritAuth in ascolto su http://localhost:${PORT}`);
+    });
+  })
+  .catch(err => {
+    console.error('[fatal] Impossibile connettersi al database:', err.message);
+    process.exit(1);
+  });
