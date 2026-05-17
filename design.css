@@ -2432,11 +2432,15 @@ div[style*="grid-template-columns: repeat(auto-fit"] {
   .ris-card .hero-race-name { font-size: 1.2rem !important; }
 }
 
-/* ── Tabella gara: layout mobile ───────────────────────────────── */
+/* ── Tabella gara/team: layout mobile ──────────────────────────── */
 .td-team-mobile { display: none; font-size: 0.75rem; font-weight: 400; margin-top: 2px; }
+
+.results-table-wrap { overflow-x: auto; -webkit-overflow-scrolling: touch; max-width: 100%; }
 
 @media (max-width: 640px) {
   .td-hide-mobile { display: none !important; }
   .td-team-mobile { display: block; }
   .td-pos { font-size: 1rem !important; }
+  .team-stats-row { flex-wrap: wrap; gap: 8px; }
+  .team-name-display { font-size: clamp(1.1rem, 4vw, 1.8rem) !important; }
 }

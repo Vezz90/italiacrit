@@ -1810,13 +1810,16 @@ async function renderTeam(team_id) {
       const rankVal = r.team_rank_dopo_gara;
       return `<tr>
         <td class="td-date">${fmtDateShort(r.data)}</td>
-        <td class="td-race"><a href="#/gara/${esc(r.gara_id)}">${esc(r.nome_gara)}</a></td>
-        <td><a href="#/atleta/${esc(r.atleta_id)}" style="color:var(--text-primary);font-family:var(--font-heading);font-weight:700">${esc(r.atleta_cognome)} ${esc(r.atleta_nome)}</a></td>
+        <td class="td-race">
+          <a href="#/gara/${esc(r.gara_id)}">${esc(r.nome_gara)}</a>
+          <div class="td-team-mobile"><a href="#/atleta/${esc(r.atleta_id)}" style="color:var(--text-secondary)">${esc(r.atleta_cognome)} ${esc(r.atleta_nome)}</a></div>
+        </td>
+        <td class="td-hide-mobile"><a href="#/atleta/${esc(r.atleta_id)}" style="color:var(--text-primary);font-family:var(--font-heading);font-weight:700">${esc(r.atleta_cognome)} ${esc(r.atleta_nome)}</a></td>
         <td class="td-pos ${posClass(r.posizione)}">${r.posizione}°</td>
-        <td style="text-align:center">${badgeMult(r.moltiplicatore || 1, r.tipo)}</td>
-        <td style="text-align:right">${esc(r.km || '—')}</td>
-        <td style="text-align:right">${esc(r.media || '—')}</td>
-        <td style="text-align:right">${rankVal ? `<span class="rank-badge" style="font-size:0.75rem; font-weight:normal; color:var(--text-muted)">Team Rank: <span class="b-num">${rankVal}°</span></span>` : ''}</td>
+        <td class="td-hide-mobile" style="text-align:center">${badgeMult(r.moltiplicatore || 1, r.tipo)}</td>
+        <td class="td-hide-mobile" style="text-align:right">${esc(r.km || '—')}</td>
+        <td class="td-hide-mobile" style="text-align:right">${esc(r.media || '—')}</td>
+        <td class="td-hide-mobile" style="text-align:right">${rankVal ? `<span style="font-size:0.75rem;color:var(--text-muted)">${rankVal}°</span>` : ''}</td>
         <td class="td-pts">${r.punti_effettivi||0}</td>
       </tr>`;
     }).join('');
@@ -1905,7 +1908,7 @@ async function renderTeam(team_id) {
     <div class="results-table-wrap">
       <table class="results-table team-results">
         <thead><tr>
-          <th>DATA</th><th>GARA</th><th>ATLETA</th><th>POS</th><th style="text-align:center">MOLT</th><th style="text-align:right">KM</th><th style="text-align:right">MEDIA</th><th style="text-align:right">RNK</th><th>PTS</th>
+          <th>DATA</th><th>GARA</th><th class="td-hide-mobile">ATLETA</th><th>POS</th><th class="td-hide-mobile" style="text-align:center">MOLT</th><th class="td-hide-mobile" style="text-align:right">KM</th><th class="td-hide-mobile" style="text-align:right">MEDIA</th><th class="td-hide-mobile" style="text-align:right">RNK</th><th>PTS</th>
         </tr></thead>
         <tbody>${risultatiRows || '<tr><td colspan="9" class="empty-state">Nessun risultato</td></tr>'}</tbody>
       </table>
