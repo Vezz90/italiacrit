@@ -108,6 +108,30 @@
     "pos": 9
   },
   {
+    "team_id": "TEAM_ECOTEK_ZERO24",
+    "team_nome": "TEAM ECOTEK ZERO24",
+    "punti": 224,
+    "vittorie": 4,
+    "p1": 4,
+    "p2": 8,
+    "p3": 1,
+    "pout": 12,
+    "n_atleti": 6,
+    "pos": 10
+  },
+  {
+    "team_id": "POLISPORTIVA_MONSUMMANESE",
+    "team_nome": "POLISPORTIVA MONSUMMANESE",
+    "punti": 219,
+    "vittorie": 4,
+    "p1": 4,
+    "p2": 2,
+    "p3": 5,
+    "pout": 16,
+    "n_atleti": 10,
+    "pos": 11
+  },
+  {
     "team_id": "AUTOZAI_CONTRI",
     "team_nome": "AUTOZAI-CONTRI",
     "punti": 213,
@@ -117,19 +141,7 @@
     "p3": 0,
     "pout": 17,
     "n_atleti": 5,
-    "pos": 10
-  },
-  {
-    "team_id": "TEAM_ECOTEK_ZERO24",
-    "team_nome": "TEAM ECOTEK ZERO24",
-    "punti": 212,
-    "vittorie": 4,
-    "p1": 4,
-    "p2": 7,
-    "p3": 1,
-    "pout": 12,
-    "n_atleti": 6,
-    "pos": 11
+    "pos": 12
   },
   {
     "team_id": "CPS_PROFESSIONAL_TEAM",
@@ -141,18 +153,6 @@
     "p3": 4,
     "pout": 16,
     "n_atleti": 9,
-    "pos": 12
-  },
-  {
-    "team_id": "POLISPORTIVA_MONSUMMANESE",
-    "team_nome": "POLISPORTIVA MONSUMMANESE",
-    "punti": 183,
-    "vittorie": 3,
-    "p1": 3,
-    "p2": 2,
-    "p3": 4,
-    "pout": 14,
-    "n_atleti": 8,
     "pos": 13
   },
   {
@@ -384,6 +384,18 @@
     "pos": 32
   },
   {
+    "team_id": "ARKITANO_MTB_CLUB",
+    "team_nome": "ARKITANO MTB CLUB",
+    "punti": 51,
+    "vittorie": 1,
+    "p1": 1,
+    "p2": 0,
+    "p3": 1,
+    "pout": 2,
+    "n_atleti": 1,
+    "pos": 33
+  },
+  {
     "team_id": "CANNIBAL_BAHRAIN_VICTORIUS",
     "team_nome": "CANNIBAL BAHRAIN VICTORIUS",
     "punti": 51,
@@ -393,7 +405,7 @@
     "p3": 1,
     "pout": 3,
     "n_atleti": 2,
-    "pos": 33
+    "pos": 34
   },
   {
     "team_id": "S_C_MONTEPONI_A_S_D",
@@ -405,7 +417,7 @@
     "p3": 0,
     "pout": 1,
     "n_atleti": 1,
-    "pos": 34
+    "pos": 35
   },
   {
     "team_id": "DUEPPI_CYCLING_PROJECT",
@@ -417,7 +429,7 @@
     "p3": 1,
     "pout": 0,
     "n_atleti": 2,
-    "pos": 35
+    "pos": 36
   },
   {
     "team_id": "A_S_D_POSTUMIA_73_D_L_CICLISMO",
@@ -429,7 +441,7 @@
     "p3": 0,
     "pout": 4,
     "n_atleti": 5,
-    "pos": 36
+    "pos": 37
   },
   {
     "team_id": "DANIMARCA",
@@ -441,7 +453,7 @@
     "p3": 1,
     "pout": 1,
     "n_atleti": 2,
-    "pos": 37
+    "pos": 38
   },
   {
     "team_id": "VINI_FANTINI_TRALFO",
@@ -453,7 +465,7 @@
     "p3": 0,
     "pout": 4,
     "n_atleti": 3,
-    "pos": 38
+    "pos": 39
   },
   {
     "team_id": "S_C_ROMANESE_ASD",
@@ -465,18 +477,6 @@
     "p3": 0,
     "pout": 7,
     "n_atleti": 2,
-    "pos": 39
-  },
-  {
-    "team_id": "ARKITANO_MTB_CLUB",
-    "team_nome": "ARKITANO MTB CLUB",
-    "punti": 43,
-    "vittorie": 1,
-    "p1": 1,
-    "p2": 0,
-    "p3": 1,
-    "pout": 1,
-    "n_atleti": 1,
     "pos": 40
   },
   {
