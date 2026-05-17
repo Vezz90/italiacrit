@@ -2386,49 +2386,47 @@ div[style*="grid-template-columns: repeat(auto-fit"] {
   align-items: start;
 }
 
-/* ── Risultati card con foto ─────────────────────────────── */
-.ris-card {
-  display: flex;
-  flex-direction: column;
-  overflow: hidden;
-  margin-bottom: 0;
-  padding: 0;
-}
+/* ── Risultati card con foto/video ───────────────────────── */
+.ris-card { display:flex; flex-direction:column; overflow:hidden; margin-bottom:0; padding:0; }
 
-.ris-card-photo {
-  width: 100%;
-  height: 200px;
-  overflow: hidden;
-  border-radius: var(--r-lg) var(--r-lg) 0 0;
-  display: block;
-  flex-shrink: 0;
-}
+.ris-card-media { width:100%; flex-shrink:0; overflow:hidden; border-radius:var(--r-lg) var(--r-lg) 0 0; height:200px; }
+.ris-card-media-split { display:flex; gap:2px; }
 
-.ris-card-photo img {
-  width: 100%;
-  height: 100%;
-  object-fit: cover;
-  display: block;
-  transition: transform 0.3s;
-}
+/* Metà sinistra: foto */
+.ris-card-photo { display:block; width:100%; height:100%; overflow:hidden; text-decoration:none; }
+.ris-card-photo.ris-media-half { width:50%; flex-shrink:0; }
+.ris-card-photo img { width:100%; height:100%; object-fit:cover; display:block; transition:transform .3s; }
+.ris-card-photo:hover img { transform:scale(1.04); }
 
-.ris-card-photo:hover img { transform: scale(1.04); }
+/* Metà destra: video thumbnail */
+.ris-card-video-thumb { position:relative; cursor:pointer; overflow:hidden; width:100%; height:100%; }
+.ris-card-video-thumb.ris-media-half { width:50%; flex-shrink:0; }
+.ris-card-video-thumb img { width:100%; height:100%; object-fit:cover; display:block; transition:transform .3s; }
+.ris-card-video-thumb:hover img { transform:scale(1.04); }
+.ris-video-play { position:absolute; inset:0; display:flex; align-items:center; justify-content:center; background:rgba(0,0,0,.35); transition:background .2s; }
+.ris-card-video-thumb:hover .ris-video-play { background:rgba(0,0,0,.55); }
+.ris-video-play span { font-size:2.8rem; color:#fff; text-shadow:0 2px 10px rgba(0,0,0,.8); }
+.ris-video-channel { position:absolute; bottom:0; left:0; right:0; padding:4px 8px; background:rgba(0,0,0,.6); font-size:0.62rem; color:#ccc; font-family:var(--font-mono); white-space:nowrap; overflow:hidden; text-overflow:ellipsis; }
 
-.ris-card-body {
-  flex: 1;
-  padding: 20px;
-  min-width: 0;
-}
+.ris-card-body { flex:1; padding:20px; min-width:0; }
 
-@media (max-width: 700px) {
-  .risultati-feed {
-    grid-template-columns: 1fr;
-    gap: 16px;
-  }
+/* Modal player YouTube */
+.video-modal-overlay { position:fixed; inset:0; background:rgba(0,0,0,.85); z-index:9999; display:flex; align-items:center; justify-content:center; padding:16px; box-sizing:border-box; }
+.video-modal-box { background:#111; border-radius:12px; overflow:hidden; width:100%; max-width:900px; position:relative; box-shadow:0 8px 48px rgba(0,0,0,.8); }
+.video-modal-close { position:absolute; top:8px; right:8px; z-index:10; background:rgba(255,255,255,.15); border:none; color:#fff; font-size:1.1rem; cursor:pointer; border-radius:50%; width:32px; height:32px; display:flex; align-items:center; justify-content:center; }
+.video-modal-close:hover { background:rgba(255,255,255,.3); }
+.video-modal-title { padding:10px 48px 10px 14px; font-size:0.78rem; color:#bbb; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; font-family:var(--font-mono); }
+.video-modal-player { position:relative; padding-bottom:56.25%; height:0; }
+.video-modal-player iframe { position:absolute; inset:0; width:100%; height:100%; border:none; }
 
-  .ris-card-photo { height: 160px; }
-  .ris-card-body  { padding: 16px; }
-  .ris-card .hero-race-name { font-size: 1.2rem !important; }
+@media (max-width:700px) {
+  .risultati-feed { grid-template-columns:1fr; gap:16px; }
+  .ris-card-media { height:160px; }
+  .ris-card-media-split { flex-direction:column; height:320px; }
+  .ris-card-photo.ris-media-half,
+  .ris-card-video-thumb.ris-media-half { width:100%; height:50%; }
+  .ris-card-body { padding:16px; }
+  .ris-card .hero-race-name { font-size:1.2rem !important; }
 }
 
 /* ── Tabella gara/team: layout mobile ──────────────────────────── */

@@ -2618,7 +2618,8 @@ async function renderCalendario() {
             ${rows}
           </div>`;
         }).join('');
-        const calVideos = (globalData.videos || {})[garaLink] || [];
+        const calVideos = (globalData.videos || {})[toCalId(garaLink)] ||
+                          (globalData.videos || {})[garaLink] || [];
         const calVideoBtn = calVideos.length
           ? `<a href="${esc(calVideos[0].url)}" target="_blank" rel="noopener" class="btn-action" style="font-size:0.72rem;padding:7px 12px;display:flex;align-items:center;gap:5px;white-space:nowrap;">▶ Video</a>`
           : '';
@@ -3679,6 +3680,30 @@ function doSearch(q, dropdown) {
 
 window.goTo = (hash) => { window.location.hash = hash; };
 
+// Rimuove il suffisso categoria (_AL_M, _ES1_F…) per ottenere il calendario ID
+function toCalId(garaId) {
+  return (garaId || '').replace(/_[A-Z0-9]+_[MF]$/, '');
+}
+
+// Modal player YouTube
+window.openVideoModal = (videoId, title) => {
+  const overlay = document.createElement('div');
+  overlay.className = 'video-modal-overlay';
+  overlay.innerHTML = `
+    <div class="video-modal-box">
+      <button class="video-modal-close" onclick="this.closest('.video-modal-overlay').remove()">✕</button>
+      <div class="video-modal-title">${esc(title)}</div>
+      <div class="video-modal-player">
+        <iframe src="https://www.youtube.com/embed/${videoId}?autoplay=1&rel=0"
+                frameborder="0" allowfullscreen
+                allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture">
+        </iframe>
+      </div>
+    </div>`;
+  overlay.addEventListener('click', e => { if (e.target === overlay) overlay.remove(); });
+  document.body.appendChild(overlay);
+};
+
 // ── MOBILE MENU ───────────────────────────────────────────────
 function initMobileMenu() {
   const hamburger = document.getElementById('nav-hamburger');
@@ -3861,6 +3886,15 @@ async function renderRisultati() {
       const featuredPhoto = Object.values(race.byCategory || {})
         .map(c => photosMap[c.gara_id]).find(Boolean);
 
+      // Video: cerca per calendar ID (senza suffisso categoria)
+      const raceCalId = toCalId(race.id);
+      const raceVideos = (globalData.videos || {})[raceCalId] ||
+                         (globalData.videos || {})[race.id] || [];
+      const featuredVideo = raceVideos[0] || null;
+      const featuredVideoId = featuredVideo
+        ? (featuredVideo.url.match(/[?&]v=([^&]+)/) || [])[1] || null
+        : null;
+
       const catSections = categories.map(([catName, catData]) => {
         const top3 = (catData.results || []).sort((a,b) => a.posizione - b.posizione).slice(0,3);
         const catGaraId = catData.gara_id;
@@ -3894,22 +3928,33 @@ async function renderRisultati() {
               <span style="font-size:0.75rem;color:var(--text-muted);font-family:var(--font-mono)">${techBit}</span>
             </div>
             ${podioRows}
-            <div style="padding-top:10px;margin-top:10px;border-top:1px solid var(--border-subtle);display:flex;gap:8px;align-items:center;">
-              <a href="#/gara/${esc(catGaraId)}" class="btn-action full" style="font-size:0.75rem;text-align:center;flex:1;">VAI ALLA CLASSIFICA COMPLETA &rarr;</a>
-              ${((globalData.videos||{})[catGaraId]||[]).length ? `<a href="${esc(((globalData.videos||{})[catGaraId]||[])[0].url)}" target="_blank" rel="noopener" class="btn-action" style="font-size:0.75rem;padding:7px 12px;white-space:nowrap;">▶ Video</a>` : ''}
+            <div style="padding-top:10px;margin-top:10px;border-top:1px solid var(--border-subtle);">
+              <a href="#/gara/${esc(catGaraId)}" class="btn-action full" style="font-size:0.75rem;text-align:center;">VAI ALLA CLASSIFICA COMPLETA &rarr;</a>
             </div>
           </div>`;
       }).join(categories.length > 1 ? '<div style="border-top:2px solid var(--border-subtle);margin:16px 0;"></div>' : '');
 
-      const photoPanel = featuredPhoto
-        ? `<a href="#/gara/${esc(race.id)}" class="ris-card-photo">
+      const photoEl = featuredPhoto
+        ? `<a href="#/gara/${esc(race.id)}" class="ris-card-photo${featuredVideoId ? ' ris-media-half' : ''}">
              <img src="${PHOTOS_BASE}/photos/${esc(featuredPhoto.filename)}" alt="Foto gara" loading="lazy"/>
            </a>`
+        : '';
+      const videoEl = featuredVideoId
+        ? `<div class="ris-card-video-thumb${featuredPhoto ? ' ris-media-half' : ''}"
+               onclick="window.openVideoModal('${featuredVideoId}','${esc((featuredVideo.title||'').replace(/'/g,"\\'"))}')">
+             <img src="https://img.youtube.com/vi/${featuredVideoId}/hqdefault.jpg"
+                  alt="${esc(featuredVideo.title)}" loading="lazy"/>
+             <div class="ris-video-play"><span>▶</span></div>
+             <div class="ris-video-channel">${esc(featuredVideo.channel)}</div>
+           </div>`
+        : '';
+      const mediaPanel = (photoEl || videoEl)
+        ? `<div class="ris-card-media${featuredPhoto && featuredVideoId ? ' ris-card-media-split' : ''}">${photoEl}${videoEl}</div>`
         : '';
 
       return `
         <div class="hero-band ris-card">
-          ${photoPanel}
+          ${mediaPanel}
           <div class="ris-card-body">
             <div class="hero-label" style="font-size:0.6rem">RISULTATI GARA</div>
             <div class="hero-race-name" style="font-size:clamp(1.4rem,3vw,2.2rem);"><a href="#/gara/${esc(race.id)}">${esc(race.nome)}</a></div>
