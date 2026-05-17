@@ -1159,39 +1159,14 @@ async function renderAdmin() {
 
   setPage(`
     <h1 style="font-family:var(--font-display);font-size:var(--size-h1);margin-bottom:8px">ADMIN DASHBOARD</h1>
-    <p style="color:var(--text-muted);margin-bottom:32px">Gestione centralizzata per evento (tutte le categorie della stessa gara).</p>
 
-    <div class="ranking-controls" style="margin-bottom:24px">
-      <div style="display:flex; gap:16px; align-items:center">
-        <div class="ranking-filter-bar" style="margin:0; flex-grow:1">
-          <input type="search" id="admin-search" placeholder="Cerca gara per nome..." oninput="filterAdminRaces(this.value)" />
-        </div>
-        <button class="btn-action" onclick="triggerSync()" id="btn-sync" style="background:var(--accent); color:white; border:none">
-          🔄 SINCRONIZZA & RICALCOLA
-        </button>
-      </div>
+    <div style="margin-bottom:32px">
+      <button class="btn-action" onclick="triggerSync()" id="btn-sync" style="background:var(--accent); color:white; border:none">
+        🔄 SINCRONIZZA & RICALCOLA
+      </button>
     </div>
 
-    <div id="admin-races-container">
-      <table class="ranking-table">
-        <thead>
-          <tr>
-            <th>DATA</th>
-            <th>GARA</th>
-            <th>CAT</th>
-            <th class="r">PUNTI (Simulati)</th>
-            <th class="r">MOLTIPLICATORE</th>
-            <th>TIPO</th>
-          </tr>
-        </thead>
-        <tbody id="admin-table-body">
-          ${renderAdminRows(races.slice(0, 50))}
-        </tbody>
-      </table>
-      ${races.length > 50 ? `<div style="text-align:center;padding:20px;color:var(--text-muted)">Filtra per vedere altre gare...</div>` : ''}
-    </div>
-
-    <div style="margin-top:48px">
+    <div style="margin-top:0">
       <h2 style="font-family:var(--font-display);font-size:1.2rem;margin-bottom:16px;border-bottom:2px solid var(--accent);padding-bottom:8px">
         📷 FOTO IN ATTESA DI APPROVAZIONE
       </h2>
