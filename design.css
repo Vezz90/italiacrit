@@ -2579,3 +2579,16 @@ div[style*="grid-template-columns: repeat(auto-fit"] {
 .countdown-today { color:var(--red-hot); font-weight:700; }
 .countdown-soon { color:var(--yellow-race); }
 .countdown-far { color:var(--text-muted); }
+
+/* Video gara */
+.gara-videos-grid { display:grid; grid-template-columns:repeat(auto-fill,minmax(260px,1fr)); gap:12px; margin-top:12px; }
+.gara-video-card { display:flex; flex-direction:column; background:var(--bg-card); border:1px solid var(--border-subtle); border-radius:var(--r-md); overflow:hidden; text-decoration:none; color:inherit; transition:border-color .15s,transform .15s; }
+.gara-video-card:hover { border-color:var(--red-hot); transform:translateY(-2px); }
+.gara-video-thumb { position:relative; width:100%; aspect-ratio:16/9; overflow:hidden; background:var(--bg-elevated); }
+.gara-video-thumb img { width:100%; height:100%; object-fit:cover; display:block; }
+.gara-video-play { position:absolute; inset:0; display:flex; align-items:center; justify-content:center; font-size:2.2rem; color:#fff; text-shadow:0 2px 8px rgba(0,0,0,.7); opacity:.85; transition:opacity .15s; pointer-events:none; }
+.gara-video-card:hover .gara-video-play { opacity:1; }
+.gara-video-info { padding:10px 12px; }
+.gara-video-title { font-family:var(--font-heading); font-weight:700; font-size:0.82rem; line-height:1.35; margin-bottom:4px; display:-webkit-box; -webkit-line-clamp:2; -webkit-box-orient:vertical; overflow:hidden; }
+.gara-video-meta { font-size:0.68rem; color:var(--text-muted); font-family:var(--font-mono); }
+@media(max-width:480px) { .gara-videos-grid { grid-template-columns:1fr; } }

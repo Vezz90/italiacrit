@@ -208,13 +208,14 @@ const ATHLETE_GENDER_FIXES = {
 
 // Preload tutto in parallelo
 async function loadAll() {
-  const [calendar, resultsRaw, athletes, teams, meta, raceDetails] = await Promise.all([
+  const [calendar, resultsRaw, athletes, teams, meta, raceDetails, videos] = await Promise.all([
     loadJson('data/calendar.json'),
     loadJson('data/results_raw.json'),
     loadJson('data/athletes.json'),
     loadJson('data/teams.json'),
     loadJson('data/meta.json'),
     loadJson('data/race_details.json'),
+    loadJson('data/videos.json'),
   ]);
 
   // Applica correzioni genere
@@ -261,6 +262,7 @@ async function loadAll() {
     teams: teams || {},
     meta: meta || {},
     raceDetails: raceDetails || {},
+    videos: videos || {},
     resultsByAtleta,
     resultsByTeam,
     _femaleIds
@@ -2393,6 +2395,30 @@ async function renderGara(gara_id) {
       </div>`;
   } catch(e) { /* silent */ }
 
+  // Video YouTube associati alla gara
+  const garaVideos = (globalData.videos || {})[gara_id] || [];
+  const videosHtml = garaVideos.length ? `
+    <div class="comp-section" style="margin-top:20px">
+      <div class="comp-section-title">Video</div>
+      <div class="gara-videos-grid">
+        ${garaVideos.map(v => {
+          const vidId = (v.url.match(/[?&]v=([^&]+)/) || [])[1] || '';
+          const thumb = vidId ? `https://img.youtube.com/vi/${vidId}/mqdefault.jpg` : '';
+          return `
+            <a href="${esc(v.url)}" target="_blank" rel="noopener" class="gara-video-card">
+              ${thumb ? `<div class="gara-video-thumb">
+                <img src="${thumb}" alt="${esc(v.title)}" loading="lazy"/>
+                <div class="gara-video-play">▶</div>
+              </div>` : ''}
+              <div class="gara-video-info">
+                <div class="gara-video-title">${esc(v.title)}</div>
+                <div class="gara-video-meta">${esc(v.channel)}</div>
+              </div>
+            </a>`;
+        }).join('')}
+      </div>
+    </div>` : '';
+
   window._shareGaraData = {name:name,date:fmtDate(data),cat:catLabel(cat),mult:mult,tipo:tipo,results:results.slice(0,10).map(r=>({cognome:r.cognome,nome:r.nome,team:r.team,punti_effettivi:r.punti_effettivi}))};
   window._currentGaraId = gara_id;
   setPage(`
@@ -2414,6 +2440,7 @@ async function renderGara(gara_id) {
         <button class="btn-share" onclick="window.triggerShareGara()"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="18" cy="5" r="3"/><circle cx="6" cy="12" r="3"/><circle cx="18" cy="19" r="3"/><line x1="8.59" y1="13.51" x2="15.42" y2="17.49"/><line x1="15.41" y1="6.51" x2="8.59" y2="10.49"/></svg> Condividi Risultati</button>
         ${adminEditBtn('gara', gara_id)}
       </div>
+    ${videosHtml}
     ${racePhotosHtml}
     <div class="results-table-wrap">
       <table class="results-table">

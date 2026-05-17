@@ -1,10 +1,11 @@
-const express = require('express');
-const cors    = require('cors');
-const bcrypt  = require('bcryptjs');
-const jwt     = require('jsonwebtoken');
-const multer  = require('multer');
-const path    = require('path');
-const fs      = require('fs');
+const express        = require('express');
+const cors           = require('cors');
+const bcrypt         = require('bcryptjs');
+const jwt            = require('jsonwebtoken');
+const multer         = require('multer');
+const path           = require('path');
+const fs             = require('fs');
+const { spawn }      = require('child_process');
 const { queries, init } = require('./db');
 
 const app  = express();
@@ -424,6 +425,41 @@ app.delete('/api/admin/race-photos/:id', requireAdmin, async (req, res) => {
 // ── Health ────────────────────────────────────────────────────────────────────
 
 app.get('/api/health', (req, res) => res.json({ ok: true, ts: new Date().toISOString() }));
+
+// ── YouTube scraper ───────────────────────────────────────────────────────────
+
+const SCRAPER_PATH = path.join(__dirname, '..', 'scraper_youtube.js');
+let scraperRunning = false;
+
+function runYoutubeScraper() {
+  if (scraperRunning) {
+    console.log('[youtube] Scraper già in esecuzione, skip');
+    return;
+  }
+  scraperRunning = true;
+  console.log('[youtube] Avvio scraper video...');
+  const proc = spawn(process.execPath, [SCRAPER_PATH], {
+    cwd: path.join(__dirname, '..'),
+    env: { ...process.env, NODE_TLS_REJECT_UNAUTHORIZED: '0' },
+  });
+  proc.stdout.on('data', d => process.stdout.write('[youtube] ' + d));
+  proc.stderr.on('data', d => process.stderr.write('[youtube] ' + d));
+  proc.on('close', code => {
+    scraperRunning = false;
+    console.log(`[youtube] Scraper terminato (exit ${code})`);
+  });
+}
+
+// Endpoint manuale (admin)
+app.post('/api/trigger_scraper', requireAdmin, (req, res) => {
+  if (scraperRunning) return res.json({ ok: false, msg: 'Scraper già in esecuzione' });
+  runYoutubeScraper();
+  res.json({ ok: true, msg: 'Scraper YouTube avviato' });
+});
+
+// Automatico ogni 12 ore — prima esecuzione dopo 60 secondi dall'avvio
+setTimeout(runYoutubeScraper, 60_000);
+setInterval(runYoutubeScraper, 12 * 60 * 60 * 1000);
 
 // Global error handler
 app.use((err, req, res, next) => {
