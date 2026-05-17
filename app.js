@@ -2372,8 +2372,16 @@ async function renderGara(gara_id) {
     `;
   }
 
+  // Video YouTube associati alla gara
+  const _calId = (globalData.garaToCalId || {})[gara_id] || gara_id;
+  const garaVideos = (globalData.videos || {})[_calId] || (globalData.videos || {})[gara_id] || [];
+  const featuredVideo = garaVideos[0] || null;
+  const featuredVideoId = featuredVideo ? (featuredVideo.url.match(/[?&]v=([^&]+)/) || [])[1] || null : null;
+  const extraVideos = garaVideos.slice(1);
+
   // Carica foto approvate in parallelo con il render
   let racePhotosHtml = '';
+  let extraVideosHtml = '';
   try {
     const photosData = await fetch(`${API_BASE}/race-photos/${encodeURIComponent(gara_id)}`).then(r=>r.json()).catch(()=>({photos:[]}));
     const photos = photosData.photos || [];
@@ -2385,54 +2393,75 @@ async function renderGara(gara_id) {
          </button>`
       : `<span style="font-size:0.8rem;color:var(--text-muted)">Accedi per caricare una foto</span>`;
     const isAdmin = user?.role === 'admin';
-    const gallery = photos.length
-      ? `<div class="race-gallery">${photos.map(p=>`
+
+    // Hero: first photo + first video side by side (or full-width if only one)
+    const featuredPhoto = photos[0] || null;
+    const heroPhotoEl = featuredPhoto
+      ? `<div class="gara-media-half gara-media-photo" onclick="window.openPhotoLightbox('${PHOTOS_BASE}/photos/${esc(featuredPhoto.filename)}')" style="cursor:zoom-in">
+           <img src="${PHOTOS_BASE}/photos/${esc(featuredPhoto.filename)}" alt="${esc(featuredPhoto.caption||'Foto gara')}" loading="lazy"/>
+         </div>`
+      : '';
+    const heroVideoEl = featuredVideoId
+      ? `<div class="gara-media-half gara-media-video" onclick="window.openVideoModal('${featuredVideoId}','${esc((featuredVideo.title||'').replace(/'/g, "\\'"))}')"> 
+           <img src="https://img.youtube.com/vi/${featuredVideoId}/hqdefault.jpg" alt="${esc(featuredVideo.title||'Video')}" loading="lazy"/>
+           <div class="gara-media-play"><span>&#9658;</span></div>
+           <div class="gara-media-channel">${esc(featuredVideo.channel||'')}</div>
+         </div>`
+      : '';
+    const heroMedia = (heroPhotoEl || heroVideoEl)
+      ? `<div class="gara-hero-media${featuredPhoto && featuredVideoId ? ' gara-hero-split' : ''}">${heroPhotoEl}${heroVideoEl}</div>`
+      : '';
+
+    const extraPhotos = photos.slice(1);
+    const gallery = extraPhotos.length
+      ? `<div class="race-gallery">${extraPhotos.map(p=>`
           <div class="race-gallery-item" id="gal-photo-${p.id}"
             data-caption="${esc(p.caption||'')}"
             data-photographer="${esc(p.photographer||'')}">
             <img src="${PHOTOS_BASE}/photos/${esc(p.filename)}" alt="${esc(p.caption||'Foto gara')}" loading="lazy" onclick="window.openPhotoLightbox('${PHOTOS_BASE}/photos/${esc(p.filename)}')" style="cursor:zoom-in"/>
             <div class="race-gallery-caption">${[p.caption, p.photographer ? '📷 '+p.photographer : '', p.display_name].filter(Boolean).join(' — ')}</div>
             ${isAdmin ? `<div style="position:absolute;top:4px;right:4px;display:flex;flex-direction:column;gap:3px;z-index:10">
-              <button onclick="event.stopPropagation();window.adminEditPhoto(${p.id})" style="padding:3px 7px;font-size:0.68rem;background:#2563eb;color:#fff;border:none;border-radius:4px;cursor:pointer;white-space:nowrap;box-shadow:0 1px 4px rgba(0,0,0,.5)">✏️ Modifica</button>
-              <button onclick="event.stopPropagation();window.adminDeletePhoto(${p.id})" style="padding:3px 7px;font-size:0.68rem;background:#dc2626;color:#fff;border:none;border-radius:4px;cursor:pointer;white-space:nowrap;box-shadow:0 1px 4px rgba(0,0,0,.5)">🗑 Elimina</button>
+              <button onclick="event.stopPropagation();window.adminEditPhoto(${p.id})" style="padding:3px 7px;font-size:0.68rem;background:#2563eb;color:#fff;border:none;border-radius:4px;cursor:pointer;white-space:nowrap;box-shadow:0 1px 4px rgba(0,0,0,.5)">&#9999;&#65039; Modifica</button>
+              <button onclick="event.stopPropagation();window.adminDeletePhoto(${p.id})" style="padding:3px 7px;font-size:0.68rem;background:#dc2626;color:#fff;border:none;border-radius:4px;cursor:pointer;white-space:nowrap;box-shadow:0 1px 4px rgba(0,0,0,.5)">&#128465; Elimina</button>
             </div>` : ''}
           </div>`).join('')}
         </div>`
-      : `<p style="color:var(--text-muted);font-size:0.875rem;margin:8px 0 0">Nessuna foto ancora. Sii il primo a condividerne una!</p>`;
+      : (!featuredPhoto ? `<p style="color:var(--text-muted);font-size:0.875rem;margin:8px 0 0">Nessuna foto ancora. Sii il primo a condividerne una!</p>` : '');
+
     racePhotosHtml = `
       <div class="comp-section" style="margin-top:16px">
-        <div style="display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:8px;margin-bottom:0">
-          <div class="comp-section-title" style="margin-bottom:0;border:none;padding:0">Foto Gara</div>
+        <div style="display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:8px;margin-bottom:${heroMedia ? '12px' : '0'}">
+          <div class="comp-section-title" style="margin-bottom:0;border:none;padding:0">Foto & Video</div>
           ${uploadBtn}
         </div>
+        ${heroMedia}
         ${gallery}
       </div>`;
-  } catch(e) { /* silent */ }
 
-  // Video YouTube associati alla gara
-  const _calId = (globalData.garaToCalId || {})[gara_id] || gara_id;
-  const garaVideos = (globalData.videos || {})[_calId] || (globalData.videos || {})[gara_id] || [];
-  const videosHtml = garaVideos.length ? `
-    <div class="comp-section" style="margin-top:20px">
-      <div class="comp-section-title">Video</div>
-      <div class="gara-videos-grid">
-        ${garaVideos.map(v => {
-          const vidId = (v.url.match(/[?&]v=([^&]+)/) || [])[1] || '';
-          const thumb = vidId ? `https://img.youtube.com/vi/${vidId}/mqdefault.jpg` : '';
-          return `
-            <a href="${esc(v.url)}" target="_blank" rel="noopener" class="gara-video-card">
-              ${thumb ? `<div class="gara-video-thumb">
-                <img src="${thumb}" alt="${esc(v.title)}" loading="lazy"/>
-                <div class="gara-video-play">▶</div>
-              </div>` : ''}
-              <div class="gara-video-info">
-                <div class="gara-video-title">${esc(v.title)}</div>
-                <div class="gara-video-meta">${esc(v.channel)}</div>
-              </div>
-            </a>`;
-        }).join('')}
-      </div>
-    </div>` : '';
+    if (extraVideos.length) {
+      extraVideosHtml = `
+        <div class="comp-section" style="margin-top:12px">
+          <div class="comp-section-title">Altri Video</div>
+          <div class="gara-videos-grid">
+            ${extraVideos.map(v => {
+              const vidId = (v.url.match(/[?&]v=([^&]+)/) || [])[1] || '';
+              const thumb = vidId ? `https://img.youtube.com/vi/${vidId}/mqdefault.jpg` : '';
+              return `
+                <div class="gara-video-card" style="cursor:pointer" onclick="window.openVideoModal('${vidId}','${esc((v.title||'').replace(/'/g, "\\'"))}')">
+                  ${thumb ? `<div class="gara-video-thumb">
+                    <img src="${thumb}" alt="${esc(v.title)}" loading="lazy"/>
+                    <div class="gara-video-play">&#9658;</div>
+                  </div>` : ''}
+                  <div class="gara-video-info">
+                    <div class="gara-video-title">${esc(v.title)}</div>
+                    <div class="gara-video-meta">${esc(v.channel)}</div>
+                  </div>
+                </div>`;
+            }).join('')}
+          </div>
+        </div>`;
+    }
+  } catch(e) { /* silent */ }
 
   window._shareGaraData = {name:name,date:fmtDate(data),cat:catLabel(cat),mult:mult,tipo:tipo,results:results.slice(0,10).map(r=>({cognome:r.cognome,nome:r.nome,team:r.team,punti_effettivi:r.punti_effettivi}))};
   window._currentGaraId = gara_id;
@@ -2455,8 +2484,8 @@ async function renderGara(gara_id) {
         <button class="btn-share" onclick="window.triggerShareGara()"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="18" cy="5" r="3"/><circle cx="6" cy="12" r="3"/><circle cx="18" cy="19" r="3"/><line x1="8.59" y1="13.51" x2="15.42" y2="17.49"/><line x1="15.41" y1="6.51" x2="8.59" y2="10.49"/></svg> Condividi Risultati</button>
         ${adminEditBtn('gara', gara_id)}
       </div>
-    ${videosHtml}
     ${racePhotosHtml}
+    ${extraVideosHtml}
     <div class="results-table-wrap">
       <table class="results-table">
         <thead><tr>
