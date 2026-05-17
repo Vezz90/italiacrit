@@ -926,7 +926,6 @@ table, .rank-num, .rank-pts, .cat-pts,
   box-shadow: none;
   transition: border-color 0.15s, box-shadow 0.15s;
   animation: none;
-  grid-template-columns: 64px 1fr auto;
 }
 
 .cal-item:hover {

@@ -2272,7 +2272,17 @@ let calQRegione = '';
 
 async function renderCalendario() {
   if (!globalData) return;
-  const { calendar } = globalData;
+  const { calendar, resultsRaw } = globalData;
+
+  // Mappa gara_id → risultati raggruppati per categoria (solo gare con dati)
+  const garaResultsMap = {};
+  for (const r of resultsRaw) {
+    if (!r.gara_id) continue;
+    if (!garaResultsMap[r.gara_id]) garaResultsMap[r.gara_id] = {};
+    const cat = r.categoria || 'N/D';
+    if (!garaResultsMap[r.gara_id][cat]) garaResultsMap[r.gara_id][cat] = [];
+    garaResultsMap[r.gara_id][cat].push(r);
+  }
 
   const allCats = [...new Set(calendar.map(g => g.categoria).filter(Boolean))].sort();
   const allRegions = [...new Set(calendar.map(g => g.regione).filter(Boolean))].sort();
@@ -2305,24 +2315,63 @@ async function renderCalendario() {
       const day = g.data ? g.data.split('-')[2] : '—';
       const mon = g.data ? (['GEN','FEB','MAR','APR','MAG','GIU','LUG','AGO','SET','OTT','NOV','DIC'][parseInt(g.data.split('-')[1])-1]||'') : '';
       const isPast = (g.data || '') < today;
-      return `<div class="cal-item ${isPast?'cal-item-past':''}">
-        <div class="cal-date-block" style="${isPast?'opacity:0.6':''}">
-          <div class="cal-day">${day}</div>
-          <div class="cal-month">${mon}</div>
-        </div>
-        <div style="flex:1">
-          <div class="cal-name"><a href="#/gara/${esc(g.id)}">${esc(g.nome)}</a></div>
-          <div class="cal-cat">
-            ${esc(catLabel(g.categoria)||'')} — <span style="text-transform:capitalize;color:var(--text-muted)">${esc(g.tipo)}</span>
-            ${g.luogo || g.regione ? `<div style="font-size:0.8rem;color:var(--text-muted);margin-top:2px;">📍 ${esc(g.luogo || '')} ${g.regione ? '('+esc(g.regione)+')' : ''}</div>` : ''}
+      const byCategory = isPast ? (garaResultsMap[g.id] || null) : null;
+      const hasResults = byCategory && Object.keys(byCategory).length > 0;
+
+      let podioHtml = '';
+      if (hasResults) {
+        const catEntries = Object.entries(byCategory);
+        podioHtml = catEntries.map(([catName, results]) => {
+          const top3 = results.sort((a,b) => a.posizione - b.posizione).slice(0,3);
+          const cLabel = catLabel(catName) || catName;
+          const firstRes = results[0];
+          const kmVal = firstRes?.km || '';
+          const mediaVal = firstRes?.media || '';
+          const techBit = (kmVal || mediaVal)
+            ? `<span style="font-size:0.72rem;color:var(--text-muted);font-family:var(--font-mono)">${kmVal ? '📍 '+esc(kmVal)+' km' : ''}${kmVal&&mediaVal?' | ':''}${mediaVal ? '⚡ '+esc(mediaVal)+' km/h' : ''}</span>`
+            : '';
+          const rows = top3.map((r,i) => {
+            const pClass = ['p1','p2','p3'][i] || '';
+            return `<div style="display:grid;grid-template-columns:28px 1fr;align-items:center;gap:6px;padding:3px 0;">
+              <div class="hero-pos ${pClass}" style="font-size:0.82rem;width:24px;height:24px;border-radius:50%;display:flex;align-items:center;justify-content:center;">${r.posizione}°</div>
+              <div>
+                <a href="#/atleta/${esc(r.atleta_id)}" style="font-weight:700;font-size:0.88rem;color:var(--text-primary)">${esc(r.cognome)} ${esc(r.nome)}</a>
+                <span style="font-size:0.75rem;color:var(--text-muted);margin-left:6px">${esc(r.team)}</span>
+              </div>
+            </div>`;
+          }).join('');
+          return `<div style="margin-top:10px;padding-top:10px;border-top:1px solid var(--border-subtle);">
+            ${catEntries.length > 1 ? `<div style="font-size:0.65rem;font-family:var(--font-mono);color:var(--accent);text-transform:uppercase;letter-spacing:1px;margin-bottom:4px">${cLabel}</div>` : ''}
+            ${techBit}
+            ${rows}
+          </div>`;
+        }).join('');
+        podioHtml += `<div style="margin-top:10px;">
+          <a href="#/gara/${esc(g.id)}" class="btn-action full" style="font-size:0.72rem;text-align:center;display:block;padding:7px 12px;">VAI AI RISULTATI COMPLETI &rarr;</a>
+        </div>`;
+      }
+
+      return `<div class="cal-item ${isPast?'cal-item-past':''} ${hasResults?'cal-item-has-results':''}">
+        <div class="cal-item-header">
+          <div class="cal-date-block" style="${isPast?'opacity:0.6':''}">
+            <div class="cal-day">${day}</div>
+            <div class="cal-month">${mon}</div>
+          </div>
+          <div style="flex:1;min-width:0">
+            <div class="cal-name"><a href="#/gara/${esc(g.id)}">${esc(g.nome)}</a></div>
+            <div class="cal-cat">
+              ${esc(catLabel(g.categoria)||'')} — <span style="text-transform:capitalize;color:var(--text-muted)">${esc(g.tipo)}</span>
+              ${g.luogo || g.regione ? `<div style="font-size:0.8rem;color:var(--text-muted);margin-top:2px;">📍 ${esc(g.luogo || '')} ${g.regione ? '('+esc(g.regione)+')' : ''}</div>` : ''}
+            </div>
+          </div>
+          <div class="cal-badges" style="${isPast?'opacity:0.5':''}">
+            ${badgeMult(mult, g.tipo, g.campionato_regionale, g.campionato_italiano)}
+            ${g.genere==='F'?'<span class="badge-cat badge-genere-f">♀</span>':''}
+            ${g.campionato_italiano?'<span class="badge-cat badge-mult-x3">CI</span>':''}
+            ${g.campionato_regionale?'<span class="badge-cat badge-mult-x2">CR</span>':''}
           </div>
         </div>
-        <div class="cal-badges" style="${isPast?'opacity:0.5':''}">
-          ${badgeMult(mult, g.tipo, g.campionato_regionale, g.campionato_italiano)}
-          ${g.genere==='F'?'<span class="badge-cat badge-genere-f">♀</span>':''}
-          ${g.campionato_italiano?'<span class="badge-cat badge-mult-x3">CI</span>':''}
-          ${g.campionato_regionale?'<span class="badge-cat badge-mult-x2">CR</span>':''}
-        </div>
+        ${podioHtml}
       </div>`;
     };
 

@@ -970,12 +970,16 @@ body:not(.light-mode) .theme-icon-moon { display: none; }
   border: 1px solid var(--border-subtle);
   border-radius: 6px;
   padding: 14px 18px;
-  display: grid;
-  grid-template-columns: 80px 1fr auto;
-  gap: 16px;
-  align-items: center;
+  display: flex;
+  flex-direction: column;
+  gap: 0;
   transition: border-color 0.15s, background 0.15s;
   animation: slide-up 0.2s ease both;
+}
+.cal-item-header {
+  display: flex;
+  align-items: center;
+  gap: 16px;
 }
 .cal-item:hover { border-color: var(--border-active); background: var(--bg-elevated); }
 .cal-date-block { text-align: center; }
@@ -1226,7 +1230,6 @@ footer .footer-sep { color: var(--red-hot); margin: 0 8px; }
   .results-table td.hide-mobile { display: none; }
   .tab-group { gap: 4px; }
   .tab-btn { padding: 5px 12px; font-size: 0.78rem; }
-  .cal-item { grid-template-columns: 60px 1fr; }
   .cal-badges { display: none; }
   .hero-band { padding: 24px 16px 20px; }
   .hero-pos { font-size: 2.2rem; }
