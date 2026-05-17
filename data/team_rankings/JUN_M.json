@@ -2,14 +2,26 @@
   {
     "team_id": "TEAM_VANGI_TOMMASINI_IL_PIRATA",
     "team_nome": "TEAM VANGI TOMMASINI IL PIRATA",
-    "punti": 632,
+    "punti": 636,
     "vittorie": 10,
     "p1": 10,
     "p2": 6,
     "p3": 9,
-    "pout": 25,
+    "pout": 26,
     "n_atleti": 11,
     "pos": 1
+  },
+  {
+    "team_id": "BORGO_MOLINO_VIGNA_FIORITA",
+    "team_nome": "BORGO MOLINO-VIGNA FIORITA",
+    "punti": 448,
+    "vittorie": 8,
+    "p1": 8,
+    "p2": 3,
+    "p3": 4,
+    "pout": 9,
+    "n_atleti": 3,
+    "pos": 2
   },
   {
     "team_id": "POOL_CANTU_GB_TEAM_A_S_D",
@@ -21,18 +33,6 @@
     "p3": 3,
     "pout": 26,
     "n_atleti": 11,
-    "pos": 2
-  },
-  {
-    "team_id": "BORGO_MOLINO_VIGNA_FIORITA",
-    "team_nome": "BORGO MOLINO-VIGNA FIORITA",
-    "punti": 437,
-    "vittorie": 8,
-    "p1": 8,
-    "p2": 3,
-    "p3": 4,
-    "pout": 7,
-    "n_atleti": 3,
     "pos": 3
   },
   {
@@ -60,6 +60,18 @@
     "pos": 5
   },
   {
+    "team_id": "ACCADEMIA_CICLISTICA",
+    "team_nome": "ACCADEMIA CICLISTICA",
+    "punti": 275,
+    "vittorie": 5,
+    "p1": 5,
+    "p2": 2,
+    "p3": 2,
+    "pout": 9,
+    "n_atleti": 4,
+    "pos": 6
+  },
+  {
     "team_id": "CICLISTICA_TREVIGLIESE",
     "team_nome": "CICLISTICA TREVIGLIESE",
     "punti": 268,
@@ -69,30 +81,18 @@
     "p3": 3,
     "pout": 18,
     "n_atleti": 9,
-    "pos": 6
+    "pos": 7
   },
   {
     "team_id": "IND_FORNITURE_MORO_C_G_CAPITAL",
     "team_nome": "IND. FORNITURE MORO-C&G CAPITAL",
-    "punti": 257,
+    "punti": 267,
     "vittorie": 5,
     "p1": 5,
     "p2": 2,
-    "p3": 3,
+    "p3": 4,
     "pout": 20,
     "n_atleti": 9,
-    "pos": 7
-  },
-  {
-    "team_id": "ACCADEMIA_CICLISTICA",
-    "team_nome": "ACCADEMIA CICLISTICA",
-    "punti": 252,
-    "vittorie": 4,
-    "p1": 4,
-    "p2": 2,
-    "p3": 2,
-    "pout": 8,
-    "n_atleti": 3,
     "pos": 8
   },
   {
@@ -108,6 +108,18 @@
     "pos": 9
   },
   {
+    "team_id": "AUTOZAI_CONTRI",
+    "team_nome": "AUTOZAI-CONTRI",
+    "punti": 225,
+    "vittorie": 1,
+    "p1": 1,
+    "p2": 2,
+    "p3": 0,
+    "pout": 17,
+    "n_atleti": 5,
+    "pos": 10
+  },
+  {
     "team_id": "TEAM_ECOTEK_ZERO24",
     "team_nome": "TEAM ECOTEK ZERO24",
     "punti": 224,
@@ -117,7 +129,7 @@
     "p3": 1,
     "pout": 12,
     "n_atleti": 6,
-    "pos": 10
+    "pos": 11
   },
   {
     "team_id": "POLISPORTIVA_MONSUMMANESE",
@@ -129,18 +141,6 @@
     "p3": 5,
     "pout": 16,
     "n_atleti": 10,
-    "pos": 11
-  },
-  {
-    "team_id": "AUTOZAI_CONTRI",
-    "team_nome": "AUTOZAI-CONTRI",
-    "punti": 213,
-    "vittorie": 1,
-    "p1": 1,
-    "p2": 1,
-    "p3": 0,
-    "pout": 17,
-    "n_atleti": 5,
     "pos": 12
   },
   {
@@ -302,12 +302,12 @@
   {
     "team_id": "FAIZANE_CSZ_SANDRIGO_BIKE",
     "team_nome": "FAIZANE' CSZ SANDRIGO BIKE",
-    "punti": 66,
+    "punti": 68,
     "vittorie": 0,
     "p1": 0,
     "p2": 1,
     "p3": 0,
-    "pout": 11,
+    "pout": 12,
     "n_atleti": 6,
     "pos": 26
   },
@@ -516,6 +516,18 @@
     "pos": 43
   },
   {
+    "team_id": "LIBERTAS_CERESETTO",
+    "team_nome": "LIBERTAS CERESETTO",
+    "punti": 41,
+    "vittorie": 0,
+    "p1": 0,
+    "p2": 0,
+    "p3": 1,
+    "pout": 3,
+    "n_atleti": 4,
+    "pos": 44
+  },
+  {
     "team_id": "CANNEDU_ITTIRI_A_MANCA_ASD",
     "team_nome": "CANNEDU ITTIRI \"A. MANCA\" ASD",
     "punti": 39,
@@ -525,7 +537,7 @@
     "p3": 0,
     "pout": 5,
     "n_atleti": 2,
-    "pos": 44
+    "pos": 45
   },
   {
     "team_id": "SS_AQUILA",
@@ -537,7 +549,7 @@
     "p3": 1,
     "pout": 5,
     "n_atleti": 2,
-    "pos": 45
+    "pos": 46
   },
   {
     "team_id": "RKC_ROMAN_KREUZIGER",
@@ -549,29 +561,17 @@
     "p3": 0,
     "pout": 1,
     "n_atleti": 1,
-    "pos": 46
-  },
-  {
-    "team_id": "LIBERTAS_CERESETTO",
-    "team_nome": "LIBERTAS CERESETTO",
-    "punti": 38,
-    "vittorie": 0,
-    "p1": 0,
-    "p2": 0,
-    "p3": 1,
-    "pout": 2,
-    "n_atleti": 3,
     "pos": 47
   },
   {
     "team_id": "GOTTARDO_GIOCHI_CANEVA",
     "team_nome": "GOTTARDO GIOCHI CANEVA",
-    "punti": 37,
+    "punti": 38,
     "vittorie": 0,
     "p1": 0,
     "p2": 0,
     "p3": 0,
-    "pout": 4,
+    "pout": 5,
     "n_atleti": 2,
     "pos": 48
   },
