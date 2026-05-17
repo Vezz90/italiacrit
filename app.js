@@ -380,12 +380,16 @@ function catLabel(code) {
 
 function getRankingFileCode(obj) {
   if (!obj) return null;
-  // If it's just a string like 'AL1_M' or 'JUN_M'
+  // Se è una stringa
   if (typeof obj === 'string') {
     if (obj.startsWith('AL')) return 'AL_' + (obj.endsWith('_F') ? 'F' : 'M');
     return obj;
   }
-  // If it's an object with gara_id
+  // Correzione genere: se l'atleta è nei fix, la categoria è sempre quella corretta
+  if (obj.atleta_id && ATHLETE_GENDER_FIXES[obj.atleta_id]) {
+    return ATHLETE_GENDER_FIXES[obj.atleta_id].categoria;
+  }
+  // Estrae dal gara_id
   if (obj.gara_id) {
     const m = obj.gara_id.match(/_([A-Z0-9]+_[MF])$/);
     if (m) {
@@ -394,9 +398,8 @@ function getRankingFileCode(obj) {
       return code;
     }
   }
-  // If it already has the backend code
+  // Se già ha il codice diretto
   if (obj.categoria && /^[A-Z0-9]+_[MF]$/.test(obj.categoria)) return obj.categoria;
-  
   return null;
 }
 
