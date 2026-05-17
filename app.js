@@ -2274,14 +2274,21 @@ async function renderCalendario() {
   if (!globalData) return;
   const { calendar, resultsRaw } = globalData;
 
-  // Mappa gara_id → risultati raggruppati per categoria (solo gare con dati)
-  const garaResultsMap = {};
-  for (const r of resultsRaw) {
-    if (!r.gara_id) continue;
-    if (!garaResultsMap[r.gara_id]) garaResultsMap[r.gara_id] = {};
-    const cat = r.categoria || 'N/D';
-    if (!garaResultsMap[r.gara_id][cat]) garaResultsMap[r.gara_id][cat] = [];
-    garaResultsMap[r.gara_id][cat].push(r);
+  // Mappa calendar.id → { byCategory, firstGaraId }
+  // Match per data + prefisso id (il gara_id dei risultati ha suffissi extra rispetto al cal.id)
+  const calendarResultsMap = {};
+  for (const g of calendar) {
+    if (!g.id || !g.data) continue;
+    const calBase = g.id.replace(/_\d{4}-\d{2}-\d{2}$/, '');
+    const matches = resultsRaw.filter(r => r.data === g.data && r.gara_id && r.gara_id.startsWith(calBase));
+    if (!matches.length) continue;
+    const byCategory = {};
+    for (const r of matches) {
+      const cat = r.categoria || 'N/D';
+      if (!byCategory[cat]) byCategory[cat] = { gara_id: r.gara_id, results: [] };
+      byCategory[cat].results.push(r);
+    }
+    calendarResultsMap[g.id] = { byCategory, firstGaraId: matches[0].gara_id };
   }
 
   const allCats = [...new Set(calendar.map(g => g.categoria).filter(Boolean))].sort();
@@ -2308,7 +2315,7 @@ async function renderCalendario() {
       });
 
     // Gare di oggi con risultati già disponibili → trattate come concluse
-    const hasRes = (g) => !!(garaResultsMap[g.id] && Object.keys(garaResultsMap[g.id]).length);
+    const hasRes = (g) => !!(calendarResultsMap[g.id]);
     const future = filtered.filter(g => (g.data || '') > today || ((g.data||'') === today && !hasRes(g))).sort((a,b) => (a.data||'').localeCompare(b.data||''));
     const past   = filtered.filter(g => (g.data || '') < today || ((g.data||'') === today && hasRes(g))).sort((a,b) => (b.data||'').localeCompare(a.data||''));
 
@@ -2317,8 +2324,11 @@ async function renderCalendario() {
       const day = g.data ? g.data.split('-')[2] : '—';
       const mon = g.data ? (['GEN','FEB','MAR','APR','MAG','GIU','LUG','AGO','SET','OTT','NOV','DIC'][parseInt(g.data.split('-')[1])-1]||'') : '';
       const isPast = (g.data || '') < today;
-      const byCategory = garaResultsMap[g.id] || null;
-      const hasResults = byCategory && Object.keys(byCategory).length > 0;
+      const calMatch   = calendarResultsMap[g.id] || null;
+      const byCategory = calMatch ? calMatch.byCategory : null;
+      const hasResults = !!(byCategory && Object.keys(byCategory).length);
+      // Link alla gara: usa il gara_id reale dai risultati se disponibile
+      const garaLink   = calMatch ? calMatch.firstGaraId : g.id;
 
       let podioHtml = '';
       if (hasResults) {
@@ -2349,7 +2359,7 @@ async function renderCalendario() {
           </div>`;
         }).join('');
         podioHtml += `<div style="margin-top:10px;">
-          <a href="#/gara/${esc(g.id)}" class="btn-action full" style="font-size:0.72rem;text-align:center;display:block;padding:7px 12px;">VAI AI RISULTATI COMPLETI &rarr;</a>
+          <a href="#/gara/${esc(garaLink)}" class="btn-action full" style="font-size:0.72rem;text-align:center;display:block;padding:7px 12px;">VAI AI RISULTATI COMPLETI &rarr;</a>
         </div>`;
       }
 
@@ -2360,7 +2370,7 @@ async function renderCalendario() {
             <div class="cal-month">${mon}</div>
           </div>
           <div style="flex:1;min-width:0">
-            <div class="cal-name"><a href="#/gara/${esc(g.id)}">${esc(g.nome)}</a></div>
+            <div class="cal-name"><a href="#/gara/${esc(garaLink)}">${esc(g.nome)}</a></div>
             <div class="cal-cat">
               ${esc(catLabel(g.categoria)||'')} — <span style="text-transform:capitalize;color:var(--text-muted)">${esc(g.tipo)}</span>
               ${g.luogo || g.regione ? `<div style="font-size:0.8rem;color:var(--text-muted);margin-top:2px;">📍 ${esc(g.luogo || '')} ${g.regione ? '('+esc(g.regione)+')' : ''}</div>` : ''}
