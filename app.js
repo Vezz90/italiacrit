@@ -2479,7 +2479,8 @@ async function renderGara(gara_id) {
     const adminBtnStyle = 'padding:3px 7px;font-size:0.68rem;color:#fff;border:none;border-radius:4px;cursor:pointer;white-space:nowrap;box-shadow:0 1px 4px rgba(0,0,0,.5)';
     const heroPhotoEl = featuredPhoto
       ? `<div class="gara-media-half gara-media-photo" onclick="window.openPhotoLightbox('${PHOTOS_BASE}/photos/${esc(featuredPhoto.filename)}')" style="cursor:zoom-in">
-           <img src="${PHOTOS_BASE}/photos/${esc(featuredPhoto.filename)}" alt="${esc(featuredPhoto.caption||'Foto gara')}" loading="lazy"/>
+           <img id="gara-hero-img" src="${PHOTOS_BASE}/photos/${esc(featuredPhoto.filename)}" alt="${esc(featuredPhoto.caption||'Foto gara')}" loading="lazy"/>
+           <div class="gara-photo-hint">🔍 Clicca per la foto intera</div>
            ${isAdmin ? `<div style="position:absolute;top:4px;right:4px;display:flex;flex-direction:column;gap:3px;z-index:10">
              <button onclick="event.stopPropagation();window.adminEditPhoto(${featuredPhoto.id})" style="${adminBtnStyle};background:#2563eb">✏️ Modifica</button>
              <button onclick="event.stopPropagation();window.adminDeletePhoto(${featuredPhoto.id})" style="${adminBtnStyle};background:#dc2626">🗑 Elimina</button>
@@ -2597,6 +2598,27 @@ async function renderGara(gara_id) {
     </div>
     ${detailsHtml}
   `);
+
+  // Face detection per centrare il volto nell'hero photo
+  (async () => {
+    const img = document.getElementById('gara-hero-img');
+    if (!img) return;
+    const detect = async () => {
+      if (!img.complete || img.naturalWidth === 0) return;
+      if ('FaceDetector' in window) {
+        try {
+          const faces = await new FaceDetector({ fastMode: true }).detect(img);
+          if (faces.length > 0) {
+            const f = faces[0].boundingBox;
+            const x = ((f.x + f.width / 2) / img.naturalWidth * 100).toFixed(1);
+            const y = ((f.y + f.height / 2) / img.naturalHeight * 100).toFixed(1);
+            img.style.objectPosition = `${x}% ${y}%`;
+          }
+        } catch { /* non supportato, rimane top center */ }
+      }
+    };
+    if (img.complete) detect(); else img.addEventListener('load', detect, { once: true });
+  })();
 
   // Upload foto gara
   window.openRacePhotoUpload = (garaId) => {

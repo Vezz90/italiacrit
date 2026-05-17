@@ -2590,7 +2590,9 @@ div[style*="grid-template-columns: repeat(auto-fit"] {
 .gara-hero-media { width:100%; overflow:hidden; border-radius:var(--r-lg); height:240px; margin-bottom:4px; }
 .gara-hero-split { display:flex; gap:2px; }
 .gara-media-half { flex:1; overflow:hidden; position:relative; height:100%; }
-.gara-media-photo img { width:100%; height:100%; object-fit:cover; display:block; }
+.gara-media-photo img { width:100%; height:100%; object-fit:cover; object-position:top center; display:block; transition:transform .3s; }
+.gara-media-photo:hover img { transform:scale(1.03); }
+.gara-photo-hint { position:absolute; bottom:0; left:0; right:0; padding:5px 8px; background:linear-gradient(transparent,rgba(0,0,0,.65)); font-size:0.65rem; color:rgba(255,255,255,.9); text-align:center; pointer-events:none; }
 .gara-media-video { cursor:pointer; background:var(--bg-elevated); }
 .gara-media-video img { width:100%; height:100%; object-fit:cover; display:block; }
 .gara-media-play { position:absolute; inset:0; display:flex; align-items:center; justify-content:center; background:rgba(0,0,0,.35); transition:background .15s; }
