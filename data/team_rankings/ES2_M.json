@@ -48,6 +48,18 @@
     "pos": 4
   },
   {
+    "team_id": "S_C_COTIGNOLESE",
+    "team_nome": "S.C.COTIGNOLESE",
+    "punti": 182,
+    "vittorie": 5,
+    "p1": 5,
+    "p2": 4,
+    "p3": 1,
+    "pout": 8,
+    "n_atleti": 2,
+    "pos": 5
+  },
+  {
     "team_id": "IL_PIRATA_SAMA_RICAMBI_OTC",
     "team_nome": "IL PIRATA SAMA RICAMBI OTC",
     "punti": 180,
@@ -57,18 +69,6 @@
     "p3": 3,
     "pout": 12,
     "n_atleti": 3,
-    "pos": 5
-  },
-  {
-    "team_id": "S_C_COTIGNOLESE",
-    "team_nome": "S.C.COTIGNOLESE",
-    "punti": 167,
-    "vittorie": 4,
-    "p1": 4,
-    "p2": 4,
-    "p3": 1,
-    "pout": 8,
-    "n_atleti": 2,
     "pos": 6
   },
   {
@@ -120,6 +120,18 @@
     "pos": 10
   },
   {
+    "team_id": "A_S_D_CICLISTICA_2000",
+    "team_nome": "A.S.D. CICLISTICA 2000",
+    "punti": 138,
+    "vittorie": 3,
+    "p1": 3,
+    "p2": 5,
+    "p3": 0,
+    "pout": 6,
+    "n_atleti": 2,
+    "pos": 11
+  },
+  {
     "team_id": "C_C_FORTI_E_VELOCI",
     "team_nome": "C.C. FORTI E VELOCI",
     "punti": 138,
@@ -129,7 +141,7 @@
     "p3": 3,
     "pout": 10,
     "n_atleti": 6,
-    "pos": 11
+    "pos": 12
   },
   {
     "team_id": "IND_FORNITURE_MORO_C_G_CAPITAL",
@@ -141,7 +153,7 @@
     "p3": 1,
     "pout": 7,
     "n_atleti": 4,
-    "pos": 12
+    "pos": 13
   },
   {
     "team_id": "U_S_SCUOLA_CICLISMO_VO",
@@ -153,7 +165,7 @@
     "p3": 2,
     "pout": 9,
     "n_atleti": 3,
-    "pos": 13
+    "pos": 14
   },
   {
     "team_id": "VIGOR_CYCLING_TEAM",
@@ -163,18 +175,6 @@
     "p1": 1,
     "p2": 3,
     "p3": 5,
-    "pout": 5,
-    "n_atleti": 2,
-    "pos": 14
-  },
-  {
-    "team_id": "A_S_D_CICLISTICA_2000",
-    "team_nome": "A.S.D. CICLISTICA 2000",
-    "punti": 118,
-    "vittorie": 3,
-    "p1": 3,
-    "p2": 4,
-    "p3": 0,
     "pout": 5,
     "n_atleti": 2,
     "pos": 15
@@ -192,6 +192,18 @@
     "pos": 16
   },
   {
+    "team_id": "VC_CREMONESE",
+    "team_nome": "VC CREMONESE",
+    "punti": 110,
+    "vittorie": 2,
+    "p1": 2,
+    "p2": 4,
+    "p3": 2,
+    "pout": 3,
+    "n_atleti": 2,
+    "pos": 17
+  },
+  {
     "team_id": "G_S_PREALPINO_A_S_D",
     "team_nome": "G.S. PREALPINO A.S.D.",
     "punti": 104,
@@ -201,7 +213,7 @@
     "p3": 0,
     "pout": 11,
     "n_atleti": 3,
-    "pos": 17
+    "pos": 18
   },
   {
     "team_id": "S_C_MINCIO_CHIESE_A_S_D",
@@ -213,18 +225,6 @@
     "p3": 2,
     "pout": 10,
     "n_atleti": 4,
-    "pos": 18
-  },
-  {
-    "team_id": "VC_CREMONESE",
-    "team_nome": "VC CREMONESE",
-    "punti": 97,
-    "vittorie": 2,
-    "p1": 2,
-    "p2": 4,
-    "p3": 1,
-    "pout": 2,
-    "n_atleti": 2,
     "pos": 19
   },
   {
@@ -372,6 +372,18 @@
     "pos": 31
   },
   {
+    "team_id": "MST_CYCLING_SANDRIGO_BIKE",
+    "team_nome": "MST CYCLING - SANDRIGO BIKE",
+    "punti": 66,
+    "vittorie": 2,
+    "p1": 2,
+    "p2": 0,
+    "p3": 2,
+    "pout": 3,
+    "n_atleti": 2,
+    "pos": 32
+  },
+  {
     "team_id": "NONSOLOBIKE",
     "team_nome": "NONSOLOBIKE",
     "punti": 65,
@@ -381,7 +393,7 @@
     "p3": 0,
     "pout": 1,
     "n_atleti": 1,
-    "pos": 32
+    "pos": 33
   },
   {
     "team_id": "G_S_ALZATE_BRIANZA_SYSTEM_CAR",
@@ -393,18 +405,6 @@
     "p3": 1,
     "pout": 12,
     "n_atleti": 3,
-    "pos": 33
-  },
-  {
-    "team_id": "MST_CYCLING_SANDRIGO_BIKE",
-    "team_nome": "MST CYCLING - SANDRIGO BIKE",
-    "punti": 60,
-    "vittorie": 2,
-    "p1": 2,
-    "p2": 0,
-    "p3": 2,
-    "pout": 2,
-    "n_atleti": 2,
     "pos": 34
   },
   {
@@ -1104,6 +1104,18 @@
     "pos": 92
   },
   {
+    "team_id": "S_C_TORRILE_PR",
+    "team_nome": "S.C. TORRILE PR",
+    "punti": 11,
+    "vittorie": 0,
+    "p1": 0,
+    "p2": 0,
+    "p3": 0,
+    "pout": 3,
+    "n_atleti": 1,
+    "pos": 93
+  },
+  {
     "team_id": "GS_FIUMICELLO_1971",
     "team_nome": "GS FIUMICELLO 1971",
     "punti": 11,
@@ -1113,7 +1125,7 @@
     "p3": 0,
     "pout": 3,
     "n_atleti": 2,
-    "pos": 93
+    "pos": 94
   },
   {
     "team_id": "VELO_JUNIOR_NOVE",
@@ -1125,7 +1137,7 @@
     "p3": 0,
     "pout": 3,
     "n_atleti": 1,
-    "pos": 94
+    "pos": 95
   },
   {
     "team_id": "G_S_MOSOLE",
@@ -1137,7 +1149,19 @@
     "p3": 0,
     "pout": 3,
     "n_atleti": 1,
-    "pos": 95
+    "pos": 96
+  },
+  {
+    "team_id": "MADIGNANESE_CICLISMO_A_S_D",
+    "team_nome": "MADIGNANESE CICLISMO A.S.D",
+    "punti": 10,
+    "vittorie": 0,
+    "p1": 0,
+    "p2": 0,
+    "p3": 0,
+    "pout": 4,
+    "n_atleti": 3,
+    "pos": 97
   },
   {
     "team_id": "U_S_PEDALE_ARCORESE_ASD",
@@ -1149,7 +1173,7 @@
     "p3": 0,
     "pout": 6,
     "n_atleti": 2,
-    "pos": 96
+    "pos": 98
   },
   {
     "team_id": "ASS_CICLISTICA_RECANATI",
@@ -1161,7 +1185,7 @@
     "p3": 0,
     "pout": 1,
     "n_atleti": 1,
-    "pos": 97
+    "pos": 99
   },
   {
     "team_id": "MEBLO_JOGI_PRO_CONCRETE",
@@ -1173,7 +1197,7 @@
     "p3": 1,
     "pout": 0,
     "n_atleti": 1,
-    "pos": 98
+    "pos": 100
   },
   {
     "team_id": "AC_F_BESSI_CALENZANO_DONORATICO",
@@ -1185,7 +1209,7 @@
     "p3": 0,
     "pout": 3,
     "n_atleti": 2,
-    "pos": 99
+    "pos": 101
   },
   {
     "team_id": "ASD_LE_FRECCE_DELL_ETNA",
@@ -1197,7 +1221,7 @@
     "p3": 0,
     "pout": 3,
     "n_atleti": 2,
-    "pos": 100
+    "pos": 102
   },
   {
     "team_id": "S_C_FONTANAFREDDA",
@@ -1209,7 +1233,7 @@
     "p3": 0,
     "pout": 3,
     "n_atleti": 2,
-    "pos": 101
+    "pos": 103
   },
   {
     "team_id": "G_S_TAVO_BONIN_BIKE",
@@ -1221,7 +1245,7 @@
     "p3": 0,
     "pout": 2,
     "n_atleti": 2,
-    "pos": 102
+    "pos": 104
   },
   {
     "team_id": "A_S_D_AF_ARREDAMENTI_TEAM_CICLING",
@@ -1233,7 +1257,7 @@
     "p3": 0,
     "pout": 3,
     "n_atleti": 1,
-    "pos": 103
+    "pos": 105
   },
   {
     "team_id": "LIBERTAS_RAIFFEISEN_LAIVES_ASD",
@@ -1245,7 +1269,7 @@
     "p3": 0,
     "pout": 3,
     "n_atleti": 1,
-    "pos": 104
+    "pos": 106
   },
   {
     "team_id": "S_C_D_ALMA_JUVENTUS_FANO",
@@ -1257,7 +1281,7 @@
     "p3": 0,
     "pout": 3,
     "n_atleti": 1,
-    "pos": 105
+    "pos": 107
   },
   {
     "team_id": "ASD_FUSION_BIKE",
@@ -1269,19 +1293,7 @@
     "p3": 0,
     "pout": 2,
     "n_atleti": 1,
-    "pos": 106
-  },
-  {
-    "team_id": "S_C_TORRILE_PR",
-    "team_nome": "S.C. TORRILE PR",
-    "punti": 6,
-    "vittorie": 0,
-    "p1": 0,
-    "p2": 0,
-    "p3": 0,
-    "pout": 2,
-    "n_atleti": 1,
-    "pos": 107
+    "pos": 108
   },
   {
     "team_id": "POGI_TEAM_UAE_GENERALI",
@@ -1293,7 +1305,7 @@
     "p3": 0,
     "pout": 2,
     "n_atleti": 2,
-    "pos": 108
+    "pos": 109
   },
   {
     "team_id": "G_S_LUPI_VALLE_D_AOSTA",
@@ -1305,7 +1317,7 @@
     "p3": 0,
     "pout": 1,
     "n_atleti": 1,
-    "pos": 109
+    "pos": 110
   },
   {
     "team_id": "FOLIGNO_CYCLING_TEAM_ASD",
@@ -1317,7 +1329,7 @@
     "p3": 0,
     "pout": 1,
     "n_atleti": 1,
-    "pos": 110
+    "pos": 111
   },
   {
     "team_id": "GS_OLIMPIA_VALDARNESE",
@@ -1329,7 +1341,7 @@
     "p3": 0,
     "pout": 2,
     "n_atleti": 1,
-    "pos": 111
+    "pos": 112
   },
   {
     "team_id": "UA_CYCLING_TEAM",
@@ -1341,7 +1353,7 @@
     "p3": 0,
     "pout": 1,
     "n_atleti": 1,
-    "pos": 112
+    "pos": 113
   },
   {
     "team_id": "G_S_CERNUSCHESE_TINO_GADDA_A_S_D",
@@ -1353,7 +1365,7 @@
     "p3": 0,
     "pout": 1,
     "n_atleti": 1,
-    "pos": 113
+    "pos": 114
   },
   {
     "team_id": "U_S_FORTI_E_LIBERI_ZANETTI_CICLI",
@@ -1365,7 +1377,7 @@
     "p3": 0,
     "pout": 2,
     "n_atleti": 1,
-    "pos": 114
+    "pos": 115
   },
   {
     "team_id": "KK_PANTAL",
@@ -1377,7 +1389,7 @@
     "p3": 0,
     "pout": 1,
     "n_atleti": 1,
-    "pos": 115
+    "pos": 116
   },
   {
     "team_id": "POL_GHISALBESE_A_S_D",
@@ -1389,24 +1401,12 @@
     "p3": 0,
     "pout": 1,
     "n_atleti": 1,
-    "pos": 116
+    "pos": 117
   },
   {
     "team_id": "OROBICI",
     "team_nome": "OROBICI",
     "punti": 4,
-    "vittorie": 0,
-    "p1": 0,
-    "p2": 0,
-    "p3": 0,
-    "pout": 1,
-    "n_atleti": 1,
-    "pos": 117
-  },
-  {
-    "team_id": "MADIGNANESE_CICLISMO_A_S_D",
-    "team_nome": "MADIGNANESE CICLISMO A.S.D",
-    "punti": 3,
     "vittorie": 0,
     "p1": 0,
     "p2": 0,

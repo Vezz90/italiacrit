@@ -108,6 +108,18 @@
     "pos": 9
   },
   {
+    "team_id": "CPS_PROFESSIONAL_TEAM",
+    "team_nome": "CPS PROFESSIONAL TEAM",
+    "punti": 253,
+    "vittorie": 4,
+    "p1": 4,
+    "p2": 3,
+    "p3": 4,
+    "pout": 19,
+    "n_atleti": 11,
+    "pos": 10
+  },
+  {
     "team_id": "AUTOZAI_CONTRI",
     "team_nome": "AUTOZAI-CONTRI",
     "punti": 249,
@@ -117,7 +129,7 @@
     "p3": 0,
     "pout": 17,
     "n_atleti": 5,
-    "pos": 10
+    "pos": 11
   },
   {
     "team_id": "TEAM_ECOTEK_ZERO24",
@@ -129,7 +141,7 @@
     "p3": 1,
     "pout": 13,
     "n_atleti": 6,
-    "pos": 11
+    "pos": 12
   },
   {
     "team_id": "POLISPORTIVA_MONSUMMANESE",
@@ -141,18 +153,6 @@
     "p3": 5,
     "pout": 16,
     "n_atleti": 10,
-    "pos": 12
-  },
-  {
-    "team_id": "CPS_PROFESSIONAL_TEAM",
-    "team_nome": "CPS PROFESSIONAL TEAM",
-    "punti": 211,
-    "vittorie": 3,
-    "p1": 3,
-    "p2": 2,
-    "p3": 4,
-    "pout": 16,
-    "n_atleti": 9,
     "pos": 13
   },
   {
@@ -432,6 +432,18 @@
     "pos": 36
   },
   {
+    "team_id": "CYCLING_TEAM_NIAL_NIZZOLI_ALMO",
+    "team_nome": "CYCLING TEAM NIAL NIZZOLI ALMO",
+    "punti": 49,
+    "vittorie": 0,
+    "p1": 0,
+    "p2": 0,
+    "p3": 0,
+    "pout": 13,
+    "n_atleti": 7,
+    "pos": 37
+  },
+  {
     "team_id": "A_S_D_POSTUMIA_73_D_L_CICLISMO",
     "team_nome": "A.S.D. POSTUMIA 73 D.L. CICLISMO",
     "punti": 49,
@@ -441,7 +453,7 @@
     "p3": 0,
     "pout": 4,
     "n_atleti": 5,
-    "pos": 37
+    "pos": 38
   },
   {
     "team_id": "DANIMARCA",
@@ -453,7 +465,7 @@
     "p3": 1,
     "pout": 1,
     "n_atleti": 2,
-    "pos": 38
+    "pos": 39
   },
   {
     "team_id": "VINI_FANTINI_TRALFO",
@@ -465,7 +477,7 @@
     "p3": 0,
     "pout": 4,
     "n_atleti": 3,
-    "pos": 39
+    "pos": 40
   },
   {
     "team_id": "S_C_ROMANESE_ASD",
@@ -477,7 +489,7 @@
     "p3": 0,
     "pout": 7,
     "n_atleti": 2,
-    "pos": 40
+    "pos": 41
   },
   {
     "team_id": "POGI_TEAM_UAE_GENERALI",
@@ -489,7 +501,7 @@
     "p3": 0,
     "pout": 4,
     "n_atleti": 3,
-    "pos": 41
+    "pos": 42
   },
   {
     "team_id": "SLOVENIA_NATIONAL_TEAM",
@@ -501,7 +513,7 @@
     "p3": 1,
     "pout": 3,
     "n_atleti": 2,
-    "pos": 42
+    "pos": 43
   },
   {
     "team_id": "SIDERMEC_SLP",
@@ -513,7 +525,7 @@
     "p3": 0,
     "pout": 8,
     "n_atleti": 5,
-    "pos": 43
+    "pos": 44
   },
   {
     "team_id": "LIBERTAS_CERESETTO",
@@ -525,7 +537,19 @@
     "p3": 1,
     "pout": 3,
     "n_atleti": 4,
-    "pos": 44
+    "pos": 45
+  },
+  {
+    "team_id": "TEAM_BELVEDERE",
+    "team_nome": "TEAM BELVEDERE",
+    "punti": 39,
+    "vittorie": 0,
+    "p1": 0,
+    "p2": 0,
+    "p3": 2,
+    "pout": 3,
+    "n_atleti": 2,
+    "pos": 46
   },
   {
     "team_id": "CANNEDU_ITTIRI_A_MANCA_ASD",
@@ -537,7 +561,7 @@
     "p3": 0,
     "pout": 5,
     "n_atleti": 2,
-    "pos": 45
+    "pos": 47
   },
   {
     "team_id": "SS_AQUILA",
@@ -549,7 +573,7 @@
     "p3": 1,
     "pout": 5,
     "n_atleti": 2,
-    "pos": 46
+    "pos": 48
   },
   {
     "team_id": "RKC_ROMAN_KREUZIGER",
@@ -561,7 +585,7 @@
     "p3": 0,
     "pout": 1,
     "n_atleti": 1,
-    "pos": 47
+    "pos": 49
   },
   {
     "team_id": "GOTTARDO_GIOCHI_CANEVA",
@@ -573,19 +597,7 @@
     "p3": 0,
     "pout": 5,
     "n_atleti": 2,
-    "pos": 48
-  },
-  {
-    "team_id": "CYCLING_TEAM_NIAL_NIZZOLI_ALMO",
-    "team_nome": "CYCLING TEAM NIAL NIZZOLI ALMO",
-    "punti": 36,
-    "vittorie": 0,
-    "p1": 0,
-    "p2": 0,
-    "p3": 0,
-    "pout": 10,
-    "n_atleti": 6,
-    "pos": 49
+    "pos": 50
   },
   {
     "team_id": "SVIZZERA",
@@ -597,7 +609,7 @@
     "p3": 0,
     "pout": 0,
     "n_atleti": 1,
-    "pos": 50
+    "pos": 51
   },
   {
     "team_id": "NOVO_MESTO_CYCLING_ACADEMY",
@@ -609,7 +621,7 @@
     "p3": 0,
     "pout": 2,
     "n_atleti": 3,
-    "pos": 51
+    "pos": 52
   },
   {
     "team_id": "ASD_PEDALE_CASALESE_ARMOFER",
@@ -621,7 +633,7 @@
     "p3": 0,
     "pout": 7,
     "n_atleti": 5,
-    "pos": 52
+    "pos": 53
   },
   {
     "team_id": "TRIS_STAMPI_FIOR_DI_GRANO",
@@ -633,7 +645,7 @@
     "p3": 1,
     "pout": 5,
     "n_atleti": 4,
-    "pos": 53
+    "pos": 54
   },
   {
     "team_id": "G_S_MASSI_SUPERMERCATI_PONTIDA",
@@ -645,7 +657,7 @@
     "p3": 1,
     "pout": 2,
     "n_atleti": 3,
-    "pos": 54
+    "pos": 55
   },
   {
     "team_id": "VIGNA_FIORITA_BORGO_MOLINO",
@@ -657,7 +669,7 @@
     "p3": 0,
     "pout": 4,
     "n_atleti": 2,
-    "pos": 55
+    "pos": 56
   },
   {
     "team_id": "BELGIO",
@@ -669,7 +681,7 @@
     "p3": 0,
     "pout": 3,
     "n_atleti": 2,
-    "pos": 56
+    "pos": 57
   },
   {
     "team_id": "REPUBBLICA_CECA",
@@ -681,7 +693,7 @@
     "p3": 0,
     "pout": 2,
     "n_atleti": 2,
-    "pos": 57
+    "pos": 58
   },
   {
     "team_id": "POOL_BIKE_SERRAMANNA",
@@ -693,18 +705,6 @@
     "p3": 1,
     "pout": 3,
     "n_atleti": 1,
-    "pos": 58
-  },
-  {
-    "team_id": "TEAM_BELVEDERE",
-    "team_nome": "TEAM BELVEDERE",
-    "punti": 29,
-    "vittorie": 0,
-    "p1": 0,
-    "p2": 0,
-    "p3": 1,
-    "pout": 3,
-    "n_atleti": 2,
     "pos": 59
   },
   {

@@ -2,22 +2,22 @@
   {
     "team_id": "A_S_D_S_C_PADOVANI",
     "team_nome": "A.S.D. S.C. PADOVANI",
-    "punti": 703,
+    "punti": 706,
     "vittorie": 7,
     "p1": 7,
     "p2": 9,
     "p3": 4,
-    "pout": 19,
+    "pout": 20,
     "n_atleti": 10,
     "pos": 1
   },
   {
     "team_id": "TEAM_TECHNIPES_INEMILIAROMAGNA",
     "team_nome": "TEAM TECHNIPES #INEMILIAROMAGNA",
-    "punti": 480,
+    "punti": 516,
     "vittorie": 4,
     "p1": 4,
-    "p2": 3,
+    "p2": 4,
     "p3": 5,
     "pout": 17,
     "n_atleti": 9,
@@ -26,14 +26,26 @@
   {
     "team_id": "GENERAL_STORE_ESSEGIBI_F_LLI_CURIA",
     "team_nome": "GENERAL STORE -ESSEGIBI-F.LLI CURIA",
-    "punti": 354,
+    "punti": 372,
     "vittorie": 3,
     "p1": 3,
     "p2": 2,
     "p3": 3,
-    "pout": 15,
-    "n_atleti": 9,
+    "pout": 16,
+    "n_atleti": 10,
     "pos": 3
+  },
+  {
+    "team_id": "BELTRAMI_TSA_TRE_COLLI",
+    "team_nome": "BELTRAMI TSA TRE COLLI",
+    "punti": 347,
+    "vittorie": 1,
+    "p1": 1,
+    "p2": 4,
+    "p3": 4,
+    "pout": 18,
+    "n_atleti": 7,
+    "pos": 4
   },
   {
     "team_id": "TEAM_HOPPLA",
@@ -45,29 +57,17 @@
     "p3": 3,
     "pout": 16,
     "n_atleti": 7,
-    "pos": 4
-  },
-  {
-    "team_id": "BELTRAMI_TSA_TRE_COLLI",
-    "team_nome": "BELTRAMI TSA TRE COLLI",
-    "punti": 317,
-    "vittorie": 1,
-    "p1": 1,
-    "p2": 4,
-    "p3": 3,
-    "pout": 18,
-    "n_atleti": 7,
     "pos": 5
   },
   {
     "team_id": "SOLME_OLMO_ARVEDI",
     "team_nome": "SOLME - OLMO - ARVEDI",
-    "punti": 278,
+    "punti": 308,
     "vittorie": 3,
     "p1": 3,
     "p2": 3,
     "p3": 2,
-    "pout": 13,
+    "pout": 15,
     "n_atleti": 7,
     "pos": 6
   },
@@ -84,16 +84,28 @@
     "pos": 7
   },
   {
+    "team_id": "XDS_ASTANA_DEVELOPMENT_TEAM",
+    "team_nome": "XDS ASTANA DEVELOPMENT TEAM",
+    "punti": 183,
+    "vittorie": 1,
+    "p1": 1,
+    "p2": 1,
+    "p3": 0,
+    "pout": 6,
+    "n_atleti": 6,
+    "pos": 8
+  },
+  {
     "team_id": "VEGA_VITALCARE_DYNATEK",
     "team_nome": "VEGA VITALCARE DYNATEK",
-    "punti": 150,
+    "punti": 165,
     "vittorie": 0,
     "p1": 0,
     "p2": 3,
     "p3": 0,
-    "pout": 10,
+    "pout": 11,
     "n_atleti": 6,
-    "pos": 8
+    "pos": 9
   },
   {
     "team_id": "U_C_TREVIGIANI_ENERGIAPURA_MARCHIOL",
@@ -105,7 +117,7 @@
     "p3": 3,
     "pout": 9,
     "n_atleti": 5,
-    "pos": 9
+    "pos": 10
   },
   {
     "team_id": "MG_K_VIS_COSTRUZIONI_E_AMBIENTE",
@@ -117,18 +129,6 @@
     "p3": 1,
     "pout": 5,
     "n_atleti": 7,
-    "pos": 10
-  },
-  {
-    "team_id": "XDS_ASTANA_DEVELOPMENT_TEAM",
-    "team_nome": "XDS ASTANA DEVELOPMENT TEAM",
-    "punti": 138,
-    "vittorie": 0,
-    "p1": 0,
-    "p2": 1,
-    "p3": 0,
-    "pout": 6,
-    "n_atleti": 5,
     "pos": 11
   },
   {
@@ -182,14 +182,26 @@
   {
     "team_id": "MBH_BANK_CSB_TELECOM_FORT",
     "team_nome": "MBH BANK CSB TELECOM FORT",
-    "punti": 99,
+    "punti": 108,
     "vittorie": 1,
     "p1": 1,
     "p2": 0,
     "p3": 1,
-    "pout": 2,
-    "n_atleti": 4,
+    "pout": 3,
+    "n_atleti": 5,
     "pos": 16
+  },
+  {
+    "team_id": "SOLUTION_TECH_NIPPO_RALI",
+    "team_nome": "SOLUTION TECH NIPPO RALI",
+    "punti": 93,
+    "vittorie": 1,
+    "p1": 1,
+    "p2": 1,
+    "p3": 0,
+    "pout": 1,
+    "n_atleti": 3,
+    "pos": 17
   },
   {
     "team_id": "V_C_MENDRISIO",
@@ -201,7 +213,7 @@
     "p3": 0,
     "pout": 4,
     "n_atleti": 4,
-    "pos": 17
+    "pos": 18
   },
   {
     "team_id": "CAMPANA_IMBALLAGGI_MORBIATO_TRENTINO",
@@ -213,18 +225,6 @@
     "p3": 3,
     "pout": 9,
     "n_atleti": 4,
-    "pos": 18
-  },
-  {
-    "team_id": "SOLUTION_TECH_NIPPO_RALI",
-    "team_nome": "SOLUTION TECH NIPPO RALI",
-    "punti": 81,
-    "vittorie": 1,
-    "p1": 1,
-    "p2": 1,
-    "p3": 0,
-    "pout": 0,
-    "n_atleti": 2,
     "pos": 19
   },
   {
