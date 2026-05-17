@@ -1882,9 +1882,9 @@ async function renderTeam(team_id) {
     <div class="team-header">
       <div class="profile-photo-row" style="display:flex;gap:20px;align-items:center">
         ${teamPhotoHtml}
-        <div>
-        <div class="team-name-display">${esc(t.nome)}</div>
-        ${headerStats}
+        <div style="min-width:0;overflow:hidden;flex:1">
+          <div class="team-name-display">${esc(t.nome)}</div>
+          ${headerStats}
         </div>
       </div>
     </div>
