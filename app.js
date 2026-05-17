@@ -4001,7 +4001,7 @@ async function renderRisultati() {
           ${mediaPanel}
           <div class="ris-card-body">
             <div class="hero-label" style="font-size:0.6rem">RISULTATI GARA</div>
-            <div class="hero-race-name" style="font-size:clamp(1.4rem,3vw,2.2rem);"><a href="#/gara/${esc(race.id)}">${esc(race.nome)}</a></div>
+            <div class="hero-race-name"><a href="#/gara/${esc(race.id)}">${esc(race.nome)}</a></div>
             <div class="hero-race-meta" style="margin-bottom:16px;">
               <span>${fmtDate(race.data)}</span>
               ${badgeMult(race.mult, race.tipo, race.campionato_regionale, race.campionato_italiano)}
