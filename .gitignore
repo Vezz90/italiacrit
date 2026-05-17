@@ -17,3 +17,4 @@ data/team_rankings/
 !data/user_overrides.json
 !data/athlete_gender_fixes.json
 !data/videos.json
+!data/pending_videos.json

@@ -1457,9 +1457,19 @@ async function renderAdmin() {
       </div>
     </div>
 
+    <div style="margin-top:32px">
+      <h2 style="font-family:var(--font-display);font-size:1.2rem;margin-bottom:16px;border-bottom:2px solid var(--accent);padding-bottom:8px">
+        🎬 VIDEO IN ATTESA DI APPROVAZIONE
+      </h2>
+      <div id="admin-videos-pending">
+        <div style="color:var(--text-muted);padding:20px 0">Caricamento...</div>
+      </div>
+    </div>
+
   `);
 
   loadPendingRacePhotos();
+  loadAdminPendingVideos();
 }
 
 async function loadPendingRacePhotos() {
@@ -1498,6 +1508,54 @@ async function loadPendingRacePhotos() {
     container.innerHTML = `<div style="color:var(--red-hot);padding:20px 0">Errore caricamento foto: ${esc(e.message)}</div>`;
   }
 }
+
+async function loadAdminPendingVideos() {
+  const container = document.getElementById('admin-videos-pending');
+  if (!container) return;
+  try {
+    const data = await apiCall('/admin/videos/pending');
+    const videos = data.videos || [];
+    if (!videos.length) {
+      container.innerHTML = `<div style="color:var(--text-muted);padding:20px 0">Nessun video in attesa.</div>`;
+      return;
+    }
+    container.innerHTML = `<div style="display:flex;flex-direction:column;gap:12px">${videos.map(v => {
+      const vidId = v.type === 'youtube' ? (v.url.match(/[?&]v=([^&]+)/) || [])[1] || '' : '';
+      const thumb = vidId ? `https://img.youtube.com/vi/${vidId}/mqdefault.jpg` : '';
+      return `
+      <div id="apv-${v.id}" style="display:flex;gap:12px;align-items:flex-start;background:var(--bg-card);border:1px solid var(--border-subtle);border-radius:var(--r-md);padding:12px">
+        ${thumb ? `<img src="${thumb}" style="width:120px;border-radius:var(--r-sm);flex-shrink:0;object-fit:cover" />` : `<div style="width:120px;height:68px;background:var(--bg-elevated);border-radius:var(--r-sm);flex-shrink:0;display:flex;align-items:center;justify-content:center;font-size:2rem">📁</div>`}
+        <div style="flex:1;min-width:0">
+          <div style="font-weight:600;font-size:0.875rem;margin-bottom:4px">${esc(v.title)}</div>
+          <div style="font-size:0.75rem;color:var(--text-muted);margin-bottom:4px">
+            <a href="#/gara/${esc(v.gara_id)}" style="color:var(--accent)">${esc(v.gara_id)}</a>
+            &mdash; ${esc(v.submitted_by)} &mdash; ${v.submitted_at.slice(0,10)}
+          </div>
+          <div style="font-size:0.75rem;color:var(--text-muted);margin-bottom:8px">
+            ${v.type === 'youtube' ? `🔗 <a href="${esc(v.url)}" target="_blank" rel="noopener" style="color:var(--accent)">${esc(v.url)}</a>` : `📁 File caricato`}
+          </div>
+          <div style="display:flex;gap:8px">
+            <button onclick="window.adminVideoAction('${esc(v.id)}','approve')" class="btn-approve">✓ Approva</button>
+            <button onclick="window.adminVideoAction('${esc(v.id)}','reject')"  class="btn-reject">✗ Rifiuta</button>
+          </div>
+        </div>
+      </div>`;
+    }).join('')}</div>`;
+  } catch(e) {
+    container.innerHTML = `<div style="color:var(--red-hot);padding:20px 0">Errore: ${esc(e.message)}</div>`;
+  }
+}
+
+window.adminVideoAction = async (id, action) => {
+  try {
+    await apiCall(`/admin/videos/pending/${id}/${action}`, { method: 'POST' });
+    document.getElementById('apv-' + id)?.remove();
+    const container = document.getElementById('admin-videos-pending');
+    if (container && !container.querySelector('[id^="apv-"]')) {
+      container.innerHTML = `<div style="color:var(--text-muted);padding:20px 0">Nessun video in attesa.</div>`;
+    }
+  } catch(e) { alert('Errore: ' + e.message); }
+};
 
 async function loadApprovedRacePhotos() {
   const container = document.getElementById('admin-photos-approved');
@@ -2459,11 +2517,18 @@ async function renderGara(gara_id) {
         </div>`
       : (!featuredPhoto ? `<p style="color:var(--text-muted);font-size:0.875rem;margin:8px 0 0">Nessuna foto ancora. Sii il primo a condividerne una!</p>` : '');
 
+    const addVideoBtn = user
+      ? `<button class="race-photo-upload-btn" onclick="window.openVideoSubmit('${esc(gara_id)}','${esc(_calId)}')">
+           <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polygon points="5 3 19 12 5 21 5 3"/></svg>
+           Aggiungi Video
+         </button>`
+      : '';
+
     racePhotosHtml = `
       <div class="comp-section" style="margin-top:16px">
         <div style="display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:8px;margin-bottom:${heroMedia ? '12px' : '0'}">
           <div class="comp-section-title" style="margin-bottom:0;border:none;padding:0">Foto & Video</div>
-          ${uploadBtn}
+          <div style="display:flex;gap:6px;flex-wrap:wrap">${uploadBtn}${addVideoBtn}</div>
         </div>
         ${heroMedia}
         ${gallery}
@@ -2564,6 +2629,138 @@ async function renderGara(gara_id) {
         ? `${winner.cognome} ${winner.nome} - ${winner.team} | ${gd.name}`
         : gd.name || '';
       document.getElementById('rp-caption').value = autoCaption;
+    }
+  };
+
+  // ── AGGIUNGI VIDEO ──────────────────────────────────────────────────
+  window.openVideoSubmit = (garaId, calId) => {
+    const user = authUser();
+    if (!user) return;
+    const isAdmin = user.role === 'admin';
+    const inpStyle = 'width:100%;box-sizing:border-box;padding:8px 10px;border:1px solid var(--border-subtle);border-radius:var(--r-sm);font-size:0.875rem;background:var(--bg-primary);color:var(--text-primary);margin-bottom:10px';
+    const overlay = document.createElement('div');
+    overlay.style.cssText = 'position:fixed;inset:0;background:rgba(0,0,0,.6);z-index:9999;display:flex;align-items:center;justify-content:center;padding:16px';
+    overlay.innerHTML = `
+      <div style="background:var(--bg-card);border-radius:var(--r-lg);padding:24px;width:100%;max-width:460px;box-shadow:0 8px 32px rgba(0,0,0,.3)">
+        <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:16px">
+          <strong style="font-size:1rem">Aggiungi Video</strong>
+          <button onclick="this.closest('[style*=fixed]').remove()" style="background:none;border:none;font-size:1.3rem;cursor:pointer;color:var(--text-muted)">✕</button>
+        </div>
+        ${!isAdmin ? '<p style="font-size:0.8rem;color:var(--text-muted);margin:0 0 14px">Il video sarà visibile dopo approvazione dell\'amministratore.</p>' : ''}
+
+        <div style="display:flex;gap:0;margin-bottom:16px;border-radius:var(--r-sm);overflow:hidden;border:1px solid var(--border-subtle)">
+          <button id="vtab-url" onclick="window._switchVideoTab('url')"
+            style="flex:1;padding:8px;border:none;cursor:pointer;font-size:0.82rem;font-weight:600;background:var(--red-hot);color:#fff">
+            🔗 URL YouTube
+          </button>
+          <button id="vtab-file" onclick="window._switchVideoTab('file')"
+            style="flex:1;padding:8px;border:none;cursor:pointer;font-size:0.82rem;font-weight:600;background:var(--bg-elevated);color:var(--text-secondary)">
+            📁 Carica File
+          </button>
+        </div>
+
+        <div id="vpanel-url">
+          <input type="url" id="vurl-input" placeholder="https://www.youtube.com/watch?v=..." style="${inpStyle}"/>
+          <input type="text" id="vurl-title" placeholder="Titolo (opzionale)" style="${inpStyle}"/>
+          <div id="vurl-preview" style="margin-bottom:10px;display:none">
+            <img id="vurl-thumb" src="" style="width:100%;border-radius:var(--r-sm);aspect-ratio:16/9;object-fit:cover"/>
+          </div>
+        </div>
+
+        <div id="vpanel-file" style="display:none">
+          <input type="file" id="vfile-input" accept="video/mp4,video/quicktime,video/webm,video/x-msvideo" style="${inpStyle}"/>
+          <input type="text" id="vfile-title" placeholder="Titolo del video*" style="${inpStyle}"/>
+          <div id="vfile-progress" style="display:none;margin-bottom:10px">
+            <div style="background:var(--bg-elevated);border-radius:4px;height:6px;overflow:hidden">
+              <div id="vfile-bar" style="height:100%;background:var(--red-hot);width:0%;transition:width .2s"></div>
+            </div>
+            <span id="vfile-pct" style="font-size:0.75rem;color:var(--text-muted)">0%</span>
+          </div>
+        </div>
+
+        <div id="vsubmit-err" style="color:#EF4444;font-size:0.8rem;margin-bottom:8px;display:none"></div>
+        <button id="vsubmit-btn" onclick="window._submitVideo('${esc(garaId)}','${esc(calId)}')"
+          style="width:100%;padding:9px;background:var(--red-hot);color:#fff;border:none;border-radius:var(--r-sm);font-weight:600;cursor:pointer">
+          Invia
+        </button>
+      </div>`;
+    document.body.appendChild(overlay);
+
+    // Preview thumb YouTube mentre si digita URL
+    document.getElementById('vurl-input').addEventListener('input', function() {
+      const m = this.value.match(/[?&]v=([^&]+)/);
+      const preview = document.getElementById('vurl-preview');
+      const thumb = document.getElementById('vurl-thumb');
+      if (m) { thumb.src = `https://img.youtube.com/vi/${m[1]}/hqdefault.jpg`; preview.style.display = 'block'; }
+      else { preview.style.display = 'none'; }
+    });
+  };
+
+  window._switchVideoTab = (tab) => {
+    const isUrl = tab === 'url';
+    document.getElementById('vpanel-url').style.display = isUrl ? '' : 'none';
+    document.getElementById('vpanel-file').style.display = isUrl ? 'none' : '';
+    document.getElementById('vtab-url').style.background = isUrl ? 'var(--red-hot)' : 'var(--bg-elevated)';
+    document.getElementById('vtab-url').style.color = isUrl ? '#fff' : 'var(--text-secondary)';
+    document.getElementById('vtab-file').style.background = isUrl ? 'var(--bg-elevated)' : 'var(--red-hot)';
+    document.getElementById('vtab-file').style.color = isUrl ? 'var(--text-secondary)' : '#fff';
+  };
+
+  window._submitVideo = async (garaId, calId) => {
+    const err = document.getElementById('vsubmit-err');
+    const btn = document.getElementById('vsubmit-btn');
+    err.style.display = 'none';
+    const isFileTab = document.getElementById('vpanel-file').style.display !== 'none';
+
+    if (isFileTab) {
+      const file = document.getElementById('vfile-input')?.files[0];
+      const title = document.getElementById('vfile-title')?.value.trim();
+      if (!file) { err.textContent = 'Seleziona un file video'; err.style.display = 'block'; return; }
+      if (!title) { err.textContent = 'Inserisci un titolo'; err.style.display = 'block'; return; }
+      btn.disabled = true; btn.textContent = 'Caricamento…';
+      document.getElementById('vfile-progress').style.display = 'block';
+      const fd = new FormData();
+      fd.append('gara_id', garaId);
+      fd.append('cal_id', calId);
+      fd.append('title', title);
+      fd.append('video', file);
+      try {
+        const xhr = new XMLHttpRequest();
+        xhr.upload.onprogress = e => {
+          if (e.lengthComputable) {
+            const pct = Math.round(e.loaded/e.total*100);
+            document.getElementById('vfile-bar').style.width = pct + '%';
+            document.getElementById('vfile-pct').textContent = pct + '%';
+          }
+        };
+        await new Promise((resolve, reject) => {
+          xhr.onload = () => {
+            const d = JSON.parse(xhr.responseText);
+            if (xhr.status >= 400) reject(new Error(d.error || `HTTP ${xhr.status}`));
+            else resolve(d);
+          };
+          xhr.onerror = () => reject(new Error('Errore di rete'));
+          xhr.open('POST', `${API_BASE}/videos/upload-file`);
+          xhr.setRequestHeader('Authorization', `Bearer ${authToken()}`);
+          xhr.send(fd);
+        });
+        document.querySelector('[style*="position:fixed"][style*="9999"]')?.remove();
+        const user = authUser();
+        alert(user?.role === 'admin' ? 'Video pubblicato!' : 'Video inviato! Sarà visibile dopo approvazione.');
+        if (window._currentGaraId) renderGara(window._currentGaraId);
+      } catch(e) { err.textContent = e.message; err.style.display = 'block'; btn.disabled = false; btn.textContent = 'Invia'; }
+    } else {
+      const url = document.getElementById('vurl-input')?.value.trim();
+      const title = document.getElementById('vurl-title')?.value.trim();
+      if (!url) { err.textContent = 'Inserisci un URL YouTube'; err.style.display = 'block'; return; }
+      btn.disabled = true; btn.textContent = 'Invio…';
+      try {
+        await apiCall('/videos/submit', { method: 'POST', body: JSON.stringify({ gara_id: garaId, cal_id: calId, url, title }) });
+        document.querySelector('[style*="position:fixed"][style*="9999"]')?.remove();
+        const user = authUser();
+        alert(user?.role === 'admin' ? 'Video pubblicato!' : 'Video inviato! Sarà visibile dopo approvazione.');
+        if (window._currentGaraId) renderGara(window._currentGaraId);
+      } catch(e) { err.textContent = e.message; err.style.display = 'block'; btn.disabled = false; btn.textContent = 'Invia'; }
     }
   };
 
