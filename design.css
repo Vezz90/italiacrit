@@ -3854,19 +3854,91 @@ div[style*="grid-template-columns: repeat(auto-fit"] {
 }
 .em-photo-band-cta:hover { background: rgba(255,255,255,0.12); border-color: #fff; }
 
-/* Mobile: full-width stays edge-to-edge */
+/* ── MOBILE COMPREHENSIVE FIX ────────────────────────────── */
 @media (max-width: 768px) {
+
+  /* Hero: single column, touch-friendly */
   .em-hero-content {
-    padding: 36px 20px 28px;
-    grid-template-columns: 1fr;
+    grid-template-columns: 1fr !important;
+    padding: 40px 20px 28px !important;
   }
-  .em-hero-right { padding-left: 0; }
-  .em-spotlight { padding: 60px 20px; }
-  .em-versus { padding: 60px 20px; }
-  .em-volando { padding: 56px 0 56px 20px; }
+  .em-eyebrow { font-size: 0.58rem; letter-spacing: 0.14em; }
+  /* Title: clamp min was 5rem (80px) — too wide for 375px viewport */
+  .em-title {
+    font-size: clamp(2.4rem, 13vw, 4rem) !important;
+    letter-spacing: -0.04em;
+  }
+  .em-subtitle { font-size: 0.65rem; letter-spacing: 0.08em; margin-bottom: 24px; }
+  .em-hero-winner { margin-bottom: 20px; }
+  .em-winner-name { font-size: 1.15rem; }
+  .em-hero-right {
+    padding-left: 0;
+    border-left: none;
+    border-top: 1px solid rgba(255,255,255,0.1);
+    padding-top: 20px;
+  }
+  .em-race-row { padding: 8px 4px; gap: 8px; }
+  .em-race-name { font-size: 0.72rem; }
+  .em-btn-primary, .em-btn-ghost { padding: 10px 20px; font-size: 0.68rem; }
+
+  /* Spotlight: watermark must stay within box */
+  .em-spotlight { padding: 52px 20px; overflow: clip; }
+  /* watermark bg: clamp min was 10rem (160px) — overflows 375px */
+  .em-spotlight-bg-name {
+    font-size: clamp(4rem, 22vw, 8rem) !important;
+    right: -2%;
+  }
+  .em-spot-name {
+    font-size: clamp(2rem, 11vw, 3.5rem) !important;
+    letter-spacing: -0.03em;
+  }
+  .em-spot-stats { gap: 20px; flex-wrap: wrap; }
+  .em-stat-val { font-size: 2rem; }
+
+  /* Photo band */
+  .em-photo-band { height: 200px; }
+  .em-photo-band-inner {
+    padding: 0 20px 24px;
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 14px;
+  }
+  .em-photo-band-text { font-size: clamp(1.4rem, 7vw, 2.2rem); }
+  .em-photo-band-cta { align-self: flex-start; font-size: 0.68rem; padding: 8px 18px; }
+
+  /* Versus: stack vertically */
+  .em-versus { padding: 52px 20px; gap: 28px; }
+  .em-versus-ring {
+    grid-template-columns: 1fr !important;
+    text-align: center;
+    gap: 20px;
+  }
+  .em-vs-a, .em-vs-b { text-align: center; align-items: center; }
+  .em-vs-center { order: -1; }
+  /* VS text: clamp min was 4rem (64px) — ok on mobile */
+  .em-vs-vs { font-size: clamp(3rem, 16vw, 5rem) !important; }
+  .em-vs-name { font-size: clamp(1.6rem, 8vw, 2.8rem) !important; }
+  .em-vs-pts { font-size: 1.6rem; }
+
+  /* Chi Scala */
+  .em-volando { padding: 52px 0 52px 20px; }
   .em-section-header { padding-right: 20px; }
   .em-volando-scroll { padding-right: 20px; }
-  .em-upcoming { padding: 60px 20px; }
-  .em-photo-band-inner { padding: 0 20px 24px; flex-direction: column; align-items: flex-start; gap: 16px; }
-  .em-photo-band-cta { align-self: flex-start; }
+  .em-vol-card { min-width: 136px; padding: 14px 14px; }
+  .em-vol-gain { font-size: 1.8rem; }
+  .em-vol-name { font-size: 0.72rem; }
+
+  /* Upcoming */
+  .em-upcoming { padding: 52px 20px; }
+  .em-ug-row { grid-template-columns: 64px 1fr; gap: 8px; }
+  .em-ug-date, .em-ug-cat { display: none; }
+  .em-ug-name { font-size: 0.8rem; }
+}
+
+/* Extra small: 320px devices */
+@media (max-width: 360px) {
+  .em-title { font-size: clamp(2rem, 12vw, 3rem) !important; }
+  .em-spot-name { font-size: clamp(1.8rem, 10vw, 3rem) !important; }
+  .em-hero-ctas { flex-direction: column; gap: 8px; }
+  .em-btn-primary, .em-btn-ghost { text-align: center; }
 }
