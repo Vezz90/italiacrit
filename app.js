@@ -628,179 +628,306 @@ async function renderHome() {
   if (!globalData) return;
   const { calendar, resultsRaw, resultsByAtleta } = globalData;
 
-  // ── HERO CAROUSEL (ultime gare) ───────────────────────────────
+  // ── DATA ──────────────────────────────────────────────────────
+  const lastRaceDate = resultsRaw.reduce((max, r) => (r.data||'') > max ? r.data : max, '');
+
+  // Mappa gare per hero
   const raceMap = {};
   for (const r of resultsRaw) {
-    if (!raceMap[r.gara_id]) raceMap[r.gara_id] = { id: r.gara_id, nome: r.nome_gara, data: r.data, categoria: r.categoria, genere: r.genere, tipo: r.tipo, isCR: r.campionato_regionale, isCI: r.campionato_italiano, mult: r.moltiplicatore, results: [] };
+    if (!raceMap[r.gara_id]) raceMap[r.gara_id] = { id:r.gara_id, nome:r.nome_gara, data:r.data, categoria:r.categoria, genere:r.genere, tipo:r.tipo, isCR:r.campionato_regionale, isCI:r.campionato_italiano, mult:r.moltiplicatore, regione:r.regione, results:[] };
     raceMap[r.gara_id].results.push(r);
   }
+  const allRaces = Object.values(raceMap).sort((a,b) => (b.data||'').localeCompare(a.data||''));
+  const lastDateTs = lastRaceDate ? new Date(lastRaceDate).getTime() : 0;
+  const heroRaces = allRaces.filter(r => r.data && new Date(r.data).getTime() >= (lastDateTs - 7*86400*1000));
 
-  const races = Object.values(raceMap)
-    .sort((a,b) => (b.data || '').localeCompare(a.data || ''))
-    .slice(0, 20);
-
-  const lastDateStr = races[0]?.data || '';
-  const lastDateTs = lastDateStr ? new Date(lastDateStr).getTime() : 0;
-
-  const heroRaces = races.filter(r => {
-    if (!r.data) return false;
-    const rTs = new Date(r.data).getTime();
-    return rTs >= (lastDateTs - 7 * 86400 * 1000);
-  });
-
-  let heroHtml = '';
-  if (heroRaces.length > 0) {
-    heroHtml = `
-      <div id="hero-carousel-container" style="position:relative; width:100%;">
-        ${heroRaces.map((lr, idx) => {
-          const top3 = (lr.results || []).sort((a,b)=>a.posizione-b.posizione).slice(0,3);
-          const mult = lr.mult || 1;
-          return `
-            <div class="hero-band hero-slide" id="hero-slide-${idx}" style="display: ${idx===0 ? 'block' : 'none'}; animation: fadeIn 0.5s;">
-              <div class="hero-label">ULTIMI RISULTATI (${idx+1}/${heroRaces.length}) &nbsp; &mdash; &nbsp; ROTAZIONE AUTOMATICA</div>
-              <div class="hero-race-name"><a href="#/gara/${esc(lr.id)}" style="color:var(--text-primary);text-decoration:none">${esc(lr.nome)}</a></div>
-              <div class="hero-race-meta">
-                <span>${fmtDate(lr.data)}</span>
-                <span>${esc(catLabel(lr.categoria) || '')}</span>
-                ${badgeMult(mult, lr.tipo, lr.isCR, lr.isCI)}
-              </div>
-              <div class="hero-divider"></div>
-              <div class="hero-podio">
-                ${top3.map((r,i) => {
-                  const pClass = ['p1','p2','p3'][i];
-                  const pts = (BASEPTS[r.posizione]||0) * mult;
-                  return `<div class="hero-podio-row" style="animation-delay:${i*80}ms">
-                    <div class="hero-pos ${pClass}">${i+1}°</div>
-                    <div>
-                      <div class="hero-name">
-                        <a href="#/atleta/${esc(r.atleta_id)}">${esc(r.cognome)} ${esc(r.nome)}</a>
-                      </div>
-                      <div class="hero-team">
-                        <a href="#/team/${esc(r.team_id)}" style="color:var(--text-secondary)">${esc(r.team)}</a>
-                      </div>
-                    </div>
-                    <div class="hero-pts">${pts} pt</div>
-                  </div>`;
-                }).join('')}
-              </div>
-            </div>
-          `;
-        }).join('')}
-      </div>
-    `;
-    if (heroRaces.length > 1) {
-      setTimeout(() => {
-        let currentSlide = 0;
-        window.homeHeroInterval = setInterval(() => {
-          const prev = document.getElementById(`hero-slide-${currentSlide}`);
-          if (prev) prev.style.display = 'none';
-          currentSlide = (currentSlide + 1) % heroRaces.length;
-          const next = document.getElementById(`hero-slide-${currentSlide}`);
-          if (next) next.style.display = 'block';
-        }, 5000);
-      }, 100);
-    }
+  // Trending (ultimi 14 gg dall'ultima gara)
+  const trendCut = new Date(lastRaceDate || new Date());
+  trendCut.setDate(trendCut.getDate() - 14);
+  const trendCutStr = trendCut.toISOString().split('T')[0];
+  const athTrend = {};
+  for (const r of resultsRaw) {
+    if (!r.data || r.data < trendCutStr) continue;
+    const k = r.atleta_id;
+    if (!athTrend[k]) athTrend[k] = { atleta_id:k, cognome:r.cognome, nome:r.nome, team:r.team, team_id:r.team_id, categoria:r.categoria, genere:r.genere, pts:0, gare:0, podio:0, vittorie:0 };
+    athTrend[k].pts += r.punti_effettivi || 0;
+    athTrend[k].gare++;
+    if (r.posizione <= 3) athTrend[k].podio++;
+    if (r.posizione === 1) athTrend[k].vittorie++;
   }
+  const trending = Object.values(athTrend).filter(a => a.pts > 0).sort((a,b) => b.pts - a.pts).slice(0,10);
 
-  // ── 1. PROSSIME GARE DELLA SETTIMANA ─────────────────────────
-  const MONTHS_SHORT = ['GEN','FEB','MAR','APR','MAG','GIU','LUG','AGO','SET','OTT','NOV','DIC'];
+  // Rising talents (categorie giovani)
+  const rising = Object.values(athTrend)
+    .filter(a => /esordienti|allievi/i.test(a.categoria||''))
+    .sort((a,b) => b.pts - a.pts).slice(0,8);
+
+  // Team hot
+  const teamTrend = {};
+  for (const r of resultsRaw) {
+    if (!r.data || r.data < trendCutStr) continue;
+    const k = r.team_id;
+    if (!teamTrend[k]) teamTrend[k] = { team_id:k, team:r.team, vittorie:0, podio:0, garaSet:new Set() };
+    if (r.posizione === 1) teamTrend[k].vittorie++;
+    if (r.posizione <= 3) teamTrend[k].podio++;
+    teamTrend[k].garaSet.add(r.gara_id);
+  }
+  const topTeams = Object.values(teamTrend).map(t=>({...t,gare:t.garaSet.size})).sort((a,b)=>b.vittorie-a.vittorie||b.podio-a.podio).slice(0,5);
+
+  // Upcoming
   const todayStr = new Date().toISOString().split('T')[0];
-  const todayDate = new Date(todayStr);
-  const dayOfWeek = todayDate.getDay(); // 0=dom, 6=sab
-  const daysToSunday = dayOfWeek === 0 ? 0 : 7 - dayOfWeek;
-  const thisSunday = new Date(todayDate);
-  thisSunday.setDate(thisSunday.getDate() + daysToSunday);
-  const thisSundayStr = thisSunday.toISOString().split('T')[0];
+  const upcoming = calendar.filter(g => g.data >= todayStr).sort((a,b)=>a.data.localeCompare(b.data)).slice(0,7);
 
-  let nextRaces = calendar
-    .filter(g => g.data >= todayStr && g.data <= thisSundayStr)
-    .sort((a,b) => a.data.localeCompare(b.data));
-  let weekLabel = 'QUESTA SETTIMANA';
-
-  if (nextRaces.length === 0) {
-    const nextSunday = new Date(thisSunday);
-    nextSunday.setDate(nextSunday.getDate() + 7);
-    const nextSundayStr = nextSunday.toISOString().split('T')[0];
-    nextRaces = calendar
-      .filter(g => g.data > thisSundayStr && g.data <= nextSundayStr)
-      .sort((a,b) => a.data.localeCompare(b.data));
-    weekLabel = 'PROSSIMA SETTIMANA';
-  }
-
-  // ── 1. PROSSIME GARE — filtrate per giorno ────────────────────
-  const uniqueDates = [...new Set(nextRaces.map(g => g.data))].sort();
-  const DAYS_IT = ['Dom','Lun','Mar','Mer','Gio','Ven','Sab'];
-
-  window.filterHomeCalendar = (dateStr) => {
-    document.querySelectorAll('.hcal-row').forEach(el => {
-      el.style.display = (!dateStr || el.dataset.date === dateStr) ? 'flex' : 'none';
-    });
-    document.querySelectorAll('.hcal-btn').forEach(el => {
-      el.classList.toggle('active-cat', el.dataset.date === dateStr);
-    });
-  };
-
-  const prossimeHtml = nextRaces.length ? `
-    <div class="section-header">
-      <span class="section-title">${weekLabel}</span>
-      <span class="section-line"></span>
-      <span class="section-subtitle">Gare in programma</span>
-    </div>
-    <div style="display:flex;gap:6px;flex-wrap:wrap;margin-bottom:8px">
-      <button class="tab-btn hcal-btn active-cat" data-date="" onclick="window.filterHomeCalendar('')">Tutte</button>
-      ${uniqueDates.map(d => {
-        const dt = new Date(d);
-        const label = `${DAYS_IT[dt.getDay()]} ${dt.getDate()} ${MONTHS_SHORT[dt.getMonth()]}`;
-        return `<button class="tab-btn hcal-btn" data-date="${d}" onclick="window.filterHomeCalendar('${d}')">${label}</button>`;
-      }).join('')}
-    </div>
-    <div style="display:flex;flex-direction:column;gap:4px;margin-bottom:40px">
-      ${nextRaces.map(g => {
-        const d = new Date(g.data);
-        const dayStr = `${DAYS_IT[d.getDay()]} ${d.getDate()} ${MONTHS_SHORT[d.getMonth()]}`;
-        return `
-          <a href="#/gara/${esc(g.id)}" class="hcal-row" data-date="${g.data}" style="display:flex;align-items:center;gap:8px;padding:8px 14px;background:var(--bg-card);border:1px solid var(--border-subtle);border-radius:4px;flex-wrap:wrap;text-decoration:none;color:inherit;transition:border-color .15s">
-            <span style="font-family:var(--font-mono);font-size:0.75rem;color:var(--red-hot);flex-shrink:0;min-width:72px">${dayStr}</span>
-            <span style="font-family:var(--font-heading);font-weight:700;font-size:0.88rem;text-transform:uppercase;flex:1;min-width:120px;word-break:break-word">${esc(g.nome)}</span>
-            ${g.luogo ? `<span style="font-size:0.73rem;color:var(--text-secondary);flex-shrink:0">${esc(g.luogo)}</span>` : ''}
-            <div style="display:flex;gap:4px;flex-shrink:0;align-items:center;flex-wrap:wrap">
-              ${g.campionato_italiano ? '<span class="badge-cat" style="color:var(--red-hot);border-color:var(--red-hot);font-size:0.55rem;padding:1px 5px">CI</span>' : ''}
-              ${g.campionato_regionale ? '<span class="badge-cat" style="color:var(--cat-u23);border-color:var(--cat-u23);font-size:0.55rem;padding:1px 5px">CR</span>' : ''}
-              ${badgeMult(g.moltiplicatore, g.tipo, g.campionato_regionale, g.campionato_italiano)}
-            </div>
-          </a>`;
-      }).join('')}
-    </div>
-  ` : '';
-
-  // ── 2+3. PANORAMICA CATEGORIE (forma + battaglia in un'unica card) ──
+  // Rankings
   const catOrder = ['ELI_M','JUN_M','AL_M','ES2_M','ES1_M','ELI_F','JUN_F','AL_F','ES2_F','ES1_F'];
   const allRankings = await Promise.all(catOrder.map(c => loadRanking(c)));
 
-  // Cutoff: 28 giorni prima dell'ULTIMA GARA nel dataset (non da oggi)
-  const lastRaceDate = resultsRaw.reduce((max, r) => (r.data || '') > max ? r.data : max, '');
-  const cutoffDate = new Date(lastRaceDate || new Date());
-  cutoffDate.setDate(cutoffDate.getDate() - 28);
-  const cutoffStr = cutoffDate.toISOString().split('T')[0];
+  // Quick compare — categoria più combattuta
+  let qcCat = 'ES1_M', qcA = null, qcB = null, minGap = Infinity;
+  for (let i = 0; i < catOrder.length; i++) {
+    const rk = allRankings[i];
+    if (rk && rk[0] && rk[1]) {
+      const g = rk[0].punti - rk[1].punti;
+      if (g < minGap) { minGap = g; qcCat = catOrder[i]; qcA = rk[0]; qcB = rk[1]; }
+    }
+  }
 
+  // Smart insights
+  const tickerItems = [];
+  if (trending[0]) tickerItems.push(`🔥 <strong>IN FORMA:</strong> ${trending[0].cognome} ${trending[0].nome} — ${trending[0].pts} pt in 14 giorni`);
+  if (topTeams[0] && topTeams[0].vittorie > 0) tickerItems.push(`🏆 <strong>TEAM HOT:</strong> ${topTeams[0].team} — ${topTeams[0].vittorie} vittori${topTeams[0].vittorie===1?'a':'e'} recenti`);
+  if (heroRaces[0]) { const w = heroRaces[0].results?.find(r=>r.posizione===1); if (w) tickerItems.push(`🥇 <strong>ULTIMA VITTORIA:</strong> ${w.cognome} ${w.nome} · ${heroRaces[0].nome}`); }
+  if (qcA && qcB && minGap <= 15) tickerItems.push(`⚡ <strong>BATTAGLIA:</strong> Solo ${minGap} pt tra ${qcA.cognome} e ${qcB.cognome} in ${catLabel(qcCat)}`);
+  if (upcoming[0]) { const d = Math.round((new Date(upcoming[0].data)-new Date(todayStr))/86400000); tickerItems.push(`📅 <strong>PROSSIMA GARA${d===0?' OGGI':d===1?' DOMANI':''}:</strong> ${upcoming[0].nome}`); }
+  if (rising[0]) tickerItems.push(`⬆ <strong>TALENTO:</strong> ${rising[0].cognome} ${rising[0].nome} — miglior emergente del momento`);
+
+  // Cat overview (last 28 days form)
+  const lastRaceCutoff = new Date(lastRaceDate || new Date());
+  lastRaceCutoff.setDate(lastRaceCutoff.getDate() - 28);
+  const cutoffStr = lastRaceCutoff.toISOString().split('T')[0];
+
+  const MONTHS_SHORT = ['GEN','FEB','MAR','APR','MAG','GIU','LUG','AGO','SET','OTT','NOV','DIC'];
+
+  // ── HTML SECTIONS ─────────────────────────────────────────────
+
+  // HERO EDITORIALE
+  let heroHtml = '';
+  if (heroRaces.length > 0) {
+    const slides = heroRaces.map((lr, idx) => {
+      const sorted = (lr.results||[]).slice().sort((a,b)=>a.posizione-b.posizione);
+      const winner = sorted[0];
+      const mult = lr.mult || 1;
+      const othersHtml = sorted.slice(1,3).map(r => {
+        const pts = r.punti_effettivi || (BASEPTS[r.posizione]||0)*mult;
+        const col = r.posizione===2 ? 'var(--silver)' : 'var(--bronze)';
+        return `<div class="hero-ed-other-row">
+          <span class="hero-ed-other-pos" style="color:${col}">${r.posizione}°</span>
+          <span class="hero-ed-other-name"><a href="#/atleta/${esc(r.atleta_id)}">${esc(r.cognome)} ${esc(r.nome)}</a></span>
+          <span class="hero-ed-other-pts">${pts}pt</span>
+        </div>`;
+      }).join('');
+      const wPts = winner ? (winner.punti_effettivi || (BASEPTS[1]||0)*mult) : 0;
+      return `<div class="hero-slide-ed${idx===0?' active':''}" id="hero-slide-${idx}">
+        <div class="hero-ed-label">
+          <span>ULTIMI RISULTATI</span>
+          <span style="color:var(--text-muted)">${idx+1}/${heroRaces.length}</span>
+          ${badgeMult(mult, lr.tipo, lr.isCR, lr.isCI)}
+          ${lr.genere==='F'?'<span class="badge-cat badge-genere-f" style="font-size:0.6rem">♀</span>':''}
+        </div>
+        <div class="hero-ed-inner">
+          <div>
+            <div class="hero-ed-race"><a href="#/gara/${esc(lr.id)}" style="color:inherit;text-decoration:none">${esc(lr.nome)}</a></div>
+            <div class="hero-ed-meta">
+              <span>${fmtDate(lr.data)}</span>
+              ${lr.categoria ? `<span>·</span><span>${esc(lr.categoria)}</span>` : ''}
+              ${lr.regione ? `<span>·</span><span style="color:var(--text-muted)">${esc(lr.regione)}</span>` : ''}
+            </div>
+            <div class="hero-ed-others" style="margin-top:8px">${othersHtml}</div>
+          </div>
+          ${winner ? `<div class="hero-ed-winner">
+            <div class="hero-ed-w-label">🥇 VINCITORE</div>
+            <div class="hero-ed-w-name">${esc(winner.nome)}</div>
+            <div class="hero-ed-w-surname"><a href="#/atleta/${esc(winner.atleta_id)}" style="color:var(--text-primary);text-decoration:none">${esc(winner.cognome)}</a></div>
+            <div class="hero-ed-w-team"><a href="#/team/${esc(winner.team_id)}" style="color:var(--text-muted);text-decoration:none">${esc(winner.team)}</a></div>
+            <div class="hero-ed-w-pts">${wPts} pt</div>
+          </div>` : ''}
+        </div>
+      </div>`;
+    }).join('');
+    const dotsHtml = heroRaces.length > 1 ? heroRaces.map((_,i)=>`<button class="hero-ed-dot${i===0?' active':''}" id="hero-dot-${i}" onclick="window.heroGoTo(${i})" aria-label="Slide ${i+1}"></button>`).join('') : '';
+    const arrowsHtml = heroRaces.length > 1 ? `<div class="hero-ed-arrows"><button class="hero-ed-arrow" onclick="window.heroPrev()">&#8592;</button><button class="hero-ed-arrow" onclick="window.heroNext()">&#8594;</button></div>` : '';
+    heroHtml = `<div class="hero-editorial">
+      <div class="hero-editorial-slides">${slides}</div>
+      ${heroRaces.length > 1 ? `<div class="hero-ed-nav">${dotsHtml}${arrowsHtml}</div>` : ''}
+    </div>`;
+  }
+
+  // TICKER INSIGHTS
+  const tickerHtml = tickerItems.length ? (() => {
+    const doubled = [...tickerItems, ...tickerItems].map(t=>`<div class="home-ticker-item">${t}</div>`).join('');
+    return `<div class="home-ticker"><div class="home-ticker-track">${doubled}</div></div>`;
+  })() : '';
+
+  // TRENDING NOW
+  const trendingHtml = trending.length ? `
+    <div class="home-section">
+      <div class="section-header">
+        <span class="section-title">TRENDING NOW</span>
+        <span class="section-line"></span>
+        <span class="section-subtitle">Ultimi 14 giorni · per punti</span>
+      </div>
+      <div class="trending-scroll">
+        ${trending.map((a,i)=>`
+          <a href="#/atleta/${esc(a.atleta_id)}" class="trend-card">
+            <div class="trend-rank">${i+1}</div>
+            <div class="trend-cat-tag">${esc((a.categoria||'').split('°')[0].trim().slice(0,10))}</div>
+            <div class="trend-surname">${esc(a.cognome)}</div>
+            <div class="trend-firstname">${esc(a.nome)}</div>
+            <div class="trend-teamname">${esc(a.team)}</div>
+            <div class="trend-pts-row">
+              <span class="trend-pts">${a.pts}</span>
+              <span class="trend-pts-label">pt</span>
+            </div>
+            <div class="trend-badges">
+              ${a.vittorie>0?`<span class="trend-badge trend-badge-win">🥇 ${a.vittorie} vitt.</span>`:''}
+              ${a.podio>0?`<span class="trend-badge trend-badge-pod">⬆ ${a.podio} podi</span>`:''}
+            </div>
+          </a>`).join('')}
+      </div>
+    </div>` : '';
+
+  // UPCOMING + TEAM HOT
+  const upcomingHtml = upcoming.length ? `
+    <div>
+      <div class="section-header" style="margin-bottom:12px">
+        <span class="section-title">PROSSIME GARE</span>
+        <span class="section-line"></span>
+        <a href="#/calendario" style="font-family:var(--font-mono);font-size:0.7rem;color:var(--red-hot);text-decoration:none;white-space:nowrap">Calendario →</a>
+      </div>
+      <div style="display:flex;flex-direction:column;gap:4px">
+        ${upcoming.map(g=>{
+          const d = new Date(g.data);
+          const daysTo = Math.round((d - new Date(todayStr))/86400000);
+          const cClass = daysTo===0?'countdown-today':daysTo<=2?'countdown-soon':'countdown-far';
+          const cLabel = daysTo===0?'OGGI':daysTo===1?'DOMANI':`+${daysTo}g`;
+          return `<a href="#/gara/${esc(g.id)}" class="upcoming-row">
+            <div class="upcoming-date-block">
+              <div class="upcoming-day-num">${d.getDate()}</div>
+              <div class="upcoming-mon">${MONTHS_SHORT[d.getMonth()]}</div>
+            </div>
+            <div class="upcoming-info">
+              <div class="upcoming-name">${esc(g.nome)}</div>
+              <div class="upcoming-loc">${[g.luogo,g.regione].filter(Boolean).join(' · ')}</div>
+            </div>
+            <div class="upcoming-right">
+              <span class="upcoming-countdown ${cClass}">${cLabel}</span>
+              ${badgeMult(g.moltiplicatore, g.tipo, g.campionato_regionale, g.campionato_italiano)}
+            </div>
+          </a>`;
+        }).join('')}
+      </div>
+    </div>` : '';
+
+  const teamHotHtml = topTeams.length ? `
+    <div>
+      <div class="section-header" style="margin-bottom:12px">
+        <span class="section-title">TEAM HOT 🔥</span>
+        <span class="section-line"></span>
+        <span class="section-subtitle">Vittorie · 14 giorni</span>
+      </div>
+      <div style="display:flex;flex-direction:column;gap:4px">
+        ${topTeams.map((t,i)=>`
+          <a href="#/team/${esc(t.team_id)}" class="team-hot-row">
+            <div class="team-hot-pos" style="color:${i===0?'var(--gold)':i===1?'var(--silver)':i===2?'var(--bronze)':'var(--text-muted)'}">${i+1}</div>
+            <div style="flex:1;min-width:0">
+              <div class="team-hot-name">${esc(t.team)}</div>
+              <div class="team-hot-sub">${t.gare} gare · ${t.podio} podi</div>
+            </div>
+            <div class="team-hot-wins">
+              <div class="team-hot-wins-num">${t.vittorie}</div>
+              <div class="team-hot-wins-label">vitt.</div>
+            </div>
+          </a>`).join('')}
+      </div>
+    </div>` : '';
+
+  // RISING TALENTS
+  const risingHtml = rising.length ? `
+    <div class="home-section">
+      <div class="section-header">
+        <span class="section-title">RISING TALENTS ⬆</span>
+        <span class="section-line"></span>
+        <span class="section-subtitle">Esordienti &amp; Allievi · 14 giorni</span>
+      </div>
+      <div class="trending-scroll">
+        ${rising.map((a,i)=>`
+          <a href="#/atleta/${esc(a.atleta_id)}" class="trend-card" style="border-top:2px solid var(--cat-esordienti)">
+            <div class="trend-rank">${i+1}</div>
+            <div class="trend-cat-tag">${esc((a.categoria||'').split(' ').slice(0,2).join(' '))}</div>
+            <div class="trend-surname">${esc(a.cognome)}</div>
+            <div class="trend-firstname">${esc(a.nome)}</div>
+            <div class="trend-teamname">${esc(a.team)}</div>
+            <div class="trend-pts-row">
+              <span class="trend-pts" style="color:var(--cat-allievi)">${a.pts}</span>
+              <span class="trend-pts-label">pt</span>
+            </div>
+            ${a.vittorie>0?`<div class="trend-badges"><span class="trend-badge trend-badge-win">🥇 ${a.vittorie} vitt.</span></div>`:''}
+          </a>`).join('')}
+      </div>
+    </div>` : '';
+
+  // MATCHUP DELLA SETTIMANA
+  let matchupHtml = '';
+  if (qcA && qcB) {
+    const gap = qcA.punti - qcB.punti;
+    const pctA = Math.round(qcA.punti/(qcA.punti+qcB.punti)*100);
+    matchupHtml = `
+      <div class="home-section">
+        <div class="section-header">
+          <span class="section-title">MATCHUP DELLA SETTIMANA</span>
+          <span class="section-line"></span>
+          <a href="#/comparatore" style="font-family:var(--font-mono);font-size:0.7rem;color:var(--red-hot);text-decoration:none">Confronta tutti →</a>
+        </div>
+        <div class="matchup-card">
+          <a href="#/atleta/${esc(qcA.atleta_id)}" class="matchup-side">
+            <div class="matchup-pos" style="color:var(--gold)">1°</div>
+            <div class="matchup-surname">${esc(qcA.cognome)}</div>
+            <div class="matchup-firstname">${esc(qcA.nome)}</div>
+            <div class="matchup-pts" style="color:var(--gold)">${qcA.punti}</div>
+            <div style="font-size:0.62rem;color:var(--text-muted)">punti</div>
+          </a>
+          <div class="matchup-center">
+            <div style="font-family:var(--font-heading);font-size:0.58rem;color:var(--text-muted);text-transform:uppercase;text-align:center;margin-bottom:4px">${catLabel(qcCat)}</div>
+            <div class="matchup-vs">VS</div>
+            <div class="matchup-bar" style="margin-top:8px"><div class="matchup-bar-fill" style="width:${pctA}%;background:var(--gold)"></div></div>
+            <div class="matchup-gap" style="margin-top:8px">+${gap}</div>
+            <div style="font-size:0.58rem;color:var(--text-muted)">pt di distacco</div>
+          </div>
+          <a href="#/atleta/${esc(qcB.atleta_id)}" class="matchup-side matchup-side-right">
+            <div class="matchup-pos" style="color:var(--silver)">2°</div>
+            <div class="matchup-surname">${esc(qcB.cognome)}</div>
+            <div class="matchup-firstname">${esc(qcB.nome)}</div>
+            <div class="matchup-pts" style="color:var(--silver)">${qcB.punti}</div>
+            <div style="font-size:0.62rem;color:var(--text-muted)">punti</div>
+          </a>
+        </div>
+      </div>`;
+  }
+
+  // CATEGORIA PANORAMICA (existing logic, kept)
   const panoramicaCards = catOrder.map((code, i) => {
     const ranking = allRankings[i];
     if (!ranking || ranking.length < 1) return '';
     const isF = code.endsWith('_F');
-    const first  = ranking[0];
-    const second = ranking[1] || null;
-    const third  = ranking[2] || null;
+    const first = ranking[0], second = ranking[1]||null, third = ranking[2]||null;
     const gap = second ? first.punti - second.punti : null;
-    const gapColor = gap === null ? 'var(--text-muted)' : gap <= 10 ? 'var(--red-hot)' : gap <= 30 ? 'var(--yellow-race)' : 'var(--text-muted)';
-
-    // Miglior atleta per punti nell'ultimo mese (punti_effettivi include il moltiplicatore)
-    let best = null, bestPts = -1;
+    const gapColor = gap===null?'var(--text-muted)':gap<=10?'var(--red-hot)':gap<=30?'var(--yellow-race)':'var(--text-muted)';
+    let best=null, bestPts=-1;
     for (const entry of ranking) {
-      const recenti = (resultsByAtleta[entry.atleta_id] || []).filter(r => r.data >= cutoffStr);
-      const pts = recenti.reduce((s, r) => s + (r.punti_effettivi || 0), 0);
-      if (recenti.length > 0 && pts > bestPts) { bestPts = pts; best = { ...entry, pts4w: pts, nGare: recenti.length }; }
+      const recenti = (resultsByAtleta[entry.atleta_id]||[]).filter(r=>r.data>=cutoffStr);
+      const pts = recenti.reduce((s,r)=>s+(r.punti_effettivi||0),0);
+      if (recenti.length>0 && pts>bestPts) { bestPts=pts; best={...entry,pts4w:pts,nGare:recenti.length}; }
     }
-
     const podioRow = (pos, entry, color, ptColor) => entry ? `
       <div style="display:flex;align-items:center;justify-content:space-between;gap:6px">
         <div style="min-width:0;overflow:hidden">
@@ -809,46 +936,65 @@ async function renderHome() {
         </div>
         <span style="font-family:var(--font-display);font-size:1.05rem;color:${ptColor};flex-shrink:0">${entry.punti}</span>
       </div>` : '';
-
-    return `
-      <div class="cat-card" style="border-top:2px solid ${gapColor}">
-        <div style="padding:12px 16px 10px">
-          <div style="display:flex;align-items:center;gap:6px;margin-bottom:10px">
-            ${badgeCat(code)}
-            ${isF ? '<span class="badge-cat badge-genere-f">♀</span>' : ''}
-          </div>
-          <div style="display:flex;flex-direction:column;gap:4px;margin-bottom:8px">
-            ${podioRow(1, first,  'var(--gold)',   'var(--yellow-race)')}
-            ${podioRow(2, second, 'var(--silver)', 'var(--text-secondary)')}
-            ${podioRow(3, third,  'var(--bronze)', 'var(--text-muted)')}
-            ${gap !== null ? `<div style="text-align:right;margin-top:2px">
-              <span style="font-family:var(--font-mono);font-size:0.68rem;color:${gapColor}">1°→2° +${gap} pt</span>
-            </div>` : ''}
-          </div>
-          ${best ? `
-          <div style="border-top:1px solid var(--border-subtle);padding-top:8px;display:flex;align-items:center;justify-content:space-between;gap:6px">
-            <div style="min-width:0;overflow:hidden">
-              <div style="font-size:0.58rem;color:var(--text-muted);font-family:var(--font-mono);margin-bottom:2px">🔥 IN FORMA · ${best.nGare} gar${best.nGare===1?'a':'e'} · ultimo mese</div>
-              <a href="#/atleta/${esc(best.atleta_id)}" style="font-family:var(--font-heading);font-weight:700;font-size:0.82rem;text-transform:uppercase;color:var(--text-primary)">${esc(best.cognome)} ${esc(best.nome)}</a>
-            </div>
-            <span style="font-family:var(--font-display);font-size:1.4rem;color:var(--yellow-race);flex-shrink:0">${best.pts4w}</span>
-          </div>` : ''}
+    return `<div class="cat-card" style="border-top:2px solid ${gapColor}">
+      <div style="padding:12px 16px 10px">
+        <div style="display:flex;align-items:center;gap:6px;margin-bottom:10px">
+          ${badgeCat(code)}${isF?'<span class="badge-cat badge-genere-f">♀</span>':''}
         </div>
-      </div>`;
+        <div style="display:flex;flex-direction:column;gap:4px;margin-bottom:8px">
+          ${podioRow(1,first,'var(--gold)','var(--yellow-race)')}
+          ${podioRow(2,second,'var(--silver)','var(--text-secondary)')}
+          ${podioRow(3,third,'var(--bronze)','var(--text-muted)')}
+          ${gap!==null?`<div style="text-align:right;margin-top:2px"><span style="font-family:var(--font-mono);font-size:0.68rem;color:${gapColor}">1°→2° +${gap} pt</span></div>`:''}
+        </div>
+        ${best?`<div style="border-top:1px solid var(--border-subtle);padding-top:8px;display:flex;align-items:center;justify-content:space-between;gap:6px">
+          <div style="min-width:0;overflow:hidden">
+            <div style="font-size:0.58rem;color:var(--text-muted);font-family:var(--font-mono);margin-bottom:2px">🔥 IN FORMA · ${best.nGare} gar${best.nGare===1?'a':'e'} · ultimo mese</div>
+            <a href="#/atleta/${esc(best.atleta_id)}" style="font-family:var(--font-heading);font-weight:700;font-size:0.82rem;text-transform:uppercase;color:var(--text-primary)">${esc(best.cognome)} ${esc(best.nome)}</a>
+          </div>
+          <span style="font-family:var(--font-display);font-size:1.4rem;color:var(--yellow-race);flex-shrink:0">${best.pts4w}</span>
+        </div>`:''}
+      </div>
+    </div>`;
   }).join('');
 
+  // ── ASSEMBLE ──────────────────────────────────────────────────
   setPage(`
     ${heroHtml}
-    ${prossimeHtml}
+    ${tickerHtml}
+    ${trendingHtml}
+    <div class="home-2col">
+      ${upcomingHtml}
+      ${teamHotHtml}
+    </div>
+    ${risingHtml}
+    ${matchupHtml}
     <div class="section-header">
       <span class="section-title">PANORAMICA CATEGORIE</span>
       <span class="section-line"></span>
-      <span class="section-subtitle">Leader stagionale · distacco · 🔥 in forma (4 settimane)</span>
+      <span class="section-subtitle">Leader stagionale · distacco · 🔥 forma (4 settimane)</span>
     </div>
     <div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(240px,1fr));gap:12px;margin-bottom:48px">
       ${panoramicaCards}
     </div>
   `);
+
+  // Hero carousel controller
+  if (heroRaces.length > 1) {
+    let current = 0;
+    const total = heroRaces.length;
+    const goTo = (idx) => {
+      document.getElementById(`hero-slide-${current}`)?.classList.remove('active');
+      document.getElementById(`hero-dot-${current}`)?.classList.remove('active');
+      current = (idx + total) % total;
+      document.getElementById(`hero-slide-${current}`)?.classList.add('active');
+      document.getElementById(`hero-dot-${current}`)?.classList.add('active');
+    };
+    window.heroGoTo = goTo;
+    window.heroNext = () => { clearInterval(window.homeHeroInterval); goTo(current+1); window.homeHeroInterval = setInterval(()=>goTo(current+1), 6000); };
+    window.heroPrev = () => { clearInterval(window.homeHeroInterval); goTo(current-1); window.homeHeroInterval = setInterval(()=>goTo(current+1), 6000); };
+    window.homeHeroInterval = setInterval(() => goTo(current+1), 6000);
+  }
 }
 
 // ── CLASSIFICA ────────────────────────────────────────────────
