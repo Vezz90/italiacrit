@@ -15,3 +15,4 @@ data/team_rankings/
 
 # Eccezioni per i dati manuali
 !data/user_overrides.json
+!data/athlete_gender_fixes.json

@@ -1,0 +1,12 @@
+[
+  { "id": "ANDREOLI_ALICE",       "genere": "F", "categoria": "ES1_F" },
+  { "id": "MASINI_GRETA",         "genere": "F", "categoria": "ES2_F" },
+  { "id": "DELOGU_GIULIA",        "genere": "F", "categoria": "ES2_F" },
+  { "id": "RENZULLI_GIULIA",      "genere": "F", "categoria": "ES1_F" },
+  { "id": "ABRIONI_ALESSIA",      "genere": "F", "categoria": "ES1_F" },
+  { "id": "CINQUEGRANI_FEDERICA", "genere": "F", "categoria": "ES1_F" },
+  { "id": "POIDOMANI_ELENA",      "genere": "F", "categoria": "ES1_F" },
+  { "id": "FONTANA_GIULIA_MARIA", "genere": "F", "categoria": "ES1_F" },
+  { "id": "SGROI_GIADA",          "genere": "F", "categoria": "ES1_F" },
+  { "id": "DI_PARDO_BEATRICE",    "genere": "F", "categoria": "ES1_F" }
+]

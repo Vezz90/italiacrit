@@ -1006,7 +1006,10 @@ async function updateRankTable() {
       return `<tr class="ranking-row" style="animation-delay:${Math.min(i,20)*30}ms">
         <td><span class="rank-num ${pClass}">${r.pos}</span></td>
         <td style="text-align:center;width:40px">${renderTrend(r)}</td>
-        <td><span class="rank-name"><a href="#/atleta/${esc(r.atleta_id)}">${esc(r.cognome)} ${esc(r.nome)}</a></span></td>
+        <td>
+          <span class="rank-name"><a href="#/atleta/${esc(r.atleta_id)}">${esc(r.cognome)} ${esc(r.nome)}</a></span>
+          <div class="td-team-mobile"><a href="#/team/${esc(r.team_id)}" style="color:var(--text-secondary)">${esc(r.team_nome)}</a></div>
+        </td>
         <td class="hide-mobile"><a href="#/team/${esc(r.team_id)}" style="color:var(--text-secondary);font-size:.85rem">${esc(r.team_nome)}</a></td>
         <td class="r"><span class="rank-pts">${r.punti}</span></td>
         <td class="r hide-mobile" style="color:var(--text-secondary);font-family:var(--font-mono);font-size:.85rem">${r.gare||0}</td>
