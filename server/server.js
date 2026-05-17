@@ -12,29 +12,59 @@ const PORT = 8002;
 const JWT_SECRET = process.env.JWT_SECRET || 'italiacrit-dev-secret-2026';
 const JWT_EXPIRES = '30d';
 
-// ── Uploads setup ────────────────────────────────────────────────────────────
+// ── Supabase Storage (produzione) o disco locale (sviluppo) ─────────────────
+const SUPABASE_URL    = process.env.SUPABASE_URL;
+const SUPABASE_SECRET = process.env.SUPABASE_SECRET;
+let supabase = null;
+if (SUPABASE_URL && SUPABASE_SECRET) {
+  const { createClient } = require('@supabase/supabase-js');
+  supabase = createClient(SUPABASE_URL, SUPABASE_SECRET);
+  console.log('[storage] Supabase Storage attivo');
+}
+
+// ── Uploads locali (fallback sviluppo) ───────────────────────────────────────
 const UPLOADS_DIR = path.join(__dirname, 'uploads');
 if (!fs.existsSync(UPLOADS_DIR)) fs.mkdirSync(UPLOADS_DIR);
 
-const storage = multer.diskStorage({
-  destination: UPLOADS_DIR,
-  filename: (req, file, cb) => {
-    const ext  = path.extname(file.originalname).toLowerCase() || '.jpg';
-    const base = req.body.entity_type && req.body.entity_id
-      ? (req.body.entity_type + '_' + req.body.entity_id)
-      : ('photo_' + Date.now() + '_' + Math.random().toString(36).slice(2, 7));
-    const safe = base.replace(/[^a-zA-Z0-9_-]/g, '_').slice(0, 120);
-    cb(null, safe + ext);
-  },
-});
+function makeFilename(req, ext) {
+  const base = req.body.entity_type && req.body.entity_id
+    ? (req.body.entity_type + '_' + req.body.entity_id)
+    : ('photo_' + Date.now() + '_' + Math.random().toString(36).slice(2, 7));
+  return base.replace(/[^a-zA-Z0-9_-]/g, '_').slice(0, 120) + ext;
+}
+
 const upload = multer({
-  storage,
+  storage: supabase ? multer.memoryStorage() : multer.diskStorage({
+    destination: UPLOADS_DIR,
+    filename: (req, file, cb) => cb(null, makeFilename(req, path.extname(file.originalname).toLowerCase() || '.jpg')),
+  }),
   limits: { fileSize: 50 * 1024 * 1024 },
   fileFilter: (req, file, cb) => {
     if (/^image\/(jpeg|png|webp|gif)$/.test(file.mimetype)) cb(null, true);
     else cb(new Error('Solo immagini JPEG, PNG, WebP o GIF'));
   },
 });
+
+async function savePhoto(req, file) {
+  const ext      = path.extname(file.originalname).toLowerCase() || '.jpg';
+  const filename = makeFilename(req, ext);
+  if (supabase) {
+    const { error } = await supabase.storage.from('photos').upload(filename, file.buffer, { contentType: file.mimetype, upsert: true });
+    if (error) throw new Error(error.message);
+  } else {
+    fs.writeFileSync(path.join(UPLOADS_DIR, filename), file.buffer || fs.readFileSync(file.path));
+  }
+  return filename;
+}
+
+async function deletePhoto(filename) {
+  if (supabase) {
+    await supabase.storage.from('photos').remove([filename]);
+  } else {
+    const p = path.join(UPLOADS_DIR, filename);
+    try { if (fs.existsSync(p)) fs.unlinkSync(p); } catch {}
+  }
+}
 
 app.use(cors({ origin: '*' }));
 app.options('*', cors());   // preflight per tutte le route
@@ -326,20 +356,25 @@ app.post('/api/upload/photo', requireAuth, upload.single('photo'), (req, res) =>
 // ── Race Photos ──────────────────────────────────────────────────────────────
 
 // POST /api/race-photos/upload  — qualsiasi utente loggato
-app.post('/api/race-photos/upload', requireAuth, upload.single('photo'), (req, res) => {
-  const { gara_id, caption, photographer } = req.body;
-  if (!gara_id) return res.status(400).json({ error: 'gara_id mancante' });
-  if (!req.file) return res.status(400).json({ error: 'Nessun file ricevuto' });
-  const display_name = req.user.display_name || req.user.email;
-  const status = req.user.role === 'admin' ? 'approved' : 'pending';
-  queries.insertRacePhoto.run({
-    gara_id, user_id: req.user.id, display_name,
-    filename: req.file.filename,
-    caption: caption || '',
-    photographer: photographer || '',
-    status,
-  });
-  res.json({ ok: true, status });
+app.post('/api/race-photos/upload', requireAuth, upload.single('photo'), async (req, res) => {
+  try {
+    const { gara_id, caption, photographer } = req.body;
+    if (!gara_id) return res.status(400).json({ error: 'gara_id mancante' });
+    if (!req.file) return res.status(400).json({ error: 'Nessun file ricevuto' });
+    const filename     = await savePhoto(req, req.file);
+    const display_name = req.user.display_name || req.user.email;
+    const status       = req.user.role === 'admin' ? 'approved' : 'pending';
+    queries.insertRacePhoto.run({
+      gara_id, user_id: req.user.id, display_name,
+      filename,
+      caption: caption || '',
+      photographer: photographer || '',
+      status,
+    });
+    res.json({ ok: true, status });
+  } catch (e) {
+    res.status(500).json({ error: e.message });
+  }
 });
 
 // GET /api/race-photos  — tutte le approvate (per Risultati page)
@@ -378,13 +413,11 @@ app.patch('/api/admin/race-photos/:id', requireAdmin, (req, res) => {
 });
 
 // DELETE /api/admin/race-photos/:id
-app.delete('/api/admin/race-photos/:id', requireAdmin, (req, res) => {
+app.delete('/api/admin/race-photos/:id', requireAdmin, async (req, res) => {
   const photo = queries.getRacePhotoById.get(req.params.id);
   if (!photo) return res.status(404).json({ error: 'Foto non trovata' });
   queries.deleteRacePhoto.run(req.params.id);
-  // Remove file from disk
-  const filePath = path.join(UPLOADS_DIR, photo.filename);
-  try { if (fs.existsSync(filePath)) fs.unlinkSync(filePath); } catch {}
+  await deletePhoto(photo.filename);
   res.json({ ok: true });
 });
 
