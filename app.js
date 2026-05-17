@@ -681,17 +681,21 @@ async function renderHome() {
     if (r.posizione <= 3) teamPerCat[code][tid].podio++;
     teamPerCat[code][tid].gare++;
   }
-  // Migliore team per categoria
+  // Migliore team per categoria — per punti e per vittorie
   const catOrderM = ['ELI_M','JUN_M','AL_M','ES2_M','ES1_M'];
   const catOrderF = ['ELI_F','JUN_F','AL_F','ES2_F','ES1_F'];
-  const bestTeamPerCat = cat => {
-    if (!teamPerCat[cat]) return null;
-    return Object.values(teamPerCat[cat]).sort((a,b)=>b.pts-a.pts||b.vittorie-a.vittorie)[0];
+  const byPtsFn  = (a,b) => b.pts-a.pts||b.vittorie-a.vittorie;
+  const byWinsFn = (a,b) => b.vittorie-a.vittorie||b.pts-a.pts;
+  const bestTeam = (cat, sortFn) => teamPerCat[cat] ? Object.values(teamPerCat[cat]).sort(sortFn)[0]||null : null;
+  const teamHotM = {
+    byPts:  catOrderM.map(c=>({code:c,best:bestTeam(c,byPtsFn)})).filter(x=>x.best),
+    byWins: catOrderM.map(c=>({code:c,best:bestTeam(c,byWinsFn)})).filter(x=>x.best)
   };
-  const teamHotM = catOrderM.map(c=>({ code:c, best:bestTeamPerCat(c) })).filter(x=>x.best);
-  const teamHotF = catOrderF.map(c=>({ code:c, best:bestTeamPerCat(c) })).filter(x=>x.best);
-  // Per ticker: top team complessivo per punti (M)
-  const topTeamTicker = teamHotM[0]?.best || teamHotF[0]?.best || null;
+  const teamHotF = {
+    byPts:  catOrderF.map(c=>({code:c,best:bestTeam(c,byPtsFn)})).filter(x=>x.best),
+    byWins: catOrderF.map(c=>({code:c,best:bestTeam(c,byWinsFn)})).filter(x=>x.best)
+  };
+  const topTeamTicker = teamHotM.byPts[0]?.best || teamHotF.byPts[0]?.best || null;
 
   // Upcoming
   const todayStr = new Date().toISOString().split('T')[0];
@@ -701,29 +705,83 @@ async function renderHome() {
   const catOrder = ['ELI_M','JUN_M','AL_M','ES2_M','ES1_M','ELI_F','JUN_F','AL_F','ES2_F','ES1_F'];
   const allRankings = await Promise.all(catOrder.map(c => loadRanking(c)));
 
-  // Quick compare — categoria più combattuta
-  let qcCat = 'ES1_M', qcA = null, qcB = null, minGap = Infinity;
-  for (let i = 0; i < catOrder.length; i++) {
-    const rk = allRankings[i];
-    if (rk && rk[0] && rk[1]) {
-      const g = rk[0].punti - rk[1].punti;
-      if (g < minGap) { minGap = g; qcCat = catOrder[i]; qcA = rk[0]; qcB = rk[1]; }
+  // 28-day cutoff (usato per forma recente e posizioni a rischio)
+  const lastRaceCutoff = new Date(lastRaceDate || new Date());
+  lastRaceCutoff.setDate(lastRaceCutoff.getDate() - 28);
+  const cutoffStr = lastRaceCutoff.toISOString().split('T')[0];
+
+  // 7-day cutoff per Chi Scala
+  const weekCutStr = (() => { const d = new Date(lastRaceDate||new Date()); d.setDate(d.getDate()-7); return d.toISOString().split('T')[0]; })();
+
+  // Forma 28gg per atleta per categoria (usata per rischio posizione)
+  const form28ByCat = {};
+  // Punti ultima settimana per atleta per categoria (usata per Chi Scala)
+  const recentPtsByCat = {};
+  for (const r of resultsRaw) {
+    const code = getRankingFileCode(r);
+    if (!code || !r.data) continue;
+    const aid = r.atleta_id;
+    if (r.data >= cutoffStr) {
+      if (!form28ByCat[code]) form28ByCat[code] = {};
+      form28ByCat[code][aid] = (form28ByCat[code][aid]||0) + (r.punti_effettivi||0);
+    }
+    if (r.data >= weekCutStr) {
+      if (!recentPtsByCat[code]) recentPtsByCat[code] = {};
+      recentPtsByCat[code][aid] = (recentPtsByCat[code][aid]||0) + (r.punti_effettivi||0);
     }
   }
+
+  // Chi Scala — maggiori guadagni di posizione nell'ultima settimana
+  const topScalatori = (() => {
+    const result = [];
+    for (let i = 0; i < catOrder.length; i++) {
+      const code = catOrder[i];
+      const rk = allRankings[i];
+      if (!rk || rk.length < 2) continue;
+      const recentInCat = recentPtsByCat[code] || {};
+      // Ranking "prima della settimana" = punti correnti - punti ultima settimana
+      const oldSorted = rk.map(a => ({ atleta_id:a.atleta_id, oldPts: a.punti-(recentInCat[a.atleta_id]||0) }))
+                          .sort((a,b) => b.oldPts-a.oldPts);
+      const oldPos = {};
+      oldSorted.forEach((a,idx) => oldPos[a.atleta_id] = idx+1);
+      rk.forEach((a, newIdx) => {
+        const gain = (oldPos[a.atleta_id]||newIdx+1) - (newIdx+1);
+        const recentPts = recentInCat[a.atleta_id]||0;
+        if (gain > 0 && recentPts > 0) result.push({ atleta_id:a.atleta_id, cognome:a.cognome, nome:a.nome, team:a.team_attuale||a.team||'', team_id:a.team_id, code, gain, newPos:newIdx+1, oldPos:oldPos[a.atleta_id]||newIdx+1, recentPts });
+      });
+    }
+    return result.sort((a,b)=>b.gain-a.gain||b.recentPts-a.recentPts).slice(0,12);
+  })();
+
+  // Posizioni a Rischio — top 5 per categoria con indicatore forma
+  const rischioPerCat = catOrder.map((code, i) => {
+    const rk = allRankings[i];
+    if (!rk || rk.length < 2) return null;
+    const form = form28ByCat[code] || {};
+    const top5 = rk.slice(0,5).map((a, idx) => {
+      const below = rk[idx+1] || null;
+      const gapBelow = below ? a.punti - below.punti : null;
+      const holderForm = form[a.atleta_id] || 0;
+      const belowForm  = below ? (form[below.atleta_id]||0) : 0;
+      let risk = 'stabile';
+      if (gapBelow !== null && below) {
+        if      (gapBelow <= 5  && belowForm > holderForm)      risk = 'critico';
+        else if (gapBelow <= 15 && belowForm > holderForm)      risk = 'alto';
+        else if (gapBelow <= 30 && belowForm > holderForm*1.2)  risk = 'medio';
+      }
+      return { pos:idx+1, atleta_id:a.atleta_id, cognome:a.cognome, nome:a.nome, punti:a.punti, gapBelow, holderForm, belowForm, risk };
+    });
+    return { code, top5 };
+  }).filter(Boolean);
 
   // Smart insights ticker
   const tickerItems = [];
   if (formaBest[0]) tickerItems.push(`🔥 <strong>IN FORMA:</strong> ${formaBest[0].cognome} ${formaBest[0].nome} — ${formaBest[0].pts} pt · ${catLabel(formaBest[0].code)}`);
   if (topTeamTicker) tickerItems.push(`🏆 <strong>TEAM HOT:</strong> ${topTeamTicker.team} — ${topTeamTicker.pts} pt · ${topTeamTicker.vittorie} vitt. recenti`);
   if (heroRaces[0]) { const w = heroRaces[0].results?.find(r=>r.posizione===1); if (w) tickerItems.push(`🥇 <strong>ULTIMA VITTORIA:</strong> ${w.cognome} ${w.nome} · ${heroRaces[0].nome}`); }
-  if (qcA && qcB && minGap <= 15) tickerItems.push(`⚡ <strong>BATTAGLIA:</strong> Solo ${minGap} pt tra ${qcA.cognome} e ${qcB.cognome} in ${catLabel(qcCat)}`);
+  if (topScalatori[0]) tickerItems.push(`⬆ <strong>CHI SCALA:</strong> ${topScalatori[0].cognome} ${topScalatori[0].nome} +${topScalatori[0].gain} pos. in ${catLabel(topScalatori[0].code)}`);
   if (upcoming[0]) { const d = Math.round((new Date(upcoming[0].data)-new Date(todayStr))/86400000); tickerItems.push(`📅 <strong>PROSSIMA GARA${d===0?' OGGI':d===1?' DOMANI':''}:</strong> ${upcoming[0].nome}`); }
   if (formaBest.length > 1) { const f = formaBest[1]; tickerItems.push(`⬆ <strong>EMERGENTE:</strong> ${f.cognome} ${f.nome} — ${f.pts} pt · ${catLabel(f.code)}`); }
-
-  // Cat overview (last 28 days form)
-  const lastRaceCutoff = new Date(lastRaceDate || new Date());
-  lastRaceCutoff.setDate(lastRaceCutoff.getDate() - 28);
-  const cutoffStr = lastRaceCutoff.toISOString().split('T')[0];
 
   const MONTHS_SHORT = ['GEN','FEB','MAR','APR','MAG','GIU','LUG','AGO','SET','OTT','NOV','DIC'];
 
@@ -844,133 +902,89 @@ async function renderHome() {
       </div>
     </div>` : '';
 
-  const teamCatCard = ({code, best}) => `
-    <a href="#/team/${esc(best.team_id)}" class="forma-cat-card">
-      <div class="forma-cat-badge">${badgeCat(code)}</div>
-      <div class="forma-surname">${esc(best.team)}</div>
-      <div class="forma-pts-row">
-        <span class="forma-pts">${best.pts}</span>
-        <span class="forma-pts-label">pt</span>
-      </div>
-      <div class="forma-sub">${best.gare} gar${best.gare===1?'a':'e'} · ${best.vittorie} vitt. · ${best.podio} podi</div>
-    </a>`;
+  // TEAM HOT — per punti e per vittorie, M e F
+  const teamCardPts  = ({code,best}) => `<a href="#/team/${esc(best.team_id)}" class="forma-cat-card"><div class="forma-cat-badge">${badgeCat(code)}</div><div class="forma-surname">${esc(best.team)}</div><div class="forma-pts-row"><span class="forma-pts">${best.pts}</span><span class="forma-pts-label">pt</span></div><div class="forma-sub">${best.gare} gar${best.gare===1?'a':'e'} · ${best.vittorie} vitt.</div></a>`;
+  const teamCardWins = ({code,best}) => `<a href="#/team/${esc(best.team_id)}" class="forma-cat-card"><div class="forma-cat-badge">${badgeCat(code)}</div><div class="forma-surname">${esc(best.team)}</div><div class="forma-pts-row"><span class="forma-pts">${best.vittorie}</span><span class="forma-pts-label">vitt.</span></div><div class="forma-sub">${best.pts} pt · ${best.gare} gar${best.gare===1?'a':'e'}</div></a>`;
 
-  const teamHotHtml = (teamHotM.length || teamHotF.length) ? `
+  const teamHotBlock = (hot) => hot.byPts.length || hot.byWins.length ? `
+    <div class="team-hot-col-label" style="color:var(--yellow-race);margin-top:10px">Per Punti</div>
+    <div class="forma-grid" style="margin-bottom:12px">${hot.byPts.map(teamCardPts).join('')}</div>
+    <div class="team-hot-col-label" style="color:var(--red-hot)">Per Vittorie</div>
+    <div class="forma-grid">${hot.byWins.map(teamCardWins).join('')}</div>` : '';
+
+  const teamHotHtml = (teamHotM.byPts.length || teamHotF.byPts.length) ? `
     <div class="home-section">
-      <div class="section-header" style="margin-bottom:16px">
+      <div class="section-header" style="margin-bottom:4px">
         <span class="section-title">TEAM HOT 🔥</span>
         <span class="section-line"></span>
-        <span class="section-subtitle">Miglior team per categoria · ultimi 14 giorni · per punti</span>
+        <span class="section-subtitle">Miglior team per categoria · ultimi 14 giorni</span>
       </div>
-      ${teamHotM.length ? `
-        <div class="team-hot-gender-label">♂ Maschile</div>
-        <div class="forma-grid" style="margin-bottom:16px">${teamHotM.map(teamCatCard).join('')}</div>
-      ` : ''}
-      ${teamHotF.length ? `
-        <div class="team-hot-gender-label">♀ Femminile</div>
-        <div class="forma-grid">${teamHotF.map(teamCatCard).join('')}</div>
-      ` : ''}
+      ${teamHotM.byPts.length ? `<div class="team-hot-gender-label" style="margin-top:12px">♂ Maschile</div>${teamHotBlock(teamHotM)}` : ''}
+      ${teamHotF.byPts.length ? `<div class="team-hot-gender-label" style="margin-top:20px">♀ Femminile</div>${teamHotBlock(teamHotF)}` : ''}
     </div>` : '';
 
-
-  // MATCHUP DELLA SETTIMANA
-  let matchupHtml = '';
-  if (qcA && qcB) {
-    const gap = qcA.punti - qcB.punti;
-    const pctA = Math.round(qcA.punti/(qcA.punti+qcB.punti)*100);
-    matchupHtml = `
-      <div class="home-section">
-        <div class="section-header">
-          <span class="section-title">MATCHUP DELLA SETTIMANA</span>
-          <span class="section-line"></span>
-          <a href="#/comparatore" style="font-family:var(--font-mono);font-size:0.7rem;color:var(--red-hot);text-decoration:none">Confronta tutti →</a>
-        </div>
-        <div class="matchup-card">
-          <a href="#/atleta/${esc(qcA.atleta_id)}" class="matchup-side">
-            <div class="matchup-pos" style="color:var(--gold)">1°</div>
-            <div class="matchup-surname">${esc(qcA.cognome)}</div>
-            <div class="matchup-firstname">${esc(qcA.nome)}</div>
-            <div class="matchup-pts" style="color:var(--gold)">${qcA.punti}</div>
-            <div style="font-size:0.62rem;color:var(--text-muted)">punti</div>
-          </a>
-          <div class="matchup-center">
-            <div style="font-family:var(--font-heading);font-size:0.58rem;color:var(--text-muted);text-transform:uppercase;text-align:center;margin-bottom:4px">${catLabel(qcCat)}</div>
-            <div class="matchup-vs">VS</div>
-            <div class="matchup-bar" style="margin-top:8px"><div class="matchup-bar-fill" style="width:${pctA}%;background:var(--gold)"></div></div>
-            <div class="matchup-gap" style="margin-top:8px">+${gap}</div>
-            <div style="font-size:0.58rem;color:var(--text-muted)">pt di distacco</div>
-          </div>
-          <a href="#/atleta/${esc(qcB.atleta_id)}" class="matchup-side matchup-side-right">
-            <div class="matchup-pos" style="color:var(--silver)">2°</div>
-            <div class="matchup-surname">${esc(qcB.cognome)}</div>
-            <div class="matchup-firstname">${esc(qcB.nome)}</div>
-            <div class="matchup-pts" style="color:var(--silver)">${qcB.punti}</div>
-            <div style="font-size:0.62rem;color:var(--text-muted)">punti</div>
-          </a>
-        </div>
-      </div>`;
-  }
-
-  // CATEGORIA PANORAMICA (existing logic, kept)
-  const panoramicaCards = catOrder.map((code, i) => {
-    const ranking = allRankings[i];
-    if (!ranking || ranking.length < 1) return '';
-    const isF = code.endsWith('_F');
-    const first = ranking[0], second = ranking[1]||null, third = ranking[2]||null;
-    const gap = second ? first.punti - second.punti : null;
-    const gapColor = gap===null?'var(--text-muted)':gap<=10?'var(--red-hot)':gap<=30?'var(--yellow-race)':'var(--text-muted)';
-    let best=null, bestPts=-1;
-    for (const entry of ranking) {
-      const recenti = (resultsByAtleta[entry.atleta_id]||[]).filter(r=>r.data>=cutoffStr);
-      const pts = recenti.reduce((s,r)=>s+(r.punti_effettivi||0),0);
-      if (recenti.length>0 && pts>bestPts) { bestPts=pts; best={...entry,pts4w:pts,nGare:recenti.length}; }
-    }
-    const podioRow = (pos, entry, color, ptColor) => entry ? `
-      <div style="display:flex;align-items:center;justify-content:space-between;gap:6px">
-        <div style="min-width:0;overflow:hidden">
-          <span style="font-family:var(--font-display);font-size:1.05rem;color:${color}">${pos}° </span>
-          <a href="#/atleta/${esc(entry.atleta_id)}" style="font-family:var(--font-heading);font-weight:600;font-size:0.875rem">${esc(entry.cognome)} ${esc(entry.nome)}</a>
-        </div>
-        <span style="font-family:var(--font-display);font-size:1.05rem;color:${ptColor};flex-shrink:0">${entry.punti}</span>
-      </div>` : '';
-    return `<div class="cat-card" style="border-top:2px solid ${gapColor}">
-      <div style="padding:12px 16px 10px">
-        <div style="display:flex;align-items:center;gap:6px;margin-bottom:10px">
-          ${badgeCat(code)}${isF?'<span class="badge-cat badge-genere-f">♀</span>':''}
-        </div>
-        <div style="display:flex;flex-direction:column;gap:4px;margin-bottom:8px">
-          ${podioRow(1,first,'var(--gold)','var(--yellow-race)')}
-          ${podioRow(2,second,'var(--silver)','var(--text-secondary)')}
-          ${podioRow(3,third,'var(--bronze)','var(--text-muted)')}
-          ${gap!==null?`<div style="text-align:right;margin-top:2px"><span style="font-family:var(--font-mono);font-size:0.68rem;color:${gapColor}">1°→2° +${gap} pt</span></div>`:''}
-        </div>
-        ${best?`<div style="border-top:1px solid var(--border-subtle);padding-top:8px;display:flex;align-items:center;justify-content:space-between;gap:6px">
-          <div style="min-width:0;overflow:hidden">
-            <div style="font-size:0.58rem;color:var(--text-muted);font-family:var(--font-mono);margin-bottom:2px">🔥 IN FORMA · ${best.nGare} gar${best.nGare===1?'a':'e'} · ultimo mese</div>
-            <a href="#/atleta/${esc(best.atleta_id)}" style="font-family:var(--font-heading);font-weight:700;font-size:0.82rem;text-transform:uppercase;color:var(--text-primary)">${esc(best.cognome)} ${esc(best.nome)}</a>
-          </div>
-          <span style="font-family:var(--font-display);font-size:1.4rem;color:var(--yellow-race);flex-shrink:0">${best.pts4w}</span>
-        </div>`:''}
+  // CHI SCALA — maggiori guadagni di posizione nell'ultima settimana
+  const riskIcon = r => r==='critico'?'🔴':r==='alto'?'🟠':r==='medio'?'🟡':'🟢';
+  const scalatoriHtml = topScalatori.length ? `
+    <div class="home-section">
+      <div class="section-header">
+        <span class="section-title">CHI SCALA ⬆</span>
+        <span class="section-line"></span>
+        <span class="section-subtitle">Maggiori guadagni di posizione nell'ultima settimana · tutte le categorie</span>
       </div>
-    </div>`;
-  }).join('');
+      <div class="trending-scroll">
+        ${topScalatori.map((a,i) => `
+          <a href="#/atleta/${esc(a.atleta_id)}" class="trend-card" style="border-top:2px solid var(--yellow-race)">
+            <div class="trend-rank">${i+1}</div>
+            <div class="trend-cat-tag">${badgeCat(a.code)}</div>
+            <div class="trend-surname">${esc(a.cognome)}</div>
+            <div class="trend-firstname">${esc(a.nome)}</div>
+            <div class="trend-teamname">${esc(a.team)}</div>
+            <div class="trend-pts-row">
+              <span class="trend-pts" style="color:var(--yellow-race)">+${a.gain}</span>
+              <span class="trend-pts-label">pos.</span>
+            </div>
+            <div class="forma-sub">${a.oldPos}° → ${a.newPos}° · +${a.recentPts}pt</div>
+          </a>`).join('')}
+      </div>
+    </div>` : '';
+
+  // POSIZIONI A RISCHIO — top 5 per categoria con indicatore forma 28gg
+  const rischioHtml = rischioPerCat.length ? `
+    <div class="home-section">
+      <div class="section-header">
+        <span class="section-title">POSIZIONI A RISCHIO</span>
+        <span class="section-line"></span>
+        <span class="section-subtitle">Top 5 per categoria · rischio calcolato su forma 28 giorni e distacco</span>
+      </div>
+      <div class="trending-scroll">
+        ${rischioPerCat.map(({code, top5}) => `
+          <div class="rischio-card">
+            <div class="rischio-header">${badgeCat(code)}</div>
+            ${top5.map(p => {
+              const posColor = p.pos===1?'var(--gold)':p.pos===2?'var(--silver)':p.pos===3?'var(--bronze)':'var(--text-muted)';
+              const icon = riskIcon(p.risk);
+              return `<div class="rischio-row">
+                <span class="rischio-pos" style="color:${posColor}">${p.pos}°</span>
+                <a href="#/atleta/${esc(p.atleta_id)}" class="rischio-name">${esc(p.cognome)} ${esc(p.nome)}</a>
+                <span class="rischio-pts">${p.punti}</span>
+                <span class="rischio-icon" title="Gap sotto: ${p.gapBelow??'—'}pt · Forma: ${p.holderForm}pt vs ${p.belowForm}pt">${icon}</span>
+              </div>`;
+            }).join('')}
+            <div class="rischio-legend"><span>🔴 critico</span><span>🟠 alto</span><span>🟡 medio</span><span>🟢 stabile</span></div>
+          </div>`).join('')}
+      </div>
+    </div>` : '';
 
   // ── ASSEMBLE ──────────────────────────────────────────────────
   setPage(`
     ${heroHtml}
     ${tickerHtml}
     ${formaHtml}
-    ${upcomingHtml}
     ${teamHotHtml}
-    ${matchupHtml}
-    <div class="section-header">
-      <span class="section-title">PANORAMICA CATEGORIE</span>
-      <span class="section-line"></span>
-      <span class="section-subtitle">Leader stagionale · distacco · 🔥 forma (4 settimane)</span>
-    </div>
-    <div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(240px,1fr));gap:12px;margin-bottom:48px">
-      ${panoramicaCards}
-    </div>
+    ${upcomingHtml}
+    ${scalatoriHtml}
+    ${rischioHtml}
   `);
 
   // Hero carousel controller

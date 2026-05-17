@@ -2494,11 +2494,21 @@ div[style*="grid-template-columns: repeat(auto-fit"] {
 .forma-sub { font-size:0.6rem; color:var(--text-muted); font-family:var(--font-mono); }
 .forma-more { font-size:0.62rem; color:var(--red-hot); font-family:var(--font-mono); margin-top:2px; }
 
-/* Team hot col label */
+/* Team hot labels */
 .team-hot-col-label { font-size:0.65rem; font-family:var(--font-mono); text-transform:uppercase; letter-spacing:0.1em; margin-bottom:8px; }
 .team-hot-gender-label { font-family:var(--font-heading); font-size:0.72rem; font-weight:700; color:var(--text-muted); text-transform:uppercase; letter-spacing:0.08em; margin-bottom:10px; padding-bottom:6px; border-bottom:1px solid var(--border-subtle); }
-.team-hot-cats { display:inline-flex; gap:3px; margin-left:6px; }
-.team-hot-cat { font-size:0.58rem; font-family:var(--font-mono); background:var(--bg-elevated); color:var(--text-muted); border-radius:2px; padding:1px 4px; }
+
+/* Rischio posizioni card */
+.rischio-card { flex-shrink:0; width:240px; background:var(--bg-card); border:1px solid var(--border-subtle); border-radius:6px; padding:12px; display:flex; flex-direction:column; gap:6px; }
+.rischio-header { margin-bottom:4px; }
+.rischio-row { display:flex; align-items:center; gap:6px; padding:3px 0; border-bottom:1px solid var(--border-subtle); }
+.rischio-row:last-of-type { border-bottom:none; }
+.rischio-pos { font-family:var(--font-display); font-size:1rem; width:22px; flex-shrink:0; }
+.rischio-name { flex:1; font-family:var(--font-heading); font-size:0.78rem; font-weight:600; text-decoration:none; color:var(--text-primary); white-space:nowrap; overflow:hidden; text-overflow:ellipsis; }
+.rischio-name:hover { color:var(--red-hot); }
+.rischio-pts { font-family:var(--font-mono); font-size:0.72rem; color:var(--text-secondary); flex-shrink:0; }
+.rischio-icon { font-size:0.85rem; flex-shrink:0; }
+.rischio-legend { display:flex; gap:6px; flex-wrap:wrap; margin-top:4px; font-size:0.55rem; color:var(--text-muted); font-family:var(--font-mono); }
 
 /* Matchup card */
 .matchup-card { display:flex; background:var(--bg-card); border:1px solid var(--border-subtle); border-radius:6px; overflow:hidden; margin-bottom:40px; }
