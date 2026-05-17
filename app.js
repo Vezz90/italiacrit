@@ -2593,10 +2593,10 @@ async function renderCalendario() {
       let podioHtml = '';
       if (hasResults) {
         const catEntries = Object.entries(byCategory);
-        podioHtml = catEntries.map(([catName, results]) => {
-          const top3 = results.sort((a,b) => a.posizione - b.posizione).slice(0,3);
+        podioHtml = catEntries.map(([catName, catData]) => {
+          const top3 = (catData.results || []).sort((a,b) => a.posizione - b.posizione).slice(0,3);
           const cLabel = catLabel(catName) || catName;
-          const firstRes = results[0];
+          const firstRes = top3[0];
           const kmVal = firstRes?.km || '';
           const mediaVal = firstRes?.media || '';
           const techBit = (kmVal || mediaVal)
@@ -2618,8 +2618,13 @@ async function renderCalendario() {
             ${rows}
           </div>`;
         }).join('');
-        podioHtml += `<div style="margin-top:10px;">
-          <a href="#/gara/${esc(garaLink)}" class="btn-action full" style="font-size:0.72rem;text-align:center;display:block;padding:7px 12px;">VAI AI RISULTATI COMPLETI &rarr;</a>
+        const calVideos = (globalData.videos || {})[garaLink] || [];
+        const calVideoBtn = calVideos.length
+          ? `<a href="${esc(calVideos[0].url)}" target="_blank" rel="noopener" class="btn-action" style="font-size:0.72rem;padding:7px 12px;display:flex;align-items:center;gap:5px;white-space:nowrap;">▶ Video</a>`
+          : '';
+        podioHtml += `<div style="margin-top:10px;display:flex;gap:8px;align-items:center;">
+          <a href="#/gara/${esc(garaLink)}" class="btn-action full" style="font-size:0.72rem;text-align:center;padding:7px 12px;flex:1;">VAI AI RISULTATI COMPLETI &rarr;</a>
+          ${calVideoBtn}
         </div>`;
       }
 
@@ -3889,8 +3894,9 @@ async function renderRisultati() {
               <span style="font-size:0.75rem;color:var(--text-muted);font-family:var(--font-mono)">${techBit}</span>
             </div>
             ${podioRows}
-            <div style="padding-top:10px;margin-top:10px;border-top:1px solid var(--border-subtle);">
-              <a href="#/gara/${esc(catGaraId)}" class="btn-action full" style="font-size:0.75rem;text-align:center;">VAI ALLA CLASSIFICA COMPLETA &rarr;</a>
+            <div style="padding-top:10px;margin-top:10px;border-top:1px solid var(--border-subtle);display:flex;gap:8px;align-items:center;">
+              <a href="#/gara/${esc(catGaraId)}" class="btn-action full" style="font-size:0.75rem;text-align:center;flex:1;">VAI ALLA CLASSIFICA COMPLETA &rarr;</a>
+              ${((globalData.videos||{})[catGaraId]||[]).length ? `<a href="${esc(((globalData.videos||{})[catGaraId]||[])[0].url)}" target="_blank" rel="noopener" class="btn-action" style="font-size:0.75rem;padding:7px 12px;white-space:nowrap;">▶ Video</a>` : ''}
             </div>
           </div>`;
       }).join(categories.length > 1 ? '<div style="border-top:2px solid var(--border-subtle);margin:16px 0;"></div>' : '');
