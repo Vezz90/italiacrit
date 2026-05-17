@@ -255,6 +255,19 @@ async function loadAll() {
   // Set IDs atlete — usato per filtrare ranking pre-costruiti
   const _femaleIds = new Set((resultsRaw || []).filter(r => r.genere === 'F').map(r => r.atleta_id));
 
+  // Mappa gara_id (risultati) → calendar_id — necessaria perché i gara_id
+  // dei risultati hanno suffissi extra rispetto agli id del calendario
+  const garaToCalId = {};
+  for (const cal of (calendar || [])) {
+    if (!cal.id || !cal.data) continue;
+    const calBase = cal.id.replace(/_\d{4}-\d{2}-\d{2}$/, '');
+    for (const r of (resultsRaw || [])) {
+      if (r.data === cal.data && r.gara_id && r.gara_id.startsWith(calBase)) {
+        garaToCalId[r.gara_id] = cal.id;
+      }
+    }
+  }
+
   return {
     calendar: calendar || [],
     resultsRaw: resultsRaw || [],
@@ -265,7 +278,8 @@ async function loadAll() {
     videos: videos || {},
     resultsByAtleta,
     resultsByTeam,
-    _femaleIds
+    _femaleIds,
+    garaToCalId
   };
 }
 
@@ -2396,7 +2410,8 @@ async function renderGara(gara_id) {
   } catch(e) { /* silent */ }
 
   // Video YouTube associati alla gara
-  const garaVideos = (globalData.videos || {})[gara_id] || [];
+  const _calId = (globalData.garaToCalId || {})[gara_id] || gara_id;
+  const garaVideos = (globalData.videos || {})[_calId] || (globalData.videos || {})[gara_id] || [];
   const videosHtml = garaVideos.length ? `
     <div class="comp-section" style="margin-top:20px">
       <div class="comp-section-title">Video</div>
@@ -2618,7 +2633,7 @@ async function renderCalendario() {
             ${rows}
           </div>`;
         }).join('');
-        const calVideos = (globalData.videos || {})[toCalId(garaLink)] ||
+        const calVideos = (globalData.videos || {})[(globalData.garaToCalId||{})[garaLink] || toCalId(garaLink)] ||
                           (globalData.videos || {})[garaLink] || [];
         const calVideoBtn = calVideos.length
           ? `<a href="${esc(calVideos[0].url)}" target="_blank" rel="noopener" class="btn-action" style="font-size:0.72rem;padding:7px 12px;display:flex;align-items:center;gap:5px;white-space:nowrap;">▶ Video</a>`
@@ -3886,8 +3901,8 @@ async function renderRisultati() {
       const featuredPhoto = Object.values(race.byCategory || {})
         .map(c => photosMap[c.gara_id]).find(Boolean);
 
-      // Video: cerca per calendar ID (senza suffisso categoria)
-      const raceCalId = toCalId(race.id);
+      // Video: usa la mappa gara_id → calendar_id
+      const raceCalId = (globalData.garaToCalId || {})[race.id] || toCalId(race.id);
       const raceVideos = (globalData.videos || {})[raceCalId] ||
                          (globalData.videos || {})[race.id] || [];
       const featuredVideo = raceVideos[0] || null;
