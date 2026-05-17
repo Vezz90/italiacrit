@@ -1802,8 +1802,8 @@ async function renderTeam(team_id) {
       <span class="cat-pts">${a.puntiCat||0}</span>
     </div>`).join('');
 
-  const risultatiRows = catRisultati
-    .sort((a,b) => (b.data||'').localeCompare(a.data||''))
+  const risultatiRows = [...catRisultati]
+    .sort((a,b) => a.posizione - b.posizione || (b.data||'').localeCompare(a.data||''))
     .slice(0, 30)
     .map(r => {
       // Per la scheda Team mostriamo il rank della squadra (con tie-break)

@@ -2439,8 +2439,9 @@ div[style*="grid-template-columns: repeat(auto-fit"] {
 
 @media (max-width: 640px) {
   .td-hide-mobile { display: none !important; }
-  .td-team-mobile { display: block; }
+  .td-team-mobile { display: block; font-size: 0.85rem; }
   .td-pos { font-size: 1rem !important; }
-  .team-stats-row { flex-wrap: wrap; gap: 8px; }
+  .team-stats-row { overflow-x: auto; flex-wrap: nowrap !important; -webkit-overflow-scrolling: touch; padding-bottom: 6px; gap: 12px !important; }
+  .team-stat { min-width: 60px; flex-shrink: 0; }
   .team-name-display { font-size: clamp(1.1rem, 4vw, 1.8rem) !important; }
 }
