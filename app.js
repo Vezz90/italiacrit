@@ -269,8 +269,14 @@ const RANKING_CODES = [
 ];
 
 async function loadRanking(code) {
-  const data = await loadJson(`data/rankings/${code}.json`);
-  return data || [];
+  let data = await loadJson(`data/rankings/${code}.json`) || [];
+  // Rimuove atlete classificate nel sesso sbagliato dal ranking precompilato
+  if (code.endsWith('_M')) {
+    data = data.filter(r => !ATHLETE_GENDER_FIXES[r.atleta_id]);
+  }
+  // Ricalcola le posizioni dopo il filtro
+  data.forEach((r, i) => { r.pos = i + 1; });
+  return data;
 }
 
 async function loadTeamRanking(code) {
