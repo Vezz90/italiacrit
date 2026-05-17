@@ -324,33 +324,38 @@ app.get('/api/admin/all-entity-overrides', requireAdmin, (req, res) => {
 
 // ── Photo upload ─────────────────────────────────────────────────────────────
 
-app.post('/api/upload/photo', requireAuth, upload.single('photo'), (req, res) => {
-  const { entity_type, entity_id } = req.body;
-  if (!entity_type || !entity_id) return res.status(400).json({ error: 'Dati mancanti' });
-  if (!req.file) return res.status(400).json({ error: 'Nessun file ricevuto' });
+app.post('/api/upload/photo', requireAuth, upload.single('photo'), async (req, res) => {
+  try {
+    const { entity_type, entity_id } = req.body;
+    if (!entity_type || !entity_id) return res.status(400).json({ error: 'Dati mancanti' });
+    if (!req.file) return res.status(400).json({ error: 'Nessun file ricevuto' });
 
-  const user = req.user;
+    const user = req.user;
 
-  // Ownership check (admin bypasses)
-  if (user.role !== 'admin') {
-    if (entity_type === 'atleta' && user.role === 'atleta') {
-      const profile = queries.getAthleteProfile.get(user.id);
-      if (!profile || profile.atleta_id !== entity_id || profile.status !== 'active')
-        return res.status(403).json({ error: 'Profilo atleta non collegato o non verificato' });
-    } else if (entity_type === 'team' && user.role === 'team') {
-      const profile = queries.getTeamProfile.get(user.id);
-      if (!profile || profile.team_id !== entity_id || profile.status !== 'active')
-        return res.status(403).json({ error: 'Profilo team non collegato o non verificato' });
-    } else {
-      return res.status(403).json({ error: 'Non autorizzato' });
+    // Ownership check (admin bypasses)
+    if (user.role !== 'admin') {
+      if (entity_type === 'atleta' && user.role === 'atleta') {
+        const profile = queries.getAthleteProfile.get(user.id);
+        if (!profile || profile.atleta_id !== entity_id || profile.status !== 'active')
+          return res.status(403).json({ error: 'Profilo atleta non collegato o non verificato' });
+      } else if (entity_type === 'team' && user.role === 'team') {
+        const profile = queries.getTeamProfile.get(user.id);
+        if (!profile || profile.team_id !== entity_id || profile.status !== 'active')
+          return res.status(403).json({ error: 'Profilo team non collegato o non verificato' });
+      } else {
+        return res.status(403).json({ error: 'Non autorizzato' });
+      }
     }
-  }
 
-  const photo_url = `/photos/${req.file.filename}`;
-  queries.setEntityOverride.run({
-    entity_type, entity_id, field: 'photo_url', new_value: photo_url, edited_by: user.id,
-  });
-  res.json({ ok: true, photo_url });
+    const filename  = await savePhoto(req, req.file);
+    const photo_url = `/photos/${filename}`;
+    queries.setEntityOverride.run({
+      entity_type, entity_id, field: 'photo_url', new_value: photo_url, edited_by: user.id,
+    });
+    res.json({ ok: true, photo_url });
+  } catch (e) {
+    res.status(500).json({ error: e.message });
+  }
 });
 
 // ── Race Photos ──────────────────────────────────────────────────────────────
