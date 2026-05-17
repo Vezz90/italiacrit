@@ -1078,7 +1078,10 @@ async function renderClassifica() {
   }).join('');
 
   setPage(`
-    <h1 style="font-family:var(--font-display);font-size:var(--size-h1);margin-bottom:28px">Classifiche</h1>
+    <div class="pg-header">
+      <div class="pg-eyebrow">🏆 CLASSIFICA UFFICIALE</div>
+      <h1 class="pg-title">CLASSIFICHE</h1>
+    </div>
 
     <!-- Parallel Leaderboards Section -->
     <div style="display:grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap:24px; margin-bottom:40px;">
@@ -2899,7 +2902,10 @@ async function renderCalendario() {
   };
 
   setPage(`
-    <h1 style="font-family:var(--font-display);font-size:var(--size-h1);margin-bottom:28px">Calendario</h1>
+    <div class="pg-header">
+      <div class="pg-eyebrow">📅 STAGIONE 2025-2026</div>
+      <h1 class="pg-title">CALENDARIO</h1>
+    </div>
     <div class="calendar-controls">
       <select class="cal-filter-select" id="cal-month" onchange="window.calSetMonth(this.value)" aria-label="Filtra per mese">
         <option value="">Tutti i mesi</option>
@@ -3240,8 +3246,10 @@ async function renderStatistiche() {
 
   let activeRegTab = 'M';
   setPage(`
-    <h1 style="font-family:var(--font-display);font-size:var(--size-h1);margin-bottom:8px">Statistiche</h1>
-    <p style="color:var(--text-muted);margin-bottom:28px">Stagione 2026</p>
+    <div class="pg-header">
+      <div class="pg-eyebrow">📊 ANALISI & DATI</div>
+      <h1 class="pg-title">STATISTICHE</h1>
+    </div>
 
     <!-- KPI -->
     <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(160px,1fr));gap:16px;margin-bottom:40px">
@@ -3750,7 +3758,10 @@ async function renderComparatore() {
   };
 
   setPage(`
-    <h1 style="font-family:var(--font-display);font-size:var(--size-h1);margin-bottom:8px">Comparatore</h1>
+    <div class="pg-header">
+      <div class="pg-eyebrow">⚡ CONFRONTO ATLETI & TEAM</div>
+      <h1 class="pg-title">COMPARATORE</h1>
+    </div>
     <p style="color:var(--text-muted);margin-bottom:24px">Confronta atleti o team della stessa categoria e genere</p>
     <div class="comp-filter-bar">
       <div class="comp-mode-tabs">
