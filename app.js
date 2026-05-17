@@ -270,11 +270,41 @@ const RANKING_CODES = [
 
 async function loadRanking(code) {
   let data = await loadJson(`data/rankings/${code}.json`) || [];
-  // Rimuove atlete classificate nel sesso sbagliato dal ranking precompilato
+
   if (code.endsWith('_M')) {
+    // Rimuove atlete nel sesso sbagliato
     data = data.filter(r => !ATHLETE_GENDER_FIXES[r.atleta_id]);
+  } else if (code.endsWith('_F')) {
+    // Aggiunge atlete mancanti che dovrebbero essere in questa categoria
+    const toAdd = Object.entries(ATHLETE_GENDER_FIXES)
+      .filter(([, fix]) => fix.categoria === code)
+      .map(([id]) => id);
+    const existingIds = new Set(data.map(r => r.atleta_id));
+    for (const aid of toAdd) {
+      if (existingIds.has(aid)) continue;
+      const athlete = globalData?.athletes?.[aid];
+      if (!athlete) continue;
+      const results = (athlete.risultati || []);
+      const punti = results.reduce((s, r) => s + (r.punti_effettivi || 0), 0);
+      if (!punti) continue;
+      data.push({
+        atleta_id: aid,
+        cognome:   athlete.cognome,
+        nome:      athlete.nome,
+        team_id:   athlete.team_id,
+        team_nome: athlete.team_attuale || '',
+        punti,
+        gare:  results.length,
+        p1:    results.filter(r => r.posizione === 1).length,
+        p2:    results.filter(r => r.posizione === 2).length,
+        p3:    results.filter(r => r.posizione === 3).length,
+        pout:  results.filter(r => r.posizione >= 4 && r.posizione <= 10).length,
+      });
+    }
+    data.sort((a, b) => b.punti - a.punti);
   }
-  // Ricalcola le posizioni dopo il filtro
+
+  // Ricalcola posizioni
   data.forEach((r, i) => { r.pos = i + 1; });
   return data;
 }
