@@ -2480,6 +2480,23 @@ div[style*="grid-template-columns: repeat(auto-fit"] {
 @media(max-width:700px) { .home-2col { grid-template-columns:1fr; } }
 #app { overflow-x:hidden; }
 
+/* Forma del momento grid */
+.forma-grid { display:grid; grid-template-columns:repeat(auto-fill,minmax(175px,1fr)); gap:10px; margin-bottom:0; }
+.forma-cat-card { background:var(--bg-card); border:1px solid var(--border-subtle); border-radius:6px; padding:14px 12px; text-decoration:none; color:inherit; display:flex; flex-direction:column; gap:4px; transition:border-color .15s,transform .15s; }
+.forma-cat-card:hover { border-color:var(--red-hot); transform:translateY(-2px); }
+.forma-cat-badge { margin-bottom:4px; }
+.forma-surname { font-family:var(--font-display); font-size:1.15rem; line-height:1; text-transform:uppercase; color:var(--text-primary); }
+.forma-firstname { font-size:0.78rem; color:var(--text-secondary); }
+.forma-team { font-size:0.65rem; color:var(--text-muted); white-space:nowrap; overflow:hidden; text-overflow:ellipsis; }
+.forma-pts-row { display:flex; align-items:baseline; gap:4px; margin-top:auto; padding-top:8px; border-top:1px solid var(--border-subtle); }
+.forma-pts { font-family:var(--font-display); font-size:1.7rem; color:var(--yellow-race); line-height:1; }
+.forma-pts-label { font-size:0.6rem; color:var(--text-muted); text-transform:uppercase; }
+.forma-sub { font-size:0.6rem; color:var(--text-muted); font-family:var(--font-mono); }
+.forma-more { font-size:0.62rem; color:var(--red-hot); font-family:var(--font-mono); margin-top:2px; }
+
+/* Team hot col label */
+.team-hot-col-label { font-size:0.65rem; font-family:var(--font-mono); text-transform:uppercase; letter-spacing:0.1em; margin-bottom:8px; }
+
 /* Matchup card */
 .matchup-card { display:flex; background:var(--bg-card); border:1px solid var(--border-subtle); border-radius:6px; overflow:hidden; margin-bottom:40px; }
 .matchup-side { flex:1; padding:24px 16px; text-decoration:none; color:inherit; display:flex; flex-direction:column; align-items:center; gap:4px; transition:background .15s; }

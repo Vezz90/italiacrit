@@ -596,6 +596,8 @@ function route() {
   if (m_team) return renderTeam(m_team[1]);
   const m_gara = match('/gara/:id');
   if (m_gara) return renderGara(m_gara[1]);
+  const m_forma = match('/forma/:cat');
+  if (m_forma) return renderForma(m_forma[1]);
 
   renderNotFound();
 }
@@ -641,28 +643,30 @@ async function renderHome() {
   const lastDateTs = lastRaceDate ? new Date(lastRaceDate).getTime() : 0;
   const heroRaces = allRaces.filter(r => r.data && new Date(r.data).getTime() >= (lastDateTs - 7*86400*1000));
 
-  // Trending (ultimi 14 gg dall'ultima gara)
+  // Forma del momento — ultimi 14 gg dall'ultima gara, per categoria
   const trendCut = new Date(lastRaceDate || new Date());
   trendCut.setDate(trendCut.getDate() - 14);
   const trendCutStr = trendCut.toISOString().split('T')[0];
-  const athTrend = {};
+  const formaPerCat = {}; // catCode → { atleta_id → stats }
   for (const r of resultsRaw) {
     if (!r.data || r.data < trendCutStr) continue;
-    const k = r.atleta_id;
-    if (!athTrend[k]) athTrend[k] = { atleta_id:k, cognome:r.cognome, nome:r.nome, team:r.team, team_id:r.team_id, categoria:r.categoria, genere:r.genere, pts:0, gare:0, podio:0, vittorie:0 };
-    athTrend[k].pts += r.punti_effettivi || 0;
-    athTrend[k].gare++;
-    if (r.posizione <= 3) athTrend[k].podio++;
-    if (r.posizione === 1) athTrend[k].vittorie++;
+    const code = getRankingFileCode(r);
+    if (!code) continue;
+    const aid = r.atleta_id;
+    if (!formaPerCat[code]) formaPerCat[code] = {};
+    if (!formaPerCat[code][aid]) formaPerCat[code][aid] = { atleta_id:aid, cognome:r.cognome, nome:r.nome, team:r.team, team_id:r.team_id, pts:0, gare:0, vittorie:0, podio:0 };
+    formaPerCat[code][aid].pts += r.punti_effettivi || 0;
+    formaPerCat[code][aid].gare++;
+    if (r.posizione === 1) formaPerCat[code][aid].vittorie++;
+    if (r.posizione <= 3) formaPerCat[code][aid].podio++;
   }
-  const trending = Object.values(athTrend).filter(a => a.pts > 0).sort((a,b) => b.pts - a.pts).slice(0,10);
+  // Un campione per categoria
+  const catOrder14 = ['ELI_M','JUN_M','AL_M','ES2_M','ES1_M','ELI_F','JUN_F','AL_F','ES2_F','ES1_F'];
+  const formaBest = catOrder14
+    .filter(code => formaPerCat[code])
+    .map(code => ({ code, ...Object.values(formaPerCat[code]).sort((a,b)=>b.pts-a.pts)[0] }));
 
-  // Rising talents (categorie giovani)
-  const rising = Object.values(athTrend)
-    .filter(a => /esordienti|allievi/i.test(a.categoria||''))
-    .sort((a,b) => b.pts - a.pts).slice(0,8);
-
-  // Team hot
+  // Team hot — due classifiche separate
   const teamTrend = {};
   for (const r of resultsRaw) {
     if (!r.data || r.data < trendCutStr) continue;
@@ -673,7 +677,9 @@ async function renderHome() {
     teamTrend[k].pts += r.punti_effettivi || 0;
     teamTrend[k].garaSet.add(r.gara_id);
   }
-  const topTeams = Object.values(teamTrend).map(t=>({...t,gare:t.garaSet.size})).sort((a,b)=>b.vittorie-a.vittorie||b.pts-a.pts||b.podio-a.podio).slice(0,5);
+  const allTeamsArr = Object.values(teamTrend).map(t=>({...t,gare:t.garaSet.size}));
+  const topTeamsByPts  = allTeamsArr.slice().sort((a,b)=>b.pts-a.pts||b.vittorie-a.vittorie).slice(0,5);
+  const topTeamsByWins = allTeamsArr.slice().sort((a,b)=>b.vittorie-a.vittorie||b.pts-a.pts).slice(0,5);
 
   // Upcoming
   const todayStr = new Date().toISOString().split('T')[0];
@@ -693,14 +699,14 @@ async function renderHome() {
     }
   }
 
-  // Smart insights
+  // Smart insights ticker
   const tickerItems = [];
-  if (trending[0]) tickerItems.push(`🔥 <strong>IN FORMA:</strong> ${trending[0].cognome} ${trending[0].nome} — ${trending[0].pts} pt in 14 giorni`);
-  if (topTeams[0] && topTeams[0].vittorie > 0) tickerItems.push(`🏆 <strong>TEAM HOT:</strong> ${topTeams[0].team} — ${topTeams[0].vittorie} vittori${topTeams[0].vittorie===1?'a':'e'} recenti`);
+  if (formaBest[0]) tickerItems.push(`🔥 <strong>IN FORMA:</strong> ${formaBest[0].cognome} ${formaBest[0].nome} — ${formaBest[0].pts} pt · ${catLabel(formaBest[0].code)}`);
+  if (topTeamsByPts[0]) tickerItems.push(`🏆 <strong>TEAM HOT:</strong> ${topTeamsByPts[0].team} — ${topTeamsByPts[0].pts} pt · ${topTeamsByPts[0].vittorie} vitt. recenti`);
   if (heroRaces[0]) { const w = heroRaces[0].results?.find(r=>r.posizione===1); if (w) tickerItems.push(`🥇 <strong>ULTIMA VITTORIA:</strong> ${w.cognome} ${w.nome} · ${heroRaces[0].nome}`); }
   if (qcA && qcB && minGap <= 15) tickerItems.push(`⚡ <strong>BATTAGLIA:</strong> Solo ${minGap} pt tra ${qcA.cognome} e ${qcB.cognome} in ${catLabel(qcCat)}`);
   if (upcoming[0]) { const d = Math.round((new Date(upcoming[0].data)-new Date(todayStr))/86400000); tickerItems.push(`📅 <strong>PROSSIMA GARA${d===0?' OGGI':d===1?' DOMANI':''}:</strong> ${upcoming[0].nome}`); }
-  if (rising[0]) tickerItems.push(`⬆ <strong>TALENTO:</strong> ${rising[0].cognome} ${rising[0].nome} — miglior emergente del momento`);
+  if (formaBest.length > 1) { const f = formaBest[1]; tickerItems.push(`⬆ <strong>EMERGENTE:</strong> ${f.cognome} ${f.nome} — ${f.pts} pt · ${catLabel(f.code)}`); }
 
   // Cat overview (last 28 days form)
   const lastRaceCutoff = new Date(lastRaceDate || new Date());
@@ -769,37 +775,34 @@ async function renderHome() {
     return `<div class="home-ticker"><div class="home-ticker-track">${doubled}</div></div>`;
   })() : '';
 
-  // IN FORMA
-  const trendingHtml = trending.length ? `
+  // FORMA DEL MOMENTO — griglia per categoria
+  const formaHtml = formaBest.length ? `
     <div class="home-section">
       <div class="section-header">
-        <span class="section-title">IN FORMA</span>
+        <span class="section-title">FORMA DEL MOMENTO</span>
         <span class="section-line"></span>
-        <span class="section-subtitle">Atleti con più punti negli ultimi 14 giorni · tutte le categorie</span>
+        <span class="section-subtitle">Miglior atleta per categoria · ultimi 14 giorni · clicca per la lista completa</span>
       </div>
-      <div class="trending-scroll">
-        ${trending.map((a,i)=>`
-          <a href="#/atleta/${esc(a.atleta_id)}" class="trend-card">
-            <div class="trend-rank">${i+1}</div>
-            <div class="trend-cat-tag">${esc((a.categoria||'').split('°')[0].trim().slice(0,10))}</div>
-            <div class="trend-surname">${esc(a.cognome)}</div>
-            <div class="trend-firstname">${esc(a.nome)}</div>
-            <div class="trend-teamname">${esc(a.team)}</div>
-            <div class="trend-pts-row">
-              <span class="trend-pts">${a.pts}</span>
-              <span class="trend-pts-label">pt</span>
+      <div class="forma-grid">
+        ${formaBest.map(item=>`
+          <a href="#/forma/${esc(item.code)}" class="forma-cat-card">
+            <div class="forma-cat-badge">${badgeCat(item.code)}</div>
+            <div class="forma-surname">${esc(item.cognome)}</div>
+            <div class="forma-firstname">${esc(item.nome)}</div>
+            <div class="forma-team">${esc(item.team)}</div>
+            <div class="forma-pts-row">
+              <span class="forma-pts">${item.pts}</span>
+              <span class="forma-pts-label">pt</span>
             </div>
-            <div class="trend-badges">
-              ${a.vittorie>0?`<span class="trend-badge trend-badge-win">🥇 ${a.vittorie} vitt.</span>`:''}
-              ${a.podio>0?`<span class="trend-badge trend-badge-pod">⬆ ${a.podio} podi</span>`:''}
-            </div>
+            <div class="forma-sub">${item.gare} gar${item.gare===1?'a':'e'} · ${item.vittorie} vitt. · ${item.podio} podi</div>
+            <div class="forma-more">Lista completa →</div>
           </a>`).join('')}
       </div>
     </div>` : '';
 
-  // UPCOMING + TEAM HOT
+  // PROSSIME GARE
   const upcomingHtml = upcoming.length ? `
-    <div>
+    <div class="home-section">
       <div class="section-header" style="margin-bottom:12px">
         <span class="section-title">PROSSIME GARE</span>
         <span class="section-line"></span>
@@ -829,63 +832,39 @@ async function renderHome() {
       </div>
     </div>` : '';
 
-  const teamHotHtml = topTeams.length ? `
-    <div>
+  const teamRowHtml = (t, i, valueHtml) => `
+    <a href="#/team/${esc(t.team_id)}" class="team-hot-row">
+      <div class="team-hot-pos" style="color:${i===0?'var(--gold)':i===1?'var(--silver)':i===2?'var(--bronze)':'var(--text-muted)'}">${i+1}</div>
+      <div style="flex:1;min-width:0">
+        <div class="team-hot-name">${esc(t.team)}</div>
+        <div class="team-hot-sub">${t.gare} gare · ${t.podio} podi</div>
+      </div>
+      ${valueHtml}
+    </a>`;
+
+  const teamHotHtml = (topTeamsByPts.length || topTeamsByWins.length) ? `
+    <div class="home-section" style="margin-bottom:0">
       <div class="section-header" style="margin-bottom:12px">
         <span class="section-title">TEAM HOT 🔥</span>
         <span class="section-line"></span>
         <span class="section-subtitle">Tutte le categorie · 14 giorni</span>
       </div>
-      <div style="display:flex;flex-direction:column;gap:4px">
-        ${topTeams.map((t,i)=>`
-          <a href="#/team/${esc(t.team_id)}" class="team-hot-row">
-            <div class="team-hot-pos" style="color:${i===0?'var(--gold)':i===1?'var(--silver)':i===2?'var(--bronze)':'var(--text-muted)'}">${i+1}</div>
-            <div style="flex:1;min-width:0">
-              <div class="team-hot-name">${esc(t.team)}</div>
-              <div class="team-hot-sub">${t.gare} gare · ${t.podio} podi</div>
-            </div>
-            <div style="text-align:right;flex-shrink:0">
-              <div class="team-hot-wins-num">${t.vittorie}<span style="font-size:0.7rem;color:var(--text-muted);margin-left:3px">vitt.</span></div>
-              <div style="font-family:var(--font-mono);font-size:0.72rem;color:var(--yellow-race)">${t.pts} pt</div>
-            </div>
-          </a>`).join('')}
+      <div class="home-2col" style="margin-bottom:0">
+        <div>
+          <div class="team-hot-col-label" style="color:var(--yellow-race)">Per Punti</div>
+          <div style="display:flex;flex-direction:column;gap:4px">
+            ${topTeamsByPts.map((t,i)=>teamRowHtml(t,i,`<div style="text-align:right;flex-shrink:0"><div class="team-hot-wins-num">${t.pts}</div><div class="team-hot-wins-label">pt</div></div>`)).join('')}
+          </div>
+        </div>
+        <div>
+          <div class="team-hot-col-label" style="color:var(--red-hot)">Per Vittorie</div>
+          <div style="display:flex;flex-direction:column;gap:4px">
+            ${topTeamsByWins.map((t,i)=>teamRowHtml(t,i,`<div style="text-align:right;flex-shrink:0"><div class="team-hot-wins-num">${t.vittorie}</div><div class="team-hot-wins-label">vitt.</div></div>`)).join('')}
+          </div>
+        </div>
       </div>
     </div>` : '';
 
-  // EMERGENTI
-  const risingHtml = rising.length ? `
-    <div class="home-section">
-      <div class="section-header">
-        <span class="section-title">EMERGENTI ⬆</span>
-        <span class="section-line"></span>
-        <span class="section-subtitle">Esordienti &amp; Allievi con più punti negli ultimi 14 giorni</span>
-      </div>
-      <div class="trending-scroll">
-        ${rising.map((a,i)=>{
-          const cat = a.categoria||'';
-          const isF = a.genere === 'F';
-          const shortCat = /esordienti/i.test(cat)
-            ? (/2[°º]|secondo/i.test(cat) ? 'ES2' : 'ES1')
-            : /allievi/i.test(cat)
-            ? (/2[°º]|secondo/i.test(cat) ? 'AL2' : 'AL1')
-            : cat.slice(0,3).toUpperCase();
-          const tagLabel = shortCat + (isF ? ' ♀' : ' ♂');
-          const tagColor = /es/i.test(shortCat) ? 'var(--cat-esordienti)' : 'var(--cat-allievi)';
-          return `<a href="#/atleta/${esc(a.atleta_id)}" class="trend-card" style="border-top:2px solid ${tagColor}">
-            <div class="trend-rank">${i+1}</div>
-            <div class="trend-cat-tag" style="color:${tagColor}">${tagLabel}</div>
-            <div class="trend-surname">${esc(a.cognome)}</div>
-            <div class="trend-firstname">${esc(a.nome)}</div>
-            <div class="trend-teamname">${esc(a.team)}</div>
-            <div class="trend-pts-row">
-              <span class="trend-pts" style="color:${tagColor}">${a.pts}</span>
-              <span class="trend-pts-label">pt</span>
-            </div>
-            ${a.vittorie>0?`<div class="trend-badges"><span class="trend-badge trend-badge-win">🥇 ${a.vittorie} vitt.</span></div>`:''}
-          </a>`;
-        }).join('')}
-      </div>
-    </div>` : '';
 
   // MATCHUP DELLA SETTIMANA
   let matchupHtml = '';
@@ -973,12 +952,9 @@ async function renderHome() {
   setPage(`
     ${heroHtml}
     ${tickerHtml}
-    ${trendingHtml}
-    <div class="home-2col">
-      ${upcomingHtml}
-      ${teamHotHtml}
-    </div>
-    ${risingHtml}
+    ${formaHtml}
+    ${upcomingHtml}
+    ${teamHotHtml}
     ${matchupHtml}
     <div class="section-header">
       <span class="section-title">PANORAMICA CATEGORIE</span>
@@ -1006,6 +982,79 @@ async function renderHome() {
     window.heroPrev = () => { clearInterval(window.homeHeroInterval); goTo(current-1); window.homeHeroInterval = setInterval(()=>goTo(current+1), 6000); };
     window.homeHeroInterval = setInterval(() => goTo(current+1), 6000);
   }
+}
+
+// ── FORMA DEL MOMENTO — pagina completa per categoria ─────────
+async function renderForma(catCode) {
+  if (!globalData) return;
+  const { resultsRaw } = globalData;
+  const label = catLabel(catCode);
+  const lastRaceDate = resultsRaw.reduce((max, r) => (r.data||'') > max ? r.data : max, '');
+  const trendCut = new Date(lastRaceDate || new Date());
+  trendCut.setDate(trendCut.getDate() - 14);
+  const trendCutStr = trendCut.toISOString().split('T')[0];
+
+  const byAthlete = {};
+  for (const r of resultsRaw) {
+    if (!r.data || r.data < trendCutStr) continue;
+    if (getRankingFileCode(r) !== catCode) continue;
+    const aid = r.atleta_id;
+    if (!byAthlete[aid]) byAthlete[aid] = { atleta_id:aid, cognome:r.cognome, nome:r.nome, team:r.team, team_id:r.team_id, pts:0, gare:0, vittorie:0, podio:0 };
+    byAthlete[aid].pts += r.punti_effettivi || 0;
+    byAthlete[aid].gare++;
+    if (r.posizione === 1) byAthlete[aid].vittorie++;
+    if (r.posizione <= 3) byAthlete[aid].podio++;
+  }
+  const ranked = Object.values(byAthlete).filter(a=>a.pts>0).sort((a,b)=>b.pts-a.pts);
+
+  if (!ranked.length) {
+    setPage(`<div style="margin-bottom:8px"><a href="#/" style="font-size:0.75rem;color:var(--text-muted);text-decoration:none">← Home</a></div>
+    <div class="empty-state">Nessun dato per ${esc(label)} negli ultimi 14 giorni.</div>`);
+    return;
+  }
+
+  const rows = ranked.map((a,i) => {
+    const posColor = i===0?'var(--gold)':i===1?'var(--silver)':i===2?'var(--bronze)':'';
+    return `<tr>
+      <td class="r" style="font-family:var(--font-display);font-size:1.1rem;color:${posColor||'var(--text-muted)'}">${i+1}</td>
+      <td><a href="#/atleta/${esc(a.atleta_id)}" class="link-primary" style="font-weight:600">${esc(a.cognome)} ${esc(a.nome)}</a></td>
+      <td style="color:var(--text-muted)"><a href="#/team/${esc(a.team_id)}" style="color:var(--text-muted)">${esc(a.team)}</a></td>
+      <td class="r" style="font-family:var(--font-display);font-size:1.2rem;color:var(--yellow-race)">${a.pts}</td>
+      <td class="r" style="color:var(--text-secondary)">${a.gare}</td>
+      <td class="r" style="color:var(--gold)">${a.vittorie||'—'}</td>
+      <td class="r" style="color:var(--text-secondary)">${a.podio||'—'}</td>
+    </tr>`;
+  }).join('');
+
+  setPage(`
+    <div style="margin-bottom:16px">
+      <a href="#/" style="font-size:0.75rem;color:var(--text-muted);text-decoration:none;font-family:var(--font-mono)">← Home</a>
+    </div>
+    <div class="section-header" style="margin-bottom:20px">
+      <span class="section-title">FORMA DEL MOMENTO</span>
+      <span class="section-line"></span>
+      ${badgeCat(catCode)}
+    </div>
+    <div style="font-size:0.75rem;color:var(--text-muted);margin-bottom:20px;font-family:var(--font-mono)">
+      Punti accumulati dal ${fmtDate(trendCutStr)} ad oggi · ${ranked.length} atleti classificati
+    </div>
+    <div class="results-table-wrap">
+      <table class="results-table">
+        <thead>
+          <tr>
+            <th class="r" style="width:36px">#</th>
+            <th>ATLETA</th>
+            <th>TEAM</th>
+            <th class="r">PUNTI</th>
+            <th class="r">GARE</th>
+            <th class="r">VITT.</th>
+            <th class="r">PODI</th>
+          </tr>
+        </thead>
+        <tbody>${rows}</tbody>
+      </table>
+    </div>
+  `);
 }
 
 // ── CLASSIFICA ────────────────────────────────────────────────
