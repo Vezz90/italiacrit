@@ -3540,13 +3540,12 @@ async function renderRisultati() {
 
         const podioRows = top3.map((r,i) => {
           const pClass = ['p1','p2','p3'][i] || 'pout';
-          return '<div class="hero-podio-row" style="animation-delay:' + (i*60) + 'ms;grid-template-columns:40px 1fr auto;">' +
-            '<div class="hero-pos ' + pClass + '" style="font-size:2rem">' + r.posizione + '&#176;</div>' +
+          return '<div class="hero-podio-row" style="animation-delay:' + (i*60) + 'ms;grid-template-columns:32px 1fr;">' +
+            '<div class="hero-pos ' + pClass + '" style="font-size:0.95rem">' + r.posizione + '&#176;</div>' +
             '<div>' +
               '<div class="hero-name"><a href="#/atleta/' + esc(r.atleta_id) + '">' + esc(r.cognome) + ' ' + esc(r.nome) + '</a></div>' +
               '<div class="hero-team"><a href="#/team/' + esc(r.team_id) + '" style="color:var(--text-secondary)">' + esc(r.team) + '</a></div>' +
             '</div>' +
-            '<div class="hero-pts" style="font-size:1.3rem">' + r.punti_effettivi + ' pt</div>' +
           '</div>';
         }).join('');
 
