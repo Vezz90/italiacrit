@@ -667,12 +667,13 @@ async function renderHome() {
   for (const r of resultsRaw) {
     if (!r.data || r.data < trendCutStr) continue;
     const k = r.team_id;
-    if (!teamTrend[k]) teamTrend[k] = { team_id:k, team:r.team, vittorie:0, podio:0, garaSet:new Set() };
+    if (!teamTrend[k]) teamTrend[k] = { team_id:k, team:r.team, vittorie:0, podio:0, pts:0, garaSet:new Set() };
     if (r.posizione === 1) teamTrend[k].vittorie++;
     if (r.posizione <= 3) teamTrend[k].podio++;
+    teamTrend[k].pts += r.punti_effettivi || 0;
     teamTrend[k].garaSet.add(r.gara_id);
   }
-  const topTeams = Object.values(teamTrend).map(t=>({...t,gare:t.garaSet.size})).sort((a,b)=>b.vittorie-a.vittorie||b.podio-a.podio).slice(0,5);
+  const topTeams = Object.values(teamTrend).map(t=>({...t,gare:t.garaSet.size})).sort((a,b)=>b.vittorie-a.vittorie||b.pts-a.pts||b.podio-a.podio).slice(0,5);
 
   // Upcoming
   const todayStr = new Date().toISOString().split('T')[0];
@@ -768,13 +769,13 @@ async function renderHome() {
     return `<div class="home-ticker"><div class="home-ticker-track">${doubled}</div></div>`;
   })() : '';
 
-  // TRENDING NOW
+  // IN FORMA
   const trendingHtml = trending.length ? `
     <div class="home-section">
       <div class="section-header">
-        <span class="section-title">TRENDING NOW</span>
+        <span class="section-title">IN FORMA</span>
         <span class="section-line"></span>
-        <span class="section-subtitle">Ultimi 14 giorni · per punti</span>
+        <span class="section-subtitle">Atleti con più punti negli ultimi 14 giorni · tutte le categorie</span>
       </div>
       <div class="trending-scroll">
         ${trending.map((a,i)=>`
@@ -833,7 +834,7 @@ async function renderHome() {
       <div class="section-header" style="margin-bottom:12px">
         <span class="section-title">TEAM HOT 🔥</span>
         <span class="section-line"></span>
-        <span class="section-subtitle">Vittorie · 14 giorni</span>
+        <span class="section-subtitle">Tutte le categorie · 14 giorni</span>
       </div>
       <div style="display:flex;flex-direction:column;gap:4px">
         ${topTeams.map((t,i)=>`
@@ -843,36 +844,46 @@ async function renderHome() {
               <div class="team-hot-name">${esc(t.team)}</div>
               <div class="team-hot-sub">${t.gare} gare · ${t.podio} podi</div>
             </div>
-            <div class="team-hot-wins">
-              <div class="team-hot-wins-num">${t.vittorie}</div>
-              <div class="team-hot-wins-label">vitt.</div>
+            <div style="text-align:right;flex-shrink:0">
+              <div class="team-hot-wins-num">${t.vittorie}<span style="font-size:0.7rem;color:var(--text-muted);margin-left:3px">vitt.</span></div>
+              <div style="font-family:var(--font-mono);font-size:0.72rem;color:var(--yellow-race)">${t.pts} pt</div>
             </div>
           </a>`).join('')}
       </div>
     </div>` : '';
 
-  // RISING TALENTS
+  // EMERGENTI
   const risingHtml = rising.length ? `
     <div class="home-section">
       <div class="section-header">
-        <span class="section-title">RISING TALENTS ⬆</span>
+        <span class="section-title">EMERGENTI ⬆</span>
         <span class="section-line"></span>
-        <span class="section-subtitle">Esordienti &amp; Allievi · 14 giorni</span>
+        <span class="section-subtitle">Esordienti &amp; Allievi con più punti negli ultimi 14 giorni</span>
       </div>
       <div class="trending-scroll">
-        ${rising.map((a,i)=>`
-          <a href="#/atleta/${esc(a.atleta_id)}" class="trend-card" style="border-top:2px solid var(--cat-esordienti)">
+        ${rising.map((a,i)=>{
+          const cat = a.categoria||'';
+          const isF = a.genere === 'F';
+          const shortCat = /esordienti/i.test(cat)
+            ? (/2[°º]|secondo/i.test(cat) ? 'ES2' : 'ES1')
+            : /allievi/i.test(cat)
+            ? (/2[°º]|secondo/i.test(cat) ? 'AL2' : 'AL1')
+            : cat.slice(0,3).toUpperCase();
+          const tagLabel = shortCat + (isF ? ' ♀' : ' ♂');
+          const tagColor = /es/i.test(shortCat) ? 'var(--cat-esordienti)' : 'var(--cat-allievi)';
+          return `<a href="#/atleta/${esc(a.atleta_id)}" class="trend-card" style="border-top:2px solid ${tagColor}">
             <div class="trend-rank">${i+1}</div>
-            <div class="trend-cat-tag">${esc((a.categoria||'').split(' ').slice(0,2).join(' '))}</div>
+            <div class="trend-cat-tag" style="color:${tagColor}">${tagLabel}</div>
             <div class="trend-surname">${esc(a.cognome)}</div>
             <div class="trend-firstname">${esc(a.nome)}</div>
             <div class="trend-teamname">${esc(a.team)}</div>
             <div class="trend-pts-row">
-              <span class="trend-pts" style="color:var(--cat-allievi)">${a.pts}</span>
+              <span class="trend-pts" style="color:${tagColor}">${a.pts}</span>
               <span class="trend-pts-label">pt</span>
             </div>
             ${a.vittorie>0?`<div class="trend-badges"><span class="trend-badge trend-badge-win">🥇 ${a.vittorie} vitt.</span></div>`:''}
-          </a>`).join('')}
+          </a>`;
+        }).join('')}
       </div>
     </div>` : '';
 

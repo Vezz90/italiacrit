@@ -2476,8 +2476,9 @@ div[style*="grid-template-columns: repeat(auto-fit"] {
 
 /* Home layout */
 .home-2col { display:grid; grid-template-columns:1fr 1fr; gap:24px; margin-bottom:40px; }
-.home-section { margin-bottom:40px; }
+.home-section { margin-bottom:40px; overflow:hidden; }
 @media(max-width:700px) { .home-2col { grid-template-columns:1fr; } }
+#app { overflow-x:hidden; }
 
 /* Matchup card */
 .matchup-card { display:flex; background:var(--bg-card); border:1px solid var(--border-subtle); border-radius:6px; overflow:hidden; margin-bottom:40px; }
