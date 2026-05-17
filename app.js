@@ -937,10 +937,22 @@ async function renderHome() {
     </div>
   </section>` : '';
 
+  // ── RACE PHOTO BAND ──────────────────────────────────────────
+  const emBandHtml = `<div class="em-photo-band">
+    <div class="em-photo-band-inner">
+      <div class="em-photo-band-text">
+        <small>📍 Ciclismo su Strada · Italia</small>
+        In Gara Ogni Giorno
+      </div>
+      <a href="#/calendario" class="em-photo-band-cta">Calendario →</a>
+    </div>
+  </div>`;
+
   // ══ ASSEMBLE ═════════════════════════════════════════════════
   setPage(`
     ${heroHtml}
     ${spotlightHtml}
+    ${emBandHtml}
     ${versusHtml}
     ${volandoHtml}
     ${upcomingHtml}
