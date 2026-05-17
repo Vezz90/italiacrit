@@ -2,9 +2,9 @@
   {
     "team_id": "TEAM_VANGI_TOMMASINI_IL_PIRATA",
     "team_nome": "TEAM VANGI TOMMASINI IL PIRATA",
-    "punti": 636,
-    "vittorie": 10,
-    "p1": 10,
+    "punti": 666,
+    "vittorie": 11,
+    "p1": 11,
     "p2": 6,
     "p3": 9,
     "pout": 26,
@@ -38,12 +38,12 @@
   {
     "team_id": "NORDEST_PETRUCCI_ASSALI_STEFEN",
     "team_nome": "NORDEST PETRUCCI ASSALI STEFEN",
-    "punti": 327,
+    "punti": 337,
     "vittorie": 8,
     "p1": 8,
     "p2": 1,
     "p3": 1,
-    "pout": 17,
+    "pout": 19,
     "n_atleti": 9,
     "pos": 4
   },
@@ -60,6 +60,18 @@
     "pos": 5
   },
   {
+    "team_id": "CICLISTICA_TREVIGLIESE",
+    "team_nome": "CICLISTICA TREVIGLIESE",
+    "punti": 282,
+    "vittorie": 1,
+    "p1": 1,
+    "p2": 3,
+    "p3": 3,
+    "pout": 20,
+    "n_atleti": 9,
+    "pos": 6
+  },
+  {
     "team_id": "ACCADEMIA_CICLISTICA",
     "team_nome": "ACCADEMIA CICLISTICA",
     "punti": 275,
@@ -69,19 +81,19 @@
     "p3": 2,
     "pout": 9,
     "n_atleti": 4,
-    "pos": 6
+    "pos": 7
   },
   {
-    "team_id": "CICLISTICA_TREVIGLIESE",
-    "team_nome": "CICLISTICA TREVIGLIESE",
-    "punti": 268,
-    "vittorie": 1,
-    "p1": 1,
-    "p2": 3,
+    "team_id": "TEAM_NERI_SOTTOLI_LUCCHINI_ENERGY",
+    "team_nome": "TEAM NERI SOTTOLI LUCCHINI ENERGY",
+    "punti": 272,
+    "vittorie": 0,
+    "p1": 0,
+    "p2": 5,
     "p3": 3,
-    "pout": 18,
-    "n_atleti": 9,
-    "pos": 7
+    "pout": 22,
+    "n_atleti": 6,
+    "pos": 8
   },
   {
     "team_id": "IND_FORNITURE_MORO_C_G_CAPITAL",
@@ -93,27 +105,15 @@
     "p3": 4,
     "pout": 20,
     "n_atleti": 9,
-    "pos": 8
-  },
-  {
-    "team_id": "TEAM_NERI_SOTTOLI_LUCCHINI_ENERGY",
-    "team_nome": "TEAM NERI SOTTOLI LUCCHINI ENERGY",
-    "punti": 252,
-    "vittorie": 0,
-    "p1": 0,
-    "p2": 5,
-    "p3": 2,
-    "pout": 22,
-    "n_atleti": 6,
     "pos": 9
   },
   {
     "team_id": "AUTOZAI_CONTRI",
     "team_nome": "AUTOZAI-CONTRI",
-    "punti": 225,
+    "punti": 249,
     "vittorie": 1,
     "p1": 1,
-    "p2": 2,
+    "p2": 3,
     "p3": 0,
     "pout": 17,
     "n_atleti": 5,
@@ -122,12 +122,12 @@
   {
     "team_id": "TEAM_ECOTEK_ZERO24",
     "team_nome": "TEAM ECOTEK ZERO24",
-    "punti": 224,
+    "punti": 230,
     "vittorie": 4,
     "p1": 4,
     "p2": 8,
     "p3": 1,
-    "pout": 12,
+    "pout": 13,
     "n_atleti": 6,
     "pos": 11
   },
@@ -204,6 +204,18 @@
     "pos": 17
   },
   {
+    "team_id": "BUSTESE_OLONIA_A_S_D",
+    "team_nome": "BUSTESE OLONIA A.S.D.",
+    "punti": 130,
+    "vittorie": 0,
+    "p1": 0,
+    "p2": 0,
+    "p3": 1,
+    "pout": 18,
+    "n_atleti": 7,
+    "pos": 18
+  },
+  {
     "team_id": "U_C_PIASCO",
     "team_nome": "U.C. PIASCO",
     "punti": 128,
@@ -213,7 +225,7 @@
     "p3": 2,
     "pout": 4,
     "n_atleti": 2,
-    "pos": 18
+    "pos": 19
   },
   {
     "team_id": "PC_BAIX_EBRE_TORTOSA",
@@ -225,18 +237,6 @@
     "p3": 2,
     "pout": 10,
     "n_atleti": 4,
-    "pos": 19
-  },
-  {
-    "team_id": "BUSTESE_OLONIA_A_S_D",
-    "team_nome": "BUSTESE OLONIA A.S.D.",
-    "punti": 118,
-    "vittorie": 0,
-    "p1": 0,
-    "p2": 0,
-    "p3": 1,
-    "pout": 17,
-    "n_atleti": 7,
     "pos": 20
   },
   {
@@ -252,6 +252,18 @@
     "pos": 21
   },
   {
+    "team_id": "A_R_MONEX_PRO_CYCLING_TEAM",
+    "team_nome": "A.R.MONEX PRO CYCLING TEAM",
+    "punti": 106,
+    "vittorie": 0,
+    "p1": 0,
+    "p2": 2,
+    "p3": 1,
+    "pout": 3,
+    "n_atleti": 2,
+    "pos": 22
+  },
+  {
     "team_id": "SOUDAL_QUICK_STEP_JUNIOR_TEAM",
     "team_nome": "SOUDAL QUICK-STEP JUNIOR TEAM",
     "punti": 99,
@@ -261,7 +273,7 @@
     "p3": 0,
     "pout": 2,
     "n_atleti": 2,
-    "pos": 22
+    "pos": 23
   },
   {
     "team_id": "TEAM_TIEPOLO_U19_DEVO",
@@ -273,18 +285,6 @@
     "p3": 2,
     "pout": 8,
     "n_atleti": 6,
-    "pos": 23
-  },
-  {
-    "team_id": "A_R_MONEX_PRO_CYCLING_TEAM",
-    "team_nome": "A.R.MONEX PRO CYCLING TEAM",
-    "punti": 90,
-    "vittorie": 0,
-    "p1": 0,
-    "p2": 2,
-    "p3": 1,
-    "pout": 2,
-    "n_atleti": 2,
     "pos": 24
   },
   {

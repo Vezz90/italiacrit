@@ -1,35 +1,35 @@
 [
   {
+    "team_id": "SCUOLA_CICLISMO_VERSO_L_IRIDE",
+    "team_nome": "SCUOLA CICLISMO VERSO L'IRIDE",
+    "punti": 185,
+    "vittorie": 4,
+    "p1": 4,
+    "p2": 3,
+    "p3": 4,
+    "pout": 10,
+    "n_atleti": 3,
+    "pos": 1
+  },
+  {
     "team_id": "S_C_CESANO_MADERNO",
     "team_nome": "S.C. CESANO MADERNO",
-    "punti": 157,
+    "punti": 166,
     "vittorie": 3,
     "p1": 3,
     "p2": 3,
     "p3": 4,
-    "pout": 8,
-    "n_atleti": 2,
-    "pos": 1
-  },
-  {
-    "team_id": "SCUOLA_CICLISMO_VERSO_L_IRIDE",
-    "team_nome": "SCUOLA CICLISMO VERSO L'IRIDE",
-    "punti": 152,
-    "vittorie": 3,
-    "p1": 3,
-    "p2": 3,
-    "p3": 3,
-    "pout": 9,
+    "pout": 10,
     "n_atleti": 2,
     "pos": 2
   },
   {
     "team_id": "HG_CYCLING_TEAM",
     "team_nome": "HG CYCLING TEAM",
-    "punti": 152,
+    "punti": 164,
     "vittorie": 3,
     "p1": 3,
-    "p2": 2,
+    "p2": 3,
     "p3": 1,
     "pout": 11,
     "n_atleti": 4,
@@ -38,9 +38,9 @@
   {
     "team_id": "OFF_ALBERTI_U_C_VAL_D_ILLASI",
     "team_nome": "OFF.ALBERTI U.C. VAL D'ILLASI",
-    "punti": 143,
-    "vittorie": 7,
-    "p1": 7,
+    "punti": 158,
+    "vittorie": 8,
+    "p1": 8,
     "p2": 2,
     "p3": 1,
     "pout": 1,
@@ -50,11 +50,11 @@
   {
     "team_id": "ASD_VELOCE_CLUB_BORGO",
     "team_nome": "ASD VELOCE CLUB BORGO",
-    "punti": 90,
+    "punti": 100,
     "vittorie": 2,
     "p1": 2,
     "p2": 2,
-    "p3": 0,
+    "p3": 1,
     "pout": 6,
     "n_atleti": 2,
     "pos": 5
@@ -62,12 +62,12 @@
   {
     "team_id": "U_C_GIORGIONE",
     "team_nome": "U.C. GIORGIONE",
-    "punti": 62,
+    "punti": 65,
     "vittorie": 0,
     "p1": 0,
     "p2": 1,
     "p3": 2,
-    "pout": 7,
+    "pout": 8,
     "n_atleti": 2,
     "pos": 6
   },
@@ -86,12 +86,12 @@
   {
     "team_id": "MARY_J_SWEET_ANGEL_ASD",
     "team_nome": "MARY J SWEET ANGEL ASD",
-    "punti": 58,
+    "punti": 59,
     "vittorie": 0,
     "p1": 0,
     "p2": 2,
     "p3": 0,
-    "pout": 6,
+    "pout": 7,
     "n_atleti": 1,
     "pos": 8
   },
@@ -108,6 +108,18 @@
     "pos": 9
   },
   {
+    "team_id": "U_C_CONSCIO_PEDALE_DEL_SILE",
+    "team_nome": "U.C.CONSCIO PEDALE DEL SILE",
+    "punti": 54,
+    "vittorie": 0,
+    "p1": 0,
+    "p2": 0,
+    "p3": 0,
+    "pout": 14,
+    "n_atleti": 4,
+    "pos": 10
+  },
+  {
     "team_id": "ALLGOR_TATOBIKE",
     "team_nome": "ALLGOR TATOBIKE",
     "punti": 54,
@@ -117,7 +129,31 @@
     "p3": 1,
     "pout": 6,
     "n_atleti": 2,
-    "pos": 10
+    "pos": 11
+  },
+  {
+    "team_id": "G_C_SOSSANO_1975",
+    "team_nome": "G.C. SOSSANO 1975",
+    "punti": 53,
+    "vittorie": 0,
+    "p1": 0,
+    "p2": 0,
+    "p3": 1,
+    "pout": 13,
+    "n_atleti": 5,
+    "pos": 12
+  },
+  {
+    "team_id": "BREGANZE_MILLENIUM",
+    "team_nome": "BREGANZE MILLENIUM",
+    "punti": 49,
+    "vittorie": 0,
+    "p1": 0,
+    "p2": 1,
+    "p3": 1,
+    "pout": 6,
+    "n_atleti": 2,
+    "pos": 13
   },
   {
     "team_id": "C_C_APPENNINICO_1907",
@@ -129,77 +165,41 @@
     "p3": 1,
     "pout": 1,
     "n_atleti": 1,
-    "pos": 11
-  },
-  {
-    "team_id": "U_C_CONSCIO_PEDALE_DEL_SILE",
-    "team_nome": "U.C.CONSCIO PEDALE DEL SILE",
-    "punti": 45,
-    "vittorie": 0,
-    "p1": 0,
-    "p2": 0,
-    "p3": 0,
-    "pout": 12,
-    "n_atleti": 4,
-    "pos": 12
-  },
-  {
-    "team_id": "G_C_SOSSANO_1975",
-    "team_nome": "G.C. SOSSANO 1975",
-    "punti": 44,
-    "vittorie": 0,
-    "p1": 0,
-    "p2": 0,
-    "p3": 1,
-    "pout": 11,
-    "n_atleti": 4,
-    "pos": 13
-  },
-  {
-    "team_id": "BREGANZE_MILLENIUM",
-    "team_nome": "BREGANZE MILLENIUM",
-    "punti": 37,
-    "vittorie": 0,
-    "p1": 0,
-    "p2": 0,
-    "p3": 1,
-    "pout": 6,
-    "n_atleti": 2,
     "pos": 14
   },
   {
     "team_id": "G_C_NOVENTANA",
     "team_nome": "G.C. NOVENTANA",
-    "punti": 24,
+    "punti": 32,
     "vittorie": 0,
     "p1": 0,
     "p2": 0,
     "p3": 1,
-    "pout": 3,
-    "n_atleti": 1,
+    "pout": 5,
+    "n_atleti": 2,
     "pos": 15
   },
   {
     "team_id": "BUSTO_GAROLFO",
     "team_nome": "BUSTO GAROLFO",
-    "punti": 24,
+    "punti": 29,
     "vittorie": 0,
     "p1": 0,
     "p2": 0,
     "p3": 0,
-    "pout": 6,
+    "pout": 7,
     "n_atleti": 2,
     "pos": 16
   },
   {
     "team_id": "POL_FIUMICINESE_FA_I_T_ADRIATICA",
     "team_nome": "POL. FIUMICINESE FA.I.T. ADRIATICA",
-    "punti": 24,
+    "punti": 28,
     "vittorie": 0,
     "p1": 0,
     "p2": 1,
     "p3": 1,
-    "pout": 1,
+    "pout": 2,
     "n_atleti": 1,
     "pos": 17
   },
@@ -300,6 +300,18 @@
     "pos": 25
   },
   {
+    "team_id": "UNIONE_CICLISTICA_OSSANESGA",
+    "team_nome": "UNIONE CICLISTICA OSSANESGA",
+    "punti": 3,
+    "vittorie": 0,
+    "p1": 0,
+    "p2": 0,
+    "p3": 0,
+    "pout": 2,
+    "n_atleti": 1,
+    "pos": 26
+  },
+  {
     "team_id": "U_S_SCUOLA_CICLISMO_VO",
     "team_nome": "U.S.SCUOLA CICLISMO VO'",
     "punti": 3,
@@ -309,24 +321,12 @@
     "p3": 0,
     "pout": 1,
     "n_atleti": 1,
-    "pos": 26
+    "pos": 27
   },
   {
     "team_id": "GS_CAPANNORI",
     "team_nome": "GS CAPANNORI",
     "punti": 2,
-    "vittorie": 0,
-    "p1": 0,
-    "p2": 0,
-    "p3": 0,
-    "pout": 1,
-    "n_atleti": 1,
-    "pos": 27
-  },
-  {
-    "team_id": "UNIONE_CICLISTICA_OSSANESGA",
-    "team_nome": "UNIONE CICLISTICA OSSANESGA",
-    "punti": 1,
     "vittorie": 0,
     "p1": 0,
     "p2": 0,

@@ -120,6 +120,18 @@
     "pos": 10
   },
   {
+    "team_id": "TEAM_CORATTI",
+    "team_nome": "TEAM CORATTI",
+    "punti": 149,
+    "vittorie": 4,
+    "p1": 4,
+    "p2": 2,
+    "p3": 1,
+    "pout": 13,
+    "n_atleti": 4,
+    "pos": 11
+  },
+  {
     "team_id": "S_C_ROMANESE_ASD",
     "team_nome": "S.C. ROMANESE ASD",
     "punti": 149,
@@ -129,7 +141,19 @@
     "p3": 3,
     "pout": 11,
     "n_atleti": 4,
-    "pos": 11
+    "pos": 12
+  },
+  {
+    "team_id": "IL_PIRATA_VANGI_OTC",
+    "team_nome": "IL PIRATA VANGI OTC",
+    "punti": 146,
+    "vittorie": 0,
+    "p1": 0,
+    "p2": 1,
+    "p3": 5,
+    "pout": 12,
+    "n_atleti": 5,
+    "pos": 13
   },
   {
     "team_id": "S_C_COTIGNOLESE",
@@ -141,19 +165,19 @@
     "p3": 2,
     "pout": 12,
     "n_atleti": 5,
-    "pos": 12
+    "pos": 14
   },
   {
-    "team_id": "TEAM_CORATTI",
-    "team_nome": "TEAM CORATTI",
-    "punti": 132,
-    "vittorie": 4,
-    "p1": 4,
-    "p2": 1,
-    "p3": 1,
-    "pout": 11,
-    "n_atleti": 4,
-    "pos": 13
+    "team_id": "ETHICA_ZERO24_CYCLING_TEAM_ECOTEK",
+    "team_nome": "ETHICA ZERO24 CYCLING TEAM ECOTEK",
+    "punti": 135,
+    "vittorie": 1,
+    "p1": 1,
+    "p2": 3,
+    "p3": 3,
+    "pout": 13,
+    "n_atleti": 7,
+    "pos": 15
   },
   {
     "team_id": "BUSTESE_OLONIA_A_S_D",
@@ -165,19 +189,7 @@
     "p3": 1,
     "pout": 16,
     "n_atleti": 7,
-    "pos": 14
-  },
-  {
-    "team_id": "IL_PIRATA_VANGI_OTC",
-    "team_nome": "IL PIRATA VANGI OTC",
-    "punti": 132,
-    "vittorie": 0,
-    "p1": 0,
-    "p2": 1,
-    "p3": 5,
-    "pout": 10,
-    "n_atleti": 5,
-    "pos": 15
+    "pos": 16
   },
   {
     "team_id": "FABIO_ARU_ACADEMY_S_R_L_A_R_L",
@@ -189,7 +201,7 @@
     "p3": 2,
     "pout": 8,
     "n_atleti": 3,
-    "pos": 16
+    "pos": 17
   },
   {
     "team_id": "C_C_FORTI_E_VELOCI",
@@ -201,7 +213,7 @@
     "p3": 3,
     "pout": 12,
     "n_atleti": 5,
-    "pos": 17
+    "pos": 18
   },
   {
     "team_id": "ACCADEMIA_CICLISTICA",
@@ -213,7 +225,7 @@
     "p3": 1,
     "pout": 12,
     "n_atleti": 8,
-    "pos": 18
+    "pos": 19
   },
   {
     "team_id": "TEAM_SENAGHESE_GUERRINI",
@@ -225,7 +237,19 @@
     "p3": 0,
     "pout": 18,
     "n_atleti": 5,
-    "pos": 19
+    "pos": 20
+  },
+  {
+    "team_id": "S_C_RECANATI_MARINELLI_CANTARINI",
+    "team_nome": "S.C.RECANATI MARINELLI CANTARINI",
+    "punti": 115,
+    "vittorie": 3,
+    "p1": 3,
+    "p2": 1,
+    "p3": 2,
+    "pout": 11,
+    "n_atleti": 4,
+    "pos": 21
   },
   {
     "team_id": "GCD_PEDALE_MANZANESE",
@@ -237,19 +261,7 @@
     "p3": 2,
     "pout": 4,
     "n_atleti": 3,
-    "pos": 20
-  },
-  {
-    "team_id": "S_C_RECANATI_MARINELLI_CANTARINI",
-    "team_nome": "S.C.RECANATI MARINELLI CANTARINI",
-    "punti": 110,
-    "vittorie": 3,
-    "p1": 3,
-    "p2": 1,
-    "p3": 2,
-    "pout": 10,
-    "n_atleti": 4,
-    "pos": 21
+    "pos": 22
   },
   {
     "team_id": "POL_FIUMICINESE_FA_I_T_ADRIATICA",
@@ -261,18 +273,6 @@
     "p3": 2,
     "pout": 16,
     "n_atleti": 5,
-    "pos": 22
-  },
-  {
-    "team_id": "ETHICA_ZERO24_CYCLING_TEAM_ECOTEK",
-    "team_nome": "ETHICA ZERO24 CYCLING TEAM ECOTEK",
-    "punti": 106,
-    "vittorie": 0,
-    "p1": 0,
-    "p2": 3,
-    "p3": 2,
-    "pout": 12,
-    "n_atleti": 6,
     "pos": 23
   },
   {
@@ -470,12 +470,12 @@
   {
     "team_id": "U_C_CITTA_DI_CASTELLO_A_S_D",
     "team_nome": "U.C. CITTA' DI CASTELLO A.S.D.",
-    "punti": 58,
+    "punti": 59,
     "vittorie": 1,
     "p1": 1,
     "p2": 2,
     "p3": 0,
-    "pout": 5,
+    "pout": 6,
     "n_atleti": 1,
     "pos": 40
   },

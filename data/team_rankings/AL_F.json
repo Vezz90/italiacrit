@@ -2,14 +2,26 @@
   {
     "team_id": "SPORT_CLUB_BRESCIA_FLANDRES_LOVE",
     "team_nome": "SPORT CLUB BRESCIA - FLANDRES LOVE",
-    "punti": 155,
+    "punti": 173,
     "vittorie": 5,
     "p1": 5,
     "p2": 2,
-    "p3": 1,
-    "pout": 7,
+    "p3": 2,
+    "pout": 9,
     "n_atleti": 5,
     "pos": 1
+  },
+  {
+    "team_id": "S_C_CESANO_MADERNO",
+    "team_nome": "S.C. CESANO MADERNO",
+    "punti": 154,
+    "vittorie": 4,
+    "p1": 4,
+    "p2": 2,
+    "p3": 0,
+    "pout": 17,
+    "n_atleti": 6,
+    "pos": 2
   },
   {
     "team_id": "U_C_GIORGIONE",
@@ -21,7 +33,7 @@
     "p3": 4,
     "pout": 6,
     "n_atleti": 5,
-    "pos": 2
+    "pos": 3
   },
   {
     "team_id": "U_C_CONSCIO_PEDALE_DEL_SILE",
@@ -33,31 +45,31 @@
     "p3": 2,
     "pout": 2,
     "n_atleti": 2,
-    "pos": 3
+    "pos": 4
   },
   {
-    "team_id": "S_C_CESANO_MADERNO",
-    "team_nome": "S.C. CESANO MADERNO",
-    "punti": 137,
-    "vittorie": 4,
-    "p1": 4,
-    "p2": 1,
-    "p3": 0,
-    "pout": 16,
-    "n_atleti": 6,
-    "pos": 4
+    "team_id": "VANGI_LADIES_CYCLING_TEAM",
+    "team_nome": "VANGI LADIES CYCLING TEAM",
+    "punti": 110,
+    "vittorie": 1,
+    "p1": 1,
+    "p2": 3,
+    "p3": 1,
+    "pout": 12,
+    "n_atleti": 5,
+    "pos": 5
   },
   {
     "team_id": "BIESSE_CARRERA_PREMAC",
     "team_nome": "BIESSE - CARRERA - PREMAC",
-    "punti": 100,
+    "punti": 103,
     "vittorie": 3,
     "p1": 3,
     "p2": 1,
     "p3": 1,
-    "pout": 3,
+    "pout": 4,
     "n_atleti": 1,
-    "pos": 5
+    "pos": 6
   },
   {
     "team_id": "POL_FIUMICINESE_FA_I_T_ADRIATICA",
@@ -69,29 +81,17 @@
     "p3": 1,
     "pout": 7,
     "n_atleti": 2,
-    "pos": 6
-  },
-  {
-    "team_id": "VANGI_LADIES_CYCLING_TEAM",
-    "team_nome": "VANGI LADIES CYCLING TEAM",
-    "punti": 95,
-    "vittorie": 0,
-    "p1": 0,
-    "p2": 3,
-    "p3": 1,
-    "pout": 12,
-    "n_atleti": 5,
     "pos": 7
   },
   {
     "team_id": "TEAM_FABIANA_LUPERINI_ASD",
     "team_nome": "TEAM FABIANA LUPERINI ASD",
-    "punti": 85,
+    "punti": 93,
     "vittorie": 2,
     "p1": 2,
     "p2": 1,
     "p3": 2,
-    "pout": 6,
+    "pout": 7,
     "n_atleti": 2,
     "pos": 8
   },
@@ -240,6 +240,18 @@
     "pos": 20
   },
   {
+    "team_id": "I_CINGHIALI_EVO",
+    "team_nome": "I CINGHIALI EVO",
+    "punti": 17,
+    "vittorie": 0,
+    "p1": 0,
+    "p2": 0,
+    "p3": 0,
+    "pout": 4,
+    "n_atleti": 1,
+    "pos": 21
+  },
+  {
     "team_id": "LIBERTAS_CERESETTO",
     "team_nome": "LIBERTAS CERESETTO",
     "punti": 16,
@@ -249,18 +261,6 @@
     "p3": 1,
     "pout": 3,
     "n_atleti": 2,
-    "pos": 21
-  },
-  {
-    "team_id": "I_CINGHIALI_EVO",
-    "team_nome": "I CINGHIALI EVO",
-    "punti": 16,
-    "vittorie": 0,
-    "p1": 0,
-    "p2": 0,
-    "p3": 0,
-    "pout": 3,
-    "n_atleti": 1,
     "pos": 22
   },
   {
@@ -288,6 +288,18 @@
     "pos": 24
   },
   {
+    "team_id": "HG_CYCLING_TEAM",
+    "team_nome": "HG CYCLING TEAM",
+    "punti": 13,
+    "vittorie": 0,
+    "p1": 0,
+    "p2": 0,
+    "p3": 0,
+    "pout": 3,
+    "n_atleti": 1,
+    "pos": 25
+  },
+  {
     "team_id": "ASD_FUSION_BIKE",
     "team_nome": "ASD FUSION BIKE",
     "punti": 13,
@@ -297,7 +309,7 @@
     "p3": 0,
     "pout": 2,
     "n_atleti": 2,
-    "pos": 25
+    "pos": 26
   },
   {
     "team_id": "A_S_D_G_C_EMIC",
@@ -309,7 +321,7 @@
     "p3": 0,
     "pout": 3,
     "n_atleti": 1,
-    "pos": 26
+    "pos": 27
   },
   {
     "team_id": "GS_CAPANNORI",
@@ -321,7 +333,7 @@
     "p3": 0,
     "pout": 1,
     "n_atleti": 1,
-    "pos": 27
+    "pos": 28
   },
   {
     "team_id": "TEAM_GO_FAST_PUGLIA_ARADEO",
@@ -333,7 +345,7 @@
     "p3": 0,
     "pout": 0,
     "n_atleti": 1,
-    "pos": 28
+    "pos": 29
   },
   {
     "team_id": "BICIFESTIVAL",
@@ -345,7 +357,7 @@
     "p3": 0,
     "pout": 2,
     "n_atleti": 2,
-    "pos": 29
+    "pos": 30
   },
   {
     "team_id": "ASD_VELOCE_CLUB_BORGO",
@@ -357,18 +369,6 @@
     "p3": 0,
     "pout": 4,
     "n_atleti": 2,
-    "pos": 30
-  },
-  {
-    "team_id": "HG_CYCLING_TEAM",
-    "team_nome": "HG CYCLING TEAM",
-    "punti": 9,
-    "vittorie": 0,
-    "p1": 0,
-    "p2": 0,
-    "p3": 0,
-    "pout": 2,
-    "n_atleti": 1,
     "pos": 31
   },
   {
