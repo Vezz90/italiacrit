@@ -749,6 +749,152 @@ function siCategoryCompetitiveness(resultsRaw, catOrder) {
   return result;
 }
 
+
+// siRivalryFinder — athletes with most direct race encounters
+function siRivalryFinder(resultsRaw) {
+  const pairs = {};
+  const byRace = {};
+  for (const r of resultsRaw) {
+    if (!r.gara_id || !r.posizione || r.posizione > 8 || !r.data) continue;
+    if (!byRace[r.gara_id]) byRace[r.gara_id] = [];
+    byRace[r.gara_id].push(r);
+  }
+  for (const results of Object.values(byRace)) {
+    const sorted = results.slice().sort((a,b) => a.posizione - b.posizione).slice(0, 6);
+    for (let i = 0; i < sorted.length - 1; i++) {
+      for (let j = i+1; j < sorted.length && j <= i+4; j++) {
+        const a = sorted[i], b = sorted[j];
+        if (a.atleta_id === b.atleta_id) continue;
+        const key = [a.atleta_id, b.atleta_id].sort().join('|');
+        if (!pairs[key]) pairs[key] = {
+          aId:a.atleta_id, bId:b.atleta_id,
+          aCog:a.cognome, aNom:a.nome, aTeam:a.team, aTeamId:a.team_id,
+          bCog:b.cognome, bNom:b.nome, bTeam:b.team, bTeamId:b.team_id,
+          code: getRankingFileCode(a)||'', encounters:0, aWins:0, bWins:0
+        };
+        pairs[key].encounters++;
+        if (a.posizione < b.posizione) pairs[key].aWins++;
+        else pairs[key].bWins++;
+      }
+    }
+  }
+  return Object.values(pairs)
+    .filter(p => p.encounters >= 3)
+    .sort((a,b) => {
+      const aClose = Math.min(a.aWins, a.bWins) / Math.max(a.encounters,1);
+      const bClose = Math.min(b.aWins, b.bWins) / Math.max(b.encounters,1);
+      return (b.encounters*(1+bClose)) - (a.encounters*(1+aClose));
+    })
+    .slice(0, 5);
+}
+
+// siNewsroomFeed — auto-generate editorial narrative bullets from data
+function siNewsroomFeed(resultsRaw, allRankings, catOrder, topScalatori, teamDom) {
+  const items = [];
+  const lastDate = resultsRaw.reduce((mx,r) => (r.data||'') > mx ? r.data : mx, '');
+  const cut7 = (() => { const d=new Date(lastDate||new Date()); d.setDate(d.getDate()-7); return d.toISOString().split('T')[0]; })();
+  // Recent winners
+  const byRace = {};
+  for (const r of resultsRaw.filter(r => r.data >= cut7 && r.posizione <= 3)) {
+    if (!byRace[r.gara_id]) byRace[r.gara_id] = { nome:r.nome_gara, data:r.data, results:[], code:getRankingFileCode(r)||'' };
+    byRace[r.gara_id].results.push(r);
+  }
+  for (const race of Object.values(byRace).sort((a,b) => b.data.localeCompare(a.data)).slice(0,3)) {
+    const w = race.results.find(r => r.posizione === 1);
+    if (w) items.push({ icon:'🥇', text:'<strong>' + esc(w.cognome) + ' ' + esc(w.nome) + '</strong> vince <em>' + esc(race.nome) + '</em> in ' + catLabel(race.code), type:'victory', atleta_id:w.atleta_id });
+  }
+  // Streak detections
+  const checkedA = new Set();
+  for (const r of resultsRaw.filter(x => x.data >= cut7 && x.posizione === 1).sort((a,b) => b.data.localeCompare(a.data)).slice(0,6)) {
+    if (checkedA.has(r.atleta_id)) continue; checkedA.add(r.atleta_id);
+    const { winStreak, podioStreak } = siStreak(r.atleta_id, resultsRaw);
+    if (winStreak >= 2) items.push({ icon:'👑', text:'<strong>' + esc(r.cognome) + '</strong> in striscia: <strong>' + winStreak + ' vittorie consecutive</strong>', type:'streak', atleta_id:r.atleta_id });
+    else if (podioStreak >= 3) items.push({ icon:'🔥', text:'<strong>' + esc(r.cognome) + '</strong> — <strong>' + podioStreak + ' podi consecutivi</strong>', type:'streak', atleta_id:r.atleta_id });
+  }
+  // Biggest movers
+  if (topScalatori[0]) items.push({ icon:'📈', text:'<strong>' + esc(topScalatori[0].cognome) + ' ' + esc(topScalatori[0].nome) + '</strong> sale di <strong>+' + topScalatori[0].gain + ' posizioni</strong> in ' + catLabel(topScalatori[0].code), type:'mover', atleta_id:topScalatori[0].atleta_id });
+  if (topScalatori[2]) items.push({ icon:'📈', text:'<strong>' + esc(topScalatori[2].cognome) + ' ' + esc(topScalatori[2].nome) + '</strong> — ora ' + topScalatori[2].newPos + '° in ' + catLabel(topScalatori[2].code), type:'mover', atleta_id:topScalatori[2].atleta_id });
+  // Team dominance
+  for (const [code, td] of Object.entries(teamDom).slice(0,2)) {
+    items.push({ icon:'🏆', text:'<strong>' + esc(td.team) + '</strong> domina in ' + catLabel(code) + ': <strong>' + td.wins + ' vittorie</strong> nell\'ultimo mese', type:'team', team_id:td.team_id });
+  }
+  // Close battles
+  for (let i=0; i < Math.min(allRankings.length, catOrder.length); i++) {
+    const rk = allRankings[i]; if (!rk || rk.length < 2) continue;
+    const gap = rk[0].punti - rk[1].punti;
+    if (gap <= 15) { items.push({ icon:'⚔', text:'Solo <strong>' + gap + ' punti</strong> separano <strong>' + esc(rk[0].cognome) + '</strong> e <strong>' + esc(rk[1].cognome) + '</strong> in ' + catLabel(catOrder[i]), type:'battle' }); break; }
+  }
+  return items.slice(0, 8);
+}
+
+// siRaceNarrative — auto-generate story string for a race
+function siRaceNarrative(raceId, resultsRaw) {
+  const results = resultsRaw.filter(r => r.gara_id === raceId && r.posizione).sort((a,b) => a.posizione - b.posizione);
+  if (!results.length) return null;
+  const w = results[0], p2 = results[1];
+  const { winStreak, podioStreak } = siStreak(w.atleta_id, resultsRaw);
+  if (winStreak >= 3) return '👑 ' + esc(w.cognome) + ' è in striscia: ' + winStreak + 'ª vittoria di fila.';
+  if (winStreak >= 2) return '🔥 ' + esc(w.cognome) + ' non si ferma: ' + winStreak + ' vittorie consecutive.';
+  if (podioStreak >= 4) return '📈 ' + esc(w.cognome) + ' inarrestabile — ' + podioStreak + ' podi di fila.';
+  if (p2 && Math.abs((w.punti_effettivi||0)-(p2.punti_effettivi||0)) <= 2) return '⚡ Duello al limite: ' + esc(w.cognome) + ' batte ' + esc(p2.cognome) + ' per pochissimi punti.';
+  return '🥇 Vince ' + esc(w.cognome) + ' ' + esc(w.nome) + (p2 ? ' davanti a ' + esc(p2.cognome) : '') + '.';
+}
+
+// siClosestBattle — find the tightest ranking gap across categories
+function siClosestBattle(allRankings, catOrder) {
+  let best = null, bestGap = Infinity;
+  for (let i = 0; i < Math.min(allRankings.length, catOrder.length); i++) {
+    const rk = allRankings[i]; if (!rk || rk.length < 2) continue;
+    const gap = rk[0].punti - rk[1].punti;
+    if (gap < bestGap) { bestGap = gap; best = { a:rk[0], b:rk[1], code:catOrder[i], gap }; }
+  }
+  return best;
+}
+
+// siTeamNarrative — generate team storyline text
+function siTeamNarrative(teamId, resultsRaw) {
+  const teamRes = resultsRaw.filter(r => r.team_id === teamId && r.posizione && r.data);
+  if (!teamRes.length) return null;
+  const lastDate = teamRes.reduce((mx,r) => r.data > mx ? r.data : mx, '');
+  const cut28 = (() => { const d=new Date(lastDate||new Date()); d.setDate(d.getDate()-28); return d.toISOString().split('T')[0]; })();
+  const recent = teamRes.filter(r => r.data >= cut28);
+  const wins28 = recent.filter(r => r.posizione === 1).length;
+  const podi28 = recent.filter(r => r.posizione <= 3).length;
+  const gare28 = new Set(recent.map(r => r.gara_id)).size;
+  const wByAtl = {};
+  for (const r of recent.filter(x => x.posizione === 1)) {
+    if (!wByAtl[r.atleta_id]) wByAtl[r.atleta_id] = { cognome:r.cognome, wins:0 };
+    wByAtl[r.atleta_id].wins++;
+  }
+  const topWinner = Object.values(wByAtl).sort((a,b) => b.wins-a.wins)[0] || null;
+  const cats28 = [...new Set(recent.map(r => getRankingFileCode(r)||r.categoria).filter(Boolean))];
+  if (wins28 === 0 && podi28 === 0) return gare28 + ' gare nell\'ultimo mese. In cerca di conferme.';
+  if (wins28 >= 5) return '🔥 Squadra dominante — ' + wins28 + ' vittorie in ' + gare28 + ' gare (ultimi 28gg).';
+  if (topWinner && topWinner.wins >= 2) return '👑 ' + esc(topWinner.cognome) + ' trascina il team: ' + topWinner.wins + ' vittorie. ' + podi28 + ' podi totali su ' + gare28 + ' gare.';
+  if (podi28 > 0) return '📈 ' + podi28 + ' podi in ' + gare28 + ' gare nell\'ultimo mese' + (cats28.length > 1 ? ' in ' + cats28.length + ' categorie' : '') + '.';
+  return gare28 + ' gare, ' + podi28 + ' podi nell\'ultimo mese.';
+}
+
+// siAthleteStory — generate season narrative label for athlete
+function siAthleteStory(athleteId, resultsRaw) {
+  const myRes = resultsRaw.filter(r => r.atleta_id === athleteId && r.posizione && r.data).sort((a,b) => b.data.localeCompare(a.data));
+  if (!myRes.length) return null;
+  const lastDate = myRes[0].data;
+  const cut30 = (() => { const d=new Date(lastDate||new Date()); d.setDate(d.getDate()-30); return d.toISOString().split('T')[0]; })();
+  const r30 = myRes.filter(r => r.data >= cut30);
+  const wins30 = r30.filter(r => r.posizione === 1).length;
+  const podi30 = r30.filter(r => r.posizione <= 3).length;
+  const { winStreak, podioStreak } = siStreak(athleteId, resultsRaw);
+  if (winStreak >= 3) return '👑 DOMINATORE — ' + winStreak + ' vittorie di fila';
+  if (winStreak >= 2) return '🔥 IN STRISCIA — ' + winStreak + ' vittorie consecutive';
+  if (podioStreak >= 4) return '🔥 FORMA STRAORDINARIA — ' + podioStreak + ' podi di fila';
+  if (wins30 >= 3) return '📈 STAGIONE ECCEZIONALE — ' + wins30 + ' vittorie nell\'ultimo mese';
+  if (podi30 >= 4) return '📈 MOLTO IN FORMA — ' + podi30 + ' podi in 30 giorni';
+  if (wins30 === 0 && r30.length > 2) return '⏳ In cerca di forma — ' + podi30 + ' podi in ' + r30.length + ' gare';
+  return null;
+}
+
+
 // ── HOME ──────────────────────────────────────────────────────
 async function renderHome() {
   if (!globalData) return;
@@ -990,32 +1136,70 @@ async function renderHome() {
     </div>
   </section>` : '';
 
-  // ── 3. SFIDA DELLA SETTIMANA ──────────────────────────────────
+  // ── 3. RIVALITÀ + NEWSROOM ───────────────────────────────────
+  const rivalries = siRivalryFinder(resultsRaw);
+  const rv = rivalries[0];
   const vsIdx = allRankings[1]?.length >= 2 ? 1 : (allRankings[0]?.length >= 2 ? 0 : -1);
   const vsRk = vsIdx >= 0 ? allRankings[vsIdx] : null;
   const vsCode = vsIdx >= 0 ? catOrder[vsIdx] : '';
   const vsA = vsRk?.[0], vsB = vsRk?.[1];
-  const versusHtml = (vsA && vsB) ? `<section class="em-versus">
-    <div class="em-versus-label">⚔ SFIDA DELLA SETTIMANA · ${catLabel(vsCode)}</div>
-    <div class="em-versus-ring">
-      <div class="em-vs-side em-vs-a">
-        <div class="em-vs-pos">1°</div>
-        <a href="#/atleta/${encodeURIComponent(vsA.atleta_id)}" class="em-vs-name">${esc(vsA.cognome)}<br><small>${esc(vsA.nome)}</small></a>
-        <div class="em-vs-pts">${vsA.punti} <span>pt</span></div>
-        <div class="em-vs-team">${esc(vsA.team_attuale||vsA.team||'')}</div>
-      </div>
-      <div class="em-vs-center">
-        <div class="em-vs-vs">VS</div>
-        <div class="em-vs-gap">+${vsA.punti - vsB.punti} pt</div>
-      </div>
-      <div class="em-vs-side em-vs-b">
-        <div class="em-vs-pos">2°</div>
-        <a href="#/atleta/${encodeURIComponent(vsB.atleta_id)}" class="em-vs-name">${esc(vsB.cognome)}<br><small>${esc(vsB.nome)}</small></a>
-        <div class="em-vs-pts">${vsB.punti} <span>pt</span></div>
-        <div class="em-vs-team">${esc(vsB.team_attuale||vsB.team||'')}</div>
-      </div>
-    </div>
-  </section>` : '';
+
+  const versusHtml = rv
+    ? '<section class="em-versus">' +
+        '<div class="em-versus-label">⚔ RIVALITÀ DI STAGIONE · ' + catLabel(rv.code) + ' · ' + rv.encounters + ' scontri diretti</div>' +
+        '<div class="em-versus-ring">' +
+          '<div class="em-vs-side em-vs-a">' +
+            '<div class="em-vs-pos">' + rv.aWins + 'V</div>' +
+            '<a href="#/atleta/' + encodeURIComponent(rv.aId) + '" class="em-vs-name">' + esc(rv.aCog) + '<br><small>' + esc(rv.aNom) + '</small></a>' +
+            '<div class="em-vs-team">' + esc(rv.aTeam||'') + '</div>' +
+          '</div>' +
+          '<div class="em-vs-center"><div class="em-vs-vs">VS</div><div class="em-vs-gap">' + rv.encounters + ' sfide</div>' +
+          '<div style="font-size:0.6rem;color:rgba(255,255,255,0.4);margin-top:4px">HEAD TO HEAD</div></div>' +
+          '<div class="em-vs-side em-vs-b">' +
+            '<div class="em-vs-pos">' + rv.bWins + 'V</div>' +
+            '<a href="#/atleta/' + encodeURIComponent(rv.bId) + '" class="em-vs-name">' + esc(rv.bCog) + '<br><small>' + esc(rv.bNom) + '</small></a>' +
+            '<div class="em-vs-team">' + esc(rv.bTeam||'') + '</div>' +
+          '</div>' +
+        '</div></section>'
+    : (vsA && vsB)
+      ? '<section class="em-versus">' +
+          '<div class="em-versus-label">⚔ SFIDA IN CLASSIFICA · ' + catLabel(vsCode) + '</div>' +
+          '<div class="em-versus-ring">' +
+            '<div class="em-vs-side em-vs-a"><div class="em-vs-pos">1°</div>' +
+            '<a href="#/atleta/' + encodeURIComponent(vsA.atleta_id) + '" class="em-vs-name">' + esc(vsA.cognome) + '<br><small>' + esc(vsA.nome) + '</small></a>' +
+            '<div class="em-vs-pts">' + vsA.punti + ' <span>pt</span></div>' +
+            '<div class="em-vs-team">' + esc(vsA.team_attuale||vsA.team||'') + '</div></div>' +
+            '<div class="em-vs-center"><div class="em-vs-vs">VS</div><div class="em-vs-gap">+' + (vsA.punti - vsB.punti) + ' pt</div></div>' +
+            '<div class="em-vs-side em-vs-b"><div class="em-vs-pos">2°</div>' +
+            '<a href="#/atleta/' + encodeURIComponent(vsB.atleta_id) + '" class="em-vs-name">' + esc(vsB.cognome) + '<br><small>' + esc(vsB.nome) + '</small></a>' +
+            '<div class="em-vs-pts">' + vsB.punti + ' <span>pt</span></div>' +
+            '<div class="em-vs-team">' + esc(vsB.team_attuale||vsB.team||'') + '</div></div>' +
+          '</div></section>'
+      : '';
+
+  // Newsroom feed
+  const newsroomItems = siNewsroomFeed(resultsRaw, allRankings, catOrder, topScalatori, teamDom);
+  const newsroomHtml = newsroomItems.length
+    ? '<section class="em-newsroom">' +
+        '<div class="em-newsroom-header">' +
+          '<span class="em-newsroom-badge">📡 COSA STA SUCCEDENDO</span>' +
+          '<a href="#/risultati" class="em-newsroom-all">Tutti i risultati →</a>' +
+        '</div>' +
+        '<div class="em-newsroom-feed">' +
+          newsroomItems.map(function(item) {
+            const clickAttr = item.atleta_id
+              ? " onclick=\"location.hash='#/atleta/" + item.atleta_id + "'\""
+              : item.team_id
+                ? " onclick=\"location.hash='#/team/" + item.team_id + "'\""
+                : '';
+            return '<div class="em-news-item em-news-' + item.type + '"' + clickAttr + '>' +
+              '<span class="em-news-icon">' + item.icon + '</span>' +
+              '<div class="em-news-text">' + item.text + '</div>' +
+              ((item.atleta_id || item.team_id) ? '<span class="em-news-arrow">→</span>' : '') +
+            '</div>';
+          }).join('') +
+        '</div></section>'
+    : '';
 
   // ── 4. CHI STA VOLANDO ────────────────────────────────────────
   const volandoHtml = topScalatori.length ? `<section class="em-volando">
@@ -1066,14 +1250,15 @@ async function renderHome() {
   </div>`;
 
   // ══ ASSEMBLE ═════════════════════════════════════════════════
-  setPage(`
-    ${heroHtml}
-    ${spotlightHtml}
-    ${emBandHtml}
-    ${versusHtml}
-    ${volandoHtml}
-    ${upcomingHtml}
-  `);
+  setPage(
+    heroHtml +
+    spotlightHtml +
+    newsroomHtml +
+    emBandHtml +
+    versusHtml +
+    volandoHtml +
+    upcomingHtml
+  );
 }
 
 // ── FORMA DEL MOMENTO — pagina completa per categoria ─────────
@@ -1194,11 +1379,40 @@ async function renderClassifica() {
     return `<option value="${v}" ${rankMonth===v?'selected':''}>${n}</option>`;
   }).join('');
 
+  const _rkLastDate = globalData.resultsRaw.reduce((mx,r) => (r.data||'')>mx?r.data:mx, '');
+  const _rk28cut = (()=>{ const d=new Date(_rkLastDate||new Date()); d.setDate(d.getDate()-28); return d.toISOString().split('T')[0]; })();
+  const _rkTeamDom = siTeamDominance(globalData.resultsRaw, currentCats, _rk28cut);
+  const _rkWin28 = {};
+  for (const r of globalData.resultsRaw.filter(x => x.data >= _rk28cut && x.posizione === 1)) {
+    const code = getRankingFileCode(r); if (!code || !currentCats.includes(code)) continue;
+    if (!_rkWin28[r.atleta_id]) _rkWin28[r.atleta_id] = { atleta_id:r.atleta_id, cognome:r.cognome, nome:r.nome, code, wins:0 };
+    _rkWin28[r.atleta_id].wins++;
+  }
+  const _rkTopWinner = Object.values(_rkWin28).sort((a,b)=>b.wins-a.wins)[0]||null;
+  const _rkTopDom    = Object.values(_rkTeamDom).sort((a,b)=>b.wins-a.wins)[0]||null;
+  const _rkIntelHtml = (_rkTopWinner||_rkTopDom)
+    ? '<div class="rk-intel-strip">' +
+        (_rkTopWinner
+          ? "<div class=\"rk-intel-chip\" onclick=\"location.hash='#/atleta/" + encodeURIComponent(_rkTopWinner.atleta_id) + "'\">" +
+              '<span class="rk-intel-icon">🔥</span>' +
+              '<div><div class="rk-intel-label">RIDER ON FIRE</div>' +
+              '<div class="rk-intel-val">' + esc(_rkTopWinner.cognome) + ' — ' + _rkTopWinner.wins + ' vittorie in 28gg</div></div></div>'
+          : '') +
+        (_rkTopDom
+          ? "<div class=\"rk-intel-chip\" onclick=\"location.hash='#/team/" + encodeURIComponent(_rkTopDom.team_id) + "'\">" +
+              '<span class="rk-intel-icon">🏆</span>' +
+              '<div><div class="rk-intel-label">TEAM DOMINANTE</div>' +
+              '<div class="rk-intel-val">' + esc(_rkTopDom.team) + ' — ' + _rkTopDom.wins + ' vitt · ' + catLabel(_rkTopDom.code) + '</div></div></div>'
+          : '') +
+      '</div>'
+    : '';
+
   setPage(`
     <div class="pg-header">
       <div class="pg-eyebrow">🏆 CLASSIFICA UFFICIALE</div>
       <h1 class="pg-title">CLASSIFICHE</h1>
     </div>
+    ${_rkIntelHtml}
 
     <div class="ranking-controls">
       <div class="tab-group" role="tablist" aria-label="Seleziona genere">${genderTabs}</div>
@@ -2034,8 +2248,9 @@ async function renderAtleta(atleta_id) {
   const aiStreak = siStreak(atleta_id, _siRaw);
   const aiMomentum = siMomentum(atleta_id, _siRaw, _siLastDate);
   const aiRivals = siRivals(atleta_id, _siRaw, rCode);
+  const _aiStory = siAthleteStory(atleta_id, _siRaw);
 
-  const siIntelPanelHtml = `<div class="si-intel-panel">
+  const siIntelPanelHtml = (_aiStory ? '<div class="si-athlete-story-badge">' + _aiStory + '</div>' : '') + `<div class="si-intel-panel">
     <div class="si-intel-momentum" style="--si-color:${aiMomentum.color}">
       <span class="si-intel-label">${aiMomentum.label}</span>
       ${aiMomentum.gare14>0 ? `<span class="si-intel-sub">${aiMomentum.gare14} gare · ${aiMomentum.vittorie14} vitt. · ${aiMomentum.podio14} podi (ultimi 14gg)</span>` : ''}
@@ -2175,6 +2390,8 @@ async function renderTeam(team_id) {
       `).join('')}
     </div>
   ` : '';
+  const _teamNarr = siTeamNarrative(team_id, globalData.resultsRaw);
+  const teamNarrHtml = _teamNarr ? '<div class="si-team-narrative">' + _teamNarr + '</div>' : '';
 
   // Atleti con punti (nella categoria selezionata)
   const atletiMap = {};
@@ -2293,6 +2510,7 @@ async function renderTeam(team_id) {
         <button class="btn-share" onclick="window.triggerShareTeam()"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="18" cy="5" r="3"/><circle cx="6" cy="12" r="3"/><circle cx="18" cy="19" r="3"/><line x1="8.59" y1="13.51" x2="15.42" y2="17.49"/><line x1="15.41" y1="6.51" x2="8.59" y2="10.49"/></svg> Condividi Team</button>
         ${adminEditBtn('team', team_id)}
       </div>
+    ${teamNarrHtml}
     ${catTabsHtml}
     <div class="section-header">
       <span class="section-title">ATLETI</span>
@@ -3047,11 +3265,38 @@ async function renderCalendario() {
     document.getElementById('cal-count').textContent = `${filtered.length} gare`;
   };
 
+  const _todayStr2 = new Date().toISOString().split('T')[0];
+  const _nextRaces = calendar.filter(g => g.data >= _todayStr2).sort((a,b) => a.data.localeCompare(b.data)).slice(0,3);
+  let _calHypeHtml = '';
+  if (_nextRaces.length) {
+    const _nr = _nextRaces[0];
+    const _daysTo = Math.round((new Date(_nr.data) - new Date(_todayStr2)) / 86400000);
+    const _daysLabel = _daysTo === 0 ? 'OGGI' : _daysTo === 1 ? 'DOMANI' : 'fra ' + _daysTo + ' giorni';
+    _calHypeHtml = '<div class="cal-hype-strip">' +
+      '<div class="cal-hype-race">' +
+        '<div class="cal-hype-label">🏁 PROSSIMA GARA</div>' +
+        "<div class=\"cal-hype-name\" onclick=\"location.hash='#/calendario/" + encodeURIComponent(_nr.id) + "'\">" + esc(_nr.nome) + '</div>' +
+        '<div class="cal-hype-meta">' + _daysLabel +
+          (_nr.regione ? ' · ' + esc(_nr.regione) : '') +
+          (_nr.categoria ? ' · ' + esc(_nr.categoria) : '') +
+        '</div>' +
+      '</div>' +
+      _nextRaces.slice(1,3).map(function(g) {
+        const d2 = Math.round((new Date(g.data) - new Date(_todayStr2)) / 86400000);
+        return "<div class=\"cal-hype-next\" onclick=\"location.hash='#/calendario/" + encodeURIComponent(g.id) + "'\">" +
+          '<span class="cal-hype-next-days">' + d2 + 'gg</span>' +
+          '<span class="cal-hype-next-name">' + esc(g.nome) + '</span>' +
+          '</div>';
+      }).join('') +
+    '</div>';
+  }
+
   setPage(`
     <div class="pg-header">
       <div class="pg-eyebrow">📅 STAGIONE 2025-2026</div>
       <h1 class="pg-title">CALENDARIO</h1>
     </div>
+    ${_calHypeHtml}
     <div class="calendar-controls">
       <select class="cal-filter-select" id="cal-month" onchange="window.calSetMonth(this.value)" aria-label="Filtra per mese">
         <option value="">Tutti i mesi</option>
@@ -3856,6 +4101,28 @@ async function renderComparatore() {
         <div class="comp-section-title">Metriche Avanzate</div>
         <div class="comp-stats-grid">${advRows}</div>
       </div>
+      ${(()=>{
+        const _stA = siAthleteStory(compA, resultsRaw)||'';
+        const _stB = siAthleteStory(compB, resultsRaw)||'';
+        const _mA = siMomentum(compA, resultsRaw, resultsRaw.reduce((mx,r)=>(r.data||'')>mx?r.data:mx,''));
+        const _mB = siMomentum(compB, resultsRaw, resultsRaw.reduce((mx,r)=>(r.data||'')>mx?r.data:mx,''));
+        const _rivals = siRivalryFinder(resultsRaw).find(p=>(p.aId===compA&&p.bId===compB)||(p.aId===compB&&p.bId===compA));
+        const _h2hStr = _rivals
+          ? esc(nA)+' '+_rivals.aWins+'V – '+_rivals.bWins+'V '+esc(nB)+' ('+_rivals.encounters+' scontri diretti)'
+          : 'Nessun incontro diretto registrato';
+        return '<div class="comp-duel-banner">' +
+          '<div class="comp-duel-h2h">⚔ HEAD TO HEAD · ' + _h2hStr + '</div>' +
+          '<div class="comp-duel-narratives">' +
+            (_stA ? '<div class="comp-duel-story comp-duel-story-a">' + _stA + '</div>' : '') +
+            (_stB ? '<div class="comp-duel-story comp-duel-story-b">' + _stB + '</div>' : '') +
+          '</div>' +
+          '<div class="comp-duel-momentum">' +
+            '<span style="color:' + _mA.color + '">' + esc(nA.split(' ')[0]) + ': ' + _mA.label + '</span>' +
+            ' &nbsp;·&nbsp; ' +
+            '<span style="color:' + _mB.color + '">' + esc(nB.split(' ')[0]) + ': ' + _mB.label + '</span>' +
+          '</div>' +
+        '</div>';
+      })()}
       ${buildH2H(aRes, bRes, nA, nB)}
       ${buildRadar(sA, sB, nA, nB)}
       ${buildInsights(sA, sB, nA, nB)}`;
@@ -4435,6 +4702,7 @@ async function renderRisultati() {
           <div class="ris-card-body">
             <div class="hero-label" style="font-size:0.6rem">RISULTATI GARA</div>
             <div class="hero-race-name"><a href="#/gara/${esc(race.id)}">${esc(race.nome)}</a></div>
+            ${(()=>{ const _rn=siRaceNarrative(race.id,resultsRaw); return _rn?'<div class="ris-race-narrative">'+_rn+'</div>':''; })()}
             <div class="hero-race-meta" style="margin-bottom:16px;">
               <span>${fmtDate(race.data)}</span>
               ${badgeMult(race.mult, race.tipo, race.campionato_regionale, race.campionato_italiano)}

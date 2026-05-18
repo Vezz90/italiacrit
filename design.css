@@ -4434,3 +4434,257 @@ div[style*="grid-template-columns: repeat(auto-fit"] {
 @media (max-width: 480px) {
   .si-stories-grid { grid-template-columns: 1fr; }
 }
+
+/* ════════════════════════════════════════════════════════════════
+   SPORTS INTELLIGENCE LAYER — new components
+   ════════════════════════════════════════════════════════════════ */
+
+/* ── Newsroom feed (homepage) ────────────────────────────────── */
+.em-newsroom {
+  background: var(--bg-card);
+  border: 1px solid var(--border-subtle);
+  border-radius: 12px;
+  padding: 20px 24px;
+  margin: 24px 0;
+}
+.em-newsroom-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 14px;
+}
+.em-newsroom-badge {
+  font-family: var(--font-heading);
+  font-size: 0.7rem;
+  font-weight: 700;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--red-hot);
+}
+.em-newsroom-all {
+  font-size: 0.72rem;
+  color: var(--text-muted);
+  text-decoration: none;
+  transition: color 0.15s;
+}
+.em-newsroom-all:hover { color: var(--red-hot); }
+.em-newsroom-feed {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+.em-news-item {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 9px 12px;
+  border-radius: 8px;
+  background: var(--bg-secondary);
+  cursor: pointer;
+  transition: background 0.15s;
+  font-size: 0.82rem;
+  color: var(--text-primary);
+}
+.em-news-item:hover { background: var(--border-subtle); }
+.em-news-icon { font-size: 1rem; flex-shrink: 0; }
+.em-news-text { flex: 1; line-height: 1.4; }
+.em-news-text strong { color: var(--text-primary); }
+.em-news-arrow {
+  color: var(--text-muted);
+  font-size: 0.8rem;
+  flex-shrink: 0;
+}
+.em-news-victory { border-left: 3px solid #F59E0B; }
+.em-news-streak  { border-left: 3px solid #EF4444; }
+.em-news-mover   { border-left: 3px solid #10B981; }
+.em-news-team    { border-left: 3px solid #6366F1; }
+.em-news-battle  { border-left: 3px solid #EC4899; }
+
+/* ── Classifica intel strip ──────────────────────────────────── */
+.rk-intel-strip {
+  display: flex;
+  gap: 12px;
+  flex-wrap: wrap;
+  margin: 0 0 20px;
+}
+.rk-intel-chip {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 10px 16px;
+  background: var(--bg-card);
+  border: 1px solid var(--border-subtle);
+  border-radius: 10px;
+  cursor: pointer;
+  transition: border-color 0.15s, background 0.15s;
+  flex: 1;
+  min-width: 200px;
+}
+.rk-intel-chip:hover { border-color: var(--red-hot); background: var(--bg-secondary); }
+.rk-intel-icon { font-size: 1.4rem; }
+.rk-intel-label {
+  font-family: var(--font-heading);
+  font-size: 0.62rem;
+  font-weight: 700;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--text-muted);
+  margin-bottom: 2px;
+}
+.rk-intel-val {
+  font-size: 0.83rem;
+  font-weight: 600;
+  color: var(--text-primary);
+}
+
+/* ── Atleta story badge ──────────────────────────────────────── */
+.si-athlete-story-badge {
+  display: inline-block;
+  font-family: var(--font-heading);
+  font-size: 0.72rem;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  padding: 6px 14px;
+  border-radius: 20px;
+  background: rgba(239,68,68,0.12);
+  color: var(--red-hot);
+  border: 1px solid rgba(239,68,68,0.25);
+  margin-bottom: 10px;
+}
+
+/* ── Team narrative strip ────────────────────────────────────── */
+.si-team-narrative {
+  font-size: 0.88rem;
+  color: var(--text-secondary);
+  background: var(--bg-card);
+  border: 1px solid var(--border-subtle);
+  border-left: 3px solid var(--red-hot);
+  border-radius: 8px;
+  padding: 10px 14px;
+  margin: 16px 0 8px;
+  line-height: 1.5;
+}
+
+/* ── Race narrative (risultati cards) ────────────────────────── */
+.ris-race-narrative {
+  font-size: 0.8rem;
+  color: var(--text-muted);
+  font-style: italic;
+  margin: 2px 0 8px;
+  line-height: 1.4;
+}
+
+/* ── Calendario hype strip ───────────────────────────────────── */
+.cal-hype-strip {
+  display: flex;
+  align-items: stretch;
+  gap: 0;
+  background: linear-gradient(135deg, var(--red-hot) 0%, #7C3AED 100%);
+  border-radius: 12px;
+  padding: 0;
+  margin-bottom: 20px;
+  overflow: hidden;
+}
+.cal-hype-race {
+  flex: 1;
+  padding: 18px 20px;
+  color: #fff;
+}
+.cal-hype-label {
+  font-family: var(--font-heading);
+  font-size: 0.62rem;
+  font-weight: 700;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: rgba(255,255,255,0.65);
+  margin-bottom: 4px;
+}
+.cal-hype-name {
+  font-family: var(--font-display);
+  font-size: 1.05rem;
+  font-weight: 800;
+  color: #fff;
+  cursor: pointer;
+  line-height: 1.2;
+  margin-bottom: 4px;
+}
+.cal-hype-name:hover { text-decoration: underline; }
+.cal-hype-meta {
+  font-size: 0.75rem;
+  color: rgba(255,255,255,0.7);
+}
+.cal-hype-next {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  padding: 12px 16px;
+  background: rgba(0,0,0,0.18);
+  border-left: 1px solid rgba(255,255,255,0.12);
+  cursor: pointer;
+  min-width: 120px;
+  transition: background 0.15s;
+}
+.cal-hype-next:hover { background: rgba(0,0,0,0.28); }
+.cal-hype-next-days {
+  font-family: var(--font-display);
+  font-size: 1.3rem;
+  font-weight: 800;
+  color: rgba(255,255,255,0.9);
+  line-height: 1;
+}
+.cal-hype-next-name {
+  font-size: 0.7rem;
+  color: rgba(255,255,255,0.6);
+  margin-top: 3px;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  max-width: 130px;
+}
+
+/* ── Comparatore duel banner ─────────────────────────────────── */
+.comp-duel-banner {
+  background: var(--bg-card);
+  border: 1px solid var(--border-subtle);
+  border-left: 3px solid var(--red-hot);
+  border-radius: 10px;
+  padding: 16px 20px;
+  margin: 20px 0;
+}
+.comp-duel-h2h {
+  font-family: var(--font-heading);
+  font-size: 0.72rem;
+  font-weight: 700;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--red-hot);
+  margin-bottom: 10px;
+}
+.comp-duel-narratives {
+  display: flex;
+  gap: 12px;
+  flex-wrap: wrap;
+  margin-bottom: 8px;
+}
+.comp-duel-story {
+  font-size: 0.82rem;
+  font-weight: 600;
+  padding: 4px 10px;
+  border-radius: 14px;
+  background: var(--bg-secondary);
+}
+.comp-duel-story-a { color: var(--yellow-race); border: 1px solid rgba(245,158,11,0.2); }
+.comp-duel-story-b { color: #6366F1; border: 1px solid rgba(99,102,241,0.2); }
+.comp-duel-momentum {
+  font-size: 0.8rem;
+  color: var(--text-muted);
+  margin-top: 4px;
+}
+
+/* ── Mobile tweaks ───────────────────────────────────────────── */
+@media (max-width: 600px) {
+  .rk-intel-strip { flex-direction: column; }
+  .cal-hype-next { display: none; }
+  .em-newsroom { padding: 14px 16px; }
+}
