@@ -1200,20 +1200,6 @@ async function renderClassifica() {
       <h1 class="pg-title">CLASSIFICHE</h1>
     </div>
 
-    <!-- Parallel Leaderboards Section -->
-    <div style="display:grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap:24px; margin-bottom:40px;">
-      <div class="hero-band" style="padding:20px; background:var(--gradient-male)">
-        <div class="hero-label">LEADER MENSILI</div>
-        <div style="font-size:1.2rem; font-weight:700; color:var(--red-hot); margin-bottom:12px">Categorie Uomini</div>
-        <div id="parallel-male-ranking"></div>
-      </div>
-      <div class="hero-band" style="padding:20px; background:var(--gradient-female)">
-        <div class="hero-label">LEADER MENSILI</div>
-        <div style="font-size:1.2rem; font-weight:700; color:var(--text-secondary); margin-bottom:12px">Categorie Donne</div>
-        <div id="parallel-female-ranking"></div>
-      </div>
-    </div>
-
     <div class="ranking-controls">
       <div class="tab-group" role="tablist" aria-label="Seleziona genere">${genderTabs}</div>
       <div class="tab-group" role="tablist" aria-label="Seleziona categoria">${catTabs}</div>
@@ -2177,7 +2163,7 @@ async function renderTeam(team_id) {
   const catRisultati = (t.risultati||[]).filter(r => (getRankingFileCode(r) || r.categoria) === teamViewCat);
   const catPuntiTotali = catRisultati.reduce((sum, r) => sum + (r.punti_effettivi||0), 0);
 
-  window.setTeamCat = (cat) => {
+  window.setTeamDetailCat = (cat) => {
     teamViewCat = cat;
     renderTeam(team_id);
   };
@@ -2185,7 +2171,7 @@ async function renderTeam(team_id) {
   const catTabsHtml = teamCats.length > 1 ? `
     <div class="tab-group" role="tablist" style="margin-top:24px; margin-bottom: 24px; display: flex; flex-wrap: wrap; gap: 8px;">
       ${teamCats.map(c => `
-        <button class="tab-btn ${teamViewCat===c?'active-cat':''}" onclick="setTeamCat('${c}')">${catLabel(c)}</button>
+        <button class="tab-btn ${teamViewCat===c?'active-cat':''}" onclick="setTeamDetailCat('${c}')">${catLabel(c)}</button>
       `).join('')}
     </div>
   ` : '';
@@ -2921,7 +2907,7 @@ let calQGenere = '';
 let calQTipo   = '';
 let calQSearch = '';
 let calQCat    = '';
-let calQMonth  = new Date().toISOString().slice(5, 7); // Default mese corrente = '04' ad es.
+let calQMonth  = '';
 let calQRegione = '';
 
 async function renderCalendario() {
@@ -4017,20 +4003,19 @@ async function renderComparatore() {
 
 function renderRegolamento() {
   setPage(`
-    <div class="content-wrapper">
-      <div class="section-header">
-        <h1 style="font-family:var(--font-display);font-size:var(--size-h1);margin-bottom:0">Regolamento</h1>
-        <span class="section-line"></span>
-      </div>
-      <div style="max-width:800px; margin:0 auto; line-height:1.6; color:var(--text-primary)">
-        <p>Il sistema di punteggio di <strong>Italiacrit</strong> è progettato per valorizzare la costanza e la qualità delle prestazioni degli atleti nelle gare su strada.</p>
-        
-        <h3 style="margin-top:32px; color:var(--red-hot)">PUNTEGGIO BASE</h3>
-        <p>In base alla posizione d'arrivo (Top 10), vengono assegnati i seguenti punti:</p>
-        <table class="ranking-table" style="max-width:300px">
+    <div class="pg-header">
+      <div class="pg-eyebrow">Italiacrit · Sistema di Punteggio</div>
+      <h1 class="pg-title">Regolamento</h1>
+    </div>
+
+    <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(300px,1fr));gap:24px;margin-bottom:40px;">
+      <div style="background:var(--bg-card);border:1px solid var(--border-subtle);border-radius:var(--r-lg);padding:28px;border-top:3px solid #E11D48;">
+        <div style="font-size:0.58rem;font-weight:800;letter-spacing:0.2em;color:#E11D48;text-transform:uppercase;margin-bottom:16px;">Punteggio Base</div>
+        <p style="color:var(--text-secondary);font-size:0.875rem;margin-bottom:20px;line-height:1.6">Posizioni di arrivo Top 10 nelle gare su strada.</p>
+        <table class="ranking-table" style="width:100%">
           <thead><tr><th>POS</th><th>PUNTI</th></tr></thead>
           <tbody>
-            <tr><td>1°</td><td>15</td></tr>
+            <tr><td>1°</td><td><strong>15</strong></td></tr>
             <tr><td>2°</td><td>12</td></tr>
             <tr><td>3°</td><td>10</td></tr>
             <tr><td>4°</td><td>8</td></tr>
@@ -4042,21 +4027,48 @@ function renderRegolamento() {
             <tr><td>10°</td><td>1</td></tr>
           </tbody>
         </table>
-
-        <h3 style="margin-top:32px; color:var(--red-hot)">MOLTIPLICATORI</h3>
-        <p>Il punteggio base viene moltiplicato in base al livello della gara:</p>
-        <ul style="list-style:none; padding-left:0">
-          <li style="margin-bottom:12px"><strong>×1 (Regionale):</strong> Gare di livello regionale standard.</li>
-          <li style="margin-bottom:12px"><strong>×2 (Nazionale):</strong> Gare nazionali e <strong>Campionati Regionali</strong>.</li>
-          <li style="margin-bottom:12px"><strong>×3 (Internazionale):</strong> Gare del calendario internazionale e <strong>Campionati Italiani</strong>.</li>
-        </ul>
-
-        <h3 style="margin-top:32px; color:var(--red-hot)">CLASSIFICHE SPECIALI</h3>
-        <ul style="list-style:none; padding-left:0">
-          <li><strong>Ranking Regionale:</strong> Classifica calcolata esclusivamente sui punteggi ottenuti in gare svolte in una specifica regione.</li>
-          <li><strong>Ranking Mensile:</strong> Classifica calcolata sui punteggi ottenuti in un singolo mese solare.</li>
-        </ul>
       </div>
+
+      <div style="background:var(--bg-card);border:1px solid var(--border-subtle);border-radius:var(--r-lg);padding:28px;border-top:3px solid #E11D48;">
+        <div style="font-size:0.58rem;font-weight:800;letter-spacing:0.2em;color:#E11D48;text-transform:uppercase;margin-bottom:16px;">Moltiplicatori Gara</div>
+        <p style="color:var(--text-secondary);font-size:0.875rem;margin-bottom:20px;line-height:1.6">Il punteggio base viene moltiplicato in base al livello della competizione.</p>
+        <div style="display:flex;flex-direction:column;gap:12px;">
+          <div style="display:flex;align-items:center;gap:16px;padding:14px 16px;background:var(--bg-elevated);border-radius:var(--r-md);">
+            <span style="font-family:'Inter Tight',sans-serif;font-size:1.6rem;font-weight:900;color:var(--text-muted);">×1</span>
+            <div><div style="font-weight:700;font-size:0.875rem;color:var(--text-primary)">Regionale</div><div style="font-size:0.78rem;color:var(--text-secondary)">Gare di livello regionale standard</div></div>
+          </div>
+          <div style="display:flex;align-items:center;gap:16px;padding:14px 16px;background:var(--bg-elevated);border-radius:var(--r-md);">
+            <span style="font-family:'Inter Tight',sans-serif;font-size:1.6rem;font-weight:900;color:var(--text-secondary);">×2</span>
+            <div><div style="font-weight:700;font-size:0.875rem;color:var(--text-primary)">Nazionale</div><div style="font-size:0.78rem;color:var(--text-secondary)">Gare nazionali e Campionati Regionali</div></div>
+          </div>
+          <div style="display:flex;align-items:center;gap:16px;padding:14px 16px;background:var(--bg-elevated);border-radius:var(--r-md);">
+            <span style="font-family:'Inter Tight',sans-serif;font-size:1.6rem;font-weight:900;color:#E11D48;">×3</span>
+            <div><div style="font-weight:700;font-size:0.875rem;color:var(--text-primary)">Internazionale</div><div style="font-size:0.78rem;color:var(--text-secondary)">Calendario internazionale e Campionati Italiani</div></div>
+          </div>
+        </div>
+      </div>
+
+      <div style="background:var(--bg-card);border:1px solid var(--border-subtle);border-radius:var(--r-lg);padding:28px;border-top:3px solid #E11D48;">
+        <div style="font-size:0.58rem;font-weight:800;letter-spacing:0.2em;color:#E11D48;text-transform:uppercase;margin-bottom:16px;">Classifiche Speciali</div>
+        <p style="color:var(--text-secondary);font-size:0.875rem;margin-bottom:20px;line-height:1.6">Ranking aggiuntivi calcolati su sottoinsiemi di gare.</p>
+        <div style="display:flex;flex-direction:column;gap:12px;">
+          <div style="padding:14px 16px;background:var(--bg-elevated);border-radius:var(--r-md);">
+            <div style="font-weight:700;font-size:0.875rem;color:var(--text-primary);margin-bottom:4px;">Ranking Regionale</div>
+            <div style="font-size:0.8rem;color:var(--text-secondary);line-height:1.5">Punteggi ottenuti esclusivamente in gare svolte nella stessa regione.</div>
+          </div>
+          <div style="padding:14px 16px;background:var(--bg-elevated);border-radius:var(--r-md);">
+            <div style="font-weight:700;font-size:0.875rem;color:var(--text-primary);margin-bottom:4px;">Ranking Mensile</div>
+            <div style="font-size:0.8rem;color:var(--text-secondary);line-height:1.5">Punteggi ottenuti in un singolo mese solare.</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div style="background:var(--bg-card);border:1px solid var(--border-subtle);border-radius:var(--r-lg);padding:24px;border-left:3px solid var(--border-subtle);">
+      <div style="font-size:0.58rem;font-weight:800;letter-spacing:0.2em;color:var(--text-muted);text-transform:uppercase;margin-bottom:8px;">Nota</div>
+      <p style="color:var(--text-secondary);font-size:0.875rem;line-height:1.6;margin:0">
+        Il sistema di punteggio di <strong style="color:var(--text-primary)">Italiacrit</strong> è progettato per valorizzare la costanza e la qualità delle prestazioni sulle gare su strada. I dati sono elaborati a partire dai risultati ufficiali FCI. Progetto indipendente, non affiliato alla Federazione Ciclistica Italiana.
+      </p>
     </div>
   `);
 }
