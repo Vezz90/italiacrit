@@ -2936,6 +2936,360 @@
       }
     ]
   },
+  "ROCCELLA_MARCO": {
+    "id": "ROCCELLA_MARCO",
+    "nome": "MARCO",
+    "cognome": "ROCCELLA",
+    "team_attuale": "MULTICAR GRUPPO AMARU'",
+    "team_id": "MULTICAR_GRUPPO_AMARU",
+    "categoria": "ELI_M",
+    "genere": "M",
+    "punti_totali": 45,
+    "risultati": [
+      {
+        "gara_id": "MEMORIAL_GIOVANNI_CANNARELLA_2026-05-17_ELI_M",
+        "nome_gara": "MEMORIAL GIOVANNI CANNARELLA",
+        "data": "2026-05-17",
+        "posizione": 1,
+        "punti_effettivi": 15,
+        "team": "MULTICAR GRUPPO AMARU'",
+        "moltiplicatore": 1,
+        "tipo": "regionale",
+        "regione": "SICILIA",
+        "km": "113.000",
+        "media": ""
+      },
+      {
+        "gara_id": "103_COPPA_ASCENSIONE_2026-05-10_ELI_M",
+        "nome_gara": "103 COPPA ASCENSIONE",
+        "data": "2026-05-10",
+        "posizione": 1,
+        "punti_effettivi": 15,
+        "team": "MULTICAR GRUPPO AMARU'",
+        "moltiplicatore": 1,
+        "tipo": "regionale",
+        "regione": "SICILIA",
+        "km": "100.000",
+        "media": "40.377"
+      },
+      {
+        "gara_id": "5_MEMORIAL_GIUSEPPA_PATELLARO_2026-03-29_ELI_M",
+        "nome_gara": "5 MEMORIAL GIUSEPPA PATELLARO",
+        "data": "2026-03-29",
+        "posizione": 1,
+        "punti_effettivi": 15,
+        "team": "MULTICAR GRUPPO AMARU'",
+        "moltiplicatore": 1,
+        "tipo": "regionale",
+        "regione": "UNDER",
+        "km": "77.000",
+        "media": ""
+      }
+    ]
+  },
+  "PARISI_MICHELANGELO": {
+    "id": "PARISI_MICHELANGELO",
+    "nome": "MICHELANGELO",
+    "cognome": "PARISI",
+    "team_attuale": "PRO.GI.T. CYCLING TEAM",
+    "team_id": "PRO_GI_T_CYCLING_TEAM",
+    "categoria": "ELI_M",
+    "genere": "M",
+    "punti_totali": 12,
+    "risultati": [
+      {
+        "gara_id": "MEMORIAL_GIOVANNI_CANNARELLA_2026-05-17_ELI_M",
+        "nome_gara": "MEMORIAL GIOVANNI CANNARELLA",
+        "data": "2026-05-17",
+        "posizione": 2,
+        "punti_effettivi": 12,
+        "team": "PRO.GI.T. CYCLING TEAM",
+        "moltiplicatore": 1,
+        "tipo": "regionale",
+        "regione": "SICILIA",
+        "km": "113.000",
+        "media": ""
+      }
+    ]
+  },
+  "GERACI_SALVATORE": {
+    "id": "GERACI_SALVATORE",
+    "nome": "SALVATORE",
+    "cognome": "GERACI",
+    "team_attuale": "MULTICAR GRUPPO AMARU'",
+    "team_id": "MULTICAR_GRUPPO_AMARU",
+    "categoria": "ELI_M",
+    "genere": "M",
+    "punti_totali": 20,
+    "risultati": [
+      {
+        "gara_id": "MEMORIAL_GIOVANNI_CANNARELLA_2026-05-17_ELI_M",
+        "nome_gara": "MEMORIAL GIOVANNI CANNARELLA",
+        "data": "2026-05-17",
+        "posizione": 3,
+        "punti_effettivi": 10,
+        "team": "MULTICAR GRUPPO AMARU'",
+        "moltiplicatore": 1,
+        "tipo": "regionale",
+        "regione": "SICILIA",
+        "km": "113.000",
+        "media": ""
+      },
+      {
+        "gara_id": "103_COPPA_ASCENSIONE_2026-05-10_ELI_M",
+        "nome_gara": "103 COPPA ASCENSIONE",
+        "data": "2026-05-10",
+        "posizione": 3,
+        "punti_effettivi": 10,
+        "team": "MULTICAR GRUPPO AMARU'",
+        "moltiplicatore": 1,
+        "tipo": "regionale",
+        "regione": "SICILIA",
+        "km": "100.000",
+        "media": "40.377"
+      }
+    ]
+  },
+  "RUSSO_MARCO": {
+    "id": "RUSSO_MARCO",
+    "nome": "MARCO",
+    "cognome": "RUSSO",
+    "team_attuale": "PRO.GI.T. CYCLING TEAM",
+    "team_id": "PRO_GI_T_CYCLING_TEAM",
+    "categoria": "ELI_M",
+    "genere": "M",
+    "punti_totali": 10,
+    "risultati": [
+      {
+        "gara_id": "MEMORIAL_GIOVANNI_CANNARELLA_2026-05-17_ELI_M",
+        "nome_gara": "MEMORIAL GIOVANNI CANNARELLA",
+        "data": "2026-05-17",
+        "posizione": 4,
+        "punti_effettivi": 8,
+        "team": "PRO.GI.T. CYCLING TEAM",
+        "moltiplicatore": 1,
+        "tipo": "regionale",
+        "regione": "SICILIA",
+        "km": "113.000",
+        "media": ""
+      },
+      {
+        "gara_id": "72_COPPA_MARIA_SS_DELLA_STELLA_2026-04-12_ELI_M",
+        "nome_gara": "72 COPPA MARIA SS DELLA STELLA",
+        "data": "2026-04-12",
+        "posizione": 9,
+        "punti_effettivi": 2,
+        "team": "PRO.GI.T. CYCLING TEAM",
+        "moltiplicatore": 1,
+        "tipo": "regionale",
+        "regione": "PUGLIA",
+        "km": "107.000",
+        "media": "45.441"
+      }
+    ]
+  },
+  "GIOIA_FRANCESCO": {
+    "id": "GIOIA_FRANCESCO",
+    "nome": "FRANCESCO",
+    "cognome": "GIOIA",
+    "team_attuale": "ASD CAMPOBELLO RUNNING & BIKE",
+    "team_id": "ASD_CAMPOBELLO_RUNNING_BIKE",
+    "categoria": "ELI_M",
+    "genere": "M",
+    "punti_totali": 30,
+    "risultati": [
+      {
+        "gara_id": "MEMORIAL_GIOVANNI_CANNARELLA_2026-05-17_ELI_M",
+        "nome_gara": "MEMORIAL GIOVANNI CANNARELLA",
+        "data": "2026-05-17",
+        "posizione": 5,
+        "punti_effettivi": 6,
+        "team": "ASD CAMPOBELLO RUNNING & BIKE",
+        "moltiplicatore": 1,
+        "tipo": "regionale",
+        "regione": "SICILIA",
+        "km": "113.000",
+        "media": ""
+      },
+      {
+        "gara_id": "103_COPPA_ASCENSIONE_2026-05-10_ELI_M",
+        "nome_gara": "103 COPPA ASCENSIONE",
+        "data": "2026-05-10",
+        "posizione": 2,
+        "punti_effettivi": 12,
+        "team": "ASD CAMPOBELLO RUNNING & BIKE",
+        "moltiplicatore": 1,
+        "tipo": "regionale",
+        "regione": "SICILIA",
+        "km": "100.000",
+        "media": "40.377"
+      },
+      {
+        "gara_id": "5_MEMORIAL_GIUSEPPA_PATELLARO_2026-03-29_ELI_M",
+        "nome_gara": "5 MEMORIAL GIUSEPPA PATELLARO",
+        "data": "2026-03-29",
+        "posizione": 2,
+        "punti_effettivi": 12,
+        "team": "ASD CAMPOBELLO RUNNING & BIKE",
+        "moltiplicatore": 1,
+        "tipo": "regionale",
+        "regione": "UNDER",
+        "km": "77.000",
+        "media": ""
+      }
+    ]
+  },
+  "BORDIERI_GABRIELE": {
+    "id": "BORDIERI_GABRIELE",
+    "nome": "GABRIELE",
+    "cognome": "BORDIERI",
+    "team_attuale": "DEKA RIDERS TEAM ASD",
+    "team_id": "DEKA_RIDERS_TEAM_ASD",
+    "categoria": "ELI_M",
+    "genere": "M",
+    "punti_totali": 5,
+    "risultati": [
+      {
+        "gara_id": "MEMORIAL_GIOVANNI_CANNARELLA_2026-05-17_ELI_M",
+        "nome_gara": "MEMORIAL GIOVANNI CANNARELLA",
+        "data": "2026-05-17",
+        "posizione": 6,
+        "punti_effettivi": 5,
+        "team": "DEKA RIDERS TEAM ASD",
+        "moltiplicatore": 1,
+        "tipo": "regionale",
+        "regione": "SICILIA",
+        "km": "113.000",
+        "media": ""
+      }
+    ]
+  },
+  "REGANO_ANTONIO": {
+    "id": "REGANO_ANTONIO",
+    "nome": "ANTONIO",
+    "cognome": "REGANO",
+    "team_attuale": "PRO.GI.T. CYCLING TEAM",
+    "team_id": "PRO_GI_T_CYCLING_TEAM",
+    "categoria": "ELI_M",
+    "genere": "M",
+    "punti_totali": 4,
+    "risultati": [
+      {
+        "gara_id": "MEMORIAL_GIOVANNI_CANNARELLA_2026-05-17_ELI_M",
+        "nome_gara": "MEMORIAL GIOVANNI CANNARELLA",
+        "data": "2026-05-17",
+        "posizione": 7,
+        "punti_effettivi": 4,
+        "team": "PRO.GI.T. CYCLING TEAM",
+        "moltiplicatore": 1,
+        "tipo": "regionale",
+        "regione": "SICILIA",
+        "km": "113.000",
+        "media": ""
+      }
+    ]
+  },
+  "MARETTA_GABRIELE": {
+    "id": "MARETTA_GABRIELE",
+    "nome": "GABRIELE",
+    "cognome": "MARETTA",
+    "team_attuale": "MADONE-TEAM BIKE SICILIA",
+    "team_id": "MADONE_TEAM_BIKE_SICILIA",
+    "categoria": "ELI_M",
+    "genere": "M",
+    "punti_totali": 18,
+    "risultati": [
+      {
+        "gara_id": "MEMORIAL_GIOVANNI_CANNARELLA_2026-05-17_ELI_M",
+        "nome_gara": "MEMORIAL GIOVANNI CANNARELLA",
+        "data": "2026-05-17",
+        "posizione": 8,
+        "punti_effettivi": 3,
+        "team": "MADONE-TEAM BIKE SICILIA",
+        "moltiplicatore": 1,
+        "tipo": "regionale",
+        "regione": "SICILIA",
+        "km": "113.000",
+        "media": ""
+      },
+      {
+        "gara_id": "103_COPPA_ASCENSIONE_2026-05-10_ELI_M",
+        "nome_gara": "103 COPPA ASCENSIONE",
+        "data": "2026-05-10",
+        "posizione": 6,
+        "punti_effettivi": 5,
+        "team": "MADONE-TEAM BIKE SICILIA",
+        "moltiplicatore": 1,
+        "tipo": "regionale",
+        "regione": "SICILIA",
+        "km": "100.000",
+        "media": "40.377"
+      },
+      {
+        "gara_id": "5_MEMORIAL_GIUSEPPA_PATELLARO_2026-03-29_ELI_M",
+        "nome_gara": "5 MEMORIAL GIUSEPPA PATELLARO",
+        "data": "2026-03-29",
+        "posizione": 3,
+        "punti_effettivi": 10,
+        "team": "MADONE-TEAM BIKE SICILIA",
+        "moltiplicatore": 1,
+        "tipo": "regionale",
+        "regione": "UNDER",
+        "km": "77.000",
+        "media": ""
+      }
+    ]
+  },
+  "CARMENI_GIUSEPPE_ALESSANDRO": {
+    "id": "CARMENI_GIUSEPPE_ALESSANDRO",
+    "nome": "GIUSEPPE ALESSANDRO",
+    "cognome": "CARMENI",
+    "team_attuale": "MG K-VIS COSTRUZIONI E AMBIENTE",
+    "team_id": "MG_K_VIS_COSTRUZIONI_E_AMBIENTE",
+    "categoria": "ELI_M",
+    "genere": "M",
+    "punti_totali": 2,
+    "risultati": [
+      {
+        "gara_id": "MEMORIAL_GIOVANNI_CANNARELLA_2026-05-17_ELI_M",
+        "nome_gara": "MEMORIAL GIOVANNI CANNARELLA",
+        "data": "2026-05-17",
+        "posizione": 9,
+        "punti_effettivi": 2,
+        "team": "MG K-VIS COSTRUZIONI E AMBIENTE",
+        "moltiplicatore": 1,
+        "tipo": "regionale",
+        "regione": "SICILIA",
+        "km": "113.000",
+        "media": ""
+      }
+    ]
+  },
+  "MARCHIONE_GIACOMO": {
+    "id": "MARCHIONE_GIACOMO",
+    "nome": "GIACOMO",
+    "cognome": "MARCHIONE",
+    "team_attuale": "MADONE-TEAM BIKE SICILIA",
+    "team_id": "MADONE_TEAM_BIKE_SICILIA",
+    "categoria": "ELI_M",
+    "genere": "M",
+    "punti_totali": 1,
+    "risultati": [
+      {
+        "gara_id": "MEMORIAL_GIOVANNI_CANNARELLA_2026-05-17_ELI_M",
+        "nome_gara": "MEMORIAL GIOVANNI CANNARELLA",
+        "data": "2026-05-17",
+        "posizione": 10,
+        "punti_effettivi": 1,
+        "team": "MADONE-TEAM BIKE SICILIA",
+        "moltiplicatore": 1,
+        "tipo": "regionale",
+        "regione": "SICILIA",
+        "km": "113.000",
+        "media": ""
+      }
+    ]
+  },
   "CARUSO_SALVATORE": {
     "id": "CARUSO_SALVATORE",
     "nome": "SALVATORE",
@@ -49753,107 +50107,6 @@
       }
     ]
   },
-  "ROCCELLA_MARCO": {
-    "id": "ROCCELLA_MARCO",
-    "nome": "MARCO",
-    "cognome": "ROCCELLA",
-    "team_attuale": "MULTICAR GRUPPO AMARU'",
-    "team_id": "MULTICAR_GRUPPO_AMARU",
-    "categoria": "ELI_M",
-    "genere": "M",
-    "punti_totali": 30,
-    "risultati": [
-      {
-        "gara_id": "103_COPPA_ASCENSIONE_2026-05-10_ELI_M",
-        "nome_gara": "103 COPPA ASCENSIONE",
-        "data": "2026-05-10",
-        "posizione": 1,
-        "punti_effettivi": 15,
-        "team": "MULTICAR GRUPPO AMARU'",
-        "moltiplicatore": 1,
-        "tipo": "regionale",
-        "regione": "SICILIA",
-        "km": "100.000",
-        "media": "40.377"
-      },
-      {
-        "gara_id": "5_MEMORIAL_GIUSEPPA_PATELLARO_2026-03-29_ELI_M",
-        "nome_gara": "5 MEMORIAL GIUSEPPA PATELLARO",
-        "data": "2026-03-29",
-        "posizione": 1,
-        "punti_effettivi": 15,
-        "team": "MULTICAR GRUPPO AMARU'",
-        "moltiplicatore": 1,
-        "tipo": "regionale",
-        "regione": "UNDER",
-        "km": "77.000",
-        "media": ""
-      }
-    ]
-  },
-  "GIOIA_FRANCESCO": {
-    "id": "GIOIA_FRANCESCO",
-    "nome": "FRANCESCO",
-    "cognome": "GIOIA",
-    "team_attuale": "ASD CAMPOBELLO RUNNING & BIKE",
-    "team_id": "ASD_CAMPOBELLO_RUNNING_BIKE",
-    "categoria": "ELI_M",
-    "genere": "M",
-    "punti_totali": 24,
-    "risultati": [
-      {
-        "gara_id": "103_COPPA_ASCENSIONE_2026-05-10_ELI_M",
-        "nome_gara": "103 COPPA ASCENSIONE",
-        "data": "2026-05-10",
-        "posizione": 2,
-        "punti_effettivi": 12,
-        "team": "ASD CAMPOBELLO RUNNING & BIKE",
-        "moltiplicatore": 1,
-        "tipo": "regionale",
-        "regione": "SICILIA",
-        "km": "100.000",
-        "media": "40.377"
-      },
-      {
-        "gara_id": "5_MEMORIAL_GIUSEPPA_PATELLARO_2026-03-29_ELI_M",
-        "nome_gara": "5 MEMORIAL GIUSEPPA PATELLARO",
-        "data": "2026-03-29",
-        "posizione": 2,
-        "punti_effettivi": 12,
-        "team": "ASD CAMPOBELLO RUNNING & BIKE",
-        "moltiplicatore": 1,
-        "tipo": "regionale",
-        "regione": "UNDER",
-        "km": "77.000",
-        "media": ""
-      }
-    ]
-  },
-  "GERACI_SALVATORE": {
-    "id": "GERACI_SALVATORE",
-    "nome": "SALVATORE",
-    "cognome": "GERACI",
-    "team_attuale": "MULTICAR GRUPPO AMARU'",
-    "team_id": "MULTICAR_GRUPPO_AMARU",
-    "categoria": "ELI_M",
-    "genere": "M",
-    "punti_totali": 10,
-    "risultati": [
-      {
-        "gara_id": "103_COPPA_ASCENSIONE_2026-05-10_ELI_M",
-        "nome_gara": "103 COPPA ASCENSIONE",
-        "data": "2026-05-10",
-        "posizione": 3,
-        "punti_effettivi": 10,
-        "team": "MULTICAR GRUPPO AMARU'",
-        "moltiplicatore": 1,
-        "tipo": "regionale",
-        "regione": "SICILIA",
-        "km": "100.000",
-        "media": "40.377"
-      }
-    ]
-  },
   "BASILE_ELIA": {
     "id": "BASILE_ELIA",
     "nome": "ELIA",
@@ -49901,44 +50154,6 @@
         "regione": "SICILIA",
         "km": "100.000",
         "media": "40.377"
-      }
-    ]
-  },
-  "MARETTA_GABRIELE": {
-    "id": "MARETTA_GABRIELE",
-    "nome": "GABRIELE",
-    "cognome": "MARETTA",
-    "team_attuale": "MADONE-TEAM BIKE SICILIA",
-    "team_id": "MADONE_TEAM_BIKE_SICILIA",
-    "categoria": "ELI_M",
-    "genere": "M",
-    "punti_totali": 15,
-    "risultati": [
-      {
-        "gara_id": "103_COPPA_ASCENSIONE_2026-05-10_ELI_M",
-        "nome_gara": "103 COPPA ASCENSIONE",
-        "data": "2026-05-10",
-        "posizione": 6,
-        "punti_effettivi": 5,
-        "team": "MADONE-TEAM BIKE SICILIA",
-        "moltiplicatore": 1,
-        "tipo": "regionale",
-        "regione": "SICILIA",
-        "km": "100.000",
-        "media": "40.377"
-      },
-      {
-        "gara_id": "5_MEMORIAL_GIUSEPPA_PATELLARO_2026-03-29_ELI_M",
-        "nome_gara": "5 MEMORIAL GIUSEPPA PATELLARO",
-        "data": "2026-03-29",
-        "posizione": 3,
-        "punti_effettivi": 10,
-        "team": "MADONE-TEAM BIKE SICILIA",
-        "moltiplicatore": 1,
-        "tipo": "regionale",
-        "regione": "UNDER",
-        "km": "77.000",
-        "media": ""
       }
     ]
   },
@@ -75933,31 +76148,6 @@
         "regione": "VENETO",
         "km": "101.200",
         "media": "46.708"
-      }
-    ]
-  },
-  "RUSSO_MARCO": {
-    "id": "RUSSO_MARCO",
-    "nome": "MARCO",
-    "cognome": "RUSSO",
-    "team_attuale": "PRO.GI.T. CYCLING TEAM",
-    "team_id": "PRO_GI_T_CYCLING_TEAM",
-    "categoria": "ELI_M",
-    "genere": "M",
-    "punti_totali": 2,
-    "risultati": [
-      {
-        "gara_id": "72_COPPA_MARIA_SS_DELLA_STELLA_2026-04-12_ELI_M",
-        "nome_gara": "72 COPPA MARIA SS DELLA STELLA",
-        "data": "2026-04-12",
-        "posizione": 9,
-        "punti_effettivi": 2,
-        "team": "PRO.GI.T. CYCLING TEAM",
-        "moltiplicatore": 1,
-        "tipo": "regionale",
-        "regione": "PUGLIA",
-        "km": "107.000",
-        "media": "45.441"
       }
     ]
   },
