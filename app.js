@@ -591,18 +591,21 @@ function route() {
   const hash = window.location.hash || '#/';
   updateNavActive(hash);
 
-  // Hub contextual routes
+  // Hub filter routes — apply context filter then render the target page
   if (hash.startsWith('#/hub/')) {
     const hubParts = hash.slice(6).split('/');
     const hubCode = hubParts[0];
     const hubSub  = hubParts[1] || '';
     if (HUB_CONFIG[hubCode]) {
-      if (!hubSub || hubSub === 'home') return renderHubHome(hubCode);
+      activeHub = HUB_CONFIG[hubCode];
+      activeHub._code = hubCode;
+      applyHubFilters(HUB_CONFIG[hubCode]);
+      // No hub homepage — go directly to filtered classifica
+      if (!hubSub || hubSub === 'home') return renderClassifica();
       return renderHubSubpage(hubCode, hubSub);
     }
   }
-  // Clear hub context for all non-hub routes
-  activeHub = null;
+  // activeHub persists as global filter — cleared only by clearHubFilter()
 
   const match = (pattern) => {
     const re = new RegExp('^' + pattern.replace(/:[^/]+/g, '([^/]+)') + '$');
@@ -657,8 +660,14 @@ function setPage(html) {
     clearInterval(window.homeHeroInterval);
     window.homeHeroInterval = null;
   }
-  const _hubNav = (typeof activeHub !== 'undefined' && activeHub) ? buildHubSubnav(activeHub) : '';
-  app.innerHTML = `<main class="page page-enter">${_hubNav}${html}</main>`;
+  const _fb = (typeof activeHub !== 'undefined' && activeHub)
+    ? '<div class="global-filter-bar" style="--hub-color:' + activeHub.color + '">' +
+        '<span class="gfb-dot"></span>' +
+        '<span class="gfb-label">' + activeHub.icon + ' ' + activeHub.label + '</span>' +
+        '<button class="gfb-clear" onclick="window.clearHubFilter()">✕ Tutto</button>' +
+      '</div>'
+    : '';
+  app.innerHTML = `<main class="page page-enter">${_fb}${html}</main>`;
 }
 
 
@@ -1101,6 +1110,38 @@ function renderHubSubpage(hubCode, subpage) {
     case 'statistiche':  return renderStatistiche();
     default:             return renderHubHome(hubCode);
   }
+}
+
+// ── GLOBAL FILTER HELPERS ─────────────────────────────────────────
+window.clearHubFilter = function() {
+  activeHub = null;
+  rankGender = 'M'; rankCat = 'ES1_M'; rankFilter = ''; rankRegion = ''; rankMonth = '';
+  atlGender = 'M'; atlCat = 'JUN_M'; atlSearch = '';
+  teamGender = 'M'; teamCat = 'JUN_M'; teamSearch = '';
+  risQueryGenere = ''; risQueryCat = ''; risQueryMonth = ''; risQueryRegion = ''; risSearchQuery = '';
+  calQGenere = ''; calQCat = ''; calQMonth = ''; calQSearch = ''; calQTipo = ''; calQRegione = '';
+  route();
+};
+
+function buildCategoryStrip() {
+  const cats = [
+    { code:'elite-m',      label:'Elite/U23 ♂', color:'#F59E0B' },
+    { code:'juniores-m',   label:'Juniores ♂',  color:'#E11D48' },
+    { code:'allievi-m',    label:'Allievi ♂',   color:'#10B981' },
+    { code:'esordienti-m', label:'Esord. ♂',    color:'#6366F1' },
+    { code:'elite-f',      label:'Elite/U23 ♀', color:'#F472B6' },
+    { code:'juniores-f',   label:'Juniores ♀',  color:'#F43F5E' },
+    { code:'allievi-f',    label:'Allieve ♀',   color:'#8B5CF6' },
+    { code:'esordienti-f', label:'Esord. ♀',    color:'#A78BFA' },
+  ];
+  return '<div class="cat-filter-strip">' +
+    '<span class="cat-filter-label">ESPLORA</span>' +
+    '<div class="cat-filter-chips">' +
+      cats.map(function(c) {
+        return '<a href="#/hub/' + c.code + '/classifica" class="cat-chip" style="--chip-color:' + c.color + '">' + c.label + '</a>';
+      }).join('') +
+    '</div>' +
+  '</div>';
 }
 
 // ── SPORT INTELLIGENCE ENGINE ──────────────────────────────
@@ -1714,7 +1755,7 @@ async function renderHome() {
     versusHtml +
     volandoHtml +
     upcomingHtml +
-    buildNetworkSection(resultsRaw, calendar)
+    buildCategoryStrip()
   );
 }
 
