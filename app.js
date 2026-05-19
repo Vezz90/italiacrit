@@ -615,15 +615,28 @@ function route() {
     return hash.replace('#', '').match(re);
   };
 
-  if (match('/')) return renderHome();
+  if (match('/')) {
+    // When a hub is active, Home = hub home
+    if (activeHub && activeHub._code) {
+      window.location.hash = '#/hub/' + activeHub._code + '/';
+      return;
+    }
+    return renderHome();
+  }
   if (match('/classifica')) return renderClassifica();
   if (match('/atleti')) return renderAtletiList();
   if (match('/team')) return renderTeamList();
   if (match('/risultati')) {
+    // Reset generic filters, then re-apply hub context if active
     risSearchQuery = ''; risQueryCat = ''; risQueryMonth = ''; risQueryRegion = ''; risQueryGenere = '';
+    if (activeHub) applyHubFilters(activeHub);
     return renderRisultati();
   }
-  if (match('/calendario')) return renderCalendario();
+  if (match('/calendario')) {
+    // Re-apply hub context if active (renderCalendario may reset calQ* internally)
+    if (activeHub) applyHubFilters(activeHub);
+    return renderCalendario();
+  }
   if (match('/statistiche')) return renderStatistiche();
   if (match('/comparatore')) return renderComparatore();
   if (match('/regolamento')) return renderRegolamento();
@@ -670,20 +683,14 @@ function setPage(html) {
     clearInterval(window.homeHeroInterval);
     window.homeHeroInterval = null;
   }
-  let _header = '';
-  if (typeof activeHub !== 'undefined' && activeHub) {
-    const _hash = window.location.hash || '';
-    if (_hash.startsWith('#/hub/')) {
-      _header = buildHubSubnav(activeHub);
-    } else {
-      _header = '<div class="global-filter-bar" style="--hub-color:' + activeHub.color + '">' +
+  const _fb = (typeof activeHub !== 'undefined' && activeHub)
+    ? '<div class="global-filter-bar" style="--hub-color:' + activeHub.color + '">' +
         '<span class="gfb-dot"></span>' +
         '<span class="gfb-label">' + activeHub.icon + ' ' + activeHub.label + '</span>' +
         '<button class="gfb-clear" onclick="window.clearHubFilter()">✕ Tutto</button>' +
-      '</div>';
-    }
-  }
-  app.innerHTML = `<main class="page page-enter">${_header}${html}</main>`;
+      '</div>'
+    : '';
+  app.innerHTML = `<main class="page page-enter">${_fb}${html}</main>`;
   updateNavContextChip();
 }
 

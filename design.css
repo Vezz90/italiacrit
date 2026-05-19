@@ -4693,8 +4693,11 @@ div[style*="grid-template-columns: repeat(auto-fit"] {
    MULTI-HUB SYSTEM
    ════════════════════════════════════════════════════════════════ */
 
-/* ── Hub subnav — secondary navigation inside a category hub ── */
+/* ── Hub subnav — disabled, navigation handled by main navbar ── */
 .hub-subnav {
+  display: none !important;
+}
+._hub-subnav-archived {
   display: flex;
   align-items: center;
   gap: 0;
