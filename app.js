@@ -1098,47 +1098,54 @@ async function renderHubHome(hubCode) {
     tickerItems.push('📅 <strong>PROSSIMA' + (dys===0?' OGGI':dys===1?' DOMANI':'') + ':</strong> ' + esc(upcomingAll[0].nome));
   }
 
-  // ── Race map per hero feed ──────────────────────────────────────
+  // ── Race map — all races for this hub ──────────────────────────
   const raceMap = {};
   for (const r of hubRes) {
     if (!raceMap[r.gara_id]) raceMap[r.gara_id] = { id:r.gara_id, nome:r.nome_gara, data:r.data, categoria:r.categoria, genere:r.genere, tipo:r.tipo, results:[] };
     raceMap[r.gara_id].results.push(r);
   }
   const allRacesSorted = Object.values(raceMap).sort(function(a,b){ return (b.data||'').localeCompare(a.data||''); });
-  const lastDTs = lastDate ? new Date(lastDate).getTime() : 0;
-  const heroRaces = allRacesSorted.filter(function(r){ return r.data && new Date(r.data).getTime() >= (lastDTs - 7*86400*1000); });
-  const recentRacesHtml = heroRaces.slice(0, 6).map(function(r, i) {
-    const w = r.results.find(function(x){ return x.posizione === 1; });
-    const d = r.data ? new Date(r.data) : null;
-    const dateStr = d ? (d.getDate() + ' ' + MONTHS_SHORT[d.getMonth()]) : '';
-    const rcCode = getRankingFileCode({categoria:r.categoria, genere:r.genere, tipo:r.tipo});
-    return '<div class="em-race-row' + (i===0?' em-race-row--latest':'') + '" onclick="location.hash=\'#/risultati/' + encodeURIComponent(r.id) + '\'">' +
-      '<span class="em-race-date">' + dateStr + '</span>' +
-      '<div class="em-race-info"><span class="em-race-name">' + esc(r.nome) + '</span><span class="em-race-cat">' + catLabel(rcCode||'') + '</span></div>' +
-      (w ? '<span class="em-race-winner">&#127945; ' + esc(w.cognome) + '</span>' : '') +
-    '</div>';
-  }).join('');
+  const lastWeekRaces = allRacesSorted.filter(function(r){ return r.data && r.data >= cut7; });
 
-  // ── 1. HERO ─────────────────────────────────────────────────────
+  // ── 1. HERO — nome categoria, layout centrato ────────────────────
   const heroHtml = '<section class="em-hero">' +
-    '<div class="em-hero-content">' +
+    '<div class="em-hero-content em-hero-content--centered">' +
       '<div class="em-hero-left">' +
-        '<div class="em-eyebrow">' + hub.icon + ' ' + hub.label.toUpperCase() + ' · ITALIACRIT</div>' +
-        '<h1 class="em-title">ITALIA<span class="em-title-red">CRIT</span></h1>' +
+        '<div class="em-eyebrow">ITALIACRIT · ' + hub.icon + ' ' + hub.label.toUpperCase() + '</div>' +
+        '<h1 class="em-title hub-cat-title">' + esc(hub.label.toUpperCase()) + '</h1>' +
         '<p class="em-subtitle">' + esc(hub.desc) + '</p>' +
         '<div class="em-hero-ctas">' +
           '<a href="#/classifica" class="em-btn-primary">Classifiche</a>' +
           '<a href="#/risultati" class="em-btn-ghost">Risultati</a>' +
         '</div>' +
       '</div>' +
-      '<div class="em-hero-right">' +
-        '<div class="em-right-label">ULTIMI RISULTATI · ' + hub.label.toUpperCase() + '</div>' +
-        '<div class="em-race-feed">' + (recentRacesHtml || '<div class="em-race-row" style="opacity:.5">Nessuna gara recente</div>') + '</div>' +
-        '<a href="#/risultati" class="em-all-link">Tutti i risultati &rarr;</a>' +
-      '</div>' +
     '</div>' +
     (tickerItems.length ? '<div class="em-ticker-bar"><div class="em-ticker-inner"><span class="em-ticker-track">' + [...tickerItems,...tickerItems].join(' &nbsp;&middot;&nbsp; ') + '</span></div></div>' : '') +
   '</section>';
+
+  // ── 2. ULTIMI RISULTATI — piena larghezza, tutti i vincitori ────
+  const lastResultsHtml = lastWeekRaces.length
+    ? '<section class="hub-last-results">' +
+        '<div class="hub-section-header hub-section-header--wide">' +
+          '<div class="hub-section-label">🏁 ULTIMI RISULTATI</div>' +
+          '<a href="#/risultati" class="hub-section-more">Tutti i risultati &rarr;</a>' +
+        '</div>' +
+        '<div class="hub-last-list">' +
+          lastWeekRaces.map(function(r) {
+            const w = r.results.find(function(x){ return x.posizione === 1; });
+            const d = new Date(r.data + 'T00:00:00');
+            const dateStr = d.getDate() + ' ' + MONTHS_SHORT[d.getMonth()];
+            const rcCode = getRankingFileCode({categoria:r.categoria, genere:r.genere, tipo:r.tipo});
+            return '<div class="hub-last-row" onclick="location.hash=\'#/risultati/' + encodeURIComponent(r.id) + '\'">' +
+              '<span class="hub-last-date">' + dateStr + '</span>' +
+              '<span class="hub-last-cat">' + catLabel(rcCode||r.categoria||'') + '</span>' +
+              '<span class="hub-last-name">' + esc(r.nome) + '</span>' +
+              (w ? '<span class="hub-last-winner">&#127945; ' + esc(w.cognome) + ' ' + esc(w.nome) + '</span>' : '<span class="hub-last-winner" style="opacity:.4">—</span>') +
+            '</div>';
+          }).join('') +
+        '</div>' +
+      '</section>'
+    : '';
 
   // ── 2. RIDER ON FIRE ────────────────────────────────────────────
   const spotlightHtml = isEsordienti
@@ -1160,68 +1167,40 @@ async function renderHubHome(hubCode) {
     ? dualWrap(buildNewsHtml(hubResES1, 'ESORDIENTI 1° ANNO'), buildNewsHtml(hubResES2, 'ESORDIENTI 2° ANNO'))
     : buildNewsHtml(hubRes, hub.label.toUpperCase() + ' · NEWSROOM');
 
-  // ── 6. PROSSIME GARE ────────────────────────────────────────────
+  // ── 6. PROSSIME GARE — solo il prossimo fine settimana ──────────
   let upHtml = '';
   if (upcomingAll.length) {
-    if (isEsordienti) {
-      // Group by weekend (Sat key)
-      const weekends = {};
-      const weekendOrder = [];
-      upcomingAll.forEach(function(g) {
-        const wk = weekendKey(g.data);
-        if (!weekends[wk]) { weekends[wk] = []; weekendOrder.push(wk); }
-        weekends[wk].push(g);
-      });
-      const DAY_NAMES = ['DOM','LUN','MAR','MER','GIO','VEN','SAB'];
-      upHtml = '<section class="em-upcoming em-upcoming--weekends">' +
-        '<div class="em-section-header">' +
-          '<span class="em-section-badge">🗓 PROSSIME GARE · ' + hub.label.toUpperCase() + '</span>' +
-          '<a href="#/calendario" class="em-newsroom-all">Calendario &rarr;</a>' +
-        '</div>' +
-        weekendOrder.map(function(wk) {
-          const races = weekends[wk];
-          const satD = new Date(wk + 'T00:00:00');
-          const sunD = new Date(satD); sunD.setDate(satD.getDate() + 1);
-          const mon  = MONTHS_SHORT[satD.getMonth()];
-          const wkLabel = satD.getDate() + '-' + sunD.getDate() + ' ' + mon + ' ' + satD.getFullYear();
-          return '<div class="hub-weekend-block">' +
-            '<div class="hub-weekend-label">🏁 ' + wkLabel + '</div>' +
-            '<div class="hub-weekend-races">' +
-              races.map(function(g) {
-                const gd  = new Date(g.data + 'T00:00:00');
-                const days = Math.round((gd - new Date(todayStr + 'T00:00:00')) / 86400000);
-                const dayTag = days === 0
-                  ? '<span class="hub-ug-oggi">OGGI</span>'
-                  : days === 1 ? '<span class="hub-ug-domani">DOMANI</span>' : DAY_NAMES[gd.getDay()];
-                return '<div class="em-ug-row" onclick="location.hash=\'#/calendario/' + encodeURIComponent(g.id) + '\'">' +
-                  '<span class="em-ug-days">' + dayTag + '</span>' +
-                  '<span class="em-ug-name">' + esc(g.nome) + '</span>' +
-                  '<span class="em-ug-cat">' + esc(g.categoria||'') + '</span>' +
-                '</div>';
-              }).join('') +
-            '</div></div>';
-        }).join('') +
-      '</section>';
-    } else {
-      const upcomingSlice = upcomingAll.slice(0, 4);
-      upHtml = '<section class="em-upcoming"><div class="em-section-header"><span class="em-section-badge">🗓 PROSSIME GARE · ' + hub.label.toUpperCase() + '</span></div>' +
-        '<div class="em-upcoming-list">' +
-        upcomingSlice.map(function(g) {
-          const d = new Date(g.data);
-          const days = Math.round((d - new Date(todayStr)) / 86400000);
-          const daysStr = days === 0 ? 'OGGI' : days === 1 ? 'DOMANI' : 'fra ' + days + 'gg';
-          return '<div class="em-ug-row" onclick="location.hash=\'#/calendario/' + encodeURIComponent(g.id) + '\'">' +
-            '<span class="em-ug-days' + (days===0?' em-ug-oggi':'') + '">' + daysStr + '</span>' +
-            '<span class="em-ug-date">' + d.getDate() + ' ' + MONTHS_SHORT[d.getMonth()] + '</span>' +
-            '<span class="em-ug-name">' + esc(g.nome) + '</span>' +
-            '<span class="em-ug-cat">' + esc(g.categoria||'') + '</span>' +
+    // Trova il weekend del primo evento in arrivo e mostra solo quello
+    const nextWk = weekendKey(upcomingAll[0].data);
+    const nextWkRaces = upcomingAll.filter(function(g){ return weekendKey(g.data) === nextWk; });
+    const satD = new Date(nextWk + 'T00:00:00');
+    const sunD = new Date(satD); sunD.setDate(satD.getDate() + 1);
+    const wkLabel = satD.getDate() + '–' + sunD.getDate() + ' ' + MONTHS_SHORT[satD.getMonth()] + ' ' + satD.getFullYear();
+    const DAY_NAMES = ['DOM','LUN','MAR','MER','GIO','VEN','SAB'];
+    upHtml = '<section class="hub-upcoming-weekend">' +
+      '<div class="hub-section-header hub-section-header--wide">' +
+        '<div class="hub-section-label">🗓 PROSSIMO FINE SETTIMANA &nbsp;<span class="hub-wk-date">' + wkLabel + '</span></div>' +
+        '<a href="#/calendario" class="hub-section-more">Calendario &rarr;</a>' +
+      '</div>' +
+      '<div class="hub-last-list">' +
+        nextWkRaces.map(function(g) {
+          const gd   = new Date(g.data + 'T00:00:00');
+          const days = Math.round((gd - new Date(todayStr + 'T00:00:00')) / 86400000);
+          const dayLabel = days === 0 ? '<span class="hub-ug-oggi">OGGI</span>'
+                         : days === 1 ? '<span class="hub-ug-domani">DOMANI</span>'
+                         : DAY_NAMES[gd.getDay()];
+          return '<div class="hub-last-row" onclick="location.hash=\'#/calendario/' + encodeURIComponent(g.id) + '\'">' +
+            '<span class="hub-last-date">' + dayLabel + '</span>' +
+            '<span class="hub-last-cat">' + esc(catLabel(g.categoria)||g.categoria||'') + '</span>' +
+            '<span class="hub-last-name">' + esc(g.nome) + '</span>' +
+            '<span class="hub-last-winner" style="opacity:.5">' + esc(g.luogo||g.regione||'') + '</span>' +
           '</div>';
         }).join('') +
-      '</div></section>';
-    }
+      '</div>' +
+    '</section>';
   }
 
-  setPage(heroHtml + spotlightHtml + rankHtml + rivalHtml + newsHtml + upHtml);
+  setPage(heroHtml + lastResultsHtml + spotlightHtml + rankHtml + rivalHtml + newsHtml + upHtml);
 }
 
 // ── Hub subpage dispatcher ────────────────────────────────────────────

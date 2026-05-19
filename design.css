@@ -6023,6 +6023,96 @@ body[data-hub] .hub-hero-btn:not(.hub-hero-btn-ghost) {
 /* Scroll indicator and dots */
 body[data-hub] .gfb-dot { background: var(--hub-color); }
 
+/* ── Hub category title (replaces ITALIACRIT in hub pages) ──── */
+body[data-hub] .hub-cat-title {
+  color: var(--hub-color);
+}
+
+/* ── Hub last results + upcoming weekend shared row style ────── */
+.hub-last-results,
+.hub-upcoming-weekend {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 28px var(--sp-page) 16px;
+  border-bottom: 1px solid var(--border-subtle);
+}
+.hub-section-header--wide {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 16px;
+  margin-bottom: 12px;
+  flex-wrap: wrap;
+}
+.hub-wk-date {
+  font-weight: 400;
+  color: var(--hub-color, var(--red-hot));
+  font-size: 0.78rem;
+  letter-spacing: 0.04em;
+}
+.hub-last-list {
+  display: flex;
+  flex-direction: column;
+  gap: 0;
+  border: 1px solid var(--border-subtle);
+  border-radius: 10px;
+  overflow: hidden;
+}
+.hub-last-row {
+  display: grid;
+  grid-template-columns: 52px 110px 1fr auto;
+  align-items: center;
+  gap: 12px;
+  padding: 10px 16px;
+  border-bottom: 1px solid var(--border-subtle);
+  cursor: pointer;
+  transition: background 0.12s;
+}
+.hub-last-row:last-child { border-bottom: none; }
+.hub-last-row:hover { background: var(--bg-secondary); }
+.hub-last-date {
+  font-family: var(--font-mono);
+  font-size: 0.68rem;
+  color: var(--text-muted);
+  white-space: nowrap;
+}
+.hub-last-cat {
+  font-size: 0.65rem;
+  font-weight: 700;
+  letter-spacing: 0.1em;
+  color: var(--hub-color, var(--accent));
+  text-transform: uppercase;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+.hub-last-name {
+  font-size: 0.88rem;
+  font-weight: 600;
+  color: var(--text-primary);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+.hub-last-winner {
+  font-family: var(--font-display);
+  font-size: 0.82rem;
+  font-weight: 700;
+  color: var(--gold);
+  white-space: nowrap;
+  text-align: right;
+}
+
+@media (max-width: 600px) {
+  .hub-last-row {
+    grid-template-columns: 44px 1fr;
+    grid-template-rows: auto auto;
+  }
+  .hub-last-cat  { grid-column: 2; grid-row: 1; }
+  .hub-last-name { grid-column: 1 / -1; grid-row: 2; font-size: 0.82rem; }
+  .hub-last-winner { grid-column: 1 / -1; grid-row: 3; font-size: 0.78rem; }
+}
+
 /* ── Hub dual layout — two sections side by side ───────────── */
 .hub-dual {
   display: grid;
