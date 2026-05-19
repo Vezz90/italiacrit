@@ -6049,12 +6049,50 @@ body[data-hub] .hub-cat-title {
   padding: 36px var(--sp-page);
   border-bottom: 1px solid var(--border-subtle);
 }
-/* Override box style for results (upcoming keeps it) */
+/* Override box style for results — two-column grid (upcoming keeps bordered style) */
 .hub-last-results .hub-last-list {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
   border: none;
   border-radius: 0;
   overflow: visible;
   background: transparent;
+}
+.hub-last-results .hlr-row:nth-child(odd) {
+  border-right: 1px solid var(--border-subtle);
+  padding-right: 20px;
+}
+.hub-last-results .hlr-row:nth-last-child(-n+2) {
+  border-bottom: none;
+}
+/* Esordienti halves: keep single column (already in half-width hub-dual) */
+.hub-last-results--half .hub-last-list {
+  grid-template-columns: 1fr;
+}
+.hub-last-results--half .hlr-row:nth-child(odd) {
+  border-right: none;
+  padding-right: 0;
+}
+.hub-last-results--half .hlr-row:nth-last-child(-n+2) {
+  border-bottom: 1px solid var(--border-subtle);
+}
+.hub-last-results--half .hlr-row:last-child {
+  border-bottom: none;
+}
+@media (max-width: 700px) {
+  .hub-last-results .hub-last-list {
+    grid-template-columns: 1fr;
+  }
+  .hub-last-results .hlr-row:nth-child(odd) {
+    border-right: none;
+    padding-right: 0;
+  }
+  .hub-last-results .hlr-row:nth-last-child(-n+2) {
+    border-bottom: 1px solid var(--border-subtle);
+  }
+  .hub-last-results .hlr-row:last-child {
+    border-bottom: none;
+  }
 }
 
 /* ── Upcoming weekend (keeps old bordered style) ─────────────── */
