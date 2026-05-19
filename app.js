@@ -550,6 +550,14 @@ window.addEventListener('load', async () => {
   initSearch();
   initMobileMenu();
 
+  // Logo click: se siamo in modalità hub → torna alla home generale
+  document.getElementById('nav-logo-link')?.addEventListener('click', function(e) {
+    if (activeHub) {
+      e.preventDefault();
+      window.clearHubFilter();
+    }
+  });
+
   // --- Sistema di AUTO-POLLING ---
   setInterval(async () => {
     try {
@@ -929,8 +937,13 @@ async function renderHubHome(hubCode) {
     return hub.catCodes.includes(code);
   });
 
-  // Load ranking for main category
+  // Load rankings — for esordienti also load ES1 (both years shown)
+  activeHub = Object.assign({}, hub);
+  activeHub._code = hubCode;
+  applyHubFilters(activeHub);
   const hubRanking = (await loadRanking(hub.mainCat)).slice(0, 5);
+  const es1Code = hub.catCodes.find(function(c) { return c.startsWith('ES1'); });
+  const hubRankingES1 = es1Code ? (await loadRanking(es1Code)).slice(0, 5) : null;
 
   // Date helpers
   const lastDate = hubRes.reduce(function(mx,r){ return (r.data||'')>mx?r.data:mx; }, '');
@@ -941,7 +954,7 @@ async function renderHubHome(hubCode) {
   // Rider on Fire (last 14 days)
   const fireMap = {};
   hubRes.filter(function(r){ return r.data >= cut14; }).forEach(function(r) {
-    if (!fireMap[r.atleta_id]) fireMap[r.atleta_id] = { atleta_id:r.atleta_id, cognome:r.cognome, nome:r.nome, team:r.team, wins:0, podi:0, pts:0 };
+    if (!fireMap[r.atleta_id]) fireMap[r.atleta_id] = { atleta_id:r.atleta_id, cognome:r.cognome, nome:r.nome, team:r.team, wins:0, podi:0, pts:0, code:getRankingFileCode(r) };
     if (r.posizione === 1) fireMap[r.atleta_id].wins++;
     if (r.posizione <= 3) fireMap[r.atleta_id].podi++;
     fireMap[r.atleta_id].pts += (r.punti_effettivi||0);
@@ -969,159 +982,179 @@ async function renderHubHome(hubCode) {
   // Newsroom (hub-scoped)
   const newsItems = siNewsroomFeed(hubRes, [], [], [], {}).slice(0, 5);
 
-  // ── HTML ASSEMBLY ────────────────────────────────────────────────
+  // ── HTML ASSEMBLY — stessa grafica della home generale ──────────
+  const MONTHS_SHORT = ['GEN','FEB','MAR','APR','MAG','GIU','LUG','AGO','SET','OTT','NOV','DIC'];
 
-  const heroHtml =
-    '<div class="hub-hero" style="--hub-gradient:' + hub.gradient + ';--hub-color:' + hub.color + '">' +
-      '<div class="hub-hero-eyebrow">🇮🇹 ITALIACRIT NETWORK</div>' +
-      '<div class="hub-hero-title">' + hub.label.toUpperCase() + '</div>' +
-      '<div class="hub-hero-desc">' + hub.desc + '</div>' +
-      '<div class="hub-hero-cta-row">' +
-        '<a href="#/hub/' + hubCode + '/classifica" class="hub-hero-btn">Classifica →</a>' +
-        '<a href="#/hub/' + hubCode + '/risultati"  class="hub-hero-btn hub-hero-btn-ghost">Risultati →</a>' +
-        '<a href="#/hub/' + hubCode + '/calendario" class="hub-hero-btn hub-hero-btn-ghost">Calendario →</a>' +
+  // Race map per hero (struttura identica alla home, filtrata per hub)
+  const raceMap = {};
+  for (const r of hubRes) {
+    if (!raceMap[r.gara_id]) raceMap[r.gara_id] = { id:r.gara_id, nome:r.nome_gara, data:r.data, categoria:r.categoria, genere:r.genere, tipo:r.tipo, results:[] };
+    raceMap[r.gara_id].results.push(r);
+  }
+  const allRacesSorted = Object.values(raceMap).sort((a,b) => (b.data||'').localeCompare(a.data||''));
+  const lastDTs = lastDate ? new Date(lastDate).getTime() : 0;
+  const heroRaces = allRacesSorted.filter(r => r.data && new Date(r.data).getTime() >= (lastDTs - 7*86400*1000));
+  const latestRace = heroRaces[0];
+  const latestWinner = latestRace?.results?.find(r => r.posizione === 1);
+
+  const recentRacesHtml = heroRaces.slice(0, 6).map((r, i) => {
+    const w = r.results?.find(x => x.posizione === 1);
+    const d = r.data ? new Date(r.data) : null;
+    const dateStr = d ? `${d.getDate()} ${MONTHS_SHORT[d.getMonth()]}` : '';
+    const rcCode = getRankingFileCode({categoria:r.categoria, genere:r.genere, tipo:r.tipo});
+    return `<div class="em-race-row${i===0?' em-race-row--latest':''}" onclick="location.hash='#/risultati/${encodeURIComponent(r.id)}'">
+      <span class="em-race-date">${dateStr}</span>
+      <div class="em-race-info">
+        <span class="em-race-name">${esc(r.nome)}</span>
+        <span class="em-race-cat">${catLabel(rcCode||'')}</span>
+      </div>
+      ${w ? `<span class="em-race-winner">&#127945; ${esc(w.cognome)}</span>` : ''}
+    </div>`;
+  }).join('');
+
+  // Ticker hub-filtrato
+  const tickerItems = [];
+  recentWins.slice(0, 3).forEach(r => tickerItems.push(`🥇 <strong>${esc(r.cognome).toUpperCase()}</strong> vince ${esc(r.nome_gara||'')}`));
+  if (fireAthlete && fireStreak && fireStreak.winStreak >= 2) tickerItems.push(`👑 <strong>${esc(fireAthlete.cognome).toUpperCase()}</strong> — ${fireStreak.winStreak} vittorie consecutive`);
+  upcomingHub.slice(0, 1).forEach(g => {
+    const dys = Math.round((new Date(g.data)-new Date(todayStr))/86400000);
+    tickerItems.push(`📅 <strong>PROSSIMA${dys===0?' OGGI':dys===1?' DOMANI':''}:</strong> ${esc(g.nome)}`);
+  });
+
+  // ── 1. HERO — stesso em-hero della home generale ─────────────
+  const heroHtml = `<section class="em-hero">
+    <div class="em-hero-content">
+      <div class="em-hero-left">
+        <div class="em-eyebrow">${hub.icon} ${hub.label.toUpperCase()} · ITALIACRIT</div>
+        <h1 class="em-title">ITALIA<span class="em-title-red">CRIT</span></h1>
+        <p class="em-subtitle">${esc(hub.desc)}</p>
+        ${latestWinner ? `<div class="em-hero-winner">
+          <span class="em-winner-label">ULTIMA VITTORIA</span>
+          <span class="em-winner-name">${esc(latestWinner.cognome)} ${esc(latestWinner.nome)}</span>
+          <span class="em-winner-race">${esc(latestRace.nome)}</span>
+        </div>` : ''}
+        <div class="em-hero-ctas">
+          <a href="#/classifica" class="em-btn-primary">Classifiche</a>
+          <a href="#/risultati" class="em-btn-ghost">Risultati</a>
+        </div>
+      </div>
+      <div class="em-hero-right">
+        <div class="em-right-label">ULTIMI RISULTATI · ${hub.label.toUpperCase()}</div>
+        <div class="em-race-feed">${recentRacesHtml || '<div class="em-race-row" style="opacity:.5">Nessuna gara recente</div>'}</div>
+        <a href="#/risultati" class="em-all-link">Tutti i risultati &rarr;</a>
+      </div>
+    </div>
+    ${tickerItems.length ? `<div class="em-ticker-bar"><div class="em-ticker-inner"><span class="em-ticker-track">${[...tickerItems,...tickerItems].join(' &nbsp;&middot;&nbsp; ')}</span></div></div>` : ''}
+  </section>`;
+
+  // ── 2. SPOTLIGHT — rider on fire (em-spotlight) ───────────────
+  const spotlightHtml = fireAthlete
+    ? `<section class="em-spotlight">
+        <div class="em-spotlight-bg-name">${esc(fireAthlete.cognome)}</div>
+        <div class="em-spotlight-body">
+          <div class="em-spot-meta">
+            <span class="em-spot-badge">🔥 RIDER ON FIRE</span>
+            <span class="em-spot-cat">${catLabel(fireAthlete.code || hub.mainCat)}</span>
+            ${fireStreak && fireStreak.winStreak >= 2 ? `<div class="si-streak-badge">👑 ${fireStreak.winStreak} vittorie consecutive</div>` : ''}
+          </div>
+          <h2 class="em-spot-name">${esc(fireAthlete.cognome)}<br><span class="em-spot-firstname">${esc(fireAthlete.nome)}</span></h2>
+          <div class="em-spot-team">${esc(fireAthlete.team||'')}</div>
+          <div class="em-spot-stats">
+            <div class="em-stat"><span class="em-stat-val">${fireAthlete.pts}</span><span class="em-stat-lbl">punti 14gg</span></div>
+            <div class="em-stat"><span class="em-stat-val">${fireAthlete.wins}</span><span class="em-stat-lbl">vittorie</span></div>
+            <div class="em-stat"><span class="em-stat-val">${fireAthlete.podi}</span><span class="em-stat-lbl">podi</span></div>
+          </div>
+          <a href="#/atleta/${encodeURIComponent(fireAthlete.atleta_id)}" class="em-spot-cta">Scheda atleta →</a>
+        </div>
+      </section>`
+    : '';
+
+  // ── 3. TOP CLASSIFICA ─────────────────────────────────────────
+  const buildRankSection = function(ranking, catCode) {
+    if (!ranking || !ranking.length) return '';
+    return '<section class="hub-ranking-section">' +
+      '<div class="hub-section-header">' +
+        '<div class="hub-section-label">🏆 TOP CLASSIFICA · ' + catLabel(catCode) + '</div>' +
+        '<a href="#/classifica" class="hub-section-more">Vedi tutto →</a>' +
       '</div>' +
-    '</div>';
+      '<div class="hub-rank-list">' +
+        ranking.map(function(a, i) {
+          return '<div class="hub-rank-row' + (i===0?' hub-rank-leader':'') + '" onclick="location.hash=\'#/atleta/' + encodeURIComponent(a.atleta_id) + '\'">' +
+            '<span class="hub-rank-pos' + (i===0?' hub-rank-pos-1':i===1?' hub-rank-pos-2':i===2?' hub-rank-pos-3':'') + '">' + (i+1) + '</span>' +
+            '<div class="hub-rank-info">' +
+              '<div class="hub-rank-name">' + esc(a.cognome) + ' ' + esc(a.nome) + '</div>' +
+              '<div class="hub-rank-team">' + esc(a.team_attuale||a.team||'') + '</div>' +
+            '</div>' +
+            '<span class="hub-rank-pts">' + a.punti + '<small> pt</small></span>' +
+          '</div>';
+        }).join('') +
+      '</div>' +
+    '</section>';
+  };
+  const rankHtml = buildRankSection(hubRanking, hub.mainCat) +
+    (hubRankingES1 ? buildRankSection(hubRankingES1, es1Code) : '');
 
-  const fireHtml = fireAthlete
-    ? '<section class="hub-fire-section">' +
-        '<div class="hub-section-label">🔥 RIDER ON FIRE · ' + catLabel(hub.mainCat) + '</div>' +
-        '<div class="hub-fire-card" style="--hub-color:' + hub.color + '" onclick="location.hash=\'#/atleta/' + encodeURIComponent(fireAthlete.atleta_id) + '\'">' +
-          (fireStory ? '<div class="hub-fire-story">' + fireStory + '</div>' : '') +
-          '<div class="hub-fire-name">' + esc(fireAthlete.cognome) + ' ' + esc(fireAthlete.nome) + '</div>' +
-          '<div class="hub-fire-team">' + esc(fireAthlete.team||'') + '</div>' +
-          '<div class="hub-fire-stats">' +
-            '<span><strong>' + fireAthlete.wins + '</strong> vittorie</span>' +
-            '<span><strong>' + fireAthlete.podi + '</strong> podi</span>' +
-            '<span><strong>' + fireAthlete.pts + '</strong> pt</span>' +
-            (fireStreak && fireStreak.winStreak >= 2 ? '<span class="hub-fire-streak">👑 ' + fireStreak.winStreak + ' consecutive</span>' : '') +
-          '</div>' +
-          '<div class="hub-fire-arrow">Scheda atleta →</div>' +
-        '</div>' +
-      '</section>'
-    : '';
-
+  // ── 4. RIVALITÀ — em-versus ───────────────────────────────────
   const rivalHtml = rv
-    ? '<section class="hub-rivalry-section">' +
-        '<div class="hub-section-label">⚔ RIVALITÀ DI STAGIONE</div>' +
-        '<div class="hub-rivalry-card">' +
-          '<div class="hub-rv-side hub-rv-a" onclick="location.hash=\'#/atleta/' + encodeURIComponent(rv.aId) + '\'">' +
-            '<div class="hub-rv-wins">' + rv.aWins + 'V</div>' +
-            '<div class="hub-rv-name">' + esc(rv.aCog) + '</div>' +
-            '<div class="hub-rv-nom">' + esc(rv.aNom) + '</div>' +
-            '<div class="hub-rv-team">' + esc(rv.aTeam||'') + '</div>' +
+    ? '<section class="em-versus">' +
+        '<div class="em-versus-label">⚔ RIVALITÀ DI STAGIONE · ' + catLabel(rv.code || hub.mainCat) + ' · ' + rv.encounters + ' scontri</div>' +
+        '<div class="em-versus-ring">' +
+          '<div class="em-vs-side em-vs-a">' +
+            '<div class="em-vs-pos">' + rv.aWins + 'V</div>' +
+            '<a href="#/atleta/' + encodeURIComponent(rv.aId) + '" class="em-vs-name">' + esc(rv.aCog) + '<br><small>' + esc(rv.aNom) + '</small></a>' +
+            '<div class="em-vs-team">' + esc(rv.aTeam||'') + '</div>' +
           '</div>' +
-          '<div class="hub-rv-center">' +
-            '<div class="hub-rv-vs">VS</div>' +
-            '<div class="hub-rv-enc">' + rv.encounters + ' scontri</div>' +
-            '<div class="hub-rv-cat">' + catLabel(rv.code || hub.mainCat) + '</div>' +
+          '<div class="em-vs-center"><div class="em-vs-vs">VS</div><div class="em-vs-gap">' + rv.encounters + ' sfide</div></div>' +
+          '<div class="em-vs-side em-vs-b">' +
+            '<div class="em-vs-pos">' + rv.bWins + 'V</div>' +
+            '<a href="#/atleta/' + encodeURIComponent(rv.bId) + '" class="em-vs-name">' + esc(rv.bCog) + '<br><small>' + esc(rv.bNom) + '</small></a>' +
+            '<div class="em-vs-team">' + esc(rv.bTeam||'') + '</div>' +
           '</div>' +
-          '<div class="hub-rv-side hub-rv-b" onclick="location.hash=\'#/atleta/' + encodeURIComponent(rv.bId) + '\'">' +
-            '<div class="hub-rv-wins">' + rv.bWins + 'V</div>' +
-            '<div class="hub-rv-name">' + esc(rv.bCog) + '</div>' +
-            '<div class="hub-rv-nom">' + esc(rv.bNom) + '</div>' +
-            '<div class="hub-rv-team">' + esc(rv.bTeam||'') + '</div>' +
-          '</div>' +
-        '</div>' +
-      '</section>'
+        '</div></section>'
     : '';
 
-  const rankHtml = hubRanking.length
-    ? '<section class="hub-ranking-section">' +
-        '<div class="hub-section-header">' +
-          '<div class="hub-section-label">🏆 TOP CLASSIFICA · ' + catLabel(hub.mainCat) + '</div>' +
-          '<a href="#/hub/' + hubCode + '/classifica" class="hub-section-more">Vedi tutto →</a>' +
-        '</div>' +
-        '<div class="hub-rank-list">' +
-          hubRanking.map(function(a, i) {
-            return '<div class="hub-rank-row' + (i===0?' hub-rank-leader':'') + '" onclick="location.hash=\'#/atleta/' + encodeURIComponent(a.atleta_id) + '\'">' +
-              '<span class="hub-rank-pos' + (i===0?' hub-rank-pos-1':i===1?' hub-rank-pos-2':i===2?' hub-rank-pos-3':'') + '">' + (i+1) + '</span>' +
-              '<div class="hub-rank-info">' +
-                '<div class="hub-rank-name">' + esc(a.cognome) + ' ' + esc(a.nome) + '</div>' +
-                '<div class="hub-rank-team">' + esc(a.team_attuale||a.team||'') + '</div>' +
-              '</div>' +
-              '<span class="hub-rank-pts">' + a.punti + '<small> pt</small></span>' +
-            '</div>';
-          }).join('') +
-        '</div>' +
-      '</section>'
-    : '';
-
-  const recentHtml = recentWins.length
-    ? '<section class="hub-recent-section">' +
-        '<div class="hub-section-header">' +
-          '<div class="hub-section-label">🥇 ULTIMI VINCITORI</div>' +
-          '<a href="#/hub/' + hubCode + '/risultati" class="hub-section-more">Tutti i risultati →</a>' +
-        '</div>' +
-        '<div class="hub-recent-list">' +
-          recentWins.map(function(r) {
-            const d = new Date(r.data);
-            return '<div class="hub-recent-row">' +
-              '<span class="hub-recent-date">' + d.getDate() + ' ' + _HUB_MONTHS[d.getMonth()] + '</span>' +
-              '<div class="hub-recent-info">' +
-                '<a href="#/atleta/' + encodeURIComponent(r.atleta_id) + '" class="hub-recent-name">' + esc(r.cognome) + ' ' + esc(r.nome) + '</a>' +
-                '<span class="hub-recent-race">' + esc(r.nome_gara||'') + '</span>' +
-              '</div>' +
-            '</div>';
-          }).join('') +
-        '</div>' +
-      '</section>'
-    : '';
-
-  const upcomingHtml = upcomingHub.length
-    ? '<section class="hub-upcoming-section">' +
-        '<div class="hub-section-header">' +
-          '<div class="hub-section-label">📅 PROSSIME GARE</div>' +
-          '<a href="#/hub/' + hubCode + '/calendario" class="hub-section-more">Calendario →</a>' +
-        '</div>' +
-        '<div class="hub-upcoming-list">' +
-          upcomingHub.map(function(g) {
-            const d = new Date(g.data);
-            const days = Math.round((d - new Date(todayStr)) / 86400000);
-            const dStr = days === 0 ? 'OGGI' : days === 1 ? 'DOMANI' : 'fra ' + days + 'gg';
-            return '<div class="hub-upcoming-row" onclick="location.hash=\'#/calendario/' + encodeURIComponent(g.id) + '\'">' +
-              '<span class="hub-upcoming-badge' + (days === 0 ? ' hub-upcoming-oggi' : '') + '">' + dStr + '</span>' +
-              '<div class="hub-upcoming-info">' +
-                '<span class="hub-upcoming-date">' + d.getDate() + ' ' + _HUB_MONTHS[d.getMonth()] + '</span>' +
-                '<span class="hub-upcoming-name">' + esc(g.nome) + '</span>' +
-              '</div>' +
-            '</div>';
-          }).join('') +
-        '</div>' +
-      '</section>'
-    : '';
-
+  // ── 5. NEWSROOM — em-newsroom ─────────────────────────────────
   const newsHtml = newsItems.length
-    ? '<section class="hub-news-section">' +
-        '<div class="hub-section-label">📡 NEWSROOM · ' + hub.label.toUpperCase() + '</div>' +
-        '<div class="hub-news-feed">' +
+    ? '<section class="em-newsroom">' +
+        '<div class="em-newsroom-header">' +
+          '<span class="em-newsroom-badge">📡 ' + hub.label.toUpperCase() + ' · NEWSROOM</span>' +
+          '<a href="#/risultati" class="em-newsroom-all">Tutti i risultati →</a>' +
+        '</div>' +
+        '<div class="em-newsroom-feed">' +
           newsItems.map(function(item) {
-            const click = item.atleta_id
+            const clickAttr = item.atleta_id
               ? " onclick=\"location.hash='#/atleta/" + item.atleta_id + "'\""
-              : item.team_id
-                ? " onclick=\"location.hash='#/team/" + item.team_id + "'\""
-                : '';
-            return '<div class="hub-news-item em-news-' + item.type + '"' + click + '>' +
-              '<span class="hub-news-icon">' + item.icon + '</span>' +
-              '<div class="hub-news-text">' + item.text + '</div>' +
-              (click ? '<span class="hub-news-arrow">→</span>' : '') +
+              : item.team_id ? " onclick=\"location.hash='#/team/" + item.team_id + "'\"" : '';
+            return '<div class="em-news-item em-news-' + item.type + '"' + clickAttr + '>' +
+              '<span class="em-news-icon">' + item.icon + '</span>' +
+              '<div class="em-news-text">' + item.text + '</div>' +
+              ((item.atleta_id || item.team_id) ? '<span class="em-news-arrow">→</span>' : '') +
             '</div>';
           }).join('') +
-        '</div>' +
-      '</section>'
+        '</div></section>'
     : '';
 
-  setPage(
-    heroHtml +
-    '<div class="hub-content-grid">' +
-      fireHtml +
-      rivalHtml +
-      rankHtml +
-      recentHtml +
-      upcomingHtml +
-      newsHtml +
-    '</div>'
-  );
+  // ── 6. PROSSIME GARE — em-upcoming ───────────────────────────
+  const upHtml = upcomingHub.length ? `<section class="em-upcoming">
+    <div class="em-section-header">
+      <span class="em-section-badge">🗓 PROSSIME GARE · ${hub.label.toUpperCase()}</span>
+    </div>
+    <div class="em-upcoming-list">
+      ${upcomingHub.map(g => {
+        const d = new Date(g.data);
+        const days = Math.round((d - new Date(todayStr)) / 86400000);
+        const daysStr = days === 0 ? 'OGGI' : days === 1 ? 'DOMANI' : `fra ${days}gg`;
+        return `<div class="em-ug-row" onclick="location.hash='#/calendario/${encodeURIComponent(g.id)}'">
+          <span class="em-ug-days${days===0?' em-ug-oggi':''}">${daysStr}</span>
+          <span class="em-ug-date">${d.getDate()} ${MONTHS_SHORT[d.getMonth()]}</span>
+          <span class="em-ug-name">${esc(g.nome)}</span>
+          <span class="em-ug-cat">${esc(g.categoria||'')}</span>
+        </div>`;
+      }).join('')}
+    </div>
+  </section>` : '';
+
+  setPage(heroHtml + spotlightHtml + rankHtml + rivalHtml + newsHtml + upHtml);
 }
 
 // ── Hub subpage dispatcher ────────────────────────────────────────────
@@ -4604,6 +4637,12 @@ window.compAcPick = (side, el) => {
 async function renderComparatore() {
   if (!globalData) return;
   const { resultsRaw, athletes } = globalData;
+
+  // Pre-seleziona la categoria del hub attivo (l'utente può sempre cambiare)
+  if (activeHub && !compCat) {
+    compGender = activeHub.gender;
+    compCat = activeHub.mainCat;
+  }
 
   const availCats = [...new Set(
     resultsRaw.filter(r => r.genere === compGender).map(r => r.categoria)
