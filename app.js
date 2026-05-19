@@ -5498,9 +5498,13 @@ async function renderRisultati() {
     races = races.filter(r => r.nome.toLowerCase().includes(q) || (r.regione || '').toLowerCase().includes(q));
   }
   if (risQueryGenere) races = races.filter(r => r.genere === risQueryGenere);
-  if (activeHub && activeHub.catCodes && activeHub.catCodes.length) {
-    const hCodes = new Set(activeHub.catCodes);
-    races = races.filter(r => r.byCategory && Object.keys(r.byCategory).some(c => hCodes.has(c)));
+  if (activeHub && activeHub.catFilter) {
+    const cf = activeHub.catFilter.toLowerCase();
+    races = races.filter(function(ev) {
+      return Object.keys(ev.byCategory || {}).some(function(c) {
+        return c.toLowerCase().includes(cf);
+      });
+    });
   }
   if (risQueryMonth)  races = races.filter(r => r.data && r.data.split('-')[1] === risQueryMonth);
   if (risQueryRegion) races = races.filter(r => r.regione === risQueryRegion);
