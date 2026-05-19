@@ -389,6 +389,16 @@ function getRankingFileCode(obj) {
   return null;
 }
 
+// ── Weekend key: returns the Saturday ISO date for Sa+Su grouping ──
+function weekendKey(dateStr) {
+  const d = new Date(dateStr + 'T00:00:00');
+  const day = d.getDay(); // 0=Sun, 6=Sat
+  const offset = day === 0 ? -1 : (6 - day);
+  const sat = new Date(d);
+  sat.setDate(d.getDate() + offset);
+  return sat.toISOString().split('T')[0];
+}
+
 function renderTrend(r) {
   if (!r) return '';
   const t = r.trend;
@@ -1011,10 +1021,11 @@ async function renderHubHome(hubCode) {
   }
 
   // ── Helper: rivalry section ────────────────────────────────────
-  function buildRivalHtml(resSet, catCode) {
+  function buildRivalHtml(resSet, catCode, isHalf) {
     const rv = siRivalryFinder(resSet)[0] || null;
     if (!rv) return '';
-    return '<section class="em-versus em-versus--half">' +
+    const vsClass = isHalf ? 'em-versus em-versus--half' : 'em-versus';
+    return '<section class="' + vsClass + '">' +
       '<div class="em-versus-label">⚔ RIVALITÀ · ' + catLabel(catCode) + ' · ' + rv.encounters + ' scontri</div>' +
       '<div class="em-versus-ring">' +
         '<div class="em-vs-side em-vs-a">' +
@@ -1079,16 +1090,6 @@ async function renderHubHome(hubCode) {
     return '<div class="hub-dual">' + (htmlA||'') + (htmlB||'') + '</div>';
   }
 
-  // ── Weekend key: returns the Saturday of the week for grouping ──
-  function weekendKey(dateStr) {
-    const d = new Date(dateStr + 'T00:00:00');
-    const day = d.getDay(); // 0=Sun, 6=Sat
-    const offset = day === 0 ? -1 : (6 - day);
-    const sat = new Date(d);
-    sat.setDate(d.getDate() + offset);
-    return sat.toISOString().split('T')[0];
-  }
-
   // ── Ticker ──────────────────────────────────────────────────────
   const tickerItems = [];
   recentWins.slice(0, 3).forEach(function(r){ tickerItems.push('🥇 <strong>' + esc(r.cognome).toUpperCase() + '</strong> vince ' + esc(r.nome_gara||'')); });
@@ -1098,14 +1099,35 @@ async function renderHubHome(hubCode) {
     tickerItems.push('📅 <strong>PROSSIMA' + (dys===0?' OGGI':dys===1?' DOMANI':'') + ':</strong> ' + esc(upcomingAll[0].nome));
   }
 
-  // ── Race map — all races for this hub ──────────────────────────
+  // ── Race map — all hub races (genere + catCodes already filtered) ─
   const raceMap = {};
   for (const r of hubRes) {
     if (!raceMap[r.gara_id]) raceMap[r.gara_id] = { id:r.gara_id, nome:r.nome_gara, data:r.data, categoria:r.categoria, genere:r.genere, tipo:r.tipo, results:[] };
     raceMap[r.gara_id].results.push(r);
   }
   const allRacesSorted = Object.values(raceMap).sort(function(a,b){ return (b.data||'').localeCompare(a.data||''); });
-  const lastWeekRaces = allRacesSorted.filter(function(r){ return r.data && r.data >= cut7; });
+  // Show only races from the most recent weekend
+  const lastWkKey = lastDate ? weekendKey(lastDate) : null;
+  const lastWeekRaces = lastWkKey
+    ? allRacesSorted.filter(function(r){ return r.data && weekendKey(r.data) === lastWkKey; })
+    : [];
+
+  // ── Helper: build hub-last-list rows ───────────────────────────
+  function buildLastRows(races) {
+    return races.map(function(r) {
+      const w = r.results.find(function(x){ return x.posizione === 1; });
+      const d = new Date(r.data + 'T00:00:00');
+      const dateStr = d.getDate() + ' ' + MONTHS_SHORT[d.getMonth()];
+      const rcCode = getRankingFileCode({categoria:r.categoria, genere:r.genere, tipo:r.tipo});
+      return '<div class="hub-last-row" onclick="location.hash=\'#/risultati/' + encodeURIComponent(r.id) + '\'">' +
+        '<span class="hub-last-date">' + dateStr + '</span>' +
+        '<span class="hub-last-cat">' + catLabel(rcCode||r.categoria||'') + '</span>' +
+        '<span class="hub-last-name">' + esc(r.nome) + '</span>' +
+        (w ? '<span class="hub-last-winner">&#127945; ' + esc(w.cognome) + ' ' + esc(w.nome) + '</span>'
+           : '<span class="hub-last-winner" style="opacity:.35">—</span>') +
+      '</div>';
+    }).join('');
+  }
 
   // ── 1. HERO — nome categoria, layout centrato ────────────────────
   const heroHtml = '<section class="em-hero">' +
@@ -1123,44 +1145,52 @@ async function renderHubHome(hubCode) {
     (tickerItems.length ? '<div class="em-ticker-bar"><div class="em-ticker-inner"><span class="em-ticker-track">' + [...tickerItems,...tickerItems].join(' &nbsp;&middot;&nbsp; ') + '</span></div></div>' : '') +
   '</section>';
 
-  // ── 2. ULTIMI RISULTATI — piena larghezza, tutti i vincitori ────
-  const lastResultsHtml = lastWeekRaces.length
-    ? '<section class="hub-last-results">' +
-        '<div class="hub-section-header hub-section-header--wide">' +
-          '<div class="hub-section-label">🏁 ULTIMI RISULTATI</div>' +
-          '<a href="#/risultati" class="hub-section-more">Tutti i risultati &rarr;</a>' +
-        '</div>' +
-        '<div class="hub-last-list">' +
-          lastWeekRaces.map(function(r) {
-            const w = r.results.find(function(x){ return x.posizione === 1; });
-            const d = new Date(r.data + 'T00:00:00');
-            const dateStr = d.getDate() + ' ' + MONTHS_SHORT[d.getMonth()];
-            const rcCode = getRankingFileCode({categoria:r.categoria, genere:r.genere, tipo:r.tipo});
-            return '<div class="hub-last-row" onclick="location.hash=\'#/risultati/' + encodeURIComponent(r.id) + '\'">' +
-              '<span class="hub-last-date">' + dateStr + '</span>' +
-              '<span class="hub-last-cat">' + catLabel(rcCode||r.categoria||'') + '</span>' +
-              '<span class="hub-last-name">' + esc(r.nome) + '</span>' +
-              (w ? '<span class="hub-last-winner">&#127945; ' + esc(w.cognome) + ' ' + esc(w.nome) + '</span>' : '<span class="hub-last-winner" style="opacity:.4">—</span>') +
-            '</div>';
-          }).join('') +
-        '</div>' +
-      '</section>'
-    : '';
+  // ── 2. ULTIMI RISULTATI — piena larghezza, per categoria/genere ──
+  let lastResultsHtml = '';
+  if (lastWeekRaces.length) {
+    if (isEsordienti) {
+      // Split ES1 / ES2 side by side
+      const es1Races = lastWeekRaces.filter(function(r){ return getRankingFileCode({categoria:r.categoria,genere:r.genere,tipo:r.tipo}) === es1Code; });
+      const es2Races = lastWeekRaces.filter(function(r){ return getRankingFileCode({categoria:r.categoria,genere:r.genere,tipo:r.tipo}) === es2Code; });
+      const makeHalf = function(races, label) {
+        if (!races.length) return '';
+        return '<section class="hub-last-results hub-last-results--half">' +
+          '<div class="hub-section-header hub-section-header--wide">' +
+            '<div class="hub-section-label">🏁 ' + label + '</div>' +
+          '</div>' +
+          '<div class="hub-last-list">' + buildLastRows(races) + '</div>' +
+        '</section>';
+      };
+      lastResultsHtml = dualWrap(
+        makeHalf(es1Races, 'ESORDIENTI 1° ANNO'),
+        makeHalf(es2Races, 'ESORDIENTI 2° ANNO')
+      );
+    } else {
+      lastResultsHtml =
+        '<section class="hub-last-results">' +
+          '<div class="hub-section-header hub-section-header--wide">' +
+            '<div class="hub-section-label">🏁 ULTIMI RISULTATI</div>' +
+            '<a href="#/risultati" class="hub-section-more">Tutti i risultati &rarr;</a>' +
+          '</div>' +
+          '<div class="hub-last-list">' + buildLastRows(lastWeekRaces) + '</div>' +
+        '</section>';
+    }
+  }
 
-  // ── 2. RIDER ON FIRE ────────────────────────────────────────────
+  // ── 3. RIDER ON FIRE ────────────────────────────────────────────
   const spotlightHtml = isEsordienti
     ? dualWrap(buildSpotlightHtml(fireES1.ath, fireES1.streak, es1Code), buildSpotlightHtml(fireES2.ath, fireES2.streak, es2Code))
     : buildSpotlightHtml(fireAthlete, fireStreak, hub.mainCat);
 
-  // ── 3. TOP CLASSIFICA ───────────────────────────────────────────
+  // ── 4. TOP CLASSIFICA ───────────────────────────────────────────
   const rankHtml = isEsordienti && hubRankingES1
     ? dualWrap(buildRankSection(hubRankingES1, es1Code), buildRankSection(hubRanking, es2Code))
     : buildRankSection(hubRanking, hub.mainCat);
 
-  // ── 4. RIVALITÀ ─────────────────────────────────────────────────
+  // ── 5. RIVALITÀ — half (in dual) per esordienti, full per gli altri
   const rivalHtml = isEsordienti
-    ? dualWrap(buildRivalHtml(hubResES1, es1Code), buildRivalHtml(hubResES2, es2Code))
-    : buildRivalHtml(hubRes, hub.mainCat);
+    ? dualWrap(buildRivalHtml(hubResES1, es1Code, true), buildRivalHtml(hubResES2, es2Code, true))
+    : buildRivalHtml(hubRes, hub.mainCat, false);
 
   // ── 5. NEWSROOM ─────────────────────────────────────────────────
   const newsHtml = isEsordienti
@@ -1991,8 +2021,14 @@ async function renderHome() {
     ${tickerItems.length ? `<div class="em-ticker-bar"><div class="em-ticker-inner"><span class="em-ticker-track">${[...tickerItems,...tickerItems].join(' &nbsp;&middot;&nbsp; ')}</span></div></div>` : ''}
   </section>`;
 
-  const recentResultsHtml = heroRaces.length ? (() => {
-    const rows = heroRaces.map(function(r) {
+  // Last weekend races (all categories) for the home results section
+  const homeLastWkKey = lastRaceDate ? weekendKey(lastRaceDate) : null;
+  const homeWeekRaces = homeLastWkKey
+    ? allRaces.filter(function(r){ return r.data && weekendKey(r.data) === homeLastWkKey; })
+    : heroRaces;
+
+  const recentResultsHtml = homeWeekRaces.length ? (() => {
+    const rows = homeWeekRaces.map(function(r) {
       const w = r.results ? r.results.find(function(x){ return x.posizione === 1; }) : null;
       const d = r.data ? new Date(r.data) : null;
       const dateStr = d ? (d.getDate() + ' ' + MONTHS_SHORT[d.getMonth()]) : '';
@@ -2005,7 +2041,7 @@ async function renderHome() {
            : '<span class="hub-last-winner" style="opacity:.35">—</span>') +
       '</div>';
     }).join('');
-    return '<section class="hub-last-results">' +
+    return '<section class="hub-last-results hub-last-results--home">' +
       '<div class="hub-section-header hub-section-header--wide">' +
         '<div class="hub-section-label">🏁 ULTIMI RISULTATI</div>' +
         '<a href="#/risultati" class="hub-section-more">Tutti i risultati &rarr;</a>' +

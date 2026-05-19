@@ -6046,8 +6046,6 @@ body[data-hub] .hub-cat-title {
 /* ── Hub last results + upcoming weekend shared row style ────── */
 .hub-last-results,
 .hub-upcoming-weekend {
-  max-width: 1200px;
-  margin: 0 auto;
   padding: 28px var(--sp-page) 16px;
   border-bottom: 1px solid var(--border-subtle);
 }
@@ -6153,12 +6151,61 @@ body[data-hub] .hub-cat-title {
   font-size: clamp(1.8rem, 3.5vw, 3rem);
 }
 
-/* Half-width versus (in dual) */
-.em-versus--half {
+/* ── Home last results — two-column grid ──────────────────────── */
+.hub-last-results--home .hub-last-list {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  border-radius: 10px;
+}
+.hub-last-results--home .hub-last-row:nth-child(odd) {
+  border-right: 1px solid var(--border-subtle);
+}
+/* Remove bottom border from the last two items (bottom row of each column) */
+.hub-last-results--home .hub-last-row:nth-last-child(-n+2) {
   border-bottom: none;
 }
+@media (max-width: 700px) {
+  .hub-last-results--home .hub-last-list {
+    grid-template-columns: 1fr;
+  }
+  .hub-last-results--home .hub-last-row:nth-child(odd) {
+    border-right: none;
+  }
+  .hub-last-results--home .hub-last-row:nth-last-child(-n+2) {
+    border-bottom: 1px solid var(--border-subtle);
+  }
+  .hub-last-results--home .hub-last-row:last-child {
+    border-bottom: none;
+  }
+}
+
+/* ── Half-width versus (in dual — esordienti) ─────────────────── */
+.em-versus--half {
+  border-bottom: none;
+  padding: 48px 24px;
+  gap: 20px;
+}
 .em-versus--half .em-versus-ring {
-  gap: 0;
+  gap: 12px;
+  max-width: none;
+}
+.em-versus--half .em-vs-name {
+  font-size: clamp(1.1rem, 2.2vw, 2rem);
+}
+.em-versus--half .em-vs-vs {
+  font-size: clamp(2.2rem, 5vw, 4.5rem);
+}
+
+/* ── Full-width versus (non-esordienti hubs) — big names ───────── */
+.em-versus:not(.em-versus--half) .em-versus-ring {
+  max-width: 1400px;
+  margin: 0 auto;
+}
+.em-versus:not(.em-versus--half) .em-vs-name {
+  font-size: clamp(2.5rem, 5.5vw, 5.5rem);
+}
+.em-versus:not(.em-versus--half) .em-vs-vs {
+  font-size: clamp(4rem, 10vw, 9rem);
 }
 
 /* Weekend upcoming */
