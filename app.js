@@ -3137,7 +3137,12 @@ async function renderAtleta(atleta_id) {
   const aRankObj = currentRanking.find(x => x.atleta_id === a.id);
   const globalPos = aRankObj ? aRankObj.pos : '-';
 
-  const initials = ((a.cognome||'?')[0] + (a.nome||'?')[0]).toUpperCase();
+  // Apply admin overrides to display fields
+  const displayCognome = atletaOv.cognome || a.cognome || '';
+  const displayNome    = atletaOv.nome    || a.nome    || '';
+  const displayTeam    = atletaOv.team    || a.team_attuale || '';
+
+  const initials = ((displayCognome||'?')[0] + (displayNome||'?')[0]).toUpperCase();
   const photoHtml = photoAreaHtml('atleta', atleta_id, atletaOv.photo_url || null, initials, 'circle');
 
   const headerHtml = `
@@ -3145,13 +3150,13 @@ async function renderAtleta(atleta_id) {
       <div class="athlete-header-top">
         ${badgeCat(a.categoria)}
         ${a.genere === 'F' ? '<span class="badge-cat badge-genere-f">♀</span>' : ''}
-        ${a.team_id ? `<a href="#/team/${esc(a.team_id)}" style="font-family:var(--font-heading);font-size:.8rem;color:var(--text-secondary);border:1px solid var(--border-subtle);padding:2px 10px;border-radius:2px">${esc(a.team_attuale)} →</a>` : ''}
+        ${a.team_id ? `<a href="#/team/${esc(a.team_id)}" style="font-family:var(--font-heading);font-size:.8rem;color:var(--text-secondary);border:1px solid var(--border-subtle);padding:2px 10px;border-radius:2px">${esc(displayTeam)} →</a>` : ''}
       </div>
       <div class="profile-photo-row" style="display:flex;gap:20px;align-items:center;flex-wrap:wrap;margin-bottom:4px">
         ${photoHtml}
         <div class="athlete-header-name">
-          <span class="athlete-cognome">${esc(a.cognome)}</span>
-          <span class="athlete-nome">${esc(a.nome)}</span>
+          <span class="athlete-cognome">${esc(displayCognome)}</span>
+          <span class="athlete-nome">${esc(displayNome)}</span>
           <div class="athlete-pts-display">
             <div class="athlete-pts-dot"></div>
             <div>
@@ -3216,7 +3221,7 @@ async function renderAtleta(atleta_id) {
     </tr>`;
   }).join('');
 
-  window._shareAtletaData = {cognome:a.cognome,nome:a.nome,cat:catLabel(a.categoria),team:a.team_attuale||'',punti:a.punti_totali,pos:globalPos,p1:p1,p2:p2,p3:p3,gare:top10};
+  window._shareAtletaData = {cognome:displayCognome,nome:displayNome,cat:catLabel(a.categoria),team:displayTeam,punti:a.punti_totali,pos:globalPos,p1:p1,p2:p2,p3:p3,gare:top10};
 
   // Sport Intelligence computations
   const { resultsRaw: _siRaw } = globalData;
