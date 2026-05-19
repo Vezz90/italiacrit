@@ -834,12 +834,12 @@ function applyHubFilters(hub) {
   teamGender = hub.gender;
   teamCat = hub.mainCat;
   risSearchQuery = '';
-  risQueryCat = hub.catFilter;
+  risQueryCat = '';
   risQueryMonth = '';
   risQueryRegion = '';
   risQueryGenere = hub.gender;
   calQGenere = hub.gender;
-  calQCat = hub.catFilter;
+  calQCat = (hub.catFilter || '').toLowerCase();
   calQMonth = '';
   calQSearch = '';
   calQTipo = '';
@@ -1924,29 +1924,27 @@ async function renderHome() {
   '</section>';
 
   const heroHtml = `<section class="em-hero">
-    <div class="em-hero-content">
+    <div class="em-hero-content em-hero-content--centered">
       <div class="em-hero-left">
         <div class="em-eyebrow">IL CICLISMO AGONISTICO ITALIANO</div>
         <h1 class="em-title">ITALIA<span class="em-title-red">CRIT</span></h1>
         <p class="em-subtitle">Classifiche &middot; Risultati &middot; Storie &middot; Statistiche</p>
-        ${latestWinner ? `<div class="em-hero-winner">
-          <span class="em-winner-label">ULTIMA VITTORIA</span>
-          <span class="em-winner-name">${esc(latestWinner.cognome)} ${esc(latestWinner.nome)}</span>
-          <span class="em-winner-race">${esc(latestRace.nome)}</span>
-        </div>` : ''}
         <div class="em-hero-ctas">
           <a href="#/classifica" class="em-btn-primary">Classifiche</a>
           <a href="#/risultati" class="em-btn-ghost">Risultati</a>
         </div>
       </div>
-      <div class="em-hero-right">
-        <div class="em-right-label">ULTIMI RISULTATI</div>
-        <div class="em-race-feed">${recentRacesHtml}</div>
-        <a href="#/risultati" class="em-all-link">Tutti i risultati &rarr;</a>
-      </div>
     </div>
     ${tickerItems.length ? `<div class="em-ticker-bar"><div class="em-ticker-inner"><span class="em-ticker-track">${[...tickerItems,...tickerItems].join(' &nbsp;&middot;&nbsp; ')}</span></div></div>` : ''}
   </section>`;
+
+  const recentResultsHtml = recentRacesHtml ? `<section class="em-recent-results">
+    <div class="em-recent-header">
+      <span class="em-section-badge">🏁 ULTIMI RISULTATI</span>
+      <a href="#/risultati" class="em-newsroom-all">Tutti i risultati &rarr;</a>
+    </div>
+    <div class="em-race-feed em-race-feed--standalone">${recentRacesHtml}</div>
+  </section>` : '';
 
   // ── 2. UOMO DEL MOMENTO ───────────────────────────────────────
   const star = formaBest[0];
@@ -2089,12 +2087,8 @@ async function renderHome() {
   setPage(
     heroHtml +
     catBannersHtml +
-    spotlightHtml +
-    newsroomHtml +
-    emBandHtml +
-    versusHtml +
-    volandoHtml +
-    upcomingHtml
+    recentResultsHtml +
+    emBandHtml
   );
 }
 
@@ -3988,7 +3982,12 @@ async function renderCalendario() {
     calendarResultsMap[g.id] = { byCategory, firstGaraId: matches[0].gara_id };
   }
 
-  const allCats = [...new Set(calendar.map(g => g.categoria).filter(Boolean))].sort();
+  const CAL_CAT_GROUPS = [
+    { value: 'esordient', label: 'Esordienti' },
+    { value: 'alliev',    label: 'Allievi' },
+    { value: 'junior',    label: 'Juniores' },
+    { value: 'elite',     label: 'Elite / U23' },
+  ];
   const allRegions = [...new Set(calendar.map(g => g.regione).filter(Boolean))].sort();
 
   const render = () => {
@@ -3996,7 +3995,12 @@ async function renderCalendario() {
 
     let filtered = calendar
       .filter(g => !calQGenere || g.genere === calQGenere)
-      .filter(g => !calQCat    || g.categoria === calQCat)
+      .filter(g => {
+        if (!calQCat) return true;
+        const cat = (g.categoria || '').toLowerCase();
+        if (calQCat === 'elite') return cat.includes('elite') || cat.includes('under');
+        return cat.includes(calQCat);
+      })
       .filter(g => !calQRegione || g.regione === calQRegione)
       .filter(g => {
          if (!calQTipo) return true;
@@ -4132,7 +4136,7 @@ async function renderCalendario() {
       </select>
       <select class="cal-filter-select" id="cal-cat" onchange="calSetCat(this.value)" aria-label="Filtra per categoria">
         <option value="" ${calQCat===''?'selected':''}>Tutte Categorie</option>
-        ${allCats.map(c => `<option value="${c}" ${c === calQCat ? 'selected' : ''}>${catLabel(c)}</option>`).join('')}
+        ${CAL_CAT_GROUPS.map(g => `<option value="${g.value}" ${g.value === calQCat ? 'selected' : ''}>${g.label}</option>`).join('')}
       </select>
       <select class="cal-filter-select" id="cal-tipo" onchange="calSetTipo(this.value)" aria-label="Filtra per tipo gara">
         <option value="" ${calQTipo===''?'selected':''}>Tutti i tipi</option>
@@ -5366,6 +5370,10 @@ async function renderRisultati() {
     races = races.filter(r => r.nome.toLowerCase().includes(q) || (r.regione || '').toLowerCase().includes(q));
   }
   if (risQueryGenere) races = races.filter(r => r.genere === risQueryGenere);
+  if (activeHub && activeHub.catCodes && activeHub.catCodes.length) {
+    const hCodes = new Set(activeHub.catCodes);
+    races = races.filter(r => r.byCategory && Object.keys(r.byCategory).some(c => hCodes.has(c)));
+  }
   if (risQueryMonth)  races = races.filter(r => r.data && r.data.split('-')[1] === risQueryMonth);
   if (risQueryRegion) races = races.filter(r => r.regione === risQueryRegion);
   const allCatsSet = new Set();

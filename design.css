@@ -6022,4 +6022,43 @@ body[data-hub] .hub-hero-btn:not(.hub-hero-btn-ghost) {
 
 /* Scroll indicator and dots */
 body[data-hub] .gfb-dot { background: var(--hub-color); }
+
+/* ── Home hero — centered single-column layout ─────────────── */
+.em-hero-content--centered {
+  grid-template-columns: 1fr;
+  max-width: 760px;
+  padding: 64px 48px 52px;
+  text-align: center;
+}
+.em-hero-content--centered .em-hero-ctas {
+  justify-content: center;
+}
+
+/* ── Ultimi risultati standalone section ────────────────────── */
+.em-recent-results {
+  max-width: 900px;
+  margin: 0 auto;
+  padding: 36px var(--sp-page) 8px;
+}
+.em-recent-header {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 16px;
+  margin-bottom: 16px;
+  flex-wrap: wrap;
+}
+.em-race-feed--standalone {
+  border: 1px solid var(--border-subtle);
+  border-radius: 12px;
+  overflow: hidden;
+  background: var(--bg-card);
+}
+.em-race-feed--standalone .em-race-row {
+  padding: 12px 18px;
+  border-color: var(--border-subtle);
+}
+.em-race-feed--standalone .em-race-row:hover {
+  background: var(--bg-secondary);
+}
 body[data-hub] .loading-bar { background: var(--hub-color) !important; }
