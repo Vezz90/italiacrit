@@ -1783,6 +1783,7 @@ async function renderHome() {
 
   // ── 1. HERO ──────────────────────────────────────────────────
   // ── 1. HERO — cinematic with inline contextual selector ────────
+  // ── 1. HERO ──────────────────────────────────────────────────
   const latestRace = heroRaces[0];
   const latestWinner = latestRace?.results?.find(r => r.posizione === 1);
 
@@ -1801,19 +1802,7 @@ async function renderHome() {
     </div>`;
   }).join('');
 
-  // Hero context selector helpers
-  window._heroSwitchGender = function(gender) {
-    var mC = document.getElementById('hcs-m'); var fC = document.getElementById('hcs-f');
-    var mT = document.getElementById('hcs-tm'); var fT = document.getElementById('hcs-tf');
-    if (!mC || !fC) return;
-    if (gender === 'M') {
-      mC.style.display = ''; fC.style.display = 'none';
-      if (mT) { mT.classList.add('hcs-tab-on'); fT.classList.remove('hcs-tab-on'); }
-    } else {
-      fC.style.display = ''; mC.style.display = 'none';
-      if (fT) { fT.classList.add('hcs-tab-on'); mT.classList.remove('hcs-tab-on'); }
-    }
-  };
+  // Context setter used by category banners
   window._heroSetContext = function(hubCode) {
     var appEl = document.getElementById('app');
     if (appEl) { appEl.style.transition = 'opacity .18s'; appEl.style.opacity = '0'; }
@@ -1827,46 +1816,68 @@ async function renderHome() {
     }, 190);
   };
 
-  // Build inline selector
-  var _curCode   = activeHub ? activeHub._code : null;
-  var _curGender = (_curCode && _curCode.endsWith('-f')) ? 'F' : 'M';
-  var _buildPills = function(cats) {
-    return cats.map(function(c) {
-      var on = _curCode === c.code;
-      return '<button class="hcs-pill' + (on ? ' hcs-pill-on' : '') + '" style="--pill-c:' + c.color + '" onclick="window._heroSetContext(\'' + c.code + '\')">' + c.label + '</button>';
-    }).join('');
-  };
-  var _selectorHtml =
-    '<div class="home-hero-ctx">' +
-      '<div class="hcs-gender-row">' +
-        '<button id="hcs-tm" class="hcs-tab' + (_curGender==='M'?' hcs-tab-on':'') + '" onclick="window._heroSwitchGender(\'M\')">UOMINI</button>' +
-        '<button id="hcs-tf" class="hcs-tab' + (_curGender==='F'?' hcs-tab-on':'') + '" onclick="window._heroSwitchGender(\'F\')">DONNE</button>' +
-        (_curCode ? '<button class="hcs-reset" onclick="window.clearHubFilter()">&#10005; tutto</button>' : '') +
-      '</div>' +
-      '<div id="hcs-m" class="hcs-pills"' + (_curGender==='F' ? ' style="display:none"' : '') + '>' + _buildPills(ENTRY_CATS.M) + '</div>' +
-      '<div id="hcs-f" class="hcs-pills"' + (_curGender==='M' ? ' style="display:none"' : '') + '>' + _buildPills(ENTRY_CATS.F) + '</div>' +
-    '</div>';
+  // Category banners builder
+  var _catBannerDefs = [
+    { label: 'ESORDIENTI', m: 'esordienti-m', f: 'esordienti-f',
+      mG: 'linear-gradient(135deg,#1e1b4b,#4f46e5)', fG: 'linear-gradient(135deg,#3b0764,#7c3aed)' },
+    { label: 'ALLIEVI',    m: 'allievi-m',    f: 'allievi-f',
+      mG: 'linear-gradient(135deg,#052e16,#16a34a)', fG: 'linear-gradient(135deg,#3b0764,#7c3aed)' },
+    { label: 'JUNIORES',   m: 'juniores-m',   f: 'juniores-f',
+      mG: 'linear-gradient(135deg,#450a0a,#dc2626)', fG: 'linear-gradient(135deg,#500724,#be185d)' },
+    { label: 'ELITE / U23', m: 'elite-m',     f: 'elite-f',
+      mG: 'linear-gradient(135deg,#451a03,#b45309)', fG: 'linear-gradient(135deg,#500724,#e11d48)' }
+  ];
+  const catBannersHtml = '<section class="cat-banners">' +
+    _catBannerDefs.map(function(d) {
+      var mOn = activeHub && activeHub._code === d.m ? ' cat-banner-on' : '';
+      var fOn = activeHub && activeHub._code === d.f ? ' cat-banner-on' : '';
+      return '<div class="cat-banner">' +
+        '<div class="cat-banner-half cat-banner-m' + mOn + '" style="background:' + d.mG + '" data-hub="' + d.m + '" onclick="window._heroSetContext(this.dataset.hub)">' +
+          '<div class="cbi">' +
+            '<div class="cbi-text">' +
+              '<span class="cbi-name">' + d.label + '</span>' +
+              '<span class="cbi-gender">&#9794; Maschile</span>' +
+            '</div>' +
+            '<span class="cbi-arrow">&#8594;</span>' +
+          '</div>' +
+        '</div>' +
+        '<div class="cat-banner-slash">/</div>' +
+        '<div class="cat-banner-half cat-banner-f' + fOn + '" style="background:' + d.fG + '" data-hub="' + d.f + '" onclick="window._heroSetContext(this.dataset.hub)">' +
+          '<div class="cbi cbi-r">' +
+            '<span class="cbi-arrow">&#8592;</span>' +
+            '<div class="cbi-text cbi-text-r">' +
+              '<span class="cbi-name">' + d.label + '</span>' +
+              '<span class="cbi-gender">&#9792; Femminile</span>' +
+            '</div>' +
+          '</div>' +
+        '</div>' +
+      '</div>';
+    }).join('') +
+  '</section>';
 
-  const heroHtml = `<section class="home-hero">
-    <div class="home-hero-bg"><div class="home-hero-glow"></div></div>
-    <div class="home-hero-body">
-      <div class="home-hero-left">
-        <div class="hero-eyebrow">IL CICLISMO ITALIANO AGONISTICO</div>
-        <h1 class="hero-headline">Italian Cycling<br><span class="hero-hl-accent">Lives Here.</span></h1>
-        <p class="hero-subline">Every Category. Every Rivalry. Every Race.</p>
-        ${_selectorHtml}
-        <div class="hero-ctas">
+  const heroHtml = `<section class="em-hero">
+    <div class="em-hero-content">
+      <div class="em-hero-left">
+        <div class="em-eyebrow">IL CICLISMO AGONISTICO ITALIANO</div>
+        <h1 class="em-title">ITALIA<span class="em-title-red">CRIT</span></h1>
+        <p class="em-subtitle">Classifiche &middot; Risultati &middot; Storie &middot; Statistiche</p>
+        ${latestWinner ? `<div class="em-hero-winner">
+          <span class="em-winner-label">ULTIMA VITTORIA</span>
+          <span class="em-winner-name">${esc(latestWinner.cognome)} ${esc(latestWinner.nome)}</span>
+          <span class="em-winner-race">${esc(latestRace.nome)}</span>
+        </div>` : ''}
+        <div class="em-hero-ctas">
           <a href="#/classifica" class="em-btn-primary">Classifiche</a>
           <a href="#/risultati" class="em-btn-ghost">Risultati</a>
         </div>
       </div>
-      <div class="home-hero-right">
+      <div class="em-hero-right">
         <div class="em-right-label">ULTIMI RISULTATI</div>
         <div class="em-race-feed">${recentRacesHtml}</div>
-        <a href="#/risultati" class="em-all-link">Tutti i risultati &#8594;</a>
+        <a href="#/risultati" class="em-all-link">Tutti i risultati &rarr;</a>
       </div>
     </div>
-    ${tickerItems.length ? `<div class="em-ticker-bar"><div class="em-ticker-inner"><span class="em-ticker-track">${[...tickerItems,...tickerItems].join(' &nbsp;&#183;&nbsp; ')}</span></div></div>` : ''}
+    ${tickerItems.length ? `<div class="em-ticker-bar"><div class="em-ticker-inner"><span class="em-ticker-track">${[...tickerItems,...tickerItems].join(' &nbsp;&middot;&nbsp; ')}</span></div></div>` : ''}
   </section>`;
 
   // ── 2. UOMO DEL MOMENTO ───────────────────────────────────────
@@ -2009,6 +2020,7 @@ async function renderHome() {
   // ══ ASSEMBLE ═════════════════════════════════════════════════
   setPage(
     heroHtml +
+    catBannersHtml +
     spotlightHtml +
     newsroomHtml +
     emBandHtml +

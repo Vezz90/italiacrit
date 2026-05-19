@@ -5893,3 +5893,113 @@ div[style*="grid-template-columns: repeat(auto-fit"] {
   .entry-cat-name { font-size: .9rem; }
   .ctx-chip-lbl { max-width: 70px; }
 }
+
+/* ═══════════════════════════════════════════════════════════════
+   CATEGORY BANNERS — split M/F with slash divider
+   ═══════════════════════════════════════════════════════════════ */
+
+.cat-banners {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  padding: 0 0 4px;
+}
+
+.cat-banner {
+  display: flex;
+  align-items: stretch;
+  height: 108px;
+  overflow: hidden;
+  position: relative;
+}
+
+.cat-banner-half {
+  flex: 1;
+  display: flex;
+  align-items: center;
+  cursor: pointer;
+  transition: filter .22s;
+  position: relative;
+}
+.cat-banner-half:hover { filter: brightness(1.18); }
+
+.cat-banner-on::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  border: 2px solid rgba(255,255,255,.35);
+  pointer-events: none;
+}
+
+/* inner layout */
+.cbi {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  width: 100%;
+  padding: 0 28px;
+  gap: 12px;
+}
+
+.cbi-r {
+  flex-direction: row-reverse;
+  padding: 0 28px;
+}
+
+.cbi-text {
+  display: flex;
+  flex-direction: column;
+  gap: .2rem;
+}
+
+.cbi-text-r { align-items: flex-end; }
+
+.cbi-name {
+  font-family: var(--font-heading);
+  font-size: 1.4rem;
+  font-weight: 900;
+  letter-spacing: .05em;
+  color: rgba(255,255,255,.95);
+  line-height: 1;
+}
+
+.cbi-gender {
+  font-size: .62rem;
+  letter-spacing: .22em;
+  text-transform: uppercase;
+  color: rgba(255,255,255,.5);
+}
+
+.cbi-arrow {
+  font-size: 1.3rem;
+  color: rgba(255,255,255,.4);
+  flex-shrink: 0;
+}
+
+/* slash divider */
+.cat-banner-slash {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 38px;
+  font-family: var(--font-heading);
+  font-size: 3.8rem;
+  font-weight: 900;
+  color: rgba(255,255,255,.18);
+  background: rgba(0,0,0,.22);
+  flex-shrink: 0;
+  z-index: 2;
+  line-height: 1;
+  pointer-events: none;
+  letter-spacing: 0;
+  user-select: none;
+}
+
+/* mobile */
+@media (max-width: 600px) {
+  .cat-banner { height: 80px; }
+  .cbi, .cbi-r { padding: 0 14px; }
+  .cbi-name { font-size: 1rem; }
+  .cat-banner-slash { font-size: 2.6rem; width: 26px; }
+  .cbi-arrow { font-size: 1rem; }
+}
