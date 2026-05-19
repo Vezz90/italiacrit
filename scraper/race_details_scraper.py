@@ -131,7 +131,7 @@ def scrape_all_details():
     print("Cerco raceid sul sito FCI...")
     for mese in sorted(mesi_da_cercare):
         print(f"  -> Mese {mese:02d}...")
-        for pagina in range(1, 10):
+        for pagina in range(1, 50):
             url = f"https://www.federciclismo.it/ricerca-gare/?site=strada_it&mese={mese:02d}&anno2={YEAR}&pagina={pagina}"
             html = fetch_html(url)
             if not html: break

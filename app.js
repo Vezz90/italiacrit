@@ -3207,9 +3207,12 @@ async function renderGara(gara_id) {
     </tr>`;
   }).join('');
 
+  const _calId = (globalData.garaToCalId || {})[gara_id] || gara_id;
+
   let detailsHtml = '';
-  if (globalData.raceDetails && globalData.raceDetails[gara_id] && globalData.raceDetails[gara_id].info) {
-    const infoBlocks = globalData.raceDetails[gara_id].info.map(t => {
+  const _raceDetail = (globalData.raceDetails || {})[gara_id] || (globalData.raceDetails || {})[_calId];
+  if (_raceDetail && _raceDetail.info) {
+    const infoBlocks = _raceDetail.info.map(t => {
       let ft = t
         .replace(/(INFORMAZIONI GENERALI)/g, '<strong style="color:var(--primary); font-size:1.05rem; display:block; margin-top:12px; margin-bottom:6px;">$1</strong>')
         .replace(/(ORGANIZZATORE)/g, '<strong style="color:var(--primary); font-size:1.05rem; display:block; margin-top:20px; margin-bottom:6px;">$1</strong>')
@@ -3222,14 +3225,13 @@ async function renderGara(gara_id) {
         <h3 style="margin-top:0; margin-bottom:16px; font-size:1.1rem; color:var(--primary);">Informazioni e Dettagli Tecnici</h3>
         ${infoBlocks}
         <div style="margin-top:16px;">
-          <a href="${esc(globalData.raceDetails[gara_id].fci_url)}" target="_blank" class="btn-action" style="font-size:0.8rem; display:inline-block;">VAI ALLA SCHEDA FCI &rarr;</a>
+          <a href="${esc(_raceDetail.fci_url)}" target="_blank" class="btn-action" style="font-size:0.8rem; display:inline-block;">VAI ALLA SCHEDA FCI &rarr;</a>
         </div>
       </div>
     `;
   }
 
   // Video YouTube associati alla gara
-  const _calId = (globalData.garaToCalId || {})[gara_id] || gara_id;
   const garaVideos = (globalData.videos || {})[_calId] || (globalData.videos || {})[gara_id] || [];
   const featuredVideo = garaVideos[0] || null;
   const featuredVideoId = featuredVideo ? (featuredVideo.url.match(/[?&]v=([^&]+)/) || [])[1] || null : null;
