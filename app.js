@@ -1117,25 +1117,22 @@ async function renderHubHome(hubCode) {
     return races.map(function(r) {
       const w = r.results.find(function(x){ return x.posizione === 1; });
       const d = new Date(r.data + 'T00:00:00');
-      const dateStr = d.getDate() + ' ' + MONTHS_SHORT[d.getMonth()];
-      const rcCode = getRankingFileCode({categoria:r.categoria, genere:r.genere, tipo:r.tipo});
+      const dateStr = d.getDate() + ' ' + MONTHS_SHORT[d.getMonth()];
+      const rcCode = getRankingFileCode({gara_id:r.id, categoria:r.categoria, genere:r.genere, tipo:r.tipo});
       const catStr = catLabel(rcCode || r.categoria || '');
       return '<div class="hlr-row" onclick="location.hash=\'#/gara/' + encodeURIComponent(r.id) + '\'">' +
-        '<div class="hlr-header">' +
+        '<span class="hlr-date">' + dateStr + '</span>' +
+        '<div class="hlr-info">' +
           '<div class="hlr-race-name">' + esc(r.nome) + '</div>' +
-          '<div class="hlr-tags">' +
-            '<span class="hlr-date">' + dateStr + '</span>' +
-            '<span class="hlr-cat">' + esc(catStr) + '</span>' +
+          '<div class="hlr-winner-line">' +
+            (w ?
+              '<span class="hlr-medal">🥇</span>' +
+              '<span class="hlr-surname">' + esc(w.cognome) + '</span>' +
+              '<span class="hlr-firstname">' + esc(w.nome) + '</span>'
+              : '<span class="hlr-no-winner">—</span>') +
           '</div>' +
         '</div>' +
-        '<div class="hlr-winner">' +
-          (w ?
-            '<span class="hlr-medal">🥇</span>' +
-            '<span class="hlr-surname">' + esc(w.cognome) + '</span>' +
-            '<span class="hlr-firstname">' + esc(w.nome) + '</span>' +
-            '<span class="hlr-team">' + esc(w.team || '') + '</span>'
-            : '<span class="hlr-no-winner">—</span>') +
-        '</div>' +
+        '<span class="hlr-cat-badge">' + esc(catStr) + '</span>' +
       '</div>';
     }).join('');
   }
@@ -1171,10 +1168,10 @@ async function renderHubHome(hubCode) {
       const makeHalf = function(races, label) {
         if (!races.length) return '';
         return '<section class="hub-last-results hub-last-results--half">' +
-          '<div class="hlr-section-hdr">' +
-            '<span class="hlr-section-title">' + label + '</span>' +
+          '<div class="hub-section-header">' +
+            '<div class="hub-section-label">📋 ' + label.toUpperCase() + '</div>' +
           '</div>' +
-          '<div class="hub-last-list">' + buildLastRows(races) + '</div>' +
+          '<div class="hub-last-list hlr-list">' + buildLastRows(races) + '</div>' +
         '</section>';
       };
       lastResultsHtml = dualWrap(
@@ -1184,12 +1181,11 @@ async function renderHubHome(hubCode) {
     } else {
       lastResultsHtml =
         '<section class="hub-last-results">' +
-          '<div class="hlr-section-hdr">' +
-            '<span class="hlr-section-title">Ultimi Risultati</span>' +
-            '<span class="hlr-section-date">' + lastWkLabel + '</span>' +
+          '<div class="hub-section-header">' +
+            '<div class="hub-section-label">🏁 ULTIMI RISULTATI &nbsp;<span class="hub-wk-date">' + lastWkLabel + '</span></div>' +
             '<a href="#/risultati" class="hub-section-more">Tutti &rarr;</a>' +
           '</div>' +
-          '<div class="hub-last-list">' + buildLastRows(lastWeekRaces) + '</div>' +
+          '<div class="hub-last-list hlr-list">' + buildLastRows(lastWeekRaces) + '</div>' +
         '</section>';
     }
   }
@@ -2052,21 +2048,18 @@ async function renderHome() {
       const rcCode = getRankingFileCode({categoria:r.categoria, genere:r.genere, tipo:r.tipo});
       const catStr = catLabel(rcCode || r.categoria || '');
       return '<div class="hlr-row" onclick="location.hash=\'#/gara/' + encodeURIComponent(r.id) + '\'">' +
-        '<div class="hlr-header">' +
+        '<span class="hlr-date">' + dateStr + '</span>' +
+        '<div class="hlr-info">' +
           '<div class="hlr-race-name">' + esc(r.nome) + '</div>' +
-          '<div class="hlr-tags">' +
-            '<span class="hlr-date">' + dateStr + '</span>' +
-            '<span class="hlr-cat">' + esc(catStr) + '</span>' +
+          '<div class="hlr-winner-line">' +
+            (w ?
+              '<span class="hlr-medal">🥇</span>' +
+              '<span class="hlr-surname">' + esc(w.cognome) + '</span>' +
+              '<span class="hlr-firstname">' + esc(w.nome) + '</span>'
+              : '<span class="hlr-no-winner">—</span>') +
           '</div>' +
         '</div>' +
-        '<div class="hlr-winner">' +
-          (w ?
-            '<span class="hlr-medal">🥇</span>' +
-            '<span class="hlr-surname">' + esc(w.cognome) + '</span>' +
-            '<span class="hlr-firstname">' + esc(w.nome) + '</span>' +
-            '<span class="hlr-team">' + esc(w.team || '') + '</span>'
-            : '<span class="hlr-no-winner">—</span>') +
-        '</div>' +
+        '<span class="hlr-cat-badge">' + esc(catStr) + '</span>' +
       '</div>';
     }).join('');
     return '<section class="hub-last-results hub-last-results--home">' +
@@ -2074,7 +2067,7 @@ async function renderHome() {
         '<div class="hub-section-label">🏁 ULTIMI RISULTATI</div>' +
         '<a href="#/risultati" class="hub-section-more">Tutti i risultati &rarr;</a>' +
       '</div>' +
-      '<div class="hub-last-list">' + rows + '</div>' +
+      '<div class="hub-last-list hlr-list">' + rows + '</div>' +
     '</section>';
   })() : '';
 
