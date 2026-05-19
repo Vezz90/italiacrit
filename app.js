@@ -1040,7 +1040,13 @@ async function renderHubHome(hubCode) {
           '<a href="#/atleta/' + encodeURIComponent(rv.bId) + '" class="em-vs-name">' + esc(rv.bCog) + '<br><small>' + esc(rv.bNom) + '</small></a>' +
           '<div class="em-vs-team">' + esc(rv.bTeam||'') + '</div>' +
         '</div>' +
-      '</div></section>';
+      '</div>' +
+      '<div class="em-vs-comp-bar">' +
+        '<button class="btn-share" onclick="window.openComparatoreVs(\'' + rv.aId + '\',\'' + rv.bId + '\',\'atleta\')">' +
+          '⚖ Apri nel Comparatore' +
+        '</button>' +
+      '</div>' +
+      '</section>';
   }
 
   // ── Helper: newsroom section ────────────────────────────────────
@@ -2352,15 +2358,15 @@ async function renderClassifica() {
 
   const _rkLastDate = globalData.resultsRaw.reduce((mx,r) => (r.data||'')>mx?r.data:mx, '');
   const _rk28cut = (()=>{ const d=new Date(_rkLastDate||new Date()); d.setDate(d.getDate()-28); return d.toISOString().split('T')[0]; })();
-  const _rkTeamDom = siTeamDominance(globalData.resultsRaw, currentCats, _rk28cut);
+  const _rkTeamDom = siTeamDominance(globalData.resultsRaw, [rankCat], _rk28cut);
   const _rkWin28 = {};
   for (const r of globalData.resultsRaw.filter(x => x.data >= _rk28cut && x.posizione === 1)) {
-    const code = getRankingFileCode(r); if (!code || !currentCats.includes(code)) continue;
+    const code = getRankingFileCode(r); if (!code || code !== rankCat) continue;
     if (!_rkWin28[r.atleta_id]) _rkWin28[r.atleta_id] = { atleta_id:r.atleta_id, cognome:r.cognome, nome:r.nome, code, wins:0 };
     _rkWin28[r.atleta_id].wins++;
   }
   const _rkTopWinner = Object.values(_rkWin28).sort((a,b)=>b.wins-a.wins)[0]||null;
-  const _rkTopDom    = Object.values(_rkTeamDom).sort((a,b)=>b.wins-a.wins)[0]||null;
+  const _rkTopDom    = _rkTeamDom[rankCat] || null;
   const _rkIntelHtml = (_rkTopWinner||_rkTopDom)
     ? '<div class="rk-intel-strip">' +
         (_rkTopWinner
@@ -3240,6 +3246,7 @@ async function renderAtleta(atleta_id) {
     ${sparkHtml ? `<div class="sparkline-wrap"><div class="sparkline-title">ANDAMENTO PUNTI — STAGIONE ${new Date().getFullYear()}</div>${sparkHtml}</div>` : ''}
     <div style="margin: 8px 0 20px;display:flex;gap:10px;align-items:center;flex-wrap:wrap">
       <button class="btn-share" onclick="window.triggerShareAtleta()"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="18" cy="5" r="3"/><circle cx="6" cy="12" r="3"/><circle cx="18" cy="19" r="3"/><line x1="8.59" y1="13.51" x2="15.42" y2="17.49"/><line x1="15.41" y1="6.51" x2="8.59" y2="10.49"/></svg> Condividi Profilo</button>
+      <button class="btn-share" onclick="window.openComparatore('${esc(atleta_id)}','atleta')">⚖ Compara</button>
       ${adminEditBtn('atleta', atleta_id)}
     </div>
     ${siIntelPanelHtml}
@@ -3479,6 +3486,7 @@ async function renderTeam(team_id) {
     </div>
       <div style="margin-top:12px;display:flex;gap:10px;align-items:center;flex-wrap:wrap">
         <button class="btn-share" onclick="window.triggerShareTeam()"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="18" cy="5" r="3"/><circle cx="6" cy="12" r="3"/><circle cx="18" cy="19" r="3"/><line x1="8.59" y1="13.51" x2="15.42" y2="17.49"/><line x1="15.41" y1="6.51" x2="8.59" y2="10.49"/></svg> Condividi Team</button>
+        <button class="btn-share" onclick="window.openComparatore('${esc(team_id)}','team')">⚖ Compara</button>
         ${adminEditBtn('team', team_id)}
       </div>
     ${teamNarrHtml}
@@ -5228,6 +5236,18 @@ async function renderComparatore() {
   window.setCompCat    = v => { compCat=v; compA=''; compB=''; renderComparatore(); };
   window.setCompA      = v => { compA=v; renderComparatore(); };
   window.setCompB      = v => { compB=v; renderComparatore(); };
+  window.openComparatore = (id, mode, gender, cat) => {
+    compMode = mode || 'atleta'; compA = id; compB = '';
+    if (gender) compGender = gender;
+    if (cat) compCat = cat;
+    location.hash = '#/comparatore';
+  };
+  window.openComparatoreVs = (aId, bId, mode, gender, cat) => {
+    compMode = mode || 'atleta'; compA = aId; compB = bId;
+    if (gender) compGender = gender;
+    if (cat) compCat = cat;
+    location.hash = '#/comparatore';
+  };
 }
 
 function renderRegolamento() {
