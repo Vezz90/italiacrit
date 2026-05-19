@@ -1917,10 +1917,17 @@ async function renderHome() {
     </div>`;
   }).join('');
 
-  // Context setter used by category banners — navigates to dedicated hub URL
+  // Context setter — animated zoom-into-hub transition
   window._heroSetContext = function(hubCode) {
-    try { localStorage.setItem('itcContext', hubCode); } catch(e) {}
-    window.location.hash = '#/hub/' + hubCode + '/';
+    const page = document.querySelector('main.page');
+    if (page) {
+      page.classList.remove('page-enter');
+      page.classList.add('page-exit');
+    }
+    setTimeout(function() {
+      try { localStorage.setItem('itcContext', hubCode); } catch(e) {}
+      window.location.hash = '#/hub/' + hubCode + '/';
+    }, 160);
   };
 
   // Category banners builder — photo backgrounds with oblique clip-path split
@@ -1984,13 +1991,28 @@ async function renderHome() {
     ${tickerItems.length ? `<div class="em-ticker-bar"><div class="em-ticker-inner"><span class="em-ticker-track">${[...tickerItems,...tickerItems].join(' &nbsp;&middot;&nbsp; ')}</span></div></div>` : ''}
   </section>`;
 
-  const recentResultsHtml = recentRacesHtml ? `<section class="em-recent-results">
-    <div class="em-recent-header">
-      <span class="em-section-badge">🏁 ULTIMI RISULTATI</span>
-      <a href="#/risultati" class="em-newsroom-all">Tutti i risultati &rarr;</a>
-    </div>
-    <div class="em-race-feed em-race-feed--standalone">${recentRacesHtml}</div>
-  </section>` : '';
+  const recentResultsHtml = heroRaces.length ? (() => {
+    const rows = heroRaces.map(function(r) {
+      const w = r.results ? r.results.find(function(x){ return x.posizione === 1; }) : null;
+      const d = r.data ? new Date(r.data) : null;
+      const dateStr = d ? (d.getDate() + ' ' + MONTHS_SHORT[d.getMonth()]) : '';
+      const rcCode = getRankingFileCode({categoria:r.categoria, genere:r.genere, tipo:r.tipo});
+      return '<div class="hub-last-row" onclick="location.hash=\'#/risultati/' + encodeURIComponent(r.id) + '\'">' +
+        '<span class="hub-last-date">' + dateStr + '</span>' +
+        '<span class="hub-last-cat">' + catLabel(rcCode||r.categoria||'') + '</span>' +
+        '<span class="hub-last-name">' + esc(r.nome) + '</span>' +
+        (w ? '<span class="hub-last-winner">&#127945; ' + esc(w.cognome) + ' ' + esc(w.nome) + '</span>'
+           : '<span class="hub-last-winner" style="opacity:.35">—</span>') +
+      '</div>';
+    }).join('');
+    return '<section class="hub-last-results">' +
+      '<div class="hub-section-header hub-section-header--wide">' +
+        '<div class="hub-section-label">🏁 ULTIMI RISULTATI</div>' +
+        '<a href="#/risultati" class="hub-section-more">Tutti i risultati &rarr;</a>' +
+      '</div>' +
+      '<div class="hub-last-list">' + rows + '</div>' +
+    '</section>';
+  })() : '';
 
   // ── 2. UOMO DEL MOMENTO ───────────────────────────────────────
   const star = formaBest[0];
@@ -2129,11 +2151,35 @@ async function renderHome() {
     </div>
   </div>`;
 
+  // ── Compact editorial — 3 insights (stesso componente em-newsroom di HUB) ──
+  const flashItems = newsroomItems.slice(0, 3);
+  const flashHtml = flashItems.length
+    ? '<section class="em-newsroom em-newsroom--home">' +
+        '<div class="em-newsroom-header">' +
+          '<span class="em-newsroom-badge">⚡ IN EVIDENZA</span>' +
+          '<a href="#/statistiche" class="em-newsroom-all">Statistiche &rarr;</a>' +
+        '</div>' +
+        '<div class="em-newsroom-feed">' +
+          flashItems.map(function(item) {
+            const click = item.atleta_id
+              ? ' onclick="location.hash=\'#/atleta/' + item.atleta_id + '\'"'
+              : item.team_id ? ' onclick="location.hash=\'#/team/' + item.team_id + '\'"' : '';
+            return '<div class="em-news-item em-news-' + item.type + '"' + click + '>' +
+              '<span class="em-news-icon">' + item.icon + '</span>' +
+              '<div class="em-news-text">' + item.text + '</div>' +
+              ((item.atleta_id || item.team_id) ? '<span class="em-news-arrow">&rarr;</span>' : '') +
+            '</div>';
+          }).join('') +
+        '</div>' +
+      '</section>'
+    : '';
+
   // ══ ASSEMBLE ═════════════════════════════════════════════════
   setPage(
     heroHtml +
     catBannersHtml +
     recentResultsHtml +
+    flashHtml +
     emBandHtml
   );
 }
