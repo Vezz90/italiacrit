@@ -607,8 +607,8 @@ function route() {
   }
   // activeHub persists as global filter — cleared only by clearHubFilter()
 
-  // Entry gate: show cinematic selector if no context stored
-  if (_routeEntryGate()) return;
+  // Restore saved context (no gate — users land directly on homepage)
+  _softRestoreContext();
 
   const match = (pattern) => {
     const re = new RegExp('^' + pattern.replace(/:[^/]+/g, '([^/]+)') + '$');
@@ -1117,6 +1117,17 @@ function renderHubSubpage(hubCode, subpage) {
 }
 
 // ── GLOBAL FILTER HELPERS ─────────────────────────────────────────
+function _softRestoreContext() {
+  if (activeHub) return;
+  var _s;
+  try { _s = localStorage.getItem('itcContext'); } catch(e) { return; }
+  if (_s && _s !== 'skip' && HUB_CONFIG[_s]) {
+    activeHub = Object.assign({}, HUB_CONFIG[_s]);
+    activeHub._code = _s;
+    applyHubFilters(activeHub);
+  }
+}
+
 window.clearHubFilter = function() {
   activeHub = null;
   try { localStorage.setItem('itcContext', 'skip'); } catch(e) {}
@@ -1302,8 +1313,8 @@ window._entrySkip = function() {
 };
 
 window.openContextSwitcher = function() {
-  window._entryReturnHash = window.location.hash || '#/';
-  renderEntry();
+  window.location.hash = '#/';
+  route();
 };
 
 function _routeEntryGate() {
@@ -1771,6 +1782,7 @@ async function renderHome() {
   const MONTHS_SHORT = ['GEN','FEB','MAR','APR','MAG','GIU','LUG','AGO','SET','OTT','NOV','DIC'];
 
   // ── 1. HERO ──────────────────────────────────────────────────
+  // ── 1. HERO — cinematic with inline contextual selector ────────
   const latestRace = heroRaces[0];
   const latestWinner = latestRace?.results?.find(r => r.posizione === 1);
 
@@ -1785,33 +1797,76 @@ async function renderHome() {
         <span class="em-race-name">${esc(r.nome)}</span>
         <span class="em-race-cat">${catLabel(rcCode||'')}</span>
       </div>
-      ${w ? `<span class="em-race-winner">🥇 ${esc(w.cognome)}</span>` : ''}
+      ${w ? `<span class="em-race-winner">&#127945; ${esc(w.cognome)}</span>` : ''}
     </div>`;
   }).join('');
 
-  const heroHtml = `<section class="em-hero">
-    <div class="em-hero-content">
-      <div class="em-hero-left">
-        <div class="em-eyebrow">IL CICLISMO AGONISTICO ITALIANO</div>
-        <h1 class="em-title">ITALIA<span class="em-title-red">CRIT</span></h1>
-        <p class="em-subtitle">Classifiche · Risultati · Storie · Statistiche</p>
-        ${latestWinner ? `<div class="em-hero-winner">
-          <span class="em-winner-label">ULTIMA VITTORIA</span>
-          <span class="em-winner-name">${esc(latestWinner.cognome)} ${esc(latestWinner.nome)}</span>
-          <span class="em-winner-race">${esc(latestRace.nome)}</span>
-        </div>` : ''}
-        <div class="em-hero-ctas">
+  // Hero context selector helpers
+  window._heroSwitchGender = function(gender) {
+    var mC = document.getElementById('hcs-m'); var fC = document.getElementById('hcs-f');
+    var mT = document.getElementById('hcs-tm'); var fT = document.getElementById('hcs-tf');
+    if (!mC || !fC) return;
+    if (gender === 'M') {
+      mC.style.display = ''; fC.style.display = 'none';
+      if (mT) { mT.classList.add('hcs-tab-on'); fT.classList.remove('hcs-tab-on'); }
+    } else {
+      fC.style.display = ''; mC.style.display = 'none';
+      if (fT) { fT.classList.add('hcs-tab-on'); mT.classList.remove('hcs-tab-on'); }
+    }
+  };
+  window._heroSetContext = function(hubCode) {
+    var appEl = document.getElementById('app');
+    if (appEl) { appEl.style.transition = 'opacity .18s'; appEl.style.opacity = '0'; }
+    setTimeout(function() {
+      if (appEl) { appEl.style.transition = ''; appEl.style.opacity = ''; }
+      activeHub = Object.assign({}, HUB_CONFIG[hubCode]);
+      activeHub._code = hubCode;
+      applyHubFilters(activeHub);
+      try { localStorage.setItem('itcContext', hubCode); } catch(e) {}
+      route();
+    }, 190);
+  };
+
+  // Build inline selector
+  var _curCode   = activeHub ? activeHub._code : null;
+  var _curGender = (_curCode && _curCode.endsWith('-f')) ? 'F' : 'M';
+  var _buildPills = function(cats) {
+    return cats.map(function(c) {
+      var on = _curCode === c.code;
+      return '<button class="hcs-pill' + (on ? ' hcs-pill-on' : '') + '" style="--pill-c:' + c.color + '" onclick="window._heroSetContext(\'' + c.code + '\')">' + c.label + '</button>';
+    }).join('');
+  };
+  var _selectorHtml =
+    '<div class="home-hero-ctx">' +
+      '<div class="hcs-gender-row">' +
+        '<button id="hcs-tm" class="hcs-tab' + (_curGender==='M'?' hcs-tab-on':'') + '" onclick="window._heroSwitchGender(\'M\')">UOMINI</button>' +
+        '<button id="hcs-tf" class="hcs-tab' + (_curGender==='F'?' hcs-tab-on':'') + '" onclick="window._heroSwitchGender(\'F\')">DONNE</button>' +
+        (_curCode ? '<button class="hcs-reset" onclick="window.clearHubFilter()">&#10005; tutto</button>' : '') +
+      '</div>' +
+      '<div id="hcs-m" class="hcs-pills"' + (_curGender==='F' ? ' style="display:none"' : '') + '>' + _buildPills(ENTRY_CATS.M) + '</div>' +
+      '<div id="hcs-f" class="hcs-pills"' + (_curGender==='M' ? ' style="display:none"' : '') + '>' + _buildPills(ENTRY_CATS.F) + '</div>' +
+    '</div>';
+
+  const heroHtml = `<section class="home-hero">
+    <div class="home-hero-bg"><div class="home-hero-glow"></div></div>
+    <div class="home-hero-body">
+      <div class="home-hero-left">
+        <div class="hero-eyebrow">IL CICLISMO ITALIANO AGONISTICO</div>
+        <h1 class="hero-headline">Italian Cycling<br><span class="hero-hl-accent">Lives Here.</span></h1>
+        <p class="hero-subline">Every Category. Every Rivalry. Every Race.</p>
+        ${_selectorHtml}
+        <div class="hero-ctas">
           <a href="#/classifica" class="em-btn-primary">Classifiche</a>
           <a href="#/risultati" class="em-btn-ghost">Risultati</a>
         </div>
       </div>
-      <div class="em-hero-right">
+      <div class="home-hero-right">
         <div class="em-right-label">ULTIMI RISULTATI</div>
         <div class="em-race-feed">${recentRacesHtml}</div>
-        <a href="#/risultati" class="em-all-link">Tutti i risultati →</a>
+        <a href="#/risultati" class="em-all-link">Tutti i risultati &#8594;</a>
       </div>
     </div>
-    ${tickerItems.length ? `<div class="em-ticker-bar"><div class="em-ticker-inner"><span class="em-ticker-track">${[...tickerItems,...tickerItems].join(' &nbsp;·&nbsp; ')}</span></div></div>` : ''}
+    ${tickerItems.length ? `<div class="em-ticker-bar"><div class="em-ticker-inner"><span class="em-ticker-track">${[...tickerItems,...tickerItems].join(' &nbsp;&#183;&nbsp; ')}</span></div></div>` : ''}
   </section>`;
 
   // ── 2. UOMO DEL MOMENTO ───────────────────────────────────────
