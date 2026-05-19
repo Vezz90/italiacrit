@@ -1128,8 +1128,8 @@ async function renderHubHome(hubCode) {
       return '<div class="hlr-row" onclick="location.hash=\'#/gara/' + encodeURIComponent(r.id) + '\'">' +
         '<span class="hlr-date">' + dateStr + '</span>' +
         '<div class="hlr-info">' +
-          '<div class="hlr-winner-name">' + winnerStr + '</div>' +
           '<div class="hlr-race-name">' + esc(r.nome) + '</div>' +
+          '<div class="hlr-winner-name">' + winnerStr + '</div>' +
         '</div>' +
         '<span class="hlr-cat-badge">' + esc(catStr) + '</span>' +
       '</div>';
@@ -1143,10 +1143,7 @@ async function renderHubHome(hubCode) {
         '<div class="em-eyebrow">ITALIACRIT · ' + hub.icon + ' ' + hub.label.toUpperCase() + '</div>' +
         '<h1 class="em-title hub-cat-title">' + esc(hub.label.toUpperCase()) + '</h1>' +
         '<p class="em-subtitle">' + esc(hub.desc) + '</p>' +
-        '<div class="em-hero-ctas">' +
-          '<a href="#/classifica" class="em-btn-primary">Classifiche</a>' +
-          '<a href="#/risultati" class="em-btn-ghost">Risultati</a>' +
-        '</div>' +
+        '' +
       '</div>' +
     '</div>' +
     (tickerItems.length ? '<div class="em-ticker-bar"><div class="em-ticker-inner"><span class="em-ticker-track">' + [...tickerItems,...tickerItems].join(' &nbsp;&middot;&nbsp; ') + '</span></div></div>' : '') +
@@ -2024,10 +2021,6 @@ async function renderHome() {
         <div class="em-eyebrow">IL CICLISMO AGONISTICO ITALIANO</div>
         <h1 class="em-title">ITALIA<span class="em-title-red">CRIT</span></h1>
         <p class="em-subtitle">Classifiche &middot; Risultati &middot; Storie &middot; Statistiche</p>
-        <div class="em-hero-ctas">
-          <a href="#/classifica" class="em-btn-primary">Classifiche</a>
-          <a href="#/risultati" class="em-btn-ghost">Risultati</a>
-        </div>
       </div>
     </div>
     ${tickerItems.length ? `<div class="em-ticker-bar"><div class="em-ticker-inner"><span class="em-ticker-track">${[...tickerItems,...tickerItems].join(' &nbsp;&middot;&nbsp; ')}</span></div></div>` : ''}
@@ -2050,8 +2043,8 @@ async function renderHome() {
       return '<div class="hlr-row" onclick="location.hash=\'#/gara/' + encodeURIComponent(r.id) + '\'">' +
         '<span class="hlr-date">' + dateStr + '</span>' +
         '<div class="hlr-info">' +
-          '<div class="hlr-winner-name">' + winnerStr + '</div>' +
           '<div class="hlr-race-name">' + esc(r.nome) + '</div>' +
+          '<div class="hlr-winner-name">' + winnerStr + '</div>' +
         '</div>' +
         '<span class="hlr-cat-badge">' + esc(catStr) + '</span>' +
       '</div>';
@@ -2202,28 +2195,7 @@ async function renderHome() {
     </div>
   </div>`;
 
-  // ── Compact editorial — 3 insights (stesso componente em-newsroom di HUB) ──
-  const flashItems = newsroomItems.slice(0, 3);
-  const flashHtml = flashItems.length
-    ? '<section class="em-newsroom em-newsroom--home">' +
-        '<div class="em-newsroom-header">' +
-          '<span class="em-newsroom-badge">⚡ IN EVIDENZA</span>' +
-          '<a href="#/statistiche" class="em-newsroom-all">Statistiche &rarr;</a>' +
-        '</div>' +
-        '<div class="em-newsroom-feed">' +
-          flashItems.map(function(item) {
-            const click = item.atleta_id
-              ? ' onclick="location.hash=\'#/atleta/' + item.atleta_id + '\'"'
-              : item.team_id ? ' onclick="location.hash=\'#/team/' + item.team_id + '\'"' : '';
-            return '<div class="em-news-item em-news-' + item.type + '"' + click + '>' +
-              '<span class="em-news-icon">' + item.icon + '</span>' +
-              '<div class="em-news-text">' + item.text + '</div>' +
-              ((item.atleta_id || item.team_id) ? '<span class="em-news-arrow">&rarr;</span>' : '') +
-            '</div>';
-          }).join('') +
-        '</div>' +
-      '</section>'
-    : '';
+  const flashHtml = '';
 
   // ══ ASSEMBLE ═════════════════════════════════════════════════
   setPage(

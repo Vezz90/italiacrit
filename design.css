@@ -3237,8 +3237,8 @@ div[style*="grid-template-columns: repeat(auto-fit"] {
 /* HERO */
 .em-hero {
   position: relative;
-  min-height: 100vh;
-  min-height: 100dvh;
+  min-height: 62vh;
+  min-height: 62dvh;
   background-image:
     linear-gradient(to right, rgba(15,23,42,0.96) 0%, rgba(15,23,42,0.85) 55%, rgba(15,23,42,0.55) 100%),
     url('https://images.unsplash.com/photo-1558618666-fcd25c85cd64?auto=format&fit=crop&w=1920&q=80');
@@ -3745,11 +3745,11 @@ div[style*="grid-template-columns: repeat(auto-fit"] {
 /* Hero: true full-bleed, no max-width cap */
 .em-hero-content {
   max-width: none;
-  padding: 80px clamp(20px, 7vw, 140px) 56px;
+  padding: 52px clamp(20px, 7vw, 140px) 36px;
   grid-template-columns: 55fr 45fr;
 }
 .em-title {
-  font-size: clamp(5rem, 12vw, 14rem);
+  font-size: clamp(3.5rem, 8vw, 9rem);
   letter-spacing: -0.05em;
 }
 .em-hero-right {
@@ -3868,14 +3868,17 @@ div[style*="grid-template-columns: repeat(auto-fit"] {
 @media (max-width: 768px) {
 
   /* Hero: single column, touch-friendly */
+  .em-hero {
+    min-height: 48vh;
+    min-height: 48dvh;
+  }
   .em-hero-content {
     grid-template-columns: 1fr !important;
-    padding: 40px 20px 28px !important;
+    padding: 28px 20px 20px !important;
   }
   .em-eyebrow { font-size: 0.58rem; letter-spacing: 0.14em; }
-  /* Title: clamp min was 5rem (80px) — too wide for 375px viewport */
   .em-title {
-    font-size: clamp(2.4rem, 13vw, 4rem) !important;
+    font-size: clamp(2rem, 11vw, 3.5rem) !important;
     letter-spacing: -0.04em;
   }
   .em-subtitle { font-size: 0.65rem; letter-spacing: 0.08em; margin-bottom: 24px; }
@@ -6193,7 +6196,7 @@ body[data-hub] .hub-cat-title {
   line-height: 1.3;
 }
 .hlr-info { flex: 1; min-width: 0; }
-.hlr-winner-name {
+.hlr-race-name {
   font-weight: 600;
   font-size: 0.87rem;
   color: var(--text-primary);
@@ -6201,7 +6204,7 @@ body[data-hub] .hub-cat-title {
   overflow: hidden;
   text-overflow: ellipsis;
 }
-.hlr-race-name {
+.hlr-winner-name {
   font-size: 0.72rem;
   color: var(--text-muted);
   white-space: nowrap;
