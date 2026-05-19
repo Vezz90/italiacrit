@@ -374,16 +374,17 @@ function getRankingFileCode(obj) {
     return obj;
   }
   // r.genere è autorevole — già corretto da ATHLETE_GENDER_FIXES in loadAll()
-  const gender = obj.genere === 'F' ? 'F' : 'M';
-  // Estrae solo il TIPO di categoria da gara_id, usa r.genere per il suffisso genere
+  // Se genere non è disponibile (es. team results), lo ricaviamo dal suffisso gara_id
   if (obj.gara_id) {
-    const m = obj.gara_id.match(/_([A-Z0-9]+)_[MF]$/);
+    const m = obj.gara_id.match(/_([A-Z0-9]+)_([MF])$/);
     if (m) {
       let base = m[1];
       if (base.startsWith('AL')) base = 'AL';
+      const gender = obj.genere === 'F' ? 'F' : obj.genere === 'M' ? 'M' : m[2];
       return `${base}_${gender}`;
     }
   }
+  const gender = obj.genere === 'F' ? 'F' : 'M';
   // Fallback: usa categoria (già corretta al caricamento)
   if (obj.categoria && /^[A-Z0-9]+_[MF]$/.test(obj.categoria)) return obj.categoria;
   return null;
@@ -1120,17 +1121,12 @@ async function renderHubHome(hubCode) {
       const dateStr = d.getDate() + ' ' + MONTHS_SHORT[d.getMonth()];
       const rcCode = getRankingFileCode({gara_id:r.id, categoria:r.categoria, genere:r.genere, tipo:r.tipo});
       const catStr = catLabel(rcCode || r.categoria || '');
+      const winnerStr = w ? esc(w.cognome) + ' ' + esc(w.nome) : '—';
       return '<div class="hlr-row" onclick="location.hash=\'#/gara/' + encodeURIComponent(r.id) + '\'">' +
         '<span class="hlr-date">' + dateStr + '</span>' +
         '<div class="hlr-info">' +
+          '<div class="hlr-winner-name">' + winnerStr + '</div>' +
           '<div class="hlr-race-name">' + esc(r.nome) + '</div>' +
-          '<div class="hlr-winner-line">' +
-            (w ?
-              '<span class="hlr-medal">🥇</span>' +
-              '<span class="hlr-surname">' + esc(w.cognome) + '</span>' +
-              '<span class="hlr-firstname">' + esc(w.nome) + '</span>'
-              : '<span class="hlr-no-winner">—</span>') +
-          '</div>' +
         '</div>' +
         '<span class="hlr-cat-badge">' + esc(catStr) + '</span>' +
       '</div>';
@@ -2047,17 +2043,12 @@ async function renderHome() {
       const dateStr = d ? (d.getDate() + ' ' + MONTHS_SHORT[d.getMonth()]) : '';
       const rcCode = getRankingFileCode({categoria:r.categoria, genere:r.genere, tipo:r.tipo});
       const catStr = catLabel(rcCode || r.categoria || '');
+      const winnerStr = w ? esc(w.cognome) + ' ' + esc(w.nome) : '—';
       return '<div class="hlr-row" onclick="location.hash=\'#/gara/' + encodeURIComponent(r.id) + '\'">' +
         '<span class="hlr-date">' + dateStr + '</span>' +
         '<div class="hlr-info">' +
+          '<div class="hlr-winner-name">' + winnerStr + '</div>' +
           '<div class="hlr-race-name">' + esc(r.nome) + '</div>' +
-          '<div class="hlr-winner-line">' +
-            (w ?
-              '<span class="hlr-medal">🥇</span>' +
-              '<span class="hlr-surname">' + esc(w.cognome) + '</span>' +
-              '<span class="hlr-firstname">' + esc(w.nome) + '</span>'
-              : '<span class="hlr-no-winner">—</span>') +
-          '</div>' +
         '</div>' +
         '<span class="hlr-cat-badge">' + esc(catStr) + '</span>' +
       '</div>';
