@@ -1275,9 +1275,9 @@ footer .footer-sep { color: var(--red-hot); margin: 0 8px; }
 .btn-share {
   display: inline-flex; align-items: center; gap: 6px;
   font-family: var(--font-heading); font-size: 0.72rem; font-weight: 700;
-  letter-spacing: 0.06em; text-transform: uppercase; padding: 5px 12px;
-  border-radius: 4px; border: 1px solid rgba(255,255,255,0.12);
-  color: var(--text-muted); background: rgba(255,255,255,0.03);
+  letter-spacing: 0.06em; text-transform: uppercase; padding: 6px 14px;
+  border-radius: 4px; border: 1px solid var(--border-subtle);
+  color: var(--text-secondary); background: var(--bg-card);
   cursor: pointer; transition: all 0.18s ease;
 }
 .btn-share:hover { color: var(--text-primary); border-color: var(--red-hot); background: rgba(232,0,29,0.07); }

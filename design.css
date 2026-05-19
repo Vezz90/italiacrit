@@ -4087,13 +4087,13 @@ div[style*="grid-template-columns: repeat(auto-fit"] {
   background: #0F172A !important;
 }
 .ranking-table thead th {
-  color: rgba(255,255,255,0.5) !important;
+  color: rgba(255,255,255,0.82) !important;
   font-size: 0.6rem !important;
   font-weight: 800 !important;
   letter-spacing: 0.15em !important;
   text-transform: uppercase !important;
   padding: 12px 8px !important;
-  border-bottom: 1px solid rgba(255,255,255,0.1) !important;
+  border-bottom: 1px solid rgba(255,255,255,0.15) !important;
 }
 
 /* ── F) Calendar item editorial style ───────────────────────── */

@@ -400,15 +400,12 @@ function weekendKey(dateStr) {
   return sat.toISOString().split('T')[0];
 }
 
-function renderTrend(r) {
+function renderTrend(r, showNew = true) {
   if (!r) return '';
   const t = r.trend;
-  
   if (t === undefined || t === null) {
-    // Se è la prima volta che appare (o non ha storico)
-    return `<span class="trend-indicator trend-new">NEW</span>`;
+    return showNew ? `<span class="trend-indicator trend-new">NEW</span>` : '';
   }
-  
   if (t > 0) return `<span class="trend-indicator trend-up">▲${t}</span>`;
   if (t < 0) return `<span class="trend-indicator trend-down">▼${Math.abs(t)}</span>`;
   return `<span class="trend-indicator trend-stable">●</span>`;
@@ -2593,6 +2590,7 @@ async function updateRankTable() {
       const pClass = posClass(t.pos);
       return `<tr class="ranking-row" style="animation-delay:${Math.min(i,20)*30}ms">
         <td><span class="rank-num ${pClass}">${t.pos}</span></td>
+        <td style="text-align:center;width:40px">${renderTrend(t, false)}</td>
         <td><span class="rank-name"><a href="#/team/${esc(t.team_id)}">${esc(t.team_nome)}</a></span></td>
         <td class="r"><span class="rank-pts">${t.punti}</span></td>
         <td class="hide-mobile">
@@ -2611,6 +2609,7 @@ async function updateRankTable() {
       <table class="ranking-table">
         <thead><tr>
           <th style="width:50px">POS</th>
+          <th style="width:40px" title="Trend">↕</th>
           <th>TEAM</th>
           <th class="r">PUNTI</th>
           <th class="hide-mobile">PODI / TOP10</th>
@@ -4731,6 +4730,19 @@ async function renderStatistiche() {
 // ── COMPARATORE ───────────────────────────────────────────────
 let compA = '', compB = '', compMode = 'atleta', compCat = '', compGender = 'M';
 
+window.openComparatore = (id, mode, gender, cat) => {
+  compMode = mode || 'atleta'; compA = id; compB = '';
+  if (gender) compGender = gender;
+  if (cat) compCat = cat;
+  location.hash = '#/comparatore';
+};
+window.openComparatoreVs = (aId, bId, mode, gender, cat) => {
+  compMode = mode || 'atleta'; compA = aId; compB = bId;
+  if (gender) compGender = gender;
+  if (cat) compCat = cat;
+  location.hash = '#/comparatore';
+};
+
 // ── COMPARATORE AUTOCOMPLETE HELPERS ──────────────────────────
 function buildCompAc(side, items, selectedId) {
   const sel = items.find(i => i.id === selectedId);
@@ -5236,18 +5248,6 @@ async function renderComparatore() {
   window.setCompCat    = v => { compCat=v; compA=''; compB=''; renderComparatore(); };
   window.setCompA      = v => { compA=v; renderComparatore(); };
   window.setCompB      = v => { compB=v; renderComparatore(); };
-  window.openComparatore = (id, mode, gender, cat) => {
-    compMode = mode || 'atleta'; compA = id; compB = '';
-    if (gender) compGender = gender;
-    if (cat) compCat = cat;
-    location.hash = '#/comparatore';
-  };
-  window.openComparatoreVs = (aId, bId, mode, gender, cat) => {
-    compMode = mode || 'atleta'; compA = aId; compB = bId;
-    if (gender) compGender = gender;
-    if (cat) compCat = cat;
-    location.hash = '#/comparatore';
-  };
 }
 
 function renderRegolamento() {
