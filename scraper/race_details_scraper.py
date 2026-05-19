@@ -10,7 +10,7 @@ from bs4 import BeautifulSoup
 import unicodedata
 
 # ----------------- CONFIGURAZIONE -----------------
-DATA_DIR = Path("data")
+DATA_DIR = Path(__file__).parent.parent / "data"
 CALENDAR_FILE = DATA_DIR / "calendar.json"
 DETAILS_FILE = DATA_DIR / "race_details.json"
 YEAR = 2026

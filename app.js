@@ -1754,8 +1754,7 @@ async function renderHome() {
     emBandHtml +
     versusHtml +
     volandoHtml +
-    upcomingHtml +
-    buildCategoryStrip()
+    upcomingHtml
   );
 }
 
@@ -3763,38 +3762,11 @@ async function renderCalendario() {
     document.getElementById('cal-count').textContent = `${filtered.length} gare`;
   };
 
-  const _todayStr2 = new Date().toISOString().split('T')[0];
-  const _nextRaces = calendar.filter(g => g.data >= _todayStr2).sort((a,b) => a.data.localeCompare(b.data)).slice(0,3);
-  let _calHypeHtml = '';
-  if (_nextRaces.length) {
-    const _nr = _nextRaces[0];
-    const _daysTo = Math.round((new Date(_nr.data) - new Date(_todayStr2)) / 86400000);
-    const _daysLabel = _daysTo === 0 ? 'OGGI' : _daysTo === 1 ? 'DOMANI' : 'fra ' + _daysTo + ' giorni';
-    _calHypeHtml = '<div class="cal-hype-strip">' +
-      '<div class="cal-hype-race">' +
-        '<div class="cal-hype-label">🏁 PROSSIMA GARA</div>' +
-        "<div class=\"cal-hype-name\" onclick=\"location.hash='#/calendario/" + encodeURIComponent(_nr.id) + "'\">" + esc(_nr.nome) + '</div>' +
-        '<div class="cal-hype-meta">' + _daysLabel +
-          (_nr.regione ? ' · ' + esc(_nr.regione) : '') +
-          (_nr.categoria ? ' · ' + esc(_nr.categoria) : '') +
-        '</div>' +
-      '</div>' +
-      _nextRaces.slice(1,3).map(function(g) {
-        const d2 = Math.round((new Date(g.data) - new Date(_todayStr2)) / 86400000);
-        return "<div class=\"cal-hype-next\" onclick=\"location.hash='#/calendario/" + encodeURIComponent(g.id) + "'\">" +
-          '<span class="cal-hype-next-days">' + d2 + 'gg</span>' +
-          '<span class="cal-hype-next-name">' + esc(g.nome) + '</span>' +
-          '</div>';
-      }).join('') +
-    '</div>';
-  }
-
   setPage(`
     <div class="pg-header">
       <div class="pg-eyebrow">📅 STAGIONE 2025-2026</div>
       <h1 class="pg-title">CALENDARIO</h1>
     </div>
-    ${_calHypeHtml}
     <div class="calendar-controls">
       <select class="cal-filter-select" id="cal-month" onchange="window.calSetMonth(this.value)" aria-label="Filtra per mese">
         <option value="">Tutti i mesi</option>
