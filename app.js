@@ -591,17 +591,17 @@ function route() {
   const hash = window.location.hash || '#/';
   updateNavActive(hash);
 
-  // Hub filter routes — apply context filter then render the target page
+  // Hub routes — dedicated category ecosystem with URL-encoded context
   if (hash.startsWith('#/hub/')) {
     const hubParts = hash.slice(6).split('/');
     const hubCode = hubParts[0];
     const hubSub  = hubParts[1] || '';
     if (HUB_CONFIG[hubCode]) {
-      activeHub = HUB_CONFIG[hubCode];
+      activeHub = Object.assign({}, HUB_CONFIG[hubCode]);
       activeHub._code = hubCode;
-      applyHubFilters(HUB_CONFIG[hubCode]);
-      // No hub homepage — go directly to filtered classifica
-      if (!hubSub || hubSub === 'home') return renderClassifica();
+      applyHubFilters(activeHub);
+      try { localStorage.setItem('itcContext', hubCode); } catch(e) {}
+      if (!hubSub || hubSub === 'home' || hubSub === '') return renderHubHome(hubCode);
       return renderHubSubpage(hubCode, hubSub);
     }
   }
@@ -648,6 +648,13 @@ function updateNavActive(hash) {
     document.getElementById(id)?.classList.remove('active');
   });
   updateNavLoginState();
+  // Hub routes: highlight based on subpage
+  if (hash.startsWith('#/hub/')) {
+    const sub = (hash.slice(6).split('/')[1] || '');
+    const subMap = { classifica:'nav-class', risultati:'nav-risultati', atleti:'nav-atleti', team:'nav-team', calendario:'nav-cal', statistiche:'nav-stats', comparatore:'nav-comp', regolamento:'nav-reg', login:'nav-login' };
+    document.getElementById(subMap[sub] || 'nav-home')?.classList.add('active');
+    return;
+  }
   if (hash === '#/' || hash === '#') document.getElementById('nav-home')?.classList.add('active');
   else if (hash.startsWith('#/classifica')) document.getElementById('nav-class')?.classList.add('active');
   else if (hash.startsWith('#/atleti')) document.getElementById('nav-atleti')?.classList.add('active');
@@ -663,14 +670,20 @@ function setPage(html) {
     clearInterval(window.homeHeroInterval);
     window.homeHeroInterval = null;
   }
-  const _fb = (typeof activeHub !== 'undefined' && activeHub)
-    ? '<div class="global-filter-bar" style="--hub-color:' + activeHub.color + '">' +
+  let _header = '';
+  if (typeof activeHub !== 'undefined' && activeHub) {
+    const _hash = window.location.hash || '';
+    if (_hash.startsWith('#/hub/')) {
+      _header = buildHubSubnav(activeHub);
+    } else {
+      _header = '<div class="global-filter-bar" style="--hub-color:' + activeHub.color + '">' +
         '<span class="gfb-dot"></span>' +
         '<span class="gfb-label">' + activeHub.icon + ' ' + activeHub.label + '</span>' +
         '<button class="gfb-clear" onclick="window.clearHubFilter()">✕ Tutto</button>' +
-      '</div>'
-    : '';
-  app.innerHTML = `<main class="page page-enter">${_fb}${html}</main>`;
+      '</div>';
+    }
+  }
+  app.innerHTML = `<main class="page page-enter">${_header}${html}</main>`;
   updateNavContextChip();
 }
 
@@ -773,13 +786,15 @@ function buildHubSubnav(hub) {
   const code = hub._code || '';
   const base = '#/hub/' + code;
   const tabs = [
-    { path:'',            label:'Home' },
-    { path:'/classifica', label:'Classifica' },
-    { path:'/risultati',  label:'Risultati' },
-    { path:'/atleti',     label:'Atleti' },
-    { path:'/team',       label:'Team' },
-    { path:'/calendario', label:'Calendario' },
-    { path:'/statistiche',label:'Statistiche' },
+    { path:'',             label:'Home' },
+    { path:'/risultati',   label:'Risultati' },
+    { path:'/classifica',  label:'Classifica' },
+    { path:'/atleti',      label:'Atleti' },
+    { path:'/team',        label:'Team' },
+    { path:'/calendario',  label:'Calendario' },
+    { path:'/statistiche', label:'Statistiche' },
+    { path:'/comparatore', label:'Comparatore' },
+    { path:'/regolamento', label:'Regolamento' },
   ];
   const tabsHtml = tabs.map(function(t) {
     const href = base + t.path;
@@ -789,7 +804,7 @@ function buildHubSubnav(hub) {
     return '<a href="' + href + '" class="hub-subnav-tab' + (isActive ? ' hub-subnav-active' : '') + '">' + t.label + '</a>';
   }).join('');
   return '<div class="hub-subnav" style="--hub-color:' + hub.color + '">' +
-    '<a href="#/" class="hub-subnav-back">← Network</a>' +
+    '<a href="#/" class="hub-subnav-back" onclick="window.clearHubFilter();return false;">← Tutti</a>' +
     '<span class="hub-subnav-name">' + hub.icon + ' ' + hub.label.toUpperCase() + '</span>' +
     '<div class="hub-subnav-tabs">' + tabsHtml + '</div>' +
   '</div>';
@@ -814,6 +829,10 @@ function applyHubFilters(hub) {
   calQSearch = '';
   calQTipo = '';
   calQRegione = '';
+  // Apply hub theme to document
+  document.body.setAttribute('data-hub', hub._code || '');
+  document.documentElement.style.setProperty('--hub-color', hub.color);
+  document.documentElement.style.setProperty('--hub-gradient', hub.gradient || '');
 }
 
 // ── Network section for global homepage ─────────────────────────────
@@ -1106,12 +1125,14 @@ function renderHubSubpage(hubCode, subpage) {
   activeHub._code = hubCode;
   applyHubFilters(hub);
   switch (subpage) {
-    case 'classifica':   return renderClassifica();
     case 'risultati':    return renderRisultati();
+    case 'classifica':   return renderClassifica();
     case 'atleti':       return renderAtletiList();
     case 'team':         return renderTeamList();
     case 'calendario':   return renderCalendario();
     case 'statistiche':  return renderStatistiche();
+    case 'comparatore':  return renderComparatore();
+    case 'regolamento':  return renderRegolamento();
     default:             return renderHubHome(hubCode);
   }
 }
@@ -1131,12 +1152,20 @@ function _softRestoreContext() {
 window.clearHubFilter = function() {
   activeHub = null;
   try { localStorage.setItem('itcContext', 'skip'); } catch(e) {}
+  document.body.removeAttribute('data-hub');
+  document.documentElement.style.removeProperty('--hub-color');
+  document.documentElement.style.removeProperty('--hub-gradient');
   rankGender = 'M'; rankCat = 'ES1_M'; rankFilter = ''; rankRegion = ''; rankMonth = '';
   atlGender = 'M'; atlCat = 'JUN_M'; atlSearch = '';
   teamGender = 'M'; teamCat = 'JUN_M'; teamSearch = '';
   risQueryGenere = ''; risQueryCat = ''; risQueryMonth = ''; risQueryRegion = ''; risSearchQuery = '';
   calQGenere = ''; calQCat = ''; calQMonth = ''; calQSearch = ''; calQTipo = ''; calQRegione = '';
-  route();
+  // If on a hub URL, navigate to home — hashchange triggers route() with cleared state
+  if ((window.location.hash || '').startsWith('#/hub/')) {
+    window.location.hash = '#/';
+  } else {
+    route();
+  }
 };
 
 function buildCategoryStrip() {
@@ -1802,18 +1831,10 @@ async function renderHome() {
     </div>`;
   }).join('');
 
-  // Context setter used by category banners
+  // Context setter used by category banners — navigates to dedicated hub URL
   window._heroSetContext = function(hubCode) {
-    var appEl = document.getElementById('app');
-    if (appEl) { appEl.style.transition = 'opacity .18s'; appEl.style.opacity = '0'; }
-    setTimeout(function() {
-      if (appEl) { appEl.style.transition = ''; appEl.style.opacity = ''; }
-      activeHub = Object.assign({}, HUB_CONFIG[hubCode]);
-      activeHub._code = hubCode;
-      applyHubFilters(activeHub);
-      try { localStorage.setItem('itcContext', hubCode); } catch(e) {}
-      route();
-    }, 190);
+    try { localStorage.setItem('itcContext', hubCode); } catch(e) {}
+    window.location.hash = '#/hub/' + hubCode + '/';
   };
 
   // Category banners builder — photo backgrounds with oblique clip-path split

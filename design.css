@@ -4693,12 +4693,8 @@ div[style*="grid-template-columns: repeat(auto-fit"] {
    MULTI-HUB SYSTEM
    ════════════════════════════════════════════════════════════════ */
 
-/* ── Hub subnav — retired (replaced by global filter bar) ───── */
+/* ── Hub subnav — secondary navigation inside a category hub ── */
 .hub-subnav {
-  display: none !important;
-}
-/* kept for reference only — */
-._hub-subnav-archived {
   display: flex;
   align-items: center;
   gap: 0;
@@ -5993,3 +5989,34 @@ div[style*="grid-template-columns: repeat(auto-fit"] {
   .cat-banner-f { clip-path: polygon(calc(50% + 40px) 0, 100% 0, 100% 100%, calc(50% - 40px) 100%); }
   .cbi-name { font-size: .95rem; }
 }
+
+/* ═══════════════════════════════════════════════════════════════
+   HUB THEMING — applies when body[data-hub] is set
+   ═══════════════════════════════════════════════════════════════ */
+
+/* Navbar accent stripe under active link */
+body[data-hub] .nav-link.active {
+  color: var(--hub-color) !important;
+}
+body[data-hub] .nav-link.active::after {
+  background: var(--hub-color) !important;
+}
+
+/* Navbar bottom border gets hub color */
+body[data-hub] #navbar {
+  border-bottom-color: var(--hub-color);
+  box-shadow: 0 1px 0 0 var(--hub-color);
+}
+
+/* Primary buttons use hub color */
+body[data-hub] .em-btn-primary,
+body[data-hub] .hub-hero-btn:not(.hub-hero-btn-ghost) {
+  background: var(--hub-color) !important;
+  border-color: var(--hub-color) !important;
+}
+
+/* Hub subnav active tab and border already use --hub-color via CSS variable */
+
+/* Scroll indicator and dots */
+body[data-hub] .gfb-dot { background: var(--hub-color); }
+body[data-hub] .loading-bar { background: var(--hub-color) !important; }

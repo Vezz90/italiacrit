@@ -204,10 +204,39 @@ def scrape_all_details():
         else:
             print(f"  [!] Nessun match per: {c['nome']} in data {c_date}")
 
-    # Salva
+    # Salva file principale
     with open(DETAILS_FILE, 'w', encoding='utf-8') as f:
         json.dump(details_map, f, indent=2, ensure_ascii=False)
     print(f"Salvati dettagli per {len(details_map)} gare in {DETAILS_FILE}")
+
+    # Salva file per categoria (subset del principale)
+    cat_key_map = {
+        'elite': [], 'juniores': [], 'allievi': [], 'esordienti': [], 'altri': []
+    }
+    for c in calendar:
+        cal_id = c["id"]
+        if cal_id not in details_map:
+            continue
+        cat_raw = (c.get("categoria") or "").lower()
+        if "elite" in cat_raw:
+            cat_key_map['elite'].append(cal_id)
+        elif "junior" in cat_raw:
+            cat_key_map['juniores'].append(cal_id)
+        elif "alliev" in cat_raw:
+            cat_key_map['allievi'].append(cal_id)
+        elif "esordient" in cat_raw:
+            cat_key_map['esordienti'].append(cal_id)
+        else:
+            cat_key_map['altri'].append(cal_id)
+
+    for cat_key, ids in cat_key_map.items():
+        if not ids:
+            continue
+        subset = {i: details_map[i] for i in ids if i in details_map}
+        cat_file = DATA_DIR / f"race_details_{cat_key}.json"
+        with open(cat_file, 'w', encoding='utf-8') as f:
+            json.dump(subset, f, indent=2, ensure_ascii=False)
+        print(f"  {cat_key}: {len(subset)} gare → {cat_file.name}")
 
 if __name__ == "__main__":
     scrape_all_details()
