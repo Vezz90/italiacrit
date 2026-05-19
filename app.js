@@ -925,152 +925,134 @@ async function renderHubHome(hubCode) {
   if (!globalData) return;
   const hub = HUB_CONFIG[hubCode];
   if (!hub) { renderNotFound(); return; }
-  activeHub = hub;
-  activeHub._code = hubCode;
-
-  const { resultsRaw, calendar } = globalData;
-
-  // Filter results to this hub
-  const hubRes = resultsRaw.filter(function(r) {
-    if (r.genere !== hub.gender) return false;
-    const code = getRankingFileCode(r);
-    return hub.catCodes.includes(code);
-  });
-
-  // Load rankings — for esordienti also load ES1 (both years shown)
   activeHub = Object.assign({}, hub);
   activeHub._code = hubCode;
   applyHubFilters(activeHub);
-  const hubRanking = (await loadRanking(hub.mainCat)).slice(0, 5);
+
+  const { resultsRaw, calendar } = globalData;
+
+  // Load rankings
   const es1Code = hub.catCodes.find(function(c) { return c.startsWith('ES1'); });
+  const es2Code = hub.mainCat;
+  const isEsordienti = !!es1Code;
+  const hubRanking    = (await loadRanking(es2Code)).slice(0, 5);
   const hubRankingES1 = es1Code ? (await loadRanking(es1Code)).slice(0, 5) : null;
 
+  // Filter results to this hub, then split by year for esordienti
+  const hubRes = resultsRaw.filter(function(r) {
+    return r.genere === hub.gender && hub.catCodes.includes(getRankingFileCode(r));
+  });
+  const hubResES2 = isEsordienti ? hubRes.filter(function(r){ return getRankingFileCode(r) === es2Code; }) : hubRes;
+  const hubResES1 = isEsordienti ? hubRes.filter(function(r){ return getRankingFileCode(r) === es1Code; }) : [];
+
   // Date helpers
+  const MONTHS_SHORT = ['GEN','FEB','MAR','APR','MAG','GIU','LUG','AGO','SET','OTT','NOV','DIC'];
   const lastDate = hubRes.reduce(function(mx,r){ return (r.data||'')>mx?r.data:mx; }, '');
-  const cut14 = (function(){ var d=new Date(lastDate||new Date()); d.setDate(d.getDate()-14); return d.toISOString().split('T')[0]; })();
-  const cut7  = (function(){ var d=new Date(lastDate||new Date()); d.setDate(d.getDate()-7);  return d.toISOString().split('T')[0]; })();
+  const cut14 = (function(){ const d=new Date(lastDate||new Date()); d.setDate(d.getDate()-14); return d.toISOString().split('T')[0]; })();
+  const cut7  = (function(){ const d=new Date(lastDate||new Date()); d.setDate(d.getDate()-7);  return d.toISOString().split('T')[0]; })();
   const todayStr = new Date().toISOString().split('T')[0];
 
-  // Rider on Fire (last 14 days)
-  const fireMap = {};
-  hubRes.filter(function(r){ return r.data >= cut14; }).forEach(function(r) {
-    if (!fireMap[r.atleta_id]) fireMap[r.atleta_id] = { atleta_id:r.atleta_id, cognome:r.cognome, nome:r.nome, team:r.team, wins:0, podi:0, pts:0, code:getRankingFileCode(r) };
-    if (r.posizione === 1) fireMap[r.atleta_id].wins++;
-    if (r.posizione <= 3) fireMap[r.atleta_id].podi++;
-    fireMap[r.atleta_id].pts += (r.punti_effettivi||0);
-  });
-  const fireList = Object.values(fireMap).sort(function(a,b){ return b.wins-a.wins||b.podi-a.podi||b.pts-a.pts; });
-  const fireAthlete = fireList[0] || null;
-  const fireStory = fireAthlete ? siAthleteStory(fireAthlete.atleta_id, hubRes) : null;
-  const fireStreak = fireAthlete ? siStreak(fireAthlete.atleta_id, hubRes) : null;
+  // ── Helper: compute "rider on fire" from a result set ──────────
+  function computeFire(resSet) {
+    const fm = {};
+    resSet.filter(function(r){ return r.data >= cut14; }).forEach(function(r) {
+      if (!fm[r.atleta_id]) fm[r.atleta_id] = { atleta_id:r.atleta_id, cognome:r.cognome, nome:r.nome, team:r.team, wins:0, podi:0, pts:0, code:getRankingFileCode(r) };
+      if (r.posizione === 1) fm[r.atleta_id].wins++;
+      if (r.posizione <= 3) fm[r.atleta_id].podi++;
+      fm[r.atleta_id].pts += (r.punti_effettivi||0);
+    });
+    const list = Object.values(fm).sort(function(a,b){ return b.wins-a.wins||b.podi-a.podi||b.pts-a.pts; });
+    const ath = list[0] || null;
+    return { ath, streak: ath ? siStreak(ath.atleta_id, resSet) : null };
+  }
 
-  // Rivalry
-  const rivals = siRivalryFinder(hubRes);
-  const rv = rivals[0] || null;
+  const fireES2 = computeFire(hubResES2);
+  const fireES1 = isEsordienti ? computeFire(hubResES1) : { ath: null, streak: null };
+  // Legacy aliases for non-esordienti paths
+  const fireAthlete = fireES2.ath;
+  const fireStreak  = fireES2.streak;
 
-  // Recent winners (last 7 days)
+  // Recent winners (last 7 days) — combined for ticker
   const recentWins = hubRes.filter(function(r){ return r.data >= cut7 && r.posizione === 1; })
     .sort(function(a,b){ return b.data.localeCompare(a.data); }).slice(0, 5);
 
-  // Upcoming hub races
-  const upcomingHub = calendar.filter(function(g) {
+  // Upcoming hub races (all, no slice — will group for esordienti)
+  const upcomingAll = calendar.filter(function(g) {
     if (g.genere && g.genere !== hub.gender) return false;
     if (hub.catFilter && !(g.categoria||'').toLowerCase().includes(hub.catFilter.toLowerCase())) return false;
-    return (g.data || '') >= todayStr;
-  }).sort(function(a,b){ return a.data.localeCompare(b.data); }).slice(0, 4);
+    return (g.data||'') >= todayStr;
+  }).sort(function(a,b){ return a.data.localeCompare(b.data); });
 
-  // Newsroom (hub-scoped)
-  const newsItems = siNewsroomFeed(hubRes, [], [], [], {}).slice(0, 5);
-
-  // ── HTML ASSEMBLY — stessa grafica della home generale ──────────
-  const MONTHS_SHORT = ['GEN','FEB','MAR','APR','MAG','GIU','LUG','AGO','SET','OTT','NOV','DIC'];
-
-  // Race map per hero (struttura identica alla home, filtrata per hub)
-  const raceMap = {};
-  for (const r of hubRes) {
-    if (!raceMap[r.gara_id]) raceMap[r.gara_id] = { id:r.gara_id, nome:r.nome_gara, data:r.data, categoria:r.categoria, genere:r.genere, tipo:r.tipo, results:[] };
-    raceMap[r.gara_id].results.push(r);
+  // ── Helper: spotlight card ─────────────────────────────────────
+  function buildSpotlightHtml(ath, streak, catCode) {
+    if (!ath) return '<section class="em-spotlight em-spotlight--half">' +
+      '<div class="em-spotlight-body">' +
+        '<div class="em-spot-meta"><span class="em-spot-badge">🔥 RIDER ON FIRE</span>' +
+        '<span class="em-spot-cat">' + catLabel(catCode) + '</span></div>' +
+        '<p style="color:rgba(255,255,255,0.3);font-size:0.82rem;margin-top:12px">Nessun dato recente</p>' +
+      '</div></section>';
+    return '<section class="em-spotlight em-spotlight--half">' +
+      '<div class="em-spotlight-bg-name">' + esc(ath.cognome) + '</div>' +
+      '<div class="em-spotlight-body">' +
+        '<div class="em-spot-meta">' +
+          '<span class="em-spot-badge">🔥 RIDER ON FIRE</span>' +
+          '<span class="em-spot-cat">' + catLabel(catCode) + '</span>' +
+          (streak && streak.winStreak >= 2 ? '<div class="si-streak-badge">👑 ' + streak.winStreak + ' vittorie di fila</div>' : '') +
+        '</div>' +
+        '<h2 class="em-spot-name">' + esc(ath.cognome) + '<br><span class="em-spot-firstname">' + esc(ath.nome) + '</span></h2>' +
+        '<div class="em-spot-team">' + esc(ath.team||'') + '</div>' +
+        '<div class="em-spot-stats">' +
+          '<div class="em-stat"><span class="em-stat-val">' + ath.pts + '</span><span class="em-stat-lbl">punti 14gg</span></div>' +
+          '<div class="em-stat"><span class="em-stat-val">' + ath.wins + '</span><span class="em-stat-lbl">vittorie</span></div>' +
+          '<div class="em-stat"><span class="em-stat-val">' + ath.podi + '</span><span class="em-stat-lbl">podi</span></div>' +
+        '</div>' +
+        '<a href="#/atleta/' + encodeURIComponent(ath.atleta_id) + '" class="em-spot-cta">Scheda atleta →</a>' +
+      '</div></section>';
   }
-  const allRacesSorted = Object.values(raceMap).sort((a,b) => (b.data||'').localeCompare(a.data||''));
-  const lastDTs = lastDate ? new Date(lastDate).getTime() : 0;
-  const heroRaces = allRacesSorted.filter(r => r.data && new Date(r.data).getTime() >= (lastDTs - 7*86400*1000));
-  const latestRace = heroRaces[0];
-  const latestWinner = latestRace?.results?.find(r => r.posizione === 1);
 
-  const recentRacesHtml = heroRaces.slice(0, 6).map((r, i) => {
-    const w = r.results?.find(x => x.posizione === 1);
-    const d = r.data ? new Date(r.data) : null;
-    const dateStr = d ? `${d.getDate()} ${MONTHS_SHORT[d.getMonth()]}` : '';
-    const rcCode = getRankingFileCode({categoria:r.categoria, genere:r.genere, tipo:r.tipo});
-    return `<div class="em-race-row${i===0?' em-race-row--latest':''}" onclick="location.hash='#/risultati/${encodeURIComponent(r.id)}'">
-      <span class="em-race-date">${dateStr}</span>
-      <div class="em-race-info">
-        <span class="em-race-name">${esc(r.nome)}</span>
-        <span class="em-race-cat">${catLabel(rcCode||'')}</span>
-      </div>
-      ${w ? `<span class="em-race-winner">&#127945; ${esc(w.cognome)}</span>` : ''}
-    </div>`;
-  }).join('');
+  // ── Helper: rivalry section ────────────────────────────────────
+  function buildRivalHtml(resSet, catCode) {
+    const rv = siRivalryFinder(resSet)[0] || null;
+    if (!rv) return '';
+    return '<section class="em-versus em-versus--half">' +
+      '<div class="em-versus-label">⚔ RIVALITÀ · ' + catLabel(catCode) + ' · ' + rv.encounters + ' scontri</div>' +
+      '<div class="em-versus-ring">' +
+        '<div class="em-vs-side em-vs-a">' +
+          '<div class="em-vs-pos">' + rv.aWins + 'V</div>' +
+          '<a href="#/atleta/' + encodeURIComponent(rv.aId) + '" class="em-vs-name">' + esc(rv.aCog) + '<br><small>' + esc(rv.aNom) + '</small></a>' +
+          '<div class="em-vs-team">' + esc(rv.aTeam||'') + '</div>' +
+        '</div>' +
+        '<div class="em-vs-center"><div class="em-vs-vs">VS</div><div class="em-vs-gap">' + rv.encounters + ' sfide</div></div>' +
+        '<div class="em-vs-side em-vs-b">' +
+          '<div class="em-vs-pos">' + rv.bWins + 'V</div>' +
+          '<a href="#/atleta/' + encodeURIComponent(rv.bId) + '" class="em-vs-name">' + esc(rv.bCog) + '<br><small>' + esc(rv.bNom) + '</small></a>' +
+          '<div class="em-vs-team">' + esc(rv.bTeam||'') + '</div>' +
+        '</div>' +
+      '</div></section>';
+  }
 
-  // Ticker hub-filtrato
-  const tickerItems = [];
-  recentWins.slice(0, 3).forEach(r => tickerItems.push(`🥇 <strong>${esc(r.cognome).toUpperCase()}</strong> vince ${esc(r.nome_gara||'')}`));
-  if (fireAthlete && fireStreak && fireStreak.winStreak >= 2) tickerItems.push(`👑 <strong>${esc(fireAthlete.cognome).toUpperCase()}</strong> — ${fireStreak.winStreak} vittorie consecutive`);
-  upcomingHub.slice(0, 1).forEach(g => {
-    const dys = Math.round((new Date(g.data)-new Date(todayStr))/86400000);
-    tickerItems.push(`📅 <strong>PROSSIMA${dys===0?' OGGI':dys===1?' DOMANI':''}:</strong> ${esc(g.nome)}`);
-  });
+  // ── Helper: newsroom section ────────────────────────────────────
+  function buildNewsHtml(resSet, label) {
+    const items = siNewsroomFeed(resSet, [], [], [], {}).slice(0, 5);
+    if (!items.length) return '';
+    return '<section class="em-newsroom">' +
+      '<div class="em-newsroom-header"><span class="em-newsroom-badge">📡 ' + label + '</span></div>' +
+      '<div class="em-newsroom-feed">' +
+        items.map(function(item) {
+          const click = item.atleta_id
+            ? ' onclick="location.hash=\'#/atleta/' + item.atleta_id + '\'"'
+            : item.team_id ? ' onclick="location.hash=\'#/team/' + item.team_id + '\'"' : '';
+          return '<div class="em-news-item em-news-' + item.type + '"' + click + '>' +
+            '<span class="em-news-icon">' + item.icon + '</span>' +
+            '<div class="em-news-text">' + item.text + '</div>' +
+            ((item.atleta_id || item.team_id) ? '<span class="em-news-arrow">→</span>' : '') +
+          '</div>';
+        }).join('') +
+      '</div></section>';
+  }
 
-  // ── 1. HERO — stesso em-hero della home generale ─────────────
-  const heroHtml = `<section class="em-hero">
-    <div class="em-hero-content">
-      <div class="em-hero-left">
-        <div class="em-eyebrow">${hub.icon} ${hub.label.toUpperCase()} · ITALIACRIT</div>
-        <h1 class="em-title">ITALIA<span class="em-title-red">CRIT</span></h1>
-        <p class="em-subtitle">${esc(hub.desc)}</p>
-        ${latestWinner ? `<div class="em-hero-winner">
-          <span class="em-winner-label">ULTIMA VITTORIA</span>
-          <span class="em-winner-name">${esc(latestWinner.cognome)} ${esc(latestWinner.nome)}</span>
-          <span class="em-winner-race">${esc(latestRace.nome)}</span>
-        </div>` : ''}
-        <div class="em-hero-ctas">
-          <a href="#/classifica" class="em-btn-primary">Classifiche</a>
-          <a href="#/risultati" class="em-btn-ghost">Risultati</a>
-        </div>
-      </div>
-      <div class="em-hero-right">
-        <div class="em-right-label">ULTIMI RISULTATI · ${hub.label.toUpperCase()}</div>
-        <div class="em-race-feed">${recentRacesHtml || '<div class="em-race-row" style="opacity:.5">Nessuna gara recente</div>'}</div>
-        <a href="#/risultati" class="em-all-link">Tutti i risultati &rarr;</a>
-      </div>
-    </div>
-    ${tickerItems.length ? `<div class="em-ticker-bar"><div class="em-ticker-inner"><span class="em-ticker-track">${[...tickerItems,...tickerItems].join(' &nbsp;&middot;&nbsp; ')}</span></div></div>` : ''}
-  </section>`;
-
-  // ── 2. SPOTLIGHT — rider on fire (em-spotlight) ───────────────
-  const spotlightHtml = fireAthlete
-    ? `<section class="em-spotlight">
-        <div class="em-spotlight-bg-name">${esc(fireAthlete.cognome)}</div>
-        <div class="em-spotlight-body">
-          <div class="em-spot-meta">
-            <span class="em-spot-badge">🔥 RIDER ON FIRE</span>
-            <span class="em-spot-cat">${catLabel(fireAthlete.code || hub.mainCat)}</span>
-            ${fireStreak && fireStreak.winStreak >= 2 ? `<div class="si-streak-badge">👑 ${fireStreak.winStreak} vittorie consecutive</div>` : ''}
-          </div>
-          <h2 class="em-spot-name">${esc(fireAthlete.cognome)}<br><span class="em-spot-firstname">${esc(fireAthlete.nome)}</span></h2>
-          <div class="em-spot-team">${esc(fireAthlete.team||'')}</div>
-          <div class="em-spot-stats">
-            <div class="em-stat"><span class="em-stat-val">${fireAthlete.pts}</span><span class="em-stat-lbl">punti 14gg</span></div>
-            <div class="em-stat"><span class="em-stat-val">${fireAthlete.wins}</span><span class="em-stat-lbl">vittorie</span></div>
-            <div class="em-stat"><span class="em-stat-val">${fireAthlete.podi}</span><span class="em-stat-lbl">podi</span></div>
-          </div>
-          <a href="#/atleta/${encodeURIComponent(fireAthlete.atleta_id)}" class="em-spot-cta">Scheda atleta →</a>
-        </div>
-      </section>`
-    : '';
-
-  // ── 3. TOP CLASSIFICA ─────────────────────────────────────────
-  const buildRankSection = function(ranking, catCode) {
+  // ── Helper: ranking section ─────────────────────────────────────
+  function buildRankSection(ranking, catCode) {
     if (!ranking || !ranking.length) return '';
     return '<section class="hub-ranking-section">' +
       '<div class="hub-section-header">' +
@@ -1088,71 +1070,156 @@ async function renderHubHome(hubCode) {
             '<span class="hub-rank-pts">' + a.punti + '<small> pt</small></span>' +
           '</div>';
         }).join('') +
-      '</div>' +
-    '</section>';
-  };
-  const rankHtml = buildRankSection(hubRanking, hub.mainCat) +
-    (hubRankingES1 ? buildRankSection(hubRankingES1, es1Code) : '');
+      '</div></section>';
+  }
 
-  // ── 4. RIVALITÀ — em-versus ───────────────────────────────────
-  const rivalHtml = rv
-    ? '<section class="em-versus">' +
-        '<div class="em-versus-label">⚔ RIVALITÀ DI STAGIONE · ' + catLabel(rv.code || hub.mainCat) + ' · ' + rv.encounters + ' scontri</div>' +
-        '<div class="em-versus-ring">' +
-          '<div class="em-vs-side em-vs-a">' +
-            '<div class="em-vs-pos">' + rv.aWins + 'V</div>' +
-            '<a href="#/atleta/' + encodeURIComponent(rv.aId) + '" class="em-vs-name">' + esc(rv.aCog) + '<br><small>' + esc(rv.aNom) + '</small></a>' +
-            '<div class="em-vs-team">' + esc(rv.aTeam||'') + '</div>' +
-          '</div>' +
-          '<div class="em-vs-center"><div class="em-vs-vs">VS</div><div class="em-vs-gap">' + rv.encounters + ' sfide</div></div>' +
-          '<div class="em-vs-side em-vs-b">' +
-            '<div class="em-vs-pos">' + rv.bWins + 'V</div>' +
-            '<a href="#/atleta/' + encodeURIComponent(rv.bId) + '" class="em-vs-name">' + esc(rv.bCog) + '<br><small>' + esc(rv.bNom) + '</small></a>' +
-            '<div class="em-vs-team">' + esc(rv.bTeam||'') + '</div>' +
-          '</div>' +
-        '</div></section>'
-    : '';
+  // ── Helper: wrap two sections side by side ──────────────────────
+  function dualWrap(htmlA, htmlB) {
+    if (!htmlA && !htmlB) return '';
+    return '<div class="hub-dual">' + (htmlA||'') + (htmlB||'') + '</div>';
+  }
 
-  // ── 5. NEWSROOM — em-newsroom ─────────────────────────────────
-  const newsHtml = newsItems.length
-    ? '<section class="em-newsroom">' +
-        '<div class="em-newsroom-header">' +
-          '<span class="em-newsroom-badge">📡 ' + hub.label.toUpperCase() + ' · NEWSROOM</span>' +
-          '<a href="#/risultati" class="em-newsroom-all">Tutti i risultati →</a>' +
+  // ── Weekend key: returns the Saturday of the week for grouping ──
+  function weekendKey(dateStr) {
+    const d = new Date(dateStr + 'T00:00:00');
+    const day = d.getDay(); // 0=Sun, 6=Sat
+    const offset = day === 0 ? -1 : (6 - day);
+    const sat = new Date(d);
+    sat.setDate(d.getDate() + offset);
+    return sat.toISOString().split('T')[0];
+  }
+
+  // ── Ticker ──────────────────────────────────────────────────────
+  const tickerItems = [];
+  recentWins.slice(0, 3).forEach(function(r){ tickerItems.push('🥇 <strong>' + esc(r.cognome).toUpperCase() + '</strong> vince ' + esc(r.nome_gara||'')); });
+  if (fireAthlete && fireStreak && fireStreak.winStreak >= 2) tickerItems.push('👑 <strong>' + esc(fireAthlete.cognome).toUpperCase() + '</strong> — ' + fireStreak.winStreak + ' vittorie consecutive');
+  if (upcomingAll[0]) {
+    const dys = Math.round((new Date(upcomingAll[0].data) - new Date(todayStr)) / 86400000);
+    tickerItems.push('📅 <strong>PROSSIMA' + (dys===0?' OGGI':dys===1?' DOMANI':'') + ':</strong> ' + esc(upcomingAll[0].nome));
+  }
+
+  // ── Race map per hero feed ──────────────────────────────────────
+  const raceMap = {};
+  for (const r of hubRes) {
+    if (!raceMap[r.gara_id]) raceMap[r.gara_id] = { id:r.gara_id, nome:r.nome_gara, data:r.data, categoria:r.categoria, genere:r.genere, tipo:r.tipo, results:[] };
+    raceMap[r.gara_id].results.push(r);
+  }
+  const allRacesSorted = Object.values(raceMap).sort(function(a,b){ return (b.data||'').localeCompare(a.data||''); });
+  const lastDTs = lastDate ? new Date(lastDate).getTime() : 0;
+  const heroRaces = allRacesSorted.filter(function(r){ return r.data && new Date(r.data).getTime() >= (lastDTs - 7*86400*1000); });
+  const recentRacesHtml = heroRaces.slice(0, 6).map(function(r, i) {
+    const w = r.results.find(function(x){ return x.posizione === 1; });
+    const d = r.data ? new Date(r.data) : null;
+    const dateStr = d ? (d.getDate() + ' ' + MONTHS_SHORT[d.getMonth()]) : '';
+    const rcCode = getRankingFileCode({categoria:r.categoria, genere:r.genere, tipo:r.tipo});
+    return '<div class="em-race-row' + (i===0?' em-race-row--latest':'') + '" onclick="location.hash=\'#/risultati/' + encodeURIComponent(r.id) + '\'">' +
+      '<span class="em-race-date">' + dateStr + '</span>' +
+      '<div class="em-race-info"><span class="em-race-name">' + esc(r.nome) + '</span><span class="em-race-cat">' + catLabel(rcCode||'') + '</span></div>' +
+      (w ? '<span class="em-race-winner">&#127945; ' + esc(w.cognome) + '</span>' : '') +
+    '</div>';
+  }).join('');
+
+  // ── 1. HERO ─────────────────────────────────────────────────────
+  const heroHtml = '<section class="em-hero">' +
+    '<div class="em-hero-content">' +
+      '<div class="em-hero-left">' +
+        '<div class="em-eyebrow">' + hub.icon + ' ' + hub.label.toUpperCase() + ' · ITALIACRIT</div>' +
+        '<h1 class="em-title">ITALIA<span class="em-title-red">CRIT</span></h1>' +
+        '<p class="em-subtitle">' + esc(hub.desc) + '</p>' +
+        '<div class="em-hero-ctas">' +
+          '<a href="#/classifica" class="em-btn-primary">Classifiche</a>' +
+          '<a href="#/risultati" class="em-btn-ghost">Risultati</a>' +
         '</div>' +
-        '<div class="em-newsroom-feed">' +
-          newsItems.map(function(item) {
-            const clickAttr = item.atleta_id
-              ? " onclick=\"location.hash='#/atleta/" + item.atleta_id + "'\""
-              : item.team_id ? " onclick=\"location.hash='#/team/" + item.team_id + "'\"" : '';
-            return '<div class="em-news-item em-news-' + item.type + '"' + clickAttr + '>' +
-              '<span class="em-news-icon">' + item.icon + '</span>' +
-              '<div class="em-news-text">' + item.text + '</div>' +
-              ((item.atleta_id || item.team_id) ? '<span class="em-news-arrow">→</span>' : '') +
-            '</div>';
-          }).join('') +
-        '</div></section>'
-    : '';
+      '</div>' +
+      '<div class="em-hero-right">' +
+        '<div class="em-right-label">ULTIMI RISULTATI · ' + hub.label.toUpperCase() + '</div>' +
+        '<div class="em-race-feed">' + (recentRacesHtml || '<div class="em-race-row" style="opacity:.5">Nessuna gara recente</div>') + '</div>' +
+        '<a href="#/risultati" class="em-all-link">Tutti i risultati &rarr;</a>' +
+      '</div>' +
+    '</div>' +
+    (tickerItems.length ? '<div class="em-ticker-bar"><div class="em-ticker-inner"><span class="em-ticker-track">' + [...tickerItems,...tickerItems].join(' &nbsp;&middot;&nbsp; ') + '</span></div></div>' : '') +
+  '</section>';
 
-  // ── 6. PROSSIME GARE — em-upcoming ───────────────────────────
-  const upHtml = upcomingHub.length ? `<section class="em-upcoming">
-    <div class="em-section-header">
-      <span class="em-section-badge">🗓 PROSSIME GARE · ${hub.label.toUpperCase()}</span>
-    </div>
-    <div class="em-upcoming-list">
-      ${upcomingHub.map(g => {
-        const d = new Date(g.data);
-        const days = Math.round((d - new Date(todayStr)) / 86400000);
-        const daysStr = days === 0 ? 'OGGI' : days === 1 ? 'DOMANI' : `fra ${days}gg`;
-        return `<div class="em-ug-row" onclick="location.hash='#/calendario/${encodeURIComponent(g.id)}'">
-          <span class="em-ug-days${days===0?' em-ug-oggi':''}">${daysStr}</span>
-          <span class="em-ug-date">${d.getDate()} ${MONTHS_SHORT[d.getMonth()]}</span>
-          <span class="em-ug-name">${esc(g.nome)}</span>
-          <span class="em-ug-cat">${esc(g.categoria||'')}</span>
-        </div>`;
-      }).join('')}
-    </div>
-  </section>` : '';
+  // ── 2. RIDER ON FIRE ────────────────────────────────────────────
+  const spotlightHtml = isEsordienti
+    ? dualWrap(buildSpotlightHtml(fireES1.ath, fireES1.streak, es1Code), buildSpotlightHtml(fireES2.ath, fireES2.streak, es2Code))
+    : buildSpotlightHtml(fireAthlete, fireStreak, hub.mainCat);
+
+  // ── 3. TOP CLASSIFICA ───────────────────────────────────────────
+  const rankHtml = isEsordienti && hubRankingES1
+    ? dualWrap(buildRankSection(hubRankingES1, es1Code), buildRankSection(hubRanking, es2Code))
+    : buildRankSection(hubRanking, hub.mainCat);
+
+  // ── 4. RIVALITÀ ─────────────────────────────────────────────────
+  const rivalHtml = isEsordienti
+    ? dualWrap(buildRivalHtml(hubResES1, es1Code), buildRivalHtml(hubResES2, es2Code))
+    : buildRivalHtml(hubRes, hub.mainCat);
+
+  // ── 5. NEWSROOM ─────────────────────────────────────────────────
+  const newsHtml = isEsordienti
+    ? dualWrap(buildNewsHtml(hubResES1, 'ESORDIENTI 1° ANNO'), buildNewsHtml(hubResES2, 'ESORDIENTI 2° ANNO'))
+    : buildNewsHtml(hubRes, hub.label.toUpperCase() + ' · NEWSROOM');
+
+  // ── 6. PROSSIME GARE ────────────────────────────────────────────
+  let upHtml = '';
+  if (upcomingAll.length) {
+    if (isEsordienti) {
+      // Group by weekend (Sat key)
+      const weekends = {};
+      const weekendOrder = [];
+      upcomingAll.forEach(function(g) {
+        const wk = weekendKey(g.data);
+        if (!weekends[wk]) { weekends[wk] = []; weekendOrder.push(wk); }
+        weekends[wk].push(g);
+      });
+      const DAY_NAMES = ['DOM','LUN','MAR','MER','GIO','VEN','SAB'];
+      upHtml = '<section class="em-upcoming em-upcoming--weekends">' +
+        '<div class="em-section-header">' +
+          '<span class="em-section-badge">🗓 PROSSIME GARE · ' + hub.label.toUpperCase() + '</span>' +
+          '<a href="#/calendario" class="em-newsroom-all">Calendario &rarr;</a>' +
+        '</div>' +
+        weekendOrder.map(function(wk) {
+          const races = weekends[wk];
+          const satD = new Date(wk + 'T00:00:00');
+          const sunD = new Date(satD); sunD.setDate(satD.getDate() + 1);
+          const mon  = MONTHS_SHORT[satD.getMonth()];
+          const wkLabel = satD.getDate() + '-' + sunD.getDate() + ' ' + mon + ' ' + satD.getFullYear();
+          return '<div class="hub-weekend-block">' +
+            '<div class="hub-weekend-label">🏁 ' + wkLabel + '</div>' +
+            '<div class="hub-weekend-races">' +
+              races.map(function(g) {
+                const gd  = new Date(g.data + 'T00:00:00');
+                const days = Math.round((gd - new Date(todayStr + 'T00:00:00')) / 86400000);
+                const dayTag = days === 0
+                  ? '<span class="hub-ug-oggi">OGGI</span>'
+                  : days === 1 ? '<span class="hub-ug-domani">DOMANI</span>' : DAY_NAMES[gd.getDay()];
+                return '<div class="em-ug-row" onclick="location.hash=\'#/calendario/' + encodeURIComponent(g.id) + '\'">' +
+                  '<span class="em-ug-days">' + dayTag + '</span>' +
+                  '<span class="em-ug-name">' + esc(g.nome) + '</span>' +
+                  '<span class="em-ug-cat">' + esc(g.categoria||'') + '</span>' +
+                '</div>';
+              }).join('') +
+            '</div></div>';
+        }).join('') +
+      '</section>';
+    } else {
+      const upcomingSlice = upcomingAll.slice(0, 4);
+      upHtml = '<section class="em-upcoming"><div class="em-section-header"><span class="em-section-badge">🗓 PROSSIME GARE · ' + hub.label.toUpperCase() + '</span></div>' +
+        '<div class="em-upcoming-list">' +
+        upcomingSlice.map(function(g) {
+          const d = new Date(g.data);
+          const days = Math.round((d - new Date(todayStr)) / 86400000);
+          const daysStr = days === 0 ? 'OGGI' : days === 1 ? 'DOMANI' : 'fra ' + days + 'gg';
+          return '<div class="em-ug-row" onclick="location.hash=\'#/calendario/' + encodeURIComponent(g.id) + '\'">' +
+            '<span class="em-ug-days' + (days===0?' em-ug-oggi':'') + '">' + daysStr + '</span>' +
+            '<span class="em-ug-date">' + d.getDate() + ' ' + MONTHS_SHORT[d.getMonth()] + '</span>' +
+            '<span class="em-ug-name">' + esc(g.nome) + '</span>' +
+            '<span class="em-ug-cat">' + esc(g.categoria||'') + '</span>' +
+          '</div>';
+        }).join('') +
+      '</div></section>';
+    }
+  }
 
   setPage(heroHtml + spotlightHtml + rankHtml + rivalHtml + newsHtml + upHtml);
 }

@@ -6023,6 +6023,71 @@ body[data-hub] .hub-hero-btn:not(.hub-hero-btn-ghost) {
 /* Scroll indicator and dots */
 body[data-hub] .gfb-dot { background: var(--hub-color); }
 
+/* ── Hub dual layout — two sections side by side ───────────── */
+.hub-dual {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  border-bottom: 1px solid var(--border-subtle);
+}
+.hub-dual > * {
+  border-right: 1px solid var(--border-subtle);
+}
+.hub-dual > *:last-child {
+  border-right: none;
+}
+
+/* Half-width spotlight (in dual) */
+.em-spotlight--half {
+  min-height: 280px;
+  padding: 52px 36px;
+}
+.em-spotlight--half .em-spotlight-bg-name {
+  font-size: clamp(4rem, 9vw, 11rem);
+}
+.em-spotlight--half .em-spot-name {
+  font-size: clamp(1.8rem, 3.5vw, 3rem);
+}
+
+/* Half-width versus (in dual) */
+.em-versus--half {
+  border-bottom: none;
+}
+.em-versus--half .em-versus-ring {
+  gap: 0;
+}
+
+/* Weekend upcoming */
+.em-upcoming--weekends { max-width: 900px; margin: 0 auto; padding: 36px var(--sp-page); }
+.hub-weekend-block { margin-bottom: 24px; }
+.hub-weekend-label {
+  font-family: var(--font-heading);
+  font-size: 0.65rem;
+  font-weight: 800;
+  letter-spacing: 0.18em;
+  color: var(--hub-color, var(--red-hot));
+  text-transform: uppercase;
+  padding-bottom: 8px;
+  border-bottom: 1px solid var(--border-subtle);
+  margin-bottom: 4px;
+}
+.hub-weekend-races { display: flex; flex-direction: column; }
+.hub-ug-oggi   { color: var(--hub-color, var(--red-hot)); font-weight: 800; }
+.hub-ug-domani { color: var(--yellow-race); font-weight: 700; }
+
+@media (max-width: 600px) {
+  .hub-dual {
+    grid-template-columns: 1fr;
+  }
+  .hub-dual > * {
+    border-right: none;
+    border-bottom: 1px solid var(--border-subtle);
+  }
+  .hub-dual > *:last-child {
+    border-bottom: none;
+  }
+  .em-spotlight--half { padding: 40px 20px; }
+}
+
 /* ── Home hero — centered single-column layout ─────────────── */
 .em-hero-content--centered {
   grid-template-columns: 1fr;
