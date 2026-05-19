@@ -6095,10 +6095,21 @@ body[data-hub] .hub-cat-title {
   }
 }
 
-/* ── Upcoming weekend (keeps old bordered style) ─────────────── */
+/* ── Upcoming weekend ────────────────────────────────────────── */
 .hub-upcoming-weekend {
-  padding: 28px var(--sp-page) 16px;
+  background: var(--bg-card);
+  padding: 28px var(--sp-page) 24px;
+  border-top: 3px solid var(--hub-color, var(--red-hot));
   border-bottom: 1px solid var(--border-subtle);
+}
+.hub-upcoming-weekend .hub-section-label {
+  font-family: 'Inter Tight', 'Inter', sans-serif;
+  font-size: 1.1rem;
+  font-weight: 900;
+  color: var(--text-primary);
+  letter-spacing: -0.02em;
+  text-transform: uppercase;
+  margin-bottom: 0;
 }
 .hub-last-list {
   display: flex;
@@ -6167,6 +6178,31 @@ body[data-hub] .hub-cat-title {
   color: var(--hub-color, var(--red-hot));
   font-size: 0.78rem;
   letter-spacing: 0.04em;
+}
+
+/* ── Results section header ──────────────────────────────────── */
+.hlr-section-hdr {
+  display: flex;
+  align-items: baseline;
+  gap: 14px;
+  margin-bottom: 20px;
+  flex-wrap: wrap;
+}
+.hlr-section-title {
+  font-family: 'Inter Tight', 'Inter', sans-serif;
+  font-size: 1.5rem;
+  font-weight: 900;
+  color: var(--text-primary);
+  letter-spacing: -0.03em;
+  text-transform: uppercase;
+  line-height: 1;
+}
+.hlr-section-date {
+  font-family: var(--font-mono);
+  font-size: 0.65rem;
+  color: var(--hub-color, var(--red-hot));
+  letter-spacing: 0.08em;
+  flex: 1;
 }
 
 /* ── Result row — scoreboard style ───────────────────────────── */

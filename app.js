@@ -1120,7 +1120,7 @@ async function renderHubHome(hubCode) {
       const dateStr = d.getDate() + ' ' + MONTHS_SHORT[d.getMonth()];
       const rcCode = getRankingFileCode({categoria:r.categoria, genere:r.genere, tipo:r.tipo});
       const catStr = catLabel(rcCode || r.categoria || '');
-      return '<div class="hlr-row" onclick="location.hash=\'#/risultati/' + encodeURIComponent(r.id) + '\'">' +
+      return '<div class="hlr-row" onclick="location.hash=\'#/gara/' + encodeURIComponent(r.id) + '\'">' +
         '<div class="hlr-header">' +
           '<div class="hlr-race-name">' + esc(r.nome) + '</div>' +
           '<div class="hlr-tags">' +
@@ -1159,29 +1159,35 @@ async function renderHubHome(hubCode) {
   // ── 2. ULTIMI RISULTATI — piena larghezza, per categoria/genere ──
   let lastResultsHtml = '';
   if (lastWeekRaces.length) {
+    // Format last weekend date for header
+    const lastWkD = new Date(lastWkKey + 'T00:00:00');
+    const lastWkSunD = new Date(lastWkD); lastWkSunD.setDate(lastWkD.getDate() + 1);
+    const lastWkLabel = lastWkD.getDate() + '–' + lastWkSunD.getDate() + ' ' + MONTHS_SHORT[lastWkD.getMonth()];
+
     if (isEsordienti) {
-      // Split ES1 / ES2 side by side
-      const es1Races = lastWeekRaces.filter(function(r){ return getRankingFileCode({categoria:r.categoria,genere:r.genere,tipo:r.tipo}) === es1Code; });
-      const es2Races = lastWeekRaces.filter(function(r){ return getRankingFileCode({categoria:r.categoria,genere:r.genere,tipo:r.tipo}) === es2Code; });
+      // Split ES1 / ES2 side by side — pass gara_id so getRankingFileCode extracts correctly
+      const es1Races = lastWeekRaces.filter(function(r){ return getRankingFileCode({gara_id:r.id, categoria:r.categoria, genere:r.genere}) === es1Code; });
+      const es2Races = lastWeekRaces.filter(function(r){ return getRankingFileCode({gara_id:r.id, categoria:r.categoria, genere:r.genere}) === es2Code; });
       const makeHalf = function(races, label) {
         if (!races.length) return '';
         return '<section class="hub-last-results hub-last-results--half">' +
-          '<div class="hub-section-header hub-section-header--wide">' +
-            '<div class="hub-section-label">🏁 ' + label + '</div>' +
+          '<div class="hlr-section-hdr">' +
+            '<span class="hlr-section-title">' + label + '</span>' +
           '</div>' +
           '<div class="hub-last-list">' + buildLastRows(races) + '</div>' +
         '</section>';
       };
       lastResultsHtml = dualWrap(
-        makeHalf(es1Races, 'ESORDIENTI 1° ANNO'),
-        makeHalf(es2Races, 'ESORDIENTI 2° ANNO')
+        makeHalf(es1Races, '1° Anno'),
+        makeHalf(es2Races, '2° Anno')
       );
     } else {
       lastResultsHtml =
         '<section class="hub-last-results">' +
-          '<div class="hub-section-header hub-section-header--wide">' +
-            '<div class="hub-section-label">🏁 ULTIMI RISULTATI</div>' +
-            '<a href="#/risultati" class="hub-section-more">Tutti i risultati &rarr;</a>' +
+          '<div class="hlr-section-hdr">' +
+            '<span class="hlr-section-title">Ultimi Risultati</span>' +
+            '<span class="hlr-section-date">' + lastWkLabel + '</span>' +
+            '<a href="#/risultati" class="hub-section-more">Tutti &rarr;</a>' +
           '</div>' +
           '<div class="hub-last-list">' + buildLastRows(lastWeekRaces) + '</div>' +
         '</section>';
@@ -2045,7 +2051,7 @@ async function renderHome() {
       const dateStr = d ? (d.getDate() + ' ' + MONTHS_SHORT[d.getMonth()]) : '';
       const rcCode = getRankingFileCode({categoria:r.categoria, genere:r.genere, tipo:r.tipo});
       const catStr = catLabel(rcCode || r.categoria || '');
-      return '<div class="hlr-row" onclick="location.hash=\'#/risultati/' + encodeURIComponent(r.id) + '\'">' +
+      return '<div class="hlr-row" onclick="location.hash=\'#/gara/' + encodeURIComponent(r.id) + '\'">' +
         '<div class="hlr-header">' +
           '<div class="hlr-race-name">' + esc(r.nome) + '</div>' +
           '<div class="hlr-tags">' +
