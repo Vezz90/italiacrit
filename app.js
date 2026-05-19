@@ -1816,35 +1816,42 @@ async function renderHome() {
     }, 190);
   };
 
-  // Category banners builder
+  // Category banners builder — photo backgrounds with oblique clip-path split
   var _catBannerDefs = [
     { label: 'ESORDIENTI', m: 'esordienti-m', f: 'esordienti-f',
-      mG: 'linear-gradient(135deg,#1e1b4b,#4f46e5)', fG: 'linear-gradient(135deg,#3b0764,#7c3aed)' },
+      photo: 'https://images.unsplash.com/photo-1571068316344-75bc76f77890?auto=format&fit=crop&w=1920&q=80',
+      mTint: 'linear-gradient(to right,rgba(15,23,42,0.82),rgba(29,78,216,0.55))',
+      fTint: 'linear-gradient(to left,rgba(15,5,25,0.82),rgba(190,24,93,0.55))' },
     { label: 'ALLIEVI',    m: 'allievi-m',    f: 'allievi-f',
-      mG: 'linear-gradient(135deg,#052e16,#16a34a)', fG: 'linear-gradient(135deg,#3b0764,#7c3aed)' },
+      photo: 'https://images.unsplash.com/photo-1558618666-fcd25c85cd64?auto=format&fit=crop&w=1920&q=80',
+      mTint: 'linear-gradient(to right,rgba(5,46,22,0.82),rgba(22,163,74,0.55))',
+      fTint: 'linear-gradient(to left,rgba(59,7,100,0.82),rgba(147,51,234,0.55))' },
     { label: 'JUNIORES',   m: 'juniores-m',   f: 'juniores-f',
-      mG: 'linear-gradient(135deg,#450a0a,#dc2626)', fG: 'linear-gradient(135deg,#500724,#be185d)' },
+      photo: 'https://images.unsplash.com/photo-1517649763962-0c623066013b?auto=format&fit=crop&w=1920&q=80',
+      mTint: 'linear-gradient(to right,rgba(69,10,10,0.82),rgba(220,38,38,0.55))',
+      fTint: 'linear-gradient(to left,rgba(80,7,36,0.82),rgba(219,39,119,0.55))' },
     { label: 'ELITE / U23', m: 'elite-m',     f: 'elite-f',
-      mG: 'linear-gradient(135deg,#451a03,#b45309)', fG: 'linear-gradient(135deg,#500724,#e11d48)' }
+      photo: 'https://images.unsplash.com/photo-1541625602330-2277a4c46182?auto=format&fit=crop&w=1920&q=80',
+      mTint: 'linear-gradient(to right,rgba(69,26,3,0.82),rgba(180,83,9,0.55))',
+      fTint: 'linear-gradient(to left,rgba(80,7,36,0.82),rgba(225,29,72,0.55))' }
   ];
   const catBannersHtml = '<section class="cat-banners">' +
     _catBannerDefs.map(function(d) {
       var mOn = activeHub && activeHub._code === d.m ? ' cat-banner-on' : '';
       var fOn = activeHub && activeHub._code === d.f ? ' cat-banner-on' : '';
+      var mBg = d.mTint + ', url(' + d.photo + ')';
+      var fBg = d.fTint + ', url(' + d.photo + ')';
       return '<div class="cat-banner">' +
-        '<div class="cat-banner-half cat-banner-m' + mOn + '" style="background:' + d.mG + '" data-hub="' + d.m + '" onclick="window._heroSetContext(this.dataset.hub)">' +
+        '<div class="cat-banner-half cat-banner-m' + mOn + '" style="background-image:' + mBg + '" data-hub="' + d.m + '" onclick="window._heroSetContext(this.dataset.hub)">' +
           '<div class="cbi">' +
             '<div class="cbi-text">' +
               '<span class="cbi-name">' + d.label + '</span>' +
               '<span class="cbi-gender">&#9794; Maschile</span>' +
             '</div>' +
-            '<span class="cbi-arrow">&#8594;</span>' +
           '</div>' +
         '</div>' +
-        '<div class="cat-banner-slash">/</div>' +
-        '<div class="cat-banner-half cat-banner-f' + fOn + '" style="background:' + d.fG + '" data-hub="' + d.f + '" onclick="window._heroSetContext(this.dataset.hub)">' +
-          '<div class="cbi cbi-r">' +
-            '<span class="cbi-arrow">&#8592;</span>' +
+        '<div class="cat-banner-half cat-banner-f' + fOn + '" style="background-image:' + fBg + '" data-hub="' + d.f + '" onclick="window._heroSetContext(this.dataset.hub)">' +
+          '<div class="cbi-r">' +
             '<div class="cbi-text cbi-text-r">' +
               '<span class="cbi-name">' + d.label + '</span>' +
               '<span class="cbi-gender">&#9792; Femminile</span>' +
