@@ -701,6 +701,7 @@ function setPage(html) {
     window.homeHeroInterval = null;
   }
   app.innerHTML = `<main class="page page-enter">${html}</main>`;
+  window.scrollTo({ top: 0, behavior: 'instant' });
   updateNavContextChip();
 }
 
@@ -1461,8 +1462,7 @@ window._entrySkip = function() {
 };
 
 window.openContextSwitcher = function() {
-  _entryHideShell();
-  renderEntry();
+  window.clearHubFilter();
 };
 
 function _routeEntryGate() {

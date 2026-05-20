@@ -186,6 +186,8 @@ table, .rank-num, .rank-pts, .cat-pts,
   font-weight: 600;
 }
 
+.nav-search-wrap { margin-left: 20px; }
+
 #nav-search {
   background: rgba(255,255,255,0.08);
   border: 1px solid rgba(255,255,255,0.12);
