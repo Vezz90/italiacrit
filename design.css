@@ -133,8 +133,6 @@ table, .rank-num, .rank-pts, .cat-pts,
 
 .nav-logo-img {
   height: 52px;
-  mix-blend-mode: screen;
-  filter: invert(1) hue-rotate(180deg);
 }
 
 .nav-sep {
@@ -3297,8 +3295,6 @@ div[style*="grid-template-columns: repeat(auto-fit"] {
   width: auto;
   display: block;
   margin: 0 0 16px;
-  mix-blend-mode: screen;
-  filter: invert(1) hue-rotate(180deg);
 }
 
 .em-subtitle {

@@ -155,8 +155,6 @@ img { max-width: 100%; display: block; }
   object-fit: contain;
   display: block;
   transition: opacity 0.2s;
-  mix-blend-mode: screen;
-  filter: invert(1) hue-rotate(180deg);
 }
 .nav-logo:hover .nav-logo-img { opacity: 0.8; }
 .nav-sep {

@@ -547,6 +547,42 @@ const footer_update = document.getElementById('footer-update');
 
 let globalData = null;
 
+// ── Rimuovi sfondo bianco dai loghi via Canvas ───────────────────
+function _removeLogoBg(img, tolerance) {
+  tolerance = tolerance == null ? 28 : tolerance;
+  if (!img || img.getAttribute('data-nobg')) return;
+  img.setAttribute('data-nobg', '1');
+  function process() {
+    var w = img.naturalWidth, h = img.naturalHeight;
+    if (!w || !h) return;
+    var canvas = document.createElement('canvas');
+    canvas.width = w; canvas.height = h;
+    var ctx = canvas.getContext('2d');
+    ctx.drawImage(img, 0, 0);
+    try {
+      var id = ctx.getImageData(0, 0, w, h), d = id.data;
+      for (var i = 0; i < d.length; i += 4) {
+        var r = d[i], g = d[i+1], b = d[i+2];
+        // pixel "bianco" = tutti i canali vicini a 255
+        if (r >= 255-tolerance && g >= 255-tolerance && b >= 255-tolerance) {
+          // alpha proporzionale a quanto è lontano dal bianco puro (bordi morbidi)
+          var dist = Math.max(255-r, 255-g, 255-b);
+          d[i+3] = Math.min(d[i+3], Math.round(dist * (255 / tolerance)));
+        }
+      }
+      ctx.putImageData(id, 0, 0);
+      img.src = canvas.toDataURL('image/png');
+    } catch(e) { /* CORS fallback — skip */ }
+  }
+  if (img.complete && img.naturalWidth) { process(); }
+  else { img.addEventListener('load', process, { once: true }); }
+}
+
+function applyAllLogoTransparency() {
+  document.querySelectorAll('.nav-logo-img:not([data-nobg]), .em-hero-logo:not([data-nobg])')
+    .forEach(function(img) { _removeLogoBg(img); });
+}
+
 window.addEventListener('hashchange', route);
 window.addEventListener('load', async () => {
   globalData = await loadAll();
@@ -555,6 +591,7 @@ window.addEventListener('load', async () => {
   document.getElementById('initial-loader')?.remove();
   initTheme();
   route();
+  applyAllLogoTransparency();
   initSearch();
   initMobileMenu();
 
@@ -699,9 +736,9 @@ function setPage(html) {
     clearInterval(window.homeHeroInterval);
     window.homeHeroInterval = null;
   }
-  const _fb = '';
-  app.innerHTML = `<main class="page page-enter">${_fb}${html}</main>`;
+  app.innerHTML = `<main class="page page-enter">${html}</main>`;
   updateNavContextChip();
+  applyAllLogoTransparency();
 }
 
 
