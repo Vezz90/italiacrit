@@ -1395,6 +1395,7 @@ function _itcBuildGate() {
 function showCinematicEntry(asOverlay) {
   if (document.getElementById('itc-gate')) return; // already open
   _entryHideShell();
+  document.body.style.overflow = 'hidden';
 
   var gate = document.createElement('div');
   gate.id  = 'itc-gate';
@@ -1422,6 +1423,7 @@ function _itcClose(hubCode) {
 
   setTimeout(function() {
     _entryShowShell();
+    document.body.style.overflow = '';
     if (gate.parentNode) gate.parentNode.removeChild(gate);
     if (hubCode) {
       window.location.hash = '#/hub/' + hubCode + '/';
@@ -1529,6 +1531,7 @@ function _buildPickerRows(gender) {
 
 function showCategoryPicker() {
   if (document.getElementById('itc-picker')) return;
+  document.body.style.overflow = 'hidden';
 
   var el = document.createElement('div');
   el.id = 'itc-picker';
@@ -1567,6 +1570,7 @@ window._closePicker = function() {
   if (!p) return;
   p.classList.remove('itc-picker--in');
   p.classList.add('itc-picker--out');
+  document.body.style.overflow = '';
   setTimeout(function() { if (p.parentNode) p.parentNode.removeChild(p); }, 340);
 };
 
@@ -4185,6 +4189,16 @@ let calQCat    = '';
 let calQMonth  = '';
 let calQRegione = '';
 
+// Deriva il genere da campo categoria/nome (il JSON calendar non ha campo genere)
+function _calDeriveGender(g) {
+  const t = ((g.categoria || '') + ' ' + (g.nome || '')).toLowerCase();
+  if (/donne|femmin|women/.test(t)) return 'F';
+  if (/maschile/.test(t)) return 'M';
+  // gare promiscue / professionistiche senza genere → mostra sempre
+  if (/promiscua|multicategor|pista pi|coppa nazioni|world tour|proseries|classe 1 pro|uci pro|2\.cup/.test(t)) return '';
+  return 'M'; // default: maschile per categorie agonistiche senza prefisso
+}
+
 async function renderCalendario() {
   if (!globalData) return;
   const { calendar, resultsRaw } = globalData;
@@ -4218,11 +4232,16 @@ async function renderCalendario() {
     const today = new Date().toISOString().split('T')[0];
 
     let filtered = calendar
-      .filter(g => !calQGenere || g.genere === calQGenere)
+      .filter(g => {
+        if (!calQGenere) return true;
+        const gn = _calDeriveGender(g);
+        return gn === '' || gn === calQGenere; // '' = gara promiscua/pro → sempre visibile
+      })
       .filter(g => {
         if (!calQCat) return true;
         const cat = (g.categoria || '').toLowerCase();
         if (calQCat === 'elite') return cat.includes('elite') || cat.includes('under');
+        if (calQCat === 'alliev') return cat.includes('alliev') || cat.includes('alliev');
         return cat.includes(calQCat);
       })
       .filter(g => !calQRegione || g.regione === calQRegione)
