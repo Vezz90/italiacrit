@@ -566,12 +566,10 @@ window.addEventListener('load', async () => {
     showCinematicEntry(false);
   }
 
-  // Logo click: se siamo in modalità hub → torna alla home generale
+  // Logo click: apre sempre la schermata cinematografica di selezione
   document.getElementById('nav-logo-link')?.addEventListener('click', function(e) {
-    if (activeHub) {
-      e.preventDefault();
-      window.clearHubFilter();
-    }
+    e.preventDefault();
+    showCinematicEntry(true);
   });
 
   // --- Sistema di AUTO-POLLING ---
@@ -1511,8 +1509,79 @@ window._itcBack = function() {
 // ── Skip (no category) ───────────────────────────────────────────
 window._itcSkip = function() { _itcClose(null); };
 
-// ── Public: reopen from chip ─────────────────────────────────────
-window.openContextSwitcher = function() { showCinematicEntry(true); };
+// ── Public: reopen from chip → compact picker ────────────────────
+window.openContextSwitcher = function() { showCategoryPicker(); };
+
+// ════════════════════════════════════════════════════════════════════
+//  CATEGORY PICKER — compact drawer for in-session category switch
+// ════════════════════════════════════════════════════════════════════
+
+function _buildPickerRows(gender) {
+  return ENTRY_CATS[gender].map(function(c) {
+    var on = activeHub && activeHub._code === c.code;
+    return '<div class="itc-pk-row' + (on ? ' itc-pk-row--on' : '') + '" style="--cc:' + c.color + '" onclick="window._itcPickCat(\'' + c.code + '\')">' +
+      '<span class="itc-pk-dot" style="background:' + c.color + '"></span>' +
+      '<span class="itc-pk-name">' + c.label + '</span>' +
+      (on ? '<span class="itc-pk-cur">●</span>' : '<span class="itc-pk-arr">&#8594;</span>') +
+    '</div>';
+  }).join('');
+}
+
+function showCategoryPicker() {
+  if (document.getElementById('itc-picker')) return;
+
+  var el = document.createElement('div');
+  el.id = 'itc-picker';
+  el.className = 'itc-picker';
+  el.innerHTML =
+    '<div class="itc-pk-panel" id="itc-pk-panel">' +
+      '<div class="itc-pk-head">' +
+        '<span class="itc-pk-title">CAMBIA CATEGORIA</span>' +
+        '<button class="itc-pk-close" onclick="window._closePicker()">&#10005;</button>' +
+      '</div>' +
+      '<div class="itc-pk-body">' +
+        '<div class="itc-pk-section">' +
+          '<div class="itc-pk-shdr itc-pk-M">&#9794; UOMINI</div>' +
+          _buildPickerRows('M') +
+        '</div>' +
+        '<div class="itc-pk-sep"></div>' +
+        '<div class="itc-pk-section">' +
+          '<div class="itc-pk-shdr itc-pk-F">&#9792; DONNE</div>' +
+          _buildPickerRows('F') +
+        '</div>' +
+      '</div>' +
+      '<button class="itc-pk-all" onclick="window._itcPickCat(null)">Esplora tutto il ciclismo &#8594;</button>' +
+    '</div>';
+
+  document.body.appendChild(el);
+  el.addEventListener('click', function(e) {
+    if (e.target === el) window._closePicker();
+  });
+  requestAnimationFrame(function() {
+    requestAnimationFrame(function() { el.classList.add('itc-picker--in'); });
+  });
+}
+
+window._closePicker = function() {
+  var p = document.getElementById('itc-picker');
+  if (!p) return;
+  p.classList.remove('itc-picker--in');
+  p.classList.add('itc-picker--out');
+  setTimeout(function() { if (p.parentNode) p.parentNode.removeChild(p); }, 340);
+};
+
+window._itcPickCat = function(hubCode) {
+  window._closePicker();
+  setTimeout(function() {
+    if (!hubCode) { window.clearHubFilter(); return; }
+    if (!HUB_CONFIG[hubCode]) return;
+    activeHub = Object.assign({}, HUB_CONFIG[hubCode]);
+    activeHub._code = hubCode;
+    applyHubFilters(activeHub);
+    try { localStorage.setItem('itcContext', hubCode); } catch(e) {}
+    window.location.hash = '#/hub/' + hubCode + '/';
+  }, 260);
+};
 
 function _routeEntryGate() {
   // Legacy — kept for compatibility but gate is now shown from load handler
