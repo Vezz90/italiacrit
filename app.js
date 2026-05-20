@@ -699,13 +699,7 @@ function setPage(html) {
     clearInterval(window.homeHeroInterval);
     window.homeHeroInterval = null;
   }
-  const _fb = (typeof activeHub !== 'undefined' && activeHub)
-    ? '<div class="global-filter-bar" style="--hub-color:' + activeHub.color + '">' +
-        '<span class="gfb-dot"></span>' +
-        '<span class="gfb-label">' + activeHub.icon + ' ' + activeHub.label + '</span>' +
-        '<button class="gfb-clear" onclick="window.clearHubFilter()">✕ Tutto</button>' +
-      '</div>'
-    : '';
+  const _fb = '';
   app.innerHTML = `<main class="page page-enter">${_fb}${html}</main>`;
   updateNavContextChip();
 }
@@ -1467,8 +1461,8 @@ window._entrySkip = function() {
 };
 
 window.openContextSwitcher = function() {
-  window.location.hash = '#/';
-  route();
+  _entryHideShell();
+  renderEntry();
 };
 
 function _routeEntryGate() {
@@ -2019,7 +2013,7 @@ async function renderHome() {
     <div class="em-hero-content em-hero-content--centered">
       <div class="em-hero-left">
         <div class="em-eyebrow">IL CICLISMO AGONISTICO ITALIANO</div>
-        <h1 class="em-title">ITALIA<span class="em-title-red">CRIT</span></h1>
+        <img src="assets/logo.jpeg" class="em-hero-logo" alt="ItaliacritResultati" />
         <p class="em-subtitle">Classifiche &middot; Risultati &middot; Storie &middot; Statistiche</p>
       </div>
     </div>

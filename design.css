@@ -133,6 +133,8 @@ table, .rank-num, .rank-pts, .cat-pts,
 
 .nav-logo-img {
   height: 52px;
+  mix-blend-mode: screen;
+  filter: invert(1) hue-rotate(180deg);
 }
 
 .nav-sep {
@@ -192,7 +194,7 @@ table, .rank-num, .rank-pts, .cat-pts,
   color: #ffffff;
   font-family: 'Inter', system-ui, sans-serif;
   font-size: 0.8125rem;
-  padding: 6px 12px 6px 32px;
+  padding: 6px 12px;
   border-radius: var(--r-sm);
   width: 180px;
   transition: border-color 0.15s, width 0.2s;
@@ -1454,6 +1456,16 @@ a.hcal-row:hover {
   .nav-logo-img { height: 38px; }
   #app { padding-top: var(--nav-h); }
   #nav-drawer { top: var(--nav-h); }
+
+  /* Chip si espande tra logo e search */
+  #ctx-chip {
+    flex-grow: 1;
+    order: 2;
+    margin: 0 6px;
+    min-width: 0;
+    justify-content: center;
+  }
+  #ctx-chip .ctx-chip-lbl { max-width: none; }
 
   .page { padding: 20px 16px; }
 
@@ -3278,6 +3290,17 @@ div[style*="grid-template-columns: repeat(auto-fit"] {
   margin: 0 0 14px;
 }
 .em-title-red { color: #E11D48; }
+
+/* ── Hero logo (replaces text title on home page) ───────────── */
+.em-hero-logo {
+  height: clamp(80px, 14vw, 180px);
+  width: auto;
+  display: block;
+  margin: 0 0 16px;
+  mix-blend-mode: screen;
+  filter: invert(1) hue-rotate(180deg);
+}
+
 .em-subtitle {
   font-size: 0.78rem;
   color: rgba(255,255,255,0.38);
@@ -3718,6 +3741,7 @@ div[style*="grid-template-columns: repeat(auto-fit"] {
     padding-top: 24px;
   }
   .em-title { font-size: clamp(3.2rem, 16vw, 5rem); }
+  .em-hero-logo { height: clamp(60px, 18vw, 100px); margin-bottom: 10px; }
   .em-spotlight { padding: 56px 20px; }
   .em-spot-stats { gap: 20px; flex-wrap: wrap; }
   .em-spot-name { font-size: clamp(2.5rem, 12vw, 4rem); }
