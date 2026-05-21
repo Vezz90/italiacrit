@@ -3734,14 +3734,27 @@ async function renderGara(gara_id) {
   if (!globalData) return;
   const { resultsRaw, calendar } = globalData;
 
-  const calEntry = calendar.find(g => g.id === gara_id);
-  const results = resultsRaw.filter(r => r.gara_id === gara_id).sort((a,b) => a.posizione - b.posizione);
+  // ES1/ES2 Esordienti: canonicalize to ES1 and merge both results in one page
+  const esMatch = gara_id.match(/^(.+)_ES([12])_([MF])$/);
+  let isEsordienti = false, es1GaraId = gara_id, es2GaraId = null;
+  if (esMatch) {
+    isEsordienti = true;
+    const base = esMatch[1], gender = esMatch[3];
+    es1GaraId = `${base}_ES1_${gender}`;
+    es2GaraId = `${base}_ES2_${gender}`;
+  }
+  const primaryGaraId = es1GaraId; // canonical ID for photos, videos, URL
+
+  const calEntry = calendar.find(g => g.id === primaryGaraId) || calendar.find(g => g.id === gara_id);
+  const results1 = resultsRaw.filter(r => r.gara_id === es1GaraId).sort((a,b) => a.posizione - b.posizione);
+  const results2 = isEsordienti ? resultsRaw.filter(r => r.gara_id === es2GaraId).sort((a,b) => a.posizione - b.posizione) : [];
+  const results = [...results1, ...results2];
 
   if (!results.length && !calEntry) return renderNotFound();
 
   const name = results[0]?.nome_gara || calEntry?.nome || gara_id;
   const data = results[0]?.data || calEntry?.data || '';
-  const cat  = results[0]?.categoria || calEntry?.categoria || '';
+  const cat  = isEsordienti ? 'Esordienti' : (results[0]?.categoria || calEntry?.categoria || '');
   // Usa moltiplicatore già calcolato dal scraper se disponibile
   const mult = results[0]?.moltiplicatore ||
     calEntry?.moltiplicatore ||
@@ -3752,7 +3765,7 @@ async function renderGara(gara_id) {
     );
   const tipo = results[0]?.tipo || calEntry?.tipo || 'regionale';
 
-  const tableRows = results.map(r => {
+  const _buildRows = (arr) => arr.map(r => {
     const pts = r.punti_effettivi || (BASEPTS[r.posizione]||0) * mult;
     const pClass = posClass(r.posizione);
     return `<tr>
@@ -3768,11 +3781,22 @@ async function renderGara(gara_id) {
       <td class="td-pts">${pts > 0 ? pts : '—'}</td>
     </tr>`;
   }).join('');
+  const _esCatHeader = (label) =>
+    `<tr><td colspan="7" style="background:var(--bg-card);color:var(--primary);font-family:var(--font-heading);font-weight:800;font-size:0.78rem;letter-spacing:.08em;text-transform:uppercase;padding:10px 14px;border-bottom:2px solid var(--primary)">${label}</td></tr>`;
+  let tableRows;
+  if (isEsordienti) {
+    tableRows =
+      _esCatHeader('Esordienti 1° Anno') +
+      (_buildRows(results1) || '<tr><td colspan="7" class="empty-state">Nessuna classifica disponibile</td></tr>') +
+      (results2.length ? _esCatHeader('Esordienti 2° Anno') + _buildRows(results2) : '');
+  } else {
+    tableRows = _buildRows(results);
+  }
 
-  const _calId = (globalData.garaToCalId || {})[gara_id] || gara_id;
+  const _calId = (globalData.garaToCalId || {})[primaryGaraId] || (globalData.garaToCalId || {})[gara_id] || primaryGaraId;
 
   let detailsHtml = '';
-  const _raceDetail = (globalData.raceDetails || {})[gara_id] || (globalData.raceDetails || {})[_calId];
+  const _raceDetail = (globalData.raceDetails || {})[primaryGaraId] || (globalData.raceDetails || {})[gara_id] || (globalData.raceDetails || {})[_calId];
   if (_raceDetail && _raceDetail.info) {
     const infoBlocks = _raceDetail.info.map(t => {
       let ft = t
@@ -3803,11 +3827,11 @@ async function renderGara(gara_id) {
   let racePhotosHtml = '';
   let extraVideosHtml = '';
   try {
-    const photosData = await fetch(`${API_BASE}/race-photos/${encodeURIComponent(gara_id)}`).then(r=>r.json()).catch(()=>({photos:[]}));
+    const photosData = await fetch(`${API_BASE}/race-photos/${encodeURIComponent(primaryGaraId)}`).then(r=>r.json()).catch(()=>({photos:[]}));
     const photos = photosData.photos || [];
     const user = authUser();
     const uploadBtn = user
-      ? `<button class="race-photo-upload-btn" onclick="window.openRacePhotoUpload('${esc(gara_id)}')">
+      ? `<button class="race-photo-upload-btn" onclick="window.openRacePhotoUpload('${esc(primaryGaraId)}')">
            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="17 8 12 3 7 8"/><line x1="12" y1="3" x2="12" y2="15"/></svg>
            Carica foto
          </button>`
@@ -3859,7 +3883,7 @@ async function renderGara(gara_id) {
       : (!featuredPhoto ? `<p style="color:var(--text-muted);font-size:0.875rem;margin:8px 0 0">Nessuna foto ancora. Sii il primo a condividerne una!</p>` : '');
 
     const addVideoBtn = user
-      ? `<button class="race-photo-upload-btn" onclick="window.openVideoSubmit('${esc(gara_id)}','${esc(_calId)}')">
+      ? `<button class="race-photo-upload-btn" onclick="window.openVideoSubmit('${esc(primaryGaraId)}','${esc(_calId)}')">
            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polygon points="5 3 19 12 5 21 5 3"/></svg>
            Aggiungi Video
          </button>`
@@ -3905,11 +3929,11 @@ async function renderGara(gara_id) {
     }
   } catch(e) { /* silent */ }
 
-  window._shareGaraData = {name:name,date:fmtDate(data),cat:catLabel(cat),mult:mult,tipo:tipo,results:results.slice(0,10).map(r=>({cognome:r.cognome,nome:r.nome,team:r.team,punti_effettivi:r.punti_effettivi}))};
+  window._shareGaraData = {name:name,date:fmtDate(data),cat:catLabel(cat),mult:mult,tipo:tipo,results:results1.slice(0,10).map(r=>({cognome:r.cognome,nome:r.nome,team:r.team,punti_effettivi:r.punti_effettivi}))};
 
-  // Sport Intelligence: race analysis
+  // Sport Intelligence: race analysis (use results1 = ES1 or solo results)
   const _garaLastDate = resultsRaw.reduce((max, r) => (r.data||'') > max ? r.data : max, '');
-  const top5 = results.slice(0, 5);
+  const top5 = results1.slice(0, 5);
   const participantCards = top5.map(r => {
     const mom = siMomentum(r.atleta_id, resultsRaw, _garaLastDate);
     const streak = siStreak(r.atleta_id, resultsRaw);
@@ -3925,7 +3949,7 @@ async function renderGara(gara_id) {
     <div class="si-race-participants">${participantCards}</div>
   </div>` : '';
 
-  window._currentGaraId = gara_id;
+  window._currentGaraId = primaryGaraId;
   setPage(`
     <div class="race-header">
       <div class="race-name-display">${esc(name)}</div>
@@ -3936,14 +3960,14 @@ async function renderGara(gara_id) {
         <span class="race-meta-sep">|</span>
         <span style="text-transform:capitalize">${esc(tipo)}</span>
         <span class="race-meta-sep">|</span>
-        ${badgeMult(mult, tipo, results[0]?.campionato_regionale || calEntry?.campionato_regionale, results[0]?.campionato_italiano || calEntry?.campionato_italiano)}
-        ${results[0]?.km ? `<span class="race-meta-sep">|</span><span>${esc(results[0].km)} Km</span>` : ''}
-        ${results[0]?.media ? `<span class="race-meta-sep">|</span><span>Media: ${esc(results[0].media)} Km/h</span>` : ''}
+        ${badgeMult(mult, tipo, results1[0]?.campionato_regionale || calEntry?.campionato_regionale, results1[0]?.campionato_italiano || calEntry?.campionato_italiano)}
+        ${results1[0]?.km ? `<span class="race-meta-sep">|</span><span>${esc(results1[0].km)} Km</span>` : ''}
+        ${results1[0]?.media ? `<span class="race-meta-sep">|</span><span>Media: ${esc(results1[0].media)} Km/h</span>` : ''}
       </div>
     </div>
       <div style="margin-top:12px;display:flex;gap:10px;align-items:center;flex-wrap:wrap">
         <button class="btn-share" onclick="window.triggerShareGara()"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="18" cy="5" r="3"/><circle cx="6" cy="12" r="3"/><circle cx="18" cy="19" r="3"/><line x1="8.59" y1="13.51" x2="15.42" y2="17.49"/><line x1="15.41" y1="6.51" x2="8.59" y2="10.49"/></svg> Condividi Risultati</button>
-        ${adminEditBtn('gara', gara_id)}
+        ${adminEditBtn('gara', primaryGaraId)}
       </div>
     ${racePhotosHtml}
     ${extraVideosHtml}
@@ -4137,7 +4161,7 @@ async function renderGara(gara_id) {
       if (!url) { err.textContent = 'Inserisci un URL YouTube'; err.style.display = 'block'; return; }
       btn.disabled = true; btn.textContent = 'Invio…';
       try {
-        await apiCall('/videos/submit', { method: 'POST', body: JSON.stringify({ gara_id: garaId, cal_id: calId, url, title }) });
+        await apiCall('/videos/submit', { method: 'POST', body: { gara_id: garaId, cal_id: calId, url, title } });
         document.querySelector('[style*="position:fixed"][style*="9999"]')?.remove();
         const user = authUser();
         alert(user?.role === 'admin' ? 'Video pubblicato!' : 'Video inviato! Sarà visibile dopo approvazione.');
@@ -5589,9 +5613,11 @@ async function renderRisultati() {
     // Normalizza ES1 e ES2 alla stessa chiave (gareggiano insieme)
     const eventKey = (r.gara_id || '').replace(/_ES[12]_([MF])$/, '_ES_$1')
                      || (r.nome_gara.trim().toUpperCase() + '|' + r.data + '|' + (r.genere||'M'));
+    // For ES1/ES2: canonical id always uses ES1 so the race page link is consistent
+    const canonicalGaraId = (r.gara_id || '').replace(/_ES[12]_([MF])$/, '_ES1_$1') || r.gara_id;
     if (!eventMap[eventKey]) {
       eventMap[eventKey] = {
-        id: r.gara_id,
+        id: canonicalGaraId,
         nome: r.nome_gara,
         data: r.data,
         genere: r.genere,
