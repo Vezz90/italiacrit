@@ -1977,6 +1977,56 @@ function siAthleteStory(athleteId, resultsRaw) {
 }
 
 
+// ── Weekly ranking narrative ──────────────────────────────────
+function buildWeeklyNarrative(filtered, resultsRaw, catCode) {
+  const lastDate = resultsRaw.reduce((mx,r)=>(r.data||'')>mx?r.data:mx,'');
+  const cutWeek  = (()=>{ const d=new Date(lastDate||new Date()); d.setDate(d.getDate()-7); return d.toISOString().split('T')[0]; })();
+
+  const lines = [];
+
+  // Leader situation
+  if (filtered.length >= 2) {
+    const l1 = filtered[0], l2 = filtered[1];
+    const gap = l1.punti - l2.punti;
+    if (gap === 0)
+      lines.push(`${l1.cognome} e ${l2.cognome} sono a pari punti in vetta`);
+    else if (gap <= 15)
+      lines.push(`${l1.cognome} comanda con soli ${gap} punti su ${l2.cognome} — battaglia aperta`);
+    else
+      lines.push(`${l1.cognome} in testa a ${l1.punti} punti, +${gap} su ${l2.cognome}`);
+  } else if (filtered.length === 1) {
+    lines.push(`${filtered[0].cognome} al comando con ${filtered[0].punti} punti`);
+  }
+
+  // Top movers this week (trend > 0 = gained positions)
+  const risers = filtered.filter(r => (r.trend||0) >= 2).sort((a,b)=>(b.trend||0)-(a.trend||0)).slice(0,2);
+  for (const r of risers)
+    lines.push(`${r.cognome} sale di ${r.trend} posizioni e raggiunge il ${r.pos}° posto`);
+
+  // Biggest faller
+  const faller = filtered.filter(r => (r.trend||0) <= -3).sort((a,b)=>(a.trend||0)-(b.trend||0))[0];
+  if (faller)
+    lines.push(`${faller.cognome} cede ${Math.abs(faller.trend)} posizioni, ora ${faller.pos}°`);
+
+  // New entries in top 20
+  const newEntries = filtered.filter(r => r.pos <= 20 && (r.trend === null || r.trend === undefined));
+  if (newEntries.length)
+    lines.push(`Nuovi in classifica: ${newEntries.slice(0,2).map(r=>r.cognome).join(', ')}`);
+
+  // Recent race winners
+  const recentWins = resultsRaw
+    .filter(r => r.data >= cutWeek && getRankingFileCode(r) === catCode && r.posizione === 1);
+  const seenWins = new Set();
+  for (const w of recentWins) {
+    if (seenWins.has(w.atleta_id)) continue;
+    seenWins.add(w.atleta_id);
+    lines.push(`${w.cognome} ha vinto ${w.nome_gara} (${fmtDateShort(w.data)})`);
+    if (seenWins.size >= 2) break;
+  }
+
+  return lines;
+}
+
 // ── HOME ──────────────────────────────────────────────────────
 async function renderHome() {
   if (!globalData) return;
@@ -2697,41 +2747,25 @@ async function updateRankTable() {
     const _rkLastDate2 = globalData.resultsRaw.reduce((mx,r)=>(r.data||'')>mx?r.data:mx,'');
     const leaderPts    = filtered[0]?.punti || 0;
 
-    // Precompute momentum + streak for top 20
-    const _momCache2   = {};
-    const _streakCache2= {};
+    // Precompute momentum for top 20 (text only, no emoji)
+    const _momCache2 = {};
     for (const entry of filtered.slice(0, 20)) {
-      _momCache2[entry.atleta_id]    = siMomentum(entry.atleta_id, globalData.resultsRaw, _rkLastDate2);
-      _streakCache2[entry.atleta_id] = siStreak(entry.atleta_id, globalData.resultsRaw);
+      _momCache2[entry.atleta_id] = siMomentum(entry.atleta_id, globalData.resultsRaw, _rkLastDate2);
     }
 
-    // Championship battle banner
-    let champHtml = '';
-    if (filtered.length >= 2 && !isFiltered) {
-      const gap12 = (filtered[0]?.punti||0) - (filtered[1]?.punti||0);
-      const gap13 = filtered[2] ? (filtered[0]?.punti||0) - (filtered[2]?.punti||0) : null;
-      const leader = filtered[0];
-      let battleLabel = '';
-      if (gap12 === 0)       battleLabel = '<span class="rk-champ-fire">⚔ PAREGGIO IN VETTA</span>';
-      else if (gap12 < 15)   battleLabel = '<span class="rk-champ-fire">⚔ BATTAGLIA APERTA</span>';
-      else if (gap12 < 40)   battleLabel = '<span class="rk-champ-close">🔥 LOTTA SERRATA</span>';
-      const leaderMom = _momCache2[leader.atleta_id];
-      champHtml = `
-        <div class="rk-champ-banner">
-          <div class="rk-champ-leader">
-            <div class="rk-champ-crown">👑</div>
-            <div>
-              <div class="rk-champ-leader-name"><a href="#/atleta/${esc(leader.atleta_id)}">${esc(leader.cognome)} ${esc(leader.nome[0])}.</a></div>
-              <div class="rk-champ-leader-pts">${leader.punti} pt</div>
+    // Weekly storytelling banner
+    let storyHtml = '';
+    if (!isFiltered) {
+      const storyLines = buildWeeklyNarrative(filtered, globalData.resultsRaw, rankCat);
+      if (storyLines.length) {
+        storyHtml = `
+          <div class="rk-story-banner">
+            <div class="rk-story-label">NOVITÀ IN CLASSIFICA</div>
+            <div class="rk-story-lines">
+              ${storyLines.map(l => `<div class="rk-story-line">${l}</div>`).join('')}
             </div>
-          </div>
-          <div class="rk-champ-middle">
-            <div class="rk-champ-gap-label">${gap12 > 0 ? `+${gap12} sul 2°` : 'Parità'}</div>
-            ${battleLabel}
-            ${gap13 !== null && gap13 < 50 ? `<div class="rk-champ-sub">Solo ${gap13} pt tra 1° e 3°</div>` : ''}
-          </div>
-          ${leaderMom ? `<div class="rk-champ-form" style="color:${leaderMom.color}">${leaderMom.label}</div>` : ''}
-        </div>`;
+          </div>`;
+      }
     }
 
     const rows = filtered.map((r, i) => {
@@ -2740,21 +2774,18 @@ async function updateRankTable() {
       const gap    = r.pos === 1
         ? '<span class="rk-leader-badge">LEADER</span>'
         : i < 20 ? `<span class="rk-gap-label">−${leaderPts - r.punti}</span>` : '';
-      const mom    = _momCache2[r.atleta_id];
-      const str    = _streakCache2[r.atleta_id];
-      const formChip   = mom && i < 20 ? `<span class="rk-form-chip" style="color:${mom.color}">${mom.label.split(' ').slice(0,3).join(' ')}</span>` : '';
-      const streakBadge= str?.winStreak >= 2 ? `<span class="rk-streak-badge">👑${str.winStreak}W</span>` :
-                         str?.podioStreak >= 3 ? `<span class="rk-streak-badge" style="color:var(--red-hot)">🔥${str.podioStreak}P</span>` : '';
-      const nextGap = filtered[i+1] ? r.punti - filtered[i+1].punti : null;
-      const battleDot = nextGap !== null && nextGap <= 10 && r.pos > 1 ? '<span class="rk-battle-dot" title="Battaglia serrata con il successivo">⚡</span>' : '';
+      const mom = _momCache2[r.atleta_id];
+      // Strip emoji from label — take everything after the first word (which is always an emoji)
+      const formText = mom ? mom.label.split(' ').slice(1).join(' ') : '';
+      const formChip = formText && i < 20 ? `<span class="rk-form-chip" style="color:${mom.color}">${formText}</span>` : '';
       return `<tr class="ranking-row ${tier}" style="animation-delay:${Math.min(i,20)*30}ms">
         <td><span class="rank-num ${pClass}">${r.pos}</span></td>
-        <td style="text-align:center;width:40px">${renderTrend(r)}${battleDot}</td>
+        <td style="text-align:center;width:40px">${renderTrend(r)}</td>
         <td>
           <div class="rk-athlete-cell">
             <span class="rank-name"><a href="#/atleta/${esc(r.atleta_id)}">${esc(r.cognome)} ${esc(r.nome)}</a></span>
             <div class="td-team-mobile"><a href="#/team/${esc(r.team_id)}" style="color:var(--text-secondary)">${esc(r.team_nome)}</a></div>
-            ${formChip || streakBadge ? `<div class="rk-chips">${formChip}${streakBadge}</div>` : ''}
+            ${formChip ? `<div class="rk-chips">${formChip}</div>` : ''}
           </div>
         </td>
         <td class="hide-mobile"><a href="#/team/${esc(r.team_id)}" style="color:var(--text-secondary);font-size:.85rem">${esc(r.team_nome)}</a></td>
@@ -2765,29 +2796,20 @@ async function updateRankTable() {
           </div>
         </td>
         <td class="r hide-mobile" style="color:var(--text-secondary);font-family:var(--font-mono);font-size:.85rem">${r.gare||0}</td>
-        <td class="hide-mobile">
-          <div class="td-p-wrap">
-            <span class="td-p p1" title="Vittorie">${r.p1||0}</span>
-            <span class="td-p p2" title="Secondi Posti">${r.p2||0}</span>
-            <span class="td-p p3" title="Terzi Posti">${r.p3||0}</span>
-            <span class="td-p pout" title="Piazzamenti 4-10">${r.pout||0}</span>
-          </div>
-        </td>
       </tr>`;
     }).join('');
 
-    tableHtml = champHtml + `
+    tableHtml = storyHtml + `
       <table class="ranking-table">
         <thead><tr>
           <th style="width:50px">POS</th>
-          <th style="width:40px" title="Trend (Progressione in classifica)">↕</th>
+          <th style="width:40px" title="Variazione">↕</th>
           <th>ATLETA</th>
           <th class="hide-mobile">TEAM</th>
           <th class="r">PUNTI</th>
           <th class="r hide-mobile">GARE</th>
-          <th class="hide-mobile">PODI / TOP10</th>
         </tr></thead>
-        <tbody>${rows || '<tr><td colspan="7" class="empty-state">Nessun dato</td></tr>'}</tbody>
+        <tbody>${rows || '<tr><td colspan="6" class="empty-state">Nessun dato</td></tr>'}</tbody>
       </table>`;
 
   } else {
@@ -2840,14 +2862,6 @@ async function updateRankTable() {
         <td style="text-align:center;width:40px">${renderTrend(t, false)}</td>
         <td><span class="rank-name"><a href="#/team/${esc(t.team_id)}">${esc(t.team_nome)}</a></span></td>
         <td class="r"><span class="rank-pts">${t.punti}</span></td>
-        <td class="hide-mobile">
-          <div class="td-p-wrap">
-            <span class="td-p p1">${t.p1||0}</span>
-            <span class="td-p p2">${t.p2||0}</span>
-            <span class="td-p p3">${t.p3||0}</span>
-            <span class="td-p pout">${t.pout||0}</span>
-          </div>
-        </td>
         <td class="r hide-mobile" style="font-family:var(--font-mono);font-size:.85rem;color:var(--text-muted)">${t.n_atleti||0}</td>
       </tr>`;
     }).join('');
@@ -2856,10 +2870,9 @@ async function updateRankTable() {
       <table class="ranking-table">
         <thead><tr>
           <th style="width:50px">POS</th>
-          <th style="width:40px" title="Trend">↕</th>
+          <th style="width:40px" title="Variazione">↕</th>
           <th>TEAM</th>
           <th class="r">PUNTI</th>
-          <th class="hide-mobile">PODI / TOP10</th>
           <th class="r hide-mobile">ATLETI</th>
         </tr></thead>
         <tbody>${rows || '<tr><td colspan="5" class="empty-state">Nessun dato</td></tr>'}</tbody>
@@ -3765,10 +3778,17 @@ async function renderTeam(team_id) {
   // Top performers — per categoria selezionata
   const catPerfMap = {};
   for (const r of catRisultati) {
-    if (!catPerfMap[r.atleta_id]) catPerfMap[r.atleta_id] = { id:r.atleta_id, cognome:r.cognome, nome:r.nome, pts:0, wins:0, podi:0 };
-    catPerfMap[r.atleta_id].pts  += r.punti_effettivi||0;
+    if (!catPerfMap[r.atleta_id]) {
+      const ath = athletes[r.atleta_id] || {};
+      catPerfMap[r.atleta_id] = {
+        id: r.atleta_id,
+        cognome: ath.cognome || r.atleta_cognome || r.cognome || '',
+        nome:    ath.nome    || r.atleta_nome    || r.nome    || '',
+        pts: 0, wins: 0
+      };
+    }
+    catPerfMap[r.atleta_id].pts += r.punti_effettivi||0;
     if (r.posizione === 1) catPerfMap[r.atleta_id].wins++;
-    if (r.posizione <= 3) catPerfMap[r.atleta_id].podi++;
   }
   const topPerformers = Object.values(catPerfMap).sort((a,b) => b.pts - a.pts).slice(0, 6);
   const _rankAccents = ['var(--gold)','var(--silver)','var(--bronze)','var(--text-muted)','var(--text-muted)','var(--text-muted)'];
@@ -3780,7 +3800,6 @@ async function renderTeam(team_id) {
       </div>
       <div class="team-perf-right">
         <div class="team-perf-pts">${p.pts}<small>pts</small></div>
-        ${p.wins > 0 ? `<div class="team-perf-wins">🏆 ${p.wins}</div>` : ''}
       </div>
     </div>`;
   }).join('') : '<div class="empty-state">Nessun risultato stagionale</div>';

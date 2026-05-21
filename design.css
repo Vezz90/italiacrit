@@ -4714,87 +4714,36 @@ div[style*="grid-template-columns: repeat(auto-fit"] {
   color: var(--text-primary);
 }
 
-/* ── Championship banner ─────────────────────────────────────── */
-.rk-champ-banner {
-  display: flex;
-  align-items: center;
-  gap: 20px;
-  background: linear-gradient(135deg, var(--bg-card) 0%, var(--bg-secondary) 100%);
+/* ── Weekly ranking story banner ─────────────────────────────── */
+.rk-story-banner {
+  background: var(--bg-card);
   border: 1px solid var(--border-subtle);
-  border-left: 3px solid var(--gold);
+  border-left: 3px solid var(--red-hot);
   border-radius: 10px;
-  padding: 14px 20px;
+  padding: 14px 18px 16px;
   margin-bottom: 16px;
-  flex-wrap: wrap;
 }
-.rk-champ-leader {
-  display: flex;
-  align-items: center;
-  gap: 10px;
-  flex-shrink: 0;
-}
-.rk-champ-crown { font-size: 1.6rem; line-height: 1; }
-.rk-champ-leader-name {
+.rk-story-label {
   font-family: var(--font-heading);
-  font-size: 0.9rem;
-  font-weight: 800;
-  letter-spacing: 0.04em;
+  font-size: 0.6rem;
+  font-weight: 700;
+  letter-spacing: 0.14em;
   text-transform: uppercase;
-}
-.rk-champ-leader-name a { color: var(--gold); text-decoration: none; }
-.rk-champ-leader-name a:hover { text-decoration: underline; }
-.rk-champ-leader-pts {
-  font-size: 0.72rem;
   color: var(--text-muted);
-  margin-top: 2px;
+  margin-bottom: 10px;
 }
-.rk-champ-middle {
-  flex: 1;
-  min-width: 120px;
-}
-.rk-champ-gap-label {
-  font-size: 0.8rem;
-  font-weight: 700;
+.rk-story-lines { display: flex; flex-direction: column; gap: 6px; }
+.rk-story-line {
+  font-size: 0.82rem;
   color: var(--text-secondary);
+  line-height: 1.4;
+  padding-left: 10px;
+  border-left: 2px solid var(--border-subtle);
 }
-.rk-champ-fire {
-  display: inline-block;
-  font-family: var(--font-heading);
-  font-size: 0.62rem;
-  font-weight: 800;
-  letter-spacing: 0.1em;
-  padding: 3px 10px;
-  border-radius: 20px;
-  background: rgba(239,68,68,0.12);
-  color: var(--red-hot);
-  border: 1px solid rgba(239,68,68,0.25);
-  margin-left: 8px;
-}
-.rk-champ-close {
-  display: inline-block;
-  font-family: var(--font-heading);
-  font-size: 0.62rem;
-  font-weight: 800;
-  letter-spacing: 0.1em;
-  padding: 3px 10px;
-  border-radius: 20px;
-  background: rgba(245,158,11,0.12);
-  color: #f59e0b;
-  border: 1px solid rgba(245,158,11,0.25);
-  margin-left: 8px;
-}
-.rk-champ-sub {
-  font-size: 0.65rem;
-  color: var(--text-muted);
-  margin-top: 3px;
-}
-.rk-champ-form {
-  font-family: var(--font-heading);
-  font-size: 0.72rem;
-  font-weight: 700;
-  letter-spacing: 0.04em;
-  text-align: right;
-  flex-shrink: 0;
+.rk-story-line:first-child {
+  color: var(--text-primary);
+  font-weight: 600;
+  border-left-color: var(--red-hot);
 }
 
 /* ── Ranking row tiers (emotional hierarchy) ─────────────────── */
