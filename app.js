@@ -995,20 +995,42 @@ async function renderHubHome(hubCode) {
   function buildSpotlightHtml(ath, streak, catCode) {
     if (!ath) return '<section class="em-spotlight em-spotlight--half">' +
       '<div class="em-spotlight-body">' +
-        '<div class="em-spot-meta"><span class="em-spot-badge">🔥 RIDER ON FIRE</span>' +
+        '<div class="em-spot-meta"><span class="em-spot-badge">RIDER ON FIRE</span>' +
         '<span class="em-spot-cat">' + catLabel(catCode) + '</span></div>' +
         '<p style="color:rgba(255,255,255,0.3);font-size:0.82rem;margin-top:12px">Nessun dato recente</p>' +
       '</div></section>';
+
+    // Ranking context: find this athlete in the hub ranking for this catCode
+    const spotRankEntry = (catCode === hub.mainCat ? hubRanking : (hubRankingES1||[])).find(function(e){ return e.atleta_id === ath.atleta_id; });
+    const spotLeader    = (catCode === hub.mainCat ? hubRanking : (hubRankingES1||[]))[0];
+    let rankContextHtml = '';
+    if (spotRankEntry && spotLeader) {
+      const spotPos = spotRankEntry.pos || (spotRankEntry === spotLeader ? 1 : '?');
+      const spotGap = spotLeader.punti - spotRankEntry.punti;
+      if (spotGap === 0)
+        rankContextHtml = '<div class="em-spot-rank-ctx em-spot-rank-leader">LEADER IN CLASSIFICA · ' + spotRankEntry.punti + ' PT</div>';
+      else
+        rankContextHtml = '<div class="em-spot-rank-ctx">' + spotPos + '° IN CLASSIFICA · −' + spotGap + ' DAL LEADER</div>';
+    }
+
+    // Streak context line
+    let streakCtx = '';
+    if (streak && streak.winStreak >= 2)
+      streakCtx = '<div class="em-spot-streak">' + streak.winStreak + ' VITTORIE CONSECUTIVE</div>';
+    else if (streak && streak.podiumStreak >= 3)
+      streakCtx = '<div class="em-spot-streak">' + streak.podiumStreak + ' PODI DI FILA</div>';
+
     return '<section class="em-spotlight em-spotlight--half">' +
       '<div class="em-spotlight-bg-name">' + esc(ath.cognome) + '</div>' +
       '<div class="em-spotlight-body">' +
         '<div class="em-spot-meta">' +
-          '<span class="em-spot-badge">🔥 RIDER ON FIRE</span>' +
+          '<span class="em-spot-badge">RIDER ON FIRE</span>' +
           '<span class="em-spot-cat">' + catLabel(catCode) + '</span>' +
-          (streak && streak.winStreak >= 2 ? '<div class="si-streak-badge">👑 ' + streak.winStreak + ' vittorie di fila</div>' : '') +
         '</div>' +
+        rankContextHtml +
         '<h2 class="em-spot-name">' + esc(ath.cognome) + '<br><span class="em-spot-firstname">' + esc(ath.nome) + '</span></h2>' +
         '<div class="em-spot-team">' + esc(ath.team||'') + '</div>' +
+        streakCtx +
         '<div class="em-spot-stats">' +
           '<div class="em-stat"><span class="em-stat-val">' + ath.pts + '</span><span class="em-stat-lbl">punti 14gg</span></div>' +
           '<div class="em-stat"><span class="em-stat-val">' + ath.wins + '</span><span class="em-stat-lbl">vittorie</span></div>' +
@@ -1069,19 +1091,37 @@ async function renderHubHome(hubCode) {
   // ── Helper: ranking section ─────────────────────────────────────
   function buildRankSection(ranking, catCode) {
     if (!ranking || !ranking.length) return '';
+    const leaderPts = ranking[0].punti;
     return '<section class="hub-ranking-section">' +
       '<div class="hub-section-header">' +
-        '<div class="hub-section-label">🏆 TOP CLASSIFICA · ' + catLabel(catCode) + '</div>' +
+        '<div class="hub-section-label">TOP CLASSIFICA · ' + catLabel(catCode) + '</div>' +
         '<a href="#/classifica" class="hub-section-more">Vedi tutto →</a>' +
       '</div>' +
       '<div class="hub-rank-list">' +
         ranking.map(function(a, i) {
+          // Persistent trend: compare rank_dopo_gara now vs 3 races ago
+          let trendHtml = '';
+          const athHist = resultsRaw
+            .filter(function(r){ return r.atleta_id === a.atleta_id && getRankingFileCode(r) === catCode && r.rank_dopo_gara; })
+            .sort(function(a,b){ return b.data.localeCompare(a.data); });
+          if (athHist.length >= 2) {
+            const rNow = athHist[0].rank_dopo_gara;
+            const rRef = athHist[Math.min(3, athHist.length-1)].rank_dopo_gara;
+            const gain = rRef - rNow;
+            if (gain >= 2)       trendHtml = '<span class="hub-rank-trend hub-rank-up">▲' + gain + '</span>';
+            else if (gain <= -2) trendHtml = '<span class="hub-rank-trend hub-rank-down">▼' + Math.abs(gain) + '</span>';
+          }
+          // Gap to leader
+          const gapHtml = i === 0
+            ? '<span class="hub-rank-leader-badge">LEADER</span>'
+            : '<span class="hub-rank-gap">−' + (leaderPts - a.punti) + '</span>';
           return '<div class="hub-rank-row' + (i===0?' hub-rank-leader':'') + '" onclick="location.hash=\'#/atleta/' + encodeURIComponent(a.atleta_id) + '\'">' +
             '<span class="hub-rank-pos' + (i===0?' hub-rank-pos-1':i===1?' hub-rank-pos-2':i===2?' hub-rank-pos-3':'') + '">' + (i+1) + '</span>' +
             '<div class="hub-rank-info">' +
-              '<div class="hub-rank-name">' + esc(a.cognome) + ' ' + esc(a.nome) + '</div>' +
+              '<div class="hub-rank-name">' + esc(a.cognome) + ' ' + esc(a.nome) + trendHtml + '</div>' +
               '<div class="hub-rank-team">' + esc(a.team_attuale||a.team||'') + '</div>' +
             '</div>' +
+            gapHtml +
             '<span class="hub-rank-pts">' + a.punti + '<small> pt</small></span>' +
           '</div>';
         }).join('') +
@@ -1094,13 +1134,39 @@ async function renderHubHome(hubCode) {
     return '<div class="hub-dual">' + (htmlA||'') + (htmlB||'') + '</div>';
   }
 
+  // ── Championship tension data (uses already-loaded top-5 ranking) ──
+  // Build a persistent-mover summary for the ticker (same logic as buildWeeklyNarrative
+  // but working on the top-5 slice so we don't need a separate full-ranking load).
+  const champMoverLines = [];
+  for (const entry of hubRanking) {
+    const athRes = resultsRaw
+      .filter(function(r){ return r.atleta_id === entry.atleta_id && getRankingFileCode(r) === hub.mainCat && r.rank_dopo_gara; })
+      .sort(function(a,b){ return b.data.localeCompare(a.data); });
+    if (athRes.length < 2) continue;
+    const rankNow = athRes[0].rank_dopo_gara;
+    const refIdx  = Math.min(3, athRes.length - 1);
+    const rankRef = athRes[refIdx].rank_dopo_gara;
+    const gain    = rankRef - rankNow;
+    if (gain >= 3)  champMoverLines.push('<strong>' + esc(entry.cognome).toUpperCase() + '</strong> sale di ' + gain + ' posizioni — ora ' + rankNow + '° in classifica');
+    if (gain <= -3) champMoverLines.push('<strong>' + esc(entry.cognome).toUpperCase() + '</strong> scende al ' + rankNow + '° posto (−' + Math.abs(gain) + ')');
+  }
+
   // ── Ticker ──────────────────────────────────────────────────────
   const tickerItems = [];
-  recentWins.slice(0, 3).forEach(function(r){ tickerItems.push('🥇 <strong>' + esc(r.cognome).toUpperCase() + '</strong> vince ' + esc(r.nome_gara||'')); });
-  if (fireAthlete && fireStreak && fireStreak.winStreak >= 2) tickerItems.push('👑 <strong>' + esc(fireAthlete.cognome).toUpperCase() + '</strong> — ' + fireStreak.winStreak + ' vittorie consecutive');
+  // 1. Classification movements (persistent movers — no race wins)
+  champMoverLines.slice(0, 2).forEach(function(l){ tickerItems.push(l); });
+  // 2. Hot streak alert
+  if (fireAthlete && fireStreak && fireStreak.winStreak >= 2) tickerItems.push('<strong>' + esc(fireAthlete.cognome).toUpperCase() + '</strong> — ' + fireStreak.winStreak + ' vittorie consecutive');
+  // 3. Upcoming race
   if (upcomingAll[0]) {
     const dys = Math.round((new Date(upcomingAll[0].data) - new Date(todayStr)) / 86400000);
-    tickerItems.push('📅 <strong>PROSSIMA' + (dys===0?' OGGI':dys===1?' DOMANI':'') + ':</strong> ' + esc(upcomingAll[0].nome));
+    tickerItems.push('PROSSIMA' + (dys===0?' OGGI':dys===1?' DOMANI':'') + ': <strong>' + esc(upcomingAll[0].nome) + '</strong>');
+  }
+  // 4. Title gap (always last as a heartbeat)
+  if (hubRanking.length >= 2) {
+    const gap12 = hubRanking[0].punti - hubRanking[1].punti;
+    if (gap12 <= 15) tickerItems.push('LOTTA AL VERTICE — <strong>' + esc(hubRanking[0].cognome) + '</strong> guida con soli ' + gap12 + ' punti di margine');
+    else tickerItems.push('CLASSIFICA — <strong>' + esc(hubRanking[0].cognome) + '</strong> in testa con ' + hubRanking[0].punti + ' pt');
   }
 
   // ── Race map — all hub races (genere + catCodes already filtered) ─
@@ -1136,6 +1202,25 @@ async function renderHubHome(hubCode) {
     }).join('');
   }
 
+  // ── Championship status line (leader + top-3 gaps) ─────────────
+  let champStatusHtml = '';
+  if (hubRanking.length >= 2) {
+    const l1 = hubRanking[0];
+    const gap12 = l1.punti - hubRanking[1].punti;
+    const l3 = hubRanking[2];
+    const tension = gap12 === 0 ? 'PARITÀ IN VETTA' : gap12 <= 10 ? 'LOTTA APERTISSIMA' : gap12 <= 30 ? 'MARGINE RISICATO' : 'LEADER IN FUGA';
+    champStatusHtml =
+      '<div class="hub-champ-status">' +
+        '<span class="hub-champ-tension">' + tension + '</span>' +
+        '<span class="hub-champ-sep" aria-hidden="true">·</span>' +
+        '<span class="hub-champ-leader">' + esc(l1.cognome) + '</span>' +
+        '<span class="hub-champ-pts">' + l1.punti + ' pt</span>' +
+        '<span class="hub-champ-divider" aria-hidden="true">|</span>' +
+        '<span class="hub-champ-rival">' + esc(hubRanking[1].cognome) + ' <em>−' + gap12 + '</em></span>' +
+        (l3 ? '<span class="hub-champ-divider" aria-hidden="true">|</span><span class="hub-champ-rival">' + esc(l3.cognome) + ' <em>−' + (l1.punti - l3.punti) + '</em></span>' : '') +
+      '</div>';
+  }
+
   // ── 1. HERO — nome categoria, layout centrato ────────────────────
   const heroHtml = '<section class="em-hero">' +
     '<div class="em-hero-content em-hero-content--centered">' +
@@ -1143,7 +1228,7 @@ async function renderHubHome(hubCode) {
         '<div class="em-eyebrow">ITALIACRIT · ' + hub.icon + ' ' + hub.label.toUpperCase() + '</div>' +
         '<h1 class="em-title hub-cat-title">' + esc(hub.label.toUpperCase()) + '</h1>' +
         '<p class="em-subtitle">' + esc(hub.desc) + '</p>' +
-        '' +
+        champStatusHtml +
       '</div>' +
     '</div>' +
     (tickerItems.length ? '<div class="em-ticker-bar"><div class="em-ticker-inner"><span class="em-ticker-track">' + [...tickerItems,...tickerItems].join(' &nbsp;&middot;&nbsp; ') + '</span></div></div>' : '') +
@@ -2021,13 +2106,12 @@ function siAthleteStory(athleteId, resultsRaw) {
 
 
 // ── Weekly ranking narrative ──────────────────────────────────
+// Movements are computed from rank_dopo_gara history (not the volatile `trend` field)
+// so they persist across multiple scraper runs, not just the last race.
 function buildWeeklyNarrative(filtered, resultsRaw, catCode) {
-  const lastDate = resultsRaw.reduce((mx,r)=>(r.data||'')>mx?r.data:mx,'');
-  const cutWeek  = (()=>{ const d=new Date(lastDate||new Date()); d.setDate(d.getDate()-7); return d.toISOString().split('T')[0]; })();
-
   const lines = [];
 
-  // 1. Vertice: describe the top-3 situation
+  // 1. Vertice: describe the top-3 title battle
   if (filtered.length >= 2) {
     const l1 = filtered[0], l2 = filtered[1], l3 = filtered[2];
     const gap12 = l1.punti - l2.punti;
@@ -2046,31 +2130,46 @@ function buildWeeklyNarrative(filtered, resultsRaw, catCode) {
     lines.push(`${filtered[0].cognome} solo al comando con ${filtered[0].punti} punti`);
   }
 
-  // 2. Rank movers — who gained/lost positions since last race
-  const risers  = filtered.filter(r => (r.trend||0) >= 2).sort((a,b)=>(b.trend||0)-(a.trend||0)).slice(0,2);
-  const fallers = filtered.filter(r => (r.trend||0) <= -2).sort((a,b)=>(a.trend||0)-(b.trend||0)).slice(0,1);
-  for (const r of risers)
-    lines.push(`${r.cognome} guadagna ${r.trend} posizioni e sale al ${r.pos}° posto`);
-  for (const r of fallers)
-    lines.push(`${r.cognome} perde ${Math.abs(r.trend)} posizion${Math.abs(r.trend)===1?'e':'i'} e scende al ${r.pos}°`);
-
-  // 3. New entries in top 15
-  const newEntries = filtered.filter(r => r.pos <= 15 && (r.trend === null || r.trend === undefined));
-  if (newEntries.length)
-    lines.push(`Nuovi in classifica: ${newEntries.slice(0,3).map(r=>`${r.cognome} (${r.pos}°)`).join(', ')}`);
-
-  // 4. Recent race results that drove ranking changes
-  const recentWins = resultsRaw.filter(r => r.data >= cutWeek && getRankingFileCode(r) === catCode && r.posizione === 1);
-  const seenWins = new Set();
-  for (const w of recentWins) {
-    if (seenWins.has(w.atleta_id)) continue;
-    seenWins.add(w.atleta_id);
-    // Find where the winner is in the ranking for context
-    const rankEntry = filtered.find(f => f.atleta_id === w.atleta_id);
-    const rankCtx = rankEntry ? ` (ora ${rankEntry.pos}° in classifica)` : '';
-    lines.push(`${w.cognome} vince ${w.nome_gara} il ${fmtDateShort(w.data)}${rankCtx}`);
-    if (seenWins.size >= 2) break;
+  // 2. Persistent rank movers — compare rank_dopo_gara now vs 3+ races ago
+  // This means movements stay visible for days, not just until the next scraper tick.
+  const movers = [];
+  for (const entry of filtered) {
+    // All results for this athlete in this category, newest first
+    const athRes = resultsRaw
+      .filter(r => r.atleta_id === entry.atleta_id && getRankingFileCode(r) === catCode && r.rank_dopo_gara)
+      .sort((a, b) => b.data.localeCompare(a.data));
+    if (athRes.length < 2) continue;
+    const rankNow = athRes[0].rank_dopo_gara;
+    // Reference point: at least 3 races back (or as many as available)
+    const refIdx  = Math.min(3, athRes.length - 1);
+    const rankRef = athRes[refIdx].rank_dopo_gara;
+    const gain    = rankRef - rankNow; // positive = moved up in classification
+    if (Math.abs(gain) >= 2) {
+      movers.push({ entry, gain, rankNow, rankRef });
+    }
   }
+  movers.sort((a, b) => Math.abs(b.gain) - Math.abs(a.gain));
+  const risers  = movers.filter(m => m.gain >= 2).slice(0, 2);
+  const fallers = movers.filter(m => m.gain <= -2).slice(0, 1);
+  for (const m of risers)
+    lines.push(`${m.entry.cognome} sale di ${m.gain} posizioni ed è ora ${m.rankNow}° in classifica`);
+  for (const m of fallers)
+    lines.push(`${m.entry.cognome} perde ${Math.abs(m.gain)} posizion${Math.abs(m.gain)===1?'e':'i'} e scende al ${m.rankNow}°`);
+
+  // 3. New entries in top 15 (athletes with very few historical results = recent arrivals)
+  const newEntries = [];
+  for (const entry of filtered) {
+    if (entry.pos > 15) continue;
+    const athRes = resultsRaw
+      .filter(r => r.atleta_id === entry.atleta_id && getRankingFileCode(r) === catCode && r.rank_dopo_gara)
+      .sort((a, b) => b.data.localeCompare(a.data));
+    // "New" = only 1 scored result, or just entered the top 15 from outside
+    if (athRes.length === 1 || (athRes.length >= 2 && athRes[1].rank_dopo_gara > 15 && athRes[0].rank_dopo_gara <= 15)) {
+      newEntries.push(entry);
+    }
+  }
+  if (newEntries.length)
+    lines.push(`Nuovi nella top-15: ${newEntries.slice(0,3).map(r=>`${r.cognome} (${r.pos}°)`).join(', ')}`);
 
   return lines;
 }

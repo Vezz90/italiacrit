@@ -7732,3 +7732,103 @@ body[data-hub] .loading-bar { background: var(--hub-color) !important; }
   .itc-picker--out .itc-pk-panel { transform: translateY(100%); }
 }
 
+/* ── Hub championship tension status line ───────────────────────
+   Lives inside .em-hero, below the subtitle.
+   Shows leader + gaps in a condensed scoreboard strip.          */
+.hub-champ-status {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 6px 10px;
+  margin-top: 14px;
+  padding: 8px 14px;
+  border: 1px solid rgba(255,255,255,.12);
+  border-radius: 6px;
+  background: rgba(0,0,0,.25);
+  backdrop-filter: blur(4px);
+  font-size: 0.72rem;
+  letter-spacing: .06em;
+  text-transform: uppercase;
+  color: rgba(255,255,255,.65);
+  max-width: 560px;
+}
+.hub-champ-tension {
+  font-weight: 900;
+  color: var(--red-hot, #E11D48);
+  letter-spacing: .1em;
+}
+.hub-champ-sep { opacity: .35; }
+.hub-champ-leader {
+  font-weight: 800;
+  color: #fff;
+  font-size: 0.78rem;
+}
+.hub-champ-pts {
+  color: var(--gold, #F59E0B);
+  font-weight: 700;
+}
+.hub-champ-divider {
+  opacity: .3;
+  margin: 0 2px;
+}
+.hub-champ-rival { color: rgba(255,255,255,.55); font-weight: 500; }
+.hub-champ-rival em { font-style: normal; color: rgba(255,255,255,.35); }
+
+/* ── Hub ranking — new inline elements ─────────────────────────  */
+.hub-rank-trend {
+  display: inline-block;
+  font-size: 0.6rem;
+  font-weight: 700;
+  vertical-align: middle;
+  margin-left: 5px;
+  padding: 1px 4px;
+  border-radius: 3px;
+  letter-spacing: .04em;
+}
+.hub-rank-up   { color: #10B981; background: rgba(16,185,129,.12); }
+.hub-rank-down { color: #EF4444; background: rgba(239,68,68,.12); }
+.hub-rank-gap {
+  font-size: 0.7rem;
+  color: var(--text-muted);
+  font-family: var(--font-display, monospace);
+  min-width: 36px;
+  text-align: right;
+  margin-right: 4px;
+}
+.hub-rank-leader-badge {
+  font-size: 0.55rem;
+  font-weight: 900;
+  letter-spacing: .09em;
+  color: var(--gold, #F59E0B);
+  border: 1px solid rgba(245,158,11,.35);
+  padding: 2px 5px;
+  border-radius: 3px;
+  margin-right: 4px;
+  text-transform: uppercase;
+}
+
+/* ── Spotlight — ranking context + streak lines ─────────────── */
+.em-spot-rank-ctx {
+  font-size: 0.62rem;
+  font-weight: 700;
+  letter-spacing: .1em;
+  text-transform: uppercase;
+  color: rgba(255,255,255,.45);
+  margin-bottom: 8px;
+}
+.em-spot-rank-leader {
+  color: var(--gold, #F59E0B);
+}
+.em-spot-streak {
+  font-size: 0.62rem;
+  font-weight: 800;
+  letter-spacing: .12em;
+  text-transform: uppercase;
+  color: var(--red-hot, #E11D48);
+  margin: 6px 0 10px;
+  padding: 4px 8px;
+  border: 1px solid rgba(225,29,72,.3);
+  border-radius: 4px;
+  display: inline-block;
+}
+
