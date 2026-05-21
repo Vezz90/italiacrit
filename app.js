@@ -3931,10 +3931,9 @@ async function renderGara(gara_id) {
 
   window._shareGaraData = {name:name,date:fmtDate(data),cat:catLabel(cat),mult:mult,tipo:tipo,results:results1.slice(0,10).map(r=>({cognome:r.cognome,nome:r.nome,team:r.team,punti_effettivi:r.punti_effettivi}))};
 
-  // Sport Intelligence: race analysis (use results1 = ES1 or solo results)
+  // Sport Intelligence: race analysis
   const _garaLastDate = resultsRaw.reduce((max, r) => (r.data||'') > max ? r.data : max, '');
-  const top5 = results1.slice(0, 5);
-  const participantCards = top5.map(r => {
+  const _makeParticipantCards = (arr) => arr.slice(0, 5).map(r => {
     const mom = siMomentum(r.atleta_id, resultsRaw, _garaLastDate);
     const streak = siStreak(r.atleta_id, resultsRaw);
     const streakBadge = streak.winStreak >= 2 ? `👑${streak.winStreak}W` : streak.podioStreak >= 2 ? `🔥${streak.podioStreak}P` : '';
@@ -3944,10 +3943,27 @@ async function renderGara(gara_id) {
       <div class="si-participant-form" style="color:${mom.color}">${mom.label.replace(/^[^ ]+ /,'')}${streakBadge ? ' · '+streakBadge : ''}</div>
     </div>`;
   }).join('');
-  const siRaceIntelHtml = top5.length ? `<div class="si-race-intel">
-    <div class="si-race-intel-title">📊 ANALISI GARA — Forma dei protagonisti</div>
-    <div class="si-race-participants">${participantCards}</div>
-  </div>` : '';
+
+  let siRaceIntelHtml = '';
+  if (isEsordienti) {
+    const cards1 = results1.length ? _makeParticipantCards(results1) : '';
+    const cards2 = results2.length ? _makeParticipantCards(results2) : '';
+    if (cards1 || cards2) {
+      siRaceIntelHtml = `<div class="si-race-intel">
+        <div class="si-race-intel-title">📊 ANALISI GARA — Forma dei protagonisti</div>
+        ${cards1 ? `<div style="font-size:0.7rem;font-weight:800;letter-spacing:.08em;text-transform:uppercase;color:var(--primary);margin:8px 0 4px">Esordienti 1° Anno</div>
+        <div class="si-race-participants">${cards1}</div>` : ''}
+        ${cards2 ? `<div style="font-size:0.7rem;font-weight:800;letter-spacing:.08em;text-transform:uppercase;color:var(--primary);margin:12px 0 4px">Esordienti 2° Anno</div>
+        <div class="si-race-participants">${cards2}</div>` : ''}
+      </div>`;
+    }
+  } else {
+    const cards = _makeParticipantCards(results1);
+    if (cards) siRaceIntelHtml = `<div class="si-race-intel">
+      <div class="si-race-intel-title">📊 ANALISI GARA — Forma dei protagonisti</div>
+      <div class="si-race-participants">${cards}</div>
+    </div>`;
+  }
 
   window._currentGaraId = primaryGaraId;
   setPage(`
