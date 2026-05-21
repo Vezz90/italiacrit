@@ -5299,11 +5299,96 @@ tr.ranking-row:not(.rk-tier-1):not(.rk-tier-top3):not(.rk-tier-top10) {
 /* ── Race narrative (risultati cards) ────────────────────────── */
 .ris-race-narrative {
   font-size: 0.8rem;
-  color: var(--text-muted);
-  font-style: italic;
-  margin: 2px 0 8px;
-  line-height: 1.4;
+  color: var(--text-secondary);
+  margin: 4px 0 10px;
+  line-height: 1.45;
+  font-weight: 500;
 }
+
+/* ── Race card tiers (visual hierarchy) ──────────────────────── */
+.ris-card-ci  { border-left: 3px solid var(--gold) !important; }
+.ris-card-cr  { border-left: 3px solid var(--red-hot) !important; }
+.ris-card-premium { border-left: 3px solid #7C3AED !important; }
+
+/* ── Importance badge ────────────────────────────────────────── */
+.ris-importance-badge {
+  display: inline-block;
+  font-family: var(--font-heading);
+  font-size: 0.55rem;
+  font-weight: 800;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  padding: 3px 9px;
+  border-radius: 4px;
+  margin-bottom: 8px;
+}
+.ris-badge-ci      { background: rgba(245,158,11,0.15); color: var(--gold);    border: 1px solid rgba(245,158,11,0.3); }
+.ris-badge-cr      { background: rgba(239,68,68,0.12);  color: var(--red-hot); border: 1px solid rgba(239,68,68,0.25); }
+.ris-badge-mult    { background: rgba(124,58,237,0.12); color: #a78bfa;        border: 1px solid rgba(124,58,237,0.25); }
+
+/* ── Cat section ─────────────────────────────────────────────── */
+.ris-cat-section { margin-bottom: 12px; }
+.ris-cat-label {
+  font-family: var(--font-heading);
+  font-size: 0.6rem;
+  font-weight: 700;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--accent);
+  margin-bottom: 6px;
+}
+.ris-tech-bit {
+  font-size: 0.7rem;
+  color: var(--text-muted);
+  font-family: var(--font-mono);
+  margin-bottom: 8px;
+}
+.ris-cat-divider {
+  border-top: 2px solid var(--border-subtle);
+  margin: 14px 0;
+}
+.ris-full-link { padding-top: 10px; margin-top: 10px; border-top: 1px solid var(--border-subtle); }
+.ris-podio-row { grid-template-columns: 32px 1fr !important; }
+.ris-podio-info { min-width: 0; }
+.ris-region-tag {
+  font-size: 0.68rem;
+  color: var(--text-muted);
+  font-family: var(--font-mono);
+  margin-left: 6px;
+}
+
+/* ── Impact strip ────────────────────────────────────────────── */
+.ris-impact-strip {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+  margin: 10px 0 8px;
+}
+.ris-insight-chip {
+  font-family: var(--font-heading);
+  font-size: 0.62rem;
+  font-weight: 700;
+  letter-spacing: 0.07em;
+  padding: 3px 9px;
+  border-radius: 12px;
+  background: var(--bg-secondary);
+  border: 1px solid var(--border-subtle);
+  color: var(--text-secondary);
+}
+.ris-chip-shakeup {
+  background: rgba(239,68,68,0.08);
+  border-color: rgba(239,68,68,0.2);
+  color: var(--red-hot);
+}
+.ris-mover {
+  font-size: 0.65rem;
+  font-weight: 700;
+  font-family: var(--font-heading);
+  padding: 3px 8px;
+  border-radius: 12px;
+}
+.ris-mover-up   { background: rgba(16,185,129,0.1); color: #10b981; border: 1px solid rgba(16,185,129,0.2); }
+.ris-mover-down { background: rgba(239,68,68,0.08); color: var(--red-hot); border: 1px solid rgba(239,68,68,0.18); }
 
 /* ── Calendario hype strip ───────────────────────────────────── */
 .cal-hype-strip {

@@ -1798,17 +1798,60 @@ function siNewsroomFeed(resultsRaw, allRankings, catOrder, topScalatori, teamDom
   return items.slice(0, 8);
 }
 
-// siRaceNarrative — auto-generate story string for a race
+// siRaceNarrative — auto-generate story string for a race (text only, no emoji)
 function siRaceNarrative(raceId, resultsRaw) {
   const results = resultsRaw.filter(r => r.gara_id === raceId && r.posizione).sort((a,b) => a.posizione - b.posizione);
   if (!results.length) return null;
   const w = results[0], p2 = results[1];
   const { winStreak, podioStreak } = siStreak(w.atleta_id, resultsRaw);
-  if (winStreak >= 3) return '👑 ' + esc(w.cognome) + ' è in striscia: ' + winStreak + 'ª vittoria di fila.';
-  if (winStreak >= 2) return '🔥 ' + esc(w.cognome) + ' non si ferma: ' + winStreak + ' vittorie consecutive.';
-  if (podioStreak >= 4) return '📈 ' + esc(w.cognome) + ' inarrestabile — ' + podioStreak + ' podi di fila.';
-  if (p2 && Math.abs((w.punti_effettivi||0)-(p2.punti_effettivi||0)) <= 2) return '⚡ Duello al limite: ' + esc(w.cognome) + ' batte ' + esc(p2.cognome) + ' per pochissimi punti.';
-  return '🥇 Vince ' + esc(w.cognome) + ' ' + esc(w.nome) + (p2 ? ' davanti a ' + esc(p2.cognome) : '') + '.';
+  if (winStreak >= 3) return esc(w.cognome) + ' è in striscia: ' + winStreak + 'ª vittoria di fila.';
+  if (winStreak >= 2) return esc(w.cognome) + ' non si ferma: ' + winStreak + ' vittorie consecutive.';
+  if (podioStreak >= 4) return esc(w.cognome) + ' inarrestabile — ' + podioStreak + ' podi di fila.';
+  if (p2 && Math.abs((w.punti_effettivi||0)-(p2.punti_effettivi||0)) <= 2) return 'Duello al limite: ' + esc(w.cognome) + ' batte ' + esc(p2.cognome) + ' per pochissimi punti.';
+  return 'Vince ' + esc(w.cognome) + ' ' + esc(w.nome) + (p2 ? ' davanti a ' + esc(p2.cognome) : '') + '.';
+}
+
+// siRaceImpact — compute race impact: insight chip + ranking movers
+function siRaceImpact(catResults, resultsRaw) {
+  if (!catResults || !catResults.length) return null;
+  const sorted  = [...catResults].sort((a,b) => a.posizione - b.posizione);
+  const winner  = sorted[0];
+  const second  = sorted[1];
+  const raceDate = winner?.data || '';
+  const catCode  = winner ? getRankingFileCode(winner) : null;
+
+  // Insight chip: race type label
+  const { winStreak, podioStreak } = winner ? siStreak(winner.atleta_id, resultsRaw) : { winStreak:0, podioStreak:0 };
+  const ptsDiff = (winner && second) ? Math.abs((winner.punti_effettivi||0) - (second.punti_effettivi||0)) : null;
+
+  let insight = null;
+  if (winStreak >= 3)         insight = 'Dominatore — ' + winStreak + 'ª vittoria consecutiva';
+  else if (winStreak >= 2)    insight = 'Striscia vincente — ' + winStreak + ' di fila';
+  else if (podioStreak >= 3)  insight = 'In grande forma — ' + podioStreak + ' podi consecutivi';
+  else if (ptsDiff !== null && ptsDiff <= 3) insight = 'Volata ristretta';
+  else if (ptsDiff !== null && ptsDiff >= 25) insight = 'Vittoria netta';
+
+  // Ranking movers: compare rank_dopo_gara vs previous rank
+  const gainers = [];
+  for (const r of sorted.slice(0, 12)) {
+    if (!r.atleta_id || !r.rank_dopo_gara) continue;
+    const prevRes = resultsRaw.filter(x =>
+      x.atleta_id === r.atleta_id &&
+      x.data < raceDate &&
+      x.rank_dopo_gara &&
+      catCode && getRankingFileCode(x) === catCode
+    ).sort((a,b) => b.data.localeCompare(a.data))[0];
+    if (prevRes?.rank_dopo_gara) {
+      const gain = prevRes.rank_dopo_gara - r.rank_dopo_gara; // positive = moved up
+      if (gain !== 0) gainers.push({ cognome: r.cognome, nome: r.nome, atleta_id: r.atleta_id, gain, newRank: r.rank_dopo_gara });
+    }
+  }
+  gainers.sort((a,b) => b.gain - a.gain);
+  const topGainer = gainers[0]?.gain >= 2 ? gainers[0] : null;
+  const topFaller = gainers[gainers.length-1]?.gain <= -3 ? gainers[gainers.length-1] : null;
+  const hasShakeup = gainers.some(g => Math.abs(g.gain) >= 4);
+
+  return { insight, topGainer, topFaller, hasShakeup };
 }
 
 // siClosestBattle — find the tightest ranking gap across categories
@@ -1984,43 +2027,48 @@ function buildWeeklyNarrative(filtered, resultsRaw, catCode) {
 
   const lines = [];
 
-  // Leader situation
+  // 1. Vertice: describe the top-3 situation
   if (filtered.length >= 2) {
-    const l1 = filtered[0], l2 = filtered[1];
-    const gap = l1.punti - l2.punti;
-    if (gap === 0)
-      lines.push(`${l1.cognome} e ${l2.cognome} sono a pari punti in vetta`);
-    else if (gap <= 15)
-      lines.push(`${l1.cognome} comanda con soli ${gap} punti su ${l2.cognome} — battaglia aperta`);
+    const l1 = filtered[0], l2 = filtered[1], l3 = filtered[2];
+    const gap12 = l1.punti - l2.punti;
+    const gap13 = l3 ? l1.punti - l3.punti : null;
+    if (gap12 === 0)
+      lines.push(`Parità assoluta in vetta: ${l1.cognome} e ${l2.cognome} divisi da zero punti`);
+    else if (gap12 <= 10)
+      lines.push(`Lotta apertissima: ${l1.cognome} (1°, ${l1.punti} pt) guida con soli ${gap12} punti su ${l2.cognome} (2°)`);
+    else if (gap12 <= 30)
+      lines.push(`${l1.cognome} al comando (${l1.punti} pt), ${l2.cognome} a −${gap12} in seconda posizione`);
     else
-      lines.push(`${l1.cognome} in testa a ${l1.punti} punti, +${gap} su ${l2.cognome}`);
+      lines.push(`${l1.cognome} in fuga: ${l1.punti} punti, vantaggio di ${gap12} su ${l2.cognome} (2°)`);
+    if (l3 && gap13 !== null && gap13 <= 40)
+      lines.push(`Top-3 in ${gap13} punti — tutto ancora aperto per ${l3.cognome} (3°, ${l3.punti} pt)`);
   } else if (filtered.length === 1) {
-    lines.push(`${filtered[0].cognome} al comando con ${filtered[0].punti} punti`);
+    lines.push(`${filtered[0].cognome} solo al comando con ${filtered[0].punti} punti`);
   }
 
-  // Top movers this week (trend > 0 = gained positions)
-  const risers = filtered.filter(r => (r.trend||0) >= 2).sort((a,b)=>(b.trend||0)-(a.trend||0)).slice(0,2);
+  // 2. Rank movers — who gained/lost positions since last race
+  const risers  = filtered.filter(r => (r.trend||0) >= 2).sort((a,b)=>(b.trend||0)-(a.trend||0)).slice(0,2);
+  const fallers = filtered.filter(r => (r.trend||0) <= -2).sort((a,b)=>(a.trend||0)-(b.trend||0)).slice(0,1);
   for (const r of risers)
-    lines.push(`${r.cognome} sale di ${r.trend} posizioni e raggiunge il ${r.pos}° posto`);
+    lines.push(`${r.cognome} guadagna ${r.trend} posizioni e sale al ${r.pos}° posto`);
+  for (const r of fallers)
+    lines.push(`${r.cognome} perde ${Math.abs(r.trend)} posizion${Math.abs(r.trend)===1?'e':'i'} e scende al ${r.pos}°`);
 
-  // Biggest faller
-  const faller = filtered.filter(r => (r.trend||0) <= -3).sort((a,b)=>(a.trend||0)-(b.trend||0))[0];
-  if (faller)
-    lines.push(`${faller.cognome} cede ${Math.abs(faller.trend)} posizioni, ora ${faller.pos}°`);
-
-  // New entries in top 20
-  const newEntries = filtered.filter(r => r.pos <= 20 && (r.trend === null || r.trend === undefined));
+  // 3. New entries in top 15
+  const newEntries = filtered.filter(r => r.pos <= 15 && (r.trend === null || r.trend === undefined));
   if (newEntries.length)
-    lines.push(`Nuovi in classifica: ${newEntries.slice(0,2).map(r=>r.cognome).join(', ')}`);
+    lines.push(`Nuovi in classifica: ${newEntries.slice(0,3).map(r=>`${r.cognome} (${r.pos}°)`).join(', ')}`);
 
-  // Recent race winners
-  const recentWins = resultsRaw
-    .filter(r => r.data >= cutWeek && getRankingFileCode(r) === catCode && r.posizione === 1);
+  // 4. Recent race results that drove ranking changes
+  const recentWins = resultsRaw.filter(r => r.data >= cutWeek && getRankingFileCode(r) === catCode && r.posizione === 1);
   const seenWins = new Set();
   for (const w of recentWins) {
     if (seenWins.has(w.atleta_id)) continue;
     seenWins.add(w.atleta_id);
-    lines.push(`${w.cognome} ha vinto ${w.nome_gara} (${fmtDateShort(w.data)})`);
+    // Find where the winner is in the ranking for context
+    const rankEntry = filtered.find(f => f.atleta_id === w.atleta_id);
+    const rankCtx = rankEntry ? ` (ora ${rankEntry.pos}° in classifica)` : '';
+    lines.push(`${w.cognome} vince ${w.nome_gara} il ${fmtDateShort(w.data)}${rankCtx}`);
     if (seenWins.size >= 2) break;
   }
 
@@ -2773,9 +2821,8 @@ async function updateRankTable() {
       const tier   = r.pos === 1 ? 'rk-tier-1' : r.pos <= 3 ? 'rk-tier-top3' : r.pos <= 10 ? 'rk-tier-top10' : '';
       const gap    = r.pos === 1
         ? '<span class="rk-leader-badge">LEADER</span>'
-        : i < 20 ? `<span class="rk-gap-label">−${leaderPts - r.punti}</span>` : '';
+        : `<span class="rk-gap-label">−${leaderPts - r.punti}</span>`;
       const mom = _momCache2[r.atleta_id];
-      // Strip emoji from label — take everything after the first word (which is always an emoji)
       const formText = mom ? mom.label.split(' ').slice(1).join(' ') : '';
       const formChip = formText && i < 20 ? `<span class="rk-form-chip" style="color:${mom.color}">${formText}</span>` : '';
       return `<tr class="ranking-row ${tier}" style="animation-delay:${Math.min(i,20)*30}ms">
@@ -2792,10 +2839,17 @@ async function updateRankTable() {
         <td class="r">
           <div class="rk-pts-cell">
             <span class="rank-pts">${r.punti}</span>
-            ${i < 20 ? gap : ''}
+            ${gap}
           </div>
         </td>
-        <td class="r hide-mobile" style="color:var(--text-secondary);font-family:var(--font-mono);font-size:.85rem">${r.gare||0}</td>
+        <td class="hide-mobile">
+          <div class="td-p-wrap">
+            <span class="td-p p1" title="Vittorie">${r.p1||0}</span>
+            <span class="td-p p2" title="Secondi Posti">${r.p2||0}</span>
+            <span class="td-p p3" title="Terzi Posti">${r.p3||0}</span>
+            <span class="td-p pout" title="Piazzamenti 4-10">${r.pout||0}</span>
+          </div>
+        </td>
       </tr>`;
     }).join('');
 
@@ -2807,7 +2861,7 @@ async function updateRankTable() {
           <th>ATLETA</th>
           <th class="hide-mobile">TEAM</th>
           <th class="r">PUNTI</th>
-          <th class="r hide-mobile">GARE</th>
+          <th class="hide-mobile">1° / 2° / 3° / TOP10</th>
         </tr></thead>
         <tbody>${rows || '<tr><td colspan="6" class="empty-state">Nessun dato</td></tr>'}</tbody>
       </table>`;
@@ -3450,14 +3504,6 @@ async function renderAtleta(atleta_id) {
           <span class="athlete-stat-val" style="color:var(--text-muted)">${pout}</span>
           <span class="athlete-stat-label">4°-10° Posti</span>
         </div>
-        <div class="athlete-stat">
-          <span class="athlete-stat-val">${top10}</span>
-          <span class="athlete-stat-label">Tot. Gare</span>
-        </div>
-        <div class="athlete-stat">
-          <span class="athlete-stat-val" style="color:var(--yellow-race)">${media}</span>
-          <span class="athlete-stat-label">Media pt/gara</span>
-        </div>
       </div>
     </div>`;
 
@@ -3814,9 +3860,8 @@ async function renderTeam(team_id) {
         </div>
         <div class="team-mission-desc">${mission.desc}</div>
         <div class="team-cat-quickstats">
-          ${catWins > 0 ? `<span class="team-cat-stat-chip" style="color:var(--gold)">🏆 ${catWins} vitt.</span>` : ''}
-          ${catPodi > catWins ? `<span class="team-cat-stat-chip">🥇 ${catPodi} podi</span>` : ''}
-          ${catGare > 0 ? `<span class="team-cat-stat-chip">${catGare} gare</span>` : ''}
+          ${catWins > 0 ? `<span class="team-cat-stat-chip" style="color:var(--gold)">${catWins} vitt.</span>` : ''}
+          ${catPodi > catWins ? `<span class="team-cat-stat-chip">${catPodi} podi</span>` : ''}
         </div>
       </div>
       <div class="team-intel-card">
@@ -6112,43 +6157,52 @@ async function renderRisultati() {
         : null;
 
       const catSections = categories.map(([catName, catData]) => {
-        const top3 = (catData.results || []).sort((a,b) => a.posizione - b.posizione).slice(0,3);
+        const sortedCatRes = (catData.results || []).sort((a,b) => a.posizione - b.posizione);
+        const top3 = sortedCatRes.slice(0,3);
         const catGaraId = catData.gara_id;
         const cLabel = catLabel(catName) || catName;
 
         const firstRes = catData.results?.[0];
         const kmVal    = firstRes?.km    || '';
         const mediaVal = firstRes?.media || '';
-        const techBit  = (kmVal || mediaVal)
-          ? ' &nbsp;|&nbsp; ' +
-            (kmVal ? '&#128205; ' + esc(kmVal) + ' km' : '') +
-            (kmVal && mediaVal ? ' &nbsp;|&nbsp; ' : '') +
-            (mediaVal ? '&#9889; ' + esc(mediaVal) + ' km/h' : '')
-          : '';
+        const techBit  = [
+          kmVal    ? esc(kmVal) + ' km'    : '',
+          mediaVal ? esc(mediaVal) + ' km/h' : ''
+        ].filter(Boolean).join(' · ');
 
         const podioRows = top3.map((r,i) => {
           const pClass = ['p1','p2','p3'][i] || 'pout';
-          return '<div class="hero-podio-row" style="animation-delay:' + (i*60) + 'ms;grid-template-columns:32px 1fr;">' +
-            '<div class="hero-pos ' + pClass + '" style="font-size:0.95rem">' + r.posizione + '&#176;</div>' +
-            '<div>' +
+          return '<div class="hero-podio-row ris-podio-row" style="animation-delay:' + (i*60) + 'ms">' +
+            '<div class="hero-pos ' + pClass + '">' + r.posizione + '&#176;</div>' +
+            '<div class="ris-podio-info">' +
               '<div class="hero-name"><a href="#/atleta/' + esc(r.atleta_id) + '">' + esc(r.cognome) + ' ' + esc(r.nome) + '</a></div>' +
               '<div class="hero-team"><a href="#/team/' + esc(r.team_id) + '" style="color:var(--text-secondary)">' + esc(r.team) + '</a></div>' +
             '</div>' +
           '</div>';
         }).join('');
 
+        // Race impact
+        const impact = siRaceImpact(sortedCatRes, resultsRaw);
+        const impactStrip = impact ? (() => {
+          const parts = [];
+          if (impact.insight) parts.push(`<span class="ris-insight-chip">${impact.insight}</span>`);
+          if (impact.topGainer) parts.push(`<span class="ris-mover ris-mover-up">+${impact.topGainer.gain} ${esc(impact.topGainer.cognome)}</span>`);
+          if (impact.topFaller) parts.push(`<span class="ris-mover ris-mover-down">${impact.topFaller.gain} ${esc(impact.topFaller.cognome)}</span>`);
+          if (impact.hasShakeup && !impact.topGainer && !impact.topFaller) parts.push(`<span class="ris-insight-chip ris-chip-shakeup">Scossone in classifica</span>`);
+          return parts.length ? `<div class="ris-impact-strip">${parts.join('')}</div>` : '';
+        })() : '';
+
         return `
-          <div style="margin-bottom:16px;">
-            <div style="display:flex;align-items:center;gap:12px;margin-bottom:8px;flex-wrap:wrap;">
-              ${categories.length > 1 ? '<span style="font-size:0.65rem;font-family:var(--font-mono);color:var(--accent);text-transform:uppercase;letter-spacing:1px;">' + cLabel + '</span>' : ''}
-              <span style="font-size:0.75rem;color:var(--text-muted);font-family:var(--font-mono)">${techBit}</span>
-            </div>
+          <div class="ris-cat-section">
+            ${categories.length > 1 ? `<div class="ris-cat-label">${cLabel}</div>` : ''}
+            ${techBit ? `<div class="ris-tech-bit">${techBit}</div>` : ''}
             ${podioRows}
-            <div style="padding-top:10px;margin-top:10px;border-top:1px solid var(--border-subtle);">
-              <a href="#/gara/${esc(catGaraId)}" class="btn-action full" style="font-size:0.75rem;text-align:center;">VAI ALLA CLASSIFICA COMPLETA &rarr;</a>
+            ${impactStrip}
+            <div class="ris-full-link">
+              <a href="#/gara/${esc(catGaraId)}" class="btn-action full" style="font-size:0.75rem;text-align:center;">CLASSIFICA COMPLETA &rarr;</a>
             </div>
           </div>`;
-      }).join(categories.length > 1 ? '<div style="border-top:2px solid var(--border-subtle);margin:16px 0;"></div>' : '');
+      }).join(categories.length > 1 ? '<div class="ris-cat-divider"></div>' : '');
 
       const photoEl = featuredPhoto
         ? `<a href="#/gara/${esc(race.id)}" class="ris-card-photo${featuredVideoId ? ' ris-media-half' : ''}">
@@ -6168,15 +6222,30 @@ async function renderRisultati() {
         ? `<div class="ris-card-media${featuredPhoto && featuredVideoId ? ' ris-card-media-split' : ''}">${photoEl}${videoEl}</div>`
         : '';
 
+      const cardTier = race.campionato_italiano ? 'ris-card-ci'
+                    : race.campionato_regionale ? 'ris-card-cr'
+                    : (race.mult >= 2)          ? 'ris-card-premium'
+                    : '';
+      const importanceBadge = race.campionato_italiano
+        ? '<span class="ris-importance-badge ris-badge-ci">CAMPIONATO ITALIANO</span>'
+        : race.campionato_regionale
+        ? '<span class="ris-importance-badge ris-badge-cr">CAMP. REGIONALE</span>'
+        : race.mult >= 2
+        ? `<span class="ris-importance-badge ris-badge-mult">GARA MOLTIPLICATORE ×${race.mult}</span>`
+        : '';
+
+      const _raceNarr = siRaceNarrative(race.id, resultsRaw);
+
       return `
-        <div class="hero-band ris-card">
+        <div class="hero-band ris-card ${cardTier}">
           ${mediaPanel}
           <div class="ris-card-body">
-            <div class="hero-label" style="font-size:0.6rem">RISULTATI GARA</div>
+            ${importanceBadge}
             <div class="hero-race-name"><a href="#/gara/${esc(race.id)}">${esc(race.nome)}</a></div>
-            ${(()=>{ const _rn=siRaceNarrative(race.id,resultsRaw); return _rn?'<div class="ris-race-narrative">'+_rn+'</div>':''; })()}
-            <div class="hero-race-meta" style="margin-bottom:16px;">
+            ${_raceNarr ? `<div class="ris-race-narrative">${_raceNarr}</div>` : ''}
+            <div class="hero-race-meta" style="margin-bottom:14px;">
               <span>${fmtDate(race.data)}</span>
+              ${race.regione ? `<span class="ris-region-tag">${esc(race.regione)}</span>` : ''}
               ${badgeMult(race.mult, race.tipo, race.campionato_regionale, race.campionato_italiano)}
             </div>
             <div class="hero-divider" style="margin-bottom:12px;"></div>
