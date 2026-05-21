@@ -6214,20 +6214,40 @@ function renderLogin() {
   if (authUser()) { window.location.hash = '/profilo'; return; }
   setPage(`
     <div class="auth-wrap">
-      <div class="auth-card">
-        <h1 class="auth-title">ACCEDI</h1>
-        <p class="auth-sub">Bentornato su ItaliacritResultati</p>
-        <div id="auth-error" class="auth-error" style="display:none"></div>
-        <form id="login-form" class="auth-form" onsubmit="submitLogin(event)">
-          <label class="auth-label">Email
-            <input type="email" id="login-email" class="auth-input" placeholder="tua@email.it" required autocomplete="email" />
-          </label>
-          <label class="auth-label">Password
-            <input type="password" id="login-pwd" class="auth-input" placeholder="••••••••" required autocomplete="current-password" />
-          </label>
-          <button type="submit" class="auth-btn" id="login-submit">ENTRA</button>
-        </form>
-        <p class="auth-switch">Non hai un account? <a href="#/register">Registrati</a></p>
+      <div style="width:100%;max-width:420px">
+        <div class="auth-brand">
+          <div class="auth-brand-name">ITALIACRIT</div>
+          <div class="auth-brand-sub">Risultati Ciclismo Italiano</div>
+        </div>
+        <div class="auth-card">
+          <div class="auth-card-header">
+            <h1 class="auth-title">Bentornato</h1>
+            <p class="auth-sub">Accedi per caricare foto, video e seguire i tuoi atleti</p>
+          </div>
+          <div id="auth-error" class="auth-error" style="display:none"></div>
+          <form id="login-form" class="auth-form" onsubmit="submitLogin(event)" style="display:flex;flex-direction:column;gap:0">
+            <div class="auth-field">
+              <label class="auth-label" for="login-email">Email</label>
+              <div class="auth-input-wrap">
+                <svg class="auth-input-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="2" y="4" width="20" height="16" rx="2"/><path d="m2 7 10 7 10-7"/></svg>
+                <input type="email" id="login-email" class="auth-input" placeholder="tua@email.it" required autocomplete="email" />
+              </div>
+            </div>
+            <div class="auth-field">
+              <label class="auth-label" for="login-pwd">Password</label>
+              <div class="auth-input-wrap">
+                <svg class="auth-input-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="11" width="18" height="11" rx="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg>
+                <input type="password" id="login-pwd" class="auth-input" placeholder="••••••••" required autocomplete="current-password" />
+              </div>
+            </div>
+            <button type="submit" class="auth-btn" id="login-submit">
+              Accedi
+              <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
+            </button>
+          </form>
+          <div class="auth-divider"><span>Non hai un account?</span></div>
+          <a href="#/register" class="auth-btn auth-btn-secondary">Crea il tuo account</a>
+        </div>
       </div>
     </div>
   `);
@@ -6257,32 +6277,60 @@ function renderRegister() {
   if (authUser()) { window.location.hash = '/profilo'; return; }
   setPage(`
     <div class="auth-wrap">
-      <div class="auth-card">
-        <h1 class="auth-title">REGISTRATI</h1>
-        <p class="auth-sub">Crea il tuo account ItaliacritResultati</p>
-        <div id="auth-error" class="auth-error" style="display:none"></div>
-        <form id="reg-form" class="auth-form" onsubmit="submitRegister(event)">
-          <label class="auth-label">Nome visualizzato
-            <input type="text" id="reg-name" class="auth-input" placeholder="Es. Mario Rossi" required />
-          </label>
-          <label class="auth-label">Email
-            <input type="email" id="reg-email" class="auth-input" placeholder="tua@email.it" required autocomplete="email" />
-          </label>
-          <label class="auth-label">Password
-            <input type="password" id="reg-pwd" class="auth-input" placeholder="Minimo 6 caratteri" required autocomplete="new-password" minlength="6" />
-          </label>
-          <label class="auth-label">Tipo di account
-            <select id="reg-role" class="auth-input">
-              <option value="appassionato">Appassionato — seguo le gare</option>
-              <option value="atleta">Atleta — voglio collegare il mio profilo</option>
-              <option value="team">Team — gestisco una squadra</option>
-              <option value="genitore">Genitore — seguo mio/a figlio/a</option>
-              <option value="parente">Parente / Tifoso — seguo un atleta</option>
-            </select>
-          </label>
-          <button type="submit" class="auth-btn" id="reg-submit">CREA ACCOUNT</button>
-        </form>
-        <p class="auth-switch">Hai già un account? <a href="#/login">Accedi</a></p>
+      <div style="width:100%;max-width:420px">
+        <div class="auth-brand">
+          <div class="auth-brand-name">ITALIACRIT</div>
+          <div class="auth-brand-sub">Risultati Ciclismo Italiano</div>
+        </div>
+        <div class="auth-card">
+          <div class="auth-card-header">
+            <h1 class="auth-title">Crea account</h1>
+            <p class="auth-sub">Unisciti alla community del ciclismo agonistico italiano</p>
+          </div>
+          <div id="auth-error" class="auth-error" style="display:none"></div>
+          <form id="reg-form" class="auth-form" onsubmit="submitRegister(event)" style="display:flex;flex-direction:column;gap:0">
+            <div class="auth-field">
+              <label class="auth-label" for="reg-name">Nome visualizzato</label>
+              <div class="auth-input-wrap">
+                <svg class="auth-input-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="8" r="4"/><path d="M4 20c0-4 3.6-7 8-7s8 3 8 7"/></svg>
+                <input type="text" id="reg-name" class="auth-input" placeholder="Es. Mario Rossi" required />
+              </div>
+            </div>
+            <div class="auth-field">
+              <label class="auth-label" for="reg-email">Email</label>
+              <div class="auth-input-wrap">
+                <svg class="auth-input-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="2" y="4" width="20" height="16" rx="2"/><path d="m2 7 10 7 10-7"/></svg>
+                <input type="email" id="reg-email" class="auth-input" placeholder="tua@email.it" required autocomplete="email" />
+              </div>
+            </div>
+            <div class="auth-field">
+              <label class="auth-label" for="reg-pwd">Password</label>
+              <div class="auth-input-wrap">
+                <svg class="auth-input-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="11" width="18" height="11" rx="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg>
+                <input type="password" id="reg-pwd" class="auth-input" placeholder="Minimo 6 caratteri" required autocomplete="new-password" minlength="6" />
+              </div>
+            </div>
+            <div class="auth-field">
+              <label class="auth-label" for="reg-role">Ruolo</label>
+              <div class="auth-input-wrap">
+                <svg class="auth-input-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg>
+                <select id="reg-role" class="auth-input" style="appearance:auto;cursor:pointer">
+                  <option value="appassionato">Appassionato — seguo le gare</option>
+                  <option value="atleta">Atleta — voglio collegare il mio profilo</option>
+                  <option value="team">Team — gestisco una squadra</option>
+                  <option value="genitore">Genitore — seguo mio/a figlio/a</option>
+                  <option value="parente">Parente / Tifoso — seguo un atleta</option>
+                </select>
+              </div>
+            </div>
+            <button type="submit" class="auth-btn" id="reg-submit">
+              Crea il mio account
+              <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
+            </button>
+          </form>
+          <div class="auth-divider"><span>Hai già un account?</span></div>
+          <a href="#/login" class="auth-btn auth-btn-secondary">Accedi</a>
+        </div>
       </div>
     </div>
   `);
