@@ -1846,6 +1846,74 @@ function siTeamNarrative(teamId, resultsRaw) {
   return gare28 + ' gare, ' + podi28 + ' podi nell\'ultimo mese.';
 }
 
+// ── TEAM INTELLIGENCE: Season Mission ─────────────────────────
+function siTeamMission(teamId, resultsRaw, tCatRanks) {
+  const allRes = resultsRaw.filter(r => r.team_id === teamId && r.posizione && r.data);
+  if (!allRes.length) return { tag:'🏗', label:'IN COSTRUZIONE', desc:'Il team sta muovendo i primi passi stagionali', color:'var(--text-muted)' };
+  const lastDate = allRes.reduce((mx,r) => r.data > mx ? r.data : mx, '');
+  const cut28 = (() => { const d=new Date(lastDate); d.setDate(d.getDate()-28); return d.toISOString().split('T')[0]; })();
+  const recent = allRes.filter(r => r.data >= cut28);
+  const wins    = allRes.filter(r => r.posizione === 1).length;
+  const wRec    = recent.filter(r => r.posizione === 1).length;
+  const cats    = [...new Set(allRes.map(r => getRankingFileCode(r)).filter(Boolean))];
+  const winners = [...new Set(allRes.filter(r => r.posizione === 1).map(r => r.atleta_id))];
+  const topRank = (tCatRanks || []).slice().sort((a,b) => a.pos - b.pos)[0];
+  if (topRank && topRank.pos === 1) return { tag:'👑', label:'SQUADRA DA BATTERE', desc:'Leader assoluti — la stagione è loro', color:'#f59e0b' };
+  if (topRank && topRank.pos <= 3)  return { tag:'🎯', label:'IN CACCIA DEL TITOLO', desc:`${topRank.pos}° posto — a un passo dalla cima`, color:'var(--red-hot)' };
+  if (wRec >= 3)  return { tag:'🔥', label:'MOMENTO DI FUOCO', desc:`${wRec} vittorie nelle ultime 4 settimane`, color:'var(--red-hot)' };
+  if (cats.length >= 3) return { tag:'⚡', label:'FORZA TRASVERSALE', desc:`Presente in ${cats.length} categorie della stagione`, color:'#3b82f6' };
+  if (winners.length >= 3) return { tag:'🏆', label:'SQUADRA PLURIVINCENTE', desc:`${winners.length} corridori diversi a segno`, color:'#10b981' };
+  if (wins >= 3)  return { tag:'📈', label:'STAGIONE DI SPESSORE', desc:`${wins} vittorie stagionali`, color:'#10b981' };
+  if (wins > 0)   return { tag:'💪', label:'IN RAMPA DI LANCIO', desc:`${wins} vittori${wins===1?'a':'e'} — il meglio deve ancora venire`, color:'var(--text-secondary)' };
+  return { tag:'⏳', label:'IN CERCA DI FORMA', desc:'La vittoria è il prossimo obiettivo stagionale', color:'var(--text-muted)' };
+}
+
+// ── TEAM INTELLIGENCE: Strength Tags ──────────────────────────
+function siTeamStrengths(teamId, resultsRaw) {
+  const allRes = resultsRaw.filter(r => r.team_id === teamId && r.posizione && r.data);
+  if (!allRes.length) return [];
+  const wins    = allRes.filter(r => r.posizione === 1).length;
+  const podi    = allRes.filter(r => r.posizione <= 3).length;
+  const top10   = allRes.filter(r => r.posizione <= 10).length;
+  const races   = new Set(allRes.map(r => r.gara_id)).size;
+  const cats    = [...new Set(allRes.map(r => getRankingFileCode(r)).filter(Boolean))];
+  const winners = [...new Set(allRes.filter(r => r.posizione === 1).map(r => r.atleta_id))];
+  const winRate    = races > 0 ? wins / races : 0;
+  const podioRate  = races > 0 ? podi / races : 0;
+  const top10Rate  = races > 0 ? top10 / races : 0;
+  const tags = [];
+  if (winRate >= 0.4 && races >= 4) tags.push({ icon:'🔥', label:'Macchina da vittorie', desc:`Vince nel ${Math.round(winRate*100)}% delle gare` });
+  else if (winners.length >= 3)     tags.push({ icon:'🎯', label:'Plurivittoria', desc:`${winners.length} corridori diversi a segno` });
+  else if (wins >= 3)               tags.push({ icon:'🏆', label:'Squadra Vincente', desc:`${wins} vittorie stagionali` });
+  if (podioRate >= 0.5 && races >= 5)         tags.push({ icon:'🥇', label:'Alta Consistenza', desc:`Podio nel ${Math.round(podioRate*100)}% delle gare` });
+  else if (top10Rate >= 0.65 && races >= 5)   tags.push({ icon:'📊', label:'Top-10 Costante', desc:`Top-10 nel ${Math.round(top10Rate*100)}% delle gare` });
+  if (cats.length >= 3)  tags.push({ icon:'⚡', label:'Multi-Categoria', desc:`${cats.length} categorie presidiate` });
+  if (races >= 8 && podi / races >= 0.3) tags.push({ icon:'💎', label:'Presenza Costante', desc:`${races} gare disputate` });
+  return tags.slice(0, 4);
+}
+
+// ── TEAM INTELLIGENCE: Momentum Score ─────────────────────────
+function siTeamMomentumData(teamId, resultsRaw) {
+  const allRes = resultsRaw.filter(r => r.team_id === teamId && r.posizione && r.data);
+  if (!allRes.length) return { label:'Nessun dato', color:'var(--text-muted)', pct:50, delta:0 };
+  const lastDate = allRes.reduce((mx,r) => r.data > mx ? r.data : mx, '');
+  const cut14 = (() => { const d=new Date(lastDate); d.setDate(d.getDate()-14); return d.toISOString().split('T')[0]; })();
+  const cut28 = (() => { const d=new Date(lastDate); d.setDate(d.getDate()-28); return d.toISOString().split('T')[0]; })();
+  const recent = allRes.filter(r => r.data >= cut14);
+  const prev   = allRes.filter(r => r.data >= cut28 && r.data < cut14);
+  const ptsR = recent.reduce((s,r) => s+(r.punti_effettivi||0), 0);
+  const ptsP = prev.reduce((s,r)   => s+(r.punti_effettivi||0), 0);
+  const wR   = recent.filter(r => r.posizione === 1).length;
+  const delta = ptsR - ptsP;
+  const maxPts = Math.max(ptsR, ptsP, 1);
+  const pct = Math.min(90, Math.max(10, Math.round(50 + (delta / maxPts) * 38)));
+  if (wR >= 2 || delta > 20)  return { label:'🔥 In grande forma', color:'var(--red-hot)', pct, delta };
+  if (delta > 5)              return { label:'📈 In crescita',      color:'#10b981',        pct, delta };
+  if (Math.abs(delta) <= 5)   return { label:'➡ Forma stabile',    color:'var(--text-secondary)', pct:50, delta };
+  if (delta < -10)            return { label:'📉 In calo',          color:'#6b7280',        pct, delta };
+  return                             { label:'↘ Lieve calo',        color:'var(--text-muted)', pct, delta };
+}
+
 // siAthleteStory — generate season narrative label for athlete
 function siAthleteStory(athleteId, resultsRaw) {
   const myRes = resultsRaw.filter(r => r.atleta_id === athleteId && r.posizione && r.data).sort((a,b) => b.data.localeCompare(a.data));
@@ -3448,9 +3516,6 @@ async function renderTeam(team_id) {
       `).join('')}
     </div>
   ` : '';
-  const _teamNarr = siTeamNarrative(team_id, globalData.resultsRaw);
-  const teamNarrHtml = _teamNarr ? '<div class="si-team-narrative">' + _teamNarr + '</div>' : '';
-
   // Atleti con punti (nella categoria selezionata)
   const atletiMap = {};
   catRisultati.forEach(r => {
@@ -3511,7 +3576,109 @@ async function renderTeam(team_id) {
     const rk = (rlist || []).find(x => x.team_id === team_id);
     if (rk) tCatRanks.push({ cat: code, pos: rk.pos, pts: rk.punti });
   });
-  const topC = tCatRanks.sort((a,b)=>b.pts - a.pts)[0];
+  const topC = tCatRanks.slice().sort((a,b)=>b.pts - a.pts)[0];
+
+  // ── INTELLIGENCE ──────────────────────────────────────────────
+  const allTeamRes  = globalData.resultsRaw.filter(r => r.team_id === team_id && r.posizione && r.data);
+  const lastDateGlobal = allTeamRes.reduce((mx,r) => r.data > mx ? r.data : mx, '');
+
+  const mission   = siTeamMission(team_id, globalData.resultsRaw, [...tCatRanks]);
+  const strengths = siTeamStrengths(team_id, globalData.resultsRaw);
+  const momentum  = siTeamMomentumData(team_id, globalData.resultsRaw);
+
+  // Wins per category (dominance bar)
+  const winsByCat = {};
+  for (const r of allTeamRes.filter(x => x.posizione === 1)) {
+    const code = getRankingFileCode(r) || r.categoria;
+    if (code) winsByCat[code] = (winsByCat[code]||0) + 1;
+  }
+  const maxCatWins = Math.max(...Object.values(winsByCat), 1);
+  const dominanceHtml = Object.keys(winsByCat).length ? `
+    <div class="team-dominance">
+      ${Object.entries(winsByCat).sort((a,b)=>b[1]-a[1]).map(([code,wins])=>`
+        <div class="team-dom-row">
+          <span class="team-dom-cat">${catLabel(code)}</span>
+          <div class="team-dom-track"><div class="team-dom-fill" style="width:${Math.round(wins/maxCatWins*100)}%"></div></div>
+          <span class="team-dom-wins">${wins}🏆</span>
+        </div>`).join('')}
+    </div>` : '<p style="color:var(--text-muted);font-size:0.8rem;margin:0">Nessuna vittoria stagionale ancora.</p>';
+
+  // Top performers (across all categories)
+  const perfMap = {};
+  for (const r of allTeamRes) {
+    if (!perfMap[r.atleta_id]) perfMap[r.atleta_id] = { id:r.atleta_id, cognome:r.cognome, nome:r.nome, pts:0, wins:0, podi:0, cat:getRankingFileCode(r)||r.categoria };
+    perfMap[r.atleta_id].pts  += r.punti_effettivi||0;
+    if (r.posizione === 1) perfMap[r.atleta_id].wins++;
+    if (r.posizione <= 3) perfMap[r.atleta_id].podi++;
+  }
+  const topPerformers = Object.values(perfMap).sort((a,b) => b.pts - a.pts).slice(0, 5);
+  const _rankAccents = ['var(--gold)','var(--silver)','var(--bronze)','var(--text-muted)','var(--text-muted)'];
+  const topPerfHtml = topPerformers.length ? topPerformers.map((p,i) => {
+    const mom    = siMomentum(p.id, globalData.resultsRaw, lastDateGlobal);
+    const streak = siStreak(p.id, globalData.resultsRaw);
+    const sBadge = streak.winStreak >= 2 ? `<span class="team-perf-badge">👑${streak.winStreak}W</span>` :
+                   streak.podioStreak >= 2 ? `<span class="team-perf-badge">🔥${streak.podioStreak}P</span>` : '';
+    return `<div class="team-performer-card">
+      <div class="team-perf-rank" style="color:${_rankAccents[i]}">${i+1}</div>
+      <div class="team-perf-info">
+        <div class="team-perf-name"><a href="#/atleta/${esc(p.id)}">${esc(p.cognome)} <span style="font-weight:400">${esc(p.nome)}</span></a></div>
+        <div class="team-perf-cat">${catLabel(p.cat)}</div>
+        <div class="team-perf-form" style="color:${mom.color}">${mom.label.replace(/^[^ ]+ /,'')}</div>
+      </div>
+      <div class="team-perf-right">
+        <div class="team-perf-pts">${p.pts}<small>pts</small></div>
+        ${p.wins > 0 ? `<div class="team-perf-wins">🏆 ${p.wins}</div>` : ''}
+        ${sBadge}
+      </div>
+    </div>`;
+  }).join('') : '<div class="empty-state">Nessun risultato stagionale</div>';
+
+  // Identity strip HTML
+  const identityHtml = `
+    <div class="team-identity-strip">
+      <div class="team-intel-card">
+        <div class="team-intel-label">MISSIONE STAGIONE</div>
+        <div class="team-mission-tag" style="color:${mission.color}">
+          <span class="team-mission-icon">${mission.tag}</span><span>${mission.label}</span>
+        </div>
+        <div class="team-mission-desc">${mission.desc}</div>
+        <div class="team-intel-label" style="margin-top:14px;margin-bottom:8px">VITTORIE PER CATEGORIA</div>
+        ${dominanceHtml}
+      </div>
+      <div class="team-intel-card">
+        <div class="team-intel-label">PUNTI DI FORZA</div>
+        ${strengths.length ? `<div class="team-strength-list">${strengths.map(s=>`
+          <div class="team-strength-item">
+            <span class="team-strength-icon">${s.icon}</span>
+            <div><div class="team-strength-name">${s.label}</div><div class="team-strength-desc">${s.desc}</div></div>
+          </div>`).join('')}</div>`
+        : '<p style="color:var(--text-muted);font-size:0.8rem;margin:8px 0 0">Dati in costruzione — torna dopo qualche gara.</p>'}
+      </div>
+      <div class="team-intel-card">
+        <div class="team-intel-label">FORMA ATTUALE</div>
+        <div class="team-momentum-label" style="color:${momentum.color}">${momentum.label}</div>
+        <div class="team-momentum-track">
+          <div class="team-momentum-fill" style="width:${momentum.pct}%;background:${momentum.color}"></div>
+          <div class="team-momentum-marker" style="left:${momentum.pct}%"></div>
+        </div>
+        <div class="team-momentum-sub">Ultime 2 settimane vs precedenti</div>
+        <div class="team-intel-label" style="margin-top:18px;margin-bottom:4px">IDENTITÀ STAGIONALE</div>
+        <div style="font-size:0.82rem;color:var(--text-secondary);line-height:1.5">
+          ${(() => {
+            const races = new Set(allTeamRes.map(r=>r.gara_id)).size;
+            const podi  = allTeamRes.filter(r=>r.posizione<=3).length;
+            const cats  = [...new Set(allTeamRes.map(r=>getRankingFileCode(r)).filter(Boolean))];
+            const bestCatRank = tCatRanks.slice().sort((a,b)=>a.pos-b.pos)[0];
+            let lines = [];
+            if (races)  lines.push(`<strong>${races}</strong> gare disputate`);
+            if (podi)   lines.push(`<strong>${podi}</strong> podi stagionali`);
+            if (cats.length > 1) lines.push(`Presente in <strong>${cats.length}</strong> categorie`);
+            if (bestCatRank) lines.push(`Miglior ranking: <strong>${bestCatRank.pos}°</strong> in ${catLabel(bestCatRank.cat)}`);
+            return lines.join(' · ') || 'Stagione in corso.';
+          })()}
+        </div>
+      </div>
+    </div>`;
 
   // Header stats
   const currentRank = tCatRanks.find(rk => rk.cat === teamViewCat);
@@ -3564,12 +3731,21 @@ async function renderTeam(team_id) {
         </div>
       </div>
     </div>
-      <div style="margin-top:12px;display:flex;gap:10px;align-items:center;flex-wrap:wrap">
-        <button class="btn-share" onclick="window.triggerShareTeam()"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="18" cy="5" r="3"/><circle cx="6" cy="12" r="3"/><circle cx="18" cy="19" r="3"/><line x1="8.59" y1="13.51" x2="15.42" y2="17.49"/><line x1="15.41" y1="6.51" x2="8.59" y2="10.49"/></svg> Condividi Team</button>
-        <button class="btn-share" onclick="window.openComparatore('${esc(team_id)}','team')">⚖ Compara</button>
-        ${adminEditBtn('team', team_id)}
-      </div>
-    ${teamNarrHtml}
+    <div style="margin-top:12px;display:flex;gap:10px;align-items:center;flex-wrap:wrap">
+      <button class="btn-share" onclick="window.triggerShareTeam()"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="18" cy="5" r="3"/><circle cx="6" cy="12" r="3"/><circle cx="18" cy="19" r="3"/><line x1="8.59" y1="13.51" x2="15.42" y2="17.49"/><line x1="15.41" y1="6.51" x2="8.59" y2="10.49"/></svg> Condividi Team</button>
+      <button class="btn-share" onclick="window.openComparatore('${esc(team_id)}','team')">⚖ Compara</button>
+      ${adminEditBtn('team', team_id)}
+    </div>
+
+    ${identityHtml}
+
+    <div class="section-header" style="margin-top:28px">
+      <span class="section-title">CORRIDORI CHIAVE</span>
+      <span class="section-line"></span>
+      <span class="section-subtitle">Stagione completa</span>
+    </div>
+    <div class="team-performers-list" style="margin-bottom:28px">${topPerfHtml}</div>
+
     ${catTabsHtml}
     <div class="section-header">
       <span class="section-title">ATLETI</span>
