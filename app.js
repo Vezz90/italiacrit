@@ -1914,6 +1914,49 @@ function siTeamMomentumData(teamId, resultsRaw) {
   return                             { label:'↘ Lieve calo',        color:'var(--text-muted)', pct, delta };
 }
 
+// siAthleteIdentity — racing style, specialty, strengths
+function siAthleteIdentity(athleteId, resultsRaw) {
+  const myRes = resultsRaw.filter(r => r.atleta_id === athleteId && r.posizione && r.data);
+  if (!myRes.length) return null;
+  const races  = new Set(myRes.map(r => r.gara_id)).size;
+  const wins   = myRes.filter(r => r.posizione === 1).length;
+  const podi   = myRes.filter(r => r.posizione <= 3).length;
+  const top5   = myRes.filter(r => r.posizione <= 5).length;
+  const top10  = myRes.filter(r => r.posizione <= 10).length;
+  const winRate   = races ? wins   / races : 0;
+  const podioRate = races ? podi   / races : 0;
+  const top5Rate  = races ? top5   / races : 0;
+  const top10Rate = races ? top10  / races : 0;
+  let style, icon, desc;
+  if (winRate >= 0.4 && races >= 4)     { style = 'DOMINATORE';        icon = '👑'; desc = 'Vince in quasi la metà delle gare disputate'; }
+  else if (winRate >= 0.25 && races >= 3){ style = 'FINISSEUR PURO';   icon = '🎯'; desc = 'Corridore da vittoria — attacca per vincere'; }
+  else if (podioRate >= 0.5 && wins===0) { style = 'UOMO DI PUNTA';    icon = '💎'; desc = 'Costantemente tra i migliori — manca solo il guizzo'; }
+  else if (podioRate >= 0.4)             { style = 'CORRIDORE DA PODIO';icon = '🥇'; desc = `Podio nel ${Math.round(podioRate*100)}% delle gare`; }
+  else if (top5Rate >= 0.5 && races >= 5){ style = 'SPECIALISTA TOP-5';icon = '📈'; desc = 'Regolare e competitivo nelle prime posizioni'; }
+  else if (top10Rate >= 0.6 && races >= 5){ style = 'PRESENZA COSTANTE';icon = '⚙'; desc = 'Pilastro di squadra — sempre nei dieci'; }
+  else if (races <= 3)                   { style = 'IN COSTRUZIONE';   icon = '🏗'; desc = 'Stagione agli inizi — dati in crescita'; }
+  else                                   { style = 'IN EVOLUZIONE';    icon = '⏳'; desc = 'Alla ricerca del rendimento migliore'; }
+  const strengths = [];
+  if (winRate > 0.2)   strengths.push('Corridore da vittoria');
+  if (podioRate > 0.4) strengths.push('Alta consistenza');
+  if (top5Rate > 0.5)  strengths.push('Presenza costante');
+  if (races >= 8)      strengths.push('Grande esperienza');
+  return { style, icon, desc, strengths, winRate, podioRate, top5Rate, races, wins, podi, top5 };
+}
+
+// siBestMoment — best single result of the season
+function siBestMoment(athleteId, resultsRaw) {
+  const myRes = resultsRaw.filter(r => r.atleta_id === athleteId && r.posizione && r.data);
+  if (!myRes.length) return null;
+  const sorted  = [...myRes].sort((a,b) => a.posizione - b.posizione || b.data.localeCompare(a.data));
+  const best    = sorted[0];
+  const lastWin = myRes.filter(r=>r.posizione===1).sort((a,b)=>b.data.localeCompare(a.data))[0];
+  return {
+    best:    { pos:best.posizione, nome:best.nome_gara, data:best.data, pts:best.punti_effettivi||0, gara_id:best.gara_id },
+    lastWin: (lastWin && lastWin.gara_id !== best.gara_id) ? { pos:1, nome:lastWin.nome_gara, data:lastWin.data, pts:lastWin.punti_effettivi||0, gara_id:lastWin.gara_id } : null,
+  };
+}
+
 // siAthleteStory — generate season narrative label for athlete
 function siAthleteStory(athleteId, resultsRaw) {
   const myRes = resultsRaw.filter(r => r.atleta_id === athleteId && r.posizione && r.data).sort((a,b) => b.data.localeCompare(a.data));
@@ -3370,24 +3413,78 @@ async function renderAtleta(atleta_id) {
   // Sport Intelligence computations
   const { resultsRaw: _siRaw } = globalData;
   const _siLastDate = _siRaw.reduce((max, r) => (r.data||'') > max ? r.data : max, '');
-  const aiStreak = siStreak(atleta_id, _siRaw);
-  const aiMomentum = siMomentum(atleta_id, _siRaw, _siLastDate);
-  const aiRivals = siRivals(atleta_id, _siRaw, rCode);
-  const _aiStory = siAthleteStory(atleta_id, _siRaw);
+  const aiStreak    = siStreak(atleta_id, _siRaw);
+  const aiMomentum  = siMomentum(atleta_id, _siRaw, _siLastDate);
+  const aiRivals    = siRivals(atleta_id, _siRaw, rCode);
+  const _aiStory    = siAthleteStory(atleta_id, _siRaw);
+  const aiIdentity  = siAthleteIdentity(atleta_id, _siRaw);
+  const aiHeroMom   = siBestMoment(atleta_id, _siRaw);
 
-  const siIntelPanelHtml = (_aiStory ? '<div class="si-athlete-story-badge">' + _aiStory + '</div>' : '') + `<div class="si-intel-panel">
-    <div class="si-intel-momentum" style="--si-color:${aiMomentum.color}">
-      <span class="si-intel-label">${aiMomentum.label}</span>
-      ${aiMomentum.gare14>0 ? `<span class="si-intel-sub">${aiMomentum.gare14} gare · ${aiMomentum.vittorie14} vitt. · ${aiMomentum.podio14} podi (ultimi 14gg)</span>` : ''}
-    </div>
-    ${aiStreak.podioStreak >= 2 ? `<div class="si-intel-streak">
-      ${aiStreak.winStreak>=2?'👑':'🔥'} <strong>${aiStreak.winStreak>=2?aiStreak.winStreak+' vittorie':aiStreak.podioStreak+' podi'} consecutivi</strong>
-    </div>` : ''}
-    ${aiRivals.length>0 ? `<div class="si-intel-rivals">
-      <span class="si-intel-rivals-label">Rivali frequenti</span>
-      ${aiRivals.map(r=>`<a href="#/atleta/${encodeURIComponent(r.atleta_id)}" class="si-rival-chip">${esc(r.cognome)} ${esc(r.nome[0])}. <small>${r.encounters} scontri</small></a>`).join('')}
-    </div>` : ''}
-  </div>`;
+  // ── HERO SEASON CARD ─────────────────────────────────────────
+  const _narrativeParts = [];
+  if (p1 > 0) _narrativeParts.push(`${p1} vittori${p1===1?'a':'e'} in ${top10} gar${top10===1?'a':'e'}`);
+  else if (p2+p3 > 0) _narrativeParts.push(`${p2+p3} podi in ${top10} gar${top10===1?'a':'e'}`);
+  else if (top10 > 0) _narrativeParts.push(`${top10} gar${top10===1?'a':'e'} disputat${top10===1?'a':'e'}`);
+  if (aiStreak.winStreak >= 2) _narrativeParts.push(`🔥 ${aiStreak.winStreak} vittorie consecutive`);
+  else if (aiStreak.podioStreak >= 2) _narrativeParts.push(`${aiStreak.podioStreak} podi di fila`);
+
+  const heroHtml = `
+    <div class="athlete-hero-card">
+      <div class="athlete-hero-left">
+        ${_aiStory ? `<div class="athlete-hero-story">${_aiStory}</div>` : ''}
+        <div class="athlete-hero-form" style="color:${aiMomentum.color}">${aiMomentum.label}</div>
+        ${_narrativeParts.length ? `<div class="athlete-hero-narrative">${_narrativeParts.join(' · ')}</div>` : ''}
+        ${aiMomentum.gare14 > 0 ? `<div class="athlete-hero-recent">${aiMomentum.gare14} gar${aiMomentum.gare14===1?'a':'e'} · ${aiMomentum.vittorie14} vitt. · ${aiMomentum.podio14} podi nelle ultime 2 settimane</div>` : ''}
+      </div>
+      ${aiHeroMom ? `<div class="athlete-hero-right">
+        <div class="athlete-hero-moment-label">MIGLIOR RISULTATO</div>
+        <div class="athlete-hero-moment-pos" style="color:${aiHeroMom.best.pos===1?'var(--gold)':aiHeroMom.best.pos<=3?'var(--silver)':'var(--text-primary)'}">${aiHeroMom.best.pos}°</div>
+        <div class="athlete-hero-moment-race"><a href="#/gara/${esc(aiHeroMom.best.gara_id)}">${esc(aiHeroMom.best.nome)}</a></div>
+        <div class="athlete-hero-moment-date">${fmtDateShort(aiHeroMom.best.data)} · ${aiHeroMom.best.pts} pt</div>
+        ${aiHeroMom.lastWin ? `<div class="athlete-hero-moment-label" style="margin-top:14px">ULTIMA VITTORIA</div>
+        <div class="athlete-hero-moment-race"><a href="#/gara/${esc(aiHeroMom.lastWin.gara_id)}">${esc(aiHeroMom.lastWin.nome)}</a></div>
+        <div class="athlete-hero-moment-date">${fmtDateShort(aiHeroMom.lastWin.data)}</div>` : ''}
+      </div>` : ''}
+    </div>`;
+
+  // ── ATHLETE IDENTITY STRIP ───────────────────────────────────
+  const _rivalHtml = aiRivals.length ? aiRivals.map(r => `
+    <div class="ath-rival-item">
+      <a href="#/atleta/${encodeURIComponent(r.atleta_id)}" class="ath-rival-name">${esc(r.cognome)} ${esc(r.nome[0])}.</a>
+      <span class="ath-rival-meta">${r.encounters} sfid${r.encounters===1?'a':'e'}${r.wins>0?' · 🏆 '+r.wins:''}</span>
+    </div>`).join('') : `<p class="ath-empty-note">Dati rivalità insufficienti</p>`;
+
+  const _streakHtml = aiStreak.winStreak >= 2
+    ? `<div class="ath-streak-badge" style="color:var(--gold)">👑 ${aiStreak.winStreak} vittorie consecutive</div>`
+    : aiStreak.podioStreak >= 2
+    ? `<div class="ath-streak-badge" style="color:var(--red-hot)">🔥 ${aiStreak.podioStreak} podi di fila</div>`
+    : '';
+
+  const _identityHtml = aiIdentity ? `
+    <div class="ath-identity-strip">
+      <div class="ath-identity-card">
+        <div class="ath-identity-label">RIVALITÀ</div>
+        ${_rivalHtml}
+      </div>
+      <div class="ath-identity-card">
+        <div class="ath-identity-label">STILE DI GARA</div>
+        <div class="ath-style-tag"><span class="ath-style-icon">${aiIdentity.icon}</span>${aiIdentity.style}</div>
+        <div class="ath-style-desc">${aiIdentity.desc}</div>
+        ${_streakHtml}
+        ${aiIdentity.strengths.length ? `<div class="ath-strengths">${aiIdentity.strengths.map(s=>`<span class="ath-strength-chip">${s}</span>`).join('')}</div>` : ''}
+      </div>
+      <div class="ath-identity-card">
+        <div class="ath-identity-label">STATISTICHE CHIAVE</div>
+        <div class="ath-stat-block">
+          <div class="ath-stat-row"><span>Vittorie</span><strong style="color:var(--gold)">${aiIdentity.wins}</strong></div>
+          <div class="ath-stat-row"><span>Podi</span><strong style="color:var(--silver)">${aiIdentity.podi}</strong></div>
+          <div class="ath-stat-row"><span>Top-5</span><strong>${aiIdentity.top5}</strong></div>
+          <div class="ath-stat-row"><span>Win rate</span><strong>${Math.round(aiIdentity.winRate*100)}%</strong></div>
+          <div class="ath-stat-row"><span>Podio rate</span><strong>${Math.round(aiIdentity.podioRate*100)}%</strong></div>
+          <div class="ath-stat-row"><span>Gare disputate</span><strong>${aiIdentity.races}</strong></div>
+        </div>
+      </div>
+    </div>` : '';
 
   setPage(`
     ${headerHtml}
@@ -3397,8 +3494,9 @@ async function renderAtleta(atleta_id) {
       <button class="btn-share" onclick="window.openComparatore('${esc(atleta_id)}','atleta')">⚖ Compara</button>
       ${adminEditBtn('atleta', atleta_id)}
     </div>
-    ${siIntelPanelHtml}
-    <div class="section-header" style="margin-top:24px">
+    ${heroHtml}
+    ${_identityHtml}
+    <div class="section-header" style="margin-top:28px">
       <span class="section-title">RISULTATI STAGIONE</span>
       <span class="section-line"></span>
     </div>
@@ -3582,26 +3680,27 @@ async function renderTeam(team_id) {
   const allTeamRes  = globalData.resultsRaw.filter(r => r.team_id === team_id && r.posizione && r.data);
   const lastDateGlobal = allTeamRes.reduce((mx,r) => r.data > mx ? r.data : mx, '');
 
-  const mission   = siTeamMission(team_id, globalData.resultsRaw, [...tCatRanks]);
-  const strengths = siTeamStrengths(team_id, globalData.resultsRaw);
-  const momentum  = siTeamMomentumData(team_id, globalData.resultsRaw);
+  // Category-scoped raw for per-cat mission/strengths/momentum
+  const catScopedRaw = globalData.resultsRaw.filter(r => (getRankingFileCode(r)||r.categoria) === teamViewCat);
+  const catCatRanks  = tCatRanks.filter(rk => rk.cat === teamViewCat);
 
-  // Wins per category (dominance bar)
+  const mission   = siTeamMission(team_id, catScopedRaw, catCatRanks);
+  const strengths = siTeamStrengths(team_id, catScopedRaw);
+  const momentum  = siTeamMomentumData(team_id, catScopedRaw);
+
+  // Cat-scoped quick stats for the mission card
+  const _catRes = allTeamRes.filter(r => (getRankingFileCode(r)||r.categoria) === teamViewCat);
+  const catWins  = _catRes.filter(r => r.posizione === 1).length;
+  const catPodi  = _catRes.filter(r => r.posizione <= 3).length;
+  const catGare  = new Set(_catRes.map(r => r.gara_id)).size;
+
+  // Global dominance bars (all cats — used inside identity card)
   const winsByCat = {};
   for (const r of allTeamRes.filter(x => x.posizione === 1)) {
     const code = getRankingFileCode(r) || r.categoria;
     if (code) winsByCat[code] = (winsByCat[code]||0) + 1;
   }
   const maxCatWins = Math.max(...Object.values(winsByCat), 1);
-  const dominanceHtml = Object.keys(winsByCat).length ? `
-    <div class="team-dominance">
-      ${Object.entries(winsByCat).sort((a,b)=>b[1]-a[1]).map(([code,wins])=>`
-        <div class="team-dom-row">
-          <span class="team-dom-cat">${catLabel(code)}</span>
-          <div class="team-dom-track"><div class="team-dom-fill" style="width:${Math.round(wins/maxCatWins*100)}%"></div></div>
-          <span class="team-dom-wins">${wins}🏆</span>
-        </div>`).join('')}
-    </div>` : '<p style="color:var(--text-muted);font-size:0.8rem;margin:0">Nessuna vittoria stagionale ancora.</p>';
 
   // Top performers (across all categories)
   const perfMap = {};
@@ -3637,13 +3736,16 @@ async function renderTeam(team_id) {
   const identityHtml = `
     <div class="team-identity-strip">
       <div class="team-intel-card">
-        <div class="team-intel-label">MISSIONE STAGIONE</div>
+        <div class="team-intel-label">MISSIONE — ${catLabel(teamViewCat)}</div>
         <div class="team-mission-tag" style="color:${mission.color}">
           <span class="team-mission-icon">${mission.tag}</span><span>${mission.label}</span>
         </div>
         <div class="team-mission-desc">${mission.desc}</div>
-        <div class="team-intel-label" style="margin-top:14px;margin-bottom:8px">VITTORIE PER CATEGORIA</div>
-        ${dominanceHtml}
+        <div class="team-cat-quickstats">
+          ${catWins > 0 ? `<span class="team-cat-stat-chip" style="color:var(--gold)">🏆 ${catWins} vitt.</span>` : ''}
+          ${catPodi > catWins ? `<span class="team-cat-stat-chip">🥇 ${catPodi} podi</span>` : ''}
+          ${catGare > 0 ? `<span class="team-cat-stat-chip">${catGare} gare</span>` : ''}
+        </div>
       </div>
       <div class="team-intel-card">
         <div class="team-intel-label">PUNTI DI FORZA</div>
@@ -3737,6 +3839,7 @@ async function renderTeam(team_id) {
       ${adminEditBtn('team', team_id)}
     </div>
 
+    ${catTabsHtml}
     ${identityHtml}
 
     <div class="section-header" style="margin-top:28px">
@@ -3746,7 +3849,6 @@ async function renderTeam(team_id) {
     </div>
     <div class="team-performers-list" style="margin-bottom:28px">${topPerfHtml}</div>
 
-    ${catTabsHtml}
     <div class="section-header">
       <span class="section-title">ATLETI</span>
       <span class="section-line"></span>
