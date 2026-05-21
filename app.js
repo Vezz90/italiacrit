@@ -5582,20 +5582,22 @@ async function renderRisultati() {
   const { resultsRaw, calendar } = globalData;
   const photosMap = await loadRisPhotos();
   
-  // Raggruppa per EVENTO: (nome_gara normalizzato, data, genere)
-  // Questo evita che la stessa gara con categorie diverse appaia come doppia
+  // Raggruppa per gara_id — ogni categoria ha il proprio card separato.
+  // Eccezione: Esordienti 1°/2° anno (ES1/ES2) corrono insieme → stesso card.
   const eventMap = {};
   for (const r of resultsRaw) {
-    const eventKey = r.nome_gara.trim().toUpperCase() + '|' + r.data + '|' + (r.genere||'M');
+    // Normalizza ES1 e ES2 alla stessa chiave (gareggiano insieme)
+    const eventKey = (r.gara_id || '').replace(/_ES[12]_([MF])$/, '_ES_$1')
+                     || (r.nome_gara.trim().toUpperCase() + '|' + r.data + '|' + (r.genere||'M'));
     if (!eventMap[eventKey]) {
       eventMap[eventKey] = {
-        id: r.gara_id,          // gara_id del primo risultato (per link gara)
+        id: r.gara_id,
         nome: r.nome_gara,
         data: r.data,
         genere: r.genere,
         tipo: r.tipo,
         regione: r.regione,
-        byCategory: {}          // risultati raggruppati per categoria
+        byCategory: {}
       };
     }
     const cat = r.categoria || 'N/D';
