@@ -41,6 +41,8 @@ jobs:
 
       - name: Run race details scraper (informazioni tecniche gare)
         run: python scraper/race_details_scraper.py
+        continue-on-error: true   # non-blocking: se timeout/errore non blocca il commit
+        timeout-minutes: 20
         env:
           PYTHONUNBUFFERED: '1'
 

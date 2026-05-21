@@ -5,9 +5,24 @@ import ssl
 import bs4
 import re
 import time
+import signal
 from pathlib import Path
 from bs4 import BeautifulSoup
 import unicodedata
+
+# Timeout globale: interrompe lo script dopo MAX_SECONDS secondi
+# così non può bloccare il job GitHub Actions oltre il necessario
+MAX_SECONDS = 18 * 60  # 18 minuti
+
+class _TimeoutError(Exception): pass
+
+def _timeout_handler(signum, frame):
+    raise _TimeoutError("Timeout globale raggiunto — dettagli parziali salvati")
+
+# SIGALRM disponibile solo su Unix/Linux (GitHub Actions usa Ubuntu)
+if hasattr(signal, 'SIGALRM'):
+    signal.signal(signal.SIGALRM, _timeout_handler)
+    signal.alarm(MAX_SECONDS)
 
 # ----------------- CONFIGURAZIONE -----------------
 DATA_DIR = Path(__file__).parent.parent / "data"
@@ -177,37 +192,38 @@ def scrape_all_details():
         with open(DETAILS_FILE, 'r', encoding='utf-8') as f:
             details_map = json.load(f)
 
-    for c in calendar:
-        cal_id = c["id"]
-        c_date = c["data"]
-        c_norm = robust_norm(c["nome"])
-        
-        # Evita di riscaricare se c'è già (commentalo per forzare il refresh)
-        if cal_id in details_map and details_map[cal_id].get("info"):
-            continue
-            
-        fci_list = fci_races_map.get(c_date, [])
-        best_match_id = None
-        
-        # Exact/Substring match
-        for (f_norm, f_id, f_nome) in fci_list:
-            if c_norm in f_norm or f_norm in c_norm:
-                best_match_id = f_id
-                break
-                
-        if best_match_id:
-            print(f"  Scraping dettagli per {c['nome']} (FCI: {best_match_id})")
-            data = extract_race_details(best_match_id)
-            if data:
-                details_map[cal_id] = data
-            time.sleep(0.5)
-        else:
-            print(f"  [!] Nessun match per: {c['nome']} in data {c_date}")
+    try:
+        for c in calendar:
+            cal_id = c["id"]
+            c_date = c["data"]
+            c_norm = robust_norm(c["nome"])
 
-    # Salva file principale
-    with open(DETAILS_FILE, 'w', encoding='utf-8') as f:
-        json.dump(details_map, f, indent=2, ensure_ascii=False)
-    print(f"Salvati dettagli per {len(details_map)} gare in {DETAILS_FILE}")
+            # Evita di riscaricare se c'è già (commentalo per forzare il refresh)
+            if cal_id in details_map and details_map[cal_id].get("info"):
+                continue
+
+            fci_list = fci_races_map.get(c_date, [])
+            best_match_id = None
+
+            # Exact/Substring match
+            for (f_norm, f_id, f_nome) in fci_list:
+                if c_norm in f_norm or f_norm in c_norm:
+                    best_match_id = f_id
+                    break
+
+            if best_match_id:
+                print(f"  Scraping dettagli per {c['nome']} (FCI: {best_match_id})")
+                data = extract_race_details(best_match_id)
+                if data:
+                    details_map[cal_id] = data
+                time.sleep(0.5)
+            else:
+                print(f"  [!] Nessun match per: {c['nome']} in data {c_date}")
+    finally:
+        # Salva sempre — anche se interrotto da timeout
+        with open(DETAILS_FILE, 'w', encoding='utf-8') as f:
+            json.dump(details_map, f, indent=2, ensure_ascii=False)
+        print(f"Salvati dettagli per {len(details_map)} gare in {DETAILS_FILE}")
 
     # Salva file per categoria (subset del principale)
     cat_key_map = {
@@ -239,4 +255,10 @@ def scrape_all_details():
         print(f"  {cat_key}: {len(subset)} gare → {cat_file.name}")
 
 if __name__ == "__main__":
-    scrape_all_details()
+    try:
+        scrape_all_details()
+    except _TimeoutError as e:
+        print(f"\n[WARNING] {e} — uscita pulita, i dati parziali sono stati salvati.")
+    except Exception as e:
+        print(f"\n[ERROR] Errore non gestito: {e}")
+        raise
