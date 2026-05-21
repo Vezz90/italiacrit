@@ -2693,17 +2693,77 @@ async function updateRankTable() {
     });
     countLabel = `${filtered.length} atleti`;
 
+    // ── Championship intelligence ─────────────────────────────
+    const _rkLastDate2 = globalData.resultsRaw.reduce((mx,r)=>(r.data||'')>mx?r.data:mx,'');
+    const leaderPts    = filtered[0]?.punti || 0;
+
+    // Precompute momentum + streak for top 20
+    const _momCache2   = {};
+    const _streakCache2= {};
+    for (const entry of filtered.slice(0, 20)) {
+      _momCache2[entry.atleta_id]    = siMomentum(entry.atleta_id, globalData.resultsRaw, _rkLastDate2);
+      _streakCache2[entry.atleta_id] = siStreak(entry.atleta_id, globalData.resultsRaw);
+    }
+
+    // Championship battle banner
+    let champHtml = '';
+    if (filtered.length >= 2 && !isFiltered) {
+      const gap12 = (filtered[0]?.punti||0) - (filtered[1]?.punti||0);
+      const gap13 = filtered[2] ? (filtered[0]?.punti||0) - (filtered[2]?.punti||0) : null;
+      const leader = filtered[0];
+      let battleLabel = '';
+      if (gap12 === 0)       battleLabel = '<span class="rk-champ-fire">⚔ PAREGGIO IN VETTA</span>';
+      else if (gap12 < 15)   battleLabel = '<span class="rk-champ-fire">⚔ BATTAGLIA APERTA</span>';
+      else if (gap12 < 40)   battleLabel = '<span class="rk-champ-close">🔥 LOTTA SERRATA</span>';
+      const leaderMom = _momCache2[leader.atleta_id];
+      champHtml = `
+        <div class="rk-champ-banner">
+          <div class="rk-champ-leader">
+            <div class="rk-champ-crown">👑</div>
+            <div>
+              <div class="rk-champ-leader-name"><a href="#/atleta/${esc(leader.atleta_id)}">${esc(leader.cognome)} ${esc(leader.nome[0])}.</a></div>
+              <div class="rk-champ-leader-pts">${leader.punti} pt</div>
+            </div>
+          </div>
+          <div class="rk-champ-middle">
+            <div class="rk-champ-gap-label">${gap12 > 0 ? `+${gap12} sul 2°` : 'Parità'}</div>
+            ${battleLabel}
+            ${gap13 !== null && gap13 < 50 ? `<div class="rk-champ-sub">Solo ${gap13} pt tra 1° e 3°</div>` : ''}
+          </div>
+          ${leaderMom ? `<div class="rk-champ-form" style="color:${leaderMom.color}">${leaderMom.label}</div>` : ''}
+        </div>`;
+    }
+
     const rows = filtered.map((r, i) => {
       const pClass = posClass(r.pos);
-      return `<tr class="ranking-row" style="animation-delay:${Math.min(i,20)*30}ms">
+      const tier   = r.pos === 1 ? 'rk-tier-1' : r.pos <= 3 ? 'rk-tier-top3' : r.pos <= 10 ? 'rk-tier-top10' : '';
+      const gap    = r.pos === 1
+        ? '<span class="rk-leader-badge">LEADER</span>'
+        : i < 20 ? `<span class="rk-gap-label">−${leaderPts - r.punti}</span>` : '';
+      const mom    = _momCache2[r.atleta_id];
+      const str    = _streakCache2[r.atleta_id];
+      const formChip   = mom && i < 20 ? `<span class="rk-form-chip" style="color:${mom.color}">${mom.label.split(' ').slice(0,3).join(' ')}</span>` : '';
+      const streakBadge= str?.winStreak >= 2 ? `<span class="rk-streak-badge">👑${str.winStreak}W</span>` :
+                         str?.podioStreak >= 3 ? `<span class="rk-streak-badge" style="color:var(--red-hot)">🔥${str.podioStreak}P</span>` : '';
+      const nextGap = filtered[i+1] ? r.punti - filtered[i+1].punti : null;
+      const battleDot = nextGap !== null && nextGap <= 10 && r.pos > 1 ? '<span class="rk-battle-dot" title="Battaglia serrata con il successivo">⚡</span>' : '';
+      return `<tr class="ranking-row ${tier}" style="animation-delay:${Math.min(i,20)*30}ms">
         <td><span class="rank-num ${pClass}">${r.pos}</span></td>
-        <td style="text-align:center;width:40px">${renderTrend(r)}</td>
+        <td style="text-align:center;width:40px">${renderTrend(r)}${battleDot}</td>
         <td>
-          <span class="rank-name"><a href="#/atleta/${esc(r.atleta_id)}">${esc(r.cognome)} ${esc(r.nome)}</a></span>
-          <div class="td-team-mobile"><a href="#/team/${esc(r.team_id)}" style="color:var(--text-secondary)">${esc(r.team_nome)}</a></div>
+          <div class="rk-athlete-cell">
+            <span class="rank-name"><a href="#/atleta/${esc(r.atleta_id)}">${esc(r.cognome)} ${esc(r.nome)}</a></span>
+            <div class="td-team-mobile"><a href="#/team/${esc(r.team_id)}" style="color:var(--text-secondary)">${esc(r.team_nome)}</a></div>
+            ${formChip || streakBadge ? `<div class="rk-chips">${formChip}${streakBadge}</div>` : ''}
+          </div>
         </td>
         <td class="hide-mobile"><a href="#/team/${esc(r.team_id)}" style="color:var(--text-secondary);font-size:.85rem">${esc(r.team_nome)}</a></td>
-        <td class="r"><span class="rank-pts">${r.punti}</span></td>
+        <td class="r">
+          <div class="rk-pts-cell">
+            <span class="rank-pts">${r.punti}</span>
+            ${i < 20 ? gap : ''}
+          </div>
+        </td>
         <td class="r hide-mobile" style="color:var(--text-secondary);font-family:var(--font-mono);font-size:.85rem">${r.gare||0}</td>
         <td class="hide-mobile">
           <div class="td-p-wrap">
@@ -2716,7 +2776,7 @@ async function updateRankTable() {
       </tr>`;
     }).join('');
 
-    tableHtml = `
+    tableHtml = champHtml + `
       <table class="ranking-table">
         <thead><tr>
           <th style="width:50px">POS</th>
@@ -3702,32 +3762,25 @@ async function renderTeam(team_id) {
   }
   const maxCatWins = Math.max(...Object.values(winsByCat), 1);
 
-  // Top performers (across all categories)
-  const perfMap = {};
-  for (const r of allTeamRes) {
-    if (!perfMap[r.atleta_id]) perfMap[r.atleta_id] = { id:r.atleta_id, cognome:r.cognome, nome:r.nome, pts:0, wins:0, podi:0, cat:getRankingFileCode(r)||r.categoria };
-    perfMap[r.atleta_id].pts  += r.punti_effettivi||0;
-    if (r.posizione === 1) perfMap[r.atleta_id].wins++;
-    if (r.posizione <= 3) perfMap[r.atleta_id].podi++;
+  // Top performers — per categoria selezionata
+  const catPerfMap = {};
+  for (const r of catRisultati) {
+    if (!catPerfMap[r.atleta_id]) catPerfMap[r.atleta_id] = { id:r.atleta_id, cognome:r.cognome, nome:r.nome, pts:0, wins:0, podi:0 };
+    catPerfMap[r.atleta_id].pts  += r.punti_effettivi||0;
+    if (r.posizione === 1) catPerfMap[r.atleta_id].wins++;
+    if (r.posizione <= 3) catPerfMap[r.atleta_id].podi++;
   }
-  const topPerformers = Object.values(perfMap).sort((a,b) => b.pts - a.pts).slice(0, 5);
-  const _rankAccents = ['var(--gold)','var(--silver)','var(--bronze)','var(--text-muted)','var(--text-muted)'];
+  const topPerformers = Object.values(catPerfMap).sort((a,b) => b.pts - a.pts).slice(0, 6);
+  const _rankAccents = ['var(--gold)','var(--silver)','var(--bronze)','var(--text-muted)','var(--text-muted)','var(--text-muted)'];
   const topPerfHtml = topPerformers.length ? topPerformers.map((p,i) => {
-    const mom    = siMomentum(p.id, globalData.resultsRaw, lastDateGlobal);
-    const streak = siStreak(p.id, globalData.resultsRaw);
-    const sBadge = streak.winStreak >= 2 ? `<span class="team-perf-badge">👑${streak.winStreak}W</span>` :
-                   streak.podioStreak >= 2 ? `<span class="team-perf-badge">🔥${streak.podioStreak}P</span>` : '';
     return `<div class="team-performer-card">
       <div class="team-perf-rank" style="color:${_rankAccents[i]}">${i+1}</div>
       <div class="team-perf-info">
         <div class="team-perf-name"><a href="#/atleta/${esc(p.id)}">${esc(p.cognome)} <span style="font-weight:400">${esc(p.nome)}</span></a></div>
-        <div class="team-perf-cat">${catLabel(p.cat)}</div>
-        <div class="team-perf-form" style="color:${mom.color}">${mom.label.replace(/^[^ ]+ /,'')}</div>
       </div>
       <div class="team-perf-right">
         <div class="team-perf-pts">${p.pts}<small>pts</small></div>
         ${p.wins > 0 ? `<div class="team-perf-wins">🏆 ${p.wins}</div>` : ''}
-        ${sBadge}
       </div>
     </div>`;
   }).join('') : '<div class="empty-state">Nessun risultato stagionale</div>';
@@ -3845,18 +3898,10 @@ async function renderTeam(team_id) {
     <div class="section-header" style="margin-top:28px">
       <span class="section-title">CORRIDORI CHIAVE</span>
       <span class="section-line"></span>
-      <span class="section-subtitle">Stagione completa</span>
+      <span class="section-subtitle">${catLabel(teamViewCat)}</span>
     </div>
     <div class="team-performers-list" style="margin-bottom:28px">${topPerfHtml}</div>
 
-    <div class="section-header">
-      <span class="section-title">ATLETI</span>
-      <span class="section-line"></span>
-      <span class="section-subtitle">Per contributo punti</span>
-    </div>
-    <div class="cat-card" style="margin-bottom:32px;border-left:3px solid var(--yellow-race)">
-      <div class="cat-card-body">${atletiRows || '<div class="empty-state">Nessun atleta</div>'}</div>
-    </div>
     <div class="section-header">
       <span class="section-title">RISULTATI TEAM</span>
       <span class="section-line"></span>
