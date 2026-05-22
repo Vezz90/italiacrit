@@ -5390,16 +5390,23 @@ tr.ranking-row:not(.rk-tier-1):not(.rk-tier-top3):not(.rk-tier-top10) {
 .ris-mover-up   { background: rgba(16,185,129,0.1); color: #10b981; border: 1px solid rgba(16,185,129,0.2); }
 .ris-mover-down { background: rgba(239,68,68,0.08); color: var(--red-hot); border: 1px solid rgba(239,68,68,0.18); }
 
-/* Posizione in classifica generale accanto al nome nella pagina risultati */
+/* Posizione in classifica — mostrata sotto i punti nella tabella gara */
 .ris-rank-pos {
-  display: inline-block;
-  margin-left: 7px;
-  font-size: 0.62rem;
+  display: block;
+  font-size: 0.6rem;
   font-weight: 600;
   letter-spacing: .04em;
   color: var(--text-muted);
+  opacity: .8;
+  margin-top: 2px;
+  white-space: nowrap;
+}
+/* Nella card podio risultati rimane inline */
+.ris-podio-info .ris-rank-pos {
+  display: inline-block;
+  margin-left: 6px;
+  margin-top: 0;
   vertical-align: middle;
-  opacity: .75;
 }
 
 /* ── Calendario hype strip ───────────────────────────────────── */
@@ -7859,5 +7866,27 @@ body[data-hub] .loading-bar { background: var(--hub-color) !important; }
   border: 1px solid rgba(225,29,72,.3);
   border-radius: 4px;
   display: inline-block;
+}
+
+/* ── Stats page: editorial intelligence section ────────────── */
+.stats-intel-section {
+  margin-bottom: 32px;
+  padding: 24px 28px;
+  background: var(--bg-card);
+  border: 1px solid var(--border-subtle);
+  border-radius: 10px;
+}
+.stats-intel-lead p {
+  margin: 0 0 10px 0;
+  line-height: 1.65;
+  max-width: 72ch;
+}
+.stats-intel-lead p:last-child { margin-bottom: 0; }
+
+/* Hub newsroom: season context item */
+.em-news-context {
+  border-bottom: 1px solid var(--border-subtle);
+  margin-bottom: 4px;
+  padding-bottom: 8px;
 }
 

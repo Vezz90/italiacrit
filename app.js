@@ -1,5 +1,5 @@
 /* ============================================================
-   ItaliacritResultati — app.js
+   ItaliacritResultati — app.js  v120
    Hash Router + Page Renderers
    Legge i JSON statici da data/ via fetch()
    ============================================================ */
@@ -1117,9 +1117,21 @@ async function renderHubHome(hubCode) {
   function buildNewsHtml(resSet, label) {
     const items = siNewsroomFeed(resSet, [], [], [], {}).slice(0, 5);
     if (!items.length) return '';
+    // Season-context sentence from buildWeeklyNarrative section 0
+    let seasonContextHtml = '';
+    try {
+      const _ctxCat = hub.mainCat;
+      const _ctxNarr = buildWeeklyNarrative([], resultsRaw, _ctxCat);
+      if (_ctxNarr.length) {
+        seasonContextHtml = '<div class="em-news-item em-news-context">' +
+          '<div class="em-news-text" style="color:var(--text-secondary);font-style:italic">' + esc(_ctxNarr[0]) + '</div>' +
+          '</div>';
+      }
+    } catch(e) {}
     return '<section class="em-newsroom">' +
       '<div class="em-newsroom-header"><span class="em-newsroom-badge">📡 ' + label + '</span></div>' +
       '<div class="em-newsroom-feed">' +
+        seasonContextHtml +
         items.map(function(item) {
           const click = item.atleta_id
             ? ' onclick="location.hash=\'#/atleta/' + item.atleta_id + '\'"'
@@ -1779,24 +1791,50 @@ function siStreak(athleteId, resultsRaw) {
 }
 
 function siMomentum(athleteId, resultsRaw, lastRaceDate) {
+  const myRes = resultsRaw
+    .filter(r => r.atleta_id === athleteId && r.posizione && r.data)
+    .sort((a, b) => a.data.localeCompare(b.data));
+
+  // Keep legacy fields for callers that use them
   const cut14 = (() => { const d = new Date(lastRaceDate||new Date()); d.setDate(d.getDate()-14); return d.toISOString().split('T')[0]; })();
-  const cut28 = (() => { const d = new Date(lastRaceDate||new Date()); d.setDate(d.getDate()-28); return d.toISOString().split('T')[0]; })();
-  const r14 = resultsRaw.filter(r => r.atleta_id === athleteId && r.data >= cut14);
-  const r28 = resultsRaw.filter(r => r.atleta_id === athleteId && r.data >= cut28 && r.data < cut14);
+  const r14 = myRes.filter(r => r.data >= cut14);
   const pts14 = r14.reduce((s, r) => s + (r.punti_effettivi||0), 0);
-  const pts28 = r28.reduce((s, r) => s + (r.punti_effettivi||0), 0);
+  const pts28 = myRes.filter(r => { const cut28 = (() => { const d = new Date(lastRaceDate||new Date()); d.setDate(d.getDate()-28); return d.toISOString().split('T')[0]; })(); return r.data >= cut28 && r.data < cut14; }).reduce((s, r) => s + (r.punti_effettivi||0), 0);
   const gare14 = r14.length, podio14 = r14.filter(r=>r.posizione<=3).length, vittorie14 = r14.filter(r=>r.posizione===1).length;
-  let label, trend, color;
-  if (pts28 === 0 && pts14 > 0) { label = '🔥 In Grande Forma'; trend = 'up'; color = '#E11D48'; }
-  else if (pts28 === 0) { label = '⏸ Dati insufficienti'; trend = 'neutral'; color = 'rgba(255,255,255,0.4)'; }
-  else {
-    const ratio = pts14 / pts28;
-    if (ratio >= 1.8)      { label = '🔥 In Forma Straordinaria'; trend = 'up';      color = '#E11D48'; }
-    else if (ratio >= 1.2) { label = '📈 In Crescita';             trend = 'up';      color = '#22c55e'; }
-    else if (ratio >= 0.8) { label = '⚖ Stabile';                  trend = 'neutral'; color = 'rgba(255,255,255,0.5)'; }
-    else if (ratio >= 0.5) { label = '📉 In Rallentamento';         trend = 'down';    color = '#f59e0b'; }
-    else                   { label = '⚠ Momento Difficile';         trend = 'down';    color = '#ef4444'; }
+
+  if (myRes.length < 4) {
+    return { label: 'Dati insufficienti', trend: 'neutral', color: 'rgba(255,255,255,0.4)', pts14, pts28, gare14, podio14, vittorie14 };
   }
+
+  // Season trajectory score (based on siSeasonArc logic)
+  const arc = siSeasonArc(athleteId, resultsRaw);
+  let seasonScore = 0; // 0=neutral, positive=good, negative=bad
+  if (arc) {
+    const improvement = arc.earlyAvg - arc.lateAvg;
+    seasonScore = improvement / Math.max(arc.avgAll, 1);
+    if (arc.trajectory === 'dominante') seasonScore = 1;
+    else if (arc.trajectory === 'calo') seasonScore = Math.min(seasonScore, -0.3);
+  }
+
+  // Recent form score: last 20% of results by date
+  const recentCount = Math.max(1, Math.ceil(myRes.length * 0.2));
+  const recentRes = myRes.slice(-recentCount);
+  const olderRes  = myRes.slice(0, -recentCount);
+  const recentAvg = recentRes.reduce((s, r) => s + r.posizione, 0) / recentRes.length;
+  const olderAvg  = olderRes.length ? olderRes.reduce((s, r) => s + r.posizione, 0) / olderRes.length : recentAvg;
+  // positive = improving recently (lower pos is better)
+  const recentScore = (olderAvg - recentAvg) / Math.max(olderAvg, 1);
+
+  // Weighted blend: 60% season, 40% recent
+  const blended = seasonScore * 0.6 + recentScore * 0.4;
+
+  let label, trend, color;
+  if (blended >= 0.4)       { label = 'In grande forma'; trend = 'up';      color = '#E11D48'; }
+  else if (blended >= 0.12) { label = 'In crescita';     trend = 'up';      color = '#22c55e'; }
+  else if (blended >= -0.1) { label = 'Stabile';         trend = 'neutral'; color = 'rgba(255,255,255,0.5)'; }
+  else if (blended >= -0.3) { label = 'In calo';         trend = 'down';    color = '#f59e0b'; }
+  else                      { label = 'Difficile momento'; trend = 'down';   color = '#ef4444'; }
+
   return { label, trend, color, pts14, pts28, gare14, podio14, vittorie14 };
 }
 
@@ -1917,19 +1955,72 @@ function siNewsroomFeed(resultsRaw, allRankings, catOrder, topScalatori, teamDom
     const w = race.results.find(r => r.posizione === 1);
     if (w) items.push({ icon:'🥇', text:'<strong>' + esc(w.cognome) + ' ' + esc(w.nome) + '</strong> vince <em>' + esc(race.nome) + '</em> in ' + catLabel(race.code), type:'victory', atleta_id:w.atleta_id });
   }
-  // Biggest movers
+  // Biggest mover (only topScalatori[0], drop [2])
   if (topScalatori[0]) items.push({ icon:'📈', text:'<strong>' + esc(topScalatori[0].cognome) + ' ' + esc(topScalatori[0].nome) + '</strong> sale di <strong>+' + topScalatori[0].gain + ' posizioni</strong> in ' + catLabel(topScalatori[0].code), type:'mover', atleta_id:topScalatori[0].atleta_id });
-  if (topScalatori[2]) items.push({ icon:'📈', text:'<strong>' + esc(topScalatori[2].cognome) + ' ' + esc(topScalatori[2].nome) + '</strong> — ora ' + topScalatori[2].newPos + '° in ' + catLabel(topScalatori[2].code), type:'mover', atleta_id:topScalatori[2].atleta_id });
   // Team dominance
   for (const [code, td] of Object.entries(teamDom).slice(0,2)) {
     items.push({ icon:'🏆', text:'<strong>' + esc(td.team) + '</strong> domina in ' + catLabel(code) + ': <strong>' + td.wins + ' vittorie</strong> nell\'ultimo mese', type:'team', team_id:td.team_id });
   }
-  // Close battles
+  // Close battles (from ranking)
   for (let i=0; i < Math.min(allRankings.length, catOrder.length); i++) {
     const rk = allRankings[i]; if (!rk || rk.length < 2) continue;
     const gap = rk[0].punti - rk[1].punti;
     if (gap <= 15) { items.push({ icon:'⚔', text:'Solo <strong>' + gap + ' punti</strong> separano <strong>' + esc(rk[0].cognome) + '</strong> e <strong>' + esc(rk[1].cognome) + '</strong> in ' + catLabel(catOrder[i]), type:'battle' }); break; }
   }
+  // Full-season rivalry: top pair with close finishes (<3 positions apart)
+  (() => {
+    const pairs = {};
+    const byRaceAll = {};
+    for (const r of resultsRaw) {
+      if (!r.gara_id || !r.posizione || !r.data) continue;
+      if (!byRaceAll[r.gara_id]) byRaceAll[r.gara_id] = [];
+      byRaceAll[r.gara_id].push(r);
+    }
+    for (const raceResults of Object.values(byRaceAll)) {
+      const sorted = raceResults.slice().sort((a,b) => a.posizione - b.posizione);
+      for (let i = 0; i < sorted.length; i++) {
+        for (let j = i+1; j < sorted.length; j++) {
+          if (sorted[j].posizione - sorted[i].posizione >= 3) break;
+          const a = sorted[i], b = sorted[j];
+          if (a.atleta_id === b.atleta_id) continue;
+          const key = [a.atleta_id, b.atleta_id].sort().join('|');
+          if (!pairs[key]) pairs[key] = { aId:a.atleta_id, bId:b.atleta_id, aCog:a.cognome, bCog:b.cognome, close:0 };
+          pairs[key].close++;
+        }
+      }
+    }
+    const topPair = Object.values(pairs).sort((a,b) => b.close - a.close)[0];
+    if (!topPair || topPair.close < 3) return;
+    // Check if they're close in ranking (≤20 pts) — look in allRankings
+    for (let i = 0; i < allRankings.length; i++) {
+      const rk = allRankings[i]; if (!rk) continue;
+      const eA = rk.find(e => e.atleta_id === topPair.aId);
+      const eB = rk.find(e => e.atleta_id === topPair.bId);
+      if (eA && eB) {
+        const gap = Math.abs(eA.punti - eB.punti);
+        if (gap <= 20) {
+          items.push({ icon:'⚔', text:'Solo <strong>' + gap + ' punti</strong> separano <strong>' + esc(topPair.aCog) + '</strong> e <strong>' + esc(topPair.bCog) + '</strong> in classifica.', type:'battle' });
+        }
+        break;
+      }
+    }
+  })();
+  // Full-season team dominance: team with >30% of wins
+  (() => {
+    const teamWinCounts = {};
+    let totalWins = 0;
+    for (const r of resultsRaw) {
+      if (r.posizione !== 1 || !r.team_id) continue;
+      teamWinCounts[r.team_id] = teamWinCounts[r.team_id] || { team:r.team, team_id:r.team_id, wins:0 };
+      teamWinCounts[r.team_id].wins++;
+      totalWins++;
+    }
+    if (!totalWins) return;
+    const topTeam = Object.values(teamWinCounts).sort((a,b) => b.wins - a.wins)[0];
+    if (topTeam && topTeam.wins / totalWins > 0.3) {
+      items.push({ icon:'🏆', text:'<strong>' + esc(topTeam.team) + '</strong> domina la stagione: <strong>' + topTeam.wins + ' vittorie</strong> su ' + totalWins + ' totali.', type:'team', team_id:topTeam.team_id });
+    }
+  })();
   return items.slice(0, 8);
 }
 
@@ -2136,21 +2227,73 @@ function siBestMoment(athleteId, resultsRaw) {
 }
 
 // siAthleteStory — generate season narrative label for athlete
+function siSeasonArc(athleteId, resultsRaw) {
+  const myRes = resultsRaw
+    .filter(r => r.atleta_id === athleteId && r.posizione && r.data)
+    .sort((a, b) => a.data.localeCompare(b.data));
+  if (myRes.length < 4) return null;
+
+  const n = myRes.length;
+  const third = Math.floor(n / 3);
+  const early = myRes.slice(0, third);
+  const mid   = myRes.slice(third, third * 2);
+  const late  = myRes.slice(third * 2);
+
+  const avg = arr => arr.reduce((s, r) => s + r.posizione, 0) / arr.length;
+  const earlyAvg = avg(early);
+  const midAvg   = mid.length ? avg(mid) : earlyAvg;
+  const lateAvg  = avg(late);
+  const avgAll   = avg(myRes);
+
+  const wins  = myRes.filter(r => r.posizione === 1).length;
+  const podi  = myRes.filter(r => r.posizione <= 3).length;
+  const winRate   = wins / n;
+  const podioRate = podi / n;
+
+  // consistency = low stddev of positions
+  const variance = myRes.reduce((s, r) => s + Math.pow(r.posizione - avgAll, 2), 0) / n;
+  const stddev = Math.sqrt(variance);
+  const consistency = stddev < 3;
+
+  // trajectory detection
+  let trajectory;
+  const improvement = earlyAvg - lateAvg; // positive = improved (lower pos = better)
+  if (avgAll <= 3 && winRate >= 0.2) {
+    trajectory = 'dominante';
+  } else if (improvement >= 2 && lateAvg < earlyAvg) {
+    trajectory = lateAvg < midAvg ? 'crescita' : 'esplosivo';
+  } else if (improvement <= -2 && lateAvg > earlyAvg) {
+    trajectory = 'calo';
+  } else {
+    trajectory = 'stabile';
+  }
+
+  return { trajectory, earlyAvg, midAvg, lateAvg, n, avgAll, podioRate, winRate, consistency, wins, podi };
+}
+
 function siAthleteStory(athleteId, resultsRaw) {
-  const myRes = resultsRaw.filter(r => r.atleta_id === athleteId && r.posizione && r.data).sort((a,b) => b.data.localeCompare(a.data));
-  if (!myRes.length) return null;
-  const lastDate = myRes[0].data;
-  const cut30 = (() => { const d=new Date(lastDate||new Date()); d.setDate(d.getDate()-30); return d.toISOString().split('T')[0]; })();
-  const r30 = myRes.filter(r => r.data >= cut30);
-  const wins30 = r30.filter(r => r.posizione === 1).length;
-  const podi30 = r30.filter(r => r.posizione <= 3).length;
-  const { winStreak, podioStreak } = siStreak(athleteId, resultsRaw);
-  if (winStreak >= 3) return winStreak + ' vittorie di fila';
-  if (winStreak >= 2) return '2 vittorie consecutive';
-  if (podioStreak >= 4) return podioStreak + ' podi di fila';
-  if (wins30 >= 3) return wins30 + ' vittorie nell\'ultimo mese';
-  if (podi30 >= 4) return podi30 + ' podi nelle ultime settimane';
-  if (wins30 === 0 && r30.length > 2) return null;
+  const arc = siSeasonArc(athleteId, resultsRaw);
+  if (!arc) return null;
+  const { trajectory, n, wins, podi, winRate, podioRate, consistency } = arc;
+
+  if (trajectory === 'dominante' && winRate > 0.3) {
+    return `${n} gare, ${wins} vittorie: uno dei protagonisti della stagione.`;
+  }
+  if (trajectory === 'dominante') {
+    return `Regolarmente sul podio nel corso della stagione.`;
+  }
+  if (trajectory === 'crescita') {
+    return `Progressione costante nel corso della stagione.`;
+  }
+  if (trajectory === 'esplosivo') {
+    return `Partenza difficile, ora regolarmente tra i migliori.`;
+  }
+  if (trajectory === 'calo') {
+    return `Grande avvio, rendimento calato nelle ultime settimane.`;
+  }
+  if (trajectory === 'stabile' && consistency) {
+    return `Corridore affidabile — sempre nella parte alta della classifica.`;
+  }
   return null;
 }
 
@@ -2167,6 +2310,38 @@ function buildWeeklyNarrative(filtered, resultsRaw, catCode) {
   if (!latestDate) return lines;
   const cutWeek = (() => { const d = new Date(latestDate); d.setDate(d.getDate() - 7);  return d.toISOString().split('T')[0]; })();
   const cutPrev = (() => { const d = new Date(latestDate); d.setDate(d.getDate() - 14); return d.toISOString().split('T')[0]; })();
+
+  // 0. Season context: leadership stability
+  (() => {
+    // Group results by gara_id, find who was rank 1 after each race, sorted by date
+    const garaLeaders = {};
+    for (const r of allCatRes) {
+      if (r.rank_dopo_gara === 1) {
+        if (!garaLeaders[r.gara_id] || r.data > garaLeaders[r.gara_id].data) {
+          garaLeaders[r.gara_id] = { atleta_id: r.atleta_id, data: r.data };
+        }
+      }
+    }
+    const leaderHistory = Object.values(garaLeaders).sort((a, b) => a.data.localeCompare(b.data));
+    if (!leaderHistory.length) return;
+
+    // Count distinct leader changes
+    const distinctLeaders = new Set(leaderHistory.map(l => l.atleta_id));
+    let leaderChanges = 0;
+    for (let i = 1; i < leaderHistory.length; i++) {
+      if (leaderHistory[i].atleta_id !== leaderHistory[i-1].atleta_id) leaderChanges++;
+    }
+
+    // Check stability: last 3+ consecutive races same leader
+    const last3 = leaderHistory.slice(-3);
+    const stableTop = last3.length >= 3 && last3.every(l => l.atleta_id === last3[0].atleta_id);
+
+    if (leaderChanges >= 3) {
+      lines.push(`Il campionato ha già cambiato leader ${leaderChanges} volte.`);
+    } else if (stableTop) {
+      lines.push(`La classifica è stabile al vertice da settimane.`);
+    }
+  })();
 
   // 1. Situazione al vertice
   if (filtered.length >= 2) {
@@ -4306,14 +4481,14 @@ async function renderGara(gara_id) {
     return `<tr>
       <td class="td-pos ${pClass} ${r.posizione===1?'win':''}">${r.posizione}°</td>
       <td style="font-family:var(--font-heading);font-weight:700">
-        <a href="#/atleta/${esc(r.atleta_id)}">${esc(r.cognome)} ${esc(r.nome)}</a>${rkTag}
+        <a href="#/atleta/${esc(r.atleta_id)}">${esc(r.cognome)} ${esc(r.nome)}</a>
         <div class="td-team-mobile"><a href="#/team/${esc(r.team_id)}" style="color:var(--text-secondary)">${esc(r.team)}</a></div>
       </td>
       <td class="td-hide-mobile"><a href="#/team/${esc(r.team_id)}" style="color:var(--text-secondary)">${esc(r.team)}</a></td>
       <td class="td-time">${esc(r.tempo||'S.T.')}</td>
       <td class="td-hide-mobile" style="text-align:right">${esc(r.km || '—')}</td>
       <td class="td-hide-mobile" style="text-align:right">${esc(r.media || '—')}</td>
-      <td class="td-pts">${pts > 0 ? pts : '—'}</td>
+      <td class="td-pts">${pts > 0 ? pts : '—'}${rkTag}</td>
     </tr>`;
   }).join('');
   const _esCatHeader = (label) =>
@@ -5327,12 +5502,118 @@ async function renderStatistiche() {
     </div>` : ''}
   </div>`;
 
+  // ── Editorial intelligence section (stats page top) ──────────
+  // 1. Championship overview
+  const siIntelRaces = new Set(resultsRaw.map(r => r.gara_id)).size;
+  const siIntelAthletes = new Set(resultsRaw.filter(r => r.punti_effettivi > 0).map(r => r.atleta_id)).size;
+
+  // Find overall leader (across all categories): athlete with most wins or points
+  // We derive a simple cross-cat top from siWinCounts
+  const siIntelLeader = siTopWinner ? athletes[siTopWinner[0]] : null;
+  const siIntelLeaderName = siIntelLeader ? `${siIntelLeader.cognome} ${siIntelLeader.nome}` : null;
+  const siIntelLeaderWins = siTopWinner ? siTopWinner[1] : 0;
+
+  // Best trajectory: athlete whose siSeasonArc shows most improvement
+  let siBestArcId = null, siBestImprovement = -Infinity;
+  const siArcCandidates = Object.entries(siRaceCounts).filter(([id, g]) => g >= 5);
+  for (const [id] of siArcCandidates.slice(0, 60)) { // sample up to 60 for perf
+    const arc = siSeasonArc(id, resultsRaw);
+    if (!arc) continue;
+    const improvement = arc.earlyAvg - arc.lateAvg;
+    if (improvement > siBestImprovement) { siBestImprovement = improvement; siBestArcId = id; }
+  }
+  const siBestArcAtleta = siBestArcId ? athletes[siBestArcId] : null;
+  const siBestArcName = siBestArcAtleta ? `${siBestArcAtleta.cognome} ${siBestArcAtleta.nome}` : null;
+
+  // Most consistent: lowest position stddev, ≥5 races
+  let siMostConsistentId = null, siLowestStddev = Infinity;
+  for (const [id] of siArcCandidates) {
+    const arc = siSeasonArc(id, resultsRaw);
+    if (!arc || arc.n < 5) continue;
+    const myPos = resultsRaw.filter(r => r.atleta_id === id && r.posizione && r.data).map(r => r.posizione);
+    const mn = myPos.reduce((s,v)=>s+v,0)/myPos.length;
+    const sd = Math.sqrt(myPos.reduce((s,v)=>s+Math.pow(v-mn,2),0)/myPos.length);
+    if (sd < siLowestStddev) { siLowestStddev = sd; siMostConsistentId = id; }
+  }
+  const siMostConsistentAtleta = siMostConsistentId ? athletes[siMostConsistentId] : null;
+  const siMostConsistentName = siMostConsistentAtleta ? `${siMostConsistentAtleta.cognome} ${siMostConsistentAtleta.nome}` : null;
+
+  // Team with most wins in season
+  const siTeamWinMap = {};
+  let siTotalWins = 0;
+  for (const r of resultsRaw) {
+    if (r.posizione !== 1 || !r.team_id) continue;
+    if (!siTeamWinMap[r.team_id]) siTeamWinMap[r.team_id] = { team:r.team, wins:0 };
+    siTeamWinMap[r.team_id].wins++;
+    siTotalWins++;
+  }
+  const siTopTeam = Object.values(siTeamWinMap).sort((a,b) => b.wins - a.wins)[0];
+
+  // Top rivalry pair (season-long close finishes)
+  const siRivPairs = {};
+  const siByRaceAll = {};
+  for (const r of resultsRaw) {
+    if (!r.gara_id || !r.posizione || !r.data) continue;
+    if (!siByRaceAll[r.gara_id]) siByRaceAll[r.gara_id] = [];
+    siByRaceAll[r.gara_id].push(r);
+  }
+  for (const raceResults of Object.values(siByRaceAll)) {
+    const sorted = raceResults.slice().sort((a,b) => a.posizione - b.posizione);
+    for (let i = 0; i < sorted.length; i++) {
+      for (let j = i+1; j < sorted.length; j++) {
+        if (sorted[j].posizione - sorted[i].posizione >= 3) break;
+        const a = sorted[i], b = sorted[j];
+        if (a.atleta_id === b.atleta_id) continue;
+        const key = [a.atleta_id, b.atleta_id].sort().join('|');
+        if (!siRivPairs[key]) siRivPairs[key] = { aCog:a.cognome, bCog:b.cognome, aId:a.atleta_id, bId:b.atleta_id, close:0 };
+        siRivPairs[key].close++;
+      }
+    }
+  }
+  const siTopRiv = Object.values(siRivPairs).filter(p => p.close >= 3).sort((a,b) => b.close - a.close)[0];
+
+  // Build the editorial HTML
+  const siOverviewParts = [];
+  if (siIntelRaces > 0) siOverviewParts.push(`${siIntelRaces} gare disputate`);
+  if (siIntelAthletes > 0) siOverviewParts.push(`${siIntelAthletes} atleti classificati`);
+  const siOverviewBase = siOverviewParts.join(', ');
+  const siOverviewLeader = siIntelLeaderName ? ` ${esc(siIntelLeaderName)} guida la stagione con ${siIntelLeaderWins} vittorie.` : '';
+
+  const siDynamicsSentences = [];
+  if (siBestArcName && siBestImprovement > 1) {
+    siDynamicsSentences.push(`<strong style="color:var(--text-primary)">${esc(siBestArcName)}</strong> è l'atleta con la progressione più marcata della stagione.`);
+  }
+  if (siMostConsistentName) {
+    siDynamicsSentences.push(`<strong style="color:var(--text-primary)">${esc(siMostConsistentName)}</strong> è il corridore più regolare, con la minor varianza nei piazzamenti.`);
+  }
+  if (siTopTeam && siTotalWins > 0) {
+    const teamPct = Math.round(siTopTeam.wins / siTotalWins * 100);
+    siDynamicsSentences.push(`<strong style="color:var(--text-primary)">${esc(siTopTeam.team)}</strong> è la squadra più vincente: ${siTopTeam.wins} successi (${teamPct}% del totale).`);
+  }
+
+  const siRivalrySentences = [];
+  if (siTopRiv) {
+    siRivalrySentences.push(`La rivalità più accesa della stagione oppone <strong style="color:var(--text-primary)">${esc(siTopRiv.aCog)}</strong> e <strong style="color:var(--text-primary)">${esc(siTopRiv.bCog)}</strong>: ${siTopRiv.close} arrivi ravvicinati.`);
+  }
+
+  const siIntelHtml = (siOverviewBase || siDynamicsSentences.length || siRivalrySentences.length) ? `
+  <section class="stats-intel-section">
+    <div class="stats-intel-lead">
+      ${siOverviewBase ? `<p style="font-family:var(--font-heading);font-size:1.05rem;color:var(--text-primary);margin:0 0 12px 0;line-height:1.5">Stagione in corso: ${siOverviewBase}.${siOverviewLeader}</p>` : ''}
+      ${siDynamicsSentences.map(s => `<p style="color:var(--text-secondary);margin:0 0 8px 0;line-height:1.6;font-size:0.95rem">${s}</p>`).join('')}
+      ${siRivalrySentences.map(s => `<p style="color:var(--text-secondary);margin:0 0 8px 0;line-height:1.6;font-size:0.95rem">${s}</p>`).join('')}
+    </div>
+  </section>` : '';
+
   let activeRegTab = 'M';
   setPage(`
     <div class="pg-header">
       <div class="pg-eyebrow">📊 ANALISI & DATI</div>
       <h1 class="pg-title">STATISTICHE</h1>
     </div>
+
+    <!-- EDITORIAL INTELLIGENCE SECTION -->
+    ${siIntelHtml}
 
     <!-- SPORT INTELLIGENCE NARRATIVES -->
     ${siStoryCardsHtml}
