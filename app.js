@@ -244,6 +244,46 @@ async function loadAll() {
     }
   }
 
+  // ── Calcolo rank_dopo_gara client-side ────────────────────────
+  // Il campo non è scritto dallo scraper, quindi lo calcoliamo qui:
+  // per ogni categoria, processiamo i risultati in ordine cronologico,
+  // accumuliamo i punti_effettivi e dopo ogni gara assegniamo il rank.
+  // Così ogni risultato porta il rank dell'atleta DOPO quella specifica gara.
+  if (resultsRaw) {
+    // Raggruppa per catCode
+    const _byCode = {};
+    for (const r of resultsRaw) {
+      const code = getRankingFileCode(r);
+      if (!code || !r.data || !r.atleta_id) continue;
+      if (!_byCode[code]) _byCode[code] = [];
+      _byCode[code].push(r);
+    }
+    for (const catRes of Object.values(_byCode)) {
+      // Ordine crescente per data, poi per gara_id (più gare lo stesso giorno)
+      catRes.sort((a, b) => a.data.localeCompare(b.data) || (a.gara_id||'').localeCompare(b.gara_id||''));
+      const cumPts = {}; // atleta_id → punti cumulati
+      let i = 0;
+      while (i < catRes.length) {
+        // Raggruppa tutti i risultati della stessa gara (stesso gara_id)
+        const garaId = catRes[i].gara_id;
+        let j = i;
+        while (j < catRes.length && catRes[j].gara_id === garaId) j++;
+        const raceSlice = catRes.slice(i, j);
+        // Accumula punti di questa gara
+        for (const r of raceSlice) {
+          cumPts[r.atleta_id] = (cumPts[r.atleta_id] || 0) + (r.punti_effettivi || 0);
+        }
+        // Rank dopo questa gara: sort decrescente per punti cumulati
+        const sorted = Object.entries(cumPts).sort(([, a], [, b]) => b - a);
+        const rankMap = {};
+        sorted.forEach(([id], idx) => { rankMap[id] = idx + 1; });
+        // Assegna rank_dopo_gara a tutti i risultati di questa gara
+        for (const r of raceSlice) r.rank_dopo_gara = rankMap[r.atleta_id] || null;
+        i = j;
+      }
+    }
+  }
+
   // Indicizzazione per calcolo trend rapidi
   const resultsByAtleta = {};
   const resultsByTeam = {};
@@ -4262,10 +4302,11 @@ async function renderGara(gara_id) {
   const _buildRows = (arr) => arr.map(r => {
     const pts = r.punti_effettivi || (BASEPTS[r.posizione]||0) * mult;
     const pClass = posClass(r.posizione);
+    const rkTag = r.rank_dopo_gara ? `<span class="ris-rank-pos">${r.rank_dopo_gara}° class.</span>` : '';
     return `<tr>
       <td class="td-pos ${pClass} ${r.posizione===1?'win':''}">${r.posizione}°</td>
       <td style="font-family:var(--font-heading);font-weight:700">
-        <a href="#/atleta/${esc(r.atleta_id)}">${esc(r.cognome)} ${esc(r.nome)}</a>
+        <a href="#/atleta/${esc(r.atleta_id)}">${esc(r.cognome)} ${esc(r.nome)}</a>${rkTag}
         <div class="td-team-mobile"><a href="#/team/${esc(r.team_id)}" style="color:var(--text-secondary)">${esc(r.team)}</a></div>
       </td>
       <td class="td-hide-mobile"><a href="#/team/${esc(r.team_id)}" style="color:var(--text-secondary)">${esc(r.team)}</a></td>
@@ -6114,22 +6155,6 @@ async function renderRisultati() {
   const { resultsRaw, calendar } = globalData;
   const photosMap = await loadRisPhotos();
 
-  // ── Mappa rank corrente per atleta ────────────────────────────
-  // Per ogni (atleta_id, catCode) teniamo il rank_dopo_gara del risultato
-  // più recente. Questo riflette sempre l'ultimo scraping: se la settimana
-  // dopo l'atleta scende, la mappa si aggiorna da sola al prossimo run.
-  const currentRankMap = {}; // { atleta_id: { catCode: rank } }
-  for (const r of resultsRaw) {
-    if (!r.rank_dopo_gara || !r.atleta_id || !r.data) continue;
-    const code = getRankingFileCode(r);
-    if (!code) continue;
-    if (!currentRankMap[r.atleta_id]) currentRankMap[r.atleta_id] = {};
-    const cur = currentRankMap[r.atleta_id][code];
-    if (!cur || r.data > cur.data) {
-      currentRankMap[r.atleta_id][code] = { rank: r.rank_dopo_gara, data: r.data };
-    }
-  }
-
   // Raggruppa per gara_id — ogni categoria ha il proprio card separato.
   // Eccezione: Esordienti 1°/2° anno (ES1/ES2) corrono insieme → stesso card.
   const eventMap = {};
@@ -6291,15 +6316,10 @@ async function renderRisultati() {
           mediaVal ? esc(mediaVal) + ' km/h' : ''
         ].filter(Boolean).join(' · ');
 
-        // catCode di questa categoria per il lookup del rank corrente
-        const _catCodeForRank = sortedCatRes[0] ? getRankingFileCode(sortedCatRes[0]) : null;
-
         const podioRows = top3.map((r,i) => {
           const pClass = ['p1','p2','p3'][i] || 'pout';
-          // Usa il rank più recente scrapato per questo atleta in questa categoria
-          const rkPos = _catCodeForRank
-            ? (currentRankMap[r.atleta_id] || {})[_catCodeForRank]?.rank
-            : null;
+          // rank_dopo_gara è calcolato in loadAll() per ogni risultato
+          const rkPos = r.rank_dopo_gara;
           const rkHtml = rkPos ? '<span class="ris-rank-pos">' + rkPos + '° class.</span>' : '';
           return '<div class="hero-podio-row ris-podio-row" style="animation-delay:' + (i*60) + 'ms">' +
             '<div class="hero-pos ' + pClass + '">' + r.posizione + '&#176;</div>' +
