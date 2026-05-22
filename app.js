@@ -2376,11 +2376,16 @@ function buildWeeklyNarrative(filtered, resultsRaw, catCode) {
     const rankAfter  = lastWeekRes[0].rank_dopo_gara;
     const rankBefore = prevWeekRes[0].rank_dopo_gara;
     const gain = rankBefore - rankAfter; // positivo = salito in classifica
-    if (gain !== 0) movers.push({ entry, gain, rankAfter, rankBefore });
+    if (gain === 0) continue;
+    // Controlla se l'atleta ha chiuso top 5 in almeno una gara nell'ultima settimana
+    const hadTop5LastWeek = lastWeekRes.some(r => r.posizione && r.posizione <= 5);
+    movers.push({ entry, gain, rankAfter, rankBefore, hadTop5LastWeek });
   }
   movers.sort((a, b) => Math.abs(b.gain) - Math.abs(a.gain));
-  const risers  = movers.filter(m => m.gain >= 1).slice(0, 3);
-  const fallers = movers.filter(m => m.gain <= -2).slice(0, 1);
+  // Risers: top 5 nella gara + attualmente in top 30 — esclude chi sale da posizioni irrilevanti
+  const risers  = movers.filter(m => m.gain >= 1 && m.hadTop5LastWeek && m.rankAfter <= 30).slice(0, 3);
+  // Fallers: solo chi era già tra i primi 20 — movimenti significativi nella lotta al titolo
+  const fallers = movers.filter(m => m.gain <= -2 && m.rankBefore <= 20).slice(0, 1);
   for (const m of risers) {
     const pos = m.gain === 1 ? 'una posizione' : `${m.gain} posizioni`;
     lines.push(`${m.entry.cognome} guadagna ${pos} e sale ${m.rankAfter}°`);
