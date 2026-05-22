@@ -9789,7 +9789,7 @@
   "CICLISTICA_ROSTESE": {
     "id": "CICLISTICA_ROSTESE",
     "nome": "CICLISTICA ROSTESE",
-    "punti_totali": 188,
+    "punti_totali": 190,
     "atleti": [
       "TESSIORE_TOMMASO",
       "QUATTRONE_DAVIDE",
@@ -9839,8 +9839,8 @@
         "atleta_id": "BISTERZO_MANUEL",
         "atleta_cognome": "BISTERZO",
         "atleta_nome": "MANUEL",
-        "posizione": 4,
-        "punti_effettivi": 8,
+        "posizione": 3,
+        "punti_effettivi": 10,
         "moltiplicatore": 1,
         "tipo": "regionale",
         "regione": "PIEMONTE",
@@ -10151,7 +10151,7 @@
     "punti_per_cat": {
       "ELI_M": 130,
       "AL_M": 15,
-      "ES1_M": 28,
+      "ES1_M": 30,
       "ES2_M": 15
     }
   },
@@ -26407,11 +26407,11 @@
   "CICLISTICA_BORDIGHERA": {
     "id": "CICLISTICA_BORDIGHERA",
     "nome": "CICLISTICA BORDIGHERA",
-    "punti_totali": 48,
+    "punti_totali": 51,
     "atleti": [
       "RODIGARI_FRANCESCO",
-      "DAMI_GABRIELE",
       "GROSSO_MATTEO",
+      "DAMI_GABRIELE",
       "TALIA_LISANDRO_LORENZO"
     ],
     "risultati": [
@@ -26429,6 +26429,21 @@
         "regione": "PIEMONTE",
         "km": "65.800",
         "media": "42.452"
+      },
+      {
+        "gara_id": "TROFEO_ARDENS_GARA_UNICA_2026-05-17_ES1_M",
+        "nome_gara": "TROFEO ARDENS GARA UNICA",
+        "data": "2026-05-17",
+        "atleta_id": "GROSSO_MATTEO",
+        "atleta_cognome": "GROSSO",
+        "atleta_nome": "MATTEO",
+        "posizione": 8,
+        "punti_effettivi": 3,
+        "moltiplicatore": 1,
+        "tipo": "regionale",
+        "regione": "PIEMONTE",
+        "km": "28.900",
+        "media": "36.125"
       },
       {
         "gara_id": "1_TROFEO_CITTA_DI_GATTINARA_GARA_UNICA_2026-05-10_ES1_M",
@@ -26583,17 +26598,18 @@
     ],
     "punti_per_cat": {
       "AL_M": 15,
-      "ES1_M": 33
+      "ES1_M": 36
     }
   },
   "ARDENS_CYCLING_TEAM": {
     "id": "ARDENS_CYCLING_TEAM",
     "nome": "ARDENS CYCLING TEAM",
-    "punti_totali": 182,
+    "punti_totali": 187,
     "atleti": [
       "DOTTA_LEONARDO",
       "PELLEGRINO_LORENZO",
       "ARCUDI_FEDERICO",
+      "BIOLATTO_SAMUELE",
       "DONETTO_FILIPPO",
       "RACCA_ANDREA",
       "REJNAUD_MATTEO",
@@ -26650,11 +26666,26 @@
         "gara_id": "TROFEO_ARDENS_GARA_UNICA_2026-05-17_ES1_M",
         "nome_gara": "TROFEO ARDENS GARA UNICA",
         "data": "2026-05-17",
+        "atleta_id": "BIOLATTO_SAMUELE",
+        "atleta_cognome": "BIOLATTO",
+        "atleta_nome": "SAMUELE",
+        "posizione": 5,
+        "punti_effettivi": 6,
+        "moltiplicatore": 1,
+        "tipo": "regionale",
+        "regione": "PIEMONTE",
+        "km": "28.900",
+        "media": "36.125"
+      },
+      {
+        "gara_id": "TROFEO_ARDENS_GARA_UNICA_2026-05-17_ES1_M",
+        "nome_gara": "TROFEO ARDENS GARA UNICA",
+        "data": "2026-05-17",
         "atleta_id": "DONETTO_FILIPPO",
         "atleta_cognome": "DONETTO",
         "atleta_nome": "FILIPPO",
-        "posizione": 5,
-        "punti_effettivi": 6,
+        "posizione": 6,
+        "punti_effettivi": 5,
         "moltiplicatore": 1,
         "tipo": "regionale",
         "regione": "PIEMONTE",
@@ -26994,7 +27025,7 @@
     ],
     "punti_per_cat": {
       "AL_M": 25,
-      "ES1_M": 81,
+      "ES1_M": 86,
       "ES2_M": 76
     }
   },
@@ -27196,13 +27227,13 @@
   "PEDALE_OSSOLANO": {
     "id": "PEDALE_OSSOLANO",
     "nome": "PEDALE OSSOLANO",
-    "punti_totali": 72,
+    "punti_totali": 70,
     "atleti": [
       "BASALINI_EDOARDO",
-      "PIOLETTI_NIKOLAS",
       "MILANI_TOMMASO",
       "LA_FATA_VITTORIO",
-      "PONTI_GABRIELE"
+      "PONTI_GABRIELE",
+      "PIOLETTI_NIKOLAS"
     ],
     "risultati": [
       {
@@ -27219,21 +27250,6 @@
         "regione": "PIEMONTE",
         "km": "65.800",
         "media": "42.452"
-      },
-      {
-        "gara_id": "TROFEO_ARDENS_GARA_UNICA_2026-05-17_ES1_M",
-        "nome_gara": "TROFEO ARDENS GARA UNICA",
-        "data": "2026-05-17",
-        "atleta_id": "PIOLETTI_NIKOLAS",
-        "atleta_cognome": "PIOLETTI",
-        "atleta_nome": "NIKOLAS",
-        "posizione": 9,
-        "punti_effettivi": 2,
-        "moltiplicatore": 1,
-        "tipo": "regionale",
-        "regione": "PIEMONTE",
-        "km": "28.900",
-        "media": "36.125"
       },
       {
         "gara_id": "TROFEO_ARDENS_GARA_UNICA_2026-05-17_ES2_M",
@@ -27433,8 +27449,8 @@
     ],
     "punti_per_cat": {
       "AL_M": 22,
-      "ES1_M": 10,
-      "ES2_M": 40
+      "ES2_M": 40,
+      "ES1_M": 8
     }
   },
   "ESPERIA_PIASCO": {
@@ -50535,10 +50551,9 @@
   "ALBA_BRA_LANGHE_ROERO": {
     "id": "ALBA_BRA_LANGHE_ROERO",
     "nome": "ALBA BRA LANGHE ROERO",
-    "punti_totali": 11,
+    "punti_totali": 8,
     "atleti": [
-      "RAMONDETTI_GIOELE",
-      "CHERCHI_GABRIELE"
+      "RAMONDETTI_GIOELE"
     ],
     "risultati": [
       {
@@ -50548,23 +50563,8 @@
         "atleta_id": "RAMONDETTI_GIOELE",
         "atleta_cognome": "RAMONDETTI",
         "atleta_nome": "GIOELE",
-        "posizione": 3,
-        "punti_effettivi": 10,
-        "moltiplicatore": 1,
-        "tipo": "regionale",
-        "regione": "PIEMONTE",
-        "km": "28.900",
-        "media": "36.125"
-      },
-      {
-        "gara_id": "TROFEO_ARDENS_GARA_UNICA_2026-05-17_ES1_M",
-        "nome_gara": "TROFEO ARDENS GARA UNICA",
-        "data": "2026-05-17",
-        "atleta_id": "CHERCHI_GABRIELE",
-        "atleta_cognome": "CHERCHI",
-        "atleta_nome": "GABRIELE",
-        "posizione": 10,
-        "punti_effettivi": 1,
+        "posizione": 4,
+        "punti_effettivi": 8,
         "moltiplicatore": 1,
         "tipo": "regionale",
         "regione": "PIEMONTE",
@@ -50573,13 +50573,13 @@
       }
     ],
     "punti_per_cat": {
-      "ES1_M": 11
+      "ES1_M": 8
     }
   },
   "G_S_PREALPINO_A_S_D": {
     "id": "G_S_PREALPINO_A_S_D",
     "nome": "G.S. PREALPINO A.S.D.",
-    "punti_totali": 117,
+    "punti_totali": 116,
     "atleti": [
       "COGO_ACHILLE",
       "GRISONI_CARABALLO_ALESSIO_BRUNO",
@@ -50594,8 +50594,8 @@
         "atleta_id": "COGO_ACHILLE",
         "atleta_cognome": "COGO",
         "atleta_nome": "ACHILLE",
-        "posizione": 6,
-        "punti_effettivi": 5,
+        "posizione": 7,
+        "punti_effettivi": 4,
         "moltiplicatore": 1,
         "tipo": "regionale",
         "regione": "PIEMONTE",
@@ -50874,14 +50874,14 @@
       }
     ],
     "punti_per_cat": {
-      "ES1_M": 13,
+      "ES1_M": 12,
       "ES2_M": 104
     }
   },
   "U_C_A_B_1925_BIELLA_SEMPERLUX": {
     "id": "U_C_A_B_1925_BIELLA_SEMPERLUX",
     "nome": "U.C.A.B. 1925 BIELLA - SEMPERLUX",
-    "punti_totali": 15,
+    "punti_totali": 11,
     "atleti": [
       "CATAGUA_CHRISTIAN",
       "SALSICCIA_PIETRO",
@@ -50895,8 +50895,8 @@
         "atleta_id": "CATAGUA_CHRISTIAN",
         "atleta_cognome": "CATAGUA",
         "atleta_nome": "CHRISTIAN",
-        "posizione": 7,
-        "punti_effettivi": 4,
+        "posizione": 9,
+        "punti_effettivi": 2,
         "moltiplicatore": 1,
         "tipo": "regionale",
         "regione": "PIEMONTE",
@@ -50910,8 +50910,8 @@
         "atleta_id": "SALSICCIA_PIETRO",
         "atleta_cognome": "SALSICCIA",
         "atleta_nome": "PIETRO",
-        "posizione": 8,
-        "punti_effettivi": 3,
+        "posizione": 10,
+        "punti_effettivi": 1,
         "moltiplicatore": 1,
         "tipo": "regionale",
         "regione": "PIEMONTE",
@@ -50935,7 +50935,7 @@
       }
     ],
     "punti_per_cat": {
-      "ES1_M": 15
+      "ES1_M": 11
     }
   },
   "UA_CYCLING_TEAM": {

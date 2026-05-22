@@ -17109,31 +17109,6 @@
       }
     ]
   },
-  "RAMONDETTI_GIOELE": {
-    "id": "RAMONDETTI_GIOELE",
-    "nome": "GIOELE",
-    "cognome": "RAMONDETTI",
-    "team_attuale": "ALBA BRA LANGHE ROERO",
-    "team_id": "ALBA_BRA_LANGHE_ROERO",
-    "categoria": "ES1_M",
-    "genere": "M",
-    "punti_totali": 10,
-    "risultati": [
-      {
-        "gara_id": "TROFEO_ARDENS_GARA_UNICA_2026-05-17_ES1_M",
-        "nome_gara": "TROFEO ARDENS GARA UNICA",
-        "data": "2026-05-17",
-        "posizione": 3,
-        "punti_effettivi": 10,
-        "team": "ALBA BRA LANGHE ROERO",
-        "moltiplicatore": 1,
-        "tipo": "regionale",
-        "regione": "PIEMONTE",
-        "km": "28.900",
-        "media": "36.125"
-      }
-    ]
-  },
   "BISTERZO_MANUEL": {
     "id": "BISTERZO_MANUEL",
     "nome": "MANUEL",
@@ -17142,14 +17117,14 @@
     "team_id": "CICLISTICA_ROSTESE",
     "categoria": "ES1_M",
     "genere": "M",
-    "punti_totali": 10,
+    "punti_totali": 12,
     "risultati": [
       {
         "gara_id": "TROFEO_ARDENS_GARA_UNICA_2026-05-17_ES1_M",
         "nome_gara": "TROFEO ARDENS GARA UNICA",
         "data": "2026-05-17",
-        "posizione": 4,
-        "punti_effettivi": 8,
+        "posizione": 3,
+        "punti_effettivi": 10,
         "team": "CICLISTICA ROSTESE",
         "moltiplicatore": 1,
         "tipo": "regionale",
@@ -17172,6 +17147,56 @@
       }
     ]
   },
+  "RAMONDETTI_GIOELE": {
+    "id": "RAMONDETTI_GIOELE",
+    "nome": "GIOELE",
+    "cognome": "RAMONDETTI",
+    "team_attuale": "ALBA BRA LANGHE ROERO",
+    "team_id": "ALBA_BRA_LANGHE_ROERO",
+    "categoria": "ES1_M",
+    "genere": "M",
+    "punti_totali": 8,
+    "risultati": [
+      {
+        "gara_id": "TROFEO_ARDENS_GARA_UNICA_2026-05-17_ES1_M",
+        "nome_gara": "TROFEO ARDENS GARA UNICA",
+        "data": "2026-05-17",
+        "posizione": 4,
+        "punti_effettivi": 8,
+        "team": "ALBA BRA LANGHE ROERO",
+        "moltiplicatore": 1,
+        "tipo": "regionale",
+        "regione": "PIEMONTE",
+        "km": "28.900",
+        "media": "36.125"
+      }
+    ]
+  },
+  "BIOLATTO_SAMUELE": {
+    "id": "BIOLATTO_SAMUELE",
+    "nome": "SAMUELE",
+    "cognome": "BIOLATTO",
+    "team_attuale": "ARDENS CYCLING TEAM",
+    "team_id": "ARDENS_CYCLING_TEAM",
+    "categoria": "ES1_M",
+    "genere": "M",
+    "punti_totali": 6,
+    "risultati": [
+      {
+        "gara_id": "TROFEO_ARDENS_GARA_UNICA_2026-05-17_ES1_M",
+        "nome_gara": "TROFEO ARDENS GARA UNICA",
+        "data": "2026-05-17",
+        "posizione": 5,
+        "punti_effettivi": 6,
+        "team": "ARDENS CYCLING TEAM",
+        "moltiplicatore": 1,
+        "tipo": "regionale",
+        "regione": "PIEMONTE",
+        "km": "28.900",
+        "media": "36.125"
+      }
+    ]
+  },
   "DONETTO_FILIPPO": {
     "id": "DONETTO_FILIPPO",
     "nome": "FILIPPO",
@@ -17180,14 +17205,14 @@
     "team_id": "ARDENS_CYCLING_TEAM",
     "categoria": "ES1_M",
     "genere": "M",
-    "punti_totali": 23,
+    "punti_totali": 22,
     "risultati": [
       {
         "gara_id": "TROFEO_ARDENS_GARA_UNICA_2026-05-17_ES1_M",
         "nome_gara": "TROFEO ARDENS GARA UNICA",
         "data": "2026-05-17",
-        "posizione": 5,
-        "punti_effettivi": 6,
+        "posizione": 6,
+        "punti_effettivi": 5,
         "team": "ARDENS CYCLING TEAM",
         "moltiplicatore": 1,
         "tipo": "regionale",
@@ -17244,14 +17269,14 @@
     "team_id": "G_S_PREALPINO_A_S_D",
     "categoria": "ES1_M",
     "genere": "M",
-    "punti_totali": 13,
+    "punti_totali": 12,
     "risultati": [
       {
         "gara_id": "TROFEO_ARDENS_GARA_UNICA_2026-05-17_ES1_M",
         "nome_gara": "TROFEO ARDENS GARA UNICA",
         "data": "2026-05-17",
-        "posizione": 6,
-        "punti_effettivi": 5,
+        "posizione": 7,
+        "punti_effettivi": 4,
         "team": "G.S. PREALPINO A.S.D.",
         "moltiplicatore": 1,
         "tipo": "regionale",
@@ -17300,6 +17325,109 @@
       }
     ]
   },
+  "GROSSO_MATTEO": {
+    "id": "GROSSO_MATTEO",
+    "nome": "MATTEO",
+    "cognome": "GROSSO",
+    "team_attuale": "CICLISTICA BORDIGHERA",
+    "team_id": "CICLISTICA_BORDIGHERA",
+    "categoria": "ES1_M",
+    "genere": "M",
+    "punti_totali": 31,
+    "risultati": [
+      {
+        "gara_id": "TROFEO_ARDENS_GARA_UNICA_2026-05-17_ES1_M",
+        "nome_gara": "TROFEO ARDENS GARA UNICA",
+        "data": "2026-05-17",
+        "posizione": 8,
+        "punti_effettivi": 3,
+        "team": "CICLISTICA BORDIGHERA",
+        "moltiplicatore": 1,
+        "tipo": "regionale",
+        "regione": "PIEMONTE",
+        "km": "28.900",
+        "media": "36.125"
+      },
+      {
+        "gara_id": "2_TROFEO_CITTA_DI_OVADA_GARA_UNICA_2026-05-03_ES1_M",
+        "nome_gara": "2 TROFEO CITTA' DI OVADA GARA UNICA",
+        "data": "2026-05-03",
+        "posizione": 6,
+        "punti_effettivi": 5,
+        "team": "CICLISTICA BORDIGHERA",
+        "moltiplicatore": 1,
+        "tipo": "regionale",
+        "regione": "PIEMONTE",
+        "km": "35.700",
+        "media": "37.415"
+      },
+      {
+        "gara_id": "11_MEMORIAL_MARIO_BIANCO_GARA_UNICA_2026-05-01_ES1_M",
+        "nome_gara": "11 MEMORIAL MARIO BIANCO GARA UNICA",
+        "data": "2026-05-01",
+        "posizione": 5,
+        "punti_effettivi": 6,
+        "team": "CICLISTICA BORDIGHERA",
+        "moltiplicatore": 1,
+        "tipo": "regionale",
+        "regione": "PIEMONTE",
+        "km": "29.000",
+        "media": "40.154"
+      },
+      {
+        "gara_id": "COPPA_LIBERAZIONE_5_TROFEO_I_GREPPI_GARA_UNICA_2026-04-25_ES1_M",
+        "nome_gara": "COPPA LIBERAZIONE 5 TROFEO I GREPPI GARA UNICA",
+        "data": "2026-04-25",
+        "posizione": 5,
+        "punti_effettivi": 6,
+        "team": "CICLISTICA BORDIGHERA",
+        "moltiplicatore": 1,
+        "tipo": "regionale",
+        "regione": "TOSCANA",
+        "km": "30.500",
+        "media": "36.600"
+      },
+      {
+        "gara_id": "53_EDIZIONE_CIRCUITO_SAN_GIUSEPPE_GARA_UNICA_2026-04-19_ES1_M",
+        "nome_gara": "53 EDIZIONE CIRCUITO SAN GIUSEPPE GARA UNICA",
+        "data": "2026-04-19",
+        "posizione": 5,
+        "punti_effettivi": 6,
+        "team": "CICLISTICA BORDIGHERA",
+        "moltiplicatore": 1,
+        "tipo": "regionale",
+        "regione": "TOSCANA",
+        "km": "25.200",
+        "media": "36.878"
+      },
+      {
+        "gara_id": "SAGRA_DEL_CICLISMO_MEMORIAL_PIERO_VENTURINI_2026-04-12_ES1_M",
+        "nome_gara": "SAGRA DEL CICLISMO MEMORIAL PIERO VENTURINI",
+        "data": "2026-04-12",
+        "posizione": 7,
+        "punti_effettivi": 4,
+        "team": "CICLISTICA BORDIGHERA",
+        "moltiplicatore": 1,
+        "tipo": "regionale",
+        "regione": "TOSCANA",
+        "km": "24.250",
+        "media": "38.039"
+      },
+      {
+        "gara_id": "78_COPPA_COMUNE_DI_CALENZANO_GARA_UNICA_2026-04-06_ES1_M",
+        "nome_gara": "78 COPPA COMUNE DI CALENZANO GARA UNICA",
+        "data": "2026-04-06",
+        "posizione": 10,
+        "punti_effettivi": 1,
+        "team": "CICLISTICA BORDIGHERA",
+        "moltiplicatore": 1,
+        "tipo": "regionale",
+        "regione": "TOSCANA",
+        "km": "28.000",
+        "media": "39.070"
+      }
+    ]
+  },
   "CATAGUA_CHRISTIAN": {
     "id": "CATAGUA_CHRISTIAN",
     "nome": "CHRISTIAN",
@@ -17308,14 +17436,14 @@
     "team_id": "U_C_A_B_1925_BIELLA_SEMPERLUX",
     "categoria": "ES1_M",
     "genere": "M",
-    "punti_totali": 4,
+    "punti_totali": 2,
     "risultati": [
       {
         "gara_id": "TROFEO_ARDENS_GARA_UNICA_2026-05-17_ES1_M",
         "nome_gara": "TROFEO ARDENS GARA UNICA",
         "data": "2026-05-17",
-        "posizione": 7,
-        "punti_effettivi": 4,
+        "posizione": 9,
+        "punti_effettivi": 2,
         "team": "U.C.A.B. 1925 BIELLA - SEMPERLUX",
         "moltiplicatore": 1,
         "tipo": "regionale",
@@ -17333,95 +17461,6 @@
     "team_id": "U_C_A_B_1925_BIELLA_SEMPERLUX",
     "categoria": "ES1_M",
     "genere": "M",
-    "punti_totali": 3,
-    "risultati": [
-      {
-        "gara_id": "TROFEO_ARDENS_GARA_UNICA_2026-05-17_ES1_M",
-        "nome_gara": "TROFEO ARDENS GARA UNICA",
-        "data": "2026-05-17",
-        "posizione": 8,
-        "punti_effettivi": 3,
-        "team": "U.C.A.B. 1925 BIELLA - SEMPERLUX",
-        "moltiplicatore": 1,
-        "tipo": "regionale",
-        "regione": "PIEMONTE",
-        "km": "28.900",
-        "media": "36.125"
-      }
-    ]
-  },
-  "PIOLETTI_NIKOLAS": {
-    "id": "PIOLETTI_NIKOLAS",
-    "nome": "NIKOLAS",
-    "cognome": "PIOLETTI",
-    "team_attuale": "PEDALE OSSOLANO",
-    "team_id": "PEDALE_OSSOLANO",
-    "categoria": "ES1_M",
-    "genere": "M",
-    "punti_totali": 10,
-    "risultati": [
-      {
-        "gara_id": "TROFEO_ARDENS_GARA_UNICA_2026-05-17_ES1_M",
-        "nome_gara": "TROFEO ARDENS GARA UNICA",
-        "data": "2026-05-17",
-        "posizione": 9,
-        "punti_effettivi": 2,
-        "team": "PEDALE OSSOLANO",
-        "moltiplicatore": 1,
-        "tipo": "regionale",
-        "regione": "PIEMONTE",
-        "km": "28.900",
-        "media": "36.125"
-      },
-      {
-        "gara_id": "2_TROFEO_CITTA_DI_OVADA_GARA_UNICA_2026-05-03_ES1_M",
-        "nome_gara": "2 TROFEO CITTA' DI OVADA GARA UNICA",
-        "data": "2026-05-03",
-        "posizione": 10,
-        "punti_effettivi": 1,
-        "team": "PEDALE OSSOLANO",
-        "moltiplicatore": 1,
-        "tipo": "regionale",
-        "regione": "PIEMONTE",
-        "km": "35.700",
-        "media": "37.415"
-      },
-      {
-        "gara_id": "11_MEMORIAL_MARIO_BIANCO_GARA_UNICA_2026-05-01_ES1_M",
-        "nome_gara": "11 MEMORIAL MARIO BIANCO GARA UNICA",
-        "data": "2026-05-01",
-        "posizione": 7,
-        "punti_effettivi": 4,
-        "team": "PEDALE OSSOLANO",
-        "moltiplicatore": 1,
-        "tipo": "regionale",
-        "regione": "PIEMONTE",
-        "km": "29.000",
-        "media": "40.154"
-      },
-      {
-        "gara_id": "MEMORIAL_BESOZZI_2026-03-29_ES1_M",
-        "nome_gara": "MEMORIAL BESOZZI",
-        "data": "2026-03-29",
-        "posizione": 8,
-        "punti_effettivi": 3,
-        "team": "PEDALE OSSOLANO",
-        "moltiplicatore": 1,
-        "tipo": "regionale",
-        "regione": "PIEMONTE",
-        "km": "29.000",
-        "media": "36.995"
-      }
-    ]
-  },
-  "CHERCHI_GABRIELE": {
-    "id": "CHERCHI_GABRIELE",
-    "nome": "GABRIELE",
-    "cognome": "CHERCHI",
-    "team_attuale": "ALBA BRA LANGHE ROERO",
-    "team_id": "ALBA_BRA_LANGHE_ROERO",
-    "categoria": "ES1_M",
-    "genere": "M",
     "punti_totali": 1,
     "risultati": [
       {
@@ -17430,7 +17469,7 @@
         "data": "2026-05-17",
         "posizione": 10,
         "punti_effettivi": 1,
-        "team": "ALBA BRA LANGHE ROERO",
+        "team": "U.C.A.B. 1925 BIELLA - SEMPERLUX",
         "moltiplicatore": 1,
         "tipo": "regionale",
         "regione": "PIEMONTE",
@@ -55772,23 +55811,23 @@
       }
     ]
   },
-  "GROSSO_MATTEO": {
-    "id": "GROSSO_MATTEO",
-    "nome": "MATTEO",
-    "cognome": "GROSSO",
-    "team_attuale": "CICLISTICA BORDIGHERA",
-    "team_id": "CICLISTICA_BORDIGHERA",
+  "PIOLETTI_NIKOLAS": {
+    "id": "PIOLETTI_NIKOLAS",
+    "nome": "NIKOLAS",
+    "cognome": "PIOLETTI",
+    "team_attuale": "PEDALE OSSOLANO",
+    "team_id": "PEDALE_OSSOLANO",
     "categoria": "ES1_M",
     "genere": "M",
-    "punti_totali": 28,
+    "punti_totali": 8,
     "risultati": [
       {
         "gara_id": "2_TROFEO_CITTA_DI_OVADA_GARA_UNICA_2026-05-03_ES1_M",
         "nome_gara": "2 TROFEO CITTA' DI OVADA GARA UNICA",
         "data": "2026-05-03",
-        "posizione": 6,
-        "punti_effettivi": 5,
-        "team": "CICLISTICA BORDIGHERA",
+        "posizione": 10,
+        "punti_effettivi": 1,
+        "team": "PEDALE OSSOLANO",
         "moltiplicatore": 1,
         "tipo": "regionale",
         "regione": "PIEMONTE",
@@ -55799,9 +55838,9 @@
         "gara_id": "11_MEMORIAL_MARIO_BIANCO_GARA_UNICA_2026-05-01_ES1_M",
         "nome_gara": "11 MEMORIAL MARIO BIANCO GARA UNICA",
         "data": "2026-05-01",
-        "posizione": 5,
-        "punti_effettivi": 6,
-        "team": "CICLISTICA BORDIGHERA",
+        "posizione": 7,
+        "punti_effettivi": 4,
+        "team": "PEDALE OSSOLANO",
         "moltiplicatore": 1,
         "tipo": "regionale",
         "regione": "PIEMONTE",
@@ -55809,56 +55848,17 @@
         "media": "40.154"
       },
       {
-        "gara_id": "COPPA_LIBERAZIONE_5_TROFEO_I_GREPPI_GARA_UNICA_2026-04-25_ES1_M",
-        "nome_gara": "COPPA LIBERAZIONE 5 TROFEO I GREPPI GARA UNICA",
-        "data": "2026-04-25",
-        "posizione": 5,
-        "punti_effettivi": 6,
-        "team": "CICLISTICA BORDIGHERA",
+        "gara_id": "MEMORIAL_BESOZZI_2026-03-29_ES1_M",
+        "nome_gara": "MEMORIAL BESOZZI",
+        "data": "2026-03-29",
+        "posizione": 8,
+        "punti_effettivi": 3,
+        "team": "PEDALE OSSOLANO",
         "moltiplicatore": 1,
         "tipo": "regionale",
-        "regione": "TOSCANA",
-        "km": "30.500",
-        "media": "36.600"
-      },
-      {
-        "gara_id": "53_EDIZIONE_CIRCUITO_SAN_GIUSEPPE_GARA_UNICA_2026-04-19_ES1_M",
-        "nome_gara": "53 EDIZIONE CIRCUITO SAN GIUSEPPE GARA UNICA",
-        "data": "2026-04-19",
-        "posizione": 5,
-        "punti_effettivi": 6,
-        "team": "CICLISTICA BORDIGHERA",
-        "moltiplicatore": 1,
-        "tipo": "regionale",
-        "regione": "TOSCANA",
-        "km": "25.200",
-        "media": "36.878"
-      },
-      {
-        "gara_id": "SAGRA_DEL_CICLISMO_MEMORIAL_PIERO_VENTURINI_2026-04-12_ES1_M",
-        "nome_gara": "SAGRA DEL CICLISMO MEMORIAL PIERO VENTURINI",
-        "data": "2026-04-12",
-        "posizione": 7,
-        "punti_effettivi": 4,
-        "team": "CICLISTICA BORDIGHERA",
-        "moltiplicatore": 1,
-        "tipo": "regionale",
-        "regione": "TOSCANA",
-        "km": "24.250",
-        "media": "38.039"
-      },
-      {
-        "gara_id": "78_COPPA_COMUNE_DI_CALENZANO_GARA_UNICA_2026-04-06_ES1_M",
-        "nome_gara": "78 COPPA COMUNE DI CALENZANO GARA UNICA",
-        "data": "2026-04-06",
-        "posizione": 10,
-        "punti_effettivi": 1,
-        "team": "CICLISTICA BORDIGHERA",
-        "moltiplicatore": 1,
-        "tipo": "regionale",
-        "regione": "TOSCANA",
-        "km": "28.000",
-        "media": "39.070"
+        "regione": "PIEMONTE",
+        "km": "29.000",
+        "media": "36.995"
       }
     ]
   },
