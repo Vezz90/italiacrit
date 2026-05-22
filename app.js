@@ -727,6 +727,7 @@ function route() {
   if (m_gara) return renderGara(m_gara[1]);
   const m_forma = match('/forma/:cat');
   if (m_forma) return renderForma(m_forma[1]);
+  if (match('/news')) return renderNews();
 
   renderNotFound();
 }
@@ -983,6 +984,24 @@ function buildNetworkSection(resultsRaw, calendar) {
 
 // ── Hub Homepage ──────────────────────────────────────────────────────
 async function renderHubHome(hubCode) {
+  if (!globalData) return;
+  const hub = HUB_CONFIG[hubCode];
+  if (!hub) { renderNotFound(); return; }
+  activeHub = Object.assign({}, hub);
+  activeHub._code = hubCode;
+  applyHubFilters(activeHub);
+
+  // ── SEIA routing ────────────────────────────────────────────
+  // Hub di genere → selezione categoria
+  if (hubCode === 'uomini' || hubCode === 'donne') {
+    return renderGenderSelect(hubCode);
+  }
+  // Hub di categoria → hub editoriale
+  return renderEditorialHub(hubCode);
+}
+
+// ── LEGACY HUB (archivio — non più usato direttamente) ────────
+async function _renderHubHomeLegacy(hubCode) {
   if (!globalData) return;
   const hub = HUB_CONFIG[hubCode];
   if (!hub) { renderNotFound(); return; }
@@ -2411,8 +2430,566 @@ function buildWeeklyNarrative(filtered, resultsRaw, catCode) {
   return lines;
 }
 
-// ── HOME ──────────────────────────────────────────────────────
+// ═══════════════════════════════════════════════════════════════
+// SEASON EDITORIAL INTELLIGENCE AGENT (SEIA)
+// Engine 1: Season Analysis — usa l'intera stagione, non solo le ultime gare
+// ═══════════════════════════════════════════════════════════════
+function seiaSeasonAnalysis(hubCode, resultsRaw, ranking) {
+  const hub = HUB_CONFIG[hubCode];
+  if (!hub) return null;
+  const cat = hub.mainCat;
+  const catRes = resultsRaw.filter(r =>
+    hub.catCodes.includes(getRankingFileCode(r)) && r.genere === hub.gender
+  );
+
+  const lastDate  = catRes.reduce((mx,r)=>(r.data||'')>mx?r.data:mx,'');
+  const firstDate = catRes.reduce((mn,r)=>(!mn||(r.data||'')<mn)?r.data:mn,'');
+
+  const raceIds    = new Set(catRes.map(r=>r.gara_id));
+  const totalRaces = raceIds.size;
+  const msSpan     = new Date(lastDate) - new Date(firstDate);
+  const weeksDuration = Math.max(1, Math.round(msSpan/(7*864e5)));
+
+  let seasonPhase = 'early';
+  if (weeksDuration >= 14) seasonPhase = 'late';
+  else if (weeksDuration >= 7) seasonPhase = 'mid';
+
+  const leader = ranking[0]||null;
+  const second = ranking[1]||null;
+  const third  = ranking[2]||null;
+  const gap12  = leader&&second ? leader.punti-second.punti : null;
+  const gap13  = leader&&third  ? leader.punti-third.punti  : null;
+
+  const leaderRes  = leader ? catRes.filter(r=>r.atleta_id===leader.atleta_id) : [];
+  const leaderWins = leaderRes.filter(r=>r.posizione===1).length;
+  const leaderWinRate = leaderRes.length>0 ? leaderWins/leaderRes.length : 0;
+
+  const isDominating  = gap12!==null && gap12>25 && leaderWinRate>=0.3;
+  const isVeryClose   = gap12!==null && gap12<=10;
+  const isClose       = gap12!==null && gap12<=28;
+
+  // Recent form — last 28 days
+  const cut4w = (()=>{const d=new Date(lastDate||new Date());d.setDate(d.getDate()-28);return d.toISOString().split('T')[0];})();
+  const recentMap={};
+  catRes.filter(r=>r.data>=cut4w).forEach(r=>{
+    if(!recentMap[r.atleta_id]) recentMap[r.atleta_id]={aid:r.atleta_id,cog:r.cognome,nom:r.nome,team:r.team,pts:0,wins:0,gare:0};
+    recentMap[r.atleta_id].pts+=(r.punti_effettivi||0);
+    recentMap[r.atleta_id].gare++;
+    if(r.posizione===1) recentMap[r.atleta_id].wins++;
+  });
+  const recentSorted = Object.values(recentMap).sort((a,b)=>b.pts-a.pts);
+  const recentLeader = recentSorted[0]||null;
+  const risingThreat = recentLeader&&leader&&recentLeader.aid!==leader.atleta_id ? recentLeader : null;
+
+  // Rivalry
+  const catOnly = catRes.filter(r=>getRankingFileCode(r)===cat);
+  const rivalry = siRivalryFinder(catOnly)[0]||null;
+
+  // Top team (among top-20)
+  const teamMap={};
+  ranking.slice(0,20).forEach(a=>{
+    const tk=a.team_id||'?';
+    if(!teamMap[tk]) teamMap[tk]={team:a.team_nome||a.team_attuale||tk,pts:0,count:0,top3:0};
+    teamMap[tk].pts+=a.punti; teamMap[tk].count++;
+    if((a.pos||99)<=3) teamMap[tk].top3++;
+  });
+  const topTeam = Object.values(teamMap).filter(t=>t.count>=2).sort((a,b)=>b.pts-a.pts)[0]||null;
+
+  return {
+    hubCode,cat,hub,catRes,totalRaces,weeksDuration,seasonPhase,
+    firstDate,lastDate,leader,second,third,gap12,gap13,
+    leaderRes,leaderWins,leaderWinRate,isDominating,isVeryClose,isClose,
+    recentLeader,risingThreat,rivalry,topTeam,ranking
+  };
+}
+
+// ── Engine 4: Content Generation ─────────────────────────────────
+function seiaGenerateSeasonArticle(analysis) {
+  if(!analysis||!analysis.leader) return null;
+  const {cat,hub,leader,second,third,gap12,gap13,leaderWins,leaderWinRate,
+         leaderRes,totalRaces,weeksDuration,seasonPhase,isDominating,
+         isVeryClose,isClose,risingThreat,rivalry,topTeam,ranking} = analysis;
+
+  const catName = catLabel(cat);
+  const ln  = leader.cognome;
+  const lf  = leader.cognome+' '+leader.nome;
+  const lpt = leader.punti;
+  const lg  = leaderRes.length||leader.gare||1;
+  const lte = leader.team_nome||leader.team_attuale||'';
+
+  // TITOLO
+  let title;
+  if (isDominating && leaderWins>=4)
+    title = `${ln} inarrestabile: la stagione ${catName} ha già un padrone`;
+  else if (isDominating && leaderWins>=2)
+    title = `${ln} in controllo: vantaggio, vittorie e una classifica che parla chiaro`;
+  else if (isVeryClose && second)
+    title = `${ln} e ${second.cognome}: la battaglia per la vetta che tiene in sospeso la stagione ${catName}`;
+  else if (isClose && !isDominating && second)
+    title = `La corsa è aperta: la stagione ${catName} non ha ancora un padrone`;
+  else if (risingThreat && risingThreat.wins>=2)
+    title = `${risingThreat.cog} scuote la stagione: la sfida al vertice si riapre`;
+  else if (rivalry && rivalry.encounters>=4)
+    title = `${rivalry.aCog} vs ${rivalry.bCog}: la rivalità che segna la stagione ${catName}`;
+  else
+    title = `${lf}: al comando di una stagione ${catName} ancora tutta da scrivere`;
+
+  // INTRO
+  let intro;
+  if (isDominating) {
+    intro = `${lf} non ha lasciato molti dubbi. ${leaderWins} vittori${leaderWins===1?'a':'e'} su ${lg} presenze — numeri che pochi possono permettersi in questa categoria — raccontano una stagione che ha trovato il suo protagonista. `
+      +(gap12>40
+        ?`${gap12} punti di vantaggio su ${second?.cognome||'il secondo'}: un margine che, se questa stagione fosse una corsa in linea, varrebbe già il traguardo.`
+        :`${gap12} punti separano ${ln} da ${second?.cognome||'il secondo'}: abbastanza per respirare, non abbastanza per smettere di correre.`);
+  } else if (isVeryClose) {
+    intro = `${gap12} punti. È questo il confine sottile che separa ${ln} da ${second?.cognome||'il suo inseguitore'} nella classifica ${catName}. `
+      +`Ogni gara diventa una resa dei conti, ogni weekend un'occasione per ribaltare un equilibrio che non si è mai davvero stabilizzato. `
+      +`In una stagione simile, la testa conta quanto le gambe.`;
+  } else if (isClose) {
+    intro = `La classifica ${catName} ha il volto di ${ln}, ma i conti sono ancora aperti. `
+      +`${lpt} punti in ${totalRaces} gare disputate, ${gap12} di vantaggio su ${second?.cognome||'il secondo'}: `
+      +`un margine da difendere e, per chi lo insegue, ancora tutto da costruire.`;
+  } else {
+    intro = `Stagione ${catName}: ${totalRaces} gare, ${ranking.length} corridori in classifica, `
+      +`e un nome che emerge sopra tutti — ${lf}. `
+      +`Con ${lpt} punti${leaderWins>0?' e '+leaderWins+' vittori'+(leaderWins===1?'a':'e')+'':''}, `
+      +`il corridore di ${lte||'la sua squadra'} tiene le redini di una stagione ancora in divenire.`;
+  }
+
+  // SEZIONI
+  const sections = [];
+
+  // § 1 — La vetta
+  let s1 = `${ln} guida con ${lpt} punti${leaderWins>0?' e '+leaderWins+' vittori'+(leaderWins===1?'a':'e'):''}. `;
+  if (second&&third) {
+    s1 += `${second.cognome} (${second.punti} pt) e ${third.cognome} (${third.punti} pt) formano una top-3 `;
+    s1 += isVeryClose
+      ?`compressa in ${gap13} punti — un fazzoletto che può ribaltarsi in un solo weekend.`
+      :isClose
+        ?`separata da distacchi ancora combattibili. La classifica è viva.`
+        :` con distacchi che pesano ma non escludono ancora nessuno dalla lotta.`;
+  } else if (second) {
+    s1 += `${second.cognome} insegue a ${gap12} punti: un distacco `
+      +(isClose?`che tiene aperta ogni possibilità.`:`che si è allargato nelle ultime settimane.`);
+  }
+  sections.push({heading:'Il quadro in vetta', body:s1});
+
+  // § 2 — Rivalità o minaccia emergente
+  if (rivalry&&rivalry.encounters>=3) {
+    const rv=rivalry;
+    let s2=`Due nomi che tornano sui tabelloni degli ${catName} con frequenza non casuale: ${rv.aCog} e ${rv.bCog}. `;
+    s2+=`${rv.encounters} scontri diretti in stagione`;
+    if (rv.aWins>rv.bWins)
+      s2+=`, con ${rv.aCog} in vantaggio ${rv.aWins} a ${rv.bWins}. Un divario che esiste, ma che ${rv.bCog} non ha mai smesso di contestare.`;
+    else if (rv.bWins>rv.aWins)
+      s2+=`, con ${rv.bCog} avanti ${rv.bWins} a ${rv.aWins}. Ogni incrocio è una partita a sé.`;
+    else
+      s2+=` e il conto in perfetta parità: ${rv.aWins} vittorie per parte. La prossima sfida diretta vale doppio.`;
+    sections.push({heading:'La rivalità che segna la stagione', body:s2});
+  } else if (risingThreat) {
+    const rt=risingThreat;
+    const rtPos = ranking.findIndex(r=>r.atleta_id===rt.aid)+1;
+    let s2=`Il nome che scorre sulle labbra nelle ultime settimane è quello di ${rt.cog}. `;
+    s2+=`Con ${rt.pts} punti nell'ultimo mese — il rendimento più alto della categoria in quel periodo — `;
+    s2+=rt.wins>0
+      ?`e ${rt.wins} vittori${rt.wins===1?'a':'e'} recenti, è lui il protagonista di questo momento di stagione.`
+      :`ha costruito una progressione che lo rende difficile da ignorare.`;
+    if (rtPos>0&&rtPos<=15) {
+      const ptGap=ranking[0].punti-(ranking[rtPos-1]?.punti||0);
+      s2+=` Attualmente ${rtPos}° in classifica, a ${ptGap} punti dalla vetta: `
+        +(ptGap<=30?`abbastanza vicino da crederci davvero.`:`lontano ma non impossibile.`);
+    }
+    sections.push({heading:'La minaccia che cresce', body:s2});
+  }
+
+  // § 3 — Dimensione di squadra
+  if (topTeam) {
+    let s3=`Nell'analisi di questa stagione ${catName}, non si può ignorare il peso di ${topTeam.team}. `;
+    s3+=topTeam.count>=3
+      ?`Con ${topTeam.count} corridori nei piani alti della classifica, il team ha costruito un blocco di forza che condiziona le strategie di tutti gli avversari.`
+      :`Due atleti ai vertici della classifica: una doppia presenza che si traduce in più opzioni tattiche e più pressione sugli avversari.`;
+    if (topTeam.top3>0)
+      s3+=` ${topTeam.top3===1?'Un corridore nella top-3':topTeam.top3+' corridori nella top-3'} assoluta. Numeri che parlano di un team costruito per vincere.`;
+    sections.push({heading:'La dimensione di squadra', body:s3});
+  }
+
+  // CONCLUSIONE
+  let conclusion;
+  if (seasonPhase==='early')
+    conclusion=`Siamo nelle prime settimane della stagione ${catName}. Le gerarchie sono fluide, i protagonisti ancora in assestamento. `
+      +`Ogni weekend aggiunge mattoni alla classifica e, potenzialmente, cambia il racconto. Il titolo è ancora un'ipotesi; chi lo vincerà lo deciderà nelle gare che verranno.`;
+  else if (seasonPhase==='mid')
+    conclusion=`La stagione è nel pieno del suo corso. Le tendenze si consolidano, i caratteri emergono, e la classifica prende forma. `
+      +(isDominating
+        ?`${ln} sembra aver trovato il proprio ritmo. Fermarlo adesso richiederebbe qualcosa di straordinario.`
+        :isClose
+          ?`La lotta per il titolo è aperta. Ogni punto ha un peso che, a fine stagione, potrebbe fare la differenza.`
+          :`Chi ha costruito la stagione con intelligenza e costanza è pronto a raccogliere i frutti.`);
+  else
+    conclusion=`Il finale di stagione è alle porte. I punti pesano il doppio, la pressione sale, i margini d'errore si restringono. `
+      +(isDominating
+        ?`${ln} parte da favorito. Qualcosa di imprevisto dovrebbe cambiare le sorti di una stagione che sembra già scritta.`
+        :`Nulla è ancora deciso. Le prossime settimane diranno chi aveva la mentalità — oltre alle gambe — per arrivare dove conta.`);
+
+  return {
+    id:`season_${cat}_${analysis.lastDate||'2026'}`,
+    type:'season_story', category:cat, hubCode,
+    title, intro, sections, conclusion,
+    importance:100,
+    generatedAt:new Date().toISOString().split('T')[0],
+    leaderAtletaId:leader?.atleta_id, leaderName:ln
+  };
+}
+
+function seiaGenerateSecondaryArticles(analysis) {
+  const arts=[];
+  const {cat,leader,second,ranking,rivalry,risingThreat,topTeam,gap12,isVeryClose,isDominating} = analysis;
+
+  // Rivalità
+  if (rivalry&&rivalry.encounters>=4) {
+    arts.push({
+      id:`rivalry_${cat}`,type:'rivalry',category:cat,
+      title:`${rivalry.aCog} vs ${rivalry.bCog}: ${rivalry.encounters} sfide, una sola rivalità`,
+      intro:`${rivalry.encounters} incontri diretti. Ogni volta che si trovano allo stesso traguardo, la storia della stagione cambia.`,
+      preview:`${rivalry.aWins} vittorie contro ${rivalry.bWins}: il bilancio lascia aperto ogni scenario.`,
+      linkA:`#/atleta/${encodeURIComponent(rivalry.aId)}`,
+      linkB:`#/atleta/${encodeURIComponent(rivalry.bId)}`,
+      nameA:rivalry.aCog, nameB:rivalry.bCog
+    });
+  }
+
+  // Momentum
+  if (risingThreat&&risingThreat.wins>=1) {
+    const rtPos=ranking.findIndex(r=>r.atleta_id===risingThreat.aid)+1;
+    arts.push({
+      id:`momentum_${cat}_${risingThreat.aid}`,type:'momentum',category:cat,
+      title:`${risingThreat.cog}: il momento di un corridore che non si può ignorare`,
+      intro:`${risingThreat.wins} vittori${risingThreat.wins===1?'a':'e'} recenti e il rendimento più alto della categoria nell'ultimo mese.`,
+      preview:rtPos>0?`Attualmente ${rtPos}° in classifica — e in ascesa.`:'Una progressione che parla da sola.',
+      athleteId:risingThreat.aid
+    });
+  }
+
+  // Scenario
+  if (isVeryClose&&second&&gap12!==null) {
+    arts.push({
+      id:`scenario_${cat}_title`,type:'scenario',category:cat,
+      title:`Come si ribalta tutto: lo scenario che può riscrivere la classifica ${catLabel(cat)}`,
+      intro:`${gap12} punti tra il primo e il secondo. In una gara con moltiplicatore, questo distacco sparisce in un pomeriggio.`,
+      preview:`I numeri che spiegano perché la lotta al titolo è matematicamente ancora aperta.`
+    });
+  }
+
+  // Team
+  if (topTeam&&topTeam.count>=2&&arts.length<3) {
+    arts.push({
+      id:`team_${cat}_${topTeam.team}`,type:'team',category:cat,
+      title:`${topTeam.team}: la forza collettiva che ridisegna la categoria`,
+      intro:`${topTeam.count} corridori nei piani alti della classifica non è un caso. È un sistema che funziona.`,
+      preview:'Il modello che trasforma una squadra in fattore determinante di stagione.'
+    });
+  }
+
+  return arts.slice(0,3);
+}
+
+function seiaContextLine(analysis) {
+  const {leader,second,gap12,totalRaces,seasonPhase,risingThreat,rivalry,isDominating,isVeryClose} = analysis;
+  if (!leader) return '';
+  if (isVeryClose&&second)
+    return `${leader.cognome} e ${second.cognome} separati da ${gap12} punti — ogni gara può cambiare tutto.`;
+  if (isDominating)
+    return `${leader.cognome} comanda con ${gap12} punti di vantaggio dopo ${totalRaces} gare disputate.`;
+  if (risingThreat&&risingThreat.wins>=1)
+    return `${risingThreat.cog} è il corridore del momento — ${risingThreat.wins} vittori${risingThreat.wins===1?'a':'e'} nell'ultimo mese.`;
+  if (rivalry&&rivalry.encounters>=3)
+    return `La rivalità stagionale: ${rivalry.aCog} vs ${rivalry.bCog}, ${rivalry.encounters} scontri diretti.`;
+  if (seasonPhase==='late')
+    return `Finale di stagione: ${totalRaces} gare disputate, la classifica inizia a scrivere la storia.`;
+  return `Stagione in corso — ${totalRaces} gare, ${leader.cognome} al comando.`;
+}
+
+// ── Rendering editoriale ──────────────────────────────────────────
+function buildEditorialHeroHtml(hub, article, analysis) {
+  const {leader,totalRaces,seasonPhase,gap12,isVeryClose,isDominating} = analysis;
+  const phaseLabel = seasonPhase==='early'?'Inizio stagione':seasonPhase==='mid'?'Stagione in corso':'Finale di stagione';
+  const situationLine = isVeryClose&&gap12!==null
+    ? `Lotta aperta · ${gap12} pt di distacco`
+    : isDominating
+      ? `${leader?.cognome||''} in fuga`
+      : `${totalRaces} gare disputate`;
+
+  return `<section class="editorial-hero" style="background:${hub.gradient||'var(--bg-secondary)'}">
+    <div class="editorial-hero-inner">
+      <div class="editorial-hero-eyebrow">${esc(hub.label)} · ${phaseLabel}</div>
+      <h1 class="editorial-hero-title">${article?esc(article.title):'Stagione '+esc(catLabel(analysis.cat))}</h1>
+      <div class="editorial-hero-meta">
+        <span class="editorial-hero-situation">${esc(situationLine)}</span>
+        ${leader?`<a href="#/atleta/${encodeURIComponent(leader.atleta_id)}" class="editorial-hero-leader">${esc(leader.cognome)} ${esc(leader.nome)} · ${leader.punti} pt</a>`:''}
+      </div>
+    </div>
+    <div class="editorial-subnav-wrap">
+      ${buildHubSubnav(Object.assign({},hub,{_code:analysis.hubCode}))}
+    </div>
+  </section>`;
+}
+
+function buildMainArticleHtml(article, analysis) {
+  if (!article) return '';
+  const {leader,second,rivalry} = analysis;
+  const byline = `Analisi editoriale · ${new Date(article.generatedAt).toLocaleDateString('it-IT',{day:'2-digit',month:'long',year:'numeric'})}`;
+  let sectionsHtml = article.sections.map(s=>
+    `<div class="article-section">
+      <h3 class="article-section-heading">${esc(s.heading)}</h3>
+      <p class="article-section-body">${esc(s.body)}</p>
+    </div>`
+  ).join('');
+
+  // Inline data hook (leader card)
+  let dataHookHtml = '';
+  if (leader) {
+    const gap = second ? `−${leader.punti-second.punti} su ${second.cognome}` : '';
+    dataHookHtml = `<div class="article-data-hook">
+      <a href="#/atleta/${encodeURIComponent(leader.atleta_id)}" class="adh-leader">
+        <span class="adh-pos">1°</span>
+        <span class="adh-name">${esc(leader.cognome)} ${esc(leader.nome)}</span>
+        <span class="adh-pts">${leader.punti} pt</span>
+        ${gap?`<span class="adh-gap">${gap}</span>`:''}
+      </a>
+      ${second?`<a href="#/atleta/${encodeURIComponent(second.atleta_id)}" class="adh-second">
+        <span class="adh-pos">2°</span>
+        <span class="adh-name">${esc(second.cognome)} ${esc(second.nome)}</span>
+        <span class="adh-pts">${second.punti} pt</span>
+      </a>`:''}
+    </div>`;
+  }
+
+  return `<article class="main-season-article">
+    <header class="article-header">
+      <div class="article-eyebrow">Racconto di stagione · ${esc(catLabel(article.category))}</div>
+      <h2 class="article-title">${esc(article.title)}</h2>
+      <div class="article-byline">${byline}</div>
+    </header>
+    <div class="article-intro">${esc(article.intro)}</div>
+    ${dataHookHtml}
+    <div class="article-body">${sectionsHtml}</div>
+    <footer class="article-footer">
+      <p class="article-conclusion">${esc(article.conclusion)}</p>
+      <a href="#/hub/${esc(article.hubCode)}/classifica" class="article-cta">Classifica completa →</a>
+    </footer>
+  </article>`;
+}
+
+function buildSecondaryArticlesHtml(articles) {
+  if (!articles.length) return '';
+  const cards = articles.map(a => {
+    const typeLabels = {rivalry:'Rivalità',momentum:'Momento',team:'Squadra',scenario:'Scenario'};
+    const typeLabel = typeLabels[a.type]||'Analisi';
+    let cta = '';
+    if (a.type==='rivalry'&&a.linkA)
+      cta=`<div class="sec-art-cta"><a href="${a.linkA}">${esc(a.nameA)}</a> · <a href="${a.linkB}">${esc(a.nameB)}</a></div>`;
+    else if (a.type==='momentum'&&a.athleteId)
+      cta=`<div class="sec-art-cta"><a href="#/atleta/${encodeURIComponent(a.athleteId)}">Scheda atleta →</a></div>`;
+    else
+      cta=`<div class="sec-art-cta"><a href="#/hub/${esc(a.hubCode||a.category)}/classifica">Classifica →</a></div>`;
+
+    return `<div class="sec-article sec-article-${esc(a.type)}">
+      <div class="sec-art-type">${typeLabel}</div>
+      <h3 class="sec-art-title">${esc(a.title)}</h3>
+      <p class="sec-art-intro">${esc(a.intro)}</p>
+      <p class="sec-art-preview">${esc(a.preview)}</p>
+      ${cta}
+    </div>`;
+  }).join('');
+  return `<section class="secondary-articles"><div class="sec-articles-grid">${cards}</div></section>`;
+}
+
+function buildHubDataNavHtml(hubCode) {
+  const tabs=[
+    {sub:'classifica',label:'Classifica'},
+    {sub:'risultati', label:'Risultati'},
+    {sub:'atleti',    label:'Atleti'},
+    {sub:'team',      label:'Team'},
+    {sub:'calendario',label:'Calendario'},
+    {sub:'statistiche',label:'Stats'},
+  ];
+  return `<nav class="hub-data-nav" aria-label="Dati della categoria">
+    <div class="hub-data-nav-label">DATI</div>
+    <div class="hub-data-nav-tabs">
+      ${tabs.map(t=>`<a href="#/hub/${esc(hubCode)}/${t.sub}" class="hub-data-tab">${t.label}</a>`).join('')}
+    </div>
+  </nav>`;
+}
+
+// ── renderGenderSelect — pagina scelta categoria ──────────────────
+async function renderGenderSelect(hubCode) {
+  if (!globalData) return;
+  const hub = HUB_CONFIG[hubCode];
+  const isMale = hubCode==='uomini';
+  const catCodes = isMale
+    ? ['elite-m','juniores-m','allievi-m','esordienti-m']
+    : ['elite-f','juniores-f','allievi-f','esordienti-f'];
+
+  // Quick stats per categoria
+  const stats={};
+  for (const code of catCodes) {
+    const h = HUB_CONFIG[code];
+    const res = globalData.resultsRaw.filter(r=>h.catCodes.includes(getRankingFileCode(r)));
+    const wins = res.filter(r=>r.posizione===1).sort((a,b)=>b.data.localeCompare(a.data));
+    const races = new Set(res.map(r=>r.gara_id)).size;
+    const last = wins[0]||null;
+    stats[code]={races, lastWinner:last?esc(last.cognome)+' '+esc(last.nome):null, lastDate:last?.data};
+  }
+
+  const cards = catCodes.map(code=>{
+    const h=HUB_CONFIG[code], s=stats[code];
+    return `<a href="#/hub/${code}" class="cat-entry-card">
+      <div class="cat-entry-label">${esc(h.label)}</div>
+      <div class="cat-entry-desc">${esc(h.desc)}</div>
+      ${s.races>0?`<div class="cat-entry-stat">${s.races} gar${s.races===1?'a':'e'} disputat${s.races===1?'a':'e'}</div>`:''}
+      ${s.lastWinner?`<div class="cat-entry-winner">Ultimo vincitore: ${s.lastWinner}</div>`:''}
+    </a>`;
+  }).join('');
+
+  setPage(`<div class="gender-select-page">
+    <div class="gender-select-header">
+      <a href="#/" class="gender-select-back">← Home</a>
+      <h1 class="gender-select-title">${esc(hub.label)}</h1>
+      <div class="gender-select-sub">Seleziona la categoria</div>
+    </div>
+    <div class="cat-entry-grid">${cards}</div>
+    <div class="gender-select-footer">
+      <a href="#/news" class="gender-news-link">Tutte le storie della stagione →</a>
+    </div>
+  </div>`);
+}
+
+// ── renderEditorialHub — HUB editoriale per categoria ────────────
+async function renderEditorialHub(hubCode) {
+  if (!globalData) return;
+  const hub = HUB_CONFIG[hubCode];
+  if (!hub) { renderNotFound(); return; }
+  const cat = hub.mainCat;
+
+  const ranking = await loadRanking(cat);
+  const analysis = seiaSeasonAnalysis(hubCode, globalData.resultsRaw, ranking);
+  if (!analysis) { renderNotFound(); return; }
+
+  const article    = seiaGenerateSeasonArticle(analysis);
+  const secondary  = seiaGenerateSecondaryArticles(analysis);
+  const contextLine= seiaContextLine(analysis);
+
+  const heroHtml      = buildEditorialHeroHtml(hub, article, analysis);
+  const articleHtml   = buildMainArticleHtml(article, analysis);
+  const secondaryHtml = buildSecondaryArticlesHtml(secondary);
+  const contextHtml   = contextLine
+    ? `<div class="hub-context-line"><div class="hub-context-inner">${esc(contextLine)}</div></div>`
+    : '';
+  const datNavHtml    = buildHubDataNavHtml(hubCode);
+
+  setPage(heroHtml + articleHtml + secondaryHtml + contextHtml + datNavHtml);
+}
+
+// ── renderNews — archivio editoriale globale ─────────────────────
+async function renderNews() {
+  if (!globalData) return;
+  const { resultsRaw } = globalData;
+
+  // Genera articoli per tutte le categorie
+  const allHubCodes = ['elite-m','juniores-m','allievi-m','esordienti-m',
+                       'elite-f','juniores-f','allievi-f','esordienti-f'];
+  const allArticles = [];
+
+  for (const hc of allHubCodes) {
+    const hub = HUB_CONFIG[hc];
+    const cat = hub.mainCat;
+    try {
+      const ranking  = await loadRanking(cat);
+      if (!ranking.length) continue;
+      const analysis = seiaSeasonAnalysis(hc, resultsRaw, ranking);
+      if (!analysis||!analysis.leader) continue;
+      const main     = seiaGenerateSeasonArticle(analysis);
+      if (main) allArticles.push({...main, hubCode:hc, hub});
+      const secondary= seiaGenerateSecondaryArticles(analysis);
+      secondary.forEach(a=>allArticles.push({...a, hubCode:hc, hub}));
+    } catch(e) { /* skip */ }
+  }
+
+  // Ordina per tipo (season_story prima) poi categoria
+  allArticles.sort((a,b)=>{
+    if (a.type==='season_story'&&b.type!=='season_story') return -1;
+    if (b.type==='season_story'&&a.type!=='season_story') return 1;
+    return (a.category||'').localeCompare(b.category||'');
+  });
+
+  const typeLabels={season_story:'Racconto di stagione',rivalry:'Rivalità',momentum:'Momento',team:'Squadra',scenario:'Scenario'};
+  const typeColors={season_story:'var(--text-primary)',rivalry:'var(--red-hot)',momentum:'#10B981',team:'#3B82F6',scenario:'#8B5CF6'};
+
+  const cards = allArticles.map(a=>{
+    const hub = a.hub||{};
+    const tl = typeLabels[a.type]||a.type;
+    const tc = typeColors[a.type]||'var(--text-muted)';
+    let cta='';
+    if (a.leaderAtletaId&&a.type==='season_story')
+      cta=`<a href="#/hub/${esc(a.hubCode)}" class="news-card-cta">Leggi il racconto →</a>`;
+    else if (a.type==='rivalry'&&a.linkA)
+      cta=`<a href="${a.linkA}" class="news-card-cta">${esc(a.nameA)} vs ${esc(a.nameB)} →</a>`;
+    else if (a.type==='momentum'&&a.athleteId)
+      cta=`<a href="#/atleta/${encodeURIComponent(a.athleteId)}" class="news-card-cta">Scheda atleta →</a>`;
+    else
+      cta=`<a href="#/hub/${esc(a.hubCode)}/classifica" class="news-card-cta">Classifica →</a>`;
+
+    return `<div class="news-card news-card-${esc(a.type)}">
+      <div class="news-card-meta" style="color:${tc}">
+        <span class="news-card-type">${tl}</span>
+        <span class="news-card-cat">${esc(catLabel(a.category))}</span>
+      </div>
+      <h3 class="news-card-title">${esc(a.title)}</h3>
+      <p class="news-card-intro">${esc(a.intro||a.preview||'')}</p>
+      ${cta}
+    </div>`;
+  }).join('');
+
+  setPage(`<div class="news-page">
+    <div class="pg-header">
+      <div class="pg-eyebrow">STAGIONE 2026</div>
+      <h1 class="pg-title">Storie della stagione</h1>
+      <p class="pg-desc">Analisi editoriali, rivalità, momenti e scenari di tutto il ciclismo agonistico italiano.</p>
+    </div>
+    <div class="news-grid">${cards||'<p style="color:var(--text-muted);padding:32px">Nessun articolo disponibile — avvia lo scraper per popolare i dati.</p>'}</div>
+  </div>`);
+}
+
+// ── HOME — entry gate ─────────────────────────────────────────
 async function renderHome() {
+  const lastUpdate = globalData?.meta?.last_update;
+  const lastStr = lastUpdate
+    ? new Date(lastUpdate).toLocaleString('it-IT',{day:'2-digit',month:'2-digit',hour:'2-digit',minute:'2-digit'})
+    : null;
+
+  setPage(`<div class="entry-gate">
+    <div class="entry-inner">
+      <div class="entry-logo-wrap">
+        <img src="assets/logo2.png" alt="ItaliacritResultati" class="entry-logo-img">
+        <p class="entry-tagline">Classifiche · Risultati · Storie</p>
+      </div>
+      <div class="entry-choices">
+        <a href="#/hub/uomini" class="entry-choice">
+          <span class="entry-choice-label">UOMINI</span>
+          <span class="entry-choice-sub">Esordienti · Allievi · Juniores · Elite</span>
+        </a>
+        <a href="#/hub/donne" class="entry-choice">
+          <span class="entry-choice-label">DONNE</span>
+          <span class="entry-choice-sub">Esordienti · Allieve · Juniores · Elite</span>
+        </a>
+      </div>
+      ${lastStr?`<div class="entry-meta">Aggiornato ${lastStr}</div>`:''}
+    </div>
+  </div>`);
+}
+
+// ── OLD HOME (archivio) — rimossa: logica banner/spotlight ora nel SEIA ──
+async function _renderHomeOld_UNUSED() {
   if (!globalData) return;
   const { calendar, resultsRaw, resultsByAtleta } = globalData;
 
