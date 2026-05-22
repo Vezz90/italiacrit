@@ -1,5 +1,5 @@
 /* ============================================================
-   ItaliacritResultati — app.js  v120
+   ItaliacritResultati — app.js  v121
    Hash Router + Page Renderers
    Legge i JSON statici da data/ via fetch()
    ============================================================ */
@@ -961,7 +961,7 @@ function buildNetworkSection(resultsRaw, calendar) {
     return '<div class="hub-entry-card" style="--hub-color:' + hub.color + ';--hub-gradient:' + hub.gradient + '" onclick="location.hash=\'#/hub/' + code + '\'">' +
       '<div class="hub-entry-top">' +
         '<span class="hub-entry-icon">' + hub.icon + '</span>' +
-        (isHot ? '<span class="hub-entry-hot">🔥</span>' : '') +
+        (isHot ? '<span class="hub-entry-hot-dot"></span>' : '') +
       '</div>' +
       '<div class="hub-entry-label">' + hub.label + '</div>' +
       '<div class="hub-entry-desc">' + hub.desc + '</div>' +
@@ -1048,8 +1048,7 @@ async function renderHubHome(hubCode) {
   function buildSpotlightHtml(ath, streak, catCode) {
     if (!ath) return '<section class="em-spotlight em-spotlight--half">' +
       '<div class="em-spotlight-body">' +
-        '<div class="em-spot-meta"><span class="em-spot-badge">RIDER ON FIRE</span>' +
-        '<span class="em-spot-cat">' + catLabel(catCode) + '</span></div>' +
+        '<div class="em-spot-meta"><span class="em-spot-cat">' + catLabel(catCode) + '</span></div>' +
         '<p style="color:rgba(255,255,255,0.3);font-size:0.82rem;margin-top:12px">Nessun dato recente</p>' +
       '</div></section>';
 
@@ -1070,7 +1069,6 @@ async function renderHubHome(hubCode) {
       '<div class="em-spotlight-bg-name">' + esc(ath.cognome) + '</div>' +
       '<div class="em-spotlight-body">' +
         '<div class="em-spot-meta">' +
-          '<span class="em-spot-badge">RIDER ON FIRE</span>' +
           '<span class="em-spot-cat">' + catLabel(catCode) + '</span>' +
         '</div>' +
         rankContextHtml +
@@ -1091,7 +1089,7 @@ async function renderHubHome(hubCode) {
     if (!rv) return '';
     const vsClass = isHalf ? 'em-versus em-versus--half' : 'em-versus';
     return '<section class="' + vsClass + '">' +
-      '<div class="em-versus-label">⚔ RIVALITÀ · ' + catLabel(catCode) + ' · ' + rv.encounters + ' scontri</div>' +
+      '<div class="em-versus-label">SFIDA · ' + catLabel(catCode) + ' · ' + rv.encounters + ' scontri</div>' +
       '<div class="em-versus-ring">' +
         '<div class="em-vs-side em-vs-a">' +
           '<div class="em-vs-pos">' + rv.aWins + 'V</div>' +
@@ -1129,7 +1127,7 @@ async function renderHubHome(hubCode) {
       }
     } catch(e) {}
     return '<section class="em-newsroom">' +
-      '<div class="em-newsroom-header"><span class="em-newsroom-badge">📡 ' + label + '</span></div>' +
+      '<div class="em-newsroom-header"><span class="em-newsroom-badge">' + label + '</span></div>' +
       '<div class="em-newsroom-feed">' +
         seasonContextHtml +
         items.map(function(item) {
@@ -1137,7 +1135,6 @@ async function renderHubHome(hubCode) {
             ? ' onclick="location.hash=\'#/atleta/' + item.atleta_id + '\'"'
             : item.team_id ? ' onclick="location.hash=\'#/team/' + item.team_id + '\'"' : '';
           return '<div class="em-news-item em-news-' + item.type + '"' + click + '>' +
-            '<span class="em-news-icon">' + item.icon + '</span>' +
             '<div class="em-news-text">' + item.text + '</div>' +
             ((item.atleta_id || item.team_id) ? '<span class="em-news-arrow">→</span>' : '') +
           '</div>';
@@ -1320,7 +1317,7 @@ async function renderHubHome(hubCode) {
         if (!races.length) return '';
         return '<section class="hub-last-results hub-last-results--half">' +
           '<div class="hub-section-header">' +
-            '<div class="hub-section-label">📋 ' + label.toUpperCase() + '</div>' +
+            '<div class="hub-section-label">' + label.toUpperCase() + '</div>' +
           '</div>' +
           '<div class="hub-last-list hlr-list">' + buildLastRows(races) + '</div>' +
         '</section>';
@@ -1333,7 +1330,7 @@ async function renderHubHome(hubCode) {
       lastResultsHtml =
         '<section class="hub-last-results">' +
           '<div class="hub-section-header">' +
-            '<div class="hub-section-label">🏁 ULTIMI RISULTATI &nbsp;<span class="hub-wk-date">' + lastWkLabel + '</span></div>' +
+            '<div class="hub-section-label">ULTIMI RISULTATI &nbsp;<span class="hub-wk-date">' + lastWkLabel + '</span></div>' +
             '<a href="#/risultati" class="hub-section-more">Tutti &rarr;</a>' +
           '</div>' +
           '<div class="hub-last-list hlr-list">' + buildLastRows(lastWeekRaces) + '</div>' +
@@ -1373,7 +1370,7 @@ async function renderHubHome(hubCode) {
     const DAY_NAMES = ['DOM','LUN','MAR','MER','GIO','VEN','SAB'];
     upHtml = '<section class="hub-upcoming-weekend">' +
       '<div class="hub-section-header hub-section-header--wide">' +
-        '<div class="hub-section-label">🗓 PROSSIMO FINE SETTIMANA &nbsp;<span class="hub-wk-date">' + wkLabel + '</span></div>' +
+        '<div class="hub-section-label">PROSSIMO FINE SETTIMANA &nbsp;<span class="hub-wk-date">' + wkLabel + '</span></div>' +
         '<a href="#/calendario" class="hub-section-more">Calendario &rarr;</a>' +
       '</div>' +
       '<div class="hub-last-list">' +
@@ -2109,9 +2106,9 @@ function siTeamNarrative(teamId, resultsRaw) {
   const topWinner = Object.values(wByAtl).sort((a,b) => b.wins-a.wins)[0] || null;
   const cats28 = [...new Set(recent.map(r => getRankingFileCode(r)||r.categoria).filter(Boolean))];
   if (wins28 === 0 && podi28 === 0) return gare28 + ' gare nell\'ultimo mese. In cerca di conferme.';
-  if (wins28 >= 5) return '🔥 Squadra dominante — ' + wins28 + ' vittorie in ' + gare28 + ' gare (ultimi 28gg).';
-  if (topWinner && topWinner.wins >= 2) return '👑 ' + esc(topWinner.cognome) + ' trascina il team: ' + topWinner.wins + ' vittorie. ' + podi28 + ' podi totali su ' + gare28 + ' gare.';
-  if (podi28 > 0) return '📈 ' + podi28 + ' podi in ' + gare28 + ' gare nell\'ultimo mese' + (cats28.length > 1 ? ' in ' + cats28.length + ' categorie' : '') + '.';
+  if (wins28 >= 5) return 'Squadra dominante — ' + wins28 + ' vittorie in ' + gare28 + ' gare (ultimi 28gg).';
+  if (topWinner && topWinner.wins >= 2) return esc(topWinner.cognome) + ' trascina il team: ' + topWinner.wins + ' vittorie. ' + podi28 + ' podi totali su ' + gare28 + ' gare.';
+  if (podi28 > 0) return podi28 + ' podi in ' + gare28 + ' gare nell\'ultimo mese' + (cats28.length > 1 ? ' in ' + cats28.length + ' categorie' : '') + '.';
   return gare28 + ' gare, ' + podi28 + ' podi nell\'ultimo mese.';
 }
 
@@ -2713,7 +2710,6 @@ async function renderHome() {
     <div class="em-spotlight-bg-name">${esc(star.cognome)}</div>
     <div class="em-spotlight-body">
       <div class="em-spot-meta">
-        <span class="em-spot-badge">UOMO DEL MOMENTO</span>
         <span class="em-spot-cat">${catLabel(star.code)}</span>
       </div>
       <h2 class="em-spot-name">${esc(star.cognome)}<br><span class="em-spot-firstname">${esc(star.nome)}</span></h2>
@@ -2958,8 +2954,8 @@ async function renderClassifica() {
   `).join('');
   const viewTabs = `
     <div class="tab-group" role="tablist" aria-label="Vista" style="margin-left:auto">
-      <button class="tab-btn ${rankView==='atleti'?'active-cat':''}" onclick="setRankView('atleti')">👤 ATLETI</button>
-      <button class="tab-btn ${rankView==='team'?'active-cat':''}" onclick="setRankView('team')">🏢 TEAM</button>
+      <button class="tab-btn ${rankView==='atleti'?'active-cat':''}" onclick="setRankView('atleti')">ATLETI</button>
+      <button class="tab-btn ${rankView==='team'?'active-cat':''}" onclick="setRankView('team')">TEAM</button>
     </div>`;
 
   const regions = [...new Set(globalData.resultsRaw.map(r => normalizeRegion(r.regione)).filter(Boolean))].sort();
@@ -2982,26 +2978,22 @@ async function renderClassifica() {
   }
   const _rkTopWinner = Object.values(_rkWin28).sort((a,b)=>b.wins-a.wins)[0]||null;
   const _rkTopDom    = _rkTeamDom[rankCat] || null;
-  const _rkIntelHtml = (_rkTopWinner||_rkTopDom)
-    ? '<div class="rk-intel-strip">' +
-        (_rkTopWinner
-          ? "<div class=\"rk-intel-chip\" onclick=\"location.hash='#/atleta/" + encodeURIComponent(_rkTopWinner.atleta_id) + "'\">" +
-              '<span class="rk-intel-icon">🔥</span>' +
-              '<div><div class="rk-intel-label">RIDER ON FIRE</div>' +
-              '<div class="rk-intel-val">' + esc(_rkTopWinner.cognome) + ' — ' + _rkTopWinner.wins + ' vittorie in 28gg</div></div></div>'
-          : '') +
-        (_rkTopDom
-          ? "<div class=\"rk-intel-chip\" onclick=\"location.hash='#/team/" + encodeURIComponent(_rkTopDom.team_id) + "'\">" +
-              '<span class="rk-intel-icon">🏆</span>' +
-              '<div><div class="rk-intel-label">TEAM DOMINANTE</div>' +
-              '<div class="rk-intel-val">' + esc(_rkTopDom.team) + ' — ' + _rkTopDom.wins + ' vitt · ' + catLabel(_rkTopDom.code) + '</div></div></div>'
-          : '') +
-      '</div>'
+  const _rkIntelParts = [];
+  if (_rkTopWinner) _rkIntelParts.push(
+    '<a href="#/atleta/' + encodeURIComponent(_rkTopWinner.atleta_id) + '" class="rk-intel-link">' + esc(_rkTopWinner.cognome) + '</a>' +
+    ' — ' + _rkTopWinner.wins + ' vittori' + (_rkTopWinner.wins === 1 ? 'a' : 'e') + ' nelle ultime 4 settimane'
+  );
+  if (_rkTopDom) _rkIntelParts.push(
+    '<a href="#/team/' + encodeURIComponent(_rkTopDom.team_id) + '" class="rk-intel-link">' + esc(_rkTopDom.team) + '</a>' +
+    ' il team più vincente in questa categoria'
+  );
+  const _rkIntelHtml = _rkIntelParts.length
+    ? '<p class="rk-intel-line">' + _rkIntelParts.join(' &middot; ') + '</p>'
     : '';
 
   setPage(`
     <div class="pg-header">
-      <div class="pg-eyebrow">🏆 CLASSIFICA UFFICIALE</div>
+      <div class="pg-eyebrow">CLASSIFICA UFFICIALE</div>
       <h1 class="pg-title">CLASSIFICHE</h1>
     </div>
     ${_rkIntelHtml}
@@ -3155,9 +3147,6 @@ async function updateRankTable() {
       const gap    = r.pos === 1
         ? ''
         : `<span class="rk-gap-label">−${leaderPts - r.punti}</span>`;
-      const mom = _momCache2[r.atleta_id];
-      const formText = mom ? mom.label.split(' ').slice(1).join(' ') : '';
-      const formChip = formText && i < 20 ? `<span class="rk-form-chip" style="color:${mom.color}">${formText}</span>` : '';
       return `<tr class="ranking-row ${tier}" style="animation-delay:${Math.min(i,20)*30}ms">
         <td><span class="rank-num ${pClass}">${r.pos}</span></td>
         <td style="text-align:center;width:40px">${renderTrend(r)}</td>
@@ -3165,7 +3154,6 @@ async function updateRankTable() {
           <div class="rk-athlete-cell">
             <span class="rank-name"><a href="#/atleta/${esc(r.atleta_id)}">${esc(r.cognome)} ${esc(r.nome)}</a></span>
             <div class="td-team-mobile"><a href="#/team/${esc(r.team_id)}" style="color:var(--text-secondary)">${esc(r.team_nome)}</a></div>
-            ${formChip ? `<div class="rk-chips">${formChip}</div>` : ''}
           </div>
         </td>
         <td class="hide-mobile"><a href="#/team/${esc(r.team_id)}" style="color:var(--text-secondary);font-size:.85rem">${esc(r.team_nome)}</a></td>
@@ -3903,7 +3891,7 @@ async function renderAtleta(atleta_id) {
   const _rivalHtml = aiRivals.length ? aiRivals.map(r => `
     <div class="ath-rival-item">
       <a href="#/atleta/${encodeURIComponent(r.atleta_id)}" class="ath-rival-name">${esc(r.cognome)} ${esc(r.nome[0])}.</a>
-      <span class="ath-rival-meta">${r.encounters} sfid${r.encounters===1?'a':'e'}${r.wins>0?' · 🏆 '+r.wins:''}</span>
+      <span class="ath-rival-meta">${r.encounters} sfid${r.encounters===1?'a':'e'}${r.wins>0?' · '+r.wins+' vinte':''}</span>
     </div>`).join('') : `<p class="ath-empty-note">Dati rivalità insufficienti</p>`;
 
 
@@ -3915,9 +3903,9 @@ async function renderAtleta(atleta_id) {
       </div>
       <div class="ath-identity-card">
         <div class="ath-identity-label">STILE DI GARA</div>
-        <div class="ath-style-tag"><span class="ath-style-icon">${aiIdentity.icon}</span>${aiIdentity.style}</div>
+        <div class="ath-style-tag">${aiIdentity.style}</div>
         <div class="ath-style-desc">${aiIdentity.desc}</div>
-        ${aiIdentity.strengths.length ? `<div class="ath-strengths">${aiIdentity.strengths.map(s=>`<span class="ath-strength-chip">${s}</span>`).join('')}</div>` : ''}
+        ${aiIdentity.strengths.length ? `<div class="ath-strengths-line">${aiIdentity.strengths.join(', ')}</div>` : ''}
       </div>
       <div class="ath-identity-card">
         <div class="ath-identity-label">STATISTICHE CHIAVE</div>
@@ -4182,20 +4170,17 @@ async function renderTeam(team_id) {
     <div class="team-identity-strip">
       <div class="team-intel-card">
         <div class="team-intel-label">MISSIONE — ${catLabel(teamViewCat)}</div>
-        <div class="team-mission-tag" style="color:${mission.color}">
-          <span class="team-mission-icon">${mission.tag}</span><span>${mission.label}</span>
-        </div>
+        <div class="team-mission-tag" style="color:${mission.color}">${mission.label}</div>
         <div class="team-mission-desc">${mission.desc}</div>
         <div class="team-cat-quickstats">
-          ${catWins > 0 ? `<span class="team-cat-stat-chip" style="color:var(--gold)">${catWins} vitt.</span>` : ''}
-          ${catPodi > catWins ? `<span class="team-cat-stat-chip">${catPodi} podi</span>` : ''}
+          ${catWins > 0 ? `<span class="team-cat-quickstat">${catWins} vittorie</span>` : ''}
+          ${catPodi > catWins ? `<span class="team-cat-quickstat">${catPodi} podi</span>` : ''}
         </div>
       </div>
       <div class="team-intel-card">
         <div class="team-intel-label">PUNTI DI FORZA</div>
         ${strengths.length ? `<div class="team-strength-list">${strengths.map(s=>`
           <div class="team-strength-item">
-            <span class="team-strength-icon">${s.icon}</span>
             <div><div class="team-strength-name">${s.label}</div><div class="team-strength-desc">${s.desc}</div></div>
           </div>`).join('')}</div>`
         : '<p style="color:var(--text-muted);font-size:0.8rem;margin:8px 0 0">Dati in costruzione — torna dopo qualche gara.</p>'}

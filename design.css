@@ -3612,23 +3612,16 @@ div[style*="grid-template-columns: repeat(auto-fit"] {
   width: 100%;
   margin: 0 auto;
 }
-.em-spot-meta { display: flex; align-items: center; gap: 16px; margin-bottom: 16px; }
-.em-spot-badge {
-  font-size: 0.68rem;
-  font-weight: 900;
-  letter-spacing: 0.18em;
-  color: #E11D48;
-  text-transform: uppercase;
-}
+.em-spot-meta { display: flex; align-items: center; gap: 16px; margin-bottom: 20px; }
+/* em-spot-badge removed — spotlight context is self-evident from section */
+.em-spot-badge { display: none; }
+/* Category label: plain uppercase text, no border pill */
 .em-spot-cat {
-  font-size: 0.62rem;
-  font-weight: 600;
-  color: rgba(255,255,255,0.32);
-  letter-spacing: 0.1em;
+  font-size: 0.65rem;
+  font-weight: 700;
+  color: rgba(255,255,255,0.38);
+  letter-spacing: 0.16em;
   text-transform: uppercase;
-  border: 1px solid rgba(255,255,255,0.14);
-  padding: 2px 8px;
-  border-radius: 2px;
 }
 .em-spot-name {
   font-family: 'Inter Tight', 'Inter', sans-serif;
@@ -4630,13 +4623,14 @@ div[style*="grid-template-columns: repeat(auto-fit"] {
   justify-content: space-between;
   margin-bottom: 14px;
 }
+/* Newsroom label: plain section text, no badge chip */
 .em-newsroom-badge {
   font-family: var(--font-heading);
-  font-size: 0.7rem;
+  font-size: 0.6875rem;
   font-weight: 700;
-  letter-spacing: 0.12em;
+  letter-spacing: 0.1em;
   text-transform: uppercase;
-  color: var(--red-hot);
+  color: var(--text-muted);
 }
 .em-newsroom-all {
   font-size: 0.72rem;
@@ -4648,71 +4642,65 @@ div[style*="grid-template-columns: repeat(auto-fit"] {
 .em-newsroom-feed {
   display: flex;
   flex-direction: column;
-  gap: 6px;
+  gap: 0;
 }
+/* News items: minimal list — no background card, just left-border + text */
 .em-news-item {
   display: flex;
   align-items: center;
-  gap: 10px;
-  padding: 9px 12px;
-  border-radius: 8px;
-  background: var(--bg-secondary);
-  cursor: pointer;
-  transition: background 0.15s;
-  font-size: 0.82rem;
-  color: var(--text-primary);
-}
-.em-news-item:hover { background: var(--border-subtle); }
-.em-news-icon { font-size: 1rem; flex-shrink: 0; }
-.em-news-text { flex: 1; line-height: 1.4; }
-.em-news-text strong { color: var(--text-primary); }
-.em-news-arrow {
-  color: var(--text-muted);
-  font-size: 0.8rem;
-  flex-shrink: 0;
-}
-.em-news-victory { border-left: 3px solid #F59E0B; }
-.em-news-streak  { border-left: 3px solid #EF4444; }
-.em-news-mover   { border-left: 3px solid #10B981; }
-.em-news-team    { border-left: 3px solid #6366F1; }
-.em-news-battle  { border-left: 3px solid #EC4899; }
-
-/* ── Classifica intel strip ──────────────────────────────────── */
-.rk-intel-strip {
-  display: flex;
   gap: 12px;
-  flex-wrap: wrap;
-  margin: 0 0 20px;
-}
-.rk-intel-chip {
-  display: flex;
-  align-items: center;
-  gap: 10px;
-  padding: 10px 16px;
-  background: var(--bg-card);
-  border: 1px solid var(--border-subtle);
-  border-radius: 10px;
+  padding: 10px 12px;
+  border-radius: 0;
+  background: transparent;
+  border-left: 2px solid var(--border-subtle);
+  margin-left: 2px;
   cursor: pointer;
   transition: border-color 0.15s, background 0.15s;
-  flex: 1;
-  min-width: 200px;
+  font-size: 0.82rem;
+  color: var(--text-secondary);
 }
-.rk-intel-chip:hover { border-color: var(--red-hot); background: var(--bg-secondary); }
-.rk-intel-icon { font-size: 1.4rem; }
-.rk-intel-label {
-  font-family: var(--font-heading);
-  font-size: 0.62rem;
-  font-weight: 700;
-  letter-spacing: 0.12em;
-  text-transform: uppercase;
+.em-news-item + .em-news-item { border-top: 1px solid var(--border-subtle); }
+.em-news-item:hover { background: var(--bg-elevated); border-left-color: var(--red-hot); }
+.em-news-icon { display: none; } /* removed — left border conveys type */
+.em-news-text { flex: 1; line-height: 1.5; }
+.em-news-text strong { color: var(--text-primary); font-weight: 600; }
+.em-news-arrow {
   color: var(--text-muted);
-  margin-bottom: 2px;
+  font-size: 0.75rem;
+  flex-shrink: 0;
+  opacity: 0.5;
 }
-.rk-intel-val {
-  font-size: 0.83rem;
-  font-weight: 600;
+/* Type-specific left border colors — intelligence through accent, not emoji */
+.em-news-victory { border-left-color: #D97706; }
+.em-news-streak  { border-left-color: var(--border-subtle); }
+.em-news-mover   { border-left-color: #10B981; }
+.em-news-team    { border-left-color: var(--border-subtle); }
+.em-news-battle  { border-left-color: var(--red-hot); }
+/* Season context item: italic editorial note */
+.em-news-context {
+  border-left-color: var(--border-subtle) !important;
+  font-style: italic;
+  color: var(--text-muted) !important;
+}
+
+/* ── Classifica intel strip ──────────────────────────────────── */
+/* Editorial context line replaces chip strip */
+.rk-intel-strip { display: none; } /* archived — replaced by rk-intel-line */
+.rk-intel-chip  { display: none; }
+.rk-intel-line {
+  font-size: 0.8125rem;
+  color: var(--text-muted);
+  margin: 0 0 20px;
+  line-height: 1.5;
+  padding-left: 12px;
+  border-left: 2px solid var(--border-subtle);
+}
+.rk-intel-link {
   color: var(--text-primary);
+  font-weight: 600;
+  text-decoration: none;
 }
+.rk-intel-link:hover { color: var(--red-hot); }
 
 /* ── Weekly ranking story banner ─────────────────────────────── */
 .rk-story-banner {
@@ -4746,28 +4734,28 @@ div[style*="grid-template-columns: repeat(auto-fit"] {
   border-left-color: var(--red-hot);
 }
 
-/* ── Ranking row tiers (emotional hierarchy) ─────────────────── */
+/* ── Ranking row tiers — intelligence via typography, not badges ── */
+/* Position 1: gold tint + heavier name */
 tr.rk-tier-1 {
-  background: linear-gradient(90deg, rgba(245,158,11,0.06) 0%, transparent 60%);
+  background: linear-gradient(90deg, rgba(245,158,11,0.05) 0%, transparent 55%);
 }
-tr.rk-tier-1 .rank-pts { color: var(--gold); }
-tr.rk-tier-top3 {
-  background: linear-gradient(90deg, rgba(148,163,184,0.05) 0%, transparent 60%);
-}
-tr.rk-tier-top3 .rank-pts { color: var(--silver); }
-tr.rk-tier-top10 { opacity: 0.92; }
+tr.rk-tier-1 .rank-pts  { color: #D97706; }
+tr.rk-tier-1 .rank-name { font-size: 0.9375rem; font-weight: 700; }
+/* Positions 2–3: very subtle lift */
+tr.rk-tier-top3 { background: transparent; }
+tr.rk-tier-top3 .rank-pts  { color: var(--text-secondary); }
+tr.rk-tier-top3 .rank-name { font-weight: 600; }
+/* Positions 4–10: normal */
+tr.rk-tier-top10 { opacity: 1; }
+/* Everything else: visually receded */
 tr.ranking-row:not(.rk-tier-1):not(.rk-tier-top3):not(.rk-tier-top10) {
-  opacity: 0.8;
+  opacity: 0.72;
 }
 
-/* ── Ranking form/gap/streak chips ───────────────────────────── */
-.rk-athlete-cell { display: flex; flex-direction: column; gap: 2px; }
-.rk-chips { display: flex; flex-wrap: wrap; gap: 5px; margin-top: 3px; }
-.rk-form-chip {
-  font-size: 0.63rem;
-  font-weight: 700;
-  opacity: 0.9;
-}
+/* ── Ranking athlete cell — no chip clutter ───────────────────── */
+.rk-athlete-cell { display: flex; flex-direction: column; gap: 1px; }
+.rk-chips  { display: none; } /* chips removed */
+.rk-form-chip { display: none; } /* intelligence via tier, not label */
 .rk-streak-badge {
   font-family: var(--font-heading);
   font-size: 0.58rem;
@@ -4872,7 +4860,7 @@ tr.ranking-row:not(.rk-tier-1):not(.rk-tier-top3):not(.rk-tier-top10) {
   text-transform: uppercase;
   margin-bottom: 6px;
 }
-.team-mission-icon { font-size: 1.05rem; line-height: 1; }
+.team-mission-icon { display: none; } /* emoji removed */
 .team-mission-desc {
   font-size: 0.78rem;
   color: var(--text-secondary);
@@ -4920,7 +4908,7 @@ tr.ranking-row:not(.rk-tier-1):not(.rk-tier-top3):not(.rk-tier-top10) {
   align-items: flex-start;
   gap: 9px;
 }
-.team-strength-icon { font-size: 1.1rem; line-height: 1; flex-shrink: 0; margin-top: 1px; }
+.team-strength-icon { display: none; } /* emoji removed */
 .team-strength-name {
   font-size: 0.75rem;
   font-weight: 700;
@@ -5062,21 +5050,18 @@ tr.ranking-row:not(.rk-tier-1):not(.rk-tier-top3):not(.rk-tier-top10) {
   border: 1px solid rgba(239,68,68,0.22);
 }
 
-/* Team quick stats chips (cat-scoped mission card) */
+/* Team quick stats — plain text row, no chip */
 .team-cat-quickstats {
   display: flex;
   flex-wrap: wrap;
-  gap: 6px;
-  margin-top: 12px;
+  gap: 12px;
+  margin-top: 10px;
 }
-.team-cat-stat-chip {
-  font-size: 0.68rem;
-  font-weight: 700;
-  padding: 3px 9px;
-  border-radius: 20px;
-  background: var(--bg-secondary);
-  border: 1px solid var(--border-subtle);
+.team-cat-stat-chip { display: none; } /* chip archived */
+.team-cat-quickstat {
+  font-size: 0.72rem;
   color: var(--text-secondary);
+  font-weight: 500;
 }
 
 /* Mobile collapse */
@@ -5225,47 +5210,32 @@ tr.ranking-row:not(.rk-tier-1):not(.rk-tier-top3):not(.rk-tier-top10) {
   margin: 6px 0 0;
 }
 
-/* Style tag */
+/* Style tag — plain emphasis, no pill or badge */
 .ath-style-tag {
-  display: flex;
-  align-items: center;
-  gap: 7px;
   font-family: var(--font-heading);
-  font-size: 0.75rem;
-  font-weight: 800;
+  font-size: 0.72rem;
+  font-weight: 700;
   letter-spacing: 0.06em;
   text-transform: uppercase;
-  color: var(--red-hot);
-  margin-bottom: 5px;
+  color: var(--text-primary);
+  margin-bottom: 4px;
 }
-.ath-style-icon { font-size: 1rem; line-height: 1; }
+.ath-style-icon { display: none; } /* emoji icon removed */
 .ath-style-desc {
   font-size: 0.75rem;
   color: var(--text-secondary);
   line-height: 1.4;
   margin-bottom: 8px;
 }
-.ath-streak-badge {
-  display: inline-block;
-  font-family: var(--font-heading);
-  font-size: 0.65rem;
-  font-weight: 800;
-  letter-spacing: 0.06em;
-  padding: 3px 10px;
-  border-radius: 20px;
-  background: rgba(239,68,68,0.10);
-  border: 1px solid rgba(239,68,68,0.2);
-  margin-bottom: 8px;
-}
+.ath-streak-badge { display: none; } /* streak badge removed */
+/* Strengths — plain comma-separated text, not chips */
 .ath-strengths { display: flex; flex-wrap: wrap; gap: 5px; margin-top: 4px; }
-.ath-strength-chip {
-  font-size: 0.62rem;
-  font-weight: 700;
-  padding: 2px 8px;
-  border-radius: 10px;
-  background: var(--bg-secondary);
-  border: 1px solid var(--border-subtle);
+.ath-strength-chip { display: none; } /* chip class archived */
+.ath-strengths-line {
+  font-size: 0.72rem;
   color: var(--text-muted);
+  line-height: 1.4;
+  margin-top: 2px;
 }
 
 /* Stats block */
@@ -5673,15 +5643,15 @@ tr.ranking-row:not(.rk-tier-1):not(.rk-tier-top3):not(.rk-tier-top10) {
   gap: 0;
 }
 
-/* ── Hub section headers ─────────────────────────────────────── */
+/* ── Hub section headers — editorial restraint ───────────────── */
 .hub-section-label {
   font-family: var(--font-heading);
-  font-size: 0.68rem;
-  font-weight: 800;
-  letter-spacing: 0.14em;
+  font-size: 0.625rem;
+  font-weight: 600;
+  letter-spacing: 0.12em;
   text-transform: uppercase;
   color: var(--text-muted);
-  margin-bottom: 14px;
+  margin-bottom: 12px;
 }
 .hub-section-header {
   display: flex;
@@ -5742,15 +5712,7 @@ tr.ranking-row:not(.rk-tier-1):not(.rk-tier-top3):not(.rk-tier-top10) {
   color: var(--text-secondary);
 }
 .hub-fire-stats strong { color: var(--text-primary); font-size: 1.05rem; }
-.hub-fire-streak {
-  font-family: var(--font-heading);
-  font-size: 0.72rem;
-  font-weight: 700;
-  color: var(--hub-color, #E11D48);
-  background: rgba(225,29,72,0.1);
-  padding: 2px 8px;
-  border-radius: 10px;
-}
+.hub-fire-streak { display: none; } /* streak pill removed */
 .hub-fire-arrow {
   font-size: 0.72rem;
   color: var(--text-muted);
@@ -6112,13 +6074,18 @@ tr.ranking-row:not(.rk-tier-1):not(.rk-tier-top3):not(.rk-tier-top10) {
   margin-bottom: 8px;
 }
 .hub-entry-icon { font-size: 1.6rem; }
-.hub-entry-hot {
-  font-size: 0.75rem;
-  animation: hub-pulse 1.5s ease-in-out infinite;
+/* Hot-dot: subtle pulsing dot instead of 🔥 emoji */
+.hub-entry-hot-dot {
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background: var(--red-hot);
+  flex-shrink: 0;
+  animation: hub-hot-pulse 2s ease-in-out infinite;
 }
-@keyframes hub-pulse {
-  0%, 100% { opacity: 1; }
-  50% { opacity: 0.5; }
+@keyframes hub-hot-pulse {
+  0%, 100% { opacity: 1; transform: scale(1); }
+  50% { opacity: 0.4; transform: scale(0.8); }
 }
 .hub-entry-label {
   font-family: var(--font-heading);
@@ -7810,23 +7777,22 @@ body[data-hub] .loading-bar { background: var(--hub-color) !important; }
 .hub-champ-rival { color: var(--text-secondary); font-weight: 500; }
 .hub-champ-rival em { font-style: normal; color: var(--text-muted); }
 
-/* ── Hub ranking — new inline elements ─────────────────────────  */
+/* ── Hub ranking — trend & gap: pure typography, no chip ────────  */
 .hub-rank-trend {
   display: inline-block;
   font-size: 0.6rem;
   font-weight: 700;
   vertical-align: middle;
-  margin-left: 5px;
-  padding: 1px 4px;
-  border-radius: 3px;
-  letter-spacing: .04em;
+  margin-left: 6px;
+  letter-spacing: .02em;
+  /* no background, no border-radius — just color */
 }
-.hub-rank-up   { color: #10B981; background: rgba(16,185,129,.12); }
-.hub-rank-down { color: #EF4444; background: rgba(239,68,68,.12); }
+.hub-rank-up   { color: #10B981; }
+.hub-rank-down { color: #EF4444; opacity: 0.7; }
 .hub-rank-gap {
-  font-size: 0.7rem;
+  font-size: 0.68rem;
   color: var(--text-muted);
-  font-family: var(--font-display, monospace);
+  font-variant-numeric: tabular-nums;
   min-width: 36px;
   text-align: right;
   margin-right: 4px;
