@@ -1013,13 +1013,6 @@ async function renderHubHome(hubCode) {
         rankContextHtml = '<div class="em-spot-rank-ctx">' + spotPos + '° IN CLASSIFICA · −' + spotGap + ' DAL LEADER</div>';
     }
 
-    // Streak context line
-    let streakCtx = '';
-    if (streak && streak.winStreak >= 2)
-      streakCtx = '<div class="em-spot-streak">' + streak.winStreak + ' VITTORIE CONSECUTIVE</div>';
-    else if (streak && streak.podiumStreak >= 3)
-      streakCtx = '<div class="em-spot-streak">' + streak.podiumStreak + ' PODI DI FILA</div>';
-
     return '<section class="em-spotlight em-spotlight--half">' +
       '<div class="em-spotlight-bg-name">' + esc(ath.cognome) + '</div>' +
       '<div class="em-spotlight-body">' +
@@ -1030,7 +1023,6 @@ async function renderHubHome(hubCode) {
         rankContextHtml +
         '<h2 class="em-spot-name">' + esc(ath.cognome) + '<br><span class="em-spot-firstname">' + esc(ath.nome) + '</span></h2>' +
         '<div class="em-spot-team">' + esc(ath.team||'') + '</div>' +
-        streakCtx +
         '<div class="em-spot-stats">' +
           '<div class="em-stat"><span class="em-stat-val">' + ath.pts + '</span><span class="em-stat-lbl">punti 14gg</span></div>' +
           '<div class="em-stat"><span class="em-stat-val">' + ath.wins + '</span><span class="em-stat-lbl">vittorie</span></div>' +
@@ -1155,8 +1147,7 @@ async function renderHubHome(hubCode) {
   const tickerItems = [];
   // 1. Classification movements (persistent movers — no race wins)
   champMoverLines.slice(0, 2).forEach(function(l){ tickerItems.push(l); });
-  // 2. Hot streak alert
-  if (fireAthlete && fireStreak && fireStreak.winStreak >= 2) tickerItems.push('<strong>' + esc(fireAthlete.cognome).toUpperCase() + '</strong> — ' + fireStreak.winStreak + ' vittorie consecutive');
+  // 2. (streak alert removed)
   // 3. Upcoming race
   if (upcomingAll[0]) {
     const dys = Math.round((new Date(upcomingAll[0].data) - new Date(todayStr)) / 86400000);
@@ -1859,14 +1850,6 @@ function siNewsroomFeed(resultsRaw, allRankings, catOrder, topScalatori, teamDom
     const w = race.results.find(r => r.posizione === 1);
     if (w) items.push({ icon:'🥇', text:'<strong>' + esc(w.cognome) + ' ' + esc(w.nome) + '</strong> vince <em>' + esc(race.nome) + '</em> in ' + catLabel(race.code), type:'victory', atleta_id:w.atleta_id });
   }
-  // Streak detections
-  const checkedA = new Set();
-  for (const r of resultsRaw.filter(x => x.data >= cut7 && x.posizione === 1).sort((a,b) => b.data.localeCompare(a.data)).slice(0,6)) {
-    if (checkedA.has(r.atleta_id)) continue; checkedA.add(r.atleta_id);
-    const { winStreak, podioStreak } = siStreak(r.atleta_id, resultsRaw);
-    if (winStreak >= 2) items.push({ icon:'👑', text:'<strong>' + esc(r.cognome) + '</strong> in striscia: <strong>' + winStreak + ' vittorie consecutive</strong>', type:'streak', atleta_id:r.atleta_id });
-    else if (podioStreak >= 3) items.push({ icon:'🔥', text:'<strong>' + esc(r.cognome) + '</strong> — <strong>' + podioStreak + ' podi consecutivi</strong>', type:'streak', atleta_id:r.atleta_id });
-  }
   // Biggest movers
   if (topScalatori[0]) items.push({ icon:'📈', text:'<strong>' + esc(topScalatori[0].cognome) + ' ' + esc(topScalatori[0].nome) + '</strong> sale di <strong>+' + topScalatori[0].gain + ' posizioni</strong> in ' + catLabel(topScalatori[0].code), type:'mover', atleta_id:topScalatori[0].atleta_id });
   if (topScalatori[2]) items.push({ icon:'📈', text:'<strong>' + esc(topScalatori[2].cognome) + ' ' + esc(topScalatori[2].nome) + '</strong> — ora ' + topScalatori[2].newPos + '° in ' + catLabel(topScalatori[2].code), type:'mover', atleta_id:topScalatori[2].atleta_id });
@@ -1910,9 +1893,9 @@ function siRaceImpact(catResults, resultsRaw) {
   const ptsDiff = (winner && second) ? Math.abs((winner.punti_effettivi||0) - (second.punti_effettivi||0)) : null;
 
   let insight = null;
-  if (winStreak >= 3)         insight = 'Dominatore — ' + winStreak + 'ª vittoria consecutiva';
-  else if (winStreak >= 2)    insight = 'Striscia vincente — ' + winStreak + ' di fila';
-  else if (podioStreak >= 3)  insight = 'In grande forma — ' + podioStreak + ' podi consecutivi';
+  if (winStreak >= 3)         insight = winStreak + ' vittorie di fila';
+  else if (winStreak >= 2)    insight = '2 vittorie consecutive';
+  else if (podioStreak >= 3)  insight = podioStreak + ' podi consecutivi';
   else if (ptsDiff !== null && ptsDiff <= 3) insight = 'Volata ristretta';
   else if (ptsDiff !== null && ptsDiff >= 25) insight = 'Vittoria netta';
 
@@ -2095,12 +2078,12 @@ function siAthleteStory(athleteId, resultsRaw) {
   const wins30 = r30.filter(r => r.posizione === 1).length;
   const podi30 = r30.filter(r => r.posizione <= 3).length;
   const { winStreak, podioStreak } = siStreak(athleteId, resultsRaw);
-  if (winStreak >= 3) return '👑 DOMINATORE — ' + winStreak + ' vittorie di fila';
-  if (winStreak >= 2) return '🔥 IN STRISCIA — ' + winStreak + ' vittorie consecutive';
-  if (podioStreak >= 4) return '🔥 FORMA STRAORDINARIA — ' + podioStreak + ' podi di fila';
-  if (wins30 >= 3) return '📈 STAGIONE ECCEZIONALE — ' + wins30 + ' vittorie nell\'ultimo mese';
-  if (podi30 >= 4) return '📈 MOLTO IN FORMA — ' + podi30 + ' podi in 30 giorni';
-  if (wins30 === 0 && r30.length > 2) return '⏳ In cerca di forma — ' + podi30 + ' podi in ' + r30.length + ' gare';
+  if (winStreak >= 3) return winStreak + ' vittorie di fila';
+  if (winStreak >= 2) return '2 vittorie consecutive';
+  if (podioStreak >= 4) return podioStreak + ' podi di fila';
+  if (wins30 >= 3) return wins30 + ' vittorie nell\'ultimo mese';
+  if (podi30 >= 4) return podi30 + ' podi nelle ultime settimane';
+  if (wins30 === 0 && r30.length > 2) return null;
   return null;
 }
 
@@ -2328,12 +2311,8 @@ async function renderHome() {
   const trendCut28Str = (() => { const d = new Date(lastRaceDate||new Date()); d.setDate(d.getDate()-28); return d.toISOString().split('T')[0]; })();
   const teamDom = siTeamDominance(resultsRaw, catOrder, trendCut28Str);
   const tickerItems = [];
-  // Streaks
   if (formaBest[0]) {
-    const { podioStreak, winStreak } = siStreak(formaBest[0].atleta_id, resultsRaw);
-    if (winStreak >= 2) tickerItems.push(`👑 <strong>${formaBest[0].cognome.toUpperCase()}</strong> — ${winStreak} vittorie di fila in ${catLabel(formaBest[0].code)}`);
-    else if (podioStreak >= 3) tickerItems.push(`🔥 <strong>${formaBest[0].cognome.toUpperCase()}</strong> — ${podioStreak} podi consecutivi in ${catLabel(formaBest[0].code)}`);
-    else tickerItems.push(`🔥 <strong>IN FORMA:</strong> ${formaBest[0].cognome} ${formaBest[0].nome} — ${formaBest[0].pts} pt · ${catLabel(formaBest[0].code)}`);
+    tickerItems.push(`<strong>${formaBest[0].cognome} ${formaBest[0].nome}</strong> — ${formaBest[0].pts} pt · ${catLabel(formaBest[0].code)}`);
   }
   for (const r of heroRaces.slice(0,3)) { const w = r.results?.find(x=>x.posizione===1); if (w) tickerItems.push(`🥇 <strong>${w.cognome.toUpperCase()}</strong> vince ${r.nome}`); }
   if (topScalatori[0]) tickerItems.push(`📈 <strong>SALE:</strong> ${topScalatori[0].cognome} ${topScalatori[0].nome} +${topScalatori[0].gain} posizioni in ${catLabel(topScalatori[0].code)}`);
@@ -2342,7 +2321,7 @@ async function renderHome() {
   if (tdTop) tickerItems.push(`🏆 <strong>DOMINA:</strong> ${tdTop.team} — ${tdTop.wins} vittorie in ${catLabel(tdTop.code)}`);
   if (topTeamTicker) tickerItems.push(`🏆 <strong>TEAM HOT:</strong> ${topTeamTicker.team} — ${topTeamTicker.pts} pt · ${topTeamTicker.vittorie} vitt.`);
   if (upcoming[0]) { const d = Math.round((new Date(upcoming[0].data)-new Date(todayStr))/86400000); tickerItems.push(`📅 <strong>PROSSIMA GARA${d===0?' OGGI':d===1?' DOMANI':''}:</strong> ${upcoming[0].nome}`); }
-  if (formaBest.length > 1) { const f = formaBest[1]; const { podioStreak:ps } = siStreak(f.atleta_id, resultsRaw); tickerItems.push(ps>=2?`🚀 <strong>EMERGENTE:</strong> ${f.cognome} ${f.nome} — ${ps} podi in ${catLabel(f.code)}`:`📈 <strong>EMERGENTE:</strong> ${f.cognome} ${f.nome} — ${f.pts} pt · ${catLabel(f.code)}`); }
+  if (formaBest.length > 1) { const f = formaBest[1]; tickerItems.push(`<strong>${f.cognome} ${f.nome}</strong> — ${f.pts} pt · ${catLabel(f.code)}`); }
 
   // ── HTML SECTIONS (editorial v2) ──────────────────────────────
   const MONTHS_SHORT = ['GEN','FEB','MAR','APR','MAG','GIU','LUG','AGO','SET','OTT','NOV','DIC'];
@@ -2472,15 +2451,13 @@ async function renderHome() {
 
   // ── 2. UOMO DEL MOMENTO ───────────────────────────────────────
   const star = formaBest[0];
-  const starStreak = star ? siStreak(star.atleta_id, resultsRaw) : null;
   const starMomentum = star ? siMomentum(star.atleta_id, resultsRaw, lastRaceDate) : null;
   const spotlightHtml = star ? `<section class="em-spotlight">
     <div class="em-spotlight-bg-name">${esc(star.cognome)}</div>
     <div class="em-spotlight-body">
       <div class="em-spot-meta">
-        <span class="em-spot-badge">🔥 UOMO DEL MOMENTO</span>
+        <span class="em-spot-badge">UOMO DEL MOMENTO</span>
         <span class="em-spot-cat">${catLabel(star.code)}</span>
-        ${starStreak && starStreak.podioStreak >= 2 ? `<div class="si-streak-badge">${starStreak.winStreak>=2?'👑':'🔥'} ${starStreak.winStreak>=2?starStreak.winStreak+' vittorie':''+starStreak.podioStreak+' podi'} consecutivi</div>` : ''}
       </div>
       <h2 class="em-spot-name">${esc(star.cognome)}<br><span class="em-spot-firstname">${esc(star.nome)}</span></h2>
       <a href="#/team/${encodeURIComponent(star.team_id)}" class="em-spot-team">${esc(star.team||'')}</a>
@@ -3643,7 +3620,7 @@ async function renderAtleta(atleta_id) {
   if (p1 > 0) _narrativeParts.push(`${p1} vittori${p1===1?'a':'e'} in ${top10} gar${top10===1?'a':'e'}`);
   else if (p2+p3 > 0) _narrativeParts.push(`${p2+p3} podi in ${top10} gar${top10===1?'a':'e'}`);
   else if (top10 > 0) _narrativeParts.push(`${top10} gar${top10===1?'a':'e'} disputat${top10===1?'a':'e'}`);
-  if (aiStreak.winStreak >= 2) _narrativeParts.push(`🔥 ${aiStreak.winStreak} vittorie consecutive`);
+  if (aiStreak.winStreak >= 2) _narrativeParts.push(`${aiStreak.winStreak} vittorie consecutive`);
   else if (aiStreak.podioStreak >= 2) _narrativeParts.push(`${aiStreak.podioStreak} podi di fila`);
 
   const heroHtml = `
@@ -3672,11 +3649,6 @@ async function renderAtleta(atleta_id) {
       <span class="ath-rival-meta">${r.encounters} sfid${r.encounters===1?'a':'e'}${r.wins>0?' · 🏆 '+r.wins:''}</span>
     </div>`).join('') : `<p class="ath-empty-note">Dati rivalità insufficienti</p>`;
 
-  const _streakHtml = aiStreak.winStreak >= 2
-    ? `<div class="ath-streak-badge" style="color:var(--gold)">👑 ${aiStreak.winStreak} vittorie consecutive</div>`
-    : aiStreak.podioStreak >= 2
-    ? `<div class="ath-streak-badge" style="color:var(--red-hot)">🔥 ${aiStreak.podioStreak} podi di fila</div>`
-    : '';
 
   const _identityHtml = aiIdentity ? `
     <div class="ath-identity-strip">
@@ -3688,7 +3660,6 @@ async function renderAtleta(atleta_id) {
         <div class="ath-identity-label">STILE DI GARA</div>
         <div class="ath-style-tag"><span class="ath-style-icon">${aiIdentity.icon}</span>${aiIdentity.style}</div>
         <div class="ath-style-desc">${aiIdentity.desc}</div>
-        ${_streakHtml}
         ${aiIdentity.strengths.length ? `<div class="ath-strengths">${aiIdentity.strengths.map(s=>`<span class="ath-strength-chip">${s}</span>`).join('')}</div>` : ''}
       </div>
       <div class="ath-identity-card">
@@ -4421,12 +4392,10 @@ async function renderGara(gara_id) {
   const _garaLastDate = resultsRaw.reduce((max, r) => (r.data||'') > max ? r.data : max, '');
   const _makeParticipantCards = (arr) => arr.slice(0, 5).map(r => {
     const mom = siMomentum(r.atleta_id, resultsRaw, _garaLastDate);
-    const streak = siStreak(r.atleta_id, resultsRaw);
-    const streakBadge = streak.winStreak >= 2 ? `👑${streak.winStreak}W` : streak.podioStreak >= 2 ? `🔥${streak.podioStreak}P` : '';
     return `<div class="si-participant-card">
       <div class="si-participant-pos">${r.posizione}° posto</div>
       <div class="si-participant-name"><a href="#/atleta/${encodeURIComponent(r.atleta_id)}" style="color:inherit;text-decoration:none">${esc(r.cognome)}<br><small style="font-weight:400">${esc(r.nome)}</small></a></div>
-      <div class="si-participant-form" style="color:${mom.color}">${mom.label.replace(/^[^ ]+ /,'')}${streakBadge ? ' · '+streakBadge : ''}</div>
+      <div class="si-participant-form" style="color:${mom.color}">${mom.label.replace(/^[^ ]+ /,'')}</div>
     </div>`;
   }).join('');
 
