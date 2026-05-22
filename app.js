@@ -1219,7 +1219,6 @@ async function renderHubHome(hubCode) {
         '<div class="em-eyebrow">ITALIACRIT · ' + hub.icon + ' ' + hub.label.toUpperCase() + '</div>' +
         '<h1 class="em-title hub-cat-title">' + esc(hub.label.toUpperCase()) + '</h1>' +
         '<p class="em-subtitle">' + esc(hub.desc) + '</p>' +
-        champStatusHtml +
       '</div>' +
     '</div>' +
     (tickerItems.length ? '<div class="em-ticker-bar"><div class="em-ticker-inner"><span class="em-ticker-track">' + [...tickerItems,...tickerItems].join(' &nbsp;&middot;&nbsp; ') + '</span></div></div>' : '') +
@@ -1315,7 +1314,7 @@ async function renderHubHome(hubCode) {
     '</section>';
   }
 
-  setPage(heroHtml + lastResultsHtml + spotlightHtml + rankHtml + rivalHtml + newsHtml + upHtml);
+  setPage(heroHtml + champStatusHtml + lastResultsHtml + spotlightHtml + rankHtml + rivalHtml + newsHtml + upHtml);
 }
 
 // ── Hub subpage dispatcher ────────────────────────────────────────────
