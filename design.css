@@ -7753,10 +7753,10 @@ body[data-hub] .loading-bar { background: var(--hub-color) !important; }
   color: var(--red-hot, #E11D48);
   letter-spacing: .1em;
 }
-.hub-champ-sep { opacity: .35; }
+.hub-champ-sep { color: var(--text-muted); opacity: .5; }
 .hub-champ-leader {
   font-weight: 800;
-  color: #fff;
+  color: var(--text-primary);
   font-size: 0.78rem;
 }
 .hub-champ-pts {
@@ -7764,11 +7764,12 @@ body[data-hub] .loading-bar { background: var(--hub-color) !important; }
   font-weight: 700;
 }
 .hub-champ-divider {
-  opacity: .3;
+  color: var(--text-muted);
+  opacity: .4;
   margin: 0 2px;
 }
-.hub-champ-rival { color: rgba(255,255,255,.55); font-weight: 500; }
-.hub-champ-rival em { font-style: normal; color: rgba(255,255,255,.35); }
+.hub-champ-rival { color: var(--text-secondary); font-weight: 500; }
+.hub-champ-rival em { font-style: normal; color: var(--text-muted); }
 
 /* ── Hub ranking — new inline elements ─────────────────────────  */
 .hub-rank-trend {
