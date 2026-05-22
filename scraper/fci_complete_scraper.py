@@ -325,6 +325,7 @@ def parse_risultati_page(soup: BeautifulSoup, calendar_map: dict, existing_ids: 
         if not table: continue
 
         # Parsa classifica
+        seen_pos_1 = False  # ex-aequo pos 1: solo il primo corridore è il vincitore ufficiale
         for row in table.find_all("tr"):
             th = row.find("th")
             if not th: continue
@@ -332,6 +333,11 @@ def parse_risultati_page(soup: BeautifulSoup, calendar_map: dict, existing_ids: 
             if not pos_raw.isdigit(): continue
             pos = int(pos_raw)
             if pos < 1 or pos > 10: continue
+            # Ex-aequo a posizione 1: salta il secondo corridore (solo il principale vince)
+            if pos == 1:
+                if seen_pos_1:
+                    continue
+                seen_pos_1 = True
 
             tds = row.find_all("td")
             if len(tds) < 2: continue
@@ -359,6 +365,11 @@ def parse_risultati_page(soup: BeautifulSoup, calendar_map: dict, existing_ids: 
                 tempo = HTMLMOD.unescape(tds[-1].get_text(strip=True))
 
             if not cognome: continue
+
+            # Pulizia ex-aequo: rimuove annotazioni tipo "(6° - EXEQUO)", "(1 - EX AEQUO)", ecc.
+            _exaeq_re = re.compile(r'\(\s*\d+\s*°?\s*[-–]?\s*EX[\s\-]?AEQUO\s*\)', re.IGNORECASE)
+            cognome = _exaeq_re.sub('', cognome).strip()
+            nome    = _exaeq_re.sub('', nome).strip()
 
             atleta_id = slug(f"{cognome}_{nome}")
             team_id   = slug(team) if team else "SCONOSCIUTO"
@@ -607,6 +618,10 @@ async def run_cycle():
             print(f"Caricati {len(all_results)} risultati esistenti. Ricalcolo moltiplicatori...")
             # Riapplica le regole di moltiplicatore e normalizza ID (unificazione doppioni)
             for r in all_results:
+                # Pulizia ex-aequo dai dati storici (annotazioni tipo "(6° - EXEQUO)")
+                _exaeq = re.compile(r'\(\s*\d+\s*°?\s*[-–]?\s*EX[\s\-]?AEQUO\s*\)', re.IGNORECASE)
+                r["cognome"] = _exaeq.sub('', r.get("cognome","")).strip()
+                r["nome"]    = _exaeq.sub('', r.get("nome","")).strip()
                 # Forza ricalcolo ID con la nuova logica stabile
                 r["atleta_id"] = slug(r["cognome"] + " " + r["nome"])
                 r["team_id"] = slug(r["team"])
