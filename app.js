@@ -231,6 +231,19 @@ async function loadAll() {
     }
   }
 
+  // Normalizza cognome/nome in resultsRaw con i dati completi da athletes.
+  // Lo scraper a volte tronca i cognomi composti (es. "DE ROSA" → solo "DE").
+  // Il file athletes.json invece contiene il cognome registrato per intero.
+  if (resultsRaw && athletes) {
+    for (const r of resultsRaw) {
+      const ath = athletes[r.atleta_id];
+      if (ath) {
+        if (ath.cognome) r.cognome = ath.cognome;
+        if (ath.nome)    r.nome    = ath.nome;
+      }
+    }
+  }
+
   // Indicizzazione per calcolo trend rapidi
   const resultsByAtleta = {};
   const resultsByTeam = {};
@@ -1194,22 +1207,37 @@ async function renderHubHome(hubCode) {
   }
 
   // ── Championship status line (leader + top-3 gaps) ─────────────
-  let champStatusHtml = '';
-  if (hubRanking.length >= 2) {
-    const l1 = hubRanking[0];
-    const gap12 = l1.punti - hubRanking[1].punti;
-    const l3 = hubRanking[2];
+  // buildChampStrip(ranking, annoLabel?) → HTML stringa di una singola strip.
+  // annoLabel è opzionale: se passato appare come prefisso (es. "1° ANNO").
+  function buildChampStrip(ranking, annoLabel) {
+    if (!ranking || ranking.length < 2) return '';
+    const l1 = ranking[0];
+    const gap12 = l1.punti - ranking[1].punti;
+    const l3 = ranking[2];
     const tension = gap12 === 0 ? 'PARITÀ IN VETTA' : gap12 <= 10 ? 'LOTTA APERTISSIMA' : gap12 <= 30 ? 'MARGINE RISICATO' : 'LEADER IN FUGA';
-    champStatusHtml =
-      '<div class="hub-champ-status">' +
-        '<span class="hub-champ-tension">' + tension + '</span>' +
-        '<span class="hub-champ-sep" aria-hidden="true">·</span>' +
-        '<span class="hub-champ-leader">' + esc(l1.cognome) + '</span>' +
-        '<span class="hub-champ-pts">' + l1.punti + ' pt</span>' +
-        '<span class="hub-champ-divider" aria-hidden="true">|</span>' +
-        '<span class="hub-champ-rival">' + esc(hubRanking[1].cognome) + ' <em>−' + gap12 + '</em></span>' +
-        (l3 ? '<span class="hub-champ-divider" aria-hidden="true">|</span><span class="hub-champ-rival">' + esc(l3.cognome) + ' <em>−' + (l1.punti - l3.punti) + '</em></span>' : '') +
-      '</div>';
+    return '<div class="hub-champ-status">' +
+      (annoLabel ? '<span class="hub-champ-anno">' + annoLabel + '</span><span class="hub-champ-divider" aria-hidden="true">|</span>' : '') +
+      '<span class="hub-champ-tension">' + tension + '</span>' +
+      '<span class="hub-champ-sep" aria-hidden="true">·</span>' +
+      '<span class="hub-champ-leader">' + esc(l1.cognome) + '</span>' +
+      '<span class="hub-champ-pts">' + l1.punti + ' pt</span>' +
+      '<span class="hub-champ-divider" aria-hidden="true">|</span>' +
+      '<span class="hub-champ-rival">' + esc(ranking[1].cognome) + ' <em>−' + gap12 + '</em></span>' +
+      (l3 ? '<span class="hub-champ-divider" aria-hidden="true">|</span><span class="hub-champ-rival">' + esc(l3.cognome) + ' <em>−' + (l1.punti - l3.punti) + '</em></span>' : '') +
+    '</div>';
+  }
+
+  // Per gli esordienti: due strip affiancate (1° anno a sx, 2° a dx).
+  // Per tutte le altre categorie: strip singola a piena larghezza.
+  let champStatusHtml = '';
+  if (isEsordienti) {
+    const stripES1 = buildChampStrip(hubRankingES1, '1° ANNO');
+    const stripES2 = buildChampStrip(hubRanking,    '2° ANNO');
+    if (stripES1 || stripES2) {
+      champStatusHtml = '<div class="hub-champ-dual">' + (stripES1||'') + (stripES2||'') + '</div>';
+    }
+  } else {
+    champStatusHtml = buildChampStrip(hubRanking);
   }
 
   // ── 1. HERO — nome categoria, layout centrato ────────────────────

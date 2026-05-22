@@ -7748,6 +7748,26 @@ body[data-hub] .loading-bar { background: var(--hub-color) !important; }
   text-transform: uppercase;
   color: var(--text-muted);
 }
+/* Esordienti: due strip affiancate, 1° anno a sx, 2° a dx */
+.hub-champ-dual {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  border-bottom: 1px solid var(--border-subtle);
+}
+.hub-champ-dual .hub-champ-status {
+  border-bottom: none;          /* il bordo lo gestisce il wrapper */
+  border-right: 1px solid var(--border-subtle);
+}
+.hub-champ-dual .hub-champ-status:last-child {
+  border-right: none;
+}
+.hub-champ-anno {
+  font-weight: 900;
+  color: var(--text-secondary);
+  letter-spacing: .08em;
+  margin-right: 2px;
+}
+
 .hub-champ-tension {
   font-weight: 900;
   color: var(--red-hot, #E11D48);
