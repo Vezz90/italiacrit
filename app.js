@@ -6113,7 +6113,23 @@ async function renderRisultati() {
   if (!globalData) return;
   const { resultsRaw, calendar } = globalData;
   const photosMap = await loadRisPhotos();
-  
+
+  // ── Mappa rank corrente per atleta ────────────────────────────
+  // Per ogni (atleta_id, catCode) teniamo il rank_dopo_gara del risultato
+  // più recente. Questo riflette sempre l'ultimo scraping: se la settimana
+  // dopo l'atleta scende, la mappa si aggiorna da sola al prossimo run.
+  const currentRankMap = {}; // { atleta_id: { catCode: rank } }
+  for (const r of resultsRaw) {
+    if (!r.rank_dopo_gara || !r.atleta_id || !r.data) continue;
+    const code = getRankingFileCode(r);
+    if (!code) continue;
+    if (!currentRankMap[r.atleta_id]) currentRankMap[r.atleta_id] = {};
+    const cur = currentRankMap[r.atleta_id][code];
+    if (!cur || r.data > cur.data) {
+      currentRankMap[r.atleta_id][code] = { rank: r.rank_dopo_gara, data: r.data };
+    }
+  }
+
   // Raggruppa per gara_id — ogni categoria ha il proprio card separato.
   // Eccezione: Esordienti 1°/2° anno (ES1/ES2) corrono insieme → stesso card.
   const eventMap = {};
@@ -6275,9 +6291,15 @@ async function renderRisultati() {
           mediaVal ? esc(mediaVal) + ' km/h' : ''
         ].filter(Boolean).join(' · ');
 
+        // catCode di questa categoria per il lookup del rank corrente
+        const _catCodeForRank = sortedCatRes[0] ? getRankingFileCode(sortedCatRes[0]) : null;
+
         const podioRows = top3.map((r,i) => {
           const pClass = ['p1','p2','p3'][i] || 'pout';
-          const rkPos = r.rank_dopo_gara;
+          // Usa il rank più recente scrapato per questo atleta in questa categoria
+          const rkPos = _catCodeForRank
+            ? (currentRankMap[r.atleta_id] || {})[_catCodeForRank]?.rank
+            : null;
           const rkHtml = rkPos ? '<span class="ris-rank-pos">' + rkPos + '° class.</span>' : '';
           return '<div class="hero-podio-row ris-podio-row" style="animation-delay:' + (i*60) + 'ms">' +
             '<div class="hero-pos ' + pClass + '">' + r.posizione + '&#176;</div>' +
