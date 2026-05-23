@@ -1,6 +1,7 @@
 import json
 import os
 import urllib.request
+import urllib.parse
 import ssl
 import bs4
 import re
@@ -53,66 +54,126 @@ def robust_norm(s):
     s = re.sub(r"\b(di|del|della|dei|delle|da|in|con|su|per|tra|fra|il|lo|la|i|gli|le|un|uno|una|gp|g p|gran premio|memorial|trofeo|coppa)\b", " ", s)
     return re.sub(r"\s+", " ", s).strip()
 
+def extract_field(text, *field_names):
+    """Estrae il valore di un campo dal testo grezzo.
+    Cerca 'NomeCampo: valore' e restituisce il valore fino al prossimo label noto.
+    """
+    ALL_LABELS = [
+        'Luogo Ritrovo', 'Indirizzo Ritrovo', 'Orario Ritrovo',
+        'Luogo Partenza', 'Orario Partenza', 'Luogo Arrivo', 'Orario Arrivo',
+        'Luogo Verifica', 'Punto Incontro DS', 'Lunghezza KM',
+        'Località', 'Provincia', 'Categoria', 'Indirizzo', 'CAP', 'Città',
+        'Telefono', 'Email', 'Note', 'Descrizione', 'Organizzatore',
+    ]
+    for fname in field_names:
+        pattern = rf'{re.escape(fname)}\s*:\s*(.+?)(?=' + '|'.join(re.escape(l + ':') for l in ALL_LABELS if l != fname) + r'|$)'
+        m = re.search(pattern, text, re.IGNORECASE | re.DOTALL)
+        if m:
+            val = re.sub(r'\s+', ' ', m.group(1)).strip().rstrip('.,;')
+            if val:
+                return val
+    return None
+
+
+_geocode_cache = {}
+
+def geocode_location(query):
+    """Geocodifica con Nominatim (OSM). Restituisce (lat, lng) o (None, None)."""
+    if not query:
+        return None, None
+    if query in _geocode_cache:
+        return _geocode_cache[query]
+    try:
+        encoded = urllib.parse.quote(query)
+        url = f"https://nominatim.openstreetmap.org/search?q={encoded}&countrycodes=it&format=json&limit=1"
+        req = urllib.request.Request(url, headers={
+            'User-Agent': 'ItaliacritScraper/1.0 (ciclismo-agonistico)'
+        })
+        res = urllib.request.urlopen(req, context=ctx, timeout=8)
+        data = json.loads(res.read().decode('utf-8'))
+        if data:
+            lat = round(float(data[0]['lat']), 5)
+            lng = round(float(data[0]['lon']), 5)
+            _geocode_cache[query] = (lat, lng)
+            time.sleep(1.1)   # rispetta il rate-limit Nominatim (1 req/sec)
+            return lat, lng
+    except Exception as e:
+        print(f"    [geocode] Errore per '{query}': {e}")
+    _geocode_cache[query] = (None, None)
+    return None, None
+
+
 def extract_race_details(raceid):
     url = f"https://www.federciclismo.it/ricerca-gare/dettaglio-gara/?raceid={raceid}&site=strada_it"
     html = fetch_html(url)
     if not html: return None
-    
+
     soup = BeautifulSoup(html, 'html.parser')
     main = soup.find('div', class_='main-content') or soup
-    
-    details = {}
-    
+
     # Raccogliamo i blocchi principali
     testo_completo = []
-    
+
     for row in main.find_all(['li', 'p']):
         text = row.get_text(" ", strip=True).replace("\n", " ")
         if text and len(text) > 3:
             testo_completo.append(text)
-            
+
     for div in main.find_all('div', class_=re.compile('col-')):
         text = div.get_text(" ", strip=True).replace("\n", " ")
         if text and len(text) > 3:
             testo_completo.append(text)
-            
+
     # Filtriamo e raggruppiamo i blocchi di interesse
     keywords = ["Ritrovo", "Partenza", "Arrivo", "Verifica", "Descrizione:", "Lunghezza KM", "Iscrizioni", "Organizzatore", "Email", "Telefono"]
-    
+
     info_utili = []
     seen = set()
     for block in testo_completo:
         if any(k.lower() in block.lower() for k in keywords):
-            # Puliamo doppi spazi
             clean_block = re.sub(r'\s+', ' ', block).strip()
-            # Rimuoviamo blocchi enormi spazzatura
             if len(clean_block) > 10 and clean_block not in seen:
                 seen.add(clean_block)
                 info_utili.append(clean_block)
-                
-    # Uniamo tutte le info in un formato leggibile
-    # Filtro social e spazzatura
+
+    # ── Estrai campi strutturati dal testo grezzo ─────────────────
+    # Unisci tutti i blocchi in un unico testo per la ricerca dei campi
+    full_text = ' '.join(info_utili)
+
+    # Il "Luogo Ritrovo" è il punto di partenza della gara (start location)
+    luogo_ritrovo   = extract_field(full_text, 'Luogo Ritrovo', 'Luogo Partenza', 'Luogo')
+    indirizzo_ritrovo = extract_field(full_text, 'Indirizzo Ritrovo', 'Indirizzo')
+    orario_partenza   = extract_field(full_text, 'Orario Partenza', 'Orario Ritrovo')
+    km                = extract_field(full_text, 'Lunghezza KM')
+
+    # Costruisci stringa per geocoding: "Via Roma 1, Comune, Italia"
+    geo_parts = []
+    if indirizzo_ritrovo:
+        geo_parts.append(indirizzo_ritrovo)
+    if luogo_ritrovo:
+        geo_parts.append(luogo_ritrovo)
+    geo_parts.append('Italia')
+    location_str = ', '.join(geo_parts) if geo_parts[:-1] else None
+
+    # ── Formatta HTML per display ─────────────────────────────────
     cleaned_info = []
     for blk in info_utili:
         if "BICIMPARO" in blk or "Twitter feed" in blk or "Retweet on Twitter" in blk:
             continue
         blk = blk.replace("Home / Ricerca Gare / Dettaglio Gara / Dettaglio Gara", "")
         blk = blk.replace("📅 AGGIUNGI QUESTA GARA AL CALENDARIO", "")
-        
-        # Inserisci <b> prima dei label noti
+
         labels = [
             'Località:', 'Provincia:', 'Categoria:', 'Categorie Ammesse:', 'Categoria Geografica:',
-            'Specifica Gara:', 'Tipo di Gara:', 'Tipo di Programma:', 'Direttore di Corsa:', 
-            'Vice Direttore di Corsa:', 'Approvazione:', 'Nome:', 'Indirizzo:', 'CAP:', 'Città:', 
-            'Telefono:', 'Email:', 'Luogo:', 'Iscrizioni Dal - Al:', 'Tipo:', 'Prova:', 'Data:', 
-            'Descrizione:', 'Luogo Ritrovo:', 'Indirizzo Ritrovo:', 'Orario Ritrovo:', 
-            'Luogo Partenza:', 'Orario Partenza:', 'Luogo Arrivo:', 'Orario Arrivo:', 
+            'Specifica Gara:', 'Tipo di Gara:', 'Tipo di Programma:', 'Direttore di Corsa:',
+            'Vice Direttore di Corsa:', 'Approvazione:', 'Nome:', 'Indirizzo:', 'CAP:', 'Città:',
+            'Telefono:', 'Email:', 'Luogo:', 'Iscrizioni Dal - Al:', 'Tipo:', 'Prova:', 'Data:',
+            'Descrizione:', 'Luogo Ritrovo:', 'Indirizzo Ritrovo:', 'Orario Ritrovo:',
+            'Luogo Partenza:', 'Orario Partenza:', 'Luogo Arrivo:', 'Orario Arrivo:',
             'Luogo Verifica:', 'Punto Incontro DS:', 'Lunghezza KM:', 'Note:'
         ]
-        
         for lbl in labels:
             blk = re.sub(rf'\b({lbl})', r'<br><b>\1</b>', blk)
-            
         blk = re.sub(r'<br>\s*<br>', '<br>', blk)
         cleaned_info.append(blk.strip())
 
@@ -125,7 +186,13 @@ def extract_race_details(raceid):
     return {
         "raceid": raceid,
         "fci_url": url,
-        "info": final_info
+        "info": final_info,
+        # Campi strutturati per la mappa
+        "luogo_ritrovo":    luogo_ritrovo,
+        "indirizzo_ritrovo": indirizzo_ritrovo,
+        "orario_partenza":  orario_partenza,
+        "km":               km,
+        "location_str":     location_str,
     }
 
 def scrape_all_details():
@@ -198,27 +265,47 @@ def scrape_all_details():
             c_date = c["data"]
             c_norm = robust_norm(c["nome"])
 
-            # Evita di riscaricare se c'è già (commentalo per forzare il refresh)
-            if cal_id in details_map and details_map[cal_id].get("info"):
-                continue
+            existing = details_map.get(cal_id, {})
 
-            fci_list = fci_races_map.get(c_date, [])
-            best_match_id = None
+            # ── Scarica dettagli se non ci sono ancora ───────────
+            if not existing.get("info"):
+                fci_list = fci_races_map.get(c_date, [])
+                best_match_id = None
+                for (f_norm, f_id, f_nome) in fci_list:
+                    if c_norm in f_norm or f_norm in c_norm:
+                        best_match_id = f_id
+                        break
 
-            # Exact/Substring match
-            for (f_norm, f_id, f_nome) in fci_list:
-                if c_norm in f_norm or f_norm in c_norm:
-                    best_match_id = f_id
-                    break
+                if best_match_id:
+                    print(f"  Scraping dettagli per {c['nome']} (FCI: {best_match_id})")
+                    data = extract_race_details(best_match_id)
+                    if data:
+                        details_map[cal_id] = data
+                        existing = data
+                    time.sleep(0.5)
+                else:
+                    print(f"  [!] Nessun match per: {c['nome']} in data {c_date}")
 
-            if best_match_id:
-                print(f"  Scraping dettagli per {c['nome']} (FCI: {best_match_id})")
-                data = extract_race_details(best_match_id)
-                if data:
-                    details_map[cal_id] = data
-                time.sleep(0.5)
-            else:
-                print(f"  [!] Nessun match per: {c['nome']} in data {c_date}")
+            # ── Geocoding: solo se mancano lat/lng ───────────────
+            if existing and existing.get("location_str") and existing.get("lat") is None:
+                loc = existing["location_str"]
+                print(f"  Geocoding: {loc}")
+                lat, lng = geocode_location(loc)
+                if lat is not None:
+                    details_map[cal_id]["lat"] = lat
+                    details_map[cal_id]["lng"] = lng
+                    print(f"    → {lat}, {lng}")
+                else:
+                    # Fallback: solo comune senza indirizzo
+                    fallback = (existing.get("luogo_ritrovo") or "") + ", Italia"
+                    lat, lng = geocode_location(fallback)
+                    if lat is not None:
+                        details_map[cal_id]["lat"] = lat
+                        details_map[cal_id]["lng"] = lng
+                        print(f"    → {lat}, {lng} (fallback comune)")
+                    else:
+                        details_map[cal_id]["lat"] = None
+                        details_map[cal_id]["lng"] = None
     finally:
         # Salva sempre — anche se interrotto da timeout
         with open(DETAILS_FILE, 'w', encoding='utf-8') as f:
