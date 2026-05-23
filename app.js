@@ -3731,26 +3731,46 @@ async function updateRankTable() {
       ranking.forEach((r, i) => r.pos = i+1);
     }
 
-    // Ricalcola trend dinamicamente solo se rank_dopo_gara è disponibile nei risultati
-    // IMPORTANTE: filtrare per categoria (rankCat) altrimenti si confrontano
-    // rank_dopo_gara di categorie diverse → indicatori completamente errati
-    const { resultsByAtleta } = globalData;
-    ranking.forEach(entry => {
-      const res = (resultsByAtleta[entry.atleta_id] || [])
-        .filter(r => getRankingFileCode(r) === rankCat && r.rank_dopo_gara != null);
-      // res è già ordinato per data decrescente (da resultsByAtleta)
-      const r0 = res[0], r1 = res[1];
-      const rk0 = r0?.rank_dopo_gara, rk1 = r1?.rank_dopo_gara;
-      if (rk0 != null && rk1 != null) {
-        // rk1 = rank gara precedente, rk0 = rank gara più recente
-        // rank più basso = meglio → gain positivo = salita in classifica
-        entry.trend = rk1 - rk0;
-      } else if (rk0 != null && !r1) {
-        // solo una gara in questa categoria: prima apparizione
-        entry.trend = null;
+    // Ricalcola trend: classifica prima dell'ultimo giorno di gara vs classifica attuale.
+    // NON usiamo rank_dopo_gara perché confronta due snapshot personali dell'atleta,
+    // ignorando che altri corridori abbiano gareggiato nel frattempo e modificato la graduatoria.
+    // Il confronto corretto è: posizione PRIMA delle gare dell'ultimo giorno vs posizione DOPO.
+    {
+      const catResults = globalData.resultsRaw.filter(r =>
+        getRankingFileCode(r) === rankCat && r.data && r.atleta_id && (r.punti_effettivi || 0) > 0
+      );
+      // Ultimo giorno con risultati in questa categoria
+      const latestDate = catResults.reduce((mx, r) => r.data > mx ? r.data : mx, '');
+
+      if (latestDate) {
+        // Ranking attuale (punti cumulati con TUTTI i risultati disponibili)
+        const curPts = {};
+        for (const r of catResults) {
+          curPts[r.atleta_id] = (curPts[r.atleta_id] || 0) + (r.punti_effettivi || 0);
+        }
+        const curRankMap = {};
+        Object.entries(curPts).sort(([,a],[,b]) => b-a).forEach(([id], i) => { curRankMap[id] = i + 1; });
+
+        // Ranking prima dell'ultimo giorno (esclude risultati di latestDate)
+        const prevPts = {};
+        for (const r of catResults.filter(r => r.data < latestDate)) {
+          prevPts[r.atleta_id] = (prevPts[r.atleta_id] || 0) + (r.punti_effettivi || 0);
+        }
+        const prevRankMap = {};
+        Object.entries(prevPts).sort(([,a],[,b]) => b-a).forEach(([id], i) => { prevRankMap[id] = i + 1; });
+
+        ranking.forEach(entry => {
+          const cur  = curRankMap[entry.atleta_id];
+          const prev = prevRankMap[entry.atleta_id];
+          if (cur != null && prev != null) {
+            entry.trend = prev - cur; // positivo = salita, negativo = discesa
+          } else if (cur != null && prev == null) {
+            entry.trend = null; // nuovo in classifica nell'ultimo giorno
+          }
+          // altrimenti lascia invariato il trend del JSON
+        });
       }
-      // altrimenti lascia invariato il trend del JSON
-    });
+    }
 
     const filtered = ranking.filter(r => {
       if (!rankFilter) return true;
