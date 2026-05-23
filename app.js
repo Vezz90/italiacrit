@@ -5841,7 +5841,8 @@ async function _loadRaceDetails() {
 }
 
 // ── Geocoding client-side con localStorage cache ──────────────────────
-const GEO_CACHE_KEY = 'itc_geo_v1';
+// v2: usa 'in' operator per distinguere null (già provato) da undefined (mai provato)
+const GEO_CACHE_KEY = 'itc_geo_v2';  // bump = invalida cache vecchia (v1 usava check errato)
 function _geoLoad() {
   try { return JSON.parse(localStorage.getItem(GEO_CACHE_KEY) || '{}'); } catch { return {}; }
 }
@@ -5850,7 +5851,8 @@ function _geoSave(cache) {
 }
 async function _geoLookup(query) {
   const cache = _geoLoad();
-  if (cache[query]) return cache[query];
+  // Usa 'in' per distinguere "mai cercato" da "cercato ma fallito" (null)
+  if (query in cache) return cache[query];
   try {
     const url = `https://nominatim.openstreetmap.org/search?q=${encodeURIComponent(query)}&countrycodes=it&format=json&limit=1`;
     const res = await fetch(url, { headers: { 'Accept-Language': 'it' } });
@@ -5862,6 +5864,7 @@ async function _geoLookup(query) {
       return coords;
     }
   } catch {}
+  // Salva null = "abbiamo già provato, non trovato" — non riprovare mai più
   cache[query] = null;
   _geoSave(cache);
   return null;
@@ -5894,27 +5897,46 @@ async function renderCalMap(filtered, calendarResultsMap) {
     const today = new Date().toISOString().split('T')[0];
     const geoCache = _geoLoad();
 
-    // Costruisce la query di geocoding: priorità a Luogo+Indirizzo Ritrovo (più precisi)
-    const buildGeoQuery = (g, det) => {
-      // 1. Indirizzo Ritrovo + Luogo Ritrovo (da race_details — dati FCI esatti)
+    // Costruisce lista di query in ordine di precisione (si prova la prima, poi le fallback)
+    const buildGeoQueries = (g, det) => {
+      const qs = [];
+      // 1. Indirizzo + Comune ritrovo (dati FCI precisi)
       if (det.indirizzo_ritrovo && det.luogo_ritrovo)
-        return `${det.indirizzo_ritrovo}, ${det.luogo_ritrovo}, Italia`;
+        qs.push(`${det.indirizzo_ritrovo}, ${det.luogo_ritrovo}, Italia`);
+      // 2. Solo comune ritrovo
       if (det.luogo_ritrovo)
-        return `${det.luogo_ritrovo}, Italia`;
-      // 2. Fallback: luogo dal calendario
+        qs.push(`${det.luogo_ritrovo}, Italia`);
+      // 3. Luogo dal calendario con regione
+      if (g.luogo && g.regione)
+        qs.push(`${g.luogo}, ${g.regione}, Italia`);
+      // 4. Solo luogo senza regione (Nominatim spesso trova meglio così)
       if (g.luogo)
-        return `${g.luogo}, ${g.regione || ''}, Italia`;
+        qs.push(`${g.luogo}, Italia`);
+      return qs;
+    };
+
+    // Helper: prima query con coords cached (non null)
+    const getCachedCoords = (queries) => {
+      for (const q of queries) {
+        if (Array.isArray(geoCache[q])) return geoCache[q];
+      }
       return null;
     };
 
-    // Separa gare con coords già note (da scraper o cache) da quelle da geocodificare
+    // Separa gare con coords già note (da scraper o cache) da quelle da geocodificare.
+    // USA !(q in geoCache) così i fallimenti null non vengono mai riprovati.
     const toGeocode = [];
     for (const g of filtered) {
-      const det   = details[g.id] || {};
-      const hasLL = det.lat && det.lng;
-      const query = buildGeoQuery(g, det);
-      const cached = query ? geoCache[query] : null;
-      if (!hasLL && query && !cached) toGeocode.push({ g, det, query });
+      const det     = details[g.id] || {};
+      const hasLL   = det.lat && det.lng;
+      if (hasLL) continue;
+      const queries = buildGeoQueries(g, det);
+      if (!queries.length) continue;
+      const alreadyCached = getCachedCoords(queries);
+      if (alreadyCached) continue;  // ha già coords in cache → prima passa le aggiunge
+      // Aggiungi solo se almeno una query non è ancora stata tentata
+      const hasUntried = queries.some(q => !(q in geoCache));
+      if (hasUntried) toGeocode.push({ g, det, queries });
     }
 
     // Mostra progress se servono chiamate Nominatim
@@ -5954,12 +5976,18 @@ async function renderCalMap(filtered, calendarResultsMap) {
         popupAnchor: [0, -32]
       });
 
-      // Link corretto: gare con risultati → pagina gara; future → calendario
+      // Link nel popup:
+      //   • gare con risultati registrati → pagina gara specifica
+      //   • gare future/senza risultati + fci_url noto → scheda FCI (nuova tab)
+      //   • altrimenti → nessun link
       const calMatch = calendarResultsMap[g.id];
       const garaLink = calMatch ? calMatch.firstGaraId : null;
+      const fciUrl   = det && det.fci_url ? det.fci_url : null;
       const linkHtml = garaLink
-        ? `<a href="#/gara/${encodeURIComponent(garaLink)}" style="display:inline-block;margin-top:8px;font-size:12px;font-weight:600;color:#E11D48">Risultati →</a>`
-        : `<a href="#/calendario" style="display:inline-block;margin-top:8px;font-size:12px;font-weight:600;color:#E11D48">Calendario →</a>`;
+        ? `<a href="#/gara/${encodeURIComponent(garaLink)}" style="display:inline-block;margin-top:8px;font-size:12px;font-weight:700;color:#E11D48;text-decoration:none">Risultati →</a>`
+        : fciUrl
+          ? `<a href="${esc(fciUrl)}" target="_blank" rel="noopener" style="display:inline-block;margin-top:8px;font-size:12px;font-weight:700;color:#6366F1;text-decoration:none">Scheda FCI ↗</a>`
+          : '';
 
       const luogoDisplay = det.luogo_ritrovo || g.luogo || '';
       const popup = L.popup({ maxWidth: 260 }).setContent(`
@@ -5977,11 +6005,11 @@ async function renderCalMap(filtered, calendarResultsMap) {
 
     // 1. Prima passa: aggiungi tutti i pin con coordinate già note (scraper o localStorage)
     for (const g of filtered) {
-      const det   = details[g.id] || {};
+      const det     = details[g.id] || {};
       let lat = det.lat, lng = det.lng;
       if (!lat || !lng) {
-        const query = buildGeoQuery(g, det);
-        if (query && geoCache[query]) [lat, lng] = geoCache[query];
+        const coords = getCachedCoords(buildGeoQueries(g, det));
+        if (coords) [lat, lng] = coords;
       }
       if (lat && lng) addPin(g, det, lat, lng);
     }
@@ -5991,12 +6019,23 @@ async function renderCalMap(filtered, calendarResultsMap) {
       _calMap.fitBounds(_calCluster.getBounds(), { padding: [40,40], maxZoom: 10 });
     }
 
-    // 2. Seconda passa: geocodifica le rimanenti (1.1s tra richieste, rispetta Nominatim ToS)
+    // 2. Seconda passa: geocodifica le rimanenti con fallback a cascata
+    //    1.1s di pausa solo tra richieste reali (non per cache hits)
     let done = 0;
-    for (const { g, det, query } of toGeocode) {
-      // Interrompi se l'utente ha cambiato vista
+    for (const { g, det, queries } of toGeocode) {
       if (calView !== 'mappa' || !document.getElementById('cal-map')) break;
-      const coords = await _geoLookup(query);
+      let coords = null;
+      for (const q of queries) {
+        if (q in geoCache) {
+          if (Array.isArray(geoCache[q])) { coords = geoCache[q]; break; }
+          continue; // già provata e fallita, prova la successiva
+        }
+        // Query non ancora tentata: chiamata Nominatim
+        coords = await _geoLookup(q);
+        await _sleep(1100);
+        if (coords) break;
+        // fallita: _geoLookup ha già salvato null, prova la prossima senza sleep extra
+      }
       done++;
       if (progressEl) progressEl.textContent = `Geocoding ${done}/${toGeocode.length}…`;
       if (coords) {
@@ -6005,7 +6044,6 @@ async function renderCalMap(filtered, calendarResultsMap) {
           _calMap.fitBounds(_calCluster.getBounds(), { padding: [40,40], maxZoom: 10 });
         }
       }
-      await _sleep(1100); // rate limit Nominatim
     }
 
     if (progressEl) progressEl.remove();
