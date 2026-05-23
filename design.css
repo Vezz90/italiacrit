@@ -2903,9 +2903,9 @@ div[style*="grid-template-columns: repeat(auto-fit"] {
 .countdown-far { color:var(--text-muted); }
 
 /* Gara hero media panel (foto + video affiancati) */
-.gara-hero-media { width:100%; overflow:hidden; border-radius:var(--r-lg); height:240px; margin-bottom:4px; }
-.gara-hero-split { display:flex; gap:2px; }
-.gara-media-half { flex:1; overflow:hidden; position:relative; height:100%; }
+/* Sempre flex: funziona sia con solo foto, solo video, o entrambi */
+.gara-hero-media { display:flex; gap:2px; width:100%; overflow:hidden; border-radius:var(--r-lg); height:260px; margin-bottom:4px; }
+.gara-media-half { flex:1; overflow:hidden; position:relative; min-width:0; }
 .gara-media-photo img { width:100%; height:100%; object-fit:cover; object-position:top center; display:block; transition:transform .3s; }
 .gara-media-photo:hover img { transform:scale(1.03); }
 .gara-photo-hint { position:absolute; bottom:0; left:0; right:0; padding:5px 8px; background:linear-gradient(transparent,rgba(0,0,0,.65)); font-size:0.65rem; color:rgba(255,255,255,.9); text-align:center; pointer-events:none; }
@@ -2915,7 +2915,21 @@ div[style*="grid-template-columns: repeat(auto-fit"] {
 .gara-media-video:hover .gara-media-play { background:rgba(0,0,0,.5); }
 .gara-media-play span { font-size:2.8rem; color:#fff; text-shadow:0 2px 10px rgba(0,0,0,.8); }
 .gara-media-channel { position:absolute; bottom:0; left:0; right:0; padding:4px 8px; background:rgba(0,0,0,.6); font-size:0.62rem; color:#ccc; font-family:var(--font-mono); }
-@media(max-width:600px) { .gara-hero-media { height:160px; } .gara-hero-split { flex-direction:column; height:auto; } .gara-media-half { height:140px; flex:none; width:100%; } }
+/* Solo foto (senza video): limita larghezza max così non diventa una striscia sottilissima */
+.gara-hero-media:has(.gara-media-photo):not(:has(.gara-media-video)) .gara-media-half { max-width:560px; }
+@media(max-width:600px) {
+  .gara-hero-media { height:auto; flex-direction:column; gap:3px; }
+  .gara-media-half { height:160px; }
+  .gara-hero-media:has(.gara-media-photo):not(:has(.gara-media-video)) .gara-media-half { max-width:none; }
+}
+
+/* Galleria foto extra — griglia responsive con immagini di dimensione controllata */
+.race-gallery { display:grid; grid-template-columns:repeat(auto-fill,minmax(180px,1fr)); gap:8px; margin-top:8px; }
+.race-gallery-item { position:relative; border-radius:var(--r-md); overflow:hidden; aspect-ratio:4/3; background:var(--bg-elevated); cursor:zoom-in; }
+.race-gallery-item img { width:100%; height:100%; object-fit:cover; display:block; transition:transform .25s; }
+.race-gallery-item:hover img { transform:scale(1.04); }
+.race-gallery-caption { position:absolute; bottom:0; left:0; right:0; padding:4px 7px; background:linear-gradient(transparent,rgba(0,0,0,.65)); font-size:0.62rem; color:rgba(255,255,255,.88); pointer-events:none; }
+@media(max-width:480px) { .race-gallery { grid-template-columns:repeat(2,1fr); } }
 
 /* Video gara */
 .gara-videos-grid { display:grid; grid-template-columns:repeat(auto-fill,minmax(260px,1fr)); gap:12px; margin-top:12px; }

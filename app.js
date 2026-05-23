@@ -5460,7 +5460,15 @@ async function renderGara(gara_id) {
   }
 
   // Video YouTube associati alla gara
-  const garaVideos = (globalData.videos || {})[_calId] || (globalData.videos || {})[gara_id] || [];
+  // Lookup multi-livello: calId → gara_id → calId senza suffisso categoria
+  const _vids = globalData.videos || {};
+  const _calIdStripped = _calId.replace(/_[A-Z0-9]+_[MF]$/, ''); // rimuove _JUNIORES_M ecc.
+  const garaVideos = _vids[_calId]
+    || _vids[gara_id]
+    || (_calIdStripped !== _calId ? _vids[_calIdStripped] : null)
+    || _vids[primaryGaraId]
+    || _vids[primaryGaraId.replace(/_[A-Z0-9]+_[MF]$/, '')]
+    || [];
   const featuredVideo = garaVideos[0] || null;
   const featuredVideoId = featuredVideo ? (featuredVideo.url.match(/[?&]v=([^&]+)/) || [])[1] || null : null;
   const extraVideos = garaVideos.slice(1);
