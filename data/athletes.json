@@ -2864,6 +2864,82 @@
       }
     ]
   },
+  "CARLINO_MARIA_VITTORIA": {
+    "id": "CARLINO_MARIA_VITTORIA",
+    "nome": "MARIA VITTORIA",
+    "cognome": "CARLINO",
+    "team_attuale": "A.S.A.C.I. - EVONACICLI",
+    "team_id": "A_S_A_C_I_EVONACICLI",
+    "categoria": "ES2_F",
+    "genere": "F",
+    "punti_totali": 27,
+    "risultati": [
+      {
+        "gara_id": "CRONOSCALATA_CITTA_DI_FUMONE_DONNE_ESORDIENTI_SECONDO_ANNO_2026-05-23_ES2_F",
+        "nome_gara": "CRONOSCALATA CITTA' DI FUMONE DONNE ESORDIENTI SECONDO ANNO",
+        "data": "2026-05-23",
+        "posizione": 1,
+        "punti_effettivi": 15,
+        "team": "A.S.A.C.I. - EVONACICLI",
+        "moltiplicatore": 1,
+        "tipo": "regionale",
+        "regione": "ESORDIENTI",
+        "km": "4.600",
+        "media": "13.990"
+      },
+      {
+        "gara_id": "TROFEO_VALLE_D_OFANTO_2026_DONNE_ESORDIENTI_SECONDO_ANNO_2026-04-19_ES2_F",
+        "nome_gara": "TROFEO VALLE D'OFANTO 2026 DONNE ESORDIENTI SECONDO ANNO",
+        "data": "2026-04-19",
+        "posizione": 2,
+        "punti_effettivi": 12,
+        "team": "A.S.A.C.I. - EVONACICLI",
+        "moltiplicatore": 1,
+        "tipo": "regionale",
+        "regione": "PUGLIA",
+        "km": "24.000",
+        "media": ""
+      }
+    ]
+  },
+  "CARLINO_LETIZIA": {
+    "id": "CARLINO_LETIZIA",
+    "nome": "LETIZIA",
+    "cognome": "CARLINO",
+    "team_attuale": "A.S.A.C.I. - EVONACICLI",
+    "team_id": "A_S_A_C_I_EVONACICLI",
+    "categoria": "ES2_F",
+    "genere": "F",
+    "punti_totali": 22,
+    "risultati": [
+      {
+        "gara_id": "CRONOSCALATA_CITTA_DI_FUMONE_DONNE_ESORDIENTI_SECONDO_ANNO_2026-05-23_ES2_F",
+        "nome_gara": "CRONOSCALATA CITTA' DI FUMONE DONNE ESORDIENTI SECONDO ANNO",
+        "data": "2026-05-23",
+        "posizione": 2,
+        "punti_effettivi": 12,
+        "team": "A.S.A.C.I. - EVONACICLI",
+        "moltiplicatore": 1,
+        "tipo": "regionale",
+        "regione": "ESORDIENTI",
+        "km": "4.600",
+        "media": "13.990"
+      },
+      {
+        "gara_id": "TROFEO_VALLE_D_OFANTO_2026_DONNE_ESORDIENTI_SECONDO_ANNO_2026-04-19_ES2_F",
+        "nome_gara": "TROFEO VALLE D'OFANTO 2026 DONNE ESORDIENTI SECONDO ANNO",
+        "data": "2026-04-19",
+        "posizione": 3,
+        "punti_effettivi": 10,
+        "team": "A.S.A.C.I. - EVONACICLI",
+        "moltiplicatore": 1,
+        "tipo": "regionale",
+        "regione": "PUGLIA",
+        "km": "24.000",
+        "media": ""
+      }
+    ]
+  },
   "LOMBARDI_SAMUELE": {
     "id": "LOMBARDI_SAMUELE",
     "nome": "SAMUELE",
@@ -76390,56 +76466,6 @@
         "data": "2026-04-19",
         "posizione": 7,
         "punti_effettivi": 4,
-        "team": "A.S.A.C.I. - EVONACICLI",
-        "moltiplicatore": 1,
-        "tipo": "regionale",
-        "regione": "PUGLIA",
-        "km": "24.000",
-        "media": ""
-      }
-    ]
-  },
-  "CARLINO_MARIA_VITTORIA": {
-    "id": "CARLINO_MARIA_VITTORIA",
-    "nome": "MARIA VITTORIA",
-    "cognome": "CARLINO",
-    "team_attuale": "A.S.A.C.I. - EVONACICLI",
-    "team_id": "A_S_A_C_I_EVONACICLI",
-    "categoria": "ES2_F",
-    "genere": "F",
-    "punti_totali": 12,
-    "risultati": [
-      {
-        "gara_id": "TROFEO_VALLE_D_OFANTO_2026_DONNE_ESORDIENTI_SECONDO_ANNO_2026-04-19_ES2_F",
-        "nome_gara": "TROFEO VALLE D'OFANTO 2026 DONNE ESORDIENTI SECONDO ANNO",
-        "data": "2026-04-19",
-        "posizione": 2,
-        "punti_effettivi": 12,
-        "team": "A.S.A.C.I. - EVONACICLI",
-        "moltiplicatore": 1,
-        "tipo": "regionale",
-        "regione": "PUGLIA",
-        "km": "24.000",
-        "media": ""
-      }
-    ]
-  },
-  "CARLINO_LETIZIA": {
-    "id": "CARLINO_LETIZIA",
-    "nome": "LETIZIA",
-    "cognome": "CARLINO",
-    "team_attuale": "A.S.A.C.I. - EVONACICLI",
-    "team_id": "A_S_A_C_I_EVONACICLI",
-    "categoria": "ES2_F",
-    "genere": "F",
-    "punti_totali": 10,
-    "risultati": [
-      {
-        "gara_id": "TROFEO_VALLE_D_OFANTO_2026_DONNE_ESORDIENTI_SECONDO_ANNO_2026-04-19_ES2_F",
-        "nome_gara": "TROFEO VALLE D'OFANTO 2026 DONNE ESORDIENTI SECONDO ANNO",
-        "data": "2026-04-19",
-        "posizione": 3,
-        "punti_effettivi": 10,
         "team": "A.S.A.C.I. - EVONACICLI",
         "moltiplicatore": 1,
         "tipo": "regionale",

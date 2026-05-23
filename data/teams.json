@@ -9076,19 +9076,19 @@
   "A_S_A_C_I_EVONACICLI": {
     "id": "A_S_A_C_I_EVONACICLI",
     "nome": "A.S.A.C.I. - EVONACICLI",
-    "punti_totali": 142,
+    "punti_totali": 169,
     "atleti": [
       "DEL_DUCA_GIULIA",
       "BUTTARAZZI_GIULIA",
       "BUTTARAZZI_SOFIA",
       "TRICARICO_MARGHERITA",
       "D_EMILIO_VITTORIA",
+      "CARLINO_MARIA_VITTORIA",
+      "CARLINO_LETIZIA",
       "RECCHIA_ALESSANDRO",
       "DI_STEFANO_LEONARDO",
       "DI_RUSCIO_LUDOVICA",
-      "BASTIANELLI_CLAUDIA",
-      "CARLINO_MARIA_VITTORIA",
-      "CARLINO_LETIZIA"
+      "BASTIANELLI_CLAUDIA"
     ],
     "risultati": [
       {
@@ -9165,6 +9165,36 @@
         "regione": "ESORDIENTI",
         "km": "4.600",
         "media": "15.560"
+      },
+      {
+        "gara_id": "CRONOSCALATA_CITTA_DI_FUMONE_DONNE_ESORDIENTI_SECONDO_ANNO_2026-05-23_ES2_F",
+        "nome_gara": "CRONOSCALATA CITTA' DI FUMONE DONNE ESORDIENTI SECONDO ANNO",
+        "data": "2026-05-23",
+        "atleta_id": "CARLINO_MARIA_VITTORIA",
+        "atleta_cognome": "CARLINO",
+        "atleta_nome": "MARIA VITTORIA",
+        "posizione": 1,
+        "punti_effettivi": 15,
+        "moltiplicatore": 1,
+        "tipo": "regionale",
+        "regione": "ESORDIENTI",
+        "km": "4.600",
+        "media": "13.990"
+      },
+      {
+        "gara_id": "CRONOSCALATA_CITTA_DI_FUMONE_DONNE_ESORDIENTI_SECONDO_ANNO_2026-05-23_ES2_F",
+        "nome_gara": "CRONOSCALATA CITTA' DI FUMONE DONNE ESORDIENTI SECONDO ANNO",
+        "data": "2026-05-23",
+        "atleta_id": "CARLINO_LETIZIA",
+        "atleta_cognome": "CARLINO",
+        "atleta_nome": "LETIZIA",
+        "posizione": 2,
+        "punti_effettivi": 12,
+        "moltiplicatore": 1,
+        "tipo": "regionale",
+        "regione": "ESORDIENTI",
+        "km": "4.600",
+        "media": "13.990"
       },
       {
         "gara_id": "CRONOSCALATA_CITTA_DI_FUMONE_2026-05-23_ES1_M",
@@ -9365,8 +9395,8 @@
     "punti_per_cat": {
       "AL_F": 14,
       "ES1_F": 86,
-      "ES1_M": 20,
-      "ES2_F": 22
+      "ES2_F": 49,
+      "ES1_M": 20
     }
   },
   "TEAM_CESARO_NERI_LUCCHINI": {
