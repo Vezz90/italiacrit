@@ -314,10 +314,12 @@ async function loadAll() {
   for (const cal of (calendar || [])) {
     if (!cal.id || !cal.data) continue;
     const calBase = cal.id.replace(/_\d{4}-\d{2}-\d{2}$/, '');
+    const calBaseNoEd = calBase.replace(/^\d+_/, '');
     for (const r of (resultsRaw || [])) {
-      if (r.data === cal.data && r.gara_id && r.gara_id.startsWith(calBase)) {
-        garaToCalId[r.gara_id] = cal.id;
-      }
+      if (!r.gara_id || r.data !== cal.data) continue;
+      if (r.gara_id.startsWith(calBase)) { garaToCalId[r.gara_id] = cal.id; continue; }
+      const garaBase = r.gara_id.replace(/^\d+_/, '').replace(/_\d{4}-\d{2}-\d{2}.*$/, '');
+      if (garaBase === calBaseNoEd) garaToCalId[r.gara_id] = cal.id;
     }
   }
 
@@ -5569,7 +5571,13 @@ async function renderCalendario() {
   for (const g of calendar) {
     if (!g.id || !g.data) continue;
     const calBase = g.id.replace(/_\d{4}-\d{2}-\d{2}$/, '');
-    const matches = resultsRaw.filter(r => r.data === g.data && r.gara_id && r.gara_id.startsWith(calBase));
+    const calBaseNoEd = calBase.replace(/^\d+_/, '');
+    const matches = resultsRaw.filter(r => {
+      if (!r.gara_id || r.data !== g.data) return false;
+      if (r.gara_id.startsWith(calBase)) return true;
+      const garaBase = r.gara_id.replace(/^\d+_/, '').replace(/_\d{4}-\d{2}-\d{2}.*$/, '');
+      return garaBase === calBaseNoEd;
+    });
     if (!matches.length) continue;
     const byCategory = {};
     for (const r of matches) {
