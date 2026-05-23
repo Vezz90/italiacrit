@@ -896,22 +896,6 @@
     "trend": 0
   },
   {
-    "atleta_id": "GOTTOLI_EMMA",
-    "cognome": "GOTTOLI",
-    "nome": "EMMA",
-    "team_id": "TEAM_WILIER_BREGANZE",
-    "team_nome": "TEAM WILIER BREGANZE",
-    "punti": 1,
-    "vittorie": 0,
-    "gare": 1,
-    "p1": 0,
-    "p2": 0,
-    "p3": 0,
-    "pout": 1,
-    "pos": 57,
-    "trend": 0
-  },
-  {
     "atleta_id": "BACCI_GINEVRA",
     "cognome": "BACCI",
     "nome": "GINEVRA",
@@ -924,7 +908,7 @@
     "p2": 0,
     "p3": 0,
     "pout": 1,
-    "pos": 58,
-    "trend": 0
+    "pos": 57,
+    "trend": 1
   }
 ]

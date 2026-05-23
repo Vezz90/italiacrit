@@ -84,6 +84,18 @@
     "pos": 7
   },
   {
+    "team_id": "A_S_A_C_I_EVONACICLI",
+    "team_nome": "A.S.A.C.I. - EVONACICLI",
+    "punti": 86,
+    "vittorie": 2,
+    "p1": 2,
+    "p2": 2,
+    "p3": 2,
+    "pout": 2,
+    "n_atleti": 5,
+    "pos": 8
+  },
+  {
     "team_id": "GS_CICLI_FIORIN_ASD",
     "team_nome": "GS CICLI FIORIN ASD",
     "punti": 66,
@@ -93,7 +105,7 @@
     "p3": 2,
     "pout": 11,
     "n_atleti": 3,
-    "pos": 8
+    "pos": 9
   },
   {
     "team_id": "BICIFESTIVAL",
@@ -105,7 +117,7 @@
     "p3": 1,
     "pout": 4,
     "n_atleti": 1,
-    "pos": 9
+    "pos": 10
   },
   {
     "team_id": "MADIGNANESE_CICLISMO_A_S_D",
@@ -117,7 +129,7 @@
     "p3": 0,
     "pout": 3,
     "n_atleti": 1,
-    "pos": 10
+    "pos": 11
   },
   {
     "team_id": "U_C_CONSCIO_PEDALE_DEL_SILE",
@@ -129,18 +141,6 @@
     "p3": 0,
     "pout": 3,
     "n_atleti": 1,
-    "pos": 11
-  },
-  {
-    "team_id": "A_S_A_C_I_EVONACICLI",
-    "team_nome": "A.S.A.C.I. - EVONACICLI",
-    "punti": 41,
-    "vittorie": 1,
-    "p1": 1,
-    "p2": 1,
-    "p3": 1,
-    "pout": 1,
-    "n_atleti": 4,
     "pos": 12
   },
   {
