@@ -5996,37 +5996,34 @@ async function renderCalMap(filtered, calendarResultsMap) {
         : cat.includes('alliev')                ? '#8B5CF6'
         : cat.includes('esordient')             ? '#10B981'
         : '#6B7280';
-      const opacity  = isApprox ? (isPast ? '0.3' : '0.5') : (isPast ? '0.5' : '1');
+      const opacity  = isPast ? '0.5' : '1';
+      // Pin approssimativo (posizione regionale): teardrop grigio con ? — sempre visibile
+      const fillColor = isApprox ? '#9CA3AF' : pinColor;
 
-      // Pin preciso: teardrop con cerchio bianco; approssimativo: cerchio con tratteggio
       const icon = L.divIcon({
         className: '',
         html: isApprox
-          ? `<svg width="22" height="22" viewBox="0 0 22 22" xmlns="http://www.w3.org/2000/svg" style="opacity:${opacity}">
-               <circle cx="11" cy="11" r="9" fill="none" stroke="${pinColor}" stroke-width="2.5" stroke-dasharray="4 3"/>
-               <circle cx="11" cy="11" r="3.5" fill="${pinColor}" opacity="0.6"/>
+          ? `<svg width="24" height="32" viewBox="0 0 24 32" xmlns="http://www.w3.org/2000/svg" style="opacity:${opacity};filter:drop-shadow(0 2px 2px rgba(0,0,0,.3))">
+               <path d="M12 0C5.373 0 0 5.373 0 12c0 8.5 12 20 12 20S24 20.5 24 12C24 5.373 18.627 0 12 0z" fill="${fillColor}"/>
+               <text x="12" y="16" text-anchor="middle" font-size="11" font-weight="bold" fill="white" font-family="system-ui,sans-serif">?</text>
              </svg>`
           : `<svg width="24" height="32" viewBox="0 0 24 32" xmlns="http://www.w3.org/2000/svg" style="opacity:${opacity};filter:drop-shadow(0 2px 3px rgba(0,0,0,.4))">
-               <path d="M12 0C5.373 0 0 5.373 0 12c0 8.5 12 20 12 20S24 20.5 24 12C24 5.373 18.627 0 12 0z" fill="${pinColor}"/>
+               <path d="M12 0C5.373 0 0 5.373 0 12c0 8.5 12 20 12 20S24 20.5 24 12C24 5.373 18.627 0 12 0z" fill="${fillColor}"/>
                <circle cx="12" cy="11" r="4.5" fill="white"/>
              </svg>`,
-        iconSize: isApprox ? [22, 22] : [24, 32],
-        iconAnchor: isApprox ? [11, 11] : [12, 32],
-        popupAnchor: [0, isApprox ? -12 : -32]
+        iconSize: [24, 32],
+        iconAnchor: [12, 32],
+        popupAnchor: [0, -32]
       });
 
       // Link nel popup:
-      //   • gare con risultati registrati → pagina gara specifica
-      //   • gare future/senza risultati + fci_url noto → scheda FCI (nuova tab)
-      //   • altrimenti → nessun link
+      //   • gare passate con risultati → pagina gara
+      //   • tutte le altre → scheda calendario interno
       const calMatch = calendarResultsMap[g.id];
       const garaLink = calMatch ? calMatch.firstGaraId : null;
-      const fciUrl   = det && det.fci_url ? det.fci_url : null;
       const linkHtml = garaLink
         ? `<a href="#/gara/${encodeURIComponent(garaLink)}" style="display:inline-block;margin-top:8px;font-size:12px;font-weight:700;color:#E11D48;text-decoration:none">Risultati →</a>`
-        : fciUrl
-          ? `<a href="${esc(fciUrl)}" target="_blank" rel="noopener" style="display:inline-block;margin-top:8px;font-size:12px;font-weight:700;color:#6366F1;text-decoration:none">Scheda FCI ↗</a>`
-          : '';
+        : `<a href="#/calendario" style="display:inline-block;margin-top:8px;font-size:12px;font-weight:700;color:#6366F1;text-decoration:none">Vedi nel calendario →</a>`;
 
       const luogoDisplay = det.luogo_ritrovo || g.luogo || '';
       const popup = L.popup({ maxWidth: 260 }).setContent(`
@@ -6037,6 +6034,7 @@ async function renderCalMap(filtered, calendarResultsMap) {
           ${luogoDisplay ? `<div style="font-size:12px;color:#888">📍 ${esc(luogoDisplay)}</div>` : ''}
           ${det.orario_partenza ? `<div style="font-size:12px;color:#888">🕐 ${esc(det.orario_partenza)}</div>` : ''}
           ${det.km ? `<div style="font-size:12px;color:#888">📏 ${esc(det.km)} km</div>` : ''}
+          ${isApprox ? `<div style="font-size:10px;color:#aaa;margin-top:4px">📌 Posizione approssimativa (${g.regione})</div>` : ''}
           ${linkHtml}
         </div>`);
       const marker = L.marker([lat, lng], { icon }).bindPopup(popup);
