@@ -2,12 +2,12 @@
   {
     "team_id": "TEAM_CESARO_NERI_LUCCHINI",
     "team_nome": "TEAM CESARO-NERI-LUCCHINI",
-    "punti": 373,
+    "punti": 400,
     "vittorie": 9,
     "p1": 9,
-    "p2": 6,
-    "p3": 3,
-    "pout": 20,
+    "p2": 7,
+    "p3": 4,
+    "pout": 22,
     "n_atleti": 5,
     "pos": 1
   },
@@ -36,6 +36,18 @@
     "pos": 3
   },
   {
+    "team_id": "IL_PIRATA_SAMA_RICAMBI_OTC",
+    "team_nome": "IL PIRATA SAMA RICAMBI OTC",
+    "punti": 201,
+    "vittorie": 4,
+    "p1": 4,
+    "p2": 3,
+    "p3": 3,
+    "pout": 13,
+    "n_atleti": 3,
+    "pos": 4
+  },
+  {
     "team_id": "SAMABIKE",
     "team_nome": "SAMABIKE",
     "punti": 187,
@@ -45,7 +57,7 @@
     "p3": 3,
     "pout": 3,
     "n_atleti": 2,
-    "pos": 4
+    "pos": 5
   },
   {
     "team_id": "S_C_COTIGNOLESE",
@@ -57,18 +69,6 @@
     "p3": 1,
     "pout": 8,
     "n_atleti": 2,
-    "pos": 5
-  },
-  {
-    "team_id": "IL_PIRATA_SAMA_RICAMBI_OTC",
-    "team_nome": "IL PIRATA SAMA RICAMBI OTC",
-    "punti": 180,
-    "vittorie": 3,
-    "p1": 3,
-    "p2": 3,
-    "p3": 3,
-    "pout": 12,
-    "n_atleti": 3,
     "pos": 6
   },
   {
@@ -228,6 +228,18 @@
     "pos": 19
   },
   {
+    "team_id": "ASD_GUBBIO_CICLISMO_MOCAIANA",
+    "team_nome": "ASD GUBBIO CICLISMO MOCAIANA",
+    "punti": 94,
+    "vittorie": 0,
+    "p1": 0,
+    "p2": 3,
+    "p3": 2,
+    "pout": 10,
+    "n_atleti": 2,
+    "pos": 20
+  },
+  {
     "team_id": "V_CYCLING_ARICI_CLAUDIA_PITON",
     "team_nome": "V CYCLING - ARICI CLAUDIA - PITON",
     "punti": 86,
@@ -237,18 +249,6 @@
     "p3": 0,
     "pout": 17,
     "n_atleti": 3,
-    "pos": 20
-  },
-  {
-    "team_id": "ASD_GUBBIO_CICLISMO_MOCAIANA",
-    "team_nome": "ASD GUBBIO CICLISMO MOCAIANA",
-    "punti": 83,
-    "vittorie": 0,
-    "p1": 0,
-    "p2": 3,
-    "p3": 2,
-    "pout": 8,
-    "n_atleti": 2,
     "pos": 21
   },
   {
@@ -852,6 +852,18 @@
     "pos": 71
   },
   {
+    "team_id": "TEAM_CORATTI",
+    "team_nome": "TEAM CORATTI",
+    "punti": 23,
+    "vittorie": 0,
+    "p1": 0,
+    "p2": 0,
+    "p3": 0,
+    "pout": 4,
+    "n_atleti": 1,
+    "pos": 72
+  },
+  {
     "team_id": "A_S_D_POSTUMIA_73_D_L_CICLISMO",
     "team_nome": "A.S.D. POSTUMIA 73 D.L. CICLISMO",
     "punti": 23,
@@ -861,7 +873,7 @@
     "p3": 0,
     "pout": 4,
     "n_atleti": 2,
-    "pos": 72
+    "pos": 73
   },
   {
     "team_id": "VELO_CLUB_CATTOLICA",
@@ -873,7 +885,7 @@
     "p3": 0,
     "pout": 5,
     "n_atleti": 3,
-    "pos": 73
+    "pos": 74
   },
   {
     "team_id": "TEAM_SERIO",
@@ -885,7 +897,7 @@
     "p3": 1,
     "pout": 3,
     "n_atleti": 2,
-    "pos": 74
+    "pos": 75
   },
   {
     "team_id": "PEDALE_MARENESE_GINO_BARTALI",
@@ -897,7 +909,7 @@
     "p3": 0,
     "pout": 5,
     "n_atleti": 2,
-    "pos": 75
+    "pos": 76
   },
   {
     "team_id": "C_S_LIBERTAS_SCORZE",
@@ -909,7 +921,7 @@
     "p3": 0,
     "pout": 1,
     "n_atleti": 2,
-    "pos": 76
+    "pos": 77
   },
   {
     "team_id": "KD_SLOGA_1902_IDRIJA",
@@ -921,7 +933,7 @@
     "p3": 0,
     "pout": 3,
     "n_atleti": 1,
-    "pos": 77
+    "pos": 78
   },
   {
     "team_id": "A_S_D_U_S_F_COPPI_MONTECCHIO_P",
@@ -933,7 +945,7 @@
     "p3": 1,
     "pout": 3,
     "n_atleti": 3,
-    "pos": 78
+    "pos": 79
   },
   {
     "team_id": "SOC_SPORT_SANFIORESE",
@@ -945,7 +957,7 @@
     "p3": 0,
     "pout": 6,
     "n_atleti": 3,
-    "pos": 79
+    "pos": 80
   },
   {
     "team_id": "VELO_CLUB_SARROCH",
@@ -957,7 +969,7 @@
     "p3": 0,
     "pout": 3,
     "n_atleti": 1,
-    "pos": 80
+    "pos": 81
   },
   {
     "team_id": "GHEDI_CICLISMO_ASD_BIESSE_CARRERA",
@@ -969,19 +981,19 @@
     "p3": 0,
     "pout": 4,
     "n_atleti": 2,
-    "pos": 81
+    "pos": 82
   },
   {
-    "team_id": "TEAM_CORATTI",
-    "team_nome": "TEAM CORATTI",
-    "punti": 18,
-    "vittorie": 0,
-    "p1": 0,
+    "team_id": "CAMB_KE",
+    "team_nome": "CAMB!KE",
+    "punti": 17,
+    "vittorie": 1,
+    "p1": 1,
     "p2": 0,
     "p3": 0,
-    "pout": 3,
+    "pout": 1,
     "n_atleti": 1,
-    "pos": 82
+    "pos": 83
   },
   {
     "team_id": "PEDALE_RIMINESE_FRECCE_ROSSE",
@@ -993,7 +1005,7 @@
     "p3": 0,
     "pout": 4,
     "n_atleti": 2,
-    "pos": 83
+    "pos": 84
   },
   {
     "team_id": "POL_FIUMICINESE_FA_I_T_ADRIATICA",
@@ -1005,23 +1017,11 @@
     "p3": 0,
     "pout": 0,
     "n_atleti": 1,
-    "pos": 84
+    "pos": 85
   },
   {
     "team_id": "QUILIANO_BIKE_SPEED_WHEEL",
     "team_nome": "QUILIANO BIKE SPEED WHEEL",
-    "punti": 15,
-    "vittorie": 1,
-    "p1": 1,
-    "p2": 0,
-    "p3": 0,
-    "pout": 0,
-    "n_atleti": 1,
-    "pos": 85
-  },
-  {
-    "team_id": "CAMB_KE",
-    "team_nome": "CAMB!KE",
     "punti": 15,
     "vittorie": 1,
     "p1": 1,
