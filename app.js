@@ -729,8 +729,12 @@ function route() {
     if (activeHub) applyHubFilters(activeHub);
     return renderRisultati();
   }
+  const m_cal = match('/calendario/:id');
+  if (m_cal) {
+    if (activeHub) applyHubFilters(activeHub);
+    return renderCalendario(decodeURIComponent(m_cal[1]));
+  }
   if (match('/calendario')) {
-    // Re-apply hub context if active (renderCalendario may reset calQ* internally)
     if (activeHub) applyHubFilters(activeHub);
     return renderCalendario();
   }
@@ -5575,7 +5579,7 @@ function _calDeriveGender(g) {
   return 'M'; // default: maschile per categorie agonistiche senza prefisso
 }
 
-async function renderCalendario() {
+async function renderCalendario(highlightId) {
   if (!globalData) return;
   const { calendar, resultsRaw } = globalData;
 
@@ -5710,7 +5714,7 @@ async function renderCalendario() {
         </div>`;
       }
 
-      return `<div class="cal-item ${isPast?'cal-item-past':''} ${hasResults?'cal-item-has-results':''}">
+      return `<div id="cal-${esc(g.id)}" class="cal-item ${isPast?'cal-item-past':''} ${hasResults?'cal-item-has-results':''}">
         <div class="cal-item-header">
           <div class="cal-date-block" style="${isPast?'opacity:0.6':''}">
             <div class="cal-day">${day}</div>
@@ -5746,6 +5750,18 @@ async function renderCalendario() {
 
     document.getElementById('cal-list').innerHTML = html || '<div class="empty-state">Nessuna gara trovata</div>';
     document.getElementById('cal-count').textContent = `${filtered.length} gare`;
+
+    // Deep-link highlight: se highlightId è presente, scrolla e illumina la card
+    if (highlightId) {
+      const target = document.getElementById('cal-' + highlightId);
+      if (target) {
+        requestAnimationFrame(() => {
+          target.scrollIntoView({ behavior: 'smooth', block: 'center' });
+          target.classList.add('cal-item-highlight');
+          setTimeout(() => target.classList.remove('cal-item-highlight'), 2800);
+        });
+      }
+    }
 
     // Se la mappa è attiva, aggiornala con i dati filtrati
     if (calView === 'mappa') renderCalMap(filtered, calendarResultsMap);
@@ -6023,7 +6039,7 @@ async function renderCalMap(filtered, calendarResultsMap) {
       const garaLink = calMatch ? calMatch.firstGaraId : null;
       const linkHtml = garaLink
         ? `<a href="#/gara/${encodeURIComponent(garaLink)}" style="display:inline-block;margin-top:8px;font-size:12px;font-weight:700;color:#E11D48;text-decoration:none">Risultati →</a>`
-        : `<a href="#/calendario" style="display:inline-block;margin-top:8px;font-size:12px;font-weight:700;color:#6366F1;text-decoration:none">Vedi nel calendario →</a>`;
+        : `<a href="#/calendario/${encodeURIComponent(g.id)}" style="display:inline-block;margin-top:8px;font-size:12px;font-weight:700;color:#6366F1;text-decoration:none">Vedi nel calendario →</a>`;
 
       const luogoDisplay = det.luogo_ritrovo || g.luogo || '';
       const popup = L.popup({ maxWidth: 260 }).setContent(`
