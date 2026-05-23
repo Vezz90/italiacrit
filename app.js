@@ -5711,7 +5711,7 @@ async function renderCalendario() {
     document.getElementById('cal-count').textContent = `${filtered.length} gare`;
 
     // Se la mappa è attiva, aggiornala con i dati filtrati
-    if (calView === 'mappa') renderCalMap(filtered);
+    if (calView === 'mappa') renderCalMap(filtered, calendarResultsMap);
   };
 
   setPage(`
@@ -5789,7 +5789,7 @@ async function renderCalendario() {
     if (v === 'mappa') {
       if (list) list.style.display = 'none';
       if (map)  map.style.display  = 'block';
-      // Rilancia render per passare filtered a renderCalMap
+      // Rilancia render per passare filtered e calendarResultsMap a renderCalMap
       render();
     } else {
       if (map)  map.style.display  = 'none';
@@ -5868,7 +5868,8 @@ async function _geoLookup(query) {
 }
 function _sleep(ms) { return new Promise(r => setTimeout(r, ms)); }
 
-async function renderCalMap(filtered) {
+async function renderCalMap(filtered, calendarResultsMap) {
+  calendarResultsMap = calendarResultsMap || {};
   const container = document.getElementById('cal-map');
   if (!container) return;
 
@@ -5893,13 +5894,25 @@ async function renderCalMap(filtered) {
     const today = new Date().toISOString().split('T')[0];
     const geoCache = _geoLoad();
 
+    // Costruisce la query di geocoding: priorità a Luogo+Indirizzo Ritrovo (più precisi)
+    const buildGeoQuery = (g, det) => {
+      // 1. Indirizzo Ritrovo + Luogo Ritrovo (da race_details — dati FCI esatti)
+      if (det.indirizzo_ritrovo && det.luogo_ritrovo)
+        return `${det.indirizzo_ritrovo}, ${det.luogo_ritrovo}, Italia`;
+      if (det.luogo_ritrovo)
+        return `${det.luogo_ritrovo}, Italia`;
+      // 2. Fallback: luogo dal calendario
+      if (g.luogo)
+        return `${g.luogo}, ${g.regione || ''}, Italia`;
+      return null;
+    };
+
     // Separa gare con coords già note (da scraper o cache) da quelle da geocodificare
     const toGeocode = [];
     for (const g of filtered) {
       const det   = details[g.id] || {};
       const hasLL = det.lat && det.lng;
-      const luogo = g.luogo || det.luogo_ritrovo || '';
-      const query = luogo ? `${luogo}, ${g.regione || ''}, Italia` : null;
+      const query = buildGeoQuery(g, det);
       const cached = query ? geoCache[query] : null;
       if (!hasLL && query && !cached) toGeocode.push({ g, det, query });
     }
@@ -5921,39 +5934,54 @@ async function renderCalMap(filtered) {
       const catStr   = catLabel(g.categoria) || g.categoria || '';
       const genIcon  = g.genere === 'F' ? '♀' : '♂';
       const cat      = (g.categoria || '').toLowerCase();
-      const pinColor = g.genere === 'F'              ? '#EC4899'
-        : cat.includes('elite')                      ? '#E11D48'
-        : cat.includes('junior')                     ? '#F97316'
-        : cat.includes('alliev')                     ? '#8B5CF6'
-        : cat.includes('esordient')                  ? '#10B981'
+      const pinColor = g.genere === 'F'         ? '#EC4899'
+        : cat.includes('elite')                 ? '#E11D48'
+        : cat.includes('junior')                ? '#F97316'
+        : cat.includes('alliev')                ? '#8B5CF6'
+        : cat.includes('esordient')             ? '#10B981'
         : '#6B7280';
+      const opacity  = isPast ? '0.5' : '1';
 
+      // Segnaposto classico (teardrop) con colore categoria
       const icon = L.divIcon({
         className: '',
-        html: `<div style="width:12px;height:12px;border-radius:50%;background:${pinColor};border:2px solid #fff;box-shadow:0 1px 4px rgba(0,0,0,.4);opacity:${isPast?.5:1}"></div>`,
-        iconSize: [12,12], iconAnchor: [6,6]
+        html: `<svg width="24" height="32" viewBox="0 0 24 32" xmlns="http://www.w3.org/2000/svg" style="opacity:${opacity};filter:drop-shadow(0 2px 3px rgba(0,0,0,.4))">
+          <path d="M12 0C5.373 0 0 5.373 0 12c0 8.5 12 20 12 20S24 20.5 24 12C24 5.373 18.627 0 12 0z" fill="${pinColor}"/>
+          <circle cx="12" cy="11" r="4.5" fill="white"/>
+        </svg>`,
+        iconSize: [24, 32],
+        iconAnchor: [12, 32],   // punta in basso al centro
+        popupAnchor: [0, -32]
       });
+
+      // Link corretto: gare con risultati → pagina gara; future → calendario
+      const calMatch = calendarResultsMap[g.id];
+      const garaLink = calMatch ? calMatch.firstGaraId : null;
+      const linkHtml = garaLink
+        ? `<a href="#/gara/${encodeURIComponent(garaLink)}" style="display:inline-block;margin-top:8px;font-size:12px;font-weight:600;color:#E11D48">Risultati →</a>`
+        : `<a href="#/calendario" style="display:inline-block;margin-top:8px;font-size:12px;font-weight:600;color:#E11D48">Calendario →</a>`;
+
+      const luogoDisplay = det.luogo_ritrovo || g.luogo || '';
       const popup = L.popup({ maxWidth: 260 }).setContent(`
         <div style="font-family:system-ui,sans-serif;font-size:13px;line-height:1.4">
           <div style="font-weight:700;margin-bottom:4px;font-size:14px">${esc(g.nome)}</div>
           <div style="color:#666;margin-bottom:2px">${dateStr} ${genIcon}</div>
           <div style="color:#666;margin-bottom:6px">${catStr}</div>
-          ${g.luogo ? `<div style="font-size:12px;color:#888">📍 ${esc(g.luogo)}${g.regione?' ('+esc(g.regione)+')':''}</div>` : ''}
-          ${det.orario_partenza ? `<div style="font-size:12px;color:#888">🕐 Partenza ${esc(det.orario_partenza)}</div>` : ''}
+          ${luogoDisplay ? `<div style="font-size:12px;color:#888">📍 ${esc(luogoDisplay)}</div>` : ''}
+          ${det.orario_partenza ? `<div style="font-size:12px;color:#888">🕐 ${esc(det.orario_partenza)}</div>` : ''}
           ${det.km ? `<div style="font-size:12px;color:#888">📏 ${esc(det.km)} km</div>` : ''}
-          <a href="#/calendario/${encodeURIComponent(g.id)}" style="display:inline-block;margin-top:8px;font-size:12px;font-weight:600;color:#E11D48">Dettaglio →</a>
+          ${linkHtml}
         </div>`);
       L.marker([lat, lng], { icon }).bindPopup(popup).addTo(_calCluster);
     };
 
-    // 1. Prima passa: aggiungi tutti i pin con coordinate già note
+    // 1. Prima passa: aggiungi tutti i pin con coordinate già note (scraper o localStorage)
     for (const g of filtered) {
       const det   = details[g.id] || {};
-      const luogo = g.luogo || det.luogo_ritrovo || '';
-      const query = luogo ? `${luogo}, ${g.regione || ''}, Italia` : null;
       let lat = det.lat, lng = det.lng;
-      if ((!lat || !lng) && query && geoCache[query]) {
-        [lat, lng] = geoCache[query];
+      if (!lat || !lng) {
+        const query = buildGeoQuery(g, det);
+        if (query && geoCache[query]) [lat, lng] = geoCache[query];
       }
       if (lat && lng) addPin(g, det, lat, lng);
     }
