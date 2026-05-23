@@ -5538,12 +5538,16 @@ async function renderGara(gara_id) {
 
 }
 
-let calQGenere = '';
-let calQTipo   = '';
-let calQSearch = '';
-let calQCat    = '';
-let calQMonth  = '';
+let calQGenere  = '';
+let calQTipo    = '';
+let calQSearch  = '';
+let calQCat     = '';
+let calQMonth   = '';
 let calQRegione = '';
+let calView     = 'lista';   // 'lista' | 'mappa'
+let _calMap     = null;      // istanza Leaflet
+let _calCluster = null;      // istanza MarkerCluster
+let _raceDetailsCache = null; // cache race_details.json
 
 // Deriva il genere da campo categoria/nome (il JSON calendar non ha campo genere)
 function _calDeriveGender(g) {
@@ -5705,6 +5709,9 @@ async function renderCalendario() {
 
     document.getElementById('cal-list').innerHTML = html || '<div class="empty-state">Nessuna gara trovata</div>';
     document.getElementById('cal-count').textContent = `${filtered.length} gare`;
+
+    // Se la mappa è attiva, aggiornala con i dati filtrati
+    if (calView === 'mappa') renderCalMap(filtered);
   };
 
   setPage(`
@@ -5752,7 +5759,18 @@ async function renderCalendario() {
       <input type="search" class="cal-filter-select" id="cal-search" placeholder="Cerca gara…" oninput="calSetSearch(this.value)" aria-label="Cerca gara" style="width:200px" value="${calQSearch.replace(/"/g, '&quot;')}"/>
       <span class="ranking-count" id="cal-count">${calendar.length} gare</span>
     </div>
-    <div class="calendar-list" id="cal-list"></div>
+    <div class="cal-view-toggle">
+      <button id="cal-view-lista" class="cal-view-btn ${calView==='lista'?'active':''}" onclick="window.calSetView('lista')">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="8" y1="6" x2="21" y2="6"/><line x1="8" y1="12" x2="21" y2="12"/><line x1="8" y1="18" x2="21" y2="18"/><circle cx="3" cy="6" r="1.5" fill="currentColor" stroke="none"/><circle cx="3" cy="12" r="1.5" fill="currentColor" stroke="none"/><circle cx="3" cy="18" r="1.5" fill="currentColor" stroke="none"/></svg>
+        Lista
+      </button>
+      <button id="cal-view-mappa" class="cal-view-btn ${calView==='mappa'?'active':''}" onclick="window.calSetView('mappa')">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polygon points="1 6 1 22 8 18 16 22 23 18 23 2 16 6 8 2 1 6"/><line x1="8" y1="2" x2="8" y2="18"/><line x1="16" y1="6" x2="16" y2="22"/></svg>
+        Mappa
+      </button>
+    </div>
+    <div class="calendar-list" id="cal-list" style="${calView==='mappa'?'display:none':''}"></div>
+    <div id="cal-map" style="${calView==='lista'?'display:none':'display:block'}"></div>
   `);
 
   window.calSetMonth  = (v) => { calQMonth = v; render(); };
@@ -5761,7 +5779,162 @@ async function renderCalendario() {
   window.calSetTipo   = (v) => { calQTipo = v; render(); };
   window.calSetSearch = (v) => { calQSearch = v; render(); };
   window.calSetRegione = (v) => { calQRegione = v; render(); };
+
+  window.calSetView = (v) => {
+    calView = v;
+    const list = document.getElementById('cal-list');
+    const map  = document.getElementById('cal-map');
+    document.querySelectorAll('.cal-view-btn').forEach(b => b.classList.remove('active'));
+    document.getElementById('cal-view-' + v)?.classList.add('active');
+    if (v === 'mappa') {
+      if (list) list.style.display = 'none';
+      if (map)  map.style.display  = 'block';
+      // Rilancia render per passare filtered a renderCalMap
+      render();
+    } else {
+      if (map)  map.style.display  = 'none';
+      if (list) list.style.display = 'block';
+    }
+  };
+
   render();
+}
+
+// ── CALENDARIO — Vista Mappa con Leaflet ──────────────────────────────
+async function _loadLeaflet() {
+  if (window.L) return; // già caricato
+  // CSS Leaflet + MarkerCluster
+  for (const href of [
+    'https://unpkg.com/leaflet@1.9.4/dist/leaflet.css',
+    'https://unpkg.com/leaflet.markercluster@1.5.3/dist/MarkerCluster.css',
+    'https://unpkg.com/leaflet.markercluster@1.5.3/dist/MarkerCluster.Default.css',
+  ]) {
+    if (!document.querySelector(`link[href="${href}"]`)) {
+      const link = document.createElement('link');
+      link.rel = 'stylesheet'; link.href = href;
+      document.head.appendChild(link);
+    }
+  }
+  // JS Leaflet + MarkerCluster (in sequenza)
+  await _loadScript('https://unpkg.com/leaflet@1.9.4/dist/leaflet.js');
+  await _loadScript('https://unpkg.com/leaflet.markercluster@1.5.3/dist/leaflet.markercluster.js');
+}
+
+function _loadScript(src) {
+  return new Promise((resolve, reject) => {
+    if (document.querySelector(`script[src="${src}"]`)) { resolve(); return; }
+    const s = document.createElement('script');
+    s.src = src; s.onload = resolve; s.onerror = reject;
+    document.head.appendChild(s);
+  });
+}
+
+async function _loadRaceDetails() {
+  if (_raceDetailsCache) return _raceDetailsCache;
+  try {
+    const res = await fetch('data/race_details.json');
+    _raceDetailsCache = await res.json();
+  } catch(e) {
+    _raceDetailsCache = {};
+  }
+  return _raceDetailsCache;
+}
+
+async function renderCalMap(filtered) {
+  const container = document.getElementById('cal-map');
+  if (!container) return;
+
+  container.innerHTML = '<div style="padding:32px;text-align:center;color:var(--text-muted)">Caricamento mappa…</div>';
+
+  try {
+    await _loadLeaflet();
+    const details = await _loadRaceDetails();
+    const L = window.L;
+
+    // Reset mappa precedente
+    if (_calMap) { _calMap.remove(); _calMap = null; _calCluster = null; }
+
+    container.innerHTML = '';
+    container.style.height = '560px';
+
+    _calMap = L.map(container, { center: [42.5, 12.5], zoom: 6 });
+    L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+      attribution: '© <a href="https://openstreetmap.org">OpenStreetMap</a>',
+      maxZoom: 18
+    }).addTo(_calMap);
+
+    _calCluster = L.markerClusterGroup({ maxClusterRadius: 40 });
+
+    let pinCount = 0;
+    const today = new Date().toISOString().split('T')[0];
+
+    for (const g of filtered) {
+      const det = details[g.id];
+      const lat = det?.lat;
+      const lng = det?.lng;
+      if (!lat || !lng) continue;
+
+      const isPast = (g.data || '') < today;
+      const dateStr = g.data
+        ? new Date(g.data + 'T00:00:00').toLocaleDateString('it-IT', { day:'numeric', month:'long' })
+        : '';
+      const catStr  = catLabel(g.categoria) || g.categoria || '';
+      const genIcon = g.genere === 'F' ? '♀' : '♂';
+
+      // Colore pin per categoria
+      const pinColor = g.genere === 'F' ? '#EC4899'
+        : (g.categoria||'').toLowerCase().includes('elite')    ? '#E11D48'
+        : (g.categoria||'').toLowerCase().includes('junior')   ? '#F97316'
+        : (g.categoria||'').toLowerCase().includes('alliev')   ? '#8B5CF6'
+        : (g.categoria||'').toLowerCase().includes('esordient')? '#10B981'
+        : '#6B7280';
+
+      const icon = L.divIcon({
+        className: '',
+        html: `<div style="
+          width:12px;height:12px;border-radius:50%;
+          background:${pinColor};border:2px solid #fff;
+          box-shadow:0 1px 4px rgba(0,0,0,.35);
+          opacity:${isPast ? 0.45 : 1};
+        "></div>`,
+        iconSize: [12, 12], iconAnchor: [6, 6]
+      });
+
+      const popup = L.popup({ maxWidth: 260 }).setContent(`
+        <div style="font-family:system-ui,sans-serif;font-size:13px">
+          <div style="font-weight:700;margin-bottom:4px;font-size:14px">${esc(g.nome)}</div>
+          <div style="color:#666;margin-bottom:2px">${dateStr} ${genIcon}</div>
+          <div style="color:#666;margin-bottom:6px">${catStr}</div>
+          ${det.luogo_ritrovo ? `<div style="font-size:12px;color:#888">📍 ${esc(det.luogo_ritrovo)}</div>` : ''}
+          ${det.orario_partenza ? `<div style="font-size:12px;color:#888">🕐 Partenza ${esc(det.orario_partenza)}</div>` : ''}
+          ${det.km ? `<div style="font-size:12px;color:#888">📏 ${esc(det.km)} km</div>` : ''}
+          <a href="#/calendario/${encodeURIComponent(g.id)}" style="display:inline-block;margin-top:8px;font-size:12px;font-weight:600;color:#E11D48">Dettaglio →</a>
+        </div>`);
+
+      L.marker([lat, lng], { icon }).bindPopup(popup).addTo(_calCluster);
+      pinCount++;
+    }
+
+    _calCluster.addTo(_calMap);
+
+    // Adatta zoom ai pin presenti
+    if (pinCount > 0 && _calCluster.getBounds().isValid()) {
+      _calMap.fitBounds(_calCluster.getBounds(), { padding: [40, 40], maxZoom: 10 });
+    }
+
+    // Nota se molte gare non hanno coordinate
+    const missing = filtered.length - pinCount;
+    if (missing > 0) {
+      const note = document.createElement('div');
+      note.style.cssText = 'font-size:0.72rem;color:var(--text-muted);text-align:center;padding:8px 0 0';
+      note.textContent = `${pinCount} gare su mappa · ${missing} senza coordinate (aggiunte al prossimo aggiornamento scraper)`;
+      container.after(note);
+    }
+
+  } catch(e) {
+    console.error('[renderCalMap]', e);
+    container.innerHTML = `<div style="padding:32px;text-align:center;color:var(--text-muted)">Errore caricamento mappa: ${esc(e.message)}</div>`;
+  }
 }
 
 // ── SEARCH GLOBALE ────────────────────────────────────────────
