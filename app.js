@@ -1235,21 +1235,35 @@ async function _renderHubHomeLegacy(hubCode) {
     return '<div class="hub-dual">' + (htmlA||'') + (htmlB||'') + '</div>';
   }
 
-  // ── Championship tension data (uses already-loaded top-5 ranking) ──
-  // Build a persistent-mover summary for the ticker (same logic as buildWeeklyNarrative
-  // but working on the top-5 slice so we don't need a separate full-ranking load).
+  // ── Championship tension data: movers nell'ultima settimana ──
+  // Usa classifiche cumulative (non rank_dopo_gara personali) per evitare
+  // confronti distoriti tra gare di settimane diverse.
   const champMoverLines = [];
-  for (const entry of hubRanking) {
-    const athRes = resultsRaw
-      .filter(function(r){ return r.atleta_id === entry.atleta_id && getRankingFileCode(r) === hub.mainCat && r.rank_dopo_gara; })
-      .sort(function(a,b){ return b.data.localeCompare(a.data); });
-    if (athRes.length < 2) continue;
-    const rankNow = athRes[0].rank_dopo_gara;
-    const refIdx  = Math.min(3, athRes.length - 1);
-    const rankRef = athRes[refIdx].rank_dopo_gara;
-    const gain    = rankRef - rankNow;
-    if (gain >= 3)  champMoverLines.push('<strong>' + esc(entry.cognome).toUpperCase() + '</strong> sale di ' + gain + ' posizioni — ora ' + rankNow + '° in classifica');
-    if (gain <= -3) champMoverLines.push('<strong>' + esc(entry.cognome).toUpperCase() + '</strong> scende al ' + rankNow + '° posto (−' + Math.abs(gain) + ')');
+  {
+    const _hubCat = hub.mainCat;
+    const _hubCutWeek = (function(){ const d = new Date(todayStr||new Date()); d.setDate(d.getDate()-7); return d.toISOString().split('T')[0]; })();
+    const _hubRaw = resultsRaw.filter(function(r){
+      return getRankingFileCode(r) === _hubCat && r.data && r.atleta_id && (r.punti_effettivi||0) > 0;
+    });
+    // Classifica attuale
+    const _hubCurPts = {}, _hubPrevPts = {};
+    for (var _hi = 0; _hi < _hubRaw.length; _hi++) {
+      var _hr = _hubRaw[_hi];
+      _hubCurPts[_hr.atleta_id] = (_hubCurPts[_hr.atleta_id]||0) + (_hr.punti_effettivi||0);
+      if (_hr.data < _hubCutWeek) _hubPrevPts[_hr.atleta_id] = (_hubPrevPts[_hr.atleta_id]||0) + (_hr.punti_effettivi||0);
+    }
+    const _hubCurRankMap = {}, _hubPrevRankMap = {};
+    Object.entries(_hubCurPts).sort(function(a,b){ return b[1]-a[1]; }).forEach(function(e,i){ _hubCurRankMap[e[0]] = i+1; });
+    Object.entries(_hubPrevPts).sort(function(a,b){ return b[1]-a[1]; }).forEach(function(e,i){ _hubPrevRankMap[e[0]] = i+1; });
+    for (var _hj = 0; _hj < hubRanking.length; _hj++) {
+      var _he = hubRanking[_hj];
+      var _rankNow  = _hubCurRankMap[_he.atleta_id];
+      var _rankRef  = _hubPrevRankMap[_he.atleta_id];
+      if (_rankNow == null || _rankRef == null) continue;
+      var _gain = _rankRef - _rankNow;
+      if (_gain >= 3)  champMoverLines.push('<strong>' + esc(_he.cognome).toUpperCase() + '</strong> sale di ' + _gain + ' posizioni — ora ' + _rankNow + '° in classifica');
+      if (_gain <= -3) champMoverLines.push('<strong>' + esc(_he.cognome).toUpperCase() + '</strong> scende al ' + _rankNow + '° posto (−' + Math.abs(_gain) + ')');
+    }
   }
 
   // ── Ticker ──────────────────────────────────────────────────────
@@ -2407,28 +2421,38 @@ function buildWeeklyNarrative(filtered, resultsRaw, catCode) {
   }
 
   // 2. Spostamenti settimana scorsa vs settimana prima
-  // rankAfter  = rank_dopo_gara dal risultato più recente nell'ultima settimana
-  // rankBefore = rank_dopo_gara dal risultato più recente nella settimana precedente
+  // Calcoliamo due classifiche dai punti cumulati (non da rank_dopo_gara personali),
+  // così i movimenti riflettono cosa è cambiato per TUTTI, non solo per chi ha gareggiato.
+  // curRankMap  = classifica con tutti i risultati disponibili (oggi)
+  // prevRankMap = classifica con soli i risultati di data < cutWeek (una settimana fa)
+  const _allRaw = resultsRaw.filter(r =>
+    getRankingFileCode(r) === catCode && r.data && r.atleta_id && (r.punti_effettivi || 0) > 0
+  );
+  const _curPts = {}, _prevPts = {};
+  for (const r of _allRaw) {
+    _curPts[r.atleta_id] = (_curPts[r.atleta_id] || 0) + (r.punti_effettivi || 0);
+    if (r.data < cutWeek) _prevPts[r.atleta_id] = (_prevPts[r.atleta_id] || 0) + (r.punti_effettivi || 0);
+  }
+  const _curRankMap = {}, _prevRankMap = {};
+  Object.entries(_curPts).sort(([,a],[,b]) => b-a).forEach(([id], i) => { _curRankMap[id] = i + 1; });
+  Object.entries(_prevPts).sort(([,a],[,b]) => b-a).forEach(([id], i) => { _prevRankMap[id] = i + 1; });
+
   const movers = [];
   for (const entry of filtered) {
-    const athRes = allCatRes
-      .filter(r => r.atleta_id === entry.atleta_id)
-      .sort((a, b) => b.data.localeCompare(a.data));
-    const lastWeekRes = athRes.filter(r => r.data >= cutWeek);
-    const prevWeekRes = athRes.filter(r => r.data >= cutPrev && r.data < cutWeek);
-    if (!lastWeekRes.length || !prevWeekRes.length) continue;
-    const rankAfter  = lastWeekRes[0].rank_dopo_gara;
-    const rankBefore = prevWeekRes[0].rank_dopo_gara;
-    const gain = rankBefore - rankAfter; // positivo = salito in classifica
+    const curRank  = _curRankMap[entry.atleta_id];
+    const prevRank = _prevRankMap[entry.atleta_id];
+    if (curRank == null || prevRank == null) continue;
+    const gain = prevRank - curRank; // positivo = salito in classifica
     if (gain === 0) continue;
-    // Controlla se l'atleta ha chiuso top 5 in almeno una gara nell'ultima settimana
-    const hadTop5LastWeek = lastWeekRes.some(r => r.posizione && r.posizione <= 5);
-    movers.push({ entry, gain, rankAfter, rankBefore, hadTop5LastWeek });
+    const hadTop5LastWeek = _allRaw.some(r =>
+      r.atleta_id === entry.atleta_id && r.data >= cutWeek && r.posizione && r.posizione <= 5
+    );
+    movers.push({ entry, gain, rankAfter: curRank, rankBefore: prevRank, hadTop5LastWeek });
   }
   movers.sort((a, b) => Math.abs(b.gain) - Math.abs(a.gain));
-  // Risers: top 5 nella gara + attualmente in top 30 — esclude chi sale da posizioni irrilevanti
+  // Risers: top 5 nella gara + attualmente in top 30
   const risers  = movers.filter(m => m.gain >= 1 && m.hadTop5LastWeek && m.rankAfter <= 30).slice(0, 3);
-  // Fallers: solo chi era già tra i primi 20 — movimenti significativi nella lotta al titolo
+  // Fallers: solo chi era già tra i primi 20
   const fallers = movers.filter(m => m.gain <= -2 && m.rankBefore <= 20).slice(0, 1);
   for (const m of risers) {
     const pos = m.gain === 1 ? 'una posizione' : `${m.gain} posizioni`;
@@ -2437,18 +2461,14 @@ function buildWeeklyNarrative(filtered, resultsRaw, catCode) {
   for (const m of fallers)
     lines.push(`${m.entry.cognome} perde ${Math.abs(m.gain)} posizion${Math.abs(m.gain)===1?'e':'i'} e scende al ${m.rankAfter}°`);
 
-  // 3. Nuovi entrati in top-15 nell'ultima settimana (erano fuori, ora dentro)
+  // 3. Nuovi entrati in top-15 nell'ultima settimana: curRank ≤ 15, prevRank assente o > 15
   const newEntries = [];
   for (const entry of filtered) {
     if (entry.pos > 15) continue;
-    const athRes = allCatRes
-      .filter(r => r.atleta_id === entry.atleta_id)
-      .sort((a, b) => b.data.localeCompare(a.data));
-    const lastWeekRes = athRes.filter(r => r.data >= cutWeek);
-    const prevWeekRes = athRes.filter(r => r.data < cutWeek);
-    // Era fuori dalla top-15 prima della settimana scorsa, ora è dentro
-    if (lastWeekRes.length && lastWeekRes[0].rank_dopo_gara <= 15 &&
-        (!prevWeekRes.length || prevWeekRes[0].rank_dopo_gara > 15)) {
+    const curRank  = _curRankMap[entry.atleta_id];
+    const prevRank = _prevRankMap[entry.atleta_id];
+    const racedLastWeek = _allRaw.some(r => r.atleta_id === entry.atleta_id && r.data >= cutWeek);
+    if (racedLastWeek && curRank != null && curRank <= 15 && (prevRank == null || prevRank > 15)) {
       newEntries.push(entry);
     }
   }
