@@ -333,7 +333,9 @@ async function loadAll() {
       if (calNorm2 === garaNorm) { garaToCalId[r.gara_id] = cal.id; continue; }
       if (garaNorm.length >= 8 && calNorm2.startsWith(garaNorm + '_')) { garaToCalId[r.gara_id] = cal.id; continue; }
       const garaEd = (r.gara_id.match(/^(\d+)_/)||[])[1];
-      if (calEd2 && garaEd && calEd2 === garaEd) garaToCalId[r.gara_id] = cal.id;
+      if (calEd2 && garaEd && calEd2 === garaEd) { garaToCalId[r.gara_id] = cal.id; continue; }
+      { let i=0; while(i<calNorm2.length&&i<garaNorm.length&&calNorm2[i]===garaNorm[i]) i++;
+        if (i>=18 && calNorm2.slice(0,i).endsWith('_')) garaToCalId[r.gara_id] = cal.id; }
     }
   }
 
@@ -5612,6 +5614,9 @@ async function renderCalendario(highlightId) {
       if (garaNorm.length >= 8 && calNorm.startsWith(garaNorm + '_')) return true;
       const garaEd = (r.gara_id.match(/^(\d+)_/)||[])[1];
       if (calEd && garaEd && calEd === garaEd) return true;
+      // Step 6: prefisso comune ≥18 chars che termina con _ (stessa gara, nomi parzialmente diversi)
+      { let i=0; while(i<calNorm.length&&i<garaNorm.length&&calNorm[i]===garaNorm[i]) i++;
+        if (i>=18 && calNorm.slice(0,i).endsWith('_')) return true; }
       return false;
     });
     if (!matches.length) continue;
