@@ -6651,9 +6651,31 @@ async function renderComparatore() {
     const recent5   = sorted.slice(0,5);
     const recent5pts = recent5.reduce((s,r)=>s+(r.punti_effettivi||0),0);
     const ptsPerResult = piazzamenti ? +(pts/piazzamenti).toFixed(1) : 0;
-    const vittorie  = sorted.filter(r=>r.posizione===1).slice(0,5);  // ultime 5 vittorie
+    const vittorie  = sorted.filter(r=>r.posizione===1).slice(0,5);
+    // ── Metriche derivate (calcolate SUI RISULTATI REGISTRATI) ──────
+    // convRate/podioRate/consistRate: % calcolate su piazzamenti, non su gare totali
+    const convRate    = piazzamenti ? Math.round(wins/piazzamenti*100) : 0;
+    const podioRate   = piazzamenti ? Math.round(podi/piazzamenti*100) : 0;
+    const consistRate = piazzamenti ? Math.round(top10/piazzamenti*100) : 0;
+    const bestPos     = arr.length ? Math.min(...arr.map(r=>r.posizione)) : null;
+    const maxKm       = arr.length ? Math.max(...arr.map(r=>parseFloat(r.km)||0)) : 0;
+    // Trend: posizione media ultimi 3 vs 3 precedenti (desc per data)
+    const t3  = sorted.slice(0,3);
+    const t3p = sorted.slice(3,6);
+    const avgT3  = t3.length  ? t3.reduce((s,r)=>s+r.posizione,0)/t3.length  : null;
+    const avgT3p = t3p.length ? t3p.reduce((s,r)=>s+r.posizione,0)/t3p.length : null;
+    let trend;
+    if      (avgT3 === null)      trend = {label:'—',            color:'var(--text-muted)'};
+    else if (avgT3p === null)     trend = {label:'→ Stabile',    color:'#F59E0B'};
+    else {
+      const delta = avgT3p - avgT3;   // positivo = miglioramento (pos bassa = meglio)
+      trend = delta > 2  ? {label:'↑ In crescita', color:'#10B981'}
+            : delta < -2 ? {label:'↓ In calo',     color:'#EF4444'}
+            :              {label:'→ Stabile',      color:'#F59E0B'};
+    }
     return { pts, wins, podi, top5, top10, piazzamenti, gare, km, mediaKm,
-             avgPos, recent8, recent5, recent5pts, ptsPerResult, vittorie };
+             avgPos, recent8, recent5, recent5pts, ptsPerResult, vittorie,
+             convRate, podioRate, consistRate, bestPos, maxKm, trend };
   };
 
   // ── FORM PILLS ────────────────────────────────────────────────
@@ -6732,6 +6754,135 @@ async function renderComparatore() {
           </tr>`).join('')}</tbody>
         </table>
       </div>
+    </div>`;
+  };
+
+  // ── METRICA BAR INVERSA (vince il valore più basso, es. posizione) ─
+  const mBarInv = (vA, vB, label, fmt='') => {
+    const nA=parseFloat(vA)||99, nB=parseFloat(vB)||99;
+    const iA=1/Math.max(nA,0.01), iB=1/Math.max(nB,0.01), tot=iA+iB||1;
+    const pA=Math.round(iA/tot*100);
+    const wA=nA<nB, wB=nB<nA;
+    return `<div class="comp-bar-row">
+      <span class="comp-bar-val comp-bar-val-a${wA?' comp-bar-winner':''}">${vA}${fmt}</span>
+      <div class="comp-bar-center">
+        <div class="comp-bar-label">${label}</div>
+        <div class="comp-bar-track">
+          <div class="comp-bar-fill-a" style="width:${pA}%"></div>
+          <div class="comp-bar-fill-b" style="width:${100-pA}%"></div>
+        </div>
+      </div>
+      <span class="comp-bar-val comp-bar-val-b${wB?' comp-bar-winner':''}">${vB}${fmt}</span>
+    </div>`;
+  };
+
+  // ── SCOREBOARD (conta metriche vinte) ─────────────────────────
+  const buildScoreboard = (sA, sB, nA, nB) => {
+    let scoreA=0, scoreB=0;
+    const cmp = (a, b, inv=false) => {
+      if(a===b) return;
+      (inv ? a<b : a>b) ? scoreA++ : scoreB++;
+    };
+    cmp(sA.pts,          sB.pts);
+    cmp(sA.wins,         sB.wins);
+    cmp(sA.podi,         sB.podi);
+    cmp(sA.top5,         sB.top5);
+    cmp(sA.top10,        sB.top10);
+    cmp(sA.km,           sB.km);
+    cmp(sA.convRate,     sB.convRate);
+    cmp(sA.consistRate,  sB.consistRate);
+    cmp(sA.recent5pts,   sB.recent5pts);
+    cmp(parseFloat(sA.avgPos)||99, parseFloat(sB.avgPos)||99, true);
+    const leadA=scoreA>scoreB, leadB=scoreB>scoreA;
+    const leaderName = leadA ? nA.split(' ')[0] : leadB ? nB.split(' ')[0] : null;
+    const sub = leaderName
+      ? `${esc(leaderName)} conduce su ${scoreA+scoreB} metriche`
+      : 'Confronto in equilibrio';
+    return `<div class="comp-scoreboard">
+      <div class="comp-score-a" style="color:#FF6B00">${scoreA}</div>
+      <div class="comp-score-mid">
+        <div class="comp-score-title">METRICHE VINTE</div>
+        <div class="comp-score-sub">${sub}</div>
+      </div>
+      <div class="comp-score-b" style="color:#10B981">${scoreB}</div>
+    </div>`;
+  };
+
+  // ── BADGES (chi primeggia in cosa) ────────────────────────────
+  const buildBadges = (sA, sB, nA, nB) => {
+    const bA=[], bB=[];
+    if(sA.pts    > sB.pts)    bA.push('⚡ Top scorer');  else if(sB.pts    > sA.pts)    bB.push('⚡ Top scorer');
+    if(sA.wins   > sB.wins)   bA.push('🏆 Più vittorie'); else if(sB.wins   > sA.wins)   bB.push('🏆 Più vittorie');
+    if(sA.recent5pts > sB.recent5pts) bA.push('🔥 Forma migliore'); else if(sB.recent5pts > sA.recent5pts) bB.push('🔥 Forma migliore');
+    if(sA.consistRate > sB.consistRate) bA.push('🎯 Più regolare'); else if(sB.consistRate > sA.consistRate) bB.push('🎯 Più regolare');
+    if(sA.km     > sB.km)     bA.push('🛣️ Più km');      else if(sB.km     > sA.km)     bB.push('🛣️ Più km');
+    if(sA.convRate > sB.convRate) bA.push('⚔️ Miglior conversione'); else if(sB.convRate > sA.convRate) bB.push('⚔️ Miglior conversione');
+    if(!bA.length && !bB.length) return '';
+    const chips = (arr, col) => arr.map(b=>`<span class="comp-badge" style="border-color:${col};color:${col}">${b}</span>`).join('');
+    return `<div class="comp-badge-row">
+      <div class="comp-badges-side comp-badges-a">${chips(bA,'#FF6B00')}</div>
+      <div class="comp-badges-mid"></div>
+      <div class="comp-badges-side comp-badges-b">${chips(bB,'#10B981')}</div>
+    </div>`;
+  };
+
+  // ── PROFILO DI RENDIMENTO (metriche derivate + distanza) ──────
+  const buildProfileSection = (sA, sB, nA, nB, aRes, bRes) => {
+    // Segmentazione per distanza gara
+    const byDist = res => ({
+      short: res.filter(r=>(parseFloat(r.km)||0)<80),
+      mid:   res.filter(r=>(parseFloat(r.km)||0)>=80&&(parseFloat(r.km)||0)<130),
+      long:  res.filter(r=>(parseFloat(r.km)||0)>=130),
+    });
+    const dA=byDist(aRes), dB=byDist(bRes);
+    const distRow = (label, arrA, arrB) => {
+      if(!arrA.length&&!arrB.length) return '';
+      const ptsA=arrA.reduce((s,r)=>s+(r.punti_effettivi||0),0);
+      const ptsB=arrB.reduce((s,r)=>s+(r.punti_effettivi||0),0);
+      const wA=arrA.filter(r=>r.posizione===1).length;
+      const wB=arrB.filter(r=>r.posizione===1).length;
+      const winA=ptsA>ptsB, winB=ptsB>ptsA;
+      return `<tr>
+        <td style="text-align:right;padding:7px 12px 7px 0;font-size:0.82rem;font-weight:${winA?700:400};color:${winA?'#FF6B00':'var(--text-secondary)'}">
+          ${ptsA} pt${wA?` · <strong style="font-size:.7rem">${wA}V</strong>`:''}
+        </td>
+        <td class="comp-dist-lbl">${label}</td>
+        <td style="text-align:left;padding:7px 0 7px 12px;font-size:0.82rem;font-weight:${winB?700:400};color:${winB?'#10B981':'var(--text-secondary)'}">
+          ${ptsB} pt${wB?` · <strong style="font-size:.7rem">${wB}V</strong>`:''}
+        </td>
+      </tr>`;
+    };
+    const hasDist = dA.short.length||dA.mid.length||dA.long.length||dB.short.length||dB.mid.length||dB.long.length;
+    return `<div class="comp-section">
+      <div class="comp-section-title">Profilo di Rendimento</div>
+      <div class="comp-stats-grid">
+        ${mBar(sA.convRate,    sB.convRate,    'VITTORIE SUI RISULTATI', '%')}
+        ${mBar(sA.podioRate,   sB.podioRate,   'PODI SUI RISULTATI',     '%')}
+        ${mBar(sA.consistRate, sB.consistRate, 'REGOLARITÀ TOP-10',      '%')}
+      </div>
+      <div class="comp-trend-row">
+        <div style="text-align:right">
+          <div class="comp-trend-val" style="color:${sA.trend.color}">${sA.trend.label}</div>
+          <div class="comp-trend-lbl">ultimi 6 risultati</div>
+        </div>
+        <div class="comp-trend-mid">TREND</div>
+        <div>
+          <div class="comp-trend-val" style="color:${sB.trend.color}">${sB.trend.label}</div>
+          <div class="comp-trend-lbl">ultimi 6 risultati</div>
+        </div>
+      </div>
+      ${hasDist ? `<table class="comp-dist-table">
+        <thead><tr>
+          <th style="text-align:right">${esc(nA.split(' ')[0])}</th>
+          <th class="comp-dist-lbl">DISTANZA</th>
+          <th style="text-align:left">${esc(nB.split(' ')[0])}</th>
+        </tr></thead>
+        <tbody>
+          ${distRow('CORTA < 80 km',   dA.short, dB.short)}
+          ${distRow('MEDIA 80–130 km', dA.mid,   dB.mid)}
+          ${distRow('LUNGA > 130 km',  dA.long,  dB.long)}
+        </tbody>
+      </table>` : ''}
     </div>`;
   };
 
@@ -6822,21 +6973,56 @@ async function renderComparatore() {
         <span class="comp-vs-sm">VS</span>
         ${buildCompAc('b', acItems, compB)}
       </div>
+
       <div class="comp-hero">
         <div class="comp-hero-side comp-hero-a">
           <div class="comp-hero-avatar comp-hero-avatar-a">${iA}</div>
           <div class="comp-hero-name">${esc(nA)}</div>
           <div class="comp-hero-meta">${esc(aD.team_attuale||'—')} · ${esc(aD.categoria||'—')}</div>
+          <div class="comp-hero-tri">
+            <div class="comp-hero-tri-item">
+              <div class="comp-hero-tri-val" style="color:#FF6B00">${sA.wins}</div>
+              <div class="comp-hero-tri-lbl">VITT.</div>
+            </div>
+            <div class="comp-hero-tri-item">
+              <div class="comp-hero-tri-val">${sA.podi}</div>
+              <div class="comp-hero-tri-lbl">PODI</div>
+            </div>
+            <div class="comp-hero-tri-item">
+              <div class="comp-hero-tri-val">${sA.pts}</div>
+              <div class="comp-hero-tri-lbl">PT</div>
+            </div>
+          </div>
           <div class="comp-hero-form">${formPills(sA.recent8)}</div>
+          <div class="comp-hero-trend" style="color:${sA.trend.color}">${sA.trend.label}</div>
         </div>
         <div class="comp-hero-center"><div class="comp-vs-text">VS</div></div>
         <div class="comp-hero-side comp-hero-b">
           <div class="comp-hero-avatar comp-hero-avatar-b">${iB}</div>
           <div class="comp-hero-name">${esc(nB)}</div>
           <div class="comp-hero-meta">${esc(bD.team_attuale||'—')} · ${esc(bD.categoria||'—')}</div>
+          <div class="comp-hero-tri">
+            <div class="comp-hero-tri-item">
+              <div class="comp-hero-tri-val" style="color:#10B981">${sB.wins}</div>
+              <div class="comp-hero-tri-lbl">VITT.</div>
+            </div>
+            <div class="comp-hero-tri-item">
+              <div class="comp-hero-tri-val">${sB.podi}</div>
+              <div class="comp-hero-tri-lbl">PODI</div>
+            </div>
+            <div class="comp-hero-tri-item">
+              <div class="comp-hero-tri-val">${sB.pts}</div>
+              <div class="comp-hero-tri-lbl">PT</div>
+            </div>
+          </div>
           <div class="comp-hero-form">${formPills(sB.recent8)}</div>
+          <div class="comp-hero-trend" style="color:${sB.trend.color}">${sB.trend.label}</div>
         </div>
       </div>
+
+      ${buildScoreboard(sA, sB, nA, nB)}
+      ${buildBadges(sA, sB, nA, nB)}
+
       <div class="comp-section">
         <div class="comp-section-title">Statistiche Stagionali</div>
         <div class="comp-stats-grid">
@@ -6846,13 +7032,19 @@ async function renderComparatore() {
           ${mBar(sA.gare,    sB.gare,    'GARE CON RISULTATO')}
           ${mBar(sA.km,      sB.km,      'KM',                 ' km')}
           ${mBar(sA.mediaKm, sB.mediaKm, 'VELOCITÀ MEDIA',     ' km/h')}
+          ${sA.bestPos && sB.bestPos ? mBarInv(sA.bestPos+'°', sB.bestPos+'°', 'MIGLIOR PIAZZAMENTO') : ''}
         </div>
       </div>
+
+      ${buildProfileSection(sA, sB, nA, nB, aRes, bRes)}
+
       <div class="comp-section">
         <div class="comp-section-title">Metriche di Rendimento</div>
         <div class="comp-stats-grid">${advRows}</div>
       </div>
+
       ${buildH2H(aRes, bRes, nA, nB)}
+
       <div class="comp-section">
         <div class="comp-section-title">Ultimi Risultati</div>
         <div style="display:grid;grid-template-columns:1fr 1fr;gap:20px">
@@ -6896,6 +7088,7 @@ async function renderComparatore() {
     const aRes=resultsRaw.filter(r=>r.team_id===compA&&catFilter(r));
     const bRes=resultsRaw.filter(r=>r.team_id===compB&&catFilter(r));
     const stT = arr => {
+      const sorted = [...arr].sort((a,b)=>(b.data||'').localeCompare(a.data||''));
       const wins  = arr.filter(r=>r.posizione===1).length;
       const podi  = arr.filter(r=>r.posizione<=3).length;
       const top5  = arr.filter(r=>r.posizione<=5).length;
@@ -6907,8 +7100,22 @@ async function renderComparatore() {
       const atleti = new Set(arr.map(r=>r.atleta_id)).size;
       const ptsPerResult = piazzamenti?+(pts/piazzamenti).toFixed(1):0;
       const avgPos = piazzamenti?(arr.reduce((s,r)=>s+r.posizione,0)/piazzamenti).toFixed(1):'—';
-      const recent5pts = [...arr].sort((a,b)=>(b.data||'').localeCompare(a.data||'')).slice(0,5).reduce((s,r)=>s+(r.punti_effettivi||0),0);
-      return {pts,wins,podi,top5,top10,gare,piazzamenti,km,atleti,ptsPerResult,avgPos,recent5pts};
+      const recent5pts = sorted.slice(0,5).reduce((s,r)=>s+(r.punti_effettivi||0),0);
+      const convRate    = piazzamenti ? Math.round(wins/piazzamenti*100) : 0;
+      const podioRate   = piazzamenti ? Math.round(podi/piazzamenti*100) : 0;
+      const consistRate = piazzamenti ? Math.round(top10/piazzamenti*100) : 0;
+      const t3=sorted.slice(0,3), t3p=sorted.slice(3,6);
+      const avgT3=t3.length?t3.reduce((s,r)=>s+r.posizione,0)/t3.length:null;
+      const avgT3p=t3p.length?t3p.reduce((s,r)=>s+r.posizione,0)/t3p.length:null;
+      let trend;
+      if(avgT3===null)     trend={label:'—',color:'var(--text-muted)'};
+      else if(!avgT3p)     trend={label:'→ Stabile',color:'#F59E0B'};
+      else {
+        const delta=avgT3p-avgT3;
+        trend=delta>2?{label:'↑ In crescita',color:'#10B981'}:delta<-2?{label:'↓ In calo',color:'#EF4444'}:{label:'→ Stabile',color:'#F59E0B'};
+      }
+      return {pts,wins,podi,top5,top10,gare,piazzamenti,km,atleti,ptsPerResult,avgPos,
+              recent5pts,convRate,podioRate,consistRate,trend};
     };
     const sA=stT(aRes), sB=stT(bRes);
     const iA=nA.split(/\s+/).map(w=>w[0]||'').join('').toUpperCase().slice(0,3);
@@ -6938,19 +7145,54 @@ async function renderComparatore() {
         <span class="comp-vs-sm">VS</span>
         ${buildCompAc('b', acItemsT, compB)}
       </div>
+
       <div class="comp-hero">
         <div class="comp-hero-side comp-hero-a">
-          <div class="comp-hero-avatar comp-hero-avatar-a" style="border-radius:8px;font-size:1.1rem">${iA}</div>
+          <div class="comp-hero-avatar comp-hero-avatar-a" style="border-radius:10px;font-size:1.1rem">${iA}</div>
           <div class="comp-hero-name">${esc(nA)}</div>
-          <div class="comp-hero-meta">${sA.atleti} atleti · ${sA.gare} gare</div>
+          <div class="comp-hero-meta">${sA.atleti} corridori schierati</div>
+          <div class="comp-hero-tri">
+            <div class="comp-hero-tri-item">
+              <div class="comp-hero-tri-val" style="color:#FF6B00">${sA.wins}</div>
+              <div class="comp-hero-tri-lbl">VITT.</div>
+            </div>
+            <div class="comp-hero-tri-item">
+              <div class="comp-hero-tri-val">${sA.podi}</div>
+              <div class="comp-hero-tri-lbl">PODI</div>
+            </div>
+            <div class="comp-hero-tri-item">
+              <div class="comp-hero-tri-val">${sA.pts}</div>
+              <div class="comp-hero-tri-lbl">PT</div>
+            </div>
+          </div>
+          <div class="comp-hero-trend" style="color:${sA.trend.color}">${sA.trend.label}</div>
         </div>
         <div class="comp-hero-center"><div class="comp-vs-text">VS</div></div>
         <div class="comp-hero-side comp-hero-b">
-          <div class="comp-hero-avatar comp-hero-avatar-b" style="border-radius:8px;font-size:1.1rem">${iB}</div>
+          <div class="comp-hero-avatar comp-hero-avatar-b" style="border-radius:10px;font-size:1.1rem">${iB}</div>
           <div class="comp-hero-name">${esc(nB)}</div>
-          <div class="comp-hero-meta">${sB.atleti} atleti · ${sB.gare} gare</div>
+          <div class="comp-hero-meta">${sB.atleti} corridori schierati</div>
+          <div class="comp-hero-tri">
+            <div class="comp-hero-tri-item">
+              <div class="comp-hero-tri-val" style="color:#10B981">${sB.wins}</div>
+              <div class="comp-hero-tri-lbl">VITT.</div>
+            </div>
+            <div class="comp-hero-tri-item">
+              <div class="comp-hero-tri-val">${sB.podi}</div>
+              <div class="comp-hero-tri-lbl">PODI</div>
+            </div>
+            <div class="comp-hero-tri-item">
+              <div class="comp-hero-tri-val">${sB.pts}</div>
+              <div class="comp-hero-tri-lbl">PT</div>
+            </div>
+          </div>
+          <div class="comp-hero-trend" style="color:${sB.trend.color}">${sB.trend.label}</div>
         </div>
       </div>
+
+      ${buildScoreboard(sA, sB, nA, nB)}
+      ${buildBadges(sA, sB, nA, nB)}
+
       <div class="comp-section">
         <div class="comp-section-title">Statistiche Team</div>
         <div class="comp-stats-grid">
@@ -6959,13 +7201,35 @@ async function renderComparatore() {
           ${mBar(sA.podi,   sB.podi,   'PODI (TOP 3)')}
           ${mBar(sA.gare,   sB.gare,   'GARE CON RISULTATO')}
           ${mBar(sA.km,     sB.km,     'KM',                 ' km')}
-          ${mBar(sA.atleti, sB.atleti, 'ATLETI SCHIERATI')}
+          ${mBar(sA.atleti, sB.atleti, 'CORRIDORI SCHIERATI')}
         </div>
       </div>
+
+      <div class="comp-section">
+        <div class="comp-section-title">Profilo di Rendimento</div>
+        <div class="comp-stats-grid">
+          ${mBar(sA.convRate,    sB.convRate,    'VITTORIE SUI RISULTATI', '%')}
+          ${mBar(sA.podioRate,   sB.podioRate,   'PODI SUI RISULTATI',     '%')}
+          ${mBar(sA.consistRate, sB.consistRate, 'REGOLARITÀ TOP-10',      '%')}
+        </div>
+        <div class="comp-trend-row">
+          <div style="text-align:right">
+            <div class="comp-trend-val" style="color:${sA.trend.color}">${sA.trend.label}</div>
+            <div class="comp-trend-lbl">ultimi 6 risultati</div>
+          </div>
+          <div class="comp-trend-mid">TREND</div>
+          <div>
+            <div class="comp-trend-val" style="color:${sB.trend.color}">${sB.trend.label}</div>
+            <div class="comp-trend-lbl">ultimi 6 risultati</div>
+          </div>
+        </div>
+      </div>
+
       <div class="comp-section">
         <div class="comp-section-title">Metriche di Rendimento</div>
         <div class="comp-stats-grid">${advRows}</div>
       </div>
+
       <div class="comp-section">
         <div class="comp-section-title">Ultimi Risultati</div>
         <div style="display:grid;grid-template-columns:1fr 1fr;gap:20px">
