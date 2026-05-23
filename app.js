@@ -1,5 +1,5 @@
 /* ============================================================
-   ItaliacritResultati — app.js  v123
+   ItaliacritResultati — app.js  v124
    Hash Router + Page Renderers
    Legge i JSON statici da data/ via fetch()
    ============================================================ */
@@ -6356,13 +6356,16 @@ async function renderComparatore() {
     compCat = activeHub.mainCat;
   }
 
+  // Categorie per dropdown — usa codici normalizzati per coerenza con activeHub.mainCat
   const availCats = [...new Set(
-    resultsRaw.filter(r => r.genere === compGender).map(r => r.categoria)
+    resultsRaw.filter(r => r.genere === compGender)
+      .map(r => getRankingFileCode(r)).filter(Boolean)
   )].sort();
   const catOpts = availCats.map(c =>
-    `<option value="${esc(c)}" ${c === compCat ? 'selected' : ''}>${esc(c)}</option>`
+    `<option value="${esc(c)}" ${c === compCat ? 'selected' : ''}>${esc(catLabel(c))}</option>`
   ).join('');
-  const catFilter = r => r.genere === compGender && (!compCat || r.categoria === compCat);
+  // Filtro categoria usa getRankingFileCode per confrontare con il codice normalizzato
+  const catFilter = r => r.genere === compGender && (!compCat || getRankingFileCode(r) === compCat);
 
   // ── STATS CALCULATOR ──────────────────────────────────────────
   const calcStats = arr => {
@@ -6535,7 +6538,7 @@ async function renderComparatore() {
   // ── ATHLETE BLOCK ─────────────────────────────────────────────
   const buildAthleteResult = () => {
     const validIds = new Set(
-      resultsRaw.filter(r => r.genere===compGender && (!compCat||r.categoria===compCat)).map(r=>r.atleta_id)
+      resultsRaw.filter(r => r.genere===compGender && (!compCat||getRankingFileCode(r)===compCat)).map(r=>r.atleta_id)
     );
     const list = Object.values(athletes).filter(a=>validIds.has(a.id))
       .sort((a,b)=>(a.cognome||'').localeCompare(b.cognome||''));
@@ -6661,7 +6664,7 @@ async function renderComparatore() {
   // ── TEAM BLOCK ────────────────────────────────────────────────
   const buildTeamResult = () => {
     const teamMap = {};
-    resultsRaw.filter(r=>r.genere===compGender&&(!compCat||r.categoria===compCat))
+    resultsRaw.filter(r=>r.genere===compGender&&(!compCat||getRankingFileCode(r)===compCat))
       .forEach(r=>{ if(r.team_id) teamMap[r.team_id]={id:r.team_id,nome:r.team}; });
     const list = Object.values(teamMap).sort((a,b)=>(a.nome||'').localeCompare(b.nome||''));
     const opts = (sel) => list.map(t=>
