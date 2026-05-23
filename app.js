@@ -6035,43 +6035,32 @@ async function renderCalMap(filtered, calendarResultsMap) {
         popupAnchor: [0, -32]
       });
 
-      // Destinazione al click: gare con risultati → pagina gara; altre → calendario
-      const calMatch  = calendarResultsMap[g.id];
-      const garaLink  = calMatch ? calMatch.firstGaraId : null;
-      const navHash   = garaLink
-        ? `#/gara/${encodeURIComponent(garaLink)}`
+      // Destinazione: gara PASSATA → risultati; gara FUTURA → calendario
+      const calMatch = calendarResultsMap[g.id];
+      const navHash  = (isPast && calMatch)
+        ? `#/gara/${encodeURIComponent(calMatch.firstGaraId)}`
         : `#/calendario/${encodeURIComponent(g.id)}`;
-      const navLabel  = garaLink ? '→ Risultati' : '→ Calendario';
-      const navColor  = garaLink ? '#E11D48' : '#6366F1';
+      const navLabel = (isPast && calMatch) ? '→ Vai ai Risultati' : '→ Vedi nel Calendario';
+      const navColor = (isPast && calMatch) ? '#E11D48' : '#6366F1';
+      // Inline onclick — unico modo affidabile per navigare da dentro un popup Leaflet
+      const navOnclick = `event.stopPropagation();location.hash='${navHash.replace(/'/g,"\\'")}';`;
 
       const luogoDisplay = det.luogo_ritrovo || g.luogo || '';
       const popupContent = `
-        <div style="font-family:system-ui,sans-serif;font-size:13px;line-height:1.4;cursor:pointer" class="itc-map-popup">
-          <div style="font-weight:700;margin-bottom:4px;font-size:14px">${esc(g.nome)}</div>
+        <div style="font-family:system-ui,sans-serif;font-size:13px;line-height:1.5">
+          <div style="font-weight:700;margin-bottom:3px;font-size:14px">${esc(g.nome)}</div>
           <div style="color:#666;margin-bottom:2px">${dateStr} ${genIcon}</div>
           <div style="color:#666;margin-bottom:6px">${catStr}</div>
           ${luogoDisplay ? `<div style="font-size:12px;color:#888">📍 ${esc(luogoDisplay)}</div>` : ''}
-          ${det.orario_partenza ? `<div style="font-size:12px;color:#888">🕐 ${esc(det.orario_partenza)}</div>` : ''}
-          ${det.km ? `<div style="font-size:12px;color:#888">📏 ${esc(det.km)} km</div>` : ''}
-          ${isApprox ? `<div style="font-size:10px;color:#aaa;margin-top:4px">📌 Posizione approssimativa (${g.regione})</div>` : ''}
-          <div style="margin-top:10px;padding-top:8px;border-top:1px solid #eee">
-            <span style="font-size:12px;font-weight:700;color:${navColor}">${navLabel}</span>
-          </div>
+          ${isApprox ? `<div style="font-size:10px;color:#bbb;margin-top:2px">📌 posizione indicativa (${g.regione})</div>` : ''}
+          <button onclick="${navOnclick}"
+            style="margin-top:10px;width:100%;padding:7px 0;border:none;border-radius:6px;font-size:12px;font-weight:700;cursor:pointer;background:${navColor};color:#fff">
+            ${navLabel}
+          </button>
         </div>`;
 
-      const popup = L.popup({ maxWidth: 260, className: 'itc-popup' }).setContent(popupContent);
+      const popup = L.popup({ maxWidth: 240 }).setContent(popupContent);
       const marker = L.marker([lat, lng], { icon }).bindPopup(popup);
-
-      // Navigazione al click sul marker (bypass Leaflet popup link issues)
-      marker.on('click', (e) => { L.DomEvent.stopPropagation(e); });
-      popup.on('add', () => {
-        // Dopo l'apertura del popup, ascolta click sull'intero contenuto
-        setTimeout(() => {
-          const el = document.querySelector('.itc-map-popup');
-          if (el) el.addEventListener('click', () => { location.hash = navHash; }, { once: true });
-        }, 50);
-      });
-
       marker.addTo(_calCluster);
       return marker;
     };
