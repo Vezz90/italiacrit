@@ -998,13 +998,12 @@ async function renderHubHome(hubCode) {
   activeHub._code = hubCode;
   applyHubFilters(activeHub);
 
-  // ── SEIA routing ────────────────────────────────────────────
   // Hub di genere → selezione categoria
   if (hubCode === 'uomini' || hubCode === 'donne') {
     return renderGenderSelect(hubCode);
   }
-  // Hub di categoria → hub editoriale
-  return renderEditorialHub(hubCode);
+  // Hub di categoria → layout dati (rider on fire, classifica, rivalità, newsroom, prossime gare)
+  return _renderHubHomeLegacy(hubCode);
 }
 
 // ── LEGACY HUB (archivio — non più usato direttamente) ────────
