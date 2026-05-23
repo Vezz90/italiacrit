@@ -315,9 +315,13 @@ async function loadAll() {
     if (!cal.id || !cal.data) continue;
     const calBase = cal.id.replace(/_\d{4}-\d{2}-\d{2}$/, '');
     const calBaseNoEd = calBase.replace(/^\d+_/, '');
-    const _nm2 = s => s.replace(/\bG_P\b/g,'GRAN_PREMIO').replace(/\bGP\b/g,'GRAN_PREMIO')
-      .replace(/GRANPREMIO/g,'GRAN_PREMIO').replace(/\bM_O\b/g,'MEMORIAL')
-      .replace(/\bA_M\b/g,'').replace(/_+/g,'_').replace(/^_|_$/g,'');
+    const _nm2 = s => s
+      .replace(/(?<![A-Z0-9])G_P(?![A-Z0-9])/g,'GRAN_PREMIO')
+      .replace(/(?<![A-Z0-9])GP(?![A-Z0-9])/g,'GRAN_PREMIO')
+      .replace(/(?<![A-Z0-9])GRANPREMIO(?![A-Z0-9])/g,'GRAN_PREMIO')
+      .replace(/(?<![A-Z0-9])M_O(?![A-Z0-9])/g,'MEDAGLIA_ORO')
+      .replace(/(?<![A-Z0-9])A_M(?![A-Z0-9])/g,'')
+      .replace(/_+/g,'_').replace(/^_|_$/g,'');
     const calNorm2 = _nm2(calBaseNoEd);
     const calEd2   = calBase !== calBaseNoEd ? (calBase.match(/^(\d+)_/)||[])[1] : null;
     for (const r of (resultsRaw || [])) {
@@ -5582,9 +5586,13 @@ async function renderCalendario() {
     if (!g.id || !g.data) continue;
     const calBase = g.id.replace(/_\d{4}-\d{2}-\d{2}$/, '');
     const calBaseNoEd = calBase.replace(/^\d+_/, '');
-    const _nm = s => s.replace(/\bG_P\b/g,'GRAN_PREMIO').replace(/\bGP\b/g,'GRAN_PREMIO')
-      .replace(/GRANPREMIO/g,'GRAN_PREMIO').replace(/\bM_O\b/g,'MEMORIAL')
-      .replace(/\bA_M\b/g,'').replace(/_+/g,'_').replace(/^_|_$/g,'');
+    const _nm = s => s
+      .replace(/(?<![A-Z0-9])G_P(?![A-Z0-9])/g,'GRAN_PREMIO')
+      .replace(/(?<![A-Z0-9])GP(?![A-Z0-9])/g,'GRAN_PREMIO')
+      .replace(/(?<![A-Z0-9])GRANPREMIO(?![A-Z0-9])/g,'GRAN_PREMIO')
+      .replace(/(?<![A-Z0-9])M_O(?![A-Z0-9])/g,'MEDAGLIA_ORO')
+      .replace(/(?<![A-Z0-9])A_M(?![A-Z0-9])/g,'')
+      .replace(/_+/g,'_').replace(/^_|_$/g,'');
     const calNorm = _nm(calBaseNoEd);
     const calEd   = calBase !== calBaseNoEd ? (calBase.match(/^(\d+)_/)||[])[1] : null;
     const matches = resultsRaw.filter(r => {
