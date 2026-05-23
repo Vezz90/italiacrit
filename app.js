@@ -696,9 +696,11 @@ function route() {
       window.location.hash = '#/hub/' + activeHub._code + '/';
       return;
     }
-    // Nessun hub: la cinematic gate È la home — mostrala se non è già aperta
+    // Nessun hub: la cinematic gate È la home
+    // Chiamare setPage crea il chip navbar e dà uno sfondo all'app
+    setPage('<div style="min-height:100vh;background:var(--bg-primary)"></div>');
     if (!document.getElementById('itc-gate')) {
-      showCinematicEntry(true);
+      showCinematicEntry(false);
     }
     return;
   }
@@ -2917,15 +2919,15 @@ async function renderEditorialHub(hubCode) {
 async function renderNews() {
   if (!globalData) return;
 
-  // Loading state immediato
+  // Loading state immediato — pg-desc va FUORI dal pg-header (su sfondo chiaro)
   setPage(`<div class="news-page">
     <div class="pg-header">
       <div class="pg-eyebrow">STAGIONE 2026</div>
       <h1 class="pg-title">Storie della stagione</h1>
-      <p class="pg-desc">Analisi editoriali, rivalità, momenti e scenari di tutto il ciclismo agonistico italiano.</p>
     </div>
+    <p class="pg-desc">Analisi editoriali, rivalità, momenti e scenari di tutto il ciclismo agonistico italiano.</p>
     <div class="news-grid" id="news-grid-inner">
-      <p style="color:var(--text-muted);padding:32px;grid-column:1/-1">Caricamento articoli…</p>
+      <p style="color:var(--text-muted);padding:32px 0;grid-column:1/-1">Caricamento articoli…</p>
     </div>
   </div>`);
 

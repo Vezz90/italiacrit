@@ -8049,6 +8049,10 @@ body[data-hub] .loading-bar { background: var(--hub-color) !important; }
   padding: 0;
   overflow: hidden;
   color: #fff;
+  margin: -32px -24px 0;   /* esce dai bordi .page come .pg-header */
+}
+@media (max-width: 768px) {
+  .editorial-hero { margin: -20px -16px 0; }
 }
 .editorial-hero-inner {
   padding: 48px 28px 32px;
