@@ -5581,6 +5581,9 @@ function _calDeriveGender(g) {
 
 async function renderCalendario(highlightId) {
   if (!globalData) return;
+  // Se arriva un deep-link a una gara specifica, forza la vista lista
+  // (altrimenti con calView='mappa' verrebbe rerenderizzata la mappa al posto della card)
+  if (highlightId) calView = 'lista';
   const { calendar, resultsRaw } = globalData;
 
   // Mappa calendar.id → { byCategory, firstGaraId }
