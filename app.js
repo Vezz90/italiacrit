@@ -3732,16 +3732,21 @@ async function updateRankTable() {
     }
 
     // Ricalcola trend dinamicamente solo se rank_dopo_gara è disponibile nei risultati
+    // IMPORTANTE: filtrare per categoria (rankCat) altrimenti si confrontano
+    // rank_dopo_gara di categorie diverse → indicatori completamente errati
     const { resultsByAtleta } = globalData;
     ranking.forEach(entry => {
-      const res = resultsByAtleta[entry.atleta_id] || [];
+      const res = (resultsByAtleta[entry.atleta_id] || [])
+        .filter(r => getRankingFileCode(r) === rankCat && r.rank_dopo_gara != null);
+      // res è già ordinato per data decrescente (da resultsByAtleta)
       const r0 = res[0], r1 = res[1];
       const rk0 = r0?.rank_dopo_gara, rk1 = r1?.rank_dopo_gara;
       if (rk0 != null && rk1 != null) {
-        // entrambi disponibili: calcola differenza tra le ultime due gare
+        // rk1 = rank gara precedente, rk0 = rank gara più recente
+        // rank più basso = meglio → gain positivo = salita in classifica
         entry.trend = rk1 - rk0;
       } else if (rk0 != null && !r1) {
-        // solo una gara: prima apparizione
+        // solo una gara in questa categoria: prima apparizione
         entry.trend = null;
       }
       // altrimenti lascia invariato il trend del JSON
