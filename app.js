@@ -6035,18 +6035,18 @@ async function renderCalMap(filtered, calendarResultsMap) {
         popupAnchor: [0, -32]
       });
 
-      // Link nel popup:
-      //   • gare passate con risultati → pagina gara
-      //   • tutte le altre → scheda calendario interno
-      const calMatch = calendarResultsMap[g.id];
-      const garaLink = calMatch ? calMatch.firstGaraId : null;
-      const linkHtml = garaLink
-        ? `<a href="#/gara/${encodeURIComponent(garaLink)}" style="display:inline-block;margin-top:8px;font-size:12px;font-weight:700;color:#E11D48;text-decoration:none">Risultati →</a>`
-        : `<a href="#/calendario/${encodeURIComponent(g.id)}" style="display:inline-block;margin-top:8px;font-size:12px;font-weight:700;color:#6366F1;text-decoration:none">Vedi nel calendario →</a>`;
+      // Destinazione al click: gare con risultati → pagina gara; altre → calendario
+      const calMatch  = calendarResultsMap[g.id];
+      const garaLink  = calMatch ? calMatch.firstGaraId : null;
+      const navHash   = garaLink
+        ? `#/gara/${encodeURIComponent(garaLink)}`
+        : `#/calendario/${encodeURIComponent(g.id)}`;
+      const navLabel  = garaLink ? '→ Risultati' : '→ Calendario';
+      const navColor  = garaLink ? '#E11D48' : '#6366F1';
 
       const luogoDisplay = det.luogo_ritrovo || g.luogo || '';
-      const popup = L.popup({ maxWidth: 260 }).setContent(`
-        <div style="font-family:system-ui,sans-serif;font-size:13px;line-height:1.4">
+      const popupContent = `
+        <div style="font-family:system-ui,sans-serif;font-size:13px;line-height:1.4;cursor:pointer" class="itc-map-popup">
           <div style="font-weight:700;margin-bottom:4px;font-size:14px">${esc(g.nome)}</div>
           <div style="color:#666;margin-bottom:2px">${dateStr} ${genIcon}</div>
           <div style="color:#666;margin-bottom:6px">${catStr}</div>
@@ -6054,9 +6054,24 @@ async function renderCalMap(filtered, calendarResultsMap) {
           ${det.orario_partenza ? `<div style="font-size:12px;color:#888">🕐 ${esc(det.orario_partenza)}</div>` : ''}
           ${det.km ? `<div style="font-size:12px;color:#888">📏 ${esc(det.km)} km</div>` : ''}
           ${isApprox ? `<div style="font-size:10px;color:#aaa;margin-top:4px">📌 Posizione approssimativa (${g.regione})</div>` : ''}
-          ${linkHtml}
-        </div>`);
+          <div style="margin-top:10px;padding-top:8px;border-top:1px solid #eee">
+            <span style="font-size:12px;font-weight:700;color:${navColor}">${navLabel}</span>
+          </div>
+        </div>`;
+
+      const popup = L.popup({ maxWidth: 260, className: 'itc-popup' }).setContent(popupContent);
       const marker = L.marker([lat, lng], { icon }).bindPopup(popup);
+
+      // Navigazione al click sul marker (bypass Leaflet popup link issues)
+      marker.on('click', (e) => { L.DomEvent.stopPropagation(e); });
+      popup.on('add', () => {
+        // Dopo l'apertura del popup, ascolta click sull'intero contenuto
+        setTimeout(() => {
+          const el = document.querySelector('.itc-map-popup');
+          if (el) el.addEventListener('click', () => { location.hash = navHash; }, { once: true });
+        }, 50);
+      });
+
       marker.addTo(_calCluster);
       return marker;
     };
