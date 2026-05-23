@@ -4014,10 +4014,46 @@ async function renderAdmin() {
       </div>
     </div>
 
+    <div style="margin-top:40px">
+      <h2 style="font-family:var(--font-display);font-size:1.2rem;margin-bottom:8px;border-bottom:2px solid var(--accent);padding-bottom:8px">
+        🎥 GESTIONE VIDEO APPROVATI
+      </h2>
+      <div style="display:flex;gap:10px;flex-wrap:wrap;margin-bottom:16px;align-items:center">
+        <button class="btn-action" onclick="window.adminShowAddVideo()" style="background:var(--accent);color:white;border:none;padding:8px 18px;border-radius:6px;font-size:.85rem">+ Aggiungi video</button>
+        <button class="btn-action" onclick="window.triggerYoutubeScraper()" id="btn-scraper" style="background:var(--bg-card);color:var(--text-primary);border:1px solid var(--border);padding:8px 18px;border-radius:6px;font-size:.85rem">▶ Avvia scraper YouTube</button>
+        <input type="search" id="admin-video-search" placeholder="Filtra per nome gara…" oninput="window.adminFilterVideos(this.value)"
+          style="padding:8px 12px;border:1px solid var(--border);border-radius:6px;background:var(--bg-card);color:var(--text-primary);font-size:.85rem;flex:1;min-width:180px" />
+      </div>
+      <div id="admin-add-video-form" style="display:none;background:var(--bg-card);border:1px solid var(--border);border-radius:8px;padding:16px;margin-bottom:16px">
+        <div style="font-weight:700;margin-bottom:12px;font-size:.9rem">Aggiungi video manualmente</div>
+        <div style="display:flex;flex-direction:column;gap:10px">
+          <div>
+            <label style="font-size:.8rem;color:var(--text-muted);display:block;margin-bottom:4px">Cerca gara (id calendario)</label>
+            <input type="search" id="avf-race-search" placeholder="Digita nome gara…" oninput="window.adminSearchCalRace(this.value)"
+              style="width:100%;padding:8px;border:1px solid var(--border);border-radius:6px;background:var(--bg-input,var(--bg-card));color:var(--text-primary);font-size:.85rem;box-sizing:border-box" />
+            <div id="avf-race-results" style="display:none;background:var(--bg-card);border:1px solid var(--border);border-radius:6px;max-height:180px;overflow-y:auto;margin-top:4px"></div>
+            <div id="avf-race-selected" style="font-size:.8rem;color:var(--accent);margin-top:4px;font-weight:600"></div>
+          </div>
+          <input type="url" id="avf-url" placeholder="URL YouTube (https://www.youtube.com/watch?v=...)"
+            style="padding:8px;border:1px solid var(--border);border-radius:6px;background:var(--bg-input,var(--bg-card));color:var(--text-primary);font-size:.85rem" />
+          <input type="text" id="avf-title" placeholder="Titolo (opzionale — lascia vuoto per usare quello del video)"
+            style="padding:8px;border:1px solid var(--border);border-radius:6px;background:var(--bg-input,var(--bg-card));color:var(--text-primary);font-size:.85rem" />
+          <div style="display:flex;gap:8px">
+            <button onclick="window.adminSubmitAddVideo()" style="background:var(--accent);color:white;border:none;padding:8px 20px;border-radius:6px;font-weight:600;cursor:pointer">Aggiungi</button>
+            <button onclick="window.adminShowAddVideo(false)" style="background:transparent;color:var(--text-muted);border:1px solid var(--border);padding:8px 16px;border-radius:6px;cursor:pointer">Annulla</button>
+          </div>
+        </div>
+      </div>
+      <div id="admin-videos-all">
+        <div style="color:var(--text-muted);padding:20px 0">Caricamento...</div>
+      </div>
+    </div>
+
   `);
 
   loadPendingRacePhotos();
   loadAdminPendingVideos();
+  loadAdminAllVideos();
 }
 
 async function loadPendingRacePhotos() {
@@ -4102,7 +4138,228 @@ window.adminVideoAction = async (id, action) => {
     if (container && !container.querySelector('[id^="apv-"]')) {
       container.innerHTML = `<div style="color:var(--text-muted);padding:20px 0">Nessun video in attesa.</div>`;
     }
+    // Aggiorna anche la lista approvati
+    loadAdminAllVideos();
   } catch(e) { alert('Errore: ' + e.message); }
+};
+
+// ── GESTIONE VIDEO APPROVATI ─────────────────────────────────────────────────
+
+let _adminVideosData = {}; // cache locale per filtro
+let _adminVideoFilter = '';
+
+async function loadAdminAllVideos() {
+  const container = document.getElementById('admin-videos-all');
+  if (!container) return;
+  container.innerHTML = `<div style="color:var(--text-muted);padding:20px 0">Caricamento...</div>`;
+  try {
+    _adminVideosData = await apiCall('/admin/videos', { method: 'GET' });
+    renderAdminVideosAll();
+  } catch(e) {
+    container.innerHTML = `<div style="color:var(--red-hot);padding:20px 0">Errore: ${esc(e.message)}</div>`;
+  }
+}
+
+function renderAdminVideosAll() {
+  const container = document.getElementById('admin-videos-all');
+  if (!container) return;
+  const calMap = {};
+  (globalData?.calendar || []).forEach(g => calMap[g.id] = g);
+
+  const entries = Object.entries(_adminVideosData)
+    .filter(([calId]) => {
+      if (!_adminVideoFilter) return true;
+      const q = _adminVideoFilter.toLowerCase();
+      const cal = calMap[calId];
+      return calId.toLowerCase().includes(q) || (cal?.nome||'').toLowerCase().includes(q);
+    })
+    .sort(([a],[b]) => {
+      const da = calMap[a]?.data || a;
+      const db = calMap[b]?.data || b;
+      return db.localeCompare(da);
+    });
+
+  if (!entries.length) {
+    container.innerHTML = `<div style="color:var(--text-muted);padding:20px 0">${_adminVideoFilter ? 'Nessun risultato.' : 'Nessun video approvato.'}</div>`;
+    return;
+  }
+
+  container.innerHTML = entries.map(([calId, vids]) => {
+    const cal = calMap[calId];
+    const raceName = cal?.nome || calId;
+    const raceDate = cal?.data || '';
+    const raceLabel = raceDate ? `${raceName} — ${fmtDate(raceDate)}` : raceName;
+    const videoRows = vids.map((v, idx) => {
+      const vidId = (v.url.match(/[?&]v=([^&]+)/) || [])[1] || '';
+      const thumb = vidId ? `https://img.youtube.com/vi/${vidId}/mqdefault.jpg` : '';
+      const scoreColor = v.score >= 0.7 ? '#22c55e' : v.score >= 0.45 ? '#f59e0b' : '#ef4444';
+      return `
+      <div class="admin-video-row" id="avr-${esc(calId)}-${idx}" style="display:flex;gap:12px;align-items:flex-start;padding:10px;border-bottom:1px solid var(--border-subtle)">
+        ${thumb ? `<img src="${thumb}" alt="thumb" style="width:90px;height:60px;object-fit:cover;border-radius:4px;flex-shrink:0;cursor:pointer" onclick="window.open('${esc(v.url)}','_blank')" />` : `<div style="width:90px;height:60px;background:var(--bg-card2,#1a1a2e);border-radius:4px;flex-shrink:0;display:flex;align-items:center;justify-content:center;color:var(--text-muted);font-size:1.5rem">🎬</div>`}
+        <div style="flex:1;min-width:0">
+          <div style="font-weight:600;font-size:.85rem;margin-bottom:2px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis">${esc(v.title)}</div>
+          <div style="font-size:.75rem;color:var(--text-muted)">${esc(v.channel||'')} &nbsp;•&nbsp; ${esc(v.published_at||'')} &nbsp;•&nbsp; <span style="color:${scoreColor};font-weight:700">score ${v.score||'?'}</span></div>
+        </div>
+        <div style="display:flex;flex-direction:column;gap:4px;flex-shrink:0">
+          <button onclick="window.adminVideoEdit('${esc(calId)}',${idx})" style="background:var(--bg-card);border:1px solid var(--border);padding:4px 10px;border-radius:4px;cursor:pointer;font-size:.75rem;color:var(--text-primary)">✏️ Modifica</button>
+          <button onclick="window.adminVideoMove('${esc(calId)}',${idx})" style="background:var(--bg-card);border:1px solid var(--border);padding:4px 10px;border-radius:4px;cursor:pointer;font-size:.75rem;color:var(--text-primary)">↔️ Sposta</button>
+          <button onclick="window.adminVideoDelete('${esc(calId)}',${idx})" style="background:transparent;border:1px solid #ef4444;padding:4px 10px;border-radius:4px;cursor:pointer;font-size:.75rem;color:#ef4444">🗑️ Elimina</button>
+        </div>
+      </div>`;
+    }).join('');
+
+    return `
+    <div class="admin-video-race-block" style="background:var(--bg-card);border:1px solid var(--border);border-radius:8px;margin-bottom:12px;overflow:hidden">
+      <div style="padding:10px 14px;background:var(--bg-card2,rgba(0,0,0,.15));display:flex;align-items:center;justify-content:space-between;gap:8px">
+        <div>
+          <a href="#/calendario/${encodeURIComponent(calId)}" style="color:var(--accent);font-weight:700;font-size:.9rem;text-decoration:none">${esc(raceName)}</a>
+          ${raceDate ? `<span style="color:var(--text-muted);font-size:.75rem;margin-left:8px">${fmtDate(raceDate)}</span>` : ''}
+          <span style="color:var(--text-muted);font-size:.75rem;margin-left:8px">${vids.length} video</span>
+        </div>
+        <button onclick="window.adminShowAddVideoForRace('${esc(calId)}')" style="background:transparent;border:1px solid var(--accent);color:var(--accent);padding:3px 10px;border-radius:4px;cursor:pointer;font-size:.75rem">+ video</button>
+      </div>
+      ${videoRows}
+    </div>`;
+  }).join('');
+}
+
+window.adminFilterVideos = (q) => {
+  _adminVideoFilter = q.trim();
+  renderAdminVideosAll();
+};
+
+window.adminVideoDelete = async (calId, idx) => {
+  if (!confirm(`Eliminare questo video?`)) return;
+  try {
+    await apiCall(`/admin/videos/${encodeURIComponent(calId)}/${idx}`, { method: 'DELETE' });
+    if (_adminVideosData[calId]) {
+      _adminVideosData[calId].splice(idx, 1);
+      if (!_adminVideosData[calId].length) delete _adminVideosData[calId];
+    }
+    renderAdminVideosAll();
+  } catch(e) { alert('Errore: ' + e.message); }
+};
+
+window.adminVideoEdit = async (calId, idx) => {
+  const v = _adminVideosData[calId]?.[idx];
+  if (!v) return;
+  const newUrl   = prompt('URL YouTube:', v.url);
+  if (newUrl === null) return;
+  const newTitle = prompt('Titolo:', v.title);
+  if (newTitle === null) return;
+  try {
+    await apiCall(`/admin/videos/${encodeURIComponent(calId)}/${idx}`, {
+      method: 'PATCH',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ url: newUrl.trim(), title: newTitle.trim() }),
+    });
+    v.url   = newUrl.trim();
+    v.title = newTitle.trim();
+    renderAdminVideosAll();
+  } catch(e) { alert('Errore: ' + e.message); }
+};
+
+window.adminVideoMove = async (calId, idx) => {
+  const newCalId = prompt('ID calendario della gara di destinazione (es. TROFEO_XYZ_2026-04-20):');
+  if (!newCalId || !newCalId.trim()) return;
+  try {
+    await apiCall(`/admin/videos/${encodeURIComponent(calId)}/${idx}/move`, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ newCalId: newCalId.trim() }),
+    });
+    // Aggiorna cache locale
+    const v = _adminVideosData[calId].splice(idx, 1)[0];
+    if (!_adminVideosData[calId].length) delete _adminVideosData[calId];
+    if (!_adminVideosData[newCalId.trim()]) _adminVideosData[newCalId.trim()] = [];
+    _adminVideosData[newCalId.trim()].unshift(v);
+    renderAdminVideosAll();
+  } catch(e) { alert('Errore: ' + e.message); }
+};
+
+// -- Form "Aggiungi video" --
+let _avfSelectedCalId = null;
+
+window.adminShowAddVideo = (show = true) => {
+  const f = document.getElementById('admin-add-video-form');
+  if (f) f.style.display = show ? 'block' : 'none';
+  if (show) {
+    _avfSelectedCalId = null;
+    document.getElementById('avf-race-search').value = '';
+    document.getElementById('avf-url').value = '';
+    document.getElementById('avf-title').value = '';
+    document.getElementById('avf-race-selected').textContent = '';
+    document.getElementById('avf-race-results').style.display = 'none';
+  }
+};
+
+window.adminShowAddVideoForRace = (calId) => {
+  window.adminShowAddVideo(true);
+  const cal = (globalData?.calendar || []).find(g => g.id === calId);
+  _avfSelectedCalId = calId;
+  const sel = document.getElementById('avf-race-selected');
+  const search = document.getElementById('avf-race-search');
+  if (sel) sel.textContent = `✔ ${cal?.nome || calId}`;
+  if (search) search.value = cal?.nome || calId;
+  document.getElementById('admin-add-video-form')?.scrollIntoView({ behavior:'smooth', block:'start' });
+};
+
+window.adminSearchCalRace = (q) => {
+  const res = document.getElementById('avf-race-results');
+  if (!res) return;
+  if (!q || q.length < 2) { res.style.display = 'none'; return; }
+  const matches = (globalData?.calendar || [])
+    .filter(g => (g.nome||'').toLowerCase().includes(q.toLowerCase()) || (g.id||'').toLowerCase().includes(q.toLowerCase()))
+    .sort((a,b) => (b.data||'').localeCompare(a.data||''))
+    .slice(0, 12);
+  if (!matches.length) { res.style.display = 'none'; return; }
+  res.style.display = 'block';
+  res.innerHTML = matches.map(g => `
+    <div onclick="window.adminSelectCalRace('${esc(g.id)}','${esc(g.nome||g.id)}')"
+      style="padding:8px 12px;cursor:pointer;font-size:.82rem;border-bottom:1px solid var(--border-subtle)">
+      <strong>${esc(g.nome||g.id)}</strong>
+      <span style="color:var(--text-muted);font-size:.75rem;margin-left:6px">${g.data||''}</span>
+    </div>`).join('');
+};
+
+window.adminSelectCalRace = (calId, nome) => {
+  _avfSelectedCalId = calId;
+  const sel = document.getElementById('avf-race-selected');
+  const res = document.getElementById('avf-race-results');
+  const search = document.getElementById('avf-race-search');
+  if (sel) sel.textContent = `✔ ${nome}`;
+  if (search) search.value = nome;
+  if (res) res.style.display = 'none';
+};
+
+window.adminSubmitAddVideo = async () => {
+  if (!_avfSelectedCalId) { alert('Seleziona prima una gara.'); return; }
+  const url   = document.getElementById('avf-url').value.trim();
+  const title = document.getElementById('avf-title').value.trim();
+  if (!url) { alert('Inserisci un URL YouTube.'); return; }
+  try {
+    await apiCall(`/admin/videos/${encodeURIComponent(_avfSelectedCalId)}`, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ url, title, channel: 'Admin' }),
+    });
+    window.adminShowAddVideo(false);
+    await loadAdminAllVideos();
+  } catch(e) { alert('Errore: ' + e.message); }
+};
+
+window.triggerYoutubeScraper = async () => {
+  const btn = document.getElementById('btn-scraper');
+  if (btn) { btn.disabled = true; btn.textContent = '⏳ Avvio...'; }
+  try {
+    const data = await apiCall('/trigger_scraper', { method: 'POST' });
+    alert(data.msg || 'Scraper avviato — i nuovi video appariranno tra qualche minuto.');
+    if (btn) setTimeout(() => { btn.disabled = false; btn.textContent = '▶ Avvia scraper YouTube'; }, 3000);
+    setTimeout(loadAdminAllVideos, 30000); // ricarica dopo 30s
+  } catch(e) {
+    alert('Errore: ' + e.message);
+    if (btn) { btn.disabled = false; btn.textContent = '▶ Avvia scraper YouTube'; }
+  }
 };
 
 async function loadApprovedRacePhotos() {

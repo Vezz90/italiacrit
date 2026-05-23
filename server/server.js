@@ -573,6 +573,50 @@ function writeVideos(data) {
   fs.writeFileSync(VIDEOS_PATH, JSON.stringify(data, null, 2));
 }
 
+// Lista tutti i video approvati (senza cache — legge sempre dal disco)
+app.get('/api/admin/videos', requireAdmin, (req, res) => {
+  res.json(readVideos());
+});
+
+// Aggiungi video manualmente a una gara (admin diretto, senza pending)
+app.post('/api/admin/videos/:calId', requireAdmin, (req, res) => {
+  try {
+    const { calId } = req.params;
+    const { url, title, channel, description } = req.body;
+    if (!url) return res.status(400).json({ error: 'url obbligatorio' });
+    const videos = readVideos();
+    if (!videos[calId]) videos[calId] = [];
+    // Evita duplicati per URL
+    if (videos[calId].some(v => v.url === url)) return res.status(409).json({ error: 'Video già presente per questa gara' });
+    videos[calId].unshift({
+      url, title: title || url,
+      description: description || '',
+      channel: channel || 'Admin',
+      published_at: new Date().toISOString().slice(0,10),
+      score: 1,
+    });
+    writeVideos(videos);
+    res.json({ ok: true });
+  } catch(e) { res.status(500).json({ error: e.message }); }
+});
+
+// Sposta un video da una gara a un'altra
+app.post('/api/admin/videos/:calId/:idx/move', requireAdmin, (req, res) => {
+  try {
+    const { calId, idx } = req.params;
+    const { newCalId } = req.body;
+    if (!newCalId) return res.status(400).json({ error: 'newCalId obbligatorio' });
+    const videos = readVideos();
+    if (!videos[calId]?.[parseInt(idx)]) return res.status(404).json({ error: 'Video non trovato' });
+    const v = videos[calId].splice(parseInt(idx), 1)[0];
+    if (!videos[calId].length) delete videos[calId];
+    if (!videos[newCalId]) videos[newCalId] = [];
+    videos[newCalId].unshift(v);
+    writeVideos(videos);
+    res.json({ ok: true });
+  } catch(e) { res.status(500).json({ error: e.message }); }
+});
+
 app.delete('/api/admin/videos/:calId/:idx', requireAdmin, (req, res) => {
   try {
     const { calId, idx } = req.params;

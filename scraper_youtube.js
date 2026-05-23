@@ -10,41 +10,44 @@
 
 'use strict';
 
-// Necessario su alcune reti aziendali con catena SSL personalizzata
 process.env.NODE_TLS_REJECT_UNAUTHORIZED = '0';
 
 const fs   = require('fs');
 const path = require('path');
 
 // ── CONFIGURAZIONE CANALI ────────────────────────────────────────────────────
-// Per ogni canale: handle YouTube o URL diretto
 const CHANNELS = [
-  { name: 'CiclismoWeb',   handle: '@ciclismoweb' },
-  { name: 'CiclismoLive',  handle: '@CiclismoLive' },
-  { name: 'ToscanaSprint', handle: '@ToscanasprintIt' },
-  // Pianeta Ciclismo — cerca il canale e aggiorna con il channel_id corretto
-  // { name: 'PianetaCiclismo', channelId: 'UC...' },
+  { name: 'CiclismoWeb',    handle: '@ciclismoweb' },
+  { name: 'CiclismoLive',   handle: '@CiclismoLive' },
+  { name: 'ToscanaSprint',  handle: '@ToscanasprintIt' },
+  { name: 'BetaCycling',    handle: '@BetaCycling' },
+  { name: 'Tuttobiciweb',   handle: '@tuttobiciweb' },
 ];
 
 // Finestra temporale: il video può uscire da N giorni prima a M giorni dopo la gara
-const DAYS_BEFORE = 1;
-const DAYS_AFTER  = 7;
+const DAYS_BEFORE = 2;   // dirette pre-gara o live
+const DAYS_AFTER  = 14;  // highlights e rassegne possono uscire anche 2 settimane dopo
 
-// Soglia minima di similarity (0–1) per accettare un match
-const MIN_SCORE = 0.42;
+// Soglia minima di similarity per accettare un match
+// Due soglie: se sia Jaccard SIA coverage superano MIN_SCORE_SOFT → ok
+//             altrimenti serve MIN_SCORE_HARD (più selettivo)
+const MIN_SCORE_SOFT = 0.38;
+const MIN_SCORE_HARD = 0.52;
 
 // Parole da ignorare nel matching
 const STOPWORDS = new Set([
   'di','del','della','dello','dei','delle','degli',
   'il','la','lo','i','le','gli','un','una','uno',
   'e','ed','o','in','a','da','su','per','con','tra','fra',
+  'al','ai','alla','alle','alle','agli',
   'gara','corsa','ciclismo','ciclistica','ciclistico',
   'campionato','trofeo','coppa','gran','premio','gp',
-  'highlights','highlight','video','live','diretta',
+  'highlights','highlight','video','live','diretta','streaming',
   'italia','italiano','italiana','italiani','italiane',
-  '2024','2025','2026','2027',
   'uomini','donne','maschile','femminile',
   'esordienti','allievi','juniores','elite','under23','u23',
+  '2024','2025','2026','2027',
+  'stage','tappa','giro','tour','race',
 ]);
 
 // ── UTILITY ─────────────────────────────────────────────────────────────────
@@ -52,8 +55,9 @@ const STOPWORDS = new Set([
 function normalize(str) {
   return (str || '')
     .toLowerCase()
-    .normalize('NFD').replace(/[̀-ͯ]/g, '')  // rimuovi accenti
-    .replace(/[^a-z0-9\s]/g, ' ')                       // solo lettere e numeri
+    .normalize('NFD').replace(/[̀-ͯ]/g, '') // rimuovi accenti
+    .replace(/[°^ª]/g, '')                             // rimuovi simboli edizione
+    .replace(/[^a-z0-9\s]/g, ' ')
     .replace(/\s+/g, ' ')
     .trim();
 }
@@ -73,16 +77,22 @@ function jaccardScore(a, b) {
   return inter / (sa.size + sb.size - inter);
 }
 
-// Percentuale di parole della gara che compaiono nel titolo video
-function coverageScore(raceName, videoTitle) {
+// Percentuale di token della gara trovati nel testo del video
+function coverageScore(raceName, text) {
   const raceWords = tokenize(raceName);
   if (raceWords.length === 0) return 0;
-  const videoNorm = normalize(videoTitle);
+  const normText = normalize(text);
   let found = 0;
   for (const w of raceWords) {
-    if (videoNorm.includes(w)) found++;
+    if (normText.includes(w)) found++;
   }
   return found / raceWords.length;
+}
+
+// Estrai il numero di edizione dal testo (es. "50°", "76^", "32°", "109^")
+function extractEdition(str) {
+  const m = normalize(str).match(/\b(\d{1,3})\s*(?:esima|esimo|a|o)?\b/);
+  return m ? parseInt(m[1]) : null;
 }
 
 function dateDiffDays(dateStr1, dateStr2) {
@@ -92,7 +102,6 @@ function dateDiffDays(dateStr1, dateStr2) {
 // ── YOUTUBE ─────────────────────────────────────────────────────────────────
 
 async function resolveChannelId(handle) {
-  // Risolve @handle → channel_id leggendo la pagina del canale
   const url = `https://www.youtube.com/${handle}`;
   const res  = await fetch(url, {
     headers: {
@@ -103,33 +112,26 @@ async function resolveChannelId(handle) {
   if (!res.ok) throw new Error(`HTTP ${res.status} per ${url}`);
   const html = await res.text();
 
-  // Cerca channelId nel JSON embedded di YouTube
   let m = html.match(/"channelId"\s*:\s*"(UC[^"]+)"/);
   if (m) return m[1];
-
-  // Fallback: cerca nella meta tag og:url
   m = html.match(/youtube\.com\/channel\/(UC[^"&\s]+)/);
   if (m) return m[1];
-
   throw new Error(`channel_id non trovato per ${handle}`);
 }
 
 function parseRSS(xml) {
   const videos = [];
-  // Estrai ogni <entry> dal feed RSS di YouTube
   const entries = xml.match(/<entry>([\s\S]*?)<\/entry>/g) || [];
   for (const entry of entries) {
     const videoId   = (entry.match(/<yt:videoId>([^<]+)<\/yt:videoId>/)  || [])[1];
     const title     = (entry.match(/<title>([^<]+)<\/title>/)             || [])[1];
     const published = (entry.match(/<published>([^<]+)<\/published>/)     || [])[1];
     const descRaw   = (entry.match(/<media:description>([\s\S]*?)<\/media:description>/) || [])[1];
-
     if (!videoId || !title) continue;
-
     videos.push({
       url:          `https://www.youtube.com/watch?v=${videoId}`,
       title:        decodeXML(title),
-      description:  decodeXML(descRaw || '').slice(0, 500),
+      description:  decodeXML(descRaw || '').slice(0, 600),
       published_at: published ? published.split('T')[0] : '',
     });
   }
@@ -147,17 +149,13 @@ function decodeXML(s) {
 
 async function fetchChannelVideos(channel) {
   let channelId = channel.channelId;
-
   if (!channelId && channel.handle) {
     console.log(`  Risolvo channel_id per ${channel.handle}...`);
     channelId = await resolveChannelId(channel.handle);
     console.log(`  → ${channelId}`);
   }
-
   const rssUrl = `https://www.youtube.com/feeds/videos.xml?channel_id=${channelId}`;
-  const res = await fetch(rssUrl, {
-    headers: { 'User-Agent': 'Mozilla/5.0' }
-  });
+  const res = await fetch(rssUrl, { headers: { 'User-Agent': 'Mozilla/5.0' } });
   if (!res.ok) throw new Error(`RSS HTTP ${res.status}`);
   const xml    = await res.text();
   const videos = parseRSS(xml);
@@ -166,33 +164,72 @@ async function fetchChannelVideos(channel) {
 
 // ── MATCHING ─────────────────────────────────────────────────────────────────
 
+function scoreVideoRace(video, race) {
+  // Testo completo del video per il matching
+  const videoText = `${video.title} ${video.description}`;
+
+  // Score base: Jaccard sul titolo
+  const j = jaccardScore(race.nome, video.title);
+
+  // Coverage: quanti token del nome gara compaiono nel titolo video
+  const cTitle = coverageScore(race.nome, video.title);
+
+  // Coverage estesa: il testo completo (titolo + descrizione) copre la gara?
+  const cFull = coverageScore(race.nome, videoText);
+
+  // Bonus edizione: se entrambi citano lo stesso numero (50°, 76^, ecc.)
+  let edBonus = 0;
+  const raceEd  = extractEdition(race.nome);
+  const videoEd = extractEdition(video.title);
+  if (raceEd && videoEd) {
+    edBonus = raceEd === videoEd ? 0.15 : -0.10; // penalizza edizioni diverse
+  }
+
+  // Bonus città/località: se il calendario ha campo 'citta' o 'localita'
+  let cityBonus = 0;
+  const city = race.citta || race.localita || race.luogo || '';
+  if (city && city.length > 3) {
+    const cityNorm = normalize(city).replace(/\s+/g, '');
+    const titleNorm = normalize(video.title).replace(/\s+/g, '');
+    if (titleNorm.includes(cityNorm) || coverageScore(city, video.title) >= 0.7) cityBonus = 0.10;
+  }
+
+  // Score finale: combina le metriche
+  const base = Math.max(j, cTitle * 0.88, cFull * 0.65);
+  const score = Math.min(1, base + edBonus + cityBonus);
+
+  return { score, j, cTitle, cFull };
+}
+
 function matchVideoToRaces(video, calendar) {
   const pubDate = video.published_at;
   if (!pubDate) return null;
 
   let bestScore = -1;
   let bestRace  = null;
+  let bestDebug = null;
 
   for (const race of calendar) {
     if (!race.data) continue;
-
-    // Filtro temporale: il video deve uscire entro DAYS_BEFORE…DAYS_AFTER dalla gara
     const diff = dateDiffDays(pubDate, race.data);
     if (diff < -DAYS_BEFORE || diff > DAYS_AFTER) continue;
 
-    // Score = combinazione Jaccard e coverage
-    const j = jaccardScore(race.nome, video.title);
-    const c = coverageScore(race.nome, video.title);
-    const score = Math.max(j, c * 0.9); // coverage pesata leggermente meno
+    const { score, j, cTitle, cFull } = scoreVideoRace(video, race);
 
-    if (score > bestScore) {
+    // Accetta solo se supera la soglia
+    // Logica: score ≥ HARD sempre ok; tra SOFT e HARD richiediamo sia j>0.2 che cTitle>0.3
+    const accepted = score >= MIN_SCORE_HARD ||
+      (score >= MIN_SCORE_SOFT && j >= 0.18 && cTitle >= 0.28);
+
+    if (accepted && score > bestScore) {
       bestScore = score;
       bestRace  = race;
+      bestDebug = { j: j.toFixed(2), cT: cTitle.toFixed(2), cF: cFull.toFixed(2) };
     }
   }
 
-  if (bestScore >= MIN_SCORE) {
-    return { race: bestRace, score: Math.round(bestScore * 100) / 100 };
+  if (bestRace) {
+    return { race: bestRace, score: Math.round(bestScore * 100) / 100, debug: bestDebug };
   }
   return null;
 }
@@ -210,15 +247,23 @@ async function main() {
   const calendar = JSON.parse(fs.readFileSync(calendarPath));
   console.log(`Calendario: ${calendar.length} gare caricate`);
 
-  // Carica video già salvati (per non perdere match manuali)
+  // Carica video già salvati (preserva match manuali e approvazioni)
   let existing = {};
   if (fs.existsSync(outputPath)) {
     existing = JSON.parse(fs.readFileSync(outputPath));
   }
 
   const result = { ...existing };
+
+  // Set globale di URL già presenti — ogni video va in una sola gara
+  const globalUrls = new Set();
+  for (const vids of Object.values(result)) {
+    for (const v of vids) globalUrls.add(v.url);
+  }
+
   let newMatches = 0;
   let totalVideos = 0;
+  let skipped = 0;
 
   for (const channel of CHANNELS) {
     console.log(`\n[${channel.name}] Recupero video...`);
@@ -233,41 +278,42 @@ async function main() {
     totalVideos += videos.length;
 
     for (const video of videos) {
-      console.log(`  "${video.title}" (${video.published_at})`);
-      const match = matchVideoToRaces(video, calendar);
+      // Salta se già presente (in qualsiasi gara)
+      if (globalUrls.has(video.url)) {
+        skipped++;
+        continue;
+      }
 
+      const match = matchVideoToRaces(video, calendar);
       if (match) {
-        const { race, score } = match;
-        console.log(`    → MATCH [${score}] ${race.id}`);
+        const { race, score, debug } = match;
+        console.log(`  ✔ [${score}] "${video.title.slice(0,60)}" → ${race.id}`);
+        if (debug) console.log(`    j=${debug.j} cT=${debug.cT} cF=${debug.cF}`);
 
         if (!result[race.id]) result[race.id] = [];
-
-        // Evita duplicati per URL
-        const alreadyIn = result[race.id].some(v => v.url === video.url);
-        if (!alreadyIn) {
-          result[race.id].push({
-            url:          video.url,
-            title:        video.title,
-            description:  video.description,
-            channel:      video.channel,
-            published_at: video.published_at,
-            score,
-          });
-          newMatches++;
-        }
+        result[race.id].push({
+          url:          video.url,
+          title:        video.title,
+          description:  video.description,
+          channel:      video.channel,
+          published_at: video.published_at,
+          score,
+        });
+        globalUrls.add(video.url);
+        newMatches++;
       } else {
-        console.log(`    → nessuna gara corrispondente`);
+        console.log(`  ✗ nessuna gara per: "${video.title.slice(0,60)}" (${video.published_at})`);
       }
     }
   }
 
   // Ordina i video di ogni gara per score decrescente
   for (const gid of Object.keys(result)) {
-    result[gid].sort((a, b) => b.score - a.score);
+    result[gid].sort((a, b) => (b.score||0) - (a.score||0));
   }
 
   fs.writeFileSync(outputPath, JSON.stringify(result, null, 2));
-  console.log(`\n✅ Completato: ${totalVideos} video analizzati, ${newMatches} nuovi match`);
+  console.log(`\n✅ Completato: ${totalVideos} video analizzati, ${newMatches} nuovi match, ${skipped} già presenti`);
   console.log(`   → data/videos.json aggiornato (${Object.keys(result).length} gare con video)`);
 }
 
