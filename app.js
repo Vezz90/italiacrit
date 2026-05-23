@@ -5840,100 +5840,151 @@ async function _loadRaceDetails() {
   return _raceDetailsCache;
 }
 
+// ── Geocoding client-side con localStorage cache ──────────────────────
+const GEO_CACHE_KEY = 'itc_geo_v1';
+function _geoLoad() {
+  try { return JSON.parse(localStorage.getItem(GEO_CACHE_KEY) || '{}'); } catch { return {}; }
+}
+function _geoSave(cache) {
+  try { localStorage.setItem(GEO_CACHE_KEY, JSON.stringify(cache)); } catch {}
+}
+async function _geoLookup(query) {
+  const cache = _geoLoad();
+  if (cache[query]) return cache[query];
+  try {
+    const url = `https://nominatim.openstreetmap.org/search?q=${encodeURIComponent(query)}&countrycodes=it&format=json&limit=1`;
+    const res = await fetch(url, { headers: { 'Accept-Language': 'it' } });
+    const data = await res.json();
+    if (data && data[0]) {
+      const coords = [parseFloat(data[0].lat), parseFloat(data[0].lon)];
+      cache[query] = coords;
+      _geoSave(cache);
+      return coords;
+    }
+  } catch {}
+  cache[query] = null;
+  _geoSave(cache);
+  return null;
+}
+function _sleep(ms) { return new Promise(r => setTimeout(r, ms)); }
+
 async function renderCalMap(filtered) {
   const container = document.getElementById('cal-map');
   if (!container) return;
 
-  container.innerHTML = '<div style="padding:32px;text-align:center;color:var(--text-muted)">Caricamento mappa…</div>';
+  // Reset mappa precedente
+  if (_calMap) { _calMap.remove(); _calMap = null; _calCluster = null; }
+  container.innerHTML = '';
+  container.style.height = '560px';
 
   try {
     await _loadLeaflet();
     const details = await _loadRaceDetails();
     const L = window.L;
 
-    // Reset mappa precedente
-    if (_calMap) { _calMap.remove(); _calMap = null; _calCluster = null; }
-
-    container.innerHTML = '';
-    container.style.height = '560px';
-
     _calMap = L.map(container, { center: [42.5, 12.5], zoom: 6 });
     L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
       attribution: '© <a href="https://openstreetmap.org">OpenStreetMap</a>',
       maxZoom: 18
     }).addTo(_calMap);
-
     _calCluster = L.markerClusterGroup({ maxClusterRadius: 40 });
+    _calCluster.addTo(_calMap);
 
-    let pinCount = 0;
     const today = new Date().toISOString().split('T')[0];
+    const geoCache = _geoLoad();
 
+    // Separa gare con coords già note (da scraper o cache) da quelle da geocodificare
+    const toGeocode = [];
     for (const g of filtered) {
-      const det = details[g.id];
-      const lat = det?.lat;
-      const lng = det?.lng;
-      if (!lat || !lng) continue;
+      const det   = details[g.id] || {};
+      const hasLL = det.lat && det.lng;
+      const luogo = g.luogo || det.luogo_ritrovo || '';
+      const query = luogo ? `${luogo}, ${g.regione || ''}, Italia` : null;
+      const cached = query ? geoCache[query] : null;
+      if (!hasLL && query && !cached) toGeocode.push({ g, det, query });
+    }
 
-      const isPast = (g.data || '') < today;
-      const dateStr = g.data
-        ? new Date(g.data + 'T00:00:00').toLocaleDateString('it-IT', { day:'numeric', month:'long' })
-        : '';
-      const catStr  = catLabel(g.categoria) || g.categoria || '';
-      const genIcon = g.genere === 'F' ? '♀' : '♂';
+    // Mostra progress se servono chiamate Nominatim
+    let progressEl = null;
+    if (toGeocode.length > 0) {
+      progressEl = document.createElement('div');
+      progressEl.style.cssText = 'position:absolute;bottom:12px;left:50%;transform:translateX(-50%);z-index:1000;background:rgba(0,0,0,.7);color:#fff;font-size:0.72rem;padding:6px 14px;border-radius:20px;pointer-events:none';
+      progressEl.textContent = `Geocoding 0/${toGeocode.length}…`;
+      container.style.position = 'relative';
+      container.appendChild(progressEl);
+    }
 
-      // Colore pin per categoria
-      const pinColor = g.genere === 'F' ? '#EC4899'
-        : (g.categoria||'').toLowerCase().includes('elite')    ? '#E11D48'
-        : (g.categoria||'').toLowerCase().includes('junior')   ? '#F97316'
-        : (g.categoria||'').toLowerCase().includes('alliev')   ? '#8B5CF6'
-        : (g.categoria||'').toLowerCase().includes('esordient')? '#10B981'
+    // Funzione che aggiunge un pin
+    const addPin = (g, det, lat, lng) => {
+      const isPast   = (g.data || '') < today;
+      const dateStr  = g.data ? new Date(g.data + 'T00:00:00').toLocaleDateString('it-IT', { day:'numeric', month:'long' }) : '';
+      const catStr   = catLabel(g.categoria) || g.categoria || '';
+      const genIcon  = g.genere === 'F' ? '♀' : '♂';
+      const cat      = (g.categoria || '').toLowerCase();
+      const pinColor = g.genere === 'F'              ? '#EC4899'
+        : cat.includes('elite')                      ? '#E11D48'
+        : cat.includes('junior')                     ? '#F97316'
+        : cat.includes('alliev')                     ? '#8B5CF6'
+        : cat.includes('esordient')                  ? '#10B981'
         : '#6B7280';
 
       const icon = L.divIcon({
         className: '',
-        html: `<div style="
-          width:12px;height:12px;border-radius:50%;
-          background:${pinColor};border:2px solid #fff;
-          box-shadow:0 1px 4px rgba(0,0,0,.35);
-          opacity:${isPast ? 0.45 : 1};
-        "></div>`,
-        iconSize: [12, 12], iconAnchor: [6, 6]
+        html: `<div style="width:12px;height:12px;border-radius:50%;background:${pinColor};border:2px solid #fff;box-shadow:0 1px 4px rgba(0,0,0,.4);opacity:${isPast?.5:1}"></div>`,
+        iconSize: [12,12], iconAnchor: [6,6]
       });
-
       const popup = L.popup({ maxWidth: 260 }).setContent(`
-        <div style="font-family:system-ui,sans-serif;font-size:13px">
+        <div style="font-family:system-ui,sans-serif;font-size:13px;line-height:1.4">
           <div style="font-weight:700;margin-bottom:4px;font-size:14px">${esc(g.nome)}</div>
           <div style="color:#666;margin-bottom:2px">${dateStr} ${genIcon}</div>
           <div style="color:#666;margin-bottom:6px">${catStr}</div>
-          ${det.luogo_ritrovo ? `<div style="font-size:12px;color:#888">📍 ${esc(det.luogo_ritrovo)}</div>` : ''}
+          ${g.luogo ? `<div style="font-size:12px;color:#888">📍 ${esc(g.luogo)}${g.regione?' ('+esc(g.regione)+')':''}</div>` : ''}
           ${det.orario_partenza ? `<div style="font-size:12px;color:#888">🕐 Partenza ${esc(det.orario_partenza)}</div>` : ''}
           ${det.km ? `<div style="font-size:12px;color:#888">📏 ${esc(det.km)} km</div>` : ''}
           <a href="#/calendario/${encodeURIComponent(g.id)}" style="display:inline-block;margin-top:8px;font-size:12px;font-weight:600;color:#E11D48">Dettaglio →</a>
         </div>`);
-
       L.marker([lat, lng], { icon }).bindPopup(popup).addTo(_calCluster);
-      pinCount++;
+    };
+
+    // 1. Prima passa: aggiungi tutti i pin con coordinate già note
+    for (const g of filtered) {
+      const det   = details[g.id] || {};
+      const luogo = g.luogo || det.luogo_ritrovo || '';
+      const query = luogo ? `${luogo}, ${g.regione || ''}, Italia` : null;
+      let lat = det.lat, lng = det.lng;
+      if ((!lat || !lng) && query && geoCache[query]) {
+        [lat, lng] = geoCache[query];
+      }
+      if (lat && lng) addPin(g, det, lat, lng);
     }
 
-    _calCluster.addTo(_calMap);
-
-    // Adatta zoom ai pin presenti
-    if (pinCount > 0 && _calCluster.getBounds().isValid()) {
-      _calMap.fitBounds(_calCluster.getBounds(), { padding: [40, 40], maxZoom: 10 });
+    // Adatta subito lo zoom ai pin già presenti
+    if (_calCluster.getLayers().length > 0 && _calCluster.getBounds().isValid()) {
+      _calMap.fitBounds(_calCluster.getBounds(), { padding: [40,40], maxZoom: 10 });
     }
 
-    // Nota se molte gare non hanno coordinate
-    const missing = filtered.length - pinCount;
-    if (missing > 0) {
-      const note = document.createElement('div');
-      note.style.cssText = 'font-size:0.72rem;color:var(--text-muted);text-align:center;padding:8px 0 0';
-      note.textContent = `${pinCount} gare su mappa · ${missing} senza coordinate (aggiunte al prossimo aggiornamento scraper)`;
-      container.after(note);
+    // 2. Seconda passa: geocodifica le rimanenti (1.1s tra richieste, rispetta Nominatim ToS)
+    let done = 0;
+    for (const { g, det, query } of toGeocode) {
+      // Interrompi se l'utente ha cambiato vista
+      if (calView !== 'mappa' || !document.getElementById('cal-map')) break;
+      const coords = await _geoLookup(query);
+      done++;
+      if (progressEl) progressEl.textContent = `Geocoding ${done}/${toGeocode.length}…`;
+      if (coords) {
+        addPin(g, det, coords[0], coords[1]);
+        if (_calCluster.getBounds().isValid()) {
+          _calMap.fitBounds(_calCluster.getBounds(), { padding: [40,40], maxZoom: 10 });
+        }
+      }
+      await _sleep(1100); // rate limit Nominatim
     }
+
+    if (progressEl) progressEl.remove();
 
   } catch(e) {
     console.error('[renderCalMap]', e);
-    container.innerHTML = `<div style="padding:32px;text-align:center;color:var(--text-muted)">Errore caricamento mappa: ${esc(e.message)}</div>`;
+    if (container) container.innerHTML = `<div style="padding:32px;text-align:center;color:var(--text-muted)">Errore: ${esc(e.message)}</div>`;
   }
 }
 
