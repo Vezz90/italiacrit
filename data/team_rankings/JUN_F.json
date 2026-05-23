@@ -2,9 +2,9 @@
   {
     "team_id": "BIESSE_CARRERA_PREMAC",
     "team_nome": "BIESSE - CARRERA - PREMAC",
-    "punti": 247,
-    "vittorie": 2,
-    "p1": 2,
+    "punti": 277,
+    "vittorie": 3,
+    "p1": 3,
     "p2": 4,
     "p3": 5,
     "pout": 20,
@@ -14,12 +14,12 @@
   {
     "team_id": "BFT_BURZONI",
     "team_nome": "BFT BURZONI",
-    "punti": 185,
+    "punti": 225,
     "vittorie": 4,
     "p1": 4,
-    "p2": 3,
+    "p2": 4,
     "p3": 1,
-    "pout": 8,
+    "pout": 10,
     "n_atleti": 5,
     "pos": 2
   },
@@ -50,12 +50,12 @@
   {
     "team_id": "PETRUCCI_GAUSS_CYCLING_TEAM",
     "team_nome": "PETRUCCI GAUSS CYCLING TEAM",
-    "punti": 105,
+    "punti": 121,
     "vittorie": 3,
     "p1": 3,
     "p2": 1,
     "p3": 1,
-    "pout": 6,
+    "pout": 7,
     "n_atleti": 6,
     "pos": 5
   },
@@ -72,6 +72,30 @@
     "pos": 6
   },
   {
+    "team_id": "A_R_MONEX_PRO_CYCLING_TEAM",
+    "team_nome": "A.R.MONEX PRO CYCLING TEAM",
+    "punti": 74,
+    "vittorie": 1,
+    "p1": 1,
+    "p2": 0,
+    "p3": 1,
+    "pout": 4,
+    "n_atleti": 4,
+    "pos": 7
+  },
+  {
+    "team_id": "U_C_CONSCIO_PEDALE_DEL_SILE",
+    "team_nome": "U.C.CONSCIO PEDALE DEL SILE",
+    "punti": 65,
+    "vittorie": 2,
+    "p1": 2,
+    "p2": 0,
+    "p3": 0,
+    "pout": 8,
+    "n_atleti": 2,
+    "pos": 8
+  },
+  {
     "team_id": "CICLISTICA_OMNIA_IMOLA",
     "team_nome": "CICLISTICA OMNIA IMOLA",
     "punti": 63,
@@ -81,30 +105,6 @@
     "p3": 1,
     "pout": 5,
     "n_atleti": 4,
-    "pos": 7
-  },
-  {
-    "team_id": "A_R_MONEX_PRO_CYCLING_TEAM",
-    "team_nome": "A.R.MONEX PRO CYCLING TEAM",
-    "punti": 54,
-    "vittorie": 1,
-    "p1": 1,
-    "p2": 0,
-    "p3": 0,
-    "pout": 4,
-    "n_atleti": 4,
-    "pos": 8
-  },
-  {
-    "team_id": "U_C_CONSCIO_PEDALE_DEL_SILE",
-    "team_nome": "U.C.CONSCIO PEDALE DEL SILE",
-    "punti": 53,
-    "vittorie": 2,
-    "p1": 2,
-    "p2": 0,
-    "p3": 0,
-    "pout": 7,
-    "n_atleti": 2,
     "pos": 9
   },
   {
@@ -120,27 +120,27 @@
     "pos": 10
   },
   {
-    "team_id": "PC_BAIX_EBRE_TORTOSA",
-    "team_nome": "PC BAIX EBRE TORTOSA",
-    "punti": 37,
-    "vittorie": 0,
-    "p1": 0,
-    "p2": 0,
-    "p3": 0,
-    "pout": 6,
-    "n_atleti": 1,
-    "pos": 11
-  },
-  {
     "team_id": "TEAM_WILIER_BREGANZE",
     "team_nome": "TEAM WILIER BREGANZE",
-    "punti": 32,
+    "punti": 42,
     "vittorie": 0,
     "p1": 0,
     "p2": 0,
     "p3": 1,
-    "pout": 8,
+    "pout": 10,
     "n_atleti": 5,
+    "pos": 11
+  },
+  {
+    "team_id": "PC_BAIX_EBRE_TORTOSA",
+    "team_nome": "PC BAIX EBRE TORTOSA",
+    "punti": 41,
+    "vittorie": 0,
+    "p1": 0,
+    "p2": 0,
+    "p3": 0,
+    "pout": 7,
+    "n_atleti": 1,
     "pos": 12
   },
   {
