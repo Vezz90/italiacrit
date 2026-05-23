@@ -1,5 +1,5 @@
 /* ============================================================
-   ItaliacritResultati — app.js  v121
+   ItaliacritResultati — app.js  v123
    Hash Router + Page Renderers
    Legge i JSON statici da data/ via fetch()
    ============================================================ */
@@ -691,12 +691,16 @@ function route() {
   };
 
   if (match('/')) {
-    // When a hub is active, Home = hub home
+    // Returning user con hub attivo → vai direttamente all'hub editoriale
     if (activeHub && activeHub._code) {
       window.location.hash = '#/hub/' + activeHub._code + '/';
       return;
     }
-    return renderHome();
+    // Nessun hub: la cinematic gate È la home — mostrala se non è già aperta
+    if (!document.getElementById('itc-gate')) {
+      showCinematicEntry(true);
+    }
+    return;
   }
   if (match('/classifica')) return renderClassifica();
   if (match('/atleti')) return renderAtletiList();
@@ -745,6 +749,7 @@ function updateNavActive(hash) {
     return;
   }
   if (hash === '#/' || hash === '#') document.getElementById('nav-home')?.classList.add('active');
+  else if (hash.startsWith('#/news')) document.getElementById('nav-news')?.classList.add('active');
   else if (hash.startsWith('#/classifica')) document.getElementById('nav-class')?.classList.add('active');
   else if (hash.startsWith('#/atleti')) document.getElementById('nav-atleti')?.classList.add('active');
   else if (hash.startsWith('#/team')) document.getElementById('nav-team')?.classList.add('active');
@@ -1456,9 +1461,9 @@ window.clearHubFilter = function() {
   teamGender = 'M'; teamCat = 'JUN_M'; teamSearch = '';
   risQueryGenere = ''; risQueryCat = ''; risQueryMonth = ''; risQueryRegion = ''; risSearchQuery = '';
   calQGenere = ''; calQCat = ''; calQMonth = ''; calQSearch = ''; calQTipo = ''; calQRegione = '';
-  // If on a hub URL, navigate to home — hashchange triggers route() with cleared state
+  // Se su hub URL, vai alla classifica generale (senza riaprire la cinematic)
   if ((window.location.hash || '').startsWith('#/hub/')) {
-    window.location.hash = '#/';
+    window.location.hash = '#/classifica';
   } else {
     route();
   }
@@ -1599,9 +1604,9 @@ function _itcClose(hubCode) {
     if (hubCode) {
       window.location.hash = '#/hub/' + hubCode + '/';
     } else {
+      // Skip: nessuna categoria selezionata → vai alla classifica generale
       try { localStorage.setItem('itcContext', 'skip'); } catch(e) {}
-      window.location.hash = '#/';
-      route();
+      window.location.hash = '#/classifica';
     }
   }, 550);
 }
@@ -2506,7 +2511,7 @@ function seiaSeasonAnalysis(hubCode, resultsRaw, ranking) {
 // ── Engine 4: Content Generation ─────────────────────────────────
 function seiaGenerateSeasonArticle(analysis) {
   if(!analysis||!analysis.leader) return null;
-  const {cat,hub,leader,second,third,gap12,gap13,leaderWins,leaderWinRate,
+  const {cat,hub,hubCode,leader,second,third,gap12,gap13,leaderWins,leaderWinRate,
          leaderRes,totalRaces,weeksDuration,seasonPhase,isDominating,
          isVeryClose,isClose,risingThreat,rivalry,topTeam,ranking} = analysis;
 
@@ -2871,121 +2876,145 @@ async function renderEditorialHub(hubCode) {
   if (!hub) { renderNotFound(); return; }
   const cat = hub.mainCat;
 
-  const ranking = await loadRanking(cat);
-  const analysis = seiaSeasonAnalysis(hubCode, globalData.resultsRaw, ranking);
-  if (!analysis) { renderNotFound(); return; }
+  // Loading state
+  setPage(`<div class="pg-header" style="background:${hub.gradient||'var(--bg-secondary)'}">
+    <div class="pg-eyebrow">${esc(hub.label)}</div>
+    <h1 class="pg-title" style="color:#fff">Caricamento…</h1>
+  </div>`);
 
-  const article    = seiaGenerateSeasonArticle(analysis);
-  const secondary  = seiaGenerateSecondaryArticles(analysis);
-  const contextLine= seiaContextLine(analysis);
+  try {
+    const ranking = await loadRanking(cat);
+    const analysis = seiaSeasonAnalysis(hubCode, globalData.resultsRaw, ranking);
+    if (!analysis) { renderNotFound(); return; }
 
-  const heroHtml      = buildEditorialHeroHtml(hub, article, analysis);
-  const articleHtml   = buildMainArticleHtml(article, analysis);
-  const secondaryHtml = buildSecondaryArticlesHtml(secondary);
-  const contextHtml   = contextLine
-    ? `<div class="hub-context-line"><div class="hub-context-inner">${esc(contextLine)}</div></div>`
-    : '';
-  const datNavHtml    = buildHubDataNavHtml(hubCode);
+    const article    = seiaGenerateSeasonArticle(analysis);
+    const secondary  = seiaGenerateSecondaryArticles(analysis);
+    const contextLine= seiaContextLine(analysis);
 
-  setPage(heroHtml + articleHtml + secondaryHtml + contextHtml + datNavHtml);
+    const heroHtml      = buildEditorialHeroHtml(hub, article, analysis);
+    const articleHtml   = buildMainArticleHtml(article, analysis);
+    const secondaryHtml = buildSecondaryArticlesHtml(secondary);
+    const contextHtml   = contextLine
+      ? `<div class="hub-context-line"><div class="hub-context-inner">${esc(contextLine)}</div></div>`
+      : '';
+    const datNavHtml    = buildHubDataNavHtml(hubCode);
+
+    setPage(heroHtml + articleHtml + secondaryHtml + contextHtml + datNavHtml);
+  } catch(e) {
+    console.error('[renderEditorialHub]', hubCode, e);
+    setPage(`<div class="pg-header">
+      <div class="pg-eyebrow">${esc(hub.label)}</div>
+      <h1 class="pg-title">Errore nel caricamento</h1>
+      <p style="color:var(--text-muted);margin-top:12px">${esc(e.message||'Errore sconosciuto')}</p>
+      <p style="color:var(--text-muted);font-size:.8rem;margin-top:4px">
+        <a href="#/hub/${esc(hubCode)}/classifica" style="color:var(--accent)">Vai alla classifica →</a>
+      </p>
+    </div>`);
+  }
 }
 
 // ── renderNews — archivio editoriale globale ─────────────────────
 async function renderNews() {
   if (!globalData) return;
-  const { resultsRaw } = globalData;
 
-  // Genera articoli per tutte le categorie
-  const allHubCodes = ['elite-m','juniores-m','allievi-m','esordienti-m',
-                       'elite-f','juniores-f','allievi-f','esordienti-f'];
-  const allArticles = [];
-
-  for (const hc of allHubCodes) {
-    const hub = HUB_CONFIG[hc];
-    const cat = hub.mainCat;
-    try {
-      const ranking  = await loadRanking(cat);
-      if (!ranking.length) continue;
-      const analysis = seiaSeasonAnalysis(hc, resultsRaw, ranking);
-      if (!analysis||!analysis.leader) continue;
-      const main     = seiaGenerateSeasonArticle(analysis);
-      if (main) allArticles.push({...main, hubCode:hc, hub});
-      const secondary= seiaGenerateSecondaryArticles(analysis);
-      secondary.forEach(a=>allArticles.push({...a, hubCode:hc, hub}));
-    } catch(e) { /* skip */ }
-  }
-
-  // Ordina per tipo (season_story prima) poi categoria
-  allArticles.sort((a,b)=>{
-    if (a.type==='season_story'&&b.type!=='season_story') return -1;
-    if (b.type==='season_story'&&a.type!=='season_story') return 1;
-    return (a.category||'').localeCompare(b.category||'');
-  });
-
-  const typeLabels={season_story:'Racconto di stagione',rivalry:'Rivalità',momentum:'Momento',team:'Squadra',scenario:'Scenario'};
-  const typeColors={season_story:'var(--text-primary)',rivalry:'var(--red-hot)',momentum:'#10B981',team:'#3B82F6',scenario:'#8B5CF6'};
-
-  const cards = allArticles.map(a=>{
-    const hub = a.hub||{};
-    const tl = typeLabels[a.type]||a.type;
-    const tc = typeColors[a.type]||'var(--text-muted)';
-    let cta='';
-    if (a.leaderAtletaId&&a.type==='season_story')
-      cta=`<a href="#/hub/${esc(a.hubCode)}" class="news-card-cta">Leggi il racconto →</a>`;
-    else if (a.type==='rivalry'&&a.linkA)
-      cta=`<a href="${a.linkA}" class="news-card-cta">${esc(a.nameA)} vs ${esc(a.nameB)} →</a>`;
-    else if (a.type==='momentum'&&a.athleteId)
-      cta=`<a href="#/atleta/${encodeURIComponent(a.athleteId)}" class="news-card-cta">Scheda atleta →</a>`;
-    else
-      cta=`<a href="#/hub/${esc(a.hubCode)}/classifica" class="news-card-cta">Classifica →</a>`;
-
-    return `<div class="news-card news-card-${esc(a.type)}">
-      <div class="news-card-meta" style="color:${tc}">
-        <span class="news-card-type">${tl}</span>
-        <span class="news-card-cat">${esc(catLabel(a.category))}</span>
-      </div>
-      <h3 class="news-card-title">${esc(a.title)}</h3>
-      <p class="news-card-intro">${esc(a.intro||a.preview||'')}</p>
-      ${cta}
-    </div>`;
-  }).join('');
-
+  // Loading state immediato
   setPage(`<div class="news-page">
     <div class="pg-header">
       <div class="pg-eyebrow">STAGIONE 2026</div>
       <h1 class="pg-title">Storie della stagione</h1>
       <p class="pg-desc">Analisi editoriali, rivalità, momenti e scenari di tutto il ciclismo agonistico italiano.</p>
     </div>
-    <div class="news-grid">${cards||'<p style="color:var(--text-muted);padding:32px">Nessun articolo disponibile — avvia lo scraper per popolare i dati.</p>'}</div>
-  </div>`);
-}
-
-// ── HOME — entry gate ─────────────────────────────────────────
-async function renderHome() {
-  const lastUpdate = globalData?.meta?.last_update;
-  const lastStr = lastUpdate
-    ? new Date(lastUpdate).toLocaleString('it-IT',{day:'2-digit',month:'2-digit',hour:'2-digit',minute:'2-digit'})
-    : null;
-
-  setPage(`<div class="entry-gate">
-    <div class="entry-inner">
-      <div class="entry-logo-wrap">
-        <img src="assets/logo2.png" alt="ItaliacritResultati" class="entry-logo-img">
-        <p class="entry-tagline">Classifiche · Risultati · Storie</p>
-      </div>
-      <div class="entry-choices">
-        <a href="#/hub/uomini" class="entry-choice">
-          <span class="entry-choice-label">UOMINI</span>
-          <span class="entry-choice-sub">Esordienti · Allievi · Juniores · Elite</span>
-        </a>
-        <a href="#/hub/donne" class="entry-choice">
-          <span class="entry-choice-label">DONNE</span>
-          <span class="entry-choice-sub">Esordienti · Allieve · Juniores · Elite</span>
-        </a>
-      </div>
-      ${lastStr?`<div class="entry-meta">Aggiornato ${lastStr}</div>`:''}
+    <div class="news-grid" id="news-grid-inner">
+      <p style="color:var(--text-muted);padding:32px;grid-column:1/-1">Caricamento articoli…</p>
     </div>
   </div>`);
+
+  try {
+    const { resultsRaw } = globalData;
+
+    // Genera articoli per tutte le categorie — inizio anno → ultimo scraper
+    const allHubCodes = ['elite-m','juniores-m','allievi-m','esordienti-m',
+                         'elite-f','juniores-f','allievi-f','esordienti-f'];
+    const allArticles = [];
+
+    for (const hc of allHubCodes) {
+      const hub = HUB_CONFIG[hc];
+      if (!hub) continue;
+      const cat = hub.mainCat;
+      try {
+        const ranking  = await loadRanking(cat);
+        if (!ranking || !ranking.length) continue;
+        const analysis = seiaSeasonAnalysis(hc, resultsRaw, ranking);
+        if (!analysis || !analysis.leader) continue;
+        const main     = seiaGenerateSeasonArticle(analysis);
+        if (main) allArticles.push({...main, hubCode:hc, hub});
+        const secondary = seiaGenerateSecondaryArticles(analysis);
+        secondary.forEach(a => allArticles.push({...a, hubCode:hc, hub}));
+      } catch(e) {
+        console.warn('[renderNews] hub', hc, e.message);
+      }
+    }
+
+    // Ordina: season_story prima, poi per categoria
+    allArticles.sort((a,b) => {
+      if (a.type==='season_story' && b.type!=='season_story') return -1;
+      if (b.type==='season_story' && a.type!=='season_story') return 1;
+      return (a.category||'').localeCompare(b.category||'');
+    });
+
+    const typeLabels = {
+      season_story:'Racconto di stagione', rivalry:'Rivalità',
+      momentum:'Momento', team:'Squadra', scenario:'Scenario'
+    };
+    const typeColors = {
+      season_story:'var(--text-primary)', rivalry:'var(--red-hot)',
+      momentum:'#10B981', team:'#3B82F6', scenario:'#8B5CF6'
+    };
+
+    const cards = allArticles.map(a => {
+      const tl = typeLabels[a.type] || a.type;
+      const tc = typeColors[a.type] || 'var(--text-muted)';
+      const hubLabel = a.hub ? esc(a.hub.label) : esc(catLabel(a.category));
+      let cta = '';
+      if (a.type==='season_story')
+        cta = `<a href="#/hub/${esc(a.hubCode)}" class="news-card-cta">Leggi il racconto →</a>`;
+      else if (a.type==='rivalry' && a.linkA)
+        cta = `<a href="${a.linkA}" class="news-card-cta">${esc(a.nameA)} vs ${esc(a.nameB)} →</a>`;
+      else if (a.type==='momentum' && a.athleteId)
+        cta = `<a href="#/atleta/${encodeURIComponent(a.athleteId)}" class="news-card-cta">Scheda atleta →</a>`;
+      else
+        cta = `<a href="#/hub/${esc(a.hubCode)}/classifica" class="news-card-cta">Classifica →</a>`;
+
+      return `<div class="news-card news-card-${esc(a.type)}">
+        <div class="news-card-meta">
+          <span class="news-card-type" style="color:${tc}">${tl}</span>
+          <span class="news-card-cat">${hubLabel}</span>
+        </div>
+        <h3 class="news-card-title">${esc(a.title)}</h3>
+        <p class="news-card-intro">${esc(a.intro||a.preview||'')}</p>
+        ${cta}
+      </div>`;
+    }).join('');
+
+    // Aggiorna il grid in-place (evita flash del pg-header)
+    const grid = document.getElementById('news-grid-inner');
+    if (grid) {
+      grid.innerHTML = cards ||
+        '<p style="color:var(--text-muted);padding:32px;grid-column:1/-1">Nessun articolo disponibile — dati insufficienti per generare storie.</p>';
+    }
+  } catch(e) {
+    console.error('[renderNews]', e);
+    const grid = document.getElementById('news-grid-inner');
+    if (grid) grid.innerHTML = `<p style="color:var(--text-muted);padding:32px;grid-column:1/-1">Errore: ${esc(e.message)}</p>`;
+  }
+}
+
+// ── HOME — la cinematic gate è la home; questa funzione è fallback di emergenza ─
+async function renderHome() {
+  // Fallback: apre la cinematic se non è già aperta
+  if (!document.getElementById('itc-gate')) {
+    showCinematicEntry(true);
+  }
 }
 
 // ── OLD HOME (archivio) — rimossa: logica banner/spotlight ora nel SEIA ──
