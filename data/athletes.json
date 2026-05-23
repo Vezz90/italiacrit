@@ -1,4 +1,306 @@
 {
+  "BUGAENKO_VIKTOR": {
+    "id": "BUGAENKO_VIKTOR",
+    "nome": "VIKTOR",
+    "cognome": "BUGAENKO",
+    "team_attuale": "NEUTRAL TEAM",
+    "team_id": "NEUTRAL_TEAM",
+    "categoria": "ELI_M",
+    "genere": "M",
+    "punti_totali": 30,
+    "risultati": [
+      {
+        "gara_id": "17_CRONOROMANENGO_PROVA_VALIDA_CAMPIONATO_REGIONALE_2026-05-23_ELI_M",
+        "nome_gara": "17 CRONOROMANENGO PROVA VALIDA CAMPIONATO REGIONALE",
+        "data": "2026-05-23",
+        "posizione": 1,
+        "punti_effettivi": 30,
+        "team": "NEUTRAL TEAM",
+        "moltiplicatore": 2,
+        "tipo": "regionale",
+        "regione": "UNDER",
+        "km": "23.600",
+        "media": "48.480"
+      }
+    ]
+  },
+  "ALUNNI_TOMMASO": {
+    "id": "ALUNNI_TOMMASO",
+    "nome": "TOMMASO",
+    "cognome": "ALUNNI",
+    "team_attuale": "MG K-VIS COSTRUZIONI E AMBIENTE",
+    "team_id": "MG_K_VIS_COSTRUZIONI_E_AMBIENTE",
+    "categoria": "ELI_M",
+    "genere": "M",
+    "punti_totali": 24,
+    "risultati": [
+      {
+        "gara_id": "17_CRONOROMANENGO_PROVA_VALIDA_CAMPIONATO_REGIONALE_2026-05-23_ELI_M",
+        "nome_gara": "17 CRONOROMANENGO PROVA VALIDA CAMPIONATO REGIONALE",
+        "data": "2026-05-23",
+        "posizione": 2,
+        "punti_effettivi": 24,
+        "team": "MG K-VIS COSTRUZIONI E AMBIENTE",
+        "moltiplicatore": 2,
+        "tipo": "regionale",
+        "regione": "UNDER",
+        "km": "23.600",
+        "media": "48.480"
+      }
+    ]
+  },
+  "GABELLONI_MATTEO": {
+    "id": "GABELLONI_MATTEO",
+    "nome": "MATTEO",
+    "cognome": "GABELLONI",
+    "team_attuale": "OVERALL TRE COLLI CYCLING TEAM",
+    "team_id": "OVERALL_TRE_COLLI_CYCLING_TEAM",
+    "categoria": "ELI_M",
+    "genere": "M",
+    "punti_totali": 28,
+    "risultati": [
+      {
+        "gara_id": "17_CRONOROMANENGO_PROVA_VALIDA_CAMPIONATO_REGIONALE_2026-05-23_ELI_M",
+        "nome_gara": "17 CRONOROMANENGO PROVA VALIDA CAMPIONATO REGIONALE",
+        "data": "2026-05-23",
+        "posizione": 3,
+        "punti_effettivi": 20,
+        "team": "OVERALL TRE COLLI CYCLING TEAM",
+        "moltiplicatore": 2,
+        "tipo": "regionale",
+        "regione": "UNDER",
+        "km": "23.600",
+        "media": "48.480"
+      },
+      {
+        "gara_id": "82_VICENZA_BIONDE_UNDER23_2026-04-26_ELI_M",
+        "nome_gara": "82 VICENZA BIONDE UNDER23",
+        "data": "2026-04-26",
+        "posizione": 9,
+        "punti_effettivi": 4,
+        "team": "OVERALL TRE COLLI CYCLING TEAM",
+        "moltiplicatore": 2,
+        "tipo": "nazionale",
+        "regione": "VENETO",
+        "km": "164.200",
+        "media": "47.354"
+      },
+      {
+        "gara_id": "TROFEO_TECNOMECCANICA_2026-03-01_ELI_M",
+        "nome_gara": "TROFEO TECNOMECCANICA",
+        "data": "2026-03-01",
+        "posizione": 7,
+        "punti_effettivi": 4,
+        "team": "OVERALL TRE COLLI CYCLING TEAM",
+        "moltiplicatore": 1,
+        "tipo": "regionale",
+        "regione": "LOMBARDIA",
+        "km": "133.500",
+        "media": "41.154"
+      }
+    ]
+  },
+  "CATTIVELLI_MATTEO": {
+    "id": "CATTIVELLI_MATTEO",
+    "nome": "MATTEO",
+    "cognome": "CATTIVELLI",
+    "team_attuale": "GARLASCHESE A.S.D.",
+    "team_id": "GARLASCHESE_A_S_D",
+    "categoria": "ELI_M",
+    "genere": "M",
+    "punti_totali": 16,
+    "risultati": [
+      {
+        "gara_id": "17_CRONOROMANENGO_PROVA_VALIDA_CAMPIONATO_REGIONALE_2026-05-23_ELI_M",
+        "nome_gara": "17 CRONOROMANENGO PROVA VALIDA CAMPIONATO REGIONALE",
+        "data": "2026-05-23",
+        "posizione": 4,
+        "punti_effettivi": 16,
+        "team": "GARLASCHESE A.S.D.",
+        "moltiplicatore": 2,
+        "tipo": "regionale",
+        "regione": "UNDER",
+        "km": "23.600",
+        "media": "48.480"
+      }
+    ]
+  },
+  "SAVEKIN_ILIA": {
+    "id": "SAVEKIN_ILIA",
+    "nome": "ILIA",
+    "cognome": "SAVEKIN",
+    "team_attuale": "NEUTRAL TEAM",
+    "team_id": "NEUTRAL_TEAM",
+    "categoria": "ELI_M",
+    "genere": "M",
+    "punti_totali": 12,
+    "risultati": [
+      {
+        "gara_id": "17_CRONOROMANENGO_PROVA_VALIDA_CAMPIONATO_REGIONALE_2026-05-23_ELI_M",
+        "nome_gara": "17 CRONOROMANENGO PROVA VALIDA CAMPIONATO REGIONALE",
+        "data": "2026-05-23",
+        "posizione": 5,
+        "punti_effettivi": 12,
+        "team": "NEUTRAL TEAM",
+        "moltiplicatore": 2,
+        "tipo": "regionale",
+        "regione": "UNDER",
+        "km": "23.600",
+        "media": "48.480"
+      }
+    ]
+  },
+  "PROSANDEEV_IAROSLAV": {
+    "id": "PROSANDEEV_IAROSLAV",
+    "nome": "IAROSLAV",
+    "cognome": "PROSANDEEV",
+    "team_attuale": "PC BAIX EBRE TORTOSA",
+    "team_id": "PC_BAIX_EBRE_TORTOSA",
+    "categoria": "ELI_M",
+    "genere": "M",
+    "punti_totali": 22,
+    "risultati": [
+      {
+        "gara_id": "17_CRONOROMANENGO_PROVA_VALIDA_CAMPIONATO_REGIONALE_2026-05-23_ELI_M",
+        "nome_gara": "17 CRONOROMANENGO PROVA VALIDA CAMPIONATO REGIONALE",
+        "data": "2026-05-23",
+        "posizione": 6,
+        "punti_effettivi": 10,
+        "team": "PC BAIX EBRE TORTOSA",
+        "moltiplicatore": 2,
+        "tipo": "regionale",
+        "regione": "UNDER",
+        "km": "23.600",
+        "media": "48.480"
+      },
+      {
+        "gara_id": "79_COPPA_CADUTI_NERVIANESI_2026-04-25_ELI_M",
+        "nome_gara": "79 COPPA CADUTI NERVIANESI",
+        "data": "2026-04-25",
+        "posizione": 5,
+        "punti_effettivi": 12,
+        "team": "PC BAIX EBRE TORTOSA",
+        "moltiplicatore": 2,
+        "tipo": "nazionale",
+        "regione": "LOMBARDIA",
+        "km": "153.000",
+        "media": "48.413"
+      }
+    ]
+  },
+  "POPOV_MARK": {
+    "id": "POPOV_MARK",
+    "nome": "MARK",
+    "cognome": "POPOV",
+    "team_attuale": "PC BAIX EBRE TORTOSA",
+    "team_id": "PC_BAIX_EBRE_TORTOSA",
+    "categoria": "ELI_M",
+    "genere": "M",
+    "punti_totali": 23,
+    "risultati": [
+      {
+        "gara_id": "17_CRONOROMANENGO_PROVA_VALIDA_CAMPIONATO_REGIONALE_2026-05-23_ELI_M",
+        "nome_gara": "17 CRONOROMANENGO PROVA VALIDA CAMPIONATO REGIONALE",
+        "data": "2026-05-23",
+        "posizione": 7,
+        "punti_effettivi": 8,
+        "team": "PC BAIX EBRE TORTOSA",
+        "moltiplicatore": 2,
+        "tipo": "regionale",
+        "regione": "UNDER",
+        "km": "23.600",
+        "media": "48.480"
+      },
+      {
+        "gara_id": "37_GRAN_PREMIO_INDUSTRIE_DEL_MARMO_UNDER23_2026-05-10_ELI_M",
+        "nome_gara": "37 GRAN PREMIO INDUSTRIE DEL MARMO UNDER23",
+        "data": "2026-05-10",
+        "posizione": 6,
+        "punti_effettivi": 15,
+        "team": "PC BAIX EBRE TORTOSA",
+        "moltiplicatore": 3,
+        "tipo": "internazionale",
+        "regione": "TOSCANA",
+        "km": "179.500",
+        "media": "41.527"
+      }
+    ]
+  },
+  "FAVERO_RENATO": {
+    "id": "FAVERO_RENATO",
+    "nome": "RENATO",
+    "cognome": "FAVERO",
+    "team_attuale": "BIESSE - CARRERA - PREMAC",
+    "team_id": "BIESSE_CARRERA_PREMAC",
+    "categoria": "ELI_M",
+    "genere": "M",
+    "punti_totali": 6,
+    "risultati": [
+      {
+        "gara_id": "17_CRONOROMANENGO_PROVA_VALIDA_CAMPIONATO_REGIONALE_2026-05-23_ELI_M",
+        "nome_gara": "17 CRONOROMANENGO PROVA VALIDA CAMPIONATO REGIONALE",
+        "data": "2026-05-23",
+        "posizione": 8,
+        "punti_effettivi": 6,
+        "team": "BIESSE - CARRERA - PREMAC",
+        "moltiplicatore": 2,
+        "tipo": "regionale",
+        "regione": "UNDER",
+        "km": "23.600",
+        "media": "48.480"
+      }
+    ]
+  },
+  "BANFI_FABIO": {
+    "id": "BANFI_FABIO",
+    "nome": "FABIO",
+    "cognome": "BANFI",
+    "team_attuale": "V.C.MENDRISIO",
+    "team_id": "V_C_MENDRISIO",
+    "categoria": "ELI_M",
+    "genere": "M",
+    "punti_totali": 4,
+    "risultati": [
+      {
+        "gara_id": "17_CRONOROMANENGO_PROVA_VALIDA_CAMPIONATO_REGIONALE_2026-05-23_ELI_M",
+        "nome_gara": "17 CRONOROMANENGO PROVA VALIDA CAMPIONATO REGIONALE",
+        "data": "2026-05-23",
+        "posizione": 9,
+        "punti_effettivi": 4,
+        "team": "V.C.MENDRISIO",
+        "moltiplicatore": 2,
+        "tipo": "regionale",
+        "regione": "UNDER",
+        "km": "23.600",
+        "media": "48.480"
+      }
+    ]
+  },
+  "BORTOLAMI_JULIAN": {
+    "id": "BORTOLAMI_JULIAN",
+    "nome": "JULIAN",
+    "cognome": "BORTOLAMI",
+    "team_attuale": "SOLME - OLMO - ARVEDI",
+    "team_id": "SOLME_OLMO_ARVEDI",
+    "categoria": "ELI_M",
+    "genere": "M",
+    "punti_totali": 2,
+    "risultati": [
+      {
+        "gara_id": "17_CRONOROMANENGO_PROVA_VALIDA_CAMPIONATO_REGIONALE_2026-05-23_ELI_M",
+        "nome_gara": "17 CRONOROMANENGO PROVA VALIDA CAMPIONATO REGIONALE",
+        "data": "2026-05-23",
+        "posizione": 10,
+        "punti_effettivi": 2,
+        "team": "SOLME - OLMO - ARVEDI",
+        "moltiplicatore": 2,
+        "tipo": "regionale",
+        "regione": "UNDER",
+        "km": "23.600",
+        "media": "48.480"
+      }
+    ]
+  },
   "DELLE_VEDOVE_ALESSIO": {
     "id": "DELLE_VEDOVE_ALESSIO",
     "nome": "ALESSIO",
@@ -36152,31 +36454,6 @@
       }
     ]
   },
-  "POPOV_MARK": {
-    "id": "POPOV_MARK",
-    "nome": "MARK",
-    "cognome": "POPOV",
-    "team_attuale": "PC BAIX EBRE TORTOSA",
-    "team_id": "PC_BAIX_EBRE_TORTOSA",
-    "categoria": "ELI_M",
-    "genere": "M",
-    "punti_totali": 15,
-    "risultati": [
-      {
-        "gara_id": "37_GRAN_PREMIO_INDUSTRIE_DEL_MARMO_UNDER23_2026-05-10_ELI_M",
-        "nome_gara": "37 GRAN PREMIO INDUSTRIE DEL MARMO UNDER23",
-        "data": "2026-05-10",
-        "posizione": 6,
-        "punti_effettivi": 15,
-        "team": "PC BAIX EBRE TORTOSA",
-        "moltiplicatore": 3,
-        "tipo": "internazionale",
-        "regione": "TOSCANA",
-        "km": "179.500",
-        "media": "41.527"
-      }
-    ]
-  },
   "BAMBAGIONI_TOMMASO": {
     "id": "BAMBAGIONI_TOMMASO",
     "nome": "TOMMASO",
@@ -66207,44 +66484,6 @@
       }
     ]
   },
-  "GABELLONI_MATTEO": {
-    "id": "GABELLONI_MATTEO",
-    "nome": "MATTEO",
-    "cognome": "GABELLONI",
-    "team_attuale": "OVERALL TRE COLLI CYCLING TEAM",
-    "team_id": "OVERALL_TRE_COLLI_CYCLING_TEAM",
-    "categoria": "ELI_M",
-    "genere": "M",
-    "punti_totali": 8,
-    "risultati": [
-      {
-        "gara_id": "82_VICENZA_BIONDE_UNDER23_2026-04-26_ELI_M",
-        "nome_gara": "82 VICENZA BIONDE UNDER23",
-        "data": "2026-04-26",
-        "posizione": 9,
-        "punti_effettivi": 4,
-        "team": "OVERALL TRE COLLI CYCLING TEAM",
-        "moltiplicatore": 2,
-        "tipo": "nazionale",
-        "regione": "VENETO",
-        "km": "164.200",
-        "media": "47.354"
-      },
-      {
-        "gara_id": "TROFEO_TECNOMECCANICA_2026-03-01_ELI_M",
-        "nome_gara": "TROFEO TECNOMECCANICA",
-        "data": "2026-03-01",
-        "posizione": 7,
-        "punti_effettivi": 4,
-        "team": "OVERALL TRE COLLI CYCLING TEAM",
-        "moltiplicatore": 1,
-        "tipo": "regionale",
-        "regione": "LOMBARDIA",
-        "km": "133.500",
-        "media": "41.154"
-      }
-    ]
-  },
   "TRISCONI_SIRIO": {
     "id": "TRISCONI_SIRIO",
     "nome": "SIRIO",
@@ -69811,31 +70050,6 @@
         "posizione": 3,
         "punti_effettivi": 20,
         "team": "NAZIONALE PARALIMPICA",
-        "moltiplicatore": 2,
-        "tipo": "nazionale",
-        "regione": "LOMBARDIA",
-        "km": "153.000",
-        "media": "48.413"
-      }
-    ]
-  },
-  "PROSANDEEV_IAROSLAV": {
-    "id": "PROSANDEEV_IAROSLAV",
-    "nome": "IAROSLAV",
-    "cognome": "PROSANDEEV",
-    "team_attuale": "PC BAIX EBRE TORTOSA",
-    "team_id": "PC_BAIX_EBRE_TORTOSA",
-    "categoria": "ELI_M",
-    "genere": "M",
-    "punti_totali": 12,
-    "risultati": [
-      {
-        "gara_id": "79_COPPA_CADUTI_NERVIANESI_2026-04-25_ELI_M",
-        "nome_gara": "79 COPPA CADUTI NERVIANESI",
-        "data": "2026-04-25",
-        "posizione": 5,
-        "punti_effettivi": 12,
-        "team": "PC BAIX EBRE TORTOSA",
         "moltiplicatore": 2,
         "tipo": "nazionale",
         "regione": "LOMBARDIA",
