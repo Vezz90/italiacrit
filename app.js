@@ -315,11 +315,21 @@ async function loadAll() {
     if (!cal.id || !cal.data) continue;
     const calBase = cal.id.replace(/_\d{4}-\d{2}-\d{2}$/, '');
     const calBaseNoEd = calBase.replace(/^\d+_/, '');
+    const _nm2 = s => s.replace(/\bG_P\b/g,'GRAN_PREMIO').replace(/\bGP\b/g,'GRAN_PREMIO')
+      .replace(/GRANPREMIO/g,'GRAN_PREMIO').replace(/\bM_O\b/g,'MEMORIAL')
+      .replace(/\bA_M\b/g,'').replace(/_+/g,'_').replace(/^_|_$/g,'');
+    const calNorm2 = _nm2(calBaseNoEd);
+    const calEd2   = calBase !== calBaseNoEd ? (calBase.match(/^(\d+)_/)||[])[1] : null;
     for (const r of (resultsRaw || [])) {
       if (!r.gara_id || r.data !== cal.data) continue;
       if (r.gara_id.startsWith(calBase)) { garaToCalId[r.gara_id] = cal.id; continue; }
-      const garaBase = r.gara_id.replace(/^\d+_/, '').replace(/_\d{4}-\d{2}-\d{2}.*$/, '');
-      if (garaBase === calBaseNoEd) garaToCalId[r.gara_id] = cal.id;
+      const garaBase = r.gara_id.replace(/^\d+_/,'').replace(/_\d{4}-\d{2}-\d{2}.*$/,'');
+      if (garaBase === calBaseNoEd) { garaToCalId[r.gara_id] = cal.id; continue; }
+      const garaNorm = _nm2(garaBase);
+      if (calNorm2 === garaNorm) { garaToCalId[r.gara_id] = cal.id; continue; }
+      if (garaNorm.length >= 8 && calNorm2.startsWith(garaNorm + '_')) { garaToCalId[r.gara_id] = cal.id; continue; }
+      const garaEd = (r.gara_id.match(/^(\d+)_/)||[])[1];
+      if (calEd2 && garaEd && calEd2 === garaEd) garaToCalId[r.gara_id] = cal.id;
     }
   }
 
@@ -5572,11 +5582,22 @@ async function renderCalendario() {
     if (!g.id || !g.data) continue;
     const calBase = g.id.replace(/_\d{4}-\d{2}-\d{2}$/, '');
     const calBaseNoEd = calBase.replace(/^\d+_/, '');
+    const _nm = s => s.replace(/\bG_P\b/g,'GRAN_PREMIO').replace(/\bGP\b/g,'GRAN_PREMIO')
+      .replace(/GRANPREMIO/g,'GRAN_PREMIO').replace(/\bM_O\b/g,'MEMORIAL')
+      .replace(/\bA_M\b/g,'').replace(/_+/g,'_').replace(/^_|_$/g,'');
+    const calNorm = _nm(calBaseNoEd);
+    const calEd   = calBase !== calBaseNoEd ? (calBase.match(/^(\d+)_/)||[])[1] : null;
     const matches = resultsRaw.filter(r => {
       if (!r.gara_id || r.data !== g.data) return false;
       if (r.gara_id.startsWith(calBase)) return true;
-      const garaBase = r.gara_id.replace(/^\d+_/, '').replace(/_\d{4}-\d{2}-\d{2}.*$/, '');
-      return garaBase === calBaseNoEd;
+      const garaBase = r.gara_id.replace(/^\d+_/,'').replace(/_\d{4}-\d{2}-\d{2}.*$/,'');
+      if (garaBase === calBaseNoEd) return true;
+      const garaNorm = _nm(garaBase);
+      if (calNorm === garaNorm) return true;
+      if (garaNorm.length >= 8 && calNorm.startsWith(garaNorm + '_')) return true;
+      const garaEd = (r.gara_id.match(/^(\d+)_/)||[])[1];
+      if (calEd && garaEd && calEd === garaEd) return true;
+      return false;
     });
     if (!matches.length) continue;
     const byCategory = {};
@@ -5905,60 +5926,57 @@ async function renderCalMap(filtered, calendarResultsMap) {
     const today = new Date().toISOString().split('T')[0];
     const geoCache = _geoLoad();
 
+    // Centroidi regionali (fallback immediato quando il geocoding non è ancora avvenuto)
+    const REGION_COORDS = {
+      'ABRUZZO':               [42.35, 13.45],
+      'BASILICATA':            [40.64, 15.97],
+      'BOLZANO':               [46.50, 11.35],
+      'CALABRIA':              [38.91, 16.59],
+      'CAMPANIA':              [40.84, 14.67],
+      'EMILIA_ROMAGNA':        [44.50, 11.34],
+      'FRIULI_VENEZIA_GIULIA': [46.05, 13.30],
+      'LAZIO':                 [41.90, 12.48],
+      'LIGURIA':               [44.35,  8.60],
+      'LOMBARDIA':             [45.47,  9.19],
+      'MARCHE':                [43.61, 13.51],
+      'MOLISE':                [41.56, 14.66],
+      'PIEMONTE':              [44.90,  7.95],
+      'PUGLIA':                [40.80, 16.55],
+      'SARDEGNA':              [40.12,  9.01],
+      'SICILIA':               [37.60, 14.02],
+      'TOSCANA':               [43.47, 11.22],
+      'TRENTO':                [46.10, 11.20],
+      'UMBRIA':                [43.11, 12.39],
+      'VAL_D_AOSTA':           [45.74,  7.32],
+      'VENETO':                [45.44, 11.87],
+    };
+    // Normalizza la stringa regione per la lookup
+    const normReg = s => (s||'').toUpperCase().replace(/[^A-Z]/g,'_').replace(/_+/g,'_').replace(/^_|_$/g,'');
+    // Jitter deterministico basato sull'id della gara (stessa gara = stessa posizione tra sessioni)
+    const _sh = s => { let h=5381; for(let i=0;i<s.length;i++) h=((h<<5)+h)^s.charCodeAt(i); return h>>>0; };
+    const regionJitter = id => [
+      ((_sh(id)        % 2000) - 1000) / 1000 * 0.30,  // ±0.30° lat ≈ ±33 km
+      ((_sh(id+'~lng') % 2000) - 1000) / 1000 * 0.45,  // ±0.45° lng
+    ];
+
     // Costruisce lista di query in ordine di precisione (si prova la prima, poi le fallback)
     const buildGeoQueries = (g, det) => {
       const qs = [];
-      // 1. Indirizzo + Comune ritrovo (dati FCI precisi)
       if (det.indirizzo_ritrovo && det.luogo_ritrovo)
         qs.push(`${det.indirizzo_ritrovo}, ${det.luogo_ritrovo}, Italia`);
-      // 2. Solo comune ritrovo
       if (det.luogo_ritrovo)
         qs.push(`${det.luogo_ritrovo}, Italia`);
-      // 3. Luogo dal calendario con regione
       if (g.luogo && g.regione)
         qs.push(`${g.luogo}, ${g.regione}, Italia`);
-      // 4. Solo luogo senza regione (Nominatim spesso trova meglio così)
       if (g.luogo)
         qs.push(`${g.luogo}, Italia`);
       return qs;
     };
+    // Prima query con coords valide in cache
+    const getCachedCoords = qs => { for(const q of qs) if(Array.isArray(geoCache[q])) return geoCache[q]; return null; };
 
-    // Helper: prima query con coords cached (non null)
-    const getCachedCoords = (queries) => {
-      for (const q of queries) {
-        if (Array.isArray(geoCache[q])) return geoCache[q];
-      }
-      return null;
-    };
-
-    // Separa gare con coords già note (da scraper o cache) da quelle da geocodificare.
-    // USA !(q in geoCache) così i fallimenti null non vengono mai riprovati.
-    const toGeocode = [];
-    for (const g of filtered) {
-      const det     = details[g.id] || {};
-      const hasLL   = det.lat && det.lng;
-      if (hasLL) continue;
-      const queries = buildGeoQueries(g, det);
-      if (!queries.length) continue;
-      const alreadyCached = getCachedCoords(queries);
-      if (alreadyCached) continue;  // ha già coords in cache → prima passa le aggiunge
-      // Aggiungi solo se almeno una query non è ancora stata tentata
-      const hasUntried = queries.some(q => !(q in geoCache));
-      if (hasUntried) toGeocode.push({ g, det, queries });
-    }
-
-    // Mostra progress se servono chiamate Nominatim
-    let progressEl = null;
-    if (toGeocode.length > 0) {
-      progressEl = document.createElement('div');
-      progressEl.style.cssText = 'position:absolute;bottom:12px;left:50%;transform:translateX(-50%);z-index:1000;background:rgba(0,0,0,.7);color:#fff;font-size:0.72rem;padding:6px 14px;border-radius:20px;pointer-events:none';
-      progressEl.textContent = `Geocoding 0/${toGeocode.length}…`;
-      container.style.position = 'relative';
-      container.appendChild(progressEl);
-    }
-
-    // Funzione che aggiunge un pin
-    const addPin = (g, det, lat, lng) => {
+    // Funzione che aggiunge un pin; restituisce il marker Leaflet
+    const addPin = (g, det, lat, lng, isApprox = false) => {
       const isPast   = (g.data || '') < today;
       const dateStr  = g.data ? new Date(g.data + 'T00:00:00').toLocaleDateString('it-IT', { day:'numeric', month:'long' }) : '';
       const catStr   = catLabel(g.categoria) || g.categoria || '';
@@ -5970,18 +5988,23 @@ async function renderCalMap(filtered, calendarResultsMap) {
         : cat.includes('alliev')                ? '#8B5CF6'
         : cat.includes('esordient')             ? '#10B981'
         : '#6B7280';
-      const opacity  = isPast ? '0.5' : '1';
+      const opacity  = isApprox ? (isPast ? '0.3' : '0.5') : (isPast ? '0.5' : '1');
 
-      // Segnaposto classico (teardrop) con colore categoria
+      // Pin preciso: teardrop con cerchio bianco; approssimativo: cerchio con tratteggio
       const icon = L.divIcon({
         className: '',
-        html: `<svg width="24" height="32" viewBox="0 0 24 32" xmlns="http://www.w3.org/2000/svg" style="opacity:${opacity};filter:drop-shadow(0 2px 3px rgba(0,0,0,.4))">
-          <path d="M12 0C5.373 0 0 5.373 0 12c0 8.5 12 20 12 20S24 20.5 24 12C24 5.373 18.627 0 12 0z" fill="${pinColor}"/>
-          <circle cx="12" cy="11" r="4.5" fill="white"/>
-        </svg>`,
-        iconSize: [24, 32],
-        iconAnchor: [12, 32],   // punta in basso al centro
-        popupAnchor: [0, -32]
+        html: isApprox
+          ? `<svg width="22" height="22" viewBox="0 0 22 22" xmlns="http://www.w3.org/2000/svg" style="opacity:${opacity}">
+               <circle cx="11" cy="11" r="9" fill="none" stroke="${pinColor}" stroke-width="2.5" stroke-dasharray="4 3"/>
+               <circle cx="11" cy="11" r="3.5" fill="${pinColor}" opacity="0.6"/>
+             </svg>`
+          : `<svg width="24" height="32" viewBox="0 0 24 32" xmlns="http://www.w3.org/2000/svg" style="opacity:${opacity};filter:drop-shadow(0 2px 3px rgba(0,0,0,.4))">
+               <path d="M12 0C5.373 0 0 5.373 0 12c0 8.5 12 20 12 20S24 20.5 24 12C24 5.373 18.627 0 12 0z" fill="${pinColor}"/>
+               <circle cx="12" cy="11" r="4.5" fill="white"/>
+             </svg>`,
+        iconSize: isApprox ? [22, 22] : [24, 32],
+        iconAnchor: isApprox ? [11, 11] : [12, 32],
+        popupAnchor: [0, isApprox ? -12 : -32]
       });
 
       // Link nel popup:
@@ -6008,49 +6031,76 @@ async function renderCalMap(filtered, calendarResultsMap) {
           ${det.km ? `<div style="font-size:12px;color:#888">📏 ${esc(det.km)} km</div>` : ''}
           ${linkHtml}
         </div>`);
-      L.marker([lat, lng], { icon }).bindPopup(popup).addTo(_calCluster);
+      const marker = L.marker([lat, lng], { icon }).bindPopup(popup);
+      marker.addTo(_calCluster);
+      return marker;
     };
 
-    // 1. Prima passa: aggiungi tutti i pin con coordinate già note (scraper o localStorage)
+    // ── Passata 1: aggiungi TUTTE le gare immediatamente ─────────────────────
+    // Priorità: lat/lng scraper → localStorage cache → centroide regionale + jitter
+    const approxMarkers = {}; // g.id → marker per i pin approssimativi (da aggiornare)
     for (const g of filtered) {
-      const det     = details[g.id] || {};
-      let lat = det.lat, lng = det.lng;
-      if (!lat || !lng) {
-        const coords = getCachedCoords(buildGeoQueries(g, det));
-        if (coords) [lat, lng] = coords;
+      const det = details[g.id] || {};
+      let lat = det.lat || null, lng = det.lng || null, isApprox = false;
+      if (!lat) {
+        const cached = getCachedCoords(buildGeoQueries(g, det));
+        if (cached) [lat, lng] = cached;
       }
-      if (lat && lng) addPin(g, det, lat, lng);
+      if (!lat) {
+        // Fallback: centroide regionale + jitter deterministico
+        const rk = normReg(g.regione);
+        const [clat, clng] = REGION_COORDS[rk] || [42.5, 12.5];
+        const [jlat, jlng] = regionJitter(g.id);
+        lat = clat + jlat; lng = clng + jlng;
+        isApprox = true;
+      }
+      const marker = addPin(g, det, lat, lng, isApprox);
+      if (isApprox) approxMarkers[g.id] = marker;
     }
 
-    // Adatta subito lo zoom ai pin già presenti
+    // Zoom iniziale sull'Italia intera (tutti i pin già presenti)
     if (_calCluster.getLayers().length > 0 && _calCluster.getBounds().isValid()) {
-      _calMap.fitBounds(_calCluster.getBounds(), { padding: [40,40], maxZoom: 10 });
+      _calMap.fitBounds(_calCluster.getBounds(), { padding: [40, 40], maxZoom: 10 });
     }
 
-    // 2. Seconda passa: geocodifica le rimanenti con fallback a cascata
-    //    1.1s di pausa solo tra richieste reali (non per cache hits)
+    // ── Passata 2: geocodifica in background le gare approssimate ────────────
+    // Aggiorna il pin dal cerchio tratteggiato al teardrop preciso man mano che
+    // Nominatim risponde. I risultati vengono salvati in localStorage per le sessioni future.
+    const toGeocode = [];
+    for (const g of Object.keys(approxMarkers)) {
+      const gObj = filtered.find(x => x.id === g);
+      if (!gObj) continue;
+      const det = details[g] || {};
+      const queries = buildGeoQueries(gObj, det);
+      if (queries.some(q => !(q in geoCache))) toGeocode.push({ g: gObj, det, queries });
+    }
+
+    let progressEl = null;
+    if (toGeocode.length > 0) {
+      progressEl = document.createElement('div');
+      progressEl.style.cssText = 'position:absolute;bottom:12px;left:50%;transform:translateX(-50%);z-index:1000;background:rgba(0,0,0,.7);color:#fff;font-size:0.72rem;padding:6px 14px;border-radius:20px;pointer-events:none';
+      progressEl.textContent = `Precisione mappa: 0/${toGeocode.length}…`;
+      container.style.position = 'relative';
+      container.appendChild(progressEl);
+    }
+
     let done = 0;
     for (const { g, det, queries } of toGeocode) {
       if (calView !== 'mappa' || !document.getElementById('cal-map')) break;
       let coords = null;
       for (const q of queries) {
-        if (q in geoCache) {
-          if (Array.isArray(geoCache[q])) { coords = geoCache[q]; break; }
-          continue; // già provata e fallita, prova la successiva
-        }
-        // Query non ancora tentata: chiamata Nominatim
+        if (q in geoCache) { if (Array.isArray(geoCache[q])) { coords = geoCache[q]; break; } continue; }
         coords = await _geoLookup(q);
         await _sleep(1100);
         if (coords) break;
-        // fallita: _geoLookup ha già salvato null, prova la prossima senza sleep extra
       }
       done++;
-      if (progressEl) progressEl.textContent = `Geocoding ${done}/${toGeocode.length}…`;
-      if (coords) {
-        addPin(g, det, coords[0], coords[1]);
-        if (_calCluster.getBounds().isValid()) {
-          _calMap.fitBounds(_calCluster.getBounds(), { padding: [40,40], maxZoom: 10 });
-        }
+      if (progressEl) progressEl.textContent = `Precisione mappa: ${done}/${toGeocode.length}…`;
+      if (coords && approxMarkers[g.id]) {
+        // Rimuovi pin approssimativo e aggiungi pin preciso
+        _calCluster.removeLayer(approxMarkers[g.id]);
+        delete approxMarkers[g.id];
+        addPin(g, det, coords[0], coords[1], false);
       }
     }
 
