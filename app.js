@@ -2932,12 +2932,15 @@ async function renderNews() {
     ? `Analisi editoriali, rivalità e momenti della stagione ${newsHubObj.label}.`
     : 'Analisi editoriali, rivalità, momenti e scenari di tutto il ciclismo agonistico italiano.';
 
-  // Hero FUORI da .news-page così pg-header con margin:-32px -24px
-  // si espande all'intera larghezza del viewport (non vincolato dal max-width 1080px di .news-page)
-  setPage(`<div class="pg-header news-hdr" style="background:${heroGradient}">
-    <div class="pg-eyebrow">${esc(heroEyebrow)}</div>
-    <h1 class="pg-title">Storie</h1>
-    <p class="news-hdr-sub">${esc(heroSub)}</p>
+  // Hero usa .editorial-hero — stessa struttura/altezza/colore degli altri hub
+  setPage(`<div class="editorial-hero" style="background:${heroGradient}">
+    <div class="editorial-hero-inner">
+      <div class="editorial-hero-eyebrow">${esc(heroEyebrow)}</div>
+      <h1 class="editorial-hero-title">Storie della stagione</h1>
+      <div class="editorial-hero-meta">
+        <span class="editorial-hero-situation">${esc(heroSub)}</span>
+      </div>
+    </div>
   </div>
   <div class="news-page">
     <div class="news-grid-toolbar">

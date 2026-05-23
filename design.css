@@ -8337,22 +8337,7 @@ body[data-hub] .loading-bar { background: var(--hub-color) !important; }
 
 /* ── NEWS PAGE ─────────────────────────────────────────────────── */
 
-/* Hero override: gradient editoriale sulla testata news */
-.pg-header.news-hdr {
-  background: linear-gradient(135deg, #0C0A1E 0%, #1E1B4B 55%, #0F172A 100%);
-  border-bottom: 2px solid #E11D48;
-  margin-bottom: 0;
-}
-.pg-header.news-hdr .pg-title {
-  color: #fff;
-}
-.news-hdr-sub {
-  font-size: 0.85rem;
-  color: rgba(255,255,255,.55);
-  margin: 10px 0 0;
-  max-width: 60ch;
-  line-height: 1.6;
-}
+/* News hero usa .editorial-hero standard — nessun override specifico */
 .news-page {
   max-width: 1080px;
   margin: 0 auto;
