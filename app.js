@@ -2821,7 +2821,7 @@ function buildHubDataNavHtml(hubCode) {
     {sub:'statistiche',label:'Stats'},
   ];
   return `<nav class="hub-data-nav" aria-label="Dati della categoria">
-    <div class="hub-data-nav-label">DATI</div>
+    <div class="hub-data-nav-label">ESPLORA</div>
     <div class="hub-data-nav-tabs">
       ${tabs.map(t=>`<a href="#/hub/${esc(hubCode)}/${t.sub}" class="hub-data-tab">${t.label}</a>`).join('')}
     </div>
@@ -2919,13 +2919,17 @@ async function renderEditorialHub(hubCode) {
 async function renderNews() {
   if (!globalData) return;
 
-  // Loading state immediato — pg-desc va FUORI dal pg-header (su sfondo chiaro)
-  setPage(`<div class="news-page">
-    <div class="pg-header">
-      <div class="pg-eyebrow">STAGIONE 2026</div>
-      <h1 class="pg-title">Storie della stagione</h1>
+  // Hero FUORI da .news-page così pg-header con margin:-32px -24px
+  // si espande all'intera larghezza del viewport (non vincolato dal max-width 1080px di .news-page)
+  setPage(`<div class="pg-header news-hdr">
+    <div class="pg-eyebrow">STAGIONE 2026</div>
+    <h1 class="pg-title">Storie</h1>
+    <p class="news-hdr-sub">Analisi editoriali, rivalità, momenti e scenari di tutto il ciclismo agonistico italiano.</p>
+  </div>
+  <div class="news-page">
+    <div class="news-grid-toolbar">
+      <span id="news-count" class="news-count-badge"></span>
     </div>
-    <p class="pg-desc">Analisi editoriali, rivalità, momenti e scenari di tutto il ciclismo agonistico italiano.</p>
     <div class="news-grid" id="news-grid-inner">
       <p style="color:var(--text-muted);padding:32px 0;grid-column:1/-1">Caricamento articoli…</p>
     </div>
@@ -3004,6 +3008,8 @@ async function renderNews() {
       grid.innerHTML = cards ||
         '<p style="color:var(--text-muted);padding:32px;grid-column:1/-1">Nessun articolo disponibile — dati insufficienti per generare storie.</p>';
     }
+    const badge = document.getElementById('news-count');
+    if (badge && allArticles.length) badge.textContent = allArticles.length + ' articoli';
   } catch(e) {
     console.error('[renderNews]', e);
     const grid = document.getElementById('news-grid-inner');

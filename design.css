@@ -8336,10 +8336,41 @@ body[data-hub] .loading-bar { background: var(--hub-color) !important; }
 }
 
 /* ── NEWS PAGE ─────────────────────────────────────────────────── */
+
+/* Hero override: gradient editoriale sulla testata news */
+.pg-header.news-hdr {
+  background: linear-gradient(135deg, #0C0A1E 0%, #1E1B4B 55%, #0F172A 100%);
+  border-bottom: 2px solid #E11D48;
+  margin-bottom: 0;
+}
+.pg-header.news-hdr .pg-title {
+  color: #fff;
+}
+.news-hdr-sub {
+  font-size: 0.85rem;
+  color: rgba(255,255,255,.55);
+  margin: 10px 0 0;
+  max-width: 60ch;
+  line-height: 1.6;
+}
 .news-page {
   max-width: 1080px;
   margin: 0 auto;
-  padding: 0 20px 60px;
+  padding: 24px 20px 60px;
+}
+.news-grid-toolbar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 20px;
+  min-height: 24px;
+}
+.news-count-badge {
+  font-size: 0.7rem;
+  font-weight: 700;
+  color: var(--text-muted);
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
 }
 .pg-desc {
   font-size: 0.88rem;
