@@ -2918,12 +2918,26 @@ async function renderEditorialHub(hubCode) {
 async function renderNews() {
   if (!globalData) return;
 
+  // Determina categoria attiva — se nessuna, mostra tutte
+  const newsHub     = (activeHub && activeHub._code && HUB_CONFIG[activeHub._code]) ? activeHub : null;
+  const hubCodesToRender = newsHub
+    ? [newsHub._code]
+    : ['elite-m','juniores-m','allievi-m','esordienti-m',
+       'elite-f','juniores-f','allievi-f','esordienti-f'];
+
+  const newsHubObj  = newsHub ? HUB_CONFIG[newsHub._code] : null;
+  const heroGradient = newsHubObj ? (newsHubObj.gradient || 'linear-gradient(135deg,#0C0A1E,#1E1B4B)') : 'linear-gradient(135deg,#0C0A1E 0%,#1E1B4B 55%,#0F172A 100%)';
+  const heroEyebrow  = newsHubObj ? `STAGIONE 2026 · ${newsHubObj.label.toUpperCase()}` : 'STAGIONE 2026';
+  const heroSub      = newsHubObj
+    ? `Analisi editoriali, rivalità e momenti della stagione ${newsHubObj.label}.`
+    : 'Analisi editoriali, rivalità, momenti e scenari di tutto il ciclismo agonistico italiano.';
+
   // Hero FUORI da .news-page così pg-header con margin:-32px -24px
   // si espande all'intera larghezza del viewport (non vincolato dal max-width 1080px di .news-page)
-  setPage(`<div class="pg-header news-hdr">
-    <div class="pg-eyebrow">STAGIONE 2026</div>
+  setPage(`<div class="pg-header news-hdr" style="background:${heroGradient}">
+    <div class="pg-eyebrow">${esc(heroEyebrow)}</div>
     <h1 class="pg-title">Storie</h1>
-    <p class="news-hdr-sub">Analisi editoriali, rivalità, momenti e scenari di tutto il ciclismo agonistico italiano.</p>
+    <p class="news-hdr-sub">${esc(heroSub)}</p>
   </div>
   <div class="news-page">
     <div class="news-grid-toolbar">
@@ -2937,12 +2951,9 @@ async function renderNews() {
   try {
     const { resultsRaw } = globalData;
 
-    // Genera articoli per tutte le categorie — inizio anno → ultimo scraper
-    const allHubCodes = ['elite-m','juniores-m','allievi-m','esordienti-m',
-                         'elite-f','juniores-f','allievi-f','esordienti-f'];
     const allArticles = [];
 
-    for (const hc of allHubCodes) {
+    for (const hc of hubCodesToRender) {
       const hub = HUB_CONFIG[hc];
       if (!hub) continue;
       const cat = hub.mainCat;
