@@ -6630,32 +6630,30 @@ async function renderComparatore() {
   const catFilter = r => r.genere === compGender && (!compCat || getRankingFileCode(r) === compCat);
 
   // ── STATS CALCULATOR ──────────────────────────────────────────
+  // NOTA: arr contiene solo i piazzamenti registrati, NON tutte le gare disputate.
+  // I corridori gareggiano ~1 volta a settimana — i dati mostrano solo dove hanno un risultato.
   const calcStats = arr => {
     const sorted = [...arr].sort((a,b) => (b.data||'').localeCompare(a.data||''));
-    const wins  = arr.filter(r => r.posizione === 1).length;
-    const podi  = arr.filter(r => r.posizione <= 3).length;
-    const top5  = arr.filter(r => r.posizione <= 5).length;
-    const gare  = new Set(arr.map(r => r.gara_id)).size;
-    const pts   = arr.reduce((s,r) => s + (r.punti_effettivi||0), 0);
-    const km    = Math.round(arr.reduce((s,r) => s + (parseFloat(r.km)||0), 0));
-    const mArr  = arr.filter(r => r.media);
+    const wins   = arr.filter(r => r.posizione === 1).length;
+    const podi   = arr.filter(r => r.posizione <= 3).length;
+    const top5   = arr.filter(r => r.posizione <= 5).length;
+    const top10  = arr.filter(r => r.posizione <= 10).length;
+    const piazzamenti = arr.length;                          // righe risultato, NON gare totali
+    const gare   = new Set(arr.map(r => r.gara_id)).size;   // gare distinte con risultato
+    const pts    = arr.reduce((s,r) => s + (r.punti_effettivi||0), 0);
+    const km     = Math.round(arr.reduce((s,r) => s + (parseFloat(r.km)||0), 0));
+    const mArr   = arr.filter(r => r.media && parseFloat(r.media) > 0);
     const mediaKm = mArr.length
       ? (mArr.reduce((s,r) => s+(parseFloat(r.media)||0),0)/mArr.length).toFixed(1) : '—';
-    const avgPos = arr.length
-      ? (arr.reduce((s,r)=>s+r.posizione,0)/arr.length).toFixed(1) : '—';
-    const recent8 = sorted.slice(0,8);
-    const recentPts = sorted.slice(0,5).reduce((s,r)=>s+(r.punti_effettivi||0),0);
-    const ptsPerRace = gare ? +(pts/gare).toFixed(1) : 0;
-    const winRate    = gare ? +(wins/gare*100).toFixed(1) : 0;
-    const podiumRate = gare ? +(podi/gare*100).toFixed(1) : 0;
-    const ptsArr = arr.map(r=>r.punti_effettivi||0);
-    const mean   = ptsArr.length ? ptsArr.reduce((s,v)=>s+v,0)/ptsArr.length : 0;
-    const stdev  = ptsArr.length>1 ? Math.sqrt(ptsArr.reduce((s,v)=>s+(v-mean)**2,0)/ptsArr.length) : 0;
-    const cv     = mean>0 ? stdev/mean : 1;
-    const consistencyScore = Math.max(0, Math.round((1-Math.min(cv,1))*100));
-    const aggressionIdx    = gare ? +((wins*3+podi*2+top5)/gare*10).toFixed(1) : 0;
-    return { pts, wins, podi, top5, gare, km, mediaKm, avgPos, recent8, recentPts,
-             ptsPerRace, winRate, podiumRate, consistencyScore, aggressionIdx };
+    const avgPos = piazzamenti
+      ? (arr.reduce((s,r)=>s+r.posizione,0)/piazzamenti).toFixed(1) : '—';
+    const recent8   = sorted.slice(0,8);
+    const recent5   = sorted.slice(0,5);
+    const recent5pts = recent5.reduce((s,r)=>s+(r.punti_effettivi||0),0);
+    const ptsPerResult = piazzamenti ? +(pts/piazzamenti).toFixed(1) : 0;
+    const vittorie  = sorted.filter(r=>r.posizione===1).slice(0,5);  // ultime 5 vittorie
+    return { pts, wins, podi, top5, top10, piazzamenti, gare, km, mediaKm,
+             avgPos, recent8, recent5, recent5pts, ptsPerResult, vittorie };
   };
 
   // ── FORM PILLS ────────────────────────────────────────────────
@@ -6689,41 +6687,7 @@ async function renderComparatore() {
     </div>`;
   };
 
-  // ── RADAR SVG ─────────────────────────────────────────────────
-  const buildRadar = (sA, sB, nA, nB) => {
-    const axes = [
-      { label:'Vittorie',   vA:sA.wins,           vB:sB.wins           },
-      { label:'Podi',       vA:sA.podi,           vB:sB.podi           },
-      { label:'Costanza',   vA:sA.consistencyScore, vB:sB.consistencyScore },
-      { label:'Attività',   vA:sA.gare,           vB:sB.gare           },
-      { label:'Efficienza', vA:sA.ptsPerRace,     vB:sB.ptsPerRace     },
-      { label:'Forma',      vA:sA.recentPts,      vB:sB.recentPts      },
-    ];
-    const N=axes.length, cx=130, cy=130, R=95;
-    const norm = axes.map(a => { const mx=Math.max(a.vA,a.vB,1); return {label:a.label,nA:a.vA/mx,nB:a.vB/mx}; });
-    const pt = (i,r) => { const a=i*(2*Math.PI/N)-Math.PI/2; return [cx+r*Math.cos(a), cy+r*Math.sin(a)]; };
-    const circles = [0.25,0.5,0.75,1].map(f=>`<circle cx="${cx}" cy="${cy}" r="${R*f}" fill="none" stroke="rgba(0,0,0,0.06)" stroke-width="1"/>`).join('');
-    const axLines = Array.from({length:N}).map((_,i)=>{ const [x,y]=pt(i,R); return `<line x1="${cx}" y1="${cy}" x2="${x.toFixed(1)}" y2="${y.toFixed(1)}" stroke="rgba(0,0,0,0.07)" stroke-width="1"/>`; }).join('');
-    const poly = key => norm.map((_,i)=>{ const [x,y]=pt(i,R*norm[i][key]); return `${x.toFixed(1)},${y.toFixed(1)}`; }).join(' ');
-    const lbls = norm.map((m,i)=>{ const [x,y]=pt(i,R+20); return `<text x="${x.toFixed(1)}" y="${y.toFixed(1)}" text-anchor="middle" dominant-baseline="middle" font-family="Inter,system-ui,sans-serif" font-size="9" fill="#9CA3AF" font-weight="600" letter-spacing="0.05em">${m.label.toUpperCase()}</text>`; }).join('');
-    const dotsA = norm.map((_,i)=>{ const [x,y]=pt(i,R*norm[i].nA); return `<circle cx="${x.toFixed(1)}" cy="${y.toFixed(1)}" r="3" fill="#FF6B00"/>`; }).join('');
-    const dotsB = norm.map((_,i)=>{ const [x,y]=pt(i,R*norm[i].nB); return `<circle cx="${x.toFixed(1)}" cy="${y.toFixed(1)}" r="3" fill="#10B981"/>`; }).join('');
-    return `<div class="comp-section">
-      <div class="comp-section-title">Radar Analitico</div>
-      <div class="comp-radar-wrap">
-        <svg viewBox="0 0 260 260" width="240" height="240" style="overflow:visible;flex-shrink:0">
-          ${circles}${axLines}
-          <polygon points="${poly('nB')}" fill="rgba(16,185,129,0.1)" stroke="#10B981" stroke-width="1.5"/>
-          <polygon points="${poly('nA')}" fill="rgba(255,107,0,0.1)" stroke="#FF6B00" stroke-width="1.5"/>
-          ${dotsA}${dotsB}${lbls}
-        </svg>
-        <div class="comp-radar-legend">
-          <div class="comp-radar-leg-item"><span class="comp-radar-dot" style="background:#FF6B00"></span>${esc(nA)}</div>
-          <div class="comp-radar-leg-item"><span class="comp-radar-dot" style="background:#10B981"></span>${esc(nB)}</div>
-        </div>
-      </div>
-    </div>`;
-  };
+  // Radar rimosso — sostituito con dati reali
 
   // ── HEAD TO HEAD ──────────────────────────────────────────────
   const buildH2H = (aRes, bRes, nA, nB) => {
@@ -6771,29 +6735,23 @@ async function renderComparatore() {
     </div>`;
   };
 
-  // ── INSIGHTS ──────────────────────────────────────────────────
-  const buildInsights = (sA, sB, nA, nB) => {
-    const ins = [];
-    const add = (cond, icon, text, side) => { if(cond) ins.push({icon,text,side}); };
-    add(sA.winRate>sB.winRate*1.2,   '🏆', `<strong>${esc(nA)}</strong> ha un tasso vittorie superiore (${sA.winRate}% vs ${sB.winRate}%)`, 'a');
-    add(sB.winRate>sA.winRate*1.2,   '🏆', `<strong>${esc(nB)}</strong> ha un tasso vittorie superiore (${sB.winRate}% vs ${sA.winRate}%)`, 'b');
-    add(sA.consistencyScore>sB.consistencyScore+10, '📊', `<strong>${esc(nA)}</strong> è più costante nelle prestazioni (indice ${sA.consistencyScore} vs ${sB.consistencyScore})`, 'a');
-    add(sB.consistencyScore>sA.consistencyScore+10, '📊', `<strong>${esc(nB)}</strong> è più costante nelle prestazioni (indice ${sB.consistencyScore} vs ${sA.consistencyScore})`, 'b');
-    add(sA.recentPts>sB.recentPts*1.3, '🔥', `<strong>${esc(nA)}</strong> è in forma migliore nelle ultime 5 gare (${sA.recentPts} vs ${sB.recentPts} pt)`, 'a');
-    add(sB.recentPts>sA.recentPts*1.3, '🔥', `<strong>${esc(nB)}</strong> è in forma migliore nelle ultime 5 gare (${sB.recentPts} vs ${sA.recentPts} pt)`, 'b');
-    add(sA.podiumRate>sB.podiumRate*1.2, '🥇', `<strong>${esc(nA)}</strong> sale sul podio più frequentemente (${sA.podiumRate}% vs ${sB.podiumRate}%)`, 'a');
-    add(sB.podiumRate>sA.podiumRate*1.2, '🥇', `<strong>${esc(nB)}</strong> sale sul podio più frequentemente (${sB.podiumRate}% vs ${sA.podiumRate}%)`, 'b');
-    add(sA.ptsPerRace>sB.ptsPerRace*1.2, '⚡', `<strong>${esc(nA)}</strong> produce più punti per gara (${sA.ptsPerRace} vs ${sB.ptsPerRace} pt/gara)`, 'a');
-    add(sB.ptsPerRace>sA.ptsPerRace*1.2, '⚡', `<strong>${esc(nB)}</strong> produce più punti per gara (${sB.ptsPerRace} vs ${sA.ptsPerRace} pt/gara)`, 'b');
-    if (!ins.length) ins.push({icon:'⚖️', text:'Le statistiche dei due atleti sono molto equilibrate in questa stagione.', side:'n'});
-    return `<div class="comp-section">
-      <div class="comp-section-title">Analisi Intelligente</div>
-      <div class="comp-insights">
-        ${ins.map(i=>`<div class="comp-insight-item comp-insight-${i.side}">
-          <span class="comp-insight-icon">${i.icon}</span>
-          <span class="comp-insight-text">${i.text}</span>
-        </div>`).join('')}
-      </div>
+  // ── ULTIMI RISULTATI (tabella reale, niente testo generato) ────
+  const buildRecentResults = (res, name, color) => {
+    const sorted = [...res].sort((a,b)=>(b.data||'').localeCompare(a.data||'')).slice(0,10);
+    if (!sorted.length) return `<div style="color:var(--text-muted);padding:12px 0;font-size:0.82rem">Nessun risultato</div>`;
+    return `<div class="comp-recent-table">
+      <div class="comp-recent-name" style="color:${color};font-weight:700;font-size:0.75rem;letter-spacing:.08em;text-transform:uppercase;margin-bottom:6px">${esc(name)}</div>
+      <table class="results-table" style="font-size:0.8rem;width:100%">
+        <thead><tr><th>DATA</th><th>GARA</th><th style="text-align:center">POS</th><th style="text-align:right">PT</th></tr></thead>
+        <tbody>${sorted.map(r=>`<tr>
+          <td class="td-date" style="white-space:nowrap">${fmtDateShort(r.data)}</td>
+          <td class="td-race" style="max-width:180px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap">
+            <a href="#/gara/${esc(r.gara_id)}">${esc(r.nome_gara)}</a>
+          </td>
+          <td class="td-pos ${posClass(r.posizione)}" style="text-align:center;font-weight:700">${r.posizione}°</td>
+          <td style="text-align:right;color:var(--text-muted);font-size:0.75rem">${r.punti_effettivi||0}</td>
+        </tr>`).join('')}</tbody>
+      </table>
     </div>`;
   };
 
@@ -6837,13 +6795,11 @@ async function renderComparatore() {
     const iB=((bD.cognome||'?')[0]+(bD.nome||'?')[0]).toUpperCase();
 
     const advRows = [
-      {l:'Tasso Vittorie',      vA:sA.winRate+'%',       vB:sB.winRate+'%',       nA:+sA.winRate,       nB:+sB.winRate},
-      {l:'Tasso Podi',          vA:sA.podiumRate+'%',    vB:sB.podiumRate+'%',    nA:+sA.podiumRate,    nB:+sB.podiumRate},
-      {l:'Indice Costanza',     vA:sA.consistencyScore,  vB:sB.consistencyScore,  nA:sA.consistencyScore, nB:sB.consistencyScore},
-      {l:'Indice Aggressività', vA:sA.aggressionIdx,     vB:sB.aggressionIdx,     nA:sA.aggressionIdx,  nB:sB.aggressionIdx},
-      {l:'Punti / Gara',        vA:sA.ptsPerRace,        vB:sB.ptsPerRace,        nA:sA.ptsPerRace,     nB:sB.ptsPerRace},
-      {l:'Posizione Media',     vA:sA.avgPos+'°',        vB:sB.avgPos+'°',        nA:10-(+sA.avgPos||10), nB:10-(+sB.avgPos||10)},
-      {l:'Forma Recente (5g)',  vA:sA.recentPts+' pt',   vB:sB.recentPts+' pt',   nA:sA.recentPts,      nB:sB.recentPts},
+      {l:'TOP 5',                  vA:sA.top5,               vB:sB.top5,               nA:sA.top5,            nB:sB.top5},
+      {l:'TOP 10',                 vA:sA.top10,              vB:sB.top10,              nA:sA.top10,           nB:sB.top10},
+      {l:'PUNTI / PIAZZAMENTO',    vA:sA.ptsPerResult+' pt', vB:sB.ptsPerResult+' pt', nA:sA.ptsPerResult,    nB:sB.ptsPerResult},
+      {l:'POSIZIONE MEDIA',        vA:sA.avgPos+'°',         vB:sB.avgPos+'°',         nA:10-(+sA.avgPos||10), nB:10-(+sB.avgPos||10)},
+      {l:'FORMA RECENTE (5 ris.)', vA:sA.recent5pts+' pt',  vB:sB.recent5pts+' pt',  nA:sA.recent5pts,      nB:sB.recent5pts},
     ].map(m => {
       const tot=(m.nA||0)+(m.nB||0)||1, pA=Math.round((m.nA||0)/tot*100);
       const wA=m.nA>m.nB, wB=m.nB>m.nA;
@@ -6884,43 +6840,26 @@ async function renderComparatore() {
       <div class="comp-section">
         <div class="comp-section-title">Statistiche Stagionali</div>
         <div class="comp-stats-grid">
-          ${mBar(sA.pts,  sB.pts,  'PUNTI',  ' pt', true)}
-          ${mBar(sA.wins, sB.wins, 'VITTORIE')}
-          ${mBar(sA.podi, sB.podi, 'PODI (TOP 3)')}
-          ${mBar(sA.gare, sB.gare, 'GARE')}
-          ${mBar(sA.km,   sB.km,   'KM', ' km')}
-          ${mBar(sA.mediaKm, sB.mediaKm, 'VELOCITÀ MEDIA', ' km/h')}
+          ${mBar(sA.pts,     sB.pts,     'PUNTI',              ' pt', true)}
+          ${mBar(sA.wins,    sB.wins,    'VITTORIE')}
+          ${mBar(sA.podi,    sB.podi,    'PODI (TOP 3)')}
+          ${mBar(sA.gare,    sB.gare,    'GARE CON RISULTATO')}
+          ${mBar(sA.km,      sB.km,      'KM',                 ' km')}
+          ${mBar(sA.mediaKm, sB.mediaKm, 'VELOCITÀ MEDIA',     ' km/h')}
         </div>
       </div>
       <div class="comp-section">
-        <div class="comp-section-title">Metriche Avanzate</div>
+        <div class="comp-section-title">Metriche di Rendimento</div>
         <div class="comp-stats-grid">${advRows}</div>
       </div>
-      ${(()=>{
-        const _stA = siAthleteStory(compA, resultsRaw)||'';
-        const _stB = siAthleteStory(compB, resultsRaw)||'';
-        const _mA = siMomentum(compA, resultsRaw, resultsRaw.reduce((mx,r)=>(r.data||'')>mx?r.data:mx,''));
-        const _mB = siMomentum(compB, resultsRaw, resultsRaw.reduce((mx,r)=>(r.data||'')>mx?r.data:mx,''));
-        const _rivals = siRivalryFinder(resultsRaw).find(p=>(p.aId===compA&&p.bId===compB)||(p.aId===compB&&p.bId===compA));
-        const _h2hStr = _rivals
-          ? esc(nA)+' '+_rivals.aWins+'V – '+_rivals.bWins+'V '+esc(nB)+' ('+_rivals.encounters+' scontri diretti)'
-          : 'Nessun incontro diretto registrato';
-        return '<div class="comp-duel-banner">' +
-          '<div class="comp-duel-h2h">⚔ HEAD TO HEAD · ' + _h2hStr + '</div>' +
-          '<div class="comp-duel-narratives">' +
-            (_stA ? '<div class="comp-duel-story comp-duel-story-a">' + _stA + '</div>' : '') +
-            (_stB ? '<div class="comp-duel-story comp-duel-story-b">' + _stB + '</div>' : '') +
-          '</div>' +
-          '<div class="comp-duel-momentum">' +
-            '<span style="color:' + _mA.color + '">' + esc(nA.split(' ')[0]) + ': ' + _mA.label + '</span>' +
-            ' &nbsp;·&nbsp; ' +
-            '<span style="color:' + _mB.color + '">' + esc(nB.split(' ')[0]) + ': ' + _mB.label + '</span>' +
-          '</div>' +
-        '</div>';
-      })()}
       ${buildH2H(aRes, bRes, nA, nB)}
-      ${buildRadar(sA, sB, nA, nB)}
-      ${buildInsights(sA, sB, nA, nB)}`;
+      <div class="comp-section">
+        <div class="comp-section-title">Ultimi Risultati</div>
+        <div style="display:grid;grid-template-columns:1fr 1fr;gap:20px">
+          <div>${buildRecentResults(aRes, nA, '#FF6B00')}</div>
+          <div>${buildRecentResults(bRes, nB, '#10B981')}</div>
+        </div>
+      </div>`;
   };
 
   // ── TEAM BLOCK ────────────────────────────────────────────────
@@ -6957,29 +6896,30 @@ async function renderComparatore() {
     const aRes=resultsRaw.filter(r=>r.team_id===compA&&catFilter(r));
     const bRes=resultsRaw.filter(r=>r.team_id===compB&&catFilter(r));
     const stT = arr => {
-      const wins=arr.filter(r=>r.posizione===1).length, podi=arr.filter(r=>r.posizione<=3).length;
-      const gare=new Set(arr.map(r=>r.gara_id)).size, pts=arr.reduce((s,r)=>s+(r.punti_effettivi||0),0);
-      const km=Math.round(arr.reduce((s,r)=>s+(parseFloat(r.km)||0),0));
-      const atleti=new Set(arr.map(r=>r.atleta_id)).size;
-      const ptsPerRace=gare?+(pts/gare).toFixed(1):0;
-      const winRate=gare?+(wins/gare*100).toFixed(1):0;
-      const podiumRate=gare?+(podi/gare*100).toFixed(1):0;
-      const ptsArr=arr.map(r=>r.punti_effettivi||0), mean=ptsArr.length?ptsArr.reduce((s,v)=>s+v,0)/ptsArr.length:0;
-      const stdev=ptsArr.length>1?Math.sqrt(ptsArr.reduce((s,v)=>s+(v-mean)**2,0)/ptsArr.length):0;
-      const cv=mean>0?stdev/mean:1, consistencyScore=Math.max(0,Math.round((1-Math.min(cv,1))*100));
-      const recent5pts=[...arr].sort((a,b)=>(b.data||'').localeCompare(a.data||'')).slice(0,5).reduce((s,r)=>s+(r.punti_effettivi||0),0);
-      return {pts,wins,podi,gare,km,atleti,ptsPerRace,winRate,podiumRate,consistencyScore,recent5pts};
+      const wins  = arr.filter(r=>r.posizione===1).length;
+      const podi  = arr.filter(r=>r.posizione<=3).length;
+      const top5  = arr.filter(r=>r.posizione<=5).length;
+      const top10 = arr.filter(r=>r.posizione<=10).length;
+      const gare  = new Set(arr.map(r=>r.gara_id)).size;
+      const piazzamenti = arr.length;
+      const pts   = arr.reduce((s,r)=>s+(r.punti_effettivi||0),0);
+      const km    = Math.round(arr.reduce((s,r)=>s+(parseFloat(r.km)||0),0));
+      const atleti = new Set(arr.map(r=>r.atleta_id)).size;
+      const ptsPerResult = piazzamenti?+(pts/piazzamenti).toFixed(1):0;
+      const avgPos = piazzamenti?(arr.reduce((s,r)=>s+r.posizione,0)/piazzamenti).toFixed(1):'—';
+      const recent5pts = [...arr].sort((a,b)=>(b.data||'').localeCompare(a.data||'')).slice(0,5).reduce((s,r)=>s+(r.punti_effettivi||0),0);
+      return {pts,wins,podi,top5,top10,gare,piazzamenti,km,atleti,ptsPerResult,avgPos,recent5pts};
     };
     const sA=stT(aRes), sB=stT(bRes);
     const iA=nA.split(/\s+/).map(w=>w[0]||'').join('').toUpperCase().slice(0,3);
     const iB=nB.split(/\s+/).map(w=>w[0]||'').join('').toUpperCase().slice(0,3);
 
     const advRows = [
-      {l:'Tasso Vittorie',    vA:sA.winRate+'%',    vB:sB.winRate+'%',    nA:+sA.winRate,       nB:+sB.winRate},
-      {l:'Tasso Podi',        vA:sA.podiumRate+'%', vB:sB.podiumRate+'%', nA:+sA.podiumRate,    nB:+sB.podiumRate},
-      {l:'Indice Costanza',   vA:sA.consistencyScore, vB:sB.consistencyScore, nA:sA.consistencyScore, nB:sB.consistencyScore},
-      {l:'Punti / Gara',      vA:sA.ptsPerRace,     vB:sB.ptsPerRace,     nA:sA.ptsPerRace,     nB:sB.ptsPerRace},
-      {l:'Forma Recente (5g)',vA:sA.recent5pts+' pt',vB:sB.recent5pts+' pt',nA:sA.recent5pts,   nB:sB.recent5pts},
+      {l:'TOP 5',                  vA:sA.top5,               vB:sB.top5,               nA:sA.top5,            nB:sB.top5},
+      {l:'TOP 10',                 vA:sA.top10,              vB:sB.top10,              nA:sA.top10,           nB:sB.top10},
+      {l:'PUNTI / PIAZZAMENTO',    vA:sA.ptsPerResult+' pt', vB:sB.ptsPerResult+' pt', nA:sA.ptsPerResult,    nB:sB.ptsPerResult},
+      {l:'POSIZIONE MEDIA',        vA:sA.avgPos+'°',         vB:sB.avgPos+'°',         nA:10-(+sA.avgPos||10), nB:10-(+sB.avgPos||10)},
+      {l:'FORMA RECENTE (5 ris.)', vA:sA.recent5pts+' pt',  vB:sB.recent5pts+' pt',  nA:sA.recent5pts,      nB:sB.recent5pts},
     ].map(m=>{
       const tot=(m.nA||0)+(m.nB||0)||1, pA=Math.round((m.nA||0)/tot*100);
       const wA=m.nA>m.nB, wB=m.nB>m.nA;
@@ -7016,15 +6956,22 @@ async function renderComparatore() {
         <div class="comp-stats-grid">
           ${mBar(sA.pts,    sB.pts,    'PUNTI',              ' pt', true)}
           ${mBar(sA.wins,   sB.wins,   'VITTORIE')}
-          ${mBar(sA.podi,   sB.podi,   'PODI')}
-          ${mBar(sA.gare,   sB.gare,   'GARE')}
+          ${mBar(sA.podi,   sB.podi,   'PODI (TOP 3)')}
+          ${mBar(sA.gare,   sB.gare,   'GARE CON RISULTATO')}
           ${mBar(sA.km,     sB.km,     'KM',                 ' km')}
           ${mBar(sA.atleti, sB.atleti, 'ATLETI SCHIERATI')}
         </div>
       </div>
       <div class="comp-section">
-        <div class="comp-section-title">Metriche Avanzate</div>
+        <div class="comp-section-title">Metriche di Rendimento</div>
         <div class="comp-stats-grid">${advRows}</div>
+      </div>
+      <div class="comp-section">
+        <div class="comp-section-title">Ultimi Risultati</div>
+        <div style="display:grid;grid-template-columns:1fr 1fr;gap:20px">
+          <div>${buildRecentResults(aRes, nA, '#FF6B00')}</div>
+          <div>${buildRecentResults(bRes, nB, '#10B981')}</div>
+        </div>
       </div>`;
   };
 
