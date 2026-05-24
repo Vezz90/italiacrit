@@ -4187,7 +4187,7 @@ async function loadAdminPendingVideos() {
           </div>
           <div style="display:flex;gap:8px;flex-wrap:wrap">
             <button onclick="window.adminVideoAction('${esc(v.id)}','approve')" class="btn-approve">✓ Approva</button>
-            <button onclick="window.openMoveModal('pending',null,null,'${esc(v.id)}',${JSON.stringify(esc(v.title))})"
+            <button data-title="${esc(v.title)}" onclick="window.openMoveModal('pending',null,null,'${esc(v.id)}',this.dataset.title)"
               style="background:var(--bg-card);border:1px solid var(--border);padding:5px 12px;border-radius:6px;cursor:pointer;font-size:.8rem">↔️ Sposta+Approva</button>
             <button onclick="window.adminVideoAction('${esc(v.id)}','reject')"  class="btn-reject">✗ Rifiuta</button>
           </div>
@@ -4257,17 +4257,39 @@ function renderAdminVideosAll() {
     const cal = calMap[calId];
     const raceName = cal?.nome || calId;
     const raceDate = cal?.data || '';
-    const raceLabel = raceDate ? `${raceName} — ${fmtDate(raceDate)}` : raceName;
+    const raceCat  = cal?.categoria || '';
+    const catCol   = raceCat ? catColor(raceCat) : '';
+    const catBadgeHtml = raceCat
+      ? `<span style="background:${catCol}22;color:${catCol};border:1px solid ${catCol}55;border-radius:5px;padding:2px 8px;font-size:.68rem;font-weight:700;margin-left:8px">${esc(raceCat)}</span>`
+      : '';
+
     const videoRows = vids.map((v, idx) => {
       const vidId = (v.url.match(/[?&]v=([^&]+)/) || [])[1] || '';
       const thumb = vidId ? `https://img.youtube.com/vi/${vidId}/mqdefault.jpg` : '';
-      const scoreColor = v.score >= 0.7 ? '#22c55e' : v.score >= 0.45 ? '#f59e0b' : '#ef4444';
+      const scoreNum = parseFloat(v.score) || 0;
+      const scoreColor = scoreNum >= 0.70 ? '#22c55e' : scoreNum >= 0.50 ? '#f59e0b' : scoreNum > 0 ? '#ef4444' : 'var(--text-muted)';
+
+      // Estrai categoria dal titolo del video per mostrare badge anche nel pannello
+      const vTitleLow = (v.title || '').toLowerCase();
+      let vCat = '';
+      if (/esordienti?/.test(vTitleLow)) vCat = vTitleLow.includes('1') || vTitleLow.includes('primo') ? 'Esordienti 1° anno' : vTitleLow.includes('2') || vTitleLow.includes('second') ? 'Esordienti 2° anno' : 'Esordienti';
+      else if (/allievi|allievo/.test(vTitleLow)) vCat = 'Allievi';
+      else if (/juniores?|junior/.test(vTitleLow)) vCat = 'Juniores';
+      else if (/donne|femmin/.test(vTitleLow)) vCat = 'Donne';
+      else if (/under\s*23|u23/.test(vTitleLow)) vCat = 'Under 23';
+      else if (/elite/.test(vTitleLow)) vCat = 'Elite';
+
+      const vCatCol = vCat ? catColor(vCat) : '';
+      const vCatBadge = (vCat && vCat !== raceCat)
+        ? `<span style="background:${vCatCol}22;color:${vCatCol};border:1px solid ${vCatCol}55;border-radius:4px;padding:1px 6px;font-size:.66rem;font-weight:700;margin-left:4px">${esc(vCat)}</span>`
+        : '';
+
       return `
       <div class="admin-video-row" id="avr-${esc(calId)}-${idx}" style="display:flex;gap:12px;align-items:flex-start;padding:10px;border-bottom:1px solid var(--border-subtle)">
-        ${thumb ? `<img src="${thumb}" alt="thumb" style="width:90px;height:60px;object-fit:cover;border-radius:4px;flex-shrink:0;cursor:pointer" onclick="window.open('${esc(v.url)}','_blank')" />` : `<div style="width:90px;height:60px;background:var(--bg-card2,#1a1a2e);border-radius:4px;flex-shrink:0;display:flex;align-items:center;justify-content:center;color:var(--text-muted);font-size:1.5rem">🎬</div>`}
+        ${thumb ? `<img src="${thumb}" alt="thumb" style="width:90px;height:60px;object-fit:cover;border-radius:4px;flex-shrink:0;cursor:pointer" onclick="window.open('${esc(v.url)}','_blank')" />` : `<div style="width:90px;height:60px;background:var(--bg-elevated,rgba(128,128,128,.1));border-radius:4px;flex-shrink:0;display:flex;align-items:center;justify-content:center;color:var(--text-muted);font-size:1.5rem">🎬</div>`}
         <div style="flex:1;min-width:0">
-          <div style="font-weight:600;font-size:.85rem;margin-bottom:2px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis">${esc(v.title)}</div>
-          <div style="font-size:.75rem;color:var(--text-muted)">${esc(v.channel||'')} &nbsp;•&nbsp; ${esc(v.published_at||'')} &nbsp;•&nbsp; <span style="color:${scoreColor};font-weight:700">score ${v.score||'?'}</span></div>
+          <div style="font-weight:600;font-size:.85rem;margin-bottom:3px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis">${esc(v.title)}${vCatBadge}</div>
+          <div style="font-size:.75rem;color:var(--text-muted)">${esc(v.channel||'')} &nbsp;•&nbsp; ${esc(v.published_at||'')} &nbsp;•&nbsp; <span style="color:${scoreColor};font-weight:700">score ${scoreNum > 0 ? scoreNum.toFixed(2) : '?'}</span></div>
         </div>
         <div style="display:flex;flex-direction:column;gap:4px;flex-shrink:0">
           <button onclick="window.adminVideoEdit('${esc(calId)}',${idx})" style="background:var(--bg-card);border:1px solid var(--border);padding:4px 10px;border-radius:4px;cursor:pointer;font-size:.75rem;color:var(--text-primary)">✏️ Modifica</button>
@@ -4279,13 +4301,14 @@ function renderAdminVideosAll() {
 
     return `
     <div class="admin-video-race-block" style="background:var(--bg-card);border:1px solid var(--border);border-radius:8px;margin-bottom:12px;overflow:hidden">
-      <div style="padding:10px 14px;background:var(--bg-card2,rgba(0,0,0,.15));display:flex;align-items:center;justify-content:space-between;gap:8px">
-        <div>
+      <div style="padding:10px 14px;background:var(--bg-elevated,rgba(128,128,128,.08));display:flex;align-items:center;justify-content:space-between;gap:8px">
+        <div style="display:flex;align-items:center;flex-wrap:wrap;gap:4px">
           <a href="#/calendario/${encodeURIComponent(calId)}" style="color:var(--accent);font-weight:700;font-size:.9rem;text-decoration:none">${esc(raceName)}</a>
-          ${raceDate ? `<span style="color:var(--text-muted);font-size:.75rem;margin-left:8px">${fmtDate(raceDate)}</span>` : ''}
-          <span style="color:var(--text-muted);font-size:.75rem;margin-left:8px">${vids.length} video</span>
+          ${catBadgeHtml}
+          ${raceDate ? `<span style="color:var(--text-muted);font-size:.75rem;margin-left:4px">${fmtDate(raceDate)}</span>` : ''}
+          <span style="color:var(--text-muted);font-size:.75rem">•&nbsp;${vids.length} video</span>
         </div>
-        <button onclick="window.adminShowAddVideoForRace('${esc(calId)}')" style="background:transparent;border:1px solid var(--accent);color:var(--accent);padding:3px 10px;border-radius:4px;cursor:pointer;font-size:.75rem">+ video</button>
+        <button onclick="window.adminShowAddVideoForRace('${esc(calId)}')" style="background:transparent;border:1px solid var(--accent);color:var(--accent);padding:3px 10px;border-radius:4px;cursor:pointer;font-size:.75rem;flex-shrink:0">+ video</button>
       </div>
       ${videoRows}
     </div>`;
@@ -4443,11 +4466,21 @@ window.openMoveModal = (type, calId, idx, pendingId, sourceTitle) => {
   requestAnimationFrame(() => searchInput.focus());
 };
 
+// Colori per categoria — usati sia nel modal che nell'admin panel
+function catColor(categoria) {
+  const c = (categoria || '').toLowerCase();
+  if (c.includes('esordient')) return '#10b981';          // verde
+  if (c.includes('allievi') || c.includes('allievo')) return '#3b82f6'; // blu
+  if (c.includes('junior'))    return '#f59e0b';          // ambra
+  if (c.includes('donne') || c.includes('femmin')) return '#ec4899';    // rosa
+  if (c.includes('under') || c.includes('u23'))   return '#8b5cf6';     // viola
+  if (c.includes('elite'))     return '#ef4444';          // rosso
+  return '#6b7280';                                       // grigio
+}
+
 function vmmRenderList(matches, emptyMsg) {
   const res = document.getElementById('vmm-results');
   if (!res) return;
-
-  // Svuota
   while (res.firstChild) res.removeChild(res.firstChild);
 
   if (!matches.length) {
@@ -4458,40 +4491,73 @@ function vmmRenderList(matches, emptyMsg) {
     return;
   }
 
-  // Costruisci righe con DOM (nessun problema di escape o virgolette)
+  // Raggruppa per nome gara per evidenziare i casi con stessa gara, categorie diverse
+  const byName = {};
   for (const g of matches) {
+    const key = (g.nome || g.id).trim().toUpperCase();
+    if (!byName[key]) byName[key] = [];
+    byName[key].push(g);
+  }
+  const hasAmbiguousNames = Object.values(byName).some(arr => arr.length > 1);
+
+  for (const g of matches) {
+    const siblings = byName[(g.nome || g.id).trim().toUpperCase()] || [];
+    const isAmbiguous = siblings.length > 1; // stesso nome, categorie diverse
+
     const row = document.createElement('div');
+    row.dataset.calId = g.id;
     Object.assign(row.style, {
-      padding:'9px 14px', cursor:'pointer',
+      padding:'8px 12px', cursor:'pointer',
       borderBottom:'1px solid var(--border-subtle)',
-      display:'flex', justifyContent:'space-between', alignItems:'center', gap:'10px',
+      display:'grid',
+      gridTemplateColumns:'auto 1fr auto',
+      alignItems:'center', gap:'8px',
     });
-    row.addEventListener('mouseenter', () => { row.style.background = 'var(--bg-elevated,rgba(128,128,128,.12))'; });
-    row.addEventListener('mouseleave', () => { row.style.background = _moveModalSelectedCalId === g.id ? 'var(--accent-muted,rgba(99,102,241,.15))' : ''; });
+    row.addEventListener('mouseenter', () => { if (_moveModalSelectedCalId !== g.id) row.style.background = 'var(--bg-elevated,rgba(128,128,128,.1))'; });
+    row.addEventListener('mouseleave', () => { if (_moveModalSelectedCalId !== g.id) row.style.background = ''; });
 
-    const left = document.createElement('span');
-    left.style.cssText = 'min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;display:flex;align-items:center;gap:6px';
-
-    const nameEl = document.createElement('strong');
-    nameEl.textContent = g.nome || g.id;
-    left.appendChild(nameEl);
-
+    // — Colonna 1: badge categoria (PROMINENTE — sempre mostrato se presente)
+    const catWrap = document.createElement('div');
+    catWrap.style.cssText = 'flex-shrink:0';
     if (g.categoria) {
+      const color = catColor(g.categoria);
       const badge = document.createElement('span');
       badge.textContent = g.categoria;
-      badge.style.cssText = 'font-size:.66rem;background:var(--bg-elevated,rgba(128,128,128,.15));border:1px solid var(--border-subtle);border-radius:4px;padding:1px 5px;white-space:nowrap;flex-shrink:0;color:var(--text-muted)';
-      left.appendChild(badge);
+      badge.style.cssText = `
+        display:inline-block;background:${color}22;color:${color};
+        border:1px solid ${color}55;border-radius:5px;
+        padding:2px 7px;font-size:.7rem;font-weight:700;white-space:nowrap;
+        ${isAmbiguous ? 'font-size:.75rem;padding:3px 9px;' : ''}
+      `;
+      catWrap.appendChild(badge);
+    } else {
+      catWrap.style.minWidth = '60px'; // mantieni allineamento
     }
 
-    const right = document.createElement('span');
-    right.textContent = g.data || '';
-    right.style.cssText = 'color:var(--text-muted);font-size:.73rem;flex-shrink:0';
+    // — Colonna 2: nome gara + id (piccolo sotto)
+    const nameWrap = document.createElement('div');
+    nameWrap.style.cssText = 'min-width:0';
 
-    row.append(left, right);
+    const nameEl = document.createElement('div');
+    nameEl.textContent = g.nome || g.id;
+    nameEl.style.cssText = `font-weight:600;font-size:.83rem;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;color:var(--text-primary)${isAmbiguous ? ';font-size:.85rem' : ''}`;
+    nameWrap.appendChild(nameEl);
 
-    // Click: salva calId nella riga per poterla evidenziare
-    row.dataset.calId = g.id;
-    row.addEventListener('click', () => window.vmmSelect(g.id, g.nome || g.id));
+    // Sotto il nome: id calendario (piccolo, utile per distinguere)
+    if (isAmbiguous || hasAmbiguousNames) {
+      const idEl = document.createElement('div');
+      idEl.textContent = g.id;
+      idEl.style.cssText = 'font-size:.65rem;color:var(--text-muted);white-space:nowrap;overflow:hidden;text-overflow:ellipsis;margin-top:1px';
+      nameWrap.appendChild(idEl);
+    }
+
+    // — Colonna 3: data
+    const dateEl = document.createElement('span');
+    dateEl.textContent = g.data || '';
+    dateEl.style.cssText = 'color:var(--text-muted);font-size:.73rem;flex-shrink:0;text-align:right';
+
+    row.append(catWrap, nameWrap, dateEl);
+    row.addEventListener('click', () => window.vmmSelect(g.id, g.nome || g.id, g.categoria));
     res.appendChild(row);
   }
 }
@@ -4505,12 +4571,20 @@ window.vmmSearch = (q) => {
       (g.id||'').toLowerCase().includes(qq) ||
       (g.categoria||'').toLowerCase().includes(qq) ||
       (g.data||'').includes(qq))
-    .sort((a,b) => (b.data||'').localeCompare(a.data||''))
-    .slice(0, qq ? 20 : 30);
+    .sort((a,b) => {
+      // Ordina: prima per data desc, poi per nome, poi per categoria
+      // così le gare dello stesso giorno con nomi simili restano vicine
+      const dateComp = (b.data||'').localeCompare(a.data||'');
+      if (dateComp !== 0) return dateComp;
+      const nameComp = (a.nome||'').localeCompare(b.nome||'');
+      if (nameComp !== 0) return nameComp;
+      return (a.categoria||'').localeCompare(b.categoria||'');
+    })
+    .slice(0, qq ? 25 : 35);
   vmmRenderList(matches, qq ? 'Nessuna gara trovata.' : 'Calendario vuoto.');
 };
 
-window.vmmSelect = (calId, nome) => {
+window.vmmSelect = (calId, nome, categoria) => {
   _moveModalSelectedCalId = calId;
   // Evidenzia la riga selezionata, deseleziona le altre
   document.querySelectorAll('#vmm-results [data-cal-id]').forEach(el => {
@@ -4521,14 +4595,30 @@ window.vmmSelect = (calId, nome) => {
   const sel = document.getElementById('vmm-selected');
   if (sel) {
     sel.innerHTML = '';
+    sel.style.cssText = 'font-size:.82rem;margin-top:10px;font-weight:600;min-height:1.4em;display:flex;align-items:center;gap:6px;flex-wrap:wrap';
+
     const check = document.createElement('span');
-    check.textContent = '✔ ';
+    check.textContent = '✔';
+    check.style.color = 'var(--accent)';
+
     const boldName = document.createElement('strong');
     boldName.textContent = nome;
+    boldName.style.color = 'var(--text-primary)';
+
+    sel.append(check, boldName);
+
+    if (categoria) {
+      const color = catColor(categoria);
+      const catBadge = document.createElement('span');
+      catBadge.textContent = categoria;
+      catBadge.style.cssText = `background:${color}22;color:${color};border:1px solid ${color}55;border-radius:5px;padding:2px 8px;font-size:.72rem;font-weight:700`;
+      sel.appendChild(catBadge);
+    }
+
     const idSpan = document.createElement('span');
-    idSpan.textContent = '  ' + calId;
-    idSpan.style.cssText = 'color:var(--text-muted);font-size:.72rem;margin-left:4px';
-    sel.append(check, boldName, idSpan);
+    idSpan.textContent = calId;
+    idSpan.style.cssText = 'color:var(--text-muted);font-size:.7rem;font-weight:400';
+    sel.appendChild(idSpan);
   }
   const btn = document.getElementById('vmm-confirm');
   if (btn) { btn.disabled = false; btn.style.opacity = '1'; btn.style.cursor = 'pointer'; }
