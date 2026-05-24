@@ -208,11 +208,39 @@ const ATHLETE_GENDER_FIXES = {
 
 // Preload tutto in parallelo
 async function loadAll() {
-  // In produzione i video vengono letti dall'API del server (sempre aggiornati
-  // dallo scraper/approvazioni admin). In locale si usa il file statico.
+  // Strategia video:
+  // 1. In locale → file statico (immediato)
+  // 2. In produzione → prova l'API Render con timeout 5s
+  //    Se Render è in sleep (free tier) → fallback al file statico nel repo
+  //    Dopo il caricamento iniziale, riprova in background e aggiorna globalData
   const videosPromise = IS_LOCAL
     ? loadJson('data/videos.json')
-    : fetch(`${API_BASE}/videos`).then(r => r.json()).catch(() => ({}));
+    : (async () => {
+        try {
+          const ctrl = new AbortController();
+          const timer = setTimeout(() => ctrl.abort(), 5000); // 5s timeout
+          const r = await fetch(`${API_BASE}/videos`, { signal: ctrl.signal });
+          clearTimeout(timer);
+          if (!r.ok) throw new Error('status ' + r.status);
+          return await r.json();
+        } catch {
+          // Render in sleep o irraggiungibile: usa il file statico come fallback
+          const fallback = await loadJson('data/videos.json');
+          // Riprova in background dopo 8s (Render si sveglia in ~10-15s)
+          setTimeout(async () => {
+            try {
+              const r2 = await fetch(`${API_BASE}/videos`);
+              if (!r2.ok) return;
+              const fresh = await r2.json();
+              if (globalData) {
+                globalData.videos = fresh;
+                console.log('[videos] aggiornati da API dopo wake-up Render');
+              }
+            } catch { /* ignora */ }
+          }, 8000);
+          return fallback || {};
+        }
+      })();
 
   const [calendar, resultsRaw, athletes, teams, meta, raceDetails, videos] = await Promise.all([
     loadJson('data/calendar.json'),
