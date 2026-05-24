@@ -312,9 +312,20 @@ async function main() {
     result[gid].sort((a, b) => (b.score||0) - (a.score||0));
   }
 
+  const today = new Date().toISOString().slice(0, 10);
+  const totalRaces = Object.keys(result).length;
+
   fs.writeFileSync(outputPath, JSON.stringify(result, null, 2));
-  console.log(`\n✅ Completato: ${totalVideos} video analizzati, ${newMatches} nuovi match, ${skipped} già presenti`);
-  console.log(`   → data/videos.json aggiornato (${Object.keys(result).length} gare con video)`);
+
+  // Salva i metadati in un file separato (non interferisce con la struttura di videos.json)
+  const metaPath = path.join(__dirname, 'data', 'videos_meta.json');
+  fs.writeFileSync(metaPath, JSON.stringify({ last_run: today, total_races: totalRaces, new_matches: newMatches }, null, 2));
+
+  console.log(`\n✅ Completato [${today}]: ${totalVideos} video analizzati, ${newMatches} nuovi match, ${skipped} già presenti`);
+  console.log(`   → data/videos.json aggiornato (${totalRaces} gare con video)`);
+
+  // Exit code 0 anche se non ci sono nuovi match (GitHub Actions non fallisce)
+  process.exit(0);
 }
 
 main().catch(e => { console.error(e); process.exit(1); });

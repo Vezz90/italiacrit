@@ -1,0 +1,39 @@
+name: Scrape YouTube Videos
+
+on:
+  # Ogni giorno alle 07:00 UTC (09:00 ora italiana in estate)
+  schedule:
+    - cron: '0 7 * * *'
+  # Trigger manuale dalla tab Actions di GitHub (utile per test o run urgenti)
+  workflow_dispatch:
+
+jobs:
+  scrape:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write   # necessario per pushare il commit aggiornato
+
+    steps:
+      - name: Checkout repo
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js 20
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+
+      - name: Esegui scraper YouTube
+        run: node scraper_youtube.js
+
+      - name: Commita videos.json se aggiornato
+        run: |
+          git config user.name  "italiacrit-bot"
+          git config user.email "bot@italiacrit.it"
+          git add data/videos.json data/videos_meta.json
+          if git diff --staged --quiet; then
+            echo "Nessun nuovo video trovato oggi."
+          else
+            OGGI=$(date '+%Y-%m-%d')
+            git commit -m "🤖 Auto-scrape video YouTube [$OGGI]"
+            git push
+          fi
