@@ -2,36 +2,36 @@
   {
     "team_id": "SCUOLA_CICLISMO_VERSO_L_IRIDE",
     "team_nome": "SCUOLA CICLISMO VERSO L'IRIDE",
-    "punti": 185,
+    "punti": 198,
     "vittorie": 4,
     "p1": 4,
     "p2": 3,
-    "p3": 4,
-    "pout": 10,
+    "p3": 5,
+    "pout": 11,
     "n_atleti": 3,
     "pos": 1
   },
   {
     "team_id": "S_C_CESANO_MADERNO",
     "team_nome": "S.C. CESANO MADERNO",
-    "punti": 166,
+    "punti": 171,
     "vittorie": 3,
     "p1": 3,
     "p2": 3,
     "p3": 4,
-    "pout": 10,
+    "pout": 11,
     "n_atleti": 2,
     "pos": 2
   },
   {
     "team_id": "HG_CYCLING_TEAM",
     "team_nome": "HG CYCLING TEAM",
-    "punti": 164,
+    "punti": 170,
     "vittorie": 3,
     "p1": 3,
     "p2": 3,
     "p3": 1,
-    "pout": 11,
+    "pout": 12,
     "n_atleti": 4,
     "pos": 3
   },
@@ -60,6 +60,30 @@
     "pos": 5
   },
   {
+    "team_id": "SPORT_CLUB_BRESCIA_FLANDRES_LOVE",
+    "team_nome": "SPORT CLUB BRESCIA - FLANDRES LOVE",
+    "punti": 74,
+    "vittorie": 0,
+    "p1": 0,
+    "p2": 2,
+    "p3": 1,
+    "pout": 9,
+    "n_atleti": 3,
+    "pos": 6
+  },
+  {
+    "team_id": "MARY_J_SWEET_ANGEL_ASD",
+    "team_nome": "MARY J SWEET ANGEL ASD",
+    "punti": 68,
+    "vittorie": 0,
+    "p1": 0,
+    "p2": 2,
+    "p3": 0,
+    "pout": 9,
+    "n_atleti": 2,
+    "pos": 7
+  },
+  {
     "team_id": "U_C_GIORGIONE",
     "team_nome": "U.C. GIORGIONE",
     "punti": 65,
@@ -69,30 +93,6 @@
     "p3": 2,
     "pout": 8,
     "n_atleti": 2,
-    "pos": 6
-  },
-  {
-    "team_id": "SPORT_CLUB_BRESCIA_FLANDRES_LOVE",
-    "team_nome": "SPORT CLUB BRESCIA - FLANDRES LOVE",
-    "punti": 62,
-    "vittorie": 0,
-    "p1": 0,
-    "p2": 1,
-    "p3": 1,
-    "pout": 9,
-    "n_atleti": 3,
-    "pos": 7
-  },
-  {
-    "team_id": "MARY_J_SWEET_ANGEL_ASD",
-    "team_nome": "MARY J SWEET ANGEL ASD",
-    "punti": 59,
-    "vittorie": 0,
-    "p1": 0,
-    "p2": 2,
-    "p3": 0,
-    "pout": 7,
-    "n_atleti": 1,
     "pos": 8
   },
   {
@@ -194,12 +194,12 @@
   {
     "team_id": "BUSTO_GAROLFO",
     "team_nome": "BUSTO GAROLFO",
-    "punti": 29,
+    "punti": 31,
     "vittorie": 0,
     "p1": 0,
     "p2": 0,
     "p3": 0,
-    "pout": 7,
+    "pout": 8,
     "n_atleti": 2,
     "pos": 17
   },
@@ -252,6 +252,18 @@
     "pos": 21
   },
   {
+    "team_id": "GAZZANIGHESE_ASD",
+    "team_nome": "GAZZANIGHESE ASD",
+    "punti": 15,
+    "vittorie": 1,
+    "p1": 1,
+    "p2": 0,
+    "p3": 0,
+    "pout": 0,
+    "n_atleti": 1,
+    "pos": 22
+  },
+  {
     "team_id": "CARISMA_TEAM",
     "team_nome": "CARISMA TEAM",
     "punti": 12,
@@ -261,7 +273,7 @@
     "p3": 0,
     "pout": 0,
     "n_atleti": 1,
-    "pos": 22
+    "pos": 23
   },
   {
     "team_id": "BICIFESTIVAL",
@@ -273,7 +285,7 @@
     "p3": 0,
     "pout": 3,
     "n_atleti": 2,
-    "pos": 23
+    "pos": 24
   },
   {
     "team_id": "LIBERTAS_CERESETTO",
@@ -285,7 +297,19 @@
     "p3": 0,
     "pout": 2,
     "n_atleti": 1,
-    "pos": 24
+    "pos": 25
+  },
+  {
+    "team_id": "UNIONE_CICLISTICA_OSSANESGA",
+    "team_nome": "UNIONE CICLISTICA OSSANESGA",
+    "punti": 7,
+    "vittorie": 0,
+    "p1": 0,
+    "p2": 0,
+    "p3": 0,
+    "pout": 3,
+    "n_atleti": 1,
+    "pos": 26
   },
   {
     "team_id": "COMAL_TRENTINO_CYCLING_ACADEMY",
@@ -297,19 +321,7 @@
     "p3": 0,
     "pout": 2,
     "n_atleti": 1,
-    "pos": 25
-  },
-  {
-    "team_id": "UNIONE_CICLISTICA_OSSANESGA",
-    "team_nome": "UNIONE CICLISTICA OSSANESGA",
-    "punti": 3,
-    "vittorie": 0,
-    "p1": 0,
-    "p2": 0,
-    "p3": 0,
-    "pout": 2,
-    "n_atleti": 1,
-    "pos": 26
+    "pos": 27
   },
   {
     "team_id": "U_S_SCUOLA_CICLISMO_VO",
@@ -321,7 +333,7 @@
     "p3": 0,
     "pout": 1,
     "n_atleti": 1,
-    "pos": 27
+    "pos": 28
   },
   {
     "team_id": "GS_CAPANNORI",
@@ -333,7 +345,7 @@
     "p3": 0,
     "pout": 1,
     "n_atleti": 1,
-    "pos": 28
+    "pos": 29
   },
   {
     "team_id": "G_S_CICLI_FIORIN_CYCLING_TEAM_ASD",
@@ -345,7 +357,7 @@
     "p3": 0,
     "pout": 1,
     "n_atleti": 1,
-    "pos": 29
+    "pos": 30
   },
   {
     "team_id": "SAMABIKE",
@@ -357,6 +369,6 @@
     "p3": 0,
     "pout": 1,
     "n_atleti": 1,
-    "pos": 30
+    "pos": 31
   }
 ]
