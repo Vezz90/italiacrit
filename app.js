@@ -4343,68 +4343,158 @@ window.openMoveModal = (type, calId, idx, pendingId, sourceTitle) => {
   _moveModalSource        = { type, calId, idx: parseInt(idx), pendingId };
   _moveModalSelectedCalId = null;
 
-  const existing = document.getElementById('video-move-modal');
-  if (existing) existing.remove();
+  document.getElementById('video-move-modal')?.remove();
 
   const confirmLabel = type === 'pending' ? 'Sposta e Approva' : 'Sposta';
 
-  const modal = document.createElement('div');
-  modal.id = 'video-move-modal';
-  modal.style.cssText = 'position:fixed;inset:0;background:rgba(0,0,0,.72);z-index:9999;display:flex;align-items:center;justify-content:center;padding:16px';
-  modal.innerHTML = `
-    <div style="background:var(--bg-card);border:1px solid var(--border);border-radius:14px;padding:24px;max-width:540px;width:100%;position:relative;box-shadow:0 8px 40px rgba(0,0,0,.5)">
-      <button onclick="document.getElementById('video-move-modal').remove()"
-        style="position:absolute;top:12px;right:14px;background:transparent;border:none;font-size:1.3rem;cursor:pointer;color:var(--text-muted);line-height:1">✕</button>
-      <div style="font-weight:700;font-size:1rem;margin-bottom:4px">↔️ Sposta video</div>
-      <div style="font-size:.78rem;color:var(--text-muted);margin-bottom:16px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis">${esc(sourceTitle||'')}</div>
+  // Costruisci il modal con DOM API — evita problemi di escape in innerHTML
+  const overlay = document.createElement('div');
+  overlay.id = 'video-move-modal';
+  Object.assign(overlay.style, {
+    position:'fixed', inset:'0', background:'rgba(0,0,0,.65)',
+    zIndex:'9999', display:'flex', alignItems:'center', justifyContent:'center', padding:'16px',
+  });
 
-      <label style="font-size:.8rem;color:var(--text-muted);display:block;margin-bottom:5px">Cerca gara di destinazione</label>
-      <input type="search" id="vmm-search" placeholder="🔍  Filtra per nome, data o categoria…" oninput="window.vmmSearch(this.value)" autocomplete="off"
-        style="width:100%;padding:9px 12px;border:1px solid var(--border);border-radius:7px;background:var(--bg-input,var(--bg-card2,#111));color:var(--text-primary);font-size:.85rem;box-sizing:border-box;margin-bottom:6px" />
+  const box = document.createElement('div');
+  Object.assign(box.style, {
+    background:'var(--bg-card)', border:'1px solid var(--border)', borderRadius:'14px',
+    padding:'24px', maxWidth:'560px', width:'100%', position:'relative',
+    boxShadow:'0 8px 40px rgba(0,0,0,.4)', color:'var(--text-primary)',
+  });
 
-      <!-- Lista gare: sempre visibile, filtrata dalla ricerca -->
-      <div id="vmm-results"
-        style="background:var(--bg-card2,#111);border:1px solid var(--border);border-radius:7px;max-height:240px;overflow-y:auto;font-size:.82rem"></div>
+  // Titolo + X
+  const closeBtn = document.createElement('button');
+  closeBtn.textContent = '✕';
+  Object.assign(closeBtn.style, {
+    position:'absolute', top:'12px', right:'14px', background:'transparent',
+    border:'none', fontSize:'1.3rem', cursor:'pointer', color:'var(--text-muted)', lineHeight:'1',
+  });
+  closeBtn.onclick = () => overlay.remove();
 
-      <div id="vmm-selected" style="font-size:.82rem;color:var(--accent);margin-top:10px;font-weight:600;min-height:1.3em"></div>
-      <div style="display:flex;gap:8px;margin-top:14px">
-        <button id="vmm-confirm" onclick="window.vmmConfirm()" disabled
-          style="background:var(--accent);color:white;border:none;padding:9px 20px;border-radius:7px;font-weight:700;cursor:not-allowed;flex:1;opacity:.4;transition:opacity .15s">
-          ${confirmLabel}
-        </button>
-        <button onclick="document.getElementById('video-move-modal').remove()"
-          style="background:transparent;color:var(--text-muted);border:1px solid var(--border);padding:9px 16px;border-radius:7px;cursor:pointer">Annulla</button>
-      </div>
-    </div>`;
-  document.body.appendChild(modal);
-  // Pre-carica le gare più recenti subito
-  setTimeout(() => {
-    window.vmmSearch('');
-    document.getElementById('vmm-search')?.focus();
-  }, 40);
+  const title = document.createElement('div');
+  title.innerHTML = '<strong>↔️ Sposta video</strong>';
+  title.style.cssText = 'font-size:1rem;margin-bottom:4px';
+
+  const subtitle = document.createElement('div');
+  subtitle.textContent = sourceTitle || '';
+  subtitle.style.cssText = 'font-size:.78rem;color:var(--text-muted);margin-bottom:16px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis';
+
+  // Campo ricerca
+  const searchLabel = document.createElement('label');
+  searchLabel.textContent = 'Cerca gara di destinazione';
+  searchLabel.style.cssText = 'font-size:.8rem;color:var(--text-muted);display:block;margin-bottom:5px';
+
+  const searchInput = document.createElement('input');
+  searchInput.type = 'search';
+  searchInput.id   = 'vmm-search';
+  searchInput.placeholder = '🔍  Filtra per nome, data o categoria…';
+  searchInput.autocomplete = 'off';
+  Object.assign(searchInput.style, {
+    width:'100%', padding:'9px 12px', border:'1px solid var(--border)', borderRadius:'7px',
+    background:'var(--bg-card)', color:'var(--text-primary)', fontSize:'.85rem',
+    boxSizing:'border-box', marginBottom:'6px', outline:'none',
+  });
+  searchInput.oninput = () => window.vmmSearch(searchInput.value);
+
+  // Lista risultati
+  const results = document.createElement('div');
+  results.id = 'vmm-results';
+  Object.assign(results.style, {
+    background:'var(--bg-card)', border:'1px solid var(--border)', borderRadius:'7px',
+    maxHeight:'240px', overflowY:'auto', fontSize:'.82rem', color:'var(--text-primary)',
+  });
+
+  // Selezione corrente
+  const selected = document.createElement('div');
+  selected.id = 'vmm-selected';
+  selected.style.cssText = 'font-size:.82rem;color:var(--accent);margin-top:10px;font-weight:600;min-height:1.4em';
+
+  // Pulsanti
+  const btnRow = document.createElement('div');
+  btnRow.style.cssText = 'display:flex;gap:8px;margin-top:14px';
+
+  const confirmBtn = document.createElement('button');
+  confirmBtn.id = 'vmm-confirm';
+  confirmBtn.textContent = confirmLabel;
+  confirmBtn.disabled = true;
+  Object.assign(confirmBtn.style, {
+    background:'var(--accent)', color:'white', border:'none', padding:'9px 20px',
+    borderRadius:'7px', fontWeight:'700', cursor:'not-allowed', flex:'1',
+    opacity:'.4', transition:'opacity .15s',
+  });
+  confirmBtn.onclick = () => window.vmmConfirm();
+
+  const cancelBtn = document.createElement('button');
+  cancelBtn.textContent = 'Annulla';
+  Object.assign(cancelBtn.style, {
+    background:'transparent', color:'var(--text-muted)', border:'1px solid var(--border)',
+    padding:'9px 16px', borderRadius:'7px', cursor:'pointer',
+  });
+  cancelBtn.onclick = () => overlay.remove();
+
+  btnRow.append(confirmBtn, cancelBtn);
+  box.append(closeBtn, title, subtitle, searchLabel, searchInput, results, selected, btnRow);
+  overlay.appendChild(box);
+  // Chiudi cliccando sull'overlay (fuori dalla box)
+  overlay.addEventListener('click', e => { if (e.target === overlay) overlay.remove(); });
+  document.body.appendChild(overlay);
+
+  // Pre-carica le gare più recenti e metti il focus
+  window.vmmSearch('');
+  requestAnimationFrame(() => searchInput.focus());
 };
 
 function vmmRenderList(matches, emptyMsg) {
   const res = document.getElementById('vmm-results');
   if (!res) return;
+
+  // Svuota
+  while (res.firstChild) res.removeChild(res.firstChild);
+
   if (!matches.length) {
-    res.innerHTML = `<div style="padding:12px 14px;color:var(--text-muted)">${emptyMsg || 'Nessuna gara trovata.'}</div>`;
+    const msg = document.createElement('div');
+    msg.textContent = emptyMsg || 'Nessuna gara trovata.';
+    msg.style.cssText = 'padding:12px 14px;color:var(--text-muted)';
+    res.appendChild(msg);
     return;
   }
-  res.innerHTML = matches.map(g => {
-    const catBadge = g.categoria
-      ? `<span style="font-size:.68rem;background:var(--bg-card);border:1px solid var(--border-subtle);border-radius:4px;padding:1px 5px;margin-left:4px;white-space:nowrap">${esc(g.categoria)}</span>`
-      : '';
-    return `
-    <div onclick="window.vmmSelect('${esc(g.id)}',${JSON.stringify(esc(g.nome||g.id))})"
-      style="padding:9px 14px;cursor:pointer;border-bottom:1px solid var(--border-subtle);display:flex;justify-content:space-between;align-items:center;gap:10px"
-      onmouseover="this.style.background='var(--bg-elevated,rgba(255,255,255,.06))'" onmouseout="this.style.background=''">
-      <span style="min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap">
-        <strong>${esc(g.nome||g.id)}</strong>${catBadge}
-      </span>
-      <span style="color:var(--text-muted);font-size:.73rem;flex-shrink:0">${g.data||''}</span>
-    </div>`;
-  }).join('');
+
+  // Costruisci righe con DOM (nessun problema di escape o virgolette)
+  for (const g of matches) {
+    const row = document.createElement('div');
+    Object.assign(row.style, {
+      padding:'9px 14px', cursor:'pointer',
+      borderBottom:'1px solid var(--border-subtle)',
+      display:'flex', justifyContent:'space-between', alignItems:'center', gap:'10px',
+    });
+    row.addEventListener('mouseenter', () => { row.style.background = 'var(--bg-elevated,rgba(128,128,128,.12))'; });
+    row.addEventListener('mouseleave', () => { row.style.background = _moveModalSelectedCalId === g.id ? 'var(--accent-muted,rgba(99,102,241,.15))' : ''; });
+
+    const left = document.createElement('span');
+    left.style.cssText = 'min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;display:flex;align-items:center;gap:6px';
+
+    const nameEl = document.createElement('strong');
+    nameEl.textContent = g.nome || g.id;
+    left.appendChild(nameEl);
+
+    if (g.categoria) {
+      const badge = document.createElement('span');
+      badge.textContent = g.categoria;
+      badge.style.cssText = 'font-size:.66rem;background:var(--bg-elevated,rgba(128,128,128,.15));border:1px solid var(--border-subtle);border-radius:4px;padding:1px 5px;white-space:nowrap;flex-shrink:0;color:var(--text-muted)';
+      left.appendChild(badge);
+    }
+
+    const right = document.createElement('span');
+    right.textContent = g.data || '';
+    right.style.cssText = 'color:var(--text-muted);font-size:.73rem;flex-shrink:0';
+
+    row.append(left, right);
+
+    // Click: salva calId nella riga per poterla evidenziare
+    row.dataset.calId = g.id;
+    row.addEventListener('click', () => window.vmmSelect(g.id, g.nome || g.id));
+    res.appendChild(row);
+  }
 }
 
 window.vmmSearch = (q) => {
@@ -4417,19 +4507,31 @@ window.vmmSearch = (q) => {
       (g.categoria||'').toLowerCase().includes(qq) ||
       (g.data||'').includes(qq))
     .sort((a,b) => (b.data||'').localeCompare(a.data||''))
-    .slice(0, qq ? 20 : 30); // più risultati nella lista iniziale
+    .slice(0, qq ? 20 : 30);
   vmmRenderList(matches, qq ? 'Nessuna gara trovata.' : 'Calendario vuoto.');
 };
 
 window.vmmSelect = (calId, nome) => {
   _moveModalSelectedCalId = calId;
-  const sel = document.getElementById('vmm-selected');
-  const btn = document.getElementById('vmm-confirm');
-  // Evidenzia la riga selezionata
-  document.querySelectorAll('#vmm-results > div').forEach(el => {
-    el.style.background = el.getAttribute('onclick')?.includes(calId) ? 'var(--accent-muted,rgba(99,102,241,.18))' : '';
+  // Evidenzia la riga selezionata, deseleziona le altre
+  document.querySelectorAll('#vmm-results [data-cal-id]').forEach(el => {
+    el.style.background = el.dataset.calId === calId
+      ? 'var(--accent-muted,rgba(99,102,241,.15))'
+      : '';
   });
-  if (sel) sel.innerHTML = `✔ <strong>${nome}</strong> <span style="color:var(--text-muted);font-size:.75rem">${calId}</span>`;
+  const sel = document.getElementById('vmm-selected');
+  if (sel) {
+    sel.innerHTML = '';
+    const check = document.createElement('span');
+    check.textContent = '✔ ';
+    const boldName = document.createElement('strong');
+    boldName.textContent = nome;
+    const idSpan = document.createElement('span');
+    idSpan.textContent = '  ' + calId;
+    idSpan.style.cssText = 'color:var(--text-muted);font-size:.72rem;margin-left:4px';
+    sel.append(check, boldName, idSpan);
+  }
+  const btn = document.getElementById('vmm-confirm');
   if (btn) { btn.disabled = false; btn.style.opacity = '1'; btn.style.cursor = 'pointer'; }
 };
 
