@@ -144,6 +144,18 @@
     "pos": 12
   },
   {
+    "team_id": "A_S_A_C_I_EVONACICLI",
+    "team_nome": "A.S.A.C.I. - EVONACICLI",
+    "punti": 49,
+    "vittorie": 1,
+    "p1": 1,
+    "p2": 2,
+    "p3": 1,
+    "pout": 0,
+    "n_atleti": 2,
+    "pos": 13
+  },
+  {
     "team_id": "BREGANZE_MILLENIUM",
     "team_nome": "BREGANZE MILLENIUM",
     "punti": 49,
@@ -153,7 +165,7 @@
     "p3": 1,
     "pout": 6,
     "n_atleti": 2,
-    "pos": 13
+    "pos": 14
   },
   {
     "team_id": "C_C_APPENNINICO_1907",
@@ -165,7 +177,7 @@
     "p3": 1,
     "pout": 1,
     "n_atleti": 1,
-    "pos": 14
+    "pos": 15
   },
   {
     "team_id": "G_C_NOVENTANA",
@@ -177,7 +189,7 @@
     "p3": 1,
     "pout": 5,
     "n_atleti": 2,
-    "pos": 15
+    "pos": 16
   },
   {
     "team_id": "BUSTO_GAROLFO",
@@ -189,7 +201,7 @@
     "p3": 0,
     "pout": 7,
     "n_atleti": 2,
-    "pos": 16
+    "pos": 17
   },
   {
     "team_id": "POL_FIUMICINESE_FA_I_T_ADRIATICA",
@@ -201,18 +213,6 @@
     "p3": 1,
     "pout": 2,
     "n_atleti": 1,
-    "pos": 17
-  },
-  {
-    "team_id": "A_S_A_C_I_EVONACICLI",
-    "team_nome": "A.S.A.C.I. - EVONACICLI",
-    "punti": 22,
-    "vittorie": 0,
-    "p1": 0,
-    "p2": 1,
-    "p3": 1,
-    "pout": 0,
-    "n_atleti": 2,
     "pos": 18
   },
   {
