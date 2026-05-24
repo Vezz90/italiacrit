@@ -2697,15 +2697,19 @@ div[style*="grid-template-columns: repeat(auto-fit"] {
 /* ── Risultati feed grid ─────────────────────────────────── */
 .risultati-feed {
   display: grid;
-  grid-template-columns: 1fr 1fr;
-  gap: 20px;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 18px;
   align-items: start;
+}
+@media (max-width:1024px) {
+  .risultati-feed { grid-template-columns: 1fr 1fr; gap:16px; }
 }
 
 /* ── Risultati card con foto/video ───────────────────────── */
 .ris-card { display:flex; flex-direction:column; overflow:hidden; margin-bottom:0; padding:0; }
 
-.ris-card-media { width:100%; flex-shrink:0; overflow:hidden; border-radius:var(--r-lg) var(--r-lg) 0 0; height:200px; }
+.ris-card-media { width:100%; flex-shrink:0; overflow:hidden; border-radius:var(--r-lg) var(--r-lg) 0 0; height:170px; }
+@media (max-width:1024px) { .ris-card-media { height:200px; } }
 .ris-card-media-split { display:flex; gap:2px; }
 
 /* Metà sinistra: foto */
