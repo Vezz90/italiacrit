@@ -208,6 +208,12 @@ const ATHLETE_GENDER_FIXES = {
 
 // Preload tutto in parallelo
 async function loadAll() {
+  // In produzione i video vengono letti dall'API del server (sempre aggiornati
+  // dallo scraper/approvazioni admin). In locale si usa il file statico.
+  const videosPromise = IS_LOCAL
+    ? loadJson('data/videos.json')
+    : fetch(`${API_BASE}/videos`).then(r => r.json()).catch(() => ({}));
+
   const [calendar, resultsRaw, athletes, teams, meta, raceDetails, videos] = await Promise.all([
     loadJson('data/calendar.json'),
     loadJson('data/results_raw.json'),
@@ -215,7 +221,7 @@ async function loadAll() {
     loadJson('data/teams.json'),
     loadJson('data/meta.json'),
     loadJson('data/race_details.json'),
-    loadJson('data/videos.json'),
+    videosPromise,
   ]);
 
   // Applica correzioni genere
@@ -5589,37 +5595,7 @@ async function renderGara(gara_id) {
 
   window._shareGaraData = {name:name,date:fmtDate(data),cat:catLabel(cat),mult:mult,tipo:tipo,results:results1.slice(0,10).map(r=>({cognome:r.cognome,nome:r.nome,team:r.team,punti_effettivi:r.punti_effettivi}))};
 
-  // Sport Intelligence: race analysis
-  const _garaLastDate = resultsRaw.reduce((max, r) => (r.data||'') > max ? r.data : max, '');
-  const _makeParticipantCards = (arr) => arr.slice(0, 5).map(r => {
-    const mom = siMomentum(r.atleta_id, resultsRaw, _garaLastDate);
-    return `<div class="si-participant-card">
-      <div class="si-participant-pos">${r.posizione}° posto</div>
-      <div class="si-participant-name"><a href="#/atleta/${encodeURIComponent(r.atleta_id)}" style="color:inherit;text-decoration:none">${esc(r.cognome)}<br><small style="font-weight:400">${esc(r.nome)}</small></a></div>
-      <div class="si-participant-form" style="color:${mom.color}">${mom.label.replace(/^[^ ]+ /,'')}</div>
-    </div>`;
-  }).join('');
-
-  let siRaceIntelHtml = '';
-  if (isEsordienti) {
-    const cards1 = results1.length ? _makeParticipantCards(results1) : '';
-    const cards2 = results2.length ? _makeParticipantCards(results2) : '';
-    if (cards1 || cards2) {
-      siRaceIntelHtml = `<div class="si-race-intel">
-        <div class="si-race-intel-title">📊 ANALISI GARA — Forma dei protagonisti</div>
-        ${cards1 ? `<div style="font-size:0.7rem;font-weight:800;letter-spacing:.08em;text-transform:uppercase;color:var(--primary);margin:8px 0 4px">Esordienti 1° Anno</div>
-        <div class="si-race-participants">${cards1}</div>` : ''}
-        ${cards2 ? `<div style="font-size:0.7rem;font-weight:800;letter-spacing:.08em;text-transform:uppercase;color:var(--primary);margin:12px 0 4px">Esordienti 2° Anno</div>
-        <div class="si-race-participants">${cards2}</div>` : ''}
-      </div>`;
-    }
-  } else {
-    const cards = _makeParticipantCards(results1);
-    if (cards) siRaceIntelHtml = `<div class="si-race-intel">
-      <div class="si-race-intel-title">📊 ANALISI GARA — Forma dei protagonisti</div>
-      <div class="si-race-participants">${cards}</div>
-    </div>`;
-  }
+  const siRaceIntelHtml = '';
 
   window._currentGaraId = primaryGaraId;
   setPage(`

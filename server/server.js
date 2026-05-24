@@ -573,6 +573,13 @@ function writeVideos(data) {
   fs.writeFileSync(VIDEOS_PATH, JSON.stringify(data, null, 2));
 }
 
+// Endpoint PUBBLICO — usato dal frontend in produzione invece del file statico
+// Serve sempre la versione live di videos.json (aggiornata dallo scraper/admin)
+app.get('/api/videos', (req, res) => {
+  res.set('Cache-Control', 'public, max-age=300'); // cache 5 min nei browser
+  res.json(readVideos());
+});
+
 // Lista tutti i video approvati (senza cache — legge sempre dal disco)
 app.get('/api/admin/videos', requireAdmin, (req, res) => {
   res.json(readVideos());
