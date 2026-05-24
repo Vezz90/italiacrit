@@ -2,26 +2,38 @@
   {
     "team_id": "BIESSE_CARRERA_PREMAC",
     "team_nome": "BIESSE - CARRERA - PREMAC",
-    "punti": 277,
+    "punti": 299,
     "vittorie": 3,
     "p1": 3,
-    "p2": 4,
+    "p2": 5,
     "p3": 5,
-    "pout": 20,
+    "pout": 22,
     "n_atleti": 8,
     "pos": 1
   },
   {
     "team_id": "BFT_BURZONI",
     "team_nome": "BFT BURZONI",
-    "punti": 225,
-    "vittorie": 4,
-    "p1": 4,
+    "punti": 240,
+    "vittorie": 5,
+    "p1": 5,
     "p2": 4,
     "p3": 1,
     "pout": 10,
     "n_atleti": 5,
     "pos": 2
+  },
+  {
+    "team_id": "LIBERTAS_CERESETTO",
+    "team_nome": "LIBERTAS CERESETTO",
+    "punti": 146,
+    "vittorie": 0,
+    "p1": 0,
+    "p2": 2,
+    "p3": 2,
+    "pout": 15,
+    "n_atleti": 5,
+    "pos": 3
   },
   {
     "team_id": "BREGANZE_MILLENIUM",
@@ -33,18 +45,6 @@
     "p3": 0,
     "pout": 10,
     "n_atleti": 5,
-    "pos": 3
-  },
-  {
-    "team_id": "LIBERTAS_CERESETTO",
-    "team_nome": "LIBERTAS CERESETTO",
-    "punti": 133,
-    "vittorie": 0,
-    "p1": 0,
-    "p2": 2,
-    "p3": 2,
-    "pout": 13,
-    "n_atleti": 4,
     "pos": 4
   },
   {
@@ -62,11 +62,11 @@
   {
     "team_id": "BRESCIA_F_MAGNI_FLANDRES_LOVE",
     "team_nome": "BRESCIA - F. MAGNI - FLANDRES LOVE",
-    "punti": 102,
+    "punti": 112,
     "vittorie": 0,
     "p1": 0,
     "p2": 2,
-    "p3": 3,
+    "p3": 4,
     "pout": 5,
     "n_atleti": 4,
     "pos": 6
@@ -86,12 +86,12 @@
   {
     "team_id": "U_C_CONSCIO_PEDALE_DEL_SILE",
     "team_nome": "U.C.CONSCIO PEDALE DEL SILE",
-    "punti": 65,
+    "punti": 66,
     "vittorie": 2,
     "p1": 2,
     "p2": 0,
     "p3": 0,
-    "pout": 8,
+    "pout": 9,
     "n_atleti": 2,
     "pos": 8
   },
@@ -122,13 +122,13 @@
   {
     "team_id": "TEAM_WILIER_BREGANZE",
     "team_nome": "TEAM WILIER BREGANZE",
-    "punti": 42,
+    "punti": 47,
     "vittorie": 0,
     "p1": 0,
     "p2": 0,
     "p3": 1,
-    "pout": 10,
-    "n_atleti": 5,
+    "pout": 12,
+    "n_atleti": 6,
     "pos": 11
   },
   {

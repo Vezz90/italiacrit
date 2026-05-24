@@ -12,6 +12,30 @@
     "pos": 1
   },
   {
+    "team_id": "U_C_GIORGIONE",
+    "team_nome": "U.C. GIORGIONE",
+    "punti": 164,
+    "vittorie": 4,
+    "p1": 4,
+    "p2": 2,
+    "p3": 4,
+    "pout": 7,
+    "n_atleti": 5,
+    "pos": 2
+  },
+  {
+    "team_id": "U_C_CONSCIO_PEDALE_DEL_SILE",
+    "team_nome": "U.C.CONSCIO PEDALE DEL SILE",
+    "punti": 164,
+    "vittorie": 3,
+    "p1": 3,
+    "p2": 6,
+    "p3": 2,
+    "pout": 3,
+    "n_atleti": 2,
+    "pos": 3
+  },
+  {
     "team_id": "S_C_CESANO_MADERNO",
     "team_nome": "S.C. CESANO MADERNO",
     "punti": 163,
@@ -21,30 +45,6 @@
     "p3": 0,
     "pout": 19,
     "n_atleti": 6,
-    "pos": 2
-  },
-  {
-    "team_id": "U_C_CONSCIO_PEDALE_DEL_SILE",
-    "team_nome": "U.C.CONSCIO PEDALE DEL SILE",
-    "punti": 152,
-    "vittorie": 3,
-    "p1": 3,
-    "p2": 5,
-    "p3": 2,
-    "pout": 3,
-    "n_atleti": 2,
-    "pos": 3
-  },
-  {
-    "team_id": "U_C_GIORGIONE",
-    "team_nome": "U.C. GIORGIONE",
-    "punti": 147,
-    "vittorie": 3,
-    "p1": 3,
-    "p2": 2,
-    "p3": 4,
-    "pout": 6,
-    "n_atleti": 5,
     "pos": 4
   },
   {
@@ -74,24 +74,24 @@
   {
     "team_id": "POL_FIUMICINESE_FA_I_T_ADRIATICA",
     "team_nome": "POL. FIUMICINESE FA.I.T. ADRIATICA",
-    "punti": 95,
+    "punti": 103,
     "vittorie": 0,
     "p1": 0,
     "p2": 1,
     "p3": 1,
-    "pout": 7,
+    "pout": 8,
     "n_atleti": 2,
     "pos": 7
   },
   {
     "team_id": "TEAM_FABIANA_LUPERINI_ASD",
     "team_nome": "TEAM FABIANA LUPERINI ASD",
-    "punti": 93,
+    "punti": 98,
     "vittorie": 2,
     "p1": 2,
     "p2": 1,
     "p3": 2,
-    "pout": 7,
+    "pout": 8,
     "n_atleti": 2,
     "pos": 8
   },
@@ -132,6 +132,18 @@
     "pos": 11
   },
   {
+    "team_id": "U_S_SCUOLA_CICLISMO_VO",
+    "team_nome": "U.S.SCUOLA CICLISMO VO'",
+    "punti": 46,
+    "vittorie": 0,
+    "p1": 0,
+    "p2": 0,
+    "p3": 2,
+    "pout": 4,
+    "n_atleti": 1,
+    "pos": 12
+  },
+  {
     "team_id": "JU_GREEN_A_S_D_GORLA_MINORE",
     "team_nome": "JU GREEN A.S.D. GORLA MINORE",
     "punti": 44,
@@ -141,7 +153,7 @@
     "p3": 1,
     "pout": 4,
     "n_atleti": 1,
-    "pos": 12
+    "pos": 13
   },
   {
     "team_id": "ASS_NE_CICLISTICA_DILETT_VALVASONE",
@@ -153,18 +165,6 @@
     "p3": 0,
     "pout": 6,
     "n_atleti": 2,
-    "pos": 13
-  },
-  {
-    "team_id": "U_S_SCUOLA_CICLISMO_VO",
-    "team_nome": "U.S.SCUOLA CICLISMO VO'",
-    "punti": 36,
-    "vittorie": 0,
-    "p1": 0,
-    "p2": 0,
-    "p3": 1,
-    "pout": 4,
-    "n_atleti": 1,
     "pos": 14
   },
   {
@@ -228,6 +228,18 @@
     "pos": 19
   },
   {
+    "team_id": "LIBERTAS_CERESETTO",
+    "team_nome": "LIBERTAS CERESETTO",
+    "punti": 22,
+    "vittorie": 0,
+    "p1": 0,
+    "p2": 0,
+    "p3": 1,
+    "pout": 4,
+    "n_atleti": 2,
+    "pos": 20
+  },
+  {
     "team_id": "SAMABIKE",
     "team_nome": "SAMABIKE",
     "punti": 20,
@@ -237,7 +249,7 @@
     "p3": 1,
     "pout": 0,
     "n_atleti": 1,
-    "pos": 20
+    "pos": 21
   },
   {
     "team_id": "I_CINGHIALI_EVO",
@@ -249,18 +261,6 @@
     "p3": 0,
     "pout": 5,
     "n_atleti": 1,
-    "pos": 21
-  },
-  {
-    "team_id": "LIBERTAS_CERESETTO",
-    "team_nome": "LIBERTAS CERESETTO",
-    "punti": 16,
-    "vittorie": 0,
-    "p1": 0,
-    "p2": 0,
-    "p3": 1,
-    "pout": 3,
-    "n_atleti": 2,
     "pos": 22
   },
   {
@@ -312,6 +312,42 @@
     "pos": 26
   },
   {
+    "team_id": "ASD_VELOCE_CLUB_BORGO",
+    "team_nome": "ASD VELOCE CLUB BORGO",
+    "punti": 13,
+    "vittorie": 0,
+    "p1": 0,
+    "p2": 0,
+    "p3": 0,
+    "pout": 5,
+    "n_atleti": 2,
+    "pos": 27
+  },
+  {
+    "team_id": "BICIFESTIVAL",
+    "team_nome": "BICIFESTIVAL",
+    "punti": 13,
+    "vittorie": 0,
+    "p1": 0,
+    "p2": 0,
+    "p3": 0,
+    "pout": 3,
+    "n_atleti": 2,
+    "pos": 28
+  },
+  {
+    "team_id": "A_S_D_G_C_EMIC",
+    "team_nome": "A.S.D. - G.C. EMIC",
+    "punti": 13,
+    "vittorie": 0,
+    "p1": 0,
+    "p2": 0,
+    "p3": 0,
+    "pout": 4,
+    "n_atleti": 1,
+    "pos": 29
+  },
+  {
     "team_id": "HG_CYCLING_TEAM",
     "team_nome": "HG CYCLING TEAM",
     "punti": 13,
@@ -321,7 +357,7 @@
     "p3": 0,
     "pout": 3,
     "n_atleti": 1,
-    "pos": 27
+    "pos": 30
   },
   {
     "team_id": "ASD_FUSION_BIKE",
@@ -333,7 +369,7 @@
     "p3": 0,
     "pout": 2,
     "n_atleti": 2,
-    "pos": 28
+    "pos": 31
   },
   {
     "team_id": "FREE_BIKE_LT_LOGISTICA_AMBIENTALE",
@@ -345,19 +381,7 @@
     "p3": 0,
     "pout": 0,
     "n_atleti": 1,
-    "pos": 29
-  },
-  {
-    "team_id": "A_S_D_G_C_EMIC",
-    "team_nome": "A.S.D. - G.C. EMIC",
-    "punti": 12,
-    "vittorie": 0,
-    "p1": 0,
-    "p2": 0,
-    "p3": 0,
-    "pout": 3,
-    "n_atleti": 1,
-    "pos": 30
+    "pos": 32
   },
   {
     "team_id": "GS_CAPANNORI",
@@ -369,7 +393,7 @@
     "p3": 0,
     "pout": 1,
     "n_atleti": 1,
-    "pos": 31
+    "pos": 33
   },
   {
     "team_id": "TEAM_GO_FAST_PUGLIA_ARADEO",
@@ -381,30 +405,6 @@
     "p3": 0,
     "pout": 0,
     "n_atleti": 1,
-    "pos": 32
-  },
-  {
-    "team_id": "BICIFESTIVAL",
-    "team_nome": "BICIFESTIVAL",
-    "punti": 10,
-    "vittorie": 0,
-    "p1": 0,
-    "p2": 0,
-    "p3": 0,
-    "pout": 2,
-    "n_atleti": 2,
-    "pos": 33
-  },
-  {
-    "team_id": "ASD_VELOCE_CLUB_BORGO",
-    "team_nome": "ASD VELOCE CLUB BORGO",
-    "punti": 9,
-    "vittorie": 0,
-    "p1": 0,
-    "p2": 0,
-    "p3": 0,
-    "pout": 4,
-    "n_atleti": 2,
     "pos": 34
   },
   {
