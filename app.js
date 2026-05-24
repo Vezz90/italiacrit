@@ -4137,23 +4137,58 @@ async function loadAdminPendingVideos() {
       container.innerHTML = `<div style="color:var(--text-muted);padding:20px 0">Nessun video in attesa.</div>`;
       return;
     }
+    const calMap = {};
+    (globalData?.calendar || []).forEach(g => { calMap[g.id] = g; });
+
     container.innerHTML = `<div style="display:flex;flex-direction:column;gap:12px">${videos.map(v => {
-      const vidId = v.type === 'youtube' ? (v.url.match(/[?&]v=([^&]+)/) || [])[1] || '' : '';
+      const vidId = (v.url || '').match(/[?&]v=([^&]+)/)?.[1] || '';
       const thumb = vidId ? `https://img.youtube.com/vi/${vidId}/mqdefault.jpg` : '';
+      const isYt  = v.type === 'youtube' || v.type === 'scraper';
+
+      // Score badge con colore
+      const scoreNum = v.score != null ? Number(v.score) : null;
+      const scoreColor = scoreNum == null ? 'var(--text-muted)'
+                       : scoreNum >= 0.70 ? '#22c55e'
+                       : scoreNum >= 0.52 ? '#f59e0b'
+                       : '#ef4444';
+      const scoreBadge = scoreNum != null
+        ? `<span style="color:${scoreColor};font-weight:700;font-size:.75rem">score ${scoreNum.toFixed(2)}</span>`
+        : '';
+
+      // Gara proposta (dal calendario)
+      const calId = v.cal_id || v.gara_id;
+      const cal   = calMap[calId];
+      const raceName = cal ? `${cal.nome}${cal.data ? ' — ' + cal.data : ''}${cal.categoria ? ' (' + cal.categoria + ')' : ''}` : calId;
+
+      // Badge sorgente
+      const srcBadge = v.type === 'scraper'
+        ? `<span style="background:#6366f1;color:white;font-size:.65rem;padding:1px 6px;border-radius:4px;margin-left:6px">🤖 scraper</span>`
+        : `<span style="background:#0ea5e9;color:white;font-size:.65rem;padding:1px 6px;border-radius:4px;margin-left:6px">👤 ${esc(v.submitted_by||'')}</span>`;
+
       return `
       <div id="apv-${v.id}" style="display:flex;gap:12px;align-items:flex-start;background:var(--bg-card);border:1px solid var(--border-subtle);border-radius:var(--r-md);padding:12px">
-        ${thumb ? `<img src="${thumb}" style="width:120px;border-radius:var(--r-sm);flex-shrink:0;object-fit:cover" />` : `<div style="width:120px;height:68px;background:var(--bg-elevated);border-radius:var(--r-sm);flex-shrink:0;display:flex;align-items:center;justify-content:center;font-size:2rem">📁</div>`}
+        ${thumb
+          ? `<img src="${thumb}" style="width:120px;height:68px;border-radius:var(--r-sm);flex-shrink:0;object-fit:cover;cursor:pointer" onclick="window.open('${esc(v.url)}','_blank')" />`
+          : `<div style="width:120px;height:68px;background:var(--bg-elevated);border-radius:var(--r-sm);flex-shrink:0;display:flex;align-items:center;justify-content:center;font-size:2rem">📁</div>`}
         <div style="flex:1;min-width:0">
-          <div style="font-weight:600;font-size:0.875rem;margin-bottom:4px">${esc(v.title)}</div>
-          <div style="font-size:0.75rem;color:var(--text-muted);margin-bottom:4px">
-            <a href="#/gara/${esc(v.gara_id)}" style="color:var(--accent)">${esc(v.gara_id)}</a>
-            &mdash; ${esc(v.submitted_by)} &mdash; ${v.submitted_at.slice(0,10)}
+          <div style="font-weight:600;font-size:0.875rem;margin-bottom:4px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis">${esc(v.title)}</div>
+          <div style="font-size:0.75rem;color:var(--text-muted);margin-bottom:4px;display:flex;align-items:center;gap:6px;flex-wrap:wrap">
+            ${scoreBadge}
+            ${srcBadge}
+            <span>&nbsp;${esc((v.published_at||v.submitted_at||'').slice(0,10))}</span>
+            ${v.channel && v.type === 'scraper' ? `<span>• ${esc(v.channel)}</span>` : ''}
           </div>
-          <div style="font-size:0.75rem;color:var(--text-muted);margin-bottom:8px">
-            ${v.type === 'youtube' ? `🔗 <a href="${esc(v.url)}" target="_blank" rel="noopener" style="color:var(--accent)">${esc(v.url)}</a>` : `📁 File caricato`}
+          <div style="font-size:0.75rem;margin-bottom:6px">
+            <span style="color:var(--text-muted)">Gara proposta: </span>
+            <a href="#/calendario/${encodeURIComponent(calId)}" style="color:var(--accent);font-weight:600">${esc(raceName)}</a>
           </div>
-          <div style="display:flex;gap:8px">
+          <div style="font-size:0.72rem;color:var(--text-muted);margin-bottom:8px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis">
+            ${isYt ? `🔗 <a href="${esc(v.url)}" target="_blank" rel="noopener" style="color:var(--accent)">${esc(v.url)}</a>` : '📁 File caricato'}
+          </div>
+          <div style="display:flex;gap:8px;flex-wrap:wrap">
             <button onclick="window.adminVideoAction('${esc(v.id)}','approve')" class="btn-approve">✓ Approva</button>
+            <button onclick="window.openMoveModal('pending',null,null,'${esc(v.id)}',${JSON.stringify(esc(v.title))})"
+              style="background:var(--bg-card);border:1px solid var(--border);padding:5px 12px;border-radius:6px;cursor:pointer;font-size:.8rem">↔️ Sposta+Approva</button>
             <button onclick="window.adminVideoAction('${esc(v.id)}','reject')"  class="btn-reject">✗ Rifiuta</button>
           </div>
         </div>
@@ -4293,22 +4328,127 @@ window.adminVideoEdit = async (calId, idx) => {
   } catch(e) { alert('Errore: ' + e.message); }
 };
 
-window.adminVideoMove = async (calId, idx) => {
-  const newCalId = prompt('ID calendario della gara di destinazione (es. TROFEO_XYZ_2026-04-20):');
-  if (!newCalId || !newCalId.trim()) return;
+window.adminVideoMove = (calId, idx) => {
+  const v = _adminVideosData[calId]?.[idx];
+  if (!v) return;
+  window.openMoveModal('approved', calId, idx, null, v.title);
+};
+
+// ── MODAL SPOSTA VIDEO ───────────────────────────────────────────────────────
+
+let _moveModalSource         = null;  // { type, calId, idx, pendingId }
+let _moveModalSelectedCalId  = null;
+
+window.openMoveModal = (type, calId, idx, pendingId, sourceTitle) => {
+  _moveModalSource        = { type, calId, idx: parseInt(idx), pendingId };
+  _moveModalSelectedCalId = null;
+
+  const existing = document.getElementById('video-move-modal');
+  if (existing) existing.remove();
+
+  const confirmLabel = type === 'pending' ? 'Sposta e Approva' : 'Sposta';
+
+  const modal = document.createElement('div');
+  modal.id = 'video-move-modal';
+  modal.style.cssText = 'position:fixed;inset:0;background:rgba(0,0,0,.72);z-index:9999;display:flex;align-items:center;justify-content:center;padding:16px';
+  modal.innerHTML = `
+    <div style="background:var(--bg-card);border:1px solid var(--border);border-radius:14px;padding:24px;max-width:520px;width:100%;position:relative;box-shadow:0 8px 40px rgba(0,0,0,.5)">
+      <button onclick="document.getElementById('video-move-modal').remove()"
+        style="position:absolute;top:12px;right:14px;background:transparent;border:none;font-size:1.3rem;cursor:pointer;color:var(--text-muted);line-height:1">✕</button>
+      <div style="font-weight:700;font-size:1rem;margin-bottom:6px">↔️ Sposta video</div>
+      <div style="font-size:.8rem;color:var(--text-muted);margin-bottom:18px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis">${esc(sourceTitle||'')}</div>
+      <label style="font-size:.8rem;color:var(--text-muted);display:block;margin-bottom:5px">Cerca gara di destinazione</label>
+      <input type="search" id="vmm-search" placeholder="Digita nome gara…" oninput="window.vmmSearch(this.value)" autocomplete="off"
+        style="width:100%;padding:9px 12px;border:1px solid var(--border);border-radius:7px;background:var(--bg-input,var(--bg-card2));color:var(--text-primary);font-size:.85rem;box-sizing:border-box" />
+      <div id="vmm-results"
+        style="display:none;background:var(--bg-card);border:1px solid var(--border);border-radius:7px;max-height:210px;overflow-y:auto;margin-top:4px;box-shadow:0 4px 16px rgba(0,0,0,.2)"></div>
+      <div id="vmm-selected" style="font-size:.82rem;color:var(--accent);margin-top:8px;font-weight:600;min-height:1.3em"></div>
+      <div style="display:flex;gap:8px;margin-top:18px">
+        <button id="vmm-confirm" onclick="window.vmmConfirm()" disabled
+          style="background:var(--accent);color:white;border:none;padding:9px 20px;border-radius:7px;font-weight:700;cursor:not-allowed;flex:1;opacity:.45;transition:opacity .2s">
+          ${confirmLabel}
+        </button>
+        <button onclick="document.getElementById('video-move-modal').remove()"
+          style="background:transparent;color:var(--text-muted);border:1px solid var(--border);padding:9px 16px;border-radius:7px;cursor:pointer">Annulla</button>
+      </div>
+    </div>`;
+  document.body.appendChild(modal);
+  setTimeout(() => document.getElementById('vmm-search')?.focus(), 60);
+};
+
+window.vmmSearch = (q) => {
+  const res = document.getElementById('vmm-results');
+  if (!res) return;
+  if (!q || q.length < 2) { res.style.display = 'none'; return; }
+  const matches = (globalData?.calendar || [])
+    .filter(g => (g.nome||'').toLowerCase().includes(q.toLowerCase()) || (g.id||'').toLowerCase().includes(q.toLowerCase()))
+    .sort((a,b) => (b.data||'').localeCompare(a.data||''))
+    .slice(0, 14);
+  if (!matches.length) { res.style.display = 'none'; return; }
+  res.style.display = 'block';
+  res.innerHTML = matches.map(g => `
+    <div onclick="window.vmmSelect('${esc(g.id)}',${JSON.stringify(esc(g.nome||g.id))})"
+      style="padding:8px 14px;cursor:pointer;font-size:.82rem;border-bottom:1px solid var(--border-subtle);display:flex;justify-content:space-between;align-items:center;gap:8px"
+      onmouseover="this.style.background='var(--bg-elevated)'" onmouseout="this.style.background=''">
+      <strong>${esc(g.nome||g.id)}</strong>
+      <span style="color:var(--text-muted);font-size:.72rem;flex-shrink:0;text-align:right">${g.data||''}<br>${g.categoria||''}</span>
+    </div>`).join('');
+};
+
+window.vmmSelect = (calId, nome) => {
+  _moveModalSelectedCalId = calId;
+  const sel = document.getElementById('vmm-selected');
+  const res = document.getElementById('vmm-results');
+  const btn = document.getElementById('vmm-confirm');
+  if (sel) sel.textContent = `✔ ${nome}`;
+  if (res) res.style.display = 'none';
+  if (btn) { btn.disabled = false; btn.style.opacity = '1'; btn.style.cursor = 'pointer'; }
+};
+
+window.vmmConfirm = async () => {
+  if (!_moveModalSelectedCalId || !_moveModalSource) return;
+  const src = _moveModalSource;
+  const btn = document.getElementById('vmm-confirm');
+  if (btn) { btn.disabled = true; btn.textContent = '…'; }
   try {
-    await apiCall(`/admin/videos/${encodeURIComponent(calId)}/${idx}/move`, {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ newCalId: newCalId.trim() }),
-    });
-    // Aggiorna cache locale
-    const v = _adminVideosData[calId].splice(idx, 1)[0];
-    if (!_adminVideosData[calId].length) delete _adminVideosData[calId];
-    if (!_adminVideosData[newCalId.trim()]) _adminVideosData[newCalId.trim()] = [];
-    _adminVideosData[newCalId.trim()].unshift(v);
-    renderAdminVideosAll();
-  } catch(e) { alert('Errore: ' + e.message); }
+    if (src.type === 'approved') {
+      // Sposta video già approvato → PATCH endpoint
+      await apiCall(`/admin/videos/${encodeURIComponent(src.calId)}/${src.idx}/move`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ newCalId: _moveModalSelectedCalId }),
+      });
+      // Aggiorna cache locale
+      const v = _adminVideosData[src.calId].splice(src.idx, 1)[0];
+      if (!_adminVideosData[src.calId]?.length) delete _adminVideosData[src.calId];
+      if (!_adminVideosData[_moveModalSelectedCalId]) _adminVideosData[_moveModalSelectedCalId] = [];
+      _adminVideosData[_moveModalSelectedCalId].unshift(v);
+      renderAdminVideosAll();
+
+    } else if (src.type === 'pending') {
+      // Approva il pending con gara di destinazione diversa
+      await apiCall(`/admin/videos/pending/${src.pendingId}/approve`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ newCalId: _moveModalSelectedCalId }),
+      });
+      document.getElementById('apv-' + src.pendingId)?.remove();
+      const container = document.getElementById('admin-videos-pending');
+      if (container && !container.querySelector('[id^="apv-"]')) {
+        container.innerHTML = `<div style="color:var(--text-muted);padding:20px 0">Nessun video in attesa.</div>`;
+      }
+      loadAdminAllVideos();
+    }
+    document.getElementById('video-move-modal')?.remove();
+  } catch(e) {
+    alert('Errore: ' + e.message);
+    if (btn) {
+      btn.disabled = false;
+      btn.textContent = src.type === 'pending' ? 'Sposta e Approva' : 'Sposta';
+      btn.style.opacity = '1';
+      btn.style.cursor = 'pointer';
+    }
+  }
 };
 
 // -- Form "Aggiungi video" --

@@ -535,6 +535,7 @@ app.get('/api/admin/videos/pending', requireAdmin, (req, res) => {
 });
 
 // Admin: approva video
+// Accetta opzionalmente { newCalId } nel body per spostare il video in un'altra gara
 app.post('/api/admin/videos/pending/:id/approve', requireAdmin, (req, res) => {
   try {
     const pending = readPendingVideos();
@@ -542,9 +543,17 @@ app.post('/api/admin/videos/pending/:id/approve', requireAdmin, (req, res) => {
     if (i === -1) return res.status(404).json({ error: 'Non trovato' });
     const v = pending[i];
     const videos = readVideos();
-    const key = v.cal_id || v.gara_id;
+    // newCalId dal body sovrascrive cal_id del pending (usato dal modal "Sposta+Approva")
+    const key = (req.body && req.body.newCalId) ? req.body.newCalId : (v.cal_id || v.gara_id);
     if (!videos[key]) videos[key] = [];
-    videos[key].unshift({ url: v.url, title: v.title, description: v.description || '', channel: v.submitted_by, published_at: v.submitted_at.slice(0,10), score: 0.8 });
+    videos[key].unshift({
+      url:          v.url,
+      title:        v.title,
+      description:  v.description || '',
+      channel:      v.channel || v.submitted_by || '',
+      published_at: (v.published_at || v.submitted_at || '').slice(0, 10),
+      score:        v.score != null ? v.score : 0.8,
+    });
     writeVideos(videos);
     pending.splice(i, 1);
     writePendingVideos(pending);

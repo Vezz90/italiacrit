@@ -34,6 +34,10 @@ const DAYS_AFTER  = 14;  // highlights e rassegne possono uscire anche 2 settima
 const MIN_SCORE_SOFT = 0.38;
 const MIN_SCORE_HARD = 0.52;
 
+// Soglia di auto-pubblicazione: score >= AUTO_APPROVE → va in videos.json
+//                               score <  AUTO_APPROVE → va in pending_videos.json (revisione admin)
+const SCORE_AUTO_APPROVE = 0.60;
+
 // Parole da ignorare nel matching
 const STOPWORDS = new Set([
   'di','del','della','dello','dei','delle','degli',
@@ -309,8 +313,9 @@ function matchVideoToRaces(video, calendar) {
 // ── MAIN ─────────────────────────────────────────────────────────────────────
 
 async function main() {
-  const calendarPath = path.join(__dirname, 'data', 'calendar.json');
-  const outputPath   = path.join(__dirname, 'data', 'videos.json');
+  const calendarPath  = path.join(__dirname, 'data', 'calendar.json');
+  const outputPath    = path.join(__dirname, 'data', 'videos.json');
+  const pendingPath   = path.join(__dirname, 'data', 'pending_videos.json');
 
   if (!fs.existsSync(calendarPath)) {
     console.error('ERRORE: data/calendar.json non trovato');
@@ -325,7 +330,15 @@ async function main() {
     existing = JSON.parse(fs.readFileSync(outputPath));
   }
 
-  const result = { ...existing };
+  // Carica pending esistenti — evitiamo di ri-aggiungere URL già in attesa
+  let pendingExisting = [];
+  if (fs.existsSync(pendingPath)) {
+    try { pendingExisting = JSON.parse(fs.readFileSync(pendingPath)); } catch { pendingExisting = []; }
+  }
+  const pendingUrls = new Set(pendingExisting.map(v => v.url));
+
+  const result      = { ...existing };
+  const newPending  = []; // video con score basso da aggiungere al pending
 
   // Strutture per la deduplicazione intelligente:
   //   raceVideoUrls  → { raceId: Set<url> }   evita duplicati nella stessa gara
@@ -361,11 +374,16 @@ async function main() {
     totalVideos += videos.length;
 
     for (const video of videos) {
+      const url = video.url;
+
+      // Salta se già in pending (attesa revisione admin)
+      if (pendingUrls.has(url)) { skipped++; continue; }
+
       const matches = matchVideoToRaces(video, calendar);
 
       if (matches.length === 0) {
         // Salta velocemente se l'URL è già noto ovunque
-        const alreadyKnown = Object.values(raceVideoUrls).some(s => s.has(video.url));
+        const alreadyKnown = Object.values(raceVideoUrls).some(s => s.has(url));
         if (!alreadyKnown) {
           console.log(`  ✗ nessuna gara per: "${video.title.slice(0,60)}" (${video.published_at})`);
         } else {
@@ -376,7 +394,6 @@ async function main() {
 
       let addedAny = false;
       for (const { race, score, debug } of matches) {
-        const url = video.url;
 
         // 1. Dedup per gara: stesso video non va due volte nella stessa gara
         if (!raceVideoUrls[race.id]) raceVideoUrls[race.id] = new Set();
@@ -389,12 +406,40 @@ async function main() {
           continue;
         }
 
+        // 3. Score basso → pending (revisione admin), score alto → auto-pubblica
+        if (score < SCORE_AUTO_APPROVE) {
+          console.log(`  ⏳ [${score}] "${video.title.slice(0,60)}" → PENDING (${race.id})`);
+          if (debug) console.log(`    j=${debug.j} cT=${debug.cT} cF=${debug.cF}`);
+          const today = new Date().toISOString().slice(0, 10);
+          const id = Date.now().toString(36) + Math.random().toString(36).slice(2, 7);
+          newPending.push({
+            id,
+            gara_id:      race.id,
+            cal_id:       race.id,
+            type:         'scraper',
+            url,
+            title:        video.title,
+            description:  video.description,
+            channel:      video.channel,
+            published_at: video.published_at,
+            score,
+            submitted_by: 'scraper-auto',
+            submitted_at: today,
+          });
+          pendingUrls.add(url);
+          // Registra la data per non duplicare cross-evento
+          if (!urlDates[url]) urlDates[url] = new Set();
+          urlDates[url].add(race.data);
+          addedAny = true;
+          continue;
+        }
+
         console.log(`  ✔ [${score}] "${video.title.slice(0,60)}" → ${race.id}`);
         if (debug) console.log(`    j=${debug.j} cT=${debug.cT} cF=${debug.cF}`);
 
         if (!result[race.id]) result[race.id] = [];
         result[race.id].push({
-          url:          url,
+          url,
           title:        video.title,
           description:  video.description,
           channel:      video.channel,
@@ -423,11 +468,23 @@ async function main() {
 
   fs.writeFileSync(outputPath, JSON.stringify(result, null, 2));
 
+  // Aggiorna pending_videos.json: aggiungi i nuovi video a basso score
+  if (newPending.length > 0) {
+    const pendingAll = [...pendingExisting, ...newPending];
+    fs.writeFileSync(pendingPath, JSON.stringify(pendingAll, null, 2));
+    console.log(`\n⏳ ${newPending.length} video a basso score aggiunti a pending_videos.json`);
+  }
+
   // Salva i metadati in un file separato (non interferisce con la struttura di videos.json)
   const metaPath = path.join(__dirname, 'data', 'videos_meta.json');
-  fs.writeFileSync(metaPath, JSON.stringify({ last_run: today, total_races: totalRaces, new_matches: newMatches }, null, 2));
+  fs.writeFileSync(metaPath, JSON.stringify({
+    last_run: today,
+    total_races: totalRaces,
+    new_matches: newMatches,
+    new_pending: newPending.length,
+  }, null, 2));
 
-  console.log(`\n✅ Completato [${today}]: ${totalVideos} video analizzati, ${newMatches} nuovi match, ${skipped} già presenti`);
+  console.log(`\n✅ Completato [${today}]: ${totalVideos} video analizzati, ${newMatches} auto-pubblicati, ${newPending.length} in attesa revisione, ${skipped} già presenti`);
   console.log(`   → data/videos.json aggiornato (${totalRaces} gare con video)`);
 
   // Exit code 0 anche se non ci sono nuovi match (GitHub Actions non fallisce)
