@@ -4352,20 +4352,24 @@ window.openMoveModal = (type, calId, idx, pendingId, sourceTitle) => {
   modal.id = 'video-move-modal';
   modal.style.cssText = 'position:fixed;inset:0;background:rgba(0,0,0,.72);z-index:9999;display:flex;align-items:center;justify-content:center;padding:16px';
   modal.innerHTML = `
-    <div style="background:var(--bg-card);border:1px solid var(--border);border-radius:14px;padding:24px;max-width:520px;width:100%;position:relative;box-shadow:0 8px 40px rgba(0,0,0,.5)">
+    <div style="background:var(--bg-card);border:1px solid var(--border);border-radius:14px;padding:24px;max-width:540px;width:100%;position:relative;box-shadow:0 8px 40px rgba(0,0,0,.5)">
       <button onclick="document.getElementById('video-move-modal').remove()"
         style="position:absolute;top:12px;right:14px;background:transparent;border:none;font-size:1.3rem;cursor:pointer;color:var(--text-muted);line-height:1">✕</button>
-      <div style="font-weight:700;font-size:1rem;margin-bottom:6px">↔️ Sposta video</div>
-      <div style="font-size:.8rem;color:var(--text-muted);margin-bottom:18px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis">${esc(sourceTitle||'')}</div>
+      <div style="font-weight:700;font-size:1rem;margin-bottom:4px">↔️ Sposta video</div>
+      <div style="font-size:.78rem;color:var(--text-muted);margin-bottom:16px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis">${esc(sourceTitle||'')}</div>
+
       <label style="font-size:.8rem;color:var(--text-muted);display:block;margin-bottom:5px">Cerca gara di destinazione</label>
-      <input type="search" id="vmm-search" placeholder="Digita nome gara…" oninput="window.vmmSearch(this.value)" autocomplete="off"
-        style="width:100%;padding:9px 12px;border:1px solid var(--border);border-radius:7px;background:var(--bg-input,var(--bg-card2));color:var(--text-primary);font-size:.85rem;box-sizing:border-box" />
+      <input type="search" id="vmm-search" placeholder="🔍  Filtra per nome, data o categoria…" oninput="window.vmmSearch(this.value)" autocomplete="off"
+        style="width:100%;padding:9px 12px;border:1px solid var(--border);border-radius:7px;background:var(--bg-input,var(--bg-card2,#111));color:var(--text-primary);font-size:.85rem;box-sizing:border-box;margin-bottom:6px" />
+
+      <!-- Lista gare: sempre visibile, filtrata dalla ricerca -->
       <div id="vmm-results"
-        style="display:none;background:var(--bg-card);border:1px solid var(--border);border-radius:7px;max-height:210px;overflow-y:auto;margin-top:4px;box-shadow:0 4px 16px rgba(0,0,0,.2)"></div>
-      <div id="vmm-selected" style="font-size:.82rem;color:var(--accent);margin-top:8px;font-weight:600;min-height:1.3em"></div>
-      <div style="display:flex;gap:8px;margin-top:18px">
+        style="background:var(--bg-card2,#111);border:1px solid var(--border);border-radius:7px;max-height:240px;overflow-y:auto;font-size:.82rem"></div>
+
+      <div id="vmm-selected" style="font-size:.82rem;color:var(--accent);margin-top:10px;font-weight:600;min-height:1.3em"></div>
+      <div style="display:flex;gap:8px;margin-top:14px">
         <button id="vmm-confirm" onclick="window.vmmConfirm()" disabled
-          style="background:var(--accent);color:white;border:none;padding:9px 20px;border-radius:7px;font-weight:700;cursor:not-allowed;flex:1;opacity:.45;transition:opacity .2s">
+          style="background:var(--accent);color:white;border:none;padding:9px 20px;border-radius:7px;font-weight:700;cursor:not-allowed;flex:1;opacity:.4;transition:opacity .15s">
           ${confirmLabel}
         </button>
         <button onclick="document.getElementById('video-move-modal').remove()"
@@ -4373,35 +4377,59 @@ window.openMoveModal = (type, calId, idx, pendingId, sourceTitle) => {
       </div>
     </div>`;
   document.body.appendChild(modal);
-  setTimeout(() => document.getElementById('vmm-search')?.focus(), 60);
+  // Pre-carica le gare più recenti subito
+  setTimeout(() => {
+    window.vmmSearch('');
+    document.getElementById('vmm-search')?.focus();
+  }, 40);
 };
 
-window.vmmSearch = (q) => {
+function vmmRenderList(matches, emptyMsg) {
   const res = document.getElementById('vmm-results');
   if (!res) return;
-  if (!q || q.length < 2) { res.style.display = 'none'; return; }
-  const matches = (globalData?.calendar || [])
-    .filter(g => (g.nome||'').toLowerCase().includes(q.toLowerCase()) || (g.id||'').toLowerCase().includes(q.toLowerCase()))
-    .sort((a,b) => (b.data||'').localeCompare(a.data||''))
-    .slice(0, 14);
-  if (!matches.length) { res.style.display = 'none'; return; }
-  res.style.display = 'block';
-  res.innerHTML = matches.map(g => `
+  if (!matches.length) {
+    res.innerHTML = `<div style="padding:12px 14px;color:var(--text-muted)">${emptyMsg || 'Nessuna gara trovata.'}</div>`;
+    return;
+  }
+  res.innerHTML = matches.map(g => {
+    const catBadge = g.categoria
+      ? `<span style="font-size:.68rem;background:var(--bg-card);border:1px solid var(--border-subtle);border-radius:4px;padding:1px 5px;margin-left:4px;white-space:nowrap">${esc(g.categoria)}</span>`
+      : '';
+    return `
     <div onclick="window.vmmSelect('${esc(g.id)}',${JSON.stringify(esc(g.nome||g.id))})"
-      style="padding:8px 14px;cursor:pointer;font-size:.82rem;border-bottom:1px solid var(--border-subtle);display:flex;justify-content:space-between;align-items:center;gap:8px"
-      onmouseover="this.style.background='var(--bg-elevated)'" onmouseout="this.style.background=''">
-      <strong>${esc(g.nome||g.id)}</strong>
-      <span style="color:var(--text-muted);font-size:.72rem;flex-shrink:0;text-align:right">${g.data||''}<br>${g.categoria||''}</span>
-    </div>`).join('');
+      style="padding:9px 14px;cursor:pointer;border-bottom:1px solid var(--border-subtle);display:flex;justify-content:space-between;align-items:center;gap:10px"
+      onmouseover="this.style.background='var(--bg-elevated,rgba(255,255,255,.06))'" onmouseout="this.style.background=''">
+      <span style="min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap">
+        <strong>${esc(g.nome||g.id)}</strong>${catBadge}
+      </span>
+      <span style="color:var(--text-muted);font-size:.73rem;flex-shrink:0">${g.data||''}</span>
+    </div>`;
+  }).join('');
+}
+
+window.vmmSearch = (q) => {
+  const cal = globalData?.calendar || [];
+  const qq  = (q || '').toLowerCase().trim();
+  const matches = cal
+    .filter(g => !qq ||
+      (g.nome||'').toLowerCase().includes(qq) ||
+      (g.id||'').toLowerCase().includes(qq) ||
+      (g.categoria||'').toLowerCase().includes(qq) ||
+      (g.data||'').includes(qq))
+    .sort((a,b) => (b.data||'').localeCompare(a.data||''))
+    .slice(0, qq ? 20 : 30); // più risultati nella lista iniziale
+  vmmRenderList(matches, qq ? 'Nessuna gara trovata.' : 'Calendario vuoto.');
 };
 
 window.vmmSelect = (calId, nome) => {
   _moveModalSelectedCalId = calId;
   const sel = document.getElementById('vmm-selected');
-  const res = document.getElementById('vmm-results');
   const btn = document.getElementById('vmm-confirm');
-  if (sel) sel.textContent = `✔ ${nome}`;
-  if (res) res.style.display = 'none';
+  // Evidenzia la riga selezionata
+  document.querySelectorAll('#vmm-results > div').forEach(el => {
+    el.style.background = el.getAttribute('onclick')?.includes(calId) ? 'var(--accent-muted,rgba(99,102,241,.18))' : '';
+  });
+  if (sel) sel.innerHTML = `✔ <strong>${nome}</strong> <span style="color:var(--text-muted);font-size:.75rem">${calId}</span>`;
   if (btn) { btn.disabled = false; btn.style.opacity = '1'; btn.style.cursor = 'pointer'; }
 };
 
