@@ -4319,8 +4319,7 @@ window.adminVideoEdit = async (calId, idx) => {
   try {
     await apiCall(`/admin/videos/${encodeURIComponent(calId)}/${idx}`, {
       method: 'PATCH',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ url: newUrl.trim(), title: newTitle.trim() }),
+      body: { url: newUrl.trim(), title: newTitle.trim() },
     });
     v.url   = newUrl.trim();
     v.title = newTitle.trim();
@@ -4543,10 +4542,10 @@ window.vmmConfirm = async () => {
   try {
     if (src.type === 'approved') {
       // Sposta video già approvato → PATCH endpoint
+      // apiCall fa già JSON.stringify(body) internamente — non pre-stringificare
       await apiCall(`/admin/videos/${encodeURIComponent(src.calId)}/${src.idx}/move`, {
         method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ newCalId: _moveModalSelectedCalId }),
+        body: { newCalId: _moveModalSelectedCalId },
       });
       // Aggiorna cache locale
       const v = _adminVideosData[src.calId].splice(src.idx, 1)[0];
@@ -4559,8 +4558,7 @@ window.vmmConfirm = async () => {
       // Approva il pending con gara di destinazione diversa
       await apiCall(`/admin/videos/pending/${src.pendingId}/approve`, {
         method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ newCalId: _moveModalSelectedCalId }),
+        body: { newCalId: _moveModalSelectedCalId },
       });
       document.getElementById('apv-' + src.pendingId)?.remove();
       const container = document.getElementById('admin-videos-pending');
@@ -4644,8 +4642,7 @@ window.adminSubmitAddVideo = async () => {
   try {
     await apiCall(`/admin/videos/${encodeURIComponent(_avfSelectedCalId)}`, {
       method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ url, title, channel: 'Admin' }),
+      body: { url, title, channel: 'Admin' },
     });
     window.adminShowAddVideo(false);
     await loadAdminAllVideos();
@@ -5668,7 +5665,7 @@ window.adminEditVideo = async function(calId, idx) {
   try {
     await apiCall(`/admin/videos/${encodeURIComponent(calId)}/${idx}`, {
       method: 'PATCH',
-      body: JSON.stringify({ url: newUrl, ...(newTitle ? { title: newTitle } : {}) })
+      body: { url: newUrl, ...(newTitle ? { title: newTitle } : {}) },
     });
     if (window._currentGaraId) renderGara(window._currentGaraId);
   } catch(e) { alert('Errore: ' + e.message); }
