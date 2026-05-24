@@ -162,9 +162,49 @@ async function fetchChannelVideos(channel) {
   return videos.map(v => ({ ...v, channel: channel.name, channel_id: channelId }));
 }
 
+// ── CATEGORY DETECTION ───────────────────────────────────────────────────────
+
+// Mappa keyword titolo video → nomi categoria del calendario
+const CAT_KEYWORDS = [
+  { kw: ['juniores', 'junior'],        cats: ['Juniores'] },
+  { kw: ['allievi', 'allievo'],        cats: ['Allievi'] },
+  { kw: ['esordienti', 'esordiente'],  cats: ['Esordienti'] },
+  { kw: ['under23', 'u23'],            cats: ['Under 23', 'Elite e Under 23'] },
+  { kw: ['elite'],                      cats: ['Elite', 'Elite e Under 23'] },
+  { kw: ['donne', 'femmin'],           cats: ['Donne'] },
+];
+
+/**
+ * Estrae le categorie menzionate nel titolo del video.
+ * Restituisce un array di nomi categoria (formato calendario), può essere vuoto.
+ */
+function extractVideoCategories(title) {
+  const norm = normalize(title);
+  const found = [];
+  for (const { kw, cats } of CAT_KEYWORDS) {
+    if (kw.some(k => norm.includes(k))) found.push(...cats);
+  }
+  return [...new Set(found)];
+}
+
+/**
+ * Compatibilità categoria video ↔ voce calendario.
+ *  1 = match esplicito   → bonus score
+ *  0 = neutro (nessun segnale nel video)
+ * -1 = mismatch esplicito → penalità score
+ */
+function categoryCompat(race, videoCats) {
+  if (videoCats.length === 0) return 0;
+  const rc = normalize(race.categoria || '');
+  for (const vc of videoCats) {
+    if (rc.includes(normalize(vc))) return 1;
+  }
+  return -1;
+}
+
 // ── MATCHING ─────────────────────────────────────────────────────────────────
 
-function scoreVideoRace(video, race) {
+function scoreVideoRace(video, race, videoCats) {
   // Testo completo del video per il matching
   const videoText = `${video.title} ${video.description}`;
 
@@ -194,44 +234,76 @@ function scoreVideoRace(video, race) {
     if (titleNorm.includes(cityNorm) || coverageScore(city, video.title) >= 0.7) cityBonus = 0.10;
   }
 
-  // Score finale: combina le metriche
-  const base = Math.max(j, cTitle * 0.88, cFull * 0.65);
-  const score = Math.min(1, base + edBonus + cityBonus);
+  // Bonus/penalità categoria: +0.20 se il video cita la stessa categoria della gara,
+  // -0.25 se cita una categoria diversa (es. titolo "Juniores" su voce Allievi)
+  const compat   = categoryCompat(race, videoCats);
+  const catBonus = compat === 1 ? 0.20 : compat === -1 ? -0.25 : 0;
 
-  return { score, j, cTitle, cFull };
+  // Score finale: combina le metriche
+  const base  = Math.max(j, cTitle * 0.88, cFull * 0.65);
+  const score = Math.min(1, base + edBonus + cityBonus + catBonus);
+
+  return { score, j, cTitle, cFull, compat };
 }
 
+/**
+ * Trova le voci del calendario che corrispondono al video.
+ * Restituisce un ARRAY (vuoto se nessun match).
+ *
+ * Logica multi-categoria:
+ *  - video senza segnale categoria → singolo best match (comportamento classico)
+ *  - video con categoria esplicita → solo le voci con categoria compatibile
+ *  - video con più categorie (es. "Allievi e Juniores") → una voce per categoria
+ *    → lo stesso video finirà in più race_id il giorno stesso
+ */
 function matchVideoToRaces(video, calendar) {
   const pubDate = video.published_at;
-  if (!pubDate) return null;
+  if (!pubDate) return [];
 
-  let bestScore = -1;
-  let bestRace  = null;
-  let bestDebug = null;
+  const videoCats = extractVideoCategories(video.title);
+  const candidates = [];
 
   for (const race of calendar) {
     if (!race.data) continue;
     const diff = dateDiffDays(pubDate, race.data);
     if (diff < -DAYS_BEFORE || diff > DAYS_AFTER) continue;
 
-    const { score, j, cTitle, cFull } = scoreVideoRace(video, race);
+    const { score, j, cTitle, cFull, compat } = scoreVideoRace(video, race, videoCats);
 
     // Accetta solo se supera la soglia
-    // Logica: score ≥ HARD sempre ok; tra SOFT e HARD richiediamo sia j>0.2 che cTitle>0.3
     const accepted = score >= MIN_SCORE_HARD ||
       (score >= MIN_SCORE_SOFT && j >= 0.18 && cTitle >= 0.28);
 
-    if (accepted && score > bestScore) {
-      bestScore = score;
-      bestRace  = race;
-      bestDebug = { j: j.toFixed(2), cT: cTitle.toFixed(2), cF: cFull.toFixed(2) };
+    if (accepted) {
+      candidates.push({
+        race,
+        score: Math.round(score * 100) / 100,
+        compat,
+        debug: { j: j.toFixed(2), cT: cTitle.toFixed(2), cF: cFull.toFixed(2) },
+      });
     }
   }
 
-  if (bestRace) {
-    return { race: bestRace, score: Math.round(bestScore * 100) / 100, debug: bestDebug };
+  if (candidates.length === 0) return [];
+  candidates.sort((a, b) => b.score - a.score);
+
+  // Nessun segnale categoria nel video → best match singolo (classico)
+  if (videoCats.length === 0) return [candidates[0]];
+
+  // Segnale categoria presente: preferisci voci con categoria compatibile
+  const catMatches = candidates.filter(c => c.compat === 1);
+  if (catMatches.length > 0) {
+    // Può restituire più voci (es. video "Allievi e Juniores" → 2 race_id)
+    return catMatches;
   }
-  return null;
+
+  // Nessuna voce con categoria esplicita compatibile →
+  // accetta voci "neutre" (race.categoria assente o non riconoscibile)
+  const neutrals = candidates.filter(c => c.compat === 0);
+  if (neutrals.length > 0) return [neutrals[0]];
+
+  // Tutto in mismatch categoria → nessun match
+  return [];
 }
 
 // ── MAIN ─────────────────────────────────────────────────────────────────────
@@ -255,10 +327,21 @@ async function main() {
 
   const result = { ...existing };
 
-  // Set globale di URL già presenti — ogni video va in una sola gara
-  const globalUrls = new Set();
-  for (const vids of Object.values(result)) {
-    for (const v of vids) globalUrls.add(v.url);
+  // Strutture per la deduplicazione intelligente:
+  //   raceVideoUrls  → { raceId: Set<url> }   evita duplicati nella stessa gara
+  //   urlDates       → { url: Set<data> }      traccia su quali DATE un URL è già assegnato
+  //                    → stesso URL ammesso in più gare DELLA STESSA DATA (categorie diverse)
+  //                    → bloccato se date diverse (eventi completamente distinti)
+  const raceVideoUrls = {};
+  const urlDates      = {};
+  for (const [raceId, vids] of Object.entries(result)) {
+    raceVideoUrls[raceId] = new Set(vids.map(v => v.url));
+    for (const v of vids) {
+      if (!urlDates[v.url]) urlDates[v.url] = new Set();
+      // Recupera la data della gara dal calendario, fallback all'id
+      const raceEntry = calendar.find(r => r.id === raceId);
+      if (raceEntry?.data) urlDates[v.url].add(raceEntry.data);
+    }
   }
 
   let newMatches = 0;
@@ -278,32 +361,55 @@ async function main() {
     totalVideos += videos.length;
 
     for (const video of videos) {
-      // Salta se già presente (in qualsiasi gara)
-      if (globalUrls.has(video.url)) {
-        skipped++;
+      const matches = matchVideoToRaces(video, calendar);
+
+      if (matches.length === 0) {
+        // Salta velocemente se l'URL è già noto ovunque
+        const alreadyKnown = Object.values(raceVideoUrls).some(s => s.has(video.url));
+        if (!alreadyKnown) {
+          console.log(`  ✗ nessuna gara per: "${video.title.slice(0,60)}" (${video.published_at})`);
+        } else {
+          skipped++;
+        }
         continue;
       }
 
-      const match = matchVideoToRaces(video, calendar);
-      if (match) {
-        const { race, score, debug } = match;
+      let addedAny = false;
+      for (const { race, score, debug } of matches) {
+        const url = video.url;
+
+        // 1. Dedup per gara: stesso video non va due volte nella stessa gara
+        if (!raceVideoUrls[race.id]) raceVideoUrls[race.id] = new Set();
+        if (raceVideoUrls[race.id].has(url)) continue;
+
+        // 2. Dedup cross-evento: stesso URL già assegnato a una gara in data DIVERSA
+        //    → significa che è già stato messo in un evento distinto → salta
+        if (urlDates[url] && urlDates[url].size > 0 && !urlDates[url].has(race.data)) {
+          skipped++;
+          continue;
+        }
+
         console.log(`  ✔ [${score}] "${video.title.slice(0,60)}" → ${race.id}`);
         if (debug) console.log(`    j=${debug.j} cT=${debug.cT} cF=${debug.cF}`);
 
         if (!result[race.id]) result[race.id] = [];
         result[race.id].push({
-          url:          video.url,
+          url:          url,
           title:        video.title,
           description:  video.description,
           channel:      video.channel,
           published_at: video.published_at,
           score,
         });
-        globalUrls.add(video.url);
+
+        raceVideoUrls[race.id].add(url);
+        if (!urlDates[url]) urlDates[url] = new Set();
+        urlDates[url].add(race.data);
         newMatches++;
-      } else {
-        console.log(`  ✗ nessuna gara per: "${video.title.slice(0,60)}" (${video.published_at})`);
+        addedAny = true;
       }
+
+      if (!addedAny) skipped++;
     }
   }
 
