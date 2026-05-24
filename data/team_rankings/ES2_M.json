@@ -14,12 +14,12 @@
   {
     "team_id": "BUSTO_GAROLFO",
     "team_nome": "BUSTO GAROLFO",
-    "punti": 268,
+    "punti": 282,
     "vittorie": 5,
     "p1": 5,
-    "p2": 4,
+    "p2": 5,
     "p3": 4,
-    "pout": 19,
+    "pout": 20,
     "n_atleti": 4,
     "pos": 2
   },
@@ -170,12 +170,12 @@
   {
     "team_id": "VIGOR_CYCLING_TEAM",
     "team_nome": "VIGOR - CYCLING TEAM",
-    "punti": 126,
+    "punti": 130,
     "vittorie": 1,
     "p1": 1,
     "p2": 3,
     "p3": 5,
-    "pout": 5,
+    "pout": 6,
     "n_atleti": 2,
     "pos": 15
   },
@@ -192,6 +192,18 @@
     "pos": 16
   },
   {
+    "team_id": "G_S_PREALPINO_A_S_D",
+    "team_nome": "G.S. PREALPINO A.S.D.",
+    "punti": 110,
+    "vittorie": 3,
+    "p1": 3,
+    "p2": 1,
+    "p3": 0,
+    "pout": 12,
+    "n_atleti": 3,
+    "pos": 17
+  },
+  {
     "team_id": "VC_CREMONESE",
     "team_nome": "VC CREMONESE",
     "punti": 110,
@@ -201,18 +213,6 @@
     "p3": 2,
     "pout": 3,
     "n_atleti": 2,
-    "pos": 17
-  },
-  {
-    "team_id": "G_S_PREALPINO_A_S_D",
-    "team_nome": "G.S. PREALPINO A.S.D.",
-    "punti": 104,
-    "vittorie": 3,
-    "p1": 3,
-    "p2": 1,
-    "p3": 0,
-    "pout": 11,
-    "n_atleti": 3,
     "pos": 18
   },
   {
@@ -240,6 +240,18 @@
     "pos": 20
   },
   {
+    "team_id": "ASD_PEDALE_CASALESE_ARMOFER",
+    "team_nome": "ASD PEDALE CASALESE ARMOFER",
+    "punti": 92,
+    "vittorie": 0,
+    "p1": 0,
+    "p2": 0,
+    "p3": 3,
+    "pout": 16,
+    "n_atleti": 2,
+    "pos": 21
+  },
+  {
     "team_id": "V_CYCLING_ARICI_CLAUDIA_PITON",
     "team_nome": "V CYCLING - ARICI CLAUDIA - PITON",
     "punti": 86,
@@ -249,18 +261,6 @@
     "p3": 0,
     "pout": 17,
     "n_atleti": 3,
-    "pos": 21
-  },
-  {
-    "team_id": "ASD_PEDALE_CASALESE_ARMOFER",
-    "team_nome": "ASD PEDALE CASALESE ARMOFER",
-    "punti": 82,
-    "vittorie": 0,
-    "p1": 0,
-    "p2": 0,
-    "p3": 2,
-    "pout": 16,
-    "n_atleti": 2,
     "pos": 22
   },
   {
@@ -324,6 +324,18 @@
     "pos": 27
   },
   {
+    "team_id": "BUSTESE_OLONIA_A_S_D",
+    "team_nome": "BUSTESE OLONIA A.S.D.",
+    "punti": 75,
+    "vittorie": 1,
+    "p1": 1,
+    "p2": 2,
+    "p3": 2,
+    "pout": 6,
+    "n_atleti": 2,
+    "pos": 28
+  },
+  {
     "team_id": "ASD_TEAM_PETRUCCI",
     "team_nome": "ASD TEAM PETRUCCI",
     "punti": 73,
@@ -333,7 +345,7 @@
     "p3": 1,
     "pout": 8,
     "n_atleti": 2,
-    "pos": 28
+    "pos": 29
   },
   {
     "team_id": "CRAZY_WHEELS_CYCLING_ACADEMY",
@@ -345,19 +357,19 @@
     "p3": 1,
     "pout": 8,
     "n_atleti": 2,
-    "pos": 29
+    "pos": 30
   },
   {
-    "team_id": "BUSTESE_OLONIA_A_S_D",
-    "team_nome": "BUSTESE OLONIA A.S.D.",
+    "team_id": "G_S_ALZATE_BRIANZA_SYSTEM_CAR",
+    "team_nome": "G.S. ALZATE BRIANZA - SYSTEM CAR",
     "punti": 71,
-    "vittorie": 1,
-    "p1": 1,
-    "p2": 2,
-    "p3": 2,
-    "pout": 4,
-    "n_atleti": 2,
-    "pos": 30
+    "vittorie": 0,
+    "p1": 0,
+    "p2": 1,
+    "p3": 1,
+    "pout": 13,
+    "n_atleti": 3,
+    "pos": 31
   },
   {
     "team_id": "MULTICAR_GRUPPO_AMARU",
@@ -369,7 +381,7 @@
     "p3": 0,
     "pout": 2,
     "n_atleti": 1,
-    "pos": 31
+    "pos": 32
   },
   {
     "team_id": "MST_CYCLING_SANDRIGO_BIKE",
@@ -381,7 +393,7 @@
     "p3": 2,
     "pout": 3,
     "n_atleti": 2,
-    "pos": 32
+    "pos": 33
   },
   {
     "team_id": "NONSOLOBIKE",
@@ -393,19 +405,19 @@
     "p3": 0,
     "pout": 1,
     "n_atleti": 1,
-    "pos": 33
+    "pos": 34
   },
   {
-    "team_id": "G_S_ALZATE_BRIANZA_SYSTEM_CAR",
-    "team_nome": "G.S. ALZATE BRIANZA - SYSTEM CAR",
+    "team_id": "V_C_LUGANO",
+    "team_nome": "V.C. LUGANO",
     "punti": 63,
-    "vittorie": 0,
-    "p1": 0,
+    "vittorie": 1,
+    "p1": 1,
     "p2": 1,
     "p3": 1,
-    "pout": 12,
-    "n_atleti": 3,
-    "pos": 34
+    "pout": 6,
+    "n_atleti": 2,
+    "pos": 35
   },
   {
     "team_id": "ASD_G_C_FAUSTO_COPPI",
@@ -417,7 +429,7 @@
     "p3": 0,
     "pout": 13,
     "n_atleti": 4,
-    "pos": 35
+    "pos": 36
   },
   {
     "team_id": "GS_BERTI_MOBILI_BENASSI",
@@ -429,7 +441,7 @@
     "p3": 0,
     "pout": 8,
     "n_atleti": 2,
-    "pos": 36
+    "pos": 37
   },
   {
     "team_id": "GOTTARDO_GIOCHI_CANEVA",
@@ -441,7 +453,7 @@
     "p3": 1,
     "pout": 6,
     "n_atleti": 2,
-    "pos": 37
+    "pos": 38
   },
   {
     "team_id": "STAR_CYCLING_LAB",
@@ -453,7 +465,7 @@
     "p3": 1,
     "pout": 11,
     "n_atleti": 3,
-    "pos": 38
+    "pos": 39
   },
   {
     "team_id": "NOVO_MESTO_CYCLING_ACADEMY",
@@ -465,7 +477,7 @@
     "p3": 0,
     "pout": 3,
     "n_atleti": 3,
-    "pos": 39
+    "pos": 40
   },
   {
     "team_id": "UC_GODIGESE_ABRA_IRIDE",
@@ -477,7 +489,7 @@
     "p3": 1,
     "pout": 8,
     "n_atleti": 2,
-    "pos": 40
+    "pos": 41
   },
   {
     "team_id": "S_C_VILLA_S_ANTONIO_CICLI_COCCI",
@@ -489,7 +501,7 @@
     "p3": 1,
     "pout": 4,
     "n_atleti": 1,
-    "pos": 41
+    "pos": 42
   },
   {
     "team_id": "PEDALE_SARZANESE",
@@ -501,7 +513,7 @@
     "p3": 1,
     "pout": 8,
     "n_atleti": 2,
-    "pos": 42
+    "pos": 43
   },
   {
     "team_id": "POL_ALBERGO_OLIVETO",
@@ -513,7 +525,7 @@
     "p3": 1,
     "pout": 2,
     "n_atleti": 1,
-    "pos": 43
+    "pos": 44
   },
   {
     "team_id": "U_C_S_OTTAVIO_ZULIANI_A_S_D",
@@ -525,7 +537,7 @@
     "p3": 1,
     "pout": 0,
     "n_atleti": 2,
-    "pos": 44
+    "pos": 45
   },
   {
     "team_id": "SESTU_BIKE_A_S_D",
@@ -537,7 +549,7 @@
     "p3": 0,
     "pout": 12,
     "n_atleti": 3,
-    "pos": 45
+    "pos": 46
   },
   {
     "team_id": "A_S_D_PROBIKE_ERICE",
@@ -549,7 +561,7 @@
     "p3": 1,
     "pout": 6,
     "n_atleti": 2,
-    "pos": 46
+    "pos": 47
   },
   {
     "team_id": "UNIONE_CICLISTICA_MIRANO",
@@ -561,7 +573,7 @@
     "p3": 0,
     "pout": 7,
     "n_atleti": 1,
-    "pos": 47
+    "pos": 48
   },
   {
     "team_id": "G_C_SOSSANO_1975",
@@ -573,18 +585,6 @@
     "p3": 1,
     "pout": 9,
     "n_atleti": 3,
-    "pos": 48
-  },
-  {
-    "team_id": "V_C_LUGANO",
-    "team_nome": "V.C. LUGANO",
-    "punti": 43,
-    "vittorie": 0,
-    "p1": 0,
-    "p2": 1,
-    "p3": 1,
-    "pout": 5,
-    "n_atleti": 2,
     "pos": 49
   },
   {
