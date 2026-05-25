@@ -4095,10 +4095,11 @@ async function renderAdmin() {
             <div id="avf-race-selected" style="font-size:.8rem;color:var(--accent);margin-top:4px;font-weight:600"></div>
           </div>
           <input type="url" id="avf-url" placeholder="URL YouTube (https://www.youtube.com/watch?v=...)"
+            oninput="window.adminUrlOembed(this.value)"
             style="padding:8px;border:1px solid var(--border);border-radius:6px;background:var(--bg-input,var(--bg-card));color:var(--text-primary);font-size:.85rem" />
-          <input type="text" id="avf-title" placeholder="Titolo (opzionale — lascia vuoto per usare quello del video)"
+          <input type="text" id="avf-title" placeholder="Titolo — compilato automaticamente dall'URL"
             style="padding:8px;border:1px solid var(--border);border-radius:6px;background:var(--bg-input,var(--bg-card));color:var(--text-primary);font-size:.85rem" />
-          <input type="text" id="avf-channel" placeholder="Autore / Canale (opzionale)"
+          <input type="text" id="avf-channel" placeholder="Autore / Canale — compilato automaticamente dall'URL"
             style="padding:8px;border:1px solid var(--border);border-radius:6px;background:var(--bg-input,var(--bg-card));color:var(--text-primary);font-size:.85rem" />
           <div style="display:flex;gap:8px">
             <button onclick="window.adminSubmitAddVideo()" style="background:var(--accent);color:white;border:none;padding:8px 20px;border-radius:6px;font-weight:600;cursor:pointer">Aggiungi</button>
@@ -4389,15 +4390,35 @@ window._adminVideoEditSave = async (calId, idx) => {
 
 let _avfSelectedCalId = null;
 
+// oEmbed auto-fill per il form admin (avf-url → avf-title + avf-channel)
+let _avfOembedTimer = null;
+window.adminUrlOembed = (url) => {
+  clearTimeout(_avfOembedTimer);
+  const vid = ytId(url);
+  if (!vid) return;
+  _avfOembedTimer = setTimeout(async () => {
+    try {
+      const d = await fetch(`https://www.youtube.com/oembed?url=${encodeURIComponent(url)}&format=json`).then(r => r.json());
+      const titleEl   = document.getElementById('avf-title');
+      const channelEl = document.getElementById('avf-channel');
+      if (titleEl   && !titleEl._manual)   titleEl.value   = d.title       || '';
+      if (channelEl && !channelEl._manual) channelEl.value = d.author_name || '';
+    } catch { /* oEmbed non disponibile */ }
+  }, 600);
+};
+
 window.adminShowAddVideo = (show = true) => {
   const f = document.getElementById('admin-add-video-form');
   if (f) f.style.display = show ? 'block' : 'none';
   if (show) {
     _avfSelectedCalId = null;
     document.getElementById('avf-race-search').value = '';
-    document.getElementById('avf-url').value = '';
-    document.getElementById('avf-title').value = '';
-    document.getElementById('avf-channel').value = '';
+    const _avfUrl = document.getElementById('avf-url');
+    const _avfTitle = document.getElementById('avf-title');
+    const _avfChan  = document.getElementById('avf-channel');
+    if (_avfUrl)   { _avfUrl.value = ''; }
+    if (_avfTitle) { _avfTitle.value = ''; _avfTitle._manual = false; }
+    if (_avfChan)  { _avfChan.value = '';  _avfChan._manual  = false; }
     document.getElementById('avf-race-selected').textContent = '';
     document.getElementById('avf-race-results').style.display = 'none';
   }
