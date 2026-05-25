@@ -5491,21 +5491,24 @@ async function renderGara(gara_id) {
     .then(r => r.ok ? r.json() : null)
     .then(fresh => {
       if (!fresh || !globalData) return;
+      console.log('[video-debug] API /videos risposta:', JSON.stringify(fresh).slice(0,300));
       const changed = JSON.stringify(globalData.videos) !== JSON.stringify(fresh);
       globalData.videos = fresh;
       if (changed && window._currentGaraId === gara_id) renderGara(gara_id);
     })
-    .catch(() => {});
+    .catch(e => console.warn('[video-debug] fetch fallito:', e.message));
 
   // Lookup multi-livello: calId → gara_id → calId senza suffisso categoria
   const _vids = globalData.videos || {};
   const _calIdStripped = _calId.replace(/_[A-Z0-9]+_[MF]$/, ''); // rimuove _JUNIORES_M ecc.
+  console.log('[video-debug] gara_id:', gara_id, '| _calId:', _calId, '| keys in videos:', Object.keys(_vids));
   const garaVideos = _vids[_calId]
     || _vids[gara_id]
     || (_calIdStripped !== _calId ? _vids[_calIdStripped] : null)
     || _vids[primaryGaraId]
     || _vids[primaryGaraId.replace(/_[A-Z0-9]+_[MF]$/, '')]
     || [];
+  console.log('[video-debug] garaVideos trovati:', garaVideos.length);
   const featuredVideo = garaVideos[0] || null;
   const featuredVideoId = featuredVideo ? (featuredVideo.url.match(/[?&]v=([^&]+)/) || [])[1] || null : null;
   const extraVideos = garaVideos.slice(1);
