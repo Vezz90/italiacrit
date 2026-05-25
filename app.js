@@ -4099,6 +4099,29 @@ async function renderAdmin() {
     </div>
 
     <!-- ═══════════════════════════════════════════════════════ -->
+    <!-- ITALIACICLISMO AUTO-FOTO                               -->
+    <!-- ═══════════════════════════════════════════════════════ -->
+    <div style="margin-top:40px">
+      <h2 style="font-family:var(--font-display);font-size:1.2rem;margin-bottom:4px;border-bottom:2px solid #8b5cf6;padding-bottom:8px;display:flex;align-items:center;gap:8px">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#8b5cf6" stroke-width="2"><rect x="3" y="3" width="18" height="18" rx="2"/><circle cx="8.5" cy="8.5" r="1.5"/><polyline points="21 15 16 10 5 21"/></svg>
+        ITALIACICLISMO.NET AUTO-FOTO
+      </h2>
+      <p style="font-size:.8rem;color:var(--text-muted);margin:0 0 12px">
+        Scarica automaticamente le foto da italiaciclismo.net (HTTP) e abbinale alle gare.
+      </p>
+      <div style="display:flex;gap:10px;flex-wrap:wrap;align-items:center;margin-bottom:16px">
+        <button onclick="window.icSync()" id="ic-sync-btn"
+          style="background:#8b5cf6;color:#fff;border:none;padding:9px 20px;border-radius:6px;font-weight:700;cursor:pointer;font-size:.875rem">
+          🔄 Sincronizza ItaliaCiclismo
+        </button>
+        <span id="ic-sync-status" style="font-size:.8rem;color:var(--text-muted)"></span>
+      </div>
+      <div id="ic-queue-container">
+        <div style="color:var(--text-muted);font-size:.85rem">Premi "Sincronizza ItaliaCiclismo" per scaricare le foto.</div>
+      </div>
+    </div>
+
+    <!-- ═══════════════════════════════════════════════════════ -->
     <!-- YOUTUBE AUTO-SYNC                                       -->
     <!-- ═══════════════════════════════════════════════════════ -->
     <div style="margin-top:40px">
@@ -4184,6 +4207,7 @@ async function renderAdmin() {
   loadAdminPendingVideos();
   loadAdminAllVideos();
   loadXpixQueue();
+  loadICQueue();
   loadYTQueue();
 }
 
@@ -4550,8 +4574,10 @@ window.ytPickGara = (id, garaId) => {
 
 // ── Approva e pubblica ────────────────────────────────────────────────────────
 window.ytApprove = async (id) => {
-  const garaId = _ytItemGaraMap[id];
-  if (!garaId) { showToast('Seleziona prima una gara', 'error'); return; }
+  const garaId = _ytItemGaraMap[id]
+    || document.querySelector(`#ytq-${id} select`)?.value
+    || '';
+  if (!garaId || garaId === '__search__') { showToast('Seleziona prima una gara', 'error'); return; }
   const item = _ytQueue.find(q => q.id === id);
   if (!item) return;
   try {
@@ -4844,8 +4870,11 @@ window.xpixPickGara = (id, garaId) => {
 };
 
 window.xpixApprove = async (id) => {
-  const garaId = _xpixItemGaraMap[id];
-  if (!garaId) { showToast('Seleziona prima una gara', 'error'); return; }
+  // Leggi dal map oppure direttamente dal SELECT (se l'utente non ha cambiato selezione)
+  const garaId = _xpixItemGaraMap[id]
+    || document.querySelector(`#xpixq-${id} select`)?.value
+    || '';
+  if (!garaId || garaId === '__search__') { showToast('Seleziona prima una gara', 'error'); return; }
   const item = _xpixQueue.find(q => q.id === id);
   const selectedPhotoUrl = _xpixItemPhotoMap[id] || item?.photo_url;
   if (!selectedPhotoUrl) { showToast('Nessuna foto selezionata', 'error'); return; }
@@ -4871,6 +4900,192 @@ window.xpixDismiss = async (id) => {
     if (item) item.status = 'dismissed';
     showToast('Foto scartata', 'info');
   } catch (e) { showToast('Errore: ' + e.message, 'error'); }
+};
+
+// ══════════════════════════════════════════════════════════════════════════════
+// ITALIACICLISMO.NET AUTO-FOTO — funzioni frontend
+// ══════════════════════════════════════════════════════════════════════════════
+
+let _icQueue = [];
+let _icItemGaraMap  = {};
+let _icItemPhotoMap = {};
+
+function _icScore(icName, icDate, race) {
+  // Usa la stessa logica di xpix/yt ma con data esatta come bonus maggiore
+  const base = _ytScore(icName, race);
+  const dateExact = icDate && race.data && icDate === race.data ? 0.3 : 0;
+  return Math.min(1, base + dateExact);
+}
+
+function _icFindMatches(name, date, maxResults = 5) {
+  const races = (globalData?.resultsRaw || []);
+  const seen = new Set();
+  const unique = races.filter(r => { if (seen.has(r.gara_id)) return false; seen.add(r.gara_id); return true; });
+  return unique
+    .map(r => ({ race: r, score: _icScore(name, date, r) }))
+    .filter(x => x.score > 0.12)
+    .sort((a, b) => b.score - a.score)
+    .slice(0, maxResults);
+}
+
+async function loadICQueue() {
+  const container = document.getElementById('ic-queue-container');
+  if (!container) return;
+  try {
+    const { queue } = await apiCall('/admin/ic/queue', { method: 'GET' });
+    _icQueue = queue || [];
+    renderICQueue();
+  } catch (e) {
+    if (container) container.innerHTML = `<div style="color:var(--text-muted);font-size:.85rem">Errore caricamento queue IC: ${esc(e.message)}</div>`;
+  }
+}
+
+function renderICQueue() {
+  const container = document.getElementById('ic-queue-container');
+  if (!container) return;
+  const pending   = _icQueue.filter(q => q.status === 'pending');
+  const dismissed = _icQueue.filter(q => q.status === 'dismissed').length;
+  const approved  = _icQueue.filter(q => q.status === 'approved').length;
+
+  if (!_icQueue.length) {
+    container.innerHTML = `<div style="color:var(--text-muted);font-size:.85rem;padding:16px 0">Nessuna foto in coda. Clicca "Sincronizza ItaliaCiclismo".</div>`;
+    return;
+  }
+  const stats = `<div style="font-size:.8rem;color:var(--text-muted);margin-bottom:12px">
+    📋 In attesa: <strong style="color:var(--text-primary)">${pending.length}</strong>
+    &nbsp;•&nbsp; ✓ Approvate: ${approved} &nbsp;•&nbsp; ✗ Scartate: ${dismissed}
+  </div>`;
+  if (!pending.length) {
+    container.innerHTML = stats + `<div style="color:var(--text-muted);font-size:.85rem">Tutte le foto sono state elaborate.</div>`;
+    return;
+  }
+
+  const rows = pending.map(item => {
+    const matches    = _icFindMatches(item.name, item.date);
+    const best       = matches[0];
+    const score      = best ? Math.round(best.score * 100) : 0;
+    const scoreColor = score >= 70 ? '#16a34a' : score >= 40 ? '#d97706' : '#6b7280';
+    const bestGaraId = _icItemGaraMap[item.id] || (best ? best.race.gara_id : '');
+    const optionsHtml = matches.map(m => {
+      const label = `${m.race.nome_gara} — ${m.race.categoria||''} ${m.race.genere||''} (${m.race.data||''}) [${Math.round(m.score*100)}%]`;
+      return `<option value="${esc(m.race.gara_id)}"${m.race.gara_id===bestGaraId?' selected':''}>${esc(label)}</option>`;
+    }).join('');
+    const allPhotos  = item.photos?.length ? item.photos : (item.photo_url ? [item.photo_url] : []);
+    const photosGrid = allPhotos.map(url => `
+      <img src="${esc(url)}" data-url="${esc(url)}" data-id="${esc(item.id)}"
+        onclick="window.icSelectPhoto('${esc(item.id)}',this)"
+        style="width:80px;height:54px;object-fit:cover;border-radius:4px;cursor:pointer;border:2px solid ${url===(item.photo_url||allPhotos[0])?'#8b5cf6':'transparent'};transition:border-color .15s;flex-shrink:0"
+        onerror="this.style.display='none'" />`).join('');
+
+    return `
+    <div id="icq-${esc(item.id)}" style="background:var(--bg-card);border:1px solid var(--border);border-radius:8px;padding:12px;margin-bottom:10px">
+      <div style="font-weight:600;font-size:.85rem;margin-bottom:4px">${esc(item.name)}</div>
+      <div style="font-size:.75rem;color:var(--text-muted);margin-bottom:8px">
+        📅 ${esc(item.date||'')} &nbsp;•&nbsp; 🏷 ${esc(item.categoria||'')}
+        ${score ? `&nbsp;•&nbsp; <span style="color:${scoreColor};font-weight:700">${score}% match</span>` : ''}
+        &nbsp;•&nbsp; <a href="${esc(item.gara_url||'#')}" target="_blank" style="color:var(--accent)">Apri pagina gara ↗</a>
+      </div>
+      <div style="display:flex;flex-wrap:wrap;gap:6px;margin-bottom:10px;padding:8px;background:var(--bg-elevated);border-radius:6px">
+        <div style="width:100%;font-size:.72rem;color:var(--text-muted);margin-bottom:4px">👇 Clicca la foto da usare</div>
+        ${photosGrid || '<span style="font-size:.8rem;color:var(--text-muted)">Nessuna foto</span>'}
+      </div>
+      <div style="display:flex;gap:6px;flex-wrap:wrap;align-items:center;margin-bottom:6px">
+        <select onchange="window.icSetGara('${esc(item.id)}',this.value)"
+          style="flex:1;min-width:180px;padding:5px 8px;border:1px solid var(--border);border-radius:5px;background:var(--bg-primary);color:var(--text-primary);font-size:.78rem">
+          <option value="">— Seleziona gara —</option>
+          ${optionsHtml}
+          <option value="__search__">🔍 Cerca altra gara…</option>
+        </select>
+      </div>
+      <div id="icq-search-${esc(item.id)}" style="display:none;margin-bottom:6px">
+        <input type="text" placeholder="Cerca gara per nome…" oninput="window.icSearchGara('${esc(item.id)}',this.value)"
+          style="width:100%;box-sizing:border-box;padding:5px 8px;border:1px solid var(--border);border-radius:5px;background:var(--bg-primary);color:var(--text-primary);font-size:.78rem" />
+        <div id="icq-sr-${esc(item.id)}" style="background:var(--bg-card);border:1px solid var(--border);border-radius:5px;max-height:160px;overflow-y:auto;margin-top:2px"></div>
+      </div>
+      <div style="display:flex;gap:6px;flex-wrap:wrap">
+        <button onclick="window.icApprove('${esc(item.id)}')"
+          style="background:#16a34a;color:#fff;border:none;padding:5px 14px;border-radius:5px;cursor:pointer;font-size:.78rem;font-weight:700">✓ Pubblica foto</button>
+        <button onclick="window.icDismiss('${esc(item.id)}')"
+          style="background:transparent;border:1px solid #ef4444;color:#ef4444;padding:5px 12px;border-radius:5px;cursor:pointer;font-size:.78rem">✗ Scarta</button>
+      </div>
+    </div>`;
+  }).join('');
+  container.innerHTML = stats + rows;
+}
+
+window.icSync = async () => {
+  const btn = document.getElementById('ic-sync-btn');
+  const status = document.getElementById('ic-sync-status');
+  if (btn) { btn.disabled = true; btn.textContent = '⏳ Sincronizzazione…'; }
+  if (status) status.textContent = 'Download in corso…';
+  try {
+    const r = await apiCall('/admin/ic/sync', { method: 'POST' });
+    if (status) status.textContent = `✓ +${r.added} nuove gare trovate`;
+    await loadICQueue();
+  } catch (e) {
+    if (status) status.textContent = '✗ Errore: ' + e.message;
+  } finally {
+    if (btn) { btn.disabled = false; btn.textContent = '🔄 Sincronizza ItaliaCiclismo'; }
+  }
+};
+
+window.icSelectPhoto = (id, imgEl) => {
+  const block = document.getElementById('icq-' + id);
+  if (block) block.querySelectorAll('img[data-url]').forEach(el => { el.style.borderColor = 'transparent'; });
+  imgEl.style.borderColor = '#8b5cf6';
+  _icItemPhotoMap[id] = imgEl.dataset.url;
+};
+window.icSetGara = (id, garaId) => {
+  if (garaId === '__search__') { const sr = document.getElementById('icq-search-'+id); if(sr) sr.style.display='block'; return; }
+  _icItemGaraMap[id] = garaId;
+};
+window.icSearchGara = (id, q) => {
+  const el = document.getElementById('icq-sr-'+id); if (!el) return;
+  if (!q || q.length < 2) { el.innerHTML = ''; return; }
+  const seen = new Set();
+  const matches = (globalData?.resultsRaw||[]).filter(r => { if(seen.has(r.gara_id))return false; seen.add(r.gara_id);
+    return (r.nome_gara||'').toLowerCase().includes(q.toLowerCase()) || r.gara_id.toLowerCase().includes(q.toLowerCase());
+  }).sort((a,b)=>(b.data||'').localeCompare(a.data||'')).slice(0,8);
+  el.innerHTML = matches.map(r => `<div onclick="window.icPickGara('${esc(id)}','${esc(r.gara_id)}')"
+    style="padding:6px 10px;cursor:pointer;font-size:.78rem;border-bottom:1px solid var(--border-subtle)">
+    ${esc(r.nome_gara)} — ${esc(r.categoria||'')} ${esc(r.genere||'')} (${esc(r.data||'')})
+  </div>`).join('') || '<div style="padding:6px 10px;font-size:.78rem;color:var(--text-muted)">Nessun risultato</div>';
+};
+window.icPickGara = (id, garaId) => {
+  _icItemGaraMap[id] = garaId;
+  const sr = document.getElementById('icq-search-'+id); if(sr) sr.style.display='none';
+  const sel = document.querySelector(`#icq-${id} select`);
+  if (sel) {
+    const r = (globalData?.resultsRaw||[]).find(x=>x.gara_id===garaId);
+    if (r && ![...sel.options].find(o=>o.value===garaId)) {
+      const opt = document.createElement('option'); opt.value=garaId;
+      opt.textContent=`${r.nome_gara} — ${r.categoria||''} ${r.genere||''} (${r.data||''})`;
+      sel.insertBefore(opt, sel.firstChild);
+    }
+    sel.value = garaId;
+  }
+};
+window.icApprove = async (id) => {
+  const garaId = _icItemGaraMap[id] || document.querySelector(`#icq-${id} select`)?.value || '';
+  if (!garaId || garaId==='__search__') { showToast('Seleziona prima una gara','error'); return; }
+  const item = _icQueue.find(q=>q.id===id);
+  const selectedPhotoUrl = _icItemPhotoMap[id] || item?.photo_url;
+  if (!selectedPhotoUrl) { showToast('Nessuna foto selezionata','error'); return; }
+  try {
+    await apiCall(`/admin/ic/queue/${id}/approve`, { method:'POST', body:{ gara_id:garaId, selected_photo_url:selectedPhotoUrl } });
+    document.getElementById('icq-'+id)?.remove();
+    const it = _icQueue.find(q=>q.id===id); if(it) it.status='approved';
+    _risPhotosMap = null;
+    showToast('✓ Foto pubblicata!');
+  } catch(e) { showToast('Errore: '+e.message,'error'); }
+};
+window.icDismiss = async (id) => {
+  try {
+    await apiCall(`/admin/ic/queue/${id}`,{method:'DELETE'});
+    document.getElementById('icq-'+id)?.remove();
+    const it=_icQueue.find(q=>q.id===id); if(it) it.status='dismissed';
+    showToast('Foto scartata','info');
+  } catch(e) { showToast('Errore: '+e.message,'error'); }
 };
 
 // ── GESTIONE VIDEO APPROVATI ─────────────────────────────────────────────────
@@ -8902,12 +9117,14 @@ let _risPhotosMap = null;
 async function loadRisPhotos() {
   if (_risPhotosMap) return _risPhotosMap;
   try {
-    const [d1, d2] = await Promise.all([
+    const [d1, d2, d3] = await Promise.all([
       fetch(`${API_BASE}/race-photos`).then(r => r.json()).catch(() => ({ photos: [] })),
       fetch(`${API_BASE}/xpix-photos`).then(r => r.json()).catch(() => ({ photos: [] })),
+      fetch(`${API_BASE}/ic-photos`).then(r => r.json()).catch(() => ({ photos: [] })),
     ]);
     _risPhotosMap = {};
-    // xpix prima (priorità bassa) — foto uploaded le sovrascrivono
+    // Priorità: italiaciclismo < xpix < uploaded
+    (d3.photos || []).forEach(p => { if (p.gara_id && !_risPhotosMap[p.gara_id]) _risPhotosMap[p.gara_id] = p; });
     (d2.photos || []).forEach(p => { if (p.gara_id && !_risPhotosMap[p.gara_id]) _risPhotosMap[p.gara_id] = p; });
     (d1.photos || []).forEach(p => { if (p.gara_id) _risPhotosMap[p.gara_id] = p; });
   } catch { _risPhotosMap = {}; }

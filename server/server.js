@@ -962,6 +962,132 @@ app.delete('/api/admin/xpix/photos/:gara_id', requireAdmin, async (req, res) => 
   } catch (e) { res.status(500).json({ error: e.message }); }
 });
 
+// ══════════════════════════════════════════════════════════════════════════════
+// ITALIACICLISMO.NET AUTO-FOTO
+// ══════════════════════════════════════════════════════════════════════════════
+const { fetchItaliaciclismoCandidates } = require('./italiaciclismo-scraper');
+
+const IC_QUEUE_PATH  = path.join(__dirname, '../data/ic_queue.json');
+const IC_PHOTOS_PATH = path.join(__dirname, '../data/ic_photos.json');
+
+async function readICQueue() {
+  if (supabase) {
+    const { data, error } = await supabase.from('kv_store').select('value').eq('key', 'ic_queue').single();
+    if (error && error.code !== 'PGRST116') console.error('[ic_queue] read:', error.message);
+    return data?.value || [];
+  }
+  try { return JSON.parse(fs.readFileSync(IC_QUEUE_PATH, 'utf8')); } catch { return []; }
+}
+async function writeICQueue(arr) {
+  if (supabase) {
+    const { error } = await supabase.from('kv_store')
+      .upsert({ key: 'ic_queue', value: arr, updated_at: new Date().toISOString() });
+    if (error) throw new Error('Supabase write ic_queue: ' + error.message);
+    return;
+  }
+  fs.writeFileSync(IC_QUEUE_PATH, JSON.stringify(arr, null, 2));
+}
+async function readICPhotos() {
+  if (supabase) {
+    const { data, error } = await supabase.from('kv_store').select('value').eq('key', 'ic_photos').single();
+    if (error && error.code !== 'PGRST116') console.error('[ic_photos] read:', error.message);
+    return data?.value || {};
+  }
+  try { return JSON.parse(fs.readFileSync(IC_PHOTOS_PATH, 'utf8')); } catch { return {}; }
+}
+async function writeICPhotos(obj) {
+  if (supabase) {
+    const { error } = await supabase.from('kv_store')
+      .upsert({ key: 'ic_photos', value: obj, updated_at: new Date().toISOString() });
+    if (error) throw new Error('Supabase write ic_photos: ' + error.message);
+    return;
+  }
+  fs.writeFileSync(IC_PHOTOS_PATH, JSON.stringify(obj, null, 2));
+}
+
+app.get('/api/admin/ic/queue', requireAdmin, async (req, res) => {
+  try { res.json({ queue: await readICQueue() }); }
+  catch (e) { res.status(500).json({ error: e.message }); }
+});
+
+app.post('/api/admin/ic/sync', requireAdmin, async (req, res) => {
+  try {
+    const queue     = await readICQueue();
+    const knownUrls = new Set(queue.map(q => q.gara_url));
+    const candidates = await fetchItaliaciclismoCandidates(knownUrls, 20);
+    let added = 0;
+    for (const c of candidates) {
+      const id = Date.now().toString(36) + Math.random().toString(36).slice(2, 7);
+      queue.push({
+        id,
+        gara_url:  c.gara_url,
+        categoria: c.categoria,
+        date:      c.date,
+        name:      c.name,
+        photos:    c.photos,
+        photo_url: c.photo_url,
+        status:            'pending',
+        suggested_gara_id: null,
+        added_at:          new Date().toISOString(),
+      });
+      added++;
+    }
+    const nonPending = queue.filter(q => q.status !== 'pending');
+    const pending    = queue.filter(q => q.status === 'pending')
+      .sort((a, b) => (b.added_at || '').localeCompare(a.added_at || ''))
+      .slice(0, 200);
+    const trimmed = [...nonPending, ...pending];
+    await writeICQueue(trimmed);
+    res.json({ ok: true, added, total: trimmed.length });
+  } catch (e) {
+    console.error('[ic-sync]', e.message);
+    res.status(500).json({ error: e.message });
+  }
+});
+
+app.post('/api/admin/ic/queue/:id/approve', requireAdmin, async (req, res) => {
+  try {
+    const { gara_id, selected_photo_url } = req.body;
+    if (!gara_id) return res.status(400).json({ error: 'gara_id obbligatorio' });
+    const queue = await readICQueue();
+    const i = queue.findIndex(q => q.id === req.params.id);
+    if (i === -1) return res.status(404).json({ error: 'Non trovato' });
+    const item   = queue[i];
+    const photos = await readICPhotos();
+    photos[gara_id] = {
+      url:        selected_photo_url || item.photo_url,
+      gara_url:   item.gara_url,
+      name:       item.name,
+      gara_id,
+      source:     'italiaciclismo',
+      approved_at: new Date().toISOString(),
+    };
+    await writeICPhotos(photos);
+    queue[i].status = 'approved';
+    queue[i].approved_gara_id = gara_id;
+    await writeICQueue(queue);
+    res.json({ ok: true });
+  } catch (e) { res.status(500).json({ error: e.message }); }
+});
+
+app.delete('/api/admin/ic/queue/:id', requireAdmin, async (req, res) => {
+  try {
+    const queue = await readICQueue();
+    const i = queue.findIndex(q => q.id === req.params.id);
+    if (i === -1) return res.status(404).json({ error: 'Non trovato' });
+    queue[i].status = 'dismissed';
+    await writeICQueue(queue);
+    res.json({ ok: true });
+  } catch (e) { res.status(500).json({ error: e.message }); }
+});
+
+app.get('/api/ic-photos', async (req, res) => {
+  try {
+    const photos = await readICPhotos();
+    res.json({ photos: Object.values(photos) });
+  } catch (e) { res.status(500).json({ error: e.message }); }
+});
+
 // GET foto xpix approvate (endpoint pubblico usato dal frontend)
 app.get('/api/xpix-photos', async (req, res) => {
   try {
