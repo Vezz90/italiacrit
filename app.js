@@ -5497,8 +5497,6 @@ async function renderAtleta(atleta_id) {
       <button class="btn-share" onclick="window.openComparatore('${esc(atleta_id)}','atleta')">⚖ Compara</button>
       ${adminEditBtn('atleta', atleta_id)}
     </div>
-    ${heroHtml}
-    ${_identityHtml}
     ${buildProfileMedia(risultati, photosMap, globalData.videos)}
     <div class="section-header" style="margin-top:28px">
       <span class="section-title">RISULTATI STAGIONE</span>
@@ -5840,7 +5838,6 @@ async function renderTeam(team_id) {
     </div>
 
     ${catTabsHtml}
-    ${identityHtml}
 
     <div class="section-header" style="margin-top:28px">
       <span class="section-title">CORRIDORI CHIAVE</span>
