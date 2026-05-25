@@ -5610,12 +5610,18 @@ async function renderGara(gara_id) {
   // al calId per retrocompatibilità con video inseriti prima di questa fix.
   const _vids = globalData.videos || {};
   const _calIdStripped = _calId.replace(/_[A-Z0-9]+_[MF]$/, ''); // rimuove _JUN_M, _ELI_M ecc.
-  const garaVideos = _vids[primaryGaraId]                                         // ← chiave esatta con categoria (nuovo)
-    || _vids[gara_id]                                                               // ← alias gara_id
-    || _vids[_calId]                                                                // ← calId senza categoria (legacy)
-    || (_calIdStripped !== _calId ? _vids[_calIdStripped] : null)                  // ← calId stripped
-    || _vids[primaryGaraId.replace(/_[A-Z0-9]+_[MF]$/, '')]                       // ← primaryGaraId stripped
-    || [];
+  // Unisce video da tutte le chiavi possibili (nuova + legacy) e deduplica per URL
+  const _videoKeys = [
+    primaryGaraId,
+    gara_id,
+    _calId,
+    _calIdStripped !== _calId ? _calIdStripped : null,
+    primaryGaraId.replace(/_[A-Z0-9]+_[MF]$/, ''),
+  ].filter(Boolean);
+  const _seenVideoUrls = new Set();
+  const garaVideos = _videoKeys
+    .flatMap(k => _vids[k] || [])
+    .filter(v => { if (_seenVideoUrls.has(v.url)) return false; _seenVideoUrls.add(v.url); return true; });
   const featuredVideo = garaVideos[0] || null;
   const featuredVideoId = featuredVideo ? ytId(featuredVideo.url) : null;
   const extraVideos = garaVideos.slice(1);
