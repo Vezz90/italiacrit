@@ -940,6 +940,31 @@ app.post('/api/admin/xpix/queue/:id/approve', requireAdmin, async (req, res) => 
   } catch (e) { res.status(500).json({ error: e.message }); }
 });
 
+// POST refresh-photos: ricarica le foto di un album già in coda
+app.post('/api/admin/xpix/queue/:id/refresh-photos', requireAdmin, async (req, res) => {
+  try {
+    const queue = await readXpixQueue();
+    const i = queue.findIndex(q => q.id === req.params.id);
+    if (i === -1) return res.status(404).json({ error: 'Non trovato' });
+
+    const item   = queue[i];
+    const { fetchPhotosForAlbum } = require('./xpix-scraper');
+    const photos = await fetchPhotosForAlbum(
+      { id: item.album_id, slug: item.album_slug },
+      16  // prendi più foto possibili
+    );
+
+    queue[i].photos    = photos;
+    queue[i].photo_url = photos[0] || item.photo_url;
+    await writeXpixQueue(queue);
+
+    res.json({ ok: true, photos_count: photos.length, photos });
+  } catch (e) {
+    console.error('[xpix-refresh]', e.message);
+    res.status(500).json({ error: e.message });
+  }
+});
+
 // DELETE scarta
 app.delete('/api/admin/xpix/queue/:id', requireAdmin, async (req, res) => {
   try {

@@ -4778,6 +4778,11 @@ function renderXpixQueue() {
           style="background:#16a34a;color:#fff;border:none;padding:5px 14px;border-radius:5px;cursor:pointer;font-size:.78rem;font-weight:700">
           ✓ Pubblica foto selezionata
         </button>
+        <button onclick="window.xpixRefreshPhotos('${esc(item.id)}')"
+          style="background:transparent;border:1px solid #0ea5e9;color:#0ea5e9;padding:5px 12px;border-radius:5px;cursor:pointer;font-size:.78rem"
+          title="Ricarica tutte le foto dell'album dal sito xpix.it">
+          🔄 Ricarica foto
+        </button>
         <button onclick="window.xpixDismiss('${esc(item.id)}')"
           style="background:transparent;border:1px solid #ef4444;color:#ef4444;padding:5px 12px;border-radius:5px;cursor:pointer;font-size:.78rem">
           ✗ Scarta album
@@ -4900,6 +4905,28 @@ window.xpixDismiss = async (id) => {
     if (item) item.status = 'dismissed';
     showToast('Foto scartata', 'info');
   } catch (e) { showToast('Errore: ' + e.message, 'error'); }
+};
+
+window.xpixRefreshPhotos = async (id) => {
+  const block = document.getElementById('xpixq-' + id);
+  const btn   = block?.querySelector('button[onclick*="xpixRefreshPhotos"]');
+  if (btn) { btn.disabled = true; btn.textContent = '⏳ Caricamento…'; }
+  try {
+    const r = await apiCall(`/admin/xpix/queue/${id}/refresh-photos`, { method: 'POST' });
+    if (!r.ok) throw new Error(r.error || 'Errore');
+
+    // Aggiorna item locale nella queue e ri-renderizza
+    const item = _xpixQueue.find(q => q.id === id);
+    if (item) {
+      item.photos    = r.photos || [];
+      item.photo_url = r.photos?.[0] || item.photo_url;
+    }
+    renderXpixQueue();
+    showToast(`${r.photos_count} foto caricate`, 'success');
+  } catch (e) {
+    if (btn) { btn.disabled = false; btn.textContent = '🔄 Ricarica foto'; }
+    showToast('Errore: ' + e.message, 'error');
+  }
 };
 
 // ══════════════════════════════════════════════════════════════════════════════

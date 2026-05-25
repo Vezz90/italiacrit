@@ -102,48 +102,99 @@ function isRecent(name) {
 }
 
 // ── Recupera più URL foto watermarked per un album ────────────────────────────
-// Strategia 1 (preferita): wp/v2/product?pixy_album=[id] → N prodotti → media → source_url
-// Strategia 2 (fallback):  scrape HTML gallery e prendi tutti i src watermarked
+// Strategia 1: wp/v2/product?pixy_album=[id] → prodotti → featured_media+images → source_url
+// Strategia 2: wp/v2/media?pixy_album=[id] (taxonomy diretta su media)
+// Strategia 3: scrape HTML gallery — sempre eseguita per supplementare
 async function fetchPhotosForAlbum(album, maxPhotos = 12) {
+  const seen   = new Set();
   const photos = [];
 
-  // Strategia 1: API WP — ottieni i primi N prodotti dell'album
+  const addPhoto = (url) => {
+    if (!url || seen.has(url) || photos.length >= maxPhotos) return;
+    seen.add(url);
+    photos.push(url);
+  };
+
+  // ── Strategia 1: WP products → featured_media + images array ──────────────
   try {
     const products = await fetchURL(
-      `${XPIX_API}/product?pixy_album=${album.id}&per_page=${maxPhotos}&_fields=id,featured_media`,
-      12000, true
+      `${XPIX_API}/product?pixy_album=${album.id}&per_page=${maxPhotos}&_fields=id,featured_media,images`,
+      15000, true
     );
     if (Array.isArray(products) && products.length) {
-      // Fetch media URLs in parallelo
-      const mediaUrls = await mapConcurrent(
-        products.filter(p => p.featured_media),
-        async (p) => {
-          try {
-            const media = await fetchURL(
-              `${XPIX_API}/media/${p.featured_media}?_fields=source_url`,
-              6000, true
-            );
-            return media?.source_url || null;
-          } catch { return null; }
-        }, 4
-      );
-      photos.push(...mediaUrls.filter(Boolean));
-    }
-  } catch { /* fallback */ }
+      // (a) Estrai da campo images[] direttamente (WooCommerce lo include spesso)
+      for (const p of products) {
+        if (Array.isArray(p.images)) {
+          for (const img of p.images) {
+            addPhoto(img.src || img.source_url || null);
+          }
+        }
+      }
 
-  // Strategia 2: scrape HTML gallery page (prendi tutti i src watermarked visibili)
-  if (!photos.length) {
+      // (b) Fetch featured_media per i prodotti che ancora non hanno foto
+      const withMedia = products.filter(p => p.featured_media && !photos.length);
+      if (withMedia.length) {
+        const mediaUrls = await mapConcurrent(
+          withMedia.slice(0, maxPhotos),
+          async (p) => {
+            try {
+              const media = await fetchURL(
+                `${XPIX_API}/media/${p.featured_media}?_fields=source_url,media_details`,
+                8000, true
+              );
+              return media?.source_url || null;
+            } catch { return null; }
+          }, 4
+        );
+        mediaUrls.filter(Boolean).forEach(addPhoto);
+      }
+    }
+  } catch (e) {
+    console.warn(`[xpix] strategy1 album ${album.slug}: ${e.message}`);
+  }
+
+  // ── Strategia 2: media con taxonomy pixy_album ─────────────────────────────
+  if (photos.length < 3) {
+    try {
+      const media = await fetchURL(
+        `${XPIX_API}/media?pixy_album=${album.id}&per_page=${maxPhotos}&_fields=source_url`,
+        12000, true
+      );
+      if (Array.isArray(media)) {
+        media.forEach(m => addPhoto(m.source_url || null));
+      }
+    } catch { /* ignorato */ }
+  }
+
+  // ── Strategia 3: scrape HTML gallery (sempre, per integrare) ──────────────
+  if (photos.length < maxPhotos) {
     try {
       const html = await fetchURL(
         `${XPIX_SHOP}?yith_wcan=1&filter=open&pixy_album=${encodeURIComponent(album.slug)}`,
-        12000, false
+        15000, false
       );
-      const re = /src="(https:\/\/xpix\.fsn1\.your-objectstorage\.com\/[^"]+_watermarked\.jpg)"/g;
+
+      // Regex ampia: qualsiasi src su xpix.it o CDN xpix
+      const re = /(?:src|data-src|data-lazy-src)="(https?:\/\/(?:www\.xpix\.it|xpix\.[^"]+\.com)[^"]+\.(?:jpg|jpeg|png)(?:\?[^"]*)?)"/gi;
       let m;
-      while ((m = re.exec(html)) !== null && photos.length < maxPhotos) {
-        if (!photos.includes(m[1])) photos.push(m[1]);
+      while ((m = re.exec(html)) !== null) {
+        const url = m[1];
+        // Salta thumbnail minuscole e icone UI
+        if (/\d{1,3}x\d{1,3}\.jpg/.test(url)) continue;  // es. 150x150.jpg
+        if (/logo|icon|avatar|sprite/i.test(url)) continue;
+        addPhoto(url);
+        if (photos.length >= maxPhotos) break;
       }
-    } catch { /* nothing */ }
+
+      // Fallback: cerca anche i data-product_image / data-large_image WC
+      const reImg = /data-large_image="([^"]+\.(?:jpg|jpeg|png)[^"]*)"/gi;
+      while ((m = reImg.exec(html)) !== null) {
+        addPhoto(m[1]);
+        if (photos.length >= maxPhotos) break;
+      }
+    } catch (e) {
+      console.warn(`[xpix] strategy3 HTML ${album.slug}: ${e.message}`);
+    }
   }
 
   return photos;
