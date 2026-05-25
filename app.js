@@ -5484,6 +5484,16 @@ async function renderGara(gara_id) {
   }
 
   // Video YouTube associati alla gara
+  // Fetch sempre freschi dall'API (max 3s), fallback a globalData.videos
+  // evita che dati stantii dal caricamento iniziale nascondano video appena approvati
+  try {
+    const _ctrl = new AbortController();
+    const _timer = setTimeout(() => _ctrl.abort(), 3000);
+    const _vr = await fetch(`${API_BASE}/videos`, { signal: _ctrl.signal });
+    clearTimeout(_timer);
+    if (_vr.ok) { const _fresh = await _vr.json(); if (_fresh) globalData.videos = _fresh; }
+  } catch { /* Render non raggiungibile — usa globalData.videos stantio */ }
+
   // Lookup multi-livello: calId → gara_id → calId senza suffisso categoria
   const _vids = globalData.videos || {};
   const _calIdStripped = _calId.replace(/_[A-Z0-9]+_[MF]$/, ''); // rimuove _JUNIORES_M ecc.
