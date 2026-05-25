@@ -4085,6 +4085,8 @@ async function renderAdmin() {
             style="padding:8px;border:1px solid var(--border);border-radius:6px;background:var(--bg-input,var(--bg-card));color:var(--text-primary);font-size:.85rem" />
           <input type="text" id="avf-title" placeholder="Titolo (opzionale — lascia vuoto per usare quello del video)"
             style="padding:8px;border:1px solid var(--border);border-radius:6px;background:var(--bg-input,var(--bg-card));color:var(--text-primary);font-size:.85rem" />
+          <input type="text" id="avf-channel" placeholder="Autore / Canale (opzionale)"
+            style="padding:8px;border:1px solid var(--border);border-radius:6px;background:var(--bg-input,var(--bg-card));color:var(--text-primary);font-size:.85rem" />
           <div style="display:flex;gap:8px">
             <button onclick="window.adminSubmitAddVideo()" style="background:var(--accent);color:white;border:none;padding:8px 20px;border-radius:6px;font-weight:600;cursor:pointer">Aggiungi</button>
             <button onclick="window.adminShowAddVideo(false)" style="background:transparent;color:var(--text-muted);border:1px solid var(--border);padding:8px 16px;border-radius:6px;cursor:pointer">Annulla</button>
@@ -4309,23 +4311,53 @@ window.adminVideoDelete = async (calId, idx) => {
   } catch(e) { alert('Errore: ' + e.message); }
 };
 
-window.adminVideoEdit = async (calId, idx) => {
+window.adminVideoEdit = (calId, idx) => {
   const v = _adminVideosData[calId]?.[idx];
   if (!v) return;
-  const newUrl   = prompt('URL YouTube:', v.url);
-  if (newUrl === null) return;
-  const newTitle = prompt('Titolo:', v.title);
-  if (newTitle === null) return;
+  const inpS = 'width:100%;box-sizing:border-box;padding:8px 10px;border:1px solid var(--border);border-radius:6px;font-size:.875rem;background:var(--bg-card);color:var(--text-primary);margin-bottom:10px';
+  const overlay = document.createElement('div');
+  overlay.id = 'admin-video-edit-overlay';
+  overlay.style.cssText = 'position:fixed;inset:0;background:rgba(0,0,0,.6);z-index:9999;display:flex;align-items:center;justify-content:center;padding:16px';
+  overlay.innerHTML = `
+    <div style="background:var(--bg-card);border-radius:12px;padding:24px;width:100%;max-width:440px;box-shadow:0 8px 32px rgba(0,0,0,.3)">
+      <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:16px">
+        <strong style="font-size:1rem">✏️ Modifica Video</strong>
+        <button onclick="document.getElementById('admin-video-edit-overlay').remove()" style="background:none;border:none;font-size:1.3rem;cursor:pointer;color:var(--text-muted)">✕</button>
+      </div>
+      <label style="font-size:.8rem;color:var(--text-muted);display:block;margin-bottom:3px">URL YouTube</label>
+      <input id="ave-url" type="url" value="${esc(v.url||'')}" style="${inpS}"/>
+      <label style="font-size:.8rem;color:var(--text-muted);display:block;margin-bottom:3px">Titolo</label>
+      <input id="ave-title" type="text" value="${esc(v.title||'')}" style="${inpS}"/>
+      <label style="font-size:.8rem;color:var(--text-muted);display:block;margin-bottom:3px">Autore / Canale</label>
+      <input id="ave-channel" type="text" value="${esc(v.channel||'')}" placeholder="Autore o nome canale" style="${inpS}"/>
+      <div id="ave-err" style="color:#EF4444;font-size:.8rem;margin-bottom:8px;display:none"></div>
+      <div style="display:flex;gap:8px">
+        <button onclick="window._adminVideoEditSave('${esc(calId)}',${idx})"
+          style="flex:1;padding:9px;background:var(--accent);color:#fff;border:none;border-radius:6px;font-weight:600;cursor:pointer">Salva</button>
+        <button onclick="document.getElementById('admin-video-edit-overlay').remove()"
+          style="padding:9px 16px;background:transparent;border:1px solid var(--border);border-radius:6px;cursor:pointer;color:var(--text-muted)">Annulla</button>
+      </div>
+    </div>`;
+  document.body.appendChild(overlay);
+};
+
+window._adminVideoEditSave = async (calId, idx) => {
+  const url     = document.getElementById('ave-url')?.value.trim();
+  const title   = document.getElementById('ave-title')?.value.trim();
+  const channel = document.getElementById('ave-channel')?.value.trim();
+  const errEl   = document.getElementById('ave-err');
+  if (!url) { errEl.textContent = 'URL obbligatorio'; errEl.style.display = 'block'; return; }
   try {
     await apiCall(`/admin/videos/${encodeURIComponent(calId)}/${idx}`, {
       method: 'PATCH',
-      body: { url: newUrl.trim(), title: newTitle.trim() },
+      body: { url, title, channel },
     });
-    v.url   = newUrl.trim();
-    v.title = newTitle.trim();
+    const v = _adminVideosData[calId]?.[idx];
+    if (v) { v.url = url; v.title = title; v.channel = channel; }
+    document.getElementById('admin-video-edit-overlay')?.remove();
     await refreshVideos();
     renderAdminVideosAll();
-  } catch(e) { alert('Errore: ' + e.message); }
+  } catch(e) { errEl.textContent = 'Errore: ' + e.message; errEl.style.display = 'block'; }
 };
 
 // ── FORM AGGIUNGI VIDEO ──────────────────────────────────────────────────────
@@ -4341,6 +4373,7 @@ window.adminShowAddVideo = (show = true) => {
     document.getElementById('avf-race-search').value = '';
     document.getElementById('avf-url').value = '';
     document.getElementById('avf-title').value = '';
+    document.getElementById('avf-channel').value = '';
     document.getElementById('avf-race-selected').textContent = '';
     document.getElementById('avf-race-results').style.display = 'none';
   }
@@ -4387,13 +4420,14 @@ window.adminSelectCalRace = (calId, nome) => {
 
 window.adminSubmitAddVideo = async () => {
   if (!_avfSelectedCalId) { alert('Seleziona prima una gara.'); return; }
-  const url   = document.getElementById('avf-url').value.trim();
-  const title = document.getElementById('avf-title').value.trim();
+  const url     = document.getElementById('avf-url').value.trim();
+  const title   = document.getElementById('avf-title').value.trim();
+  const channel = document.getElementById('avf-channel').value.trim();
   if (!url) { alert('Inserisci un URL YouTube.'); return; }
   try {
     await apiCall(`/admin/videos/${encodeURIComponent(_avfSelectedCalId)}`, {
       method: 'POST',
-      body: { url, title, channel: 'Admin' },
+      body: { url, title, channel: channel || 'Admin' },
     });
     window.adminShowAddVideo(false);
     await refreshVideos();
@@ -5764,6 +5798,7 @@ async function renderGara(gara_id) {
         <div id="vpanel-url">
           <input type="url" id="vurl-input" placeholder="https://www.youtube.com/watch?v=..." style="${inpStyle}"/>
           <input type="text" id="vurl-title" placeholder="Titolo (opzionale)" style="${inpStyle}"/>
+          <input type="text" id="vurl-channel" placeholder="Autore / Canale (opzionale)" style="${inpStyle}"/>
           <div id="vurl-preview" style="margin-bottom:10px;display:none">
             <img id="vurl-thumb" src="" style="width:100%;border-radius:var(--r-sm);aspect-ratio:16/9;object-fit:cover"/>
           </div>
@@ -5772,6 +5807,7 @@ async function renderGara(gara_id) {
         <div id="vpanel-file" style="display:none">
           <input type="file" id="vfile-input" accept="video/mp4,video/quicktime,video/webm,video/x-msvideo" style="${inpStyle}"/>
           <input type="text" id="vfile-title" placeholder="Titolo del video*" style="${inpStyle}"/>
+          <input type="text" id="vfile-channel" placeholder="Autore / Canale (opzionale)" style="${inpStyle}"/>
           <div id="vfile-progress" style="display:none;margin-bottom:10px">
             <div style="background:var(--bg-elevated);border-radius:4px;height:6px;overflow:hidden">
               <div id="vfile-bar" style="height:100%;background:var(--red-hot);width:0%;transition:width .2s"></div>
@@ -5815,8 +5851,9 @@ async function renderGara(gara_id) {
     const isFileTab = document.getElementById('vpanel-file').style.display !== 'none';
 
     if (isFileTab) {
-      const file = document.getElementById('vfile-input')?.files[0];
-      const title = document.getElementById('vfile-title')?.value.trim();
+      const file    = document.getElementById('vfile-input')?.files[0];
+      const title   = document.getElementById('vfile-title')?.value.trim();
+      const channel = document.getElementById('vfile-channel')?.value.trim();
       if (!file) { err.textContent = 'Seleziona un file video'; err.style.display = 'block'; return; }
       if (!title) { err.textContent = 'Inserisci un titolo'; err.style.display = 'block'; return; }
       btn.disabled = true; btn.textContent = 'Caricamento…';
@@ -5825,6 +5862,7 @@ async function renderGara(gara_id) {
       fd.append('gara_id', garaId);
       fd.append('cal_id', calId);
       fd.append('title', title);
+      fd.append('channel', channel || '');
       fd.append('video', file);
       try {
         const xhr = new XMLHttpRequest();
@@ -5852,12 +5890,13 @@ async function renderGara(gara_id) {
         if (window._currentGaraId) renderGara(window._currentGaraId);
       } catch(e) { err.textContent = e.message; err.style.display = 'block'; btn.disabled = false; btn.textContent = 'Invia'; }
     } else {
-      const url = document.getElementById('vurl-input')?.value.trim();
-      const title = document.getElementById('vurl-title')?.value.trim();
+      const url     = document.getElementById('vurl-input')?.value.trim();
+      const title   = document.getElementById('vurl-title')?.value.trim();
+      const channel = document.getElementById('vurl-channel')?.value.trim();
       if (!url) { err.textContent = 'Inserisci un URL YouTube'; err.style.display = 'block'; return; }
       btn.disabled = true; btn.textContent = 'Invio…';
       try {
-        await apiCall('/videos/submit', { method: 'POST', body: { gara_id: garaId, cal_id: calId, url, title } });
+        await apiCall('/videos/submit', { method: 'POST', body: { gara_id: garaId, cal_id: calId, url, title, channel } });
         document.querySelector('[style*="position:fixed"][style*="9999"]')?.remove();
         const user = authUser();
         alert(user?.role === 'admin' ? 'Video pubblicato!' : 'Video inviato! Sarà visibile dopo approvazione.');
