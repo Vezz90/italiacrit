@@ -5194,6 +5194,113 @@ async function renderParallelRankings() {
 }
 
 // ── ATLETA ────────────────────────────────────────────────────
+// ── Sezione Media per profili atleta/team ─────────────────────────────────────
+// risultati: array con {gara_id, nome_gara, data, posizione, atleta_cognome?, atleta_nome?}
+// photosMap: { [gara_id]: photoObj }  (da loadRisPhotos)
+// videos:    { [gara_id]: [videoObj] } (globalData.videos)
+// opts.showAthleteName: mostra nome atleta su ogni card (per profili team)
+function buildProfileMedia(risultati, photosMap, videos, opts = {}) {
+  const { showAthleteName = false, maxItems = 8 } = opts;
+  const _vids = videos || {};
+  const _photos = photosMap || {};
+
+  // Scorri risultati dal più recente al più vecchio
+  const sorted = [...(risultati || [])].sort((a, b) => (b.data || '').localeCompare(a.data || ''));
+
+  const winPhotos = [];   // pos=1 + foto disponibile
+  const top10Vids = [];   // pos≤10 + video disponibile
+  const seenPG = new Set();
+  const seenVG = new Set();
+
+  for (const r of sorted) {
+    const photo = _photos[r.gara_id];
+    // Cerca video: prima chiave esatta, poi varianti categoria
+    let videoArr = _vids[r.gara_id] || [];
+    if (!videoArr.length) {
+      // Cerca chiavi che iniziano con la base del gara_id (es. senza _JUN_M)
+      const baseKey = r.gara_id.replace(/_[A-Z0-9]+_[MF]$/, '');
+      for (const [k, v] of Object.entries(_vids)) {
+        if (k.startsWith(baseKey) && v.length) { videoArr = v; break; }
+      }
+    }
+
+    if (r.posizione === 1 && photo && !seenPG.has(r.gara_id)) {
+      seenPG.add(r.gara_id);
+      winPhotos.push({ r, photo });
+    }
+    if (r.posizione <= 10 && videoArr.length && !seenVG.has(r.gara_id)) {
+      seenVG.add(r.gara_id);
+      top10Vids.push({ r, video: videoArr[0] });
+    }
+  }
+
+  const photos = winPhotos.slice(0, maxItems);
+  const vids   = top10Vids.slice(0, maxItems);
+  if (!photos.length && !vids.length) return '';
+
+  const posLabel = p => p === 1 ? '🥇 1°' : p === 2 ? '🥈 2°' : p === 3 ? '🥉 3°' : `${p}°`;
+  const posColor = p => p === 1 ? 'var(--gold)' : p === 2 ? 'var(--silver)' : p === 3 ? 'var(--bronze)' : 'var(--text-muted)';
+
+  const photoCard = ({ r, photo }) => {
+    const ath = showAthleteName && r.atleta_cognome
+      ? `<div class="profile-media-athlete">${esc(r.atleta_cognome)} ${esc(r.atleta_nome || '')}</div>` : '';
+    return `<a href="#/gara/${esc(r.gara_id)}" class="profile-media-card profile-media-photo">
+      <div class="profile-media-thumb">
+        <img src="${esc(photo.url)}" alt="${esc(r.nome_gara)}" loading="lazy" onerror="this.style.display='none'" />
+        <div class="profile-media-badge" style="color:${posColor(r.posizione)}">${posLabel(r.posizione)}</div>
+      </div>
+      <div class="profile-media-info">${ath}
+        <div class="profile-media-race">${esc(r.nome_gara)}</div>
+        <div class="profile-media-meta">${fmtDateShort(r.data)}</div>
+      </div>
+    </a>`;
+  };
+
+  const videoCard = ({ r, video }) => {
+    const vid   = ytId(video.url);
+    const thumb = vid ? `https://img.youtube.com/vi/${vid}/mqdefault.jpg` : '';
+    const ath   = showAthleteName && r.atleta_cognome
+      ? `<div class="profile-media-athlete">${esc(r.atleta_cognome)} ${esc(r.atleta_nome || '')}</div>` : '';
+    return `<div class="profile-media-card profile-media-video" style="cursor:pointer" onclick="window.open('${esc(video.url)}','_blank')">
+      <div class="profile-media-thumb">
+        ${thumb ? `<img src="${thumb}" alt="${esc(video.title)}" loading="lazy" />` : '<div style="width:100%;height:100%;display:flex;align-items:center;justify-content:center;font-size:2rem;color:var(--text-muted)">🎬</div>'}
+        <div class="profile-media-play-btn"><div class="profile-media-play-icon"><svg width="14" height="14" viewBox="0 0 24 24" fill="#fff"><path d="M8 5v14l11-7z"/></svg></div></div>
+        <div class="profile-media-badge" style="color:${posColor(r.posizione)}">${posLabel(r.posizione)}</div>
+      </div>
+      <div class="profile-media-info">${ath}
+        <div class="profile-media-race">${esc(r.nome_gara)}</div>
+        <div class="profile-media-meta">${fmtDateShort(r.data)}${video.channel ? ` · ${esc(video.channel)}` : ''}</div>
+      </div>
+    </div>`;
+  };
+
+  let inner = '';
+  if (photos.length && vids.length) {
+    inner = `
+      <div style="margin-bottom:18px">
+        <div class="profile-media-sub-title">📸 FOTO VITTORIE</div>
+        <div class="profile-media-grid">${photos.map(photoCard).join('')}</div>
+      </div>
+      <div>
+        <div class="profile-media-sub-title">🎬 VIDEO</div>
+        <div class="profile-media-grid">${vids.map(videoCard).join('')}</div>
+      </div>`;
+  } else if (photos.length) {
+    inner = `<div class="profile-media-sub-title">📸 FOTO VITTORIE</div>
+      <div class="profile-media-grid">${photos.map(photoCard).join('')}</div>`;
+  } else {
+    inner = `<div class="profile-media-sub-title">🎬 VIDEO</div>
+      <div class="profile-media-grid">${vids.map(videoCard).join('')}</div>`;
+  }
+
+  return `
+  <div class="section-header" style="margin-top:28px">
+    <span class="section-title">MEDIA</span>
+    <span class="section-line"></span>
+  </div>
+  <div class="profile-media-section">${inner}</div>`;
+}
+
 async function renderAtleta(atleta_id) {
   if (!globalData) return;
   const { athletes, calendar } = globalData;
@@ -5220,9 +5327,10 @@ async function renderAtleta(atleta_id) {
 
   // Recupero ranking asincrono per evitare crash
   const rCode = getRankingFileCode(a.categoria);
-  const [currentRanking, atletaOv] = await Promise.all([
+  const [currentRanking, atletaOv, photosMap] = await Promise.all([
     rCode ? loadRanking(rCode) : Promise.resolve([]),
     getEntityOverrides('atleta', atleta_id),
+    loadRisPhotos(),
   ]);
   const aRankObj = currentRanking.find(x => x.atleta_id === a.id);
   const globalPos = aRankObj ? aRankObj.pos : '-';
@@ -5385,6 +5493,7 @@ async function renderAtleta(atleta_id) {
     </div>
     ${heroHtml}
     ${_identityHtml}
+    ${buildProfileMedia(risultati, photosMap, globalData.videos)}
     <div class="section-header" style="margin-top:28px">
       <span class="section-title">RISULTATI STAGIONE</span>
       <span class="section-line"></span>
@@ -5553,9 +5662,10 @@ async function renderTeam(team_id) {
     }).join('');
 
   // Caricamento classifiche team + override foto in parallelo
-  const [teamRankings, teamOv] = await Promise.all([
+  const [teamRankings, teamOv, teamPhotosMap] = await Promise.all([
     Promise.all(RANKING_CODES.map(c => loadTeamRanking(c))),
     getEntityOverrides('team', team_id),
+    loadRisPhotos(),
   ]);
   const tCatRanks = [];
   teamRankings.forEach((rlist, idx) => {
@@ -5733,7 +5843,8 @@ async function renderTeam(team_id) {
     </div>
     <div class="team-performers-list" style="margin-bottom:28px">${topPerfHtml}</div>
 
-    <div class="section-header">
+    ${buildProfileMedia(allTeamRes, teamPhotosMap, globalData.videos, { showAthleteName: true })}
+    <div class="section-header" style="margin-top:28px">
       <span class="section-title">RISULTATI TEAM</span>
       <span class="section-line"></span>
     </div>
