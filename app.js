@@ -25,7 +25,7 @@ function ytId(url) {
   if (!url) return null;
   const m = url.match(/[?&]v=([^&\s]+)/)
     || url.match(/youtu\.be\/([^?&\s]+)/)
-    || url.match(/youtube\.com\/(?:shorts|embed)\/([^?&\s]+)/);
+    || url.match(/youtube\.com\/(?:shorts|embed|live)\/([^?&\s]+)/);
   return m ? m[1] : null;
 }
 
