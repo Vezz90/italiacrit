@@ -2918,7 +2918,9 @@ div[style*="grid-template-columns: repeat(auto-fit"] {
 .gara-media-play { position:absolute; inset:0; display:flex; align-items:center; justify-content:center; background:rgba(0,0,0,.35); transition:background .15s; }
 .gara-media-video:hover .gara-media-play { background:rgba(0,0,0,.5); }
 .gara-media-play span { font-size:2.8rem; color:#fff; text-shadow:0 2px 10px rgba(0,0,0,.8); }
-.gara-media-channel { position:absolute; bottom:0; left:0; right:0; padding:4px 8px; background:rgba(0,0,0,.6); font-size:0.62rem; color:#ccc; font-family:var(--font-mono); }
+.gara-media-channel { position:absolute; bottom:24px; left:0; right:0; padding:3px 8px; background:rgba(0,0,0,.55); font-size:0.62rem; color:#ccc; font-family:var(--font-mono); }
+/* Titolo del video hero — striscia scura in fondo, sopra il canale */
+.gara-video-hero-caption { position:absolute; bottom:0; left:0; right:0; padding:4px 8px; background:rgba(0,0,0,.72); font-size:0.72rem; color:#fff; font-weight:600; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; pointer-events:none; }
 /* Solo foto (senza video): limita larghezza max così non diventa una striscia sottilissima */
 .gara-hero-media:has(.gara-media-photo):not(:has(.gara-media-video)) .gara-media-half { max-width:560px; }
 @media(max-width:600px) {

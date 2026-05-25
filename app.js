@@ -5602,29 +5602,40 @@ async function renderGara(gara_id) {
        </button>`
     : '';
 
-  // Hero video thumbnail (sempre visibile se esiste)
-  const _heroVideoEl = featuredVideoId
-    ? `<div class="gara-media-half gara-media-video" onclick="window.openVideoModal('${featuredVideoId}','${esc((featuredVideo.title||'').replace(/'/g, "\\'"))}')">
-         <img src="https://img.youtube.com/vi/${featuredVideoId}/hqdefault.jpg" alt="${esc(featuredVideo.title||'Video')}" loading="lazy"/>
-         <div class="gara-media-play"><span>&#9658;</span></div>
-         <div class="gara-media-channel">${esc(featuredVideo.channel||'')}</div>
-         ${_isAdmin ? `<div style="position:absolute;top:4px;right:4px;display:flex;flex-direction:column;gap:3px;z-index:10">
-           <button onclick="event.stopPropagation();window.adminEditVideo('${esc(_calId)}',0)" style="${_adminBtnStyle};background:#2563eb">✏️ Modifica</button>
-           <button onclick="event.stopPropagation();window.adminDeleteVideo('${esc(_calId)}',0)" style="${_adminBtnStyle};background:#dc2626">🗑 Elimina</button>
-         </div>` : ''}
-       </div>`
-    : '';
+  // Helper: costruisce un elemento video (usato per hero e side-by-side)
+  const _buildVideoEl = (v, idx, cls = 'gara-media-half gara-media-video') => {
+    const vId = ytId(v.url);
+    if (!vId) return '';
+    return `<div class="${cls}" onclick="window.openVideoModal('${vId}','${esc((v.title||'').replace(/'/g, "\\'"))}')">
+      <img src="https://img.youtube.com/vi/${vId}/hqdefault.jpg" alt="${esc(v.title||'Video')}" loading="lazy"/>
+      <div class="gara-media-play"><span>&#9658;</span></div>
+      ${v.channel ? `<div class="gara-media-channel">${esc(v.channel)}</div>` : ''}
+      ${_isAdmin ? `<div style="position:absolute;top:4px;right:4px;display:flex;flex-direction:column;gap:3px;z-index:10">
+        <button onclick="event.stopPropagation();window.adminEditVideo('${esc(primaryGaraId)}',${idx})" style="${_adminBtnStyle};background:#2563eb">✏️ Modifica</button>
+        <button onclick="event.stopPropagation();window.adminDeleteVideo('${esc(primaryGaraId)}',${idx})" style="${_adminBtnStyle};background:#dc2626">🗑 Elimina</button>
+      </div>` : ''}
+      ${v.title ? `<div class="gara-video-hero-caption">${esc(v.title)}</div>` : ''}
+    </div>`;
+  };
+
+  // Hero video (sempre visibile se esiste) — il layout finale dipende dalle foto,
+  // quindi viene assemblato DOPO il blocco foto qui sotto.
+  const _heroVideoEl = featuredVideoId ? _buildVideoEl(featuredVideo, 0) : '';
 
   // Extra video cards (sempre visibili)
-  if (extraVideos.length) {
-    extraVideosHtml = `
+  // L'indice di partenza degli "extra" dipende da quanti video vanno in hero:
+  // verrà ricalcolato dopo le foto. Qui prepariamo solo la funzione di render.
+  const _buildExtraVideos = (startIdx) => {
+    const extras = garaVideos.slice(startIdx);
+    if (!extras.length) return '';
+    return `
       <div class="comp-section" style="margin-top:12px">
         <div class="comp-section-title">Altri Video</div>
         <div class="gara-videos-grid">
-          ${extraVideos.map((v, i) => {
+          ${extras.map((v, i) => {
             const vidId = ytId(v.url) || '';
             const thumb = vidId ? `https://img.youtube.com/vi/${vidId}/mqdefault.jpg` : '';
-            const realIdx = i + 1;
+            const realIdx = startIdx + i;
             return `
               <div class="gara-video-card" style="cursor:pointer;position:relative" onclick="window.openVideoModal('${vidId}','${esc((v.title||'').replace(/'/g, "\\'"))}')">
                 ${thumb ? `<div class="gara-video-thumb">
@@ -5636,14 +5647,14 @@ async function renderGara(gara_id) {
                   <div class="gara-video-meta">${esc(v.channel)}</div>
                 </div>
                 ${_isAdmin ? `<div style="position:absolute;top:4px;right:4px;display:flex;gap:3px;z-index:10">
-                  <button onclick="event.stopPropagation();window.adminEditVideo('${esc(_calId)}',${realIdx})" style="${_adminBtnStyle};background:#2563eb">✏️</button>
-                  <button onclick="event.stopPropagation();window.adminDeleteVideo('${esc(_calId)}',${realIdx})" style="${_adminBtnStyle};background:#dc2626">🗑</button>
+                  <button onclick="event.stopPropagation();window.adminEditVideo('${esc(primaryGaraId)}',${realIdx})" style="${_adminBtnStyle};background:#2563eb">✏️</button>
+                  <button onclick="event.stopPropagation();window.adminDeleteVideo('${esc(primaryGaraId)}',${realIdx})" style="${_adminBtnStyle};background:#dc2626">🗑</button>
                 </div>` : ''}
               </div>`;
           }).join('')}
         </div>
       </div>`;
-  }
+  };
 
   // Foto approvate — in try separato: se fallisce i video sono già pronti
   let _heroPhotoEl = '';
@@ -5686,9 +5697,35 @@ async function renderGara(gara_id) {
   } catch(e) { console.error('renderGara photos:', e); }
 
   // Assembla sezione media (foto + video combinati)
-  const _heroMedia = (_heroPhotoEl || _heroVideoEl)
-    ? `<div class="gara-hero-media${_heroPhotoEl && _heroVideoEl ? ' gara-hero-split' : ''}">${_heroPhotoEl}${_heroVideoEl}</div>`
-    : '';
+  // Regola layout:
+  // • foto + video      → foto sinistra, video destra, extra video sotto
+  // • solo video ×1     → video hero larghezza piena, nessun extra
+  // • solo video ×2+    → primo + secondo fianco a fianco, resto come extra
+  // • solo foto         → foto a sinistra, nessun video
+  let _heroMedia = '';
+  let _extraVideoStartIdx = 1;
+
+  if (_heroPhotoEl && _heroVideoEl) {
+    // foto sinistra + video destra
+    _heroMedia = `<div class="gara-hero-media gara-hero-split">${_heroPhotoEl}${_heroVideoEl}</div>`;
+    _extraVideoStartIdx = 1;
+  } else if (_heroPhotoEl) {
+    // solo foto
+    _heroMedia = `<div class="gara-hero-media">${_heroPhotoEl}</div>`;
+    _extraVideoStartIdx = 0;
+  } else if (_heroVideoEl && garaVideos.length >= 2) {
+    // nessuna foto + 2+ video → side by side
+    const _video2El = _buildVideoEl(garaVideos[1], 1);
+    _heroMedia = `<div class="gara-hero-media gara-hero-split">${_heroVideoEl}${_video2El}</div>`;
+    _extraVideoStartIdx = 2;
+  } else if (_heroVideoEl) {
+    // nessuna foto + 1 solo video → full width
+    _heroMedia = `<div class="gara-hero-media">${_heroVideoEl}</div>`;
+    _extraVideoStartIdx = 1;
+  }
+
+  extraVideosHtml = _buildExtraVideos(_extraVideoStartIdx);
+
   racePhotosHtml = `
     <div class="comp-section" style="margin-top:16px">
       <div style="display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:8px;margin-bottom:${_heroMedia ? '12px' : '0'}">
