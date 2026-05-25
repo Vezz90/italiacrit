@@ -9377,9 +9377,10 @@ async function renderRisultati() {
           </div>`;
       }).join(categories.length > 1 ? '<div class="ris-cat-divider"></div>' : '');
 
-      const photoEl = featuredPhoto
+      const _photoSrcRis = featuredPhoto?.url || (featuredPhoto?.filename ? `${PHOTOS_BASE}/photos/${featuredPhoto.filename}` : '');
+      const photoEl = _photoSrcRis
         ? `<a href="#/gara/${esc(race.id)}" class="ris-card-photo${featuredVideoId ? ' ris-media-half' : ''}">
-             <img src="${PHOTOS_BASE}/photos/${esc(featuredPhoto.filename)}" alt="Foto gara" loading="lazy"/>
+             <img src="${esc(_photoSrcRis)}" alt="Foto gara" loading="lazy"/>
            </a>`
         : '';
       const videoEl = featuredVideoId
