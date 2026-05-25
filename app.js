@@ -29,6 +29,19 @@ function ytId(url) {
   return m ? m[1] : null;
 }
 
+// ── TOAST ─────────────────────────────────────────────────────
+// Notifica leggera in basso a destra, sparisce da sola dopo 3s.
+// type: 'success' (verde) | 'info' (blu) | 'error' (rosso)
+function showToast(msg, type = 'success') {
+  const colors = { success: '#16a34a', info: '#2563eb', error: '#dc2626' };
+  const t = document.createElement('div');
+  t.textContent = msg;
+  t.style.cssText = `position:fixed;bottom:24px;right:20px;z-index:99999;padding:10px 18px;border-radius:8px;background:${colors[type]||colors.success};color:#fff;font-size:.875rem;font-weight:600;box-shadow:0 4px 16px rgba(0,0,0,.3);opacity:0;transition:opacity .2s;pointer-events:none`;
+  document.body.appendChild(t);
+  requestAnimationFrame(() => { t.style.opacity = '1'; });
+  setTimeout(() => { t.style.opacity = '0'; setTimeout(() => t.remove(), 220); }, 3000);
+}
+
 // ── AUTH HELPERS ──────────────────────────────────────────────
 function authToken() { return localStorage.getItem('italiacrit-token'); }
 function authUser()  {
@@ -5977,7 +5990,7 @@ async function renderGara(gara_id) {
         });
         document.querySelector('[style*="position:fixed"][style*="9999"]')?.remove();
         const user = authUser();
-        alert(user?.role === 'admin' ? 'Video pubblicato!' : 'Video inviato! Sarà visibile dopo approvazione.');
+        showToast(user?.role === 'admin' ? '✓ Video pubblicato!' : '✓ Video inviato — in attesa di approvazione');
         if (window._currentGaraId) renderGara(window._currentGaraId);
       } catch(e) { err.textContent = e.message; err.style.display = 'block'; btn.disabled = false; btn.textContent = 'Invia'; }
     } else {
@@ -5990,7 +6003,7 @@ async function renderGara(gara_id) {
         await apiCall('/videos/submit', { method: 'POST', body: { gara_id: garaId, cal_id: calId, url, title, channel } });
         document.querySelector('[style*="position:fixed"][style*="9999"]')?.remove();
         const user = authUser();
-        alert(user?.role === 'admin' ? 'Video pubblicato!' : 'Video inviato! Sarà visibile dopo approvazione.');
+        showToast(user?.role === 'admin' ? '✓ Video pubblicato!' : '✓ Video inviato — in attesa di approvazione');
         if (window._currentGaraId) renderGara(window._currentGaraId);
       } catch(e) { err.textContent = e.message; err.style.display = 'block'; btn.disabled = false; btn.textContent = 'Invia'; }
     }
@@ -6019,10 +6032,10 @@ async function renderGara(gara_id) {
       if (!res.ok) throw new Error(data.error || `Errore ${res.status}`);
       document.querySelector('[style*="position:fixed"][style*="9999"]')?.remove();
       if (data.status === 'approved') {
-        alert('Foto pubblicata!');
+        showToast('✓ Foto pubblicata!');
         renderGara(window._currentGaraId);
       } else {
-        alert('Foto inviata! Sarà visibile dopo approvazione.');
+        showToast('✓ Foto inviata — in attesa di approvazione', 'info');
       }
     } catch(e) {
       errEl.textContent = e.message; errEl.style.display = 'block';
