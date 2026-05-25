@@ -4709,47 +4709,53 @@ function renderXpixQueue() {
       return `<option value="${esc(m.race.gara_id)}"${sel}>${esc(label)}</option>`;
     }).join('');
 
+    // Griglia foto selezionabili
+    const allPhotos = item.photos && item.photos.length ? item.photos : (item.photo_url ? [item.photo_url] : []);
+    const photosGridHtml = allPhotos.map((url, pi) => {
+      const isSelected = (url === (item.photo_url || allPhotos[0]));
+      return `<img src="${esc(url)}" data-url="${esc(url)}" data-id="${esc(item.id)}"
+        onclick="window.xpixSelectPhoto('${esc(item.id)}',this)"
+        style="width:80px;height:54px;object-fit:cover;border-radius:4px;cursor:pointer;border:2px solid ${isSelected ? '#0ea5e9' : 'transparent'};transition:border-color .15s;flex-shrink:0"
+        onerror="this.style.display='none'" title="Clicca per selezionare" />`;
+    }).join('');
+
     return `
-    <div id="xpixq-${esc(item.id)}" style="background:var(--bg-card);border:1px solid var(--border);border-radius:8px;padding:12px;margin-bottom:10px;display:flex;gap:12px;align-items:flex-start">
-      <!-- Anteprima foto -->
-      <a href="${esc(item.album_page||'#')}" target="_blank" style="flex-shrink:0">
-        <img src="${esc(item.photo_url||'')}" alt=""
-          style="width:100px;height:66px;border-radius:5px;object-fit:cover;display:block"
-          onerror="this.style.display='none'" />
-      </a>
-      <!-- Info -->
-      <div style="flex:1;min-width:0">
-        <div style="font-weight:600;font-size:.85rem;margin-bottom:2px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap" title="${esc(item.album_name)}">${esc(item.album_name)}</div>
-        <div style="font-size:.75rem;color:var(--text-muted);margin-bottom:6px">
-          📸 ${item.photo_count||'?'} foto
-          ${score ? `&nbsp;•&nbsp; <span style="color:${scoreColor};font-weight:700">${score}% match</span>` : ''}
-          &nbsp;•&nbsp; <a href="${esc(item.album_page||'#')}" target="_blank" style="color:var(--accent)">Vedi album</a>
-        </div>
-        <!-- Selezione gara -->
-        <div style="display:flex;gap:6px;flex-wrap:wrap;align-items:center;margin-bottom:6px">
-          <select onchange="window.xpixSetGara('${esc(item.id)}', this.value)"
-            style="flex:1;min-width:180px;padding:5px 8px;border:1px solid var(--border);border-radius:5px;background:var(--bg-primary);color:var(--text-primary);font-size:.78rem">
-            <option value="">— Seleziona gara —</option>
-            ${optionsHtml}
-            <option value="__search__">🔍 Cerca altra gara…</option>
-          </select>
-        </div>
-        <div id="xpixq-search-${esc(item.id)}" style="display:none;margin-bottom:6px">
-          <input type="text" placeholder="Cerca gara per nome…" oninput="window.xpixSearchGara('${esc(item.id)}',this.value)"
-            style="width:100%;box-sizing:border-box;padding:5px 8px;border:1px solid var(--border);border-radius:5px;background:var(--bg-primary);color:var(--text-primary);font-size:.78rem" />
-          <div id="xpixq-sr-${esc(item.id)}" style="background:var(--bg-card);border:1px solid var(--border);border-radius:5px;max-height:160px;overflow-y:auto;margin-top:2px"></div>
-        </div>
-        <!-- Azioni -->
-        <div style="display:flex;gap:6px;flex-wrap:wrap">
-          <button onclick="window.xpixApprove('${esc(item.id)}')"
-            style="background:#16a34a;color:#fff;border:none;padding:5px 14px;border-radius:5px;cursor:pointer;font-size:.78rem;font-weight:700">
-            ✓ Pubblica foto
-          </button>
-          <button onclick="window.xpixDismiss('${esc(item.id)}')"
-            style="background:transparent;border:1px solid #ef4444;color:#ef4444;padding:5px 12px;border-radius:5px;cursor:pointer;font-size:.78rem">
-            ✗ Scarta
-          </button>
-        </div>
+    <div id="xpixq-${esc(item.id)}" style="background:var(--bg-card);border:1px solid var(--border);border-radius:8px;padding:12px;margin-bottom:10px">
+      <!-- Header: nome album + meta -->
+      <div style="font-weight:600;font-size:.85rem;margin-bottom:4px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap" title="${esc(item.album_name)}">${esc(item.album_name)}</div>
+      <div style="font-size:.75rem;color:var(--text-muted);margin-bottom:8px">
+        📸 ${item.photo_count||'?'} foto totali
+        ${score ? `&nbsp;•&nbsp; <span style="color:${scoreColor};font-weight:700">${score}% match</span>` : ''}
+        &nbsp;•&nbsp; <a href="${esc(item.album_page||'#')}" target="_blank" style="color:var(--accent)">Apri album completo ↗</a>
+      </div>
+      <!-- Griglia foto: clicca per selezionare quella da pubblicare -->
+      <div style="display:flex;flex-wrap:wrap;gap:6px;margin-bottom:10px;padding:8px;background:var(--bg-elevated);border-radius:6px">
+        <div style="width:100%;font-size:.72rem;color:var(--text-muted);margin-bottom:4px">👇 Clicca la foto da usare (bordo blu = selezionata)</div>
+        ${photosGridHtml || '<span style="font-size:.8rem;color:var(--text-muted)">Nessuna foto disponibile</span>'}
+      </div>
+      <!-- Selezione gara + azioni -->
+      <div style="display:flex;gap:6px;flex-wrap:wrap;align-items:center;margin-bottom:6px">
+        <select onchange="window.xpixSetGara('${esc(item.id)}', this.value)"
+          style="flex:1;min-width:180px;padding:5px 8px;border:1px solid var(--border);border-radius:5px;background:var(--bg-primary);color:var(--text-primary);font-size:.78rem">
+          <option value="">— Seleziona gara —</option>
+          ${optionsHtml}
+          <option value="__search__">🔍 Cerca altra gara…</option>
+        </select>
+      </div>
+      <div id="xpixq-search-${esc(item.id)}" style="display:none;margin-bottom:6px">
+        <input type="text" placeholder="Cerca gara per nome…" oninput="window.xpixSearchGara('${esc(item.id)}',this.value)"
+          style="width:100%;box-sizing:border-box;padding:5px 8px;border:1px solid var(--border);border-radius:5px;background:var(--bg-primary);color:var(--text-primary);font-size:.78rem" />
+        <div id="xpixq-sr-${esc(item.id)}" style="background:var(--bg-card);border:1px solid var(--border);border-radius:5px;max-height:160px;overflow-y:auto;margin-top:2px"></div>
+      </div>
+      <div style="display:flex;gap:6px;flex-wrap:wrap">
+        <button onclick="window.xpixApprove('${esc(item.id)}')"
+          style="background:#16a34a;color:#fff;border:none;padding:5px 14px;border-radius:5px;cursor:pointer;font-size:.78rem;font-weight:700">
+          ✓ Pubblica foto selezionata
+        </button>
+        <button onclick="window.xpixDismiss('${esc(item.id)}')"
+          style="background:transparent;border:1px solid #ef4444;color:#ef4444;padding:5px 12px;border-radius:5px;cursor:pointer;font-size:.78rem">
+          ✗ Scarta album
+        </button>
       </div>
     </div>`;
   }).join('');
@@ -4771,6 +4777,18 @@ window.xpixSync = async () => {
   } finally {
     if (btn) { btn.disabled = false; btn.textContent = '🔄 Sincronizza Xpix'; }
   }
+};
+
+// Mappa id → URL foto selezionata dall'admin
+const _xpixItemPhotoMap = {};
+
+window.xpixSelectPhoto = (id, imgEl) => {
+  // Deseleziona tutte le foto del blocco
+  const block = document.getElementById('xpixq-' + id);
+  if (block) block.querySelectorAll('img[data-url]').forEach(el => { el.style.borderColor = 'transparent'; });
+  // Seleziona questa
+  imgEl.style.borderColor = '#0ea5e9';
+  _xpixItemPhotoMap[id] = imgEl.dataset.url;
 };
 
 window.xpixSetGara = (id, garaId) => {
@@ -4828,8 +4846,14 @@ window.xpixPickGara = (id, garaId) => {
 window.xpixApprove = async (id) => {
   const garaId = _xpixItemGaraMap[id];
   if (!garaId) { showToast('Seleziona prima una gara', 'error'); return; }
+  const item = _xpixQueue.find(q => q.id === id);
+  const selectedPhotoUrl = _xpixItemPhotoMap[id] || item?.photo_url;
+  if (!selectedPhotoUrl) { showToast('Nessuna foto selezionata', 'error'); return; }
   try {
-    await apiCall(`/admin/xpix/queue/${id}/approve`, { method: 'POST', body: { gara_id: garaId } });
+    await apiCall(`/admin/xpix/queue/${id}/approve`, {
+      method: 'POST',
+      body: { gara_id: garaId, selected_photo_url: selectedPhotoUrl },
+    });
     document.getElementById('xpixq-' + id)?.remove();
     const item = _xpixQueue.find(q => q.id === id);
     if (item) item.status = 'approved';

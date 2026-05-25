@@ -882,7 +882,8 @@ app.post('/api/admin/xpix/sync', requireAdmin, async (req, res) => {
         album_name:  c.album_name,
         album_slug:  c.album_slug,
         photo_count: c.photo_count,
-        photo_url:   c.photo_url,
+        photos:      c.photos || [],       // array URL watermarked
+        photo_url:   c.photo_url,          // selezionata (default: prima)
         album_page:  c.album_page,
         status:            'pending',
         suggested_gara_id: null,
@@ -909,7 +910,7 @@ app.post('/api/admin/xpix/sync', requireAdmin, async (req, res) => {
 // POST approva: salva la foto xpix come foto della gara
 app.post('/api/admin/xpix/queue/:id/approve', requireAdmin, async (req, res) => {
   try {
-    const { gara_id } = req.body;
+    const { gara_id, selected_photo_url } = req.body;
     if (!gara_id) return res.status(400).json({ error: 'gara_id obbligatorio' });
 
     const queue = await readXpixQueue();
@@ -919,8 +920,10 @@ app.post('/api/admin/xpix/queue/:id/approve', requireAdmin, async (req, res) => 
     const item   = queue[i];
     const photos = await readXpixPhotos();
 
+    // Usa la foto selezionata dall'admin (o la prima di default)
+    const chosenUrl = selected_photo_url || item.photo_url;
     photos[gara_id] = {
-      url:        item.photo_url,
+      url:        chosenUrl,
       album_name: item.album_name,
       album_slug: item.album_slug,
       album_page: item.album_page,

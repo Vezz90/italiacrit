@@ -101,42 +101,58 @@ function isRecent(name) {
   return new RegExp(`\\b(${y}|${y - 1})\\b`).test(name);
 }
 
-// ── Recupera URL foto watermarked tramite WP REST API ─────────────────────────
-// Strategia 1 (preferita): pixy_album term ID → product → media → source_url
-// Strategia 2 (fallback):  scrape pagina gallery HTML
-async function fetchPhotoForAlbum(album) {
-  // Strategia 1: wp/v2/product?pixy_album=[id]
+// ── Recupera più URL foto watermarked per un album ────────────────────────────
+// Strategia 1 (preferita): wp/v2/product?pixy_album=[id] → N prodotti → media → source_url
+// Strategia 2 (fallback):  scrape HTML gallery e prendi tutti i src watermarked
+async function fetchPhotosForAlbum(album, maxPhotos = 12) {
+  const photos = [];
+
+  // Strategia 1: API WP — ottieni i primi N prodotti dell'album
   try {
     const products = await fetchURL(
-      `${XPIX_API}/product?pixy_album=${album.id}&per_page=1&_fields=id,featured_media`,
-      10000, true
+      `${XPIX_API}/product?pixy_album=${album.id}&per_page=${maxPhotos}&_fields=id,featured_media`,
+      12000, true
     );
-    if (Array.isArray(products) && products.length && products[0].featured_media) {
-      const media = await fetchURL(
-        `${XPIX_API}/media/${products[0].featured_media}?_fields=source_url`,
-        8000, true
+    if (Array.isArray(products) && products.length) {
+      // Fetch media URLs in parallelo
+      const mediaUrls = await mapConcurrent(
+        products.filter(p => p.featured_media),
+        async (p) => {
+          try {
+            const media = await fetchURL(
+              `${XPIX_API}/media/${p.featured_media}?_fields=source_url`,
+              6000, true
+            );
+            return media?.source_url || null;
+          } catch { return null; }
+        }, 4
       );
-      if (media && media.source_url) return media.source_url;
+      photos.push(...mediaUrls.filter(Boolean));
     }
   } catch { /* fallback */ }
 
-  // Strategia 2: scrape HTML gallery page
-  try {
-    const html = await fetchURL(
-      `${XPIX_SHOP}?yith_wcan=1&filter=open&pixy_album=${encodeURIComponent(album.slug)}`,
-      12000, false
-    );
-    const m = html.match(/src="(https:\/\/xpix\.fsn1\.your-objectstorage\.com\/[^"]+_watermarked\.jpg)"/);
-    if (m) return m[1];
-  } catch { /* nothing */ }
+  // Strategia 2: scrape HTML gallery page (prendi tutti i src watermarked visibili)
+  if (!photos.length) {
+    try {
+      const html = await fetchURL(
+        `${XPIX_SHOP}?yith_wcan=1&filter=open&pixy_album=${encodeURIComponent(album.slug)}`,
+        12000, false
+      );
+      const re = /src="(https:\/\/xpix\.fsn1\.your-objectstorage\.com\/[^"]+_watermarked\.jpg)"/g;
+      let m;
+      while ((m = re.exec(html)) !== null && photos.length < maxPhotos) {
+        if (!photos.includes(m[1])) photos.push(m[1]);
+      }
+    } catch { /* nothing */ }
+  }
 
-  return null;
+  return photos;
 }
 
 // ── Entry point principale ─────────────────────────────────────────────────────
 // knownSlugs: Set di slug già presenti in coda (evita duplicati)
-// maxNew: quanti nuovi album processare per sync (default 30, bilancia velocità/completezza)
-async function fetchXpixCandidates(knownSlugs, maxNew = 30) {
+// maxNew: quanti nuovi album processare per sync (default 25)
+async function fetchXpixCandidates(knownSlugs, maxNew = 25) {
   console.log('[xpix] Caricamento lista album...');
   const allAlbums = await fetchAllAlbums();
   console.log(`[xpix] ${allAlbums.length} album totali trovati`);
@@ -150,17 +166,18 @@ async function fetchXpixCandidates(knownSlugs, maxNew = 30) {
   console.log(`[xpix] ${toProcess.length} nuovi album da processare (max ${maxNew})`);
 
   const results = await mapConcurrent(toProcess, async (album) => {
-    const photoUrl = await fetchPhotoForAlbum(album);
-    if (!photoUrl) return null;
+    const photos = await fetchPhotosForAlbum(album, 12);
+    if (!photos.length) return null;
     return {
       album_id:    album.id,
       album_name:  album.name,
       album_slug:  album.slug,
       photo_count: album.count,
-      photo_url:   photoUrl,
+      photos,                    // array di URL watermarked
+      photo_url:   photos[0],    // default: prima foto
       album_page:  `${XPIX_SHOP}?yith_wcan=1&filter=open&pixy_album=${encodeURIComponent(album.slug)}`,
     };
-  }, 4);
+  }, 3);   // 3 album in parallelo per non sovraccaricare
 
   const valid = results.filter(Boolean);
   console.log(`[xpix] ${valid.length} album con foto recuperate`);
