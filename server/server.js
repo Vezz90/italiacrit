@@ -5,7 +5,6 @@ const jwt            = require('jsonwebtoken');
 const multer         = require('multer');
 const path           = require('path');
 const fs             = require('fs');
-const { spawn }      = require('child_process');
 const { queries, init } = require('./db');
 
 const app  = express();
@@ -426,154 +425,8 @@ app.delete('/api/admin/race-photos/:id', requireAdmin, async (req, res) => {
 
 app.get('/api/health', (req, res) => res.json({ ok: true, ts: new Date().toISOString() }));
 
-// ── YouTube scraper ───────────────────────────────────────────────────────────
-
-const SCRAPER_PATH = path.join(__dirname, '..', 'scraper_youtube.js');
-let scraperRunning = false;
-
-function runYoutubeScraper() {
-  if (scraperRunning) {
-    console.log('[youtube] Scraper già in esecuzione, skip');
-    return;
-  }
-  scraperRunning = true;
-  console.log('[youtube] Avvio scraper video...');
-  const proc = spawn(process.execPath, [SCRAPER_PATH], {
-    cwd: path.join(__dirname, '..'),
-    env: { ...process.env, NODE_TLS_REJECT_UNAUTHORIZED: '0' },
-  });
-  proc.stdout.on('data', d => process.stdout.write('[youtube] ' + d));
-  proc.stderr.on('data', d => process.stderr.write('[youtube] ' + d));
-  proc.on('close', code => {
-    scraperRunning = false;
-    console.log(`[youtube] Scraper terminato (exit ${code})`);
-  });
-}
-
 // ── VIDEO MANAGEMENT ──────────────────────────────────────────────────────
 const VIDEOS_PATH = path.join(__dirname, '../data/videos.json');
-const PENDING_VIDEOS_PATH = path.join(__dirname, '../data/pending_videos.json');
-
-const videoUpload = multer({
-  storage: supabase ? multer.memoryStorage() : multer.diskStorage({
-    destination: UPLOADS_DIR,
-    filename: (req, file, cb) => cb(null, 'vid_' + Date.now() + path.extname(file.originalname).toLowerCase()),
-  }),
-  limits: { fileSize: 500 * 1024 * 1024 },
-  fileFilter: (req, file, cb) => {
-    if (/^video\/(mp4|quicktime|x-msvideo|webm|x-matroska)$/.test(file.mimetype)) cb(null, true);
-    else cb(new Error('Solo file video MP4, MOV, AVI, WebM, MKV'));
-  },
-});
-
-function readPendingVideos() {
-  try { return JSON.parse(fs.readFileSync(PENDING_VIDEOS_PATH, 'utf8')); } catch { return []; }
-}
-function writePendingVideos(arr) {
-  fs.writeFileSync(PENDING_VIDEOS_PATH, JSON.stringify(arr, null, 2));
-}
-
-// Submit YouTube URL (tutti gli autenticati)
-app.post('/api/videos/submit', requireAuth, async (req, res) => {
-  try {
-    const { gara_id, cal_id, url, title, description } = req.body;
-    if (!gara_id || !url) return res.status(400).json({ error: 'gara_id e url obbligatori' });
-    const isAdmin = req.user.role === 'admin';
-    const key = cal_id || gara_id;
-    if (isAdmin) {
-      const videos = readVideos();
-      if (!videos[key]) videos[key] = [];
-      videos[key].unshift({ url, title: title || url, description: description || '', channel: 'Caricato', published_at: new Date().toISOString().slice(0,10), score: 1 });
-      writeVideos(videos);
-      return res.json({ ok: true, status: 'approved' });
-    }
-    const pending = readPendingVideos();
-    const id = Date.now().toString(36) + Math.random().toString(36).slice(2,7);
-    pending.push({ id, gara_id, cal_id: key, type: 'youtube', url, title: title || url, description: description || '', submitted_by: req.user.display_name || req.user.email, submitted_at: new Date().toISOString() });
-    writePendingVideos(pending);
-    res.json({ ok: true, status: 'pending' });
-  } catch(e) { res.status(500).json({ error: e.message }); }
-});
-
-// Upload file video (tutti gli autenticati)
-app.post('/api/videos/upload-file', requireAuth, videoUpload.single('video'), async (req, res) => {
-  try {
-    const { gara_id, cal_id, title, description } = req.body;
-    if (!gara_id) return res.status(400).json({ error: 'gara_id mancante' });
-    if (!req.file) return res.status(400).json({ error: 'Nessun file ricevuto' });
-    const ext = path.extname(req.file.originalname).toLowerCase() || '.mp4';
-    const filename = `vid_${Date.now()}${ext}`;
-    let videoUrl;
-    if (supabase) {
-      const { error } = await supabase.storage.from('videos').upload(filename, req.file.buffer, { contentType: req.file.mimetype, upsert: true });
-      if (error) throw new Error(error.message);
-      videoUrl = supabase.storage.from('videos').getPublicUrl(filename).data.publicUrl;
-    } else {
-      fs.writeFileSync(path.join(UPLOADS_DIR, filename), req.file.buffer || fs.readFileSync(req.file.path));
-      videoUrl = `/uploads/${filename}`;
-    }
-    const isAdmin = req.user.role === 'admin';
-    const key = cal_id || gara_id;
-    if (isAdmin) {
-      const videos = readVideos();
-      if (!videos[key]) videos[key] = [];
-      videos[key].unshift({ url: videoUrl, title: title || filename, description: description || '', channel: req.user.display_name || 'Upload', published_at: new Date().toISOString().slice(0,10), score: 1 });
-      writeVideos(videos);
-      return res.json({ ok: true, status: 'approved', url: videoUrl });
-    }
-    const pending = readPendingVideos();
-    const id = Date.now().toString(36) + Math.random().toString(36).slice(2,7);
-    pending.push({ id, gara_id, cal_id: key, type: 'upload', url: videoUrl, title: title || filename, description: description || '', submitted_by: req.user.display_name || req.user.email, submitted_at: new Date().toISOString() });
-    writePendingVideos(pending);
-    res.json({ ok: true, status: 'pending', url: videoUrl });
-  } catch(e) { res.status(500).json({ error: e.message }); }
-});
-
-// Admin: lista video in attesa
-app.get('/api/admin/videos/pending', requireAdmin, (req, res) => {
-  res.json({ videos: readPendingVideos() });
-});
-
-// Admin: approva video
-// Accetta opzionalmente { newCalId } nel body per spostare il video in un'altra gara
-app.post('/api/admin/videos/pending/:id/approve', requireAdmin, (req, res) => {
-  try {
-    const pending = readPendingVideos();
-    const i = pending.findIndex(v => v.id === req.params.id);
-    if (i === -1) return res.status(404).json({ error: 'Non trovato' });
-    const v = pending[i];
-    const videos = readVideos();
-    // newCalId dal body sovrascrive cal_id del pending (usato dal modal "Sposta+Approva")
-    const key = (req.body && req.body.newCalId) ? req.body.newCalId : (v.cal_id || v.gara_id);
-    if (!videos[key]) videos[key] = [];
-    videos[key].unshift({
-      url:          v.url,
-      title:        v.title,
-      description:  v.description || '',
-      channel:      v.channel || v.submitted_by || '',
-      published_at: (v.published_at || v.submitted_at || '').slice(0, 10),
-      score:        v.score != null ? v.score : 0.8,
-    });
-    writeVideos(videos);
-    pending.splice(i, 1);
-    writePendingVideos(pending);
-    res.json({ ok: true });
-  } catch(e) { res.status(500).json({ error: e.message }); }
-});
-
-// Admin: rifiuta video
-app.post('/api/admin/videos/pending/:id/reject', requireAdmin, (req, res) => {
-  try {
-    const pending = readPendingVideos();
-    const i = pending.findIndex(v => v.id === req.params.id);
-    if (i === -1) return res.status(404).json({ error: 'Non trovato' });
-    pending.splice(i, 1);
-    writePendingVideos(pending);
-    res.json({ ok: true });
-  } catch(e) { res.status(500).json({ error: e.message }); }
-});
-
-// ── ADMIN VIDEO MANAGEMENT (modifica/elimina singolo video approvato) ──────
 
 function readVideos() {
   try { return JSON.parse(fs.readFileSync(VIDEOS_PATH, 'utf8')); } catch { return {}; }
@@ -583,7 +436,7 @@ function writeVideos(data) {
 }
 
 // Endpoint PUBBLICO — usato dal frontend in produzione invece del file statico
-// Serve sempre la versione live di videos.json (aggiornata dallo scraper/admin)
+// Serve sempre la versione live di videos.json (aggiornata dall'admin)
 app.get('/api/videos', (req, res) => {
   res.set('Cache-Control', 'public, max-age=300'); // cache 5 min nei browser
   res.json(readVideos());
@@ -658,17 +511,6 @@ app.patch('/api/admin/videos/:calId/:idx', requireAdmin, (req, res) => {
     res.json({ ok: true });
   } catch(e) { res.status(500).json({ error: e.message }); }
 });
-
-// Endpoint manuale (admin)
-app.post('/api/trigger_scraper', requireAdmin, (req, res) => {
-  if (scraperRunning) return res.json({ ok: false, msg: 'Scraper già in esecuzione' });
-  runYoutubeScraper();
-  res.json({ ok: true, msg: 'Scraper YouTube avviato' });
-});
-
-// Automatico ogni 12 ore — prima esecuzione dopo 60 secondi dall'avvio
-setTimeout(runYoutubeScraper, 60_000);
-setInterval(runYoutubeScraper, 12 * 60 * 60 * 1000);
 
 // Global error handler
 app.use((err, req, res, next) => {
