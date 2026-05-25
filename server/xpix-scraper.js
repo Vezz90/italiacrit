@@ -101,103 +101,43 @@ function isRecent(name) {
   return new RegExp(`\\b(${y}|${y - 1})\\b`).test(name);
 }
 
-// ── Recupera più URL foto watermarked per un album ────────────────────────────
-// Strategia 1: wp/v2/product?pixy_album=[id] → prodotti → featured_media+images → source_url
-// Strategia 2: wp/v2/media?pixy_album=[id] (taxonomy diretta su media)
-// Strategia 3: scrape HTML gallery — sempre eseguita per supplementare
-async function fetchPhotosForAlbum(album, maxPhotos = 12) {
-  const seen   = new Set();
-  const photos = [];
-
-  const addPhoto = (url) => {
-    if (!url || seen.has(url) || photos.length >= maxPhotos) return;
-    seen.add(url);
-    photos.push(url);
-  };
-
-  // ── Strategia 1: WP products → featured_media + images array ──────────────
+// ── Recupera URL foto watermarked per un album — 2 sole chiamate API ──────────
+// 1. GET /wp/v2/product?pixy_album=[id]  → lista featured_media IDs
+// 2. GET /wp/v2/media?include=[id,id,…]  → tutti i source_url in un colpo solo
+async function fetchPhotosForAlbum(album, maxPhotos = 20) {
   try {
+    // Passo 1: ottieni i prodotti dell'album (max maxPhotos)
     const products = await fetchURL(
-      `${XPIX_API}/product?pixy_album=${album.id}&per_page=${maxPhotos}&_fields=id,featured_media,images`,
+      `${XPIX_API}/product?pixy_album=${album.id}&per_page=${maxPhotos}&_fields=id,featured_media&orderby=id&order=asc`,
       15000, true
     );
-    if (Array.isArray(products) && products.length) {
-      // (a) Estrai da campo images[] direttamente (WooCommerce lo include spesso)
-      for (const p of products) {
-        if (Array.isArray(p.images)) {
-          for (const img of p.images) {
-            addPhoto(img.src || img.source_url || null);
-          }
-        }
-      }
+    if (!Array.isArray(products) || !products.length) return [];
 
-      // (b) Fetch featured_media per i prodotti che ancora non hanno foto
-      const withMedia = products.filter(p => p.featured_media && !photos.length);
-      if (withMedia.length) {
-        const mediaUrls = await mapConcurrent(
-          withMedia.slice(0, maxPhotos),
-          async (p) => {
-            try {
-              const media = await fetchURL(
-                `${XPIX_API}/media/${p.featured_media}?_fields=source_url,media_details`,
-                8000, true
-              );
-              return media?.source_url || null;
-            } catch { return null; }
-          }, 4
-        );
-        mediaUrls.filter(Boolean).forEach(addPhoto);
-      }
-    }
+    // Passo 2: raccogli tutti i featured_media IDs (salta 0/null)
+    const mediaIds = products
+      .map(p => p.featured_media)
+      .filter(Boolean);
+    if (!mediaIds.length) return [];
+
+    // Passo 3: singola chiamata per recuperare tutti gli URL
+    const mediaList = await fetchURL(
+      `${XPIX_API}/media?include=${mediaIds.join(',')}&per_page=${maxPhotos}&_fields=id,source_url`,
+      15000, true
+    );
+    if (!Array.isArray(mediaList)) return [];
+
+    // Mantieni l'ordine originale dei prodotti
+    const urlByMediaId = {};
+    mediaList.forEach(m => { if (m.source_url) urlByMediaId[m.id] = m.source_url; });
+
+    return mediaIds
+      .map(id => urlByMediaId[id])
+      .filter(Boolean);
+
   } catch (e) {
-    console.warn(`[xpix] strategy1 album ${album.slug}: ${e.message}`);
+    console.warn(`[xpix] fetchPhotosForAlbum ${album.slug}: ${e.message}`);
+    return [];
   }
-
-  // ── Strategia 2: media con taxonomy pixy_album ─────────────────────────────
-  if (photos.length < 3) {
-    try {
-      const media = await fetchURL(
-        `${XPIX_API}/media?pixy_album=${album.id}&per_page=${maxPhotos}&_fields=source_url`,
-        12000, true
-      );
-      if (Array.isArray(media)) {
-        media.forEach(m => addPhoto(m.source_url || null));
-      }
-    } catch { /* ignorato */ }
-  }
-
-  // ── Strategia 3: scrape HTML gallery (sempre, per integrare) ──────────────
-  if (photos.length < maxPhotos) {
-    try {
-      const html = await fetchURL(
-        `${XPIX_SHOP}?yith_wcan=1&filter=open&pixy_album=${encodeURIComponent(album.slug)}`,
-        15000, false
-      );
-
-      // Regex ampia: qualsiasi src su xpix.it o CDN xpix
-      const re = /(?:src|data-src|data-lazy-src)="(https?:\/\/(?:www\.xpix\.it|xpix\.[^"]+\.com)[^"]+\.(?:jpg|jpeg|png)(?:\?[^"]*)?)"/gi;
-      let m;
-      while ((m = re.exec(html)) !== null) {
-        const url = m[1];
-        // Salta thumbnail minuscole e icone UI
-        if (/\d{1,3}x\d{1,3}\.jpg/.test(url)) continue;  // es. 150x150.jpg
-        if (/logo|icon|avatar|sprite/i.test(url)) continue;
-        addPhoto(url);
-        if (photos.length >= maxPhotos) break;
-      }
-
-      // Fallback: cerca anche i data-product_image / data-large_image WC
-      const reImg = /data-large_image="([^"]+\.(?:jpg|jpeg|png)[^"]*)"/gi;
-      while ((m = reImg.exec(html)) !== null) {
-        addPhoto(m[1]);
-        if (photos.length >= maxPhotos) break;
-      }
-    } catch (e) {
-      console.warn(`[xpix] strategy3 HTML ${album.slug}: ${e.message}`);
-    }
-  }
-
-  return photos;
 }
 
 // ── Entry point principale ─────────────────────────────────────────────────────
