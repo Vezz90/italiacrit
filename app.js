@@ -4039,6 +4039,15 @@ async function renderAdmin() {
       </div>
     </div>
 
+    <div style="margin-top:32px">
+      <h2 style="font-family:var(--font-display);font-size:1.2rem;margin-bottom:16px;border-bottom:2px solid var(--accent);padding-bottom:8px">
+        🎬 VIDEO IN ATTESA DI APPROVAZIONE
+      </h2>
+      <div id="admin-videos-pending">
+        <div style="color:var(--text-muted);padding:20px 0">Caricamento...</div>
+      </div>
+    </div>
+
     <div style="margin-top:40px">
       <h2 style="font-family:var(--font-display);font-size:1.2rem;margin-bottom:8px;border-bottom:2px solid var(--accent);padding-bottom:8px">
         🎥 GESTIONE VIDEO APPROVATI
@@ -4076,6 +4085,7 @@ async function renderAdmin() {
   `);
 
   loadPendingRacePhotos();
+  loadAdminPendingVideos();
   loadAdminAllVideos();
 }
 
@@ -4115,6 +4125,64 @@ async function loadPendingRacePhotos() {
     container.innerHTML = `<div style="color:var(--red-hot);padding:20px 0">Errore caricamento foto: ${esc(e.message)}</div>`;
   }
 }
+
+// ── VIDEO IN ATTESA (inviati dagli utenti) ───────────────────────────────────
+
+async function loadAdminPendingVideos() {
+  const container = document.getElementById('admin-videos-pending');
+  if (!container) return;
+  try {
+    const { videos } = await apiCall('/admin/videos/pending');
+    if (!videos.length) {
+      container.innerHTML = `<div style="color:var(--text-muted);padding:20px 0">Nessun video in attesa.</div>`;
+      return;
+    }
+    const calMap = {};
+    (globalData?.calendar || []).forEach(g => { calMap[g.id] = g; });
+
+    container.innerHTML = `<div style="display:flex;flex-direction:column;gap:10px">${videos.map(v => {
+      const vidId = (v.url || '').match(/[?&]v=([^&]+)/)?.[1] || '';
+      const thumb = vidId ? `https://img.youtube.com/vi/${vidId}/mqdefault.jpg` : '';
+      const calId = v.cal_id || v.gara_id;
+      const cal   = calMap[calId];
+      const raceName = cal ? `${cal.nome}${cal.data ? ' — ' + cal.data : ''}` : calId;
+      return `
+      <div id="apv-${v.id}" style="display:flex;gap:12px;align-items:flex-start;background:var(--bg-card);border:1px solid var(--border-subtle);border-radius:var(--r-md);padding:12px">
+        ${thumb
+          ? `<img src="${thumb}" style="width:110px;height:62px;border-radius:var(--r-sm);flex-shrink:0;object-fit:cover;cursor:pointer" onclick="window.open('${esc(v.url)}','_blank')" />`
+          : `<div style="width:110px;height:62px;background:var(--bg-elevated);border-radius:var(--r-sm);flex-shrink:0;display:flex;align-items:center;justify-content:center;font-size:2rem">🎬</div>`}
+        <div style="flex:1;min-width:0">
+          <div style="font-weight:600;font-size:.875rem;margin-bottom:3px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis">${esc(v.title)}</div>
+          <div style="font-size:.75rem;color:var(--text-muted);margin-bottom:4px">
+            👤 ${esc(v.submitted_by||'')} &nbsp;•&nbsp; ${esc((v.submitted_at||'').slice(0,10))}
+          </div>
+          <div style="font-size:.75rem;margin-bottom:8px">
+            <span style="color:var(--text-muted)">Gara: </span>
+            <a href="#/calendario/${encodeURIComponent(calId)}" style="color:var(--accent);font-weight:600">${esc(raceName)}</a>
+          </div>
+          <div style="display:flex;gap:8px">
+            <button onclick="window.adminVideoAction('${esc(v.id)}','approve')" class="btn-approve">✓ Approva</button>
+            <button onclick="window.adminVideoAction('${esc(v.id)}','reject')"  class="btn-reject">✗ Rifiuta</button>
+          </div>
+        </div>
+      </div>`;
+    }).join('')}</div>`;
+  } catch(e) {
+    container.innerHTML = `<div style="color:var(--red-hot);padding:20px 0">Errore: ${esc(e.message)}</div>`;
+  }
+}
+
+window.adminVideoAction = async (id, action) => {
+  try {
+    await apiCall(`/admin/videos/pending/${id}/${action}`, { method: 'POST' });
+    document.getElementById('apv-' + id)?.remove();
+    const container = document.getElementById('admin-videos-pending');
+    if (container && !container.querySelector('[id^="apv-"]')) {
+      container.innerHTML = `<div style="color:var(--text-muted);padding:20px 0">Nessun video in attesa.</div>`;
+    }
+    if (action === 'approve') loadAdminAllVideos();
+  } catch(e) { alert('Errore: ' + e.message); }
+};
 
 // ── GESTIONE VIDEO APPROVATI ─────────────────────────────────────────────────
 
