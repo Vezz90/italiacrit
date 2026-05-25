@@ -482,7 +482,9 @@ app.post('/api/videos/submit', requireAuth, async (req, res) => {
   try {
     const { gara_id, cal_id, url, title, description, channel } = req.body;
     if (!gara_id || !url) return res.status(400).json({ error: 'gara_id e url obbligatori' });
-    const key = cal_id || gara_id;
+    // Usa sempre gara_id (include la categoria es. _JUN_M, _ELI_M) come chiave
+    // così ogni categoria della stessa gara ha i propri video separati
+    const key = gara_id;
     if (req.user.role === 'admin') {
       const videos = await readVideos();
       if (!videos[key]) videos[key] = [];
@@ -514,7 +516,7 @@ const videoUpload = multer({
 
 app.post('/api/videos/upload-file', requireAuth, videoUpload.single('video'), async (req, res) => {
   try {
-    const { gara_id, cal_id, title, channel } = req.body;
+    const { gara_id, cal_id, title, channel } = req.body; // cal_id ignorato, usiamo sempre gara_id
     if (!gara_id) return res.status(400).json({ error: 'gara_id mancante' });
     if (!req.file) return res.status(400).json({ error: 'Nessun file ricevuto' });
     const ext = path.extname(req.file.originalname).toLowerCase() || '.mp4';
@@ -528,7 +530,7 @@ app.post('/api/videos/upload-file', requireAuth, videoUpload.single('video'), as
       fs.writeFileSync(path.join(UPLOADS_DIR, filename), req.file.buffer || fs.readFileSync(req.file.path));
       videoUrl = `/uploads/${filename}`;
     }
-    const key = cal_id || gara_id;
+    const key = gara_id; // usa sempre gara_id (con categoria) come chiave
     if (req.user.role === 'admin') {
       const videos = await readVideos();
       if (!videos[key]) videos[key] = [];

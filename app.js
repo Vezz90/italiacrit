@@ -4234,19 +4234,27 @@ async function loadAdminAllVideos() {
 function renderAdminVideosAll() {
   const container = document.getElementById('admin-videos-all');
   if (!container) return;
+  // Mappa gara_id → prima risultato (per nome + categoria + data)
+  const garaMap = {};
+  (globalData?.resultsRaw || []).forEach(r => { if (!garaMap[r.gara_id]) garaMap[r.gara_id] = r; });
+  // Fallback: calendario
   const calMap = {};
   (globalData?.calendar || []).forEach(g => calMap[g.id] = g);
 
   const entries = Object.entries(_adminVideosData)
-    .filter(([calId]) => {
+    .filter(([garaId]) => {
       if (!_adminVideoFilter) return true;
       const q = _adminVideoFilter.toLowerCase();
-      const cal = calMap[calId];
-      return calId.toLowerCase().includes(q) || (cal?.nome||'').toLowerCase().includes(q);
+      const r = garaMap[garaId];
+      const cal = calMap[garaId];
+      return garaId.toLowerCase().includes(q)
+        || (r?.nome_gara||'').toLowerCase().includes(q)
+        || (r?.categoria||'').toLowerCase().includes(q)
+        || (cal?.nome||'').toLowerCase().includes(q);
     })
     .sort(([a],[b]) => {
-      const da = calMap[a]?.data || a;
-      const db = calMap[b]?.data || b;
+      const da = garaMap[a]?.data || calMap[a]?.data || a;
+      const db = garaMap[b]?.data || calMap[b]?.data || b;
       return db.localeCompare(da);
     });
 
@@ -4256,9 +4264,11 @@ function renderAdminVideosAll() {
   }
 
   container.innerHTML = entries.map(([calId, vids]) => {
+    const r = garaMap[calId];
     const cal = calMap[calId];
-    const raceName = cal?.nome || calId;
-    const raceDate = cal?.data || '';
+    const raceName = r?.nome_gara || cal?.nome || calId;
+    const catBadge = r?.categoria ? ` <span style="background:var(--accent);color:#fff;border-radius:3px;padding:1px 5px;font-size:.7rem">${esc(r.categoria)} ${r.genere||''}</span>` : '';
+    const raceDate = r?.data || cal?.data || '';
 
     const videoRows = vids.map((v, idx) => {
       const vidId = ytId(v.url) || '';
@@ -4282,8 +4292,9 @@ function renderAdminVideosAll() {
     <div class="admin-video-race-block" style="background:var(--bg-card);border:1px solid var(--border);border-radius:8px;margin-bottom:12px;overflow:hidden">
       <div style="padding:10px 14px;background:var(--bg-elevated,rgba(128,128,128,.08));display:flex;align-items:center;justify-content:space-between;gap:8px">
         <div style="display:flex;align-items:center;flex-wrap:wrap;gap:4px">
-          <a href="#/calendario/${encodeURIComponent(calId)}" style="color:var(--accent);font-weight:700;font-size:.9rem;text-decoration:none">${esc(raceName)}</a>
-          ${raceDate ? `<span style="color:var(--text-muted);font-size:.75rem;margin-left:6px">${fmtDate(raceDate)}</span>` : ''}
+          <a href="#/gara/${encodeURIComponent(calId)}" style="color:var(--accent);font-weight:700;font-size:.9rem;text-decoration:none">${esc(raceName)}</a>
+          ${catBadge}
+          ${raceDate ? `<span style="color:var(--text-muted);font-size:.75rem;margin-left:4px">${fmtDate(raceDate)}</span>` : ''}
           <span style="color:var(--text-muted);font-size:.75rem">•&nbsp;${vids.length} video</span>
         </div>
         <button onclick="window.adminShowAddVideoForRace('${esc(calId)}')" style="background:transparent;border:1px solid var(--accent);color:var(--accent);padding:3px 10px;border-radius:4px;cursor:pointer;font-size:.75rem;flex-shrink:0">+ video</button>
@@ -4379,33 +4390,46 @@ window.adminShowAddVideo = (show = true) => {
   }
 };
 
-window.adminShowAddVideoForRace = (calId) => {
+window.adminShowAddVideoForRace = (garaId) => {
   window.adminShowAddVideo(true);
-  const cal = (globalData?.calendar || []).find(g => g.id === calId);
-  _avfSelectedCalId = calId;
+  // garaId è ora un gara_id completo (con categoria), non un cal.id
+  const r = (globalData?.resultsRaw || []).find(x => x.gara_id === garaId);
+  _avfSelectedCalId = garaId;
+  const label = r ? `${r.nome_gara||garaId} — ${r.categoria||''} ${r.genere||''}`.trim() : garaId;
   const sel = document.getElementById('avf-race-selected');
   const search = document.getElementById('avf-race-search');
-  if (sel) sel.textContent = `✔ ${cal?.nome || calId}`;
-  if (search) search.value = cal?.nome || calId;
+  if (sel) sel.textContent = `✔ ${label}`;
+  if (search) search.value = label;
   document.getElementById('admin-add-video-form')?.scrollIntoView({ behavior:'smooth', block:'start' });
 };
 
+// Cerca gare per categoria da resultsRaw (ogni riga = gara_id unico con categoria)
 window.adminSearchCalRace = (q) => {
   const res = document.getElementById('avf-race-results');
   if (!res) return;
   if (!q || q.length < 2) { res.style.display = 'none'; return; }
-  const matches = (globalData?.calendar || [])
-    .filter(g => (g.nome||'').toLowerCase().includes(q.toLowerCase()) || (g.id||'').toLowerCase().includes(q.toLowerCase()))
+  const seen = new Set();
+  const matches = (globalData?.resultsRaw || [])
+    .filter(r => {
+      if (seen.has(r.gara_id)) return false;
+      seen.add(r.gara_id);
+      const name = (r.nome_gara || r.gara_id || '').toLowerCase();
+      const cat  = (r.categoria || '').toLowerCase();
+      return name.includes(q.toLowerCase()) || cat.includes(q.toLowerCase()) || r.gara_id.toLowerCase().includes(q.toLowerCase());
+    })
     .sort((a,b) => (b.data||'').localeCompare(a.data||''))
-    .slice(0, 12);
+    .slice(0, 15);
   if (!matches.length) { res.style.display = 'none'; return; }
   res.style.display = 'block';
-  res.innerHTML = matches.map(g => `
-    <div onclick="window.adminSelectCalRace('${esc(g.id)}','${esc(g.nome||g.id)}')"
-      style="padding:8px 12px;cursor:pointer;font-size:.82rem;border-bottom:1px solid var(--border-subtle)">
-      <strong>${esc(g.nome||g.id)}</strong>
-      <span style="color:var(--text-muted);font-size:.75rem;margin-left:6px">${g.data||''}</span>
-    </div>`).join('');
+  res.innerHTML = matches.map(r => {
+    const label = `${esc(r.nome_gara||r.gara_id)}`;
+    const badge = r.categoria ? `<span style="background:var(--accent);color:#fff;border-radius:3px;padding:1px 5px;font-size:.7rem;margin-left:6px">${esc(r.categoria)} ${r.genere||''}</span>` : '';
+    return `<div onclick="window.adminSelectCalRace('${esc(r.gara_id)}','${esc(r.nome_gara||r.gara_id)} — ${esc(r.categoria||'')} ${r.genere||''}')"
+      style="padding:8px 12px;cursor:pointer;font-size:.82rem;border-bottom:1px solid var(--border-subtle);display:flex;align-items:center;gap:4px">
+      <strong>${label}</strong>${badge}
+      <span style="color:var(--text-muted);font-size:.75rem;margin-left:auto">${r.data||''}</span>
+    </div>`;
+  }).join('');
 };
 
 window.adminSelectCalRace = (calId, nome) => {
@@ -5546,17 +5570,17 @@ async function renderGara(gara_id) {
     })
     .catch(e => console.warn('[video-debug] fetch fallito:', e.message));
 
-  // Lookup multi-livello: calId → gara_id → calId senza suffisso categoria
+  // Lookup multi-livello: prima per gara_id COMPLETO (con categoria) per evitare
+  // che categorie diverse della stessa gara condividano i video, poi fallback
+  // al calId per retrocompatibilità con video inseriti prima di questa fix.
   const _vids = globalData.videos || {};
-  const _calIdStripped = _calId.replace(/_[A-Z0-9]+_[MF]$/, ''); // rimuove _JUNIORES_M ecc.
-  console.log('[video-debug] gara_id:', gara_id, '| _calId:', _calId, '| keys in videos:', Object.keys(_vids));
-  const garaVideos = _vids[_calId]
-    || _vids[gara_id]
-    || (_calIdStripped !== _calId ? _vids[_calIdStripped] : null)
-    || _vids[primaryGaraId]
-    || _vids[primaryGaraId.replace(/_[A-Z0-9]+_[MF]$/, '')]
+  const _calIdStripped = _calId.replace(/_[A-Z0-9]+_[MF]$/, ''); // rimuove _JUN_M, _ELI_M ecc.
+  const garaVideos = _vids[primaryGaraId]                                         // ← chiave esatta con categoria (nuovo)
+    || _vids[gara_id]                                                               // ← alias gara_id
+    || _vids[_calId]                                                                // ← calId senza categoria (legacy)
+    || (_calIdStripped !== _calId ? _vids[_calIdStripped] : null)                  // ← calId stripped
+    || _vids[primaryGaraId.replace(/_[A-Z0-9]+_[MF]$/, '')]                       // ← primaryGaraId stripped
     || [];
-  console.log('[video-debug] garaVideos trovati:', garaVideos.length);
   const featuredVideo = garaVideos[0] || null;
   const featuredVideoId = featuredVideo ? ytId(featuredVideo.url) : null;
   const extraVideos = garaVideos.slice(1);
