@@ -426,52 +426,75 @@ app.delete('/api/admin/race-photos/:id', requireAdmin, async (req, res) => {
 app.get('/api/health', (req, res) => res.json({ ok: true, ts: new Date().toISOString() }));
 
 // ── VIDEO MANAGEMENT ──────────────────────────────────────────────────────
+// Persistenza: Supabase (kv_store) in produzione, file JSON in locale
 const VIDEOS_PATH         = path.join(__dirname, '../data/videos.json');
 const PENDING_VIDEOS_PATH = path.join(__dirname, '../data/pending_videos.json');
 
-function readVideos() {
+async function readVideos() {
+  if (supabase) {
+    const { data, error } = await supabase.from('kv_store').select('value').eq('key', 'videos').single();
+    if (error && error.code !== 'PGRST116') console.error('[videos] read error:', error.message);
+    return data?.value || {};
+  }
   try { return JSON.parse(fs.readFileSync(VIDEOS_PATH, 'utf8')); } catch { return {}; }
 }
-function writeVideos(data) {
-  fs.writeFileSync(VIDEOS_PATH, JSON.stringify(data, null, 2));
+async function writeVideos(obj) {
+  if (supabase) {
+    const { error } = await supabase.from('kv_store')
+      .upsert({ key: 'videos', value: obj, updated_at: new Date().toISOString() });
+    if (error) throw new Error('Supabase write error: ' + error.message);
+    return;
+  }
+  fs.writeFileSync(VIDEOS_PATH, JSON.stringify(obj, null, 2));
 }
-function readPendingVideos() {
+async function readPendingVideos() {
+  if (supabase) {
+    const { data, error } = await supabase.from('kv_store').select('value').eq('key', 'pending_videos').single();
+    if (error && error.code !== 'PGRST116') console.error('[pending] read error:', error.message);
+    return data?.value || [];
+  }
   try { return JSON.parse(fs.readFileSync(PENDING_VIDEOS_PATH, 'utf8')); } catch { return []; }
 }
-function writePendingVideos(arr) {
+async function writePendingVideos(arr) {
+  if (supabase) {
+    const { error } = await supabase.from('kv_store')
+      .upsert({ key: 'pending_videos', value: arr, updated_at: new Date().toISOString() });
+    if (error) throw new Error('Supabase write error: ' + error.message);
+    return;
+  }
   fs.writeFileSync(PENDING_VIDEOS_PATH, JSON.stringify(arr, null, 2));
 }
 
 // Endpoint PUBBLICO — usato dal frontend in produzione invece del file statico
 // Serve sempre la versione live di videos.json (aggiornata dall'admin)
-app.get('/api/videos', (req, res) => {
-  res.set('Cache-Control', 'public, max-age=300'); // cache 5 min nei browser
-  res.json(readVideos());
+app.get('/api/videos', async (req, res) => {
+  res.set('Cache-Control', 'no-cache');
+  res.json(await readVideos());
 });
 
 // Lista tutti i video approvati (senza cache — legge sempre dal disco)
-app.get('/api/admin/videos', requireAdmin, (req, res) => {
-  res.json(readVideos());
+app.get('/api/admin/videos', requireAdmin, async (req, res) => {
+  res.json(await readVideos());
 });
 
 // Submit URL YouTube (utenti autenticati)
-app.post('/api/videos/submit', requireAuth, (req, res) => {
+app.post('/api/videos/submit', requireAuth, async (req, res) => {
   try {
     const { gara_id, cal_id, url, title, description } = req.body;
     if (!gara_id || !url) return res.status(400).json({ error: 'gara_id e url obbligatori' });
     const key = cal_id || gara_id;
     if (req.user.role === 'admin') {
-      const videos = readVideos();
+      const videos = await readVideos();
       if (!videos[key]) videos[key] = [];
       if (videos[key].some(v => v.url === url)) return res.status(409).json({ error: 'Video già presente' });
       videos[key].unshift({ url, title: title || url, description: description || '', channel: 'Admin', published_at: new Date().toISOString().slice(0,10) });
-      writeVideos(videos);
+      await writeVideos(videos);
       return res.json({ ok: true, status: 'approved' });
     }
-    const pending = readPendingVideos();
+    const pending = await readPendingVideos();
     const id = Date.now().toString(36) + Math.random().toString(36).slice(2,7);
     pending.push({ id, gara_id, cal_id: key, type: 'youtube', url, title: title || url, description: description || '', submitted_by: req.user.display_name || req.user.email, submitted_at: new Date().toISOString() });
-    writePendingVideos(pending);
+    await writePendingVideos(pending);
     res.json({ ok: true, status: 'pending' });
   } catch(e) { res.status(500).json({ error: e.message }); }
 });
@@ -507,62 +530,62 @@ app.post('/api/videos/upload-file', requireAuth, videoUpload.single('video'), as
     }
     const key = cal_id || gara_id;
     if (req.user.role === 'admin') {
-      const videos = readVideos();
+      const videos = await readVideos();
       if (!videos[key]) videos[key] = [];
       videos[key].unshift({ url: videoUrl, title: title || filename, description: '', channel: req.user.display_name || 'Admin', published_at: new Date().toISOString().slice(0,10) });
-      writeVideos(videos);
+      await writeVideos(videos);
       return res.json({ ok: true, status: 'approved', url: videoUrl });
     }
-    const pending = readPendingVideos();
+    const pending = await readPendingVideos();
     const id = Date.now().toString(36) + Math.random().toString(36).slice(2,7);
     pending.push({ id, gara_id, cal_id: key, type: 'upload', url: videoUrl, title: title || filename, description: '', submitted_by: req.user.display_name || req.user.email, submitted_at: new Date().toISOString() });
-    writePendingVideos(pending);
+    await writePendingVideos(pending);
     res.json({ ok: true, status: 'pending', url: videoUrl });
   } catch(e) { res.status(500).json({ error: e.message }); }
 });
 
 // Admin: lista video in attesa di approvazione
-app.get('/api/admin/videos/pending', requireAdmin, (req, res) => {
-  res.json({ videos: readPendingVideos() });
+app.get('/api/admin/videos/pending', requireAdmin, async (req, res) => {
+  res.json({ videos: await readPendingVideos() });
 });
 
 // Admin: approva video in attesa
-app.post('/api/admin/videos/pending/:id/approve', requireAdmin, (req, res) => {
+app.post('/api/admin/videos/pending/:id/approve', requireAdmin, async (req, res) => {
   try {
-    const pending = readPendingVideos();
+    const pending = await readPendingVideos();
     const i = pending.findIndex(v => v.id === req.params.id);
     if (i === -1) return res.status(404).json({ error: 'Non trovato' });
     const v = pending[i];
-    const videos = readVideos();
+    const videos = await readVideos();
     const key = v.cal_id || v.gara_id;
     if (!videos[key]) videos[key] = [];
     videos[key].unshift({ url: v.url, title: v.title, description: v.description || '', channel: v.submitted_by || '', published_at: (v.submitted_at || '').slice(0, 10) });
-    writeVideos(videos);
+    await writeVideos(videos);
     pending.splice(i, 1);
-    writePendingVideos(pending);
+    await writePendingVideos(pending);
     res.json({ ok: true });
   } catch(e) { res.status(500).json({ error: e.message }); }
 });
 
 // Admin: rifiuta video in attesa
-app.post('/api/admin/videos/pending/:id/reject', requireAdmin, (req, res) => {
+app.post('/api/admin/videos/pending/:id/reject', requireAdmin, async (req, res) => {
   try {
-    const pending = readPendingVideos();
+    const pending = await readPendingVideos();
     const i = pending.findIndex(v => v.id === req.params.id);
     if (i === -1) return res.status(404).json({ error: 'Non trovato' });
     pending.splice(i, 1);
-    writePendingVideos(pending);
+    await writePendingVideos(pending);
     res.json({ ok: true });
   } catch(e) { res.status(500).json({ error: e.message }); }
 });
 
 // Aggiungi video manualmente a una gara (admin diretto, senza pending)
-app.post('/api/admin/videos/:calId', requireAdmin, (req, res) => {
+app.post('/api/admin/videos/:calId', requireAdmin, async (req, res) => {
   try {
     const { calId } = req.params;
     const { url, title, channel, description } = req.body;
     if (!url) return res.status(400).json({ error: 'url obbligatorio' });
-    const videos = readVideos();
+    const videos = await readVideos();
     if (!videos[calId]) videos[calId] = [];
     // Evita duplicati per URL
     if (videos[calId].some(v => v.url === url)) return res.status(409).json({ error: 'Video già presente per questa gara' });
@@ -573,50 +596,50 @@ app.post('/api/admin/videos/:calId', requireAdmin, (req, res) => {
       published_at: new Date().toISOString().slice(0,10),
       score: 1,
     });
-    writeVideos(videos);
+    await writeVideos(videos);
     res.json({ ok: true });
   } catch(e) { res.status(500).json({ error: e.message }); }
 });
 
 // Sposta un video da una gara a un'altra
-app.post('/api/admin/videos/:calId/:idx/move', requireAdmin, (req, res) => {
+app.post('/api/admin/videos/:calId/:idx/move', requireAdmin, async (req, res) => {
   try {
     const { calId, idx } = req.params;
     const { newCalId } = req.body;
     if (!newCalId) return res.status(400).json({ error: 'newCalId obbligatorio' });
-    const videos = readVideos();
+    const videos = await readVideos();
     if (!videos[calId]?.[parseInt(idx)]) return res.status(404).json({ error: 'Video non trovato' });
     const v = videos[calId].splice(parseInt(idx), 1)[0];
     if (!videos[calId].length) delete videos[calId];
     if (!videos[newCalId]) videos[newCalId] = [];
     videos[newCalId].unshift(v);
-    writeVideos(videos);
+    await writeVideos(videos);
     res.json({ ok: true });
   } catch(e) { res.status(500).json({ error: e.message }); }
 });
 
-app.delete('/api/admin/videos/:calId/:idx', requireAdmin, (req, res) => {
+app.delete('/api/admin/videos/:calId/:idx', requireAdmin, async (req, res) => {
   try {
     const { calId, idx } = req.params;
-    const videos = readVideos();
+    const videos = await readVideos();
     if (!videos[calId]) return res.status(404).json({ error: 'Gara non trovata' });
     videos[calId].splice(parseInt(idx), 1);
     if (!videos[calId].length) delete videos[calId];
-    writeVideos(videos);
+    await writeVideos(videos);
     res.json({ ok: true });
   } catch(e) { res.status(500).json({ error: e.message }); }
 });
 
-app.patch('/api/admin/videos/:calId/:idx', requireAdmin, (req, res) => {
+app.patch('/api/admin/videos/:calId/:idx', requireAdmin, async (req, res) => {
   try {
     const { calId, idx } = req.params;
     const { url, title } = req.body;
-    const videos = readVideos();
+    const videos = await readVideos();
     if (!videos[calId]?.[parseInt(idx)]) return res.status(404).json({ error: 'Video non trovato' });
     const v = videos[calId][parseInt(idx)];
     if (url) v.url = url;
     if (title !== undefined) v.title = title;
-    writeVideos(videos);
+    await writeVideos(videos);
     res.json({ ok: true });
   } catch(e) { res.status(500).json({ error: e.message }); }
 });
