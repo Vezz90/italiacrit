@@ -235,4 +235,4 @@ async function fetchXpixCandidates(knownSlugs, maxNew = 25) {
   return valid;
 }
 
-module.exports = { fetchXpixCandidates, fetchAllAlbums, isCyclingRelevant, isRecent };
+module.exports = { fetchXpixCandidates, fetchPhotosForAlbum, fetchAllAlbums, isCyclingRelevant, isRecent };

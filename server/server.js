@@ -818,7 +818,7 @@ app.delete('/api/admin/youtube/queue/:id', requireAdmin, async (req, res) => {
 // ══════════════════════════════════════════════════════════════════════════════
 // XPIX AUTO-FOTO
 // ══════════════════════════════════════════════════════════════════════════════
-const { fetchXpixCandidates } = require('./xpix-scraper');
+const { fetchXpixCandidates, fetchPhotosForAlbum } = require('./xpix-scraper');
 
 const XPIX_QUEUE_PATH  = path.join(__dirname, '../data/xpix_queue.json');
 const XPIX_PHOTOS_PATH = path.join(__dirname, '../data/xpix_photos.json');
@@ -948,7 +948,6 @@ app.post('/api/admin/xpix/queue/:id/refresh-photos', requireAdmin, async (req, r
     if (i === -1) return res.status(404).json({ error: 'Non trovato' });
 
     const item   = queue[i];
-    const { fetchPhotosForAlbum } = require('./xpix-scraper');
     const photos = await fetchPhotosForAlbum(
       { id: item.album_id, slug: item.album_slug },
       16  // prendi più foto possibili
