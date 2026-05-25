@@ -4558,7 +4558,7 @@ window._adminSavePhoto = async (id) => {
       body: JSON.stringify({ caption, photographer }),
     });
     if (!res.ok) throw new Error((await res.json()).error || 'Errore');
-    document.querySelector('[style*="position:fixed"][style*="9999"]')?.remove();
+    document.getElementById('modal-overlay')?.remove();
     loadApprovedRacePhotos();
   } catch(e) {
     if (errEl) { errEl.textContent = e.message; errEl.style.display = 'block'; }
@@ -5381,6 +5381,7 @@ function adminEditPhoto(id) {
   const photographer = card?.dataset.photographer || '';
 
   const overlay = document.createElement('div');
+  overlay.id = 'modal-overlay';
   overlay.style.cssText = 'position:fixed;inset:0;background:rgba(0,0,0,.65);z-index:9999;display:flex;align-items:center;justify-content:center;padding:20px;box-sizing:border-box';
 
   const box = document.createElement('div');
@@ -5834,6 +5835,7 @@ async function renderGara(gara_id) {
     const user = authUser();
     if (!user) return;
     const overlay = document.createElement('div');
+    overlay.id = 'modal-overlay';
     overlay.style.cssText = 'position:fixed;inset:0;background:rgba(0,0,0,.6);z-index:9999;display:flex;align-items:center;justify-content:center;padding:16px';
     const isAdmin = user.role === 'admin';
     const inpStyle = 'width:100%;box-sizing:border-box;padding:8px 10px;border:1px solid var(--border-subtle);border-radius:var(--r-sm);font-size:0.875rem;background:var(--bg-primary);color:var(--text-primary);margin-bottom:10px';
@@ -5875,6 +5877,7 @@ async function renderGara(gara_id) {
       || '';
     const inpStyle = 'width:100%;box-sizing:border-box;padding:8px 10px;border:1px solid var(--border-subtle);border-radius:var(--r-sm);font-size:0.875rem;background:var(--bg-primary);color:var(--text-primary);margin-bottom:10px';
     const overlay = document.createElement('div');
+    overlay.id = 'modal-overlay';
     overlay.style.cssText = 'position:fixed;inset:0;background:rgba(0,0,0,.6);z-index:9999;display:flex;align-items:center;justify-content:center;padding:16px';
     overlay.innerHTML = `
       <div style="background:var(--bg-card);border-radius:var(--r-lg);padding:24px;width:100%;max-width:460px;box-shadow:0 8px 32px rgba(0,0,0,.3)">
@@ -6009,7 +6012,7 @@ async function renderGara(gara_id) {
           xhr.setRequestHeader('Authorization', `Bearer ${authToken()}`);
           xhr.send(fd);
         });
-        document.querySelector('[style*="position:fixed"][style*="9999"]')?.remove();
+        document.getElementById('modal-overlay')?.remove();
         const user = authUser();
         showToast(user?.role === 'admin' ? '✓ Video pubblicato!' : '✓ Video inviato — in attesa di approvazione');
         if (window._currentGaraId) renderGara(window._currentGaraId);
@@ -6022,7 +6025,7 @@ async function renderGara(gara_id) {
       btn.disabled = true; btn.textContent = 'Invio…';
       try {
         await apiCall('/videos/submit', { method: 'POST', body: { gara_id: garaId, cal_id: calId, url, title, channel } });
-        document.querySelector('[style*="position:fixed"][style*="9999"]')?.remove();
+        document.getElementById('modal-overlay')?.remove();
         const user = authUser();
         showToast(user?.role === 'admin' ? '✓ Video pubblicato!' : '✓ Video inviato — in attesa di approvazione');
         if (window._currentGaraId) renderGara(window._currentGaraId);
@@ -6051,7 +6054,7 @@ async function renderGara(gara_id) {
       let data;
       try { data = JSON.parse(text); } catch { throw new Error(`Errore HTTP ${res.status}`); }
       if (!res.ok) throw new Error(data.error || `Errore ${res.status}`);
-      document.querySelector('[style*="position:fixed"][style*="9999"]')?.remove();
+      document.getElementById('modal-overlay')?.remove();
       if (data.status === 'approved') {
         showToast('✓ Foto pubblicata!');
         renderGara(window._currentGaraId);
