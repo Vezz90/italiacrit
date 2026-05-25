@@ -4076,6 +4076,29 @@ async function renderAdmin() {
     </div>
 
     <!-- ═══════════════════════════════════════════════════════ -->
+    <!-- XPIX AUTO-FOTO                                         -->
+    <!-- ═══════════════════════════════════════════════════════ -->
+    <div style="margin-top:40px">
+      <h2 style="font-family:var(--font-display);font-size:1.2rem;margin-bottom:4px;border-bottom:2px solid #0ea5e9;padding-bottom:8px;display:flex;align-items:center;gap:8px">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#0ea5e9" stroke-width="2"><rect x="3" y="3" width="18" height="18" rx="2"/><circle cx="8.5" cy="8.5" r="1.5"/><polyline points="21 15 16 10 5 21"/></svg>
+        XPIX AUTO-FOTO
+      </h2>
+      <p style="font-size:.8rem;color:var(--text-muted);margin:0 0 12px">
+        Scarica automaticamente le foto watermarked da xpix.it e abbinale alle gare. Clicca Sync per aggiornare.
+      </p>
+      <div style="display:flex;gap:10px;flex-wrap:wrap;align-items:center;margin-bottom:16px">
+        <button onclick="window.xpixSync()" id="xpix-sync-btn"
+          style="background:#0ea5e9;color:#fff;border:none;padding:9px 20px;border-radius:6px;font-weight:700;cursor:pointer;font-size:.875rem">
+          🔄 Sincronizza Xpix
+        </button>
+        <span id="xpix-sync-status" style="font-size:.8rem;color:var(--text-muted)"></span>
+      </div>
+      <div id="xpix-queue-container">
+        <div style="color:var(--text-muted);font-size:.85rem">Premi "Sincronizza Xpix" per scaricare le foto.</div>
+      </div>
+    </div>
+
+    <!-- ═══════════════════════════════════════════════════════ -->
     <!-- YOUTUBE AUTO-SYNC                                       -->
     <!-- ═══════════════════════════════════════════════════════ -->
     <div style="margin-top:40px">
@@ -4160,6 +4183,7 @@ async function renderAdmin() {
   loadPendingRacePhotos();
   loadAdminPendingVideos();
   loadAdminAllVideos();
+  loadXpixQueue();
   loadYTQueue();
 }
 
@@ -4608,6 +4632,220 @@ window.ytSaveChannels = async () => {
   try {
     await apiCall('/admin/youtube/channels', { method: 'PUT', body: { channels: _ytChannels } });
     showToast('✓ Canali salvati!');
+  } catch (e) { showToast('Errore: ' + e.message, 'error'); }
+};
+
+// ══════════════════════════════════════════════════════════════════════════════
+// XPIX AUTO-FOTO — funzioni frontend
+// ══════════════════════════════════════════════════════════════════════════════
+
+let _xpixQueue = [];
+let _xpixItemGaraMap = {};   // id → gara_id selezionato
+
+// Riusa le stesse funzioni di normalizzazione/scoring di YouTube
+function _xpixScore(albumName, race) {
+  // Strip province codes "(Fi)", "(Vi)", "(Mo)" etc. from album name
+  const cleanAlbum = albumName.replace(/\([A-Z]{2}\)/g, '').replace(/\s+/g, ' ');
+  return _ytScore(cleanAlbum, race);
+}
+
+function _xpixFindMatches(albumName, maxResults = 5) {
+  const races = (globalData?.resultsRaw || []);
+  const seen = new Set();
+  const unique = races.filter(r => { if (seen.has(r.gara_id)) return false; seen.add(r.gara_id); return true; });
+  return unique
+    .map(r => ({ race: r, score: _xpixScore(albumName, r) }))
+    .filter(x => x.score > 0.12)
+    .sort((a, b) => b.score - a.score)
+    .slice(0, maxResults);
+}
+
+async function loadXpixQueue() {
+  const container = document.getElementById('xpix-queue-container');
+  if (!container) return;
+  try {
+    const { queue } = await apiCall('/admin/xpix/queue', { method: 'GET' });
+    _xpixQueue = queue || [];
+    renderXpixQueue();
+  } catch (e) {
+    if (container) container.innerHTML = `<div style="color:var(--text-muted);font-size:.85rem">Errore caricamento queue xpix: ${esc(e.message)}</div>`;
+  }
+}
+
+function renderXpixQueue() {
+  const container = document.getElementById('xpix-queue-container');
+  if (!container) return;
+
+  const pending   = _xpixQueue.filter(q => q.status === 'pending');
+  const dismissed = _xpixQueue.filter(q => q.status === 'dismissed').length;
+  const approved  = _xpixQueue.filter(q => q.status === 'approved').length;
+
+  if (!_xpixQueue.length) {
+    container.innerHTML = `<div style="color:var(--text-muted);font-size:.85rem;padding:16px 0">Nessuna foto in coda. Clicca "Sincronizza Xpix".</div>`;
+    return;
+  }
+
+  const stats = `<div style="font-size:.8rem;color:var(--text-muted);margin-bottom:12px">
+    📋 In attesa: <strong style="color:var(--text-primary)">${pending.length}</strong>
+    &nbsp;•&nbsp; ✓ Approvate: ${approved}
+    &nbsp;•&nbsp; ✗ Scartate: ${dismissed}
+  </div>`;
+
+  if (!pending.length) {
+    container.innerHTML = stats + `<div style="color:var(--text-muted);font-size:.85rem">Tutte le foto sono state elaborate.</div>`;
+    return;
+  }
+
+  const rows = pending.map(item => {
+    const matches     = _xpixFindMatches(item.album_name);
+    const best        = matches[0];
+    const score       = best ? Math.round(best.score * 100) : 0;
+    const scoreColor  = score >= 70 ? '#16a34a' : score >= 40 ? '#d97706' : '#6b7280';
+    const bestGaraId  = _xpixItemGaraMap[item.id] || (best ? best.race.gara_id : '');
+
+    const optionsHtml = matches.map(m => {
+      const label = `${m.race.nome_gara} — ${m.race.categoria||''} ${m.race.genere||''} (${m.race.data||''}) [${Math.round(m.score*100)}%]`;
+      const sel   = m.race.gara_id === bestGaraId ? ' selected' : '';
+      return `<option value="${esc(m.race.gara_id)}"${sel}>${esc(label)}</option>`;
+    }).join('');
+
+    return `
+    <div id="xpixq-${esc(item.id)}" style="background:var(--bg-card);border:1px solid var(--border);border-radius:8px;padding:12px;margin-bottom:10px;display:flex;gap:12px;align-items:flex-start">
+      <!-- Anteprima foto -->
+      <a href="${esc(item.album_page||'#')}" target="_blank" style="flex-shrink:0">
+        <img src="${esc(item.photo_url||'')}" alt=""
+          style="width:100px;height:66px;border-radius:5px;object-fit:cover;display:block"
+          onerror="this.style.display='none'" />
+      </a>
+      <!-- Info -->
+      <div style="flex:1;min-width:0">
+        <div style="font-weight:600;font-size:.85rem;margin-bottom:2px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap" title="${esc(item.album_name)}">${esc(item.album_name)}</div>
+        <div style="font-size:.75rem;color:var(--text-muted);margin-bottom:6px">
+          📸 ${item.photo_count||'?'} foto
+          ${score ? `&nbsp;•&nbsp; <span style="color:${scoreColor};font-weight:700">${score}% match</span>` : ''}
+          &nbsp;•&nbsp; <a href="${esc(item.album_page||'#')}" target="_blank" style="color:var(--accent)">Vedi album</a>
+        </div>
+        <!-- Selezione gara -->
+        <div style="display:flex;gap:6px;flex-wrap:wrap;align-items:center;margin-bottom:6px">
+          <select onchange="window.xpixSetGara('${esc(item.id)}', this.value)"
+            style="flex:1;min-width:180px;padding:5px 8px;border:1px solid var(--border);border-radius:5px;background:var(--bg-primary);color:var(--text-primary);font-size:.78rem">
+            <option value="">— Seleziona gara —</option>
+            ${optionsHtml}
+            <option value="__search__">🔍 Cerca altra gara…</option>
+          </select>
+        </div>
+        <div id="xpixq-search-${esc(item.id)}" style="display:none;margin-bottom:6px">
+          <input type="text" placeholder="Cerca gara per nome…" oninput="window.xpixSearchGara('${esc(item.id)}',this.value)"
+            style="width:100%;box-sizing:border-box;padding:5px 8px;border:1px solid var(--border);border-radius:5px;background:var(--bg-primary);color:var(--text-primary);font-size:.78rem" />
+          <div id="xpixq-sr-${esc(item.id)}" style="background:var(--bg-card);border:1px solid var(--border);border-radius:5px;max-height:160px;overflow-y:auto;margin-top:2px"></div>
+        </div>
+        <!-- Azioni -->
+        <div style="display:flex;gap:6px;flex-wrap:wrap">
+          <button onclick="window.xpixApprove('${esc(item.id)}')"
+            style="background:#16a34a;color:#fff;border:none;padding:5px 14px;border-radius:5px;cursor:pointer;font-size:.78rem;font-weight:700">
+            ✓ Pubblica foto
+          </button>
+          <button onclick="window.xpixDismiss('${esc(item.id)}')"
+            style="background:transparent;border:1px solid #ef4444;color:#ef4444;padding:5px 12px;border-radius:5px;cursor:pointer;font-size:.78rem">
+            ✗ Scarta
+          </button>
+        </div>
+      </div>
+    </div>`;
+  }).join('');
+
+  container.innerHTML = stats + rows;
+}
+
+window.xpixSync = async () => {
+  const btn    = document.getElementById('xpix-sync-btn');
+  const status = document.getElementById('xpix-sync-status');
+  if (btn) { btn.disabled = true; btn.textContent = '⏳ Sincronizzazione…'; }
+  if (status) status.textContent = 'Download album in corso, può richiedere ~30s…';
+  try {
+    const r = await apiCall('/admin/xpix/sync', { method: 'POST' });
+    if (status) status.textContent = `✓ +${r.added} nuovi album trovati (totale in coda: ${r.total})`;
+    await loadXpixQueue();
+  } catch (e) {
+    if (status) status.textContent = '✗ Errore: ' + e.message;
+  } finally {
+    if (btn) { btn.disabled = false; btn.textContent = '🔄 Sincronizza Xpix'; }
+  }
+};
+
+window.xpixSetGara = (id, garaId) => {
+  if (garaId === '__search__') {
+    const sr = document.getElementById('xpixq-search-' + id);
+    if (sr) sr.style.display = 'block';
+    return;
+  }
+  _xpixItemGaraMap[id] = garaId;
+};
+
+window.xpixSearchGara = (id, q) => {
+  const resultsEl = document.getElementById('xpixq-sr-' + id);
+  if (!resultsEl) return;
+  if (!q || q.length < 2) { resultsEl.innerHTML = ''; return; }
+  const seen = new Set();
+  const matches = (globalData?.resultsRaw || [])
+    .filter(r => {
+      if (seen.has(r.gara_id)) return false;
+      seen.add(r.gara_id);
+      return (r.nome_gara||'').toLowerCase().includes(q.toLowerCase())
+          || r.gara_id.toLowerCase().includes(q.toLowerCase());
+    })
+    .sort((a, b) => (b.data||'').localeCompare(a.data||''))
+    .slice(0, 8);
+  resultsEl.innerHTML = matches.map(r => {
+    const label = `${r.nome_gara} — ${r.categoria||''} ${r.genere||''} (${r.data||''})`;
+    return `<div onclick="window.xpixPickGara('${esc(id)}','${esc(r.gara_id)}')"
+      style="padding:6px 10px;cursor:pointer;font-size:.78rem;border-bottom:1px solid var(--border-subtle)">
+      ${esc(label)}
+    </div>`;
+  }).join('') || '<div style="padding:6px 10px;font-size:.78rem;color:var(--text-muted)">Nessun risultato</div>';
+};
+
+window.xpixPickGara = (id, garaId) => {
+  _xpixItemGaraMap[id] = garaId;
+  const sr = document.getElementById('xpixq-search-' + id);
+  if (sr) sr.style.display = 'none';
+  const sel = document.querySelector(`#xpixq-${id} select`);
+  if (sel) {
+    const existing = [...sel.options].find(o => o.value === garaId);
+    if (!existing) {
+      const r = (globalData?.resultsRaw || []).find(x => x.gara_id === garaId);
+      if (r) {
+        const opt = document.createElement('option');
+        opt.value = garaId;
+        opt.textContent = `${r.nome_gara} — ${r.categoria||''} ${r.genere||''} (${r.data||''})`;
+        sel.insertBefore(opt, sel.firstChild);
+      }
+    }
+    sel.value = garaId;
+  }
+};
+
+window.xpixApprove = async (id) => {
+  const garaId = _xpixItemGaraMap[id];
+  if (!garaId) { showToast('Seleziona prima una gara', 'error'); return; }
+  try {
+    await apiCall(`/admin/xpix/queue/${id}/approve`, { method: 'POST', body: { gara_id: garaId } });
+    document.getElementById('xpixq-' + id)?.remove();
+    const item = _xpixQueue.find(q => q.id === id);
+    if (item) item.status = 'approved';
+    // Invalida cache foto
+    _risPhotosMap = null;
+    showToast('✓ Foto pubblicata!');
+  } catch (e) { showToast('Errore: ' + e.message, 'error'); }
+};
+
+window.xpixDismiss = async (id) => {
+  try {
+    await apiCall(`/admin/xpix/queue/${id}`, { method: 'DELETE' });
+    document.getElementById('xpixq-' + id)?.remove();
+    const item = _xpixQueue.find(q => q.id === id);
+    if (item) item.status = 'dismissed';
+    showToast('Foto scartata', 'info');
   } catch (e) { showToast('Errore: ' + e.message, 'error'); }
 };
 
@@ -8640,9 +8878,14 @@ let _risPhotosMap = null;
 async function loadRisPhotos() {
   if (_risPhotosMap) return _risPhotosMap;
   try {
-    const d = await fetch(`${API_BASE}/race-photos`).then(r => r.json()).catch(() => ({photos:[]}));
+    const [d1, d2] = await Promise.all([
+      fetch(`${API_BASE}/race-photos`).then(r => r.json()).catch(() => ({ photos: [] })),
+      fetch(`${API_BASE}/xpix-photos`).then(r => r.json()).catch(() => ({ photos: [] })),
+    ]);
     _risPhotosMap = {};
-    (d.photos || []).forEach(p => { if (!_risPhotosMap[p.gara_id]) _risPhotosMap[p.gara_id] = p; });
+    // xpix prima (priorità bassa) — foto uploaded le sovrascrivono
+    (d2.photos || []).forEach(p => { if (p.gara_id && !_risPhotosMap[p.gara_id]) _risPhotosMap[p.gara_id] = p; });
+    (d1.photos || []).forEach(p => { if (p.gara_id) _risPhotosMap[p.gara_id] = p; });
   } catch { _risPhotosMap = {}; }
   return _risPhotosMap;
 }

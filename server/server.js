@@ -815,6 +815,158 @@ app.delete('/api/admin/youtube/queue/:id', requireAdmin, async (req, res) => {
   } catch (e) { res.status(500).json({ error: e.message }); }
 });
 
+// ══════════════════════════════════════════════════════════════════════════════
+// XPIX AUTO-FOTO
+// ══════════════════════════════════════════════════════════════════════════════
+const { fetchXpixCandidates } = require('./xpix-scraper');
+
+const XPIX_QUEUE_PATH  = path.join(__dirname, '../data/xpix_queue.json');
+const XPIX_PHOTOS_PATH = path.join(__dirname, '../data/xpix_photos.json');
+
+async function readXpixQueue() {
+  if (supabase) {
+    const { data, error } = await supabase.from('kv_store').select('value').eq('key', 'xpix_queue').single();
+    if (error && error.code !== 'PGRST116') console.error('[xpix_queue] read:', error.message);
+    return data?.value || [];
+  }
+  try { return JSON.parse(fs.readFileSync(XPIX_QUEUE_PATH, 'utf8')); } catch { return []; }
+}
+async function writeXpixQueue(arr) {
+  if (supabase) {
+    const { error } = await supabase.from('kv_store')
+      .upsert({ key: 'xpix_queue', value: arr, updated_at: new Date().toISOString() });
+    if (error) throw new Error('Supabase write xpix_queue: ' + error.message);
+    return;
+  }
+  fs.writeFileSync(XPIX_QUEUE_PATH, JSON.stringify(arr, null, 2));
+}
+
+async function readXpixPhotos() {
+  if (supabase) {
+    const { data, error } = await supabase.from('kv_store').select('value').eq('key', 'xpix_photos').single();
+    if (error && error.code !== 'PGRST116') console.error('[xpix_photos] read:', error.message);
+    return data?.value || {};
+  }
+  try { return JSON.parse(fs.readFileSync(XPIX_PHOTOS_PATH, 'utf8')); } catch { return {}; }
+}
+async function writeXpixPhotos(obj) {
+  if (supabase) {
+    const { error } = await supabase.from('kv_store')
+      .upsert({ key: 'xpix_photos', value: obj, updated_at: new Date().toISOString() });
+    if (error) throw new Error('Supabase write xpix_photos: ' + error.message);
+    return;
+  }
+  fs.writeFileSync(XPIX_PHOTOS_PATH, JSON.stringify(obj, null, 2));
+}
+
+// GET coda xpix (admin)
+app.get('/api/admin/xpix/queue', requireAdmin, async (req, res) => {
+  try { res.json({ queue: await readXpixQueue() }); }
+  catch (e) { res.status(500).json({ error: e.message }); }
+});
+
+// POST sync: scarica nuovi album da xpix, aggiunge alla coda
+app.post('/api/admin/xpix/sync', requireAdmin, async (req, res) => {
+  try {
+    const queue      = await readXpixQueue();
+    const knownSlugs = new Set(queue.map(q => q.album_slug));
+
+    const candidates = await fetchXpixCandidates(knownSlugs, 30);
+    let added = 0;
+
+    for (const c of candidates) {
+      const id = Date.now().toString(36) + Math.random().toString(36).slice(2, 7);
+      queue.push({
+        id,
+        album_id:    c.album_id,
+        album_name:  c.album_name,
+        album_slug:  c.album_slug,
+        photo_count: c.photo_count,
+        photo_url:   c.photo_url,
+        album_page:  c.album_page,
+        status:            'pending',
+        suggested_gara_id: null,
+        added_at:          new Date().toISOString(),
+      });
+      added++;
+    }
+
+    // Mantieni tutti gli approvati/scartati + max 200 pending più recenti
+    const nonPending = queue.filter(q => q.status !== 'pending');
+    const pending    = queue.filter(q => q.status === 'pending')
+      .sort((a, b) => (b.added_at || '').localeCompare(a.added_at || ''))
+      .slice(0, 200);
+    const trimmed = [...nonPending, ...pending];
+    await writeXpixQueue(trimmed);
+
+    res.json({ ok: true, added, total: trimmed.length });
+  } catch (e) {
+    console.error('[xpix-sync]', e.message);
+    res.status(500).json({ error: e.message });
+  }
+});
+
+// POST approva: salva la foto xpix come foto della gara
+app.post('/api/admin/xpix/queue/:id/approve', requireAdmin, async (req, res) => {
+  try {
+    const { gara_id } = req.body;
+    if (!gara_id) return res.status(400).json({ error: 'gara_id obbligatorio' });
+
+    const queue = await readXpixQueue();
+    const i = queue.findIndex(q => q.id === req.params.id);
+    if (i === -1) return res.status(404).json({ error: 'Non trovato' });
+
+    const item   = queue[i];
+    const photos = await readXpixPhotos();
+
+    photos[gara_id] = {
+      url:        item.photo_url,
+      album_name: item.album_name,
+      album_slug: item.album_slug,
+      album_page: item.album_page,
+      gara_id,
+      approved_at: new Date().toISOString(),
+    };
+    await writeXpixPhotos(photos);
+
+    queue[i].status           = 'approved';
+    queue[i].approved_gara_id = gara_id;
+    await writeXpixQueue(queue);
+
+    res.json({ ok: true });
+  } catch (e) { res.status(500).json({ error: e.message }); }
+});
+
+// DELETE scarta
+app.delete('/api/admin/xpix/queue/:id', requireAdmin, async (req, res) => {
+  try {
+    const queue = await readXpixQueue();
+    const i = queue.findIndex(q => q.id === req.params.id);
+    if (i === -1) return res.status(404).json({ error: 'Non trovato' });
+    queue[i].status = 'dismissed';
+    await writeXpixQueue(queue);
+    res.json({ ok: true });
+  } catch (e) { res.status(500).json({ error: e.message }); }
+});
+
+// DELETE rimuovi foto xpix approvata da una gara
+app.delete('/api/admin/xpix/photos/:gara_id', requireAdmin, async (req, res) => {
+  try {
+    const photos = await readXpixPhotos();
+    delete photos[req.params.gara_id];
+    await writeXpixPhotos(photos);
+    res.json({ ok: true });
+  } catch (e) { res.status(500).json({ error: e.message }); }
+});
+
+// GET foto xpix approvate (endpoint pubblico usato dal frontend)
+app.get('/api/xpix-photos', async (req, res) => {
+  try {
+    const photos = await readXpixPhotos();
+    res.json({ photos: Object.values(photos) });
+  } catch (e) { res.status(500).json({ error: e.message }); }
+});
+
 // Global error handler
 app.use((err, req, res, next) => {
   console.error('[error]', err.message);
