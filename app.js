@@ -5244,7 +5244,7 @@ function buildProfileMedia(risultati, photosMap, videos, opts = {}) {
   const photoCard = ({ r, photo }) => {
     const ath = showAthleteName && r.atleta_cognome
       ? `<div class="profile-media-athlete">${esc(r.atleta_cognome)} ${esc(r.atleta_nome || '')}</div>` : '';
-    return `<a href="#/gara/${esc(r.gara_id)}" class="profile-media-card profile-media-photo">
+    return `<div class="profile-media-card profile-media-photo" style="cursor:zoom-in" onclick="openPhotoLightbox('${esc(photo.url)}')">
       <div class="profile-media-thumb">
         <img src="${esc(photo.url)}" alt="${esc(r.nome_gara)}" loading="lazy" onerror="this.style.display='none'" />
         <div class="profile-media-badge" style="color:${posColor(r.posizione)}">${posLabel(r.posizione)}</div>
@@ -5253,7 +5253,7 @@ function buildProfileMedia(risultati, photosMap, videos, opts = {}) {
         <div class="profile-media-race">${esc(r.nome_gara)}</div>
         <div class="profile-media-meta">${fmtDateShort(r.data)}</div>
       </div>
-    </a>`;
+    </div>`;
   };
 
   const videoCard = ({ r, video }) => {
@@ -5261,9 +5261,13 @@ function buildProfileMedia(risultati, photosMap, videos, opts = {}) {
     const thumb = vid ? `https://img.youtube.com/vi/${vid}/mqdefault.jpg` : '';
     const ath   = showAthleteName && r.atleta_cognome
       ? `<div class="profile-media-athlete">${esc(r.atleta_cognome)} ${esc(r.atleta_nome || '')}</div>` : '';
-    return `<div class="profile-media-card profile-media-video" style="cursor:pointer" onclick="window.open('${esc(video.url)}','_blank')">
+    const _vtitle = esc((video.title || r.nome_gara || '').replace(/'/g, "\\'"));
+    const _vclick = vid
+      ? `window.openVideoModal('${vid}','${_vtitle}')`
+      : `window.open('${esc(video.url)}','_blank')`;
+    return `<div class="profile-media-card profile-media-video" style="cursor:pointer" onclick="${_vclick.replace(/"/g,'&quot;')}">
       <div class="profile-media-thumb">
-        ${thumb ? `<img src="${thumb}" alt="${esc(video.title)}" loading="lazy" />` : '<div style="width:100%;height:100%;display:flex;align-items:center;justify-content:center;font-size:2rem;color:var(--text-muted)">🎬</div>'}
+        ${thumb ? `<img src="${thumb}" alt="${esc(video.title||'')}" loading="lazy" />` : '<div style="width:100%;height:100%;display:flex;align-items:center;justify-content:center;font-size:2rem;color:var(--text-muted)">🎬</div>'}
         <div class="profile-media-play-btn"><div class="profile-media-play-icon"><svg width="14" height="14" viewBox="0 0 24 24" fill="#fff"><path d="M8 5v14l11-7z"/></svg></div></div>
         <div class="profile-media-badge" style="color:${posColor(r.posizione)}">${posLabel(r.posizione)}</div>
       </div>
