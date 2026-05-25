@@ -5484,15 +5484,18 @@ async function renderGara(gara_id) {
   }
 
   // Video YouTube associati alla gara
-  // Fetch sempre freschi dall'API (max 3s), fallback a globalData.videos
-  // evita che dati stantii dal caricamento iniziale nascondano video appena approvati
-  try {
-    const _ctrl = new AbortController();
-    const _timer = setTimeout(() => _ctrl.abort(), 3000);
-    const _vr = await fetch(`${API_BASE}/videos`, { signal: _ctrl.signal });
-    clearTimeout(_timer);
-    if (_vr.ok) { const _fresh = await _vr.json(); if (_fresh) globalData.videos = _fresh; }
-  } catch { /* Render non raggiungibile — usa globalData.videos stantio */ }
+  // Avvia fetch in background senza timeout — se Render è in sleep (50s+) la pagina
+  // si renderizza subito con i dati locali, poi si aggiorna automaticamente con i video
+  // quando Render risponde (anche dopo 30-60s).
+  fetch(`${API_BASE}/videos`)
+    .then(r => r.ok ? r.json() : null)
+    .then(fresh => {
+      if (!fresh || !globalData) return;
+      const changed = JSON.stringify(globalData.videos) !== JSON.stringify(fresh);
+      globalData.videos = fresh;
+      if (changed && window._currentGaraId === gara_id) renderGara(gara_id);
+    })
+    .catch(() => {});
 
   // Lookup multi-livello: calId → gara_id → calId senza suffisso categoria
   const _vids = globalData.videos || {};
