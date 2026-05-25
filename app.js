@@ -4126,6 +4126,17 @@ async function loadPendingRacePhotos() {
   }
 }
 
+// ── VIDEO HELPERS ────────────────────────────────────────────────────────────
+
+// Ricarica videos.json dal server e aggiorna globalData.videos in memoria
+// Va chiamato dopo ogni modifica (approva, aggiungi, elimina, modifica)
+async function refreshVideos() {
+  try {
+    const fresh = await fetch(`${API_BASE}/videos`).then(r => r.json());
+    if (fresh && globalData) globalData.videos = fresh;
+  } catch { /* non bloccante */ }
+}
+
 // ── VIDEO IN ATTESA (inviati dagli utenti) ───────────────────────────────────
 
 async function loadAdminPendingVideos() {
@@ -4180,7 +4191,10 @@ window.adminVideoAction = async (id, action) => {
     if (container && !container.querySelector('[id^="apv-"]')) {
       container.innerHTML = `<div style="color:var(--text-muted);padding:20px 0">Nessun video in attesa.</div>`;
     }
-    if (action === 'approve') loadAdminAllVideos();
+    if (action === 'approve') {
+      await refreshVideos(); // aggiorna globalData.videos in memoria
+      loadAdminAllVideos();
+    }
   } catch(e) { alert('Errore: ' + e.message); }
 };
 
@@ -4276,6 +4290,7 @@ window.adminVideoDelete = async (calId, idx) => {
       _adminVideosData[calId].splice(idx, 1);
       if (!_adminVideosData[calId].length) delete _adminVideosData[calId];
     }
+    await refreshVideos();
     renderAdminVideosAll();
   } catch(e) { alert('Errore: ' + e.message); }
 };
@@ -4294,6 +4309,7 @@ window.adminVideoEdit = async (calId, idx) => {
     });
     v.url   = newUrl.trim();
     v.title = newTitle.trim();
+    await refreshVideos();
     renderAdminVideosAll();
   } catch(e) { alert('Errore: ' + e.message); }
 };
@@ -4366,6 +4382,7 @@ window.adminSubmitAddVideo = async () => {
       body: { url, title, channel: 'Admin' },
     });
     window.adminShowAddVideo(false);
+    await refreshVideos();
     await loadAdminAllVideos();
   } catch(e) { alert('Errore: ' + e.message); }
 };
