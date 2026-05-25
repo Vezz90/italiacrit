@@ -4075,47 +4075,10 @@ async function renderAdmin() {
       </div>
     </div>
 
-    <div style="margin-top:40px">
-      <h2 style="font-family:var(--font-display);font-size:1.2rem;margin-bottom:8px;border-bottom:2px solid var(--accent);padding-bottom:8px">
-        🎥 GESTIONE VIDEO APPROVATI
-      </h2>
-      <div style="display:flex;gap:10px;flex-wrap:wrap;margin-bottom:16px;align-items:center">
-        <button class="btn-action" onclick="window.adminShowAddVideo()" style="background:var(--accent);color:white;border:none;padding:8px 18px;border-radius:6px;font-size:.85rem">+ Aggiungi video</button>
-        <input type="search" id="admin-video-search" placeholder="Filtra per nome gara…" oninput="window.adminFilterVideos(this.value)"
-          style="padding:8px 12px;border:1px solid var(--border);border-radius:6px;background:var(--bg-card);color:var(--text-primary);font-size:.85rem;flex:1;min-width:180px" />
-      </div>
-      <div id="admin-add-video-form" style="display:none;background:var(--bg-card);border:1px solid var(--border);border-radius:8px;padding:16px;margin-bottom:16px">
-        <div style="font-weight:700;margin-bottom:12px;font-size:.9rem">Aggiungi video manualmente</div>
-        <div style="display:flex;flex-direction:column;gap:10px">
-          <div>
-            <label style="font-size:.8rem;color:var(--text-muted);display:block;margin-bottom:4px">Cerca gara (id calendario)</label>
-            <input type="search" id="avf-race-search" placeholder="Digita nome gara…" oninput="window.adminSearchCalRace(this.value)"
-              style="width:100%;padding:8px;border:1px solid var(--border);border-radius:6px;background:var(--bg-input,var(--bg-card));color:var(--text-primary);font-size:.85rem;box-sizing:border-box" />
-            <div id="avf-race-results" style="display:none;background:var(--bg-card);border:1px solid var(--border);border-radius:6px;max-height:180px;overflow-y:auto;margin-top:4px"></div>
-            <div id="avf-race-selected" style="font-size:.8rem;color:var(--accent);margin-top:4px;font-weight:600"></div>
-          </div>
-          <input type="url" id="avf-url" placeholder="URL YouTube (https://www.youtube.com/watch?v=...)"
-            oninput="window.adminUrlOembed(this.value)"
-            style="padding:8px;border:1px solid var(--border);border-radius:6px;background:var(--bg-input,var(--bg-card));color:var(--text-primary);font-size:.85rem" />
-          <input type="text" id="avf-title" placeholder="Titolo — compilato automaticamente dall'URL"
-            style="padding:8px;border:1px solid var(--border);border-radius:6px;background:var(--bg-input,var(--bg-card));color:var(--text-primary);font-size:.85rem" />
-          <input type="text" id="avf-channel" placeholder="Autore / Canale — compilato automaticamente dall'URL"
-            style="padding:8px;border:1px solid var(--border);border-radius:6px;background:var(--bg-input,var(--bg-card));color:var(--text-primary);font-size:.85rem" />
-          <div style="display:flex;gap:8px">
-            <button onclick="window.adminSubmitAddVideo()" style="background:var(--accent);color:white;border:none;padding:8px 20px;border-radius:6px;font-weight:600;cursor:pointer">Aggiungi</button>
-            <button onclick="window.adminShowAddVideo(false)" style="background:transparent;color:var(--text-muted);border:1px solid var(--border);padding:8px 16px;border-radius:6px;cursor:pointer">Annulla</button>
-          </div>
-        </div>
-      </div>
-      <div id="admin-videos-all">
-        <div style="color:var(--text-muted);padding:20px 0">Caricamento...</div>
-      </div>
-    </div>
-
     <!-- ═══════════════════════════════════════════════════════ -->
     <!-- YOUTUBE AUTO-SYNC                                       -->
     <!-- ═══════════════════════════════════════════════════════ -->
-    <div style="margin-top:48px">
+    <div style="margin-top:40px">
       <h2 style="font-family:var(--font-display);font-size:1.2rem;margin-bottom:4px;border-bottom:2px solid #ef4444;padding-bottom:8px;display:flex;align-items:center;gap:8px">
         <svg width="18" height="18" viewBox="0 0 24 24" fill="#ef4444"><path d="M23.5 6.2s-.3-1.8-1-2.6c-1-.9-2-.9-2.5-1C17.1 2.4 12 2.4 12 2.4s-5.1 0-8 .2c-.5.1-1.5.1-2.5 1-.7.8-1 2.6-1 2.6S.2 8.2.2 10.2v1.8c0 2 .3 4 .3 4s.3 1.8 1 2.6c1 .9 2.2.9 2.8 1 2 .2 8.7.2 8.7.2s5.1 0 8-.2c.5-.1 1.5-.1 2.5-1 .7-.8 1-2.6 1-2.6s.3-2 .3-4v-1.8c0-2-.3-4-.3-4zM9.7 15.1V8.6l6.7 3.3-6.7 3.2z"/></svg>
         YOUTUBE AUTO-SYNC
@@ -4152,6 +4115,43 @@ async function renderAdmin() {
       <!-- Coda matching -->
       <div id="yt-queue-container">
         <div style="color:var(--text-muted);font-size:.85rem">Premi "Sincronizza Canali" per scaricare i video.</div>
+      </div>
+    </div>
+
+    <div style="margin-top:40px">
+      <h2 style="font-family:var(--font-display);font-size:1.2rem;margin-bottom:8px;border-bottom:2px solid var(--accent);padding-bottom:8px">
+        🎥 GESTIONE VIDEO APPROVATI
+      </h2>
+      <div style="display:flex;gap:10px;flex-wrap:wrap;margin-bottom:16px;align-items:center">
+        <button class="btn-action" onclick="window.adminShowAddVideo()" style="background:var(--accent);color:white;border:none;padding:8px 18px;border-radius:6px;font-size:.85rem">+ Aggiungi video</button>
+        <input type="search" id="admin-video-search" placeholder="Filtra per nome gara…" oninput="window.adminFilterVideos(this.value)"
+          style="padding:8px 12px;border:1px solid var(--border);border-radius:6px;background:var(--bg-card);color:var(--text-primary);font-size:.85rem;flex:1;min-width:180px" />
+      </div>
+      <div id="admin-add-video-form" style="display:none;background:var(--bg-card);border:1px solid var(--border);border-radius:8px;padding:16px;margin-bottom:16px">
+        <div style="font-weight:700;margin-bottom:12px;font-size:.9rem">Aggiungi video manualmente</div>
+        <div style="display:flex;flex-direction:column;gap:10px">
+          <div>
+            <label style="font-size:.8rem;color:var(--text-muted);display:block;margin-bottom:4px">Cerca gara (id calendario)</label>
+            <input type="search" id="avf-race-search" placeholder="Digita nome gara…" oninput="window.adminSearchCalRace(this.value)"
+              style="width:100%;padding:8px;border:1px solid var(--border);border-radius:6px;background:var(--bg-input,var(--bg-card));color:var(--text-primary);font-size:.85rem;box-sizing:border-box" />
+            <div id="avf-race-results" style="display:none;background:var(--bg-card);border:1px solid var(--border);border-radius:6px;max-height:180px;overflow-y:auto;margin-top:4px"></div>
+            <div id="avf-race-selected" style="font-size:.8rem;color:var(--accent);margin-top:4px;font-weight:600"></div>
+          </div>
+          <input type="url" id="avf-url" placeholder="URL YouTube (https://www.youtube.com/watch?v=...)"
+            oninput="window.adminUrlOembed(this.value)"
+            style="padding:8px;border:1px solid var(--border);border-radius:6px;background:var(--bg-input,var(--bg-card));color:var(--text-primary);font-size:.85rem" />
+          <input type="text" id="avf-title" placeholder="Titolo — compilato automaticamente dall'URL"
+            style="padding:8px;border:1px solid var(--border);border-radius:6px;background:var(--bg-input,var(--bg-card));color:var(--text-primary);font-size:.85rem" />
+          <input type="text" id="avf-channel" placeholder="Autore / Canale — compilato automaticamente dall'URL"
+            style="padding:8px;border:1px solid var(--border);border-radius:6px;background:var(--bg-input,var(--bg-card));color:var(--text-primary);font-size:.85rem" />
+          <div style="display:flex;gap:8px">
+            <button onclick="window.adminSubmitAddVideo()" style="background:var(--accent);color:white;border:none;padding:8px 20px;border-radius:6px;font-weight:600;cursor:pointer">Aggiungi</button>
+            <button onclick="window.adminShowAddVideo(false)" style="background:transparent;color:var(--text-muted);border:1px solid var(--border);padding:8px 16px;border-radius:6px;cursor:pointer">Annulla</button>
+          </div>
+        </div>
+      </div>
+      <div id="admin-videos-all">
+        <div style="color:var(--text-muted);padding:20px 0">Caricamento...</div>
       </div>
     </div>
 

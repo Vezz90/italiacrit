@@ -747,10 +747,14 @@ app.post('/api/admin/youtube/sync', requireAdmin, async (req, res) => {
       }
     }
 
-    // Mantieni max 300 voci (le più recenti prima)
-    const trimmed = queue
+    // Conserva TUTTI gli approvati/scartati (servono per la deduplicazione degli URL)
+    // Limita solo i pending a max 200 (i più recenti)
+    const nonPending = queue.filter(q => q.status !== 'pending');
+    const pending    = queue
+      .filter(q => q.status === 'pending')
       .sort((a, b) => (b.added_at || '').localeCompare(a.added_at || ''))
-      .slice(0, 300);
+      .slice(0, 200);
+    const trimmed = [...nonPending, ...pending];
     await writeYTQueue(trimmed);
 
     res.json({ ok: true, added, total: trimmed.length });
