@@ -5224,11 +5224,12 @@ function buildProfileMedia(risultati, photosMap, videos, opts = {}) {
       }
     }
 
-    if (r.posizione === 1 && photo && !seenPG.has(r.gara_id)) {
+    const _pos = Number(r.posizione);
+    if (_pos === 1 && photo && !seenPG.has(r.gara_id)) {
       seenPG.add(r.gara_id);
       winPhotos.push({ r, photo });
     }
-    if (r.posizione <= 10 && videoArr.length && !seenVG.has(r.gara_id)) {
+    if (_pos >= 1 && _pos <= 10 && videoArr.length && !seenVG.has(r.gara_id)) {
       seenVG.add(r.gara_id);
       top10Vids.push({ r, video: videoArr[0] });
     }
@@ -5238,15 +5239,16 @@ function buildProfileMedia(risultati, photosMap, videos, opts = {}) {
   const vids   = top10Vids.slice(0, maxItems);
   if (!photos.length && !vids.length) return '';
 
-  const posLabel = p => p === 1 ? '🥇 1°' : p === 2 ? '🥈 2°' : p === 3 ? '🥉 3°' : `${p}°`;
-  const posColor = p => p === 1 ? 'var(--gold)' : p === 2 ? 'var(--silver)' : p === 3 ? 'var(--bronze)' : 'var(--text-muted)';
+  const posLabel = p => { p = Number(p); return p === 1 ? '🥇 1°' : p === 2 ? '🥈 2°' : p === 3 ? '🥉 3°' : `${p}°`; };
+  const posColor = p => { p = Number(p); return p === 1 ? 'var(--gold)' : p === 2 ? 'var(--silver)' : p === 3 ? 'var(--bronze)' : 'var(--text-muted)'; };
 
   const photoCard = ({ r, photo }) => {
+    const _photoSrc = photo.url || (photo.filename ? `${PHOTOS_BASE}/photos/${photo.filename}` : '');
     const ath = showAthleteName && r.atleta_cognome
       ? `<div class="profile-media-athlete">${esc(r.atleta_cognome)} ${esc(r.atleta_nome || '')}</div>` : '';
-    return `<div class="profile-media-card profile-media-photo" style="cursor:zoom-in" onclick="openPhotoLightbox('${esc(photo.url)}')">
+    return `<div class="profile-media-card profile-media-photo" style="cursor:zoom-in" onclick="openPhotoLightbox('${esc(_photoSrc)}')">
       <div class="profile-media-thumb">
-        <img src="${esc(photo.url)}" alt="${esc(r.nome_gara)}" loading="lazy" onerror="this.style.display='none'" />
+        <img src="${esc(_photoSrc)}" alt="${esc(r.nome_gara)}" loading="lazy" onerror="this.style.display='none'" />
         <div class="profile-media-badge" style="color:${posColor(r.posizione)}">${posLabel(r.posizione)}</div>
       </div>
       <div class="profile-media-info">${ath}
