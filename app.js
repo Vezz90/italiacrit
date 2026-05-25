@@ -5797,6 +5797,11 @@ async function renderGara(gara_id) {
     const user = authUser();
     if (!user) return;
     const isAdmin = user.role === 'admin';
+    // Nome gara da _shareGaraData (già disponibile in renderGara) o da resultsRaw
+    const _gd = window._shareGaraData;
+    const _raceName = _gd?.name
+      || (globalData?.resultsRaw||[]).find(r => r.gara_id === garaId)?.nome_gara
+      || '';
     const inpStyle = 'width:100%;box-sizing:border-box;padding:8px 10px;border:1px solid var(--border-subtle);border-radius:var(--r-sm);font-size:0.875rem;background:var(--bg-primary);color:var(--text-primary);margin-bottom:10px';
     const overlay = document.createElement('div');
     overlay.style.cssText = 'position:fixed;inset:0;background:rgba(0,0,0,.6);z-index:9999;display:flex;align-items:center;justify-content:center;padding:16px';
@@ -5821,8 +5826,14 @@ async function renderGara(gara_id) {
 
         <div id="vpanel-url">
           <input type="url" id="vurl-input" placeholder="https://www.youtube.com/watch?v=..." style="${inpStyle}"/>
-          <input type="text" id="vurl-title" placeholder="Titolo (opzionale)" style="${inpStyle}"/>
-          <input type="text" id="vurl-channel" placeholder="Autore / Canale (opzionale)" style="${inpStyle}"/>
+          <div style="position:relative">
+            <input type="text" id="vurl-title" placeholder="Titolo" style="${inpStyle}" value="${esc(_raceName)}"/>
+            <span id="vurl-title-hint" style="position:absolute;right:8px;top:50%;transform:translateY(-70%);font-size:.7rem;color:var(--text-muted);pointer-events:none">auto</span>
+          </div>
+          <div style="position:relative">
+            <input type="text" id="vurl-channel" placeholder="Autore / Canale" style="${inpStyle}"/>
+            <span id="vurl-channel-hint" style="position:absolute;right:8px;top:50%;transform:translateY(-70%);font-size:.7rem;color:var(--text-muted);pointer-events:none">auto</span>
+          </div>
           <div id="vurl-preview" style="margin-bottom:10px;display:none">
             <img id="vurl-thumb" src="" style="width:100%;border-radius:var(--r-sm);aspect-ratio:16/9;object-fit:cover"/>
           </div>
@@ -5830,7 +5841,7 @@ async function renderGara(gara_id) {
 
         <div id="vpanel-file" style="display:none">
           <input type="file" id="vfile-input" accept="video/mp4,video/quicktime,video/webm,video/x-msvideo" style="${inpStyle}"/>
-          <input type="text" id="vfile-title" placeholder="Titolo del video*" style="${inpStyle}"/>
+          <input type="text" id="vfile-title" placeholder="Titolo del video*" style="${inpStyle}" value="${esc(_raceName)}"/>
           <input type="text" id="vfile-channel" placeholder="Autore / Canale (opzionale)" style="${inpStyle}"/>
           <div id="vfile-progress" style="display:none;margin-bottom:10px">
             <div style="background:var(--bg-elevated);border-radius:4px;height:6px;overflow:hidden">
@@ -5848,13 +5859,32 @@ async function renderGara(gara_id) {
       </div>`;
     document.body.appendChild(overlay);
 
-    // Preview thumb YouTube mentre si digita URL
+    // Segna i campi come "modificati manualmente" se l'utente digita
+    const titleEl   = document.getElementById('vurl-title');
+    const channelEl = document.getElementById('vurl-channel');
+    titleEl.addEventListener('input',   () => { titleEl._manual = true;   document.getElementById('vurl-title-hint').style.display   = 'none'; });
+    channelEl.addEventListener('input', () => { channelEl._manual = true; document.getElementById('vurl-channel-hint').style.display = 'none'; });
+
+    // URL input: preview thumbnail + fetch oEmbed per titolo e canale automatici
+    let _oembedTimer = null;
     document.getElementById('vurl-input').addEventListener('input', function() {
-      const _vid = ytId(this.value);
+      const url = this.value.trim();
+      const _vid = ytId(url);
       const preview = document.getElementById('vurl-preview');
-      const thumb = document.getElementById('vurl-thumb');
+      const thumb   = document.getElementById('vurl-thumb');
       if (_vid) { thumb.src = `https://img.youtube.com/vi/${_vid}/hqdefault.jpg`; preview.style.display = 'block'; }
       else { preview.style.display = 'none'; }
+
+      // Fetch oEmbed con debounce 600ms
+      clearTimeout(_oembedTimer);
+      if (!url || !_vid) return;
+      _oembedTimer = setTimeout(async () => {
+        try {
+          const d = await fetch(`https://www.youtube.com/oembed?url=${encodeURIComponent(url)}&format=json`).then(r => r.json());
+          if (d.title   && !titleEl._manual)   { titleEl.value   = d.title;       document.getElementById('vurl-title-hint').style.display   = 'none'; }
+          if (d.author_name && !channelEl._manual) { channelEl.value = d.author_name; document.getElementById('vurl-channel-hint').style.display = 'none'; }
+        } catch { /* oEmbed non disponibile, mantieni valori esistenti */ }
+      }, 600);
     });
   };
 
