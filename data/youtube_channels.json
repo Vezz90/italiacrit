@@ -1,0 +1,6 @@
+[
+  {"id":"toscana_sprint","name":"ToscanaSprint","type":"channel_id","value":"UCVvuWSmp_89VDcdayoJMelw","enabled":true},
+  {"id":"ciclismoweb","name":"ciclismoweb / ExtraCiclismo","type":"username","value":"ciclismoweb","enabled":true},
+  {"id":"bicitv","name":"BICITV","type":"channel_id","value":"UCkQ32NsdII9MQ4p3RHyWeVA","enabled":true},
+  {"id":"ciclismolive","name":"CiclismoLive","type":"channel_id","value":"","enabled":false}
+]

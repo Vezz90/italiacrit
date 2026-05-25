@@ -18,3 +18,5 @@ data/team_rankings/
 !data/athlete_gender_fixes.json
 !data/videos.json
 !data/pending_videos.json
+!data/youtube_channels.json
+!data/youtube_queue.json

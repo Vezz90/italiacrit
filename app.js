@@ -4112,11 +4112,55 @@ async function renderAdmin() {
       </div>
     </div>
 
+    <!-- ═══════════════════════════════════════════════════════ -->
+    <!-- YOUTUBE AUTO-SYNC                                       -->
+    <!-- ═══════════════════════════════════════════════════════ -->
+    <div style="margin-top:48px">
+      <h2 style="font-family:var(--font-display);font-size:1.2rem;margin-bottom:4px;border-bottom:2px solid #ef4444;padding-bottom:8px;display:flex;align-items:center;gap:8px">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="#ef4444"><path d="M23.5 6.2s-.3-1.8-1-2.6c-1-.9-2-.9-2.5-1C17.1 2.4 12 2.4 12 2.4s-5.1 0-8 .2c-.5.1-1.5.1-2.5 1-.7.8-1 2.6-1 2.6S.2 8.2.2 10.2v1.8c0 2 .3 4 .3 4s.3 1.8 1 2.6c1 .9 2.2.9 2.8 1 2 .2 8.7.2 8.7.2s5.1 0 8-.2c.5-.1 1.5-.1 2.5-1 .7-.8 1-2.6 1-2.6s.3-2 .3-4v-1.8c0-2-.3-4-.3-4zM9.7 15.1V8.6l6.7 3.3-6.7 3.2z"/></svg>
+        YOUTUBE AUTO-SYNC
+      </h2>
+      <p style="font-size:.8rem;color:var(--text-muted);margin:0 0 12px">
+        Scarica automaticamente i video dai canali YouTube configurati e abbinali alle gare. Clicca Sync per aggiornare.
+      </p>
+
+      <!-- Controlli sync -->
+      <div style="display:flex;gap:10px;flex-wrap:wrap;align-items:center;margin-bottom:16px">
+        <button onclick="window.ytSync()" id="yt-sync-btn"
+          style="background:#ef4444;color:#fff;border:none;padding:9px 20px;border-radius:6px;font-weight:700;cursor:pointer;font-size:.875rem">
+          🔄 Sincronizza Canali
+        </button>
+        <button onclick="window.ytShowChannels()" id="yt-channels-btn"
+          style="background:var(--bg-card);border:1px solid var(--border);color:var(--text-primary);padding:9px 16px;border-radius:6px;cursor:pointer;font-size:.875rem">
+          ⚙️ Gestisci Canali
+        </button>
+        <span id="yt-sync-status" style="font-size:.8rem;color:var(--text-muted)"></span>
+      </div>
+
+      <!-- Channel manager (nascosto) -->
+      <div id="yt-channels-panel" style="display:none;background:var(--bg-card);border:1px solid var(--border);border-radius:8px;padding:16px;margin-bottom:16px">
+        <div style="font-weight:700;font-size:.875rem;margin-bottom:10px">Canali YouTube configurati</div>
+        <div id="yt-channels-list"></div>
+        <div style="margin-top:12px;display:flex;gap:8px;flex-wrap:wrap">
+          <button onclick="window.ytAddChannel()"
+            style="background:var(--accent);color:#fff;border:none;padding:6px 14px;border-radius:5px;cursor:pointer;font-size:.8rem">+ Aggiungi canale</button>
+          <button onclick="window.ytSaveChannels()"
+            style="background:#16a34a;color:#fff;border:none;padding:6px 14px;border-radius:5px;cursor:pointer;font-size:.8rem">💾 Salva</button>
+        </div>
+      </div>
+
+      <!-- Coda matching -->
+      <div id="yt-queue-container">
+        <div style="color:var(--text-muted);font-size:.85rem">Premi "Sincronizza Canali" per scaricare i video.</div>
+      </div>
+    </div>
+
   `);
 
   loadPendingRacePhotos();
   loadAdminPendingVideos();
   loadAdminAllVideos();
+  loadYTQueue();
 }
 
 async function loadPendingRacePhotos() {
@@ -4226,6 +4270,345 @@ window.adminVideoAction = async (id, action) => {
       loadAdminAllVideos();
     }
   } catch(e) { alert('Errore: ' + e.message); }
+};
+
+// ══════════════════════════════════════════════════════════════════════════════
+// YOUTUBE AUTO-SYNC — funzioni frontend
+// ══════════════════════════════════════════════════════════════════════════════
+
+// ── Normalizzazione testo per il matching ─────────────────────────────────────
+const _YT_STOPWORDS = new Set([
+  'il','la','lo','gli','le','di','da','del','della','dei','delle','degli',
+  'per','con','a','e','in','è','un','una','ai','al','alla','allo','alle','agli',
+  'che','si','non','su','ma','o','se','ed','mi','ti','ci','vi','ne',
+  'trofeo','memorial','coppa','gran','premio','gp','gara','corsa',
+  'ciclismo','ciclistica','ciclistico','cicli','anno','edizione','bike',
+]);
+
+function _ytNorm(str) {
+  return (str || '').toLowerCase()
+    .normalize('NFD').replace(/[̀-ͯ]/g, '')  // rimuovi accenti
+    .replace(/[°^°'`\-–—()[\]{}|/:.,;!?*#@&+%]/g, ' ')
+    .replace(/\d+[°^]/g, '')           // "63^" "14°" → rimuovi
+    .replace(/\b\d{1,2}\/\d{1,2}\/\d{4}\b/g, '')  // date (26/04/2026)
+    .replace(/\b\d{4}\b/g, '')         // anni 4 cifre
+    .replace(/\b\d+\b/g, '')           // numeri rimasti
+    .split(/\s+/)
+    .map(w => w.trim())
+    .filter(w => w.length >= 3 && !_YT_STOPWORDS.has(w));
+}
+
+// ── Estrai categoria dal titolo video ────────────────────────────────────────
+function _ytExtractCat(title) {
+  const t = (title || '').toLowerCase();
+  if (/juniores?|junior/i.test(t))   return 'JUN';
+  if (/allievi|allieva|alliev/i.test(t)) return 'AL';
+  if (/esordienti|esordient/i.test(t)) return 'ES';
+  if (/elite|élite/i.test(t))         return 'ELI';
+  if (/under.?23|u\.?23/i.test(t))    return 'U23';
+  if (/giovanissim/i.test(t))         return 'GIO';
+  return null;
+}
+
+// ── Score di matching titolo video ↔ gara ────────────────────────────────────
+function _ytScore(videoTitle, race) {
+  const vtWords = new Set(_ytNorm(videoTitle));
+  const rWords  = new Set(_ytNorm(race.nome_gara));
+  if (!vtWords.size || !rWords.size) return 0;
+
+  let overlap = 0;
+  for (const w of vtWords) { if (rWords.has(w)) overlap++; }
+  const ratio = overlap / Math.max(vtWords.size, rWords.size);
+
+  // Bonus categoria
+  const vtCat  = _ytExtractCat(videoTitle);
+  const raceCat = race.categoria || '';
+  let catBonus = 0;
+  if (vtCat && raceCat.startsWith(vtCat)) catBonus = 0.25;
+
+  // Bonus data: anno dal titolo vs anno della gara
+  const ytYear = (videoTitle.match(/\b(202\d)\b/) || [])[1];
+  const raceYear = (race.data || '').slice(0, 4);
+  const dateBonus = (ytYear && raceYear && ytYear === raceYear) ? 0.1 : 0;
+
+  return Math.min(1, ratio + catBonus + dateBonus);
+}
+
+// ── Trova le migliori gare candidate per un video ───────────────────────────
+function _ytFindMatches(videoTitle, maxResults = 5) {
+  const races = (globalData?.resultsRaw || []);
+  // Deduplica per gara_id
+  const seen = new Set();
+  const unique = races.filter(r => { if (seen.has(r.gara_id)) return false; seen.add(r.gara_id); return true; });
+
+  return unique
+    .map(r => ({ race: r, score: _ytScore(videoTitle, r) }))
+    .filter(x => x.score > 0.12)
+    .sort((a, b) => b.score - a.score)
+    .slice(0, maxResults);
+}
+
+// ── Stato locale della queue ──────────────────────────────────────────────────
+let _ytQueue = [];
+let _ytChannels = [];
+let _ytItemGaraMap = {}; // id → gara_id selezionato
+
+// ── Carica e mostra la queue ──────────────────────────────────────────────────
+async function loadYTQueue() {
+  const container = document.getElementById('yt-queue-container');
+  if (!container) return;
+  try {
+    const { queue } = await apiCall('/admin/youtube/queue', { method: 'GET' });
+    _ytQueue = queue || [];
+    renderYTQueue();
+  } catch (e) {
+    if (container) container.innerHTML = `<div style="color:var(--text-muted);font-size:.85rem">Errore caricamento queue: ${esc(e.message)}</div>`;
+  }
+}
+
+function renderYTQueue() {
+  const container = document.getElementById('yt-queue-container');
+  if (!container) return;
+
+  const pending   = _ytQueue.filter(q => q.status === 'pending');
+  const dismissed = _ytQueue.filter(q => q.status === 'dismissed').length;
+  const approved  = _ytQueue.filter(q => q.status === 'approved').length;
+
+  if (!_ytQueue.length) {
+    container.innerHTML = `<div style="color:var(--text-muted);font-size:.85rem;padding:16px 0">Nessun video in coda. Clicca "Sincronizza Canali".</div>`;
+    return;
+  }
+
+  const stats = `<div style="font-size:.8rem;color:var(--text-muted);margin-bottom:12px">
+    📋 In attesa: <strong style="color:var(--text-primary)">${pending.length}</strong>
+    &nbsp;•&nbsp; ✓ Approvati: ${approved}
+    &nbsp;•&nbsp; ✗ Scartati: ${dismissed}
+  </div>`;
+
+  if (!pending.length) {
+    container.innerHTML = stats + `<div style="color:var(--text-muted);font-size:.85rem">Tutti i video sono stati elaborati.</div>`;
+    return;
+  }
+
+  const rows = pending.map(item => {
+    const matches   = _ytFindMatches(item.title);
+    const best      = matches[0];
+    const score     = best ? Math.round(best.score * 100) : 0;
+    const scoreColor = score >= 70 ? '#16a34a' : score >= 40 ? '#d97706' : '#6b7280';
+    const bestGaraId = _ytItemGaraMap[item.id] || (best ? best.race.gara_id : '');
+    const bestRaceName = best
+      ? `${best.race.nome_gara} — ${best.race.categoria || ''} ${best.race.genere || ''} (${best.race.data || ''})`
+      : 'Nessuna corrispondenza trovata';
+
+    const optionsHtml = matches.map(m => {
+      const label = `${m.race.nome_gara} — ${m.race.categoria||''} ${m.race.genere||''} (${m.race.data||''}) [${Math.round(m.score*100)}%]`;
+      const sel   = m.race.gara_id === bestGaraId ? ' selected' : '';
+      return `<option value="${esc(m.race.gara_id)}"${sel}>${esc(label)}</option>`;
+    }).join('');
+
+    return `
+    <div id="ytq-${esc(item.id)}" style="background:var(--bg-card);border:1px solid var(--border);border-radius:8px;padding:12px;margin-bottom:10px;display:flex;gap:12px;align-items:flex-start">
+      <!-- Thumbnail -->
+      <img src="${esc(item.thumbnail||'')}" alt="" style="width:100px;height:60px;border-radius:5px;object-fit:cover;flex-shrink:0;cursor:pointer"
+        onerror="this.style.display='none'" onclick="window.open('${esc(item.url)}','_blank')" />
+      <!-- Info -->
+      <div style="flex:1;min-width:0">
+        <div style="font-weight:600;font-size:.85rem;margin-bottom:2px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap" title="${esc(item.title)}">${esc(item.title)}</div>
+        <div style="font-size:.75rem;color:var(--text-muted);margin-bottom:6px">
+          📺 ${esc(item.channel_name||'')} &nbsp;•&nbsp; 📅 ${esc(item.published_at||'')}
+          ${score ? `&nbsp;•&nbsp; <span style="color:${scoreColor};font-weight:700">${score}% match</span>` : ''}
+        </div>
+        <!-- Selezione gara -->
+        <div style="display:flex;gap:6px;flex-wrap:wrap;align-items:center;margin-bottom:6px">
+          <select onchange="window.ytSetGara('${esc(item.id)}', this.value)"
+            style="flex:1;min-width:180px;padding:5px 8px;border:1px solid var(--border);border-radius:5px;background:var(--bg-primary);color:var(--text-primary);font-size:.78rem">
+            <option value="">— Seleziona gara —</option>
+            ${optionsHtml}
+            <option value="__search__">🔍 Cerca altra gara…</option>
+          </select>
+        </div>
+        <div id="ytq-search-${esc(item.id)}" style="display:none;margin-bottom:6px">
+          <input type="text" placeholder="Cerca gara per nome…" oninput="window.ytSearchGara('${esc(item.id)}',this.value)"
+            style="width:100%;box-sizing:border-box;padding:5px 8px;border:1px solid var(--border);border-radius:5px;background:var(--bg-primary);color:var(--text-primary);font-size:.78rem" />
+          <div id="ytq-sr-${esc(item.id)}" style="background:var(--bg-card);border:1px solid var(--border);border-radius:5px;max-height:160px;overflow-y:auto;margin-top:2px"></div>
+        </div>
+        <!-- Azioni -->
+        <div style="display:flex;gap:6px;flex-wrap:wrap">
+          <button onclick="window.ytApprove('${esc(item.id)}')"
+            style="background:#16a34a;color:#fff;border:none;padding:5px 14px;border-radius:5px;cursor:pointer;font-size:.78rem;font-weight:700">
+            ✓ Pubblica
+          </button>
+          <button onclick="window.ytDismiss('${esc(item.id)}')"
+            style="background:transparent;border:1px solid #ef4444;color:#ef4444;padding:5px 12px;border-radius:5px;cursor:pointer;font-size:.78rem">
+            ✗ Scarta
+          </button>
+        </div>
+      </div>
+    </div>`;
+  }).join('');
+
+  container.innerHTML = stats + rows;
+}
+
+// ── Sync ─────────────────────────────────────────────────────────────────────
+window.ytSync = async () => {
+  const btn    = document.getElementById('yt-sync-btn');
+  const status = document.getElementById('yt-sync-status');
+  if (btn) { btn.disabled = true; btn.textContent = '⏳ Sincronizzazione…'; }
+  if (status) status.textContent = '';
+  try {
+    const r = await apiCall('/admin/youtube/sync', { method: 'POST' });
+    if (status) status.textContent = `✓ +${r.added} nuovi video trovati (totale in coda: ${r.total})`;
+    await loadYTQueue();
+  } catch (e) {
+    if (status) status.textContent = '✗ Errore: ' + e.message;
+  } finally {
+    if (btn) { btn.disabled = false; btn.textContent = '🔄 Sincronizza Canali'; }
+  }
+};
+
+// ── Imposta gara per un item della queue ─────────────────────────────────────
+window.ytSetGara = (id, garaId) => {
+  if (garaId === '__search__') {
+    const sr = document.getElementById('ytq-search-' + id);
+    if (sr) sr.style.display = 'block';
+    return;
+  }
+  _ytItemGaraMap[id] = garaId;
+};
+
+// ── Cerca gara per nome (ricerca live) ───────────────────────────────────────
+window.ytSearchGara = (id, q) => {
+  const resultsEl = document.getElementById('ytq-sr-' + id);
+  if (!resultsEl) return;
+  if (!q || q.length < 2) { resultsEl.innerHTML = ''; return; }
+  const seen = new Set();
+  const matches = (globalData?.resultsRaw || [])
+    .filter(r => {
+      if (seen.has(r.gara_id)) return false;
+      seen.add(r.gara_id);
+      return (r.nome_gara||'').toLowerCase().includes(q.toLowerCase())
+          || r.gara_id.toLowerCase().includes(q.toLowerCase());
+    })
+    .sort((a, b) => (b.data||'').localeCompare(a.data||''))
+    .slice(0, 8);
+
+  resultsEl.innerHTML = matches.map(r => {
+    const label = `${r.nome_gara} — ${r.categoria||''} ${r.genere||''} (${r.data||''})`;
+    return `<div onclick="window.ytPickGara('${esc(id)}','${esc(r.gara_id)}')"
+      style="padding:6px 10px;cursor:pointer;font-size:.78rem;border-bottom:1px solid var(--border-subtle);hover:background:var(--bg-elevated)">
+      ${esc(label)}
+    </div>`;
+  }).join('') || '<div style="padding:6px 10px;font-size:.78rem;color:var(--text-muted)">Nessun risultato</div>';
+};
+
+window.ytPickGara = (id, garaId) => {
+  _ytItemGaraMap[id] = garaId;
+  const sr = document.getElementById('ytq-search-' + id);
+  if (sr) sr.style.display = 'none';
+  // Aggiorna il select per mostrare la selezione
+  const sel = document.querySelector(`#ytq-${id} select`);
+  if (sel) {
+    // Rimuovi opzioni extra e aggiungi quella selezionata se non c'è
+    const existing = [...sel.options].find(o => o.value === garaId);
+    if (!existing) {
+      const r = (globalData?.resultsRaw || []).find(x => x.gara_id === garaId);
+      if (r) {
+        const opt = document.createElement('option');
+        opt.value = garaId;
+        opt.textContent = `${r.nome_gara} — ${r.categoria||''} ${r.genere||''} (${r.data||''})`;
+        sel.insertBefore(opt, sel.firstChild);
+      }
+    }
+    sel.value = garaId;
+  }
+};
+
+// ── Approva e pubblica ────────────────────────────────────────────────────────
+window.ytApprove = async (id) => {
+  const garaId = _ytItemGaraMap[id];
+  if (!garaId) { showToast('Seleziona prima una gara', 'error'); return; }
+  const item = _ytQueue.find(q => q.id === id);
+  if (!item) return;
+  try {
+    await apiCall(`/admin/youtube/queue/${id}/approve`, {
+      method: 'POST',
+      body: { gara_id: garaId, title: item.title, channel: item.channel_name },
+    });
+    document.getElementById('ytq-' + id)?.remove();
+    item.status = 'approved';
+    showToast('✓ Video pubblicato!');
+    await refreshVideos();
+    loadAdminAllVideos();
+  } catch (e) { showToast('Errore: ' + e.message, 'error'); }
+};
+
+// ── Scarta ────────────────────────────────────────────────────────────────────
+window.ytDismiss = async (id) => {
+  try {
+    await apiCall(`/admin/youtube/queue/${id}`, { method: 'DELETE' });
+    document.getElementById('ytq-' + id)?.remove();
+    const item = _ytQueue.find(q => q.id === id);
+    if (item) item.status = 'dismissed';
+    showToast('Video scartato', 'info');
+  } catch (e) { showToast('Errore: ' + e.message, 'error'); }
+};
+
+// ── Gestione canali ───────────────────────────────────────────────────────────
+window.ytShowChannels = async () => {
+  const panel = document.getElementById('yt-channels-panel');
+  if (!panel) return;
+  const visible = panel.style.display !== 'none';
+  if (visible) { panel.style.display = 'none'; return; }
+  try {
+    const { channels } = await apiCall('/admin/youtube/channels', { method: 'GET' });
+    _ytChannels = channels || [];
+    renderYTChannelsList();
+    panel.style.display = 'block';
+  } catch (e) { showToast('Errore caricamento canali: ' + e.message, 'error'); }
+};
+
+function renderYTChannelsList() {
+  const el = document.getElementById('yt-channels-list');
+  if (!el) return;
+  const inpS = 'padding:5px 8px;border:1px solid var(--border);border-radius:4px;background:var(--bg-primary);color:var(--text-primary);font-size:.78rem';
+  el.innerHTML = _ytChannels.map((ch, i) => `
+    <div style="display:flex;gap:8px;align-items:center;margin-bottom:8px;flex-wrap:wrap" id="ytch-row-${i}">
+      <input type="text" value="${esc(ch.name)}" oninput="window._ytChEdit(${i},'name',this.value)"
+        placeholder="Nome" style="${inpS};flex:1;min-width:100px" />
+      <select onchange="window._ytChEdit(${i},'type',this.value)"
+        style="${inpS}">
+        <option value="channel_id"${ch.type==='channel_id'?' selected':''}>Channel ID (UC...)</option>
+        <option value="username"${ch.type==='username'?' selected':''}>Username</option>
+      </select>
+      <input type="text" value="${esc(ch.value)}" oninput="window._ytChEdit(${i},'value',this.value)"
+        placeholder="ID o username" style="${inpS};flex:2;min-width:140px" />
+      <label style="display:flex;align-items:center;gap:4px;font-size:.78rem;cursor:pointer">
+        <input type="checkbox" ${ch.enabled?'checked':''} onchange="window._ytChEdit(${i},'enabled',this.checked)" />
+        Attivo
+      </label>
+      <button onclick="window._ytChRemove(${i})" style="background:transparent;border:1px solid #ef4444;color:#ef4444;padding:3px 8px;border-radius:4px;cursor:pointer;font-size:.75rem">✕</button>
+    </div>`).join('') || '<div style="color:var(--text-muted);font-size:.8rem">Nessun canale configurato.</div>';
+}
+
+window._ytChEdit = (i, key, val) => {
+  if (_ytChannels[i]) _ytChannels[i][key] = val;
+};
+window._ytChRemove = (i) => {
+  _ytChannels.splice(i, 1);
+  renderYTChannelsList();
+};
+window.ytAddChannel = () => {
+  _ytChannels.push({ id: 'ch_' + Date.now(), name: '', type: 'channel_id', value: '', enabled: true });
+  renderYTChannelsList();
+};
+window.ytSaveChannels = async () => {
+  // Assegna ID se mancante
+  _ytChannels.forEach((ch, i) => { if (!ch.id) ch.id = 'ch_' + i; });
+  try {
+    await apiCall('/admin/youtube/channels', { method: 'PUT', body: { channels: _ytChannels } });
+    showToast('✓ Canali salvati!');
+  } catch (e) { showToast('Errore: ' + e.message, 'error'); }
 };
 
 // ── GESTIONE VIDEO APPROVATI ─────────────────────────────────────────────────

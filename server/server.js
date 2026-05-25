@@ -647,6 +647,170 @@ app.patch('/api/admin/videos/:calId/:idx', requireAdmin, async (req, res) => {
   } catch(e) { res.status(500).json({ error: e.message }); }
 });
 
+// ══════════════════════════════════════════════════════════════════════════════
+// YouTube Auto-Scraper
+// ══════════════════════════════════════════════════════════════════════════════
+const { DEFAULT_CHANNELS, fetchAllChannels } = require('./youtube-scraper');
+
+const YT_CHANNELS_PATH = path.join(__dirname, '../data/youtube_channels.json');
+const YT_QUEUE_PATH    = path.join(__dirname, '../data/youtube_queue.json');
+
+async function readYTChannels() {
+  if (supabase) {
+    const { data, error } = await supabase.from('kv_store').select('value').eq('key', 'yt_channels').single();
+    if (error && error.code !== 'PGRST116') console.error('[yt_channels] read error:', error.message);
+    return data?.value || DEFAULT_CHANNELS;
+  }
+  try { return JSON.parse(fs.readFileSync(YT_CHANNELS_PATH, 'utf8')); } catch { return DEFAULT_CHANNELS; }
+}
+
+async function writeYTChannels(arr) {
+  if (supabase) {
+    const { error } = await supabase.from('kv_store')
+      .upsert({ key: 'yt_channels', value: arr, updated_at: new Date().toISOString() });
+    if (error) throw new Error('Supabase write: ' + error.message);
+    return;
+  }
+  fs.writeFileSync(YT_CHANNELS_PATH, JSON.stringify(arr, null, 2));
+}
+
+async function readYTQueue() {
+  if (supabase) {
+    const { data, error } = await supabase.from('kv_store').select('value').eq('key', 'yt_queue').single();
+    if (error && error.code !== 'PGRST116') console.error('[yt_queue] read error:', error.message);
+    return data?.value || [];
+  }
+  try { return JSON.parse(fs.readFileSync(YT_QUEUE_PATH, 'utf8')); } catch { return []; }
+}
+
+async function writeYTQueue(arr) {
+  if (supabase) {
+    const { error } = await supabase.from('kv_store')
+      .upsert({ key: 'yt_queue', value: arr, updated_at: new Date().toISOString() });
+    if (error) throw new Error('Supabase write: ' + error.message);
+    return;
+  }
+  fs.writeFileSync(YT_QUEUE_PATH, JSON.stringify(arr, null, 2));
+}
+
+// GET canali configurati
+app.get('/api/admin/youtube/channels', requireAdmin, async (req, res) => {
+  try { res.json({ channels: await readYTChannels() }); }
+  catch (e) { res.status(500).json({ error: e.message }); }
+});
+
+// PUT canali (salva configurazione completa)
+app.put('/api/admin/youtube/channels', requireAdmin, async (req, res) => {
+  try {
+    const { channels } = req.body;
+    if (!Array.isArray(channels)) return res.status(400).json({ error: 'channels deve essere un array' });
+    await writeYTChannels(channels);
+    res.json({ ok: true });
+  } catch (e) { res.status(500).json({ error: e.message }); }
+});
+
+// POST sync: fetch RSS di tutti i canali abilitati, aggiunge nuovi video alla queue
+app.post('/api/admin/youtube/sync', requireAdmin, async (req, res) => {
+  try {
+    const channels   = await readYTChannels();
+    const allVideos  = await readVideos();
+    const queue      = await readYTQueue();
+
+    // URL già noti (approvati in videos o già in coda)
+    const knownUrls = new Set([
+      ...queue.map(q => q.url),
+      ...Object.values(allVideos).flat().map(v => v.url),
+    ]);
+
+    const fetched = await fetchAllChannels(channels);
+    let added = 0;
+
+    for (const [chId, videos] of Object.entries(fetched)) {
+      const ch = channels.find(c => c.id === chId);
+      for (const v of videos) {
+        if (knownUrls.has(v.url)) continue;
+        knownUrls.add(v.url);
+        const id = Date.now().toString(36) + Math.random().toString(36).slice(2, 7);
+        queue.push({
+          id,
+          channel_id:   chId,
+          channel_name: ch?.name || chId,
+          url:          v.url,
+          title:        v.title,
+          published_at: v.published_at,
+          thumbnail:    v.thumbnail,
+          status:       'pending',   // pending | approved | dismissed
+          suggested_gara_id: null,
+          added_at:     new Date().toISOString(),
+        });
+        added++;
+      }
+    }
+
+    // Mantieni max 300 voci (le più recenti prima)
+    const trimmed = queue
+      .sort((a, b) => (b.added_at || '').localeCompare(a.added_at || ''))
+      .slice(0, 300);
+    await writeYTQueue(trimmed);
+
+    res.json({ ok: true, added, total: trimmed.length });
+  } catch (e) {
+    console.error('[yt-sync] errore:', e.message);
+    res.status(500).json({ error: e.message });
+  }
+});
+
+// GET queue
+app.get('/api/admin/youtube/queue', requireAdmin, async (req, res) => {
+  try { res.json({ queue: await readYTQueue() }); }
+  catch (e) { res.status(500).json({ error: e.message }); }
+});
+
+// POST approva: assegna video a una gara e lo pubblica
+app.post('/api/admin/youtube/queue/:id/approve', requireAdmin, async (req, res) => {
+  try {
+    const { gara_id, title, channel } = req.body;
+    if (!gara_id) return res.status(400).json({ error: 'gara_id obbligatorio' });
+
+    const queue = await readYTQueue();
+    const i = queue.findIndex(q => q.id === req.params.id);
+    if (i === -1) return res.status(404).json({ error: 'Non trovato' });
+
+    const item   = queue[i];
+    const videos = await readVideos();
+    if (!videos[gara_id]) videos[gara_id] = [];
+
+    if (!videos[gara_id].some(v => v.url === item.url)) {
+      videos[gara_id].unshift({
+        url:          item.url,
+        title:        title   || item.title,
+        description:  '',
+        channel:      channel || item.channel_name || '',
+        published_at: item.published_at || new Date().toISOString().slice(0, 10),
+      });
+      await writeVideos(videos);
+    }
+
+    queue[i].status           = 'approved';
+    queue[i].approved_gara_id = gara_id;
+    await writeYTQueue(queue);
+
+    res.json({ ok: true });
+  } catch (e) { res.status(500).json({ error: e.message }); }
+});
+
+// DELETE scarta (dismiss)
+app.delete('/api/admin/youtube/queue/:id', requireAdmin, async (req, res) => {
+  try {
+    const queue = await readYTQueue();
+    const i = queue.findIndex(q => q.id === req.params.id);
+    if (i === -1) return res.status(404).json({ error: 'Non trovato' });
+    queue[i].status = 'dismissed';
+    await writeYTQueue(queue);
+    res.json({ ok: true });
+  } catch (e) { res.status(500).json({ error: e.message }); }
+});
+
 // Global error handler
 app.use((err, req, res, next) => {
   console.error('[error]', err.message);
