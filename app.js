@@ -6736,6 +6736,22 @@ async function renderGara(gara_id) {
           </div>`).join('')}
         </div>`
       : (!featuredPhoto ? `<p style="color:var(--text-muted);font-size:0.875rem;margin:8px 0 0">Nessuna foto ancora. Sii il primo a condividerne una!</p>` : '');
+
+    // Fallback: se non ci sono foto caricate manualmente, usa xpix o IC
+    if (!featuredPhoto) {
+      const _pm = await loadRisPhotos();
+      const _extPhoto = _pm[primaryGaraId] || _pm[gara_id];
+      if (_extPhoto?.url) {
+        const _src = esc(_extPhoto.url);
+        const _srcLabel = _extPhoto.source === 'xpix' ? 'xpix.it' : 'italiaciclismo.net';
+        _heroPhotoEl = `<div class="gara-media-half gara-media-photo" onclick="window.openPhotoLightbox('${_src}')" style="cursor:zoom-in">
+           <img id="gara-hero-img" src="${_src}" alt="Foto gara" loading="lazy"/>
+           <div class="gara-photo-hint">🔍 Clicca per la foto intera</div>
+           <div style="position:absolute;bottom:6px;left:8px;font-size:0.65rem;color:rgba(255,255,255,.7);background:rgba(0,0,0,.45);padding:2px 6px;border-radius:3px">📷 ${_srcLabel}</div>
+         </div>`;
+        _gallery = '';  // nessuna galleria aggiuntiva per foto esterne
+      }
+    }
   } catch(e) { console.error('renderGara photos:', e); }
 
   // Assembla sezione media (foto + video combinati)
