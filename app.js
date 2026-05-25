@@ -15,6 +15,20 @@ const API_BASE         = IS_LOCAL ? '/api' : `${RENDER_BASE}/api`;
 const PHOTOS_BASE      = IS_LOCAL ? '' : SUPABASE_STORAGE;
 const MEDIA_BASE       = IS_LOCAL ? '' : SUPABASE_STORAGE;
 
+// ── YOUTUBE HELPER ────────────────────────────────────────────
+// Estrae l'ID video da qualsiasi formato URL YouTube:
+//   https://www.youtube.com/watch?v=ID
+//   https://youtu.be/ID
+//   https://youtube.com/shorts/ID
+//   https://youtube.com/embed/ID
+function ytId(url) {
+  if (!url) return null;
+  const m = url.match(/[?&]v=([^&\s]+)/)
+    || url.match(/youtu\.be\/([^?&\s]+)/)
+    || url.match(/youtube\.com\/(?:shorts|embed)\/([^?&\s]+)/);
+  return m ? m[1] : null;
+}
+
 // ── AUTH HELPERS ──────────────────────────────────────────────
 function authToken() { return localStorage.getItem('italiacrit-token'); }
 function authUser()  {
@@ -4152,7 +4166,7 @@ async function loadAdminPendingVideos() {
     (globalData?.calendar || []).forEach(g => { calMap[g.id] = g; });
 
     container.innerHTML = `<div style="display:flex;flex-direction:column;gap:10px">${videos.map(v => {
-      const vidId = (v.url || '').match(/[?&]v=([^&]+)/)?.[1] || '';
+      const vidId = ytId(v.url || '') || '';
       const thumb = vidId ? `https://img.youtube.com/vi/${vidId}/mqdefault.jpg` : '';
       const calId = v.cal_id || v.gara_id;
       const cal   = calMap[calId];
@@ -4245,7 +4259,7 @@ function renderAdminVideosAll() {
     const raceDate = cal?.data || '';
 
     const videoRows = vids.map((v, idx) => {
-      const vidId = (v.url.match(/[?&]v=([^&]+)/) || [])[1] || '';
+      const vidId = ytId(v.url) || '';
       const thumb = vidId ? `https://img.youtube.com/vi/${vidId}/mqdefault.jpg` : '';
 
       return `
@@ -5510,7 +5524,7 @@ async function renderGara(gara_id) {
     || [];
   console.log('[video-debug] garaVideos trovati:', garaVideos.length);
   const featuredVideo = garaVideos[0] || null;
-  const featuredVideoId = featuredVideo ? (featuredVideo.url.match(/[?&]v=([^&]+)/) || [])[1] || null : null;
+  const featuredVideoId = featuredVideo ? ytId(featuredVideo.url) : null;
   const extraVideos = garaVideos.slice(1);
 
   // ── Media section: video (sempre) + foto (se server disponibile) ──────────
@@ -5550,7 +5564,7 @@ async function renderGara(gara_id) {
         <div class="comp-section-title">Altri Video</div>
         <div class="gara-videos-grid">
           ${extraVideos.map((v, i) => {
-            const vidId = (v.url.match(/[?&]v=([^&]+)/) || [])[1] || '';
+            const vidId = ytId(v.url) || '';
             const thumb = vidId ? `https://img.youtube.com/vi/${vidId}/mqdefault.jpg` : '';
             const realIdx = i + 1;
             return `
@@ -5776,10 +5790,10 @@ async function renderGara(gara_id) {
 
     // Preview thumb YouTube mentre si digita URL
     document.getElementById('vurl-input').addEventListener('input', function() {
-      const m = this.value.match(/[?&]v=([^&]+)/);
+      const _vid = ytId(this.value);
       const preview = document.getElementById('vurl-preview');
       const thumb = document.getElementById('vurl-thumb');
-      if (m) { thumb.src = `https://img.youtube.com/vi/${m[1]}/hqdefault.jpg`; preview.style.display = 'block'; }
+      if (_vid) { thumb.src = `https://img.youtube.com/vi/${_vid}/hqdefault.jpg`; preview.style.display = 'block'; }
       else { preview.style.display = 'none'; }
     });
   };
@@ -8112,7 +8126,7 @@ async function renderRisultati() {
                          (globalData.videos || {})[race.id] || [];
       const featuredVideo = raceVideos[0] || null;
       const featuredVideoId = featuredVideo
-        ? (featuredVideo.url.match(/[?&]v=([^&]+)/) || [])[1] || null
+        ? ytId(featuredVideo.url)
         : null;
 
       const catSections = categories.map(([catName, catData]) => {
