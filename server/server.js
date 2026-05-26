@@ -927,13 +927,17 @@ app.post('/api/admin/xpix/queue/:id/approve', requireAdmin, async (req, res) => 
       album_name: item.album_name,
       album_slug: item.album_slug,
       album_page: item.album_page,
+      source:     'xpix',
       gara_id,
       approved_at: new Date().toISOString(),
     };
     await writeXpixPhotos(photos);
 
-    queue[i].status           = 'approved';
-    queue[i].approved_gara_id = gara_id;
+    // Accumula le gare approvate (stesso album può coprire M e F)
+    if (!queue[i].approved_gara_ids) queue[i].approved_gara_ids = [];
+    if (!queue[i].approved_gara_ids.includes(gara_id)) queue[i].approved_gara_ids.push(gara_id);
+    queue[i].approved_gara_id = gara_id;   // ultima approvata (compat.)
+    queue[i].status            = 'approved';
     await writeXpixQueue(queue);
 
     res.json({ ok: true });

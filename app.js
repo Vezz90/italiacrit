@@ -4449,7 +4449,8 @@ function renderYTQueue() {
       : 'Nessuna corrispondenza trovata';
 
     const optionsHtml = matches.map(m => {
-      const label = `${m.race.nome_gara} — ${m.race.categoria||''} ${m.race.genere||''} (${m.race.data||''}) [${Math.round(m.score*100)}%]`;
+      const genLabel = m.race.genere === 'F' ? '♀ ' : m.race.genere === 'M' ? '♂ ' : '';
+      const label = `${genLabel}${m.race.nome_gara} — ${m.race.categoria||''} (${m.race.data||''}) [${Math.round(m.score*100)}%]`;
       const sel   = m.race.gara_id === bestGaraId ? ' selected' : '';
       return `<option value="${esc(m.race.gara_id)}"${sel}>${esc(label)}</option>`;
     }).join('');
@@ -4675,10 +4676,17 @@ function _xpixScore(albumName, race) {
   return _ytScore(cleanAlbum, race);
 }
 
-function _xpixFindMatches(albumName, maxResults = 5) {
+function _xpixFindMatches(albumName, maxResults = 12) {
   const races = (globalData?.resultsRaw || []);
   const seen = new Set();
-  const unique = races.filter(r => { if (seen.has(r.gara_id)) return false; seen.add(r.gara_id); return true; });
+  // Deduplicazione: per Esordienti mostra solo ES1 (canonico), non ES2 separato
+  const unique = races.filter(r => {
+    // Normalizza ES2 → ES1 per deduplicare
+    const key = (r.gara_id || '').replace(/_ES2_([MF])$/, '_ES1_$1');
+    if (seen.has(key)) return false;
+    seen.add(key);
+    return true;
+  });
   return unique
     .map(r => ({ race: r, score: _xpixScore(albumName, r) }))
     .filter(x => x.score > 0.12)
@@ -4730,7 +4738,8 @@ function renderXpixQueue() {
     const bestGaraId  = _xpixItemGaraMap[item.id] || (best ? best.race.gara_id : '');
 
     const optionsHtml = matches.map(m => {
-      const label = `${m.race.nome_gara} — ${m.race.categoria||''} ${m.race.genere||''} (${m.race.data||''}) [${Math.round(m.score*100)}%]`;
+      const genLabel = m.race.genere === 'F' ? '♀ ' : m.race.genere === 'M' ? '♂ ' : '';
+      const label = `${genLabel}${m.race.nome_gara} — ${m.race.categoria||''} (${m.race.data||''}) [${Math.round(m.score*100)}%]`;
       const sel   = m.race.gara_id === bestGaraId ? ' selected' : '';
       return `<option value="${esc(m.race.gara_id)}"${sel}>${esc(label)}</option>`;
     }).join('');
@@ -4875,7 +4884,6 @@ window.xpixPickGara = (id, garaId) => {
 };
 
 window.xpixApprove = async (id) => {
-  // Leggi dal map oppure direttamente dal SELECT (se l'utente non ha cambiato selezione)
   const garaId = _xpixItemGaraMap[id]
     || document.querySelector(`#xpixq-${id} select`)?.value
     || '';
@@ -4888,12 +4896,29 @@ window.xpixApprove = async (id) => {
       method: 'POST',
       body: { gara_id: garaId, selected_photo_url: selectedPhotoUrl },
     });
-    document.getElementById('xpixq-' + id)?.remove();
-    const item = _xpixQueue.find(q => q.id === id);
-    if (item) item.status = 'approved';
-    // Invalida cache foto
+    if (item) {
+      if (!item._approvedFor) item._approvedFor = [];
+      item._approvedFor.push(garaId);
+      item.status = 'approved';
+    }
     _risPhotosMap = null;
-    showToast('✓ Foto pubblicata!');
+    // Mostra banner "pubblicato" dentro il blocco, senza rimuoverlo
+    // così l'admin può subito approvare anche per la versione femminile/altra categoria
+    const block = document.getElementById('xpixq-' + id);
+    if (block) {
+      const banner = block.querySelector('.xpix-approved-banner') || document.createElement('div');
+      banner.className = 'xpix-approved-banner';
+      banner.style.cssText = 'background:#16a34a22;border:1px solid #16a34a;border-radius:5px;padding:6px 10px;font-size:.78rem;color:#16a34a;margin-bottom:6px;font-weight:600';
+      const approvedList = (item._approvedFor || [garaId]).map(g => `<span style="display:inline-block;background:#16a34a33;border-radius:3px;padding:1px 5px;margin:1px">${esc(g)}</span>`).join(' ');
+      banner.innerHTML = `✓ Pubblicato per: ${approvedList} &nbsp;—&nbsp; <span style="font-weight:400;color:var(--text-muted)">Puoi selezionare un'altra gara (es. versione ♀) e pubblicare di nuovo</span>`;
+      if (!block.querySelector('.xpix-approved-banner')) block.insertBefore(banner, block.firstChild);
+      else block.replaceChild(banner, block.querySelector('.xpix-approved-banner'));
+      // Reset selezione gara per permettere subito una seconda approvazione
+      _xpixItemGaraMap[id] = '';
+      const sel = block.querySelector('select');
+      if (sel) sel.value = '';
+    }
+    showToast('✓ Foto pubblicata per ' + garaId.split('_').slice(0,4).join(' '));
   } catch (e) { showToast('Errore: ' + e.message, 'error'); }
 };
 
@@ -4994,7 +5019,8 @@ function renderICQueue() {
     const scoreColor = score >= 70 ? '#16a34a' : score >= 40 ? '#d97706' : '#6b7280';
     const bestGaraId = _icItemGaraMap[item.id] || (best ? best.race.gara_id : '');
     const optionsHtml = matches.map(m => {
-      const label = `${m.race.nome_gara} — ${m.race.categoria||''} ${m.race.genere||''} (${m.race.data||''}) [${Math.round(m.score*100)}%]`;
+      const genLabel = m.race.genere === 'F' ? '♀ ' : m.race.genere === 'M' ? '♂ ' : '';
+      const label = `${genLabel}${m.race.nome_gara} — ${m.race.categoria||''} (${m.race.data||''}) [${Math.round(m.score*100)}%]`;
       return `<option value="${esc(m.race.gara_id)}"${m.race.gara_id===bestGaraId?' selected':''}>${esc(label)}</option>`;
     }).join('');
     const allPhotos  = item.photos?.length ? item.photos : (item.photo_url ? [item.photo_url] : []);
@@ -6740,7 +6766,14 @@ async function renderGara(gara_id) {
     // Fallback: se non ci sono foto caricate manualmente, usa xpix o IC
     if (!featuredPhoto) {
       const _pm = await loadRisPhotos();
-      const _extPhoto = _pm[primaryGaraId] || _pm[gara_id];
+      // Prova tutte le varianti possibili del gara_id (incluse ES1/ES2 per Esordienti)
+      const _esBase  = primaryGaraId.replace(/_ES[12]_([MF])$/, '');
+      const _es2Id   = primaryGaraId.replace(/_ES1_([MF])$/, '_ES2_$1');
+      const _extPhoto = _pm[primaryGaraId]
+                     || _pm[gara_id]
+                     || _pm[_es2Id]
+                     || _pm[_esBase + '_ES1_M'] || _pm[_esBase + '_ES1_F']
+                     || _pm[_esBase + '_ES2_M'] || _pm[_esBase + '_ES2_F'];
       if (_extPhoto?.url) {
         const _src = esc(_extPhoto.url);
         const _srcLabel = _extPhoto.source === 'xpix' ? 'xpix.it' : 'italiaciclismo.net';
@@ -6749,7 +6782,7 @@ async function renderGara(gara_id) {
            <div class="gara-photo-hint">🔍 Clicca per la foto intera</div>
            <div style="position:absolute;bottom:6px;left:8px;font-size:0.65rem;color:rgba(255,255,255,.7);background:rgba(0,0,0,.45);padding:2px 6px;border-radius:3px">📷 ${_srcLabel}</div>
          </div>`;
-        _gallery = '';  // nessuna galleria aggiuntiva per foto esterne
+        _gallery = '';
       }
     }
   } catch(e) { console.error('renderGara photos:', e); }
