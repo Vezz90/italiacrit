@@ -1663,6 +1663,151 @@ app.post('/api/admin/media/seed-xpix', requireAdmin, async (req, res) => {
   } catch (e) { res.status(500).json({ error: e.message }); }
 });
 
+// ── Messaging API ─────────────────────────────────────────────────────────────
+
+// Lookup utente da atleta_id (per bottone "Scrivi" su profilo atleta)
+app.get('/api/users/lookup', requireAuth, async (req, res) => {
+  try {
+    let user = null;
+    if (req.query.atleta_id) {
+      user = await queries.getUserByAtletaId(req.query.atleta_id);
+    } else if (req.query.team_profile_id) {
+      user = await queries.getUserByTeamProfileId(req.query.team_profile_id);
+    } else if (req.query.team_name) {
+      // Cerca tramite nome team
+      const row = await rawQuery(
+        `SELECT u.id, u.display_name, u.role FROM users u JOIN team_profiles tp ON tp.user_id=u.id WHERE LOWER(tp.nome)=LOWER($1) AND tp.status='active' LIMIT 1`,
+        [req.query.team_name]
+      ).then(r => r.rows[0] || null);
+      user = row;
+    } else if (req.query.media_profile_id) {
+      const prof = await queries.getMediaProfileById(req.query.media_profile_id);
+      if (prof?.user_id) user = await queries.getUserById(prof.user_id);
+    }
+    if (!user) return res.json({ user: null });
+    // Non esporre dati sensibili
+    res.json({ user: { id: user.id, display_name: user.display_name, role: user.role } });
+  } catch (e) { res.status(500).json({ error: e.message }); }
+});
+
+// Conteggio messaggi non letti
+app.get('/api/messages/unread-count', requireAuth, async (req, res) => {
+  try {
+    const row = await queries.countUnreadMessages(req.user.id);
+    res.json({ count: row?.count || 0 });
+  } catch (e) { res.status(500).json({ error: e.message }); }
+});
+
+// Lista conversazioni dell'utente loggato
+app.get('/api/messages/conversations', requireAuth, async (req, res) => {
+  try {
+    const conversations = await queries.getConversationsForUser(req.user.id);
+    res.json({ conversations });
+  } catch (e) { res.status(500).json({ error: e.message }); }
+});
+
+// Avvia (o trova) conversazione + invia primo messaggio
+app.post('/api/messages/conversations', requireAuth, async (req, res) => {
+  try {
+    const { other_user_id, body } = req.body;
+    if (!other_user_id) return res.status(400).json({ error: 'other_user_id mancante' });
+    if (other_user_id === req.user.id) return res.status(400).json({ error: 'Non puoi scrivere a te stesso' });
+
+    const conv = await queries.getOrCreateConversation(req.user.id, other_user_id);
+    let msg = null;
+    if (body?.trim()) {
+      msg = await queries.sendMessage(conv.id, req.user.id, body.trim());
+      // Notifica al destinatario
+      const sender = await queries.getUserById(req.user.id);
+      const senderLabel = sender.display_name || sender.email;
+      const recipient = await queries.getUserById(other_user_id);
+      await sendNotification({
+        user_id:       other_user_id,
+        type:          'new_message',
+        title:         `✉ Messaggio da ${senderLabel}`,
+        body:          body.trim().slice(0, 200),
+        data:          { conversation_id: conv.id, sender_id: req.user.id, sender_name: senderLabel },
+        email_to:      recipient?.email,
+        email_subject: `[ItaliacritResultati] Nuovo messaggio da ${senderLabel}`,
+        email_html: `
+          <h2 style="color:#2563eb;margin-top:0">✉ Nuovo messaggio</h2>
+          <p>Hai ricevuto un messaggio da <strong>${senderLabel}</strong>:</p>
+          <blockquote style="border-left:3px solid #2563eb;margin:16px 0;padding:8px 16px;background:#f0f4ff;border-radius:0 6px 6px 0">
+            ${body.trim().replace(/\n/g,'<br/>')}
+          </blockquote>`,
+      });
+    }
+    res.json({ ok: true, conversation_id: conv.id, message: msg });
+  } catch (e) { res.status(500).json({ error: e.message }); }
+});
+
+// Messaggi di una conversazione
+app.get('/api/messages/conversations/:id', requireAuth, async (req, res) => {
+  try {
+    const conv = await queries.getConversationById(req.params.id);
+    if (!conv) return res.status(404).json({ error: 'Conversazione non trovata' });
+    // Verifica che l'utente faccia parte della conversazione
+    if (conv.user_a !== req.user.id && conv.user_b !== req.user.id) {
+      return res.status(403).json({ error: 'Accesso negato' });
+    }
+    const messages = await queries.getMessages(conv.id, 100);
+    // Segna come letti
+    await queries.markConversationRead(conv.id, req.user.id);
+    res.json({ conversation: conv, messages });
+  } catch (e) { res.status(500).json({ error: e.message }); }
+});
+
+// Invia messaggio in conversazione esistente
+app.post('/api/messages/conversations/:id/send', requireAuth, async (req, res) => {
+  try {
+    const conv = await queries.getConversationById(req.params.id);
+    if (!conv) return res.status(404).json({ error: 'Conversazione non trovata' });
+    if (conv.user_a !== req.user.id && conv.user_b !== req.user.id) {
+      return res.status(403).json({ error: 'Accesso negato' });
+    }
+    const body = (req.body.body || '').trim();
+    if (!body) return res.status(400).json({ error: 'Messaggio vuoto' });
+
+    const msg = await queries.sendMessage(conv.id, req.user.id, body);
+
+    // Notifica all'altro utente
+    const other_user_id = conv.user_a === req.user.id ? conv.user_b : conv.user_a;
+    const sender    = await queries.getUserById(req.user.id);
+    const recipient = await queries.getUserById(other_user_id);
+    const senderLabel = sender.display_name || sender.email;
+    await sendNotification({
+      user_id:       other_user_id,
+      type:          'new_message',
+      title:         `✉ Messaggio da ${senderLabel}`,
+      body:          body.slice(0, 200),
+      data:          { conversation_id: conv.id, sender_id: req.user.id, sender_name: senderLabel },
+      email_to:      recipient?.email,
+      email_subject: `[ItaliacritResultati] Nuovo messaggio da ${senderLabel}`,
+      email_html: `
+        <h2 style="color:#2563eb;margin-top:0">✉ Nuovo messaggio</h2>
+        <p>Hai ricevuto un messaggio da <strong>${senderLabel}</strong>:</p>
+        <blockquote style="border-left:3px solid #2563eb;margin:16px 0;padding:8px 16px;background:#f0f4ff;border-radius:0 6px 6px 0">
+          ${body.replace(/\n/g,'<br/>')}
+        </blockquote>`,
+    });
+
+    res.json({ ok: true, message: msg });
+  } catch (e) { res.status(500).json({ error: e.message }); }
+});
+
+// Segna conversazione come letta (chiamato all'apertura)
+app.patch('/api/messages/conversations/:id/read', requireAuth, async (req, res) => {
+  try {
+    const conv = await queries.getConversationById(req.params.id);
+    if (!conv) return res.status(404).json({ error: 'Conversazione non trovata' });
+    if (conv.user_a !== req.user.id && conv.user_b !== req.user.id) {
+      return res.status(403).json({ error: 'Accesso negato' });
+    }
+    await queries.markConversationRead(conv.id, req.user.id);
+    res.json({ ok: true });
+  } catch (e) { res.status(500).json({ error: e.message }); }
+});
+
 // Global error handler
 app.use((err, req, res, next) => {
   console.error('[error]', err.message);

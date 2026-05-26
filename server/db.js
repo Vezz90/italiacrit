@@ -194,6 +194,26 @@ async function migrate() {
       created_at TIMESTAMPTZ NOT NULL DEFAULT NOW()
     )`,
     `CREATE INDEX IF NOT EXISTS idx_notifications_user ON notifications(user_id, created_at DESC)`,
+    // ── Messaggistica diretta ─────────────────────────────────────────────────
+    `CREATE TABLE IF NOT EXISTS conversations (
+      id         SERIAL PRIMARY KEY,
+      user_a     INTEGER NOT NULL REFERENCES users(id) ON DELETE CASCADE,
+      user_b     INTEGER NOT NULL REFERENCES users(id) ON DELETE CASCADE,
+      last_msg   TEXT DEFAULT '',
+      last_at    TIMESTAMPTZ DEFAULT NOW(),
+      created_at TIMESTAMPTZ NOT NULL DEFAULT NOW(),
+      CONSTRAINT conv_order CHECK (user_a < user_b)
+    )`,
+    `CREATE UNIQUE INDEX IF NOT EXISTS idx_conv_unique ON conversations(user_a, user_b)`,
+    `CREATE TABLE IF NOT EXISTS messages (
+      id              SERIAL PRIMARY KEY,
+      conversation_id INTEGER NOT NULL REFERENCES conversations(id) ON DELETE CASCADE,
+      sender_id       INTEGER NOT NULL REFERENCES users(id) ON DELETE CASCADE,
+      body            TEXT NOT NULL,
+      read            BOOLEAN NOT NULL DEFAULT FALSE,
+      created_at      TIMESTAMPTZ NOT NULL DEFAULT NOW()
+    )`,
+    `CREATE INDEX IF NOT EXISTS idx_messages_conv ON messages(conversation_id, created_at)`,
   ];
   for (const sql of migrations) {
     try { await run(sql); } catch (e) { console.warn('[migrate]', e.message); }
@@ -552,6 +572,74 @@ const queries = {
 
   deleteNotification: (id, user_id) =>
     run(`DELETE FROM notifications WHERE id=$1 AND user_id=$2`, [id, user_id]),
+
+  // ── Messaging ─────────────────────────────────────────────────────────────────
+  // Crea o recupera una conversazione tra due utenti (user_a sempre < user_b)
+  getOrCreateConversation: async (uid1, uid2) => {
+    const a = Math.min(uid1, uid2);
+    const b = Math.max(uid1, uid2);
+    const existing = await one(`SELECT * FROM conversations WHERE user_a=$1 AND user_b=$2`, [a, b]);
+    if (existing) return existing;
+    return one(`INSERT INTO conversations (user_a, user_b) VALUES ($1,$2) RETURNING *`, [a, b]);
+  },
+
+  getConversationById: (id) =>
+    one(`SELECT * FROM conversations WHERE id=$1`, [id]),
+
+  // Lista conversazioni di un utente, con info sull'altro utente e conteggio non letti
+  getConversationsForUser: (user_id) =>
+    all(`
+      SELECT c.*,
+             CASE WHEN c.user_a=$1 THEN c.user_b ELSE c.user_a END AS other_user_id,
+             u.display_name  AS other_display_name,
+             u.role          AS other_role,
+             (SELECT COUNT(*)::int FROM messages m
+              WHERE m.conversation_id=c.id AND m.sender_id != $1 AND m.read=false) AS unread_count
+      FROM conversations c
+      JOIN users u ON u.id = CASE WHEN c.user_a=$1 THEN c.user_b ELSE c.user_a END
+      WHERE c.user_a=$1 OR c.user_b=$1
+      ORDER BY c.last_at DESC NULLS LAST`, [user_id]),
+
+  // Messaggi di una conversazione (ultimi 100)
+  getMessages: (conversation_id, limit = 100) =>
+    all(`
+      SELECT m.*, u.display_name AS sender_name, u.role AS sender_role
+      FROM messages m
+      JOIN users u ON u.id = m.sender_id
+      WHERE m.conversation_id=$1
+      ORDER BY m.created_at ASC
+      LIMIT $2`, [conversation_id, limit]),
+
+  sendMessage: async (conversation_id, sender_id, body) => {
+    const msg = await one(
+      `INSERT INTO messages (conversation_id, sender_id, body) VALUES ($1,$2,$3) RETURNING *`,
+      [conversation_id, sender_id, body]
+    );
+    await run(
+      `UPDATE conversations SET last_msg=$1, last_at=NOW() WHERE id=$2`,
+      [body.slice(0, 120), conversation_id]
+    );
+    return msg;
+  },
+
+  markConversationRead: (conversation_id, reader_id) =>
+    run(`UPDATE messages SET read=true WHERE conversation_id=$1 AND sender_id != $2`, [conversation_id, reader_id]),
+
+  countUnreadMessages: (user_id) =>
+    one(`
+      SELECT COUNT(*)::int AS count
+      FROM messages m
+      JOIN conversations c ON c.id = m.conversation_id
+      WHERE (c.user_a=$1 OR c.user_b=$1)
+        AND m.sender_id != $1
+        AND m.read = false`, [user_id]),
+
+  // Lookup utente da atleta_id o team profile id (per il bottone "Scrivi")
+  getUserByAtletaId: (atleta_id) =>
+    one(`SELECT u.id, u.display_name, u.role FROM users u JOIN athlete_profiles ap ON ap.user_id=u.id WHERE ap.atleta_id=$1 AND ap.status='active' LIMIT 1`, [atleta_id]),
+
+  getUserByTeamProfileId: (team_profile_id) =>
+    one(`SELECT u.id, u.display_name, u.role FROM users u JOIN team_profiles tp ON tp.user_id=u.id WHERE tp.id=$1 AND tp.status='active' LIMIT 1`, [team_profile_id]),
 };
 
 module.exports = { queries, init, rawQuery: (sql, params) => pool.query(sql, params) };

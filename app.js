@@ -174,18 +174,29 @@ function updateNavLoginState() {
   const user = authUser();
   const link = document.getElementById('nav-login');
   const drawerLink = document.getElementById('drawer-login');
-  const bell = document.getElementById('notif-bell');
+  const bell    = document.getElementById('notif-bell');
+  const msgBell = document.getElementById('msg-bell');
+  const navMsg  = document.getElementById('nav-msg');
+  const drawerMsg = document.getElementById('drawer-msg');
   if (user) {
     const label = user.display_name?.split(' ')[0] || 'Profilo';
     if (link)       { link.textContent = label; link.href = '#/profilo'; link.id = 'nav-login'; }
     if (drawerLink) { drawerLink.textContent = label; drawerLink.href = '#/profilo'; }
-    if (bell) bell.style.display = 'flex';
+    if (bell)    bell.style.display = 'flex';
+    if (msgBell) msgBell.style.display = 'flex';
+    if (navMsg)  navMsg.style.display = '';
+    if (drawerMsg) drawerMsg.style.display = '';
     startNotifPolling();
+    startMsgPolling();
   } else {
     if (link)       { link.textContent = 'Login'; link.href = '#/login'; }
     if (drawerLink) { drawerLink.textContent = 'Login'; drawerLink.href = '#/login'; }
-    if (bell) bell.style.display = 'none';
+    if (bell)    bell.style.display = 'none';
+    if (msgBell) msgBell.style.display = 'none';
+    if (navMsg)  navMsg.style.display = 'none';
+    if (drawerMsg) drawerMsg.style.display = 'none';
     stopNotifPolling();
+    stopMsgPolling();
   }
 }
 
@@ -317,6 +328,248 @@ function formatTimeAgo(isoStr) {
   if (diff < 86400) return `${Math.floor(diff/3600)} ore fa`;
   return `${Math.floor(diff/86400)} giorni fa`;
 }
+
+// ── MESSAGE POLLING ────────────────────────────────────────────────────────────
+let _msgPollTimer = null;
+
+function startMsgPolling() {
+  if (_msgPollTimer) return;
+  refreshMsgCount();
+  _msgPollTimer = setInterval(refreshMsgCount, 30_000); // ogni 30s
+}
+function stopMsgPolling() {
+  if (_msgPollTimer) { clearInterval(_msgPollTimer); _msgPollTimer = null; }
+  const badge = document.getElementById('msg-badge');
+  if (badge) { badge.style.display = 'none'; badge.textContent = '0'; }
+}
+
+async function refreshMsgCount() {
+  const token = authToken();
+  if (!token) return;
+  try {
+    const d = await fetch(`${API_BASE}/messages/unread-count`, {
+      headers: { Authorization: `Bearer ${token}` }
+    }).then(r => r.json());
+    const count = d.count || 0;
+    const badge = document.getElementById('msg-badge');
+    if (!badge) return;
+    if (count > 0) {
+      badge.textContent = count > 99 ? '99+' : count;
+      badge.style.display = 'flex';
+    } else {
+      badge.style.display = 'none';
+    }
+  } catch { /* silenzioso */ }
+}
+
+// ── INBOX & MESSAGING ─────────────────────────────────────────────────────────
+async function renderInbox(activeConvId) {
+  const user = authUser();
+  if (!user) { window.location.hash = '#/login'; return; }
+
+  setPage(`<div class="loading-bar"></div>`);
+
+  // Carica conversazioni
+  let conversations = [];
+  try {
+    const d = await apiCall('/messages/conversations');
+    conversations = d.conversations || [];
+  } catch(e) {
+    setPage(`<div class="error-msg">Errore caricamento: ${esc(e.message)}</div>`);
+    return;
+  }
+
+  // Se non c'è una convo attiva ma ce n'è una, apri la prima (solo desktop)
+  if (!activeConvId && conversations.length > 0 && window.innerWidth > 700) {
+    activeConvId = conversations[0].id;
+  }
+
+  const convListHtml = conversations.length
+    ? conversations.map(c => {
+        const initial = (c.other_display_name || '?')[0].toUpperCase();
+        const unreadHtml = c.unread_count > 0
+          ? `<span class="msg-conv-badge">${c.unread_count}</span>` : '';
+        const isActive = String(c.id) === String(activeConvId);
+        const isUnread = c.unread_count > 0;
+        const cls = `msg-conv-item${isActive?' active':''}${isUnread?' unread':''}`;
+        const roleIcon = { atleta: '🚴', team: '👥', media: '📷', admin: '⚙' }[c.other_role] || '👤';
+        return `<div class="${cls}" onclick="window._msgOpenConv(${c.id})" data-conv-id="${c.id}">
+          <div class="msg-conv-avatar">${initial}</div>
+          <div class="msg-conv-info">
+            <div class="msg-conv-name">
+              <span>${roleIcon} ${esc(c.other_display_name || 'Utente')}</span>
+              <span class="msg-conv-time">${c.last_at ? formatTimeAgo(c.last_at) : ''}</span>
+            </div>
+            <div class="msg-conv-preview">${esc(c.last_msg || 'Nessun messaggio')}</div>
+          </div>
+          ${unreadHtml}
+        </div>`;
+      }).join('')
+    : `<div class="msg-inbox-empty">📭 Nessuna conversazione<br/><span style="font-size:.75rem">Avvia una chat dal profilo di un atleta, team o fotografo</span></div>`;
+
+  setPage(`
+    <div class="comp-section" style="padding:0;max-width:1100px;margin:20px auto">
+      <div class="msg-layout" id="msg-layout">
+        <div class="msg-inbox-panel">
+          <div class="msg-inbox-head">
+            <span>✉ Messaggi</span>
+          </div>
+          <div class="msg-conv-list" id="msg-conv-list">${convListHtml}</div>
+        </div>
+        <div class="msg-thread-panel" id="msg-thread-panel">
+          <div class="msg-thread-empty" id="msg-thread-empty">
+            ${activeConvId ? '<div class="loading-bar"></div>' : '← Seleziona una conversazione'}
+          </div>
+        </div>
+      </div>
+    </div>`);
+
+  if (activeConvId) {
+    await _msgLoadThread(activeConvId);
+  }
+
+  window._msgOpenConv = async (convId) => {
+    // Aggiorna attivo nella lista
+    document.querySelectorAll('.msg-conv-item').forEach(el => {
+      el.classList.toggle('active', String(el.dataset.convId) === String(convId));
+    });
+    // Mobile: mostra thread
+    document.getElementById('msg-layout')?.classList.add('thread-open');
+    window.history.replaceState(null, '', `#/messaggi/${convId}`);
+    await _msgLoadThread(convId);
+  };
+}
+
+async function _msgLoadThread(convId) {
+  const threadPanel = document.getElementById('msg-thread-panel');
+  if (!threadPanel) return;
+  const user = authUser();
+
+  // Spinner
+  threadPanel.innerHTML = `<div class="msg-thread-empty"><div class="loading-bar" style="width:60%"></div></div>`;
+
+  try {
+    const d = await apiCall(`/messages/conversations/${convId}`);
+    const { conversation: conv, messages } = d;
+    const other_user_id = conv.user_a === user.id ? conv.user_b : conv.user_a;
+
+    // Aggrega per data
+    let lastDate = '';
+    const msgsHtml = messages.map(m => {
+      const isSent = m.sender_id === user.id;
+      const msgDate = new Date(m.created_at).toLocaleDateString('it-IT', { day:'numeric', month:'long' });
+      const dateSep = msgDate !== lastDate
+        ? `<div class="msg-date-sep">${msgDate}</div>`
+        : '';
+      lastDate = msgDate;
+      const timeStr = new Date(m.created_at).toLocaleTimeString('it-IT', { hour:'2-digit', minute:'2-digit' });
+      return `${dateSep}
+        <div class="msg-bubble-wrap ${isSent ? 'sent' : 'received'}">
+          <div class="msg-bubble">${esc(m.body)}</div>
+          <div class="msg-bubble-time">${timeStr}</div>
+        </div>`;
+    }).join('');
+
+    // Ottieni nome dell'altro utente (già nella convo se caricata dall'inbox)
+    const convItem = document.querySelector(`[data-conv-id="${convId}"]`);
+    const otherName = convItem?.querySelector('.msg-conv-name span')?.textContent || 'Utente';
+
+    threadPanel.innerHTML = `
+      <div class="msg-thread-head">
+        <button class="msg-back-btn" onclick="document.getElementById('msg-layout')?.classList.remove('thread-open');window.history.replaceState(null,'','#/messaggi')">←</button>
+        <div class="msg-conv-avatar" style="width:32px;height:32px;font-size:.8rem">${otherName.replace(/^[^ ]+ /,'')[0]?.toUpperCase() || '?'}</div>
+        <span>${otherName}</span>
+      </div>
+      <div class="msg-thread-body" id="msg-thread-body">
+        ${msgsHtml || '<div style="text-align:center;color:var(--text-muted);padding:40px;font-size:.85rem">Scrivi il primo messaggio 👇</div>'}
+      </div>
+      <div class="msg-input-area">
+        <textarea id="msg-input" placeholder="Scrivi un messaggio…" rows="1"
+          onkeydown="if(event.key==='Enter'&&!event.shiftKey){event.preventDefault();window._msgSend(${convId})}"
+          oninput="this.style.height='auto';this.style.height=this.scrollHeight+'px'"></textarea>
+        <button class="msg-send-btn" onclick="window._msgSend(${convId})" title="Invia">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <line x1="22" y1="2" x2="11" y2="13"/><polygon points="22 2 15 22 11 13 2 9 22 2"/>
+          </svg>
+        </button>
+      </div>`;
+
+    // Scroll all fondo
+    const body = document.getElementById('msg-thread-body');
+    if (body) body.scrollTop = body.scrollHeight;
+
+    // Azzera badge unread per questa convo nella lista
+    const convItem2 = document.querySelector(`[data-conv-id="${convId}"]`);
+    if (convItem2) {
+      convItem2.classList.remove('unread');
+      convItem2.querySelector('.msg-conv-badge')?.remove();
+    }
+    // Rifresca conteggio globale
+    refreshMsgCount();
+
+  } catch(e) {
+    threadPanel.innerHTML = `<div class="msg-thread-empty">Errore: ${esc(e.message)}</div>`;
+  }
+
+  // Polling auto ogni 8s per nuovi messaggi mentre la chat è aperta
+  clearInterval(window._msgThreadPoll);
+  window._msgThreadPoll = setInterval(async () => {
+    if (!document.getElementById('msg-thread-body')) { clearInterval(window._msgThreadPoll); return; }
+    try {
+      const d = await apiCall(`/messages/conversations/${convId}`);
+      const body = document.getElementById('msg-thread-body');
+      if (!body) return;
+      const { messages } = d;
+      const user = authUser();
+      let lastDate = '';
+      const msgsHtml = messages.map(m => {
+        const isSent = m.sender_id === user.id;
+        const msgDate = new Date(m.created_at).toLocaleDateString('it-IT', { day:'numeric', month:'long' });
+        const dateSep = msgDate !== lastDate ? `<div class="msg-date-sep">${msgDate}</div>` : '';
+        lastDate = msgDate;
+        const timeStr = new Date(m.created_at).toLocaleTimeString('it-IT', { hour:'2-digit', minute:'2-digit' });
+        return `${dateSep}<div class="msg-bubble-wrap ${isSent?'sent':'received'}"><div class="msg-bubble">${esc(m.body)}</div><div class="msg-bubble-time">${timeStr}</div></div>`;
+      }).join('');
+      const wasAtBottom = body.scrollHeight - body.scrollTop - body.clientHeight < 60;
+      body.innerHTML = msgsHtml;
+      if (wasAtBottom) body.scrollTop = body.scrollHeight;
+      refreshMsgCount();
+    } catch {}
+  }, 8000);
+}
+
+window._msgSend = async function(convId) {
+  const input = document.getElementById('msg-input');
+  const body = input?.value.trim();
+  if (!body) return;
+  input.value = '';
+  input.style.height = 'auto';
+  try {
+    await apiCall(`/messages/conversations/${convId}/send`, {
+      method: 'POST',
+      body: { body },
+    });
+    // Ricarica thread
+    await _msgLoadThread(convId);
+  } catch(e) {
+    showToast('Errore invio: ' + e.message, 'error');
+    if (input) input.value = body; // rimetti il testo
+  }
+};
+
+// Avvia conversazione da bottone su profilo esterno
+window.startConversation = async function(otherUserId, otherName) {
+  const user = authUser();
+  if (!user) { showToast('Accedi per inviare messaggi', 'info'); window.location.hash = '#/login'; return; }
+  if (otherUserId === user.id) { showToast('Non puoi scrivere a te stesso 😅', 'info'); return; }
+  try {
+    showToast('Apertura chat…', 'info');
+    const d = await apiCall('/messages/conversations', { method: 'POST', body: { other_user_id: otherUserId } });
+    window.location.hash = `#/messaggi/${d.conversation_id}`;
+  } catch(e) {
+    showToast('Errore: ' + e.message, 'error');
+  }
+};
 
 // ── REGION NORMALIZATION ───────────────────────────────────────
 const ITALIAN_REGIONS = [
@@ -950,6 +1203,9 @@ function route() {
   if (m_gara) return renderGara(m_gara[1]);
   const m_media = match('/media/:id');
   if (m_media) return renderMediaProfile(m_media[1]);
+  const m_msgConv = match('/messaggi/:id');
+  if (m_msgConv) return renderInbox(m_msgConv[1]);
+  if (match('/messaggi')) return renderInbox(null);
   const m_forma = match('/forma/:cat');
   if (m_forma) return renderForma(m_forma[1]);
   if (match('/news')) return renderNews();
@@ -6460,8 +6716,11 @@ async function renderAtleta(atleta_id) {
       <div class="profile-photo-row" style="display:flex;gap:20px;align-items:center;flex-wrap:wrap;margin-bottom:4px">
         ${photoHtml}
         <div class="athlete-header-name">
-          <span class="athlete-cognome">${esc(displayCognome)}</span>
-          <span class="athlete-nome">${esc(displayNome)}</span>
+          <div style="display:flex;align-items:center;gap:10px;flex-wrap:wrap;margin-bottom:4px">
+            <span class="athlete-cognome">${esc(displayCognome)}</span>
+            <span class="athlete-nome">${esc(displayNome)}</span>
+            <span id="atleta-msg-btn"></span>
+          </div>
           <div class="athlete-pts-display">
             <div class="athlete-pts-dot"></div>
             <div>
@@ -6611,6 +6870,29 @@ async function renderAtleta(atleta_id) {
       </table>
     </div>
   `);
+
+  // Inject bottone messaggio in modo async (lookup non blocca il render)
+  _injectMsgBtn('atleta-msg-btn', atleta_id, null, null);
+}
+
+// Inietta bottone "Scrivi messaggio" dopo aver verificato se l'utente ha un account
+async function _injectMsgBtn(spanId, atleta_id, team_name, media_profile_id) {
+  const span = document.getElementById(spanId);
+  if (!span) return;
+  const loggedUser = authUser();
+  if (!loggedUser) return; // non loggato — non mostrare nulla
+  try {
+    const params = new URLSearchParams();
+    if (atleta_id)        params.set('atleta_id', atleta_id);
+    if (team_name)        params.set('team_name', team_name);
+    if (media_profile_id) params.set('media_profile_id', media_profile_id);
+    const d = await apiCall(`/users/lookup?${params}`);
+    if (!d.user || d.user.id === loggedUser.id) return; // stesso utente o non trovato
+    span.innerHTML = `<button class="btn-msg-write" onclick="window.startConversation(${d.user.id},'${esc(d.user.display_name || 'Utente')}')">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="14" height="14"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/><polyline points="22,6 12,13 2,6"/></svg>
+      Scrivi
+    </button>`;
+  } catch { /* silenzioso — feature opzionale */ }
 }
 
 function buildSparkline(values, risultati) {
@@ -6927,7 +7209,10 @@ async function renderTeam(team_id) {
       <div class="profile-photo-row" style="display:flex;gap:20px;align-items:center">
         ${teamPhotoHtml}
         <div style="min-width:0;overflow:hidden;flex:1">
-          <div class="team-name-display">${esc(t.nome)}</div>
+          <div style="display:flex;align-items:center;gap:10px;flex-wrap:wrap">
+            <div class="team-name-display">${esc(t.nome)}</div>
+            <span id="team-msg-btn"></span>
+          </div>
           ${headerStats}
         </div>
       </div>
@@ -6961,6 +7246,10 @@ async function renderTeam(team_id) {
       </table>
     </div>
   `);
+
+  // Bottone messaggio team (async, non blocca il render)
+  // Cerchiamo il team_profile tramite nome team
+  _injectMsgBtn('team-msg-btn', null, team_id, null);
 }
 
 // ── Photo helpers (top-level so always available) ────────────
@@ -7121,6 +7410,15 @@ async function renderMediaProfile(profileId) {
         }).join('')}</div>`
       : `<p style="color:var(--text-muted);padding:24px 0">Nessun album ancora.</p>`;
 
+    const loggedUser = authUser();
+    const isOwner = loggedUser && profile.user_id && loggedUser.id === profile.user_id;
+    const canMsg  = loggedUser && profile.user_id && !isOwner;
+    const msgBtn  = canMsg
+      ? `<button class="btn-msg-write" onclick="window.startConversation(${profile.user_id},'${esc(profile.display_name)}')">
+           <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="14" height="14"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/><polyline points="22,6 12,13 2,6"/></svg>
+           Scrivi messaggio
+         </button>` : '';
+
     setPage(`
       <div class="media-profile-header">
         <div class="media-profile-avatar">📷</div>
@@ -7131,6 +7429,7 @@ async function renderMediaProfile(profileId) {
             ${profile.website ? `<a href="${esc(profile.website)}" target="_blank" rel="noopener" class="media-profile-link"><svg class="social-icon" viewBox="0 0 24 24"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-1 17.93c-3.95-.49-7-3.85-7-7.93 0-.62.08-1.21.21-1.79L9 15v1c0 1.1.9 2 2 2v1.93zm6.9-2.54c-.26-.81-1-1.39-1.9-1.39h-1v-3c0-.55-.45-1-1-1H8v-2h2c.55 0 1-.45 1-1V7h2c1.1 0 2-.9 2-2v-.41c2.93 1.19 5 4.06 5 7.41 0 2.08-.8 3.97-2.1 5.39z"/></svg> Sito web</a>` : ''}
             ${profile.instagram ? `<a href="https://instagram.com/${esc(profile.instagram.replace('@',''))}" target="_blank" rel="noopener" class="media-profile-link"><svg class="social-icon social-icon-ig" viewBox="0 0 24 24"><rect x="2" y="2" width="20" height="20" rx="5" ry="5"/><path d="M16 11.37A4 4 0 1 1 12.63 8 4 4 0 0 1 16 11.37z"/><line x1="17.5" y1="6.5" x2="17.51" y2="6.5"/></svg> ${esc(profile.instagram)}</a>` : ''}
             ${profile.facebook ? `<a href="${profile.facebook.startsWith('http') ? esc(profile.facebook) : 'https://facebook.com/'+esc(profile.facebook)}" target="_blank" rel="noopener" class="media-profile-link"><svg class="social-icon social-icon-fb" viewBox="0 0 24 24"><path d="M18 2h-3a5 5 0 0 0-5 5v3H7v4h3v8h4v-8h3l1-4h-4V7a1 1 0 0 1 1-1h3z"/></svg> Facebook</a>` : ''}
+            ${msgBtn}
           </div>
           <div class="media-profile-stats">
             <span>${albums.length} album</span>

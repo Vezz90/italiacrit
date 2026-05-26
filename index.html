@@ -13,7 +13,7 @@
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
   <link href="https://fonts.googleapis.com/css2?family=Inter+Tight:wght@400;600;700;800;900&display=swap" rel="stylesheet" />
   <link rel="stylesheet" href="style.css?v=12" />
-  <link rel="stylesheet" href="design.css?v=84" />
+  <link rel="stylesheet" href="design.css?v=85" />
 
 </head>
 <body>
@@ -37,6 +37,7 @@
     <a href="#/statistiche" class="nav-link" id="nav-stats"     role="listitem">Statistiche</a>
     <a href="#/comparatore" class="nav-link" id="nav-comp"      role="listitem">Comparatore</a>
     <a href="#/regolamento" class="nav-link" id="nav-reg"       role="listitem">Regolamento</a>
+    <a href="#/messaggi"   class="nav-link" id="nav-msg"      role="listitem" style="display:none">Messaggi</a>
     <a href="#/login"       class="nav-link" id="nav-login"     role="listitem">Login</a>
   </div>
   <div class="nav-search-wrap">
@@ -52,6 +53,10 @@
   <div class="badge-live" id="badge-live" role="status" aria-live="polite">
     <span class="dot" aria-hidden="true"></span> LIVE
   </div>
+  <button class="notif-bell" id="msg-bell" aria-label="Messaggi" style="display:none" onclick="window.location.hash='#/messaggi'">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" width="20" height="20" aria-hidden="true"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/><polyline points="22,6 12,13 2,6"/></svg>
+    <span class="notif-badge" id="msg-badge" style="display:none">0</span>
+  </button>
   <button class="notif-bell" id="notif-bell" aria-label="Notifiche" style="display:none" onclick="window.toggleNotifPanel()">
     <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" width="20" height="20" aria-hidden="true"><path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9"/><path d="M13.73 21a2 2 0 0 1-3.46 0"/></svg>
     <span class="notif-badge" id="notif-badge" style="display:none">0</span>
@@ -76,6 +81,7 @@
   <a href="#/statistiche" class="nav-link" id="drawer-stats">Statistiche</a>
   <a href="#/comparatore" class="nav-link" id="drawer-comp">Comparatore</a>
   <a href="#/regolamento" class="nav-link" id="drawer-reg">Regolamento</a>
+  <a href="#/messaggi"   class="nav-link" id="drawer-msg" style="display:none">Messaggi</a>
   <a href="#/login"       class="nav-link" id="drawer-login">Login</a>
 </div>
 
@@ -104,6 +110,6 @@
   </span>
 </footer>
 
-<script src="app.js?v=194" defer></script>
+<script src="app.js?v=195" defer></script>
 </body>
 </html>
