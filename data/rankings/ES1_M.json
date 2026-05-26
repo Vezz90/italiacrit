@@ -181,12 +181,12 @@
     "nome": "SAMUELE",
     "team_id": "HG_CYCLING_TEAM",
     "team_nome": "HG CYCLING TEAM",
-    "punti": 96,
+    "punti": 98,
     "vittorie": 1,
     "gare": 11,
     "p1": 1,
-    "p2": 0,
-    "p3": 3,
+    "p2": 1,
+    "p3": 2,
     "pout": 7,
     "pos": 12,
     "trend": 0
@@ -592,22 +592,6 @@
     "trend": 0
   },
   {
-    "atleta_id": "SABATELLI_GABRIELE",
-    "cognome": "SABATELLI",
-    "nome": "GABRIELE",
-    "team_id": "SEI_SPORT",
-    "team_nome": "SEI SPORT",
-    "punti": 61,
-    "vittorie": 1,
-    "gare": 5,
-    "p1": 1,
-    "p2": 2,
-    "p3": 1,
-    "pout": 1,
-    "pos": 38,
-    "trend": 0
-  },
-  {
     "atleta_id": "BARBERO_ALESSANDRO",
     "cognome": "BARBERO",
     "nome": "ALESSANDRO",
@@ -620,8 +604,8 @@
     "p2": 1,
     "p3": 1,
     "pout": 8,
-    "pos": 39,
-    "trend": 0
+    "pos": 38,
+    "trend": 1
   },
   {
     "atleta_id": "TUDISCO_LUDOVICO",
@@ -636,8 +620,24 @@
     "p2": 0,
     "p3": 3,
     "pout": 7,
+    "pos": 39,
+    "trend": 1
+  },
+  {
+    "atleta_id": "SABATELLI_GABRIELE",
+    "cognome": "SABATELLI",
+    "nome": "GABRIELE",
+    "team_id": "SEI_SPORT",
+    "team_nome": "SEI SPORT",
+    "punti": 59,
+    "vittorie": 1,
+    "gare": 5,
+    "p1": 1,
+    "p2": 1,
+    "p3": 2,
+    "pout": 1,
     "pos": 40,
-    "trend": 0
+    "trend": -2
   },
   {
     "atleta_id": "BOTTAZZO_GIANLUCA",

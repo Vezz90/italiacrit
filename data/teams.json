@@ -22894,7 +22894,7 @@
   "HG_CYCLING_TEAM": {
     "id": "HG_CYCLING_TEAM",
     "nome": "HG CYCLING TEAM",
-    "punti_totali": 302,
+    "punti_totali": 304,
     "atleti": [
       "ESPOSTO_GIOVANELLI_LETIZIA",
       "DAZZANI_MYA",
@@ -22972,8 +22972,8 @@
         "atleta_id": "LOMBARDI_SAMUELE",
         "atleta_cognome": "LOMBARDI",
         "atleta_nome": "SAMUELE",
-        "posizione": 3,
-        "punti_effettivi": 10,
+        "posizione": 2,
+        "punti_effettivi": 12,
         "moltiplicatore": 1,
         "tipo": "regionale",
         "regione": "BASILICATA",
@@ -23450,7 +23450,7 @@
       "AL_F": 18,
       "ES2_F": 185,
       "ES1_F": 3,
-      "ES1_M": 96
+      "ES1_M": 98
     }
   },
   "JU_GREEN_A_S_D_GORLA_MINORE": {
@@ -52308,7 +52308,7 @@
   "SEI_SPORT": {
     "id": "SEI_SPORT",
     "nome": "SEI SPORT",
-    "punti_totali": 61,
+    "punti_totali": 59,
     "atleti": [
       "SABATELLI_GABRIELE"
     ],
@@ -52320,8 +52320,8 @@
         "atleta_id": "SABATELLI_GABRIELE",
         "atleta_cognome": "SABATELLI",
         "atleta_nome": "GABRIELE",
-        "posizione": 2,
-        "punti_effettivi": 12,
+        "posizione": 3,
+        "punti_effettivi": 10,
         "moltiplicatore": 1,
         "tipo": "regionale",
         "regione": "BASILICATA",
@@ -52390,7 +52390,7 @@
       }
     ],
     "punti_per_cat": {
-      "ES1_M": 61
+      "ES1_M": 59
     }
   },
   "TEAM_NIBALI": {

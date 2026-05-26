@@ -180,6 +180,18 @@
     "pos": 15
   },
   {
+    "team_id": "HG_CYCLING_TEAM",
+    "team_nome": "HG CYCLING TEAM",
+    "punti": 98,
+    "vittorie": 1,
+    "p1": 1,
+    "p2": 1,
+    "p3": 2,
+    "pout": 7,
+    "n_atleti": 1,
+    "pos": 16
+  },
+  {
     "team_id": "FERALPI_MONTECLARENSE_ASD",
     "team_nome": "FERALPI MONTECLARENSE ASD",
     "punti": 98,
@@ -189,7 +201,7 @@
     "p3": 1,
     "pout": 11,
     "n_atleti": 2,
-    "pos": 16
+    "pos": 17
   },
   {
     "team_id": "A_S_D_POSTUMIA_73_D_L_CICLISMO",
@@ -201,18 +213,6 @@
     "p3": 0,
     "pout": 14,
     "n_atleti": 4,
-    "pos": 17
-  },
-  {
-    "team_id": "HG_CYCLING_TEAM",
-    "team_nome": "HG CYCLING TEAM",
-    "punti": 96,
-    "vittorie": 1,
-    "p1": 1,
-    "p2": 0,
-    "p3": 3,
-    "pout": 7,
-    "n_atleti": 1,
     "pos": 18
   },
   {
@@ -480,18 +480,6 @@
     "pos": 40
   },
   {
-    "team_id": "SEI_SPORT",
-    "team_nome": "SEI SPORT",
-    "punti": 61,
-    "vittorie": 1,
-    "p1": 1,
-    "p2": 2,
-    "p3": 1,
-    "pout": 1,
-    "n_atleti": 1,
-    "pos": 41
-  },
-  {
     "team_id": "CONTRABAND_CYCLING_TEAM_ASD",
     "team_nome": "CONTRABAND CYCLING TEAM ASD",
     "punti": 61,
@@ -500,6 +488,18 @@
     "p2": 1,
     "p3": 1,
     "pout": 8,
+    "n_atleti": 1,
+    "pos": 41
+  },
+  {
+    "team_id": "SEI_SPORT",
+    "team_nome": "SEI SPORT",
+    "punti": 59,
+    "vittorie": 1,
+    "p1": 1,
+    "p2": 1,
+    "p3": 2,
+    "pout": 1,
     "n_atleti": 1,
     "pos": 42
   },

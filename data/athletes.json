@@ -18400,83 +18400,6 @@
       }
     ]
   },
-  "SABATELLI_GABRIELE": {
-    "id": "SABATELLI_GABRIELE",
-    "nome": "GABRIELE",
-    "cognome": "SABATELLI",
-    "team_attuale": "SEI SPORT",
-    "team_id": "SEI_SPORT",
-    "categoria": "ES1_M",
-    "genere": "M",
-    "punti_totali": 61,
-    "risultati": [
-      {
-        "gara_id": "MEMORIAL_GUERINO_PIARULLI_GARA_UNICA_2026-05-24_ES1_M",
-        "nome_gara": "MEMORIAL GUERINO PIARULLI GARA UNICA",
-        "data": "2026-05-24",
-        "posizione": 2,
-        "punti_effettivi": 12,
-        "team": "SEI SPORT",
-        "moltiplicatore": 1,
-        "tipo": "regionale",
-        "regione": "BASILICATA",
-        "km": "28.400",
-        "media": "24.343"
-      },
-      {
-        "gara_id": "26_TROFEO_PADRE_GIUSEPPE_GARA_UNICA_PROVA_VALIDA_CAMPIONATO_REGIONALE_2026-05-01_ES1_M",
-        "nome_gara": "26 TROFEO PADRE GIUSEPPE GARA UNICA PROVA VALIDA CAMPIONATO REGIONALE",
-        "data": "2026-05-01",
-        "posizione": 5,
-        "punti_effettivi": 12,
-        "team": "SEI SPORT",
-        "moltiplicatore": 2,
-        "tipo": "regionale",
-        "regione": "ABRUZZO",
-        "km": "26.400",
-        "media": ""
-      },
-      {
-        "gara_id": "LIBERAZIONE_ESORDIENTI_GARA_UNICA_2026-04-24_ES1_M",
-        "nome_gara": "LIBERAZIONE ESORDIENTI GARA UNICA",
-        "data": "2026-04-24",
-        "posizione": 3,
-        "punti_effettivi": 10,
-        "team": "SEI SPORT",
-        "moltiplicatore": 1,
-        "tipo": "regionale",
-        "regione": "LAZIO",
-        "km": "30.000",
-        "media": "39.604"
-      },
-      {
-        "gara_id": "TROFEO_VALLE_D_OFANTO_2026_GARA_UNICA_2026-04-19_ES1_M",
-        "nome_gara": "TROFEO VALLE D'OFANTO 2026 GARA UNICA",
-        "data": "2026-04-19",
-        "posizione": 1,
-        "punti_effettivi": 15,
-        "team": "SEI SPORT",
-        "moltiplicatore": 1,
-        "tipo": "regionale",
-        "regione": "PUGLIA",
-        "km": "24.000",
-        "media": "40.111"
-      },
-      {
-        "gara_id": "GIORNATA_AZZURRA_ESORDIENTI_GARA_UNICA_2026-04-04_ES1_M",
-        "nome_gara": "GIORNATA AZZURRA ESORDIENTI GARA UNICA",
-        "data": "2026-04-04",
-        "posizione": 2,
-        "punti_effettivi": 12,
-        "team": "SEI SPORT",
-        "moltiplicatore": 1,
-        "tipo": "regionale",
-        "regione": "PUGLIA",
-        "km": "32.000",
-        "media": ""
-      }
-    ]
-  },
   "LOMBARDI_SAMUELE": {
     "id": "LOMBARDI_SAMUELE",
     "nome": "SAMUELE",
@@ -18485,14 +18408,14 @@
     "team_id": "HG_CYCLING_TEAM",
     "categoria": "ES1_M",
     "genere": "M",
-    "punti_totali": 96,
+    "punti_totali": 98,
     "risultati": [
       {
         "gara_id": "MEMORIAL_GUERINO_PIARULLI_GARA_UNICA_2026-05-24_ES1_M",
         "nome_gara": "MEMORIAL GUERINO PIARULLI GARA UNICA",
         "data": "2026-05-24",
-        "posizione": 3,
-        "punti_effettivi": 10,
+        "posizione": 2,
+        "punti_effettivi": 12,
         "team": "HG CYCLING TEAM",
         "moltiplicatore": 1,
         "tipo": "regionale",
@@ -18629,6 +18552,83 @@
         "regione": "PIEMONTE",
         "km": "29.000",
         "media": "36.995"
+      }
+    ]
+  },
+  "SABATELLI_GABRIELE": {
+    "id": "SABATELLI_GABRIELE",
+    "nome": "GABRIELE",
+    "cognome": "SABATELLI",
+    "team_attuale": "SEI SPORT",
+    "team_id": "SEI_SPORT",
+    "categoria": "ES1_M",
+    "genere": "M",
+    "punti_totali": 59,
+    "risultati": [
+      {
+        "gara_id": "MEMORIAL_GUERINO_PIARULLI_GARA_UNICA_2026-05-24_ES1_M",
+        "nome_gara": "MEMORIAL GUERINO PIARULLI GARA UNICA",
+        "data": "2026-05-24",
+        "posizione": 3,
+        "punti_effettivi": 10,
+        "team": "SEI SPORT",
+        "moltiplicatore": 1,
+        "tipo": "regionale",
+        "regione": "BASILICATA",
+        "km": "28.400",
+        "media": "24.343"
+      },
+      {
+        "gara_id": "26_TROFEO_PADRE_GIUSEPPE_GARA_UNICA_PROVA_VALIDA_CAMPIONATO_REGIONALE_2026-05-01_ES1_M",
+        "nome_gara": "26 TROFEO PADRE GIUSEPPE GARA UNICA PROVA VALIDA CAMPIONATO REGIONALE",
+        "data": "2026-05-01",
+        "posizione": 5,
+        "punti_effettivi": 12,
+        "team": "SEI SPORT",
+        "moltiplicatore": 2,
+        "tipo": "regionale",
+        "regione": "ABRUZZO",
+        "km": "26.400",
+        "media": ""
+      },
+      {
+        "gara_id": "LIBERAZIONE_ESORDIENTI_GARA_UNICA_2026-04-24_ES1_M",
+        "nome_gara": "LIBERAZIONE ESORDIENTI GARA UNICA",
+        "data": "2026-04-24",
+        "posizione": 3,
+        "punti_effettivi": 10,
+        "team": "SEI SPORT",
+        "moltiplicatore": 1,
+        "tipo": "regionale",
+        "regione": "LAZIO",
+        "km": "30.000",
+        "media": "39.604"
+      },
+      {
+        "gara_id": "TROFEO_VALLE_D_OFANTO_2026_GARA_UNICA_2026-04-19_ES1_M",
+        "nome_gara": "TROFEO VALLE D'OFANTO 2026 GARA UNICA",
+        "data": "2026-04-19",
+        "posizione": 1,
+        "punti_effettivi": 15,
+        "team": "SEI SPORT",
+        "moltiplicatore": 1,
+        "tipo": "regionale",
+        "regione": "PUGLIA",
+        "km": "24.000",
+        "media": "40.111"
+      },
+      {
+        "gara_id": "GIORNATA_AZZURRA_ESORDIENTI_GARA_UNICA_2026-04-04_ES1_M",
+        "nome_gara": "GIORNATA AZZURRA ESORDIENTI GARA UNICA",
+        "data": "2026-04-04",
+        "posizione": 2,
+        "punti_effettivi": 12,
+        "team": "SEI SPORT",
+        "moltiplicatore": 1,
+        "tipo": "regionale",
+        "regione": "PUGLIA",
+        "km": "32.000",
+        "media": ""
       }
     ]
   },
