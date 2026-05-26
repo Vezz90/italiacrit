@@ -174,14 +174,148 @@ function updateNavLoginState() {
   const user = authUser();
   const link = document.getElementById('nav-login');
   const drawerLink = document.getElementById('drawer-login');
+  const bell = document.getElementById('notif-bell');
   if (user) {
     const label = user.display_name?.split(' ')[0] || 'Profilo';
     if (link)       { link.textContent = label; link.href = '#/profilo'; link.id = 'nav-login'; }
     if (drawerLink) { drawerLink.textContent = label; drawerLink.href = '#/profilo'; }
+    if (bell) bell.style.display = 'flex';
+    startNotifPolling();
   } else {
     if (link)       { link.textContent = 'Login'; link.href = '#/login'; }
     if (drawerLink) { drawerLink.textContent = 'Login'; drawerLink.href = '#/login'; }
+    if (bell) bell.style.display = 'none';
+    stopNotifPolling();
   }
+}
+
+// ── NOTIFICATION SYSTEM ────────────────────────────────────────────────────────
+let _notifPollTimer = null;
+
+function startNotifPolling() {
+  if (_notifPollTimer) return; // già attivo
+  refreshNotifCount(); // subito al login
+  _notifPollTimer = setInterval(refreshNotifCount, 60_000); // ogni minuto
+}
+function stopNotifPolling() {
+  if (_notifPollTimer) { clearInterval(_notifPollTimer); _notifPollTimer = null; }
+  const badge = document.getElementById('notif-badge');
+  if (badge) { badge.style.display = 'none'; badge.textContent = '0'; }
+}
+
+async function refreshNotifCount() {
+  const token = authToken();
+  if (!token) return;
+  try {
+    const d = await fetch(`${API_BASE}/notifications/count`, {
+      headers: { Authorization: `Bearer ${token}` }
+    }).then(r => r.json());
+    const count = d.count || 0;
+    const badge = document.getElementById('notif-badge');
+    if (!badge) return;
+    if (count > 0) {
+      badge.textContent = count > 99 ? '99+' : count;
+      badge.style.display = 'flex';
+    } else {
+      badge.style.display = 'none';
+    }
+  } catch { /* silenzioso */ }
+}
+
+window.toggleNotifPanel = function() {
+  const existing = document.getElementById('notif-panel');
+  if (existing) { existing.remove(); return; }
+  renderNotifPanel();
+  // Chiudi cliccando fuori
+  setTimeout(() => {
+    document.addEventListener('click', function handler(e) {
+      const panel = document.getElementById('notif-panel');
+      const bell  = document.getElementById('notif-bell');
+      if (panel && !panel.contains(e.target) && !bell?.contains(e.target)) {
+        panel.remove();
+        document.removeEventListener('click', handler);
+      }
+    });
+  }, 50);
+};
+
+async function renderNotifPanel() {
+  const token = authToken();
+  if (!token) return;
+  const panel = document.createElement('div');
+  panel.id = 'notif-panel';
+  panel.className = 'notif-panel';
+  panel.innerHTML = `
+    <div class="notif-panel-head">
+      <span>🔔 Notifiche</span>
+      <button onclick="window._notifMarkAllRead()">Segna tutte come lette</button>
+    </div>
+    <div class="notif-list" id="notif-list"><div class="notif-empty">Caricamento…</div></div>`;
+  document.body.appendChild(panel);
+
+  try {
+    // Carica e segna come lette in parallelo
+    const [d] = await Promise.all([
+      fetch(`${API_BASE}/notifications`, { headers: { Authorization: `Bearer ${token}` } }).then(r => r.json()),
+      fetch(`${API_BASE}/notifications/read-all`, { method: 'PATCH', headers: { Authorization: `Bearer ${token}` } }).catch(() => {}),
+    ]);
+    // Azzera badge subito
+    const badge = document.getElementById('notif-badge');
+    if (badge) badge.style.display = 'none';
+
+    const notifications = d.notifications || [];
+    const listEl = document.getElementById('notif-list');
+    if (!listEl) return;
+    if (!notifications.length) {
+      listEl.innerHTML = '<div class="notif-empty">Nessuna notifica</div>';
+      return;
+    }
+    listEl.innerHTML = notifications.map(n => {
+      const ago = formatTimeAgo(n.created_at);
+      const cls = n.read ? 'notif-item read' : 'notif-item unread';
+      return `<div class="${cls}" data-id="${n.id}">
+        <div class="notif-dot"></div>
+        <div class="notif-content">
+          <div class="notif-title">${esc(n.title)}</div>
+          ${n.body ? `<div class="notif-body">${esc(n.body)}</div>` : ''}
+          <div class="notif-time">${ago}</div>
+        </div>
+        <button class="notif-del" onclick="window._notifDelete(${n.id},this)" title="Elimina">✕</button>
+      </div>`;
+    }).join('');
+  } catch(e) {
+    const listEl = document.getElementById('notif-list');
+    if (listEl) listEl.innerHTML = `<div class="notif-empty">Errore: ${esc(e.message)}</div>`;
+  }
+}
+
+window._notifMarkAllRead = async function() {
+  const token = authToken();
+  if (!token) return;
+  await fetch(`${API_BASE}/notifications/read-all`, { method: 'PATCH', headers: { Authorization: `Bearer ${token}` } }).catch(() => {});
+  document.querySelectorAll('.notif-item.unread').forEach(el => el.classList.replace('unread', 'read'));
+  const badge = document.getElementById('notif-badge');
+  if (badge) badge.style.display = 'none';
+};
+
+window._notifDelete = async function(id, btn) {
+  const token = authToken();
+  if (!token) return;
+  btn.closest('.notif-item')?.remove();
+  await fetch(`${API_BASE}/notifications/${id}`, { method: 'DELETE', headers: { Authorization: `Bearer ${token}` } }).catch(() => {});
+  // Se non ci sono più items, mostra empty state
+  const list = document.getElementById('notif-list');
+  if (list && !list.querySelector('.notif-item')) {
+    list.innerHTML = '<div class="notif-empty">Nessuna notifica</div>';
+  }
+};
+
+function formatTimeAgo(isoStr) {
+  const diff = Math.floor((Date.now() - new Date(isoStr).getTime()) / 1000);
+  if (diff < 60)   return 'adesso';
+  if (diff < 3600) return `${Math.floor(diff/60)} min fa`;
+  if (diff < 86400) return `${Math.floor(diff/3600)} ore fa`;
+  return `${Math.floor(diff/86400)} giorni fa`;
 }
 
 // ── REGION NORMALIZATION ───────────────────────────────────────
@@ -7511,20 +7645,20 @@ async function renderGara(gara_id) {
     overlay.id = 'media-carousel';
     overlay.style.cssText = 'position:fixed;inset:0;background:rgba(0,0,0,.95);z-index:9999;display:flex;flex-direction:column;align-items:center;justify-content:center;padding:16px';
     overlay.innerHTML = `
-      <div style="position:absolute;top:12px;left:50%;transform:translateX(-50%);display:flex;gap:8px">
-        ${user ? `<button id="mgc-buy"   data-photo-src="" style="${btnBase};background:#f59e0b;color:#000" onclick="window._mgRequestPurchase(this)">🛒 Acquista</button>` : ''}
-        ${(user?.role === 'atleta' || user?.role === 'admin') ? `<button id="mgc-share" data-photo-src="" style="${btnBase};background:var(--accent);color:#fff" onclick="window._mgShareToProfile(this)">📌 Condividi sul mio profilo</button>` : ''}
-      </div>
       <div style="position:absolute;top:12px;right:16px;display:flex;align-items:center;gap:14px">
         <span id="mgc-counter" style="color:rgba(255,255,255,.45);font-size:.8rem"></span>
         <button onclick="document.getElementById('media-carousel')?.remove()" style="background:none;border:none;color:#ccc;font-size:1.8rem;cursor:pointer;line-height:1">✕</button>
       </div>
       <div style="width:100%;max-width:960px;display:flex;align-items:center;justify-content:center;gap:8px">
         <button id="mgc-prev" class="mgc-nav-btn">‹</button>
-        <img id="mgc-img" src="" alt="" style="max-height:78vh;max-width:calc(100% - 120px);object-fit:contain;border-radius:4px;display:block"/>
+        <img id="mgc-img" src="" alt="" style="max-height:70vh;max-width:calc(100% - 120px);object-fit:contain;border-radius:4px;display:block"/>
         <button id="mgc-next" class="mgc-nav-btn">›</button>
       </div>
-      <div id="mgc-caption" style="margin-top:10px;font-size:.8rem;color:rgba(255,255,255,.55);text-align:center"></div>`;
+      <div id="mgc-caption" style="margin-top:8px;font-size:.8rem;color:rgba(255,255,255,.55);text-align:center"></div>
+      <div class="mgc-actions" style="margin-top:10px">
+        ${user ? `<button id="mgc-buy"   data-photo-src="" style="${btnBase};background:#f59e0b;color:#000" onclick="window._mgRequestPurchase(this)">🛒 Acquista</button>` : ''}
+        ${(user?.role === 'atleta' || user?.role === 'admin') ? `<button id="mgc-share" data-photo-src="" style="${btnBase};background:var(--accent);color:#fff" onclick="window._mgShareToProfile(this)">📌 Condividi sul mio profilo</button>` : ''}
+      </div>`;
     document.body.appendChild(overlay);
     render();
 
@@ -7579,7 +7713,7 @@ async function renderGara(gara_id) {
       await fetch(`${API_BASE}/media/photo/by-url/share`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json', Authorization: `Bearer ${authToken()}` },
-        body: JSON.stringify({ src: p.src }),
+        body: JSON.stringify({ src: p.src, album_title: p.albumTitle, photographer_name: p.photographer_name }),
       });
       btn.textContent = '✓ Condivisa';
       showToast('✓ Foto aggiunta al tuo profilo atleta!');

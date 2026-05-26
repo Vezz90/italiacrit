@@ -13,7 +13,7 @@
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
   <link href="https://fonts.googleapis.com/css2?family=Inter+Tight:wght@400;600;700;800;900&display=swap" rel="stylesheet" />
   <link rel="stylesheet" href="style.css?v=12" />
-  <link rel="stylesheet" href="design.css?v=83" />
+  <link rel="stylesheet" href="design.css?v=84" />
 
 </head>
 <body>
@@ -52,6 +52,10 @@
   <div class="badge-live" id="badge-live" role="status" aria-live="polite">
     <span class="dot" aria-hidden="true"></span> LIVE
   </div>
+  <button class="notif-bell" id="notif-bell" aria-label="Notifiche" style="display:none" onclick="window.toggleNotifPanel()">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" width="20" height="20" aria-hidden="true"><path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9"/><path d="M13.73 21a2 2 0 0 1-3.46 0"/></svg>
+    <span class="notif-badge" id="notif-badge" style="display:none">0</span>
+  </button>
   <button class="theme-toggle" id="theme-toggle" aria-label="Cambia tema">
     <svg class="theme-icon-sun" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 3v1m0 16v1m9-9h-1M4 9H3m15.364-6.364l-.707.707M6.343 17.657l-.707.707M16.243 17.243l.707.707M7.757 7.757l.707-.707M12 8a4 4 0 100 8 4 4 0 000-8z"/></svg>
     <svg class="theme-icon-moon" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20.354 15.354A9 9 0 018.646 3.646 9.003 9.003 0 0012 21a9.003 9.003 0 008.354-5.646z"/></svg>
@@ -100,6 +104,6 @@
   </span>
 </footer>
 
-<script src="app.js?v=193" defer></script>
+<script src="app.js?v=194" defer></script>
 </body>
 </html>

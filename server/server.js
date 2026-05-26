@@ -8,6 +8,62 @@ const fs             = require('fs');
 const { queries, init, rawQuery } = require('./db');
 
 const app  = express();
+
+// ── Email (nodemailer) ────────────────────────────────────────────────────────
+let _transporter = null;
+(function initMailer() {
+  if (!process.env.SMTP_HOST || !process.env.SMTP_USER || !process.env.SMTP_PASS) {
+    console.log('[email] SMTP non configurato (SMTP_HOST/SMTP_USER/SMTP_PASS mancanti) — email disabilitate');
+    return;
+  }
+  try {
+    const nodemailer = require('nodemailer');
+    _transporter = nodemailer.createTransport({
+      host:   process.env.SMTP_HOST,
+      port:   parseInt(process.env.SMTP_PORT || '587'),
+      secure: process.env.SMTP_PORT === '465',
+      auth:   { user: process.env.SMTP_USER, pass: process.env.SMTP_PASS },
+    });
+    console.log('[email] Nodemailer pronto:', process.env.SMTP_HOST);
+  } catch (e) {
+    console.warn('[email] Errore init nodemailer:', e.message);
+  }
+})();
+
+async function sendEmail({ to, subject, html, text }) {
+  if (!_transporter) return;
+  const from = process.env.SMTP_FROM || `"ItaliacritResultati" <${process.env.SMTP_USER}>`;
+  try {
+    await _transporter.sendMail({ from, to, subject, html, text });
+    console.log('[email] ✓', subject, '→', to);
+  } catch (e) {
+    console.error('[email] ✗', e.message);
+  }
+}
+
+// ── Notification helper ───────────────────────────────────────────────────────
+// Salva nel DB e, se email_to presente, spedisce anche l'email
+async function sendNotification({ user_id, type = 'info', title, body = '', data = {}, email_to, email_subject, email_html }) {
+  if (user_id) {
+    try { await queries.createNotification({ user_id, type, title, body, data }); }
+    catch (e) { console.error('[notify] DB error:', e.message); }
+  }
+  if (email_to && email_subject) {
+    const baseHtml = email_html || `<p>${body.replace(/\n/g,'<br/>')}</p>`;
+    const footer = `
+      <hr style="margin:30px 0;border:none;border-top:1px solid #eee"/>
+      <p style="font-size:11px;color:#999;text-align:center">
+        <a href="https://italiacrit.it/#/profilo" style="color:#e65c00">Vai al tuo profilo ItaliacritResultati</a>
+        &nbsp;·&nbsp; Non affiliato a FCI
+      </p>`;
+    await sendEmail({
+      to: email_to,
+      subject: email_subject,
+      html: `<div style="font-family:sans-serif;max-width:600px;margin:0 auto;padding:20px">${baseHtml}${footer}</div>`,
+      text: body,
+    });
+  }
+}
 const PORT = 8002;
 const JWT_SECRET  = process.env.JWT_SECRET || 'italiacrit-dev-secret-2026';
 const JWT_EXPIRES = '30d';
@@ -1387,10 +1443,42 @@ app.post('/api/media/photo/by-url/request-purchase', requireAuth, async (req, re
     const { src, album_title, photographer_name, message } = req.body;
     if (!src) return res.status(400).json({ error: 'URL foto mancante' });
     const requester = await queries.getUserById(req.user.id);
-    // Log della richiesta — in produzione qui si invierebbe email
-    console.log(`[purchase-req] ${requester.email} vuole acquistare una foto di ${photographer_name} (album: ${album_title}) — msg: ${message || '—'}`);
-    // Cerca il profilo del fotografo per eventuale email futura
-    // Per ora risponde ok (sistema di notifica email da integrare)
+
+    // Cerca il profilo media del fotografo tramite display_name
+    const profiles = await queries.getApprovedMediaProfiles();
+    const profile  = profiles.find(p => p.display_name === photographer_name);
+    let photographerEmail = null;
+    let photographerUserId = null;
+    if (profile?.user_id) {
+      const photographer = await queries.getUserById(profile.user_id);
+      photographerEmail  = photographer?.email || null;
+      photographerUserId = profile.user_id;
+    }
+
+    const requesterLabel = requester.display_name || requester.email;
+    const notifBody = `${requesterLabel} vuole acquistare una tua foto dall'album "${album_title}".\nMessaggio: ${message || '—'}\nContatto: ${requester.email}`;
+
+    await sendNotification({
+      user_id:       photographerUserId,
+      type:          'purchase_request',
+      title:         `🛒 Richiesta acquisto foto`,
+      body:          notifBody,
+      data:          { src, album_title, photographer_name, requester_email: requester.email, requester_name: requesterLabel, message },
+      email_to:      photographerEmail,
+      email_subject: `[ItaliacritResultati] Richiesta acquisto foto — "${album_title}"`,
+      email_html: `
+        <h2 style="color:#e65c00;margin-top:0">🛒 Nuova richiesta di acquisto foto</h2>
+        <p><strong>${requesterLabel}</strong> è interessato/a ad acquistare una tua foto.</p>
+        <table style="border-collapse:collapse;width:100%;margin:16px 0">
+          <tr style="background:#f9f9f9"><td style="padding:8px 12px;color:#666;width:120px">Album</td>
+              <td style="padding:8px 12px"><strong>${album_title}</strong></td></tr>
+          <tr><td style="padding:8px 12px;color:#666">Messaggio</td>
+              <td style="padding:8px 12px">${message || '<em>—</em>'}</td></tr>
+          <tr style="background:#f9f9f9"><td style="padding:8px 12px;color:#666">Email contatto</td>
+              <td style="padding:8px 12px"><a href="mailto:${requester.email}">${requester.email}</a></td></tr>
+        </table>`,
+    });
+
     res.json({ ok: true });
   } catch (e) { res.status(500).json({ error: e.message }); }
 });
@@ -1398,8 +1486,9 @@ app.post('/api/media/photo/by-url/request-purchase', requireAuth, async (req, re
 // Condivisione foto su profilo atleta tramite URL
 app.post('/api/media/photo/by-url/share', requireAuth, async (req, res) => {
   try {
-    const { src } = req.body;
+    const { src, album_title, photographer_name } = req.body;
     if (!src) return res.status(400).json({ error: 'URL foto mancante' });
+
     // Cerca la foto nel DB per url o ext_url
     const row = await rawQuery(
       `SELECT mp.id, mp.album_id FROM media_photos mp WHERE mp.ext_url = $1 OR (mp.filename IS NOT NULL AND $1 LIKE '%' || mp.filename || '%') LIMIT 1`,
@@ -1413,6 +1502,32 @@ app.post('/api/media/photo/by-url/share', requireAuth, async (req, res) => {
         user_id:            req.user.id,
       });
     }
+
+    // Notifica al fotografo (se ha account)
+    if (photographer_name) {
+      const sharer      = await queries.getUserById(req.user.id);
+      const profiles    = await queries.getApprovedMediaProfiles();
+      const profile     = profiles.find(p => p.display_name === photographer_name);
+      if (profile?.user_id) {
+        const photographer    = await queries.getUserById(profile.user_id);
+        const sharerLabel     = sharer.display_name || sharer.email;
+        const albumLabel      = album_title ? `dall'album "${album_title}"` : '';
+        const notifBody       = `${sharerLabel} ha condiviso una tua foto ${albumLabel} sul proprio profilo atleta.`;
+        await sendNotification({
+          user_id:       profile.user_id,
+          type:          'photo_shared',
+          title:         `📌 Foto condivisa sul profilo atleta`,
+          body:          notifBody,
+          data:          { src, album_title, sharer_email: sharer.email, sharer_name: sharerLabel },
+          email_to:      photographer?.email,
+          email_subject: `[ItaliacritResultati] Un atleta ha condiviso una tua foto`,
+          email_html: `
+            <h2 style="color:#2563eb;margin-top:0">📌 Foto condivisa sul profilo atleta</h2>
+            <p><strong>${sharerLabel}</strong> ha condiviso una tua foto ${albumLabel} sul proprio profilo atleta di ItaliacritResultati.</p>`,
+        });
+      }
+    }
+
     res.json({ ok: true });
   } catch (e) { res.status(500).json({ error: e.message }); }
 });
@@ -1442,6 +1557,48 @@ app.post('/api/media/photo/:id/share', requireAuth, async (req, res) => {
       athlete_profile_id: athleteProfile?.id || null,
       user_id:            req.user.id,
     });
+    res.json({ ok: true });
+  } catch (e) { res.status(500).json({ error: e.message }); }
+});
+
+// ── Notifications API ─────────────────────────────────────────────────────────
+
+// Lista notifiche (max 50, più recenti prima)
+app.get('/api/notifications', requireAuth, async (req, res) => {
+  try {
+    const notifications = await queries.getNotificationsForUser(req.user.id, 50);
+    res.json({ notifications });
+  } catch (e) { res.status(500).json({ error: e.message }); }
+});
+
+// Conteggio non lette (usato dal polling frontend)
+app.get('/api/notifications/count', requireAuth, async (req, res) => {
+  try {
+    const row = await queries.countUnreadNotifications(req.user.id);
+    res.json({ count: row?.count || 0 });
+  } catch (e) { res.status(500).json({ error: e.message }); }
+});
+
+// Segna tutte come lette (chiamato all'apertura del pannello)
+app.patch('/api/notifications/read-all', requireAuth, async (req, res) => {
+  try {
+    await queries.markAllNotificationsRead(req.user.id);
+    res.json({ ok: true });
+  } catch (e) { res.status(500).json({ error: e.message }); }
+});
+
+// Segna una come letta
+app.patch('/api/notifications/:id/read', requireAuth, async (req, res) => {
+  try {
+    await queries.markNotificationRead(req.params.id, req.user.id);
+    res.json({ ok: true });
+  } catch (e) { res.status(500).json({ error: e.message }); }
+});
+
+// Elimina una notifica
+app.delete('/api/notifications/:id', requireAuth, async (req, res) => {
+  try {
+    await queries.deleteNotification(req.params.id, req.user.id);
     res.json({ ok: true });
   } catch (e) { res.status(500).json({ error: e.message }); }
 });

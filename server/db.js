@@ -183,6 +183,17 @@ async function migrate() {
       created_at       TIMESTAMPTZ NOT NULL DEFAULT NOW(),
       UNIQUE(media_photo_id, user_id)
     )`,
+    `CREATE TABLE IF NOT EXISTS notifications (
+      id         SERIAL PRIMARY KEY,
+      user_id    INTEGER NOT NULL REFERENCES users(id) ON DELETE CASCADE,
+      type       TEXT NOT NULL DEFAULT 'info',
+      title      TEXT NOT NULL,
+      body       TEXT DEFAULT '',
+      data       JSONB DEFAULT '{}',
+      read       BOOLEAN NOT NULL DEFAULT FALSE,
+      created_at TIMESTAMPTZ NOT NULL DEFAULT NOW()
+    )`,
+    `CREATE INDEX IF NOT EXISTS idx_notifications_user ON notifications(user_id, created_at DESC)`,
   ];
   for (const sql of migrations) {
     try { await run(sql); } catch (e) { console.warn('[migrate]', e.message); }
@@ -519,6 +530,28 @@ const queries = {
       WHERE mas.athlete_profile_id = $1
       ORDER BY mas.created_at DESC
       LIMIT 30`, [athlete_profile_id]),
+
+  // ── Notifications ─────────────────────────────────────────────────────────────
+  createNotification: ({ user_id, type = 'info', title, body = '', data = {} }) =>
+    one(
+      `INSERT INTO notifications (user_id, type, title, body, data) VALUES ($1,$2,$3,$4,$5) RETURNING *`,
+      [user_id, type, title, body, JSON.stringify(data)]
+    ),
+
+  getNotificationsForUser: (user_id, limit = 50) =>
+    all(`SELECT * FROM notifications WHERE user_id=$1 ORDER BY created_at DESC LIMIT $2`, [user_id, limit]),
+
+  countUnreadNotifications: (user_id) =>
+    one(`SELECT COUNT(*)::int AS count FROM notifications WHERE user_id=$1 AND read=false`, [user_id]),
+
+  markNotificationRead: (id, user_id) =>
+    run(`UPDATE notifications SET read=true WHERE id=$1 AND user_id=$2`, [id, user_id]),
+
+  markAllNotificationsRead: (user_id) =>
+    run(`UPDATE notifications SET read=true WHERE user_id=$1`, [user_id]),
+
+  deleteNotification: (id, user_id) =>
+    run(`DELETE FROM notifications WHERE id=$1 AND user_id=$2`, [id, user_id]),
 };
 
 module.exports = { queries, init, rawQuery: (sql, params) => pool.query(sql, params) };
