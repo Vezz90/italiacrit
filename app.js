@@ -4059,6 +4059,20 @@ async function renderAdmin() {
         <div class="admin-nav-item" data-section="video-tutti" onclick="adminNav('video-tutti')">
           <span class="admin-nav-icon">🎥</span> Tutti i video
         </div>
+
+        <div class="admin-nav-group">Archivio Foto</div>
+        <div class="admin-nav-item" data-section="foto-tutti" onclick="adminNav('foto-tutti')">
+          <span class="admin-nav-icon">🖼️</span> Tutte le foto
+        </div>
+
+        <div class="admin-nav-group">Utenti</div>
+        <div class="admin-nav-item" data-section="utenti-lista" onclick="adminNav('utenti-lista')">
+          <span class="admin-nav-icon">👥</span> Lista utenti
+        </div>
+        <div class="admin-nav-item" data-section="utenti-pending" onclick="adminNav('utenti-pending')">
+          <span class="admin-nav-icon">📥</span> Profili in attesa
+          <span class="admin-nav-badge" id="badge-profili-pending"></span>
+        </div>
       </aside>
 
       <!-- ── MAIN CONTENT ── -->
@@ -4114,30 +4128,47 @@ window.adminNav = async function(section) {
             <div class="admin-stat-label">YouTube in coda</div>
             <div class="admin-stat-value" id="ov-yt">—</div>
           </div>
+          <div class="admin-stat-card" onclick="adminNav('utenti-pending')" style="cursor:pointer">
+            <div class="admin-stat-icon">📥</div>
+            <div class="admin-stat-label">Profili in attesa</div>
+            <div class="admin-stat-value" id="ov-profili-pending">—</div>
+          </div>
+          <div class="admin-stat-card" onclick="adminNav('utenti-lista')" style="cursor:pointer">
+            <div class="admin-stat-icon">👥</div>
+            <div class="admin-stat-label">Utenti registrati</div>
+            <div class="admin-stat-value" id="ov-utenti">—</div>
+          </div>
         </div>`;
       // Carica i contatori
       try {
-        const [photos, xpixQ, vidPend, ytQ] = await Promise.all([
+        const [photos, xpixQ, vidPend, ytQ, pendProf, usersD] = await Promise.all([
           apiCall('/admin/race-photos/pending').catch(()=>({photos:[]})),
           apiCall('/admin/xpix/queue').catch(()=>({queue:[]})),
           apiCall('/admin/videos/pending').catch(()=>({videos:[]})),
           apiCall('/admin/yt/queue').catch(()=>({queue:[]})),
+          fetch(`${API_BASE}/admin/pending`, { headers: { Authorization: `Bearer ${authToken()}` } }).then(r=>r.json()).catch(()=>({pending:[]})),
+          fetch(`${API_BASE}/admin/users`,   { headers: { Authorization: `Bearer ${authToken()}` } }).then(r=>r.json()).catch(()=>({users:[]})),
         ]);
         const setPending = (id, n) => { const el = document.getElementById(id); if (el) el.textContent = n; };
-        const fotoPend = (photos.photos||[]).length;
-        const xpixPend = (xpixQ.queue||[]).filter(q=>q.status==='pending').length;
-        const vidPend2 = (vidPend.videos||[]).length;
-        const ytPend   = (ytQ.queue||[]).filter(q=>q.status==='pending').length;
+        const fotoPend    = (photos.photos||[]).length;
+        const xpixPend    = (xpixQ.queue||[]).filter(q=>q.status==='pending').length;
+        const vidPend2    = (vidPend.videos||[]).length;
+        const ytPend      = (ytQ.queue||[]).filter(q=>q.status==='pending').length;
+        const profPend    = (pendProf.pending||[]).length;
+        const utentiCount = (usersD.users||[]).length;
         setPending('ov-foto-pending', fotoPend);
         setPending('ov-xpix', xpixPend);
         setPending('ov-video-pending', vidPend2);
         setPending('ov-yt', ytPend);
+        setPending('ov-profili-pending', profPend);
+        setPending('ov-utenti', utentiCount);
         // Aggiorna badge sidebar
         const setBadge = (id, n) => { const el = document.getElementById(id); if (el) { el.textContent = n > 0 ? n : ''; el.style.display = n > 0 ? '' : 'none'; } };
         setBadge('badge-foto-pending', fotoPend);
         setBadge('badge-xpix', xpixPend);
         setBadge('badge-video-pending', vidPend2);
         setBadge('badge-yt', ytPend);
+        setBadge('badge-profili-pending', profPend);
       } catch(e) { /* ignora */ }
       break;
     }
@@ -4296,6 +4327,230 @@ window.adminNav = async function(section) {
         </div>
         <div id="admin-videos-all"><div class="admin-loading">Caricamento…</div></div>`;
       loadAdminAllVideos();
+      break;
+    }
+
+    case 'foto-tutti': {
+      main.innerHTML = `
+        <div class="admin-page-header">
+          <h1 class="admin-page-title">🖼️ Tutte le foto</h1>
+          <p class="admin-page-sub">Archivio completo foto approvate — caricate dagli utenti, xpix.it e italiaciclismo.net.</p>
+        </div>
+        <div style="display:flex;gap:8px;flex-wrap:wrap;margin-bottom:20px">
+          <button id="foto-tutti-tab-up"   onclick="adminFotoTuttiTab('uploaded')"   style="padding:7px 16px;border-radius:6px;border:1px solid var(--accent);background:var(--accent);color:#fff;font-weight:700;cursor:pointer;font-size:.82rem">📤 Caricate</button>
+          <button id="foto-tutti-tab-xpix" onclick="adminFotoTuttiTab('xpix')"      style="padding:7px 16px;border-radius:6px;border:1px solid var(--border);background:transparent;color:var(--text-secondary);cursor:pointer;font-size:.82rem">📸 xpix.it</button>
+          <button id="foto-tutti-tab-ic"   onclick="adminFotoTuttiTab('ic')"        style="padding:7px 16px;border-radius:6px;border:1px solid var(--border);background:transparent;color:var(--text-secondary);cursor:pointer;font-size:.82rem">🌐 italiaciclismo</button>
+        </div>
+        <div id="foto-tutti-body"><div class="admin-loading">Caricamento…</div></div>`;
+      window._adminFotoTuttiCache = {};
+      window.adminFotoTuttiTab = async (tab) => {
+        ['uploaded','xpix','ic'].forEach(t => {
+          const btn = document.getElementById('foto-tutti-tab-' + t);
+          if (!btn) return;
+          if (t === tab) { btn.style.background = 'var(--accent)'; btn.style.color = '#fff'; btn.style.borderColor = 'var(--accent)'; btn.style.fontWeight = '700'; }
+          else           { btn.style.background = 'transparent'; btn.style.color = 'var(--text-secondary)'; btn.style.borderColor = 'var(--border)'; btn.style.fontWeight = '400'; }
+        });
+        const body = document.getElementById('foto-tutti-body');
+        if (!body) return;
+        if (window._adminFotoTuttiCache[tab]) { body.innerHTML = window._adminFotoTuttiCache[tab]; return; }
+        body.innerHTML = `<div class="admin-loading">Caricamento…</div>`;
+        try {
+          const token = authToken();
+          let photos = [];
+          if (tab === 'uploaded') {
+            const d = await fetch(`${API_BASE}/race-photos`, { headers: { Authorization: `Bearer ${token}` } }).then(r => r.json());
+            photos = (d.photos || []).map(p => ({
+              src: `${PHOTOS_BASE}/photos/${esc(p.filename)}`,
+              gara_id: p.gara_id, credit: p.photographer || p.display_name || '',
+              caption: p.caption || '', source: 'uploaded', id: p.id,
+              date: (p.created_at||'').slice(0,10),
+            }));
+          } else if (tab === 'xpix') {
+            const d = await fetch(`${API_BASE}/xpix-photos`).then(r => r.json());
+            photos = (d.photos || []).map(p => ({
+              src: p.url, gara_id: p.gara_id, credit: 'xpix.it',
+              caption: p.album_name || '', source: 'xpix', id: null,
+              date: (p.approved_at||'').slice(0,10),
+            }));
+          } else {
+            const d = await fetch(`${API_BASE}/ic-photos`).then(r => r.json());
+            photos = (d.photos || []).map(p => ({
+              src: p.url, gara_id: p.gara_id, credit: 'italiaciclismo.net',
+              caption: '', source: 'ic', id: null,
+              date: (p.approved_at||'').slice(0,10),
+            }));
+          }
+          if (!photos.length) {
+            const html = `<div style="color:var(--text-muted);padding:24px 0">Nessuna foto in questa categoria.</div>`;
+            window._adminFotoTuttiCache[tab] = html;
+            body.innerHTML = html;
+            return;
+          }
+          const html = `
+            <div style="margin-bottom:10px;font-size:.8rem;color:var(--text-muted)">${photos.length} foto</div>
+            <div class="admin-photo-grid">${photos.map(p => `
+              <div class="admin-photo-card">
+                <img src="${p.src}" alt="${esc(p.caption||'foto')}" onclick="window.adminOpenLightbox('${p.src}')" style="cursor:zoom-in" loading="lazy" />
+                <div class="admin-photo-card-body">
+                  <div class="admin-photo-meta">
+                    <a href="#/gara/${encodeURIComponent(p.gara_id)}" style="color:var(--accent);font-weight:600;font-size:0.78rem">${esc(p.gara_id)}</a>
+                    <span style="font-size:.75rem;color:var(--text-muted)">${p.date}</span>
+                    ${p.credit ? `<span style="font-size:.78rem">📷 ${esc(p.credit)}</span>` : ''}
+                    ${p.caption ? `<span style="font-size:.75rem;font-style:italic;color:var(--text-muted)">${esc(p.caption)}</span>` : ''}
+                  </div>
+                  ${p.source === 'uploaded' && p.id ? `
+                  <div class="admin-photo-actions">
+                    <button class="btn-approve" onclick="window.adminPanelEditPhoto(${p.id},'${esc(p.caption||'')}','${esc(p.credit||'')}')">✏️</button>
+                    <button class="btn-reject"  onclick="window.adminPanelDeletePhoto(${p.id})">🗑</button>
+                  </div>` : ''}
+                </div>
+              </div>
+            `).join('')}</div>`;
+          window._adminFotoTuttiCache[tab] = html;
+          body.innerHTML = html;
+        } catch(e) {
+          body.innerHTML = `<div style="color:var(--red-hot);padding:20px 0">Errore: ${esc(e.message)}</div>`;
+        }
+      };
+      window.adminFotoTuttiTab('uploaded');
+      break;
+    }
+
+    case 'utenti-lista': {
+      main.innerHTML = `
+        <div class="admin-page-header">
+          <h1 class="admin-page-title">👥 Lista utenti</h1>
+          <p class="admin-page-sub">Tutti gli account registrati sulla piattaforma.</p>
+        </div>
+        <div style="display:flex;gap:10px;margin-bottom:14px;align-items:center">
+          <input type="search" id="utenti-search" placeholder="Cerca per email o nome…" oninput="window.adminFilterUtenti(this.value)"
+            style="padding:9px 12px;border:1px solid var(--border);border-radius:6px;background:var(--bg-card);color:var(--text-primary);font-size:.875rem;flex:1;min-width:180px" />
+        </div>
+        <div id="admin-utenti-body"><div class="admin-loading">Caricamento…</div></div>`;
+      (async () => {
+        const body = document.getElementById('admin-utenti-body');
+        if (!body) return;
+        try {
+          const d = await fetch(`${API_BASE}/admin/users`, { headers: { Authorization: `Bearer ${authToken()}` } }).then(r => r.json());
+          const users = d.users || [];
+          window._adminUtentiAll = users;
+          window.adminFilterUtenti = (q) => {
+            const filtered = q ? users.filter(u => (u.email||'').toLowerCase().includes(q.toLowerCase()) || (u.display_name||'').toLowerCase().includes(q.toLowerCase())) : users;
+            window._adminRenderUtenti(filtered);
+          };
+          window._adminRenderUtenti = (list) => {
+            const b = document.getElementById('admin-utenti-body');
+            if (!b) return;
+            if (!list.length) { b.innerHTML = `<div style="color:var(--text-muted);padding:24px 0">Nessun utente trovato.</div>`; return; }
+            b.innerHTML = `
+              <div style="font-size:.8rem;color:var(--text-muted);margin-bottom:8px">${list.length} utenti</div>
+              <div style="overflow-x:auto">
+              <table style="width:100%;border-collapse:collapse;font-size:.83rem">
+                <thead>
+                  <tr style="border-bottom:2px solid var(--border)">
+                    <th style="text-align:left;padding:8px 10px;color:var(--text-muted);font-weight:600">Email</th>
+                    <th style="text-align:left;padding:8px 10px;color:var(--text-muted);font-weight:600">Nome</th>
+                    <th style="text-align:left;padding:8px 10px;color:var(--text-muted);font-weight:600">Ruolo</th>
+                    <th style="text-align:left;padding:8px 10px;color:var(--text-muted);font-weight:600">Registrato</th>
+                    <th style="text-align:left;padding:8px 10px;color:var(--text-muted);font-weight:600">Ultimo accesso</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  ${list.map(u => `
+                    <tr style="border-bottom:1px solid var(--border);transition:background .15s" onmouseover="this.style.background='var(--bg-elevated)'" onmouseout="this.style.background=''">
+                      <td style="padding:9px 10px">${esc(u.email||'')}</td>
+                      <td style="padding:9px 10px;font-weight:600">${esc(u.display_name||'—')}</td>
+                      <td style="padding:9px 10px">
+                        <span style="padding:2px 8px;border-radius:12px;font-size:.75rem;font-weight:700;
+                          background:${u.role==='admin'?'var(--accent)':u.role==='user'?'var(--bg-elevated)':'var(--bg-elevated)'};
+                          color:${u.role==='admin'?'#fff':'var(--text-secondary)'}">
+                          ${esc(u.role||'user')}
+                        </span>
+                      </td>
+                      <td style="padding:9px 10px;color:var(--text-muted)">${(u.created_at||'').slice(0,10)}</td>
+                      <td style="padding:9px 10px;color:var(--text-muted)">${(u.last_login||'—').toString().slice(0,10)}</td>
+                    </tr>
+                  `).join('')}
+                </tbody>
+              </table>
+              </div>`;
+          };
+          window._adminRenderUtenti(users);
+        } catch(e) {
+          if (body) body.innerHTML = `<div style="color:var(--red-hot);padding:20px 0">Errore: ${esc(e.message)}</div>`;
+        }
+      })();
+      break;
+    }
+
+    case 'utenti-pending': {
+      main.innerHTML = `
+        <div class="admin-page-header">
+          <h1 class="admin-page-title">📥 Profili in attesa</h1>
+          <p class="admin-page-sub">Richieste di collegamento atleta, team o familiare in attesa di approvazione.</p>
+        </div>
+        <div id="admin-pending-body"><div class="admin-loading">Caricamento…</div></div>`;
+      (async () => {
+        const body = document.getElementById('admin-pending-body');
+        if (!body) return;
+        const loadPending = async () => {
+          body.innerHTML = `<div class="admin-loading">Caricamento…</div>`;
+          try {
+            const d = await fetch(`${API_BASE}/admin/pending`, { headers: { Authorization: `Bearer ${authToken()}` } }).then(r => r.json());
+            const pending = d.pending || [];
+            const badge = document.getElementById('badge-profili-pending');
+            if (badge) badge.textContent = pending.length || '';
+            if (!pending.length) {
+              body.innerHTML = `<div style="color:var(--text-muted);padding:24px 0">✅ Nessun profilo in attesa di approvazione.</div>`;
+              return;
+            }
+            const typeLabel = { athlete: '🏅 Atleta', team: '🚴 Team', family: '👨‍👩‍👦 Familiare' };
+            body.innerHTML = `
+              <div style="font-size:.8rem;color:var(--text-muted);margin-bottom:14px">${pending.length} richiesta${pending.length !== 1 ? 'e' : ''} in attesa</div>
+              <div style="display:flex;flex-direction:column;gap:12px">
+              ${pending.map(p => `
+                <div id="pending-card-${p.type}-${p.id}" style="background:var(--bg-card);border:1px solid var(--border);border-radius:10px;padding:16px 20px;display:flex;align-items:center;gap:16px;flex-wrap:wrap">
+                  <div style="flex:1;min-width:200px">
+                    <div style="font-weight:700;font-size:.9rem;margin-bottom:4px">
+                      <span style="padding:2px 8px;border-radius:10px;font-size:.72rem;font-weight:700;background:var(--bg-elevated);color:var(--text-muted);margin-right:8px">${typeLabel[p.type]||p.type}</span>
+                      ${esc(p.name||'—')}
+                    </div>
+                    <div style="font-size:.78rem;color:var(--text-muted)">
+                      <span>${esc(p.email||'')}</span>
+                      ${p.fci_code ? `<span style="margin-left:10px">FCI: ${esc(p.fci_code)}</span>` : ''}
+                      ${p.atleta_id ? `<span style="margin-left:10px">→ atleta #${esc(String(p.atleta_id))}</span>` : ''}
+                      <span style="margin-left:10px">${(p.created_at||'').slice(0,10)}</span>
+                    </div>
+                  </div>
+                  <div style="display:flex;gap:8px">
+                    <button class="btn-approve" onclick="window.adminPendingAction('${p.type}',${p.id},'approve')" style="padding:7px 16px;font-size:.82rem">✓ Approva</button>
+                    <button class="btn-reject"  onclick="window.adminPendingAction('${p.type}',${p.id},'reject')"  style="padding:7px 14px;font-size:.82rem">✗ Rifiuta</button>
+                  </div>
+                </div>
+              `).join('')}
+              </div>`;
+          } catch(e) {
+            body.innerHTML = `<div style="color:var(--red-hot);padding:20px 0">Errore: ${esc(e.message)}</div>`;
+          }
+        };
+        window.adminPendingAction = async (type, id, action) => {
+          const card = document.getElementById(`pending-card-${type}-${id}`);
+          if (card) { card.style.opacity = '.4'; card.style.pointerEvents = 'none'; }
+          try {
+            const res = await fetch(`${API_BASE}/admin/${action}`, {
+              method: 'POST',
+              headers: { 'Content-Type': 'application/json', Authorization: `Bearer ${authToken()}` },
+              body: JSON.stringify({ type, id }),
+            });
+            if (!res.ok) throw new Error((await res.json()).error || 'Errore');
+            await loadPending();
+          } catch(e) {
+            if (card) { card.style.opacity = ''; card.style.pointerEvents = ''; }
+            alert('Errore: ' + e.message);
+          }
+        };
+        await loadPending();
+      })();
       break;
     }
   }
