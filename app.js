@@ -4005,6 +4005,8 @@ async function updateRankTable() {
 }
 
 // ── ADMIN DASHBOARD ──────────────────────────────────────────
+let _adminSection = 'overview';
+
 async function renderAdmin() {
   if (!globalData) return;
   const user = authUser();
@@ -4017,198 +4019,286 @@ async function renderAdmin() {
     return;
   }
 
-  // Carichiamo gli override salvati
-  let overrides, resultsRaw;
-  try {
-    overrides = await loadJson('data/user_overrides.json') || {};
-    resultsRaw = globalData.resultsRaw;
-  } catch(e) {
-    setPage(`<div style="padding:40px;color:var(--red-hot)">Errore caricamento admin: ${esc(e.message)}</div>`);
-    return;
-  }
-
-  // Raggruppa per GARA EVENTO (Nome + Data), ignorando la categoria
-  const raceMap = {};
-  resultsRaw.forEach(r => {
-    const eventId = slug(r.nome_gara) + "_" + r.data;
-    if (!raceMap[eventId]) {
-      const ov = overrides[eventId] || {};
-      raceMap[eventId] = { 
-        id: eventId, // ID EVENTO (Usato per l'override)
-        nome: r.nome_gara, 
-        data: r.data, 
-        mult: ov.mult || r.moltiplicatore, 
-        tipo: ov.tipo || r.tipo,
-        cats: new Set(),
-        pos_base: r.posizione
-      };
-    }
-    raceMap[eventId].cats.add(r.categoria);
-  });
-  
-  const races = Object.values(raceMap).sort((a,b) => (b.data||'').localeCompare(a.data||''));
-
   setPage(`
-    <h1 style="font-family:var(--font-display);font-size:var(--size-h1);margin-bottom:8px">ADMIN DASHBOARD</h1>
+    <div class="admin-shell">
+      <!-- ── SIDEBAR ── -->
+      <aside class="admin-sidebar">
+        <div class="admin-sidebar-title">GESTIONALE</div>
 
-    <div style="margin-bottom:32px">
-      <button class="btn-action" onclick="triggerSync()" id="btn-sync" style="background:var(--accent); color:white; border:none">
-        🔄 SINCRONIZZA & RICALCOLA
-      </button>
-    </div>
-
-    <div style="margin-top:0">
-      <h2 style="font-family:var(--font-display);font-size:1.2rem;margin-bottom:16px;border-bottom:2px solid var(--accent);padding-bottom:8px">
-        📷 FOTO IN ATTESA DI APPROVAZIONE
-      </h2>
-      <div id="admin-photos-pending">
-        <div style="color:var(--text-muted);padding:20px 0">Caricamento...</div>
-      </div>
-    </div>
-
-    <div style="margin-top:32px">
-      <h2 style="font-family:var(--font-display);font-size:1.2rem;margin-bottom:16px;border-bottom:2px solid var(--accent);padding-bottom:8px">
-        🎬 VIDEO IN ATTESA DI APPROVAZIONE
-      </h2>
-      <div id="admin-videos-pending">
-        <div style="color:var(--text-muted);padding:20px 0">Caricamento...</div>
-      </div>
-    </div>
-
-    <!-- ═══════════════════════════════════════════════════════ -->
-    <!-- XPIX AUTO-FOTO                                         -->
-    <!-- ═══════════════════════════════════════════════════════ -->
-    <div style="margin-top:40px">
-      <h2 style="font-family:var(--font-display);font-size:1.2rem;margin-bottom:4px;border-bottom:2px solid #0ea5e9;padding-bottom:8px;display:flex;align-items:center;gap:8px">
-        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#0ea5e9" stroke-width="2"><rect x="3" y="3" width="18" height="18" rx="2"/><circle cx="8.5" cy="8.5" r="1.5"/><polyline points="21 15 16 10 5 21"/></svg>
-        XPIX AUTO-FOTO
-      </h2>
-      <p style="font-size:.8rem;color:var(--text-muted);margin:0 0 12px">
-        Scarica automaticamente le foto watermarked da xpix.it e abbinale alle gare. Clicca Sync per aggiornare.
-      </p>
-      <div style="display:flex;gap:10px;flex-wrap:wrap;align-items:center;margin-bottom:16px">
-        <button onclick="window.xpixSync()" id="xpix-sync-btn"
-          style="background:#0ea5e9;color:#fff;border:none;padding:9px 20px;border-radius:6px;font-weight:700;cursor:pointer;font-size:.875rem">
-          🔄 Sincronizza Xpix
-        </button>
-        <span id="xpix-sync-status" style="font-size:.8rem;color:var(--text-muted)"></span>
-      </div>
-      <div id="xpix-queue-container">
-        <div style="color:var(--text-muted);font-size:.85rem">Premi "Sincronizza Xpix" per scaricare le foto.</div>
-      </div>
-    </div>
-
-    <!-- ═══════════════════════════════════════════════════════ -->
-    <!-- ITALIACICLISMO AUTO-FOTO                               -->
-    <!-- ═══════════════════════════════════════════════════════ -->
-    <div style="margin-top:40px">
-      <h2 style="font-family:var(--font-display);font-size:1.2rem;margin-bottom:4px;border-bottom:2px solid #8b5cf6;padding-bottom:8px;display:flex;align-items:center;gap:8px">
-        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#8b5cf6" stroke-width="2"><rect x="3" y="3" width="18" height="18" rx="2"/><circle cx="8.5" cy="8.5" r="1.5"/><polyline points="21 15 16 10 5 21"/></svg>
-        ITALIACICLISMO.NET AUTO-FOTO
-      </h2>
-      <p style="font-size:.8rem;color:var(--text-muted);margin:0 0 12px">
-        Scarica automaticamente le foto da italiaciclismo.net (HTTP) e abbinale alle gare.
-      </p>
-      <div style="display:flex;gap:10px;flex-wrap:wrap;align-items:center;margin-bottom:16px">
-        <button onclick="window.icSync()" id="ic-sync-btn"
-          style="background:#8b5cf6;color:#fff;border:none;padding:9px 20px;border-radius:6px;font-weight:700;cursor:pointer;font-size:.875rem">
-          🔄 Sincronizza ItaliaCiclismo
-        </button>
-        <span id="ic-sync-status" style="font-size:.8rem;color:var(--text-muted)"></span>
-      </div>
-      <div id="ic-queue-container">
-        <div style="color:var(--text-muted);font-size:.85rem">Premi "Sincronizza ItaliaCiclismo" per scaricare le foto.</div>
-      </div>
-    </div>
-
-    <!-- ═══════════════════════════════════════════════════════ -->
-    <!-- YOUTUBE AUTO-SYNC                                       -->
-    <!-- ═══════════════════════════════════════════════════════ -->
-    <div style="margin-top:40px">
-      <h2 style="font-family:var(--font-display);font-size:1.2rem;margin-bottom:4px;border-bottom:2px solid #ef4444;padding-bottom:8px;display:flex;align-items:center;gap:8px">
-        <svg width="18" height="18" viewBox="0 0 24 24" fill="#ef4444"><path d="M23.5 6.2s-.3-1.8-1-2.6c-1-.9-2-.9-2.5-1C17.1 2.4 12 2.4 12 2.4s-5.1 0-8 .2c-.5.1-1.5.1-2.5 1-.7.8-1 2.6-1 2.6S.2 8.2.2 10.2v1.8c0 2 .3 4 .3 4s.3 1.8 1 2.6c1 .9 2.2.9 2.8 1 2 .2 8.7.2 8.7.2s5.1 0 8-.2c.5-.1 1.5-.1 2.5-1 .7-.8 1-2.6 1-2.6s.3-2 .3-4v-1.8c0-2-.3-4-.3-4zM9.7 15.1V8.6l6.7 3.3-6.7 3.2z"/></svg>
-        YOUTUBE AUTO-SYNC
-      </h2>
-      <p style="font-size:.8rem;color:var(--text-muted);margin:0 0 12px">
-        Scarica automaticamente i video dai canali YouTube configurati e abbinali alle gare. Clicca Sync per aggiornare.
-      </p>
-
-      <!-- Controlli sync -->
-      <div style="display:flex;gap:10px;flex-wrap:wrap;align-items:center;margin-bottom:16px">
-        <button onclick="window.ytSync()" id="yt-sync-btn"
-          style="background:#ef4444;color:#fff;border:none;padding:9px 20px;border-radius:6px;font-weight:700;cursor:pointer;font-size:.875rem">
-          🔄 Sincronizza Canali
-        </button>
-        <button onclick="window.ytShowChannels()" id="yt-channels-btn"
-          style="background:var(--bg-card);border:1px solid var(--border);color:var(--text-primary);padding:9px 16px;border-radius:6px;cursor:pointer;font-size:.875rem">
-          ⚙️ Gestisci Canali
-        </button>
-        <span id="yt-sync-status" style="font-size:.8rem;color:var(--text-muted)"></span>
-      </div>
-
-      <!-- Channel manager (nascosto) -->
-      <div id="yt-channels-panel" style="display:none;background:var(--bg-card);border:1px solid var(--border);border-radius:8px;padding:16px;margin-bottom:16px">
-        <div style="font-weight:700;font-size:.875rem;margin-bottom:10px">Canali YouTube configurati</div>
-        <div id="yt-channels-list"></div>
-        <div style="margin-top:12px;display:flex;gap:8px;flex-wrap:wrap">
-          <button onclick="window.ytAddChannel()"
-            style="background:var(--accent);color:#fff;border:none;padding:6px 14px;border-radius:5px;cursor:pointer;font-size:.8rem">+ Aggiungi canale</button>
-          <button onclick="window.ytSaveChannels()"
-            style="background:#16a34a;color:#fff;border:none;padding:6px 14px;border-radius:5px;cursor:pointer;font-size:.8rem">💾 Salva</button>
+        <div class="admin-nav-group">Generale</div>
+        <div class="admin-nav-item" data-section="overview" onclick="adminNav('overview')">
+          <span class="admin-nav-icon">📊</span> Dashboard
         </div>
-      </div>
-
-      <!-- Coda matching -->
-      <div id="yt-queue-container">
-        <div style="color:var(--text-muted);font-size:.85rem">Premi "Sincronizza Canali" per scaricare i video.</div>
-      </div>
-    </div>
-
-    <div style="margin-top:40px">
-      <h2 style="font-family:var(--font-display);font-size:1.2rem;margin-bottom:8px;border-bottom:2px solid var(--accent);padding-bottom:8px">
-        🎥 GESTIONE VIDEO APPROVATI
-      </h2>
-      <div style="display:flex;gap:10px;flex-wrap:wrap;margin-bottom:16px;align-items:center">
-        <button class="btn-action" onclick="window.adminShowAddVideo()" style="background:var(--accent);color:white;border:none;padding:8px 18px;border-radius:6px;font-size:.85rem">+ Aggiungi video</button>
-        <input type="search" id="admin-video-search" placeholder="Filtra per nome gara…" oninput="window.adminFilterVideos(this.value)"
-          style="padding:8px 12px;border:1px solid var(--border);border-radius:6px;background:var(--bg-card);color:var(--text-primary);font-size:.85rem;flex:1;min-width:180px" />
-      </div>
-      <div id="admin-add-video-form" style="display:none;background:var(--bg-card);border:1px solid var(--border);border-radius:8px;padding:16px;margin-bottom:16px">
-        <div style="font-weight:700;margin-bottom:12px;font-size:.9rem">Aggiungi video manualmente</div>
-        <div style="display:flex;flex-direction:column;gap:10px">
-          <div>
-            <label style="font-size:.8rem;color:var(--text-muted);display:block;margin-bottom:4px">Cerca gara (id calendario)</label>
-            <input type="search" id="avf-race-search" placeholder="Digita nome gara…" oninput="window.adminSearchCalRace(this.value)"
-              style="width:100%;padding:8px;border:1px solid var(--border);border-radius:6px;background:var(--bg-input,var(--bg-card));color:var(--text-primary);font-size:.85rem;box-sizing:border-box" />
-            <div id="avf-race-results" style="display:none;background:var(--bg-card);border:1px solid var(--border);border-radius:6px;max-height:180px;overflow-y:auto;margin-top:4px"></div>
-            <div id="avf-race-selected" style="font-size:.8rem;color:var(--accent);margin-top:4px;font-weight:600"></div>
-          </div>
-          <input type="url" id="avf-url" placeholder="URL YouTube (https://www.youtube.com/watch?v=...)"
-            oninput="window.adminUrlOembed(this.value)"
-            style="padding:8px;border:1px solid var(--border);border-radius:6px;background:var(--bg-input,var(--bg-card));color:var(--text-primary);font-size:.85rem" />
-          <input type="text" id="avf-title" placeholder="Titolo — compilato automaticamente dall'URL"
-            style="padding:8px;border:1px solid var(--border);border-radius:6px;background:var(--bg-input,var(--bg-card));color:var(--text-primary);font-size:.85rem" />
-          <input type="text" id="avf-channel" placeholder="Autore / Canale — compilato automaticamente dall'URL"
-            style="padding:8px;border:1px solid var(--border);border-radius:6px;background:var(--bg-input,var(--bg-card));color:var(--text-primary);font-size:.85rem" />
-          <div style="display:flex;gap:8px">
-            <button onclick="window.adminSubmitAddVideo()" style="background:var(--accent);color:white;border:none;padding:8px 20px;border-radius:6px;font-weight:600;cursor:pointer">Aggiungi</button>
-            <button onclick="window.adminShowAddVideo(false)" style="background:transparent;color:var(--text-muted);border:1px solid var(--border);padding:8px 16px;border-radius:6px;cursor:pointer">Annulla</button>
-          </div>
+        <div class="admin-nav-item" data-section="sync" onclick="adminNav('sync')">
+          <span class="admin-nav-icon">🔄</span> Sincronizza dati
         </div>
-      </div>
-      <div id="admin-videos-all">
-        <div style="color:var(--text-muted);padding:20px 0">Caricamento...</div>
-      </div>
-    </div>
 
+        <div class="admin-nav-group">Foto</div>
+        <div class="admin-nav-item" data-section="foto-pending" onclick="adminNav('foto-pending')">
+          <span class="admin-nav-icon">📥</span> In attesa
+          <span class="admin-nav-badge" id="badge-foto-pending"></span>
+        </div>
+        <div class="admin-nav-item" data-section="foto-xpix" onclick="adminNav('foto-xpix')">
+          <span class="admin-nav-icon" style="color:#0ea5e9">◈</span> xpix Auto-Sync
+          <span class="admin-nav-badge" id="badge-xpix"></span>
+        </div>
+        <div class="admin-nav-item" data-section="foto-ic" onclick="adminNav('foto-ic')">
+          <span class="admin-nav-icon" style="color:#8b5cf6">◈</span> ItaliaCiclismo
+          <span class="admin-nav-badge" id="badge-ic"></span>
+        </div>
+
+        <div class="admin-nav-group">Video</div>
+        <div class="admin-nav-item" data-section="video-pending" onclick="adminNav('video-pending')">
+          <span class="admin-nav-icon">📥</span> In attesa
+          <span class="admin-nav-badge" id="badge-video-pending"></span>
+        </div>
+        <div class="admin-nav-item" data-section="video-yt" onclick="adminNav('video-yt')">
+          <span class="admin-nav-icon" style="color:#ef4444">▶</span> YouTube Auto-Sync
+          <span class="admin-nav-badge" id="badge-yt"></span>
+        </div>
+        <div class="admin-nav-item" data-section="video-tutti" onclick="adminNav('video-tutti')">
+          <span class="admin-nav-icon">🎥</span> Tutti i video
+        </div>
+      </aside>
+
+      <!-- ── MAIN CONTENT ── -->
+      <main class="admin-main" id="admin-main">
+        <div class="admin-loading">Caricamento…</div>
+      </main>
+    </div>
   `);
 
-  loadPendingRacePhotos();
-  loadAdminPendingVideos();
-  loadAdminAllVideos();
-  loadXpixQueue();
-  loadICQueue();
-  loadYTQueue();
+  // Carica la sezione di default
+  adminNav(_adminSection);
+}
+
+window.adminNav = async function(section) {
+  _adminSection = section;
+
+  // Aggiorna active nella sidebar
+  document.querySelectorAll('.admin-nav-item').forEach(el => {
+    el.classList.toggle('active', el.dataset.section === section);
+  });
+
+  const main = document.getElementById('admin-main');
+  if (!main) return;
+  main.innerHTML = '<div class="admin-loading">Caricamento…</div>';
+
+  switch (section) {
+
+    // ── OVERVIEW ──────────────────────────────────────────────
+    case 'overview': {
+      main.innerHTML = `
+        <div class="admin-page-header">
+          <h1 class="admin-page-title">📊 Dashboard</h1>
+          <p class="admin-page-sub">Benvenuto nel pannello di gestione ItaliacritResultati.</p>
+        </div>
+        <div class="admin-overview-grid">
+          <div class="admin-stat-card" onclick="adminNav('foto-pending')" style="cursor:pointer">
+            <div class="admin-stat-icon">📷</div>
+            <div class="admin-stat-label">Foto in attesa</div>
+            <div class="admin-stat-value" id="ov-foto-pending">—</div>
+          </div>
+          <div class="admin-stat-card" onclick="adminNav('foto-xpix')" style="cursor:pointer">
+            <div class="admin-stat-icon" style="color:#0ea5e9">◈</div>
+            <div class="admin-stat-label">xpix in coda</div>
+            <div class="admin-stat-value" id="ov-xpix">—</div>
+          </div>
+          <div class="admin-stat-card" onclick="adminNav('video-pending')" style="cursor:pointer">
+            <div class="admin-stat-icon">🎬</div>
+            <div class="admin-stat-label">Video in attesa</div>
+            <div class="admin-stat-value" id="ov-video-pending">—</div>
+          </div>
+          <div class="admin-stat-card" onclick="adminNav('video-yt')" style="cursor:pointer">
+            <div class="admin-stat-icon" style="color:#ef4444">▶</div>
+            <div class="admin-stat-label">YouTube in coda</div>
+            <div class="admin-stat-value" id="ov-yt">—</div>
+          </div>
+        </div>`;
+      // Carica i contatori
+      try {
+        const [photos, xpixQ, vidPend, ytQ] = await Promise.all([
+          apiCall('/admin/race-photos/pending').catch(()=>({photos:[]})),
+          apiCall('/admin/xpix/queue').catch(()=>({queue:[]})),
+          apiCall('/admin/videos/pending').catch(()=>({videos:[]})),
+          apiCall('/admin/yt/queue').catch(()=>({queue:[]})),
+        ]);
+        const setPending = (id, n) => { const el = document.getElementById(id); if (el) el.textContent = n; };
+        const fotoPend = (photos.photos||[]).length;
+        const xpixPend = (xpixQ.queue||[]).filter(q=>q.status==='pending').length;
+        const vidPend2 = (vidPend.videos||[]).length;
+        const ytPend   = (ytQ.queue||[]).filter(q=>q.status==='pending').length;
+        setPending('ov-foto-pending', fotoPend);
+        setPending('ov-xpix', xpixPend);
+        setPending('ov-video-pending', vidPend2);
+        setPending('ov-yt', ytPend);
+        // Aggiorna badge sidebar
+        const setBadge = (id, n) => { const el = document.getElementById(id); if (el) { el.textContent = n > 0 ? n : ''; el.style.display = n > 0 ? '' : 'none'; } };
+        setBadge('badge-foto-pending', fotoPend);
+        setBadge('badge-xpix', xpixPend);
+        setBadge('badge-video-pending', vidPend2);
+        setBadge('badge-yt', ytPend);
+      } catch(e) { /* ignora */ }
+      break;
+    }
+
+    // ── SYNC ──────────────────────────────────────────────────
+    case 'sync': {
+      main.innerHTML = `
+        <div class="admin-page-header">
+          <h1 class="admin-page-title">🔄 Sincronizza dati</h1>
+          <p class="admin-page-sub">Ricalcola classifiche, punti e aggiorna i dati dal CSV.</p>
+        </div>
+        <div class="admin-action-card">
+          <div style="font-size:.9rem;color:var(--text-secondary);margin-bottom:16px">
+            Avvia la sincronizzazione completa: scarica il CSV FCI, ricalcola i punti e aggiorna tutte le classifiche.
+          </div>
+          <button class="btn-action" onclick="triggerSync()" id="btn-sync" style="background:var(--accent);color:white;border:none;font-size:1rem;padding:12px 28px">
+            🔄 SINCRONIZZA &amp; RICALCOLA
+          </button>
+          <div id="sync-status-msg" style="margin-top:12px;font-size:.85rem;color:var(--text-muted)"></div>
+        </div>`;
+      break;
+    }
+
+    // ── FOTO IN ATTESA ────────────────────────────────────────
+    case 'foto-pending': {
+      main.innerHTML = `
+        <div class="admin-page-header">
+          <h1 class="admin-page-title">📥 Foto in attesa di approvazione</h1>
+          <p class="admin-page-sub">Foto caricate dagli utenti — approva o rifiuta.</p>
+        </div>
+        <div id="admin-photos-pending"><div class="admin-loading">Caricamento…</div></div>`;
+      loadPendingRacePhotos();
+      break;
+    }
+
+    // ── XPIX ─────────────────────────────────────────────────
+    case 'foto-xpix': {
+      main.innerHTML = `
+        <div class="admin-page-header">
+          <h1 class="admin-page-title" style="color:#0ea5e9">◈ xpix Auto-Sync</h1>
+          <p class="admin-page-sub">Foto watermarked da xpix.it — sincronizza, seleziona e pubblica.</p>
+        </div>
+        <div style="display:flex;gap:10px;align-items:center;margin-bottom:20px;flex-wrap:wrap">
+          <button onclick="window.xpixSync()" id="xpix-sync-btn"
+            style="background:#0ea5e9;color:#fff;border:none;padding:10px 22px;border-radius:6px;font-weight:700;cursor:pointer;font-size:.875rem">
+            🔄 Sincronizza xpix
+          </button>
+          <span id="xpix-sync-status" style="font-size:.8rem;color:var(--text-muted)"></span>
+        </div>
+        <div id="xpix-queue-container">
+          <div class="admin-loading">Caricamento coda…</div>
+        </div>`;
+      loadXpixQueue();
+      break;
+    }
+
+    // ── ITALIACICLISMO ────────────────────────────────────────
+    case 'foto-ic': {
+      main.innerHTML = `
+        <div class="admin-page-header">
+          <h1 class="admin-page-title" style="color:#8b5cf6">◈ ItaliaCiclismo Auto-Sync</h1>
+          <p class="admin-page-sub">Foto da italiaciclismo.net — sincronizza, seleziona e pubblica.</p>
+        </div>
+        <div style="display:flex;gap:10px;align-items:center;margin-bottom:20px;flex-wrap:wrap">
+          <button onclick="window.icSync()" id="ic-sync-btn"
+            style="background:#8b5cf6;color:#fff;border:none;padding:10px 22px;border-radius:6px;font-weight:700;cursor:pointer;font-size:.875rem">
+            🔄 Sincronizza ItaliaCiclismo
+          </button>
+          <span id="ic-sync-status" style="font-size:.8rem;color:var(--text-muted)"></span>
+        </div>
+        <div id="ic-queue-container">
+          <div class="admin-loading">Caricamento coda…</div>
+        </div>`;
+      loadICQueue();
+      break;
+    }
+
+    // ── VIDEO IN ATTESA ───────────────────────────────────────
+    case 'video-pending': {
+      main.innerHTML = `
+        <div class="admin-page-header">
+          <h1 class="admin-page-title">📥 Video in attesa di approvazione</h1>
+          <p class="admin-page-sub">Video proposti dagli utenti — approva o rifiuta.</p>
+        </div>
+        <div id="admin-videos-pending"><div class="admin-loading">Caricamento…</div></div>`;
+      loadAdminPendingVideos();
+      break;
+    }
+
+    // ── YOUTUBE AUTO-SYNC ─────────────────────────────────────
+    case 'video-yt': {
+      main.innerHTML = `
+        <div class="admin-page-header">
+          <h1 class="admin-page-title" style="color:#ef4444">▶ YouTube Auto-Sync</h1>
+          <p class="admin-page-sub">Video dai canali YouTube configurati — sincronizza e abbina alle gare.</p>
+        </div>
+        <div style="display:flex;gap:10px;flex-wrap:wrap;align-items:center;margin-bottom:16px">
+          <button onclick="window.ytSync()" id="yt-sync-btn"
+            style="background:#ef4444;color:#fff;border:none;padding:10px 22px;border-radius:6px;font-weight:700;cursor:pointer;font-size:.875rem">
+            🔄 Sincronizza Canali
+          </button>
+          <button onclick="window.ytShowChannels()" id="yt-channels-btn"
+            style="background:var(--bg-card);border:1px solid var(--border);color:var(--text-primary);padding:10px 18px;border-radius:6px;cursor:pointer;font-size:.875rem">
+            ⚙️ Gestisci Canali
+          </button>
+          <span id="yt-sync-status" style="font-size:.8rem;color:var(--text-muted)"></span>
+        </div>
+        <div id="yt-channels-panel" style="display:none;background:var(--bg-card);border:1px solid var(--border);border-radius:8px;padding:16px;margin-bottom:16px">
+          <div style="font-weight:700;font-size:.875rem;margin-bottom:10px">Canali YouTube configurati</div>
+          <div id="yt-channels-list"></div>
+          <div style="margin-top:12px;display:flex;gap:8px;flex-wrap:wrap">
+            <button onclick="window.ytAddChannel()" style="background:var(--accent);color:#fff;border:none;padding:6px 14px;border-radius:5px;cursor:pointer;font-size:.8rem">+ Aggiungi canale</button>
+            <button onclick="window.ytSaveChannels()" style="background:#16a34a;color:#fff;border:none;padding:6px 14px;border-radius:5px;cursor:pointer;font-size:.8rem">💾 Salva</button>
+          </div>
+        </div>
+        <div id="yt-queue-container">
+          <div class="admin-loading">Caricamento coda…</div>
+        </div>`;
+      loadYTQueue();
+      break;
+    }
+
+    // ── TUTTI I VIDEO ─────────────────────────────────────────
+    case 'video-tutti': {
+      main.innerHTML = `
+        <div class="admin-page-header">
+          <h1 class="admin-page-title">🎥 Gestione video approvati</h1>
+          <p class="admin-page-sub">Visualizza, modifica ed elimina tutti i video pubblicati.</p>
+        </div>
+        <div style="display:flex;gap:10px;flex-wrap:wrap;margin-bottom:16px;align-items:center">
+          <button class="btn-action" onclick="window.adminShowAddVideo()" style="background:var(--accent);color:white;border:none;padding:9px 18px;border-radius:6px;font-size:.875rem">+ Aggiungi video</button>
+          <input type="search" id="admin-video-search" placeholder="Filtra per nome gara…" oninput="window.adminFilterVideos(this.value)"
+            style="padding:9px 12px;border:1px solid var(--border);border-radius:6px;background:var(--bg-card);color:var(--text-primary);font-size:.875rem;flex:1;min-width:180px" />
+        </div>
+        <div id="admin-add-video-form" style="display:none;background:var(--bg-card);border:1px solid var(--border);border-radius:8px;padding:16px;margin-bottom:16px">
+          <div style="font-weight:700;margin-bottom:12px;font-size:.9rem">Aggiungi video manualmente</div>
+          <div style="display:flex;flex-direction:column;gap:10px">
+            <div>
+              <label style="font-size:.8rem;color:var(--text-muted);display:block;margin-bottom:4px">Cerca gara (id calendario)</label>
+              <input type="search" id="avf-race-search" placeholder="Digita nome gara…" oninput="window.adminSearchCalRace(this.value)"
+                style="width:100%;padding:8px;border:1px solid var(--border);border-radius:6px;background:var(--bg-input,var(--bg-card));color:var(--text-primary);font-size:.85rem;box-sizing:border-box" />
+              <div id="avf-race-results" style="display:none;background:var(--bg-card);border:1px solid var(--border);border-radius:6px;max-height:180px;overflow-y:auto;margin-top:4px"></div>
+              <div id="avf-race-selected" style="font-size:.8rem;color:var(--accent);margin-top:4px;font-weight:600"></div>
+            </div>
+            <input type="url" id="avf-url" placeholder="URL YouTube (https://www.youtube.com/watch?v=...)" oninput="window.adminUrlOembed(this.value)"
+              style="padding:8px;border:1px solid var(--border);border-radius:6px;background:var(--bg-input,var(--bg-card));color:var(--text-primary);font-size:.85rem" />
+            <input type="text" id="avf-title" placeholder="Titolo — compilato automaticamente dall'URL"
+              style="padding:8px;border:1px solid var(--border);border-radius:6px;background:var(--bg-input,var(--bg-card));color:var(--text-primary);font-size:.85rem" />
+            <input type="text" id="avf-channel" placeholder="Autore / Canale — compilato automaticamente dall'URL"
+              style="padding:8px;border:1px solid var(--border);border-radius:6px;background:var(--bg-input,var(--bg-card));color:var(--text-primary);font-size:.85rem" />
+            <div style="display:flex;gap:8px">
+              <button onclick="window.adminSubmitAddVideo()" style="background:var(--accent);color:white;border:none;padding:8px 20px;border-radius:6px;font-weight:600;cursor:pointer">Aggiungi</button>
+              <button onclick="window.adminShowAddVideo(false)" style="background:transparent;color:var(--text-muted);border:1px solid var(--border);padding:8px 16px;border-radius:6px;cursor:pointer">Annulla</button>
+            </div>
+          </div>
+        </div>
+        <div id="admin-videos-all"><div class="admin-loading">Caricamento…</div></div>`;
+      loadAdminAllVideos();
+      break;
+    }
+  }
 }
 
 async function loadPendingRacePhotos() {
