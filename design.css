@@ -9047,3 +9047,60 @@ body[data-hub] .loading-bar { background: var(--hub-color) !important; }
   .media-gallery-thumb { height: 130px; }
   .media-gallery-arrow { width: 24px; height: 24px; font-size: .9rem; }
 }
+
+/* ── Social icons (media profile) ──────────────────────────────────────────── */
+.social-icon {
+  width: 15px;
+  height: 15px;
+  display: inline-block;
+  vertical-align: middle;
+  fill: none;
+  stroke: currentColor;
+  stroke-width: 2;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+  flex-shrink: 0;
+}
+.social-icon-ig {
+  stroke: #e1306c;
+}
+.social-icon-fb {
+  stroke: #1877f2;
+  fill: #1877f2;
+}
+
+/* ── Gallery thumb expand hint ─────────────────────────────────────────────── */
+.media-gallery-thumb-cover { position: relative; }
+.media-gallery-expand-hint {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: rgba(0,0,0,.38);
+  color: #fff;
+  font-size: .78rem;
+  font-weight: 700;
+  letter-spacing: .04em;
+  transition: background .2s;
+}
+.media-gallery-thumb-cover:hover .media-gallery-expand-hint { background: rgba(0,0,0,.55); }
+
+/* ── Carousel nav buttons ──────────────────────────────────────────────────── */
+.mgc-nav-btn {
+  background: rgba(255,255,255,.12);
+  border: none;
+  color: #fff;
+  font-size: 2.2rem;
+  width: 44px;
+  height: 44px;
+  border-radius: 50%;
+  cursor: pointer;
+  flex-shrink: 0;
+  transition: background .15s;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  line-height: 1;
+}
+.mgc-nav-btn:hover { background: rgba(255,255,255,.28); }

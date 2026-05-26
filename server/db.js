@@ -163,8 +163,35 @@ async function seedAdmin() {
   }
 }
 
+async function migrate() {
+  // Aggiunte colonne successive — idempotenti grazie a IF NOT EXISTS
+  const migrations = [
+    `ALTER TABLE media_profiles ADD COLUMN IF NOT EXISTS facebook TEXT DEFAULT ''`,
+    `CREATE TABLE IF NOT EXISTS media_purchase_requests (
+      id               SERIAL PRIMARY KEY,
+      media_photo_id   INTEGER NOT NULL REFERENCES media_photos(id) ON DELETE CASCADE,
+      requester_id     INTEGER NOT NULL REFERENCES users(id) ON DELETE CASCADE,
+      message          TEXT DEFAULT '',
+      status           TEXT NOT NULL DEFAULT 'pending',
+      created_at       TIMESTAMPTZ NOT NULL DEFAULT NOW()
+    )`,
+    `CREATE TABLE IF NOT EXISTS media_athlete_shares (
+      id               SERIAL PRIMARY KEY,
+      media_photo_id   INTEGER NOT NULL REFERENCES media_photos(id) ON DELETE CASCADE,
+      athlete_profile_id INTEGER REFERENCES athlete_profiles(id) ON DELETE CASCADE,
+      user_id          INTEGER NOT NULL REFERENCES users(id) ON DELETE CASCADE,
+      created_at       TIMESTAMPTZ NOT NULL DEFAULT NOW(),
+      UNIQUE(media_photo_id, user_id)
+    )`,
+  ];
+  for (const sql of migrations) {
+    try { await run(sql); } catch (e) { console.warn('[migrate]', e.message); }
+  }
+}
+
 async function init() {
   await createSchema();
+  await migrate();
   await seedAdmin();
   console.log('[db] PostgreSQL pronto');
 }
@@ -352,11 +379,11 @@ const queries = {
 
   // ── Media profiles ────────────────────────────────────────────────────────────
 
-  createMediaProfile: ({ user_id, display_name, bio, website, instagram }) =>
+  createMediaProfile: ({ user_id, display_name, bio, website, instagram, facebook }) =>
     one(
-      `INSERT INTO media_profiles (user_id, display_name, bio, website, instagram)
-       VALUES ($1, $2, $3, $4, $5) RETURNING *`,
-      [user_id, display_name, bio || '', website || '', instagram || '']
+      `INSERT INTO media_profiles (user_id, display_name, bio, website, instagram, facebook)
+       VALUES ($1, $2, $3, $4, $5, $6) RETURNING *`,
+      [user_id, display_name, bio || '', website || '', instagram || '', facebook || '']
     ),
 
   getMediaProfileByUser: (user_id) =>
@@ -366,7 +393,7 @@ const queries = {
     one(`SELECT * FROM media_profiles WHERE id = $1`, [id]),
 
   getApprovedMediaProfiles: () =>
-    all(`SELECT id, display_name, bio, website, instagram, cover_url, created_at
+    all(`SELECT id, display_name, bio, website, instagram, facebook, cover_url, created_at
          FROM media_profiles WHERE status = 'active' ORDER BY display_name`),
 
   approveMediaProfile: (id) =>
@@ -375,9 +402,9 @@ const queries = {
   rejectMediaProfile: (id) =>
     run(`UPDATE media_profiles SET status = 'rejected' WHERE id = $1`, [id]),
 
-  updateMediaProfile: ({ id, display_name, bio, website, instagram }) =>
-    run(`UPDATE media_profiles SET display_name=$2, bio=$3, website=$4, instagram=$5 WHERE id=$1`,
-        [id, display_name, bio || '', website || '', instagram || '']),
+  updateMediaProfile: ({ id, display_name, bio, website, instagram, facebook }) =>
+    run(`UPDATE media_profiles SET display_name=$2, bio=$3, website=$4, instagram=$5, facebook=$6 WHERE id=$1`,
+        [id, display_name, bio || '', website || '', instagram || '', facebook || '']),
 
   // ── Media albums ──────────────────────────────────────────────────────────────
 
@@ -452,6 +479,46 @@ const queries = {
     one(`SELECT COUNT(mp.id)::int AS total FROM media_photos mp
          JOIN media_albums ma ON ma.id = mp.album_id
          WHERE ma.media_profile_id = $1`, [media_profile_id]),
+
+  // ── Purchase requests ─────────────────────────────────────────────────────────
+  createPurchaseRequest: ({ media_photo_id, requester_id, message }) =>
+    one(
+      `INSERT INTO media_purchase_requests (media_photo_id, requester_id, message)
+       VALUES ($1, $2, $3)
+       ON CONFLICT DO NOTHING RETURNING *`,
+      [media_photo_id, requester_id, message || '']
+    ),
+
+  getPurchaseRequestsForPhotographer: (media_profile_id) =>
+    all(`
+      SELECT mpr.*, mp.filename, mp.ext_url, u.display_name AS requester_name, u.email AS requester_email,
+             ma.title AS album_title, ma.gara_id
+      FROM media_purchase_requests mpr
+      JOIN media_photos mp ON mp.id = mpr.media_photo_id
+      JOIN media_albums ma ON ma.id = mp.album_id
+      JOIN users u ON u.id = mpr.requester_id
+      WHERE ma.media_profile_id = $1
+      ORDER BY mpr.created_at DESC`, [media_profile_id]),
+
+  // ── Athlete shares ────────────────────────────────────────────────────────────
+  createAthleteShare: ({ media_photo_id, athlete_profile_id, user_id }) =>
+    run(
+      `INSERT INTO media_athlete_shares (media_photo_id, athlete_profile_id, user_id)
+       VALUES ($1, $2, $3) ON CONFLICT (media_photo_id, user_id) DO NOTHING`,
+      [media_photo_id, athlete_profile_id || null, user_id]
+    ),
+
+  getAthleteSharedPhotos: (athlete_profile_id) =>
+    all(`
+      SELECT mp.*, mp2.display_name AS photographer_name, mp2.id AS profile_id,
+             mas.created_at AS shared_at
+      FROM media_athlete_shares mas
+      JOIN media_photos mp ON mp.id = mas.media_photo_id
+      JOIN media_albums ma ON ma.id = mp.album_id
+      JOIN media_profiles mp2 ON mp2.id = ma.media_profile_id
+      WHERE mas.athlete_profile_id = $1
+      ORDER BY mas.created_at DESC
+      LIMIT 30`, [athlete_profile_id]),
 };
 
 module.exports = { queries, init, rawQuery: (sql, params) => pool.query(sql, params) };

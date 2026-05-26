@@ -1134,7 +1134,7 @@ app.post('/api/profile/media', requireAuth, async (req, res) => {
     if (req.user.role !== 'media') return res.status(403).json({ error: 'Solo per account Media/Fotografo' });
     const existing = await queries.getMediaProfileByUser(req.user.id);
     if (existing) return res.status(409).json({ error: 'Profilo già presente' });
-    const { display_name, bio, website, instagram } = req.body;
+    const { display_name, bio, website, instagram, facebook } = req.body;
     if (!display_name?.trim()) return res.status(400).json({ error: 'Il nome è obbligatorio' });
     const profile = await queries.createMediaProfile({
       user_id: req.user.id,
@@ -1142,6 +1142,7 @@ app.post('/api/profile/media', requireAuth, async (req, res) => {
       bio: bio?.trim() || '',
       website: website?.trim() || '',
       instagram: instagram?.trim() || '',
+      facebook: facebook?.trim() || '',
     });
     res.status(201).json({ ok: true, profile });
   } catch (e) { res.status(500).json({ error: e.message }); }
@@ -1152,13 +1153,14 @@ app.patch('/api/profile/media', requireAuth, async (req, res) => {
   try {
     const profile = await queries.getMediaProfileByUser(req.user.id);
     if (!profile && req.user.role !== 'admin') return res.status(404).json({ error: 'Profilo non trovato' });
-    const { display_name, bio, website, instagram } = req.body;
+    const { display_name, bio, website, instagram, facebook } = req.body;
     await queries.updateMediaProfile({
       id: profile.id,
       display_name: display_name?.trim() || profile.display_name,
       bio: bio?.trim() ?? profile.bio,
       website: website?.trim() ?? profile.website,
       instagram: instagram?.trim() ?? profile.instagram,
+      facebook: facebook?.trim() ?? (profile.facebook || ''),
     });
     res.json({ ok: true });
   } catch (e) { res.status(500).json({ error: e.message }); }
@@ -1345,7 +1347,106 @@ app.patch('/api/media/photo/:id', requireMediaOrAdmin, async (req, res) => {
   } catch (e) { res.status(500).json({ error: e.message }); }
 });
 
-// ── Admin: seed xpix → media albums ──────────────────────────────────────────
+// ── Purchase requests ─────────────────────────────────────────────────────────
+
+// Richiedi acquisto foto (utente loggato → notifica al fotografo)
+app.post('/api/media/photo/:id/request-purchase', requireAuth, async (req, res) => {
+  try {
+    const photo = await queries.getMediaPhotoById(req.params.id);
+    if (!photo) return res.status(404).json({ error: 'Foto non trovata' });
+    const album = await queries.getMediaAlbum(photo.album_id);
+    if (!album) return res.status(404).json({ error: 'Album non trovato' });
+
+    const requester = await queries.getUserById(req.user.id);
+    const request   = await queries.createPurchaseRequest({
+      media_photo_id: photo.id,
+      requester_id:   req.user.id,
+      message:        req.body.message || '',
+    });
+
+    // Recupera email del fotografo (se ha account)
+    if (album.media_profile_id) {
+      const prof = await queries.getMediaProfileById(album.media_profile_id);
+      if (prof?.user_id) {
+        const photographer = await queries.getUserById(prof.user_id);
+        if (photographer?.email) {
+          // Log acquisto — in produzione qui si invierebbe una email
+          console.log(`[purchase] Richiesta da ${requester.email} al fotografo ${photographer.email} per foto ${photo.id} — album "${album.title}"`);
+          // TODO: integrare invio email (es. SendGrid/Nodemailer)
+        }
+      }
+    }
+
+    res.json({ ok: true, request });
+  } catch (e) { res.status(500).json({ error: e.message }); }
+});
+
+// Richiesta acquisto tramite URL foto (da carousel — non richiede ID DB)
+app.post('/api/media/photo/by-url/request-purchase', requireAuth, async (req, res) => {
+  try {
+    const { src, album_title, photographer_name, message } = req.body;
+    if (!src) return res.status(400).json({ error: 'URL foto mancante' });
+    const requester = await queries.getUserById(req.user.id);
+    // Log della richiesta — in produzione qui si invierebbe email
+    console.log(`[purchase-req] ${requester.email} vuole acquistare una foto di ${photographer_name} (album: ${album_title}) — msg: ${message || '—'}`);
+    // Cerca il profilo del fotografo per eventuale email futura
+    // Per ora risponde ok (sistema di notifica email da integrare)
+    res.json({ ok: true });
+  } catch (e) { res.status(500).json({ error: e.message }); }
+});
+
+// Condivisione foto su profilo atleta tramite URL
+app.post('/api/media/photo/by-url/share', requireAuth, async (req, res) => {
+  try {
+    const { src } = req.body;
+    if (!src) return res.status(400).json({ error: 'URL foto mancante' });
+    // Cerca la foto nel DB per url o ext_url
+    const row = await rawQuery(
+      `SELECT mp.id, mp.album_id FROM media_photos mp WHERE mp.ext_url = $1 OR (mp.filename IS NOT NULL AND $1 LIKE '%' || mp.filename || '%') LIMIT 1`,
+      [src]
+    ).then(r => r.rows[0]);
+    const athleteProfile = await queries.getAthleteProfile(req.user.id);
+    if (row) {
+      await queries.createAthleteShare({
+        media_photo_id:     row.id,
+        athlete_profile_id: athleteProfile?.id || null,
+        user_id:            req.user.id,
+      });
+    }
+    res.json({ ok: true });
+  } catch (e) { res.status(500).json({ error: e.message }); }
+});
+
+// Lista richieste acquisto per il fotografo loggato
+app.get('/api/media/purchase-requests', requireMediaOrAdmin, async (req, res) => {
+  try {
+    const profile = req.user.role === 'admin'
+      ? { id: req.query.profile_id }
+      : await queries.getMediaProfileByUser(req.user.id);
+    if (!profile) return res.status(404).json({ error: 'Profilo non trovato' });
+    const requests = await queries.getPurchaseRequestsForPhotographer(profile.id);
+    res.json({ requests });
+  } catch (e) { res.status(500).json({ error: e.message }); }
+});
+
+// ── Athlete shares ─────────────────────────────────────────────────────────────
+
+// Atleta condivide una foto sul proprio profilo
+app.post('/api/media/photo/:id/share', requireAuth, async (req, res) => {
+  try {
+    const photo = await queries.getMediaPhotoById(req.params.id);
+    if (!photo) return res.status(404).json({ error: 'Foto non trovata' });
+    const athleteProfile = await queries.getAthleteProfile(req.user.id);
+    await queries.createAthleteShare({
+      media_photo_id:     photo.id,
+      athlete_profile_id: athleteProfile?.id || null,
+      user_id:            req.user.id,
+    });
+    res.json({ ok: true });
+  } catch (e) { res.status(500).json({ error: e.message }); }
+});
+
+// Admin: seed xpix → media albums ──────────────────────────────────────────
 app.post('/api/admin/media/seed-xpix', requireAdmin, async (req, res) => {
   try {
     // 1. Crea (o trova) profilo "xpix.it" — utente_id NULL = profilo di sistema

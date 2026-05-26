@@ -6982,7 +6982,7 @@ async function renderMediaProfile(profileId) {
               <div class="media-album-count">${a.photo_count} foto</div>
             </div>
             <div class="media-album-title">${esc(a.title)}</div>
-            ${a.gara_id ? `<div class="media-album-gara"><a href="#/gara/${encodeURIComponent(a.gara_id)}" onclick="event.stopPropagation()" style="color:var(--accent);font-size:.72rem">${esc(a.gara_id)}</a></div>` : ''}
+            ${a.gara_id ? `<div class="media-album-gara"><a href="#/gara/${encodeURIComponent(a.gara_id)}" onclick="event.stopPropagation()" style="color:var(--accent);font-size:.72rem">→ Vedi gara</a></div>` : ''}
           </a>`;
         }).join('')}</div>`
       : `<p style="color:var(--text-muted);padding:24px 0">Nessun album ancora.</p>`;
@@ -6994,8 +6994,9 @@ async function renderMediaProfile(profileId) {
           <h1 class="media-profile-name">${esc(profile.display_name)}</h1>
           ${profile.bio ? `<p class="media-profile-bio">${esc(profile.bio)}</p>` : ''}
           <div class="media-profile-links">
-            ${profile.website ? `<a href="${esc(profile.website)}" target="_blank" rel="noopener" class="media-profile-link">🌐 Sito web</a>` : ''}
-            ${profile.instagram ? `<a href="https://instagram.com/${esc(profile.instagram.replace('@',''))}" target="_blank" rel="noopener" class="media-profile-link">📸 ${esc(profile.instagram)}</a>` : ''}
+            ${profile.website ? `<a href="${esc(profile.website)}" target="_blank" rel="noopener" class="media-profile-link"><svg class="social-icon" viewBox="0 0 24 24"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-1 17.93c-3.95-.49-7-3.85-7-7.93 0-.62.08-1.21.21-1.79L9 15v1c0 1.1.9 2 2 2v1.93zm6.9-2.54c-.26-.81-1-1.39-1.9-1.39h-1v-3c0-.55-.45-1-1-1H8v-2h2c.55 0 1-.45 1-1V7h2c1.1 0 2-.9 2-2v-.41c2.93 1.19 5 4.06 5 7.41 0 2.08-.8 3.97-2.1 5.39z"/></svg> Sito web</a>` : ''}
+            ${profile.instagram ? `<a href="https://instagram.com/${esc(profile.instagram.replace('@',''))}" target="_blank" rel="noopener" class="media-profile-link"><svg class="social-icon social-icon-ig" viewBox="0 0 24 24"><rect x="2" y="2" width="20" height="20" rx="5" ry="5"/><path d="M16 11.37A4 4 0 1 1 12.63 8 4 4 0 0 1 16 11.37z"/><line x1="17.5" y1="6.5" x2="17.51" y2="6.5"/></svg> ${esc(profile.instagram)}</a>` : ''}
+            ${profile.facebook ? `<a href="${profile.facebook.startsWith('http') ? esc(profile.facebook) : 'https://facebook.com/'+esc(profile.facebook)}" target="_blank" rel="noopener" class="media-profile-link"><svg class="social-icon social-icon-fb" viewBox="0 0 24 24"><path d="M18 2h-3a5 5 0 0 0-5 5v3H7v4h3v8h4v-8h3l1-4h-4V7a1 1 0 0 1 1-1h3z"/></svg> Facebook</a>` : ''}
           </div>
           <div class="media-profile-stats">
             <span>${albums.length} album</span>
@@ -7385,61 +7386,6 @@ async function renderGara(gara_id) {
     ${detailsHtml}
   `);
 
-  // Carica gallery media (fotografi della community) — async post-render, prima della classifica
-  (async () => {
-    const galEl = document.getElementById('gara-media-gallery');
-    if (!galEl) return;
-    try {
-      const d = await fetch(`${API_BASE}/media/gara/${encodeURIComponent(primaryGaraId)}`).then(r => r.json());
-      const albums = d.albums || [];
-      if (!albums.length) return;
-
-      // Per ogni album carica le foto in parallelo (max 4 concurrent)
-      const albumPhotos = await Promise.all(albums.map(a =>
-        fetch(`${API_BASE}/media/album/${a.id}/photos`).then(r => r.json())
-          .then(r => ({ ...a, photos: (r.photos || []).map(p => p.ext_url || (p.filename ? `${PHOTOS_BASE}/photos/${p.filename}` : '')).filter(Boolean) }))
-          .catch(() => ({ ...a, photos: [] }))
-      ));
-
-      const validAlbums = albumPhotos.filter(a => a.photos.length);
-      if (!validAlbums.length) return;
-
-      // Raccoglie tutti i src in un flat array per il carousel globale, tenendo traccia degli offset per album
-      const allPhotos = [];  // { src, albumTitle, photographer_name, profile_id }
-      validAlbums.forEach(a => a.photos.forEach(src => allPhotos.push({ src, albumTitle: a.title, photographer_name: a.photographer_name, profile_id: a.profile_id })));
-      window._garaMediaPhotos = allPhotos;
-
-      galEl.innerHTML = `
-        <div class="comp-section media-gallery-section">
-          <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:10px;flex-wrap:wrap;gap:6px">
-            <div class="comp-section-title" style="margin:0;border:none;padding:0">📷 Gallery fotografi</div>
-            <span style="font-size:.75rem;color:var(--text-muted)">${allPhotos.length} foto · ${validAlbums.length} album</span>
-          </div>
-          ${validAlbums.map((a, ai) => {
-            const stripId = `mgstrip-${a.id}`;
-            const globalStart = allPhotos.findIndex(p => p.albumTitle === a.title && p.photographer_name === a.photographer_name);
-            return `
-              <div class="media-gallery-album" style="margin-bottom:16px">
-                <div class="media-gallery-album-header">
-                  <span class="media-gallery-album-name">${esc(a.title)}</span>
-                  <a href="#/media/${a.profile_id}" class="media-gallery-photographer" onclick="event.stopPropagation()">📷 ${esc(a.photographer_name)}</a>
-                </div>
-                <div class="media-gallery-strip-wrap">
-                  <button class="media-gallery-arrow media-gallery-prev" onclick="window._mgScroll('${stripId}',-1)" aria-label="Scorri sinistra">‹</button>
-                  <div class="media-gallery-strip" id="${stripId}">
-                    ${a.photos.map((src, pi) => `
-                      <div class="media-gallery-thumb" onclick="window.openMediaCarousel(${globalStart + pi})">
-                        <img src="${esc(src)}" loading="lazy" alt="Foto ${pi+1}"/>
-                      </div>`).join('')}
-                  </div>
-                  <button class="media-gallery-arrow media-gallery-next" onclick="window._mgScroll('${stripId}',1)" aria-label="Scorri destra">›</button>
-                </div>
-              </div>`;
-          }).join('')}
-        </div>`;
-    } catch(e) { /* non blocca la pagina */ }
-  })();
-
   // Scroll orizzontale dello strip
   window._mgScroll = function(stripId, dir) {
     const el = document.getElementById(stripId);
@@ -7448,47 +7394,148 @@ async function renderGara(gara_id) {
     el.scrollBy({ left: dir * thumbW * 3, behavior: 'smooth' });
   };
 
-  // Carousel lightbox con prev/next su tutti i foto dell'evento
+  // Gallery media: lazy — carica solo quando la sezione entra nel viewport
+  // → evita N fetch parallele che rallentano la pagina al caricamento
+  (() => {
+    const galEl = document.getElementById('gara-media-gallery');
+    if (!galEl) return;
+    let loaded = false;
+
+    const doLoad = async () => {
+      if (loaded) return;
+      loaded = true;
+      try {
+        const d = await fetch(`${API_BASE}/media/gara/${encodeURIComponent(primaryGaraId)}`).then(r => r.json());
+        const albums = d.albums || [];
+        if (!albums.length) return;
+
+        // Mostra subito la struttura con solo le cover (già disponibili dall'API albums)
+        // La copertina è first_ext_url / first_filename — zero fetch extra
+        galEl.innerHTML = `
+          <div class="comp-section media-gallery-section">
+            <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:10px;flex-wrap:wrap;gap:6px">
+              <div class="comp-section-title" style="margin:0;border:none;padding:0">📷 Gallery fotografi</div>
+              <span style="font-size:.75rem;color:var(--text-muted)">${albums.length} album</span>
+            </div>
+            ${albums.map(a => {
+              const stripId = `mgstrip-${a.id}`;
+              const cover = a.first_ext_url || (a.first_filename ? `${PHOTOS_BASE}/photos/${a.first_filename}` : '');
+              return `
+                <div class="media-gallery-album">
+                  <div class="media-gallery-album-header">
+                    <span class="media-gallery-album-name">${esc(a.title)}</span>
+                    <a href="#/media/${a.profile_id}" class="media-gallery-photographer">📷 ${esc(a.photographer_name)}</a>
+                  </div>
+                  <div class="media-gallery-strip-wrap">
+                    <button class="media-gallery-arrow media-gallery-prev" onclick="window._mgScroll('${stripId}',-1)">‹</button>
+                    <div class="media-gallery-strip" id="${stripId}">
+                      ${cover
+                        ? `<div class="media-gallery-thumb media-gallery-thumb-cover" onclick="window._mgExpandAlbum(${a.id},'${esc(a.title)}','${esc(a.photographer_name)}',${a.profile_id})">
+                             <img src="${esc(cover)}" loading="lazy" alt="Anteprima"/>
+                             <div class="media-gallery-expand-hint">▶ ${a.photo_count} foto</div>
+                           </div>`
+                        : `<div class="media-gallery-thumb" style="background:var(--bg-elevated);display:flex;align-items:center;justify-content:center;color:var(--text-muted)" onclick="window._mgExpandAlbum(${a.id},'${esc(a.title)}','${esc(a.photographer_name)}',${a.profile_id})">📷</div>`}
+                    </div>
+                    <button class="media-gallery-arrow media-gallery-next" onclick="window._mgScroll('${stripId}',1)">›</button>
+                  </div>
+                </div>`;
+            }).join('')}
+          </div>`;
+      } catch(e) { /* non blocca la pagina */ }
+    };
+
+    // IntersectionObserver: carica al 10% di visibilità
+    if ('IntersectionObserver' in window) {
+      const obs = new IntersectionObserver((entries) => {
+        if (entries[0].isIntersecting) { obs.disconnect(); doLoad(); }
+      }, { threshold: 0.1 });
+      obs.observe(galEl);
+    } else {
+      doLoad(); // fallback per browser vecchi
+    }
+  })();
+
+  // Espande un album nello strip (carica tutte le foto al click sulla copertina)
+  window._mgExpandAlbum = async function(albumId, title, photographer, profileId) {
+    const strip = document.getElementById(`mgstrip-${albumId}`);
+    if (!strip) return;
+    // Mostra spinner
+    const thumbs = strip.querySelectorAll('.media-gallery-thumb');
+    thumbs.forEach(t => t.style.opacity = '.4');
+    try {
+      const d = await fetch(`${API_BASE}/media/album/${albumId}/photos`).then(r => r.json());
+      const photos = (d.photos || []).map(p => p.ext_url || (p.filename ? `${PHOTOS_BASE}/photos/${p.filename}` : '')).filter(Boolean);
+      if (!photos.length) return;
+
+      // Registra nel flat array globale per il carousel
+      if (!window._garaMediaPhotos) window._garaMediaPhotos = [];
+      const existingIdx = window._garaMediaPhotos.findIndex(p => p.albumId === albumId);
+      let globalStart;
+      if (existingIdx >= 0) {
+        globalStart = existingIdx;
+      } else {
+        globalStart = window._garaMediaPhotos.length;
+        photos.forEach(src => window._garaMediaPhotos.push({ src, albumTitle: title, photographer_name: photographer, profile_id: profileId, albumId }));
+      }
+
+      // Sostituisce il contenuto dello strip con le miniature reali
+      strip.innerHTML = photos.map((src, pi) => `
+        <div class="media-gallery-thumb" onclick="window.openMediaCarousel(${globalStart + pi})">
+          <img src="${esc(src)}" loading="lazy" alt="Foto ${pi+1}"/>
+        </div>`).join('');
+    } catch(e) {
+      strip.querySelectorAll('.media-gallery-thumb').forEach(t => t.style.opacity = '1');
+    }
+  };
+
+  // Carousel lightbox con prev/next, Acquista e Condividi
   window.openMediaCarousel = function(startIdx) {
     const photos = window._garaMediaPhotos || [];
     if (!photos.length) return;
     let cur = startIdx;
+    const user = authUser();
 
     const render = () => {
       const p = photos[cur];
-      const counterEl = document.getElementById('mgc-counter');
-      const imgEl     = document.getElementById('mgc-img');
-      const captEl    = document.getElementById('mgc-caption');
-      if (counterEl) counterEl.textContent = `${cur + 1} / ${photos.length}`;
-      if (imgEl)  { imgEl.src = p.src; }
-      if (captEl) captEl.innerHTML = `<a href="#/media/${p.profile_id}" style="color:var(--accent)" onclick="document.getElementById('media-carousel')?.remove()">📷 ${esc(p.photographer_name)}</a>  <span style="color:rgba(255,255,255,.5)">·</span>  ${esc(p.albumTitle)}`;
+      const el = id => document.getElementById(id);
+      if (el('mgc-counter')) el('mgc-counter').textContent = `${cur + 1} / ${photos.length}`;
+      if (el('mgc-img'))     el('mgc-img').src = p.src;
+      if (el('mgc-caption')) el('mgc-caption').innerHTML =
+        `<a href="#/media/${p.profile_id}" style="color:var(--accent)" onclick="document.getElementById('media-carousel')?.remove()">📷 ${esc(p.photographer_name)}</a>` +
+        `<span style="color:rgba(255,255,255,.4);margin:0 8px">·</span>${esc(p.albumTitle)}`;
+      // Aggiorna data-photo-id per i bottoni azione
+      if (el('mgc-buy'))   el('mgc-buy').dataset.photoSrc   = p.src;
+      if (el('mgc-share')) el('mgc-share').dataset.photoSrc = p.src;
     };
 
     const existing = document.getElementById('media-carousel');
     if (existing) existing.remove();
 
+    const btnBase = 'border:none;padding:7px 16px;border-radius:6px;font-size:.78rem;font-weight:600;cursor:pointer';
     const overlay = document.createElement('div');
     overlay.id = 'media-carousel';
     overlay.style.cssText = 'position:fixed;inset:0;background:rgba(0,0,0,.95);z-index:9999;display:flex;flex-direction:column;align-items:center;justify-content:center;padding:16px';
     overlay.innerHTML = `
+      <div style="position:absolute;top:12px;left:50%;transform:translateX(-50%);display:flex;gap:8px">
+        ${user ? `<button id="mgc-buy"   data-photo-src="" style="${btnBase};background:#f59e0b;color:#000" onclick="window._mgRequestPurchase(this)">🛒 Acquista</button>` : ''}
+        ${user?.role === 'atleta' ? `<button id="mgc-share" data-photo-src="" style="${btnBase};background:var(--accent);color:#fff" onclick="window._mgShareToProfile(this)">📌 Condividi sul mio profilo</button>` : ''}
+      </div>
       <div style="position:absolute;top:12px;right:16px;display:flex;align-items:center;gap:14px">
-        <span id="mgc-counter" style="color:rgba(255,255,255,.5);font-size:.82rem"></span>
+        <span id="mgc-counter" style="color:rgba(255,255,255,.45);font-size:.8rem"></span>
         <button onclick="document.getElementById('media-carousel')?.remove()" style="background:none;border:none;color:#ccc;font-size:1.8rem;cursor:pointer;line-height:1">✕</button>
       </div>
-      <div style="position:relative;width:100%;max-width:960px;display:flex;align-items:center;justify-content:center;gap:8px">
-        <button id="mgc-prev" style="background:rgba(255,255,255,.12);border:none;color:#fff;font-size:2.2rem;width:44px;height:44px;border-radius:50%;cursor:pointer;flex-shrink:0;transition:background .15s" onmouseenter="this.style.background='rgba(255,255,255,.25)'" onmouseleave="this.style.background='rgba(255,255,255,.12)'">‹</button>
-        <img id="mgc-img" src="" alt="" style="max-height:80vh;max-width:calc(100% - 120px);object-fit:contain;border-radius:4px;display:block"/>
-        <button id="mgc-next" style="background:rgba(255,255,255,.12);border:none;color:#fff;font-size:2.2rem;width:44px;height:44px;border-radius:50%;cursor:pointer;flex-shrink:0;transition:background .15s" onmouseenter="this.style.background='rgba(255,255,255,.25)'" onmouseleave="this.style.background='rgba(255,255,255,.12)'">›</button>
+      <div style="width:100%;max-width:960px;display:flex;align-items:center;justify-content:center;gap:8px">
+        <button id="mgc-prev" class="mgc-nav-btn">‹</button>
+        <img id="mgc-img" src="" alt="" style="max-height:78vh;max-width:calc(100% - 120px);object-fit:contain;border-radius:4px;display:block"/>
+        <button id="mgc-next" class="mgc-nav-btn">›</button>
       </div>
-      <div id="mgc-caption" style="margin-top:12px;font-size:.8rem;color:rgba(255,255,255,.65);text-align:center"></div>`;
+      <div id="mgc-caption" style="margin-top:10px;font-size:.8rem;color:rgba(255,255,255,.55);text-align:center"></div>`;
     document.body.appendChild(overlay);
-
     render();
 
     document.getElementById('mgc-prev').onclick = () => { cur = (cur - 1 + photos.length) % photos.length; render(); };
     document.getElementById('mgc-next').onclick = () => { cur = (cur + 1) % photos.length; render(); };
 
-    // Keyboard navigation
     const onKey = (e) => {
       if (e.key === 'ArrowLeft')  { cur = (cur - 1 + photos.length) % photos.length; render(); }
       if (e.key === 'ArrowRight') { cur = (cur + 1) % photos.length; render(); }
@@ -7498,6 +7545,53 @@ async function renderGara(gara_id) {
     overlay.addEventListener('click', (e) => {
       if (e.target === overlay) { overlay.remove(); document.removeEventListener('keydown', onKey); }
     });
+  };
+
+  // Richiesta acquisto
+  window._mgRequestPurchase = async function(btn) {
+    const photos = window._garaMediaPhotos || [];
+    const counter = document.getElementById('mgc-counter')?.textContent || '';
+    const idx = parseInt(counter.split('/')[0]) - 1;
+    const p = photos[idx];
+    if (!p) return;
+    const msg = prompt('Messaggio per il fotografo (opzionale):', '') ?? null;
+    if (msg === null) return; // annullato
+    btn.disabled = true; btn.textContent = '⏳';
+    try {
+      // Trova l'id della foto tramite src (o invia direttamente il src come riferimento)
+      await fetch(`${API_BASE}/media/photo/by-url/request-purchase`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json', Authorization: `Bearer ${authToken()}` },
+        body: JSON.stringify({ src: p.src, album_title: p.albumTitle, photographer_name: p.photographer_name, message: msg }),
+      });
+      btn.textContent = '✓ Richiesta inviata';
+      showToast('✓ Richiesta inviata al fotografo!');
+    } catch(e) {
+      btn.disabled = false; btn.textContent = '🛒 Acquista';
+      showToast('Errore: ' + e.message, 'error');
+    }
+  };
+
+  // Condivisione foto su profilo atleta
+  window._mgShareToProfile = async function(btn) {
+    const photos = window._garaMediaPhotos || [];
+    const counter = document.getElementById('mgc-counter')?.textContent || '';
+    const idx = parseInt(counter.split('/')[0]) - 1;
+    const p = photos[idx];
+    if (!p) return;
+    btn.disabled = true; btn.textContent = '⏳';
+    try {
+      await fetch(`${API_BASE}/media/photo/by-url/share`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json', Authorization: `Bearer ${authToken()}` },
+        body: JSON.stringify({ src: p.src }),
+      });
+      btn.textContent = '✓ Condivisa';
+      showToast('✓ Foto aggiunta al tuo profilo atleta!');
+    } catch(e) {
+      btn.disabled = false; btn.textContent = '📌 Condividi sul mio profilo';
+      showToast('Errore: ' + e.message, 'error');
+    }
   };
 
   // Face detection per centrare il volto nell'hero photo
@@ -10755,7 +10849,10 @@ async function renderMyProfile() {
                 <input type="url" id="mp-web" class="auth-input" placeholder="https://tuosito.it" />
               </label>
               <label class="auth-label">Instagram
-                <input type="text" id="mp-ig" class="auth-input" placeholder="@tuonomeutente" />
+                <input type="text" id="mp-ig" class="auth-input" placeholder="@nomeutente (senza @)" />
+              </label>
+              <label class="auth-label">Facebook
+                <input type="text" id="mp-fb" class="auth-input" placeholder="nomepagina o URL profilo" />
               </label>
               <button type="submit" class="auth-btn">CREA PROFILO</button>
             </form>
@@ -10764,12 +10861,16 @@ async function renderMyProfile() {
         const statusMap = { active:'✅ Approvato', pending:'⏳ In attesa di approvazione', rejected:'❌ Rifiutato' };
         profileHtml = `
           <div class="auth-section">
-            <h3 class="auth-section-title">📷 Il tuo profilo fotografo</h3>
+            <h3 class="auth-section-title" style="display:flex;align-items:center;justify-content:space-between">
+              📷 Il tuo profilo fotografo
+              <button onclick="window.openMediaProfileEdit(${JSON.stringify(profile).replace(/"/g,'&quot;')})" style="font-size:.75rem;background:none;border:1px solid var(--border);color:var(--text-muted);padding:4px 10px;border-radius:4px;cursor:pointer">✏️ Modifica</button>
+            </h3>
             <div class="profile-info-row"><span>Stato</span><span>${statusMap[profile.status] || profile.status}</span></div>
             <div class="profile-info-row"><span>Nome pubblico</span><span>${esc(profile.display_name)}</span></div>
             ${profile.bio ? `<div class="profile-info-row"><span>Bio</span><span>${esc(profile.bio)}</span></div>` : ''}
             ${profile.website ? `<div class="profile-info-row"><span>Sito</span><a href="${esc(profile.website)}" target="_blank" rel="noopener">${esc(profile.website)}</a></div>` : ''}
-            ${profile.instagram ? `<div class="profile-info-row"><span>Instagram</span><span>${esc(profile.instagram)}</span></div>` : ''}
+            ${profile.instagram ? `<div class="profile-info-row"><span>Instagram</span><a href="https://instagram.com/${esc(profile.instagram.replace('@',''))}" target="_blank" rel="noopener">${esc(profile.instagram)}</a></div>` : ''}
+            ${profile.facebook ? `<div class="profile-info-row"><span>Facebook</span><a href="${profile.facebook.startsWith('http') ? esc(profile.facebook) : 'https://facebook.com/'+esc(profile.facebook)}" target="_blank" rel="noopener">${esc(profile.facebook)}</a></div>` : ''}
             ${profile.status === 'active'
               ? `<div style="margin-top:12px;display:flex;gap:8px;flex-wrap:wrap">
                    <a href="#/media/${profile.id}" class="auth-btn" style="text-decoration:none;text-align:center;font-size:.85rem">👁 Vedi il mio profilo</a>
@@ -10854,12 +10955,61 @@ window.submitMediaProfile = async function(e) {
       bio:          document.getElementById('mp-bio')?.value.trim(),
       website:      document.getElementById('mp-web')?.value.trim(),
       instagram:    document.getElementById('mp-ig')?.value.trim(),
+      facebook:     document.getElementById('mp-fb')?.value.trim(),
     }});
     showToast('✓ Profilo inviato — in attesa di approvazione');
     renderMyProfile();
   } catch(err) {
     btn.disabled = false; btn.textContent = 'CREA PROFILO';
     showToast('Errore: ' + err.message, 'error');
+  }
+};
+
+window.openMediaProfileEdit = function(profile) {
+  const inpStyle = 'width:100%;box-sizing:border-box;padding:8px 10px;border:1px solid var(--border-subtle);border-radius:var(--r-sm);font-size:0.875rem;background:var(--bg-primary);color:var(--text-primary);margin-bottom:10px';
+  const overlay = document.createElement('div');
+  overlay.id = 'modal-overlay';
+  overlay.style.cssText = 'position:fixed;inset:0;background:rgba(0,0,0,.6);z-index:9999;display:flex;align-items:center;justify-content:center;padding:16px';
+  overlay.innerHTML = `
+    <div style="background:var(--bg-card);border-radius:var(--r-lg);padding:24px;width:100%;max-width:420px;box-shadow:0 8px 32px rgba(0,0,0,.25);max-height:90vh;overflow-y:auto">
+      <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:16px">
+        <strong>Modifica profilo</strong>
+        <button onclick="this.closest('[style*=fixed]').remove()" style="background:none;border:none;font-size:1.3rem;cursor:pointer;color:var(--text-muted)">✕</button>
+      </div>
+      <label style="font-size:.8rem;color:var(--text-muted);display:block;margin-bottom:4px">Nome pubblico *</label>
+      <input id="mpe-name" type="text" value="${esc(profile.display_name||'')}" style="${inpStyle}" required/>
+      <label style="font-size:.8rem;color:var(--text-muted);display:block;margin-bottom:4px">Bio</label>
+      <input id="mpe-bio"  type="text" value="${esc(profile.bio||'')}" placeholder="Breve descrizione" style="${inpStyle}"/>
+      <label style="font-size:.8rem;color:var(--text-muted);display:block;margin-bottom:4px">Sito web</label>
+      <input id="mpe-web"  type="url"  value="${esc(profile.website||'')}" placeholder="https://…" style="${inpStyle}"/>
+      <label style="font-size:.8rem;color:var(--text-muted);display:block;margin-bottom:4px">Instagram</label>
+      <input id="mpe-ig"   type="text" value="${esc(profile.instagram||'')}" placeholder="nomeutente (senza @)" style="${inpStyle}"/>
+      <label style="font-size:.8rem;color:var(--text-muted);display:block;margin-bottom:4px">Facebook</label>
+      <input id="mpe-fb"   type="text" value="${esc(profile.facebook||'')}" placeholder="nomepagina o URL profilo" style="${inpStyle}"/>
+      <div id="mpe-err" style="color:#EF4444;font-size:0.8rem;margin-bottom:8px;display:none"></div>
+      <button id="mpe-submit" onclick="window._submitMediaProfileEdit()" style="width:100%;padding:9px;background:var(--accent);color:#fff;border:none;border-radius:var(--r-sm);font-weight:600;cursor:pointer">Salva modifiche</button>
+    </div>`;
+  document.body.appendChild(overlay);
+};
+
+window._submitMediaProfileEdit = async function() {
+  const btn   = document.getElementById('mpe-submit');
+  const errEl = document.getElementById('mpe-err');
+  btn.disabled = true; btn.textContent = 'Salvataggio…';
+  try {
+    await apiCall('/profile/media', { method: 'PATCH', body: {
+      display_name: document.getElementById('mpe-name')?.value.trim(),
+      bio:          document.getElementById('mpe-bio')?.value.trim(),
+      website:      document.getElementById('mpe-web')?.value.trim(),
+      instagram:    document.getElementById('mpe-ig')?.value.trim(),
+      facebook:     document.getElementById('mpe-fb')?.value.trim(),
+    }});
+    document.getElementById('modal-overlay')?.remove();
+    showToast('✓ Profilo aggiornato');
+    renderMyProfile();
+  } catch(err) {
+    errEl.textContent = err.message; errEl.style.display = 'block';
+    btn.disabled = false; btn.textContent = 'Salva modifiche';
   }
 };
 
