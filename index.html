@@ -1,10 +1,10 @@
-﻿<!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="it">
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>ItaliacritResultati â€” Ciclismo Italiano Agonistico</title>
-  <meta name="description" content="Classifiche, risultati e statistiche del ciclismo agonistico italiano su strada. Esordienti, Allievi, Juniores, Under23 ed Elite â€” uomini e donne." />
+  <title>ItaliacritResultati – Ciclismo Italiano Agonistico</title>
+  <meta name="description" content="Classifiche, risultati e statistiche del ciclismo agonistico italiano su strada. Esordienti, Allievi, Juniores, Under23 ed Elite – uomini e donne." />
   <meta name="keywords" content="ciclismo italiano, classifiche ciclismo, risultati gare ciclismo, FCI, juniores, allievi, esordienti, elite under23" />
   <meta property="og:title" content="ItaliacritResultati" />
   <meta property="og:description" content="Classifiche e risultati del ciclismo agonistico italiano su strada" />
@@ -13,46 +13,75 @@
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
   <link href="https://fonts.googleapis.com/css2?family=Inter+Tight:wght@400;600;700;800;900&display=swap" rel="stylesheet" />
   <link rel="stylesheet" href="style.css?v=12" />
-  <link rel="stylesheet" href="design.css?v=85" />
-
+  <link rel="stylesheet" href="design.css?v=86" />
 </head>
 <body>
 
-<!-- â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â• -->
+<!-- ══════════════════════════════════════════════════════════ -->
 <!--  NAVBAR                                                    -->
-<!-- â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â• -->
+<!-- ══════════════════════════════════════════════════════════ -->
 <nav id="navbar" role="navigation" aria-label="Navigazione principale">
   <a href="#/" class="nav-logo" id="nav-logo-link" aria-label="ItaliacritCycling Ranking - Home">
     <img src="assets/logo2.png" alt="ITC Italia Crit Cycling Ranking" class="nav-logo-img" />
   </a>
   <div class="nav-sep" aria-hidden="true"></div>
+
   <div class="nav-links" role="list">
-    <a href="#/"            class="nav-link" id="nav-home"      role="listitem">Home</a>
-    <a href="#/news"        class="nav-link" id="nav-news"      role="listitem">Storie</a>
-    <a href="#/risultati"   class="nav-link" id="nav-risultati" role="listitem">Risultati</a>
-    <a href="#/classifica"  class="nav-link" id="nav-class"     role="listitem">Classifica</a>
-    <a href="#/atleti"      class="nav-link" id="nav-atleti"    role="listitem">Atleti</a>
-    <a href="#/team"        class="nav-link" id="nav-team"      role="listitem">Team</a>
-    <a href="#/calendario"  class="nav-link" id="nav-cal"       role="listitem">Calendario</a>
-    <a href="#/statistiche" class="nav-link" id="nav-stats"     role="listitem">Statistiche</a>
-    <a href="#/comparatore" class="nav-link" id="nav-comp"      role="listitem">Comparatore</a>
-    <a href="#/regolamento" class="nav-link" id="nav-reg"       role="listitem">Regolamento</a>
-    <a href="#/messaggi"   class="nav-link" id="nav-msg"      role="listitem" style="display:none">Messaggi</a>
-    <a href="#/login"       class="nav-link" id="nav-login"     role="listitem">Login</a>
+    <a href="#/" class="nav-link" id="nav-home" role="listitem">Home</a>
+
+    <!-- Risultati ▾ -->
+    <div class="nav-group" id="navg-gare" role="listitem">
+      <button class="nav-link nav-group-btn" id="nav-gare-btn" aria-haspopup="true" aria-expanded="false">
+        Risultati <span class="nav-chevron" aria-hidden="true">▾</span>
+      </button>
+      <div class="nav-group-panel" role="menu">
+        <a href="#/risultati"  class="nav-group-item" id="nav-risultati"  role="menuitem">Risultati</a>
+        <a href="#/calendario" class="nav-group-item" id="nav-cal"        role="menuitem">Calendario</a>
+      </div>
+    </div>
+
+    <!-- Classifiche ▾ -->
+    <div class="nav-group" id="navg-classifiche" role="listitem">
+      <button class="nav-link nav-group-btn" id="nav-class-btn" aria-haspopup="true" aria-expanded="false">
+        Classifiche <span class="nav-chevron" aria-hidden="true">▾</span>
+      </button>
+      <div class="nav-group-panel" role="menu">
+        <a href="#/classifica" class="nav-group-item" id="nav-class"   role="menuitem">Classifica</a>
+        <a href="#/atleti"     class="nav-group-item" id="nav-atleti"  role="menuitem">Atleti</a>
+        <a href="#/team"       class="nav-group-item" id="nav-team"    role="menuitem">Team</a>
+      </div>
+    </div>
+
+    <!-- Analisi ▾ -->
+    <div class="nav-group" id="navg-analisi" role="listitem">
+      <button class="nav-link nav-group-btn" id="nav-analisi-btn" aria-haspopup="true" aria-expanded="false">
+        Analisi <span class="nav-chevron" aria-hidden="true">▾</span>
+      </button>
+      <div class="nav-group-panel" role="menu">
+        <a href="#/statistiche"  class="nav-group-item" id="nav-stats" role="menuitem">Statistiche</a>
+        <a href="#/comparatore"  class="nav-group-item" id="nav-comp"  role="menuitem">Comparatore</a>
+      </div>
+    </div>
+
+    <a href="#/messaggi" class="nav-link" id="nav-msg" role="listitem" style="display:none">Messaggi</a>
+    <a href="#/login"    class="nav-link" id="nav-login" role="listitem">Login</a>
   </div>
+
   <div class="nav-search-wrap">
     <input
       type="search"
       id="nav-search"
-      placeholder="Cerca atleta o teamâ€¦"
+      placeholder="Cerca atleta o team…"
       autocomplete="off"
       aria-label="Cerca atleta o team"
     />
     <div id="search-results-dropdown" role="listbox" aria-label="Risultati ricerca" style="display:none"></div>
   </div>
+
   <div class="badge-live" id="badge-live" role="status" aria-live="polite">
     <span class="dot" aria-hidden="true"></span> LIVE
   </div>
+
   <button class="notif-bell" id="msg-bell" aria-label="Messaggi" style="display:none" onclick="window.location.hash='#/messaggi'">
     <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" width="20" height="20" aria-hidden="true"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/><polyline points="22,6 12,13 2,6"/></svg>
     <span class="notif-badge" id="msg-badge" style="display:none">0</span>
@@ -70,24 +99,27 @@
   </button>
 </nav>
 
-<!-- Mobile drawer -->
+<!-- Mobile drawer (flat — no dropdowns su mobile) -->
 <div id="nav-drawer" role="dialog" aria-label="Menu mobile">
   <a href="#/"            class="nav-link" id="drawer-home">Home</a>
+  <div class="drawer-section-label">RISULTATI</div>
   <a href="#/risultati"   class="nav-link" id="drawer-risultati">Risultati</a>
+  <a href="#/calendario"  class="nav-link" id="drawer-cal">Calendario</a>
+  <div class="drawer-section-label">CLASSIFICHE</div>
   <a href="#/classifica"  class="nav-link" id="drawer-class">Classifica</a>
   <a href="#/atleti"      class="nav-link" id="drawer-atleti">Atleti</a>
   <a href="#/team"        class="nav-link" id="drawer-team">Team</a>
-  <a href="#/calendario"  class="nav-link" id="drawer-cal">Calendario</a>
+  <div class="drawer-section-label">ANALISI</div>
   <a href="#/statistiche" class="nav-link" id="drawer-stats">Statistiche</a>
   <a href="#/comparatore" class="nav-link" id="drawer-comp">Comparatore</a>
-  <a href="#/regolamento" class="nav-link" id="drawer-reg">Regolamento</a>
-  <a href="#/messaggi"   class="nav-link" id="drawer-msg" style="display:none">Messaggi</a>
-  <a href="#/login"       class="nav-link" id="drawer-login">Login</a>
+  <div class="drawer-section-label" id="drawer-section-msg" style="display:none">ACCOUNT</div>
+  <a href="#/messaggi"    class="nav-link" id="drawer-msg" style="display:none">Messaggi</a>
+  <a href="#/login"       class="nav-link" id="drawer-login">Login / Profilo</a>
 </div>
 
-<!-- â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â• -->
+<!-- ══════════════════════════════════════════════════════════ -->
 <!--  APP ROOT                                                  -->
-<!-- â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â• -->
+<!-- ══════════════════════════════════════════════════════════ -->
 <div id="app">
   <div class="loading-bar" id="initial-loader"></div>
 </div>
@@ -95,21 +127,23 @@
 <!-- Tooltip sparkline -->
 <div class="sparkline-tooltip" id="sparkline-tooltip"></div>
 
-<!-- â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â• -->
+<!-- ══════════════════════════════════════════════════════════ -->
 <!--  FOOTER                                                    -->
-<!-- â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â• -->
+<!-- ══════════════════════════════════════════════════════════ -->
 <footer role="contentinfo">
-  <strong>ITALIACRIT</strong> â€” Risultati Ciclismo Italiano
+  <strong>ITALIACRIT</strong> – Risultati Ciclismo Italiano
   <span class="footer-sep">|</span>
   Dati: Federazione Ciclistica Italiana
-  <span class="footer-sep">â€¢</span>
-  Aggiornato: <span id="footer-update">â€”</span>
+  <span class="footer-sep">•</span>
+  Aggiornato: <span id="footer-update">—</span>
+  <span class="footer-sep">•</span>
+  <a href="#/regolamento" class="footer-link">Regolamento</a>
   <br/>
   <span style="font-size:0.75rem;margin-top:4px;display:block">
-    Non affiliato a FCI &nbsp;â€¢&nbsp; Progetto indipendente
+    Non affiliato a FCI &nbsp;•&nbsp; Progetto indipendente
   </span>
 </footer>
 
-<script src="app.js?v=195" defer></script>
+<script src="app.js?v=197" defer></script>
 </body>
 </html>

@@ -172,6 +172,81 @@ table, .rank-num, .rank-pts, .cat-pts,
   font-weight: 600;
 }
 
+/* ── Navbar dropdown groups ─────────────────────────────────────── */
+.nav-group {
+  position: relative;
+  display: flex;
+  align-items: center;
+}
+
+.nav-group-btn {
+  background: none;
+  border: none;
+  cursor: pointer;
+  font: inherit;
+  display: flex;
+  align-items: center;
+  gap: 3px;
+}
+
+.nav-chevron {
+  font-size: .6em;
+  transition: transform .2s;
+  display: inline-block;
+  opacity: .6;
+}
+.nav-group:hover .nav-chevron,
+.nav-group.open .nav-chevron { transform: rotate(180deg); opacity: 1; }
+
+.nav-group-panel {
+  position: absolute;
+  top: calc(100% + 4px);
+  left: 0;
+  background: #1f2937;
+  border: 1px solid rgba(255,255,255,0.1);
+  border-radius: 8px;
+  box-shadow: 0 12px 32px rgba(0,0,0,.4);
+  padding: 5px 0;
+  min-width: 150px;
+  z-index: 600;
+  opacity: 0;
+  pointer-events: none;
+  transform: translateY(-4px);
+  transition: opacity .15s, transform .15s;
+}
+.nav-group:hover .nav-group-panel,
+.nav-group.open .nav-group-panel {
+  opacity: 1;
+  pointer-events: all;
+  transform: translateY(0);
+}
+
+.nav-group-item {
+  display: block;
+  padding: 9px 18px;
+  font-size: .82rem;
+  font-weight: 500;
+  color: rgba(255,255,255,0.7);
+  text-decoration: none;
+  transition: background .1s, color .1s;
+  white-space: nowrap;
+}
+.nav-group-item:hover  { background: rgba(255,255,255,0.08); color: #fff; }
+.nav-group-item.active { color: var(--red-hot); background: rgba(255,107,0,0.12); font-weight: 600; }
+
+/* Gruppo attivo: il bottone si illumina */
+.nav-group-btn.active { color: var(--red-hot) !important; background: rgba(255,107,0,0.15) !important; font-weight: 600; }
+
+/* ── Mobile drawer section labels ───────────────────────────────── */
+.drawer-section-label {
+  font-size: .65rem;
+  font-weight: 700;
+  letter-spacing: .08em;
+  color: var(--text-muted);
+  padding: 12px 16px 4px;
+  text-transform: uppercase;
+}
+
 /* Link nel drawer mobile (sfondo chiaro) */
 #nav-drawer .nav-link {
   color: var(--text-primary);
@@ -180,6 +255,14 @@ table, .rank-num, .rank-pts, .cat-pts,
   color: var(--red-hot);
   background: var(--bg-elevated);
 }
+
+/* Footer link */
+.footer-link {
+  color: inherit;
+  opacity: .7;
+  text-decoration: none;
+}
+.footer-link:hover { opacity: 1; text-decoration: underline; }
 #nav-drawer .nav-link.active {
   color: var(--red-hot);
   background: var(--red-glow);

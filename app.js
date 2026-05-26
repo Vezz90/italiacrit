@@ -185,16 +185,20 @@ function updateNavLoginState() {
     if (bell)    bell.style.display = 'flex';
     if (msgBell) msgBell.style.display = 'flex';
     if (navMsg)  navMsg.style.display = '';
-    if (drawerMsg) drawerMsg.style.display = '';
+    if (drawerMsg) { drawerMsg.style.display = ''; }
+    const drawerSectionMsg = document.getElementById('drawer-section-msg');
+    if (drawerSectionMsg) drawerSectionMsg.style.display = '';
     startNotifPolling();
     startMsgPolling();
   } else {
     if (link)       { link.textContent = 'Login'; link.href = '#/login'; }
-    if (drawerLink) { drawerLink.textContent = 'Login'; drawerLink.href = '#/login'; }
+    if (drawerLink) { drawerLink.textContent = 'Login / Profilo'; drawerLink.href = '#/login'; }
     if (bell)    bell.style.display = 'none';
     if (msgBell) msgBell.style.display = 'none';
     if (navMsg)  navMsg.style.display = 'none';
     if (drawerMsg) drawerMsg.style.display = 'none';
+    const drawerSectionMsg = document.getElementById('drawer-section-msg');
+    if (drawerSectionMsg) drawerSectionMsg.style.display = 'none';
     stopNotifPolling();
     stopMsgPolling();
   }
@@ -1188,7 +1192,9 @@ function route() {
     if (activeHub) applyHubFilters(activeHub);
     return renderCalendario();
   }
-  if (match('/statistiche')) return renderStatistiche();
+  const m_stats = match('/statistiche/:cat');
+  if (m_stats) return renderStatistiche(decodeURIComponent(m_stats[1]));
+  if (match('/statistiche')) return renderStatistiche(null);
   if (match('/comparatore')) return renderComparatore();
   if (match('/regolamento')) return renderRegolamento();
   if (match('/login')) return renderLogin();
@@ -1208,32 +1214,44 @@ function route() {
   if (match('/messaggi')) return renderInbox(null);
   const m_forma = match('/forma/:cat');
   if (m_forma) return renderForma(m_forma[1]);
-  if (match('/news')) return renderNews();
-
   renderNotFound();
 }
 
 function updateNavActive(hash) {
-  ['nav-home','nav-class','nav-atleti','nav-team','nav-cal','nav-risultati','nav-reg','nav-stats','nav-comp','nav-login'].forEach(id => {
-    document.getElementById(id)?.classList.remove('active');
-  });
+  // Rimuovi active da tutti
+  document.querySelectorAll('.nav-link, .nav-group-btn, .nav-group-item').forEach(el => el.classList.remove('active'));
   updateNavLoginState();
-  // Hub routes: highlight based on subpage
-  if (hash.startsWith('#/hub/')) {
-    const sub = (hash.slice(6).split('/')[1] || '');
-    const subMap = { classifica:'nav-class', risultati:'nav-risultati', atleti:'nav-atleti', team:'nav-team', calendario:'nav-cal', statistiche:'nav-stats', comparatore:'nav-comp', regolamento:'nav-reg', login:'nav-login' };
-    document.getElementById(subMap[sub] || 'nav-home')?.classList.add('active');
+
+  if (hash === '#/' || hash === '#') {
+    document.getElementById('nav-home')?.classList.add('active');
     return;
   }
-  if (hash === '#/' || hash === '#') document.getElementById('nav-home')?.classList.add('active');
-  else if (hash.startsWith('#/news')) document.getElementById('nav-news')?.classList.add('active');
-  else if (hash.startsWith('#/classifica')) document.getElementById('nav-class')?.classList.add('active');
-  else if (hash.startsWith('#/atleti')) document.getElementById('nav-atleti')?.classList.add('active');
-  else if (hash.startsWith('#/team')) document.getElementById('nav-team')?.classList.add('active');
-  else if (hash.startsWith('#/risultati')) document.getElementById('nav-risultati')?.classList.add('active');
-  else if (hash.startsWith('#/statistiche')) document.getElementById('nav-stats')?.classList.add('active');
-  else if (hash.startsWith('#/comparatore')) document.getElementById('nav-comp')?.classList.add('active');
-  else if (hash.startsWith('#/login') || hash.startsWith('#/register') || hash.startsWith('#/profilo')) document.getElementById('nav-login')?.classList.add('active');
+
+  const seg = (hash.replace(/^#\//, '').split('/')[0] || '');
+
+  const GARE_SEGS    = ['risultati', 'calendario', 'gara'];
+  const CLASS_SEGS   = ['classifica', 'atleti', 'team', 'atleta'];
+  const ANALISI_SEGS = ['statistiche', 'comparatore'];
+  const ACCOUNT_SEGS = ['login', 'register', 'profilo'];
+
+  if (GARE_SEGS.includes(seg)) {
+    document.getElementById('nav-gare-btn')?.classList.add('active');
+    document.getElementById('nav-risultati')?.classList.toggle('active', seg === 'risultati');
+    document.getElementById('nav-cal')?.classList.toggle('active', seg === 'calendario');
+  } else if (CLASS_SEGS.includes(seg)) {
+    document.getElementById('nav-class-btn')?.classList.add('active');
+    document.getElementById('nav-class')?.classList.toggle('active',  seg === 'classifica');
+    document.getElementById('nav-atleti')?.classList.toggle('active', seg === 'atleti');
+    document.getElementById('nav-team')?.classList.toggle('active',   seg === 'team');
+  } else if (ANALISI_SEGS.includes(seg)) {
+    document.getElementById('nav-analisi-btn')?.classList.add('active');
+    document.getElementById('nav-stats')?.classList.toggle('active', seg === 'statistiche');
+    document.getElementById('nav-comp')?.classList.toggle('active',  seg === 'comparatore');
+  } else if (seg === 'messaggi') {
+    document.getElementById('nav-msg')?.classList.add('active');
+  } else if (ACCOUNT_SEGS.includes(seg)) {
+    document.getElementById('nav-login')?.classList.add('active');
+  }
 }
 
 function setPage(html) {
@@ -9054,9 +9072,32 @@ function catGenLabel(cat, gen) {
 }
 
 // ── STATISTICHE PAGE ─────────────────────────────────────────
-async function renderStatistiche() {
+async function renderStatistiche(selectedCatKey) {
   if (!globalData) return;
-  const { resultsRaw, athletes, calendar } = globalData;
+  const { resultsRaw: allResults, athletes, calendar } = globalData;
+
+  // Categorie disponibili: lista unica (categoria|genere) → chiave URL
+  const availableCats = [...new Set(allResults.map(r => `${r.categoria}|${r.genere}`))].sort();
+  const catTabsHtml = `
+    <div class="cat-tabs" style="margin-bottom:28px;flex-wrap:wrap">
+      <button class="cat-tab${!selectedCatKey ? ' active' : ''}" onclick="location.hash='#/statistiche'">Generale</button>
+      ${availableCats.map(key => {
+        const [cat, gen] = key.split('|');
+        const label = catGenLabel(cat, gen);
+        const isActive = selectedCatKey === key;
+        return `<button class="cat-tab${isActive ? ' active' : ''}" onclick="location.hash='#/statistiche/${encodeURIComponent(key)}'">${label}</button>`;
+      }).join('')}
+    </div>`;
+
+  // Filtra i risultati per la categoria selezionata (o usa tutti per il generale)
+  const resultsRaw = selectedCatKey
+    ? allResults.filter(r => `${r.categoria}|${r.genere}` === selectedCatKey)
+    : allResults;
+
+  // Se categoria singola → mostra vista dedicata
+  if (selectedCatKey) {
+    return _renderStatisticheCat(selectedCatKey, resultsRaw, athletes, calendar, catTabsHtml);
+  }
 
   // KPI globali (ridotto)
   const totalRaces = new Set(resultsRaw.map(r => r.gara_id)).size;
@@ -9324,6 +9365,8 @@ async function renderStatistiche() {
       <h1 class="pg-title">STATISTICHE</h1>
     </div>
 
+    ${catTabsHtml}
+
     <!-- EDITORIAL INTELLIGENCE SECTION -->
     ${siIntelHtml}
 
@@ -9387,6 +9430,158 @@ async function renderStatistiche() {
     bF.style.color = tab==='F'?'#fff':'var(--text-muted)';
     bF.style.borderColor = tab==='F'?'var(--cat-donne)':'var(--border-subtle)';
   };
+}
+
+// ── STATISTICHE CATEGORIA SINGOLA ────────────────────────────
+function _renderStatisticheCat(catKey, resultsRaw, athletes, calendar, catTabsHtml) {
+  const [cat, gen] = catKey.split('|');
+  const label = catGenLabel(cat, gen);
+
+  if (!resultsRaw.length) {
+    setPage(`<div class="pg-header"><h1 class="pg-title">STATISTICHE — ${esc(label)}</h1></div>${catTabsHtml}<p style="color:var(--text-muted)">Nessun dato per questa categoria.</p>`);
+    return;
+  }
+
+  // KPI categoria
+  const catRaces     = new Set(resultsRaw.map(r => r.gara_id)).size;
+  const catAthletes  = new Set(resultsRaw.filter(r => r.punti_effettivi > 0).map(r => r.atleta_id)).size;
+  const catKm        = Math.round(resultsRaw.reduce((s,r) => s+(parseFloat(r.km)||0), 0)).toLocaleString('it-IT');
+  const catWins      = resultsRaw.filter(r => r.posizione === 1).length;
+
+  // Top vincitore (più vittorie)
+  const winsMap = {};
+  const ptsMap  = {};
+  const racesMap = {};
+  const podioMap = {};
+  resultsRaw.forEach(r => {
+    const id = r.atleta_id;
+    racesMap[id] = (racesMap[id]||0) + 1;
+    ptsMap[id]   = (ptsMap[id]||0) + (r.punti_effettivi||0);
+    if (r.posizione === 1) winsMap[id] = (winsMap[id]||0) + 1;
+    if (r.posizione <= 3)  podioMap[id] = (podioMap[id]||0) + 1;
+  });
+  const getName = id => { const a = athletes[id]; return a ? `${a.cognome} ${a.nome}` : id.replace(/_/g,' '); };
+  const topWinner  = Object.entries(winsMap).sort((a,b)=>b[1]-a[1])[0];
+  const topScorer  = Object.entries(ptsMap).sort((a,b)=>b[1]-a[1])[0];
+  const topConsist = Object.entries(racesMap).filter(([,g])=>g>=3)
+    .map(([id,g]) => ({ id, pct: Math.round(((podioMap[id]||0)/g)*100), g }))
+    .sort((a,b)=>b.pct-a.pct)[0];
+
+  // Team con più vittorie
+  const teamMap = {};
+  resultsRaw.forEach(r => {
+    if (r.posizione !== 1 || !r.team_id) return;
+    if (!teamMap[r.team_id]) teamMap[r.team_id] = { team: r.team, wins: 0 };
+    teamMap[r.team_id].wins++;
+  });
+  const topTeam = Object.values(teamMap).sort((a,b)=>b.wins-a.wins)[0];
+
+  // Top 10 vincitori assoluti
+  const top10Wins = Object.entries(winsMap)
+    .sort((a,b)=>b[1]-a[1]).slice(0,10)
+    .map(([id,w],i) => `<tr>
+      <td style="padding:8px 12px;color:var(--text-muted);font-size:.8rem">${i+1}</td>
+      <td style="padding:8px 12px"><a href="#/atleta/${esc(id)}" style="font-weight:600">${esc(getName(id))}</a></td>
+      <td style="padding:8px 12px;font-family:var(--font-display);font-size:1.2rem;color:var(--gold)">${w}</td>
+    </tr>`).join('');
+
+  const top10Pts = Object.entries(ptsMap)
+    .sort((a,b)=>b[1]-a[1]).slice(0,10)
+    .map(([id,p],i) => `<tr>
+      <td style="padding:8px 12px;color:var(--text-muted);font-size:.8rem">${i+1}</td>
+      <td style="padding:8px 12px"><a href="#/atleta/${esc(id)}" style="font-weight:600">${esc(getName(id))}</a></td>
+      <td style="padding:8px 12px;font-family:var(--font-display);font-size:1.2rem;color:var(--red-hot)">${p}</td>
+    </tr>`).join('');
+
+  // Distribuzione vittorie per team (top 8)
+  const teamBars = Object.entries(teamMap).sort((a,b)=>b[1].wins-a[1].wins).slice(0,8);
+  const maxTeamW = teamBars[0]?.[1]?.wins || 1;
+  const teamBarsHtml = teamBars.map(([id,{team,wins}]) => `
+    <div style="margin-bottom:8px">
+      <div style="display:flex;justify-content:space-between;font-size:.78rem;margin-bottom:3px">
+        <span style="font-weight:600">${esc(team||id)}</span>
+        <span style="color:var(--text-muted)">${wins} vitt.</span>
+      </div>
+      <div style="height:8px;background:var(--bg-elevated);border-radius:4px;overflow:hidden">
+        <div style="height:100%;width:${Math.round(wins/maxTeamW*100)}%;background:linear-gradient(90deg,var(--red-hot),var(--yellow-race));border-radius:4px"></div>
+      </div>
+    </div>`).join('');
+
+  // Attività per mese
+  const monthMap = {};
+  resultsRaw.forEach(r => {
+    if (!r.data) return;
+    const m = r.data.slice(0,7);
+    if (!monthMap[m]) monthMap[m] = 0;
+    monthMap[m]++;
+  });
+  const months = Object.entries(monthMap).sort((a,b)=>a[0]<b[0]?-1:1);
+  const maxM = Math.max(...months.map(([,v])=>v), 1);
+  const SI_MESI = ['','GEN','FEB','MAR','APR','MAG','GIU','LUG','AGO','SET','OTT','NOV','DIC'];
+  const monthBarsHtml = months.map(([ym,n]) => {
+    const [,mm] = ym.split('-');
+    return `<div style="display:flex;align-items:center;gap:8px;margin-bottom:6px">
+      <div style="width:30px;font-size:.7rem;color:var(--text-muted);text-align:right">${SI_MESI[parseInt(mm)]||mm}</div>
+      <div style="flex:1;height:12px;background:var(--bg-elevated);border-radius:6px;overflow:hidden">
+        <div style="height:100%;width:${Math.round(n/maxM*100)}%;background:var(--accent);border-radius:6px"></div>
+      </div>
+      <div style="width:24px;font-size:.75rem;font-weight:600;color:var(--text-main)">${n}</div>
+    </div>`;
+  }).join('');
+
+  const cardBase = 'background:var(--bg-card);border:1px solid var(--border-subtle);border-radius:8px;padding:20px;text-align:center';
+  const tableBase = 'background:var(--bg-card);border:1px solid var(--border-subtle);border-radius:8px;overflow:hidden;margin-bottom:24px';
+
+  setPage(`
+    <div class="pg-header">
+      <div class="pg-eyebrow">📊 ANALISI & DATI</div>
+      <h1 class="pg-title">STATISTICHE</h1>
+    </div>
+
+    ${catTabsHtml}
+
+    <!-- KPI categoria -->
+    <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(140px,1fr));gap:12px;margin-bottom:28px">
+      ${[['🏁',catRaces,'Gare'],['👤',catAthletes,'Atleti attivi'],['🏆',catWins,'Vittorie totali'],['🛣️',catKm,'Km totali']].map(([icon,val,lbl])=>`
+        <div style="${cardBase}">
+          <div style="font-size:1.6rem;margin-bottom:4px">${icon}</div>
+          <div style="font-family:var(--font-display);font-size:1.8rem;color:var(--red-hot);line-height:1">${val}</div>
+          <div style="font-family:var(--font-heading);font-size:.65rem;color:var(--text-muted);text-transform:uppercase;letter-spacing:.1em;margin-top:4px">${lbl}</div>
+        </div>`).join('')}
+    </div>
+
+    <!-- Protagonisti -->
+    <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(180px,1fr));gap:12px;margin-bottom:28px">
+      ${topWinner ? `<div style="${cardBase}"><div style="font-size:1.3rem">👑</div><div style="font-size:.65rem;font-family:var(--font-heading);color:var(--text-muted);text-transform:uppercase;letter-spacing:.08em;margin:4px 0">Top vincitore</div><div style="font-weight:700;font-size:.9rem"><a href="#/atleta/${esc(topWinner[0])}">${esc(getName(topWinner[0]))}</a></div><div style="font-size:.75rem;color:var(--text-muted);margin-top:2px">${topWinner[1]} vittorie</div></div>` : ''}
+      ${topScorer ? `<div style="${cardBase}"><div style="font-size:1.3rem">🔥</div><div style="font-size:.65rem;font-family:var(--font-heading);color:var(--text-muted);text-transform:uppercase;letter-spacing:.08em;margin:4px 0">Top marcatore</div><div style="font-weight:700;font-size:.9rem"><a href="#/atleta/${esc(topScorer[0])}">${esc(getName(topScorer[0]))}</a></div><div style="font-size:.75rem;color:var(--text-muted);margin-top:2px">${topScorer[1]} punti</div></div>` : ''}
+      ${topConsist ? `<div style="${cardBase}"><div style="font-size:1.3rem">🎯</div><div style="font-size:.65rem;font-family:var(--font-heading);color:var(--text-muted);text-transform:uppercase;letter-spacing:.08em;margin:4px 0">Più costante</div><div style="font-weight:700;font-size:.9rem"><a href="#/atleta/${esc(topConsist.id)}">${esc(getName(topConsist.id))}</a></div><div style="font-size:.75rem;color:var(--text-muted);margin-top:2px">${topConsist.pct}% podi su ${topConsist.g} gare</div></div>` : ''}
+      ${topTeam ? `<div style="${cardBase}"><div style="font-size:1.3rem">🏅</div><div style="font-size:.65rem;font-family:var(--font-heading);color:var(--text-muted);text-transform:uppercase;letter-spacing:.08em;margin:4px 0">Team dominante</div><div style="font-weight:700;font-size:.85rem"><a href="#/team/${esc(topTeam.team)}">${esc(topTeam.team)}</a></div><div style="font-size:.75rem;color:var(--text-muted);margin-top:2px">${topTeam.wins} vittorie</div></div>` : ''}
+    </div>
+
+    <!-- Classifiche top 10 -->
+    <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(320px,1fr));gap:24px;margin-bottom:28px">
+      <div style="${tableBase}">
+        <div style="padding:12px 16px;background:var(--bg-secondary);border-bottom:1px solid var(--border-subtle);font-family:var(--font-heading);font-weight:700;font-size:.85rem;text-transform:uppercase;letter-spacing:.06em">🥇 Più vittorie</div>
+        <table style="width:100%;border-collapse:collapse"><tbody>${top10Wins}</tbody></table>
+      </div>
+      <div style="${tableBase}">
+        <div style="padding:12px 16px;background:var(--bg-secondary);border-bottom:1px solid var(--border-subtle);font-family:var(--font-heading);font-weight:700;font-size:.85rem;text-transform:uppercase;letter-spacing:.06em">📊 Più punti</div>
+        <table style="width:100%;border-collapse:collapse"><tbody>${top10Pts}</tbody></table>
+      </div>
+    </div>
+
+    <!-- Distribuzione team + attività per mese -->
+    <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(300px,1fr));gap:24px;margin-bottom:28px">
+      ${teamBarsHtml ? `<div style="${tableBase}">
+        <div style="padding:12px 16px;background:var(--bg-secondary);border-bottom:1px solid var(--border-subtle);font-family:var(--font-heading);font-weight:700;font-size:.85rem;text-transform:uppercase;letter-spacing:.06em">🏆 Vittorie per Team</div>
+        <div style="padding:16px">${teamBarsHtml}</div>
+      </div>` : ''}
+      <div style="${tableBase}">
+        <div style="padding:12px 16px;background:var(--bg-secondary);border-bottom:1px solid var(--border-subtle);font-family:var(--font-heading);font-weight:700;font-size:.85rem;text-transform:uppercase;letter-spacing:.06em">📅 Gare per Mese</div>
+        <div style="padding:16px">${monthBarsHtml || '<p style="color:var(--text-muted)">Dati insufficienti</p>'}</div>
+      </div>
+    </div>
+  `);
 }
 
 // ── COMPARATORE ───────────────────────────────────────────────
