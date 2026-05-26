@@ -104,24 +104,33 @@ function isRecent(name) {
 // ── Recupera URL foto watermarked per un album — 2 sole chiamate API ──────────
 // 1. GET /wp/v2/product?pixy_album=[id]  → lista featured_media IDs
 // 2. GET /wp/v2/media?include=[id,id,…]  → tutti i source_url in un colpo solo
-async function fetchPhotosForAlbum(album, maxPhotos = 20) {
+async function fetchPhotosForAlbum(album, maxPhotos = 50) {
   try {
-    // Passo 1: ottieni i prodotti dell'album (max maxPhotos)
-    const products = await fetchURL(
-      `${XPIX_API}/product?pixy_album=${album.id}&per_page=${maxPhotos}&_fields=id,featured_media&orderby=id&order=asc`,
-      15000, true
-    );
-    if (!Array.isArray(products) || !products.length) return [];
+    // Passo 1: ottieni tutti i prodotti dell'album (paginato se > 100)
+    const products = [];
+    let page = 1;
+    while (products.length < maxPhotos) {
+      const batch = await fetchURL(
+        `${XPIX_API}/product?pixy_album=${album.id}&per_page=100&page=${page}&_fields=id,featured_media&orderby=id&order=asc`,
+        15000, true
+      );
+      if (!Array.isArray(batch) || !batch.length) break;
+      products.push(...batch);
+      if (batch.length < 100) break;
+      page++;
+    }
+    if (!products.length) return [];
 
-    // Passo 2: raccogli tutti i featured_media IDs (salta 0/null)
+    // Passo 2: raccogli i featured_media IDs (salta 0/null), rispetta maxPhotos
     const mediaIds = products
       .map(p => p.featured_media)
-      .filter(Boolean);
+      .filter(Boolean)
+      .slice(0, maxPhotos);
     if (!mediaIds.length) return [];
 
     // Passo 3: singola chiamata per recuperare tutti gli URL
     const mediaList = await fetchURL(
-      `${XPIX_API}/media?include=${mediaIds.join(',')}&per_page=${maxPhotos}&_fields=id,source_url`,
+      `${XPIX_API}/media?include=${mediaIds.join(',')}&per_page=${mediaIds.length}&_fields=id,source_url`,
       15000, true
     );
     if (!Array.isArray(mediaList)) return [];

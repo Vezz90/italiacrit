@@ -949,8 +949,8 @@ app.post('/api/admin/xpix/queue/:id/refresh-photos', requireAdmin, async (req, r
 
     const item   = queue[i];
     const photos = await fetchPhotosForAlbum(
-      { id: item.album_id, slug: item.album_slug },
-      16  // prendi più foto possibili
+      { id: item.album_id, slug: item.album_slug }
+      // usa default maxPhotos=50 per prendere tutto l'album
     );
 
     queue[i].photos    = photos;
