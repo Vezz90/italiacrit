@@ -7373,6 +7373,7 @@ async function renderGara(gara_id) {
     ${racePhotosHtml}
     ${extraVideosHtml}
     ${siRaceIntelHtml}
+    <div id="gara-media-gallery"></div>
     <div class="results-table-wrap">
       <table class="results-table">
         <thead><tr>
@@ -7382,10 +7383,9 @@ async function renderGara(gara_id) {
       </table>
     </div>
     ${detailsHtml}
-    <div id="gara-media-gallery"></div>
   `);
 
-  // Carica gallery media (fotografer della community) — async post-render
+  // Carica gallery media (fotografi della community) — async post-render, prima della classifica
   (async () => {
     const galEl = document.getElementById('gara-media-gallery');
     if (!galEl) return;
@@ -7393,54 +7393,111 @@ async function renderGara(gara_id) {
       const d = await fetch(`${API_BASE}/media/gara/${encodeURIComponent(primaryGaraId)}`).then(r => r.json());
       const albums = d.albums || [];
       if (!albums.length) return;
+
+      // Per ogni album carica le foto in parallelo (max 4 concurrent)
+      const albumPhotos = await Promise.all(albums.map(a =>
+        fetch(`${API_BASE}/media/album/${a.id}/photos`).then(r => r.json())
+          .then(r => ({ ...a, photos: (r.photos || []).map(p => p.ext_url || (p.filename ? `${PHOTOS_BASE}/photos/${p.filename}` : '')).filter(Boolean) }))
+          .catch(() => ({ ...a, photos: [] }))
+      ));
+
+      const validAlbums = albumPhotos.filter(a => a.photos.length);
+      if (!validAlbums.length) return;
+
+      // Raccoglie tutti i src in un flat array per il carousel globale, tenendo traccia degli offset per album
+      const allPhotos = [];  // { src, albumTitle, photographer_name, profile_id }
+      validAlbums.forEach(a => a.photos.forEach(src => allPhotos.push({ src, albumTitle: a.title, photographer_name: a.photographer_name, profile_id: a.profile_id })));
+      window._garaMediaPhotos = allPhotos;
+
       galEl.innerHTML = `
-        <div class="comp-section" style="margin-top:16px">
-          <div class="comp-section-title" style="margin-bottom:12px">📷 Gallery fotografi</div>
-          <div class="media-album-grid">${albums.map(a => {
-            const cover = a.first_ext_url || (a.first_filename ? `${PHOTOS_BASE}/photos/${a.first_filename}` : '');
-            return `<div class="media-album-card" style="cursor:pointer" onclick="window.openMediaGalleryLightbox(${a.id},'${esc(a.title)}')">
-              <div class="media-album-cover">
-                ${cover ? `<img src="${esc(cover)}" loading="lazy" alt="${esc(a.title)}"/>` : `<div class="media-album-cover-empty">📷</div>`}
-                <div class="media-album-count">${a.photo_count} foto</div>
-              </div>
-              <div class="media-album-title">${esc(a.title)}</div>
-              <div style="font-size:.72rem;color:var(--text-muted)">
-                📷 <a href="#/media/${a.profile_id}" style="color:var(--accent)" onclick="event.stopPropagation()">${esc(a.photographer_name)}</a>
-              </div>
-            </div>`;
-          }).join('')}</div>
+        <div class="comp-section media-gallery-section">
+          <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:10px;flex-wrap:wrap;gap:6px">
+            <div class="comp-section-title" style="margin:0;border:none;padding:0">📷 Gallery fotografi</div>
+            <span style="font-size:.75rem;color:var(--text-muted)">${allPhotos.length} foto · ${validAlbums.length} album</span>
+          </div>
+          ${validAlbums.map((a, ai) => {
+            const stripId = `mgstrip-${a.id}`;
+            const globalStart = allPhotos.findIndex(p => p.albumTitle === a.title && p.photographer_name === a.photographer_name);
+            return `
+              <div class="media-gallery-album" style="margin-bottom:16px">
+                <div class="media-gallery-album-header">
+                  <span class="media-gallery-album-name">${esc(a.title)}</span>
+                  <a href="#/media/${a.profile_id}" class="media-gallery-photographer" onclick="event.stopPropagation()">📷 ${esc(a.photographer_name)}</a>
+                </div>
+                <div class="media-gallery-strip-wrap">
+                  <button class="media-gallery-arrow media-gallery-prev" onclick="window._mgScroll('${stripId}',-1)" aria-label="Scorri sinistra">‹</button>
+                  <div class="media-gallery-strip" id="${stripId}">
+                    ${a.photos.map((src, pi) => `
+                      <div class="media-gallery-thumb" onclick="window.openMediaCarousel(${globalStart + pi})">
+                        <img src="${esc(src)}" loading="lazy" alt="Foto ${pi+1}"/>
+                      </div>`).join('')}
+                  </div>
+                  <button class="media-gallery-arrow media-gallery-next" onclick="window._mgScroll('${stripId}',1)" aria-label="Scorri destra">›</button>
+                </div>
+              </div>`;
+          }).join('')}
         </div>`;
     } catch(e) { /* non blocca la pagina */ }
   })();
 
-  window.openMediaGalleryLightbox = async function(albumId, title) {
+  // Scroll orizzontale dello strip
+  window._mgScroll = function(stripId, dir) {
+    const el = document.getElementById(stripId);
+    if (!el) return;
+    const thumbW = el.querySelector('.media-gallery-thumb')?.offsetWidth || 200;
+    el.scrollBy({ left: dir * thumbW * 3, behavior: 'smooth' });
+  };
+
+  // Carousel lightbox con prev/next su tutti i foto dell'evento
+  window.openMediaCarousel = function(startIdx) {
+    const photos = window._garaMediaPhotos || [];
+    if (!photos.length) return;
+    let cur = startIdx;
+
+    const render = () => {
+      const p = photos[cur];
+      const counterEl = document.getElementById('mgc-counter');
+      const imgEl     = document.getElementById('mgc-img');
+      const captEl    = document.getElementById('mgc-caption');
+      if (counterEl) counterEl.textContent = `${cur + 1} / ${photos.length}`;
+      if (imgEl)  { imgEl.src = p.src; }
+      if (captEl) captEl.innerHTML = `<a href="#/media/${p.profile_id}" style="color:var(--accent)" onclick="document.getElementById('media-carousel')?.remove()">📷 ${esc(p.photographer_name)}</a>  <span style="color:rgba(255,255,255,.5)">·</span>  ${esc(p.albumTitle)}`;
+    };
+
+    const existing = document.getElementById('media-carousel');
+    if (existing) existing.remove();
+
     const overlay = document.createElement('div');
-    overlay.id = 'media-lightbox';
-    overlay.style.cssText = 'position:fixed;inset:0;background:rgba(0,0,0,.92);z-index:9999;overflow-y:auto;padding:24px 16px';
+    overlay.id = 'media-carousel';
+    overlay.style.cssText = 'position:fixed;inset:0;background:rgba(0,0,0,.95);z-index:9999;display:flex;flex-direction:column;align-items:center;justify-content:center;padding:16px';
     overlay.innerHTML = `
-      <div style="max-width:960px;margin:0 auto">
-        <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:16px">
-          <strong style="color:#fff;font-size:1rem">${esc(title)}</strong>
-          <button onclick="document.getElementById('media-lightbox')?.remove()" style="background:none;border:none;color:#ccc;font-size:1.5rem;cursor:pointer">✕</button>
-        </div>
-        <div id="mgl-grid" style="display:grid;grid-template-columns:repeat(auto-fill,minmax(200px,1fr));gap:8px"><div style="color:#aaa;padding:32px;text-align:center">Caricamento…</div></div>
-      </div>`;
+      <div style="position:absolute;top:12px;right:16px;display:flex;align-items:center;gap:14px">
+        <span id="mgc-counter" style="color:rgba(255,255,255,.5);font-size:.82rem"></span>
+        <button onclick="document.getElementById('media-carousel')?.remove()" style="background:none;border:none;color:#ccc;font-size:1.8rem;cursor:pointer;line-height:1">✕</button>
+      </div>
+      <div style="position:relative;width:100%;max-width:960px;display:flex;align-items:center;justify-content:center;gap:8px">
+        <button id="mgc-prev" style="background:rgba(255,255,255,.12);border:none;color:#fff;font-size:2.2rem;width:44px;height:44px;border-radius:50%;cursor:pointer;flex-shrink:0;transition:background .15s" onmouseenter="this.style.background='rgba(255,255,255,.25)'" onmouseleave="this.style.background='rgba(255,255,255,.12)'">‹</button>
+        <img id="mgc-img" src="" alt="" style="max-height:80vh;max-width:calc(100% - 120px);object-fit:contain;border-radius:4px;display:block"/>
+        <button id="mgc-next" style="background:rgba(255,255,255,.12);border:none;color:#fff;font-size:2.2rem;width:44px;height:44px;border-radius:50%;cursor:pointer;flex-shrink:0;transition:background .15s" onmouseenter="this.style.background='rgba(255,255,255,.25)'" onmouseleave="this.style.background='rgba(255,255,255,.12)'">›</button>
+      </div>
+      <div id="mgc-caption" style="margin-top:12px;font-size:.8rem;color:rgba(255,255,255,.65);text-align:center"></div>`;
     document.body.appendChild(overlay);
-    try {
-      const d = await fetch(`${API_BASE}/media/album/${albumId}/photos`).then(r => r.json());
-      const photos = d.photos || [];
-      const grid = document.getElementById('mgl-grid');
-      if (!grid) return;
-      grid.innerHTML = photos.map(p => {
-        const src = p.ext_url || (p.filename ? `${PHOTOS_BASE}/photos/${p.filename}` : '');
-        return src ? `<div style="aspect-ratio:4/3;overflow:hidden;border-radius:6px;cursor:zoom-in" onclick="window.openPhotoLightbox('${esc(src)}')">
-          <img src="${esc(src)}" loading="lazy" style="width:100%;height:100%;object-fit:cover"/>
-        </div>` : '';
-      }).join('');
-    } catch(e) {
-      const grid = document.getElementById('mgl-grid');
-      if (grid) grid.innerHTML = `<div style="color:#f87171">Errore: ${esc(e.message)}</div>`;
-    }
+
+    render();
+
+    document.getElementById('mgc-prev').onclick = () => { cur = (cur - 1 + photos.length) % photos.length; render(); };
+    document.getElementById('mgc-next').onclick = () => { cur = (cur + 1) % photos.length; render(); };
+
+    // Keyboard navigation
+    const onKey = (e) => {
+      if (e.key === 'ArrowLeft')  { cur = (cur - 1 + photos.length) % photos.length; render(); }
+      if (e.key === 'ArrowRight') { cur = (cur + 1) % photos.length; render(); }
+      if (e.key === 'Escape')     { overlay.remove(); document.removeEventListener('keydown', onKey); }
+    };
+    document.addEventListener('keydown', onKey);
+    overlay.addEventListener('click', (e) => {
+      if (e.target === overlay) { overlay.remove(); document.removeEventListener('keydown', onKey); }
+    });
   };
 
   // Face detection per centrare il volto nell'hero photo

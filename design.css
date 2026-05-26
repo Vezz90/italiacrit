@@ -8873,7 +8873,7 @@ body[data-hub] .loading-bar { background: var(--hub-color) !important; }
 .media-profile-link:hover { text-decoration: underline; }
 .media-profile-stats { font-size: .8rem; color: var(--text-muted); }
 
-/* ── Media Album Grid ──────────────────────────────────────────────────────── */
+/* ── Media Album Grid (profilo fotografo) ──────────────────────────────────── */
 .media-album-grid {
   display: grid;
   grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
@@ -8923,7 +8923,7 @@ body[data-hub] .loading-bar { background: var(--hub-color) !important; }
 }
 .media-album-gara { margin-top: 2px; }
 
-/* ── Media Photos Grid ─────────────────────────────────────────────────────── */
+/* ── Media Photos Grid (pagina profilo) ────────────────────────────────────── */
 .media-photos-grid {
   display: grid;
   grid-template-columns: repeat(auto-fill, minmax(160px, 1fr));
@@ -8956,7 +8956,94 @@ body[data-hub] .loading-bar { background: var(--hub-color) !important; }
   text-overflow: ellipsis;
 }
 
+/* ── Gallery fotografo in pagina gara — strip orizzontale ──────────────────── */
+.media-gallery-section { margin-top: 16px; }
+
+.media-gallery-album { margin-bottom: 4px; }
+
+.media-gallery-album-header {
+  display: flex;
+  align-items: baseline;
+  gap: 10px;
+  margin-bottom: 7px;
+  flex-wrap: wrap;
+}
+.media-gallery-album-name {
+  font-size: .82rem;
+  font-weight: 700;
+  color: var(--text-secondary);
+}
+.media-gallery-photographer {
+  font-size: .75rem;
+  color: var(--accent);
+  text-decoration: none;
+}
+.media-gallery-photographer:hover { text-decoration: underline; }
+
+.media-gallery-strip-wrap {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  position: relative;
+}
+.media-gallery-strip {
+  display: flex;
+  gap: 6px;
+  overflow-x: auto;
+  scroll-behavior: smooth;
+  -webkit-overflow-scrolling: touch;
+  padding-bottom: 6px;
+  flex: 1;
+  /* hide scrollbar visually but keep functional */
+  scrollbar-width: thin;
+  scrollbar-color: var(--border) transparent;
+}
+.media-gallery-strip::-webkit-scrollbar { height: 4px; }
+.media-gallery-strip::-webkit-scrollbar-track { background: transparent; }
+.media-gallery-strip::-webkit-scrollbar-thumb { background: var(--border); border-radius: 2px; }
+
+.media-gallery-thumb {
+  flex-shrink: 0;
+  height: 180px;
+  width: auto;
+  aspect-ratio: 4 / 3;
+  overflow: hidden;
+  border-radius: 6px;
+  cursor: pointer;
+  background: var(--bg-elevated);
+  position: relative;
+}
+.media-gallery-thumb img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  transition: transform .22s, opacity .2s;
+  display: block;
+}
+.media-gallery-thumb:hover img { transform: scale(1.05); }
+
+.media-gallery-arrow {
+  flex-shrink: 0;
+  background: var(--bg-card);
+  border: 1px solid var(--border);
+  color: var(--text-primary);
+  width: 30px;
+  height: 30px;
+  border-radius: 50%;
+  cursor: pointer;
+  font-size: 1.1rem;
+  line-height: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: background .15s;
+  align-self: center;
+}
+.media-gallery-arrow:hover { background: var(--bg-elevated); }
+
 @media (max-width: 600px) {
   .media-album-grid { grid-template-columns: repeat(2, 1fr); gap: 10px; }
   .media-photos-grid { grid-template-columns: repeat(2, 1fr); }
+  .media-gallery-thumb { height: 130px; }
+  .media-gallery-arrow { width: 24px; height: 24px; font-size: .9rem; }
 }
