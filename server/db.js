@@ -114,6 +114,40 @@ async function createSchema() {
       status       TEXT NOT NULL DEFAULT 'pending',
       created_at   TIMESTAMPTZ NOT NULL DEFAULT NOW()
     );
+
+    -- ── Media / Fotografi ──────────────────────────────────────────────────────
+
+    CREATE TABLE IF NOT EXISTS media_profiles (
+      id           SERIAL PRIMARY KEY,
+      user_id      INTEGER REFERENCES users(id) ON DELETE CASCADE,
+      display_name TEXT NOT NULL,
+      bio          TEXT    DEFAULT '',
+      website      TEXT    DEFAULT '',
+      instagram    TEXT    DEFAULT '',
+      cover_url    TEXT    DEFAULT '',
+      status       TEXT    NOT NULL DEFAULT 'pending',
+      created_at   TIMESTAMPTZ NOT NULL DEFAULT NOW()
+    );
+
+    CREATE TABLE IF NOT EXISTS media_albums (
+      id               SERIAL PRIMARY KEY,
+      media_profile_id INTEGER NOT NULL REFERENCES media_profiles(id) ON DELETE CASCADE,
+      gara_id          TEXT,
+      title            TEXT NOT NULL,
+      description      TEXT DEFAULT '',
+      cover_url        TEXT DEFAULT '',
+      created_at       TIMESTAMPTZ NOT NULL DEFAULT NOW()
+    );
+
+    CREATE TABLE IF NOT EXISTS media_photos (
+      id         SERIAL PRIMARY KEY,
+      album_id   INTEGER NOT NULL REFERENCES media_albums(id) ON DELETE CASCADE,
+      filename   TEXT,
+      ext_url    TEXT,
+      caption    TEXT DEFAULT '',
+      ord        INTEGER NOT NULL DEFAULT 0,
+      created_at TIMESTAMPTZ NOT NULL DEFAULT NOW()
+    );
   `);
 }
 
@@ -226,6 +260,11 @@ const queries = {
                fl.relation as name, NULL as fci_code, fl.status, fl.created_at, u.email
         FROM family_links fl JOIN users u ON u.id = fl.user_id
         WHERE fl.status = 'pending'
+        UNION ALL
+        SELECT 'media' as type, mp.id, mp.user_id, NULL as atleta_id,
+               mp.display_name as name, NULL as fci_code, mp.status, mp.created_at, u.email
+        FROM media_profiles mp JOIN users u ON u.id = mp.user_id
+        WHERE mp.status = 'pending'
       ) sub ORDER BY created_at DESC
     `),
 
@@ -310,6 +349,109 @@ const queries = {
 
   deleteRacePhoto: (id) =>
     run(`DELETE FROM race_photos WHERE id = $1`, [id]),
+
+  // ── Media profiles ────────────────────────────────────────────────────────────
+
+  createMediaProfile: ({ user_id, display_name, bio, website, instagram }) =>
+    one(
+      `INSERT INTO media_profiles (user_id, display_name, bio, website, instagram)
+       VALUES ($1, $2, $3, $4, $5) RETURNING *`,
+      [user_id, display_name, bio || '', website || '', instagram || '']
+    ),
+
+  getMediaProfileByUser: (user_id) =>
+    one(`SELECT * FROM media_profiles WHERE user_id = $1`, [user_id]),
+
+  getMediaProfileById: (id) =>
+    one(`SELECT * FROM media_profiles WHERE id = $1`, [id]),
+
+  getApprovedMediaProfiles: () =>
+    all(`SELECT id, display_name, bio, website, instagram, cover_url, created_at
+         FROM media_profiles WHERE status = 'active' ORDER BY display_name`),
+
+  approveMediaProfile: (id) =>
+    run(`UPDATE media_profiles SET status = 'active' WHERE id = $1`, [id]),
+
+  rejectMediaProfile: (id) =>
+    run(`UPDATE media_profiles SET status = 'rejected' WHERE id = $1`, [id]),
+
+  updateMediaProfile: ({ id, display_name, bio, website, instagram }) =>
+    run(`UPDATE media_profiles SET display_name=$2, bio=$3, website=$4, instagram=$5 WHERE id=$1`,
+        [id, display_name, bio || '', website || '', instagram || '']),
+
+  // ── Media albums ──────────────────────────────────────────────────────────────
+
+  createMediaAlbum: ({ media_profile_id, gara_id, title, description }) =>
+    one(
+      `INSERT INTO media_albums (media_profile_id, gara_id, title, description)
+       VALUES ($1, $2, $3, $4) RETURNING *`,
+      [media_profile_id, gara_id || null, title, description || '']
+    ),
+
+  getMediaAlbumsByProfile: (media_profile_id) =>
+    all(`
+      SELECT ma.*,
+             COUNT(mp.id)::int AS photo_count,
+             (SELECT mp2.filename FROM media_photos mp2 WHERE mp2.album_id = ma.id ORDER BY mp2.ord, mp2.id LIMIT 1) AS first_filename,
+             (SELECT mp2.ext_url  FROM media_photos mp2 WHERE mp2.album_id = ma.id ORDER BY mp2.ord, mp2.id LIMIT 1) AS first_ext_url
+      FROM media_albums ma
+      LEFT JOIN media_photos mp ON mp.album_id = ma.id
+      WHERE ma.media_profile_id = $1
+      GROUP BY ma.id ORDER BY ma.created_at DESC`,
+      [media_profile_id]
+    ),
+
+  getMediaAlbumsByGara: (gara_id) =>
+    all(`
+      SELECT ma.*,
+             pr.display_name AS photographer_name, pr.id AS profile_id,
+             COUNT(mp.id)::int AS photo_count,
+             (SELECT mp2.filename FROM media_photos mp2 WHERE mp2.album_id = ma.id ORDER BY mp2.ord, mp2.id LIMIT 1) AS first_filename,
+             (SELECT mp2.ext_url  FROM media_photos mp2 WHERE mp2.album_id = ma.id ORDER BY mp2.ord, mp2.id LIMIT 1) AS first_ext_url
+      FROM media_albums ma
+      JOIN media_profiles pr ON pr.id = ma.media_profile_id
+      LEFT JOIN media_photos mp ON mp.album_id = ma.id
+      WHERE ma.gara_id = $1 AND pr.status = 'active'
+      GROUP BY ma.id, pr.display_name, pr.id ORDER BY ma.created_at DESC`,
+      [gara_id]
+    ),
+
+  getMediaAlbum: (id) =>
+    one(`
+      SELECT ma.*, pr.display_name AS photographer_name, pr.instagram, pr.website, pr.id AS profile_id, pr.status AS profile_status
+      FROM media_albums ma
+      JOIN media_profiles pr ON pr.id = ma.media_profile_id
+      WHERE ma.id = $1`, [id]),
+
+  updateMediaAlbum: ({ id, title, gara_id, description }) =>
+    run(`UPDATE media_albums SET title=$2, gara_id=$3, description=$4 WHERE id=$1`,
+        [id, title, gara_id || null, description || '']),
+
+  deleteMediaAlbum: (id) =>
+    run(`DELETE FROM media_albums WHERE id = $1`, [id]),
+
+  // ── Media photos ──────────────────────────────────────────────────────────────
+
+  addMediaPhoto: ({ album_id, filename, ext_url, caption, ord }) =>
+    one(
+      `INSERT INTO media_photos (album_id, filename, ext_url, caption, ord)
+       VALUES ($1, $2, $3, $4, $5) RETURNING *`,
+      [album_id, filename || null, ext_url || null, caption || '', ord || 0]
+    ),
+
+  getMediaPhotosByAlbum: (album_id) =>
+    all(`SELECT * FROM media_photos WHERE album_id = $1 ORDER BY ord, id`, [album_id]),
+
+  getMediaPhotoById: (id) =>
+    one(`SELECT * FROM media_photos WHERE id = $1`, [id]),
+
+  deleteMediaPhoto: (id) =>
+    one(`DELETE FROM media_photos WHERE id = $1 RETURNING filename, ext_url`, [id]),
+
+  countMediaPhotosByProfile: (media_profile_id) =>
+    one(`SELECT COUNT(mp.id)::int AS total FROM media_photos mp
+         JOIN media_albums ma ON ma.id = mp.album_id
+         WHERE ma.media_profile_id = $1`, [media_profile_id]),
 };
 
-module.exports = { queries, init };
+module.exports = { queries, init, rawQuery: (sql, params) => pool.query(sql, params) };

@@ -8831,3 +8831,132 @@ body[data-hub] .loading-bar { background: var(--hub-color) !important; }
   .admin-main { padding: 16px; }
 }
 
+
+/* ── Media Profile ─────────────────────────────────────────────────────────── */
+.media-profile-header {
+  display: flex;
+  align-items: flex-start;
+  gap: 20px;
+  padding: 24px 0 20px;
+  border-bottom: 1px solid var(--border);
+  margin-bottom: 28px;
+  flex-wrap: wrap;
+}
+.media-profile-avatar {
+  width: 72px;
+  height: 72px;
+  border-radius: 50%;
+  background: var(--bg-card);
+  border: 2px solid var(--border);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 2rem;
+  flex-shrink: 0;
+}
+.media-profile-name {
+  font-family: var(--font-display);
+  font-size: 1.6rem;
+  font-weight: 900;
+  margin: 0 0 4px;
+}
+.media-profile-bio { font-size: .9rem; color: var(--text-secondary); margin: 0 0 8px; }
+.media-profile-links { display: flex; gap: 12px; flex-wrap: wrap; margin-bottom: 8px; }
+.media-profile-link {
+  font-size: .82rem;
+  color: var(--accent);
+  text-decoration: none;
+  display: flex;
+  align-items: center;
+  gap: 4px;
+}
+.media-profile-link:hover { text-decoration: underline; }
+.media-profile-stats { font-size: .8rem; color: var(--text-muted); }
+
+/* ── Media Album Grid ──────────────────────────────────────────────────────── */
+.media-album-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+  gap: 16px;
+}
+.media-album-card {
+  text-decoration: none;
+  color: inherit;
+  display: block;
+}
+.media-album-card:hover .media-album-cover img { transform: scale(1.04); }
+.media-album-cover {
+  aspect-ratio: 4 / 3;
+  overflow: hidden;
+  border-radius: 8px;
+  background: var(--bg-elevated);
+  position: relative;
+  margin-bottom: 8px;
+}
+.media-album-cover img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  transition: transform .3s;
+}
+.media-album-cover-empty {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  height: 100%;
+  font-size: 2rem;
+  color: var(--text-muted);
+}
+.media-album-count {
+  position: absolute;
+  bottom: 0; left: 0; right: 0;
+  padding: 4px 8px;
+  background: rgba(0,0,0,.55);
+  font-size: .7rem;
+  color: #fff;
+  text-align: right;
+}
+.media-album-title {
+  font-size: .88rem;
+  font-weight: 700;
+  line-height: 1.3;
+}
+.media-album-gara { margin-top: 2px; }
+
+/* ── Media Photos Grid ─────────────────────────────────────────────────────── */
+.media-photos-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(160px, 1fr));
+  gap: 6px;
+}
+.media-photo-item {
+  aspect-ratio: 4 / 3;
+  overflow: hidden;
+  border-radius: 6px;
+  position: relative;
+  cursor: zoom-in;
+  background: var(--bg-elevated);
+}
+.media-photo-item img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  transition: transform .25s;
+}
+.media-photo-item:hover img { transform: scale(1.06); }
+.media-photo-caption {
+  position: absolute;
+  bottom: 0; left: 0; right: 0;
+  padding: 3px 6px;
+  background: rgba(0,0,0,.55);
+  font-size: .65rem;
+  color: #ddd;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+@media (max-width: 600px) {
+  .media-album-grid { grid-template-columns: repeat(2, 1fr); gap: 10px; }
+  .media-photos-grid { grid-template-columns: repeat(2, 1fr); }
+}

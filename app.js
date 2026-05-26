@@ -814,6 +814,8 @@ function route() {
   if (m_team) return renderTeam(m_team[1]);
   const m_gara = match('/gara/:id');
   if (m_gara) return renderGara(m_gara[1]);
+  const m_media = match('/media/:id');
+  if (m_media) return renderMediaProfile(m_media[1]);
   const m_forma = match('/forma/:cat');
   if (m_forma) return renderForma(m_forma[1]);
   if (match('/news')) return renderNews();
@@ -4065,6 +4067,14 @@ async function renderAdmin() {
           <span class="admin-nav-icon">🖼️</span> Tutte le foto
         </div>
 
+        <div class="admin-nav-group">Media / Fotografi</div>
+        <div class="admin-nav-item" data-section="media-profiles" onclick="adminNav('media-profiles')">
+          <span class="admin-nav-icon">📷</span> Profili media
+        </div>
+        <div class="admin-nav-item" data-section="media-seed" onclick="adminNav('media-seed')">
+          <span class="admin-nav-icon">🌱</span> Seed xpix
+        </div>
+
         <div class="admin-nav-group">Utenti</div>
         <div class="admin-nav-item" data-section="utenti-lista" onclick="adminNav('utenti-lista')">
           <span class="admin-nav-icon">👥</span> Lista utenti
@@ -4551,6 +4561,88 @@ window.adminNav = async function(section) {
         };
         await loadPending();
       })();
+      break;
+    }
+
+    case 'media-profiles': {
+      main.innerHTML = `
+        <div class="admin-page-header">
+          <h1 class="admin-page-title">📷 Profili Media / Fotografi</h1>
+          <p class="admin-page-sub">Tutti i profili fotografo registrati sulla piattaforma.</p>
+        </div>
+        <div id="admin-media-profiles-body"><div class="admin-loading">Caricamento…</div></div>`;
+      (async () => {
+        const body = document.getElementById('admin-media-profiles-body');
+        if (!body) return;
+        try {
+          const d = await fetch(`${API_BASE}/media/profiles`).then(r => r.json());
+          const profiles = d.profiles || [];
+          if (!profiles.length) { body.innerHTML = `<div style="color:var(--text-muted);padding:24px 0">Nessun profilo media approvato.</div>`; return; }
+          body.innerHTML = `
+            <div style="font-size:.8rem;color:var(--text-muted);margin-bottom:12px">${profiles.length} profili approvati</div>
+            <div style="display:flex;flex-direction:column;gap:10px">
+            ${profiles.map(p => `
+              <div style="background:var(--bg-card);border:1px solid var(--border);border-radius:10px;padding:14px 18px;display:flex;align-items:center;gap:14px;flex-wrap:wrap">
+                <div style="font-size:1.5rem">📷</div>
+                <div style="flex:1;min-width:160px">
+                  <a href="#/media/${p.id}" style="font-weight:700;color:var(--accent)">${esc(p.display_name)}</a>
+                  ${p.bio ? `<div style="font-size:.78rem;color:var(--text-muted);margin-top:2px">${esc(p.bio)}</div>` : ''}
+                  <div style="font-size:.72rem;color:var(--text-muted);margin-top:2px">${(p.created_at||'').slice(0,10)}</div>
+                </div>
+                <div style="display:flex;gap:8px">
+                  ${p.website ? `<a href="${esc(p.website)}" target="_blank" rel="noopener" style="font-size:.78rem;color:var(--accent)">🌐</a>` : ''}
+                  ${p.instagram ? `<a href="https://instagram.com/${esc(p.instagram.replace('@',''))}" target="_blank" rel="noopener" style="font-size:.78rem;color:var(--accent)">📸</a>` : ''}
+                </div>
+              </div>`).join('')}
+            </div>`;
+        } catch(e) {
+          body.innerHTML = `<div style="color:var(--red-hot);padding:20px 0">Errore: ${esc(e.message)}</div>`;
+        }
+      })();
+      break;
+    }
+
+    case 'media-seed': {
+      main.innerHTML = `
+        <div class="admin-page-header">
+          <h1 class="admin-page-title">🌱 Seed xpix → Media Albums</h1>
+          <p class="admin-page-sub">Importa le foto xpix già approvate come album del profilo "xpix.it".</p>
+        </div>
+        <div class="admin-action-card">
+          <div style="font-size:.9rem;color:var(--text-secondary);margin-bottom:16px;line-height:1.6">
+            <p style="margin:0 0 8px">Questa operazione:</p>
+            <ul style="margin:0;padding-left:20px;font-size:.85rem;color:var(--text-muted)">
+              <li>Crea (o trova) un profilo media "xpix.it" di sistema</li>
+              <li>Per ogni foto xpix approvata, crea un album collegato alla gara</li>
+              <li>Popola ogni album con tutte le foto dalla coda xpix</li>
+              <li>Salta gli album già presenti (idempotente)</li>
+            </ul>
+          </div>
+          <button id="seed-xpix-btn" onclick="window.adminSeedXpix()" style="background:#0ea5e9;color:#fff;border:none;padding:11px 24px;border-radius:6px;font-weight:700;cursor:pointer;font-size:.9rem">
+            🌱 Avvia importazione xpix
+          </button>
+          <div id="seed-xpix-status" style="margin-top:14px;font-size:.85rem;color:var(--text-muted)"></div>
+        </div>`;
+      window.adminSeedXpix = async () => {
+        const btn  = document.getElementById('seed-xpix-btn');
+        const stat = document.getElementById('seed-xpix-status');
+        btn.disabled = true; btn.textContent = '⏳ Importazione in corso…';
+        stat.textContent = '';
+        try {
+          const d = await fetch(`${API_BASE}/admin/media/seed-xpix`, {
+            method: 'POST',
+            headers: { Authorization: `Bearer ${authToken()}` },
+          }).then(r => r.json());
+          if (d.error) throw new Error(d.error);
+          stat.innerHTML = `✅ Importazione completata — <strong>${d.created}</strong> album creati, ${d.skipped} già presenti.<br>
+            Profilo xpix.it: <a href="#/media/${d.profile_id}" style="color:var(--accent)">#/media/${d.profile_id}</a>`;
+          btn.textContent = '✓ Completato';
+          _mediaProfilesCache = null; // invalida cache ricerca
+        } catch(e) {
+          stat.innerHTML = `<span style="color:var(--red-hot)">Errore: ${esc(e.message)}</span>`;
+          btn.disabled = false; btn.textContent = '🌱 Avvia importazione xpix';
+        }
+      };
       break;
     }
   }
@@ -6873,6 +6965,87 @@ window.adminEditVideo = async function(calId, idx) {
   } catch(e) { alert('Errore: ' + e.message); }
 };
 
+// ── MEDIA PROFILE PAGE ────────────────────────────────────────
+async function renderMediaProfile(profileId) {
+  setPage(`<div class="loading-bar"></div>`);
+  try {
+    const d = await fetch(`${API_BASE}/media/profile/${profileId}`).then(r => r.json());
+    if (d.error) { renderNotFound(); return; }
+    const { profile, albums, stats } = d;
+
+    const albumsHtml = albums.length
+      ? `<div class="media-album-grid">${albums.map(a => {
+          const cover = a.first_ext_url || (a.first_filename ? `${PHOTOS_BASE}/photos/${a.first_filename}` : '');
+          return `<a href="#/media/${profile.id}/album/${a.id}" class="media-album-card" onclick="window._renderMediaAlbum(${a.id},${profile.id});return false;">
+            <div class="media-album-cover">
+              ${cover ? `<img src="${esc(cover)}" loading="lazy" alt="${esc(a.title)}"/>` : `<div class="media-album-cover-empty">📷</div>`}
+              <div class="media-album-count">${a.photo_count} foto</div>
+            </div>
+            <div class="media-album-title">${esc(a.title)}</div>
+            ${a.gara_id ? `<div class="media-album-gara"><a href="#/gara/${encodeURIComponent(a.gara_id)}" onclick="event.stopPropagation()" style="color:var(--accent);font-size:.72rem">${esc(a.gara_id)}</a></div>` : ''}
+          </a>`;
+        }).join('')}</div>`
+      : `<p style="color:var(--text-muted);padding:24px 0">Nessun album ancora.</p>`;
+
+    setPage(`
+      <div class="media-profile-header">
+        <div class="media-profile-avatar">📷</div>
+        <div>
+          <h1 class="media-profile-name">${esc(profile.display_name)}</h1>
+          ${profile.bio ? `<p class="media-profile-bio">${esc(profile.bio)}</p>` : ''}
+          <div class="media-profile-links">
+            ${profile.website ? `<a href="${esc(profile.website)}" target="_blank" rel="noopener" class="media-profile-link">🌐 Sito web</a>` : ''}
+            ${profile.instagram ? `<a href="https://instagram.com/${esc(profile.instagram.replace('@',''))}" target="_blank" rel="noopener" class="media-profile-link">📸 ${esc(profile.instagram)}</a>` : ''}
+          </div>
+          <div class="media-profile-stats">
+            <span>${albums.length} album</span>
+            <span style="margin:0 8px;color:var(--border)">·</span>
+            <span>${stats?.total || 0} foto</span>
+          </div>
+        </div>
+      </div>
+      <div id="media-album-area">
+        <div class="comp-section-title" style="margin-bottom:16px">Album</div>
+        ${albumsHtml}
+      </div>
+    `);
+  } catch(e) {
+    setPage(`<div style="padding:48px;color:var(--text-muted);text-align:center">Errore nel caricamento del profilo: ${esc(e.message)}</div>`);
+  }
+}
+
+window._renderMediaAlbum = async function(albumId, profileId) {
+  const area = document.getElementById('media-album-area');
+  if (!area) return;
+  area.innerHTML = `<div class="admin-loading">Caricamento album…</div>`;
+  try {
+    const [albumData, photosData] = await Promise.all([
+      fetch(`${API_BASE}/media/profile/${profileId}`).then(r => r.json()),
+      fetch(`${API_BASE}/media/album/${albumId}/photos`).then(r => r.json()),
+    ]);
+    const album  = albumData.albums?.find(a => a.id == albumId);
+    const photos = photosData.photos || [];
+    area.innerHTML = `
+      <div style="margin-bottom:16px;display:flex;align-items:center;gap:10px">
+        <button onclick="renderMediaProfile(${profileId})" style="background:none;border:none;color:var(--accent);cursor:pointer;font-size:.85rem;padding:0">← Tutti gli album</button>
+        <span style="color:var(--border)">|</span>
+        <span style="font-weight:700">${esc(album?.title || 'Album')}</span>
+        ${album?.gara_id ? `<a href="#/gara/${encodeURIComponent(album.gara_id)}" style="font-size:.78rem;color:var(--text-muted)">→ ${esc(album.gara_id)}</a>` : ''}
+      </div>
+      ${photos.length
+        ? `<div class="media-photos-grid">${photos.map(p => {
+            const src = p.ext_url || (p.filename ? `${PHOTOS_BASE}/photos/${p.filename}` : '');
+            return src ? `<div class="media-photo-item" onclick="window.openPhotoLightbox('${esc(src)}')">
+              <img src="${esc(src)}" loading="lazy" alt="${esc(p.caption||'')}"/>
+              ${p.caption ? `<div class="media-photo-caption">${esc(p.caption)}</div>` : ''}
+            </div>` : '';
+          }).join('')}</div>`
+        : `<p style="color:var(--text-muted)">Nessuna foto in questo album.</p>`}`;
+  } catch(e) {
+    area.innerHTML = `<div style="color:var(--red-hot)">Errore: ${esc(e.message)}</div>`;
+  }
+};
+
 // ── GARA ──────────────────────────────────────────────────────
 async function renderGara(gara_id) {
   if (!globalData) return;
@@ -7209,7 +7382,66 @@ async function renderGara(gara_id) {
       </table>
     </div>
     ${detailsHtml}
+    <div id="gara-media-gallery"></div>
   `);
+
+  // Carica gallery media (fotografer della community) — async post-render
+  (async () => {
+    const galEl = document.getElementById('gara-media-gallery');
+    if (!galEl) return;
+    try {
+      const d = await fetch(`${API_BASE}/media/gara/${encodeURIComponent(primaryGaraId)}`).then(r => r.json());
+      const albums = d.albums || [];
+      if (!albums.length) return;
+      galEl.innerHTML = `
+        <div class="comp-section" style="margin-top:16px">
+          <div class="comp-section-title" style="margin-bottom:12px">📷 Gallery fotografi</div>
+          <div class="media-album-grid">${albums.map(a => {
+            const cover = a.first_ext_url || (a.first_filename ? `${PHOTOS_BASE}/photos/${a.first_filename}` : '');
+            return `<div class="media-album-card" style="cursor:pointer" onclick="window.openMediaGalleryLightbox(${a.id},'${esc(a.title)}')">
+              <div class="media-album-cover">
+                ${cover ? `<img src="${esc(cover)}" loading="lazy" alt="${esc(a.title)}"/>` : `<div class="media-album-cover-empty">📷</div>`}
+                <div class="media-album-count">${a.photo_count} foto</div>
+              </div>
+              <div class="media-album-title">${esc(a.title)}</div>
+              <div style="font-size:.72rem;color:var(--text-muted)">
+                📷 <a href="#/media/${a.profile_id}" style="color:var(--accent)" onclick="event.stopPropagation()">${esc(a.photographer_name)}</a>
+              </div>
+            </div>`;
+          }).join('')}</div>
+        </div>`;
+    } catch(e) { /* non blocca la pagina */ }
+  })();
+
+  window.openMediaGalleryLightbox = async function(albumId, title) {
+    const overlay = document.createElement('div');
+    overlay.id = 'media-lightbox';
+    overlay.style.cssText = 'position:fixed;inset:0;background:rgba(0,0,0,.92);z-index:9999;overflow-y:auto;padding:24px 16px';
+    overlay.innerHTML = `
+      <div style="max-width:960px;margin:0 auto">
+        <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:16px">
+          <strong style="color:#fff;font-size:1rem">${esc(title)}</strong>
+          <button onclick="document.getElementById('media-lightbox')?.remove()" style="background:none;border:none;color:#ccc;font-size:1.5rem;cursor:pointer">✕</button>
+        </div>
+        <div id="mgl-grid" style="display:grid;grid-template-columns:repeat(auto-fill,minmax(200px,1fr));gap:8px"><div style="color:#aaa;padding:32px;text-align:center">Caricamento…</div></div>
+      </div>`;
+    document.body.appendChild(overlay);
+    try {
+      const d = await fetch(`${API_BASE}/media/album/${albumId}/photos`).then(r => r.json());
+      const photos = d.photos || [];
+      const grid = document.getElementById('mgl-grid');
+      if (!grid) return;
+      grid.innerHTML = photos.map(p => {
+        const src = p.ext_url || (p.filename ? `${PHOTOS_BASE}/photos/${p.filename}` : '');
+        return src ? `<div style="aspect-ratio:4/3;overflow:hidden;border-radius:6px;cursor:zoom-in" onclick="window.openPhotoLightbox('${esc(src)}')">
+          <img src="${esc(src)}" loading="lazy" style="width:100%;height:100%;object-fit:cover"/>
+        </div>` : '';
+      }).join('');
+    } catch(e) {
+      const grid = document.getElementById('mgl-grid');
+      if (grid) grid.innerHTML = `<div style="color:#f87171">Errore: ${esc(e.message)}</div>`;
+    }
+  };
 
   // Face detection per centrare il volto nell'hero photo
   (async () => {
@@ -9424,6 +9656,17 @@ function initSearch() {
   bindSearch('drawer-search', 'drawer-search-dropdown');
 }
 
+// Cache profili media per la ricerca
+let _mediaProfilesCache = null;
+async function _loadMediaProfiles() {
+  if (_mediaProfilesCache) return _mediaProfilesCache;
+  try {
+    const d = await fetch(`${API_BASE}/media/profiles`).then(r => r.json());
+    _mediaProfilesCache = d.profiles || [];
+  } catch { _mediaProfilesCache = []; }
+  return _mediaProfilesCache;
+}
+
 function doSearch(q, dropdown) {
   if (!dropdown) dropdown = document.getElementById('search-results-dropdown');
   if (!q.trim() || !globalData) {
@@ -9452,21 +9695,33 @@ function doSearch(q, dropdown) {
     if (results.length >= 8) break;
   }
 
-  if (!results.length) {
-    dropdown.innerHTML = '<div class="search-result-item"><span class="search-result-sub">Nessun risultato</span></div>';
+  // Mostra subito quello che abbiamo, poi aggiunge media in async
+  const renderDropdown = (list) => {
+    if (!list.length) {
+      dropdown.innerHTML = '<div class="search-result-item"><span class="search-result-sub">Nessun risultato</span></div>';
+    } else {
+      dropdown.innerHTML = list.map(r => `
+        <div class="search-result-item" onclick="goTo('#/${r.type === 'media' ? 'media' : r.type}/${r.id}'); window.closeAllSearchDropdowns()">
+          <div>
+            <div class="search-result-label">${r.type === 'atleta' ? 'ATLETA' : r.type === 'media' ? '📷 FOTOGRAFO' : 'TEAM'}</div>
+            <div class="search-result-name">${esc(r.display)}</div>
+            <div class="search-result-sub">${esc(r.sub)}</div>
+          </div>
+        </div>`).join('');
+    }
     dropdown.style.display = 'block';
-    return;
-  }
+  };
 
-  dropdown.innerHTML = results.map(r => `
-    <div class="search-result-item" onclick="goTo('#/${r.type}/${r.id}'); window.closeAllSearchDropdowns()">
-      <div>
-        <div class="search-result-label">${r.type === 'atleta' ? 'ATLETA' : 'TEAM'}</div>
-        <div class="search-result-name">${esc(r.display)}</div>
-        <div class="search-result-sub">${esc(r.sub)}</div>
-      </div>
-    </div>`).join('');
-  dropdown.style.display = 'block';
+  renderDropdown(results);
+
+  // Arricchisci con fotografer (async, non blocca)
+  _loadMediaProfiles().then(profiles => {
+    const mediaResults = profiles
+      .filter(p => (p.display_name||'').toLowerCase().includes(ql))
+      .slice(0, 3)
+      .map(p => ({ type: 'media', id: p.id, display: p.display_name, sub: p.bio || 'Fotografo' }));
+    if (mediaResults.length) renderDropdown([...results, ...mediaResults]);
+  });
 }
 
 window.goTo = (hash) => { window.location.hash = hash; };
@@ -10293,6 +10548,7 @@ function renderRegister() {
                   <option value="team">Team — gestisco una squadra</option>
                   <option value="genitore">Genitore — seguo mio/a figlio/a</option>
                   <option value="parente">Parente / Tifoso — seguo un atleta</option>
+                  <option value="media">📷 Media / Fotografo — pubblico le mie foto</option>
                 </select>
               </div>
             </div>
@@ -10336,7 +10592,7 @@ async function renderMyProfile() {
   if (!user) { window.location.hash = '/login'; return; }
 
   const roleLabels = {
-    atleta:'Atleta', team:'Team', genitore:'Genitore', parente:'Parente / Tifoso', appassionato:'Appassionato', admin:'Amministratore'
+    atleta:'Atleta', team:'Team', genitore:'Genitore', parente:'Parente / Tifoso', appassionato:'Appassionato', admin:'Amministratore', media:'📷 Media / Fotografo'
   };
 
   let profileHtml = '';
@@ -10423,6 +10679,82 @@ async function renderMyProfile() {
             <button type="submit" class="auth-btn" style="margin-top:8px">AGGIUNGI ATLETA</button>
           </form>
         </div>`;
+    } else if (user.role === 'media') {
+      if (!profile) {
+        profileHtml = `
+          <div class="auth-section">
+            <h3 class="auth-section-title">📷 Crea il tuo profilo fotografo</h3>
+            <p style="color:var(--text-muted);margin-bottom:16px;font-size:0.9rem">
+              Inserisci i tuoi dati per creare il profilo. Sarà visibile a tutti dopo approvazione.
+            </p>
+            <form onsubmit="window.submitMediaProfile(event)" class="auth-form">
+              <label class="auth-label">Nome pubblico *
+                <input type="text" id="mp-name" class="auth-input" placeholder="Es. Mario Rossi Foto" required />
+              </label>
+              <label class="auth-label">Bio
+                <input type="text" id="mp-bio" class="auth-input" placeholder="Breve descrizione di te" />
+              </label>
+              <label class="auth-label">Sito web
+                <input type="url" id="mp-web" class="auth-input" placeholder="https://tuosito.it" />
+              </label>
+              <label class="auth-label">Instagram
+                <input type="text" id="mp-ig" class="auth-input" placeholder="@tuonomeutente" />
+              </label>
+              <button type="submit" class="auth-btn">CREA PROFILO</button>
+            </form>
+          </div>`;
+      } else {
+        const statusMap = { active:'✅ Approvato', pending:'⏳ In attesa di approvazione', rejected:'❌ Rifiutato' };
+        profileHtml = `
+          <div class="auth-section">
+            <h3 class="auth-section-title">📷 Il tuo profilo fotografo</h3>
+            <div class="profile-info-row"><span>Stato</span><span>${statusMap[profile.status] || profile.status}</span></div>
+            <div class="profile-info-row"><span>Nome pubblico</span><span>${esc(profile.display_name)}</span></div>
+            ${profile.bio ? `<div class="profile-info-row"><span>Bio</span><span>${esc(profile.bio)}</span></div>` : ''}
+            ${profile.website ? `<div class="profile-info-row"><span>Sito</span><a href="${esc(profile.website)}" target="_blank" rel="noopener">${esc(profile.website)}</a></div>` : ''}
+            ${profile.instagram ? `<div class="profile-info-row"><span>Instagram</span><span>${esc(profile.instagram)}</span></div>` : ''}
+            ${profile.status === 'active'
+              ? `<div style="margin-top:12px;display:flex;gap:8px;flex-wrap:wrap">
+                   <a href="#/media/${profile.id}" class="auth-btn" style="text-decoration:none;text-align:center;font-size:.85rem">👁 Vedi il mio profilo</a>
+                   <button onclick="window.openMediaAlbumCreate(${profile.id})" class="auth-btn" style="font-size:.85rem;background:var(--accent)">+ Nuovo album</button>
+                 </div>`
+              : ''}
+          </div>
+          ${profile.status === 'active' ? `<div id="my-albums-section"><div class="admin-loading">Caricamento album…</div></div>` : ''}`;
+        // Dopo render, carica gli album
+        setTimeout(async () => {
+          const sec = document.getElementById('my-albums-section');
+          if (!sec) return;
+          try {
+            const d = await fetch(`${API_BASE}/media/profile/${profile.id}`).then(r => r.json());
+            const albums = d.albums || [];
+            sec.innerHTML = `
+              <div class="auth-section">
+                <h3 class="auth-section-title" style="display:flex;align-items:center;justify-content:space-between">
+                  I miei album <span style="font-weight:400;font-size:.8rem;color:var(--text-muted)">${albums.length} album · ${d.stats?.total||0} foto</span>
+                </h3>
+                ${albums.length ? `<div class="media-album-grid">${albums.map(a => `
+                  <div class="media-album-card">
+                    <a href="#/media/${profile.id}#album-${a.id}" class="media-album-cover" style="display:block;aspect-ratio:16/9;overflow:hidden;border-radius:6px;background:var(--bg-elevated);position:relative">
+                      ${(a.first_ext_url || a.first_filename)
+                        ? `<img src="${a.first_ext_url || (PHOTOS_BASE+'/photos/'+a.first_filename)}" loading="lazy" style="width:100%;height:100%;object-fit:cover"/>`
+                        : `<div style="display:flex;align-items:center;justify-content:center;height:100%;color:var(--text-muted);font-size:1.5rem">📷</div>`}
+                      <div style="position:absolute;bottom:0;left:0;right:0;padding:4px 8px;background:rgba(0,0,0,.6);font-size:.7rem;color:#fff">${a.photo_count} foto</div>
+                    </a>
+                    <div style="padding:6px 0;font-size:.85rem;font-weight:600">${esc(a.title)}</div>
+                    ${a.gara_id ? `<div style="font-size:.75rem;color:var(--text-muted)">${esc(a.gara_id)}</div>` : ''}
+                    <div style="display:flex;gap:6px;margin-top:6px">
+                      <button onclick="window.openMediaAlbumUpload(${a.id})" style="font-size:.75rem;padding:4px 10px;border:1px solid var(--accent);color:var(--accent);background:transparent;border-radius:4px;cursor:pointer">+ Foto</button>
+                      <button onclick="window.deleteMediaAlbum(${a.id})" style="font-size:.75rem;padding:4px 10px;border:1px solid var(--border);color:var(--text-muted);background:transparent;border-radius:4px;cursor:pointer">🗑</button>
+                    </div>
+                  </div>`).join('')}</div>`
+                  : `<p style="color:var(--text-muted)">Nessun album ancora. Creane uno!</p>`}
+              </div>`;
+          } catch(e) {
+            if (sec) sec.innerHTML = `<div style="color:var(--red-hot)">Errore caricamento album: ${esc(e.message)}</div>`;
+          }
+        }, 0);
+      }
     }
   } catch (err) {
     profileHtml = `<p style="color:var(--text-muted)">Impossibile caricare il profilo: ${esc(err.message)}</p>`;
@@ -10451,6 +10783,141 @@ window.doLogout = function() {
   authClear();
   updateNavLoginState();
   window.location.hash = '/';
+};
+
+// ── MEDIA PROFILE HANDLERS ────────────────────────────────────────────────────
+
+window.submitMediaProfile = async function(e) {
+  e.preventDefault();
+  const btn = e.target.querySelector('button[type=submit]');
+  btn.disabled = true; btn.textContent = 'Invio…';
+  try {
+    await apiCall('/profile/media', { method: 'POST', body: {
+      display_name: document.getElementById('mp-name')?.value.trim(),
+      bio:          document.getElementById('mp-bio')?.value.trim(),
+      website:      document.getElementById('mp-web')?.value.trim(),
+      instagram:    document.getElementById('mp-ig')?.value.trim(),
+    }});
+    showToast('✓ Profilo inviato — in attesa di approvazione');
+    renderMyProfile();
+  } catch(err) {
+    btn.disabled = false; btn.textContent = 'CREA PROFILO';
+    showToast('Errore: ' + err.message, 'error');
+  }
+};
+
+window.openMediaAlbumCreate = function(profileId) {
+  const inpStyle = 'width:100%;box-sizing:border-box;padding:8px 10px;border:1px solid var(--border-subtle);border-radius:var(--r-sm);font-size:0.875rem;background:var(--bg-primary);color:var(--text-primary);margin-bottom:10px';
+  const overlay = document.createElement('div');
+  overlay.id = 'modal-overlay';
+  overlay.style.cssText = 'position:fixed;inset:0;background:rgba(0,0,0,.6);z-index:9999;display:flex;align-items:center;justify-content:center;padding:16px';
+  overlay.innerHTML = `
+    <div style="background:var(--bg-card);border-radius:var(--r-lg);padding:24px;width:100%;max-width:420px;box-shadow:0 8px 32px rgba(0,0,0,.25)">
+      <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:16px">
+        <strong>Nuovo album</strong>
+        <button onclick="this.closest('[style*=fixed]').remove()" style="background:none;border:none;font-size:1.3rem;cursor:pointer;color:var(--text-muted)">✕</button>
+      </div>
+      <input id="mac-title" type="text" placeholder="Titolo album *" style="${inpStyle}" required/>
+      <input id="mac-gara"  type="text" placeholder="ID gara (es. 27_TROFEO_…_JUN_M) — opzionale" style="${inpStyle}"/>
+      <textarea id="mac-desc" placeholder="Descrizione (opzionale)" rows="2" style="${inpStyle};resize:vertical"></textarea>
+      <div id="mac-err" style="color:#EF4444;font-size:0.8rem;margin-bottom:8px;display:none"></div>
+      <button id="mac-submit" onclick="window._submitMediaAlbumCreate(${profileId})" style="width:100%;padding:9px;background:var(--accent);color:#fff;border:none;border-radius:var(--r-sm);font-weight:600;cursor:pointer">Crea album</button>
+    </div>`;
+  document.body.appendChild(overlay);
+};
+
+window._submitMediaAlbumCreate = async function(profileId) {
+  const title = document.getElementById('mac-title')?.value.trim();
+  const gara  = document.getElementById('mac-gara')?.value.trim() || null;
+  const desc  = document.getElementById('mac-desc')?.value.trim() || '';
+  const errEl = document.getElementById('mac-err');
+  const btn   = document.getElementById('mac-submit');
+  if (!title) { errEl.textContent = 'Il titolo è obbligatorio'; errEl.style.display = 'block'; return; }
+  btn.disabled = true; btn.textContent = 'Creazione…';
+  try {
+    const d = await apiCall('/media/album', { method: 'POST', body: { title, gara_id: gara, description: desc } });
+    document.getElementById('modal-overlay')?.remove();
+    showToast('✓ Album creato!');
+    // Apri subito il caricamento foto
+    window.openMediaAlbumUpload(d.album.id);
+    renderMyProfile();
+  } catch(err) {
+    errEl.textContent = err.message; errEl.style.display = 'block';
+    btn.disabled = false; btn.textContent = 'Crea album';
+  }
+};
+
+window.openMediaAlbumUpload = function(albumId) {
+  const overlay = document.createElement('div');
+  overlay.id = 'modal-overlay';
+  overlay.style.cssText = 'position:fixed;inset:0;background:rgba(0,0,0,.6);z-index:9999;display:flex;align-items:center;justify-content:center;padding:16px';
+  overlay.innerHTML = `
+    <div style="background:var(--bg-card);border-radius:var(--r-lg);padding:24px;width:100%;max-width:480px;box-shadow:0 8px 32px rgba(0,0,0,.25)">
+      <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:14px">
+        <strong>Carica foto nell'album</strong>
+        <button onclick="this.closest('[style*=fixed]').remove()" style="background:none;border:none;font-size:1.3rem;cursor:pointer;color:var(--text-muted)">✕</button>
+      </div>
+      <p style="font-size:.8rem;color:var(--text-muted);margin:0 0 12px">Puoi selezionare più file contemporaneamente (max 20, 25 MB ciascuno). Formati: JPEG, PNG, WebP.</p>
+      <input type="file" id="mau-files" multiple accept="image/jpeg,image/png,image/webp"
+        style="width:100%;box-sizing:border-box;padding:8px;border:2px dashed var(--border);border-radius:8px;cursor:pointer;margin-bottom:12px"/>
+      <div id="mau-progress" style="display:none;margin-bottom:8px">
+        <div style="background:var(--bg-elevated);border-radius:4px;height:6px;overflow:hidden">
+          <div id="mau-bar" style="height:100%;background:var(--accent);width:0%;transition:width .3s"></div>
+        </div>
+        <div id="mau-status" style="font-size:.75rem;color:var(--text-muted);margin-top:4px"></div>
+      </div>
+      <div id="mau-err" style="color:#EF4444;font-size:0.8rem;margin-bottom:8px;display:none"></div>
+      <button id="mau-submit" onclick="window._submitMediaPhotos(${albumId})" style="width:100%;padding:9px;background:var(--accent);color:#fff;border:none;border-radius:var(--r-sm);font-weight:600;cursor:pointer">Carica foto</button>
+    </div>`;
+  document.body.appendChild(overlay);
+};
+
+window._submitMediaPhotos = async function(albumId) {
+  const files = document.getElementById('mau-files')?.files;
+  const errEl = document.getElementById('mau-err');
+  const btn   = document.getElementById('mau-submit');
+  const prog  = document.getElementById('mau-progress');
+  if (!files?.length) { errEl.textContent = 'Seleziona almeno un file'; errEl.style.display = 'block'; return; }
+  btn.disabled = true; btn.textContent = 'Caricamento…';
+  prog.style.display = 'block';
+  const fd = new FormData();
+  Array.from(files).forEach(f => fd.append('photos', f));
+  try {
+    const xhr = new XMLHttpRequest();
+    xhr.upload.onprogress = ev => {
+      if (ev.lengthComputable) {
+        const pct = Math.round(ev.loaded / ev.total * 100);
+        document.getElementById('mau-bar').style.width = pct + '%';
+        document.getElementById('mau-status').textContent = `${pct}% — ${files.length} foto in caricamento…`;
+      }
+    };
+    await new Promise((resolve, reject) => {
+      xhr.onload = () => {
+        const d = JSON.parse(xhr.responseText);
+        if (xhr.status >= 400) reject(new Error(d.error || `HTTP ${xhr.status}`));
+        else resolve(d);
+      };
+      xhr.onerror = () => reject(new Error('Errore di rete'));
+      xhr.open('POST', `${API_BASE}/media/album/${albumId}/photos`);
+      xhr.setRequestHeader('Authorization', `Bearer ${authToken()}`);
+      xhr.send(fd);
+    });
+    document.getElementById('modal-overlay')?.remove();
+    showToast(`✓ ${files.length} foto caricate!`);
+    renderMyProfile();
+  } catch(err) {
+    errEl.textContent = err.message; errEl.style.display = 'block';
+    btn.disabled = false; btn.textContent = 'Carica foto';
+  }
+};
+
+window.deleteMediaAlbum = async function(albumId) {
+  if (!confirm('Eliminare questo album e tutte le sue foto?')) return;
+  try {
+    await apiCall(`/media/album/${albumId}`, { method: 'DELETE' });
+    showToast('Album eliminato');
+    renderMyProfile();
+  } catch(err) { showToast('Errore: ' + err.message, 'error'); }
 };
 
 window.searchAtletaForLink = function(q) {

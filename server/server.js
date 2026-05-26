@@ -5,7 +5,7 @@ const jwt            = require('jsonwebtoken');
 const multer         = require('multer');
 const path           = require('path');
 const fs             = require('fs');
-const { queries, init } = require('./db');
+const { queries, init, rawQuery } = require('./db');
 
 const app  = express();
 const PORT = 8002;
@@ -107,7 +107,7 @@ function makeToken(user) {
 app.post('/api/auth/register', async (req, res) => {
   try {
     const { email, password, role, display_name } = req.body;
-    const ALLOWED_ROLES = ['atleta', 'team', 'genitore', 'parente', 'appassionato'];
+    const ALLOWED_ROLES = ['atleta', 'team', 'genitore', 'parente', 'appassionato', 'media'];
     if (!email || !password) return res.status(400).json({ error: 'Email e password obbligatorie' });
     if (password.length < 6)  return res.status(400).json({ error: 'Password minimo 6 caratteri' });
     if (!ALLOWED_ROLES.includes(role)) return res.status(400).json({ error: 'Tipo utente non valido' });
@@ -253,6 +253,7 @@ app.post('/api/admin/approve', requireAdmin, async (req, res) => {
     if      (type === 'athlete') await queries.approveAthleteProfile(id);
     else if (type === 'team')    await queries.approveTeamProfile(id);
     else if (type === 'family')  await queries.approveFamilyLink(id);
+    else if (type === 'media')   await queries.approveMediaProfile(id);
     else return res.status(400).json({ error: 'Tipo non valido' });
     res.json({ ok: true });
   } catch (e) { res.status(500).json({ error: e.message }); }
@@ -264,6 +265,7 @@ app.post('/api/admin/reject', requireAdmin, async (req, res) => {
     if      (type === 'athlete') await queries.rejectAthleteProfile(id);
     else if (type === 'team')    await queries.rejectTeamProfile(id);
     else if (type === 'family')  await queries.rejectFamilyLink(id);
+    else if (type === 'media')   await queries.rejectMediaProfile(id);
     else return res.status(400).json({ error: 'Tipo non valido' });
     res.json({ ok: true });
   } catch (e) { res.status(500).json({ error: e.message }); }
@@ -1121,6 +1123,285 @@ app.get('/api/xpix-photos', async (req, res) => {
   try {
     const photos = await readXpixPhotos();
     res.json({ photos: Object.values(photos) });
+  } catch (e) { res.status(500).json({ error: e.message }); }
+});
+
+// ── Media profiles ────────────────────────────────────────────────────────────
+
+// Crea profilo media (richiesta, va approvata dall'admin)
+app.post('/api/profile/media', requireAuth, async (req, res) => {
+  try {
+    if (req.user.role !== 'media') return res.status(403).json({ error: 'Solo per account Media/Fotografo' });
+    const existing = await queries.getMediaProfileByUser(req.user.id);
+    if (existing) return res.status(409).json({ error: 'Profilo già presente' });
+    const { display_name, bio, website, instagram } = req.body;
+    if (!display_name?.trim()) return res.status(400).json({ error: 'Il nome è obbligatorio' });
+    const profile = await queries.createMediaProfile({
+      user_id: req.user.id,
+      display_name: display_name.trim(),
+      bio: bio?.trim() || '',
+      website: website?.trim() || '',
+      instagram: instagram?.trim() || '',
+    });
+    res.status(201).json({ ok: true, profile });
+  } catch (e) { res.status(500).json({ error: e.message }); }
+});
+
+// Aggiorna profilo media (utente media o admin)
+app.patch('/api/profile/media', requireAuth, async (req, res) => {
+  try {
+    const profile = await queries.getMediaProfileByUser(req.user.id);
+    if (!profile && req.user.role !== 'admin') return res.status(404).json({ error: 'Profilo non trovato' });
+    const { display_name, bio, website, instagram } = req.body;
+    await queries.updateMediaProfile({
+      id: profile.id,
+      display_name: display_name?.trim() || profile.display_name,
+      bio: bio?.trim() ?? profile.bio,
+      website: website?.trim() ?? profile.website,
+      instagram: instagram?.trim() ?? profile.instagram,
+    });
+    res.json({ ok: true });
+  } catch (e) { res.status(500).json({ error: e.message }); }
+});
+
+// Lista pubblica profili media approvati
+app.get('/api/media/profiles', async (req, res) => {
+  try { res.json({ profiles: await queries.getApprovedMediaProfiles() }); }
+  catch (e) { res.status(500).json({ error: e.message }); }
+});
+
+// Profilo media singolo (pubblico) con album
+app.get('/api/media/profile/:id', async (req, res) => {
+  try {
+    const profile = await queries.getMediaProfileById(req.params.id);
+    if (!profile) return res.status(404).json({ error: 'Profilo non trovato' });
+    const albums  = await queries.getMediaAlbumsByProfile(profile.id);
+    const stats   = await queries.countMediaPhotosByProfile(profile.id);
+    res.json({ profile, albums, stats });
+  } catch (e) { res.status(500).json({ error: e.message }); }
+});
+
+// Album di una gara (pubblico)
+app.get('/api/media/gara/:gara_id', async (req, res) => {
+  try { res.json({ albums: await queries.getMediaAlbumsByGara(req.params.gara_id) }); }
+  catch (e) { res.status(500).json({ error: e.message }); }
+});
+
+// ── Middleware media/admin ─────────────────────────────────────────────────────
+function requireMediaOrAdmin(req, res, next) {
+  requireAuth(req, res, () => {
+    if (req.user.role !== 'media' && req.user.role !== 'admin')
+      return res.status(403).json({ error: 'Solo per account Media/Fotografo' });
+    next();
+  });
+}
+
+// Crea album
+app.post('/api/media/album', requireMediaOrAdmin, async (req, res) => {
+  try {
+    const profile = req.user.role === 'admin'
+      ? await queries.getMediaProfileById(req.body.media_profile_id)
+      : await queries.getMediaProfileByUser(req.user.id);
+    if (!profile) return res.status(404).json({ error: 'Profilo media non trovato' });
+    const { gara_id, title, description } = req.body;
+    if (!title?.trim()) return res.status(400).json({ error: 'Titolo obbligatorio' });
+    const album = await queries.createMediaAlbum({
+      media_profile_id: profile.id,
+      gara_id: gara_id || null,
+      title: title.trim(),
+      description: description?.trim() || '',
+    });
+    res.status(201).json({ ok: true, album });
+  } catch (e) { res.status(500).json({ error: e.message }); }
+});
+
+// Modifica album
+app.patch('/api/media/album/:id', requireMediaOrAdmin, async (req, res) => {
+  try {
+    const album = await queries.getMediaAlbum(req.params.id);
+    if (!album) return res.status(404).json({ error: 'Album non trovato' });
+    // verifica ownership se non admin
+    if (req.user.role !== 'admin') {
+      const profile = await queries.getMediaProfileByUser(req.user.id);
+      if (!profile || album.media_profile_id !== profile.id)
+        return res.status(403).json({ error: 'Non autorizzato' });
+    }
+    const { title, gara_id, description } = req.body;
+    await queries.updateMediaAlbum({
+      id: album.id,
+      title: title?.trim() || album.title,
+      gara_id: gara_id !== undefined ? (gara_id || null) : album.gara_id,
+      description: description?.trim() ?? album.description,
+    });
+    res.json({ ok: true });
+  } catch (e) { res.status(500).json({ error: e.message }); }
+});
+
+// Elimina album
+app.delete('/api/media/album/:id', requireMediaOrAdmin, async (req, res) => {
+  try {
+    const album = await queries.getMediaAlbum(req.params.id);
+    if (!album) return res.status(404).json({ error: 'Album non trovato' });
+    if (req.user.role !== 'admin') {
+      const profile = await queries.getMediaProfileByUser(req.user.id);
+      if (!profile || album.media_profile_id !== profile.id)
+        return res.status(403).json({ error: 'Non autorizzato' });
+    }
+    // Cancella foto locali dell'album
+    const photos = await queries.getMediaPhotosByAlbum(album.id);
+    for (const p of photos) { if (p.filename) await deletePhoto(p.filename).catch(() => {}); }
+    await queries.deleteMediaAlbum(album.id);
+    res.json({ ok: true });
+  } catch (e) { res.status(500).json({ error: e.message }); }
+});
+
+// Upload foto in album (multiple, max 20 per richiesta)
+const uploadMedia = multer({
+  storage: supabase ? multer.memoryStorage() : multer.diskStorage({
+    destination: UPLOADS_DIR,
+    filename: (req, file, cb) => {
+      const ext = path.extname(file.originalname).toLowerCase() || '.jpg';
+      cb(null, `media_${Date.now()}_${Math.random().toString(36).slice(2,7)}${ext}`);
+    },
+  }),
+  limits: { fileSize: 25 * 1024 * 1024, files: 20 },
+  fileFilter: (req, file, cb) => {
+    if (/^image\/(jpeg|png|webp)$/.test(file.mimetype)) cb(null, true);
+    else cb(new Error('Solo immagini JPEG, PNG, WebP'));
+  },
+});
+
+app.post('/api/media/album/:id/photos', requireMediaOrAdmin, uploadMedia.array('photos', 20), async (req, res) => {
+  try {
+    const album = await queries.getMediaAlbum(req.params.id);
+    if (!album) return res.status(404).json({ error: 'Album non trovato' });
+    if (req.user.role !== 'admin') {
+      const profile = await queries.getMediaProfileByUser(req.user.id);
+      if (!profile || album.media_profile_id !== profile.id)
+        return res.status(403).json({ error: 'Non autorizzato' });
+    }
+    const files = req.files || [];
+    if (!files.length) return res.status(400).json({ error: 'Nessun file ricevuto' });
+
+    // Ottieni l'ordine corrente massimo
+    const existingPhotos = await queries.getMediaPhotosByAlbum(album.id);
+    let startOrd = existingPhotos.length;
+
+    const saved = [];
+    for (const file of files) {
+      const ext      = path.extname(file.originalname).toLowerCase() || '.jpg';
+      const filename = `media_${Date.now()}_${Math.random().toString(36).slice(2,7)}${ext}`;
+      if (supabase) {
+        const { error } = await supabase.storage.from('photos').upload(filename, file.buffer, { contentType: file.mimetype, upsert: true });
+        if (error) throw new Error(error.message);
+      } else {
+        fs.writeFileSync(path.join(UPLOADS_DIR, filename), file.buffer || fs.readFileSync(file.path));
+      }
+      const photo = await queries.addMediaPhoto({ album_id: album.id, filename, caption: '', ord: startOrd++ });
+      saved.push(photo);
+    }
+    res.status(201).json({ ok: true, photos: saved });
+  } catch (e) { res.status(500).json({ error: e.message }); }
+});
+
+// Foto singola di un album (pubblico)
+app.get('/api/media/album/:id/photos', async (req, res) => {
+  try {
+    const photos = await queries.getMediaPhotosByAlbum(req.params.id);
+    res.json({ photos });
+  } catch (e) { res.status(500).json({ error: e.message }); }
+});
+
+// Elimina singola foto
+app.delete('/api/media/photo/:id', requireMediaOrAdmin, async (req, res) => {
+  try {
+    const photo = await queries.getMediaPhotoById(req.params.id);
+    if (!photo) return res.status(404).json({ error: 'Foto non trovata' });
+    if (req.user.role !== 'admin') {
+      const album   = await queries.getMediaAlbum(photo.album_id);
+      const profile = await queries.getMediaProfileByUser(req.user.id);
+      if (!profile || album.media_profile_id !== profile.id)
+        return res.status(403).json({ error: 'Non autorizzato' });
+    }
+    const deleted = await queries.deleteMediaPhoto(photo.id);
+    if (deleted?.filename) await deletePhoto(deleted.filename).catch(() => {});
+    res.json({ ok: true });
+  } catch (e) { res.status(500).json({ error: e.message }); }
+});
+
+// Aggiorna caption di una foto
+app.patch('/api/media/photo/:id', requireMediaOrAdmin, async (req, res) => {
+  try {
+    const photo = await queries.getMediaPhotoById(req.params.id);
+    if (!photo) return res.status(404).json({ error: 'Foto non trovata' });
+    if (req.user.role !== 'admin') {
+      const album   = await queries.getMediaAlbum(photo.album_id);
+      const profile = await queries.getMediaProfileByUser(req.user.id);
+      if (!profile || album.media_profile_id !== profile.id)
+        return res.status(403).json({ error: 'Non autorizzato' });
+    }
+    await pool.query(`UPDATE media_photos SET caption=$2 WHERE id=$1`, [photo.id, req.body.caption || '']);
+    res.json({ ok: true });
+  } catch (e) { res.status(500).json({ error: e.message }); }
+});
+
+// ── Admin: seed xpix → media albums ──────────────────────────────────────────
+app.post('/api/admin/media/seed-xpix', requireAdmin, async (req, res) => {
+  try {
+    // 1. Crea (o trova) profilo "xpix.it" — utente_id NULL = profilo di sistema
+    let xpixProfile = await rawQuery(`SELECT * FROM media_profiles WHERE user_id IS NULL AND display_name = 'xpix.it' LIMIT 1`).then(r => r.rows[0]);
+    if (!xpixProfile) {
+      const r = await rawQuery(
+        `INSERT INTO media_profiles (user_id, display_name, bio, website, instagram, status)
+         VALUES (NULL, 'xpix.it', 'Fotografia ciclismo agonistico italiano', 'https://www.xpix.it', 'xpix.it', 'active')
+         RETURNING *`
+      );
+      xpixProfile = r.rows[0];
+    }
+
+    // 2. Leggi xpix_queue da Supabase per avere le foto complete degli album
+    const xpixQueue = await readXpixQueue();
+    const xpixPhotos = await readXpixPhotos();
+
+    // Mappa slug → item di coda (con photos[])
+    const queueBySlug = {};
+    for (const item of xpixQueue) {
+      if (item.album_slug && item.photos?.length) queueBySlug[item.album_slug] = item;
+    }
+
+    let created = 0, skipped = 0;
+    for (const [gara_id, xpixEntry] of Object.entries(xpixPhotos)) {
+      const slug = xpixEntry.album_slug;
+      if (!slug) { skipped++; continue; }
+
+      // Salta se album già presente
+      const existing = await rawQuery(
+        `SELECT id FROM media_albums WHERE media_profile_id=$1 AND gara_id=$2 LIMIT 1`,
+        [xpixProfile.id, gara_id]
+      ).then(r => r.rows[0]);
+      if (existing) { skipped++; continue; }
+
+      // Crea album
+      const album = await queries.createMediaAlbum({
+        media_profile_id: xpixProfile.id,
+        gara_id,
+        title: xpixEntry.album_name || slug,
+        description: '',
+      });
+
+      // Aggiungi le foto: usa photos[] dalla queue se disponibili, altrimenti solo la foto hero
+      const photoUrls = queueBySlug[slug]?.photos?.length
+        ? queueBySlug[slug].photos
+        : [xpixEntry.url];
+
+      let ord = 0;
+      for (const url of photoUrls) {
+        await queries.addMediaPhoto({ album_id: album.id, filename: null, ext_url: url, caption: '', ord: ord++ });
+      }
+      created++;
+    }
+
+    res.json({ ok: true, created, skipped, profile_id: xpixProfile.id });
   } catch (e) { res.status(500).json({ error: e.message }); }
 });
 
