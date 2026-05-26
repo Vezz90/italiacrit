@@ -9412,9 +9412,18 @@ async function renderRisultati() {
       }).join(categories.length > 1 ? '<div class="ris-cat-divider"></div>' : '');
 
       const _photoSrcRis = featuredPhoto?.url || (featuredPhoto?.filename ? `${PHOTOS_BASE}/photos/${featuredPhoto.filename}` : '');
+      const _photoCreditRis = (() => {
+        if (!featuredPhoto) return '';
+        if (featuredPhoto.photographer) return '📷 ' + featuredPhoto.photographer;
+        if (featuredPhoto.display_name)  return '📷 ' + featuredPhoto.display_name;
+        if (featuredPhoto.album_slug || featuredPhoto.source === 'xpix') return '📷 xpix.it';
+        if (featuredPhoto.source === 'italiaciclismo') return '📷 italiaciclismo.net';
+        return '';
+      })();
       const photoEl = _photoSrcRis
         ? `<a href="#/gara/${esc(race.id)}" class="ris-card-photo${featuredVideoId ? ' ris-media-half' : ''}">
              <img src="${esc(_photoSrcRis)}" alt="Foto gara" loading="lazy"/>
+             ${_photoCreditRis ? `<div class="ris-photo-credit">${esc(_photoCreditRis)}</div>` : ''}
            </a>`
         : '';
       const videoEl = featuredVideoId

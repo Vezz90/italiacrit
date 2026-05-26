@@ -2713,10 +2713,11 @@ div[style*="grid-template-columns: repeat(auto-fit"] {
 .ris-card-media-split { display:flex; gap:2px; }
 
 /* Metà sinistra: foto */
-.ris-card-photo { display:block; width:100%; height:100%; overflow:hidden; text-decoration:none; }
+.ris-card-photo { display:block; width:100%; height:100%; overflow:hidden; text-decoration:none; position:relative; }
 .ris-card-photo.ris-media-half { width:50%; flex-shrink:0; }
 .ris-card-photo img { width:100%; height:100%; object-fit:cover; display:block; transition:transform .3s; }
 .ris-card-photo:hover img { transform:scale(1.04); }
+.ris-photo-credit { position:absolute; bottom:0; left:0; right:0; padding:4px 8px; background:rgba(0,0,0,.6); font-size:0.62rem; color:#ccc; font-family:var(--font-mono); white-space:nowrap; overflow:hidden; text-overflow:ellipsis; }
 
 /* Metà destra: video thumbnail */
 .ris-card-video-thumb { position:relative; cursor:pointer; overflow:hidden; width:100%; height:100%; }
