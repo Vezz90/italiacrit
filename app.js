@@ -6776,7 +6776,8 @@ async function renderGara(gara_id) {
                      || _pm[_esBase + '_ES2_M'] || _pm[_esBase + '_ES2_F'];
       if (_extPhoto?.url) {
         const _src = esc(_extPhoto.url);
-        const _srcLabel = _extPhoto.source === 'xpix' ? 'xpix.it' : 'italiaciclismo.net';
+        // album_slug è presente solo nelle foto xpix; source:'italiaciclismo' solo in IC
+        const _srcLabel = (_extPhoto.album_slug || _extPhoto.source === 'xpix') ? 'xpix.it' : 'italiaciclismo.net';
         _heroPhotoEl = `<div class="gara-media-half gara-media-photo" onclick="window.openPhotoLightbox('${_src}')" style="cursor:zoom-in">
            <img id="gara-hero-img" src="${_src}" alt="Foto gara" loading="lazy"/>
            <div class="gara-photo-hint">🔍 Clicca per la foto intera</div>
