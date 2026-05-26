@@ -7409,17 +7409,51 @@ async function renderGara(gara_id) {
         const albums = d.albums || [];
         if (!albums.length) return;
 
-        // Mostra subito la struttura con solo le cover (già disponibili dall'API albums)
-        // La copertina è first_ext_url / first_filename — zero fetch extra
+        // Carica TUTTE le foto di tutti gli album in parallelo (lazy: solo quando la sezione è visibile)
+        const albumPhotos = await Promise.all(
+          albums.map(a =>
+            fetch(`${API_BASE}/media/album/${a.id}/photos`)
+              .then(r => r.json())
+              .then(pd => ({ album: a, photos: (pd.photos || []).map(p => ({ src: p.ext_url || (p.filename ? `${PHOTOS_BASE}/photos/${p.filename}` : ''), raw: p })).filter(p => p.src) }))
+              .catch(() => ({ album: a, photos: [] }))
+          )
+        );
+
+        // Costruisce il flat array globale per il carousel
+        window._garaMediaPhotos = [];
+        albumPhotos.forEach(({ album: a, photos }) => {
+          photos.forEach(p => window._garaMediaPhotos.push({
+            src: p.src,
+            albumTitle: a.title,
+            photographer_name: a.photographer_name,
+            profile_id: a.profile_id,
+            albumId: a.id
+          }));
+        });
+
+        // Mappa: albumId → indice di partenza nel flat array
+        const albumStartIdx = {};
+        let running = 0;
+        albumPhotos.forEach(({ album: a, photos }) => {
+          albumStartIdx[a.id] = running;
+          running += photos.length;
+        });
+
         galEl.innerHTML = `
           <div class="comp-section media-gallery-section">
             <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:10px;flex-wrap:wrap;gap:6px">
               <div class="comp-section-title" style="margin:0;border:none;padding:0">📷 Gallery fotografi</div>
               <span style="font-size:.75rem;color:var(--text-muted)">${albums.length} album</span>
             </div>
-            ${albums.map(a => {
+            ${albumPhotos.map(({ album: a, photos }) => {
               const stripId = `mgstrip-${a.id}`;
-              const cover = a.first_ext_url || (a.first_filename ? `${PHOTOS_BASE}/photos/${a.first_filename}` : '');
+              const startIdx = albumStartIdx[a.id];
+              const thumbsHtml = photos.length
+                ? photos.map((p, pi) => `
+                    <div class="media-gallery-thumb" onclick="window.openMediaCarousel(${startIdx + pi})">
+                      <img src="${esc(p.src)}" loading="lazy" alt="Foto ${pi+1}"/>
+                    </div>`).join('')
+                : `<div class="media-gallery-thumb" style="background:var(--bg-elevated);display:flex;align-items:center;justify-content:center;color:var(--text-muted)">📷</div>`;
               return `
                 <div class="media-gallery-album">
                   <div class="media-gallery-album-header">
@@ -7428,14 +7462,7 @@ async function renderGara(gara_id) {
                   </div>
                   <div class="media-gallery-strip-wrap">
                     <button class="media-gallery-arrow media-gallery-prev" onclick="window._mgScroll('${stripId}',-1)">‹</button>
-                    <div class="media-gallery-strip" id="${stripId}">
-                      ${cover
-                        ? `<div class="media-gallery-thumb media-gallery-thumb-cover" onclick="window._mgExpandAlbum(${a.id},'${esc(a.title)}','${esc(a.photographer_name)}',${a.profile_id})">
-                             <img src="${esc(cover)}" loading="lazy" alt="Anteprima"/>
-                             <div class="media-gallery-expand-hint">▶ ${a.photo_count} foto</div>
-                           </div>`
-                        : `<div class="media-gallery-thumb" style="background:var(--bg-elevated);display:flex;align-items:center;justify-content:center;color:var(--text-muted)" onclick="window._mgExpandAlbum(${a.id},'${esc(a.title)}','${esc(a.photographer_name)}',${a.profile_id})">📷</div>`}
-                    </div>
+                    <div class="media-gallery-strip" id="${stripId}">${thumbsHtml}</div>
                     <button class="media-gallery-arrow media-gallery-next" onclick="window._mgScroll('${stripId}',1)">›</button>
                   </div>
                 </div>`;
@@ -7455,38 +7482,6 @@ async function renderGara(gara_id) {
     }
   })();
 
-  // Espande un album nello strip (carica tutte le foto al click sulla copertina)
-  window._mgExpandAlbum = async function(albumId, title, photographer, profileId) {
-    const strip = document.getElementById(`mgstrip-${albumId}`);
-    if (!strip) return;
-    // Mostra spinner
-    const thumbs = strip.querySelectorAll('.media-gallery-thumb');
-    thumbs.forEach(t => t.style.opacity = '.4');
-    try {
-      const d = await fetch(`${API_BASE}/media/album/${albumId}/photos`).then(r => r.json());
-      const photos = (d.photos || []).map(p => p.ext_url || (p.filename ? `${PHOTOS_BASE}/photos/${p.filename}` : '')).filter(Boolean);
-      if (!photos.length) return;
-
-      // Registra nel flat array globale per il carousel
-      if (!window._garaMediaPhotos) window._garaMediaPhotos = [];
-      const existingIdx = window._garaMediaPhotos.findIndex(p => p.albumId === albumId);
-      let globalStart;
-      if (existingIdx >= 0) {
-        globalStart = existingIdx;
-      } else {
-        globalStart = window._garaMediaPhotos.length;
-        photos.forEach(src => window._garaMediaPhotos.push({ src, albumTitle: title, photographer_name: photographer, profile_id: profileId, albumId }));
-      }
-
-      // Sostituisce il contenuto dello strip con le miniature reali
-      strip.innerHTML = photos.map((src, pi) => `
-        <div class="media-gallery-thumb" onclick="window.openMediaCarousel(${globalStart + pi})">
-          <img src="${esc(src)}" loading="lazy" alt="Foto ${pi+1}"/>
-        </div>`).join('');
-    } catch(e) {
-      strip.querySelectorAll('.media-gallery-thumb').forEach(t => t.style.opacity = '1');
-    }
-  };
 
   // Carousel lightbox con prev/next, Acquista e Condividi
   window.openMediaCarousel = function(startIdx) {
@@ -7518,7 +7513,7 @@ async function renderGara(gara_id) {
     overlay.innerHTML = `
       <div style="position:absolute;top:12px;left:50%;transform:translateX(-50%);display:flex;gap:8px">
         ${user ? `<button id="mgc-buy"   data-photo-src="" style="${btnBase};background:#f59e0b;color:#000" onclick="window._mgRequestPurchase(this)">🛒 Acquista</button>` : ''}
-        ${user?.role === 'atleta' ? `<button id="mgc-share" data-photo-src="" style="${btnBase};background:var(--accent);color:#fff" onclick="window._mgShareToProfile(this)">📌 Condividi sul mio profilo</button>` : ''}
+        ${(user?.role === 'atleta' || user?.role === 'admin') ? `<button id="mgc-share" data-photo-src="" style="${btnBase};background:var(--accent);color:#fff" onclick="window._mgShareToProfile(this)">📌 Condividi sul mio profilo</button>` : ''}
       </div>
       <div style="position:absolute;top:12px;right:16px;display:flex;align-items:center;gap:14px">
         <span id="mgc-counter" style="color:rgba(255,255,255,.45);font-size:.8rem"></span>
