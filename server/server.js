@@ -1665,6 +1665,21 @@ app.post('/api/admin/media/seed-xpix', requireAdmin, async (req, res) => {
 
 // ── Messaging API ─────────────────────────────────────────────────────────────
 
+// Ricerca utenti registrati per display_name (per avviare conversazione da inbox)
+app.get('/api/users/search', requireAuth, async (req, res) => {
+  try {
+    const q = (req.query.q || '').trim();
+    if (q.length < 2) return res.json({ users: [] });
+    const rows = await rawQuery(
+      `SELECT id, display_name, role FROM users
+       WHERE id != $1 AND display_name ILIKE $2
+       ORDER BY display_name LIMIT 15`,
+      [req.user.id, `%${q}%`]
+    ).then(r => r.rows);
+    res.json({ users: rows });
+  } catch (e) { res.status(500).json({ error: e.message }); }
+});
+
 // Lookup utente da atleta_id (per bottone "Scrivi" su profilo atleta)
 app.get('/api/users/lookup', requireAuth, async (req, res) => {
   try {

@@ -1,5 +1,5 @@
 /* ============================================================
-   ItaliacritResultati — app.js  v124
+   ItaliacritResultati — app.js  v198
    Hash Router + Page Renderers
    Legge i JSON statici da data/ via fetch()
    ============================================================ */
@@ -184,7 +184,8 @@ function updateNavLoginState() {
     if (drawerLink) { drawerLink.textContent = label; drawerLink.href = '#/profilo'; }
     if (bell)    bell.style.display = 'flex';
     if (msgBell) msgBell.style.display = 'flex';
-    if (navMsg)  navMsg.style.display = '';
+    // nav-msg (desktop) sempre nascosto: l'icona busta nel navbar gestisce i msg su desktop
+    if (navMsg)  navMsg.style.display = 'none';
     if (drawerMsg) { drawerMsg.style.display = ''; }
     const drawerSectionMsg = document.getElementById('drawer-section-msg');
     if (drawerSectionMsg) drawerSectionMsg.style.display = '';
@@ -345,6 +346,8 @@ function stopMsgPolling() {
   if (_msgPollTimer) { clearInterval(_msgPollTimer); _msgPollTimer = null; }
   const badge = document.getElementById('msg-badge');
   if (badge) { badge.style.display = 'none'; badge.textContent = '0'; }
+  const drawerBadge = document.getElementById('drawer-msg-badge');
+  if (drawerBadge) { drawerBadge.style.display = 'none'; drawerBadge.textContent = '0'; }
 }
 
 async function refreshMsgCount() {
@@ -355,13 +358,25 @@ async function refreshMsgCount() {
       headers: { Authorization: `Bearer ${token}` }
     }).then(r => r.json());
     const count = d.count || 0;
+    // Badge icona busta desktop
     const badge = document.getElementById('msg-badge');
-    if (!badge) return;
-    if (count > 0) {
-      badge.textContent = count > 99 ? '99+' : count;
-      badge.style.display = 'flex';
-    } else {
-      badge.style.display = 'none';
+    if (badge) {
+      if (count > 0) {
+        badge.textContent = count > 99 ? '99+' : count;
+        badge.style.display = 'flex';
+      } else {
+        badge.style.display = 'none';
+      }
+    }
+    // Badge link Messaggi nel drawer mobile
+    const drawerBadge = document.getElementById('drawer-msg-badge');
+    if (drawerBadge) {
+      if (count > 0) {
+        drawerBadge.textContent = count > 99 ? '99+' : count;
+        drawerBadge.style.display = 'inline-flex';
+      } else {
+        drawerBadge.style.display = 'none';
+      }
     }
   } catch { /* silenzioso */ }
 }
@@ -418,6 +433,12 @@ async function renderInbox(activeConvId) {
           <div class="msg-inbox-head">
             <span>✉ Messaggi</span>
           </div>
+          <div class="msg-new-search">
+            <svg class="search-icon" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
+            <input type="search" id="msg-user-search" placeholder="Cerca utente per inviare un messaggio…" autocomplete="off"
+              oninput="window._msgUserSearch(this.value)" onfocus="window._msgUserSearch(this.value)" />
+            <div class="msg-user-results" id="msg-user-results" style="display:none"></div>
+          </div>
           <div class="msg-conv-list" id="msg-conv-list">${convListHtml}</div>
         </div>
         <div class="msg-thread-panel" id="msg-thread-panel">
@@ -431,6 +452,45 @@ async function renderInbox(activeConvId) {
   if (activeConvId) {
     await _msgLoadThread(activeConvId);
   }
+
+  // Ricerca utente per nuova conversazione
+  let _msgSearchTimer = null;
+  window._msgUserSearch = function(q) {
+    clearTimeout(_msgSearchTimer);
+    const box = document.getElementById('msg-user-results');
+    if (!box) return;
+    if (!q || q.trim().length < 2) { box.style.display = 'none'; return; }
+    _msgSearchTimer = setTimeout(async () => {
+      try {
+        const d = await apiCall(`/users/search?q=${encodeURIComponent(q.trim())}`);
+        const users = d.users || [];
+        if (!users.length) { box.innerHTML = '<div style="padding:12px 14px;font-size:.8rem;color:var(--text-muted)">Nessun utente trovato</div>'; box.style.display = 'block'; return; }
+        const roleIcon = { atleta:'🚴', team:'👥', media:'📷', admin:'⚙️' };
+        box.innerHTML = users.map(u => `
+          <div class="msg-user-result-item" onclick="window._msgStartFromSearch(${u.id},'${esc(u.display_name||'Utente')}')">
+            <div class="msg-user-result-avatar">${(u.display_name||'?')[0].toUpperCase()}</div>
+            <div>
+              <div class="msg-user-result-name">${esc(u.display_name||'Utente')}</div>
+              <div class="msg-user-result-role">${roleIcon[u.role]||'👤'} ${u.role}</div>
+            </div>
+          </div>`).join('');
+        box.style.display = 'block';
+      } catch { box.style.display = 'none'; }
+    }, 280);
+  };
+  window._msgStartFromSearch = async function(userId, userName) {
+    const box = document.getElementById('msg-user-results');
+    const inp = document.getElementById('msg-user-search');
+    if (box) box.style.display = 'none';
+    if (inp) inp.value = '';
+    await window.startConversation(userId, userName);
+  };
+  // Chiudi risultati se clicchi fuori
+  document.addEventListener('click', function(e) {
+    const box = document.getElementById('msg-user-results');
+    const wrap = document.querySelector('.msg-new-search');
+    if (box && wrap && !wrap.contains(e.target)) box.style.display = 'none';
+  }, { capture: true });
 
   window._msgOpenConv = async (convId) => {
     // Aggiorna attivo nella lista
@@ -1081,18 +1141,12 @@ window.addEventListener('load', async () => {
   route();
   initSearch();
   initMobileMenu();
+  initNavDropdowns();
 
-  // ── Cinematic entry: prima visita ──────────────────────────────
-  var _itcStored;
-  try { _itcStored = localStorage.getItem('itcContext'); } catch(e) {}
-  if (!_itcStored) {
-    showCinematicEntry(false);
-  }
-
-  // Logo click: apre sempre la schermata cinematografica di selezione
+  // Logo click → Risultati
   document.getElementById('nav-logo-link')?.addEventListener('click', function(e) {
     e.preventDefault();
-    showCinematicEntry(true);
+    window.location.hash = '#/risultati';
   });
 
   // --- Sistema di AUTO-POLLING ---
@@ -1161,17 +1215,8 @@ function route() {
   };
 
   if (match('/')) {
-    // Returning user con hub attivo → vai direttamente all'hub editoriale
-    if (activeHub && activeHub._code) {
-      window.location.hash = '#/hub/' + activeHub._code + '/';
-      return;
-    }
-    // Nessun hub: la cinematic gate È la home
-    // Chiamare setPage crea il chip navbar e dà uno sfondo all'app
-    setPage('<div style="min-height:100vh;background:var(--bg-primary)"></div>');
-    if (!document.getElementById('itc-gate')) {
-      showCinematicEntry(false);
-    }
+    // Nessuna home page — va direttamente ai risultati
+    window.location.replace('#/risultati');
     return;
   }
   if (match('/classifica')) return renderClassifica();
@@ -1222,22 +1267,16 @@ function updateNavActive(hash) {
   document.querySelectorAll('.nav-link, .nav-group-btn, .nav-group-item').forEach(el => el.classList.remove('active'));
   updateNavLoginState();
 
-  if (hash === '#/' || hash === '#') {
-    document.getElementById('nav-home')?.classList.add('active');
-    return;
-  }
-
   const seg = (hash.replace(/^#\//, '').split('/')[0] || '');
 
-  const GARE_SEGS    = ['risultati', 'calendario', 'gara'];
   const CLASS_SEGS   = ['classifica', 'atleti', 'team', 'atleta'];
   const ANALISI_SEGS = ['statistiche', 'comparatore'];
   const ACCOUNT_SEGS = ['login', 'register', 'profilo'];
 
-  if (GARE_SEGS.includes(seg)) {
-    document.getElementById('nav-gare-btn')?.classList.add('active');
-    document.getElementById('nav-risultati')?.classList.toggle('active', seg === 'risultati');
-    document.getElementById('nav-cal')?.classList.toggle('active', seg === 'calendario');
+  if (seg === 'risultati' || seg === 'gara') {
+    document.getElementById('nav-risultati')?.classList.add('active');
+  } else if (seg === 'calendario') {
+    document.getElementById('nav-cal')?.classList.add('active');
   } else if (CLASS_SEGS.includes(seg)) {
     document.getElementById('nav-class-btn')?.classList.add('active');
     document.getElementById('nav-class')?.classList.toggle('active',  seg === 'classifica');
@@ -10523,6 +10562,46 @@ window.openVideoModal = (videoId, title) => {
   overlay.addEventListener('click', e => { if (e.target === overlay) overlay.remove(); });
   document.body.appendChild(overlay);
 };
+
+// ── NAV DROPDOWNS (click-based) ───────────────────────────────
+function initNavDropdowns() {
+  // Chiudi tutti i gruppi aperti
+  function closeAll() {
+    document.querySelectorAll('.nav-group.open').forEach(g => {
+      g.classList.remove('open');
+      g.querySelector('.nav-group-btn')?.setAttribute('aria-expanded', 'false');
+    });
+  }
+
+  // Click sul bottone del gruppo → toggle open
+  document.querySelectorAll('.nav-group-btn').forEach(btn => {
+    btn.addEventListener('click', function(e) {
+      e.stopPropagation();
+      const group = this.closest('.nav-group');
+      const wasOpen = group.classList.contains('open');
+      closeAll();
+      if (!wasOpen) {
+        group.classList.add('open');
+        this.setAttribute('aria-expanded', 'true');
+      }
+    });
+  });
+
+  // Click su una voce del menu → chiudi il dropdown
+  document.querySelectorAll('.nav-group-item').forEach(item => {
+    item.addEventListener('click', () => closeAll());
+  });
+
+  // Click fuori dal nav-group → chiudi
+  document.addEventListener('click', function(e) {
+    if (!e.target.closest('.nav-group')) closeAll();
+  });
+
+  // Escape → chiudi
+  document.addEventListener('keydown', function(e) {
+    if (e.key === 'Escape') closeAll();
+  });
+}
 
 // ── MOBILE MENU ───────────────────────────────────────────────
 function initMobileMenu() {
