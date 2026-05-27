@@ -3594,21 +3594,18 @@ async function renderHubBars() {
   const eyebrow  = hub
     ? `${hub.icon || ''} ${hub.gender === 'M' ? 'Maschile' : hub.gender === 'F' ? 'Femminile' : ''}`
     : 'Ciclismo Agonistico Italiano';
-  // Hero title: nome categoria se presente, altrimenti brand
   const heroTitle = hub ? hub.label.toUpperCase() : 'Italiacrit<br>Risultati';
   const heroSub   = hub
     ? `${hub.desc || ''} — scegli una sezione.`
     : 'Classifiche, risultati e statistiche del ciclismo su strada italiano.';
 
-  // ── Carica foto e video in parallelo ──────────────────────────
-  let allPhotos = [], vidMap = {};
+  // ── Carica solo foto (niente video) ───────────────────────────
+  let allPhotos = [];
   try {
-    const [d1, d2, dv] = await Promise.all([
+    const [d1, d2] = await Promise.all([
       fetch(`${API_BASE}/race-photos`).then(r => r.json()).catch(() => ({ photos: [] })),
       fetch(`${API_BASE}/xpix-photos`).then(r => r.json()).catch(() => ({ photos: [] })),
-      fetch(`${API_BASE}/videos`).then(r => r.json()).catch(() => ({})),
     ]);
-    // Foto con gara_id per il filtro per categoria
     const rawPhotos = [];
     (d1.photos || []).forEach(p => {
       if (p.filename) rawPhotos.push({ url: `${PHOTOS_BASE}/photos/${p.filename}`, gara_id: p.gara_id || '' });
@@ -3616,14 +3613,13 @@ async function renderHubBars() {
     (d2.photos || []).forEach(p => {
       if (p.url) rawPhotos.push({ url: p.url, gara_id: p.gara_id || '' });
     });
-    vidMap = dv || {};
 
     // Filtra per categoria se hub attivo
     const catPhotos = catCodes.length
       ? rawPhotos.filter(p => catCodes.some(code => p.gara_id.includes(code)))
       : rawPhotos;
 
-    // Usa foto categoria se abbastanza, altrimenti tutte
+    // Usa foto categoria se ne abbiamo abbastanza, altrimenti tutte
     allPhotos = catPhotos.length >= 4 ? catPhotos : rawPhotos;
 
     // Shuffle
@@ -3633,48 +3629,25 @@ async function renderHubBars() {
     }
   } catch { /* fallback: dark bg */ }
 
-  // ── YouTube IDs per categoria ──────────────────────────────────
-  const catYtIds = [];
-  if (Object.keys(vidMap).length) {
-    Object.entries(vidMap).forEach(([garaId, vids]) => {
-      const match = catCodes.length
-        ? catCodes.some(c => garaId.includes(c))
-        : true;
-      if (match) {
-        (vids || []).forEach(v => {
-          const id = ytId(v.url);
-          if (id && !catYtIds.includes(id)) catYtIds.push(id);
-        });
-      }
-    });
-  }
-
   const pickPhoto = i => allPhotos[i % allPhotos.length]?.url || null;
 
   // ── Build bars HTML ───────────────────────────────────────────
-  // Alterna: bar pari → foto + testo SINISTRA, bar dispari → video/foto + testo DESTRA
+  // Alterna sinistra/destra: 0→sx, 1→dx, 2→sx, 3→dx
+  // NOTA: i sub-item usano <span onclick> NON <a> perché il bar stesso è già <a>
+  //       (nested <a> è HTML invalido e causa overflow fuori dal ban)
   const barsHtml = BARS.map((b, i) => {
-    const isRight  = i % 2 === 1;
-    const useVideo = isRight && catYtIds.length > 0;
-    const ytVidId  = useVideo ? catYtIds[Math.floor(i / 2) % catYtIds.length] : null;
-    const pic      = pickPhoto(i);
-
-    const bgMedia = ytVidId
-      ? `<div class="hub-bar-video-bg">
-           <iframe src="https://www.youtube.com/embed/${ytVidId}?autoplay=1&mute=1&loop=1&playlist=${ytVidId}&controls=0&disablekb=1&rel=0&iv_load_policy=3&modestbranding=1&playsinline=1"
-             allow="autoplay; encrypted-media" allowfullscreen frameborder="0"></iframe>
-         </div>`
-      : `<div class="hub-bar-bg" style="${pic ? `background-image:url('${pic}')` : ''}"></div>`;
+    const isRight = i % 2 === 1;
+    const pic     = pickPhoto(i);
 
     const subsHtml = b.subs
       ? `<div class="hub-bar-subs">${b.subs.map(s =>
-          `<a href="${s.h}" class="hub-bar-sub-item" onclick="event.stopPropagation()">${esc(s.l)}</a>`
+          `<span class="hub-bar-sub-item" onclick="event.preventDefault();event.stopPropagation();window.location.hash='${s.h}'">${esc(s.l)}</span>`
         ).join('')}</div>`
       : '';
 
     return `
       <a href="${b.href}" class="hub-bar${isRight ? ' hub-bar--right' : ''}" style="transition-delay:${i * 110}ms">
-        ${bgMedia}
+        <div class="hub-bar-bg" style="${pic ? `background-image:url('${pic}')` : ''}"></div>
         <div class="hub-bar-overlay"></div>
         <div class="hub-bar-inner">
           <div class="hub-bar-stripe" style="background:${hubColor}"></div>

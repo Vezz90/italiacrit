@@ -9732,7 +9732,7 @@ main.page:has(.hub-page) {
 .hub-bar {
   position: relative;
   display: block;
-  height: clamp(200px, 24vw, 300px);
+  height: clamp(260px, 30vw, 400px);
   overflow: hidden;
   text-decoration: none;
   cursor: pointer;
@@ -9950,7 +9950,7 @@ main.page:has(.hub-page) {
   .hub-hero { min-height: 42vh; }
   .hub-hero-content { padding: 24px 20px 32px; }
   .hub-bars { gap: 2px; }
-  .hub-bar { height: 130px; }
+  .hub-bar { height: 160px; }
   .hub-bar--right .hub-bar-inner { flex-direction: row; }
   .hub-bar--right .hub-bar-overlay {
     background: linear-gradient(to right,
