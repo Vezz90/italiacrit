@@ -605,7 +605,7 @@
     "p3": 1,
     "pout": 8,
     "pos": 38,
-    "trend": 1
+    "trend": 0
   },
   {
     "atleta_id": "TUDISCO_LUDOVICO",
@@ -621,7 +621,7 @@
     "p3": 3,
     "pout": 7,
     "pos": 39,
-    "trend": 1
+    "trend": 0
   },
   {
     "atleta_id": "SABATELLI_GABRIELE",
@@ -637,7 +637,7 @@
     "p3": 2,
     "pout": 1,
     "pos": 40,
-    "trend": -2
+    "trend": 0
   },
   {
     "atleta_id": "BOTTAZZO_GIANLUCA",
