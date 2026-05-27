@@ -1143,10 +1143,10 @@ window.addEventListener('load', async () => {
   initMobileMenu();
   initNavDropdowns();
 
-  // Logo click → Risultati
+  // Logo click → Hub home
   document.getElementById('nav-logo-link')?.addEventListener('click', function(e) {
     e.preventDefault();
-    window.location.hash = '#/risultati';
+    window.location.hash = '#/';
   });
 
   // --- Sistema di AUTO-POLLING ---
@@ -1214,11 +1214,7 @@ function route() {
     return hash.replace('#', '').match(re);
   };
 
-  if (match('/')) {
-    // Nessuna home page — va direttamente ai risultati
-    window.location.replace('#/risultati');
-    return;
-  }
+  if (match('/')) return renderHome();
   if (match('/classifica')) return renderClassifica();
   if (match('/atleti')) return renderAtletiList();
   if (match('/team')) return renderTeamList();
@@ -3573,12 +3569,80 @@ async function renderNews() {
   }
 }
 
-// ── HOME — la cinematic gate è la home; questa funzione è fallback di emergenza ─
-async function renderHome() {
-  // Fallback: apre la cinematic se non è già aperta
-  if (!document.getElementById('itc-gate')) {
-    showCinematicEntry(true);
-  }
+// ── HOME — Hub page con barre animate ─────────────────────────────
+function renderHome() {
+  const BARS = [
+    {
+      href: '#/risultati',
+      num: '01',
+      label: 'Risultati',
+      subs: null,
+    },
+    {
+      href: '#/classifica',
+      num: '02',
+      label: 'Classifiche',
+      subs: [
+        { label: 'Classifica', href: '#/classifica' },
+        { label: 'Atleti',     href: '#/atleti' },
+        { label: 'Team',       href: '#/team' },
+      ],
+    },
+    {
+      href: '#/calendario',
+      num: '03',
+      label: 'Calendario',
+      subs: null,
+    },
+    {
+      href: '#/statistiche',
+      num: '04',
+      label: 'Analisi',
+      subs: [
+        { label: 'Statistiche', href: '#/statistiche' },
+        { label: 'Comparatore', href: '#/comparatore' },
+      ],
+    },
+  ];
+
+  const barsHtml = BARS.map((b, i) => {
+    const subsHtml = b.subs
+      ? `<div class="hub-bar-subs">${b.subs.map(s =>
+          `<a href="${s.href}" class="hub-bar-sub-item" onclick="event.stopPropagation()">${esc(s.label)}</a>`
+        ).join('')}</div>`
+      : '';
+    return `
+      <a href="${b.href}" class="hub-bar" style="transition-delay:${i * 90}ms">
+        <div class="hub-bar-stripe"></div>
+        <div class="hub-bar-num">${b.num}</div>
+        <div class="hub-bar-label">${esc(b.label)}</div>
+        ${subsHtml}
+        <div class="hub-bar-arrow">→</div>
+      </a>`;
+  }).join('');
+
+  setPage(`
+    <div class="hub-page">
+      <div class="hub-hero">
+        <div class="hub-hero-eyebrow">Ciclismo Agonistico Italiano</div>
+        <div class="hub-hero-title">Italiacrit<br>Risultati</div>
+        <div class="hub-hero-sub">Classifiche, risultati e statistiche del ciclismo su strada italiano — Esordienti, Allievi, Juniores, Under 23 ed Elite.</div>
+      </div>
+      <div class="hub-bars">${barsHtml}</div>
+    </div>
+  `);
+
+  // Scroll-triggered reveal via IntersectionObserver
+  const observer = new IntersectionObserver(entries => {
+    entries.forEach(entry => {
+      if (entry.isIntersecting) {
+        entry.target.classList.add('hub-visible');
+        observer.unobserve(entry.target);
+      }
+    });
+  }, { threshold: 0.1 });
+
+  document.querySelectorAll('.hub-bar').forEach(bar => observer.observe(bar));
 }
 
 // ── OLD HOME (archivio) — rimossa: logica banner/spotlight ora nel SEIA ──
