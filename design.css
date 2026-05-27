@@ -9229,6 +9229,11 @@ body[data-hub] .loading-bar { background: var(--hub-color) !important; }
   background: rgba(255,255,255,0.08);
 }
 
+/* Su mobile l'icona busta è nascosta: i messaggi si trovano nel drawer */
+@media (max-width: 640px) {
+  #msg-bell { display: none !important; }
+}
+
 .notif-badge {
   position: absolute;
   top: 2px;
