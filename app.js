@@ -2553,6 +2553,242 @@ function siRivalryFinder(resultsRaw) {
     .slice(0, 5);
 }
 
+// ── computeTeamRanking — classifica squadre cumulativa ad una data ───
+// Restituisce array ordinato { team_id, team, punti, wins, riders, pos }
+function computeTeamRanking(resSet, catCode, beforeDate) {
+  const pts={}, meta={};
+  for(const r of resSet) {
+    if(getRankingFileCode(r)!==catCode||!r.team_id||!r.data) continue;
+    if(beforeDate&&r.data>=beforeDate) continue;
+    const k=r.team_id;
+    pts[k]=(pts[k]||0)+(r.punti_effettivi||0);
+    if(!meta[k]) meta[k]={team:r.team||k,wins:0,podi:0,riders:new Set()};
+    if(r.posizione===1) meta[k].wins++;
+    if(r.posizione<=3)  meta[k].podi++;
+    if(r.atleta_id) meta[k].riders.add(r.atleta_id);
+  }
+  return Object.entries(pts).filter(([,v])=>v>0).sort(([,a],[,b])=>b-a)
+    .map(([id,punti],i)=>({team_id:id,team:meta[id]?.team||id,punti,wins:meta[id]?.wins||0,podi:meta[id]?.podi||0,riders:meta[id]?.riders.size||0,pos:i+1}));
+}
+
+// ── computeTeamHotScore — forma team 0-100 ────────────────────────────
+function computeTeamHotScore(team_id, resSet, catCode) {
+  const lastDate=resSet.reduce((mx,r)=>(r.data||'')>mx?r.data:mx,'');
+  const cut14=(()=>{const d=new Date(lastDate||new Date());d.setDate(d.getDate()-14);return d.toISOString().split('T')[0];})();
+  const recent=resSet.filter(r=>r.team_id===team_id&&getRankingFileCode(r)===catCode&&r.data>=cut14);
+  if(!recent.length) return 0;
+  const catTotalPts=Math.max(1,resSet.filter(r=>getRankingFileCode(r)===catCode&&r.data>=cut14).reduce((s,r)=>s+(r.punti_effettivi||0),0));
+  const teamPts=recent.reduce((s,r)=>s+(r.punti_effettivi||0),0);
+  const shareScore=Math.min(40,(teamPts/catTotalPts)*200);
+  const winsScore=Math.min(30,recent.filter(r=>r.posizione===1).length*10);
+  const riders=new Set(recent.filter(r=>(r.punti_effettivi||0)>0).map(r=>r.atleta_id)).size;
+  const coverageScore=Math.min(20,riders*5);
+  const podiScore=Math.min(10,recent.filter(r=>r.posizione<=3).length*2);
+  return Math.round(shareScore+winsScore+coverageScore+podiScore);
+}
+
+// ── computeRankSnapshot — classifica cumulativa ad una data ──────────
+// beforeDate = null → snapshot attuale; altrimenti snapshot a quella data.
+function computeRankSnapshot(resSet, catCode, beforeDate) {
+  const pts = {};
+  for (const r of resSet) {
+    if (getRankingFileCode(r) !== catCode || !r.atleta_id || !r.data) continue;
+    if (beforeDate && r.data >= beforeDate) continue;
+    pts[r.atleta_id] = (pts[r.atleta_id] || 0) + (r.punti_effettivi || 0);
+  }
+  const rankMap = {};
+  Object.entries(pts).filter(([,v])=>v>0).sort(([,a],[,b])=>b-a)
+    .forEach(([id],i) => { rankMap[id] = i + 1; });
+  return rankMap;
+}
+
+// ── siFormRivalryFinder — rivalità basata sulla forma recente ─────────
+// Non richiede scontri diretti: trova la coppia di atleti più "narrativa"
+// considerando: vicinanza in classifica, forma ultimi 30gg, scontri recenti.
+function siFormRivalryFinder(resSet, catCode, ranking, lastDate) {
+  if (!ranking || ranking.length < 2) return null;
+  const cut30 = (()=>{const d=new Date(lastDate||new Date());d.setDate(d.getDate()-30);return d.toISOString().split('T')[0];})();
+
+  // Statistiche recenti per atleta
+  const stats = {};
+  for (const r of resSet) {
+    if (getRankingFileCode(r)!==catCode||!r.atleta_id||!r.data||r.data<cut30) continue;
+    if (!stats[r.atleta_id]) stats[r.atleta_id]={pts:0,wins:0,podi:0,races:0};
+    stats[r.atleta_id].pts  +=(r.punti_effettivi||0);
+    stats[r.atleta_id].races++;
+    if (r.posizione===1) stats[r.atleta_id].wins++;
+    if (r.posizione<=3)  stats[r.atleta_id].podi++;
+  }
+
+  // Scontri diretti recenti (bonus)
+  const meetMap = {};
+  const byRace = {};
+  for (const r of resSet) {
+    if (getRankingFileCode(r)!==catCode||!r.gara_id||!r.data||r.data<cut30) continue;
+    if (!byRace[r.gara_id]) byRace[r.gara_id]=[];
+    byRace[r.gara_id].push(r);
+  }
+  for (const raceRes of Object.values(byRace)) {
+    const top = raceRes.filter(r=>r.posizione<=8).sort((a,b)=>a.posizione-b.posizione);
+    for (let i=0;i<top.length-1;i++) for(let j=i+1;j<top.length&&j<=i+4;j++) {
+      const key=[top[i].atleta_id,top[j].atleta_id].sort().join('|');
+      if(!meetMap[key]) meetMap[key]={meets:0,wins:{}};
+      meetMap[key].meets++;
+      const wId=top[i].posizione<top[j].posizione?top[i].atleta_id:top[j].atleta_id;
+      meetMap[key].wins[wId]=(meetMap[key].wins[wId]||0)+1;
+    }
+  }
+
+  // Valuta tutte le coppie nel top-12 classificato
+  const top12 = ranking.slice(0,12);
+  const leaderPts = ranking[0].punti;
+  let best=null, bestScore=-1;
+  for (let i=0;i<top12.length-1;i++) {
+    for (let j=i+1;j<top12.length;j++) {
+      const a=top12[i], b=top12[j];
+      const sA=stats[a.atleta_id]||{pts:0,wins:0,podi:0,races:0};
+      const sB=stats[b.atleta_id]||{pts:0,wins:0,podi:0,races:0};
+      if(sA.races===0&&sB.races===0) continue;
+      const ptsGap=Math.abs(a.punti-b.punti);
+      const tension=Math.max(0,60-ptsGap*0.8);
+      const formAvg=(sA.pts+sB.pts)/2;
+      const meet=meetMap[[a.atleta_id,b.atleta_id].sort().join('|')]||{meets:0,wins:{}};
+      const score=tension*0.5 + formAvg*0.15 + (sA.races>0?10:0) + (sB.races>0?10:0)
+                + meet.meets*4 + (sA.wins>0&&sB.wins>0?25:0) - (j-i-1)*6;
+      if(score>bestScore) {
+        bestScore=score;
+        const aWinsVs=meet.wins[a.atleta_id]||0, bWinsVs=meet.wins[b.atleta_id]||0;
+        best={
+          aId:a.atleta_id, bId:b.atleta_id,
+          aCog:a.cognome,  bCog:b.cognome,
+          aNom:a.nome,     bNom:b.nome,
+          aTeam:a.team_attuale||a.team||'', bTeam:b.team_attuale||b.team||'',
+          aPts:a.punti, bPts:b.punti, ptsGap,
+          aRecentPts:sA.pts, bRecentPts:sB.pts,
+          aRecentWins:sA.wins, bRecentWins:sB.wins,
+          aWinsVs, bWinsVs, directMeets:meet.meets,
+        };
+      }
+    }
+  }
+  return best;
+}
+
+// ── buildRichNewsItems — feed editoriale con analisi completa ─────────
+function buildRichNewsItems(resSet, ranking, catCode, lastDate) {
+  const items = [];
+  const cut30 = (()=>{const d=new Date(lastDate||new Date());d.setDate(d.getDate()-30);return d.toISOString().split('T')[0];})();
+  const cut14 = (()=>{const d=new Date(lastDate||new Date());d.setDate(d.getDate()-14);return d.toISOString().split('T')[0];})();
+  const cut7  = (()=>{const d=new Date(lastDate||new Date());d.setDate(d.getDate()-7); return d.toISOString().split('T')[0];})();
+
+  // 1. Ultimi vincitori (max 2, ultimi 14gg)
+  const byRace={};
+  for(const r of resSet.filter(r=>r.data>=cut14&&r.posizione<=1)){
+    if(!byRace[r.gara_id]) byRace[r.gara_id]={nome:r.nome_gara,data:r.data,results:[]};
+    byRace[r.gara_id].results.push(r);
+  }
+  for(const race of Object.values(byRace).sort((a,b)=>b.data.localeCompare(a.data)).slice(0,2)){
+    const w=race.results[0];
+    if(w){
+      const rPos=ranking.findIndex(r=>r.atleta_id===w.atleta_id);
+      const ctx=rPos>=0?` (${rPos+1}° in classifica)`:'';
+      items.push({icon:'🥇',text:`<strong>${esc(w.cognome)} ${esc(w.nome)}</strong> vince <em>${esc(race.nome)}</em>${ctx}`,atleta_id:w.atleta_id});
+    }
+  }
+
+  // 2. Analisi gap in vetta
+  if(ranking.length>=2){
+    const gap=ranking[0].punti-ranking[1].punti;
+    const snapOld=computeRankSnapshot(resSet,catCode,cut14);
+    const leader=ranking[0];
+    const wasLeader=snapOld[leader.atleta_id]===1;
+    if(gap<=10){
+      items.push({icon:'⚔',text:`<strong>${esc(leader.cognome)}</strong> e <strong>${esc(ranking[1].cognome)}</strong> separati da soli <strong>${gap} punti</strong> — la vetta è contesa`});
+    } else if(gap<=30){
+      const gainingText=wasLeader?'conserva il vantaggio':'ha recuperato terreno';
+      items.push({icon:'📊',text:`<strong>${esc(leader.cognome)}</strong> guida con ${leader.punti} pt — ${esc(ranking[1].cognome)} insegue a ${gap} punti`});
+    } else {
+      items.push({icon:'📊',text:`<strong>${esc(leader.cognome)}</strong> in testa con ${leader.punti} pt, margine solido su ${esc(ranking[1].cognome)} (−${gap})`});
+    }
+  }
+
+  // 3. Scalatore del momento (maggior guadagno posizioni ultimi 14gg)
+  if(ranking.length>3){
+    const snapNow=computeRankSnapshot(resSet,catCode,null);
+    const snapOld=computeRankSnapshot(resSet,catCode,cut14);
+    let best=null,bestGain=2;
+    for(const a of ranking){
+      const now=snapNow[a.atleta_id]||999, old=snapOld[a.atleta_id]||999;
+      const gain=old-now;
+      const recentPts=resSet.filter(r=>r.atleta_id===a.atleta_id&&r.data>=cut14).reduce((s,r)=>s+(r.punti_effettivi||0),0);
+      if(gain>bestGain&&recentPts>0){bestGain=gain;best=a;}
+    }
+    if(best){
+      const pos=ranking.indexOf(best)+1;
+      items.push({icon:'🚀',text:`<strong>${esc(best.cognome)} ${esc(best.nome)}</strong> guadagna +${bestGain} posizioni in 2 settimane — ora <strong>${pos}°</strong>`,atleta_id:best.atleta_id});
+    }
+  }
+
+  // 4. Streak podio
+  const checked=new Set();
+  let bestStreak=null,bestStreakLen=3;
+  for(const a of ranking.slice(0,20)){
+    if(checked.has(a.atleta_id)) continue; checked.add(a.atleta_id);
+    const streak=siStreak(a.atleta_id,resSet);
+    if(streak.podioStreak>=bestStreakLen){bestStreakLen=streak.podioStreak;bestStreak=a;}
+  }
+  if(bestStreak){
+    const pos=ranking.indexOf(bestStreak)+1;
+    items.push({icon:'🔥',text:`<strong>${esc(bestStreak.cognome)} ${esc(bestStreak.nome)}</strong> è sul podio da <strong>${bestStreakLen} gare consecutive</strong>${pos>0?' · '+pos+'° in classifica':''}`,atleta_id:bestStreak.atleta_id});
+  }
+
+  // 5. Squadra dominante (ultimo mese)
+  const teamW={};
+  for(const r of resSet.filter(r=>r.data>=cut30&&r.posizione===1&&r.team)){
+    const k=r.team_id||r.team;
+    if(!teamW[k]) teamW[k]={name:r.team,id:r.team_id,wins:0};
+    teamW[k].wins++;
+  }
+  const topTeam=Object.values(teamW).sort((a,b)=>b.wins-a.wins)[0];
+  if(topTeam&&topTeam.wins>=2)
+    items.push({icon:'🏆',text:`<strong>${esc(topTeam.name)}</strong> — squadra più vincente dell'ultimo mese con <strong>${topTeam.wins} vittorie</strong>`,team_id:topTeam.id});
+
+  // 6. Corridore sottovalutato (alto Hot Score, fuori top-5)
+  if(ranking.length>5){
+    let sleeper=null,sleeperScore=55;
+    for(const a of ranking.slice(5,20)){
+      const s=computeHotScore(a.atleta_id,resSet,catCode);
+      if(s>sleeperScore){sleeperScore=s;sleeper=a;}
+    }
+    if(sleeper){
+      const pos=ranking.indexOf(sleeper)+1;
+      items.push({icon:'💡',text:`<strong>${esc(sleeper.cognome)} ${esc(sleeper.nome)}</strong> è il corridore più in forma fuori dalla top-5 — ${pos}°, forma score <strong>${sleeperScore}/100</strong>`,atleta_id:sleeper.atleta_id});
+    }
+  }
+
+  // 7. Prossimo sorpasso (chi ha il momentum per salire)
+  if(ranking.length>=3){
+    const snapNow=computeRankSnapshot(resSet,catCode,null);
+    const snapOld=computeRankSnapshot(resSet,catCode,cut30);
+    for(const a of ranking.slice(1,8)){
+      const nowPos=snapNow[a.atleta_id]||999, oldPos=snapOld[a.atleta_id]||999;
+      if(nowPos<oldPos&&a.atleta_id!==ranking[0].atleta_id){
+        const target=ranking[ranking.indexOf(a)-1];
+        if(target){
+          const gapTarget=target.punti-a.punti;
+          const recentPts=resSet.filter(r=>r.atleta_id===a.atleta_id&&r.data>=cut14).reduce((s,r)=>s+(r.punti_effettivi||0),0);
+          if(gapTarget>0&&gapTarget<40&&recentPts>0){
+            items.push({icon:'⚡',text:`<strong>${esc(a.cognome)} ${esc(a.nome)}</strong> è in ascesa: solo <strong>${gapTarget} punti</strong> da <strong>${esc(target.cognome)}</strong>`,atleta_id:a.atleta_id});
+            break;
+          }
+        }
+      }
+    }
+  }
+
+  return items.slice(0,7);
+}
+
 // siNewsroomFeed — auto-generate editorial narrative bullets from data
 function siNewsroomFeed(resultsRaw, allRankings, catOrder, topScalatori, teamDom) {
   const items = [];
@@ -3679,25 +3915,31 @@ async function renderHubBars() {
   const fireAth    = computeFireForSet(hubResES2);
   const fireAthES1 = isEsordienti?computeFireForSet(hubResES1):null;
 
-  // ── Movers ───────────────────────────────────────────────────────
-  function computeMovers(ranking, resSet, catCode) {
-    const cur={},prev={};
-    resSet.filter(r=>getRankingFileCode(r)===catCode&&r.atleta_id&&(r.punti_effettivi||0)>0).forEach(r=>{
-      cur[r.atleta_id]=(cur[r.atleta_id]||0)+(r.punti_effettivi||0);
-      if(r.data<cut7) prev[r.atleta_id]=(prev[r.atleta_id]||0)+(r.punti_effettivi||0);
-    });
-    const cR={},pR={};
-    Object.entries(cur).sort((a,b)=>b[1]-a[1]).forEach(([id],i)=>cR[id]=i+1);
-    Object.entries(prev).sort((a,b)=>b[1]-a[1]).forEach(([id],i)=>pR[id]=i+1);
-    const list=ranking.map(a=>{
-      const now=cR[a.atleta_id],old=pR[a.atleta_id];
+  // ── Movers — basati su snapshot di classifica reali ──────────────
+  // Confronto classifica cumulativa ora vs 7 giorni fa
+  const _snapNow   = computeRankSnapshot(hubResES2, mainCat, null);
+  const _snap7ago  = computeRankSnapshot(hubResES2, mainCat, cut7);
+  const _snapNowE1 = es1Code?computeRankSnapshot(hubResES1,es1Code,null):{};
+  const _snap7agoE1= es1Code?computeRankSnapshot(hubResES1,es1Code,cut7):{};
+  // Snapshot 14gg per trend frecce classifica
+  const _snap14ago  = computeRankSnapshot(hubResES2, mainCat, cut14);
+  const _snap14agoE1= es1Code?computeRankSnapshot(hubResES1,es1Code,cut14):{};
+
+  function computeMovers(ranking, snapNow, snap7ago) {
+    const list = ranking.map(a=>{
+      const now=snapNow[a.atleta_id], old=snap7ago[a.atleta_id];
       if(!now||!old) return null;
       return {atleta_id:a.atleta_id,cognome:a.cognome,nome:a.nome,pos:now,gain:old-now};
     }).filter(Boolean);
     return {up:list.filter(m=>m.gain>=1).sort((a,b)=>b.gain-a.gain).slice(0,3),dn:list.filter(m=>m.gain<=-1).sort((a,b)=>a.gain-b.gain).slice(0,2)};
   }
-  const movers    = computeMovers(hubRanking, hubResES2, mainCat);
-  const moversES1 = isEsordienti&&hubRankingES1?computeMovers(hubRankingES1,hubResES1,es1Code):{up:[],dn:[]};
+  const movers    = computeMovers(hubRanking,    _snapNow,   _snap7ago);
+  const moversES1 = isEsordienti&&hubRankingES1?computeMovers(hubRankingES1,_snapNowE1,_snap7agoE1):{up:[],dn:[]};
+
+  // Pre-carica foto atleta on fire
+  let fireAthPhoto=null, fireAthES1Photo=null;
+  if(fireAth){try{const ov=await getEntityOverrides('atleta',fireAth.atleta_id);if(ov.photo_url)fireAthPhoto=`${MEDIA_BASE}${ov.photo_url}`;}catch{}}
+  if(fireAthES1){try{const ov=await getEntityOverrides('atleta',fireAthES1.atleta_id);if(ov.photo_url)fireAthES1Photo=`${MEDIA_BASE}${ov.photo_url}`;}catch{}}
 
   // ── Championship bar ─────────────────────────────────────────────
   function champBar(ranking, label) {
@@ -3717,11 +3959,13 @@ async function renderHubBars() {
   }
 
   // ── Rider on fire card ───────────────────────────────────────────
-  function buildFireCard(ath, catCode, ranking, photo) {
+  function buildFireCard(ath, catCode, ranking, photoUrl) {
     if(!ath) return '';
     const score      = computeHotScore(ath.atleta_id, resultsRaw, catCode);
     const scoreColor = score>=80?'#E11D48':score>=55?'#F59E0B':'#10B981';
     const rankEntry  = ranking.find(r=>r.atleta_id===ath.atleta_id);
+    const snap14     = catCode===mainCat?_snap14ago:_snap14agoE1;
+    const snapN      = catCode===mainCat?_snapNow:_snapNowE1;
     const badges     = getAthleteBadges(ath.atleta_id, resultsRaw, catCode, rankEntry);
     const rankPos    = rankEntry?ranking.indexOf(rankEntry)+1:null;
     const gap        = rankEntry&&ranking[0]?ranking[0].punti-rankEntry.punti:null;
@@ -3733,9 +3977,17 @@ async function renderHubBars() {
     const badgesHtml = badges.length
       ? `<div class="itc-badges">${badges.map(b=>`<span class="itc-badge itc-${b.cls}">${b.icon} ${b.label}</span>`).join('')}</div>`
       : '';
-    const bgStyle = photo?`style="background-image:url('${photo}')"`:'';
+    // Sfondo: foto atleta portrait (face top-center) oppure watermark cognome
+    let bgHtml;
+    if (photoUrl) {
+      bgHtml = `<div class="itc-fire-bg itc-fire-bg--portrait" style="background-image:url('${photoUrl}')"></div>`;
+    } else {
+      bgHtml = `<div class="itc-fire-bg itc-fire-bg--neutral">
+        <div class="itc-fire-watermark">${esc(ath.cognome.toUpperCase())}</div>
+      </div>`;
+    }
     return `<div class="itc-fire" style="--hub-color:${hubColor}">
-      <div class="itc-fire-bg" ${bgStyle}></div>
+      ${bgHtml}
       <div class="itc-fire-overlay"></div>
       <div class="itc-fire-content">
         <div class="itc-fire-eyebrow">🔥 RIDER OF THE MOMENT · ${esc(catLabel(catCode))}</div>
@@ -3762,16 +4014,27 @@ async function renderHubBars() {
     </div>`;
   }
 
-  // ── Rank card con Last-5 dots ────────────────────────────────────
-  function buildRankCard(ranking, catCode, title) {
+  // ── Rank card con Last-5 dots e trend snapshot-based ─────────────
+  function buildRankCard(ranking, catCode, title, snapNow, snap14) {
     if(!ranking.length) return '';
     const leaderPts=ranking[0].punti;
     const rows=ranking.map((a,i)=>{
+      // Trend: confronto posizione ora vs 14gg fa (entrambi da snapshot cumulativi)
       let trendHtml='';
-      const hist=resultsRaw.filter(r=>r.atleta_id===a.atleta_id&&getRankingFileCode(r)===catCode&&r.rank_dopo_gara).sort((a,b)=>b.data.localeCompare(a.data));
-      if(hist.length>=2){const gain=hist[Math.min(3,hist.length-1)].rank_dopo_gara-hist[0].rank_dopo_gara;if(gain>=2)trendHtml=`<span class="itc-rank-trend up">▲${gain}</span>`;else if(gain<=-2)trendHtml=`<span class="itc-rank-trend dn">▼${Math.abs(gain)}</span>`;}
-      const last5=resultsRaw.filter(r=>r.atleta_id===a.atleta_id&&getRankingFileCode(r)===catCode&&r.posizione).sort((a,b)=>b.data.localeCompare(a.data)).slice(0,5).reverse();
-      const dotsHtml=last5.length?`<div class="itc-last5">${last5.map(r=>{const c=r.posizione===1?'w':r.posizione<=3?'p':r.posizione<=10?'t':'o';return`<span class="itc-dot itc-dot-${c}" title="${r.posizione}°"></span>`;}).join('')}</div>`:'';
+      const posNow=snapNow?snapNow[a.atleta_id]:null;
+      const posOld=snap14?snap14[a.atleta_id]:null;
+      if(posNow&&posOld){
+        const gain=posOld-posNow; // positivo=salito, negativo=sceso
+        if(gain>=2)      trendHtml=`<span class="itc-rank-trend up">▲${gain}</span>`;
+        else if(gain<=-2)trendHtml=`<span class="itc-rank-trend dn">▼${Math.abs(gain)}</span>`;
+      }
+      // Last 5 races dots
+      const last5=resultsRaw.filter(r=>r.atleta_id===a.atleta_id&&getRankingFileCode(r)===catCode&&r.posizione)
+        .sort((a,b)=>b.data.localeCompare(a.data)).slice(0,5).reverse();
+      const dotsHtml=last5.length?`<div class="itc-last5">${last5.map(r=>{
+        const c=r.posizione===1?'w':r.posizione<=3?'p':r.posizione<=10?'t':'o';
+        return`<span class="itc-dot itc-dot-${c}" title="${r.posizione}°"></span>`;
+      }).join('')}</div>`:'';
       const gap=i===0?'':`<span class="itc-rank-gap">−${leaderPts-a.punti}</span>`;
       return `<div class="itc-rank-row${i===0?' itc-rank-row--leader':''}" onclick="location.hash='#/atleta/${encodeURIComponent(a.atleta_id)}'">
         <span class="itc-rank-pos itc-rank-pos-${i<3?i+1:'x'}">${i+1}</span>
@@ -3806,21 +4069,29 @@ async function renderHubBars() {
     </div>`;
   }
 
-  // ── VS Rivalità ──────────────────────────────────────────────────
-  function buildVsCard(resSet, halfLabel) {
-    const rv=siRivalryFinder(resSet)[0]||null;
+  // ── VS Rivalità — basata su forma recente, non solo scontri diretti ─
+  function buildVsCard(resSet, rankingForVs, catCodeForVs) {
+    const rv=siFormRivalryFinder(resSet, catCodeForVs, rankingForVs, lastDate);
     if(!rv) return '';
-    const total=rv.aWins+rv.bWins, aPct=total?Math.round(rv.aWins/total*100):50;
+    // Barra forma recente (punti ultimi 30gg): aPct = quota di A sul totale
+    const totalRecent=(rv.aRecentPts||0)+(rv.bRecentPts||0);
+    const aPct=totalRecent>0?Math.round((rv.aRecentPts/totalRecent)*100):50;
+    // Etichetta: se ci sono scontri diretti la menzioniamo, altrimenti solo forma
+    const encounterNote=rv.directMeets>0
+      ? `${rv.directMeets} scontri diretti`
+      : 'nessuno scontro diretto';
+    const ptsGapNote=`${rv.ptsGap} pt di distacco in classifica`;
     return `<div class="itc-card itc-vs-card">
       <div class="itc-card-hdr">
-        <span class="itc-card-title">⚔ RIVALITÀ${halfLabel?' · '+halfLabel:''}</span>
-        <span class="itc-vs-encounters">${rv.encounters} scontri</span>
+        <span class="itc-card-title">⚔ RIVALITÀ DEL MOMENTO</span>
+        <span class="itc-vs-encounters">${ptsGapNote}</span>
       </div>
       <div class="itc-vs-ring">
         <div class="itc-vs-side itc-vs-a" onclick="location.hash='#/atleta/${encodeURIComponent(rv.aId)}'">
-          <div class="itc-vs-wins">${rv.aWins}V</div>
+          <div class="itc-vs-wins">${rv.aRecentWins>0?rv.aRecentWins+'V':'–'}</div>
           <div class="itc-vs-name">${esc(rv.aCog)}<br><small>${esc(rv.aNom)}</small></div>
           <div class="itc-vs-team">${esc(rv.aTeam||'')}</div>
+          <div class="itc-vs-recent-pts">${rv.aRecentPts} pt / 30gg</div>
         </div>
         <div class="itc-vs-center">
           <div class="itc-vs-vs">VS</div>
@@ -3828,32 +4099,35 @@ async function renderHubBars() {
             <div class="itc-vs-bar-a" style="width:${aPct}%;background:${hubColor}"></div>
             <div class="itc-vs-bar-b" style="width:${100-aPct}%"></div>
           </div>
+          <div class="itc-vs-bar-label">FORMA</div>
         </div>
         <div class="itc-vs-side itc-vs-b" onclick="location.hash='#/atleta/${encodeURIComponent(rv.bId)}'">
-          <div class="itc-vs-wins">${rv.bWins}V</div>
+          <div class="itc-vs-wins">${rv.bRecentWins>0?rv.bRecentWins+'V':'–'}</div>
           <div class="itc-vs-name">${esc(rv.bCog)}<br><small>${esc(rv.bNom)}</small></div>
           <div class="itc-vs-team">${esc(rv.bTeam||'')}</div>
+          <div class="itc-vs-recent-pts">${rv.bRecentPts} pt / 30gg</div>
         </div>
       </div>
+      <div class="itc-vs-note">${encounterNote}</div>
       <div class="itc-vs-footer">
         <button class="itc-vs-cta" onclick="window.openComparatoreVs('${rv.aId}','${rv.bId}','atleta')">⚖ Confronta nel Comparatore</button>
       </div>
     </div>`;
   }
 
-  // ── Feed notizie ─────────────────────────────────────────────────
-  function buildFeedCard(resSet) {
-    const items=siNewsroomFeed(resSet,[],[],[],{}).slice(0,6);
+  // ── Feed notizie — analisi editoriale completa ────────────────────
+  function buildFeedCard(resSet, rankingForFeed, catCodeForFeed) {
+    const items=buildRichNewsItems(resSet, rankingForFeed, catCodeForFeed, lastDate);
     if(!items.length) return '';
     return `<div class="itc-card itc-feed-card">
-      <div class="itc-card-hdr"><span class="itc-card-title">📰 NOTIZIE</span><a href="#/risultati" class="itc-card-more">Tutti i risultati →</a></div>
+      <div class="itc-card-hdr"><span class="itc-card-title">📰 NOTIZIE & ANALISI</span><a href="#/risultati" class="itc-card-more">Tutti i risultati →</a></div>
       ${items.map(item=>{
-        const click=item.atleta_id?`onclick="location.hash='#/atleta/${item.atleta_id}'"`:item.team_id?`onclick="location.hash='#/team/${item.team_id}'"`:''
-        return `<div class="itc-feed-item" ${click}>
+        const click=item.atleta_id?`onclick="location.hash='#/atleta/${encodeURIComponent(item.atleta_id)}'"`:item.team_id?`onclick="location.hash='#/team/${encodeURIComponent(item.team_id)}'"`:'';
+        return `<div class="itc-feed-item${click?' itc-feed-item--link':''}" ${click}>
           <span class="itc-feed-icon">${item.icon||'📌'}</span>
           <div class="itc-feed-text">${item.text}</div>
           ${(item.atleta_id||item.team_id)?'<span class="itc-feed-arrow">→</span>':''}
-        </div>`
+        </div>`;
       }).join('')}
     </div>`;
   }
@@ -3901,19 +4175,19 @@ async function renderHubBars() {
     : champBar(hubRanking,'');
 
   const fireHtml = isEsordienti
-    ? `<div class="itc-dual">${buildFireCard(fireAthES1,es1Code,hubRankingES1||[],pickPh(1))}${buildFireCard(fireAth,mainCat,hubRanking,pickPh(2))}</div>`
-    : buildFireCard(fireAth,mainCat,hubRanking,pickPh(1));
+    ? `<div class="itc-dual">${buildFireCard(fireAthES1,es1Code,hubRankingES1||[],fireAthES1Photo)}${buildFireCard(fireAth,mainCat,hubRanking,fireAthPhoto)}</div>`
+    : buildFireCard(fireAth,mainCat,hubRanking,fireAthPhoto);
 
   const rankHtml = isEsordienti
-    ? `<div class="itc-dual">${buildRankCard(hubRankingES1||[],es1Code,'1° Anno')}${buildRankCard(hubRanking,mainCat,'2° Anno')}</div>`
-    : buildRankCard(hubRanking,mainCat,'');
+    ? `<div class="itc-dual">${buildRankCard(hubRankingES1||[],es1Code,'1° Anno',_snapNowE1,_snap14agoE1)}${buildRankCard(hubRanking,mainCat,'2° Anno',_snapNow,_snap14ago)}</div>`
+    : buildRankCard(hubRanking,mainCat,'',_snapNow,_snap14ago);
 
   const sideSectionHtml = isEsordienti
     ? `<div class="itc-dual">${buildMoversCard(moversES1,'1° Anno')}${buildMoversCard(movers,'2° Anno')}</div>`
-    : `<div class="itc-grid-2-side">${buildMoversCard(movers,'')}${buildVsCard(hubRes,'')}</div>`;
+    : `<div class="itc-grid-2-side">${buildMoversCard(movers,'')}${buildVsCard(hubRes,hubRanking,mainCat)}</div>`;
 
-  const vsHtml      = isEsordienti ? buildVsCard(hubResES2,'') : '';
-  const feedHtml    = buildFeedCard(hubRes);
+  const vsHtml      = isEsordienti ? buildVsCard(hubResES2,hubRankingES1||[],es1Code) : '';
+  const feedHtml    = buildFeedCard(hubRes, hubRanking, mainCat);
   const calHtml     = buildCalCard();
   const athCount    = new Set(hubRes.map(r=>r.atleta_id).filter(Boolean)).size;
   const raceCount   = new Set(hubRes.map(r=>r.gara_id).filter(Boolean)).size;

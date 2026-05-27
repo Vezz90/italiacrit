@@ -10110,6 +10110,24 @@ main.page:has(.itc-dash) {
   transform: scale(1.04);
   transition: transform 8s ease;
 }
+/* Portrait: foto atleta con faccia in alto al centro */
+.itc-fire-bg--portrait {
+  background-position: top center !important;
+  background-size: cover !important;
+}
+/* Fallback: sfondo neutro scuro con watermark cognome */
+.itc-fire-bg--neutral {
+  background: #0a0c14;
+  display: flex; align-items: center; justify-content: flex-end;
+  padding-right: 5%;
+}
+.itc-fire-watermark {
+  font-size: clamp(6rem, 20vw, 18rem); font-weight: 900;
+  letter-spacing: -.06em; line-height: 1;
+  color: rgba(255,255,255,.04);
+  text-transform: uppercase; white-space: nowrap;
+  user-select: none; pointer-events: none;
+}
 .itc-fire:hover .itc-fire-bg { transform: scale(1.0); }
 .itc-fire-overlay {
   position: absolute; inset: 0; z-index: 1;
@@ -10319,6 +10337,17 @@ main.page:has(.itc-dash) {
 .itc-vs-encounters {
   font-size: .58rem; color: var(--text-muted); white-space: nowrap;
 }
+.itc-vs-recent-pts {
+  font-size: .55rem; color: var(--text-muted); margin-top: 4px; font-weight: 600;
+}
+.itc-vs-bar-label {
+  font-size: .48rem; color: var(--text-muted); letter-spacing: .08em;
+  text-transform: uppercase; margin-top: 4px;
+}
+.itc-vs-note {
+  text-align: center; font-size: .58rem; color: var(--text-muted);
+  padding: 0 16px 8px; font-style: italic;
+}
 .itc-vs-footer {
   padding: 10px 16px; border-top: 1px solid var(--border-subtle); text-align: center;
 }
@@ -10333,12 +10362,13 @@ main.page:has(.itc-dash) {
 /* ── FEED ─────────────────────────────────────────────────────── */
 .itc-feed-item {
   display: flex; align-items: flex-start; gap: 10px;
-  padding: 10px 16px; cursor: pointer;
+  padding: 10px 16px;
   border-bottom: 1px solid var(--border-subtle);
   transition: background .15s;
 }
+.itc-feed-item--link { cursor: pointer; }
 .itc-feed-item:last-child { border-bottom: none; }
-.itc-feed-item:hover { background: var(--bg-elevated); }
+.itc-feed-item--link:hover { background: var(--bg-elevated); }
 .itc-feed-icon { font-size: .85rem; flex-shrink: 0; margin-top: 1px; }
 .itc-feed-text {
   flex: 1; font-size: .72rem; color: var(--text-primary); line-height: 1.45;
