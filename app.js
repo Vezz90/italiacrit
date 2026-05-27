@@ -1,5 +1,5 @@
 /* ============================================================
-   ItaliacritResultati — app.js  v202
+   ItaliacritResultati — app.js  v203
    Hash Router + Page Renderers
    Legge i JSON statici da data/ via fetch()
    ============================================================ */
@@ -3587,50 +3587,94 @@ async function renderHubBars() {
       subs:[{l:'Statistiche',h:'#/statistiche'},{l:'Comparatore',h:'#/comparatore'}] },
   ];
 
-  // Hub context
-  const hub       = activeHub || null;
-  const hubColor  = hub ? (hub.color || '#FF6B00') : '#FF6B00';
-  const eyebrow   = hub
-    ? `${hub.icon || ''} ${hub.label} · ${hub.gender==='M' ? 'Maschile' : hub.gender==='F' ? 'Femminile' : ''}`
+  // ── Hub context ────────────────────────────────────────────────
+  const hub      = activeHub || null;
+  const hubColor = hub ? (hub.color || '#FF6B00') : '#FF6B00';
+  const catCodes = hub ? (hub.catCodes || []) : [];
+  const eyebrow  = hub
+    ? `${hub.icon || ''} ${hub.gender === 'M' ? 'Maschile' : hub.gender === 'F' ? 'Femminile' : ''}`
     : 'Ciclismo Agonistico Italiano';
+  // Hero title: nome categoria se presente, altrimenti brand
+  const heroTitle = hub ? hub.label.toUpperCase() : 'Italiacrit<br>Risultati';
   const heroSub   = hub
     ? `${hub.desc || ''} — scegli una sezione.`
-    : 'Classifiche, risultati e statistiche del ciclismo su strada italiano — Esordienti, Allievi, Juniores, Under 23 ed Elite.';
+    : 'Classifiche, risultati e statistiche del ciclismo su strada italiano.';
 
-  // ── Carica foto reali dal backend ──────────────────────────────
-  let photos = [];
+  // ── Carica foto e video in parallelo ──────────────────────────
+  let allPhotos = [], vidMap = {};
   try {
-    const [d1, d2] = await Promise.all([
+    const [d1, d2, dv] = await Promise.all([
       fetch(`${API_BASE}/race-photos`).then(r => r.json()).catch(() => ({ photos: [] })),
       fetch(`${API_BASE}/xpix-photos`).then(r => r.json()).catch(() => ({ photos: [] })),
+      fetch(`${API_BASE}/videos`).then(r => r.json()).catch(() => ({})),
     ]);
+    // Foto con gara_id per il filtro per categoria
+    const rawPhotos = [];
     (d1.photos || []).forEach(p => {
-      if (p.filename) photos.push(`${PHOTOS_BASE}/photos/${p.filename}`);
+      if (p.filename) rawPhotos.push({ url: `${PHOTOS_BASE}/photos/${p.filename}`, gara_id: p.gara_id || '' });
     });
     (d2.photos || []).forEach(p => {
-      if (p.url) photos.push(p.url);
+      if (p.url) rawPhotos.push({ url: p.url, gara_id: p.gara_id || '' });
     });
-    // Mischia per varietà ogni caricamento
-    for (let i = photos.length - 1; i > 0; i--) {
+    vidMap = dv || {};
+
+    // Filtra per categoria se hub attivo
+    const catPhotos = catCodes.length
+      ? rawPhotos.filter(p => catCodes.some(code => p.gara_id.includes(code)))
+      : rawPhotos;
+
+    // Usa foto categoria se abbastanza, altrimenti tutte
+    allPhotos = catPhotos.length >= 4 ? catPhotos : rawPhotos;
+
+    // Shuffle
+    for (let i = allPhotos.length - 1; i > 0; i--) {
       const j = Math.floor(Math.random() * (i + 1));
-      [photos[i], photos[j]] = [photos[j], photos[i]];
+      [allPhotos[i], allPhotos[j]] = [allPhotos[j], allPhotos[i]];
     }
-  } catch { /* no photos — fallback dark bg */ }
+  } catch { /* fallback: dark bg */ }
 
-  const pick = i => photos[i % photos.length] || null;
+  // ── YouTube IDs per categoria ──────────────────────────────────
+  const catYtIds = [];
+  if (Object.keys(vidMap).length) {
+    Object.entries(vidMap).forEach(([garaId, vids]) => {
+      const match = catCodes.length
+        ? catCodes.some(c => garaId.includes(c))
+        : true;
+      if (match) {
+        (vids || []).forEach(v => {
+          const id = ytId(v.url);
+          if (id && !catYtIds.includes(id)) catYtIds.push(id);
+        });
+      }
+    });
+  }
 
-  // ── Build HTML ─────────────────────────────────────────────────
+  const pickPhoto = i => allPhotos[i % allPhotos.length]?.url || null;
+
+  // ── Build bars HTML ───────────────────────────────────────────
+  // Alterna: bar pari → foto + testo SINISTRA, bar dispari → video/foto + testo DESTRA
   const barsHtml = BARS.map((b, i) => {
-    const pic = pick(i + 1);
-    const bgStyle = pic ? `background-image:url('${pic}')` : '';
+    const isRight  = i % 2 === 1;
+    const useVideo = isRight && catYtIds.length > 0;
+    const ytVidId  = useVideo ? catYtIds[Math.floor(i / 2) % catYtIds.length] : null;
+    const pic      = pickPhoto(i);
+
+    const bgMedia = ytVidId
+      ? `<div class="hub-bar-video-bg">
+           <iframe src="https://www.youtube.com/embed/${ytVidId}?autoplay=1&mute=1&loop=1&playlist=${ytVidId}&controls=0&disablekb=1&rel=0&iv_load_policy=3&modestbranding=1&playsinline=1"
+             allow="autoplay; encrypted-media" allowfullscreen frameborder="0"></iframe>
+         </div>`
+      : `<div class="hub-bar-bg" style="${pic ? `background-image:url('${pic}')` : ''}"></div>`;
+
     const subsHtml = b.subs
       ? `<div class="hub-bar-subs">${b.subs.map(s =>
           `<a href="${s.h}" class="hub-bar-sub-item" onclick="event.stopPropagation()">${esc(s.l)}</a>`
         ).join('')}</div>`
       : '';
+
     return `
-      <a href="${b.href}" class="hub-bar" style="transition-delay:${i * 100}ms">
-        <div class="hub-bar-bg" style="${bgStyle}"></div>
+      <a href="${b.href}" class="hub-bar${isRight ? ' hub-bar--right' : ''}" style="transition-delay:${i * 110}ms">
+        ${bgMedia}
         <div class="hub-bar-overlay"></div>
         <div class="hub-bar-inner">
           <div class="hub-bar-stripe" style="background:${hubColor}"></div>
@@ -3645,7 +3689,8 @@ async function renderHubBars() {
       </a>`;
   }).join('');
 
-  const heroPic = pick(0);
+  // ── Hero ───────────────────────────────────────────────────────
+  const heroPic   = pickPhoto(0);
   const heroStyle = heroPic ? `background-image:url('${heroPic}')` : '';
 
   setPage(`
@@ -3654,7 +3699,7 @@ async function renderHubBars() {
         <div class="hub-hero-overlay"></div>
         <div class="hub-hero-content">
           <div class="hub-hero-eyebrow" style="color:${hubColor}">${eyebrow}</div>
-          <div class="hub-hero-title">Italiacrit<br>Risultati</div>
+          <div class="hub-hero-title">${heroTitle}</div>
           <div class="hub-hero-sub">${heroSub}</div>
           ${hub ? `<button class="hub-clear-filter" onclick="window.clearHubFilter();window.location.hash='#/hub'">✕ Rimuovi filtro</button>` : ''}
         </div>
@@ -3668,30 +3713,29 @@ async function renderHubBars() {
     entries.forEach(e => {
       if (e.isIntersecting) { e.target.classList.add('hub-visible'); obs.unobserve(e.target); }
     });
-  }, { threshold: 0.08 });
+  }, { threshold: 0.06 });
   document.querySelectorAll('.hub-bar').forEach(b => obs.observe(b));
 
-  // ── Hero photo slideshow (cambia ogni 6s) ──────────────────────
-  if (photos.length > 1) {
+  // ── Hero slideshow: cambia foto ogni 6s con crossfade ──────────
+  if (allPhotos.length > 1) {
     const hero = document.querySelector('.hub-hero');
     if (hero) {
-      // Crea layer bg2 per il crossfade
       const bg2 = document.createElement('div');
       bg2.className = 'hub-hero-bg2';
       hero.prepend(bg2);
       let idx = 1;
       const slide = () => {
-        const next = photos[idx % photos.length];
+        if (!document.contains(hero)) return;
+        const next = allPhotos[idx % allPhotos.length].url;
         bg2.style.backgroundImage = `url('${next}')`;
         bg2.classList.add('active');
         setTimeout(() => {
           hero.style.backgroundImage = `url('${next}')`;
           bg2.classList.remove('active');
           idx++;
-        }, 1500);
+        }, 1400);
       };
       const timer = setInterval(slide, 6000);
-      // Pulizia quando si naviga via
       const cleanup = () => { clearInterval(timer); window.removeEventListener('hashchange', cleanup); };
       window.addEventListener('hashchange', cleanup);
     }
