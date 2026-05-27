@@ -1,5 +1,5 @@
 /* ============================================================
-   ItaliacritResultati — app.js  v198
+   ItaliacritResultati — app.js  v199
    Hash Router + Page Renderers
    Legge i JSON statici da data/ via fetch()
    ============================================================ */
@@ -1143,7 +1143,7 @@ window.addEventListener('load', async () => {
   initMobileMenu();
   initNavDropdowns();
 
-  // Logo click → Hub home
+  // Logo click → cinematic entry
   document.getElementById('nav-logo-link')?.addEventListener('click', function(e) {
     e.preventDefault();
     window.location.hash = '#/';
@@ -1189,6 +1189,9 @@ function updateMetaUI() {
 function route() {
   const hash = window.location.hash || '#/';
   updateNavActive(hash);
+
+  // Hub home — barre animate di navigazione
+  if (hash === '#/hub' || hash === '#/hub/') return renderHubBars();
 
   // Hub routes — dedicated category ecosystem with URL-encoded context
   if (hash.startsWith('#/hub/')) {
@@ -2147,9 +2150,9 @@ function _itcClose(hubCode) {
     if (hubCode) {
       window.location.hash = '#/hub/' + hubCode + '/';
     } else {
-      // Skip: nessuna categoria selezionata → vai alla classifica generale
+      // Skip: nessuna categoria selezionata → vai all'hub con le barre
       try { localStorage.setItem('itcContext', 'skip'); } catch(e) {}
-      window.location.hash = '#/classifica';
+      window.location.hash = '#/hub';
     }
   }, 550);
 }
@@ -3569,8 +3572,13 @@ async function renderNews() {
   }
 }
 
-// ── HOME — Hub page con barre animate ─────────────────────────────
+// ── HOME — Cinematic entry (M/F + categoria) ──────────────────────
 function renderHome() {
+  showCinematicEntry(false);
+}
+
+// ── HUB BARS — Landing page con barre animate stile Early Rider ───
+function renderHubBars() {
   const BARS = [
     {
       href: '#/risultati',
