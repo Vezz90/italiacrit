@@ -2356,6 +2356,53 @@ function siStreak(athleteId, resultsRaw) {
   return { podioStreak, winStreak: wStreak };
 }
 
+// ── computeHotScore — forma 0-100 ────────────────────────────────
+function computeHotScore(atleta_id, resultsRaw, catCode) {
+  const lastDate = resultsRaw.reduce((mx,r)=>(r.data||'')>mx?r.data:mx,'');
+  const cut14 = (()=>{ const d=new Date(lastDate||new Date()); d.setDate(d.getDate()-14); return d.toISOString().split('T')[0]; })();
+  const recent = resultsRaw
+    .filter(r=>r.atleta_id===atleta_id && getRankingFileCode(r)===catCode && r.data>=cut14)
+    .sort((a,b)=>b.data.localeCompare(a.data));
+  if (!recent.length) return 0;
+  const pts14 = recent.reduce((s,r)=>s+(r.punti_effettivi||0),0);
+  const ptsScore = Math.min(40,(pts14/50)*40);
+  const wins = recent.filter(r=>r.posizione===1).length;
+  const winsScore = Math.min(20,wins*10);
+  const avgPos = recent.slice(0,5).reduce((s,r)=>s+(r.posizione||99),0)/Math.min(recent.length,5);
+  const trendScore = Math.max(0,30-(avgPos-1)*2);
+  let streak=0;
+  for(const r of recent){ if((r.punti_effettivi||0)>0) streak++; else break; }
+  const streakScore = Math.min(10,streak*2);
+  return Math.round(ptsScore+winsScore+trendScore+streakScore);
+}
+
+// ── getAthleteBadges — badge dinamici ─────────────────────────────
+function getAthleteBadges(atleta_id, resultsRaw, catCode, rankingEntry) {
+  const badges = [];
+  const lastDate = resultsRaw.reduce((mx,r)=>(r.data||'')>mx?r.data:mx,'');
+  const cut14 = (()=>{ const d=new Date(lastDate||new Date()); d.setDate(d.getDate()-14); return d.toISOString().split('T')[0]; })();
+  const cut7  = (()=>{ const d=new Date(lastDate||new Date()); d.setDate(d.getDate()-7);  return d.toISOString().split('T')[0]; })();
+  const r14 = resultsRaw.filter(r=>r.atleta_id===atleta_id&&getRankingFileCode(r)===catCode&&r.data>=cut14);
+  const r7  = resultsRaw.filter(r=>r.atleta_id===atleta_id&&getRankingFileCode(r)===catCode&&r.data>=cut7);
+  const wins14=r14.filter(r=>r.posizione===1).length;
+  const wins7=r7.filter(r=>r.posizione===1).length;
+  if (wins14>=2) badges.push({icon:'🔥',label:'ON FIRE',cls:'badge-fire'});
+  else if (wins7>=1) badges.push({icon:'⚡',label:'IN FORMA',cls:'badge-hot'});
+  const sorted=resultsRaw.filter(r=>r.atleta_id===atleta_id&&getRankingFileCode(r)===catCode&&r.data).sort((a,b)=>b.data.localeCompare(a.data));
+  let str=0; for(const r of sorted){if((r.punti_effettivi||0)>0)str++;else break;}
+  if(str>=5) badges.push({icon:'💪',label:'STREAK '+str,cls:'badge-streak'});
+  else if(str>=3) badges.push({icon:'📈',label:'SERIE '+str,cls:'badge-streak'});
+  if(rankingEntry && rankingEntry.pos===1) badges.push({icon:'👑',label:'LEADER',cls:'badge-leader'});
+  if(rankingEntry){
+    const hist=resultsRaw.filter(r=>r.atleta_id===atleta_id&&getRankingFileCode(r)===catCode&&r.rank_dopo_gara).sort((a,b)=>b.data.localeCompare(a.data));
+    if(hist.length>=2){
+      const gain=hist[Math.min(3,hist.length-1)].rank_dopo_gara-hist[0].rank_dopo_gara;
+      if(gain>=5) badges.push({icon:'🚀',label:'↑'+gain,cls:'badge-up'});
+    }
+  }
+  return badges.slice(0,3);
+}
+
 function siMomentum(athleteId, resultsRaw, lastRaceDate) {
   const myRes = resultsRaw
     .filter(r => r.atleta_id === athleteId && r.posizione && r.data)
@@ -3576,8 +3623,353 @@ function renderHome() {
   showCinematicEntry(false);
 }
 
-// ── HUB BARS — Landing page con barre animate stile Early Rider ───
+// ── HUB DASHBOARD — Landing page con dati, classifiche e rivalità ─
 async function renderHubBars() {
+  const hub = activeHub || null;
+  // No hub = general nav bars fallback
+  if (!hub || !hub._code) return _renderNavBars();
+  if (!globalData) { setPage('<div class="loading-bar"></div>'); return; }
+
+  const hubCode   = hub._code;
+  const hubColor  = hub.color || '#FF6B00';
+  const catCodes  = hub.catCodes || [];
+  const { resultsRaw, calendar } = globalData;
+
+  // ── Load photos ──────────────────────────────────────────────────
+  let allPhotos = [];
+  try {
+    const [d1,d2] = await Promise.all([
+      fetch(`${API_BASE}/race-photos`).then(r=>r.json()).catch(()=>({photos:[]})),
+      fetch(`${API_BASE}/xpix-photos`).then(r=>r.json()).catch(()=>({photos:[]})),
+    ]);
+    const rawP=[];
+    (d1.photos||[]).forEach(p=>{ if(p.filename) rawP.push({url:`${PHOTOS_BASE}/photos/${p.filename}`,gara_id:p.gara_id||''}); });
+    (d2.photos||[]).forEach(p=>{ if(p.url) rawP.push({url:p.url,gara_id:p.gara_id||''}); });
+    const catP=catCodes.length?rawP.filter(p=>catCodes.some(c=>p.gara_id.includes(c))):rawP;
+    allPhotos=catP.length>=3?catP:rawP;
+    for(let i=allPhotos.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));[allPhotos[i],allPhotos[j]]=[allPhotos[j],allPhotos[i]];}
+  } catch {}
+  const pickPh = i => allPhotos[i%allPhotos.length]?.url||null;
+
+  // ── Ranking + race data ──────────────────────────────────────────
+  const es1Code       = hub.catCodes.find(c=>c.startsWith('ES1'));
+  const mainCat       = hub.mainCat;
+  const isEsordienti  = !!es1Code;
+  const hubRanking    = (await loadRanking(mainCat)).slice(0,8);
+  const hubRankingES1 = es1Code?(await loadRanking(es1Code)).slice(0,8):null;
+  const hubRes    = resultsRaw.filter(r=>r.genere===hub.gender&&hub.catCodes.includes(getRankingFileCode(r)));
+  const hubResES2 = isEsordienti?hubRes.filter(r=>getRankingFileCode(r)===mainCat):hubRes;
+  const hubResES1 = isEsordienti?hubRes.filter(r=>getRankingFileCode(r)===es1Code):[];
+  const lastDate  = hubRes.reduce((mx,r)=>(r.data||'')>mx?r.data:mx,'');
+  const todayStr  = new Date().toISOString().split('T')[0];
+  const cut14     = (()=>{const d=new Date(lastDate||new Date());d.setDate(d.getDate()-14);return d.toISOString().split('T')[0];})();
+  const cut7      = (()=>{const d=new Date(lastDate||new Date());d.setDate(d.getDate()-7); return d.toISOString().split('T')[0];})();
+
+  // ── Rider on fire ────────────────────────────────────────────────
+  function computeFireForSet(resSet) {
+    const fm={};
+    resSet.filter(r=>r.data>=cut14).forEach(r=>{
+      if(!fm[r.atleta_id]) fm[r.atleta_id]={atleta_id:r.atleta_id,cognome:r.cognome,nome:r.nome,team:r.team,wins:0,podi:0,pts:0,code:getRankingFileCode(r)};
+      if(r.posizione===1) fm[r.atleta_id].wins++;
+      if(r.posizione<=3)  fm[r.atleta_id].podi++;
+      fm[r.atleta_id].pts+=(r.punti_effettivi||0);
+    });
+    return Object.values(fm).sort((a,b)=>b.wins-a.wins||b.podi-a.podi||b.pts-a.pts)[0]||null;
+  }
+  const fireAth    = computeFireForSet(hubResES2);
+  const fireAthES1 = isEsordienti?computeFireForSet(hubResES1):null;
+
+  // ── Movers ───────────────────────────────────────────────────────
+  function computeMovers(ranking, resSet, catCode) {
+    const cur={},prev={};
+    resSet.filter(r=>getRankingFileCode(r)===catCode&&r.atleta_id&&(r.punti_effettivi||0)>0).forEach(r=>{
+      cur[r.atleta_id]=(cur[r.atleta_id]||0)+(r.punti_effettivi||0);
+      if(r.data<cut7) prev[r.atleta_id]=(prev[r.atleta_id]||0)+(r.punti_effettivi||0);
+    });
+    const cR={},pR={};
+    Object.entries(cur).sort((a,b)=>b[1]-a[1]).forEach(([id],i)=>cR[id]=i+1);
+    Object.entries(prev).sort((a,b)=>b[1]-a[1]).forEach(([id],i)=>pR[id]=i+1);
+    const list=ranking.map(a=>{
+      const now=cR[a.atleta_id],old=pR[a.atleta_id];
+      if(!now||!old) return null;
+      return {atleta_id:a.atleta_id,cognome:a.cognome,nome:a.nome,pos:now,gain:old-now};
+    }).filter(Boolean);
+    return {up:list.filter(m=>m.gain>=1).sort((a,b)=>b.gain-a.gain).slice(0,3),dn:list.filter(m=>m.gain<=-1).sort((a,b)=>a.gain-b.gain).slice(0,2)};
+  }
+  const movers    = computeMovers(hubRanking, hubResES2, mainCat);
+  const moversES1 = isEsordienti&&hubRankingES1?computeMovers(hubRankingES1,hubResES1,es1Code):{up:[],dn:[]};
+
+  // ── Championship bar ─────────────────────────────────────────────
+  function champBar(ranking, label) {
+    if(!ranking.length) return '';
+    const l=ranking[0], gap12=ranking.length>1?l.punti-ranking[1].punti:0;
+    const tension=gap12===0?'PARITÀ IN VETTA':gap12<=10?'LOTTA ACCESA':gap12<=30?'MARGINE RISICATO':'LEADER IN FUGA';
+    return `<div class="itc-champ-bar" style="--hub-color:${hubColor}">
+      ${label?`<span class="itc-champ-label">${label}</span><span class="itc-champ-sep">|</span>`:''}
+      <span class="itc-champ-tension">${tension}</span>
+      <span class="itc-champ-sep">·</span>
+      <span class="itc-champ-leader">${esc(l.cognome)}</span>
+      <span class="itc-champ-pts">${l.punti} pt</span>
+      ${ranking[1]?`<span class="itc-champ-sep">|</span><span class="itc-champ-gap">${esc(ranking[1].cognome)} <em>−${gap12}</em></span>`:''}
+      ${ranking[2]?`<span class="itc-champ-sep">|</span><span class="itc-champ-gap">${esc(ranking[2].cognome)} <em>−${l.punti-ranking[2].punti}</em></span>`:''}
+      <a href="#/classifica" class="itc-champ-link">Classifica →</a>
+    </div>`;
+  }
+
+  // ── Rider on fire card ───────────────────────────────────────────
+  function buildFireCard(ath, catCode, ranking, photo) {
+    if(!ath) return '';
+    const score      = computeHotScore(ath.atleta_id, resultsRaw, catCode);
+    const scoreColor = score>=80?'#E11D48':score>=55?'#F59E0B':'#10B981';
+    const rankEntry  = ranking.find(r=>r.atleta_id===ath.atleta_id);
+    const badges     = getAthleteBadges(ath.atleta_id, resultsRaw, catCode, rankEntry);
+    const rankPos    = rankEntry?ranking.indexOf(rankEntry)+1:null;
+    const gap        = rankEntry&&ranking[0]?ranking[0].punti-rankEntry.punti:null;
+    const rankCtx    = rankPos===1
+      ? `<div class="itc-fire-rank-ctx itc-fire-rank-leader">👑 LEADER IN CLASSIFICA · ${rankEntry.punti} PT</div>`
+      : rankPos
+        ? `<div class="itc-fire-rank-ctx">${rankPos}° in classifica${gap?' · −'+gap+' dal leader':''}</div>`
+        : '';
+    const badgesHtml = badges.length
+      ? `<div class="itc-badges">${badges.map(b=>`<span class="itc-badge itc-${b.cls}">${b.icon} ${b.label}</span>`).join('')}</div>`
+      : '';
+    const bgStyle = photo?`style="background-image:url('${photo}')"`:'';
+    return `<div class="itc-fire" style="--hub-color:${hubColor}">
+      <div class="itc-fire-bg" ${bgStyle}></div>
+      <div class="itc-fire-overlay"></div>
+      <div class="itc-fire-content">
+        <div class="itc-fire-eyebrow">🔥 RIDER OF THE MOMENT · ${esc(catLabel(catCode))}</div>
+        ${rankCtx}
+        <h2 class="itc-fire-name">${esc(ath.cognome)}<br><span class="itc-fire-firstname">${esc(ath.nome)}</span></h2>
+        <div class="itc-fire-team">${esc(ath.team||'')}</div>
+        ${badgesHtml}
+        <div class="itc-fire-stats">
+          <div class="itc-fire-stat"><span class="itc-fire-val">${ath.pts}</span><span class="itc-fire-lbl">punti 14gg</span></div>
+          <div class="itc-fire-stat"><span class="itc-fire-val">${ath.wins}</span><span class="itc-fire-lbl">vittorie</span></div>
+          <div class="itc-fire-stat"><span class="itc-fire-val">${ath.podi}</span><span class="itc-fire-lbl">podi</span></div>
+          <div class="itc-fire-stat itc-fire-score"><span class="itc-fire-val" style="color:${scoreColor}">${score}</span><span class="itc-fire-lbl">hot score</span></div>
+        </div>
+        <div class="itc-hot-wrap">
+          <div class="itc-hot-label">FORMA</div>
+          <div class="itc-hot-track"><div class="itc-hot-fill" style="width:${score}%;background:${scoreColor}"></div></div>
+          <div class="itc-hot-val" style="color:${scoreColor}">${score}<span style="opacity:.5;font-size:.55rem">/100</span></div>
+        </div>
+        <div class="itc-fire-ctas">
+          <a href="#/atleta/${encodeURIComponent(ath.atleta_id)}" class="itc-fire-cta-primary">Scheda atleta →</a>
+          <button class="itc-fire-cta-sec" onclick="event.preventDefault();window.location.hash='#/comparatore'">⚖ Confronta</button>
+        </div>
+      </div>
+    </div>`;
+  }
+
+  // ── Rank card con Last-5 dots ────────────────────────────────────
+  function buildRankCard(ranking, catCode, title) {
+    if(!ranking.length) return '';
+    const leaderPts=ranking[0].punti;
+    const rows=ranking.map((a,i)=>{
+      let trendHtml='';
+      const hist=resultsRaw.filter(r=>r.atleta_id===a.atleta_id&&getRankingFileCode(r)===catCode&&r.rank_dopo_gara).sort((a,b)=>b.data.localeCompare(a.data));
+      if(hist.length>=2){const gain=hist[Math.min(3,hist.length-1)].rank_dopo_gara-hist[0].rank_dopo_gara;if(gain>=2)trendHtml=`<span class="itc-rank-trend up">▲${gain}</span>`;else if(gain<=-2)trendHtml=`<span class="itc-rank-trend dn">▼${Math.abs(gain)}</span>`;}
+      const last5=resultsRaw.filter(r=>r.atleta_id===a.atleta_id&&getRankingFileCode(r)===catCode&&r.posizione).sort((a,b)=>b.data.localeCompare(a.data)).slice(0,5).reverse();
+      const dotsHtml=last5.length?`<div class="itc-last5">${last5.map(r=>{const c=r.posizione===1?'w':r.posizione<=3?'p':r.posizione<=10?'t':'o';return`<span class="itc-dot itc-dot-${c}" title="${r.posizione}°"></span>`;}).join('')}</div>`:'';
+      const gap=i===0?'':`<span class="itc-rank-gap">−${leaderPts-a.punti}</span>`;
+      return `<div class="itc-rank-row${i===0?' itc-rank-row--leader':''}" onclick="location.hash='#/atleta/${encodeURIComponent(a.atleta_id)}'">
+        <span class="itc-rank-pos itc-rank-pos-${i<3?i+1:'x'}">${i+1}</span>
+        <div class="itc-rank-info">
+          <div class="itc-rank-name">${esc(a.cognome)} ${esc(a.nome)}${trendHtml}</div>
+          <div class="itc-rank-sub">${esc(a.team_attuale||a.team||'')}${dotsHtml}</div>
+        </div>
+        ${gap}
+        <span class="itc-rank-pts">${a.punti}<small>pt</small></span>
+      </div>`;
+    }).join('');
+    return `<div class="itc-card itc-rank-card">
+      <div class="itc-card-hdr"><span class="itc-card-title">TOP CLASSIFICA${title?' · '+title:''}</span><a href="#/classifica" class="itc-card-more">Vedi tutto →</a></div>
+      ${rows}
+    </div>`;
+  }
+
+  // ── Movers card ──────────────────────────────────────────────────
+  function buildMoversCard(mv, title) {
+    if(!mv.up.length&&!mv.dn.length) return '';
+    const mkRow=(m,dir)=>`<div class="itc-mover itc-mover--${dir}" onclick="location.hash='#/atleta/${encodeURIComponent(m.atleta_id)}'">
+      <span class="itc-mover-icon">${dir==='up'?'▲':'▼'}</span>
+      <div class="itc-mover-info">
+        <span class="itc-mover-name">${esc(m.cognome)} ${esc(m.nome)}</span>
+        <span class="itc-mover-detail">ora ${m.pos}° ${dir==='up'?'(+'+m.gain+')':'('+m.gain+')'}</span>
+      </div>
+    </div>`;
+    return `<div class="itc-card itc-movers-card">
+      <div class="itc-card-hdr"><span class="itc-card-title">📈 MOVERS${title?' · '+title:''}</span></div>
+      ${mv.up.map(m=>mkRow(m,'up')).join('')}
+      ${mv.dn.map(m=>mkRow(m,'dn')).join('')}
+    </div>`;
+  }
+
+  // ── VS Rivalità ──────────────────────────────────────────────────
+  function buildVsCard(resSet, halfLabel) {
+    const rv=siRivalryFinder(resSet)[0]||null;
+    if(!rv) return '';
+    const total=rv.aWins+rv.bWins, aPct=total?Math.round(rv.aWins/total*100):50;
+    return `<div class="itc-card itc-vs-card">
+      <div class="itc-card-hdr">
+        <span class="itc-card-title">⚔ RIVALITÀ${halfLabel?' · '+halfLabel:''}</span>
+        <span class="itc-vs-encounters">${rv.encounters} scontri</span>
+      </div>
+      <div class="itc-vs-ring">
+        <div class="itc-vs-side itc-vs-a" onclick="location.hash='#/atleta/${encodeURIComponent(rv.aId)}'">
+          <div class="itc-vs-wins">${rv.aWins}V</div>
+          <div class="itc-vs-name">${esc(rv.aCog)}<br><small>${esc(rv.aNom)}</small></div>
+          <div class="itc-vs-team">${esc(rv.aTeam||'')}</div>
+        </div>
+        <div class="itc-vs-center">
+          <div class="itc-vs-vs">VS</div>
+          <div class="itc-vs-bar-wrap">
+            <div class="itc-vs-bar-a" style="width:${aPct}%;background:${hubColor}"></div>
+            <div class="itc-vs-bar-b" style="width:${100-aPct}%"></div>
+          </div>
+        </div>
+        <div class="itc-vs-side itc-vs-b" onclick="location.hash='#/atleta/${encodeURIComponent(rv.bId)}'">
+          <div class="itc-vs-wins">${rv.bWins}V</div>
+          <div class="itc-vs-name">${esc(rv.bCog)}<br><small>${esc(rv.bNom)}</small></div>
+          <div class="itc-vs-team">${esc(rv.bTeam||'')}</div>
+        </div>
+      </div>
+      <div class="itc-vs-footer">
+        <button class="itc-vs-cta" onclick="window.openComparatoreVs('${rv.aId}','${rv.bId}','atleta')">⚖ Confronta nel Comparatore</button>
+      </div>
+    </div>`;
+  }
+
+  // ── Feed notizie ─────────────────────────────────────────────────
+  function buildFeedCard(resSet) {
+    const items=siNewsroomFeed(resSet,[],[],[],{}).slice(0,6);
+    if(!items.length) return '';
+    return `<div class="itc-card itc-feed-card">
+      <div class="itc-card-hdr"><span class="itc-card-title">📰 NOTIZIE</span><a href="#/risultati" class="itc-card-more">Tutti i risultati →</a></div>
+      ${items.map(item=>{
+        const click=item.atleta_id?`onclick="location.hash='#/atleta/${item.atleta_id}'"`:item.team_id?`onclick="location.hash='#/team/${item.team_id}'"`:''
+        return `<div class="itc-feed-item" ${click}>
+          <span class="itc-feed-icon">${item.icon||'📌'}</span>
+          <div class="itc-feed-text">${item.text}</div>
+          ${(item.atleta_id||item.team_id)?'<span class="itc-feed-arrow">→</span>':''}
+        </div>`
+      }).join('')}
+    </div>`;
+  }
+
+  // ── Prossime gare ─────────────────────────────────────────────────
+  function buildCalCard() {
+    const upcoming=calendar.filter(g=>{
+      if(g.genere&&g.genere!==hub.gender) return false;
+      if(hub.catFilter&&!(g.categoria||'').toLowerCase().includes(hub.catFilter.toLowerCase())) return false;
+      return (g.data||'')>=todayStr;
+    }).sort((a,b)=>a.data.localeCompare(b.data)).slice(0,4);
+    if(!upcoming.length) return '';
+    const DAY=['DOM','LUN','MAR','MER','GIO','VEN','SAB'];
+    const MESI=['gen','feb','mar','apr','mag','giu','lug','ago','set','ott','nov','dic'];
+    return `<div class="itc-card itc-cal-card">
+      <div class="itc-card-hdr"><span class="itc-card-title">📅 PROSSIME GARE</span><a href="#/calendario" class="itc-card-more">Calendario →</a></div>
+      ${upcoming.map(g=>{
+        const gd=new Date(g.data+'T00:00:00');
+        const days=Math.round((gd-new Date(todayStr+'T00:00:00'))/86400000);
+        const dayLbl=days===0?'OGGI':days===1?'DOMANI':DAY[gd.getDay()]+' '+gd.getDate()+' '+MESI[gd.getMonth()];
+        const isCR=g.campionato_regionale||g.tipo==='CR', isCI=g.campionato_italiano||g.tipo==='CI';
+        return `<div class="itc-cal-row" onclick="location.hash='#/calendario/${encodeURIComponent(g.id)}'">
+          <span class="itc-cal-day${days<=1?' itc-cal-day--near':''}">${dayLbl}</span>
+          <div class="itc-cal-info">
+            <div class="itc-cal-name">${esc(g.nome)}${isCR?' <span class="itc-cal-badge cr">CR</span>':''}${isCI?' <span class="itc-cal-badge ci">CI</span>':''}</div>
+            <div class="itc-cal-loc">${esc(g.luogo||g.regione||'')}</div>
+          </div>
+        </div>`;
+      }).join('')}
+    </div>`;
+  }
+
+  // ── Ticker ───────────────────────────────────────────────────────
+  const tickItems=[];
+  if(hubRanking.length>=2){const g12=hubRanking[0].punti-hubRanking[1].punti;tickItems.push(g12<=15?`LOTTA AL VERTICE — <strong>${esc(hubRanking[0].cognome)}</strong> guida con soli ${g12} pt`:`<strong>${esc(hubRanking[0].cognome)}</strong> in testa con ${hubRanking[0].punti} pt`);}
+  if(fireAth) tickItems.push(`🔥 RIDER OF MOMENT: <strong>${esc(fireAth.cognome)} ${esc(fireAth.nome)}</strong> · ${fireAth.wins} vittorie ultimi 14gg`);
+  if(movers.up[0]) tickItems.push(`📈 <strong>${esc(movers.up[0].cognome)}</strong> sale di +${movers.up[0].gain} posizioni`);
+  const nextRace=calendar.find(g=>{if(g.genere&&g.genere!==hub.gender)return false;if(hub.catFilter&&!(g.categoria||'').toLowerCase().includes(hub.catFilter.toLowerCase()))return false;return(g.data||'')>=todayStr;});
+  if(nextRace) tickItems.push(`📅 PROSSIMA: <strong>${esc(nextRace.nome)}</strong>`);
+  const tickerHtml=tickItems.length?`<div class="itc-ticker"><div class="itc-ticker-track">${[...tickItems,...tickItems].join(' &nbsp;·&nbsp; ')}</div></div>`:'';
+
+  // ── Build sections ────────────────────────────────────────────────
+  const champHtml = isEsordienti
+    ? (champBar(hubRankingES1||[],'1° ANNO')+champBar(hubRanking,'2° ANNO'))
+    : champBar(hubRanking,'');
+
+  const fireHtml = isEsordienti
+    ? `<div class="itc-dual">${buildFireCard(fireAthES1,es1Code,hubRankingES1||[],pickPh(1))}${buildFireCard(fireAth,mainCat,hubRanking,pickPh(2))}</div>`
+    : buildFireCard(fireAth,mainCat,hubRanking,pickPh(1));
+
+  const rankHtml = isEsordienti
+    ? `<div class="itc-dual">${buildRankCard(hubRankingES1||[],es1Code,'1° Anno')}${buildRankCard(hubRanking,mainCat,'2° Anno')}</div>`
+    : buildRankCard(hubRanking,mainCat,'');
+
+  const sideSectionHtml = isEsordienti
+    ? `<div class="itc-dual">${buildMoversCard(moversES1,'1° Anno')}${buildMoversCard(movers,'2° Anno')}</div>`
+    : `<div class="itc-grid-2-side">${buildMoversCard(movers,'')}${buildVsCard(hubRes,'')}</div>`;
+
+  const vsHtml      = isEsordienti ? buildVsCard(hubResES2,'') : '';
+  const feedHtml    = buildFeedCard(hubRes);
+  const calHtml     = buildCalCard();
+  const athCount    = new Set(hubRes.map(r=>r.atleta_id).filter(Boolean)).size;
+  const raceCount   = new Set(hubRes.map(r=>r.gara_id).filter(Boolean)).size;
+  const genderLabel = hub.gender==='M'?'MASCHILE':hub.gender==='F'?'FEMMINILE':'';
+  const heroPh      = pickPh(0);
+  const subnav      = buildHubSubnav(hub);
+
+  setPage(`
+    <div class="itc-dash">
+      <div class="itc-dash-hero" style="${heroPh?`background-image:url('${heroPh}')`:''}" id="itc-hero-bg">
+        <div class="itc-hero-bg2"></div>
+        <div class="itc-dash-hero-overlay" style="--hub-color:${hubColor}"></div>
+        <div class="itc-dash-hero-content">
+          <div class="itc-dash-eyebrow" style="color:${hubColor}">${hub.icon} ${genderLabel}</div>
+          <h1 class="itc-dash-title">${esc(hub.label.toUpperCase())}</h1>
+          <div class="itc-dash-meta">${athCount} atleti · ${raceCount} gare · ${esc(hub.desc)}</div>
+          <button class="hub-clear-filter" onclick="window.clearHubFilter();window.location.hash='#/'">← Cambia categoria</button>
+        </div>
+      </div>
+      ${subnav}
+      ${tickerHtml}
+      ${champHtml}
+      <div class="itc-sections">
+        ${fireHtml}
+        <div class="itc-grid-2">
+          ${rankHtml}
+          ${sideSectionHtml}
+        </div>
+        ${isEsordienti?vsHtml:''}
+        ${feedHtml}
+        ${calHtml}
+      </div>
+    </div>
+  `);
+
+  // ── Hero slideshow ───────────────────────────────────────────────
+  if (allPhotos.length > 1) {
+    const heroEl = document.getElementById('itc-hero-bg');
+    const bg2    = heroEl?.querySelector('.itc-hero-bg2');
+    if (heroEl && bg2) {
+      let idx = 1;
+      const slide = () => {
+        if (!document.contains(heroEl)) return;
+        const next = allPhotos[idx % allPhotos.length].url;
+        bg2.style.backgroundImage = `url('${next}')`;
+        bg2.classList.add('active');
+        setTimeout(() => { heroEl.style.backgroundImage = `url('${next}')`; bg2.classList.remove('active'); idx++; }, 1400);
+      };
+      const t = setInterval(slide, 6000);
+      window.addEventListener('hashchange', ()=>clearInterval(t), {once:true});
+    }
+  }
+}
+
+// ── Fallback: nav bars animate per #/hub senza categoria ───────────
+async function _renderNavBars() {
   const BARS = [
     { href:'#/risultati',   num:'01', label:'Risultati',   desc:'Gare recenti, podi e classifiche per categoria e regione', subs: null },
     { href:'#/classifica',  num:'02', label:'Classifiche', desc:'Ranking atleti, team e classifica generale della stagione',

@@ -9969,3 +9969,427 @@ main.page:has(.hub-page) {
   .hub-bar-label { font-size: clamp(1.5rem, 6vw, 2.2rem); }
   .hub-bar-arrow { font-size: .95rem; }
 }
+
+/* ════════════════════════════════════════════════════════════════
+   ITALIACRIT DASHBOARD — Sistema visivo hub categoriale v1
+   Componenti: Hero · Fire Card · Rank · Movers · VS · Feed · Cal
+   ════════════════════════════════════════════════════════════════ */
+
+/* Full-width override (like hub-page) */
+main.page:has(.itc-dash) {
+  max-width: none !important; padding: 0 !important;
+  margin: 0 !important; width: 100% !important;
+}
+.itc-dash { width: 100%; background: var(--bg-primary); min-height: 100vh; }
+
+/* ── HERO ─────────────────────────────────────────────────────── */
+.itc-dash-hero {
+  position: relative;
+  min-height: clamp(38vh, 50vh, 56vh);
+  background: #060810 center / cover no-repeat;
+  display: flex; flex-direction: column; justify-content: flex-end;
+  overflow: hidden;
+}
+.itc-hero-bg2 {
+  position: absolute; inset: 0; z-index: 0;
+  background: #060810 center / cover no-repeat;
+  opacity: 0; transition: opacity 1.4s ease;
+  pointer-events: none;
+}
+.itc-hero-bg2.active { opacity: 1; }
+.itc-dash-hero-overlay {
+  position: absolute; inset: 0; z-index: 1;
+  background:
+    linear-gradient(to right,  rgba(4,5,14,.97) 0%, rgba(4,5,14,.72) 42%, rgba(4,5,14,.18) 100%),
+    linear-gradient(to top,    rgba(4,5,14,.92) 0%, transparent 60%);
+}
+.itc-dash-hero-content {
+  position: relative; z-index: 2;
+  padding: clamp(20px, 4vw, 60px) clamp(20px, 7vw, 120px) clamp(28px, 4vw, 52px);
+}
+.itc-dash-eyebrow {
+  font-size: .6rem; font-weight: 800; letter-spacing: .16em;
+  text-transform: uppercase; margin-bottom: 8px; opacity: .9;
+}
+.itc-dash-title {
+  font-size: clamp(2.6rem, 7vw, 5.2rem);
+  font-weight: 900; letter-spacing: -.04em; line-height: .88;
+  color: #fff; text-transform: uppercase; margin: 0 0 10px;
+}
+.itc-dash-meta {
+  font-size: clamp(.68rem, 1.1vw, .78rem);
+  color: rgba(255,255,255,.38); margin-bottom: 14px;
+}
+
+/* ── TICKER ───────────────────────────────────────────────────── */
+.itc-ticker {
+  background: #04050e;
+  border-top: 1px solid rgba(255,255,255,.06);
+  border-bottom: 1px solid rgba(255,255,255,.06);
+  overflow: hidden; height: 36px;
+  display: flex; align-items: center;
+}
+.itc-ticker-track {
+  white-space: nowrap; padding: 0 20px;
+  animation: itc-tick 36s linear infinite;
+  font-size: .64rem; font-weight: 500; letter-spacing: .04em;
+  color: rgba(255,255,255,.42);
+}
+.itc-ticker-track strong { color: rgba(255,255,255,.8); }
+@keyframes itc-tick {
+  from { transform: translateX(110vw); }
+  to   { transform: translateX(-100%); }
+}
+
+/* ── CHAMP BAR ────────────────────────────────────────────────── */
+.itc-champ-bar {
+  display: flex; align-items: center; flex-wrap: wrap; gap: 4px 10px;
+  padding: 9px clamp(16px, 5vw, 80px);
+  background: rgba(0,0,0,.28);
+  font-size: .62rem; font-weight: 700; letter-spacing: .07em;
+  overflow-x: auto; -webkit-overflow-scrolling: touch;
+  scrollbar-width: none;
+}
+.itc-champ-bar::-webkit-scrollbar { display: none; }
+.itc-champ-label   { color: rgba(255,255,255,.3); text-transform: uppercase; }
+.itc-champ-tension { color: var(--hub-color); text-transform: uppercase; }
+.itc-champ-leader  { color: #fff; }
+.itc-champ-pts     { color: rgba(255,255,255,.38); margin-left: 2px; }
+.itc-champ-sep     { color: rgba(255,255,255,.18); }
+.itc-champ-gap     { color: rgba(255,255,255,.45); }
+.itc-champ-gap em  { color: rgba(255,255,255,.25); font-style: normal; }
+.itc-champ-link    { margin-left: auto; color: var(--hub-color); text-decoration: none; font-size: .58rem; white-space: nowrap; padding: 2px 6px; }
+.itc-champ-link:hover { text-decoration: underline; }
+
+/* ── SECTIONS WRAPPER ─────────────────────────────────────────── */
+.itc-sections {
+  padding: 20px clamp(12px, 4vw, 60px) 60px;
+  max-width: 1400px; margin: 0 auto;
+  display: flex; flex-direction: column; gap: 16px;
+}
+
+/* ── LAYOUTS ──────────────────────────────────────────────────── */
+.itc-dual {
+  display: grid; grid-template-columns: 1fr 1fr; gap: 16px;
+}
+.itc-grid-2 {
+  display: grid; grid-template-columns: 1fr 340px; gap: 16px; align-items: start;
+}
+.itc-grid-2-side { display: flex; flex-direction: column; gap: 16px; }
+
+/* ── CARD BASE ────────────────────────────────────────────────── */
+.itc-card {
+  background: var(--bg-card);
+  border: 1px solid var(--border-subtle);
+  border-radius: 12px; overflow: hidden;
+}
+.itc-card-hdr {
+  display: flex; align-items: center; justify-content: space-between;
+  padding: 12px 16px 10px;
+  border-bottom: 1px solid var(--border-subtle);
+}
+.itc-card-title {
+  font-size: .58rem; font-weight: 800; letter-spacing: .11em;
+  text-transform: uppercase; color: var(--text-secondary);
+}
+.itc-card-more {
+  font-size: .62rem; color: var(--red-hot);
+  text-decoration: none; font-weight: 600; white-space: nowrap;
+}
+.itc-card-more:hover { text-decoration: underline; }
+
+/* ── FIRE CARD ────────────────────────────────────────────────── */
+.itc-fire {
+  position: relative; border-radius: 16px; overflow: hidden;
+  min-height: 300px; display: flex; align-items: flex-end;
+  border: 1px solid rgba(255,255,255,.06);
+}
+.itc-fire-bg {
+  position: absolute; inset: 0; z-index: 0;
+  background: #0d1117 center / cover no-repeat;
+  transform: scale(1.04);
+  transition: transform 8s ease;
+}
+.itc-fire:hover .itc-fire-bg { transform: scale(1.0); }
+.itc-fire-overlay {
+  position: absolute; inset: 0; z-index: 1;
+  background:
+    linear-gradient(to right,  rgba(4,5,14,.97) 0%, rgba(4,5,14,.82) 50%, rgba(4,5,14,.22) 100%),
+    linear-gradient(to top,    rgba(4,5,14,.92) 0%, transparent 55%);
+}
+.itc-fire-content {
+  position: relative; z-index: 2; width: 100%;
+  padding: clamp(22px, 4vw, 56px) clamp(20px, 6vw, 100px);
+}
+.itc-fire-eyebrow {
+  font-size: .58rem; font-weight: 800; letter-spacing: .15em;
+  color: var(--hub-color); text-transform: uppercase; margin-bottom: 6px;
+}
+.itc-fire-rank-ctx {
+  font-size: .6rem; font-weight: 700; letter-spacing: .05em;
+  color: rgba(255,255,255,.4); text-transform: uppercase; margin-bottom: 8px;
+}
+.itc-fire-rank-leader { color: #F59E0B; }
+.itc-fire-name {
+  font-size: clamp(2rem, 5vw, 3.8rem);
+  font-weight: 900; line-height: .88; letter-spacing: -.04em;
+  color: #fff; margin: 0 0 4px; text-transform: uppercase;
+}
+.itc-fire-firstname {
+  font-size: 52%; font-weight: 400;
+  color: rgba(255,255,255,.6); letter-spacing: 0; text-transform: capitalize;
+}
+.itc-fire-team {
+  font-size: .68rem; color: rgba(255,255,255,.36); margin-bottom: 12px;
+}
+
+/* ── BADGES ───────────────────────────────────────────────────── */
+.itc-badges {
+  display: flex; flex-wrap: wrap; gap: 6px; margin-bottom: 16px;
+}
+.itc-badge {
+  display: inline-flex; align-items: center; gap: 4px;
+  padding: 3px 10px; border-radius: 999px;
+  font-size: .56rem; font-weight: 700; letter-spacing: .07em;
+  text-transform: uppercase; border: 1px solid;
+  white-space: nowrap;
+}
+.itc-badge-fire   { background: rgba(225,29,72,.15);  color:#E11D48; border-color:rgba(225,29,72,.3); }
+.itc-badge-hot    { background: rgba(245,158,11,.12); color:#F59E0B; border-color:rgba(245,158,11,.3); }
+.itc-badge-streak { background: rgba(16,185,129,.12); color:#10B981; border-color:rgba(16,185,129,.3); }
+.itc-badge-leader { background: rgba(245,158,11,.15); color:#F59E0B; border-color:rgba(245,158,11,.3); }
+.itc-badge-up     { background: rgba(34,197,94,.12);  color:#22c55e; border-color:rgba(34,197,94,.3); }
+
+/* ── FIRE STATS ───────────────────────────────────────────────── */
+.itc-fire-stats {
+  display: flex; gap: 20px; margin-bottom: 14px; flex-wrap: wrap;
+}
+.itc-fire-stat { display: flex; flex-direction: column; gap: 2px; }
+.itc-fire-val  {
+  font-size: clamp(1.3rem, 2.5vw, 1.9rem);
+  font-weight: 900; color: #fff; line-height: 1;
+}
+.itc-fire-lbl  {
+  font-size: .52rem; font-weight: 600; letter-spacing: .08em;
+  text-transform: uppercase; color: rgba(255,255,255,.3);
+}
+
+/* ── HOT SCORE BAR ────────────────────────────────────────────── */
+.itc-hot-wrap {
+  display: flex; align-items: center; gap: 10px; margin-bottom: 18px;
+}
+.itc-hot-label {
+  font-size: .52rem; font-weight: 700; letter-spacing: .1em;
+  color: rgba(255,255,255,.3); text-transform: uppercase; width: 42px;
+}
+.itc-hot-track {
+  flex: 1; height: 3px; background: rgba(255,255,255,.1);
+  border-radius: 999px; overflow: hidden;
+}
+.itc-hot-fill {
+  height: 100%; border-radius: 999px;
+  transition: width 1.4s cubic-bezier(.22,.68,0,1.1) .4s;
+}
+.itc-hot-val {
+  font-size: .62rem; font-weight: 800; width: 46px; text-align: right;
+}
+
+/* ── FIRE CTAs ────────────────────────────────────────────────── */
+.itc-fire-ctas { display: flex; gap: 10px; flex-wrap: wrap; }
+.itc-fire-cta-primary {
+  padding: 9px 18px; border-radius: 8px;
+  background: var(--hub-color); color: #fff;
+  font-size: .7rem; font-weight: 700; text-decoration: none;
+  transition: opacity .15s; display: inline-block;
+}
+.itc-fire-cta-primary:hover { opacity: .82; }
+.itc-fire-cta-sec {
+  padding: 9px 18px; border-radius: 8px;
+  background: rgba(255,255,255,.08);
+  border: 1px solid rgba(255,255,255,.15);
+  color: rgba(255,255,255,.65); font-size: .7rem; font-weight: 600;
+  cursor: pointer; transition: all .15s;
+}
+.itc-fire-cta-sec:hover { background: rgba(255,255,255,.14); color: #fff; }
+
+/* ── RANK CARD ────────────────────────────────────────────────── */
+.itc-rank-row {
+  display: flex; align-items: center; gap: 10px;
+  padding: 9px 16px; cursor: pointer;
+  border-bottom: 1px solid var(--border-subtle);
+  transition: background .15s;
+}
+.itc-rank-row:last-child { border-bottom: none; }
+.itc-rank-row:hover { background: var(--bg-elevated); }
+.itc-rank-row--leader { background: rgba(245,158,11,.05); }
+.itc-rank-pos {
+  width: 22px; height: 22px; border-radius: 6px; flex-shrink: 0;
+  display: flex; align-items: center; justify-content: center;
+  font-size: .58rem; font-weight: 800;
+  background: var(--bg-elevated); color: var(--text-secondary);
+}
+.itc-rank-pos-1 { background: #F59E0B; color: #000; }
+.itc-rank-pos-2 { background: #9CA3AF; color: #fff; }
+.itc-rank-pos-3 { background: #CD7F32; color: #fff; }
+.itc-rank-info  { flex: 1; min-width: 0; }
+.itc-rank-name  {
+  font-size: .76rem; font-weight: 700; color: var(--text-primary);
+  white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
+}
+.itc-rank-sub {
+  font-size: .58rem; color: var(--text-muted); margin-top: 3px;
+  display: flex; align-items: center; gap: 8px; flex-wrap: wrap;
+}
+.itc-rank-gap {
+  font-size: .58rem; color: var(--text-muted); font-weight: 600; flex-shrink: 0;
+}
+.itc-rank-pts {
+  font-size: .82rem; font-weight: 800; color: var(--text-primary); flex-shrink: 0;
+}
+.itc-rank-pts small {
+  font-size: .52rem; color: var(--text-muted); font-weight: 500; margin-left: 1px;
+}
+.itc-rank-trend {
+  font-size: .52rem; font-weight: 800; margin-left: 5px;
+  padding: 1px 4px; border-radius: 3px; vertical-align: middle;
+}
+.itc-rank-trend.up { color: #10B981; background: rgba(16,185,129,.12); }
+.itc-rank-trend.dn { color: #EF4444; background: rgba(239,68,68,.10); }
+
+/* Last-5 dots */
+.itc-last5 { display: flex; gap: 3px; }
+.itc-dot { width: 7px; height: 7px; border-radius: 2px; flex-shrink: 0; }
+.itc-dot-w { background: #F59E0B; }
+.itc-dot-p { background: #10B981; }
+.itc-dot-t { background: rgba(99,102,241,.45); }
+.itc-dot-o { background: rgba(255,255,255,.1); }
+
+/* ── MOVERS ───────────────────────────────────────────────────── */
+.itc-mover {
+  display: flex; align-items: center; gap: 10px;
+  padding: 9px 16px; cursor: pointer;
+  border-bottom: 1px solid var(--border-subtle);
+  transition: background .15s;
+}
+.itc-mover:last-child { border-bottom: none; }
+.itc-mover:hover { background: var(--bg-elevated); }
+.itc-mover-icon {
+  font-size: .7rem; font-weight: 900; flex-shrink: 0;
+  width: 18px; text-align: center;
+}
+.itc-mover--up .itc-mover-icon { color: #10B981; }
+.itc-mover--dn .itc-mover-icon { color: #EF4444; }
+.itc-mover-info { flex: 1; min-width: 0; }
+.itc-mover-name { font-size: .73rem; font-weight: 700; color: var(--text-primary); }
+.itc-mover-detail { font-size: .58rem; color: var(--text-muted); }
+
+/* ── VS CARD ──────────────────────────────────────────────────── */
+.itc-vs-card {}
+.itc-vs-ring {
+  display: flex; align-items: center;
+  padding: 14px 10px 8px;
+}
+.itc-vs-side {
+  flex: 1; text-align: center; cursor: pointer;
+  padding: 8px 6px; border-radius: 8px;
+  transition: background .15s;
+}
+.itc-vs-side:hover { background: var(--bg-elevated); }
+.itc-vs-wins {
+  font-size: 1.5rem; font-weight: 900; color: var(--text-primary); line-height: 1;
+}
+.itc-vs-name {
+  font-size: .72rem; font-weight: 700; color: var(--text-primary);
+  line-height: 1.25; margin-top: 3px;
+}
+.itc-vs-name small { font-size: .62rem; color: var(--text-secondary); font-weight: 400; }
+.itc-vs-team { font-size: .56rem; color: var(--text-muted); margin-top: 3px; }
+.itc-vs-center {
+  width: 52px; flex-shrink: 0; text-align: center; padding: 0 4px;
+}
+.itc-vs-vs {
+  font-size: .78rem; font-weight: 900;
+  color: var(--text-secondary); letter-spacing: .1em;
+}
+.itc-vs-bar-wrap {
+  display: flex; height: 3px; border-radius: 999px; overflow: hidden; margin-top: 6px;
+}
+.itc-vs-bar-a { transition: width .9s cubic-bezier(.22,.68,0,1.1) .5s; }
+.itc-vs-bar-b { background: rgba(255,255,255,.12); flex: 1; }
+.itc-vs-encounters {
+  font-size: .58rem; color: var(--text-muted); white-space: nowrap;
+}
+.itc-vs-footer {
+  padding: 10px 16px; border-top: 1px solid var(--border-subtle); text-align: center;
+}
+.itc-vs-cta {
+  font-size: .64rem; font-weight: 700; color: var(--red-hot);
+  background: none; border: 1px solid rgba(255,107,0,.3);
+  border-radius: 6px; padding: 6px 14px;
+  cursor: pointer; transition: all .15s;
+}
+.itc-vs-cta:hover { background: rgba(255,107,0,.08); }
+
+/* ── FEED ─────────────────────────────────────────────────────── */
+.itc-feed-item {
+  display: flex; align-items: flex-start; gap: 10px;
+  padding: 10px 16px; cursor: pointer;
+  border-bottom: 1px solid var(--border-subtle);
+  transition: background .15s;
+}
+.itc-feed-item:last-child { border-bottom: none; }
+.itc-feed-item:hover { background: var(--bg-elevated); }
+.itc-feed-icon { font-size: .85rem; flex-shrink: 0; margin-top: 1px; }
+.itc-feed-text {
+  flex: 1; font-size: .72rem; color: var(--text-primary); line-height: 1.45;
+}
+.itc-feed-text strong { font-weight: 700; }
+.itc-feed-text em     { font-style: italic; color: var(--text-secondary); }
+.itc-feed-arrow { font-size: .62rem; color: var(--text-muted); flex-shrink: 0; margin-top: 2px; }
+
+/* ── CALENDAR ─────────────────────────────────────────────────── */
+.itc-cal-row {
+  display: flex; align-items: center; gap: 12px;
+  padding: 10px 16px; cursor: pointer;
+  border-bottom: 1px solid var(--border-subtle);
+  transition: background .15s;
+}
+.itc-cal-row:last-child { border-bottom: none; }
+.itc-cal-row:hover { background: var(--bg-elevated); }
+.itc-cal-day {
+  font-size: .58rem; font-weight: 800; letter-spacing: .05em;
+  text-transform: uppercase; color: var(--text-muted);
+  width: 72px; flex-shrink: 0; line-height: 1.3;
+}
+.itc-cal-day--near { color: var(--red-hot); }
+.itc-cal-info { flex: 1; min-width: 0; }
+.itc-cal-name { font-size: .73rem; font-weight: 600; color: var(--text-primary); }
+.itc-cal-loc  { font-size: .58rem; color: var(--text-muted); margin-top: 2px; }
+.itc-cal-badge {
+  font-size: .48rem; font-weight: 800; padding: 1px 5px;
+  border-radius: 3px; letter-spacing: .06em; vertical-align: middle;
+  margin-left: 4px;
+}
+.itc-cal-badge.cr { background: #1D4ED8; color: #fff; }
+.itc-cal-badge.ci { background: #E11D48; color: #fff; }
+
+/* ── RESPONSIVE ───────────────────────────────────────────────── */
+@media (max-width: 900px) {
+  .itc-grid-2 { grid-template-columns: 1fr; }
+}
+@media (max-width: 640px) {
+  .itc-dual { grid-template-columns: 1fr; }
+  .itc-sections { padding: 16px 12px 40px; gap: 12px; }
+  .itc-dash-hero { min-height: 34vh; }
+  .itc-fire { min-height: 240px; }
+  .itc-fire-stats { gap: 14px; }
+  .itc-rank-row { padding: 8px 12px; }
+  .itc-mover    { padding: 8px 12px; }
+  .itc-feed-item{ padding: 9px 12px; }
+  .itc-cal-row  { padding: 9px 12px; }
+  .itc-card-hdr { padding: 10px 12px 8px; }
+}
+
+/* Dark mode adjustments */
+[data-theme="dark"] .itc-ticker { background: #02030a; }
+[data-theme="dark"] .itc-champ-bar { background: rgba(0,0,0,.5); }
