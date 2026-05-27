@@ -13,7 +13,7 @@
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
   <link href="https://fonts.googleapis.com/css2?family=Inter+Tight:wght@400;600;700;800;900&display=swap" rel="stylesheet" />
   <link rel="stylesheet" href="style.css?v=12" />
-  <link rel="stylesheet" href="design.css?v=95" />
+  <link rel="stylesheet" href="design.css?v=96" />
 </head>
 <body>
 
@@ -27,6 +27,7 @@
   <div class="nav-sep" aria-hidden="true"></div>
 
   <div class="nav-links" role="list">
+    <a href="#/" class="nav-link" id="nav-home" role="listitem" onclick="window.goHome(event)">Home</a>
     <a href="#/risultati" class="nav-link" id="nav-risultati" role="listitem">Risultati</a>
 
     <!-- Classifiche ▾ -->
@@ -92,6 +93,7 @@
 
 <!-- Mobile drawer (flat — no dropdowns su mobile) -->
 <div id="nav-drawer" role="dialog" aria-label="Menu mobile">
+  <a href="#/" class="nav-link" id="drawer-home" onclick="window.goHome(event)">Home</a>
   <a href="#/risultati"   class="nav-link" id="drawer-risultati">Risultati</a>
   <div class="drawer-section-label">CLASSIFICHE</div>
   <a href="#/classifica"  class="nav-link" id="drawer-class">Classifica</a>
@@ -133,6 +135,6 @@
   </span>
 </footer>
 
-<script src="app.js?v=207" defer></script>
+<script src="app.js?v=208" defer></script>
 </body>
 </html>

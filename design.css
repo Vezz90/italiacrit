@@ -10424,6 +10424,34 @@ main.page:has(.itc-dash) {
 [data-theme="dark"] .itc-ticker { background: #02030a; }
 [data-theme="dark"] .itc-champ-bar { background: rgba(0,0,0,.5); }
 
+/* ── POPULAR / TRENDING CARD ───────────────────────────────────── */
+.itc-popular-card { display: flex; flex-direction: column; }
+.itc-popular-row {
+  display: flex; align-items: center; gap: 10px;
+  padding: 7px 16px;
+  cursor: pointer; transition: background .15s;
+  border-bottom: 1px solid var(--border-color, rgba(255,255,255,.06));
+}
+.itc-popular-row:last-child { border-bottom: none; }
+.itc-popular-row:hover { background: rgba(255,255,255,.04); }
+.itc-popular-rank {
+  width: 22px; text-align: center;
+  font-size: .65rem; font-weight: 800;
+  color: var(--text-muted, rgba(255,255,255,.35));
+  flex-shrink: 0;
+}
+.itc-popular-info { flex: 1; min-width: 0; }
+.itc-popular-name {
+  font-size: .78rem; font-weight: 600;
+  color: var(--text-primary, #fff);
+  white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
+}
+.itc-popular-count {
+  font-size: .65rem; font-weight: 700;
+  color: var(--text-muted, rgba(255,255,255,.35));
+  flex-shrink: 0;
+}
+
 /* ── TEAM SECTIONS ─────────────────────────────────────────────── */
 /* Section divider with centered label */
 .itc-section-divider {

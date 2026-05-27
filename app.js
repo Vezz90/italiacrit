@@ -894,6 +894,54 @@ function esc(s) {
     .replace(/"/g,'&quot;').replace(/'/g,'&#39;');
 }
 
+// ── Home navigation — va all'hub salvato o alla home ─────────────
+window.goHome = function(e) {
+  if (e) e.preventDefault();
+  try {
+    const saved = localStorage.getItem('itcContext');
+    window.location.hash = (saved && HUB_CONFIG[saved]) ? '#/hub/' + saved : '#/';
+  } catch { window.location.hash = '#/'; }
+};
+
+// ── Athlete view tracking (Popular Today / Trending) ──────────────
+function trackAthleteView(atleta_id, cognome, nome) {
+  try {
+    const today = new Date().toISOString().split('T')[0];
+    const key   = 'itc_views_' + today;
+    const views = JSON.parse(localStorage.getItem(key) || '{}');
+    if (!views[atleta_id]) views[atleta_id] = { cognome, nome, count: 0 };
+    views[atleta_id].count++;
+    localStorage.setItem(key, JSON.stringify(views));
+    // Pulisci chiavi vecchie (tieni solo ultimi 7gg)
+    for (const k of Object.keys(localStorage)) {
+      if (k.startsWith('itc_views_') && k !== key) {
+        const d = k.replace('itc_views_', '');
+        if (d < new Date(Date.now() - 7*86400000).toISOString().split('T')[0])
+          localStorage.removeItem(k);
+      }
+    }
+  } catch {}
+}
+
+function getPopularAthletes(limit = 10) {
+  try {
+    const agg = {};
+    for (let i = 0; i < 7; i++) {
+      const d = new Date(); d.setDate(d.getDate() - i);
+      const key = 'itc_views_' + d.toISOString().split('T')[0];
+      const views = JSON.parse(localStorage.getItem(key) || '{}');
+      for (const [id, v] of Object.entries(views)) {
+        if (!agg[id]) agg[id] = { cognome: v.cognome, nome: v.nome, count: 0 };
+        agg[id].count += v.count * (i === 0 ? 2 : 1); // oggi vale doppio
+      }
+    }
+    return Object.entries(agg)
+      .map(([id, v]) => ({ atleta_id: id, ...v }))
+      .sort((a, b) => b.count - a.count)
+      .slice(0, limit);
+  } catch { return []; }
+}
+
 function fmtDate(iso) {
   if (!iso) return '—';
   const [y,m,d] = iso.split('-');
@@ -4284,6 +4332,145 @@ async function renderHubBars() {
     </div>`;
   }
 
+  // ── Team VS Rivalry card ─────────────────────────────────────────
+  function buildTeamVsCard(teamRank) {
+    if (teamRank.length < 2) return '';
+    // Cerca la coppia più narrativa: adiacente in classifica + entrambe attive
+    let rv = null;
+    for (let i = 0; i < Math.min(teamRank.length - 1, 6) && !rv; i++) {
+      const a = teamRank[i], b = teamRank[i+1];
+      const aAct = hubResES2.filter(r => r.team_id === a.team_id && r.data >= cut14).length;
+      const bAct = hubResES2.filter(r => r.team_id === b.team_id && r.data >= cut14).length;
+      if (aAct > 0 && bAct > 0) rv = { a, b };
+    }
+    if (!rv) rv = { a: teamRank[0], b: teamRank[1] };
+    const { a, b } = rv;
+    const gap = a.punti - b.punti;
+    const aRec = hubResES2.filter(r=>r.team_id===a.team_id&&r.data>=cut14).reduce((s,r)=>s+(r.punti_effettivi||0),0);
+    const bRec = hubResES2.filter(r=>r.team_id===b.team_id&&r.data>=cut14).reduce((s,r)=>s+(r.punti_effettivi||0),0);
+    const total = Math.max(1, aRec + bRec);
+    const aPct  = Math.round(aRec / total * 100);
+    return `<div class="itc-card itc-vs-card">
+      <div class="itc-card-hdr">
+        <span class="itc-card-title">⚔ RIVALITÀ TEAM</span>
+        <span class="itc-vs-encounters">${gap} pt distacco</span>
+      </div>
+      <div class="itc-vs-ring">
+        <div class="itc-vs-side itc-vs-a" onclick="location.hash='#/team/${encodeURIComponent(a.team_id)}'">
+          <div class="itc-vs-wins">${a.wins}V</div>
+          <div class="itc-vs-name">${esc(a.team)}</div>
+          <div class="itc-vs-recent-pts">${aRec} pt / 14gg</div>
+        </div>
+        <div class="itc-vs-center">
+          <div class="itc-vs-vs">VS</div>
+          <div class="itc-vs-bar-wrap">
+            <div class="itc-vs-bar-a" style="width:${aPct}%;background:${hubColor}"></div>
+            <div class="itc-vs-bar-b" style="width:${100-aPct}%"></div>
+          </div>
+          <div class="itc-vs-bar-label">FORMA</div>
+        </div>
+        <div class="itc-vs-side itc-vs-b" onclick="location.hash='#/team/${encodeURIComponent(b.team_id)}'">
+          <div class="itc-vs-wins">${b.wins}V</div>
+          <div class="itc-vs-name">${esc(b.team)}</div>
+          <div class="itc-vs-recent-pts">${bRec} pt / 14gg</div>
+        </div>
+      </div>
+      <div class="itc-vs-footer">
+        <button class="itc-vs-cta" onclick="window.openComparatoreVs('${a.team_id}','${b.team_id}','team')">⚖ Confronta</button>
+      </div>
+    </div>`;
+  }
+
+  // ── Team News & Analysis feed ─────────────────────────────────────
+  function buildTeamFeedCard(teamRank, resSet, catCode) {
+    if (!teamRank.length) return '';
+    const items = [];
+    // 1. Situazione in vetta
+    if (teamRank.length >= 2) {
+      const gap = teamRank[0].punti - teamRank[1].punti;
+      items.push({ icon:'🏆', text: gap <= 15
+        ? `<strong>${esc(teamRank[0].team)}</strong> guida con ${teamRank[0].punti} pt — solo ${gap} pt su <strong>${esc(teamRank[1].team)}</strong>`
+        : `<strong>${esc(teamRank[0].team)}</strong> in testa con ${teamRank[0].punti} pt, +${gap} su ${esc(teamRank[1].team)}` });
+    }
+    // 2. Team più vincente ultimi 14gg
+    const teamWins14 = {};
+    for (const r of resSet.filter(r=>r.data>=cut14&&r.posizione===1&&r.team_id)) {
+      if (!teamWins14[r.team_id]) teamWins14[r.team_id] = { name: r.team, wins: 0 };
+      teamWins14[r.team_id].wins++;
+    }
+    const topW = Object.values(teamWins14).sort((a,b)=>b.wins-a.wins)[0];
+    if (topW && topW.wins >= 2)
+      items.push({ icon:'🥇', text:`<strong>${esc(topW.name)}</strong> è la squadra più vincente negli ultimi 14 giorni: <strong>${topW.wins} vittorie</strong>` });
+    // 3. Maggior scalatore team (snapshot-based)
+    {
+      let bestGain = 1, bestTeam = null;
+      for (const t of teamRank) {
+        const now = _teamSnapNow[t.team_id] || 99, old = _teamSnap14[t.team_id] || 99;
+        if (old - now > bestGain) { bestGain = old - now; bestTeam = t; }
+      }
+      if (bestTeam)
+        items.push({ icon:'🚀', text:`<strong>${esc(bestTeam.team)}</strong> guadagna <strong>+${bestGain} posizioni</strong> nella classifica squadre` });
+    }
+    // 4. Team con più atleti a punti (profondità rosa)
+    const riders14 = {};
+    for (const r of resSet.filter(r=>r.data>=cut14&&(r.punti_effettivi||0)>0&&r.team_id)) {
+      if (!riders14[r.team_id]) riders14[r.team_id] = { name: r.team, riders: new Set() };
+      riders14[r.team_id].riders.add(r.atleta_id);
+    }
+    const deepest = Object.values(riders14).sort((a,b)=>b.riders.size-a.riders.size)[0];
+    if (deepest && deepest.riders.size >= 3)
+      items.push({ icon:'👥', text:`<strong>${esc(deepest.name)}</strong> porta <strong>${deepest.riders.size} corridori</strong> a punti negli ultimi 14 giorni` });
+    // 5. Team in calo (segnale negativo)
+    {
+      let worstDrop = -1, worstTeam = null;
+      for (const t of teamRank) {
+        const now = _teamSnapNow[t.team_id] || 99, old = _teamSnap14[t.team_id] || 99;
+        if (now - old > worstDrop) { worstDrop = now - old; worstTeam = t; }
+      }
+      if (worstTeam && worstDrop >= 2)
+        items.push({ icon:'📉', text:`<strong>${esc(worstTeam.team)}</strong> scende di ${worstDrop} posizioni nelle ultime 2 settimane` });
+    }
+    if (!items.length) return '';
+    return `<div class="itc-card itc-feed-card">
+      <div class="itc-card-hdr"><span class="itc-card-title">📊 ANALISI TEAM</span><a href="#/team" class="itc-card-more">Classifica →</a></div>
+      ${items.map(item=>`<div class="itc-feed-item">
+        <span class="itc-feed-icon">${item.icon||'📌'}</span>
+        <div class="itc-feed-text">${item.text}</div>
+      </div>`).join('')}
+    </div>`;
+  }
+
+  // ── Popular riders / Trending ─────────────────────────────────────
+  function buildPopularCard(resSet, catCode) {
+    const hubIds = new Set(resSet.map(r=>r.atleta_id).filter(Boolean));
+    const localViews = getPopularAthletes(20).filter(a=>hubIds.has(a.atleta_id));
+    // Se ci sono abbastanza view locali, usale; altrimenti usa trending per punti
+    const hasRealViews = localViews.reduce((s,a)=>s+a.count,0) >= 3;
+    let items = localViews.slice(0, 10);
+    if (!hasRealViews) {
+      // Trending: atleti con più punti negli ultimi 7gg
+      const trending = {};
+      for (const r of resSet.filter(r=>r.data>=cut7&&(r.punti_effettivi||0)>0&&r.atleta_id)) {
+        if (!trending[r.atleta_id])
+          trending[r.atleta_id] = { atleta_id:r.atleta_id, cognome:r.cognome, nome:r.nome, count:r.punti_effettivi||0 };
+        else trending[r.atleta_id].count += (r.punti_effettivi||0);
+      }
+      items = Object.values(trending).sort((a,b)=>b.count-a.count).slice(0,10);
+    }
+    if (!items.length) return '';
+    const title = hasRealViews ? '👁 POPOLARI OGGI' : '📈 TRENDING';
+    return `<div class="itc-card itc-popular-card">
+      <div class="itc-card-hdr"><span class="itc-card-title">${title}</span></div>
+      ${items.map((a,i)=>`<div class="itc-popular-row" onclick="location.hash='#/atleta/${encodeURIComponent(a.atleta_id)}'">
+        <span class="itc-popular-rank">${i+1}</span>
+        <div class="itc-popular-info">
+          <span class="itc-popular-name">${esc(a.cognome)} ${esc(a.nome)}</span>
+        </div>
+        ${hasRealViews?`<span class="itc-popular-count">${a.count}</span>`:''}
+      </div>`).join('')}
+    </div>`;
+  }
+
   // ── Ticker ───────────────────────────────────────────────────────
   const tickItems=[];
   if(hubRanking.length>=2){const g12=hubRanking[0].punti-hubRanking[1].punti;tickItems.push(g12<=15?`LOTTA AL VERTICE — <strong>${esc(hubRanking[0].cognome)}</strong> guida con soli ${g12} pt`:`<strong>${esc(hubRanking[0].cognome)}</strong> in testa con ${hubRanking[0].punti} pt`);}
@@ -4298,30 +4485,52 @@ async function renderHubBars() {
     ? (champBar(hubRankingES1||[],'1° ANNO')+champBar(hubRanking,'2° ANNO'))
     : champBar(hubRanking,'');
 
-  const fireHtml = isEsordienti
+  // Rider sections
+  const _rFireHtml = isEsordienti
     ? `<div class="itc-dual">${buildFireCard(fireAthES1,es1Code,hubRankingES1||[],fireAthES1Photo)}${buildFireCard(fireAth,mainCat,hubRanking,fireAthPhoto)}</div>`
     : buildFireCard(fireAth,mainCat,hubRanking,fireAthPhoto);
-
-  const rankHtml = isEsordienti
+  const _rRankHtml = isEsordienti
     ? `<div class="itc-dual">${buildRankCard(hubRankingES1||[],es1Code,'1° Anno',_snapNowE1,_snap14agoE1)}${buildRankCard(hubRanking,mainCat,'2° Anno',_snapNow,_snap14ago)}</div>`
     : buildRankCard(hubRanking,mainCat,'',_snapNow,_snap14ago);
-
-  const sideSectionHtml = isEsordienti
+  const _rMovHtml = isEsordienti
     ? `<div class="itc-dual">${buildMoversCard(moversES1,'1° Anno')}${buildMoversCard(movers,'2° Anno')}</div>`
-    : `<div class="itc-grid-2-side">${buildMoversCard(movers,'')}${buildVsCard(hubRes,hubRanking,mainCat)}</div>`;
+    : buildMoversCard(movers,'');
+  const _rVsHtml   = buildVsCard(hubRes, hubRanking, mainCat);
+  const _rFeedHtml = buildFeedCard(hubRes, hubRanking, mainCat);
 
-  const vsHtml      = isEsordienti ? buildVsCard(hubResES2,hubRankingES1||[],es1Code) : '';
-  const feedHtml    = buildFeedCard(hubRes, hubRanking, mainCat);
-  const calHtml     = buildCalCard();
-  const teamSectionHtml = _teamRankNow.length >= 2 ? `
-    <div class="itc-section-divider"><span class="itc-section-divider-label">SQUADRE</span></div>
-    <div class="itc-grid-2">
-      ${buildTeamRankCard(_teamRankNow)}
-      <div>
-        ${buildTeamFireCard(_teamOfMoment, _teamOfMomentPhoto)}
-        ${buildTeamMoversCard(_teamRankNow)}
-      </div>
-    </div>` : '';
+  // Team sections
+  const _tFireHtml = buildTeamFireCard(_teamOfMoment, _teamOfMomentPhoto);
+  const _tRankHtml = buildTeamRankCard(_teamRankNow);
+  const _tMovHtml  = buildTeamMoversCard(_teamRankNow);
+  const _tVsHtml   = buildTeamVsCard(_teamRankNow);
+  const _tFeedHtml = buildTeamFeedCard(_teamRankNow, hubResES2, mainCat);
+
+  // Calendar + Popular
+  const _calHtml     = buildCalCard();
+  const _popularHtml = buildPopularCard(hubRes, mainCat);
+
+  // Layout: per esordienti i blocchi rider sono già itc-dual internamente
+  // → non li annidiamo in altro dual; team va sotto.
+  // Per tutti gli altri: ogni riga = itc-dual rider|team.
+  const sectionsInner = isEsordienti ? `
+    ${_rFireHtml}
+    ${_tFireHtml}
+    ${_rRankHtml}
+    ${_tRankHtml}
+    ${_rMovHtml}
+    ${_tMovHtml}
+    <div class="itc-dual">${_rVsHtml}${_tVsHtml}</div>
+    <div class="itc-dual">${_rFeedHtml}${_tFeedHtml}</div>
+    <div class="itc-dual">${_popularHtml}${_calHtml}</div>
+  ` : `
+    <div class="itc-dual">${_rFireHtml}${_tFireHtml}</div>
+    <div class="itc-dual">${_rRankHtml}${_tRankHtml}</div>
+    <div class="itc-dual">${_rMovHtml}${_tMovHtml}</div>
+    <div class="itc-dual">${_rVsHtml}${_tVsHtml}</div>
+    <div class="itc-dual">${_rFeedHtml}${_tFeedHtml}</div>
+    <div class="itc-dual">${_popularHtml}${_calHtml}</div>
+  `;
+
   const athCount    = new Set(hubRes.map(r=>r.atleta_id).filter(Boolean)).size;
   const raceCount   = new Set(hubRes.map(r=>r.gara_id).filter(Boolean)).size;
   const genderLabel = hub.gender==='M'?'MASCHILE':hub.gender==='F'?'FEMMINILE':'';
@@ -4344,15 +4553,7 @@ async function renderHubBars() {
       ${tickerHtml}
       ${champHtml}
       <div class="itc-sections">
-        ${fireHtml}
-        <div class="itc-grid-2">
-          ${rankHtml}
-          ${sideSectionHtml}
-        </div>
-        ${isEsordienti?vsHtml:''}
-        ${feedHtml}
-        ${calHtml}
-        ${teamSectionHtml}
+        ${sectionsInner}
       </div>
     </div>
   `);
@@ -7661,6 +7862,9 @@ async function renderAtleta(atleta_id) {
 
   const a = athletes[atleta_id];
   if (!a) return renderNotFound();
+
+  // Registra visualizzazione per Popular Today
+  trackAthleteView(atleta_id, a.cognome || '', a.nome || '');
 
   // Lookup moltiplicatori dal calendario
   const calMap = {};
