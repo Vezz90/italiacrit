@@ -10423,3 +10423,24 @@ main.page:has(.itc-dash) {
 /* Dark mode adjustments */
 [data-theme="dark"] .itc-ticker { background: #02030a; }
 [data-theme="dark"] .itc-champ-bar { background: rgba(0,0,0,.5); }
+
+/* ── TEAM SECTIONS ─────────────────────────────────────────────── */
+/* Section divider with centered label */
+.itc-section-divider {
+  display: flex; align-items: center; gap: 16px;
+  margin: 4px 0 2px;
+}
+.itc-section-divider::before,
+.itc-section-divider::after {
+  content: ''; flex: 1; height: 1px;
+  background: var(--border-color, rgba(255,255,255,.1));
+}
+.itc-section-divider-label {
+  font-size: .55rem; font-weight: 800; letter-spacing: .2em;
+  color: var(--text-muted, rgba(255,255,255,.35));
+  text-transform: uppercase; white-space: nowrap;
+}
+
+/* Team fire card — slightly shorter than athlete card */
+.itc-team-fire { min-height: 220px; margin-bottom: 12px; }
+.itc-team-fire .itc-fire-name { word-break: break-word; hyphens: auto; }

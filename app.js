@@ -3941,6 +3941,28 @@ async function renderHubBars() {
   if(fireAth){try{const ov=await getEntityOverrides('atleta',fireAth.atleta_id);if(ov.photo_url)fireAthPhoto=`${MEDIA_BASE}${ov.photo_url}`;}catch{}}
   if(fireAthES1){try{const ov=await getEntityOverrides('atleta',fireAthES1.atleta_id);if(ov.photo_url)fireAthES1Photo=`${MEDIA_BASE}${ov.photo_url}`;}catch{}}
 
+  // ── Team ranking & movers ─────────────────────────────────────────
+  const _teamRankNow  = computeTeamRanking(hubResES2, mainCat, null).slice(0, 6);
+  const _teamRank14   = computeTeamRanking(hubResES2, mainCat, cut14);
+  const _teamRank7    = computeTeamRanking(hubResES2, mainCat, cut7);
+  // Snapshot maps: team_id → posizione
+  const _teamSnapNow  = Object.fromEntries(_teamRankNow.map(t=>[t.team_id,t.pos]));
+  const _teamSnap14   = Object.fromEntries(_teamRank14.map(t=>[t.team_id,t.pos]));
+  const _teamSnap7    = Object.fromEntries(_teamRank7.map(t=>[t.team_id,t.pos]));
+  // Team of the moment — team con hot score più alto negli ultimi 14gg
+  let _teamOfMoment = null;
+  {
+    let bestScore = -1;
+    for (const t of _teamRankNow) {
+      const s = computeTeamHotScore(t.team_id, hubResES2, mainCat);
+      if (s > bestScore) { bestScore = s; _teamOfMoment = { ...t, score: s }; }
+    }
+  }
+  let _teamOfMomentPhoto = null;
+  if (_teamOfMoment) {
+    try { const ov=await getEntityOverrides('team',_teamOfMoment.team_id); if(ov.photo_url) _teamOfMomentPhoto=`${MEDIA_BASE}${ov.photo_url}`; } catch {}
+  }
+
   // ── Championship bar ─────────────────────────────────────────────
   function champBar(ranking, label) {
     if(!ranking.length) return '';
@@ -4160,6 +4182,106 @@ async function renderHubBars() {
     </div>`;
   }
 
+  // ── Team of the Moment card ──────────────────────────────────────
+  function buildTeamFireCard(team, photoUrl) {
+    if (!team) return '';
+    const score = team.score ?? 0;
+    const scoreColor = score>=80?'#E11D48':score>=55?'#F59E0B':'#10B981';
+    const posNow = _teamSnapNow[team.team_id], pos14 = _teamSnap14[team.team_id];
+    let trendHtml = '';
+    if (posNow && pos14) {
+      const gain = pos14 - posNow;
+      if (gain >= 1) trendHtml = ` <span class="itc-rank-trend up" style="font-size:.9rem">▲${gain}</span>`;
+      else if (gain <= -1) trendHtml = ` <span class="itc-rank-trend dn" style="font-size:.9rem">▼${Math.abs(gain)}</span>`;
+    }
+    let bgHtml;
+    if (photoUrl) {
+      bgHtml = `<div class="itc-fire-bg itc-fire-bg--portrait" style="background-image:url('${photoUrl}')"></div>`;
+    } else {
+      bgHtml = `<div class="itc-fire-bg itc-fire-bg--neutral">
+        <div class="itc-fire-watermark" style="font-size:clamp(2.5rem,10vw,8rem);word-break:break-word;padding:1rem">${esc(team.team.toUpperCase())}</div>
+      </div>`;
+    }
+    return `<div class="itc-fire itc-team-fire" style="--hub-color:${hubColor}">
+      ${bgHtml}
+      <div class="itc-fire-overlay"></div>
+      <div class="itc-fire-content">
+        <div class="itc-fire-eyebrow">🏆 TEAM OF THE MOMENT</div>
+        <h2 class="itc-fire-name" style="font-size:clamp(1.2rem,3vw,2rem);line-height:1.15">${esc(team.team)}${trendHtml}</h2>
+        <div class="itc-fire-stats">
+          <div class="itc-fire-stat"><span class="itc-fire-val">${team.punti}</span><span class="itc-fire-lbl">punti</span></div>
+          <div class="itc-fire-stat"><span class="itc-fire-val">${team.wins}</span><span class="itc-fire-lbl">vittorie</span></div>
+          <div class="itc-fire-stat"><span class="itc-fire-val">${team.podi}</span><span class="itc-fire-lbl">podi</span></div>
+          <div class="itc-fire-stat itc-fire-score"><span class="itc-fire-val" style="color:${scoreColor}">${score}</span><span class="itc-fire-lbl">forma</span></div>
+        </div>
+        <div class="itc-hot-wrap">
+          <div class="itc-hot-label">FORMA TEAM</div>
+          <div class="itc-hot-track"><div class="itc-hot-fill" style="width:${score}%;background:${scoreColor}"></div></div>
+          <div class="itc-hot-val" style="color:${scoreColor}">${score}<span style="opacity:.5;font-size:.55rem">/100</span></div>
+        </div>
+        <div class="itc-fire-ctas">
+          <a href="#/team/${encodeURIComponent(team.team_id)}" class="itc-fire-cta-primary">Scheda team →</a>
+        </div>
+      </div>
+    </div>`;
+  }
+
+  // ── Top Team ranking card ─────────────────────────────────────────
+  function buildTeamRankCard(teamRank) {
+    if (!teamRank.length) return '';
+    const leaderPts = teamRank[0].punti;
+    const rows = teamRank.map((t, i) => {
+      const posNow = _teamSnapNow[t.team_id], pos14 = _teamSnap14[t.team_id];
+      let trendHtml = '';
+      if (posNow && pos14) {
+        const gain = pos14 - posNow;
+        if (gain >= 2)      trendHtml = `<span class="itc-rank-trend up">▲${gain}</span>`;
+        else if (gain <= -2) trendHtml = `<span class="itc-rank-trend dn">▼${Math.abs(gain)}</span>`;
+      }
+      const gap = i === 0 ? '' : `<span class="itc-rank-gap">−${leaderPts - t.punti}</span>`;
+      return `<div class="itc-rank-row${i===0?' itc-rank-row--leader':''}" onclick="location.hash='#/team/${encodeURIComponent(t.team_id)}'">
+        <span class="itc-rank-pos itc-rank-pos-${i<3?i+1:'x'}">${i+1}</span>
+        <div class="itc-rank-info">
+          <div class="itc-rank-name">${esc(t.team)}${trendHtml}</div>
+          <div class="itc-rank-sub">${t.riders} atleti · ${t.wins} vitt. · ${t.podi} podi</div>
+        </div>
+        ${gap}
+        <span class="itc-rank-pts">${t.punti}<small>pt</small></span>
+      </div>`;
+    }).join('');
+    return `<div class="itc-card itc-rank-card">
+      <div class="itc-card-hdr"><span class="itc-card-title">🏆 TOP TEAM</span><a href="#/team" class="itc-card-more">Vedi tutti →</a></div>
+      ${rows}
+    </div>`;
+  }
+
+  // ── Team movers card ──────────────────────────────────────────────
+  function buildTeamMoversCard(teamRank) {
+    const up = [], dn = [];
+    for (const t of teamRank) {
+      const now = _teamSnapNow[t.team_id], old = _teamSnap7[t.team_id];
+      if (!now || !old) continue;
+      const gain = old - now;
+      if (gain >= 1)  up.push({ ...t, gain });
+      else if (gain <= -1) dn.push({ ...t, gain });
+    }
+    up.sort((a,b)=>b.gain-a.gain); dn.sort((a,b)=>a.gain-b.gain);
+    const up3=up.slice(0,3), dn2=dn.slice(0,2);
+    if (!up3.length && !dn2.length) return '';
+    const mkRow=(t,dir)=>`<div class="itc-mover itc-mover--${dir}" onclick="location.hash='#/team/${encodeURIComponent(t.team_id)}'">
+      <span class="itc-mover-icon">${dir==='up'?'▲':'▼'}</span>
+      <div class="itc-mover-info">
+        <span class="itc-mover-name">${esc(t.team)}</span>
+        <span class="itc-mover-detail">ora ${_teamSnapNow[t.team_id]}° ${dir==='up'?'(+'+t.gain+')':'('+t.gain+')'}</span>
+      </div>
+    </div>`;
+    return `<div class="itc-card itc-movers-card">
+      <div class="itc-card-hdr"><span class="itc-card-title">📈 TEAM MOVERS</span></div>
+      ${up3.map(t=>mkRow(t,'up')).join('')}
+      ${dn2.map(t=>mkRow(t,'dn')).join('')}
+    </div>`;
+  }
+
   // ── Ticker ───────────────────────────────────────────────────────
   const tickItems=[];
   if(hubRanking.length>=2){const g12=hubRanking[0].punti-hubRanking[1].punti;tickItems.push(g12<=15?`LOTTA AL VERTICE — <strong>${esc(hubRanking[0].cognome)}</strong> guida con soli ${g12} pt`:`<strong>${esc(hubRanking[0].cognome)}</strong> in testa con ${hubRanking[0].punti} pt`);}
@@ -4189,6 +4311,15 @@ async function renderHubBars() {
   const vsHtml      = isEsordienti ? buildVsCard(hubResES2,hubRankingES1||[],es1Code) : '';
   const feedHtml    = buildFeedCard(hubRes, hubRanking, mainCat);
   const calHtml     = buildCalCard();
+  const teamSectionHtml = _teamRankNow.length >= 2 ? `
+    <div class="itc-section-divider"><span class="itc-section-divider-label">SQUADRE</span></div>
+    <div class="itc-grid-2">
+      ${buildTeamRankCard(_teamRankNow)}
+      <div>
+        ${buildTeamFireCard(_teamOfMoment, _teamOfMomentPhoto)}
+        ${buildTeamMoversCard(_teamRankNow)}
+      </div>
+    </div>` : '';
   const athCount    = new Set(hubRes.map(r=>r.atleta_id).filter(Boolean)).size;
   const raceCount   = new Set(hubRes.map(r=>r.gara_id).filter(Boolean)).size;
   const genderLabel = hub.gender==='M'?'MASCHILE':hub.gender==='F'?'FEMMINILE':'';
@@ -4219,6 +4350,7 @@ async function renderHubBars() {
         ${isEsordienti?vsHtml:''}
         ${feedHtml}
         ${calHtml}
+        ${teamSectionHtml}
       </div>
     </div>
   `);
