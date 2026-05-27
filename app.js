@@ -1,5 +1,5 @@
 /* ============================================================
-   ItaliacritResultati — app.js  v199
+   ItaliacritResultati — app.js  v202
    Hash Router + Page Renderers
    Legge i JSON statici da data/ via fetch()
    ============================================================ */
@@ -3577,91 +3577,125 @@ function renderHome() {
 }
 
 // ── HUB BARS — Landing page con barre animate stile Early Rider ───
-function renderHubBars() {
+async function renderHubBars() {
   const BARS = [
-    {
-      href: '#/risultati',
-      num: '01',
-      label: 'Risultati',
-      subs: null,
-    },
-    {
-      href: '#/classifica',
-      num: '02',
-      label: 'Classifiche',
-      subs: [
-        { label: 'Classifica', href: '#/classifica' },
-        { label: 'Atleti',     href: '#/atleti' },
-        { label: 'Team',       href: '#/team' },
-      ],
-    },
-    {
-      href: '#/calendario',
-      num: '03',
-      label: 'Calendario',
-      subs: null,
-    },
-    {
-      href: '#/statistiche',
-      num: '04',
-      label: 'Analisi',
-      subs: [
-        { label: 'Statistiche', href: '#/statistiche' },
-        { label: 'Comparatore', href: '#/comparatore' },
-      ],
-    },
+    { href:'#/risultati',   num:'01', label:'Risultati',   desc:'Gare recenti, podi e classifiche per categoria e regione', subs: null },
+    { href:'#/classifica',  num:'02', label:'Classifiche', desc:'Ranking atleti, team e classifica generale della stagione',
+      subs:[{l:'Classifica',h:'#/classifica'},{l:'Atleti',h:'#/atleti'},{l:'Team',h:'#/team'}] },
+    { href:'#/calendario',  num:'03', label:'Calendario',  desc:'Prossime gare e calendario stagionale completo', subs: null },
+    { href:'#/statistiche', num:'04', label:'Analisi',     desc:'Statistiche, comparatore atleti e trend stagionali',
+      subs:[{l:'Statistiche',h:'#/statistiche'},{l:'Comparatore',h:'#/comparatore'}] },
   ];
 
-  // Contesto categoria selezionato dalla cinematic (se presente)
-  const hub = activeHub || null;
-  const hubColor  = hub ? (hub.color || 'var(--red-hot)') : 'var(--red-hot)';
+  // Hub context
+  const hub       = activeHub || null;
+  const hubColor  = hub ? (hub.color || '#FF6B00') : '#FF6B00';
   const eyebrow   = hub
-    ? `${hub.icon || ''} ${hub.label} &nbsp;·&nbsp; ${hub.gender === 'M' ? 'Maschile' : hub.gender === 'F' ? 'Femminile' : ''}`
+    ? `${hub.icon || ''} ${hub.label} · ${hub.gender==='M' ? 'Maschile' : hub.gender==='F' ? 'Femminile' : ''}`
     : 'Ciclismo Agonistico Italiano';
-  const heroTitle = 'Italiacrit<br>Risultati';
   const heroSub   = hub
     ? `${hub.desc || ''} — scegli una sezione.`
     : 'Classifiche, risultati e statistiche del ciclismo su strada italiano — Esordienti, Allievi, Juniores, Under 23 ed Elite.';
 
+  // ── Carica foto reali dal backend ──────────────────────────────
+  let photos = [];
+  try {
+    const [d1, d2] = await Promise.all([
+      fetch(`${API_BASE}/race-photos`).then(r => r.json()).catch(() => ({ photos: [] })),
+      fetch(`${API_BASE}/xpix-photos`).then(r => r.json()).catch(() => ({ photos: [] })),
+    ]);
+    (d1.photos || []).forEach(p => {
+      if (p.filename) photos.push(`${PHOTOS_BASE}/photos/${p.filename}`);
+    });
+    (d2.photos || []).forEach(p => {
+      if (p.url) photos.push(p.url);
+    });
+    // Mischia per varietà ogni caricamento
+    for (let i = photos.length - 1; i > 0; i--) {
+      const j = Math.floor(Math.random() * (i + 1));
+      [photos[i], photos[j]] = [photos[j], photos[i]];
+    }
+  } catch { /* no photos — fallback dark bg */ }
+
+  const pick = i => photos[i % photos.length] || null;
+
+  // ── Build HTML ─────────────────────────────────────────────────
   const barsHtml = BARS.map((b, i) => {
+    const pic = pick(i + 1);
+    const bgStyle = pic ? `background-image:url('${pic}')` : '';
     const subsHtml = b.subs
       ? `<div class="hub-bar-subs">${b.subs.map(s =>
-          `<a href="${s.href}" class="hub-bar-sub-item" onclick="event.stopPropagation()">${esc(s.label)}</a>`
+          `<a href="${s.h}" class="hub-bar-sub-item" onclick="event.stopPropagation()">${esc(s.l)}</a>`
         ).join('')}</div>`
       : '';
     return `
-      <a href="${b.href}" class="hub-bar" style="transition-delay:${i * 90}ms">
-        <div class="hub-bar-stripe" style="background:${hubColor}"></div>
-        <div class="hub-bar-num">${b.num}</div>
-        <div class="hub-bar-label">${esc(b.label)}</div>
-        ${subsHtml}
-        <div class="hub-bar-arrow">→</div>
+      <a href="${b.href}" class="hub-bar" style="transition-delay:${i * 100}ms">
+        <div class="hub-bar-bg" style="${bgStyle}"></div>
+        <div class="hub-bar-overlay"></div>
+        <div class="hub-bar-inner">
+          <div class="hub-bar-stripe" style="background:${hubColor}"></div>
+          <div class="hub-bar-num">${b.num}</div>
+          <div class="hub-bar-text">
+            <div class="hub-bar-label">${esc(b.label)}</div>
+            <div class="hub-bar-desc">${b.desc}</div>
+            ${subsHtml}
+          </div>
+          <div class="hub-bar-arrow">→</div>
+        </div>
       </a>`;
   }).join('');
 
+  const heroPic = pick(0);
+  const heroStyle = heroPic ? `background-image:url('${heroPic}')` : '';
+
   setPage(`
     <div class="hub-page">
-      <div class="hub-hero" style="${hub ? `--hub-accent:${hubColor}` : ''}">
-        <div class="hub-hero-eyebrow" style="color:${hubColor}">${eyebrow}</div>
-        <div class="hub-hero-title">${heroTitle}</div>
-        <div class="hub-hero-sub">${heroSub}</div>
-        ${hub ? `<button class="hub-clear-filter" onclick="window.clearHubFilter();window.location.hash='#/hub'">✕ Rimuovi filtro categoria</button>` : ''}
+      <div class="hub-hero" style="${heroStyle}">
+        <div class="hub-hero-overlay"></div>
+        <div class="hub-hero-content">
+          <div class="hub-hero-eyebrow" style="color:${hubColor}">${eyebrow}</div>
+          <div class="hub-hero-title">Italiacrit<br>Risultati</div>
+          <div class="hub-hero-sub">${heroSub}</div>
+          ${hub ? `<button class="hub-clear-filter" onclick="window.clearHubFilter();window.location.hash='#/hub'">✕ Rimuovi filtro</button>` : ''}
+        </div>
       </div>
       <div class="hub-bars">${barsHtml}</div>
     </div>
   `);
 
-  // Scroll-triggered reveal via IntersectionObserver
-  const observer = new IntersectionObserver(entries => {
-    entries.forEach(entry => {
-      if (entry.isIntersecting) {
-        entry.target.classList.add('hub-visible');
-        observer.unobserve(entry.target);
-      }
+  // ── Scroll-reveal ──────────────────────────────────────────────
+  const obs = new IntersectionObserver(entries => {
+    entries.forEach(e => {
+      if (e.isIntersecting) { e.target.classList.add('hub-visible'); obs.unobserve(e.target); }
     });
-  }, { threshold: 0.1 });
+  }, { threshold: 0.08 });
+  document.querySelectorAll('.hub-bar').forEach(b => obs.observe(b));
 
-  document.querySelectorAll('.hub-bar').forEach(bar => observer.observe(bar));
+  // ── Hero photo slideshow (cambia ogni 6s) ──────────────────────
+  if (photos.length > 1) {
+    const hero = document.querySelector('.hub-hero');
+    if (hero) {
+      // Crea layer bg2 per il crossfade
+      const bg2 = document.createElement('div');
+      bg2.className = 'hub-hero-bg2';
+      hero.prepend(bg2);
+      let idx = 1;
+      const slide = () => {
+        const next = photos[idx % photos.length];
+        bg2.style.backgroundImage = `url('${next}')`;
+        bg2.classList.add('active');
+        setTimeout(() => {
+          hero.style.backgroundImage = `url('${next}')`;
+          bg2.classList.remove('active');
+          idx++;
+        }, 1500);
+      };
+      const timer = setInterval(slide, 6000);
+      // Pulizia quando si naviga via
+      const cleanup = () => { clearInterval(timer); window.removeEventListener('hashchange', cleanup); };
+      window.addEventListener('hashchange', cleanup);
+    }
+  }
 }
 
 // ── OLD HOME (archivio) — rimossa: logica banner/spotlight ora nel SEIA ──
