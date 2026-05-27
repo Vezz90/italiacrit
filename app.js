@@ -1190,10 +1190,8 @@ function route() {
   const hash = window.location.hash || '#/';
   updateNavActive(hash);
 
-  // Hub home — barre animate di navigazione
+  // Hub — barre animate (sia generale #/hub che per categoria #/hub/CODE/)
   if (hash === '#/hub' || hash === '#/hub/') return renderHubBars();
-
-  // Hub routes — dedicated category ecosystem with URL-encoded context
   if (hash.startsWith('#/hub/')) {
     const hubParts = hash.slice(6).split('/');
     const hubCode = hubParts[0];
@@ -1203,8 +1201,10 @@ function route() {
       activeHub._code = hubCode;
       applyHubFilters(activeHub);
       try { localStorage.setItem('itcContext', hubCode); } catch(e) {}
-      if (!hubSub || hubSub === 'home' || hubSub === '') return renderHubHome(hubCode);
-      return renderHubSubpage(hubCode, hubSub);
+      // Sotto-pagine specifiche (classifica/atleti/team interne all'hub) rimangono
+      if (hubSub && hubSub !== 'home') return renderHubSubpage(hubCode, hubSub);
+      // Home hub → nuove barre
+      return renderHubBars();
     }
   }
   // activeHub persists as global filter — cleared only by clearHubFilter()
@@ -2147,13 +2147,12 @@ function _itcClose(hubCode) {
     _entryShowShell();
     document.body.style.overflow = '';
     if (gate.parentNode) gate.parentNode.removeChild(gate);
-    if (hubCode) {
-      window.location.hash = '#/hub/' + hubCode + '/';
-    } else {
-      // Skip: nessuna categoria selezionata → vai all'hub con le barre
+    // In tutti i casi va all'hub con le barre animate.
+    // I filtri di categoria sono già applicati da applyHubFilters() sopra.
+    if (!hubCode) {
       try { localStorage.setItem('itcContext', 'skip'); } catch(e) {}
-      window.location.hash = '#/hub';
     }
+    window.location.hash = '#/hub';
   }, 550);
 }
 
@@ -3613,6 +3612,17 @@ function renderHubBars() {
     },
   ];
 
+  // Contesto categoria selezionato dalla cinematic (se presente)
+  const hub = activeHub || null;
+  const hubColor  = hub ? (hub.color || 'var(--red-hot)') : 'var(--red-hot)';
+  const eyebrow   = hub
+    ? `${hub.icon || ''} ${hub.label} &nbsp;·&nbsp; ${hub.gender === 'M' ? 'Maschile' : hub.gender === 'F' ? 'Femminile' : ''}`
+    : 'Ciclismo Agonistico Italiano';
+  const heroTitle = 'Italiacrit<br>Risultati';
+  const heroSub   = hub
+    ? `${hub.desc || ''} — scegli una sezione.`
+    : 'Classifiche, risultati e statistiche del ciclismo su strada italiano — Esordienti, Allievi, Juniores, Under 23 ed Elite.';
+
   const barsHtml = BARS.map((b, i) => {
     const subsHtml = b.subs
       ? `<div class="hub-bar-subs">${b.subs.map(s =>
@@ -3621,7 +3631,7 @@ function renderHubBars() {
       : '';
     return `
       <a href="${b.href}" class="hub-bar" style="transition-delay:${i * 90}ms">
-        <div class="hub-bar-stripe"></div>
+        <div class="hub-bar-stripe" style="background:${hubColor}"></div>
         <div class="hub-bar-num">${b.num}</div>
         <div class="hub-bar-label">${esc(b.label)}</div>
         ${subsHtml}
@@ -3631,10 +3641,11 @@ function renderHubBars() {
 
   setPage(`
     <div class="hub-page">
-      <div class="hub-hero">
-        <div class="hub-hero-eyebrow">Ciclismo Agonistico Italiano</div>
-        <div class="hub-hero-title">Italiacrit<br>Risultati</div>
-        <div class="hub-hero-sub">Classifiche, risultati e statistiche del ciclismo su strada italiano — Esordienti, Allievi, Juniores, Under 23 ed Elite.</div>
+      <div class="hub-hero" style="${hub ? `--hub-accent:${hubColor}` : ''}">
+        <div class="hub-hero-eyebrow" style="color:${hubColor}">${eyebrow}</div>
+        <div class="hub-hero-title">${heroTitle}</div>
+        <div class="hub-hero-sub">${heroSub}</div>
+        ${hub ? `<button class="hub-clear-filter" onclick="window.clearHubFilter();window.location.hash='#/hub'">✕ Rimuovi filtro categoria</button>` : ''}
       </div>
       <div class="hub-bars">${barsHtml}</div>
     </div>

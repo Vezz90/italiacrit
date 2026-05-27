@@ -9822,6 +9822,25 @@ body[data-hub] .loading-bar { background: var(--hub-color) !important; }
   color: var(--red-hot);
 }
 
+/* Bottone rimuovi filtro categoria */
+.hub-clear-filter {
+  margin-top: 18px;
+  background: none;
+  border: 1px solid var(--border-subtle);
+  border-radius: 999px;
+  padding: 5px 14px;
+  font-size: .72rem;
+  font-weight: 600;
+  letter-spacing: .04em;
+  color: var(--text-secondary);
+  cursor: pointer;
+  transition: border-color .2s, color .2s;
+}
+.hub-clear-filter:hover {
+  border-color: var(--red-hot);
+  color: var(--red-hot);
+}
+
 /* ── Mobile ──────────────────────────────────────────────── */
 @media (max-width: 640px) {
   .hub-hero { padding: 40px 20px 28px; }
