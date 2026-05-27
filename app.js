@@ -3916,25 +3916,27 @@ async function renderHubBars() {
   const fireAthES1 = isEsordienti?computeFireForSet(hubResES1):null;
 
   // ── Movers — basati su snapshot di classifica reali ──────────────
-  // Confronto classifica cumulativa ora vs 7 giorni fa
-  const _snapNow   = computeRankSnapshot(hubResES2, mainCat, null);
-  const _snap7ago  = computeRankSnapshot(hubResES2, mainCat, cut7);
-  const _snapNowE1 = es1Code?computeRankSnapshot(hubResES1,es1Code,null):{};
-  const _snap7agoE1= es1Code?computeRankSnapshot(hubResES1,es1Code,cut7):{};
-  // Snapshot 14gg per trend frecce classifica
+  // Confronto: classifica attuale vs classifica PRIMA dell'ultima gara
+  const lastDateES2 = hubResES2.reduce((mx,r)=>(r.data||'')>mx?r.data:mx,'') || lastDate;
+  const lastDateES1 = hubResES1.reduce((mx,r)=>(r.data||'')>mx?r.data:mx,'') || lastDate;
+  const _snapNow          = computeRankSnapshot(hubResES2, mainCat, null);
+  const _snapBeforeLast   = computeRankSnapshot(hubResES2, mainCat, lastDateES2);
+  const _snapNowE1        = es1Code?computeRankSnapshot(hubResES1,es1Code,null):{};
+  const _snapBeforeLastE1 = es1Code?computeRankSnapshot(hubResES1,es1Code,lastDateES1):{};
+  // Snapshot 14gg per trend frecce classifica (non movers)
   const _snap14ago  = computeRankSnapshot(hubResES2, mainCat, cut14);
   const _snap14agoE1= es1Code?computeRankSnapshot(hubResES1,es1Code,cut14):{};
 
-  function computeMovers(ranking, snapNow, snap7ago) {
+  function computeMovers(ranking, snapNow, snapBefore) {
     const list = ranking.map(a=>{
-      const now=snapNow[a.atleta_id], old=snap7ago[a.atleta_id];
+      const now=snapNow[a.atleta_id], old=snapBefore[a.atleta_id];
       if(!now||!old) return null;
       return {atleta_id:a.atleta_id,cognome:a.cognome,nome:a.nome,pos:now,gain:old-now};
     }).filter(Boolean);
     return {up:list.filter(m=>m.gain>=1).sort((a,b)=>b.gain-a.gain).slice(0,3),dn:list.filter(m=>m.gain<=-1).sort((a,b)=>a.gain-b.gain).slice(0,2)};
   }
-  const movers    = computeMovers(hubRanking,    _snapNow,   _snap7ago);
-  const moversES1 = isEsordienti&&hubRankingES1?computeMovers(hubRankingES1,_snapNowE1,_snap7agoE1):{up:[],dn:[]};
+  const movers    = computeMovers(hubRanking,    _snapNow,   _snapBeforeLast);
+  const moversES1 = isEsordienti&&hubRankingES1?computeMovers(hubRankingES1,_snapNowE1,_snapBeforeLastE1):{up:[],dn:[]};
 
   // Pre-carica foto atleta on fire
   let fireAthPhoto=null, fireAthES1Photo=null;
@@ -3942,13 +3944,13 @@ async function renderHubBars() {
   if(fireAthES1){try{const ov=await getEntityOverrides('atleta',fireAthES1.atleta_id);if(ov.photo_url)fireAthES1Photo=`${MEDIA_BASE}${ov.photo_url}`;}catch{}}
 
   // ── Team ranking & movers ─────────────────────────────────────────
-  const _teamRankNow  = computeTeamRanking(hubResES2, mainCat, null).slice(0, 6);
-  const _teamRank14   = computeTeamRanking(hubResES2, mainCat, cut14);
-  const _teamRank7    = computeTeamRanking(hubResES2, mainCat, cut7);
+  const _teamRankNow        = computeTeamRanking(hubResES2, mainCat, null).slice(0, 6);
+  const _teamRank14         = computeTeamRanking(hubResES2, mainCat, cut14);
+  const _teamRankBeforeLast = computeTeamRanking(hubResES2, mainCat, lastDateES2);
   // Snapshot maps: team_id → posizione
-  const _teamSnapNow  = Object.fromEntries(_teamRankNow.map(t=>[t.team_id,t.pos]));
-  const _teamSnap14   = Object.fromEntries(_teamRank14.map(t=>[t.team_id,t.pos]));
-  const _teamSnap7    = Object.fromEntries(_teamRank7.map(t=>[t.team_id,t.pos]));
+  const _teamSnapNow        = Object.fromEntries(_teamRankNow.map(t=>[t.team_id,t.pos]));
+  const _teamSnap14         = Object.fromEntries(_teamRank14.map(t=>[t.team_id,t.pos]));
+  const _teamSnapBeforeLast = Object.fromEntries(_teamRankBeforeLast.map(t=>[t.team_id,t.pos]));
   // Team of the moment — team con hot score più alto negli ultimi 14gg
   let _teamOfMoment = null;
   {
@@ -4259,7 +4261,7 @@ async function renderHubBars() {
   function buildTeamMoversCard(teamRank) {
     const up = [], dn = [];
     for (const t of teamRank) {
-      const now = _teamSnapNow[t.team_id], old = _teamSnap7[t.team_id];
+      const now = _teamSnapNow[t.team_id], old = _teamSnapBeforeLast[t.team_id];
       if (!now || !old) continue;
       const gain = old - now;
       if (gain >= 1)  up.push({ ...t, gain });
