@@ -4332,7 +4332,7 @@ async function renderHubBars() {
       </div>`;
     }).join('');
     return `<div class="itc-card itc-rank-card">
-      <div class="itc-card-hdr"><span class="itc-card-title">TOP CLASSIFICA${title?' · '+title:''}</span><a href="#/classifica" class="itc-card-more">Vedi tutto →</a></div>
+      <div class="itc-card-hdr"><span class="itc-card-title">TOP CLASSIFICA${title?' · '+title:''}</span><a href="#/classifica" onclick="event.preventDefault();window.navToRankCat('${catCode}','atleti')" class="itc-card-more">Vedi tutto →</a></div>
       ${rows}
     </div>`;
   }
@@ -4507,7 +4507,7 @@ async function renderHubBars() {
   }
 
   // ── Top Team ranking card ─────────────────────────────────────────
-  function buildTeamRankCard(teamRank, snapNow, snapBefore, title) {
+  function buildTeamRankCard(teamRank, snapNow, snapBefore, title, catCode) {
     if (!teamRank.length) return '';
     const sNow  = snapNow   || _teamSnapNow;
     const sBef  = snapBefore|| _teamSnapBeforeLast;
@@ -4532,8 +4532,11 @@ async function renderHubBars() {
         <span class="itc-rank-pts">${t.punti}<small>pt</small></span>
       </div>`;
     }).join('');
+    const teamLink = catCode
+      ? `href="#/classifica" onclick="event.preventDefault();window.navToRankCat('${catCode}','team')"`
+      : `href="#/classifica" onclick="event.preventDefault();window.navToRankCat('${mainCat}','team')"`;
     return `<div class="itc-card itc-rank-card">
-      <div class="itc-card-hdr"><span class="itc-card-title">🏆 TOP TEAM${title?' · '+esc(title):''}</span><a href="#/team" class="itc-card-more">Vedi tutti →</a></div>
+      <div class="itc-card-hdr"><span class="itc-card-title">🏆 TOP TEAM${title?' · '+esc(title):''}</span><a ${teamLink} class="itc-card-more">Vedi tutti →</a></div>
       ${rows}
     </div>`;
   }
@@ -4756,8 +4759,8 @@ async function renderHubBars() {
     ? `<div class="itc-dual">${buildTeamFireCard(_teamOfMomentES1,_teamOfMomentES1Photo,_teamSnapNowES1,_teamSnap14ES1,'1° Anno')}${buildTeamFireCard(_teamOfMoment,_teamOfMomentPhoto,_teamSnapNow,_teamSnap14,'2° Anno')}</div>`
     : buildTeamFireCard(_teamOfMoment, _teamOfMomentPhoto, _teamSnapNow, _teamSnap14, '');
   const _tRankHtml = isEsordienti
-    ? `<div class="itc-dual">${buildTeamRankCard(_teamRankNowES1,_teamSnapNowES1,_teamSnapBeforeLastES1,'1° Anno')}${buildTeamRankCard(_teamRankNow,_teamSnapNow,_teamSnapBeforeLast,'2° Anno')}</div>`
-    : buildTeamRankCard(_teamRankNow, _teamSnapNow, _teamSnapBeforeLast, '');
+    ? `<div class="itc-dual">${buildTeamRankCard(_teamRankNowES1,_teamSnapNowES1,_teamSnapBeforeLastES1,'1° Anno',es1Code)}${buildTeamRankCard(_teamRankNow,_teamSnapNow,_teamSnapBeforeLast,'2° Anno',mainCat)}</div>`
+    : buildTeamRankCard(_teamRankNow, _teamSnapNow, _teamSnapBeforeLast, '', mainCat);
   const _tMovHtml = isEsordienti
     ? `<div class="itc-dual">${buildTeamMoversCard(_teamRankFullES1,_teamSnapNowES1,_teamSnapBeforeLastES1,'1° Anno')}${buildTeamMoversCard(_teamRankFull,_teamSnapNow,_teamSnapBeforeLast,'2° Anno')}</div>`
     : buildTeamMoversCard(_teamRankFull, _teamSnapNow, _teamSnapBeforeLast, '');
@@ -8043,6 +8046,14 @@ window.triggerSync = async () => {
   }
 };
 
+// Naviga alla classifica impostando categoria/view senza doppio render
+window.navToRankCat  = (catCode, view) => {
+  rankCat    = catCode;
+  rankGender = catCode.endsWith('_F') ? 'F' : 'M';
+  rankView   = view || 'atleti';
+  rankFilter = ''; rankRegion = ''; rankMonth = ''; rankSort = 'punti';
+  window.location.hash = '#/classifica';
+};
 window.setRankGender = (g) => { rankGender = g; rankFilter = ''; rankRegion = ''; rankMonth = ''; rankSort = 'punti'; renderClassifica(); };
 window.setRankCat    = (c) => { rankCat = c; rankFilter = ''; rankRegion = ''; rankMonth = ''; rankSort = 'punti'; renderClassifica(); };
 window.setRankFilter = (v) => { rankFilter = v; updateRankTable(); };
