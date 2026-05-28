@@ -3939,8 +3939,11 @@ async function renderHubBars() {
   const es1Code       = hub.catCodes.find(c=>c.startsWith('ES1'));
   const mainCat       = hub.mainCat;
   const isEsordienti  = !!es1Code;
-  const hubRanking    = (await loadRanking(mainCat)).slice(0,8);
-  const hubRankingES1 = es1Code?(await loadRanking(es1Code)).slice(0,8):null;
+  // Full ranking per i movers (tutto il campo); top10 per la rank card
+  const _hubRankFull   = await loadRanking(mainCat);
+  const _hubRankES1Full= es1Code ? await loadRanking(es1Code) : null;
+  const hubRanking    = _hubRankFull.slice(0, 10);
+  const hubRankingES1 = _hubRankES1Full ? _hubRankES1Full.slice(0, 10) : null;
   const hubRes    = resultsRaw.filter(r=>r.genere===hub.gender&&hub.catCodes.includes(getRankingFileCode(r)));
   const hubResES2 = isEsordienti?hubRes.filter(r=>getRankingFileCode(r)===mainCat):hubRes;
   const hubResES1 = isEsordienti?hubRes.filter(r=>getRankingFileCode(r)===es1Code):[];
@@ -3971,32 +3974,67 @@ async function renderHubBars() {
   const _snapBeforeLast   = computeRankSnapshot(hubResES2, mainCat, lastDateES2);
   const _snapNowE1        = es1Code?computeRankSnapshot(hubResES1,es1Code,null):{};
   const _snapBeforeLastE1 = es1Code?computeRankSnapshot(hubResES1,es1Code,lastDateES1):{};
-  // Snapshot 14gg per trend frecce classifica (non movers)
-  const _snap14ago  = computeRankSnapshot(hubResES2, mainCat, cut14);
-  const _snap14agoE1= es1Code?computeRankSnapshot(hubResES1,es1Code,cut14):{};
-
+  // ── Movers: usa snapshot before-last (= logica identica alla classifica page) ──
   function computeMovers(ranking, snapNow, snapBefore) {
-    const list = ranking.map(a=>{
-      const now=snapNow[a.atleta_id], old=snapBefore[a.atleta_id];
-      if(!now||!old) return null;
-      return {atleta_id:a.atleta_id,cognome:a.cognome,nome:a.nome,pos:now,gain:old-now};
+    // ranking = array completo (non limitato a top10) per trovare i maggiori salitori/scesori
+    const list = ranking.map(a => {
+      const now = snapNow[a.atleta_id], old = snapBefore[a.atleta_id];
+      if (!now || !old) return null;
+      const gain = old - now; // positivo = salito, negativo = sceso
+      return { atleta_id:a.atleta_id, cognome:a.cognome, nome:a.nome,
+               team:a.team_attuale||a.team||'', pos:now, gain, pts:a.punti||0 };
     }).filter(Boolean);
-    return {up:list.filter(m=>m.gain>=1).sort((a,b)=>b.gain-a.gain).slice(0,3),dn:list.filter(m=>m.gain<=-1).sort((a,b)=>a.gain-b.gain).slice(0,2)};
+    return {
+      up: list.filter(m => m.gain >= 1).sort((a,b) => b.gain - a.gain).slice(0, 5),
+      dn: list.filter(m => m.gain <= -1).sort((a,b) => a.gain - b.gain).slice(0, 5),
+    };
   }
-  const movers    = computeMovers(hubRanking,    _snapNow,   _snapBeforeLast);
-  const moversES1 = isEsordienti&&hubRankingES1?computeMovers(hubRankingES1,_snapNowE1,_snapBeforeLastE1):{up:[],dn:[]};
+  // Usa il ranking COMPLETO per i movers (non limitato a top10)
+  const movers    = computeMovers(_hubRankFull,    _snapNow,   _snapBeforeLast);
+  const moversES1 = isEsordienti && _hubRankES1Full
+    ? computeMovers(_hubRankES1Full, _snapNowE1, _snapBeforeLastE1)
+    : { up: [], dn: [] };
 
-  // Pre-carica foto atleta on fire
-  let fireAthPhoto=null, fireAthES1Photo=null;
-  if(fireAth){try{const ov=await getEntityOverrides('atleta',fireAth.atleta_id);if(ov.photo_url)fireAthPhoto=`${MEDIA_BASE}${ov.photo_url}`;}catch{}}
-  if(fireAthES1){try{const ov=await getEntityOverrides('atleta',fireAthES1.atleta_id);if(ov.photo_url)fireAthES1Photo=`${MEDIA_BASE}${ov.photo_url}`;}catch{}}
+  // Pre-carica foto atleta on fire:
+  // 1° priorità: foto profilo da entity override
+  // 2° fallback: prima foto di vittoria disponibile tra le race photos
+  const _allPhotosMap = {};
+  allPhotos.forEach(p => { if (p.gara_id && !_allPhotosMap[p.gara_id]) _allPhotosMap[p.gara_id] = p.url; });
+
+  function pickAthPhoto(athObj, resSet) {
+    // Prova override prima
+    // (restituisce promise — chiamato sempre con await)
+    return getEntityOverrides('atleta', athObj.atleta_id)
+      .then(ov => {
+        if (ov.photo_url) return `${MEDIA_BASE}${ov.photo_url}`;
+        // Fallback: cerca una gara vinta con foto disponibile
+        const wins = [...resSet]
+          .filter(r => r.atleta_id === athObj.atleta_id && r.posizione === 1)
+          .sort((a, b) => (b.data || '').localeCompare(a.data || ''));
+        for (const w of wins) {
+          if (_allPhotosMap[w.gara_id]) return _allPhotosMap[w.gara_id];
+          // Prova anche con match parziale (tronca suffisso _CAT_G)
+          const base = w.gara_id.replace(/_[A-Z0-9]+_[MF]$/, '');
+          const key = Object.keys(_allPhotosMap).find(k => k.startsWith(base));
+          if (key) return _allPhotosMap[key];
+        }
+        return null;
+      })
+      .catch(() => null);
+  }
+
+  let fireAthPhoto    = null;
+  let fireAthES1Photo = null;
+  if (fireAth)    fireAthPhoto    = await pickAthPhoto(fireAth,    hubResES2);
+  if (fireAthES1) fireAthES1Photo = await pickAthPhoto(fireAthES1, hubResES1);
 
   // ── Team ranking & movers ─────────────────────────────────────────
-  const _teamRankNow        = computeTeamRanking(hubResES2, mainCat, null).slice(0, 6);
+  const _teamRankFull       = computeTeamRanking(hubResES2, mainCat, null);
+  const _teamRankNow        = _teamRankFull.slice(0, 10);
   const _teamRank14         = computeTeamRanking(hubResES2, mainCat, cut14);
   const _teamRankBeforeLast = computeTeamRanking(hubResES2, mainCat, lastDateES2);
-  // Snapshot maps: team_id → posizione
-  const _teamSnapNow        = Object.fromEntries(_teamRankNow.map(t=>[t.team_id,t.pos]));
+  // Snapshot maps: team_id → posizione (full ranking for movers coverage)
+  const _teamSnapNow        = Object.fromEntries(_teamRankFull.map(t=>[t.team_id,t.pos]));
   const _teamSnap14         = Object.fromEntries(_teamRank14.map(t=>[t.team_id,t.pos]));
   const _teamSnapBeforeLast = Object.fromEntries(_teamRankBeforeLast.map(t=>[t.team_id,t.pos]));
   // Team of the moment — team con hot score più alto negli ultimi 14gg
@@ -4087,18 +4125,19 @@ async function renderHubBars() {
   }
 
   // ── Rank card con Last-5 dots e trend snapshot-based ─────────────
-  function buildRankCard(ranking, catCode, title, snapNow, snap14) {
+  function buildRankCard(ranking, catCode, title, snapNow, snapBefore) {
     if(!ranking.length) return '';
     const leaderPts=ranking[0].punti;
     const rows=ranking.map((a,i)=>{
-      // Trend: confronto posizione ora vs 14gg fa (entrambi da snapshot cumulativi)
+      // Trend: confronto posizione PRIMA dell'ultima gara vs ora
+      // (stessa logica della pagina Classifica)
       let trendHtml='';
       const posNow=snapNow?snapNow[a.atleta_id]:null;
-      const posOld=snap14?snap14[a.atleta_id]:null;
+      const posOld=snapBefore?snapBefore[a.atleta_id]:null;
       if(posNow&&posOld){
         const gain=posOld-posNow; // positivo=salito, negativo=sceso
-        if(gain>=2)      trendHtml=`<span class="itc-rank-trend up">▲${gain}</span>`;
-        else if(gain<=-2)trendHtml=`<span class="itc-rank-trend dn">▼${Math.abs(gain)}</span>`;
+        if(gain>=1)      trendHtml=`<span class="itc-rank-trend up">▲${gain}</span>`;
+        else if(gain<=-1)trendHtml=`<span class="itc-rank-trend dn">▼${Math.abs(gain)}</span>`;
       }
       // Last 5 races dots
       const last5=resultsRaw.filter(r=>r.atleta_id===a.atleta_id&&getRankingFileCode(r)===catCode&&r.posizione)
@@ -4124,20 +4163,35 @@ async function renderHubBars() {
     </div>`;
   }
 
-  // ── Movers card ──────────────────────────────────────────────────
+  // ── Movers card (corposo: 5 su + 5 giù) ──────────────────────────
   function buildMoversCard(mv, title) {
-    if(!mv.up.length&&!mv.dn.length) return '';
-    const mkRow=(m,dir)=>`<div class="itc-mover itc-mover--${dir}" onclick="location.hash='#/atleta/${encodeURIComponent(m.atleta_id)}'">
-      <span class="itc-mover-icon">${dir==='up'?'▲':'▼'}</span>
-      <div class="itc-mover-info">
-        <span class="itc-mover-name">${esc(m.cognome)} ${esc(m.nome)}</span>
-        <span class="itc-mover-detail">ora ${m.pos}° ${dir==='up'?'(+'+m.gain+')':'('+m.gain+')'}</span>
-      </div>
-    </div>`;
+    if (!mv.up.length && !mv.dn.length) return '';
+    const mkRow = (m, dir) => {
+      const isUp = dir === 'up';
+      const gainLabel = isUp ? `+${m.gain}` : `${m.gain}`;
+      const prevPos   = isUp ? m.pos + m.gain : m.pos + m.gain; // pos è quella attuale; gain è old-now
+      return `<div class="itc-mover itc-mover--${dir}" onclick="location.hash='#/atleta/${encodeURIComponent(m.atleta_id)}'">
+        <div class="itc-mover-badge itc-mover-badge--${dir}">${gainLabel}</div>
+        <div class="itc-mover-info">
+          <span class="itc-mover-name">${esc(m.cognome)} <span style="font-weight:400">${esc(m.nome)}</span></span>
+          <span class="itc-mover-detail">${esc(m.team||'')}</span>
+        </div>
+        <div class="itc-mover-pos-wrap">
+          <span class="itc-mover-prev-pos">${prevPos}°</span>
+          <span class="itc-mover-arrow">${isUp ? '→' : '→'}</span>
+          <span class="itc-mover-now-pos" style="color:${isUp?'#10B981':'#EF4444'}">${m.pos}°</span>
+        </div>
+      </div>`;
+    };
+    const upSection = mv.up.length ? `
+      <div class="itc-mover-section-lbl itc-mover-section-up">▲ IN SALITA</div>
+      ${mv.up.map(m => mkRow(m, 'up')).join('')}` : '';
+    const dnSection = mv.dn.length ? `
+      <div class="itc-mover-section-lbl itc-mover-section-dn">▼ IN DISCESA</div>
+      ${mv.dn.map(m => mkRow(m, 'dn')).join('')}` : '';
     return `<div class="itc-card itc-movers-card">
-      <div class="itc-card-hdr"><span class="itc-card-title">📈 MOVERS${title?' · '+title:''}</span></div>
-      ${mv.up.map(m=>mkRow(m,'up')).join('')}
-      ${mv.dn.map(m=>mkRow(m,'dn')).join('')}
+      <div class="itc-card-hdr"><span class="itc-card-title">📈 MOVERS${title ? ' · ' + title : ''}</span></div>
+      ${upSection}${dnSection}
     </div>`;
   }
 
@@ -4281,12 +4335,13 @@ async function renderHubBars() {
     if (!teamRank.length) return '';
     const leaderPts = teamRank[0].punti;
     const rows = teamRank.map((t, i) => {
-      const posNow = _teamSnapNow[t.team_id], pos14 = _teamSnap14[t.team_id];
+      // Trend: before-last vs now (come classifica page)
+      const posNow = _teamSnapNow[t.team_id], posOld = _teamSnapBeforeLast[t.team_id];
       let trendHtml = '';
-      if (posNow && pos14) {
-        const gain = pos14 - posNow;
-        if (gain >= 2)      trendHtml = `<span class="itc-rank-trend up">▲${gain}</span>`;
-        else if (gain <= -2) trendHtml = `<span class="itc-rank-trend dn">▼${Math.abs(gain)}</span>`;
+      if (posNow && posOld) {
+        const gain = posOld - posNow;
+        if (gain >= 1)       trendHtml = `<span class="itc-rank-trend up">▲${gain}</span>`;
+        else if (gain <= -1) trendHtml = `<span class="itc-rank-trend dn">▼${Math.abs(gain)}</span>`;
       }
       const gap = i === 0 ? '' : `<span class="itc-rank-gap">−${leaderPts - t.punti}</span>`;
       return `<div class="itc-rank-row${i===0?' itc-rank-row--leader':''}" onclick="location.hash='#/team/${encodeURIComponent(t.team_id)}'">
@@ -4312,23 +4367,38 @@ async function renderHubBars() {
       const now = _teamSnapNow[t.team_id], old = _teamSnapBeforeLast[t.team_id];
       if (!now || !old) continue;
       const gain = old - now;
-      if (gain >= 1)  up.push({ ...t, gain });
-      else if (gain <= -1) dn.push({ ...t, gain });
+      if (gain >= 1)       up.push({ ...t, gain, pos: now });
+      else if (gain <= -1) dn.push({ ...t, gain, pos: now });
     }
     up.sort((a,b)=>b.gain-a.gain); dn.sort((a,b)=>a.gain-b.gain);
-    const up3=up.slice(0,3), dn2=dn.slice(0,2);
-    if (!up3.length && !dn2.length) return '';
-    const mkRow=(t,dir)=>`<div class="itc-mover itc-mover--${dir}" onclick="location.hash='#/team/${encodeURIComponent(t.team_id)}'">
-      <span class="itc-mover-icon">${dir==='up'?'▲':'▼'}</span>
-      <div class="itc-mover-info">
-        <span class="itc-mover-name">${esc(t.team)}</span>
-        <span class="itc-mover-detail">ora ${_teamSnapNow[t.team_id]}° ${dir==='up'?'(+'+t.gain+')':'('+t.gain+')'}</span>
-      </div>
-    </div>`;
+    const up5 = up.slice(0, 5), dn5 = dn.slice(0, 5);
+    if (!up5.length && !dn5.length) return '';
+    const mkRow = (t, dir) => {
+      const isUp    = dir === 'up';
+      const gainLbl = isUp ? `+${t.gain}` : `${t.gain}`;
+      const prevPos = t.pos + t.gain; // gain = old - now, so old = pos + gain
+      return `<div class="itc-mover itc-mover--${dir}" onclick="location.hash='#/team/${encodeURIComponent(t.team_id)}'">
+        <div class="itc-mover-badge itc-mover-badge--${dir}">${gainLbl}</div>
+        <div class="itc-mover-info">
+          <span class="itc-mover-name">${esc(t.team)}</span>
+          <span class="itc-mover-detail">${t.riders || ''} atleti · ${t.wins || 0} vitt.</span>
+        </div>
+        <div class="itc-mover-pos-wrap">
+          <span class="itc-mover-prev-pos">${prevPos}°</span>
+          <span class="itc-mover-arrow">→</span>
+          <span class="itc-mover-now-pos" style="color:${isUp ? '#10B981' : '#EF4444'}">${t.pos}°</span>
+        </div>
+      </div>`;
+    };
+    const upSection = up5.length ? `
+      <div class="itc-mover-section-lbl itc-mover-section-up">▲ IN SALITA</div>
+      ${up5.map(t => mkRow(t, 'up')).join('')}` : '';
+    const dnSection = dn5.length ? `
+      <div class="itc-mover-section-lbl itc-mover-section-dn">▼ IN DISCESA</div>
+      ${dn5.map(t => mkRow(t, 'dn')).join('')}` : '';
     return `<div class="itc-card itc-movers-card">
       <div class="itc-card-hdr"><span class="itc-card-title">📈 TEAM MOVERS</span></div>
-      ${up3.map(t=>mkRow(t,'up')).join('')}
-      ${dn2.map(t=>mkRow(t,'dn')).join('')}
+      ${upSection}${dnSection}
     </div>`;
   }
 
@@ -4490,8 +4560,8 @@ async function renderHubBars() {
     ? `<div class="itc-dual">${buildFireCard(fireAthES1,es1Code,hubRankingES1||[],fireAthES1Photo)}${buildFireCard(fireAth,mainCat,hubRanking,fireAthPhoto)}</div>`
     : buildFireCard(fireAth,mainCat,hubRanking,fireAthPhoto);
   const _rRankHtml = isEsordienti
-    ? `<div class="itc-dual">${buildRankCard(hubRankingES1||[],es1Code,'1° Anno',_snapNowE1,_snap14agoE1)}${buildRankCard(hubRanking,mainCat,'2° Anno',_snapNow,_snap14ago)}</div>`
-    : buildRankCard(hubRanking,mainCat,'',_snapNow,_snap14ago);
+    ? `<div class="itc-dual">${buildRankCard(hubRankingES1||[],es1Code,'1° Anno',_snapNowE1,_snapBeforeLastE1)}${buildRankCard(hubRanking,mainCat,'2° Anno',_snapNow,_snapBeforeLast)}</div>`
+    : buildRankCard(hubRanking,mainCat,'',_snapNow,_snapBeforeLast);
   const _rMovHtml = isEsordienti
     ? `<div class="itc-dual">${buildMoversCard(moversES1,'1° Anno')}${buildMoversCard(movers,'2° Anno')}</div>`
     : buildMoversCard(movers,'');
@@ -4501,7 +4571,7 @@ async function renderHubBars() {
   // Team sections
   const _tFireHtml = buildTeamFireCard(_teamOfMoment, _teamOfMomentPhoto);
   const _tRankHtml = buildTeamRankCard(_teamRankNow);
-  const _tMovHtml  = buildTeamMoversCard(_teamRankNow);
+  const _tMovHtml  = buildTeamMoversCard(_teamRankFull);
   const _tVsHtml   = buildTeamVsCard(_teamRankNow);
   const _tFeedHtml = buildTeamFeedCard(_teamRankNow, hubResES2, mainCat);
 

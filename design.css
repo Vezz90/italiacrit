@@ -10447,8 +10447,34 @@ main.page:has(.itc-dash) {
 .itc-mover--up .itc-mover-icon { color: #10B981; }
 .itc-mover--dn .itc-mover-icon { color: #EF4444; }
 .itc-mover-info { flex: 1; min-width: 0; }
-.itc-mover-name { font-size: .73rem; font-weight: 700; color: var(--text-primary); }
-.itc-mover-detail { font-size: .58rem; color: var(--text-muted); }
+.itc-mover-name { font-size: .73rem; font-weight: 700; color: var(--text-primary); display: block; }
+.itc-mover-detail { font-size: .58rem; color: var(--text-muted); display: block; }
+
+/* ── Movers corposi — badge + pos-change ─────────────────────── */
+.itc-mover-section-lbl {
+  font-size: .58rem; font-weight: 800; letter-spacing: .06em;
+  padding: 5px 16px 3px;
+}
+.itc-mover-section-up { color: #10B981; }
+.itc-mover-section-dn { color: #EF4444; }
+
+.itc-mover-badge {
+  flex-shrink: 0;
+  min-width: 34px; text-align: center;
+  font-size: .65rem; font-weight: 900;
+  border-radius: 6px; padding: 3px 5px;
+}
+.itc-mover-badge--up { background: rgba(16,185,129,.15); color: #10B981; }
+.itc-mover-badge--dn { background: rgba(239,68,68,.12);  color: #EF4444; }
+
+.itc-mover-pos-wrap {
+  display: flex; align-items: center; gap: 3px;
+  flex-shrink: 0;
+  font-size: .65rem;
+}
+.itc-mover-prev-pos { color: var(--text-muted); font-weight: 600; }
+.itc-mover-arrow    { color: var(--text-muted); font-size: .55rem; }
+.itc-mover-now-pos  { font-weight: 800; }
 
 /* ── VS CARD ──────────────────────────────────────────────────── */
 .itc-vs-card {}
