@@ -4135,8 +4135,8 @@ async function renderHubBars() {
   // Full ranking per i movers (tutto il campo); top10 per la rank card
   const _hubRankFull   = await loadRanking(mainCat);
   const _hubRankES1Full= es1Code ? await loadRanking(es1Code) : null;
-  const hubRanking    = _hubRankFull.slice(0, 10);
-  const hubRankingES1 = _hubRankES1Full ? _hubRankES1Full.slice(0, 10) : null;
+  const hubRanking    = _hubRankFull.slice(0, 3);
+  const hubRankingES1 = _hubRankES1Full ? _hubRankES1Full.slice(0, 3) : null;
   const hubRes    = resultsRaw.filter(r=>r.genere===hub.gender&&hub.catCodes.includes(getRankingFileCode(r)));
   const hubResES2 = isEsordienti?hubRes.filter(r=>getRankingFileCode(r)===mainCat):hubRes;
   const hubResES1 = isEsordienti?hubRes.filter(r=>getRankingFileCode(r)===es1Code):[];
@@ -4224,7 +4224,7 @@ async function renderHubBars() {
 
   // ── Team ranking & movers ─────────────────────────────────────────
   const _teamRankFull       = computeTeamRanking(hubResES2, mainCat, null);
-  const _teamRankNow        = _teamRankFull.slice(0, 10);
+  const _teamRankNow        = _teamRankFull.slice(0, 3);
   const _teamRank14         = computeTeamRanking(hubResES2, mainCat, cut14);
   const _teamRankBeforeLast = computeTeamRanking(hubResES2, mainCat, lastDateES2);
   // Snapshot maps: team_id → posizione (full ranking for movers coverage)
@@ -5854,6 +5854,7 @@ async function updateRankTable() {
 
   let tableHtml = '';
   let countLabel = '';
+  let _rankPhotosQueue = null;
 
   // Se i filtri regione/mese sono attivi, ricalcoliamo dinamicamente dai risultati raw
   const isFiltered = rankRegion || rankMonth;
@@ -6124,6 +6125,7 @@ async function updateRankTable() {
       </tr>`;
     }).join('');
 
+    _rankPhotosQueue = displayList;
     tableHtml = storyHtml + sortBar + `
       <table class="ranking-table rk-table-narrative">
         <thead><tr>
@@ -6174,22 +6176,53 @@ async function updateRankTable() {
       teamRanking.forEach((t, i) => { t.pos = i+1; t.n_atleti = t.atleti.size; });
     }
 
+    // ── Trend team: snapshot prima dell'ultimo giorno di gara ──────
+    if (!isFiltered) {
+      const _tResRaw = globalData.resultsRaw.filter(r => getRankingFileCode(r) === rankCat);
+      const _tLastDate = _tResRaw.reduce((mx,r)=>(r.data||'')>mx?r.data:mx,'');
+      if (_tLastDate) {
+        const _snapNow    = Object.fromEntries(computeTeamRanking(_tResRaw, rankCat, null).map(t=>[t.team_id,t.pos]));
+        const _snapBefore = Object.fromEntries(computeTeamRanking(_tResRaw, rankCat, _tLastDate).map(t=>[t.team_id,t.pos]));
+        teamRanking.forEach(t => {
+          const now = _snapNow[t.team_id], old = _snapBefore[t.team_id];
+          t.trend = (now && old) ? old - now : null;
+        });
+      }
+    }
+
     const filtered = teamRanking.filter(t => {
       if (!rankFilter) return true;
       return (t.team_nome||'').toLowerCase().includes(rankFilter.toLowerCase());
     });
     countLabel = `${filtered.length} team`;
 
+    const leaderTeamPts = filtered[0]?.punti || 0;
     const rows = filtered.map((t, i) => {
       const pClass = posClass(t.pos);
+      const gap = i === 0
+        ? `<span class="rk-leader-tag">LEADER</span>`
+        : `<span class="rk-gap-label">−${leaderTeamPts - t.punti}</span>`;
       return `<tr class="ranking-row" style="animation-delay:${Math.min(i,20)*30}ms">
         <td><span class="rank-num ${pClass}">${t.pos}</span></td>
         <td style="text-align:center;width:40px">${renderTrend(t, false)}</td>
-        <td><span class="rank-name"><a href="#/team/${esc(t.team_id)}">${esc(t.team_nome)}</a></span></td>
-        <td class="r"><span class="rank-pts">${t.punti}</span></td>
+        <td>
+          <div class="rk-athlete-cell">
+            <div class="rk-athlete-name-row">
+              <span class="rk-tl-wrap" data-tid="${esc(t.team_id||'')}"></span>
+              <span class="rank-name"><a href="#/team/${esc(t.team_id)}">${esc(t.team_nome)}</a></span>
+            </div>
+          </div>
+        </td>
+        <td class="r">
+          <div class="rk-pts-cell">
+            <span class="rank-pts">${t.punti}</span>
+            ${gap}
+          </div>
+        </td>
         <td class="r hide-mobile" style="font-family:var(--font-mono);font-size:.85rem;color:var(--text-muted)">${t.n_atleti||0}</td>
       </tr>`;
     }).join('');
+    _rankPhotosQueue = filtered; // per logo team
 
     tableHtml = `
       <table class="ranking-table">
@@ -6206,28 +6239,34 @@ async function updateRankTable() {
 
   container.innerHTML = tableHtml;
   countSpan.textContent = countLabel;
-  if (rankView === 'atleti') _injectRankPhotos(displayList.slice(0, 60));
+  if (_rankPhotosQueue) _injectRankPhotos(_rankPhotosQueue.slice(0, 60));
 }
 
-async function _injectRankPhotos(athletes) {
-  if (!athletes || !athletes.length) return;
+async function _injectRankPhotos(items) {
+  if (!items || !items.length) return;
   const tableEl = document.querySelector('.ranking-table');
   if (!tableEl) return;
-  // Atleti — foto profilo (batch da 8 per non saturare la rete)
-  const batchSize = 8;
-  for (let i = 0; i < athletes.length; i += batchSize) {
-    if (!document.contains(tableEl)) return;
-    await Promise.all(athletes.slice(i, i + batchSize).map(async a => {
-      const span = tableEl.querySelector(`.rk-av-wrap[data-aid="${CSS.escape(a.atleta_id)}"]`);
-      if (!span) return;
-      const ov = await getEntityOverrides('atleta', a.atleta_id).catch(() => ({}));
-      if (ov.photo_url && document.contains(span))
-        span.innerHTML = `<img src="${MEDIA_BASE}${esc(ov.photo_url)}" alt="" class="rk-av-img" onerror="this.parentElement.style.display='none'">`;
-    }));
+
+  // Atleti — foto profilo (batch da 8)
+  const hasAthletes = items.some(a => a.atleta_id);
+  if (hasAthletes) {
+    const batchSize = 8;
+    for (let i = 0; i < items.length; i += batchSize) {
+      if (!document.contains(tableEl)) return;
+      await Promise.all(items.slice(i, i + batchSize).map(async a => {
+        if (!a.atleta_id) return;
+        const span = tableEl.querySelector(`.rk-av-wrap[data-aid="${CSS.escape(a.atleta_id)}"]`);
+        if (!span) return;
+        const ov = await getEntityOverrides('atleta', a.atleta_id).catch(() => ({}));
+        if (ov.photo_url && document.contains(span))
+          span.innerHTML = `<img src="${MEDIA_BASE}${esc(ov.photo_url)}" alt="" class="rk-av-img" onerror="this.parentElement.style.display='none'">`;
+      }));
+    }
   }
-  // Team — logo (carica per team unici, molto più rapido)
+
+  // Team — logo (team unici, sia classifica atleti che classifica team)
   if (!document.contains(tableEl)) return;
-  const teamIds = [...new Set(athletes.map(a => a.team_id).filter(Boolean))];
+  const teamIds = [...new Set(items.map(a => a.team_id || a.team_id).filter(Boolean))];
   await Promise.all(teamIds.map(async tid => {
     const ov = await getEntityOverrides('team', tid).catch(() => ({}));
     if (!ov.photo_url) return;
