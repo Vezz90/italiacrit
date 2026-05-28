@@ -4251,7 +4251,7 @@ async function renderHubBars() {
   let _teamOfMomentES1 = null, _teamOfMomentES1Photo = null;
   if (isEsordienti && es1Code) {
     _teamRankFullES1             = computeTeamRanking(hubResES1, es1Code, null);
-    _teamRankNowES1              = _teamRankFullES1.slice(0, 10);
+    _teamRankNowES1              = _teamRankFullES1.slice(0, 3);
     const _teamRank14ES1tmp      = computeTeamRanking(hubResES1, es1Code, cut14);
     const _teamRankBLES1tmp      = computeTeamRanking(hubResES1, es1Code, lastDateES1);
     _teamSnapNowES1              = Object.fromEntries(_teamRankFullES1.map(t=>[t.team_id,t.pos]));
