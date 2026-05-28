@@ -8803,16 +8803,14 @@ async function renderTeam(team_id) {
   window._shareTeamData = {nome:t.nome,cat:catLabel(teamViewCat),punti:catPuntiTotali,pos:currentRank?currentRank.pos:null,p1:p1,atleti:atletiList.slice(0,5)};
   setPage(`
     <div class="team-header">
-      <div class="profile-photo-row" style="display:flex;gap:20px;align-items:center">
+      <div class="team-header-identity">
         ${teamPhotoHtml}
-        <div style="min-width:0;overflow:hidden;flex:1">
-          <div style="display:flex;align-items:center;gap:10px;flex-wrap:wrap">
-            <div class="team-name-display">${esc(t.nome)}</div>
-            <span id="team-msg-btn"></span>
-          </div>
-          ${headerStats}
+        <div class="team-header-name-block">
+          <div class="team-name-display">${esc(t.nome)}</div>
+          <span id="team-msg-btn"></span>
         </div>
       </div>
+      ${headerStats}
     </div>
     <div style="margin-top:12px;display:flex;gap:10px;align-items:center;flex-wrap:wrap">
       <button class="btn-share" onclick="window.triggerShareTeam()"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="18" cy="5" r="3"/><circle cx="6" cy="12" r="3"/><circle cx="18" cy="19" r="3"/><line x1="8.59" y1="13.51" x2="15.42" y2="17.49"/><line x1="15.41" y1="6.51" x2="8.59" y2="10.49"/></svg> Condividi Team</button>

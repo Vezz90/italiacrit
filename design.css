@@ -1769,11 +1769,23 @@ a.hcal-row:hover {
   .athlete-stat { min-width: 72px; }
   .athlete-stat-val { font-size: 1.25rem !important; }
 
-  /* Nome e stats team */
-  .team-name-display { font-size: clamp(1.25rem, 5.5vw, 1.8rem) !important; margin-bottom: 10px; }
-  .team-stats-row { overflow-x: auto; flex-wrap: nowrap !important; padding-bottom: 4px; gap: 12px !important; }
-  .team-stat { min-width: 64px; flex-shrink: 0; }
-  .team-stat-val { font-size: 1.25rem !important; }
+  /* Nome e stats team — mobile */
+  .team-name-display { font-size: clamp(1.15rem, 5vw, 1.8rem) !important; margin-bottom: 10px; }
+  .team-header-identity { flex-direction: column !important; align-items: flex-start !important; gap: 12px !important; }
+  .team-header-identity .photo-area { width: 72px !important; height: 72px !important; }
+  /* Grid 3 colonne invece di scroll orizzontale */
+  .team-stats-row {
+    display: grid !important;
+    grid-template-columns: repeat(3, 1fr) !important;
+    overflow-x: unset !important;
+    flex-wrap: unset !important;
+    gap: 0 !important;
+    padding-bottom: 0 !important;
+  }
+  .team-stat { min-width: unset !important; flex-shrink: unset !important; padding: 10px 8px !important; border-right: 1px solid rgba(255,255,255,0.07); border-bottom: 1px solid rgba(255,255,255,0.07); }
+  .team-stat:nth-child(3n) { border-right: none !important; }
+  .team-stat-val { font-size: 1.2rem !important; }
+  .team-stat-label { font-size: 0.6rem !important; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
 
   .cal-item { grid-template-columns: 56px 1fr; }
   .cal-badges { display: none; }
@@ -3015,9 +3027,10 @@ div[style*="grid-template-columns: repeat(auto-fit"] {
   .td-hide-mobile { display: none !important; }
   .td-team-mobile { display: block; font-size: 0.85rem; }
   .td-pos { font-size: 1rem !important; }
-  .team-stats-row { overflow-x: auto; flex-wrap: nowrap !important; -webkit-overflow-scrolling: touch; padding-bottom: 6px; gap: 12px !important; }
-  .team-stat { min-width: 60px; flex-shrink: 0; }
-  .team-name-display { font-size: clamp(1.1rem, 4vw, 1.8rem) !important; }
+  .team-stats-row { display: grid !important; grid-template-columns: repeat(3, 1fr) !important; overflow-x: unset !important; -webkit-overflow-scrolling: unset !important; flex-wrap: unset !important; gap: 0 !important; padding-bottom: 0 !important; }
+  .team-stat { min-width: unset !important; flex-shrink: unset !important; padding: 9px 6px !important; }
+  .team-stat-val { font-size: 1.1rem !important; }
+  .team-name-display { font-size: clamp(1rem, 4.5vw, 1.5rem) !important; }
 }
 
 /* ── HOME v9 — Ticker, Trending, Matchup, Hero Editorial ──────── */
@@ -4631,7 +4644,21 @@ div[style*="grid-template-columns: repeat(auto-fit"] {
   color: #fff !important;
   text-transform: uppercase !important;
   letter-spacing: -0.03em !important;
-  line-height: 1 !important;
+  line-height: 1.05 !important;
+  word-break: break-word !important;
+  overflow-wrap: break-word !important;
+  hyphens: auto !important;
+}
+/* Identity row: photo + name side-by-side on desktop */
+.team-header-identity {
+  display: flex;
+  gap: 20px;
+  align-items: center;
+  margin-bottom: 20px;
+}
+.team-header-name-block {
+  flex: 1;
+  min-width: 0;
 }
 .team-stats-row {
   border-top: 1px solid rgba(255,255,255,0.08) !important;
@@ -4640,6 +4667,8 @@ div[style*="grid-template-columns: repeat(auto-fit"] {
   margin-right: clamp(-16px, -4vw, -64px) !important;
   padding-left: clamp(16px, 4vw, 64px) !important;
   padding-right: clamp(16px, 4vw, 64px) !important;
+  padding-top: 6px !important;
+  padding-bottom: 6px !important;
 }
 
 /* ── D) Cinematic race-header (gara page) ───────────────────── */
@@ -4786,11 +4815,23 @@ div[style*="grid-template-columns: repeat(auto-fit"] {
     padding-left: 16px !important;
     padding-right: 16px !important;
   }
+  .team-header-identity {
+    flex-direction: column !important;
+    align-items: flex-start !important;
+    gap: 12px !important;
+    margin-bottom: 16px !important;
+  }
+  .team-header-identity .photo-area {
+    width: 72px !important;
+    height: 72px !important;
+  }
   .team-stats-row {
     margin-left: -16px !important;
     margin-right: -16px !important;
-    padding-left: 16px !important;
-    padding-right: 16px !important;
+    padding-left: 0 !important;
+    padding-right: 0 !important;
+    padding-top: 0 !important;
+    padding-bottom: 0 !important;
   }
   .pg-header {
     margin: -20px -16px 28px;
