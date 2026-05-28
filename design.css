@@ -4716,14 +4716,18 @@ div[style*="grid-template-columns: repeat(auto-fit"] {
   background: #0F172A !important;
 }
 .ranking-table thead th {
-  color: rgba(255,255,255,0.82) !important;
-  font-size: 0.6rem !important;
-  font-weight: 800 !important;
-  letter-spacing: 0.15em !important;
+  color: rgba(255,255,255,0.96) !important;
+  font-size: 0.7rem !important;
+  font-weight: 700 !important;
+  letter-spacing: 0.08em !important;
   text-transform: uppercase !important;
-  padding: 12px 8px !important;
-  border-bottom: 1px solid rgba(255,255,255,0.15) !important;
+  padding: 11px 8px !important;
+  border-bottom: 1px solid rgba(255,255,255,0.18) !important;
+  text-align: left !important;
 }
+/* Allinea ↕ header al centro come la cella */
+.ranking-table thead th:nth-child(2) { text-align: center !important; }
+/* PUNTI header già gestito da th.r → text-align:right in style.css */
 
 /* ── F) Calendar item editorial style ───────────────────────── */
 .cal-item {
@@ -10941,17 +10945,17 @@ main.page:has(.itc-dash) {
 /* ── Ranking — avatar atleta + logo team (solo desktop) ────────── */
 .rk-av-wrap {
   display: inline-flex; align-items: center; justify-content: center;
-  width: 28px; height: 28px; flex-shrink: 0; margin-right: 8px;
+  width: 34px; height: 34px; flex-shrink: 0; margin-right: 10px;
   vertical-align: middle;
 }
 .rk-av-img {
-  width: 28px; height: 28px; border-radius: 50%; object-fit: cover;
-  border: 1.5px solid var(--border-subtle); display: block;
+  width: 34px; height: 34px; border-radius: 50%; object-fit: cover;
+  border: 2px solid var(--border-subtle); display: block;
 }
 .rk-tl-wrap {
-  display: inline-flex; align-items: center; vertical-align: middle; margin-right: 5px;
+  display: inline-flex; align-items: center; vertical-align: middle; margin-right: 7px;
 }
-.rk-tl-img { width: 20px; height: 20px; border-radius: 3px; object-fit: contain; display: block; }
+.rk-tl-img { width: 24px; height: 24px; border-radius: 4px; object-fit: contain; display: block; }
 
 /* ═══════════════════════════════════════════════════════════════
    GAMIFICATION SYSTEM
