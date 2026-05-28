@@ -4127,8 +4127,7 @@ async function renderHubBars() {
   const _snapNowE1        = es1Code?computeRankSnapshot(hubResES1,es1Code,null):{};
   const _snapBeforeLastE1 = es1Code?computeRankSnapshot(hubResES1,es1Code,lastDateES1):{};
   // ── Movers: usa snapshot before-last (= logica identica alla classifica page) ──
-  function computeMovers(ranking, snapNow, snapBefore) {
-    // ranking = array completo (non limitato a top10) per trovare i maggiori salitori/scesori
+  function computeMovers(ranking, snapNow, snapBefore, posLimit = 30) {
     const list = ranking.map(a => {
       const now = snapNow[a.atleta_id], old = snapBefore[a.atleta_id];
       if (!now || !old) return null;
@@ -4137,8 +4136,10 @@ async function renderHubBars() {
                team:a.team_attuale||a.team||'', pos:now, gain, pts:a.punti||0 };
     }).filter(Boolean);
     return {
-      up: list.filter(m => m.gain >= 1).sort((a,b) => b.gain - a.gain).slice(0, 5),
-      dn: list.filter(m => m.gain <= -1).sort((a,b) => a.gain - b.gain).slice(0, 5),
+      // UP: arrivati/rimasti dentro top posLimit
+      up: list.filter(m => m.gain >= 1 && m.pos <= posLimit).sort((a,b) => b.gain - a.gain).slice(0, 5),
+      // DOWN: erano dentro top posLimit e sono scesi
+      dn: list.filter(m => m.gain <= -1 && (m.pos - m.gain) <= posLimit).sort((a,b) => a.gain - b.gain).slice(0, 5),
     };
   }
   // Usa il ranking COMPLETO per i movers (non limitato a top10)
@@ -4541,13 +4542,16 @@ async function renderHubBars() {
   function buildTeamMoversCard(teamRank, snapNow, snapBefore, title) {
     const sNow = snapNow   || _teamSnapNow;
     const sBef = snapBefore|| _teamSnapBeforeLast;
+    const TEAM_POS_LIMIT = 20;
     const up = [], dn = [];
     for (const t of teamRank) {
       const now = sNow[t.team_id], old = sBef[t.team_id];
       if (!now || !old) continue;
       const gain = old - now;
-      if (gain >= 1)       up.push({ ...t, gain, pos: now });
-      else if (gain <= -1) dn.push({ ...t, gain, pos: now });
+      // UP: arrivati dentro top 20
+      if (gain >= 1 && now <= TEAM_POS_LIMIT) up.push({ ...t, gain, pos: now });
+      // DOWN: erano in top 20 e sono scesi
+      else if (gain <= -1 && (now - gain) <= TEAM_POS_LIMIT) dn.push({ ...t, gain, pos: now });
     }
     up.sort((a,b)=>b.gain-a.gain); dn.sort((a,b)=>a.gain-b.gain);
     const up5 = up.slice(0, 5), dn5 = dn.slice(0, 5);
