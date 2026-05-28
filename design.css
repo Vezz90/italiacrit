@@ -1234,7 +1234,8 @@ table, .rank-num, .rank-pts, .cat-pts,
 }
 
 /* ── TD-P (posizioni spaccate) ──────────────────────────────────── */
-.td-p-wrap { font-family: 'Inter', system-ui, sans-serif; font-size: 0.8125rem; }
+.td-p-wrap { font-family: 'Inter', system-ui, sans-serif; font-size: 0.8125rem; display: flex; gap: 10px; justify-content: center; }
+.ranking-table td:nth-child(6) { text-align: center; }
 .td-p.p1 { color: #D97706; }
 .td-p.p2 { color: #6B7280; }
 .td-p.p3 { color: #92400E; }
@@ -4713,21 +4714,22 @@ div[style*="grid-template-columns: repeat(auto-fit"] {
 
 /* ── E) Ranking table editorial style ───────────────────────── */
 .ranking-table thead tr {
-  background: #0F172A !important;
+  background: var(--bg-elevated) !important;
 }
 .ranking-table thead th {
-  color: rgba(255,255,255,0.96) !important;
+  color: var(--text-primary) !important;
   font-size: 0.7rem !important;
   font-weight: 700 !important;
-  letter-spacing: 0.08em !important;
+  letter-spacing: 0.06em !important;
   text-transform: uppercase !important;
   padding: 11px 8px !important;
-  border-bottom: 1px solid rgba(255,255,255,0.18) !important;
+  border-bottom: 2px solid var(--border-subtle) !important;
   text-align: left !important;
 }
-/* Allinea ↕ header al centro come la cella */
+/* ↕ centrato come la cella */
 .ranking-table thead th:nth-child(2) { text-align: center !important; }
-/* PUNTI header già gestito da th.r → text-align:right in style.css */
+/* 1°/2°/3°/TOP10 centrato sopra i dati */
+.ranking-table thead th:nth-child(6) { text-align: center !important; }
 
 /* ── F) Calendar item editorial style ───────────────────────── */
 .cal-item {
