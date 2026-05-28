@@ -6097,6 +6097,7 @@ async function updateRankTable() {
         <td>
           <div class="rk-athlete-cell">
             <div class="rk-athlete-name-row">
+              <span class="rk-av-wrap hide-mobile" data-aid="${esc(r.atleta_id)}"></span>
               <span class="rank-name"><a href="#/atleta/${esc(r.atleta_id)}">${esc(r.cognome)} ${esc(r.nome)}</a></span>
               ${badgeHtml}
             </div>
@@ -6105,7 +6106,7 @@ async function updateRankTable() {
             ${extraHtml}
           </div>
         </td>
-        <td class="hide-mobile"><a href="#/team/${esc(r.team_id)}" style="color:var(--text-secondary);font-size:.85rem">${esc(r.team_nome)}</a></td>
+        <td class="hide-mobile rk-team-cell"><span class="rk-tl-wrap" data-tid="${esc(r.team_id||'')}"></span><a href="#/team/${esc(r.team_id)}" style="color:var(--text-secondary);font-size:.85rem">${esc(r.team_nome)}</a></td>
         <td class="r">
           <div class="rk-pts-cell">
             <span class="rank-pts">${r.punti}</span>
@@ -6205,6 +6206,36 @@ async function updateRankTable() {
 
   container.innerHTML = tableHtml;
   countSpan.textContent = countLabel;
+  if (rankView === 'atleti') _injectRankPhotos(displayList.slice(0, 60));
+}
+
+async function _injectRankPhotos(athletes) {
+  if (!athletes || !athletes.length) return;
+  const tableEl = document.querySelector('.ranking-table');
+  if (!tableEl) return;
+  // Atleti — foto profilo (batch da 8 per non saturare la rete)
+  const batchSize = 8;
+  for (let i = 0; i < athletes.length; i += batchSize) {
+    if (!document.contains(tableEl)) return;
+    await Promise.all(athletes.slice(i, i + batchSize).map(async a => {
+      const span = tableEl.querySelector(`.rk-av-wrap[data-aid="${CSS.escape(a.atleta_id)}"]`);
+      if (!span) return;
+      const ov = await getEntityOverrides('atleta', a.atleta_id).catch(() => ({}));
+      if (ov.photo_url && document.contains(span))
+        span.innerHTML = `<img src="${MEDIA_BASE}${esc(ov.photo_url)}" alt="" class="rk-av-img" onerror="this.parentElement.style.display='none'">`;
+    }));
+  }
+  // Team — logo (carica per team unici, molto più rapido)
+  if (!document.contains(tableEl)) return;
+  const teamIds = [...new Set(athletes.map(a => a.team_id).filter(Boolean))];
+  await Promise.all(teamIds.map(async tid => {
+    const ov = await getEntityOverrides('team', tid).catch(() => ({}));
+    if (!ov.photo_url) return;
+    tableEl.querySelectorAll(`.rk-tl-wrap[data-tid="${CSS.escape(tid)}"]`).forEach(span => {
+      if (document.contains(span))
+        span.innerHTML = `<img src="${MEDIA_BASE}${esc(ov.photo_url)}" alt="" class="rk-tl-img" onerror="this.remove()">`;
+    });
+  }));
 }
 
 // ── ADMIN DASHBOARD ──────────────────────────────────────────
