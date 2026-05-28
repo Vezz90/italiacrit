@@ -12896,41 +12896,54 @@ async function _getLogo() {
   });
 }
 function _bg(ctx, W, H) {
-  const g = ctx.createLinearGradient(0,0,W,H);
-  g.addColorStop(0,'#0f0f13'); g.addColorStop(1,'#1a1a22');
-  ctx.fillStyle = g; ctx.fillRect(0,0,W,H);
-  ctx.save(); ctx.globalAlpha=0.025; ctx.strokeStyle='#fff'; ctx.lineWidth=1;
-  for(let i=-H;i<W+H;i+=14){ctx.beginPath();ctx.moveTo(i,0);ctx.lineTo(i+H,H);ctx.stroke();}
+  // Deep navy gradient
+  const g = ctx.createLinearGradient(0, 0, W * 0.4, H);
+  g.addColorStop(0, '#0c1228'); g.addColorStop(1, '#0f1a35');
+  ctx.fillStyle = g; ctx.fillRect(0, 0, W, H);
+  // Subtle dot grid texture
+  ctx.save(); ctx.globalAlpha = 0.042; ctx.fillStyle = '#ffffff';
+  const ds = Math.round(W * 0.028);
+  for (let x = ds; x < W; x += ds)
+    for (let y = ds; y < H; y += ds) { ctx.beginPath(); ctx.arc(x, y, 1.2, 0, Math.PI * 2); ctx.fill(); }
   ctx.restore();
+  // Left accent stripe
+  const sg = ctx.createLinearGradient(0, 0, Math.round(W * 0.005), 0);
+  sg.addColorStop(0, 'rgba(232,0,29,0.55)'); sg.addColorStop(1, 'transparent');
+  ctx.fillStyle = sg; ctx.fillRect(0, 0, Math.round(W * 0.005), H);
 }
 function _header(ctx, logo, W, H) {
-  const bH = Math.round(H*0.09);
-  const g = ctx.createLinearGradient(0,0,W,0);
-  g.addColorStop(0,'#e8001d'); g.addColorStop(1,'#9b0013');
-  ctx.fillStyle=g; ctx.fillRect(0,0,W,bH);
+  const bH = Math.round(H * 0.09);
+  // Dark semi-transparent bar
+  ctx.fillStyle = 'rgba(0,0,0,0.52)'; ctx.fillRect(0, 0, W, bH);
+  // Accent line at bottom (red → gold → transparent)
+  const lineG = ctx.createLinearGradient(0, 0, W, 0);
+  lineG.addColorStop(0, '#e8001d'); lineG.addColorStop(0.42, '#f5c400'); lineG.addColorStop(1, 'rgba(245,196,0,0)');
+  ctx.fillStyle = lineG; ctx.fillRect(0, bH - 3, W, 3);
   if (logo) {
-    const lH=Math.round(bH*0.72), lW=Math.round(lH*logo.naturalWidth/logo.naturalHeight);
-    ctx.drawImage(logo,16,Math.round((bH-lH)/2),lW,lH);
+    const lH = Math.round(bH * 0.68), lW = Math.round(lH * logo.naturalWidth / logo.naturalHeight);
+    ctx.drawImage(logo, 16, Math.round((bH - lH) / 2), lW, lH);
   }
-  const fs=Math.round(bH*0.3);
-  ctx.font=`700 ${fs}px 'Barlow Condensed',sans-serif`;
-  ctx.fillStyle='rgba(255,255,255,0.9)'; ctx.textAlign='right';
-  ctx.fillText('ITALIACRIT',W-16,Math.round(bH*0.6));
-  ctx.font=`400 ${Math.round(fs*0.52)}px 'Barlow Condensed',sans-serif`;
-  ctx.fillStyle='rgba(255,255,255,0.45)';
-  ctx.fillText(SHARE_URL,W-16,Math.round(bH*0.87));
-  ctx.textAlign='left';
+  const fs = Math.round(bH * 0.31);
+  ctx.font = `800 ${fs}px 'Barlow Condensed',sans-serif`;
+  ctx.fillStyle = 'rgba(255,255,255,0.92)'; ctx.textAlign = 'right';
+  ctx.fillText('ITALIACRIT', W - 16, Math.round(bH * 0.6));
+  ctx.font = `400 ${Math.round(fs * 0.52)}px 'Barlow Condensed',sans-serif`;
+  ctx.fillStyle = 'rgba(255,255,255,0.38)';
+  ctx.fillText(SHARE_URL, W - 16, Math.round(bH * 0.87));
+  ctx.textAlign = 'left';
 }
 function _footer(ctx, W, H) {
-  const fH=Math.round(H*0.06); const y=H-fH;
-  ctx.fillStyle='rgba(0,0,0,0.75)'; ctx.fillRect(0,y,W,fH);
-  const s=3; ctx.fillStyle='#009246'; ctx.fillRect(0,y,W/3,s);
-  ctx.fillStyle='#fff'; ctx.fillRect(W/3,y,W/3,s);
-  ctx.fillStyle='#ce2b37'; ctx.fillRect(2*W/3,y,W/3,s);
-  ctx.font=`500 ${Math.round(fH*0.32)}px 'Barlow Condensed',sans-serif`;
-  ctx.fillStyle='rgba(255,255,255,0.38)'; ctx.textAlign='center';
-  ctx.fillText(SHARE_TAG,W/2,y+Math.round(fH*0.66));
-  ctx.textAlign='left';
+  const fH = Math.round(H * 0.06); const y = H - fH;
+  ctx.fillStyle = 'rgba(0,0,0,0.62)'; ctx.fillRect(0, y, W, fH);
+  // Italian tricolore strip at top of footer
+  const s = 3;
+  ctx.fillStyle = '#009246'; ctx.fillRect(0, y, Math.round(W / 3), s);
+  ctx.fillStyle = '#f0f0ee'; ctx.fillRect(Math.round(W / 3), y, Math.round(W / 3), s);
+  ctx.fillStyle = '#ce2b37'; ctx.fillRect(Math.round(2 * W / 3), y, W - Math.round(2 * W / 3), s);
+  ctx.font = `500 ${Math.round(fH * 0.31)}px 'Barlow Condensed',sans-serif`;
+  ctx.fillStyle = 'rgba(255,255,255,0.3)'; ctx.textAlign = 'center';
+  ctx.fillText(SHARE_TAG, W / 2, y + Math.round(fH * 0.67));
+  ctx.textAlign = 'left';
 }
 function _wrap(ctx, txt, x, y, maxW, lH) {
   const words=txt.split(' '); let line='';
@@ -12943,52 +12956,123 @@ function _wrap(ctx, txt, x, y, maxW, lH) {
   return y+lH;
 }
 
-// ── GARA CARD (top 10 + team) ──────────────────────────────
+// ── GARA CARD v4 — medal circles + surname-bold layout ──────
 function _drawGara(ctx, W, H, d) {
   const { name, date, cat, mult, tipo, results } = d;
-  const hB=Math.round(H*0.09), fB=Math.round(H*0.06), pad=Math.round(W*0.048);
-  let y = hB + Math.round(H*0.04);
+  const hB = Math.round(H * 0.09), fB = Math.round(H * 0.06), pad = Math.round(W * 0.048);
+  let y = hB + Math.round(H * 0.024);
 
-  // Nome gara
-  const fsT = Math.round(W*(name.length>35?0.034:name.length>20?0.042:0.052));
-  ctx.font=`900 ${fsT}px 'Bebas Neue',Impact,sans-serif`; ctx.fillStyle='#f0f0f0';
-  y = _wrap(ctx, name.toUpperCase(), pad, y+fsT, W-pad*2, fsT*1.08);
+  // ── Race name ──
+  const fsT = Math.round(W * (name.length > 38 ? 0.042 : name.length > 24 ? 0.052 : 0.064));
+  ctx.font = `900 ${fsT}px 'Bebas Neue',Impact,sans-serif`; ctx.fillStyle = '#ffffff';
+  y = _wrap(ctx, name.toUpperCase(), pad, y + fsT, W - pad * 2, fsT * 1.07);
+  y += Math.round(H * 0.006);
 
-  // Meta: data · cat · moltiplicatore
-  const fsM=Math.round(W*0.024);
-  ctx.font=`600 ${fsM}px 'Barlow Condensed',sans-serif`; ctx.fillStyle='#e8001d';
-  ctx.fillText(`${date}  ·  ${cat}  ·  ×${mult}  ·  ${tipo}`, pad, y);
-  y += fsM*1.5;
-  ctx.fillStyle='rgba(232,0,29,0.25)'; ctx.fillRect(pad,y,W-pad*2,1); y+=8;
+  // ── Meta pill ──
+  const fsMeta = Math.round(W * 0.021);
+  ctx.font = `600 ${fsMeta}px 'Barlow Condensed',sans-serif`;
+  const metaTxt = `${date}  ·  ${cat}  ·  ×${mult}`;
+  const pillW = ctx.measureText(metaTxt).width + Math.round(W * 0.032);
+  const pillH = Math.round(fsMeta * 1.85);
+  ctx.fillStyle = 'rgba(232,0,29,0.14)'; ctx.strokeStyle = 'rgba(232,0,29,0.32)'; ctx.lineWidth = 1;
+  if (ctx.roundRect) { ctx.beginPath(); ctx.roundRect(pad, y, pillW, pillH, 4); ctx.fill(); ctx.stroke(); }
+  else { ctx.fillRect(pad, y, pillW, pillH); }
+  ctx.fillStyle = '#e8001d';
+  ctx.fillText(metaTxt, pad + Math.round(W * 0.016), y + Math.round(pillH * 0.68));
+  y += pillH + Math.round(H * 0.015);
 
-  // Top 10 rows
-  const listH = H - fB - y - 4;
+  // ── Accent divider ──
+  const divG = ctx.createLinearGradient(pad, 0, W - pad, 0);
+  divG.addColorStop(0, 'rgba(232,0,29,0.75)'); divG.addColorStop(0.5, 'rgba(245,196,0,0.4)'); divG.addColorStop(1, 'transparent');
+  ctx.fillStyle = divG; ctx.fillRect(pad, y, W - pad * 2, 2);
+  y += Math.round(H * 0.015);
+
+  // ── Results list ──
+  const listH = H - fB - y - Math.round(H * 0.006);
   const maxR = Math.min(results.length, 10);
   const rH = Math.round(listH / maxR);
-  const posCol=['#f5c400','#b0b0b0','#cd7f32'];
-  const fsPos=Math.round(rH*0.52), fsName=Math.round(rH*0.33), fsTeam=Math.round(rH*0.23), fsPts=Math.round(rH*0.42);
+  const medalBg = ['#f5c400', '#c8c8c8', '#cd7f32'];
+  const medalFg = ['#1a1200', '#1a1a1a', '#2a1500'];
 
   results.slice(0, maxR).forEach((r, i) => {
-    const ry = y + i*rH;
-    // BG alternato
-    if (i%2===0){ctx.fillStyle='rgba(255,255,255,0.022)';ctx.fillRect(pad,ry,W-pad*2,rH);}
-    // BG speciale top 3
-    if (i<3){ctx.fillStyle=`rgba(${i===0?'245,196,0':i===1?'176,176,176':'205,127,50'},0.06)`;ctx.fillRect(pad,ry,W-pad*2,rH);}
-    // Posizione
-    ctx.font=`900 ${fsPos}px 'Bebas Neue',Impact,sans-serif`;
-    ctx.fillStyle=i<3?posCol[i]:'rgba(255,255,255,0.25)';
-    ctx.fillText(i+1, pad+4, ry+rH*0.7);
-    const posW=ctx.measureText('00').width+10;
-    // Nome atleta
-    ctx.font=`700 ${fsName}px 'Barlow Condensed',sans-serif`; ctx.fillStyle='#f0f0f0';
-    ctx.fillText((`${r.cognome||''} ${r.nome||''}`).toUpperCase().substring(0,28), pad+posW, ry+rH*0.44);
-    // Team
-    ctx.font=`400 ${fsTeam}px 'Barlow Condensed',sans-serif`; ctx.fillStyle='#666';
-    ctx.fillText((r.team||'').substring(0,32), pad+posW, ry+rH*0.76);
-    // Punti
-    ctx.font=`900 ${fsPts}px 'Bebas Neue',Impact,sans-serif`; ctx.fillStyle='#f5c400'; ctx.textAlign='right';
-    ctx.fillText(`${r.punti_effettivi||0}pt`, W-pad, ry+rH*0.66);
-    ctx.textAlign='left';
+    const ry = y + i * rH;
+    const isTop3 = i < 3;
+
+    // Row background
+    if (isTop3) {
+      ctx.fillStyle = `rgba(${i===0?'245,196,0':i===1?'200,200,200':'205,127,50'},${[0.08,0.05,0.035][i]})`;
+      ctx.fillRect(pad, ry + 1, W - pad * 2, rH - 2);
+    } else if (i % 2 === 0) {
+      ctx.fillStyle = 'rgba(255,255,255,0.016)'; ctx.fillRect(pad, ry, W - pad * 2, rH);
+    }
+
+    // Medal / position circle
+    const circR = Math.round(rH * (isTop3 ? 0.37 : 0.28));
+    const cx = pad + circR + Math.round(W * 0.004);
+    const cy = Math.round(ry + rH / 2);
+    ctx.beginPath(); ctx.arc(cx, cy, circR, 0, Math.PI * 2);
+    if (isTop3) {
+      const mg = ctx.createRadialGradient(cx - circR * 0.28, cy - circR * 0.28, 0, cx, cy, circR);
+      mg.addColorStop(0, i===0?'#ffe566':i===1?'#eeeeee':'#e09050');
+      mg.addColorStop(1, medalBg[i]);
+      ctx.fillStyle = mg;
+    } else {
+      ctx.fillStyle = 'rgba(255,255,255,0.07)';
+    }
+    ctx.fill();
+
+    // Position number in circle
+    const fsPos = Math.round(circR * (isTop3 ? 1.2 : 1.05));
+    ctx.font = `900 ${fsPos}px 'Bebas Neue',Impact,sans-serif`; ctx.textAlign = 'center';
+    ctx.fillStyle = isTop3 ? medalFg[i] : 'rgba(255,255,255,0.38)';
+    ctx.fillText(String(i + 1), cx, cy + fsPos * 0.37);
+    ctx.textAlign = 'left';
+
+    // Name layout — surname bold, first name lighter inline
+    const nameX = pad + circR * 2 + Math.round(W * 0.03);
+    const ptsAreaW = Math.round(W * 0.165);
+    const nameMaxW = W - pad - nameX - ptsAreaW;
+    const fsSur = Math.round(rH * (isTop3 ? 0.37 : 0.34));
+
+    // Surname (bold, uppercase)
+    ctx.font = `800 ${fsSur}px 'Barlow Condensed',sans-serif`;
+    ctx.fillStyle = isTop3 ? '#ffffff' : 'rgba(255,255,255,0.82)';
+    let cog = (r.cognome || '').toUpperCase();
+    while (ctx.measureText(cog).width > nameMaxW - 8 && cog.length > 3) cog = cog.slice(0, -1);
+    const cogW = ctx.measureText(cog).width;
+    ctx.fillText(cog, nameX, cy - Math.round(rH * 0.05));
+
+    // First name (lighter, inline after surname)
+    const fsNom = Math.round(fsSur * 0.7);
+    ctx.font = `400 ${fsNom}px 'Barlow Condensed',sans-serif`;
+    ctx.fillStyle = isTop3 ? 'rgba(255,255,255,0.52)' : 'rgba(255,255,255,0.32)';
+    const nomStr = ' ' + (r.nome || '').substring(0, 14);
+    if (nameX + cogW + ctx.measureText(nomStr).width <= nameX + nameMaxW) {
+      ctx.fillText(nomStr, nameX + cogW, cy - Math.round(rH * 0.05));
+    }
+
+    // Team (small, muted)
+    const fsTm = Math.round(rH * 0.21);
+    ctx.font = `400 ${fsTm}px 'Barlow Condensed',sans-serif`;
+    ctx.fillStyle = 'rgba(255,255,255,0.28)';
+    ctx.fillText((r.team || '').substring(0, 32), nameX, cy + Math.round(rH * 0.35));
+
+    // Points — right-aligned, medal colour for top 3
+    const fsPts = Math.round(rH * (isTop3 ? 0.5 : 0.44));
+    ctx.font = `900 ${fsPts}px 'Bebas Neue',Impact,sans-serif`; ctx.textAlign = 'right';
+    ctx.fillStyle = isTop3 ? (i===0?'#f5c400':i===1?'#d8d8d8':'#e09050') : 'rgba(255,255,255,0.42)';
+    ctx.fillText(String(r.punti_effettivi || 0), W - pad, cy + fsPts * 0.32);
+    const fsPtLbl = Math.round(fsPts * 0.3);
+    ctx.font = `600 ${fsPtLbl}px 'Barlow Condensed',sans-serif`;
+    ctx.fillStyle = 'rgba(255,255,255,0.2)';
+    ctx.fillText('pt', W - pad, cy + fsPts * 0.32 + fsPtLbl * 1.2);
+    ctx.textAlign = 'left';
+
+    // Row separator (4th place onwards)
+    if (i >= 3 && i < maxR - 1) {
+      ctx.fillStyle = 'rgba(255,255,255,0.04)';
+      ctx.fillRect(nameX, ry + rH - 1, W - pad - nameX, 1);
+    }
   });
 }
 
