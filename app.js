@@ -9723,7 +9723,7 @@ async function renderGara(gara_id) {
       ${_gallery}
     </div>`;
 
-  window._shareGaraData = {name:name,date:fmtDate(data),cat:catLabel(cat),mult:mult,tipo:tipo,results:results1.slice(0,10).map(r=>({cognome:r.cognome,nome:r.nome,team:r.team,punti_effettivi:r.punti_effettivi}))};
+  window._shareGaraData = {name:name,date:fmtDate(data),cat:catLabel(cat),mult:mult,tipo:tipo,km:results1[0]?.km||'',media:results1[0]?.media||'',results:results1.slice(0,10).map(r=>({cognome:r.cognome,nome:r.nome,team:r.team,punti_effettivi:r.punti_effettivi}))};
 
   const siRaceIntelHtml = '';
 
@@ -12960,20 +12960,19 @@ function _wrap(ctx, txt, x, y, maxW, lH) {
   return y+lH;
 }
 
-// ── GARA CARD v5 — UCI-inspired, no points, big logo ─────────
+// ── GARA CARD v6 — UCI-inspired, no points, big names ────────
 function _drawGara(ctx, W, H, d, logo) {
-  const { name, date, cat, mult, tipo, results } = d;
+  const { name, date, cat, mult, tipo, km, media, results } = d;
   const pad = Math.round(W * 0.048);
 
-  // ── Custom event header (bigger logo, centred) ──
-  const hH = Math.round(H * 0.145);
+  // ── Custom event header (logo centred, tall) ──
+  const hH = Math.round(H * 0.13);
   ctx.fillStyle = 'rgba(0,0,0,0.5)'; ctx.fillRect(0, 0, W, hH);
-  // red→gold accent line at bottom
   const hLineG = ctx.createLinearGradient(0, 0, W, 0);
   hLineG.addColorStop(0, '#e8001d'); hLineG.addColorStop(0.45, '#f5c400'); hLineG.addColorStop(1, 'transparent');
   ctx.fillStyle = hLineG; ctx.fillRect(0, hH - 3, W, 3);
   if (logo) {
-    const lH = Math.round(hH * 0.74);
+    const lH = Math.round(hH * 0.75);
     const lW = Math.round(lH * logo.naturalWidth / logo.naturalHeight);
     ctx.drawImage(logo, Math.round((W - lW) / 2), Math.round((hH - lH) / 2), lW, lH);
   } else {
@@ -12982,33 +12981,48 @@ function _drawGara(ctx, W, H, d, logo) {
     ctx.fillStyle = '#ffffff'; ctx.textAlign = 'center';
     ctx.fillText('ITALIACRIT', W / 2, Math.round(hH * 0.64)); ctx.textAlign = 'left';
   }
-  // URL — bottom-right, small
-  const fsUrl = Math.round(hH * 0.13);
+  const fsUrl = Math.round(hH * 0.12);
   ctx.font = `400 ${fsUrl}px 'Barlow Condensed',sans-serif`;
-  ctx.fillStyle = 'rgba(255,255,255,0.28)'; ctx.textAlign = 'right';
+  ctx.fillStyle = 'rgba(255,255,255,0.26)'; ctx.textAlign = 'right';
   ctx.fillText(SHARE_URL, W - pad, hH - Math.round(hH * 0.09)); ctx.textAlign = 'left';
 
-  let y = hH + Math.round(H * 0.018);
+  let y = hH + Math.round(H * 0.016);
 
   // ── Race name ──
   const fsT = Math.round(W * (name.length > 38 ? 0.044 : name.length > 24 ? 0.054 : 0.066));
   ctx.font = `900 ${fsT}px 'Bebas Neue',Impact,sans-serif`; ctx.fillStyle = '#ffffff';
   y = _wrap(ctx, name.toUpperCase(), pad, y + fsT, W - pad * 2, fsT * 1.07);
-  y += Math.round(H * 0.004);
+  y += Math.round(H * 0.003);
 
-  // ── Date · category meta ──
-  const fsMeta = Math.round(W * 0.022);
-  ctx.font = `600 ${fsMeta}px 'Barlow Condensed',sans-serif`;
-  ctx.fillStyle = 'rgba(232,0,29,0.9)';
-  ctx.fillText(`${date}  ·  ${cat}  ·  ×${mult}`, pad, y); y += fsMeta * 1.35;
+  // ── Category (prominent) ──
+  const fsCat = Math.round(W * 0.028);
+  ctx.font = `700 ${fsCat}px 'Barlow Condensed',sans-serif`;
+  ctx.fillStyle = '#e8001d';
+  ctx.fillText(cat.toUpperCase(), pad, y);
+  const catW2 = ctx.measureText(cat.toUpperCase()).width;
+  ctx.font = `500 ${Math.round(fsCat * 0.82)}px 'Barlow Condensed',sans-serif`;
+  ctx.fillStyle = 'rgba(255,255,255,0.4)';
+  ctx.fillText(`  ·  ${date}  ·  ×${mult}`, pad + catW2, y);
+  y += fsCat * 1.45;
+
+  // ── Km · Media (if available) ──
+  if (km || media) {
+    const fsKm = Math.round(W * 0.021);
+    ctx.font = `500 ${fsKm}px 'Barlow Condensed',sans-serif`;
+    ctx.fillStyle = 'rgba(255,255,255,0.38)';
+    const parts = [];
+    if (km)    parts.push(`${km} km`);
+    if (media) parts.push(`media ${media} km/h`);
+    ctx.fillText(parts.join('  ·  '), pad, y); y += fsKm * 1.5;
+  }
 
   // Accent divider
   const divG = ctx.createLinearGradient(pad, 0, W - pad, 0);
   divG.addColorStop(0, 'rgba(232,0,29,0.7)'); divG.addColorStop(0.5, 'rgba(245,196,0,0.35)'); divG.addColorStop(1, 'transparent');
-  ctx.fillStyle = divG; ctx.fillRect(pad, y, W - pad * 2, 2); y += Math.round(H * 0.013);
+  ctx.fillStyle = divG; ctx.fillRect(pad, y, W - pad * 2, 2); y += Math.round(H * 0.012);
 
   // ── Footer ──
-  const fB = Math.round(H * 0.055);
+  const fB = Math.round(H * 0.05);
   const footerY = H - fB;
   ctx.fillStyle = 'rgba(0,0,0,0.55)'; ctx.fillRect(0, footerY, W, fB);
   const s = 3;
@@ -13017,13 +13031,13 @@ function _drawGara(ctx, W, H, d, logo) {
   ctx.fillStyle = '#ce2b37'; ctx.fillRect(Math.round(2 * W / 3), footerY, W - Math.round(2 * W / 3), s);
   ctx.font = `500 ${Math.round(fB * 0.3)}px 'Barlow Condensed',sans-serif`;
   ctx.fillStyle = 'rgba(255,255,255,0.28)'; ctx.textAlign = 'center';
-  ctx.fillText(SHARE_TAG, W / 2, footerY + Math.round(fB * 0.65)); ctx.textAlign = 'left';
+  ctx.fillText(SHARE_TAG, W / 2, footerY + Math.round(fB * 0.67)); ctx.textAlign = 'left';
 
   // ── Results list ──
-  const listH = footerY - y - Math.round(H * 0.004);
+  const listH = footerY - y - Math.round(H * 0.003);
   const maxR = Math.min(results.length, 10);
-  // 1st place gets ~17% of list height, rest split equally
-  const rH1 = Math.round(listH * 0.17);
+  // 1st gets ~18%, rest equal
+  const rH1 = Math.round(listH * 0.18);
   const rHN = Math.round((listH - rH1) / Math.max(maxR - 1, 1));
   const medalBg = ['#f5c400', '#c8c8c8', '#cd7f32'];
   const medalFg = ['#1a1200', '#1a1a1a', '#2a1500'];
@@ -13037,7 +13051,6 @@ function _drawGara(ctx, W, H, d, logo) {
 
     // ── Row background ──
     if (isFirst) {
-      // Gold-tinted card with border
       const goldG = ctx.createLinearGradient(0, ry, W, ry + rHcur);
       goldG.addColorStop(0, 'rgba(245,196,0,0.13)'); goldG.addColorStop(1, 'rgba(245,196,0,0.04)');
       ctx.fillStyle = goldG; ctx.fillRect(pad / 2, ry, W - pad, rHcur);
@@ -13049,52 +13062,56 @@ function _drawGara(ctx, W, H, d, logo) {
     } else if (i === 2) {
       ctx.fillStyle = 'rgba(205,127,50,0.035)'; ctx.fillRect(pad, ry, W - pad * 2, rHcur);
     } else {
-      // Thin separator only
       ctx.fillStyle = 'rgba(255,255,255,0.045)'; ctx.fillRect(pad, ry, W - pad * 2, 1);
     }
 
-    // ── Position pill (UCI leading-zero style) ──
-    const pillH = Math.round(rHcur * (isFirst ? 0.54 : 0.48));
-    const pillW = Math.round(pillH * 1.6);
+    // ── Position pill ──
+    const pillH = Math.round(rHcur * (isFirst ? 0.62 : 0.58));
+    const pillW = Math.round(pillH * 1.58);
     const pillX = pad + Math.round(W * 0.004);
     const pillY = cy - Math.round(pillH / 2);
     ctx.fillStyle = isTop3 ? medalBg[i] : 'rgba(255,255,255,0.07)';
     if (ctx.roundRect) { ctx.beginPath(); ctx.roundRect(pillX, pillY, pillW, pillH, Math.round(pillH * 0.2)); ctx.fill(); }
     else { ctx.fillRect(pillX, pillY, pillW, pillH); }
-    // Position number with leading zero
     const fsPos = Math.round(pillH * 0.64);
     ctx.font = `900 ${fsPos}px 'Bebas Neue',Impact,sans-serif`; ctx.textAlign = 'center';
     ctx.fillStyle = isTop3 ? medalFg[i] : 'rgba(255,255,255,0.38)';
     ctx.fillText(String(i + 1).padStart(2, '0'), pillX + pillW / 2, pillY + Math.round(pillH * 0.72));
     ctx.textAlign = 'left';
 
-    // ── Athlete name ──
-    const nameX = pillX + pillW + Math.round(W * 0.025);
-    const nameMaxW = W - pad - nameX - Math.round(W * 0.02);
-    const fsSur = Math.round(rHcur * (isFirst ? 0.38 : 0.34));
+    // ── Name block — centred vertically around cy ──
+    const nameX = pillX + pillW + Math.round(W * 0.022);
+    const nameMaxW = W - pad - nameX - Math.round(W * 0.015);
+    // Bigger surname — fills the row
+    const fsSur = Math.round(rHcur * (isFirst ? 0.5 : 0.46));
+    const fsTm  = Math.round(rHcur * (isFirst ? 0.21 : 0.20));
+    // Centre the two-line block: blockH ≈ fsSur + fsTm*1.4
+    const blockH = fsSur + Math.round(fsTm * 1.4);
+    const surY   = Math.round(ry + (rHcur - blockH) / 2) + fsSur;  // baseline of surname
+    const tmY    = surY + Math.round(fsTm * 1.4);                   // baseline of team
 
-    // Surname — bold, uppercase
+    // Surname bold
     ctx.font = `800 ${fsSur}px 'Barlow Condensed',sans-serif`;
-    ctx.fillStyle = isTop3 ? '#ffffff' : 'rgba(255,255,255,0.82)';
+    ctx.fillStyle = isTop3 ? '#ffffff' : 'rgba(255,255,255,0.85)';
     let cog = (r.cognome || '').toUpperCase();
     while (ctx.measureText(cog).width > nameMaxW - 6 && cog.length > 3) cog = cog.slice(0, -1);
     const cogW = ctx.measureText(cog).width;
-    ctx.fillText(cog, nameX, cy - Math.round(rHcur * 0.05));
+    ctx.fillText(cog, nameX, surY);
 
-    // First name — lighter, inline after surname
-    const fsNom = Math.round(fsSur * 0.7);
+    // First name lighter, inline
+    const fsNom = Math.round(fsSur * 0.68);
     ctx.font = `400 ${fsNom}px 'Barlow Condensed',sans-serif`;
-    ctx.fillStyle = isTop3 ? 'rgba(255,255,255,0.5)' : 'rgba(255,255,255,0.3)';
+    ctx.fillStyle = isTop3 ? 'rgba(255,255,255,0.5)' : 'rgba(255,255,255,0.32)';
     const nomStr = ' ' + (r.nome || '').substring(0, 14);
+    // align nome baseline with surname baseline (same y, smaller size looks natural)
     if (nameX + cogW + ctx.measureText(nomStr).width <= nameX + nameMaxW) {
-      ctx.fillText(nomStr, nameX + cogW, cy - Math.round(rHcur * 0.05));
+      ctx.fillText(nomStr, nameX + cogW, surY);
     }
 
-    // Team — small, italic-style, muted; prefixed with dash like UCI
-    const fsTm = Math.round(rHcur * (isFirst ? 0.2 : 0.185));
+    // Team muted, below
     ctx.font = `400 ${fsTm}px 'Barlow Condensed',sans-serif`;
-    ctx.fillStyle = isFirst ? 'rgba(255,255,255,0.42)' : 'rgba(255,255,255,0.26)';
-    ctx.fillText('— ' + (r.team || '').substring(0, 34), nameX, cy + Math.round(rHcur * 0.37));
+    ctx.fillStyle = isFirst ? 'rgba(255,255,255,0.42)' : 'rgba(255,255,255,0.28)';
+    ctx.fillText('— ' + (r.team || '').substring(0, 34), nameX, tmY);
   });
 }
 
