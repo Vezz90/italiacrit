@@ -4226,7 +4226,6 @@ async function renderHubBars() {
     const score      = computeHotScore(ath.atleta_id, resultsRaw, catCode);
     const scoreColor = score>=80?'#E11D48':score>=55?'#F59E0B':'#10B981';
     const rankEntry  = ranking.find(r=>r.atleta_id===ath.atleta_id);
-    const snap14     = catCode===mainCat?_snap14ago:_snap14agoE1;
     const snapN      = catCode===mainCat?_snapNow:_snapNowE1;
     const badges     = getAthleteBadges(ath.atleta_id, resultsRaw, catCode, rankEntry);
     const rankPos    = rankEntry?ranking.indexOf(rankEntry)+1:null;
