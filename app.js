@@ -1266,6 +1266,23 @@ function route() {
   };
 
   if (match('/')) return renderHome();
+  // Classifica con categoria+vista encode nell'URL: #/classifica/ES1_M/atleti
+  const _mClassCatView = match('/classifica/:cat/:view');
+  if (_mClassCatView) {
+    rankCat    = decodeURIComponent(_mClassCatView[1]);
+    rankGender = rankCat.endsWith('_F') ? 'F' : 'M';
+    rankView   = _mClassCatView[2] || 'atleti';
+    rankFilter = ''; rankRegion = ''; rankMonth = ''; rankSort = 'punti';
+    return renderClassifica();
+  }
+  const _mClassCat = match('/classifica/:cat');
+  if (_mClassCat) {
+    rankCat    = decodeURIComponent(_mClassCat[1]);
+    rankGender = rankCat.endsWith('_F') ? 'F' : 'M';
+    rankView   = 'atleti';
+    rankFilter = ''; rankRegion = ''; rankMonth = ''; rankSort = 'punti';
+    return renderClassifica();
+  }
   if (match('/classifica')) return renderClassifica();
   if (match('/atleti')) return renderAtletiList();
   if (match('/team')) return renderTeamList();
@@ -4332,7 +4349,7 @@ async function renderHubBars() {
       </div>`;
     }).join('');
     return `<div class="itc-card itc-rank-card">
-      <div class="itc-card-hdr"><span class="itc-card-title">TOP CLASSIFICA${title?' · '+title:''}</span><a href="#/classifica" onclick="event.preventDefault();window.navToRankCat('${catCode}','atleti')" class="itc-card-more">Vedi tutto →</a></div>
+      <div class="itc-card-hdr"><span class="itc-card-title">TOP CLASSIFICA${title?' · '+title:''}</span><a href="#/classifica/${catCode}/atleti" class="itc-card-more">Vedi tutto →</a></div>
       ${rows}
     </div>`;
   }
@@ -4532,11 +4549,9 @@ async function renderHubBars() {
         <span class="itc-rank-pts">${t.punti}<small>pt</small></span>
       </div>`;
     }).join('');
-    const teamLink = catCode
-      ? `href="#/classifica" onclick="event.preventDefault();window.navToRankCat('${catCode}','team')"`
-      : `href="#/classifica" onclick="event.preventDefault();window.navToRankCat('${mainCat}','team')"`;
+    const resolvedCat = catCode || mainCat;
     return `<div class="itc-card itc-rank-card">
-      <div class="itc-card-hdr"><span class="itc-card-title">🏆 TOP TEAM${title?' · '+esc(title):''}</span><a ${teamLink} class="itc-card-more">Vedi tutti →</a></div>
+      <div class="itc-card-hdr"><span class="itc-card-title">🏆 TOP TEAM${title?' · '+esc(title):''}</span><a href="#/classifica/${resolvedCat}/team" class="itc-card-more">Vedi tutti →</a></div>
       ${rows}
     </div>`;
   }
