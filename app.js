@@ -5990,22 +5990,12 @@ async function updateRankTable() {
         ? leaderFull.punti - ath.punti : 0;
       const metrics = _metricCache[ath.atleta_id];
       const badge = metrics?.badge;
-      // Streak
-      const athRes = globalData.resultsRaw
-        .filter(r => r.atleta_id === ath.atleta_id && getRankingFileCode(r) === rankCat && r.posizione)
-        .sort((a,b) => (b.data||'').localeCompare(a.data||''));
-      let streakTxt = '';
-      let ws = 0; for (const r of athRes) { if (r.posizione === 1) ws++; else break; }
-      let ps = 0; for (const r of athRes) { if (r.posizione <= 3) ps++; else break; }
-      if (ws >= 2) streakTxt = `🔥 ${ws} vittorie consecutive`;
-      else if (ps >= 2) streakTxt = `⚡ ${ps} podi di fila`;
       // Challenger info
       const above = ranking.find(r => r.pos === ath.pos - 1);
       const below  = ranking.find(r => r.pos === ath.pos + 1);
       const parts = [];
       if (ath.pos === 1) parts.push(`Leader della classifica con ${ath.punti} pt`);
       else parts.push(`${ath.pos}° in classifica · ${ath.punti} pt · −${gapToLeader} dal leader`);
-      if (streakTxt) parts.push(streakTxt);
       if (above && ath.pos > 1) parts.push(`${above.punti - ath.punti} pt da ${esc(above.cognome)}`);
       if (below) parts.push(`+${ath.punti - below.punti} pt su ${esc(below.cognome)}`);
       const badgeHtml2 = badge ? `<span class="rk-badge-pill ${badge.cls}">${badge.emoji} ${badge.label}</span>` : '';
@@ -6049,14 +6039,7 @@ async function updateRankTable() {
       }
     }
 
-    // ── Sort bar ──────────────────────────────────────────────
-    const sortBar = `
-      <div class="rk-sort-bar">
-        <span class="rk-sort-label">Ordina:</span>
-        <button class="rk-sort-btn ${rankSort==='punti'?'active':''}" onclick="window.setRankSort('punti')">Punti</button>
-        <button class="rk-sort-btn ${rankSort==='momentum'?'active':''}" onclick="window.setRankSort('momentum')">🔥 Momentum</button>
-        <button class="rk-sort-btn ${rankSort==='form'?'active':''}" onclick="window.setRankSort('form')">📈 Forma</button>
-      </div>`;
+    const sortBar = '';
 
     // ── Build rows ────────────────────────────────────────────
     const rows = displayList.map((r, i) => {
