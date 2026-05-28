@@ -12896,12 +12896,16 @@ async function _getLogo() {
   });
 }
 function _bg(ctx, W, H) {
-  // Deep navy gradient
+  // Deep navy base
   const g = ctx.createLinearGradient(0, 0, W * 0.4, H);
   g.addColorStop(0, '#0c1228'); g.addColorStop(1, '#0f1a35');
   ctx.fillStyle = g; ctx.fillRect(0, 0, W, H);
-  // Subtle dot grid texture
-  ctx.save(); ctx.globalAlpha = 0.042; ctx.fillStyle = '#ffffff';
+  // Atmospheric radial glow (blue/indigo centre)
+  const rg = ctx.createRadialGradient(W * 0.5, H * 0.44, 0, W * 0.5, H * 0.44, W * 0.78);
+  rg.addColorStop(0, 'rgba(22,55,130,0.32)'); rg.addColorStop(1, 'transparent');
+  ctx.fillStyle = rg; ctx.fillRect(0, 0, W, H);
+  // Dot grid
+  ctx.save(); ctx.globalAlpha = 0.038; ctx.fillStyle = '#ffffff';
   const ds = Math.round(W * 0.028);
   for (let x = ds; x < W; x += ds)
     for (let y = ds; y < H; y += ds) { ctx.beginPath(); ctx.arc(x, y, 1.2, 0, Math.PI * 2); ctx.fill(); }
@@ -12956,123 +12960,141 @@ function _wrap(ctx, txt, x, y, maxW, lH) {
   return y+lH;
 }
 
-// ── GARA CARD v4 — medal circles + surname-bold layout ──────
-function _drawGara(ctx, W, H, d) {
+// ── GARA CARD v5 — UCI-inspired, no points, big logo ─────────
+function _drawGara(ctx, W, H, d, logo) {
   const { name, date, cat, mult, tipo, results } = d;
-  const hB = Math.round(H * 0.09), fB = Math.round(H * 0.06), pad = Math.round(W * 0.048);
-  let y = hB + Math.round(H * 0.024);
+  const pad = Math.round(W * 0.048);
+
+  // ── Custom event header (bigger logo, centred) ──
+  const hH = Math.round(H * 0.145);
+  ctx.fillStyle = 'rgba(0,0,0,0.5)'; ctx.fillRect(0, 0, W, hH);
+  // red→gold accent line at bottom
+  const hLineG = ctx.createLinearGradient(0, 0, W, 0);
+  hLineG.addColorStop(0, '#e8001d'); hLineG.addColorStop(0.45, '#f5c400'); hLineG.addColorStop(1, 'transparent');
+  ctx.fillStyle = hLineG; ctx.fillRect(0, hH - 3, W, 3);
+  if (logo) {
+    const lH = Math.round(hH * 0.74);
+    const lW = Math.round(lH * logo.naturalWidth / logo.naturalHeight);
+    ctx.drawImage(logo, Math.round((W - lW) / 2), Math.round((hH - lH) / 2), lW, lH);
+  } else {
+    const fsLg = Math.round(hH * 0.38);
+    ctx.font = `900 ${fsLg}px 'Bebas Neue',Impact,sans-serif`;
+    ctx.fillStyle = '#ffffff'; ctx.textAlign = 'center';
+    ctx.fillText('ITALIACRIT', W / 2, Math.round(hH * 0.64)); ctx.textAlign = 'left';
+  }
+  // URL — bottom-right, small
+  const fsUrl = Math.round(hH * 0.13);
+  ctx.font = `400 ${fsUrl}px 'Barlow Condensed',sans-serif`;
+  ctx.fillStyle = 'rgba(255,255,255,0.28)'; ctx.textAlign = 'right';
+  ctx.fillText(SHARE_URL, W - pad, hH - Math.round(hH * 0.09)); ctx.textAlign = 'left';
+
+  let y = hH + Math.round(H * 0.018);
 
   // ── Race name ──
-  const fsT = Math.round(W * (name.length > 38 ? 0.042 : name.length > 24 ? 0.052 : 0.064));
+  const fsT = Math.round(W * (name.length > 38 ? 0.044 : name.length > 24 ? 0.054 : 0.066));
   ctx.font = `900 ${fsT}px 'Bebas Neue',Impact,sans-serif`; ctx.fillStyle = '#ffffff';
   y = _wrap(ctx, name.toUpperCase(), pad, y + fsT, W - pad * 2, fsT * 1.07);
-  y += Math.round(H * 0.006);
+  y += Math.round(H * 0.004);
 
-  // ── Meta pill ──
-  const fsMeta = Math.round(W * 0.021);
+  // ── Date · category meta ──
+  const fsMeta = Math.round(W * 0.022);
   ctx.font = `600 ${fsMeta}px 'Barlow Condensed',sans-serif`;
-  const metaTxt = `${date}  ·  ${cat}  ·  ×${mult}`;
-  const pillW = ctx.measureText(metaTxt).width + Math.round(W * 0.032);
-  const pillH = Math.round(fsMeta * 1.85);
-  ctx.fillStyle = 'rgba(232,0,29,0.14)'; ctx.strokeStyle = 'rgba(232,0,29,0.32)'; ctx.lineWidth = 1;
-  if (ctx.roundRect) { ctx.beginPath(); ctx.roundRect(pad, y, pillW, pillH, 4); ctx.fill(); ctx.stroke(); }
-  else { ctx.fillRect(pad, y, pillW, pillH); }
-  ctx.fillStyle = '#e8001d';
-  ctx.fillText(metaTxt, pad + Math.round(W * 0.016), y + Math.round(pillH * 0.68));
-  y += pillH + Math.round(H * 0.015);
+  ctx.fillStyle = 'rgba(232,0,29,0.9)';
+  ctx.fillText(`${date}  ·  ${cat}  ·  ×${mult}`, pad, y); y += fsMeta * 1.35;
 
-  // ── Accent divider ──
+  // Accent divider
   const divG = ctx.createLinearGradient(pad, 0, W - pad, 0);
-  divG.addColorStop(0, 'rgba(232,0,29,0.75)'); divG.addColorStop(0.5, 'rgba(245,196,0,0.4)'); divG.addColorStop(1, 'transparent');
-  ctx.fillStyle = divG; ctx.fillRect(pad, y, W - pad * 2, 2);
-  y += Math.round(H * 0.015);
+  divG.addColorStop(0, 'rgba(232,0,29,0.7)'); divG.addColorStop(0.5, 'rgba(245,196,0,0.35)'); divG.addColorStop(1, 'transparent');
+  ctx.fillStyle = divG; ctx.fillRect(pad, y, W - pad * 2, 2); y += Math.round(H * 0.013);
+
+  // ── Footer ──
+  const fB = Math.round(H * 0.055);
+  const footerY = H - fB;
+  ctx.fillStyle = 'rgba(0,0,0,0.55)'; ctx.fillRect(0, footerY, W, fB);
+  const s = 3;
+  ctx.fillStyle = '#009246'; ctx.fillRect(0, footerY, Math.round(W / 3), s);
+  ctx.fillStyle = '#f0f0ee'; ctx.fillRect(Math.round(W / 3), footerY, Math.round(W / 3), s);
+  ctx.fillStyle = '#ce2b37'; ctx.fillRect(Math.round(2 * W / 3), footerY, W - Math.round(2 * W / 3), s);
+  ctx.font = `500 ${Math.round(fB * 0.3)}px 'Barlow Condensed',sans-serif`;
+  ctx.fillStyle = 'rgba(255,255,255,0.28)'; ctx.textAlign = 'center';
+  ctx.fillText(SHARE_TAG, W / 2, footerY + Math.round(fB * 0.65)); ctx.textAlign = 'left';
 
   // ── Results list ──
-  const listH = H - fB - y - Math.round(H * 0.006);
+  const listH = footerY - y - Math.round(H * 0.004);
   const maxR = Math.min(results.length, 10);
-  const rH = Math.round(listH / maxR);
+  // 1st place gets ~17% of list height, rest split equally
+  const rH1 = Math.round(listH * 0.17);
+  const rHN = Math.round((listH - rH1) / Math.max(maxR - 1, 1));
   const medalBg = ['#f5c400', '#c8c8c8', '#cd7f32'];
   const medalFg = ['#1a1200', '#1a1a1a', '#2a1500'];
 
   results.slice(0, maxR).forEach((r, i) => {
-    const ry = y + i * rH;
+    const ry = i === 0 ? y : y + rH1 + (i - 1) * rHN;
+    const rHcur = i === 0 ? rH1 : rHN;
     const isTop3 = i < 3;
+    const isFirst = i === 0;
+    const cy = Math.round(ry + rHcur / 2);
 
-    // Row background
-    if (isTop3) {
-      ctx.fillStyle = `rgba(${i===0?'245,196,0':i===1?'200,200,200':'205,127,50'},${[0.08,0.05,0.035][i]})`;
-      ctx.fillRect(pad, ry + 1, W - pad * 2, rH - 2);
-    } else if (i % 2 === 0) {
-      ctx.fillStyle = 'rgba(255,255,255,0.016)'; ctx.fillRect(pad, ry, W - pad * 2, rH);
-    }
-
-    // Medal / position circle
-    const circR = Math.round(rH * (isTop3 ? 0.37 : 0.28));
-    const cx = pad + circR + Math.round(W * 0.004);
-    const cy = Math.round(ry + rH / 2);
-    ctx.beginPath(); ctx.arc(cx, cy, circR, 0, Math.PI * 2);
-    if (isTop3) {
-      const mg = ctx.createRadialGradient(cx - circR * 0.28, cy - circR * 0.28, 0, cx, cy, circR);
-      mg.addColorStop(0, i===0?'#ffe566':i===1?'#eeeeee':'#e09050');
-      mg.addColorStop(1, medalBg[i]);
-      ctx.fillStyle = mg;
+    // ── Row background ──
+    if (isFirst) {
+      // Gold-tinted card with border
+      const goldG = ctx.createLinearGradient(0, ry, W, ry + rHcur);
+      goldG.addColorStop(0, 'rgba(245,196,0,0.13)'); goldG.addColorStop(1, 'rgba(245,196,0,0.04)');
+      ctx.fillStyle = goldG; ctx.fillRect(pad / 2, ry, W - pad, rHcur);
+      ctx.strokeStyle = 'rgba(245,196,0,0.42)'; ctx.lineWidth = 1.5;
+      if (ctx.roundRect) { ctx.beginPath(); ctx.roundRect(pad / 2, ry + 1, W - pad, rHcur - 2, 7); ctx.stroke(); }
+      else { ctx.strokeRect(pad / 2, ry + 1, W - pad, rHcur - 2); }
+    } else if (i === 1) {
+      ctx.fillStyle = 'rgba(200,200,200,0.045)'; ctx.fillRect(pad, ry, W - pad * 2, rHcur);
+    } else if (i === 2) {
+      ctx.fillStyle = 'rgba(205,127,50,0.035)'; ctx.fillRect(pad, ry, W - pad * 2, rHcur);
     } else {
-      ctx.fillStyle = 'rgba(255,255,255,0.07)';
+      // Thin separator only
+      ctx.fillStyle = 'rgba(255,255,255,0.045)'; ctx.fillRect(pad, ry, W - pad * 2, 1);
     }
-    ctx.fill();
 
-    // Position number in circle
-    const fsPos = Math.round(circR * (isTop3 ? 1.2 : 1.05));
+    // ── Position pill (UCI leading-zero style) ──
+    const pillH = Math.round(rHcur * (isFirst ? 0.54 : 0.48));
+    const pillW = Math.round(pillH * 1.6);
+    const pillX = pad + Math.round(W * 0.004);
+    const pillY = cy - Math.round(pillH / 2);
+    ctx.fillStyle = isTop3 ? medalBg[i] : 'rgba(255,255,255,0.07)';
+    if (ctx.roundRect) { ctx.beginPath(); ctx.roundRect(pillX, pillY, pillW, pillH, Math.round(pillH * 0.2)); ctx.fill(); }
+    else { ctx.fillRect(pillX, pillY, pillW, pillH); }
+    // Position number with leading zero
+    const fsPos = Math.round(pillH * 0.64);
     ctx.font = `900 ${fsPos}px 'Bebas Neue',Impact,sans-serif`; ctx.textAlign = 'center';
     ctx.fillStyle = isTop3 ? medalFg[i] : 'rgba(255,255,255,0.38)';
-    ctx.fillText(String(i + 1), cx, cy + fsPos * 0.37);
+    ctx.fillText(String(i + 1).padStart(2, '0'), pillX + pillW / 2, pillY + Math.round(pillH * 0.72));
     ctx.textAlign = 'left';
 
-    // Name layout — surname bold, first name lighter inline
-    const nameX = pad + circR * 2 + Math.round(W * 0.03);
-    const ptsAreaW = Math.round(W * 0.165);
-    const nameMaxW = W - pad - nameX - ptsAreaW;
-    const fsSur = Math.round(rH * (isTop3 ? 0.37 : 0.34));
+    // ── Athlete name ──
+    const nameX = pillX + pillW + Math.round(W * 0.025);
+    const nameMaxW = W - pad - nameX - Math.round(W * 0.02);
+    const fsSur = Math.round(rHcur * (isFirst ? 0.38 : 0.34));
 
-    // Surname (bold, uppercase)
+    // Surname — bold, uppercase
     ctx.font = `800 ${fsSur}px 'Barlow Condensed',sans-serif`;
     ctx.fillStyle = isTop3 ? '#ffffff' : 'rgba(255,255,255,0.82)';
     let cog = (r.cognome || '').toUpperCase();
-    while (ctx.measureText(cog).width > nameMaxW - 8 && cog.length > 3) cog = cog.slice(0, -1);
+    while (ctx.measureText(cog).width > nameMaxW - 6 && cog.length > 3) cog = cog.slice(0, -1);
     const cogW = ctx.measureText(cog).width;
-    ctx.fillText(cog, nameX, cy - Math.round(rH * 0.05));
+    ctx.fillText(cog, nameX, cy - Math.round(rHcur * 0.05));
 
-    // First name (lighter, inline after surname)
+    // First name — lighter, inline after surname
     const fsNom = Math.round(fsSur * 0.7);
     ctx.font = `400 ${fsNom}px 'Barlow Condensed',sans-serif`;
-    ctx.fillStyle = isTop3 ? 'rgba(255,255,255,0.52)' : 'rgba(255,255,255,0.32)';
+    ctx.fillStyle = isTop3 ? 'rgba(255,255,255,0.5)' : 'rgba(255,255,255,0.3)';
     const nomStr = ' ' + (r.nome || '').substring(0, 14);
     if (nameX + cogW + ctx.measureText(nomStr).width <= nameX + nameMaxW) {
-      ctx.fillText(nomStr, nameX + cogW, cy - Math.round(rH * 0.05));
+      ctx.fillText(nomStr, nameX + cogW, cy - Math.round(rHcur * 0.05));
     }
 
-    // Team (small, muted)
-    const fsTm = Math.round(rH * 0.21);
+    // Team — small, italic-style, muted; prefixed with dash like UCI
+    const fsTm = Math.round(rHcur * (isFirst ? 0.2 : 0.185));
     ctx.font = `400 ${fsTm}px 'Barlow Condensed',sans-serif`;
-    ctx.fillStyle = 'rgba(255,255,255,0.28)';
-    ctx.fillText((r.team || '').substring(0, 32), nameX, cy + Math.round(rH * 0.35));
-
-    // Points — right-aligned, medal colour for top 3
-    const fsPts = Math.round(rH * (isTop3 ? 0.5 : 0.44));
-    ctx.font = `900 ${fsPts}px 'Bebas Neue',Impact,sans-serif`; ctx.textAlign = 'right';
-    ctx.fillStyle = isTop3 ? (i===0?'#f5c400':i===1?'#d8d8d8':'#e09050') : 'rgba(255,255,255,0.42)';
-    ctx.fillText(String(r.punti_effettivi || 0), W - pad, cy + fsPts * 0.32);
-    const fsPtLbl = Math.round(fsPts * 0.3);
-    ctx.font = `600 ${fsPtLbl}px 'Barlow Condensed',sans-serif`;
-    ctx.fillStyle = 'rgba(255,255,255,0.2)';
-    ctx.fillText('pt', W - pad, cy + fsPts * 0.32 + fsPtLbl * 1.2);
-    ctx.textAlign = 'left';
-
-    // Row separator (4th place onwards)
-    if (i >= 3 && i < maxR - 1) {
-      ctx.fillStyle = 'rgba(255,255,255,0.04)';
-      ctx.fillRect(nameX, ry + rH - 1, W - pad - nameX, 1);
-    }
+    ctx.fillStyle = isFirst ? 'rgba(255,255,255,0.42)' : 'rgba(255,255,255,0.26)';
+    ctx.fillText('— ' + (r.team || '').substring(0, 34), nameX, cy + Math.round(rHcur * 0.37));
   });
 }
 
@@ -13199,11 +13221,16 @@ async function generateShareCanvas(type, payload, platKey) {
   const canvas=document.createElement('canvas'); canvas.width=p.w; canvas.height=p.h;
   const ctx=canvas.getContext('2d');
   const logo=await _getLogo();
-  _bg(ctx,p.w,p.h); _header(ctx,logo,p.w,p.h); _footer(ctx,p.w,p.h);
-  if(type==='gara')        _drawGara(ctx,p.w,p.h,payload);
-  else if(type==='atleta') _drawAtleta(ctx,p.w,p.h,payload);
-  else if(type==='team')   _drawTeam(ctx,p.w,p.h,payload);
-  else if(type==='class')  _drawClass(ctx,p.w,p.h,payload);
+  _bg(ctx,p.w,p.h);
+  if(type==='gara') {
+    // gara manages its own header/footer for bigger logo treatment
+    _drawGara(ctx,p.w,p.h,payload,logo);
+  } else {
+    _header(ctx,logo,p.w,p.h); _footer(ctx,p.w,p.h);
+    if(type==='atleta') _drawAtleta(ctx,p.w,p.h,payload);
+    else if(type==='team')  _drawTeam(ctx,p.w,p.h,payload);
+    else if(type==='class') _drawClass(ctx,p.w,p.h,payload);
+  }
   return canvas;
 }
 
