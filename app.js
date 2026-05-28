@@ -8827,7 +8827,7 @@ async function renderTeam(team_id) {
     </div>
     <div class="team-performers-list" style="margin-bottom:28px">${topPerfHtml}</div>
 
-    ${buildProfileMedia(allTeamRes, teamPhotosMap, globalData.videos, { showAthleteName: true })}
+    ${buildProfileMedia(catRisultati, teamPhotosMap, globalData.videos, { showAthleteName: true })}
     <div class="section-header" style="margin-top:28px">
       <span class="section-title">RISULTATI TEAM</span>
       <span class="section-line"></span>
