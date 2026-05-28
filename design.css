@@ -5231,6 +5231,214 @@ tr.ranking-row:not(.rk-tier-1):not(.rk-tier-top3):not(.rk-tier-top10) {
   opacity: 0.8;
 }
 
+/* ══════════════════════════════════════════════════════════════ */
+/* RANKING REVOLUTION — Narrative & Momentum UI                  */
+/* ══════════════════════════════════════════════════════════════ */
+
+/* ── Season Pulse Banner ─────────────────────────────────────── */
+.rk-narrative {
+  background: var(--bg-card);
+  border: 1px solid var(--border-subtle);
+  border-left: 4px solid var(--red-hot);
+  border-radius: 10px;
+  padding: 14px 18px 16px;
+  margin-bottom: 14px;
+}
+.rk-narrative-label {
+  font-family: var(--font-heading);
+  font-size: 0.56rem;
+  font-weight: 800;
+  letter-spacing: 0.15em;
+  text-transform: uppercase;
+  color: var(--red-hot);
+  margin-bottom: 8px;
+}
+.rk-narrative-headline {
+  font-size: 0.93rem;
+  font-weight: 700;
+  color: var(--text-primary);
+  line-height: 1.35;
+  margin-bottom: 10px;
+}
+.rk-narrative-details {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  border-top: 1px solid var(--border-subtle);
+  padding-top: 8px;
+  margin-top: 4px;
+}
+.rk-narrative-detail {
+  font-size: 0.78rem;
+  color: var(--text-secondary);
+  line-height: 1.4;
+  padding-left: 8px;
+  border-left: 2px solid var(--border-subtle);
+}
+.rk-narrative-detail:first-child {
+  color: var(--text-primary);
+  font-weight: 600;
+  border-left-color: var(--red-hot);
+}
+
+/* ── Sort bar ────────────────────────────────────────────────── */
+.rk-sort-bar {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  margin-bottom: 10px;
+  flex-wrap: wrap;
+}
+.rk-sort-label {
+  font-size: 0.68rem;
+  font-weight: 700;
+  color: var(--text-muted);
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  margin-right: 2px;
+}
+.rk-sort-btn {
+  font-family: var(--font-heading);
+  font-size: 0.67rem;
+  font-weight: 700;
+  letter-spacing: 0.05em;
+  padding: 4px 10px;
+  border-radius: 20px;
+  border: 1px solid var(--border-subtle);
+  background: transparent;
+  color: var(--text-muted);
+  cursor: pointer;
+  transition: background .15s, color .15s, border-color .15s;
+}
+.rk-sort-btn:hover { background: var(--bg-elevated); color: var(--text-primary); }
+.rk-sort-btn.active {
+  background: var(--red-hot);
+  color: #fff;
+  border-color: var(--red-hot);
+}
+
+/* ── Athlete name row (name + badge inline) ──────────────────── */
+.rk-athlete-name-row {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  flex-wrap: wrap;
+}
+
+/* ── Momentum mini-bar ───────────────────────────────────────── */
+.rk-momentum-wrap {
+  width: 80px;
+  height: 3px;
+  background: var(--border-subtle);
+  border-radius: 2px;
+  margin-top: 4px;
+  overflow: hidden;
+}
+.rk-momentum-bar {
+  height: 100%;
+  border-radius: 2px;
+  transition: width .4s ease;
+}
+
+/* ── Badge pills ─────────────────────────────────────────────── */
+.rk-badge-pill {
+  display: inline-flex;
+  align-items: center;
+  gap: 3px;
+  font-family: var(--font-heading);
+  font-size: 0.56rem;
+  font-weight: 800;
+  letter-spacing: 0.07em;
+  text-transform: uppercase;
+  padding: 2px 7px;
+  border-radius: 20px;
+  white-space: nowrap;
+  flex-shrink: 0;
+}
+.badge-dominant { background: rgba(245,158,11,0.15); color: #D97706; border: 1px solid rgba(245,158,11,0.3); }
+.badge-fire     { background: rgba(239,68,68,0.12);  color: #EF4444; border: 1px solid rgba(239,68,68,0.25); }
+.badge-surge    { background: rgba(139,92,246,0.12); color: #8B5CF6; border: 1px solid rgba(139,92,246,0.25); }
+.badge-growing  { background: rgba(16,185,129,0.12); color: #10B981; border: 1px solid rgba(16,185,129,0.25); }
+.badge-comeback { background: rgba(59,130,246,0.12); color: #3B82F6; border: 1px solid rgba(59,130,246,0.25); }
+.badge-idle     { background: rgba(107,114,128,0.12);color: #9CA3AF; border: 1px solid rgba(107,114,128,0.2); }
+.badge-risk     { background: rgba(251,146,60,0.12); color: #F97316; border: 1px solid rgba(251,146,60,0.25); }
+.badge-down     { background: rgba(107,114,128,0.08);color: #6B7280; border: 1px solid rgba(107,114,128,0.15); }
+
+/* ── Leader tag (replaces empty gap for pos 1) ───────────────── */
+.rk-leader-tag {
+  font-family: var(--font-heading);
+  font-size: 0.52rem;
+  font-weight: 900;
+  letter-spacing: 0.12em;
+  color: #D97706;
+  text-transform: uppercase;
+}
+
+/* ── Leadership safety gauge ─────────────────────────────────── */
+.rk-leader-gauge-wrap {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  margin-top: 5px;
+}
+.rk-leader-gauge-track {
+  width: 72px;
+  height: 3px;
+  background: var(--border-subtle);
+  border-radius: 2px;
+  overflow: hidden;
+  flex-shrink: 0;
+}
+.rk-leader-gauge-fill {
+  height: 100%;
+  border-radius: 2px;
+  transition: width .5s ease;
+}
+.rk-leader-gauge-lbl {
+  font-size: 0.58rem;
+  font-weight: 700;
+  font-family: var(--font-heading);
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  white-space: nowrap;
+}
+
+/* ── Catch-up hint ───────────────────────────────────────────── */
+.rk-catchup {
+  display: inline-block;
+  margin-top: 3px;
+  font-size: 0.58rem;
+  font-weight: 700;
+  color: #F59E0B;
+  font-family: var(--font-heading);
+  letter-spacing: 0.04em;
+}
+
+/* ── Battle zone separator row ───────────────────────────────── */
+tr.rk-zone-sep td {
+  padding: 4px 14px;
+  font-family: var(--font-heading);
+  font-size: 0.6rem;
+  font-weight: 800;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: #F97316;
+  background: rgba(249,115,22,0.06);
+  border-top: 1px solid rgba(249,115,22,0.2);
+  border-bottom: 1px solid rgba(249,115,22,0.2);
+}
+
+/* ── Narrative table (same as ranking-table but class hook) ──── */
+.rk-table-narrative tr.rk-tier-1 td { vertical-align: top; }
+
+/* ─── Mobile tweaks ──────────────────────────────────────────── */
+@media (max-width: 600px) {
+  .rk-narrative-headline { font-size: 0.85rem; }
+  .rk-sort-bar            { gap: 4px; }
+  .rk-sort-btn            { font-size: 0.62rem; padding: 3px 8px; }
+  .rk-momentum-wrap       { width: 60px; }
+}
+
 /* ── Atleta story badge ──────────────────────────────────────── */
 .si-athlete-story-badge {
   display: inline-block;

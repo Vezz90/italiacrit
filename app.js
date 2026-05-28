@@ -2499,6 +2499,158 @@ function siMomentum(athleteId, resultsRaw, lastRaceDate) {
   return { label, trend, color, pts14, pts28, gare14, podio14, vittorie14 };
 }
 
+// ═══════════════════════════════════════════════════════════════
+// RANKING NARRATIVE METRICS
+// Client-side only — computed from existing resultsRaw JSON data.
+// ═══════════════════════════════════════════════════════════════
+
+// Time-decayed momentum score 0–100.
+// Recent points count exponentially more (half-life 21 days).
+function calcRankMomentum(athleteId, resultsRaw, refDate, catCode) {
+  const HALF_LIFE = 21;
+  const ref = new Date(refDate || new Date());
+  const res = resultsRaw.filter(r =>
+    r.atleta_id === athleteId &&
+    (!catCode || getRankingFileCode(r) === catCode) &&
+    r.data && (r.punti_effettivi || 0) > 0
+  );
+  if (!res.length) return 0;
+  let wSum = 0, wTotal = 0;
+  for (const r of res) {
+    const days = Math.max(0, (ref - new Date(r.data)) / 86400000);
+    const w = Math.pow(0.5, days / HALF_LIFE);
+    wSum   += (r.punti_effettivi || 0) * w;
+    wTotal += w;
+  }
+  const wavg = wTotal > 0 ? wSum / wTotal : 0;
+  // Normalize: ~25 weighted-avg pts ≈ 100. Clamp at 100.
+  return Math.min(100, Math.round(wavg / 25 * 100));
+}
+
+// Form delta: avg pts/race in last 15 days vs prior 15 days.
+// Positive = in crescita, negative = in calo.
+function calcFormDelta(athleteId, resultsRaw, refDate, catCode) {
+  const ref  = new Date(refDate || new Date());
+  const cut15 = new Date(ref); cut15.setDate(ref.getDate() - 15);
+  const cut30 = new Date(ref); cut30.setDate(ref.getDate() - 30);
+  const c15s  = cut15.toISOString().split('T')[0];
+  const c30s  = cut30.toISOString().split('T')[0];
+  const res   = resultsRaw.filter(r =>
+    r.atleta_id === athleteId && (!catCode || getRankingFileCode(r) === catCode) && r.data
+  );
+  const recent = res.filter(r => r.data >= c15s);
+  const prev   = res.filter(r => r.data >= c30s && r.data < c15s);
+  const rAvg   = recent.length ? recent.reduce((s,r)=>s+(r.punti_effettivi||0),0)/recent.length : 0;
+  const pAvg   = prev.length   ? prev.reduce((s,r)=>s+(r.punti_effettivi||0),0)/prev.length     : 0;
+  return rAvg - pAvg;
+}
+
+// Leadership safety 0–100 (100 = completely safe, 0 = about to be overtaken).
+// Based on how many races the best challenger needs to close the gap.
+function calcLeadershipSafety(leaderPts, challengerPts, challengerLast4Results) {
+  const gap = leaderPts - challengerPts;
+  if (gap <= 0) return 0;
+  const avgPts = challengerLast4Results.length
+    ? challengerLast4Results.reduce((s,r)=>s+(r.punti_effettivi||0),0) / challengerLast4Results.length
+    : 0;
+  const racesNeeded = avgPts > 0 ? gap / avgPts : Infinity;
+  // 100 if needs >10 races; 0 if gap already closed.
+  return Math.min(100, Math.max(0, Math.round(Math.min(racesNeeded / 10, 1) * 100)));
+}
+
+// Pick the single most dramatic badge for an athlete.
+// Returns {emoji, label, cls} or null.
+function getRankBadge(entry, ranking, resultsRaw, catCode, refDate, momentum, formDelta, daysIdle) {
+  const pos      = entry.pos;
+  const leaderPts = ranking[0]?.punti || 1;
+  const pctOfTotal = entry.punti / leaderPts;
+  const trend    = entry.trend || 0;
+
+  // 👑 DOMINANTE — leader with wide gap and high win rate
+  if (pos === 1 && pctOfTotal > 0.28 && ranking[1] && entry.punti - ranking[1].punti > 25)
+    return { emoji: '👑', label: 'DOMINANTE', cls: 'badge-dominant' };
+
+  // 🔥 IN FIAMME — very high momentum
+  if (momentum >= 78)
+    return { emoji: '🔥', label: 'IN FIAMME', cls: 'badge-fire' };
+
+  // ⚡ SURGE — big jump this week
+  if (trend >= 5 && pos <= 30)
+    return { emoji: '⚡', label: `+${trend} SURGE`, cls: 'badge-surge' };
+
+  // 🔄 RIMONTA — entered top 5 from outside top 10
+  if (pos <= 5 && trend !== null && trend !== undefined && (pos + trend) > 10)
+    return { emoji: '🔄', label: 'RIMONTA', cls: 'badge-comeback' };
+
+  // 📈 IN CRESCITA — strong positive form delta
+  if (formDelta > 6)
+    return { emoji: '📈', label: 'IN CRESCITA', cls: 'badge-growing' };
+
+  // 💀 FERMO — not raced in 21+ days
+  if (daysIdle > 21)
+    return { emoji: '💀', label: `FERMO ${daysIdle}gg`, cls: 'badge-idle' };
+
+  // ⚠ A RISCHIO — in top 5 but form in decline
+  if (pos <= 5 && formDelta < -8)
+    return { emoji: '⚠', label: 'A RISCHIO', cls: 'badge-risk' };
+
+  // ▼ IN CALO
+  if (formDelta < -5 && pos <= 15)
+    return { emoji: '▼', label: 'IN CALO', cls: 'badge-down' };
+
+  return null;
+}
+
+// Generate a single impactful narrative headline for the season pulse banner.
+function generateNarrativeHeadline(ranking, resultsRaw, catCode, refDate) {
+  if (!ranking.length) return '';
+  const leader  = ranking[0];
+  const second  = ranking[1];
+  const third   = ranking[2];
+  const gap12   = second ? leader.punti - second.punti : null;
+
+  const ref  = new Date(refDate || new Date());
+  const c15s = (() => { const d = new Date(ref); d.setDate(d.getDate()-15); return d.toISOString().split('T')[0]; })();
+  const c28s = (() => { const d = new Date(ref); d.setDate(d.getDate()-28); return d.toISOString().split('T')[0]; })();
+
+  // Challenger's recent scoring pace
+  const challLast = second ? resultsRaw.filter(r =>
+    r.atleta_id === second.atleta_id && getRankingFileCode(r) === catCode && r.data >= c15s
+  ) : [];
+  const challPts15 = challLast.reduce((s,r)=>s+(r.punti_effettivi||0),0);
+
+  // Leader's last race date
+  const leaderLastRace = resultsRaw.filter(r =>
+    r.atleta_id === leader.atleta_id && getRankingFileCode(r) === catCode && r.data
+  ).reduce((mx,r)=>r.data>mx?r.data:mx,'');
+  const leaderIdle = leaderLastRace
+    ? Math.floor((ref - new Date(leaderLastRace)) / 86400000)
+    : 999;
+
+  // Biggest mover in top 30
+  const bigMover = ranking.slice(0, 30)
+    .filter(r => (r.trend||0) >= 5)
+    .sort((a,b)=>(b.trend||0)-(a.trend||0))[0] || null;
+
+  // Tight top-3
+  const tightTop3 = third && (leader.punti - third.punti) <= 40;
+
+  // Scenario selection
+  if (gap12 !== null && gap12 <= 10 && second)
+    return `⚔ Lotta al vertice: ${leader.cognome.toUpperCase()} guida su ${second.cognome.toUpperCase()} con soli ${gap12} punti`;
+  if (gap12 !== null && gap12 <= 35 && challPts15 > 15 && second)
+    return `🔥 ${second.cognome.toUpperCase()} in rimonta: −${gap12}pt da ${leader.cognome.toUpperCase()}, forma stellare nelle ultime 2 settimane`;
+  if (leaderIdle > 21 && second)
+    return `💀 ${leader.cognome.toUpperCase()} fermo da ${leaderIdle}gg — ${second.cognome.toUpperCase()} si avvicina`;
+  if (bigMover)
+    return `⚡ ${bigMover.cognome.toUpperCase()} scuote la classifica: +${bigMover.trend} posizioni in una settimana`;
+  if (tightTop3 && third && second)
+    return `🎯 Top-3 in ${leader.punti - third.punti} punti — ${leader.cognome.toUpperCase()}, ${second.cognome.toUpperCase()}, ${third.cognome.toUpperCase()} in battaglia aperta`;
+  if (gap12 !== null && gap12 > 120)
+    return `👑 ${leader.cognome.toUpperCase()} domina: ${leader.punti} punti, ${gap12}pt di vantaggio sulla concorrenza`;
+  return `${leader.cognome.toUpperCase()} al comando con ${leader.punti} punti — la stagione continua`;
+}
+
 function siRivals(athleteId, resultsRaw, catCode) {
   // Find athletes who appear most in the same races as athleteId
   const myRaces = new Set(
@@ -5310,6 +5462,7 @@ let rankFilter = '';
 let rankView   = 'atleti'; // 'atleti' | 'team'
 let rankRegion = '';
 let rankMonth  = '';
+let rankSort   = 'punti';  // 'punti' | 'momentum' | 'form'
 
 async function renderClassifica() {
   if ((rankGender === 'M' && rankCat.endsWith('_F')) ||
@@ -5516,44 +5669,159 @@ async function updateRankTable() {
     });
     countLabel = `${filtered.length} atleti`;
 
-    // ── Championship intelligence ─────────────────────────────
-    const _rkLastDate2 = globalData.resultsRaw.reduce((mx,r)=>(r.data||'')>mx?r.data:mx,'');
-    const leaderPts    = filtered[0]?.punti || 0;
+    // ── Pre-compute narrative metrics for top 30 ──────────────
+    const _refDate = globalData.resultsRaw.reduce((mx,r)=>(r.data||'')>mx?r.data:mx,'')
+      || new Date().toISOString().split('T')[0];
+    const _metricCache = {};
+    for (const entry of filtered.slice(0, 30)) {
+      const id  = entry.atleta_id;
+      const mom = calcRankMomentum(id, globalData.resultsRaw, _refDate, rankCat);
+      const fd  = calcFormDelta(id, globalData.resultsRaw, _refDate, rankCat);
+      const lr  = globalData.resultsRaw
+        .filter(r => r.atleta_id === id && getRankingFileCode(r) === rankCat && r.data)
+        .reduce((mx,r) => r.data > mx ? r.data : mx, '');
+      const di  = lr ? Math.floor((new Date(_refDate) - new Date(lr)) / 86400000) : 999;
+      const bdg = getRankBadge(entry, filtered, globalData.resultsRaw, rankCat, _refDate, mom, fd, di);
+      _metricCache[id] = { momentum: mom, formDelta: fd, daysIdle: di, badge: bdg };
+    }
+    const leaderPts = filtered[0]?.punti || 0;
 
-    // Precompute momentum for top 20 (text only, no emoji)
-    const _momCache2 = {};
-    for (const entry of filtered.slice(0, 20)) {
-      _momCache2[entry.atleta_id] = siMomentum(entry.atleta_id, globalData.resultsRaw, _rkLastDate2);
+    // ── Apply sort ────────────────────────────────────────────
+    let displayList = [...filtered];
+    if (rankSort === 'momentum') {
+      displayList.sort((a,b) =>
+        ((_metricCache[b.atleta_id]?.momentum ?? -1) - (_metricCache[a.atleta_id]?.momentum ?? -1))
+      );
+    } else if (rankSort === 'form') {
+      displayList.sort((a,b) =>
+        ((_metricCache[b.atleta_id]?.formDelta ?? -999) - (_metricCache[a.atleta_id]?.formDelta ?? -999))
+      );
     }
 
-    // Weekly storytelling banner
+    // ── Narrative headline banner ─────────────────────────────
     let storyHtml = '';
     if (!isFiltered) {
+      const headline   = generateNarrativeHeadline(filtered, globalData.resultsRaw, rankCat, _refDate);
       const storyLines = buildWeeklyNarrative(filtered, globalData.resultsRaw, rankCat);
-      if (storyLines.length) {
+      const detailsHtml = storyLines.length
+        ? `<div class="rk-narrative-details">${storyLines.map(l=>`<span class="rk-narrative-detail">${l}</span>`).join('')}</div>`
+        : '';
+      if (headline || storyLines.length) {
         storyHtml = `
-          <div class="rk-story-banner">
-            <div class="rk-story-label">NOVITÀ IN CLASSIFICA</div>
-            <div class="rk-story-lines">
-              ${storyLines.map(l => `<div class="rk-story-line">${l}</div>`).join('')}
-            </div>
+          <div class="rk-narrative">
+            <div class="rk-narrative-label">SITUATION IN CLASSIFICA</div>
+            ${headline ? `<div class="rk-narrative-headline">${headline}</div>` : ''}
+            ${detailsHtml}
           </div>`;
       }
     }
 
-    const rows = filtered.map((r, i) => {
-      const pClass = posClass(r.pos);
-      const tier   = r.pos === 1 ? 'rk-tier-1' : r.pos <= 3 ? 'rk-tier-top3' : r.pos <= 10 ? 'rk-tier-top10' : '';
-      const gap    = r.pos === 1
-        ? ''
+    // ── Battle zone detection (only meaningful when sorted by pts) ─
+    let battleZoneStart = -1, battleZoneEnd = -1;
+    if (rankSort === 'punti' && leaderPts > 0 && filtered.length >= 6) {
+      for (let zi = 2; zi < Math.min(filtered.length - 3, 18); zi++) {
+        const spread3 = filtered[zi].punti - filtered[zi+3].punti;
+        if (spread3 / leaderPts < 0.06) {
+          battleZoneStart = zi;
+          for (let zj = zi+1; zj < Math.min(filtered.length, 22); zj++) {
+            if ((filtered[zi].punti - filtered[zj].punti) / leaderPts < 0.10)
+              battleZoneEnd = zj;
+            else break;
+          }
+          if (battleZoneEnd > battleZoneStart) break;
+          else { battleZoneStart = -1; battleZoneEnd = -1; }
+        }
+      }
+    }
+
+    // ── Sort bar ──────────────────────────────────────────────
+    const sortBar = `
+      <div class="rk-sort-bar">
+        <span class="rk-sort-label">Ordina:</span>
+        <button class="rk-sort-btn ${rankSort==='punti'?'active':''}" onclick="window.setRankSort('punti')">Punti</button>
+        <button class="rk-sort-btn ${rankSort==='momentum'?'active':''}" onclick="window.setRankSort('momentum')">🔥 Momentum</button>
+        <button class="rk-sort-btn ${rankSort==='form'?'active':''}" onclick="window.setRankSort('form')">📈 Forma</button>
+      </div>`;
+
+    // ── Build rows ────────────────────────────────────────────
+    const rows = displayList.map((r, i) => {
+      const pClass  = posClass(r.pos);
+      const tier    = r.pos === 1 ? 'rk-tier-1' : r.pos <= 3 ? 'rk-tier-top3' : r.pos <= 10 ? 'rk-tier-top10' : '';
+      const gap     = r.pos === 1
+        ? `<span class="rk-leader-tag">LEADER</span>`
         : `<span class="rk-gap-label">−${leaderPts - r.punti}</span>`;
-      return `<tr class="ranking-row ${tier}" style="animation-delay:${Math.min(i,20)*30}ms">
+
+      const metrics = _metricCache[r.atleta_id];
+
+      // Momentum mini-bar
+      const mom      = metrics?.momentum ?? 0;
+      const fd       = metrics?.formDelta ?? 0;
+      const momColor = mom >= 70 ? '#10B981' : mom >= 40 ? '#F59E0B' : '#6B7280';
+      const momBar   = `<div class="rk-momentum-wrap" title="Momentum ${mom}/100">
+        <div class="rk-momentum-bar" style="width:${mom}%;background:${momColor}"></div>
+      </div>`;
+
+      // Badge
+      const badge = metrics?.badge;
+      const badgeHtml = badge
+        ? `<span class="rk-badge-pill ${badge.cls}">${badge.emoji} ${badge.label}</span>`
+        : '';
+
+      // Leader safety gauge (row 1 only)
+      let extraHtml = '';
+      if (r.pos === 1 && filtered[1]) {
+        const chall  = filtered[1];
+        const c28s   = (() => { const d = new Date(_refDate); d.setDate(d.getDate()-28); return d.toISOString().split('T')[0]; })();
+        const cRes4  = globalData.resultsRaw.filter(rr =>
+          rr.atleta_id === chall.atleta_id && getRankingFileCode(rr) === rankCat && rr.data >= c28s
+        );
+        const safety = calcLeadershipSafety(r.punti, chall.punti, cRes4);
+        const sColor = safety > 65 ? '#10B981' : safety > 35 ? '#F59E0B' : '#EF4444';
+        const sLabel = safety > 65 ? 'Leadership sicura' : safety > 35 ? 'Sotto pressione' : '⚠ A rischio';
+        extraHtml = `<div class="rk-leader-gauge-wrap">
+          <div class="rk-leader-gauge-track">
+            <div class="rk-leader-gauge-fill" style="width:${safety}%;background:${sColor}"></div>
+          </div>
+          <span class="rk-leader-gauge-lbl" style="color:${sColor}">${sLabel}</span>
+        </div>`;
+      }
+      // Catch-up hint for positions 2-3
+      if (r.pos >= 2 && r.pos <= 3 && leaderPts > 0) {
+        const myRes = globalData.resultsRaw.filter(rr =>
+          rr.atleta_id === r.atleta_id && getRankingFileCode(rr) === rankCat && (rr.punti_effettivi||0) > 0
+        );
+        const myAvg = myRes.length ? myRes.reduce((s,rr)=>s+(rr.punti_effettivi||0),0)/myRes.length : 0;
+        const gapPts = leaderPts - r.punti;
+        if (myAvg > 0 && gapPts > 0) {
+          const races = Math.ceil(gapPts / myAvg);
+          if (races <= 8)
+            extraHtml += `<span class="rk-catchup">~${races} gar${races===1?'a':'e'} dal 1°</span>`;
+        }
+      }
+
+      // Zone separator row injected before battleZoneStart
+      let zoneSep = '';
+      if (rankSort === 'punti' && i === battleZoneStart) {
+        const cnt      = battleZoneEnd - battleZoneStart + 1;
+        const spanPts  = filtered[battleZoneStart].punti
+          - (filtered[Math.min(battleZoneEnd, filtered.length-1)]?.punti || 0);
+        zoneSep = `<tr class="rk-zone-sep">
+          <td colspan="6">⚔ ZONA BATTAGLIA — ${cnt} atleti in ${spanPts} punti</td>
+        </tr>`;
+      }
+
+      return `${zoneSep}<tr class="ranking-row ${tier}" style="animation-delay:${Math.min(i,20)*30}ms">
         <td><span class="rank-num ${pClass}">${r.pos}</span></td>
         <td style="text-align:center;width:40px">${renderTrend(r)}</td>
         <td>
           <div class="rk-athlete-cell">
-            <span class="rank-name"><a href="#/atleta/${esc(r.atleta_id)}">${esc(r.cognome)} ${esc(r.nome)}</a></span>
+            <div class="rk-athlete-name-row">
+              <span class="rank-name"><a href="#/atleta/${esc(r.atleta_id)}">${esc(r.cognome)} ${esc(r.nome)}</a></span>
+              ${badgeHtml}
+            </div>
             <div class="td-team-mobile"><a href="#/team/${esc(r.team_id)}" style="color:var(--text-secondary)">${esc(r.team_nome)}</a></div>
+            ${momBar}
+            ${extraHtml}
           </div>
         </td>
         <td class="hide-mobile"><a href="#/team/${esc(r.team_id)}" style="color:var(--text-secondary);font-size:.85rem">${esc(r.team_nome)}</a></td>
@@ -5574,8 +5842,8 @@ async function updateRankTable() {
       </tr>`;
     }).join('');
 
-    tableHtml = storyHtml + `
-      <table class="ranking-table">
+    tableHtml = storyHtml + sortBar + `
+      <table class="ranking-table rk-table-narrative">
         <thead><tr>
           <th style="width:50px">POS</th>
           <th style="width:40px" title="Variazione">↕</th>
@@ -7738,12 +8006,13 @@ window.triggerSync = async () => {
   }
 };
 
-window.setRankGender = (g) => { rankGender = g; rankFilter = ''; rankRegion = ''; rankMonth = ''; renderClassifica(); };
-window.setRankCat    = (c) => { rankCat = c; rankFilter = ''; rankRegion = ''; rankMonth = ''; renderClassifica(); };
+window.setRankGender = (g) => { rankGender = g; rankFilter = ''; rankRegion = ''; rankMonth = ''; rankSort = 'punti'; renderClassifica(); };
+window.setRankCat    = (c) => { rankCat = c; rankFilter = ''; rankRegion = ''; rankMonth = ''; rankSort = 'punti'; renderClassifica(); };
 window.setRankFilter = (v) => { rankFilter = v; updateRankTable(); };
-window.setRankView   = (v) => { rankView = v; rankFilter = ''; rankRegion = ''; rankMonth = ''; renderClassifica(); };
+window.setRankView   = (v) => { rankView = v; rankFilter = ''; rankRegion = ''; rankMonth = ''; rankSort = 'punti'; renderClassifica(); };
 window.setRankRegion = (v) => { rankRegion = v; updateRankTable(); };
 window.setRankMonth  = (v) => { rankMonth = v; updateRankTable(); };
+window.setRankSort   = (s) => { rankSort = s; updateRankTable(); };
 
 // ── PARALLEL RANKINGS ────────────────────────────────────────
 async function renderParallelRankings() {
