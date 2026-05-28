@@ -10834,24 +10834,42 @@ window.compAcPick = (side, el) => {
 
 async function renderComparatore() {
   if (!globalData) return;
-  const { resultsRaw, athletes } = globalData;
+  const { resultsRaw, athletes, calendar } = globalData;
 
-  // Pre-seleziona la categoria del hub attivo (l'utente può sempre cambiare)
+  // ── Hub auto-fill ─────────────────────────────────────────────────────────
   if (activeHub && !compCat) {
     compGender = activeHub.gender;
-    compCat = activeHub.mainCat;
+    compCat    = activeHub.mainCat;
   }
 
-  // Categorie per dropdown — usa codici normalizzati per coerenza con activeHub.mainCat
+  // ── Utilities ─────────────────────────────────────────────────────────────
+  const catFilter  = r => r.genere === compGender && (!compCat || getRankingFileCode(r) === compCat);
+  const allCatRes  = resultsRaw.filter(catFilter);
+  // lastDate = ultima data reale nei dati, per finestre temporali coerenti
+  const lastDate   = allCatRes.reduce((mx,r) => (r.data||'') > mx ? r.data : mx, '')
+                     || new Date().toISOString().split('T')[0];
+  const dateMinus  = days => {
+    const d = new Date(lastDate + 'T00:00:00'); d.setDate(d.getDate()-days);
+    return d.toISOString().split('T')[0];
+  };
+  const cut14  = dateMinus(14);
+  const cut30  = dateMinus(30);
+  const cut60  = dateMinus(60);
+  const today  = new Date().toISOString().split('T')[0];
+  const cName  = n => (n||'').split(' ')[0];
+
+  // ── Category dropdown ──────────────────────────────────────────────────────
   const availCats = [...new Set(
-    resultsRaw.filter(r => r.genere === compGender)
-      .map(r => getRankingFileCode(r)).filter(Boolean)
+    resultsRaw.filter(r => r.genere === compGender).map(r => getRankingFileCode(r)).filter(Boolean)
   )].sort();
   const catOpts = availCats.map(c =>
-    `<option value="${esc(c)}" ${c === compCat ? 'selected' : ''}>${esc(catLabel(c))}</option>`
+    `<option value="${esc(c)}" ${c===compCat?'selected':''}>${esc(catLabel(c))}</option>`
   ).join('');
-  // Filtro categoria usa getRankingFileCode per confrontare con il codice normalizzato
-  const catFilter = r => r.genere === compGender && (!compCat || getRankingFileCode(r) === compCat);
+
+  // ─────────────────────────────────────────────────────────────────────────
+  // STATS — usa finestre TEMPORALI, non conteggio posizioni.
+  // I risultati non sono consecutivi: possono distare settimane.
+  // ─────────────────────────────────────────────────────────────────────────
 
   // ── STATS CALCULATOR ──────────────────────────────────────────
   // NOTA: arr contiene solo i piazzamenti registrati, NON tutte le gare disputate.
@@ -10902,20 +10920,47 @@ async function renderComparatore() {
              convRate, podioRate, consistRate, bestPos, maxKm, trend };
   };
 
-  // ── FORM PILLS ────────────────────────────────────────────────
+  // ── FORM PILLS (last N results as colored dots) ───────────────
   const formPills = results => {
     if (!results.length) return '<span style="color:var(--text-muted);font-size:0.8rem">—</span>';
     return results.map(r => {
       const p = r.posizione;
-      let bg='#EEF1F4', col='#6B7280';
+      let bg='var(--bg-elevated)', col='var(--text-muted)';
       if (p===1)      { bg='#D97706'; col='#fff'; }
-      else if (p<=3)  { bg='#6B7280'; col='#fff'; }
-      else if (p<=5)  { bg='rgba(255,107,0,0.75)'; col='#fff'; }
+      else if (p<=3)  { bg='#64748b'; col='#fff'; }
+      else if (p<=5)  { bg='rgba(255,107,0,0.7)'; col='#fff'; }
       return `<span class="form-pill" style="background:${bg};color:${col}">${p}°</span>`;
     }).join('');
   };
 
-  // ── METRIC BAR ────────────────────────────────────────────────
+  // ── BATTLE ROUND (single metric duel row) ─────────────────────
+  // Restituisce HTML per un round in stile sport TV.
+  // inv=true → vince il valore più BASSO (es. posizione media)
+  const battleRound = (vA, vB, label, fmt='', inv=false) => {
+    const nA = parseFloat(vA) || 0;
+    const nB = parseFloat(vB) || 0;
+    let wA, wB;
+    if (inv) { wA = nA > 0 && (nA < nB || nB === 0); wB = nB > 0 && (nB < nA || nA === 0); }
+    else     { wA = nA > nB; wB = nB > nA; }
+    const tot = (inv ? (1/(nA||0.01) + 1/(nB||0.01)) : (nA+nB)) || 1;
+    const pA  = inv
+      ? Math.round((1/(nA||0.01)) / tot * 100)
+      : Math.round(nA / tot * 100);
+    const cls = wA ? 'battle-round-winner-a' : wB ? 'battle-round-winner-b' : '';
+    return `<div class="battle-round ${cls}">
+      <span class="battle-round-val battle-round-val-a">${vA}${fmt}</span>
+      <div class="battle-round-center">
+        <div class="battle-round-lbl">${label}</div>
+        <div class="battle-bar-track">
+          <div class="battle-bar-a" style="width:${pA}%"></div>
+          <div class="battle-bar-b" style="width:${100-pA}%"></div>
+        </div>
+      </div>
+      <span class="battle-round-val battle-round-val-b">${vB}${fmt}</span>
+    </div>`;
+  };
+
+  // ── METRIC BAR (legacy — usato nel team block) ────────────────
   const mBar = (vA, vB, label, fmt='', hl=false) => {
     const nA=parseFloat(vA)||0, nB=parseFloat(vB)||0, tot=nA+nB||1;
     const pA=Math.round(nA/tot*100);
@@ -10933,7 +10978,23 @@ async function renderComparatore() {
     </div>`;
   };
 
-  // Radar rimosso — sostituito con dati reali
+  const mBarInv = (vA, vB, label, fmt='') => {
+    const nA=parseFloat(vA)||99, nB=parseFloat(vB)||99;
+    const iA=1/Math.max(nA,0.01), iB=1/Math.max(nB,0.01), tot=iA+iB||1;
+    const pA=Math.round(iA/tot*100);
+    const wA=nA<nB, wB=nB<nA;
+    return `<div class="comp-bar-row">
+      <span class="comp-bar-val comp-bar-val-a${wA?' comp-bar-winner':''}">${vA}${fmt}</span>
+      <div class="comp-bar-center">
+        <div class="comp-bar-label">${label}</div>
+        <div class="comp-bar-track">
+          <div class="comp-bar-fill-a" style="width:${pA}%"></div>
+          <div class="comp-bar-fill-b" style="width:${100-pA}%"></div>
+        </div>
+      </div>
+      <span class="comp-bar-val comp-bar-val-b${wB?' comp-bar-winner':''}">${vB}${fmt}</span>
+    </div>`;
+  };
 
   // ── HEAD TO HEAD ──────────────────────────────────────────────
   const buildH2H = (aRes, bRes, nA, nB) => {
@@ -10955,7 +11016,7 @@ async function renderComparatore() {
       <div class="h2h-score-bar">
         <div class="h2h-score-side">
           <span class="h2h-score-num" style="color:#FF6B00">${wA}</span>
-          <span class="h2h-score-label">${esc(nA)}</span>
+          <span class="h2h-score-label">${esc(nA.split(' ')[0])}</span>
         </div>
         <div class="h2h-score-center">
           <div class="h2h-bar-track"><div class="h2h-bar-fill" style="width:${pA}%"></div></div>
@@ -10963,12 +11024,12 @@ async function renderComparatore() {
         </div>
         <div class="h2h-score-side h2h-score-right">
           <span class="h2h-score-num" style="color:#10B981">${wB}</span>
-          <span class="h2h-score-label">${esc(nB)}</span>
+          <span class="h2h-score-label">${esc(nB.split(' ')[0])}</span>
         </div>
       </div>
-      <div class="results-table-wrap" style="margin-top:16px">
+      <div class="results-table-wrap" style="margin-top:12px">
         <table class="results-table h2h-table">
-          <thead><tr><th>DATA</th><th>GARA</th><th style="text-align:center">${esc(nA)}</th><th></th><th style="text-align:center">${esc(nB)}</th></tr></thead>
+          <thead><tr><th>DATA</th><th>GARA</th><th style="text-align:center">${esc(nA.split(' ')[0])}</th><th></th><th style="text-align:center">${esc(nB.split(' ')[0])}</th></tr></thead>
           <tbody>${rows.map(r=>`<tr class="${r.w==='A'?'h2h-win-a':r.w==='B'?'h2h-win-b':''}">
             <td class="td-date">${fmtDateShort(r.data)}</td>
             <td class="td-race"><a href="#/gara/${esc(r.garaId)}">${esc(r.gara)}</a></td>
@@ -10981,30 +11042,11 @@ async function renderComparatore() {
     </div>`;
   };
 
-  // ── METRICA BAR INVERSA (vince il valore più basso, es. posizione) ─
-  const mBarInv = (vA, vB, label, fmt='') => {
-    const nA=parseFloat(vA)||99, nB=parseFloat(vB)||99;
-    const iA=1/Math.max(nA,0.01), iB=1/Math.max(nB,0.01), tot=iA+iB||1;
-    const pA=Math.round(iA/tot*100);
-    const wA=nA<nB, wB=nB<nA;
-    return `<div class="comp-bar-row">
-      <span class="comp-bar-val comp-bar-val-a${wA?' comp-bar-winner':''}">${vA}${fmt}</span>
-      <div class="comp-bar-center">
-        <div class="comp-bar-label">${label}</div>
-        <div class="comp-bar-track">
-          <div class="comp-bar-fill-a" style="width:${pA}%"></div>
-          <div class="comp-bar-fill-b" style="width:${100-pA}%"></div>
-        </div>
-      </div>
-      <span class="comp-bar-val comp-bar-val-b${wB?' comp-bar-winner':''}">${vB}${fmt}</span>
-    </div>`;
-  };
-
-  // ── SCOREBOARD (conta metriche vinte) ─────────────────────────
-  const buildScoreboard = (sA, sB, nA, nB) => {
+  // ── VERDICT (conta metriche vinte) ────────────────────────────
+  const buildVerdict = (sA, sB, nA, nB) => {
     let scoreA=0, scoreB=0;
     const cmp = (a, b, inv=false) => {
-      if(a===b) return;
+      if (a===b) return;
       (inv ? a<b : a>b) ? scoreA++ : scoreB++;
     };
     cmp(sA.pts,          sB.pts);
@@ -11012,47 +11054,43 @@ async function renderComparatore() {
     cmp(sA.podi,         sB.podi);
     cmp(sA.top5,         sB.top5);
     cmp(sA.top10,        sB.top10);
-    cmp(sA.km,           sB.km);
     cmp(sA.convRate,     sB.convRate);
+    cmp(sA.podioRate,    sB.podioRate);
     cmp(sA.consistRate,  sB.consistRate);
     cmp(sA.recent5pts,   sB.recent5pts);
     cmp(parseFloat(sA.avgPos)||99, parseFloat(sB.avgPos)||99, true);
-    const leadA=scoreA>scoreB, leadB=scoreB>scoreA;
-    const leaderName = leadA ? nA.split(' ')[0] : leadB ? nB.split(' ')[0] : null;
-    const sub = leaderName
-      ? `${esc(leaderName)} conduce su ${scoreA+scoreB} metriche`
-      : 'Confronto in equilibrio';
-    return `<div class="comp-scoreboard">
-      <div class="comp-score-a" style="color:#FF6B00">${scoreA}</div>
-      <div class="comp-score-mid">
-        <div class="comp-score-title">METRICHE VINTE</div>
-        <div class="comp-score-sub">${sub}</div>
-      </div>
-      <div class="comp-score-b" style="color:#10B981">${scoreB}</div>
-    </div>`;
+    const total = scoreA + scoreB;
+    const leadA = scoreA > scoreB, leadB = scoreB > scoreA;
+    const winnerName = leadA ? nA : leadB ? nB : null;
+    const winnerColor = leadA ? '#FF6B00' : leadB ? '#10B981' : 'var(--text-muted)';
+    const verdictText = winnerName
+      ? `🏆 ${esc(winnerName.split(' ')[0])}`
+      : 'PARI';
+    const subText = winnerName
+      ? `conduce su ${total} metriche`
+      : `equilibrio perfetto`;
+    return { scoreA, scoreB, verdictText, winnerColor, subText, leadA, leadB };
   };
 
   // ── BADGES (chi primeggia in cosa) ────────────────────────────
-  const buildBadges = (sA, sB, nA, nB) => {
+  const buildBattleBadges = (sA, sB, nA, nB) => {
     const bA=[], bB=[];
-    if(sA.pts    > sB.pts)    bA.push('⚡ Top scorer');  else if(sB.pts    > sA.pts)    bB.push('⚡ Top scorer');
-    if(sA.wins   > sB.wins)   bA.push('🏆 Più vittorie'); else if(sB.wins   > sA.wins)   bB.push('🏆 Più vittorie');
-    if(sA.recent5pts > sB.recent5pts) bA.push('🔥 Forma migliore'); else if(sB.recent5pts > sA.recent5pts) bB.push('🔥 Forma migliore');
-    if(sA.consistRate > sB.consistRate) bA.push('🎯 Più regolare'); else if(sB.consistRate > sA.consistRate) bB.push('🎯 Più regolare');
-    if(sA.km     > sB.km)     bA.push('🛣️ Più km');      else if(sB.km     > sA.km)     bB.push('🛣️ Più km');
-    if(sA.convRate > sB.convRate) bA.push('⚔️ Miglior conversione'); else if(sB.convRate > sA.convRate) bB.push('⚔️ Miglior conversione');
+    if(sA.pts       > sB.pts)       bA.push('⚡ Top scorer');      else if(sB.pts       > sA.pts)       bB.push('⚡ Top scorer');
+    if(sA.wins      > sB.wins)      bA.push('🏆 Più vittorie');    else if(sB.wins      > sA.wins)      bB.push('🏆 Più vittorie');
+    if(sA.recent5pts> sB.recent5pts)bA.push('🔥 Forma migliore'); else if(sB.recent5pts> sA.recent5pts)bB.push('🔥 Forma migliore');
+    if(sA.consistRate>sB.consistRate)bA.push('🎯 Più regolare');  else if(sB.consistRate>sA.consistRate)bB.push('🎯 Più regolare');
+    if(sA.convRate  > sB.convRate)  bA.push('⚔️ Miglior conv.');  else if(sB.convRate  > sA.convRate)  bB.push('⚔️ Miglior conv.');
     if(!bA.length && !bB.length) return '';
     const chips = (arr, col) => arr.map(b=>`<span class="comp-badge" style="border-color:${col};color:${col}">${b}</span>`).join('');
-    return `<div class="comp-badge-row">
-      <div class="comp-badges-side comp-badges-a">${chips(bA,'#FF6B00')}</div>
-      <div class="comp-badges-mid"></div>
-      <div class="comp-badges-side comp-badges-b">${chips(bB,'#10B981')}</div>
+    return `<div class="battle-badge-row">
+      <div class="battle-badges-side battle-badges-a">${chips(bA,'#FF6B00')}</div>
+      <div></div>
+      <div class="battle-badges-side battle-badges-b">${chips(bB,'#10B981')}</div>
     </div>`;
   };
 
-  // ── PROFILO DI RENDIMENTO (metriche derivate + distanza) ──────
-  const buildProfileSection = (sA, sB, nA, nB, aRes, bRes) => {
-    // Segmentazione per distanza gara
+  // ── PROFILO PER DISTANZA (sezione compatta) ───────────────────
+  const buildDistProfile = (aRes, bRes, nA, nB) => {
     const byDist = res => ({
       short: res.filter(r=>(parseFloat(r.km)||0)<80),
       mid:   res.filter(r=>(parseFloat(r.km)||0)>=80&&(parseFloat(r.km)||0)<130),
@@ -11076,55 +11114,37 @@ async function renderComparatore() {
         </td>
       </tr>`;
     };
-    const hasDist = dA.short.length||dA.mid.length||dA.long.length||dB.short.length||dB.mid.length||dB.long.length;
-    return `<div class="comp-section">
-      <div class="comp-section-title">Profilo di Rendimento</div>
-      <div class="comp-stats-grid">
-        ${mBar(sA.convRate,    sB.convRate,    'VITTORIE SUI RISULTATI', '%')}
-        ${mBar(sA.podioRate,   sB.podioRate,   'PODI SUI RISULTATI',     '%')}
-        ${mBar(sA.consistRate, sB.consistRate, 'REGOLARITÀ TOP-10',      '%')}
-      </div>
-      <div class="comp-trend-row">
-        <div style="text-align:right">
-          <div class="comp-trend-val" style="color:${sA.trend.color}">${sA.trend.label}</div>
-          <div class="comp-trend-lbl">ultimi 6 risultati</div>
-        </div>
-        <div class="comp-trend-mid">TREND</div>
-        <div>
-          <div class="comp-trend-val" style="color:${sB.trend.color}">${sB.trend.label}</div>
-          <div class="comp-trend-lbl">ultimi 6 risultati</div>
-        </div>
-      </div>
-      ${hasDist ? `<table class="comp-dist-table">
-        <thead><tr>
-          <th style="text-align:right">${esc(nA.split(' ')[0])}</th>
-          <th class="comp-dist-lbl">DISTANZA</th>
-          <th style="text-align:left">${esc(nB.split(' ')[0])}</th>
-        </tr></thead>
-        <tbody>
-          ${distRow('CORTA < 80 km',   dA.short, dB.short)}
-          ${distRow('MEDIA 80–130 km', dA.mid,   dB.mid)}
-          ${distRow('LUNGA > 130 km',  dA.long,  dB.long)}
-        </tbody>
-      </table>` : ''}
-    </div>`;
+    const rows = [
+      distRow('CORTA < 80 km',   dA.short, dB.short),
+      distRow('MEDIA 80–130 km', dA.mid,   dB.mid),
+      distRow('LUNGA > 130 km',  dA.long,  dB.long),
+    ].join('');
+    if (!rows) return '';
+    return `<table class="comp-dist-table">
+      <thead><tr>
+        <th style="text-align:right;font-size:0.6rem;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:var(--text-muted);padding-bottom:6px">${esc(nA.split(' ')[0])}</th>
+        <th class="comp-dist-lbl">DISTANZA</th>
+        <th style="text-align:left;font-size:0.6rem;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:var(--text-muted);padding-bottom:6px">${esc(nB.split(' ')[0])}</th>
+      </tr></thead>
+      <tbody>${rows}</tbody>
+    </table>`;
   };
 
-  // ── ULTIMI RISULTATI (tabella reale, niente testo generato) ────
+  // ── ULTIMI RISULTATI ──────────────────────────────────────────
   const buildRecentResults = (res, name, color) => {
-    const sorted = [...res].sort((a,b)=>(b.data||'').localeCompare(a.data||'')).slice(0,10);
+    const sorted = [...res].sort((a,b)=>(b.data||'').localeCompare(a.data||'')).slice(0,8);
     if (!sorted.length) return `<div style="color:var(--text-muted);padding:12px 0;font-size:0.82rem">Nessun risultato</div>`;
-    return `<div class="comp-recent-table">
-      <div class="comp-recent-name" style="color:${color};font-weight:700;font-size:0.75rem;letter-spacing:.08em;text-transform:uppercase;margin-bottom:6px">${esc(name)}</div>
-      <table class="results-table" style="font-size:0.8rem;width:100%">
+    return `<div>
+      <div class="comp-recent-name" style="color:${color}">${esc(name)}</div>
+      <table class="results-table" style="font-size:0.78rem;width:100%">
         <thead><tr><th>DATA</th><th>GARA</th><th style="text-align:center">POS</th><th style="text-align:right">PT</th></tr></thead>
         <tbody>${sorted.map(r=>`<tr>
           <td class="td-date" style="white-space:nowrap">${fmtDateShort(r.data)}</td>
-          <td class="td-race" style="max-width:180px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap">
+          <td class="td-race" style="max-width:160px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap">
             <a href="#/gara/${esc(r.gara_id)}">${esc(r.nome_gara)}</a>
           </td>
           <td class="td-pos ${posClass(r.posizione)}" style="text-align:center;font-weight:700">${r.posizione}°</td>
-          <td style="text-align:right;color:var(--text-muted);font-size:0.75rem">${r.punti_effettivi||0}</td>
+          <td style="text-align:right;color:var(--text-muted);font-size:0.72rem">${r.punti_effettivi||0}</td>
         </tr>`).join('')}</tbody>
       </table>
     </div>`;
@@ -11137,9 +11157,6 @@ async function renderComparatore() {
     );
     const list = Object.values(athletes).filter(a=>validIds.has(a.id))
       .sort((a,b)=>(a.cognome||'').localeCompare(b.cognome||''));
-    const opts = (sel) => list.map(a=>
-      `<option value="${a.id}" ${a.id===sel?'selected':''}>${esc(a.cognome)} ${esc(a.nome)}</option>`
-    ).join('');
 
     const acItems = list.map(a => ({ id: a.id, label: `${a.cognome} ${a.nome}`, sub: a.team_attuale||'' }));
 
@@ -11157,7 +11174,7 @@ async function renderComparatore() {
       </div>
       <div class="comp-empty-state">
         <div class="comp-empty-icon">⚔️</div>
-        <div class="comp-empty-text">Seleziona due atleti per avviare il confronto</div>
+        <div class="comp-empty-text">Seleziona due atleti per avviare la sfida</div>
       </div>`;
 
     const aD=athletes[compA], bD=athletes[compB];
@@ -11168,112 +11185,133 @@ async function renderComparatore() {
     const nA=`${aD.cognome} ${aD.nome}`, nB=`${bD.cognome} ${bD.nome}`;
     const iA=((aD.cognome||'?')[0]+(aD.nome||'?')[0]).toUpperCase();
     const iB=((bD.cognome||'?')[0]+(bD.nome||'?')[0]).toUpperCase();
+    const verdict = buildVerdict(sA, sB, nA, nB);
 
-    const advRows = [
-      {l:'TOP 5',                  vA:sA.top5,               vB:sB.top5,               nA:sA.top5,            nB:sB.top5},
-      {l:'TOP 10',                 vA:sA.top10,              vB:sB.top10,              nA:sA.top10,           nB:sB.top10},
-      {l:'PUNTI / PIAZZAMENTO',    vA:sA.ptsPerResult+' pt', vB:sB.ptsPerResult+' pt', nA:sA.ptsPerResult,    nB:sB.ptsPerResult},
-      {l:'POSIZIONE MEDIA',        vA:sA.avgPos+'°',         vB:sB.avgPos+'°',         nA:10-(+sA.avgPos||10), nB:10-(+sB.avgPos||10)},
-      {l:'FORMA RECENTE (5 ris.)', vA:sA.recent5pts+' pt',  vB:sB.recent5pts+' pt',  nA:sA.recent5pts,      nB:sB.recent5pts},
-    ].map(m => {
-      const tot=(m.nA||0)+(m.nB||0)||1, pA=Math.round((m.nA||0)/tot*100);
-      const wA=m.nA>m.nB, wB=m.nB>m.nA;
-      return `<div class="comp-bar-row">
-        <span class="comp-bar-val comp-bar-val-a${wA?' comp-bar-winner':''}">${m.vA}</span>
-        <div class="comp-bar-center">
-          <div class="comp-bar-label">${m.l}</div>
-          <div class="comp-bar-track">
-            <div class="comp-bar-fill-a" style="width:${pA}%"></div>
-            <div class="comp-bar-fill-b" style="width:${100-pA}%"></div>
-          </div>
-        </div>
-        <span class="comp-bar-val comp-bar-val-b${wB?' comp-bar-winner':''}">${m.vB}</span>
-      </div>`;
-    }).join('');
+    // Share URL
+    const shareUrl = `${location.origin}${location.pathname}#/comparatore?a=${encodeURIComponent(compA)}&b=${encodeURIComponent(compB)}&g=${compGender}${compCat?'&cat='+encodeURIComponent(compCat):''}`;
 
     return `
+      <!-- Selettori compatti -->
       <div class="comp-selectors-compact">
         ${buildCompAc('a', acItems, compA)}
         <span class="comp-vs-sm">VS</span>
         ${buildCompAc('b', acItems, compB)}
       </div>
 
-      <div class="comp-hero">
-        <div class="comp-hero-side comp-hero-a">
-          <div class="comp-hero-avatar comp-hero-avatar-a">${iA}</div>
-          <div class="comp-hero-name">${esc(nA)}</div>
-          <div class="comp-hero-meta">${esc(aD.team_attuale||'—')} · ${esc(aD.categoria||'—')}</div>
-          <div class="comp-hero-tri">
-            <div class="comp-hero-tri-item">
-              <div class="comp-hero-tri-val" style="color:#FF6B00">${sA.wins}</div>
-              <div class="comp-hero-tri-lbl">VITT.</div>
+      <!-- ① BATTLE ARENA -->
+      <div class="battle-arena">
+        <div class="battle-side battle-side-a">
+          <div class="battle-avatar battle-avatar-a">${iA}</div>
+          <div class="battle-name">${esc(nA)}</div>
+          <div class="battle-team">${esc(aD.team_attuale||'—')}</div>
+          <div class="battle-stats-row">
+            <div class="battle-stat">
+              <div class="battle-stat-val" style="color:#FF6B00">${sA.wins}</div>
+              <div class="battle-stat-lbl">Vitt.</div>
             </div>
-            <div class="comp-hero-tri-item">
-              <div class="comp-hero-tri-val">${sA.podi}</div>
-              <div class="comp-hero-tri-lbl">PODI</div>
+            <div class="battle-stat">
+              <div class="battle-stat-val">${sA.podi}</div>
+              <div class="battle-stat-lbl">Podi</div>
             </div>
-            <div class="comp-hero-tri-item">
-              <div class="comp-hero-tri-val">${sA.pts}</div>
-              <div class="comp-hero-tri-lbl">PT</div>
-            </div>
-          </div>
-          <div class="comp-hero-form">${formPills(sA.recent8)}</div>
-          <div class="comp-hero-trend" style="color:${sA.trend.color}">${sA.trend.label}</div>
-        </div>
-        <div class="comp-hero-center"><div class="comp-vs-text">VS</div></div>
-        <div class="comp-hero-side comp-hero-b">
-          <div class="comp-hero-avatar comp-hero-avatar-b">${iB}</div>
-          <div class="comp-hero-name">${esc(nB)}</div>
-          <div class="comp-hero-meta">${esc(bD.team_attuale||'—')} · ${esc(bD.categoria||'—')}</div>
-          <div class="comp-hero-tri">
-            <div class="comp-hero-tri-item">
-              <div class="comp-hero-tri-val" style="color:#10B981">${sB.wins}</div>
-              <div class="comp-hero-tri-lbl">VITT.</div>
-            </div>
-            <div class="comp-hero-tri-item">
-              <div class="comp-hero-tri-val">${sB.podi}</div>
-              <div class="comp-hero-tri-lbl">PODI</div>
-            </div>
-            <div class="comp-hero-tri-item">
-              <div class="comp-hero-tri-val">${sB.pts}</div>
-              <div class="comp-hero-tri-lbl">PT</div>
+            <div class="battle-stat">
+              <div class="battle-stat-val">${sA.pts}</div>
+              <div class="battle-stat-lbl">Pt</div>
             </div>
           </div>
-          <div class="comp-hero-form">${formPills(sB.recent8)}</div>
-          <div class="comp-hero-trend" style="color:${sB.trend.color}">${sB.trend.label}</div>
+          <div class="battle-form-strip">${formPills(sA.recent8)}</div>
+          <div class="battle-trend" style="color:${sA.trend.color}">${sA.trend.label}</div>
+        </div>
+
+        <div class="battle-vs">
+          <div class="battle-vs-text">VS</div>
+        </div>
+
+        <div class="battle-side battle-side-b">
+          <div class="battle-avatar battle-avatar-b">${iB}</div>
+          <div class="battle-name">${esc(nB)}</div>
+          <div class="battle-team">${esc(bD.team_attuale||'—')}</div>
+          <div class="battle-stats-row">
+            <div class="battle-stat">
+              <div class="battle-stat-val" style="color:#10B981">${sB.wins}</div>
+              <div class="battle-stat-lbl">Vitt.</div>
+            </div>
+            <div class="battle-stat">
+              <div class="battle-stat-val">${sB.podi}</div>
+              <div class="battle-stat-lbl">Podi</div>
+            </div>
+            <div class="battle-stat">
+              <div class="battle-stat-val">${sB.pts}</div>
+              <div class="battle-stat-lbl">Pt</div>
+            </div>
+          </div>
+          <div class="battle-form-strip">${formPills(sB.recent8)}</div>
+          <div class="battle-trend" style="color:${sB.trend.color}">${sB.trend.label}</div>
         </div>
       </div>
 
-      ${buildScoreboard(sA, sB, nA, nB)}
-      ${buildBadges(sA, sB, nA, nB)}
-
-      <div class="comp-section">
-        <div class="comp-section-title">Statistiche Stagionali</div>
-        <div class="comp-stats-grid">
-          ${mBar(sA.pts,     sB.pts,     'PUNTI',              ' pt', true)}
-          ${mBar(sA.wins,    sB.wins,    'VITTORIE')}
-          ${mBar(sA.podi,    sB.podi,    'PODI (TOP 3)')}
-          ${mBar(sA.gare,    sB.gare,    'GARE CON RISULTATO')}
-          ${mBar(sA.km,      sB.km,      'KM',                 ' km')}
-          ${mBar(sA.mediaKm, sB.mediaKm, 'VELOCITÀ MEDIA',     ' km/h')}
-          ${sA.bestPos && sB.bestPos ? mBarInv(sA.bestPos+'°', sB.bestPos+'°', 'MIGLIOR PIAZZAMENTO') : ''}
+      <!-- ② VERDICT PANEL -->
+      <div class="battle-verdict">
+        <div class="battle-verdict-score battle-verdict-score-a">${verdict.scoreA}</div>
+        <div class="battle-verdict-mid">
+          <div class="battle-verdict-label">Metriche vinte</div>
+          <div class="battle-verdict-winner" style="color:${verdict.winnerColor}">${verdict.verdictText}</div>
+          <div class="battle-verdict-sub">${verdict.subText}</div>
+          <button class="battle-share-btn" onclick="window.shareBattle(${JSON.stringify(shareUrl)}, ${JSON.stringify(nA + ' vs ' + nB)})">
+            <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><circle cx="18" cy="5" r="3"/><circle cx="6" cy="12" r="3"/><circle cx="18" cy="19" r="3"/><line x1="8.59" y1="13.51" x2="15.42" y2="17.49"/><line x1="15.41" y1="6.51" x2="8.59" y2="10.49"/></svg>
+            Condividi sfida
+          </button>
         </div>
+        <div class="battle-verdict-score battle-verdict-score-b">${verdict.scoreB}</div>
       </div>
 
-      ${buildProfileSection(sA, sB, nA, nB, aRes, bRes)}
+      <!-- ③ BADGE ACHIEVEMENTS -->
+      ${buildBattleBadges(sA, sB, nA, nB)}
 
+      <!-- ④ ROUND BY ROUND -->
+      <div class="battle-rounds">
+        <div class="battle-rounds-header">
+          <span class="battle-rounds-title">Round by Round</span>
+          <span style="font-size:0.65rem;color:var(--text-muted)">su stagione completa</span>
+        </div>
+        ${battleRound(sA.pts,          sB.pts,          'PUNTI',              ' pt')}
+        ${battleRound(sA.wins,         sB.wins,         'VITTORIE')}
+        ${battleRound(sA.podi,         sB.podi,         'PODI (TOP 3)')}
+        ${battleRound(sA.top5,         sB.top5,         'TOP 5')}
+        ${battleRound(sA.top10,        sB.top10,        'TOP 10')}
+        ${battleRound(sA.gare,         sB.gare,         'GARE CON RISULTATO')}
+        ${battleRound(sA.convRate,     sB.convRate,     'VITTORIE SUI RISULTATI', '%')}
+        ${battleRound(sA.podioRate,    sB.podioRate,    'PODI SUI RISULTATI',     '%')}
+        ${battleRound(sA.consistRate,  sB.consistRate,  'REGOLARITÀ TOP-10',      '%')}
+        ${sA.avgPos!=='—'&&sB.avgPos!=='—' ? battleRound(sA.avgPos+'°', sB.avgPos+'°', 'POSIZIONE MEDIA', '', true) : ''}
+        ${battleRound(sA.recent5pts,   sB.recent5pts,   'FORMA RECENTE (5 ris.)', ' pt')}
+      </div>
+
+      <!-- ⑤ TREND -->
       <div class="comp-section">
-        <div class="comp-section-title">Metriche di Rendimento</div>
-        <div class="comp-stats-grid">${advRows}</div>
+        <div class="comp-section-title">Trend & Profilo</div>
+        <div class="comp-trend-row">
+          <div style="text-align:right">
+            <div class="comp-trend-val" style="color:${sA.trend.color}">${sA.trend.label}</div>
+            <div class="comp-trend-lbl">ultimi 6 risultati</div>
+          </div>
+          <div class="comp-trend-mid">TREND</div>
+          <div>
+            <div class="comp-trend-val" style="color:${sB.trend.color}">${sB.trend.label}</div>
+            <div class="comp-trend-lbl">ultimi 6 risultati</div>
+          </div>
+        </div>
+        ${buildDistProfile(aRes, bRes, nA, nB)}
       </div>
 
+      <!-- ⑥ TESTA A TESTA DIRETTO -->
       ${buildH2H(aRes, bRes, nA, nB)}
 
+      <!-- ⑦ ULTIMI RISULTATI -->
       <div class="comp-section">
         <div class="comp-section-title">Ultimi Risultati</div>
-        <div style="display:grid;grid-template-columns:1fr 1fr;gap:20px">
-          <div>${buildRecentResults(aRes, nA, '#FF6B00')}</div>
-          <div>${buildRecentResults(bRes, nB, '#10B981')}</div>
+        <div class="comp-recent-split">
+          ${buildRecentResults(aRes, nA, '#FF6B00')}
+          ${buildRecentResults(bRes, nB, '#10B981')}
         </div>
       </div>`;
   };
@@ -11284,9 +11322,6 @@ async function renderComparatore() {
     resultsRaw.filter(r=>r.genere===compGender&&(!compCat||getRankingFileCode(r)===compCat))
       .forEach(r=>{ if(r.team_id) teamMap[r.team_id]={id:r.team_id,nome:r.team}; });
     const list = Object.values(teamMap).sort((a,b)=>(a.nome||'').localeCompare(b.nome||''));
-    const opts = (sel) => list.map(t=>
-      `<option value="${t.id}" ${t.id===sel?'selected':''}>${esc(t.nome)}</option>`
-    ).join('');
 
     const acItemsT = list.map(t => ({ id: t.id, label: t.nome, sub: '' }));
 
@@ -11304,7 +11339,7 @@ async function renderComparatore() {
       </div>
       <div class="comp-empty-state">
         <div class="comp-empty-icon">⚔️</div>
-        <div class="comp-empty-text">Seleziona due team per avviare il confronto</div>
+        <div class="comp-empty-text">Seleziona due team per avviare la sfida</div>
       </div>`;
 
     const nA=list.find(t=>t.id===compA)?.nome||compA;
@@ -11344,24 +11379,9 @@ async function renderComparatore() {
     const sA=stT(aRes), sB=stT(bRes);
     const iA=nA.split(/\s+/).map(w=>w[0]||'').join('').toUpperCase().slice(0,3);
     const iB=nB.split(/\s+/).map(w=>w[0]||'').join('').toUpperCase().slice(0,3);
+    const verdict = buildVerdict(sA, sB, nA, nB);
 
-    const advRows = [
-      {l:'TOP 5',                  vA:sA.top5,               vB:sB.top5,               nA:sA.top5,            nB:sB.top5},
-      {l:'TOP 10',                 vA:sA.top10,              vB:sB.top10,              nA:sA.top10,           nB:sB.top10},
-      {l:'PUNTI / PIAZZAMENTO',    vA:sA.ptsPerResult+' pt', vB:sB.ptsPerResult+' pt', nA:sA.ptsPerResult,    nB:sB.ptsPerResult},
-      {l:'POSIZIONE MEDIA',        vA:sA.avgPos+'°',         vB:sB.avgPos+'°',         nA:10-(+sA.avgPos||10), nB:10-(+sB.avgPos||10)},
-      {l:'FORMA RECENTE (5 ris.)', vA:sA.recent5pts+' pt',  vB:sB.recent5pts+' pt',  nA:sA.recent5pts,      nB:sB.recent5pts},
-    ].map(m=>{
-      const tot=(m.nA||0)+(m.nB||0)||1, pA=Math.round((m.nA||0)/tot*100);
-      const wA=m.nA>m.nB, wB=m.nB>m.nA;
-      return `<div class="comp-bar-row">
-        <span class="comp-bar-val comp-bar-val-a${wA?' comp-bar-winner':''}">${m.vA}</span>
-        <div class="comp-bar-center"><div class="comp-bar-label">${m.l}</div>
-          <div class="comp-bar-track"><div class="comp-bar-fill-a" style="width:${pA}%"></div><div class="comp-bar-fill-b" style="width:${100-pA}%"></div></div>
-        </div>
-        <span class="comp-bar-val comp-bar-val-b${wB?' comp-bar-winner':''}">${m.vB}</span>
-      </div>`;
-    }).join('');
+    const shareUrl = `${location.origin}${location.pathname}#/comparatore?a=${encodeURIComponent(compA)}&b=${encodeURIComponent(compB)}&g=${compGender}&mode=team${compCat?'&cat='+encodeURIComponent(compCat):''}`;
 
     return `
       <div class="comp-selectors-compact">
@@ -11370,52 +11390,67 @@ async function renderComparatore() {
         ${buildCompAc('b', acItemsT, compB)}
       </div>
 
-      <div class="comp-hero">
-        <div class="comp-hero-side comp-hero-a">
-          <div class="comp-hero-avatar comp-hero-avatar-a" style="border-radius:10px;font-size:1.1rem">${iA}</div>
-          <div class="comp-hero-name">${esc(nA)}</div>
-          <div class="comp-hero-meta">${sA.atleti} corridori schierati</div>
-          <div class="comp-hero-tri">
-            <div class="comp-hero-tri-item">
-              <div class="comp-hero-tri-val" style="color:#FF6B00">${sA.wins}</div>
-              <div class="comp-hero-tri-lbl">VITT.</div>
+      <!-- BATTLE ARENA TEAM -->
+      <div class="battle-arena">
+        <div class="battle-side battle-side-a">
+          <div class="battle-avatar battle-avatar-a" style="border-radius:12px;font-size:1.1rem">${iA}</div>
+          <div class="battle-name">${esc(nA)}</div>
+          <div class="battle-team">${sA.atleti} corridori schierati</div>
+          <div class="battle-stats-row">
+            <div class="battle-stat">
+              <div class="battle-stat-val" style="color:#FF6B00">${sA.wins}</div>
+              <div class="battle-stat-lbl">Vitt.</div>
             </div>
-            <div class="comp-hero-tri-item">
-              <div class="comp-hero-tri-val">${sA.podi}</div>
-              <div class="comp-hero-tri-lbl">PODI</div>
+            <div class="battle-stat">
+              <div class="battle-stat-val">${sA.podi}</div>
+              <div class="battle-stat-lbl">Podi</div>
             </div>
-            <div class="comp-hero-tri-item">
-              <div class="comp-hero-tri-val">${sA.pts}</div>
-              <div class="comp-hero-tri-lbl">PT</div>
+            <div class="battle-stat">
+              <div class="battle-stat-val">${sA.pts}</div>
+              <div class="battle-stat-lbl">Pt</div>
             </div>
           </div>
-          <div class="comp-hero-trend" style="color:${sA.trend.color}">${sA.trend.label}</div>
+          <div class="battle-trend" style="color:${sA.trend.color}">${sA.trend.label}</div>
         </div>
-        <div class="comp-hero-center"><div class="comp-vs-text">VS</div></div>
-        <div class="comp-hero-side comp-hero-b">
-          <div class="comp-hero-avatar comp-hero-avatar-b" style="border-radius:10px;font-size:1.1rem">${iB}</div>
-          <div class="comp-hero-name">${esc(nB)}</div>
-          <div class="comp-hero-meta">${sB.atleti} corridori schierati</div>
-          <div class="comp-hero-tri">
-            <div class="comp-hero-tri-item">
-              <div class="comp-hero-tri-val" style="color:#10B981">${sB.wins}</div>
-              <div class="comp-hero-tri-lbl">VITT.</div>
+        <div class="battle-vs"><div class="battle-vs-text">VS</div></div>
+        <div class="battle-side battle-side-b">
+          <div class="battle-avatar battle-avatar-b" style="border-radius:12px;font-size:1.1rem">${iB}</div>
+          <div class="battle-name">${esc(nB)}</div>
+          <div class="battle-team">${sB.atleti} corridori schierati</div>
+          <div class="battle-stats-row">
+            <div class="battle-stat">
+              <div class="battle-stat-val" style="color:#10B981">${sB.wins}</div>
+              <div class="battle-stat-lbl">Vitt.</div>
             </div>
-            <div class="comp-hero-tri-item">
-              <div class="comp-hero-tri-val">${sB.podi}</div>
-              <div class="comp-hero-tri-lbl">PODI</div>
+            <div class="battle-stat">
+              <div class="battle-stat-val">${sB.podi}</div>
+              <div class="battle-stat-lbl">Podi</div>
             </div>
-            <div class="comp-hero-tri-item">
-              <div class="comp-hero-tri-val">${sB.pts}</div>
-              <div class="comp-hero-tri-lbl">PT</div>
+            <div class="battle-stat">
+              <div class="battle-stat-val">${sB.pts}</div>
+              <div class="battle-stat-lbl">Pt</div>
             </div>
           </div>
-          <div class="comp-hero-trend" style="color:${sB.trend.color}">${sB.trend.label}</div>
+          <div class="battle-trend" style="color:${sB.trend.color}">${sB.trend.label}</div>
         </div>
       </div>
 
-      ${buildScoreboard(sA, sB, nA, nB)}
-      ${buildBadges(sA, sB, nA, nB)}
+      <!-- VERDICT TEAM -->
+      <div class="battle-verdict">
+        <div class="battle-verdict-score battle-verdict-score-a">${verdict.scoreA}</div>
+        <div class="battle-verdict-mid">
+          <div class="battle-verdict-label">Metriche vinte</div>
+          <div class="battle-verdict-winner" style="color:${verdict.winnerColor}">${verdict.verdictText}</div>
+          <div class="battle-verdict-sub">${verdict.subText}</div>
+          <button class="battle-share-btn" onclick="window.shareBattle(${JSON.stringify(shareUrl)}, ${JSON.stringify(nA + ' vs ' + nB)})">
+            <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><circle cx="18" cy="5" r="3"/><circle cx="6" cy="12" r="3"/><circle cx="18" cy="19" r="3"/><line x1="8.59" y1="13.51" x2="15.42" y2="17.49"/><line x1="15.41" y1="6.51" x2="8.59" y2="10.49"/></svg>
+            Condividi sfida
+          </button>
+        </div>
+        <div class="battle-verdict-score battle-verdict-score-b">${verdict.scoreB}</div>
+      </div>
+
+      ${buildBattleBadges(sA, sB, nA, nB)}
 
       <div class="comp-section">
         <div class="comp-section-title">Statistiche Team</div>
@@ -11423,18 +11458,14 @@ async function renderComparatore() {
           ${mBar(sA.pts,    sB.pts,    'PUNTI',              ' pt', true)}
           ${mBar(sA.wins,   sB.wins,   'VITTORIE')}
           ${mBar(sA.podi,   sB.podi,   'PODI (TOP 3)')}
+          ${mBar(sA.top5,   sB.top5,   'TOP 5')}
+          ${mBar(sA.top10,  sB.top10,  'TOP 10')}
           ${mBar(sA.gare,   sB.gare,   'GARE CON RISULTATO')}
-          ${mBar(sA.km,     sB.km,     'KM',                 ' km')}
-          ${mBar(sA.atleti, sB.atleti, 'CORRIDORI SCHIERATI')}
-        </div>
-      </div>
-
-      <div class="comp-section">
-        <div class="comp-section-title">Profilo di Rendimento</div>
-        <div class="comp-stats-grid">
           ${mBar(sA.convRate,    sB.convRate,    'VITTORIE SUI RISULTATI', '%')}
           ${mBar(sA.podioRate,   sB.podioRate,   'PODI SUI RISULTATI',     '%')}
           ${mBar(sA.consistRate, sB.consistRate, 'REGOLARITÀ TOP-10',      '%')}
+          ${mBar(sA.recent5pts,  sB.recent5pts,  'FORMA RECENTE (5 ris.)', ' pt')}
+          ${mBar(sA.atleti, sB.atleti, 'CORRIDORI SCHIERATI')}
         </div>
         <div class="comp-trend-row">
           <div style="text-align:right">
@@ -11450,29 +11481,34 @@ async function renderComparatore() {
       </div>
 
       <div class="comp-section">
-        <div class="comp-section-title">Metriche di Rendimento</div>
-        <div class="comp-stats-grid">${advRows}</div>
-      </div>
-
-      <div class="comp-section">
         <div class="comp-section-title">Ultimi Risultati</div>
-        <div style="display:grid;grid-template-columns:1fr 1fr;gap:20px">
-          <div>${buildRecentResults(aRes, nA, '#FF6B00')}</div>
-          <div>${buildRecentResults(bRes, nB, '#10B981')}</div>
+        <div class="comp-recent-split">
+          ${buildRecentResults(aRes, nA, '#FF6B00')}
+          ${buildRecentResults(bRes, nB, '#10B981')}
         </div>
       </div>`;
   };
 
+  // ── URL param deep-link (condivisione sfida) ──────────────────
+  const hashParams = new URLSearchParams(location.hash.replace(/^[^?]*\??/, ''));
+  if (hashParams.get('a') && !compA) {
+    compA = hashParams.get('a');
+    compB = hashParams.get('b') || '';
+    if (hashParams.get('g')) compGender = hashParams.get('g');
+    if (hashParams.get('cat')) compCat = hashParams.get('cat');
+    if (hashParams.get('mode')) compMode = hashParams.get('mode');
+  }
+
+  // ── PAGE RENDER ───────────────────────────────────────────────
   setPage(`
     <div class="pg-header">
-      <div class="pg-eyebrow">⚡ CONFRONTO ATLETI & TEAM</div>
+      <div class="pg-eyebrow">⚔️ SFIDA</div>
       <h1 class="pg-title">COMPARATORE</h1>
     </div>
-    <p style="color:var(--text-muted);margin-bottom:24px">Confronta atleti o team della stessa categoria e genere</p>
     <div class="comp-filter-bar">
       <div class="comp-mode-tabs">
         <button class="comp-tab ${compMode==='atleta'?'comp-tab-active-a':''}" onclick="window.setCompMode('atleta')">Atleti</button>
-        <button class="comp-tab ${compMode==='team'?'comp-tab-active-b':''}" onclick="window.setCompMode('team')">Team</button>
+        <button class="comp-tab ${compMode==='team'?'comp-tab-active-b':''}"   onclick="window.setCompMode('team')">Team</button>
       </div>
       <div style="flex:1;min-width:120px">
         <label class="comp-label">Genere</label>
@@ -11497,6 +11533,20 @@ async function renderComparatore() {
   window.setCompA      = v => { compA=v; renderComparatore(); };
   window.setCompB      = v => { compB=v; renderComparatore(); };
 }
+
+// ── SHARE BATTLE ──────────────────────────────────────────────
+window.shareBattle = (url, title) => {
+  if (navigator.share) {
+    navigator.share({ title: `ItaliacritResultati — ${title}`, url })
+      .catch(() => {});
+  } else {
+    navigator.clipboard?.writeText(url).then(() => {
+      showToast('Link sfida copiato!', 'success');
+    }).catch(() => {
+      showToast('Copia: ' + url, 'info');
+    });
+  }
+};
 
 function renderRegolamento() {
   setPage(`
