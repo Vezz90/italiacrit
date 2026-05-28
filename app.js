@@ -5982,9 +5982,42 @@ async function updateRankTable() {
 
     // ── Narrative headline banner ─────────────────────────────
     let storyHtml = '';
-    if (!isFiltered) {
-      const headline   = generateNarrativeHeadline(filtered, globalData.resultsRaw, rankCat, _refDate);
-      const storyLines = buildWeeklyNarrative(filtered, globalData.resultsRaw, rankCat);
+    if (rankFilter && filtered.length >= 1) {
+      // Ricerca attiva: mostra la situazione in classifica del corridore trovato
+      const ath = filtered[0];
+      const leaderFull = ranking[0];
+      const gapToLeader = leaderFull && ath.atleta_id !== leaderFull.atleta_id
+        ? leaderFull.punti - ath.punti : 0;
+      const metrics = _metricCache[ath.atleta_id];
+      const badge = metrics?.badge;
+      // Streak
+      const athRes = globalData.resultsRaw
+        .filter(r => r.atleta_id === ath.atleta_id && getRankingFileCode(r) === rankCat && r.posizione)
+        .sort((a,b) => (b.data||'').localeCompare(a.data||''));
+      let streakTxt = '';
+      let ws = 0; for (const r of athRes) { if (r.posizione === 1) ws++; else break; }
+      let ps = 0; for (const r of athRes) { if (r.posizione <= 3) ps++; else break; }
+      if (ws >= 2) streakTxt = `🔥 ${ws} vittorie consecutive`;
+      else if (ps >= 2) streakTxt = `⚡ ${ps} podi di fila`;
+      // Challenger info
+      const above = ranking.find(r => r.pos === ath.pos - 1);
+      const below  = ranking.find(r => r.pos === ath.pos + 1);
+      const parts = [];
+      if (ath.pos === 1) parts.push(`Leader della classifica con ${ath.punti} pt`);
+      else parts.push(`${ath.pos}° in classifica · ${ath.punti} pt · −${gapToLeader} dal leader`);
+      if (streakTxt) parts.push(streakTxt);
+      if (above && ath.pos > 1) parts.push(`${above.punti - ath.punti} pt da ${esc(above.cognome)}`);
+      if (below) parts.push(`+${ath.punti - below.punti} pt su ${esc(below.cognome)}`);
+      const badgeHtml2 = badge ? `<span class="rk-badge-pill ${badge.cls}">${badge.emoji} ${badge.label}</span>` : '';
+      storyHtml = `
+        <div class="rk-narrative rk-narrative--athlete">
+          <div class="rk-narrative-label">SITUAZIONE IN CLASSIFICA · ${esc(ath.cognome)} ${esc(ath.nome)}</div>
+          <div class="rk-narrative-headline">${parts[0]}${badgeHtml2 ? ' ' + badgeHtml2 : ''}</div>
+          ${parts.slice(1).length ? `<div class="rk-narrative-details">${parts.slice(1).map(l=>`<span class="rk-narrative-detail">${l}</span>`).join('')}</div>` : ''}
+        </div>`;
+    } else if (!isFiltered) {
+      const headline   = generateNarrativeHeadline(ranking, globalData.resultsRaw, rankCat, _refDate);
+      const storyLines = buildWeeklyNarrative(ranking, globalData.resultsRaw, rankCat);
       const detailsHtml = storyLines.length
         ? `<div class="rk-narrative-details">${storyLines.map(l=>`<span class="rk-narrative-detail">${l}</span>`).join('')}</div>`
         : '';
