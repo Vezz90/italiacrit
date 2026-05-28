@@ -10937,3 +10937,178 @@ main.page:has(.itc-dash) {
 /* Team fire card — slightly shorter than athlete card */
 .itc-team-fire { min-height: 220px; margin-bottom: 12px; }
 .itc-team-fire .itc-fire-name { word-break: break-word; hyphens: auto; }
+
+/* ═══════════════════════════════════════════════════════════════
+   GAMIFICATION SYSTEM
+   ═══════════════════════════════════════════════════════════════ */
+
+/* ── Watch Button ─────────────────────────────────────────────── */
+.watch-btn {
+  display: inline-flex; align-items: center; gap: 6px;
+  padding: 7px 16px; border-radius: 6px; cursor: pointer;
+  font-size: .8rem; font-weight: 600; border: 1.5px solid var(--border-subtle);
+  background: var(--bg-card); color: var(--text-secondary);
+  transition: all .18s;
+}
+.watch-btn:hover { border-color: var(--accent); color: var(--accent); }
+.watch-btn--active {
+  background: rgba(245,158,11,.12); border-color: #F59E0B;
+  color: #F59E0B;
+}
+.watch-btn span { font-size: 1rem; line-height: 1; }
+
+/* ── Athlete Badge Strip ─────────────────────────────────────── */
+.ath-badge-strip {
+  display: flex; flex-wrap: wrap; gap: 7px;
+  padding: 10px 0 4px;
+}
+.ath-badge {
+  display: inline-flex; align-items: center; gap: 5px;
+  padding: 4px 10px; border-radius: 20px; font-size: .72rem; font-weight: 700;
+  border: 1px solid; letter-spacing: .03em;
+}
+.ath-badge--badge-fire, .ath-badge--badge-hot {
+  background: rgba(239,68,68,.1); border-color: rgba(239,68,68,.3); color: #EF4444;
+}
+.ath-badge--badge-leader, .ath-badge--badge-dominant {
+  background: rgba(245,158,11,.12); border-color: rgba(245,158,11,.35); color: #F59E0B;
+}
+.ath-badge--badge-surge, .ath-badge--badge-up {
+  background: rgba(99,102,241,.1); border-color: rgba(99,102,241,.3); color: #818CF8;
+}
+.ath-badge--badge-streak, .ath-badge--badge-consistent {
+  background: rgba(16,185,129,.1); border-color: rgba(16,185,129,.3); color: #10B981;
+}
+.ath-badge--badge-rookie, .ath-badge--badge-comeback {
+  background: rgba(20,184,166,.1); border-color: rgba(20,184,166,.3); color: #14B8A6;
+}
+.ath-badge--default {
+  background: var(--bg-elevated); border-color: var(--border-subtle); color: var(--text-secondary);
+}
+
+/* ── Weekly Digest Card ──────────────────────────────────────── */
+.itc-digest-card {}
+.itc-digest-week {
+  font-size: .65rem; color: var(--text-muted); font-weight: 400;
+}
+.itc-digest-list { padding: 4px 16px 12px; }
+.itc-digest-item {
+  padding: 7px 0;
+  font-size: .78rem; color: var(--text-secondary);
+  border-bottom: 1px solid var(--border-subtle);
+  line-height: 1.4;
+}
+.itc-digest-item:last-child { border-bottom: none; }
+.itc-digest-item strong { color: var(--text-primary); }
+
+/* ── MVP Card ────────────────────────────────────────────────── */
+.itc-mvp-card { cursor: pointer; }
+.itc-mvp-card:hover { background: var(--bg-elevated); }
+.itc-mvp-body {
+  display: flex; align-items: center; gap: 14px;
+  padding: 12px 16px 16px;
+}
+.itc-mvp-crown { font-size: 2.2rem; line-height: 1; flex-shrink: 0; }
+.itc-mvp-info { flex: 1; min-width: 0; }
+.itc-mvp-name {
+  font-size: .9rem; font-weight: 800; color: var(--text-primary);
+  white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
+}
+.itc-mvp-team {
+  font-size: .7rem; color: var(--text-muted); margin-top: 2px;
+}
+.itc-mvp-stats {
+  display: flex; flex-wrap: wrap; gap: 6px; margin-top: 8px;
+}
+.itc-mvp-stat {
+  font-size: .68rem; font-weight: 600; padding: 2px 8px;
+  border-radius: 12px; background: var(--bg-elevated); color: var(--text-secondary);
+}
+.itc-mvp-stat--win { background: rgba(245,158,11,.12); color: #F59E0B; }
+.itc-mvp-stat--pod { background: rgba(156,163,175,.12); color: #9CA3AF; }
+.itc-mvp-stat--pts { background: rgba(99,102,241,.1); color: #818CF8; }
+.itc-mvp-stat--streak { background: rgba(239,68,68,.1); color: #EF4444; }
+
+/* ── Upset Card ──────────────────────────────────────────────── */
+.itc-upset-card { cursor: pointer; }
+.itc-upset-card:hover { background: var(--bg-elevated); }
+.itc-upset-body {
+  display: flex; align-items: center; justify-content: space-between;
+  padding: 10px 16px 8px; gap: 8px;
+}
+.itc-upset-side { flex: 1; min-width: 0; text-align: center; }
+.itc-upset-side--beaten { opacity: .75; }
+.itc-upset-cls {
+  display: inline-block; font-size: .6rem; font-weight: 800;
+  padding: 2px 7px; border-radius: 12px; margin-bottom: 4px; letter-spacing: .04em;
+}
+.itc-upset-cls--winner { background: rgba(16,185,129,.15); color: #10B981; }
+.itc-upset-cls--beaten { background: rgba(107,114,128,.12); color: #6B7280; }
+.itc-upset-name {
+  font-size: .78rem; font-weight: 700; color: var(--text-primary);
+  white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
+}
+.itc-upset-role { font-size: .62rem; color: var(--text-muted); margin-top: 2px; }
+.itc-upset-vs {
+  font-size: 1.4rem; font-weight: 900; color: #F59E0B;
+  flex-shrink: 0; padding: 0 4px;
+}
+.itc-upset-race {
+  font-size: .65rem; color: var(--text-muted); text-align: center;
+  padding: 0 16px 12px;
+}
+
+/* ── Rookie Card ─────────────────────────────────────────────── */
+.itc-rookie-card { cursor: pointer; }
+.itc-rookie-card:hover { background: var(--bg-elevated); }
+.itc-rookie-body {
+  display: flex; align-items: center; gap: 14px;
+  padding: 12px 16px 16px;
+}
+.itc-rookie-icon { font-size: 2rem; line-height: 1; flex-shrink: 0; }
+.itc-rookie-info { flex: 1; min-width: 0; }
+.itc-rookie-name {
+  font-size: .88rem; font-weight: 800; color: var(--text-primary);
+  white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
+}
+.itc-rookie-team { font-size: .68rem; color: var(--text-muted); margin-top: 2px; }
+.itc-rookie-pos { font-size: .75rem; color: #14B8A6; font-weight: 700; margin-top: 5px; }
+.itc-rookie-stats {
+  display: flex; gap: 8px; margin-top: 6px; flex-wrap: wrap;
+}
+.itc-rookie-stats span {
+  font-size: .65rem; color: var(--text-muted); font-weight: 600;
+}
+.itc-rookie-stats span + span::before { content: '·'; margin-right: 8px; }
+
+/* ── Watchlist Card ──────────────────────────────────────────── */
+.itc-watchlist-empty {
+  padding: 16px; font-size: .78rem; color: var(--text-muted); line-height: 1.5;
+}
+.itc-watchlist-empty strong { color: var(--text-secondary); }
+.itc-watchlist-row {
+  display: flex; align-items: center; gap: 10px;
+  padding: 9px 16px; cursor: pointer;
+  border-bottom: 1px solid var(--border-subtle);
+  transition: background .15s;
+}
+.itc-watchlist-row:last-child { border-bottom: none; }
+.itc-watchlist-row:hover { background: var(--bg-elevated); }
+.itc-watchlist-info { flex: 1; min-width: 0; }
+.itc-watchlist-name {
+  font-size: .8rem; font-weight: 700; color: var(--text-primary);
+  white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
+}
+.itc-watchlist-sub { font-size: .68rem; color: var(--text-muted); margin-top: 2px; }
+.itc-wl-streak {
+  font-size: .65rem; font-weight: 700; color: #EF4444;
+  background: rgba(239,68,68,.1); border-radius: 10px; padding: 1px 6px;
+  margin-left: 5px;
+}
+.itc-wl-remove {
+  background: none; border: none; cursor: pointer;
+  color: var(--text-muted); font-size: .75rem; padding: 4px 6px;
+  border-radius: 4px; flex-shrink: 0;
+  transition: color .15s, background .15s;
+}
+.itc-wl-remove:hover { color: #EF4444; background: rgba(239,68,68,.1); }

@@ -2618,6 +2618,30 @@ function getRankBadge(entry, ranking, resultsRaw, catCode, refDate, momentum, fo
   return null;
 }
 
+// ── WATCHLIST ────────────────────────────────────────────────────
+function getWatchlist() {
+  try { return JSON.parse(localStorage.getItem('itc_watchlist') || '[]'); } catch { return []; }
+}
+function isWatched(atleta_id) {
+  return getWatchlist().some(w => w.id === atleta_id);
+}
+window.toggleWatch = function(atleta_id, cognome, nome) {
+  let list = getWatchlist();
+  const idx = list.findIndex(w => w.id === atleta_id);
+  if (idx >= 0) { list.splice(idx, 1); }
+  else { list.push({ id: atleta_id, cognome, nome, ts: Date.now() }); }
+  try { localStorage.setItem('itc_watchlist', JSON.stringify(list)); } catch {}
+  const added = idx < 0;
+  const btn = document.getElementById('watch-btn-' + atleta_id);
+  if (btn) {
+    btn.classList.toggle('watch-btn--active', added);
+    btn.innerHTML = added
+      ? '<span>★</span> Seguito'
+      : '<span>☆</span> Segui';
+  }
+  return added;
+};
+
 // Generate a single impactful narrative headline for the season pulse banner.
 function generateNarrativeHeadline(ranking, resultsRaw, catCode, refDate) {
   if (!ranking.length) return '';
@@ -4363,6 +4387,190 @@ async function renderHubBars() {
     </div>`;
   }
 
+  // ── Weekly Digest ─────────────────────────────────────────────
+  function buildWeeklyDigestCard() {
+    const cut7 = (()=>{ const d=new Date(lastDate||new Date()); d.setDate(d.getDate()-7); return d.toISOString().split('T')[0]; })();
+    const recent = hubRes.filter(r=>r.data>=cut7&&r.posizione);
+    if (!recent.length) return '';
+    const races = new Set(recent.map(r=>r.gara_id)).size;
+    const items = [];
+    // Vittorie
+    const wins = recent.filter(r=>r.posizione===1);
+    wins.slice(0,2).forEach(w=>{ items.push(`🏆 <strong>${esc(w.cognome)}</strong> vince — ${esc(w.nome_gara||'')}`); });
+    // Top mover
+    const catRes = hubRes.filter(r=>r.posizione&&(r.punti_effettivi||0)>0);
+    const snapNow2 = computeRankSnapshot(catRes, mainCat, null);
+    const snapBef2 = computeRankSnapshot(catRes, mainCat, lastDate);
+    let topMover=null, topGain=0;
+    for(const [aid,posNow] of Object.entries(snapNow2)){
+      const posBef=snapBef2[aid]; if(!posBef) continue;
+      const gain=posBef-posNow;
+      if(gain>topGain&&posNow<=20){topGain=gain;topMover={aid,posNow};}
+    }
+    if(topMover&&topGain>=2){
+      const r0=recent.find(r=>r.atleta_id===topMover.aid);
+      if(r0) items.push(`📈 <strong>${esc(r0.cognome)}</strong> sale ${topGain} posizioni (${topMover.posNow}°)`);
+    }
+    // Gap leader
+    if(hubRanking.length>=2){
+      const gap=hubRanking[0].punti-hubRanking[1].punti;
+      if(gap<25) items.push(`⚔ Solo ${gap} pt tra <strong>${esc(hubRanking[0].cognome)}</strong> e <strong>${esc(hubRanking[1].cognome)}</strong>`);
+    }
+    if(!items.length) return '';
+    const d=new Date(lastDate||new Date());
+    const s=new Date(d); s.setDate(d.getDate()-6);
+    const weekLbl=`${s.getDate()}–${d.getDate()} ${d.toLocaleDateString('it-IT',{month:'short'})}`;
+    return `<div class="itc-card itc-digest-card">
+      <div class="itc-card-hdr"><span class="itc-card-title">📅 QUESTA SETTIMANA</span><span class="itc-digest-week">${weekLbl} · ${races} gar${races===1?'a':'e'}</span></div>
+      <div class="itc-digest-list">${items.map(it=>`<div class="itc-digest-item">${it}</div>`).join('')}</div>
+    </div>`;
+  }
+
+  // ── Atleta della settimana (MVP) ──────────────────────────────
+  function buildMVPCard() {
+    const cut7=(()=>{ const d=new Date(lastDate||new Date()); d.setDate(d.getDate()-7); return d.toISOString().split('T')[0]; })();
+    const agg={};
+    hubRes.filter(r=>r.data>=cut7&&r.posizione).forEach(r=>{
+      const k=r.atleta_id;
+      if(!agg[k]) agg[k]={atleta_id:k,cognome:r.cognome,nome:r.nome,team:r.team,wins:0,podi:0,pts:0,races:0};
+      agg[k].races++; agg[k].pts+=(r.punti_effettivi||0);
+      if(r.posizione===1) agg[k].wins++;
+      if(r.posizione<=3) agg[k].podi++;
+    });
+    const sorted=Object.values(agg).sort((a,b)=>b.wins-a.wins||b.pts-a.pts);
+    const mvp=sorted[0]; if(!mvp||mvp.races<1) return '';
+    const rEntry=hubRanking.find(r=>r.atleta_id===mvp.atleta_id);
+    const pos=rEntry?.pos;
+    const streak=(()=>{
+      const rs=hubRes.filter(r=>r.atleta_id===mvp.atleta_id&&r.posizione).sort((a,b)=>(b.data||'').localeCompare(a.data||''));
+      let s=0; for(const r of rs){if(r.posizione===1)s++;else break;} return s;
+    })();
+    return `<div class="itc-card itc-mvp-card" onclick="location.hash='#/atleta/${encodeURIComponent(mvp.atleta_id)}'">
+      <div class="itc-card-hdr"><span class="itc-card-title">🏆 ATLETA DELLA SETTIMANA</span></div>
+      <div class="itc-mvp-body">
+        <div class="itc-mvp-crown">🏆</div>
+        <div class="itc-mvp-info">
+          <div class="itc-mvp-name">${esc(mvp.cognome)} ${esc(mvp.nome)}</div>
+          <div class="itc-mvp-team">${esc(mvp.team||'')}</div>
+          <div class="itc-mvp-stats">
+            ${mvp.wins>0?`<span class="itc-mvp-stat itc-mvp-stat--win">${mvp.wins} vittori${mvp.wins>1?'e':'a'}</span>`:''}
+            ${mvp.podi>mvp.wins?`<span class="itc-mvp-stat itc-mvp-stat--pod">${mvp.podi} podi</span>`:''}
+            <span class="itc-mvp-stat itc-mvp-stat--pts">${mvp.pts} pt</span>
+            ${pos?`<span class="itc-mvp-stat">${pos}° in classifica</span>`:''}
+            ${streak>=2?`<span class="itc-mvp-stat itc-mvp-stat--streak">🔥 ${streak} di fila</span>`:''}
+          </div>
+        </div>
+      </div>
+    </div>`;
+  }
+
+  // ── Il colpo di giornata (Upset) ──────────────────────────────
+  function buildUpsetCard() {
+    const cut14=(()=>{ const d=new Date(lastDate||new Date()); d.setDate(d.getDate()-14); return d.toISOString().split('T')[0]; })();
+    let bestUpset=null, bestScore=0;
+    const recentWins=hubRes.filter(r=>r.data>=cut14&&r.posizione===1);
+    for(const win of recentWins){
+      const wRank=hubRanking.find(r=>r.atleta_id===win.atleta_id);
+      if(!wRank||wRank.pos<=5) continue;
+      const gaceParticipants=hubRes.filter(r=>r.gara_id===win.gara_id&&r.posizione>1&&r.posizione<=5);
+      const topBeaten=gaceParticipants
+        .map(r=>({...r,rp:(hubRanking.find(rx=>rx.atleta_id===r.atleta_id)?.pos||999)}))
+        .sort((a,b)=>a.rp-b.rp)[0];
+      if(!topBeaten||topBeaten.rp>=wRank.pos) continue;
+      const score=(wRank.pos-topBeaten.rp)*(win.punti_effettivi||10);
+      if(score>bestScore){bestScore=score;bestUpset={win,wPos:wRank.pos,beaten:topBeaten,bPos:topBeaten.rp};}
+    }
+    if(!bestUpset) return '';
+    const {win,wPos,beaten,bPos}=bestUpset;
+    return `<div class="itc-card itc-upset-card" onclick="location.hash='#/gara/${encodeURIComponent(win.gara_id)}'">
+      <div class="itc-card-hdr"><span class="itc-card-title">😱 IL COLPO DI GIORNATA</span></div>
+      <div class="itc-upset-body">
+        <div class="itc-upset-side">
+          <div class="itc-upset-cls itc-upset-cls--winner">${wPos}° CL.</div>
+          <div class="itc-upset-name">${esc(win.cognome)} ${esc(win.nome)}</div>
+          <div class="itc-upset-role">VINCITORE</div>
+        </div>
+        <div class="itc-upset-vs">1°</div>
+        <div class="itc-upset-side itc-upset-side--beaten">
+          <div class="itc-upset-cls itc-upset-cls--beaten">${bPos}° CL.</div>
+          <div class="itc-upset-name">${esc(beaten.cognome)} ${esc(beaten.nome)}</div>
+          <div class="itc-upset-role">${beaten.posizione}° nella gara</div>
+        </div>
+      </div>
+      <div class="itc-upset-race">${esc(win.nome_gara||'')} · ${fmtDateShort(win.data)}</div>
+    </div>`;
+  }
+
+  // ── Talento Emergente (Rookie Spotlight) ──────────────────────
+  function buildRookieCard() {
+    const year=new Date().getFullYear().toString();
+    const allIds=new Set(hubRes.map(r=>r.atleta_id));
+    const candidates=[];
+    for(const aid of allIds){
+      const all=globalData.resultsRaw.filter(r=>r.atleta_id===aid);
+      if(!all.length) continue;
+      const firstYear=all.reduce((mn,r)=>(r.data||'')<mn?r.data:mn,'9999').slice(0,4);
+      if(firstYear!==year) continue;
+      const rEntry=hubRanking.find(r=>r.atleta_id===aid);
+      if(!rEntry||rEntry.pos>35) continue;
+      const rc=hubRes.filter(r=>r.atleta_id===aid&&r.posizione);
+      if(rc.length<2) continue;
+      const wins=rc.filter(r=>r.posizione===1).length;
+      const podi=rc.filter(r=>r.posizione<=3).length;
+      const pts=rc.reduce((s,r)=>s+(r.punti_effettivi||0),0);
+      candidates.push({atleta_id:aid,cognome:rc[0].cognome,nome:rc[0].nome,team:rc[0].team,pos:rEntry.pos,wins,podi,pts,races:rc.length});
+    }
+    if(!candidates.length) return '';
+    const rookie=candidates.sort((a,b)=>a.pos-b.pos||b.wins-a.wins)[0];
+    return `<div class="itc-card itc-rookie-card" onclick="location.hash='#/atleta/${encodeURIComponent(rookie.atleta_id)}'">
+      <div class="itc-card-hdr"><span class="itc-card-title">🌱 TALENTO EMERGENTE</span></div>
+      <div class="itc-rookie-body">
+        <div class="itc-rookie-icon">🌱</div>
+        <div class="itc-rookie-info">
+          <div class="itc-rookie-name">${esc(rookie.cognome)} ${esc(rookie.nome)}</div>
+          <div class="itc-rookie-team">${esc(rookie.team||'')} · prima stagione</div>
+          <div class="itc-rookie-pos">${rookie.pos}° in classifica</div>
+          <div class="itc-rookie-stats">
+            ${rookie.wins>0?`<span>${rookie.wins} vitt.</span>`:''}
+            ${rookie.podi>0?`<span>${rookie.podi} podi</span>`:''}
+            <span>${rookie.pts} pt in ${rookie.races} gare</span>
+          </div>
+        </div>
+      </div>
+    </div>`;
+  }
+
+  // ── I tuoi atleti (Watchlist) ─────────────────────────────────
+  function buildWatchlistCard() {
+    const wl=getWatchlist();
+    if(!wl.length) return `<div class="itc-card itc-watchlist-card">
+      <div class="itc-card-hdr"><span class="itc-card-title">⭐ I TUOI ATLETI</span></div>
+      <div class="itc-watchlist-empty">
+        Apri la scheda di un atleta e premi <strong>⭐ Segui</strong> per tenerlo d'occhio.
+      </div>
+    </div>`;
+    const rows=wl.map(w=>{
+      const re=hubRanking.find(r=>r.atleta_id===w.id);
+      const pos=re?.pos, pts=re?.punti;
+      const rs=hubRes.filter(r=>r.atleta_id===w.id&&r.posizione).sort((a,b)=>(b.data||'').localeCompare(a.data||''));
+      let streak=0,stype='';
+      for(const r of rs){if(r.posizione===1)streak++;else break;}
+      if(streak>=2) stype=`🔥×${streak}`;
+      else{streak=0;for(const r of rs){if(r.posizione<=3)streak++;else break;}if(streak>=2)stype=`⚡×${streak}`;}
+      return `<div class="itc-watchlist-row" onclick="location.hash='#/atleta/${encodeURIComponent(w.id)}'">
+        <div class="itc-watchlist-info">
+          <div class="itc-watchlist-name">${esc(w.cognome)} ${esc(w.nome)}${stype?` <span class="itc-wl-streak">${stype}</span>`:''}</div>
+          <div class="itc-watchlist-sub">${pos?`${pos}° · ${pts||0} pt`:'Fuori categoria'}</div>
+        </div>
+        <button class="itc-wl-remove" onclick="event.stopPropagation();window.toggleWatch('${w.id.replace(/'/g,"\\'")}','${(w.cognome||'').replace(/'/g,"\\'")}','${(w.nome||'').replace(/'/g,"\\'")}');this.closest('.itc-watchlist-row').remove()" title="Rimuovi">✕</button>
+      </div>`;
+    }).join('');
+    return `<div class="itc-card itc-watchlist-card">
+      <div class="itc-card-hdr"><span class="itc-card-title">⭐ I TUOI ATLETI</span></div>
+      ${rows}
+    </div>`;
+  }
+
   // ── Movers card (corposo: 5 su + 5 giù) ──────────────────────────
   function buildMoversCard(mv, title) {
     if (!mv.up.length && !mv.dn.length) return '';
@@ -4795,10 +5003,18 @@ async function renderHubBars() {
   const _calHtml     = buildCalCard();
   const _popularHtml = buildPopularCard(hubRes, mainCat);
 
+  // Gamification cards
+  const _digestHtml   = buildWeeklyDigestCard();
+  const _mvpHtml      = buildMVPCard();
+  const _upsetHtml    = buildUpsetCard();
+  const _rookieHtml   = buildRookieCard();
+  const _watchHtml    = buildWatchlistCard();
+
   // Layout: per esordienti i blocchi rider sono già itc-dual internamente
   // → non li annidiamo in altro dual; team va sotto.
   // Per tutti gli altri: ogni riga = itc-dual rider|team.
   const sectionsInner = isEsordienti ? `
+    ${_digestHtml ? `<div class="itc-dual">${_digestHtml}${_watchHtml}</div>` : _watchHtml}
     ${_rFireHtml}
     ${_tFireHtml}
     ${_rRankHtml}
@@ -4806,13 +5022,18 @@ async function renderHubBars() {
     ${_rMovHtml}
     ${_tMovHtml}
     <div class="itc-dual">${_rVsHtml}${_tVsHtml}</div>
+    <div class="itc-dual">${_mvpHtml||''}${_upsetHtml||''}</div>
+    <div class="itc-dual">${_rookieHtml||''}${''}</div>
     <div class="itc-dual">${_rFeedHtml}${_tFeedHtml}</div>
     <div class="itc-dual">${_popularHtml}${_calHtml}</div>
   ` : `
+    ${_digestHtml ? `<div class="itc-dual">${_digestHtml}${_watchHtml}</div>` : _watchHtml}
     <div class="itc-dual">${_rFireHtml}${_tFireHtml}</div>
     <div class="itc-dual">${_rRankHtml}${_tRankHtml}</div>
     <div class="itc-dual">${_rMovHtml}${_tMovHtml}</div>
     <div class="itc-dual">${_rVsHtml}${_tVsHtml}</div>
+    <div class="itc-dual">${_mvpHtml||''}${_upsetHtml||''}</div>
+    <div class="itc-dual">${_rookieHtml||''}${''}</div>
     <div class="itc-dual">${_rFeedHtml}${_tFeedHtml}</div>
     <div class="itc-dual">${_popularHtml}${_calHtml}</div>
   `;
@@ -8469,12 +8690,24 @@ async function renderAtleta(atleta_id) {
       </div>
     </div>` : '';
 
+  // Build badge strip
+  const _badges = getAthleteBadges(atleta_id, globalData.resultsRaw, rCode, aRankObj);
+  const _badgeStripHtml = _badges.length ? `
+    <div class="ath-badge-strip">
+      ${_badges.map(b => `<span class="ath-badge ath-badge--${b.cls||'default'}">${b.icon} ${b.label}</span>`).join('')}
+    </div>` : '';
+
+  // Watch button state
+  const _watched = isWatched(atleta_id);
+
   setPage(`
     ${headerHtml}
+    ${_badgeStripHtml}
     ${sparkHtml ? `<div class="sparkline-wrap"><div class="sparkline-title">ANDAMENTO PUNTI — STAGIONE ${new Date().getFullYear()}</div>${sparkHtml}</div>` : ''}
     <div style="margin: 8px 0 20px;display:flex;gap:10px;align-items:center;flex-wrap:wrap">
       <button class="btn-share" onclick="window.triggerShareAtleta()"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="18" cy="5" r="3"/><circle cx="6" cy="12" r="3"/><circle cx="18" cy="19" r="3"/><line x1="8.59" y1="13.51" x2="15.42" y2="17.49"/><line x1="15.41" y1="6.51" x2="8.59" y2="10.49"/></svg> Condividi Profilo</button>
       <button class="btn-share" onclick="window.openComparatore('${esc(atleta_id)}','atleta')">⚖ Compara</button>
+      <button class="watch-btn ${_watched ? 'watch-btn--active' : ''}" id="watch-btn-${esc(atleta_id)}" onclick="window.toggleWatch('${esc(atleta_id)}','${esc(displayCognome)}','${esc(displayNome)}')">${_watched ? '<span>★</span> Seguito' : '<span>☆</span> Segui'}</button>
       ${adminEditBtn('atleta', atleta_id)}
     </div>
     ${buildProfileMedia(risultati, photosMap, globalData.videos)}
