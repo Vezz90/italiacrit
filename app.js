@@ -5014,7 +5014,6 @@ async function renderHubBars() {
   // → non li annidiamo in altro dual; team va sotto.
   // Per tutti gli altri: ogni riga = itc-dual rider|team.
   const sectionsInner = isEsordienti ? `
-    ${_digestHtml ? `<div class="itc-dual">${_digestHtml}${_watchHtml}</div>` : _watchHtml}
     ${_rFireHtml}
     ${_tFireHtml}
     ${_rRankHtml}
@@ -5022,18 +5021,15 @@ async function renderHubBars() {
     ${_rMovHtml}
     ${_tMovHtml}
     <div class="itc-dual">${_rVsHtml}${_tVsHtml}</div>
-    <div class="itc-dual">${_mvpHtml||''}${_upsetHtml||''}</div>
-    <div class="itc-dual">${_rookieHtml||''}${''}</div>
+    <div class="itc-dual">${_upsetHtml||''}${_watchHtml}</div>
     <div class="itc-dual">${_rFeedHtml}${_tFeedHtml}</div>
     <div class="itc-dual">${_popularHtml}${_calHtml}</div>
   ` : `
-    ${_digestHtml ? `<div class="itc-dual">${_digestHtml}${_watchHtml}</div>` : _watchHtml}
     <div class="itc-dual">${_rFireHtml}${_tFireHtml}</div>
     <div class="itc-dual">${_rRankHtml}${_tRankHtml}</div>
     <div class="itc-dual">${_rMovHtml}${_tMovHtml}</div>
     <div class="itc-dual">${_rVsHtml}${_tVsHtml}</div>
-    <div class="itc-dual">${_mvpHtml||''}${_upsetHtml||''}</div>
-    <div class="itc-dual">${_rookieHtml||''}${''}</div>
+    <div class="itc-dual">${_upsetHtml||''}${_watchHtml}</div>
     <div class="itc-dual">${_rFeedHtml}${_tFeedHtml}</div>
     <div class="itc-dual">${_popularHtml}${_calHtml}</div>
   `;
