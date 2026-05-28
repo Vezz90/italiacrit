@@ -5861,7 +5861,7 @@ async function updateRankTable() {
         const spanPts  = filtered[battleZoneStart].punti
           - (filtered[Math.min(battleZoneEnd, filtered.length-1)]?.punti || 0);
         zoneSep = `<tr class="rk-zone-sep">
-          <td colspan="5">⚔ ZONA BATTAGLIA — ${cnt} atleti in ${spanPts} punti</td>
+          <td colspan="6">⚔ ZONA BATTAGLIA — ${cnt} atleti in ${spanPts} punti</td>
         </tr>`;
       }
 
@@ -5874,11 +5874,12 @@ async function updateRankTable() {
               <span class="rank-name"><a href="#/atleta/${esc(r.atleta_id)}">${esc(r.cognome)} ${esc(r.nome)}</a></span>
               ${badgeHtml}
             </div>
-            <div class="rk-athlete-team"><a href="#/team/${esc(r.team_id)}">${esc(r.team_nome)}</a></div>
+            <div class="td-team-mobile"><a href="#/team/${esc(r.team_id)}" style="color:var(--text-secondary)">${esc(r.team_nome)}</a></div>
             ${momBar}
             ${extraHtml}
           </div>
         </td>
+        <td class="hide-mobile"><a href="#/team/${esc(r.team_id)}" style="color:var(--text-secondary);font-size:.85rem">${esc(r.team_nome)}</a></td>
         <td class="r">
           <div class="rk-pts-cell">
             <span class="rank-pts">${r.punti}</span>
@@ -5901,11 +5902,12 @@ async function updateRankTable() {
         <thead><tr>
           <th style="width:50px">POS</th>
           <th style="width:40px" title="Variazione">↕</th>
-          <th>ATLETA / TEAM</th>
+          <th>ATLETA</th>
+          <th class="hide-mobile">TEAM</th>
           <th class="r">PUNTI</th>
           <th class="hide-mobile">1° / 2° / 3° / TOP10</th>
         </tr></thead>
-        <tbody>${rows || '<tr><td colspan="5" class="empty-state">Nessun dato</td></tr>'}</tbody>
+        <tbody>${rows || '<tr><td colspan="6" class="empty-state">Nessun dato</td></tr>'}</tbody>
       </table>`;
 
   } else {
