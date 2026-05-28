@@ -3030,6 +3030,21 @@ div[style*="grid-template-columns: repeat(auto-fit"] {
   .team-stat { min-width: unset !important; flex-shrink: unset !important; padding: 9px 6px !important; }
   .team-stat-val { font-size: 1.1rem !important; }
   .team-name-display { font-size: clamp(1rem, 4.5vw, 1.5rem) !important; }
+
+  /* ── Tabella classifica — mobile compatta ── */
+  .ranking-row td   { padding: 8px 6px; }
+  .ranking-table th { padding: 8px 6px; }
+  .rank-name        { font-size: 0.8rem; }
+  .rank-pts         { font-size: 0.8rem; }
+  .rank-num         { font-size: 0.8rem; min-width: 22px; }
+  .rk-gap-label     { font-size: 0.6rem; }
+  .rk-leader-tag    { font-size: 0.5rem; padding: 1px 4px; }
+}
+
+/* Su schermi molto stretti nascondi colonna trend (↕) */
+@media (max-width: 400px) {
+  .ranking-row td:nth-child(2),
+  .ranking-table th:nth-child(2) { display: none; }
 }
 
 /* ── HOME v9 — Ticker, Trending, Matchup, Hero Editorial ──────── */
@@ -10859,7 +10874,11 @@ main.page:has(.itc-dash) {
   .itc-dash-hero { min-height: 34vh; }
   .itc-fire { min-height: 240px; }
   .itc-fire-stats { gap: 14px; }
-  .itc-rank-row { padding: 8px 12px; }
+  .itc-rank-row { padding: 8px 12px; gap: 8px; }
+  /* Su mobile nascondi il gap (−xxx) per fare spazio al nome */
+  .itc-rank-gap { display: none; }
+  /* Pts leggermente più piccolo per non mangiarsi la riga */
+  .itc-rank-pts { font-size: .78rem; }
   .itc-mover    { padding: 8px 12px; }
   .itc-feed-item{ padding: 9px 12px; }
   .itc-cal-row  { padding: 9px 12px; }
