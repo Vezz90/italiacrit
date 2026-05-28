@@ -4203,6 +4203,28 @@ async function renderHubBars() {
     try { const ov=await getEntityOverrides('team',_teamOfMoment.team_id); if(ov.photo_url) _teamOfMomentPhoto=`${MEDIA_BASE}${ov.photo_url}`; } catch {}
   }
 
+  // ── ES1 team data (solo per hub esordienti) ───────────────────────
+  let _teamRankFullES1 = [], _teamRankNowES1 = [];
+  let _teamSnapNowES1 = {}, _teamSnap14ES1 = {}, _teamSnapBeforeLastES1 = {};
+  let _teamOfMomentES1 = null, _teamOfMomentES1Photo = null;
+  if (isEsordienti && es1Code) {
+    _teamRankFullES1             = computeTeamRanking(hubResES1, es1Code, null);
+    _teamRankNowES1              = _teamRankFullES1.slice(0, 10);
+    const _teamRank14ES1tmp      = computeTeamRanking(hubResES1, es1Code, cut14);
+    const _teamRankBLES1tmp      = computeTeamRanking(hubResES1, es1Code, lastDateES1);
+    _teamSnapNowES1              = Object.fromEntries(_teamRankFullES1.map(t=>[t.team_id,t.pos]));
+    _teamSnap14ES1               = Object.fromEntries(_teamRank14ES1tmp.map(t=>[t.team_id,t.pos]));
+    _teamSnapBeforeLastES1       = Object.fromEntries(_teamRankBLES1tmp.map(t=>[t.team_id,t.pos]));
+    let bestScoreES1 = -1;
+    for (const t of _teamRankNowES1) {
+      const s = computeTeamHotScore(t.team_id, hubResES1, es1Code);
+      if (s > bestScoreES1) { bestScoreES1 = s; _teamOfMomentES1 = { ...t, score: s }; }
+    }
+    if (_teamOfMomentES1) {
+      try { const ov=await getEntityOverrides('team',_teamOfMomentES1.team_id); if(ov.photo_url) _teamOfMomentES1Photo=`${MEDIA_BASE}${ov.photo_url}`; } catch {}
+    }
+  }
+
   // ── Championship bar ─────────────────────────────────────────────
   function champBar(ranking, label) {
     if(!ranking.length) return '';
@@ -4438,11 +4460,13 @@ async function renderHubBars() {
   }
 
   // ── Team of the Moment card ──────────────────────────────────────
-  function buildTeamFireCard(team, photoUrl) {
+  function buildTeamFireCard(team, photoUrl, teamSnapNow, teamSnap14, title) {
     if (!team) return '';
+    const sNow = teamSnapNow || _teamSnapNow;
+    const s14  = teamSnap14  || _teamSnap14;
     const score = team.score ?? 0;
     const scoreColor = score>=80?'#E11D48':score>=55?'#F59E0B':'#10B981';
-    const posNow = _teamSnapNow[team.team_id], pos14 = _teamSnap14[team.team_id];
+    const posNow = sNow[team.team_id], pos14 = s14[team.team_id];
     let trendHtml = '';
     if (posNow && pos14) {
       const gain = pos14 - posNow;
@@ -4461,7 +4485,7 @@ async function renderHubBars() {
       ${bgHtml}
       <div class="itc-fire-overlay"></div>
       <div class="itc-fire-content">
-        <div class="itc-fire-eyebrow">🏆 TEAM OF THE MOMENT</div>
+        <div class="itc-fire-eyebrow">🏆 TEAM OF THE MOMENT${title?' · '+esc(title):''}</div>
         <h2 class="itc-fire-name" style="font-size:clamp(1.2rem,3vw,2rem);line-height:1.15">${esc(team.team)}${trendHtml}</h2>
         <div class="itc-fire-stats">
           <div class="itc-fire-stat"><span class="itc-fire-val">${team.punti}</span><span class="itc-fire-lbl">punti</span></div>
@@ -4482,12 +4506,14 @@ async function renderHubBars() {
   }
 
   // ── Top Team ranking card ─────────────────────────────────────────
-  function buildTeamRankCard(teamRank) {
+  function buildTeamRankCard(teamRank, snapNow, snapBefore, title) {
     if (!teamRank.length) return '';
+    const sNow  = snapNow   || _teamSnapNow;
+    const sBef  = snapBefore|| _teamSnapBeforeLast;
     const leaderPts = teamRank[0].punti;
     const rows = teamRank.map((t, i) => {
       // Trend: before-last vs now (come classifica page)
-      const posNow = _teamSnapNow[t.team_id], posOld = _teamSnapBeforeLast[t.team_id];
+      const posNow = sNow[t.team_id], posOld = sBef[t.team_id];
       let trendHtml = '';
       if (posNow && posOld) {
         const gain = posOld - posNow;
@@ -4506,16 +4532,18 @@ async function renderHubBars() {
       </div>`;
     }).join('');
     return `<div class="itc-card itc-rank-card">
-      <div class="itc-card-hdr"><span class="itc-card-title">🏆 TOP TEAM</span><a href="#/team" class="itc-card-more">Vedi tutti →</a></div>
+      <div class="itc-card-hdr"><span class="itc-card-title">🏆 TOP TEAM${title?' · '+esc(title):''}</span><a href="#/team" class="itc-card-more">Vedi tutti →</a></div>
       ${rows}
     </div>`;
   }
 
   // ── Team movers card ──────────────────────────────────────────────
-  function buildTeamMoversCard(teamRank) {
+  function buildTeamMoversCard(teamRank, snapNow, snapBefore, title) {
+    const sNow = snapNow   || _teamSnapNow;
+    const sBef = snapBefore|| _teamSnapBeforeLast;
     const up = [], dn = [];
     for (const t of teamRank) {
-      const now = _teamSnapNow[t.team_id], old = _teamSnapBeforeLast[t.team_id];
+      const now = sNow[t.team_id], old = sBef[t.team_id];
       if (!now || !old) continue;
       const gain = old - now;
       if (gain >= 1)       up.push({ ...t, gain, pos: now });
@@ -4548,7 +4576,7 @@ async function renderHubBars() {
       <div class="itc-mover-section-lbl itc-mover-section-dn">▼ IN DISCESA</div>
       ${dn5.map(t => mkRow(t, 'dn')).join('')}` : '';
     return `<div class="itc-card itc-movers-card">
-      <div class="itc-card-hdr"><span class="itc-card-title">📈 TEAM MOVERS</span></div>
+      <div class="itc-card-hdr"><span class="itc-card-title">📈 TEAM MOVERS${title?' · '+esc(title):''}</span></div>
       ${upSection}${dnSection}
     </div>`;
   }
@@ -4719,10 +4747,16 @@ async function renderHubBars() {
   const _rVsHtml   = buildVsCard(hubRes, hubRanking, mainCat);
   const _rFeedHtml = buildFeedCard(hubRes, hubRanking, mainCat);
 
-  // Team sections
-  const _tFireHtml = buildTeamFireCard(_teamOfMoment, _teamOfMomentPhoto);
-  const _tRankHtml = buildTeamRankCard(_teamRankNow);
-  const _tMovHtml  = buildTeamMoversCard(_teamRankFull);
+  // Team sections — per esordienti mostra ES1 e ES2 in dual
+  const _tFireHtml = isEsordienti
+    ? `<div class="itc-dual">${buildTeamFireCard(_teamOfMomentES1,_teamOfMomentES1Photo,_teamSnapNowES1,_teamSnap14ES1,'1° Anno')}${buildTeamFireCard(_teamOfMoment,_teamOfMomentPhoto,_teamSnapNow,_teamSnap14,'2° Anno')}</div>`
+    : buildTeamFireCard(_teamOfMoment, _teamOfMomentPhoto, _teamSnapNow, _teamSnap14, '');
+  const _tRankHtml = isEsordienti
+    ? `<div class="itc-dual">${buildTeamRankCard(_teamRankNowES1,_teamSnapNowES1,_teamSnapBeforeLastES1,'1° Anno')}${buildTeamRankCard(_teamRankNow,_teamSnapNow,_teamSnapBeforeLast,'2° Anno')}</div>`
+    : buildTeamRankCard(_teamRankNow, _teamSnapNow, _teamSnapBeforeLast, '');
+  const _tMovHtml = isEsordienti
+    ? `<div class="itc-dual">${buildTeamMoversCard(_teamRankFullES1,_teamSnapNowES1,_teamSnapBeforeLastES1,'1° Anno')}${buildTeamMoversCard(_teamRankFull,_teamSnapNow,_teamSnapBeforeLast,'2° Anno')}</div>`
+    : buildTeamMoversCard(_teamRankFull, _teamSnapNow, _teamSnapBeforeLast, '');
   const _tVsHtml   = buildTeamVsCard(_teamRankNow);
   const _tFeedHtml = buildTeamFeedCard(_teamRankNow, hubResES2, mainCat);
 
