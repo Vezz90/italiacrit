@@ -4315,34 +4315,43 @@ async function renderHubBars() {
     </div>`;
   }
 
-  // ── Rank card con Last-5 dots e trend snapshot-based ─────────────
+  // ── Team lookup da resultsRaw (fallback se team_nome mancante nel JSON classifica) ──
+  const _hubTeamLookup = {};
+  resultsRaw.forEach(r => {
+    if (!r.atleta_id || !r.team) return;
+    const cur = _hubTeamLookup[r.atleta_id];
+    if (!cur || (r.data || '') > cur.date) {
+      _hubTeamLookup[r.atleta_id] = { team: r.team, team_id: r.team_id || '', date: r.data || '' };
+    }
+  });
+
+  // ── Rank card con trend snapshot-based ───────────────────────────
   function buildRankCard(ranking, catCode, title, snapNow, snapBefore) {
     if(!ranking.length) return '';
     const leaderPts=ranking[0].punti;
     const rows=ranking.map((a,i)=>{
       // Trend: confronto posizione PRIMA dell'ultima gara vs ora
-      // (stessa logica della pagina Classifica)
       let trendHtml='';
       const posNow=snapNow?snapNow[a.atleta_id]:null;
       const posOld=snapBefore?snapBefore[a.atleta_id]:null;
       if(posNow&&posOld){
-        const gain=posOld-posNow; // positivo=salito, negativo=sceso
+        const gain=posOld-posNow;
         if(gain>=1)      trendHtml=`<span class="itc-rank-trend up">▲${gain}</span>`;
         else if(gain<=-1)trendHtml=`<span class="itc-rank-trend dn">▼${Math.abs(gain)}</span>`;
       }
-      // Last 5 races dots
-      const last5=resultsRaw.filter(r=>r.atleta_id===a.atleta_id&&getRankingFileCode(r)===catCode&&r.posizione)
-        .sort((a,b)=>b.data.localeCompare(a.data)).slice(0,5).reverse();
-      const dotsHtml=last5.length?`<div class="itc-last5">${last5.map(r=>{
-        const c=r.posizione===1?'w':r.posizione<=3?'p':r.posizione<=10?'t':'o';
-        return`<span class="itc-dot itc-dot-${c}" title="${r.posizione}°"></span>`;
-      }).join('')}</div>`:'';
+      // Team: JSON field con fallback a resultsRaw
+      const _tlu = _hubTeamLookup[a.atleta_id] || {};
+      const teamName = a.team_nome || a.team_attuale || a.team || _tlu.team || '';
+      const teamId   = a.team_id || _tlu.team_id || '';
+      const teamHtml = teamName
+        ? (teamId ? `<a href="#/team/${encodeURIComponent(teamId)}" onclick="event.stopPropagation()">${esc(teamName)}</a>` : esc(teamName))
+        : '';
       const gap=i===0?'':`<span class="itc-rank-gap">−${leaderPts-a.punti}</span>`;
       return `<div class="itc-rank-row${i===0?' itc-rank-row--leader':''}" onclick="location.hash='#/atleta/${encodeURIComponent(a.atleta_id)}'">
         <span class="itc-rank-pos itc-rank-pos-${i<3?i+1:'x'}">${i+1}</span>
         <div class="itc-rank-info">
           <div class="itc-rank-name">${esc(a.cognome)} ${esc(a.nome)}${trendHtml}</div>
-          <div class="itc-rank-sub">${esc(a.team_attuale||a.team||'')}${dotsHtml}</div>
+          ${teamHtml ? `<div class="itc-rank-sub">${teamHtml}</div>` : ''}
         </div>
         ${gap}
         <span class="itc-rank-pts">${a.punti}<small>pt</small></span>
