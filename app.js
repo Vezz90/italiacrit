@@ -13953,37 +13953,31 @@ async function _getLogo() {
   });
 }
 function _bg(ctx, W, H) {
-  // Deep navy base
-  const g = ctx.createLinearGradient(0, 0, W * 0.4, H);
-  g.addColorStop(0, '#0c1228'); g.addColorStop(1, '#0f1a35');
+  // ── Stile Velon: dark pulito, flat, data-forward ──
+  // Base quasi-nera con leggerissimo gradiente verticale
+  const g = ctx.createLinearGradient(0, 0, 0, H);
+  g.addColorStop(0, '#0c0e12'); g.addColorStop(0.6, '#0a0c10'); g.addColorStop(1, '#070809');
   ctx.fillStyle = g; ctx.fillRect(0, 0, W, H);
-  // Atmospheric radial glow (blue/indigo centre)
-  const rg = ctx.createRadialGradient(W * 0.5, H * 0.44, 0, W * 0.5, H * 0.44, W * 0.78);
-  rg.addColorStop(0, 'rgba(22,55,130,0.32)'); rg.addColorStop(1, 'transparent');
+  // Soft glow accent in alto a destra (sottile, moderno)
+  const rg = ctx.createRadialGradient(W * 0.92, -H * 0.05, 0, W * 0.92, -H * 0.05, W * 0.95);
+  rg.addColorStop(0, 'rgba(232,0,29,0.16)'); rg.addColorStop(1, 'transparent');
   ctx.fillStyle = rg; ctx.fillRect(0, 0, W, H);
-  // Dot grid
-  ctx.save(); ctx.globalAlpha = 0.038; ctx.fillStyle = '#ffffff';
-  const ds = Math.round(W * 0.028);
-  for (let x = ds; x < W; x += ds)
-    for (let y = ds; y < H; y += ds) { ctx.beginPath(); ctx.arc(x, y, 1.2, 0, Math.PI * 2); ctx.fill(); }
+  // Slash geometrico in basso a sinistra (giallo, molto tenue)
+  ctx.save();
+  ctx.globalAlpha = 0.05; ctx.fillStyle = '#f5c400';
+  ctx.beginPath();
+  ctx.moveTo(0, H * 0.86); ctx.lineTo(W * 0.46, H); ctx.lineTo(0, H); ctx.closePath(); ctx.fill();
   ctx.restore();
-  // Left accent stripe
-  const sg = ctx.createLinearGradient(0, 0, Math.round(W * 0.005), 0);
-  sg.addColorStop(0, 'rgba(232,0,29,0.55)'); sg.addColorStop(1, 'transparent');
-  ctx.fillStyle = sg; ctx.fillRect(0, 0, Math.round(W * 0.005), H);
+  // Barra accento solida sul bordo sinistro (brand)
+  ctx.fillStyle = '#e8001d'; ctx.fillRect(0, 0, Math.round(W * 0.012), H);
 }
 function _header(ctx, logo, W, H, classData) {
-  const bH = Math.round(H * 0.078); // barra leggermente più bassa
-  // Dark semi-transparent bar
-  ctx.fillStyle = 'rgba(0,0,0,0.52)'; ctx.fillRect(0, 0, W, bH);
-  // Accent line at bottom (red → gold → transparent)
-  const lineG = ctx.createLinearGradient(0, 0, W, 0);
-  lineG.addColorStop(0, '#e8001d'); lineG.addColorStop(0.42, '#f5c400'); lineG.addColorStop(1, 'rgba(245,196,0,0)');
-  ctx.fillStyle = lineG; ctx.fillRect(0, bH - 3, W, 3);
-  // Logo ITC più grande
+  // ── Stile Velon: header flat, niente barra scura, logo che siede sul fondo dark ──
+  const bH = Math.round(H * 0.078);
+  // Logo ITC grande
   let logoRight = 18;
   if (logo) {
-    const lH = Math.round(bH * 0.90), lW = Math.round(lH * logo.naturalWidth / logo.naturalHeight);
+    const lH = Math.round(bH * 0.92), lW = Math.round(lH * logo.naturalWidth / logo.naturalHeight);
     ctx.drawImage(logo, 18, Math.round((bH - lH) / 2), lW, lH);
     logoRight = 18 + lW;
   }
@@ -13993,9 +13987,9 @@ function _header(ctx, logo, W, H, classData) {
       ? (classData.region || '').toUpperCase()
       : 'ITALIA';
     if (regTxt) {
-      // separatore verticale
-      ctx.fillStyle = 'rgba(255,255,255,0.20)';
-      ctx.fillRect(logoRight + 16, Math.round(bH * 0.26), 2, Math.round(bH * 0.48));
+      // separatore verticale sottile
+      ctx.fillStyle = 'rgba(255,255,255,0.16)';
+      ctx.fillRect(logoRight + 16, Math.round(bH * 0.28), 2, Math.round(bH * 0.44));
       const rfs = Math.round(bH * 0.34);
       ctx.font = `800 ${rfs}px 'Barlow Condensed',sans-serif`;
       ctx.fillStyle = classData.scope === 'regionale' ? '#f5c400' : 'rgba(255,255,255,0.92)';
@@ -14009,20 +14003,25 @@ function _header(ctx, logo, W, H, classData) {
   ctx.fillStyle = 'rgba(255,255,255,0.92)'; ctx.textAlign = 'right';
   ctx.fillText('ITALIACRIT', W - 16, Math.round(bH * 0.6));
   ctx.font = `400 ${Math.round(fs * 0.52)}px 'Barlow Condensed',sans-serif`;
-  ctx.fillStyle = 'rgba(255,255,255,0.38)';
+  ctx.fillStyle = 'rgba(255,255,255,0.34)';
   ctx.fillText(SHARE_URL, W - 16, Math.round(bH * 0.88));
   ctx.textAlign = 'left';
+  // Linea accento sottile e piena (no gradiente): solo brand red
+  ctx.fillStyle = 'rgba(255,255,255,0.07)'; ctx.fillRect(0, bH, W, 1);
+  ctx.fillStyle = '#e8001d'; ctx.fillRect(Math.round(W * 0.012), bH, Math.round(W * 0.10), 2);
 }
 function _footer(ctx, W, H) {
+  // ── Stile Velon: footer minimale, niente barra scura ──
   const fH = Math.round(H * 0.06); const y = H - fH;
-  ctx.fillStyle = 'rgba(0,0,0,0.62)'; ctx.fillRect(0, y, W, fH);
-  // Italian tricolore strip at top of footer
-  const s = 3;
-  ctx.fillStyle = '#009246'; ctx.fillRect(0, y, Math.round(W / 3), s);
-  ctx.fillStyle = '#f0f0ee'; ctx.fillRect(Math.round(W / 3), y, Math.round(W / 3), s);
-  ctx.fillStyle = '#ce2b37'; ctx.fillRect(Math.round(2 * W / 3), y, W - Math.round(2 * W / 3), s);
+  // linea divisoria sottile
+  ctx.fillStyle = 'rgba(255,255,255,0.07)'; ctx.fillRect(0, y, W, 1);
+  // micro accento tricolore (sobrio, in basso a sinistra)
+  const s = 2, accW = Math.round(W * 0.018), ax = Math.round(W * 0.012), ay = y + Math.round(fH * 0.42);
+  ctx.fillStyle = '#009246'; ctx.fillRect(ax, ay, accW, s);
+  ctx.fillStyle = '#f0f0ee'; ctx.fillRect(ax + accW, ay, accW, s);
+  ctx.fillStyle = '#ce2b37'; ctx.fillRect(ax + accW * 2, ay, accW, s);
   ctx.font = `500 ${Math.round(fH * 0.31)}px 'Barlow Condensed',sans-serif`;
-  ctx.fillStyle = 'rgba(255,255,255,0.3)'; ctx.textAlign = 'center';
+  ctx.fillStyle = 'rgba(255,255,255,0.32)'; ctx.textAlign = 'center';
   ctx.fillText(SHARE_TAG, W / 2, y + Math.round(fH * 0.67));
   ctx.textAlign = 'left';
 }
@@ -14042,12 +14041,8 @@ function _drawGara(ctx, W, H, d, logo) {
   const { name, date, cat, mult, tipo, km, media, results, region, luogo } = d;
   const pad = Math.round(W * 0.048);
 
-  // ── Header compatto: logo a sinistra (grande) + regione accanto, URL a destra ──
+  // ── Header compatto Velon: flat, logo a sinistra (grande) + regione accanto, URL a destra ──
   const hH = Math.round(H * 0.095);
-  ctx.fillStyle = 'rgba(0,0,0,0.5)'; ctx.fillRect(0, 0, W, hH);
-  const hLineG = ctx.createLinearGradient(0, 0, W, 0);
-  hLineG.addColorStop(0, '#e8001d'); hLineG.addColorStop(0.45, '#f5c400'); hLineG.addColorStop(1, 'transparent');
-  ctx.fillStyle = hLineG; ctx.fillRect(0, hH - 3, W, 3);
   let logoRight = pad;
   if (logo) {
     const lH = Math.round(hH * 0.86);
@@ -14064,8 +14059,8 @@ function _drawGara(ctx, W, H, d, logo) {
   // Regione (o luogo) accanto al logo
   const regTxt = (region || luogo || '').toUpperCase();
   if (regTxt) {
-    ctx.fillStyle = 'rgba(255,255,255,0.20)';
-    ctx.fillRect(logoRight + 16, Math.round(hH * 0.26), 2, Math.round(hH * 0.48));
+    ctx.fillStyle = 'rgba(255,255,255,0.16)';
+    ctx.fillRect(logoRight + 16, Math.round(hH * 0.28), 2, Math.round(hH * 0.44));
     const rfs = Math.round(hH * 0.34);
     ctx.font = `800 ${rfs}px 'Barlow Condensed',sans-serif`;
     ctx.fillStyle = '#f5c400';
@@ -14077,6 +14072,9 @@ function _drawGara(ctx, W, H, d, logo) {
   ctx.font = `400 ${fsUrl}px 'Barlow Condensed',sans-serif`;
   ctx.fillStyle = 'rgba(255,255,255,0.30)'; ctx.textAlign = 'right';
   ctx.fillText(SHARE_URL, W - pad, Math.round(hH * 0.62)); ctx.textAlign = 'left';
+  // Linea accento sottile flat sotto l'header
+  ctx.fillStyle = 'rgba(255,255,255,0.07)'; ctx.fillRect(0, hH, W, 1);
+  ctx.fillStyle = '#e8001d'; ctx.fillRect(pad, hH, Math.round(W * 0.10), 2);
 
   let y = hH + Math.round(H * 0.022);
 
@@ -14108,21 +14106,21 @@ function _drawGara(ctx, W, H, d, logo) {
     ctx.fillText(parts.join('  ·  '), pad, y); y += fsKm * 1.5;
   }
 
-  // Accent divider
-  const divG = ctx.createLinearGradient(pad, 0, W - pad, 0);
-  divG.addColorStop(0, 'rgba(232,0,29,0.7)'); divG.addColorStop(0.5, 'rgba(245,196,0,0.35)'); divG.addColorStop(1, 'transparent');
-  ctx.fillStyle = divG; ctx.fillRect(pad, y, W - pad * 2, 2); y += Math.round(H * 0.012);
+  // Accent divider flat (Velon): linea sottile + tratto brand
+  ctx.fillStyle = 'rgba(255,255,255,0.07)'; ctx.fillRect(pad, y, W - pad * 2, 1);
+  ctx.fillStyle = '#e8001d'; ctx.fillRect(pad, y, Math.round(W * 0.10), 2);
+  y += Math.round(H * 0.012);
 
-  // ── Footer ──
+  // ── Footer Velon: minimale ──
   const fB = Math.round(H * 0.05);
   const footerY = H - fB;
-  ctx.fillStyle = 'rgba(0,0,0,0.55)'; ctx.fillRect(0, footerY, W, fB);
-  const s = 3;
-  ctx.fillStyle = '#009246'; ctx.fillRect(0, footerY, Math.round(W / 3), s);
-  ctx.fillStyle = '#f0f0ee'; ctx.fillRect(Math.round(W / 3), footerY, Math.round(W / 3), s);
-  ctx.fillStyle = '#ce2b37'; ctx.fillRect(Math.round(2 * W / 3), footerY, W - Math.round(2 * W / 3), s);
+  ctx.fillStyle = 'rgba(255,255,255,0.07)'; ctx.fillRect(0, footerY, W, 1);
+  const s = 2, accW = Math.round(W * 0.018), ax = pad, ay = footerY + Math.round(fB * 0.40);
+  ctx.fillStyle = '#009246'; ctx.fillRect(ax, ay, accW, s);
+  ctx.fillStyle = '#f0f0ee'; ctx.fillRect(ax + accW, ay, accW, s);
+  ctx.fillStyle = '#ce2b37'; ctx.fillRect(ax + accW * 2, ay, accW, s);
   ctx.font = `500 ${Math.round(fB * 0.3)}px 'Barlow Condensed',sans-serif`;
-  ctx.fillStyle = 'rgba(255,255,255,0.28)'; ctx.textAlign = 'center';
+  ctx.fillStyle = 'rgba(255,255,255,0.3)'; ctx.textAlign = 'center';
   ctx.fillText(SHARE_TAG, W / 2, footerY + Math.round(fB * 0.67)); ctx.textAlign = 'left';
 
   // ── Results list ──
