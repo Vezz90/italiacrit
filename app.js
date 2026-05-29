@@ -13972,25 +13972,45 @@ function _bg(ctx, W, H) {
   sg.addColorStop(0, 'rgba(232,0,29,0.55)'); sg.addColorStop(1, 'transparent');
   ctx.fillStyle = sg; ctx.fillRect(0, 0, Math.round(W * 0.005), H);
 }
-function _header(ctx, logo, W, H) {
-  const bH = Math.round(H * 0.09);
+function _header(ctx, logo, W, H, classData) {
+  const bH = Math.round(H * 0.078); // barra leggermente più bassa
   // Dark semi-transparent bar
   ctx.fillStyle = 'rgba(0,0,0,0.52)'; ctx.fillRect(0, 0, W, bH);
   // Accent line at bottom (red → gold → transparent)
   const lineG = ctx.createLinearGradient(0, 0, W, 0);
   lineG.addColorStop(0, '#e8001d'); lineG.addColorStop(0.42, '#f5c400'); lineG.addColorStop(1, 'rgba(245,196,0,0)');
   ctx.fillStyle = lineG; ctx.fillRect(0, bH - 3, W, 3);
+  // Logo ITC più grande
+  let logoRight = 18;
   if (logo) {
-    const lH = Math.round(bH * 0.68), lW = Math.round(lH * logo.naturalWidth / logo.naturalHeight);
-    ctx.drawImage(logo, 16, Math.round((bH - lH) / 2), lW, lH);
+    const lH = Math.round(bH * 0.90), lW = Math.round(lH * logo.naturalWidth / logo.naturalHeight);
+    ctx.drawImage(logo, 18, Math.round((bH - lH) / 2), lW, lH);
+    logoRight = 18 + lW;
   }
-  const fs = Math.round(bH * 0.31);
+  // Regione accanto al logo (solo per classifica)
+  if (classData) {
+    const regTxt = classData.scope === 'regionale'
+      ? (classData.region || '').toUpperCase()
+      : 'ITALIA';
+    if (regTxt) {
+      // separatore verticale
+      ctx.fillStyle = 'rgba(255,255,255,0.20)';
+      ctx.fillRect(logoRight + 16, Math.round(bH * 0.26), 2, Math.round(bH * 0.48));
+      const rfs = Math.round(bH * 0.34);
+      ctx.font = `800 ${rfs}px 'Barlow Condensed',sans-serif`;
+      ctx.fillStyle = classData.scope === 'regionale' ? '#f5c400' : 'rgba(255,255,255,0.92)';
+      ctx.textAlign = 'left'; ctx.textBaseline = 'middle';
+      ctx.fillText(regTxt, logoRight + 30, Math.round(bH * 0.52));
+      ctx.textBaseline = 'alphabetic';
+    }
+  }
+  const fs = Math.round(bH * 0.30);
   ctx.font = `800 ${fs}px 'Barlow Condensed',sans-serif`;
   ctx.fillStyle = 'rgba(255,255,255,0.92)'; ctx.textAlign = 'right';
   ctx.fillText('ITALIACRIT', W - 16, Math.round(bH * 0.6));
   ctx.font = `400 ${Math.round(fs * 0.52)}px 'Barlow Condensed',sans-serif`;
   ctx.fillStyle = 'rgba(255,255,255,0.38)';
-  ctx.fillText(SHARE_URL, W - 16, Math.round(bH * 0.87));
+  ctx.fillText(SHARE_URL, W - 16, Math.round(bH * 0.88));
   ctx.textAlign = 'left';
 }
 function _footer(ctx, W, H) {
@@ -14257,35 +14277,32 @@ function _drawTeam(ctx, W, H, d) {
 // ── CLASSIFICA CARD ────────────────────────────────────────
 function _drawClass(ctx, W, H, d) {
   const {catLabel:cL,rows,scope,region} = d;
-  const hB=Math.round(H*0.09),fB=Math.round(H*0.06),pad=Math.round(W*0.048);
-  let y=hB+Math.round(H*0.025);
-  const scopeTxt=scope==='regionale'?`REGIONALE — ${(region||'').toUpperCase()}`:'NAZIONALE';
-  const fsSc=Math.round(W*0.026);
-  ctx.font=`700 ${fsSc}px 'Barlow Condensed',sans-serif`; ctx.fillStyle=scope==='regionale'?'#f5c400':'#e8001d';
-  ctx.fillText(scopeTxt,pad,y+fsSc); y+=fsSc*1.6;
-  const fsT=Math.round(W*0.033);
+  const hB=Math.round(H*0.078),fB=Math.round(H*0.06),pad=Math.round(W*0.048);
+  // Lista alzata: meno spazio in alto (la regione è ora nell'header)
+  let y=hB+Math.round(H*0.018);
+  const fsT=Math.round(W*0.032);
   ctx.font=`400 ${fsT}px 'Bebas Neue',Impact,sans-serif`; ctx.fillStyle='rgba(255,255,255,0.35)';
-  ctx.fillText('CLASSIFICA',pad,y+fsT); y+=fsT*1.05;
-  const fsC=Math.round(W*0.065);
+  ctx.fillText('CLASSIFICA',pad,y+fsT); y+=fsT*1.02;
+  const fsC=Math.round(W*0.063);
   ctx.font=`900 ${fsC}px 'Bebas Neue',Impact,sans-serif`; ctx.fillStyle='#f0f0f0';
-  ctx.fillText(cL.toUpperCase(),pad,y+fsC); y+=fsC*1.05;
+  ctx.fillText(cL.toUpperCase(),pad,y+fsC); y+=fsC*1.0;
   ctx.fillStyle='#e8001d'; ctx.fillRect(pad,y,W-pad*2,2); y+=8;
   const avail=H-fB-y-4, maxR=Math.min(rows.length,10), rH=Math.round(avail/maxR);
   const posCol=['#f5c400','#b0b0b0','#cd7f32'];
   rows.slice(0,maxR).forEach((r,i)=>{
     const ry=y+i*rH;
-    if(i%2===0){ctx.fillStyle='rgba(255,255,255,0.02)';ctx.fillRect(pad,ry,W-pad*2,rH);}
-    const fsPos=Math.round(rH*0.58);
-    ctx.font=`900 ${fsPos}px 'Bebas Neue',Impact,sans-serif`; ctx.fillStyle=i<3?posCol[i]:'rgba(255,255,255,0.25)';
+    if(i%2===0){ctx.fillStyle='rgba(255,255,255,0.025)';ctx.fillRect(pad,ry,W-pad*2,rH);}
+    const fsPos=Math.round(rH*0.62);
+    ctx.font=`900 ${fsPos}px 'Bebas Neue',Impact,sans-serif`; ctx.fillStyle=i<3?posCol[i]:'rgba(255,255,255,0.30)';
     ctx.fillText(r.pos,pad,ry+rH*0.74);
-    const pW=ctx.measureText('00').width+8;
-    const fsN=Math.round(rH*0.36);
+    const pW=ctx.measureText('00').width+10;
+    const fsN=Math.round(rH*0.42);
     ctx.font=`700 ${fsN}px 'Barlow Condensed',sans-serif`; ctx.fillStyle='#f0f0f0';
-    ctx.fillText((`${r.cognome||''} ${r.nome||''}`).toUpperCase().trim().substring(0,26),pad+pW,ry+rH*0.44);
-    ctx.font=`400 ${Math.round(fsN*0.7)}px 'Barlow Condensed',sans-serif`; ctx.fillStyle='#555';
-    ctx.fillText((r.team||'').substring(0,28),pad+pW,ry+rH*0.78);
-    ctx.font=`900 ${Math.round(rH*0.5)}px 'Bebas Neue',Impact,sans-serif`; ctx.fillStyle='#f5c400'; ctx.textAlign='right';
-    ctx.fillText(r.punti,W-pad,ry+rH*0.7); ctx.textAlign='left';
+    ctx.fillText((`${r.cognome||''} ${r.nome||''}`).toUpperCase().trim().substring(0,26),pad+pW,ry+rH*0.46);
+    ctx.font=`400 ${Math.round(fsN*0.66)}px 'Barlow Condensed',sans-serif`; ctx.fillStyle='#6a6a6a';
+    ctx.fillText((r.team||'').substring(0,28),pad+pW,ry+rH*0.80);
+    ctx.font=`900 ${Math.round(rH*0.54)}px 'Bebas Neue',Impact,sans-serif`; ctx.fillStyle='#f5c400'; ctx.textAlign='right';
+    ctx.fillText(r.punti,W-pad,ry+rH*0.70); ctx.textAlign='left';
   });
 }
 
@@ -14300,7 +14317,7 @@ async function generateShareCanvas(type, payload, platKey) {
     // gara manages its own header/footer for bigger logo treatment
     _drawGara(ctx,p.w,p.h,payload,logo);
   } else {
-    _header(ctx,logo,p.w,p.h); _footer(ctx,p.w,p.h);
+    _header(ctx,logo,p.w,p.h, type==='class'?payload:null); _footer(ctx,p.w,p.h);
     if(type==='atleta') _drawAtleta(ctx,p.w,p.h,payload);
     else if(type==='team')  _drawTeam(ctx,p.w,p.h,payload);
     else if(type==='class') _drawClass(ctx,p.w,p.h,payload);
@@ -14414,7 +14431,7 @@ window.shareClassifica=async function(){
     catLabel:catLabel(rankCat),
     scope:rankRegion?'regionale':'nazionale',
     region:rankRegion||'',
-    rows:ranking.slice(0,10).map(r=>({pos:r.pos,cognome:r.cognome||r.atleta_id,nome:r.nome||'',team:r.team||'',punti:r.punti}))
+    rows:ranking.slice(0,10).map(r=>({pos:r.pos,cognome:r.cognome||r.atleta_id,nome:r.nome||'',team:r.team||r.team_nome||'',punti:r.punti}))
   });
 };
 
