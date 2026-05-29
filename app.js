@@ -14094,6 +14094,94 @@ function _wrap(ctx, txt, x, y, maxW, lH) {
   return y+lH;
 }
 
+// ── Colonna risultati gara (riusabile: 1 o 2 colonne) ───────
+// Righe a altezza uniforme + font ancorati alla larghezza (no ballooning su Storie/landscape)
+function _drawGaraColumn(ctx, x, colW, topY, bottomY, slice, startIdx) {
+  const medalBg = ['#f5c400', '#c8c8c8', '#cd7f32'];
+  const medalFg = ['#1a1200', '#1a1a1a', '#2a1500'];
+  const right = x + colW;
+  const n = slice.length;
+  if (!n) return;
+  const rH = Math.round((bottomY - topY) / n);
+
+  // Font cap: il più piccolo tra (altezza riga) e (larghezza colonna) → WhatsApp-like
+  const fsSur = Math.min(Math.round(rH * 0.40), Math.round(colW * 0.060));
+  const fsNom = Math.round(fsSur * 0.68);
+  const fsTm  = Math.min(Math.round(rH * 0.22), Math.round(colW * 0.034));
+
+  slice.forEach((r, i) => {
+    const gIdx = startIdx + i;          // posizione globale (0-based)
+    const isTop3 = gIdx < 3;
+    const isFirst = gIdx === 0;
+    const ry = topY + i * rH;
+    const cy = Math.round(ry + rH / 2);
+
+    // ── Sfondo riga ──
+    if (isFirst) {
+      const goldG = ctx.createLinearGradient(x, ry, right, ry + rH);
+      goldG.addColorStop(0, 'rgba(245,196,0,0.13)'); goldG.addColorStop(1, 'rgba(245,196,0,0.04)');
+      ctx.fillStyle = goldG; ctx.fillRect(x, ry, colW, rH);
+      ctx.strokeStyle = 'rgba(245,196,0,0.42)'; ctx.lineWidth = 1.5;
+      if (ctx.roundRect) { ctx.beginPath(); ctx.roundRect(x, ry + 1, colW, rH - 2, 7); ctx.stroke(); }
+      else ctx.strokeRect(x, ry + 1, colW, rH - 2);
+    } else if (gIdx === 1) {
+      ctx.fillStyle = 'rgba(200,200,200,0.045)'; ctx.fillRect(x, ry, colW, rH);
+    } else if (gIdx === 2) {
+      ctx.fillStyle = 'rgba(205,127,50,0.035)'; ctx.fillRect(x, ry, colW, rH);
+    } else if (i > 0) {
+      ctx.fillStyle = 'rgba(255,255,255,0.045)'; ctx.fillRect(x, ry, colW, 1);
+    }
+
+    // ── Pill posizione (centrata verticalmente) ──
+    const pillH = Math.min(Math.round(rH * 0.56), Math.round(colW * 0.085));
+    const pillW = Math.round(pillH * 1.58);
+    const pillX = x + Math.round(colW * 0.008);
+    const pillY = cy - Math.round(pillH / 2);
+    ctx.fillStyle = isTop3 ? medalBg[gIdx] : 'rgba(255,255,255,0.07)';
+    if (ctx.roundRect) { ctx.beginPath(); ctx.roundRect(pillX, pillY, pillW, pillH, Math.round(pillH * 0.2)); ctx.fill(); }
+    else ctx.fillRect(pillX, pillY, pillW, pillH);
+    const fsPos = Math.round(pillH * 0.58);
+    ctx.font = `700 ${fsPos}px 'Inter Tight',sans-serif`;
+    ctx.textAlign = 'center'; ctx.textBaseline = 'middle';
+    ctx.fillStyle = isTop3 ? medalFg[gIdx] : 'rgba(255,255,255,0.38)';
+    ctx.fillText(String(gIdx + 1).padStart(2, '0'), pillX + pillW / 2, cy + 1);
+    ctx.textAlign = 'left'; ctx.textBaseline = 'alphabetic';
+
+    // ── Blocco nome centrato attorno a cy ──
+    const nameX = pillX + pillW + Math.round(colW * 0.04);
+    const nameMaxW = right - nameX - Math.round(colW * 0.02);
+    const hasTeam = !!(r.team);
+    const blockH = fsSur + (hasTeam ? Math.round(fsTm * 1.4) : 0);
+    const surY = Math.round(ry + (rH - blockH) / 2) + fsSur;
+    const tmY  = surY + Math.round(fsTm * 1.4);
+
+    // Cognome
+    ctx.font = `700 ${fsSur}px 'Inter Tight',sans-serif`;
+    ctx.fillStyle = isTop3 ? '#f4f4f4' : 'rgba(255,255,255,0.82)';
+    let cog = (r.cognome || '').toUpperCase();
+    while (ctx.measureText(cog).width > nameMaxW - 6 && cog.length > 3) cog = cog.slice(0, -1);
+    const cogW = ctx.measureText(cog).width;
+    ctx.fillText(cog, nameX, surY);
+
+    // Nome inline (più chiaro), solo se entra
+    ctx.font = `400 ${fsNom}px 'Inter Tight',sans-serif`;
+    ctx.fillStyle = isTop3 ? 'rgba(255,255,255,0.5)' : 'rgba(255,255,255,0.32)';
+    const nomStr = ' ' + (r.nome || '').substring(0, 14);
+    if (nameX + cogW + ctx.measureText(nomStr).width <= nameX + nameMaxW) {
+      ctx.fillText(nomStr, nameX + cogW, surY);
+    }
+
+    // Team sotto (clip a larghezza)
+    if (hasTeam) {
+      ctx.font = `400 ${fsTm}px 'Inter Tight',sans-serif`;
+      ctx.fillStyle = isFirst ? 'rgba(255,255,255,0.42)' : 'rgba(255,255,255,0.28)';
+      let tm = '— ' + r.team;
+      while (ctx.measureText(tm).width > nameMaxW && tm.length > 6) tm = tm.slice(0, -1);
+      ctx.fillText(tm, nameX, tmY);
+    }
+  });
+}
+
 // ── GARA CARD v6 — UCI-inspired, no points, big names ────────
 function _drawGara(ctx, W, H, d, logo) {
   const { name, date, cat, mult, tipo, km, media, results, region, luogo } = d;
@@ -14185,86 +14273,21 @@ function _drawGara(ctx, W, H, d, logo) {
   ctx.fillStyle = 'rgba(255,255,255,0.3)'; ctx.textAlign = 'right';
   ctx.fillText('@italiacrit', W - pad, footerY + Math.round(fB * 0.66)); ctx.textAlign = 'left';
 
-  // ── Results list ──
-  const listH = footerY - y - Math.round(H * 0.003);
+  // ── Results list (1 colonna; 2 colonne su formati landscape con >5 atleti) ──
+  const listTop = y;
+  const listBot = footerY - Math.round(H * 0.003);
   const maxR = Math.min(results.length, 10);
-  // 1° leggermente più contenuto → più spazio (e dimensione) per i posti dal 2° in poi
-  const rH1 = Math.round(listH * 0.15);
-  const rHN = Math.round((listH - rH1) / Math.max(maxR - 1, 1));
-  const medalBg = ['#f5c400', '#c8c8c8', '#cd7f32'];
-  const medalFg = ['#1a1200', '#1a1a1a', '#2a1500'];
+  const slice = results.slice(0, maxR);
+  const landscape = W > H * 1.25;
 
-  results.slice(0, maxR).forEach((r, i) => {
-    const ry = i === 0 ? y : y + rH1 + (i - 1) * rHN;
-    const rHcur = i === 0 ? rH1 : rHN;
-    const isTop3 = i < 3;
-    const isFirst = i === 0;
-    const cy = Math.round(ry + rHcur / 2);
-
-    // ── Row background ──
-    if (isFirst) {
-      const goldG = ctx.createLinearGradient(0, ry, W, ry + rHcur);
-      goldG.addColorStop(0, 'rgba(245,196,0,0.13)'); goldG.addColorStop(1, 'rgba(245,196,0,0.04)');
-      ctx.fillStyle = goldG; ctx.fillRect(pad / 2, ry, W - pad, rHcur);
-      ctx.strokeStyle = 'rgba(245,196,0,0.42)'; ctx.lineWidth = 1.5;
-      if (ctx.roundRect) { ctx.beginPath(); ctx.roundRect(pad / 2, ry + 1, W - pad, rHcur - 2, 7); ctx.stroke(); }
-      else { ctx.strokeRect(pad / 2, ry + 1, W - pad, rHcur - 2); }
-    } else if (i === 1) {
-      ctx.fillStyle = 'rgba(200,200,200,0.045)'; ctx.fillRect(pad, ry, W - pad * 2, rHcur);
-    } else if (i === 2) {
-      ctx.fillStyle = 'rgba(205,127,50,0.035)'; ctx.fillRect(pad, ry, W - pad * 2, rHcur);
-    } else {
-      ctx.fillStyle = 'rgba(255,255,255,0.045)'; ctx.fillRect(pad, ry, W - pad * 2, 1);
-    }
-
-    // ── Position pill ──
-    const pillH = Math.round(rHcur * (isFirst ? 0.62 : 0.58));
-    const pillW = Math.round(pillH * 1.58);
-    const pillX = pad + Math.round(W * 0.004);
-    const pillY = cy - Math.round(pillH / 2);
-    ctx.fillStyle = isTop3 ? medalBg[i] : 'rgba(255,255,255,0.07)';
-    if (ctx.roundRect) { ctx.beginPath(); ctx.roundRect(pillX, pillY, pillW, pillH, Math.round(pillH * 0.2)); ctx.fill(); }
-    else { ctx.fillRect(pillX, pillY, pillW, pillH); }
-    const fsPos = Math.round(pillH * 0.58);
-    ctx.font = `700 ${fsPos}px 'Inter Tight',sans-serif`; ctx.textAlign = 'center';
-    ctx.fillStyle = isTop3 ? medalFg[i] : 'rgba(255,255,255,0.38)';
-    ctx.fillText(String(i + 1).padStart(2, '0'), pillX + pillW / 2, pillY + Math.round(pillH * 0.72));
-    ctx.textAlign = 'left';
-
-    // ── Name block — centred vertically around cy ──
-    const nameX = pillX + pillW + Math.round(W * 0.022);
-    const nameMaxW = W - pad - nameX - Math.round(W * 0.015);
-    // Bigger surname — fills the row
-    const fsSur = Math.round(rHcur * (isFirst ? 0.5 : 0.49));
-    const fsTm  = Math.round(rHcur * (isFirst ? 0.21 : 0.21));
-    // Centre the two-line block: blockH ≈ fsSur + fsTm*1.4
-    const blockH = fsSur + Math.round(fsTm * 1.4);
-    const surY   = Math.round(ry + (rHcur - blockH) / 2) + fsSur;  // baseline of surname
-    const tmY    = surY + Math.round(fsTm * 1.4);                   // baseline of team
-
-    // Surname
-    ctx.font = `700 ${fsSur}px 'Inter Tight',sans-serif`;
-    ctx.fillStyle = isTop3 ? '#f4f4f4' : 'rgba(255,255,255,0.82)';
-    let cog = (r.cognome || '').toUpperCase();
-    while (ctx.measureText(cog).width > nameMaxW - 6 && cog.length > 3) cog = cog.slice(0, -1);
-    const cogW = ctx.measureText(cog).width;
-    ctx.fillText(cog, nameX, surY);
-
-    // First name lighter, inline
-    const fsNom = Math.round(fsSur * 0.68);
-    ctx.font = `400 ${fsNom}px 'Inter Tight',sans-serif`;
-    ctx.fillStyle = isTop3 ? 'rgba(255,255,255,0.5)' : 'rgba(255,255,255,0.32)';
-    const nomStr = ' ' + (r.nome || '').substring(0, 14);
-    // align nome baseline with surname baseline (same y, smaller size looks natural)
-    if (nameX + cogW + ctx.measureText(nomStr).width <= nameX + nameMaxW) {
-      ctx.fillText(nomStr, nameX + cogW, surY);
-    }
-
-    // Team muted, below
-    ctx.font = `400 ${fsTm}px 'Inter Tight',sans-serif`;
-    ctx.fillStyle = isFirst ? 'rgba(255,255,255,0.42)' : 'rgba(255,255,255,0.28)';
-    ctx.fillText('— ' + (r.team || '').substring(0, 34), nameX, tmY);
-  });
+  if (landscape && maxR > 5) {
+    const gap = Math.round(W * 0.045);
+    const colW = Math.round((W - pad * 2 - gap) / 2);
+    _drawGaraColumn(ctx, pad, colW, listTop, listBot, slice.slice(0, 5), 0);
+    _drawGaraColumn(ctx, pad + colW + gap, colW, listTop, listBot, slice.slice(5), 5);
+  } else {
+    _drawGaraColumn(ctx, pad, W - pad * 2, listTop, listBot, slice, 0);
+  }
 }
 
 // ── ATLETA CARD ────────────────────────────────────────────
