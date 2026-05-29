@@ -6495,6 +6495,11 @@ async function renderAdmin() {
           <span class="admin-nav-icon">📥</span> Profili in attesa
           <span class="admin-nav-badge" id="badge-profili-pending"></span>
         </div>
+
+        <div class="admin-nav-group">Struttura sito</div>
+        <div class="admin-nav-item" data-section="page-gallery" onclick="adminNav('page-gallery')">
+          <span class="admin-nav-icon">🗂️</span> Conformazione pagine
+        </div>
       </aside>
 
       <!-- ── MAIN CONTENT ── -->
@@ -7055,6 +7060,125 @@ window.adminNav = async function(section) {
           btn.disabled = false; btn.textContent = '🌱 Avvia importazione xpix';
         }
       };
+      break;
+    }
+
+    case 'page-gallery': {
+      const PAGES = [
+        { icon:'🏠', title:'Home',          route:'#/',             sections:[
+          {label:'Hero banner',        color:''},
+          {label:'Countdown prossima gara', color:'gold'},
+          {label:'Ultime gare (card)', color:''},
+          {label:'Narrative classifica', color:'blue'},
+          {label:'Classifica rapida (top 5)', color:''},
+          {label:'Foto in evidenza',   color:'green'},
+          {label:'Calendario prossime', color:'gold'},
+        ]},
+        { icon:'📋', title:'Risultati',     route:'#/risultati',    sections:[
+          {label:'Filtri categoria / anno', color:''},
+          {label:'Lista gare (data, nome, cat)', color:''},
+          {label:'Risultati gara (modale / inline)', color:'blue'},
+          {label:'Pulsante condivisione grafica', color:'green'},
+          {label:'Link foto / video gara', color:'gold'},
+        ]},
+        { icon:'🏆', title:'Classifica',    route:'#/classifica',   sections:[
+          {label:'Selettore categoria + anno', color:''},
+          {label:'Narrative banner (headline + storia)', color:'blue'},
+          {label:'Tabella classifica atleti', color:''},
+          {label:'Sparkline trend punteggi', color:'green'},
+          {label:'Pulsante condivisione', color:'gold'},
+        ]},
+        { icon:'👤', title:'Atleti',        route:'#/atleti',       sections:[
+          {label:'Ricerca per nome / team', color:''},
+          {label:'Griglia atleti (card)', color:''},
+          {label:'Paginazione',            color:'gray'},
+        ]},
+        { icon:'🚴', title:'Scheda atleta', route:'#/atleta/:id',   sections:[
+          {label:'Header (nome, team, stato forma)', color:''},
+          {label:'Statistiche (gare, vittorie, podi, punti)', color:'blue'},
+          {label:'Grafico trend punti (sparkline)', color:'green'},
+          {label:'Tabella risultati stagione', color:''},
+          {label:'Storico stagioni precedenti', color:'gray'},
+          {label:'Foto / album collegati', color:'gold'},
+          {label:'Comparatore rapido', color:''},
+          {label:'Watchlist toggle ★', color:'gold'},
+        ]},
+        { icon:'👥', title:'Team',          route:'#/team',         sections:[
+          {label:'Narrative banner team', color:'blue'},
+          {label:'Tabella classifica team', color:''},
+          {label:'Pulsante condivisione', color:'gold'},
+        ]},
+        { icon:'🏢', title:'Scheda team',   route:'#/team/:id',     sections:[
+          {label:'Header (nome, categoria)', color:''},
+          {label:'Statistiche team', color:'blue'},
+          {label:'Roster atleti attivi', color:''},
+          {label:'Ultimi risultati squadra', color:''},
+          {label:'Trend stagionale', color:'green'},
+        ]},
+        { icon:'📅', title:'Calendario',    route:'#/calendario',   sections:[
+          {label:'Filtro categoria / mese', color:''},
+          {label:'Lista gare future', color:''},
+          {label:'Gare già disputate (link risultato)', color:'gray'},
+        ]},
+        { icon:'📊', title:'Statistiche',   route:'#/statistiche',  sections:[
+          {label:'Selettore categoria + metrica', color:''},
+          {label:'Grafici vittorie per team', color:'blue'},
+          {label:'Grafici distribuzione punteggi', color:'green'},
+          {label:'Top atleti / top team', color:''},
+          {label:'Heatmap attività gare', color:'gold'},
+        ]},
+        { icon:'⚖️', title:'Comparatore',   route:'#/comparatore',  sections:[
+          {label:'Selezione 2 atleti (autocomplete)', color:''},
+          {label:'Statistiche a confronto', color:'blue'},
+          {label:'Grafico radar o bar comparato', color:'green'},
+          {label:'Risultati comuni (stessa gara)', color:''},
+        ]},
+        { icon:'📷', title:'Media',         route:'#/media/:id',    sections:[
+          {label:'Header fotografo (nome, bio, social)', color:''},
+          {label:'Griglia album', color:''},
+          {label:'Lightbox foto', color:'green'},
+          {label:'Collegamento gara', color:'gold'},
+        ]},
+        { icon:'🔐', title:'Login / Profilo',route:'#/login',       sections:[
+          {label:'Form login / registrazione', color:''},
+          {label:'Dashboard ruolo (post-login)', color:'blue'},
+          {label:'Collega profilo atleta/team', color:'gold'},
+        ]},
+        { icon:'⚙️', title:'Admin',         route:'#/admin',        sections:[
+          {label:'Sidebar navigazione sezioni', color:''},
+          {label:'Dashboard overview + stats', color:'blue'},
+          {label:'Gestione foto (pending / xpix / IC)', color:''},
+          {label:'Gestione video (pending / YouTube)', color:''},
+          {label:'Gestione media / fotografi', color:'green'},
+          {label:'Lista utenti + profili in attesa', color:'gold'},
+          {label:'Sync dati FCI', color:''},
+          {label:'Conformazione pagine (questa)', color:'gray'},
+        ]},
+      ];
+      const dotClass = c => c ? `pg-comp-dot pg-comp-dot--${c}` : 'pg-comp-dot';
+      main.innerHTML = `
+        <div class="admin-page-header">
+          <h1 class="admin-page-title">🗂️ Conformazione Pagine</h1>
+          <p class="admin-page-sub">Struttura e componenti di ogni pagina del sito.</p>
+        </div>
+        <div class="pg-gallery">
+          ${PAGES.map(p => `
+            <div class="pg-card">
+              <div class="pg-card-header">
+                <span class="pg-card-icon">${p.icon}</span>
+                <span class="pg-card-title">${p.title}</span>
+                <span class="pg-card-route">${p.route}</span>
+              </div>
+              <div class="pg-card-body">
+                <div class="pg-section-label">Sezioni / Componenti</div>
+                ${p.sections.map(s => `
+                  <div class="pg-comp-row">
+                    <div class="${dotClass(s.color)}"></div>
+                    <span>${s.label}</span>
+                  </div>`).join('')}
+              </div>
+            </div>`).join('')}
+        </div>`;
       break;
     }
   }
@@ -13635,204 +13759,59 @@ window.submitRegister = async function(e) {
   }
 };
 
-// ── MY PROFILE ────────────────────────────────────────────────
+// ── MY PROFILE / DASHBOARD ────────────────────────────────────
 async function renderMyProfile() {
   const user = authUser();
   if (!user) { window.location.hash = '/login'; return; }
 
   const roleLabels = {
-    atleta:'Atleta', team:'Team', genitore:'Genitore', parente:'Parente / Tifoso', appassionato:'Appassionato', admin:'Amministratore', media:'📷 Media / Fotografo'
+    atleta:'Atleta', team:'Team Manager', genitore:'Genitore', parente:'Parente / Tifoso',
+    appassionato:'Appassionato', admin:'Amministratore', media:'Media / Fotografo'
   };
+  const roleIcons = {
+    atleta:'🚴', team:'👥', genitore:'👨‍👧', parente:'❤️',
+    appassionato:'🏆', admin:'⚙️', media:'📷'
+  };
+  const label = roleLabels[user.role] || user.role;
+  const icon  = roleIcons[user.role] || '👤';
+  const initials = (user.display_name || user.email || '?').slice(0,1).toUpperCase();
 
-  let profileHtml = '';
-  try {
-    const { profile } = await apiCall('/profile');
-    if (user.role === 'atleta') {
-      if (!profile) {
-        profileHtml = `
-          <div class="auth-section">
-            <h3 class="auth-section-title">Collega il tuo profilo atleta</h3>
-            <p style="color:var(--text-muted);margin-bottom:16px;font-size:0.9rem">
-              Cerca il tuo nome nelle classifiche e collegati per seguire facilmente i tuoi risultati.
-            </p>
-            <form onsubmit="submitLinkAthlete(event)" class="auth-form">
-              <label class="auth-label">Cerca atleta nel DB
-                <input type="text" id="link-search" class="auth-input" placeholder="Digita cognome…" oninput="searchAtletaForLink(this.value)" autocomplete="off" />
-                <div id="link-results" style="margin-top:6px"></div>
-                <input type="hidden" id="link-atleta-id" />
-              </label>
-              <label class="auth-label">Oppure inserisci codice FCI
-                <input type="text" id="link-fci" class="auth-input" placeholder="Codice tessera FCI (opzionale)" />
-              </label>
-              <label class="auth-label">Nome
-                <input type="text" id="link-fname" class="auth-input" placeholder="Nome" />
-              </label>
-              <label class="auth-label">Cognome
-                <input type="text" id="link-lname" class="auth-input" placeholder="Cognome" />
-              </label>
-              <button type="submit" class="auth-btn">COLLEGA PROFILO</button>
-            </form>
-            <p style="font-size:0.8rem;color:var(--text-muted);margin-top:8px">
-              Se non trovi il tuo profilo, compila comunque il form: verrà revisionato dall'admin.
-            </p>
-          </div>`;
-      } else {
-        const statusMap = { active:'✅ Verificato', pending:'⏳ In attesa di verifica', rejected:'❌ Rifiutato' };
-        profileHtml = `
-          <div class="auth-section">
-            <h3 class="auth-section-title">Il tuo profilo atleta</h3>
-            <div class="profile-info-row"><span>Stato</span><span>${statusMap[profile.status] || profile.status}</span></div>
-            ${profile.atleta_id ? `<div class="profile-info-row"><span>Profilo</span><a href="#/atleta/${esc(profile.atleta_id)}">${esc(profile.first_name)} ${esc(profile.last_name)}</a></div>` : ''}
-            ${profile.fci_code ? `<div class="profile-info-row"><span>Codice FCI</span><span>${esc(profile.fci_code)}</span></div>` : ''}
-            ${profile.team ? `<div class="profile-info-row"><span>Team</span><span>${esc(profile.team)}</span></div>` : ''}
-          </div>`;
-      }
-    } else if (user.role === 'team') {
-      if (!profile) {
-        profileHtml = `
-          <div class="auth-section">
-            <h3 class="auth-section-title">Collega il tuo team</h3>
-            <form onsubmit="submitLinkTeam(event)" class="auth-form">
-              <label class="auth-label">Nome team
-                <input type="text" id="link-team-name" class="auth-input" placeholder="Nome squadra" required />
-              </label>
-              <button type="submit" class="auth-btn">COLLEGA TEAM</button>
-            </form>
-          </div>`;
-      } else {
-        const statusMap = { active:'✅ Verificato', pending:'⏳ In attesa di verifica', rejected:'❌ Rifiutato' };
-        profileHtml = `
-          <div class="auth-section">
-            <h3 class="auth-section-title">Il tuo team</h3>
-            <div class="profile-info-row"><span>Stato</span><span>${statusMap[profile.status] || profile.status}</span></div>
-            ${profile.team_id ? `<div class="profile-info-row"><span>Profilo</span><a href="#/team/${esc(profile.team_id)}">${esc(profile.team_name)}</a></div>` : `<div class="profile-info-row"><span>Nome</span><span>${esc(profile.team_name)}</span></div>`}
-          </div>`;
-      }
-    } else if (user.role === 'genitore' || user.role === 'parente') {
-      const links = Array.isArray(profile) ? profile : [];
-      const statusMap = { active:'✅', pending:'⏳', rejected:'❌' };
-      profileHtml = `
-        <div class="auth-section">
-          <h3 class="auth-section-title">Atleti seguiti</h3>
-          ${links.length ? links.map(l => `
-            <div class="profile-info-row">
-              <a href="#/atleta/${esc(l.linked_atleta_id)}">${esc(l.linked_atleta_id)}</a>
-              <span>${statusMap[l.status] || l.status} ${esc(l.relation)}</span>
-            </div>`).join('') : '<p style="color:var(--text-muted)">Nessun atleta collegato.</p>'}
-          <form onsubmit="submitLinkFamily(event)" class="auth-form" style="margin-top:16px">
-            <label class="auth-label">Cerca atleta
-              <input type="text" id="link-search" class="auth-input" placeholder="Digita cognome…" oninput="searchAtletaForLink(this.value)" autocomplete="off" />
-              <div id="link-results" style="margin-top:6px"></div>
-              <input type="hidden" id="link-atleta-id" />
-            </label>
-            <button type="submit" class="auth-btn" style="margin-top:8px">AGGIUNGI ATLETA</button>
-          </form>
-        </div>`;
-    } else if (user.role === 'media') {
-      if (!profile) {
-        profileHtml = `
-          <div class="auth-section">
-            <h3 class="auth-section-title">📷 Crea il tuo profilo fotografo</h3>
-            <p style="color:var(--text-muted);margin-bottom:16px;font-size:0.9rem">
-              Inserisci i tuoi dati per creare il profilo. Sarà visibile a tutti dopo approvazione.
-            </p>
-            <form onsubmit="window.submitMediaProfile(event)" class="auth-form">
-              <label class="auth-label">Nome pubblico *
-                <input type="text" id="mp-name" class="auth-input" placeholder="Es. Mario Rossi Foto" required />
-              </label>
-              <label class="auth-label">Bio
-                <input type="text" id="mp-bio" class="auth-input" placeholder="Breve descrizione di te" />
-              </label>
-              <label class="auth-label">Sito web
-                <input type="url" id="mp-web" class="auth-input" placeholder="https://tuosito.it" />
-              </label>
-              <label class="auth-label">Instagram
-                <input type="text" id="mp-ig" class="auth-input" placeholder="@nomeutente (senza @)" />
-              </label>
-              <label class="auth-label">Facebook
-                <input type="text" id="mp-fb" class="auth-input" placeholder="nomepagina o URL profilo" />
-              </label>
-              <button type="submit" class="auth-btn">CREA PROFILO</button>
-            </form>
-          </div>`;
-      } else {
-        const statusMap = { active:'✅ Approvato', pending:'⏳ In attesa di approvazione', rejected:'❌ Rifiutato' };
-        profileHtml = `
-          <div class="auth-section">
-            <h3 class="auth-section-title" style="display:flex;align-items:center;justify-content:space-between">
-              📷 Il tuo profilo fotografo
-              <button onclick="window.openMediaProfileEdit(${JSON.stringify(profile).replace(/"/g,'&quot;')})" style="font-size:.75rem;background:none;border:1px solid var(--border);color:var(--text-muted);padding:4px 10px;border-radius:4px;cursor:pointer">✏️ Modifica</button>
-            </h3>
-            <div class="profile-info-row"><span>Stato</span><span>${statusMap[profile.status] || profile.status}</span></div>
-            <div class="profile-info-row"><span>Nome pubblico</span><span>${esc(profile.display_name)}</span></div>
-            ${profile.bio ? `<div class="profile-info-row"><span>Bio</span><span>${esc(profile.bio)}</span></div>` : ''}
-            ${profile.website ? `<div class="profile-info-row"><span>Sito</span><a href="${esc(profile.website)}" target="_blank" rel="noopener">${esc(profile.website)}</a></div>` : ''}
-            ${profile.instagram ? `<div class="profile-info-row"><span>Instagram</span><a href="https://instagram.com/${esc(profile.instagram.replace('@',''))}" target="_blank" rel="noopener">${esc(profile.instagram)}</a></div>` : ''}
-            ${profile.facebook ? `<div class="profile-info-row"><span>Facebook</span><a href="${profile.facebook.startsWith('http') ? esc(profile.facebook) : 'https://facebook.com/'+esc(profile.facebook)}" target="_blank" rel="noopener">${esc(profile.facebook)}</a></div>` : ''}
-            ${profile.status === 'active'
-              ? `<div style="margin-top:12px;display:flex;gap:8px;flex-wrap:wrap">
-                   <a href="#/media/${profile.id}" class="auth-btn" style="text-decoration:none;text-align:center;font-size:.85rem">👁 Vedi il mio profilo</a>
-                   <button onclick="window.openMediaAlbumCreate(${profile.id})" class="auth-btn" style="font-size:.85rem;background:var(--accent)">+ Nuovo album</button>
-                 </div>`
-              : ''}
-          </div>
-          ${profile.status === 'active' ? `<div id="my-albums-section"><div class="admin-loading">Caricamento album…</div></div>` : ''}`;
-        // Dopo render, carica gli album
-        setTimeout(async () => {
-          const sec = document.getElementById('my-albums-section');
-          if (!sec) return;
-          try {
-            const d = await fetch(`${API_BASE}/media/profile/${profile.id}`).then(r => r.json());
-            const albums = d.albums || [];
-            sec.innerHTML = `
-              <div class="auth-section">
-                <h3 class="auth-section-title" style="display:flex;align-items:center;justify-content:space-between">
-                  I miei album <span style="font-weight:400;font-size:.8rem;color:var(--text-muted)">${albums.length} album · ${d.stats?.total||0} foto</span>
-                </h3>
-                ${albums.length ? `<div class="media-album-grid">${albums.map(a => `
-                  <div class="media-album-card">
-                    <a href="#/media/${profile.id}#album-${a.id}" class="media-album-cover" style="display:block;aspect-ratio:16/9;overflow:hidden;border-radius:6px;background:var(--bg-elevated);position:relative">
-                      ${(a.first_ext_url || a.first_filename)
-                        ? `<img src="${a.first_ext_url || (PHOTOS_BASE+'/photos/'+a.first_filename)}" loading="lazy" style="width:100%;height:100%;object-fit:cover"/>`
-                        : `<div style="display:flex;align-items:center;justify-content:center;height:100%;color:var(--text-muted);font-size:1.5rem">📷</div>`}
-                      <div style="position:absolute;bottom:0;left:0;right:0;padding:4px 8px;background:rgba(0,0,0,.6);font-size:.7rem;color:#fff">${a.photo_count} foto</div>
-                    </a>
-                    <div style="padding:6px 0;font-size:.85rem;font-weight:600">${esc(a.title)}</div>
-                    ${a.gara_id ? `<div style="font-size:.75rem;color:var(--text-muted)">${esc(a.gara_id)}</div>` : ''}
-                    <div style="display:flex;gap:6px;margin-top:6px">
-                      <button onclick="window.openMediaAlbumUpload(${a.id})" style="font-size:.75rem;padding:4px 10px;border:1px solid var(--accent);color:var(--accent);background:transparent;border-radius:4px;cursor:pointer">+ Foto</button>
-                      <button onclick="window.deleteMediaAlbum(${a.id})" style="font-size:.75rem;padding:4px 10px;border:1px solid var(--border);color:var(--text-muted);background:transparent;border-radius:4px;cursor:pointer">🗑</button>
-                    </div>
-                  </div>`).join('')}</div>`
-                  : `<p style="color:var(--text-muted)">Nessun album ancora. Creane uno!</p>`}
-              </div>`;
-          } catch(e) {
-            if (sec) sec.innerHTML = `<div style="color:var(--red-hot)">Errore caricamento album: ${esc(e.message)}</div>`;
-          }
-        }, 0);
-      }
-    }
-  } catch (err) {
-    profileHtml = `<p style="color:var(--text-muted)">Impossibile caricare il profilo: ${esc(err.message)}</p>`;
-  }
-
+  // Render shell immediately
   setPage(`
-    <div class="auth-wrap">
-      <div class="auth-card" style="max-width:560px">
-        <h1 class="auth-title">IL MIO PROFILO</h1>
-        <div class="auth-section">
-          <div class="profile-info-row"><span>Nome</span><span>${esc(user.display_name)}</span></div>
-          <div class="profile-info-row"><span>Email</span><span>${esc(user.email)}</span></div>
-          <div class="profile-info-row"><span>Tipo</span><span>${roleLabels[user.role] || user.role}</span></div>
+    <div class="dash-wrap">
+      <div class="dash-hero">
+        <div class="dash-hero-avatar">${initials}</div>
+        <div class="dash-hero-info">
+          <div class="dash-hero-name">${esc(user.display_name || user.email)}</div>
+          <div class="dash-hero-email">${esc(user.email)}</div>
+          <div class="dash-role-badge">${icon} ${label.toUpperCase()}</div>
         </div>
-        ${profileHtml}
-        <div style="margin-top:24px;display:flex;gap:12px;flex-wrap:wrap">
-          ${user.role === 'admin' ? `<a href="#/admin" class="auth-btn" style="text-decoration:none;text-align:center">PANNELLO ADMIN</a>` : ''}
-          <button class="auth-btn auth-btn-outline" onclick="doLogout()">ESCI</button>
+        <div class="dash-hero-actions">
+          ${user.role === 'admin' ? `<a href="#/admin" class="dash-btn dash-btn--primary">⚙️ Admin</a>` : ''}
+          <button class="dash-btn dash-btn--outline" onclick="doLogout()">Esci</button>
         </div>
       </div>
+      <div id="dash-body"><div class="admin-loading">Caricamento…</div></div>
     </div>
   `);
+
+  // Async fill
+  try {
+    const { profile } = await apiCall('/profile');
+    const el = document.getElementById('dash-body');
+    if (!el) return;
+    if      (user.role === 'atleta')      await _dashAtleta(el, user, profile);
+    else if (user.role === 'team')        await _dashTeam(el, user, profile);
+    else if (user.role === 'genitore')    await _dashGenitore(el, user, profile);
+    else if (user.role === 'parente')     await _dashParente(el, user, profile);
+    else if (user.role === 'appassionato') await _dashAppassionato(el, user);
+    else if (user.role === 'media')       await _dashMedia(el, user, profile);
+    else if (user.role === 'admin')       await _dashAdmin(el, user);
+    else el.innerHTML = `<p style="color:var(--text-muted)">Pannello non disponibile per il ruolo "${esc(user.role)}".</p>`;
+  } catch(err) {
+    const el = document.getElementById('dash-body');
+    if (el) el.innerHTML = `<p style="color:var(--text-muted)">Errore caricamento pannello: ${esc(err.message)}</p>`;
+  }
 }
 
 window.doLogout = function() {
@@ -13840,6 +13819,558 @@ window.doLogout = function() {
   updateNavLoginState();
   window.location.hash = '/';
 };
+
+// ── DASHBOARD HELPERS ────────────────────────────────────────────────────────
+
+/* Returns ranking position data for an atleta from live globalData */
+function _dashRankingInfo(atleta_id) {
+  if (!globalData?.resultsRaw || !atleta_id) return null;
+  const res = globalData.resultsRaw;
+  const cats = [...new Set(res.map(r => getRankingFileCode(r)).filter(Boolean))];
+  const out = [];
+  for (const cat of cats) {
+    const ranking = computeRanking ? computeRanking(res, cat) : null;
+    if (!ranking) continue;
+    const idx = ranking.findIndex(r => r.atleta_id === atleta_id);
+    if (idx < 0) continue;
+    const r = ranking[idx];
+    out.push({ cat, catLabel: catLabel(cat), pos: r.pos || idx+1, punti: r.punti, gap: idx > 0 ? (ranking[0].punti - r.punti) : 0 });
+  }
+  return out;
+}
+
+async function _dashAtleta(el, user, profile) {
+  const statusMap = { active:'✅ Verificato', pending:'⏳ In attesa', rejected:'❌ Rifiutato' };
+
+  // No profile linked yet
+  if (!profile) {
+    el.innerHTML = `
+      <div class="dash-grid">
+        <div class="dash-card dash-card--accent">
+          <div class="dash-card-title"><span>🔗</span>Collega il tuo profilo atleta</div>
+          <p style="font-size:.85rem;color:var(--text-muted);line-height:1.5">
+            Cerca il tuo nome nelle classifiche FCI e collegati per accedere ai tuoi risultati, statistiche e posizioni in classifica in tempo reale.
+          </p>
+          <div class="dash-link-form">
+            <input type="text" id="link-search" placeholder="Cerca per cognome…" oninput="searchAtletaForLink(this.value)" autocomplete="off" />
+            <div id="link-results"></div>
+            <input type="hidden" id="link-atleta-id" />
+            <input type="text" id="link-fci" placeholder="Codice tessera FCI (opzionale)" />
+            <input type="text" id="link-fname" placeholder="Nome" />
+            <input type="text" id="link-lname" placeholder="Cognome" />
+            <button class="dash-btn dash-btn--primary" onclick="submitLinkAthlete(event)">COLLEGA PROFILO</button>
+          </div>
+          <p style="font-size:.75rem;color:var(--text-muted)">Non trovi il tuo nome? Compila comunque — verrà revisionato dall'admin.</p>
+        </div>
+        <div class="dash-card">
+          <div class="dash-card-title"><span>💡</span>Cosa puoi fare</div>
+          <div class="dash-actions-grid">
+            <a href="#/classifica" class="dash-quick-btn"><span class="dqb-icon">🏆</span>Classifiche</a>
+            <a href="#/risultati"  class="dash-quick-btn"><span class="dqb-icon">📋</span>Risultati</a>
+            <a href="#/calendario" class="dash-quick-btn"><span class="dqb-icon">📅</span>Calendario</a>
+            <a href="#/statistiche" class="dash-quick-btn"><span class="dqb-icon">📊</span>Statistiche</a>
+          </div>
+        </div>
+      </div>`;
+    return;
+  }
+
+  // Profile linked — show full dashboard
+  const atleta_id = profile.atleta_id;
+  const rankInfo  = atleta_id ? _dashRankingInfo(atleta_id) : [];
+  const res       = globalData?.resultsRaw || [];
+  const myResults = atleta_id
+    ? res.filter(r => r.atleta_id === atleta_id).sort((a,b) => (b.data||'').localeCompare(a.data||'')).slice(0, 6)
+    : [];
+
+  // upcoming races (next 5)
+  const today = new Date().toISOString().slice(0,10);
+  const calendar = (globalData?.calendar || []).filter(g => (g.data||g.date||'') >= today).slice(0,5);
+
+  const totalVittorie = res.filter(r => r.atleta_id === atleta_id && (r.pos === 1 || r.pos === '1')).length;
+  const totalPodi     = res.filter(r => r.atleta_id === atleta_id && [1,2,3,'1','2','3'].includes(r.pos)).length;
+  const totalGare     = res.filter(r => r.atleta_id === atleta_id).length;
+
+  el.innerHTML = `
+    <div class="dash-grid">
+
+      <!-- STATUS -->
+      <div class="dash-card">
+        <div class="dash-card-title"><span>🚴</span>Il tuo profilo</div>
+        <div style="display:flex;align-items:center;gap:10px;flex-wrap:wrap">
+          <span class="dash-status ${profile.status==='active'?'dash-status--ok':profile.status==='pending'?'dash-status--warn':'dash-status--err'}">${statusMap[profile.status]||profile.status}</span>
+          ${atleta_id ? `<a href="#/atleta/${esc(atleta_id)}" class="dash-btn dash-btn--outline dash-btn--sm">👁 Vedi profilo pubblico</a>` : ''}
+        </div>
+        ${profile.team ? `<div style="font-size:.84rem;color:var(--text-muted)">Team: <strong style="color:var(--text-primary)">${esc(profile.team)}</strong></div>` : ''}
+        ${profile.fci_code ? `<div style="font-size:.8rem;color:var(--text-muted)">FCI: ${esc(profile.fci_code)}</div>` : ''}
+        <div class="dash-stats-row">
+          <div class="dash-stat"><div class="dash-stat-val">${totalGare}</div><div class="dash-stat-lbl">Gare</div></div>
+          <div class="dash-stat"><div class="dash-stat-val">${totalVittorie}</div><div class="dash-stat-lbl">Vittorie</div></div>
+          <div class="dash-stat"><div class="dash-stat-val">${totalPodi}</div><div class="dash-stat-lbl">Podi</div></div>
+        </div>
+      </div>
+
+      <!-- RANKING POSITIONS -->
+      ${rankInfo && rankInfo.length ? `
+      <div class="dash-card">
+        <div class="dash-card-title"><span>🏆</span>Posizioni in classifica</div>
+        ${rankInfo.map(r => `
+          <div style="display:flex;align-items:center;justify-content:space-between;padding:6px 0;border-bottom:1px solid var(--border-subtle)">
+            <div>
+              <div style="font-size:.82rem;font-weight:700;color:var(--text-primary)">${esc(r.catLabel)}</div>
+              <div style="font-size:.72rem;color:var(--text-muted)">${r.punti} punti${r.gap > 0 ? ` · −${r.gap} dal leader` : ''}</div>
+            </div>
+            <div style="font-family:var(--font-display);font-size:1.6rem;font-weight:900;color:${r.pos<=3?'var(--accent)':'var(--text-secondary)'}">
+              #${r.pos}
+            </div>
+          </div>`).join('')}
+        <a href="#/classifica" class="dash-btn dash-btn--outline dash-btn--sm" style="margin-top:4px">Vai alle classifiche →</a>
+      </div>` : ''}
+
+      <!-- ULTIMI RISULTATI -->
+      ${myResults.length ? `
+      <div class="dash-card">
+        <div class="dash-card-title"><span>📋</span>Ultimi risultati</div>
+        <div class="dash-results-list">
+          ${myResults.map(r => `
+            <div class="dash-result-row">
+              <div class="dash-result-pos">${r.pos||'–'}</div>
+              <div class="dash-result-name" title="${esc(r.gara||'')}"><a href="#/gara/${esc(r.gara_id||r.gara_slug||'')}" style="color:inherit;text-decoration:none">${esc((r.gara||'').slice(0,28))}</a></div>
+              <div class="dash-result-date">${(r.data||'').slice(5)}</div>
+              <div class="dash-result-pts">${r.punti_effettivi||''}</div>
+            </div>`).join('')}
+        </div>
+        <a href="#/atleta/${esc(atleta_id)}" class="dash-btn dash-btn--outline dash-btn--sm">Tutti i risultati →</a>
+      </div>` : ''}
+
+      <!-- AZIONI RAPIDE -->
+      <div class="dash-card">
+        <div class="dash-card-title"><span>⚡</span>Azioni rapide</div>
+        <div class="dash-actions-grid">
+          <a href="#/classifica"  class="dash-quick-btn"><span class="dqb-icon">🏆</span>Classifiche</a>
+          <a href="#/risultati"   class="dash-quick-btn"><span class="dqb-icon">📋</span>Risultati</a>
+          <a href="#/calendario"  class="dash-quick-btn"><span class="dqb-icon">📅</span>Calendario</a>
+          <a href="#/statistiche" class="dash-quick-btn"><span class="dqb-icon">📊</span>Statistiche</a>
+          ${atleta_id ? `<a href="#/comparatore" class="dash-quick-btn"><span class="dqb-icon">⚖️</span>Comparatore</a>` : ''}
+          <a href="#/atleti"      class="dash-quick-btn"><span class="dqb-icon">👤</span>Atleti</a>
+        </div>
+      </div>
+
+      <!-- PROSSIME GARE -->
+      ${calendar.length ? `
+      <div class="dash-card">
+        <div class="dash-card-title"><span>📅</span>Prossime gare</div>
+        ${calendar.map(g => `
+          <div class="dash-cal-row">
+            <div class="dash-cal-date">${(g.data||g.date||'').slice(5)}</div>
+            <div style="flex:1">
+              <div class="dash-cal-name">${esc((g.nome||g.name||'').slice(0,32))}</div>
+              <div class="dash-cal-cat">${esc(g.cat||g.categoria||'')}</div>
+            </div>
+          </div>`).join('')}
+        <a href="#/calendario" class="dash-btn dash-btn--outline dash-btn--sm">Tutto il calendario →</a>
+      </div>` : ''}
+
+    </div>`;
+}
+
+async function _dashTeam(el, user, profile) {
+  const statusMap = { active:'✅ Verificato', pending:'⏳ In attesa', rejected:'❌ Rifiutato' };
+
+  if (!profile) {
+    el.innerHTML = `
+      <div class="dash-grid">
+        <div class="dash-card dash-card--accent">
+          <div class="dash-card-title"><span>🔗</span>Collega il tuo team</div>
+          <p style="font-size:.85rem;color:var(--text-muted);line-height:1.5">
+            Associa il tuo account al tuo team per accedere alle statistiche di squadra, classifica team e gestione atleti.
+          </p>
+          <div class="dash-link-form">
+            <input type="text" id="link-team-name" placeholder="Nome squadra" required />
+            <button class="dash-btn dash-btn--primary" onclick="submitLinkTeam(event)">COLLEGA TEAM</button>
+          </div>
+        </div>
+      </div>`;
+    return;
+  }
+
+  const teamId   = profile.team_id;
+  const teamName = profile.team_name || teamId || '';
+  const res      = globalData?.resultsRaw || [];
+  const teamRes  = teamId
+    ? res.filter(r => (r.team||'').toLowerCase() === teamName.toLowerCase()).sort((a,b)=>(b.data||'').localeCompare(a.data||'')).slice(0,6)
+    : [];
+
+  // team ranking across categories
+  const cats = [...new Set(res.map(r => getRankingFileCode(r)).filter(Boolean))];
+  const teamRankRows = [];
+  for (const cat of cats) {
+    const tr = computeTeamRanking ? computeTeamRanking(res, cat) : null;
+    if (!tr) continue;
+    const idx = tr.findIndex(t => (t.team||'').toLowerCase() === teamName.toLowerCase());
+    if (idx < 0) continue;
+    const t = tr[idx];
+    teamRankRows.push({ cat, catLabel: catLabel(cat), pos: t.pos||idx+1, punti: t.punti, n_atleti: t.n_atleti||0 });
+  }
+
+  const totalVittorie = teamRes.filter(r => r.pos===1||r.pos==='1').length;
+  const atleti = [...new Set(teamRes.map(r=>r.atleta_id).filter(Boolean))].length;
+
+  el.innerHTML = `
+    <div class="dash-grid">
+
+      <div class="dash-card">
+        <div class="dash-card-title"><span>👥</span>Il tuo team</div>
+        <div style="display:flex;align-items:center;gap:10px;flex-wrap:wrap">
+          <span class="dash-status ${profile.status==='active'?'dash-status--ok':profile.status==='pending'?'dash-status--warn':'dash-status--err'}">${statusMap[profile.status]||profile.status}</span>
+          ${teamId ? `<a href="#/team/${esc(teamId)}" class="dash-btn dash-btn--outline dash-btn--sm">👁 Profilo pubblico</a>` : ''}
+        </div>
+        <div style="font-size:1rem;font-weight:800;color:var(--text-primary);margin:4px 0">${esc(teamName)}</div>
+        <div class="dash-stats-row">
+          <div class="dash-stat"><div class="dash-stat-val">${atleti}</div><div class="dash-stat-lbl">Atleti</div></div>
+          <div class="dash-stat"><div class="dash-stat-val">${teamRes.length}</div><div class="dash-stat-lbl">Risultati</div></div>
+          <div class="dash-stat"><div class="dash-stat-val">${totalVittorie}</div><div class="dash-stat-lbl">Vittorie</div></div>
+        </div>
+      </div>
+
+      ${teamRankRows.length ? `
+      <div class="dash-card">
+        <div class="dash-card-title"><span>🏆</span>Posizioni classifica team</div>
+        ${teamRankRows.map(r => `
+          <div style="display:flex;align-items:center;justify-content:space-between;padding:6px 0;border-bottom:1px solid var(--border-subtle)">
+            <div>
+              <div style="font-size:.82rem;font-weight:700">${esc(r.catLabel)}</div>
+              <div style="font-size:.72rem;color:var(--text-muted)">${r.punti} punti · ${r.n_atleti} atleti</div>
+            </div>
+            <div style="font-family:var(--font-display);font-size:1.6rem;font-weight:900;color:${r.pos<=3?'var(--accent)':'var(--text-secondary)'}">#${r.pos}</div>
+          </div>`).join('')}
+        <a href="#/team" class="dash-btn dash-btn--outline dash-btn--sm" style="margin-top:4px">Classifica team →</a>
+      </div>` : ''}
+
+      ${teamRes.length ? `
+      <div class="dash-card">
+        <div class="dash-card-title"><span>📋</span>Ultimi risultati squadra</div>
+        <div class="dash-results-list">
+          ${teamRes.map(r => `
+            <div class="dash-result-row">
+              <div class="dash-result-pos">${r.pos||'–'}</div>
+              <div class="dash-result-name">${esc((r.cognome||'')+' '+(r.nome||'').slice(0,1)+'.')}</div>
+              <div class="dash-result-date">${(r.data||'').slice(5)}</div>
+              <div class="dash-result-pts">${r.punti_effettivi||''}</div>
+            </div>`).join('')}
+        </div>
+        ${teamId ? `<a href="#/team/${esc(teamId)}" class="dash-btn dash-btn--outline dash-btn--sm">Tutti i risultati →</a>` : ''}
+      </div>` : ''}
+
+      <div class="dash-card">
+        <div class="dash-card-title"><span>⚡</span>Azioni rapide</div>
+        <div class="dash-actions-grid">
+          <a href="#/team"        class="dash-quick-btn"><span class="dqb-icon">🏆</span>Class. team</a>
+          <a href="#/classifica"  class="dash-quick-btn"><span class="dqb-icon">📊</span>Classifica</a>
+          <a href="#/risultati"   class="dash-quick-btn"><span class="dqb-icon">📋</span>Risultati</a>
+          <a href="#/statistiche" class="dash-quick-btn"><span class="dqb-icon">📈</span>Statistiche</a>
+          <a href="#/calendario"  class="dash-quick-btn"><span class="dqb-icon">📅</span>Calendario</a>
+          <a href="#/atleti"      class="dash-quick-btn"><span class="dqb-icon">👤</span>Atleti</a>
+        </div>
+      </div>
+
+    </div>`;
+}
+
+async function _dashGenitore(el, user, profile) {
+  _dashFamiglia(el, user, profile, 'genitore');
+}
+async function _dashParente(el, user, profile) {
+  _dashFamiglia(el, user, profile, 'parente');
+}
+
+async function _dashFamiglia(el, user, profile, role) {
+  const statusMap = { active:'✅', pending:'⏳', rejected:'❌' };
+  const links = Array.isArray(profile) ? profile : [];
+  const res   = globalData?.resultsRaw || [];
+
+  // Build athlete cards for linked athletes
+  const atletaCards = links.filter(l => l.status === 'active' && l.linked_atleta_id).map(l => {
+    const aid = l.linked_atleta_id;
+    const myRes = res.filter(r => r.atleta_id === aid).sort((a,b)=>(b.data||'').localeCompare(a.data||'')).slice(0,3);
+    const vittorie = res.filter(r => r.atleta_id === aid && (r.pos===1||r.pos==='1')).length;
+    const rankInfo = _dashRankingInfo(aid);
+    const bestRank = rankInfo && rankInfo.length ? rankInfo.reduce((b,r)=>r.pos<b.pos?r:b, rankInfo[0]) : null;
+    return { l, aid, myRes, vittorie, bestRank };
+  });
+
+  el.innerHTML = `
+    <div class="dash-grid">
+
+      ${atletaCards.length ? atletaCards.map(({l, aid, myRes, vittorie, bestRank}) => `
+      <div class="dash-card dash-card--accent">
+        <div class="dash-card-title"><span>🚴</span>${esc(aid)}</div>
+        <div style="display:flex;align-items:center;gap:8px;flex-wrap:wrap">
+          <a href="#/atleta/${esc(aid)}" class="dash-btn dash-btn--outline dash-btn--sm">👁 Profilo</a>
+          <span style="font-size:.75rem;color:var(--text-muted)">${l.relation||''}</span>
+        </div>
+        ${bestRank ? `
+        <div style="display:flex;align-items:center;gap:10px">
+          <div style="font-family:var(--font-display);font-size:2rem;font-weight:900;color:${bestRank.pos<=3?'var(--accent)':'var(--text-secondary)'}">#${bestRank.pos}</div>
+          <div style="font-size:.8rem;color:var(--text-muted)">${esc(bestRank.catLabel)}<br>${bestRank.punti} punti</div>
+        </div>` : ''}
+        <div class="dash-stats-row">
+          <div class="dash-stat"><div class="dash-stat-val">${res.filter(r=>r.atleta_id===aid).length}</div><div class="dash-stat-lbl">Gare</div></div>
+          <div class="dash-stat"><div class="dash-stat-val">${vittorie}</div><div class="dash-stat-lbl">Vittorie</div></div>
+        </div>
+        ${myRes.length ? `
+        <div class="dash-results-list">
+          ${myRes.map(r=>`
+            <div class="dash-result-row">
+              <div class="dash-result-pos">${r.pos||'–'}</div>
+              <div class="dash-result-name">${esc((r.gara||'').slice(0,22))}</div>
+              <div class="dash-result-date">${(r.data||'').slice(5)}</div>
+            </div>`).join('')}
+        </div>` : ''}
+      </div>`).join('') : ''}
+
+      <!-- Pending links -->
+      ${links.filter(l=>l.status!=='active').length ? `
+      <div class="dash-card">
+        <div class="dash-card-title"><span>⏳</span>Richieste in attesa</div>
+        ${links.filter(l=>l.status!=='active').map(l=>`
+          <div class="dash-athlete-item">
+            <div class="dash-athlete-info">
+              <div class="dash-athlete-name">${esc(l.linked_atleta_id)}</div>
+              <div class="dash-athlete-sub">${l.relation||''}</div>
+            </div>
+            <span class="dash-status ${l.status==='pending'?'dash-status--warn':'dash-status--err'}">${statusMap[l.status]||l.status}</span>
+          </div>`).join('')}
+      </div>` : ''}
+
+      <!-- Aggiungi atleta -->
+      <div class="dash-card">
+        <div class="dash-card-title"><span>➕</span>Aggiungi atleta</div>
+        <div class="dash-link-form">
+          <input type="text" id="link-search" placeholder="Cerca per cognome…" oninput="searchAtletaForLink(this.value)" autocomplete="off" />
+          <div id="link-results"></div>
+          <input type="hidden" id="link-atleta-id" />
+          <button class="dash-btn dash-btn--primary" onclick="submitLinkFamily(event)">AGGIUNGI</button>
+        </div>
+      </div>
+
+      <!-- Quick links -->
+      <div class="dash-card">
+        <div class="dash-card-title"><span>⚡</span>Esplora</div>
+        <div class="dash-actions-grid">
+          <a href="#/classifica"  class="dash-quick-btn"><span class="dqb-icon">🏆</span>Classifiche</a>
+          <a href="#/risultati"   class="dash-quick-btn"><span class="dqb-icon">📋</span>Risultati</a>
+          <a href="#/calendario"  class="dash-quick-btn"><span class="dqb-icon">📅</span>Calendario</a>
+          <a href="#/statistiche" class="dash-quick-btn"><span class="dqb-icon">📊</span>Statistiche</a>
+        </div>
+      </div>
+
+    </div>`;
+}
+
+async function _dashAppassionato(el, user) {
+  const wl  = typeof getWatchlist === 'function' ? getWatchlist() : [];
+  const res = globalData?.resultsRaw || [];
+
+  // Build watchlist cards
+  const wlData = wl.slice(0, 8).map(aid => {
+    const myRes = res.filter(r => r.atleta_id === aid).sort((a,b)=>(b.data||'').localeCompare(a.data||'')).slice(0,2);
+    const lastRes = myRes[0];
+    const rankInfo = _dashRankingInfo(aid);
+    const bestRank = rankInfo && rankInfo.length ? rankInfo.reduce((b,r)=>r.pos<b.pos?r:b, rankInfo[0]) : null;
+    const name = lastRes ? `${lastRes.cognome||''} ${lastRes.nome||''}`.trim() : aid;
+    return { aid, name, lastRes, bestRank };
+  });
+
+  // Top moments: best results in last 30 days
+  const cutoff = new Date(Date.now() - 30*86400000).toISOString().slice(0,10);
+  const topRecent = res.filter(r => (r.data||'')>=cutoff && [1,2,3,'1','2','3'].includes(r.pos))
+    .sort((a,b)=>(b.data||'').localeCompare(a.data||'')).slice(0,5);
+
+  el.innerHTML = `
+    <div class="dash-grid">
+
+      <!-- WATCHLIST -->
+      <div class="dash-card ${wlData.length?'':'dash-card--accent'}">
+        <div class="dash-card-title"><span>⭐</span>La mia watchlist</div>
+        ${wlData.length ? `
+        ${wlData.map(({aid, name, lastRes, bestRank}) => `
+          <div class="dash-wl-row">
+            <div>
+              <div class="dash-wl-name"><a href="#/atleta/${esc(aid)}" style="color:inherit;text-decoration:none">${esc(name)}</a></div>
+              ${lastRes ? `<div class="dash-wl-team">${esc(lastRes.team||'')} · ${(lastRes.data||'').slice(5)}</div>` : ''}
+            </div>
+            ${bestRank ? `<div class="dash-wl-pos">#${bestRank.pos}</div>` : ''}
+          </div>`).join('')}
+        <a href="#/atleti" class="dash-btn dash-btn--outline dash-btn--sm" style="margin-top:4px">Scopri altri atleti →</a>` :
+        `<p style="font-size:.85rem;color:var(--text-muted)">La tua watchlist è vuota. Vai su una scheda atleta e clicca ★ per aggiungerlo.</p>
+        <a href="#/atleti" class="dash-btn dash-btn--primary">Esplora atleti →</a>`}
+      </div>
+
+      <!-- TOP RISULTATI RECENTI -->
+      ${topRecent.length ? `
+      <div class="dash-card">
+        <div class="dash-card-title"><span>🔥</span>Top risultati (ultimi 30 gg)</div>
+        <div class="dash-results-list">
+          ${topRecent.map(r => `
+            <div class="dash-result-row">
+              <div class="dash-result-pos">${r.pos}</div>
+              <div class="dash-result-name"><a href="#/atleta/${esc(r.atleta_id||'')}" style="color:inherit;text-decoration:none">${esc((r.cognome||'')+' '+(r.nome||'').slice(0,1)+'.')}</a></div>
+              <div class="dash-result-date">${(r.data||'').slice(5)}</div>
+              <div class="dash-result-pts">${esc(r.team||'')}</div>
+            </div>`).join('')}
+        </div>
+      </div>` : ''}
+
+      <!-- EXPLORE -->
+      <div class="dash-card">
+        <div class="dash-card-title"><span>🔭</span>Esplora il ciclismo italiano</div>
+        <div class="dash-actions-grid">
+          <a href="#/classifica"   class="dash-quick-btn"><span class="dqb-icon">🏆</span>Classifiche</a>
+          <a href="#/risultati"    class="dash-quick-btn"><span class="dqb-icon">📋</span>Risultati</a>
+          <a href="#/atleti"       class="dash-quick-btn"><span class="dqb-icon">👤</span>Atleti</a>
+          <a href="#/team"         class="dash-quick-btn"><span class="dqb-icon">👥</span>Team</a>
+          <a href="#/statistiche"  class="dash-quick-btn"><span class="dqb-icon">📊</span>Statistiche</a>
+          <a href="#/comparatore"  class="dash-quick-btn"><span class="dqb-icon">⚖️</span>Comparatore</a>
+          <a href="#/calendario"   class="dash-quick-btn"><span class="dqb-icon">📅</span>Calendario</a>
+        </div>
+      </div>
+
+    </div>`;
+}
+
+async function _dashMedia(el, user, profile) {
+  const statusMap = { active:'✅ Approvato', pending:'⏳ In attesa', rejected:'❌ Rifiutato' };
+
+  if (!profile) {
+    el.innerHTML = `
+      <div class="dash-grid">
+        <div class="dash-card dash-card--accent">
+          <div class="dash-card-title"><span>📷</span>Crea il tuo profilo fotografo</div>
+          <p style="font-size:.85rem;color:var(--text-muted);line-height:1.5">
+            Crea il tuo profilo per pubblicare album fotografici delle gare e farti trovare dagli appassionati.
+          </p>
+          <form onsubmit="window.submitMediaProfile(event)" class="dash-link-form">
+            <input type="text" id="mp-name" placeholder="Nome pubblico *" required />
+            <input type="text" id="mp-bio"  placeholder="Bio (breve presentazione)" />
+            <input type="url"  id="mp-web"  placeholder="Sito web" />
+            <input type="text" id="mp-ig"   placeholder="Instagram (senza @)" />
+            <input type="text" id="mp-fb"   placeholder="Facebook" />
+            <button type="submit" class="dash-btn dash-btn--primary">CREA PROFILO</button>
+          </form>
+        </div>
+      </div>`;
+    return;
+  }
+
+  el.innerHTML = `
+    <div class="dash-grid">
+
+      <div class="dash-card">
+        <div class="dash-card-title"><span>📷</span>Il tuo profilo media</div>
+        <div style="display:flex;align-items:center;gap:10px;flex-wrap:wrap">
+          <span class="dash-status ${profile.status==='active'?'dash-status--ok':profile.status==='pending'?'dash-status--warn':'dash-status--err'}">${statusMap[profile.status]||profile.status}</span>
+          ${profile.status==='active' ? `<a href="#/media/${profile.id}" class="dash-btn dash-btn--outline dash-btn--sm">👁 Profilo pubblico</a>` : ''}
+          <button onclick="window.openMediaProfileEdit(${JSON.stringify(profile).replace(/"/g,'&quot;')})" class="dash-btn dash-btn--outline dash-btn--sm">✏️ Modifica</button>
+        </div>
+        <div style="font-size:1rem;font-weight:800;color:var(--text-primary)">${esc(profile.display_name)}</div>
+        ${profile.bio ? `<div style="font-size:.82rem;color:var(--text-muted)">${esc(profile.bio)}</div>` : ''}
+        <div style="display:flex;gap:10px;flex-wrap:wrap;font-size:.8rem">
+          ${profile.website  ? `<a href="${esc(profile.website)}"  target="_blank" rel="noopener" style="color:var(--accent)">🌐 Sito</a>` : ''}
+          ${profile.instagram? `<a href="https://instagram.com/${esc(profile.instagram.replace('@',''))}" target="_blank" rel="noopener" style="color:var(--accent)">📸 Instagram</a>` : ''}
+          ${profile.facebook ? `<a href="${profile.facebook.startsWith('http')?esc(profile.facebook):'https://facebook.com/'+esc(profile.facebook)}" target="_blank" rel="noopener" style="color:var(--accent)">👍 Facebook</a>` : ''}
+        </div>
+      </div>
+
+      ${profile.status === 'active' ? `
+      <div class="dash-card dash-card--accent">
+        <div class="dash-card-title"><span>📁</span>I miei album</div>
+        <div id="dash-albums-inner"><div class="admin-loading">Caricamento…</div></div>
+      </div>
+
+      <div class="dash-card">
+        <div class="dash-card-title"><span>⚡</span>Azioni rapide</div>
+        <div class="dash-actions-grid">
+          <button onclick="window.openMediaAlbumCreate(${profile.id})" class="dash-quick-btn"><span class="dqb-icon">➕</span>Nuovo album</button>
+          <a href="#/media/${profile.id}" class="dash-quick-btn"><span class="dqb-icon">👁</span>Vedi profilo</a>
+          <a href="#/risultati" class="dash-quick-btn"><span class="dqb-icon">📋</span>Risultati</a>
+          <a href="#/calendario" class="dash-quick-btn"><span class="dqb-icon">📅</span>Calendario</a>
+        </div>
+      </div>` : ''}
+
+    </div>`;
+
+  // Load albums async
+  if (profile.status === 'active') {
+    const albumEl = document.getElementById('dash-albums-inner');
+    if (albumEl) {
+      try {
+        const d = await fetch(`${API_BASE}/media/profile/${profile.id}`).then(r=>r.json());
+        const albums = d.albums || [];
+        albumEl.innerHTML = albums.length ? `
+          <div style="font-size:.8rem;color:var(--text-muted);margin-bottom:10px">${albums.length} album · ${d.stats?.total||0} foto totali</div>
+          <div style="display:flex;flex-direction:column;gap:8px">
+            ${albums.slice(0,5).map(a=>`
+              <div style="display:flex;align-items:center;gap:10px;padding:6px 0;border-bottom:1px solid var(--border-subtle)">
+                <div style="width:48px;height:36px;border-radius:4px;overflow:hidden;background:var(--bg-base);flex-shrink:0">
+                  ${(a.first_ext_url||a.first_filename) ? `<img src="${a.first_ext_url||(PHOTOS_BASE+'/photos/'+a.first_filename)}" style="width:100%;height:100%;object-fit:cover" loading="lazy"/>` : '<div style="display:flex;align-items:center;justify-content:center;height:100%;color:var(--text-muted)">📷</div>'}
+                </div>
+                <div style="flex:1;min-width:0">
+                  <div style="font-size:.82rem;font-weight:600;white-space:nowrap;overflow:hidden;text-overflow:ellipsis">${esc(a.title)}</div>
+                  <div style="font-size:.7rem;color:var(--text-muted)">${a.photo_count} foto</div>
+                </div>
+                <button onclick="window.openMediaAlbumUpload(${a.id})" class="dash-btn dash-btn--outline dash-btn--sm">+ Foto</button>
+              </div>`).join('')}
+          </div>
+          ${albums.length > 5 ? `<div style="font-size:.78rem;color:var(--text-muted);margin-top:8px">+${albums.length-5} altri album</div>` : ''}
+          <button onclick="window.openMediaAlbumCreate(${profile.id})" class="dash-btn dash-btn--accent dash-btn--sm" style="margin-top:10px">+ Nuovo album</button>
+        ` : `<p style="font-size:.85rem;color:var(--text-muted)">Nessun album ancora.</p>
+             <button onclick="window.openMediaAlbumCreate(${profile.id})" class="dash-btn dash-btn--primary">+ Crea il primo album</button>`;
+      } catch(e) {
+        albumEl.innerHTML = `<span style="color:var(--red-hot);font-size:.8rem">Errore: ${esc(e.message)}</span>`;
+      }
+    }
+  }
+}
+
+async function _dashAdmin(el, user) {
+  // Quick stats from globalData
+  const res   = globalData?.resultsRaw  || [];
+  const cal   = globalData?.calendar    || [];
+  const today = new Date().toISOString().slice(0,10);
+  const thisY = today.slice(0,4);
+  const gare  = [...new Set(res.map(r=>r.gara_id||r.gara).filter(Boolean))].length;
+  const atleti= [...new Set(res.map(r=>r.atleta_id).filter(Boolean))].length;
+  const gareY = res.filter(r=>(r.data||'').startsWith(thisY));
+  const prossime = cal.filter(g=>(g.data||g.date||'')>=today).length;
+
+  el.innerHTML = `
+    <div class="dash-grid">
+
+      <div class="dash-card">
+        <div class="dash-card-title"><span>📊</span>Dati del database</div>
+        <div class="dash-stats-row">
+          <div class="dash-stat"><div class="dash-stat-val">${res.length}</div><div class="dash-stat-lbl">Risultati</div></div>
+          <div class="dash-stat"><div class="dash-stat-val">${gare}</div><div class="dash-stat-lbl">Gare</div></div>
+          <div class="dash-stat"><div class="dash-stat-val">${atleti}</div><div class="dash-stat-lbl">Atleti</div></div>
+          <div class="dash-stat"><div class="dash-stat-val">${prossime}</div><div class="dash-stat-lbl">In calendario</div></div>
+        </div>
+      </div>
+
+      <div class="dash-card">
+        <div class="dash-card-title"><span>⚡</span>Accesso rapido</div>
+        <div class="dash-actions-grid">
+          <a href="#/admin"                   class="dash-quick-btn"><span class="dqb-icon">⚙️</span>Gestionale</a>
+          <a href="#/admin" onclick="setTimeout(()=>adminNav('overview'),100)" class="dash-quick-btn"><span class="dqb-icon">📊</span>Dashboard</a>
+          <a href="#/admin" onclick="setTimeout(()=>adminNav('utenti-lista'),100)" class="dash-quick-btn"><span class="dqb-icon">👥</span>Utenti</a>
+          <a href="#/admin" onclick="setTimeout(()=>adminNav('foto-pending'),100)" class="dash-quick-btn"><span class="dqb-icon">📥</span>Foto</a>
+          <a href="#/admin" onclick="setTimeout(()=>adminNav('sync'),100)" class="dash-quick-btn"><span class="dqb-icon">🔄</span>Sync dati</a>
+          <a href="#/admin" onclick="setTimeout(()=>adminNav('page-gallery'),100)" class="dash-quick-btn"><span class="dqb-icon">🗂️</span>Pagine</a>
+        </div>
+      </div>
+
+    </div>`;
+}
 
 // ── MEDIA PROFILE HANDLERS ────────────────────────────────────────────────────
 
