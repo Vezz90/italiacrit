@@ -13975,48 +13975,99 @@ function _header(ctx, logo, W, H, classData) {
     ctx.drawImage(logo, 18, Math.round((bH - lH) / 2), lW, lH);
     logoRight = 18 + lW;
   }
-  // Regione accanto al logo (solo per classifica)
-  if (classData) {
-    const regTxt = classData.scope === 'regionale'
-      ? (classData.region || '').toUpperCase()
-      : 'ITALIA';
-    if (regTxt) {
-      // separatore verticale sottile
-      ctx.fillStyle = 'rgba(255,255,255,0.16)';
-      ctx.fillRect(logoRight + 16, Math.round(bH * 0.28), 2, Math.round(bH * 0.44));
-      const rfs = Math.round(bH * 0.30);
-      ctx.font = `600 ${rfs}px 'Inter Tight',sans-serif`;
-      ctx.letterSpacing = '1px';
-      ctx.fillStyle = classData.scope === 'regionale' ? '#f5c400' : 'rgba(255,255,255,0.80)';
-      ctx.textAlign = 'left'; ctx.textBaseline = 'middle';
-      ctx.fillText(regTxt, logoRight + 30, Math.round(bH * 0.52));
-      ctx.textBaseline = 'alphabetic'; ctx.letterSpacing = '0px';
-    }
-  }
-  // Wordmark: regionale → "<Regione>Crit", nazionale → "ITALIACRIT"
   const isRegio = classData && classData.scope === 'regionale' && classData.region;
+  // ── Wordmark accanto al logo, TUTTO MAIUSCOLO (es. TOSCANACRIT) ──
   const brand = isRegio
-    ? classData.region.replace(/\s+/g, '') + 'Crit'
+    ? (classData.region.replace(/\s+/g, '') + 'CRIT').toUpperCase()
     : 'ITALIACRIT';
-  const fs = Math.round(bH * 0.26);
-  ctx.font = `600 ${fs}px 'Inter Tight',sans-serif`;
-  ctx.letterSpacing = isRegio ? '0.5px' : '2px';
-  ctx.fillStyle = 'rgba(255,255,255,0.82)'; ctx.textAlign = 'right';
-  ctx.fillText(brand, W - 18, Math.round(bH * 0.50));
-  ctx.letterSpacing = '0px';
-  // Sotto al brand: mese (se filtrato) in oro, altrimenti URL
-  if (classData && classData.month) {
-    ctx.font = `600 ${Math.round(fs * 0.56)}px 'Inter Tight',sans-serif`;
-    ctx.fillStyle = '#f5c400';
-    ctx.fillText(classData.month.toUpperCase(), W - 18, Math.round(bH * 0.78));
+  {
+    // separatore verticale sottile
+    ctx.fillStyle = 'rgba(255,255,255,0.16)';
+    ctx.fillRect(logoRight + 16, Math.round(bH * 0.28), 2, Math.round(bH * 0.44));
+    const wfs = Math.round(bH * 0.30);
+    ctx.font = `700 ${wfs}px 'Inter Tight',sans-serif`;
+    ctx.letterSpacing = '1px';
+    ctx.fillStyle = isRegio ? '#f5c400' : 'rgba(255,255,255,0.90)';
+    ctx.textAlign = 'left'; ctx.textBaseline = 'middle';
+    ctx.fillText(brand, logoRight + 30, Math.round(bH * 0.52));
+    ctx.textBaseline = 'alphabetic'; ctx.letterSpacing = '0px';
+  }
+
+  if (classData) {
+    // ── A destra: "CLASSIFICA <categoria>" (+ mese se filtrato) ──
+    const lblFs = Math.round(bH * 0.24);
+    ctx.textAlign = 'right';
+    const catTxt = (classData.catLabel || '').toUpperCase();
+    // categoria (bianca) + label "CLASSIFICA" (muted), su stessa baseline
+    const baseY = classData.month ? Math.round(bH * 0.46) : Math.round(bH * 0.58);
+    ctx.font = `700 ${lblFs}px 'Inter Tight',sans-serif`; ctx.fillStyle = '#f2f2f2';
+    ctx.fillText(catTxt, W - 18, baseY);
+    const catW = ctx.measureText(catTxt).width;
+    ctx.font = `500 ${lblFs}px 'Inter Tight',sans-serif`; ctx.fillStyle = 'rgba(255,255,255,0.42)';
+    ctx.letterSpacing = '1px';
+    ctx.fillText('CLASSIFICA ', W - 18 - catW - 10, baseY);
+    ctx.letterSpacing = '0px';
+    if (classData.month) {
+      ctx.font = `600 ${Math.round(lblFs * 0.78)}px 'Inter Tight',sans-serif`;
+      ctx.fillStyle = '#f5c400';
+      ctx.fillText(classData.month.toUpperCase(), W - 18, Math.round(bH * 0.80));
+    }
+    ctx.textAlign = 'left';
   } else {
+    // atleta / team: brand + URL a destra
+    const fs = Math.round(bH * 0.26);
+    ctx.font = `600 ${fs}px 'Inter Tight',sans-serif`;
+    ctx.letterSpacing = '2px';
+    ctx.fillStyle = 'rgba(255,255,255,0.82)'; ctx.textAlign = 'right';
+    ctx.fillText('ITALIACRIT', W - 18, Math.round(bH * 0.50));
+    ctx.letterSpacing = '0px';
     ctx.font = `400 ${Math.round(fs * 0.50)}px 'Inter Tight',sans-serif`;
     ctx.fillStyle = 'rgba(255,255,255,0.30)';
     ctx.fillText(SHARE_URL, W - 18, Math.round(bH * 0.80));
+    ctx.textAlign = 'left';
   }
-  ctx.textAlign = 'left';
   // Filo divisorio discreto
   ctx.fillStyle = 'rgba(255,255,255,0.06)'; ctx.fillRect(0, bH, W, 1);
+}
+// ── Disegna le 3 icone social nel footer (Instagram, Facebook, Sito) ──
+function _drawSocialIcons(ctx, cx, cy, sz, color) {
+  const items = [
+    // Instagram: cornice arrotondata + cerchio + punto
+    (x, y) => {
+      ctx.lineWidth = Math.max(2, sz * 0.09);
+      ctx.strokeStyle = color; ctx.fillStyle = color;
+      const r = sz * 0.26;
+      if (ctx.roundRect) { ctx.beginPath(); ctx.roundRect(x, y, sz, sz, r); ctx.stroke(); }
+      else { ctx.strokeRect(x, y, sz, sz); }
+      ctx.beginPath(); ctx.arc(x + sz / 2, y + sz / 2, sz * 0.27, 0, Math.PI * 2); ctx.stroke();
+      ctx.beginPath(); ctx.arc(x + sz * 0.76, y + sz * 0.24, sz * 0.07, 0, Math.PI * 2); ctx.fill();
+    },
+    // Facebook: cerchio pieno con "f"
+    (x, y) => {
+      ctx.fillStyle = color;
+      ctx.beginPath(); ctx.arc(x + sz / 2, y + sz / 2, sz / 2, 0, Math.PI * 2); ctx.fill();
+      ctx.fillStyle = '#0a0c10';
+      ctx.font = `800 ${Math.round(sz * 0.78)}px 'Inter Tight',sans-serif`;
+      ctx.textAlign = 'center'; ctx.textBaseline = 'middle';
+      ctx.fillText('f', x + sz / 2, y + sz * 0.54);
+      ctx.textBaseline = 'alphabetic';
+    },
+    // Sito: globo (cerchio + meridiani)
+    (x, y) => {
+      ctx.lineWidth = Math.max(2, sz * 0.08);
+      ctx.strokeStyle = color;
+      const r = sz / 2, mx = x + r, my = y + r;
+      ctx.beginPath(); ctx.arc(mx, my, r, 0, Math.PI * 2); ctx.stroke();
+      ctx.beginPath(); ctx.moveTo(x, my); ctx.lineTo(x + sz, my); ctx.stroke();
+      ctx.beginPath(); ctx.ellipse(mx, my, r * 0.5, r, 0, 0, Math.PI * 2); ctx.stroke();
+    },
+  ];
+  const gap = sz * 1.7;
+  const totalW = gap * (items.length - 1);
+  let x = cx - totalW / 2 - sz / 2;
+  const y = cy - sz / 2;
+  items.forEach((draw, i) => { ctx.save(); draw(x, y); ctx.restore(); x += gap; });
+  ctx.textAlign = 'left';
 }
 function _footer(ctx, W, H) {
   // ── Stile Velon: footer minimale, niente barra scura ──
@@ -14028,9 +14079,12 @@ function _footer(ctx, W, H) {
   ctx.fillStyle = '#009246'; ctx.fillRect(ax, ay, accW, s);
   ctx.fillStyle = '#f0f0ee'; ctx.fillRect(ax + accW, ay, accW, s);
   ctx.fillStyle = '#ce2b37'; ctx.fillRect(ax + accW * 2, ay, accW, s);
-  ctx.font = `500 ${Math.round(fH * 0.31)}px 'Inter Tight',sans-serif`;
-  ctx.fillStyle = 'rgba(255,255,255,0.32)'; ctx.textAlign = 'center';
-  ctx.fillText(SHARE_TAG, W / 2, y + Math.round(fH * 0.67));
+  // ── Icone social al centro: Instagram · Facebook · Sito ──
+  _drawSocialIcons(ctx, W / 2, y + Math.round(fH * 0.50), Math.round(fH * 0.40), 'rgba(255,255,255,0.55)');
+  // handle a destra
+  ctx.font = `500 ${Math.round(fH * 0.30)}px 'Inter Tight',sans-serif`;
+  ctx.fillStyle = 'rgba(255,255,255,0.32)'; ctx.textAlign = 'right';
+  ctx.fillText('@italiacrit', W - Math.round(W * 0.012), y + Math.round(fH * 0.66));
   ctx.textAlign = 'left';
 }
 function _wrap(ctx, txt, x, y, maxW, lH) {
@@ -14129,9 +14183,11 @@ function _drawGara(ctx, W, H, d, logo) {
   ctx.fillStyle = '#009246'; ctx.fillRect(ax, ay, accW, s);
   ctx.fillStyle = '#f0f0ee'; ctx.fillRect(ax + accW, ay, accW, s);
   ctx.fillStyle = '#ce2b37'; ctx.fillRect(ax + accW * 2, ay, accW, s);
+  // Icone social al centro + handle a destra
+  _drawSocialIcons(ctx, W / 2, footerY + Math.round(fB * 0.50), Math.round(fB * 0.40), 'rgba(255,255,255,0.55)');
   ctx.font = `500 ${Math.round(fB * 0.3)}px 'Inter Tight',sans-serif`;
-  ctx.fillStyle = 'rgba(255,255,255,0.3)'; ctx.textAlign = 'center';
-  ctx.fillText(SHARE_TAG, W / 2, footerY + Math.round(fB * 0.67)); ctx.textAlign = 'left';
+  ctx.fillStyle = 'rgba(255,255,255,0.3)'; ctx.textAlign = 'right';
+  ctx.fillText('@italiacrit', W - pad, footerY + Math.round(fB * 0.66)); ctx.textAlign = 'left';
 
   // ── Results list ──
   const listH = footerY - y - Math.round(H * 0.003);
@@ -14301,21 +14357,10 @@ function _drawTeam(ctx, W, H, d) {
 function _drawClass(ctx, W, H, d) {
   const {catLabel:cL,rows,scope,region,month} = d;
   const hB=Math.round(H*0.092),fB=Math.round(H*0.06),pad=Math.round(W*0.048);
-  // Lista alzata: meno spazio in alto (la regione è ora nell'header)
-  let y=hB+Math.round(H*0.018);
-  // "CLASSIFICA" + nome categoria accanto, stessa baseline e stessa dimensione — leggero
-  const lblFs=Math.round(W*0.034);
-  const baseY=y+lblFs;
-  ctx.font=`500 ${lblFs}px 'Inter Tight',sans-serif`; ctx.fillStyle='rgba(255,255,255,0.42)';
-  ctx.letterSpacing='2px';
-  ctx.fillText('CLASSIFICA',pad,baseY);
-  const lblW=ctx.measureText('CLASSIFICA').width; // misurato con letter-spacing attivo
-  ctx.letterSpacing='0px';
-  ctx.font=`700 ${lblFs}px 'Inter Tight',sans-serif`; ctx.fillStyle='#f2f2f2';
-  ctx.fillText(cL.toUpperCase(),pad+lblW+Math.round(W*0.020),baseY);
-  y=baseY+Math.round(H*0.014);
-  // (Il mese filtrato è mostrato nell'header, accanto al brand)
-  ctx.fillStyle='rgba(232,0,29,0.85)'; ctx.fillRect(pad,y,Math.round(W*0.10),2); y+=10;
+  // Titolo "CLASSIFICA <categoria>" + eventuale mese sono ora nell'header.
+  // Atleti alzati: la lista parte subito sotto l'header con un filo accento.
+  let y=hB+Math.round(H*0.024);
+  ctx.fillStyle='rgba(232,0,29,0.85)'; ctx.fillRect(pad,y,Math.round(W*0.10),2); y+=12;
   const avail=H-fB-y-4, maxR=Math.min(rows.length,10), rH=Math.round(avail/maxR);
   const posCol=['#f5c400','#b8b8b8','#cd7f32'];
   rows.slice(0,maxR).forEach((r,i)=>{
