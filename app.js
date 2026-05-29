@@ -3510,6 +3510,90 @@ function buildWeeklyNarrative(filtered, resultsRaw, catCode) {
   return lines;
 }
 
+// ── Team ranking narrative ─────────────────────────────────────
+function generateTeamNarrativeHeadline(teamRanking, resultsRaw, catCode) {
+  if (!teamRanking.length) return '';
+  const leader = teamRanking[0];
+  const second = teamRanking[1];
+  const third  = teamRanking[2];
+  const gap12  = second ? leader.punti - second.punti : null;
+
+  // 2nd team's recent scoring pace (last 15 days)
+  const c15s = (() => { const d = new Date(); d.setDate(d.getDate() - 15); return d.toISOString().split('T')[0]; })();
+  const challPts15 = second ? resultsRaw.filter(r =>
+    r.team_id === second.team_id && getRankingFileCode(r) === catCode && (r.data || '') >= c15s
+  ).reduce((s, r) => s + (r.punti_effettivi || 0), 0) : 0;
+
+  // Biggest positive mover (from trend computed in updateRankTable)
+  const bigMover  = teamRanking.slice(0, 20).filter(t => (t.trend || 0) >= 3)
+    .sort((a, b) => (b.trend || 0) - (a.trend || 0))[0] || null;
+  const bigFaller = teamRanking.slice(0, 15).filter(t => (t.trend || 0) <= -3)
+    .sort((a, b) => (a.trend || 0) - (b.trend || 0))[0] || null;
+
+  const tightTop3 = third && (leader.punti - third.punti) <= 30;
+
+  if (gap12 !== null && gap12 <= 10 && second)
+    return `⚔ Lotta al vertice: ${esc(leader.team_nome)} guida su ${esc(second.team_nome)} con soli ${gap12} punti`;
+  if (gap12 !== null && gap12 <= 40 && challPts15 > 12 && second)
+    return `🔥 ${esc(second.team_nome)} in rimonta: a soli −${gap12} pt da ${esc(leader.team_nome)}`;
+  if (bigFaller && bigFaller.trend <= -4)
+    return `📉 ${esc(bigFaller.team_nome)} crolla di ${Math.abs(bigFaller.trend)} posizioni — la classifica cambia faccia`;
+  if (bigMover && bigMover.trend >= 4)
+    return `⚡ ${esc(bigMover.team_nome)} vola: +${bigMover.trend} posizioni nell'ultima tornata`;
+  if (tightTop3 && third && second)
+    return `🎯 Top-3 in ${leader.punti - third.punti} pt — ${esc(leader.team_nome)}, ${esc(second.team_nome)}, ${esc(third.team_nome)} in battaglia aperta`;
+  if (gap12 !== null && gap12 > 100)
+    return `👑 ${esc(leader.team_nome)} domina: ${leader.punti} pt, +${gap12} sulla concorrenza`;
+  return `${esc(leader.team_nome)} al comando con ${leader.punti} pt — la stagione entra nel vivo`;
+}
+
+function buildTeamWeeklyNarrative(teamRanking, resultsRaw, catCode) {
+  const lines = [];
+  if (teamRanking.length < 2) return lines;
+
+  const l1 = teamRanking[0], l2 = teamRanking[1], l3 = teamRanking[2];
+  const gap12 = l1.punti - l2.punti;
+  const gap13 = l3 ? l1.punti - l3.punti : null;
+
+  // 1. Leadership situation
+  if (gap12 === 0)
+    lines.push(`Parità assoluta in vetta: ${esc(l1.team_nome)} e ${esc(l2.team_nome)} divisi da zero punti`);
+  else if (gap12 <= 10)
+    lines.push(`Lotta apertissima: ${esc(l1.team_nome)} (${l1.punti} pt) guida di soli ${gap12} pt su ${esc(l2.team_nome)}`);
+  else if (gap12 <= 35)
+    lines.push(`${esc(l1.team_nome)} al vertice (${l1.punti} pt), ${esc(l2.team_nome)} a −${gap12} pt in seconda posizione`);
+  else
+    lines.push(`${esc(l1.team_nome)} in fuga con ${l1.punti} pt — +${gap12} su ${esc(l2.team_nome)} (2°)`);
+  if (l3 && gap13 !== null && gap13 <= 40)
+    lines.push(`Top-3 in ${gap13} pt: ${esc(l3.team_nome)} (3°, ${l3.punti} pt) ancora pienamente in corsa`);
+
+  // 2. Weekly movers (from trend field)
+  const risers  = teamRanking.slice(0, 20).filter(t => (t.trend || 0) >= 2)
+    .sort((a, b) => (b.trend || 0) - (a.trend || 0)).slice(0, 3);
+  const fallers = teamRanking.slice(0, 15).filter(t => (t.trend || 0) <= -2)
+    .sort((a, b) => (a.trend || 0) - (b.trend || 0)).slice(0, 2);
+  for (const t of risers) {
+    const n = t.trend === 1 ? 'una posizione' : `${t.trend} posizioni`;
+    lines.push(`↑ ${esc(t.team_nome)} guadagna ${n} e sale ${t.pos}°`);
+  }
+  for (const t of fallers) {
+    const n = Math.abs(t.trend) === 1 ? 'una posizione' : `${Math.abs(t.trend)} posizioni`;
+    lines.push(`↓ ${esc(t.team_nome)} perde ${n} e scende al ${t.pos}°`);
+  }
+
+  // 3. Micro-gap alert: teams separated by ≤5 pt (outside top-2, already shown)
+  for (let i = 1; i < Math.min(teamRanking.length - 1, 10); i++) {
+    const ta = teamRanking[i], tb = teamRanking[i + 1];
+    const g = ta.punti - tb.punti;
+    if (g > 0 && g <= 5) {
+      lines.push(`⚠ Solo ${g} pt tra ${esc(ta.team_nome)} (${ta.pos}°) e ${esc(tb.team_nome)} (${tb.pos}°)`);
+      break;
+    }
+  }
+
+  return lines;
+}
+
 // ═══════════════════════════════════════════════════════════════
 // SEASON EDITORIAL INTELLIGENCE AGENT (SEIA)
 // Engine 1: Season Analysis — usa l'intera stagione, non solo le ultime gare
@@ -6215,6 +6299,7 @@ async function updateRankTable() {
     // ── Team narrative banner ──────────────────────────────────
     let teamStoryHtml = '';
     if (rankFilter && filtered.length >= 1) {
+      // Ricerca attiva: situazione specifica del team
       const tm = filtered[0];
       const leaderFull = teamRanking[0];
       const gapToLeader = leaderFull && tm.team_id !== leaderFull.team_id
@@ -6227,6 +6312,8 @@ async function updateRankTable() {
       if (above && tm.pos > 1) parts.push(`${above.punti - tm.punti} pt da ${esc(above.team_nome)}`);
       if (below) parts.push(`+${tm.punti - below.punti} pt su ${esc(below.team_nome)}`);
       if (tm.n_atleti) parts.push(`${tm.n_atleti} atleti in classifica`);
+      if ((tm.trend || 0) > 0) parts.push(`In risalita di ${tm.trend} posizion${tm.trend===1?'e':'i'} ↑`);
+      else if ((tm.trend || 0) < 0) parts.push(`In calo di ${Math.abs(tm.trend)} posizion${Math.abs(tm.trend)===1?'e':'i'} ↓`);
       teamStoryHtml = `
         <div class="rk-narrative rk-narrative--athlete">
           <div class="rk-narrative-label">SITUAZIONE IN CLASSIFICA · ${esc(tm.team_nome)}</div>
@@ -6234,19 +6321,20 @@ async function updateRankTable() {
           ${parts.slice(1).length ? `<div class="rk-narrative-details">${parts.slice(1).map(l=>`<span class="rk-narrative-detail">${l}</span>`).join('')}</div>` : ''}
         </div>`;
     } else if (!isFiltered && teamRanking.length >= 2) {
-      const leader = teamRanking[0];
-      const second = teamRanking[1];
-      const gap12 = leader.punti - second.punti;
-      const headline = `${esc(leader.team_nome)} guida con ${leader.punti} pt`;
-      const details = [];
-      if (gap12 > 0) details.push(`+${gap12} su ${esc(second.team_nome)}`);
-      if (teamRanking.length >= 3) details.push(`${teamRanking.length} team in classifica`);
-      teamStoryHtml = `
-        <div class="rk-narrative">
-          <div class="rk-narrative-label">SITUAZIONE IN CLASSIFICA</div>
-          <div class="rk-narrative-headline">${headline}</div>
-          ${details.length ? `<div class="rk-narrative-details">${details.map(l=>`<span class="rk-narrative-detail">${l}</span>`).join('')}</div>` : ''}
-        </div>`;
+      // Vista generale: headline + storia settimanale
+      const headline   = generateTeamNarrativeHeadline(teamRanking, globalData.resultsRaw, rankCat);
+      const storyLines = buildTeamWeeklyNarrative(teamRanking, globalData.resultsRaw, rankCat);
+      const detailsHtml = storyLines.length
+        ? `<div class="rk-narrative-details">${storyLines.map(l=>`<span class="rk-narrative-detail">${l}</span>`).join('')}</div>`
+        : '';
+      if (headline || storyLines.length) {
+        teamStoryHtml = `
+          <div class="rk-narrative">
+            <div class="rk-narrative-label">SITUAZIONE IN CLASSIFICA</div>
+            ${headline ? `<div class="rk-narrative-headline">${headline}</div>` : ''}
+            ${detailsHtml}
+          </div>`;
+      }
     }
 
     const leaderTeamPts = teamRanking[0]?.punti || 0;
