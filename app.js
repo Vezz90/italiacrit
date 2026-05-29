@@ -13993,15 +13993,27 @@ function _header(ctx, logo, W, H, classData) {
       ctx.textBaseline = 'alphabetic'; ctx.letterSpacing = '0px';
     }
   }
+  // Wordmark: regionale → "<Regione>Crit", nazionale → "ITALIACRIT"
+  const isRegio = classData && classData.scope === 'regionale' && classData.region;
+  const brand = isRegio
+    ? classData.region.replace(/\s+/g, '') + 'Crit'
+    : 'ITALIACRIT';
   const fs = Math.round(bH * 0.26);
   ctx.font = `600 ${fs}px 'Inter Tight',sans-serif`;
-  ctx.letterSpacing = '2px';
-  ctx.fillStyle = 'rgba(255,255,255,0.78)'; ctx.textAlign = 'right';
-  ctx.fillText('ITALIACRIT', W - 18, Math.round(bH * 0.58));
+  ctx.letterSpacing = isRegio ? '0.5px' : '2px';
+  ctx.fillStyle = 'rgba(255,255,255,0.82)'; ctx.textAlign = 'right';
+  ctx.fillText(brand, W - 18, Math.round(bH * 0.50));
   ctx.letterSpacing = '0px';
-  ctx.font = `400 ${Math.round(fs * 0.50)}px 'Inter Tight',sans-serif`;
-  ctx.fillStyle = 'rgba(255,255,255,0.30)';
-  ctx.fillText(SHARE_URL, W - 18, Math.round(bH * 0.86));
+  // Sotto al brand: mese (se filtrato) in oro, altrimenti URL
+  if (classData && classData.month) {
+    ctx.font = `600 ${Math.round(fs * 0.56)}px 'Inter Tight',sans-serif`;
+    ctx.fillStyle = '#f5c400';
+    ctx.fillText(classData.month.toUpperCase(), W - 18, Math.round(bH * 0.78));
+  } else {
+    ctx.font = `400 ${Math.round(fs * 0.50)}px 'Inter Tight',sans-serif`;
+    ctx.fillStyle = 'rgba(255,255,255,0.30)';
+    ctx.fillText(SHARE_URL, W - 18, Math.round(bH * 0.80));
+  }
   ctx.textAlign = 'left';
   // Filo divisorio discreto
   ctx.fillStyle = 'rgba(255,255,255,0.06)'; ctx.fillRect(0, bH, W, 1);
@@ -14301,13 +14313,8 @@ function _drawClass(ctx, W, H, d) {
   ctx.letterSpacing='0px';
   ctx.font=`700 ${lblFs}px 'Inter Tight',sans-serif`; ctx.fillStyle='#f2f2f2';
   ctx.fillText(cL.toUpperCase(),pad+lblW+Math.round(W*0.020),baseY);
-  y=baseY+Math.round(H*0.012);
-  // Mese (se filtrato) come sottotitolo
-  if(month){
-    const mfs=Math.round(W*0.024);
-    ctx.font=`600 ${mfs}px 'Inter Tight',sans-serif`; ctx.fillStyle='#f5c400';
-    ctx.fillText(month.toUpperCase(),pad,y+mfs); y+=mfs*1.4;
-  }
+  y=baseY+Math.round(H*0.014);
+  // (Il mese filtrato è mostrato nell'header, accanto al brand)
   ctx.fillStyle='rgba(232,0,29,0.85)'; ctx.fillRect(pad,y,Math.round(W*0.10),2); y+=10;
   const avail=H-fB-y-4, maxR=Math.min(rows.length,10), rH=Math.round(avail/maxR);
   const posCol=['#f5c400','#b8b8b8','#cd7f32'];
