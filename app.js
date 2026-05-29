@@ -10779,7 +10779,7 @@ async function renderGara(gara_id) {
       ${_gallery}
     </div>`;
 
-  window._shareGaraData = {name:name,date:fmtDate(data),cat:catLabel(cat),mult:mult,tipo:tipo,km:results1[0]?.km||'',media:results1[0]?.media||'',results:results1.slice(0,10).map(r=>({cognome:r.cognome,nome:r.nome,team:r.team,punti_effettivi:r.punti_effettivi}))};
+  window._shareGaraData = {name:name,date:fmtDate(data),cat:catLabel(cat),mult:mult,tipo:tipo,region:normalizeRegion(calEntry?.regione||results1[0]?.regione||''),luogo:calEntry?.luogo||'',km:results1[0]?.km||'',media:results1[0]?.media||'',results:results1.slice(0,10).map(r=>({cognome:r.cognome,nome:r.nome,team:r.team,punti_effettivi:r.punti_effettivi}))};
 
   const siRaceIntelHtml = '';
 
@@ -14039,31 +14039,46 @@ function _wrap(ctx, txt, x, y, maxW, lH) {
 
 // ── GARA CARD v6 — UCI-inspired, no points, big names ────────
 function _drawGara(ctx, W, H, d, logo) {
-  const { name, date, cat, mult, tipo, km, media, results } = d;
+  const { name, date, cat, mult, tipo, km, media, results, region, luogo } = d;
   const pad = Math.round(W * 0.048);
 
-  // ── Custom event header (logo centred, tall) ──
-  const hH = Math.round(H * 0.13);
+  // ── Header compatto: logo a sinistra (grande) + regione accanto, URL a destra ──
+  const hH = Math.round(H * 0.095);
   ctx.fillStyle = 'rgba(0,0,0,0.5)'; ctx.fillRect(0, 0, W, hH);
   const hLineG = ctx.createLinearGradient(0, 0, W, 0);
   hLineG.addColorStop(0, '#e8001d'); hLineG.addColorStop(0.45, '#f5c400'); hLineG.addColorStop(1, 'transparent');
   ctx.fillStyle = hLineG; ctx.fillRect(0, hH - 3, W, 3);
+  let logoRight = pad;
   if (logo) {
-    const lH = Math.round(hH * 0.75);
+    const lH = Math.round(hH * 0.86);
     const lW = Math.round(lH * logo.naturalWidth / logo.naturalHeight);
-    ctx.drawImage(logo, Math.round((W - lW) / 2), Math.round((hH - lH) / 2), lW, lH);
+    ctx.drawImage(logo, pad, Math.round((hH - lH) / 2), lW, lH);
+    logoRight = pad + lW;
   } else {
-    const fsLg = Math.round(hH * 0.38);
+    const fsLg = Math.round(hH * 0.42);
     ctx.font = `900 ${fsLg}px 'Bebas Neue',Impact,sans-serif`;
-    ctx.fillStyle = '#ffffff'; ctx.textAlign = 'center';
-    ctx.fillText('ITALIACRIT', W / 2, Math.round(hH * 0.64)); ctx.textAlign = 'left';
+    ctx.fillStyle = '#ffffff';
+    ctx.fillText('ITALIACRIT', pad, Math.round(hH * 0.64));
+    logoRight = pad + ctx.measureText('ITALIACRIT').width;
   }
-  const fsUrl = Math.round(hH * 0.12);
+  // Regione (o luogo) accanto al logo
+  const regTxt = (region || luogo || '').toUpperCase();
+  if (regTxt) {
+    ctx.fillStyle = 'rgba(255,255,255,0.20)';
+    ctx.fillRect(logoRight + 16, Math.round(hH * 0.26), 2, Math.round(hH * 0.48));
+    const rfs = Math.round(hH * 0.34);
+    ctx.font = `800 ${rfs}px 'Barlow Condensed',sans-serif`;
+    ctx.fillStyle = '#f5c400';
+    ctx.textAlign = 'left'; ctx.textBaseline = 'middle';
+    ctx.fillText(regTxt, logoRight + 30, Math.round(hH * 0.52));
+    ctx.textBaseline = 'alphabetic';
+  }
+  const fsUrl = Math.round(hH * 0.18);
   ctx.font = `400 ${fsUrl}px 'Barlow Condensed',sans-serif`;
-  ctx.fillStyle = 'rgba(255,255,255,0.26)'; ctx.textAlign = 'right';
-  ctx.fillText(SHARE_URL, W - pad, hH - Math.round(hH * 0.09)); ctx.textAlign = 'left';
+  ctx.fillStyle = 'rgba(255,255,255,0.30)'; ctx.textAlign = 'right';
+  ctx.fillText(SHARE_URL, W - pad, Math.round(hH * 0.62)); ctx.textAlign = 'left';
 
-  let y = hH + Math.round(H * 0.016);
+  let y = hH + Math.round(H * 0.022);
 
   // ── Race name ──
   const fsT = Math.round(W * (name.length > 38 ? 0.044 : name.length > 24 ? 0.054 : 0.066));
@@ -14113,8 +14128,8 @@ function _drawGara(ctx, W, H, d, logo) {
   // ── Results list ──
   const listH = footerY - y - Math.round(H * 0.003);
   const maxR = Math.min(results.length, 10);
-  // 1st gets ~18%, rest equal
-  const rH1 = Math.round(listH * 0.18);
+  // 1° leggermente più contenuto → più spazio (e dimensione) per i posti dal 2° in poi
+  const rH1 = Math.round(listH * 0.15);
   const rHN = Math.round((listH - rH1) / Math.max(maxR - 1, 1));
   const medalBg = ['#f5c400', '#c8c8c8', '#cd7f32'];
   const medalFg = ['#1a1200', '#1a1a1a', '#2a1500'];
@@ -14160,8 +14175,8 @@ function _drawGara(ctx, W, H, d, logo) {
     const nameX = pillX + pillW + Math.round(W * 0.022);
     const nameMaxW = W - pad - nameX - Math.round(W * 0.015);
     // Bigger surname — fills the row
-    const fsSur = Math.round(rHcur * (isFirst ? 0.5 : 0.46));
-    const fsTm  = Math.round(rHcur * (isFirst ? 0.21 : 0.20));
+    const fsSur = Math.round(rHcur * (isFirst ? 0.5 : 0.49));
+    const fsTm  = Math.round(rHcur * (isFirst ? 0.21 : 0.21));
     // Centre the two-line block: blockH ≈ fsSur + fsTm*1.4
     const blockH = fsSur + Math.round(fsTm * 1.4);
     const surY   = Math.round(ry + (rHcur - blockH) / 2) + fsSur;  // baseline of surname
@@ -14284,9 +14299,16 @@ function _drawClass(ctx, W, H, d) {
   const eyebrow = month ? `CLASSIFICA · ${month.toUpperCase()}` : 'CLASSIFICA';
   ctx.font=`400 ${fsT}px 'Bebas Neue',Impact,sans-serif`; ctx.fillStyle='rgba(255,255,255,0.35)';
   ctx.fillText(eyebrow,pad,y+fsT); y+=fsT*1.02;
+  // Etichetta "CATEGORIA" + nome categoria accanto, allineati sulla stessa baseline
   const fsC=Math.round(W*0.063);
+  const lblFs=Math.round(W*0.024);
+  const baseY=y+fsC;
+  ctx.font=`700 ${lblFs}px 'Barlow Condensed',sans-serif`; ctx.fillStyle='rgba(255,255,255,0.45)';
+  ctx.fillText('CATEGORIA',pad,baseY);
+  const lblW=ctx.measureText('CATEGORIA').width;
   ctx.font=`900 ${fsC}px 'Bebas Neue',Impact,sans-serif`; ctx.fillStyle='#f0f0f0';
-  ctx.fillText(cL.toUpperCase(),pad,y+fsC); y+=fsC*1.0;
+  ctx.fillText(cL.toUpperCase(),pad+lblW+Math.round(W*0.018),baseY);
+  y=baseY+Math.round(H*0.006);
   ctx.fillStyle='#e8001d'; ctx.fillRect(pad,y,W-pad*2,2); y+=8;
   const avail=H-fB-y-4, maxR=Math.min(rows.length,10), rH=Math.round(avail/maxR);
   const posCol=['#f5c400','#b0b0b0','#cd7f32'];
