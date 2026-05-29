@@ -14372,28 +14372,41 @@ function _drawRankColumn(ctx, x, colW, topY, bottomY, slice, hdFs) {
   y += 12;
   const rH = Math.round((bottomY - y - 4) / slice.length);
   const ptsResW = Math.round(colW * 0.16); // larghezza riservata ai punti
+  const nameMaxW = right - nameX - ptsResW;
+  // ── Font con TETTO: indipendenti dall'altezza riga, così i nomi non
+  //    diventano enormi/tagliati su formati alti (Story) o larghi (Facebook). ──
+  const fsPos = Math.min(Math.round(rH * 0.44), Math.round(colW * 0.052));
+  const fsN   = Math.min(Math.round(rH * 0.34), Math.round(colW * 0.038));
+  const fsT   = Math.round(fsN * 0.66);
+  const fsPts = Math.min(Math.round(rH * 0.40), Math.round(colW * 0.048));
   slice.forEach((r, i) => {
-    const ry = y + i * rH;
+    const ry = y + i * rH, mid = ry + rH / 2;
     const medal = (r.pos >= 1 && r.pos <= 3) ? posCol[r.pos - 1] : null;
     if (i % 2 === 0) { ctx.fillStyle = 'rgba(255,255,255,0.022)'; ctx.fillRect(x, ry, colW, rH); }
-    if (medal) { ctx.fillStyle = medal; ctx.fillRect(tickX, ry + Math.round(rH * 0.18), 3, Math.round(rH * 0.64)); }
-    const fsPos = Math.round(rH * 0.50);
+    if (medal) { ctx.fillStyle = medal; ctx.fillRect(tickX, mid - Math.round(rH * 0.30), 3, Math.round(rH * 0.60)); }
+    // posizione (centrata verticalmente)
     ctx.font = `700 ${fsPos}px 'Inter Tight',sans-serif`; ctx.fillStyle = medal || 'rgba(255,255,255,0.45)';
-    ctx.fillText(r.pos, posX, ry + rH * 0.66);
-    // nome (clip per larghezza colonna)
-    const nameMaxW = right - nameX - ptsResW;
-    const fsN = Math.round(rH * 0.38);
+    ctx.textAlign = 'left'; ctx.textBaseline = 'middle';
+    ctx.fillText(r.pos, posX, mid);
+    // nome + team come blocco centrato (clip per larghezza colonna)
+    const hasTeam = !!(r.team && String(r.team).trim());
+    ctx.textBaseline = 'alphabetic';
+    const nameBy = hasTeam ? mid - Math.round(fsT * 0.15) : mid + Math.round(fsN * 0.35);
     ctx.font = `600 ${fsN}px 'Inter Tight',sans-serif`; ctx.fillStyle = '#f0f0f0';
     let nm = (`${r.cognome || ''} ${r.nome || ''}`).toUpperCase().trim();
     while (nm.length > 3 && ctx.measureText(nm).width > nameMaxW) nm = nm.slice(0, -1);
-    ctx.fillText(nm, nameX, ry + rH * 0.46);
-    const fsT = Math.round(fsN * 0.64);
-    ctx.font = `400 ${fsT}px 'Inter Tight',sans-serif`; ctx.fillStyle = 'rgba(255,255,255,0.42)';
-    let tm = (r.team || '');
-    while (tm.length > 2 && ctx.measureText(tm).width > nameMaxW) tm = tm.slice(0, -1);
-    ctx.fillText(tm, nameX, ry + rH * 0.80);
-    ctx.font = `700 ${Math.round(rH * 0.44)}px 'Inter Tight',sans-serif`; ctx.fillStyle = '#f5c400'; ctx.textAlign = 'right';
-    ctx.fillText(r.punti, right, ry + rH * 0.62); ctx.textAlign = 'left';
+    ctx.fillText(nm, nameX, nameBy);
+    if (hasTeam) {
+      ctx.font = `400 ${fsT}px 'Inter Tight',sans-serif`; ctx.fillStyle = 'rgba(255,255,255,0.42)';
+      let tm = String(r.team);
+      while (tm.length > 2 && ctx.measureText(tm).width > nameMaxW) tm = tm.slice(0, -1);
+      ctx.fillText(tm, nameX, nameBy + Math.round(fsT * 1.5));
+    }
+    // punti (centrati verticalmente)
+    ctx.font = `700 ${fsPts}px 'Inter Tight',sans-serif`; ctx.fillStyle = '#f5c400';
+    ctx.textAlign = 'right'; ctx.textBaseline = 'middle';
+    ctx.fillText(r.punti, right, mid);
+    ctx.textAlign = 'left'; ctx.textBaseline = 'alphabetic';
   });
 }
 // ── CLASSIFICA CARD ────────────────────────────────────────
