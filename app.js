@@ -13967,7 +13967,7 @@ function _bg(ctx, W, H) {
 }
 function _header(ctx, logo, W, H, classData) {
   // ── Stile Velon: header flat, niente barra scura, logo che siede sul fondo dark ──
-  const bH = Math.round(H * 0.078);
+  const bH = Math.round(H * 0.092);
   // Logo ITC grande
   let logoRight = 18;
   if (logo) {
@@ -14288,21 +14288,20 @@ function _drawTeam(ctx, W, H, d) {
 // ── CLASSIFICA CARD ────────────────────────────────────────
 function _drawClass(ctx, W, H, d) {
   const {catLabel:cL,rows,scope,region,month} = d;
-  const hB=Math.round(H*0.078),fB=Math.round(H*0.06),pad=Math.round(W*0.048);
+  const hB=Math.round(H*0.092),fB=Math.round(H*0.06),pad=Math.round(W*0.048);
   // Lista alzata: meno spazio in alto (la regione è ora nell'header)
   let y=hB+Math.round(H*0.018);
-  // "CLASSIFICA" + nome categoria accanto, sulla stessa baseline — leggero
-  const fsC=Math.round(W*0.050);
-  const lblFs=Math.round(W*0.030);
-  const baseY=y+fsC;
+  // "CLASSIFICA" + nome categoria accanto, stessa baseline e stessa dimensione — leggero
+  const lblFs=Math.round(W*0.034);
+  const baseY=y+lblFs;
   ctx.font=`500 ${lblFs}px 'Inter Tight',sans-serif`; ctx.fillStyle='rgba(255,255,255,0.42)';
   ctx.letterSpacing='2px';
   ctx.fillText('CLASSIFICA',pad,baseY);
   const lblW=ctx.measureText('CLASSIFICA').width; // misurato con letter-spacing attivo
   ctx.letterSpacing='0px';
-  ctx.font=`700 ${fsC}px 'Inter Tight',sans-serif`; ctx.fillStyle='#f2f2f2';
-  ctx.fillText(cL.toUpperCase(),pad+lblW+Math.round(W*0.022),baseY);
-  y=baseY+Math.round(H*0.008);
+  ctx.font=`700 ${lblFs}px 'Inter Tight',sans-serif`; ctx.fillStyle='#f2f2f2';
+  ctx.fillText(cL.toUpperCase(),pad+lblW+Math.round(W*0.020),baseY);
+  y=baseY+Math.round(H*0.012);
   // Mese (se filtrato) come sottotitolo
   if(month){
     const mfs=Math.round(W*0.024);
