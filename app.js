@@ -14291,17 +14291,18 @@ function _drawClass(ctx, W, H, d) {
   const hB=Math.round(H*0.078),fB=Math.round(H*0.06),pad=Math.round(W*0.048);
   // Lista alzata: meno spazio in alto (la regione è ora nell'header)
   let y=hB+Math.round(H*0.018);
-  // "CLASSIFICA" (eyebrow) sopra, nome categoria sotto — più arioso, meno pesante
-  const lblFs=Math.round(W*0.026);
-  ctx.font=`500 ${lblFs}px 'Inter Tight',sans-serif`; ctx.fillStyle='rgba(255,255,255,0.40)';
-  ctx.letterSpacing='3px';
-  ctx.fillText('CLASSIFICA',pad,y+lblFs);
+  // "CLASSIFICA" + nome categoria accanto, sulla stessa baseline — leggero
+  const fsC=Math.round(W*0.050);
+  const lblFs=Math.round(W*0.030);
+  const baseY=y+fsC;
+  ctx.font=`500 ${lblFs}px 'Inter Tight',sans-serif`; ctx.fillStyle='rgba(255,255,255,0.42)';
+  ctx.letterSpacing='2px';
+  ctx.fillText('CLASSIFICA',pad,baseY);
+  const lblW=ctx.measureText('CLASSIFICA').width; // misurato con letter-spacing attivo
   ctx.letterSpacing='0px';
-  const fsC=Math.round(W*0.052);
   ctx.font=`700 ${fsC}px 'Inter Tight',sans-serif`; ctx.fillStyle='#f2f2f2';
-  const titleY=y+lblFs+Math.round(fsC*0.95);
-  ctx.fillText(cL.toUpperCase(),pad,titleY);
-  y=titleY+Math.round(H*0.008);
+  ctx.fillText(cL.toUpperCase(),pad+lblW+Math.round(W*0.022),baseY);
+  y=baseY+Math.round(H*0.008);
   // Mese (se filtrato) come sottotitolo
   if(month){
     const mfs=Math.round(W*0.024);
