@@ -6212,10 +6212,47 @@ async function updateRankTable() {
     });
     countLabel = `${filtered.length} team`;
 
-    const leaderTeamPts = filtered[0]?.punti || 0;
+    // ── Team narrative banner ──────────────────────────────────
+    let teamStoryHtml = '';
+    if (rankFilter && filtered.length >= 1) {
+      const tm = filtered[0];
+      const leaderFull = teamRanking[0];
+      const gapToLeader = leaderFull && tm.team_id !== leaderFull.team_id
+        ? leaderFull.punti - tm.punti : 0;
+      const above = teamRanking.find(t => t.pos === tm.pos - 1);
+      const below  = teamRanking.find(t => t.pos === tm.pos + 1);
+      const parts = [];
+      if (tm.pos === 1) parts.push(`Leader della classifica con ${tm.punti} pt`);
+      else parts.push(`${tm.pos}° in classifica · ${tm.punti} pt · −${gapToLeader} dal leader`);
+      if (above && tm.pos > 1) parts.push(`${above.punti - tm.punti} pt da ${esc(above.team_nome)}`);
+      if (below) parts.push(`+${tm.punti - below.punti} pt su ${esc(below.team_nome)}`);
+      if (tm.n_atleti) parts.push(`${tm.n_atleti} atleti in classifica`);
+      teamStoryHtml = `
+        <div class="rk-narrative rk-narrative--athlete">
+          <div class="rk-narrative-label">SITUAZIONE IN CLASSIFICA · ${esc(tm.team_nome)}</div>
+          <div class="rk-narrative-headline">${parts[0]}</div>
+          ${parts.slice(1).length ? `<div class="rk-narrative-details">${parts.slice(1).map(l=>`<span class="rk-narrative-detail">${l}</span>`).join('')}</div>` : ''}
+        </div>`;
+    } else if (!isFiltered && teamRanking.length >= 2) {
+      const leader = teamRanking[0];
+      const second = teamRanking[1];
+      const gap12 = leader.punti - second.punti;
+      const headline = `${esc(leader.team_nome)} guida con ${leader.punti} pt`;
+      const details = [];
+      if (gap12 > 0) details.push(`+${gap12} su ${esc(second.team_nome)}`);
+      if (teamRanking.length >= 3) details.push(`${teamRanking.length} team in classifica`);
+      teamStoryHtml = `
+        <div class="rk-narrative">
+          <div class="rk-narrative-label">SITUAZIONE IN CLASSIFICA</div>
+          <div class="rk-narrative-headline">${headline}</div>
+          ${details.length ? `<div class="rk-narrative-details">${details.map(l=>`<span class="rk-narrative-detail">${l}</span>`).join('')}</div>` : ''}
+        </div>`;
+    }
+
+    const leaderTeamPts = teamRanking[0]?.punti || 0;
     const rows = filtered.map((t, i) => {
       const pClass = posClass(t.pos);
-      const gap = i === 0
+      const gap = t.pos === 1
         ? `<span class="rk-leader-tag">LEADER</span>`
         : `<span class="rk-gap-label">−${leaderTeamPts - t.punti}</span>`;
       return `<tr class="ranking-row" style="animation-delay:${Math.min(i,20)*30}ms">
@@ -6240,8 +6277,8 @@ async function updateRankTable() {
     }).join('');
     _rankPhotosQueue = filtered; // per logo team
 
-    tableHtml = `
-      <table class="ranking-table">
+    tableHtml = teamStoryHtml + `
+      <table class="ranking-table rk-table-narrative">
         <thead><tr>
           <th style="width:50px">POS</th>
           <th style="width:40px" title="Variazione">↕</th>
