@@ -529,7 +529,7 @@ async function _msgLoadThread(convId) {
       const timeStr = new Date(m.created_at).toLocaleTimeString('it-IT', { hour:'2-digit', minute:'2-digit' });
       return `${dateSep}
         <div class="msg-bubble-wrap ${isSent ? 'sent' : 'received'}">
-          <div class="msg-bubble">${esc(m.body)}</div>
+          <div class="msg-bubble">${_msgRenderBody(m.body)}</div>
           <div class="msg-bubble-time">${timeStr}</div>
         </div>`;
     }).join('');
@@ -541,13 +541,25 @@ async function _msgLoadThread(convId) {
     threadPanel.innerHTML = `
       <div class="msg-thread-head">
         <button class="msg-back-btn" onclick="document.getElementById('msg-layout')?.classList.remove('thread-open');window.history.replaceState(null,'','#/messaggi')">←</button>
-        <div class="msg-conv-avatar" style="width:32px;height:32px;font-size:.8rem">${otherName.replace(/^[^ ]+ /,'')[0]?.toUpperCase() || '?'}</div>
-        <span>${otherName}</span>
+        <div class="msg-conv-avatar">${otherName.replace(/^[^ ]+ /,'')[0]?.toUpperCase() || '?'}</div>
+        <div class="msg-thread-head-info">
+          <span>${otherName}</span>
+          <span class="msg-thread-head-sub">Attivo ora</span>
+        </div>
       </div>
       <div class="msg-thread-body" id="msg-thread-body">
         ${msgsHtml || '<div style="text-align:center;color:var(--text-muted);padding:40px;font-size:.85rem">Scrivi il primo messaggio 👇</div>'}
       </div>
       <div class="msg-input-area">
+        <div class="msg-attach-wrap">
+          <button class="msg-attach-btn" onclick="window._msgToggleAttach(${convId})" title="Allega foto, video o link" aria-label="Allega">＋</button>
+          <div class="msg-attach-menu" id="msg-attach-menu" style="display:none">
+            <button onclick="window._msgAttachUrl(${convId},'foto')">🖼️ Foto (link)</button>
+            <button onclick="window._msgAttachUrl(${convId},'video')">🎬 Video (link)</button>
+            <button onclick="window._msgAttachUrl(${convId},'link')">🔗 Link</button>
+            <button onclick="window._msgAttachFromCollection(${convId})">📸 Dalla raccolta</button>
+          </div>
+        </div>
         <textarea id="msg-input" placeholder="Scrivi un messaggio…" rows="1"
           onkeydown="if(event.key==='Enter'&&!event.shiftKey){event.preventDefault();window._msgSend(${convId})}"
           oninput="this.style.height='auto';this.style.height=this.scrollHeight+'px'"></textarea>
@@ -592,7 +604,7 @@ async function _msgLoadThread(convId) {
         const dateSep = msgDate !== lastDate ? `<div class="msg-date-sep">${msgDate}</div>` : '';
         lastDate = msgDate;
         const timeStr = new Date(m.created_at).toLocaleTimeString('it-IT', { hour:'2-digit', minute:'2-digit' });
-        return `${dateSep}<div class="msg-bubble-wrap ${isSent?'sent':'received'}"><div class="msg-bubble">${esc(m.body)}</div><div class="msg-bubble-time">${timeStr}</div></div>`;
+        return `${dateSep}<div class="msg-bubble-wrap ${isSent?'sent':'received'}"><div class="msg-bubble">${_msgRenderBody(m.body)}</div><div class="msg-bubble-time">${timeStr}</div></div>`;
       }).join('');
       const wasAtBottom = body.scrollHeight - body.scrollTop - body.clientHeight < 60;
       body.innerHTML = msgsHtml;
@@ -601,6 +613,43 @@ async function _msgLoadThread(convId) {
     } catch {}
   }, 8000);
 }
+
+// Renderizza il corpo di un messaggio rilevando URL → foto / video / link
+function _msgRenderBody(body) {
+  if (!body) return '';
+  const urlRe = /(https?:\/\/[^\s]+)/g;
+  let out = '', last = 0, m;
+  while ((m = urlRe.exec(body)) !== null) {
+    out += esc(body.slice(last, m.index));
+    const raw = m[0];
+    const clean = raw.replace(/[)\].,;!?'"]+$/, '');
+    const lower = clean.toLowerCase().split('?')[0].split('#')[0];
+    if (/\.(jpe?g|png|gif|webp|avif|bmp|svg)$/.test(lower)) {
+      out += `<a href="${esc(clean)}" target="_blank" rel="noopener"><img class="msg-media" src="${esc(clean)}" loading="lazy" alt="foto condivisa"/></a>`;
+    } else if (/\.(mp4|webm|mov|m4v|ogg)$/.test(lower)) {
+      out += `<video class="msg-media" src="${esc(clean)}" controls preload="metadata"></video>`;
+    } else if (/(youtube\.com\/watch|youtu\.be\/|vimeo\.com\/)/.test(lower)) {
+      out += `<a class="msg-link" href="${esc(clean)}" target="_blank" rel="noopener">▶ ${esc(clean)}</a>`;
+    } else {
+      out += `<a class="msg-link" href="${esc(clean)}" target="_blank" rel="noopener">🔗 ${esc(clean)}</a>`;
+    }
+    last = m.index + raw.length;
+  }
+  out += esc(body.slice(last));
+  return out;
+}
+
+// Invio generico (riusabile da allegati e raccolta)
+window._msgSendBody = async function(convId, text) {
+  const body = (text || '').trim();
+  if (!body) return;
+  try {
+    await apiCall(`/messages/conversations/${convId}/send`, { method: 'POST', body: { body } });
+    await _msgLoadThread(convId);
+  } catch(e) {
+    showToast('Errore invio: ' + e.message, 'error');
+  }
+};
 
 window._msgSend = async function(convId) {
   const input = document.getElementById('msg-input');
@@ -619,6 +668,64 @@ window._msgSend = async function(convId) {
     showToast('Errore invio: ' + e.message, 'error');
     if (input) input.value = body; // rimetti il testo
   }
+};
+
+// ── Allegati: foto / video / link / raccolta ──────────────────
+window._msgToggleAttach = function() {
+  const menu = document.getElementById('msg-attach-menu');
+  if (menu) menu.style.display = menu.style.display === 'none' ? 'flex' : 'none';
+};
+window._msgAttachUrl = function(convId, kind) {
+  const menu = document.getElementById('msg-attach-menu');
+  if (menu) menu.style.display = 'none';
+  const label = kind === 'foto' ? 'Incolla il link della foto (jpg, png, webp…)'
+            : kind === 'video' ? 'Incolla il link del video (mp4, YouTube, Vimeo…)'
+            : 'Incolla il link da condividere';
+  const url = prompt(label, '');
+  if (!url || !url.trim()) return;
+  const u = url.trim();
+  if (!/^https?:\/\//i.test(u)) { showToast('Inserisci un link valido (http/https)', 'error'); return; }
+  const caption = prompt('Aggiungi un commento (opzionale):', '') || '';
+  const body = caption.trim() ? `${caption.trim()}\n${u}` : u;
+  window._msgSendBody(convId, body);
+};
+window._msgAttachFromCollection = function(convId) {
+  const menu = document.getElementById('msg-attach-menu');
+  if (menu) menu.style.display = 'none';
+  const items = (typeof getMediaCollection === 'function') ? getMediaCollection() : [];
+  if (!items.length) { showToast('La tua raccolta è vuota. Salva foto/video con ＋ nelle gallery.', 'info'); return; }
+  window._msgPickerItems = items;
+  const grid = items.map((it, i) => `
+    <div class="msg-pick-item" onclick="window._msgSendCollItem(${convId}, ${i})" title="${esc(it.title || '')}">
+      ${it.type === 'video'
+        ? '<div class="msg-pick-vid">🎬</div>'
+        : `<img src="${esc(it.url)}" loading="lazy" alt=""/>`}
+      <span class="msg-pick-type">${it.type === 'video' ? '🎬' : '📷'}</span>
+    </div>`).join('');
+  const ov = document.createElement('div');
+  ov.className = 'msg-picker-overlay';
+  ov.id = 'msg-picker-overlay';
+  ov.onclick = (e) => { if (e.target === ov) window._msgClosePicker(); };
+  ov.innerHTML = `
+    <div class="msg-picker-box">
+      <div class="msg-picker-head">
+        <span>📸 Condividi dalla raccolta</span>
+        <button onclick="window._msgClosePicker()" aria-label="Chiudi">✕</button>
+      </div>
+      <div class="msg-picker-grid">${grid}</div>
+    </div>`;
+  document.body.appendChild(ov);
+};
+window._msgSendCollItem = function(convId, idx) {
+  const it = (window._msgPickerItems || [])[idx];
+  window._msgClosePicker();
+  if (it && it.url) {
+    const body = it.title ? `${it.title}\n${it.url}` : it.url;
+    window._msgSendBody(convId, body);
+  }
+};
+window._msgClosePicker = function() {
+  document.getElementById('msg-picker-overlay')?.remove();
 };
 
 // Avvia conversazione da bottone su profilo esterno
@@ -2640,6 +2747,93 @@ window.toggleWatch = function(atleta_id, cognome, nome) {
       : '<span>☆</span> Segui';
   }
   return added;
+};
+
+// ══════════════════════════════════════════════════════════════
+//  DASHBOARD "SKILLS" — servizi personali (localStorage)
+// ══════════════════════════════════════════════════════════════
+
+/* ── Raccoglitore Foto & Video ── */
+function getMediaCollection() {
+  try { return JSON.parse(localStorage.getItem('itc_media_collection') || '[]'); } catch { return []; }
+}
+function isInCollection(uid) {
+  return getMediaCollection().some(m => m.uid === uid);
+}
+window.toggleMediaCollect = function(uid, type, url, title, gara) {
+  let list = getMediaCollection();
+  const idx = list.findIndex(m => m.uid === uid);
+  if (idx >= 0) { list.splice(idx, 1); }
+  else { list.unshift({ uid, type, url, title: title||'', gara: gara||'', ts: Date.now() }); }
+  try { localStorage.setItem('itc_media_collection', JSON.stringify(list.slice(0, 200))); } catch {}
+  const added = idx < 0;
+  const btn = document.getElementById('collect-btn-' + uid);
+  if (btn) {
+    btn.classList.toggle('collect-btn--active', added);
+    btn.title = added ? 'Nella tua raccolta' : 'Salva nella raccolta';
+    btn.textContent = added ? '✓' : '＋';
+  }
+  // Refresh dashboard collection card if open
+  if (typeof window._refreshCollectionCard === 'function') window._refreshCollectionCard();
+  return added;
+};
+window.removeFromCollection = function(uid) {
+  let list = getMediaCollection().filter(m => m.uid !== uid);
+  try { localStorage.setItem('itc_media_collection', JSON.stringify(list)); } catch {}
+  if (typeof window._refreshCollectionCard === 'function') window._refreshCollectionCard();
+};
+
+/* ── Calendario personale (gare seguite) ── */
+function getMyRaces() {
+  try { return JSON.parse(localStorage.getItem('itc_my_races') || '[]'); } catch { return []; }
+}
+function isMyRace(garaId) {
+  return getMyRaces().some(r => r.id === garaId);
+}
+window.toggleMyRace = function(garaId, nome, data) {
+  let list = getMyRaces();
+  const idx = list.findIndex(r => r.id === garaId);
+  if (idx >= 0) { list.splice(idx, 1); }
+  else { list.push({ id: garaId, nome: nome||'', data: data||'', ts: Date.now() }); }
+  try { localStorage.setItem('itc_my_races', JSON.stringify(list)); } catch {}
+  const added = idx < 0;
+  const btn = document.getElementById('myrace-btn-' + garaId);
+  if (btn) btn.classList.toggle('active', added);
+  return added;
+};
+
+/* ── Preferenze notifiche ── */
+function getNotifPrefs() {
+  try { return JSON.parse(localStorage.getItem('itc_notif_prefs') || '{}'); } catch { return {}; }
+}
+window.setNotifPref = function(key, val) {
+  const p = getNotifPrefs();
+  p[key] = val;
+  try { localStorage.setItem('itc_notif_prefs', JSON.stringify(p)); } catch {}
+};
+
+/* ── Obiettivi atleta ── */
+function getAthleteGoals() {
+  try { return JSON.parse(localStorage.getItem('itc_athlete_goals') || '[]'); } catch { return []; }
+}
+window.addAthleteGoal = function(text) {
+  if (!text || !text.trim()) return;
+  const list = getAthleteGoals();
+  list.push({ id: Date.now(), text: text.trim(), done: false });
+  try { localStorage.setItem('itc_athlete_goals', JSON.stringify(list)); } catch {}
+  if (typeof window._refreshGoalsCard === 'function') window._refreshGoalsCard();
+};
+window.toggleAthleteGoal = function(id) {
+  const list = getAthleteGoals();
+  const g = list.find(x => x.id === id);
+  if (g) g.done = !g.done;
+  try { localStorage.setItem('itc_athlete_goals', JSON.stringify(list)); } catch {}
+  if (typeof window._refreshGoalsCard === 'function') window._refreshGoalsCard();
+};
+window.removeAthleteGoal = function(id) {
+  const list = getAthleteGoals().filter(x => x.id !== id);
+  try { localStorage.setItem('itc_athlete_goals', JSON.stringify(list)); } catch {}
+  if (typeof window._refreshGoalsCard === 'function') window._refreshGoalsCard();
 };
 
 // Generate a single impactful narrative headline for the season pulse banner.
@@ -10233,10 +10427,18 @@ window._renderMediaAlbum = async function(albumId, profileId) {
       ${photos.length
         ? `<div class="media-photos-grid">${photos.map(p => {
             const src = p.ext_url || (p.filename ? `${PHOTOS_BASE}/photos/${p.filename}` : '');
-            return src ? `<div class="media-photo-item" onclick="window.openPhotoLightbox('${esc(src)}')">
-              <img src="${esc(src)}" loading="lazy" alt="${esc(p.caption||'')}"/>
+            if (!src) return '';
+            const uid = 'ph_' + (p.id || p.filename || src).toString().replace(/[^a-z0-9]/gi,'').slice(-24);
+            const inColl = isInCollection(uid);
+            const ttl = (p.caption || album?.title || 'Foto gara').replace(/'/g,'');
+            const gid = (album?.gara_id || '').replace(/'/g,'');
+            return `<div class="media-photo-item">
+              <img src="${esc(src)}" loading="lazy" alt="${esc(p.caption||'')}" onclick="window.openPhotoLightbox('${esc(src)}')" style="cursor:zoom-in"/>
+              <button id="collect-btn-${uid}" class="collect-btn ${inColl?'collect-btn--active':''}" title="${inColl?'Nella tua raccolta':'Salva nella raccolta'}"
+                style="position:absolute;top:6px;right:6px;z-index:2"
+                onclick="event.stopPropagation();window.toggleMediaCollect('${uid}','foto','${esc(src)}','${esc(ttl)}','${esc(gid)}')">${inColl?'✓':'＋'}</button>
               ${p.caption ? `<div class="media-photo-caption">${esc(p.caption)}</div>` : ''}
-            </div>` : '';
+            </div>`;
           }).join('')}</div>`
         : `<p style="color:var(--text-muted)">Nessuna foto in questo album.</p>`}`;
   } catch(e) {
@@ -10471,6 +10673,7 @@ async function renderGara(gara_id) {
             data-photographer="${esc(p.photographer||'')}">
             <img src="${PHOTOS_BASE}/photos/${esc(p.filename)}" alt="${esc(p.caption||'Foto gara')}" loading="lazy" onclick="window.openPhotoLightbox('${PHOTOS_BASE}/photos/${esc(p.filename)}')" style="cursor:zoom-in"/>
             <div class="race-gallery-caption">${[p.caption, p.photographer ? '📷 '+p.photographer : '', p.display_name].filter(Boolean).join(' — ')}</div>
+            ${(() => { const uid='ph_'+String(p.id||p.filename).replace(/[^a-z0-9]/gi,'').slice(-24); const ic=isInCollection(uid); return `<button id="collect-btn-${uid}" class="collect-btn ${ic?'collect-btn--active':''}" title="${ic?'Nella tua raccolta':'Salva nella raccolta'}" style="position:absolute;top:4px;left:4px;z-index:10;width:26px;height:26px;font-size:.85rem" onclick="event.stopPropagation();window.toggleMediaCollect('${uid}','foto','${PHOTOS_BASE}/photos/${esc(p.filename)}','${esc((p.caption||'Foto gara').replace(/'/g,''))}','${esc((primaryGaraId||'').replace(/'/g,''))}')">${ic?'✓':'＋'}</button>`; })()}
             ${_isAdmin ? `<div style="position:absolute;top:4px;right:4px;display:flex;flex-direction:column;gap:3px;z-index:10">
               <button onclick="event.stopPropagation();window.adminEditPhoto(${p.id})" style="padding:3px 7px;font-size:0.68rem;background:#2563eb;color:#fff;border:none;border-radius:4px;cursor:pointer;white-space:nowrap;box-shadow:0 1px 4px rgba(0,0,0,.5)">&#9999;&#65039; Modifica</button>
               <button onclick="event.stopPropagation();window.adminDeletePhoto(${p.id})" style="padding:3px 7px;font-size:0.68rem;background:#dc2626;color:#fff;border:none;border-radius:4px;cursor:pointer;white-space:nowrap;box-shadow:0 1px 4px rgba(0,0,0,.5)">&#128465; Elimina</button>
@@ -11226,6 +11429,7 @@ async function renderCalendario(highlightId) {
             ${g.genere==='F'?'<span class="badge-cat badge-genere-f">♀</span>':''}
             ${g.campionato_italiano?'<span class="badge-cat badge-mult-x3">CI</span>':''}
             ${g.campionato_regionale?'<span class="badge-cat badge-mult-x2">CR</span>':''}
+            ${(!isPast && typeof authUser==='function' && authUser()) ? `<button id="myrace-btn-${esc(g.id)}" class="cal-follow-btn ${isMyRace(g.id)?'active':''}" title="Aggiungi al mio calendario" onclick="event.stopPropagation();window.toggleMyRace('${esc(g.id)}','${esc((g.nome||'').replace(/'/g,''))}','${esc(g.data||'')}')">★</button>` : ''}
           </div>
         </div>
         ${podioHtml}
@@ -14411,6 +14615,100 @@ function _dashRankingInfo(atleta_id) {
   return out;
 }
 
+// ── SKILL CARD BUILDERS (riutilizzabili tra ruoli) ──────────────
+
+/* 📸 Raccoglitore Foto & Video — collezione personale salvata */
+function _skillCollection() {
+  const items = getMediaCollection();
+  const foto  = items.filter(m => m.type === 'foto').length;
+  const video = items.filter(m => m.type === 'video').length;
+  return `
+    <div class="dash-card dash-card--skill" id="dash-skill-collection">
+      <div class="dash-card-title"><span>📸</span>Raccoglitore Foto & Video</div>
+      <div class="dash-skill-desc">La tua raccolta personale: salva foto e video delle gare con il pulsante ＋ per ritrovarli qui.</div>
+      <div class="dash-stats-row">
+        <div class="dash-stat"><div class="dash-stat-val">${foto}</div><div class="dash-stat-lbl">Foto</div></div>
+        <div class="dash-stat"><div class="dash-stat-val">${video}</div><div class="dash-stat-lbl">Video</div></div>
+      </div>
+      <div id="dash-collection-inner">${_collectionInner(items)}</div>
+    </div>`;
+}
+function _collectionInner(items) {
+  if (!items.length) return `<p class="dash-skill-empty">Raccolta vuota. Sfoglia le gallerie foto e clicca ＋ per salvare.</p>
+    <a href="#/risultati" class="dash-btn dash-btn--outline dash-btn--sm">Sfoglia gare →</a>`;
+  return `<div class="dash-collect-grid">
+    ${items.slice(0, 8).map(m => `
+      <div class="dash-collect-item">
+        ${m.url ? `<a href="${esc(m.url)}" target="_blank" rel="noopener"><img src="${esc(m.url)}" loading="lazy" alt="${esc(m.title)}"/></a>`
+                : `<div class="dash-collect-ph">${m.type==='video'?'▶':'📷'}</div>`}
+        ${m.type==='video'?`<span class="dash-collect-badge">▶</span>`:''}
+        <button class="dash-collect-rm" title="Rimuovi" onclick="window.removeFromCollection('${esc(m.uid)}')">✕</button>
+      </div>`).join('')}
+  </div>
+  ${items.length > 8 ? `<div class="dash-skill-more">+${items.length-8} altri elementi salvati</div>` : ''}`;
+}
+
+/* 📅 Calendario personale — gare seguite */
+function _skillCalendario() {
+  const races = getMyRaces().sort((a,b)=>(a.data||'').localeCompare(b.data||''));
+  const today = new Date().toISOString().slice(0,10);
+  const upcoming = races.filter(r => (r.data||'') >= today);
+  return `
+    <div class="dash-card dash-card--skill">
+      <div class="dash-card-title"><span>📅</span>Il mio calendario</div>
+      <div class="dash-skill-desc">Le gare che vuoi seguire. Aggiungile dal calendario col pulsante ＋.</div>
+      ${races.length ? `
+        ${(upcoming.length ? upcoming : races).slice(0,5).map(r=>`
+          <div class="dash-cal-row">
+            <div class="dash-cal-date">${(r.data||'').slice(5)||'—'}</div>
+            <div style="flex:1"><div class="dash-cal-name">${esc((r.nome||r.id).slice(0,32))}</div></div>
+            <button class="dash-collect-rm" style="position:static" title="Rimuovi" onclick="window.toggleMyRace('${esc(r.id)}');renderMyProfile()">✕</button>
+          </div>`).join('')}
+        <a href="#/calendario" class="dash-btn dash-btn--outline dash-btn--sm">Aggiungi gare →</a>` :
+      `<p class="dash-skill-empty">Nessuna gara seguita. Vai al calendario e clicca ＋ sulle gare di interesse.</p>
+       <a href="#/calendario" class="dash-btn dash-btn--primary dash-btn--sm">Apri calendario →</a>`}
+    </div>`;
+}
+
+/* 🔔 Notifiche — preferenze */
+function _skillNotifiche(role) {
+  const p = getNotifPrefs();
+  const opts = [
+    { key:'risultati',   label:'Nuovi risultati', desc:'Quando esce un risultato che ti riguarda' },
+    { key:'classifica',  label:'Cambi in classifica', desc:'Movimenti di posizione rilevanti' },
+    { key:'gare',        label:'Promemoria gare', desc:'Gare del tuo calendario in arrivo' },
+    { key:'foto',        label:'Nuove foto/video', desc:'Media pubblicati dalle gare seguite' },
+  ];
+  return `
+    <div class="dash-card dash-card--skill">
+      <div class="dash-card-title"><span>🔔</span>Notifiche</div>
+      <div class="dash-skill-desc">Scegli di cosa essere avvisato.</div>
+      ${opts.map(o => `
+        <label class="dash-toggle-row">
+          <div>
+            <div class="dash-toggle-label">${o.label}</div>
+            <div class="dash-toggle-desc">${o.desc}</div>
+          </div>
+          <input type="checkbox" class="dash-toggle" ${p[o.key]?'checked':''} onchange="window.setNotifPref('${o.key}', this.checked)" />
+        </label>`).join('')}
+    </div>`;
+}
+
+/* 🖼️ Condivisione — genera grafiche */
+function _skillCondivisione(kind, id) {
+  return `
+    <div class="dash-card dash-card--skill">
+      <div class="dash-card-title"><span>🖼️</span>Condivisione social</div>
+      <div class="dash-skill-desc">Genera grafiche pronte per Instagram, Storie, Facebook e WhatsApp con i tuoi risultati.</div>
+      <div class="dash-actions-grid">
+        <a href="#/risultati" class="dash-quick-btn"><span class="dqb-icon">📋</span>Risultati gara</a>
+        <a href="#/classifica" class="dash-quick-btn"><span class="dqb-icon">🏆</span>Classifica</a>
+        ${kind==='atleta'&&id?`<a href="#/atleta/${esc(String(id))}" class="dash-quick-btn"><span class="dqb-icon">🚴</span>Mio profilo</a>`:''}
+        ${kind==='team'&&id?`<a href="#/team/${esc(String(id))}" class="dash-quick-btn"><span class="dqb-icon">👥</span>Mio team</a>`:''}
+      </div>
+    </div>`;
+}
+
 async function _dashAtleta(el, user, profile) {
   const statusMap = { active:'✅ Verificato', pending:'⏳ In attesa', rejected:'❌ Rifiutato' };
 
@@ -14543,7 +14841,48 @@ async function _dashAtleta(el, user, profile) {
         <a href="#/calendario" class="dash-btn dash-btn--outline dash-btn--sm">Tutto il calendario →</a>
       </div>` : ''}
 
+      <!-- SKILL: OBIETTIVI -->
+      <div class="dash-card dash-card--skill" id="dash-skill-goals">
+        <div class="dash-card-title"><span>🎯</span>Obiettivi stagionali</div>
+        <div class="dash-skill-desc">Fissa i tuoi traguardi e spuntali quando li raggiungi.</div>
+        <div id="dash-goals-inner">${_goalsInner()}</div>
+        <div class="dash-link-form" style="margin-top:6px">
+          <input type="text" id="goal-input" placeholder="Es. Top 10 in classifica regionale" onkeydown="if(event.key==='Enter'){window.addAthleteGoal(this.value);this.value=''}" />
+          <button class="dash-btn dash-btn--accent dash-btn--sm" onclick="const i=document.getElementById('goal-input');window.addAthleteGoal(i.value);i.value=''">+ Aggiungi obiettivo</button>
+        </div>
+      </div>
+
+      <!-- SKILL: RACCOGLITORE FOTO & VIDEO -->
+      ${_skillCollection()}
+
+      <!-- SKILL: CALENDARIO PERSONALE -->
+      ${_skillCalendario()}
+
+      <!-- SKILL: CONDIVISIONE -->
+      ${_skillCondivisione('atleta', atleta_id)}
+
+      <!-- SKILL: NOTIFICHE -->
+      ${_skillNotifiche('atleta')}
+
     </div>`;
+
+  // Wire refresh hooks for skill cards
+  window._refreshGoalsCard = () => { const i=document.getElementById('dash-goals-inner'); if(i) i.innerHTML=_goalsInner(); };
+  window._refreshCollectionCard = () => { const i=document.getElementById('dash-collection-inner'); if(i) i.innerHTML=_collectionInner(getMediaCollection()); };
+}
+
+/* Goals list inner HTML */
+function _goalsInner() {
+  const goals = getAthleteGoals();
+  if (!goals.length) return `<p class="dash-skill-empty">Nessun obiettivo. Aggiungine uno qui sotto.</p>`;
+  return `<div class="dash-goals-list">
+    ${goals.map(g => `
+      <div class="dash-goal-row ${g.done?'done':''}">
+        <button class="dash-goal-check" onclick="window.toggleAthleteGoal(${g.id})">${g.done?'✓':''}</button>
+        <span class="dash-goal-text">${esc(g.text)}</span>
+        <button class="dash-collect-rm" style="position:static" title="Rimuovi" onclick="window.removeAthleteGoal(${g.id})">✕</button>
+      </div>`).join('')}
+  </div>`;
 }
 
 async function _dashTeam(el, user, profile) {
@@ -14634,6 +14973,21 @@ async function _dashTeam(el, user, profile) {
         ${teamId ? `<a href="#/team/${esc(teamId)}" class="dash-btn dash-btn--outline dash-btn--sm">Tutti i risultati →</a>` : ''}
       </div>` : ''}
 
+      <!-- ROSTER ATLETI -->
+      ${teamRes.length ? `
+      <div class="dash-card dash-card--skill">
+        <div class="dash-card-title"><span>👤</span>Roster squadra</div>
+        <div class="dash-skill-desc">Gli atleti che hanno corso per ${esc(teamName)}.</div>
+        ${[...new Map(teamRes.concat(res.filter(r=>(r.team||'').toLowerCase()===teamName.toLowerCase())).map(r=>[r.atleta_id,r])).values()].slice(0,8).map(r=>`
+          <div class="dash-athlete-item">
+            <div class="dash-athlete-info">
+              <div class="dash-athlete-name"><a href="#/atleta/${esc(String(r.atleta_id||''))}" style="color:inherit;text-decoration:none">${esc((r.cognome||'')+' '+(r.nome||''))}</a></div>
+              <div class="dash-athlete-sub">${res.filter(x=>x.atleta_id===r.atleta_id).length} gare</div>
+            </div>
+          </div>`).join('')}
+        ${teamId?`<a href="#/team/${esc(teamId)}" class="dash-btn dash-btn--outline dash-btn--sm">Tutti gli atleti →</a>`:''}
+      </div>` : ''}
+
       <div class="dash-card">
         <div class="dash-card-title"><span>⚡</span>Azioni rapide</div>
         <div class="dash-actions-grid">
@@ -14646,7 +15000,21 @@ async function _dashTeam(el, user, profile) {
         </div>
       </div>
 
+      <!-- SKILL: RACCOGLITORE FOTO & VIDEO -->
+      ${_skillCollection()}
+
+      <!-- SKILL: CALENDARIO -->
+      ${_skillCalendario()}
+
+      <!-- SKILL: CONDIVISIONE -->
+      ${_skillCondivisione('team', teamId)}
+
+      <!-- SKILL: NOTIFICHE -->
+      ${_skillNotifiche('team')}
+
     </div>`;
+
+  window._refreshCollectionCard = () => { const i=document.getElementById('dash-collection-inner'); if(i) i.innerHTML=_collectionInner(getMediaCollection()); };
 }
 
 async function _dashGenitore(el, user, profile) {
@@ -14737,7 +15105,18 @@ async function _dashFamiglia(el, user, profile, role) {
         </div>
       </div>
 
+      <!-- SKILL: RACCOGLITORE FOTO & VIDEO -->
+      ${_skillCollection()}
+
+      <!-- SKILL: CALENDARIO -->
+      ${_skillCalendario()}
+
+      <!-- SKILL: NOTIFICHE -->
+      ${_skillNotifiche(role)}
+
     </div>`;
+
+  window._refreshCollectionCard = () => { const i=document.getElementById('dash-collection-inner'); if(i) i.innerHTML=_collectionInner(getMediaCollection()); };
 }
 
 async function _dashAppassionato(el, user) {
@@ -14808,7 +15187,18 @@ async function _dashAppassionato(el, user) {
         </div>
       </div>
 
+      <!-- SKILL: RACCOGLITORE FOTO & VIDEO -->
+      ${_skillCollection()}
+
+      <!-- SKILL: CALENDARIO -->
+      ${_skillCalendario()}
+
+      <!-- SKILL: NOTIFICHE -->
+      ${_skillNotifiche('appassionato')}
+
     </div>`;
+
+  window._refreshCollectionCard = () => { const i=document.getElementById('dash-collection-inner'); if(i) i.innerHTML=_collectionInner(getMediaCollection()); };
 }
 
 async function _dashMedia(el, user, profile) {
@@ -14868,9 +15258,20 @@ async function _dashMedia(el, user, profile) {
           <a href="#/risultati" class="dash-quick-btn"><span class="dqb-icon">📋</span>Risultati</a>
           <a href="#/calendario" class="dash-quick-btn"><span class="dqb-icon">📅</span>Calendario</a>
         </div>
-      </div>` : ''}
+      </div>
+
+      <!-- SKILL: RACCOGLITORE FOTO & VIDEO -->
+      ${_skillCollection()}
+
+      <!-- SKILL: CALENDARIO (gare da coprire) -->
+      ${_skillCalendario()}
+
+      <!-- SKILL: NOTIFICHE -->
+      ${_skillNotifiche('media')}` : ''}
 
     </div>`;
+
+  window._refreshCollectionCard = () => { const i=document.getElementById('dash-collection-inner'); if(i) i.innerHTML=_collectionInner(getMediaCollection()); };
 
   // Load albums async
   if (profile.status === 'active') {
