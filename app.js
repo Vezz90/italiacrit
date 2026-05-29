@@ -13958,18 +13958,12 @@ function _bg(ctx, W, H) {
   const g = ctx.createLinearGradient(0, 0, 0, H);
   g.addColorStop(0, '#0c0e12'); g.addColorStop(0.6, '#0a0c10'); g.addColorStop(1, '#070809');
   ctx.fillStyle = g; ctx.fillRect(0, 0, W, H);
-  // Soft glow accent in alto a destra (sottile, moderno)
+  // Soft glow accent in alto a destra (molto tenue)
   const rg = ctx.createRadialGradient(W * 0.92, -H * 0.05, 0, W * 0.92, -H * 0.05, W * 0.95);
-  rg.addColorStop(0, 'rgba(232,0,29,0.16)'); rg.addColorStop(1, 'transparent');
+  rg.addColorStop(0, 'rgba(232,0,29,0.10)'); rg.addColorStop(1, 'transparent');
   ctx.fillStyle = rg; ctx.fillRect(0, 0, W, H);
-  // Slash geometrico in basso a sinistra (giallo, molto tenue)
-  ctx.save();
-  ctx.globalAlpha = 0.05; ctx.fillStyle = '#f5c400';
-  ctx.beginPath();
-  ctx.moveTo(0, H * 0.86); ctx.lineTo(W * 0.46, H); ctx.lineTo(0, H); ctx.closePath(); ctx.fill();
-  ctx.restore();
-  // Barra accento solida sul bordo sinistro (brand)
-  ctx.fillStyle = '#e8001d'; ctx.fillRect(0, 0, Math.round(W * 0.012), H);
+  // Sottile filo accento sul bordo sinistro (brand, discreto)
+  ctx.fillStyle = '#e8001d'; ctx.fillRect(0, 0, Math.max(3, Math.round(W * 0.005)), H);
 }
 function _header(ctx, logo, W, H, classData) {
   // ── Stile Velon: header flat, niente barra scura, logo che siede sul fondo dark ──
@@ -13990,25 +13984,27 @@ function _header(ctx, logo, W, H, classData) {
       // separatore verticale sottile
       ctx.fillStyle = 'rgba(255,255,255,0.16)';
       ctx.fillRect(logoRight + 16, Math.round(bH * 0.28), 2, Math.round(bH * 0.44));
-      const rfs = Math.round(bH * 0.34);
-      ctx.font = `800 ${rfs}px 'Barlow Condensed',sans-serif`;
-      ctx.fillStyle = classData.scope === 'regionale' ? '#f5c400' : 'rgba(255,255,255,0.92)';
+      const rfs = Math.round(bH * 0.30);
+      ctx.font = `600 ${rfs}px 'Inter Tight',sans-serif`;
+      ctx.letterSpacing = '1px';
+      ctx.fillStyle = classData.scope === 'regionale' ? '#f5c400' : 'rgba(255,255,255,0.80)';
       ctx.textAlign = 'left'; ctx.textBaseline = 'middle';
       ctx.fillText(regTxt, logoRight + 30, Math.round(bH * 0.52));
-      ctx.textBaseline = 'alphabetic';
+      ctx.textBaseline = 'alphabetic'; ctx.letterSpacing = '0px';
     }
   }
-  const fs = Math.round(bH * 0.30);
-  ctx.font = `800 ${fs}px 'Barlow Condensed',sans-serif`;
-  ctx.fillStyle = 'rgba(255,255,255,0.92)'; ctx.textAlign = 'right';
-  ctx.fillText('ITALIACRIT', W - 16, Math.round(bH * 0.6));
-  ctx.font = `400 ${Math.round(fs * 0.52)}px 'Barlow Condensed',sans-serif`;
-  ctx.fillStyle = 'rgba(255,255,255,0.34)';
-  ctx.fillText(SHARE_URL, W - 16, Math.round(bH * 0.88));
+  const fs = Math.round(bH * 0.26);
+  ctx.font = `600 ${fs}px 'Inter Tight',sans-serif`;
+  ctx.letterSpacing = '2px';
+  ctx.fillStyle = 'rgba(255,255,255,0.78)'; ctx.textAlign = 'right';
+  ctx.fillText('ITALIACRIT', W - 18, Math.round(bH * 0.58));
+  ctx.letterSpacing = '0px';
+  ctx.font = `400 ${Math.round(fs * 0.50)}px 'Inter Tight',sans-serif`;
+  ctx.fillStyle = 'rgba(255,255,255,0.30)';
+  ctx.fillText(SHARE_URL, W - 18, Math.round(bH * 0.86));
   ctx.textAlign = 'left';
-  // Linea accento sottile e piena (no gradiente): solo brand red
-  ctx.fillStyle = 'rgba(255,255,255,0.07)'; ctx.fillRect(0, bH, W, 1);
-  ctx.fillStyle = '#e8001d'; ctx.fillRect(Math.round(W * 0.012), bH, Math.round(W * 0.10), 2);
+  // Filo divisorio discreto
+  ctx.fillStyle = 'rgba(255,255,255,0.06)'; ctx.fillRect(0, bH, W, 1);
 }
 function _footer(ctx, W, H) {
   // ── Stile Velon: footer minimale, niente barra scura ──
@@ -14020,7 +14016,7 @@ function _footer(ctx, W, H) {
   ctx.fillStyle = '#009246'; ctx.fillRect(ax, ay, accW, s);
   ctx.fillStyle = '#f0f0ee'; ctx.fillRect(ax + accW, ay, accW, s);
   ctx.fillStyle = '#ce2b37'; ctx.fillRect(ax + accW * 2, ay, accW, s);
-  ctx.font = `500 ${Math.round(fH * 0.31)}px 'Barlow Condensed',sans-serif`;
+  ctx.font = `500 ${Math.round(fH * 0.31)}px 'Inter Tight',sans-serif`;
   ctx.fillStyle = 'rgba(255,255,255,0.32)'; ctx.textAlign = 'center';
   ctx.fillText(SHARE_TAG, W / 2, y + Math.round(fH * 0.67));
   ctx.textAlign = 'left';
@@ -14051,7 +14047,7 @@ function _drawGara(ctx, W, H, d, logo) {
     logoRight = pad + lW;
   } else {
     const fsLg = Math.round(hH * 0.42);
-    ctx.font = `900 ${fsLg}px 'Bebas Neue',Impact,sans-serif`;
+    ctx.font = `900 ${fsLg}px 'Inter Tight','Inter Tight',sans-serif`;
     ctx.fillStyle = '#ffffff';
     ctx.fillText('ITALIACRIT', pad, Math.round(hH * 0.64));
     logoRight = pad + ctx.measureText('ITALIACRIT').width;
@@ -14062,14 +14058,14 @@ function _drawGara(ctx, W, H, d, logo) {
     ctx.fillStyle = 'rgba(255,255,255,0.16)';
     ctx.fillRect(logoRight + 16, Math.round(hH * 0.28), 2, Math.round(hH * 0.44));
     const rfs = Math.round(hH * 0.34);
-    ctx.font = `800 ${rfs}px 'Barlow Condensed',sans-serif`;
+    ctx.font = `800 ${rfs}px 'Inter Tight',sans-serif`;
     ctx.fillStyle = '#f5c400';
     ctx.textAlign = 'left'; ctx.textBaseline = 'middle';
     ctx.fillText(regTxt, logoRight + 30, Math.round(hH * 0.52));
     ctx.textBaseline = 'alphabetic';
   }
   const fsUrl = Math.round(hH * 0.18);
-  ctx.font = `400 ${fsUrl}px 'Barlow Condensed',sans-serif`;
+  ctx.font = `400 ${fsUrl}px 'Inter Tight',sans-serif`;
   ctx.fillStyle = 'rgba(255,255,255,0.30)'; ctx.textAlign = 'right';
   ctx.fillText(SHARE_URL, W - pad, Math.round(hH * 0.62)); ctx.textAlign = 'left';
   // Linea accento sottile flat sotto l'header
@@ -14079,26 +14075,28 @@ function _drawGara(ctx, W, H, d, logo) {
   let y = hH + Math.round(H * 0.022);
 
   // ── Race name ──
-  const fsT = Math.round(W * (name.length > 38 ? 0.044 : name.length > 24 ? 0.054 : 0.066));
-  ctx.font = `900 ${fsT}px 'Bebas Neue',Impact,sans-serif`; ctx.fillStyle = '#ffffff';
-  y = _wrap(ctx, name.toUpperCase(), pad, y + fsT, W - pad * 2, fsT * 1.07);
-  y += Math.round(H * 0.003);
+  const fsT = Math.round(W * (name.length > 38 ? 0.040 : name.length > 24 ? 0.050 : 0.060));
+  ctx.font = `700 ${fsT}px 'Inter Tight',sans-serif`; ctx.fillStyle = '#f4f4f4';
+  y = _wrap(ctx, name.toUpperCase(), pad, y + fsT, W - pad * 2, fsT * 1.10);
+  y += Math.round(H * 0.004);
 
-  // ── Category (prominent) ──
-  const fsCat = Math.round(W * 0.028);
-  ctx.font = `700 ${fsCat}px 'Barlow Condensed',sans-serif`;
+  // ── Category ──
+  const fsCat = Math.round(W * 0.026);
+  ctx.font = `600 ${fsCat}px 'Inter Tight',sans-serif`;
   ctx.fillStyle = '#e8001d';
+  ctx.letterSpacing = '1px';
   ctx.fillText(cat.toUpperCase(), pad, y);
   const catW2 = ctx.measureText(cat.toUpperCase()).width;
-  ctx.font = `500 ${Math.round(fsCat * 0.82)}px 'Barlow Condensed',sans-serif`;
-  ctx.fillStyle = 'rgba(255,255,255,0.4)';
-  ctx.fillText(`  ·  ${date}  ·  ×${mult}`, pad + catW2, y);
-  y += fsCat * 1.45;
+  ctx.letterSpacing = '0px';
+  ctx.font = `400 ${Math.round(fsCat * 0.82)}px 'Inter Tight',sans-serif`;
+  ctx.fillStyle = 'rgba(255,255,255,0.38)';
+  ctx.fillText(`   ·   ${date}   ·   ×${mult}`, pad + catW2 + 6, y);
+  y += fsCat * 1.5;
 
   // ── Km · Media (if available) ──
   if (km || media) {
     const fsKm = Math.round(W * 0.021);
-    ctx.font = `500 ${fsKm}px 'Barlow Condensed',sans-serif`;
+    ctx.font = `500 ${fsKm}px 'Inter Tight',sans-serif`;
     ctx.fillStyle = 'rgba(255,255,255,0.38)';
     const parts = [];
     if (km)    parts.push(`${km} km`);
@@ -14119,7 +14117,7 @@ function _drawGara(ctx, W, H, d, logo) {
   ctx.fillStyle = '#009246'; ctx.fillRect(ax, ay, accW, s);
   ctx.fillStyle = '#f0f0ee'; ctx.fillRect(ax + accW, ay, accW, s);
   ctx.fillStyle = '#ce2b37'; ctx.fillRect(ax + accW * 2, ay, accW, s);
-  ctx.font = `500 ${Math.round(fB * 0.3)}px 'Barlow Condensed',sans-serif`;
+  ctx.font = `500 ${Math.round(fB * 0.3)}px 'Inter Tight',sans-serif`;
   ctx.fillStyle = 'rgba(255,255,255,0.3)'; ctx.textAlign = 'center';
   ctx.fillText(SHARE_TAG, W / 2, footerY + Math.round(fB * 0.67)); ctx.textAlign = 'left';
 
@@ -14163,8 +14161,8 @@ function _drawGara(ctx, W, H, d, logo) {
     ctx.fillStyle = isTop3 ? medalBg[i] : 'rgba(255,255,255,0.07)';
     if (ctx.roundRect) { ctx.beginPath(); ctx.roundRect(pillX, pillY, pillW, pillH, Math.round(pillH * 0.2)); ctx.fill(); }
     else { ctx.fillRect(pillX, pillY, pillW, pillH); }
-    const fsPos = Math.round(pillH * 0.64);
-    ctx.font = `900 ${fsPos}px 'Bebas Neue',Impact,sans-serif`; ctx.textAlign = 'center';
+    const fsPos = Math.round(pillH * 0.58);
+    ctx.font = `700 ${fsPos}px 'Inter Tight',sans-serif`; ctx.textAlign = 'center';
     ctx.fillStyle = isTop3 ? medalFg[i] : 'rgba(255,255,255,0.38)';
     ctx.fillText(String(i + 1).padStart(2, '0'), pillX + pillW / 2, pillY + Math.round(pillH * 0.72));
     ctx.textAlign = 'left';
@@ -14180,9 +14178,9 @@ function _drawGara(ctx, W, H, d, logo) {
     const surY   = Math.round(ry + (rHcur - blockH) / 2) + fsSur;  // baseline of surname
     const tmY    = surY + Math.round(fsTm * 1.4);                   // baseline of team
 
-    // Surname bold
-    ctx.font = `800 ${fsSur}px 'Barlow Condensed',sans-serif`;
-    ctx.fillStyle = isTop3 ? '#ffffff' : 'rgba(255,255,255,0.85)';
+    // Surname
+    ctx.font = `700 ${fsSur}px 'Inter Tight',sans-serif`;
+    ctx.fillStyle = isTop3 ? '#f4f4f4' : 'rgba(255,255,255,0.82)';
     let cog = (r.cognome || '').toUpperCase();
     while (ctx.measureText(cog).width > nameMaxW - 6 && cog.length > 3) cog = cog.slice(0, -1);
     const cogW = ctx.measureText(cog).width;
@@ -14190,7 +14188,7 @@ function _drawGara(ctx, W, H, d, logo) {
 
     // First name lighter, inline
     const fsNom = Math.round(fsSur * 0.68);
-    ctx.font = `400 ${fsNom}px 'Barlow Condensed',sans-serif`;
+    ctx.font = `400 ${fsNom}px 'Inter Tight',sans-serif`;
     ctx.fillStyle = isTop3 ? 'rgba(255,255,255,0.5)' : 'rgba(255,255,255,0.32)';
     const nomStr = ' ' + (r.nome || '').substring(0, 14);
     // align nome baseline with surname baseline (same y, smaller size looks natural)
@@ -14199,7 +14197,7 @@ function _drawGara(ctx, W, H, d, logo) {
     }
 
     // Team muted, below
-    ctx.font = `400 ${fsTm}px 'Barlow Condensed',sans-serif`;
+    ctx.font = `400 ${fsTm}px 'Inter Tight',sans-serif`;
     ctx.fillStyle = isFirst ? 'rgba(255,255,255,0.42)' : 'rgba(255,255,255,0.28)';
     ctx.fillText('— ' + (r.team || '').substring(0, 34), nameX, tmY);
   });
@@ -14212,17 +14210,17 @@ function _drawAtleta(ctx, W, H, d) {
   let y = hB + Math.round(H*0.05);
   // Cognome
   const fsC=Math.round(W*(cognome.length>12?0.065:0.085));
-  ctx.font=`900 ${fsC}px 'Bebas Neue',Impact,sans-serif`; ctx.fillStyle='#f0f0f0';
+  ctx.font=`900 ${fsC}px 'Inter Tight','Inter Tight',sans-serif`; ctx.fillStyle='#f0f0f0';
   y=_wrap(ctx,cognome.toUpperCase(),pad,y+fsC,W-pad*2,fsC*1.05);
   // Nome
   const fsN=Math.round(fsC*0.44);
-  ctx.font=`600 ${fsN}px 'Barlow Condensed',sans-serif`; ctx.fillStyle='#e8001d';
+  ctx.font=`600 ${fsN}px 'Inter Tight',sans-serif`; ctx.fillStyle='#e8001d';
   ctx.fillText(nome.toUpperCase(),pad,y); y+=fsN*1.4;
   // Cat + Team
   const fsI=Math.round(W*0.024);
-  ctx.font=`600 ${fsI}px 'Barlow Condensed',sans-serif`; ctx.fillStyle='#777';
+  ctx.font=`600 ${fsI}px 'Inter Tight',sans-serif`; ctx.fillStyle='#777';
   ctx.fillText(cat,pad,y); y+=fsI*1.3;
-  ctx.font=`400 ${fsI}px 'Barlow Condensed',sans-serif`; ctx.fillStyle='#555';
+  ctx.font=`400 ${fsI}px 'Inter Tight',sans-serif`; ctx.fillStyle='#555';
   ctx.fillText(team.substring(0,40),pad,y); y+=fsI*1.8;
   // Separatore
   ctx.fillStyle='rgba(232,0,29,0.25)'; ctx.fillRect(pad,y,W-pad*2,1); y+=Math.round(H*0.035);
@@ -14230,15 +14228,15 @@ function _drawAtleta(ctx, W, H, d) {
   const fsP=Math.round(W*0.11);
   const g=ctx.createLinearGradient(pad,y,pad+fsP*3,y);
   g.addColorStop(0,'#e8001d'); g.addColorStop(1,'#f5c400');
-  ctx.font=`900 ${fsP}px 'Bebas Neue',Impact,sans-serif`; ctx.fillStyle=g;
+  ctx.font=`900 ${fsP}px 'Inter Tight','Inter Tight',sans-serif`; ctx.fillStyle=g;
   ctx.fillText(punti,pad,y+fsP);
   const fsL=Math.round(W*0.019);
-  ctx.font=`600 ${fsL}px 'Barlow Condensed',sans-serif`; ctx.fillStyle='rgba(255,255,255,0.38)';
+  ctx.font=`600 ${fsL}px 'Inter Tight',sans-serif`; ctx.fillStyle='rgba(255,255,255,0.38)';
   ctx.fillText('PUNTI STAGIONE',pad,y+fsP+fsL*1.4);
   if (pos&&pos!=='-') {
-    ctx.font=`900 ${fsP}px 'Bebas Neue',Impact,sans-serif`; ctx.fillStyle='#f5c400'; ctx.textAlign='right';
+    ctx.font=`900 ${fsP}px 'Inter Tight','Inter Tight',sans-serif`; ctx.fillStyle='#f5c400'; ctx.textAlign='right';
     ctx.fillText(`${pos}°`,W-pad,y+fsP);
-    ctx.font=`600 ${fsL}px 'Barlow Condensed',sans-serif`; ctx.fillStyle='rgba(255,255,255,0.38)';
+    ctx.font=`600 ${fsL}px 'Inter Tight',sans-serif`; ctx.fillStyle='rgba(255,255,255,0.38)';
     ctx.fillText('IN CLASSIFICA',W-pad,y+fsP+fsL*1.4); ctx.textAlign='left';
   }
   // Stat bar
@@ -14246,9 +14244,9 @@ function _drawAtleta(ctx, W, H, d) {
   ctx.fillStyle='rgba(255,255,255,0.04)'; ctx.fillRect(pad,stY,W-pad*2,stH);
   [['1°','#f5c400',p1],['2°','#b0b0b0',p2],['3°','#cd7f32',p3],['GARE','#f0f0f0',gare]].forEach(([l,c,v],i)=>{
     const sw=(W-pad*2)/4, sx=pad+i*sw+sw/2;
-    ctx.font=`900 ${Math.round(stH*0.48)}px 'Bebas Neue',Impact,sans-serif`; ctx.fillStyle=c; ctx.textAlign='center';
+    ctx.font=`900 ${Math.round(stH*0.48)}px 'Inter Tight','Inter Tight',sans-serif`; ctx.fillStyle=c; ctx.textAlign='center';
     ctx.fillText(v,sx,stY+Math.round(stH*0.58));
-    ctx.font=`600 ${Math.round(stH*0.2)}px 'Barlow Condensed',sans-serif`; ctx.fillStyle='rgba(255,255,255,0.35)';
+    ctx.font=`600 ${Math.round(stH*0.2)}px 'Inter Tight',sans-serif`; ctx.fillStyle='rgba(255,255,255,0.35)';
     ctx.fillText(l,sx,stY+Math.round(stH*0.83));
   }); ctx.textAlign='left';
 }
@@ -14259,30 +14257,30 @@ function _drawTeam(ctx, W, H, d) {
   const hB=Math.round(H*0.09),fB=Math.round(H*0.06),pad=Math.round(W*0.048);
   let y=hB+Math.round(H*0.04);
   const fsN=Math.round(W*(nome.length>20?0.05:0.065));
-  ctx.font=`900 ${fsN}px 'Bebas Neue',Impact,sans-serif`; ctx.fillStyle='#f0f0f0';
+  ctx.font=`900 ${fsN}px 'Inter Tight','Inter Tight',sans-serif`; ctx.fillStyle='#f0f0f0';
   y=_wrap(ctx,nome.toUpperCase(),pad,y+fsN,W-pad*2,fsN*1.08);
-  ctx.font=`600 ${Math.round(W*0.026)}px 'Barlow Condensed',sans-serif`; ctx.fillStyle='#e8001d';
+  ctx.font=`600 ${Math.round(W*0.026)}px 'Inter Tight',sans-serif`; ctx.fillStyle='#e8001d';
   ctx.fillText(cat,pad,y); y+=Math.round(W*0.026)*1.5;
   ctx.fillStyle='rgba(232,0,29,0.25)'; ctx.fillRect(pad,y,W-pad*2,1); y+=Math.round(H*0.03);
   const fsP=Math.round(W*0.1);
   const g=ctx.createLinearGradient(pad,y,pad+fsP*4,y);
   g.addColorStop(0,'#e8001d'); g.addColorStop(1,'#f5c400');
-  ctx.font=`900 ${fsP}px 'Bebas Neue',Impact,sans-serif`; ctx.fillStyle=g;
+  ctx.font=`900 ${fsP}px 'Inter Tight','Inter Tight',sans-serif`; ctx.fillStyle=g;
   ctx.fillText(punti,pad,y+fsP);
   const fsL=Math.round(W*0.018);
-  ctx.font=`600 ${fsL}px 'Barlow Condensed',sans-serif`; ctx.fillStyle='rgba(255,255,255,0.38)';
+  ctx.font=`600 ${fsL}px 'Inter Tight',sans-serif`; ctx.fillStyle='rgba(255,255,255,0.38)';
   ctx.fillText('PUNTI',pad,y+fsP+fsL*1.4);
-  if(pos){ctx.font=`900 ${fsP}px 'Bebas Neue',Impact,sans-serif`;ctx.fillStyle='#f5c400';ctx.textAlign='right';ctx.fillText(`${pos}°`,W-pad,y+fsP);ctx.textAlign='left';}
+  if(pos){ctx.font=`900 ${fsP}px 'Inter Tight','Inter Tight',sans-serif`;ctx.fillStyle='#f5c400';ctx.textAlign='right';ctx.fillText(`${pos}°`,W-pad,y+fsP);ctx.textAlign='left';}
   y+=fsP+Math.round(H*0.07);
   const lMax=Math.min(atleti.length,5),lH=H-fB-y-8,rH=Math.round(lH/lMax);
   ctx.fillStyle='rgba(255,255,255,0.03)'; ctx.fillRect(pad,y,W-pad*2,lH);
   atleti.slice(0,lMax).forEach((a,i)=>{
     const ry=y+i*rH,fsA=Math.round(rH*0.34),fsT=Math.round(rH*0.22);
-    ctx.font=`700 ${fsA}px 'Barlow Condensed',sans-serif`; ctx.fillStyle=i===0?'#f5c400':'#f0f0f0';
+    ctx.font=`700 ${fsA}px 'Inter Tight',sans-serif`; ctx.fillStyle=i===0?'#f5c400':'#f0f0f0';
     ctx.fillText(`${i+1}.  ${(a.cognome||'').toUpperCase()} ${(a.nome||'').toUpperCase()}`.substring(0,32),pad+8,ry+rH*0.44);
-    ctx.font=`400 ${fsT}px 'Barlow Condensed',sans-serif`; ctx.fillStyle='#555';
+    ctx.font=`400 ${fsT}px 'Inter Tight',sans-serif`; ctx.fillStyle='#555';
     ctx.fillText((a.team||a.team_attuale||'').substring(0,36),pad+8,ry+rH*0.74);
-    ctx.font=`900 ${Math.round(rH*0.42)}px 'Bebas Neue',Impact,sans-serif`; ctx.fillStyle='#f5c400'; ctx.textAlign='right';
+    ctx.font=`900 ${Math.round(rH*0.42)}px 'Inter Tight','Inter Tight',sans-serif`; ctx.fillStyle='#f5c400'; ctx.textAlign='right';
     ctx.fillText(a.puntiCat||0,W-pad,ry+rH*0.55); ctx.textAlign='left';
   });
 }
@@ -14293,39 +14291,40 @@ function _drawClass(ctx, W, H, d) {
   const hB=Math.round(H*0.078),fB=Math.round(H*0.06),pad=Math.round(W*0.048);
   // Lista alzata: meno spazio in alto (la regione è ora nell'header)
   let y=hB+Math.round(H*0.018);
-  // "CLASSIFICA" + nome categoria accanto, allineati sulla stessa baseline
-  const fsC=Math.round(W*0.060);
-  const lblFs=Math.round(W*0.034);
-  const baseY=y+fsC;
-  ctx.font=`700 ${lblFs}px 'Barlow Condensed',sans-serif`; ctx.fillStyle='rgba(255,255,255,0.42)';
-  ctx.fillText('CLASSIFICA',pad,baseY);
-  const lblW=ctx.measureText('CLASSIFICA').width;
-  ctx.font=`900 ${fsC}px 'Bebas Neue',Impact,sans-serif`; ctx.fillStyle='#f0f0f0';
-  ctx.fillText(cL.toUpperCase(),pad+lblW+Math.round(W*0.020),baseY);
-  y=baseY+Math.round(H*0.004);
+  // "CLASSIFICA" (eyebrow) sopra, nome categoria sotto — più arioso, meno pesante
+  const lblFs=Math.round(W*0.026);
+  ctx.font=`500 ${lblFs}px 'Inter Tight',sans-serif`; ctx.fillStyle='rgba(255,255,255,0.40)';
+  ctx.letterSpacing='3px';
+  ctx.fillText('CLASSIFICA',pad,y+lblFs);
+  ctx.letterSpacing='0px';
+  const fsC=Math.round(W*0.052);
+  ctx.font=`700 ${fsC}px 'Inter Tight',sans-serif`; ctx.fillStyle='#f2f2f2';
+  const titleY=y+lblFs+Math.round(fsC*0.95);
+  ctx.fillText(cL.toUpperCase(),pad,titleY);
+  y=titleY+Math.round(H*0.008);
   // Mese (se filtrato) come sottotitolo
   if(month){
-    const mfs=Math.round(W*0.026);
-    ctx.font=`700 ${mfs}px 'Barlow Condensed',sans-serif`; ctx.fillStyle='#f5c400';
-    ctx.fillText(month.toUpperCase(),pad,y+mfs); y+=mfs*1.35;
+    const mfs=Math.round(W*0.024);
+    ctx.font=`600 ${mfs}px 'Inter Tight',sans-serif`; ctx.fillStyle='#f5c400';
+    ctx.fillText(month.toUpperCase(),pad,y+mfs); y+=mfs*1.4;
   }
-  ctx.fillStyle='#e8001d'; ctx.fillRect(pad,y,W-pad*2,2); y+=8;
+  ctx.fillStyle='rgba(232,0,29,0.85)'; ctx.fillRect(pad,y,Math.round(W*0.10),2); y+=10;
   const avail=H-fB-y-4, maxR=Math.min(rows.length,10), rH=Math.round(avail/maxR);
-  const posCol=['#f5c400','#b0b0b0','#cd7f32'];
+  const posCol=['#f5c400','#b8b8b8','#cd7f32'];
   rows.slice(0,maxR).forEach((r,i)=>{
     const ry=y+i*rH;
-    if(i%2===0){ctx.fillStyle='rgba(255,255,255,0.025)';ctx.fillRect(pad,ry,W-pad*2,rH);}
-    const fsPos=Math.round(rH*0.62);
-    ctx.font=`900 ${fsPos}px 'Bebas Neue',Impact,sans-serif`; ctx.fillStyle=i<3?posCol[i]:'rgba(255,255,255,0.30)';
-    ctx.fillText(r.pos,pad,ry+rH*0.74);
-    const pW=ctx.measureText('00').width+10;
-    const fsN=Math.round(rH*0.42);
-    ctx.font=`700 ${fsN}px 'Barlow Condensed',sans-serif`; ctx.fillStyle='#f0f0f0';
+    if(i%2===0){ctx.fillStyle='rgba(255,255,255,0.02)';ctx.fillRect(pad,ry,W-pad*2,rH);}
+    const fsPos=Math.round(rH*0.50);
+    ctx.font=`700 ${fsPos}px 'Inter Tight',sans-serif`; ctx.fillStyle=i<3?posCol[i]:'rgba(255,255,255,0.32)';
+    ctx.fillText(r.pos,pad,ry+rH*0.66);
+    const pW=ctx.measureText('00').width+14;
+    const fsN=Math.round(rH*0.38);
+    ctx.font=`600 ${fsN}px 'Inter Tight',sans-serif`; ctx.fillStyle='#eaeaea';
     ctx.fillText((`${r.cognome||''} ${r.nome||''}`).toUpperCase().trim().substring(0,26),pad+pW,ry+rH*0.46);
-    ctx.font=`400 ${Math.round(fsN*0.66)}px 'Barlow Condensed',sans-serif`; ctx.fillStyle='#6a6a6a';
+    ctx.font=`400 ${Math.round(fsN*0.64)}px 'Inter Tight',sans-serif`; ctx.fillStyle='#6a6a6a';
     ctx.fillText((r.team||'').substring(0,28),pad+pW,ry+rH*0.80);
-    ctx.font=`900 ${Math.round(rH*0.54)}px 'Bebas Neue',Impact,sans-serif`; ctx.fillStyle='#f5c400'; ctx.textAlign='right';
-    ctx.fillText(r.punti,W-pad,ry+rH*0.70); ctx.textAlign='left';
+    ctx.font=`700 ${Math.round(rH*0.44)}px 'Inter Tight',sans-serif`; ctx.fillStyle='#f5c400'; ctx.textAlign='right';
+    ctx.fillText(r.punti,W-pad,ry+rH*0.62); ctx.textAlign='left';
   });
 }
 
@@ -14335,6 +14334,8 @@ async function generateShareCanvas(type, payload, platKey) {
   const canvas=document.createElement('canvas'); canvas.width=p.w; canvas.height=p.h;
   const ctx=canvas.getContext('2d');
   const logo=await _getLogo();
+  // Assicura che i webfont (Inter Tight) siano pronti prima di disegnare sul canvas
+  try { if (document.fonts && document.fonts.ready) await document.fonts.ready; } catch(e){}
   _bg(ctx,p.w,p.h);
   if(type==='gara') {
     // gara manages its own header/footer for bigger logo treatment
