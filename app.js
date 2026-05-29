@@ -14276,13 +14276,14 @@ function _drawTeam(ctx, W, H, d) {
 
 // ── CLASSIFICA CARD ────────────────────────────────────────
 function _drawClass(ctx, W, H, d) {
-  const {catLabel:cL,rows,scope,region} = d;
+  const {catLabel:cL,rows,scope,region,month} = d;
   const hB=Math.round(H*0.078),fB=Math.round(H*0.06),pad=Math.round(W*0.048);
   // Lista alzata: meno spazio in alto (la regione è ora nell'header)
   let y=hB+Math.round(H*0.018);
   const fsT=Math.round(W*0.032);
+  const eyebrow = month ? `CLASSIFICA · ${month.toUpperCase()}` : 'CLASSIFICA';
   ctx.font=`400 ${fsT}px 'Bebas Neue',Impact,sans-serif`; ctx.fillStyle='rgba(255,255,255,0.35)';
-  ctx.fillText('CLASSIFICA',pad,y+fsT); y+=fsT*1.02;
+  ctx.fillText(eyebrow,pad,y+fsT); y+=fsT*1.02;
   const fsC=Math.round(W*0.063);
   ctx.font=`900 ${fsC}px 'Bebas Neue',Impact,sans-serif`; ctx.fillStyle='#f0f0f0';
   ctx.fillText(cL.toUpperCase(),pad,y+fsC); y+=fsC*1.0;
@@ -14425,12 +14426,41 @@ window.triggerShareAtleta=function(){ if(window._shareAtletaData) window.showSha
 window.triggerShareTeam=function(){ if(window._shareTeamData) window.showShareModal('team',window._shareTeamData); };
 
 window.shareClassifica=async function(){
-  const ranking=await loadRanking(rankCat);
-  if(!ranking||!ranking.length){alert('Carica prima la classifica!');return;}
+  const isFiltered = rankRegion || rankMonth;
+  let ranking;
+  if(!isFiltered){
+    ranking = await loadRanking(rankCat);
+  } else {
+    // Ricalcola dinamicamente in base ai filtri attivi (regione / mese / combinati),
+    // stessa logica di updateRankTable
+    const { resultsRaw } = globalData;
+    const calMap = {};
+    globalData.calendar.forEach(g => calMap[g.id] = g);
+    const agg = {};
+    resultsRaw.forEach(r => {
+      if (r.genere !== rankGender) return;
+      if (getRankingFileCode(r) !== rankCat) return;
+      const calEntry = calMap[r.gara_id];
+      const resolvedRegion = normalizeRegion(r.regione || (calEntry ? calEntry.regione : ''));
+      if (rankRegion && resolvedRegion !== rankRegion) return;
+      if (rankMonth && r.data && r.data.split('-')[1] !== rankMonth) return;
+      if (!agg[r.atleta_id]) {
+        agg[r.atleta_id] = { atleta_id:r.atleta_id, cognome:r.cognome, nome:r.nome,
+          team_id:r.team_id, team_nome:r.team, punti:0 };
+      }
+      agg[r.atleta_id].punti += (r.punti_effettivi || 0);
+    });
+    ranking = Object.values(agg).sort((a,b) => b.punti - a.punti);
+    ranking.forEach((r,i) => r.pos = i+1);
+  }
+  if(!ranking||!ranking.length){alert('Nessun dato per i filtri selezionati.');return;}
+  const monthNames=['','Gennaio','Febbraio','Marzo','Aprile','Maggio','Giugno','Luglio','Agosto','Settembre','Ottobre','Novembre','Dicembre'];
+  const monthLabel = rankMonth ? (monthNames[parseInt(rankMonth,10)]||'') : '';
   window.showShareModal('class',{
     catLabel:catLabel(rankCat),
     scope:rankRegion?'regionale':'nazionale',
     region:rankRegion||'',
+    month:monthLabel,
     rows:ranking.slice(0,10).map(r=>({pos:r.pos,cognome:r.cognome||r.atleta_id,nome:r.nome||'',team:r.team||r.team_nome||'',punti:r.punti}))
   });
 };
