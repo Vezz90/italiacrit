@@ -14295,20 +14295,22 @@ function _drawClass(ctx, W, H, d) {
   const hB=Math.round(H*0.078),fB=Math.round(H*0.06),pad=Math.round(W*0.048);
   // Lista alzata: meno spazio in alto (la regione è ora nell'header)
   let y=hB+Math.round(H*0.018);
-  const fsT=Math.round(W*0.032);
-  const eyebrow = month ? `CLASSIFICA · ${month.toUpperCase()}` : 'CLASSIFICA';
-  ctx.font=`400 ${fsT}px 'Bebas Neue',Impact,sans-serif`; ctx.fillStyle='rgba(255,255,255,0.35)';
-  ctx.fillText(eyebrow,pad,y+fsT); y+=fsT*1.02;
-  // Etichetta "CATEGORIA" + nome categoria accanto, allineati sulla stessa baseline
-  const fsC=Math.round(W*0.063);
-  const lblFs=Math.round(W*0.024);
+  // "CLASSIFICA" + nome categoria accanto, allineati sulla stessa baseline
+  const fsC=Math.round(W*0.060);
+  const lblFs=Math.round(W*0.034);
   const baseY=y+fsC;
-  ctx.font=`700 ${lblFs}px 'Barlow Condensed',sans-serif`; ctx.fillStyle='rgba(255,255,255,0.45)';
-  ctx.fillText('CATEGORIA',pad,baseY);
-  const lblW=ctx.measureText('CATEGORIA').width;
+  ctx.font=`700 ${lblFs}px 'Barlow Condensed',sans-serif`; ctx.fillStyle='rgba(255,255,255,0.42)';
+  ctx.fillText('CLASSIFICA',pad,baseY);
+  const lblW=ctx.measureText('CLASSIFICA').width;
   ctx.font=`900 ${fsC}px 'Bebas Neue',Impact,sans-serif`; ctx.fillStyle='#f0f0f0';
-  ctx.fillText(cL.toUpperCase(),pad+lblW+Math.round(W*0.018),baseY);
-  y=baseY+Math.round(H*0.006);
+  ctx.fillText(cL.toUpperCase(),pad+lblW+Math.round(W*0.020),baseY);
+  y=baseY+Math.round(H*0.004);
+  // Mese (se filtrato) come sottotitolo
+  if(month){
+    const mfs=Math.round(W*0.026);
+    ctx.font=`700 ${mfs}px 'Barlow Condensed',sans-serif`; ctx.fillStyle='#f5c400';
+    ctx.fillText(month.toUpperCase(),pad,y+mfs); y+=mfs*1.35;
+  }
   ctx.fillStyle='#e8001d'; ctx.fillRect(pad,y,W-pad*2,2); y+=8;
   const avail=H-fB-y-4, maxR=Math.min(rows.length,10), rH=Math.round(avail/maxR);
   const posCol=['#f5c400','#b0b0b0','#cd7f32'];
