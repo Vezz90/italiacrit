@@ -14359,22 +14359,39 @@ function _drawClass(ctx, W, H, d) {
   const hB=Math.round(H*0.092),fB=Math.round(H*0.06),pad=Math.round(W*0.048);
   // Titolo "CLASSIFICA <categoria>" + eventuale mese sono ora nell'header.
   // Atleti alzati: la lista parte subito sotto l'header con un filo accento.
-  let y=hB+Math.round(H*0.024);
-  ctx.fillStyle='rgba(232,0,29,0.85)'; ctx.fillRect(pad,y,Math.round(W*0.10),2); y+=12;
+  let y=hB+Math.round(H*0.022);
+  // ── Intestazione colonne (data-forward, stile Velon) ──
+  const colTick=pad+Math.round(W*0.006);          // x inizio filetto podio
+  const colPos=pad+Math.round(W*0.020);           // x numero posizione
+  const colName=colPos+Math.round(W*0.085);       // x nome atleta
+  const hdFs=Math.round(W*0.020);
+  ctx.font=`600 ${hdFs}px 'Inter Tight',sans-serif`; ctx.fillStyle='rgba(255,255,255,0.34)';
+  ctx.letterSpacing='1.5px';
+  ctx.textAlign='left';
+  ctx.fillText('POS',colPos,y+hdFs);
+  ctx.fillText('ATLETA',colName,y+hdFs);
+  ctx.textAlign='right';
+  ctx.fillText('PUNTI',W-pad,y+hdFs);
+  ctx.letterSpacing='0px'; ctx.textAlign='left';
+  y+=hdFs+Math.round(H*0.006);
+  ctx.fillStyle='rgba(232,0,29,0.85)'; ctx.fillRect(pad,y,Math.round(W*0.10),2);
+  ctx.fillStyle='rgba(255,255,255,0.06)'; ctx.fillRect(pad+Math.round(W*0.10),y,W-pad*2-Math.round(W*0.10),1);
+  y+=12;
   const avail=H-fB-y-4, maxR=Math.min(rows.length,10), rH=Math.round(avail/maxR);
-  const posCol=['#f5c400','#b8b8b8','#cd7f32'];
+  const posCol=['#f5c400','#dadada','#cd7f32'];
   rows.slice(0,maxR).forEach((r,i)=>{
     const ry=y+i*rH;
-    if(i%2===0){ctx.fillStyle='rgba(255,255,255,0.02)';ctx.fillRect(pad,ry,W-pad*2,rH);}
+    if(i%2===0){ctx.fillStyle='rgba(255,255,255,0.022)';ctx.fillRect(pad,ry,W-pad*2,rH);}
+    // filetto podio (oro / argento / bronzo) per i primi 3
+    if(i<3){ctx.fillStyle=posCol[i];ctx.fillRect(colTick,ry+Math.round(rH*0.18),3,Math.round(rH*0.64));}
     const fsPos=Math.round(rH*0.50);
-    ctx.font=`700 ${fsPos}px 'Inter Tight',sans-serif`; ctx.fillStyle=i<3?posCol[i]:'rgba(255,255,255,0.32)';
-    ctx.fillText(r.pos,pad,ry+rH*0.66);
-    const pW=ctx.measureText('00').width+14;
+    ctx.font=`700 ${fsPos}px 'Inter Tight',sans-serif`; ctx.fillStyle=i<3?posCol[i]:'rgba(255,255,255,0.45)';
+    ctx.fillText(r.pos,colPos,ry+rH*0.66);
     const fsN=Math.round(rH*0.38);
-    ctx.font=`600 ${fsN}px 'Inter Tight',sans-serif`; ctx.fillStyle='#eaeaea';
-    ctx.fillText((`${r.cognome||''} ${r.nome||''}`).toUpperCase().trim().substring(0,26),pad+pW,ry+rH*0.46);
-    ctx.font=`400 ${Math.round(fsN*0.64)}px 'Inter Tight',sans-serif`; ctx.fillStyle='#6a6a6a';
-    ctx.fillText((r.team||'').substring(0,28),pad+pW,ry+rH*0.80);
+    ctx.font=`600 ${fsN}px 'Inter Tight',sans-serif`; ctx.fillStyle='#f0f0f0';
+    ctx.fillText((`${r.cognome||''} ${r.nome||''}`).toUpperCase().trim().substring(0,26),colName,ry+rH*0.46);
+    ctx.font=`400 ${Math.round(fsN*0.64)}px 'Inter Tight',sans-serif`; ctx.fillStyle='rgba(255,255,255,0.42)';
+    ctx.fillText((r.team||'').substring(0,30),colName,ry+rH*0.80);
     ctx.font=`700 ${Math.round(rH*0.44)}px 'Inter Tight',sans-serif`; ctx.fillStyle='#f5c400'; ctx.textAlign='right';
     ctx.fillText(r.punti,W-pad,ry+rH*0.62); ctx.textAlign='left';
   });
