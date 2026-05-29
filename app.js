@@ -6100,7 +6100,7 @@ async function renderClassifica() {
         </select>
         <div class="ranking-filter-bar" style="margin:0; flex-grow:1">
           <input type="search" id="ranking-search"
-            placeholder="${rankView==='atleti'?'Filtra nome…':'Filtra team…'}"
+            placeholder="${rankView==='atleti'?'Cerca atleta o team…':'Filtra team…'}"
             value="${esc(rankFilter)}"
             oninput="setRankFilter(this.value)"
             aria-label="Filtra classifica" />
@@ -6260,7 +6260,39 @@ async function updateRankTable() {
 
     // ── Narrative headline banner ─────────────────────────────
     let storyHtml = '';
-    if (rankFilter && filtered.length >= 1) {
+    // Determina se la ricerca corrisponde a un TEAM (più corridori della stessa squadra)
+    const _q = (rankFilter || '').toLowerCase().trim();
+    const _teamMatches = _q ? filtered.filter(r => (r.team_nome||'').toLowerCase().includes(_q)) : [];
+    const _nameMatches = _q ? filtered.filter(r => (r.cognome||'').toLowerCase().includes(_q) || (r.nome||'').toLowerCase().includes(_q)) : [];
+    const _isTeamSearch = _teamMatches.length >= 2 && _teamMatches.length >= _nameMatches.length;
+
+    if (rankFilter && _isTeamSearch) {
+      // ── Banner TEAM: tutte le posizioni dei corridori della squadra ──
+      const byTeam = {};
+      _teamMatches.forEach(r => { const t = r.team_nome || '—'; (byTeam[t] = byTeam[t] || []).push(r); });
+      const teamsSorted = Object.entries(byTeam).sort((a,b) => b[1].length - a[1].length);
+      const [mainTeam, riders] = teamsSorted[0];
+      // riders mantiene l'ordine di classifica (filtered è ordinato per punti)
+      const totalPts = riders.reduce((s,r) => s + (r.punti||0), 0);
+      const podi     = riders.reduce((s,r) => s + ((r.p1||0)+(r.p2||0)+(r.p3||0)), 0);
+      const wins     = riders.reduce((s,r) => s + (r.p1||0), 0);
+      const best     = riders[0];
+      const top10    = riders.filter(r => r.pos <= 10).length;
+      const detailParts = [
+        `<span class="rk-narrative-detail">🏅 Miglior posizione: ${best.pos}° — ${esc(best.cognome)} ${esc(best.nome)}</span>`,
+        `<span class="rk-narrative-detail">${totalPts} pt totali</span>`,
+      ];
+      if (top10 > 0) detailParts.push(`<span class="rk-narrative-detail">${top10} nei primi 10</span>`);
+      if (wins > 0)  detailParts.push(`<span class="rk-narrative-detail">${wins} vittori${wins===1?'a':'e'}</span>`);
+      else if (podi > 0) detailParts.push(`<span class="rk-narrative-detail">${podi} podi</span>`);
+      if (teamsSorted.length > 1) detailParts.push(`<span class="rk-narrative-detail">+${teamsSorted.length-1} altri team nel filtro</span>`);
+      storyHtml = `
+        <div class="rk-narrative rk-narrative--team">
+          <div class="rk-narrative-label">🚩 TEAM IN CLASSIFICA · ${esc(mainTeam)}</div>
+          <div class="rk-narrative-headline">${riders.length} atlet${riders.length===1?'a':'i'} in ${catLabel(rankCat)}</div>
+          <div class="rk-narrative-details">${detailParts.join('')}</div>
+        </div>`;
+    } else if (rankFilter && filtered.length >= 1) {
       // Ricerca attiva: mostra la situazione in classifica del corridore trovato
       const ath = filtered[0];
       const leaderFull = ranking[0];

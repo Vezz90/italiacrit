@@ -5341,6 +5341,10 @@ tr.ranking-row:not(.rk-tier-1):not(.rk-tier-top3):not(.rk-tier-top10) {
   font-weight: 600;
   border-left-color: var(--red-hot);
 }
+/* Variante team: bordo/accento accent invece del rosso */
+.rk-narrative--team { border-left-color: var(--accent); }
+.rk-narrative--team .rk-narrative-label { color: var(--accent); }
+.rk-narrative--team .rk-narrative-detail:first-child { border-left-color: var(--accent); }
 
 /* ── Sort bar ────────────────────────────────────────────────── */
 .rk-sort-bar {
