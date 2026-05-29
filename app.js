@@ -14154,17 +14154,21 @@ function _drawGaraColumn(ctx, x, colW, topY, bottomY, slice, startIdx) {
     const hasTeam = !!(r.team);
     ctx.textBaseline = 'middle';
 
-    // Team a destra (misurato prima per riservare lo spazio)
+    // Team a destra — NON taglia il nome: riduce il font finché entra
     let teamW = 0;
     if (hasTeam) {
-      ctx.font = `400 ${fsTm}px 'Inter Tight',sans-serif`;
-      let tm = r.team;
-      const teamCap = Math.round(rowMaxW * 0.42);   // il team non supera ~42% della riga
-      while (ctx.measureText(tm).width > teamCap && tm.length > 4) tm = tm.slice(0, -1);
-      teamW = ctx.measureText(tm).width;
+      const teamCap = Math.round(rowMaxW * 0.46);   // spazio massimo per il team
+      const minFs = Math.max(10, Math.round(fsTm * 0.55));
+      let fsTmCur = fsTm;
+      ctx.font = `400 ${fsTmCur}px 'Inter Tight',sans-serif`;
+      while (ctx.measureText(r.team).width > teamCap && fsTmCur > minFs) {
+        fsTmCur -= 1;
+        ctx.font = `400 ${fsTmCur}px 'Inter Tight',sans-serif`;
+      }
+      teamW = ctx.measureText(r.team).width;
       ctx.fillStyle = isFirst ? 'rgba(255,255,255,0.45)' : 'rgba(255,255,255,0.30)';
       ctx.textAlign = 'right';
-      ctx.fillText(tm, rowRight, cy + 1);
+      ctx.fillText(r.team, rowRight, cy + 1);
       ctx.textAlign = 'left';
     }
 
@@ -14249,19 +14253,12 @@ function _drawGara(ctx, W, H, d, logo) {
   ctx.letterSpacing = '0px';
   ctx.font = `400 ${Math.round(fsCat * 0.82)}px 'Inter Tight',sans-serif`;
   ctx.fillStyle = 'rgba(255,255,255,0.38)';
-  ctx.fillText(`   ·   ${date}   ·   ×${mult}`, pad + catW2 + 6, y);
+  // Data · ×mult · km · media — tutto sulla stessa riga
+  const meta = [date, `×${mult}`];
+  if (km)    meta.push(`${km} km`);
+  if (media) meta.push(`media ${media} km/h`);
+  ctx.fillText('   ·   ' + meta.join('   ·   '), pad + catW2 + 6, y);
   y += fsCat * 1.5;
-
-  // ── Km · Media (if available) ──
-  if (km || media) {
-    const fsKm = Math.round(W * 0.021);
-    ctx.font = `500 ${fsKm}px 'Inter Tight',sans-serif`;
-    ctx.fillStyle = 'rgba(255,255,255,0.38)';
-    const parts = [];
-    if (km)    parts.push(`${km} km`);
-    if (media) parts.push(`media ${media} km/h`);
-    ctx.fillText(parts.join('  ·  '), pad, y); y += fsKm * 1.5;
-  }
 
   // Accent divider flat (Velon): linea sottile + tratto brand
   ctx.fillStyle = 'rgba(255,255,255,0.07)'; ctx.fillRect(pad, y, W - pad * 2, 1);
