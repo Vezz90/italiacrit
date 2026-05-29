@@ -14105,9 +14105,9 @@ function _drawGaraColumn(ctx, x, colW, topY, bottomY, slice, startIdx) {
   const rH = Math.round((bottomY - topY) / n);
 
   // Font cap: il più piccolo tra (altezza riga) e (larghezza colonna) → WhatsApp-like
-  const fsSur = Math.min(Math.round(rH * 0.40), Math.round(colW * 0.060));
+  const fsSur = Math.min(Math.round(rH * 0.46), Math.round(colW * 0.060));
   const fsNom = Math.round(fsSur * 0.68);
-  const fsTm  = Math.min(Math.round(rH * 0.22), Math.round(colW * 0.034));
+  const fsTm  = Math.min(Math.round(rH * 0.30), Math.round(fsSur * 0.66));
 
   slice.forEach((r, i) => {
     const gIdx = startIdx + i;          // posizione globale (0-based)
@@ -14147,38 +14147,47 @@ function _drawGaraColumn(ctx, x, colW, topY, bottomY, slice, startIdx) {
     ctx.fillText(String(gIdx + 1).padStart(2, '0'), pillX + pillW / 2, cy + 1);
     ctx.textAlign = 'left'; ctx.textBaseline = 'alphabetic';
 
-    // ── Blocco nome centrato attorno a cy ──
+    // ── Riga unica: cognome + nome + team, tutto centrato su cy ──
     const nameX = pillX + pillW + Math.round(colW * 0.04);
-    const nameMaxW = right - nameX - Math.round(colW * 0.02);
+    const rowRight = right - Math.round(colW * 0.02);
+    const rowMaxW = rowRight - nameX;
     const hasTeam = !!(r.team);
-    const blockH = fsSur + (hasTeam ? Math.round(fsTm * 1.4) : 0);
-    const surY = Math.round(ry + (rH - blockH) / 2) + fsSur;
-    const tmY  = surY + Math.round(fsTm * 1.4);
+    ctx.textBaseline = 'middle';
 
-    // Cognome
+    // Team a destra (misurato prima per riservare lo spazio)
+    let teamW = 0;
+    if (hasTeam) {
+      ctx.font = `400 ${fsTm}px 'Inter Tight',sans-serif`;
+      let tm = r.team;
+      const teamCap = Math.round(rowMaxW * 0.42);   // il team non supera ~42% della riga
+      while (ctx.measureText(tm).width > teamCap && tm.length > 4) tm = tm.slice(0, -1);
+      teamW = ctx.measureText(tm).width;
+      ctx.fillStyle = isFirst ? 'rgba(255,255,255,0.45)' : 'rgba(255,255,255,0.30)';
+      ctx.textAlign = 'right';
+      ctx.fillText(tm, rowRight, cy + 1);
+      ctx.textAlign = 'left';
+    }
+
+    // Spazio disponibile per cognome+nome (lascia margine prima del team)
+    const nameMaxW = rowMaxW - (hasTeam ? teamW + Math.round(colW * 0.03) : 0);
+
+    // Cognome (bold)
     ctx.font = `700 ${fsSur}px 'Inter Tight',sans-serif`;
     ctx.fillStyle = isTop3 ? '#f4f4f4' : 'rgba(255,255,255,0.82)';
     let cog = (r.cognome || '').toUpperCase();
     while (ctx.measureText(cog).width > nameMaxW - 6 && cog.length > 3) cog = cog.slice(0, -1);
     const cogW = ctx.measureText(cog).width;
-    ctx.fillText(cog, nameX, surY);
+    ctx.fillText(cog, nameX, cy + 1);
 
     // Nome inline (più chiaro), solo se entra
     ctx.font = `400 ${fsNom}px 'Inter Tight',sans-serif`;
     ctx.fillStyle = isTop3 ? 'rgba(255,255,255,0.5)' : 'rgba(255,255,255,0.32)';
     const nomStr = ' ' + (r.nome || '').substring(0, 14);
     if (nameX + cogW + ctx.measureText(nomStr).width <= nameX + nameMaxW) {
-      ctx.fillText(nomStr, nameX + cogW, surY);
+      ctx.fillText(nomStr, nameX + cogW, cy + 1);
     }
 
-    // Team sotto (clip a larghezza)
-    if (hasTeam) {
-      ctx.font = `400 ${fsTm}px 'Inter Tight',sans-serif`;
-      ctx.fillStyle = isFirst ? 'rgba(255,255,255,0.42)' : 'rgba(255,255,255,0.28)';
-      let tm = '— ' + r.team;
-      while (ctx.measureText(tm).width > nameMaxW && tm.length > 6) tm = tm.slice(0, -1);
-      ctx.fillText(tm, nameX, tmY);
-    }
+    ctx.textBaseline = 'alphabetic';
   });
 }
 
