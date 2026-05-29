@@ -6496,7 +6496,18 @@ async function renderAdmin() {
           <span class="admin-nav-badge" id="badge-profili-pending"></span>
         </div>
 
+        <div class="admin-nav-group">Gestione contenuti</div>
+        <div class="admin-nav-item" data-section="atleti-gestione" onclick="adminNav('atleti-gestione')">
+          <span class="admin-nav-icon">🚴</span> Atleti
+        </div>
+        <div class="admin-nav-item" data-section="gare-gestione" onclick="adminNav('gare-gestione')">
+          <span class="admin-nav-icon">🏁</span> Gare / Risultati
+        </div>
+
         <div class="admin-nav-group">Struttura sito</div>
+        <div class="admin-nav-item" data-section="pannelli-ruolo" onclick="adminNav('pannelli-ruolo')">
+          <span class="admin-nav-icon">👤</span> Pannelli per ruolo
+        </div>
         <div class="admin-nav-item" data-section="page-gallery" onclick="adminNav('page-gallery')">
           <span class="admin-nav-icon">🗂️</span> Conformazione pagine
         </div>
@@ -6844,15 +6855,23 @@ window.adminNav = async function(section) {
     }
 
     case 'utenti-lista': {
+      const ROLES_ALL = ['atleta','team','genitore','parente','appassionato','media','admin'];
+      const roleColor = r => ({'admin':'#e8001d','atleta':'#3b82f6','team':'#8b5cf6','media':'#0ea5e9','genitore':'#22c55e','parente':'#f59e0b','appassionato':'#64748b'}[r]||'#64748b');
       main.innerHTML = `
         <div class="admin-page-header">
-          <h1 class="admin-page-title">👥 Lista utenti</h1>
-          <p class="admin-page-sub">Tutti gli account registrati sulla piattaforma.</p>
+          <h1 class="admin-page-title">👥 Gestione utenti</h1>
+          <p class="admin-page-sub">Visualizza, modifica ruolo ed elimina gli account registrati.</p>
         </div>
-        <div style="display:flex;gap:10px;margin-bottom:14px;align-items:center">
+        <div style="display:flex;gap:10px;margin-bottom:14px;align-items:center;flex-wrap:wrap">
           <input type="search" id="utenti-search" placeholder="Cerca per email o nome…" oninput="window.adminFilterUtenti(this.value)"
             style="padding:9px 12px;border:1px solid var(--border);border-radius:6px;background:var(--bg-card);color:var(--text-primary);font-size:.875rem;flex:1;min-width:180px" />
+          <select id="utenti-role-filter" onchange="window.adminFilterUtenti(document.getElementById('utenti-search').value)"
+            style="padding:9px 12px;border:1px solid var(--border);border-radius:6px;background:var(--bg-card);color:var(--text-primary);font-size:.875rem">
+            <option value="">Tutti i ruoli</option>
+            ${ROLES_ALL.map(r=>`<option value="${r}">${r}</option>`).join('')}
+          </select>
         </div>
+        <div id="admin-utenti-msg" style="display:none;padding:8px 14px;border-radius:6px;margin-bottom:10px;font-size:.85rem"></div>
         <div id="admin-utenti-body"><div class="admin-loading">Caricamento…</div></div>`;
       (async () => {
         const body = document.getElementById('admin-utenti-body');
@@ -6861,10 +6880,92 @@ window.adminNav = async function(section) {
           const d = await fetch(`${API_BASE}/admin/users`, { headers: { Authorization: `Bearer ${authToken()}` } }).then(r => r.json());
           const users = d.users || [];
           window._adminUtentiAll = users;
+
           window.adminFilterUtenti = (q) => {
-            const filtered = q ? users.filter(u => (u.email||'').toLowerCase().includes(q.toLowerCase()) || (u.display_name||'').toLowerCase().includes(q.toLowerCase())) : users;
-            window._adminRenderUtenti(filtered);
+            const rf = (document.getElementById('utenti-role-filter')?.value)||'';
+            let list = users;
+            if (q) list = list.filter(u => (u.email||'').toLowerCase().includes(q.toLowerCase()) || (u.display_name||'').toLowerCase().includes(q.toLowerCase()));
+            if (rf) list = list.filter(u => (u.role||'') === rf);
+            window._adminRenderUtenti(list);
           };
+
+          window._adminShowMsg = (msg, ok) => {
+            const el = document.getElementById('admin-utenti-msg');
+            if (!el) return;
+            el.textContent = msg;
+            el.style.display = 'block';
+            el.style.background = ok ? 'rgba(34,197,94,.12)' : 'rgba(239,68,68,.12)';
+            el.style.color = ok ? '#22c55e' : '#ef4444';
+            setTimeout(() => { if (el) el.style.display = 'none'; }, 3500);
+          };
+
+          window.adminChangeRole = async (userId, newRole) => {
+            try {
+              const res = await fetch(`${API_BASE}/admin/users/${userId}`, {
+                method: 'PATCH',
+                headers: { 'Content-Type':'application/json', Authorization:`Bearer ${authToken()}` },
+                body: JSON.stringify({ role: newRole }),
+              });
+              if (!res.ok) throw new Error((await res.json()).error || `HTTP ${res.status}`);
+              const u = window._adminUtentiAll.find(x => x.id === userId);
+              if (u) u.role = newRole;
+              window._adminShowMsg(`✅ Ruolo di ${u?.email||userId} aggiornato a "${newRole}"`, true);
+              window.adminFilterUtenti(document.getElementById('utenti-search')?.value||'');
+            } catch(e) {
+              window._adminShowMsg(`❌ Errore: ${e.message}`, false);
+            }
+          };
+
+          window.adminDeleteUser = async (userId, email) => {
+            if (!confirm(`Eliminare definitivamente l'utente "${email}"?\nQuesta operazione non può essere annullata.`)) return;
+            try {
+              const res = await fetch(`${API_BASE}/admin/users/${userId}`, {
+                method: 'DELETE',
+                headers: { Authorization:`Bearer ${authToken()}` },
+              });
+              if (!res.ok) throw new Error((await res.json()).error || `HTTP ${res.status}`);
+              window._adminUtentiAll = window._adminUtentiAll.filter(u => u.id !== userId);
+              window._adminShowMsg(`✅ Utente "${email}" eliminato`, true);
+              window.adminFilterUtenti(document.getElementById('utenti-search')?.value||'');
+            } catch(e) {
+              window._adminShowMsg(`❌ Errore eliminazione: ${e.message}`, false);
+            }
+          };
+
+          window.adminViewUserProfile = (userId) => {
+            const u = window._adminUtentiAll.find(x => x.id === userId);
+            if (!u) return;
+            const panel = document.getElementById('admin-user-detail');
+            if (panel) panel.remove();
+            const linked = u.linked_atleta_id || u.atleta_id || u.team_id || '';
+            document.body.insertAdjacentHTML('beforeend', `
+              <div id="admin-user-detail" style="position:fixed;inset:0;background:rgba(0,0,0,.6);z-index:9999;display:flex;align-items:center;justify-content:center;padding:20px" onclick="if(event.target===this)this.remove()">
+                <div style="background:var(--bg-elevated);border:1px solid var(--border-subtle);border-radius:14px;padding:28px 32px;max-width:480px;width:100%;max-height:85vh;overflow-y:auto" onclick="event.stopPropagation()">
+                  <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:18px">
+                    <h3 style="font-family:var(--font-display);font-weight:800;font-size:1.1rem;margin:0">Dettaglio utente</h3>
+                    <button onclick="document.getElementById('admin-user-detail').remove()" style="background:none;border:none;font-size:1.2rem;cursor:pointer;color:var(--text-muted)">✕</button>
+                  </div>
+                  <div style="display:flex;flex-direction:column;gap:10px;font-size:.88rem">
+                    <div style="display:flex;gap:8px"><span style="color:var(--text-muted);min-width:110px">ID</span><span>${esc(String(u.id))}</span></div>
+                    <div style="display:flex;gap:8px"><span style="color:var(--text-muted);min-width:110px">Email</span><strong>${esc(u.email||'—')}</strong></div>
+                    <div style="display:flex;gap:8px"><span style="color:var(--text-muted);min-width:110px">Nome</span><span>${esc(u.display_name||'—')}</span></div>
+                    <div style="display:flex;gap:8px"><span style="color:var(--text-muted);min-width:110px">Ruolo</span>
+                      <select onchange="window.adminChangeRole(${u.id},this.value)" style="padding:4px 8px;border:1px solid var(--border);border-radius:5px;background:var(--bg-base);color:var(--text-primary);font-size:.85rem">
+                        ${ROLES_ALL.map(r=>`<option value="${r}" ${r===u.role?'selected':''}>${r}</option>`).join('')}
+                      </select>
+                    </div>
+                    <div style="display:flex;gap:8px"><span style="color:var(--text-muted);min-width:110px">Registrato</span><span>${(u.created_at||'—').toString().slice(0,10)}</span></div>
+                    <div style="display:flex;gap:8px"><span style="color:var(--text-muted);min-width:110px">Ultimo accesso</span><span>${(u.last_login||'—').toString().slice(0,10)}</span></div>
+                    ${linked ? `<div style="display:flex;gap:8px"><span style="color:var(--text-muted);min-width:110px">Profilo collegato</span><a href="#/atleta/${esc(String(linked))}" onclick="document.getElementById('admin-user-detail').remove()" style="color:var(--accent)">${esc(String(linked))}</a></div>` : ''}
+                  </div>
+                  <div style="margin-top:20px;display:flex;gap:10px">
+                    ${u.role==='atleta'&&linked ? `<a href="#/atleta/${esc(String(linked))}" onclick="document.getElementById('admin-user-detail').remove()" class="dash-btn dash-btn--outline dash-btn--sm">🚴 Vai al profilo atleta</a>` : ''}
+                    <button onclick="window.adminDeleteUser(${u.id},'${esc(u.email||'')}');document.getElementById('admin-user-detail').remove()" class="dash-btn dash-btn--danger dash-btn--sm">🗑 Elimina utente</button>
+                  </div>
+                </div>
+              </div>`);
+          };
+
           window._adminRenderUtenti = (list) => {
             const b = document.getElementById('admin-utenti-body');
             if (!b) return;
@@ -6879,7 +6980,7 @@ window.adminNav = async function(section) {
                     <th style="text-align:left;padding:8px 10px;color:var(--text-muted);font-weight:600">Nome</th>
                     <th style="text-align:left;padding:8px 10px;color:var(--text-muted);font-weight:600">Ruolo</th>
                     <th style="text-align:left;padding:8px 10px;color:var(--text-muted);font-weight:600">Registrato</th>
-                    <th style="text-align:left;padding:8px 10px;color:var(--text-muted);font-weight:600">Ultimo accesso</th>
+                    <th style="text-align:left;padding:8px 10px;color:var(--text-muted);font-weight:600">Azioni</th>
                   </tr>
                 </thead>
                 <tbody>
@@ -6888,14 +6989,18 @@ window.adminNav = async function(section) {
                       <td style="padding:9px 10px">${esc(u.email||'')}</td>
                       <td style="padding:9px 10px;font-weight:600">${esc(u.display_name||'—')}</td>
                       <td style="padding:9px 10px">
-                        <span style="padding:2px 8px;border-radius:12px;font-size:.75rem;font-weight:700;
-                          background:${u.role==='admin'?'var(--accent)':u.role==='user'?'var(--bg-elevated)':'var(--bg-elevated)'};
-                          color:${u.role==='admin'?'#fff':'var(--text-secondary)'}">
-                          ${esc(u.role||'user')}
-                        </span>
+                        <select onchange="window.adminChangeRole(${u.id},this.value)"
+                          style="padding:3px 7px;border:1px solid var(--border);border-radius:5px;background:var(--bg-base);color:${roleColor(u.role)};font-size:.78rem;font-weight:700;cursor:pointer">
+                          ${ROLES_ALL.map(r=>`<option value="${r}" ${r===u.role?'selected':''}>${r}</option>`).join('')}
+                        </select>
                       </td>
                       <td style="padding:9px 10px;color:var(--text-muted)">${(u.created_at||'').slice(0,10)}</td>
-                      <td style="padding:9px 10px;color:var(--text-muted)">${(u.last_login||'—').toString().slice(0,10)}</td>
+                      <td style="padding:9px 10px">
+                        <div style="display:flex;gap:6px">
+                          <button onclick="window.adminViewUserProfile(${u.id})" title="Dettaglio" style="padding:5px 10px;border:1px solid var(--border);border-radius:5px;background:transparent;color:var(--text-muted);cursor:pointer;font-size:.78rem">👁 Dettaglio</button>
+                          <button onclick="window.adminDeleteUser(${u.id},'${esc((u.email||'').replace(/'/g,''))}',)" title="Elimina" style="padding:5px 8px;border:1px solid rgba(239,68,68,.4);border-radius:5px;background:transparent;color:#ef4444;cursor:pointer;font-size:.78rem">🗑</button>
+                        </div>
+                      </td>
                     </tr>
                   `).join('')}
                 </tbody>
@@ -7060,6 +7165,473 @@ window.adminNav = async function(section) {
           btn.disabled = false; btn.textContent = '🌱 Avvia importazione xpix';
         }
       };
+      break;
+    }
+
+    case 'pannelli-ruolo': {
+      // Visual map of what each role sees in their dashboard
+      const ROLE_PANELS = [
+        { role:'atleta', icon:'🚴', label:'Atleta', color:'#3b82f6', sections:[
+          { name:'Hero (nome, email, badge ruolo)', type:'always' },
+          { name:'Stato profilo + link profilo pubblico', type:'always' },
+          { name:'Statistiche: gare, vittorie, podi', type:'active' },
+          { name:'Posizioni in classifica (per categoria)', type:'active' },
+          { name:'Ultimi 6 risultati personali', type:'active' },
+          { name:'Prossime gare in calendario', type:'active' },
+          { name:'Azioni rapide (classifiche, risultati, stats…)', type:'always' },
+          { name:'Form collega profilo FCI', type:'noprofile' },
+        ]},
+        { role:'team', icon:'👥', label:'Team Manager', color:'#8b5cf6', sections:[
+          { name:'Hero (nome, email, badge ruolo)', type:'always' },
+          { name:'Stato profilo team + link pubblico', type:'always' },
+          { name:'Statistiche: atleti, risultati, vittorie', type:'active' },
+          { name:'Posizioni classifica team (per categoria)', type:'active' },
+          { name:'Ultimi 6 risultati della squadra', type:'active' },
+          { name:'Azioni rapide (class. team, atleti…)', type:'always' },
+          { name:'Form collega team', type:'noprofile' },
+        ]},
+        { role:'genitore', icon:'👨‍👧', label:'Genitore', color:'#22c55e', sections:[
+          { name:'Hero (nome, email, badge ruolo)', type:'always' },
+          { name:'Schede atleti collegati (card per ognuno)', type:'active' },
+          { name:'Per ogni atleta: pos. classifica + ultimi 3 risultati', type:'active' },
+          { name:'Richieste collegamento in attesa', type:'pending' },
+          { name:'Form aggiungi atleta (cerca per cognome)', type:'always' },
+          { name:'Esplora rapido', type:'always' },
+        ]},
+        { role:'parente', icon:'❤️', label:'Parente / Tifoso', color:'#f59e0b', sections:[
+          { name:'Come Genitore — stessa struttura', type:'always' },
+          { name:'Card atleti seguiti con stats + risultati', type:'active' },
+          { name:'Form aggiungi atleta', type:'always' },
+        ]},
+        { role:'appassionato', icon:'🏆', label:'Appassionato', color:'#64748b', sections:[
+          { name:'Hero (nome, email, badge ruolo)', type:'always' },
+          { name:'Watchlist (atleti aggiunti con ★)', type:'active' },
+          { name:'Per ogni atleta in watchlist: pos. + ultima gara', type:'active' },
+          { name:'Top risultati ultimi 30 giorni (podi)', type:'always' },
+          { name:'Griglia esplora (7 sezioni del sito)', type:'always' },
+          { name:'Messaggio "watchlist vuota" + link atleti', type:'empty' },
+        ]},
+        { role:'media', icon:'📷', label:'Media / Fotografo', color:'#0ea5e9', sections:[
+          { name:'Hero (nome, email, badge ruolo)', type:'always' },
+          { name:'Stato profilo + link profilo pubblico', type:'always' },
+          { name:'Nome, bio, link social', type:'active' },
+          { name:'Lista album con anteprime + contatori foto', type:'active' },
+          { name:'Pulsante nuovo album', type:'active' },
+          { name:'Azioni rapide (nuovo album, calendario…)', type:'active' },
+          { name:'Form creazione profilo (nome, bio, social)', type:'noprofile' },
+        ]},
+        { role:'admin', icon:'⚙️', label:'Amministratore', color:'#e8001d', sections:[
+          { name:'Hero (nome, email, badge ruolo)', type:'always' },
+          { name:'Statistiche DB: risultati, gare, atleti, cal.', type:'always' },
+          { name:'6 shortcut rapidi al pannello admin', type:'always' },
+          { name:'Link diretto → Gestionale completo', type:'always' },
+        ]},
+      ];
+      const typeTag = t => {
+        const map = { always:'sempre visibile', active:'solo se profilo attivo', noprofile:'solo senza profilo', pending:'solo se ci sono richieste', empty:'solo se lista vuota' };
+        const col = { always:'#22c55e', active:'#3b82f6', noprofile:'#f59e0b', pending:'#f59e0b', empty:'#64748b' };
+        return `<span style="font-size:.65rem;padding:1px 6px;border-radius:10px;background:${col[t]||'#64748b'}22;color:${col[t]||'#64748b'};border:1px solid ${col[t]||'#64748b'}44;margin-left:6px;white-space:nowrap">${map[t]||t}</span>`;
+      };
+      main.innerHTML = `
+        <div class="admin-page-header">
+          <h1 class="admin-page-title">👤 Pannelli per ruolo</h1>
+          <p class="admin-page-sub">Struttura del dashboard personale per ogni tipologia di utente registrato.</p>
+        </div>
+        <div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(300px,1fr));gap:18px">
+          ${ROLE_PANELS.map(p => `
+            <div style="background:var(--bg-elevated);border:1px solid var(--border-subtle);border-radius:12px;overflow:hidden">
+              <div style="padding:14px 18px;border-bottom:1px solid var(--border-subtle);display:flex;align-items:center;gap:10px;background:${p.color}14">
+                <span style="font-size:1.3rem">${p.icon}</span>
+                <span style="font-family:var(--font-display);font-weight:800;font-size:.95rem;color:${p.color}">${p.label}</span>
+                <code style="margin-left:auto;font-size:.7rem;color:var(--text-muted);background:var(--bg-base);padding:2px 6px;border-radius:4px">${p.role}</code>
+              </div>
+              <div style="padding:14px 18px;display:flex;flex-direction:column;gap:5px">
+                ${p.sections.map(s => `
+                  <div style="display:flex;align-items:center;font-size:.8rem;color:var(--text-secondary);padding:3px 0;border-bottom:1px solid var(--border-subtle)">
+                    <span style="width:6px;height:6px;border-radius:50%;background:${p.color};flex-shrink:0;margin-right:8px"></span>
+                    <span style="flex:1">${s.name}</span>
+                    ${typeTag(s.type)}
+                  </div>`).join('')}
+              </div>
+            </div>`).join('')}
+        </div>
+        <div style="margin-top:24px;padding:14px 18px;background:var(--bg-elevated);border:1px solid var(--border-subtle);border-radius:10px;font-size:.8rem;color:var(--text-muted);line-height:1.8">
+          <strong style="color:var(--text-primary)">Legenda stati:</strong>
+          &nbsp;<span style="color:#22c55e">● sempre visibile</span> — mostrato a tutti gli utenti con quel ruolo
+          &nbsp;<span style="color:#3b82f6">● solo se profilo attivo</span> — richiede profilo approvato collegato
+          &nbsp;<span style="color:#f59e0b">● condizionale</span> — appare solo in certi scenari
+          &nbsp;<span style="color:#64748b">● fallback</span> — mostrato quando la lista principale è vuota
+        </div>`;
+      break;
+    }
+
+    case 'atleti-gestione': {
+      const res = globalData?.resultsRaw || [];
+      // Aggregate unique athletes
+      const atMap = {};
+      res.forEach(r => {
+        const aid = r.atleta_id;
+        if (!aid) return;
+        if (!atMap[aid]) atMap[aid] = { atleta_id:aid, cognome:r.cognome||'', nome:r.nome||'', team:r.team||'', gare:0, vittorie:0, podi:0, pts:0, lastGara:'' };
+        atMap[aid].gare++;
+        if (r.posizione===1||r.pos===1||r.pos==='1'||r.posizione==='1') atMap[aid].vittorie++;
+        if ([1,2,3,'1','2','3'].includes(r.posizione||r.pos)) atMap[aid].podi++;
+        atMap[aid].pts += (r.punti_effettivi||0);
+        if ((r.data||'') > atMap[aid].lastGara) atMap[aid].lastGara = r.data||'';
+      });
+      const atletiList = Object.values(atMap).sort((a,b)=>(b.cognome||'').localeCompare(a.cognome||''));
+
+      main.innerHTML = `
+        <div class="admin-page-header">
+          <h1 class="admin-page-title">🚴 Gestione atleti</h1>
+          <p class="admin-page-sub">${atletiList.length} atleti nel database. Visualizza, modifica e gestisci i profili.</p>
+        </div>
+        <div style="display:flex;gap:10px;margin-bottom:14px;flex-wrap:wrap">
+          <input type="search" id="atleti-search" placeholder="Cerca per cognome, nome o team…" oninput="window.adminFilterAtleti(this.value)"
+            style="padding:9px 12px;border:1px solid var(--border);border-radius:6px;background:var(--bg-card);color:var(--text-primary);font-size:.875rem;flex:1;min-width:200px" />
+        </div>
+        <div id="admin-atleti-msg" style="display:none;padding:8px 14px;border-radius:6px;margin-bottom:10px;font-size:.85rem"></div>
+        <div id="admin-atleti-body"></div>`;
+
+      window._adminAtletiAll = atletiList;
+      window.adminFilterAtleti = (q) => {
+        const ql = q.toLowerCase();
+        const list = q ? atletiList.filter(a =>
+          (a.cognome||'').toLowerCase().includes(ql) ||
+          (a.nome||'').toLowerCase().includes(ql) ||
+          (a.team||'').toLowerCase().includes(ql) ||
+          (a.atleta_id||'').toString().toLowerCase().includes(ql)
+        ) : atletiList;
+        window._adminRenderAtleti(list.slice(0,100));
+      };
+
+      window._adminShowAtletiMsg = (msg, ok) => {
+        const el = document.getElementById('admin-atleti-msg');
+        if (!el) return;
+        el.textContent = msg; el.style.display = 'block';
+        el.style.background = ok ? 'rgba(34,197,94,.12)' : 'rgba(239,68,68,.12)';
+        el.style.color = ok ? '#22c55e' : '#ef4444';
+        setTimeout(() => { if (el) el.style.display = 'none'; }, 3000);
+      };
+
+      window.adminEditAtleta = (aid) => {
+        const a = window._adminAtletiAll.find(x => x.atleta_id === aid);
+        if (!a) return;
+        document.getElementById('admin-atleta-modal')?.remove();
+        document.body.insertAdjacentHTML('beforeend', `
+          <div id="admin-atleta-modal" style="position:fixed;inset:0;background:rgba(0,0,0,.6);z-index:9999;display:flex;align-items:center;justify-content:center;padding:20px" onclick="if(event.target===this)this.remove()">
+            <div style="background:var(--bg-elevated);border:1px solid var(--border-subtle);border-radius:14px;padding:28px 32px;max-width:500px;width:100%" onclick="event.stopPropagation()">
+              <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:18px">
+                <h3 style="font-family:var(--font-display);font-weight:800;font-size:1.05rem;margin:0">✏️ Modifica atleta</h3>
+                <button onclick="document.getElementById('admin-atleta-modal').remove()" style="background:none;border:none;font-size:1.2rem;cursor:pointer;color:var(--text-muted)">✕</button>
+              </div>
+              <div style="font-size:.78rem;color:var(--text-muted);margin-bottom:14px">ID: <code>${esc(String(a.atleta_id))}</code> · ${a.gare} gare · ${a.vittorie} vittorie</div>
+              <div style="display:flex;flex-direction:column;gap:10px">
+                <label style="font-size:.82rem;color:var(--text-muted)">Cognome
+                  <input id="ae-cognome" value="${esc(a.cognome)}" style="display:block;width:100%;margin-top:4px;padding:8px 12px;border:1px solid var(--border);border-radius:6px;background:var(--bg-base);color:var(--text-primary);font-size:.9rem" />
+                </label>
+                <label style="font-size:.82rem;color:var(--text-muted)">Nome
+                  <input id="ae-nome" value="${esc(a.nome)}" style="display:block;width:100%;margin-top:4px;padding:8px 12px;border:1px solid var(--border);border-radius:6px;background:var(--bg-base);color:var(--text-primary);font-size:.9rem" />
+                </label>
+                <label style="font-size:.82rem;color:var(--text-muted)">Team
+                  <input id="ae-team" value="${esc(a.team)}" style="display:block;width:100%;margin-top:4px;padding:8px 12px;border:1px solid var(--border);border-radius:6px;background:var(--bg-base);color:var(--text-primary);font-size:.9rem" />
+                </label>
+              </div>
+              <div style="margin-top:18px;display:flex;gap:10px;justify-content:flex-end">
+                <button onclick="document.getElementById('admin-atleta-modal').remove()" class="dash-btn dash-btn--outline dash-btn--sm">Annulla</button>
+                <button onclick="window.adminSaveAtleta('${esc(String(a.atleta_id))}')" class="dash-btn dash-btn--primary dash-btn--sm">💾 Salva modifiche</button>
+              </div>
+            </div>
+          </div>`);
+      };
+
+      window.adminSaveAtleta = async (aid) => {
+        const cognome = document.getElementById('ae-cognome')?.value.trim();
+        const nome    = document.getElementById('ae-nome')?.value.trim();
+        const team    = document.getElementById('ae-team')?.value.trim();
+        document.getElementById('admin-atleta-modal')?.remove();
+        try {
+          const res = await fetch(`${API_BASE}/admin/atleti/${encodeURIComponent(aid)}`, {
+            method: 'PATCH',
+            headers: { 'Content-Type':'application/json', Authorization:`Bearer ${authToken()}` },
+            body: JSON.stringify({ cognome, nome, team }),
+          });
+          if (!res.ok) throw new Error((await res.json()).error || `HTTP ${res.status}`);
+          // Update local cache
+          const a = window._adminAtletiAll.find(x => String(x.atleta_id) === String(aid));
+          if (a) { a.cognome = cognome||a.cognome; a.nome = nome||a.nome; a.team = team||a.team; }
+          window._adminShowAtletiMsg(`✅ Atleta aggiornato`, true);
+          window.adminFilterAtleti(document.getElementById('atleti-search')?.value||'');
+        } catch(e) {
+          window._adminShowAtletiMsg(`❌ Errore: ${e.message}`, false);
+        }
+      };
+
+      window._adminRenderAtleti = (list) => {
+        const b = document.getElementById('admin-atleti-body');
+        if (!b) return;
+        if (!list.length) { b.innerHTML = `<div style="color:var(--text-muted);padding:24px 0">Nessun atleta trovato.</div>`; return; }
+        b.innerHTML = `
+          <div style="font-size:.8rem;color:var(--text-muted);margin-bottom:8px">${list.length} atleti (max 100 mostrati — usa la ricerca)</div>
+          <div style="overflow-x:auto">
+          <table style="width:100%;border-collapse:collapse;font-size:.83rem">
+            <thead>
+              <tr style="border-bottom:2px solid var(--border)">
+                <th style="text-align:left;padding:8px 10px;color:var(--text-muted);font-weight:600">Atleta</th>
+                <th style="text-align:left;padding:8px 10px;color:var(--text-muted);font-weight:600">Team</th>
+                <th style="text-align:right;padding:8px 10px;color:var(--text-muted);font-weight:600">Gare</th>
+                <th style="text-align:right;padding:8px 10px;color:var(--text-muted);font-weight:600">Vittorie</th>
+                <th style="text-align:right;padding:8px 10px;color:var(--text-muted);font-weight:600">Podi</th>
+                <th style="text-align:left;padding:8px 10px;color:var(--text-muted);font-weight:600">Ultima gara</th>
+                <th style="text-align:left;padding:8px 10px;color:var(--text-muted);font-weight:600">Azioni</th>
+              </tr>
+            </thead>
+            <tbody>
+              ${list.map(a => `
+                <tr style="border-bottom:1px solid var(--border);transition:background .15s" onmouseover="this.style.background='var(--bg-elevated)'" onmouseout="this.style.background=''">
+                  <td style="padding:9px 10px">
+                    <a href="#/atleta/${esc(String(a.atleta_id))}" style="font-weight:700;color:var(--accent);text-decoration:none">${esc(a.cognome)} ${esc(a.nome)}</a>
+                    <div style="font-size:.7rem;color:var(--text-muted)">${esc(String(a.atleta_id))}</div>
+                  </td>
+                  <td style="padding:9px 10px;color:var(--text-secondary)">${esc(a.team||'—')}</td>
+                  <td style="padding:9px 10px;text-align:right">${a.gare}</td>
+                  <td style="padding:9px 10px;text-align:right;font-weight:${a.vittorie>0?'700':'400'};color:${a.vittorie>0?'var(--accent)':'var(--text-muted)'}">${a.vittorie}</td>
+                  <td style="padding:9px 10px;text-align:right;color:var(--text-muted)">${a.podi}</td>
+                  <td style="padding:9px 10px;color:var(--text-muted);font-size:.8rem">${(a.lastGara||'').slice(0,10)}</td>
+                  <td style="padding:9px 10px">
+                    <div style="display:flex;gap:6px">
+                      <a href="#/atleta/${esc(String(a.atleta_id))}" title="Vai al profilo" style="padding:5px 8px;border:1px solid var(--border);border-radius:5px;background:transparent;color:var(--text-muted);cursor:pointer;font-size:.78rem;text-decoration:none">👁</a>
+                      <button onclick="window.adminEditAtleta('${esc(String(a.atleta_id))}')" title="Modifica" style="padding:5px 8px;border:1px solid var(--border);border-radius:5px;background:transparent;color:var(--text-muted);cursor:pointer;font-size:.78rem">✏️</button>
+                    </div>
+                  </td>
+                </tr>`).join('')}
+            </tbody>
+          </table>
+          </div>`;
+      };
+      window._adminRenderAtleti(atletiList.slice(0,100));
+      break;
+    }
+
+    case 'gare-gestione': {
+      const res = globalData?.resultsRaw || [];
+      // Aggregate unique races
+      const garaMap = {};
+      res.forEach(r => {
+        const gid = r.gara_id || r.gara_slug || r.gara;
+        if (!gid) return;
+        if (!garaMap[gid]) garaMap[gid] = {
+          gara_id: gid, nome: r.gara||gid, data: r.data||'', cat: r.cat||r.categoria||'',
+          tipo: r.tipo||'', km: r.km||'', media: r.media||'', n_atleti: 0
+        };
+        garaMap[gid].n_atleti++;
+        if ((r.data||'') > garaMap[gid].data) garaMap[gid].data = r.data||'';
+      });
+      const gareList = Object.values(garaMap).sort((a,b)=>(b.data||'').localeCompare(a.data||''));
+
+      main.innerHTML = `
+        <div class="admin-page-header">
+          <h1 class="admin-page-title">🏁 Gestione gare</h1>
+          <p class="admin-page-sub">${gareList.length} gare nel database.</p>
+        </div>
+        <div style="display:flex;gap:10px;margin-bottom:14px;flex-wrap:wrap">
+          <input type="search" id="gare-search" placeholder="Cerca per nome gara, categoria…" oninput="window.adminFilterGare(this.value)"
+            style="padding:9px 12px;border:1px solid var(--border);border-radius:6px;background:var(--bg-card);color:var(--text-primary);font-size:.875rem;flex:1;min-width:200px" />
+          <select id="gare-year-filter" onchange="window.adminFilterGare(document.getElementById('gare-search').value)"
+            style="padding:9px 12px;border:1px solid var(--border);border-radius:6px;background:var(--bg-card);color:var(--text-primary);font-size:.875rem">
+            <option value="">Tutti gli anni</option>
+            ${[...new Set(gareList.map(g=>(g.data||'').slice(0,4)).filter(Boolean))].sort((a,b)=>b.localeCompare(a)).map(y=>`<option value="${y}">${y}</option>`).join('')}
+          </select>
+        </div>
+        <div id="admin-gare-msg" style="display:none;padding:8px 14px;border-radius:6px;margin-bottom:10px;font-size:.85rem"></div>
+        <div id="admin-gare-body"></div>`;
+
+      window._adminGareAll = gareList;
+      window.adminFilterGare = (q) => {
+        const ql = q.toLowerCase();
+        const yf = document.getElementById('gare-year-filter')?.value||'';
+        let list = gareList;
+        if (q) list = list.filter(g => (g.nome||'').toLowerCase().includes(ql) || (g.cat||'').toLowerCase().includes(ql) || (g.gara_id||'').toLowerCase().includes(ql));
+        if (yf) list = list.filter(g => (g.data||'').startsWith(yf));
+        window._adminRenderGare(list.slice(0,100));
+      };
+
+      window._adminShowGareMsg = (msg, ok) => {
+        const el = document.getElementById('admin-gare-msg');
+        if (!el) return;
+        el.textContent = msg; el.style.display = 'block';
+        el.style.background = ok ? 'rgba(34,197,94,.12)' : 'rgba(239,68,68,.12)';
+        el.style.color = ok ? '#22c55e' : '#ef4444';
+        setTimeout(() => { if (el) el.style.display = 'none'; }, 3000);
+      };
+
+      window.adminEditGara = (gid) => {
+        const g = window._adminGareAll.find(x => x.gara_id === gid);
+        if (!g) return;
+        document.getElementById('admin-gara-modal')?.remove();
+        document.body.insertAdjacentHTML('beforeend', `
+          <div id="admin-gara-modal" style="position:fixed;inset:0;background:rgba(0,0,0,.6);z-index:9999;display:flex;align-items:center;justify-content:center;padding:20px" onclick="if(event.target===this)this.remove()">
+            <div style="background:var(--bg-elevated);border:1px solid var(--border-subtle);border-radius:14px;padding:28px 32px;max-width:520px;width:100%" onclick="event.stopPropagation()">
+              <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:18px">
+                <h3 style="font-family:var(--font-display);font-weight:800;font-size:1.05rem;margin:0">✏️ Modifica gara</h3>
+                <button onclick="document.getElementById('admin-gara-modal').remove()" style="background:none;border:none;font-size:1.2rem;cursor:pointer;color:var(--text-muted)">✕</button>
+              </div>
+              <div style="font-size:.78rem;color:var(--text-muted);margin-bottom:14px">ID: <code>${esc(gid)}</code> · ${g.n_atleti} iscritti</div>
+              <div style="display:flex;flex-direction:column;gap:10px">
+                <label style="font-size:.82rem;color:var(--text-muted)">Nome gara
+                  <input id="ge-nome" value="${esc(g.nome)}" style="display:block;width:100%;margin-top:4px;padding:8px 12px;border:1px solid var(--border);border-radius:6px;background:var(--bg-base);color:var(--text-primary);font-size:.9rem" />
+                </label>
+                <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px">
+                  <label style="font-size:.82rem;color:var(--text-muted)">Data
+                    <input id="ge-data" type="date" value="${esc(g.data||'')}" style="display:block;width:100%;margin-top:4px;padding:8px 12px;border:1px solid var(--border);border-radius:6px;background:var(--bg-base);color:var(--text-primary);font-size:.9rem" />
+                  </label>
+                  <label style="font-size:.82rem;color:var(--text-muted)">Categoria
+                    <input id="ge-cat" value="${esc(g.cat||'')}" style="display:block;width:100%;margin-top:4px;padding:8px 12px;border:1px solid var(--border);border-radius:6px;background:var(--bg-base);color:var(--text-primary);font-size:.9rem" />
+                  </label>
+                  <label style="font-size:.82rem;color:var(--text-muted)">Km
+                    <input id="ge-km" value="${esc(String(g.km||''))}" style="display:block;width:100%;margin-top:4px;padding:8px 12px;border:1px solid var(--border);border-radius:6px;background:var(--bg-base);color:var(--text-primary);font-size:.9rem" />
+                  </label>
+                  <label style="font-size:.82rem;color:var(--text-muted)">Media km/h
+                    <input id="ge-media" value="${esc(String(g.media||''))}" style="display:block;width:100%;margin-top:4px;padding:8px 12px;border:1px solid var(--border);border-radius:6px;background:var(--bg-base);color:var(--text-primary);font-size:.9rem" />
+                  </label>
+                </div>
+                <label style="font-size:.82rem;color:var(--text-muted)">Tipo
+                  <input id="ge-tipo" value="${esc(g.tipo||'')}" placeholder="es. Criterium, Circuito, Road Race…" style="display:block;width:100%;margin-top:4px;padding:8px 12px;border:1px solid var(--border);border-radius:6px;background:var(--bg-base);color:var(--text-primary);font-size:.9rem" />
+                </label>
+              </div>
+              <div style="margin-top:18px;display:flex;gap:10px;justify-content:flex-end">
+                <button onclick="document.getElementById('admin-gara-modal').remove()" class="dash-btn dash-btn--outline dash-btn--sm">Annulla</button>
+                <button onclick="window.adminSaveGara('${esc(gid)}')" class="dash-btn dash-btn--primary dash-btn--sm">💾 Salva</button>
+              </div>
+            </div>
+          </div>`);
+      };
+
+      window.adminSaveGara = async (gid) => {
+        const payload = {
+          nome:  document.getElementById('ge-nome')?.value.trim(),
+          data:  document.getElementById('ge-data')?.value,
+          cat:   document.getElementById('ge-cat')?.value.trim(),
+          km:    document.getElementById('ge-km')?.value.trim(),
+          media: document.getElementById('ge-media')?.value.trim(),
+          tipo:  document.getElementById('ge-tipo')?.value.trim(),
+        };
+        document.getElementById('admin-gara-modal')?.remove();
+        try {
+          const res = await fetch(`${API_BASE}/admin/gare/${encodeURIComponent(gid)}`, {
+            method: 'PATCH',
+            headers: { 'Content-Type':'application/json', Authorization:`Bearer ${authToken()}` },
+            body: JSON.stringify(payload),
+          });
+          if (!res.ok) throw new Error((await res.json()).error || `HTTP ${res.status}`);
+          const g = window._adminGareAll.find(x => x.gara_id === gid);
+          if (g) Object.assign(g, payload);
+          window._adminShowGareMsg(`✅ Gara aggiornata`, true);
+          window.adminFilterGare(document.getElementById('gare-search')?.value||'');
+        } catch(e) {
+          window._adminShowGareMsg(`❌ Errore: ${e.message}`, false);
+        }
+      };
+
+      window.adminDeleteGara = async (gid, nome) => {
+        if (!confirm(`Eliminare tutti i risultati della gara "${nome}"?\nQuesta operazione non può essere annullata.`)) return;
+        try {
+          const res = await fetch(`${API_BASE}/admin/gare/${encodeURIComponent(gid)}`, {
+            method: 'DELETE',
+            headers: { Authorization:`Bearer ${authToken()}` },
+          });
+          if (!res.ok) throw new Error((await res.json()).error || `HTTP ${res.status}`);
+          window._adminGareAll = window._adminGareAll.filter(g => g.gara_id !== gid);
+          window._adminShowGareMsg(`✅ Gara "${nome}" eliminata`, true);
+          window.adminFilterGare(document.getElementById('gare-search')?.value||'');
+        } catch(e) {
+          window._adminShowGareMsg(`❌ Errore: ${e.message}`, false);
+        }
+      };
+
+      window.adminViewGaraRisultati = (gid) => {
+        const nome = (window._adminGareAll.find(x=>x.gara_id===gid)||{}).nome || gid;
+        const results = (globalData?.resultsRaw||[]).filter(r=>(r.gara_id||r.gara_slug||r.gara)===gid)
+          .sort((a,b)=>(a.posizione||a.pos||99)-(b.posizione||b.pos||99));
+        document.getElementById('admin-gara-res-modal')?.remove();
+        document.body.insertAdjacentHTML('beforeend', `
+          <div id="admin-gara-res-modal" style="position:fixed;inset:0;background:rgba(0,0,0,.6);z-index:9999;display:flex;align-items:center;justify-content:center;padding:20px" onclick="if(event.target===this)this.remove()">
+            <div style="background:var(--bg-elevated);border:1px solid var(--border-subtle);border-radius:14px;padding:28px 32px;max-width:600px;width:100%;max-height:80vh;overflow-y:auto" onclick="event.stopPropagation()">
+              <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:16px">
+                <h3 style="font-family:var(--font-display);font-weight:800;font-size:1rem;margin:0">📋 ${esc(nome)}</h3>
+                <button onclick="document.getElementById('admin-gara-res-modal').remove()" style="background:none;border:none;font-size:1.2rem;cursor:pointer;color:var(--text-muted)">✕</button>
+              </div>
+              <div style="font-size:.78rem;color:var(--text-muted);margin-bottom:12px">${results.length} risultati</div>
+              <table style="width:100%;border-collapse:collapse;font-size:.82rem">
+                <thead><tr style="border-bottom:2px solid var(--border)">
+                  <th style="text-align:left;padding:6px 8px;color:var(--text-muted);font-weight:600">Pos</th>
+                  <th style="text-align:left;padding:6px 8px;color:var(--text-muted);font-weight:600">Atleta</th>
+                  <th style="text-align:left;padding:6px 8px;color:var(--text-muted);font-weight:600">Team</th>
+                  <th style="text-align:right;padding:6px 8px;color:var(--text-muted);font-weight:600">Punti</th>
+                </tr></thead>
+                <tbody>
+                  ${results.slice(0,30).map(r=>`
+                    <tr style="border-bottom:1px solid var(--border)">
+                      <td style="padding:6px 8px;font-weight:700;color:${(r.posizione||r.pos)<=3?'var(--accent)':'var(--text-primary)'}">${r.posizione||r.pos||'–'}</td>
+                      <td style="padding:6px 8px"><a href="#/atleta/${esc(String(r.atleta_id||''))}" onclick="document.getElementById('admin-gara-res-modal').remove()" style="color:var(--accent);text-decoration:none;font-weight:600">${esc((r.cognome||'')+' '+(r.nome||''))}</a></td>
+                      <td style="padding:6px 8px;color:var(--text-muted)">${esc(r.team||'—')}</td>
+                      <td style="padding:6px 8px;text-align:right">${r.punti_effettivi||'—'}</td>
+                    </tr>`).join('')}
+                </tbody>
+              </table>
+              ${results.length>30?`<div style="font-size:.75rem;color:var(--text-muted);margin-top:8px">+${results.length-30} altri risultati</div>`:''}
+              <div style="margin-top:16px;display:flex;gap:10px">
+                <a href="#/gara/${esc(gid)}" onclick="document.getElementById('admin-gara-res-modal').remove()" class="dash-btn dash-btn--outline dash-btn--sm">🔗 Pagina pubblica →</a>
+                <button onclick="window.adminDeleteGara('${esc(gid)}','${esc(nome.replace(/'/g,''))}');document.getElementById('admin-gara-res-modal').remove()" class="dash-btn dash-btn--danger dash-btn--sm">🗑 Elimina gara</button>
+              </div>
+            </div>
+          </div>`);
+      };
+
+      window._adminRenderGare = (list) => {
+        const b = document.getElementById('admin-gare-body');
+        if (!b) return;
+        if (!list.length) { b.innerHTML = `<div style="color:var(--text-muted);padding:24px 0">Nessuna gara trovata.</div>`; return; }
+        b.innerHTML = `
+          <div style="font-size:.8rem;color:var(--text-muted);margin-bottom:8px">${list.length} gare (max 100 — usa i filtri)</div>
+          <div style="overflow-x:auto">
+          <table style="width:100%;border-collapse:collapse;font-size:.83rem">
+            <thead>
+              <tr style="border-bottom:2px solid var(--border)">
+                <th style="text-align:left;padding:8px 10px;color:var(--text-muted);font-weight:600">Gara</th>
+                <th style="text-align:left;padding:8px 10px;color:var(--text-muted);font-weight:600">Data</th>
+                <th style="text-align:left;padding:8px 10px;color:var(--text-muted);font-weight:600">Cat.</th>
+                <th style="text-align:right;padding:8px 10px;color:var(--text-muted);font-weight:600">Atleti</th>
+                <th style="text-align:left;padding:8px 10px;color:var(--text-muted);font-weight:600">Km / Media</th>
+                <th style="text-align:left;padding:8px 10px;color:var(--text-muted);font-weight:600">Azioni</th>
+              </tr>
+            </thead>
+            <tbody>
+              ${list.map(g => `
+                <tr style="border-bottom:1px solid var(--border);transition:background .15s" onmouseover="this.style.background='var(--bg-elevated)'" onmouseout="this.style.background=''">
+                  <td style="padding:9px 10px">
+                    <div style="font-weight:600;color:var(--text-primary)">${esc((g.nome||'').slice(0,40))}</div>
+                    <div style="font-size:.7rem;color:var(--text-muted)">${esc(g.gara_id||'')}</div>
+                  </td>
+                  <td style="padding:9px 10px;color:var(--text-muted);white-space:nowrap">${(g.data||'').slice(0,10)}</td>
+                  <td style="padding:9px 10px">
+                    <span style="padding:2px 7px;border-radius:10px;font-size:.72rem;font-weight:700;background:rgba(232,0,29,.1);color:var(--accent)">${esc(g.cat||'—')}</span>
+                  </td>
+                  <td style="padding:9px 10px;text-align:right">${g.n_atleti}</td>
+                  <td style="padding:9px 10px;color:var(--text-muted);font-size:.8rem">${g.km ? `${g.km} km` : '—'}${g.media ? ` · ${g.media} km/h` : ''}</td>
+                  <td style="padding:9px 10px">
+                    <div style="display:flex;gap:6px">
+                      <button onclick="window.adminViewGaraRisultati('${esc(g.gara_id||'')}')" title="Vedi risultati" style="padding:5px 8px;border:1px solid var(--border);border-radius:5px;background:transparent;color:var(--text-muted);cursor:pointer;font-size:.78rem">📋</button>
+                      <button onclick="window.adminEditGara('${esc(g.gara_id||'')}')" title="Modifica" style="padding:5px 8px;border:1px solid var(--border);border-radius:5px;background:transparent;color:var(--text-muted);cursor:pointer;font-size:.78rem">✏️</button>
+                      <button onclick="window.adminDeleteGara('${esc(g.gara_id||'')}','${esc((g.nome||'').slice(0,30).replace(/'/g,''))}')" title="Elimina" style="padding:5px 8px;border:1px solid rgba(239,68,68,.4);border-radius:5px;background:transparent;color:#ef4444;cursor:pointer;font-size:.78rem">🗑</button>
+                    </div>
+                  </td>
+                </tr>`).join('')}
+            </tbody>
+          </table>
+          </div>`;
+      };
+      window._adminRenderGare(gareList.slice(0,100));
       break;
     }
 
