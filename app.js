@@ -15140,6 +15140,30 @@ window.doLogout = function() {
   window.location.hash = '/';
 };
 
+// Admin: crea account di prova per ogni ruolo
+window.seedTestAccounts = async function() {
+  const btn = document.getElementById('seed-test-btn');
+  const out = document.getElementById('seed-test-result');
+  const pwd = prompt('Password per gli account di prova (min 6 caratteri):', 'Prova2026!');
+  if (!pwd) return;
+  if (btn) { btn.disabled = true; btn.textContent = 'Creazione…'; }
+  try {
+    const r = await apiCall('/admin/seed-test-accounts', { method: 'POST', body: { password: pwd } });
+    const rows = (r.accounts || []).map(a =>
+      `<div style="padding:4px 0;border-bottom:1px solid var(--border-subtle)">
+        <code>${esc(a.email)}</code> — <strong>${esc(a.role)}</strong>
+        ${a.created ? '<span style="color:var(--green-pos,#16a34a)">creato ✓</span>' : '<span style="color:var(--text-muted)">già esistente</span>'}
+      </div>`).join('');
+    if (out) out.innerHTML = `
+      <div style="margin-bottom:8px">Password per tutti: <code>${esc(r.password)}</code></div>
+      ${rows}`;
+  } catch (e) {
+    if (out) out.innerHTML = `<span style="color:var(--red-hot)">Errore: ${esc(e.message)}</span>`;
+  } finally {
+    if (btn) { btn.disabled = false; btn.textContent = 'Crea account di prova'; }
+  }
+};
+
 // ── CARD "IL MIO PROFILO" (campi personali, tutti i ruoli) ────────────────────
 const SPECIALITA_OPTS = ['', 'Scalatore', 'Velocista', 'Passista', 'Cronoman', 'Finisseur', 'Passista-scalatore', 'Gregario', 'Altro'];
 

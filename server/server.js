@@ -346,6 +346,26 @@ async function _adminSetUserRole(req, res) {
 app.patch('/api/admin/users/:id', requireAdmin, _adminSetUserRole);
 app.post('/api/admin/users/:id/role', requireAdmin, _adminSetUserRole);
 
+// Crea account di prova, uno per ruolo (admin) — utile per testare le dashboard
+app.post('/api/admin/seed-test-accounts', requireAdmin, async (req, res) => {
+  try {
+    const password = (req.body?.password || 'Prova2026!').toString();
+    if (password.length < 6) return res.status(400).json({ error: 'Password troppo corta (min 6)' });
+    const hash = bcrypt.hashSync(password, 10);
+    const roles = ['atleta', 'team', 'media', 'genitore', 'parente', 'appassionato'];
+    const results = [];
+    for (const role of roles) {
+      const email = `prova-${role}@italiacrit.test`;
+      const display_name = 'Prova ' + role.charAt(0).toUpperCase() + role.slice(1);
+      const existing = await queries.getUserByEmail(email);
+      if (existing) { results.push({ email, role, created: false }); continue; }
+      await queries.createUser({ email, password: hash, role, display_name });
+      results.push({ email, role, created: true });
+    }
+    res.json({ ok: true, password, accounts: results });
+  } catch (e) { res.status(500).json({ error: e.message }); }
+});
+
 // Eliminazione utente (admin)
 app.delete('/api/admin/users/:id', requireAdmin, async (req, res) => {
   try {
