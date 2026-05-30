@@ -9,6 +9,7 @@ node_modules/
 # Dati scaricati dal bot
 data/*.json
 data/*.html
+data/*.log
 data/rankings/
 data/rankings_regionali/
 data/team_rankings/

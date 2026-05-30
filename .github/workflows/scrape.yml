@@ -53,6 +53,10 @@ jobs:
           git config user.email "bot@italiacrit.it"
           git config user.name "ItaliacritBot"
           git add -f data/
+          # Rimuovi log e file temporanei dallo staging (non devono finire nel repo)
+          git reset -- data/*.log data/*.html data/service.log 2>/dev/null || true
+          # Rimuovi dal tracking se mai fossero stati committati per errore
+          git rm --cached data/*.log data/*.html data/service.log 2>/dev/null || true
           git diff --staged --quiet || git commit -m "update: $(date -u '+%Y-%m-%d %H:%M') UTC"
           git pull --rebase origin main
           git push
