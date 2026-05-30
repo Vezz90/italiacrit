@@ -1250,12 +1250,17 @@ function adminEditBtn(entityType, entityId) {
 
 window.openAdminEdit = async function(entityType, entityId) {
   const fields = ADMIN_EDIT_FIELDS[entityType] || [];
-  // Load existing overrides
+  // Carica i valori esistenti: prima il fallback statico (entity_socials.json),
+  // poi gli override dal backend che hanno la precedenza. Così i dati già
+  // presenti (Instagram/Facebook ecc.) restano precompilati e non vengono persi.
   let current = {};
+  try { current = { ...((await _loadStaticSocials())[entityType + ':' + entityId] || {}) }; } catch(_) {}
   try {
     const { overrides } = await apiCall(`/admin/override/entity/${entityType}/${encodeURIComponent(entityId)}`);
-    current = overrides || {};
+    if (overrides) current = { ...current, ...overrides };
   } catch(_) {}
+  // Memorizza i valori iniziali per salvare solo ciò che cambia
+  window._adminEditCurrent = { ...current };
 
   const fieldsHtml = fields.map(f => {
     const val = esc(current[f.key] || '');
@@ -1298,10 +1303,14 @@ window.saveAdminEdit = async function(entityType, entityId) {
   btn.disabled = true; btn.textContent = 'Salvataggio…';
   errEl.style.display = 'none';
   try {
+    const initial = window._adminEditCurrent || {};
     for (const f of fields) {
       const el = document.getElementById('aedit-' + f.key);
       if (!el) continue;
       const val = el.value.trim();
+      // Salva solo i campi effettivamente modificati: evita di sovrascrivere
+      // con stringa vuota i dati già presenti che non sono stati toccati.
+      if (val === String(initial[f.key] ?? '').trim()) continue;
       await apiCall('/admin/override/entity', {
         method: 'POST',
         body: { entity_type: entityType, entity_id: entityId, field: f.key, new_value: val }
