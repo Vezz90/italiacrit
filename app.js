@@ -11144,9 +11144,11 @@ async function renderGara(gara_id) {
         const _src = esc(_extPhoto.url);
         const _isXpix = (_extPhoto.album_slug || _extPhoto.source === 'xpix');
         const _srcLabel = _isXpix ? 'xpix.it' : 'italiaciclismo.net';
-        // Pulsante rimozione visibile solo all'admin, per foto xpix
+        // Pulsante rimozione visibile solo all'admin, per foto xpix.
+        // Usa _extPhoto.gara_id (chiave reale in xpix_photos) non primaryGaraId (dalla URL)
+        const _xpixKey = _extPhoto.gara_id || primaryGaraId;
         const _removeBtn = (authUser()?.role === 'admin' && _isXpix)
-          ? `<button onclick="window.adminRemoveXpixFromRace('${esc(primaryGaraId)}')"
+          ? `<button onclick="window.adminRemoveXpixFromRace('${esc(_xpixKey)}')"
                style="position:absolute;top:6px;right:6px;background:rgba(220,38,38,.85);color:#fff;border:none;padding:3px 8px;border-radius:4px;font-size:.7rem;cursor:pointer;z-index:2">
                🗑 Rimuovi foto
              </button>` : '';
