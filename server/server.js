@@ -1128,6 +1128,9 @@ app.get('/api/admin/ic/queue', requireAdmin, async (req, res) => {
 });
 
 app.post('/api/admin/ic/sync', requireAdmin, async (req, res) => {
+  // Integrazione italiaciclismo.net disattivata (non più utilizzata).
+  return res.json({ ok: true, added: 0, disabled: true, message: 'Integrazione italiaciclismo disattivata' });
+  /* eslint-disable no-unreachable */
   try {
     const queue     = await readICQueue();
     const knownUrls = new Set(queue.map(q => q.gara_url));
@@ -1886,9 +1889,13 @@ app.use((err, req, res, next) => {
 // così sono sempre presenti e rivendicabili da un utente media.
 async function ensureScraperMediaProfiles() {
   const sources = [
-    { name: 'xpix.it',            bio: 'Fotografia ciclismo agonistico italiano', website: 'https://www.xpix.it',            instagram: 'xpix.it' },
-    { name: 'italiaciclismo.net', bio: 'Foto e cronache del ciclismo italiano',   website: 'https://www.italiaciclismo.net', instagram: '' },
+    { name: 'xpix.it', bio: 'Fotografia ciclismo agonistico italiano', website: 'https://www.xpix.it', instagram: 'xpix.it' },
   ];
+
+  // Pulizia: rimuove il profilo italiaciclismo.net se non rivendicato (non più usato)
+  try {
+    await rawQuery(`DELETE FROM media_profiles WHERE user_id IS NULL AND display_name = 'italiaciclismo.net'`);
+  } catch (e) { console.warn('[startup] pulizia italiaciclismo.net:', e.message); }
   // Aggiunge anche un profilo per ogni canale video (YouTube) abilitato
   try {
     const channels = await readYTChannels();

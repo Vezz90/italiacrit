@@ -15816,12 +15816,9 @@ async function _dashMedia(el, user, profile) {
         claimEl.innerHTML = profs.length ? `
           <div style="display:flex;flex-direction:column;gap:8px;margin-top:6px">
             ${profs.map(p => `
-              <div style="display:flex;align-items:center;gap:10px;flex-wrap:wrap;padding:8px 10px;background:var(--bg-base);border:1px solid var(--border-subtle);border-radius:6px">
-                <div style="flex:1 1 130px;min-width:0">
-                  <div style="font-size:.9rem;font-weight:700;color:var(--text-primary);white-space:nowrap;overflow:hidden;text-overflow:ellipsis">${esc(p.display_name)}</div>
-                  ${p.instagram ? `<div style="font-size:.72rem;color:var(--text-muted);white-space:nowrap;overflow:hidden;text-overflow:ellipsis">@${esc(p.instagram.replace('@',''))}</div>` : (p.website ? `<div style="font-size:.72rem;color:var(--text-muted);white-space:nowrap;overflow:hidden;text-overflow:ellipsis">${esc(p.website)}</div>` : '')}
-                </div>
-                <button class="dash-btn dash-btn--outline dash-btn--sm" style="flex:0 0 auto;white-space:nowrap;margin-left:auto" onclick="window.submitClaimMediaProfile(${p.id}, this)">Aggancia</button>
+              <div style="display:flex;align-items:center;gap:10px;padding:8px 10px;background:var(--bg-base);border:1px solid var(--border-subtle);border-radius:6px">
+                <div style="flex:1;min-width:0;font-size:.9rem;font-weight:700;color:var(--text-primary);white-space:nowrap;overflow:hidden;text-overflow:ellipsis">${esc(p.display_name)}</div>
+                <button class="dash-btn dash-btn--outline dash-btn--sm" style="flex:0 0 auto;white-space:nowrap" onclick="window.submitClaimMediaProfile(${p.id}, this)">Aggancia</button>
               </div>`).join('')}
           </div>` : `<div style="font-size:.8rem;color:var(--text-muted);padding:8px 0">Nessun profilo libero da rivendicare al momento.</div>`;
       } catch (e) {
