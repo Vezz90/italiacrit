@@ -74,7 +74,12 @@ async function getEntityOverrides(type, id) {
   const base = (await _loadStaticSocials())[key] || {};
   try {
     const { overrides } = await apiCall(`/admin/override/entity/${type}/${encodeURIComponent(id)}`);
-    _ovCache[key] = { ...base, ...(overrides || {}) };
+    // Ignora i valori vuoti del backend così non cancellano il fallback statico
+    const clean = {};
+    for (const [k, v] of Object.entries(overrides || {})) {
+      if (v !== null && v !== undefined && String(v).trim() !== '') clean[k] = v;
+    }
+    _ovCache[key] = { ...base, ...clean };
   } catch { _ovCache[key] = { ...base }; }
   return _ovCache[key];
 }
