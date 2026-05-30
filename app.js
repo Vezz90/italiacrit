@@ -1031,7 +1031,7 @@ async function loadAll() {
         }
       })();
 
-  const [calendar, resultsRaw, athletes, teams, meta, raceDetails, videos] = await Promise.all([
+  const [calendar, resultsRaw, athletes, teams, meta, raceDetails, videos, extraRoster] = await Promise.all([
     loadJson('data/calendar.json'),
     loadJson('data/results_raw.json'),
     loadJson('data/athletes.json'),
@@ -1039,6 +1039,7 @@ async function loadAll() {
     loadJson('data/meta.json'),
     loadJson('data/race_details.json'),
     videosPromise,
+    loadJson('data/extra_roster.json').catch(() => ({})),
   ]);
 
   // Applica correzioni genere
@@ -1162,11 +1163,52 @@ async function loadAll() {
     }
   }
 
+  // ── Merge roster manuali (data/extra_roster.json) ─────────────
+  // Aggiunge atleti senza risultati (0 punti) ai team, per dare
+  // continuità anche a chi non ha ancora gareggiato o non è nei dati FCI.
+  // Non sovrascrive MAI chi esiste già.
+  const athletesMerged = athletes ? { ...athletes } : {};
+  const teamsMerged    = teams    ? { ...teams }    : {};
+  for (const tid in (extraRoster || {})) {
+    const entry = extraRoster[tid];
+    if (!entry || !Array.isArray(entry.atleti)) continue;
+    // Crea il team se non esiste
+    if (!teamsMerged[tid]) {
+      teamsMerged[tid] = { id: tid, nome: entry.nome || tid, atleti: [], punti_totali: 0, risultati: [] };
+    }
+    const teamNome = entry.nome || teamsMerged[tid].nome || tid;
+    const teamAtleti = Array.isArray(teamsMerged[tid].atleti) ? [...teamsMerged[tid].atleti] : [];
+    for (const p of entry.atleti) {
+      if (!p || (!p.cognome && !p.nome)) continue;
+      // ID atleta: preferisci quello esplicito, altrimenti genera da cognome+nome
+      const aid = p.atleta_id
+        ? String(p.atleta_id).toUpperCase()
+        : (slug((p.cognome||'') + '_' + (p.nome||'')) || '').toUpperCase();
+      if (!aid) continue;
+      if (!athletesMerged[aid]) {
+        athletesMerged[aid] = {
+          atleta_id: aid,
+          nome: p.nome || '',
+          cognome: p.cognome || '',
+          team_attuale: teamNome,
+          team_id: tid,
+          categoria: p.categoria || '',
+          genere: p.genere || 'M',
+          punti_totali: 0,
+          risultati: [],
+          roster_only: true,
+        };
+      }
+      if (!teamAtleti.includes(aid)) teamAtleti.push(aid);
+    }
+    teamsMerged[tid].atleti = teamAtleti;
+  }
+
   return {
     calendar: calendar || [],
     resultsRaw: resultsRaw || [],
-    athletes: athletes || {},
-    teams: teams || {},
+    athletes: athletesMerged,
+    teams: teamsMerged,
     meta: meta || {},
     raceDetails: raceDetails || {},
     videos: videos || {},
@@ -14341,20 +14383,25 @@ function _wrap(ctx, txt, x, y, maxW, lH) {
 // ── Colonna risultati gara (riusabile: 1 o 2 colonne) ───────
 // Righe a altezza uniforme + font ancorati alla larghezza (no ballooning su Storie/landscape)
 function _drawGaraColumn(ctx, x, colW, topY, bottomY, slice, startIdx) {
-  const medalBg = ['#f5c400', '#c8c8c8', '#cd7f32'];
-  const medalFg = ['#1a1200', '#1a1a1a', '#2a1500'];
+  const medalBg = ['#f5c400','#c8c8c8','#cd7f32'];
+  const medalFg = ['#1a1200','#1a1a1a','#2a1500'];
   const right = x + colW;
   const n = slice.length;
   if (!n) return;
   const rH = Math.round((bottomY - topY) / n);
 
-  // Font cap: il più piccolo tra (altezza riga) e (larghezza colonna) → WhatsApp-like
-  const fsSur = Math.min(Math.round(rH * 0.46), Math.round(colW * 0.060));
-  const fsNom = Math.round(fsSur * 0.68);
-  const fsTm  = Math.min(Math.round(rH * 0.30), Math.round(fsSur * 0.66));
+  // Font unico per nome atleta (cognome + nome stessa dimensione)
+  // e font leggermente più piccolo per il team sotto.
+  // Cap sia per altezza riga che per larghezza colonna.
+  const fsName = Math.min(Math.round(rH * 0.28), Math.round(colW * 0.052));
+  const fsTm   = Math.round(fsName * 0.82);
+
+  // Altezza del blocco testo (2 righe): usata per centrare verticalmente
+  const lineGap  = Math.round(fsName * 0.35);  // spazio tra riga nome e riga team
+  const blockH   = fsName + lineGap + fsTm;
 
   slice.forEach((r, i) => {
-    const gIdx = startIdx + i;          // posizione globale (0-based)
+    const gIdx   = startIdx + i;
     const isTop3 = gIdx < 3;
     const isFirst = gIdx === 0;
     const ry = topY + i * rH;
@@ -14366,8 +14413,8 @@ function _drawGaraColumn(ctx, x, colW, topY, bottomY, slice, startIdx) {
       goldG.addColorStop(0, 'rgba(245,196,0,0.13)'); goldG.addColorStop(1, 'rgba(245,196,0,0.04)');
       ctx.fillStyle = goldG; ctx.fillRect(x, ry, colW, rH);
       ctx.strokeStyle = 'rgba(245,196,0,0.42)'; ctx.lineWidth = 1.5;
-      if (ctx.roundRect) { ctx.beginPath(); ctx.roundRect(x, ry + 1, colW, rH - 2, 7); ctx.stroke(); }
-      else ctx.strokeRect(x, ry + 1, colW, rH - 2);
+      if (ctx.roundRect) { ctx.beginPath(); ctx.roundRect(x, ry+1, colW, rH-2, 7); ctx.stroke(); }
+      else ctx.strokeRect(x, ry+1, colW, rH-2);
     } else if (gIdx === 1) {
       ctx.fillStyle = 'rgba(200,200,200,0.045)'; ctx.fillRect(x, ry, colW, rH);
     } else if (gIdx === 2) {
@@ -14376,66 +14423,46 @@ function _drawGaraColumn(ctx, x, colW, topY, bottomY, slice, startIdx) {
       ctx.fillStyle = 'rgba(255,255,255,0.045)'; ctx.fillRect(x, ry, colW, 1);
     }
 
-    // ── Pill posizione (centrata verticalmente) ──
-    const pillH = Math.min(Math.round(rH * 0.56), Math.round(colW * 0.085));
-    const pillW = Math.round(pillH * 1.58);
+    // ── Pill posizione ──
+    const pillH = Math.min(Math.round(rH * 0.52), Math.round(colW * 0.075));
+    const pillW = Math.round(pillH * 1.55);
     const pillX = x + Math.round(colW * 0.008);
     const pillY = cy - Math.round(pillH / 2);
     ctx.fillStyle = isTop3 ? medalBg[gIdx] : 'rgba(255,255,255,0.07)';
-    if (ctx.roundRect) { ctx.beginPath(); ctx.roundRect(pillX, pillY, pillW, pillH, Math.round(pillH * 0.2)); ctx.fill(); }
+    if (ctx.roundRect) { ctx.beginPath(); ctx.roundRect(pillX, pillY, pillW, pillH, Math.round(pillH*0.2)); ctx.fill(); }
     else ctx.fillRect(pillX, pillY, pillW, pillH);
-    const fsPos = Math.round(pillH * 0.58);
+    const fsPos = Math.round(pillH * 0.56);
     ctx.font = `700 ${fsPos}px 'Inter Tight',sans-serif`;
     ctx.textAlign = 'center'; ctx.textBaseline = 'middle';
     ctx.fillStyle = isTop3 ? medalFg[gIdx] : 'rgba(255,255,255,0.38)';
-    ctx.fillText(String(gIdx + 1).padStart(2, '0'), pillX + pillW / 2, cy + 1);
-    ctx.textAlign = 'left'; ctx.textBaseline = 'alphabetic';
+    ctx.fillText(String(gIdx+1).padStart(2,'0'), pillX + pillW/2, cy+1);
 
-    // ── Riga unica: cognome + nome + team, tutto centrato su cy ──
-    const nameX = pillX + pillW + Math.round(colW * 0.04);
-    const rowRight = right - Math.round(colW * 0.02);
-    const rowMaxW = rowRight - nameX;
-    const hasTeam = !!(r.team);
-    ctx.textBaseline = 'middle';
+    // ── Blocco testo: nome (riga 1) + team (riga 2) ──
+    const nameX   = pillX + pillW + Math.round(colW * 0.04);
+    const maxW    = right - nameX - Math.round(colW * 0.02);
+    const nameY   = cy - Math.round(blockH / 2) + fsName;       // baseline riga nome
+    const teamY   = nameY + lineGap + fsTm;                      // baseline riga team
 
-    // Team a destra — NON taglia il nome: riduce il font finché entra
-    let teamW = 0;
-    if (hasTeam) {
-      const teamCap = Math.round(rowMaxW * 0.46);   // spazio massimo per il team
-      const minFs = Math.max(10, Math.round(fsTm * 0.55));
-      let fsTmCur = fsTm;
-      ctx.font = `400 ${fsTmCur}px 'Inter Tight',sans-serif`;
-      while (ctx.measureText(r.team).width > teamCap && fsTmCur > minFs) {
-        fsTmCur -= 1;
-        ctx.font = `400 ${fsTmCur}px 'Inter Tight',sans-serif`;
-      }
-      teamW = ctx.measureText(r.team).width;
-      ctx.fillStyle = isFirst ? 'rgba(255,255,255,0.45)' : 'rgba(255,255,255,0.30)';
-      ctx.textAlign = 'right';
-      ctx.fillText(r.team, rowRight, cy + 1);
-      ctx.textAlign = 'left';
+    // Riga 1 — COGNOME Nome, stessa grandezza, cognome in grassetto
+    const fullName = ((r.cognome||'').toUpperCase() + ' ' + (r.nome||'')).trim();
+    ctx.textBaseline = 'alphabetic'; ctx.textAlign = 'left';
+
+    // Clip se troppo lungo
+    ctx.save();
+    ctx.beginPath(); ctx.rect(nameX, ry+2, maxW, rH-4); ctx.clip();
+
+    ctx.font = `600 ${fsName}px 'Inter Tight',sans-serif`;
+    ctx.fillStyle = isTop3 ? '#f4f4f4' : 'rgba(255,255,255,0.88)';
+    ctx.fillText(fullName, nameX, nameY);
+
+    // Riga 2 — team, tono più chiaro
+    if (r.team) {
+      ctx.font = `400 ${fsTm}px 'Inter Tight',sans-serif`;
+      ctx.fillStyle = isFirst ? 'rgba(255,255,255,0.52)' : 'rgba(255,255,255,0.36)';
+      ctx.fillText(r.team, nameX, teamY);
     }
 
-    // Spazio disponibile per cognome+nome (lascia margine prima del team)
-    const nameMaxW = rowMaxW - (hasTeam ? teamW + Math.round(colW * 0.03) : 0);
-
-    // Cognome (bold)
-    ctx.font = `700 ${fsSur}px 'Inter Tight',sans-serif`;
-    ctx.fillStyle = isTop3 ? '#f4f4f4' : 'rgba(255,255,255,0.82)';
-    let cog = (r.cognome || '').toUpperCase();
-    while (ctx.measureText(cog).width > nameMaxW - 6 && cog.length > 3) cog = cog.slice(0, -1);
-    const cogW = ctx.measureText(cog).width;
-    ctx.fillText(cog, nameX, cy + 1);
-
-    // Nome inline (più chiaro), solo se entra
-    ctx.font = `400 ${fsNom}px 'Inter Tight',sans-serif`;
-    ctx.fillStyle = isTop3 ? 'rgba(255,255,255,0.5)' : 'rgba(255,255,255,0.32)';
-    const nomStr = ' ' + (r.nome || '').substring(0, 14);
-    if (nameX + cogW + ctx.measureText(nomStr).width <= nameX + nameMaxW) {
-      ctx.fillText(nomStr, nameX + cogW, cy + 1);
-    }
-
-    ctx.textBaseline = 'alphabetic';
+    ctx.restore();
   });
 }
 
