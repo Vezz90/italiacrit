@@ -6630,11 +6630,10 @@ async function updateRankTable() {
       else parts.push(`${ath.pos}° in classifica · ${ath.punti} pt · −${gapToLeader} dal leader`);
       if (above && ath.pos > 1) parts.push(`${above.punti - ath.punti} pt da ${esc(above.cognome)}`);
       if (below) parts.push(`+${ath.punti - below.punti} pt su ${esc(below.cognome)}`);
-      const badgeHtml2 = badge ? `<span class="rk-badge-pill ${badge.cls}">${badge.emoji} ${badge.label}</span>` : '';
       storyHtml = `
         <div class="rk-narrative rk-narrative--athlete">
           <div class="rk-narrative-label">SITUAZIONE IN CLASSIFICA · ${esc(ath.cognome)} ${esc(ath.nome)}</div>
-          <div class="rk-narrative-headline">${parts[0]}${badgeHtml2 ? ' ' + badgeHtml2 : ''}</div>
+          <div class="rk-narrative-headline">${parts[0]}</div>
           ${parts.slice(1).length ? `<div class="rk-narrative-details">${parts.slice(1).map(l=>`<span class="rk-narrative-detail">${l}</span>`).join('')}</div>` : ''}
         </div>`;
     } else if (!isFiltered) {
@@ -6747,7 +6746,6 @@ async function updateRankTable() {
             <div class="rk-athlete-name-row">
               <span class="rk-av-wrap" data-aid="${esc(r.atleta_id)}"></span>
               <span class="rank-name"><a href="#/atleta/${esc(r.atleta_id)}">${esc(r.cognome)} ${esc(r.nome)}</a></span>
-              ${badgeHtml}
             </div>
             <div class="td-team-mobile"><a href="#/team/${esc(r.team_id)}" style="color:var(--text-secondary)">${esc(r.team_nome)}</a></div>
             ${momBar}
