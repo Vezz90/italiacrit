@@ -14995,6 +14995,57 @@ window.submitLogin = async function(e) {
 };
 
 // ── REGISTER ──────────────────────────────────────────────────
+// Campi extra per ruolo, mostrati dinamicamente nel form
+const REG_ROLE_FIELDS = {
+  atleta: [
+    { id:'reg-location',  label:'Città / Regione',       type:'text',   placeholder:'es. Firenze (Toscana)',      required:true  },
+    { id:'reg-specialty', label:'Specialità',             type:'select', options: SPECIALITA_OPTS,                 required:true  },
+    { id:'reg-birth',     label:'Anno di nascita',        type:'text',   placeholder:'es. 2007',                   required:true  },
+    { id:'reg-team',      label:'Team di appartenenza',   type:'text',   placeholder:'es. ASD Ciclistica Fiorentina', required:true },
+  ],
+  team: [
+    { id:'reg-location',    label:'Città / Regione',    type:'text', placeholder:'es. Milano (Lombardia)', required:true  },
+    { id:'reg-staff-role',  label:'Ruolo nello staff',  type:'text', placeholder:'es. Direttore sportivo', required:false },
+    { id:'reg-contact',     label:'Contatto pubblico',  type:'text', placeholder:'email o telefono',       required:false },
+  ],
+  media: [
+    { id:'reg-location',  label:'Città / Regione',  type:'text', placeholder:'es. Bologna (Emilia-Romagna)', required:false },
+    { id:'reg-ig',        label:'Instagram',         type:'text', placeholder:'@handle',                     required:false },
+    { id:'reg-web',       label:'Sito web',          type:'url',  placeholder:'https://',                    required:false },
+  ],
+  genitore: [
+    { id:'reg-location', label:'Città / Regione', type:'text', placeholder:'es. Roma (Lazio)', required:false },
+  ],
+  parente: [
+    { id:'reg-location', label:'Città / Regione', type:'text', placeholder:'es. Torino (Piemonte)', required:false },
+  ],
+  appassionato: [
+    { id:'reg-location',   label:'Città / Regione',   type:'text', placeholder:'es. Venezia (Veneto)', required:false },
+    { id:'reg-fav-team',   label:'Team preferito',    type:'text', placeholder:'es. Bardiani-CSF',      required:false },
+    { id:'reg-fav-rider',  label:'Corridore preferito', type:'text', placeholder:'es. Tadej Pogačar',  required:false },
+  ],
+};
+
+function _regRoleFieldsHtml(role) {
+  const fields = REG_ROLE_FIELDS[role] || [];
+  if (!fields.length) return '';
+  return `<div id="reg-role-extra" style="display:flex;flex-direction:column;gap:0">
+    ${fields.map(f => {
+      const req = f.required ? 'required' : '';
+      const star = f.required ? ' <span style="color:var(--red-hot)">*</span>' : '';
+      let input;
+      if (f.type === 'select') {
+        input = `<select id="${f.id}" class="auth-input" style="appearance:auto;cursor:pointer" ${req}>
+          ${(f.options||[]).map(o => `<option value="${o}">${o||'— seleziona —'}</option>`).join('')}
+        </select>`;
+      } else {
+        input = `<input type="${f.type}" id="${f.id}" class="auth-input" placeholder="${f.placeholder||''}" ${req} />`;
+      }
+      return `<div class="auth-field"><label class="auth-label">${f.label}${star}</label><div class="auth-input-wrap">${input}</div></div>`;
+    }).join('')}
+  </div>`;
+}
+
 function renderRegister() {
   if (authUser()) { window.location.hash = '/profilo'; return; }
   setPage(`
@@ -15012,40 +15063,42 @@ function renderRegister() {
           <div id="auth-error" class="auth-error" style="display:none"></div>
           <form id="reg-form" class="auth-form" onsubmit="submitRegister(event)" style="display:flex;flex-direction:column;gap:0">
             <div class="auth-field">
-              <label class="auth-label" for="reg-name">Nome visualizzato</label>
+              <label class="auth-label" for="reg-name">Nome visualizzato <span style="color:var(--red-hot)">*</span></label>
               <div class="auth-input-wrap">
                 <svg class="auth-input-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="8" r="4"/><path d="M4 20c0-4 3.6-7 8-7s8 3 8 7"/></svg>
                 <input type="text" id="reg-name" class="auth-input" placeholder="Es. Mario Rossi" required />
               </div>
             </div>
             <div class="auth-field">
-              <label class="auth-label" for="reg-email">Email</label>
+              <label class="auth-label" for="reg-email">Email <span style="color:var(--red-hot)">*</span></label>
               <div class="auth-input-wrap">
                 <svg class="auth-input-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="2" y="4" width="20" height="16" rx="2"/><path d="m2 7 10 7 10-7"/></svg>
                 <input type="email" id="reg-email" class="auth-input" placeholder="tua@email.it" required autocomplete="email" />
               </div>
             </div>
             <div class="auth-field">
-              <label class="auth-label" for="reg-pwd">Password</label>
+              <label class="auth-label" for="reg-pwd">Password <span style="color:var(--red-hot)">*</span></label>
               <div class="auth-input-wrap">
                 <svg class="auth-input-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="11" width="18" height="11" rx="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg>
                 <input type="password" id="reg-pwd" class="auth-input" placeholder="Minimo 6 caratteri" required autocomplete="new-password" minlength="6" />
               </div>
             </div>
             <div class="auth-field">
-              <label class="auth-label" for="reg-role">Ruolo</label>
+              <label class="auth-label" for="reg-role">Ruolo <span style="color:var(--red-hot)">*</span></label>
               <div class="auth-input-wrap">
                 <svg class="auth-input-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg>
-                <select id="reg-role" class="auth-input" style="appearance:auto;cursor:pointer">
+                <select id="reg-role" class="auth-input" style="appearance:auto;cursor:pointer" onchange="window._onRegRoleChange(this.value)">
+                  <option value="">— scegli il tuo ruolo —</option>
                   <option value="appassionato">Appassionato — seguo le gare</option>
-                  <option value="atleta">Atleta — voglio collegare il mio profilo</option>
-                  <option value="team">Team — gestisco una squadra</option>
-                  <option value="genitore">Genitore — seguo mio/a figlio/a</option>
-                  <option value="parente">Parente / Tifoso — seguo un atleta</option>
-                  <option value="media">📷 Media / Fotografo — pubblico le mie foto</option>
+                  <option value="atleta">🚴 Atleta — sono un corridore</option>
+                  <option value="team">👥 Team — gestisco una squadra</option>
+                  <option value="genitore">👨‍👧 Genitore — seguo mio/a figlio/a</option>
+                  <option value="parente">❤️ Parente / Tifoso — seguo un atleta</option>
+                  <option value="media">📷 Media / Fotografo</option>
                 </select>
               </div>
             </div>
+            <div id="reg-role-extra-wrap"></div>
             <button type="submit" class="auth-btn" id="reg-submit">
               Crea il mio account
               <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
@@ -15059,20 +15112,41 @@ function renderRegister() {
   `);
 }
 
+window._onRegRoleChange = function(role) {
+  const wrap = document.getElementById('reg-role-extra-wrap');
+  if (wrap) wrap.innerHTML = _regRoleFieldsHtml(role);
+};
+
 window.submitRegister = async function(e) {
   e.preventDefault();
   const display_name = document.getElementById('reg-name').value.trim();
-  const email = document.getElementById('reg-email').value.trim();
-  const password = document.getElementById('reg-pwd').value;
-  const role  = document.getElementById('reg-role').value;
+  const email        = document.getElementById('reg-email').value.trim();
+  const password     = document.getElementById('reg-pwd').value;
+  const role         = document.getElementById('reg-role').value;
+  if (!role) { const err = document.getElementById('auth-error'); if (err) { err.textContent='Seleziona il tuo ruolo'; err.style.display='block'; } return; }
   const errEl = document.getElementById('auth-error');
   const btn   = document.getElementById('reg-submit');
   errEl.style.display = 'none';
   btn.disabled = true; btn.textContent = 'Registrazione…';
+
+  // Raccogli i campi extra per ruolo
+  const v = (id) => document.getElementById(id)?.value?.trim() || '';
   try {
     const { token, user } = await apiCall('/auth/register', { method: 'POST', body: { email, password, role, display_name } });
     authSave(token, user);
     updateNavLoginState();
+    // Salva i campi extra come user_details
+    const details = {
+      bio:'', location: v('reg-location'), instagram: v('reg-ig'), facebook:'', strava:'', website: v('reg-web'),
+      specialty: v('reg-specialty'), birth_year: v('reg-birth'),
+      favorite_team: v('reg-fav-team') || v('reg-team'),
+      staff_role: v('reg-staff-role'), public_contact: v('reg-contact'),
+      favorite_rider: v('reg-fav-rider'),
+    };
+    // Salva solo se c'è almeno un campo valorizzato
+    if (Object.values(details).some(x => x)) {
+      await apiCall('/profile/details', { method: 'PATCH', body: details }).catch(() => {});
+    }
     window.location.hash = '/profilo';
   } catch (err) {
     errEl.textContent = err.message; errEl.style.display = 'block';
