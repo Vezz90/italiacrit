@@ -7159,7 +7159,7 @@ window.adminNav = async function(section) {
       main.innerHTML += `
         <div style="margin-top:28px;padding:18px 20px;border:1px solid var(--border-subtle);border-radius:10px;background:var(--bg-elevated)">
           <div style="font-family:var(--font-display);font-weight:800;font-size:1rem;margin-bottom:6px">🧪 Account di prova</div>
-          <p style="font-size:.82rem;color:var(--text-muted);margin:0 0 12px;line-height:1.5">Crea un account per ogni ruolo (atleta, team, media, genitore, parente, appassionato) per testare le dashboard. Se esistono già, non vengono ricreati.</p>
+          <p style="font-size:.82rem;color:var(--text-muted);margin:0 0 12px;line-height:1.5">Crea 7 account di prova (atleta, team, media-foto, media-video, genitore, parente, appassionato) con profili già collegati e approvati. Se esistono già, non vengono ricreati.</p>
           <button class="dash-btn dash-btn--outline" id="seed-test-btn" onclick="window.seedTestAccounts()">Crea account di prova</button>
           <div id="seed-test-result" style="margin-top:12px;font-size:.82rem"></div>
         </div>`;

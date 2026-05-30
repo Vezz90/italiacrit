@@ -346,22 +346,121 @@ async function _adminSetUserRole(req, res) {
 app.patch('/api/admin/users/:id', requireAdmin, _adminSetUserRole);
 app.post('/api/admin/users/:id/role', requireAdmin, _adminSetUserRole);
 
-// Crea account di prova, uno per ruolo (admin) — utile per testare le dashboard
+// Crea account di prova con profili già collegati e approvati (admin)
 app.post('/api/admin/seed-test-accounts', requireAdmin, async (req, res) => {
   try {
     const password = (req.body?.password || 'Prova2026!').toString();
     if (password.length < 6) return res.status(400).json({ error: 'Password troppo corta (min 6)' });
     const hash = bcrypt.hashSync(password, 10);
-    const roles = ['atleta', 'team', 'media', 'genitore', 'parente', 'appassionato'];
     const results = [];
-    for (const role of roles) {
-      const email = `prova-${role}@italiacrit.test`;
-      const display_name = 'Prova ' + role.charAt(0).toUpperCase() + role.slice(1);
-      const existing = await queries.getUserByEmail(email);
-      if (existing) { results.push({ email, role, created: false }); continue; }
-      await queries.createUser({ email, password: hash, role, display_name });
-      results.push({ email, role, created: true });
+
+    // Helper: crea o recupera utente
+    async function ensureUser(email, role, display_name) {
+      let u = await queries.getUserByEmail(email);
+      if (!u) u = await queries.createUser({ email, password: hash, role, display_name });
+      return { user: u, created: !!(await queries.getUserByEmail(email) && !u.created) };
     }
+
+    // 1. ATLETA — collegato a un atleta_id fittizio già approvato
+    {
+      const email = 'prova-atleta@italiacrit.test';
+      const existing = await queries.getUserByEmail(email);
+      const u = existing || await queries.createUser({ email, password: hash, role: 'atleta', display_name: 'Prova Atleta' });
+      const prof = await queries.getAthleteProfile(u.id);
+      if (!prof) {
+        await queries.createAthleteProfile({ user_id: u.id, atleta_id: null, fci_code: 'TEST001', first_name: 'Marco', last_name: 'Rossi', team: 'Team di Prova', birth_year: '2005', status: 'active' });
+      }
+      await queries.upsertUserDetails({ user_id: u.id, bio: 'Profilo di prova — atleta', location: 'Toscana', instagram: 'marcorossi_ciclismo', facebook: '', strava: '', website: '', specialty: 'Scalatore', birth_year: '2005', favorite_team: 'Team di Prova', staff_role: '', public_contact: '' });
+      results.push({ email, role: 'atleta', created: !existing });
+    }
+
+    // 2. TEAM MANAGER — collegato a un team fittizio già approvato
+    {
+      const email = 'prova-team@italiacrit.test';
+      const existing = await queries.getUserByEmail(email);
+      const u = existing || await queries.createUser({ email, password: hash, role: 'team', display_name: 'Prova Team' });
+      const prof = await queries.getTeamProfile(u.id);
+      if (!prof) {
+        await queries.createTeamProfile({ user_id: u.id, team_id: null, team_name: 'Team di Prova ASD', status: 'active' });
+      }
+      await queries.upsertUserDetails({ user_id: u.id, bio: 'Profilo di prova — team manager', location: 'Lombardia', instagram: 'teamdiprova', facebook: '', strava: '', website: 'https://teamdiprova.it', specialty: '', birth_year: '', favorite_team: '', staff_role: 'Direttore sportivo', public_contact: 'info@teamdiprova.it' });
+      results.push({ email, role: 'team', created: !existing });
+    }
+
+    // 3. MEDIA FOTO — profilo media già approvato
+    {
+      const email = 'prova-media-foto@italiacrit.test';
+      const existing = await queries.getUserByEmail(email);
+      const u = existing || await queries.createUser({ email, password: hash, role: 'media', display_name: 'Prova Media Foto' });
+      const prof = await queries.getMediaProfileByUser(u.id);
+      if (!prof) {
+        await queries.createMediaProfile({ user_id: u.id, display_name: 'Prova Media Foto', bio: 'Fotografo di prova per il ciclismo', website: '', instagram: 'provamediafoto', facebook: '' });
+        await rawQuery(`UPDATE media_profiles SET status = 'active' WHERE user_id = $1`, [u.id]);
+      }
+      await queries.upsertUserDetails({ user_id: u.id, bio: 'Fotografo ciclismo di prova', location: 'Emilia-Romagna', instagram: 'provamediafoto', facebook: '', strava: '', website: '', specialty: '', birth_year: '', favorite_team: '', staff_role: '', public_contact: '' });
+      results.push({ email, role: 'media (foto)', created: !existing });
+    }
+
+    // 4. MEDIA VIDEO — profilo media già approvato
+    {
+      const email = 'prova-media-video@italiacrit.test';
+      const existing = await queries.getUserByEmail(email);
+      const u = existing || await queries.createUser({ email, password: hash, role: 'media', display_name: 'Prova Media Video' });
+      const prof = await queries.getMediaProfileByUser(u.id);
+      if (!prof) {
+        await queries.createMediaProfile({ user_id: u.id, display_name: 'Prova Media Video', bio: 'Videografo di prova per il ciclismo', website: 'https://youtube.com/@provaciclismo', instagram: 'provamediavideo', facebook: '' });
+        await rawQuery(`UPDATE media_profiles SET status = 'active' WHERE user_id = $1`, [u.id]);
+      }
+      await queries.upsertUserDetails({ user_id: u.id, bio: 'Videografo ciclismo di prova', location: 'Piemonte', instagram: 'provamediavideo', facebook: '', strava: '', website: 'https://youtube.com/@provaciclismo', specialty: '', birth_year: '', favorite_team: '', staff_role: '', public_contact: '' });
+      results.push({ email, role: 'media (video)', created: !existing });
+    }
+
+    // 5. GENITORE — collegato a un atleta fittizio
+    {
+      const email = 'prova-genitore@italiacrit.test';
+      const existing = await queries.getUserByEmail(email);
+      const u = existing || await queries.createUser({ email, password: hash, role: 'genitore', display_name: 'Prova Genitore' });
+      // Usa l'atleta_id fittizio dell'account atleta di prova
+      const atletaUser = await queries.getUserByEmail('prova-atleta@italiacrit.test');
+      if (atletaUser) {
+        const atletaProf = await queries.getAthleteProfile(atletaUser.id);
+        const links = await queries.getFamilyLinks(u.id);
+        const hasLink = Array.isArray(links) && links.length > 0;
+        if (!hasLink) {
+          await queries.createFamilyLink({ user_id: u.id, linked_atleta_id: atletaProf?.atleta_id || 'ROSSI_MARCO', relation: 'genitore', status: 'active' });
+        }
+      }
+      await queries.upsertUserDetails({ user_id: u.id, bio: 'Genitore di prova', location: 'Toscana', instagram: '', facebook: '', strava: '', website: '', specialty: '', birth_year: '', favorite_team: 'Team di Prova', staff_role: '', public_contact: '' });
+      results.push({ email, role: 'genitore', created: !existing });
+    }
+
+    // 6. PARENTE
+    {
+      const email = 'prova-parente@italiacrit.test';
+      const existing = await queries.getUserByEmail(email);
+      const u = existing || await queries.createUser({ email, password: hash, role: 'parente', display_name: 'Prova Parente' });
+      const atletaUser = await queries.getUserByEmail('prova-atleta@italiacrit.test');
+      if (atletaUser) {
+        const atletaProf = await queries.getAthleteProfile(atletaUser.id);
+        const links = await queries.getFamilyLinks(u.id);
+        const hasLink = Array.isArray(links) && links.length > 0;
+        if (!hasLink) {
+          await queries.createFamilyLink({ user_id: u.id, linked_atleta_id: atletaProf?.atleta_id || 'ROSSI_MARCO', relation: 'parente', status: 'active' });
+        }
+      }
+      await queries.upsertUserDetails({ user_id: u.id, bio: 'Parente/tifoso di prova', location: 'Toscana', instagram: '', facebook: '', strava: '', website: '', specialty: '', birth_year: '', favorite_team: 'Team di Prova', staff_role: '', public_contact: '' });
+      results.push({ email, role: 'parente', created: !existing });
+    }
+
+    // 7. APPASSIONATO
+    {
+      const email = 'prova-appassionato@italiacrit.test';
+      const existing = await queries.getUserByEmail(email);
+      const u = existing || await queries.createUser({ email, password: hash, role: 'appassionato', display_name: 'Prova Appassionato' });
+      await queries.upsertUserDetails({ user_id: u.id, bio: 'Appassionato di ciclismo di prova', location: 'Veneto', instagram: 'provaappassionato', facebook: '', strava: '', website: '', specialty: '', birth_year: '', favorite_team: 'Bardiani-CSF', staff_role: '', public_contact: '' });
+      results.push({ email, role: 'appassionato', created: !existing });
+    }
+
     res.json({ ok: true, password, accounts: results });
   } catch (e) { res.status(500).json({ error: e.message }); }
 });
