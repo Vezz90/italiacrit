@@ -88,12 +88,13 @@ async function fetchAllAlbums() {
 }
 
 // ── Filtri rilevanza ──────────────────────────────────────────────────────────
-// Salta gare professionistiche e contenuti non-gara
-const SKIP_RE = /\b(giro d.?italia|tour de france|vuelta|tirreno.adriatico|strade bianche|sanremo|giro di lombardia|coppi e bartali|liegi|parigi|fiandre|amstel|roubaix|critérium|criterium du dauphiné)\b|ritiro|presentazione|shooting|saggio|consegna|bmx|mountain bike|\bmtb\b|cross|pista|velodromo/i;
-const CYCLING_RE = /juniores?|allievi|esordienti|elite|under.?23|u\.?23|donne|allieve|femmin|\bgp\b|gran premio|trofeo|coppa|memorial|campionato|circuito|popolarissima|corsa|giro del|giro di|giro della/i;
+// xpix.it è già un sito di fotografia ciclistica: quasi tutto è rilevante.
+// Escludiamo solo eventi chiaramente fuori scope (grandi giri PRO, presentazioni, ecc.)
+const SKIP_RE = /\b(giro d.?italia|tour de france|vuelta|tirreno.adriatico|strade bianche|sanremo|giro di lombardia|coppi e bartali|liegi|parigi|fiandre|amstel|roubaix|critérium|criterium du dauphiné|giro donne|giro women)\b|ritiro|presentazione|shooting|saggio|consegna|bmx|mountain bike|\bmtb\b|cross|pista|velodromo|team presentation/i;
 
 function isCyclingRelevant(name) {
-  return !SKIP_RE.test(name) && CYCLING_RE.test(name);
+  // Basta che non sia nella lista esclusa: xpix pubblica solo ciclismo
+  return !SKIP_RE.test(name);
 }
 
 function isRecent(name) {
