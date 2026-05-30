@@ -1232,11 +1232,14 @@ const ADMIN_EDIT_FIELDS = {
     { key: 'instagram', label: 'Instagram (@handle o URL)', type: 'text' },
     { key: 'facebook',  label: 'Facebook (URL o pagina)',   type: 'text' },
     { key: 'strava',    label: 'Strava (ID o URL profilo)', type: 'text' },
+    { key: 'website',   label: 'Sito web (URL)',            type: 'text' },
   ],
   team: [
     { key: 'nome',      label: 'Nome team', type: 'text' },
     { key: 'instagram', label: 'Instagram (@handle o URL)', type: 'text' },
     { key: 'facebook',  label: 'Facebook (URL o pagina)',   type: 'text' },
+    { key: 'strava',    label: 'Strava (club ID o URL)',    type: 'text' },
+    { key: 'website',   label: 'Sito web (URL)',            type: 'text' },
   ],
 };
 
@@ -9776,7 +9779,7 @@ async function renderAtleta(atleta_id) {
             </div>
             ` : ''}
           </div>
-          ${entitySocialLinksHtml(atletaOv, ['instagram','facebook','strava'])}
+          ${entitySocialLinksHtml(atletaOv, ['instagram','facebook','strava','website'])}
         </div>
       </div>
       <div class="athlete-stats-bar">
@@ -10266,7 +10269,7 @@ async function renderTeam(team_id) {
         <div class="team-header-name-block">
           <div class="team-name-display">${esc(t.nome)}</div>
           <span id="team-msg-btn"></span>
-          ${entitySocialLinksHtml(teamOv, ['instagram','facebook'])}
+          ${entitySocialLinksHtml(teamOv, ['instagram','facebook','strava','website'])}
         </div>
       </div>
       ${headerStats}
