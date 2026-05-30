@@ -11770,6 +11770,16 @@ function _calDeriveGender(g) {
   return 'M'; // default: maschile per categorie agonistiche senza prefisso
 }
 
+// Estrae luogo_ritrovo e indirizzo_ritrovo dall'HTML grezzo di race_details.info
+function _parseRitrovo(det) {
+  if (!det) return {};
+  if (det.luogo_ritrovo || det.indirizzo_ritrovo) return det; // già parsati dallo scraper
+  const html = Array.isArray(det.info) ? det.info.join(' ') : (det.info || '');
+  const luogo      = (html.match(/Luogo Ritrovo:<\/b>\s*([^<\r\n]+)/) || [])[1]?.trim() || '';
+  const indirizzo  = (html.match(/Indirizzo Ritrovo:<\/b>\s*([^<\r\n]+)/) || [])[1]?.trim() || '';
+  return { luogo_ritrovo: luogo, indirizzo_ritrovo: indirizzo };
+}
+
 async function renderCalendario(highlightId) {
   if (!globalData) return;
   // Se arriva un deep-link a una gara specifica, forza la vista lista
@@ -11922,11 +11932,14 @@ async function renderCalendario(highlightId) {
             <div class="cal-cat">
               ${esc(catLabel(g.categoria)||'')} — <span style="text-transform:capitalize;color:var(--text-muted)">${esc(g.tipo)}</span>
               ${(g.luogo || g.regione) ? (() => {
-                const _addr = encodeURIComponent([g.luogo, g.regione, 'Italia'].filter(Boolean).join(', '));
+                const _det = _parseRitrovo((globalData.raceDetails || {})[g.id]);
+                const _navParts = [_det.indirizzo_ritrovo, _det.luogo_ritrovo || g.luogo, g.regione, 'Italia'].filter(Boolean);
+                const _addr = encodeURIComponent(_navParts.join(', '));
                 const _murl = `https://www.google.com/maps/dir/?api=1&destination=${_addr}`;
+                const _hasNav = !!(_det.indirizzo_ritrovo || _det.luogo_ritrovo || g.luogo);
                 return `<div style="font-size:0.8rem;color:var(--text-muted);margin-top:2px;display:flex;align-items:center;gap:8px;flex-wrap:wrap;">
                   <span>📍 ${esc(g.luogo || '')} ${g.regione ? '('+esc(g.regione)+')' : ''}</span>
-                  ${g.luogo ? `<a href="${_murl}" target="_blank" rel="noopener" onclick="event.stopPropagation()" style="font-size:0.7rem;color:#6366f1;white-space:nowrap;font-weight:600;text-decoration:none;border:1px solid #6366f1;border-radius:4px;padding:1px 7px;line-height:1.6">🧭 Indicazioni</a>` : ''}
+                  ${_hasNav ? `<a href="${_murl}" target="_blank" rel="noopener" onclick="event.stopPropagation()" style="font-size:0.7rem;color:#6366f1;white-space:nowrap;font-weight:600;text-decoration:none;border:1px solid #6366f1;border-radius:4px;padding:1px 7px;line-height:1.6">🧭 Indicazioni</a>` : ''}
                 </div>`;
               })() : ''}
             </div>
@@ -12191,10 +12204,11 @@ async function renderCalMap(filtered, calendarResultsMap) {
     // Costruisce lista di query in ordine di precisione (si prova la prima, poi le fallback)
     const buildGeoQueries = (g, det) => {
       const qs = [];
-      if (det.indirizzo_ritrovo && det.luogo_ritrovo)
-        qs.push(`${det.indirizzo_ritrovo}, ${det.luogo_ritrovo}, Italia`);
-      if (det.luogo_ritrovo)
-        qs.push(`${det.luogo_ritrovo}, Italia`);
+      const _r = _parseRitrovo(det);
+      if (_r.indirizzo_ritrovo && _r.luogo_ritrovo)
+        qs.push(`${_r.indirizzo_ritrovo}, ${_r.luogo_ritrovo}, Italia`);
+      if (_r.luogo_ritrovo)
+        qs.push(`${_r.luogo_ritrovo}, Italia`);
       if (g.luogo && g.regione)
         qs.push(`${g.luogo}, ${g.regione}, Italia`);
       if (g.luogo)
@@ -12247,9 +12261,10 @@ async function renderCalMap(filtered, calendarResultsMap) {
       // Inline onclick — unico modo affidabile per navigare da dentro un popup Leaflet
       const navOnclick = `event.stopPropagation();location.hash='${navHash.replace(/'/g,"\\'")}';`;
 
-      const luogoDisplay = det.luogo_ritrovo || g.luogo || '';
+      const _ritrovo = _parseRitrovo(det);
+      const luogoDisplay = _ritrovo.luogo_ritrovo || g.luogo || '';
       const _mapsAddr = encodeURIComponent(
-        [det.indirizzo_ritrovo, det.luogo_ritrovo || g.luogo, g.regione, 'Italia'].filter(Boolean).join(', ')
+        [_ritrovo.indirizzo_ritrovo, _ritrovo.luogo_ritrovo || g.luogo, g.regione, 'Italia'].filter(Boolean).join(', ')
       );
       const _mapsUrl = `https://www.google.com/maps/dir/?api=1&destination=${_mapsAddr}`;
       const popupContent = `
@@ -12259,7 +12274,7 @@ async function renderCalMap(filtered, calendarResultsMap) {
           <div style="color:#666;margin-bottom:6px">${catStr}</div>
           ${luogoDisplay ? `<div style="font-size:12px;color:#888">📍 ${esc(luogoDisplay)}</div>` : ''}
           ${isApprox ? `<div style="font-size:10px;color:#bbb;margin-top:2px">📌 posizione indicativa (${g.regione})</div>` : ''}
-          ${(det.luogo_ritrovo || g.luogo) ? `<a href="${_mapsUrl}" target="_blank" rel="noopener" style="margin-top:8px;display:block;width:100%;padding:6px 0;border-radius:6px;font-size:12px;font-weight:700;cursor:pointer;background:#6366f1;color:#fff;text-align:center;text-decoration:none;box-sizing:border-box">🧭 Indicazioni</a>` : ''}
+          ${(_ritrovo.luogo_ritrovo || g.luogo) ? `<a href="${_mapsUrl}" target="_blank" rel="noopener" style="margin-top:8px;display:block;width:100%;padding:6px 0;border-radius:6px;font-size:12px;font-weight:700;cursor:pointer;background:#6366f1;color:#fff;text-align:center;text-decoration:none;box-sizing:border-box">🧭 Indicazioni</a>` : ''}
           <button onclick="${navOnclick}"
             style="margin-top:6px;width:100%;padding:7px 0;border:none;border-radius:6px;font-size:12px;font-weight:700;cursor:pointer;background:${navColor};color:#fff">
             ${navLabel}
