@@ -10485,11 +10485,11 @@ async function renderTeam(team_id) {
     catPerfMap[r.atleta_id].pts += r.punti_effettivi||0;
     if (r.posizione === 1) catPerfMap[r.atleta_id].wins++;
   }
-  const topPerformers = Object.values(catPerfMap).sort((a,b) => b.pts - a.pts).slice(0, 6);
-  const _rankAccents = ['var(--gold)','var(--silver)','var(--bronze)','var(--text-muted)','var(--text-muted)','var(--text-muted)'];
+  const topPerformers = Object.values(catPerfMap).filter(p => p.pts > 0).sort((a,b) => b.pts - a.pts);
+  const _rankAccents = ['var(--gold)','var(--silver)','var(--bronze)'];
   const topPerfHtml = topPerformers.length ? topPerformers.map((p,i) => {
     return `<div class="team-performer-card">
-      <div class="team-perf-rank" style="color:${_rankAccents[i]}">${i+1}</div>
+      <div class="team-perf-rank" style="color:${_rankAccents[i] || 'var(--text-muted)'}">${i+1}</div>
       <div class="team-perf-info">
         <div class="team-perf-name"><a href="#/atleta/${esc(p.id)}">${esc(p.cognome)} <span style="font-weight:400">${esc(p.nome)}</span></a></div>
       </div>
@@ -10497,7 +10497,7 @@ async function renderTeam(team_id) {
         <div class="team-perf-pts">${p.pts}<small>pts</small></div>
       </div>
     </div>`;
-  }).join('') : '<div class="empty-state">Nessun risultato stagionale</div>';
+  }).join('') : '<div class="empty-state">Nessun corridore con punti in questa categoria</div>';
 
   // Identity strip HTML
   const identityHtml = `
