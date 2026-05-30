@@ -6719,7 +6719,6 @@ async function updateRankTable() {
           <div class="rk-leader-gauge-track">
             <div class="rk-leader-gauge-fill" style="width:${safety}%;background:${sColor}"></div>
           </div>
-          <span class="rk-leader-gauge-lbl" style="color:${sColor}">${sLabel}</span>
         </div>`;
       }
       // Catch-up hint for positions 2-3
@@ -6753,7 +6752,7 @@ async function updateRankTable() {
         <td>
           <div class="rk-athlete-cell">
             <div class="rk-athlete-name-row">
-              <span class="rk-av-wrap hide-mobile" data-aid="${esc(r.atleta_id)}"></span>
+              <span class="rk-av-wrap" data-aid="${esc(r.atleta_id)}"></span>
               <span class="rank-name"><a href="#/atleta/${esc(r.atleta_id)}">${esc(r.cognome)} ${esc(r.nome)}</a></span>
               ${badgeHtml}
             </div>
@@ -6954,21 +6953,29 @@ async function _injectRankPhotos(items) {
         const span = tableEl.querySelector(`.rk-av-wrap[data-aid="${CSS.escape(a.atleta_id)}"]`);
         if (!span) return;
         const ov = await getEntityOverrides('atleta', a.atleta_id).catch(() => ({}));
-        if (ov.photo_url && document.contains(span))
-          span.innerHTML = `<img src="${MEDIA_BASE}${esc(ov.photo_url)}" alt="" class="rk-av-img" onerror="this.parentElement.style.display='none'">`;
+        if (!document.contains(span)) return;
+        if (ov.photo_url) {
+          span.innerHTML = `<img src="${MEDIA_BASE}${esc(ov.photo_url)}" alt="" class="rk-av-img" onerror="this.parentNode.innerHTML='<span class=rk-av-placeholder><svg width=20 height=20 viewBox=\\'0 0 24 24\\' fill=\\'none\\' stroke=\\'currentColor\\' stroke-width=\\'1.5\\'><circle cx=\\'12\\' cy=\\'8\\' r=\\'4\\'/>  <path d=\\'M4 20c0-4 3.6-7 8-7s8 3 8 7\\'/></svg></span>'">`;
+        } else {
+          span.innerHTML = `<span class="rk-av-placeholder"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><circle cx="12" cy="8" r="4"/><path d="M4 20c0-4 3.6-7 8-7s8 3 8 7"/></svg></span>`;
+        }
       }));
     }
   }
 
   // Team — logo (team unici, sia classifica atleti che classifica team)
   if (!document.contains(tableEl)) return;
+  const _shieldSvg = `<span class="rk-tl-placeholder"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M12 2L3 6v6c0 5.5 3.8 10.7 9 12 5.2-1.3 9-6.5 9-12V6L12 2z"/></svg></span>`;
   const teamIds = [...new Set(items.map(a => a.team_id || a.team_id).filter(Boolean))];
   await Promise.all(teamIds.map(async tid => {
     const ov = await getEntityOverrides('team', tid).catch(() => ({}));
-    if (!ov.photo_url) return;
     tableEl.querySelectorAll(`.rk-tl-wrap[data-tid="${CSS.escape(tid)}"]`).forEach(span => {
-      if (document.contains(span))
-        span.innerHTML = `<img src="${MEDIA_BASE}${esc(ov.photo_url)}" alt="" class="rk-tl-img" onerror="this.remove()">`;
+      if (!document.contains(span)) return;
+      if (ov.photo_url) {
+        span.innerHTML = `<img src="${MEDIA_BASE}${esc(ov.photo_url)}" alt="" class="rk-tl-img" onerror="this.parentNode.innerHTML='${_shieldSvg.replace(/'/g, "\\'")}'">`;
+      } else {
+        span.innerHTML = _shieldSvg;
+      }
     });
   }));
 }
@@ -13192,13 +13199,13 @@ async function renderComparatore() {
     const avgT3  = t3.length  ? t3.reduce((s,r)=>s+r.posizione,0)/t3.length  : null;
     const avgT3p = t3p.length ? t3p.reduce((s,r)=>s+r.posizione,0)/t3p.length : null;
     let trend;
-    if      (avgT3 === null)      trend = {label:'—',            color:'var(--text-muted)'};
-    else if (avgT3p === null)     trend = {label:'→ Stabile',    color:'#F59E0B'};
+    if      (avgT3 === null)      trend = {label:'—',  color:'var(--text-muted)'};
+    else if (avgT3p === null)     trend = {label:'→',  color:'#F59E0B'};
     else {
       const delta = avgT3p - avgT3;   // positivo = miglioramento (pos bassa = meglio)
-      trend = delta > 2  ? {label:'↑ In crescita', color:'#10B981'}
-            : delta < -2 ? {label:'↓ In calo',     color:'#EF4444'}
-            :              {label:'→ Stabile',      color:'#F59E0B'};
+      trend = delta > 2  ? {label:'↑', color:'#10B981'}
+            : delta < -2 ? {label:'↓', color:'#EF4444'}
+            :              {label:'→', color:'#F59E0B'};
     }
     return { pts, wins, podi, top5, top10, piazzamenti, gare, km, mediaKm,
              avgPos, recent8, recent5, recent5pts, ptsPerResult, vittorie,
@@ -13653,10 +13660,10 @@ async function renderComparatore() {
       const avgT3p=t3p.length?t3p.reduce((s,r)=>s+r.posizione,0)/t3p.length:null;
       let trend;
       if(avgT3===null)     trend={label:'—',color:'var(--text-muted)'};
-      else if(!avgT3p)     trend={label:'→ Stabile',color:'#F59E0B'};
+      else if(!avgT3p)     trend={label:'→',color:'#F59E0B'};
       else {
         const delta=avgT3p-avgT3;
-        trend=delta>2?{label:'↑ In crescita',color:'#10B981'}:delta<-2?{label:'↓ In calo',color:'#EF4444'}:{label:'→ Stabile',color:'#F59E0B'};
+        trend=delta>2?{label:'↑',color:'#10B981'}:delta<-2?{label:'↓',color:'#EF4444'}:{label:'→',color:'#F59E0B'};
       }
       return {pts,wins,podi,top5,top10,gare,piazzamenti,km,atleti,ptsPerResult,avgPos,
               recent5pts,convRate,podioRate,consistRate,trend};

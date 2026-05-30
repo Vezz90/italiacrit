@@ -3090,12 +3090,8 @@ div[style*="grid-template-columns: repeat(auto-fit"] {
   .rank-num         { font-size: 0.8rem; min-width: 22px; }
   .rk-gap-label     { font-size: 0.6rem; }
   .rk-leader-tag    { font-size: 0.5rem; padding: 1px 4px; }
-}
-
-/* Su schermi molto stretti nascondi colonna trend (↕) */
-@media (max-width: 400px) {
-  .ranking-row td:nth-child(2),
-  .ranking-table th:nth-child(2) { display: none; }
+  /* Nascondi colonne non essenziali su mobile */
+  .hide-mobile      { display: none !important; }
 }
 
 /* ── HOME v9 — Ticker, Trending, Matchup, Hero Editorial ──────── */
@@ -11133,10 +11129,20 @@ main.page:has(.itc-dash) {
   width: 34px; height: 34px; border-radius: 50%; object-fit: cover;
   border: 2px solid var(--border-subtle); display: block;
 }
+.rk-av-placeholder {
+  width: 34px; height: 34px; border-radius: 50%; display: flex;
+  align-items: center; justify-content: center;
+  border: 1.5px solid var(--border-subtle);
+  background: var(--bg-elevated); color: var(--text-muted); flex-shrink: 0;
+}
 .rk-tl-wrap {
   display: inline-flex; align-items: center; vertical-align: middle; margin-right: 7px;
 }
 .rk-tl-img { width: 24px; height: 24px; border-radius: 4px; object-fit: cover; display: block; }
+.rk-tl-placeholder {
+  width: 24px; height: 24px; display: flex; align-items: center; justify-content: center;
+  color: var(--text-muted);
+}
 
 /* ═══════════════════════════════════════════════════════════════
    GAMIFICATION SYSTEM
