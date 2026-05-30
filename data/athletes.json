@@ -1,4 +1,829 @@
 {
+  "GUERRA_ANDREA": {
+    "id": "GUERRA_ANDREA",
+    "nome": "ANDREA",
+    "cognome": "GUERRA",
+    "team_attuale": "BELTRAMI TSA TRE COLLI",
+    "team_id": "BELTRAMI_TSA_TRE_COLLI",
+    "categoria": "ELI_M",
+    "genere": "M",
+    "punti_totali": 30,
+    "risultati": [
+      {
+        "gara_id": "70_GIRO_CICLISTICO_DEL_MONTALBANO_2026-05-30_ELI_M",
+        "nome_gara": "70 GIRO CICLISTICO DEL MONTALBANO",
+        "data": "2026-05-30",
+        "posizione": 1,
+        "punti_effettivi": 30,
+        "team": "BELTRAMI TSA TRE COLLI",
+        "moltiplicatore": 2,
+        "tipo": "nazionale",
+        "regione": "TOSCANA",
+        "km": "155.200",
+        "media": "41.571"
+      }
+    ]
+  },
+  "ROSA_LUCA": {
+    "id": "ROSA_LUCA",
+    "nome": "LUCA",
+    "cognome": "ROSA",
+    "team_attuale": "ASD G.C. SISSIO TEAM",
+    "team_id": "ASD_G_C_SISSIO_TEAM",
+    "categoria": "ELI_M",
+    "genere": "M",
+    "punti_totali": 27,
+    "risultati": [
+      {
+        "gara_id": "70_GIRO_CICLISTICO_DEL_MONTALBANO_2026-05-30_ELI_M",
+        "nome_gara": "70 GIRO CICLISTICO DEL MONTALBANO",
+        "data": "2026-05-30",
+        "posizione": 2,
+        "punti_effettivi": 24,
+        "team": "ASD G.C. SISSIO TEAM",
+        "moltiplicatore": 2,
+        "tipo": "nazionale",
+        "regione": "TOSCANA",
+        "km": "155.200",
+        "media": "41.571"
+      },
+      {
+        "gara_id": "64_COPPA_FIERA_DI_MERCATALE_2026-03-31_ELI_M",
+        "nome_gara": "64 COPPA FIERA DI MERCATALE",
+        "data": "2026-03-31",
+        "posizione": 8,
+        "punti_effettivi": 3,
+        "team": "ASD G.C. SISSIO TEAM",
+        "moltiplicatore": 1,
+        "tipo": "regionale",
+        "regione": "TOSCANA",
+        "km": "144.000",
+        "media": "41.094"
+      }
+    ]
+  },
+  "TESSIORE_TOMMASO": {
+    "id": "TESSIORE_TOMMASO",
+    "nome": "TOMMASO",
+    "cognome": "TESSIORE",
+    "team_attuale": "CICLISTICA ROSTESE",
+    "team_id": "CICLISTICA_ROSTESE",
+    "categoria": "ELI_M",
+    "genere": "M",
+    "punti_totali": 54,
+    "risultati": [
+      {
+        "gara_id": "70_GIRO_CICLISTICO_DEL_MONTALBANO_2026-05-30_ELI_M",
+        "nome_gara": "70 GIRO CICLISTICO DEL MONTALBANO",
+        "data": "2026-05-30",
+        "posizione": 3,
+        "punti_effettivi": 20,
+        "team": "CICLISTICA ROSTESE",
+        "moltiplicatore": 2,
+        "tipo": "nazionale",
+        "regione": "TOSCANA",
+        "km": "155.200",
+        "media": "41.571"
+      },
+      {
+        "gara_id": "72_TROFEO_MATTEOTTI_2026-05-17_ELI_M",
+        "nome_gara": "72 TROFEO MATTEOTTI",
+        "data": "2026-05-17",
+        "posizione": 10,
+        "punti_effettivi": 2,
+        "team": "CICLISTICA ROSTESE",
+        "moltiplicatore": 2,
+        "tipo": "nazionale",
+        "regione": "TOSCANA",
+        "km": "153.200",
+        "media": "41.738"
+      },
+      {
+        "gara_id": "12_MEMORIAL_DANIELE_TORTOLI_2026-05-03_ELI_M",
+        "nome_gara": "12 MEMORIAL DANIELE TORTOLI",
+        "data": "2026-05-03",
+        "posizione": 2,
+        "punti_effettivi": 24,
+        "team": "CICLISTICA ROSTESE",
+        "moltiplicatore": 2,
+        "tipo": "nazionale",
+        "regione": "TOSCANA",
+        "km": "176.600",
+        "media": "41.134"
+      },
+      {
+        "gara_id": "57_COPPA_PENNA_2026-05-01_ELI_M",
+        "nome_gara": "57 COPPA PENNA",
+        "data": "2026-05-01",
+        "posizione": 4,
+        "punti_effettivi": 8,
+        "team": "CICLISTICA ROSTESE",
+        "moltiplicatore": 1,
+        "tipo": "regionale",
+        "regione": "TOSCANA",
+        "km": "136.400",
+        "media": "42.867"
+      }
+    ]
+  },
+  "BAGNARA_LUCA": {
+    "id": "BAGNARA_LUCA",
+    "nome": "LUCA",
+    "cognome": "BAGNARA",
+    "team_attuale": "VEGA VITALCARE DYNATEK",
+    "team_id": "VEGA_VITALCARE_DYNATEK",
+    "categoria": "ELI_M",
+    "genere": "M",
+    "punti_totali": 16,
+    "risultati": [
+      {
+        "gara_id": "70_GIRO_CICLISTICO_DEL_MONTALBANO_2026-05-30_ELI_M",
+        "nome_gara": "70 GIRO CICLISTICO DEL MONTALBANO",
+        "data": "2026-05-30",
+        "posizione": 4,
+        "punti_effettivi": 16,
+        "team": "VEGA VITALCARE DYNATEK",
+        "moltiplicatore": 2,
+        "tipo": "nazionale",
+        "regione": "TOSCANA",
+        "km": "155.200",
+        "media": "41.571"
+      }
+    ]
+  },
+  "INNOCENTI_ANDREA": {
+    "id": "INNOCENTI_ANDREA",
+    "nome": "ANDREA",
+    "cognome": "INNOCENTI",
+    "team_attuale": "TEAM HOPPLA'",
+    "team_id": "TEAM_HOPPLA",
+    "categoria": "ELI_M",
+    "genere": "M",
+    "punti_totali": 21,
+    "risultati": [
+      {
+        "gara_id": "70_GIRO_CICLISTICO_DEL_MONTALBANO_2026-05-30_ELI_M",
+        "nome_gara": "70 GIRO CICLISTICO DEL MONTALBANO",
+        "data": "2026-05-30",
+        "posizione": 5,
+        "punti_effettivi": 12,
+        "team": "TEAM HOPPLA'",
+        "moltiplicatore": 2,
+        "tipo": "nazionale",
+        "regione": "TOSCANA",
+        "km": "155.200",
+        "media": "41.571"
+      },
+      {
+        "gara_id": "2_MEMORIAL_GIORDANO_MIGNOLLI_2026-05-09_ELI_M",
+        "nome_gara": "2 MEMORIAL GIORDANO MIGNOLLI",
+        "data": "2026-05-09",
+        "posizione": 10,
+        "punti_effettivi": 1,
+        "team": "TEAM HOPPLA'",
+        "moltiplicatore": 1,
+        "tipo": "regionale",
+        "regione": "VENETO",
+        "km": "137.900",
+        "media": "43.448"
+      },
+      {
+        "gara_id": "71_GRAN_PREMIO_PRETOLA_PROVA_VALIDA_CAMPIONATO_REGIONALE_2026-04-19_ELI_M",
+        "nome_gara": "71 GRAN PREMIO PRETOLA PROVA VALIDA CAMPIONATO REGIONALE",
+        "data": "2026-04-19",
+        "posizione": 7,
+        "punti_effettivi": 8,
+        "team": "TEAM HOPPLA'",
+        "moltiplicatore": 2,
+        "tipo": "regionale",
+        "regione": "UMBRIA",
+        "km": "143.000",
+        "media": "43.116"
+      }
+    ]
+  },
+  "ARCHETTI_RICCARDO": {
+    "id": "ARCHETTI_RICCARDO",
+    "nome": "RICCARDO",
+    "cognome": "ARCHETTI",
+    "team_attuale": "TEAM TECHNIPES #INEMILIAROMAGNA",
+    "team_id": "TEAM_TECHNIPES_INEMILIAROMAGNA",
+    "categoria": "ELI_M",
+    "genere": "M",
+    "punti_totali": 10,
+    "risultati": [
+      {
+        "gara_id": "70_GIRO_CICLISTICO_DEL_MONTALBANO_2026-05-30_ELI_M",
+        "nome_gara": "70 GIRO CICLISTICO DEL MONTALBANO",
+        "data": "2026-05-30",
+        "posizione": 6,
+        "punti_effettivi": 10,
+        "team": "TEAM TECHNIPES #INEMILIAROMAGNA",
+        "moltiplicatore": 2,
+        "tipo": "nazionale",
+        "regione": "TOSCANA",
+        "km": "155.200",
+        "media": "41.571"
+      }
+    ]
+  },
+  "PALOMBA_MARCO": {
+    "id": "PALOMBA_MARCO",
+    "nome": "MARCO",
+    "cognome": "PALOMBA",
+    "team_attuale": "A.S.D. S.C. PADOVANI",
+    "team_id": "A_S_D_S_C_PADOVANI",
+    "categoria": "ELI_M",
+    "genere": "M",
+    "punti_totali": 96,
+    "risultati": [
+      {
+        "gara_id": "70_GIRO_CICLISTICO_DEL_MONTALBANO_2026-05-30_ELI_M",
+        "nome_gara": "70 GIRO CICLISTICO DEL MONTALBANO",
+        "data": "2026-05-30",
+        "posizione": 7,
+        "punti_effettivi": 8,
+        "team": "A.S.D. S.C. PADOVANI",
+        "moltiplicatore": 2,
+        "tipo": "nazionale",
+        "regione": "TOSCANA",
+        "km": "155.200",
+        "media": "41.571"
+      },
+      {
+        "gara_id": "72_TROFEO_MATTEOTTI_2026-05-17_ELI_M",
+        "nome_gara": "72 TROFEO MATTEOTTI",
+        "data": "2026-05-17",
+        "posizione": 2,
+        "punti_effettivi": 24,
+        "team": "A.S.D. S.C. PADOVANI",
+        "moltiplicatore": 2,
+        "tipo": "nazionale",
+        "regione": "TOSCANA",
+        "km": "153.200",
+        "media": "41.738"
+      },
+      {
+        "gara_id": "12_MEMORIAL_DANIELE_TORTOLI_2026-05-03_ELI_M",
+        "nome_gara": "12 MEMORIAL DANIELE TORTOLI",
+        "data": "2026-05-03",
+        "posizione": 9,
+        "punti_effettivi": 4,
+        "team": "A.S.D. S.C. PADOVANI",
+        "moltiplicatore": 2,
+        "tipo": "nazionale",
+        "regione": "TOSCANA",
+        "km": "176.600",
+        "media": "41.134"
+      },
+      {
+        "gara_id": "7_GRAN_PREMIO_GENERAL_STORE_2026-05-01_ELI_M",
+        "nome_gara": "7 GRAN PREMIO GENERAL STORE",
+        "data": "2026-05-01",
+        "posizione": 5,
+        "punti_effettivi": 12,
+        "team": "A.S.D. S.C. PADOVANI",
+        "moltiplicatore": 2,
+        "tipo": "nazionale",
+        "regione": "VENETO",
+        "km": "160.900",
+        "media": "42.296"
+      },
+      {
+        "gara_id": "79_COPPA_CADUTI_NERVIANESI_2026-04-25_ELI_M",
+        "nome_gara": "79 COPPA CADUTI NERVIANESI",
+        "data": "2026-04-25",
+        "posizione": 2,
+        "punti_effettivi": 24,
+        "team": "A.S.D. S.C. PADOVANI",
+        "moltiplicatore": 2,
+        "tipo": "nazionale",
+        "regione": "LOMBARDIA",
+        "km": "153.000",
+        "media": "48.413"
+      },
+      {
+        "gara_id": "64_GRAN_PREMIO_LA_TORRE_2026-02-22_ELI_M",
+        "nome_gara": "64 GRAN PREMIO LA TORRE",
+        "data": "2026-02-22",
+        "posizione": 7,
+        "punti_effettivi": 8,
+        "team": "A.S.D. S.C. PADOVANI",
+        "moltiplicatore": 2,
+        "tipo": "nazionale",
+        "regione": "TOSCANA",
+        "km": "120.900",
+        "media": "44.353"
+      },
+      {
+        "gara_id": "102_COPPA_SAN_GEO_2026-02-14_ELI_M",
+        "nome_gara": "102 COPPA SAN GEO",
+        "data": "2026-02-14",
+        "posizione": 4,
+        "punti_effettivi": 16,
+        "team": "A.S.D. S.C. PADOVANI",
+        "moltiplicatore": 2,
+        "tipo": "nazionale",
+        "regione": "LOMBARDIA",
+        "km": "164.600",
+        "media": "40.051"
+      }
+    ]
+  },
+  "FERMANELLI_MARCO": {
+    "id": "FERMANELLI_MARCO",
+    "nome": "MARCO",
+    "cognome": "FERMANELLI",
+    "team_attuale": "VEGA VITALCARE DYNATEK",
+    "team_id": "VEGA_VITALCARE_DYNATEK",
+    "categoria": "ELI_M",
+    "genere": "M",
+    "punti_totali": 58,
+    "risultati": [
+      {
+        "gara_id": "70_GIRO_CICLISTICO_DEL_MONTALBANO_2026-05-30_ELI_M",
+        "nome_gara": "70 GIRO CICLISTICO DEL MONTALBANO",
+        "data": "2026-05-30",
+        "posizione": 8,
+        "punti_effettivi": 6,
+        "team": "VEGA VITALCARE DYNATEK",
+        "moltiplicatore": 2,
+        "tipo": "nazionale",
+        "regione": "TOSCANA",
+        "km": "155.200",
+        "media": "41.571"
+      },
+      {
+        "gara_id": "44_DUE_GIORNI_MARCHIGIANA_GRAN_PREMIO_SANTA_RITA_2026-05-23_ELI_M",
+        "nome_gara": "44 DUE GIORNI MARCHIGIANA GRAN PREMIO SANTA RITA",
+        "data": "2026-05-23",
+        "posizione": 9,
+        "punti_effettivi": 6,
+        "team": "VEGA VITALCARE DYNATEK",
+        "moltiplicatore": 3,
+        "tipo": "internazionale",
+        "regione": "MARCHE",
+        "km": "170.300",
+        "media": ""
+      },
+      {
+        "gara_id": "72_TROFEO_MATTEOTTI_2026-05-17_ELI_M",
+        "nome_gara": "72 TROFEO MATTEOTTI",
+        "data": "2026-05-17",
+        "posizione": 7,
+        "punti_effettivi": 8,
+        "team": "VEGA VITALCARE DYNATEK",
+        "moltiplicatore": 2,
+        "tipo": "nazionale",
+        "regione": "TOSCANA",
+        "km": "153.200",
+        "media": "41.738"
+      },
+      {
+        "gara_id": "10_GRAN_PREMIO_CITTA_DI_PONTEDERA_2026-05-16_ELI_M",
+        "nome_gara": "10 GRAN PREMIO CITTA' DI PONTEDERA",
+        "data": "2026-05-16",
+        "posizione": 5,
+        "punti_effettivi": 12,
+        "team": "VEGA VITALCARE DYNATEK",
+        "moltiplicatore": 2,
+        "tipo": "nazionale",
+        "regione": "TOSCANA",
+        "km": "166.000",
+        "media": "43.816"
+      },
+      {
+        "gara_id": "12_MEMORIAL_DANIELE_TORTOLI_2026-05-03_ELI_M",
+        "nome_gara": "12 MEMORIAL DANIELE TORTOLI",
+        "data": "2026-05-03",
+        "posizione": 10,
+        "punti_effettivi": 2,
+        "team": "VEGA VITALCARE DYNATEK",
+        "moltiplicatore": 2,
+        "tipo": "nazionale",
+        "regione": "TOSCANA",
+        "km": "176.600",
+        "media": "41.134"
+      },
+      {
+        "gara_id": "50_TROFEO_PAPA_CERVI_2026-05-01_ELI_M",
+        "nome_gara": "50 TROFEO PAPA' CERVI",
+        "data": "2026-05-01",
+        "posizione": 2,
+        "punti_effettivi": 24,
+        "team": "VEGA VITALCARE DYNATEK",
+        "moltiplicatore": 2,
+        "tipo": "nazionale",
+        "regione": "EMILIA ROMAGNA",
+        "km": "153.000",
+        "media": "45.300"
+      }
+    ]
+  },
+  "BELLERI_MICHAEL": {
+    "id": "BELLERI_MICHAEL",
+    "nome": "MICHAEL",
+    "cognome": "BELLERI",
+    "team_attuale": "BELTRAMI TSA TRE COLLI",
+    "team_id": "BELTRAMI_TSA_TRE_COLLI",
+    "categoria": "ELI_M",
+    "genere": "M",
+    "punti_totali": 34,
+    "risultati": [
+      {
+        "gara_id": "70_GIRO_CICLISTICO_DEL_MONTALBANO_2026-05-30_ELI_M",
+        "nome_gara": "70 GIRO CICLISTICO DEL MONTALBANO",
+        "data": "2026-05-30",
+        "posizione": 9,
+        "punti_effettivi": 4,
+        "team": "BELTRAMI TSA TRE COLLI",
+        "moltiplicatore": 2,
+        "tipo": "nazionale",
+        "regione": "TOSCANA",
+        "km": "155.200",
+        "media": "41.571"
+      },
+      {
+        "gara_id": "72_TROFEO_MATTEOTTI_2026-05-17_ELI_M",
+        "nome_gara": "72 TROFEO MATTEOTTI",
+        "data": "2026-05-17",
+        "posizione": 3,
+        "punti_effettivi": 20,
+        "team": "BELTRAMI TSA TRE COLLI",
+        "moltiplicatore": 2,
+        "tipo": "nazionale",
+        "regione": "TOSCANA",
+        "km": "153.200",
+        "media": "41.738"
+      },
+      {
+        "gara_id": "12_MEMORIAL_DANIELE_TORTOLI_2026-05-03_ELI_M",
+        "nome_gara": "12 MEMORIAL DANIELE TORTOLI",
+        "data": "2026-05-03",
+        "posizione": 6,
+        "punti_effettivi": 10,
+        "team": "BELTRAMI TSA TRE COLLI",
+        "moltiplicatore": 2,
+        "tipo": "nazionale",
+        "regione": "TOSCANA",
+        "km": "176.600",
+        "media": "41.134"
+      }
+    ]
+  },
+  "PIZZI_NICOLO": {
+    "id": "PIZZI_NICOLO",
+    "nome": "NICOLO'",
+    "cognome": "PIZZI",
+    "team_attuale": "TEAM TECHNIPES #INEMILIAROMAGNA",
+    "team_id": "TEAM_TECHNIPES_INEMILIAROMAGNA",
+    "categoria": "ELI_M",
+    "genere": "M",
+    "punti_totali": 32,
+    "risultati": [
+      {
+        "gara_id": "70_GIRO_CICLISTICO_DEL_MONTALBANO_2026-05-30_ELI_M",
+        "nome_gara": "70 GIRO CICLISTICO DEL MONTALBANO",
+        "data": "2026-05-30",
+        "posizione": 10,
+        "punti_effettivi": 2,
+        "team": "TEAM TECHNIPES #INEMILIAROMAGNA",
+        "moltiplicatore": 2,
+        "tipo": "nazionale",
+        "regione": "TOSCANA",
+        "km": "155.200",
+        "media": "41.571"
+      },
+      {
+        "gara_id": "64_GRAN_PREMIO_LA_TORRE_2026-02-22_ELI_M",
+        "nome_gara": "64 GRAN PREMIO LA TORRE",
+        "data": "2026-02-22",
+        "posizione": 1,
+        "punti_effettivi": 30,
+        "team": "TEAM TECHNIPES #INEMILIAROMAGNA",
+        "moltiplicatore": 2,
+        "tipo": "nazionale",
+        "regione": "TOSCANA",
+        "km": "120.900",
+        "media": "44.353"
+      }
+    ]
+  },
+  "WIEBES_LORENA": {
+    "id": "WIEBES_LORENA",
+    "nome": "LORENA",
+    "cognome": "WIEBES",
+    "team_attuale": "TEAM SD WORX-PROTIME",
+    "team_id": "TEAM_SD_WORX_PROTIME",
+    "categoria": "ELI_F",
+    "genere": "F",
+    "punti_totali": 60,
+    "risultati": [
+      {
+        "gara_id": "GIRO_D_ITALIA_WOMEN_PRIMA_TAPPA_2026-05-30_ELI_F",
+        "nome_gara": "GIRO D'ITALIA WOMEN PRIMA TAPPA",
+        "data": "2026-05-30",
+        "posizione": 1,
+        "punti_effettivi": 45,
+        "team": "TEAM SD WORX-PROTIME",
+        "moltiplicatore": 3,
+        "tipo": "internazionale",
+        "regione": "LOMBARDIA",
+        "km": "139.000",
+        "media": "42.043"
+      },
+      {
+        "gara_id": "MILANO_SANREMO_DONNE_2026-03-21_ELI_F",
+        "nome_gara": "MILANO SANREMO DONNE",
+        "data": "2026-03-21",
+        "posizione": 6,
+        "punti_effettivi": 15,
+        "team": "TEAM SD WORX-PROTIME",
+        "moltiplicatore": 3,
+        "tipo": "internazionale",
+        "regione": "LIGURIA",
+        "km": "156.000",
+        "media": "41.182"
+      }
+    ]
+  },
+  "BALSAMO_ELISA": {
+    "id": "BALSAMO_ELISA",
+    "nome": "ELISA",
+    "cognome": "BALSAMO",
+    "team_attuale": "LIDL - TREK",
+    "team_id": "LIDL_TREK",
+    "categoria": "ELI_F",
+    "genere": "F",
+    "punti_totali": 45,
+    "risultati": [
+      {
+        "gara_id": "GIRO_D_ITALIA_WOMEN_PRIMA_TAPPA_2026-05-30_ELI_F",
+        "nome_gara": "GIRO D'ITALIA WOMEN PRIMA TAPPA",
+        "data": "2026-05-30",
+        "posizione": 2,
+        "punti_effettivi": 36,
+        "team": "LIDL - TREK",
+        "moltiplicatore": 3,
+        "tipo": "internazionale",
+        "regione": "LOMBARDIA",
+        "km": "139.000",
+        "media": "42.043"
+      },
+      {
+        "gara_id": "MILANO_SANREMO_DONNE_2026-03-21_ELI_F",
+        "nome_gara": "MILANO SANREMO DONNE",
+        "data": "2026-03-21",
+        "posizione": 8,
+        "punti_effettivi": 9,
+        "team": "LIDL - TREK",
+        "moltiplicatore": 3,
+        "tipo": "internazionale",
+        "regione": "LIGURIA",
+        "km": "156.000",
+        "media": "41.182"
+      }
+    ]
+  },
+  "GILLESPIE_LARA": {
+    "id": "GILLESPIE_LARA",
+    "nome": "LARA",
+    "cognome": "GILLESPIE",
+    "team_attuale": "UAE TEAM ADQ",
+    "team_id": "UAE_TEAM_ADQ",
+    "categoria": "ELI_F",
+    "genere": "F",
+    "punti_totali": 30,
+    "risultati": [
+      {
+        "gara_id": "GIRO_D_ITALIA_WOMEN_PRIMA_TAPPA_2026-05-30_ELI_F",
+        "nome_gara": "GIRO D'ITALIA WOMEN PRIMA TAPPA",
+        "data": "2026-05-30",
+        "posizione": 3,
+        "punti_effettivi": 30,
+        "team": "UAE TEAM ADQ",
+        "moltiplicatore": 3,
+        "tipo": "internazionale",
+        "regione": "LOMBARDIA",
+        "km": "139.000",
+        "media": "42.043"
+      }
+    ]
+  },
+  "CONSONNI_CHIARA": {
+    "id": "CONSONNI_CHIARA",
+    "nome": "CHIARA",
+    "cognome": "CONSONNI",
+    "team_attuale": "CANYON SRAM ZONDACRYPTO",
+    "team_id": "CANYON_SRAM_ZONDACRYPTO",
+    "categoria": "ELI_F",
+    "genere": "F",
+    "punti_totali": 27,
+    "risultati": [
+      {
+        "gara_id": "GIRO_D_ITALIA_WOMEN_PRIMA_TAPPA_2026-05-30_ELI_F",
+        "nome_gara": "GIRO D'ITALIA WOMEN PRIMA TAPPA",
+        "data": "2026-05-30",
+        "posizione": 4,
+        "punti_effettivi": 24,
+        "team": "CANYON SRAM ZONDACRYPTO",
+        "moltiplicatore": 3,
+        "tipo": "internazionale",
+        "regione": "LOMBARDIA",
+        "km": "139.000",
+        "media": "42.043"
+      },
+      {
+        "gara_id": "MILANO_SANREMO_DONNE_2026-03-21_ELI_F",
+        "nome_gara": "MILANO SANREMO DONNE",
+        "data": "2026-03-21",
+        "posizione": 10,
+        "punti_effettivi": 3,
+        "team": "CANYON SRAM ZONDACRYPTO",
+        "moltiplicatore": 3,
+        "tipo": "internazionale",
+        "regione": "LIGURIA",
+        "km": "156.000",
+        "media": "41.182"
+      }
+    ]
+  },
+  "BAKER_GEORGIA": {
+    "id": "BAKER_GEORGIA",
+    "nome": "GEORGIA",
+    "cognome": "BAKER",
+    "team_attuale": "LIV-ALULA JAYCO",
+    "team_id": "LIV_ALULA_JAYCO",
+    "categoria": "ELI_F",
+    "genere": "F",
+    "punti_totali": 18,
+    "risultati": [
+      {
+        "gara_id": "GIRO_D_ITALIA_WOMEN_PRIMA_TAPPA_2026-05-30_ELI_F",
+        "nome_gara": "GIRO D'ITALIA WOMEN PRIMA TAPPA",
+        "data": "2026-05-30",
+        "posizione": 5,
+        "punti_effettivi": 18,
+        "team": "LIV-ALULA JAYCO",
+        "moltiplicatore": 3,
+        "tipo": "internazionale",
+        "regione": "LOMBARDIA",
+        "km": "139.000",
+        "media": "42.043"
+      }
+    ]
+  },
+  "KOOL_CHARLOTTE": {
+    "id": "KOOL_CHARLOTTE",
+    "nome": "CHARLOTTE",
+    "cognome": "KOOL",
+    "team_attuale": "FENIX-PREMIER TECH",
+    "team_id": "FENIX_PREMIER_TECH",
+    "categoria": "ELI_F",
+    "genere": "F",
+    "punti_totali": 21,
+    "risultati": [
+      {
+        "gara_id": "GIRO_D_ITALIA_WOMEN_PRIMA_TAPPA_2026-05-30_ELI_F",
+        "nome_gara": "GIRO D'ITALIA WOMEN PRIMA TAPPA",
+        "data": "2026-05-30",
+        "posizione": 6,
+        "punti_effettivi": 15,
+        "team": "FENIX-PREMIER TECH",
+        "moltiplicatore": 3,
+        "tipo": "internazionale",
+        "regione": "LOMBARDIA",
+        "km": "139.000",
+        "media": "42.043"
+      },
+      {
+        "gara_id": "MILANO_SANREMO_DONNE_2026-03-21_ELI_F",
+        "nome_gara": "MILANO SANREMO DONNE",
+        "data": "2026-03-21",
+        "posizione": 9,
+        "punti_effettivi": 6,
+        "team": "FENIX-PREMIER TECH",
+        "moltiplicatore": 3,
+        "tipo": "internazionale",
+        "regione": "LIGURIA",
+        "km": "156.000",
+        "media": "41.182"
+      }
+    ]
+  },
+  "ZANETTI_LINDA": {
+    "id": "ZANETTI_LINDA",
+    "nome": "LINDA",
+    "cognome": "ZANETTI",
+    "team_attuale": "UNO-X MOBILITY",
+    "team_id": "UNO_X_MOBILITY",
+    "categoria": "ELI_F",
+    "genere": "F",
+    "punti_totali": 12,
+    "risultati": [
+      {
+        "gara_id": "GIRO_D_ITALIA_WOMEN_PRIMA_TAPPA_2026-05-30_ELI_F",
+        "nome_gara": "GIRO D'ITALIA WOMEN PRIMA TAPPA",
+        "data": "2026-05-30",
+        "posizione": 7,
+        "punti_effettivi": 12,
+        "team": "UNO-X MOBILITY",
+        "moltiplicatore": 3,
+        "tipo": "internazionale",
+        "regione": "LOMBARDIA",
+        "km": "139.000",
+        "media": "42.043"
+      }
+    ]
+  },
+  "VERHULST_WILD_GLADYS": {
+    "id": "VERHULST_WILD_GLADYS",
+    "nome": "GLADYS",
+    "cognome": "VERHULST-WILD",
+    "team_attuale": "AG INSURANCE SOUDAL",
+    "team_id": "AG_INSURANCE_SOUDAL",
+    "categoria": "ELI_F",
+    "genere": "F",
+    "punti_totali": 9,
+    "risultati": [
+      {
+        "gara_id": "GIRO_D_ITALIA_WOMEN_PRIMA_TAPPA_2026-05-30_ELI_F",
+        "nome_gara": "GIRO D'ITALIA WOMEN PRIMA TAPPA",
+        "data": "2026-05-30",
+        "posizione": 8,
+        "punti_effettivi": 9,
+        "team": "AG INSURANCE SOUDAL",
+        "moltiplicatore": 3,
+        "tipo": "internazionale",
+        "regione": "LOMBARDIA",
+        "km": "139.000",
+        "media": "42.043"
+      }
+    ]
+  },
+  "GERY_CELIA": {
+    "id": "GERY_CELIA",
+    "nome": "CELIA",
+    "cognome": "GERY",
+    "team_attuale": "FDJ UNITED - SUEZ",
+    "team_id": "FDJ_UNITED_SUEZ",
+    "categoria": "ELI_F",
+    "genere": "F",
+    "punti_totali": 30,
+    "risultati": [
+      {
+        "gara_id": "GIRO_D_ITALIA_WOMEN_PRIMA_TAPPA_2026-05-30_ELI_F",
+        "nome_gara": "GIRO D'ITALIA WOMEN PRIMA TAPPA",
+        "data": "2026-05-30",
+        "posizione": 9,
+        "punti_effettivi": 6,
+        "team": "FDJ UNITED - SUEZ",
+        "moltiplicatore": 3,
+        "tipo": "internazionale",
+        "regione": "LOMBARDIA",
+        "km": "139.000",
+        "media": "42.043"
+      },
+      {
+        "gara_id": "GIRO_DELL_APPENNINO_DONNE_2026-03-22_ELI_F",
+        "nome_gara": "GIRO DELL'APPENNINO DONNE",
+        "data": "2026-03-22",
+        "posizione": 4,
+        "punti_effettivi": 24,
+        "team": "FDJ UNITED - SUEZ",
+        "moltiplicatore": 3,
+        "tipo": "internazionale",
+        "regione": "LIGURIA",
+        "km": "111.000",
+        "media": "40.583"
+      }
+    ]
+  },
+  "WILLIAMS_LILY": {
+    "id": "WILLIAMS_LILY",
+    "nome": "LILY",
+    "cognome": "WILLIAMS",
+    "team_attuale": "HUMAN POWERED HEALTH",
+    "team_id": "HUMAN_POWERED_HEALTH",
+    "categoria": "ELI_F",
+    "genere": "F",
+    "punti_totali": 3,
+    "risultati": [
+      {
+        "gara_id": "GIRO_D_ITALIA_WOMEN_PRIMA_TAPPA_2026-05-30_ELI_F",
+        "nome_gara": "GIRO D'ITALIA WOMEN PRIMA TAPPA",
+        "data": "2026-05-30",
+        "posizione": 10,
+        "punti_effettivi": 3,
+        "team": "HUMAN POWERED HEALTH",
+        "moltiplicatore": 3,
+        "tipo": "internazionale",
+        "regione": "LOMBARDIA",
+        "km": "139.000",
+        "media": "42.043"
+      }
+    ]
+  },
   "MANENTI_MARCO": {
     "id": "MANENTI_MARCO",
     "nome": "MARCO",
@@ -31318,83 +32143,6 @@
       }
     ]
   },
-  "FERMANELLI_MARCO": {
-    "id": "FERMANELLI_MARCO",
-    "nome": "MARCO",
-    "cognome": "FERMANELLI",
-    "team_attuale": "VEGA VITALCARE DYNATEK",
-    "team_id": "VEGA_VITALCARE_DYNATEK",
-    "categoria": "ELI_M",
-    "genere": "M",
-    "punti_totali": 52,
-    "risultati": [
-      {
-        "gara_id": "44_DUE_GIORNI_MARCHIGIANA_GRAN_PREMIO_SANTA_RITA_2026-05-23_ELI_M",
-        "nome_gara": "44 DUE GIORNI MARCHIGIANA GRAN PREMIO SANTA RITA",
-        "data": "2026-05-23",
-        "posizione": 9,
-        "punti_effettivi": 6,
-        "team": "VEGA VITALCARE DYNATEK",
-        "moltiplicatore": 3,
-        "tipo": "internazionale",
-        "regione": "MARCHE",
-        "km": "170.300",
-        "media": ""
-      },
-      {
-        "gara_id": "72_TROFEO_MATTEOTTI_2026-05-17_ELI_M",
-        "nome_gara": "72 TROFEO MATTEOTTI",
-        "data": "2026-05-17",
-        "posizione": 7,
-        "punti_effettivi": 8,
-        "team": "VEGA VITALCARE DYNATEK",
-        "moltiplicatore": 2,
-        "tipo": "nazionale",
-        "regione": "TOSCANA",
-        "km": "153.200",
-        "media": "41.738"
-      },
-      {
-        "gara_id": "10_GRAN_PREMIO_CITTA_DI_PONTEDERA_2026-05-16_ELI_M",
-        "nome_gara": "10 GRAN PREMIO CITTA' DI PONTEDERA",
-        "data": "2026-05-16",
-        "posizione": 5,
-        "punti_effettivi": 12,
-        "team": "VEGA VITALCARE DYNATEK",
-        "moltiplicatore": 2,
-        "tipo": "nazionale",
-        "regione": "TOSCANA",
-        "km": "166.000",
-        "media": "43.816"
-      },
-      {
-        "gara_id": "12_MEMORIAL_DANIELE_TORTOLI_2026-05-03_ELI_M",
-        "nome_gara": "12 MEMORIAL DANIELE TORTOLI",
-        "data": "2026-05-03",
-        "posizione": 10,
-        "punti_effettivi": 2,
-        "team": "VEGA VITALCARE DYNATEK",
-        "moltiplicatore": 2,
-        "tipo": "nazionale",
-        "regione": "TOSCANA",
-        "km": "176.600",
-        "media": "41.134"
-      },
-      {
-        "gara_id": "50_TROFEO_PAPA_CERVI_2026-05-01_ELI_M",
-        "nome_gara": "50 TROFEO PAPA' CERVI",
-        "data": "2026-05-01",
-        "posizione": 2,
-        "punti_effettivi": 24,
-        "team": "VEGA VITALCARE DYNATEK",
-        "moltiplicatore": 2,
-        "tipo": "nazionale",
-        "regione": "EMILIA ROMAGNA",
-        "km": "153.000",
-        "media": "45.300"
-      }
-    ]
-  },
   "CANTONI_ANDREA": {
     "id": "CANTONI_ANDREA",
     "nome": "ANDREA",
@@ -37263,134 +38011,6 @@
       }
     ]
   },
-  "PALOMBA_MARCO": {
-    "id": "PALOMBA_MARCO",
-    "nome": "MARCO",
-    "cognome": "PALOMBA",
-    "team_attuale": "A.S.D. S.C. PADOVANI",
-    "team_id": "A_S_D_S_C_PADOVANI",
-    "categoria": "ELI_M",
-    "genere": "M",
-    "punti_totali": 88,
-    "risultati": [
-      {
-        "gara_id": "72_TROFEO_MATTEOTTI_2026-05-17_ELI_M",
-        "nome_gara": "72 TROFEO MATTEOTTI",
-        "data": "2026-05-17",
-        "posizione": 2,
-        "punti_effettivi": 24,
-        "team": "A.S.D. S.C. PADOVANI",
-        "moltiplicatore": 2,
-        "tipo": "nazionale",
-        "regione": "TOSCANA",
-        "km": "153.200",
-        "media": "41.738"
-      },
-      {
-        "gara_id": "12_MEMORIAL_DANIELE_TORTOLI_2026-05-03_ELI_M",
-        "nome_gara": "12 MEMORIAL DANIELE TORTOLI",
-        "data": "2026-05-03",
-        "posizione": 9,
-        "punti_effettivi": 4,
-        "team": "A.S.D. S.C. PADOVANI",
-        "moltiplicatore": 2,
-        "tipo": "nazionale",
-        "regione": "TOSCANA",
-        "km": "176.600",
-        "media": "41.134"
-      },
-      {
-        "gara_id": "7_GRAN_PREMIO_GENERAL_STORE_2026-05-01_ELI_M",
-        "nome_gara": "7 GRAN PREMIO GENERAL STORE",
-        "data": "2026-05-01",
-        "posizione": 5,
-        "punti_effettivi": 12,
-        "team": "A.S.D. S.C. PADOVANI",
-        "moltiplicatore": 2,
-        "tipo": "nazionale",
-        "regione": "VENETO",
-        "km": "160.900",
-        "media": "42.296"
-      },
-      {
-        "gara_id": "79_COPPA_CADUTI_NERVIANESI_2026-04-25_ELI_M",
-        "nome_gara": "79 COPPA CADUTI NERVIANESI",
-        "data": "2026-04-25",
-        "posizione": 2,
-        "punti_effettivi": 24,
-        "team": "A.S.D. S.C. PADOVANI",
-        "moltiplicatore": 2,
-        "tipo": "nazionale",
-        "regione": "LOMBARDIA",
-        "km": "153.000",
-        "media": "48.413"
-      },
-      {
-        "gara_id": "64_GRAN_PREMIO_LA_TORRE_2026-02-22_ELI_M",
-        "nome_gara": "64 GRAN PREMIO LA TORRE",
-        "data": "2026-02-22",
-        "posizione": 7,
-        "punti_effettivi": 8,
-        "team": "A.S.D. S.C. PADOVANI",
-        "moltiplicatore": 2,
-        "tipo": "nazionale",
-        "regione": "TOSCANA",
-        "km": "120.900",
-        "media": "44.353"
-      },
-      {
-        "gara_id": "102_COPPA_SAN_GEO_2026-02-14_ELI_M",
-        "nome_gara": "102 COPPA SAN GEO",
-        "data": "2026-02-14",
-        "posizione": 4,
-        "punti_effettivi": 16,
-        "team": "A.S.D. S.C. PADOVANI",
-        "moltiplicatore": 2,
-        "tipo": "nazionale",
-        "regione": "LOMBARDIA",
-        "km": "164.600",
-        "media": "40.051"
-      }
-    ]
-  },
-  "BELLERI_MICHAEL": {
-    "id": "BELLERI_MICHAEL",
-    "nome": "MICHAEL",
-    "cognome": "BELLERI",
-    "team_attuale": "BELTRAMI TSA TRE COLLI",
-    "team_id": "BELTRAMI_TSA_TRE_COLLI",
-    "categoria": "ELI_M",
-    "genere": "M",
-    "punti_totali": 30,
-    "risultati": [
-      {
-        "gara_id": "72_TROFEO_MATTEOTTI_2026-05-17_ELI_M",
-        "nome_gara": "72 TROFEO MATTEOTTI",
-        "data": "2026-05-17",
-        "posizione": 3,
-        "punti_effettivi": 20,
-        "team": "BELTRAMI TSA TRE COLLI",
-        "moltiplicatore": 2,
-        "tipo": "nazionale",
-        "regione": "TOSCANA",
-        "km": "153.200",
-        "media": "41.738"
-      },
-      {
-        "gara_id": "12_MEMORIAL_DANIELE_TORTOLI_2026-05-03_ELI_M",
-        "nome_gara": "12 MEMORIAL DANIELE TORTOLI",
-        "data": "2026-05-03",
-        "posizione": 6,
-        "punti_effettivi": 10,
-        "team": "BELTRAMI TSA TRE COLLI",
-        "moltiplicatore": 2,
-        "tipo": "nazionale",
-        "regione": "TOSCANA",
-        "km": "176.600",
-        "media": "41.134"
-      }
-    ]
-  },
   "BRUNO_ANDREA_ALFIO": {
     "id": "BRUNO_ANDREA_ALFIO",
     "nome": "ANDREA ALFIO",
@@ -37645,57 +38265,6 @@
         "regione": "EMILIA ROMAGNA",
         "km": "148.300",
         "media": "41.788"
-      }
-    ]
-  },
-  "TESSIORE_TOMMASO": {
-    "id": "TESSIORE_TOMMASO",
-    "nome": "TOMMASO",
-    "cognome": "TESSIORE",
-    "team_attuale": "CICLISTICA ROSTESE",
-    "team_id": "CICLISTICA_ROSTESE",
-    "categoria": "ELI_M",
-    "genere": "M",
-    "punti_totali": 34,
-    "risultati": [
-      {
-        "gara_id": "72_TROFEO_MATTEOTTI_2026-05-17_ELI_M",
-        "nome_gara": "72 TROFEO MATTEOTTI",
-        "data": "2026-05-17",
-        "posizione": 10,
-        "punti_effettivi": 2,
-        "team": "CICLISTICA ROSTESE",
-        "moltiplicatore": 2,
-        "tipo": "nazionale",
-        "regione": "TOSCANA",
-        "km": "153.200",
-        "media": "41.738"
-      },
-      {
-        "gara_id": "12_MEMORIAL_DANIELE_TORTOLI_2026-05-03_ELI_M",
-        "nome_gara": "12 MEMORIAL DANIELE TORTOLI",
-        "data": "2026-05-03",
-        "posizione": 2,
-        "punti_effettivi": 24,
-        "team": "CICLISTICA ROSTESE",
-        "moltiplicatore": 2,
-        "tipo": "nazionale",
-        "regione": "TOSCANA",
-        "km": "176.600",
-        "media": "41.134"
-      },
-      {
-        "gara_id": "57_COPPA_PENNA_2026-05-01_ELI_M",
-        "nome_gara": "57 COPPA PENNA",
-        "data": "2026-05-01",
-        "posizione": 4,
-        "punti_effettivi": 8,
-        "team": "CICLISTICA ROSTESE",
-        "moltiplicatore": 1,
-        "tipo": "regionale",
-        "regione": "TOSCANA",
-        "km": "136.400",
-        "media": "42.867"
       }
     ]
   },
@@ -65539,44 +66108,6 @@
       }
     ]
   },
-  "INNOCENTI_ANDREA": {
-    "id": "INNOCENTI_ANDREA",
-    "nome": "ANDREA",
-    "cognome": "INNOCENTI",
-    "team_attuale": "TEAM HOPPLA'",
-    "team_id": "TEAM_HOPPLA",
-    "categoria": "ELI_M",
-    "genere": "M",
-    "punti_totali": 9,
-    "risultati": [
-      {
-        "gara_id": "2_MEMORIAL_GIORDANO_MIGNOLLI_2026-05-09_ELI_M",
-        "nome_gara": "2 MEMORIAL GIORDANO MIGNOLLI",
-        "data": "2026-05-09",
-        "posizione": 10,
-        "punti_effettivi": 1,
-        "team": "TEAM HOPPLA'",
-        "moltiplicatore": 1,
-        "tipo": "regionale",
-        "regione": "VENETO",
-        "km": "137.900",
-        "media": "43.448"
-      },
-      {
-        "gara_id": "71_GRAN_PREMIO_PRETOLA_PROVA_VALIDA_CAMPIONATO_REGIONALE_2026-04-19_ELI_M",
-        "nome_gara": "71 GRAN PREMIO PRETOLA PROVA VALIDA CAMPIONATO REGIONALE",
-        "data": "2026-04-19",
-        "posizione": 7,
-        "punti_effettivi": 8,
-        "team": "TEAM HOPPLA'",
-        "moltiplicatore": 2,
-        "tipo": "regionale",
-        "regione": "UMBRIA",
-        "km": "143.000",
-        "media": "43.116"
-      }
-    ]
-  },
   "FORTUNA_DAVIDE": {
     "id": "FORTUNA_DAVIDE",
     "nome": "DAVIDE",
@@ -89198,31 +89729,6 @@
       }
     ]
   },
-  "ROSA_LUCA": {
-    "id": "ROSA_LUCA",
-    "nome": "LUCA",
-    "cognome": "ROSA",
-    "team_attuale": "ASD G.C. SISSIO TEAM",
-    "team_id": "ASD_G_C_SISSIO_TEAM",
-    "categoria": "ELI_M",
-    "genere": "M",
-    "punti_totali": 3,
-    "risultati": [
-      {
-        "gara_id": "64_COPPA_FIERA_DI_MERCATALE_2026-03-31_ELI_M",
-        "nome_gara": "64 COPPA FIERA DI MERCATALE",
-        "data": "2026-03-31",
-        "posizione": 8,
-        "punti_effettivi": 3,
-        "team": "ASD G.C. SISSIO TEAM",
-        "moltiplicatore": 1,
-        "tipo": "regionale",
-        "regione": "TOSCANA",
-        "km": "144.000",
-        "media": "41.094"
-      }
-    ]
-  },
   "ANNIBALLI_LORENZO": {
     "id": "ANNIBALLI_LORENZO",
     "nome": "LORENZO",
@@ -90604,31 +91110,6 @@
       }
     ]
   },
-  "GERY_CELIA": {
-    "id": "GERY_CELIA",
-    "nome": "CELIA",
-    "cognome": "GERY",
-    "team_attuale": "FDJ UNITED - SUEZ",
-    "team_id": "FDJ_UNITED_SUEZ",
-    "categoria": "ELI_F",
-    "genere": "F",
-    "punti_totali": 24,
-    "risultati": [
-      {
-        "gara_id": "GIRO_DELL_APPENNINO_DONNE_2026-03-22_ELI_F",
-        "nome_gara": "GIRO DELL'APPENNINO DONNE",
-        "data": "2026-03-22",
-        "posizione": 4,
-        "punti_effettivi": 24,
-        "team": "FDJ UNITED - SUEZ",
-        "moltiplicatore": 3,
-        "tipo": "internazionale",
-        "regione": "LIGURIA",
-        "km": "111.000",
-        "media": "40.583"
-      }
-    ]
-  },
   "FISHER_BLACK_NIAMH": {
     "id": "FISHER_BLACK_NIAMH",
     "nome": "NIAMH",
@@ -90970,31 +91451,6 @@
       }
     ]
   },
-  "WIEBES_LORENA": {
-    "id": "WIEBES_LORENA",
-    "nome": "LORENA",
-    "cognome": "WIEBES",
-    "team_attuale": "TEAM SD WORX-PROTIME",
-    "team_id": "TEAM_SD_WORX_PROTIME",
-    "categoria": "ELI_F",
-    "genere": "F",
-    "punti_totali": 15,
-    "risultati": [
-      {
-        "gara_id": "MILANO_SANREMO_DONNE_2026-03-21_ELI_F",
-        "nome_gara": "MILANO SANREMO DONNE",
-        "data": "2026-03-21",
-        "posizione": 6,
-        "punti_effettivi": 15,
-        "team": "TEAM SD WORX-PROTIME",
-        "moltiplicatore": 3,
-        "tipo": "internazionale",
-        "regione": "LIGURIA",
-        "km": "156.000",
-        "media": "41.182"
-      }
-    ]
-  },
   "WOLLASTON_ALLY": {
     "id": "WOLLASTON_ALLY",
     "nome": "ALLY",
@@ -91012,81 +91468,6 @@
         "posizione": 7,
         "punti_effettivi": 12,
         "team": "FDJ UNITED - SUEZ",
-        "moltiplicatore": 3,
-        "tipo": "internazionale",
-        "regione": "LIGURIA",
-        "km": "156.000",
-        "media": "41.182"
-      }
-    ]
-  },
-  "BALSAMO_ELISA": {
-    "id": "BALSAMO_ELISA",
-    "nome": "ELISA",
-    "cognome": "BALSAMO",
-    "team_attuale": "LIDL - TREK",
-    "team_id": "LIDL_TREK",
-    "categoria": "ELI_F",
-    "genere": "F",
-    "punti_totali": 9,
-    "risultati": [
-      {
-        "gara_id": "MILANO_SANREMO_DONNE_2026-03-21_ELI_F",
-        "nome_gara": "MILANO SANREMO DONNE",
-        "data": "2026-03-21",
-        "posizione": 8,
-        "punti_effettivi": 9,
-        "team": "LIDL - TREK",
-        "moltiplicatore": 3,
-        "tipo": "internazionale",
-        "regione": "LIGURIA",
-        "km": "156.000",
-        "media": "41.182"
-      }
-    ]
-  },
-  "KOOL_CHARLOTTE": {
-    "id": "KOOL_CHARLOTTE",
-    "nome": "CHARLOTTE",
-    "cognome": "KOOL",
-    "team_attuale": "FENIX-PREMIER TECH",
-    "team_id": "FENIX_PREMIER_TECH",
-    "categoria": "ELI_F",
-    "genere": "F",
-    "punti_totali": 6,
-    "risultati": [
-      {
-        "gara_id": "MILANO_SANREMO_DONNE_2026-03-21_ELI_F",
-        "nome_gara": "MILANO SANREMO DONNE",
-        "data": "2026-03-21",
-        "posizione": 9,
-        "punti_effettivi": 6,
-        "team": "FENIX-PREMIER TECH",
-        "moltiplicatore": 3,
-        "tipo": "internazionale",
-        "regione": "LIGURIA",
-        "km": "156.000",
-        "media": "41.182"
-      }
-    ]
-  },
-  "CONSONNI_CHIARA": {
-    "id": "CONSONNI_CHIARA",
-    "nome": "CHIARA",
-    "cognome": "CONSONNI",
-    "team_attuale": "CANYON SRAM ZONDACRYPTO",
-    "team_id": "CANYON_SRAM_ZONDACRYPTO",
-    "categoria": "ELI_F",
-    "genere": "F",
-    "punti_totali": 3,
-    "risultati": [
-      {
-        "gara_id": "MILANO_SANREMO_DONNE_2026-03-21_ELI_F",
-        "nome_gara": "MILANO SANREMO DONNE",
-        "data": "2026-03-21",
-        "posizione": 10,
-        "punti_effettivi": 3,
-        "team": "CANYON SRAM ZONDACRYPTO",
         "moltiplicatore": 3,
         "tipo": "internazionale",
         "regione": "LIGURIA",
@@ -92908,31 +93289,6 @@
         "regione": "TOSCANA",
         "km": "120.635",
         "media": "44.911"
-      }
-    ]
-  },
-  "PIZZI_NICOLO": {
-    "id": "PIZZI_NICOLO",
-    "nome": "NICOLO'",
-    "cognome": "PIZZI",
-    "team_attuale": "TEAM TECHNIPES #INEMILIAROMAGNA",
-    "team_id": "TEAM_TECHNIPES_INEMILIAROMAGNA",
-    "categoria": "ELI_M",
-    "genere": "M",
-    "punti_totali": 30,
-    "risultati": [
-      {
-        "gara_id": "64_GRAN_PREMIO_LA_TORRE_2026-02-22_ELI_M",
-        "nome_gara": "64 GRAN PREMIO LA TORRE",
-        "data": "2026-02-22",
-        "posizione": 1,
-        "punti_effettivi": 30,
-        "team": "TEAM TECHNIPES #INEMILIAROMAGNA",
-        "moltiplicatore": 2,
-        "tipo": "nazionale",
-        "regione": "TOSCANA",
-        "km": "120.900",
-        "media": "44.353"
       }
     ]
   },

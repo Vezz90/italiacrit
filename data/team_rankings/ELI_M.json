@@ -2,26 +2,38 @@
   {
     "team_id": "A_S_D_S_C_PADOVANI",
     "team_nome": "A.S.D. S.C. PADOVANI",
-    "punti": 742,
+    "punti": 750,
     "vittorie": 7,
     "p1": 7,
     "p2": 10,
     "p3": 4,
-    "pout": 20,
+    "pout": 21,
     "n_atleti": 10,
     "pos": 1
   },
   {
     "team_id": "TEAM_TECHNIPES_INEMILIAROMAGNA",
     "team_nome": "TEAM TECHNIPES #INEMILIAROMAGNA",
-    "punti": 516,
+    "punti": 528,
     "vittorie": 4,
     "p1": 4,
     "p2": 4,
     "p3": 5,
-    "pout": 17,
-    "n_atleti": 9,
+    "pout": 19,
+    "n_atleti": 10,
     "pos": 2
+  },
+  {
+    "team_id": "BELTRAMI_TSA_TRE_COLLI",
+    "team_nome": "BELTRAMI TSA TRE COLLI",
+    "punti": 387,
+    "vittorie": 2,
+    "p1": 2,
+    "p2": 4,
+    "p3": 4,
+    "pout": 20,
+    "n_atleti": 8,
+    "pos": 3
   },
   {
     "team_id": "GENERAL_STORE_ESSEGIBI_F_LLI_CURIA",
@@ -33,29 +45,17 @@
     "p3": 3,
     "pout": 16,
     "n_atleti": 10,
-    "pos": 3
-  },
-  {
-    "team_id": "BELTRAMI_TSA_TRE_COLLI",
-    "team_nome": "BELTRAMI TSA TRE COLLI",
-    "punti": 353,
-    "vittorie": 1,
-    "p1": 1,
-    "p2": 4,
-    "p3": 4,
-    "pout": 19,
-    "n_atleti": 7,
     "pos": 4
   },
   {
     "team_id": "TEAM_HOPPLA",
     "team_nome": "TEAM HOPPLA'",
-    "punti": 327,
+    "punti": 339,
     "vittorie": 4,
     "p1": 4,
     "p2": 3,
     "p3": 3,
-    "pout": 16,
+    "pout": 17,
     "n_atleti": 7,
     "pos": 5
   },
@@ -86,13 +86,13 @@
   {
     "team_id": "VEGA_VITALCARE_DYNATEK",
     "team_nome": "VEGA VITALCARE DYNATEK",
-    "punti": 195,
+    "punti": 217,
     "vittorie": 0,
     "p1": 0,
     "p2": 3,
     "p3": 0,
-    "pout": 13,
-    "n_atleti": 6,
+    "pout": 15,
+    "n_atleti": 7,
     "pos": 8
   },
   {
@@ -146,11 +146,11 @@
   {
     "team_id": "CICLISTICA_ROSTESE",
     "team_nome": "CICLISTICA ROSTESE",
-    "punti": 130,
+    "punti": 150,
     "vittorie": 2,
     "p1": 2,
     "p2": 1,
-    "p3": 2,
+    "p3": 3,
     "pout": 8,
     "n_atleti": 4,
     "pos": 13
@@ -288,6 +288,18 @@
     "pos": 24
   },
   {
+    "team_id": "ASD_G_C_SISSIO_TEAM",
+    "team_nome": "ASD G.C. SISSIO TEAM",
+    "punti": 69,
+    "vittorie": 0,
+    "p1": 0,
+    "p2": 1,
+    "p3": 0,
+    "pout": 9,
+    "n_atleti": 7,
+    "pos": 25
+  },
+  {
     "team_id": "OVERALL_TRE_COLLI_CYCLING_TEAM",
     "team_nome": "OVERALL TRE COLLI CYCLING TEAM",
     "punti": 63,
@@ -297,7 +309,7 @@
     "p3": 1,
     "pout": 3,
     "n_atleti": 3,
-    "pos": 25
+    "pos": 26
   },
   {
     "team_id": "POLISPORTIVA_TRIPETETOLO_SEANESE",
@@ -309,7 +321,7 @@
     "p3": 1,
     "pout": 7,
     "n_atleti": 4,
-    "pos": 26
+    "pos": 27
   },
   {
     "team_id": "UAE_TEAM_EMIRATES_GEN_Z",
@@ -321,7 +333,7 @@
     "p3": 0,
     "pout": 5,
     "n_atleti": 4,
-    "pos": 27
+    "pos": 28
   },
   {
     "team_id": "GRAGNANO_SPORTING_CLUB",
@@ -333,7 +345,7 @@
     "p3": 1,
     "pout": 4,
     "n_atleti": 3,
-    "pos": 28
+    "pos": 29
   },
   {
     "team_id": "UCRAINA",
@@ -345,7 +357,7 @@
     "p3": 1,
     "pout": 5,
     "n_atleti": 4,
-    "pos": 29
+    "pos": 30
   },
   {
     "team_id": "PETROLIKE",
@@ -357,7 +369,7 @@
     "p3": 0,
     "pout": 5,
     "n_atleti": 3,
-    "pos": 30
+    "pos": 31
   },
   {
     "team_id": "TEAM_VISMA_LEASE_A_BIKE_DEVELOPMENT",
@@ -369,7 +381,7 @@
     "p3": 0,
     "pout": 1,
     "n_atleti": 2,
-    "pos": 31
+    "pos": 32
   },
   {
     "team_id": "ASD_VELO_CLUB_AVEZZANO_BIKE_LINEAORO",
@@ -381,18 +393,6 @@
     "p3": 0,
     "pout": 4,
     "n_atleti": 3,
-    "pos": 32
-  },
-  {
-    "team_id": "ASD_G_C_SISSIO_TEAM",
-    "team_nome": "ASD G.C. SISSIO TEAM",
-    "punti": 45,
-    "vittorie": 0,
-    "p1": 0,
-    "p2": 0,
-    "p3": 0,
-    "pout": 9,
-    "n_atleti": 7,
     "pos": 33
   },
   {
