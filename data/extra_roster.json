@@ -1,2 +1,12 @@
 {
+  "TEAM_DI_PROVA_ASD": {
+    "nome": "Team di Prova ASD",
+    "atleti": [
+      { "atleta_id": "PROVA_ROSSI_MARCO",   "nome": "Marco",   "cognome": "Rossi",    "categoria": "Elite-Under23", "genere": "M" },
+      { "atleta_id": "PROVA_BIANCHI_SARA",   "nome": "Sara",    "cognome": "Bianchi",  "categoria": "Juniores",      "genere": "F" },
+      { "atleta_id": "PROVA_VERDI_LUCA",     "nome": "Luca",    "cognome": "Verdi",    "categoria": "Allievi",       "genere": "M" },
+      { "atleta_id": "PROVA_FERRARI_ANNA",   "nome": "Anna",    "cognome": "Ferrari",  "categoria": "Elite-Under23", "genere": "F" },
+      { "atleta_id": "PROVA_ESPOSITO_DARIO", "nome": "Dario",   "cognome": "Esposito", "categoria": "Esordienti 1° Anno", "genere": "M" }
+    ]
+  }
 }
