@@ -1608,6 +1608,43 @@ body.light-mode .link-result-row { background: var(--bg-elevated); }
   padding: 10px 20px;
 }
 
+/* ── Editor di ritaglio foto ───────────────────────────────────── */
+.crop-overlay {
+  position: fixed; inset: 0; z-index: 10000;
+  background: rgba(0,0,0,.72);
+  display: flex; align-items: center; justify-content: center; padding: 16px;
+}
+.crop-modal {
+  background: var(--bg-card, #fff); border: 1px solid var(--border-subtle, #e2e2e2);
+  border-radius: 14px; padding: 22px; width: 100%; max-width: 360px;
+  box-shadow: 0 16px 48px rgba(0,0,0,.35);
+}
+.crop-title {
+  font-family: var(--font-display, sans-serif); font-size: 1.15rem;
+  color: var(--text-primary); margin-bottom: 14px; text-align: center;
+}
+.crop-stage {
+  position: relative; margin: 0 auto; border-radius: 10px; overflow: hidden;
+  background: #0c0c0c; touch-action: none; user-select: none;
+}
+.crop-stage canvas { display: block; cursor: grab; }
+.crop-stage canvas:active { cursor: grabbing; }
+.crop-frame {
+  position: absolute; inset: 0; pointer-events: none;
+  box-shadow: 0 0 0 1px rgba(255,255,255,.55) inset;
+}
+.crop-frame--circle {
+  box-shadow: 0 0 0 9999px rgba(0,0,0,.35); border-radius: 50%;
+}
+.crop-controls {
+  display: flex; align-items: center; gap: 10px; margin: 16px 2px 6px;
+}
+.crop-controls input[type=range] { flex: 1; accent-color: var(--red-hot, #e63329); cursor: pointer; }
+.crop-zoom-ico { font-size: 1.1rem; color: var(--text-secondary); width: 14px; text-align: center; }
+.crop-hint { font-size: .74rem; color: var(--text-muted); text-align: center; margin: 0 0 16px; }
+.crop-actions { display: flex; gap: 12px; }
+.crop-actions .auth-btn { flex: 1; }
+
 /* ── ADMIN EDIT BUTTON ──────────────────────────────────────────── */
 .admin-edit-btn {
   background: transparent;
