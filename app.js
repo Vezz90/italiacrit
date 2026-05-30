@@ -374,6 +374,36 @@ async function apiCall(path, opts = {}) {
   return data;
 }
 
+// Estrae un messaggio d'errore leggibile da una Response (anche se il corpo è HTML)
+async function _resErr(res) {
+  let msg = `HTTP ${res.status}`;
+  try {
+    const ct = res.headers.get('content-type') || '';
+    if (ct.includes('application/json')) {
+      const j = await res.json();
+      if (j && j.error) msg = j.error;
+    } else if (res.status === 404) {
+      msg = 'Endpoint non trovato sul server (404). La rotta potrebbe non essere ancora deployata su Render.';
+    } else if (res.status === 405) {
+      msg = 'Metodo non consentito sul server (405).';
+    } else {
+      msg = `Errore server (HTTP ${res.status}).`;
+    }
+  } catch { /* lascia il messaggio di default */ }
+  return msg;
+}
+
+// Richiesta su /admin/users/:id con fallback automatico se PATCH non è gestito dal backend
+async function _adminUserReq(userId, opts) {
+  let res = await fetch(`${API_BASE}/admin/users/${userId}`, opts);
+  // Se la rotta/metodo non esiste, prova convenzioni alternative comuni
+  if (!res.ok && (res.status === 404 || res.status === 405) && opts.method === 'PATCH') {
+    try { res = await fetch(`${API_BASE}/admin/users/${userId}/role`, { ...opts, method: 'POST' }); }
+    catch { /* mantiene la prima response */ }
+  }
+  return res;
+}
+
 function updateNavLoginState() {
   const user = authUser();
   const link = document.getElementById('nav-login');
@@ -7408,12 +7438,12 @@ window.adminNav = async function(section) {
 
           window.adminChangeRole = async (userId, newRole) => {
             try {
-              const res = await fetch(`${API_BASE}/admin/users/${userId}`, {
+              const res = await _adminUserReq(userId, {
                 method: 'PATCH',
                 headers: { 'Content-Type':'application/json', Authorization:`Bearer ${authToken()}` },
                 body: JSON.stringify({ role: newRole }),
               });
-              if (!res.ok) throw new Error((await res.json()).error || `HTTP ${res.status}`);
+              if (!res.ok) throw new Error(await _resErr(res));
               const u = window._adminUtentiAll.find(x => x.id === userId);
               if (u) u.role = newRole;
               window._adminShowMsg(`✅ Ruolo di ${u?.email||userId} aggiornato a "${newRole}"`, true);
@@ -7430,7 +7460,7 @@ window.adminNav = async function(section) {
                 method: 'DELETE',
                 headers: { Authorization:`Bearer ${authToken()}` },
               });
-              if (!res.ok) throw new Error((await res.json()).error || `HTTP ${res.status}`);
+              if (!res.ok) throw new Error(await _resErr(res));
               window._adminUtentiAll = window._adminUtentiAll.filter(u => u.id !== userId);
               window._adminShowMsg(`✅ Utente "${email}" eliminato`, true);
               window.adminFilterUtenti(document.getElementById('utenti-search')?.value||'');
@@ -15085,9 +15115,13 @@ async function renderMyProfile() {
     </div>
   `);
 
-  // Async fill
+  // Async fill — con timeout per non restare appesi se Render è in cold-start
   try {
-    const { profile } = await apiCall('/profile');
+    const _withTimeout = (p, ms) => Promise.race([
+      p,
+      new Promise((_, rej) => setTimeout(() => rej(new Error('Il server non risponde (potrebbe essere in fase di riavvio). Riprova tra qualche secondo.')), ms)),
+    ]);
+    const { profile } = await _withTimeout(apiCall('/profile'), 25000);
     const el = document.getElementById('dash-body');
     if (!el) return;
     if      (user.role === 'atleta')      await _dashAtleta(el, user, profile);
@@ -15100,7 +15134,11 @@ async function renderMyProfile() {
     else el.innerHTML = `<p style="color:var(--text-muted)">Pannello non disponibile per il ruolo "${esc(user.role)}".</p>`;
   } catch(err) {
     const el = document.getElementById('dash-body');
-    if (el) el.innerHTML = `<p style="color:var(--text-muted)">Errore caricamento pannello: ${esc(err.message)}</p>`;
+    if (el) el.innerHTML = `
+      <div style="text-align:center;padding:32px 16px;color:var(--text-muted)">
+        <p style="margin:0 0 14px">${esc(err.message)}</p>
+        <button class="dash-btn dash-btn--outline" onclick="renderMyProfile()">↻ Riprova</button>
+      </div>`;
   }
 }
 
