@@ -189,19 +189,132 @@ window.triggerPhotoUpload = function(entityType, entityId) {
   document.getElementById(`photo-file-${entityId}`)?.click();
 };
 
-window.handlePhotoUpload = async function(evt, entityType, entityId) {
+// Avvio: legge il file scelto e apre l'editor di ritaglio invece di caricarlo subito.
+window.handlePhotoUpload = function(evt, entityType, entityId) {
   const file = evt.target.files[0];
+  if (evt.target) evt.target.value = ''; // consente di riselezionare lo stesso file
   if (!file) return;
+  if (!/^image\//.test(file.type)) { alert('Seleziona un file immagine (JPG, PNG o WebP).'); return; }
+  const reader = new FileReader();
+  reader.onload = e => _openPhotoCropper(e.target.result, entityType, entityId, file.name);
+  reader.readAsDataURL(file);
+};
 
-  // Cambia icona per feedback visivo
+// Editor di ritaglio: zoom (slider/rotella) + trascinamento, anteprima live su canvas.
+function _openPhotoCropper(dataUrl, entityType, entityId, filename) {
+  const isCircle = entityType !== 'team';
+  const V = 300, OUT = 512; // viewport anteprima e dimensione esportata
+  const img = new Image();
+  img.onload = () => {
+    const overlay = document.createElement('div');
+    overlay.id = 'crop-overlay';
+    overlay.className = 'crop-overlay';
+    overlay.innerHTML = `
+      <div class="crop-modal">
+        <div class="crop-title">Ritaglia la foto</div>
+        <div class="crop-stage" style="width:${V}px;height:${V}px">
+          <canvas id="crop-canvas" width="${V}" height="${V}"></canvas>
+          <div class="crop-frame ${isCircle ? 'crop-frame--circle' : ''}"></div>
+        </div>
+        <div class="crop-controls">
+          <span class="crop-zoom-ico" aria-hidden="true">−</span>
+          <input type="range" id="crop-zoom" min="1" max="4" step="0.01" value="1" aria-label="Zoom">
+          <span class="crop-zoom-ico" aria-hidden="true">+</span>
+        </div>
+        <p class="crop-hint">Trascina per spostare · slider o rotella per lo zoom</p>
+        <div class="crop-actions">
+          <button class="auth-btn auth-btn-outline" id="crop-cancel">Annulla</button>
+          <button class="auth-btn" id="crop-save">Salva foto</button>
+        </div>
+      </div>`;
+    document.body.appendChild(overlay);
+
+    const canvas = overlay.querySelector('#crop-canvas');
+    const ctx = canvas.getContext('2d');
+    const baseScale = Math.max(V / img.width, V / img.height); // "cover"
+    let zoom = 1, scale = baseScale, ox = (V - img.width * scale) / 2, oy = (V - img.height * scale) / 2;
+
+    function clamp() {
+      const w = img.width * scale, h = img.height * scale;
+      ox = Math.min(0, Math.max(V - w, ox));
+      oy = Math.min(0, Math.max(V - h, oy));
+    }
+    function draw() {
+      ctx.fillStyle = '#0c0c0c';
+      ctx.fillRect(0, 0, V, V);
+      ctx.drawImage(img, ox, oy, img.width * scale, img.height * scale);
+    }
+    function setZoom(z) {
+      const prev = scale;
+      zoom = z; scale = baseScale * zoom;
+      ox = V / 2 - (V / 2 - ox) * (scale / prev);
+      oy = V / 2 - (V / 2 - oy) * (scale / prev);
+      clamp(); draw();
+    }
+    clamp(); draw();
+
+    const zoomEl = overlay.querySelector('#crop-zoom');
+    zoomEl.addEventListener('input', () => setZoom(parseFloat(zoomEl.value)));
+
+    let dragging = false, lx = 0, ly = 0;
+    const onMove = e => {
+      if (!dragging) return;
+      const p = e.touches ? e.touches[0] : e;
+      ox += p.clientX - lx; oy += p.clientY - ly; lx = p.clientX; ly = p.clientY;
+      clamp(); draw();
+      if (e.cancelable) e.preventDefault();
+    };
+    const onUp = () => { dragging = false; };
+    const onDown = e => { dragging = true; const p = e.touches ? e.touches[0] : e; lx = p.clientX; ly = p.clientY; };
+    canvas.addEventListener('mousedown', onDown);
+    canvas.addEventListener('touchstart', onDown, { passive: true });
+    window.addEventListener('mousemove', onMove);
+    window.addEventListener('touchmove', onMove, { passive: false });
+    window.addEventListener('mouseup', onUp);
+    window.addEventListener('touchend', onUp);
+    const onWheel = e => {
+      e.preventDefault();
+      const nz = Math.min(4, Math.max(1, zoom + (e.deltaY < 0 ? 0.12 : -0.12)));
+      zoomEl.value = nz; setZoom(nz);
+    };
+    canvas.addEventListener('wheel', onWheel, { passive: false });
+
+    function close() {
+      window.removeEventListener('mousemove', onMove);
+      window.removeEventListener('touchmove', onMove);
+      window.removeEventListener('mouseup', onUp);
+      window.removeEventListener('touchend', onUp);
+      overlay.remove();
+    }
+    overlay.querySelector('#crop-cancel').addEventListener('click', close);
+    overlay.addEventListener('click', e => { if (e.target === overlay) close(); });
+    overlay.querySelector('#crop-save').addEventListener('click', () => {
+      const out = document.createElement('canvas');
+      out.width = OUT; out.height = OUT;
+      const octx = out.getContext('2d');
+      octx.fillStyle = '#ffffff';
+      octx.fillRect(0, 0, OUT, OUT);
+      const r = OUT / V;
+      octx.drawImage(img, ox * r, oy * r, img.width * scale * r, img.height * scale * r);
+      out.toBlob(blob => {
+        close();
+        const name = (filename || 'photo').replace(/\.[^.]+$/, '') + '.jpg';
+        _uploadPhotoBlob(blob, entityType, entityId, name);
+      }, 'image/jpeg', 0.9);
+    });
+  };
+  img.src = dataUrl;
+}
+
+// Carica l'immagine ritagliata sul server e aggiorna subito la UI.
+async function _uploadPhotoBlob(blob, entityType, entityId, filename) {
   const btn = document.querySelector(`.photo-cam-btn`);
   if (btn) { btn.style.opacity = '0.5'; btn.style.pointerEvents = 'none'; }
-
   const fd = new FormData();
   // I campi testo devono venire PRIMA del file per essere disponibili in multer
   fd.append('entity_type', entityType);
   fd.append('entity_id', entityId);
-  fd.append('photo', file);
+  fd.append('photo', blob, filename || 'photo.jpg');
   try {
     const token = authToken();
     const res  = await fetch(`${API_BASE}/upload/photo`, {
@@ -236,7 +349,7 @@ window.handlePhotoUpload = async function(evt, entityType, entityId) {
   } finally {
     if (btn) { btn.style.opacity = ''; btn.style.pointerEvents = ''; }
   }
-};
+}
 
 async function apiCall(path, opts = {}) {
   const token = authToken();
