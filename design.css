@@ -4651,6 +4651,8 @@ div[style*="grid-template-columns: repeat(auto-fit"] {
   margin: -32px -24px 32px;
   position: relative;
   border-bottom: 1px solid rgba(255,255,255,0.08);
+  /* Layout a colonna: identità (foto+nome) sopra, statistiche stagione SOTTO il nome */
+  display: block;
 }
 .team-name-display {
   font-family: 'Inter Tight', 'Inter', sans-serif !important;
