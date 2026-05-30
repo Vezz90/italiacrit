@@ -10376,17 +10376,22 @@ async function renderTeam(team_id) {
       `).join('')}
     </div>
   ` : '';
-  // Atleti con punti (nella categoria selezionata)
+  // Corridori: tutti gli atleti del team da TUTTE le categorie (non solo quella selezionata)
+  // puntiCat = punti nel tab selezionato; puntiTot = punti totali di tutte le categorie
   const atletiMap = {};
-  catRisultati.forEach(r => {
+  (t.risultati||[]).forEach(r => {
+    if (!r.atleta_id) return;
     if (!atletiMap[r.atleta_id]) {
-      atletiMap[r.atleta_id] = { id: r.atleta_id, ...athletes[r.atleta_id], puntiCat: 0 };
+      atletiMap[r.atleta_id] = { id: r.atleta_id, ...athletes[r.atleta_id], puntiCat: 0, puntiTot: 0 };
     }
-    atletiMap[r.atleta_id].puntiCat += (r.punti_effettivi||0);
+    atletiMap[r.atleta_id].puntiTot += (r.punti_effettivi||0);
+    // puntiCat = punti solo nella categoria del tab selezionato
+    if ((getRankingFileCode(r) || r.categoria) === teamViewCat) {
+      atletiMap[r.atleta_id].puntiCat += (r.punti_effettivi||0);
+    }
   });
-  // Mostra tutti gli atleti che hanno un risultato (anche 0 punti = finiti fuori top 10)
   const atletiList = Object.values(atletiMap)
-    .sort((a,b) => b.puntiCat - a.puntiCat || (a.cognome||'').localeCompare(b.cognome||''));
+    .sort((a,b) => b.puntiTot - a.puntiTot || (a.cognome||'').localeCompare(b.cognome||''));
 
   const p1 = catRisultati.filter(r=>r.posizione===1).length;
   const p2 = catRisultati.filter(r=>r.posizione===2).length;
@@ -10400,7 +10405,7 @@ async function renderTeam(team_id) {
         <div class="cat-rider-name"><a href="#/atleta/${esc(a.id)}">${esc(a.cognome)} ${esc(a.nome)}</a></div>
         <div class="cat-rider-team">${catLabel(a.categoria||'')}</div>
       </div>
-      <span class="cat-pts">${a.puntiCat||0}</span>
+      <span class="cat-pts" title="${a.puntiCat > 0 ? a.puntiCat+' pt in questa cat.' : a.puntiTot+' pt totali'}">${a.puntiCat > 0 ? a.puntiCat : (a.puntiTot > 0 ? `<span style="opacity:.5;font-size:.8em">${a.puntiTot}</span>` : '—')}</span>
     </div>`).join('');
 
   const risultatiRows = [...catRisultati]
