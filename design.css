@@ -11086,7 +11086,7 @@ main.page:has(.itc-dash) {
 .rk-tl-wrap {
   display: inline-flex; align-items: center; vertical-align: middle; margin-right: 7px;
 }
-.rk-tl-img { width: 24px; height: 24px; border-radius: 4px; object-fit: contain; display: block; }
+.rk-tl-img { width: 24px; height: 24px; border-radius: 4px; object-fit: cover; display: block; }
 
 /* ═══════════════════════════════════════════════════════════════
    GAMIFICATION SYSTEM
