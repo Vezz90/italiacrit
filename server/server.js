@@ -1882,8 +1882,33 @@ app.use((err, req, res, next) => {
 
 // ── Startup ───────────────────────────────────────────────────────────────────
 
+// Garantisce l'esistenza dei profili media delle sorgenti scrapate (user_id NULL),
+// così sono sempre presenti e rivendicabili da un utente media.
+async function ensureScraperMediaProfiles() {
+  const sources = [
+    { name: 'xpix.it',            bio: 'Fotografia ciclismo agonistico italiano', website: 'https://www.xpix.it',            instagram: 'xpix.it' },
+    { name: 'italiaciclismo.net', bio: 'Foto e cronache del ciclismo italiano',   website: 'https://www.italiaciclismo.net', instagram: '' },
+  ];
+  for (const s of sources) {
+    try {
+      const existing = await rawQuery(
+        `SELECT id FROM media_profiles WHERE user_id IS NULL AND display_name = $1 LIMIT 1`, [s.name]
+      ).then(r => r.rows[0]);
+      if (!existing) {
+        await rawQuery(
+          `INSERT INTO media_profiles (user_id, display_name, bio, website, instagram, status)
+           VALUES (NULL, $1, $2, $3, $4, 'active')`,
+          [s.name, s.bio, s.website, s.instagram]
+        );
+        console.log(`[startup] Creato profilo media sorgente "${s.name}"`);
+      }
+    } catch (e) { console.warn(`[startup] ensureScraperMediaProfiles "${s.name}":`, e.message); }
+  }
+}
+
 init()
-  .then(() => {
+  .then(async () => {
+    await ensureScraperMediaProfiles();
     app.listen(PORT, () => {
       console.log(`[server] ItaliacritAuth in ascolto su http://localhost:${PORT}`);
     });
