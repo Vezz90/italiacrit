@@ -15796,7 +15796,38 @@ async function _dashMedia(el, user, profile) {
             <button type="submit" class="dash-btn dash-btn--primary">CREA PROFILO</button>
           </form>
         </div>
+
+        <div class="dash-card">
+          <div class="dash-card-title"><span>🔗</span>Aggancia un profilo già esistente</div>
+          <p style="font-size:.85rem;color:var(--text-muted);line-height:1.5">
+            Se le tue foto sono già presenti su Italiacrit (importate da xpix.it o italiaciclismo.net),
+            puoi rivendicare quel profilo invece di crearne uno nuovo. La richiesta sarà verificata dall'admin.
+          </p>
+          <div id="dash-media-claim-list"><div class="admin-loading">Caricamento profili disponibili…</div></div>
+        </div>
       </div>`;
+
+    // Carica i profili media scrapati ancora liberi
+    const claimEl = document.getElementById('dash-media-claim-list');
+    if (claimEl) {
+      try {
+        const d = await apiCall('/media/profiles/unclaimed');
+        const profs = d.profiles || [];
+        claimEl.innerHTML = profs.length ? `
+          <div style="display:flex;flex-direction:column;gap:8px;margin-top:6px">
+            ${profs.map(p => `
+              <div style="display:flex;align-items:center;gap:10px;padding:8px 10px;background:var(--bg-base);border:1px solid var(--border-subtle);border-radius:6px">
+                <div style="flex:1;min-width:0">
+                  <div style="font-size:.9rem;font-weight:700;color:var(--text-primary);white-space:nowrap;overflow:hidden;text-overflow:ellipsis">${esc(p.display_name)}</div>
+                  ${p.instagram ? `<div style="font-size:.72rem;color:var(--text-muted)">@${esc(p.instagram.replace('@',''))}</div>` : (p.website ? `<div style="font-size:.72rem;color:var(--text-muted)">${esc(p.website)}</div>` : '')}
+                </div>
+                <button class="dash-btn dash-btn--outline dash-btn--sm" onclick="window.submitClaimMediaProfile(${p.id}, this)">Aggancia</button>
+              </div>`).join('')}
+          </div>` : `<div style="font-size:.8rem;color:var(--text-muted);padding:8px 0">Nessun profilo libero da rivendicare al momento.</div>`;
+      } catch (e) {
+        claimEl.innerHTML = `<div style="font-size:.8rem;color:var(--text-muted);padding:8px 0">Impossibile caricare i profili (${esc(e.message)}).</div>`;
+      }
+    }
     return;
   }
 
@@ -15938,6 +15969,20 @@ window.submitMediaProfile = async function(e) {
     renderMyProfile();
   } catch(err) {
     btn.disabled = false; btn.textContent = 'CREA PROFILO';
+    showToast('Errore: ' + err.message, 'error');
+  }
+};
+
+// Rivendica un profilo media già esistente (scrapato)
+window.submitClaimMediaProfile = async function(profileId, btn) {
+  if (!confirm('Vuoi rivendicare questo profilo come tuo? La richiesta verrà verificata dall\'amministratore.')) return;
+  if (btn) { btn.disabled = true; btn.textContent = 'Invio…'; }
+  try {
+    await apiCall(`/media/profile/${profileId}/claim`, { method: 'POST' });
+    showToast('✓ Richiesta inviata — in attesa di approvazione');
+    renderMyProfile();
+  } catch(err) {
+    if (btn) { btn.disabled = false; btn.textContent = 'Aggancia'; }
     showToast('Errore: ' + err.message, 'error');
   }
 };

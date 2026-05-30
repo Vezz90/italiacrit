@@ -1259,6 +1259,26 @@ app.get('/api/media/profiles', async (req, res) => {
   catch (e) { res.status(500).json({ error: e.message }); }
 });
 
+// Lista profili media scrapati e liberi (per utenti media che vogliono rivendicarli)
+app.get('/api/media/profiles/unclaimed', requireAuth, async (req, res) => {
+  try {
+    if (req.user.role !== 'media') return res.status(403).json({ error: 'Solo per account Media/Fotografo' });
+    res.json({ profiles: await queries.getUnclaimedMediaProfiles() });
+  } catch (e) { res.status(500).json({ error: e.message }); }
+});
+
+// Rivendica un profilo media già esistente (scrapato). Va approvato dall'admin.
+app.post('/api/media/profile/:id/claim', requireAuth, async (req, res) => {
+  try {
+    if (req.user.role !== 'media') return res.status(403).json({ error: 'Solo per account Media/Fotografo' });
+    const existing = await queries.getMediaProfileByUser(req.user.id);
+    if (existing) return res.status(409).json({ error: 'Hai già un profilo media collegato' });
+    const claimed = await queries.claimMediaProfile(parseInt(req.params.id, 10), req.user.id);
+    if (!claimed) return res.status(409).json({ error: 'Profilo non disponibile o già rivendicato' });
+    res.json({ ok: true, profile: claimed });
+  } catch (e) { res.status(500).json({ error: e.message }); }
+});
+
 // Profilo media singolo (pubblico) con album
 app.get('/api/media/profile/:id', async (req, res) => {
   try {

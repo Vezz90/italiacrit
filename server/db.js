@@ -437,6 +437,16 @@ const queries = {
     all(`SELECT id, display_name, bio, website, instagram, facebook, cover_url, created_at
          FROM media_profiles WHERE status = 'active' ORDER BY display_name`),
 
+  // Profili media scrapati e non ancora rivendicati da un utente
+  getUnclaimedMediaProfiles: () =>
+    all(`SELECT id, display_name, bio, website, instagram, facebook, cover_url, status
+         FROM media_profiles WHERE user_id IS NULL ORDER BY display_name`),
+
+  // Rivendica un profilo libero collegandolo a un utente (va approvato dall'admin)
+  claimMediaProfile: (id, user_id) =>
+    one(`UPDATE media_profiles SET user_id = $2, status = 'pending'
+         WHERE id = $1 AND user_id IS NULL RETURNING *`, [id, user_id]),
+
   approveMediaProfile: (id) =>
     run(`UPDATE media_profiles SET status = 'active' WHERE id = $1`, [id]),
 
