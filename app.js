@@ -14996,6 +14996,8 @@ window.submitLogin = async function(e) {
 
 // ── REGISTER ──────────────────────────────────────────────────
 // Campi extra per ruolo, mostrati dinamicamente nel form
+const SPECIALITA_OPTS = ['', 'Scalatore', 'Velocista', 'Passista', 'Cronoman', 'Finisseur', 'Passista-scalatore', 'Gregario', 'Altro'];
+
 const REG_ROLE_FIELDS = {
   atleta: [
     { id:'reg-location',  label:'Città / Regione',       type:'text',   placeholder:'es. Firenze (Toscana)',      required:true  },
@@ -15393,7 +15395,6 @@ window.seedTestAccounts = async function() {
 };
 
 // ── CARD "IL MIO PROFILO" (campi personali, tutti i ruoli) ────────────────────
-const SPECIALITA_OPTS = ['', 'Scalatore', 'Velocista', 'Passista', 'Cronoman', 'Finisseur', 'Passista-scalatore', 'Gregario', 'Altro'];
 
 async function _injectProfileFieldsCard(el, user) {
   const grid = el.querySelector('.dash-grid');
