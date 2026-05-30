@@ -253,9 +253,30 @@ app.patch('/api/profile/details', requireAuth, async (req, res) => {
       favorite_team:  clip(b.favorite_team, 120),
       staff_role:     clip(b.staff_role, 80),
       public_contact: clip(b.public_contact, 160),
+      favorite_rider: clip(b.favorite_rider, 120),
     });
     res.json({ ok: true, details });
   } catch (e) { res.status(500).json({ error: e.message }); }
+});
+
+// Partecipazione gare (atleta dichiara se parteciperà)
+app.get('/api/participations', requireAuth, async (req, res) => {
+  try { res.json({ participations: await queries.getRaceParticipations(req.user.id) }); }
+  catch (e) { res.status(500).json({ error: e.message }); }
+});
+
+app.post('/api/participations/:gara_id', requireAuth, async (req, res) => {
+  try {
+    const { status, note } = req.body || {};
+    if (!['yes','no','maybe'].includes(status)) return res.status(400).json({ error: 'Status non valido (yes/no/maybe)' });
+    await queries.upsertRaceParticipation(req.user.id, req.params.gara_id, status, note || '');
+    res.json({ ok: true });
+  } catch (e) { res.status(500).json({ error: e.message }); }
+});
+
+app.delete('/api/participations/:gara_id', requireAuth, async (req, res) => {
+  try { await queries.deleteRaceParticipation(req.user.id, req.params.gara_id); res.json({ ok: true }); }
+  catch (e) { res.status(500).json({ error: e.message }); }
 });
 
 app.post('/api/profile/link-athlete', requireAuth, async (req, res) => {
@@ -366,11 +387,15 @@ app.post('/api/admin/seed-test-accounts', requireAdmin, async (req, res) => {
       const email = 'prova-atleta@italiacrit.test';
       const existing = await queries.getUserByEmail(email);
       const u = existing || await queries.createUser({ email, password: hash, role: 'atleta', display_name: 'Prova Atleta' });
-      const prof = await queries.getAthleteProfile(u.id);
+      let prof = await queries.getAthleteProfile(u.id);
       if (!prof) {
-        await queries.createAthleteProfile({ user_id: u.id, atleta_id: null, fci_code: 'TEST001', first_name: 'Marco', last_name: 'Rossi', team: 'Team di Prova', birth_year: '2005', status: 'active' });
+        await queries.createAthleteProfile({ user_id: u.id, atleta_id: null, fci_code: 'TEST001', first_name: 'Marco', last_name: 'Rossi', team: 'Team di Prova', birth_year: 2005, status: 'active' });
+        prof = await queries.getAthleteProfile(u.id);
+      } else if (prof.status !== 'active') {
+        // Forza active per account di prova
+        await rawQuery(`UPDATE athlete_profiles SET status='active' WHERE user_id=$1`, [u.id]);
       }
-      await queries.upsertUserDetails({ user_id: u.id, bio: 'Profilo di prova — atleta', location: 'Toscana', instagram: 'marcorossi_ciclismo', facebook: '', strava: '', website: '', specialty: 'Scalatore', birth_year: '2005', favorite_team: 'Team di Prova', staff_role: '', public_contact: '' });
+      await queries.upsertUserDetails({ user_id: u.id, bio: 'Profilo di prova — atleta', location: 'Toscana', instagram: 'marcorossi_ciclismo', facebook: '', strava: '', website: '', specialty: 'Scalatore', birth_year: '2005', favorite_team: 'Team di Prova', staff_role: '', public_contact: '', favorite_rider: 'Tadej Pogacar' });
       results.push({ email, role: 'atleta', created: !existing });
     }
 

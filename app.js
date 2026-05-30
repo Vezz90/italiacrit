@@ -3116,7 +3116,12 @@ window.toggleMyRace = function(garaId, nome, data) {
 
 /* ── Preferenze notifiche ── */
 function getNotifPrefs() {
-  try { return JSON.parse(localStorage.getItem('itc_notif_prefs') || '{}'); } catch { return {}; }
+  try {
+    const stored = localStorage.getItem('itc_notif_prefs');
+    // Default: tutte le notifiche attive finché l'utente non le disattiva esplicitamente
+    const defaults = { risultati: true, classifica: true, gare: true, foto: true };
+    return stored ? { ...defaults, ...JSON.parse(stored) } : defaults;
+  } catch { return { risultati: true, classifica: true, gare: true, foto: true }; }
 }
 window.setNotifPref = function(key, val) {
   const p = getNotifPrefs();
@@ -15194,33 +15199,36 @@ function _renderProfileFieldsCard(card, user, d) {
   // Campi comuni a tutti i ruoli
   let roleFields = '';
   if (role === 'atleta') {
+    const reqStar = '<span style="color:var(--red-hot)">*</span>';
     roleFields = `
-      <label class="pf-label">Specialità
-        <select id="pf-specialty" class="pf-input">
-          ${SPECIALITA_OPTS.map(o => `<option value="${o}" ${d.specialty===o?'selected':''}>${o||'—'}</option>`).join('')}
+      <label class="pf-label">Specialità ${reqStar}
+        <select id="pf-specialty" class="pf-input" required>
+          ${SPECIALITA_OPTS.map(o => `<option value="${o}" ${d.specialty===o?'selected':''}>${o||'— seleziona —'}</option>`).join('')}
         </select>
       </label>
-      <label class="pf-label">Anno di nascita<input type="text" id="pf-birth_year" class="pf-input" value="${f('birth_year')}" placeholder="es. 2007" /></label>
-      <label class="pf-label">Team del cuore<input type="text" id="pf-favorite_team" class="pf-input" value="${f('favorite_team')}" placeholder="Squadra preferita" /></label>`;
+      <label class="pf-label">Anno di nascita ${reqStar}<input type="text" id="pf-birth_year" class="pf-input" value="${f('birth_year')}" placeholder="es. 2007" required /></label>
+      <label class="pf-label">Team di appartenenza ${reqStar}<input type="text" id="pf-favorite_team" class="pf-input" value="${f('favorite_team')}" placeholder="es. ASD Ciclistica Fiorentina" required /></label>
+      <label class="pf-label">Corridore preferito<input type="text" id="pf-favorite_rider" class="pf-input" value="${f('favorite_rider')}" placeholder="es. Tadej Pogačar" /></label>`;
   } else if (role === 'team') {
     roleFields = `
       <label class="pf-label">Ruolo nello staff<input type="text" id="pf-staff_role" class="pf-input" value="${f('staff_role')}" placeholder="es. Direttore sportivo" /></label>
       <label class="pf-label">Contatto pubblico<input type="text" id="pf-public_contact" class="pf-input" value="${f('public_contact')}" placeholder="email o telefono pubblico" /></label>`;
   } else if (role === 'appassionato' || role === 'genitore' || role === 'parente') {
     roleFields = `
-      <label class="pf-label">Team del cuore<input type="text" id="pf-favorite_team" class="pf-input" value="${f('favorite_team')}" placeholder="Squadra preferita" /></label>`;
+      <label class="pf-label">Team preferito<input type="text" id="pf-favorite_team" class="pf-input" value="${f('favorite_team')}" placeholder="Squadra preferita" /></label>
+      <label class="pf-label">Corridore preferito<input type="text" id="pf-favorite_rider" class="pf-input" value="${f('favorite_rider')}" placeholder="es. Tadej Pogačar" /></label>`;
   }
 
   card.innerHTML = `
     <div class="dash-card-title"><span>📝</span>Il mio profilo</div>
+    ${role === 'atleta' ? `<p style="font-size:.74rem;color:var(--text-muted);margin:0 0 8px"><span style="color:var(--red-hot)">*</span> Campi obbligatori</p>` : ''}
     <div class="pf-grid">
       <label class="pf-label pf-full">Bio<textarea id="pf-bio" class="pf-input" rows="2" placeholder="Una breve presentazione">${f('bio')}</textarea></label>
-      <label class="pf-label">Località<input type="text" id="pf-location" class="pf-input" value="${f('location')}" placeholder="Città / Regione" /></label>
+      <label class="pf-label${role==='atleta'?' pf-required':''}">Località${role==='atleta'?' <span style="color:var(--red-hot)">*</span>':''}<input type="text" id="pf-location" class="pf-input" value="${f('location')}" placeholder="Città / Regione"${role==='atleta'?' required':''} /></label>
       ${roleFields}
       <label class="pf-label">Instagram<input type="text" id="pf-instagram" class="pf-input" value="${f('instagram')}" placeholder="@handle o URL" /></label>
       <label class="pf-label">Facebook<input type="text" id="pf-facebook" class="pf-input" value="${f('facebook')}" placeholder="pagina o URL" /></label>
       <label class="pf-label">Strava<input type="text" id="pf-strava" class="pf-input" value="${f('strava')}" placeholder="ID o URL profilo" /></label>
-      <label class="pf-label">Sito web<input type="text" id="pf-website" class="pf-input" value="${f('website')}" placeholder="https://" /></label>
     </div>
     <div style="display:flex;align-items:center;gap:10px;margin-top:12px">
       <button class="dash-btn dash-btn--primary" id="pf-save" onclick="window.saveProfileDetails(this)">Salva profilo</button>
@@ -15228,9 +15236,37 @@ function _renderProfileFieldsCard(card, user, d) {
     </div>`;
 }
 
+// Partecipazione gara — toggle 3 stati
+window.setParticipation = async function(garaId, status, btn) {
+  try {
+    await apiCall(`/participations/${encodeURIComponent(garaId)}`, { method: 'POST', body: { status } });
+    // Aggiorna tutti i bottoni della riga
+    const row = btn?.closest('div[style*="border-bottom"]');
+    if (row) {
+      const btns = row.querySelectorAll('button');
+      const colors = { yes: 'var(--green-pos,#16a34a)', maybe: '#f59e0b', no: 'var(--red-hot)' };
+      const labels = { yes: 'yes', maybe: 'maybe', no: 'no' };
+      btns.forEach(b => {
+        const bSt = b.onclick?.toString().match(/'(yes|maybe|no)'/)?.[1];
+        if (!bSt) return;
+        b.style.background = bSt === status ? colors[bSt] : 'transparent';
+        b.style.color = bSt === status ? '#fff' : 'var(--text-secondary)';
+      });
+    }
+  } catch (e) { showToast('Errore: ' + e.message, 'error'); }
+};
+
 window.saveProfileDetails = async function(btn) {
   const val = (id) => document.getElementById(id)?.value?.trim() || '';
   const msg = document.getElementById('pf-msg');
+  // Validazione campi obbligatori per atleta
+  const user = authUser();
+  if (user?.role === 'atleta') {
+    if (!val('pf-specialty')) { if (msg) { msg.textContent = 'Specialità obbligatoria'; msg.style.color = 'var(--red-hot)'; } return; }
+    if (!val('pf-birth_year')) { if (msg) { msg.textContent = 'Anno di nascita obbligatorio'; msg.style.color = 'var(--red-hot)'; } return; }
+    if (!val('pf-favorite_team')) { if (msg) { msg.textContent = 'Team di appartenenza obbligatorio'; msg.style.color = 'var(--red-hot)'; } return; }
+    if (!val('pf-location')) { if (msg) { msg.textContent = 'Località obbligatoria'; msg.style.color = 'var(--red-hot)'; } return; }
+  }
   if (btn) { btn.disabled = true; btn.textContent = 'Salvataggio…'; }
   try {
     await apiCall('/profile/details', { method: 'PATCH', body: {
@@ -15239,7 +15275,7 @@ window.saveProfileDetails = async function(btn) {
       strava: val('pf-strava'), website: val('pf-website'),
       specialty: val('pf-specialty'), birth_year: val('pf-birth_year'),
       favorite_team: val('pf-favorite_team'), staff_role: val('pf-staff_role'),
-      public_contact: val('pf-public_contact'),
+      public_contact: val('pf-public_contact'), favorite_rider: val('pf-favorite_rider'),
     }});
     if (msg) { msg.textContent = '✓ Salvato'; msg.style.color = 'var(--green-pos, #16a34a)'; }
   } catch (e) {
@@ -15406,71 +15442,124 @@ async function _dashAtleta(el, user, profile) {
     ? res.filter(r => r.atleta_id === atleta_id).sort((a,b) => (b.data||'').localeCompare(a.data||'')).slice(0, 6)
     : [];
 
-  // upcoming races (next 5)
   const today = new Date().toISOString().slice(0,10);
-  const calendar = (globalData?.calendar || []).filter(g => (g.data||g.date||'') >= today).slice(0,5);
+  const calendar = (globalData?.calendar || []).filter(g => (g.data||g.date||'') >= today).slice(0,10);
 
   const totalVittorie = res.filter(r => r.atleta_id === atleta_id && (r.pos === 1 || r.pos === '1')).length;
   const totalPodi     = res.filter(r => r.atleta_id === atleta_id && [1,2,3,'1','2','3'].includes(r.pos)).length;
   const totalGare     = res.filter(r => r.atleta_id === atleta_id).length;
 
+  // Atleta dati dal globalData (per team ecc.)
+  const athData = atleta_id ? (globalData?.athletes?.[atleta_id]) : null;
+  const teamId  = athData?.team_id || null;
+  const teamData = teamId ? (globalData?.teams?.[teamId]) : null;
+
+  // Partecipazioni: carichiamo in parallelo
+  let participations = {};
+  try {
+    const pResp = await apiCall('/participations');
+    for (const p of (pResp.participations || [])) participations[p.gara_id] = p.status;
+  } catch {}
+
+  const ath = atleta_id ? (globalData?.athletes?.[atleta_id]) : null;
+  const riderName = ath ? `${ath.cognome||''} ${ath.nome||''}`.trim()
+                        : `${profile.last_name||''} ${profile.first_name||''}`.trim();
+
   el.innerHTML = `
     <div class="dash-grid">
 
-      <!-- STATUS -->
-      <div class="dash-card">
-        <div class="dash-card-title"><span>🚴</span>Il tuo profilo</div>
-        ${(() => {
-          const ath = atleta_id ? (globalData?.athletes?.[atleta_id]) : null;
-          const riderName = ath ? `${ath.cognome||''} ${ath.nome||''}`.trim()
-                                : `${profile.last_name||''} ${profile.first_name||''}`.trim();
-          return riderName ? `<div style="font-family:var(--font-display);font-size:1.15rem;font-weight:800;color:var(--text-primary);margin-bottom:6px">${esc(riderName)}</div>` : '';
-        })()}
-        <div style="display:flex;align-items:center;gap:10px;flex-wrap:wrap">
-          <span class="dash-status ${profile.status==='active'?'dash-status--ok':profile.status==='pending'?'dash-status--warn':'dash-status--err'}">${statusMap[profile.status]||profile.status}</span>
-          ${atleta_id ? `<a href="#/atleta/${esc(atleta_id)}" class="dash-btn dash-btn--outline dash-btn--sm">👁 Vedi profilo pubblico</a>` : ''}
+      <!-- IL TUO PROFILO ATLETA -->
+      <div class="dash-card dash-card--accent">
+        <div class="dash-card-title"><span>🚴</span>Il tuo profilo atleta</div>
+        ${riderName ? `<div style="font-family:var(--font-display);font-size:1.25rem;font-weight:900;color:var(--text-primary);margin-bottom:8px">${esc(riderName)}</div>` : ''}
+        <div style="display:flex;align-items:center;gap:10px;flex-wrap:wrap;margin-bottom:8px">
+          <span class="dash-status ${profile.status==='active'?'dash-status--ok':profile.status==='pending'?'dash-status--warn':'dash-status--err'}">
+            ${profile.status==='active' ? atleta_id ? '✅ Verificato' : '✅ Attivo (senza ID FCI)' : statusMap[profile.status]||profile.status}
+          </span>
+          ${atleta_id ? `<a href="#/atleta/${esc(atleta_id)}" class="dash-btn dash-btn--outline dash-btn--sm">👁 Vedi il mio profilo →</a>` : ''}
         </div>
-        ${!atleta_id ? `<div style="font-size:.78rem;color:var(--text-muted);margin-top:4px">Profilo non ancora associato a un corridore (in attesa di verifica)</div>` : ''}
-        ${profile.team ? `<div style="font-size:.84rem;color:var(--text-muted)">Team: <strong style="color:var(--text-primary)">${esc(profile.team)}</strong></div>` : ''}
-        ${profile.fci_code ? `<div style="font-size:.8rem;color:var(--text-muted)">FCI: ${esc(profile.fci_code)}</div>` : ''}
-        <div class="dash-stats-row">
+        ${profile.fci_code ? `<div style="font-size:.8rem;color:var(--text-muted)">Tessera FCI: <strong>${esc(profile.fci_code)}</strong></div>` : ''}
+        ${profile.team ? `<div style="font-size:.84rem;color:var(--text-muted);margin-top:4px">Team dichiarato: <strong style="color:var(--text-primary)">${esc(profile.team)}</strong></div>` : ''}
+        ${!atleta_id ? `<div style="font-size:.78rem;color:var(--text-muted);margin-top:6px;padding:8px;background:var(--bg-base);border-radius:6px">⚠️ Il profilo non è ancora associato a un atleta nei dati FCI — in attesa di verifica admin.</div>` : ''}
+        <div class="dash-stats-row" style="margin-top:10px">
           <div class="dash-stat"><div class="dash-stat-val">${totalGare}</div><div class="dash-stat-lbl">Gare</div></div>
           <div class="dash-stat"><div class="dash-stat-val">${totalVittorie}</div><div class="dash-stat-lbl">Vittorie</div></div>
           <div class="dash-stat"><div class="dash-stat-val">${totalPodi}</div><div class="dash-stat-lbl">Podi</div></div>
         </div>
       </div>
 
+      <!-- PROFILO DEL TEAM -->
+      ${teamData ? `
+      <div class="dash-card">
+        <div class="dash-card-title"><span>👥</span>Il tuo team</div>
+        <div style="font-family:var(--font-display);font-size:1.05rem;font-weight:800;color:var(--text-primary);margin-bottom:6px">${esc(teamData.nome||teamId)}</div>
+        <div style="font-size:.82rem;color:var(--text-muted);margin-bottom:10px">${teamData.atleti ? teamData.atleti.length + ' atleti in rosa' : ''}</div>
+        <a href="#/team/${esc(teamId)}" class="dash-btn dash-btn--outline dash-btn--sm">👥 Vai alla scheda team →</a>
+      </div>` : profile.team ? `
+      <div class="dash-card">
+        <div class="dash-card-title"><span>👥</span>Il tuo team</div>
+        <div style="font-family:var(--font-display);font-size:1.05rem;font-weight:800;color:var(--text-primary);margin-bottom:6px">${esc(profile.team)}</div>
+        <div style="font-size:.78rem;color:var(--text-muted)">Team non ancora presente nel database FCI — verrà aggiunto alla prima gara registrata.</div>
+      </div>` : ''}
+
       <!-- RANKING POSITIONS -->
       ${rankInfo && rankInfo.length ? `
       <div class="dash-card">
-        <div class="dash-card-title"><span>🏆</span>Posizioni in classifica</div>
+        <div class="dash-card-title"><span>🏆</span>Le tue classifiche</div>
         ${rankInfo.map(r => `
           <div style="display:flex;align-items:center;justify-content:space-between;padding:6px 0;border-bottom:1px solid var(--border-subtle)">
             <div>
               <div style="font-size:.82rem;font-weight:700;color:var(--text-primary)">${esc(r.catLabel)}</div>
-              <div style="font-size:.72rem;color:var(--text-muted)">${r.punti} punti${r.gap > 0 ? ` · −${r.gap} dal leader` : ''}</div>
+              <div style="font-size:.72rem;color:var(--text-muted)">${r.punti} punti${r.gap > 0 ? ` · −${r.gap} dal leader` : ' · Sei il leader! 🏆'}</div>
             </div>
             <div style="font-family:var(--font-display);font-size:1.6rem;font-weight:900;color:${r.pos<=3?'var(--accent)':'var(--text-secondary)'}">
               #${r.pos}
             </div>
           </div>`).join('')}
-        <a href="#/classifica" class="dash-btn dash-btn--outline dash-btn--sm" style="margin-top:4px">Vai alle classifiche →</a>
+        <a href="#/classifica" class="dash-btn dash-btn--outline dash-btn--sm" style="margin-top:4px">Tutte le classifiche →</a>
       </div>` : ''}
 
       <!-- ULTIMI RISULTATI -->
       ${myResults.length ? `
       <div class="dash-card">
-        <div class="dash-card-title"><span>📋</span>Ultimi risultati</div>
+        <div class="dash-card-title"><span>📋</span>I tuoi ultimi risultati</div>
         <div class="dash-results-list">
           ${myResults.map(r => `
             <div class="dash-result-row">
-              <div class="dash-result-pos">${r.pos||'–'}</div>
-              <div class="dash-result-name" title="${esc(r.gara||'')}"><a href="#/gara/${esc(r.gara_id||r.gara_slug||'')}" style="color:inherit;text-decoration:none">${esc((r.gara||'').slice(0,28))}</a></div>
+              <div class="dash-result-pos ${r.pos==1?'pos-gold':r.pos==2?'pos-silver':r.pos==3?'pos-bronze':''}">${r.pos||'–'}</div>
+              <div class="dash-result-name" title="${esc(r.gara||'')}"><a href="#/gara/${esc(r.gara_id||'')}" style="color:inherit;text-decoration:none">${esc((r.gara||'').slice(0,28))}</a></div>
               <div class="dash-result-date">${(r.data||'').slice(5)}</div>
               <div class="dash-result-pts">${r.punti_effettivi||''}</div>
             </div>`).join('')}
         </div>
-        <a href="#/atleta/${esc(atleta_id)}" class="dash-btn dash-btn--outline dash-btn--sm">Tutti i risultati →</a>
+        ${atleta_id ? `<a href="#/atleta/${esc(atleta_id)}" class="dash-btn dash-btn--outline dash-btn--sm">Tutti i risultati →</a>` : ''}
+      </div>` : ''}
+
+      <!-- PROSSIME GARE + PARTECIPAZIONE -->
+      ${calendar.length ? `
+      <div class="dash-card">
+        <div class="dash-card-title"><span>📅</span>Prossime gare — ci sei?</div>
+        <p style="font-size:.76rem;color:var(--text-muted);margin:0 0 10px">Dicci se partecipi: il tuo team e gli organizzatori saranno avvisati.</p>
+        <div id="dash-cal-list">
+        ${calendar.map(g => {
+          const gid = g.id || g.gara_id || '';
+          const st  = participations[gid] || '';
+          const btnBase = 'padding:4px 10px;border-radius:4px;font-size:.75rem;font-weight:700;cursor:pointer;border:1px solid';
+          return `<div style="display:flex;align-items:center;gap:8px;padding:6px 0;border-bottom:1px solid var(--border-subtle);flex-wrap:wrap">
+            <div style="min-width:36px;font-size:.75rem;color:var(--text-muted);font-family:var(--font-mono)">${(g.data||g.date||'').slice(5)}</div>
+            <div style="flex:1;min-width:0">
+              <div style="font-size:.85rem;font-weight:600;white-space:nowrap;overflow:hidden;text-overflow:ellipsis">${esc((g.nome||g.name||'').slice(0,34))}</div>
+              <div style="font-size:.72rem;color:var(--text-muted)">${esc(g.cat||g.categoria||'')}</div>
+            </div>
+            <div style="display:flex;gap:4px;flex-shrink:0">
+              <button style="${btnBase} var(--border-subtle);${st==='yes'?'background:var(--green-pos,#16a34a);color:#fff':'background:transparent;color:var(--text-secondary)'}" onclick="window.setParticipation('${esc(gid)}','yes',this)">✓ Ci sono</button>
+              <button style="${btnBase} var(--border-subtle);${st==='maybe'?'background:#f59e0b;color:#fff':'background:transparent;color:var(--text-secondary)'}" onclick="window.setParticipation('${esc(gid)}','maybe',this)">? Forse</button>
+              <button style="${btnBase} var(--border-subtle);${st==='no'?'background:var(--red-hot);color:#fff':'background:transparent;color:var(--text-secondary)'}" onclick="window.setParticipation('${esc(gid)}','no',this)">✗ No</button>
+            </div>
+          </div>`;
+        }).join('')}
+        </div>
+        <a href="#/calendario" class="dash-btn dash-btn--outline dash-btn--sm" style="margin-top:8px">Tutto il calendario →</a>
       </div>` : ''}
 
       <!-- AZIONI RAPIDE -->
@@ -15485,21 +15574,6 @@ async function _dashAtleta(el, user, profile) {
           <a href="#/atleti"      class="dash-quick-btn"><span class="dqb-icon">👤</span>Atleti</a>
         </div>
       </div>
-
-      <!-- PROSSIME GARE -->
-      ${calendar.length ? `
-      <div class="dash-card">
-        <div class="dash-card-title"><span>📅</span>Prossime gare</div>
-        ${calendar.map(g => `
-          <div class="dash-cal-row">
-            <div class="dash-cal-date">${(g.data||g.date||'').slice(5)}</div>
-            <div style="flex:1">
-              <div class="dash-cal-name">${esc((g.nome||g.name||'').slice(0,32))}</div>
-              <div class="dash-cal-cat">${esc(g.cat||g.categoria||'')}</div>
-            </div>
-          </div>`).join('')}
-        <a href="#/calendario" class="dash-btn dash-btn--outline dash-btn--sm">Tutto il calendario →</a>
-      </div>` : ''}
 
       <!-- SKILL: OBIETTIVI -->
       <div class="dash-card dash-card--skill" id="dash-skill-goals">

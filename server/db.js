@@ -227,8 +227,20 @@ async function migrate() {
       birth_year     TEXT DEFAULT '',
       favorite_team  TEXT DEFAULT '',
       staff_role     TEXT DEFAULT '',
-      public_contact TEXT DEFAULT '',
-      updated_at     TIMESTAMPTZ NOT NULL DEFAULT NOW()
+      public_contact  TEXT DEFAULT '',
+      favorite_rider  TEXT DEFAULT '',
+      updated_at      TIMESTAMPTZ NOT NULL DEFAULT NOW()
+    )`,
+    `ALTER TABLE user_details ADD COLUMN IF NOT EXISTS favorite_rider TEXT DEFAULT ''`,
+    // Partecipazione gare dichiarata dall'atleta
+    `CREATE TABLE IF NOT EXISTS race_participations (
+      id         SERIAL PRIMARY KEY,
+      user_id    INTEGER NOT NULL REFERENCES users(id) ON DELETE CASCADE,
+      gara_id    TEXT NOT NULL,
+      status     TEXT NOT NULL DEFAULT 'yes',
+      note       TEXT DEFAULT '',
+      created_at TIMESTAMPTZ NOT NULL DEFAULT NOW(),
+      UNIQUE(user_id, gara_id)
     )`,
   ];
   for (const sql of migrations) {
@@ -281,16 +293,31 @@ const queries = {
     one(
       `INSERT INTO user_details
          (user_id, bio, location, instagram, facebook, strava, website,
-          specialty, birth_year, favorite_team, staff_role, public_contact, updated_at)
-       VALUES ($1,$2,$3,$4,$5,$6,$7,$8,$9,$10,$11,$12, NOW())
+          specialty, birth_year, favorite_team, staff_role, public_contact, favorite_rider, updated_at)
+       VALUES ($1,$2,$3,$4,$5,$6,$7,$8,$9,$10,$11,$12,$13, NOW())
        ON CONFLICT (user_id) DO UPDATE SET
          bio=$2, location=$3, instagram=$4, facebook=$5, strava=$6, website=$7,
          specialty=$8, birth_year=$9, favorite_team=$10, staff_role=$11,
-         public_contact=$12, updated_at=NOW()
+         public_contact=$12, favorite_rider=$13, updated_at=NOW()
        RETURNING *`,
       [d.user_id, d.bio, d.location, d.instagram, d.facebook, d.strava, d.website,
-       d.specialty, d.birth_year, d.favorite_team, d.staff_role, d.public_contact]
+       d.specialty, d.birth_year, d.favorite_team, d.staff_role, d.public_contact, d.favorite_rider||'']
     ),
+
+  // Partecipazione gare
+  getRaceParticipations: (user_id) =>
+    all(`SELECT gara_id, status, note FROM race_participations WHERE user_id = $1`, [user_id]),
+
+  upsertRaceParticipation: (user_id, gara_id, status, note) =>
+    run(
+      `INSERT INTO race_participations (user_id, gara_id, status, note)
+       VALUES ($1,$2,$3,$4)
+       ON CONFLICT (user_id, gara_id) DO UPDATE SET status=$3, note=$4`,
+      [user_id, gara_id, status, note||'']
+    ),
+
+  deleteRaceParticipation: (user_id, gara_id) =>
+    run(`DELETE FROM race_participations WHERE user_id=$1 AND gara_id=$2`, [user_id, gara_id]),
 
   // Athlete profiles
   getAthleteProfile: (user_id) =>
