@@ -10384,9 +10384,9 @@ async function renderTeam(team_id) {
     }
     atletiMap[r.atleta_id].puntiCat += (r.punti_effettivi||0);
   });
+  // Mostra tutti gli atleti che hanno un risultato (anche 0 punti = finiti fuori top 10)
   const atletiList = Object.values(atletiMap)
-    .filter(a => a.puntiCat > 0)
-    .sort((a,b) => b.puntiCat - a.puntiCat);
+    .sort((a,b) => b.puntiCat - a.puntiCat || (a.cognome||'').localeCompare(b.cognome||''));
 
   const p1 = catRisultati.filter(r=>r.posizione===1).length;
   const p2 = catRisultati.filter(r=>r.posizione===2).length;
