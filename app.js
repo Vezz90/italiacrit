@@ -14498,10 +14498,13 @@ function _drawGara(ctx, W, H, d, logo) {
     ctx.fillText(regTxt, logoRight + 30, Math.round(hH * 0.52));
     ctx.textBaseline = 'alphabetic';
   }
-  const fsUrl = Math.round(hH * 0.18);
-  ctx.font = `400 ${fsUrl}px 'Inter Tight',sans-serif`;
-  ctx.fillStyle = 'rgba(255,255,255,0.30)'; ctx.textAlign = 'right';
-  ctx.fillText(SHARE_URL, W - pad, Math.round(hH * 0.62)); ctx.textAlign = 'left';
+  // Categoria in alto a destra (sostituisce l'URL italiacrit)
+  const fsCatH = Math.round(hH * 0.36);
+  ctx.font = `800 ${fsCatH}px 'Inter Tight',sans-serif`;
+  ctx.letterSpacing = '1px';
+  ctx.fillStyle = '#e8001d'; ctx.textAlign = 'right'; ctx.textBaseline = 'middle';
+  ctx.fillText(cat.toUpperCase(), W - pad, Math.round(hH * 0.52));
+  ctx.letterSpacing = '0px'; ctx.textAlign = 'left'; ctx.textBaseline = 'alphabetic';
   // Linea accento sottile flat sotto l'header
   ctx.fillStyle = 'rgba(255,255,255,0.07)'; ctx.fillRect(0, hH, W, 1);
   ctx.fillStyle = '#e8001d'; ctx.fillRect(pad, hH, Math.round(W * 0.10), 2);
@@ -14525,22 +14528,16 @@ function _drawGara(ctx, W, H, d, logo) {
   ctx.fillText(nameStr, pad, y);
   y += Math.round(H * 0.006);
 
-  // ── Category ──
-  const fsCat = Math.round(W * 0.026);
-  ctx.font = `600 ${fsCat}px 'Inter Tight',sans-serif`;
-  ctx.fillStyle = '#e8001d';
-  ctx.letterSpacing = '1px';
-  ctx.fillText(cat.toUpperCase(), pad, y);
-  const catW2 = ctx.measureText(cat.toUpperCase()).width;
-  ctx.letterSpacing = '0px';
-  ctx.font = `400 ${Math.round(fsCat * 0.82)}px 'Inter Tight',sans-serif`;
-  ctx.fillStyle = 'rgba(255,255,255,0.38)';
-  // Data · ×mult · km · media — tutto sulla stessa riga
-  const meta = [date, `×${mult}`];
-  if (km)    meta.push(`${km} km`);
-  if (media) meta.push(`media ${media} km/h`);
-  ctx.fillText('   ·   ' + meta.join('   ·   '), pad + catW2 + 6, y);
-  y += fsCat * 1.5;
+  // ── Meta riga: data · ×mult · km · media (categoria è già in header) ──
+  const fsMeta = Math.round(W * 0.024);
+  ctx.font = `400 ${fsMeta}px 'Inter Tight',sans-serif`;
+  ctx.fillStyle = 'rgba(255,255,255,0.40)';
+  const metaArr = [date, `×${mult}`];
+  if (km)    metaArr.push(`${km} km`);
+  if (media) metaArr.push(`media ${media} km/h`);
+  y += fsMeta;
+  ctx.fillText(metaArr.join('   ·   '), pad, y);
+  y += Math.round(fsMeta * 0.8);
 
   // Accent divider flat (Velon): linea sottile + tratto brand
   ctx.fillStyle = 'rgba(255,255,255,0.07)'; ctx.fillRect(pad, y, W - pad * 2, 1);
