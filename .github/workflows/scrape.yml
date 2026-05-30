@@ -3,11 +3,13 @@ name: Scrape FCI Results
 on:
   schedule:
     # Ogni 30 minuti, marzo (3) → ottobre (10)
+    # Nota: GitHub Actions può ritardare o saltare i cron su repo poco attivi.
+    # Usa "Run workflow" manuale se hai bisogno di un aggiornamento immediato.
     - cron: '*/30 * * 3-10 *'
   workflow_dispatch:
     inputs:
-      seed:
-        description: 'Genera dati seed demo invece di scraping reale'
+      force:
+        description: 'Forza scraping anche se nessuna modifica rilevata'
         required: false
         default: 'false'
 
@@ -34,6 +36,9 @@ jobs:
       - name: Install Python dependencies
         run: pip install -r requirements.txt
 
+      - name: Install Playwright browsers
+        run: playwright install chromium --with-deps
+
       - name: Run main scraper (results + rankings)
         run: python scraper/fci_complete_scraper.py
         env:
@@ -41,7 +46,7 @@ jobs:
 
       - name: Run race details scraper (informazioni tecniche gare)
         run: python scraper/race_details_scraper.py
-        continue-on-error: true   # non-blocking: se timeout/errore non blocca il commit
+        continue-on-error: true
         timeout-minutes: 20
         env:
           PYTHONUNBUFFERED: '1'
