@@ -103,6 +103,42 @@ function photoAreaHtml(entityType, entityId, photoUrl, initials, shape = 'circle
   </div>`;
 }
 
+// ── SOCIAL LINKS (atleta / team) ──────────────────────────────
+// Normalizza un handle o URL in un link pulito
+function _normSocialUrl(kind, raw) {
+  if (!raw) return '';
+  let v = String(raw).trim();
+  if (!v) return '';
+  if (/^https?:\/\//i.test(v)) return v;
+  v = v.replace(/^@/, '');
+  if (kind === 'instagram') return 'https://instagram.com/' + v.replace(/^.*instagram\.com\//i, '');
+  if (kind === 'facebook')  return 'https://facebook.com/'  + v.replace(/^.*facebook\.com\//i, '');
+  if (kind === 'strava')    return 'https://www.strava.com/athletes/' + v.replace(/^.*strava\.com\/athletes\//i, '');
+  if (kind === 'website')   return 'https://' + v;
+  return v;
+}
+
+// Costruisce la riga di icone social a partire dagli override entità
+function entitySocialLinksHtml(ov, kinds) {
+  if (!ov) return '';
+  const want = k => !kinds || kinds.includes(k);
+  const out = [];
+  if (want('instagram') && ov.instagram) {
+    out.push(`<a href="${esc(_normSocialUrl('instagram', ov.instagram))}" target="_blank" rel="noopener" class="media-profile-link" aria-label="Instagram"><svg class="social-icon social-icon-ig" viewBox="0 0 24 24"><rect x="2" y="2" width="20" height="20" rx="5" ry="5"/><path d="M16 11.37A4 4 0 1 1 12.63 8 4 4 0 0 1 16 11.37z"/><line x1="17.5" y1="6.5" x2="17.51" y2="6.5"/></svg> Instagram</a>`);
+  }
+  if (want('facebook') && ov.facebook) {
+    out.push(`<a href="${esc(_normSocialUrl('facebook', ov.facebook))}" target="_blank" rel="noopener" class="media-profile-link" aria-label="Facebook"><svg class="social-icon social-icon-fb" viewBox="0 0 24 24"><path d="M18 2h-3a5 5 0 0 0-5 5v3H7v4h3v8h4v-8h3l1-4h-4V7a1 1 0 0 1 1-1h3z"/></svg> Facebook</a>`);
+  }
+  if (want('strava') && ov.strava) {
+    out.push(`<a href="${esc(_normSocialUrl('strava', ov.strava))}" target="_blank" rel="noopener" class="media-profile-link" aria-label="Strava"><svg class="social-icon social-icon-strava" viewBox="0 0 24 24"><path d="M15.387 17.944l-2.089-4.116h-3.065L15.387 24l5.15-10.172h-3.066m-7.008-5.599l2.836 5.598h4.172L10.463 0l-7 13.828h4.169"/></svg> Strava</a>`);
+  }
+  if (want('website') && ov.website) {
+    out.push(`<a href="${esc(_normSocialUrl('website', ov.website))}" target="_blank" rel="noopener" class="media-profile-link" aria-label="Sito"><svg class="social-icon" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><line x1="2" y1="12" x2="22" y2="12"/><path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"/></svg> Sito</a>`);
+  }
+  if (!out.length) return '';
+  return `<div class="media-profile-links profile-social-links">${out.join('')}</div>`;
+}
+
 window.triggerPhotoUpload = function(entityType, entityId) {
   document.getElementById(`photo-file-${entityId}`)?.click();
 };
@@ -1178,12 +1214,17 @@ const ADMIN_EDIT_FIELDS = {
     { key: 'moltiplicatore', label: 'Moltiplicatore', type: 'select', options: ['1','2','3'] },
   ],
   atleta: [
-    { key: 'nome',    label: 'Nome',    type: 'text' },
-    { key: 'cognome', label: 'Cognome', type: 'text' },
-    { key: 'team',    label: 'Team',    type: 'text' },
+    { key: 'nome',      label: 'Nome',    type: 'text' },
+    { key: 'cognome',   label: 'Cognome', type: 'text' },
+    { key: 'team',      label: 'Team',    type: 'text' },
+    { key: 'instagram', label: 'Instagram (@handle o URL)', type: 'text' },
+    { key: 'facebook',  label: 'Facebook (URL o pagina)',   type: 'text' },
+    { key: 'strava',    label: 'Strava (ID o URL profilo)', type: 'text' },
   ],
   team: [
-    { key: 'nome', label: 'Nome team', type: 'text' },
+    { key: 'nome',      label: 'Nome team', type: 'text' },
+    { key: 'instagram', label: 'Instagram (@handle o URL)', type: 'text' },
+    { key: 'facebook',  label: 'Facebook (URL o pagina)',   type: 'text' },
   ],
 };
 
@@ -9705,6 +9746,7 @@ async function renderAtleta(atleta_id) {
             </div>
             ` : ''}
           </div>
+          ${entitySocialLinksHtml(atletaOv, ['instagram','facebook','strava'])}
         </div>
       </div>
       <div class="athlete-stats-bar">
@@ -10193,6 +10235,7 @@ async function renderTeam(team_id) {
         <div class="team-header-name-block">
           <div class="team-name-display">${esc(t.nome)}</div>
           <span id="team-msg-btn"></span>
+          ${entitySocialLinksHtml(teamOv, ['instagram','facebook'])}
         </div>
       </div>
       ${headerStats}

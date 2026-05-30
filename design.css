@@ -9611,6 +9611,11 @@ body[data-hub] .loading-bar { background: var(--hub-color) !important; }
   stroke: #1877f2;
   fill: #1877f2;
 }
+.social-icon-strava {
+  stroke: none;
+  fill: #fc4c02;
+}
+.profile-social-links { margin-top: 6px; }
 
 /* ── Gallery thumb expand hint ─────────────────────────────────────────────── */
 .media-gallery-thumb-cover { position: relative; }
