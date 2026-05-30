@@ -15522,6 +15522,20 @@ window.saveProfileDetails = async function(btn) {
 
 // ── DASHBOARD HELPERS ────────────────────────────────────────────────────────
 
+// Calcola classifica per una categoria specifica dai risultati grezzi
+function computeRanking(resultsRaw, catCode) {
+  const pts = {};
+  for (const r of resultsRaw) {
+    if (getRankingFileCode(r) !== catCode) continue;
+    if (!r.atleta_id) continue;
+    if (!pts[r.atleta_id]) pts[r.atleta_id] = { atleta_id: r.atleta_id, cognome: r.cognome||'', nome: r.nome||'', punti: 0 };
+    pts[r.atleta_id].punti += (r.punti_effettivi || 0);
+  }
+  const sorted = Object.values(pts).sort((a, b) => b.punti - a.punti);
+  sorted.forEach((r, i) => { r.pos = i + 1; });
+  return sorted;
+}
+
 /* Returns ranking position data for an atleta from live globalData */
 function _dashRankingInfo(atleta_id) {
   if (!globalData?.resultsRaw || !atleta_id) return null;
@@ -15529,8 +15543,8 @@ function _dashRankingInfo(atleta_id) {
   const cats = [...new Set(res.map(r => getRankingFileCode(r)).filter(Boolean))];
   const out = [];
   for (const cat of cats) {
-    const ranking = computeRanking ? computeRanking(res, cat) : null;
-    if (!ranking) continue;
+    const ranking = computeRanking(res, cat);
+    if (!ranking?.length) continue;
     const idx = ranking.findIndex(r => r.atleta_id === atleta_id);
     if (idx < 0) continue;
     const r = ranking[idx];
