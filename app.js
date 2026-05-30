@@ -1225,9 +1225,10 @@ const ADMIN_EDIT_FIELDS = {
     { key: 'moltiplicatore', label: 'Moltiplicatore', type: 'select', options: ['1','2','3'] },
   ],
   atleta: [
-    { key: 'nome',      label: 'Nome',    type: 'text' },
-    { key: 'cognome',   label: 'Cognome', type: 'text' },
-    { key: 'team',      label: 'Team',    type: 'text' },
+    { key: 'nome',         label: 'Nome',    type: 'text' },
+    { key: 'cognome',      label: 'Cognome', type: 'text' },
+    { key: 'team',         label: 'Team',    type: 'text' },
+    { key: 'anno_nascita', label: 'Anno di nascita (es. 2009)', type: 'text' },
     { key: 'instagram', label: 'Instagram (@handle o URL)', type: 'text' },
     { key: 'facebook',  label: 'Facebook (URL o pagina)',   type: 'text' },
     { key: 'strava',    label: 'Strava (ID o URL profilo)', type: 'text' },
@@ -9749,6 +9750,7 @@ async function renderAtleta(atleta_id) {
     <div class="athlete-header">
       <div class="athlete-header-top">
         ${badgeCat(a.categoria)}
+        ${atletaOv.anno_nascita ? `<span class="badge-cat">Classe ${esc(atletaOv.anno_nascita)}</span>` : ''}
         ${a.genere === 'F' ? '<span class="badge-cat badge-genere-f">♀</span>' : ''}
         ${a.team_id ? `<a href="#/team/${esc(a.team_id)}" style="font-family:var(--font-heading);font-size:.8rem;color:var(--text-secondary);border:1px solid var(--border-subtle);padding:2px 10px;border-radius:2px">${esc(displayTeam)} →</a>` : ''}
       </div>
