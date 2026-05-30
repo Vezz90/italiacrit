@@ -97,8 +97,11 @@ function isCyclingRelevant(name) {
 }
 
 function isRecent(name) {
+  // Accetta album senza anno nel nome (molti album xpix non lo hanno)
+  // Esclude solo album con anni chiaramente vecchi (>= 2 anni fa)
   const y = new Date().getFullYear();
-  return new RegExp(`\\b(${y}|${y - 1})\\b`).test(name);
+  const oldYearRe = new RegExp(`\\b(${y - 2}|${y - 3}|${y - 4}|${y - 5})\\b`);
+  return !oldYearRe.test(name);
 }
 
 // ── Recupera URL foto watermarked per un album — 2 sole chiamate API ──────────

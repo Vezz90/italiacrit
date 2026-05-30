@@ -2005,9 +2005,43 @@ async function ensureScraperMediaProfiles() {
   }
 }
 
+// Sync xpix automatica ogni 6 ore (senza richiedere azione admin)
+async function autoXpixSync() {
+  try {
+    console.log('[xpix-auto] Avvio sync automatica...');
+    const queue      = await readXpixQueue();
+    const knownSlugs = new Set(queue.map(q => q.album_slug));
+    const candidates = await fetchXpixCandidates(knownSlugs, 30);
+    if (!candidates.length) { console.log('[xpix-auto] Nessun nuovo album'); return; }
+    let added = 0;
+    for (const c of candidates) {
+      const id = Date.now().toString(36) + Math.random().toString(36).slice(2, 7);
+      queue.push({ id, album_id: c.album_id, album_name: c.album_name,
+        album_slug: c.album_slug, album_page: c.album_page,
+        photo_url: c.photo_url, photos: c.photos, photo_count: c.photo_count,
+        status: 'pending', added_at: new Date().toISOString() });
+      added++;
+    }
+    if (added) {
+      // Mantieni max 200 pending
+      const nonPending = queue.filter(q => q.status !== 'pending');
+      const pending    = queue.filter(q => q.status === 'pending').slice(0, 200);
+      await writeXpixQueue([...nonPending, ...pending]);
+      console.log(`[xpix-auto] ${added} nuovi album aggiunti alla coda`);
+    }
+  } catch (e) {
+    console.warn('[xpix-auto] Errore:', e.message);
+  }
+}
+
 init()
   .then(async () => {
     await ensureScraperMediaProfiles();
+    // Prima sync xpix dopo 2 minuti dal boot (Render si sveglia), poi ogni 6h
+    setTimeout(() => {
+      autoXpixSync();
+      setInterval(autoXpixSync, 6 * 60 * 60 * 1000);
+    }, 2 * 60 * 1000);
     app.listen(PORT, () => {
       console.log(`[server] ItaliacritAuth in ascolto su http://localhost:${PORT}`);
     });
