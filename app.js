@@ -212,18 +212,25 @@ window.triggerPhotoUpload = function(entityType, entityId) {
 };
 
 // Apre il cropper direttamente sulla foto esistente (fetch → dataUrl)
-window.triggerPhotoCrop = async function(entityType, entityId, photoPath) {
-  try {
-    const res = await fetch(MEDIA_BASE + photoPath, { credentials: 'include' });
-    if (!res.ok) throw new Error('HTTP ' + res.status);
-    const blob = await res.blob();
-    const reader = new FileReader();
-    reader.onload = e => _openPhotoCropper(e.target.result, entityType, entityId, 'photo.jpg');
-    reader.readAsDataURL(blob);
-  } catch {
-    // CORS o 404: fallback al file picker
-    document.getElementById(`photo-file-${entityId}`)?.click();
-  }
+window.triggerPhotoCrop = function(entityType, entityId, photoPath) {
+  // Carica la foto esistente tramite <img> (evita CORS su canvas usando crossOrigin anonymous)
+  const img = new Image();
+  img.crossOrigin = 'anonymous';
+  img.onload = () => {
+    // Converti in dataUrl tramite canvas temporaneo
+    const tmp = document.createElement('canvas');
+    tmp.width = img.naturalWidth; tmp.height = img.naturalHeight;
+    try {
+      tmp.getContext('2d').drawImage(img, 0, 0);
+      const dataUrl = tmp.toDataURL('image/jpeg', 0.95);
+      _openPhotoCropper(dataUrl, entityType, entityId, 'photo.jpg');
+    } catch {
+      // Canvas tainted (CORS non supportato): fallback al file picker
+      document.getElementById(`photo-file-${entityId}`)?.click();
+    }
+  };
+  img.onerror = () => document.getElementById(`photo-file-${entityId}`)?.click();
+  img.src = MEDIA_BASE + photoPath + (photoPath.includes('?') ? '&' : '?') + '_t=' + Date.now();
 };
 
 // Avvio: legge il file scelto e apre l'editor di ritaglio invece di caricarlo subito.
