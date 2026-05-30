@@ -58,13 +58,24 @@ function authClear() {
 
 // ── ENTITY OVERRIDES / PHOTO ──────────────────────────────────
 const _ovCache = {};
+// Fallback statico (committato nel repo) per dati come i social ufficiali.
+// Le modifiche da backend/admin hanno comunque la precedenza.
+let _staticSocials = null;
+async function _loadStaticSocials() {
+  if (_staticSocials) return _staticSocials;
+  try {
+    _staticSocials = await fetch('data/entity_socials.json').then(r => r.ok ? r.json() : {});
+  } catch { _staticSocials = {}; }
+  return _staticSocials;
+}
 async function getEntityOverrides(type, id) {
   const key = `${type}:${id}`;
   if (_ovCache[key]) return _ovCache[key];
+  const base = (await _loadStaticSocials())[key] || {};
   try {
     const { overrides } = await apiCall(`/admin/override/entity/${type}/${encodeURIComponent(id)}`);
-    _ovCache[key] = overrides || {};
-  } catch { _ovCache[key] = {}; }
+    _ovCache[key] = { ...base, ...(overrides || {}) };
+  } catch { _ovCache[key] = { ...base }; }
   return _ovCache[key];
 }
 

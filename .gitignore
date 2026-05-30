@@ -20,3 +20,4 @@ data/team_rankings/
 !data/pending_videos.json
 !data/youtube_channels.json
 !data/youtube_queue.json
+!data/entity_socials.json
