@@ -11044,14 +11044,34 @@ async function renderGara(gara_id) {
                      || _pm[_esBase + '_ES2_M'] || _pm[_esBase + '_ES2_F'];
       if (_extPhoto?.url) {
         const _src = esc(_extPhoto.url);
-        // album_slug è presente solo nelle foto xpix; source:'italiaciclismo' solo in IC
         const _srcLabel = (_extPhoto.album_slug || _extPhoto.source === 'xpix') ? 'xpix.it' : 'italiaciclismo.net';
         _heroPhotoEl = `<div class="gara-media-half gara-media-photo" onclick="window.openPhotoLightbox('${_src}')" style="cursor:zoom-in">
            <img id="gara-hero-img" src="${_src}" alt="Foto gara" loading="lazy"/>
            <div class="gara-photo-hint">🔍 Clicca per la foto intera</div>
            <div style="position:absolute;bottom:6px;left:8px;font-size:0.65rem;color:rgba(255,255,255,.7);background:rgba(0,0,0,.45);padding:2px 6px;border-radius:3px">📷 ${_srcLabel}</div>
          </div>`;
-        _gallery = '';
+        // Gallery con tutte le foto dell'album (se disponibili)
+        const _allPics = _extPhoto.photos && _extPhoto.photos.length > 1 ? _extPhoto.photos : [];
+        if (_allPics.length > 1) {
+          _gallery = `
+            <div class="profile-media-grid" style="margin-top:12px">
+              ${_allPics.map((u, idx) => `
+                <div class="profile-media-card" onclick="window.openPhotoLightbox('${esc(u)}')" style="cursor:zoom-in">
+                  <img src="${esc(u)}" alt="Foto ${idx+1}" loading="lazy" style="width:100%;height:100%;object-fit:cover"/>
+                </div>`).join('')}
+            </div>
+            ${_extPhoto.album_page ? `<div style="margin-top:8px;font-size:.8rem">
+              <a href="${esc(_extPhoto.album_page)}" target="_blank" rel="noopener" style="color:var(--accent)">
+                📷 Apri album completo su xpix.it (${_extPhoto.photos.length} foto) ↗
+              </a></div>` : ''}`;
+        } else if (_extPhoto.album_page) {
+          _gallery = `<div style="margin-top:8px;font-size:.8rem">
+            <a href="${esc(_extPhoto.album_page)}" target="_blank" rel="noopener" style="color:var(--accent)">
+              📷 Apri album completo su xpix.it ↗
+            </a></div>`;
+        } else {
+          _gallery = '';
+        }
       }
     }
   } catch(e) { console.error('renderGara photos:', e); }

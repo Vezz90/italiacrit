@@ -1088,10 +1088,11 @@ app.post('/api/admin/xpix/queue/:id/approve', requireAdmin, async (req, res) => 
     const item   = queue[i];
     const photos = await readXpixPhotos();
 
-    // Usa la foto selezionata dall'admin (o la prima di default)
+    // Salva foto selezionata (hero) + intero array per la gallery
     const chosenUrl = selected_photo_url || item.photo_url;
     photos[gara_id] = {
       url:        chosenUrl,
+      photos:     item.photos || [chosenUrl],  // array completo per gallery
       album_name: item.album_name,
       album_slug: item.album_slug,
       album_page: item.album_page,
