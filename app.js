@@ -14508,11 +14508,22 @@ function _drawGara(ctx, W, H, d, logo) {
 
   let y = hH + Math.round(H * 0.022);
 
-  // ── Race name ──
-  const fsT = Math.round(W * (name.length > 38 ? 0.040 : name.length > 24 ? 0.050 : 0.060));
-  ctx.font = `700 ${fsT}px 'Inter Tight',sans-serif`; ctx.fillStyle = '#f4f4f4';
-  y = _wrap(ctx, name.toUpperCase(), pad, y + fsT, W - pad * 2, fsT * 1.10);
-  y += Math.round(H * 0.004);
+  // ── Race name — singola riga auto-shrink ──
+  // Parte da un font grande, riduce finché il nome entra in una riga sola.
+  const fsTMax = Math.round(W * 0.052);
+  const fsTMin = Math.round(W * 0.026);
+  let fsT = fsTMax;
+  const nameStr = name.toUpperCase();
+  const nameMaxW = W - pad * 2;
+  ctx.font = `700 ${fsT}px 'Inter Tight',sans-serif`;
+  while (ctx.measureText(nameStr).width > nameMaxW && fsT > fsTMin) {
+    fsT -= 1;
+    ctx.font = `700 ${fsT}px 'Inter Tight',sans-serif`;
+  }
+  ctx.fillStyle = '#f4f4f4';
+  y += fsT;
+  ctx.fillText(nameStr, pad, y);
+  y += Math.round(H * 0.006);
 
   // ── Category ──
   const fsCat = Math.round(W * 0.026);
