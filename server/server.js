@@ -207,7 +207,9 @@ app.get('/api/auth/me', requireAuth, async (req, res) => {
   try {
     const user = await queries.getUserById(req.user.id);
     if (!user) return res.status(404).json({ error: 'Utente non trovato' });
-    res.json({ user });
+    // Restituisce anche un token fresco: così eventuali cambi di ruolo
+    // (es. fatti dall'admin) si propagano alla sessione dopo un refresh.
+    res.json({ user, token: makeToken(user) });
   } catch (e) {
     res.status(500).json({ error: e.message });
   }

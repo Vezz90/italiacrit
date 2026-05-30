@@ -55,6 +55,19 @@ function authClear() {
   localStorage.removeItem('italiacrit-token');
   localStorage.removeItem('italiacrit-user');
 }
+// Ricarica l'utente dal server (ruolo, nome…) e aggiorna token+localStorage.
+// Serve a propagare i cambi di ruolo fatti dall'admin senza ri-login manuale.
+async function refreshUser() {
+  if (!authToken()) return null;
+  try {
+    const { user, token } = await apiCall('/auth/me');
+    if (user) {
+      authSave(token || authToken(), user);
+      try { updateNavLoginState(); } catch {}
+    }
+    return user;
+  } catch { return null; }
+}
 
 // ── ENTITY OVERRIDES / PHOTO ──────────────────────────────────
 const _ovCache = {};
@@ -15081,6 +15094,9 @@ window.submitRegister = async function(e) {
 
 // ── MY PROFILE / DASHBOARD ────────────────────────────────────
 async function renderMyProfile() {
+  if (!authUser()) { window.location.hash = '/login'; return; }
+  // Aggiorna l'utente dal server (ruolo aggiornato dall'admin, ecc.)
+  await refreshUser();
   const user = authUser();
   if (!user) { window.location.hash = '/login'; return; }
 
@@ -15319,10 +15335,17 @@ async function _dashAtleta(el, user, profile) {
       <!-- STATUS -->
       <div class="dash-card">
         <div class="dash-card-title"><span>🚴</span>Il tuo profilo</div>
+        ${(() => {
+          const ath = atleta_id ? (globalData?.athletes?.[atleta_id]) : null;
+          const riderName = ath ? `${ath.cognome||''} ${ath.nome||''}`.trim()
+                                : `${profile.last_name||''} ${profile.first_name||''}`.trim();
+          return riderName ? `<div style="font-family:var(--font-display);font-size:1.15rem;font-weight:800;color:var(--text-primary);margin-bottom:6px">${esc(riderName)}</div>` : '';
+        })()}
         <div style="display:flex;align-items:center;gap:10px;flex-wrap:wrap">
           <span class="dash-status ${profile.status==='active'?'dash-status--ok':profile.status==='pending'?'dash-status--warn':'dash-status--err'}">${statusMap[profile.status]||profile.status}</span>
           ${atleta_id ? `<a href="#/atleta/${esc(atleta_id)}" class="dash-btn dash-btn--outline dash-btn--sm">👁 Vedi profilo pubblico</a>` : ''}
         </div>
+        ${!atleta_id ? `<div style="font-size:.78rem;color:var(--text-muted);margin-top:4px">Profilo non ancora associato a un corridore (in attesa di verifica)</div>` : ''}
         ${profile.team ? `<div style="font-size:.84rem;color:var(--text-muted)">Team: <strong style="color:var(--text-primary)">${esc(profile.team)}</strong></div>` : ''}
         ${profile.fci_code ? `<div style="font-size:.8rem;color:var(--text-muted)">FCI: ${esc(profile.fci_code)}</div>` : ''}
         <div class="dash-stats-row">
