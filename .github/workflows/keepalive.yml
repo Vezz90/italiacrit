@@ -21,7 +21,7 @@ jobs:
           exit 0
 
       - name: Keep repo active (prevent GitHub Actions throttling)
-        uses: actions/checkout@v4
+        uses: actions/checkout@v5
         with:
           token: ${{ secrets.GITHUB_TOKEN }}
 
@@ -34,4 +34,5 @@ jobs:
           git add .github/keepalive.txt
           # Commit solo se il file è cambiato (ogni run aggiorna il timestamp)
           git diff --staged --quiet || git commit -m "keepalive: $(date -u '+%Y-%m-%d %H:%M') UTC"
+          git pull --rebase origin main
           git push

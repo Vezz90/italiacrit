@@ -23,7 +23,7 @@ jobs:
 
     steps:
       - name: Checkout repository
-        uses: actions/checkout@v4
+        uses: actions/checkout@v5
         with:
           token: ${{ secrets.GITHUB_TOKEN }}
 
@@ -54,6 +54,7 @@ jobs:
           git config user.name "ItaliacritBot"
           git add -f data/
           git diff --staged --quiet || git commit -m "update: $(date -u '+%Y-%m-%d %H:%M') UTC"
+          git pull --rebase origin main
           git push
 
       - name: Ping Render (keep server awake)
