@@ -10650,6 +10650,18 @@ function openPhotoLightbox(src) {
 }
 window.openPhotoLightbox = openPhotoLightbox;
 
+// Admin: rimuove la foto xpix direttamente dalla scheda gara
+window.adminRemoveXpixFromRace = async function(garaId) {
+  if (!confirm('Rimuovere la foto xpix da questa gara?')) return;
+  try {
+    await apiCall(`/admin/xpix/photos/${encodeURIComponent(garaId)}`, { method: 'DELETE' });
+    _risPhotosMap = null; // invalida cache
+    showToast('Foto rimossa ✓');
+    // Ricarica la pagina gara per aggiornare la UI
+    setTimeout(() => route(), 300);
+  } catch (e) { showToast('Errore: ' + e.message, 'error'); }
+};
+
 function adminEditPhoto(id) {
   const card = document.getElementById(`gal-photo-${id}`);
   const caption      = card?.dataset.caption      || '';
@@ -11125,11 +11137,19 @@ async function renderGara(gara_id) {
                      || _pm[_esBase + '_ES2_M'] || _pm[_esBase + '_ES2_F'];
       if (_extPhoto?.url) {
         const _src = esc(_extPhoto.url);
-        const _srcLabel = (_extPhoto.album_slug || _extPhoto.source === 'xpix') ? 'xpix.it' : 'italiaciclismo.net';
-        _heroPhotoEl = `<div class="gara-media-half gara-media-photo" onclick="window.openPhotoLightbox('${_src}')" style="cursor:zoom-in">
+        const _isXpix = (_extPhoto.album_slug || _extPhoto.source === 'xpix');
+        const _srcLabel = _isXpix ? 'xpix.it' : 'italiaciclismo.net';
+        // Pulsante rimozione visibile solo all'admin, per foto xpix
+        const _removeBtn = (authUser()?.role === 'admin' && _isXpix)
+          ? `<button onclick="window.adminRemoveXpixFromRace('${esc(primaryGaraId)}')"
+               style="position:absolute;top:6px;right:6px;background:rgba(220,38,38,.85);color:#fff;border:none;padding:3px 8px;border-radius:4px;font-size:.7rem;cursor:pointer;z-index:2">
+               🗑 Rimuovi foto
+             </button>` : '';
+        _heroPhotoEl = `<div class="gara-media-half gara-media-photo" onclick="window.openPhotoLightbox('${_src}')" style="cursor:zoom-in;position:relative">
            <img id="gara-hero-img" src="${_src}" alt="Foto gara" loading="lazy"/>
            <div class="gara-photo-hint">🔍 Clicca per la foto intera</div>
            <div style="position:absolute;bottom:6px;left:8px;font-size:0.65rem;color:rgba(255,255,255,.7);background:rgba(0,0,0,.45);padding:2px 6px;border-radius:3px">📷 ${_srcLabel}</div>
+           ${_removeBtn}
          </div>`;
         // Gallery con tutte le foto dell'album (se disponibili)
         const _allPics = _extPhoto.photos && _extPhoto.photos.length > 1 ? _extPhoto.photos : [];
