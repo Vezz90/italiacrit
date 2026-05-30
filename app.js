@@ -10655,6 +10655,21 @@ function openPhotoLightbox(src) {
 }
 window.openPhotoLightbox = openPhotoLightbox;
 
+// Admin: elimina un album dalla gallery di una gara
+window.adminDeleteGalleryAlbum = async function(albumId, btn) {
+  if (!confirm('Eliminare questo album dalla gallery?')) return;
+  if (btn) { btn.disabled = true; btn.textContent = '⏳…'; }
+  try {
+    await apiCall(`/media/album/${albumId}`, { method: 'DELETE' });
+    // Rimuove il blocco dall'UI senza reload
+    btn?.closest('.media-gallery-album')?.remove();
+    showToast('Album eliminato ✓');
+  } catch (e) {
+    if (btn) { btn.disabled = false; btn.textContent = '🗑 Elimina'; }
+    showToast('Errore: ' + e.message, 'error');
+  }
+};
+
 // Admin: rimuove la foto xpix direttamente dalla scheda gara
 window.adminRemoveXpixFromRace = async function(garaId) {
   if (!confirm('Rimuovere la foto xpix da questa gara?')) return;
@@ -11336,6 +11351,7 @@ async function renderGara(gara_id) {
                   <div class="media-gallery-album-header">
                     <span class="media-gallery-album-name">${esc(a.title)}</span>
                     <a href="#/media/${a.profile_id}" class="media-gallery-photographer">📷 ${esc(a.photographer_name)}</a>
+                    ${authUser()?.role === 'admin' ? `<button onclick="window.adminDeleteGalleryAlbum(${a.id},this)" style="margin-left:8px;background:transparent;border:1px solid #ef4444;color:#ef4444;padding:2px 8px;border-radius:4px;font-size:.7rem;cursor:pointer">🗑 Elimina</button>` : ''}
                   </div>
                   <div class="media-gallery-strip-wrap">
                     <button class="media-gallery-arrow media-gallery-prev" onclick="window._mgScroll('${stripId}',-1)">‹</button>
