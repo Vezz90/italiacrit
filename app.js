@@ -8808,8 +8808,55 @@ function renderXpixQueue() {
     &nbsp;•&nbsp; ✗ Scartate: ${dismissed}
   </div>`;
 
+  // ── Sezione approvate: mostra con pulsante "Rimuovi da gara"
+  const approvedList  = _xpixQueue.filter(q => q.status === 'approved');
+  const dismissedList = _xpixQueue.filter(q => q.status === 'dismissed');
+
+  const approvedHtml = approvedList.length ? `
+    <details style="margin-bottom:14px">
+      <summary style="font-weight:700;font-size:.85rem;cursor:pointer;padding:8px 0;color:var(--text-primary)">
+        ✓ Approvate (${approvedList.length}) — clicca per gestirle
+      </summary>
+      <div style="display:flex;flex-direction:column;gap:6px;margin-top:8px">
+        ${approvedList.map(item => `
+        <div style="display:flex;align-items:center;gap:8px;padding:8px 10px;background:var(--bg-card);border:1px solid var(--border-subtle);border-radius:6px;flex-wrap:wrap">
+          <div style="flex:1;min-width:0">
+            <div style="font-size:.82rem;font-weight:600;white-space:nowrap;overflow:hidden;text-overflow:ellipsis">${esc(item.album_name)}</div>
+            <div style="font-size:.72rem;color:var(--text-muted)">
+              Gara: <strong>${esc(item.approved_gara_id||item.approved_gara_ids?.[0]||'—')}</strong>
+            </div>
+          </div>
+          <button onclick="window.xpixRemoveFromGara('${esc(item.id)}','${esc(item.approved_gara_id||item.approved_gara_ids?.[0]||'')}',this)"
+            style="flex:0 0 auto;background:transparent;border:1px solid #ef4444;color:#ef4444;padding:4px 10px;border-radius:5px;cursor:pointer;font-size:.75rem;white-space:nowrap">
+            🗑 Rimuovi da gara
+          </button>
+        </div>`).join('')}
+      </div>
+    </details>` : '';
+
+  const dismissedHtml = dismissedList.length ? `
+    <details style="margin-bottom:14px">
+      <summary style="font-weight:700;font-size:.85rem;cursor:pointer;padding:8px 0;color:var(--text-primary)">
+        ✗ Scartati (${dismissedList.length}) — clicca per recuperarli
+      </summary>
+      <div style="display:flex;flex-direction:column;gap:6px;margin-top:8px">
+        ${dismissedList.map(item => `
+        <div style="display:flex;align-items:center;gap:8px;padding:8px 10px;background:var(--bg-card);border:1px solid var(--border-subtle);border-radius:6px;flex-wrap:wrap">
+          <div style="flex:1;min-width:0">
+            <div style="font-size:.82rem;font-weight:600;white-space:nowrap;overflow:hidden;text-overflow:ellipsis">${esc(item.album_name)}</div>
+            <div style="font-size:.72rem;color:var(--text-muted)">Scartato — clicca per rimettere in coda</div>
+          </div>
+          <button onclick="window.xpixRestore('${esc(item.id)}',this)"
+            style="flex:0 0 auto;background:transparent;border:1px solid #16a34a;color:#16a34a;padding:4px 10px;border-radius:5px;cursor:pointer;font-size:.75rem;white-space:nowrap">
+            ↩ Ripristina
+          </button>
+        </div>`).join('')}
+      </div>
+    </details>` : '';
+
   if (!pending.length) {
-    container.innerHTML = stats + `<div style="color:var(--text-muted);font-size:.85rem">Tutte le foto sono state elaborate.</div>`;
+    container.innerHTML = stats + approvedHtml + dismissedHtml +
+      `<div style="color:var(--text-muted);font-size:.85rem">Nessun album in attesa.</div>`;
     return;
   }
 
@@ -8883,7 +8930,7 @@ function renderXpixQueue() {
     </div>`;
   }).join('');
 
-  container.innerHTML = stats + rows;
+  container.innerHTML = stats + approvedHtml + dismissedHtml + rows;
 }
 
 window.xpixSync = async () => {
@@ -9003,6 +9050,40 @@ window.xpixApprove = async (id) => {
     }
     showToast('✓ Foto pubblicata per ' + garaId.split('_').slice(0,4).join(' '));
   } catch (e) { showToast('Errore: ' + e.message, 'error'); }
+};
+
+// Rimuove la foto xpix da una gara (senza scartare l'album dalla coda)
+window.xpixRemoveFromGara = async (id, garaId, btn) => {
+  if (!garaId) { showToast('Nessuna gara collegata', 'error'); return; }
+  if (!confirm(`Rimuovere la foto dalla gara "${garaId}"? L'album tornerà in coda.`)) return;
+  if (btn) { btn.disabled = true; btn.textContent = '⏳…'; }
+  try {
+    await apiCall(`/admin/xpix/photos/${encodeURIComponent(garaId)}`, { method: 'DELETE' });
+    // Rimette l'album in pending
+    await apiCall(`/admin/xpix/queue/${id}/restore`, { method: 'PATCH' });
+    const item = _xpixQueue.find(q => q.id === id);
+    if (item) { item.status = 'pending'; delete item.approved_gara_id; delete item.approved_gara_ids; }
+    showToast('Foto rimossa dalla gara — album di nuovo in coda');
+    renderXpixQueue();
+  } catch (e) {
+    if (btn) { btn.disabled = false; btn.textContent = '🗑 Rimuovi da gara'; }
+    showToast('Errore: ' + e.message, 'error');
+  }
+};
+
+// Ripristina un album scartato → lo rimette in pending
+window.xpixRestore = async (id, btn) => {
+  if (btn) { btn.disabled = true; btn.textContent = '⏳…'; }
+  try {
+    await apiCall(`/admin/xpix/queue/${id}/restore`, { method: 'PATCH' });
+    const item = _xpixQueue.find(q => q.id === id);
+    if (item) { item.status = 'pending'; }
+    showToast('Album ripristinato — è di nuovo in coda');
+    renderXpixQueue();
+  } catch (e) {
+    if (btn) { btn.disabled = false; btn.textContent = '↩ Ripristina'; }
+    showToast('Errore: ' + e.message, 'error');
+  }
 };
 
 window.xpixDismiss = async (id) => {

@@ -1149,6 +1149,20 @@ app.delete('/api/admin/xpix/queue/:id', requireAdmin, async (req, res) => {
   } catch (e) { res.status(500).json({ error: e.message }); }
 });
 
+// PATCH ripristina album scartato → pending (per ri-approvarlo)
+app.patch('/api/admin/xpix/queue/:id/restore', requireAdmin, async (req, res) => {
+  try {
+    const queue = await readXpixQueue();
+    const i = queue.findIndex(q => q.id === req.params.id);
+    if (i === -1) return res.status(404).json({ error: 'Non trovato' });
+    queue[i].status = 'pending';
+    delete queue[i].approved_gara_id;
+    delete queue[i].approved_gara_ids;
+    await writeXpixQueue(queue);
+    res.json({ ok: true });
+  } catch (e) { res.status(500).json({ error: e.message }); }
+});
+
 // DELETE rimuovi foto xpix approvata da una gara
 app.delete('/api/admin/xpix/photos/:gara_id', requireAdmin, async (req, res) => {
   try {
