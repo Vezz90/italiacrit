@@ -4904,16 +4904,6 @@ async function renderHubBars() {
     const badgesHtml = badges.length
       ? `<div class="itc-badges">${badges.map(b=>`<span class="itc-badge itc-${b.cls}">${b.icon} ${b.label}</span>`).join('')}</div>`
       : '';
-    // Pallini forma: ultimi 5 risultati (oro=1°, argento=2-3°, verde=top10, grigio=fuori)
-    const formDots = resultsRaw
-      .filter(r => r.atleta_id===ath.atleta_id && getRankingFileCode(r)===catCode && r.data)
-      .sort((a,b) => b.data.localeCompare(a.data))
-      .slice(0,5)
-      .map(r => {
-        const p = r.posizione;
-        const c = p===1?'#D97706':p<=3?'#9CA3AF':p<=10?'#10B981':'#1e293b';
-        return `<span style="display:inline-block;width:11px;height:11px;border-radius:50%;background:${c};border:1px solid rgba(255,255,255,.2)" title="${p}°"></span>`;
-      }).join('');
     let bgHtml;
     if (photoUrl) {
       bgHtml = `<div class="itc-fire-bg itc-fire-bg--portrait" style="background-image:url('${photoUrl}')"></div>`;
@@ -4936,7 +4926,6 @@ async function renderHubBars() {
           <div class="itc-fire-stat"><span class="itc-fire-val">${ath.wins}</span><span class="itc-fire-lbl">vittorie</span></div>
           <div class="itc-fire-stat"><span class="itc-fire-val">${ath.podi}</span><span class="itc-fire-lbl">podi</span></div>
         </div>
-        ${formDots ? `<div style="margin-top:10px;display:flex;align-items:center;gap:4px"><span style="font-size:.6rem;color:rgba(255,255,255,.4);margin-right:4px;letter-spacing:.06em">ULTIMI 5</span>${formDots}</div>` : ''}
         <div class="itc-fire-ctas">
           <a href="#/atleta/${encodeURIComponent(ath.atleta_id)}" class="itc-fire-cta-primary">Scheda atleta →</a>
           <button class="itc-fire-cta-sec" onclick="event.preventDefault();window.location.hash='#/comparatore'">⚖ Confronta</button>
@@ -5347,6 +5336,7 @@ async function renderHubBars() {
         </div>
         <div class="itc-fire-ctas">
           <a href="#/team/${encodeURIComponent(team.team_id)}" class="itc-fire-cta-primary">Scheda team →</a>
+          <button class="itc-fire-cta-sec" onclick="event.preventDefault();window.location.hash='#/comparatore?mode=team'">⚖ Confronta</button>
         </div>
       </div>
     </div>`;
