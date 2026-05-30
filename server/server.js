@@ -298,6 +298,35 @@ app.get('/api/admin/users', requireAdmin, async (req, res) => {
   catch (e) { res.status(500).json({ error: e.message }); }
 });
 
+const VALID_ROLES = ['atleta', 'team', 'genitore', 'parente', 'appassionato', 'media', 'admin'];
+
+// Cambio ruolo utente (admin)
+async function _adminSetUserRole(req, res) {
+  try {
+    const userId = parseInt(req.params.id, 10);
+    if (!userId) return res.status(400).json({ error: 'ID utente non valido' });
+    const { role } = req.body || {};
+    if (!VALID_ROLES.includes(role)) return res.status(400).json({ error: 'Ruolo non valido' });
+    if (userId === req.user.id) return res.status(400).json({ error: 'Non puoi modificare il tuo stesso ruolo' });
+    const updated = await queries.updateUserRole(userId, role);
+    if (!updated) return res.status(404).json({ error: 'Utente non trovato' });
+    res.json({ ok: true, user: updated });
+  } catch (e) { res.status(500).json({ error: e.message }); }
+}
+app.patch('/api/admin/users/:id', requireAdmin, _adminSetUserRole);
+app.post('/api/admin/users/:id/role', requireAdmin, _adminSetUserRole);
+
+// Eliminazione utente (admin)
+app.delete('/api/admin/users/:id', requireAdmin, async (req, res) => {
+  try {
+    const userId = parseInt(req.params.id, 10);
+    if (!userId) return res.status(400).json({ error: 'ID utente non valido' });
+    if (userId === req.user.id) return res.status(400).json({ error: 'Non puoi eliminare il tuo stesso account' });
+    await queries.deleteUser(userId);
+    res.json({ ok: true });
+  } catch (e) { res.status(500).json({ error: e.message }); }
+});
+
 app.get('/api/admin/pending', requireAdmin, async (req, res) => {
   try { res.json({ pending: await queries.getPendingProfiles() }); }
   catch (e) { res.status(500).json({ error: e.message }); }

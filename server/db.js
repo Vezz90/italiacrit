@@ -247,6 +247,16 @@ const queries = {
   updateLastLogin: (id) =>
     run(`UPDATE users SET last_login = NOW() WHERE id = $1`, [id]),
 
+  updateUserRole: (id, role) =>
+    one(
+      `UPDATE users SET role = $2 WHERE id = $1
+       RETURNING id, email, role, display_name, created_at, last_login`,
+      [id, role]
+    ),
+
+  deleteUser: (id) =>
+    run(`DELETE FROM users WHERE id = $1`, [id]),
+
   // Athlete profiles
   getAthleteProfile: (user_id) =>
     one(`SELECT * FROM athlete_profiles WHERE user_id = $1`, [user_id]),
