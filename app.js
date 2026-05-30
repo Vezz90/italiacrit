@@ -7006,10 +7006,6 @@ async function renderAdmin() {
           <span class="admin-nav-icon" style="color:#0ea5e9">◈</span> xpix Auto-Sync
           <span class="admin-nav-badge" id="badge-xpix"></span>
         </div>
-        <div class="admin-nav-item" data-section="foto-ic" onclick="adminNav('foto-ic')">
-          <span class="admin-nav-icon" style="color:#8b5cf6">◈</span> ItaliaCiclismo
-          <span class="admin-nav-badge" id="badge-ic"></span>
-        </div>
 
         <div class="admin-nav-group">Video</div>
         <div class="admin-nav-item" data-section="video-pending" onclick="adminNav('video-pending')">
@@ -7213,27 +7209,6 @@ window.adminNav = async function(section) {
       break;
     }
 
-    // ── ITALIACICLISMO ────────────────────────────────────────
-    case 'foto-ic': {
-      main.innerHTML = `
-        <div class="admin-page-header">
-          <h1 class="admin-page-title" style="color:#8b5cf6">◈ ItaliaCiclismo Auto-Sync</h1>
-          <p class="admin-page-sub">Foto da italiaciclismo.net — sincronizza, seleziona e pubblica.</p>
-        </div>
-        <div style="display:flex;gap:10px;align-items:center;margin-bottom:20px;flex-wrap:wrap">
-          <button onclick="window.icSync()" id="ic-sync-btn"
-            style="background:#8b5cf6;color:#fff;border:none;padding:10px 22px;border-radius:6px;font-weight:700;cursor:pointer;font-size:.875rem">
-            🔄 Sincronizza ItaliaCiclismo
-          </button>
-          <span id="ic-sync-status" style="font-size:.8rem;color:var(--text-muted)"></span>
-        </div>
-        <div id="ic-queue-container">
-          <div class="admin-loading">Caricamento coda…</div>
-        </div>`;
-      loadICQueue();
-      break;
-    }
-
     // ── VIDEO IN ATTESA ───────────────────────────────────────
     case 'video-pending': {
       main.innerHTML = `
@@ -7327,12 +7302,11 @@ window.adminNav = async function(section) {
         <div style="display:flex;gap:8px;flex-wrap:wrap;margin-bottom:20px">
           <button id="foto-tutti-tab-up"   onclick="adminFotoTuttiTab('uploaded')"   style="padding:7px 16px;border-radius:6px;border:1px solid var(--accent);background:var(--accent);color:#fff;font-weight:700;cursor:pointer;font-size:.82rem">📤 Caricate</button>
           <button id="foto-tutti-tab-xpix" onclick="adminFotoTuttiTab('xpix')"      style="padding:7px 16px;border-radius:6px;border:1px solid var(--border);background:transparent;color:var(--text-secondary);cursor:pointer;font-size:.82rem">📸 xpix.it</button>
-          <button id="foto-tutti-tab-ic"   onclick="adminFotoTuttiTab('ic')"        style="padding:7px 16px;border-radius:6px;border:1px solid var(--border);background:transparent;color:var(--text-secondary);cursor:pointer;font-size:.82rem">🌐 italiaciclismo</button>
         </div>
         <div id="foto-tutti-body"><div class="admin-loading">Caricamento…</div></div>`;
       window._adminFotoTuttiCache = {};
       window.adminFotoTuttiTab = async (tab) => {
-        ['uploaded','xpix','ic'].forEach(t => {
+        ['uploaded','xpix'].forEach(t => {
           const btn = document.getElementById('foto-tutti-tab-' + t);
           if (!btn) return;
           if (t === tab) { btn.style.background = 'var(--accent)'; btn.style.color = '#fff'; btn.style.borderColor = 'var(--accent)'; btn.style.fontWeight = '700'; }
