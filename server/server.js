@@ -1457,6 +1457,16 @@ app.delete('/api/media/album/:id', requireMediaOrAdmin, async (req, res) => {
     const photos = await queries.getMediaPhotosByAlbum(album.id);
     for (const p of photos) { if (p.filename) await deletePhoto(p.filename).catch(() => {}); }
     await queries.deleteMediaAlbum(album.id);
+
+    // Se l'album era xpix, segna gallery_deleted per evitare che seed-xpix lo rircei
+    if (album.gara_id) {
+      const xpixPhotos = await readXpixPhotos().catch(() => ({}));
+      if (xpixPhotos[album.gara_id]) {
+        xpixPhotos[album.gara_id].gallery_deleted = true;
+        await writeXpixPhotos(xpixPhotos).catch(() => {});
+      }
+    }
+
     res.json({ ok: true });
   } catch (e) { res.status(500).json({ error: e.message }); }
 });
@@ -1779,6 +1789,7 @@ app.post('/api/admin/media/seed-xpix', requireAdmin, async (req, res) => {
     for (const [gara_id, xpixEntry] of Object.entries(xpixPhotos)) {
       const slug = xpixEntry.album_slug;
       if (!slug) { skipped++; continue; }
+      if (xpixEntry.gallery_deleted) { skipped++; continue; }
 
       // Salta se album già presente
       const existing = await rawQuery(
