@@ -2784,11 +2784,11 @@ function getWatchlist() {
 function isWatched(atleta_id) {
   return getWatchlist().some(w => w.id === atleta_id);
 }
-window.toggleWatch = function(atleta_id, cognome, nome) {
+window.toggleWatch = function(atleta_id, cognome, nome, type) {
   let list = getWatchlist();
   const idx = list.findIndex(w => w.id === atleta_id);
   if (idx >= 0) { list.splice(idx, 1); }
-  else { list.push({ id: atleta_id, cognome, nome, ts: Date.now() }); }
+  else { list.push({ id: atleta_id, cognome, nome, type: type || 'atleta', ts: Date.now() }); }
   try { localStorage.setItem('itc_watchlist', JSON.stringify(list)); } catch {}
   const added = idx < 0;
   const btn = document.getElementById('watch-btn-' + atleta_id);
@@ -2799,6 +2799,11 @@ window.toggleWatch = function(atleta_id, cognome, nome) {
       : '<span>☆</span> Segui';
   }
   return added;
+};
+// Helper per i team: recupera il nome dal globalData (team_id è uno slug sicuro)
+window.toggleWatchTeam = function(team_id) {
+  const t = (globalData && globalData.teams) ? globalData.teams[team_id] : null;
+  return window.toggleWatch(team_id, (t && t.nome) || team_id, '', 'team');
 };
 
 // ══════════════════════════════════════════════════════════════
@@ -4880,6 +4885,18 @@ async function renderHubBars() {
       </div>
     </div>`;
     const rows=wl.map(w=>{
+      const isTeam = w.type === 'team';
+      if (isTeam) {
+        const tk = (globalData && globalData.teams) ? globalData.teams[w.id] : null;
+        const sub = tk ? `${(tk.atleti||[]).length} atleti · ${tk.punti_totali||0} pt` : 'Team';
+        return `<div class="itc-watchlist-row" onclick="location.hash='#/team/${encodeURIComponent(w.id)}'">
+          <div class="itc-watchlist-info">
+            <div class="itc-watchlist-name">${esc(w.cognome||w.id)} <span class="itc-wl-streak">TEAM</span></div>
+            <div class="itc-watchlist-sub">${sub}</div>
+          </div>
+          <button class="itc-wl-remove" onclick="event.stopPropagation();window.toggleWatch('${w.id.replace(/'/g,"\\'")}','','','team');this.closest('.itc-watchlist-row').remove()" title="Rimuovi">✕</button>
+        </div>`;
+      }
       const re=hubRanking.find(r=>r.atleta_id===w.id);
       const pos=re?.pos, pts=re?.punti;
       const rs=hubRes.filter(r=>r.atleta_id===w.id&&r.posizione).sort((a,b)=>(b.data||'').localeCompare(a.data||''));
@@ -9925,7 +9942,7 @@ async function _injectMsgBtn(spanId, atleta_id, team_name, media_profile_id) {
     if (!d.user || d.user.id === loggedUser.id) return; // stesso utente o non trovato
     span.innerHTML = `<button class="btn-msg-write" onclick="window.startConversation(${d.user.id},'${esc(d.user.display_name || 'Utente')}')">
       <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="14" height="14"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/><polyline points="22,6 12,13 2,6"/></svg>
-      Scrivi
+      Contatta
     </button>`;
   } catch { /* silenzioso — feature opzionale */ }
 }
@@ -10239,6 +10256,7 @@ async function renderTeam(team_id) {
   const teamPhotoHtml = photoAreaHtml('team', team_id, teamOv.photo_url || null, teamInitials, 'square');
 
   window._shareTeamData = {nome:t.nome,cat:catLabel(teamViewCat),punti:catPuntiTotali,pos:currentRank?currentRank.pos:null,p1:p1,atleti:atletiList.slice(0,5)};
+  const _teamWatched = isWatched(team_id);
   setPage(`
     <div class="team-header">
       <div class="team-header-identity">
@@ -10253,6 +10271,7 @@ async function renderTeam(team_id) {
     </div>
     <div style="margin-top:12px;display:flex;gap:10px;align-items:center;flex-wrap:wrap">
       <button class="btn-share" onclick="window.triggerShareTeam()"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="18" cy="5" r="3"/><circle cx="6" cy="12" r="3"/><circle cx="18" cy="19" r="3"/><line x1="8.59" y1="13.51" x2="15.42" y2="17.49"/><line x1="15.41" y1="6.51" x2="8.59" y2="10.49"/></svg> Condividi Team</button>
+      <button class="watch-btn ${_teamWatched ? 'watch-btn--active' : ''}" id="watch-btn-${esc(team_id)}" onclick="window.toggleWatchTeam('${esc(team_id)}')">${_teamWatched ? '<span>★</span> Seguito' : '<span>☆</span> Segui'}</button>
       <button class="btn-share" onclick="window.openComparatore('${esc(team_id)}','team')">⚖ Compara</button>
       ${adminEditBtn('team', team_id)}
     </div>
