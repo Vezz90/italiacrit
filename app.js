@@ -11914,7 +11914,14 @@ async function renderCalendario(highlightId) {
             <div class="cal-name"><a href="#/gara/${esc(garaLink)}">${esc(g.nome)}</a></div>
             <div class="cal-cat">
               ${esc(catLabel(g.categoria)||'')} — <span style="text-transform:capitalize;color:var(--text-muted)">${esc(g.tipo)}</span>
-              ${g.luogo || g.regione ? `<div style="font-size:0.8rem;color:var(--text-muted);margin-top:2px;">📍 ${esc(g.luogo || '')} ${g.regione ? '('+esc(g.regione)+')' : ''}</div>` : ''}
+              ${(g.luogo || g.regione) ? (() => {
+                const _addr = encodeURIComponent([g.luogo, g.regione, 'Italia'].filter(Boolean).join(', '));
+                const _murl = `https://www.google.com/maps/dir/?api=1&destination=${_addr}`;
+                return `<div style="font-size:0.8rem;color:var(--text-muted);margin-top:2px;display:flex;align-items:center;gap:8px;flex-wrap:wrap;">
+                  <span>📍 ${esc(g.luogo || '')} ${g.regione ? '('+esc(g.regione)+')' : ''}</span>
+                  ${g.luogo ? `<a href="${_murl}" target="_blank" rel="noopener" onclick="event.stopPropagation()" style="font-size:0.7rem;color:#6366f1;white-space:nowrap;font-weight:600;text-decoration:none;border:1px solid #6366f1;border-radius:4px;padding:1px 7px;line-height:1.6">🧭 Indicazioni</a>` : ''}
+                </div>`;
+              })() : ''}
             </div>
           </div>
           <div class="cal-badges" style="${isPast?'opacity:0.5':''}">
@@ -12234,6 +12241,10 @@ async function renderCalMap(filtered, calendarResultsMap) {
       const navOnclick = `event.stopPropagation();location.hash='${navHash.replace(/'/g,"\\'")}';`;
 
       const luogoDisplay = det.luogo_ritrovo || g.luogo || '';
+      const _mapsAddr = encodeURIComponent(
+        [det.indirizzo_ritrovo, det.luogo_ritrovo || g.luogo, g.regione, 'Italia'].filter(Boolean).join(', ')
+      );
+      const _mapsUrl = `https://www.google.com/maps/dir/?api=1&destination=${_mapsAddr}`;
       const popupContent = `
         <div style="font-family:system-ui,sans-serif;font-size:13px;line-height:1.5">
           <div style="font-weight:700;margin-bottom:3px;font-size:14px">${esc(g.nome)}</div>
@@ -12241,8 +12252,9 @@ async function renderCalMap(filtered, calendarResultsMap) {
           <div style="color:#666;margin-bottom:6px">${catStr}</div>
           ${luogoDisplay ? `<div style="font-size:12px;color:#888">📍 ${esc(luogoDisplay)}</div>` : ''}
           ${isApprox ? `<div style="font-size:10px;color:#bbb;margin-top:2px">📌 posizione indicativa (${g.regione})</div>` : ''}
+          ${(det.luogo_ritrovo || g.luogo) ? `<a href="${_mapsUrl}" target="_blank" rel="noopener" style="margin-top:8px;display:block;width:100%;padding:6px 0;border-radius:6px;font-size:12px;font-weight:700;cursor:pointer;background:#6366f1;color:#fff;text-align:center;text-decoration:none;box-sizing:border-box">🧭 Indicazioni</a>` : ''}
           <button onclick="${navOnclick}"
-            style="margin-top:10px;width:100%;padding:7px 0;border:none;border-radius:6px;font-size:12px;font-weight:700;cursor:pointer;background:${navColor};color:#fff">
+            style="margin-top:6px;width:100%;padding:7px 0;border:none;border-radius:6px;font-size:12px;font-weight:700;cursor:pointer;background:${navColor};color:#fff">
             ${navLabel}
           </button>
         </div>`;
