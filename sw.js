@@ -1,4 +1,4 @@
-const CACHE_NAME = 'italiacrit-cache-v62';
+const CACHE_NAME = 'italiacrit-cache-v63';
 
 // File statici: messi in cache e serviti velocemente
 const STATIC_ASSETS = [
@@ -27,6 +27,22 @@ self.addEventListener('activate', event => {
 
 self.addEventListener('fetch', event => {
   const url = event.request.url;
+
+  // ── STRATEGIA NETWORK-FIRST per le immagini/foto profilo ──
+  // Le foto vengono sovrascritte mantenendo lo stesso URL: senza questa
+  // regola la cache servirebbe sempre la vecchia immagine.
+  if (url.includes('/storage/v1/object/') || /\.(png|jpe?g|webp|gif)(\?|$)/i.test(url)) {
+    event.respondWith(
+      fetch(event.request, { cache: 'reload' })
+        .then(networkResponse => {
+          const clone = networkResponse.clone();
+          caches.open(CACHE_NAME).then(cache => cache.put(event.request, clone));
+          return networkResponse;
+        })
+        .catch(() => caches.match(event.request))
+    );
+    return;
+  }
 
   // ── STRATEGIA NETWORK-FIRST per i file JSON (dati dinamici) ──
   // Garantisce che gli aggiornamenti dal server siano sempre visibili.

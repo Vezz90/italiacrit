@@ -219,7 +219,9 @@ window.handlePhotoUpload = async function(evt, entityType, entityId) {
     if (target) {
       const radius = entityType === 'team' ? '10px' : '50%';
       const newImg = document.createElement('img');
-      newImg.src = `${MEDIA_BASE}${data.photo_url}`;
+      // Cache-busting: l'URL della foto resta lo stesso dopo la sostituzione,
+      // serve un parametro per forzare il browser a scaricare la nuova immagine.
+      newImg.src = `${MEDIA_BASE}${data.photo_url}?t=${Date.now()}`;
       newImg.setAttribute('data-photo-id', entityId);
       newImg.style.cssText = `width:100%;height:100%;object-fit:cover;border-radius:${radius};display:block`;
       target.replaceWith(newImg);
