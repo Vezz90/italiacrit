@@ -6958,16 +6958,19 @@ async function _injectRankPhotos(items) {
 
   // Team — logo (team unici, sia classifica atleti che classifica team)
   if (!document.contains(tableEl)) return;
-  const _shieldSvg = `<span class="rk-tl-placeholder"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M12 2L3 6v6c0 5.5 3.8 10.7 9 12 5.2-1.3 9-6.5 9-12V6L12 2z"/></svg></span>`;
+  window._rktlErr = function(img) {
+    img.parentNode.innerHTML = '<span class="rk-tl-placeholder"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M12 2L3 6v6c0 5.5 3.8 10.7 9 12 5.2-1.3 9-6.5 9-12V6L12 2z"/></svg></span>';
+  };
+  const _shieldHtml = '<span class="rk-tl-placeholder"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M12 2L3 6v6c0 5.5 3.8 10.7 9 12 5.2-1.3 9-6.5 9-12V6L12 2z"/></svg></span>';
   const teamIds = [...new Set(items.map(a => a.team_id || a.team_id).filter(Boolean))];
   await Promise.all(teamIds.map(async tid => {
     const ov = await getEntityOverrides('team', tid).catch(() => ({}));
     tableEl.querySelectorAll(`.rk-tl-wrap[data-tid="${CSS.escape(tid)}"]`).forEach(span => {
       if (!document.contains(span)) return;
       if (ov.photo_url) {
-        span.innerHTML = `<img src="${MEDIA_BASE}${esc(ov.photo_url)}" alt="" class="rk-tl-img" onerror="this.parentNode.innerHTML='${_shieldSvg.replace(/'/g, "\\'")}'">`;
+        span.innerHTML = `<img src="${MEDIA_BASE}${esc(ov.photo_url)}" alt="" class="rk-tl-img" onerror="window._rktlErr(this)">`;
       } else {
-        span.innerHTML = _shieldSvg;
+        span.innerHTML = _shieldHtml;
       }
     });
   }));
@@ -10053,10 +10056,11 @@ async function renderAtleta(atleta_id) {
 
   // Recupero ranking asincrono per evitare crash
   const rCode = getRankingFileCode(a.categoria);
-  const [currentRanking, atletaOv, photosMap] = await Promise.all([
+  const [currentRanking, atletaOv, photosMap, teamOvAtleta] = await Promise.all([
     rCode ? loadRanking(rCode) : Promise.resolve([]),
     getEntityOverrides('atleta', atleta_id),
     loadRisPhotos(),
+    a.team_id ? getEntityOverrides('team', a.team_id).catch(() => ({})) : Promise.resolve({}),
   ]);
   const aRankObj = currentRanking.find(x => x.atleta_id === a.id);
   const globalPos = aRankObj ? aRankObj.pos : '-';
@@ -10077,9 +10081,9 @@ async function renderAtleta(atleta_id) {
         ${a.genere === 'F' ? '<span class="badge-cat badge-genere-f">♀</span>' : ''}
         ${a.team_id ? `<a href="#/team/${esc(a.team_id)}" style="font-family:var(--font-heading);font-size:.8rem;color:var(--text-secondary);border:1px solid var(--border-subtle);padding:2px 10px;border-radius:2px">${esc(displayTeam)} →</a>` : ''}
       </div>
-      <div class="profile-photo-row" style="display:flex;gap:20px;align-items:center;flex-wrap:wrap;margin-bottom:4px">
+      <div class="profile-photo-row" style="display:flex;gap:20px;align-items:center;flex-wrap:wrap;margin-bottom:4px;justify-content:space-between">
         ${photoHtml}
-        <div class="athlete-header-name">
+        <div class="athlete-header-name" style="flex:1;min-width:0">
           <div style="display:flex;align-items:center;gap:10px;flex-wrap:wrap;margin-bottom:4px">
             <span class="athlete-cognome">${esc(displayCognome)}</span>
             <span class="athlete-nome">${esc(displayNome)}</span>
@@ -10101,6 +10105,13 @@ async function renderAtleta(atleta_id) {
           </div>
           ${entitySocialLinksHtml(atletaOv, ['instagram','facebook','strava','website'])}
         </div>
+        ${a.team_id ? `<a href="#/team/${esc(a.team_id)}" style="flex-shrink:0;align-self:flex-start;display:flex;flex-direction:column;align-items:center;gap:6px;text-decoration:none" title="${esc(displayTeam)}">
+          ${teamOvAtleta?.photo_url
+            ? `<img src="${MEDIA_BASE}${esc(teamOvAtleta.photo_url)}" alt="${esc(displayTeam)}" style="width:64px;height:64px;object-fit:contain;border-radius:8px;border:1px solid var(--border-subtle);background:var(--bg-elevated)">`
+            : `<span style="width:64px;height:64px;border-radius:8px;border:1px solid var(--border-subtle);background:var(--bg-elevated);display:flex;align-items:center;justify-content:center;color:var(--text-muted)"><svg width="30" height="30" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.2"><path d="M12 2L3 6v6c0 5.5 3.8 10.7 9 12 5.2-1.3 9-6.5 9-12V6L12 2z"/></svg></span>`
+          }
+          <span style="font-size:.62rem;color:var(--text-muted);text-align:center;max-width:72px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap">${esc(displayTeam)}</span>
+        </a>` : ''}
       </div>
       <div class="athlete-stats-bar">
         <div class="athlete-stat">
