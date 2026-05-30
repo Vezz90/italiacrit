@@ -1889,6 +1889,19 @@ async function ensureScraperMediaProfiles() {
     { name: 'xpix.it',            bio: 'Fotografia ciclismo agonistico italiano', website: 'https://www.xpix.it',            instagram: 'xpix.it' },
     { name: 'italiaciclismo.net', bio: 'Foto e cronache del ciclismo italiano',   website: 'https://www.italiaciclismo.net', instagram: '' },
   ];
+  // Aggiunge anche un profilo per ogni canale video (YouTube) abilitato
+  try {
+    const channels = await readYTChannels();
+    for (const ch of (channels || [])) {
+      if (!ch || ch.enabled === false || !ch.name) continue;
+      const url = ch.type === 'channel_id' ? `https://www.youtube.com/channel/${ch.value}`
+                : ch.type === 'handle'      ? `https://www.youtube.com/@${ch.value}`
+                : ch.type === 'username'    ? `https://www.youtube.com/@${ch.value}`
+                : '';
+      sources.push({ name: ch.name, bio: 'Canale video di ciclismo italiano', website: url, instagram: '' });
+    }
+  } catch (e) { console.warn('[startup] lettura canali video:', e.message); }
+
   for (const s of sources) {
     try {
       const existing = await rawQuery(
