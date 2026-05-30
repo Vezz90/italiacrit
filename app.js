@@ -4826,14 +4826,19 @@ async function renderHubBars() {
   const _teamSnapNow        = Object.fromEntries(_teamRankFull.map(t=>[t.team_id,t.pos]));
   const _teamSnap14         = Object.fromEntries(_teamRank14.map(t=>[t.team_id,t.pos]));
   const _teamSnapBeforeLast = Object.fromEntries(_teamRankBeforeLast.map(t=>[t.team_id,t.pos]));
-  // Team of the moment — team con hot score più alto negli ultimi 14gg
+  // Team of the moment — team con più vittorie negli ultimi 14gg (tutti i team)
   let _teamOfMoment = null;
   {
-    let bestScore = -1;
-    for (const t of _teamRankNow) {
-      const s = computeTeamHotScore(t.team_id, hubResES2, mainCat);
-      if (s > bestScore) { bestScore = s; _teamOfMoment = { ...t, score: s }; }
-    }
+    const _ts = {};
+    hubResES2.filter(r => r.data >= cut14 && r.team_id).forEach(r => {
+      if (!_ts[r.team_id]) _ts[r.team_id] = { team_id: r.team_id, team: r.team || '', wins: 0, podi: 0, pts: 0, _riders: new Set() };
+      if (r.posizione === 1) _ts[r.team_id].wins++;
+      if (r.posizione <= 3) _ts[r.team_id].podi++;
+      _ts[r.team_id].pts += r.punti_effettivi || 0;
+      if ((r.punti_effettivi || 0) > 0) _ts[r.team_id]._riders.add(r.atleta_id);
+    });
+    const _best = Object.values(_ts).sort((a, b) => b.wins - a.wins || b.podi - a.podi || b.pts - a.pts)[0];
+    if (_best) _teamOfMoment = { ..._best, punti: _best.pts, n_riders: _best._riders.size, score: 0 };
   }
   let _teamOfMomentPhoto = null;
   if (_teamOfMoment) {
@@ -4852,11 +4857,16 @@ async function renderHubBars() {
     _teamSnapNowES1              = Object.fromEntries(_teamRankFullES1.map(t=>[t.team_id,t.pos]));
     _teamSnap14ES1               = Object.fromEntries(_teamRank14ES1tmp.map(t=>[t.team_id,t.pos]));
     _teamSnapBeforeLastES1       = Object.fromEntries(_teamRankBLES1tmp.map(t=>[t.team_id,t.pos]));
-    let bestScoreES1 = -1;
-    for (const t of _teamRankNowES1) {
-      const s = computeTeamHotScore(t.team_id, hubResES1, es1Code);
-      if (s > bestScoreES1) { bestScoreES1 = s; _teamOfMomentES1 = { ...t, score: s }; }
-    }
+    const _tsE1 = {};
+    hubResES1.filter(r => r.data >= cut14 && r.team_id).forEach(r => {
+      if (!_tsE1[r.team_id]) _tsE1[r.team_id] = { team_id: r.team_id, team: r.team || '', wins: 0, podi: 0, pts: 0, _riders: new Set() };
+      if (r.posizione === 1) _tsE1[r.team_id].wins++;
+      if (r.posizione <= 3) _tsE1[r.team_id].podi++;
+      _tsE1[r.team_id].pts += r.punti_effettivi || 0;
+      if ((r.punti_effettivi || 0) > 0) _tsE1[r.team_id]._riders.add(r.atleta_id);
+    });
+    const _bestE1 = Object.values(_tsE1).sort((a, b) => b.wins - a.wins || b.podi - a.podi || b.pts - a.pts)[0];
+    if (_bestE1) _teamOfMomentES1 = { ..._bestE1, punti: _bestE1.pts, n_riders: _bestE1._riders.size, score: 0 };
     if (_teamOfMomentES1) {
       try { const ov=await getEntityOverrides('team',_teamOfMomentES1.team_id); if(ov.photo_url) _teamOfMomentES1Photo=`${MEDIA_BASE}${ov.photo_url}`; } catch {}
     }
@@ -4882,10 +4892,7 @@ async function renderHubBars() {
   // ── Rider on fire card ───────────────────────────────────────────
   function buildFireCard(ath, catCode, ranking, photoUrl) {
     if(!ath) return '';
-    const score      = computeHotScore(ath.atleta_id, resultsRaw, catCode);
-    const scoreColor = score>=80?'#E11D48':score>=55?'#F59E0B':'#10B981';
     const rankEntry  = ranking.find(r=>r.atleta_id===ath.atleta_id);
-    const snapN      = catCode===mainCat?_snapNow:_snapNowE1;
     const badges     = getAthleteBadges(ath.atleta_id, resultsRaw, catCode, rankEntry);
     const rankPos    = rankEntry?ranking.indexOf(rankEntry)+1:null;
     const gap        = rankEntry&&ranking[0]?ranking[0].punti-rankEntry.punti:null;
@@ -4897,7 +4904,16 @@ async function renderHubBars() {
     const badgesHtml = badges.length
       ? `<div class="itc-badges">${badges.map(b=>`<span class="itc-badge itc-${b.cls}">${b.icon} ${b.label}</span>`).join('')}</div>`
       : '';
-    // Sfondo: foto atleta portrait (face top-center) oppure watermark cognome
+    // Pallini forma: ultimi 5 risultati (oro=1°, argento=2-3°, verde=top10, grigio=fuori)
+    const formDots = resultsRaw
+      .filter(r => r.atleta_id===ath.atleta_id && getRankingFileCode(r)===catCode && r.data)
+      .sort((a,b) => b.data.localeCompare(a.data))
+      .slice(0,5)
+      .map(r => {
+        const p = r.posizione;
+        const c = p===1?'#D97706':p<=3?'#9CA3AF':p<=10?'#10B981':'#1e293b';
+        return `<span style="display:inline-block;width:11px;height:11px;border-radius:50%;background:${c};border:1px solid rgba(255,255,255,.2)" title="${p}°"></span>`;
+      }).join('');
     let bgHtml;
     if (photoUrl) {
       bgHtml = `<div class="itc-fire-bg itc-fire-bg--portrait" style="background-image:url('${photoUrl}')"></div>`;
@@ -4919,13 +4935,8 @@ async function renderHubBars() {
           <div class="itc-fire-stat"><span class="itc-fire-val">${ath.pts}</span><span class="itc-fire-lbl">punti 14gg</span></div>
           <div class="itc-fire-stat"><span class="itc-fire-val">${ath.wins}</span><span class="itc-fire-lbl">vittorie</span></div>
           <div class="itc-fire-stat"><span class="itc-fire-val">${ath.podi}</span><span class="itc-fire-lbl">podi</span></div>
-          <div class="itc-fire-stat itc-fire-score"><span class="itc-fire-val" style="color:${scoreColor}">${score}</span><span class="itc-fire-lbl">hot score</span></div>
         </div>
-        <div class="itc-hot-wrap">
-          <div class="itc-hot-label">FORMA</div>
-          <div class="itc-hot-track"><div class="itc-hot-fill" style="width:${score}%;background:${scoreColor}"></div></div>
-          <div class="itc-hot-val" style="color:${scoreColor}">${score}<span style="opacity:.5;font-size:.55rem">/100</span></div>
-        </div>
+        ${formDots ? `<div style="margin-top:10px;display:flex;align-items:center;gap:4px"><span style="font-size:.6rem;color:rgba(255,255,255,.4);margin-right:4px;letter-spacing:.06em">ULTIMI 5</span>${formDots}</div>` : ''}
         <div class="itc-fire-ctas">
           <a href="#/atleta/${encodeURIComponent(ath.atleta_id)}" class="itc-fire-cta-primary">Scheda atleta →</a>
           <button class="itc-fire-cta-sec" onclick="event.preventDefault();window.location.hash='#/comparatore'">⚖ Confronta</button>
@@ -5330,15 +5341,9 @@ async function renderHubBars() {
         <div class="itc-fire-eyebrow">🏆 TEAM OF THE MOMENT${title?' · '+esc(title):''}</div>
         <h2 class="itc-fire-name" style="font-size:clamp(1.2rem,3vw,2rem);line-height:1.15">${esc(team.team)}${trendHtml}</h2>
         <div class="itc-fire-stats">
-          <div class="itc-fire-stat"><span class="itc-fire-val">${team.punti}</span><span class="itc-fire-lbl">punti</span></div>
-          <div class="itc-fire-stat"><span class="itc-fire-val">${team.wins}</span><span class="itc-fire-lbl">vittorie</span></div>
-          <div class="itc-fire-stat"><span class="itc-fire-val">${team.podi}</span><span class="itc-fire-lbl">podi</span></div>
-          <div class="itc-fire-stat itc-fire-score"><span class="itc-fire-val" style="color:${scoreColor}">${score}</span><span class="itc-fire-lbl">forma</span></div>
-        </div>
-        <div class="itc-hot-wrap">
-          <div class="itc-hot-label">FORMA TEAM</div>
-          <div class="itc-hot-track"><div class="itc-hot-fill" style="width:${score}%;background:${scoreColor}"></div></div>
-          <div class="itc-hot-val" style="color:${scoreColor}">${score}<span style="opacity:.5;font-size:.55rem">/100</span></div>
+          <div class="itc-fire-stat"><span class="itc-fire-val">${team.wins}</span><span class="itc-fire-lbl">vittorie 14gg</span></div>
+          <div class="itc-fire-stat"><span class="itc-fire-val">${team.podi}</span><span class="itc-fire-lbl">podi 14gg</span></div>
+          <div class="itc-fire-stat"><span class="itc-fire-val">${team.n_riders ?? team.n_atleti ?? ''}</span><span class="itc-fire-lbl">atleti attivi</span></div>
         </div>
         <div class="itc-fire-ctas">
           <a href="#/team/${encodeURIComponent(team.team_id)}" class="itc-fire-cta-primary">Scheda team →</a>
@@ -5660,8 +5665,6 @@ async function renderHubBars() {
         </div>
       </div>
       ${subnav}
-      ${tickerHtml}
-      ${champHtml}
       <div class="itc-sections">
         ${sectionsInner}
       </div>
