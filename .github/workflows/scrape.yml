@@ -52,10 +52,11 @@ jobs:
         run: |
           git config user.email "bot@italiacrit.it"
           git config user.name "ItaliacritBot"
-          git add -f data/
-          # Rimuovi log dal staging e scarta le modifiche working tree
-          git reset -- 'data/*.log' 'data/*.html' 2>/dev/null || true
-          git checkout -- 'data/*.log' 'data/*.html' 2>/dev/null || true
+          # Aggiungi SOLO i file JSON e le cartelle ranking (mai i .log)
+          git add -f data/*.json
+          git add -f data/rankings/ data/team_rankings/ 2>/dev/null || true
+          # Rimuovi dal tracking i log eventualmente entrati per errore
+          git rm --cached data/unmatched_races.log data/service.log 2>/dev/null || true
           git diff --staged --quiet || git commit -m "update: $(date -u '+%Y-%m-%d %H:%M') UTC"
           git pull --rebase origin main
           git push
