@@ -129,7 +129,9 @@ function photoAreaHtml(entityType, entityId, photoUrl, initials, shape = 'circle
        </svg>`;
   const camBtn = canUp ? `
     <button class="photo-cam-btn ${hasPhoto ? 'photo-cam-btn--edit' : ''}" title="${hasPhoto ? 'Modifica foto' : 'Carica foto'}"
-      onclick="triggerPhotoUpload('${esc(entityType)}','${esc(entityId)}')">
+      onclick="${hasPhoto
+        ? `triggerPhotoCrop('${esc(entityType)}','${esc(entityId)}','${esc(photoUrl)}')`
+        : `triggerPhotoUpload('${esc(entityType)}','${esc(entityId)}')`}">
       ${camIcon}
     </button>
     <input type="file" id="photo-file-${esc(entityId)}" accept="image/jpeg,image/png,image/webp"
@@ -209,6 +211,21 @@ window.triggerPhotoUpload = function(entityType, entityId) {
   document.getElementById(`photo-file-${entityId}`)?.click();
 };
 
+// Apre il cropper direttamente sulla foto esistente (fetch → dataUrl)
+window.triggerPhotoCrop = async function(entityType, entityId, photoPath) {
+  try {
+    const res = await fetch(MEDIA_BASE + photoPath, { credentials: 'include' });
+    if (!res.ok) throw new Error('HTTP ' + res.status);
+    const blob = await res.blob();
+    const reader = new FileReader();
+    reader.onload = e => _openPhotoCropper(e.target.result, entityType, entityId, 'photo.jpg');
+    reader.readAsDataURL(blob);
+  } catch {
+    // CORS o 404: fallback al file picker
+    document.getElementById(`photo-file-${entityId}`)?.click();
+  }
+};
+
 // Avvio: legge il file scelto e apre l'editor di ritaglio invece di caricarlo subito.
 window.handlePhotoUpload = function(evt, entityType, entityId) {
   const file = evt.target.files[0];
@@ -221,7 +238,8 @@ window.handlePhotoUpload = function(evt, entityType, entityId) {
 };
 
 // Editor di ritaglio: zoom (slider/rotella) + trascinamento, anteprima live su canvas.
-function _openPhotoCropper(dataUrl, entityType, entityId, filename) {
+function _openPhotoCropper(dataUrl, entityType, entityId, filename, _entityIdForPicker) {
+  const _pickerId = _entityIdForPicker || entityId;
   const isCircle = entityType !== 'team';
   const V = 300, OUT = 512; // viewport anteprima e dimensione esportata
   const img = new Image();
@@ -244,7 +262,11 @@ function _openPhotoCropper(dataUrl, entityType, entityId, filename) {
         <p class="crop-hint">Trascina per spostare · slider o rotella per lo zoom</p>
         <div class="crop-actions">
           <button class="auth-btn auth-btn-outline" id="crop-cancel">Annulla</button>
-          <button class="auth-btn" id="crop-save">Salva foto</button>
+          <button class="auth-btn auth-btn-outline" id="crop-change" style="display:flex;align-items:center;gap:6px">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M23 19a2 2 0 0 1-2 2H3a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h4l2-3h6l2 3h4a2 2 0 0 1 2 2z"/><circle cx="12" cy="13" r="4"/></svg>
+            Cambia foto
+          </button>
+          <button class="auth-btn" id="crop-save">Salva</button>
         </div>
       </div>`;
     document.body.appendChild(overlay);
@@ -307,6 +329,10 @@ function _openPhotoCropper(dataUrl, entityType, entityId, filename) {
       overlay.remove();
     }
     overlay.querySelector('#crop-cancel').addEventListener('click', close);
+    overlay.querySelector('#crop-change').addEventListener('click', () => {
+      close();
+      document.getElementById(`photo-file-${_pickerId}`)?.click();
+    });
     overlay.addEventListener('click', e => { if (e.target === overlay) close(); });
     overlay.querySelector('#crop-save').addEventListener('click', () => {
       const out = document.createElement('canvas');
