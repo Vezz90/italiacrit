@@ -380,14 +380,15 @@ async function _uploadPhotoBlob(blob, entityType, entityId, filename) {
     if (!res.ok) throw new Error(data.error || `HTTP ${res.status}`);
     // Update cache and DOM without full re-render
     const key = `${entityType}:${entityId}`;
-    if (_ovCache[key]) _ovCache[key].photo_url = data.photo_url;
+    // Salva URL con timestamp nel cache così anche le miniature ranking useranno la versione nuova
+    const bustedUrl = data.photo_url + (data.photo_url.includes('?') ? '&' : '?') + '_v=' + Date.now();
+    if (_ovCache[key]) _ovCache[key].photo_url = bustedUrl;
+    else _ovCache[key] = { photo_url: bustedUrl };
     const target = document.querySelector(`[data-photo-id="${entityId}"]`);
     if (target) {
       const radius = entityType === 'team' ? '10px' : '50%';
       const newImg = document.createElement('img');
-      // Cache-busting: l'URL della foto resta lo stesso dopo la sostituzione,
-      // serve un parametro per forzare il browser a scaricare la nuova immagine.
-      newImg.src = `${MEDIA_BASE}${data.photo_url}?t=${Date.now()}`;
+      newImg.src = `${MEDIA_BASE}${bustedUrl}`;
       newImg.setAttribute('data-photo-id', entityId);
       newImg.style.cssText = `width:100%;height:100%;object-fit:cover;border-radius:${radius};display:block`;
       target.replaceWith(newImg);
