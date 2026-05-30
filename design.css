@@ -1645,6 +1645,19 @@ body.light-mode .link-result-row { background: var(--bg-elevated); }
 .crop-actions { display: flex; gap: 12px; }
 .crop-actions .auth-btn { flex: 1; }
 
+/* ── Card "Il mio profilo" (campi personali) ───────────────────── */
+.pf-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px 12px; margin-top: 10px; }
+.pf-full { grid-column: 1 / -1; }
+.pf-label { display: flex; flex-direction: column; gap: 4px; font-size: .76rem; font-weight: 600; color: var(--text-secondary); }
+.pf-input {
+  padding: 8px 10px; border: 1px solid var(--border-subtle); border-radius: var(--r-sm, 6px);
+  background: var(--bg-base, #fff); color: var(--text-primary); font-size: .85rem; font-weight: 400;
+  font-family: inherit; width: 100%; box-sizing: border-box;
+}
+.pf-input:focus { outline: none; border-color: var(--accent, #e63329); }
+textarea.pf-input { resize: vertical; }
+@media (max-width: 560px) { .pf-grid { grid-template-columns: 1fr; } }
+
 /* ── ADMIN EDIT BUTTON ──────────────────────────────────────────── */
 .admin-edit-btn {
   background: transparent;

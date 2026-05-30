@@ -214,6 +214,22 @@ async function migrate() {
       created_at      TIMESTAMPTZ NOT NULL DEFAULT NOW()
     )`,
     `CREATE INDEX IF NOT EXISTS idx_messages_conv ON messages(conversation_id, created_at)`,
+    // ── Profilo personale dell'utente (tutti i ruoli) ─────────────────────────
+    `CREATE TABLE IF NOT EXISTS user_details (
+      user_id        INTEGER PRIMARY KEY REFERENCES users(id) ON DELETE CASCADE,
+      bio            TEXT DEFAULT '',
+      location       TEXT DEFAULT '',
+      instagram      TEXT DEFAULT '',
+      facebook       TEXT DEFAULT '',
+      strava         TEXT DEFAULT '',
+      website        TEXT DEFAULT '',
+      specialty      TEXT DEFAULT '',
+      birth_year     TEXT DEFAULT '',
+      favorite_team  TEXT DEFAULT '',
+      staff_role     TEXT DEFAULT '',
+      public_contact TEXT DEFAULT '',
+      updated_at     TIMESTAMPTZ NOT NULL DEFAULT NOW()
+    )`,
   ];
   for (const sql of migrations) {
     try { await run(sql); } catch (e) { console.warn('[migrate]', e.message); }
@@ -256,6 +272,25 @@ const queries = {
 
   deleteUser: (id) =>
     run(`DELETE FROM users WHERE id = $1`, [id]),
+
+  // Profilo personale (campi liberi dell'utente)
+  getUserDetails: (user_id) =>
+    one(`SELECT * FROM user_details WHERE user_id = $1`, [user_id]),
+
+  upsertUserDetails: (d) =>
+    one(
+      `INSERT INTO user_details
+         (user_id, bio, location, instagram, facebook, strava, website,
+          specialty, birth_year, favorite_team, staff_role, public_contact, updated_at)
+       VALUES ($1,$2,$3,$4,$5,$6,$7,$8,$9,$10,$11,$12, NOW())
+       ON CONFLICT (user_id) DO UPDATE SET
+         bio=$2, location=$3, instagram=$4, facebook=$5, strava=$6, website=$7,
+         specialty=$8, birth_year=$9, favorite_team=$10, staff_role=$11,
+         public_contact=$12, updated_at=NOW()
+       RETURNING *`,
+      [d.user_id, d.bio, d.location, d.instagram, d.facebook, d.strava, d.website,
+       d.specialty, d.birth_year, d.favorite_team, d.staff_role, d.public_contact]
+    ),
 
   // Athlete profiles
   getAthleteProfile: (user_id) =>

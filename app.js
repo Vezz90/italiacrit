@@ -15122,6 +15122,8 @@ async function renderMyProfile() {
     else if (user.role === 'media')       await _dashMedia(el, user, profile);
     else if (user.role === 'admin')       await _dashAdmin(el, user);
     else el.innerHTML = `<p style="color:var(--text-muted)">Pannello non disponibile per il ruolo "${esc(user.role)}".</p>`;
+    // Card "Il mio profilo" (campi personali) per tutti i ruoli tranne admin
+    if (user.role !== 'admin') _injectProfileFieldsCard(el, user);
   } catch(err) {
     const el = document.getElementById('dash-body');
     if (el) el.innerHTML = `
@@ -15136,6 +15138,82 @@ window.doLogout = function() {
   authClear();
   updateNavLoginState();
   window.location.hash = '/';
+};
+
+// ── CARD "IL MIO PROFILO" (campi personali, tutti i ruoli) ────────────────────
+const SPECIALITA_OPTS = ['', 'Scalatore', 'Velocista', 'Passista', 'Cronoman', 'Finisseur', 'Passista-scalatore', 'Gregario', 'Altro'];
+
+async function _injectProfileFieldsCard(el, user) {
+  const grid = el.querySelector('.dash-grid');
+  const card = document.createElement('div');
+  card.className = 'dash-card';
+  card.id = 'dash-myfields-card';
+  card.innerHTML = `<div class="admin-loading">Caricamento profilo…</div>`;
+  if (grid) grid.prepend(card); else el.prepend(card);
+  let details = {};
+  try { const d = await apiCall('/profile/details'); details = d.details || {}; } catch {}
+  _renderProfileFieldsCard(card, user, details);
+}
+
+function _renderProfileFieldsCard(card, user, d) {
+  const role = user.role;
+  const f = (k) => esc(d[k] || '');
+  // Campi comuni a tutti i ruoli
+  let roleFields = '';
+  if (role === 'atleta') {
+    roleFields = `
+      <label class="pf-label">Specialità
+        <select id="pf-specialty" class="pf-input">
+          ${SPECIALITA_OPTS.map(o => `<option value="${o}" ${d.specialty===o?'selected':''}>${o||'—'}</option>`).join('')}
+        </select>
+      </label>
+      <label class="pf-label">Anno di nascita<input type="text" id="pf-birth_year" class="pf-input" value="${f('birth_year')}" placeholder="es. 2007" /></label>
+      <label class="pf-label">Team del cuore<input type="text" id="pf-favorite_team" class="pf-input" value="${f('favorite_team')}" placeholder="Squadra preferita" /></label>`;
+  } else if (role === 'team') {
+    roleFields = `
+      <label class="pf-label">Ruolo nello staff<input type="text" id="pf-staff_role" class="pf-input" value="${f('staff_role')}" placeholder="es. Direttore sportivo" /></label>
+      <label class="pf-label">Contatto pubblico<input type="text" id="pf-public_contact" class="pf-input" value="${f('public_contact')}" placeholder="email o telefono pubblico" /></label>`;
+  } else if (role === 'appassionato' || role === 'genitore' || role === 'parente') {
+    roleFields = `
+      <label class="pf-label">Team del cuore<input type="text" id="pf-favorite_team" class="pf-input" value="${f('favorite_team')}" placeholder="Squadra preferita" /></label>`;
+  }
+
+  card.innerHTML = `
+    <div class="dash-card-title"><span>📝</span>Il mio profilo</div>
+    <div class="pf-grid">
+      <label class="pf-label pf-full">Bio<textarea id="pf-bio" class="pf-input" rows="2" placeholder="Una breve presentazione">${f('bio')}</textarea></label>
+      <label class="pf-label">Località<input type="text" id="pf-location" class="pf-input" value="${f('location')}" placeholder="Città / Regione" /></label>
+      ${roleFields}
+      <label class="pf-label">Instagram<input type="text" id="pf-instagram" class="pf-input" value="${f('instagram')}" placeholder="@handle o URL" /></label>
+      <label class="pf-label">Facebook<input type="text" id="pf-facebook" class="pf-input" value="${f('facebook')}" placeholder="pagina o URL" /></label>
+      <label class="pf-label">Strava<input type="text" id="pf-strava" class="pf-input" value="${f('strava')}" placeholder="ID o URL profilo" /></label>
+      <label class="pf-label">Sito web<input type="text" id="pf-website" class="pf-input" value="${f('website')}" placeholder="https://" /></label>
+    </div>
+    <div style="display:flex;align-items:center;gap:10px;margin-top:12px">
+      <button class="dash-btn dash-btn--primary" id="pf-save" onclick="window.saveProfileDetails(this)">Salva profilo</button>
+      <span id="pf-msg" style="font-size:.8rem;color:var(--text-muted)"></span>
+    </div>`;
+}
+
+window.saveProfileDetails = async function(btn) {
+  const val = (id) => document.getElementById(id)?.value?.trim() || '';
+  const msg = document.getElementById('pf-msg');
+  if (btn) { btn.disabled = true; btn.textContent = 'Salvataggio…'; }
+  try {
+    await apiCall('/profile/details', { method: 'PATCH', body: {
+      bio: val('pf-bio'), location: val('pf-location'),
+      instagram: val('pf-instagram'), facebook: val('pf-facebook'),
+      strava: val('pf-strava'), website: val('pf-website'),
+      specialty: val('pf-specialty'), birth_year: val('pf-birth_year'),
+      favorite_team: val('pf-favorite_team'), staff_role: val('pf-staff_role'),
+      public_contact: val('pf-public_contact'),
+    }});
+    if (msg) { msg.textContent = '✓ Salvato'; msg.style.color = 'var(--green-pos, #16a34a)'; }
+  } catch (e) {
+    if (msg) { msg.textContent = 'Errore: ' + e.message; msg.style.color = 'var(--red-hot)'; }
+  } finally {
+    if (btn) { btn.disabled = false; btn.textContent = 'Salva profilo'; }
+  }
 };
 
 // ── DASHBOARD HELPERS ────────────────────────────────────────────────────────

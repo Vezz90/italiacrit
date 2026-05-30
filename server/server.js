@@ -230,6 +230,34 @@ app.get('/api/profile', requireAuth, async (req, res) => {
   }
 });
 
+// Profilo personale dell'utente (campi liberi, tutti i ruoli)
+app.get('/api/profile/details', requireAuth, async (req, res) => {
+  try { res.json({ details: await queries.getUserDetails(req.user.id) || {} }); }
+  catch (e) { res.status(500).json({ error: e.message }); }
+});
+
+app.patch('/api/profile/details', requireAuth, async (req, res) => {
+  try {
+    const b = req.body || {};
+    const clip = (v, n) => String(v ?? '').trim().slice(0, n);
+    const details = await queries.upsertUserDetails({
+      user_id:        req.user.id,
+      bio:            clip(b.bio, 500),
+      location:       clip(b.location, 120),
+      instagram:      clip(b.instagram, 120),
+      facebook:       clip(b.facebook, 200),
+      strava:         clip(b.strava, 200),
+      website:        clip(b.website, 200),
+      specialty:      clip(b.specialty, 60),
+      birth_year:     clip(b.birth_year, 10),
+      favorite_team:  clip(b.favorite_team, 120),
+      staff_role:     clip(b.staff_role, 80),
+      public_contact: clip(b.public_contact, 160),
+    });
+    res.json({ ok: true, details });
+  } catch (e) { res.status(500).json({ error: e.message }); }
+});
+
 app.post('/api/profile/link-athlete', requireAuth, async (req, res) => {
   try {
     if (req.user.role !== 'atleta') return res.status(403).json({ error: 'Solo per atleti' });
