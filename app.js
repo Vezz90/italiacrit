@@ -155,6 +155,36 @@ function entitySocialLinksHtml(ov, kinds) {
   return `<div class="media-profile-links profile-social-links">${out.join('')}</div>`;
 }
 
+// ── BANDIERE NAZIONALI ────────────────────────────────────────
+// Mappa nome nazione (IT) → codice ISO a 2 lettere per generare l'emoji bandiera
+const NATION_ISO = {
+  'ITALIA':'IT','AUSTRIA':'AT','BELGIO':'BE','DANIMARCA':'DK','ESTONIA':'EE',
+  'FINLANDIA':'FI','FRANCIA':'FR','GERMANIA':'DE','GRAN BRETAGNA':'GB','REGNO UNITO':'GB',
+  'IRLANDA':'IE','LETTONIA':'LV','LITUANIA':'LT','LUSSEMBURGO':'LU','NORVEGIA':'NO',
+  'OLANDA':'NL','PAESI BASSI':'NL','POLONIA':'PL','PORTOGALLO':'PT','REPUBBLICA CECA':'CZ',
+  'ROMANIA':'RO','SLOVACCHIA':'SK','SLOVENIA':'SI','SPAGNA':'ES','SVEZIA':'SE',
+  'SVIZZERA':'CH','UCRAINA':'UA','UNGHERIA':'HU','CROAZIA':'HR','SERBIA':'RS',
+  'GRECIA':'GR','TURCHIA':'TR','SAN MARINO':'SM','STATI UNITI':'US','USA':'US',
+  'COLOMBIA':'CO','AUSTRALIA':'AU','GIAPPONE':'JP','BIELORUSSIA':'BY','BULGARIA':'BG',
+};
+function _isoToFlag(iso) {
+  return iso.toUpperCase().replace(/./g, c => String.fromCodePoint(0x1F1E6 + c.charCodeAt(0) - 65));
+}
+// Restituisce il codice ISO se il nome team è una nazionale, altrimenti null.
+// Riconosce solo i nomi che SONO una nazione (evita falsi positivi tipo "ITALIA NUOVA BOLOGNA").
+function nationIso(teamName) {
+  if (!teamName) return null;
+  let u = String(teamName).toUpperCase().trim();
+  u = u.replace(/\s+NATIONAL\s+TEAM$/, '').replace(/^NAZIONALE\s+/, '').trim();
+  if (u === 'PARALIMPICA') u = 'ITALIA'; // Nazionale Paralimpica Italiana
+  return NATION_ISO[u] || null;
+}
+// Emoji bandiera (con spazio finale) da anteporre al nome di una nazionale, o '' se non è una nazionale.
+function nationFlagPrefix(teamName) {
+  const iso = nationIso(teamName);
+  return iso ? _isoToFlag(iso) + ' ' : '';
+}
+
 window.triggerPhotoUpload = function(entityType, entityId) {
   document.getElementById(`photo-file-${entityId}`)?.click();
 };
@@ -6520,7 +6550,7 @@ async function updateRankTable() {
             ${extraHtml}
           </div>
         </td>
-        <td class="hide-mobile rk-team-cell"><span class="rk-tl-wrap" data-tid="${esc(r.team_id||'')}"></span><a href="#/team/${esc(r.team_id)}" style="color:var(--text-secondary);font-size:.85rem">${esc(r.team_nome)}</a></td>
+        <td class="hide-mobile rk-team-cell"><span class="rk-tl-wrap" data-tid="${esc(r.team_id||'')}"></span><a href="#/team/${esc(r.team_id)}" style="color:var(--text-secondary);font-size:.85rem">${nationFlagPrefix(r.team_nome)}${esc(r.team_nome)}</a></td>
         <td class="r">
           <div class="rk-pts-cell">
             <span class="rank-pts">${r.punti}</span>
@@ -6663,7 +6693,7 @@ async function updateRankTable() {
           <div class="rk-athlete-cell">
             <div class="rk-athlete-name-row">
               <span class="rk-tl-wrap" data-tid="${esc(t.team_id||'')}"></span>
-              <span class="rank-name"><a href="#/team/${esc(t.team_id)}">${esc(t.team_nome)}</a></span>
+              <span class="rank-name"><a href="#/team/${esc(t.team_id)}">${nationFlagPrefix(t.team_nome)}${esc(t.team_nome)}</a></span>
             </div>
           </div>
         </td>
@@ -10281,7 +10311,7 @@ async function renderTeam(team_id) {
       <div class="team-header-identity">
         ${teamPhotoHtml}
         <div class="team-header-name-block">
-          <div class="team-name-display">${esc(t.nome)}</div>
+          <div class="team-name-display">${nationFlagPrefix(t.nome)}${esc(t.nome)}</div>
           <span id="team-msg-btn"></span>
           ${entitySocialLinksHtml(teamOv, ['instagram','facebook','strava','website'])}
         </div>
@@ -12110,7 +12140,7 @@ async function renderTeamList() {
           <tbody>
             ${filtered.slice(0, 150).map((t, i) => `
               <tr class="ranking-row" style="animation-delay:${Math.min(i,20)*30}ms">
-                <td><a href="#/team/${esc(t.id)}"><strong>${esc(t.nome)}</strong></a></td>
+                <td><a href="#/team/${esc(t.id)}"><strong>${nationFlagPrefix(t.nome)}${esc(t.nome)}</strong></a></td>
                 <td class="r" style="color:var(--text-muted);font-size:0.85rem">${t.atleti ? t.atleti.length : 0}</td>
                 <td class="r"><span class="rank-pts">${t.punti_per_cat[teamCat] || 0}</span></td>
               </tr>

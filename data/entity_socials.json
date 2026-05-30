@@ -14,5 +14,58 @@
   "team:DECATHLON_CMA_CGM_U19_TEAM": {
     "instagram": "decathloncmacgmteam",
     "facebook": "DecathlonCMACGM"
+  },
+  "team:FRANCIA": {
+    "instagram": "ffcyclisme",
+    "facebook": "ffcofficiel",
+    "website": "ffc.fr"
+  },
+  "team:BELGIO": {
+    "instagram": "belgian_cycling",
+    "facebook": "BelgianCyclingFederation",
+    "website": "belgiancycling.be"
+  },
+  "team:SVIZZERA": {
+    "instagram": "swisscyclingteam",
+    "facebook": "swisscyclingteam",
+    "website": "swiss-cycling.ch"
+  },
+  "team:OLANDA": {
+    "instagram": "teamknwu",
+    "facebook": "TeamKNWU",
+    "website": "knwu.nl"
+  },
+  "team:SPAGNA": {
+    "instagram": "rfeciclismo",
+    "facebook": "RFECiclismo",
+    "website": "rfec.com"
+  },
+  "team:GERMANIA": {
+    "instagram": "bunddeutscherradfahrer",
+    "facebook": "bunddeutscherradfahrer",
+    "website": "rad-net.de"
+  },
+  "team:SLOVENIA_NATIONAL_TEAM": {
+    "instagram": "sloveniacyclingfederation",
+    "facebook": "KolesarskaZveza",
+    "website": "kolesarska-zveza.si"
+  },
+  "team:IRLANDA": {
+    "instagram": "cyclingireland",
+    "facebook": "cyclingireland",
+    "website": "cyclingireland.ie"
+  },
+  "team:AUSTRIA": {
+    "instagram": "cycling_austria",
+    "website": "radsportverband.at"
+  },
+  "team:DANIMARCA": {
+    "instagram": "danmarkscykleunion",
+    "facebook": "DanmarksCykleUnion"
+  },
+  "team:SVEZIA": {
+    "instagram": "swecycling",
+    "facebook": "svenskacykelforbundet",
+    "website": "scf.se"
   }
 }
