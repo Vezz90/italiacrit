@@ -15027,6 +15027,58 @@ const REG_ROLE_FIELDS = {
 };
 
 function _regRoleFieldsHtml(role) {
+  if (role === 'atleta') {
+    // Per gli atleti: prima cerca e collega il profilo, poi i campi aggiuntivi
+    const specialOpts = SPECIALITA_OPTS.map(o => `<option value="${o}">${o||'— seleziona —'}</option>`).join('');
+    return `<div id="reg-role-extra" style="display:flex;flex-direction:column;gap:0">
+
+      <!-- CERCA PROFILO -->
+      <div class="auth-field">
+        <label class="auth-label">Il tuo profilo atleta <span style="color:var(--red-hot)">*</span></label>
+        <div class="auth-input-wrap">
+          <svg class="auth-input-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.35-4.35"/></svg>
+          <input type="text" id="reg-atleta-search" class="auth-input" placeholder="Cerca per cognome…" autocomplete="off"
+            oninput="window._regAtletaSearch(this.value)" />
+        </div>
+        <div id="reg-atleta-results" style="border:1px solid var(--border-subtle);border-top:none;border-radius:0 0 6px 6px;background:var(--bg-card);display:none;max-height:180px;overflow-y:auto;font-size:.85rem"></div>
+        <input type="hidden" id="reg-atleta-id" />
+      </div>
+
+      <!-- NOME MANUALE (se non trovato) -->
+      <div id="reg-manual-name-wrap" style="display:none">
+        <div style="font-size:.78rem;color:var(--text-muted);padding:4px 0 8px">
+          Non trovato nei dati FCI — inserisci nome e cognome e il profilo verrà verificato dall'admin.
+        </div>
+        <div class="auth-field">
+          <label class="auth-label">Nome <span style="color:var(--red-hot)">*</span></label>
+          <div class="auth-input-wrap"><input type="text" id="reg-fname" class="auth-input" placeholder="es. Marco" /></div>
+        </div>
+        <div class="auth-field">
+          <label class="auth-label">Cognome <span style="color:var(--red-hot)">*</span></label>
+          <div class="auth-input-wrap"><input type="text" id="reg-lname" class="auth-input" placeholder="es. Rossi" /></div>
+        </div>
+      </div>
+
+      <!-- CAMPI AGGIUNTIVI -->
+      <div class="auth-field">
+        <label class="auth-label">Città / Regione <span style="color:var(--red-hot)">*</span></label>
+        <div class="auth-input-wrap"><input type="text" id="reg-location" class="auth-input" placeholder="es. Firenze (Toscana)" required /></div>
+      </div>
+      <div class="auth-field">
+        <label class="auth-label">Specialità <span style="color:var(--red-hot)">*</span></label>
+        <div class="auth-input-wrap"><select id="reg-specialty" class="auth-input" style="appearance:auto;cursor:pointer" required>${specialOpts}</select></div>
+      </div>
+      <div class="auth-field">
+        <label class="auth-label">Anno di nascita <span style="color:var(--red-hot)">*</span></label>
+        <div class="auth-input-wrap"><input type="text" id="reg-birth" class="auth-input" placeholder="es. 2007" required /></div>
+      </div>
+      <div class="auth-field">
+        <label class="auth-label">Team di appartenenza <span style="color:var(--red-hot)">*</span></label>
+        <div class="auth-input-wrap"><input type="text" id="reg-team" class="auth-input" placeholder="es. ASD Ciclistica Fiorentina" required /></div>
+      </div>
+    </div>`;
+  }
+
   const fields = REG_ROLE_FIELDS[role] || [];
   if (!fields.length) return '';
   return `<div id="reg-role-extra" style="display:flex;flex-direction:column;gap:0">
@@ -15062,7 +15114,7 @@ function renderRegister() {
           </div>
           <div id="auth-error" class="auth-error" style="display:none"></div>
           <form id="reg-form" class="auth-form" onsubmit="submitRegister(event)" style="display:flex;flex-direction:column;gap:0">
-            <div class="auth-field">
+            <div class="auth-field" id="reg-name-field">
               <label class="auth-label" for="reg-name">Nome visualizzato <span style="color:var(--red-hot)">*</span></label>
               <div class="auth-input-wrap">
                 <svg class="auth-input-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="8" r="4"/><path d="M4 20c0-4 3.6-7 8-7s8 3 8 7"/></svg>
@@ -15115,6 +15167,65 @@ function renderRegister() {
 window._onRegRoleChange = function(role) {
   const wrap = document.getElementById('reg-role-extra-wrap');
   if (wrap) wrap.innerHTML = _regRoleFieldsHtml(role);
+  // Per l'atleta il nome viene dal profilo → nascondi il campo generico
+  const nameField = document.getElementById('reg-name-field');
+  if (nameField) nameField.style.display = role === 'atleta' ? 'none' : '';
+};
+
+// Ricerca atleta nel form di registrazione
+window._regAtletaSearch = function(q) {
+  const results = document.getElementById('reg-atleta-results');
+  const manualWrap = document.getElementById('reg-manual-name-wrap');
+  if (!results) return;
+  if (!q || q.length < 2) { results.style.display = 'none'; return; }
+  const athletes = globalData?.athletes || {};
+  const matches = Object.entries(athletes)
+    .filter(([, a]) => ((a.cognome||'') + ' ' + (a.nome||'')).toLowerCase().includes(q.toLowerCase()))
+    .slice(0, 8);
+  if (matches.length) {
+    results.style.display = 'block';
+    results.innerHTML = matches.map(([id, a]) =>
+      `<div style="padding:8px 12px;cursor:pointer;border-bottom:1px solid var(--border-subtle)"
+            onmousedown="window._regSelectAtleta('${esc(id)}','${esc(a.cognome)} ${esc(a.nome)}','${esc(a.team_attuale||'')}')">
+        <strong>${esc(a.cognome)} ${esc(a.nome)}</strong>
+        <span style="color:var(--text-muted);font-size:.78rem;margin-left:8px">${esc(a.team_attuale||a.categoria||'')}</span>
+      </div>`
+    ).join('') +
+    `<div style="padding:8px 12px;color:var(--text-muted);font-size:.78rem;cursor:pointer"
+          onmousedown="window._regSelectAtleta('','','')" >
+      ✏ Non mi trovo — inserisco manualmente
+    </div>`;
+  } else {
+    results.style.display = 'block';
+    results.innerHTML = `<div style="padding:8px 12px;color:var(--text-muted);font-size:.78rem">
+      Nessun risultato.
+      <span style="cursor:pointer;color:var(--accent);text-decoration:underline"
+            onmousedown="window._regSelectAtleta('','','')">Inserisci manualmente →</span>
+    </div>`;
+  }
+};
+
+window._regSelectAtleta = function(id, label, team) {
+  const search = document.getElementById('reg-atleta-search');
+  const hidden = document.getElementById('reg-atleta-id');
+  const results = document.getElementById('reg-atleta-results');
+  const manualWrap = document.getElementById('reg-manual-name-wrap');
+  const nameInput = document.getElementById('reg-name');
+  const teamInput = document.getElementById('reg-team');
+  if (results) results.style.display = 'none';
+  if (id) {
+    // Trovato: compila automaticamente
+    if (search) search.value = label;
+    if (hidden) hidden.value = id;
+    if (nameInput) nameInput.value = label; // display_name
+    if (teamInput && team) teamInput.value = team;
+    if (manualWrap) manualWrap.style.display = 'none';
+  } else {
+    // Non trovato: mostra campi manuali
+    if (search) search.value = '';
+    if (hidden) hidden.value = '';
+    if (manualWrap) manualWrap.style.display = '';
+  }
 };
 
 window.submitRegister = async function(e) {
@@ -15124,17 +15235,47 @@ window.submitRegister = async function(e) {
   const password     = document.getElementById('reg-pwd').value;
   const role         = document.getElementById('reg-role').value;
   if (!role) { const err = document.getElementById('auth-error'); if (err) { err.textContent='Seleziona il tuo ruolo'; err.style.display='block'; } return; }
+
+  // Validazione specifica atleta
+  const v = (id) => document.getElementById(id)?.value?.trim() || '';
+  if (role === 'atleta') {
+    const atletaId = v('reg-atleta-id');
+    const fname = v('reg-fname'), lname = v('reg-lname');
+    if (!atletaId && !fname && !lname) {
+      const err = document.getElementById('auth-error');
+      if (err) { err.textContent = 'Cerca il tuo profilo atleta o inserisci nome e cognome manualmente'; err.style.display = 'block'; }
+      return;
+    }
+  }
+
   const errEl = document.getElementById('auth-error');
   const btn   = document.getElementById('reg-submit');
   errEl.style.display = 'none';
   btn.disabled = true; btn.textContent = 'Registrazione…';
 
-  // Raccogli i campi extra per ruolo
-  const v = (id) => document.getElementById(id)?.value?.trim() || '';
+  // Per l'atleta il display_name viene dal profilo selezionato (o dal nome manuale)
+  const finalDisplayName = role === 'atleta'
+    ? (v('reg-atleta-search') || ((v('reg-lname') + ' ' + v('reg-fname')).trim()) || display_name || email.split('@')[0])
+    : display_name;
+
   try {
-    const { token, user } = await apiCall('/auth/register', { method: 'POST', body: { email, password, role, display_name } });
+    const { token, user } = await apiCall('/auth/register', { method: 'POST', body: { email, password, role, display_name: finalDisplayName } });
     authSave(token, user);
     updateNavLoginState();
+
+    // Per l'atleta: collega subito il profilo
+    if (role === 'atleta') {
+      const atletaId = v('reg-atleta-id') || null;
+      const team = v('reg-team');
+      await apiCall('/profile/link-athlete', { method: 'POST', body: {
+        atleta_id:  atletaId,
+        first_name: v('reg-fname') || (atletaId ? '' : finalDisplayName.split(' ').slice(1).join(' ')),
+        last_name:  v('reg-lname') || (atletaId ? '' : finalDisplayName.split(' ')[0]),
+        team,
+        birth_year: v('reg-birth'),
+      }}).catch(() => {});
+    }
+
     // Salva i campi extra come user_details
     const details = {
       bio:'', location: v('reg-location'), instagram: v('reg-ig'), facebook:'', strava:'', website: v('reg-web'),
@@ -15143,7 +15284,6 @@ window.submitRegister = async function(e) {
       staff_role: v('reg-staff-role'), public_contact: v('reg-contact'),
       favorite_rider: v('reg-fav-rider'),
     };
-    // Salva solo se c'è almeno un campo valorizzato
     if (Object.values(details).some(x => x)) {
       await apiCall('/profile/details', { method: 'PATCH', body: details }).catch(() => {});
     }
