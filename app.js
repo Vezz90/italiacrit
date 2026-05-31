@@ -8997,9 +8997,14 @@ function renderXpixQueue() {
 window.xpixSync = async () => {
   const btn    = document.getElementById('xpix-sync-btn');
   const status = document.getElementById('xpix-sync-status');
-  if (btn) { btn.disabled = true; btn.textContent = '⏳ Sincronizzazione…'; }
-  if (status) status.textContent = 'Download album in corso, può richiedere ~30s…';
+  if (btn) { btn.disabled = true; btn.textContent = '⏳ Avvio…'; }
+  if (status) status.textContent = 'Connessione al server…';
   try {
+    // Ping leggero per svegliare Render prima del sync vero
+    await fetch(`${API_BASE}/auth/me`, { headers: authToken() ? { Authorization: `Bearer ${authToken()}` } : {} })
+      .catch(() => {});
+    if (status) status.textContent = 'Server attivo — scarico album xpix…';
+    if (btn) btn.textContent = '⏳ Sincronizzazione…';
     const r = await apiCall('/admin/xpix/sync', { method: 'POST' });
     if (status) status.textContent = `✓ +${r.added} nuovi album trovati (totale in coda: ${r.total})`;
     await loadXpixQueue();
