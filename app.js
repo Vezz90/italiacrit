@@ -14474,6 +14474,7 @@ const SHARE_TAG = '#italiacrit #ciclismo';
 window._shareGaraData = null; window._shareAtletaData = null; window._shareTeamData = null;
 let _shareType, _sharePayload, _sharePlatKey = 'instagram';
 let _shareLogoImg = null;
+let _regionLogoCache = {};
 
 async function _getLogo() {
   if (_shareLogoImg) return _shareLogoImg;
@@ -14482,6 +14483,22 @@ async function _getLogo() {
     img.onload = () => { _shareLogoImg = img; res(img); };
     img.onerror = () => res(null);
     img.src = 'assets/logo2.png';
+  });
+}
+
+// Mappa regione → file logo (per sostituire il testo nella card gara)
+const REGION_LOGOS = {
+  'TOSCANA': 'assets/toscana-crit-logo.png',
+};
+async function _getRegionLogo(region) {
+  const src = REGION_LOGOS[(region||'').toUpperCase()];
+  if (!src) return null;
+  if (_regionLogoCache[src]) return _regionLogoCache[src];
+  return new Promise(res => {
+    const img = new Image(); img.crossOrigin = 'anonymous';
+    img.onload = () => { _regionLogoCache[src] = img; res(img); };
+    img.onerror = () => { _regionLogoCache[src] = null; res(null); };
+    img.src = src;
   });
 }
 function _bg(ctx, W, H) {
@@ -14713,7 +14730,7 @@ function _drawGaraColumn(ctx, x, colW, topY, bottomY, slice, startIdx) {
 }
 
 // ── GARA CARD v6 — UCI-inspired, no points, big names ────────
-function _drawGara(ctx, W, H, d, logo) {
+function _drawGara(ctx, W, H, d, logo, regionLogo) {
   const { name, date, cat, mult, tipo, km, media, results, region, luogo } = d;
   const pad = Math.round(W * 0.048);
 
@@ -14732,9 +14749,16 @@ function _drawGara(ctx, W, H, d, logo) {
     ctx.fillText('ITALIACRIT', pad, Math.round(hH * 0.64));
     logoRight = pad + ctx.measureText('ITALIACRIT').width;
   }
-  // Regione (o luogo) accanto al logo
+  // Regione (o luogo) accanto al logo — usa logo regionale se disponibile
   const regTxt = (region || luogo || '').toUpperCase();
-  if (regTxt) {
+  if (regionLogo) {
+    // Logo regionale: altezza uguale all'header, larghezza proporzionale
+    const rH = Math.round(hH * 0.72);
+    const rW = Math.round(rH * regionLogo.naturalWidth / regionLogo.naturalHeight);
+    const rX = logoRight + 20;
+    const rY = Math.round((hH - rH) / 2);
+    ctx.drawImage(regionLogo, rX, rY, rW, rH);
+  } else if (regTxt) {
     ctx.fillStyle = 'rgba(255,255,255,0.16)';
     ctx.fillRect(logoRight + 16, Math.round(hH * 0.28), 2, Math.round(hH * 0.44));
     const rfs = Math.round(hH * 0.34);
@@ -14996,8 +15020,8 @@ async function generateShareCanvas(type, payload, platKey) {
   try { if (document.fonts && document.fonts.ready) await document.fonts.ready; } catch(e){}
   _bg(ctx,p.w,p.h);
   if(type==='gara') {
-    // gara manages its own header/footer for bigger logo treatment
-    _drawGara(ctx,p.w,p.h,payload,logo);
+    const regionLogo = await _getRegionLogo(payload.region);
+    _drawGara(ctx,p.w,p.h,payload,logo,regionLogo);
   } else {
     _header(ctx,logo,p.w,p.h, type==='class'?payload:null); _footer(ctx,p.w,p.h);
     if(type==='atleta') _drawAtleta(ctx,p.w,p.h,payload);
