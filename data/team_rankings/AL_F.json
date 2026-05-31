@@ -2,14 +2,26 @@
   {
     "team_id": "SPORT_CLUB_BRESCIA_FLANDRES_LOVE",
     "team_nome": "SPORT CLUB BRESCIA - FLANDRES LOVE",
-    "punti": 194,
+    "punti": 197,
     "vittorie": 5,
     "p1": 5,
     "p2": 3,
     "p3": 2,
-    "pout": 11,
+    "pout": 12,
     "n_atleti": 5,
     "pos": 1
+  },
+  {
+    "team_id": "S_C_CESANO_MADERNO",
+    "team_nome": "S.C. CESANO MADERNO",
+    "punti": 183,
+    "vittorie": 4,
+    "p1": 4,
+    "p2": 2,
+    "p3": 2,
+    "pout": 19,
+    "n_atleti": 6,
+    "pos": 2
   },
   {
     "team_id": "U_C_GIORGIONE",
@@ -21,18 +33,6 @@
     "p3": 4,
     "pout": 8,
     "n_atleti": 5,
-    "pos": 2
-  },
-  {
-    "team_id": "S_C_CESANO_MADERNO",
-    "team_nome": "S.C. CESANO MADERNO",
-    "punti": 173,
-    "vittorie": 4,
-    "p1": 4,
-    "p2": 2,
-    "p3": 1,
-    "pout": 19,
-    "n_atleti": 6,
     "pos": 3
   },
   {
@@ -50,26 +50,38 @@
   {
     "team_id": "VANGI_LADIES_CYCLING_TEAM",
     "team_nome": "VANGI LADIES CYCLING TEAM",
-    "punti": 135,
+    "punti": 143,
     "vittorie": 2,
     "p1": 2,
     "p2": 3,
     "p3": 1,
-    "pout": 14,
+    "pout": 15,
     "n_atleti": 5,
     "pos": 5
   },
   {
     "team_id": "BIESSE_CARRERA_PREMAC",
     "team_nome": "BIESSE - CARRERA - PREMAC",
-    "punti": 130,
+    "punti": 136,
     "vittorie": 4,
     "p1": 4,
     "p2": 2,
     "p3": 1,
-    "pout": 4,
+    "pout": 5,
     "n_atleti": 1,
     "pos": 6
+  },
+  {
+    "team_id": "TEAM_FABIANA_LUPERINI_ASD",
+    "team_nome": "TEAM FABIANA LUPERINI ASD",
+    "punti": 107,
+    "vittorie": 2,
+    "p1": 2,
+    "p2": 1,
+    "p3": 2,
+    "pout": 10,
+    "n_atleti": 2,
+    "pos": 7
   },
   {
     "team_id": "POL_FIUMICINESE_FA_I_T_ADRIATICA",
@@ -79,18 +91,6 @@
     "p1": 0,
     "p2": 1,
     "p3": 1,
-    "pout": 8,
-    "n_atleti": 2,
-    "pos": 7
-  },
-  {
-    "team_id": "TEAM_FABIANA_LUPERINI_ASD",
-    "team_nome": "TEAM FABIANA LUPERINI ASD",
-    "punti": 98,
-    "vittorie": 2,
-    "p1": 2,
-    "p2": 1,
-    "p3": 2,
     "pout": 8,
     "n_atleti": 2,
     "pos": 8
@@ -146,12 +146,12 @@
   {
     "team_id": "JU_GREEN_A_S_D_GORLA_MINORE",
     "team_nome": "JU GREEN A.S.D. GORLA MINORE",
-    "punti": 48,
+    "punti": 50,
     "vittorie": 0,
     "p1": 0,
     "p2": 1,
     "p3": 1,
-    "pout": 5,
+    "pout": 6,
     "n_atleti": 2,
     "pos": 13
   },
@@ -252,6 +252,18 @@
     "pos": 21
   },
   {
+    "team_id": "BLU_TEAM",
+    "team_nome": "BLU TEAM",
+    "punti": 23,
+    "vittorie": 1,
+    "p1": 1,
+    "p2": 0,
+    "p3": 0,
+    "pout": 1,
+    "n_atleti": 1,
+    "pos": 22
+  },
+  {
     "team_id": "COMAL_TRENTINO_CYCLING_ACADEMY",
     "team_nome": "COMAL TRENTINO CYCLING ACADEMY",
     "punti": 23,
@@ -261,7 +273,7 @@
     "p3": 0,
     "pout": 5,
     "n_atleti": 4,
-    "pos": 22
+    "pos": 23
   },
   {
     "team_id": "LIBERTAS_CERESETTO",
@@ -273,7 +285,7 @@
     "p3": 1,
     "pout": 4,
     "n_atleti": 2,
-    "pos": 23
+    "pos": 24
   },
   {
     "team_id": "SAMABIKE",
@@ -285,7 +297,7 @@
     "p3": 1,
     "pout": 0,
     "n_atleti": 1,
-    "pos": 24
+    "pos": 25
   },
   {
     "team_id": "I_CINGHIALI_EVO",
@@ -297,7 +309,7 @@
     "p3": 0,
     "pout": 5,
     "n_atleti": 1,
-    "pos": 25
+    "pos": 26
   },
   {
     "team_id": "HG_CYCLING_TEAM",
@@ -309,7 +321,19 @@
     "p3": 0,
     "pout": 4,
     "n_atleti": 1,
-    "pos": 26
+    "pos": 27
+  },
+  {
+    "team_id": "G_S_CICLI_FIORIN_CYCLING_TEAM_ASD",
+    "team_nome": "G.S. CICLI FIORIN CYCLING TEAM ASD",
+    "punti": 17,
+    "vittorie": 0,
+    "p1": 0,
+    "p2": 1,
+    "p3": 0,
+    "pout": 1,
+    "n_atleti": 1,
+    "pos": 28
   },
   {
     "team_id": "TEAM_CESARO_NERI_LUCCHINI",
@@ -321,7 +345,7 @@
     "p3": 1,
     "pout": 1,
     "n_atleti": 1,
-    "pos": 27
+    "pos": 29
   },
   {
     "team_id": "TEAM_CORATTI",
@@ -333,7 +357,7 @@
     "p3": 0,
     "pout": 0,
     "n_atleti": 1,
-    "pos": 28
+    "pos": 30
   },
   {
     "team_id": "A_S_D_G_C_EMIC",
@@ -345,7 +369,7 @@
     "p3": 0,
     "pout": 5,
     "n_atleti": 1,
-    "pos": 29
+    "pos": 31
   },
   {
     "team_id": "ASD_GS_SORGENTE_PRADIPOZZO",
@@ -357,7 +381,7 @@
     "p3": 1,
     "pout": 2,
     "n_atleti": 1,
-    "pos": 30
+    "pos": 32
   },
   {
     "team_id": "GS_CAPANNORI",
@@ -369,7 +393,7 @@
     "p3": 0,
     "pout": 2,
     "n_atleti": 2,
-    "pos": 31
+    "pos": 33
   },
   {
     "team_id": "A_S_A_C_I_EVONACICLI",
@@ -381,7 +405,7 @@
     "p3": 1,
     "pout": 1,
     "n_atleti": 2,
-    "pos": 32
+    "pos": 34
   },
   {
     "team_id": "G_C_NOVENTANA",
@@ -393,7 +417,7 @@
     "p3": 0,
     "pout": 3,
     "n_atleti": 1,
-    "pos": 33
+    "pos": 35
   },
   {
     "team_id": "ASD_VELOCE_CLUB_BORGO",
@@ -405,7 +429,7 @@
     "p3": 0,
     "pout": 5,
     "n_atleti": 2,
-    "pos": 34
+    "pos": 36
   },
   {
     "team_id": "TEAM_GO_FAST_PUGLIA_ARADEO",
@@ -417,31 +441,19 @@
     "p3": 0,
     "pout": 0,
     "n_atleti": 1,
-    "pos": 35
+    "pos": 37
   },
   {
     "team_id": "SCUOLA_CICLISMO_VERSO_L_IRIDE",
     "team_nome": "SCUOLA CICLISMO VERSO L'IRIDE",
-    "punti": 9,
+    "punti": 10,
     "vittorie": 0,
     "p1": 0,
     "p2": 0,
     "p3": 0,
-    "pout": 3,
+    "pout": 4,
     "n_atleti": 3,
-    "pos": 36
-  },
-  {
-    "team_id": "BLU_TEAM",
-    "team_nome": "BLU TEAM",
-    "punti": 8,
-    "vittorie": 0,
-    "p1": 0,
-    "p2": 0,
-    "p3": 0,
-    "pout": 1,
-    "n_atleti": 1,
-    "pos": 37
+    "pos": 38
   },
   {
     "team_id": "BREGANZE_MILLENIUM",
@@ -453,24 +465,12 @@
     "p3": 0,
     "pout": 1,
     "n_atleti": 1,
-    "pos": 38
+    "pos": 39
   },
   {
     "team_id": "ACS_OLIMPIC_ZARNESTI",
     "team_nome": "ACS OLIMPIC ZARNESTI",
     "punti": 6,
-    "vittorie": 0,
-    "p1": 0,
-    "p2": 0,
-    "p3": 0,
-    "pout": 1,
-    "n_atleti": 1,
-    "pos": 39
-  },
-  {
-    "team_id": "G_S_CICLI_FIORIN_CYCLING_TEAM_ASD",
-    "team_nome": "G.S. CICLI FIORIN CYCLING TEAM ASD",
-    "punti": 5,
     "vittorie": 0,
     "p1": 0,
     "p2": 0,

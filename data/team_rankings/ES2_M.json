@@ -2,12 +2,12 @@
   {
     "team_id": "TEAM_CESARO_NERI_LUCCHINI",
     "team_nome": "TEAM CESARO-NERI-LUCCHINI",
-    "punti": 480,
-    "vittorie": 11,
-    "p1": 11,
-    "p2": 9,
+    "punti": 524,
+    "vittorie": 12,
+    "p1": 12,
+    "p2": 10,
     "p3": 4,
-    "pout": 27,
+    "pout": 30,
     "n_atleti": 5,
     "pos": 1
   },
@@ -60,6 +60,18 @@
     "pos": 5
   },
   {
+    "team_id": "TEAM_NIBALI",
+    "team_nome": "TEAM NIBALI",
+    "punti": 190,
+    "vittorie": 2,
+    "p1": 2,
+    "p2": 3,
+    "p3": 5,
+    "pout": 16,
+    "n_atleti": 5,
+    "pos": 6
+  },
+  {
     "team_id": "MAZZANO_A_S_D",
     "team_nome": "MAZZANO A.S.D.",
     "punti": 189,
@@ -69,7 +81,7 @@
     "p3": 2,
     "pout": 11,
     "n_atleti": 4,
-    "pos": 6
+    "pos": 7
   },
   {
     "team_id": "UC_EMPOLESE",
@@ -81,7 +93,7 @@
     "p3": 4,
     "pout": 28,
     "n_atleti": 4,
-    "pos": 7
+    "pos": 8
   },
   {
     "team_id": "S_C_COTIGNOLESE",
@@ -93,18 +105,6 @@
     "p3": 1,
     "pout": 9,
     "n_atleti": 2,
-    "pos": 8
-  },
-  {
-    "team_id": "TEAM_NIBALI",
-    "team_nome": "TEAM NIBALI",
-    "punti": 175,
-    "vittorie": 2,
-    "p1": 2,
-    "p2": 3,
-    "p3": 4,
-    "pout": 14,
-    "n_atleti": 5,
     "pos": 9
   },
   {
@@ -408,6 +408,18 @@
     "pos": 34
   },
   {
+    "team_id": "NONSOLOBIKE",
+    "team_nome": "NONSOLOBIKE",
+    "punti": 66,
+    "vittorie": 3,
+    "p1": 3,
+    "p2": 1,
+    "p3": 0,
+    "pout": 2,
+    "n_atleti": 1,
+    "pos": 35
+  },
+  {
     "team_id": "MST_CYCLING_SANDRIGO_BIKE",
     "team_nome": "MST CYCLING - SANDRIGO BIKE",
     "punti": 66,
@@ -417,18 +429,6 @@
     "p3": 2,
     "pout": 3,
     "n_atleti": 2,
-    "pos": 35
-  },
-  {
-    "team_id": "NONSOLOBIKE",
-    "team_nome": "NONSOLOBIKE",
-    "punti": 65,
-    "vittorie": 3,
-    "p1": 3,
-    "p2": 1,
-    "p3": 0,
-    "pout": 1,
-    "n_atleti": 1,
     "pos": 36
   },
   {
@@ -516,6 +516,18 @@
     "pos": 43
   },
   {
+    "team_id": "TEAM_GIUNIGOR_B_BIKE",
+    "team_nome": "TEAM GIUNIGOR - B.BIKE",
+    "punti": 55,
+    "vittorie": 1,
+    "p1": 1,
+    "p2": 0,
+    "p3": 2,
+    "pout": 5,
+    "n_atleti": 1,
+    "pos": 44
+  },
+  {
     "team_id": "U_C_S_OTTAVIO_ZULIANI_A_S_D",
     "team_nome": "U.C.S. OTTAVIO ZULIANI A.S.D.",
     "punti": 54,
@@ -525,7 +537,7 @@
     "p3": 1,
     "pout": 1,
     "n_atleti": 2,
-    "pos": 44
+    "pos": 45
   },
   {
     "team_id": "UC_GODIGESE_ABRA_IRIDE",
@@ -537,7 +549,7 @@
     "p3": 1,
     "pout": 8,
     "n_atleti": 2,
-    "pos": 45
+    "pos": 46
   },
   {
     "team_id": "S_C_VILLA_S_ANTONIO_CICLI_COCCI",
@@ -549,7 +561,7 @@
     "p3": 1,
     "pout": 4,
     "n_atleti": 1,
-    "pos": 46
+    "pos": 47
   },
   {
     "team_id": "PEDALE_TOSCANO_PONTICINO",
@@ -561,7 +573,7 @@
     "p3": 0,
     "pout": 9,
     "n_atleti": 3,
-    "pos": 47
+    "pos": 48
   },
   {
     "team_id": "ASD_TEAM_MMBIKE_ANDRIA_RESTO_AL_SUD",
@@ -573,7 +585,7 @@
     "p3": 0,
     "pout": 7,
     "n_atleti": 1,
-    "pos": 48
+    "pos": 49
   },
   {
     "team_id": "POL_ALBERGO_OLIVETO",
@@ -584,18 +596,6 @@
     "p2": 0,
     "p3": 1,
     "pout": 2,
-    "n_atleti": 1,
-    "pos": 49
-  },
-  {
-    "team_id": "TEAM_GIUNIGOR_B_BIKE",
-    "team_nome": "TEAM GIUNIGOR - B.BIKE",
-    "punti": 49,
-    "vittorie": 1,
-    "p1": 1,
-    "p2": 0,
-    "p3": 2,
-    "pout": 4,
     "n_atleti": 1,
     "pos": 50
   },

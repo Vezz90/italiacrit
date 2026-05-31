@@ -2,36 +2,36 @@
   {
     "team_id": "A_S_D_S_C_PADOVANI",
     "team_nome": "A.S.D. S.C. PADOVANI",
-    "punti": 750,
+    "punti": 766,
     "vittorie": 7,
     "p1": 7,
     "p2": 10,
     "p3": 4,
-    "pout": 21,
+    "pout": 22,
     "n_atleti": 10,
     "pos": 1
   },
   {
     "team_id": "TEAM_TECHNIPES_INEMILIAROMAGNA",
     "team_nome": "TEAM TECHNIPES #INEMILIAROMAGNA",
-    "punti": 528,
+    "punti": 560,
     "vittorie": 4,
     "p1": 4,
-    "p2": 4,
+    "p2": 5,
     "p3": 5,
-    "pout": 19,
+    "pout": 20,
     "n_atleti": 10,
     "pos": 2
   },
   {
     "team_id": "BELTRAMI_TSA_TRE_COLLI",
     "team_nome": "BELTRAMI TSA TRE COLLI",
-    "punti": 387,
-    "vittorie": 2,
-    "p1": 2,
+    "punti": 427,
+    "vittorie": 3,
+    "p1": 3,
     "p2": 4,
     "p3": 4,
-    "pout": 20,
+    "pout": 21,
     "n_atleti": 8,
     "pos": 3
   },
@@ -86,12 +86,12 @@
   {
     "team_id": "VEGA_VITALCARE_DYNATEK",
     "team_nome": "VEGA VITALCARE DYNATEK",
-    "punti": 217,
+    "punti": 223,
     "vittorie": 0,
     "p1": 0,
     "p2": 3,
     "p3": 0,
-    "pout": 15,
+    "pout": 16,
     "n_atleti": 7,
     "pos": 8
   },
@@ -192,6 +192,18 @@
     "pos": 16
   },
   {
+    "team_id": "GALLINA_LUCCHINI_ECOTEK",
+    "team_nome": "GALLINA LUCCHINI ECOTEK",
+    "punti": 114,
+    "vittorie": 1,
+    "p1": 1,
+    "p2": 0,
+    "p3": 1,
+    "pout": 12,
+    "n_atleti": 6,
+    "pos": 17
+  },
+  {
     "team_id": "RED_BULL_BORA_HANSGROHE_ROOKIES",
     "team_nome": "RED BULL-BORA-HANSGROHE ROOKIES",
     "punti": 111,
@@ -201,7 +213,7 @@
     "p3": 0,
     "pout": 2,
     "n_atleti": 3,
-    "pos": 17
+    "pos": 18
   },
   {
     "team_id": "SOLUTION_TECH_NIPPO_RALI",
@@ -213,7 +225,7 @@
     "p3": 0,
     "pout": 2,
     "n_atleti": 3,
-    "pos": 18
+    "pos": 19
   },
   {
     "team_id": "V_C_MENDRISIO",
@@ -225,7 +237,7 @@
     "p3": 0,
     "pout": 5,
     "n_atleti": 5,
-    "pos": 19
+    "pos": 20
   },
   {
     "team_id": "CAMPANA_IMBALLAGGI_MORBIATO_TRENTINO",
@@ -237,7 +249,7 @@
     "p3": 3,
     "pout": 9,
     "n_atleti": 4,
-    "pos": 20
+    "pos": 21
   },
   {
     "team_id": "PC_BAIX_EBRE_TORTOSA",
@@ -249,18 +261,6 @@
     "p3": 1,
     "pout": 5,
     "n_atleti": 3,
-    "pos": 21
-  },
-  {
-    "team_id": "GALLINA_LUCCHINI_ECOTEK",
-    "team_nome": "GALLINA LUCCHINI ECOTEK",
-    "punti": 82,
-    "vittorie": 1,
-    "p1": 1,
-    "p2": 0,
-    "p3": 0,
-    "pout": 11,
-    "n_atleti": 5,
     "pos": 22
   },
   {
@@ -434,12 +434,12 @@
   {
     "team_id": "GOODSHOP_YOYOGURT",
     "team_nome": "GOODSHOP YOYOGURT",
-    "punti": 37,
+    "punti": 39,
     "vittorie": 1,
     "p1": 1,
     "p2": 0,
     "p3": 0,
-    "pout": 4,
+    "pout": 5,
     "n_atleti": 3,
     "pos": 37
   },
@@ -468,6 +468,18 @@
     "pos": 39
   },
   {
+    "team_id": "NIPPO_NUOVACOMAUTO_OBOR",
+    "team_nome": "NIPPO NUOVACOMAUTO OBOR",
+    "punti": 33,
+    "vittorie": 0,
+    "p1": 0,
+    "p2": 0,
+    "p3": 0,
+    "pout": 6,
+    "n_atleti": 4,
+    "pos": 40
+  },
+  {
     "team_id": "PRO_GI_T_CYCLING_TEAM",
     "team_nome": "PRO.GI.T. CYCLING TEAM",
     "punti": 30,
@@ -477,7 +489,7 @@
     "p3": 0,
     "pout": 4,
     "n_atleti": 4,
-    "pos": 40
+    "pos": 41
   },
   {
     "team_id": "DECATHLON_CMA_CGM_DEVELOPMENT_TEAM",
@@ -489,7 +501,7 @@
     "p3": 0,
     "pout": 2,
     "n_atleti": 2,
-    "pos": 41
+    "pos": 42
   },
   {
     "team_id": "TEAM_POLTI_VISITMALTA",
@@ -501,18 +513,6 @@
     "p3": 1,
     "pout": 0,
     "n_atleti": 1,
-    "pos": 42
-  },
-  {
-    "team_id": "NIPPO_NUOVACOMAUTO_OBOR",
-    "team_nome": "NIPPO NUOVACOMAUTO OBOR",
-    "punti": 29,
-    "vittorie": 0,
-    "p1": 0,
-    "p2": 0,
-    "p3": 0,
-    "pout": 5,
-    "n_atleti": 3,
     "pos": 43
   },
   {
