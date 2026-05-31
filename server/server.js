@@ -1076,7 +1076,7 @@ app.delete('/api/admin/youtube/queue/:id', requireAdmin, async (req, res) => {
 // ══════════════════════════════════════════════════════════════════════════════
 // XPIX AUTO-FOTO
 // ══════════════════════════════════════════════════════════════════════════════
-const { fetchXpixCandidates, fetchPhotosForAlbum, fetchAllAlbums, isCyclingRelevant, isRecent } = require('./xpix-scraper');
+const { fetchXpixCandidates, fetchPhotosForAlbum, fetchAllAlbums, fetchAlbumBySlug, isCyclingRelevant, isRecent } = require('./xpix-scraper');
 
 const XPIX_QUEUE_PATH  = path.join(__dirname, '../data/xpix_queue.json');
 const XPIX_PHOTOS_PATH = path.join(__dirname, '../data/xpix_photos.json');
@@ -1164,6 +1164,52 @@ app.post('/api/admin/xpix/sync', requireAdmin, async (req, res) => {
     res.json({ ok: true, added, total: trimmed.length });
   } catch (e) {
     console.error('[xpix-sync]', e.message);
+    res.status(500).json({ error: e.message });
+  }
+});
+
+// POST add-by-url: aggiunge manualmente un album dalla URL/slug xpix, bypassa tutti i filtri
+app.post('/api/admin/xpix/add-by-url', requireAdmin, async (req, res) => {
+  try {
+    const { url } = req.body;
+    if (!url) return res.status(400).json({ error: 'url obbligatorio' });
+
+    const album = await fetchAlbumBySlug(url);
+    if (!album) return res.status(404).json({ error: 'Album non trovato su xpix.it (slug non trovato nel taxonomy)' });
+
+    const photos = await fetchPhotosForAlbum(album, 50);
+    if (!photos.length) return res.status(404).json({ error: `Album trovato (${album.name}) ma nessuna foto disponibile` });
+
+    const queue = await readXpixQueue();
+    // Se già presente rimuovi il vecchio (lo sostituiamo con versione fresca)
+    const existing = queue.findIndex(q => q.album_slug === album.slug);
+    if (existing !== -1) queue.splice(existing, 1);
+
+    const id = Date.now().toString(36) + Math.random().toString(36).slice(2, 7);
+    queue.push({
+      id,
+      album_id:    album.id,
+      album_name:  album.name,
+      album_slug:  album.slug,
+      photo_count: album.count,
+      photos,
+      photo_url:   photos[0],
+      album_page:  `https://www.xpix.it/negozio/?yith_wcan=1&filter=open&pixy_album=${encodeURIComponent(album.slug)}`,
+      status:      'pending',
+      suggested_gara_id: null,
+      added_at:    new Date().toISOString(),
+      added_manually: true,
+    });
+
+    const nonPending = queue.filter(q => q.status !== 'pending');
+    const pending    = queue.filter(q => q.status === 'pending')
+      .sort((a, b) => (b.added_at || '').localeCompare(a.added_at || ''))
+      .slice(0, 200);
+    await writeXpixQueue([...nonPending, ...pending]);
+
+    res.json({ ok: true, album_name: album.name, slug: album.slug, photos_count: photos.length });
+  } catch (e) {
+    console.error('[xpix-add-by-url]', e.message);
     res.status(500).json({ error: e.message });
   }
 });

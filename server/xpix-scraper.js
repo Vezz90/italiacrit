@@ -87,6 +87,19 @@ async function fetchAllAlbums() {
   return all;
 }
 
+// ── Fetch un singolo album per slug (bypass filtri) ──────────────────────────
+async function fetchAlbumBySlug(slug) {
+  // Supporta sia slug puro che URL completo negozio xpix
+  const m = slug.match(/pixy_album=([^&]+)/);
+  if (m) slug = decodeURIComponent(m[1]);
+  slug = slug.trim().replace(/^\/+|\/+$/g, '');
+
+  const url = `${XPIX_API}/pixy_album?slug=${encodeURIComponent(slug)}&_fields=id,name,slug,count`;
+  const data = await fetchURL(url, 20000, true);
+  if (!Array.isArray(data) || !data.length) return null;
+  return data[0]; // il taxonomy term
+}
+
 // ── Filtri rilevanza ──────────────────────────────────────────────────────────
 // xpix.it è già un sito di fotografia ciclistica: quasi tutto è rilevante.
 // Escludiamo solo eventi chiaramente fuori scope (grandi giri PRO, presentazioni, ecc.)
@@ -188,4 +201,4 @@ async function fetchXpixCandidates(knownSlugs, maxNew = 25) {
   return valid;
 }
 
-module.exports = { fetchXpixCandidates, fetchPhotosForAlbum, fetchAllAlbums, isCyclingRelevant, isRecent };
+module.exports = { fetchXpixCandidates, fetchPhotosForAlbum, fetchAllAlbums, fetchAlbumBySlug, isCyclingRelevant, isRecent };

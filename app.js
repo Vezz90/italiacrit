@@ -7254,6 +7254,14 @@ window.adminNav = async function(section) {
             🔍 Diagnosi
           </button>
           <span id="xpix-sync-status" style="font-size:.8rem;color:var(--text-muted)"></span>
+          <div style="margin-top:12px;display:flex;gap:8px;align-items:center;flex-wrap:wrap">
+            <input id="xpix-manual-url" type="text" placeholder="Incolla URL album xpix o slug…"
+              style="flex:1;min-width:260px;padding:8px 12px;border-radius:6px;border:1px solid var(--border);background:var(--bg-elevated);color:var(--text-primary);font-size:.85rem"/>
+            <button onclick="window.xpixAddByUrl()" id="xpix-add-btn"
+              style="background:#10b981;color:#fff;border:none;padding:9px 18px;border-radius:6px;font-weight:700;cursor:pointer;font-size:.85rem;white-space:nowrap">
+              ➕ Aggiungi da URL
+            </button>
+          </div>
         </div>
         <div id="xpix-queue-container">
           <div class="admin-loading">Caricamento coda…</div>
@@ -8985,6 +8993,28 @@ window.xpixSync = async () => {
     if (status) status.textContent = '✗ Errore: ' + e.message;
   } finally {
     if (btn) { btn.disabled = false; btn.textContent = '🔄 Sincronizza Xpix'; }
+  }
+};
+
+window.xpixAddByUrl = async () => {
+  const input = document.getElementById('xpix-manual-url');
+  const btn   = document.getElementById('xpix-add-btn');
+  const status= document.getElementById('xpix-sync-status');
+  const url   = input?.value?.trim();
+  if (!url) { showToast('Inserisci URL o slug album xpix', 'error'); return; }
+  if (btn) { btn.disabled = true; btn.textContent = '⏳ Aggiunta…'; }
+  if (status) status.textContent = 'Recupero foto album…';
+  try {
+    const r = await apiCall('/admin/xpix/add-by-url', { method: 'POST', body: { url } });
+    if (status) status.textContent = `✓ "${r.album_name}" aggiunto (${r.photos_count} foto)`;
+    if (input) input.value = '';
+    showToast(`✓ Album xpix aggiunto alla coda`);
+    await loadXpixQueue();
+  } catch (e) {
+    if (status) status.textContent = '✗ Errore: ' + e.message;
+    showToast('Errore: ' + e.message, 'error');
+  } finally {
+    if (btn) { btn.disabled = false; btn.textContent = '➕ Aggiungi da URL'; }
   }
 };
 
