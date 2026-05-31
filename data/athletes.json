@@ -6461,6 +6461,620 @@
       }
     ]
   },
+  "D_AIUTO_SEBASTIANO": {
+    "id": "D_AIUTO_SEBASTIANO",
+    "nome": "SEBASTIANO",
+    "cognome": "D'AIUTO",
+    "team_attuale": "GCD PEDALE MANZANESE",
+    "team_id": "GCD_PEDALE_MANZANESE",
+    "categoria": "AL_M",
+    "genere": "M",
+    "punti_totali": 113,
+    "risultati": [
+      {
+        "gara_id": "CARNIA_JULIUM_CLASSIC_2026-05-31_AL_M",
+        "nome_gara": "CARNIA JULIUM CLASSIC",
+        "data": "2026-05-31",
+        "posizione": 1,
+        "punti_effettivi": 15,
+        "team": "GCD PEDALE MANZANESE",
+        "moltiplicatore": 1,
+        "tipo": "regionale",
+        "regione": "FRIULI VENEZIA GIULIA",
+        "km": "75.200",
+        "media": "40.759"
+      },
+      {
+        "gara_id": "5_GRAN_PREMIO_VAL_DEGANO_2026-05-24_AL_M",
+        "nome_gara": "5 GRAN PREMIO VAL DEGANO",
+        "data": "2026-05-24",
+        "posizione": 1,
+        "punti_effettivi": 15,
+        "team": "GCD PEDALE MANZANESE",
+        "moltiplicatore": 1,
+        "tipo": "regionale",
+        "regione": "FRIULI VENEZIA GIULIA",
+        "km": "61.300",
+        "media": "36.915"
+      },
+      {
+        "gara_id": "4_MEMORIAL_CIOFFI_SALVATORE_2026-05-17_AL_M",
+        "nome_gara": "4 MEMORIAL CIOFFI SALVATORE",
+        "data": "2026-05-17",
+        "posizione": 3,
+        "punti_effettivi": 10,
+        "team": "GCD PEDALE MANZANESE",
+        "moltiplicatore": 1,
+        "tipo": "regionale",
+        "regione": "TOSCANA",
+        "km": "60.300",
+        "media": "40.267"
+      },
+      {
+        "gara_id": "41_GRAN_PREMIO_FESTA_DELLA_MAMMA_2026-05-10_AL_M",
+        "nome_gara": "41 GRAN PREMIO FESTA DELLA MAMMA",
+        "data": "2026-05-10",
+        "posizione": 6,
+        "punti_effettivi": 5,
+        "team": "GCD PEDALE MANZANESE",
+        "moltiplicatore": 1,
+        "tipo": "regionale",
+        "regione": "FRIULI VENEZIA GIULIA",
+        "km": "65.400",
+        "media": "41.960"
+      },
+      {
+        "gara_id": "6_GRAN_PREMIO_IMPRESA_SERGIO_ZANETTE_2026-05-03_AL_M",
+        "nome_gara": "6 GRAN PREMIO IMPRESA SERGIO ZANETTE",
+        "data": "2026-05-03",
+        "posizione": 1,
+        "punti_effettivi": 15,
+        "team": "GCD PEDALE MANZANESE",
+        "moltiplicatore": 1,
+        "tipo": "regionale",
+        "regione": "VENETO",
+        "km": "57.000",
+        "media": "43.291"
+      },
+      {
+        "gara_id": "7_TROFEO_GIORNATA_DEL_CICLISMO_MANZANESE_PROVA_VALIDA_CAMPIONATO_REGIONALE_2026-05-01_AL_M",
+        "nome_gara": "7 TROFEO GIORNATA DEL CICLISMO MANZANESE PROVA VALIDA CAMPIONATO REGIONALE",
+        "data": "2026-05-01",
+        "posizione": 10,
+        "punti_effettivi": 2,
+        "team": "GCD PEDALE MANZANESE",
+        "moltiplicatore": 2,
+        "tipo": "regionale",
+        "regione": "FRIULI VENEZIA GIULIA",
+        "km": "66.500",
+        "media": "39.603"
+      },
+      {
+        "gara_id": "44_CIRCUITO_DEL_BOSCO_2026-04-26_AL_M",
+        "nome_gara": "44 CIRCUITO DEL BOSCO",
+        "data": "2026-04-26",
+        "posizione": 1,
+        "punti_effettivi": 15,
+        "team": "GCD PEDALE MANZANESE",
+        "moltiplicatore": 1,
+        "tipo": "regionale",
+        "regione": "VENETO",
+        "km": "62.750",
+        "media": "42.744"
+      },
+      {
+        "gara_id": "68_TROFEO_DELLA_VITTORIA_CAMPIONATO_TRENTINO_2026-04-25_AL_M",
+        "nome_gara": "68 TROFEO DELLA VITTORIA CAMPIONATO TRENTINO",
+        "data": "2026-04-25",
+        "posizione": 1,
+        "punti_effettivi": 15,
+        "team": "GCD PEDALE MANZANESE",
+        "moltiplicatore": 1,
+        "tipo": "regionale",
+        "regione": "TRENTO",
+        "km": "51.800",
+        "media": "41.887"
+      },
+      {
+        "gara_id": "7_MEMORIAL_MORATTI_2026-04-12_AL_M",
+        "nome_gara": "7 MEMORIAL MORATTI",
+        "data": "2026-04-12",
+        "posizione": 1,
+        "punti_effettivi": 15,
+        "team": "GCD PEDALE MANZANESE",
+        "moltiplicatore": 1,
+        "tipo": "regionale",
+        "regione": "FRIULI VENEZIA GIULIA",
+        "km": "56.800",
+        "media": "47.333"
+      },
+      {
+        "gara_id": "64_GRAN_PREMIO_RINASCITA_2026-03-29_AL_M",
+        "nome_gara": "64 GRAN PREMIO RINASCITA",
+        "data": "2026-03-29",
+        "posizione": 5,
+        "punti_effettivi": 6,
+        "team": "GCD PEDALE MANZANESE",
+        "moltiplicatore": 1,
+        "tipo": "regionale",
+        "regione": "VENETO",
+        "km": "58.800",
+        "media": "44.847"
+      }
+    ]
+  },
+  "GREGORI_SIMONE": {
+    "id": "GREGORI_SIMONE",
+    "nome": "SIMONE",
+    "cognome": "GREGORI",
+    "team_attuale": "ACCADEMIA CICLISTICA",
+    "team_id": "ACCADEMIA_CICLISTICA",
+    "categoria": "AL_M",
+    "genere": "M",
+    "punti_totali": 43,
+    "risultati": [
+      {
+        "gara_id": "CARNIA_JULIUM_CLASSIC_2026-05-31_AL_M",
+        "nome_gara": "CARNIA JULIUM CLASSIC",
+        "data": "2026-05-31",
+        "posizione": 2,
+        "punti_effettivi": 12,
+        "team": "ACCADEMIA CICLISTICA",
+        "moltiplicatore": 1,
+        "tipo": "regionale",
+        "regione": "FRIULI VENEZIA GIULIA",
+        "km": "75.200",
+        "media": "40.759"
+      },
+      {
+        "gara_id": "49_GRAN_PREMIO_LIBERAZIONE_2026-04-25_AL_M",
+        "nome_gara": "49 GRAN PREMIO LIBERAZIONE",
+        "data": "2026-04-25",
+        "posizione": 2,
+        "punti_effettivi": 12,
+        "team": "ACCADEMIA CICLISTICA",
+        "moltiplicatore": 1,
+        "tipo": "regionale",
+        "regione": "EMILIA ROMAGNA",
+        "km": "49.400",
+        "media": "44.085"
+      },
+      {
+        "gara_id": "GARDOLO_IN_BICI_2026-04-12_AL_M",
+        "nome_gara": "GARDOLO IN BICI",
+        "data": "2026-04-12",
+        "posizione": 1,
+        "punti_effettivi": 15,
+        "team": "ACCADEMIA CICLISTICA",
+        "moltiplicatore": 1,
+        "tipo": "regionale",
+        "regione": "TRENTO",
+        "km": "49.800",
+        "media": "43.304"
+      },
+      {
+        "gara_id": "67_GIR_DA_GIAVE_2026-04-06_AL_M",
+        "nome_gara": "67 GIR DA GIAVE",
+        "data": "2026-04-06",
+        "posizione": 7,
+        "punti_effettivi": 4,
+        "team": "ACCADEMIA CICLISTICA",
+        "moltiplicatore": 1,
+        "tipo": "regionale",
+        "regione": "FRIULI VENEZIA GIULIA",
+        "km": "52.000",
+        "media": "43.333"
+      }
+    ]
+  },
+  "MONTAGNER_LUCA": {
+    "id": "MONTAGNER_LUCA",
+    "nome": "LUCA",
+    "cognome": "MONTAGNER",
+    "team_attuale": "LIBERTAS CERESETTO",
+    "team_id": "LIBERTAS_CERESETTO",
+    "categoria": "AL_M",
+    "genere": "M",
+    "punti_totali": 16,
+    "risultati": [
+      {
+        "gara_id": "CARNIA_JULIUM_CLASSIC_2026-05-31_AL_M",
+        "nome_gara": "CARNIA JULIUM CLASSIC",
+        "data": "2026-05-31",
+        "posizione": 3,
+        "punti_effettivi": 10,
+        "team": "LIBERTAS CERESETTO",
+        "moltiplicatore": 1,
+        "tipo": "regionale",
+        "regione": "FRIULI VENEZIA GIULIA",
+        "km": "75.200",
+        "media": "40.759"
+      },
+      {
+        "gara_id": "41_GRAN_PREMIO_FESTA_DELLA_MAMMA_2026-05-10_AL_M",
+        "nome_gara": "41 GRAN PREMIO FESTA DELLA MAMMA",
+        "data": "2026-05-10",
+        "posizione": 5,
+        "punti_effettivi": 6,
+        "team": "LIBERTAS CERESETTO",
+        "moltiplicatore": 1,
+        "tipo": "regionale",
+        "regione": "FRIULI VENEZIA GIULIA",
+        "km": "65.400",
+        "media": "41.960"
+      }
+    ]
+  },
+  "MARINIC_BORUT": {
+    "id": "MARINIC_BORUT",
+    "nome": "BORUT",
+    "cognome": "MARINIC",
+    "team_attuale": "MEBLO JOGI PRO-CONCRETE",
+    "team_id": "MEBLO_JOGI_PRO_CONCRETE",
+    "categoria": "AL_M",
+    "genere": "M",
+    "punti_totali": 20,
+    "risultati": [
+      {
+        "gara_id": "CARNIA_JULIUM_CLASSIC_2026-05-31_AL_M",
+        "nome_gara": "CARNIA JULIUM CLASSIC",
+        "data": "2026-05-31",
+        "posizione": 4,
+        "punti_effettivi": 8,
+        "team": "MEBLO JOGI PRO-CONCRETE",
+        "moltiplicatore": 1,
+        "tipo": "regionale",
+        "regione": "FRIULI VENEZIA GIULIA",
+        "km": "75.200",
+        "media": "40.759"
+      },
+      {
+        "gara_id": "5_GRAN_PREMIO_VAL_DEGANO_2026-05-24_AL_M",
+        "nome_gara": "5 GRAN PREMIO VAL DEGANO",
+        "data": "2026-05-24",
+        "posizione": 5,
+        "punti_effettivi": 6,
+        "team": "MEBLO JOGI PRO-CONCRETE",
+        "moltiplicatore": 1,
+        "tipo": "regionale",
+        "regione": "FRIULI VENEZIA GIULIA",
+        "km": "61.300",
+        "media": "36.915"
+      },
+      {
+        "gara_id": "68_TROFEO_DELLA_VITTORIA_CAMPIONATO_TRENTINO_2026-04-25_AL_M",
+        "nome_gara": "68 TROFEO DELLA VITTORIA CAMPIONATO TRENTINO",
+        "data": "2026-04-25",
+        "posizione": 5,
+        "punti_effettivi": 6,
+        "team": "MEBLO JOGI PRO-CONCRETE",
+        "moltiplicatore": 1,
+        "tipo": "regionale",
+        "regione": "TRENTO",
+        "km": "51.800",
+        "media": "41.887"
+      }
+    ]
+  },
+  "CASETTA_MARCO": {
+    "id": "CASETTA_MARCO",
+    "nome": "MARCO",
+    "cognome": "CASETTA",
+    "team_attuale": "A.S.D. SACILESE",
+    "team_id": "A_S_D_SACILESE",
+    "categoria": "AL_M",
+    "genere": "M",
+    "punti_totali": 55,
+    "risultati": [
+      {
+        "gara_id": "CARNIA_JULIUM_CLASSIC_2026-05-31_AL_M",
+        "nome_gara": "CARNIA JULIUM CLASSIC",
+        "data": "2026-05-31",
+        "posizione": 5,
+        "punti_effettivi": 6,
+        "team": "A.S.D. SACILESE",
+        "moltiplicatore": 1,
+        "tipo": "regionale",
+        "regione": "FRIULI VENEZIA GIULIA",
+        "km": "75.200",
+        "media": "40.759"
+      },
+      {
+        "gara_id": "MEDAGLIA_ORO_PRO_LOCO_LA_VIDORESE_2026-05-17_AL_M",
+        "nome_gara": "MEDAGLIA ORO PRO LOCO LA VIDORESE",
+        "data": "2026-05-17",
+        "posizione": 6,
+        "punti_effettivi": 5,
+        "team": "A.S.D. SACILESE",
+        "moltiplicatore": 1,
+        "tipo": "regionale",
+        "regione": "VENETO",
+        "km": "59.000",
+        "media": "41.844"
+      },
+      {
+        "gara_id": "41_GRAN_PREMIO_FESTA_DELLA_MAMMA_2026-05-10_AL_M",
+        "nome_gara": "41 GRAN PREMIO FESTA DELLA MAMMA",
+        "data": "2026-05-10",
+        "posizione": 2,
+        "punti_effettivi": 12,
+        "team": "A.S.D. SACILESE",
+        "moltiplicatore": 1,
+        "tipo": "regionale",
+        "regione": "FRIULI VENEZIA GIULIA",
+        "km": "65.400",
+        "media": "41.960"
+      },
+      {
+        "gara_id": "6_GRAN_PREMIO_IMPRESA_SERGIO_ZANETTE_2026-05-03_AL_M",
+        "nome_gara": "6 GRAN PREMIO IMPRESA SERGIO ZANETTE",
+        "data": "2026-05-03",
+        "posizione": 7,
+        "punti_effettivi": 4,
+        "team": "A.S.D. SACILESE",
+        "moltiplicatore": 1,
+        "tipo": "regionale",
+        "regione": "VENETO",
+        "km": "57.000",
+        "media": "43.291"
+      },
+      {
+        "gara_id": "2_MEMORIAL_EDOARDO_BERNARDI_2026-04-19_AL_M",
+        "nome_gara": "2 MEMORIAL EDOARDO BERNARDI",
+        "data": "2026-04-19",
+        "posizione": 7,
+        "punti_effettivi": 4,
+        "team": "A.S.D. SACILESE",
+        "moltiplicatore": 1,
+        "tipo": "regionale",
+        "regione": "VENETO",
+        "km": "61.200",
+        "media": "44.464"
+      },
+      {
+        "gara_id": "7_MEMORIAL_MORATTI_2026-04-12_AL_M",
+        "nome_gara": "7 MEMORIAL MORATTI",
+        "data": "2026-04-12",
+        "posizione": 4,
+        "punti_effettivi": 8,
+        "team": "A.S.D. SACILESE",
+        "moltiplicatore": 1,
+        "tipo": "regionale",
+        "regione": "FRIULI VENEZIA GIULIA",
+        "km": "56.800",
+        "media": "47.333"
+      },
+      {
+        "gara_id": "67_GIR_DA_GIAVE_2026-04-06_AL_M",
+        "nome_gara": "67 GIR DA GIAVE",
+        "data": "2026-04-06",
+        "posizione": 2,
+        "punti_effettivi": 12,
+        "team": "A.S.D. SACILESE",
+        "moltiplicatore": 1,
+        "tipo": "regionale",
+        "regione": "FRIULI VENEZIA GIULIA",
+        "km": "52.000",
+        "media": "43.333"
+      },
+      {
+        "gara_id": "64_GRAN_PREMIO_RINASCITA_2026-03-29_AL_M",
+        "nome_gara": "64 GRAN PREMIO RINASCITA",
+        "data": "2026-03-29",
+        "posizione": 9,
+        "punti_effettivi": 2,
+        "team": "A.S.D. SACILESE",
+        "moltiplicatore": 1,
+        "tipo": "regionale",
+        "regione": "VENETO",
+        "km": "58.800",
+        "media": "44.847"
+      },
+      {
+        "gara_id": "TROFEO_PIZZATO_2026-03-22_AL_M",
+        "nome_gara": "TROFEO PIZZATO",
+        "data": "2026-03-22",
+        "posizione": 9,
+        "punti_effettivi": 2,
+        "team": "A.S.D. SACILESE",
+        "moltiplicatore": 1,
+        "tipo": "regionale",
+        "regione": "VENETO",
+        "km": "60.000",
+        "media": "45.075"
+      }
+    ]
+  },
+  "NEDELJKOVIC_ZAK": {
+    "id": "NEDELJKOVIC_ZAK",
+    "nome": "ZAK",
+    "cognome": "NEDELJKOVIC",
+    "team_attuale": "MEBLO JOGI PRO-CONCRETE",
+    "team_id": "MEBLO_JOGI_PRO_CONCRETE",
+    "categoria": "AL_M",
+    "genere": "M",
+    "punti_totali": 9,
+    "risultati": [
+      {
+        "gara_id": "CARNIA_JULIUM_CLASSIC_2026-05-31_AL_M",
+        "nome_gara": "CARNIA JULIUM CLASSIC",
+        "data": "2026-05-31",
+        "posizione": 6,
+        "punti_effettivi": 5,
+        "team": "MEBLO JOGI PRO-CONCRETE",
+        "moltiplicatore": 1,
+        "tipo": "regionale",
+        "regione": "FRIULI VENEZIA GIULIA",
+        "km": "75.200",
+        "media": "40.759"
+      },
+      {
+        "gara_id": "68_TROFEO_DELLA_VITTORIA_CAMPIONATO_TRENTINO_2026-04-25_AL_M",
+        "nome_gara": "68 TROFEO DELLA VITTORIA CAMPIONATO TRENTINO",
+        "data": "2026-04-25",
+        "posizione": 7,
+        "punti_effettivi": 4,
+        "team": "MEBLO JOGI PRO-CONCRETE",
+        "moltiplicatore": 1,
+        "tipo": "regionale",
+        "regione": "TRENTO",
+        "km": "51.800",
+        "media": "41.887"
+      }
+    ]
+  },
+  "FLORIAN_GIOVANNI": {
+    "id": "FLORIAN_GIOVANNI",
+    "nome": "GIOVANNI",
+    "cognome": "FLORIAN",
+    "team_attuale": "A.S.D. VELODROME MARCON",
+    "team_id": "A_S_D_VELODROME_MARCON",
+    "categoria": "AL_M",
+    "genere": "M",
+    "punti_totali": 8,
+    "risultati": [
+      {
+        "gara_id": "CARNIA_JULIUM_CLASSIC_2026-05-31_AL_M",
+        "nome_gara": "CARNIA JULIUM CLASSIC",
+        "data": "2026-05-31",
+        "posizione": 7,
+        "punti_effettivi": 4,
+        "team": "A.S.D. VELODROME MARCON",
+        "moltiplicatore": 1,
+        "tipo": "regionale",
+        "regione": "FRIULI VENEZIA GIULIA",
+        "km": "75.200",
+        "media": "40.759"
+      },
+      {
+        "gara_id": "TROFEO_PIZZATO_2026-03-22_AL_M",
+        "nome_gara": "TROFEO PIZZATO",
+        "data": "2026-03-22",
+        "posizione": 7,
+        "punti_effettivi": 4,
+        "team": "A.S.D. VELODROME MARCON",
+        "moltiplicatore": 1,
+        "tipo": "regionale",
+        "regione": "VENETO",
+        "km": "60.000",
+        "media": "45.075"
+      }
+    ]
+  },
+  "PALAMIN_MARK": {
+    "id": "PALAMIN_MARK",
+    "nome": "MARK",
+    "cognome": "PALAMIN",
+    "team_attuale": "CICLISTICA PIERIS",
+    "team_id": "CICLISTICA_PIERIS",
+    "categoria": "AL_M",
+    "genere": "M",
+    "punti_totali": 11,
+    "risultati": [
+      {
+        "gara_id": "CARNIA_JULIUM_CLASSIC_2026-05-31_AL_M",
+        "nome_gara": "CARNIA JULIUM CLASSIC",
+        "data": "2026-05-31",
+        "posizione": 8,
+        "punti_effettivi": 3,
+        "team": "CICLISTICA PIERIS",
+        "moltiplicatore": 1,
+        "tipo": "regionale",
+        "regione": "FRIULI VENEZIA GIULIA",
+        "km": "75.200",
+        "media": "40.759"
+      },
+      {
+        "gara_id": "7_TROFEO_GIORNATA_DEL_CICLISMO_MANZANESE_PROVA_VALIDA_CAMPIONATO_REGIONALE_2026-05-01_AL_M",
+        "nome_gara": "7 TROFEO GIORNATA DEL CICLISMO MANZANESE PROVA VALIDA CAMPIONATO REGIONALE",
+        "data": "2026-05-01",
+        "posizione": 7,
+        "punti_effettivi": 8,
+        "team": "CICLISTICA PIERIS",
+        "moltiplicatore": 2,
+        "tipo": "regionale",
+        "regione": "FRIULI VENEZIA GIULIA",
+        "km": "66.500",
+        "media": "39.603"
+      }
+    ]
+  },
+  "OLENIK_TIM": {
+    "id": "OLENIK_TIM",
+    "nome": "TIM",
+    "cognome": "OLENIK",
+    "team_attuale": "MEBLO JOGI PRO-CONCRETE",
+    "team_id": "MEBLO_JOGI_PRO_CONCRETE",
+    "categoria": "AL_M",
+    "genere": "M",
+    "punti_totali": 2,
+    "risultati": [
+      {
+        "gara_id": "CARNIA_JULIUM_CLASSIC_2026-05-31_AL_M",
+        "nome_gara": "CARNIA JULIUM CLASSIC",
+        "data": "2026-05-31",
+        "posizione": 9,
+        "punti_effettivi": 2,
+        "team": "MEBLO JOGI PRO-CONCRETE",
+        "moltiplicatore": 1,
+        "tipo": "regionale",
+        "regione": "FRIULI VENEZIA GIULIA",
+        "km": "75.200",
+        "media": "40.759"
+      }
+    ]
+  },
+  "CARLET_ALBERTO": {
+    "id": "CARLET_ALBERTO",
+    "nome": "ALBERTO",
+    "cognome": "CARLET",
+    "team_attuale": "SOC. SPORT.SANFIORESE",
+    "team_id": "SOC_SPORT_SANFIORESE",
+    "categoria": "AL_M",
+    "genere": "M",
+    "punti_totali": 5,
+    "risultati": [
+      {
+        "gara_id": "CARNIA_JULIUM_CLASSIC_2026-05-31_AL_M",
+        "nome_gara": "CARNIA JULIUM CLASSIC",
+        "data": "2026-05-31",
+        "posizione": 10,
+        "punti_effettivi": 1,
+        "team": "SOC. SPORT.SANFIORESE",
+        "moltiplicatore": 1,
+        "tipo": "regionale",
+        "regione": "FRIULI VENEZIA GIULIA",
+        "km": "75.200",
+        "media": "40.759"
+      },
+      {
+        "gara_id": "MEDAGLIA_ORO_PRO_LOCO_LA_VIDORESE_2026-05-17_AL_M",
+        "nome_gara": "MEDAGLIA ORO PRO LOCO LA VIDORESE",
+        "data": "2026-05-17",
+        "posizione": 9,
+        "punti_effettivi": 2,
+        "team": "SOC. SPORT.SANFIORESE",
+        "moltiplicatore": 1,
+        "tipo": "regionale",
+        "regione": "VENETO",
+        "km": "59.000",
+        "media": "41.844"
+      },
+      {
+        "gara_id": "6_GRAN_PREMIO_IMPRESA_SERGIO_ZANETTE_2026-05-03_AL_M",
+        "nome_gara": "6 GRAN PREMIO IMPRESA SERGIO ZANETTE",
+        "data": "2026-05-03",
+        "posizione": 9,
+        "punti_effettivi": 2,
+        "team": "SOC. SPORT.SANFIORESE",
+        "moltiplicatore": 1,
+        "tipo": "regionale",
+        "regione": "VENETO",
+        "km": "57.000",
+        "media": "43.291"
+      }
+    ]
+  },
   "RONDA_DANIELE": {
     "id": "RONDA_DANIELE",
     "nome": "DANIELE",
@@ -30256,135 +30870,6 @@
       }
     ]
   },
-  "D_AIUTO_SEBASTIANO": {
-    "id": "D_AIUTO_SEBASTIANO",
-    "nome": "SEBASTIANO",
-    "cognome": "D'AIUTO",
-    "team_attuale": "GCD PEDALE MANZANESE",
-    "team_id": "GCD_PEDALE_MANZANESE",
-    "categoria": "AL_M",
-    "genere": "M",
-    "punti_totali": 98,
-    "risultati": [
-      {
-        "gara_id": "5_GRAN_PREMIO_VAL_DEGANO_2026-05-24_AL_M",
-        "nome_gara": "5 GRAN PREMIO VAL DEGANO",
-        "data": "2026-05-24",
-        "posizione": 1,
-        "punti_effettivi": 15,
-        "team": "GCD PEDALE MANZANESE",
-        "moltiplicatore": 1,
-        "tipo": "regionale",
-        "regione": "FRIULI VENEZIA GIULIA",
-        "km": "61.300",
-        "media": "36.915"
-      },
-      {
-        "gara_id": "4_MEMORIAL_CIOFFI_SALVATORE_2026-05-17_AL_M",
-        "nome_gara": "4 MEMORIAL CIOFFI SALVATORE",
-        "data": "2026-05-17",
-        "posizione": 3,
-        "punti_effettivi": 10,
-        "team": "GCD PEDALE MANZANESE",
-        "moltiplicatore": 1,
-        "tipo": "regionale",
-        "regione": "TOSCANA",
-        "km": "60.300",
-        "media": "40.267"
-      },
-      {
-        "gara_id": "41_GRAN_PREMIO_FESTA_DELLA_MAMMA_2026-05-10_AL_M",
-        "nome_gara": "41 GRAN PREMIO FESTA DELLA MAMMA",
-        "data": "2026-05-10",
-        "posizione": 6,
-        "punti_effettivi": 5,
-        "team": "GCD PEDALE MANZANESE",
-        "moltiplicatore": 1,
-        "tipo": "regionale",
-        "regione": "FRIULI VENEZIA GIULIA",
-        "km": "65.400",
-        "media": "41.960"
-      },
-      {
-        "gara_id": "6_GRAN_PREMIO_IMPRESA_SERGIO_ZANETTE_2026-05-03_AL_M",
-        "nome_gara": "6 GRAN PREMIO IMPRESA SERGIO ZANETTE",
-        "data": "2026-05-03",
-        "posizione": 1,
-        "punti_effettivi": 15,
-        "team": "GCD PEDALE MANZANESE",
-        "moltiplicatore": 1,
-        "tipo": "regionale",
-        "regione": "VENETO",
-        "km": "57.000",
-        "media": "43.291"
-      },
-      {
-        "gara_id": "7_TROFEO_GIORNATA_DEL_CICLISMO_MANZANESE_PROVA_VALIDA_CAMPIONATO_REGIONALE_2026-05-01_AL_M",
-        "nome_gara": "7 TROFEO GIORNATA DEL CICLISMO MANZANESE PROVA VALIDA CAMPIONATO REGIONALE",
-        "data": "2026-05-01",
-        "posizione": 10,
-        "punti_effettivi": 2,
-        "team": "GCD PEDALE MANZANESE",
-        "moltiplicatore": 2,
-        "tipo": "regionale",
-        "regione": "FRIULI VENEZIA GIULIA",
-        "km": "66.500",
-        "media": "39.603"
-      },
-      {
-        "gara_id": "44_CIRCUITO_DEL_BOSCO_2026-04-26_AL_M",
-        "nome_gara": "44 CIRCUITO DEL BOSCO",
-        "data": "2026-04-26",
-        "posizione": 1,
-        "punti_effettivi": 15,
-        "team": "GCD PEDALE MANZANESE",
-        "moltiplicatore": 1,
-        "tipo": "regionale",
-        "regione": "VENETO",
-        "km": "62.750",
-        "media": "42.744"
-      },
-      {
-        "gara_id": "68_TROFEO_DELLA_VITTORIA_CAMPIONATO_TRENTINO_2026-04-25_AL_M",
-        "nome_gara": "68 TROFEO DELLA VITTORIA CAMPIONATO TRENTINO",
-        "data": "2026-04-25",
-        "posizione": 1,
-        "punti_effettivi": 15,
-        "team": "GCD PEDALE MANZANESE",
-        "moltiplicatore": 1,
-        "tipo": "regionale",
-        "regione": "TRENTO",
-        "km": "51.800",
-        "media": "41.887"
-      },
-      {
-        "gara_id": "7_MEMORIAL_MORATTI_2026-04-12_AL_M",
-        "nome_gara": "7 MEMORIAL MORATTI",
-        "data": "2026-04-12",
-        "posizione": 1,
-        "punti_effettivi": 15,
-        "team": "GCD PEDALE MANZANESE",
-        "moltiplicatore": 1,
-        "tipo": "regionale",
-        "regione": "FRIULI VENEZIA GIULIA",
-        "km": "56.800",
-        "media": "47.333"
-      },
-      {
-        "gara_id": "64_GRAN_PREMIO_RINASCITA_2026-03-29_AL_M",
-        "nome_gara": "64 GRAN PREMIO RINASCITA",
-        "data": "2026-03-29",
-        "posizione": 5,
-        "punti_effettivi": 6,
-        "team": "GCD PEDALE MANZANESE",
-        "moltiplicatore": 1,
-        "tipo": "regionale",
-        "regione": "VENETO",
-        "km": "58.800",
-        "media": "44.847"
-      }
-    ]
-  },
   "KLUN_GAL": {
     "id": "KLUN_GAL",
     "nome": "GAL",
@@ -30470,44 +30955,6 @@
         "regione": "VENETO",
         "km": "53.200",
         "media": "39.022"
-      }
-    ]
-  },
-  "MARINIC_BORUT": {
-    "id": "MARINIC_BORUT",
-    "nome": "BORUT",
-    "cognome": "MARINIC",
-    "team_attuale": "MEBLO JOGI PRO-CONCRETE",
-    "team_id": "MEBLO_JOGI_PRO_CONCRETE",
-    "categoria": "AL_M",
-    "genere": "M",
-    "punti_totali": 12,
-    "risultati": [
-      {
-        "gara_id": "5_GRAN_PREMIO_VAL_DEGANO_2026-05-24_AL_M",
-        "nome_gara": "5 GRAN PREMIO VAL DEGANO",
-        "data": "2026-05-24",
-        "posizione": 5,
-        "punti_effettivi": 6,
-        "team": "MEBLO JOGI PRO-CONCRETE",
-        "moltiplicatore": 1,
-        "tipo": "regionale",
-        "regione": "FRIULI VENEZIA GIULIA",
-        "km": "61.300",
-        "media": "36.915"
-      },
-      {
-        "gara_id": "68_TROFEO_DELLA_VITTORIA_CAMPIONATO_TRENTINO_2026-04-25_AL_M",
-        "nome_gara": "68 TROFEO DELLA VITTORIA CAMPIONATO TRENTINO",
-        "data": "2026-04-25",
-        "posizione": 5,
-        "punti_effettivi": 6,
-        "team": "MEBLO JOGI PRO-CONCRETE",
-        "moltiplicatore": 1,
-        "tipo": "regionale",
-        "regione": "TRENTO",
-        "km": "51.800",
-        "media": "41.887"
       }
     ]
   },
@@ -52043,122 +52490,6 @@
       }
     ]
   },
-  "CASETTA_MARCO": {
-    "id": "CASETTA_MARCO",
-    "nome": "MARCO",
-    "cognome": "CASETTA",
-    "team_attuale": "A.S.D. SACILESE",
-    "team_id": "A_S_D_SACILESE",
-    "categoria": "AL_M",
-    "genere": "M",
-    "punti_totali": 49,
-    "risultati": [
-      {
-        "gara_id": "MEDAGLIA_ORO_PRO_LOCO_LA_VIDORESE_2026-05-17_AL_M",
-        "nome_gara": "MEDAGLIA ORO PRO LOCO LA VIDORESE",
-        "data": "2026-05-17",
-        "posizione": 6,
-        "punti_effettivi": 5,
-        "team": "A.S.D. SACILESE",
-        "moltiplicatore": 1,
-        "tipo": "regionale",
-        "regione": "VENETO",
-        "km": "59.000",
-        "media": "41.844"
-      },
-      {
-        "gara_id": "41_GRAN_PREMIO_FESTA_DELLA_MAMMA_2026-05-10_AL_M",
-        "nome_gara": "41 GRAN PREMIO FESTA DELLA MAMMA",
-        "data": "2026-05-10",
-        "posizione": 2,
-        "punti_effettivi": 12,
-        "team": "A.S.D. SACILESE",
-        "moltiplicatore": 1,
-        "tipo": "regionale",
-        "regione": "FRIULI VENEZIA GIULIA",
-        "km": "65.400",
-        "media": "41.960"
-      },
-      {
-        "gara_id": "6_GRAN_PREMIO_IMPRESA_SERGIO_ZANETTE_2026-05-03_AL_M",
-        "nome_gara": "6 GRAN PREMIO IMPRESA SERGIO ZANETTE",
-        "data": "2026-05-03",
-        "posizione": 7,
-        "punti_effettivi": 4,
-        "team": "A.S.D. SACILESE",
-        "moltiplicatore": 1,
-        "tipo": "regionale",
-        "regione": "VENETO",
-        "km": "57.000",
-        "media": "43.291"
-      },
-      {
-        "gara_id": "2_MEMORIAL_EDOARDO_BERNARDI_2026-04-19_AL_M",
-        "nome_gara": "2 MEMORIAL EDOARDO BERNARDI",
-        "data": "2026-04-19",
-        "posizione": 7,
-        "punti_effettivi": 4,
-        "team": "A.S.D. SACILESE",
-        "moltiplicatore": 1,
-        "tipo": "regionale",
-        "regione": "VENETO",
-        "km": "61.200",
-        "media": "44.464"
-      },
-      {
-        "gara_id": "7_MEMORIAL_MORATTI_2026-04-12_AL_M",
-        "nome_gara": "7 MEMORIAL MORATTI",
-        "data": "2026-04-12",
-        "posizione": 4,
-        "punti_effettivi": 8,
-        "team": "A.S.D. SACILESE",
-        "moltiplicatore": 1,
-        "tipo": "regionale",
-        "regione": "FRIULI VENEZIA GIULIA",
-        "km": "56.800",
-        "media": "47.333"
-      },
-      {
-        "gara_id": "67_GIR_DA_GIAVE_2026-04-06_AL_M",
-        "nome_gara": "67 GIR DA GIAVE",
-        "data": "2026-04-06",
-        "posizione": 2,
-        "punti_effettivi": 12,
-        "team": "A.S.D. SACILESE",
-        "moltiplicatore": 1,
-        "tipo": "regionale",
-        "regione": "FRIULI VENEZIA GIULIA",
-        "km": "52.000",
-        "media": "43.333"
-      },
-      {
-        "gara_id": "64_GRAN_PREMIO_RINASCITA_2026-03-29_AL_M",
-        "nome_gara": "64 GRAN PREMIO RINASCITA",
-        "data": "2026-03-29",
-        "posizione": 9,
-        "punti_effettivi": 2,
-        "team": "A.S.D. SACILESE",
-        "moltiplicatore": 1,
-        "tipo": "regionale",
-        "regione": "VENETO",
-        "km": "58.800",
-        "media": "44.847"
-      },
-      {
-        "gara_id": "TROFEO_PIZZATO_2026-03-22_AL_M",
-        "nome_gara": "TROFEO PIZZATO",
-        "data": "2026-03-22",
-        "posizione": 9,
-        "punti_effettivi": 2,
-        "team": "A.S.D. SACILESE",
-        "moltiplicatore": 1,
-        "tipo": "regionale",
-        "regione": "VENETO",
-        "km": "60.000",
-        "media": "45.075"
-      }
-    ]
-  },
   "NOSELLA_TOMMASO": {
     "id": "NOSELLA_TOMMASO",
     "nome": "TOMMASO",
@@ -52245,44 +52576,6 @@
         "regione": "FRIULI VENEZIA GIULIA",
         "km": "56.800",
         "media": "47.333"
-      }
-    ]
-  },
-  "CARLET_ALBERTO": {
-    "id": "CARLET_ALBERTO",
-    "nome": "ALBERTO",
-    "cognome": "CARLET",
-    "team_attuale": "SOC. SPORT.SANFIORESE",
-    "team_id": "SOC_SPORT_SANFIORESE",
-    "categoria": "AL_M",
-    "genere": "M",
-    "punti_totali": 4,
-    "risultati": [
-      {
-        "gara_id": "MEDAGLIA_ORO_PRO_LOCO_LA_VIDORESE_2026-05-17_AL_M",
-        "nome_gara": "MEDAGLIA ORO PRO LOCO LA VIDORESE",
-        "data": "2026-05-17",
-        "posizione": 9,
-        "punti_effettivi": 2,
-        "team": "SOC. SPORT.SANFIORESE",
-        "moltiplicatore": 1,
-        "tipo": "regionale",
-        "regione": "VENETO",
-        "km": "59.000",
-        "media": "41.844"
-      },
-      {
-        "gara_id": "6_GRAN_PREMIO_IMPRESA_SERGIO_ZANETTE_2026-05-03_AL_M",
-        "nome_gara": "6 GRAN PREMIO IMPRESA SERGIO ZANETTE",
-        "data": "2026-05-03",
-        "posizione": 9,
-        "punti_effettivi": 2,
-        "team": "SOC. SPORT.SANFIORESE",
-        "moltiplicatore": 1,
-        "tipo": "regionale",
-        "regione": "VENETO",
-        "km": "57.000",
-        "media": "43.291"
       }
     ]
   },
@@ -67628,31 +67921,6 @@
       }
     ]
   },
-  "MONTAGNER_LUCA": {
-    "id": "MONTAGNER_LUCA",
-    "nome": "LUCA",
-    "cognome": "MONTAGNER",
-    "team_attuale": "LIBERTAS CERESETTO",
-    "team_id": "LIBERTAS_CERESETTO",
-    "categoria": "AL_M",
-    "genere": "M",
-    "punti_totali": 6,
-    "risultati": [
-      {
-        "gara_id": "41_GRAN_PREMIO_FESTA_DELLA_MAMMA_2026-05-10_AL_M",
-        "nome_gara": "41 GRAN PREMIO FESTA DELLA MAMMA",
-        "data": "2026-05-10",
-        "posizione": 5,
-        "punti_effettivi": 6,
-        "team": "LIBERTAS CERESETTO",
-        "moltiplicatore": 1,
-        "tipo": "regionale",
-        "regione": "FRIULI VENEZIA GIULIA",
-        "km": "65.400",
-        "media": "41.960"
-      }
-    ]
-  },
   "CASCIO_DORIAN": {
     "id": "CASCIO_DORIAN",
     "nome": "DORIAN",
@@ -79886,31 +80154,6 @@
       }
     ]
   },
-  "PALAMIN_MARK": {
-    "id": "PALAMIN_MARK",
-    "nome": "MARK",
-    "cognome": "PALAMIN",
-    "team_attuale": "CICLISTICA PIERIS",
-    "team_id": "CICLISTICA_PIERIS",
-    "categoria": "AL_M",
-    "genere": "M",
-    "punti_totali": 8,
-    "risultati": [
-      {
-        "gara_id": "7_TROFEO_GIORNATA_DEL_CICLISMO_MANZANESE_PROVA_VALIDA_CAMPIONATO_REGIONALE_2026-05-01_AL_M",
-        "nome_gara": "7 TROFEO GIORNATA DEL CICLISMO MANZANESE PROVA VALIDA CAMPIONATO REGIONALE",
-        "data": "2026-05-01",
-        "posizione": 7,
-        "punti_effettivi": 8,
-        "team": "CICLISTICA PIERIS",
-        "moltiplicatore": 2,
-        "tipo": "regionale",
-        "regione": "FRIULI VENEZIA GIULIA",
-        "km": "66.500",
-        "media": "39.603"
-      }
-    ]
-  },
   "LINKE_MAKS": {
     "id": "LINKE_MAKS",
     "nome": "MAKS",
@@ -84926,57 +85169,6 @@
       }
     ]
   },
-  "GREGORI_SIMONE": {
-    "id": "GREGORI_SIMONE",
-    "nome": "SIMONE",
-    "cognome": "GREGORI",
-    "team_attuale": "ACCADEMIA CICLISTICA",
-    "team_id": "ACCADEMIA_CICLISTICA",
-    "categoria": "AL_M",
-    "genere": "M",
-    "punti_totali": 31,
-    "risultati": [
-      {
-        "gara_id": "49_GRAN_PREMIO_LIBERAZIONE_2026-04-25_AL_M",
-        "nome_gara": "49 GRAN PREMIO LIBERAZIONE",
-        "data": "2026-04-25",
-        "posizione": 2,
-        "punti_effettivi": 12,
-        "team": "ACCADEMIA CICLISTICA",
-        "moltiplicatore": 1,
-        "tipo": "regionale",
-        "regione": "EMILIA ROMAGNA",
-        "km": "49.400",
-        "media": "44.085"
-      },
-      {
-        "gara_id": "GARDOLO_IN_BICI_2026-04-12_AL_M",
-        "nome_gara": "GARDOLO IN BICI",
-        "data": "2026-04-12",
-        "posizione": 1,
-        "punti_effettivi": 15,
-        "team": "ACCADEMIA CICLISTICA",
-        "moltiplicatore": 1,
-        "tipo": "regionale",
-        "regione": "TRENTO",
-        "km": "49.800",
-        "media": "43.304"
-      },
-      {
-        "gara_id": "67_GIR_DA_GIAVE_2026-04-06_AL_M",
-        "nome_gara": "67 GIR DA GIAVE",
-        "data": "2026-04-06",
-        "posizione": 7,
-        "punti_effettivi": 4,
-        "team": "ACCADEMIA CICLISTICA",
-        "moltiplicatore": 1,
-        "tipo": "regionale",
-        "regione": "FRIULI VENEZIA GIULIA",
-        "km": "52.000",
-        "media": "43.333"
-      }
-    ]
-  },
   "BRAMATI_ALEX_REY": {
     "id": "BRAMATI_ALEX_REY",
     "nome": "ALEX REY",
@@ -85037,31 +85229,6 @@
         "regione": "LOMBARDIA",
         "km": "56.000",
         "media": "40.514"
-      }
-    ]
-  },
-  "NEDELJKOVIC_ZAK": {
-    "id": "NEDELJKOVIC_ZAK",
-    "nome": "ZAK",
-    "cognome": "NEDELJKOVIC",
-    "team_attuale": "MEBLO JOGI PRO-CONCRETE",
-    "team_id": "MEBLO_JOGI_PRO_CONCRETE",
-    "categoria": "AL_M",
-    "genere": "M",
-    "punti_totali": 4,
-    "risultati": [
-      {
-        "gara_id": "68_TROFEO_DELLA_VITTORIA_CAMPIONATO_TRENTINO_2026-04-25_AL_M",
-        "nome_gara": "68 TROFEO DELLA VITTORIA CAMPIONATO TRENTINO",
-        "data": "2026-04-25",
-        "posizione": 7,
-        "punti_effettivi": 4,
-        "team": "MEBLO JOGI PRO-CONCRETE",
-        "moltiplicatore": 1,
-        "tipo": "regionale",
-        "regione": "TRENTO",
-        "km": "51.800",
-        "media": "41.887"
       }
     ]
   },
@@ -94320,31 +94487,6 @@
         "posizione": 6,
         "punti_effettivi": 5,
         "team": "GS CARTURA NALIN",
-        "moltiplicatore": 1,
-        "tipo": "regionale",
-        "regione": "VENETO",
-        "km": "60.000",
-        "media": "45.075"
-      }
-    ]
-  },
-  "FLORIAN_GIOVANNI": {
-    "id": "FLORIAN_GIOVANNI",
-    "nome": "GIOVANNI",
-    "cognome": "FLORIAN",
-    "team_attuale": "A.S.D. VELODROME MARCON",
-    "team_id": "A_S_D_VELODROME_MARCON",
-    "categoria": "AL_M",
-    "genere": "M",
-    "punti_totali": 4,
-    "risultati": [
-      {
-        "gara_id": "TROFEO_PIZZATO_2026-03-22_AL_M",
-        "nome_gara": "TROFEO PIZZATO",
-        "data": "2026-03-22",
-        "posizione": 7,
-        "punti_effettivi": 4,
-        "team": "A.S.D. VELODROME MARCON",
         "moltiplicatore": 1,
         "tipo": "regionale",
         "regione": "VENETO",
