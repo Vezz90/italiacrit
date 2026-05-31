@@ -158,6 +158,96 @@ function makeToken(user) {
   );
 }
 
+// ── Open Graph endpoint (per condivisione Facebook/social) ──────────────────
+// Restituisce una pagina HTML con meta OG + redirect al SPA.
+// Usato come URL da condividere: FB scrapa qui, il click porta al sito.
+const DATA_DIR       = path.join(__dirname, '..', 'data');
+const SITE_URL       = 'https://vezz90.github.io/italiacrit';
+const SUPABASE_PUB   = 'https://aqqsstsbgpapzoxllosh.supabase.co/storage/v1/object/public';
+const DEFAULT_OG_IMG = `${SITE_URL}/assets/og-default.png`;
+
+function readDataJson(file) {
+  try { return JSON.parse(fs.readFileSync(path.join(DATA_DIR, file), 'utf8')); }
+  catch { return null; }
+}
+
+async function getEntityPhoto(type, id) {
+  try {
+    const ov = await queries.getEntityOverrides(type, id);
+    const photoField = ov.find(r => r.field === 'photo_url');
+    if (photoField?.new_value) return SUPABASE_PUB + photoField.new_value;
+  } catch {}
+  return null;
+}
+
+function ogHtml({ title, desc, img, redirect }) {
+  const safe = s => String(s||'').replace(/&/g,'&amp;').replace(/"/g,'&quot;').replace(/</g,'&lt;');
+  return `<!DOCTYPE html><html><head>
+<meta charset="utf-8"/>
+<meta property="og:type" content="website"/>
+<meta property="og:site_name" content="ItaliacritResultati"/>
+<meta property="og:title" content="${safe(title)}"/>
+<meta property="og:description" content="${safe(desc)}"/>
+<meta property="og:url" content="${safe(redirect)}"/>
+<meta property="og:image" content="${safe(img||DEFAULT_OG_IMG)}"/>
+<meta property="og:image:width" content="1080"/>
+<meta property="og:image:height" content="1080"/>
+<meta name="twitter:card" content="summary_large_image"/>
+<meta name="twitter:title" content="${safe(title)}"/>
+<meta name="twitter:description" content="${safe(desc)}"/>
+<meta name="twitter:image" content="${safe(img||DEFAULT_OG_IMG)}"/>
+<title>${safe(title)}</title>
+<script>window.location.replace(${JSON.stringify(redirect)});</script>
+</head><body style="font-family:sans-serif;text-align:center;padding:40px;background:#0f172a;color:#f1f5f9">
+<p>Reindirizzamento in corso…</p>
+<a href="${safe(redirect)}" style="color:#6366f1">Clicca qui se non vieni reindirizzato</a>
+</body></html>`;
+}
+
+app.get('/og/gara/:id', async (req, res) => {
+  const id  = req.params.id;
+  const cal = (readDataJson('calendar.json') || []).find(g => g.id === id);
+  const results = (readDataJson('results_raw.json') || [])
+    .filter(r => r.gara_id === id)
+    .sort((a,b) => a.posizione - b.posizione);
+  const winner = results[0];
+
+  const title = cal?.nome || id.replace(/_/g,' ');
+  const date  = cal?.data ? new Date(cal.data).toLocaleDateString('it-IT',{day:'numeric',month:'long',year:'numeric'}) : '';
+  const top3  = results.slice(0,3).map((r,i)=>`${i+1}° ${r.cognome} ${r.nome}`).join(' · ');
+  const desc  = [date, top3].filter(Boolean).join(' — ');
+
+  // Foto: prova foto vincitore, poi nessuna (usa default)
+  const img = winner ? await getEntityPhoto('atleta', winner.atleta_id) : null;
+  const redirect = `${SITE_URL}/#/gara/${encodeURIComponent(id)}`;
+  res.setHeader('Content-Type','text/html');
+  res.send(ogHtml({ title, desc, img, redirect }));
+});
+
+app.get('/og/atleta/:id', async (req, res) => {
+  const id       = req.params.id;
+  const athletes = readDataJson('athletes.json') || {};
+  const ath      = athletes[id] || {};
+  const title    = `${ath.cognome||''} ${ath.nome||''}`.trim() || id;
+  const desc     = [ath.team_attuale, ath.categoria].filter(Boolean).join(' · ') || 'Atleta ItaliacritResultati';
+  const img      = await getEntityPhoto('atleta', id);
+  const redirect = `${SITE_URL}/#/atleta/${encodeURIComponent(id)}`;
+  res.setHeader('Content-Type','text/html');
+  res.send(ogHtml({ title, desc, img, redirect }));
+});
+
+app.get('/og/team/:id', async (req, res) => {
+  const id    = req.params.id;
+  const teams = readDataJson('teams.json') || {};
+  const team  = teams[id] || {};
+  const title = team.nome || id.replace(/_/g,' ');
+  const desc  = `Team — ItaliacritResultati`;
+  const img   = await getEntityPhoto('team', id);
+  const redirect = `${SITE_URL}/#/team/${encodeURIComponent(id)}`;
+  res.setHeader('Content-Type','text/html');
+  res.send(ogHtml({ title, desc, img, redirect }));
+});
+
 // ── Auth routes ───────────────────────────────────────────────────────────────
 
 app.post('/api/auth/register', async (req, res) => {

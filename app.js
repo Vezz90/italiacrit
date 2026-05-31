@@ -10185,7 +10185,7 @@ async function renderAtleta(atleta_id) {
     </tr>`;
   }).join('');
 
-  window._shareAtletaData = {cognome:displayCognome,nome:displayNome,cat:catLabel(a.categoria),team:displayTeam,punti:a.punti_totali,pos:globalPos,p1:p1,p2:p2,p3:p3,gare:top10};
+  window._shareAtletaData = {_id:atleta_id,cognome:displayCognome,nome:displayNome,cat:catLabel(a.categoria),team:displayTeam,punti:a.punti_totali,pos:globalPos,p1:p1,p2:p2,p3:p3,gare:top10};
 
   // Sport Intelligence computations
   const { resultsRaw: _siRaw } = globalData;
@@ -10628,7 +10628,7 @@ async function renderTeam(team_id) {
   const teamInitials = t.nome.split(/\s+/).map(w=>w[0]||'').join('').toUpperCase().slice(0,3);
   const teamPhotoHtml = photoAreaHtml('team', team_id, teamOv.photo_url || null, teamInitials, 'square');
 
-  window._shareTeamData = {nome:t.nome,cat:catLabel(teamViewCat),punti:catPuntiTotali,pos:currentRank?currentRank.pos:null,p1:p1,atleti:atletiList.slice(0,5)};
+  window._shareTeamData = {_id:team_id,nome:t.nome,cat:catLabel(teamViewCat),punti:catPuntiTotali,pos:currentRank?currentRank.pos:null,p1:p1,atleti:atletiList.slice(0,5)};
   const _teamWatched = isWatched(team_id);
   setPage(`
     <div class="team-header">
@@ -11282,7 +11282,7 @@ async function renderGara(gara_id) {
       ${_gallery}
     </div>`;
 
-  window._shareGaraData = {name:name,date:fmtDate(data),cat:catLabel(cat),mult:mult,tipo:tipo,region:normalizeRegion(calEntry?.regione||results1[0]?.regione||''),luogo:calEntry?.luogo||'',km:results1[0]?.km||'',media:results1[0]?.media||'',results:results1.slice(0,10).map(r=>({cognome:r.cognome,nome:r.nome,team:r.team,punti_effettivi:r.punti_effettivi}))};
+  window._shareGaraData = {_id:primaryGaraId,name:name,date:fmtDate(data),cat:catLabel(cat),mult:mult,tipo:tipo,region:normalizeRegion(calEntry?.regione||results1[0]?.regione||''),luogo:calEntry?.luogo||'',km:results1[0]?.km||'',media:results1[0]?.media||'',results:results1.slice(0,10).map(r=>({cognome:r.cognome,nome:r.nome,team:r.team,punti_effettivi:r.punti_effettivi}))};
 
   const siRaceIntelHtml = '';
 
@@ -15054,6 +15054,11 @@ window.showShareModal = async function(type, payload) {
         <button class="share-action-btn share-action-download" id="share-dl-btn" onclick="window.downloadShareCard()">⬇ Scarica</button>
         <button class="share-action-btn share-action-native" id="share-native-btn" onclick="window.nativeShare()">↗ Condividi</button>
       </div>
+      <div style="margin-top:12px;text-align:center">
+        <button onclick="window.shareOnFacebook()" style="display:inline-flex;align-items:center;gap:8px;background:#1877F2;color:#fff;border:none;border-radius:8px;padding:10px 20px;font-size:.875rem;font-weight:700;cursor:pointer;width:100%;justify-content:center">
+          ${_SVGS.facebook} Pubblica su Facebook con link al sito
+        </button>
+      </div>
     </div>
   </div>`);
   await _refreshPreview();
@@ -15119,6 +15124,19 @@ window.nativeShare=async function(){
     window.downloadShareCard();
     if(btn){btn.disabled=false;btn.textContent='↗ Condividi';}
   }
+};
+
+// ── Open Graph URL per Facebook ────────────────────────────
+const OG_BASE = 'https://italiacrit.onrender.com/og';
+function _ogUrl(type, payload) {
+  const id = payload?._id;
+  if (!id) return null;
+  return `${OG_BASE}/${type}/${encodeURIComponent(id)}`;
+}
+window.shareOnFacebook = function() {
+  const url = _ogUrl(_shareType, _sharePayload);
+  if (!url) { showToast('Dati non disponibili per la condivisione Facebook'); return; }
+  window.open(`https://www.facebook.com/sharer/sharer.php?u=${encodeURIComponent(url)}`, '_blank', 'width=600,height=400');
 };
 
 // ── Trigger functions ──────────────────────────────────────
