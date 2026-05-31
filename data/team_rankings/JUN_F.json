@@ -2,23 +2,23 @@
   {
     "team_id": "BIESSE_CARRERA_PREMAC",
     "team_nome": "BIESSE - CARRERA - PREMAC",
-    "punti": 299,
-    "vittorie": 3,
-    "p1": 3,
+    "punti": 318,
+    "vittorie": 4,
+    "p1": 4,
     "p2": 5,
     "p3": 5,
-    "pout": 22,
+    "pout": 24,
     "n_atleti": 8,
     "pos": 1
   },
   {
     "team_id": "BFT_BURZONI",
     "team_nome": "BFT BURZONI",
-    "punti": 240,
+    "punti": 262,
     "vittorie": 5,
     "p1": 5,
-    "p2": 4,
-    "p3": 1,
+    "p2": 5,
+    "p3": 2,
     "pout": 10,
     "n_atleti": 5,
     "pos": 2
@@ -50,12 +50,12 @@
   {
     "team_id": "PETRUCCI_GAUSS_CYCLING_TEAM",
     "team_nome": "PETRUCCI GAUSS CYCLING TEAM",
-    "punti": 121,
+    "punti": 129,
     "vittorie": 3,
     "p1": 3,
     "p2": 1,
     "p3": 1,
-    "pout": 7,
+    "pout": 9,
     "n_atleti": 6,
     "pos": 5
   },
@@ -72,6 +72,18 @@
     "pos": 6
   },
   {
+    "team_id": "U_C_CONSCIO_PEDALE_DEL_SILE",
+    "team_nome": "U.C.CONSCIO PEDALE DEL SILE",
+    "punti": 78,
+    "vittorie": 2,
+    "p1": 2,
+    "p2": 0,
+    "p3": 0,
+    "pout": 11,
+    "n_atleti": 3,
+    "pos": 7
+  },
+  {
     "team_id": "A_R_MONEX_PRO_CYCLING_TEAM",
     "team_nome": "A.R.MONEX PRO CYCLING TEAM",
     "punti": 74,
@@ -81,18 +93,6 @@
     "p3": 1,
     "pout": 4,
     "n_atleti": 4,
-    "pos": 7
-  },
-  {
-    "team_id": "U_C_CONSCIO_PEDALE_DEL_SILE",
-    "team_nome": "U.C.CONSCIO PEDALE DEL SILE",
-    "punti": 66,
-    "vittorie": 2,
-    "p1": 2,
-    "p2": 0,
-    "p3": 0,
-    "pout": 9,
-    "n_atleti": 2,
     "pos": 8
   },
   {
@@ -108,6 +108,18 @@
     "pos": 9
   },
   {
+    "team_id": "TEAM_WILIER_BREGANZE",
+    "team_nome": "TEAM WILIER BREGANZE",
+    "punti": 52,
+    "vittorie": 0,
+    "p1": 0,
+    "p2": 0,
+    "p3": 1,
+    "pout": 13,
+    "n_atleti": 6,
+    "pos": 10
+  },
+  {
     "team_id": "AIRTOX_CARL_RAS",
     "team_nome": "AIRTOX - CARL RAS",
     "punti": 51,
@@ -117,18 +129,6 @@
     "p3": 0,
     "pout": 1,
     "n_atleti": 2,
-    "pos": 10
-  },
-  {
-    "team_id": "TEAM_WILIER_BREGANZE",
-    "team_nome": "TEAM WILIER BREGANZE",
-    "punti": 47,
-    "vittorie": 0,
-    "p1": 0,
-    "p2": 0,
-    "p3": 1,
-    "pout": 12,
-    "n_atleti": 6,
     "pos": 11
   },
   {
