@@ -100,9 +100,14 @@ async function fetchAlbumBySlug(slug) {
   return data[0]; // il taxonomy term
 }
 
-// Nessun filtro automatico: l'admin decide tutto dalla coda
+// Solo album dal 2026 in avanti — se non c'è anno nel nome, includi (potrebbe essere 2026)
 function isCyclingRelevant() { return true; }
-function isRecent()          { return true; }
+function isRecent(name) {
+  const match = (name || '').match(/\b(20\d{2})\b/g);
+  if (!match) return true; // nessun anno → includi
+  const maxYear = Math.max(...match.map(Number));
+  return maxYear >= 2026;
+}
 
 // ── Recupera URL foto watermarked per un album — 2 sole chiamate API ──────────
 // 1. GET /wp/v2/product?pixy_album=[id]  → lista featured_media IDs
