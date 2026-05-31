@@ -1212,6 +1212,22 @@ app.post('/api/admin/xpix/add-by-url', requireAdmin, async (req, res) => {
   }
 });
 
+// POST cleanup-queue: rimuove dalla coda tutti gli album non 2026+
+app.post('/api/admin/xpix/cleanup-queue', requireAdmin, async (req, res) => {
+  try {
+    const queue = await readXpixQueue();
+    const before = queue.length;
+    const kept = queue.filter(q => {
+      const name = q.album_name || q.album_slug || '';
+      const years = name.match(/\b(20\d{2})\b/g);
+      if (!years) return true; // nessun anno → tieni
+      return Math.max(...years.map(Number)) >= 2026;
+    });
+    await writeXpixQueue(kept);
+    res.json({ ok: true, removed: before - kept.length, kept: kept.length });
+  } catch (e) { res.status(500).json({ error: e.message }); }
+});
+
 // GET diagnosi: mostra tutti gli album xpix con motivo eventuale filtro
 app.get('/api/admin/xpix/diagnose', requireAdmin, async (req, res) => {
   try {
