@@ -77,9 +77,9 @@ async function fetchAllAlbums() {
 
   const addBatch = (data) => {
     for (const a of data) {
-      if (a.count > 0 && !seen.has(a.id)) {
+      if (!seen.has(a.id)) {
         seen.add(a.id);
-        all.push(a);
+        all.push(a); // includi anche count=0: foto potrebbero essere in arrivo
       }
     }
   };
