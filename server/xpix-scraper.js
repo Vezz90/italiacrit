@@ -84,8 +84,10 @@ async function fetchAllAlbums() {
     }
   };
 
-  // Passata 1: per ID decrescente (fino a 5 pagine = 500 album recenti)
-  for (let page = 1; page <= 5; page++) {
+  const currentYear = new Date().getFullYear();
+
+  // Passata 1: ultimi 200 album per ID (i più recenti)
+  for (let page = 1; page <= 2; page++) {
     try {
       const url = `${XPIX_API}/pixy_album?per_page=100&page=${page}&_fields=id,name,slug,count&orderby=id&order=desc`;
       const data = await fetchURL(url, 20000, true);
@@ -95,19 +97,12 @@ async function fetchAllAlbums() {
     } catch (e) { console.warn(`[xpix] fetchAllAlbums p${page}: ${e.message}`); break; }
   }
 
-  // Passata 2: cerca per anno corrente e successivo (trova album con ID vecchio ma foto 2026+)
-  const currentYear = new Date().getFullYear();
-  for (const year of [currentYear, currentYear + 1]) {
-    for (let page = 1; page <= 3; page++) {
-      try {
-        const url = `${XPIX_API}/pixy_album?search=${year}&per_page=100&page=${page}&_fields=id,name,slug,count`;
-        const data = await fetchURL(url, 20000, true);
-        if (!Array.isArray(data) || !data.length) break;
-        addBatch(data);
-        if (data.length < 100) break;
-      } catch (e) { console.warn(`[xpix] fetchAllAlbums search ${year} p${page}: ${e.message}`); break; }
-    }
-  }
+  // Passata 2: ricerca per anno corrente (cattura album con ID vecchio ma foto nuove)
+  try {
+    const url = `${XPIX_API}/pixy_album?search=${currentYear}&per_page=100&_fields=id,name,slug,count`;
+    const data = await fetchURL(url, 20000, true);
+    if (Array.isArray(data)) addBatch(data);
+  } catch (e) { console.warn(`[xpix] fetchAllAlbums search ${currentYear}: ${e.message}`); }
 
   console.log(`[xpix] fetchAllAlbums: ${all.length} album unici trovati`);
   return all;
