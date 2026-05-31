@@ -9010,7 +9010,7 @@ window.xpixSeedGalleries = async () => {
   if (btn) { btn.disabled = true; btn.textContent = '⏳ Creazione…'; }
   if (status) status.textContent = 'Creazione gallerie per tutti gli album approvati…';
   try {
-    const r = await apiCall('/admin/media/seed-xpix', { method: 'POST' });
+    const r = await apiCall('/admin/media/seed-xpix', { method: 'POST', body: { force: true } });
     if (status) status.textContent = `✓ Gallerie create: ${r.created} nuove, ${r.skipped} già presenti`;
     showToast(`✓ ${r.created} gallerie create!`);
   } catch (e) {

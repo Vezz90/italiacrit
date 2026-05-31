@@ -1130,7 +1130,7 @@ app.post('/api/admin/xpix/sync', requireAdmin, async (req, res) => {
     // Escludi tutto ciò che l'admin ha già visto (pending, approved, dismissed)
     const knownSlugs = new Set(queue.map(q => q.album_slug));
 
-    const candidates = await fetchXpixCandidates(knownSlugs, 100);
+    const candidates = await fetchXpixCandidates(knownSlugs, 20);
     let added = 0;
 
     for (const c of candidates) {
@@ -2006,11 +2006,12 @@ app.post('/api/admin/media/seed-xpix', requireAdmin, async (req, res) => {
       if (item.album_slug && item.photos?.length) queueBySlug[item.album_slug] = item;
     }
 
+    const force = !!req.body?.force; // force=true → ignora gallery_deleted
     let created = 0, skipped = 0;
     for (const [gara_id, xpixEntry] of Object.entries(xpixPhotos)) {
       const slug = xpixEntry.album_slug;
       if (!slug) { skipped++; continue; }
-      if (xpixEntry.gallery_deleted) { skipped++; continue; }
+      if (xpixEntry.gallery_deleted && !force) { skipped++; continue; }
 
       // Salta se album già presente
       const existing = await rawQuery(
