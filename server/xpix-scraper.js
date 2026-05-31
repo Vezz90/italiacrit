@@ -199,22 +199,20 @@ async function fetchXpixCandidates(knownSlugs, maxNew = 25) {
 
   console.log(`[xpix] ${toProcess.length} nuovi album da processare (max ${maxNew})`);
 
-  const results = await mapConcurrent(toProcess, async (album) => {
-    const photos = await fetchPhotosForAlbum(album, 12);
-    if (!photos.length) return null;
-    return {
-      album_id:    album.id,
-      album_name:  album.name,
-      album_slug:  album.slug,
-      photo_count: album.count,
-      photos,                    // array di URL watermarked
-      photo_url:   photos[0],    // default: prima foto
-      album_page:  `${XPIX_SHOP}?yith_wcan=1&filter=open&pixy_album=${encodeURIComponent(album.slug)}`,
-    };
-  }, 3);   // 3 album in parallelo per non sovraccaricare
+  // Aggiunge subito in coda SENZA aspettare le foto — le foto vengono
+  // caricate in background o quando l'admin clicca "Ricarica foto".
+  // Così il sync è veloce e non perde album che hanno foto in arrivo.
+  const valid = toProcess.map(album => ({
+    album_id:    album.id,
+    album_name:  album.name,
+    album_slug:  album.slug,
+    photo_count: album.count,
+    photos:      [],           // vuoto: caricato al primo "Ricarica foto"
+    photo_url:   null,
+    album_page:  `${XPIX_SHOP}?yith_wcan=1&filter=open&pixy_album=${encodeURIComponent(album.slug)}`,
+  }));
 
-  const valid = results.filter(Boolean);
-  console.log(`[xpix] ${valid.length} album con foto recuperate`);
+  console.log(`[xpix] ${valid.length} nuovi album aggiunti in coda`);
   return valid;
 }
 

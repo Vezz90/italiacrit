@@ -8831,6 +8831,16 @@ async function loadXpixQueue() {
     const { queue } = await apiCall('/admin/xpix/queue', { method: 'GET' });
     _xpixQueue = queue || [];
     renderXpixQueue();
+    // Auto-carica le foto per gli album entrati in coda senza foto (sync veloce)
+    const needPhotos = (_xpixQueue || []).filter(q => q.status === 'pending' && (!q.photos || !q.photos.length));
+    for (const item of needPhotos.slice(0, 5)) {
+      apiCall(`/admin/xpix/queue/${item.id}/refresh-photos`, { method: 'POST' })
+        .then(r => {
+          item.photos    = r.photos || [];
+          item.photo_url = r.photos?.[0] || null;
+          renderXpixQueue();
+        }).catch(() => {});
+    }
   } catch (e) {
     if (container) container.innerHTML = `<div style="color:var(--text-muted);font-size:.85rem">Errore caricamento queue xpix: ${esc(e.message)}</div>`;
   }
