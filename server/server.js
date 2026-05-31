@@ -1272,9 +1272,49 @@ app.post('/api/admin/xpix/queue/:id/approve', requireAdmin, async (req, res) => 
     // Accumula le gare approvate (stesso album può coprire M e F)
     if (!queue[i].approved_gara_ids) queue[i].approved_gara_ids = [];
     if (!queue[i].approved_gara_ids.includes(gara_id)) queue[i].approved_gara_ids.push(gara_id);
-    queue[i].approved_gara_id = gara_id;   // ultima approvata (compat.)
+    queue[i].approved_gara_id = gara_id;
     queue[i].status            = 'approved';
     await writeXpixQueue(queue);
+
+    // ── Crea automaticamente il media_album (Gallery fotografi) ──────────────
+    // Così non serve eseguire il Seed xpix manualmente dopo ogni approvazione.
+    try {
+      // 1. Trova o crea profilo xpix.it di sistema
+      let xpixProfile = await rawQuery(
+        `SELECT * FROM media_profiles WHERE user_id IS NULL AND display_name = 'xpix.it' LIMIT 1`
+      ).then(r => r.rows[0]);
+      if (!xpixProfile) {
+        const r = await rawQuery(
+          `INSERT INTO media_profiles (user_id, display_name, bio, website, instagram, status)
+           VALUES (NULL, 'xpix.it', 'Fotografia ciclismo agonistico italiano', 'https://www.xpix.it', 'xpix.it', 'active')
+           RETURNING *`
+        );
+        xpixProfile = r.rows[0];
+      }
+      // 2. Salta se album già presente (e non cancellato)
+      const existing = await rawQuery(
+        `SELECT id FROM media_albums WHERE media_profile_id=$1 AND gara_id=$2 LIMIT 1`,
+        [xpixProfile.id, gara_id]
+      ).then(r => r.rows[0]);
+      if (!existing) {
+        // 3. Crea album
+        const album = await queries.createMediaAlbum({
+          media_profile_id: xpixProfile.id,
+          gara_id,
+          title: item.album_name || item.album_slug,
+          description: '',
+        });
+        // 4. Aggiungi foto (usa array completo dall'item in coda)
+        const photoUrls = item.photos?.length ? item.photos : [chosenUrl];
+        let ord = 0;
+        for (const url of photoUrls) {
+          await queries.addMediaPhoto({ album_id: album.id, filename: null, ext_url: url, caption: '', ord: ord++ });
+        }
+      }
+    } catch (e2) {
+      // Non blocca la risposta se la gallery fallisce
+      console.warn('[xpix-approve] media_album creation failed:', e2.message);
+    }
 
     res.json({ ok: true });
   } catch (e) { res.status(500).json({ error: e.message }); }

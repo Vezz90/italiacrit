@@ -7249,6 +7249,10 @@ window.adminNav = async function(section) {
             style="background:#0ea5e9;color:#fff;border:none;padding:10px 22px;border-radius:6px;font-weight:700;cursor:pointer;font-size:.875rem">
             🔄 Sincronizza xpix
           </button>
+          <button onclick="window.xpixSeedGalleries()" id="xpix-seed-btn"
+            style="background:#10b981;color:#fff;border:none;padding:10px 18px;border-radius:6px;font-weight:700;cursor:pointer;font-size:.85rem;margin-left:8px">
+            🌱 Crea gallerie
+          </button>
           <button onclick="window.xpixDiagnose()" id="xpix-diag-btn"
             style="background:transparent;color:#0ea5e9;border:1px solid #0ea5e9;padding:10px 18px;border-radius:6px;font-weight:600;cursor:pointer;font-size:.85rem;margin-left:8px">
             🔍 Diagnosi
@@ -8997,6 +9001,23 @@ window.xpixSync = async () => {
     if (status) status.textContent = '✗ Errore: ' + e.message;
   } finally {
     if (btn) { btn.disabled = false; btn.textContent = '🔄 Sincronizza Xpix'; }
+  }
+};
+
+window.xpixSeedGalleries = async () => {
+  const btn    = document.getElementById('xpix-seed-btn');
+  const status = document.getElementById('xpix-sync-status');
+  if (btn) { btn.disabled = true; btn.textContent = '⏳ Creazione…'; }
+  if (status) status.textContent = 'Creazione gallerie per tutti gli album approvati…';
+  try {
+    const r = await apiCall('/admin/media/seed-xpix', { method: 'POST' });
+    if (status) status.textContent = `✓ Gallerie create: ${r.created} nuove, ${r.skipped} già presenti`;
+    showToast(`✓ ${r.created} gallerie create!`);
+  } catch (e) {
+    if (status) status.textContent = '✗ Errore: ' + e.message;
+    showToast('Errore: ' + e.message, 'error');
+  } finally {
+    if (btn) { btn.disabled = false; btn.textContent = '🌱 Crea gallerie'; }
   }
 };
 
