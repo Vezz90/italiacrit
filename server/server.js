@@ -1127,12 +1127,10 @@ app.get('/api/admin/xpix/queue', requireAdmin, async (req, res) => {
 app.post('/api/admin/xpix/sync', requireAdmin, async (req, res) => {
   try {
     const queue      = await readXpixQueue();
-    // Escludi solo pending e approved — i dismissed possono rientrare se xpix aggiunge nuove foto
-    const knownSlugs = new Set(
-      queue.filter(q => q.status === 'pending' || q.status === 'approved').map(q => q.album_slug)
-    );
+    // Escludi tutto ciò che l'admin ha già visto (pending, approved, dismissed)
+    const knownSlugs = new Set(queue.map(q => q.album_slug));
 
-    const candidates = await fetchXpixCandidates(knownSlugs, 50);
+    const candidates = await fetchXpixCandidates(knownSlugs, 100);
     let added = 0;
 
     for (const c of candidates) {

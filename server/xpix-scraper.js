@@ -100,23 +100,9 @@ async function fetchAlbumBySlug(slug) {
   return data[0]; // il taxonomy term
 }
 
-// ── Filtri rilevanza ──────────────────────────────────────────────────────────
-// xpix.it è già un sito di fotografia ciclistica: quasi tutto è rilevante.
-// Escludiamo solo eventi chiaramente fuori scope (grandi giri PRO, presentazioni, ecc.)
-const SKIP_RE = /\b(giro d.?italia|tour de france|vuelta|tirreno.adriatico|strade bianche|sanremo|giro di lombardia|coppi e bartali|liegi|parigi|fiandre|amstel|roubaix|critérium|criterium du dauphiné|giro donne|giro women)\b|ritiro|presentazione|shooting|saggio|consegna|bmx|mountain bike|\bmtb\b|cross|pista|velodromo|team presentation/i;
-
-function isCyclingRelevant(name) {
-  // Basta che non sia nella lista esclusa: xpix pubblica solo ciclismo
-  return !SKIP_RE.test(name);
-}
-
-function isRecent(name) {
-  // Accetta album senza anno nel nome (molti album xpix non lo hanno)
-  // Esclude solo album con anni chiaramente vecchi (>= 2 anni fa)
-  const y = new Date().getFullYear();
-  const oldYearRe = new RegExp(`\\b(${y - 2}|${y - 3}|${y - 4}|${y - 5})\\b`);
-  return !oldYearRe.test(name);
-}
+// Nessun filtro automatico: l'admin decide tutto dalla coda
+function isCyclingRelevant() { return true; }
+function isRecent()          { return true; }
 
 // ── Recupera URL foto watermarked per un album — 2 sole chiamate API ──────────
 // 1. GET /wp/v2/product?pixy_album=[id]  → lista featured_media IDs
