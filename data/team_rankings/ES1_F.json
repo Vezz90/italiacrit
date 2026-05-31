@@ -2,38 +2,50 @@
   {
     "team_id": "U_C_GIORGIONE",
     "team_nome": "U.C. GIORGIONE",
-    "punti": 214,
-    "vittorie": 5,
-    "p1": 5,
+    "punti": 234,
+    "vittorie": 6,
+    "p1": 6,
     "p2": 5,
     "p3": 3,
-    "pout": 13,
+    "pout": 14,
     "n_atleti": 6,
     "pos": 1
   },
   {
     "team_id": "GS_CAPANNORI",
     "team_nome": "GS CAPANNORI",
-    "punti": 210,
+    "punti": 229,
     "vittorie": 4,
     "p1": 4,
-    "p2": 4,
+    "p2": 5,
     "p3": 3,
-    "pout": 15,
+    "pout": 17,
     "n_atleti": 5,
     "pos": 2
   },
   {
     "team_id": "POL_FIUMICINESE_FA_I_T_ADRIATICA",
     "team_nome": "POL. FIUMICINESE FA.I.T. ADRIATICA",
-    "punti": 191,
+    "punti": 201,
     "vittorie": 6,
     "p1": 6,
     "p2": 2,
-    "p3": 2,
+    "p3": 3,
     "pout": 6,
     "n_atleti": 2,
     "pos": 3
+  },
+  {
+    "team_id": "A_S_A_C_I_EVONACICLI",
+    "team_nome": "A.S.A.C.I. - EVONACICLI",
+    "punti": 123,
+    "vittorie": 3,
+    "p1": 3,
+    "p2": 3,
+    "p3": 3,
+    "pout": 2,
+    "n_atleti": 5,
+    "pos": 4
   },
   {
     "team_id": "SCUOLA_CICLISMO_VERSO_L_IRIDE",
@@ -45,7 +57,7 @@
     "p3": 1,
     "pout": 11,
     "n_atleti": 3,
-    "pos": 4
+    "pos": 5
   },
   {
     "team_id": "S_C_CESANO_MADERNO",
@@ -57,7 +69,7 @@
     "p3": 2,
     "pout": 22,
     "n_atleti": 5,
-    "pos": 5
+    "pos": 6
   },
   {
     "team_id": "UC_DONORATICO",
@@ -69,30 +81,18 @@
     "p3": 2,
     "pout": 6,
     "n_atleti": 2,
-    "pos": 6
+    "pos": 7
   },
   {
     "team_id": "G_S_MOSOLE",
     "team_nome": "G.S. MOSOLE",
-    "punti": 104,
+    "punti": 105,
     "vittorie": 1,
     "p1": 1,
     "p2": 1,
     "p3": 4,
-    "pout": 11,
+    "pout": 12,
     "n_atleti": 2,
-    "pos": 7
-  },
-  {
-    "team_id": "A_S_A_C_I_EVONACICLI",
-    "team_nome": "A.S.A.C.I. - EVONACICLI",
-    "punti": 86,
-    "vittorie": 2,
-    "p1": 2,
-    "p2": 2,
-    "p3": 2,
-    "pout": 2,
-    "n_atleti": 5,
     "pos": 8
   },
   {
@@ -132,6 +132,18 @@
     "pos": 11
   },
   {
+    "team_id": "U_C_CONSCIO_PEDALE_DEL_SILE",
+    "team_nome": "U.C.CONSCIO PEDALE DEL SILE",
+    "punti": 50,
+    "vittorie": 1,
+    "p1": 1,
+    "p2": 1,
+    "p3": 0,
+    "pout": 4,
+    "n_atleti": 1,
+    "pos": 12
+  },
+  {
     "team_id": "SPORT_CLUB_BRESCIA_FLANDRES_LOVE",
     "team_nome": "SPORT CLUB BRESCIA - FLANDRES LOVE",
     "punti": 49,
@@ -140,18 +152,6 @@
     "p2": 1,
     "p3": 0,
     "pout": 6,
-    "n_atleti": 1,
-    "pos": 12
-  },
-  {
-    "team_id": "U_C_CONSCIO_PEDALE_DEL_SILE",
-    "team_nome": "U.C.CONSCIO PEDALE DEL SILE",
-    "punti": 42,
-    "vittorie": 1,
-    "p1": 1,
-    "p2": 1,
-    "p3": 0,
-    "pout": 3,
     "n_atleti": 1,
     "pos": 13
   },
@@ -168,6 +168,18 @@
     "pos": 14
   },
   {
+    "team_id": "G_C_SOSSANO_1975",
+    "team_nome": "G.C. SOSSANO 1975",
+    "punti": 31,
+    "vittorie": 0,
+    "p1": 0,
+    "p2": 0,
+    "p3": 0,
+    "pout": 7,
+    "n_atleti": 1,
+    "pos": 15
+  },
+  {
     "team_id": "SAMABIKE",
     "team_nome": "SAMABIKE",
     "punti": 30,
@@ -176,18 +188,6 @@
     "p2": 0,
     "p3": 0,
     "pout": 0,
-    "n_atleti": 1,
-    "pos": 15
-  },
-  {
-    "team_id": "G_C_SOSSANO_1975",
-    "team_nome": "G.C. SOSSANO 1975",
-    "punti": 25,
-    "vittorie": 0,
-    "p1": 0,
-    "p2": 0,
-    "p3": 0,
-    "pout": 6,
     "n_atleti": 1,
     "pos": 16
   },
@@ -302,12 +302,12 @@
   {
     "team_id": "A_S_D_CICLISTICA_G_BONZAGNI",
     "team_nome": "A.S.D CICLISTICA G.BONZAGNI",
-    "punti": 8,
+    "punti": 10,
     "vittorie": 0,
     "p1": 0,
     "p2": 0,
     "p3": 0,
-    "pout": 2,
+    "pout": 3,
     "n_atleti": 1,
     "pos": 26
   },

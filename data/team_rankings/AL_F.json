@@ -156,6 +156,18 @@
     "pos": 13
   },
   {
+    "team_id": "A_S_D_AVIS_BIKE_RUVO",
+    "team_nome": "A.S.D. AVIS BIKE RUVO",
+    "punti": 45,
+    "vittorie": 2,
+    "p1": 2,
+    "p2": 0,
+    "p3": 1,
+    "pout": 1,
+    "n_atleti": 3,
+    "pos": 14
+  },
+  {
     "team_id": "ASS_NE_CICLISTICA_DILETT_VALVASONE",
     "team_nome": "ASS.NE CICLISTICA DILETT. VALVASONE",
     "punti": 38,
@@ -165,7 +177,7 @@
     "p3": 0,
     "pout": 6,
     "n_atleti": 2,
-    "pos": 14
+    "pos": 15
   },
   {
     "team_id": "A_R_MONEX_PRO_CYCLING_TEAM",
@@ -177,7 +189,7 @@
     "p3": 1,
     "pout": 4,
     "n_atleti": 2,
-    "pos": 15
+    "pos": 16
   },
   {
     "team_id": "VELO_CLUB_SARROCH",
@@ -189,19 +201,31 @@
     "p3": 0,
     "pout": 0,
     "n_atleti": 1,
-    "pos": 16
+    "pos": 17
   },
   {
-    "team_id": "A_S_D_AVIS_BIKE_RUVO",
-    "team_nome": "A.S.D. AVIS BIKE RUVO",
-    "punti": 25,
-    "vittorie": 1,
-    "p1": 1,
+    "team_id": "ASD_FUSION_BIKE",
+    "team_nome": "ASD FUSION BIKE",
+    "punti": 27,
+    "vittorie": 0,
+    "p1": 0,
     "p2": 0,
-    "p3": 1,
-    "pout": 0,
+    "p3": 0,
+    "pout": 4,
     "n_atleti": 2,
-    "pos": 17
+    "pos": 18
+  },
+  {
+    "team_id": "FREE_BIKE_LT_LOGISTICA_AMBIENTALE",
+    "team_nome": "FREE BIKE LT - LOGISTICA AMBIENTALE",
+    "punti": 24,
+    "vittorie": 0,
+    "p1": 0,
+    "p2": 2,
+    "p3": 0,
+    "pout": 0,
+    "n_atleti": 1,
+    "pos": 19
   },
   {
     "team_id": "SESTU_BIKE_A_S_D",
@@ -213,7 +237,7 @@
     "p3": 0,
     "pout": 0,
     "n_atleti": 1,
-    "pos": 18
+    "pos": 20
   },
   {
     "team_id": "COMAL_TRENTINO_CYCLING_ACADEMY",
@@ -225,7 +249,7 @@
     "p3": 0,
     "pout": 5,
     "n_atleti": 4,
-    "pos": 19
+    "pos": 21
   },
   {
     "team_id": "LIBERTAS_CERESETTO",
@@ -237,7 +261,7 @@
     "p3": 1,
     "pout": 4,
     "n_atleti": 2,
-    "pos": 20
+    "pos": 22
   },
   {
     "team_id": "SAMABIKE",
@@ -249,7 +273,7 @@
     "p3": 1,
     "pout": 0,
     "n_atleti": 1,
-    "pos": 21
+    "pos": 23
   },
   {
     "team_id": "I_CINGHIALI_EVO",
@@ -261,7 +285,7 @@
     "p3": 0,
     "pout": 5,
     "n_atleti": 1,
-    "pos": 22
+    "pos": 24
   },
   {
     "team_id": "HG_CYCLING_TEAM",
@@ -273,7 +297,19 @@
     "p3": 0,
     "pout": 4,
     "n_atleti": 1,
-    "pos": 23
+    "pos": 25
+  },
+  {
+    "team_id": "TEAM_CESARO_NERI_LUCCHINI",
+    "team_nome": "TEAM CESARO-NERI-LUCCHINI",
+    "punti": 16,
+    "vittorie": 0,
+    "p1": 0,
+    "p2": 0,
+    "p3": 1,
+    "pout": 1,
+    "n_atleti": 1,
+    "pos": 26
   },
   {
     "team_id": "TEAM_CORATTI",
@@ -285,7 +321,7 @@
     "p3": 0,
     "pout": 0,
     "n_atleti": 1,
-    "pos": 24
+    "pos": 27
   },
   {
     "team_id": "ASD_GS_SORGENTE_PRADIPOZZO",
@@ -297,7 +333,7 @@
     "p3": 1,
     "pout": 2,
     "n_atleti": 1,
-    "pos": 25
+    "pos": 28
   },
   {
     "team_id": "GS_CAPANNORI",
@@ -309,7 +345,7 @@
     "p3": 0,
     "pout": 2,
     "n_atleti": 2,
-    "pos": 26
+    "pos": 29
   },
   {
     "team_id": "A_S_A_C_I_EVONACICLI",
@@ -321,7 +357,7 @@
     "p3": 1,
     "pout": 1,
     "n_atleti": 2,
-    "pos": 27
+    "pos": 30
   },
   {
     "team_id": "G_C_NOVENTANA",
@@ -333,7 +369,7 @@
     "p3": 0,
     "pout": 3,
     "n_atleti": 1,
-    "pos": 28
+    "pos": 31
   },
   {
     "team_id": "ASD_VELOCE_CLUB_BORGO",
@@ -345,7 +381,7 @@
     "p3": 0,
     "pout": 5,
     "n_atleti": 2,
-    "pos": 29
+    "pos": 32
   },
   {
     "team_id": "BICIFESTIVAL",
@@ -357,7 +393,7 @@
     "p3": 0,
     "pout": 3,
     "n_atleti": 2,
-    "pos": 30
+    "pos": 33
   },
   {
     "team_id": "A_S_D_G_C_EMIC",
@@ -369,31 +405,7 @@
     "p3": 0,
     "pout": 4,
     "n_atleti": 1,
-    "pos": 31
-  },
-  {
-    "team_id": "ASD_FUSION_BIKE",
-    "team_nome": "ASD FUSION BIKE",
-    "punti": 13,
-    "vittorie": 0,
-    "p1": 0,
-    "p2": 0,
-    "p3": 0,
-    "pout": 2,
-    "n_atleti": 2,
-    "pos": 32
-  },
-  {
-    "team_id": "FREE_BIKE_LT_LOGISTICA_AMBIENTALE",
-    "team_nome": "FREE BIKE LT - LOGISTICA AMBIENTALE",
-    "punti": 12,
-    "vittorie": 0,
-    "p1": 0,
-    "p2": 1,
-    "p3": 0,
-    "pout": 0,
-    "n_atleti": 1,
-    "pos": 33
+    "pos": 34
   },
   {
     "team_id": "TEAM_GO_FAST_PUGLIA_ARADEO",
@@ -405,7 +417,7 @@
     "p3": 0,
     "pout": 0,
     "n_atleti": 1,
-    "pos": 34
+    "pos": 35
   },
   {
     "team_id": "SCUOLA_CICLISMO_VERSO_L_IRIDE",
@@ -417,7 +429,7 @@
     "p3": 0,
     "pout": 3,
     "n_atleti": 3,
-    "pos": 35
+    "pos": 36
   },
   {
     "team_id": "BLU_TEAM",
@@ -429,7 +441,7 @@
     "p3": 0,
     "pout": 1,
     "n_atleti": 1,
-    "pos": 36
+    "pos": 37
   },
   {
     "team_id": "BREGANZE_MILLENIUM",
@@ -441,23 +453,11 @@
     "p3": 0,
     "pout": 1,
     "n_atleti": 1,
-    "pos": 37
+    "pos": 38
   },
   {
     "team_id": "ACS_OLIMPIC_ZARNESTI",
     "team_nome": "ACS OLIMPIC ZARNESTI",
-    "punti": 6,
-    "vittorie": 0,
-    "p1": 0,
-    "p2": 0,
-    "p3": 0,
-    "pout": 1,
-    "n_atleti": 1,
-    "pos": 38
-  },
-  {
-    "team_id": "TEAM_CESARO_NERI_LUCCHINI",
-    "team_nome": "TEAM CESARO-NERI-LUCCHINI",
     "punti": 6,
     "vittorie": 0,
     "p1": 0,
