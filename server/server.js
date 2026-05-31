@@ -1076,7 +1076,7 @@ app.delete('/api/admin/youtube/queue/:id', requireAdmin, async (req, res) => {
 // ══════════════════════════════════════════════════════════════════════════════
 // XPIX AUTO-FOTO
 // ══════════════════════════════════════════════════════════════════════════════
-const { fetchXpixCandidates, fetchPhotosForAlbum } = require('./xpix-scraper');
+const { fetchXpixCandidates, fetchPhotosForAlbum, fetchAllAlbums, isCyclingRelevant, isRecent } = require('./xpix-scraper');
 
 const XPIX_QUEUE_PATH  = path.join(__dirname, '../data/xpix_queue.json');
 const XPIX_PHOTOS_PATH = path.join(__dirname, '../data/xpix_photos.json');
@@ -1127,9 +1127,12 @@ app.get('/api/admin/xpix/queue', requireAdmin, async (req, res) => {
 app.post('/api/admin/xpix/sync', requireAdmin, async (req, res) => {
   try {
     const queue      = await readXpixQueue();
-    const knownSlugs = new Set(queue.map(q => q.album_slug));
+    // Escludi solo pending e approved — i dismissed possono rientrare se xpix aggiunge nuove foto
+    const knownSlugs = new Set(
+      queue.filter(q => q.status === 'pending' || q.status === 'approved').map(q => q.album_slug)
+    );
 
-    const candidates = await fetchXpixCandidates(knownSlugs, 30);
+    const candidates = await fetchXpixCandidates(knownSlugs, 50);
     let added = 0;
 
     for (const c of candidates) {
@@ -1163,6 +1166,36 @@ app.post('/api/admin/xpix/sync', requireAdmin, async (req, res) => {
     console.error('[xpix-sync]', e.message);
     res.status(500).json({ error: e.message });
   }
+});
+
+// GET diagnosi: mostra tutti gli album xpix con motivo eventuale filtro
+app.get('/api/admin/xpix/diagnose', requireAdmin, async (req, res) => {
+  try {
+    const queue = await readXpixQueue();
+    const knownPending  = new Set(queue.filter(q => q.status === 'pending').map(q => q.album_slug));
+    const knownApproved = new Set(queue.filter(q => q.status === 'approved').map(q => q.album_slug));
+    const knownDismissed= new Set(queue.filter(q => q.status === 'dismissed').map(q => q.album_slug));
+
+    const allAlbums = await fetchAllAlbums();
+    const report = allAlbums.slice(0, 200).map(a => {
+      let skip = null;
+      if (knownPending.has(a.slug))   skip = 'in_coda_pending';
+      else if (knownApproved.has(a.slug))  skip = 'approved';
+      else if (knownDismissed.has(a.slug)) skip = 'dismissed_riproposto';
+      else if (!isRecent(a.name))     skip = 'filtro_vecchio';
+      else if (!isCyclingRelevant(a.name)) skip = 'filtro_irrilevante';
+      return { id: a.id, name: a.name, slug: a.slug, count: a.count, skip };
+    });
+
+    const byReason = {};
+    report.forEach(r => {
+      const k = r.skip || 'nuovo_da_processare';
+      if (!byReason[k]) byReason[k] = 0;
+      byReason[k]++;
+    });
+
+    res.json({ total: allAlbums.length, shown: report.length, summary: byReason, albums: report });
+  } catch (e) { res.status(500).json({ error: e.message }); }
 });
 
 // POST approva: salva la foto xpix come foto della gara

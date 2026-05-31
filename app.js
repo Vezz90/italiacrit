@@ -7249,6 +7249,10 @@ window.adminNav = async function(section) {
             style="background:#0ea5e9;color:#fff;border:none;padding:10px 22px;border-radius:6px;font-weight:700;cursor:pointer;font-size:.875rem">
             🔄 Sincronizza xpix
           </button>
+          <button onclick="window.xpixDiagnose()" id="xpix-diag-btn"
+            style="background:transparent;color:#0ea5e9;border:1px solid #0ea5e9;padding:10px 18px;border-radius:6px;font-weight:600;cursor:pointer;font-size:.85rem;margin-left:8px">
+            🔍 Diagnosi
+          </button>
           <span id="xpix-sync-status" style="font-size:.8rem;color:var(--text-muted)"></span>
         </div>
         <div id="xpix-queue-container">
@@ -8981,6 +8985,39 @@ window.xpixSync = async () => {
     if (status) status.textContent = '✗ Errore: ' + e.message;
   } finally {
     if (btn) { btn.disabled = false; btn.textContent = '🔄 Sincronizza Xpix'; }
+  }
+};
+
+window.xpixDiagnose = async () => {
+  const btn    = document.getElementById('xpix-diag-btn');
+  const status = document.getElementById('xpix-sync-status');
+  if (btn) { btn.disabled = true; btn.textContent = '⏳ Analisi…'; }
+  if (status) status.textContent = 'Recupero lista album xpix, può richiedere ~20s…';
+  try {
+    const r = await apiCall('/admin/xpix/diagnose');
+    const lines = [
+      `📊 Album totali xpix: ${r.total} — analizzati: ${r.shown}`,
+      ...Object.entries(r.summary).map(([k, n]) => `  • ${k}: ${n}`),
+    ];
+    const nuovi = (r.albums || []).filter(a => !a.skip);
+    if (nuovi.length) {
+      lines.push('');
+      lines.push('📋 Album nuovi da processare (non in coda):');
+      nuovi.forEach(a => lines.push(`  • [${a.id}] ${a.name} (${a.count} foto) — slug: ${a.slug}`));
+    }
+    const filtrati = (r.albums || []).filter(a => a.skip === 'filtro_irrilevante' || a.skip === 'filtro_vecchio');
+    if (filtrati.length) {
+      lines.push('');
+      lines.push('⚠️ Album filtrati (verifica se corretti):');
+      filtrati.slice(0, 10).forEach(a => lines.push(`  • [${a.id}] ${a.name} → ${a.skip}`));
+    }
+    if (status) status.textContent = lines[0];
+    alert(lines.join('\n'));
+  } catch (e) {
+    if (status) status.textContent = '✗ Errore: ' + e.message;
+    alert('Errore diagnosi: ' + e.message);
+  } finally {
+    if (btn) { btn.disabled = false; btn.textContent = '🔍 Diagnosi'; }
   }
 };
 
