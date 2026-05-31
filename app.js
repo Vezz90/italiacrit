@@ -15023,15 +15023,18 @@ window.showShareModal = async function(type, payload) {
   _shareType=type; _sharePayload=payload; _sharePlatKey='post';
   const titles={gara:'Risultati Gara',atleta:'Profilo Atleta',team:'Profilo Team',class:'Classifica'};
   const platBtns = [
-    {k:'post',     label:'Post\nQuadrato', sz:'1080×1080'},
-    {k:'instagram',label:'Instagram\nFeed',sz:'1080×1350'},
-    {k:'story',    label:'Story /\nReels', sz:'1080×1920'},
-    {k:'facebook', label:'Facebook',       sz:'1200×630'},
-    {k:'twitter',  label:'Twitter/X',      sz:'1200×675'},
-    {k:'whatsapp', label:'WhatsApp',       sz:'1080×1080'},
-  ].map(({k,label,sz})=>{
+    {k:'post',      label:'Post\nQuadrato', sz:'1080×1080',  fb:false},
+    {k:'instagram', label:'Instagram\nFeed',sz:'1080×1350',  fb:false},
+    {k:'story',     label:'Story /\nReels', sz:'1080×1920',  fb:false},
+    {k:'facebook',  label:'Facebook',       sz:'Link + foto', fb:true},
+    {k:'twitter',   label:'Twitter/X',      sz:'1200×675',   fb:false},
+    {k:'whatsapp',  label:'WhatsApp',       sz:'1080×1080',  fb:false},
+  ].map(({k,label,sz,fb})=>{
     const p=SHARE_PLATFORMS[k];
-    return `<button class="share-plat-btn ${p.cls} ${k==='post'?'active':''}" id="sp-${k}" onclick="window.setSharePlat('${k}')" title="${sz}">
+    const onclick = fb
+      ? `window.shareOnFacebook()`
+      : `window.setSharePlat('${k}')`;
+    return `<button class="share-plat-btn ${p.cls} ${k==='post'?'active':''}" id="sp-${k}" onclick="${onclick}" title="${sz}">
       <div class="share-plat-icon">${_SVGS[k]||''}</div>
       <span class="share-plat-label">${label.replace('\n','\n')}</span>
     </button>`;
@@ -15053,11 +15056,6 @@ window.showShareModal = async function(type, payload) {
       <div class="share-actions">
         <button class="share-action-btn share-action-download" id="share-dl-btn" onclick="window.downloadShareCard()">⬇ Scarica</button>
         <button class="share-action-btn share-action-native" id="share-native-btn" onclick="window.nativeShare()">↗ Condividi</button>
-      </div>
-      <div style="margin-top:12px;text-align:center">
-        <button onclick="window.shareOnFacebook()" style="display:inline-flex;align-items:center;gap:8px;background:#1877F2;color:#fff;border:none;border-radius:8px;padding:10px 20px;font-size:.875rem;font-weight:700;cursor:pointer;width:100%;justify-content:center">
-          ${_SVGS.facebook} Pubblica su Facebook con link al sito
-        </button>
       </div>
     </div>
   </div>`);
