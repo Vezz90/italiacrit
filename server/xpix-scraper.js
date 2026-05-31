@@ -101,9 +101,10 @@ async function fetchAllAlbums() {
   // Passata 2b: ricerca per anno nello SLUG (es. "trofeo-2026-...") — usa slug come search term
   // WordPress cerca nel name di default; aggiungiamo anche slug esplicito non è supportato,
   // ma cercare parti dello slug funziona se coincidono col nome
+  // Cerca per anno, ordinato per ID decrescente → i più recenti prima
   for (const term of [`${currentYear}`, `${currentYear - 1}`]) {
     try {
-      const url = `${XPIX_API}/pixy_album?search=${term}&per_page=100&_fields=id,name,slug,count`;
+      const url = `${XPIX_API}/pixy_album?search=${term}&per_page=100&orderby=id&order=desc&_fields=id,name,slug,count`;
       const data = await fetchURL(url, 20000, true);
       if (Array.isArray(data)) addBatch(data);
     } catch (e) { console.warn(`[xpix] search ${term}: ${e.message}`); }
