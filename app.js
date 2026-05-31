@@ -8873,9 +8873,13 @@ function renderXpixQueue() {
               Gara: <strong>${esc(item.approved_gara_id||item.approved_gara_ids?.[0]||'—')}</strong>
             </div>
           </div>
+          <button onclick="window.xpixRelinkGara('${esc(item.approved_gara_id||item.approved_gara_ids?.[0]||'')}',this)"
+            style="flex:0 0 auto;background:transparent;border:1px solid #6366f1;color:#6366f1;padding:4px 10px;border-radius:5px;cursor:pointer;font-size:.75rem;white-space:nowrap">
+            🔗 Cambia gara
+          </button>
           <button onclick="window.xpixRemoveFromGara('${esc(item.id)}','${esc(item.approved_gara_id||item.approved_gara_ids?.[0]||'')}',this)"
             style="flex:0 0 auto;background:transparent;border:1px solid #ef4444;color:#ef4444;padding:4px 10px;border-radius:5px;cursor:pointer;font-size:.75rem;white-space:nowrap">
-            🗑 Rimuovi da gara
+            🗑 Rimuovi
           </button>
         </div>`).join('')}
       </div>
@@ -9155,6 +9159,22 @@ window.xpixApprove = async (id) => {
 };
 
 // Rimuove la foto xpix da una gara (senza scartare l'album dalla coda)
+window.xpixRelinkGara = async (oldGaraId, btn) => {
+  const newGaraId = prompt(`Gara_id attuale:\n${oldGaraId||'(vuoto)'}\n\nInserisci il nuovo gara_id corretto:`);
+  if (!newGaraId || newGaraId === oldGaraId) return;
+  if (btn) { btn.disabled = true; btn.textContent = '⏳…'; }
+  try {
+    await apiCall('/admin/xpix/photos/relink', { method: 'PATCH', body: { old_gara_id: oldGaraId, new_gara_id: newGaraId.trim() } });
+    showToast(`✓ Ricollegato a ${newGaraId}`);
+    _risPhotosMap = null; // invalida cache
+    await loadXpixQueue();
+  } catch (e) {
+    showToast('Errore: ' + e.message, 'error');
+  } finally {
+    if (btn) { btn.disabled = false; btn.textContent = '🔗 Cambia gara'; }
+  }
+};
+
 window.xpixRemoveFromGara = async (id, garaId, btn) => {
   if (!garaId) { showToast('Nessuna gara collegata', 'error'); return; }
   if (!confirm(`Rimuovere la foto dalla gara "${garaId}"? L'album tornerà in coda.`)) return;
@@ -14282,6 +14302,16 @@ async function loadRisPhotos() {
     (d3.photos || []).forEach(p => { if (p.gara_id && !_risPhotosMap[p.gara_id]) _risPhotosMap[p.gara_id] = p; });
     (d2.photos || []).forEach(p => { if (p.gara_id && !_risPhotosMap[p.gara_id]) _risPhotosMap[p.gara_id] = p; });
     (d1.photos || []).forEach(p => { if (p.gara_id) _risPhotosMap[p.gara_id] = p; });
+    // Fuzzy alias: per ogni foto xpix crea alias senza prefisso numerico e senza suffisso categoria
+    // es: "72_TROFEO_MATTEOTTI_2026-05-17_ELI_M" → alias senza "72_"
+    (d2.photos || []).forEach(p => {
+      if (!p.gara_id) return;
+      const noNum = p.gara_id.replace(/^\d+_/, '');
+      if (noNum !== p.gara_id && !_risPhotosMap[noNum]) _risPhotosMap[noNum] = p;
+      // alias senza _ELI_M / _JUN_M ecc.
+      const noSuffix = p.gara_id.replace(/_[A-Z0-9]+_[MF]$/, '');
+      if (noSuffix !== p.gara_id && !_risPhotosMap[noSuffix]) _risPhotosMap[noSuffix] = p;
+    });
   } catch { _risPhotosMap = {}; }
   return _risPhotosMap;
 }

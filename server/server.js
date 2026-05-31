@@ -1477,6 +1477,20 @@ app.get('/api/xpix-photos', async (req, res) => {
   } catch (e) { res.status(500).json({ error: e.message }); }
 });
 
+// PATCH xpix-photos: aggiorna gara_id di una voce (per correggere mismatch)
+app.patch('/api/admin/xpix/photos/relink', requireAdmin, async (req, res) => {
+  try {
+    const { old_gara_id, new_gara_id } = req.body;
+    if (!old_gara_id || !new_gara_id) return res.status(400).json({ error: 'old_gara_id e new_gara_id obbligatori' });
+    const photos = await readXpixPhotos();
+    if (!photos[old_gara_id]) return res.status(404).json({ error: `Nessuna foto xpix per gara_id: ${old_gara_id}` });
+    photos[new_gara_id] = { ...photos[old_gara_id], gara_id: new_gara_id };
+    delete photos[old_gara_id];
+    await writeXpixPhotos(photos);
+    res.json({ ok: true, new_gara_id });
+  } catch (e) { res.status(500).json({ error: e.message }); }
+});
+
 // ── Media profiles ────────────────────────────────────────────────────────────
 
 // Crea profilo media (richiesta, va approvata dall'admin)
