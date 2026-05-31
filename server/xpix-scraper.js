@@ -68,22 +68,48 @@ async function mapConcurrent(arr, fn, limit = 4) {
 }
 
 // ── Fetch tutti gli album dalla taxonomy pixy_album ───────────────────────────
+// Strategia doppia:
+// 1. Per ID decrescente (album più recenti per data creazione taxonomy)
+// 2. Ricerca per anno corrente e prossimo (trova album creati anni fa ma con foto 2026+)
 async function fetchAllAlbums() {
-  const all = [];
-  let page = 1;
-  while (page <= 25) {   // max 2500 album
+  const seen = new Set();
+  const all  = [];
+
+  const addBatch = (data) => {
+    for (const a of data) {
+      if (a.count > 0 && !seen.has(a.id)) {
+        seen.add(a.id);
+        all.push(a);
+      }
+    }
+  };
+
+  // Passata 1: per ID decrescente (fino a 5 pagine = 500 album recenti)
+  for (let page = 1; page <= 5; page++) {
     try {
       const url = `${XPIX_API}/pixy_album?per_page=100&page=${page}&_fields=id,name,slug,count&orderby=id&order=desc`;
       const data = await fetchURL(url, 20000, true);
       if (!Array.isArray(data) || !data.length) break;
-      all.push(...data.filter(a => a.count > 0));
+      addBatch(data);
       if (data.length < 100) break;
-      page++;
-    } catch (e) {
-      console.warn(`[xpix] fetchAllAlbums p${page}: ${e.message}`);
-      break;
+    } catch (e) { console.warn(`[xpix] fetchAllAlbums p${page}: ${e.message}`); break; }
+  }
+
+  // Passata 2: cerca per anno corrente e successivo (trova album con ID vecchio ma foto 2026+)
+  const currentYear = new Date().getFullYear();
+  for (const year of [currentYear, currentYear + 1]) {
+    for (let page = 1; page <= 3; page++) {
+      try {
+        const url = `${XPIX_API}/pixy_album?search=${year}&per_page=100&page=${page}&_fields=id,name,slug,count`;
+        const data = await fetchURL(url, 20000, true);
+        if (!Array.isArray(data) || !data.length) break;
+        addBatch(data);
+        if (data.length < 100) break;
+      } catch (e) { console.warn(`[xpix] fetchAllAlbums search ${year} p${page}: ${e.message}`); break; }
     }
   }
+
+  console.log(`[xpix] fetchAllAlbums: ${all.length} album unici trovati`);
   return all;
 }
 

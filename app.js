@@ -7249,14 +7249,6 @@ window.adminNav = async function(section) {
             style="background:#0ea5e9;color:#fff;border:none;padding:10px 22px;border-radius:6px;font-weight:700;cursor:pointer;font-size:.875rem">
             🔄 Sincronizza xpix
           </button>
-          <button onclick="window.xpixSeedGalleries()" id="xpix-seed-btn"
-            style="background:#10b981;color:#fff;border:none;padding:10px 18px;border-radius:6px;font-weight:700;cursor:pointer;font-size:.85rem;margin-left:8px">
-            🌱 Crea gallerie
-          </button>
-          <button onclick="window.xpixCleanupQueue()" id="xpix-cleanup-btn"
-            style="background:transparent;color:#ef4444;border:1px solid #ef4444;padding:10px 18px;border-radius:6px;font-weight:600;cursor:pointer;font-size:.85rem;margin-left:8px">
-            🗑 Rimuovi pre-2026
-          </button>
           <button onclick="window.xpixDiagnose()" id="xpix-diag-btn"
             style="background:transparent;color:#0ea5e9;border:1px solid #0ea5e9;padding:10px 18px;border-radius:6px;font-weight:600;cursor:pointer;font-size:.85rem;margin-left:8px">
             🔍 Diagnosi
@@ -9008,39 +9000,6 @@ window.xpixSync = async () => {
   }
 };
 
-window.xpixCleanupQueue = async () => {
-  if (!confirm('Rimuovere dalla coda tutti gli album con anno < 2026?')) return;
-  const btn    = document.getElementById('xpix-cleanup-btn');
-  const status = document.getElementById('xpix-sync-status');
-  if (btn) { btn.disabled = true; btn.textContent = '⏳…'; }
-  try {
-    const r = await apiCall('/admin/xpix/cleanup-queue', { method: 'POST' });
-    if (status) status.textContent = `✓ Rimossi ${r.removed} album vecchi (rimasti: ${r.kept})`;
-    showToast(`✓ ${r.removed} album rimossi dalla coda`);
-    await loadXpixQueue();
-  } catch (e) {
-    showToast('Errore: ' + e.message, 'error');
-  } finally {
-    if (btn) { btn.disabled = false; btn.textContent = '🗑 Rimuovi pre-2026'; }
-  }
-};
-
-window.xpixSeedGalleries = async () => {
-  const btn    = document.getElementById('xpix-seed-btn');
-  const status = document.getElementById('xpix-sync-status');
-  if (btn) { btn.disabled = true; btn.textContent = '⏳ Creazione…'; }
-  if (status) status.textContent = 'Creazione gallerie per tutti gli album approvati…';
-  try {
-    const r = await apiCall('/admin/media/seed-xpix', { method: 'POST', body: { force: true } });
-    if (status) status.textContent = `✓ Gallerie create: ${r.created} nuove, ${r.skipped} già presenti`;
-    showToast(`✓ ${r.created} gallerie create!`);
-  } catch (e) {
-    if (status) status.textContent = '✗ Errore: ' + e.message;
-    showToast('Errore: ' + e.message, 'error');
-  } finally {
-    if (btn) { btn.disabled = false; btn.textContent = '🌱 Crea gallerie'; }
-  }
-};
 
 window.xpixAddByUrl = async () => {
   const input = document.getElementById('xpix-manual-url');
