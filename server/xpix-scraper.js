@@ -97,12 +97,27 @@ async function fetchAllAlbums() {
     } catch (e) { console.warn(`[xpix] fetchAllAlbums p${page}: ${e.message}`); break; }
   }
 
-  // Passata 2: ricerca per anno corrente (cattura album con ID vecchio ma foto nuove)
-  try {
-    const url = `${XPIX_API}/pixy_album?search=${currentYear}&per_page=100&_fields=id,name,slug,count`;
-    const data = await fetchURL(url, 20000, true);
-    if (Array.isArray(data)) addBatch(data);
-  } catch (e) { console.warn(`[xpix] fetchAllAlbums search ${currentYear}: ${e.message}`); }
+  // Passata 2a: ricerca per anno nel NOME (es. "Giro 2026")
+  // Passata 2b: ricerca per anno nello SLUG (es. "trofeo-2026-...") — usa slug come search term
+  // WordPress cerca nel name di default; aggiungiamo anche slug esplicito non è supportato,
+  // ma cercare parti dello slug funziona se coincidono col nome
+  for (const term of [`${currentYear}`, `${currentYear - 1}`]) {
+    try {
+      const url = `${XPIX_API}/pixy_album?search=${term}&per_page=100&_fields=id,name,slug,count`;
+      const data = await fetchURL(url, 20000, true);
+      if (Array.isArray(data)) addBatch(data);
+    } catch (e) { console.warn(`[xpix] search ${term}: ${e.message}`); }
+  }
+  // Passata 3: ulteriori 2 pagine per catturare album con ID medio-basso ma nuovi
+  for (let page = 3; page <= 4; page++) {
+    try {
+      const url = `${XPIX_API}/pixy_album?per_page=100&page=${page}&_fields=id,name,slug,count&orderby=id&order=desc`;
+      const data = await fetchURL(url, 20000, true);
+      if (!Array.isArray(data) || !data.length) break;
+      addBatch(data);
+      if (data.length < 100) break;
+    } catch (e) { break; }
+  }
 
   console.log(`[xpix] fetchAllAlbums: ${all.length} album unici trovati`);
   return all;
