@@ -10987,23 +10987,38 @@ async function renderGara(gara_id) {
     );
   const tipo = results[0]?.tipo || calEntry?.tipo || 'regionale';
 
-  const _buildRows = (arr) => arr.map(r => {
-    const pts = r.punti_effettivi || (BASEPTS[r.posizione]||0) * mult;
-    const pClass = posClass(r.posizione);
-    const rkTag = r.rank_dopo_gara ? `<span class="ris-rank-pos">${r.rank_dopo_gara}° class.</span>` : '';
-    return `<tr>
-      <td class="td-pos ${pClass} ${r.posizione===1?'win':''}">${r.posizione}°</td>
-      <td style="font-family:var(--font-heading);font-weight:700">
-        <a href="#/atleta/${esc(r.atleta_id)}">${esc(r.cognome)} ${esc(r.nome)}</a>
-        <div class="td-team-mobile"><a href="#/team/${esc(r.team_id)}" style="color:var(--text-secondary)">${esc(r.team)}</a></div>
-      </td>
-      <td class="td-hide-mobile"><a href="#/team/${esc(r.team_id)}" style="color:var(--text-secondary)">${esc(r.team)}</a></td>
-      <td class="td-time">${esc(r.tempo||'S.T.')}</td>
-      <td class="td-hide-mobile" style="text-align:right">${esc(r.km || '—')}</td>
-      <td class="td-hide-mobile" style="text-align:right">${esc(r.media || '—')}</td>
-      <td class="td-pts">${pts > 0 ? pts : '—'}${rkTag}</td>
-    </tr>`;
-  }).join('');
+  const _buildRows = (arr) => {
+    let _prevTempo = null;
+    return arr.map(r => {
+      const pts = r.punti_effettivi || (BASEPTS[r.posizione]||0) * mult;
+      const pClass = posClass(r.posizione);
+      const rkTag = r.rank_dopo_gara ? `<span class="ris-rank-pos">${r.rank_dopo_gara}° class.</span>` : '';
+      // Colonna tempo: vincitore → tempo calcolato; stesso gap del precedente → S.T.; altri → gap pulito
+      let tempoDisplay;
+      if (r.posizione === 1) {
+        tempoDisplay = _calcWinnerTime(r.km, r.media) || '—';
+      } else if (!r.tempo || !r.tempo.trim()) {
+        tempoDisplay = 'S.T.';
+      } else if (r.tempo === _prevTempo) {
+        tempoDisplay = 'S.T.';
+      } else {
+        tempoDisplay = _fmtGap(r.tempo);
+      }
+      if (r.posizione > 1) _prevTempo = r.tempo || null;
+      return `<tr>
+        <td class="td-pos ${pClass} ${r.posizione===1?'win':''}">${r.posizione}°</td>
+        <td style="font-family:var(--font-heading);font-weight:700">
+          <a href="#/atleta/${esc(r.atleta_id)}">${esc(r.cognome)} ${esc(r.nome)}</a>
+          <div class="td-team-mobile"><a href="#/team/${esc(r.team_id)}" style="color:var(--text-secondary)">${esc(r.team)}</a></div>
+        </td>
+        <td class="td-hide-mobile"><a href="#/team/${esc(r.team_id)}" style="color:var(--text-secondary)">${esc(r.team)}</a></td>
+        <td class="td-time">${esc(tempoDisplay)}</td>
+        <td class="td-hide-mobile" style="text-align:right">${esc(r.km || '—')}</td>
+        <td class="td-hide-mobile" style="text-align:right">${esc(r.media || '—')}</td>
+        <td class="td-pts">${pts > 0 ? pts : '—'}${rkTag}</td>
+      </tr>`;
+    }).join('');
+  };
   const _esCatHeader = (label) =>
     `<tr><td colspan="7" style="background:var(--bg-card);color:var(--primary);font-family:var(--font-heading);font-weight:800;font-size:0.78rem;letter-spacing:.08em;text-transform:uppercase;padding:10px 14px;border-bottom:2px solid var(--primary)">${label}</td></tr>`;
   let tableRows;
@@ -14676,7 +14691,9 @@ function _wrap(ctx, txt, x, y, maxW, lH) {
 
 // ── Colonna risultati gara (riusabile: 1 o 2 colonne) ───────
 // Righe a altezza uniforme + font ancorati alla larghezza (no ballooning su Storie/landscape)
-function _drawGaraColumn(ctx, x, colW, topY, bottomY, slice, startIdx, winnerTime) {
+function _drawGaraColumn(ctx, x, colW, topY, bottomY, slice, startIdx, winnerTime, _prevGapRef) {
+  // _prevGapRef = { gap: string } — oggetto condiviso per tracciare il gap precedente tra colonne
+  if (!_prevGapRef) _prevGapRef = { gap: null };
   const medalBg = ['#f5c400','#c8c8c8','#cd7f32'];
   const medalFg = ['#1a1200','#1a1a1a','#2a1500'];
   const right = x + colW;
@@ -14759,9 +14776,20 @@ function _drawGaraColumn(ctx, x, colW, topY, bottomY, slice, startIdx, winnerTim
     ctx.restore();
 
     // ── Tempo / distacco a destra ──
-    const timeStr = startIdx === 0 && i === 0
-      ? (winnerTime || '')           // vincitore: tempo assoluto
-      : _fmtGap(r.tempo || '');     // altri: distacco
+    let timeStr;
+    if (startIdx === 0 && i === 0) {
+      timeStr = winnerTime || '';
+    } else {
+      const rawGap = r.tempo || '';
+      if (!rawGap) {
+        timeStr = 'ST';
+      } else if (rawGap === _prevGapRef.gap) {
+        timeStr = 'ST';
+      } else {
+        timeStr = _fmtGap(rawGap);
+      }
+      _prevGapRef.gap = rawGap || _prevGapRef.gap;
+    }
     if (timeStr) {
       const fsTi = Math.round(rH * 0.28);
       ctx.font = `600 ${fsTi}px 'Inter Tight',sans-serif`;
@@ -14880,13 +14908,14 @@ function _drawGara(ctx, W, H, d, logo, regionLogo) {
   const landscape = W > H * 1.25;
 
   const wt = d.winnerTime || '';
+  const _gapRef = { gap: null };
   if (landscape && maxR > 5) {
     const gap = Math.round(W * 0.045);
     const colW = Math.round((W - pad * 2 - gap) / 2);
-    _drawGaraColumn(ctx, pad, colW, listTop, listBot, slice.slice(0, 5), 0, wt);
-    _drawGaraColumn(ctx, pad + colW + gap, colW, listTop, listBot, slice.slice(5), 5, wt);
+    _drawGaraColumn(ctx, pad, colW, listTop, listBot, slice.slice(0, 5), 0, wt, _gapRef);
+    _drawGaraColumn(ctx, pad + colW + gap, colW, listTop, listBot, slice.slice(5), 5, wt, _gapRef);
   } else {
-    _drawGaraColumn(ctx, pad, W - pad * 2, listTop, listBot, slice, 0, wt);
+    _drawGaraColumn(ctx, pad, W - pad * 2, listTop, listBot, slice, 0, wt, _gapRef);
   }
 }
 
