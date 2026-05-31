@@ -14782,7 +14782,7 @@ function _drawGara(ctx, W, H, d, logo, regionLogo) {
   const hH = Math.round(H * 0.095);
   let logoRight = pad;
   if (logo) {
-    const lH = Math.round(hH * 0.86);
+    const lH = Math.round(hH * 1.05);
     const lW = Math.round(lH * logo.naturalWidth / logo.naturalHeight);
     ctx.drawImage(logo, pad, Math.round((hH - lH) / 2), lW, lH);
     logoRight = pad + lW;
@@ -14796,8 +14796,7 @@ function _drawGara(ctx, W, H, d, logo, regionLogo) {
   // Regione (o luogo) accanto al logo — usa logo regionale se disponibile
   const regTxt = (region || luogo || '').toUpperCase();
   if (regionLogo) {
-    // Logo regionale: altezza uguale all'header, larghezza proporzionale
-    const rH = Math.round(hH * 0.72);
+    const rH = Math.round(hH * 0.62);
     const rW = Math.round(rH * regionLogo.naturalWidth / regionLogo.naturalHeight);
     const rX = logoRight + 20;
     const rY = Math.round((hH - rH) / 2);
