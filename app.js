@@ -11282,7 +11282,19 @@ async function renderGara(gara_id) {
       ${_gallery}
     </div>`;
 
-  window._shareGaraData = {_id:primaryGaraId,name:name,date:fmtDate(data),cat:catLabel(cat),mult:mult,tipo:tipo,region:normalizeRegion(calEntry?.regione||results1[0]?.regione||''),luogo:calEntry?.luogo||'',km:results1[0]?.km||'',media:results1[0]?.media||'',results:results1.slice(0,10).map(r=>({cognome:r.cognome,nome:r.nome,team:r.team,punti_effettivi:r.punti_effettivi}))};
+  const _shareKm    = results1[0]?.km    || '';
+  const _shareMedia = results1[0]?.media || '';
+  window._shareGaraData = {
+    _id:primaryGaraId, name, date:fmtDate(data), cat:catLabel(cat), mult, tipo,
+    region:normalizeRegion(calEntry?.regione||results1[0]?.regione||''),
+    luogo:calEntry?.luogo||'', km:_shareKm, media:_shareMedia,
+    winnerTime: _calcWinnerTime(_shareKm, _shareMedia),
+    results:results1.slice(0,10).map(r=>({
+      cognome:r.cognome, nome:r.nome, team:r.team,
+      punti_effettivi:r.punti_effettivi,
+      tempo: r.posizione === 1 ? '' : (r.tempo||''),
+    })),
+  };
 
   const siRaceIntelHtml = '';
 
@@ -14501,6 +14513,25 @@ async function _getRegionLogo(region) {
     img.src = src;
   });
 }
+// ── Helper tempo gara ─────────────────────────────────────────────────────
+// Calcola il tempo del vincitore da km e media (km/h) → "4h 19'18\""
+function _calcWinnerTime(km, media) {
+  const k = parseFloat(km), m = parseFloat(media);
+  if (!k || !m) return '';
+  const totalSec = Math.round(k / m * 3600);
+  const h = Math.floor(totalSec / 3600);
+  const min = Math.floor((totalSec % 3600) / 60);
+  const sec = totalSec % 60;
+  const mm = String(min).padStart(2,'0');
+  const ss = String(sec).padStart(2,'0');
+  return h > 0 ? `${h}h ${mm}'${ss}"` : `${mm}'${ss}"`;
+}
+// Pulisce il distacco FCI "a 14\"" → "+14\"" / "a 1'55\"" → "+1'55\""
+function _fmtGap(tempo) {
+  if (!tempo || !tempo.trim()) return '';
+  return tempo.trim().replace(/^a\s*/, '+');
+}
+
 function _bg(ctx, W, H) {
   // ── Stile Velon: dark pulito, flat, data-forward ──
   // Base quasi-nera con leggerissimo gradiente verticale
@@ -14645,7 +14676,7 @@ function _wrap(ctx, txt, x, y, maxW, lH) {
 
 // ── Colonna risultati gara (riusabile: 1 o 2 colonne) ───────
 // Righe a altezza uniforme + font ancorati alla larghezza (no ballooning su Storie/landscape)
-function _drawGaraColumn(ctx, x, colW, topY, bottomY, slice, startIdx) {
+function _drawGaraColumn(ctx, x, colW, topY, bottomY, slice, startIdx, winnerTime) {
   const medalBg = ['#f5c400','#c8c8c8','#cd7f32'];
   const medalFg = ['#1a1200','#1a1a1a','#2a1500'];
   const right = x + colW;
@@ -14726,12 +14757,25 @@ function _drawGaraColumn(ctx, x, colW, topY, bottomY, slice, startIdx) {
     }
 
     ctx.restore();
+
+    // ── Tempo / distacco a destra ──
+    const timeStr = startIdx === 0 && i === 0
+      ? (winnerTime || '')           // vincitore: tempo assoluto
+      : _fmtGap(r.tempo || '');     // altri: distacco
+    if (timeStr) {
+      const fsTi = Math.round(rH * 0.28);
+      ctx.font = `600 ${fsTi}px 'Inter Tight',sans-serif`;
+      ctx.textAlign = 'right'; ctx.textBaseline = 'middle';
+      ctx.fillStyle = isFirst ? 'rgba(245,196,0,0.85)' : 'rgba(255,255,255,0.38)';
+      ctx.fillText(timeStr, right - Math.round(colW * 0.012), cy);
+      ctx.textAlign = 'left'; ctx.textBaseline = 'alphabetic';
+    }
   });
 }
 
 // ── GARA CARD v6 — UCI-inspired, no points, big names ────────
 function _drawGara(ctx, W, H, d, logo, regionLogo) {
-  const { name, date, cat, mult, tipo, km, media, results, region, luogo } = d;
+  const { name, date, cat, mult, tipo, km, media, results, region, luogo, winnerTime } = d;
   const pad = Math.round(W * 0.048);
 
   // ── Header compatto Velon: flat, logo a sinistra (grande) + regione accanto, URL a destra ──
@@ -14803,8 +14847,9 @@ function _drawGara(ctx, W, H, d, logo, regionLogo) {
   ctx.font = `400 ${fsMeta}px 'Inter Tight',sans-serif`;
   ctx.fillStyle = 'rgba(255,255,255,0.40)';
   const metaArr = [date, `×${mult}`];
-  if (km)    metaArr.push(`${km} km`);
-  if (media) metaArr.push(`media ${media} km/h`);
+  if (km)         metaArr.push(`${km} km`);
+  if (media)      metaArr.push(`${media} km/h`);
+  if (winnerTime) metaArr.push(`⏱ ${winnerTime}`);
   y += fsMeta;
   ctx.fillText(metaArr.join('   ·   '), pad, y);
   y += Math.round(fsMeta * 0.8);
@@ -14835,13 +14880,14 @@ function _drawGara(ctx, W, H, d, logo, regionLogo) {
   const slice = results.slice(0, maxR);
   const landscape = W > H * 1.25;
 
+  const wt = d.winnerTime || '';
   if (landscape && maxR > 5) {
     const gap = Math.round(W * 0.045);
     const colW = Math.round((W - pad * 2 - gap) / 2);
-    _drawGaraColumn(ctx, pad, colW, listTop, listBot, slice.slice(0, 5), 0);
-    _drawGaraColumn(ctx, pad + colW + gap, colW, listTop, listBot, slice.slice(5), 5);
+    _drawGaraColumn(ctx, pad, colW, listTop, listBot, slice.slice(0, 5), 0, wt);
+    _drawGaraColumn(ctx, pad + colW + gap, colW, listTop, listBot, slice.slice(5), 5, wt);
   } else {
-    _drawGaraColumn(ctx, pad, W - pad * 2, listTop, listBot, slice, 0);
+    _drawGaraColumn(ctx, pad, W - pad * 2, listTop, listBot, slice, 0, wt);
   }
 }
 
