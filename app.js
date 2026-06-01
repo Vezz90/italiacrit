@@ -11082,6 +11082,25 @@ window.adminPhotoMove = async function(source, garaId) {
   } catch (e) { showToast('Errore: ' + e.message, 'error'); }
 };
 
+// Promuove una foto a principale (la porta in cima alla gallery / come hero)
+window.adminPhotoPromote = async function(source, garaId, photoUrl) {
+  try {
+    await apiCall('/admin/photos/promote', { method: 'POST', body: { source, gara_id: garaId, photo_url: photoUrl } });
+    _risPhotosMap = null;
+    showToast('⭐ Foto impostata come principale');
+    setTimeout(() => route(), 300);
+  } catch (e) { showToast('Errore: ' + e.message, 'error'); }
+};
+
+// Promuove un video a principale (lo porta in cima)
+window.adminPromoteVideo = async function(calId, idx) {
+  try {
+    await apiCall(`/admin/videos/${encodeURIComponent(calId)}/${idx}/promote`, { method: 'POST' });
+    showToast('⭐ Video impostato come principale');
+    if (window._currentGaraId) renderGara(window._currentGaraId);
+  } catch (e) { showToast('Errore: ' + e.message, 'error'); }
+};
+
 // Rimuove la foto esterna da questa gara (xpix o ic)
 window.adminPhotoRemove = async function(source, garaId) {
   if (!confirm('Rimuovere questa foto dalla gara?')) return;
@@ -11540,6 +11559,7 @@ async function renderGara(gara_id) {
                   <div class="gara-video-meta">${esc(v.channel)}</div>
                 </div>
                 ${_isAdmin ? `<div style="position:absolute;top:4px;right:4px;display:flex;gap:3px;z-index:10">
+                  <button onclick="event.stopPropagation();window.adminPromoteVideo('${esc(primaryGaraId)}',${realIdx})" style="${_adminBtnStyle};background:#f59e0b" title="Imposta come video principale">⭐</button>
                   <button onclick="event.stopPropagation();window.adminEditVideo('${esc(primaryGaraId)}',${realIdx})" style="${_adminBtnStyle};background:#2563eb">✏️</button>
                   <button onclick="event.stopPropagation();window.adminDeleteVideo('${esc(primaryGaraId)}',${realIdx})" style="${_adminBtnStyle};background:#dc2626">🗑</button>
                 </div>` : ''}
@@ -11626,11 +11646,14 @@ async function renderGara(gara_id) {
         // Gallery con tutte le foto dell'album (se disponibili)
         const _allPics = _extPhoto.photos && _extPhoto.photos.length > 1 ? _extPhoto.photos : [];
         if (_allPics.length > 1) {
+          const _isAdminPhoto = authUser()?.role === 'admin';
           _gallery = `
             <div class="profile-media-grid" style="margin-top:12px">
               ${_allPics.map((u, idx) => `
-                <div class="profile-media-card" onclick="window.openPhotoLightbox('${esc(icProxy(u))}')" style="cursor:zoom-in">
+                <div class="profile-media-card" onclick="window.openPhotoLightbox('${esc(icProxy(u))}')" style="cursor:zoom-in;position:relative">
                   <img src="${esc(icProxy(u))}" alt="Foto ${idx+1}" loading="lazy" style="width:100%;height:100%;object-fit:cover"/>
+                  ${_isAdminPhoto && idx > 0 ? `<button onclick="event.stopPropagation();window.adminPhotoPromote('${esc(_photoSource)}','${esc(_xpixKey)}','${esc(u.replace(/'/g,"\\'"))}')"
+                    style="position:absolute;top:4px;right:4px;background:rgba(245,158,11,.95);color:#fff;border:none;padding:3px 7px;border-radius:4px;font-size:.66rem;cursor:pointer;font-weight:700;z-index:2">⭐ Principale</button>` : ''}
                 </div>`).join('')}
             </div>
             ${_extPhoto.album_page ? `<div style="margin-top:8px;font-size:.8rem">

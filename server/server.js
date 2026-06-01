@@ -934,7 +934,7 @@ app.post('/api/videos/submit', requireAuth, async (req, res) => {
       const videos = await readVideos();
       if (!videos[key]) videos[key] = [];
       if (videos[key].some(v => v.url === url)) return res.status(409).json({ error: 'Video già presente' });
-      videos[key].unshift({ url, title: title || url, description: description || '', channel: channel || req.user.display_name || 'Admin', published_at: new Date().toISOString().slice(0,10) });
+      videos[key].push({ url, title: title || url, description: description || '', channel: channel || req.user.display_name || 'Admin', published_at: new Date().toISOString().slice(0,10) });
       await writeVideos(videos);
       return res.json({ ok: true, status: 'approved' });
     }
@@ -979,7 +979,7 @@ app.post('/api/videos/upload-file', requireAuth, videoUpload.single('video'), as
     if (req.user.role === 'admin') {
       const videos = await readVideos();
       if (!videos[key]) videos[key] = [];
-      videos[key].unshift({ url: videoUrl, title: title || filename, description: '', channel: channel || req.user.display_name || 'Admin', published_at: new Date().toISOString().slice(0,10) });
+      videos[key].push({ url: videoUrl, title: title || filename, description: '', channel: channel || req.user.display_name || 'Admin', published_at: new Date().toISOString().slice(0,10) });
       await writeVideos(videos);
       return res.json({ ok: true, status: 'approved', url: videoUrl });
     }
@@ -1006,7 +1006,7 @@ app.post('/api/admin/videos/pending/:id/approve', requireAdmin, async (req, res)
     const videos = await readVideos();
     const key = v.cal_id || v.gara_id;
     if (!videos[key]) videos[key] = [];
-    videos[key].unshift({ url: v.url, title: v.title, description: v.description || '', channel: v.channel || v.submitted_by || '', published_at: (v.submitted_at || '').slice(0, 10) });
+    videos[key].push({ url: v.url, title: v.title, description: v.description || '', channel: v.channel || v.submitted_by || '', published_at: (v.submitted_at || '').slice(0, 10) });
     await writeVideos(videos);
     pending.splice(i, 1);
     await writePendingVideos(pending);
@@ -1036,7 +1036,7 @@ app.post('/api/admin/videos/:calId', requireAdmin, async (req, res) => {
     if (!videos[calId]) videos[calId] = [];
     // Evita duplicati per URL
     if (videos[calId].some(v => v.url === url)) return res.status(409).json({ error: 'Video già presente per questa gara' });
-    videos[calId].unshift({
+    videos[calId].push({
       url, title: title || url,
       description: description || '',
       channel: channel || 'Admin',
@@ -1072,6 +1072,21 @@ app.delete('/api/admin/videos/:calId/:idx', requireAdmin, async (req, res) => {
     if (!videos[calId]) return res.status(404).json({ error: 'Gara non trovata' });
     videos[calId].splice(parseInt(idx), 1);
     if (!videos[calId].length) delete videos[calId];
+    await writeVideos(videos);
+    res.json({ ok: true });
+  } catch(e) { res.status(500).json({ error: e.message }); }
+});
+
+// Promuove un video a principale (lo porta in cima alla lista della gara)
+app.post('/api/admin/videos/:calId/:idx/promote', requireAdmin, async (req, res) => {
+  try {
+    const { calId, idx } = req.params;
+    const videos = await readVideos();
+    const list = videos[calId];
+    const i = parseInt(idx);
+    if (!list || !list[i]) return res.status(404).json({ error: 'Video non trovato' });
+    const [v] = list.splice(i, 1);
+    list.unshift(v);
     await writeVideos(videos);
     res.json({ ok: true });
   } catch(e) { res.status(500).json({ error: e.message }); }
@@ -1257,7 +1272,7 @@ app.post('/api/admin/youtube/queue/:id/approve', requireAdmin, async (req, res) 
     for (const gid of targets) {
       if (!videos[gid]) videos[gid] = [];
       if (!videos[gid].some(v => v.url === item.url)) {
-        videos[gid].unshift({
+        videos[gid].push({
           url:          item.url,
           title:        title   || item.title,
           description:  '',
@@ -1685,6 +1700,26 @@ const _photoStore = {
 function _resolveStore(source) { return _photoStore[source] || _photoStore.xpix; }
 
 // COPIA/ESTENDE: copia l'entry foto da from_gara_id verso uno o più to_gara_ids
+// PROMUOVE una foto a principale: porta l'URL in cima all'array photos[] e su .url
+app.post('/api/admin/photos/promote', requireAdmin, async (req, res) => {
+  try {
+    const { source, gara_id, photo_url } = req.body;
+    if (!gara_id || !photo_url) return res.status(400).json({ error: 'gara_id e photo_url obbligatori' });
+    const store = _resolveStore(source);
+    const photos = await store.read();
+    const entry = photos[gara_id];
+    if (!entry) return res.status(404).json({ error: `Nessuna foto per ${gara_id}` });
+    const arr = Array.isArray(entry.photos) ? [...entry.photos] : (entry.url ? [entry.url] : []);
+    const i = arr.indexOf(photo_url);
+    if (i > 0) { arr.splice(i, 1); arr.unshift(photo_url); }
+    else if (i === -1) { arr.unshift(photo_url); }
+    entry.photos = arr;
+    entry.url = photo_url; // la principale è quella mostrata come hero
+    await store.write(photos);
+    res.json({ ok: true });
+  } catch (e) { res.status(500).json({ error: e.message }); }
+});
+
 app.post('/api/admin/photos/extend', requireAdmin, async (req, res) => {
   try {
     const { source, from_gara_id, to_gara_ids } = req.body;
