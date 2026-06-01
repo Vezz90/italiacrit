@@ -11094,6 +11094,7 @@ async function renderGara(gara_id) {
 
   const _buildRows = (arr) => {
     let _prevTempo = null;
+    let _lastGapSec = 0; // ultimo distacco valido — ereditato dai corridori S.T.
     // Media e tempo del vincitore (riferimento per calcolare i tempi reali degli altri)
     const _winner = arr.find(r => r.posizione === 1) || arr[0];
     const _winnerSec = _winner ? _winnerSeconds(_winner.km, _winner.media) : 0;
@@ -11113,13 +11114,16 @@ async function renderGara(gara_id) {
       } else {
         tempoDisplay = _fmtGap(r.tempo);
       }
-      // Media reale ricalcolata sul distacco. S.T. = stessa media del precedente (gap identico).
+      // Media reale ricalcolata sul distacco. I corridori S.T. (tempo vuoto)
+      // ereditano l'ultimo distacco valido, non quello del vincitore.
       let mediaDisplay = r.media || '—';
       if (_winnerSec && _winnerMedia) {
         if (r.posizione === 1) {
           mediaDisplay = _winnerMedia.toFixed(3);
         } else {
-          const gapSec = _parseGapSeconds(r.tempo);
+          const ownGap = _parseGapSeconds(r.tempo);
+          const gapSec = ownGap > 0 ? ownGap : _lastGapSec; // S.T. → eredita ultimo gap
+          if (ownGap > 0) _lastGapSec = ownGap;
           const avg = _realAvgSpeed(r.km, _winnerSec, gapSec);
           mediaDisplay = avg ? avg.toFixed(3) : (r.media || '—');
         }
