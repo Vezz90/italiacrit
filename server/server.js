@@ -2515,14 +2515,15 @@ async function autoXpixSync() {
 init()
   .then(async () => {
     await ensureScraperMediaProfiles();
-    // Prima sync xpix + youtube dopo 2 minuti dal boot (Render si sveglia), poi ogni 6h
+    // Prima sync dopo 2 minuti dal boot (Render si sveglia), poi ogni 30 minuti
+    const SYNC_INTERVAL = 30 * 60 * 1000;
     setTimeout(() => {
       autoXpixSync();
       autoYoutubeSync();
       autoICSync();
-      setInterval(autoXpixSync, 6 * 60 * 60 * 1000);
-      setInterval(autoYoutubeSync, 6 * 60 * 60 * 1000);
-      setInterval(autoICSync, 6 * 60 * 60 * 1000);
+      setInterval(autoXpixSync, SYNC_INTERVAL);
+      setInterval(autoYoutubeSync, SYNC_INTERVAL);
+      setInterval(autoICSync, SYNC_INTERVAL);
     }, 2 * 60 * 1000);
     app.listen(PORT, () => {
       console.log(`[server] ItaliacritAuth in ascolto su http://localhost:${PORT}`);
