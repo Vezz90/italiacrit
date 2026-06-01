@@ -724,6 +724,24 @@ app.delete('/api/admin/race-photos/:id', requireAdmin, async (req, res) => {
 
 app.get('/api/health', (req, res) => res.json({ ok: true, ts: new Date().toISOString() }));
 
+// ── Cron esterno (keepalive GitHub Actions) ────────────────────────────────────
+// Risponde subito (tiene Render sveglio) e lancia le sync in background.
+// Così le sync girano anche se l'setInterval interno si è fermato per uno sleep.
+let _lastCronSync = 0;
+app.get('/api/cron/tick', (req, res) => {
+  res.json({ ok: true, ts: new Date().toISOString() });
+  // Throttle: esegui le sync al massimo una volta ogni 25 min, anche se pingato più spesso
+  const now = Date.now();
+  if (now - _lastCronSync < 25 * 60 * 1000) return;
+  _lastCronSync = now;
+  // Lancia in background — non blocca la risposta
+  (async () => {
+    try { await autoXpixSync(); }    catch (e) { console.warn('[cron] xpix:', e.message); }
+    try { await autoYoutubeSync(); } catch (e) { console.warn('[cron] yt:', e.message); }
+    try { await autoICSync(); }      catch (e) { console.warn('[cron] ic:', e.message); }
+  })();
+});
+
 // ── Push notifications ──────────────────────────────────────────────────────
 // Chiave pubblica VAPID (serve al client per subscribe)
 app.get('/api/push/public-key', (req, res) => {
