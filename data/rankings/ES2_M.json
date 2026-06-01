@@ -797,7 +797,7 @@
     "p3": 3,
     "pout": 8,
     "pos": 50,
-    "trend": 2
+    "trend": 0
   },
   {
     "atleta_id": "BIANCINI_ALESSIO",
@@ -813,7 +813,7 @@
     "p3": 2,
     "pout": 4,
     "pos": 51,
-    "trend": -1
+    "trend": 0
   },
   {
     "atleta_id": "BELLAGAMBA_ALBERTO",
@@ -829,7 +829,7 @@
     "p3": 1,
     "pout": 5,
     "pos": 52,
-    "trend": -1
+    "trend": 0
   },
   {
     "atleta_id": "MASCOLO_VITTORIO_DAVIDE",

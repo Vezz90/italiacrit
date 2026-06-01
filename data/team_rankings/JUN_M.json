@@ -2,12 +2,12 @@
   {
     "team_id": "TEAM_VANGI_TOMMASINI_IL_PIRATA",
     "team_nome": "TEAM VANGI TOMMASINI IL PIRATA",
-    "punti": 767,
+    "punti": 797,
     "vittorie": 11,
     "p1": 11,
-    "p2": 9,
+    "p2": 10,
     "p3": 9,
-    "pout": 28,
+    "pout": 29,
     "n_atleti": 12,
     "pos": 1
   },
@@ -38,21 +38,21 @@
   {
     "team_id": "TEAM_GUERRINI_SENAGHESE",
     "team_nome": "TEAM GUERRINI SENAGHESE",
-    "punti": 367,
+    "punti": 375,
     "vittorie": 4,
     "p1": 4,
     "p2": 4,
     "p3": 4,
-    "pout": 22,
+    "pout": 23,
     "n_atleti": 11,
     "pos": 4
   },
   {
     "team_id": "NORDEST_PETRUCCI_ASSALI_STEFEN",
     "team_nome": "NORDEST PETRUCCI ASSALI STEFEN",
-    "punti": 343,
-    "vittorie": 8,
-    "p1": 8,
+    "punti": 373,
+    "vittorie": 9,
+    "p1": 9,
     "p2": 1,
     "p3": 1,
     "pout": 20,
@@ -62,37 +62,37 @@
   {
     "team_id": "TEAM_NERI_SOTTOLI_LUCCHINI_ENERGY",
     "team_nome": "TEAM NERI SOTTOLI LUCCHINI ENERGY",
-    "punti": 339,
+    "punti": 351,
     "vittorie": 0,
     "p1": 0,
     "p2": 5,
     "p3": 4,
-    "pout": 26,
+    "pout": 27,
     "n_atleti": 7,
     "pos": 6
   },
   {
+    "team_id": "CICLISTICA_TREVIGLIESE",
+    "team_nome": "CICLISTICA TREVIGLIESE",
+    "punti": 330,
+    "vittorie": 1,
+    "p1": 1,
+    "p2": 3,
+    "p3": 5,
+    "pout": 23,
+    "n_atleti": 9,
+    "pos": 7
+  },
+  {
     "team_id": "AUTOZAI_CONTRI",
     "team_nome": "AUTOZAI-CONTRI",
-    "punti": 314,
+    "punti": 316,
     "vittorie": 2,
     "p1": 2,
     "p2": 3,
     "p3": 2,
-    "pout": 19,
+    "pout": 20,
     "n_atleti": 6,
-    "pos": 7
-  },
-  {
-    "team_id": "CICLISTICA_TREVIGLIESE",
-    "team_nome": "CICLISTICA TREVIGLIESE",
-    "punti": 300,
-    "vittorie": 1,
-    "p1": 1,
-    "p2": 3,
-    "p3": 4,
-    "pout": 22,
-    "n_atleti": 9,
     "pos": 8
   },
   {
@@ -228,6 +228,18 @@
     "pos": 19
   },
   {
+    "team_id": "TEAM_TIEPOLO_U19_DEVO",
+    "team_nome": "TEAM TIEPOLO U19 DEVO",
+    "punti": 154,
+    "vittorie": 0,
+    "p1": 0,
+    "p2": 2,
+    "p3": 2,
+    "pout": 11,
+    "n_atleti": 6,
+    "pos": 20
+  },
+  {
     "team_id": "U_C_PIASCO",
     "team_nome": "U.C. PIASCO",
     "punti": 145,
@@ -237,7 +249,7 @@
     "p3": 2,
     "pout": 5,
     "n_atleti": 3,
-    "pos": 20
+    "pos": 21
   },
   {
     "team_id": "A_S_D_CICLISTICA_MONSELICE",
@@ -249,18 +261,6 @@
     "p3": 3,
     "pout": 6,
     "n_atleti": 2,
-    "pos": 21
-  },
-  {
-    "team_id": "TEAM_TIEPOLO_U19_DEVO",
-    "team_nome": "TEAM TIEPOLO U19 DEVO",
-    "punti": 138,
-    "vittorie": 0,
-    "p1": 0,
-    "p2": 2,
-    "p3": 2,
-    "pout": 10,
-    "n_atleti": 6,
     "pos": 22
   },
   {
@@ -444,6 +444,18 @@
     "pos": 37
   },
   {
+    "team_id": "S_C_ROMANESE_ASD",
+    "team_nome": "S.C. ROMANESE ASD",
+    "punti": 57,
+    "vittorie": 0,
+    "p1": 0,
+    "p2": 0,
+    "p3": 0,
+    "pout": 9,
+    "n_atleti": 2,
+    "pos": 38
+  },
+  {
     "team_id": "SLOVENIA_NATIONAL_TEAM",
     "team_nome": "SLOVENIA NATIONAL TEAM",
     "punti": 57,
@@ -453,7 +465,7 @@
     "p3": 1,
     "pout": 4,
     "n_atleti": 3,
-    "pos": 38
+    "pos": 39
   },
   {
     "team_id": "FRANCIA",
@@ -465,18 +477,6 @@
     "p3": 0,
     "pout": 5,
     "n_atleti": 3,
-    "pos": 39
-  },
-  {
-    "team_id": "S_C_ROMANESE_ASD",
-    "team_nome": "S.C. ROMANESE ASD",
-    "punti": 53,
-    "vittorie": 0,
-    "p1": 0,
-    "p2": 0,
-    "p3": 0,
-    "pout": 8,
-    "n_atleti": 2,
     "pos": 40
   },
   {

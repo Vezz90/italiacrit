@@ -1,4 +1,2743 @@
 {
+  "PEZZO_ROSOLA_PATRIK": {
+    "id": "PEZZO_ROSOLA_PATRIK",
+    "nome": "PATRIK",
+    "cognome": "PEZZO ROSOLA",
+    "team_attuale": "NORDEST PETRUCCI ASSALI STEFEN",
+    "team_id": "NORDEST_PETRUCCI_ASSALI_STEFEN",
+    "categoria": "JUN_M",
+    "genere": "M",
+    "punti_totali": 196,
+    "risultati": [
+      {
+        "gara_id": "24_GIRO_DEL_FRIULI_VENEZIA_GIULIA_SECONDA_TAPPA_2026-06-01_JUN_M",
+        "nome_gara": "24 GIRO DEL FRIULI VENEZIA GIULIA SECONDA TAPPA",
+        "data": "2026-06-01",
+        "posizione": 1,
+        "punti_effettivi": 30,
+        "team": "NORDEST PETRUCCI ASSALI STEFEN",
+        "moltiplicatore": 2,
+        "tipo": "nazionale",
+        "regione": "FRIULI VENEZIA GIULIA",
+        "km": "101.100",
+        "media": "36.756"
+      },
+      {
+        "gara_id": "CORSA_DELLA_PACE_JUNIORES_CLASSIFICA_GENERALE_2026-05-10_JUN_M",
+        "nome_gara": "CORSA DELLA PACE JUNIORES CLASSIFICA GENERALE",
+        "data": "2026-05-10",
+        "posizione": 1,
+        "punti_effettivi": 30,
+        "team": "NORDEST PETRUCCI ASSALI STEFEN",
+        "moltiplicatore": 2,
+        "tipo": "regionale",
+        "regione": "TEREZIN",
+        "km": "397.300",
+        "media": "44.514"
+      },
+      {
+        "gara_id": "CORSA_DELLA_PACE_JUNIORES_TERZA_TAPPA_2026-05-09_JUN_M",
+        "nome_gara": "CORSA DELLA PACE JUNIORES TERZA TAPPA",
+        "data": "2026-05-09",
+        "posizione": 1,
+        "punti_effettivi": 30,
+        "team": "NORDEST PETRUCCI ASSALI STEFEN",
+        "moltiplicatore": 2,
+        "tipo": "nazionale",
+        "regione": "TEPLICE",
+        "km": "112.100",
+        "media": "45.791"
+      },
+      {
+        "gara_id": "CORSA_DELLA_PACE_JUNIORES_SECONDA_TAPPA_PRIMA_SEMITAPPA_CRONOMETRO_2026-05-08_JUN_M",
+        "nome_gara": "CORSA DELLA PACE JUNIORES SECONDA TAPPA PRIMA SEMITAPPA CRONOMETRO",
+        "data": "2026-05-08",
+        "posizione": 6,
+        "punti_effettivi": 10,
+        "team": "NORDEST PETRUCCI ASSALI STEFEN",
+        "moltiplicatore": 2,
+        "tipo": "nazionale",
+        "regione": "CASOVKA",
+        "km": "8.800",
+        "media": "50.139"
+      },
+      {
+        "gara_id": "15_GIRO_DI_PRIMAVERA_2026-04-26_JUN_M",
+        "nome_gara": "15 GIRO DI PRIMAVERA",
+        "data": "2026-04-26",
+        "posizione": 2,
+        "punti_effettivi": 36,
+        "team": "NORDEST PETRUCCI ASSALI STEFEN",
+        "moltiplicatore": 3,
+        "tipo": "internazionale",
+        "regione": "VENETO",
+        "km": "129.100",
+        "media": "41.604"
+      },
+      {
+        "gara_id": "4_PICCOLA_LIEGI_DELLE_BREGONZE_CASA_ENRICO_2026-04-12_JUN_M",
+        "nome_gara": "4 PICCOLA LIEGI DELLE BREGONZE CASA ENRICO",
+        "data": "2026-04-12",
+        "posizione": 1,
+        "punti_effettivi": 30,
+        "team": "NORDEST PETRUCCI ASSALI STEFEN",
+        "moltiplicatore": 2,
+        "tipo": "nazionale",
+        "regione": "VENETO",
+        "km": "121.330",
+        "media": "41.619"
+      },
+      {
+        "gara_id": "22_TROFEO_RISTORANTE_ALLA_COLOMBERA_2026-03-22_JUN_M",
+        "nome_gara": "22 TROFEO RISTORANTE ALLA COLOMBERA",
+        "data": "2026-03-22",
+        "posizione": 1,
+        "punti_effettivi": 15,
+        "team": "NORDEST PETRUCCI ASSALI STEFEN",
+        "moltiplicatore": 1,
+        "tipo": "regionale",
+        "regione": "VENETO",
+        "km": "101.000",
+        "media": "42.676"
+      },
+      {
+        "gara_id": "4_CRONOVERSILIA_2026-03-09_JUN_M",
+        "nome_gara": "4 CRONOVERSILIA",
+        "data": "2026-03-09",
+        "posizione": 1,
+        "punti_effettivi": 15,
+        "team": "NORDEST PETRUCCI ASSALI STEFEN",
+        "moltiplicatore": 1,
+        "tipo": "regionale",
+        "regione": "TOSCANA",
+        "km": "11.500",
+        "media": "51.957"
+      }
+    ]
+  },
+  "MARTINEZ_GROSET_AITOR": {
+    "id": "MARTINEZ_GROSET_AITOR",
+    "nome": "AITOR",
+    "cognome": "MARTINEZ GROSET",
+    "team_attuale": "TEAM VANGI TOMMASINI IL PIRATA",
+    "team_id": "TEAM_VANGI_TOMMASINI_IL_PIRATA",
+    "categoria": "JUN_M",
+    "genere": "M",
+    "punti_totali": 257,
+    "risultati": [
+      {
+        "gara_id": "24_GIRO_DEL_FRIULI_VENEZIA_GIULIA_SECONDA_TAPPA_2026-06-01_JUN_M",
+        "nome_gara": "24 GIRO DEL FRIULI VENEZIA GIULIA SECONDA TAPPA",
+        "data": "2026-06-01",
+        "posizione": 2,
+        "punti_effettivi": 24,
+        "team": "TEAM VANGI TOMMASINI IL PIRATA",
+        "moltiplicatore": 2,
+        "tipo": "nazionale",
+        "regione": "FRIULI VENEZIA GIULIA",
+        "km": "101.100",
+        "media": "36.756"
+      },
+      {
+        "gara_id": "EROICA_JUNIORES_COPPA_ANDREA_MENEGHELLI_2026-05-24_JUN_M",
+        "nome_gara": "EROICA JUNIORES COPPA ANDREA MENEGHELLI",
+        "data": "2026-05-24",
+        "posizione": 2,
+        "punti_effettivi": 36,
+        "team": "TEAM VANGI TOMMASINI IL PIRATA",
+        "moltiplicatore": 3,
+        "tipo": "internazionale",
+        "regione": "TOSCANA",
+        "km": "108.000",
+        "media": "37.663"
+      },
+      {
+        "gara_id": "DUE_GIORNI_DI_BRESCIA_E_BERGAMO_2_GRAN_PREMIO_SE_AV_IM_2026-05-17_JUN_M",
+        "nome_gara": "DUE GIORNI DI BRESCIA E BERGAMO 2 GRAN PREMIO SE AV IM",
+        "data": "2026-05-17",
+        "posizione": 1,
+        "punti_effettivi": 30,
+        "team": "TEAM VANGI TOMMASINI IL PIRATA",
+        "moltiplicatore": 2,
+        "tipo": "nazionale",
+        "regione": "LOMBARDIA",
+        "km": "98.500",
+        "media": "42.518"
+      },
+      {
+        "gara_id": "DUE_GIORNI_DI_BRESCIA_E_BERGAMO_5_GRAN_PREMIO_ECOTEK_2026-05-16_JUN_M",
+        "nome_gara": "DUE GIORNI DI BRESCIA E BERGAMO 5 GRAN PREMIO ECOTEK",
+        "data": "2026-05-16",
+        "posizione": 1,
+        "punti_effettivi": 30,
+        "team": "TEAM VANGI TOMMASINI IL PIRATA",
+        "moltiplicatore": 2,
+        "tipo": "nazionale",
+        "regione": "LOMBARDIA",
+        "km": "120.700",
+        "media": "38.727"
+      },
+      {
+        "gara_id": "GRAN_PREMIO_CITTA_DI_CORTONA_PROVA_VALIDA_CAMPIONATO_REGIONALE_2026-05-10_JUN_M",
+        "nome_gara": "GRAN PREMIO CITTA' DI CORTONA PROVA VALIDA CAMPIONATO REGIONALE",
+        "data": "2026-05-10",
+        "posizione": 1,
+        "punti_effettivi": 30,
+        "team": "TEAM VANGI TOMMASINI IL PIRATA",
+        "moltiplicatore": 2,
+        "tipo": "regionale",
+        "regione": "TOSCANA",
+        "km": "111.000",
+        "media": "41.599"
+      },
+      {
+        "gara_id": "15_GIRO_DI_PRIMAVERA_2026-04-26_JUN_M",
+        "nome_gara": "15 GIRO DI PRIMAVERA",
+        "data": "2026-04-26",
+        "posizione": 3,
+        "punti_effettivi": 30,
+        "team": "TEAM VANGI TOMMASINI IL PIRATA",
+        "moltiplicatore": 3,
+        "tipo": "internazionale",
+        "regione": "VENETO",
+        "km": "129.100",
+        "media": "41.604"
+      },
+      {
+        "gara_id": "50_GRAN_PREMIO_LIBERAZIONE_CITTA_DI_MASSA_2026-04-25_JUN_M",
+        "nome_gara": "50 GRAN PREMIO LIBERAZIONE CITTA' DI MASSA",
+        "data": "2026-04-25",
+        "posizione": 2,
+        "punti_effettivi": 24,
+        "team": "TEAM VANGI TOMMASINI IL PIRATA",
+        "moltiplicatore": 2,
+        "tipo": "nazionale",
+        "regione": "TOSCANA",
+        "km": "118.500",
+        "media": "42.524"
+      },
+      {
+        "gara_id": "COPPA_PALAZZOLO_2026_PROVA_VALIDA_CAMPIONATO_REGIONALE_2026-04-06_JUN_M",
+        "nome_gara": "COPPA PALAZZOLO 2026 PROVA VALIDA CAMPIONATO REGIONALE",
+        "data": "2026-04-06",
+        "posizione": 7,
+        "punti_effettivi": 8,
+        "team": "TEAM VANGI TOMMASINI IL PIRATA",
+        "moltiplicatore": 2,
+        "tipo": "regionale",
+        "regione": "LAZIO",
+        "km": "106.000",
+        "media": "39.102"
+      },
+      {
+        "gara_id": "TROFEO_MICHELE_SCARPONI_DUE_GIORNI_2026-04-04_JUN_M",
+        "nome_gara": "TROFEO MICHELE SCARPONI DUE GIORNI",
+        "data": "2026-04-04",
+        "posizione": 1,
+        "punti_effettivi": 30,
+        "team": "TEAM VANGI TOMMASINI IL PIRATA",
+        "moltiplicatore": 2,
+        "tipo": "nazionale",
+        "regione": "MARCHE",
+        "km": "107.100",
+        "media": "39.802"
+      },
+      {
+        "gara_id": "5_MEMORIAL_PAOLO_BAICCHI_2026-03-15_JUN_M",
+        "nome_gara": "5 MEMORIAL PAOLO BAICCHI",
+        "data": "2026-03-15",
+        "posizione": 1,
+        "punti_effettivi": 15,
+        "team": "TEAM VANGI TOMMASINI IL PIRATA",
+        "moltiplicatore": 1,
+        "tipo": "regionale",
+        "regione": "TOSCANA",
+        "km": "77.000",
+        "media": "43.030"
+      }
+    ]
+  },
+  "GAMBA_CHRISTIAN": {
+    "id": "GAMBA_CHRISTIAN",
+    "nome": "CHRISTIAN",
+    "cognome": "GAMBA",
+    "team_attuale": "CICLISTICA TREVIGLIESE",
+    "team_id": "CICLISTICA_TREVIGLIESE",
+    "categoria": "JUN_M",
+    "genere": "M",
+    "punti_totali": 85,
+    "risultati": [
+      {
+        "gara_id": "24_GIRO_DEL_FRIULI_VENEZIA_GIULIA_SECONDA_TAPPA_2026-06-01_JUN_M",
+        "nome_gara": "24 GIRO DEL FRIULI VENEZIA GIULIA SECONDA TAPPA",
+        "data": "2026-06-01",
+        "posizione": 3,
+        "punti_effettivi": 20,
+        "team": "CICLISTICA TREVIGLIESE",
+        "moltiplicatore": 2,
+        "tipo": "nazionale",
+        "regione": "FRIULI VENEZIA GIULIA",
+        "km": "101.100",
+        "media": "36.756"
+      },
+      {
+        "gara_id": "45_TROFEO_PISTOLESI_2026-05-24_JUN_M",
+        "nome_gara": "45 TROFEO PISTOLESI",
+        "data": "2026-05-24",
+        "posizione": 7,
+        "punti_effettivi": 4,
+        "team": "CICLISTICA TREVIGLIESE",
+        "moltiplicatore": 1,
+        "tipo": "regionale",
+        "regione": "LOMBARDIA",
+        "km": "105.000",
+        "media": "41.653"
+      },
+      {
+        "gara_id": "8_CHALLENGE_NAZIONALE_BRESCIANA_GIANCARLO_OTELLI_RICORDANDO_GIANCARLO_CRONOMETRO_2026-05-10_JUN_M",
+        "nome_gara": "8 CHALLENGE NAZIONALE BRESCIANA GIANCARLO OTELLI RICORDANDO GIANCARLO CRONOMETRO",
+        "data": "2026-05-10",
+        "posizione": 3,
+        "punti_effettivi": 20,
+        "team": "CICLISTICA TREVIGLIESE",
+        "moltiplicatore": 2,
+        "tipo": "nazionale",
+        "regione": "LOMBARDIA",
+        "km": "5.600",
+        "media": "29.779"
+      },
+      {
+        "gara_id": "15_GIRO_DI_PRIMAVERA_2026-04-26_JUN_M",
+        "nome_gara": "15 GIRO DI PRIMAVERA",
+        "data": "2026-04-26",
+        "posizione": 10,
+        "punti_effettivi": 3,
+        "team": "CICLISTICA TREVIGLIESE",
+        "moltiplicatore": 3,
+        "tipo": "internazionale",
+        "regione": "VENETO",
+        "km": "129.100",
+        "media": "41.604"
+      },
+      {
+        "gara_id": "3_TROFEO_PROTECH_MEMORIAL_RODOLFO_BARDELLONI_2026-04-19_JUN_M",
+        "nome_gara": "3 TROFEO PROTECH MEMORIAL RODOLFO BARDELLONI",
+        "data": "2026-04-19",
+        "posizione": 7,
+        "punti_effettivi": 8,
+        "team": "CICLISTICA TREVIGLIESE",
+        "moltiplicatore": 2,
+        "tipo": "nazionale",
+        "regione": "LOMBARDIA",
+        "km": "122.000",
+        "media": "44.065"
+      },
+      {
+        "gara_id": "4_MEMORIAL_GERMANO_VITTONI_2026-04-12_JUN_M",
+        "nome_gara": "4 MEMORIAL GERMANO VITTONI",
+        "data": "2026-04-12",
+        "posizione": 5,
+        "punti_effettivi": 6,
+        "team": "CICLISTICA TREVIGLIESE",
+        "moltiplicatore": 1,
+        "tipo": "regionale",
+        "regione": "PIEMONTE",
+        "km": "93.700",
+        "media": "42.516"
+      },
+      {
+        "gara_id": "62_GIRO_DELLA_CASTELLANIA_2026-04-11_JUN_M",
+        "nome_gara": "62 GIRO DELLA CASTELLANIA",
+        "data": "2026-04-11",
+        "posizione": 5,
+        "punti_effettivi": 12,
+        "team": "CICLISTICA TREVIGLIESE",
+        "moltiplicatore": 2,
+        "tipo": "nazionale",
+        "regione": "PIEMONTE",
+        "km": "114.800",
+        "media": "43.829"
+      },
+      {
+        "gara_id": "46_PICCOLA_SAN_GEO_2026-03-15_JUN_M",
+        "nome_gara": "46 PICCOLA SAN GEO",
+        "data": "2026-03-15",
+        "posizione": 3,
+        "punti_effettivi": 10,
+        "team": "CICLISTICA TREVIGLIESE",
+        "moltiplicatore": 1,
+        "tipo": "regionale",
+        "regione": "LOMBARDIA",
+        "km": "99.200",
+        "media": "40.744"
+      },
+      {
+        "gara_id": "TROFEO_TECNOMECCANICA_2026-03-01_JUN_M",
+        "nome_gara": "TROFEO TECNOMECCANICA",
+        "data": "2026-03-01",
+        "posizione": 9,
+        "punti_effettivi": 2,
+        "team": "CICLISTICA TREVIGLIESE",
+        "moltiplicatore": 1,
+        "tipo": "regionale",
+        "regione": "LOMBARDIA",
+        "km": "88.000",
+        "media": "40.331"
+      }
+    ]
+  },
+  "WROLICH_SANTIAGO": {
+    "id": "WROLICH_SANTIAGO",
+    "nome": "SANTIAGO",
+    "cognome": "WROLICH",
+    "team_attuale": "TEAM TIEPOLO U19 DEVO",
+    "team_id": "TEAM_TIEPOLO_U19_DEVO",
+    "categoria": "JUN_M",
+    "genere": "M",
+    "punti_totali": 64,
+    "risultati": [
+      {
+        "gara_id": "24_GIRO_DEL_FRIULI_VENEZIA_GIULIA_SECONDA_TAPPA_2026-06-01_JUN_M",
+        "nome_gara": "24 GIRO DEL FRIULI VENEZIA GIULIA SECONDA TAPPA",
+        "data": "2026-06-01",
+        "posizione": 4,
+        "punti_effettivi": 16,
+        "team": "TEAM TIEPOLO U19 DEVO",
+        "moltiplicatore": 2,
+        "tipo": "nazionale",
+        "regione": "FRIULI VENEZIA GIULIA",
+        "km": "101.100",
+        "media": "36.756"
+      },
+      {
+        "gara_id": "65_VITTORIO_VENETO_CANSIGLIO_PROVA_VALIDA_CAMPIONATO_REGIONALE_2026-05-23_JUN_M",
+        "nome_gara": "65 VITTORIO VENETO CANSIGLIO PROVA VALIDA CAMPIONATO REGIONALE",
+        "data": "2026-05-23",
+        "posizione": 2,
+        "punti_effettivi": 24,
+        "team": "TEAM TIEPOLO U19 DEVO",
+        "moltiplicatore": 2,
+        "tipo": "regionale",
+        "regione": "VENETO",
+        "km": "102.520",
+        "media": "38.801"
+      },
+      {
+        "gara_id": "DUE_GIORNI_DI_BRESCIA_E_BERGAMO_5_GRAN_PREMIO_ECOTEK_2026-05-16_JUN_M",
+        "nome_gara": "DUE GIORNI DI BRESCIA E BERGAMO 5 GRAN PREMIO ECOTEK",
+        "data": "2026-05-16",
+        "posizione": 2,
+        "punti_effettivi": 24,
+        "team": "TEAM TIEPOLO U19 DEVO",
+        "moltiplicatore": 2,
+        "tipo": "nazionale",
+        "regione": "LOMBARDIA",
+        "km": "120.700",
+        "media": "38.727"
+      }
+    ]
+  },
+  "BELLATO_ACHILLE": {
+    "id": "BELLATO_ACHILLE",
+    "nome": "ACHILLE",
+    "cognome": "BELLATO",
+    "team_attuale": "TEAM NERI SOTTOLI LUCCHINI ENERGY",
+    "team_id": "TEAM_NERI_SOTTOLI_LUCCHINI_ENERGY",
+    "categoria": "JUN_M",
+    "genere": "M",
+    "punti_totali": 34,
+    "risultati": [
+      {
+        "gara_id": "24_GIRO_DEL_FRIULI_VENEZIA_GIULIA_SECONDA_TAPPA_2026-06-01_JUN_M",
+        "nome_gara": "24 GIRO DEL FRIULI VENEZIA GIULIA SECONDA TAPPA",
+        "data": "2026-06-01",
+        "posizione": 5,
+        "punti_effettivi": 12,
+        "team": "TEAM NERI SOTTOLI LUCCHINI ENERGY",
+        "moltiplicatore": 2,
+        "tipo": "nazionale",
+        "regione": "FRIULI VENEZIA GIULIA",
+        "km": "101.100",
+        "media": "36.756"
+      },
+      {
+        "gara_id": "EROICA_JUNIORES_COPPA_ANDREA_MENEGHELLI_2026-05-24_JUN_M",
+        "nome_gara": "EROICA JUNIORES COPPA ANDREA MENEGHELLI",
+        "data": "2026-05-24",
+        "posizione": 5,
+        "punti_effettivi": 18,
+        "team": "TEAM NERI SOTTOLI LUCCHINI ENERGY",
+        "moltiplicatore": 3,
+        "tipo": "internazionale",
+        "regione": "TOSCANA",
+        "km": "108.000",
+        "media": "37.663"
+      },
+      {
+        "gara_id": "TROFEO_MICHELE_SCARPONI_DUE_GIORNI_2026-04-03_JUN_M",
+        "nome_gara": "TROFEO MICHELE SCARPONI DUE GIORNI",
+        "data": "2026-04-03",
+        "posizione": 9,
+        "punti_effettivi": 4,
+        "team": "TEAM NERI SOTTOLI LUCCHINI ENERGY",
+        "moltiplicatore": 2,
+        "tipo": "nazionale",
+        "regione": "MARCHE",
+        "km": "119.200",
+        "media": "42.311"
+      }
+    ]
+  },
+  "FRANCESCHINI_GIULIO": {
+    "id": "FRANCESCHINI_GIULIO",
+    "nome": "GIULIO",
+    "cognome": "FRANCESCHINI",
+    "team_attuale": "CICLISTICA TREVIGLIESE",
+    "team_id": "CICLISTICA_TREVIGLIESE",
+    "categoria": "JUN_M",
+    "genere": "M",
+    "punti_totali": 156,
+    "risultati": [
+      {
+        "gara_id": "24_GIRO_DEL_FRIULI_VENEZIA_GIULIA_SECONDA_TAPPA_2026-06-01_JUN_M",
+        "nome_gara": "24 GIRO DEL FRIULI VENEZIA GIULIA SECONDA TAPPA",
+        "data": "2026-06-01",
+        "posizione": 6,
+        "punti_effettivi": 10,
+        "team": "CICLISTICA TREVIGLIESE",
+        "moltiplicatore": 2,
+        "tipo": "nazionale",
+        "regione": "FRIULI VENEZIA GIULIA",
+        "km": "101.100",
+        "media": "36.756"
+      },
+      {
+        "gara_id": "DUE_GIORNI_DI_BRESCIA_E_BERGAMO_2_GRAN_PREMIO_SE_AV_IM_2026-05-17_JUN_M",
+        "nome_gara": "DUE GIORNI DI BRESCIA E BERGAMO 2 GRAN PREMIO SE AV IM",
+        "data": "2026-05-17",
+        "posizione": 6,
+        "punti_effettivi": 10,
+        "team": "CICLISTICA TREVIGLIESE",
+        "moltiplicatore": 2,
+        "tipo": "nazionale",
+        "regione": "LOMBARDIA",
+        "km": "98.500",
+        "media": "42.518"
+      },
+      {
+        "gara_id": "DUE_GIORNI_DI_BRESCIA_E_BERGAMO_5_GRAN_PREMIO_ECOTEK_2026-05-16_JUN_M",
+        "nome_gara": "DUE GIORNI DI BRESCIA E BERGAMO 5 GRAN PREMIO ECOTEK",
+        "data": "2026-05-16",
+        "posizione": 4,
+        "punti_effettivi": 16,
+        "team": "CICLISTICA TREVIGLIESE",
+        "moltiplicatore": 2,
+        "tipo": "nazionale",
+        "regione": "LOMBARDIA",
+        "km": "120.700",
+        "media": "38.727"
+      },
+      {
+        "gara_id": "8_CHALLENGE_NAZIONALE_BRESCIANA_GIANCARLO_OTELLI_2026-05-10_JUN_M",
+        "nome_gara": "8 CHALLENGE NAZIONALE BRESCIANA GIANCARLO OTELLI",
+        "data": "2026-05-10",
+        "posizione": 4,
+        "punti_effettivi": 16,
+        "team": "CICLISTICA TREVIGLIESE",
+        "moltiplicatore": 2,
+        "tipo": "nazionale",
+        "regione": "LOMBARDIA",
+        "km": ".86.650",
+        "media": "41.142"
+      },
+      {
+        "gara_id": "8_CHALLENGE_NAZIONALE_BRESCIANA_GIANCARLO_OTELLI_RICORDANDO_GIANCARLO_CRONOMETRO_2026-05-10_JUN_M",
+        "nome_gara": "8 CHALLENGE NAZIONALE BRESCIANA GIANCARLO OTELLI RICORDANDO GIANCARLO CRONOMETRO",
+        "data": "2026-05-10",
+        "posizione": 2,
+        "punti_effettivi": 24,
+        "team": "CICLISTICA TREVIGLIESE",
+        "moltiplicatore": 2,
+        "tipo": "nazionale",
+        "regione": "LOMBARDIA",
+        "km": "5.600",
+        "media": "29.779"
+      },
+      {
+        "gara_id": "3_TROFEO_PROTECH_MEMORIAL_RODOLFO_BARDELLONI_2026-04-19_JUN_M",
+        "nome_gara": "3 TROFEO PROTECH MEMORIAL RODOLFO BARDELLONI",
+        "data": "2026-04-19",
+        "posizione": 1,
+        "punti_effettivi": 30,
+        "team": "CICLISTICA TREVIGLIESE",
+        "moltiplicatore": 2,
+        "tipo": "nazionale",
+        "regione": "LOMBARDIA",
+        "km": "122.000",
+        "media": "44.065"
+      },
+      {
+        "gara_id": "4_PICCOLA_LIEGI_DELLE_BREGONZE_CASA_ENRICO_2026-04-12_JUN_M",
+        "nome_gara": "4 PICCOLA LIEGI DELLE BREGONZE CASA ENRICO",
+        "data": "2026-04-12",
+        "posizione": 5,
+        "punti_effettivi": 12,
+        "team": "CICLISTICA TREVIGLIESE",
+        "moltiplicatore": 2,
+        "tipo": "nazionale",
+        "regione": "VENETO",
+        "km": "121.330",
+        "media": "41.619"
+      },
+      {
+        "gara_id": "62_GIRO_DELLA_CASTELLANIA_2026-04-11_JUN_M",
+        "nome_gara": "62 GIRO DELLA CASTELLANIA",
+        "data": "2026-04-11",
+        "posizione": 3,
+        "punti_effettivi": 20,
+        "team": "CICLISTICA TREVIGLIESE",
+        "moltiplicatore": 2,
+        "tipo": "nazionale",
+        "regione": "PIEMONTE",
+        "km": "114.800",
+        "media": "43.829"
+      },
+      {
+        "gara_id": "TROFEO_IREN_2026-03-29_JUN_M",
+        "nome_gara": "TROFEO IREN",
+        "data": "2026-03-29",
+        "posizione": 5,
+        "punti_effettivi": 6,
+        "team": "CICLISTICA TREVIGLIESE",
+        "moltiplicatore": 1,
+        "tipo": "regionale",
+        "regione": "LIGURIA",
+        "km": "105.000",
+        "media": "42.857"
+      },
+      {
+        "gara_id": "TROFEO_TECNOMECCANICA_2026-03-01_JUN_M",
+        "nome_gara": "TROFEO TECNOMECCANICA",
+        "data": "2026-03-01",
+        "posizione": 2,
+        "punti_effettivi": 12,
+        "team": "CICLISTICA TREVIGLIESE",
+        "moltiplicatore": 1,
+        "tipo": "regionale",
+        "regione": "LOMBARDIA",
+        "km": "88.000",
+        "media": "40.331"
+      }
+    ]
+  },
+  "GATTA_GABRIELE": {
+    "id": "GATTA_GABRIELE",
+    "nome": "GABRIELE",
+    "cognome": "GATTA",
+    "team_attuale": "TEAM GUERRINI SENAGHESE",
+    "team_id": "TEAM_GUERRINI_SENAGHESE",
+    "categoria": "JUN_M",
+    "genere": "M",
+    "punti_totali": 35,
+    "risultati": [
+      {
+        "gara_id": "24_GIRO_DEL_FRIULI_VENEZIA_GIULIA_SECONDA_TAPPA_2026-06-01_JUN_M",
+        "nome_gara": "24 GIRO DEL FRIULI VENEZIA GIULIA SECONDA TAPPA",
+        "data": "2026-06-01",
+        "posizione": 7,
+        "punti_effettivi": 8,
+        "team": "TEAM GUERRINI SENAGHESE",
+        "moltiplicatore": 2,
+        "tipo": "nazionale",
+        "regione": "FRIULI VENEZIA GIULIA",
+        "km": "101.100",
+        "media": "36.756"
+      },
+      {
+        "gara_id": "67_GRAN_PREMIO_U_C_A_T_2026-05-03_JUN_M",
+        "nome_gara": "67 GRAN PREMIO U C A T",
+        "data": "2026-05-03",
+        "posizione": 2,
+        "punti_effettivi": 12,
+        "team": "TEAM GUERRINI SENAGHESE",
+        "moltiplicatore": 1,
+        "tipo": "regionale",
+        "regione": "PIEMONTE",
+        "km": "101.000",
+        "media": "43.152"
+      },
+      {
+        "gara_id": "COPPA_1_MAGGIO_DEL_CERAMISTA_2026-04-26_JUN_M",
+        "nome_gara": "COPPA 1 MAGGIO DEL CERAMISTA",
+        "data": "2026-04-26",
+        "posizione": 1,
+        "punti_effettivi": 15,
+        "team": "TEAM GUERRINI SENAGHESE",
+        "moltiplicatore": 1,
+        "tipo": "regionale",
+        "regione": "LIGURIA",
+        "km": "105.000",
+        "media": "36.635"
+      }
+    ]
+  },
+  "SPANIO_MARCO": {
+    "id": "SPANIO_MARCO",
+    "nome": "MARCO",
+    "cognome": "SPANIO",
+    "team_attuale": "TEAM VANGI TOMMASINI IL PIRATA",
+    "team_id": "TEAM_VANGI_TOMMASINI_IL_PIRATA",
+    "categoria": "JUN_M",
+    "genere": "M",
+    "punti_totali": 40,
+    "risultati": [
+      {
+        "gara_id": "24_GIRO_DEL_FRIULI_VENEZIA_GIULIA_SECONDA_TAPPA_2026-06-01_JUN_M",
+        "nome_gara": "24 GIRO DEL FRIULI VENEZIA GIULIA SECONDA TAPPA",
+        "data": "2026-06-01",
+        "posizione": 8,
+        "punti_effettivi": 6,
+        "team": "TEAM VANGI TOMMASINI IL PIRATA",
+        "moltiplicatore": 2,
+        "tipo": "nazionale",
+        "regione": "FRIULI VENEZIA GIULIA",
+        "km": "101.100",
+        "media": "36.756"
+      },
+      {
+        "gara_id": "GRAN_PREMIO_SAN_MICHELE_2026-05-17_JUN_M",
+        "nome_gara": "GRAN PREMIO SAN MICHELE",
+        "data": "2026-05-17",
+        "posizione": 7,
+        "punti_effettivi": 4,
+        "team": "TEAM VANGI TOMMASINI IL PIRATA",
+        "moltiplicatore": 1,
+        "tipo": "regionale",
+        "regione": "VENETO",
+        "km": "116.900",
+        "media": "40.361"
+      },
+      {
+        "gara_id": "COPPA_PALAZZOLO_2026_PROVA_VALIDA_CAMPIONATO_REGIONALE_2026-04-06_JUN_M",
+        "nome_gara": "COPPA PALAZZOLO 2026 PROVA VALIDA CAMPIONATO REGIONALE",
+        "data": "2026-04-06",
+        "posizione": 1,
+        "punti_effettivi": 30,
+        "team": "TEAM VANGI TOMMASINI IL PIRATA",
+        "moltiplicatore": 2,
+        "tipo": "regionale",
+        "regione": "LAZIO",
+        "km": "106.000",
+        "media": "39.102"
+      }
+    ]
+  },
+  "ORENGO_EDOARDO": {
+    "id": "ORENGO_EDOARDO",
+    "nome": "EDOARDO",
+    "cognome": "ORENGO",
+    "team_attuale": "S.C. ROMANESE ASD",
+    "team_id": "S_C_ROMANESE_ASD",
+    "categoria": "JUN_M",
+    "genere": "M",
+    "punti_totali": 53,
+    "risultati": [
+      {
+        "gara_id": "24_GIRO_DEL_FRIULI_VENEZIA_GIULIA_SECONDA_TAPPA_2026-06-01_JUN_M",
+        "nome_gara": "24 GIRO DEL FRIULI VENEZIA GIULIA SECONDA TAPPA",
+        "data": "2026-06-01",
+        "posizione": 9,
+        "punti_effettivi": 4,
+        "team": "S.C. ROMANESE ASD",
+        "moltiplicatore": 2,
+        "tipo": "nazionale",
+        "regione": "FRIULI VENEZIA GIULIA",
+        "km": "101.100",
+        "media": "36.756"
+      },
+      {
+        "gara_id": "TUSCANY_CYCLING_ACADEMY_JUNIORES_2026-05-23_JUN_M",
+        "nome_gara": "TUSCANY CYCLING ACADEMY JUNIORES",
+        "data": "2026-05-23",
+        "posizione": 8,
+        "punti_effettivi": 9,
+        "team": "S.C. ROMANESE ASD",
+        "moltiplicatore": 3,
+        "tipo": "internazionale",
+        "regione": "TOSCANA",
+        "km": "112.300",
+        "media": "38.713"
+      },
+      {
+        "gara_id": "GIRO_D_ABRUZZO_JUNIORES_2026_CLASSIFICA_GENERALE_2026-05-03_JUN_M",
+        "nome_gara": "GIRO D'ABRUZZO JUNIORES 2026 CLASSIFICA GENERALE",
+        "data": "2026-05-03",
+        "posizione": 4,
+        "punti_effettivi": 24,
+        "team": "S.C. ROMANESE ASD",
+        "moltiplicatore": 3,
+        "tipo": "nazionale",
+        "regione": "ABRUZZO",
+        "km": "201.500",
+        "media": "39.916"
+      },
+      {
+        "gara_id": "GIRO_D_ABRUZZO_JUNIORES_2026_SECONDA_TAPPA_2026-05-02_JUN_M",
+        "nome_gara": "GIRO D'ABRUZZO JUNIORES 2026 SECONDA TAPPA",
+        "data": "2026-05-02",
+        "posizione": 10,
+        "punti_effettivi": 2,
+        "team": "S.C. ROMANESE ASD",
+        "moltiplicatore": 2,
+        "tipo": "nazionale",
+        "regione": "ABRUZZO",
+        "km": "2.000",
+        "media": "22.452"
+      },
+      {
+        "gara_id": "GIRO_D_ABRUZZO_JUNIORES_2026_PRIMA_TAPPA_2026-05-01_JUN_M",
+        "nome_gara": "GIRO D'ABRUZZO JUNIORES 2026 PRIMA TAPPA",
+        "data": "2026-05-01",
+        "posizione": 10,
+        "punti_effettivi": 2,
+        "team": "S.C. ROMANESE ASD",
+        "moltiplicatore": 2,
+        "tipo": "nazionale",
+        "regione": "ABRUZZO",
+        "km": "93.000",
+        "media": "39.678"
+      },
+      {
+        "gara_id": "COPPA_1_MAGGIO_DEL_CERAMISTA_2026-04-26_JUN_M",
+        "nome_gara": "COPPA 1 MAGGIO DEL CERAMISTA",
+        "data": "2026-04-26",
+        "posizione": 6,
+        "punti_effettivi": 5,
+        "team": "S.C. ROMANESE ASD",
+        "moltiplicatore": 1,
+        "tipo": "regionale",
+        "regione": "LIGURIA",
+        "km": "105.000",
+        "media": "36.635"
+      },
+      {
+        "gara_id": "TROFEO_IREN_2026-03-29_JUN_M",
+        "nome_gara": "TROFEO IREN",
+        "data": "2026-03-29",
+        "posizione": 10,
+        "punti_effettivi": 1,
+        "team": "S.C. ROMANESE ASD",
+        "moltiplicatore": 1,
+        "tipo": "regionale",
+        "regione": "LIGURIA",
+        "km": "105.000",
+        "media": "42.857"
+      },
+      {
+        "gara_id": "TROFEO_TECNOMECCANICA_2026-03-01_JUN_M",
+        "nome_gara": "TROFEO TECNOMECCANICA",
+        "data": "2026-03-01",
+        "posizione": 5,
+        "punti_effettivi": 6,
+        "team": "S.C. ROMANESE ASD",
+        "moltiplicatore": 1,
+        "tipo": "regionale",
+        "regione": "LOMBARDIA",
+        "km": "88.000",
+        "media": "40.331"
+      }
+    ]
+  },
+  "MARIOTTO_THOMAS": {
+    "id": "MARIOTTO_THOMAS",
+    "nome": "THOMAS",
+    "cognome": "MARIOTTO",
+    "team_attuale": "AUTOZAI-CONTRI",
+    "team_id": "AUTOZAI_CONTRI",
+    "categoria": "JUN_M",
+    "genere": "M",
+    "punti_totali": 164,
+    "risultati": [
+      {
+        "gara_id": "24_GIRO_DEL_FRIULI_VENEZIA_GIULIA_SECONDA_TAPPA_2026-06-01_JUN_M",
+        "nome_gara": "24 GIRO DEL FRIULI VENEZIA GIULIA SECONDA TAPPA",
+        "data": "2026-06-01",
+        "posizione": 10,
+        "punti_effettivi": 2,
+        "team": "AUTOZAI-CONTRI",
+        "moltiplicatore": 2,
+        "tipo": "nazionale",
+        "regione": "FRIULI VENEZIA GIULIA",
+        "km": "101.100",
+        "media": "36.756"
+      },
+      {
+        "gara_id": "65_VITTORIO_VENETO_CANSIGLIO_PROVA_VALIDA_CAMPIONATO_REGIONALE_2026-05-23_JUN_M",
+        "nome_gara": "65 VITTORIO VENETO CANSIGLIO PROVA VALIDA CAMPIONATO REGIONALE",
+        "data": "2026-05-23",
+        "posizione": 1,
+        "punti_effettivi": 30,
+        "team": "AUTOZAI-CONTRI",
+        "moltiplicatore": 2,
+        "tipo": "regionale",
+        "regione": "VENETO",
+        "km": "102.520",
+        "media": "38.801"
+      },
+      {
+        "gara_id": "8_CHALLENGE_NAZIONALE_BRESCIANA_GIANCARLO_OTELLI_RICORDANDO_GIANCARLO_CRONOMETRO_2026-05-10_JUN_M",
+        "nome_gara": "8 CHALLENGE NAZIONALE BRESCIANA GIANCARLO OTELLI RICORDANDO GIANCARLO CRONOMETRO",
+        "data": "2026-05-10",
+        "posizione": 1,
+        "punti_effettivi": 30,
+        "team": "AUTOZAI-CONTRI",
+        "moltiplicatore": 2,
+        "tipo": "nazionale",
+        "regione": "LOMBARDIA",
+        "km": "5.600",
+        "media": "29.779"
+      },
+      {
+        "gara_id": "GIRO_D_ABRUZZO_JUNIORES_2026_TERZA_TAPPA_2026-05-03_JUN_M",
+        "nome_gara": "GIRO D'ABRUZZO JUNIORES 2026 TERZA TAPPA",
+        "data": "2026-05-03",
+        "posizione": 4,
+        "punti_effettivi": 16,
+        "team": "AUTOZAI-CONTRI",
+        "moltiplicatore": 2,
+        "tipo": "nazionale",
+        "regione": "ABRUZZO",
+        "km": "106.500",
+        "media": "40.805"
+      },
+      {
+        "gara_id": "GIRO_D_ABRUZZO_JUNIORES_2026_CLASSIFICA_GENERALE_2026-05-03_JUN_M",
+        "nome_gara": "GIRO D'ABRUZZO JUNIORES 2026 CLASSIFICA GENERALE",
+        "data": "2026-05-03",
+        "posizione": 8,
+        "punti_effettivi": 9,
+        "team": "AUTOZAI-CONTRI",
+        "moltiplicatore": 3,
+        "tipo": "nazionale",
+        "regione": "ABRUZZO",
+        "km": "201.500",
+        "media": "39.916"
+      },
+      {
+        "gara_id": "15_GIRO_DI_PRIMAVERA_2026-04-26_JUN_M",
+        "nome_gara": "15 GIRO DI PRIMAVERA",
+        "data": "2026-04-26",
+        "posizione": 9,
+        "punti_effettivi": 6,
+        "team": "AUTOZAI-CONTRI",
+        "moltiplicatore": 3,
+        "tipo": "internazionale",
+        "regione": "VENETO",
+        "km": "129.100",
+        "media": "41.604"
+      },
+      {
+        "gara_id": "71_COPPA_MONTES_GRAN_PREMIO_DELLA_RESISTENZA_2026-04-25_JUN_M",
+        "nome_gara": "71 COPPA MONTES GRAN PREMIO DELLA RESISTENZA",
+        "data": "2026-04-25",
+        "posizione": 8,
+        "punti_effettivi": 9,
+        "team": "AUTOZAI-CONTRI",
+        "moltiplicatore": 3,
+        "tipo": "internazionale",
+        "regione": "FRIULI VENEZIA GIULIA",
+        "km": "119.000",
+        "media": "42.930"
+      },
+      {
+        "gara_id": "3_TROFEO_PROTECH_MEMORIAL_RODOLFO_BARDELLONI_2026-04-19_JUN_M",
+        "nome_gara": "3 TROFEO PROTECH MEMORIAL RODOLFO BARDELLONI",
+        "data": "2026-04-19",
+        "posizione": 5,
+        "punti_effettivi": 12,
+        "team": "AUTOZAI-CONTRI",
+        "moltiplicatore": 2,
+        "tipo": "nazionale",
+        "regione": "LOMBARDIA",
+        "km": "122.000",
+        "media": "44.065"
+      },
+      {
+        "gara_id": "4_PICCOLA_LIEGI_DELLE_BREGONZE_CASA_ENRICO_2026-04-12_JUN_M",
+        "nome_gara": "4 PICCOLA LIEGI DELLE BREGONZE CASA ENRICO",
+        "data": "2026-04-12",
+        "posizione": 6,
+        "punti_effettivi": 10,
+        "team": "AUTOZAI-CONTRI",
+        "moltiplicatore": 2,
+        "tipo": "nazionale",
+        "regione": "VENETO",
+        "km": "121.330",
+        "media": "41.619"
+      },
+      {
+        "gara_id": "62_GIRO_DELLA_CASTELLANIA_2026-04-11_JUN_M",
+        "nome_gara": "62 GIRO DELLA CASTELLANIA",
+        "data": "2026-04-11",
+        "posizione": 4,
+        "punti_effettivi": 16,
+        "team": "AUTOZAI-CONTRI",
+        "moltiplicatore": 2,
+        "tipo": "nazionale",
+        "regione": "PIEMONTE",
+        "km": "114.800",
+        "media": "43.829"
+      },
+      {
+        "gara_id": "TROFEO_MICHELE_SCARPONI_DUE_GIORNI_2026-04-04_JUN_M",
+        "nome_gara": "TROFEO MICHELE SCARPONI DUE GIORNI",
+        "data": "2026-04-04",
+        "posizione": 5,
+        "punti_effettivi": 12,
+        "team": "AUTOZAI-CONTRI",
+        "moltiplicatore": 2,
+        "tipo": "nazionale",
+        "regione": "MARCHE",
+        "km": "107.100",
+        "media": "39.802"
+      },
+      {
+        "gara_id": "22_TROFEO_RISTORANTE_ALLA_COLOMBERA_2026-03-22_JUN_M",
+        "nome_gara": "22 TROFEO RISTORANTE ALLA COLOMBERA",
+        "data": "2026-03-22",
+        "posizione": 4,
+        "punti_effettivi": 8,
+        "team": "AUTOZAI-CONTRI",
+        "moltiplicatore": 1,
+        "tipo": "regionale",
+        "regione": "VENETO",
+        "km": "101.000",
+        "media": "42.676"
+      },
+      {
+        "gara_id": "CIRCUITO_DELLE_CONCHE_2026-03-08_JUN_M",
+        "nome_gara": "CIRCUITO DELLE CONCHE",
+        "data": "2026-03-08",
+        "posizione": 9,
+        "punti_effettivi": 4,
+        "team": "AUTOZAI-CONTRI",
+        "moltiplicatore": 2,
+        "tipo": "nazionale",
+        "regione": "VENETO",
+        "km": "103.300",
+        "media": "43.343"
+      }
+    ]
+  },
+  "ASTARA_NICCOLO": {
+    "id": "ASTARA_NICCOLO",
+    "nome": "NICCOLO'",
+    "cognome": "ASTARA",
+    "team_attuale": "S.C.COTIGNOLESE",
+    "team_id": "S_C_COTIGNOLESE",
+    "categoria": "AL_M",
+    "genere": "M",
+    "punti_totali": 83,
+    "risultati": [
+      {
+        "gara_id": "GIRO_DEI_TRE_COMUNI_SECONDA_TAPPA_2026-06-01_AL_M",
+        "nome_gara": "GIRO DEI TRE COMUNI SECONDA TAPPA",
+        "data": "2026-06-01",
+        "posizione": 1,
+        "punti_effettivi": 15,
+        "team": "S.C.COTIGNOLESE",
+        "moltiplicatore": 1,
+        "tipo": "regionale",
+        "regione": "TOSCANA",
+        "km": "68.000",
+        "media": "43.816"
+      },
+      {
+        "gara_id": "14_TROFEO_CASEIFICIO_RAZIONALE_NOVESE_2026-05-24_AL_M",
+        "nome_gara": "14 TROFEO CASEIFICIO RAZIONALE NOVESE",
+        "data": "2026-05-24",
+        "posizione": 2,
+        "punti_effettivi": 12,
+        "team": "S.C.COTIGNOLESE",
+        "moltiplicatore": 1,
+        "tipo": "regionale",
+        "regione": "EMILIA ROMAGNA",
+        "km": "51.600",
+        "media": "40.559"
+      },
+      {
+        "gara_id": "MARANO_OSPITALETTO_2026-05-10_AL_M",
+        "nome_gara": "MARANO OSPITALETTO",
+        "data": "2026-05-10",
+        "posizione": 8,
+        "punti_effettivi": 3,
+        "team": "S.C.COTIGNOLESE",
+        "moltiplicatore": 1,
+        "tipo": "regionale",
+        "regione": "EMILIA ROMAGNA",
+        "km": "53.800",
+        "media": "37.096"
+      },
+      {
+        "gara_id": "38_GRAN_PREMIO_CITTA_DI_ZOLA_DIECI_COLLI_GIOVANI_2026-05-03_AL_M",
+        "nome_gara": "38 GRAN PREMIO CITTA' DI ZOLA DIECI COLLI GIOVANI",
+        "data": "2026-05-03",
+        "posizione": 7,
+        "punti_effettivi": 4,
+        "team": "S.C.COTIGNOLESE",
+        "moltiplicatore": 1,
+        "tipo": "regionale",
+        "regione": "EMILIA ROMAGNA",
+        "km": "58.000",
+        "media": "43.392"
+      },
+      {
+        "gara_id": "52_TROFEO_DANTE_SILVELLI_A_M_2026-04-26_AL_M",
+        "nome_gara": "52 TROFEO DANTE SILVELLI A M",
+        "data": "2026-04-26",
+        "posizione": 1,
+        "punti_effettivi": 15,
+        "team": "S.C.COTIGNOLESE",
+        "moltiplicatore": 1,
+        "tipo": "regionale",
+        "regione": "EMILIA ROMAGNA",
+        "km": "60.000",
+        "media": "41.779"
+      },
+      {
+        "gara_id": "49_GRAN_PREMIO_LIBERAZIONE_2026-04-25_AL_M",
+        "nome_gara": "49 GRAN PREMIO LIBERAZIONE",
+        "data": "2026-04-25",
+        "posizione": 8,
+        "punti_effettivi": 3,
+        "team": "S.C.COTIGNOLESE",
+        "moltiplicatore": 1,
+        "tipo": "regionale",
+        "regione": "EMILIA ROMAGNA",
+        "km": "49.400",
+        "media": "44.085"
+      },
+      {
+        "gara_id": "COPPA_STRADE_BIANCHE_DI_GUSSOLA_2026-04-19_AL_M",
+        "nome_gara": "COPPA STRADE BIANCHE DI GUSSOLA",
+        "data": "2026-04-19",
+        "posizione": 5,
+        "punti_effettivi": 6,
+        "team": "S.C.COTIGNOLESE",
+        "moltiplicatore": 1,
+        "tipo": "regionale",
+        "regione": "LOMBARDIA",
+        "km": "60.800",
+        "media": "40.051"
+      },
+      {
+        "gara_id": "GRAN_PREMIO_COLLI_MARIGNANESI_2026-04-12_AL_M",
+        "nome_gara": "GRAN PREMIO COLLI MARIGNANESI",
+        "data": "2026-04-12",
+        "posizione": 3,
+        "punti_effettivi": 10,
+        "team": "S.C.COTIGNOLESE",
+        "moltiplicatore": 1,
+        "tipo": "regionale",
+        "regione": "EMILIA ROMAGNA",
+        "km": "60.000",
+        "media": "42.562"
+      },
+      {
+        "gara_id": "6_TROFEO_CITTA_BELLARIA_IGEA_MARINA_2026-04-04_AL_M",
+        "nome_gara": "6 TROFEO CITTA' BELLARIA IGEA MARINA",
+        "data": "2026-04-04",
+        "posizione": 2,
+        "punti_effettivi": 12,
+        "team": "S.C.COTIGNOLESE",
+        "moltiplicatore": 1,
+        "tipo": "regionale",
+        "regione": "EMILIA ROMAGNA",
+        "km": "49.600",
+        "media": "43.006"
+      },
+      {
+        "gara_id": "GRAN_PREMIO_FIORITURA_2026-03-29_AL_M",
+        "nome_gara": "GRAN PREMIO FIORITURA",
+        "data": "2026-03-29",
+        "posizione": 8,
+        "punti_effettivi": 3,
+        "team": "S.C.COTIGNOLESE",
+        "moltiplicatore": 1,
+        "tipo": "regionale",
+        "regione": "EMILIA ROMAGNA",
+        "km": "49.000",
+        "media": "43.674"
+      }
+    ]
+  },
+  "FROSINI_RICCARDO": {
+    "id": "FROSINI_RICCARDO",
+    "nome": "RICCARDO",
+    "cognome": "FROSINI",
+    "team_attuale": "AC F. BESSI CALENZANO DONORATICO",
+    "team_id": "AC_F_BESSI_CALENZANO_DONORATICO",
+    "categoria": "AL_M",
+    "genere": "M",
+    "punti_totali": 155,
+    "risultati": [
+      {
+        "gara_id": "GIRO_DEI_TRE_COMUNI_SECONDA_TAPPA_2026-06-01_AL_M",
+        "nome_gara": "GIRO DEI TRE COMUNI SECONDA TAPPA",
+        "data": "2026-06-01",
+        "posizione": 2,
+        "punti_effettivi": 12,
+        "team": "AC F. BESSI CALENZANO DONORATICO",
+        "moltiplicatore": 1,
+        "tipo": "regionale",
+        "regione": "TOSCANA",
+        "km": "68.000",
+        "media": "43.816"
+      },
+      {
+        "gara_id": "GIRO_DEI_TRE_COMUNI_PRIMA_TAPPA_CRONOMETRO_2026-05-31_AL_M",
+        "nome_gara": "GIRO DEI TRE COMUNI PRIMA TAPPA CRONOMETRO",
+        "data": "2026-05-31",
+        "posizione": 6,
+        "punti_effettivi": 5,
+        "team": "AC F. BESSI CALENZANO DONORATICO",
+        "moltiplicatore": 1,
+        "tipo": "regionale",
+        "regione": "TOSCANA",
+        "km": "7.000",
+        "media": "41.684"
+      },
+      {
+        "gara_id": "71_COPPA_GIANCARLO_BONECHI_2026-05-24_AL_M",
+        "nome_gara": "71 COPPA GIANCARLO BONECHI",
+        "data": "2026-05-24",
+        "posizione": 1,
+        "punti_effettivi": 15,
+        "team": "AC F. BESSI CALENZANO DONORATICO",
+        "moltiplicatore": 1,
+        "tipo": "regionale",
+        "regione": "TOSCANA",
+        "km": "60.000",
+        "media": "39.273"
+      },
+      {
+        "gara_id": "4_MEMORIAL_CIOFFI_SALVATORE_2026-05-17_AL_M",
+        "nome_gara": "4 MEMORIAL CIOFFI SALVATORE",
+        "data": "2026-05-17",
+        "posizione": 2,
+        "punti_effettivi": 12,
+        "team": "AC F. BESSI CALENZANO DONORATICO",
+        "moltiplicatore": 1,
+        "tipo": "regionale",
+        "regione": "TOSCANA",
+        "km": "60.300",
+        "media": "40.267"
+      },
+      {
+        "gara_id": "44_TROFEO_FERALPI_2026-05-10_AL_M",
+        "nome_gara": "44 TROFEO FERALPI",
+        "data": "2026-05-10",
+        "posizione": 7,
+        "punti_effettivi": 4,
+        "team": "AC F. BESSI CALENZANO DONORATICO",
+        "moltiplicatore": 1,
+        "tipo": "regionale",
+        "regione": "LOMBARDIA",
+        "km": "61.850",
+        "media": "40.447"
+      },
+      {
+        "gara_id": "LA_STORICA_COPPA_DE_LE_POGGIOLA_2026-05-03_AL_M",
+        "nome_gara": "LA STORICA COPPA DE LE POGGIOLA",
+        "data": "2026-05-03",
+        "posizione": 3,
+        "punti_effettivi": 10,
+        "team": "AC F. BESSI CALENZANO DONORATICO",
+        "moltiplicatore": 1,
+        "tipo": "regionale",
+        "regione": "TOSCANA",
+        "km": "61.300",
+        "media": "39.892"
+      },
+      {
+        "gara_id": "78_COPPA_LAVORATORI_2026-05-01_AL_M",
+        "nome_gara": "78 COPPA LAVORATORI",
+        "data": "2026-05-01",
+        "posizione": 2,
+        "punti_effettivi": 12,
+        "team": "AC F. BESSI CALENZANO DONORATICO",
+        "moltiplicatore": 1,
+        "tipo": "regionale",
+        "regione": "TOSCANA",
+        "km": "58.600",
+        "media": "37.404"
+      },
+      {
+        "gara_id": "3_TROFEO_BACCI_FABIO_ALLA_MEMORIA_2026-04-26_AL_M",
+        "nome_gara": "3 TROFEO BACCI FABIO ALLA MEMORIA",
+        "data": "2026-04-26",
+        "posizione": 1,
+        "punti_effettivi": 15,
+        "team": "AC F. BESSI CALENZANO DONORATICO",
+        "moltiplicatore": 1,
+        "tipo": "regionale",
+        "regione": "TOSCANA",
+        "km": "49.200",
+        "media": "41.000"
+      },
+      {
+        "gara_id": "COPPA_LIBERAZIONE_5_TROFEO_I_GREPPI_2026-04-25_AL_M",
+        "nome_gara": "COPPA LIBERAZIONE 5 TROFEO I GREPPI",
+        "data": "2026-04-25",
+        "posizione": 1,
+        "punti_effettivi": 15,
+        "team": "AC F. BESSI CALENZANO DONORATICO",
+        "moltiplicatore": 1,
+        "tipo": "regionale",
+        "regione": "TOSCANA",
+        "km": "56.000",
+        "media": "42.000"
+      },
+      {
+        "gara_id": "62_GRAN_PREMIO_CALZIFICI_E_CALZATURIFICI_STABBIESI_2026-04-19_AL_M",
+        "nome_gara": "62 GRAN PREMIO CALZIFICI E CALZATURIFICI STABBIESI",
+        "data": "2026-04-19",
+        "posizione": 5,
+        "punti_effettivi": 6,
+        "team": "AC F. BESSI CALENZANO DONORATICO",
+        "moltiplicatore": 1,
+        "tipo": "regionale",
+        "regione": "TOSCANA",
+        "km": "58.500",
+        "media": "41.877"
+      },
+      {
+        "gara_id": "SAGRA_DEL_CICLISMO_MEMORIAL_NIERI_MAURO_2026-04-12_AL_M",
+        "nome_gara": "SAGRA DEL CICLISMO MEMORIAL NIERI MAURO",
+        "data": "2026-04-12",
+        "posizione": 3,
+        "punti_effettivi": 10,
+        "team": "AC F. BESSI CALENZANO DONORATICO",
+        "moltiplicatore": 1,
+        "tipo": "regionale",
+        "regione": "TOSCANA",
+        "km": "58.200",
+        "media": "43.686"
+      },
+      {
+        "gara_id": "78_COPPA_COMUNE_DI_CALENZANO_2026-04-06_AL_M",
+        "nome_gara": "78 COPPA COMUNE DI CALENZANO",
+        "data": "2026-04-06",
+        "posizione": 1,
+        "punti_effettivi": 15,
+        "team": "AC F. BESSI CALENZANO DONORATICO",
+        "moltiplicatore": 1,
+        "tipo": "regionale",
+        "regione": "TOSCANA",
+        "km": "49.000",
+        "media": "42.722"
+      },
+      {
+        "gara_id": "PASQUALANDO_2026-04-05_AL_M",
+        "nome_gara": "PASQUALANDO",
+        "data": "2026-04-05",
+        "posizione": 2,
+        "punti_effettivi": 12,
+        "team": "AC F. BESSI CALENZANO DONORATICO",
+        "moltiplicatore": 1,
+        "tipo": "regionale",
+        "regione": "TOSCANA",
+        "km": "55.000",
+        "media": "44.949"
+      },
+      {
+        "gara_id": "23_COPPA_CROCE_AZZURRA_PONTASSIEVE_2026-03-29_AL_M",
+        "nome_gara": "23 COPPA CROCE AZZURRA PONTASSIEVE",
+        "data": "2026-03-29",
+        "posizione": 7,
+        "punti_effettivi": 4,
+        "team": "AC F. BESSI CALENZANO DONORATICO",
+        "moltiplicatore": 1,
+        "tipo": "regionale",
+        "regione": "TOSCANA",
+        "km": "50.000",
+        "media": "42.383"
+      },
+      {
+        "gara_id": "75_COPPA_GIUSEPPE_CEI_2026-03-15_AL_M",
+        "nome_gara": "75 COPPA GIUSEPPE CEI",
+        "data": "2026-03-15",
+        "posizione": 4,
+        "punti_effettivi": 8,
+        "team": "AC F. BESSI CALENZANO DONORATICO",
+        "moltiplicatore": 1,
+        "tipo": "regionale",
+        "regione": "TOSCANA",
+        "km": "68.000",
+        "media": "42.666"
+      }
+    ]
+  },
+  "LONGARI_VITTORIO": {
+    "id": "LONGARI_VITTORIO",
+    "nome": "VITTORIO",
+    "cognome": "LONGARI",
+    "team_attuale": "U.C. CITTA' DI CASTELLO A.S.D.",
+    "team_id": "U_C_CITTA_DI_CASTELLO_A_S_D",
+    "categoria": "AL_M",
+    "genere": "M",
+    "punti_totali": 72,
+    "risultati": [
+      {
+        "gara_id": "GIRO_DEI_TRE_COMUNI_SECONDA_TAPPA_2026-06-01_AL_M",
+        "nome_gara": "GIRO DEI TRE COMUNI SECONDA TAPPA",
+        "data": "2026-06-01",
+        "posizione": 3,
+        "punti_effettivi": 10,
+        "team": "U.C. CITTA' DI CASTELLO A.S.D.",
+        "moltiplicatore": 1,
+        "tipo": "regionale",
+        "regione": "TOSCANA",
+        "km": "68.000",
+        "media": "43.816"
+      },
+      {
+        "gara_id": "71_COPPA_GIANCARLO_BONECHI_2026-05-24_AL_M",
+        "nome_gara": "71 COPPA GIANCARLO BONECHI",
+        "data": "2026-05-24",
+        "posizione": 8,
+        "punti_effettivi": 3,
+        "team": "U.C. CITTA' DI CASTELLO A.S.D.",
+        "moltiplicatore": 1,
+        "tipo": "regionale",
+        "regione": "TOSCANA",
+        "km": "60.000",
+        "media": "39.273"
+      },
+      {
+        "gara_id": "2_TROFEO_ROMANELLI_TOMMASO_MEMORIAL_LUCA_ROMANELLI_2026-05-17_AL_M",
+        "nome_gara": "2 TROFEO ROMANELLI TOMMASO MEMORIAL LUCA ROMANELLI",
+        "data": "2026-05-17",
+        "posizione": 10,
+        "punti_effettivi": 1,
+        "team": "U.C. CITTA' DI CASTELLO A.S.D.",
+        "moltiplicatore": 1,
+        "tipo": "regionale",
+        "regione": "MARCHE",
+        "km": "60.000",
+        "media": "42.747"
+      },
+      {
+        "gara_id": "74_COPPA_SPORTIVI_MONTEMARCIANESI_2026-05-10_AL_M",
+        "nome_gara": "74 COPPA SPORTIVI MONTEMARCIANESI",
+        "data": "2026-05-10",
+        "posizione": 1,
+        "punti_effettivi": 15,
+        "team": "U.C. CITTA' DI CASTELLO A.S.D.",
+        "moltiplicatore": 1,
+        "tipo": "regionale",
+        "regione": "TOSCANA",
+        "km": "66.300",
+        "media": "39.386"
+      },
+      {
+        "gara_id": "LA_STORICA_COPPA_DE_LE_POGGIOLA_2026-05-03_AL_M",
+        "nome_gara": "LA STORICA COPPA DE LE POGGIOLA",
+        "data": "2026-05-03",
+        "posizione": 2,
+        "punti_effettivi": 12,
+        "team": "U.C. CITTA' DI CASTELLO A.S.D.",
+        "moltiplicatore": 1,
+        "tipo": "regionale",
+        "regione": "TOSCANA",
+        "km": "61.300",
+        "media": "39.892"
+      },
+      {
+        "gara_id": "57_COPPA_CIRCOLO_ARCI_RENZINO_2026-05-01_AL_M",
+        "nome_gara": "57 COPPA CIRCOLO ARCI RENZINO",
+        "data": "2026-05-01",
+        "posizione": 2,
+        "punti_effettivi": 12,
+        "team": "U.C. CITTA' DI CASTELLO A.S.D.",
+        "moltiplicatore": 1,
+        "tipo": "regionale",
+        "regione": "TOSCANA",
+        "km": "59.400",
+        "media": "38.641"
+      },
+      {
+        "gara_id": "22_GRAN_PREMIO_DELLA_LIBERAZIONE_STRADE_BIANCHE_2026-04-25_AL_M",
+        "nome_gara": "22 GRAN PREMIO DELLA LIBERAZIONE STRADE BIANCHE",
+        "data": "2026-04-25",
+        "posizione": 10,
+        "punti_effettivi": 1,
+        "team": "U.C. CITTA' DI CASTELLO A.S.D.",
+        "moltiplicatore": 1,
+        "tipo": "regionale",
+        "regione": "TOSCANA",
+        "km": "57.300",
+        "media": "39.517"
+      },
+      {
+        "gara_id": "53_TROFEO_DELLA_LIBERAZIONE_2026-04-19_AL_M",
+        "nome_gara": "53 TROFEO DELLA LIBERAZIONE",
+        "data": "2026-04-19",
+        "posizione": 8,
+        "punti_effettivi": 3,
+        "team": "U.C. CITTA' DI CASTELLO A.S.D.",
+        "moltiplicatore": 1,
+        "tipo": "regionale",
+        "regione": "MARCHE",
+        "km": "49.700",
+        "media": "42.000"
+      },
+      {
+        "gara_id": "SAGRA_DEL_CICLISMO_MEMORIAL_NIERI_MAURO_2026-04-12_AL_M",
+        "nome_gara": "SAGRA DEL CICLISMO MEMORIAL NIERI MAURO",
+        "data": "2026-04-12",
+        "posizione": 6,
+        "punti_effettivi": 5,
+        "team": "U.C. CITTA' DI CASTELLO A.S.D.",
+        "moltiplicatore": 1,
+        "tipo": "regionale",
+        "regione": "TOSCANA",
+        "km": "58.200",
+        "media": "43.686"
+      },
+      {
+        "gara_id": "5_TROFEO_CITTA_DI_MONTEVARCHI_2026-04-06_AL_M",
+        "nome_gara": "5 TROFEO CITTA' DI MONTEVARCHI",
+        "data": "2026-04-06",
+        "posizione": 4,
+        "punti_effettivi": 8,
+        "team": "U.C. CITTA' DI CASTELLO A.S.D.",
+        "moltiplicatore": 1,
+        "tipo": "regionale",
+        "regione": "TOSCANA",
+        "km": "52.700",
+        "media": "38.798"
+      },
+      {
+        "gara_id": "GRAN_PREMIO_FIORITURA_2026-03-29_AL_M",
+        "nome_gara": "GRAN PREMIO FIORITURA",
+        "data": "2026-03-29",
+        "posizione": 9,
+        "punti_effettivi": 2,
+        "team": "U.C. CITTA' DI CASTELLO A.S.D.",
+        "moltiplicatore": 1,
+        "tipo": "regionale",
+        "regione": "EMILIA ROMAGNA",
+        "km": "49.000",
+        "media": "43.674"
+      }
+    ]
+  },
+  "IAZZI_LORENZO": {
+    "id": "IAZZI_LORENZO",
+    "nome": "LORENZO",
+    "cognome": "IAZZI",
+    "team_attuale": "MADIGNANESE CICLISMO A.S.D",
+    "team_id": "MADIGNANESE_CICLISMO_A_S_D",
+    "categoria": "AL_M",
+    "genere": "M",
+    "punti_totali": 77,
+    "risultati": [
+      {
+        "gara_id": "GIRO_DEI_TRE_COMUNI_SECONDA_TAPPA_2026-06-01_AL_M",
+        "nome_gara": "GIRO DEI TRE COMUNI SECONDA TAPPA",
+        "data": "2026-06-01",
+        "posizione": 4,
+        "punti_effettivi": 8,
+        "team": "MADIGNANESE CICLISMO A.S.D",
+        "moltiplicatore": 1,
+        "tipo": "regionale",
+        "regione": "TOSCANA",
+        "km": "68.000",
+        "media": "43.816"
+      },
+      {
+        "gara_id": "14_TROFEO_CASEIFICIO_RAZIONALE_NOVESE_2026-05-24_AL_M",
+        "nome_gara": "14 TROFEO CASEIFICIO RAZIONALE NOVESE",
+        "data": "2026-05-24",
+        "posizione": 3,
+        "punti_effettivi": 10,
+        "team": "MADIGNANESE CICLISMO A.S.D",
+        "moltiplicatore": 1,
+        "tipo": "regionale",
+        "regione": "EMILIA ROMAGNA",
+        "km": "51.600",
+        "media": "40.559"
+      },
+      {
+        "gara_id": "4_TROFEO_MEMORIAL_MORI_ROSSANO_2026-05-17_AL_M",
+        "nome_gara": "4 TROFEO MEMORIAL MORI ROSSANO",
+        "data": "2026-05-17",
+        "posizione": 6,
+        "punti_effettivi": 5,
+        "team": "MADIGNANESE CICLISMO A.S.D",
+        "moltiplicatore": 1,
+        "tipo": "regionale",
+        "regione": "TOSCANA",
+        "km": "68.500",
+        "media": "40.693"
+      },
+      {
+        "gara_id": "44_TROFEO_FERALPI_2026-05-10_AL_M",
+        "nome_gara": "44 TROFEO FERALPI",
+        "data": "2026-05-10",
+        "posizione": 9,
+        "punti_effettivi": 2,
+        "team": "MADIGNANESE CICLISMO A.S.D",
+        "moltiplicatore": 1,
+        "tipo": "regionale",
+        "regione": "LOMBARDIA",
+        "km": "61.850",
+        "media": "40.447"
+      },
+      {
+        "gara_id": "38_GRAN_PREMIO_CITTA_DI_ZOLA_DIECI_COLLI_GIOVANI_2026-05-03_AL_M",
+        "nome_gara": "38 GRAN PREMIO CITTA' DI ZOLA DIECI COLLI GIOVANI",
+        "data": "2026-05-03",
+        "posizione": 3,
+        "punti_effettivi": 10,
+        "team": "MADIGNANESE CICLISMO A.S.D",
+        "moltiplicatore": 1,
+        "tipo": "regionale",
+        "regione": "EMILIA ROMAGNA",
+        "km": "58.000",
+        "media": "43.392"
+      },
+      {
+        "gara_id": "81_GRAN_PREMIO_CADUTI_LIBERAZIONE_2026-05-01_AL_M",
+        "nome_gara": "81 GRAN PREMIO CADUTI LIBERAZIONE",
+        "data": "2026-05-01",
+        "posizione": 5,
+        "punti_effettivi": 6,
+        "team": "MADIGNANESE CICLISMO A.S.D",
+        "moltiplicatore": 1,
+        "tipo": "regionale",
+        "regione": "EMILIA ROMAGNA",
+        "km": "60.000",
+        "media": "41.715"
+      },
+      {
+        "gara_id": "4_TROFEO_PECSO_CAVI_2026-04-26_AL_M",
+        "nome_gara": "4 TROFEO PECSO CAVI",
+        "data": "2026-04-26",
+        "posizione": 7,
+        "punti_effettivi": 4,
+        "team": "MADIGNANESE CICLISMO A.S.D",
+        "moltiplicatore": 1,
+        "tipo": "regionale",
+        "regione": "LOMBARDIA",
+        "km": "50.400",
+        "media": "43.200"
+      },
+      {
+        "gara_id": "4_PALIO_VINI_CLASSICO_PEDEMONTE_2026-04-25_AL_M",
+        "nome_gara": "4 PALIO VINI CLASSICO PEDEMONTE",
+        "data": "2026-04-25",
+        "posizione": 9,
+        "punti_effettivi": 2,
+        "team": "MADIGNANESE CICLISMO A.S.D",
+        "moltiplicatore": 1,
+        "tipo": "regionale",
+        "regione": "VENETO",
+        "km": "53.200",
+        "media": "39.022"
+      },
+      {
+        "gara_id": "COPPA_STRADE_BIANCHE_DI_GUSSOLA_2026-04-19_AL_M",
+        "nome_gara": "COPPA STRADE BIANCHE DI GUSSOLA",
+        "data": "2026-04-19",
+        "posizione": 6,
+        "punti_effettivi": 5,
+        "team": "MADIGNANESE CICLISMO A.S.D",
+        "moltiplicatore": 1,
+        "tipo": "regionale",
+        "regione": "LOMBARDIA",
+        "km": "60.800",
+        "media": "40.051"
+      },
+      {
+        "gara_id": "68_GIRO_DELLE_TRE_PROVINCIE_2026-04-12_AL_M",
+        "nome_gara": "68 GIRO DELLE TRE PROVINCIE",
+        "data": "2026-04-12",
+        "posizione": 3,
+        "punti_effettivi": 10,
+        "team": "MADIGNANESE CICLISMO A.S.D",
+        "moltiplicatore": 1,
+        "tipo": "regionale",
+        "regione": "VENETO",
+        "km": "60.000",
+        "media": "43.636"
+      },
+      {
+        "gara_id": "MEMORIAL_FIORENZO_MONTANARI_2026-04-06_AL_M",
+        "nome_gara": "MEMORIAL FIORENZO MONTANARI",
+        "data": "2026-04-06",
+        "posizione": 6,
+        "punti_effettivi": 5,
+        "team": "MADIGNANESE CICLISMO A.S.D",
+        "moltiplicatore": 1,
+        "tipo": "regionale",
+        "regione": "LOMBARDIA",
+        "km": "57.750",
+        "media": "44.262"
+      },
+      {
+        "gara_id": "16_TROFEO_COMUNE_DI_SALIZZOLE_2026-03-29_AL_M",
+        "nome_gara": "16 TROFEO COMUNE DI SALIZZOLE",
+        "data": "2026-03-29",
+        "posizione": 3,
+        "punti_effettivi": 10,
+        "team": "MADIGNANESE CICLISMO A.S.D",
+        "moltiplicatore": 1,
+        "tipo": "regionale",
+        "regione": "VENETO",
+        "km": "55.200",
+        "media": "42.680"
+      }
+    ]
+  },
+  "FIACCO_ANDREA": {
+    "id": "FIACCO_ANDREA",
+    "nome": "ANDREA",
+    "cognome": "FIACCO",
+    "team_attuale": "TEAM CORATTI",
+    "team_id": "TEAM_CORATTI",
+    "categoria": "AL_M",
+    "genere": "M",
+    "punti_totali": 118,
+    "risultati": [
+      {
+        "gara_id": "GIRO_DEI_TRE_COMUNI_SECONDA_TAPPA_2026-06-01_AL_M",
+        "nome_gara": "GIRO DEI TRE COMUNI SECONDA TAPPA",
+        "data": "2026-06-01",
+        "posizione": 5,
+        "punti_effettivi": 6,
+        "team": "TEAM CORATTI",
+        "moltiplicatore": 1,
+        "tipo": "regionale",
+        "regione": "TOSCANA",
+        "km": "68.000",
+        "media": "43.816"
+      },
+      {
+        "gara_id": "GIRO_DEI_TRE_COMUNI_PRIMA_TAPPA_CRONOMETRO_2026-05-31_AL_M",
+        "nome_gara": "GIRO DEI TRE COMUNI PRIMA TAPPA CRONOMETRO",
+        "data": "2026-05-31",
+        "posizione": 2,
+        "punti_effettivi": 12,
+        "team": "TEAM CORATTI",
+        "moltiplicatore": 1,
+        "tipo": "regionale",
+        "regione": "TOSCANA",
+        "km": "7.000",
+        "media": "41.684"
+      },
+      {
+        "gara_id": "2_GRAN_PREMIO_NOMENTUM_TROFEO_NOI_SPORT_2026-05-24_AL_M",
+        "nome_gara": "2 GRAN PREMIO NOMENTUM TROFEO NOI SPORT",
+        "data": "2026-05-24",
+        "posizione": 4,
+        "punti_effettivi": 8,
+        "team": "TEAM CORATTI",
+        "moltiplicatore": 1,
+        "tipo": "regionale",
+        "regione": "LAZIO",
+        "km": "55.500",
+        "media": "38.676"
+      },
+      {
+        "gara_id": "CRONOSCALATA_CITTA_DI_FUMONE_2026-05-23_AL_M",
+        "nome_gara": "CRONOSCALATA CITTA' DI FUMONE",
+        "data": "2026-05-23",
+        "posizione": 2,
+        "punti_effettivi": 12,
+        "team": "TEAM CORATTI",
+        "moltiplicatore": 1,
+        "tipo": "regionale",
+        "regione": "LAZIO",
+        "km": "4.600",
+        "media": "26.040"
+      },
+      {
+        "gara_id": "2_TROFEO_ROMANELLI_TOMMASO_MEMORIAL_LUCA_ROMANELLI_2026-05-17_AL_M",
+        "nome_gara": "2 TROFEO ROMANELLI TOMMASO MEMORIAL LUCA ROMANELLI",
+        "data": "2026-05-17",
+        "posizione": 2,
+        "punti_effettivi": 12,
+        "team": "TEAM CORATTI",
+        "moltiplicatore": 1,
+        "tipo": "regionale",
+        "regione": "MARCHE",
+        "km": "60.000",
+        "media": "42.747"
+      },
+      {
+        "gara_id": "22_GRAN_PREMIO_DELLA_LIBERAZIONE_STRADE_BIANCHE_2026-04-25_AL_M",
+        "nome_gara": "22 GRAN PREMIO DELLA LIBERAZIONE STRADE BIANCHE",
+        "data": "2026-04-25",
+        "posizione": 1,
+        "punti_effettivi": 15,
+        "team": "TEAM CORATTI",
+        "moltiplicatore": 1,
+        "tipo": "regionale",
+        "regione": "TOSCANA",
+        "km": "57.300",
+        "media": "39.517"
+      },
+      {
+        "gara_id": "GRAN_PREMIO_COLLI_MARIGNANESI_2026-04-12_AL_M",
+        "nome_gara": "GRAN PREMIO COLLI MARIGNANESI",
+        "data": "2026-04-12",
+        "posizione": 8,
+        "punti_effettivi": 3,
+        "team": "TEAM CORATTI",
+        "moltiplicatore": 1,
+        "tipo": "regionale",
+        "regione": "EMILIA ROMAGNA",
+        "km": "60.000",
+        "media": "42.562"
+      },
+      {
+        "gara_id": "5_TROFEO_CITTA_DI_MONTEVARCHI_2026-04-06_AL_M",
+        "nome_gara": "5 TROFEO CITTA' DI MONTEVARCHI",
+        "data": "2026-04-06",
+        "posizione": 1,
+        "punti_effettivi": 15,
+        "team": "TEAM CORATTI",
+        "moltiplicatore": 1,
+        "tipo": "regionale",
+        "regione": "TOSCANA",
+        "km": "52.700",
+        "media": "38.798"
+      },
+      {
+        "gara_id": "GIORNATA_AZZURRA_2026-04-04_AL_M",
+        "nome_gara": "GIORNATA AZZURRA",
+        "data": "2026-04-04",
+        "posizione": 2,
+        "punti_effettivi": 12,
+        "team": "TEAM CORATTI",
+        "moltiplicatore": 1,
+        "tipo": "regionale",
+        "regione": "PUGLIA",
+        "km": "64.800",
+        "media": "39.519"
+      },
+      {
+        "gara_id": "GRAN_PREMIO_FIORITURA_2026-03-29_AL_M",
+        "nome_gara": "GRAN PREMIO FIORITURA",
+        "data": "2026-03-29",
+        "posizione": 4,
+        "punti_effettivi": 8,
+        "team": "TEAM CORATTI",
+        "moltiplicatore": 1,
+        "tipo": "regionale",
+        "regione": "EMILIA ROMAGNA",
+        "km": "49.000",
+        "media": "43.674"
+      },
+      {
+        "gara_id": "75_COPPA_GIUSEPPE_CEI_2026-03-15_AL_M",
+        "nome_gara": "75 COPPA GIUSEPPE CEI",
+        "data": "2026-03-15",
+        "posizione": 1,
+        "punti_effettivi": 15,
+        "team": "TEAM CORATTI",
+        "moltiplicatore": 1,
+        "tipo": "regionale",
+        "regione": "TOSCANA",
+        "km": "68.000",
+        "media": "42.666"
+      }
+    ]
+  },
+  "MANONI_ANDREA": {
+    "id": "MANONI_ANDREA",
+    "nome": "ANDREA",
+    "cognome": "MANONI",
+    "team_attuale": "ETHICA ZERO24 CYCLING TEAM ECOTEK",
+    "team_id": "ETHICA_ZERO24_CYCLING_TEAM_ECOTEK",
+    "categoria": "AL_M",
+    "genere": "M",
+    "punti_totali": 15,
+    "risultati": [
+      {
+        "gara_id": "GIRO_DEI_TRE_COMUNI_SECONDA_TAPPA_2026-06-01_AL_M",
+        "nome_gara": "GIRO DEI TRE COMUNI SECONDA TAPPA",
+        "data": "2026-06-01",
+        "posizione": 6,
+        "punti_effettivi": 5,
+        "team": "ETHICA ZERO24 CYCLING TEAM ECOTEK",
+        "moltiplicatore": 1,
+        "tipo": "regionale",
+        "regione": "TOSCANA",
+        "km": "68.000",
+        "media": "43.816"
+      },
+      {
+        "gara_id": "57_COPPA_CIRCOLO_ARCI_RENZINO_2026-05-01_AL_M",
+        "nome_gara": "57 COPPA CIRCOLO ARCI RENZINO",
+        "data": "2026-05-01",
+        "posizione": 6,
+        "punti_effettivi": 5,
+        "team": "ETHICA ZERO24 CYCLING TEAM ECOTEK",
+        "moltiplicatore": 1,
+        "tipo": "regionale",
+        "regione": "TOSCANA",
+        "km": "59.400",
+        "media": "38.641"
+      },
+      {
+        "gara_id": "36_GRAN_PREMIO_CITTA_DI_SAN_MAURO_PASCOLI_2026-04-06_AL_M",
+        "nome_gara": "36 GRAN PREMIO CITTA' DI SAN MAURO PASCOLI",
+        "data": "2026-04-06",
+        "posizione": 6,
+        "punti_effettivi": 5,
+        "team": "ETHICA ZERO24 CYCLING TEAM ECOTEK",
+        "moltiplicatore": 1,
+        "tipo": "regionale",
+        "regione": "EMILIA ROMAGNA",
+        "km": "46.200",
+        "media": "45.717"
+      }
+    ]
+  },
+  "MANNA_MATTEO": {
+    "id": "MANNA_MATTEO",
+    "nome": "MATTEO",
+    "cognome": "MANNA",
+    "team_attuale": "ETHICA ZERO24 CYCLING TEAM ECOTEK",
+    "team_id": "ETHICA_ZERO24_CYCLING_TEAM_ECOTEK",
+    "categoria": "AL_M",
+    "genere": "M",
+    "punti_totali": 11,
+    "risultati": [
+      {
+        "gara_id": "GIRO_DEI_TRE_COMUNI_SECONDA_TAPPA_2026-06-01_AL_M",
+        "nome_gara": "GIRO DEI TRE COMUNI SECONDA TAPPA",
+        "data": "2026-06-01",
+        "posizione": 7,
+        "punti_effettivi": 4,
+        "team": "ETHICA ZERO24 CYCLING TEAM ECOTEK",
+        "moltiplicatore": 1,
+        "tipo": "regionale",
+        "regione": "TOSCANA",
+        "km": "68.000",
+        "media": "43.816"
+      },
+      {
+        "gara_id": "57_COPPA_CIRCOLO_ARCI_RENZINO_2026-05-01_AL_M",
+        "nome_gara": "57 COPPA CIRCOLO ARCI RENZINO",
+        "data": "2026-05-01",
+        "posizione": 7,
+        "punti_effettivi": 4,
+        "team": "ETHICA ZERO24 CYCLING TEAM ECOTEK",
+        "moltiplicatore": 1,
+        "tipo": "regionale",
+        "regione": "TOSCANA",
+        "km": "59.400",
+        "media": "38.641"
+      },
+      {
+        "gara_id": "7_TROFEO_QUADRE_CITTA_DI_CHIARI_2026-03-29_AL_M",
+        "nome_gara": "7 TROFEO QUADRE CITTA' DI CHIARI",
+        "data": "2026-03-29",
+        "posizione": 8,
+        "punti_effettivi": 3,
+        "team": "ETHICA ZERO24 CYCLING TEAM ECOTEK",
+        "moltiplicatore": 1,
+        "tipo": "regionale",
+        "regione": "LOMBARDIA",
+        "km": "63.000",
+        "media": "41.478"
+      }
+    ]
+  },
+  "GALLO_GIUSEPPE": {
+    "id": "GALLO_GIUSEPPE",
+    "nome": "GIUSEPPE",
+    "cognome": "GALLO",
+    "team_attuale": "TEAM CORATTI",
+    "team_id": "TEAM_CORATTI",
+    "categoria": "AL_M",
+    "genere": "M",
+    "punti_totali": 36,
+    "risultati": [
+      {
+        "gara_id": "GIRO_DEI_TRE_COMUNI_SECONDA_TAPPA_2026-06-01_AL_M",
+        "nome_gara": "GIRO DEI TRE COMUNI SECONDA TAPPA",
+        "data": "2026-06-01",
+        "posizione": 8,
+        "punti_effettivi": 3,
+        "team": "TEAM CORATTI",
+        "moltiplicatore": 1,
+        "tipo": "regionale",
+        "regione": "TOSCANA",
+        "km": "68.000",
+        "media": "43.816"
+      },
+      {
+        "gara_id": "2_GRAN_PREMIO_NOMENTUM_TROFEO_NOI_SPORT_2026-05-24_AL_M",
+        "nome_gara": "2 GRAN PREMIO NOMENTUM TROFEO NOI SPORT",
+        "data": "2026-05-24",
+        "posizione": 5,
+        "punti_effettivi": 6,
+        "team": "TEAM CORATTI",
+        "moltiplicatore": 1,
+        "tipo": "regionale",
+        "regione": "LAZIO",
+        "km": "55.500",
+        "media": "38.676"
+      },
+      {
+        "gara_id": "CRONOSCALATA_CITTA_DI_FUMONE_2026-05-23_AL_M",
+        "nome_gara": "CRONOSCALATA CITTA' DI FUMONE",
+        "data": "2026-05-23",
+        "posizione": 10,
+        "punti_effettivi": 1,
+        "team": "TEAM CORATTI",
+        "moltiplicatore": 1,
+        "tipo": "regionale",
+        "regione": "LAZIO",
+        "km": "4.600",
+        "media": "26.040"
+      },
+      {
+        "gara_id": "2_TROFEO_ROMANELLI_TOMMASO_MEMORIAL_LUCA_ROMANELLI_2026-05-17_AL_M",
+        "nome_gara": "2 TROFEO ROMANELLI TOMMASO MEMORIAL LUCA ROMANELLI",
+        "data": "2026-05-17",
+        "posizione": 8,
+        "punti_effettivi": 3,
+        "team": "TEAM CORATTI",
+        "moltiplicatore": 1,
+        "tipo": "regionale",
+        "regione": "MARCHE",
+        "km": "60.000",
+        "media": "42.747"
+      },
+      {
+        "gara_id": "44_TROFEO_FERALPI_2026-05-10_AL_M",
+        "nome_gara": "44 TROFEO FERALPI",
+        "data": "2026-05-10",
+        "posizione": 8,
+        "punti_effettivi": 3,
+        "team": "TEAM CORATTI",
+        "moltiplicatore": 1,
+        "tipo": "regionale",
+        "regione": "LOMBARDIA",
+        "km": "61.850",
+        "media": "40.447"
+      },
+      {
+        "gara_id": "LA_STORICA_COPPA_DE_LE_POGGIOLA_2026-05-03_AL_M",
+        "nome_gara": "LA STORICA COPPA DE LE POGGIOLA",
+        "data": "2026-05-03",
+        "posizione": 7,
+        "punti_effettivi": 4,
+        "team": "TEAM CORATTI",
+        "moltiplicatore": 1,
+        "tipo": "regionale",
+        "regione": "TOSCANA",
+        "km": "61.300",
+        "media": "39.892"
+      },
+      {
+        "gara_id": "31_TROFEO_S_FRANCESCO_2026-05-01_AL_M",
+        "nome_gara": "31 TROFEO S FRANCESCO",
+        "data": "2026-05-01",
+        "posizione": 7,
+        "punti_effettivi": 4,
+        "team": "TEAM CORATTI",
+        "moltiplicatore": 1,
+        "tipo": "regionale",
+        "regione": "ABRUZZO",
+        "km": "66.000",
+        "media": "42.504"
+      },
+      {
+        "gara_id": "22_GRAN_PREMIO_DELLA_LIBERAZIONE_STRADE_BIANCHE_2026-04-25_AL_M",
+        "nome_gara": "22 GRAN PREMIO DELLA LIBERAZIONE STRADE BIANCHE",
+        "data": "2026-04-25",
+        "posizione": 6,
+        "punti_effettivi": 5,
+        "team": "TEAM CORATTI",
+        "moltiplicatore": 1,
+        "tipo": "regionale",
+        "regione": "TOSCANA",
+        "km": "57.300",
+        "media": "39.517"
+      },
+      {
+        "gara_id": "LIBERAZIONE_ALLIEVI_2026-04-24_AL_M",
+        "nome_gara": "LIBERAZIONE ALLIEVI",
+        "data": "2026-04-24",
+        "posizione": 10,
+        "punti_effettivi": 1,
+        "team": "TEAM CORATTI",
+        "moltiplicatore": 1,
+        "tipo": "regionale",
+        "regione": "LAZIO",
+        "km": "60.000",
+        "media": "41.885"
+      },
+      {
+        "gara_id": "5_TROFEO_CITTA_DI_MONTEVARCHI_2026-04-06_AL_M",
+        "nome_gara": "5 TROFEO CITTA' DI MONTEVARCHI",
+        "data": "2026-04-06",
+        "posizione": 7,
+        "punti_effettivi": 4,
+        "team": "TEAM CORATTI",
+        "moltiplicatore": 1,
+        "tipo": "regionale",
+        "regione": "TOSCANA",
+        "km": "52.700",
+        "media": "38.798"
+      },
+      {
+        "gara_id": "75_COPPA_GIUSEPPE_CEI_2026-03-15_AL_M",
+        "nome_gara": "75 COPPA GIUSEPPE CEI",
+        "data": "2026-03-15",
+        "posizione": 9,
+        "punti_effettivi": 2,
+        "team": "TEAM CORATTI",
+        "moltiplicatore": 1,
+        "tipo": "regionale",
+        "regione": "TOSCANA",
+        "km": "68.000",
+        "media": "42.666"
+      }
+    ]
+  },
+  "DEL_GAONE_LUCA": {
+    "id": "DEL_GAONE_LUCA",
+    "nome": "GAONE LUCA",
+    "cognome": "DEL",
+    "team_attuale": "IL PIRATA VANGI OTC",
+    "team_id": "IL_PIRATA_VANGI_OTC",
+    "categoria": "AL_M",
+    "genere": "M",
+    "punti_totali": 63,
+    "risultati": [
+      {
+        "gara_id": "GIRO_DEI_TRE_COMUNI_SECONDA_TAPPA_2026-06-01_AL_M",
+        "nome_gara": "GIRO DEI TRE COMUNI SECONDA TAPPA",
+        "data": "2026-06-01",
+        "posizione": 9,
+        "punti_effettivi": 2,
+        "team": "IL PIRATA VANGI OTC",
+        "moltiplicatore": 1,
+        "tipo": "regionale",
+        "regione": "TOSCANA",
+        "km": "68.000",
+        "media": "43.816"
+      },
+      {
+        "gara_id": "GIRO_DEI_TRE_COMUNI_PRIMA_TAPPA_CRONOMETRO_2026-05-31_AL_M",
+        "nome_gara": "GIRO DEI TRE COMUNI PRIMA TAPPA CRONOMETRO",
+        "data": "2026-05-31",
+        "posizione": 7,
+        "punti_effettivi": 4,
+        "team": "IL PIRATA VANGI OTC",
+        "moltiplicatore": 1,
+        "tipo": "regionale",
+        "regione": "TOSCANA",
+        "km": "7.000",
+        "media": "41.684"
+      },
+      {
+        "gara_id": "2_GRAN_PREMIO_NOMENTUM_TROFEO_NOI_SPORT_2026-05-24_AL_M",
+        "nome_gara": "2 GRAN PREMIO NOMENTUM TROFEO NOI SPORT",
+        "data": "2026-05-24",
+        "posizione": 10,
+        "punti_effettivi": 1,
+        "team": "IL PIRATA VANGI OTC",
+        "moltiplicatore": 1,
+        "tipo": "regionale",
+        "regione": "LAZIO",
+        "km": "55.500",
+        "media": "38.676"
+      },
+      {
+        "gara_id": "CRONOSCALATA_CITTA_DI_FUMONE_2026-05-23_AL_M",
+        "nome_gara": "CRONOSCALATA CITTA' DI FUMONE",
+        "data": "2026-05-23",
+        "posizione": 5,
+        "punti_effettivi": 6,
+        "team": "IL PIRATA VANGI OTC",
+        "moltiplicatore": 1,
+        "tipo": "regionale",
+        "regione": "LAZIO",
+        "km": "4.600",
+        "media": "26.040"
+      },
+      {
+        "gara_id": "2_TROFEO_ROMANELLI_TOMMASO_MEMORIAL_LUCA_ROMANELLI_2026-05-17_AL_M",
+        "nome_gara": "2 TROFEO ROMANELLI TOMMASO MEMORIAL LUCA ROMANELLI",
+        "data": "2026-05-17",
+        "posizione": 4,
+        "punti_effettivi": 8,
+        "team": "IL PIRATA VANGI OTC",
+        "moltiplicatore": 1,
+        "tipo": "regionale",
+        "regione": "MARCHE",
+        "km": "60.000",
+        "media": "42.747"
+      },
+      {
+        "gara_id": "5_EDIZIONE_DELLA_CORSA_DI_SANDRO_PROVA_VALIDA_CAMPIONATO_REGIONALE_2026-05-10_AL_M",
+        "nome_gara": "5 EDIZIONE DELLA CORSA DI SANDRO PROVA VALIDA CAMPIONATO REGIONALE",
+        "data": "2026-05-10",
+        "posizione": 3,
+        "punti_effettivi": 20,
+        "team": "IL PIRATA VANGI OTC",
+        "moltiplicatore": 2,
+        "tipo": "regionale",
+        "regione": "ABRUZZO",
+        "km": "67.000",
+        "media": "40.200"
+      },
+      {
+        "gara_id": "78_COPPA_LAVORATORI_2026-05-01_AL_M",
+        "nome_gara": "78 COPPA LAVORATORI",
+        "data": "2026-05-01",
+        "posizione": 3,
+        "punti_effettivi": 10,
+        "team": "IL PIRATA VANGI OTC",
+        "moltiplicatore": 1,
+        "tipo": "regionale",
+        "regione": "TOSCANA",
+        "km": "58.600",
+        "media": "37.404"
+      },
+      {
+        "gara_id": "22_GRAN_PREMIO_DELLA_LIBERAZIONE_STRADE_BIANCHE_2026-04-25_AL_M",
+        "nome_gara": "22 GRAN PREMIO DELLA LIBERAZIONE STRADE BIANCHE",
+        "data": "2026-04-25",
+        "posizione": 2,
+        "punti_effettivi": 12,
+        "team": "IL PIRATA VANGI OTC",
+        "moltiplicatore": 1,
+        "tipo": "regionale",
+        "regione": "TOSCANA",
+        "km": "57.300",
+        "media": "39.517"
+      }
+    ]
+  },
+  "GINESI_DANIELE": {
+    "id": "GINESI_DANIELE",
+    "nome": "DANIELE",
+    "cognome": "GINESI",
+    "team_attuale": "G.S. IPERFINISH STABBIA",
+    "team_id": "G_S_IPERFINISH_STABBIA",
+    "categoria": "AL_M",
+    "genere": "M",
+    "punti_totali": 72,
+    "risultati": [
+      {
+        "gara_id": "GIRO_DEI_TRE_COMUNI_SECONDA_TAPPA_2026-06-01_AL_M",
+        "nome_gara": "GIRO DEI TRE COMUNI SECONDA TAPPA",
+        "data": "2026-06-01",
+        "posizione": 10,
+        "punti_effettivi": 1,
+        "team": "G.S. IPERFINISH STABBIA",
+        "moltiplicatore": 1,
+        "tipo": "regionale",
+        "regione": "TOSCANA",
+        "km": "68.000",
+        "media": "43.816"
+      },
+      {
+        "gara_id": "4_MEMORIAL_CIOFFI_SALVATORE_2026-05-17_AL_M",
+        "nome_gara": "4 MEMORIAL CIOFFI SALVATORE",
+        "data": "2026-05-17",
+        "posizione": 4,
+        "punti_effettivi": 8,
+        "team": "G.S. IPERFINISH STABBIA",
+        "moltiplicatore": 1,
+        "tipo": "regionale",
+        "regione": "TOSCANA",
+        "km": "60.300",
+        "media": "40.267"
+      },
+      {
+        "gara_id": "44_TROFEO_FERALPI_2026-05-10_AL_M",
+        "nome_gara": "44 TROFEO FERALPI",
+        "data": "2026-05-10",
+        "posizione": 4,
+        "punti_effettivi": 8,
+        "team": "G.S. IPERFINISH STABBIA",
+        "moltiplicatore": 1,
+        "tipo": "regionale",
+        "regione": "LOMBARDIA",
+        "km": "61.850",
+        "media": "40.447"
+      },
+      {
+        "gara_id": "78_COPPA_LAVORATORI_2026-05-01_AL_M",
+        "nome_gara": "78 COPPA LAVORATORI",
+        "data": "2026-05-01",
+        "posizione": 4,
+        "punti_effettivi": 8,
+        "team": "G.S. IPERFINISH STABBIA",
+        "moltiplicatore": 1,
+        "tipo": "regionale",
+        "regione": "TOSCANA",
+        "km": "58.600",
+        "media": "37.404"
+      },
+      {
+        "gara_id": "COPPA_LIBERAZIONE_5_TROFEO_I_GREPPI_2026-04-25_AL_M",
+        "nome_gara": "COPPA LIBERAZIONE 5 TROFEO I GREPPI",
+        "data": "2026-04-25",
+        "posizione": 3,
+        "punti_effettivi": 10,
+        "team": "G.S. IPERFINISH STABBIA",
+        "moltiplicatore": 1,
+        "tipo": "regionale",
+        "regione": "TOSCANA",
+        "km": "56.000",
+        "media": "42.000"
+      },
+      {
+        "gara_id": "62_GRAN_PREMIO_CALZIFICI_E_CALZATURIFICI_STABBIESI_2026-04-19_AL_M",
+        "nome_gara": "62 GRAN PREMIO CALZIFICI E CALZATURIFICI STABBIESI",
+        "data": "2026-04-19",
+        "posizione": 1,
+        "punti_effettivi": 15,
+        "team": "G.S. IPERFINISH STABBIA",
+        "moltiplicatore": 1,
+        "tipo": "regionale",
+        "regione": "TOSCANA",
+        "km": "58.500",
+        "media": "41.877"
+      },
+      {
+        "gara_id": "PASQUALANDO_2026-04-05_AL_M",
+        "nome_gara": "PASQUALANDO",
+        "data": "2026-04-05",
+        "posizione": 3,
+        "punti_effettivi": 10,
+        "team": "G.S. IPERFINISH STABBIA",
+        "moltiplicatore": 1,
+        "tipo": "regionale",
+        "regione": "TOSCANA",
+        "km": "55.000",
+        "media": "44.949"
+      },
+      {
+        "gara_id": "23_COPPA_CROCE_AZZURRA_PONTASSIEVE_2026-03-29_AL_M",
+        "nome_gara": "23 COPPA CROCE AZZURRA PONTASSIEVE",
+        "data": "2026-03-29",
+        "posizione": 4,
+        "punti_effettivi": 8,
+        "team": "G.S. IPERFINISH STABBIA",
+        "moltiplicatore": 1,
+        "tipo": "regionale",
+        "regione": "TOSCANA",
+        "km": "50.000",
+        "media": "42.383"
+      },
+      {
+        "gara_id": "75_COPPA_GIUSEPPE_CEI_2026-03-15_AL_M",
+        "nome_gara": "75 COPPA GIUSEPPE CEI",
+        "data": "2026-03-15",
+        "posizione": 7,
+        "punti_effettivi": 4,
+        "team": "G.S. IPERFINISH STABBIA",
+        "moltiplicatore": 1,
+        "tipo": "regionale",
+        "regione": "TOSCANA",
+        "km": "68.000",
+        "media": "42.666"
+      }
+    ]
+  },
+  "BALSAMO_ELISA": {
+    "id": "BALSAMO_ELISA",
+    "nome": "ELISA",
+    "cognome": "BALSAMO",
+    "team_attuale": "LIDL - TREK",
+    "team_id": "LIDL_TREK",
+    "categoria": "ELI_F",
+    "genere": "F",
+    "punti_totali": 144,
+    "risultati": [
+      {
+        "gara_id": "GIRO_D_ITALIA_WOMEN_TERZA_TAPPA_2026-06-01_ELI_F",
+        "nome_gara": "GIRO D'ITALIA WOMEN TERZA TAPPA",
+        "data": "2026-06-01",
+        "posizione": 1,
+        "punti_effettivi": 45,
+        "team": "LIDL - TREK",
+        "moltiplicatore": 3,
+        "tipo": "internazionale",
+        "regione": "UNDER",
+        "km": "156.000",
+        "media": "41.839"
+      },
+      {
+        "gara_id": "GIRO_D_ITALIA_WOMEN_SECONDA_TAPPA_2026-05-31_ELI_F",
+        "nome_gara": "GIRO D'ITALIA WOMEN SECONDA TAPPA",
+        "data": "2026-05-31",
+        "posizione": 1,
+        "punti_effettivi": 45,
+        "team": "LIDL - TREK",
+        "moltiplicatore": 3,
+        "tipo": "internazionale",
+        "regione": "UNDER",
+        "km": "156.000",
+        "media": "39.358"
+      },
+      {
+        "gara_id": "GIRO_D_ITALIA_WOMEN_PRIMA_TAPPA_2026-05-30_ELI_F",
+        "nome_gara": "GIRO D'ITALIA WOMEN PRIMA TAPPA",
+        "data": "2026-05-30",
+        "posizione": 1,
+        "punti_effettivi": 45,
+        "team": "LIDL - TREK",
+        "moltiplicatore": 3,
+        "tipo": "internazionale",
+        "regione": "LOMBARDIA",
+        "km": "139.000",
+        "media": "42.043"
+      },
+      {
+        "gara_id": "MILANO_SANREMO_DONNE_2026-03-21_ELI_F",
+        "nome_gara": "MILANO SANREMO DONNE",
+        "data": "2026-03-21",
+        "posizione": 8,
+        "punti_effettivi": 9,
+        "team": "LIDL - TREK",
+        "moltiplicatore": 3,
+        "tipo": "internazionale",
+        "regione": "LIGURIA",
+        "km": "156.000",
+        "media": "41.182"
+      }
+    ]
+  },
+  "WILLIAMS_LILY": {
+    "id": "WILLIAMS_LILY",
+    "nome": "LILY",
+    "cognome": "WILLIAMS",
+    "team_attuale": "HUMAN POWERED HEALTH",
+    "team_id": "HUMAN_POWERED_HEALTH",
+    "categoria": "ELI_F",
+    "genere": "F",
+    "punti_totali": 42,
+    "risultati": [
+      {
+        "gara_id": "GIRO_D_ITALIA_WOMEN_TERZA_TAPPA_2026-06-01_ELI_F",
+        "nome_gara": "GIRO D'ITALIA WOMEN TERZA TAPPA",
+        "data": "2026-06-01",
+        "posizione": 2,
+        "punti_effettivi": 36,
+        "team": "HUMAN POWERED HEALTH",
+        "moltiplicatore": 3,
+        "tipo": "internazionale",
+        "regione": "UNDER",
+        "km": "156.000",
+        "media": "41.839"
+      },
+      {
+        "gara_id": "GIRO_D_ITALIA_WOMEN_PRIMA_TAPPA_2026-05-30_ELI_F",
+        "nome_gara": "GIRO D'ITALIA WOMEN PRIMA TAPPA",
+        "data": "2026-05-30",
+        "posizione": 9,
+        "punti_effettivi": 6,
+        "team": "HUMAN POWERED HEALTH",
+        "moltiplicatore": 3,
+        "tipo": "internazionale",
+        "regione": "LOMBARDIA",
+        "km": "139.000",
+        "media": "42.043"
+      }
+    ]
+  },
+  "GERRITSE_FEMKE": {
+    "id": "GERRITSE_FEMKE",
+    "nome": "FEMKE",
+    "cognome": "GERRITSE",
+    "team_attuale": "TEAM SD WORX-PROTIME",
+    "team_id": "TEAM_SD_WORX_PROTIME",
+    "categoria": "ELI_F",
+    "genere": "F",
+    "punti_totali": 30,
+    "risultati": [
+      {
+        "gara_id": "GIRO_D_ITALIA_WOMEN_TERZA_TAPPA_2026-06-01_ELI_F",
+        "nome_gara": "GIRO D'ITALIA WOMEN TERZA TAPPA",
+        "data": "2026-06-01",
+        "posizione": 3,
+        "punti_effettivi": 30,
+        "team": "TEAM SD WORX-PROTIME",
+        "moltiplicatore": 3,
+        "tipo": "internazionale",
+        "regione": "UNDER",
+        "km": "156.000",
+        "media": "41.839"
+      }
+    ]
+  },
+  "LONGO_BORGHINI_ELISA": {
+    "id": "LONGO_BORGHINI_ELISA",
+    "nome": "BORGHINI ELISA",
+    "cognome": "LONGO",
+    "team_attuale": "UAE TEAM ADQ",
+    "team_id": "UAE_TEAM_ADQ",
+    "categoria": "ELI_F",
+    "genere": "F",
+    "punti_totali": 93,
+    "risultati": [
+      {
+        "gara_id": "GIRO_D_ITALIA_WOMEN_TERZA_TAPPA_2026-06-01_ELI_F",
+        "nome_gara": "GIRO D'ITALIA WOMEN TERZA TAPPA",
+        "data": "2026-06-01",
+        "posizione": 4,
+        "punti_effettivi": 24,
+        "team": "UAE TEAM ADQ",
+        "moltiplicatore": 3,
+        "tipo": "internazionale",
+        "regione": "UNDER",
+        "km": "156.000",
+        "media": "41.839"
+      },
+      {
+        "gara_id": "ORO_IN_EURO_2026-03-08_ELI_F",
+        "nome_gara": "ORO IN EURO",
+        "data": "2026-03-08",
+        "posizione": 1,
+        "punti_effettivi": 45,
+        "team": "UAE TEAM ADQ",
+        "moltiplicatore": 3,
+        "tipo": "internazionale",
+        "regione": "TOSCANA",
+        "km": "106.400",
+        "media": "43.111"
+      },
+      {
+        "gara_id": "12_STRADE_BIANCHE_DONNE_2026-03-07_ELI_F",
+        "nome_gara": "12 STRADE BIANCHE DONNE",
+        "data": "2026-03-07",
+        "posizione": 4,
+        "punti_effettivi": 24,
+        "team": "UAE TEAM ADQ",
+        "moltiplicatore": 3,
+        "tipo": "internazionale",
+        "regione": "TOSCANA",
+        "km": "133.000",
+        "media": "36.996"
+      }
+    ]
+  },
+  "PERSICO_SILVIA": {
+    "id": "PERSICO_SILVIA",
+    "nome": "SILVIA",
+    "cognome": "PERSICO",
+    "team_attuale": "UAE TEAM ADQ",
+    "team_id": "UAE_TEAM_ADQ",
+    "categoria": "ELI_F",
+    "genere": "F",
+    "punti_totali": 87,
+    "risultati": [
+      {
+        "gara_id": "GIRO_D_ITALIA_WOMEN_TERZA_TAPPA_2026-06-01_ELI_F",
+        "nome_gara": "GIRO D'ITALIA WOMEN TERZA TAPPA",
+        "data": "2026-06-01",
+        "posizione": 5,
+        "punti_effettivi": 18,
+        "team": "UAE TEAM ADQ",
+        "moltiplicatore": 3,
+        "tipo": "internazionale",
+        "regione": "UNDER",
+        "km": "156.000",
+        "media": "41.839"
+      },
+      {
+        "gara_id": "GIRO_DELL_APPENNINO_DONNE_2026-03-22_ELI_F",
+        "nome_gara": "GIRO DELL'APPENNINO DONNE",
+        "data": "2026-03-22",
+        "posizione": 1,
+        "punti_effettivi": 45,
+        "team": "UAE TEAM ADQ",
+        "moltiplicatore": 3,
+        "tipo": "internazionale",
+        "regione": "LIGURIA",
+        "km": "111.000",
+        "media": "40.583"
+      },
+      {
+        "gara_id": "ORO_IN_EURO_2026-03-08_ELI_F",
+        "nome_gara": "ORO IN EURO",
+        "data": "2026-03-08",
+        "posizione": 4,
+        "punti_effettivi": 24,
+        "team": "UAE TEAM ADQ",
+        "moltiplicatore": 3,
+        "tipo": "internazionale",
+        "regione": "TOSCANA",
+        "km": "106.400",
+        "media": "43.111"
+      }
+    ]
+  },
+  "GEORGI_PFEIFFER": {
+    "id": "GEORGI_PFEIFFER",
+    "nome": "PFEIFFER",
+    "cognome": "GEORGI",
+    "team_attuale": "TEAM PICNIC POSTNL",
+    "team_id": "TEAM_PICNIC_POSTNL",
+    "categoria": "ELI_F",
+    "genere": "F",
+    "punti_totali": 15,
+    "risultati": [
+      {
+        "gara_id": "GIRO_D_ITALIA_WOMEN_TERZA_TAPPA_2026-06-01_ELI_F",
+        "nome_gara": "GIRO D'ITALIA WOMEN TERZA TAPPA",
+        "data": "2026-06-01",
+        "posizione": 6,
+        "punti_effettivi": 15,
+        "team": "TEAM PICNIC POSTNL",
+        "moltiplicatore": 3,
+        "tipo": "internazionale",
+        "regione": "UNDER",
+        "km": "156.000",
+        "media": "41.839"
+      }
+    ]
+  },
+  "REUSSER_MARLEN": {
+    "id": "REUSSER_MARLEN",
+    "nome": "MARLEN",
+    "cognome": "REUSSER",
+    "team_attuale": "MOVISTAR TEAM ACADEMY",
+    "team_id": "MOVISTAR_TEAM_ACADEMY",
+    "categoria": "ELI_F",
+    "genere": "F",
+    "punti_totali": 12,
+    "risultati": [
+      {
+        "gara_id": "GIRO_D_ITALIA_WOMEN_TERZA_TAPPA_2026-06-01_ELI_F",
+        "nome_gara": "GIRO D'ITALIA WOMEN TERZA TAPPA",
+        "data": "2026-06-01",
+        "posizione": 7,
+        "punti_effettivi": 12,
+        "team": "MOVISTAR TEAM ACADEMY",
+        "moltiplicatore": 3,
+        "tipo": "internazionale",
+        "regione": "UNDER",
+        "km": "156.000",
+        "media": "41.839"
+      }
+    ]
+  },
+  "GERY_CELIA": {
+    "id": "GERY_CELIA",
+    "nome": "CELIA",
+    "cognome": "GERY",
+    "team_attuale": "FDJ UNITED - SUEZ",
+    "team_id": "FDJ_UNITED_SUEZ",
+    "categoria": "ELI_F",
+    "genere": "F",
+    "punti_totali": 42,
+    "risultati": [
+      {
+        "gara_id": "GIRO_D_ITALIA_WOMEN_TERZA_TAPPA_2026-06-01_ELI_F",
+        "nome_gara": "GIRO D'ITALIA WOMEN TERZA TAPPA",
+        "data": "2026-06-01",
+        "posizione": 8,
+        "punti_effettivi": 9,
+        "team": "FDJ UNITED - SUEZ",
+        "moltiplicatore": 3,
+        "tipo": "internazionale",
+        "regione": "UNDER",
+        "km": "156.000",
+        "media": "41.839"
+      },
+      {
+        "gara_id": "GIRO_D_ITALIA_WOMEN_PRIMA_TAPPA_2026-05-30_ELI_F",
+        "nome_gara": "GIRO D'ITALIA WOMEN PRIMA TAPPA",
+        "data": "2026-05-30",
+        "posizione": 8,
+        "punti_effettivi": 9,
+        "team": "FDJ UNITED - SUEZ",
+        "moltiplicatore": 3,
+        "tipo": "internazionale",
+        "regione": "LOMBARDIA",
+        "km": "139.000",
+        "media": "42.043"
+      },
+      {
+        "gara_id": "GIRO_DELL_APPENNINO_DONNE_2026-03-22_ELI_F",
+        "nome_gara": "GIRO DELL'APPENNINO DONNE",
+        "data": "2026-03-22",
+        "posizione": 4,
+        "punti_effettivi": 24,
+        "team": "FDJ UNITED - SUEZ",
+        "moltiplicatore": 3,
+        "tipo": "internazionale",
+        "regione": "LIGURIA",
+        "km": "111.000",
+        "media": "40.583"
+      }
+    ]
+  },
+  "LUDWIG_UTTRUP_CECILIE": {
+    "id": "LUDWIG_UTTRUP_CECILIE",
+    "nome": "UTTRUP CECILIE",
+    "cognome": "LUDWIG",
+    "team_attuale": "CANYON SRAM ZONDACRYPTO",
+    "team_id": "CANYON_SRAM_ZONDACRYPTO",
+    "categoria": "ELI_F",
+    "genere": "F",
+    "punti_totali": 6,
+    "risultati": [
+      {
+        "gara_id": "GIRO_D_ITALIA_WOMEN_TERZA_TAPPA_2026-06-01_ELI_F",
+        "nome_gara": "GIRO D'ITALIA WOMEN TERZA TAPPA",
+        "data": "2026-06-01",
+        "posizione": 9,
+        "punti_effettivi": 6,
+        "team": "CANYON SRAM ZONDACRYPTO",
+        "moltiplicatore": 3,
+        "tipo": "internazionale",
+        "regione": "UNDER",
+        "km": "156.000",
+        "media": "41.839"
+      }
+    ]
+  },
+  "MORIER_EMILIE": {
+    "id": "MORIER_EMILIE",
+    "nome": "EMILIE",
+    "cognome": "MORIER",
+    "team_attuale": "ST MICHEL-PREFERENCE HOME-AUBER93",
+    "team_id": "ST_MICHEL_PREFERENCE_HOME_AUBER93",
+    "categoria": "ELI_F",
+    "genere": "F",
+    "punti_totali": 3,
+    "risultati": [
+      {
+        "gara_id": "GIRO_D_ITALIA_WOMEN_TERZA_TAPPA_2026-06-01_ELI_F",
+        "nome_gara": "GIRO D'ITALIA WOMEN TERZA TAPPA",
+        "data": "2026-06-01",
+        "posizione": 10,
+        "punti_effettivi": 3,
+        "team": "ST MICHEL-PREFERENCE HOME-AUBER93",
+        "moltiplicatore": 3,
+        "tipo": "internazionale",
+        "regione": "UNDER",
+        "km": "156.000",
+        "media": "41.839"
+      }
+    ]
+  },
   "ROSSI_LEONARDO": {
     "id": "ROSSI_LEONARDO",
     "nome": "LEONARDO",
@@ -11272,148 +14011,6 @@
       }
     ]
   },
-  "FIACCO_ANDREA": {
-    "id": "FIACCO_ANDREA",
-    "nome": "ANDREA",
-    "cognome": "FIACCO",
-    "team_attuale": "TEAM CORATTI",
-    "team_id": "TEAM_CORATTI",
-    "categoria": "AL_M",
-    "genere": "M",
-    "punti_totali": 112,
-    "risultati": [
-      {
-        "gara_id": "GIRO_DEI_TRE_COMUNI_PRIMA_TAPPA_CRONOMETRO_2026-05-31_AL_M",
-        "nome_gara": "GIRO DEI TRE COMUNI PRIMA TAPPA CRONOMETRO",
-        "data": "2026-05-31",
-        "posizione": 2,
-        "punti_effettivi": 12,
-        "team": "TEAM CORATTI",
-        "moltiplicatore": 1,
-        "tipo": "regionale",
-        "regione": "TOSCANA",
-        "km": "7.000",
-        "media": "41.684"
-      },
-      {
-        "gara_id": "2_GRAN_PREMIO_NOMENTUM_TROFEO_NOI_SPORT_2026-05-24_AL_M",
-        "nome_gara": "2 GRAN PREMIO NOMENTUM TROFEO NOI SPORT",
-        "data": "2026-05-24",
-        "posizione": 4,
-        "punti_effettivi": 8,
-        "team": "TEAM CORATTI",
-        "moltiplicatore": 1,
-        "tipo": "regionale",
-        "regione": "LAZIO",
-        "km": "55.500",
-        "media": "38.676"
-      },
-      {
-        "gara_id": "CRONOSCALATA_CITTA_DI_FUMONE_2026-05-23_AL_M",
-        "nome_gara": "CRONOSCALATA CITTA' DI FUMONE",
-        "data": "2026-05-23",
-        "posizione": 2,
-        "punti_effettivi": 12,
-        "team": "TEAM CORATTI",
-        "moltiplicatore": 1,
-        "tipo": "regionale",
-        "regione": "LAZIO",
-        "km": "4.600",
-        "media": "26.040"
-      },
-      {
-        "gara_id": "2_TROFEO_ROMANELLI_TOMMASO_MEMORIAL_LUCA_ROMANELLI_2026-05-17_AL_M",
-        "nome_gara": "2 TROFEO ROMANELLI TOMMASO MEMORIAL LUCA ROMANELLI",
-        "data": "2026-05-17",
-        "posizione": 2,
-        "punti_effettivi": 12,
-        "team": "TEAM CORATTI",
-        "moltiplicatore": 1,
-        "tipo": "regionale",
-        "regione": "MARCHE",
-        "km": "60.000",
-        "media": "42.747"
-      },
-      {
-        "gara_id": "22_GRAN_PREMIO_DELLA_LIBERAZIONE_STRADE_BIANCHE_2026-04-25_AL_M",
-        "nome_gara": "22 GRAN PREMIO DELLA LIBERAZIONE STRADE BIANCHE",
-        "data": "2026-04-25",
-        "posizione": 1,
-        "punti_effettivi": 15,
-        "team": "TEAM CORATTI",
-        "moltiplicatore": 1,
-        "tipo": "regionale",
-        "regione": "TOSCANA",
-        "km": "57.300",
-        "media": "39.517"
-      },
-      {
-        "gara_id": "GRAN_PREMIO_COLLI_MARIGNANESI_2026-04-12_AL_M",
-        "nome_gara": "GRAN PREMIO COLLI MARIGNANESI",
-        "data": "2026-04-12",
-        "posizione": 8,
-        "punti_effettivi": 3,
-        "team": "TEAM CORATTI",
-        "moltiplicatore": 1,
-        "tipo": "regionale",
-        "regione": "EMILIA ROMAGNA",
-        "km": "60.000",
-        "media": "42.562"
-      },
-      {
-        "gara_id": "5_TROFEO_CITTA_DI_MONTEVARCHI_2026-04-06_AL_M",
-        "nome_gara": "5 TROFEO CITTA' DI MONTEVARCHI",
-        "data": "2026-04-06",
-        "posizione": 1,
-        "punti_effettivi": 15,
-        "team": "TEAM CORATTI",
-        "moltiplicatore": 1,
-        "tipo": "regionale",
-        "regione": "TOSCANA",
-        "km": "52.700",
-        "media": "38.798"
-      },
-      {
-        "gara_id": "GIORNATA_AZZURRA_2026-04-04_AL_M",
-        "nome_gara": "GIORNATA AZZURRA",
-        "data": "2026-04-04",
-        "posizione": 2,
-        "punti_effettivi": 12,
-        "team": "TEAM CORATTI",
-        "moltiplicatore": 1,
-        "tipo": "regionale",
-        "regione": "PUGLIA",
-        "km": "64.800",
-        "media": "39.519"
-      },
-      {
-        "gara_id": "GRAN_PREMIO_FIORITURA_2026-03-29_AL_M",
-        "nome_gara": "GRAN PREMIO FIORITURA",
-        "data": "2026-03-29",
-        "posizione": 4,
-        "punti_effettivi": 8,
-        "team": "TEAM CORATTI",
-        "moltiplicatore": 1,
-        "tipo": "regionale",
-        "regione": "EMILIA ROMAGNA",
-        "km": "49.000",
-        "media": "43.674"
-      },
-      {
-        "gara_id": "75_COPPA_GIUSEPPE_CEI_2026-03-15_AL_M",
-        "nome_gara": "75 COPPA GIUSEPPE CEI",
-        "data": "2026-03-15",
-        "posizione": 1,
-        "punti_effettivi": 15,
-        "team": "TEAM CORATTI",
-        "moltiplicatore": 1,
-        "tipo": "regionale",
-        "regione": "TOSCANA",
-        "km": "68.000",
-        "media": "42.666"
-      }
-    ]
-  },
   "MUNTEANU_DAVID_ALEXANDRU": {
     "id": "MUNTEANU_DAVID_ALEXANDRU",
     "nome": "DAVID ALEXANDRU",
@@ -11694,303 +14291,6 @@
         "regione": "TOSCANA",
         "km": "68.000",
         "media": "42.666"
-      }
-    ]
-  },
-  "FROSINI_RICCARDO": {
-    "id": "FROSINI_RICCARDO",
-    "nome": "RICCARDO",
-    "cognome": "FROSINI",
-    "team_attuale": "AC F. BESSI CALENZANO DONORATICO",
-    "team_id": "AC_F_BESSI_CALENZANO_DONORATICO",
-    "categoria": "AL_M",
-    "genere": "M",
-    "punti_totali": 143,
-    "risultati": [
-      {
-        "gara_id": "GIRO_DEI_TRE_COMUNI_PRIMA_TAPPA_CRONOMETRO_2026-05-31_AL_M",
-        "nome_gara": "GIRO DEI TRE COMUNI PRIMA TAPPA CRONOMETRO",
-        "data": "2026-05-31",
-        "posizione": 6,
-        "punti_effettivi": 5,
-        "team": "AC F. BESSI CALENZANO DONORATICO",
-        "moltiplicatore": 1,
-        "tipo": "regionale",
-        "regione": "TOSCANA",
-        "km": "7.000",
-        "media": "41.684"
-      },
-      {
-        "gara_id": "71_COPPA_GIANCARLO_BONECHI_2026-05-24_AL_M",
-        "nome_gara": "71 COPPA GIANCARLO BONECHI",
-        "data": "2026-05-24",
-        "posizione": 1,
-        "punti_effettivi": 15,
-        "team": "AC F. BESSI CALENZANO DONORATICO",
-        "moltiplicatore": 1,
-        "tipo": "regionale",
-        "regione": "TOSCANA",
-        "km": "60.000",
-        "media": "39.273"
-      },
-      {
-        "gara_id": "4_MEMORIAL_CIOFFI_SALVATORE_2026-05-17_AL_M",
-        "nome_gara": "4 MEMORIAL CIOFFI SALVATORE",
-        "data": "2026-05-17",
-        "posizione": 2,
-        "punti_effettivi": 12,
-        "team": "AC F. BESSI CALENZANO DONORATICO",
-        "moltiplicatore": 1,
-        "tipo": "regionale",
-        "regione": "TOSCANA",
-        "km": "60.300",
-        "media": "40.267"
-      },
-      {
-        "gara_id": "44_TROFEO_FERALPI_2026-05-10_AL_M",
-        "nome_gara": "44 TROFEO FERALPI",
-        "data": "2026-05-10",
-        "posizione": 7,
-        "punti_effettivi": 4,
-        "team": "AC F. BESSI CALENZANO DONORATICO",
-        "moltiplicatore": 1,
-        "tipo": "regionale",
-        "regione": "LOMBARDIA",
-        "km": "61.850",
-        "media": "40.447"
-      },
-      {
-        "gara_id": "LA_STORICA_COPPA_DE_LE_POGGIOLA_2026-05-03_AL_M",
-        "nome_gara": "LA STORICA COPPA DE LE POGGIOLA",
-        "data": "2026-05-03",
-        "posizione": 3,
-        "punti_effettivi": 10,
-        "team": "AC F. BESSI CALENZANO DONORATICO",
-        "moltiplicatore": 1,
-        "tipo": "regionale",
-        "regione": "TOSCANA",
-        "km": "61.300",
-        "media": "39.892"
-      },
-      {
-        "gara_id": "78_COPPA_LAVORATORI_2026-05-01_AL_M",
-        "nome_gara": "78 COPPA LAVORATORI",
-        "data": "2026-05-01",
-        "posizione": 2,
-        "punti_effettivi": 12,
-        "team": "AC F. BESSI CALENZANO DONORATICO",
-        "moltiplicatore": 1,
-        "tipo": "regionale",
-        "regione": "TOSCANA",
-        "km": "58.600",
-        "media": "37.404"
-      },
-      {
-        "gara_id": "3_TROFEO_BACCI_FABIO_ALLA_MEMORIA_2026-04-26_AL_M",
-        "nome_gara": "3 TROFEO BACCI FABIO ALLA MEMORIA",
-        "data": "2026-04-26",
-        "posizione": 1,
-        "punti_effettivi": 15,
-        "team": "AC F. BESSI CALENZANO DONORATICO",
-        "moltiplicatore": 1,
-        "tipo": "regionale",
-        "regione": "TOSCANA",
-        "km": "49.200",
-        "media": "41.000"
-      },
-      {
-        "gara_id": "COPPA_LIBERAZIONE_5_TROFEO_I_GREPPI_2026-04-25_AL_M",
-        "nome_gara": "COPPA LIBERAZIONE 5 TROFEO I GREPPI",
-        "data": "2026-04-25",
-        "posizione": 1,
-        "punti_effettivi": 15,
-        "team": "AC F. BESSI CALENZANO DONORATICO",
-        "moltiplicatore": 1,
-        "tipo": "regionale",
-        "regione": "TOSCANA",
-        "km": "56.000",
-        "media": "42.000"
-      },
-      {
-        "gara_id": "62_GRAN_PREMIO_CALZIFICI_E_CALZATURIFICI_STABBIESI_2026-04-19_AL_M",
-        "nome_gara": "62 GRAN PREMIO CALZIFICI E CALZATURIFICI STABBIESI",
-        "data": "2026-04-19",
-        "posizione": 5,
-        "punti_effettivi": 6,
-        "team": "AC F. BESSI CALENZANO DONORATICO",
-        "moltiplicatore": 1,
-        "tipo": "regionale",
-        "regione": "TOSCANA",
-        "km": "58.500",
-        "media": "41.877"
-      },
-      {
-        "gara_id": "SAGRA_DEL_CICLISMO_MEMORIAL_NIERI_MAURO_2026-04-12_AL_M",
-        "nome_gara": "SAGRA DEL CICLISMO MEMORIAL NIERI MAURO",
-        "data": "2026-04-12",
-        "posizione": 3,
-        "punti_effettivi": 10,
-        "team": "AC F. BESSI CALENZANO DONORATICO",
-        "moltiplicatore": 1,
-        "tipo": "regionale",
-        "regione": "TOSCANA",
-        "km": "58.200",
-        "media": "43.686"
-      },
-      {
-        "gara_id": "78_COPPA_COMUNE_DI_CALENZANO_2026-04-06_AL_M",
-        "nome_gara": "78 COPPA COMUNE DI CALENZANO",
-        "data": "2026-04-06",
-        "posizione": 1,
-        "punti_effettivi": 15,
-        "team": "AC F. BESSI CALENZANO DONORATICO",
-        "moltiplicatore": 1,
-        "tipo": "regionale",
-        "regione": "TOSCANA",
-        "km": "49.000",
-        "media": "42.722"
-      },
-      {
-        "gara_id": "PASQUALANDO_2026-04-05_AL_M",
-        "nome_gara": "PASQUALANDO",
-        "data": "2026-04-05",
-        "posizione": 2,
-        "punti_effettivi": 12,
-        "team": "AC F. BESSI CALENZANO DONORATICO",
-        "moltiplicatore": 1,
-        "tipo": "regionale",
-        "regione": "TOSCANA",
-        "km": "55.000",
-        "media": "44.949"
-      },
-      {
-        "gara_id": "23_COPPA_CROCE_AZZURRA_PONTASSIEVE_2026-03-29_AL_M",
-        "nome_gara": "23 COPPA CROCE AZZURRA PONTASSIEVE",
-        "data": "2026-03-29",
-        "posizione": 7,
-        "punti_effettivi": 4,
-        "team": "AC F. BESSI CALENZANO DONORATICO",
-        "moltiplicatore": 1,
-        "tipo": "regionale",
-        "regione": "TOSCANA",
-        "km": "50.000",
-        "media": "42.383"
-      },
-      {
-        "gara_id": "75_COPPA_GIUSEPPE_CEI_2026-03-15_AL_M",
-        "nome_gara": "75 COPPA GIUSEPPE CEI",
-        "data": "2026-03-15",
-        "posizione": 4,
-        "punti_effettivi": 8,
-        "team": "AC F. BESSI CALENZANO DONORATICO",
-        "moltiplicatore": 1,
-        "tipo": "regionale",
-        "regione": "TOSCANA",
-        "km": "68.000",
-        "media": "42.666"
-      }
-    ]
-  },
-  "DEL_GAONE_LUCA": {
-    "id": "DEL_GAONE_LUCA",
-    "nome": "GAONE LUCA",
-    "cognome": "DEL",
-    "team_attuale": "IL PIRATA VANGI OTC",
-    "team_id": "IL_PIRATA_VANGI_OTC",
-    "categoria": "AL_M",
-    "genere": "M",
-    "punti_totali": 61,
-    "risultati": [
-      {
-        "gara_id": "GIRO_DEI_TRE_COMUNI_PRIMA_TAPPA_CRONOMETRO_2026-05-31_AL_M",
-        "nome_gara": "GIRO DEI TRE COMUNI PRIMA TAPPA CRONOMETRO",
-        "data": "2026-05-31",
-        "posizione": 7,
-        "punti_effettivi": 4,
-        "team": "IL PIRATA VANGI OTC",
-        "moltiplicatore": 1,
-        "tipo": "regionale",
-        "regione": "TOSCANA",
-        "km": "7.000",
-        "media": "41.684"
-      },
-      {
-        "gara_id": "2_GRAN_PREMIO_NOMENTUM_TROFEO_NOI_SPORT_2026-05-24_AL_M",
-        "nome_gara": "2 GRAN PREMIO NOMENTUM TROFEO NOI SPORT",
-        "data": "2026-05-24",
-        "posizione": 10,
-        "punti_effettivi": 1,
-        "team": "IL PIRATA VANGI OTC",
-        "moltiplicatore": 1,
-        "tipo": "regionale",
-        "regione": "LAZIO",
-        "km": "55.500",
-        "media": "38.676"
-      },
-      {
-        "gara_id": "CRONOSCALATA_CITTA_DI_FUMONE_2026-05-23_AL_M",
-        "nome_gara": "CRONOSCALATA CITTA' DI FUMONE",
-        "data": "2026-05-23",
-        "posizione": 5,
-        "punti_effettivi": 6,
-        "team": "IL PIRATA VANGI OTC",
-        "moltiplicatore": 1,
-        "tipo": "regionale",
-        "regione": "LAZIO",
-        "km": "4.600",
-        "media": "26.040"
-      },
-      {
-        "gara_id": "2_TROFEO_ROMANELLI_TOMMASO_MEMORIAL_LUCA_ROMANELLI_2026-05-17_AL_M",
-        "nome_gara": "2 TROFEO ROMANELLI TOMMASO MEMORIAL LUCA ROMANELLI",
-        "data": "2026-05-17",
-        "posizione": 4,
-        "punti_effettivi": 8,
-        "team": "IL PIRATA VANGI OTC",
-        "moltiplicatore": 1,
-        "tipo": "regionale",
-        "regione": "MARCHE",
-        "km": "60.000",
-        "media": "42.747"
-      },
-      {
-        "gara_id": "5_EDIZIONE_DELLA_CORSA_DI_SANDRO_PROVA_VALIDA_CAMPIONATO_REGIONALE_2026-05-10_AL_M",
-        "nome_gara": "5 EDIZIONE DELLA CORSA DI SANDRO PROVA VALIDA CAMPIONATO REGIONALE",
-        "data": "2026-05-10",
-        "posizione": 3,
-        "punti_effettivi": 20,
-        "team": "IL PIRATA VANGI OTC",
-        "moltiplicatore": 2,
-        "tipo": "regionale",
-        "regione": "ABRUZZO",
-        "km": "67.000",
-        "media": "40.200"
-      },
-      {
-        "gara_id": "78_COPPA_LAVORATORI_2026-05-01_AL_M",
-        "nome_gara": "78 COPPA LAVORATORI",
-        "data": "2026-05-01",
-        "posizione": 3,
-        "punti_effettivi": 10,
-        "team": "IL PIRATA VANGI OTC",
-        "moltiplicatore": 1,
-        "tipo": "regionale",
-        "regione": "TOSCANA",
-        "km": "58.600",
-        "media": "37.404"
-      },
-      {
-        "gara_id": "22_GRAN_PREMIO_DELLA_LIBERAZIONE_STRADE_BIANCHE_2026-04-25_AL_M",
-        "nome_gara": "22 GRAN PREMIO DELLA LIBERAZIONE STRADE BIANCHE",
-        "data": "2026-04-25",
-        "posizione": 2,
-        "punti_effettivi": 12,
-        "team": "IL PIRATA VANGI OTC",
-        "moltiplicatore": 1,
-        "tipo": "regionale",
-        "regione": "TOSCANA",
-        "km": "57.300",
-        "media": "39.517"
       }
     ]
   },
@@ -12336,8 +14636,8 @@
         "moltiplicatore": 1,
         "tipo": "regionale",
         "regione": "MARCHE",
-        "km": "63.000",
-        "media": ""
+        "km": "60.000",
+        "media": "37.742"
       },
       {
         "gara_id": "CRONOSCALATA_CITTA_DI_FUMONE_2026-05-23_AL_M",
@@ -12374,8 +14674,8 @@
         "moltiplicatore": 1,
         "tipo": "regionale",
         "regione": "MARCHE",
-        "km": "63.000",
-        "media": ""
+        "km": "60.000",
+        "media": "37.742"
       },
       {
         "gara_id": "31_TROFEO_S_FRANCESCO_2026-05-01_AL_M",
@@ -12425,8 +14725,8 @@
         "moltiplicatore": 1,
         "tipo": "regionale",
         "regione": "MARCHE",
-        "km": "63.000",
-        "media": ""
+        "km": "60.000",
+        "media": "37.742"
       },
       {
         "gara_id": "5_MEMORIAL_MARINO_MARCOZZI_2026-05-24_AL_M",
@@ -12541,8 +14841,8 @@
         "moltiplicatore": 1,
         "tipo": "regionale",
         "regione": "MARCHE",
-        "km": "63.000",
-        "media": ""
+        "km": "60.000",
+        "media": "37.742"
       },
       {
         "gara_id": "31_TROFEO_S_FRANCESCO_2026-05-01_AL_M",
@@ -12592,8 +14892,8 @@
         "moltiplicatore": 1,
         "tipo": "regionale",
         "regione": "MARCHE",
-        "km": "63.000",
-        "media": ""
+        "km": "60.000",
+        "media": "37.742"
       },
       {
         "gara_id": "14_TROFEO_CASEIFICIO_RAZIONALE_NOVESE_2026-05-24_AL_M",
@@ -12695,8 +14995,8 @@
         "moltiplicatore": 1,
         "tipo": "regionale",
         "regione": "MARCHE",
-        "km": "63.000",
-        "media": ""
+        "km": "60.000",
+        "media": "37.742"
       }
     ]
   },
@@ -12720,8 +15020,8 @@
         "moltiplicatore": 1,
         "tipo": "regionale",
         "regione": "MARCHE",
-        "km": "63.000",
-        "media": ""
+        "km": "60.000",
+        "media": "37.742"
       }
     ]
   },
@@ -12745,8 +15045,8 @@
         "moltiplicatore": 1,
         "tipo": "regionale",
         "regione": "MARCHE",
-        "km": "63.000",
-        "media": ""
+        "km": "60.000",
+        "media": "37.742"
       },
       {
         "gara_id": "5_MEMORIAL_MARINO_MARCOZZI_2026-05-24_AL_M",
@@ -12809,8 +15109,8 @@
         "moltiplicatore": 1,
         "tipo": "regionale",
         "regione": "MARCHE",
-        "km": "63.000",
-        "media": ""
+        "km": "60.000",
+        "media": "37.742"
       },
       {
         "gara_id": "2_TROFEO_ROMANELLI_TOMMASO_MEMORIAL_LUCA_ROMANELLI_2026-05-17_AL_M",
@@ -12899,8 +15199,8 @@
         "moltiplicatore": 1,
         "tipo": "regionale",
         "regione": "MARCHE",
-        "km": "63.000",
-        "media": ""
+        "km": "60.000",
+        "media": "37.742"
       },
       {
         "gara_id": "5_EDIZIONE_DELLA_CORSA_DI_SANDRO_PROVA_VALIDA_CAMPIONATO_REGIONALE_2026-05-10_AL_M",
@@ -30054,7 +32354,7 @@
         "tipo": "regionale",
         "regione": "MARCHE",
         "km": "30.000",
-        "media": ""
+        "media": "31.432"
       },
       {
         "gara_id": "21_MEMORIAL_GALAVOTTI_2026-05-17_ES1_M",
@@ -30157,7 +32457,7 @@
         "tipo": "regionale",
         "regione": "MARCHE",
         "km": "30.000",
-        "media": ""
+        "media": "31.432"
       },
       {
         "gara_id": "5_MEMORIAL_MARINO_MARCOZZI_GARA_UNICA_2026-05-24_ES1_M",
@@ -30299,7 +32599,7 @@
         "tipo": "regionale",
         "regione": "MARCHE",
         "km": "30.000",
-        "media": ""
+        "media": "31.432"
       },
       {
         "gara_id": "21_MEMORIAL_GALAVOTTI_2026-05-17_ES1_M",
@@ -30402,7 +32702,7 @@
         "tipo": "regionale",
         "regione": "MARCHE",
         "km": "30.000",
-        "media": ""
+        "media": "31.432"
       },
       {
         "gara_id": "5_MEMORIAL_MARINO_MARCOZZI_GARA_UNICA_2026-05-24_ES1_M",
@@ -30479,7 +32779,7 @@
         "tipo": "regionale",
         "regione": "MARCHE",
         "km": "30.000",
-        "media": ""
+        "media": "31.432"
       },
       {
         "gara_id": "2_TROFEO_ROMANELLI_TOMMASO_2026-05-17_ES1_M",
@@ -30582,7 +32882,7 @@
         "tipo": "regionale",
         "regione": "MARCHE",
         "km": "30.000",
-        "media": ""
+        "media": "31.432"
       },
       {
         "gara_id": "5_MEMORIAL_MARINO_MARCOZZI_GARA_UNICA_2026-05-24_ES1_M",
@@ -30737,7 +33037,7 @@
         "tipo": "regionale",
         "regione": "MARCHE",
         "km": "30.000",
-        "media": ""
+        "media": "31.432"
       },
       {
         "gara_id": "5_MEMORIAL_MARINO_MARCOZZI_GARA_UNICA_2026-05-24_ES1_M",
@@ -30866,7 +33166,7 @@
         "tipo": "regionale",
         "regione": "MARCHE",
         "km": "30.000",
-        "media": ""
+        "media": "31.432"
       },
       {
         "gara_id": "65_GRAN_PREMIO_A_FANTINI_GARA_UNICA_2026-05-03_ES1_M",
@@ -30930,7 +33230,7 @@
         "tipo": "regionale",
         "regione": "MARCHE",
         "km": "30.000",
-        "media": ""
+        "media": "31.432"
       },
       {
         "gara_id": "1_TROFEO_MARCO_PANTANI_CRONOMETRO_INDIVIDUALE_2026-05-30_ES1_M",
@@ -31111,7 +33411,7 @@
         "tipo": "regionale",
         "regione": "MARCHE",
         "km": "30.000",
-        "media": ""
+        "media": "31.432"
       },
       {
         "gara_id": "2_TROFEO_ROMANELLI_TOMMASO_2026-05-17_ES1_M",
@@ -31149,7 +33449,7 @@
         "tipo": "regionale",
         "regione": "MARCHE",
         "km": "36.000",
-        "media": ""
+        "media": "33.129"
       },
       {
         "gara_id": "TROFEO_OFFICINE_CELIA_GARA_UNICA_2026-05-24_ES2_M",
@@ -31317,7 +33617,7 @@
         "tipo": "regionale",
         "regione": "MARCHE",
         "km": "36.000",
-        "media": ""
+        "media": "33.129"
       },
       {
         "gara_id": "5_MEMORIAL_MARINO_MARCOZZI_GARA_UNICA_2026-05-24_ES2_M",
@@ -31420,7 +33720,7 @@
         "tipo": "regionale",
         "regione": "MARCHE",
         "km": "36.000",
-        "media": ""
+        "media": "33.129"
       },
       {
         "gara_id": "2_TROFEO_ROMANELLI_TOMMASO_2026-05-17_ES2_M",
@@ -31523,7 +33823,7 @@
         "tipo": "regionale",
         "regione": "MARCHE",
         "km": "36.000",
-        "media": ""
+        "media": "33.129"
       },
       {
         "gara_id": "25_MEMORIAL_DIRIGENTI_DEL_PEDALE_RIMINESE_2026-05-10_ES2_M",
@@ -31600,7 +33900,7 @@
         "tipo": "regionale",
         "regione": "MARCHE",
         "km": "36.000",
-        "media": ""
+        "media": "33.129"
       },
       {
         "gara_id": "5_MEMORIAL_MARINO_MARCOZZI_GARA_UNICA_2026-05-24_ES2_M",
@@ -31677,7 +33977,7 @@
         "tipo": "regionale",
         "regione": "MARCHE",
         "km": "36.000",
-        "media": ""
+        "media": "33.129"
       },
       {
         "gara_id": "25_MEMORIAL_DIRIGENTI_DEL_PEDALE_RIMINESE_2026-05-10_ES2_M",
@@ -31767,7 +34067,7 @@
         "tipo": "regionale",
         "regione": "MARCHE",
         "km": "36.000",
-        "media": ""
+        "media": "33.129"
       },
       {
         "gara_id": "2_MEMORIAL_GRAZIANO_ROSSI_2026-04-19_ES2_M",
@@ -31805,7 +34105,7 @@
         "tipo": "regionale",
         "regione": "MARCHE",
         "km": "36.000",
-        "media": ""
+        "media": "33.129"
       },
       {
         "gara_id": "81_GRAN_PREMIO_CADUTI_LIBERAZIONE_GARA_UNICA_2026-05-01_ES2_M",
@@ -31856,7 +34156,7 @@
         "tipo": "regionale",
         "regione": "MARCHE",
         "km": "36.000",
-        "media": ""
+        "media": "33.129"
       },
       {
         "gara_id": "5_MEMORIAL_MARINO_MARCOZZI_GARA_UNICA_2026-05-24_ES2_M",
@@ -31907,7 +34207,7 @@
         "tipo": "regionale",
         "regione": "MARCHE",
         "km": "36.000",
-        "media": ""
+        "media": "33.129"
       },
       {
         "gara_id": "49_GRAN_PREMIO_LIBERAZIONE_2026-04-25_ES2_M",
@@ -36772,57 +39072,6 @@
       }
     ]
   },
-  "BALSAMO_ELISA": {
-    "id": "BALSAMO_ELISA",
-    "nome": "ELISA",
-    "cognome": "BALSAMO",
-    "team_attuale": "LIDL - TREK",
-    "team_id": "LIDL_TREK",
-    "categoria": "ELI_F",
-    "genere": "F",
-    "punti_totali": 99,
-    "risultati": [
-      {
-        "gara_id": "GIRO_D_ITALIA_WOMEN_SECONDA_TAPPA_2026-05-31_ELI_F",
-        "nome_gara": "GIRO D'ITALIA WOMEN SECONDA TAPPA",
-        "data": "2026-05-31",
-        "posizione": 1,
-        "punti_effettivi": 45,
-        "team": "LIDL - TREK",
-        "moltiplicatore": 3,
-        "tipo": "internazionale",
-        "regione": "UNDER",
-        "km": "156.000",
-        "media": "39.358"
-      },
-      {
-        "gara_id": "GIRO_D_ITALIA_WOMEN_PRIMA_TAPPA_2026-05-30_ELI_F",
-        "nome_gara": "GIRO D'ITALIA WOMEN PRIMA TAPPA",
-        "data": "2026-05-30",
-        "posizione": 1,
-        "punti_effettivi": 45,
-        "team": "LIDL - TREK",
-        "moltiplicatore": 3,
-        "tipo": "internazionale",
-        "regione": "LOMBARDIA",
-        "km": "139.000",
-        "media": "42.043"
-      },
-      {
-        "gara_id": "MILANO_SANREMO_DONNE_2026-03-21_ELI_F",
-        "nome_gara": "MILANO SANREMO DONNE",
-        "data": "2026-03-21",
-        "posizione": 8,
-        "punti_effettivi": 9,
-        "team": "LIDL - TREK",
-        "moltiplicatore": 3,
-        "tipo": "internazionale",
-        "regione": "LIGURIA",
-        "km": "156.000",
-        "media": "41.182"
-      }
-    ]
-  },
   "GILLESPIE_LARA": {
     "id": "GILLESPIE_LARA",
     "nome": "LARA",
@@ -37810,69 +40059,6 @@
       }
     ]
   },
-  "GERY_CELIA": {
-    "id": "GERY_CELIA",
-    "nome": "CELIA",
-    "cognome": "GERY",
-    "team_attuale": "FDJ UNITED - SUEZ",
-    "team_id": "FDJ_UNITED_SUEZ",
-    "categoria": "ELI_F",
-    "genere": "F",
-    "punti_totali": 33,
-    "risultati": [
-      {
-        "gara_id": "GIRO_D_ITALIA_WOMEN_PRIMA_TAPPA_2026-05-30_ELI_F",
-        "nome_gara": "GIRO D'ITALIA WOMEN PRIMA TAPPA",
-        "data": "2026-05-30",
-        "posizione": 8,
-        "punti_effettivi": 9,
-        "team": "FDJ UNITED - SUEZ",
-        "moltiplicatore": 3,
-        "tipo": "internazionale",
-        "regione": "LOMBARDIA",
-        "km": "139.000",
-        "media": "42.043"
-      },
-      {
-        "gara_id": "GIRO_DELL_APPENNINO_DONNE_2026-03-22_ELI_F",
-        "nome_gara": "GIRO DELL'APPENNINO DONNE",
-        "data": "2026-03-22",
-        "posizione": 4,
-        "punti_effettivi": 24,
-        "team": "FDJ UNITED - SUEZ",
-        "moltiplicatore": 3,
-        "tipo": "internazionale",
-        "regione": "LIGURIA",
-        "km": "111.000",
-        "media": "40.583"
-      }
-    ]
-  },
-  "WILLIAMS_LILY": {
-    "id": "WILLIAMS_LILY",
-    "nome": "LILY",
-    "cognome": "WILLIAMS",
-    "team_attuale": "HUMAN POWERED HEALTH",
-    "team_id": "HUMAN_POWERED_HEALTH",
-    "categoria": "ELI_F",
-    "genere": "F",
-    "punti_totali": 6,
-    "risultati": [
-      {
-        "gara_id": "GIRO_D_ITALIA_WOMEN_PRIMA_TAPPA_2026-05-30_ELI_F",
-        "nome_gara": "GIRO D'ITALIA WOMEN PRIMA TAPPA",
-        "data": "2026-05-30",
-        "posizione": 9,
-        "punti_effettivi": 6,
-        "team": "HUMAN POWERED HEALTH",
-        "moltiplicatore": 3,
-        "tipo": "internazionale",
-        "regione": "LOMBARDIA",
-        "km": "139.000",
-        "media": "42.043"
-      }
-    ]
-  },
   "LACAVA_MARTINA": {
     "id": "LACAVA_MARTINA",
     "nome": "MARTINA",
@@ -38815,135 +41001,6 @@
       }
     ]
   },
-  "MARTINEZ_GROSET_AITOR": {
-    "id": "MARTINEZ_GROSET_AITOR",
-    "nome": "AITOR",
-    "cognome": "MARTINEZ GROSET",
-    "team_attuale": "TEAM VANGI TOMMASINI IL PIRATA",
-    "team_id": "TEAM_VANGI_TOMMASINI_IL_PIRATA",
-    "categoria": "JUN_M",
-    "genere": "M",
-    "punti_totali": 233,
-    "risultati": [
-      {
-        "gara_id": "EROICA_JUNIORES_COPPA_ANDREA_MENEGHELLI_2026-05-24_JUN_M",
-        "nome_gara": "EROICA JUNIORES COPPA ANDREA MENEGHELLI",
-        "data": "2026-05-24",
-        "posizione": 2,
-        "punti_effettivi": 36,
-        "team": "TEAM VANGI TOMMASINI IL PIRATA",
-        "moltiplicatore": 3,
-        "tipo": "internazionale",
-        "regione": "TOSCANA",
-        "km": "108.000",
-        "media": "37.663"
-      },
-      {
-        "gara_id": "DUE_GIORNI_DI_BRESCIA_E_BERGAMO_2_GRAN_PREMIO_SE_AV_IM_2026-05-17_JUN_M",
-        "nome_gara": "DUE GIORNI DI BRESCIA E BERGAMO 2 GRAN PREMIO SE AV IM",
-        "data": "2026-05-17",
-        "posizione": 1,
-        "punti_effettivi": 30,
-        "team": "TEAM VANGI TOMMASINI IL PIRATA",
-        "moltiplicatore": 2,
-        "tipo": "nazionale",
-        "regione": "LOMBARDIA",
-        "km": "98.500",
-        "media": "42.518"
-      },
-      {
-        "gara_id": "DUE_GIORNI_DI_BRESCIA_E_BERGAMO_5_GRAN_PREMIO_ECOTEK_2026-05-16_JUN_M",
-        "nome_gara": "DUE GIORNI DI BRESCIA E BERGAMO 5 GRAN PREMIO ECOTEK",
-        "data": "2026-05-16",
-        "posizione": 1,
-        "punti_effettivi": 30,
-        "team": "TEAM VANGI TOMMASINI IL PIRATA",
-        "moltiplicatore": 2,
-        "tipo": "nazionale",
-        "regione": "LOMBARDIA",
-        "km": "120.700",
-        "media": "38.727"
-      },
-      {
-        "gara_id": "GRAN_PREMIO_CITTA_DI_CORTONA_PROVA_VALIDA_CAMPIONATO_REGIONALE_2026-05-10_JUN_M",
-        "nome_gara": "GRAN PREMIO CITTA' DI CORTONA PROVA VALIDA CAMPIONATO REGIONALE",
-        "data": "2026-05-10",
-        "posizione": 1,
-        "punti_effettivi": 30,
-        "team": "TEAM VANGI TOMMASINI IL PIRATA",
-        "moltiplicatore": 2,
-        "tipo": "regionale",
-        "regione": "TOSCANA",
-        "km": "111.000",
-        "media": "41.599"
-      },
-      {
-        "gara_id": "15_GIRO_DI_PRIMAVERA_2026-04-26_JUN_M",
-        "nome_gara": "15 GIRO DI PRIMAVERA",
-        "data": "2026-04-26",
-        "posizione": 3,
-        "punti_effettivi": 30,
-        "team": "TEAM VANGI TOMMASINI IL PIRATA",
-        "moltiplicatore": 3,
-        "tipo": "internazionale",
-        "regione": "VENETO",
-        "km": "129.100",
-        "media": "41.604"
-      },
-      {
-        "gara_id": "50_GRAN_PREMIO_LIBERAZIONE_CITTA_DI_MASSA_2026-04-25_JUN_M",
-        "nome_gara": "50 GRAN PREMIO LIBERAZIONE CITTA' DI MASSA",
-        "data": "2026-04-25",
-        "posizione": 2,
-        "punti_effettivi": 24,
-        "team": "TEAM VANGI TOMMASINI IL PIRATA",
-        "moltiplicatore": 2,
-        "tipo": "nazionale",
-        "regione": "TOSCANA",
-        "km": "118.500",
-        "media": "42.524"
-      },
-      {
-        "gara_id": "COPPA_PALAZZOLO_2026_PROVA_VALIDA_CAMPIONATO_REGIONALE_2026-04-06_JUN_M",
-        "nome_gara": "COPPA PALAZZOLO 2026 PROVA VALIDA CAMPIONATO REGIONALE",
-        "data": "2026-04-06",
-        "posizione": 7,
-        "punti_effettivi": 8,
-        "team": "TEAM VANGI TOMMASINI IL PIRATA",
-        "moltiplicatore": 2,
-        "tipo": "regionale",
-        "regione": "LAZIO",
-        "km": "106.000",
-        "media": "39.102"
-      },
-      {
-        "gara_id": "TROFEO_MICHELE_SCARPONI_DUE_GIORNI_2026-04-04_JUN_M",
-        "nome_gara": "TROFEO MICHELE SCARPONI DUE GIORNI",
-        "data": "2026-04-04",
-        "posizione": 1,
-        "punti_effettivi": 30,
-        "team": "TEAM VANGI TOMMASINI IL PIRATA",
-        "moltiplicatore": 2,
-        "tipo": "nazionale",
-        "regione": "MARCHE",
-        "km": "107.100",
-        "media": "39.802"
-      },
-      {
-        "gara_id": "5_MEMORIAL_PAOLO_BAICCHI_2026-03-15_JUN_M",
-        "nome_gara": "5 MEMORIAL PAOLO BAICCHI",
-        "data": "2026-03-15",
-        "posizione": 1,
-        "punti_effettivi": 15,
-        "team": "TEAM VANGI TOMMASINI IL PIRATA",
-        "moltiplicatore": 1,
-        "tipo": "regionale",
-        "regione": "TOSCANA",
-        "km": "77.000",
-        "media": "43.030"
-      }
-    ]
-  },
   "MAKSIMOVIC_LUKA": {
     "id": "MAKSIMOVIC_LUKA",
     "nome": "LUKA",
@@ -39108,44 +41165,6 @@
         "regione": "TOSCANA",
         "km": "80.000",
         "media": "46.625"
-      }
-    ]
-  },
-  "BELLATO_ACHILLE": {
-    "id": "BELLATO_ACHILLE",
-    "nome": "ACHILLE",
-    "cognome": "BELLATO",
-    "team_attuale": "TEAM NERI SOTTOLI LUCCHINI ENERGY",
-    "team_id": "TEAM_NERI_SOTTOLI_LUCCHINI_ENERGY",
-    "categoria": "JUN_M",
-    "genere": "M",
-    "punti_totali": 22,
-    "risultati": [
-      {
-        "gara_id": "EROICA_JUNIORES_COPPA_ANDREA_MENEGHELLI_2026-05-24_JUN_M",
-        "nome_gara": "EROICA JUNIORES COPPA ANDREA MENEGHELLI",
-        "data": "2026-05-24",
-        "posizione": 5,
-        "punti_effettivi": 18,
-        "team": "TEAM NERI SOTTOLI LUCCHINI ENERGY",
-        "moltiplicatore": 3,
-        "tipo": "internazionale",
-        "regione": "TOSCANA",
-        "km": "108.000",
-        "media": "37.663"
-      },
-      {
-        "gara_id": "TROFEO_MICHELE_SCARPONI_DUE_GIORNI_2026-04-03_JUN_M",
-        "nome_gara": "TROFEO MICHELE SCARPONI DUE GIORNI",
-        "data": "2026-04-03",
-        "posizione": 9,
-        "punti_effettivi": 4,
-        "team": "TEAM NERI SOTTOLI LUCCHINI ENERGY",
-        "moltiplicatore": 2,
-        "tipo": "nazionale",
-        "regione": "MARCHE",
-        "km": "119.200",
-        "media": "42.311"
       }
     ]
   },
@@ -40258,122 +42277,6 @@
         "regione": "LOMBARDIA",
         "km": "105.700",
         "media": "44.443"
-      }
-    ]
-  },
-  "GAMBA_CHRISTIAN": {
-    "id": "GAMBA_CHRISTIAN",
-    "nome": "CHRISTIAN",
-    "cognome": "GAMBA",
-    "team_attuale": "CICLISTICA TREVIGLIESE",
-    "team_id": "CICLISTICA_TREVIGLIESE",
-    "categoria": "JUN_M",
-    "genere": "M",
-    "punti_totali": 65,
-    "risultati": [
-      {
-        "gara_id": "45_TROFEO_PISTOLESI_2026-05-24_JUN_M",
-        "nome_gara": "45 TROFEO PISTOLESI",
-        "data": "2026-05-24",
-        "posizione": 7,
-        "punti_effettivi": 4,
-        "team": "CICLISTICA TREVIGLIESE",
-        "moltiplicatore": 1,
-        "tipo": "regionale",
-        "regione": "LOMBARDIA",
-        "km": "105.000",
-        "media": "41.653"
-      },
-      {
-        "gara_id": "8_CHALLENGE_NAZIONALE_BRESCIANA_GIANCARLO_OTELLI_RICORDANDO_GIANCARLO_CRONOMETRO_2026-05-10_JUN_M",
-        "nome_gara": "8 CHALLENGE NAZIONALE BRESCIANA GIANCARLO OTELLI RICORDANDO GIANCARLO CRONOMETRO",
-        "data": "2026-05-10",
-        "posizione": 3,
-        "punti_effettivi": 20,
-        "team": "CICLISTICA TREVIGLIESE",
-        "moltiplicatore": 2,
-        "tipo": "nazionale",
-        "regione": "LOMBARDIA",
-        "km": "5.600",
-        "media": "29.779"
-      },
-      {
-        "gara_id": "15_GIRO_DI_PRIMAVERA_2026-04-26_JUN_M",
-        "nome_gara": "15 GIRO DI PRIMAVERA",
-        "data": "2026-04-26",
-        "posizione": 10,
-        "punti_effettivi": 3,
-        "team": "CICLISTICA TREVIGLIESE",
-        "moltiplicatore": 3,
-        "tipo": "internazionale",
-        "regione": "VENETO",
-        "km": "129.100",
-        "media": "41.604"
-      },
-      {
-        "gara_id": "3_TROFEO_PROTECH_MEMORIAL_RODOLFO_BARDELLONI_2026-04-19_JUN_M",
-        "nome_gara": "3 TROFEO PROTECH MEMORIAL RODOLFO BARDELLONI",
-        "data": "2026-04-19",
-        "posizione": 7,
-        "punti_effettivi": 8,
-        "team": "CICLISTICA TREVIGLIESE",
-        "moltiplicatore": 2,
-        "tipo": "nazionale",
-        "regione": "LOMBARDIA",
-        "km": "122.000",
-        "media": "44.065"
-      },
-      {
-        "gara_id": "4_MEMORIAL_GERMANO_VITTONI_2026-04-12_JUN_M",
-        "nome_gara": "4 MEMORIAL GERMANO VITTONI",
-        "data": "2026-04-12",
-        "posizione": 5,
-        "punti_effettivi": 6,
-        "team": "CICLISTICA TREVIGLIESE",
-        "moltiplicatore": 1,
-        "tipo": "regionale",
-        "regione": "PIEMONTE",
-        "km": "93.700",
-        "media": "42.516"
-      },
-      {
-        "gara_id": "62_GIRO_DELLA_CASTELLANIA_2026-04-11_JUN_M",
-        "nome_gara": "62 GIRO DELLA CASTELLANIA",
-        "data": "2026-04-11",
-        "posizione": 5,
-        "punti_effettivi": 12,
-        "team": "CICLISTICA TREVIGLIESE",
-        "moltiplicatore": 2,
-        "tipo": "nazionale",
-        "regione": "PIEMONTE",
-        "km": "114.800",
-        "media": "43.829"
-      },
-      {
-        "gara_id": "46_PICCOLA_SAN_GEO_2026-03-15_JUN_M",
-        "nome_gara": "46 PICCOLA SAN GEO",
-        "data": "2026-03-15",
-        "posizione": 3,
-        "punti_effettivi": 10,
-        "team": "CICLISTICA TREVIGLIESE",
-        "moltiplicatore": 1,
-        "tipo": "regionale",
-        "regione": "LOMBARDIA",
-        "km": "99.200",
-        "media": "40.744"
-      },
-      {
-        "gara_id": "TROFEO_TECNOMECCANICA_2026-03-01_JUN_M",
-        "nome_gara": "TROFEO TECNOMECCANICA",
-        "data": "2026-03-01",
-        "posizione": 9,
-        "punti_effettivi": 2,
-        "team": "CICLISTICA TREVIGLIESE",
-        "moltiplicatore": 1,
-        "tipo": "regionale",
-        "regione": "LOMBARDIA",
-        "km": "88.000",
-        "media": "40.331"
       }
     ]
   },
@@ -44294,290 +46197,6 @@
       }
     ]
   },
-  "ASTARA_NICCOLO": {
-    "id": "ASTARA_NICCOLO",
-    "nome": "NICCOLO'",
-    "cognome": "ASTARA",
-    "team_attuale": "S.C.COTIGNOLESE",
-    "team_id": "S_C_COTIGNOLESE",
-    "categoria": "AL_M",
-    "genere": "M",
-    "punti_totali": 68,
-    "risultati": [
-      {
-        "gara_id": "14_TROFEO_CASEIFICIO_RAZIONALE_NOVESE_2026-05-24_AL_M",
-        "nome_gara": "14 TROFEO CASEIFICIO RAZIONALE NOVESE",
-        "data": "2026-05-24",
-        "posizione": 2,
-        "punti_effettivi": 12,
-        "team": "S.C.COTIGNOLESE",
-        "moltiplicatore": 1,
-        "tipo": "regionale",
-        "regione": "EMILIA ROMAGNA",
-        "km": "51.600",
-        "media": "40.559"
-      },
-      {
-        "gara_id": "MARANO_OSPITALETTO_2026-05-10_AL_M",
-        "nome_gara": "MARANO OSPITALETTO",
-        "data": "2026-05-10",
-        "posizione": 8,
-        "punti_effettivi": 3,
-        "team": "S.C.COTIGNOLESE",
-        "moltiplicatore": 1,
-        "tipo": "regionale",
-        "regione": "EMILIA ROMAGNA",
-        "km": "53.800",
-        "media": "37.096"
-      },
-      {
-        "gara_id": "38_GRAN_PREMIO_CITTA_DI_ZOLA_DIECI_COLLI_GIOVANI_2026-05-03_AL_M",
-        "nome_gara": "38 GRAN PREMIO CITTA' DI ZOLA DIECI COLLI GIOVANI",
-        "data": "2026-05-03",
-        "posizione": 7,
-        "punti_effettivi": 4,
-        "team": "S.C.COTIGNOLESE",
-        "moltiplicatore": 1,
-        "tipo": "regionale",
-        "regione": "EMILIA ROMAGNA",
-        "km": "58.000",
-        "media": "43.392"
-      },
-      {
-        "gara_id": "52_TROFEO_DANTE_SILVELLI_A_M_2026-04-26_AL_M",
-        "nome_gara": "52 TROFEO DANTE SILVELLI A M",
-        "data": "2026-04-26",
-        "posizione": 1,
-        "punti_effettivi": 15,
-        "team": "S.C.COTIGNOLESE",
-        "moltiplicatore": 1,
-        "tipo": "regionale",
-        "regione": "EMILIA ROMAGNA",
-        "km": "60.000",
-        "media": "41.779"
-      },
-      {
-        "gara_id": "49_GRAN_PREMIO_LIBERAZIONE_2026-04-25_AL_M",
-        "nome_gara": "49 GRAN PREMIO LIBERAZIONE",
-        "data": "2026-04-25",
-        "posizione": 8,
-        "punti_effettivi": 3,
-        "team": "S.C.COTIGNOLESE",
-        "moltiplicatore": 1,
-        "tipo": "regionale",
-        "regione": "EMILIA ROMAGNA",
-        "km": "49.400",
-        "media": "44.085"
-      },
-      {
-        "gara_id": "COPPA_STRADE_BIANCHE_DI_GUSSOLA_2026-04-19_AL_M",
-        "nome_gara": "COPPA STRADE BIANCHE DI GUSSOLA",
-        "data": "2026-04-19",
-        "posizione": 5,
-        "punti_effettivi": 6,
-        "team": "S.C.COTIGNOLESE",
-        "moltiplicatore": 1,
-        "tipo": "regionale",
-        "regione": "LOMBARDIA",
-        "km": "60.800",
-        "media": "40.051"
-      },
-      {
-        "gara_id": "GRAN_PREMIO_COLLI_MARIGNANESI_2026-04-12_AL_M",
-        "nome_gara": "GRAN PREMIO COLLI MARIGNANESI",
-        "data": "2026-04-12",
-        "posizione": 3,
-        "punti_effettivi": 10,
-        "team": "S.C.COTIGNOLESE",
-        "moltiplicatore": 1,
-        "tipo": "regionale",
-        "regione": "EMILIA ROMAGNA",
-        "km": "60.000",
-        "media": "42.562"
-      },
-      {
-        "gara_id": "6_TROFEO_CITTA_BELLARIA_IGEA_MARINA_2026-04-04_AL_M",
-        "nome_gara": "6 TROFEO CITTA' BELLARIA IGEA MARINA",
-        "data": "2026-04-04",
-        "posizione": 2,
-        "punti_effettivi": 12,
-        "team": "S.C.COTIGNOLESE",
-        "moltiplicatore": 1,
-        "tipo": "regionale",
-        "regione": "EMILIA ROMAGNA",
-        "km": "49.600",
-        "media": "43.006"
-      },
-      {
-        "gara_id": "GRAN_PREMIO_FIORITURA_2026-03-29_AL_M",
-        "nome_gara": "GRAN PREMIO FIORITURA",
-        "data": "2026-03-29",
-        "posizione": 8,
-        "punti_effettivi": 3,
-        "team": "S.C.COTIGNOLESE",
-        "moltiplicatore": 1,
-        "tipo": "regionale",
-        "regione": "EMILIA ROMAGNA",
-        "km": "49.000",
-        "media": "43.674"
-      }
-    ]
-  },
-  "IAZZI_LORENZO": {
-    "id": "IAZZI_LORENZO",
-    "nome": "LORENZO",
-    "cognome": "IAZZI",
-    "team_attuale": "MADIGNANESE CICLISMO A.S.D",
-    "team_id": "MADIGNANESE_CICLISMO_A_S_D",
-    "categoria": "AL_M",
-    "genere": "M",
-    "punti_totali": 69,
-    "risultati": [
-      {
-        "gara_id": "14_TROFEO_CASEIFICIO_RAZIONALE_NOVESE_2026-05-24_AL_M",
-        "nome_gara": "14 TROFEO CASEIFICIO RAZIONALE NOVESE",
-        "data": "2026-05-24",
-        "posizione": 3,
-        "punti_effettivi": 10,
-        "team": "MADIGNANESE CICLISMO A.S.D",
-        "moltiplicatore": 1,
-        "tipo": "regionale",
-        "regione": "EMILIA ROMAGNA",
-        "km": "51.600",
-        "media": "40.559"
-      },
-      {
-        "gara_id": "4_TROFEO_MEMORIAL_MORI_ROSSANO_2026-05-17_AL_M",
-        "nome_gara": "4 TROFEO MEMORIAL MORI ROSSANO",
-        "data": "2026-05-17",
-        "posizione": 6,
-        "punti_effettivi": 5,
-        "team": "MADIGNANESE CICLISMO A.S.D",
-        "moltiplicatore": 1,
-        "tipo": "regionale",
-        "regione": "TOSCANA",
-        "km": "68.500",
-        "media": "40.693"
-      },
-      {
-        "gara_id": "44_TROFEO_FERALPI_2026-05-10_AL_M",
-        "nome_gara": "44 TROFEO FERALPI",
-        "data": "2026-05-10",
-        "posizione": 9,
-        "punti_effettivi": 2,
-        "team": "MADIGNANESE CICLISMO A.S.D",
-        "moltiplicatore": 1,
-        "tipo": "regionale",
-        "regione": "LOMBARDIA",
-        "km": "61.850",
-        "media": "40.447"
-      },
-      {
-        "gara_id": "38_GRAN_PREMIO_CITTA_DI_ZOLA_DIECI_COLLI_GIOVANI_2026-05-03_AL_M",
-        "nome_gara": "38 GRAN PREMIO CITTA' DI ZOLA DIECI COLLI GIOVANI",
-        "data": "2026-05-03",
-        "posizione": 3,
-        "punti_effettivi": 10,
-        "team": "MADIGNANESE CICLISMO A.S.D",
-        "moltiplicatore": 1,
-        "tipo": "regionale",
-        "regione": "EMILIA ROMAGNA",
-        "km": "58.000",
-        "media": "43.392"
-      },
-      {
-        "gara_id": "81_GRAN_PREMIO_CADUTI_LIBERAZIONE_2026-05-01_AL_M",
-        "nome_gara": "81 GRAN PREMIO CADUTI LIBERAZIONE",
-        "data": "2026-05-01",
-        "posizione": 5,
-        "punti_effettivi": 6,
-        "team": "MADIGNANESE CICLISMO A.S.D",
-        "moltiplicatore": 1,
-        "tipo": "regionale",
-        "regione": "EMILIA ROMAGNA",
-        "km": "60.000",
-        "media": "41.715"
-      },
-      {
-        "gara_id": "4_TROFEO_PECSO_CAVI_2026-04-26_AL_M",
-        "nome_gara": "4 TROFEO PECSO CAVI",
-        "data": "2026-04-26",
-        "posizione": 7,
-        "punti_effettivi": 4,
-        "team": "MADIGNANESE CICLISMO A.S.D",
-        "moltiplicatore": 1,
-        "tipo": "regionale",
-        "regione": "LOMBARDIA",
-        "km": "50.400",
-        "media": "43.200"
-      },
-      {
-        "gara_id": "4_PALIO_VINI_CLASSICO_PEDEMONTE_2026-04-25_AL_M",
-        "nome_gara": "4 PALIO VINI CLASSICO PEDEMONTE",
-        "data": "2026-04-25",
-        "posizione": 9,
-        "punti_effettivi": 2,
-        "team": "MADIGNANESE CICLISMO A.S.D",
-        "moltiplicatore": 1,
-        "tipo": "regionale",
-        "regione": "VENETO",
-        "km": "53.200",
-        "media": "39.022"
-      },
-      {
-        "gara_id": "COPPA_STRADE_BIANCHE_DI_GUSSOLA_2026-04-19_AL_M",
-        "nome_gara": "COPPA STRADE BIANCHE DI GUSSOLA",
-        "data": "2026-04-19",
-        "posizione": 6,
-        "punti_effettivi": 5,
-        "team": "MADIGNANESE CICLISMO A.S.D",
-        "moltiplicatore": 1,
-        "tipo": "regionale",
-        "regione": "LOMBARDIA",
-        "km": "60.800",
-        "media": "40.051"
-      },
-      {
-        "gara_id": "68_GIRO_DELLE_TRE_PROVINCIE_2026-04-12_AL_M",
-        "nome_gara": "68 GIRO DELLE TRE PROVINCIE",
-        "data": "2026-04-12",
-        "posizione": 3,
-        "punti_effettivi": 10,
-        "team": "MADIGNANESE CICLISMO A.S.D",
-        "moltiplicatore": 1,
-        "tipo": "regionale",
-        "regione": "VENETO",
-        "km": "60.000",
-        "media": "43.636"
-      },
-      {
-        "gara_id": "MEMORIAL_FIORENZO_MONTANARI_2026-04-06_AL_M",
-        "nome_gara": "MEMORIAL FIORENZO MONTANARI",
-        "data": "2026-04-06",
-        "posizione": 6,
-        "punti_effettivi": 5,
-        "team": "MADIGNANESE CICLISMO A.S.D",
-        "moltiplicatore": 1,
-        "tipo": "regionale",
-        "regione": "LOMBARDIA",
-        "km": "57.750",
-        "media": "44.262"
-      },
-      {
-        "gara_id": "16_TROFEO_COMUNE_DI_SALIZZOLE_2026-03-29_AL_M",
-        "nome_gara": "16 TROFEO COMUNE DI SALIZZOLE",
-        "data": "2026-03-29",
-        "posizione": 3,
-        "punti_effettivi": 10,
-        "team": "MADIGNANESE CICLISMO A.S.D",
-        "moltiplicatore": 1,
-        "tipo": "regionale",
-        "regione": "VENETO",
-        "km": "55.200",
-        "media": "42.680"
-      }
-    ]
-  },
   "GUERRA_ALESSANDRO": {
     "id": "GUERRA_ALESSANDRO",
     "nome": "ALESSANDRO",
@@ -47169,148 +48788,6 @@
       }
     ]
   },
-  "GALLO_GIUSEPPE": {
-    "id": "GALLO_GIUSEPPE",
-    "nome": "GIUSEPPE",
-    "cognome": "GALLO",
-    "team_attuale": "TEAM CORATTI",
-    "team_id": "TEAM_CORATTI",
-    "categoria": "AL_M",
-    "genere": "M",
-    "punti_totali": 33,
-    "risultati": [
-      {
-        "gara_id": "2_GRAN_PREMIO_NOMENTUM_TROFEO_NOI_SPORT_2026-05-24_AL_M",
-        "nome_gara": "2 GRAN PREMIO NOMENTUM TROFEO NOI SPORT",
-        "data": "2026-05-24",
-        "posizione": 5,
-        "punti_effettivi": 6,
-        "team": "TEAM CORATTI",
-        "moltiplicatore": 1,
-        "tipo": "regionale",
-        "regione": "LAZIO",
-        "km": "55.500",
-        "media": "38.676"
-      },
-      {
-        "gara_id": "CRONOSCALATA_CITTA_DI_FUMONE_2026-05-23_AL_M",
-        "nome_gara": "CRONOSCALATA CITTA' DI FUMONE",
-        "data": "2026-05-23",
-        "posizione": 10,
-        "punti_effettivi": 1,
-        "team": "TEAM CORATTI",
-        "moltiplicatore": 1,
-        "tipo": "regionale",
-        "regione": "LAZIO",
-        "km": "4.600",
-        "media": "26.040"
-      },
-      {
-        "gara_id": "2_TROFEO_ROMANELLI_TOMMASO_MEMORIAL_LUCA_ROMANELLI_2026-05-17_AL_M",
-        "nome_gara": "2 TROFEO ROMANELLI TOMMASO MEMORIAL LUCA ROMANELLI",
-        "data": "2026-05-17",
-        "posizione": 8,
-        "punti_effettivi": 3,
-        "team": "TEAM CORATTI",
-        "moltiplicatore": 1,
-        "tipo": "regionale",
-        "regione": "MARCHE",
-        "km": "60.000",
-        "media": "42.747"
-      },
-      {
-        "gara_id": "44_TROFEO_FERALPI_2026-05-10_AL_M",
-        "nome_gara": "44 TROFEO FERALPI",
-        "data": "2026-05-10",
-        "posizione": 8,
-        "punti_effettivi": 3,
-        "team": "TEAM CORATTI",
-        "moltiplicatore": 1,
-        "tipo": "regionale",
-        "regione": "LOMBARDIA",
-        "km": "61.850",
-        "media": "40.447"
-      },
-      {
-        "gara_id": "LA_STORICA_COPPA_DE_LE_POGGIOLA_2026-05-03_AL_M",
-        "nome_gara": "LA STORICA COPPA DE LE POGGIOLA",
-        "data": "2026-05-03",
-        "posizione": 7,
-        "punti_effettivi": 4,
-        "team": "TEAM CORATTI",
-        "moltiplicatore": 1,
-        "tipo": "regionale",
-        "regione": "TOSCANA",
-        "km": "61.300",
-        "media": "39.892"
-      },
-      {
-        "gara_id": "31_TROFEO_S_FRANCESCO_2026-05-01_AL_M",
-        "nome_gara": "31 TROFEO S FRANCESCO",
-        "data": "2026-05-01",
-        "posizione": 7,
-        "punti_effettivi": 4,
-        "team": "TEAM CORATTI",
-        "moltiplicatore": 1,
-        "tipo": "regionale",
-        "regione": "ABRUZZO",
-        "km": "66.000",
-        "media": "42.504"
-      },
-      {
-        "gara_id": "22_GRAN_PREMIO_DELLA_LIBERAZIONE_STRADE_BIANCHE_2026-04-25_AL_M",
-        "nome_gara": "22 GRAN PREMIO DELLA LIBERAZIONE STRADE BIANCHE",
-        "data": "2026-04-25",
-        "posizione": 6,
-        "punti_effettivi": 5,
-        "team": "TEAM CORATTI",
-        "moltiplicatore": 1,
-        "tipo": "regionale",
-        "regione": "TOSCANA",
-        "km": "57.300",
-        "media": "39.517"
-      },
-      {
-        "gara_id": "LIBERAZIONE_ALLIEVI_2026-04-24_AL_M",
-        "nome_gara": "LIBERAZIONE ALLIEVI",
-        "data": "2026-04-24",
-        "posizione": 10,
-        "punti_effettivi": 1,
-        "team": "TEAM CORATTI",
-        "moltiplicatore": 1,
-        "tipo": "regionale",
-        "regione": "LAZIO",
-        "km": "60.000",
-        "media": "41.885"
-      },
-      {
-        "gara_id": "5_TROFEO_CITTA_DI_MONTEVARCHI_2026-04-06_AL_M",
-        "nome_gara": "5 TROFEO CITTA' DI MONTEVARCHI",
-        "data": "2026-04-06",
-        "posizione": 7,
-        "punti_effettivi": 4,
-        "team": "TEAM CORATTI",
-        "moltiplicatore": 1,
-        "tipo": "regionale",
-        "regione": "TOSCANA",
-        "km": "52.700",
-        "media": "38.798"
-      },
-      {
-        "gara_id": "75_COPPA_GIUSEPPE_CEI_2026-03-15_AL_M",
-        "nome_gara": "75 COPPA GIUSEPPE CEI",
-        "data": "2026-03-15",
-        "posizione": 9,
-        "punti_effettivi": 2,
-        "team": "TEAM CORATTI",
-        "moltiplicatore": 1,
-        "tipo": "regionale",
-        "regione": "TOSCANA",
-        "km": "68.000",
-        "media": "42.666"
-      }
-    ]
-  },
   "CECCONI_PIETRO": {
     "id": "CECCONI_PIETRO",
     "nome": "PIETRO",
@@ -47628,148 +49105,6 @@
         "regione": "TOSCANA",
         "km": "52.700",
         "media": "38.798"
-      }
-    ]
-  },
-  "LONGARI_VITTORIO": {
-    "id": "LONGARI_VITTORIO",
-    "nome": "VITTORIO",
-    "cognome": "LONGARI",
-    "team_attuale": "U.C. CITTA' DI CASTELLO A.S.D.",
-    "team_id": "U_C_CITTA_DI_CASTELLO_A_S_D",
-    "categoria": "AL_M",
-    "genere": "M",
-    "punti_totali": 62,
-    "risultati": [
-      {
-        "gara_id": "71_COPPA_GIANCARLO_BONECHI_2026-05-24_AL_M",
-        "nome_gara": "71 COPPA GIANCARLO BONECHI",
-        "data": "2026-05-24",
-        "posizione": 8,
-        "punti_effettivi": 3,
-        "team": "U.C. CITTA' DI CASTELLO A.S.D.",
-        "moltiplicatore": 1,
-        "tipo": "regionale",
-        "regione": "TOSCANA",
-        "km": "60.000",
-        "media": "39.273"
-      },
-      {
-        "gara_id": "2_TROFEO_ROMANELLI_TOMMASO_MEMORIAL_LUCA_ROMANELLI_2026-05-17_AL_M",
-        "nome_gara": "2 TROFEO ROMANELLI TOMMASO MEMORIAL LUCA ROMANELLI",
-        "data": "2026-05-17",
-        "posizione": 10,
-        "punti_effettivi": 1,
-        "team": "U.C. CITTA' DI CASTELLO A.S.D.",
-        "moltiplicatore": 1,
-        "tipo": "regionale",
-        "regione": "MARCHE",
-        "km": "60.000",
-        "media": "42.747"
-      },
-      {
-        "gara_id": "74_COPPA_SPORTIVI_MONTEMARCIANESI_2026-05-10_AL_M",
-        "nome_gara": "74 COPPA SPORTIVI MONTEMARCIANESI",
-        "data": "2026-05-10",
-        "posizione": 1,
-        "punti_effettivi": 15,
-        "team": "U.C. CITTA' DI CASTELLO A.S.D.",
-        "moltiplicatore": 1,
-        "tipo": "regionale",
-        "regione": "TOSCANA",
-        "km": "66.300",
-        "media": "39.386"
-      },
-      {
-        "gara_id": "LA_STORICA_COPPA_DE_LE_POGGIOLA_2026-05-03_AL_M",
-        "nome_gara": "LA STORICA COPPA DE LE POGGIOLA",
-        "data": "2026-05-03",
-        "posizione": 2,
-        "punti_effettivi": 12,
-        "team": "U.C. CITTA' DI CASTELLO A.S.D.",
-        "moltiplicatore": 1,
-        "tipo": "regionale",
-        "regione": "TOSCANA",
-        "km": "61.300",
-        "media": "39.892"
-      },
-      {
-        "gara_id": "57_COPPA_CIRCOLO_ARCI_RENZINO_2026-05-01_AL_M",
-        "nome_gara": "57 COPPA CIRCOLO ARCI RENZINO",
-        "data": "2026-05-01",
-        "posizione": 2,
-        "punti_effettivi": 12,
-        "team": "U.C. CITTA' DI CASTELLO A.S.D.",
-        "moltiplicatore": 1,
-        "tipo": "regionale",
-        "regione": "TOSCANA",
-        "km": "59.400",
-        "media": "38.641"
-      },
-      {
-        "gara_id": "22_GRAN_PREMIO_DELLA_LIBERAZIONE_STRADE_BIANCHE_2026-04-25_AL_M",
-        "nome_gara": "22 GRAN PREMIO DELLA LIBERAZIONE STRADE BIANCHE",
-        "data": "2026-04-25",
-        "posizione": 10,
-        "punti_effettivi": 1,
-        "team": "U.C. CITTA' DI CASTELLO A.S.D.",
-        "moltiplicatore": 1,
-        "tipo": "regionale",
-        "regione": "TOSCANA",
-        "km": "57.300",
-        "media": "39.517"
-      },
-      {
-        "gara_id": "53_TROFEO_DELLA_LIBERAZIONE_2026-04-19_AL_M",
-        "nome_gara": "53 TROFEO DELLA LIBERAZIONE",
-        "data": "2026-04-19",
-        "posizione": 8,
-        "punti_effettivi": 3,
-        "team": "U.C. CITTA' DI CASTELLO A.S.D.",
-        "moltiplicatore": 1,
-        "tipo": "regionale",
-        "regione": "MARCHE",
-        "km": "49.700",
-        "media": "42.000"
-      },
-      {
-        "gara_id": "SAGRA_DEL_CICLISMO_MEMORIAL_NIERI_MAURO_2026-04-12_AL_M",
-        "nome_gara": "SAGRA DEL CICLISMO MEMORIAL NIERI MAURO",
-        "data": "2026-04-12",
-        "posizione": 6,
-        "punti_effettivi": 5,
-        "team": "U.C. CITTA' DI CASTELLO A.S.D.",
-        "moltiplicatore": 1,
-        "tipo": "regionale",
-        "regione": "TOSCANA",
-        "km": "58.200",
-        "media": "43.686"
-      },
-      {
-        "gara_id": "5_TROFEO_CITTA_DI_MONTEVARCHI_2026-04-06_AL_M",
-        "nome_gara": "5 TROFEO CITTA' DI MONTEVARCHI",
-        "data": "2026-04-06",
-        "posizione": 4,
-        "punti_effettivi": 8,
-        "team": "U.C. CITTA' DI CASTELLO A.S.D.",
-        "moltiplicatore": 1,
-        "tipo": "regionale",
-        "regione": "TOSCANA",
-        "km": "52.700",
-        "media": "38.798"
-      },
-      {
-        "gara_id": "GRAN_PREMIO_FIORITURA_2026-03-29_AL_M",
-        "nome_gara": "GRAN PREMIO FIORITURA",
-        "data": "2026-03-29",
-        "posizione": 9,
-        "punti_effettivi": 2,
-        "team": "U.C. CITTA' DI CASTELLO A.S.D.",
-        "moltiplicatore": 1,
-        "tipo": "regionale",
-        "regione": "EMILIA ROMAGNA",
-        "km": "49.000",
-        "media": "43.674"
       }
     ]
   },
@@ -53858,212 +55193,6 @@
       }
     ]
   },
-  "MARIOTTO_THOMAS": {
-    "id": "MARIOTTO_THOMAS",
-    "nome": "THOMAS",
-    "cognome": "MARIOTTO",
-    "team_attuale": "AUTOZAI-CONTRI",
-    "team_id": "AUTOZAI_CONTRI",
-    "categoria": "JUN_M",
-    "genere": "M",
-    "punti_totali": 162,
-    "risultati": [
-      {
-        "gara_id": "65_VITTORIO_VENETO_CANSIGLIO_PROVA_VALIDA_CAMPIONATO_REGIONALE_2026-05-23_JUN_M",
-        "nome_gara": "65 VITTORIO VENETO CANSIGLIO PROVA VALIDA CAMPIONATO REGIONALE",
-        "data": "2026-05-23",
-        "posizione": 1,
-        "punti_effettivi": 30,
-        "team": "AUTOZAI-CONTRI",
-        "moltiplicatore": 2,
-        "tipo": "regionale",
-        "regione": "VENETO",
-        "km": "102.520",
-        "media": "38.801"
-      },
-      {
-        "gara_id": "8_CHALLENGE_NAZIONALE_BRESCIANA_GIANCARLO_OTELLI_RICORDANDO_GIANCARLO_CRONOMETRO_2026-05-10_JUN_M",
-        "nome_gara": "8 CHALLENGE NAZIONALE BRESCIANA GIANCARLO OTELLI RICORDANDO GIANCARLO CRONOMETRO",
-        "data": "2026-05-10",
-        "posizione": 1,
-        "punti_effettivi": 30,
-        "team": "AUTOZAI-CONTRI",
-        "moltiplicatore": 2,
-        "tipo": "nazionale",
-        "regione": "LOMBARDIA",
-        "km": "5.600",
-        "media": "29.779"
-      },
-      {
-        "gara_id": "GIRO_D_ABRUZZO_JUNIORES_2026_TERZA_TAPPA_2026-05-03_JUN_M",
-        "nome_gara": "GIRO D'ABRUZZO JUNIORES 2026 TERZA TAPPA",
-        "data": "2026-05-03",
-        "posizione": 4,
-        "punti_effettivi": 16,
-        "team": "AUTOZAI-CONTRI",
-        "moltiplicatore": 2,
-        "tipo": "nazionale",
-        "regione": "ABRUZZO",
-        "km": "106.500",
-        "media": "40.805"
-      },
-      {
-        "gara_id": "GIRO_D_ABRUZZO_JUNIORES_2026_CLASSIFICA_GENERALE_2026-05-03_JUN_M",
-        "nome_gara": "GIRO D'ABRUZZO JUNIORES 2026 CLASSIFICA GENERALE",
-        "data": "2026-05-03",
-        "posizione": 8,
-        "punti_effettivi": 9,
-        "team": "AUTOZAI-CONTRI",
-        "moltiplicatore": 3,
-        "tipo": "nazionale",
-        "regione": "ABRUZZO",
-        "km": "201.500",
-        "media": "39.916"
-      },
-      {
-        "gara_id": "15_GIRO_DI_PRIMAVERA_2026-04-26_JUN_M",
-        "nome_gara": "15 GIRO DI PRIMAVERA",
-        "data": "2026-04-26",
-        "posizione": 9,
-        "punti_effettivi": 6,
-        "team": "AUTOZAI-CONTRI",
-        "moltiplicatore": 3,
-        "tipo": "internazionale",
-        "regione": "VENETO",
-        "km": "129.100",
-        "media": "41.604"
-      },
-      {
-        "gara_id": "71_COPPA_MONTES_GRAN_PREMIO_DELLA_RESISTENZA_2026-04-25_JUN_M",
-        "nome_gara": "71 COPPA MONTES GRAN PREMIO DELLA RESISTENZA",
-        "data": "2026-04-25",
-        "posizione": 8,
-        "punti_effettivi": 9,
-        "team": "AUTOZAI-CONTRI",
-        "moltiplicatore": 3,
-        "tipo": "internazionale",
-        "regione": "FRIULI VENEZIA GIULIA",
-        "km": "119.000",
-        "media": "42.930"
-      },
-      {
-        "gara_id": "3_TROFEO_PROTECH_MEMORIAL_RODOLFO_BARDELLONI_2026-04-19_JUN_M",
-        "nome_gara": "3 TROFEO PROTECH MEMORIAL RODOLFO BARDELLONI",
-        "data": "2026-04-19",
-        "posizione": 5,
-        "punti_effettivi": 12,
-        "team": "AUTOZAI-CONTRI",
-        "moltiplicatore": 2,
-        "tipo": "nazionale",
-        "regione": "LOMBARDIA",
-        "km": "122.000",
-        "media": "44.065"
-      },
-      {
-        "gara_id": "4_PICCOLA_LIEGI_DELLE_BREGONZE_CASA_ENRICO_2026-04-12_JUN_M",
-        "nome_gara": "4 PICCOLA LIEGI DELLE BREGONZE CASA ENRICO",
-        "data": "2026-04-12",
-        "posizione": 6,
-        "punti_effettivi": 10,
-        "team": "AUTOZAI-CONTRI",
-        "moltiplicatore": 2,
-        "tipo": "nazionale",
-        "regione": "VENETO",
-        "km": "121.330",
-        "media": "41.619"
-      },
-      {
-        "gara_id": "62_GIRO_DELLA_CASTELLANIA_2026-04-11_JUN_M",
-        "nome_gara": "62 GIRO DELLA CASTELLANIA",
-        "data": "2026-04-11",
-        "posizione": 4,
-        "punti_effettivi": 16,
-        "team": "AUTOZAI-CONTRI",
-        "moltiplicatore": 2,
-        "tipo": "nazionale",
-        "regione": "PIEMONTE",
-        "km": "114.800",
-        "media": "43.829"
-      },
-      {
-        "gara_id": "TROFEO_MICHELE_SCARPONI_DUE_GIORNI_2026-04-04_JUN_M",
-        "nome_gara": "TROFEO MICHELE SCARPONI DUE GIORNI",
-        "data": "2026-04-04",
-        "posizione": 5,
-        "punti_effettivi": 12,
-        "team": "AUTOZAI-CONTRI",
-        "moltiplicatore": 2,
-        "tipo": "nazionale",
-        "regione": "MARCHE",
-        "km": "107.100",
-        "media": "39.802"
-      },
-      {
-        "gara_id": "22_TROFEO_RISTORANTE_ALLA_COLOMBERA_2026-03-22_JUN_M",
-        "nome_gara": "22 TROFEO RISTORANTE ALLA COLOMBERA",
-        "data": "2026-03-22",
-        "posizione": 4,
-        "punti_effettivi": 8,
-        "team": "AUTOZAI-CONTRI",
-        "moltiplicatore": 1,
-        "tipo": "regionale",
-        "regione": "VENETO",
-        "km": "101.000",
-        "media": "42.676"
-      },
-      {
-        "gara_id": "CIRCUITO_DELLE_CONCHE_2026-03-08_JUN_M",
-        "nome_gara": "CIRCUITO DELLE CONCHE",
-        "data": "2026-03-08",
-        "posizione": 9,
-        "punti_effettivi": 4,
-        "team": "AUTOZAI-CONTRI",
-        "moltiplicatore": 2,
-        "tipo": "nazionale",
-        "regione": "VENETO",
-        "km": "103.300",
-        "media": "43.343"
-      }
-    ]
-  },
-  "WROLICH_SANTIAGO": {
-    "id": "WROLICH_SANTIAGO",
-    "nome": "SANTIAGO",
-    "cognome": "WROLICH",
-    "team_attuale": "TEAM TIEPOLO U19 DEVO",
-    "team_id": "TEAM_TIEPOLO_U19_DEVO",
-    "categoria": "JUN_M",
-    "genere": "M",
-    "punti_totali": 48,
-    "risultati": [
-      {
-        "gara_id": "65_VITTORIO_VENETO_CANSIGLIO_PROVA_VALIDA_CAMPIONATO_REGIONALE_2026-05-23_JUN_M",
-        "nome_gara": "65 VITTORIO VENETO CANSIGLIO PROVA VALIDA CAMPIONATO REGIONALE",
-        "data": "2026-05-23",
-        "posizione": 2,
-        "punti_effettivi": 24,
-        "team": "TEAM TIEPOLO U19 DEVO",
-        "moltiplicatore": 2,
-        "tipo": "regionale",
-        "regione": "VENETO",
-        "km": "102.520",
-        "media": "38.801"
-      },
-      {
-        "gara_id": "DUE_GIORNI_DI_BRESCIA_E_BERGAMO_5_GRAN_PREMIO_ECOTEK_2026-05-16_JUN_M",
-        "nome_gara": "DUE GIORNI DI BRESCIA E BERGAMO 5 GRAN PREMIO ECOTEK",
-        "data": "2026-05-16",
-        "posizione": 2,
-        "punti_effettivi": 24,
-        "team": "TEAM TIEPOLO U19 DEVO",
-        "moltiplicatore": 2,
-        "tipo": "nazionale",
-        "regione": "LOMBARDIA",
-        "km": "120.700",
-        "media": "38.727"
-      }
-    ]
-  },
   "CAMPAGNOLO_LORENZO": {
     "id": "CAMPAGNOLO_LORENZO",
     "nome": "LORENZO",
@@ -54854,109 +55983,6 @@
         "regione": "TOSCANA",
         "km": "112.300",
         "media": "38.713"
-      }
-    ]
-  },
-  "ORENGO_EDOARDO": {
-    "id": "ORENGO_EDOARDO",
-    "nome": "EDOARDO",
-    "cognome": "ORENGO",
-    "team_attuale": "S.C. ROMANESE ASD",
-    "team_id": "S_C_ROMANESE_ASD",
-    "categoria": "JUN_M",
-    "genere": "M",
-    "punti_totali": 49,
-    "risultati": [
-      {
-        "gara_id": "TUSCANY_CYCLING_ACADEMY_JUNIORES_2026-05-23_JUN_M",
-        "nome_gara": "TUSCANY CYCLING ACADEMY JUNIORES",
-        "data": "2026-05-23",
-        "posizione": 8,
-        "punti_effettivi": 9,
-        "team": "S.C. ROMANESE ASD",
-        "moltiplicatore": 3,
-        "tipo": "internazionale",
-        "regione": "TOSCANA",
-        "km": "112.300",
-        "media": "38.713"
-      },
-      {
-        "gara_id": "GIRO_D_ABRUZZO_JUNIORES_2026_CLASSIFICA_GENERALE_2026-05-03_JUN_M",
-        "nome_gara": "GIRO D'ABRUZZO JUNIORES 2026 CLASSIFICA GENERALE",
-        "data": "2026-05-03",
-        "posizione": 4,
-        "punti_effettivi": 24,
-        "team": "S.C. ROMANESE ASD",
-        "moltiplicatore": 3,
-        "tipo": "nazionale",
-        "regione": "ABRUZZO",
-        "km": "201.500",
-        "media": "39.916"
-      },
-      {
-        "gara_id": "GIRO_D_ABRUZZO_JUNIORES_2026_SECONDA_TAPPA_2026-05-02_JUN_M",
-        "nome_gara": "GIRO D'ABRUZZO JUNIORES 2026 SECONDA TAPPA",
-        "data": "2026-05-02",
-        "posizione": 10,
-        "punti_effettivi": 2,
-        "team": "S.C. ROMANESE ASD",
-        "moltiplicatore": 2,
-        "tipo": "nazionale",
-        "regione": "ABRUZZO",
-        "km": "2.000",
-        "media": "22.452"
-      },
-      {
-        "gara_id": "GIRO_D_ABRUZZO_JUNIORES_2026_PRIMA_TAPPA_2026-05-01_JUN_M",
-        "nome_gara": "GIRO D'ABRUZZO JUNIORES 2026 PRIMA TAPPA",
-        "data": "2026-05-01",
-        "posizione": 10,
-        "punti_effettivi": 2,
-        "team": "S.C. ROMANESE ASD",
-        "moltiplicatore": 2,
-        "tipo": "nazionale",
-        "regione": "ABRUZZO",
-        "km": "93.000",
-        "media": "39.678"
-      },
-      {
-        "gara_id": "COPPA_1_MAGGIO_DEL_CERAMISTA_2026-04-26_JUN_M",
-        "nome_gara": "COPPA 1 MAGGIO DEL CERAMISTA",
-        "data": "2026-04-26",
-        "posizione": 6,
-        "punti_effettivi": 5,
-        "team": "S.C. ROMANESE ASD",
-        "moltiplicatore": 1,
-        "tipo": "regionale",
-        "regione": "LIGURIA",
-        "km": "105.000",
-        "media": "36.635"
-      },
-      {
-        "gara_id": "TROFEO_IREN_2026-03-29_JUN_M",
-        "nome_gara": "TROFEO IREN",
-        "data": "2026-03-29",
-        "posizione": 10,
-        "punti_effettivi": 1,
-        "team": "S.C. ROMANESE ASD",
-        "moltiplicatore": 1,
-        "tipo": "regionale",
-        "regione": "LIGURIA",
-        "km": "105.000",
-        "media": "42.857"
-      },
-      {
-        "gara_id": "TROFEO_TECNOMECCANICA_2026-03-01_JUN_M",
-        "nome_gara": "TROFEO TECNOMECCANICA",
-        "data": "2026-03-01",
-        "posizione": 5,
-        "punti_effettivi": 6,
-        "team": "S.C. ROMANESE ASD",
-        "moltiplicatore": 1,
-        "tipo": "regionale",
-        "regione": "LOMBARDIA",
-        "km": "88.000",
-        "media": "40.331"
       }
     ]
   },
@@ -57866,135 +58892,6 @@
       }
     ]
   },
-  "FRANCESCHINI_GIULIO": {
-    "id": "FRANCESCHINI_GIULIO",
-    "nome": "GIULIO",
-    "cognome": "FRANCESCHINI",
-    "team_attuale": "CICLISTICA TREVIGLIESE",
-    "team_id": "CICLISTICA_TREVIGLIESE",
-    "categoria": "JUN_M",
-    "genere": "M",
-    "punti_totali": 146,
-    "risultati": [
-      {
-        "gara_id": "DUE_GIORNI_DI_BRESCIA_E_BERGAMO_2_GRAN_PREMIO_SE_AV_IM_2026-05-17_JUN_M",
-        "nome_gara": "DUE GIORNI DI BRESCIA E BERGAMO 2 GRAN PREMIO SE AV IM",
-        "data": "2026-05-17",
-        "posizione": 6,
-        "punti_effettivi": 10,
-        "team": "CICLISTICA TREVIGLIESE",
-        "moltiplicatore": 2,
-        "tipo": "nazionale",
-        "regione": "LOMBARDIA",
-        "km": "98.500",
-        "media": "42.518"
-      },
-      {
-        "gara_id": "DUE_GIORNI_DI_BRESCIA_E_BERGAMO_5_GRAN_PREMIO_ECOTEK_2026-05-16_JUN_M",
-        "nome_gara": "DUE GIORNI DI BRESCIA E BERGAMO 5 GRAN PREMIO ECOTEK",
-        "data": "2026-05-16",
-        "posizione": 4,
-        "punti_effettivi": 16,
-        "team": "CICLISTICA TREVIGLIESE",
-        "moltiplicatore": 2,
-        "tipo": "nazionale",
-        "regione": "LOMBARDIA",
-        "km": "120.700",
-        "media": "38.727"
-      },
-      {
-        "gara_id": "8_CHALLENGE_NAZIONALE_BRESCIANA_GIANCARLO_OTELLI_2026-05-10_JUN_M",
-        "nome_gara": "8 CHALLENGE NAZIONALE BRESCIANA GIANCARLO OTELLI",
-        "data": "2026-05-10",
-        "posizione": 4,
-        "punti_effettivi": 16,
-        "team": "CICLISTICA TREVIGLIESE",
-        "moltiplicatore": 2,
-        "tipo": "nazionale",
-        "regione": "LOMBARDIA",
-        "km": ".86.650",
-        "media": "41.142"
-      },
-      {
-        "gara_id": "8_CHALLENGE_NAZIONALE_BRESCIANA_GIANCARLO_OTELLI_RICORDANDO_GIANCARLO_CRONOMETRO_2026-05-10_JUN_M",
-        "nome_gara": "8 CHALLENGE NAZIONALE BRESCIANA GIANCARLO OTELLI RICORDANDO GIANCARLO CRONOMETRO",
-        "data": "2026-05-10",
-        "posizione": 2,
-        "punti_effettivi": 24,
-        "team": "CICLISTICA TREVIGLIESE",
-        "moltiplicatore": 2,
-        "tipo": "nazionale",
-        "regione": "LOMBARDIA",
-        "km": "5.600",
-        "media": "29.779"
-      },
-      {
-        "gara_id": "3_TROFEO_PROTECH_MEMORIAL_RODOLFO_BARDELLONI_2026-04-19_JUN_M",
-        "nome_gara": "3 TROFEO PROTECH MEMORIAL RODOLFO BARDELLONI",
-        "data": "2026-04-19",
-        "posizione": 1,
-        "punti_effettivi": 30,
-        "team": "CICLISTICA TREVIGLIESE",
-        "moltiplicatore": 2,
-        "tipo": "nazionale",
-        "regione": "LOMBARDIA",
-        "km": "122.000",
-        "media": "44.065"
-      },
-      {
-        "gara_id": "4_PICCOLA_LIEGI_DELLE_BREGONZE_CASA_ENRICO_2026-04-12_JUN_M",
-        "nome_gara": "4 PICCOLA LIEGI DELLE BREGONZE CASA ENRICO",
-        "data": "2026-04-12",
-        "posizione": 5,
-        "punti_effettivi": 12,
-        "team": "CICLISTICA TREVIGLIESE",
-        "moltiplicatore": 2,
-        "tipo": "nazionale",
-        "regione": "VENETO",
-        "km": "121.330",
-        "media": "41.619"
-      },
-      {
-        "gara_id": "62_GIRO_DELLA_CASTELLANIA_2026-04-11_JUN_M",
-        "nome_gara": "62 GIRO DELLA CASTELLANIA",
-        "data": "2026-04-11",
-        "posizione": 3,
-        "punti_effettivi": 20,
-        "team": "CICLISTICA TREVIGLIESE",
-        "moltiplicatore": 2,
-        "tipo": "nazionale",
-        "regione": "PIEMONTE",
-        "km": "114.800",
-        "media": "43.829"
-      },
-      {
-        "gara_id": "TROFEO_IREN_2026-03-29_JUN_M",
-        "nome_gara": "TROFEO IREN",
-        "data": "2026-03-29",
-        "posizione": 5,
-        "punti_effettivi": 6,
-        "team": "CICLISTICA TREVIGLIESE",
-        "moltiplicatore": 1,
-        "tipo": "regionale",
-        "regione": "LIGURIA",
-        "km": "105.000",
-        "media": "42.857"
-      },
-      {
-        "gara_id": "TROFEO_TECNOMECCANICA_2026-03-01_JUN_M",
-        "nome_gara": "TROFEO TECNOMECCANICA",
-        "data": "2026-03-01",
-        "posizione": 2,
-        "punti_effettivi": 12,
-        "team": "CICLISTICA TREVIGLIESE",
-        "moltiplicatore": 1,
-        "tipo": "regionale",
-        "regione": "LOMBARDIA",
-        "km": "88.000",
-        "media": "40.331"
-      }
-    ]
-  },
   "VIERO_GUIDO": {
     "id": "VIERO_GUIDO",
     "nome": "GUIDO",
@@ -58699,44 +59596,6 @@
         "regione": "VENETO",
         "km": "116.900",
         "media": "40.361"
-      }
-    ]
-  },
-  "SPANIO_MARCO": {
-    "id": "SPANIO_MARCO",
-    "nome": "MARCO",
-    "cognome": "SPANIO",
-    "team_attuale": "TEAM VANGI TOMMASINI IL PIRATA",
-    "team_id": "TEAM_VANGI_TOMMASINI_IL_PIRATA",
-    "categoria": "JUN_M",
-    "genere": "M",
-    "punti_totali": 34,
-    "risultati": [
-      {
-        "gara_id": "GRAN_PREMIO_SAN_MICHELE_2026-05-17_JUN_M",
-        "nome_gara": "GRAN PREMIO SAN MICHELE",
-        "data": "2026-05-17",
-        "posizione": 7,
-        "punti_effettivi": 4,
-        "team": "TEAM VANGI TOMMASINI IL PIRATA",
-        "moltiplicatore": 1,
-        "tipo": "regionale",
-        "regione": "VENETO",
-        "km": "116.900",
-        "media": "40.361"
-      },
-      {
-        "gara_id": "COPPA_PALAZZOLO_2026_PROVA_VALIDA_CAMPIONATO_REGIONALE_2026-04-06_JUN_M",
-        "nome_gara": "COPPA PALAZZOLO 2026 PROVA VALIDA CAMPIONATO REGIONALE",
-        "data": "2026-04-06",
-        "posizione": 1,
-        "punti_effettivi": 30,
-        "team": "TEAM VANGI TOMMASINI IL PIRATA",
-        "moltiplicatore": 2,
-        "tipo": "regionale",
-        "regione": "LAZIO",
-        "km": "106.000",
-        "media": "39.102"
       }
     ]
   },
@@ -61788,122 +62647,6 @@
         "regione": "TOSCANA",
         "km": "49.000",
         "media": "42.722"
-      }
-    ]
-  },
-  "GINESI_DANIELE": {
-    "id": "GINESI_DANIELE",
-    "nome": "DANIELE",
-    "cognome": "GINESI",
-    "team_attuale": "G.S. IPERFINISH STABBIA",
-    "team_id": "G_S_IPERFINISH_STABBIA",
-    "categoria": "AL_M",
-    "genere": "M",
-    "punti_totali": 71,
-    "risultati": [
-      {
-        "gara_id": "4_MEMORIAL_CIOFFI_SALVATORE_2026-05-17_AL_M",
-        "nome_gara": "4 MEMORIAL CIOFFI SALVATORE",
-        "data": "2026-05-17",
-        "posizione": 4,
-        "punti_effettivi": 8,
-        "team": "G.S. IPERFINISH STABBIA",
-        "moltiplicatore": 1,
-        "tipo": "regionale",
-        "regione": "TOSCANA",
-        "km": "60.300",
-        "media": "40.267"
-      },
-      {
-        "gara_id": "44_TROFEO_FERALPI_2026-05-10_AL_M",
-        "nome_gara": "44 TROFEO FERALPI",
-        "data": "2026-05-10",
-        "posizione": 4,
-        "punti_effettivi": 8,
-        "team": "G.S. IPERFINISH STABBIA",
-        "moltiplicatore": 1,
-        "tipo": "regionale",
-        "regione": "LOMBARDIA",
-        "km": "61.850",
-        "media": "40.447"
-      },
-      {
-        "gara_id": "78_COPPA_LAVORATORI_2026-05-01_AL_M",
-        "nome_gara": "78 COPPA LAVORATORI",
-        "data": "2026-05-01",
-        "posizione": 4,
-        "punti_effettivi": 8,
-        "team": "G.S. IPERFINISH STABBIA",
-        "moltiplicatore": 1,
-        "tipo": "regionale",
-        "regione": "TOSCANA",
-        "km": "58.600",
-        "media": "37.404"
-      },
-      {
-        "gara_id": "COPPA_LIBERAZIONE_5_TROFEO_I_GREPPI_2026-04-25_AL_M",
-        "nome_gara": "COPPA LIBERAZIONE 5 TROFEO I GREPPI",
-        "data": "2026-04-25",
-        "posizione": 3,
-        "punti_effettivi": 10,
-        "team": "G.S. IPERFINISH STABBIA",
-        "moltiplicatore": 1,
-        "tipo": "regionale",
-        "regione": "TOSCANA",
-        "km": "56.000",
-        "media": "42.000"
-      },
-      {
-        "gara_id": "62_GRAN_PREMIO_CALZIFICI_E_CALZATURIFICI_STABBIESI_2026-04-19_AL_M",
-        "nome_gara": "62 GRAN PREMIO CALZIFICI E CALZATURIFICI STABBIESI",
-        "data": "2026-04-19",
-        "posizione": 1,
-        "punti_effettivi": 15,
-        "team": "G.S. IPERFINISH STABBIA",
-        "moltiplicatore": 1,
-        "tipo": "regionale",
-        "regione": "TOSCANA",
-        "km": "58.500",
-        "media": "41.877"
-      },
-      {
-        "gara_id": "PASQUALANDO_2026-04-05_AL_M",
-        "nome_gara": "PASQUALANDO",
-        "data": "2026-04-05",
-        "posizione": 3,
-        "punti_effettivi": 10,
-        "team": "G.S. IPERFINISH STABBIA",
-        "moltiplicatore": 1,
-        "tipo": "regionale",
-        "regione": "TOSCANA",
-        "km": "55.000",
-        "media": "44.949"
-      },
-      {
-        "gara_id": "23_COPPA_CROCE_AZZURRA_PONTASSIEVE_2026-03-29_AL_M",
-        "nome_gara": "23 COPPA CROCE AZZURRA PONTASSIEVE",
-        "data": "2026-03-29",
-        "posizione": 4,
-        "punti_effettivi": 8,
-        "team": "G.S. IPERFINISH STABBIA",
-        "moltiplicatore": 1,
-        "tipo": "regionale",
-        "regione": "TOSCANA",
-        "km": "50.000",
-        "media": "42.383"
-      },
-      {
-        "gara_id": "75_COPPA_GIUSEPPE_CEI_2026-03-15_AL_M",
-        "nome_gara": "75 COPPA GIUSEPPE CEI",
-        "data": "2026-03-15",
-        "posizione": 7,
-        "punti_effettivi": 4,
-        "team": "G.S. IPERFINISH STABBIA",
-        "moltiplicatore": 1,
-        "tipo": "regionale",
-        "regione": "TOSCANA",
-        "km": "68.000",
-        "media": "42.666"
       }
     ]
   },
@@ -75851,109 +76594,6 @@
       }
     ]
   },
-  "PEZZO_ROSOLA_PATRIK": {
-    "id": "PEZZO_ROSOLA_PATRIK",
-    "nome": "PATRIK",
-    "cognome": "PEZZO ROSOLA",
-    "team_attuale": "NORDEST PETRUCCI ASSALI STEFEN",
-    "team_id": "NORDEST_PETRUCCI_ASSALI_STEFEN",
-    "categoria": "JUN_M",
-    "genere": "M",
-    "punti_totali": 166,
-    "risultati": [
-      {
-        "gara_id": "CORSA_DELLA_PACE_JUNIORES_CLASSIFICA_GENERALE_2026-05-10_JUN_M",
-        "nome_gara": "CORSA DELLA PACE JUNIORES CLASSIFICA GENERALE",
-        "data": "2026-05-10",
-        "posizione": 1,
-        "punti_effettivi": 30,
-        "team": "NORDEST PETRUCCI ASSALI STEFEN",
-        "moltiplicatore": 2,
-        "tipo": "regionale",
-        "regione": "TEREZIN",
-        "km": "397.300",
-        "media": "44.514"
-      },
-      {
-        "gara_id": "CORSA_DELLA_PACE_JUNIORES_TERZA_TAPPA_2026-05-09_JUN_M",
-        "nome_gara": "CORSA DELLA PACE JUNIORES TERZA TAPPA",
-        "data": "2026-05-09",
-        "posizione": 1,
-        "punti_effettivi": 30,
-        "team": "NORDEST PETRUCCI ASSALI STEFEN",
-        "moltiplicatore": 2,
-        "tipo": "nazionale",
-        "regione": "TEPLICE",
-        "km": "112.100",
-        "media": "45.791"
-      },
-      {
-        "gara_id": "CORSA_DELLA_PACE_JUNIORES_SECONDA_TAPPA_PRIMA_SEMITAPPA_CRONOMETRO_2026-05-08_JUN_M",
-        "nome_gara": "CORSA DELLA PACE JUNIORES SECONDA TAPPA PRIMA SEMITAPPA CRONOMETRO",
-        "data": "2026-05-08",
-        "posizione": 6,
-        "punti_effettivi": 10,
-        "team": "NORDEST PETRUCCI ASSALI STEFEN",
-        "moltiplicatore": 2,
-        "tipo": "nazionale",
-        "regione": "CASOVKA",
-        "km": "8.800",
-        "media": "50.139"
-      },
-      {
-        "gara_id": "15_GIRO_DI_PRIMAVERA_2026-04-26_JUN_M",
-        "nome_gara": "15 GIRO DI PRIMAVERA",
-        "data": "2026-04-26",
-        "posizione": 2,
-        "punti_effettivi": 36,
-        "team": "NORDEST PETRUCCI ASSALI STEFEN",
-        "moltiplicatore": 3,
-        "tipo": "internazionale",
-        "regione": "VENETO",
-        "km": "129.100",
-        "media": "41.604"
-      },
-      {
-        "gara_id": "4_PICCOLA_LIEGI_DELLE_BREGONZE_CASA_ENRICO_2026-04-12_JUN_M",
-        "nome_gara": "4 PICCOLA LIEGI DELLE BREGONZE CASA ENRICO",
-        "data": "2026-04-12",
-        "posizione": 1,
-        "punti_effettivi": 30,
-        "team": "NORDEST PETRUCCI ASSALI STEFEN",
-        "moltiplicatore": 2,
-        "tipo": "nazionale",
-        "regione": "VENETO",
-        "km": "121.330",
-        "media": "41.619"
-      },
-      {
-        "gara_id": "22_TROFEO_RISTORANTE_ALLA_COLOMBERA_2026-03-22_JUN_M",
-        "nome_gara": "22 TROFEO RISTORANTE ALLA COLOMBERA",
-        "data": "2026-03-22",
-        "posizione": 1,
-        "punti_effettivi": 15,
-        "team": "NORDEST PETRUCCI ASSALI STEFEN",
-        "moltiplicatore": 1,
-        "tipo": "regionale",
-        "regione": "VENETO",
-        "km": "101.000",
-        "media": "42.676"
-      },
-      {
-        "gara_id": "4_CRONOVERSILIA_2026-03-09_JUN_M",
-        "nome_gara": "4 CRONOVERSILIA",
-        "data": "2026-03-09",
-        "posizione": 1,
-        "punti_effettivi": 15,
-        "team": "NORDEST PETRUCCI ASSALI STEFEN",
-        "moltiplicatore": 1,
-        "tipo": "regionale",
-        "regione": "TOSCANA",
-        "km": "11.500",
-        "media": "51.957"
-      }
-    ]
-  },
   "RISBJERG_MALTHE": {
     "id": "RISBJERG_MALTHE",
     "nome": "MALTHE",
@@ -78066,44 +78706,6 @@
         "regione": "SARDEGNA",
         "km": "53.100",
         "media": "41.920"
-      }
-    ]
-  },
-  "GATTA_GABRIELE": {
-    "id": "GATTA_GABRIELE",
-    "nome": "GABRIELE",
-    "cognome": "GATTA",
-    "team_attuale": "TEAM GUERRINI SENAGHESE",
-    "team_id": "TEAM_GUERRINI_SENAGHESE",
-    "categoria": "JUN_M",
-    "genere": "M",
-    "punti_totali": 27,
-    "risultati": [
-      {
-        "gara_id": "67_GRAN_PREMIO_U_C_A_T_2026-05-03_JUN_M",
-        "nome_gara": "67 GRAN PREMIO U C A T",
-        "data": "2026-05-03",
-        "posizione": 2,
-        "punti_effettivi": 12,
-        "team": "TEAM GUERRINI SENAGHESE",
-        "moltiplicatore": 1,
-        "tipo": "regionale",
-        "regione": "PIEMONTE",
-        "km": "101.000",
-        "media": "43.152"
-      },
-      {
-        "gara_id": "COPPA_1_MAGGIO_DEL_CERAMISTA_2026-04-26_JUN_M",
-        "nome_gara": "COPPA 1 MAGGIO DEL CERAMISTA",
-        "data": "2026-04-26",
-        "posizione": 1,
-        "punti_effettivi": 15,
-        "team": "TEAM GUERRINI SENAGHESE",
-        "moltiplicatore": 1,
-        "tipo": "regionale",
-        "regione": "LIGURIA",
-        "km": "105.000",
-        "media": "36.635"
       }
     ]
   },
@@ -84314,82 +84916,6 @@
         "regione": "FRIULI VENEZIA GIULIA",
         "km": "66.500",
         "media": "39.603"
-      }
-    ]
-  },
-  "MANONI_ANDREA": {
-    "id": "MANONI_ANDREA",
-    "nome": "ANDREA",
-    "cognome": "MANONI",
-    "team_attuale": "ETHICA ZERO24 CYCLING TEAM ECOTEK",
-    "team_id": "ETHICA_ZERO24_CYCLING_TEAM_ECOTEK",
-    "categoria": "AL_M",
-    "genere": "M",
-    "punti_totali": 10,
-    "risultati": [
-      {
-        "gara_id": "57_COPPA_CIRCOLO_ARCI_RENZINO_2026-05-01_AL_M",
-        "nome_gara": "57 COPPA CIRCOLO ARCI RENZINO",
-        "data": "2026-05-01",
-        "posizione": 6,
-        "punti_effettivi": 5,
-        "team": "ETHICA ZERO24 CYCLING TEAM ECOTEK",
-        "moltiplicatore": 1,
-        "tipo": "regionale",
-        "regione": "TOSCANA",
-        "km": "59.400",
-        "media": "38.641"
-      },
-      {
-        "gara_id": "36_GRAN_PREMIO_CITTA_DI_SAN_MAURO_PASCOLI_2026-04-06_AL_M",
-        "nome_gara": "36 GRAN PREMIO CITTA' DI SAN MAURO PASCOLI",
-        "data": "2026-04-06",
-        "posizione": 6,
-        "punti_effettivi": 5,
-        "team": "ETHICA ZERO24 CYCLING TEAM ECOTEK",
-        "moltiplicatore": 1,
-        "tipo": "regionale",
-        "regione": "EMILIA ROMAGNA",
-        "km": "46.200",
-        "media": "45.717"
-      }
-    ]
-  },
-  "MANNA_MATTEO": {
-    "id": "MANNA_MATTEO",
-    "nome": "MATTEO",
-    "cognome": "MANNA",
-    "team_attuale": "ETHICA ZERO24 CYCLING TEAM ECOTEK",
-    "team_id": "ETHICA_ZERO24_CYCLING_TEAM_ECOTEK",
-    "categoria": "AL_M",
-    "genere": "M",
-    "punti_totali": 7,
-    "risultati": [
-      {
-        "gara_id": "57_COPPA_CIRCOLO_ARCI_RENZINO_2026-05-01_AL_M",
-        "nome_gara": "57 COPPA CIRCOLO ARCI RENZINO",
-        "data": "2026-05-01",
-        "posizione": 7,
-        "punti_effettivi": 4,
-        "team": "ETHICA ZERO24 CYCLING TEAM ECOTEK",
-        "moltiplicatore": 1,
-        "tipo": "regionale",
-        "regione": "TOSCANA",
-        "km": "59.400",
-        "media": "38.641"
-      },
-      {
-        "gara_id": "7_TROFEO_QUADRE_CITTA_DI_CHIARI_2026-03-29_AL_M",
-        "nome_gara": "7 TROFEO QUADRE CITTA' DI CHIARI",
-        "data": "2026-03-29",
-        "posizione": 8,
-        "punti_effettivi": 3,
-        "team": "ETHICA ZERO24 CYCLING TEAM ECOTEK",
-        "moltiplicatore": 1,
-        "tipo": "regionale",
-        "regione": "LOMBARDIA",
-        "km": "63.000",
-        "media": "41.478"
       }
     ]
   },
@@ -97731,44 +98257,6 @@
       }
     ]
   },
-  "PERSICO_SILVIA": {
-    "id": "PERSICO_SILVIA",
-    "nome": "SILVIA",
-    "cognome": "PERSICO",
-    "team_attuale": "UAE TEAM ADQ",
-    "team_id": "UAE_TEAM_ADQ",
-    "categoria": "ELI_F",
-    "genere": "F",
-    "punti_totali": 69,
-    "risultati": [
-      {
-        "gara_id": "GIRO_DELL_APPENNINO_DONNE_2026-03-22_ELI_F",
-        "nome_gara": "GIRO DELL'APPENNINO DONNE",
-        "data": "2026-03-22",
-        "posizione": 1,
-        "punti_effettivi": 45,
-        "team": "UAE TEAM ADQ",
-        "moltiplicatore": 3,
-        "tipo": "internazionale",
-        "regione": "LIGURIA",
-        "km": "111.000",
-        "media": "40.583"
-      },
-      {
-        "gara_id": "ORO_IN_EURO_2026-03-08_ELI_F",
-        "nome_gara": "ORO IN EURO",
-        "data": "2026-03-08",
-        "posizione": 4,
-        "punti_effettivi": 24,
-        "team": "UAE TEAM ADQ",
-        "moltiplicatore": 3,
-        "tipo": "internazionale",
-        "regione": "TOSCANA",
-        "km": "106.400",
-        "media": "43.111"
-      }
-    ]
-  },
   "BRAND_LUCINDA": {
     "id": "BRAND_LUCINDA",
     "nome": "LUCINDA",
@@ -99272,44 +99760,6 @@
         "regione": "EMILIA ROMAGNA",
         "km": "76.000",
         "media": "41.912"
-      }
-    ]
-  },
-  "LONGO_BORGHINI_ELISA": {
-    "id": "LONGO_BORGHINI_ELISA",
-    "nome": "BORGHINI ELISA",
-    "cognome": "LONGO",
-    "team_attuale": "UAE TEAM ADQ",
-    "team_id": "UAE_TEAM_ADQ",
-    "categoria": "ELI_F",
-    "genere": "F",
-    "punti_totali": 69,
-    "risultati": [
-      {
-        "gara_id": "ORO_IN_EURO_2026-03-08_ELI_F",
-        "nome_gara": "ORO IN EURO",
-        "data": "2026-03-08",
-        "posizione": 1,
-        "punti_effettivi": 45,
-        "team": "UAE TEAM ADQ",
-        "moltiplicatore": 3,
-        "tipo": "internazionale",
-        "regione": "TOSCANA",
-        "km": "106.400",
-        "media": "43.111"
-      },
-      {
-        "gara_id": "12_STRADE_BIANCHE_DONNE_2026-03-07_ELI_F",
-        "nome_gara": "12 STRADE BIANCHE DONNE",
-        "data": "2026-03-07",
-        "posizione": 4,
-        "punti_effettivi": 24,
-        "team": "UAE TEAM ADQ",
-        "moltiplicatore": 3,
-        "tipo": "internazionale",
-        "regione": "TOSCANA",
-        "km": "133.000",
-        "media": "36.996"
       }
     ]
   },
