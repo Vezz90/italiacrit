@@ -49,6 +49,7 @@ jobs:
           PYTHONUNBUFFERED: '1'
 
       - name: Commit & push data
+        id: commitstep
         run: |
           git config user.email "bot@italiacrit.it"
           git config user.name "ItaliacritBot"
@@ -57,10 +58,24 @@ jobs:
           git add -f data/rankings/ data/team_rankings/ 2>/dev/null || true
           # Rimuovi dal tracking i log eventualmente entrati per errore
           git rm --cached data/unmatched_races.log data/service.log 2>/dev/null || true
-          git diff --staged --quiet || git commit -m "update: $(date -u '+%Y-%m-%d %H:%M') UTC"
+          if git diff --staged --quiet; then
+            echo "changed=false" >> "$GITHUB_OUTPUT"
+          else
+            git commit -m "update: $(date -u '+%Y-%m-%d %H:%M') UTC"
+            echo "changed=true" >> "$GITHUB_OUTPUT"
+          fi
           git pull --rebase origin main
           git push
 
       - name: Ping Render (keep server awake)
         run: |
           curl -s -o /dev/null -w "Render: %{http_code}\n" --max-time 30 https://italiacrit.onrender.com/api/health || true
+
+      - name: Notifica push (solo se ci sono novità)
+        if: steps.commitstep.outputs.changed == 'true'
+        run: |
+          curl -s -X POST https://italiacrit.onrender.com/api/internal/notify-results \
+            -H "Content-Type: application/json" \
+            -H "x-notify-token: ${{ secrets.SCRAPE_NOTIFY_TOKEN }}" \
+            --max-time 30 \
+            -d '{"title":"🏁 Risultati aggiornati","body":"Nuove classifiche e risultati disponibili"}' || true

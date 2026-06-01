@@ -68,6 +68,47 @@ const PORT = 8002;
 const JWT_SECRET  = process.env.JWT_SECRET || 'italiacrit-dev-secret-2026';
 const JWT_EXPIRES = '30d';
 
+// ── Web Push (notifiche PWA) ────────────────────────────────────────────────
+let webpush = null;
+// Chiavi VAPID — DEVONO essere impostate come env su Render:
+//   VAPID_PUBLIC, VAPID_PRIVATE  (genera con: npx web-push generate-vapid-keys)
+const VAPID_PUBLIC  = process.env.VAPID_PUBLIC  || '';
+const VAPID_PRIVATE = process.env.VAPID_PRIVATE || '';
+try {
+  webpush = require('web-push');
+  if (VAPID_PUBLIC && VAPID_PRIVATE) {
+    webpush.setVapidDetails('mailto:info@italiacrit.it', VAPID_PUBLIC, VAPID_PRIVATE);
+    console.log('[push] Web Push attivo');
+  } else {
+    console.log('[push] VAPID keys mancanti — imposta VAPID_PUBLIC/VAPID_PRIVATE su Render');
+  }
+} catch (e) { console.log('[push] modulo web-push non disponibile:', e.message); }
+
+// Invia una notifica push a tutte le subscription registrate
+async function sendPushToAll({ title, body, url }) {
+  if (!webpush || !VAPID_PUBLIC || !VAPID_PRIVATE) return { sent: 0 };
+  let sent = 0;
+  try {
+    const subs = await rawQuery(`SELECT * FROM push_subscriptions`).then(r => r.rows);
+    const payload = JSON.stringify({ title, body, url: url || '/' });
+    await Promise.all(subs.map(async s => {
+      try {
+        await webpush.sendNotification(
+          { endpoint: s.endpoint, keys: { p256dh: s.p256dh, auth: s.auth } },
+          payload
+        );
+        sent++;
+      } catch (err) {
+        // 410/404 = subscription scaduta → rimuovi
+        if (err.statusCode === 410 || err.statusCode === 404) {
+          await rawQuery(`DELETE FROM push_subscriptions WHERE endpoint=$1`, [s.endpoint]).catch(()=>{});
+        }
+      }
+    }));
+  } catch (e) { console.warn('[push] sendToAll:', e.message); }
+  return { sent };
+}
+
 // ── Supabase Storage ──────────────────────────────────────────────────────────
 const SUPABASE_URL    = process.env.SUPABASE_URL;
 const SUPABASE_SECRET = process.env.SUPABASE_SECRET;
@@ -683,6 +724,67 @@ app.delete('/api/admin/race-photos/:id', requireAdmin, async (req, res) => {
 
 app.get('/api/health', (req, res) => res.json({ ok: true, ts: new Date().toISOString() }));
 
+// ── Push notifications ──────────────────────────────────────────────────────
+// Chiave pubblica VAPID (serve al client per subscribe)
+app.get('/api/push/public-key', (req, res) => {
+  res.json({ key: VAPID_PUBLIC || null });
+});
+
+// Registra una subscription (utente anche anonimo)
+app.post('/api/push/subscribe', async (req, res) => {
+  try {
+    const { subscription } = req.body;
+    if (!subscription?.endpoint || !subscription.keys) return res.status(400).json({ error: 'subscription non valida' });
+    let userId = null;
+    const auth = req.headers.authorization;
+    if (auth?.startsWith('Bearer ')) {
+      try { userId = jwt.verify(auth.slice(7), JWT_SECRET).id; } catch {}
+    }
+    await rawQuery(
+      `INSERT INTO push_subscriptions (endpoint, p256dh, auth, user_id)
+       VALUES ($1, $2, $3, $4)
+       ON CONFLICT (endpoint) DO UPDATE SET p256dh=$2, auth=$3, user_id=COALESCE($4, push_subscriptions.user_id)`,
+      [subscription.endpoint, subscription.keys.p256dh, subscription.keys.auth, userId]
+    );
+    res.json({ ok: true });
+  } catch (e) { res.status(500).json({ error: e.message }); }
+});
+
+// Rimuove una subscription (disiscrizione)
+app.post('/api/push/unsubscribe', async (req, res) => {
+  try {
+    const { endpoint } = req.body;
+    if (endpoint) await rawQuery(`DELETE FROM push_subscriptions WHERE endpoint=$1`, [endpoint]).catch(()=>{});
+    res.json({ ok: true });
+  } catch (e) { res.status(500).json({ error: e.message }); }
+});
+
+// Admin: invia una notifica push manuale a tutti
+app.post('/api/admin/push/broadcast', requireAdmin, async (req, res) => {
+  try {
+    const { title, body, url } = req.body;
+    if (!title) return res.status(400).json({ error: 'title obbligatorio' });
+    const r = await sendPushToAll({ title, body: body || '', url });
+    res.json({ ok: true, ...r });
+  } catch (e) { res.status(500).json({ error: e.message }); }
+});
+
+// Notifica nuovi risultati — chiamato dal workflow GitHub dopo lo scrape.
+// Protetto da token (SCRAPE_NOTIFY_TOKEN) per evitare abusi.
+const SCRAPE_NOTIFY_TOKEN = process.env.SCRAPE_NOTIFY_TOKEN || '';
+app.post('/api/internal/notify-results', async (req, res) => {
+  try {
+    if (!SCRAPE_NOTIFY_TOKEN || req.headers['x-notify-token'] !== SCRAPE_NOTIFY_TOKEN) return res.status(403).json({ error: 'token non valido' });
+    const { count, title, body } = req.body || {};
+    const r = await sendPushToAll({
+      title: title || '🏁 Nuovi risultati disponibili',
+      body:  body  || (count ? `${count} nuove gare aggiornate` : 'Le classifiche sono state aggiornate'),
+      url: '/#/risultati',
+    });
+    res.json({ ok: true, ...r });
+  } catch (e) { res.status(500).json({ error: e.message }); }
+});
+
 // ── VIDEO MANAGEMENT ──────────────────────────────────────────────────────
 // Persistenza: Supabase (kv_store) in produzione, file JSON in locale
 const VIDEOS_PATH         = path.join(__dirname, '../data/videos.json');
@@ -968,59 +1070,75 @@ app.put('/api/admin/youtube/channels', requireAdmin, async (req, res) => {
 });
 
 // POST sync: fetch RSS di tutti i canali abilitati, aggiunge nuovi video alla queue
+async function doYoutubeSync() {
+  const channels   = await readYTChannels();
+  const allVideos  = await readVideos();
+  const queue      = await readYTQueue();
+
+  // URL già noti (approvati in videos o già in coda)
+  const knownUrls = new Set([
+    ...queue.map(q => q.url),
+    ...Object.values(allVideos).flat().map(v => v.url),
+  ]);
+
+  const fetched = await fetchAllChannels(channels);
+  let added = 0;
+
+  for (const [chId, videos] of Object.entries(fetched)) {
+    const ch = channels.find(c => c.id === chId);
+    for (const v of videos) {
+      if (knownUrls.has(v.url)) continue;
+      knownUrls.add(v.url);
+      const id = Date.now().toString(36) + Math.random().toString(36).slice(2, 7);
+      queue.push({
+        id,
+        channel_id:   chId,
+        channel_name: ch?.name || chId,
+        url:          v.url,
+        title:        v.title,
+        published_at: v.published_at,
+        thumbnail:    v.thumbnail,
+        status:       'pending',
+        suggested_gara_id: null,
+        added_at:     new Date().toISOString(),
+      });
+      added++;
+    }
+  }
+
+  const nonPending = queue.filter(q => q.status !== 'pending');
+  const pending    = queue
+    .filter(q => q.status === 'pending')
+    .sort((a, b) => (b.added_at || '').localeCompare(a.added_at || ''))
+    .slice(0, 200);
+  const trimmed = [...nonPending, ...pending];
+  await writeYTQueue(trimmed);
+  return { added, total: trimmed.length };
+}
+
 app.post('/api/admin/youtube/sync', requireAdmin, async (req, res) => {
   try {
-    const channels   = await readYTChannels();
-    const allVideos  = await readVideos();
-    const queue      = await readYTQueue();
-
-    // URL già noti (approvati in videos o già in coda)
-    const knownUrls = new Set([
-      ...queue.map(q => q.url),
-      ...Object.values(allVideos).flat().map(v => v.url),
-    ]);
-
-    const fetched = await fetchAllChannels(channels);
-    let added = 0;
-
-    for (const [chId, videos] of Object.entries(fetched)) {
-      const ch = channels.find(c => c.id === chId);
-      for (const v of videos) {
-        if (knownUrls.has(v.url)) continue;
-        knownUrls.add(v.url);
-        const id = Date.now().toString(36) + Math.random().toString(36).slice(2, 7);
-        queue.push({
-          id,
-          channel_id:   chId,
-          channel_name: ch?.name || chId,
-          url:          v.url,
-          title:        v.title,
-          published_at: v.published_at,
-          thumbnail:    v.thumbnail,
-          status:       'pending',   // pending | approved | dismissed
-          suggested_gara_id: null,
-          added_at:     new Date().toISOString(),
-        });
-        added++;
-      }
-    }
-
-    // Conserva TUTTI gli approvati/scartati (servono per la deduplicazione degli URL)
-    // Limita solo i pending a max 200 (i più recenti)
-    const nonPending = queue.filter(q => q.status !== 'pending');
-    const pending    = queue
-      .filter(q => q.status === 'pending')
-      .sort((a, b) => (b.added_at || '').localeCompare(a.added_at || ''))
-      .slice(0, 200);
-    const trimmed = [...nonPending, ...pending];
-    await writeYTQueue(trimmed);
-
-    res.json({ ok: true, added, total: trimmed.length });
+    const r = await doYoutubeSync();
+    res.json({ ok: true, ...r });
   } catch (e) {
     console.error('[yt-sync] errore:', e.message);
     res.status(500).json({ error: e.message });
   }
 });
+
+async function autoYoutubeSync() {
+  try {
+    const r = await doYoutubeSync();
+    if (r.added) {
+      console.log(`[yt-auto] ${r.added} nuovi video aggiunti alla coda`);
+      await sendPushToAll({
+        title: '🎥 Nuovi video disponibili',
+        body: `${r.added} nuovi video di gare sono stati trovati`,
+        url: '/#/risultati',
+      });
+    }
+  } catch (e) { console.warn('[yt-auto] Errore:', e.message); }
+}
 
 // GET queue
 app.get('/api/admin/youtube/queue', requireAdmin, async (req, res) => {
@@ -2381,10 +2499,12 @@ async function autoXpixSync() {
 init()
   .then(async () => {
     await ensureScraperMediaProfiles();
-    // Prima sync xpix dopo 2 minuti dal boot (Render si sveglia), poi ogni 6h
+    // Prima sync xpix + youtube dopo 2 minuti dal boot (Render si sveglia), poi ogni 6h
     setTimeout(() => {
       autoXpixSync();
+      autoYoutubeSync();
       setInterval(autoXpixSync, 6 * 60 * 60 * 1000);
+      setInterval(autoYoutubeSync, 6 * 60 * 60 * 1000);
     }, 2 * 60 * 1000);
     app.listen(PORT, () => {
       console.log(`[server] ItaliacritAuth in ascolto su http://localhost:${PORT}`);

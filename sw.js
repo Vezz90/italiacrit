@@ -1,4 +1,4 @@
-const CACHE_NAME = 'italiacrit-cache-v127';
+const CACHE_NAME = 'italiacrit-cache-v128';
 
 // File statici: messi in cache e serviti velocemente
 const STATIC_ASSETS = [
@@ -86,6 +86,35 @@ self.addEventListener('fetch', event => {
         caches.open(CACHE_NAME).then(cache => cache.put(event.request, clone));
         return networkResponse;
       });
+    })
+  );
+});
+
+// ── PUSH NOTIFICATIONS ──────────────────────────────────────────────
+self.addEventListener('push', event => {
+  let data = {};
+  try { data = event.data ? event.data.json() : {}; } catch { data = { title: 'ItaliacritResultati', body: event.data ? event.data.text() : '' }; }
+  const title = data.title || 'ItaliacritResultati';
+  const options = {
+    body: data.body || '',
+    icon: './assets/logo2.png',
+    badge: './assets/logo2.png',
+    data: { url: data.url || '/' },
+    vibrate: [100, 50, 100],
+  };
+  event.waitUntil(self.registration.showNotification(title, options));
+});
+
+self.addEventListener('notificationclick', event => {
+  event.notification.close();
+  const target = (event.notification.data && event.notification.data.url) || '/';
+  event.waitUntil(
+    clients.matchAll({ type: 'window', includeUncontrolled: true }).then(list => {
+      // Se c'è già una finestra aperta, focus + naviga
+      for (const c of list) {
+        if ('focus' in c) { c.focus(); if (c.navigate && target !== '/') c.navigate(target); return; }
+      }
+      if (clients.openWindow) return clients.openWindow(target);
     })
   );
 });

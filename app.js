@@ -1628,6 +1628,99 @@ let globalData = null;
 
 
 window.addEventListener('hashchange', route);
+// ── SERVICE WORKER + PUSH NOTIFICATIONS ──────────────────────
+let _swRegistration = null;
+function registerServiceWorker() {
+  if (!('serviceWorker' in navigator)) return;
+  navigator.serviceWorker.register('sw.js')
+    .then(reg => { _swRegistration = reg; })
+    .catch(e => console.warn('[SW] registrazione fallita:', e.message));
+}
+
+function _urlB64ToUint8(base64) {
+  const padding = '='.repeat((4 - base64.length % 4) % 4);
+  const b64 = (base64 + padding).replace(/-/g, '+').replace(/_/g, '/');
+  const raw = atob(b64);
+  return Uint8Array.from([...raw].map(c => c.charCodeAt(0)));
+}
+
+// Stato notifiche: 'unsupported' | 'denied' | 'subscribed' | 'default'
+function pushStatus() {
+  if (!('serviceWorker' in navigator) || !('PushManager' in window) || !('Notification' in window)) return 'unsupported';
+  if (Notification.permission === 'denied') return 'denied';
+  if (Notification.permission === 'granted' && localStorage.getItem('push_subscribed') === '1') return 'subscribed';
+  return 'default';
+}
+
+window.enablePushNotifications = async function() {
+  try {
+    if (!('serviceWorker' in navigator) || !('PushManager' in window)) {
+      showToast('Notifiche non supportate su questo dispositivo', 'error'); return;
+    }
+    const perm = await Notification.requestPermission();
+    if (perm !== 'granted') { showToast('Permesso notifiche negato', 'error'); return; }
+
+    const reg = _swRegistration || await navigator.serviceWorker.ready;
+    const { key } = await fetch(`${API_BASE}/push/public-key`).then(r => r.json());
+    if (!key) { showToast('Push non configurate sul server', 'error'); return; }
+
+    let sub = await reg.pushManager.getSubscription();
+    if (!sub) {
+      sub = await reg.pushManager.subscribe({
+        userVisibleOnly: true,
+        applicationServerKey: _urlB64ToUint8(key),
+      });
+    }
+    const token = (typeof authToken === 'function') ? authToken() : null;
+    await fetch(`${API_BASE}/push/subscribe`, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json', ...(token ? { Authorization: `Bearer ${token}` } : {}) },
+      body: JSON.stringify({ subscription: sub }),
+    });
+    localStorage.setItem('push_subscribed', '1');
+    showToast('🔔 Notifiche attivate!');
+    _renderPushButton();
+  } catch (e) {
+    showToast('Errore attivazione notifiche: ' + e.message, 'error');
+  }
+};
+
+window.disablePushNotifications = async function() {
+  try {
+    const reg = _swRegistration || await navigator.serviceWorker.ready;
+    const sub = await reg.pushManager.getSubscription();
+    if (sub) {
+      await fetch(`${API_BASE}/push/unsubscribe`, {
+        method: 'POST', headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ endpoint: sub.endpoint }),
+      }).catch(()=>{});
+      await sub.unsubscribe().catch(()=>{});
+    }
+    localStorage.removeItem('push_subscribed');
+    showToast('🔕 Notifiche disattivate');
+    _renderPushButton();
+  } catch (e) { showToast('Errore: ' + e.message, 'error'); }
+};
+
+// Aggiorna lo stato del pulsante notifiche (se presente nel DOM)
+function _renderPushButton() {
+  const el = document.getElementById('push-toggle-btn');
+  if (!el) return;
+  const st = pushStatus();
+  if (st === 'unsupported') { el.style.display = 'none'; return; }
+  el.style.display = '';
+  if (st === 'subscribed') {
+    el.innerHTML = '🔔 Notifiche attive';
+    el.onclick = () => window.disablePushNotifications();
+  } else if (st === 'denied') {
+    el.innerHTML = '🔕 Notifiche bloccate';
+    el.onclick = () => showToast('Sblocca le notifiche dalle impostazioni del browser', 'error');
+  } else {
+    el.innerHTML = '🔔 Attiva notifiche';
+    el.onclick = () => window.enablePushNotifications();
+  }
+}
+
 window.addEventListener('load', async () => {
   globalData = await loadAll();
   updateMetaUI();
@@ -1638,6 +1731,8 @@ window.addEventListener('load', async () => {
   initSearch();
   initMobileMenu();
   initNavDropdowns();
+  registerServiceWorker();
+  setTimeout(_renderPushButton, 800);
 
   // Logo click → cinematic entry
   document.getElementById('nav-logo-link')?.addEventListener('click', function(e) {
