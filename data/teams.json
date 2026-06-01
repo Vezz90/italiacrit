@@ -44391,11 +44391,11 @@
   "ASD_PEDALE_CASALESE_ARMOFER": {
     "id": "ASD_PEDALE_CASALESE_ARMOFER",
     "nome": "ASD PEDALE CASALESE ARMOFER",
-    "punti_totali": 228,
+    "punti_totali": 229,
     "atleti": [
       "CARLONI_FRANCESCO",
-      "MARTI_GIUSEPPE",
       "VERZIERA_MARCO",
+      "MARTI_GIUSEPPE",
       "BETTINELLI_FRANCESCO",
       "FIGNON_MATTEO",
       "SESTINI_LUCA_FRANCESCO",
@@ -44421,6 +44421,21 @@
         "regione": "PIEMONTE",
         "km": "60.500",
         "media": "42.217"
+      },
+      {
+        "gara_id": "48_TROFEO_CADUTI_BESNATESI_GARA_UNICA_2026-05-31_ES2_M",
+        "nome_gara": "48 TROFEO CADUTI BESNATESI GARA UNICA",
+        "data": "2026-05-31",
+        "atleta_id": "VERZIERA_MARCO",
+        "atleta_cognome": "VERZIERA",
+        "atleta_nome": "MARCO",
+        "posizione": 10,
+        "punti_effettivi": 1,
+        "moltiplicatore": 1,
+        "tipo": "regionale",
+        "regione": "LOMBARDIA",
+        "km": "30.100",
+        "media": "40.133"
       },
       {
         "gara_id": "1_TROFEO_RADIOINFORMAZIONI_STRIM_COMUNE_DI_ISPRA_2026-05-24_AL_M",
@@ -45070,7 +45085,7 @@
     ],
     "punti_per_cat": {
       "AL_M": 89,
-      "ES2_M": 92,
+      "ES2_M": 93,
       "JUN_M": 47
     }
   },
