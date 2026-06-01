@@ -39,10 +39,9 @@ const DEFAULT_CHANNELS = [
   {
     id: 'ciclismolive',
     name: 'CiclismoLive',
-    type: 'handle',
-    value: 'CiclismoLive',   // @CiclismoLive handle
+    type: 'channel_id',
+    value: 'UCQl1bzhYYXYMROIuvlNDiRQ',   // @CiclismoLive risolto
     enabled: true,
-    _resolved_id: '',         // popolato automaticamente al primo sync
   },
 ];
 
@@ -55,6 +54,7 @@ function fetchURL(url, timeoutMs = 15000, extraHeaders = {}) {
     const timer = setTimeout(() => reject(new Error('Timeout: ' + url)), timeoutMs);
 
     const options = {
+      rejectUnauthorized: false, // alcune reti hanno catena cert incompleta
       headers: {
         'User-Agent': 'Mozilla/5.0 (compatible; italiacrit-bot/1.0)',
         'Accept-Language': 'it-IT,it;q=0.9',
