@@ -21,6 +21,7 @@ function fetchURL(url, timeoutMs = 15000, asJSON = false) {
   return new Promise((resolve, reject) => {
     const timer = setTimeout(() => reject(new Error('Timeout: ' + url)), timeoutMs);
     const opts = {
+      rejectUnauthorized: false, // xpix.it ha catena cert SSL incompleta — Node non la verifica
       headers: {
         'User-Agent': 'Mozilla/5.0 (compatible; italiacrit-bot/1.0)',
         'Accept': asJSON ? 'application/json' : 'text/html,*/*',
