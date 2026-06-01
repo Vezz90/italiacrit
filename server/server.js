@@ -728,18 +728,46 @@ app.get('/api/health', (req, res) => res.json({ ok: true, ts: new Date().toISOSt
 // Risponde subito (tiene Render sveglio) e lancia le sync in background.
 // Così le sync girano anche se l'setInterval interno si è fermato per uno sleep.
 let _lastCronSync = 0;
+let _lastScrapeTrigger = 0;
+// Triggera il workflow scrape su GitHub Actions (indipendente dal cron GitHub
+// che è inaffidabile). Richiede GH_DISPATCH_TOKEN (PAT con scope actions:write).
+async function triggerScrapeWorkflow() {
+  const token = process.env.GH_DISPATCH_TOKEN;
+  const repo  = process.env.GH_REPO || 'Vezz90/italiacrit';
+  if (!token) return;
+  try {
+    const r = await fetch(`https://api.github.com/repos/${repo}/actions/workflows/scrape.yml/dispatches`, {
+      method: 'POST',
+      headers: {
+        'Authorization': `Bearer ${token}`,
+        'Accept': 'application/vnd.github+json',
+        'X-GitHub-Api-Version': '2022-11-28',
+        'User-Agent': 'italiacrit-cron',
+      },
+      body: JSON.stringify({ ref: 'main' }),
+    });
+    console.log('[cron] scrape workflow dispatch →', r.status);
+  } catch (e) { console.warn('[cron] dispatch scrape:', e.message); }
+}
+
 app.get('/api/cron/tick', (req, res) => {
   res.json({ ok: true, ts: new Date().toISOString() });
-  // Throttle: esegui le sync al massimo una volta ogni 25 min, anche se pingato più spesso
   const now = Date.now();
-  if (now - _lastCronSync < 25 * 60 * 1000) return;
-  _lastCronSync = now;
-  // Lancia in background — non blocca la risposta
-  (async () => {
-    try { await autoXpixSync(); }    catch (e) { console.warn('[cron] xpix:', e.message); }
-    try { await autoYoutubeSync(); } catch (e) { console.warn('[cron] yt:', e.message); }
-    try { await autoICSync(); }      catch (e) { console.warn('[cron] ic:', e.message); }
-  })();
+  // Sync foto/video: max una volta ogni 25 min
+  if (now - _lastCronSync >= 25 * 60 * 1000) {
+    _lastCronSync = now;
+    (async () => {
+      try { await autoXpixSync(); }    catch (e) { console.warn('[cron] xpix:', e.message); }
+      try { await autoYoutubeSync(); } catch (e) { console.warn('[cron] yt:', e.message); }
+      try { await autoICSync(); }      catch (e) { console.warn('[cron] ic:', e.message); }
+    })();
+  }
+  // Scrape risultati: max una volta ogni 30 min (solo mar–ott, stagione gare)
+  const month = new Date().getMonth() + 1;
+  if (month >= 3 && month <= 10 && now - _lastScrapeTrigger >= 30 * 60 * 1000) {
+    _lastScrapeTrigger = now;
+    triggerScrapeWorkflow();
+  }
 });
 
 // ── Push notifications ──────────────────────────────────────────────────────
