@@ -69,11 +69,14 @@ function extractGaraUrls(html, sub) {
   return [...found];
 }
 
-// ── Estrai la foto "original" da una pagina gara ──────────────────────────────
+// ── Estrai TUTTE le foto "original" da una pagina gara ────────────────────────
+// Due percorsi possibili:
+//   /immagini/gara_..._original.jpg                 (foto principale)
+//   /galleria_fotografica/gare/gara_..._{fotoid}_original.jpg  (galleria multipla)
 function extractPhotos(html, sub) {
   const seen = new Set();
   const photos = [];
-  const re = /(\/immagini\/gara_[^"' >]+_original\.jpg)/gi;
+  const re = /(\/(?:immagini|galleria_fotografica\/gare)\/gara_[^"' >]+_original\.(?:jpg|jpeg|png))/gi;
   let m;
   while ((m = re.exec(html)) !== null) {
     const url = `http://${sub}.ciclismo.info${m[1]}`;
