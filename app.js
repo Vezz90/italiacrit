@@ -11094,6 +11094,10 @@ async function renderGara(gara_id) {
 
   const _buildRows = (arr) => {
     let _prevTempo = null;
+    // Media e tempo del vincitore (riferimento per calcolare i tempi reali degli altri)
+    const _winner = arr.find(r => r.posizione === 1) || arr[0];
+    const _winnerSec = _winner ? _winnerSeconds(_winner.km, _winner.media) : 0;
+    const _winnerMedia = _winner ? parseFloat(_winner.media) : null;
     return arr.map(r => {
       const pts = r.punti_effettivi || (BASEPTS[r.posizione]||0) * mult;
       const pClass = posClass(r.posizione);
@@ -11109,6 +11113,17 @@ async function renderGara(gara_id) {
       } else {
         tempoDisplay = _fmtGap(r.tempo);
       }
+      // Media reale ricalcolata sul distacco. S.T. = stessa media del precedente (gap identico).
+      let mediaDisplay = r.media || '—';
+      if (_winnerSec && _winnerMedia) {
+        if (r.posizione === 1) {
+          mediaDisplay = _winnerMedia.toFixed(3);
+        } else {
+          const gapSec = _parseGapSeconds(r.tempo);
+          const avg = _realAvgSpeed(r.km, _winnerSec, gapSec);
+          mediaDisplay = avg ? avg.toFixed(3) : (r.media || '—');
+        }
+      }
       if (r.posizione > 1) _prevTempo = r.tempo || null;
       return `<tr>
         <td class="td-pos ${pClass} ${r.posizione===1?'win':''}">${r.posizione}°</td>
@@ -11119,7 +11134,7 @@ async function renderGara(gara_id) {
         <td class="td-hide-mobile"><a href="#/team/${esc(r.team_id)}" style="color:var(--text-secondary)">${esc(r.team)}</a></td>
         <td class="td-time">${esc(tempoDisplay)}</td>
         <td class="td-hide-mobile" style="text-align:right">${esc(r.km || '—')}</td>
-        <td class="td-hide-mobile" style="text-align:right">${esc(r.media || '—')}</td>
+        <td class="td-hide-mobile" style="text-align:right">${esc(mediaDisplay)}</td>
         <td class="td-pts">${pts > 0 ? pts : '—'}${rkTag}</td>
       </tr>`;
     }).join('');
@@ -14672,6 +14687,34 @@ function _calcWinnerTime(km, media) {
 function _fmtGap(tempo) {
   if (!tempo || !tempo.trim()) return '';
   return tempo.trim().replace(/^a\s*/, '+');
+}
+// Tempo vincitore in secondi (da km e media)
+function _winnerSeconds(km, media) {
+  const k = parseFloat(km), m = parseFloat(media);
+  if (!k || !m) return 0;
+  return k / m * 3600;
+}
+// Parsa il distacco FCI in secondi: "a 14\"" → 14, "a 1'55\"" → 115, "a 3'02\"" → 182
+function _parseGapSeconds(tempo) {
+  if (!tempo) return 0;
+  const t = String(tempo).replace(/^a\s*/, '').trim();
+  // formato m'ss" oppure ss"
+  const mMin = t.match(/(\d+)\s*'/);
+  const mSec = t.match(/(\d+)\s*"/);
+  let sec = 0;
+  if (mMin) sec += parseInt(mMin[1], 10) * 60;
+  if (mSec) sec += parseInt(mSec[1], 10);
+  // se non c'è né ' né " ma c'è un numero puro, trattalo come secondi
+  if (!mMin && !mSec) { const n = parseInt(t, 10); if (!isNaN(n)) sec = n; }
+  return sec;
+}
+// Media reale di un corridore = km / (tempoVincitore + distacco) * 3600
+function _realAvgSpeed(km, winnerSec, gapSec) {
+  const k = parseFloat(km);
+  if (!k || !winnerSec) return null;
+  const totalSec = winnerSec + (gapSec || 0);
+  if (totalSec <= 0) return null;
+  return k / (totalSec / 3600);
 }
 
 function _bg(ctx, W, H) {
