@@ -1,12 +1,13 @@
 /**
- * italiaciclismo.net Photo Scraper
+ * ciclismo.info Photo Scraper
  *
- * Scarica le foto dalle pagine gara di http://www.italiaciclismo.net/
- * Il sito è HTTP-only (no HTTPS) — usa il modulo http nativo di Node.js.
+ * Scarica le foto dalle pagine gara di ciclismo.info, suddiviso per
+ * sottodomini di categoria: juniores / allievi / esordienti / donne.
+ * Ogni gara ha 1 foto: /immagini/gara_{N}_{slug}_{ID}_original.jpg
  *
  * Flusso:
- *   1. Fetcha la homepage + pagine indice per raccogliere URL gara recenti
- *   2. Per ogni pagina gara, estrae le URL delle foto
+ *   1. Per ogni sottodominio, fetcha la pagina risultati_gare_{cat}.htm
+ *   2. Estrae le pagine gara recenti, fetcha ognuna e ricava la foto
  *   3. Ritorna candidati per la coda admin (stesso pattern di xpix)
  */
 
@@ -14,7 +15,8 @@
 const http  = require('http');
 const https = require('https');
 
-const IC_BASE = 'http://www.italiaciclismo.net';
+// Sottodomini reali con pagina risultati_gare_{sub}.htm
+const IC_SUBS = ['juniores', 'allievi', 'esordienti'];
 
 // ── HTTP/HTTPS helper generico ────────────────────────────────────────────────
 function fetchURL(url, timeoutMs = 15000) {
@@ -22,6 +24,7 @@ function fetchURL(url, timeoutMs = 15000) {
     const timer = setTimeout(() => reject(new Error('Timeout: ' + url)), timeoutMs);
     const lib   = url.startsWith('https') ? https : http;
     const opts  = {
+      rejectUnauthorized: false,
       headers: {
         'User-Agent':       'Mozilla/5.0 (compatible; italiacrit-bot/1.0)',
         'Accept':           'text/html,*/*',
@@ -48,149 +51,90 @@ function fetchURL(url, timeoutMs = 15000) {
       res.on('data', c => chunks.push(c));
       res.on('end', () => {
         clearTimeout(timer);
-        resolve(Buffer.concat(chunks).toString('latin1')); // il sito usa latin1/ISO-8859-1
+        resolve(Buffer.concat(chunks).toString('latin1')); // ISO-8859-1
       });
     }).on('error', e => { clearTimeout(timer); reject(e); });
   });
 }
 
-// ── Estrai URL gare da una pagina HTML ────────────────────────────────────────
-// Cerca href tipo: gara_juniores_12345_2026_04_25_...htm
-const GARA_URL_RE = /href="(gara_(?:juniores|allievi|esordienti|elite_under23|donne[^"]*?)_\d+_\d{4}_\d{2}_\d{2}_[^"]*?\.htm)"/gi;
-
-function extractGaraUrls(html, baseUrl) {
+// ── Estrai URL pagine gara da una pagina indice ───────────────────────────────
+// href tipo: gara_juniores_35779_2026_05_31_pravisdomini___..._tappa.htm
+function extractGaraUrls(html, sub) {
   const found = new Set();
+  const re = new RegExp(`(gara_${sub}_\\d+_\\d{4}_\\d{2}_\\d{2}_[^"' >]+?\\.htm)`, 'gi');
   let m;
-  while ((m = GARA_URL_RE.exec(html)) !== null) {
-    const rel = m[1];
-    const abs = rel.startsWith('http') ? rel : `${IC_BASE}/${rel}`;
-    found.add(abs);
+  while ((m = re.exec(html)) !== null) {
+    found.add(`http://${sub}.ciclismo.info/${m[1]}`);
   }
   return [...found];
 }
 
-// ── Estrai foto da una pagina gara ────────────────────────────────────────────
-// Cerca tag <img> con percorsi foto tipici del sito
-function extractPhotos(html, garaUrl) {
+// ── Estrai la foto "original" da una pagina gara ──────────────────────────────
+function extractPhotos(html, sub) {
+  const seen = new Set();
   const photos = [];
-  const seen   = new Set();
-
-  // Pattern 1: <img src="foto/nomeFile.jpg"> o varianti con path relativo
-  const imgRe = /<img[^>]+src="([^"]+\.(?:jpg|jpeg|png|gif))"[^>]*>/gi;
+  const re = /(\/immagini\/gara_[^"' >]+_original\.jpg)/gi;
   let m;
-  while ((m = imgRe.exec(html)) !== null) {
-    let src = m[1];
-    // Salta icone, loghi, spacer, banner di piccole dimensioni
-    if (/logo|icon|banner|spacer|button|pixel|arrow|star|flag|trophy|spinner/i.test(src)) continue;
-    if (src.includes('data:')) continue;
-
-    // Costruisci URL assoluto
-    if (!src.startsWith('http')) {
-      const base = new URL(garaUrl);
-      src = src.startsWith('/') ? `${base.origin}${src}` : `${IC_BASE}/${src.replace(/^\.\//, '')}`;
-    }
-
-    if (!seen.has(src)) {
-      seen.add(src);
-      photos.push(src);
-    }
+  while ((m = re.exec(html)) !== null) {
+    const url = `http://${sub}.ciclismo.info${m[1]}`;
+    if (!seen.has(url)) { seen.add(url); photos.push(url); }
   }
-
-  // Filtra: tieni solo immagini che sembrano foto di gara (non elementi UI)
-  // Euristica: URL che contengono anno, numero, o percorso "foto"
-  const racePhotos = photos.filter(u => {
-    const lower = u.toLowerCase();
-    return lower.includes('foto') ||
-           lower.includes('gara') ||
-           lower.includes('2024') ||
-           lower.includes('2025') ||
-           lower.includes('2026') ||
-           /\/\d{4,}[_-]/.test(lower) ||
-           /[_-]\d{4,}\./.test(lower);
-  });
-
-  // Se il filtro è troppo aggressivo, restituisci le prime foto trovate
-  return (racePhotos.length ? racePhotos : photos).slice(0, 12);
+  return photos;
 }
 
 // ── Parsa info gara dall'URL ──────────────────────────────────────────────────
-// Esempio: gara_juniores_35389_2026_04_25_massa_ms_50_gran_premio_..._massa.htm
+// gara_juniores_35779_2026_05_31_pravisdomini___pravisdomini_pn_24_giro_...htm
 function parseGaraUrl(url) {
   const filename = url.split('/').pop().replace('.htm', '');
   const parts    = filename.split('_');
-
-  // parts[0] = 'gara', parts[1] = categoria, parts[2] = id numerico
-  // parts[3..5] = YYYY_MM_DD, resto = location + nome
   if (parts.length < 6) return null;
 
-  const categoria = parts[1];   // juniores | allievi | esordienti | elite_under23 | donne_...
-  const gara_id   = parts[2];   // ID numerico
-  const date      = `${parts[3]}-${parts[4]}-${parts[5]}`;  // YYYY-MM-DD
-  // Resto dell'URL = location + nome gara (separati da _)
+  const categoria = parts[1];
+  const gara_id   = parts[2];
+  const date      = `${parts[3]}-${parts[4]}-${parts[5]}`;
   const nameRaw   = parts.slice(6).join(' ').replace(/__+/g, ' ').trim();
-  // Decodifica percent-encoding e pulisci
   const name      = decodeURIComponent(nameRaw)
-    .replace(/\s+/g, ' ')
-    .replace(/[_]+/g, ' ')
-    .trim()
-    .toUpperCase();
+    .replace(/\s+/g, ' ').replace(/[_]+/g, ' ').trim().toUpperCase();
 
   return { categoria, gara_id, date, name, url };
 }
 
-// ── Pagine indice da cui raccogliere URL gare ─────────────────────────────────
-const INDEX_PAGES = [
-  `${IC_BASE}/`,
-  `${IC_BASE}/risultati_juniores.htm`,
-  `${IC_BASE}/risultati_allievi.htm`,
-  `${IC_BASE}/risultati_esordienti.htm`,
-  `${IC_BASE}/risultati_elite_under23.htm`,
-  `${IC_BASE}/risultati_donne.htm`,
-];
-
 // ── Entry point principale ─────────────────────────────────────────────────────
 // knownUrls: Set di URL gara già presenti in coda
-// maxNew: max nuovi album da processare
-async function fetchItaliaciclismoCandidates(knownUrls, maxNew = 20) {
-  console.log('[ic] Raccolta URL gare da pagine indice...');
+// maxNew: max nuove gare da processare
+async function fetchItaliaciclismoCandidates(knownUrls, maxNew = 25) {
+  console.log('[ic] Raccolta URL gare da ciclismo.info...');
 
-  // 1. Raccolta URL gare dalle pagine indice
+  // 1. Raccolta URL gare dalle pagine risultati di ogni categoria
   const garaUrls = new Set();
-  for (const indexUrl of INDEX_PAGES) {
+  for (const sub of IC_SUBS) {
     try {
-      const html = await fetchURL(indexUrl, 12000);
-      const found = extractGaraUrls(html, indexUrl);
+      const html  = await fetchURL(`http://${sub}.ciclismo.info/risultati_gare_${sub}.htm`, 12000);
+      const found = extractGaraUrls(html, sub);
       found.forEach(u => garaUrls.add(u));
-      console.log(`[ic] ${indexUrl} → ${found.length} gare trovate`);
+      console.log(`[ic] ${sub} → ${found.length} gare`);
     } catch (e) {
-      console.warn(`[ic] Errore index ${indexUrl}: ${e.message}`);
+      console.warn(`[ic] Errore indice ${sub}: ${e.message}`);
     }
   }
+  console.log(`[ic] ${garaUrls.size} URL gara totali`);
 
-  console.log(`[ic] ${garaUrls.size} URL gara totali raccolte`);
-
-  // 2. Filtra per anno corrente/precedente e non già in coda
+  // 2. Filtra per anno corrente e non già in coda
   const currentYear = new Date().getFullYear();
   const toProcess = [...garaUrls]
-    .filter(u => {
-      if (knownUrls.has(u)) return false;
-      // Mantieni solo gare recenti (anno corrente o precedente nell'URL)
-      return u.includes(`_${currentYear}_`) || u.includes(`_${currentYear - 1}_`);
-    })
+    .filter(u => !knownUrls.has(u) && u.includes(`_${currentYear}_`))
     .slice(0, maxNew);
+  console.log(`[ic] ${toProcess.length} nuove gare da processare`);
 
-  console.log(`[ic] ${toProcess.length} nuove gare recenti da processare`);
-
-  // 3. Per ogni gara, fetch pagina e estrai foto
+  // 3. Per ogni gara, fetch pagina e ricava la foto
   const results = [];
   for (const garaUrl of toProcess) {
     try {
       const info = parseGaraUrl(garaUrl);
       if (!info) continue;
-
+      const sub    = info.categoria;
       const html   = await fetchURL(garaUrl, 12000);
-      const photos = extractPhotos(html, garaUrl);
-
+      const photos = extractPhotos(html, sub);
       if (photos.length) {
         results.push({
           gara_url:  garaUrl,
@@ -201,12 +145,8 @@ async function fetchItaliaciclismoCandidates(knownUrls, maxNew = 20) {
           photo_url: photos[0],
         });
         console.log(`[ic] ✓ ${info.date} ${info.name} — ${photos.length} foto`);
-      } else {
-        console.log(`[ic] ✗ ${info.date} ${info.name} — nessuna foto`);
       }
-
-      // Pausa breve tra le richieste
-      await new Promise(r => setTimeout(r, 300));
+      await new Promise(r => setTimeout(r, 200));
     } catch (e) {
       console.warn(`[ic] Errore ${garaUrl}: ${e.message}`);
     }

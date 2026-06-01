@@ -7141,6 +7141,10 @@ async function renderAdmin() {
           <span class="admin-nav-icon" style="color:#0ea5e9">◈</span> xpix Auto-Sync
           <span class="admin-nav-badge" id="badge-xpix"></span>
         </div>
+        <div class="admin-nav-item" data-section="foto-ic" onclick="adminNav('foto-ic')">
+          <span class="admin-nav-icon" style="color:#f59e0b">📷</span> ciclismo.info Auto-Sync
+          <span class="admin-nav-badge" id="badge-ic"></span>
+        </div>
 
         <div class="admin-nav-group">Video</div>
         <div class="admin-nav-item" data-section="video-pending" onclick="adminNav('video-pending')">
@@ -7362,6 +7366,27 @@ window.adminNav = async function(section) {
           <div class="admin-loading">Caricamento coda…</div>
         </div>`;
       loadXpixQueue();
+      break;
+    }
+
+    // ── FOTO ciclismo.info ────────────────────────────────────
+    case 'foto-ic': {
+      main.innerHTML = `
+        <div class="admin-page-header">
+          <h1 class="admin-page-title" style="color:#f59e0b">📷 ciclismo.info Auto-Sync</h1>
+          <p class="admin-page-sub">Foto gara da juniores/allievi/esordienti.ciclismo.info — seleziona la gara e pubblica.</p>
+        </div>
+        <div style="display:flex;gap:10px;align-items:center;margin-bottom:20px;flex-wrap:wrap">
+          <button onclick="window.icSync()" id="ic-sync-btn"
+            style="background:#f59e0b;color:#fff;border:none;padding:10px 22px;border-radius:6px;font-weight:700;cursor:pointer;font-size:.875rem">
+            🔄 Sincronizza ciclismo.info
+          </button>
+          <span id="ic-sync-status" style="font-size:.8rem;color:var(--text-muted)"></span>
+        </div>
+        <div id="ic-queue-container">
+          <div class="admin-loading">Caricamento coda…</div>
+        </div>`;
+      loadICQueue();
       break;
     }
 
@@ -9399,7 +9424,7 @@ function renderICQueue() {
   const approved  = _icQueue.filter(q => q.status === 'approved').length;
 
   if (!_icQueue.length) {
-    container.innerHTML = `<div style="color:var(--text-muted);font-size:.85rem;padding:16px 0">Nessuna foto in coda. Clicca "Sincronizza ItaliaCiclismo".</div>`;
+    container.innerHTML = `<div style="color:var(--text-muted);font-size:.85rem;padding:16px 0">Nessuna foto in coda. Clicca "Sincronizza ciclismo.info".</div>`;
     return;
   }
   const stats = `<div style="font-size:.8rem;color:var(--text-muted);margin-bottom:12px">
@@ -9477,7 +9502,7 @@ window.icSync = async () => {
   } catch (e) {
     if (status) status.textContent = '✗ Errore: ' + e.message;
   } finally {
-    if (btn) { btn.disabled = false; btn.textContent = '🔄 Sincronizza ItaliaCiclismo'; }
+    if (btn) { btn.disabled = false; btn.textContent = '🔄 Sincronizza ciclismo.info'; }
   }
 };
 

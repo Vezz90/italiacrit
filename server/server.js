@@ -1578,43 +1578,59 @@ app.get('/api/admin/ic/queue', requireAdmin, async (req, res) => {
   catch (e) { res.status(500).json({ error: e.message }); }
 });
 
+async function doICSync(maxNew = 25) {
+  const queue     = await readICQueue();
+  const knownUrls = new Set(queue.map(q => q.gara_url));
+  const candidates = await fetchItaliaciclismoCandidates(knownUrls, maxNew);
+  let added = 0;
+  for (const c of candidates) {
+    const id = Date.now().toString(36) + Math.random().toString(36).slice(2, 7);
+    queue.push({
+      id,
+      gara_url:  c.gara_url,
+      categoria: c.categoria,
+      date:      c.date,
+      name:      c.name,
+      photos:    c.photos,
+      photo_url: c.photo_url,
+      status:            'pending',
+      suggested_gara_id: null,
+      added_at:          new Date().toISOString(),
+    });
+    added++;
+  }
+  const nonPending = queue.filter(q => q.status !== 'pending');
+  const pending    = queue.filter(q => q.status === 'pending')
+    .sort((a, b) => (b.added_at || '').localeCompare(a.added_at || ''))
+    .slice(0, 200);
+  const trimmed = [...nonPending, ...pending];
+  await writeICQueue(trimmed);
+  return { added, total: trimmed.length };
+}
+
 app.post('/api/admin/ic/sync', requireAdmin, async (req, res) => {
-  // Integrazione italiaciclismo.net disattivata (non più utilizzata).
-  return res.json({ ok: true, added: 0, disabled: true, message: 'Integrazione italiaciclismo disattivata' });
-  /* eslint-disable no-unreachable */
   try {
-    const queue     = await readICQueue();
-    const knownUrls = new Set(queue.map(q => q.gara_url));
-    const candidates = await fetchItaliaciclismoCandidates(knownUrls, 20);
-    let added = 0;
-    for (const c of candidates) {
-      const id = Date.now().toString(36) + Math.random().toString(36).slice(2, 7);
-      queue.push({
-        id,
-        gara_url:  c.gara_url,
-        categoria: c.categoria,
-        date:      c.date,
-        name:      c.name,
-        photos:    c.photos,
-        photo_url: c.photo_url,
-        status:            'pending',
-        suggested_gara_id: null,
-        added_at:          new Date().toISOString(),
-      });
-      added++;
-    }
-    const nonPending = queue.filter(q => q.status !== 'pending');
-    const pending    = queue.filter(q => q.status === 'pending')
-      .sort((a, b) => (b.added_at || '').localeCompare(a.added_at || ''))
-      .slice(0, 200);
-    const trimmed = [...nonPending, ...pending];
-    await writeICQueue(trimmed);
-    res.json({ ok: true, added, total: trimmed.length });
+    const r = await doICSync(25);
+    res.json({ ok: true, ...r });
   } catch (e) {
     console.error('[ic-sync]', e.message);
     res.status(500).json({ error: e.message });
   }
 });
+
+async function autoICSync() {
+  try {
+    const r = await doICSync(25);
+    if (r.added) {
+      console.log(`[ic-auto] ${r.added} nuove foto gara aggiunte alla coda`);
+      await sendPushToAll({
+        title: '📷 Nuove foto disponibili',
+        body: `${r.added} nuove foto di gare da ciclismo.info`,
+        url: '/#/risultati',
+      });
+    }
+  } catch (e) { console.warn('[ic-auto] Errore:', e.message); }
+}
 
 app.post('/api/admin/ic/queue/:id/approve', requireAdmin, async (req, res) => {
   try {
@@ -2503,8 +2519,10 @@ init()
     setTimeout(() => {
       autoXpixSync();
       autoYoutubeSync();
+      autoICSync();
       setInterval(autoXpixSync, 6 * 60 * 60 * 1000);
       setInterval(autoYoutubeSync, 6 * 60 * 60 * 1000);
+      setInterval(autoICSync, 6 * 60 * 60 * 1000);
     }, 2 * 60 * 1000);
     app.listen(PORT, () => {
       console.log(`[server] ItaliacritAuth in ascolto su http://localhost:${PORT}`);
