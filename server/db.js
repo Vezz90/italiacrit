@@ -486,6 +486,9 @@ const queries = {
     run(`UPDATE race_photos SET caption = $1, photographer = $2 WHERE id = $3`,
         [caption, photographer, id]),
 
+  updateRacePhotoGara: (id, gara_id) =>
+    run(`UPDATE race_photos SET gara_id = $1 WHERE id = $2`, [gara_id, id]),
+
   deleteRacePhoto: (id) =>
     run(`DELETE FROM race_photos WHERE id = $1`, [id]),
 

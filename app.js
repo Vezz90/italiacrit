@@ -11146,6 +11146,13 @@ function adminEditPhoto(id) {
     <input id="ep-caption" type="text" style="display:block;width:100%;box-sizing:border-box;padding:9px 11px;border:1px solid #334155;border-radius:6px;font-size:0.875rem;background:#0f172a;color:#f1f5f9;margin-bottom:12px"/>
     <label style="display:block;font-size:0.8rem;color:#94a3b8;margin-bottom:4px">Credit fotografo</label>
     <input id="ep-photographer" type="text" style="display:block;width:100%;box-sizing:border-box;padding:9px 11px;border:1px solid #334155;border-radius:6px;font-size:0.875rem;background:#0f172a;color:#f1f5f9;margin-bottom:16px"/>
+    ${/_ES[12]_[MF]$/.test(window._currentGaraId||'') ? `
+    <label style="display:block;font-size:0.8rem;color:#94a3b8;margin-bottom:4px">Categoria esordienti</label>
+    <select id="ep-esyear" style="display:block;width:100%;box-sizing:border-box;padding:9px 11px;border:1px solid #334155;border-radius:6px;font-size:0.875rem;background:#0f172a;color:#f1f5f9;margin-bottom:16px">
+      <option value="">— non cambiare —</option>
+      <option value="ES1">Esordienti 1° Anno</option>
+      <option value="ES2">Esordienti 2° Anno</option>
+    </select>` : ''}
     <div id="ep-err" style="color:#f87171;font-size:0.8rem;margin-bottom:10px;display:none"></div>
     <button id="ep-save" style="display:block;width:100%;padding:10px;background:#2563eb;color:#fff;border:none;border-radius:6px;font-weight:700;font-size:0.9rem;cursor:pointer">Salva modifiche</button>`;
 
@@ -11162,11 +11169,18 @@ function adminEditPhoto(id) {
     const saveBtn = document.getElementById('ep-save');
     saveBtn.textContent = 'Salvataggio...';
     saveBtn.disabled = true;
+    // Cambio annata esordienti (se selezionato)
+    let newGaraId = null;
+    const esSel = document.getElementById('ep-esyear');
+    if (esSel && esSel.value) {
+      const m = (window._currentGaraId||'').match(/^(.+)_ES[12]_([MF])$/);
+      if (m) newGaraId = `${m[1]}_${esSel.value}_${m[2]}`;
+    }
     try {
       const res = await fetch(`${API_BASE}/admin/race-photos/${id}`, {
         method: 'PATCH',
         headers: { 'Content-Type': 'application/json', Authorization: `Bearer ${authToken()}` },
-        body: JSON.stringify({ caption: newCaption, photographer: newPhotographer }),
+        body: JSON.stringify({ caption: newCaption, photographer: newPhotographer, ...(newGaraId ? { gara_id: newGaraId } : {}) }),
       });
       const data = await res.json().catch(() => ({}));
       if (!res.ok) throw new Error(data.error || `HTTP ${res.status}`);
@@ -11619,8 +11633,15 @@ async function renderGara(gara_id) {
        </button>`
     : `<span style="font-size:0.8rem;color:var(--text-muted)">Accedi per caricare una foto</span>`;
   try {
-    const photosData = await fetch(`${API_BASE}/race-photos/${encodeURIComponent(primaryGaraId)}`).then(r=>r.json()).catch(()=>({photos:[]}));
-    const photos = photosData.photos || [];
+    // Per gli esordienti carica le foto di ENTRAMBE le annate (ES1 + ES2)
+    const _photoKeys = isEsordienti ? [es1GaraId, es2GaraId] : [primaryGaraId];
+    const _photoArrs = await Promise.all(_photoKeys.map(k =>
+      fetch(`${API_BASE}/race-photos/${encodeURIComponent(k)}`).then(r=>r.json()).catch(()=>({photos:[]}))
+    ));
+    const _seenPh = new Set();
+    const photos = _photoArrs.flatMap((d, ki) =>
+      (d.photos || []).map(p => ({ ...p, _gkey: _photoKeys[ki] }))
+    ).filter(p => { if (_seenPh.has(p.id)) return false; _seenPh.add(p.id); return true; });
     const featuredPhoto = photos[0] || null;
     _heroPhotoEl = featuredPhoto
       ? `<div class="gara-media-half gara-media-photo" onclick="window.openPhotoLightbox('${PHOTOS_BASE}/photos/${esc(featuredPhoto.filename)}')" style="cursor:zoom-in">
@@ -11639,6 +11660,7 @@ async function renderGara(gara_id) {
             data-caption="${esc(p.caption||'')}"
             data-photographer="${esc(p.photographer||'')}">
             <img src="${PHOTOS_BASE}/photos/${esc(p.filename)}" alt="${esc(p.caption||'Foto gara')}" loading="lazy" onclick="window.openPhotoLightbox('${PHOTOS_BASE}/photos/${esc(p.filename)}')" style="cursor:zoom-in"/>
+            ${isEsordienti && /_ES2_[MF]$/.test(p._gkey||'') ? `<div style="position:absolute;top:4px;left:36px;background:rgba(99,102,241,.92);color:#fff;font-size:.6rem;font-weight:700;padding:1px 6px;border-radius:3px;z-index:9">2° Anno</div>` : (isEsordienti && /_ES1_[MF]$/.test(p._gkey||'') ? `<div style="position:absolute;top:4px;left:36px;background:rgba(99,102,241,.92);color:#fff;font-size:.6rem;font-weight:700;padding:1px 6px;border-radius:3px;z-index:9">1° Anno</div>` : '')}
             <div class="race-gallery-caption">${[p.caption, p.photographer ? '📷 '+p.photographer : '', p.display_name].filter(Boolean).join(' — ')}</div>
             ${(() => { const uid='ph_'+String(p.id||p.filename).replace(/[^a-z0-9]/gi,'').slice(-24); const ic=isInCollection(uid); return `<button id="collect-btn-${uid}" class="collect-btn ${ic?'collect-btn--active':''}" title="${ic?'Nella tua raccolta':'Salva nella raccolta'}" style="position:absolute;top:4px;left:4px;z-index:10;width:26px;height:26px;font-size:.85rem" onclick="event.stopPropagation();window.toggleMediaCollect('${uid}','foto','${PHOTOS_BASE}/photos/${esc(p.filename)}','${esc((p.caption||'Foto gara').replace(/'/g,''))}','${esc((primaryGaraId||'').replace(/'/g,''))}')">${ic?'✓':'＋'}</button>`; })()}
             ${_isAdmin ? `<div style="position:absolute;top:4px;right:4px;display:flex;flex-direction:column;gap:3px;z-index:10">
@@ -12056,6 +12078,13 @@ async function renderGara(gara_id) {
           <button onclick="this.closest('[style*=fixed]').remove()" style="background:none;border:none;font-size:1.3rem;cursor:pointer;color:var(--text-muted)">✕</button>
         </div>
         ${!isAdmin ? `<p style="font-size:0.8rem;color:var(--text-muted);margin:0 0 14px">La foto sarà visibile dopo approvazione dell'amministratore.</p>` : ''}
+        ${/_ES[12]_[MF]$/.test(garaId) ? `
+        <label style="display:block;font-size:0.8rem;color:var(--text-secondary);margin-bottom:4px">Categoria esordienti <span style="color:var(--red-hot)">*</span></label>
+        <select id="rp-esyear" style="${inpStyle}">
+          <option value="ES1">Esordienti 1° Anno</option>
+          <option value="ES2">Esordienti 2° Anno</option>
+          <option value="both">Entrambi gli anni</option>
+        </select>` : ''}
         <input type="file" id="rp-file" accept="image/jpeg,image/png,image/webp" style="${inpStyle}"/>
         <input type="text" id="rp-caption" placeholder="Didascalia (facoltativa)" style="${inpStyle}"/>
         <input type="text" id="rp-photographer" placeholder="Credit fotografo (es. Mario Rossi)" style="${inpStyle}"/>
@@ -12249,24 +12278,38 @@ async function renderGara(gara_id) {
     const photographer = document.getElementById('rp-photographer')?.value || '';
     const errEl = document.getElementById('rp-err');
     if (!file) { errEl.textContent='Seleziona un file'; errEl.style.display='block'; return; }
+
+    // Per esordienti: applica l'annata scelta al gara_id (e gestisci "entrambi")
+    let targets = [garaId];
+    const esSel = document.getElementById('rp-esyear');
+    if (esSel) {
+      const m = garaId.match(/^(.+)_ES[12]_([MF])$/);
+      if (m) {
+        const es1 = `${m[1]}_ES1_${m[2]}`, es2 = `${m[1]}_ES2_${m[2]}`;
+        targets = esSel.value === 'both' ? [es1, es2] : esSel.value === 'ES2' ? [es2] : [es1];
+      }
+    }
+
     const btn = document.getElementById('rp-submit');
     btn.disabled = true; btn.textContent = 'Invio…';
-    const fd = new FormData();
-    // gara_id e altri campi testo PRIMA del file, così multer li ha nel filename callback
-    fd.append('gara_id', garaId);
-    fd.append('caption', caption);
-    fd.append('photographer', photographer);
-    fd.append('photo', file);
     try {
       const token = authToken();
-      const res = await fetch(`${API_BASE}/race-photos/upload`, { method:'POST', headers:{ Authorization:`Bearer ${token}` }, body:fd });
-      const text = await res.text();
-      let data;
-      try { data = JSON.parse(text); } catch { throw new Error(`Errore HTTP ${res.status}`); }
-      if (!res.ok) throw new Error(data.error || `Errore ${res.status}`);
+      let lastData = null;
+      for (const gid of targets) {
+        const fd = new FormData();
+        fd.append('gara_id', gid);
+        fd.append('caption', caption);
+        fd.append('photographer', photographer);
+        fd.append('photo', file);
+        const res = await fetch(`${API_BASE}/race-photos/upload`, { method:'POST', headers:{ Authorization:`Bearer ${token}` }, body:fd });
+        const text = await res.text();
+        let data; try { data = JSON.parse(text); } catch { throw new Error(`Errore HTTP ${res.status}`); }
+        if (!res.ok) throw new Error(data.error || `Errore ${res.status}`);
+        lastData = data;
+      }
       document.getElementById('modal-overlay')?.remove();
-      if (data.status === 'approved') {
-        showToast('✓ Foto pubblicata!');
+      if (lastData?.status === 'approved') {
+        showToast(targets.length > 1 ? '✓ Foto pubblicata per entrambi gli anni!' : '✓ Foto pubblicata!');
         renderGara(window._currentGaraId);
       } else {
         showToast('✓ Foto inviata — in attesa di approvazione', 'info');

@@ -704,8 +704,10 @@ app.post('/api/admin/race-photos/:id/reject', requireAdmin, async (req, res) => 
 
 app.patch('/api/admin/race-photos/:id', requireAdmin, async (req, res) => {
   try {
-    const { caption, photographer } = req.body;
+    const { caption, photographer, gara_id } = req.body;
     await queries.updateRacePhoto({ id: req.params.id, caption: caption || '', photographer: photographer || '' });
+    // Cambio annata/gara: aggiorna il gara_id della foto
+    if (gara_id) await queries.updateRacePhotoGara(req.params.id, gara_id);
     res.json({ ok: true });
   } catch (e) { res.status(500).json({ error: e.message }); }
 });
