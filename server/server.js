@@ -1578,12 +1578,13 @@ app.get('/api/admin/ic/queue', requireAdmin, async (req, res) => {
   catch (e) { res.status(500).json({ error: e.message }); }
 });
 
-async function doICSync(maxNew = 25) {
+async function doICSync(maxNew = 60) {
   const queue     = await readICQueue();
+  // knownUrls = già in coda (pending/approved/dismissed) OPPURE già controllate senza foto
   const knownUrls = new Set(queue.map(q => q.gara_url));
-  const candidates = await fetchItaliaciclismoCandidates(knownUrls, maxNew);
+  const { results, checkedNoPhoto } = await fetchItaliaciclismoCandidates(knownUrls, maxNew);
   let added = 0;
-  for (const c of candidates) {
+  for (const c of results) {
     const id = Date.now().toString(36) + Math.random().toString(36).slice(2, 7);
     queue.push({
       id,
@@ -1599,18 +1600,23 @@ async function doICSync(maxNew = 25) {
     });
     added++;
   }
+  // Marca le gare senza foto così non vengono riprovate ogni volta (slot liberi per le altre)
+  for (const url of (checkedNoPhoto || [])) {
+    queue.push({ id: 'np_' + Math.random().toString(36).slice(2, 9), gara_url: url, status: 'no_photo' });
+  }
+  // Conserva non-pending (approved/dismissed/no_photo) + max 200 pending recenti
   const nonPending = queue.filter(q => q.status !== 'pending');
   const pending    = queue.filter(q => q.status === 'pending')
     .sort((a, b) => (b.added_at || '').localeCompare(a.added_at || ''))
     .slice(0, 200);
   const trimmed = [...nonPending, ...pending];
   await writeICQueue(trimmed);
-  return { added, total: trimmed.length };
+  return { added, total: pending.length };
 }
 
 app.post('/api/admin/ic/sync', requireAdmin, async (req, res) => {
   try {
-    const r = await doICSync(25);
+    const r = await doICSync(60);
     res.json({ ok: true, ...r });
   } catch (e) {
     console.error('[ic-sync]', e.message);
@@ -1620,7 +1626,7 @@ app.post('/api/admin/ic/sync', requireAdmin, async (req, res) => {
 
 async function autoICSync() {
   try {
-    const r = await doICSync(25);
+    const r = await doICSync(60);
     if (r.added) {
       console.log(`[ic-auto] ${r.added} nuove foto gara aggiunte alla coda`);
       await sendPushToAll({

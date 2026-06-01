@@ -119,41 +119,44 @@ async function fetchItaliaciclismoCandidates(knownUrls, maxNew = 25) {
   }
   console.log(`[ic] ${garaUrls.size} URL gara totali`);
 
-  // 2. Filtra per anno corrente e non già in coda
+  // 2. Filtra per anno corrente e non già controllate (in coda o no_photo)
   const currentYear = new Date().getFullYear();
   const toProcess = [...garaUrls]
     .filter(u => !knownUrls.has(u) && u.includes(`_${currentYear}_`))
     .slice(0, maxNew);
   console.log(`[ic] ${toProcess.length} nuove gare da processare`);
 
-  // 3. Per ogni gara, fetch pagina e ricava la foto
+  // 3. Per ogni gara, fetch pagina e ricava la foto (8 in parallelo)
   const results = [];
-  for (const garaUrl of toProcess) {
-    try {
-      const info = parseGaraUrl(garaUrl);
-      if (!info) continue;
-      const sub    = info.categoria;
-      const html   = await fetchURL(garaUrl, 12000);
-      const photos = extractPhotos(html, sub);
-      if (photos.length) {
-        results.push({
-          gara_url:  garaUrl,
-          categoria: info.categoria,
-          date:      info.date,
-          name:      info.name,
-          photos,
-          photo_url: photos[0],
-        });
-        console.log(`[ic] ✓ ${info.date} ${info.name} — ${photos.length} foto`);
+  const checkedNoPhoto = [];   // URL controllate senza foto → il server le ricorda
+  let idx = 0;
+  async function worker() {
+    while (idx < toProcess.length) {
+      const garaUrl = toProcess[idx++];
+      try {
+        const info = parseGaraUrl(garaUrl);
+        if (!info) { checkedNoPhoto.push(garaUrl); continue; }
+        const html   = await fetchURL(garaUrl, 12000);
+        const photos = extractPhotos(html, info.categoria);
+        if (photos.length) {
+          results.push({
+            gara_url: garaUrl, categoria: info.categoria, date: info.date,
+            name: info.name, photos, photo_url: photos[0],
+          });
+          console.log(`[ic] ✓ ${info.date} ${info.name} — ${photos.length} foto`);
+        } else {
+          checkedNoPhoto.push(garaUrl);
+        }
+      } catch (e) {
+        // errore di rete: non marcare come no_photo, riprova al prossimo sync
+        console.warn(`[ic] Errore ${garaUrl}: ${e.message}`);
       }
-      await new Promise(r => setTimeout(r, 200));
-    } catch (e) {
-      console.warn(`[ic] Errore ${garaUrl}: ${e.message}`);
     }
   }
+  await Promise.all(Array.from({ length: 8 }, worker));
 
-  console.log(`[ic] ${results.length} gare con foto trovate`);
-  return results;
+  console.log(`[ic] ${results.length} con foto, ${checkedNoPhoto.length} senza foto`);
+  return { results, checkedNoPhoto };
 }
 
 module.exports = { fetchItaliaciclismoCandidates, parseGaraUrl, extractGaraUrls };
