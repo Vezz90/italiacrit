@@ -129,9 +129,9 @@ function isRecent(name) {
 // ── Recupera URL foto watermarked per un album — 2 sole chiamate API ──────────
 // 1. GET /wp/v2/product?pixy_album=[id]  → lista featured_media IDs
 // 2. GET /wp/v2/media?include=[id,id,…]  → tutti i source_url in un colpo solo
-async function fetchPhotosForAlbum(album, maxPhotos = 50) {
+async function fetchPhotosForAlbum(album, maxPhotos = 500) {
   try {
-    // Passo 1: ottieni tutti i prodotti dell'album (paginato se > 100)
+    // Passo 1: ottieni TUTTI i prodotti dell'album, scorrendo tutte le pagine
     const products = [];
     let page = 1;
     while (products.length < maxPhotos) {
@@ -141,29 +141,33 @@ async function fetchPhotosForAlbum(album, maxPhotos = 50) {
       );
       if (!Array.isArray(batch) || !batch.length) break;
       products.push(...batch);
-      if (batch.length < 100) break;
+      if (batch.length < 100) break;  // ultima pagina
       page++;
+      if (page > 20) break;           // safety: max 2000 foto
     }
     if (!products.length) return [];
 
-    // Passo 2: raccogli i featured_media IDs (salta 0/null), rispetta maxPhotos
+    // Passo 2: raccogli i featured_media IDs (salta 0/null)
     const mediaIds = products
       .map(p => p.featured_media)
       .filter(Boolean)
       .slice(0, maxPhotos);
     if (!mediaIds.length) return [];
 
-    // Passo 3: singola chiamata per recuperare tutti gli URL
-    const mediaList = await fetchURL(
-      `${XPIX_API}/media?include=${mediaIds.join(',')}&per_page=${mediaIds.length}&_fields=id,source_url`,
-      15000, true
-    );
-    if (!Array.isArray(mediaList)) return [];
+    // Passo 3: recupera gli URL — chunk da 100 (limite per_page WP)
+    const urlByMediaId = {};
+    for (let i = 0; i < mediaIds.length; i += 100) {
+      const chunk = mediaIds.slice(i, i + 100);
+      const mediaList = await fetchURL(
+        `${XPIX_API}/media?include=${chunk.join(',')}&per_page=${chunk.length}&_fields=id,source_url`,
+        15000, true
+      );
+      if (Array.isArray(mediaList)) {
+        mediaList.forEach(m => { if (m.source_url) urlByMediaId[m.id] = m.source_url; });
+      }
+    }
 
     // Mantieni l'ordine originale dei prodotti
-    const urlByMediaId = {};
-    mediaList.forEach(m => { if (m.source_url) urlByMediaId[m.id] = m.source_url; });
-
     return mediaIds
       .map(id => urlByMediaId[id])
       .filter(Boolean);

@@ -1175,7 +1175,7 @@ app.post('/api/admin/xpix/add-by-url', requireAdmin, async (req, res) => {
     const album = await fetchAlbumBySlug(url);
     if (!album) return res.status(404).json({ error: 'Album non trovato su xpix.it (slug non trovato nel taxonomy)' });
 
-    const photos = await fetchPhotosForAlbum(album, 50);
+    const photos = await fetchPhotosForAlbum(album);
     if (!photos.length) return res.status(404).json({ error: `Album trovato (${album.name}) ma nessuna foto disponibile` });
 
     const queue = await readXpixQueue();
