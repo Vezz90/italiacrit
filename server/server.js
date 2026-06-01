@@ -1675,6 +1675,48 @@ app.get('/api/ic-photos', async (req, res) => {
   } catch (e) { res.status(500).json({ error: e.message }); }
 });
 
+// Proxy immagini ciclismo.info: il sito è solo HTTP, il browser HTTPS le blocca
+// come mixed content. Scarica lato server e ri-serve via HTTPS.
+const _icImgCache = new Map(); // url → { buf, ct, ts }
+app.get('/api/ic-image', async (req, res) => {
+  try {
+    const target = req.query.url;
+    if (!target || !/^https?:\/\/[a-z]+\.ciclismo\.info\//i.test(target)) {
+      return res.status(400).send('url non valido');
+    }
+    // Cache in memoria 1h
+    const cached = _icImgCache.get(target);
+    if (cached && (Date.now() - cached.ts) < 3600000) {
+      res.set('Content-Type', cached.ct);
+      res.set('Cache-Control', 'public, max-age=86400');
+      return res.send(cached.buf);
+    }
+    const lib = target.startsWith('https') ? require('https') : require('http');
+    const u = new URL(target);
+    const proxyReq = lib.request(
+      { hostname: u.hostname, path: u.pathname + u.search, method: 'GET',
+        rejectUnauthorized: false, headers: { 'User-Agent': 'Mozilla/5.0' }, timeout: 15000 },
+      proxyRes => {
+        if (proxyRes.statusCode !== 200) { res.status(502).send('fetch fallito'); proxyRes.resume(); return; }
+        const chunks = [];
+        proxyRes.on('data', c => chunks.push(c));
+        proxyRes.on('end', () => {
+          const buf = Buffer.concat(chunks);
+          const ct = proxyRes.headers['content-type'] || 'image/jpeg';
+          _icImgCache.set(target, { buf, ct, ts: Date.now() });
+          if (_icImgCache.size > 500) _icImgCache.delete(_icImgCache.keys().next().value);
+          res.set('Content-Type', ct);
+          res.set('Cache-Control', 'public, max-age=86400');
+          res.send(buf);
+        });
+      }
+    );
+    proxyReq.on('error', () => res.status(502).send('errore proxy'));
+    proxyReq.on('timeout', () => { proxyReq.destroy(); res.status(504).send('timeout'); });
+    proxyReq.end();
+  } catch (e) { res.status(500).send(e.message); }
+});
+
 // GET foto xpix approvate (endpoint pubblico usato dal frontend)
 app.get('/api/xpix-photos', async (req, res) => {
   try {

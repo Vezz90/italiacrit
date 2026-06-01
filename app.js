@@ -15,6 +15,14 @@ const API_BASE         = IS_LOCAL ? '/api' : `${RENDER_BASE}/api`;
 const PHOTOS_BASE      = IS_LOCAL ? '' : SUPABASE_STORAGE;
 const MEDIA_BASE       = IS_LOCAL ? '' : SUPABASE_STORAGE;
 
+// ciclismo.info è solo HTTP → su HTTPS il browser blocca le immagini (mixed content).
+// Le facciamo passare dal proxy del server che le ri-serve via HTTPS.
+function icProxy(url) {
+  if (!url) return url;
+  if (/ciclismo\.info\//i.test(url)) return `${API_BASE}/ic-image?url=${encodeURIComponent(url)}`;
+  return url;
+}
+
 // ── YOUTUBE HELPER ────────────────────────────────────────────
 // Estrae l'ID video da qualsiasi formato URL YouTube:
 //   https://www.youtube.com/watch?v=ID
@@ -9449,7 +9457,7 @@ function renderICQueue() {
     }).join('');
     const allPhotos  = item.photos?.length ? item.photos : (item.photo_url ? [item.photo_url] : []);
     const photosGrid = allPhotos.map(url => `
-      <img src="${esc(url)}" data-url="${esc(url)}" data-id="${esc(item.id)}"
+      <img src="${esc(icProxy(url))}" data-url="${esc(url)}" data-id="${esc(item.id)}"
         onclick="window.icSelectPhoto('${esc(item.id)}',this)"
         style="width:80px;height:54px;object-fit:cover;border-radius:4px;cursor:pointer;border:2px solid ${url===(item.photo_url||allPhotos[0])?'#8b5cf6':'transparent'};transition:border-color .15s;flex-shrink:0"
         onerror="this.style.display='none'" />`).join('');
@@ -11458,9 +11466,9 @@ async function renderGara(gara_id) {
                      || _pm[_esBase + '_ES1_M'] || _pm[_esBase + '_ES1_F']
                      || _pm[_esBase + '_ES2_M'] || _pm[_esBase + '_ES2_F'];
       if (_extPhoto?.url) {
-        const _src = esc(_extPhoto.url);
+        const _src = esc(icProxy(_extPhoto.url));
         const _isXpix = (_extPhoto.album_slug || _extPhoto.source === 'xpix');
-        const _srcLabel = _isXpix ? 'xpix.it' : 'italiaciclismo.net';
+        const _srcLabel = _isXpix ? 'xpix.it' : 'ciclismo.info';
         // Pulsante rimozione visibile solo all'admin, per foto xpix.
         // Usa _extPhoto.gara_id (chiave reale in xpix_photos) non primaryGaraId (dalla URL)
         const _xpixKey = _extPhoto.gara_id || primaryGaraId;
@@ -11481,8 +11489,8 @@ async function renderGara(gara_id) {
           _gallery = `
             <div class="profile-media-grid" style="margin-top:12px">
               ${_allPics.map((u, idx) => `
-                <div class="profile-media-card" onclick="window.openPhotoLightbox('${esc(u)}')" style="cursor:zoom-in">
-                  <img src="${esc(u)}" alt="Foto ${idx+1}" loading="lazy" style="width:100%;height:100%;object-fit:cover"/>
+                <div class="profile-media-card" onclick="window.openPhotoLightbox('${esc(icProxy(u))}')" style="cursor:zoom-in">
+                  <img src="${esc(icProxy(u))}" alt="Foto ${idx+1}" loading="lazy" style="width:100%;height:100%;object-fit:cover"/>
                 </div>`).join('')}
             </div>
             ${_extPhoto.album_page ? `<div style="margin-top:8px;font-size:.8rem">
