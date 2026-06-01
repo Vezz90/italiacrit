@@ -11092,6 +11092,19 @@ window.adminPhotoPromote = async function(source, garaId, photoUrl) {
   } catch (e) { showToast('Errore: ' + e.message, 'error'); }
 };
 
+// Cambia annata di un video esordienti (1° / 2° / entrambi)
+window.adminVideoSetYear = async function(calId, idx) {
+  const choice = prompt('A quale annata appartiene questo video?\n\n1 = Esordienti 1° Anno\n2 = Esordienti 2° Anno\n3 = Entrambi gli anni\n\nDigita 1, 2 o 3:');
+  if (!choice) return;
+  const target = choice.trim() === '2' ? 'ES2' : choice.trim() === '3' ? 'both' : 'ES1';
+  try {
+    await apiCall(`/admin/videos/${encodeURIComponent(calId)}/${idx}/set-year`, { method: 'POST', body: { target } });
+    await refreshVideos();
+    showToast('🏅 Annata video aggiornata');
+    if (window._currentGaraId) renderGara(window._currentGaraId);
+  } catch (e) { showToast('Errore: ' + e.message, 'error'); }
+};
+
 // Promuove un video a principale (lo porta in cima)
 window.adminPromoteVideo = async function(calId, idx) {
   try {
@@ -11485,13 +11498,15 @@ async function renderGara(gara_id) {
   const _videoKeys = [
     primaryGaraId,
     gara_id,
+    es2GaraId,  // include i video del 2° anno per le gare esordienti
     _calId,
     _calIdStripped !== _calId ? _calIdStripped : null,
     primaryGaraId.replace(/_[A-Z0-9]+_[MF]$/, ''),
   ].filter(Boolean);
   const _seenVideoUrls = new Set();
+  // Traccia su quale gara_id (annata) è salvato ogni video, per la gestione admin
   const garaVideos = _videoKeys
-    .flatMap(k => _vids[k] || [])
+    .flatMap(k => (_vids[k] || []).map((v, vi) => ({ ...v, _srcKey: k, _srcIdx: vi })))
     .filter(v => { if (_seenVideoUrls.has(v.url)) return false; _seenVideoUrls.add(v.url); return true; });
   const featuredVideo = garaVideos[0] || null;
   const featuredVideoId = featuredVideo ? ytId(featuredVideo.url) : null;
@@ -11515,16 +11530,23 @@ async function renderGara(gara_id) {
     : '';
 
   // Helper: costruisce un elemento video (usato per hero e side-by-side)
+  // Etichetta annata per gli esordienti (dal gara_id su cui è salvato il video)
+  const _esYearTag = (key) => /_ES1_[MF]$/.test(key||'') ? '1° Anno' : /_ES2_[MF]$/.test(key||'') ? '2° Anno' : '';
   const _buildVideoEl = (v, idx, cls = 'gara-media-half gara-media-video') => {
     const vId = ytId(v.url);
     if (!vId) return '';
+    const _k = v._srcKey || primaryGaraId;
+    const _i = (v._srcIdx != null) ? v._srcIdx : idx;
+    const _yt = _esYearTag(_k);
     return `<div class="${cls}" onclick="window.openVideoModal('${vId}','${esc((v.title||'').replace(/'/g, "\\'"))}')">
       <img src="https://img.youtube.com/vi/${vId}/hqdefault.jpg" alt="${esc(v.title||'Video')}" loading="lazy"/>
       <div class="gara-media-play"><span>&#9658;</span></div>
       ${v.channel ? `<div class="gara-media-channel">${esc(v.channel)}</div>` : ''}
+      ${isEsordienti && _yt ? `<div style="position:absolute;bottom:6px;left:6px;background:rgba(99,102,241,.9);color:#fff;font-size:.62rem;font-weight:700;padding:2px 7px;border-radius:3px;z-index:2">${_yt}</div>` : ''}
       ${_isAdmin ? `<div style="position:absolute;top:4px;right:4px;display:flex;flex-direction:column;gap:3px;z-index:10">
-        <button onclick="event.stopPropagation();window.adminEditVideo('${esc(primaryGaraId)}',${idx})" style="${_adminBtnStyle};background:#2563eb">✏️ Modifica</button>
-        <button onclick="event.stopPropagation();window.adminDeleteVideo('${esc(primaryGaraId)}',${idx})" style="${_adminBtnStyle};background:#dc2626">🗑 Elimina</button>
+        ${isEsordienti ? `<button onclick="event.stopPropagation();window.adminVideoSetYear('${esc(_k)}',${_i})" style="${_adminBtnStyle};background:#6366f1" title="Cambia annata (1°/2°/entrambi)">🏅 Anno</button>` : ''}
+        <button onclick="event.stopPropagation();window.adminEditVideo('${esc(_k)}',${_i})" style="${_adminBtnStyle};background:#2563eb">✏️ Modifica</button>
+        <button onclick="event.stopPropagation();window.adminDeleteVideo('${esc(_k)}',${_i})" style="${_adminBtnStyle};background:#dc2626">🗑 Elimina</button>
       </div>` : ''}
       ${v.title ? `<div class="gara-video-hero-caption">${esc(v.title)}</div>` : ''}
     </div>`;
@@ -11547,21 +11569,25 @@ async function renderGara(gara_id) {
           ${extras.map((v, i) => {
             const vidId = ytId(v.url) || '';
             const thumb = vidId ? `https://img.youtube.com/vi/${vidId}/mqdefault.jpg` : '';
-            const realIdx = startIdx + i;
+            const _k = v._srcKey || primaryGaraId;
+            const _i = (v._srcIdx != null) ? v._srcIdx : (startIdx + i);
+            const _yt = _esYearTag(_k);
             return `
               <div class="gara-video-card" style="cursor:pointer;position:relative" onclick="window.openVideoModal('${vidId}','${esc((v.title||'').replace(/'/g, "\\'"))}')">
                 ${thumb ? `<div class="gara-video-thumb">
                   <img src="${thumb}" alt="${esc(v.title)}" loading="lazy"/>
                   <div class="gara-video-play">&#9658;</div>
+                  ${isEsordienti && _yt ? `<div style="position:absolute;bottom:4px;left:4px;background:rgba(99,102,241,.9);color:#fff;font-size:.6rem;font-weight:700;padding:1px 6px;border-radius:3px">${_yt}</div>` : ''}
                 </div>` : ''}
                 <div class="gara-video-info">
                   <div class="gara-video-title">${esc(v.title)}</div>
                   <div class="gara-video-meta">${esc(v.channel)}</div>
                 </div>
                 ${_isAdmin ? `<div style="position:absolute;top:4px;right:4px;display:flex;gap:3px;z-index:10">
-                  <button onclick="event.stopPropagation();window.adminPromoteVideo('${esc(primaryGaraId)}',${realIdx})" style="${_adminBtnStyle};background:#f59e0b" title="Imposta come video principale">⭐</button>
-                  <button onclick="event.stopPropagation();window.adminEditVideo('${esc(primaryGaraId)}',${realIdx})" style="${_adminBtnStyle};background:#2563eb">✏️</button>
-                  <button onclick="event.stopPropagation();window.adminDeleteVideo('${esc(primaryGaraId)}',${realIdx})" style="${_adminBtnStyle};background:#dc2626">🗑</button>
+                  <button onclick="event.stopPropagation();window.adminPromoteVideo('${esc(_k)}',${_i})" style="${_adminBtnStyle};background:#f59e0b" title="Imposta come video principale">⭐</button>
+                  ${isEsordienti ? `<button onclick="event.stopPropagation();window.adminVideoSetYear('${esc(_k)}',${_i})" style="${_adminBtnStyle};background:#6366f1" title="Cambia annata">🏅</button>` : ''}
+                  <button onclick="event.stopPropagation();window.adminEditVideo('${esc(_k)}',${_i})" style="${_adminBtnStyle};background:#2563eb">✏️</button>
+                  <button onclick="event.stopPropagation();window.adminDeleteVideo('${esc(_k)}',${_i})" style="${_adminBtnStyle};background:#dc2626">🗑</button>
                 </div>` : ''}
               </div>`;
           }).join('')}

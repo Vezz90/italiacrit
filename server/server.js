@@ -1092,6 +1092,37 @@ app.post('/api/admin/videos/:calId/:idx/promote', requireAdmin, async (req, res)
   } catch(e) { res.status(500).json({ error: e.message }); }
 });
 
+// Cambia annata di un video esordienti: target = 'ES1' | 'ES2' | 'both'
+app.post('/api/admin/videos/:calId/:idx/set-year', requireAdmin, async (req, res) => {
+  try {
+    const { calId, idx } = req.params;
+    const { target } = req.body;
+    const videos = await readVideos();
+    const list = videos[calId];
+    const i = parseInt(idx);
+    if (!list || !list[i]) return res.status(404).json({ error: 'Video non trovato' });
+    const m = calId.match(/^(.+)_ES([12])_([MF])$/);
+    if (!m) return res.status(400).json({ error: 'Non è una gara esordienti' });
+    const es1 = `${m[1]}_ES1_${m[3]}`, es2 = `${m[1]}_ES2_${m[3]}`;
+    const v = list[i];
+
+    // Rimuovi il video dalla chiave corrente
+    list.splice(i, 1);
+    if (!list.length) delete videos[calId];
+
+    const addTo = (key) => {
+      if (!videos[key]) videos[key] = [];
+      if (!videos[key].some(x => x.url === v.url)) videos[key].push(v);
+    };
+    if (target === 'both') { addTo(es1); addTo(es2); }
+    else if (target === 'ES2') addTo(es2);
+    else addTo(es1);
+
+    await writeVideos(videos);
+    res.json({ ok: true });
+  } catch(e) { res.status(500).json({ error: e.message }); }
+});
+
 app.patch('/api/admin/videos/:calId/:idx', requireAdmin, async (req, res) => {
   try {
     const { calId, idx } = req.params;
