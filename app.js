@@ -15698,7 +15698,61 @@ const REG_ROLE_FIELDS = {
   ],
 };
 
+// Widget ricerca team nel form registrazione (per ruolo team)
+function _regTeamSearchHtml() {
+  return `
+    <div class="auth-field">
+      <label class="auth-label">La tua squadra <span style="color:var(--red-hot)">*</span></label>
+      <div class="auth-input-wrap">
+        <svg class="auth-input-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.35-4.35"/></svg>
+        <input type="text" id="reg-team-search" class="auth-input" placeholder="Cerca la tua squadra…" autocomplete="off"
+          oninput="window._regTeamSearch(this.value)" />
+      </div>
+      <div id="reg-team-results" style="border:1px solid var(--border-subtle);border-top:none;border-radius:0 0 6px 6px;background:var(--bg-card);display:none;max-height:180px;overflow-y:auto;font-size:.85rem"></div>
+      <input type="hidden" id="reg-team-id" />
+      <div style="font-size:.72rem;color:var(--text-muted);padding:4px 0 0">Se non la trovi, scrivi il nome completo: verrà verificato dall'admin.</div>
+    </div>`;
+}
+
+// Widget ricerca atleta da seguire (per genitore / parente)
+function _regFollowAthleteHtml(roleLabel) {
+  return `
+    <div class="auth-field">
+      <label class="auth-label">${roleLabel} <span style="color:var(--red-hot)">*</span></label>
+      <div class="auth-input-wrap">
+        <svg class="auth-input-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.35-4.35"/></svg>
+        <input type="text" id="reg-follow-search" class="auth-input" placeholder="Cerca l'atleta per cognome…" autocomplete="off"
+          oninput="window._regFollowSearch(this.value)" />
+      </div>
+      <div id="reg-follow-results" style="border:1px solid var(--border-subtle);border-top:none;border-radius:0 0 6px 6px;background:var(--bg-card);display:none;max-height:180px;overflow-y:auto;font-size:.85rem"></div>
+      <input type="hidden" id="reg-follow-id" />
+    </div>`;
+}
+
 function _regRoleFieldsHtml(role) {
+  if (role === 'team') {
+    const fields = REG_ROLE_FIELDS.team || [];
+    return `<div id="reg-role-extra" style="display:flex;flex-direction:column;gap:0">
+      ${_regTeamSearchHtml()}
+      ${fields.map(f => {
+        const req = f.required ? 'required' : '';
+        const star = f.required ? ' <span style="color:var(--red-hot)">*</span>' : '';
+        return `<div class="auth-field"><label class="auth-label">${f.label}${star}</label><div class="auth-input-wrap"><input type="${f.type}" id="${f.id}" class="auth-input" placeholder="${f.placeholder||''}" ${req} /></div></div>`;
+      }).join('')}
+    </div>`;
+  }
+  if (role === 'genitore' || role === 'parente') {
+    const roleLabel = role === 'genitore' ? 'Tuo/a figlio/a (atleta)' : "L'atleta che segui";
+    const fields = REG_ROLE_FIELDS[role] || [];
+    return `<div id="reg-role-extra" style="display:flex;flex-direction:column;gap:0">
+      ${_regFollowAthleteHtml(roleLabel)}
+      ${fields.map(f => {
+        const req = f.required ? 'required' : '';
+        const star = f.required ? ' <span style="color:var(--red-hot)">*</span>' : '';
+        return `<div class="auth-field"><label class="auth-label">${f.label}${star}</label><div class="auth-input-wrap"><input type="${f.type}" id="${f.id}" class="auth-input" placeholder="${f.placeholder||''}" ${req} /></div></div>`;
+      }).join('')}
+    </div>`;
+  }
   if (role === 'atleta') {
     // Per gli atleti: prima cerca e collega il profilo, poi i campi aggiuntivi
     const specialOpts = SPECIALITA_OPTS.map(o => `<option value="${o}">${o||'— seleziona —'}</option>`).join('');
@@ -15900,6 +15954,63 @@ window._regSelectAtleta = function(id, label, team) {
   }
 };
 
+// Ricerca team nel form registrazione
+window._regTeamSearch = function(q) {
+  const results = document.getElementById('reg-team-results');
+  if (!results) return;
+  if (!q || q.length < 2) { results.style.display = 'none'; return; }
+  const teams = globalData?.teams || {};
+  const matches = Object.entries(teams)
+    .filter(([, t]) => (t.nome || '').toLowerCase().includes(q.toLowerCase()))
+    .slice(0, 8);
+  results.style.display = 'block';
+  results.innerHTML = (matches.length ? matches.map(([id, t]) =>
+    `<div style="padding:8px 12px;cursor:pointer;border-bottom:1px solid var(--border-subtle)"
+          onmousedown="window._regSelectTeam('${esc(id)}','${esc((t.nome||'').replace(/'/g,''))}')">
+      <strong>${esc(t.nome||id)}</strong>
+    </div>`).join('') : '') +
+    `<div style="padding:8px 12px;color:var(--text-muted);font-size:.78rem;cursor:pointer"
+          onmousedown="window._regSelectTeam('', document.getElementById('reg-team-search').value)">
+      ✏ Usa il nome scritto sopra
+    </div>`;
+};
+window._regSelectTeam = function(id, label) {
+  const search = document.getElementById('reg-team-search');
+  const hidden = document.getElementById('reg-team-id');
+  const results = document.getElementById('reg-team-results');
+  const nameInput = document.getElementById('reg-name');
+  if (results) results.style.display = 'none';
+  if (search && label) search.value = label;
+  if (hidden) hidden.value = id || '';
+  if (nameInput && label && !nameInput.value) nameInput.value = label;
+};
+
+// Ricerca atleta da seguire (genitore/parente)
+window._regFollowSearch = function(q) {
+  const results = document.getElementById('reg-follow-results');
+  if (!results) return;
+  if (!q || q.length < 2) { results.style.display = 'none'; return; }
+  const athletes = globalData?.athletes || {};
+  const matches = Object.entries(athletes)
+    .filter(([, a]) => ((a.cognome||'') + ' ' + (a.nome||'')).toLowerCase().includes(q.toLowerCase()))
+    .slice(0, 8);
+  results.style.display = 'block';
+  results.innerHTML = matches.length ? matches.map(([id, a]) =>
+    `<div style="padding:8px 12px;cursor:pointer;border-bottom:1px solid var(--border-subtle)"
+          onmousedown="window._regSelectFollow('${esc(id)}','${esc(a.cognome)} ${esc(a.nome)}')">
+      <strong>${esc(a.cognome)} ${esc(a.nome)}</strong>
+      <span style="color:var(--text-muted);font-size:.78rem;margin-left:8px">${esc(a.team_attuale||a.categoria||'')}</span>
+    </div>`).join('') : `<div style="padding:8px 12px;color:var(--text-muted);font-size:.78rem">Nessun atleta trovato con questo cognome.</div>`;
+};
+window._regSelectFollow = function(id, label) {
+  const search = document.getElementById('reg-follow-search');
+  const hidden = document.getElementById('reg-follow-id');
+  const results = document.getElementById('reg-follow-results');
+  if (results) results.style.display = 'none';
+  if (search) search.value = label;
+  if (hidden) hidden.value = id;
+};
+
 window.submitRegister = async function(e) {
   e.preventDefault();
   const display_name = document.getElementById('reg-name').value.trim();
@@ -15946,6 +16057,25 @@ window.submitRegister = async function(e) {
         team,
         birth_year: v('reg-birth'),
       }}).catch(() => {});
+    }
+
+    // Per il team: collega subito la squadra (id selezionato o nome scritto)
+    if (role === 'team') {
+      const teamId   = v('reg-team-id') || null;
+      const teamName = v('reg-team-search') || finalDisplayName;
+      await apiCall('/profile/link-team', { method: 'POST', body: {
+        team_id: teamId, team_name: teamName,
+      }}).catch(() => {});
+    }
+
+    // Per genitore/parente: collega l'atleta seguito
+    if (role === 'genitore' || role === 'parente') {
+      const followId = v('reg-follow-id') || null;
+      if (followId) {
+        await apiCall('/profile/link-family', { method: 'POST', body: {
+          linked_atleta_id: followId,
+        }}).catch(() => {});
+      }
     }
 
     // Salva i campi extra come user_details
