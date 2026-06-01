@@ -162,4 +162,12 @@ async function fetchItaliaciclismoCandidates(knownUrls, maxNew = 25) {
   return { results, checkedNoPhoto };
 }
 
-module.exports = { fetchItaliaciclismoCandidates, parseGaraUrl, extractGaraUrls };
+// ── Ricarica le foto di una singola gara dal suo URL ──────────────────────────
+async function fetchPhotosForGara(garaUrl) {
+  const info = parseGaraUrl(garaUrl);
+  if (!info) return [];
+  const html = await fetchURL(garaUrl, 12000);
+  return extractPhotos(html, info.categoria);
+}
+
+module.exports = { fetchItaliaciclismoCandidates, parseGaraUrl, extractGaraUrls, fetchPhotosForGara };

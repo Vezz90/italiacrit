@@ -1533,7 +1533,7 @@ app.delete('/api/admin/xpix/photos/:gara_id', requireAdmin, async (req, res) => 
 // ══════════════════════════════════════════════════════════════════════════════
 // ITALIACICLISMO.NET AUTO-FOTO
 // ══════════════════════════════════════════════════════════════════════════════
-const { fetchItaliaciclismoCandidates } = require('./italiaciclismo-scraper');
+const { fetchItaliaciclismoCandidates, fetchPhotosForGara: fetchICPhotosForGara } = require('./italiaciclismo-scraper');
 
 const IC_QUEUE_PATH  = path.join(__dirname, '../data/ic_queue.json');
 const IC_PHOTOS_PATH = path.join(__dirname, '../data/ic_photos.json');
@@ -1661,6 +1661,23 @@ app.post('/api/admin/ic/queue/:id/approve', requireAdmin, async (req, res) => {
     await writeICQueue(queue);
     res.json({ ok: true });
   } catch (e) { res.status(500).json({ error: e.message }); }
+});
+
+// Ricarica tutte le foto di una gara già in coda (recupera scatti aggiuntivi)
+app.post('/api/admin/ic/queue/:id/refresh-photos', requireAdmin, async (req, res) => {
+  try {
+    const queue = await readICQueue();
+    const i = queue.findIndex(q => q.id === req.params.id);
+    if (i === -1) return res.status(404).json({ error: 'Non trovato' });
+    const photos = await fetchICPhotosForGara(queue[i].gara_url);
+    queue[i].photos    = photos;
+    queue[i].photo_url = photos[0] || queue[i].photo_url;
+    await writeICQueue(queue);
+    res.json({ ok: true, photos_count: photos.length, photos });
+  } catch (e) {
+    console.error('[ic-refresh]', e.message);
+    res.status(500).json({ error: e.message });
+  }
 });
 
 app.delete('/api/admin/ic/queue/:id', requireAdmin, async (req, res) => {

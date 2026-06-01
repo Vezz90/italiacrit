@@ -9490,6 +9490,8 @@ function renderICQueue() {
       <div style="display:flex;gap:6px;flex-wrap:wrap">
         <button onclick="window.icApprove('${esc(item.id)}')"
           style="background:#16a34a;color:#fff;border:none;padding:5px 14px;border-radius:5px;cursor:pointer;font-size:.78rem;font-weight:700">✓ Pubblica foto</button>
+        <button onclick="window.icRefreshPhotos('${esc(item.id)}')"
+          style="background:transparent;border:1px solid #f59e0b;color:#f59e0b;padding:5px 12px;border-radius:5px;cursor:pointer;font-size:.78rem">🔄 Ricarica foto</button>
         <button onclick="window.icDismiss('${esc(item.id)}')"
           style="background:transparent;border:1px solid #ef4444;color:#ef4444;padding:5px 12px;border-radius:5px;cursor:pointer;font-size:.78rem">✗ Scarta</button>
       </div>
@@ -9497,6 +9499,22 @@ function renderICQueue() {
   }).join('');
   container.innerHTML = stats + rows;
 }
+
+window.icRefreshPhotos = async (id) => {
+  const block = document.getElementById('icq-' + id);
+  const btn = block?.querySelector('button[onclick*="icRefreshPhotos"]');
+  if (btn) { btn.disabled = true; btn.textContent = '⏳…'; }
+  try {
+    const r = await apiCall(`/admin/ic/queue/${id}/refresh-photos`, { method: 'POST' });
+    const item = _icQueue.find(q => q.id === id);
+    if (item) { item.photos = r.photos || []; item.photo_url = r.photos?.[0] || item.photo_url; }
+    showToast(`✓ ${r.photos_count} foto caricate`);
+    renderICQueue();
+  } catch (e) {
+    showToast('Errore: ' + e.message, 'error');
+    if (btn) { btn.disabled = false; btn.textContent = '🔄 Ricarica foto'; }
+  }
+};
 
 window.icSync = async () => {
   const btn = document.getElementById('ic-sync-btn');
