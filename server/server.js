@@ -1552,15 +1552,21 @@ app.get('/api/xpix-photos', async (req, res) => {
 // PATCH xpix-photos: aggiorna gara_id di una voce (per correggere mismatch)
 app.patch('/api/admin/xpix/photos/relink', requireAdmin, async (req, res) => {
   try {
-    let { old_gara_id, new_gara_id } = req.body;
-    if (!old_gara_id || !new_gara_id) return res.status(400).json({ error: 'old_gara_id e new_gara_id obbligatori' });
+    let { old_gara_id, new_gara_id, album_slug } = req.body;
+    if (!new_gara_id) return res.status(400).json({ error: 'new_gara_id obbligatorio' });
     // Estrai gara_id se è stato incollato un URL completo (#/gara/XXX)
     const m = String(new_gara_id).match(/#\/gara\/([^?&\s]+)/);
     if (m) new_gara_id = decodeURIComponent(m[1]);
     new_gara_id = new_gara_id.trim();
 
     const photos = await readXpixPhotos();
-    if (!photos[old_gara_id]) return res.status(404).json({ error: `Nessuna foto xpix per gara_id: ${old_gara_id}` });
+    // Trova l'entry: prima per old_gara_id, poi (fallback) per album_slug
+    let srcKey = (old_gara_id && photos[old_gara_id]) ? old_gara_id : null;
+    if (!srcKey && album_slug) {
+      srcKey = Object.keys(photos).find(k => photos[k].album_slug === album_slug);
+    }
+    if (!srcKey) return res.status(404).json({ error: `Foto xpix non trovate (gara_id: ${old_gara_id||'?'}, slug: ${album_slug||'?'})` });
+    old_gara_id = srcKey;
 
     const entry = { ...photos[old_gara_id], gara_id: new_gara_id };
 

@@ -8883,7 +8883,7 @@ function renderXpixQueue() {
               Gara: <strong>${esc(item.approved_gara_id||item.approved_gara_ids?.[0]||'—')}</strong>
             </div>
           </div>
-          <button onclick="window.xpixRelinkGara('${esc(item.approved_gara_id||item.approved_gara_ids?.[0]||'')}',this)"
+          <button onclick="window.xpixRelinkGara('${esc(item.approved_gara_id||item.approved_gara_ids?.[0]||'')}',this,'${esc(item.album_slug||'')}')"
             style="flex:0 0 auto;background:transparent;border:1px solid #6366f1;color:#6366f1;padding:4px 10px;border-radius:5px;cursor:pointer;font-size:.75rem;white-space:nowrap">
             🔗 Cambia gara
           </button>
@@ -9175,12 +9175,12 @@ window.xpixApprove = async (id) => {
 };
 
 // Rimuove la foto xpix da una gara (senza scartare l'album dalla coda)
-window.xpixRelinkGara = async (oldGaraId, btn) => {
+window.xpixRelinkGara = async (oldGaraId, btn, albumSlug) => {
   const inp = prompt(`Gara_id attuale:\n${oldGaraId||'(vuoto)'}\n\nIncolla il gara_id o l'URL della gara:`);
   if (!inp) return;
   if (btn) { btn.disabled = true; btn.textContent = '⏳ Ricarico foto…'; }
   try {
-    const r = await apiCall('/admin/xpix/photos/relink', { method: 'PATCH', body: { old_gara_id: oldGaraId, new_gara_id: inp.trim() } });
+    const r = await apiCall('/admin/xpix/photos/relink', { method: 'PATCH', body: { old_gara_id: oldGaraId, new_gara_id: inp.trim(), album_slug: albumSlug || '' } });
     showToast(`✓ Ricollegato a ${r.new_gara_id} (${r.photos_count} foto)`);
     _risPhotosMap = null; // invalida cache
     await loadXpixQueue();
