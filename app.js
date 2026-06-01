@@ -8641,17 +8641,44 @@ function _ytScore(videoTitle, race) {
 }
 
 // ── Trova le migliori gare candidate per un video ───────────────────────────
+// Per le gare esordienti, garantisce SEMPRE entrambe le opzioni ES1 ed ES2
+// nel dropdown, anche se nei risultati FCI ce n'è solo una (l'altra categoria
+// potrebbe non essere ancora stata scrapata). Restituisce array {race, score}.
+function _expandEsordientiMatches(matches) {
+  const out = [];
+  const seen = new Set();
+  for (const m of matches) {
+    const gid = m.race.gara_id || '';
+    if (!seen.has(gid)) { seen.add(gid); out.push(m); }
+    const em = gid.match(/^(.+)_ES([12])_([MF])$/);
+    if (em) {
+      const other = `${em[1]}_ES${em[2] === '1' ? '2' : '1'}_${em[3]}`;
+      if (!seen.has(other)) {
+        seen.add(other);
+        // race virtuale: stessa gara, altra annata (categoria placeholder)
+        out.push({
+          race: { ...m.race, gara_id: other,
+                  categoria: em[2] === '1' ? 'Esordienti 2° Anno' : 'Esordienti 1° Anno' },
+          score: m.score * 0.99,
+        });
+      }
+    }
+  }
+  return out;
+}
+
 function _ytFindMatches(videoTitle, maxResults = 5) {
   const races = (globalData?.resultsRaw || []);
   // Deduplica per gara_id
   const seen = new Set();
   const unique = races.filter(r => { if (seen.has(r.gara_id)) return false; seen.add(r.gara_id); return true; });
 
-  return unique
+  const matches = unique
     .map(r => ({ race: r, score: _ytScore(videoTitle, r) }))
     .filter(x => x.score > 0.12)
     .sort((a, b) => b.score - a.score)
     .slice(0, maxResults);
+  return _expandEsordientiMatches(matches);
 }
 
 // ── Stato locale della queue ──────────────────────────────────────────────────
@@ -8963,11 +8990,12 @@ function _xpixFindMatches(albumName, maxResults = 12) {
     seen.add(r.gara_id);
     return true;
   });
-  return unique
+  const matches = unique
     .map(r => ({ race: r, score: _xpixScore(albumName, r) }))
     .filter(x => x.score > 0.12)
     .sort((a, b) => b.score - a.score)
     .slice(0, maxResults);
+  return _expandEsordientiMatches(matches);
 }
 
 async function loadXpixQueue() {
@@ -9438,11 +9466,12 @@ function _icFindMatches(name, date, maxResults = 5) {
   const races = (globalData?.resultsRaw || []);
   const seen = new Set();
   const unique = races.filter(r => { if (seen.has(r.gara_id)) return false; seen.add(r.gara_id); return true; });
-  return unique
+  const matches = unique
     .map(r => ({ race: r, score: _icScore(name, date, r) }))
     .filter(x => x.score > 0.12)
     .sort((a, b) => b.score - a.score)
     .slice(0, maxResults);
+  return _expandEsordientiMatches(matches);
 }
 
 async function loadICQueue() {
