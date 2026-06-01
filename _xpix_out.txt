@@ -1,0 +1,9 @@
+product?pa_album=8964 → HTTP 200 total=23380
+  prodotti: 100
+  primo prodotto: {"id":51974,"featured_media":51975}
+  featured_media ids (primi 5): 51975,51973,51971,51969,51967
+    media 51975 → https://xpix.fsn1.your-objectstorage.com/pixy/2026/05/ciclismo-allievi_1-tappa-giro-dei-tre-comuni-acciaiolo-lorenzana-pi-2026_2026_xpix-it_cycling_allievi_042a4390-copia_watermarked.jpg
+    media 51973 → https://xpix.fsn1.your-objectstorage.com/pixy/2026/05/ciclismo-allievi_1-tappa-giro-dei-tre-comuni-acciaiolo-lorenzana-pi-2026_2026_xpix-it_cycling_allievi_042a4348-copia_watermarked.jpg
+    media 51971 → https://xpix.fsn1.your-objectstorage.com/pixy/2026/05/ciclismo-allievi_1-tappa-giro-dei-tre-comuni-acciaiolo-lorenzana-pi-2026_2026_xpix-it_cycling_allievi_042a4295-copia_watermarked.jpg
+    media 51969 → https://xpix.fsn1.your-objectstorage.com/pixy/2026/05/ciclismo-allievi_1-tappa-giro-dei-tre-comuni-acciaiolo-lorenzana-pi-2026_2026_xpix-it_cycling_allievi_042a4268-copia_watermarked.jpg
+    media 51967 → https://xpix.fsn1.your-objectstorage.com/pixy/2026/05/ciclismo-allievi_1-tappa-giro-dei-tre-comuni-acciaiolo-lorenzana-pi-2026_2026_xpix-it_cycling_allievi_042a4264-copia_watermarked.jpg
