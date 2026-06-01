@@ -8580,7 +8580,9 @@ function renderYTQueue() {
 
     const optionsHtml = matches.map(m => {
       const genLabel = m.race.genere === 'F' ? '♀ ' : m.race.genere === 'M' ? '♂ ' : '';
-      const label = `${genLabel}${m.race.nome_gara} — ${m.race.categoria||''} (${m.race.data||''}) [${Math.round(m.score*100)}%]`;
+      const esYear = /_ES1_[MF]$/.test(m.race.gara_id) ? ' · 1° Anno'
+                   : /_ES2_[MF]$/.test(m.race.gara_id) ? ' · 2° Anno' : '';
+      const label = `${genLabel}${m.race.nome_gara} — ${m.race.categoria||''}${esYear} (${m.race.data||''}) [${Math.round(m.score*100)}%]`;
       const sel   = m.race.gara_id === bestGaraId ? ' selected' : '';
       return `<option value="${esc(m.race.gara_id)}"${sel}>${esc(label)}</option>`;
     }).join('');
@@ -8809,12 +8811,10 @@ function _xpixScore(albumName, race) {
 function _xpixFindMatches(albumName, maxResults = 12) {
   const races = (globalData?.resultsRaw || []);
   const seen = new Set();
-  // Deduplicazione: per Esordienti mostra solo ES1 (canonico), non ES2 separato
+  // Deduplica per gara_id COMPLETO (ES1 ed ES2 restano opzioni distinte)
   const unique = races.filter(r => {
-    // Normalizza ES2 → ES1 per deduplicare
-    const key = (r.gara_id || '').replace(/_ES2_([MF])$/, '_ES1_$1');
-    if (seen.has(key)) return false;
-    seen.add(key);
+    if (seen.has(r.gara_id)) return false;
+    seen.add(r.gara_id);
     return true;
   });
   return unique
@@ -8930,7 +8930,9 @@ function renderXpixQueue() {
 
     const optionsHtml = matches.map(m => {
       const genLabel = m.race.genere === 'F' ? '♀ ' : m.race.genere === 'M' ? '♂ ' : '';
-      const label = `${genLabel}${m.race.nome_gara} — ${m.race.categoria||''} (${m.race.data||''}) [${Math.round(m.score*100)}%]`;
+      const esYear = /_ES1_[MF]$/.test(m.race.gara_id) ? ' · 1° Anno'
+                   : /_ES2_[MF]$/.test(m.race.gara_id) ? ' · 2° Anno' : '';
+      const label = `${genLabel}${m.race.nome_gara} — ${m.race.categoria||''}${esYear} (${m.race.data||''}) [${Math.round(m.score*100)}%]`;
       const sel   = m.race.gara_id === bestGaraId ? ' selected' : '';
       return `<option value="${esc(m.race.gara_id)}"${sel}>${esc(label)}</option>`;
     }).join('');
@@ -11402,17 +11404,28 @@ async function renderGara(gara_id) {
 
   const _shareKm    = results1[0]?.km    || '';
   const _shareMedia = results1[0]?.media || '';
-  window._shareGaraData = {
-    _id:primaryGaraId, name, date:fmtDate(data), cat:catLabel(cat), mult, tipo,
-    region:normalizeRegion(calEntry?.regione||results1[0]?.regione||''),
-    luogo:calEntry?.luogo||'', km:_shareKm, media:_shareMedia,
-    winnerTime: _calcWinnerTime(_shareKm, _shareMedia),
-    results:results1.slice(0,10).map(r=>({
-      cognome:r.cognome, nome:r.nome, team:r.team,
-      punti_effettivi:r.punti_effettivi,
-      tempo: r.posizione === 1 ? '' : (r.tempo||''),
-    })),
+  const _mkShare = (resArr, catLabelStr, gid) => {
+    const km = resArr[0]?.km || '';
+    const media = resArr[0]?.media || '';
+    return {
+      _id: gid, name, date:fmtDate(data), cat:catLabelStr, mult, tipo,
+      region:normalizeRegion(calEntry?.regione||resArr[0]?.regione||''),
+      luogo:calEntry?.luogo||'', km, media,
+      winnerTime: _calcWinnerTime(km, media),
+      results:resArr.slice(0,10).map(r=>({
+        cognome:r.cognome, nome:r.nome, team:r.team,
+        punti_effettivi:r.punti_effettivi,
+        tempo: r.posizione === 1 ? '' : (r.tempo||''),
+      })),
+    };
   };
+  if (isEsordienti) {
+    window._shareGaraData  = _mkShare(results1, 'Esordienti 1° Anno', es1GaraId);
+    window._shareGaraData2 = results2.length ? _mkShare(results2, 'Esordienti 2° Anno', es2GaraId) : null;
+  } else {
+    window._shareGaraData  = _mkShare(results1, catLabel(cat), primaryGaraId);
+    window._shareGaraData2 = null;
+  }
 
   const siRaceIntelHtml = '';
 
@@ -11433,7 +11446,8 @@ async function renderGara(gara_id) {
       </div>
     </div>
       <div style="margin-top:12px;display:flex;gap:10px;align-items:center;flex-wrap:wrap">
-        <button class="btn-share" onclick="window.triggerShareGara()"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="18" cy="5" r="3"/><circle cx="6" cy="12" r="3"/><circle cx="18" cy="19" r="3"/><line x1="8.59" y1="13.51" x2="15.42" y2="17.49"/><line x1="15.41" y1="6.51" x2="8.59" y2="10.49"/></svg> Condividi Risultati</button>
+        <button class="btn-share" onclick="window.triggerShareGara()"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="18" cy="5" r="3"/><circle cx="6" cy="12" r="3"/><circle cx="18" cy="19" r="3"/><line x1="8.59" y1="13.51" x2="15.42" y2="17.49"/><line x1="15.41" y1="6.51" x2="8.59" y2="10.49"/></svg> Condividi Risultati${isEsordienti && results2.length ? ' 1° Anno' : ''}</button>
+        ${isEsordienti && results2.length ? `<button class="btn-share" onclick="window.triggerShareGara2()"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="18" cy="5" r="3"/><circle cx="6" cy="12" r="3"/><circle cx="18" cy="19" r="3"/><line x1="8.59" y1="13.51" x2="15.42" y2="17.49"/><line x1="15.41" y1="6.51" x2="8.59" y2="10.49"/></svg> Condividi Risultati 2° Anno</button>` : ''}
         ${adminEditBtn('gara', primaryGaraId)}
       </div>
     ${racePhotosHtml}
@@ -15350,6 +15364,7 @@ window.shareOnFacebook = function() {
 
 // ── Trigger functions ──────────────────────────────────────
 window.triggerShareGara=function(){ if(window._shareGaraData) window.showShareModal('gara',window._shareGaraData); };
+window.triggerShareGara2=function(){ if(window._shareGaraData2) window.showShareModal('gara',window._shareGaraData2); };
 window.triggerShareAtleta=function(){ if(window._shareAtletaData) window.showShareModal('atleta',window._shareAtletaData); };
 window.triggerShareTeam=function(){ if(window._shareTeamData) window.showShareModal('team',window._shareTeamData); };
 
