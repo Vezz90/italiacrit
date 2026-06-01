@@ -731,24 +731,63 @@ let _lastCronSync = 0;
 let _lastScrapeTrigger = 0;
 // Triggera il workflow scrape su GitHub Actions (indipendente dal cron GitHub
 // che è inaffidabile). Richiede GH_DISPATCH_TOKEN (PAT con scope actions:write).
-async function triggerScrapeWorkflow() {
+function triggerScrapeWorkflow() {
   const token = process.env.GH_DISPATCH_TOKEN;
   const repo  = process.env.GH_REPO || 'Vezz90/italiacrit';
-  if (!token) return;
-  try {
-    const r = await fetch(`https://api.github.com/repos/${repo}/actions/workflows/scrape.yml/dispatches`, {
-      method: 'POST',
-      headers: {
-        'Authorization': `Bearer ${token}`,
-        'Accept': 'application/vnd.github+json',
-        'X-GitHub-Api-Version': '2022-11-28',
-        'User-Agent': 'italiacrit-cron',
-      },
-      body: JSON.stringify({ ref: 'main' }),
+  if (!token) { console.warn('[cron] GH_DISPATCH_TOKEN mancante — scrape non triggerato'); return; }
+  const https = require('https');
+  const body  = JSON.stringify({ ref: 'main' });
+  const req = https.request({
+    hostname: 'api.github.com',
+    path: `/repos/${repo}/actions/workflows/scrape.yml/dispatches`,
+    method: 'POST',
+    headers: {
+      'Authorization': `Bearer ${token}`,
+      'Accept': 'application/vnd.github+json',
+      'X-GitHub-Api-Version': '2022-11-28',
+      'User-Agent': 'italiacrit-cron',
+      'Content-Type': 'application/json',
+      'Content-Length': Buffer.byteLength(body),
+    },
+  }, r => {
+    let resp = '';
+    r.on('data', c => resp += c);
+    r.on('end', () => {
+      if (r.statusCode === 204) console.log('[cron] scrape workflow dispatch OK (204)');
+      else console.warn(`[cron] scrape dispatch HTTP ${r.statusCode}: ${resp.slice(0,200)}`);
     });
-    console.log('[cron] scrape workflow dispatch →', r.status);
-  } catch (e) { console.warn('[cron] dispatch scrape:', e.message); }
+  });
+  req.on('error', e => console.warn('[cron] dispatch scrape error:', e.message));
+  req.write(body);
+  req.end();
 }
+
+// Test manuale: triggera lo scrape SUBITO e riporta lo status GitHub (diagnostica token)
+app.get('/api/cron/test-scrape', async (req, res) => {
+  const token = process.env.GH_DISPATCH_TOKEN;
+  const repo  = process.env.GH_REPO || 'Vezz90/italiacrit';
+  if (!token) return res.json({ ok: false, error: 'GH_DISPATCH_TOKEN non impostato su Render' });
+  const https = require('https');
+  const body  = JSON.stringify({ ref: 'main' });
+  const ghReq = https.request({
+    hostname: 'api.github.com',
+    path: `/repos/${repo}/actions/workflows/scrape.yml/dispatches`,
+    method: 'POST',
+    headers: {
+      'Authorization': `Bearer ${token}`,
+      'Accept': 'application/vnd.github+json',
+      'X-GitHub-Api-Version': '2022-11-28',
+      'User-Agent': 'italiacrit-cron',
+      'Content-Type': 'application/json',
+      'Content-Length': Buffer.byteLength(body),
+    },
+  }, r => {
+    let resp = ''; r.on('data', c => resp += c);
+    r.on('end', () => res.json({ ok: r.statusCode === 204, status: r.statusCode, repo, response: resp.slice(0, 300) }));
+  });
+  ghReq.on('error', e => res.json({ ok: false, error: e.message }));
+  ghReq.write(body); ghReq.end();
+});
 
 app.get('/api/cron/tick', (req, res) => {
   res.json({ ok: true, ts: new Date().toISOString() });
