@@ -1169,10 +1169,19 @@ async function doYoutubeSync() {
   const fetched = await fetchAllChannels(channels);
   let added = 0;
 
+  // Tieni solo video dal 2026 in poi: anno nel titolo, oppure data di pubblicazione 2026+
+  const _isVideoRecent = (v) => {
+    const yearsInTitle = (v.title || '').match(/\b(20\d{2})\b/g);
+    if (yearsInTitle) return Math.max(...yearsInTitle.map(Number)) >= 2026;
+    const pubYear = parseInt((v.published_at || '').slice(0, 4), 10);
+    return !pubYear || pubYear >= 2026; // se non c'è anno, includi
+  };
+
   for (const [chId, videos] of Object.entries(fetched)) {
     const ch = channels.find(c => c.id === chId);
     for (const v of videos) {
       if (knownUrls.has(v.url)) continue;
+      if (!_isVideoRecent(v)) continue;
       knownUrls.add(v.url);
       const id = Date.now().toString(36) + Math.random().toString(36).slice(2, 7);
       queue.push({

@@ -43,6 +43,13 @@ const DEFAULT_CHANNELS = [
     value: 'UCQl1bzhYYXYMROIuvlNDiRQ',   // @CiclismoLive risolto
     enabled: true,
   },
+  {
+    id: 'pianetaciclismo',
+    name: 'PianetaCiclismo',
+    type: 'channel_id',
+    value: 'UCnThk3tlBKht3Lt18gL8PMA',   // @pianetaciclismo-bypianetag4399
+    enabled: true,
+  },
 ];
 
 // ── Cache locale per channel_id risolti da handle ─────────────────────────────
