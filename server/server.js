@@ -1667,6 +1667,61 @@ app.get('/api/admin/ic/queue', requireAdmin, async (req, res) => {
   catch (e) { res.status(500).json({ error: e.message }); }
 });
 
+// ── Gestione foto esterne GIÀ pubblicate (xpix + ciclismo.info) ────────────────
+// Sposta/estende/rimuove una foto da una gara all'altra, anche cross ES1/ES2.
+const _photoStore = {
+  xpix: { read: () => readXpixPhotos(), write: (o) => writeXpixPhotos(o) },
+  ic:   { read: () => readICPhotos(),   write: (o) => writeICPhotos(o) },
+};
+function _resolveStore(source) { return _photoStore[source] || _photoStore.xpix; }
+
+// COPIA/ESTENDE: copia l'entry foto da from_gara_id verso uno o più to_gara_ids
+app.post('/api/admin/photos/extend', requireAdmin, async (req, res) => {
+  try {
+    const { source, from_gara_id, to_gara_ids } = req.body;
+    const store = _resolveStore(source);
+    const photos = await store.read();
+    const src = photos[from_gara_id];
+    if (!src) return res.status(404).json({ error: `Nessuna foto per ${from_gara_id}` });
+    const targets = Array.isArray(to_gara_ids) ? to_gara_ids : [to_gara_ids];
+    let n = 0;
+    for (const gid of targets) {
+      if (!gid || gid === from_gara_id) continue;
+      photos[gid] = { ...src, gara_id: gid };
+      n++;
+    }
+    await store.write(photos);
+    res.json({ ok: true, copied: n });
+  } catch (e) { res.status(500).json({ error: e.message }); }
+});
+
+// SPOSTA: copia su to_gara_id e rimuove from_gara_id
+app.post('/api/admin/photos/move', requireAdmin, async (req, res) => {
+  try {
+    const { source, from_gara_id, to_gara_id } = req.body;
+    if (!to_gara_id) return res.status(400).json({ error: 'to_gara_id obbligatorio' });
+    const store = _resolveStore(source);
+    const photos = await store.read();
+    const src = photos[from_gara_id];
+    if (!src) return res.status(404).json({ error: `Nessuna foto per ${from_gara_id}` });
+    photos[to_gara_id] = { ...src, gara_id: to_gara_id };
+    if (to_gara_id !== from_gara_id) delete photos[from_gara_id];
+    await store.write(photos);
+    res.json({ ok: true });
+  } catch (e) { res.status(500).json({ error: e.message }); }
+});
+
+// RIMUOVE una foto esterna da una gara
+app.delete('/api/admin/photos/:source/:gara_id', requireAdmin, async (req, res) => {
+  try {
+    const store = _resolveStore(req.params.source);
+    const photos = await store.read();
+    delete photos[req.params.gara_id];
+    await store.write(photos);
+    res.json({ ok: true });
+  } catch (e) { res.status(500).json({ error: e.message }); }
+});
+
 async function doICSync(maxNew = 60) {
   const queue     = await readICQueue();
   // knownUrls = già in coda (pending/approved/dismissed) OPPURE già controllate senza foto

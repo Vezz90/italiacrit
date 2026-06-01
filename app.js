@@ -11023,6 +11023,47 @@ window.adminRemoveXpixFromRace = async function(garaId) {
   } catch (e) { showToast('Errore: ' + e.message, 'error'); }
 };
 
+// ── Gestione foto esterne già pubblicate (xpix + ciclismo.info) ──────────────
+// Estende una foto esordienti anche all'altro anno (ES1 ↔ ES2)
+window.adminPhotoExtendBoth = async function(source, garaId) {
+  const both = _esBothGaraIds(garaId);
+  const other = both.find(g => g !== garaId);
+  if (!other) { showToast('Questa gara non è esordienti', 'error'); return; }
+  if (!confirm(`Copiare questa foto anche su:\n${other}?`)) return;
+  try {
+    await apiCall('/admin/photos/extend', { method: 'POST', body: { source, from_gara_id: garaId, to_gara_ids: [other] } });
+    _risPhotosMap = null;
+    showToast('✓ Foto estesa anche all\'altro anno');
+    setTimeout(() => route(), 400);
+  } catch (e) { showToast('Errore: ' + e.message, 'error'); }
+};
+
+// Sposta la foto su un'altra gara (incolla gara_id o URL)
+window.adminPhotoMove = async function(source, garaId) {
+  const inp = prompt(`Sposta la foto da:\n${garaId}\n\nIncolla il gara_id o l'URL della gara di destinazione:`);
+  if (!inp) return;
+  let dest = inp.trim();
+  const m = dest.match(/#\/gara\/([^?&\s]+)/);
+  if (m) dest = decodeURIComponent(m[1]);
+  try {
+    await apiCall('/admin/photos/move', { method: 'POST', body: { source, from_gara_id: garaId, to_gara_id: dest } });
+    _risPhotosMap = null;
+    showToast('✓ Foto spostata su ' + dest.split('_').slice(0,3).join(' '));
+    setTimeout(() => route(), 400);
+  } catch (e) { showToast('Errore: ' + e.message, 'error'); }
+};
+
+// Rimuove la foto esterna da questa gara (xpix o ic)
+window.adminPhotoRemove = async function(source, garaId) {
+  if (!confirm('Rimuovere questa foto dalla gara?')) return;
+  try {
+    await apiCall(`/admin/photos/${source}/${encodeURIComponent(garaId)}`, { method: 'DELETE' });
+    _risPhotosMap = null;
+    showToast('Foto rimossa ✓');
+    setTimeout(() => route(), 300);
+  } catch (e) { showToast('Errore: ' + e.message, 'error'); }
+};
+
 function adminEditPhoto(id) {
   const card = document.getElementById(`gal-photo-${id}`);
   const caption      = card?.dataset.caption      || '';
@@ -11534,14 +11575,19 @@ async function renderGara(gara_id) {
         const _src = esc(icProxy(_extPhoto.url));
         const _isXpix = (_extPhoto.album_slug || _extPhoto.source === 'xpix');
         const _srcLabel = _isXpix ? 'xpix.it' : 'ciclismo.info';
-        // Pulsante rimozione visibile solo all'admin, per foto xpix.
-        // Usa _extPhoto.gara_id (chiave reale in xpix_photos) non primaryGaraId (dalla URL)
+        const _photoSource = _isXpix ? 'xpix' : 'ic';
+        // Chiave reale nella sorgente (xpix_photos / ic_photos)
         const _xpixKey = _extPhoto.gara_id || primaryGaraId;
-        const _removeBtn = (authUser()?.role === 'admin' && _isXpix)
-          ? `<button onclick="window.adminRemoveXpixFromRace('${esc(_xpixKey)}')"
-               style="position:absolute;top:6px;right:6px;background:rgba(220,38,38,.85);color:#fff;border:none;padding:3px 8px;border-radius:4px;font-size:.7rem;cursor:pointer;z-index:2">
-               🗑 Rimuovi foto
-             </button>` : '';
+        const _isEs = /_ES[12]_[MF]$/.test(_xpixKey);
+        const _removeBtn = (authUser()?.role === 'admin')
+          ? `<div style="position:absolute;top:6px;right:6px;display:flex;flex-direction:column;gap:3px;z-index:3" onclick="event.stopPropagation()">
+               ${_isEs ? `<button onclick="window.adminPhotoExtendBoth('${esc(_photoSource)}','${esc(_xpixKey)}')"
+                 style="background:rgba(22,163,74,.9);color:#fff;border:none;padding:3px 8px;border-radius:4px;font-size:.7rem;cursor:pointer;white-space:nowrap">🏅 Anche altro anno</button>` : ''}
+               <button onclick="window.adminPhotoMove('${esc(_photoSource)}','${esc(_xpixKey)}')"
+                 style="background:rgba(37,99,235,.9);color:#fff;border:none;padding:3px 8px;border-radius:4px;font-size:.7rem;cursor:pointer;white-space:nowrap">🔀 Sposta gara</button>
+               <button onclick="window.adminPhotoRemove('${esc(_photoSource)}','${esc(_xpixKey)}')"
+                 style="background:rgba(220,38,38,.9);color:#fff;border:none;padding:3px 8px;border-radius:4px;font-size:.7rem;cursor:pointer;white-space:nowrap">🗑 Rimuovi</button>
+             </div>` : '';
         _heroPhotoEl = `<div class="gara-media-half gara-media-photo" onclick="window.openPhotoLightbox('${_src}')" style="cursor:zoom-in;position:relative">
            <img id="gara-hero-img" src="${_src}" alt="Foto gara" loading="lazy"/>
            <div class="gara-photo-hint">🔍 Clicca per la foto intera</div>
