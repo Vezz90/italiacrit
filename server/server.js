@@ -1271,11 +1271,19 @@ app.post('/api/admin/xpix/queue/:id/approve', requireAdmin, async (req, res) => 
     const item   = queue[i];
     const photos = await readXpixPhotos();
 
+    // Ricarica SEMPRE tutte le foto fresche dal sito (l'item in coda potrebbe
+    // averne solo alcune o nessuna se aggiunto col sync veloce).
+    let albumPhotos = item.photos || [];
+    try {
+      const fresh = await fetchPhotosForAlbum({ id: item.album_id, slug: item.album_slug });
+      if (fresh.length) albumPhotos = fresh;
+    } catch (e) { console.warn('[xpix-approve] refresh photos:', e.message); }
+
     // Salva foto selezionata (hero) + intero array per la gallery
-    const chosenUrl = selected_photo_url || item.photo_url;
+    const chosenUrl = selected_photo_url || item.photo_url || albumPhotos[0];
     photos[gara_id] = {
       url:        chosenUrl,
-      photos:     item.photos || [chosenUrl],  // array completo per gallery
+      photos:     albumPhotos.length ? albumPhotos : [chosenUrl],
       album_name: item.album_name,
       album_slug: item.album_slug,
       album_page: item.album_page,
@@ -1284,6 +1292,8 @@ app.post('/api/admin/xpix/queue/:id/approve', requireAdmin, async (req, res) => 
       approved_at: new Date().toISOString(),
     };
     await writeXpixPhotos(photos);
+    // Aggiorna anche l'item in coda con le foto fresche
+    queue[i].photos = albumPhotos;
 
     // Accumula le gare approvate (stesso album può coprire M e F)
     if (!queue[i].approved_gara_ids) queue[i].approved_gara_ids = [];
@@ -1307,24 +1317,30 @@ app.post('/api/admin/xpix/queue/:id/approve', requireAdmin, async (req, res) => 
         );
         xpixProfile = r.rows[0];
       }
-      // 2. Salta se album già presente (e non cancellato)
-      const existing = await rawQuery(
+      const photoUrls = albumPhotos.length ? albumPhotos : [chosenUrl];
+      // 2. Trova album esistente o creane uno nuovo
+      let albumId = await rawQuery(
         `SELECT id FROM media_albums WHERE media_profile_id=$1 AND gara_id=$2 LIMIT 1`,
         [xpixProfile.id, gara_id]
-      ).then(r => r.rows[0]);
-      if (!existing) {
-        // 3. Crea album
+      ).then(r => r.rows[0]?.id);
+      if (!albumId) {
         const album = await queries.createMediaAlbum({
           media_profile_id: xpixProfile.id,
           gara_id,
           title: item.album_name || item.album_slug,
           description: '',
         });
-        // 4. Aggiungi foto (usa array completo dall'item in coda)
-        const photoUrls = item.photos?.length ? item.photos : [chosenUrl];
+        albumId = album.id;
+      }
+      // 3. Conta le foto già presenti; se mancano, sincronizza (svuota e ricarica tutte)
+      const existingCount = await rawQuery(
+        `SELECT COUNT(*)::int AS n FROM media_photos WHERE album_id=$1`, [albumId]
+      ).then(r => r.rows[0]?.n || 0);
+      if (existingCount < photoUrls.length) {
+        await rawQuery(`DELETE FROM media_photos WHERE album_id=$1`, [albumId]);
         let ord = 0;
         for (const url of photoUrls) {
-          await queries.addMediaPhoto({ album_id: album.id, filename: null, ext_url: url, caption: '', ord: ord++ });
+          await queries.addMediaPhoto({ album_id: albumId, filename: null, ext_url: url, caption: '', ord: ord++ });
         }
       }
     } catch (e2) {
