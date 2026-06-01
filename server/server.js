@@ -1077,16 +1077,24 @@ app.delete('/api/admin/videos/:calId/:idx', requireAdmin, async (req, res) => {
   } catch(e) { res.status(500).json({ error: e.message }); }
 });
 
-// Promuove un video a principale (lo porta in cima alla lista della gara)
+// Promuove un video a principale. Lo sposta nella chiave "primary_key" (quella
+// letta per prima dalla pagina) e lo mette in cima, così diventa l'hero.
 app.post('/api/admin/videos/:calId/:idx/promote', requireAdmin, async (req, res) => {
   try {
     const { calId, idx } = req.params;
+    const { primary_key } = req.body || {};
     const videos = await readVideos();
     const list = videos[calId];
     const i = parseInt(idx);
     if (!list || !list[i]) return res.status(404).json({ error: 'Video non trovato' });
     const [v] = list.splice(i, 1);
-    list.unshift(v);
+    if (!list.length) delete videos[calId];
+
+    const dest = primary_key || calId;
+    if (!videos[dest]) videos[dest] = [];
+    // rimuovi eventuale duplicato già presente nella dest
+    videos[dest] = videos[dest].filter(x => x.url !== v.url);
+    videos[dest].unshift(v);
     await writeVideos(videos);
     res.json({ ok: true });
   } catch(e) { res.status(500).json({ error: e.message }); }

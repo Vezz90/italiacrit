@@ -11105,10 +11105,11 @@ window.adminVideoSetYear = async function(calId, idx) {
   } catch (e) { showToast('Errore: ' + e.message, 'error'); }
 };
 
-// Promuove un video a principale (lo porta in cima)
-window.adminPromoteVideo = async function(calId, idx) {
+// Promuove un video a principale (lo sposta nella chiave primaria, in cima)
+window.adminPromoteVideo = async function(calId, idx, primaryKey) {
   try {
-    await apiCall(`/admin/videos/${encodeURIComponent(calId)}/${idx}/promote`, { method: 'POST' });
+    await apiCall(`/admin/videos/${encodeURIComponent(calId)}/${idx}/promote`, { method: 'POST', body: { primary_key: primaryKey } });
+    await refreshVideos();
     showToast('⭐ Video impostato come principale');
     if (window._currentGaraId) renderGara(window._currentGaraId);
   } catch (e) { showToast('Errore: ' + e.message, 'error'); }
@@ -11503,11 +11504,16 @@ async function renderGara(gara_id) {
     _calIdStripped !== _calId ? _calIdStripped : null,
     primaryGaraId.replace(/_[A-Z0-9]+_[MF]$/, ''),
   ].filter(Boolean);
-  const _seenVideoUrls = new Set();
-  // Traccia su quale gara_id (annata) è salvato ogni video, per la gestione admin
-  const garaVideos = _videoKeys
-    .flatMap(k => (_vids[k] || []).map((v, vi) => ({ ...v, _srcKey: k, _srcIdx: vi })))
-    .filter(v => { if (_seenVideoUrls.has(v.url)) return false; _seenVideoUrls.add(v.url); return true; });
+  // Raccoglie i video deduplicati per URL, tracciando TUTTE le chiavi (annate)
+  // su cui ogni video è salvato → serve per il badge "Entrambi" e per le azioni admin.
+  const _videoByUrl = new Map();
+  for (const k of _videoKeys) {
+    (_vids[k] || []).forEach((v, vi) => {
+      if (_videoByUrl.has(v.url)) { _videoByUrl.get(v.url)._keys.push(k); return; }
+      _videoByUrl.set(v.url, { ...v, _srcKey: k, _srcIdx: vi, _keys: [k] });
+    });
+  }
+  const garaVideos = [..._videoByUrl.values()];
   const featuredVideo = garaVideos[0] || null;
   const featuredVideoId = featuredVideo ? ytId(featuredVideo.url) : null;
   const extraVideos = garaVideos.slice(1);
@@ -11530,19 +11536,27 @@ async function renderGara(gara_id) {
     : '';
 
   // Helper: costruisce un elemento video (usato per hero e side-by-side)
-  // Etichetta annata per gli esordienti (dal gara_id su cui è salvato il video)
-  const _esYearTag = (key) => /_ES1_[MF]$/.test(key||'') ? '1° Anno' : /_ES2_[MF]$/.test(key||'') ? '2° Anno' : '';
+  // Etichetta annata: "Entrambi" se il video è su ES1 ed ES2, altrimenti la singola
+  const _esYearOf = (v) => {
+    const keys = v._keys || [v._srcKey];
+    const has1 = keys.some(k => /_ES1_[MF]$/.test(k||''));
+    const has2 = keys.some(k => /_ES2_[MF]$/.test(k||''));
+    if (has1 && has2) return 'Entrambi gli anni';
+    if (has2) return '2° Anno';
+    if (has1) return '1° Anno';
+    return '';
+  };
   const _buildVideoEl = (v, idx, cls = 'gara-media-half gara-media-video') => {
     const vId = ytId(v.url);
     if (!vId) return '';
     const _k = v._srcKey || primaryGaraId;
     const _i = (v._srcIdx != null) ? v._srcIdx : idx;
-    const _yt = _esYearTag(_k);
+    const _yt = _esYearOf(v);
     return `<div class="${cls}" onclick="window.openVideoModal('${vId}','${esc((v.title||'').replace(/'/g, "\\'"))}')">
       <img src="https://img.youtube.com/vi/${vId}/hqdefault.jpg" alt="${esc(v.title||'Video')}" loading="lazy"/>
       <div class="gara-media-play"><span>&#9658;</span></div>
+      ${isEsordienti && _yt ? `<div style="position:absolute;top:6px;left:6px;background:rgba(99,102,241,.92);color:#fff;font-size:.62rem;font-weight:700;padding:2px 7px;border-radius:3px;z-index:3">${_yt}</div>` : ''}
       ${v.channel ? `<div class="gara-media-channel">${esc(v.channel)}</div>` : ''}
-      ${isEsordienti && _yt ? `<div style="position:absolute;bottom:6px;left:6px;background:rgba(99,102,241,.9);color:#fff;font-size:.62rem;font-weight:700;padding:2px 7px;border-radius:3px;z-index:2">${_yt}</div>` : ''}
       ${_isAdmin ? `<div style="position:absolute;top:4px;right:4px;display:flex;flex-direction:column;gap:3px;z-index:10">
         ${isEsordienti ? `<button onclick="event.stopPropagation();window.adminVideoSetYear('${esc(_k)}',${_i})" style="${_adminBtnStyle};background:#6366f1" title="Cambia annata (1°/2°/entrambi)">🏅 Anno</button>` : ''}
         <button onclick="event.stopPropagation();window.adminEditVideo('${esc(_k)}',${_i})" style="${_adminBtnStyle};background:#2563eb">✏️ Modifica</button>
@@ -11571,7 +11585,7 @@ async function renderGara(gara_id) {
             const thumb = vidId ? `https://img.youtube.com/vi/${vidId}/mqdefault.jpg` : '';
             const _k = v._srcKey || primaryGaraId;
             const _i = (v._srcIdx != null) ? v._srcIdx : (startIdx + i);
-            const _yt = _esYearTag(_k);
+            const _yt = _esYearOf(v);
             return `
               <div class="gara-video-card" style="cursor:pointer;position:relative" onclick="window.openVideoModal('${vidId}','${esc((v.title||'').replace(/'/g, "\\'"))}')">
                 ${thumb ? `<div class="gara-video-thumb">
@@ -11584,7 +11598,7 @@ async function renderGara(gara_id) {
                   <div class="gara-video-meta">${esc(v.channel)}</div>
                 </div>
                 ${_isAdmin ? `<div style="position:absolute;top:4px;right:4px;display:flex;gap:3px;z-index:10">
-                  <button onclick="event.stopPropagation();window.adminPromoteVideo('${esc(_k)}',${_i})" style="${_adminBtnStyle};background:#f59e0b" title="Imposta come video principale">⭐</button>
+                  <button onclick="event.stopPropagation();window.adminPromoteVideo('${esc(_k)}',${_i},'${esc(primaryGaraId)}')" style="${_adminBtnStyle};background:#f59e0b" title="Imposta come video principale">⭐</button>
                   ${isEsordienti ? `<button onclick="event.stopPropagation();window.adminVideoSetYear('${esc(_k)}',${_i})" style="${_adminBtnStyle};background:#6366f1" title="Cambia annata">🏅</button>` : ''}
                   <button onclick="event.stopPropagation();window.adminEditVideo('${esc(_k)}',${_i})" style="${_adminBtnStyle};background:#2563eb">✏️</button>
                   <button onclick="event.stopPropagation();window.adminDeleteVideo('${esc(_k)}',${_i})" style="${_adminBtnStyle};background:#dc2626">🗑</button>
