@@ -1552,14 +1552,72 @@ app.get('/api/xpix-photos', async (req, res) => {
 // PATCH xpix-photos: aggiorna gara_id di una voce (per correggere mismatch)
 app.patch('/api/admin/xpix/photos/relink', requireAdmin, async (req, res) => {
   try {
-    const { old_gara_id, new_gara_id } = req.body;
+    let { old_gara_id, new_gara_id } = req.body;
     if (!old_gara_id || !new_gara_id) return res.status(400).json({ error: 'old_gara_id e new_gara_id obbligatori' });
+    // Estrai gara_id se è stato incollato un URL completo (#/gara/XXX)
+    const m = String(new_gara_id).match(/#\/gara\/([^?&\s]+)/);
+    if (m) new_gara_id = decodeURIComponent(m[1]);
+    new_gara_id = new_gara_id.trim();
+
     const photos = await readXpixPhotos();
     if (!photos[old_gara_id]) return res.status(404).json({ error: `Nessuna foto xpix per gara_id: ${old_gara_id}` });
-    photos[new_gara_id] = { ...photos[old_gara_id], gara_id: new_gara_id };
-    delete photos[old_gara_id];
+
+    const entry = { ...photos[old_gara_id], gara_id: new_gara_id };
+
+    // Ricarica tutte le foto fresche dal sito (l'entry vecchia poteva averne 1 sola)
+    let albumPhotos = entry.photos || [];
+    if (entry.album_slug) {
+      try {
+        const albInfo = await fetchAlbumBySlug(entry.album_slug);
+        if (albInfo) {
+          const fresh = await fetchPhotosForAlbum(albInfo);
+          if (fresh.length) albumPhotos = fresh;
+        }
+      } catch (e) { console.warn('[relink] refresh:', e.message); }
+    }
+    entry.photos = albumPhotos;
+    entry.url    = entry.url || albumPhotos[0];
+
+    if (new_gara_id !== old_gara_id) delete photos[old_gara_id];
+    photos[new_gara_id] = entry;
     await writeXpixPhotos(photos);
-    res.json({ ok: true, new_gara_id });
+
+    // Sincronizza il media_album per la nuova gara
+    try {
+      let xpixProfile = await rawQuery(
+        `SELECT * FROM media_profiles WHERE user_id IS NULL AND display_name = 'xpix.it' LIMIT 1`
+      ).then(r => r.rows[0]);
+      if (!xpixProfile) {
+        const r = await rawQuery(
+          `INSERT INTO media_profiles (user_id, display_name, bio, website, instagram, status)
+           VALUES (NULL, 'xpix.it', 'Fotografia ciclismo agonistico italiano', 'https://www.xpix.it', 'xpix.it', 'active') RETURNING *`
+        );
+        xpixProfile = r.rows[0];
+      }
+      // Rimuovi eventuale media_album della vecchia gara
+      if (new_gara_id !== old_gara_id) {
+        await rawQuery(`DELETE FROM media_albums WHERE media_profile_id=$1 AND gara_id=$2`, [xpixProfile.id, old_gara_id]).catch(()=>{});
+      }
+      let albumId = await rawQuery(
+        `SELECT id FROM media_albums WHERE media_profile_id=$1 AND gara_id=$2 LIMIT 1`,
+        [xpixProfile.id, new_gara_id]
+      ).then(r => r.rows[0]?.id);
+      if (!albumId) {
+        const album = await queries.createMediaAlbum({
+          media_profile_id: xpixProfile.id, gara_id: new_gara_id,
+          title: entry.album_name || entry.album_slug, description: '',
+        });
+        albumId = album.id;
+      }
+      // Svuota e ricarica tutte le foto
+      await rawQuery(`DELETE FROM media_photos WHERE album_id=$1`, [albumId]);
+      let ord = 0;
+      for (const url of albumPhotos) {
+        await queries.addMediaPhoto({ album_id: albumId, filename: null, ext_url: url, caption: '', ord: ord++ });
+      }
+    } catch (e2) { console.warn('[relink] media_album:', e2.message); }
+
+    res.json({ ok: true, new_gara_id, photos_count: albumPhotos.length });
   } catch (e) { res.status(500).json({ error: e.message }); }
 });
 

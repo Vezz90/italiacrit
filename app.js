@@ -9176,12 +9176,12 @@ window.xpixApprove = async (id) => {
 
 // Rimuove la foto xpix da una gara (senza scartare l'album dalla coda)
 window.xpixRelinkGara = async (oldGaraId, btn) => {
-  const newGaraId = prompt(`Gara_id attuale:\n${oldGaraId||'(vuoto)'}\n\nInserisci il nuovo gara_id corretto:`);
-  if (!newGaraId || newGaraId === oldGaraId) return;
-  if (btn) { btn.disabled = true; btn.textContent = '⏳…'; }
+  const inp = prompt(`Gara_id attuale:\n${oldGaraId||'(vuoto)'}\n\nIncolla il gara_id o l'URL della gara:`);
+  if (!inp) return;
+  if (btn) { btn.disabled = true; btn.textContent = '⏳ Ricarico foto…'; }
   try {
-    await apiCall('/admin/xpix/photos/relink', { method: 'PATCH', body: { old_gara_id: oldGaraId, new_gara_id: newGaraId.trim() } });
-    showToast(`✓ Ricollegato a ${newGaraId}`);
+    const r = await apiCall('/admin/xpix/photos/relink', { method: 'PATCH', body: { old_gara_id: oldGaraId, new_gara_id: inp.trim() } });
+    showToast(`✓ Ricollegato a ${r.new_gara_id} (${r.photos_count} foto)`);
     _risPhotosMap = null; // invalida cache
     await loadXpixQueue();
   } catch (e) {
