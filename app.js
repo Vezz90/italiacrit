@@ -8741,6 +8741,11 @@ function renderYTQueue() {
             style="width:100%;box-sizing:border-box;padding:5px 8px;border:1px solid var(--border);border-radius:5px;background:var(--bg-primary);color:var(--text-primary);font-size:.78rem" />
           <div id="ytq-sr-${esc(item.id)}" style="background:var(--bg-card);border:1px solid var(--border);border-radius:5px;max-height:160px;overflow-y:auto;margin-top:2px"></div>
         </div>
+        <!-- Opzione esordienti: vale per entrambi gli anni -->
+        <label id="ytq-both-${esc(item.id)}" style="display:${/_ES[12]_[MF]$/.test(bestGaraId)?'flex':'none'};align-items:center;gap:6px;font-size:.76rem;color:var(--text-secondary);margin-bottom:6px;cursor:pointer">
+          <input type="checkbox" id="ytq-both-cb-${esc(item.id)}" style="cursor:pointer" />
+          🏅 Vale per <strong>entrambi gli anni</strong> (1° + 2°)
+        </label>
         <!-- Azioni -->
         <div style="display:flex;gap:6px;flex-wrap:wrap">
           <button onclick="window.ytApprove('${esc(item.id)}')"
@@ -8784,7 +8789,17 @@ window.ytSetGara = (id, garaId) => {
     return;
   }
   _ytItemGaraMap[id] = garaId;
+  // Mostra il checkbox "entrambi gli anni" solo se la gara è esordienti
+  const both = document.getElementById('ytq-both-' + id);
+  if (both) both.style.display = /_ES[12]_[MF]$/.test(garaId) ? 'flex' : 'none';
 };
+
+// Dato un gara_id ES1/ES2, restituisce [ES1, ES2] della stessa gara
+function _esBothGaraIds(garaId) {
+  const m = garaId.match(/^(.+)_ES([12])_([MF])$/);
+  if (!m) return [garaId];
+  return [`${m[1]}_ES1_${m[3]}`, `${m[1]}_ES2_${m[3]}`];
+}
 
 // ── Cerca gara per nome (ricerca live) ───────────────────────────────────────
 window.ytSearchGara = (id, q) => {
@@ -8841,10 +8856,13 @@ window.ytApprove = async (id) => {
   if (!garaId || garaId === '__search__') { showToast('Seleziona prima una gara', 'error'); return; }
   const item = _ytQueue.find(q => q.id === id);
   if (!item) return;
+  // Se esordienti e checkbox "entrambi gli anni" attivo → pubblica su ES1+ES2
+  const bothCb = document.getElementById('ytq-both-cb-' + id);
+  const gara_ids = (bothCb && bothCb.checked) ? _esBothGaraIds(garaId) : [garaId];
   try {
     await apiCall(`/admin/youtube/queue/${id}/approve`, {
       method: 'POST',
-      body: { gara_id: garaId, title: item.title, channel: item.channel_name },
+      body: { gara_ids, title: item.title, channel: item.channel_name },
     });
     document.getElementById('ytq-' + id)?.remove();
     item.status = 'approved';
@@ -9103,6 +9121,10 @@ function renderXpixQueue() {
           style="width:100%;box-sizing:border-box;padding:5px 8px;border:1px solid var(--border);border-radius:5px;background:var(--bg-primary);color:var(--text-primary);font-size:.78rem" />
         <div id="xpixq-sr-${esc(item.id)}" style="background:var(--bg-card);border:1px solid var(--border);border-radius:5px;max-height:160px;overflow-y:auto;margin-top:2px"></div>
       </div>
+      <label id="xpixq-both-${esc(item.id)}" style="display:${/_ES[12]_[MF]$/.test(bestGaraId)?'flex':'none'};align-items:center;gap:6px;font-size:.76rem;color:var(--text-secondary);margin-bottom:6px;cursor:pointer">
+        <input type="checkbox" id="xpixq-both-cb-${esc(item.id)}" style="cursor:pointer" />
+        🏅 Pubblica per <strong>entrambi gli anni</strong> (1° + 2°)
+      </label>
       <div style="display:flex;gap:6px;flex-wrap:wrap">
         <button onclick="window.xpixApprove('${esc(item.id)}')"
           style="background:#16a34a;color:#fff;border:none;padding:5px 14px;border-radius:5px;cursor:pointer;font-size:.78rem;font-weight:700">
@@ -9213,6 +9235,10 @@ window.xpixSelectPhoto = (id, imgEl) => {
   _xpixItemPhotoMap[id] = imgEl.dataset.url;
 };
 
+function _xpixToggleBoth(id, garaId) {
+  const both = document.getElementById('xpixq-both-' + id);
+  if (both) both.style.display = /_ES[12]_[MF]$/.test(garaId || '') ? 'flex' : 'none';
+}
 window.xpixSetGara = (id, garaId) => {
   if (garaId === '__search__') {
     const sr = document.getElementById('xpixq-search-' + id);
@@ -9220,6 +9246,7 @@ window.xpixSetGara = (id, garaId) => {
     return;
   }
   _xpixItemGaraMap[id] = garaId;
+  _xpixToggleBoth(id, garaId);
 };
 
 window.xpixSearchGara = (id, q) => {
@@ -9263,6 +9290,7 @@ window.xpixPickGara = (id, garaId) => {
     }
     sel.value = garaId;
   }
+  _xpixToggleBoth(id, garaId);
 };
 
 window.xpixApprove = async (id) => {
@@ -9273,14 +9301,19 @@ window.xpixApprove = async (id) => {
   const item = _xpixQueue.find(q => q.id === id);
   const selectedPhotoUrl = _xpixItemPhotoMap[id] || item?.photo_url;
   if (!selectedPhotoUrl) { showToast('Nessuna foto selezionata', 'error'); return; }
+  // Esordienti + checkbox "entrambi gli anni" → pubblica su ES1 ed ES2
+  const bothCb = document.getElementById('xpixq-both-cb-' + id);
+  const targets = (bothCb && bothCb.checked) ? _esBothGaraIds(garaId) : [garaId];
   try {
-    await apiCall(`/admin/xpix/queue/${id}/approve`, {
-      method: 'POST',
-      body: { gara_id: garaId, selected_photo_url: selectedPhotoUrl },
-    });
+    for (const gid of targets) {
+      await apiCall(`/admin/xpix/queue/${id}/approve`, {
+        method: 'POST',
+        body: { gara_id: gid, selected_photo_url: selectedPhotoUrl },
+      });
+    }
     if (item) {
       if (!item._approvedFor) item._approvedFor = [];
-      item._approvedFor.push(garaId);
+      targets.forEach(g => item._approvedFor.push(g));
       item.status = 'approved';
     }
     _risPhotosMap = null;
@@ -9300,7 +9333,7 @@ window.xpixApprove = async (id) => {
       const sel = block.querySelector('select');
       if (sel) sel.value = '';
     }
-    showToast('✓ Foto pubblicata per ' + garaId.split('_').slice(0,4).join(' '));
+    showToast(targets.length > 1 ? '✓ Foto pubblicata per entrambi gli anni' : '✓ Foto pubblicata per ' + garaId.split('_').slice(0,4).join(' '));
   } catch (e) { showToast('Errore: ' + e.message, 'error'); }
 };
 
@@ -9487,6 +9520,10 @@ function renderICQueue() {
           style="width:100%;box-sizing:border-box;padding:5px 8px;border:1px solid var(--border);border-radius:5px;background:var(--bg-primary);color:var(--text-primary);font-size:.78rem" />
         <div id="icq-sr-${esc(item.id)}" style="background:var(--bg-card);border:1px solid var(--border);border-radius:5px;max-height:160px;overflow-y:auto;margin-top:2px"></div>
       </div>
+      <label id="icq-both-${esc(item.id)}" style="display:${/_ES[12]_[MF]$/.test(bestGaraId)?'flex':'none'};align-items:center;gap:6px;font-size:.76rem;color:var(--text-secondary);margin-bottom:6px;cursor:pointer">
+        <input type="checkbox" id="icq-both-cb-${esc(item.id)}" style="cursor:pointer" />
+        🏅 Pubblica per <strong>entrambi gli anni</strong> (1° + 2°)
+      </label>
       <div style="display:flex;gap:6px;flex-wrap:wrap">
         <button onclick="window.icApprove('${esc(item.id)}')"
           style="background:#16a34a;color:#fff;border:none;padding:5px 14px;border-radius:5px;cursor:pointer;font-size:.78rem;font-weight:700">✓ Pubblica foto</button>
@@ -9538,9 +9575,14 @@ window.icSelectPhoto = (id, imgEl) => {
   imgEl.style.borderColor = '#8b5cf6';
   _icItemPhotoMap[id] = imgEl.dataset.url;
 };
+function _icToggleBoth(id, garaId) {
+  const both = document.getElementById('icq-both-' + id);
+  if (both) both.style.display = /_ES[12]_[MF]$/.test(garaId || '') ? 'flex' : 'none';
+}
 window.icSetGara = (id, garaId) => {
   if (garaId === '__search__') { const sr = document.getElementById('icq-search-'+id); if(sr) sr.style.display='block'; return; }
   _icItemGaraMap[id] = garaId;
+  _icToggleBoth(id, garaId);
 };
 window.icSearchGara = (id, q) => {
   const el = document.getElementById('icq-sr-'+id); if (!el) return;
@@ -9567,6 +9609,7 @@ window.icPickGara = (id, garaId) => {
     }
     sel.value = garaId;
   }
+  _icToggleBoth(id, garaId);
 };
 window.icApprove = async (id) => {
   const garaId = _icItemGaraMap[id] || document.querySelector(`#icq-${id} select`)?.value || '';
@@ -9574,12 +9617,16 @@ window.icApprove = async (id) => {
   const item = _icQueue.find(q=>q.id===id);
   const selectedPhotoUrl = _icItemPhotoMap[id] || item?.photo_url;
   if (!selectedPhotoUrl) { showToast('Nessuna foto selezionata','error'); return; }
+  const bothCb = document.getElementById('icq-both-cb-' + id);
+  const targets = (bothCb && bothCb.checked) ? _esBothGaraIds(garaId) : [garaId];
   try {
-    await apiCall(`/admin/ic/queue/${id}/approve`, { method:'POST', body:{ gara_id:garaId, selected_photo_url:selectedPhotoUrl } });
+    for (const gid of targets) {
+      await apiCall(`/admin/ic/queue/${id}/approve`, { method:'POST', body:{ gara_id:gid, selected_photo_url:selectedPhotoUrl } });
+    }
     document.getElementById('icq-'+id)?.remove();
     const it = _icQueue.find(q=>q.id===id); if(it) it.status='approved';
     _risPhotosMap = null;
-    showToast('✓ Foto pubblicata!');
+    showToast(targets.length > 1 ? '✓ Foto pubblicata per entrambi gli anni' : '✓ Foto pubblicata!');
   } catch(e) { showToast('Errore: '+e.message,'error'); }
 };
 window.icDismiss = async (id) => {

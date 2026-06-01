@@ -1234,8 +1234,10 @@ app.get('/api/admin/youtube/queue', requireAdmin, async (req, res) => {
 // POST approva: assegna video a una gara e lo pubblica
 app.post('/api/admin/youtube/queue/:id/approve', requireAdmin, async (req, res) => {
   try {
-    const { gara_id, title, channel } = req.body;
-    if (!gara_id) return res.status(400).json({ error: 'gara_id obbligatorio' });
+    const { gara_id, gara_ids, title, channel } = req.body;
+    // Supporta sia gara_id singolo che gara_ids array (per pubblicare su ES1+ES2 insieme)
+    const targets = Array.isArray(gara_ids) && gara_ids.length ? gara_ids : (gara_id ? [gara_id] : []);
+    if (!targets.length) return res.status(400).json({ error: 'gara_id obbligatorio' });
 
     const queue = await readYTQueue();
     const i = queue.findIndex(q => q.id === req.params.id);
@@ -1243,24 +1245,26 @@ app.post('/api/admin/youtube/queue/:id/approve', requireAdmin, async (req, res) 
 
     const item   = queue[i];
     const videos = await readVideos();
-    if (!videos[gara_id]) videos[gara_id] = [];
-
-    if (!videos[gara_id].some(v => v.url === item.url)) {
-      videos[gara_id].unshift({
-        url:          item.url,
-        title:        title   || item.title,
-        description:  '',
-        channel:      channel || item.channel_name || '',
-        published_at: item.published_at || new Date().toISOString().slice(0, 10),
-      });
-      await writeVideos(videos);
+    for (const gid of targets) {
+      if (!videos[gid]) videos[gid] = [];
+      if (!videos[gid].some(v => v.url === item.url)) {
+        videos[gid].unshift({
+          url:          item.url,
+          title:        title   || item.title,
+          description:  '',
+          channel:      channel || item.channel_name || '',
+          published_at: item.published_at || new Date().toISOString().slice(0, 10),
+        });
+      }
     }
+    await writeVideos(videos);
 
-    queue[i].status           = 'approved';
-    queue[i].approved_gara_id = gara_id;
+    queue[i].status            = 'approved';
+    queue[i].approved_gara_id  = targets[0];
+    queue[i].approved_gara_ids = targets;
     await writeYTQueue(queue);
 
-    res.json({ ok: true });
+    res.json({ ok: true, targets });
   } catch (e) { res.status(500).json({ error: e.message }); }
 });
 
