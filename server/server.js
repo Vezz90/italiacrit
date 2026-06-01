@@ -1704,19 +1704,45 @@ app.post('/api/admin/photos/extend', requireAdmin, async (req, res) => {
   } catch (e) { res.status(500).json({ error: e.message }); }
 });
 
-// SPOSTA: copia su to_gara_id e rimuove from_gara_id
+// SPOSTA: copia su to_gara_id e rimuove from_gara_id.
+// Cerca la sorgente con fallback ES1↔ES2 e, se non specificata, in entrambe le sorgenti.
 app.post('/api/admin/photos/move', requireAdmin, async (req, res) => {
   try {
-    const { source, from_gara_id, to_gara_id } = req.body;
+    let { source, from_gara_id, to_gara_id } = req.body;
     if (!to_gara_id) return res.status(400).json({ error: 'to_gara_id obbligatorio' });
-    const store = _resolveStore(source);
-    const photos = await store.read();
-    const src = photos[from_gara_id];
-    if (!src) return res.status(404).json({ error: `Nessuna foto per ${from_gara_id}` });
-    photos[to_gara_id] = { ...src, gara_id: to_gara_id };
-    if (to_gara_id !== from_gara_id) delete photos[from_gara_id];
-    await store.write(photos);
-    res.json({ ok: true });
+
+    // Candidati chiave origine (compresa la versione ES alternata)
+    const altEs = from_gara_id.replace(/_ES([12])_([MF])$/, (_,n,g)=>`_ES${n==='1'?'2':'1'}_${g}`);
+    const keyCands = [from_gara_id, altEs];
+    // Sorgenti da provare: quella indicata, poi l'altra come fallback
+    const srcOrder = source === 'ic' ? ['ic','xpix'] : ['xpix','ic'];
+
+    let foundStore = null, foundKey = null, foundPhotos = null;
+    for (const s of srcOrder) {
+      const store = _resolveStore(s);
+      const photos = await store.read();
+      const k = keyCands.find(kk => photos[kk]);
+      if (k) { foundStore = store; foundKey = k; foundPhotos = photos; source = s; break; }
+    }
+    if (!foundStore) return res.status(404).json({ error: `Foto non trovata (cercata in xpix e ic per ${from_gara_id})` });
+
+    foundPhotos[to_gara_id] = { ...foundPhotos[foundKey], gara_id: to_gara_id };
+    if (to_gara_id !== foundKey) delete foundPhotos[foundKey];
+    await foundStore.write(foundPhotos);
+    res.json({ ok: true, source, moved_from: foundKey, to: to_gara_id });
+  } catch (e) { res.status(500).json({ error: e.message }); }
+});
+
+// DIAGNOSI: cerca una foto per frammento di gara_id in tutte le sorgenti
+app.get('/api/admin/photos/find', requireAdmin, async (req, res) => {
+  try {
+    const q = (req.query.q || '').toUpperCase();
+    const out = {};
+    for (const s of ['xpix','ic']) {
+      const photos = await _resolveStore(s).read();
+      out[s] = Object.keys(photos).filter(k => k.toUpperCase().includes(q));
+    }
+    res.json(out);
   } catch (e) { res.status(500).json({ error: e.message }); }
 });
 
