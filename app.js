@@ -10278,36 +10278,27 @@ function buildProfileMedia(risultati, photosMap, videos, opts = {}) {
   const seenVG = new Set();
 
   for (const r of sorted) {
-    // Foto: ricerca esatta → altra annata ES (gara unica) → base senza categoria
-    const photo = _photos[r.gara_id]
-      || (/_ES[12]_[MF]$/.test(r.gara_id||'') ? _photos[r.gara_id.replace(/_ES([12])_([MF])$/, (_,n,g)=>`_ES${n==='1'?'2':'1'}_${g}`)] : null)
-      || (() => {
-        const base = r.gara_id ? r.gara_id.replace(/_[A-Z0-9]+_[MF]$/, '') : '';
-        return base && base !== r.gara_id ? _photos[base] : null;
-      })();
+    // Foto: ricerca esatta sulla SUA annata, poi fallback senza suffisso categoria.
+    // NIENTE fallback all'altra annata ES: se la foto è solo sul 1° anno non deve
+    // apparire al 2° (per "entrambi" l'admin la salva su entrambe le chiavi).
+    const photo = _photos[r.gara_id] || (() => {
+      const base = r.gara_id ? r.gara_id.replace(/_[A-Z0-9]+_[MF]$/, '') : '';
+      return base && base !== r.gara_id ? _photos[base] : null;
+    })();
 
     // Categoria estratta dal gara_id corrente (es. "JUN_M") — usata per il guard sul fallback video
     const _catSuffix = (r.gara_id && r.gara_id.match(/_([A-Z0-9]+_[MF])$/) || [])[1] || null;
 
-    // Cerca video: prima chiave esatta, poi varianti con la stessa categoria
+    // Cerca video: prima chiave esatta sulla SUA annata, poi base senza categoria.
+    // NIENTE fallback all'altra annata ES (per "entrambi" si salva su entrambe le chiavi).
     let videoArr = _vids[r.gara_id] || [];
-    // Esordienti: la gara è UNICA, quindi un video vale per entrambe le annate.
-    // Se non trovo video sulla mia annata, cerco sull'altra (ES1↔ES2) della stessa gara.
-    if (!videoArr.length && /_ES[12]_[MF]$/.test(r.gara_id || '')) {
-      const altEs = r.gara_id.replace(/_ES([12])_([MF])$/, (_,n,g)=>`_ES${n==='1'?'2':'1'}_${g}`);
-      if (_vids[altEs]?.length) videoArr = _vids[altEs];
-    }
     if (!videoArr.length) {
-      // Cerca chiavi che iniziano con la base del gara_id (es. senza _JUN_M)
-      // Guard: accetta solo video della stessa categoria per evitare cross-category leak
       const baseKey = r.gara_id ? r.gara_id.replace(/_[A-Z0-9]+_[MF]$/, '') : '';
       for (const [k, v] of Object.entries(_vids)) {
         if (k.startsWith(baseKey) && v.length) {
-          // Per esordienti accetta entrambe le annate (gara unica); per le altre
-          // categorie mantieni il guard per evitare cross-category leak
+          // Guard: accetta solo video della stessa categoria per evitare cross-category leak
           const kSuffix = (k.match(/_([A-Z0-9]+_[MF])$/) || [])[1] || null;
-          const _bothEs = /^ES[12]_[MF]$/.test(_catSuffix||'') && /^ES[12]_[MF]$/.test(kSuffix||'');
-          if (_catSuffix && kSuffix && kSuffix !== _catSuffix && !_bothEs) continue;
+          if (_catSuffix && kSuffix && kSuffix !== _catSuffix) continue;
           videoArr = v; break;
         }
       }
@@ -10996,15 +10987,12 @@ async function renderTeam(team_id) {
     <div class="team-performers-list" style="margin-bottom:28px">${topPerfHtml}</div>
 
     ${buildProfileMedia(
-      globalData.resultsRaw.filter(r => {
-        if (r.team_id !== team_id || !r.posizione || !r.data) return false;
-        const code = getRankingFileCode(r) || r.categoria;
-        if (code === teamViewCat) return true;
-        // Esordienti: includi anche l'altra annata (gara unica → media condivisi)
-        if (/^ES[12]_[MF]$/.test(teamViewCat) && /^ES[12]_[MF]$/.test(code||'')
-            && code.slice(3) === teamViewCat.slice(3)) return true;
-        return false;
-      }),
+      globalData.resultsRaw.filter(r =>
+        r.team_id === team_id &&
+        r.posizione &&
+        r.data &&
+        (getRankingFileCode(r) || r.categoria) === teamViewCat
+      ),
       teamPhotosMap,
       globalData.videos,
       { showAthleteName: true }
