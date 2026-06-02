@@ -11870,7 +11870,12 @@ async function renderGara(gara_id) {
       loaded = true;
       try {
         const d = await fetch(`${API_BASE}/media/gara/${encodeURIComponent(primaryGaraId)}`).then(r => r.json());
-        const albums = d.albums || [];
+        // Escludi gli album del profilo "xpix.it" / "ciclismo.info" di sistema:
+        // quelle foto sono già mostrate nella galleria hero qui sopra (evita doppione).
+        const albums = (d.albums || []).filter(a => {
+          const n = (a.photographer_name || a.title || '').toLowerCase();
+          return !n.includes('xpix') && !n.includes('ciclismo.info') && !n.includes('italiaciclismo');
+        });
         if (!albums.length) return;
 
         // Carica TUTTE le foto di tutti gli album in parallelo (lazy: solo quando la sezione è visibile)
