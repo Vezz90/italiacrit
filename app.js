@@ -11653,10 +11653,13 @@ async function renderGara(gara_id) {
       (d.photos || []).map(p => ({ ...p, _gkey: _photoKeys[ki] }))
     ).filter(p => { if (_seenPh.has(p.id)) return false; _seenPh.add(p.id); return true; });
     const featuredPhoto = photos[0] || null;
+    const _heroCredit = [featuredPhoto?.caption, featuredPhoto?.photographer ? '📷 ' + featuredPhoto.photographer : '', featuredPhoto?.display_name]
+      .filter(Boolean).join(' — ');
     _heroPhotoEl = featuredPhoto
       ? `<div class="gara-media-half gara-media-photo" onclick="window.openPhotoLightbox('${PHOTOS_BASE}/photos/${esc(featuredPhoto.filename)}')" style="cursor:zoom-in">
            <img id="gara-hero-img" src="${PHOTOS_BASE}/photos/${esc(featuredPhoto.filename)}" alt="${esc(featuredPhoto.caption||'Foto gara')}" loading="lazy"/>
            <div class="gara-photo-hint">🔍 Clicca per la foto intera</div>
+           ${_heroCredit ? `<div style="position:absolute;bottom:0;left:0;right:0;background:linear-gradient(transparent,rgba(0,0,0,.75));color:#fff;font-size:0.7rem;padding:14px 10px 6px;line-height:1.3">${esc(_heroCredit)}</div>` : ''}
            ${_isAdmin ? `<div style="position:absolute;top:4px;right:4px;display:flex;flex-direction:column;gap:3px;z-index:10">
              <button onclick="event.stopPropagation();window.adminEditPhoto(${featuredPhoto.id})" style="${_adminBtnStyle};background:#2563eb">✏️ Modifica</button>
              <button onclick="event.stopPropagation();window.adminDeletePhoto(${featuredPhoto.id})" style="${_adminBtnStyle};background:#dc2626">🗑 Elimina</button>
