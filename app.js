@@ -4152,21 +4152,24 @@ function buildWeeklyNarrative(filtered, resultsRaw, catCode) {
     .sort((a, b) => a.gain - b.gain).slice(0, 1);
   for (const m of risers) {
     const pos = m.gain === 1 ? 'una posizione' : `${m.gain} posizioni`;
-    // Evidenzia se è entrato/è nei primi posti
-    const where = m.rankAfter <= 10 ? ` ed entra nei primi 10` : '';
+    // "entra nei primi 10/15" solo se PRIMA era fuori da quella soglia
+    let where = '';
+    if (m.rankAfter <= 10 && m.rankBefore > 10) where = ` ed entra nei primi 10`;
+    else if (m.rankAfter <= 15 && m.rankBefore > 15) where = ` ed entra nei primi 15`;
     lines.push(`${m.entry.cognome} guadagna ${pos} e sale ${m.rankAfter}°${where}`);
   }
   for (const m of fallers)
     lines.push(`${m.entry.cognome} perde ${Math.abs(m.gain)} posizion${Math.abs(m.gain)===1?'e':'i'} e scende al ${m.rankAfter}°`);
 
-  // 3. Nuovi entrati in top-15 nell'ultima settimana: curRank ≤ 15, prevRank assente o > 15
+  // 3. Nuovi entrati in top-15: usa lo stesso trend della tabella (entry.trend).
+  // Deve essere SALITO ed essere ora ≤15 venendo da una posizione > 15.
+  const _riserIds = new Set(risers.map(m => m.entry.atleta_id));
   const newEntries = [];
   for (const entry of filtered) {
     if (entry.pos > 15) continue;
-    const curRank  = _curRankMap[entry.atleta_id];
-    const prevRank = _prevRankMap[entry.atleta_id];
-    const racedLastWeek = _allRaw.some(r => r.atleta_id === entry.atleta_id && r.data >= cutWeek);
-    if (racedLastWeek && curRank != null && curRank <= 15 && (prevRank == null || prevRank > 15)) {
+    if (_riserIds.has(entry.atleta_id)) continue; // già citato tra i risers
+    const t = entry.trend;
+    if (typeof t === 'number' && t >= 1 && (entry.pos + t) > 15) {
       newEntries.push(entry);
     }
   }
