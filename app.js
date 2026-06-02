@@ -4236,14 +4236,23 @@ function buildTeamWeeklyNarrative(teamRanking, resultsRaw, catCode) {
   if (l3 && gap13 !== null && gap13 <= 40)
     lines.push(`Top-3 in ${gap13} pt: ${esc(l3.team_nome)} (3°, ${l3.punti} pt) ancora pienamente in corsa`);
 
-  // 2. Weekly movers (from trend field)
-  const risers  = teamRanking.slice(0, 20).filter(t => (t.trend || 0) >= 2)
-    .sort((a, b) => (b.trend || 0) - (a.trend || 0)).slice(0, 3);
-  const fallers = teamRanking.slice(0, 15).filter(t => (t.trend || 0) <= -2)
-    .sort((a, b) => (a.trend || 0) - (b.trend || 0)).slice(0, 2);
+  // 2. Movers — pesati per posizione: chi si muove nelle posizioni alte conta di più
+  const _teamScore = t => {
+    const g = t.trend || 0;
+    const w = t.pos <= 5 ? 3 : t.pos <= 10 ? 2.2 : t.pos <= 15 ? 1.6 : t.pos <= 25 ? 1 : 0.6;
+    return g * w;
+  };
+  const risers  = teamRanking.filter(t => (t.trend || 0) >= 1 && t.pos <= 30)
+    .sort((a, b) => _teamScore(b) - _teamScore(a)).slice(0, 3);
+  const fallers = teamRanking.filter(t => (t.trend || 0) <= -2 && (t.pos - t.trend) <= 20)
+    .sort((a, b) => (a.trend || 0) - (b.trend || 0)).slice(0, 1);
   for (const t of risers) {
     const n = t.trend === 1 ? 'una posizione' : `${t.trend} posizioni`;
-    lines.push(`↑ ${esc(t.team_nome)} guadagna ${n} e sale ${t.pos}°`);
+    const before = t.pos + t.trend;
+    let where = '';
+    if (t.pos <= 10 && before > 10) where = ` ed entra nei primi 10`;
+    else if (t.pos <= 15 && before > 15) where = ` ed entra nei primi 15`;
+    lines.push(`↑ ${esc(t.team_nome)} guadagna ${n} e sale ${t.pos}°${where}`);
   }
   for (const t of fallers) {
     const n = Math.abs(t.trend) === 1 ? 'una posizione' : `${Math.abs(t.trend)} posizioni`;
