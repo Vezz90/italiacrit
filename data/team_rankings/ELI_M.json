@@ -26,25 +26,25 @@
   {
     "team_id": "BELTRAMI_TSA_TRE_COLLI",
     "team_nome": "BELTRAMI TSA TRE COLLI",
-    "punti": 427,
+    "punti": 463,
     "vittorie": 3,
     "p1": 3,
     "p2": 4,
     "p3": 4,
-    "pout": 21,
+    "pout": 23,
     "n_atleti": 8,
     "pos": 3
   },
   {
     "team_id": "GENERAL_STORE_ESSEGIBI_F_LLI_CURIA",
     "team_nome": "GENERAL STORE -ESSEGIBI-F.LLI CURIA",
-    "punti": 372,
-    "vittorie": 3,
-    "p1": 3,
+    "punti": 432,
+    "vittorie": 4,
+    "p1": 4,
     "p2": 2,
     "p3": 3,
-    "pout": 16,
-    "n_atleti": 10,
+    "pout": 17,
+    "n_atleti": 11,
     "pos": 4
   },
   {
@@ -108,6 +108,18 @@
     "pos": 9
   },
   {
+    "team_id": "MBH_BANK_CSB_TELECOM_FORT",
+    "team_nome": "MBH BANK CSB TELECOM FORT",
+    "punti": 189,
+    "vittorie": 2,
+    "p1": 2,
+    "p2": 0,
+    "p3": 1,
+    "pout": 7,
+    "n_atleti": 8,
+    "pos": 10
+  },
+  {
     "team_id": "U_C_TREVIGIANI_ENERGIAPURA_MARCHIOL",
     "team_nome": "U.C TREVIGIANI ENERGIAPURA MARCHIOL",
     "punti": 179,
@@ -117,7 +129,7 @@
     "p3": 4,
     "pout": 9,
     "n_atleti": 5,
-    "pos": 10
+    "pos": 11
   },
   {
     "team_id": "MG_K_VIS_COSTRUZIONI_E_AMBIENTE",
@@ -129,19 +141,19 @@
     "p3": 1,
     "pout": 7,
     "n_atleti": 9,
-    "pos": 11
+    "pos": 12
   },
   {
-    "team_id": "MBH_BANK_CSB_TELECOM_FORT",
-    "team_nome": "MBH BANK CSB TELECOM FORT",
-    "punti": 171,
-    "vittorie": 2,
-    "p1": 2,
-    "p2": 0,
-    "p3": 1,
-    "pout": 4,
-    "n_atleti": 7,
-    "pos": 12
+    "team_id": "SOLUTION_TECH_NIPPO_RALI",
+    "team_nome": "SOLUTION TECH NIPPO RALI",
+    "punti": 165,
+    "vittorie": 1,
+    "p1": 1,
+    "p2": 2,
+    "p3": 0,
+    "pout": 3,
+    "n_atleti": 5,
+    "pos": 13
   },
   {
     "team_id": "CICLISTICA_ROSTESE",
@@ -153,7 +165,7 @@
     "p3": 3,
     "pout": 8,
     "n_atleti": 4,
-    "pos": 13
+    "pos": 14
   },
   {
     "team_id": "MULTICAR_GRUPPO_AMARU",
@@ -165,7 +177,7 @@
     "p3": 2,
     "pout": 2,
     "n_atleti": 3,
-    "pos": 14
+    "pos": 15
   },
   {
     "team_id": "BAHRAIN_VICTORIOUS_DEVELOPMENT_TEAM",
@@ -177,7 +189,7 @@
     "p3": 1,
     "pout": 3,
     "n_atleti": 6,
-    "pos": 15
+    "pos": 16
   },
   {
     "team_id": "VPM_MORETTI_SCS",
@@ -189,7 +201,7 @@
     "p3": 1,
     "pout": 13,
     "n_atleti": 9,
-    "pos": 16
+    "pos": 17
   },
   {
     "team_id": "GALLINA_LUCCHINI_ECOTEK",
@@ -201,7 +213,7 @@
     "p3": 1,
     "pout": 12,
     "n_atleti": 6,
-    "pos": 17
+    "pos": 18
   },
   {
     "team_id": "RED_BULL_BORA_HANSGROHE_ROOKIES",
@@ -213,19 +225,19 @@
     "p3": 0,
     "pout": 2,
     "n_atleti": 3,
-    "pos": 18
+    "pos": 19
   },
   {
-    "team_id": "SOLUTION_TECH_NIPPO_RALI",
-    "team_nome": "SOLUTION TECH NIPPO RALI",
-    "punti": 111,
+    "team_id": "BARDIANI_CSF_7_SABER",
+    "team_nome": "BARDIANI-CSF 7 SABER",
+    "punti": 105,
     "vittorie": 1,
     "p1": 1,
-    "p2": 1,
-    "p3": 0,
+    "p2": 0,
+    "p3": 1,
     "pout": 2,
-    "n_atleti": 3,
-    "pos": 19
+    "n_atleti": 4,
+    "pos": 20
   },
   {
     "team_id": "V_C_MENDRISIO",
@@ -237,7 +249,7 @@
     "p3": 0,
     "pout": 5,
     "n_atleti": 5,
-    "pos": 20
+    "pos": 21
   },
   {
     "team_id": "CAMPANA_IMBALLAGGI_MORBIATO_TRENTINO",
@@ -249,7 +261,7 @@
     "p3": 3,
     "pout": 9,
     "n_atleti": 4,
-    "pos": 21
+    "pos": 22
   },
   {
     "team_id": "PC_BAIX_EBRE_TORTOSA",
@@ -261,7 +273,7 @@
     "p3": 1,
     "pout": 5,
     "n_atleti": 3,
-    "pos": 22
+    "pos": 23
   },
   {
     "team_id": "ASD_SWATT_CLUB",
@@ -273,18 +285,6 @@
     "p3": 0,
     "pout": 3,
     "n_atleti": 4,
-    "pos": 23
-  },
-  {
-    "team_id": "BARDIANI_CSF_7_SABER",
-    "team_nome": "BARDIANI-CSF 7 SABER",
-    "punti": 75,
-    "vittorie": 1,
-    "p1": 1,
-    "p2": 0,
-    "p3": 0,
-    "pout": 2,
-    "n_atleti": 3,
     "pos": 24
   },
   {
