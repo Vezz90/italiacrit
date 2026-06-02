@@ -7488,9 +7488,10 @@ window.adminNav = async function(section) {
           <h1 class="admin-page-title">🖼️ Tutte le foto</h1>
           <p class="admin-page-sub">Archivio completo foto approvate — caricate dagli utenti, xpix.it e italiaciclismo.net.</p>
         </div>
-        <div style="display:flex;gap:8px;flex-wrap:wrap;margin-bottom:20px">
+        <div style="display:flex;gap:8px;flex-wrap:wrap;margin-bottom:20px;align-items:center">
           <button id="foto-tutti-tab-up"   onclick="adminFotoTuttiTab('uploaded')"   style="padding:7px 16px;border-radius:6px;border:1px solid var(--accent);background:var(--accent);color:#fff;font-weight:700;cursor:pointer;font-size:.82rem">📤 Caricate</button>
           <button id="foto-tutti-tab-xpix" onclick="adminFotoTuttiTab('xpix')"      style="padding:7px 16px;border-radius:6px;border:1px solid var(--border);background:transparent;color:var(--text-secondary);cursor:pointer;font-size:.82rem">📸 xpix.it</button>
+          <button onclick="window.adminFixCaptions()" style="margin-left:auto;padding:7px 14px;border-radius:6px;border:1px solid #f59e0b;background:transparent;color:#f59e0b;cursor:pointer;font-size:.8rem;font-weight:600" title="Ricalcola le didascalie col vincitore corretto di ogni gara/annata">🔧 Correggi didascalie</button>
         </div>
         <div id="foto-tutti-body"><div class="admin-loading">Caricamento…</div></div>`;
       window._adminFotoTuttiCache = {};
@@ -9933,6 +9934,14 @@ window.adminSubmitAddVideo = async () => {
 };
 
 
+window.adminFixCaptions = async function() {
+  if (!confirm('Ricalcolare le didascalie di tutte le foto col vincitore corretto di ogni gara/annata?')) return;
+  try {
+    const r = await apiCall('/admin/race-photos/fix-captions', { method: 'POST' });
+    showToast(`✓ ${r.fixed} didascalie corrette su ${r.total} foto`);
+  } catch (e) { showToast('Errore: ' + e.message, 'error'); }
+};
+
 async function loadApprovedRacePhotos() {
   const container = document.getElementById('admin-photos-approved');
   if (!container) return;
@@ -12094,15 +12103,26 @@ async function renderGara(gara_id) {
       </div>`;
     document.body.appendChild(overlay);
 
-    // Auto-compila la caption con vincitore, società e nome gara
-    const gd = window._shareGaraData;
-    if (gd) {
-      const winner = gd.results?.[0];
-      const autoCaption = winner
-        ? `${winner.cognome} ${winner.nome} - ${winner.team} | ${gd.name}`
-        : gd.name || '';
-      document.getElementById('rp-caption').value = autoCaption;
-    }
+    // Auto-compila la caption col vincitore della categoria selezionata
+    const _capInput = document.getElementById('rp-caption');
+    const _esSel = document.getElementById('rp-esyear');
+    const _fillCaption = () => {
+      // Determina il gara_id effettivo in base alla scelta annata
+      let targetGid = garaId;
+      if (_esSel && _esSel.value && _esSel.value !== 'both') {
+        const m = garaId.match(/^(.+)_ES[12]_([MF])$/);
+        if (m) targetGid = `${m[1]}_${_esSel.value}_${m[2]}`;
+      }
+      const winner = (globalData?.resultsRaw || [])
+        .filter(r => r.gara_id === targetGid)
+        .sort((a,b) => (a.posizione||99) - (b.posizione||99))[0];
+      const gname = winner?.nome_gara || window._shareGaraData?.name || '';
+      _capInput.value = winner
+        ? `${winner.cognome} ${winner.nome} - ${winner.team} | ${gname}`
+        : gname;
+    };
+    _fillCaption();
+    if (_esSel) _esSel.addEventListener('change', _fillCaption);
   };
 
   // ── AGGIUNGI VIDEO ──────────────────────────────────────────────────

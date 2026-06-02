@@ -722,6 +722,35 @@ app.delete('/api/admin/race-photos/:id', requireAdmin, async (req, res) => {
   } catch (e) { res.status(500).json({ error: e.message }); }
 });
 
+// Ricalcola le didascalie delle race_photos col vincitore della LORO annata/gara.
+// Aggiorna solo le caption nel formato auto "COGNOME Nome - Team | Gara".
+app.post('/api/admin/race-photos/fix-captions', requireAdmin, async (req, res) => {
+  try {
+    const results = readDataJson('results_raw.json') || [];
+    // mappa gara_id → vincitore (posizione minima)
+    const winnerByGara = {};
+    for (const r of results) {
+      if (!r.gara_id || !r.posizione) continue;
+      const cur = winnerByGara[r.gara_id];
+      if (!cur || r.posizione < cur.posizione) winnerByGara[r.gara_id] = r;
+    }
+    const photos = await queries.getAllApprovedRacePhotos();
+    let fixed = 0;
+    for (const p of photos) {
+      const w = winnerByGara[p.gara_id];
+      if (!w) continue;
+      const expected = `${w.cognome} ${w.nome} - ${w.team} | ${w.nome_gara || ''}`.trim();
+      // Aggiorna solo se la caption sembra auto-generata (contiene " | ") o è diversa dall'attesa
+      const looksAuto = !p.caption || / \| /.test(p.caption || '');
+      if (looksAuto && p.caption !== expected) {
+        await queries.updateRacePhoto({ id: p.id, caption: expected, photographer: p.photographer || '' });
+        fixed++;
+      }
+    }
+    res.json({ ok: true, fixed, total: photos.length });
+  } catch (e) { res.status(500).json({ error: e.message }); }
+});
+
 // ── Health ────────────────────────────────────────────────────────────────────
 
 app.get('/api/health', (req, res) => res.json({ ok: true, ts: new Date().toISOString() }));
