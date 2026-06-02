@@ -2,12 +2,12 @@
   {
     "team_id": "TEAM_VANGI_TOMMASINI_IL_PIRATA",
     "team_nome": "TEAM VANGI TOMMASINI IL PIRATA",
-    "punti": 847,
+    "punti": 855,
     "vittorie": 11,
     "p1": 11,
     "p2": 11,
     "p3": 9,
-    "pout": 31,
+    "pout": 32,
     "n_atleti": 12,
     "pos": 1
   },
@@ -110,14 +110,26 @@
   {
     "team_id": "IND_FORNITURE_MORO_C_G_CAPITAL",
     "team_nome": "IND. FORNITURE MORO-C&G CAPITAL",
-    "punti": 297,
+    "punti": 299,
     "vittorie": 5,
     "p1": 5,
     "p2": 3,
     "p3": 4,
-    "pout": 22,
+    "pout": 23,
     "n_atleti": 9,
     "pos": 10
+  },
+  {
+    "team_id": "CPS_PROFESSIONAL_TEAM",
+    "team_nome": "CPS PROFESSIONAL TEAM",
+    "punti": 293,
+    "vittorie": 4,
+    "p1": 4,
+    "p2": 3,
+    "p3": 6,
+    "pout": 22,
+    "n_atleti": 11,
+    "pos": 11
   },
   {
     "team_id": "BUSTESE_OLONIA_A_S_D",
@@ -129,7 +141,7 @@
     "p3": 2,
     "pout": 24,
     "n_atleti": 9,
-    "pos": 11
+    "pos": 12
   },
   {
     "team_id": "ACCADEMIA_CICLISTICA",
@@ -141,19 +153,19 @@
     "p3": 2,
     "pout": 10,
     "n_atleti": 4,
-    "pos": 12
+    "pos": 13
   },
   {
-    "team_id": "CPS_PROFESSIONAL_TEAM",
-    "team_nome": "CPS PROFESSIONAL TEAM",
-    "punti": 279,
-    "vittorie": 4,
-    "p1": 4,
-    "p2": 3,
+    "team_id": "POLISPORTIVA_MONSUMMANESE",
+    "team_nome": "POLISPORTIVA MONSUMMANESE",
+    "punti": 242,
+    "vittorie": 5,
+    "p1": 5,
+    "p2": 2,
     "p3": 5,
-    "pout": 20,
-    "n_atleti": 11,
-    "pos": 13
+    "pout": 18,
+    "n_atleti": 10,
+    "pos": 14
   },
   {
     "team_id": "TEAM_CORATTI",
@@ -165,18 +177,6 @@
     "p3": 1,
     "pout": 11,
     "n_atleti": 5,
-    "pos": 14
-  },
-  {
-    "team_id": "POLISPORTIVA_MONSUMMANESE",
-    "team_nome": "POLISPORTIVA MONSUMMANESE",
-    "punti": 237,
-    "vittorie": 5,
-    "p1": 5,
-    "p2": 2,
-    "p3": 5,
-    "pout": 17,
-    "n_atleti": 10,
     "pos": 15
   },
   {
@@ -576,6 +576,18 @@
     "pos": 48
   },
   {
+    "team_id": "SS_AQUILA",
+    "team_nome": "SS AQUILA",
+    "punti": 47,
+    "vittorie": 0,
+    "p1": 0,
+    "p2": 0,
+    "p3": 1,
+    "pout": 7,
+    "n_atleti": 3,
+    "pos": 49
+  },
+  {
     "team_id": "SIDERMEC_SLP",
     "team_nome": "SIDERMEC - SLP",
     "punti": 46,
@@ -585,7 +597,7 @@
     "p3": 0,
     "pout": 10,
     "n_atleti": 5,
-    "pos": 49
+    "pos": 50
   },
   {
     "team_id": "VINI_FANTINI_TRALFO",
@@ -597,19 +609,19 @@
     "p3": 0,
     "pout": 4,
     "n_atleti": 3,
-    "pos": 50
+    "pos": 51
   },
   {
-    "team_id": "SS_AQUILA",
-    "team_nome": "SS AQUILA",
-    "punti": 43,
+    "team_id": "VELEKA_TEAM",
+    "team_nome": "VELEKA TEAM",
+    "punti": 42,
     "vittorie": 0,
     "p1": 0,
-    "p2": 0,
+    "p2": 1,
     "p3": 1,
-    "pout": 6,
-    "n_atleti": 2,
-    "pos": 51
+    "pout": 3,
+    "n_atleti": 5,
+    "pos": 52
   },
   {
     "team_id": "ITALIA_NUOVA_BOLOGNA",
@@ -621,7 +633,7 @@
     "p3": 0,
     "pout": 10,
     "n_atleti": 4,
-    "pos": 52
+    "pos": 53
   },
   {
     "team_id": "VIGNA_FIORITA_BORGO_MOLINO",
@@ -633,7 +645,19 @@
     "p3": 0,
     "pout": 6,
     "n_atleti": 2,
-    "pos": 53
+    "pos": 54
+  },
+  {
+    "team_id": "MASTROMARCO_FC_NIBALI",
+    "team_nome": "MASTROMARCO FC NIBALI",
+    "punti": 39,
+    "vittorie": 1,
+    "p1": 1,
+    "p2": 1,
+    "p3": 0,
+    "pout": 3,
+    "n_atleti": 2,
+    "pos": 55
   },
   {
     "team_id": "POOL_BIKE_SERRAMANNA",
@@ -645,7 +669,7 @@
     "p3": 1,
     "pout": 4,
     "n_atleti": 1,
-    "pos": 54
+    "pos": 56
   },
   {
     "team_id": "TEAM_BELVEDERE",
@@ -657,7 +681,7 @@
     "p3": 2,
     "pout": 3,
     "n_atleti": 2,
-    "pos": 55
+    "pos": 57
   },
   {
     "team_id": "RKC_ROMAN_KREUZIGER",
@@ -669,7 +693,7 @@
     "p3": 0,
     "pout": 1,
     "n_atleti": 1,
-    "pos": 56
+    "pos": 58
   },
   {
     "team_id": "GOTTARDO_GIOCHI_CANEVA",
@@ -681,7 +705,7 @@
     "p3": 0,
     "pout": 5,
     "n_atleti": 2,
-    "pos": 57
+    "pos": 59
   },
   {
     "team_id": "SVIZZERA",
@@ -693,7 +717,7 @@
     "p3": 0,
     "pout": 0,
     "n_atleti": 1,
-    "pos": 58
+    "pos": 60
   },
   {
     "team_id": "TRIS_STAMPI_FIOR_DI_GRANO",
@@ -705,7 +729,7 @@
     "p3": 1,
     "pout": 5,
     "n_atleti": 4,
-    "pos": 59
+    "pos": 61
   },
   {
     "team_id": "REPUBBLICA_CECA",
@@ -717,7 +741,7 @@
     "p3": 0,
     "pout": 2,
     "n_atleti": 2,
-    "pos": 60
+    "pos": 62
   },
   {
     "team_id": "BIESSE_CARRERA_PREMAC",
@@ -729,7 +753,7 @@
     "p3": 0,
     "pout": 5,
     "n_atleti": 3,
-    "pos": 61
+    "pos": 63
   },
   {
     "team_id": "STAR_CYCLING_LAB",
@@ -741,7 +765,7 @@
     "p3": 0,
     "pout": 7,
     "n_atleti": 3,
-    "pos": 62
+    "pos": 64
   },
   {
     "team_id": "MULTICAR_GRUPPO_AMARU",
@@ -753,7 +777,7 @@
     "p3": 1,
     "pout": 1,
     "n_atleti": 2,
-    "pos": 63
+    "pos": 65
   },
   {
     "team_id": "S_C_CENE_A_S_D",
@@ -765,7 +789,7 @@
     "p3": 1,
     "pout": 1,
     "n_atleti": 3,
-    "pos": 64
+    "pos": 66
   },
   {
     "team_id": "ENERGY_TEAM_A_S_D",
@@ -777,7 +801,7 @@
     "p3": 0,
     "pout": 5,
     "n_atleti": 1,
-    "pos": 65
+    "pos": 67
   },
   {
     "team_id": "WWV_HAGENS_BERMAN_JAYCO",
@@ -789,7 +813,7 @@
     "p3": 0,
     "pout": 3,
     "n_atleti": 2,
-    "pos": 66
+    "pos": 68
   },
   {
     "team_id": "AXION_FUTURE_TEAM",
@@ -801,30 +825,6 @@
     "p3": 0,
     "pout": 2,
     "n_atleti": 2,
-    "pos": 67
-  },
-  {
-    "team_id": "MASTROMARCO_FC_NIBALI",
-    "team_nome": "MASTROMARCO FC NIBALI",
-    "punti": 24,
-    "vittorie": 0,
-    "p1": 0,
-    "p2": 1,
-    "p3": 0,
-    "pout": 3,
-    "n_atleti": 2,
-    "pos": 68
-  },
-  {
-    "team_id": "VELEKA_TEAM",
-    "team_nome": "VELEKA TEAM",
-    "punti": 24,
-    "vittorie": 0,
-    "p1": 0,
-    "p2": 0,
-    "p3": 1,
-    "pout": 2,
-    "n_atleti": 3,
     "pos": 69
   },
   {
