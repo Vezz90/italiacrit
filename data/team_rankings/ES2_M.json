@@ -216,6 +216,18 @@
     "pos": 18
   },
   {
+    "team_id": "ASD_GUBBIO_CICLISMO_MOCAIANA",
+    "team_nome": "ASD GUBBIO CICLISMO MOCAIANA",
+    "punti": 131,
+    "vittorie": 1,
+    "p1": 1,
+    "p2": 4,
+    "p3": 3,
+    "pout": 10,
+    "n_atleti": 2,
+    "pos": 19
+  },
+  {
     "team_id": "G_S_PREALPINO_A_S_D",
     "team_nome": "G.S. PREALPINO A.S.D.",
     "punti": 126,
@@ -225,7 +237,7 @@
     "p3": 0,
     "pout": 15,
     "n_atleti": 4,
-    "pos": 19
+    "pos": 20
   },
   {
     "team_id": "TEAM_BOSCO_DI_ORSAGO",
@@ -237,18 +249,6 @@
     "p3": 3,
     "pout": 13,
     "n_atleti": 4,
-    "pos": 20
-  },
-  {
-    "team_id": "ASD_GUBBIO_CICLISMO_MOCAIANA",
-    "team_nome": "ASD GUBBIO CICLISMO MOCAIANA",
-    "punti": 119,
-    "vittorie": 1,
-    "p1": 1,
-    "p2": 3,
-    "p3": 3,
-    "pout": 10,
-    "n_atleti": 2,
     "pos": 21
   },
   {
@@ -372,6 +372,30 @@
     "pos": 31
   },
   {
+    "team_id": "S_C_VILLA_S_ANTONIO_CICLI_COCCI",
+    "team_nome": "S.C. VILLA S.ANTONIO CICLI COCCI",
+    "punti": 78,
+    "vittorie": 1,
+    "p1": 1,
+    "p2": 1,
+    "p3": 2,
+    "pout": 4,
+    "n_atleti": 1,
+    "pos": 32
+  },
+  {
+    "team_id": "GS_PIANELLO",
+    "team_nome": "GS PIANELLO",
+    "punti": 76,
+    "vittorie": 0,
+    "p1": 0,
+    "p2": 1,
+    "p3": 3,
+    "pout": 7,
+    "n_atleti": 3,
+    "pos": 33
+  },
+  {
     "team_id": "V_C_LUGANO",
     "team_nome": "V.C. LUGANO",
     "punti": 74,
@@ -381,7 +405,7 @@
     "p3": 1,
     "pout": 8,
     "n_atleti": 2,
-    "pos": 32
+    "pos": 34
   },
   {
     "team_id": "ASD_TEAM_MMBIKE_ANDRIA_RESTO_AL_SUD",
@@ -393,7 +417,19 @@
     "p3": 0,
     "pout": 9,
     "n_atleti": 1,
-    "pos": 33
+    "pos": 35
+  },
+  {
+    "team_id": "ASD_G_C_FAUSTO_COPPI",
+    "team_nome": "ASD G. C. FAUSTO COPPI",
+    "punti": 69,
+    "vittorie": 1,
+    "p1": 1,
+    "p2": 0,
+    "p3": 0,
+    "pout": 16,
+    "n_atleti": 4,
+    "pos": 36
   },
   {
     "team_id": "GOTTARDO_GIOCHI_CANEVA",
@@ -405,7 +441,7 @@
     "p3": 1,
     "pout": 7,
     "n_atleti": 2,
-    "pos": 34
+    "pos": 37
   },
   {
     "team_id": "GS_BERTI_MOBILI_BENASSI",
@@ -417,7 +453,7 @@
     "p3": 0,
     "pout": 10,
     "n_atleti": 2,
-    "pos": 35
+    "pos": 38
   },
   {
     "team_id": "MULTICAR_GRUPPO_AMARU",
@@ -429,7 +465,7 @@
     "p3": 0,
     "pout": 2,
     "n_atleti": 1,
-    "pos": 36
+    "pos": 39
   },
   {
     "team_id": "NONSOLOBIKE",
@@ -441,7 +477,7 @@
     "p3": 0,
     "pout": 2,
     "n_atleti": 1,
-    "pos": 37
+    "pos": 40
   },
   {
     "team_id": "MST_CYCLING_SANDRIGO_BIKE",
@@ -453,19 +489,7 @@
     "p3": 2,
     "pout": 3,
     "n_atleti": 2,
-    "pos": 38
-  },
-  {
-    "team_id": "ASD_G_C_FAUSTO_COPPI",
-    "team_nome": "ASD G. C. FAUSTO COPPI",
-    "punti": 64,
-    "vittorie": 1,
-    "p1": 1,
-    "p2": 0,
-    "p3": 0,
-    "pout": 14,
-    "n_atleti": 4,
-    "pos": 39
+    "pos": 41
   },
   {
     "team_id": "UC_GODIGESE_ABRA_IRIDE",
@@ -477,19 +501,7 @@
     "p3": 2,
     "pout": 8,
     "n_atleti": 2,
-    "pos": 40
-  },
-  {
-    "team_id": "S_C_VILLA_S_ANTONIO_CICLI_COCCI",
-    "team_nome": "S.C. VILLA S.ANTONIO CICLI COCCI",
-    "punti": 63,
-    "vittorie": 0,
-    "p1": 0,
-    "p2": 1,
-    "p3": 2,
-    "pout": 4,
-    "n_atleti": 1,
-    "pos": 41
+    "pos": 42
   },
   {
     "team_id": "A_S_D_POSTUMIA_73_D_L_CICLISMO",
@@ -501,7 +513,7 @@
     "p3": 0,
     "pout": 6,
     "n_atleti": 2,
-    "pos": 42
+    "pos": 43
   },
   {
     "team_id": "TEAM_GIUNIGOR_B_BIKE",
@@ -513,7 +525,7 @@
     "p3": 2,
     "pout": 6,
     "n_atleti": 1,
-    "pos": 43
+    "pos": 44
   },
   {
     "team_id": "G_C_SOSSANO_1975",
@@ -525,7 +537,7 @@
     "p3": 1,
     "pout": 9,
     "n_atleti": 3,
-    "pos": 44
+    "pos": 45
   },
   {
     "team_id": "UC_PIANO_DI_MOMMIO_SPEEDY_BIKE",
@@ -537,18 +549,6 @@
     "p3": 0,
     "pout": 10,
     "n_atleti": 3,
-    "pos": 45
-  },
-  {
-    "team_id": "GS_PIANELLO",
-    "team_nome": "GS PIANELLO",
-    "punti": 60,
-    "vittorie": 0,
-    "p1": 0,
-    "p2": 1,
-    "p3": 2,
-    "pout": 6,
-    "n_atleti": 2,
     "pos": 46
   },
   {
@@ -948,6 +948,30 @@
     "pos": 79
   },
   {
+    "team_id": "S_C_D_ALMA_JUVENTUS_FANO",
+    "team_nome": "S.C.D.ALMA JUVENTUS FANO",
+    "punti": 25,
+    "vittorie": 0,
+    "p1": 0,
+    "p2": 0,
+    "p3": 0,
+    "pout": 6,
+    "n_atleti": 1,
+    "pos": 80
+  },
+  {
+    "team_id": "PEDALE_RIMINESE_FRECCE_ROSSE",
+    "team_nome": "PEDALE RIMINESE FRECCE ROSSE",
+    "punti": 24,
+    "vittorie": 0,
+    "p1": 0,
+    "p2": 0,
+    "p3": 0,
+    "pout": 6,
+    "n_atleti": 2,
+    "pos": 81
+  },
+  {
     "team_id": "TEAM_CORATTI",
     "team_nome": "TEAM CORATTI",
     "punti": 23,
@@ -957,7 +981,19 @@
     "p3": 0,
     "pout": 4,
     "n_atleti": 1,
-    "pos": 80
+    "pos": 82
+  },
+  {
+    "team_id": "ASS_CICLISTICA_RECANATI",
+    "team_nome": "ASS. CICLISTICA RECANATI",
+    "punti": 22,
+    "vittorie": 0,
+    "p1": 0,
+    "p2": 0,
+    "p3": 0,
+    "pout": 6,
+    "n_atleti": 3,
+    "pos": 83
   },
   {
     "team_id": "FDB_SPORT_CLUB",
@@ -969,7 +1005,7 @@
     "p3": 0,
     "pout": 2,
     "n_atleti": 1,
-    "pos": 81
+    "pos": 84
   },
   {
     "team_id": "C_S_LIBERTAS_SCORZE",
@@ -981,19 +1017,7 @@
     "p3": 0,
     "pout": 1,
     "n_atleti": 2,
-    "pos": 82
-  },
-  {
-    "team_id": "PEDALE_RIMINESE_FRECCE_ROSSE",
-    "team_nome": "PEDALE RIMINESE FRECCE ROSSE",
-    "punti": 20,
-    "vittorie": 0,
-    "p1": 0,
-    "p2": 0,
-    "p3": 0,
-    "pout": 5,
-    "n_atleti": 2,
-    "pos": 83
+    "pos": 85
   },
   {
     "team_id": "A_S_D_U_S_F_COPPI_MONTECCHIO_P",
@@ -1005,7 +1029,7 @@
     "p3": 1,
     "pout": 3,
     "n_atleti": 3,
-    "pos": 84
+    "pos": 86
   },
   {
     "team_id": "SOC_SPORT_SANFIORESE",
@@ -1017,7 +1041,7 @@
     "p3": 0,
     "pout": 6,
     "n_atleti": 3,
-    "pos": 85
+    "pos": 87
   },
   {
     "team_id": "GHEDI_CICLISMO_ASD_BIESSE_CARRERA",
@@ -1029,7 +1053,7 @@
     "p3": 0,
     "pout": 4,
     "n_atleti": 2,
-    "pos": 86
+    "pos": 88
   },
   {
     "team_id": "GS_FIUMICELLO_1971",
@@ -1041,7 +1065,7 @@
     "p3": 0,
     "pout": 4,
     "n_atleti": 2,
-    "pos": 87
+    "pos": 89
   },
   {
     "team_id": "KTM_ACADEMY_LE_MARMOTTE",
@@ -1053,30 +1077,6 @@
     "p3": 0,
     "pout": 6,
     "n_atleti": 3,
-    "pos": 88
-  },
-  {
-    "team_id": "S_C_D_ALMA_JUVENTUS_FANO",
-    "team_nome": "S.C.D.ALMA JUVENTUS FANO",
-    "punti": 17,
-    "vittorie": 0,
-    "p1": 0,
-    "p2": 0,
-    "p3": 0,
-    "pout": 5,
-    "n_atleti": 1,
-    "pos": 89
-  },
-  {
-    "team_id": "ASS_CICLISTICA_RECANATI",
-    "team_nome": "ASS. CICLISTICA RECANATI",
-    "punti": 16,
-    "vittorie": 0,
-    "p1": 0,
-    "p2": 0,
-    "p3": 0,
-    "pout": 4,
-    "n_atleti": 2,
     "pos": 90
   },
   {

@@ -36,6 +36,18 @@
     "pos": 3
   },
   {
+    "team_id": "PEDALE_RIMINESE_FRECCE_ROSSE",
+    "team_nome": "PEDALE RIMINESE FRECCE ROSSE",
+    "punti": 226,
+    "vittorie": 4,
+    "p1": 4,
+    "p2": 5,
+    "p3": 4,
+    "pout": 14,
+    "n_atleti": 5,
+    "pos": 4
+  },
+  {
     "team_id": "CRAZY_WHEELS_CYCLING_ACADEMY",
     "team_nome": "CRAZY WHEELS - CYCLING ACADEMY",
     "punti": 217,
@@ -45,18 +57,6 @@
     "p3": 4,
     "pout": 9,
     "n_atleti": 4,
-    "pos": 4
-  },
-  {
-    "team_id": "PEDALE_RIMINESE_FRECCE_ROSSE",
-    "team_nome": "PEDALE RIMINESE FRECCE ROSSE",
-    "punti": 213,
-    "vittorie": 4,
-    "p1": 4,
-    "p2": 5,
-    "p3": 4,
-    "pout": 11,
-    "n_atleti": 5,
     "pos": 5
   },
   {
@@ -168,6 +168,30 @@
     "pos": 14
   },
   {
+    "team_id": "SC_POTENTIA_RINASCITA_ASD",
+    "team_nome": "SC POTENTIA-RINASCITA ASD",
+    "punti": 126,
+    "vittorie": 3,
+    "p1": 3,
+    "p2": 3,
+    "p3": 2,
+    "pout": 3,
+    "n_atleti": 1,
+    "pos": 15
+  },
+  {
+    "team_id": "FOLIGNO_CYCLING_TEAM_ASD",
+    "team_nome": "FOLIGNO CYCLING TEAM ASD",
+    "punti": 124,
+    "vittorie": 0,
+    "p1": 0,
+    "p2": 1,
+    "p3": 4,
+    "pout": 17,
+    "n_atleti": 3,
+    "pos": 16
+  },
+  {
     "team_id": "FDB_SPORT_CLUB",
     "team_nome": "FDB SPORT CLUB",
     "punti": 120,
@@ -177,19 +201,7 @@
     "p3": 1,
     "pout": 5,
     "n_atleti": 1,
-    "pos": 15
-  },
-  {
-    "team_id": "FOLIGNO_CYCLING_TEAM_ASD",
-    "team_nome": "FOLIGNO CYCLING TEAM ASD",
-    "punti": 119,
-    "vittorie": 0,
-    "p1": 0,
-    "p2": 1,
-    "p3": 4,
-    "pout": 16,
-    "n_atleti": 3,
-    "pos": 16
+    "pos": 17
   },
   {
     "team_id": "HG_CYCLING_TEAM",
@@ -201,7 +213,7 @@
     "p3": 2,
     "pout": 9,
     "n_atleti": 2,
-    "pos": 17
+    "pos": 18
   },
   {
     "team_id": "VC_SAN_VENDEMIANO",
@@ -213,18 +225,6 @@
     "p3": 1,
     "pout": 4,
     "n_atleti": 2,
-    "pos": 18
-  },
-  {
-    "team_id": "SC_POTENTIA_RINASCITA_ASD",
-    "team_nome": "SC POTENTIA-RINASCITA ASD",
-    "punti": 111,
-    "vittorie": 2,
-    "p1": 2,
-    "p2": 3,
-    "p3": 2,
-    "pout": 3,
-    "n_atleti": 1,
     "pos": 19
   },
   {
@@ -384,6 +384,18 @@
     "pos": 32
   },
   {
+    "team_id": "G_S_AVIS_BIKE_AMELIA",
+    "team_nome": "G.S. AVIS BIKE AMELIA",
+    "punti": 85,
+    "vittorie": 4,
+    "p1": 4,
+    "p2": 1,
+    "p3": 0,
+    "pout": 3,
+    "n_atleti": 1,
+    "pos": 33
+  },
+  {
     "team_id": "S_C_TERRANOVA_FANCELLO_CICLI",
     "team_nome": "S.C. TERRANOVA FANCELLO CICLI",
     "punti": 83,
@@ -392,18 +404,6 @@
     "p2": 0,
     "p3": 2,
     "pout": 4,
-    "n_atleti": 1,
-    "pos": 33
-  },
-  {
-    "team_id": "G_S_AVIS_BIKE_AMELIA",
-    "team_nome": "G.S. AVIS BIKE AMELIA",
-    "punti": 81,
-    "vittorie": 4,
-    "p1": 4,
-    "p2": 1,
-    "p3": 0,
-    "pout": 2,
     "n_atleti": 1,
     "pos": 34
   },
@@ -876,6 +876,30 @@
     "pos": 73
   },
   {
+    "team_id": "GS_PIANELLO",
+    "team_nome": "GS PIANELLO",
+    "punti": 36,
+    "vittorie": 0,
+    "p1": 0,
+    "p2": 0,
+    "p3": 0,
+    "pout": 8,
+    "n_atleti": 4,
+    "pos": 74
+  },
+  {
+    "team_id": "S_C_D_ALMA_JUVENTUS_FANO",
+    "team_nome": "S.C.D.ALMA JUVENTUS FANO",
+    "punti": 34,
+    "vittorie": 0,
+    "p1": 0,
+    "p2": 0,
+    "p3": 0,
+    "pout": 8,
+    "n_atleti": 2,
+    "pos": 75
+  },
+  {
     "team_id": "S_C_COTIGNOLESE",
     "team_nome": "S.C.COTIGNOLESE",
     "punti": 34,
@@ -885,19 +909,7 @@
     "p3": 0,
     "pout": 7,
     "n_atleti": 2,
-    "pos": 74
-  },
-  {
-    "team_id": "S_C_D_ALMA_JUVENTUS_FANO",
-    "team_nome": "S.C.D.ALMA JUVENTUS FANO",
-    "punti": 33,
-    "vittorie": 0,
-    "p1": 0,
-    "p2": 0,
-    "p3": 0,
-    "pout": 7,
-    "n_atleti": 2,
-    "pos": 75
+    "pos": 76
   },
   {
     "team_id": "U_S_MONTECORONA",
@@ -909,7 +921,7 @@
     "p3": 0,
     "pout": 7,
     "n_atleti": 2,
-    "pos": 76
+    "pos": 77
   },
   {
     "team_id": "ASD_1D_UN_DENTE_IN_PIU",
@@ -921,7 +933,7 @@
     "p3": 0,
     "pout": 3,
     "n_atleti": 2,
-    "pos": 77
+    "pos": 78
   },
   {
     "team_id": "SALUS_CICLISTICA_SEREGNO_DE_ROSA",
@@ -933,7 +945,7 @@
     "p3": 0,
     "pout": 8,
     "n_atleti": 2,
-    "pos": 78
+    "pos": 79
   },
   {
     "team_id": "SS_AQUILA",
@@ -945,18 +957,6 @@
     "p3": 0,
     "pout": 4,
     "n_atleti": 1,
-    "pos": 79
-  },
-  {
-    "team_id": "GS_PIANELLO",
-    "team_nome": "GS PIANELLO",
-    "punti": 30,
-    "vittorie": 0,
-    "p1": 0,
-    "p2": 0,
-    "p3": 0,
-    "pout": 7,
-    "n_atleti": 3,
     "pos": 80
   },
   {
@@ -972,6 +972,18 @@
     "pos": 81
   },
   {
+    "team_id": "U_S_FORTI_E_LIBERI_ZANETTI_CICLI",
+    "team_nome": "U.S. FORTI E LIBERI - ZANETTI CICLI",
+    "punti": 29,
+    "vittorie": 0,
+    "p1": 0,
+    "p2": 0,
+    "p3": 1,
+    "pout": 3,
+    "n_atleti": 1,
+    "pos": 82
+  },
+  {
     "team_id": "SAMABIKE",
     "team_nome": "SAMABIKE",
     "punti": 29,
@@ -981,7 +993,7 @@
     "p3": 0,
     "pout": 6,
     "n_atleti": 1,
-    "pos": 82
+    "pos": 83
   },
   {
     "team_id": "A_S_D_GIOCA_IN_BICI_OGLIO_PO",
@@ -993,7 +1005,7 @@
     "p3": 2,
     "pout": 4,
     "n_atleti": 2,
-    "pos": 83
+    "pos": 84
   },
   {
     "team_id": "UNIONE_CICLISTICA_MIRANO",
@@ -1005,7 +1017,7 @@
     "p3": 1,
     "pout": 7,
     "n_atleti": 2,
-    "pos": 84
+    "pos": 85
   },
   {
     "team_id": "ABRUZZO_CYCLING_TEAM",
@@ -1017,7 +1029,7 @@
     "p3": 0,
     "pout": 5,
     "n_atleti": 1,
-    "pos": 85
+    "pos": 86
   },
   {
     "team_id": "KK_NOVO_MESTO",
@@ -1029,7 +1041,7 @@
     "p3": 0,
     "pout": 2,
     "n_atleti": 1,
-    "pos": 86
+    "pos": 87
   },
   {
     "team_id": "A_S_D_MONTICELLI_BIKE",
@@ -1041,7 +1053,7 @@
     "p3": 0,
     "pout": 0,
     "n_atleti": 1,
-    "pos": 87
+    "pos": 88
   },
   {
     "team_id": "U_C_PESSANO_A_S_D",
@@ -1053,7 +1065,7 @@
     "p3": 1,
     "pout": 3,
     "n_atleti": 1,
-    "pos": 88
+    "pos": 89
   },
   {
     "team_id": "MULTICAR_GRUPPO_AMARU",
@@ -1065,7 +1077,7 @@
     "p3": 1,
     "pout": 0,
     "n_atleti": 2,
-    "pos": 89
+    "pos": 90
   },
   {
     "team_id": "VELO_CLUB_SARROCH",
@@ -1077,7 +1089,7 @@
     "p3": 0,
     "pout": 6,
     "n_atleti": 2,
-    "pos": 90
+    "pos": 91
   },
   {
     "team_id": "CYCLING_TEAM_NIAL_NIZZOLI_ALMO",
@@ -1089,7 +1101,7 @@
     "p3": 1,
     "pout": 3,
     "n_atleti": 1,
-    "pos": 91
+    "pos": 92
   },
   {
     "team_id": "G_S_PREALPINO_A_S_D",
@@ -1101,7 +1113,7 @@
     "p3": 0,
     "pout": 6,
     "n_atleti": 1,
-    "pos": 92
+    "pos": 93
   },
   {
     "team_id": "AC_F_BESSI_CALENZANO_DONORATICO",
@@ -1113,18 +1125,6 @@
     "p3": 0,
     "pout": 5,
     "n_atleti": 2,
-    "pos": 93
-  },
-  {
-    "team_id": "U_S_FORTI_E_LIBERI_ZANETTI_CICLI",
-    "team_nome": "U.S. FORTI E LIBERI - ZANETTI CICLI",
-    "punti": 19,
-    "vittorie": 0,
-    "p1": 0,
-    "p2": 0,
-    "p3": 0,
-    "pout": 3,
-    "n_atleti": 1,
     "pos": 94
   },
   {
@@ -1236,6 +1236,18 @@
     "pos": 103
   },
   {
+    "team_id": "ETHICA_ZERO24_CYCLING_TEAM_ECOTEK",
+    "team_nome": "ETHICA ZERO24 CYCLING TEAM ECOTEK",
+    "punti": 13,
+    "vittorie": 0,
+    "p1": 0,
+    "p2": 1,
+    "p3": 0,
+    "pout": 1,
+    "n_atleti": 1,
+    "pos": 104
+  },
+  {
     "team_id": "GS_CAPANNORI",
     "team_nome": "GS CAPANNORI",
     "punti": 13,
@@ -1245,7 +1257,7 @@
     "p3": 0,
     "pout": 3,
     "n_atleti": 3,
-    "pos": 104
+    "pos": 105
   },
   {
     "team_id": "POL_FIUMICINESE_FA_I_T_ADRIATICA",
@@ -1257,7 +1269,7 @@
     "p3": 0,
     "pout": 3,
     "n_atleti": 2,
-    "pos": 105
+    "pos": 106
   },
   {
     "team_id": "POGI_TEAM_UAE_GENERALI",
@@ -1269,7 +1281,7 @@
     "p3": 1,
     "pout": 1,
     "n_atleti": 1,
-    "pos": 106
+    "pos": 107
   },
   {
     "team_id": "V_C_CITTA_DI_MAROSTICA",
@@ -1281,7 +1293,7 @@
     "p3": 1,
     "pout": 1,
     "n_atleti": 1,
-    "pos": 107
+    "pos": 108
   },
   {
     "team_id": "POL_MOLINELLO",
@@ -1293,7 +1305,7 @@
     "p3": 0,
     "pout": 4,
     "n_atleti": 2,
-    "pos": 108
+    "pos": 109
   },
   {
     "team_id": "S_C_PIACENZA_A_S_D",
@@ -1305,7 +1317,7 @@
     "p3": 0,
     "pout": 2,
     "n_atleti": 2,
-    "pos": 109
+    "pos": 110
   },
   {
     "team_id": "VAIANO_BIKE",
@@ -1317,7 +1329,7 @@
     "p3": 0,
     "pout": 2,
     "n_atleti": 1,
-    "pos": 110
+    "pos": 111
   },
   {
     "team_id": "PROFBIKE_ANGRI_CYCLING_TEAM",
@@ -1329,7 +1341,7 @@
     "p3": 0,
     "pout": 2,
     "n_atleti": 1,
-    "pos": 111
+    "pos": 112
   },
   {
     "team_id": "U_S_CALCARA",
@@ -1341,7 +1353,7 @@
     "p3": 0,
     "pout": 3,
     "n_atleti": 1,
-    "pos": 112
+    "pos": 113
   },
   {
     "team_id": "U_P_O_L_PEDALE_LUNGAVILLA_A_S_D",
@@ -1353,7 +1365,7 @@
     "p3": 0,
     "pout": 2,
     "n_atleti": 1,
-    "pos": 113
+    "pos": 114
   },
   {
     "team_id": "U_S_AURORA_TRENTO",
@@ -1365,7 +1377,7 @@
     "p3": 0,
     "pout": 2,
     "n_atleti": 2,
-    "pos": 114
+    "pos": 115
   },
   {
     "team_id": "A_S_D_CASTIGLIONESE",
@@ -1377,7 +1389,7 @@
     "p3": 0,
     "pout": 2,
     "n_atleti": 1,
-    "pos": 115
+    "pos": 116
   },
   {
     "team_id": "G_S_LUPI_VALLE_D_AOSTA",
@@ -1389,7 +1401,7 @@
     "p3": 1,
     "pout": 0,
     "n_atleti": 1,
-    "pos": 116
+    "pos": 117
   },
   {
     "team_id": "REATE_CYCLING_TEAM",
@@ -1401,7 +1413,7 @@
     "p3": 1,
     "pout": 0,
     "n_atleti": 1,
-    "pos": 117
+    "pos": 118
   },
   {
     "team_id": "FLESSOFAB",
@@ -1413,7 +1425,7 @@
     "p3": 0,
     "pout": 2,
     "n_atleti": 1,
-    "pos": 118
+    "pos": 119
   },
   {
     "team_id": "G_S_CERNUSCHESE_TINO_GADDA_A_S_D",
@@ -1425,7 +1437,7 @@
     "p3": 0,
     "pout": 2,
     "n_atleti": 1,
-    "pos": 119
+    "pos": 120
   },
   {
     "team_id": "KTM_ACADEMY_LE_MARMOTTE",
@@ -1437,7 +1449,7 @@
     "p3": 0,
     "pout": 3,
     "n_atleti": 2,
-    "pos": 120
+    "pos": 121
   },
   {
     "team_id": "ALBA_BRA_LANGHE_ROERO",
@@ -1449,7 +1461,7 @@
     "p3": 0,
     "pout": 1,
     "n_atleti": 1,
-    "pos": 121
+    "pos": 122
   },
   {
     "team_id": "LA_TERMOPIAVE_VALCAVASIA_JUNIOR_TEAM",
@@ -1461,7 +1473,7 @@
     "p3": 0,
     "pout": 4,
     "n_atleti": 2,
-    "pos": 122
+    "pos": 123
   },
   {
     "team_id": "TEAM_BIKE_SIRACUSA",
@@ -1473,7 +1485,7 @@
     "p3": 0,
     "pout": 4,
     "n_atleti": 1,
-    "pos": 123
+    "pos": 124
   },
   {
     "team_id": "CICLISTICA_BUJESE_DIGAS",
@@ -1485,7 +1497,7 @@
     "p3": 0,
     "pout": 2,
     "n_atleti": 1,
-    "pos": 124
+    "pos": 125
   },
   {
     "team_id": "JAM_S_BIKE_TEAM_BUJA",
@@ -1497,7 +1509,7 @@
     "p3": 0,
     "pout": 3,
     "n_atleti": 3,
-    "pos": 125
+    "pos": 126
   },
   {
     "team_id": "ASD_FK_BIKE_SCORRANO",
@@ -1509,7 +1521,7 @@
     "p3": 0,
     "pout": 1,
     "n_atleti": 1,
-    "pos": 126
+    "pos": 127
   },
   {
     "team_id": "ALGHERO_BIKE_A_S_D",
@@ -1521,7 +1533,7 @@
     "p3": 0,
     "pout": 3,
     "n_atleti": 1,
-    "pos": 127
+    "pos": 128
   },
   {
     "team_id": "ASD_LE_FRECCE_DELL_ETNA",
@@ -1533,7 +1545,7 @@
     "p3": 0,
     "pout": 2,
     "n_atleti": 2,
-    "pos": 128
+    "pos": 129
   },
   {
     "team_id": "A_S_D_G_S_GULP_POOL_VAL_VIBRATA",
@@ -1545,7 +1557,7 @@
     "p3": 0,
     "pout": 2,
     "n_atleti": 2,
-    "pos": 129
+    "pos": 130
   },
   {
     "team_id": "ASD_NADIR_ON_THE_ROAD",
@@ -1557,7 +1569,7 @@
     "p3": 0,
     "pout": 1,
     "n_atleti": 1,
-    "pos": 130
+    "pos": 131
   },
   {
     "team_id": "S_S_STELLA_ALPINA_RENAZZO",
@@ -1569,7 +1581,7 @@
     "p3": 0,
     "pout": 1,
     "n_atleti": 1,
-    "pos": 131
+    "pos": 132
   },
   {
     "team_id": "S_C_GASTONE_NENCINI",
@@ -1581,7 +1593,7 @@
     "p3": 0,
     "pout": 3,
     "n_atleti": 2,
-    "pos": 132
+    "pos": 133
   },
   {
     "team_id": "SCUOLA_DI_CICLISMO_FRANCO_BALLERINI",
@@ -1593,7 +1605,7 @@
     "p3": 0,
     "pout": 1,
     "n_atleti": 1,
-    "pos": 133
+    "pos": 134
   },
   {
     "team_id": "MOTOSTAFFETTE_POTENZA",
@@ -1605,7 +1617,7 @@
     "p3": 0,
     "pout": 1,
     "n_atleti": 1,
-    "pos": 134
+    "pos": 135
   },
   {
     "team_id": "ASSAGO_TEAM_EVOLUTION",
@@ -1617,7 +1629,7 @@
     "p3": 0,
     "pout": 1,
     "n_atleti": 1,
-    "pos": 135
+    "pos": 136
   },
   {
     "team_id": "VELO_JUNIOR_NOVE",
@@ -1629,7 +1641,7 @@
     "p3": 0,
     "pout": 1,
     "n_atleti": 1,
-    "pos": 136
+    "pos": 137
   },
   {
     "team_id": "A_S_D_CICLISTICA_2000",
@@ -1641,7 +1653,7 @@
     "p3": 0,
     "pout": 1,
     "n_atleti": 1,
-    "pos": 137
+    "pos": 138
   },
   {
     "team_id": "POL_ALBERGO_OLIVETO",
@@ -1653,7 +1665,7 @@
     "p3": 0,
     "pout": 1,
     "n_atleti": 1,
-    "pos": 138
+    "pos": 139
   },
   {
     "team_id": "UC_COSTAMASNAGA_ASD",
@@ -1665,7 +1677,7 @@
     "p3": 0,
     "pout": 1,
     "n_atleti": 1,
-    "pos": 139
+    "pos": 140
   },
   {
     "team_id": "GHEDI_CICLISMO_ASD_BIESSE_CARRERA",
@@ -1677,7 +1689,7 @@
     "p3": 0,
     "pout": 1,
     "n_atleti": 1,
-    "pos": 140
+    "pos": 141
   },
   {
     "team_id": "TEAM_BOSCO_DI_ORSAGO",
@@ -1689,7 +1701,7 @@
     "p3": 0,
     "pout": 1,
     "n_atleti": 1,
-    "pos": 141
+    "pos": 142
   },
   {
     "team_id": "POL_ASD_RE_CYCLING",
@@ -1701,7 +1713,7 @@
     "p3": 0,
     "pout": 1,
     "n_atleti": 1,
-    "pos": 142
+    "pos": 143
   },
   {
     "team_id": "A_S_D_LUDOBIKE_SCUOLA_DI_CICLISMO",
@@ -1713,7 +1725,7 @@
     "p3": 0,
     "pout": 1,
     "n_atleti": 1,
-    "pos": 143
+    "pos": 144
   },
   {
     "team_id": "U_C_SANGIULIANESE",
@@ -1725,7 +1737,7 @@
     "p3": 0,
     "pout": 1,
     "n_atleti": 1,
-    "pos": 144
+    "pos": 145
   },
   {
     "team_id": "PEDALE_MARENESE_GINO_BARTALI",
@@ -1737,7 +1749,7 @@
     "p3": 0,
     "pout": 1,
     "n_atleti": 1,
-    "pos": 145
+    "pos": 146
   },
   {
     "team_id": "A_S_D_V_C_MONTEBELLUNA",
@@ -1749,7 +1761,7 @@
     "p3": 0,
     "pout": 1,
     "n_atleti": 1,
-    "pos": 146
+    "pos": 147
   },
   {
     "team_id": "PROGETTO_CICLISMO_RODENGO_S_ASD",
@@ -1761,7 +1773,7 @@
     "p3": 0,
     "pout": 1,
     "n_atleti": 1,
-    "pos": 147
+    "pos": 148
   },
   {
     "team_id": "S_C_FONTANAFREDDA",
@@ -1773,7 +1785,7 @@
     "p3": 0,
     "pout": 1,
     "n_atleti": 1,
-    "pos": 148
+    "pos": 149
   },
   {
     "team_id": "G_S_GIOVANI_GIUSSANESI_A_S_D",
@@ -1785,23 +1797,11 @@
     "p3": 0,
     "pout": 1,
     "n_atleti": 1,
-    "pos": 149
+    "pos": 150
   },
   {
     "team_id": "C_C_FORTI_E_VELOCI",
     "team_nome": "C.C. FORTI E VELOCI",
-    "punti": 1,
-    "vittorie": 0,
-    "p1": 0,
-    "p2": 0,
-    "p3": 0,
-    "pout": 1,
-    "n_atleti": 1,
-    "pos": 150
-  },
-  {
-    "team_id": "ETHICA_ZERO24_CYCLING_TEAM_ECOTEK",
-    "team_nome": "ETHICA ZERO24 CYCLING TEAM ECOTEK",
     "punti": 1,
     "vittorie": 0,
     "p1": 0,
