@@ -36,6 +36,18 @@
     "pos": 3
   },
   {
+    "team_id": "A_S_A_C_I_EVONACICLI",
+    "team_nome": "A.S.A.C.I. - EVONACICLI",
+    "punti": 165,
+    "vittorie": 4,
+    "p1": 4,
+    "p2": 4,
+    "p3": 3,
+    "pout": 5,
+    "n_atleti": 5,
+    "pos": 4
+  },
+  {
     "team_id": "S_C_CESANO_MADERNO",
     "team_nome": "S.C. CESANO MADERNO",
     "punti": 137,
@@ -45,7 +57,7 @@
     "p3": 3,
     "pout": 22,
     "n_atleti": 5,
-    "pos": 4
+    "pos": 5
   },
   {
     "team_id": "SCUOLA_CICLISMO_VERSO_L_IRIDE",
@@ -57,18 +69,6 @@
     "p3": 1,
     "pout": 11,
     "n_atleti": 3,
-    "pos": 5
-  },
-  {
-    "team_id": "A_S_A_C_I_EVONACICLI",
-    "team_nome": "A.S.A.C.I. - EVONACICLI",
-    "punti": 123,
-    "vittorie": 3,
-    "p1": 3,
-    "p2": 3,
-    "p3": 3,
-    "pout": 2,
-    "n_atleti": 5,
     "pos": 6
   },
   {
@@ -204,6 +204,18 @@
     "pos": 17
   },
   {
+    "team_id": "A_S_D_AMICISUPERSKI",
+    "team_nome": "A.S.D. AMICISUPERSKI",
+    "punti": 25,
+    "vittorie": 0,
+    "p1": 0,
+    "p2": 0,
+    "p3": 0,
+    "pout": 4,
+    "n_atleti": 2,
+    "pos": 18
+  },
+  {
     "team_id": "S_C_PATTADA",
     "team_nome": "S.C. PATTADA",
     "punti": 24,
@@ -213,7 +225,7 @@
     "p3": 0,
     "pout": 0,
     "n_atleti": 1,
-    "pos": 18
+    "pos": 19
   },
   {
     "team_id": "SALUS_CICLISTICA_SEREGNO_DE_ROSA",
@@ -225,7 +237,7 @@
     "p3": 0,
     "pout": 7,
     "n_atleti": 4,
-    "pos": 19
+    "pos": 20
   },
   {
     "team_id": "B_TEAM_CYCLING_PROJECT",
@@ -237,7 +249,7 @@
     "p3": 0,
     "pout": 4,
     "n_atleti": 1,
-    "pos": 20
+    "pos": 21
   },
   {
     "team_id": "COMAL_TRENTINO_CYCLING_ACADEMY",
@@ -249,7 +261,7 @@
     "p3": 0,
     "pout": 7,
     "n_atleti": 1,
-    "pos": 21
+    "pos": 22
   },
   {
     "team_id": "ASD_TEAM_FEMMINILE_TRENTINO",
@@ -261,7 +273,7 @@
     "p3": 0,
     "pout": 2,
     "n_atleti": 2,
-    "pos": 22
+    "pos": 23
   },
   {
     "team_id": "ASD_EFFETTO_CICLISMO_NOI_SPORT",
@@ -273,18 +285,6 @@
     "p3": 0,
     "pout": 2,
     "n_atleti": 1,
-    "pos": 23
-  },
-  {
-    "team_id": "A_S_D_AMICISUPERSKI",
-    "team_nome": "A.S.D. AMICISUPERSKI",
-    "punti": 14,
-    "vittorie": 0,
-    "p1": 0,
-    "p2": 0,
-    "p3": 0,
-    "pout": 2,
-    "n_atleti": 2,
     "pos": 24
   },
   {
@@ -300,6 +300,18 @@
     "pos": 25
   },
   {
+    "team_id": "HG_CYCLING_TEAM",
+    "team_nome": "HG CYCLING TEAM",
+    "punti": 13,
+    "vittorie": 0,
+    "p1": 0,
+    "p2": 0,
+    "p3": 1,
+    "pout": 1,
+    "n_atleti": 1,
+    "pos": 26
+  },
+  {
     "team_id": "A_S_D_CICLISTICA_G_BONZAGNI",
     "team_nome": "A.S.D CICLISTICA G.BONZAGNI",
     "punti": 10,
@@ -309,7 +321,7 @@
     "p3": 0,
     "pout": 3,
     "n_atleti": 1,
-    "pos": 26
+    "pos": 27
   },
   {
     "team_id": "BREGANZE_MILLENIUM",
@@ -321,7 +333,7 @@
     "p3": 0,
     "pout": 3,
     "n_atleti": 2,
-    "pos": 27
+    "pos": 28
   },
   {
     "team_id": "ASS_NE_CICLISTICA_DILETT_VALVASONE",
@@ -333,7 +345,7 @@
     "p3": 0,
     "pout": 2,
     "n_atleti": 2,
-    "pos": 28
+    "pos": 29
   },
   {
     "team_id": "CALDERARA_STM_RIDUTTORI",
@@ -345,7 +357,7 @@
     "p3": 0,
     "pout": 3,
     "n_atleti": 1,
-    "pos": 29
+    "pos": 30
   },
   {
     "team_id": "U_S_C_S_I_RUBANO",
@@ -357,24 +369,12 @@
     "p3": 0,
     "pout": 1,
     "n_atleti": 1,
-    "pos": 30
+    "pos": 31
   },
   {
     "team_id": "SCUOLA_DI_CICLISMO_FRANCO_BALLERINI",
     "team_nome": "SCUOLA DI CICLISMO FRANCO BALLERINI",
     "punti": 5,
-    "vittorie": 0,
-    "p1": 0,
-    "p2": 0,
-    "p3": 0,
-    "pout": 1,
-    "n_atleti": 1,
-    "pos": 31
-  },
-  {
-    "team_id": "HG_CYCLING_TEAM",
-    "team_nome": "HG CYCLING TEAM",
-    "punti": 3,
     "vittorie": 0,
     "p1": 0,
     "p2": 0,
