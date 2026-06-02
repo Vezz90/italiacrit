@@ -13433,6 +13433,32 @@ async function renderStatistiche(selectedCatKey) {
   </section>` : '';
 
   let activeRegTab = 'M';
+  // ── CONFRONTO CATEGORIE: gare, atleti, equilibrio per ogni categoria ──
+  const _catCompare = {};
+  resultsRaw.forEach(r => {
+    const key = `${r.categoria}|${r.genere}`;
+    if (!_catCompare[key]) _catCompare[key] = { gare: new Set(), atleti: new Set(), pts: {} };
+    const c = _catCompare[key];
+    if (r.gara_id) c.gare.add(r.gara_id);
+    if (r.punti_effettivi > 0) c.atleti.add(r.atleta_id);
+    c.pts[r.atleta_id] = (c.pts[r.atleta_id]||0) + (r.punti_effettivi||0);
+  });
+  const _catRows = Object.entries(_catCompare).map(([key, c]) => {
+    const [cat, gen] = key.split('|');
+    const top = Object.values(c.pts).sort((a,b)=>b-a);
+    const equil = top.length >= 2 ? Math.round((top[Math.min(9,top.length-1)] / top[0]) * 100) : 0;
+    return { key, label: catGenLabel(cat,gen), gare: c.gare.size, atleti: c.atleti.size, equil };
+  }).sort((a,b)=>b.gare-a.gare);
+  const _maxGareCat = Math.max(..._catRows.map(r=>r.gare), 1);
+  const _maxAtlCat  = Math.max(..._catRows.map(r=>r.atleti), 1);
+  const _catCompareHtml = _catRows.map(r => `
+    <div onclick="location.hash='#/statistiche/${encodeURIComponent(r.key)}'" style="display:grid;grid-template-columns:150px 1fr 1fr 90px;align-items:center;gap:12px;padding:10px 16px;border-bottom:1px solid var(--border-subtle);cursor:pointer;transition:background .12s" onmouseover="this.style.background='var(--bg-elevated)'" onmouseout="this.style.background=''">
+      <div style="font-family:var(--font-heading);font-size:.8rem;font-weight:700;text-transform:uppercase;letter-spacing:.04em">${r.label}</div>
+      <div title="${r.gare} gare"><div style="height:7px;background:var(--bg-elevated);border-radius:4px;overflow:hidden"><div style="height:100%;width:${Math.round(r.gare/_maxGareCat*100)}%;background:var(--accent);border-radius:4px"></div></div><div style="font-size:.66rem;color:var(--text-muted);margin-top:2px">${r.gare} gare</div></div>
+      <div title="${r.atleti} atleti"><div style="height:7px;background:var(--bg-elevated);border-radius:4px;overflow:hidden"><div style="height:100%;width:${Math.round(r.atleti/_maxAtlCat*100)}%;background:#6366f1;border-radius:4px"></div></div><div style="font-size:.66rem;color:var(--text-muted);margin-top:2px">${r.atleti} atleti</div></div>
+      <div style="text-align:right"><span style="font-family:var(--font-display);font-size:1.1rem;color:${r.equil>=60?'#10b981':r.equil>=35?'#f59e0b':'#ef4444'}">${r.equil}%</span><div style="font-size:.6rem;color:var(--text-muted)">equilibrio</div></div>
+    </div>`).join('');
+
   setPage(`
     <div class="pg-header">
       <div class="pg-eyebrow">📊 ANALISI & DATI</div>
@@ -13469,10 +13495,10 @@ async function renderStatistiche(selectedCatKey) {
       </div>
     </div>
 
-    <!-- GARE PER CATEGORIA -->
+    <!-- CONFRONTO CATEGORIE -->
     <div style="background:var(--bg-card);border:1px solid var(--border-subtle);border-radius:8px;overflow:hidden;margin-bottom:40px">
-      <div style="padding:14px 16px;background:var(--bg-secondary);border-bottom:1px solid var(--border-subtle);font-family:var(--font-heading);font-weight:700;text-transform:uppercase;letter-spacing:0.08em">📊 Gare Disputate per Categoria</div>
-      ${gareTableHtml}
+      <div style="padding:14px 16px;background:var(--bg-secondary);border-bottom:1px solid var(--border-subtle);font-family:var(--font-heading);font-weight:700;text-transform:uppercase;letter-spacing:0.08em">⚖️ Confronto Categorie <span style="font-weight:400;font-size:.7rem;color:var(--text-muted);text-transform:none">— clicca per il dettaglio</span></div>
+      ${_catCompareHtml}
     </div>
 
     <!-- ATTIVITA' PER REGIONE (tab M/F) -->
@@ -13603,6 +13629,105 @@ function _renderStatisticheCat(catKey, resultsRaw, athletes, calendar, catTabsHt
     </div>`;
   }).join('');
 
+  // ══ NUOVE STATISTICHE ══════════════════════════════════════════════
+  const _sortedByDate = [...resultsRaw].filter(r => r.data).sort((a,b)=>(a.data||'').localeCompare(b.data||''));
+  const _lastDate = _sortedByDate.length ? _sortedByDate[_sortedByDate.length-1].data : '';
+
+  // ── RIVELAZIONE: chi ha scalato più posizioni in classifica (rank_dopo_gara) ──
+  let rivelazione = null;
+  {
+    const byAth = {};
+    for (const r of _sortedByDate) {
+      if (!r.rank_dopo_gara) continue;
+      (byAth[r.atleta_id] ||= []).push(r);
+    }
+    let best = -1;
+    for (const [id, hist] of Object.entries(byAth)) {
+      if (hist.length < 2) continue;
+      const startRank = hist[0].rank_dopo_gara;
+      const nowRank   = hist[hist.length-1].rank_dopo_gara;
+      const gain = startRank - nowRank; // positivo = salito
+      if (gain > best && gain >= 2) { best = gain; rivelazione = { id, gain, nowRank }; }
+    }
+  }
+
+  // ── PIÙ IN FORMA: miglior media punti nelle ultime 3 gare vs 3 precedenti ──
+  let inForma = null;
+  {
+    const byAth = {};
+    for (const r of _sortedByDate) (byAth[r.atleta_id] ||= []).push(r);
+    let best = -1;
+    for (const [id, hist] of Object.entries(byAth)) {
+      if (hist.length < 4) continue;
+      const last3 = hist.slice(-3), prev3 = hist.slice(-6,-3);
+      const avg = arr => arr.reduce((s,r)=>s+(r.punti_effettivi||0),0)/(arr.length||1);
+      const delta = avg(last3) - avg(prev3);
+      if (delta > best && delta > 0) { best = delta; inForma = { id, delta: delta.toFixed(1), recent: avg(last3).toFixed(1) }; }
+    }
+  }
+
+  // ── DOMINIO TERRITORIALE: regione con più vittorie nella categoria ──
+  const regWins = {};
+  resultsRaw.forEach(r => {
+    if (r.posizione !== 1) return;
+    const reg = normalizeRegion(r.regione || '');
+    if (!isRealRegion(reg)) return;
+    regWins[reg] = (regWins[reg]||0) + 1;
+  });
+  const topRegioni = Object.entries(regWins).sort((a,b)=>b[1]-a[1]).slice(0,6);
+  const maxRegW = topRegioni[0]?.[1] || 1;
+
+  // ── RIVALITÀ: coppia più ravvicinata in punti tra i top 8 ──
+  const _ptsRank = Object.entries(ptsMap).sort((a,b)=>b[1]-a[1]).slice(0,8);
+  let rivalita = null;
+  for (let i = 0; i < _ptsRank.length - 1; i++) {
+    const gap = _ptsRank[i][1] - _ptsRank[i+1][1];
+    if (rivalita === null || gap < rivalita.gap) {
+      rivalita = { a: _ptsRank[i], b: _ptsRank[i+1], gap, pos: i+1 };
+    }
+  }
+  // Equilibrio categoria: gap percentuale tra 1° e 10°
+  const _top10pts = Object.values(ptsMap).sort((a,b)=>b-a).slice(0,10);
+  const equilibrio = _top10pts.length >= 2
+    ? Math.round((_top10pts[_top10pts.length-1] / _top10pts[0]) * 100) : null;
+
+  // ── RECORD & PRIMATI ──
+  // Vittoria con più distacco (2° classificato con gap maggiore)
+  let recordDistacco = null, recordMedia = null, recordPartecipanti = null;
+  {
+    const byGara = {};
+    resultsRaw.forEach(r => { (byGara[r.gara_id] ||= []).push(r); });
+    for (const [gid, arr] of Object.entries(byGara)) {
+      const sorted = arr.sort((a,b)=>a.posizione-b.posizione);
+      const second = sorted.find(r=>r.posizione===2);
+      if (second && second.tempo) {
+        const gapSec = _parseGapSeconds(second.tempo);
+        if (gapSec > 0 && (!recordDistacco || gapSec > recordDistacco.gapSec)) {
+          recordDistacco = { winner: sorted[0], gapSec, gname: sorted[0]?.nome_gara, gid };
+        }
+      }
+      const media = parseFloat(sorted[0]?.media);
+      if (media && (!recordMedia || media > recordMedia.media)) {
+        recordMedia = { media, winner: sorted[0], gname: sorted[0]?.nome_gara, gid };
+      }
+      if (!recordPartecipanti || arr.length > recordPartecipanti.n) {
+        recordPartecipanti = { n: arr.length, gname: sorted[0]?.nome_gara, gid };
+      }
+    }
+  }
+  // Striscia di vittorie più lunga
+  let recordStreak = null;
+  {
+    const byAth = {};
+    for (const r of _sortedByDate) (byAth[r.atleta_id] ||= []).push(r);
+    for (const [id, hist] of Object.entries(byAth)) {
+      let cur = 0, max = 0;
+      for (const r of hist) { if (r.posizione === 1) { cur++; max = Math.max(max,cur); } else cur = 0; }
+      if (max >= 2 && (!recordStreak || max > recordStreak.streak)) recordStreak = { id, streak: max };
+    }
+  }
+  const _fmtSec = s => { const m=Math.floor(s/60), ss=s%60; return m>0?`${m}'${String(ss).padStart(2,'0')}"`:`${ss}"`; };
+
   const cardBase = 'background:var(--bg-card);border:1px solid var(--border-subtle);border-radius:8px;padding:20px;text-align:center';
   const tableBase = 'background:var(--bg-card);border:1px solid var(--border-subtle);border-radius:8px;overflow:hidden;margin-bottom:24px';
 
@@ -13653,6 +13778,63 @@ function _renderStatisticheCat(catKey, resultsRaw, athletes, calendar, catTabsHt
       <div style="${tableBase}">
         <div style="padding:12px 16px;background:var(--bg-secondary);border-bottom:1px solid var(--border-subtle);font-family:var(--font-heading);font-weight:700;font-size:.85rem;text-transform:uppercase;letter-spacing:.06em">📅 Gare per Mese</div>
         <div style="padding:16px">${monthBarsHtml || '<p style="color:var(--text-muted)">Dati insufficienti</p>'}</div>
+      </div>
+    </div>
+
+    <!-- RIVELAZIONE & FORMA -->
+    ${(rivelazione || inForma) ? `
+    <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(240px,1fr));gap:12px;margin-bottom:28px">
+      ${rivelazione ? `<div style="${cardBase};text-align:left">
+        <div style="font-size:.65rem;font-family:var(--font-heading);color:var(--text-muted);text-transform:uppercase;letter-spacing:.08em">🚀 Rivelazione</div>
+        <div style="font-weight:700;font-size:1rem;margin:6px 0"><a href="#/atleta/${esc(rivelazione.id)}">${esc(getName(rivelazione.id))}</a></div>
+        <div style="font-size:.8rem;color:#10b981;font-weight:700">+${rivelazione.gain} posizioni scalate</div>
+        <div style="font-size:.72rem;color:var(--text-muted)">ora ${rivelazione.nowRank}° in classifica</div>
+      </div>` : ''}
+      ${inForma ? `<div style="${cardBase};text-align:left">
+        <div style="font-size:.65rem;font-family:var(--font-heading);color:var(--text-muted);text-transform:uppercase;letter-spacing:.08em">📈 Più in forma</div>
+        <div style="font-weight:700;font-size:1rem;margin:6px 0"><a href="#/atleta/${esc(inForma.id)}">${esc(getName(inForma.id))}</a></div>
+        <div style="font-size:.8rem;color:#10b981;font-weight:700">+${inForma.delta} pt/gara recenti</div>
+        <div style="font-size:.72rem;color:var(--text-muted)">media ${inForma.recent} pt nelle ultime 3</div>
+      </div>` : ''}
+      ${rivalita ? `<div style="${cardBase};text-align:left">
+        <div style="font-size:.65rem;font-family:var(--font-heading);color:var(--text-muted);text-transform:uppercase;letter-spacing:.08em">⚔️ Rivalità più accesa</div>
+        <div style="font-weight:700;font-size:.88rem;margin:6px 0"><a href="#/atleta/${esc(rivalita.a[0])}">${esc(getName(rivalita.a[0]))}</a></div>
+        <div style="font-size:.72rem;color:var(--text-muted);margin:2px 0">vs</div>
+        <div style="font-weight:700;font-size:.88rem"><a href="#/atleta/${esc(rivalita.b[0])}">${esc(getName(rivalita.b[0]))}</a></div>
+        <div style="font-size:.75rem;color:var(--accent);margin-top:4px">${rivalita.pos}°–${rivalita.pos+1}° · solo ${rivalita.gap} pt di scarto</div>
+      </div>` : ''}
+      ${equilibrio !== null ? `<div style="${cardBase}">
+        <div style="font-size:1.3rem">⚖️</div>
+        <div style="font-size:.65rem;font-family:var(--font-heading);color:var(--text-muted);text-transform:uppercase;letter-spacing:.08em;margin:4px 0">Equilibrio</div>
+        <div style="font-family:var(--font-display);font-size:1.8rem;color:${equilibrio>=60?'#10b981':equilibrio>=35?'#f59e0b':'#ef4444'}">${equilibrio}%</div>
+        <div style="font-size:.72rem;color:var(--text-muted);margin-top:2px">${equilibrio>=60?'Categoria equilibrata':equilibrio>=35?'Margine medio':'Dominio netto del leader'}</div>
+      </div>` : ''}
+    </div>` : ''}
+
+    <!-- DOMINIO TERRITORIALE + RECORD -->
+    <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(300px,1fr));gap:24px;margin-bottom:28px">
+      ${topRegioni.length ? `<div style="${tableBase}">
+        <div style="padding:12px 16px;background:var(--bg-secondary);border-bottom:1px solid var(--border-subtle);font-family:var(--font-heading);font-weight:700;font-size:.85rem;text-transform:uppercase;letter-spacing:.06em">🗺️ Dominio territoriale (vittorie)</div>
+        <div style="padding:16px">
+          ${topRegioni.map(([reg,w])=>`
+            <div style="margin-bottom:8px">
+              <div style="display:flex;justify-content:space-between;font-size:.78rem;margin-bottom:3px">
+                <span style="font-weight:600">${esc(reg)}</span><span style="color:var(--text-muted)">${w} vitt.</span>
+              </div>
+              <div style="height:8px;background:var(--bg-elevated);border-radius:4px;overflow:hidden">
+                <div style="height:100%;width:${Math.round(w/maxRegW*100)}%;background:linear-gradient(90deg,#6366f1,#22d3ee);border-radius:4px"></div>
+              </div>
+            </div>`).join('')}
+        </div>
+      </div>` : ''}
+      <div style="${tableBase}">
+        <div style="padding:12px 16px;background:var(--bg-secondary);border-bottom:1px solid var(--border-subtle);font-family:var(--font-heading);font-weight:700;font-size:.85rem;text-transform:uppercase;letter-spacing:.06em">🏅 Record & Primati</div>
+        <div style="padding:8px 16px">
+          ${recordStreak ? `<div style="display:flex;justify-content:space-between;align-items:center;padding:8px 0;border-bottom:1px solid var(--border-subtle)"><span style="font-size:.78rem;color:var(--text-muted)">🔥 Striscia vittorie</span><span style="font-size:.85rem;font-weight:600"><a href="#/atleta/${esc(recordStreak.id)}">${esc(getName(recordStreak.id))}</a> · ${recordStreak.streak} di fila</span></div>` : ''}
+          ${recordDistacco ? `<div style="display:flex;justify-content:space-between;align-items:center;padding:8px 0;border-bottom:1px solid var(--border-subtle)"><span style="font-size:.78rem;color:var(--text-muted)">💨 Vittoria più netta</span><span style="font-size:.82rem;font-weight:600;text-align:right"><a href="#/atleta/${esc(recordDistacco.winner.atleta_id)}">${esc(recordDistacco.winner.cognome)}</a> · +${_fmtSec(recordDistacco.gapSec)}</span></div>` : ''}
+          ${recordMedia ? `<div style="display:flex;justify-content:space-between;align-items:center;padding:8px 0;border-bottom:1px solid var(--border-subtle)"><span style="font-size:.78rem;color:var(--text-muted)">⚡ Gara più veloce</span><span style="font-size:.82rem;font-weight:600;text-align:right">${recordMedia.media.toFixed(1)} km/h<br><span style="font-size:.68rem;color:var(--text-muted)">${esc((recordMedia.gname||'').slice(0,28))}</span></span></div>` : ''}
+          ${recordPartecipanti ? `<div style="display:flex;justify-content:space-between;align-items:center;padding:8px 0"><span style="font-size:.78rem;color:var(--text-muted)">👥 Gara più affollata</span><span style="font-size:.82rem;font-weight:600;text-align:right">${recordPartecipanti.n} atleti<br><span style="font-size:.68rem;color:var(--text-muted)">${esc((recordPartecipanti.gname||'').slice(0,28))}</span></span></div>` : ''}
+        </div>
       </div>
     </div>
   `);
