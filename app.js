@@ -13150,22 +13150,21 @@ async function renderStatistiche(selectedCatKey) {
   if (!globalData) return;
   const { resultsRaw: allResults, athletes, calendar } = globalData;
 
-  // Categorie disponibili: lista unica (categoria|genere) → chiave URL
-  const availableCats = [...new Set(allResults.map(r => `${r.categoria}|${r.genere}`))].sort();
+  // Categorie standard (codici classifica) presenti nei risultati, in ordine fisso
+  const _presentCodes = new Set(allResults.map(r => getRankingFileCode(r)).filter(Boolean));
+  const availableCats = RANKING_CODES.filter(c => _presentCodes.has(c));
   const catTabsHtml = `
     <div class="cat-tabs" style="margin-bottom:28px;flex-wrap:wrap">
       <button class="cat-tab${!selectedCatKey ? ' active' : ''}" onclick="location.hash='#/statistiche'">Generale</button>
-      ${availableCats.map(key => {
-        const [cat, gen] = key.split('|');
-        const label = catGenLabel(cat, gen);
-        const isActive = selectedCatKey === key;
-        return `<button class="cat-tab${isActive ? ' active' : ''}" onclick="location.hash='#/statistiche/${encodeURIComponent(key)}'">${label}</button>`;
+      ${availableCats.map(code => {
+        const isActive = selectedCatKey === code;
+        return `<button class="cat-tab${isActive ? ' active' : ''}" onclick="location.hash='#/statistiche/${encodeURIComponent(code)}'">${catLabel(code)}</button>`;
       }).join('')}
     </div>`;
 
   // Filtra i risultati per la categoria selezionata (o usa tutti per il generale)
   const resultsRaw = selectedCatKey
-    ? allResults.filter(r => `${r.categoria}|${r.genere}` === selectedCatKey)
+    ? allResults.filter(r => getRankingFileCode(r) === selectedCatKey)
     : allResults;
 
   // Se categoria singola → mostra vista dedicata
@@ -13178,20 +13177,20 @@ async function renderStatistiche(selectedCatKey) {
   const totalAthletes = Object.keys(athletes).length;
   const totalKm = Math.round(resultsRaw.reduce((s,r) => s+(parseFloat(r.km)||0), 0)).toLocaleString('it-IT');
 
-  // Top per categoria/genere (vincitori e marcatori)
-  const catBest = {}; // key = "cat|gen" -> { winner, scorer }
+  // Top per categoria (codice classifica) — vincitori e marcatori
+  const catBest = {}; // key = codice (es. ES1_M) -> { wins, pts }
   resultsRaw.forEach(r => {
-    const key = `${r.categoria}|${r.genere}`;
+    const key = getRankingFileCode(r); if (!key) return;
     if (!catBest[key]) catBest[key] = { wins:{}, pts:{} };
     const id = r.atleta_id;
     if (r.posizione === 1) { catBest[key].wins[id] = (catBest[key].wins[id]||0)+1; }
     catBest[key].pts[id] = (catBest[key].pts[id]||0)+(r.punti_effettivi||0);
   });
 
-  // Gare per categoria/genere
+  // Gare per categoria (codice classifica)
   const garePerCat = {};
   resultsRaw.forEach(r => {
-    const key = `${r.categoria}|${r.genere}`;
+    const key = getRankingFileCode(r); if (!key) return;
     if (!garePerCat[key]) garePerCat[key] = new Set();
     garePerCat[key].add(r.gara_id);
   });
@@ -13220,9 +13219,8 @@ async function renderStatistiche(selectedCatKey) {
 
   // Render top vincitori e marcatori per categoria
   const renderTopTable = (type) => {
-    const cats = [...new Set(resultsRaw.map(r => `${r.categoria}|${r.genere}`))].sort();
+    const cats = RANKING_CODES.filter(c => catBest[c]);
     return cats.map(key => {
-      const [cat, gen] = key.split('|');
       const d = catBest[key];
       if (!d) return '';
       const map = type === 'wins' ? d.wins : d.pts;
@@ -13231,7 +13229,7 @@ async function renderStatistiche(selectedCatKey) {
       const [id, val] = sorted[0];
       return `
         <div style="display:flex;align-items:center;gap:12px;padding:10px 16px;border-bottom:1px solid var(--border-subtle);transition:background 0.12s" onmouseover="this.style.background='var(--bg-elevated)'" onmouseout="this.style.background=''">
-          <div style="min-width:160px;font-size:0.75rem;font-family:var(--font-heading);color:var(--text-muted);text-transform:uppercase;letter-spacing:0.06em">${catGenLabel(cat,gen)}</div>
+          <div style="min-width:160px;font-size:0.75rem;font-family:var(--font-heading);color:var(--text-muted);text-transform:uppercase;letter-spacing:0.06em">${catLabel(key)}</div>
           <div style="flex:1;font-family:var(--font-heading);font-weight:700;font-size:0.95rem">
             <a href="#/atleta/${esc(id)}" style="text-transform:uppercase">${esc(getName(id))}</a>
           </div>
@@ -13436,19 +13434,19 @@ async function renderStatistiche(selectedCatKey) {
   // ── CONFRONTO CATEGORIE: gare, atleti, equilibrio per ogni categoria ──
   const _catCompare = {};
   resultsRaw.forEach(r => {
-    const key = `${r.categoria}|${r.genere}`;
+    const key = getRankingFileCode(r); if (!key) return;
     if (!_catCompare[key]) _catCompare[key] = { gare: new Set(), atleti: new Set(), pts: {} };
     const c = _catCompare[key];
     if (r.gara_id) c.gare.add(r.gara_id);
     if (r.punti_effettivi > 0) c.atleti.add(r.atleta_id);
     c.pts[r.atleta_id] = (c.pts[r.atleta_id]||0) + (r.punti_effettivi||0);
   });
-  const _catRows = Object.entries(_catCompare).map(([key, c]) => {
-    const [cat, gen] = key.split('|');
+  const _catRows = RANKING_CODES.filter(c => _catCompare[c]).map((key) => {
+    const c = _catCompare[key];
     const top = Object.values(c.pts).sort((a,b)=>b-a);
     const equil = top.length >= 2 ? Math.round((top[Math.min(9,top.length-1)] / top[0]) * 100) : 0;
-    return { key, label: catGenLabel(cat,gen), gare: c.gare.size, atleti: c.atleti.size, equil };
-  }).sort((a,b)=>b.gare-a.gare);
+    return { key, label: catLabel(key), gare: c.gare.size, atleti: c.atleti.size, equil };
+  });
   const _maxGareCat = Math.max(..._catRows.map(r=>r.gare), 1);
   const _maxAtlCat  = Math.max(..._catRows.map(r=>r.atleti), 1);
   const _catCompareHtml = _catRows.map(r => `
@@ -13534,8 +13532,8 @@ async function renderStatistiche(selectedCatKey) {
 
 // ── STATISTICHE CATEGORIA SINGOLA ────────────────────────────
 function _renderStatisticheCat(catKey, resultsRaw, athletes, calendar, catTabsHtml) {
-  const [cat, gen] = catKey.split('|');
-  const label = catGenLabel(cat, gen);
+  // catKey è un codice classifica (es. ES1_M)
+  const label = catLabel(catKey);
 
   if (!resultsRaw.length) {
     setPage(`<div class="pg-header"><h1 class="pg-title">STATISTICHE — ${esc(label)}</h1></div>${catTabsHtml}<p style="color:var(--text-muted)">Nessun dato per questa categoria.</p>`);
