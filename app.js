@@ -4119,15 +4119,21 @@ function buildWeeklyNarrative(filtered, resultsRaw, catCode) {
 
   const movers = [];
   for (const entry of filtered) {
-    const curRank  = _curRankMap[entry.atleta_id];
-    const prevRank = _prevRankMap[entry.atleta_id];
-    if (curRank == null || prevRank == null) continue;
-    const gain = prevRank - curRank; // positivo = salito in classifica
-    if (gain === 0) continue;
-    const hadTop5LastWeek = _allRaw.some(r =>
-      r.atleta_id === entry.atleta_id && r.data >= cutWeek && r.posizione && r.posizione <= 5
-    );
-    movers.push({ entry, gain, rankAfter: curRank, rankBefore: prevRank, hadTop5LastWeek });
+    // Usa il trend già calcolato nella tabella (entry.trend = stessa finestra
+    // dell'ultimo giorno di gara) se disponibile; altrimenti ricava dal confronto settimanale.
+    let gain, curRank;
+    if (typeof entry.trend === 'number' && entry.trend !== 0) {
+      gain = entry.trend;
+      curRank = entry.pos;
+    } else {
+      const cr = _curRankMap[entry.atleta_id];
+      const pr = _prevRankMap[entry.atleta_id];
+      if (cr == null || pr == null) continue;
+      gain = pr - cr;
+      curRank = cr;
+    }
+    if (!gain) continue;
+    movers.push({ entry, gain, rankAfter: curRank, rankBefore: curRank + gain });
   }
   // Punteggio "rilevanza": premia chi si muove nelle posizioni alte + chi scala molto.
   // Un movimento al 5° posto conta più dello stesso movimento al 30°.
