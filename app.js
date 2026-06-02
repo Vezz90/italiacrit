@@ -4129,14 +4129,26 @@ function buildWeeklyNarrative(filtered, resultsRaw, catCode) {
     );
     movers.push({ entry, gain, rankAfter: curRank, rankBefore: prevRank, hadTop5LastWeek });
   }
-  movers.sort((a, b) => Math.abs(b.gain) - Math.abs(a.gain));
-  // Risers: top 5 nella gara + attualmente in top 30
-  const risers  = movers.filter(m => m.gain >= 1 && m.hadTop5LastWeek && m.rankAfter <= 30).slice(0, 3);
-  // Fallers: solo chi era già tra i primi 20
-  const fallers = movers.filter(m => m.gain <= -2 && m.rankBefore <= 20).slice(0, 1);
+  // Punteggio "rilevanza": premia chi si muove nelle posizioni alte + chi scala molto.
+  // Un movimento al 5° posto conta più dello stesso movimento al 30°.
+  const _moverScore = m => {
+    const posWeight = m.rankAfter <= 5 ? 3 : m.rankAfter <= 10 ? 2.2 : m.rankAfter <= 15 ? 1.6 : m.rankAfter <= 25 ? 1 : 0.6;
+    return m.gain * posWeight;
+  };
+  // Risers: salito di almeno 1 posizione, attualmente in top 30.
+  // Niente più vincolo "top5 nella gara": conta il movimento reale in classifica.
+  const risers = movers
+    .filter(m => m.gain >= 1 && m.rankAfter <= 30)
+    .sort((a, b) => _moverScore(b) - _moverScore(a))
+    .slice(0, 3);
+  // Fallers: chi era già tra i primi 20 e ha perso posizioni
+  const fallers = movers.filter(m => m.gain <= -2 && m.rankBefore <= 20)
+    .sort((a, b) => a.gain - b.gain).slice(0, 1);
   for (const m of risers) {
     const pos = m.gain === 1 ? 'una posizione' : `${m.gain} posizioni`;
-    lines.push(`${m.entry.cognome} guadagna ${pos} e sale ${m.rankAfter}°`);
+    // Evidenzia se è entrato/è nei primi posti
+    const where = m.rankAfter <= 10 ? ` ed entra nei primi 10` : '';
+    lines.push(`${m.entry.cognome} guadagna ${pos} e sale ${m.rankAfter}°${where}`);
   }
   for (const m of fallers)
     lines.push(`${m.entry.cognome} perde ${Math.abs(m.gain)} posizion${Math.abs(m.gain)===1?'e':'i'} e scende al ${m.rankAfter}°`);
