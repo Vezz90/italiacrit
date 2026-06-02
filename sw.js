@@ -1,4 +1,4 @@
-const CACHE_NAME = 'italiacrit-cache-v147';
+const CACHE_NAME = 'italiacrit-cache-v148';
 
 // File statici: messi in cache e serviti velocemente
 const STATIC_ASSETS = [
@@ -77,7 +77,22 @@ self.addEventListener('fetch', event => {
     return;
   }
 
-  // ── STRATEGIA CACHE-FIRST per tutti gli altri asset (HTML, CSS, JS) ──
+  // ── NETWORK-FIRST per app.js / index.html / *.css (codice dell'app) ──
+  // Evita di servire versioni vecchie dell'app dopo un deploy.
+  if (/\/(app\.js|index\.html|style\.css|design\.css)(\?|$)/.test(url) || url.endsWith('/')) {
+    event.respondWith(
+      fetch(event.request)
+        .then(networkResponse => {
+          const clone = networkResponse.clone();
+          caches.open(CACHE_NAME).then(cache => cache.put(event.request, clone));
+          return networkResponse;
+        })
+        .catch(() => caches.match(event.request))
+    );
+    return;
+  }
+
+  // ── STRATEGIA CACHE-FIRST per tutti gli altri asset ──
   event.respondWith(
     caches.match(event.request).then(cached => {
       if (cached) return cached;
