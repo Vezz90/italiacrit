@@ -1080,6 +1080,34 @@ const ATHLETE_GENDER_FIXES = {
   'DI_PARDO_BEATRICE':    { genere:'F', categoria:'ES1_F' },
 };
 
+// ── Cognomi composti ──────────────────────────────────────────────
+// Lo scraper FCI a volte spezza i cognomi composti mettendo solo la
+// particella in `cognome` e il resto in `nome` (es. cognome="DI",
+// nome="PARDO BEATRICE"). Nel profilo/team il problema non si vede perché
+// cognome+nome vengono concatenati, ma in tutte le altre funzioni che
+// mostrano solo il cognome compare "DI". Qui ricostruiamo il cognome.
+const SURNAME_PARTICLES = new Set([
+  'DI','DE','DA','DEL','DELL','DELLA','DELLE','DELLO','DELLI','DEI','DEGLI',
+  'DAL','DALL','DALLA','DALLE','DALLO','DAGLI','DALLI','LO','LA','LE','LI',
+  'DU','DES','SAN','SANTA','SANTO','SANT','MC','MAC','VAN','VON','DER','TEN','TER'
+]);
+function fixCompoundSurname(cognome, nome) {
+  let c = (cognome == null ? '' : String(cognome)).trim();
+  let n = (nome    == null ? '' : String(nome)).trim();
+  if (!c || !n) return { cognome: c, nome: n };
+  const cWords = c.split(/\s+/);
+  const nWords = n.split(/\s+/);
+  const isParticle = w => SURNAME_PARTICLES.has(w.replace(/['’]/g, '').toUpperCase());
+  let guard = 0;
+  // Finché il "cognome" è composto SOLO da particelle, sposta la prima
+  // parola del nome dentro al cognome (lasciando almeno una parola al nome).
+  while (nWords.length >= 2 && cWords.every(isParticle) && guard < 4) {
+    cWords.push(nWords.shift());
+    guard++;
+  }
+  return { cognome: cWords.join(' '), nome: nWords.join(' ') };
+}
+
 // Preload tutto in parallelo
 async function loadAll() {
   // Strategia video:
@@ -1132,6 +1160,14 @@ async function loadAll() {
     for (const [id, fix] of Object.entries(ATHLETE_GENDER_FIXES)) {
       if (athletes[id]) Object.assign(athletes[id], fix);
     }
+    // Ricostruisci i cognomi composti spezzati dallo scraper.
+    for (const id in athletes) {
+      const ath = athletes[id];
+      if (!ath) continue;
+      const fixed = fixCompoundSurname(ath.cognome, ath.nome);
+      ath.cognome = fixed.cognome;
+      ath.nome    = fixed.nome;
+    }
   }
   if (resultsRaw) {
     for (const r of resultsRaw) {
@@ -1140,15 +1176,19 @@ async function loadAll() {
     }
   }
 
-  // Normalizza cognome/nome in resultsRaw con i dati completi da athletes.
-  // Lo scraper a volte tronca i cognomi composti (es. "DE ROSA" → solo "DE").
-  // Il file athletes.json invece contiene il cognome registrato per intero.
-  if (resultsRaw && athletes) {
+  // Normalizza cognome/nome in resultsRaw con i dati completi da athletes
+  // (già corretti sopra). Per gli atleti non presenti in athletes.json
+  // applichiamo comunque la ricostruzione dei cognomi composti.
+  if (resultsRaw) {
     for (const r of resultsRaw) {
-      const ath = athletes[r.atleta_id];
+      const ath = athletes && athletes[r.atleta_id];
       if (ath) {
         if (ath.cognome) r.cognome = ath.cognome;
-        if (ath.nome)    r.nome    = ath.nome;
+        if (ath.nome != null) r.nome = ath.nome;
+      } else {
+        const fixed = fixCompoundSurname(r.cognome, r.nome);
+        r.cognome = fixed.cognome;
+        r.nome    = fixed.nome;
       }
     }
   }
@@ -1311,6 +1351,20 @@ const RANKING_CODES = [
 
 async function loadRanking(code) {
   const data = await loadJson(`data/rankings/${code}.json`) || [];
+  // Correggi i cognomi composti spezzati dallo scraper, allineandoli ai
+  // dati già normalizzati in athletes (fallback: ricostruzione particelle).
+  const athMap = globalData && globalData.athletes;
+  for (const a of data) {
+    const ath = athMap && athMap[a.atleta_id];
+    if (ath) {
+      if (ath.cognome) a.cognome = ath.cognome;
+      if (ath.nome != null) a.nome = ath.nome;
+    } else {
+      const fixed = fixCompoundSurname(a.cognome, a.nome);
+      a.cognome = fixed.cognome;
+      a.nome    = fixed.nome;
+    }
+  }
   // Protezione: filtra atleti del genere sbagliato (possibile errore scraper)
   if (!globalData) return data;
   const isFemale = code.endsWith('_F');
