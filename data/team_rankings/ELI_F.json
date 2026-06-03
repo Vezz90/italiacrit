@@ -2,26 +2,50 @@
   {
     "team_id": "UAE_TEAM_ADQ",
     "team_nome": "UAE TEAM ADQ",
-    "punti": 390,
+    "punti": 408,
     "vittorie": 2,
     "p1": 2,
     "p2": 3,
     "p3": 2,
-    "pout": 9,
+    "pout": 10,
     "n_atleti": 8,
     "pos": 1
   },
   {
     "team_id": "LIDL_TREK",
     "team_nome": "LIDL - TREK",
-    "punti": 209,
+    "punti": 248,
     "vittorie": 3,
     "p1": 3,
     "p2": 1,
     "p3": 0,
-    "pout": 5,
+    "pout": 7,
     "n_atleti": 5,
     "pos": 2
+  },
+  {
+    "team_id": "FDJ_UNITED_SUEZ",
+    "team_nome": "FDJ UNITED - SUEZ",
+    "punti": 207,
+    "vittorie": 2,
+    "p1": 2,
+    "p2": 0,
+    "p3": 2,
+    "pout": 6,
+    "n_atleti": 6,
+    "pos": 3
+  },
+  {
+    "team_id": "TEAM_SD_WORX_PROTIME",
+    "team_nome": "TEAM SD WORX-PROTIME",
+    "punti": 174,
+    "vittorie": 2,
+    "p1": 2,
+    "p2": 1,
+    "p3": 1,
+    "pout": 2,
+    "n_atleti": 5,
+    "pos": 4
   },
   {
     "team_id": "ISOLMANT_PREMAC_VITTORIA",
@@ -33,31 +57,19 @@
     "p3": 1,
     "pout": 8,
     "n_atleti": 6,
-    "pos": 3
-  },
-  {
-    "team_id": "FDJ_UNITED_SUEZ",
-    "team_nome": "FDJ UNITED - SUEZ",
-    "punti": 162,
-    "vittorie": 1,
-    "p1": 1,
-    "p2": 0,
-    "p3": 2,
-    "pout": 6,
-    "n_atleti": 6,
-    "pos": 4
-  },
-  {
-    "team_id": "TEAM_SD_WORX_PROTIME",
-    "team_nome": "TEAM SD WORX-PROTIME",
-    "punti": 138,
-    "vittorie": 2,
-    "p1": 2,
-    "p2": 0,
-    "p3": 1,
-    "pout": 2,
-    "n_atleti": 5,
     "pos": 5
+  },
+  {
+    "team_id": "CANYON_SRAM_ZONDACRYPTO",
+    "team_nome": "CANYON SRAM ZONDACRYPTO",
+    "punti": 151,
+    "vittorie": 0,
+    "p1": 0,
+    "p2": 1,
+    "p3": 3,
+    "pout": 3,
+    "n_atleti": 4,
+    "pos": 6
   },
   {
     "team_id": "TOP_GIRLS_FASSA_BORTOLO",
@@ -69,18 +81,6 @@
     "p3": 0,
     "pout": 13,
     "n_atleti": 8,
-    "pos": 6
-  },
-  {
-    "team_id": "CANYON_SRAM_ZONDACRYPTO",
-    "team_nome": "CANYON SRAM ZONDACRYPTO",
-    "punti": 121,
-    "vittorie": 0,
-    "p1": 0,
-    "p2": 1,
-    "p3": 2,
-    "pout": 3,
-    "n_atleti": 4,
     "pos": 7
   },
   {
@@ -134,26 +134,38 @@
   {
     "team_id": "TEAM_VISMA_LEASE_A_BIKE",
     "team_nome": "TEAM VISMA LEASE A BIKE",
-    "punti": 77,
+    "punti": 83,
     "vittorie": 0,
     "p1": 0,
     "p2": 0,
     "p3": 1,
-    "pout": 5,
+    "pout": 6,
     "n_atleti": 5,
     "pos": 12
   },
   {
     "team_id": "EF_EDUCATION_OATLY",
     "team_nome": "EF EDUCATION OATLY",
-    "punti": 66,
+    "punti": 75,
     "vittorie": 0,
     "p1": 0,
     "p2": 1,
     "p3": 0,
-    "pout": 2,
+    "pout": 3,
     "n_atleti": 2,
     "pos": 13
+  },
+  {
+    "team_id": "MOVISTAR_TEAM_ACADEMY",
+    "team_nome": "MOVISTAR TEAM ACADEMY",
+    "punti": 63,
+    "vittorie": 0,
+    "p1": 0,
+    "p2": 1,
+    "p3": 0,
+    "pout": 3,
+    "n_atleti": 2,
+    "pos": 14
   },
   {
     "team_id": "AROMITALIA_VAIANO",
@@ -165,7 +177,7 @@
     "p3": 0,
     "pout": 3,
     "n_atleti": 4,
-    "pos": 14
+    "pos": 15
   },
   {
     "team_id": "LIV_ALULA_JAYCO",
@@ -177,24 +189,12 @@
     "p3": 0,
     "pout": 4,
     "n_atleti": 2,
-    "pos": 15
+    "pos": 16
   },
   {
     "team_id": "HUMAN_POWERED_HEALTH",
     "team_nome": "HUMAN POWERED HEALTH",
     "punti": 54,
-    "vittorie": 0,
-    "p1": 0,
-    "p2": 1,
-    "p3": 0,
-    "pout": 2,
-    "n_atleti": 2,
-    "pos": 16
-  },
-  {
-    "team_id": "MOVISTAR_TEAM_ACADEMY",
-    "team_nome": "MOVISTAR TEAM ACADEMY",
-    "punti": 51,
     "vittorie": 0,
     "p1": 0,
     "p2": 1,
@@ -324,6 +324,18 @@
     "pos": 27
   },
   {
+    "team_id": "AG_INSURANCE_SOUDAL",
+    "team_nome": "AG INSURANCE SOUDAL",
+    "punti": 19,
+    "vittorie": 0,
+    "p1": 0,
+    "p2": 0,
+    "p3": 0,
+    "pout": 3,
+    "n_atleti": 3,
+    "pos": 28
+  },
+  {
     "team_id": "FANINI_PRO_CYCLING",
     "team_nome": "FANINI PRO CYCLING",
     "punti": 19,
@@ -333,7 +345,7 @@
     "p3": 0,
     "pout": 3,
     "n_atleti": 2,
-    "pos": 28
+    "pos": 29
   },
   {
     "team_id": "WCC_UCI_WORLD_CYCLING_CENTRE",
@@ -345,18 +357,6 @@
     "p3": 0,
     "pout": 1,
     "n_atleti": 1,
-    "pos": 29
-  },
-  {
-    "team_id": "AG_INSURANCE_SOUDAL",
-    "team_nome": "AG INSURANCE SOUDAL",
-    "punti": 16,
-    "vittorie": 0,
-    "p1": 0,
-    "p2": 0,
-    "p3": 0,
-    "pout": 2,
-    "n_atleti": 2,
     "pos": 30
   },
   {

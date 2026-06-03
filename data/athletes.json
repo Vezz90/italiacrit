@@ -1,4 +1,449 @@
 {
+  "VOLLERING_DEMI": {
+    "id": "VOLLERING_DEMI",
+    "nome": "DEMI",
+    "cognome": "VOLLERING",
+    "team_attuale": "FDJ UNITED - SUEZ",
+    "team_id": "FDJ_UNITED_SUEZ",
+    "categoria": "ELI_F",
+    "genere": "F",
+    "punti_totali": 65,
+    "risultati": [
+      {
+        "gara_id": "GIRO_D_ITALIA_WOMEN_QUINTA_TAPPA_2026-06-03_ELI_F",
+        "nome_gara": "GIRO D'ITALIA WOMEN QUINTA TAPPA",
+        "data": "2026-06-03",
+        "posizione": 1,
+        "punti_effettivi": 45,
+        "team": "FDJ UNITED - SUEZ",
+        "moltiplicatore": 3,
+        "tipo": "internazionale",
+        "regione": "UNDER",
+        "km": "146.000",
+        "media": "33.209"
+      },
+      {
+        "gara_id": "GIRO_D_ITALIA_WOMEN_QUARTA_TAPPA_CRONOSCALATA_2026-06-02_ELI_F",
+        "nome_gara": "GIRO D'ITALIA WOMEN QUARTA TAPPA CRONOSCALATA",
+        "data": "2026-06-02",
+        "posizione": 3,
+        "punti_effettivi": 20,
+        "team": "FDJ UNITED - SUEZ",
+        "moltiplicatore": 2,
+        "tipo": "nazionale",
+        "regione": "ABRUZZO",
+        "km": "12.700",
+        "media": "24.089"
+      }
+    ]
+  },
+  "VAN_DER_BREGGEN_ANNA": {
+    "id": "VAN_DER_BREGGEN_ANNA",
+    "nome": "ANNA",
+    "cognome": "VAN DER BREGGEN",
+    "team_attuale": "TEAM SD WORX-PROTIME",
+    "team_id": "TEAM_SD_WORX_PROTIME",
+    "categoria": "ELI_F",
+    "genere": "F",
+    "punti_totali": 66,
+    "risultati": [
+      {
+        "gara_id": "GIRO_D_ITALIA_WOMEN_QUINTA_TAPPA_2026-06-03_ELI_F",
+        "nome_gara": "GIRO D'ITALIA WOMEN QUINTA TAPPA",
+        "data": "2026-06-03",
+        "posizione": 2,
+        "punti_effettivi": 36,
+        "team": "TEAM SD WORX-PROTIME",
+        "moltiplicatore": 3,
+        "tipo": "internazionale",
+        "regione": "UNDER",
+        "km": "146.000",
+        "media": "33.209"
+      },
+      {
+        "gara_id": "GIRO_D_ITALIA_WOMEN_QUARTA_TAPPA_CRONOSCALATA_2026-06-02_ELI_F",
+        "nome_gara": "GIRO D'ITALIA WOMEN QUARTA TAPPA CRONOSCALATA",
+        "data": "2026-06-02",
+        "posizione": 1,
+        "punti_effettivi": 30,
+        "team": "TEAM SD WORX-PROTIME",
+        "moltiplicatore": 2,
+        "tipo": "nazionale",
+        "regione": "ABRUZZO",
+        "km": "12.700",
+        "media": "24.089"
+      }
+    ]
+  },
+  "NIEDERMAIER_ANTONIA": {
+    "id": "NIEDERMAIER_ANTONIA",
+    "nome": "ANTONIA",
+    "cognome": "NIEDERMAIER",
+    "team_attuale": "CANYON SRAM ZONDACRYPTO",
+    "team_id": "CANYON_SRAM_ZONDACRYPTO",
+    "categoria": "ELI_F",
+    "genere": "F",
+    "punti_totali": 46,
+    "risultati": [
+      {
+        "gara_id": "GIRO_D_ITALIA_WOMEN_QUINTA_TAPPA_2026-06-03_ELI_F",
+        "nome_gara": "GIRO D'ITALIA WOMEN QUINTA TAPPA",
+        "data": "2026-06-03",
+        "posizione": 3,
+        "punti_effettivi": 30,
+        "team": "CANYON SRAM ZONDACRYPTO",
+        "moltiplicatore": 3,
+        "tipo": "internazionale",
+        "regione": "UNDER",
+        "km": "146.000",
+        "media": "33.209"
+      },
+      {
+        "gara_id": "GIRO_D_ITALIA_WOMEN_QUARTA_TAPPA_CRONOSCALATA_2026-06-02_ELI_F",
+        "nome_gara": "GIRO D'ITALIA WOMEN QUARTA TAPPA CRONOSCALATA",
+        "data": "2026-06-02",
+        "posizione": 4,
+        "punti_effettivi": 16,
+        "team": "CANYON SRAM ZONDACRYPTO",
+        "moltiplicatore": 2,
+        "tipo": "nazionale",
+        "regione": "ABRUZZO",
+        "km": "12.700",
+        "media": "24.089"
+      }
+    ]
+  },
+  "HOLMGREN_ISABELLA": {
+    "id": "HOLMGREN_ISABELLA",
+    "nome": "ISABELLA",
+    "cognome": "HOLMGREN",
+    "team_attuale": "LIDL - TREK",
+    "team_id": "LIDL_TREK",
+    "categoria": "ELI_F",
+    "genere": "F",
+    "punti_totali": 26,
+    "risultati": [
+      {
+        "gara_id": "GIRO_D_ITALIA_WOMEN_QUINTA_TAPPA_2026-06-03_ELI_F",
+        "nome_gara": "GIRO D'ITALIA WOMEN QUINTA TAPPA",
+        "data": "2026-06-03",
+        "posizione": 4,
+        "punti_effettivi": 24,
+        "team": "LIDL - TREK",
+        "moltiplicatore": 3,
+        "tipo": "internazionale",
+        "regione": "UNDER",
+        "km": "146.000",
+        "media": "33.209"
+      },
+      {
+        "gara_id": "GIRO_D_ITALIA_WOMEN_QUARTA_TAPPA_CRONOSCALATA_2026-06-02_ELI_F",
+        "nome_gara": "GIRO D'ITALIA WOMEN QUARTA TAPPA CRONOSCALATA",
+        "data": "2026-06-02",
+        "posizione": 10,
+        "punti_effettivi": 2,
+        "team": "LIDL - TREK",
+        "moltiplicatore": 2,
+        "tipo": "nazionale",
+        "regione": "ABRUZZO",
+        "km": "12.700",
+        "media": "24.089"
+      }
+    ]
+  },
+  "LONGO_BORGHINI_ELISA": {
+    "id": "LONGO_BORGHINI_ELISA",
+    "nome": "BORGHINI ELISA",
+    "cognome": "LONGO",
+    "team_attuale": "UAE TEAM ADQ",
+    "team_id": "UAE_TEAM_ADQ",
+    "categoria": "ELI_F",
+    "genere": "F",
+    "punti_totali": 117,
+    "risultati": [
+      {
+        "gara_id": "GIRO_D_ITALIA_WOMEN_QUINTA_TAPPA_2026-06-03_ELI_F",
+        "nome_gara": "GIRO D'ITALIA WOMEN QUINTA TAPPA",
+        "data": "2026-06-03",
+        "posizione": 5,
+        "punti_effettivi": 18,
+        "team": "UAE TEAM ADQ",
+        "moltiplicatore": 3,
+        "tipo": "internazionale",
+        "regione": "UNDER",
+        "km": "146.000",
+        "media": "33.209"
+      },
+      {
+        "gara_id": "GIRO_D_ITALIA_WOMEN_QUARTA_TAPPA_CRONOSCALATA_2026-06-02_ELI_F",
+        "nome_gara": "GIRO D'ITALIA WOMEN QUARTA TAPPA CRONOSCALATA",
+        "data": "2026-06-02",
+        "posizione": 8,
+        "punti_effettivi": 6,
+        "team": "UAE TEAM ADQ",
+        "moltiplicatore": 2,
+        "tipo": "nazionale",
+        "regione": "ABRUZZO",
+        "km": "12.700",
+        "media": "24.089"
+      },
+      {
+        "gara_id": "GIRO_D_ITALIA_WOMEN_TERZA_TAPPA_2026-06-01_ELI_F",
+        "nome_gara": "GIRO D'ITALIA WOMEN TERZA TAPPA",
+        "data": "2026-06-01",
+        "posizione": 4,
+        "punti_effettivi": 24,
+        "team": "UAE TEAM ADQ",
+        "moltiplicatore": 3,
+        "tipo": "internazionale",
+        "regione": "UNDER",
+        "km": "156.000",
+        "media": "41.839"
+      },
+      {
+        "gara_id": "ORO_IN_EURO_2026-03-08_ELI_F",
+        "nome_gara": "ORO IN EURO",
+        "data": "2026-03-08",
+        "posizione": 1,
+        "punti_effettivi": 45,
+        "team": "UAE TEAM ADQ",
+        "moltiplicatore": 3,
+        "tipo": "internazionale",
+        "regione": "TOSCANA",
+        "km": "106.400",
+        "media": "43.111"
+      },
+      {
+        "gara_id": "12_STRADE_BIANCHE_DONNE_2026-03-07_ELI_F",
+        "nome_gara": "12 STRADE BIANCHE DONNE",
+        "data": "2026-03-07",
+        "posizione": 4,
+        "punti_effettivi": 24,
+        "team": "UAE TEAM ADQ",
+        "moltiplicatore": 3,
+        "tipo": "internazionale",
+        "regione": "TOSCANA",
+        "km": "133.000",
+        "media": "36.996"
+      }
+    ]
+  },
+  "FISHER_BLACK_NIAMH": {
+    "id": "FISHER_BLACK_NIAMH",
+    "nome": "NIAMH",
+    "cognome": "FISHER-BLACK",
+    "team_attuale": "LIDL - TREK",
+    "team_id": "LIDL_TREK",
+    "categoria": "ELI_F",
+    "genere": "F",
+    "punti_totali": 36,
+    "risultati": [
+      {
+        "gara_id": "GIRO_D_ITALIA_WOMEN_QUINTA_TAPPA_2026-06-03_ELI_F",
+        "nome_gara": "GIRO D'ITALIA WOMEN QUINTA TAPPA",
+        "data": "2026-06-03",
+        "posizione": 6,
+        "punti_effettivi": 15,
+        "team": "LIDL - TREK",
+        "moltiplicatore": 3,
+        "tipo": "internazionale",
+        "regione": "UNDER",
+        "km": "146.000",
+        "media": "33.209"
+      },
+      {
+        "gara_id": "GIRO_DELL_APPENNINO_DONNE_2026-03-22_ELI_F",
+        "nome_gara": "GIRO DELL'APPENNINO DONNE",
+        "data": "2026-03-22",
+        "posizione": 5,
+        "punti_effettivi": 18,
+        "team": "LIDL - TREK",
+        "moltiplicatore": 3,
+        "tipo": "internazionale",
+        "regione": "LIGURIA",
+        "km": "111.000",
+        "media": "40.583"
+      },
+      {
+        "gara_id": "12_STRADE_BIANCHE_DONNE_2026-03-07_ELI_F",
+        "nome_gara": "12 STRADE BIANCHE DONNE",
+        "data": "2026-03-07",
+        "posizione": 10,
+        "punti_effettivi": 3,
+        "team": "LIDL - TREK",
+        "moltiplicatore": 3,
+        "tipo": "internazionale",
+        "regione": "TOSCANA",
+        "km": "133.000",
+        "media": "36.996"
+      }
+    ]
+  },
+  "REUSSER_MARLEN": {
+    "id": "REUSSER_MARLEN",
+    "nome": "MARLEN",
+    "cognome": "REUSSER",
+    "team_attuale": "MOVISTAR TEAM ACADEMY",
+    "team_id": "MOVISTAR_TEAM_ACADEMY",
+    "categoria": "ELI_F",
+    "genere": "F",
+    "punti_totali": 48,
+    "risultati": [
+      {
+        "gara_id": "GIRO_D_ITALIA_WOMEN_QUINTA_TAPPA_2026-06-03_ELI_F",
+        "nome_gara": "GIRO D'ITALIA WOMEN QUINTA TAPPA",
+        "data": "2026-06-03",
+        "posizione": 7,
+        "punti_effettivi": 12,
+        "team": "MOVISTAR TEAM ACADEMY",
+        "moltiplicatore": 3,
+        "tipo": "internazionale",
+        "regione": "UNDER",
+        "km": "146.000",
+        "media": "33.209"
+      },
+      {
+        "gara_id": "GIRO_D_ITALIA_WOMEN_QUARTA_TAPPA_CRONOSCALATA_2026-06-02_ELI_F",
+        "nome_gara": "GIRO D'ITALIA WOMEN QUARTA TAPPA CRONOSCALATA",
+        "data": "2026-06-02",
+        "posizione": 2,
+        "punti_effettivi": 24,
+        "team": "MOVISTAR TEAM ACADEMY",
+        "moltiplicatore": 2,
+        "tipo": "nazionale",
+        "regione": "ABRUZZO",
+        "km": "12.700",
+        "media": "24.089"
+      },
+      {
+        "gara_id": "GIRO_D_ITALIA_WOMEN_TERZA_TAPPA_2026-06-01_ELI_F",
+        "nome_gara": "GIRO D'ITALIA WOMEN TERZA TAPPA",
+        "data": "2026-06-01",
+        "posizione": 7,
+        "punti_effettivi": 12,
+        "team": "MOVISTAR TEAM ACADEMY",
+        "moltiplicatore": 3,
+        "tipo": "internazionale",
+        "regione": "UNDER",
+        "km": "156.000",
+        "media": "41.839"
+      }
+    ]
+  },
+  "VALLIERES_MAGDELEINE": {
+    "id": "VALLIERES_MAGDELEINE",
+    "nome": "MAGDELEINE",
+    "cognome": "VALLIERES",
+    "team_attuale": "EF EDUCATION OATLY",
+    "team_id": "EF_EDUCATION_OATLY",
+    "categoria": "ELI_F",
+    "genere": "F",
+    "punti_totali": 27,
+    "risultati": [
+      {
+        "gara_id": "GIRO_D_ITALIA_WOMEN_QUINTA_TAPPA_2026-06-03_ELI_F",
+        "nome_gara": "GIRO D'ITALIA WOMEN QUINTA TAPPA",
+        "data": "2026-06-03",
+        "posizione": 8,
+        "punti_effettivi": 9,
+        "team": "EF EDUCATION OATLY",
+        "moltiplicatore": 3,
+        "tipo": "internazionale",
+        "regione": "UNDER",
+        "km": "146.000",
+        "media": "33.209"
+      },
+      {
+        "gara_id": "12_STRADE_BIANCHE_DONNE_2026-03-07_ELI_F",
+        "nome_gara": "12 STRADE BIANCHE DONNE",
+        "data": "2026-03-07",
+        "posizione": 5,
+        "punti_effettivi": 18,
+        "team": "EF EDUCATION OATLY",
+        "moltiplicatore": 3,
+        "tipo": "internazionale",
+        "regione": "TOSCANA",
+        "km": "133.000",
+        "media": "36.996"
+      }
+    ]
+  },
+  "DE_VRIES_FEMKE": {
+    "id": "DE_VRIES_FEMKE",
+    "nome": "VRIES FEMKE",
+    "cognome": "DE",
+    "team_attuale": "TEAM VISMA LEASE A BIKE",
+    "team_id": "TEAM_VISMA_LEASE_A_BIKE",
+    "categoria": "ELI_F",
+    "genere": "F",
+    "punti_totali": 20,
+    "risultati": [
+      {
+        "gara_id": "GIRO_D_ITALIA_WOMEN_QUINTA_TAPPA_2026-06-03_ELI_F",
+        "nome_gara": "GIRO D'ITALIA WOMEN QUINTA TAPPA",
+        "data": "2026-06-03",
+        "posizione": 9,
+        "punti_effettivi": 6,
+        "team": "TEAM VISMA LEASE A BIKE",
+        "moltiplicatore": 3,
+        "tipo": "internazionale",
+        "regione": "UNDER",
+        "km": "146.000",
+        "media": "33.209"
+      },
+      {
+        "gara_id": "GIRO_D_ITALIA_WOMEN_QUARTA_TAPPA_CRONOSCALATA_2026-06-02_ELI_F",
+        "nome_gara": "GIRO D'ITALIA WOMEN QUARTA TAPPA CRONOSCALATA",
+        "data": "2026-06-02",
+        "posizione": 7,
+        "punti_effettivi": 8,
+        "team": "TEAM VISMA LEASE A BIKE",
+        "moltiplicatore": 2,
+        "tipo": "nazionale",
+        "regione": "ABRUZZO",
+        "km": "12.700",
+        "media": "24.089"
+      },
+      {
+        "gara_id": "GIRO_DELL_APPENNINO_DONNE_2026-03-22_ELI_F",
+        "nome_gara": "GIRO DELL'APPENNINO DONNE",
+        "data": "2026-03-22",
+        "posizione": 9,
+        "punti_effettivi": 6,
+        "team": "TEAM VISMA LEASE A BIKE",
+        "moltiplicatore": 3,
+        "tipo": "internazionale",
+        "regione": "LIGURIA",
+        "km": "111.000",
+        "media": "40.583"
+      }
+    ]
+  },
+  "DE_SCHEPPER_LORE": {
+    "id": "DE_SCHEPPER_LORE",
+    "nome": "LORE",
+    "cognome": "DE SCHEPPER",
+    "team_attuale": "AG INSURANCE SOUDAL",
+    "team_id": "AG_INSURANCE_SOUDAL",
+    "categoria": "ELI_F",
+    "genere": "F",
+    "punti_totali": 3,
+    "risultati": [
+      {
+        "gara_id": "GIRO_D_ITALIA_WOMEN_QUINTA_TAPPA_2026-06-03_ELI_F",
+        "nome_gara": "GIRO D'ITALIA WOMEN QUINTA TAPPA",
+        "data": "2026-06-03",
+        "posizione": 10,
+        "punti_effettivi": 3,
+        "team": "AG INSURANCE SOUDAL",
+        "moltiplicatore": 3,
+        "tipo": "internazionale",
+        "regione": "UNDER",
+        "km": "146.000",
+        "media": "33.209"
+      }
+    ]
+  },
   "FEDRIZZI_BRANDON_DAVIDE": {
     "id": "FEDRIZZI_BRANDON_DAVIDE",
     "nome": "BRANDON DAVIDE",
@@ -31083,119 +31528,6 @@
       }
     ]
   },
-  "VAN_DER_BREGGEN_ANNA": {
-    "id": "VAN_DER_BREGGEN_ANNA",
-    "nome": "ANNA",
-    "cognome": "VAN DER BREGGEN",
-    "team_attuale": "TEAM SD WORX-PROTIME",
-    "team_id": "TEAM_SD_WORX_PROTIME",
-    "categoria": "ELI_F",
-    "genere": "F",
-    "punti_totali": 30,
-    "risultati": [
-      {
-        "gara_id": "GIRO_D_ITALIA_WOMEN_QUARTA_TAPPA_CRONOSCALATA_2026-06-02_ELI_F",
-        "nome_gara": "GIRO D'ITALIA WOMEN QUARTA TAPPA CRONOSCALATA",
-        "data": "2026-06-02",
-        "posizione": 1,
-        "punti_effettivi": 30,
-        "team": "TEAM SD WORX-PROTIME",
-        "moltiplicatore": 2,
-        "tipo": "nazionale",
-        "regione": "ABRUZZO",
-        "km": "12.700",
-        "media": "24.089"
-      }
-    ]
-  },
-  "REUSSER_MARLEN": {
-    "id": "REUSSER_MARLEN",
-    "nome": "MARLEN",
-    "cognome": "REUSSER",
-    "team_attuale": "MOVISTAR TEAM ACADEMY",
-    "team_id": "MOVISTAR_TEAM_ACADEMY",
-    "categoria": "ELI_F",
-    "genere": "F",
-    "punti_totali": 36,
-    "risultati": [
-      {
-        "gara_id": "GIRO_D_ITALIA_WOMEN_QUARTA_TAPPA_CRONOSCALATA_2026-06-02_ELI_F",
-        "nome_gara": "GIRO D'ITALIA WOMEN QUARTA TAPPA CRONOSCALATA",
-        "data": "2026-06-02",
-        "posizione": 2,
-        "punti_effettivi": 24,
-        "team": "MOVISTAR TEAM ACADEMY",
-        "moltiplicatore": 2,
-        "tipo": "nazionale",
-        "regione": "ABRUZZO",
-        "km": "12.700",
-        "media": "24.089"
-      },
-      {
-        "gara_id": "GIRO_D_ITALIA_WOMEN_TERZA_TAPPA_2026-06-01_ELI_F",
-        "nome_gara": "GIRO D'ITALIA WOMEN TERZA TAPPA",
-        "data": "2026-06-01",
-        "posizione": 7,
-        "punti_effettivi": 12,
-        "team": "MOVISTAR TEAM ACADEMY",
-        "moltiplicatore": 3,
-        "tipo": "internazionale",
-        "regione": "UNDER",
-        "km": "156.000",
-        "media": "41.839"
-      }
-    ]
-  },
-  "VOLLERING_DEMI": {
-    "id": "VOLLERING_DEMI",
-    "nome": "DEMI",
-    "cognome": "VOLLERING",
-    "team_attuale": "FDJ UNITED - SUEZ",
-    "team_id": "FDJ_UNITED_SUEZ",
-    "categoria": "ELI_F",
-    "genere": "F",
-    "punti_totali": 20,
-    "risultati": [
-      {
-        "gara_id": "GIRO_D_ITALIA_WOMEN_QUARTA_TAPPA_CRONOSCALATA_2026-06-02_ELI_F",
-        "nome_gara": "GIRO D'ITALIA WOMEN QUARTA TAPPA CRONOSCALATA",
-        "data": "2026-06-02",
-        "posizione": 3,
-        "punti_effettivi": 20,
-        "team": "FDJ UNITED - SUEZ",
-        "moltiplicatore": 2,
-        "tipo": "nazionale",
-        "regione": "ABRUZZO",
-        "km": "12.700",
-        "media": "24.089"
-      }
-    ]
-  },
-  "NIEDERMAIER_ANTONIA": {
-    "id": "NIEDERMAIER_ANTONIA",
-    "nome": "ANTONIA",
-    "cognome": "NIEDERMAIER",
-    "team_attuale": "CANYON SRAM ZONDACRYPTO",
-    "team_id": "CANYON_SRAM_ZONDACRYPTO",
-    "categoria": "ELI_F",
-    "genere": "F",
-    "punti_totali": 16,
-    "risultati": [
-      {
-        "gara_id": "GIRO_D_ITALIA_WOMEN_QUARTA_TAPPA_CRONOSCALATA_2026-06-02_ELI_F",
-        "nome_gara": "GIRO D'ITALIA WOMEN QUARTA TAPPA CRONOSCALATA",
-        "data": "2026-06-02",
-        "posizione": 4,
-        "punti_effettivi": 16,
-        "team": "CANYON SRAM ZONDACRYPTO",
-        "moltiplicatore": 2,
-        "tipo": "nazionale",
-        "regione": "ABRUZZO",
-        "km": "12.700",
-        "media": "24.089"
-      }
-    ]
-  },
   "TRINCA_COLONEL_MONICA": {
     "id": "TRINCA_COLONEL_MONICA",
     "nome": "MONICA",
@@ -31285,108 +31617,6 @@
       }
     ]
   },
-  "DE_VRIES_FEMKE": {
-    "id": "DE_VRIES_FEMKE",
-    "nome": "VRIES FEMKE",
-    "cognome": "DE",
-    "team_attuale": "TEAM VISMA LEASE A BIKE",
-    "team_id": "TEAM_VISMA_LEASE_A_BIKE",
-    "categoria": "ELI_F",
-    "genere": "F",
-    "punti_totali": 14,
-    "risultati": [
-      {
-        "gara_id": "GIRO_D_ITALIA_WOMEN_QUARTA_TAPPA_CRONOSCALATA_2026-06-02_ELI_F",
-        "nome_gara": "GIRO D'ITALIA WOMEN QUARTA TAPPA CRONOSCALATA",
-        "data": "2026-06-02",
-        "posizione": 7,
-        "punti_effettivi": 8,
-        "team": "TEAM VISMA LEASE A BIKE",
-        "moltiplicatore": 2,
-        "tipo": "nazionale",
-        "regione": "ABRUZZO",
-        "km": "12.700",
-        "media": "24.089"
-      },
-      {
-        "gara_id": "GIRO_DELL_APPENNINO_DONNE_2026-03-22_ELI_F",
-        "nome_gara": "GIRO DELL'APPENNINO DONNE",
-        "data": "2026-03-22",
-        "posizione": 9,
-        "punti_effettivi": 6,
-        "team": "TEAM VISMA LEASE A BIKE",
-        "moltiplicatore": 3,
-        "tipo": "internazionale",
-        "regione": "LIGURIA",
-        "km": "111.000",
-        "media": "40.583"
-      }
-    ]
-  },
-  "LONGO_BORGHINI_ELISA": {
-    "id": "LONGO_BORGHINI_ELISA",
-    "nome": "BORGHINI ELISA",
-    "cognome": "LONGO",
-    "team_attuale": "UAE TEAM ADQ",
-    "team_id": "UAE_TEAM_ADQ",
-    "categoria": "ELI_F",
-    "genere": "F",
-    "punti_totali": 99,
-    "risultati": [
-      {
-        "gara_id": "GIRO_D_ITALIA_WOMEN_QUARTA_TAPPA_CRONOSCALATA_2026-06-02_ELI_F",
-        "nome_gara": "GIRO D'ITALIA WOMEN QUARTA TAPPA CRONOSCALATA",
-        "data": "2026-06-02",
-        "posizione": 8,
-        "punti_effettivi": 6,
-        "team": "UAE TEAM ADQ",
-        "moltiplicatore": 2,
-        "tipo": "nazionale",
-        "regione": "ABRUZZO",
-        "km": "12.700",
-        "media": "24.089"
-      },
-      {
-        "gara_id": "GIRO_D_ITALIA_WOMEN_TERZA_TAPPA_2026-06-01_ELI_F",
-        "nome_gara": "GIRO D'ITALIA WOMEN TERZA TAPPA",
-        "data": "2026-06-01",
-        "posizione": 4,
-        "punti_effettivi": 24,
-        "team": "UAE TEAM ADQ",
-        "moltiplicatore": 3,
-        "tipo": "internazionale",
-        "regione": "UNDER",
-        "km": "156.000",
-        "media": "41.839"
-      },
-      {
-        "gara_id": "ORO_IN_EURO_2026-03-08_ELI_F",
-        "nome_gara": "ORO IN EURO",
-        "data": "2026-03-08",
-        "posizione": 1,
-        "punti_effettivi": 45,
-        "team": "UAE TEAM ADQ",
-        "moltiplicatore": 3,
-        "tipo": "internazionale",
-        "regione": "TOSCANA",
-        "km": "106.400",
-        "media": "43.111"
-      },
-      {
-        "gara_id": "12_STRADE_BIANCHE_DONNE_2026-03-07_ELI_F",
-        "nome_gara": "12 STRADE BIANCHE DONNE",
-        "data": "2026-03-07",
-        "posizione": 4,
-        "punti_effettivi": 24,
-        "team": "UAE TEAM ADQ",
-        "moltiplicatore": 3,
-        "tipo": "internazionale",
-        "regione": "TOSCANA",
-        "km": "133.000",
-        "media": "36.996"
-      }
-    ]
-  },
   "ZIGART_URSKA": {
     "id": "ZIGART_URSKA",
     "nome": "URSKA",
@@ -31404,31 +31634,6 @@
         "posizione": 9,
         "punti_effettivi": 4,
         "team": "AG INSURANCE SOUDAL",
-        "moltiplicatore": 2,
-        "tipo": "nazionale",
-        "regione": "ABRUZZO",
-        "km": "12.700",
-        "media": "24.089"
-      }
-    ]
-  },
-  "HOLMGREN_ISABELLA": {
-    "id": "HOLMGREN_ISABELLA",
-    "nome": "ISABELLA",
-    "cognome": "HOLMGREN",
-    "team_attuale": "LIDL - TREK",
-    "team_id": "LIDL_TREK",
-    "categoria": "ELI_F",
-    "genere": "F",
-    "punti_totali": 2,
-    "risultati": [
-      {
-        "gara_id": "GIRO_D_ITALIA_WOMEN_QUARTA_TAPPA_CRONOSCALATA_2026-06-02_ELI_F",
-        "nome_gara": "GIRO D'ITALIA WOMEN QUARTA TAPPA CRONOSCALATA",
-        "data": "2026-06-02",
-        "posizione": 10,
-        "punti_effettivi": 2,
-        "team": "LIDL - TREK",
         "moltiplicatore": 2,
         "tipo": "nazionale",
         "regione": "ABRUZZO",
@@ -103827,44 +104032,6 @@
       }
     ]
   },
-  "FISHER_BLACK_NIAMH": {
-    "id": "FISHER_BLACK_NIAMH",
-    "nome": "NIAMH",
-    "cognome": "FISHER-BLACK",
-    "team_attuale": "LIDL - TREK",
-    "team_id": "LIDL_TREK",
-    "categoria": "ELI_F",
-    "genere": "F",
-    "punti_totali": 21,
-    "risultati": [
-      {
-        "gara_id": "GIRO_DELL_APPENNINO_DONNE_2026-03-22_ELI_F",
-        "nome_gara": "GIRO DELL'APPENNINO DONNE",
-        "data": "2026-03-22",
-        "posizione": 5,
-        "punti_effettivi": 18,
-        "team": "LIDL - TREK",
-        "moltiplicatore": 3,
-        "tipo": "internazionale",
-        "regione": "LIGURIA",
-        "km": "111.000",
-        "media": "40.583"
-      },
-      {
-        "gara_id": "12_STRADE_BIANCHE_DONNE_2026-03-07_ELI_F",
-        "nome_gara": "12 STRADE BIANCHE DONNE",
-        "data": "2026-03-07",
-        "posizione": 10,
-        "punti_effettivi": 3,
-        "team": "LIDL - TREK",
-        "moltiplicatore": 3,
-        "tipo": "internazionale",
-        "regione": "TOSCANA",
-        "km": "133.000",
-        "media": "36.996"
-      }
-    ]
-  },
   "CHLADONOVA_VIKTORIA": {
     "id": "CHLADONOVA_VIKTORIA",
     "nome": "VIKTORIA",
@@ -105362,31 +105529,6 @@
         "posizione": 3,
         "punti_effettivi": 30,
         "team": "FDJ UNITED - SUEZ",
-        "moltiplicatore": 3,
-        "tipo": "internazionale",
-        "regione": "TOSCANA",
-        "km": "133.000",
-        "media": "36.996"
-      }
-    ]
-  },
-  "VALLIERES_MAGDELEINE": {
-    "id": "VALLIERES_MAGDELEINE",
-    "nome": "MAGDELEINE",
-    "cognome": "VALLIERES",
-    "team_attuale": "EF EDUCATION OATLY",
-    "team_id": "EF_EDUCATION_OATLY",
-    "categoria": "ELI_F",
-    "genere": "F",
-    "punti_totali": 18,
-    "risultati": [
-      {
-        "gara_id": "12_STRADE_BIANCHE_DONNE_2026-03-07_ELI_F",
-        "nome_gara": "12 STRADE BIANCHE DONNE",
-        "data": "2026-03-07",
-        "posizione": 5,
-        "punti_effettivi": 18,
-        "team": "EF EDUCATION OATLY",
         "moltiplicatore": 3,
         "tipo": "internazionale",
         "regione": "TOSCANA",
