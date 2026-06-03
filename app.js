@@ -8630,6 +8630,28 @@ async function refreshVideos() {
   } catch { /* non bloccante */ }
 }
 
+// Invalida le cache foto in memoria così il prossimo loadRisPhotos rilegge dal server.
+function invalidatePhotoCache() {
+  _risPhotosMap = null;
+  _risPhotosByAtleta = null;
+}
+
+// Dopo QUALSIASI modifica a foto/video: ricarica i dati freschi dal server e
+// ri-renderizza la pagina corrente, così la modifica si vede subito SENZA
+// dover ricaricare il browser. `opts.photos`/`opts.videos` per scegliere cosa
+// ricaricare (default entrambi).
+async function refreshMediaAndRerender(opts = {}) {
+  const { photos = true, videos = true } = opts;
+  if (photos) invalidatePhotoCache();
+  if (videos) await refreshVideos();
+  // Ri-renderizza la vista attuale con i dati aggiornati
+  if (window._currentGaraId && (location.hash || '').includes('/gara/')) {
+    await renderGara(window._currentGaraId);
+  } else {
+    route();
+  }
+}
+
 // ── VIDEO IN ATTESA (inviati dagli utenti) ───────────────────────────────────
 
 async function loadAdminPendingVideos() {
@@ -10154,6 +10176,7 @@ window.adminPhotoAction = async function(id, action) {
       method: 'POST',
       headers: { Authorization: `Bearer ${token}` }
     });
+    if (action === 'approve') invalidatePhotoCache(); // così la foto si vede subito nelle pagine
     const card = document.getElementById(`admin-photo-${id}`);
     if (card) {
       card.style.transition = 'opacity 0.3s';
@@ -11295,9 +11318,8 @@ window.selfTagPhoto = async function(id) {
   if (!authUser()) { showToast('Accedi per taggarti', 'info'); return; }
   try {
     await apiCall(`/race-photos/${id}/self-tag`, { method: 'POST', body: { tagged: true } });
-    _risPhotosMap = null;
     showToast('🏷 Ti sei taggato in questa foto ✓');
-    if (window._currentGaraId) renderGara(window._currentGaraId);
+    await refreshMediaAndRerender({ videos: false });
   } catch (e) {
     showToast(e.message || 'Errore', 'error');
   }
@@ -11376,9 +11398,8 @@ function adminEditPhoto(id) {
       });
       const data = await res.json().catch(() => ({}));
       if (!res.ok) throw new Error(data.error || `HTTP ${res.status}`);
-      _risPhotosMap = null;
       overlay.remove();
-      if (window._currentGaraId) renderGara(window._currentGaraId);
+      await refreshMediaAndRerender({ videos: false });
     } catch(e) {
       errEl.textContent = e.message;
       errEl.style.display = 'block';
@@ -11420,13 +11441,7 @@ function adminDeletePhoto(id) {
       const data = await res.json().catch(() => ({}));
       if (!res.ok) throw new Error(data.error || `HTTP ${res.status}`);
       overlay.remove();
-      const card = document.getElementById(`gal-photo-${id}`);
-      if (card) {
-        card.style.transition = 'opacity .3s';
-        card.style.opacity = '0';
-        setTimeout(() => card.remove(), 320);
-      }
-      _risPhotosMap = null;
+      await refreshMediaAndRerender({ videos: false });
     } catch(e) {
       errEl.textContent = 'Errore: ' + e.message;
       errEl.style.display = 'block';
@@ -12545,7 +12560,7 @@ async function renderGara(gara_id) {
         document.getElementById('modal-overlay')?.remove();
         const user = authUser();
         showToast(user?.role === 'admin' ? '✓ Video pubblicato!' : '✓ Video inviato — in attesa di approvazione');
-        if (window._currentGaraId) renderGara(window._currentGaraId);
+        if (user?.role === 'admin') await refreshMediaAndRerender({ photos: false });
       } catch(e) { err.textContent = e.message; err.style.display = 'block'; btn.disabled = false; btn.textContent = 'Invia'; }
     } else {
       const url     = document.getElementById('vurl-input')?.value.trim();
@@ -12558,7 +12573,7 @@ async function renderGara(gara_id) {
         document.getElementById('modal-overlay')?.remove();
         const user = authUser();
         showToast(user?.role === 'admin' ? '✓ Video pubblicato!' : '✓ Video inviato — in attesa di approvazione');
-        if (window._currentGaraId) renderGara(window._currentGaraId);
+        if (user?.role === 'admin') await refreshMediaAndRerender({ photos: false });
       } catch(e) { err.textContent = e.message; err.style.display = 'block'; btn.disabled = false; btn.textContent = 'Invia'; }
     }
   };
@@ -12604,7 +12619,7 @@ async function renderGara(gara_id) {
       document.getElementById('modal-overlay')?.remove();
       if (lastData?.status === 'approved') {
         showToast(targets.length > 1 ? '✓ Foto pubblicata per entrambi gli anni!' : '✓ Foto pubblicata!');
-        renderGara(window._currentGaraId);
+        await refreshMediaAndRerender({ videos: false });
       } else {
         showToast('✓ Foto inviata — in attesa di approvazione', 'info');
       }
