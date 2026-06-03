@@ -37,6 +37,34 @@ function ytId(url) {
   return m ? m[1] : null;
 }
 
+// Tipo di video: 'yt' (YouTube embed), 'file' (file caricato → <video>),
+// 'link' (es. Facebook → apri in nuova scheda). Serve perché i video non
+// YouTube non hanno un id embeddabile e venivano scartati dal rendering.
+function videoKind(url) {
+  if (!url) return 'link';
+  if (ytId(url)) return 'yt';
+  if (/(\.(mp4|mov|m4v|webm|ogg|qt))(\?|$)/i.test(url) || /\/storage\/v1\/object\/[^\s]*videos\//i.test(url)) return 'file';
+  return 'link';
+}
+function isPlayableVideo(url) { const k = videoKind(url); return k === 'yt' || k === 'file'; }
+
+// Modal per video file caricati (non YouTube): player HTML5 nativo.
+window.openVideoFileModal = (url, title) => {
+  const overlay = document.createElement('div');
+  overlay.className = 'video-modal-overlay';
+  overlay.innerHTML = `
+    <div class="video-modal-box">
+      <button class="video-modal-close" onclick="this.closest('.video-modal-overlay').remove()">✕</button>
+      <div class="video-modal-title">${esc(title || 'Video')}</div>
+      <div class="video-modal-player">
+        <video src="${esc(url)}" controls autoplay playsinline style="width:100%;height:100%;background:#000;border-radius:8px"
+               onerror="this.parentNode.innerHTML='<div style=\\'color:#fff;padding:24px;text-align:center\\'>Impossibile riprodurre il video qui. <a href=&quot;${esc(url)}&quot; target=_blank style=color:#60a5fa>Aprilo in una nuova scheda</a></div>'"></video>
+      </div>
+    </div>`;
+  overlay.addEventListener('click', e => { if (e.target === overlay) overlay.remove(); });
+  document.body.appendChild(overlay);
+};
+
 // ── TOAST ─────────────────────────────────────────────────────
 // Notifica leggera in basso a destra, sparisce da sola dopo 3s.
 // type: 'success' (verde) | 'info' (blu) | 'error' (rosso)
@@ -10463,16 +10491,23 @@ function buildProfileMedia(risultati, photosMap, videos, opts = {}) {
 
   const videoCard = ({ r, video }) => {
     const vid   = ytId(video.url);
-    const thumb = vid ? `https://img.youtube.com/vi/${vid}/mqdefault.jpg` : '';
+    const _kind = videoKind(video.url);
     const ath   = showAthleteName && r.atleta_cognome
       ? `<div class="profile-media-athlete">${esc(r.atleta_cognome)} ${esc(r.atleta_nome || '')}</div>` : '';
     const _vtitle = esc((video.title || r.nome_gara || '').replace(/'/g, "\\'"));
-    const _vclick = vid
+    const _vclick = _kind === 'yt'
       ? `window.openVideoModal('${vid}','${_vtitle}')`
-      : `window.open('${esc(video.url)}','_blank')`;
+      : _kind === 'file'
+        ? `window.openVideoFileModal('${esc(video.url)}','${_vtitle}')`
+        : `window.open('${esc(video.url)}','_blank')`;
+    const _thumbHtml = _kind === 'yt'
+      ? `<img src="https://img.youtube.com/vi/${vid}/mqdefault.jpg" alt="${esc(video.title||'')}" loading="lazy" />`
+      : _kind === 'file'
+        ? `<video src="${esc(video.url)}#t=0.1" muted preload="metadata" playsinline style="width:100%;height:100%;object-fit:cover;background:#000"></video>`
+        : '<div style="width:100%;height:100%;display:flex;align-items:center;justify-content:center;font-size:2rem;color:var(--text-muted)">🎬</div>';
     return `<div class="profile-media-card profile-media-video" style="cursor:pointer" onclick="${_vclick.replace(/"/g,'&quot;')}">
       <div class="profile-media-thumb">
-        ${thumb ? `<img src="${thumb}" alt="${esc(video.title||'')}" loading="lazy" />` : '<div style="width:100%;height:100%;display:flex;align-items:center;justify-content:center;font-size:2rem;color:var(--text-muted)">🎬</div>'}
+        ${_thumbHtml}
         <div class="profile-media-play-btn"><div class="profile-media-play-icon"><svg width="14" height="14" viewBox="0 0 24 24" fill="#fff"><path d="M8 5v14l11-7z"/></svg></div></div>
         <div class="profile-media-badge" style="color:${posColor(r.posizione)}">${posLabel(r.posizione)}</div>
       </div>
@@ -11718,14 +11753,27 @@ async function renderGara(gara_id) {
     if (has1) return '1° Anno';
     return '';
   };
+  // Onclick e thumbnail per qualsiasi tipo di video (YouTube / file / link)
+  const _vClick = (v) => {
+    const t = esc((v.title || '').replace(/'/g, "\\'"));
+    const k = videoKind(v.url);
+    if (k === 'yt')   return `window.openVideoModal('${ytId(v.url)}','${t}')`;
+    if (k === 'file') return `window.openVideoFileModal('${esc(v.url)}','${t}')`;
+    return `window.open('${esc(v.url)}','_blank')`;
+  };
+  const _vThumb = (v) => {
+    const k = videoKind(v.url);
+    if (k === 'yt') return `<img src="https://img.youtube.com/vi/${ytId(v.url)}/hqdefault.jpg" alt="${esc(v.title||'Video')}" loading="lazy"/>`;
+    if (k === 'file') return `<video src="${esc(v.url)}#t=0.1" muted preload="metadata" playsinline style="width:100%;height:100%;object-fit:cover;background:#000"></video>`;
+    return `<div style="width:100%;height:100%;display:flex;align-items:center;justify-content:center;background:#0f172a;font-size:2.4rem">🎬</div>`;
+  };
   const _buildVideoEl = (v, idx, cls = 'gara-media-half gara-media-video') => {
-    const vId = ytId(v.url);
-    if (!vId) return '';
+    if (!isPlayableVideo(v.url) && videoKind(v.url) !== 'link') return '';
     const _k = v._srcKey || primaryGaraId;
     const _i = (v._srcIdx != null) ? v._srcIdx : idx;
     const _yt = _esYearOf(v);
-    return `<div class="${cls}" onclick="window.openVideoModal('${vId}','${esc((v.title||'').replace(/'/g, "\\'"))}')">
-      <img src="https://img.youtube.com/vi/${vId}/hqdefault.jpg" alt="${esc(v.title||'Video')}" loading="lazy"/>
+    return `<div class="${cls}" onclick="${_vClick(v)}">
+      ${_vThumb(v)}
       <div class="gara-media-play"><span>&#9658;</span></div>
       ${isEsordienti && _yt ? `<div style="position:absolute;top:6px;left:6px;background:rgba(99,102,241,.92);color:#fff;font-size:.62rem;font-weight:700;padding:2px 7px;border-radius:3px;z-index:3">${_yt}</div>` : ''}
       ${v.channel ? `<div class="gara-media-channel">${esc(v.channel)}</div>` : ''}
@@ -11740,7 +11788,7 @@ async function renderGara(gara_id) {
 
   // Hero video (sempre visibile se esiste) — il layout finale dipende dalle foto,
   // quindi viene assemblato DOPO il blocco foto qui sotto.
-  const _heroVideoEl = featuredVideoId ? _buildVideoEl(featuredVideo, 0) : '';
+  const _heroVideoEl = featuredVideo ? _buildVideoEl(featuredVideo, 0) : '';
 
   // Extra video cards (sempre visibili)
   // L'indice di partenza degli "extra" dipende da quanti video vanno in hero:
@@ -11753,18 +11801,16 @@ async function renderGara(gara_id) {
         <div class="comp-section-title">Altri Video</div>
         <div class="gara-videos-grid">
           ${extras.map((v, i) => {
-            const vidId = ytId(v.url) || '';
-            const thumb = vidId ? `https://img.youtube.com/vi/${vidId}/mqdefault.jpg` : '';
             const _k = v._srcKey || primaryGaraId;
             const _i = (v._srcIdx != null) ? v._srcIdx : (startIdx + i);
             const _yt = _esYearOf(v);
             return `
-              <div class="gara-video-card" style="cursor:pointer;position:relative" onclick="window.openVideoModal('${vidId}','${esc((v.title||'').replace(/'/g, "\\'"))}')">
-                ${thumb ? `<div class="gara-video-thumb">
-                  <img src="${thumb}" alt="${esc(v.title)}" loading="lazy"/>
+              <div class="gara-video-card" style="cursor:pointer;position:relative" onclick="${_vClick(v)}">
+                <div class="gara-video-thumb">
+                  ${_vThumb(v)}
                   <div class="gara-video-play">&#9658;</div>
                   ${isEsordienti && _yt ? `<div style="position:absolute;bottom:4px;left:4px;background:rgba(99,102,241,.9);color:#fff;font-size:.6rem;font-weight:700;padding:1px 6px;border-radius:3px">${_yt}</div>` : ''}
-                </div>` : ''}
+                </div>
                 <div class="gara-video-info">
                   <div class="gara-video-title">${esc(v.title)}</div>
                   <div class="gara-video-meta">${esc(v.channel)}</div>
