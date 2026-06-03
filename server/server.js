@@ -989,22 +989,23 @@ app.get('/api/admin/videos', requireAdmin, async (req, res) => {
 // Submit URL YouTube (utenti autenticati)
 app.post('/api/videos/submit', requireAuth, async (req, res) => {
   try {
-    const { gara_id, cal_id, url, title, description, channel } = req.body;
+    const { gara_id, cal_id, url, title, description, channel, atleta_ids } = req.body;
     if (!gara_id || !url) return res.status(400).json({ error: 'gara_id e url obbligatori' });
     // Usa sempre gara_id (include la categoria es. _JUN_M, _ELI_M) come chiave
     // così ogni categoria della stessa gara ha i propri video separati
     const key = gara_id;
+    const tags = [...new Set(String(atleta_ids || '').split(',').map(s => s.trim()).filter(Boolean))].join(',');
     if (req.user.role === 'admin') {
       const videos = await readVideos();
       if (!videos[key]) videos[key] = [];
       if (videos[key].some(v => v.url === url)) return res.status(409).json({ error: 'Video già presente' });
-      videos[key].push({ url, title: title || url, description: description || '', channel: channel || req.user.display_name || 'Admin', published_at: new Date().toISOString().slice(0,10) });
+      videos[key].push({ url, title: title || url, description: description || '', channel: channel || req.user.display_name || 'Admin', published_at: new Date().toISOString().slice(0,10), atleta_ids: tags });
       await writeVideos(videos);
       return res.json({ ok: true, status: 'approved' });
     }
     const pending = await readPendingVideos();
     const id = Date.now().toString(36) + Math.random().toString(36).slice(2,7);
-    pending.push({ id, gara_id, cal_id: key, type: 'youtube', url, title: title || url, description: description || '', channel: channel || '', submitted_by: req.user.display_name || req.user.email, submitted_at: new Date().toISOString() });
+    pending.push({ id, gara_id, cal_id: key, type: 'youtube', url, title: title || url, description: description || '', channel: channel || '', atleta_ids: tags, submitted_by: req.user.display_name || req.user.email, submitted_at: new Date().toISOString() });
     await writePendingVideos(pending);
     res.json({ ok: true, status: 'pending' });
   } catch(e) { res.status(500).json({ error: e.message }); }
@@ -1025,9 +1026,10 @@ const videoUpload = multer({
 
 app.post('/api/videos/upload-file', requireAuth, videoUpload.single('video'), async (req, res) => {
   try {
-    const { gara_id, cal_id, title, channel } = req.body; // cal_id ignorato, usiamo sempre gara_id
+    const { gara_id, cal_id, title, channel, atleta_ids } = req.body; // cal_id ignorato, usiamo sempre gara_id
     if (!gara_id) return res.status(400).json({ error: 'gara_id mancante' });
     if (!req.file) return res.status(400).json({ error: 'Nessun file ricevuto' });
+    const vtags = [...new Set(String(atleta_ids || '').split(',').map(s => s.trim()).filter(Boolean))].join(',');
     const ext = path.extname(req.file.originalname).toLowerCase() || '.mp4';
     const filename = `vid_${Date.now()}${ext}`;
     let videoUrl;
@@ -1043,13 +1045,13 @@ app.post('/api/videos/upload-file', requireAuth, videoUpload.single('video'), as
     if (req.user.role === 'admin') {
       const videos = await readVideos();
       if (!videos[key]) videos[key] = [];
-      videos[key].push({ url: videoUrl, title: title || filename, description: '', channel: channel || req.user.display_name || 'Admin', published_at: new Date().toISOString().slice(0,10) });
+      videos[key].push({ url: videoUrl, title: title || filename, description: '', channel: channel || req.user.display_name || 'Admin', published_at: new Date().toISOString().slice(0,10), atleta_ids: vtags });
       await writeVideos(videos);
       return res.json({ ok: true, status: 'approved', url: videoUrl });
     }
     const pending = await readPendingVideos();
     const id = Date.now().toString(36) + Math.random().toString(36).slice(2,7);
-    pending.push({ id, gara_id, cal_id: key, type: 'upload', url: videoUrl, title: title || filename, description: '', channel: channel || '', submitted_by: req.user.display_name || req.user.email, submitted_at: new Date().toISOString() });
+    pending.push({ id, gara_id, cal_id: key, type: 'upload', url: videoUrl, title: title || filename, description: '', channel: channel || '', atleta_ids: vtags, submitted_by: req.user.display_name || req.user.email, submitted_at: new Date().toISOString() });
     await writePendingVideos(pending);
     res.json({ ok: true, status: 'pending', url: videoUrl });
   } catch(e) { res.status(500).json({ error: e.message }); }
@@ -1070,7 +1072,7 @@ app.post('/api/admin/videos/pending/:id/approve', requireAdmin, async (req, res)
     const videos = await readVideos();
     const key = v.cal_id || v.gara_id;
     if (!videos[key]) videos[key] = [];
-    videos[key].push({ url: v.url, title: v.title, description: v.description || '', channel: v.channel || v.submitted_by || '', published_at: (v.submitted_at || '').slice(0, 10) });
+    videos[key].push({ url: v.url, title: v.title, description: v.description || '', channel: v.channel || v.submitted_by || '', published_at: (v.submitted_at || '').slice(0, 10), atleta_ids: v.atleta_ids || '' });
     await writeVideos(videos);
     pending.splice(i, 1);
     await writePendingVideos(pending);
@@ -1161,6 +1163,47 @@ app.post('/api/admin/videos/:calId/:idx/promote', requireAdmin, async (req, res)
     videos[dest].unshift(v);
     await writeVideos(videos);
     res.json({ ok: true });
+  } catch(e) { res.status(500).json({ error: e.message }); }
+});
+
+// Tag corridori su un video (admin imposta la lista completa)
+app.post('/api/admin/videos/:calId/:idx/tags', requireAdmin, async (req, res) => {
+  try {
+    const { calId, idx } = req.params;
+    const { atleta_ids } = req.body;
+    const videos = await readVideos();
+    const v = videos[calId] && videos[calId][parseInt(idx)];
+    if (!v) return res.status(404).json({ error: 'Video non trovato' });
+    v.atleta_ids = [...new Set(String(atleta_ids || '').split(',').map(s => s.trim()).filter(Boolean))].join(',');
+    await writeVideos(videos);
+    res.json({ ok: true, atleta_ids: v.atleta_ids });
+  } catch(e) { res.status(500).json({ error: e.message }); }
+});
+
+// Self-tag su un video: atleta verificato aggiunge/toglie sé stesso;
+// admin può taggare un atleta_id qualsiasi (body.atleta_id).
+app.post('/api/videos/:calId/:idx/self-tag', requireAuth, async (req, res) => {
+  try {
+    const { calId, idx } = req.params;
+    const videos = await readVideos();
+    const v = videos[calId] && videos[calId][parseInt(idx)];
+    if (!v) return res.status(404).json({ error: 'Video non trovato' });
+    let targetId = null;
+    if (req.user.role === 'admin' && req.body.atleta_id) {
+      targetId = String(req.body.atleta_id).trim();
+    } else {
+      const prof = await queries.getAthleteProfile(req.user.id);
+      if (!prof || prof.status !== 'approved' || !prof.atleta_id)
+        return res.status(403).json({ error: 'Solo gli atleti verificati possono taggarsi' });
+      targetId = String(prof.atleta_id).trim();
+    }
+    if (!targetId) return res.status(400).json({ error: 'atleta_id mancante' });
+    const tagged = req.body.tagged !== false;
+    const cur = new Set(String(v.atleta_ids || '').split(',').map(s => s.trim()).filter(Boolean));
+    if (tagged) cur.add(targetId); else cur.delete(targetId);
+    v.atleta_ids = [...cur].join(',');
+    await writeVideos(videos);
+    res.json({ ok: true, atleta_ids: v.atleta_ids });
   } catch(e) { res.status(500).json({ error: e.message }); }
 });
 
