@@ -251,6 +251,10 @@ async function migrate() {
       user_id    INTEGER REFERENCES users(id) ON DELETE SET NULL,
       created_at TIMESTAMPTZ NOT NULL DEFAULT NOW()
     )`,
+    // Tag dei corridori presenti in una foto gara (CSV di atleta_id).
+    // Permette di assegnare la foto ai profili atleta/team corretti, anche
+    // quando chi è ritratto non è il vincitore della gara.
+    `ALTER TABLE race_photos ADD COLUMN IF NOT EXISTS atleta_ids TEXT DEFAULT ''`,
   ];
   for (const sql of migrations) {
     try { await run(sql); } catch (e) { console.warn('[migrate]', e.message); }
@@ -454,11 +458,11 @@ const queries = {
     all(`SELECT * FROM risultato_overrides ORDER BY created_at DESC`),
 
   // Race photos
-  insertRacePhoto: ({ gara_id, user_id, display_name, filename, caption, photographer, status }) =>
+  insertRacePhoto: ({ gara_id, user_id, display_name, filename, caption, photographer, status, atleta_ids }) =>
     run(
-      `INSERT INTO race_photos (gara_id, user_id, display_name, filename, caption, photographer, status)
-       VALUES ($1, $2, $3, $4, $5, $6, $7)`,
-      [gara_id, user_id, display_name, filename, caption, photographer, status]
+      `INSERT INTO race_photos (gara_id, user_id, display_name, filename, caption, photographer, status, atleta_ids)
+       VALUES ($1, $2, $3, $4, $5, $6, $7, $8)`,
+      [gara_id, user_id, display_name, filename, caption, photographer, status, atleta_ids || '']
     ),
 
   getApprovedRacePhotos: (gara_id) =>
@@ -488,6 +492,9 @@ const queries = {
 
   updateRacePhotoGara: (id, gara_id) =>
     run(`UPDATE race_photos SET gara_id = $1 WHERE id = $2`, [gara_id, id]),
+
+  setRacePhotoTags: (id, atleta_ids) =>
+    run(`UPDATE race_photos SET atleta_ids = $1 WHERE id = $2`, [atleta_ids || '', id]),
 
   deleteRacePhoto: (id) =>
     run(`DELETE FROM race_photos WHERE id = $1`, [id]),

@@ -661,15 +661,18 @@ app.post('/api/upload/photo', requireAuth, upload.single('photo'), async (req, r
 
 app.post('/api/race-photos/upload', requireAuth, upload.single('photo'), async (req, res) => {
   try {
-    const { gara_id, caption, photographer } = req.body;
+    const { gara_id, caption, photographer, atleta_ids } = req.body;
     if (!gara_id) return res.status(400).json({ error: 'gara_id mancante' });
     if (!req.file) return res.status(400).json({ error: 'Nessun file ricevuto' });
     const filename     = await savePhoto(req, req.file);
     const display_name = req.user.display_name || req.user.email;
     const status       = req.user.role === 'admin' ? 'approved' : 'pending';
+    // Normalizza i tag corridori in CSV pulito di atleta_id
+    const tags = String(atleta_ids || '').split(',').map(s => s.trim()).filter(Boolean);
     await queries.insertRacePhoto({
       gara_id, user_id: req.user.id, display_name,
       filename, caption: caption || '', photographer: photographer || '', status,
+      atleta_ids: [...new Set(tags)].join(','),
     });
     res.json({ ok: true, status });
   } catch (e) {
@@ -704,11 +707,41 @@ app.post('/api/admin/race-photos/:id/reject', requireAdmin, async (req, res) => 
 
 app.patch('/api/admin/race-photos/:id', requireAdmin, async (req, res) => {
   try {
-    const { caption, photographer, gara_id } = req.body;
+    const { caption, photographer, gara_id, atleta_ids } = req.body;
     await queries.updateRacePhoto({ id: req.params.id, caption: caption || '', photographer: photographer || '' });
     // Cambio annata/gara: aggiorna il gara_id della foto
     if (gara_id) await queries.updateRacePhotoGara(req.params.id, gara_id);
+    // Tag corridori (l'admin può impostare la lista completa)
+    if (atleta_ids !== undefined) {
+      const tags = String(atleta_ids || '').split(',').map(s => s.trim()).filter(Boolean);
+      await queries.setRacePhotoTags(req.params.id, [...new Set(tags)].join(','));
+    }
     res.json({ ok: true });
+  } catch (e) { res.status(500).json({ error: e.message }); }
+});
+
+// Tag/untag di sé stessi su una foto gara.
+// Un account atleta approvato può aggiungere/togliere SOLO il proprio atleta_id;
+// l'admin può taggare/togliere un atleta_id qualsiasi (passato nel body).
+app.post('/api/race-photos/:id/self-tag', requireAuth, async (req, res) => {
+  try {
+    const photo = await queries.getRacePhotoById(req.params.id);
+    if (!photo) return res.status(404).json({ error: 'Foto non trovata' });
+    let targetId = null;
+    if (req.user.role === 'admin' && req.body.atleta_id) {
+      targetId = String(req.body.atleta_id).trim();
+    } else {
+      const prof = await queries.getAthleteProfile(req.user.id);
+      if (!prof || prof.status !== 'approved' || !prof.atleta_id)
+        return res.status(403).json({ error: 'Solo gli atleti verificati possono taggarsi' });
+      targetId = String(prof.atleta_id).trim();
+    }
+    if (!targetId) return res.status(400).json({ error: 'atleta_id mancante' });
+    const tagged = req.body.tagged !== false; // default: aggiungi
+    const cur = new Set(String(photo.atleta_ids || '').split(',').map(s => s.trim()).filter(Boolean));
+    if (tagged) cur.add(targetId); else cur.delete(targetId);
+    await queries.setRacePhotoTags(req.params.id, [...cur].join(','));
+    res.json({ ok: true, atleta_ids: [...cur].join(',') });
   } catch (e) { res.status(500).json({ error: e.message }); }
 });
 

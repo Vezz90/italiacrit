@@ -10408,11 +10408,41 @@ function buildProfileMedia(risultati, photosMap, videos, opts = {}) {
     }
   }
 
+  // ── Foto taggate ────────────────────────────────────────────────
+  // Mostra le foto dove l'atleta (o un atleta del team) è stato taggato
+  // esplicitamente, anche se NON è il vincitore della gara.
+  const taggedIds = opts.atletaIds || [];
+  if (taggedIds.length && _risPhotosByAtleta) {
+    const seenTag = new Set(winPhotos.map(w => w.photo && w.photo.id).filter(Boolean));
+    for (const aid of taggedIds) {
+      for (const p of (_risPhotosByAtleta[aid] || [])) {
+        if (p.id && seenTag.has(p.id)) continue;
+        if (p.id) seenTag.add(p.id);
+        const rr = (globalData && globalData.resultsRaw || []).find(x => x.gara_id === p.gara_id && x.atleta_id === aid)
+                || (globalData && globalData.resultsRaw || []).find(x => x.gara_id === p.gara_id);
+        winPhotos.push({
+          tagged: true,
+          photo: p,
+          r: {
+            gara_id: p.gara_id,
+            nome_gara: (rr && rr.nome_gara) || p.caption || 'Foto gara',
+            data: (rr && rr.data) || '',
+            posizione: rr ? rr.posizione : null,
+            atleta_id: aid,
+            atleta_cognome: rr ? rr.cognome : '',
+            atleta_nome:    rr ? rr.nome    : '',
+          },
+        });
+      }
+    }
+    winPhotos.sort((a, b) => (b.r.data || '').localeCompare(a.r.data || ''));
+  }
+
   const photos = winPhotos.slice(0, maxItems);
   const vids   = top10Vids.slice(0, maxItems);
   if (!photos.length && !vids.length) return '';
 
-  const posLabel = p => { p = Number(p); return p === 1 ? '🥇 1°' : p === 2 ? '🥈 2°' : p === 3 ? '🥉 3°' : `${p}°`; };
+  const posLabel = p => { p = Number(p); if (!p) return '🏷'; return p === 1 ? '🥇 1°' : p === 2 ? '🥈 2°' : p === 3 ? '🥉 3°' : `${p}°`; };
   const posColor = p => { p = Number(p); return p === 1 ? 'var(--gold)' : p === 2 ? 'var(--silver)' : p === 3 ? 'var(--bronze)' : 'var(--text-muted)'; };
 
   const photoCard = ({ r, photo }) => {
@@ -10457,7 +10487,7 @@ function buildProfileMedia(risultati, photosMap, videos, opts = {}) {
   if (photos.length && vids.length) {
     inner = `
       <div style="margin-bottom:18px">
-        <div class="profile-media-sub-title">📸 FOTO VITTORIE</div>
+        <div class="profile-media-sub-title">📸 FOTO</div>
         <div class="profile-media-grid">${photos.map(photoCard).join('')}</div>
       </div>
       <div>
@@ -10465,7 +10495,7 @@ function buildProfileMedia(risultati, photosMap, videos, opts = {}) {
         <div class="profile-media-grid">${vids.map(videoCard).join('')}</div>
       </div>`;
   } else if (photos.length) {
-    inner = `<div class="profile-media-sub-title">📸 FOTO VITTORIE</div>
+    inner = `<div class="profile-media-sub-title">📸 FOTO</div>
       <div class="profile-media-grid">${photos.map(photoCard).join('')}</div>`;
   } else {
     inner = `<div class="profile-media-sub-title">🎬 VIDEO</div>
@@ -10698,7 +10728,7 @@ async function renderAtleta(atleta_id) {
       <button class="watch-btn ${_watched ? 'watch-btn--active' : ''}" id="watch-btn-${esc(atleta_id)}" onclick="window.toggleWatch('${esc(atleta_id)}','${esc(displayCognome)}','${esc(displayNome)}')">${_watched ? '<span>★</span> Seguito' : '<span>☆</span> Segui'}</button>
       ${adminEditBtn('atleta', atleta_id)}
     </div>
-    ${buildProfileMedia(risultati, photosMap, globalData.videos)}
+    ${buildProfileMedia(risultati, photosMap, globalData.videos, { atletaIds: [atleta_id] })}
     <div class="section-header" style="margin-top:28px">
       <span class="section-title">RISULTATI STAGIONE</span>
       <span class="section-line"></span>
@@ -11088,7 +11118,12 @@ async function renderTeam(team_id) {
       ),
       teamPhotosMap,
       globalData.videos,
-      { showAthleteName: true }
+      {
+        showAthleteName: true,
+        atletaIds: [...new Set(globalData.resultsRaw
+          .filter(r => r.team_id === team_id && r.atleta_id)
+          .map(r => r.atleta_id))],
+      }
     )}
     <div class="section-header" style="margin-top:28px">
       <span class="section-title">RISULTATI TEAM</span>
@@ -11220,10 +11255,29 @@ window.adminPhotoRemove = async function(source, garaId) {
   } catch (e) { showToast('Errore: ' + e.message, 'error'); }
 };
 
+// Un utente atleta verificato si tagga (o si toglie) da una foto gara.
+window.selfTagPhoto = async function(id) {
+  if (!authUser()) { showToast('Accedi per taggarti', 'info'); return; }
+  try {
+    await apiCall(`/race-photos/${id}/self-tag`, { method: 'POST', body: { tagged: true } });
+    _risPhotosMap = null;
+    showToast('🏷 Ti sei taggato in questa foto ✓');
+    if (window._currentGaraId) renderGara(window._currentGaraId);
+  } catch (e) {
+    showToast(e.message || 'Errore', 'error');
+  }
+};
+
 function adminEditPhoto(id) {
   const card = document.getElementById(`gal-photo-${id}`);
   const caption      = card?.dataset.caption      || '';
   const photographer = card?.dataset.photographer || '';
+  const atletaIdsCsv = card?.dataset.atletaIds    || '';
+  // Pre-popola i tag esistenti
+  window._rpTags = atletaIdsCsv.split(',').map(s => s.trim()).filter(Boolean).map(aid => {
+    const a = globalData?.athletes?.[aid];
+    return { id: aid, label: a ? `${a.cognome} ${a.nome}`.trim() : aid };
+  });
 
   const overlay = document.createElement('div');
   overlay.id = 'modal-overlay';
@@ -11240,6 +11294,12 @@ function adminEditPhoto(id) {
     <input id="ep-caption" type="text" style="display:block;width:100%;box-sizing:border-box;padding:9px 11px;border:1px solid #334155;border-radius:6px;font-size:0.875rem;background:#0f172a;color:#f1f5f9;margin-bottom:12px"/>
     <label style="display:block;font-size:0.8rem;color:#94a3b8;margin-bottom:4px">Credit fotografo</label>
     <input id="ep-photographer" type="text" style="display:block;width:100%;box-sizing:border-box;padding:9px 11px;border:1px solid #334155;border-radius:6px;font-size:0.875rem;background:#0f172a;color:#f1f5f9;margin-bottom:16px"/>
+    <label style="display:block;font-size:0.8rem;color:#94a3b8;margin-bottom:4px">Corridori nella foto</label>
+    <div style="position:relative">
+      <input id="rp-rider-search" type="text" placeholder="Cerca un corridore…" autocomplete="off" style="display:block;width:100%;box-sizing:border-box;padding:9px 11px;border:1px solid #334155;border-radius:6px;font-size:0.875rem;background:#0f172a;color:#f1f5f9;margin-bottom:8px"/>
+      <div id="rp-rider-dd" style="display:none;position:absolute;left:0;right:0;top:calc(100% - 4px);background:#1e293b;border:1px solid #334155;border-radius:6px;max-height:200px;overflow:auto;z-index:5;box-shadow:0 6px 20px rgba(0,0,0,.45)"></div>
+    </div>
+    <div id="rp-rider-chips" style="display:flex;flex-wrap:wrap;gap:6px;margin-bottom:16px"></div>
     ${/_ES[12]_[MF]$/.test(window._currentGaraId||'') ? `
     <label style="display:block;font-size:0.8rem;color:#94a3b8;margin-bottom:4px">Categoria esordienti</label>
     <select id="ep-esyear" style="display:block;width:100%;box-sizing:border-box;padding:9px 11px;border:1px solid #334155;border-radius:6px;font-size:0.875rem;background:#0f172a;color:#f1f5f9;margin-bottom:16px">
@@ -11255,6 +11315,8 @@ function adminEditPhoto(id) {
 
   document.getElementById('ep-caption').value      = caption;
   document.getElementById('ep-photographer').value = photographer;
+  if (window._rpRenderChips) window._rpRenderChips();
+  if (window._rpBindRiderSearch) window._rpBindRiderSearch();
   document.getElementById('ep-close').onclick = () => overlay.remove();
   document.getElementById('ep-save').onclick = async () => {
     const newCaption      = document.getElementById('ep-caption').value || '';
@@ -11271,13 +11333,15 @@ function adminEditPhoto(id) {
       if (m) newGaraId = `${m[1]}_${esSel.value}_${m[2]}`;
     }
     try {
+      const _tagIds = (window._rpTags || []).map(t => t.id).join(',');
       const res = await fetch(`${API_BASE}/admin/race-photos/${id}`, {
         method: 'PATCH',
         headers: { 'Content-Type': 'application/json', Authorization: `Bearer ${authToken()}` },
-        body: JSON.stringify({ caption: newCaption, photographer: newPhotographer, ...(newGaraId ? { gara_id: newGaraId } : {}) }),
+        body: JSON.stringify({ caption: newCaption, photographer: newPhotographer, atleta_ids: _tagIds, ...(newGaraId ? { gara_id: newGaraId } : {}) }),
       });
       const data = await res.json().catch(() => ({}));
       if (!res.ok) throw new Error(data.error || `HTTP ${res.status}`);
+      _risPhotosMap = null;
       overlay.remove();
       if (window._currentGaraId) renderGara(window._currentGaraId);
     } catch(e) {
@@ -11739,11 +11803,13 @@ async function renderGara(gara_id) {
     const featuredPhoto = photos[0] || null;
     const _heroCredit = [featuredPhoto?.caption, featuredPhoto?.photographer ? '📷 ' + featuredPhoto.photographer : '', featuredPhoto?.display_name]
       .filter(Boolean).join(' — ');
+    const _heroTagNames = featuredPhoto ? String(featuredPhoto.atleta_ids||'').split(',').map(s=>s.trim()).filter(Boolean).map(id=>{const a=globalData?.athletes?.[id]; return a?`<a href="#/atleta/${esc(id)}" style="color:#fff;text-decoration:underline" onclick="event.stopPropagation()">${esc(a.cognome)} ${esc(a.nome)}</a>`:'';}).filter(Boolean).join(', ') : '';
     _heroPhotoEl = featuredPhoto
-      ? `<div class="gara-media-half gara-media-photo" onclick="window.openPhotoLightbox('${PHOTOS_BASE}/photos/${esc(featuredPhoto.filename)}')" style="cursor:zoom-in">
+      ? `<div class="gara-media-half gara-media-photo" id="gal-photo-${featuredPhoto.id}" data-caption="${esc(featuredPhoto.caption||'')}" data-photographer="${esc(featuredPhoto.photographer||'')}" data-atleta-ids="${esc(featuredPhoto.atleta_ids||'')}" onclick="window.openPhotoLightbox('${PHOTOS_BASE}/photos/${esc(featuredPhoto.filename)}')" style="cursor:zoom-in">
            <img id="gara-hero-img" src="${PHOTOS_BASE}/photos/${esc(featuredPhoto.filename)}" alt="${esc(featuredPhoto.caption||'Foto gara')}" loading="lazy"/>
            <div class="gara-photo-hint">🔍 Clicca per la foto intera</div>
-           ${_heroCredit ? `<div style="position:absolute;bottom:0;left:0;right:0;background:linear-gradient(transparent,rgba(0,0,0,.75));color:#fff;font-size:0.7rem;padding:14px 10px 6px;line-height:1.3">${esc(_heroCredit)}</div>` : ''}
+           ${_heroCredit ? `<div style="position:absolute;bottom:0;left:0;right:0;background:linear-gradient(transparent,rgba(0,0,0,.75));color:#fff;font-size:0.7rem;padding:14px 10px 6px;line-height:1.3">${esc(_heroCredit)}${_heroTagNames ? `<div style="margin-top:3px">🏷 ${_heroTagNames}</div>` : ''}</div>` : (_heroTagNames ? `<div style="position:absolute;bottom:0;left:0;right:0;background:linear-gradient(transparent,rgba(0,0,0,.75));color:#fff;font-size:0.7rem;padding:14px 10px 6px">🏷 ${_heroTagNames}</div>` : '')}
+           ${_user && !_isAdmin ? `<button onclick="event.stopPropagation();window.selfTagPhoto(${featuredPhoto.id})" title="Segnala che sei tu in questa foto" style="position:absolute;bottom:6px;right:6px;z-index:10;background:rgba(37,99,235,.92);color:#fff;border:none;padding:4px 9px;border-radius:4px;font-size:.7rem;cursor:pointer">🏷 Sono io</button>` : ''}
            ${_isAdmin ? `<div style="position:absolute;top:4px;right:4px;display:flex;flex-direction:column;gap:3px;z-index:10">
              <button onclick="event.stopPropagation();window.adminEditPhoto(${featuredPhoto.id})" style="${_adminBtnStyle};background:#2563eb">✏️ Modifica</button>
              <button onclick="event.stopPropagation();window.adminDeletePhoto(${featuredPhoto.id})" style="${_adminBtnStyle};background:#dc2626">🗑 Elimina</button>
@@ -11755,10 +11821,13 @@ async function renderGara(gara_id) {
       ? `<div class="race-gallery">${extraPhotos.map(p=>`
           <div class="race-gallery-item" id="gal-photo-${p.id}"
             data-caption="${esc(p.caption||'')}"
-            data-photographer="${esc(p.photographer||'')}">
+            data-photographer="${esc(p.photographer||'')}"
+            data-atleta-ids="${esc(p.atleta_ids||'')}">
             <img src="${PHOTOS_BASE}/photos/${esc(p.filename)}" alt="${esc(p.caption||'Foto gara')}" loading="lazy" onclick="window.openPhotoLightbox('${PHOTOS_BASE}/photos/${esc(p.filename)}')" style="cursor:zoom-in"/>
             ${isEsordienti && /_ES2_[MF]$/.test(p._gkey||'') ? `<div style="position:absolute;top:4px;left:36px;background:rgba(99,102,241,.92);color:#fff;font-size:.6rem;font-weight:700;padding:1px 6px;border-radius:3px;z-index:9">2° Anno</div>` : (isEsordienti && /_ES1_[MF]$/.test(p._gkey||'') ? `<div style="position:absolute;top:4px;left:36px;background:rgba(99,102,241,.92);color:#fff;font-size:.6rem;font-weight:700;padding:1px 6px;border-radius:3px;z-index:9">1° Anno</div>` : '')}
             <div class="race-gallery-caption">${[p.caption, p.photographer ? '📷 '+p.photographer : '', p.display_name].filter(Boolean).join(' — ')}</div>
+            ${(() => { const nm = String(p.atleta_ids||'').split(',').map(s=>s.trim()).filter(Boolean).map(id=>{const a=globalData?.athletes?.[id]; return a?`<a href="#/atleta/${esc(id)}" style="color:#fff;text-decoration:underline" onclick="event.stopPropagation()">${esc(a.cognome)} ${esc(a.nome)}</a>`:'';}).filter(Boolean).join(', '); return nm ? `<div style="position:absolute;bottom:4px;left:6px;right:6px;font-size:.62rem;color:#fff;background:rgba(0,0,0,.5);padding:2px 6px;border-radius:4px;z-index:8">🏷 ${nm}</div>` : ''; })()}
+            ${_user && !_isAdmin ? `<button onclick="event.stopPropagation();window.selfTagPhoto(${p.id})" title="Segnala che sei tu in questa foto" style="position:absolute;bottom:4px;right:4px;z-index:10;background:rgba(37,99,235,.92);color:#fff;border:none;padding:3px 8px;border-radius:4px;font-size:.65rem;cursor:pointer;white-space:nowrap">🏷 Sono io</button>` : ''}
             ${(() => { const uid='ph_'+String(p.id||p.filename).replace(/[^a-z0-9]/gi,'').slice(-24); const ic=isInCollection(uid); return `<button id="collect-btn-${uid}" class="collect-btn ${ic?'collect-btn--active':''}" title="${ic?'Nella tua raccolta':'Salva nella raccolta'}" style="position:absolute;top:4px;left:4px;z-index:10;width:26px;height:26px;font-size:.85rem" onclick="event.stopPropagation();window.toggleMediaCollect('${uid}','foto','${PHOTOS_BASE}/photos/${esc(p.filename)}','${esc((p.caption||'Foto gara').replace(/'/g,''))}','${esc((primaryGaraId||'').replace(/'/g,''))}')">${ic?'✓':'＋'}</button>`; })()}
             ${_isAdmin ? `<div style="position:absolute;top:4px;right:4px;display:flex;flex-direction:column;gap:3px;z-index:10">
               <button onclick="event.stopPropagation();window.adminEditPhoto(${p.id})" style="padding:3px 7px;font-size:0.68rem;background:#2563eb;color:#fff;border:none;border-radius:4px;cursor:pointer;white-space:nowrap;box-shadow:0 1px 4px rgba(0,0,0,.5)">&#9999;&#65039; Modifica</button>
@@ -12190,6 +12259,12 @@ async function renderGara(gara_id) {
         <input type="file" id="rp-file" accept="image/jpeg,image/png,image/webp" style="${inpStyle}"/>
         <input type="text" id="rp-caption" placeholder="Didascalia (facoltativa)" style="${inpStyle}"/>
         <input type="text" id="rp-photographer" placeholder="Credit fotografo (es. Mario Rossi)" style="${inpStyle}"/>
+        <label style="display:block;font-size:0.8rem;color:var(--text-secondary);margin-bottom:4px">Corridori nella foto <span style="color:var(--text-muted);font-weight:400">(per assegnarla ai loro profili)</span></label>
+        <div style="position:relative">
+          <input type="text" id="rp-rider-search" placeholder="Cerca un corridore…" autocomplete="off" style="${inpStyle}"/>
+          <div id="rp-rider-dd" style="display:none;position:absolute;left:0;right:0;top:calc(100% - 4px);background:var(--bg-card);border:1px solid var(--border-subtle);border-radius:var(--r-sm);max-height:210px;overflow:auto;z-index:5;box-shadow:0 6px 20px rgba(0,0,0,.25)"></div>
+        </div>
+        <div id="rp-rider-chips" style="display:flex;flex-wrap:wrap;gap:6px;margin-bottom:10px"></div>
         <div id="rp-err" style="color:#EF4444;font-size:0.8rem;margin-bottom:8px;display:none"></div>
         <button id="rp-submit" onclick="window.submitRacePhoto('${esc(garaId)}')" style="width:100%;padding:9px;background:var(--red-hot);color:#fff;border:none;border-radius:var(--r-sm);font-weight:600;cursor:pointer">Invia</button>
       </div>`;
@@ -12215,6 +12290,63 @@ async function renderGara(gara_id) {
     };
     _fillCaption();
     if (_esSel) _esSel.addEventListener('change', _fillCaption);
+
+    // ── Picker corridori (tag) ─────────────────────────────────────
+    window._rpTags = [];
+    window._rpRenderChips();
+    window._rpBindRiderSearch();
+  };
+
+  window._rpBindRiderSearch = () => {
+    const _riderInput = document.getElementById('rp-rider-search');
+    const _riderDd    = document.getElementById('rp-rider-dd');
+    if (!_riderInput || _riderInput._rpBound) return;
+    _riderInput._rpBound = true;
+    _riderInput.addEventListener('input', function () {
+      const ql = this.value.trim().toLowerCase();
+      if (!ql || !globalData) { _riderDd.style.display = 'none'; return; }
+      const chosen = new Set((window._rpTags || []).map(t => t.id));
+      const out = [];
+      for (const [id, a] of Object.entries(globalData.athletes)) {
+        if (chosen.has(id)) continue;
+        const name = `${a.cognome || ''} ${a.nome || ''}`.toLowerCase();
+        if (name.includes(ql)) out.push({ id, label: `${a.cognome || ''} ${a.nome || ''}`.trim(), sub: a.team_attuale || '' });
+        if (out.length >= 6) break;
+      }
+      _riderDd.innerHTML = out.length
+        ? out.map(o => `<div class="search-result-item" style="padding:7px 10px;cursor:pointer;border-bottom:1px solid var(--border-subtle)"
+              onclick="window._rpAddRider('${esc(o.id)}','${esc(o.label.replace(/'/g,'’'))}')">
+              <div style="font-size:.82rem;font-weight:600">${esc(o.label)}</div>
+              <div style="font-size:.7rem;color:var(--text-muted)">${esc(o.sub)}</div>
+            </div>`).join('')
+        : `<div style="padding:7px 10px;font-size:.78rem;color:var(--text-muted)">Nessun corridore</div>`;
+      _riderDd.style.display = 'block';
+    });
+    _riderInput.addEventListener('blur', () => setTimeout(() => { if (_riderDd) _riderDd.style.display = 'none'; }, 180));
+  };
+
+  window._rpAddRider = (id, label) => {
+    window._rpTags = window._rpTags || [];
+    if (!window._rpTags.some(t => t.id === id)) window._rpTags.push({ id, label });
+    const inp = document.getElementById('rp-rider-search');
+    if (inp) inp.value = '';
+    const dd = document.getElementById('rp-rider-dd');
+    if (dd) dd.style.display = 'none';
+    window._rpRenderChips();
+  };
+  window._rpRemoveRider = (id) => {
+    window._rpTags = (window._rpTags || []).filter(t => t.id !== id);
+    window._rpRenderChips();
+  };
+  window._rpRenderChips = () => {
+    const box = document.getElementById('rp-rider-chips');
+    if (!box) return;
+    const tags = window._rpTags || [];
+    box.innerHTML = tags.map(t => `
+      <span style="display:inline-flex;align-items:center;gap:5px;background:var(--bg-elevated);border:1px solid var(--border-subtle);border-radius:14px;padding:3px 6px 3px 10px;font-size:.75rem">
+        ${esc(t.label)}
+        <button onclick="window._rpRemoveRider('${esc(t.id)}')" style="background:none;border:none;color:var(--text-muted);cursor:pointer;font-size:.9rem;line-height:1;padding:0">✕</button>
+      </span>`).join('');
   };
 
   // ── AGGIUNGI VIDEO ──────────────────────────────────────────────────
@@ -12403,6 +12535,8 @@ async function renderGara(gara_id) {
       }
     }
 
+    const _tagIds = (window._rpTags || []).map(t => t.id).join(',');
+
     const btn = document.getElementById('rp-submit');
     btn.disabled = true; btn.textContent = 'Invio…';
     try {
@@ -12413,6 +12547,7 @@ async function renderGara(gara_id) {
         fd.append('gara_id', gid);
         fd.append('caption', caption);
         fd.append('photographer', photographer);
+        fd.append('atleta_ids', _tagIds);
         fd.append('photo', file);
         const res = await fetch(`${API_BASE}/race-photos/upload`, { method:'POST', headers:{ Authorization:`Bearer ${token}` }, body:fd });
         const text = await res.text();
@@ -15005,6 +15140,7 @@ window.risSetSearch = (v) => {
 };
 
 let _risPhotosMap = null;
+let _risPhotosByAtleta = null; // atleta_id → [photoObj,...] (foto taggate)
 async function loadRisPhotos() {
   if (_risPhotosMap) return _risPhotosMap;
   try {
@@ -15013,6 +15149,15 @@ async function loadRisPhotos() {
       fetch(`${API_BASE}/xpix-photos`).then(r => r.json()).catch(() => ({ photos: [] })),
       fetch(`${API_BASE}/ic-photos`).then(r => r.json()).catch(() => ({ photos: [] })),
     ]);
+    // Indice foto → atleta taggato (solo race-photos caricate hanno tag)
+    _risPhotosByAtleta = {};
+    (d1.photos || []).forEach(p => {
+      const ids = String(p.atleta_ids || '').split(',').map(s => s.trim()).filter(Boolean);
+      for (const aid of ids) {
+        if (!_risPhotosByAtleta[aid]) _risPhotosByAtleta[aid] = [];
+        _risPhotosByAtleta[aid].push(p);
+      }
+    });
     _risPhotosMap = {};
     // Priorità: italiaciclismo < xpix < uploaded
     (d3.photos || []).forEach(p => { if (p.gara_id && !_risPhotosMap[p.gara_id]) _risPhotosMap[p.gara_id] = p; });
