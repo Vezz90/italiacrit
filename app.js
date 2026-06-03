@@ -11241,7 +11241,7 @@ function openPhotoLightbox(src, opts = {}) {
   const isAdmin = authUser()?.role === 'admin';
   const tagBtn = (isAdmin && opts.photoId && opts.garaId)
     ? `<button onclick="event.stopPropagation();window._openTagPanel({kind:'photo',photoId:${opts.photoId},garaId:'${esc(String(opts.garaId))}',current:'${esc(String(opts.current||''))}'})"
-         style="position:fixed;bottom:20px;left:50%;transform:translateX(-50%);z-index:10000;background:rgba(37,99,235,.95);color:#fff;border:none;padding:9px 16px;border-radius:20px;font-size:.85rem;font-weight:600;cursor:pointer;box-shadow:0 4px 14px rgba(0,0,0,.4)">🏷 Tagga corridori (top 10)</button>`
+         style="position:fixed;bottom:20px;left:50%;transform:translateX(-50%);z-index:10000;background:rgba(37,99,235,.95);color:#fff;border:none;padding:9px 16px;border-radius:20px;font-size:.85rem;font-weight:600;cursor:pointer;box-shadow:0 4px 14px rgba(0,0,0,.4)">🏷 Tagga corridori</button>`
     : '';
   lb.innerHTML = `<img src="${src}" alt="Foto gara"/>${tagBtn}`;
   document.body.appendChild(lb);
@@ -11262,31 +11262,49 @@ function _mediaTopTen(garaId) {
   return Object.values(m).sort((a, b) => Number(a.posizione) - Number(b.posizione));
 }
 
-// Pannello admin per taggare i corridori top-10 su una foto o un video aperto.
+// Pannello admin per taggare QUALSIASI corridore su una foto o un video aperto.
+// Ricerca libera (non solo top-10): utile per telecronache/video dove uno
+// dei presenti vuole ritrovarsi anche se non è tra i primi 10. I primi 10
+// della gara sono offerti come scorciatoia.
 window._openTagPanel = (opts) => {
   if (authUser()?.role !== 'admin') { showToast('Solo l\'admin può taggare altri corridori', 'info'); return; }
-  const top = _mediaTopTen(opts.garaId);
-  const current = new Set(String(opts.current || '').split(',').map(s => s.trim()).filter(Boolean));
+  const current = String(opts.current || '').split(',').map(s => s.trim()).filter(Boolean);
+  window._rpTags = current.map(aid => {
+    const a = globalData?.athletes?.[aid];
+    return { id: aid, label: a ? `${a.cognome} ${a.nome}`.trim() : aid };
+  });
+  const top = _mediaTopTen(opts.garaId).filter(r => !current.includes(r.atleta_id)).slice(0, 10);
+  const inpStyle = 'width:100%;box-sizing:border-box;padding:8px 10px;border:1px solid var(--border-subtle);border-radius:var(--r-sm);font-size:0.875rem;background:var(--bg-primary);color:var(--text-primary);margin-bottom:10px';
   const overlay = document.createElement('div');
   overlay.style.cssText = 'position:fixed;inset:0;background:rgba(0,0,0,.65);z-index:10001;display:flex;align-items:center;justify-content:center;padding:16px';
   overlay.onclick = (e) => { if (e.target === overlay) overlay.remove(); };
   overlay.innerHTML = `
-    <div style="background:var(--bg-card);border-radius:var(--r-lg);padding:20px;width:100%;max-width:380px;max-height:80vh;overflow:auto;box-shadow:0 8px 32px rgba(0,0,0,.4)">
+    <div style="background:var(--bg-card);border-radius:var(--r-lg);padding:20px;width:100%;max-width:400px;max-height:84vh;overflow:auto;box-shadow:0 8px 32px rgba(0,0,0,.4)">
       <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:12px">
-        <strong>🏷 Tagga corridori (top 10)</strong>
+        <strong>🏷 Tagga corridori</strong>
         <button onclick="this.closest('[style*=fixed]').remove()" style="background:none;border:none;font-size:1.3rem;cursor:pointer;color:var(--text-muted)">✕</button>
       </div>
-      ${top.length ? top.map(r => `
-        <label style="display:flex;align-items:center;gap:8px;padding:7px 4px;border-bottom:1px solid var(--border-subtle);cursor:pointer">
-          <input type="checkbox" class="tg-cb" value="${esc(r.atleta_id)}" ${current.has(r.atleta_id) ? 'checked' : ''} style="width:16px;height:16px"/>
-          <span style="font-size:.82rem"><b style="color:var(--text-secondary)">${r.posizione}°</b> ${esc(r.cognome)} ${esc(r.nome)}</span>
-        </label>`).join('') : '<div style="color:var(--text-muted);font-size:.85rem;padding:8px 0">Nessun risultato top-10 trovato per questa gara.</div>'}
-      <div id="tg-err" style="color:#EF4444;font-size:.78rem;margin-top:8px;display:none"></div>
-      <button id="tg-save" style="width:100%;margin-top:12px;padding:9px;background:var(--red-hot);color:#fff;border:none;border-radius:var(--r-sm);font-weight:600;cursor:pointer">Salva tag</button>
+      <div style="position:relative">
+        <input type="text" id="rp-rider-search" placeholder="Cerca un corridore…" autocomplete="off" style="${inpStyle}"/>
+        <div id="rp-rider-dd" style="display:none;position:absolute;left:0;right:0;top:calc(100% - 4px);background:var(--bg-card);border:1px solid var(--border-subtle);border-radius:var(--r-sm);max-height:210px;overflow:auto;z-index:5;box-shadow:0 6px 20px rgba(0,0,0,.25)"></div>
+      </div>
+      <div id="rp-rider-chips" style="display:flex;flex-wrap:wrap;gap:6px;margin-bottom:10px"></div>
+      ${top.length ? `<div style="font-size:.72rem;color:var(--text-muted);margin:2px 0 5px">Aggiungi rapido (top 10):</div>
+      <div style="display:flex;flex-wrap:wrap;gap:5px;margin-bottom:8px">
+        ${top.map(r => `<button class="tg-quick" data-id="${esc(r.atleta_id)}" data-label="${esc(`${r.cognome} ${r.nome}`.trim())}" style="background:var(--bg-elevated);border:1px solid var(--border-subtle);border-radius:12px;padding:3px 9px;font-size:.72rem;cursor:pointer;color:var(--text-primary)">${r.posizione}° ${esc(r.cognome)}</button>`).join('')}
+      </div>` : ''}
+      <div id="tg-err" style="color:#EF4444;font-size:.78rem;margin-top:6px;display:none"></div>
+      <button id="tg-save" style="width:100%;margin-top:10px;padding:9px;background:var(--red-hot);color:#fff;border:none;border-radius:var(--r-sm);font-weight:600;cursor:pointer">Salva tag</button>
     </div>`;
   document.body.appendChild(overlay);
+  if (window._rpRenderChips) window._rpRenderChips();
+  if (window._rpBindRiderSearch) window._rpBindRiderSearch();
+  overlay.querySelectorAll('.tg-quick').forEach(b => b.onclick = () => {
+    window._rpAddRider(b.dataset.id, b.dataset.label);
+    b.style.display = 'none';
+  });
   overlay.querySelector('#tg-save').onclick = async () => {
-    const csv = [...overlay.querySelectorAll('.tg-cb:checked')].map(c => c.value).join(',');
+    const csv = (window._rpTags || []).map(t => t.id).join(',');
     const btn = overlay.querySelector('#tg-save'); btn.disabled = true; btn.textContent = 'Salvataggio…';
     try {
       if (opts.kind === 'photo') {
@@ -13566,26 +13584,34 @@ async function renderStatistiche(selectedCatKey) {
   if (!globalData) return;
   const { resultsRaw: allResults, athletes, calendar } = globalData;
 
-  // Categorie standard (codici classifica) presenti nei risultati, in ordine fisso
-  const _presentCodes = new Set(allResults.map(r => getRankingFileCode(r)).filter(Boolean));
-  const availableCats = RANKING_CODES.filter(c => _presentCodes.has(c));
-  const catTabsHtml = `
-    <div class="cat-tabs" style="margin-bottom:28px;flex-wrap:wrap">
-      <button class="cat-tab${!selectedCatKey ? ' active' : ''}" onclick="location.hash='#/statistiche'">Generale</button>
-      ${availableCats.map(code => {
-        const isActive = selectedCatKey === code;
-        return `<button class="cat-tab${isActive ? ' active' : ''}" onclick="location.hash='#/statistiche/${encodeURIComponent(code)}'">${catLabel(code)}</button>`;
-      }).join('')}
-    </div>`;
+  // La pagina segue il CONTESTO attivo (la categoria scelta nella barra in
+  // alto): se sei in una categoria specifica (es. Juniores) vedi le sue
+  // statistiche; le "Generali" si vedono solo nel contesto generale
+  // (Uomini/Donne o nessun hub). Niente più striscia di tab in alto.
+  const GENERAL_HUBS = new Set(['uomini', 'donne']);
+  let ctxCat = selectedCatKey || null;
+  if (!ctxCat && activeHub && activeHub._code && !GENERAL_HUBS.has(activeHub._code)) {
+    // Esordienti (2 annate): segui l'annata che stai guardando (rankCat), altrimenti la principale
+    if (activeHub.catCodes && activeHub.catCodes.length > 1 && activeHub.catCodes.includes(rankCat)) {
+      ctxCat = rankCat;
+    } else {
+      ctxCat = activeHub.mainCat || (activeHub.catCodes && activeHub.catCodes[0]) || null;
+    }
+  }
 
-  // Filtra i risultati per la categoria selezionata (o usa tutti per il generale)
-  const resultsRaw = selectedCatKey
-    ? allResults.filter(r => getRankingFileCode(r) === selectedCatKey)
+  // Intestazione di contesto (al posto della striscia di categorie)
+  const catTabsHtml = ctxCat
+    ? `<div style="margin:-6px 0 24px;color:var(--text-secondary);font-size:.95rem;font-weight:600">${esc(catLabel(ctxCat))}</div>`
+    : `<div style="margin:-6px 0 24px;color:var(--text-secondary);font-size:.95rem;font-weight:600">Statistiche generali</div>`;
+
+  // Filtra i risultati per la categoria di contesto (o usa tutti per il generale)
+  const resultsRaw = ctxCat
+    ? allResults.filter(r => getRankingFileCode(r) === ctxCat)
     : allResults;
 
-  // Se categoria singola → mostra vista dedicata
-  if (selectedCatKey) {
-    return _renderStatisticheCat(selectedCatKey, resultsRaw, athletes, calendar, catTabsHtml);
+  // Se categoria di contesto → mostra vista dedicata
+  if (ctxCat) {
+    return _renderStatisticheCat(ctxCat, resultsRaw, athletes, calendar, catTabsHtml);
   }
 
   // KPI globali (ridotto)
