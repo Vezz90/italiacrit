@@ -1,4 +1,540 @@
 {
+  "BALSAMO_ELISA": {
+    "id": "BALSAMO_ELISA",
+    "nome": "ELISA",
+    "cognome": "BALSAMO",
+    "team_attuale": "LIDL - TREK",
+    "team_id": "LIDL_TREK",
+    "categoria": "ELI_F",
+    "genere": "F",
+    "punti_totali": 189,
+    "risultati": [
+      {
+        "gara_id": "GIRO_D_ITALIA_WOMEN_SESTA_TAPPA_2026-06-04_ELI_F",
+        "nome_gara": "GIRO D'ITALIA WOMEN SESTA TAPPA",
+        "data": "2026-06-04",
+        "posizione": 1,
+        "punti_effettivi": 45,
+        "team": "LIDL - TREK",
+        "moltiplicatore": 3,
+        "tipo": "internazionale",
+        "regione": "UNDER",
+        "km": "159.000",
+        "media": ""
+      },
+      {
+        "gara_id": "GIRO_D_ITALIA_WOMEN_TERZA_TAPPA_2026-06-01_ELI_F",
+        "nome_gara": "GIRO D'ITALIA WOMEN TERZA TAPPA",
+        "data": "2026-06-01",
+        "posizione": 1,
+        "punti_effettivi": 45,
+        "team": "LIDL - TREK",
+        "moltiplicatore": 3,
+        "tipo": "internazionale",
+        "regione": "UNDER",
+        "km": "156.000",
+        "media": "41.839"
+      },
+      {
+        "gara_id": "GIRO_D_ITALIA_WOMEN_SECONDA_TAPPA_2026-05-31_ELI_F",
+        "nome_gara": "GIRO D'ITALIA WOMEN SECONDA TAPPA",
+        "data": "2026-05-31",
+        "posizione": 1,
+        "punti_effettivi": 45,
+        "team": "LIDL - TREK",
+        "moltiplicatore": 3,
+        "tipo": "internazionale",
+        "regione": "UNDER",
+        "km": "156.000",
+        "media": "39.358"
+      },
+      {
+        "gara_id": "GIRO_D_ITALIA_WOMEN_PRIMA_TAPPA_2026-05-30_ELI_F",
+        "nome_gara": "GIRO D'ITALIA WOMEN PRIMA TAPPA",
+        "data": "2026-05-30",
+        "posizione": 1,
+        "punti_effettivi": 45,
+        "team": "LIDL - TREK",
+        "moltiplicatore": 3,
+        "tipo": "internazionale",
+        "regione": "LOMBARDIA",
+        "km": "139.000",
+        "media": "42.043"
+      },
+      {
+        "gara_id": "MILANO_SANREMO_DONNE_2026-03-21_ELI_F",
+        "nome_gara": "MILANO SANREMO DONNE",
+        "data": "2026-03-21",
+        "posizione": 8,
+        "punti_effettivi": 9,
+        "team": "LIDL - TREK",
+        "moltiplicatore": 3,
+        "tipo": "internazionale",
+        "regione": "LIGURIA",
+        "km": "156.000",
+        "media": "41.182"
+      }
+    ]
+  },
+  "COLES_LYSTER_MAGGIE": {
+    "id": "COLES_LYSTER_MAGGIE",
+    "nome": "MAGGIE",
+    "cognome": "COLES-LYSTER",
+    "team_attuale": "HUMAN POWERED HEALTH",
+    "team_id": "HUMAN_POWERED_HEALTH",
+    "categoria": "ELI_F",
+    "genere": "F",
+    "punti_totali": 48,
+    "risultati": [
+      {
+        "gara_id": "GIRO_D_ITALIA_WOMEN_SESTA_TAPPA_2026-06-04_ELI_F",
+        "nome_gara": "GIRO D'ITALIA WOMEN SESTA TAPPA",
+        "data": "2026-06-04",
+        "posizione": 2,
+        "punti_effettivi": 36,
+        "team": "HUMAN POWERED HEALTH",
+        "moltiplicatore": 3,
+        "tipo": "internazionale",
+        "regione": "UNDER",
+        "km": "159.000",
+        "media": ""
+      },
+      {
+        "gara_id": "GIRO_D_ITALIA_WOMEN_SECONDA_TAPPA_2026-05-31_ELI_F",
+        "nome_gara": "GIRO D'ITALIA WOMEN SECONDA TAPPA",
+        "data": "2026-05-31",
+        "posizione": 7,
+        "punti_effettivi": 12,
+        "team": "HUMAN POWERED HEALTH",
+        "moltiplicatore": 3,
+        "tipo": "internazionale",
+        "regione": "UNDER",
+        "km": "156.000",
+        "media": "39.358"
+      }
+    ]
+  },
+  "BAKER_GEORGIA": {
+    "id": "BAKER_GEORGIA",
+    "nome": "GEORGIA",
+    "cognome": "BAKER",
+    "team_attuale": "LIV-ALULA JAYCO",
+    "team_id": "LIV_ALULA_JAYCO",
+    "categoria": "ELI_F",
+    "genere": "F",
+    "punti_totali": 54,
+    "risultati": [
+      {
+        "gara_id": "GIRO_D_ITALIA_WOMEN_SESTA_TAPPA_2026-06-04_ELI_F",
+        "nome_gara": "GIRO D'ITALIA WOMEN SESTA TAPPA",
+        "data": "2026-06-04",
+        "posizione": 3,
+        "punti_effettivi": 30,
+        "team": "LIV-ALULA JAYCO",
+        "moltiplicatore": 3,
+        "tipo": "internazionale",
+        "regione": "UNDER",
+        "km": "159.000",
+        "media": ""
+      },
+      {
+        "gara_id": "GIRO_D_ITALIA_WOMEN_PRIMA_TAPPA_2026-05-30_ELI_F",
+        "nome_gara": "GIRO D'ITALIA WOMEN PRIMA TAPPA",
+        "data": "2026-05-30",
+        "posizione": 4,
+        "punti_effettivi": 24,
+        "team": "LIV-ALULA JAYCO",
+        "moltiplicatore": 3,
+        "tipo": "internazionale",
+        "regione": "LOMBARDIA",
+        "km": "139.000",
+        "media": "42.043"
+      }
+    ]
+  },
+  "GERY_CELIA": {
+    "id": "GERY_CELIA",
+    "nome": "CELIA",
+    "cognome": "GERY",
+    "team_attuale": "FDJ UNITED - SUEZ",
+    "team_id": "FDJ_UNITED_SUEZ",
+    "categoria": "ELI_F",
+    "genere": "F",
+    "punti_totali": 66,
+    "risultati": [
+      {
+        "gara_id": "GIRO_D_ITALIA_WOMEN_SESTA_TAPPA_2026-06-04_ELI_F",
+        "nome_gara": "GIRO D'ITALIA WOMEN SESTA TAPPA",
+        "data": "2026-06-04",
+        "posizione": 4,
+        "punti_effettivi": 24,
+        "team": "FDJ UNITED - SUEZ",
+        "moltiplicatore": 3,
+        "tipo": "internazionale",
+        "regione": "UNDER",
+        "km": "159.000",
+        "media": ""
+      },
+      {
+        "gara_id": "GIRO_D_ITALIA_WOMEN_TERZA_TAPPA_2026-06-01_ELI_F",
+        "nome_gara": "GIRO D'ITALIA WOMEN TERZA TAPPA",
+        "data": "2026-06-01",
+        "posizione": 8,
+        "punti_effettivi": 9,
+        "team": "FDJ UNITED - SUEZ",
+        "moltiplicatore": 3,
+        "tipo": "internazionale",
+        "regione": "UNDER",
+        "km": "156.000",
+        "media": "41.839"
+      },
+      {
+        "gara_id": "GIRO_D_ITALIA_WOMEN_PRIMA_TAPPA_2026-05-30_ELI_F",
+        "nome_gara": "GIRO D'ITALIA WOMEN PRIMA TAPPA",
+        "data": "2026-05-30",
+        "posizione": 8,
+        "punti_effettivi": 9,
+        "team": "FDJ UNITED - SUEZ",
+        "moltiplicatore": 3,
+        "tipo": "internazionale",
+        "regione": "LOMBARDIA",
+        "km": "139.000",
+        "media": "42.043"
+      },
+      {
+        "gara_id": "GIRO_DELL_APPENNINO_DONNE_2026-03-22_ELI_F",
+        "nome_gara": "GIRO DELL'APPENNINO DONNE",
+        "data": "2026-03-22",
+        "posizione": 4,
+        "punti_effettivi": 24,
+        "team": "FDJ UNITED - SUEZ",
+        "moltiplicatore": 3,
+        "tipo": "internazionale",
+        "regione": "LIGURIA",
+        "km": "111.000",
+        "media": "40.583"
+      }
+    ]
+  },
+  "CONSONNI_CHIARA": {
+    "id": "CONSONNI_CHIARA",
+    "nome": "CHIARA",
+    "cognome": "CONSONNI",
+    "team_attuale": "CANYON SRAM ZONDACRYPTO",
+    "team_id": "CANYON_SRAM_ZONDACRYPTO",
+    "categoria": "ELI_F",
+    "genere": "F",
+    "punti_totali": 81,
+    "risultati": [
+      {
+        "gara_id": "GIRO_D_ITALIA_WOMEN_SESTA_TAPPA_2026-06-04_ELI_F",
+        "nome_gara": "GIRO D'ITALIA WOMEN SESTA TAPPA",
+        "data": "2026-06-04",
+        "posizione": 5,
+        "punti_effettivi": 18,
+        "team": "CANYON SRAM ZONDACRYPTO",
+        "moltiplicatore": 3,
+        "tipo": "internazionale",
+        "regione": "UNDER",
+        "km": "159.000",
+        "media": ""
+      },
+      {
+        "gara_id": "GIRO_D_ITALIA_WOMEN_SECONDA_TAPPA_2026-05-31_ELI_F",
+        "nome_gara": "GIRO D'ITALIA WOMEN SECONDA TAPPA",
+        "data": "2026-05-31",
+        "posizione": 3,
+        "punti_effettivi": 30,
+        "team": "CANYON SRAM ZONDACRYPTO",
+        "moltiplicatore": 3,
+        "tipo": "internazionale",
+        "regione": "UNDER",
+        "km": "156.000",
+        "media": "39.358"
+      },
+      {
+        "gara_id": "GIRO_D_ITALIA_WOMEN_PRIMA_TAPPA_2026-05-30_ELI_F",
+        "nome_gara": "GIRO D'ITALIA WOMEN PRIMA TAPPA",
+        "data": "2026-05-30",
+        "posizione": 3,
+        "punti_effettivi": 30,
+        "team": "CANYON SRAM ZONDACRYPTO",
+        "moltiplicatore": 3,
+        "tipo": "internazionale",
+        "regione": "LOMBARDIA",
+        "km": "139.000",
+        "media": "42.043"
+      },
+      {
+        "gara_id": "MILANO_SANREMO_DONNE_2026-03-21_ELI_F",
+        "nome_gara": "MILANO SANREMO DONNE",
+        "data": "2026-03-21",
+        "posizione": 10,
+        "punti_effettivi": 3,
+        "team": "CANYON SRAM ZONDACRYPTO",
+        "moltiplicatore": 3,
+        "tipo": "internazionale",
+        "regione": "LIGURIA",
+        "km": "156.000",
+        "media": "41.182"
+      }
+    ]
+  },
+  "VERHULST_WILD_GLADYS": {
+    "id": "VERHULST_WILD_GLADYS",
+    "nome": "GLADYS",
+    "cognome": "VERHULST-WILD",
+    "team_attuale": "AG INSURANCE SOUDAL",
+    "team_id": "AG_INSURANCE_SOUDAL",
+    "categoria": "ELI_F",
+    "genere": "F",
+    "punti_totali": 27,
+    "risultati": [
+      {
+        "gara_id": "GIRO_D_ITALIA_WOMEN_SESTA_TAPPA_2026-06-04_ELI_F",
+        "nome_gara": "GIRO D'ITALIA WOMEN SESTA TAPPA",
+        "data": "2026-06-04",
+        "posizione": 6,
+        "punti_effettivi": 15,
+        "team": "AG INSURANCE SOUDAL",
+        "moltiplicatore": 3,
+        "tipo": "internazionale",
+        "regione": "UNDER",
+        "km": "159.000",
+        "media": ""
+      },
+      {
+        "gara_id": "GIRO_D_ITALIA_WOMEN_PRIMA_TAPPA_2026-05-30_ELI_F",
+        "nome_gara": "GIRO D'ITALIA WOMEN PRIMA TAPPA",
+        "data": "2026-05-30",
+        "posizione": 7,
+        "punti_effettivi": 12,
+        "team": "AG INSURANCE SOUDAL",
+        "moltiplicatore": 3,
+        "tipo": "internazionale",
+        "regione": "LOMBARDIA",
+        "km": "139.000",
+        "media": "42.043"
+      }
+    ]
+  },
+  "GILLESPIE_LARA": {
+    "id": "GILLESPIE_LARA",
+    "nome": "LARA",
+    "cognome": "GILLESPIE",
+    "team_attuale": "UAE TEAM ADQ",
+    "team_id": "UAE_TEAM_ADQ",
+    "categoria": "ELI_F",
+    "genere": "F",
+    "punti_totali": 84,
+    "risultati": [
+      {
+        "gara_id": "GIRO_D_ITALIA_WOMEN_SESTA_TAPPA_2026-06-04_ELI_F",
+        "nome_gara": "GIRO D'ITALIA WOMEN SESTA TAPPA",
+        "data": "2026-06-04",
+        "posizione": 7,
+        "punti_effettivi": 12,
+        "team": "UAE TEAM ADQ",
+        "moltiplicatore": 3,
+        "tipo": "internazionale",
+        "regione": "UNDER",
+        "km": "159.000",
+        "media": ""
+      },
+      {
+        "gara_id": "GIRO_D_ITALIA_WOMEN_SECONDA_TAPPA_2026-05-31_ELI_F",
+        "nome_gara": "GIRO D'ITALIA WOMEN SECONDA TAPPA",
+        "data": "2026-05-31",
+        "posizione": 2,
+        "punti_effettivi": 36,
+        "team": "UAE TEAM ADQ",
+        "moltiplicatore": 3,
+        "tipo": "internazionale",
+        "regione": "UNDER",
+        "km": "156.000",
+        "media": "39.358"
+      },
+      {
+        "gara_id": "GIRO_D_ITALIA_WOMEN_PRIMA_TAPPA_2026-05-30_ELI_F",
+        "nome_gara": "GIRO D'ITALIA WOMEN PRIMA TAPPA",
+        "data": "2026-05-30",
+        "posizione": 2,
+        "punti_effettivi": 36,
+        "team": "UAE TEAM ADQ",
+        "moltiplicatore": 3,
+        "tipo": "internazionale",
+        "regione": "LOMBARDIA",
+        "km": "139.000",
+        "media": "42.043"
+      }
+    ]
+  },
+  "WILLIAMS_LILY": {
+    "id": "WILLIAMS_LILY",
+    "nome": "LILY",
+    "cognome": "WILLIAMS",
+    "team_attuale": "HUMAN POWERED HEALTH",
+    "team_id": "HUMAN_POWERED_HEALTH",
+    "categoria": "ELI_F",
+    "genere": "F",
+    "punti_totali": 51,
+    "risultati": [
+      {
+        "gara_id": "GIRO_D_ITALIA_WOMEN_SESTA_TAPPA_2026-06-04_ELI_F",
+        "nome_gara": "GIRO D'ITALIA WOMEN SESTA TAPPA",
+        "data": "2026-06-04",
+        "posizione": 8,
+        "punti_effettivi": 9,
+        "team": "HUMAN POWERED HEALTH",
+        "moltiplicatore": 3,
+        "tipo": "internazionale",
+        "regione": "UNDER",
+        "km": "159.000",
+        "media": ""
+      },
+      {
+        "gara_id": "GIRO_D_ITALIA_WOMEN_TERZA_TAPPA_2026-06-01_ELI_F",
+        "nome_gara": "GIRO D'ITALIA WOMEN TERZA TAPPA",
+        "data": "2026-06-01",
+        "posizione": 2,
+        "punti_effettivi": 36,
+        "team": "HUMAN POWERED HEALTH",
+        "moltiplicatore": 3,
+        "tipo": "internazionale",
+        "regione": "UNDER",
+        "km": "156.000",
+        "media": "41.839"
+      },
+      {
+        "gara_id": "GIRO_D_ITALIA_WOMEN_PRIMA_TAPPA_2026-05-30_ELI_F",
+        "nome_gara": "GIRO D'ITALIA WOMEN PRIMA TAPPA",
+        "data": "2026-05-30",
+        "posizione": 9,
+        "punti_effettivi": 6,
+        "team": "HUMAN POWERED HEALTH",
+        "moltiplicatore": 3,
+        "tipo": "internazionale",
+        "regione": "LOMBARDIA",
+        "km": "139.000",
+        "media": "42.043"
+      }
+    ]
+  },
+  "ZAMBELLI_ALESSIA": {
+    "id": "ZAMBELLI_ALESSIA",
+    "nome": "ALESSIA",
+    "cognome": "ZAMBELLI",
+    "team_attuale": "TOP GIRLS - FASSA BORTOLO",
+    "team_id": "TOP_GIRLS_FASSA_BORTOLO",
+    "categoria": "ELI_F",
+    "genere": "F",
+    "punti_totali": 38,
+    "risultati": [
+      {
+        "gara_id": "GIRO_D_ITALIA_WOMEN_SESTA_TAPPA_2026-06-04_ELI_F",
+        "nome_gara": "GIRO D'ITALIA WOMEN SESTA TAPPA",
+        "data": "2026-06-04",
+        "posizione": 9,
+        "punti_effettivi": 6,
+        "team": "TOP GIRLS - FASSA BORTOLO",
+        "moltiplicatore": 3,
+        "tipo": "internazionale",
+        "regione": "UNDER",
+        "km": "159.000",
+        "media": ""
+      },
+      {
+        "gara_id": "GIRO_D_ITALIA_WOMEN_SECONDA_TAPPA_2026-05-31_ELI_F",
+        "nome_gara": "GIRO D'ITALIA WOMEN SECONDA TAPPA",
+        "data": "2026-05-31",
+        "posizione": 8,
+        "punti_effettivi": 9,
+        "team": "TOP GIRLS - FASSA BORTOLO",
+        "moltiplicatore": 3,
+        "tipo": "internazionale",
+        "regione": "UNDER",
+        "km": "156.000",
+        "media": "39.358"
+      },
+      {
+        "gara_id": "GIRO_D_ITALIA_WOMEN_PRIMA_TAPPA_2026-05-30_ELI_F",
+        "nome_gara": "GIRO D'ITALIA WOMEN PRIMA TAPPA",
+        "data": "2026-05-30",
+        "posizione": 10,
+        "punti_effettivi": 3,
+        "team": "TOP GIRLS - FASSA BORTOLO",
+        "moltiplicatore": 3,
+        "tipo": "internazionale",
+        "regione": "LOMBARDIA",
+        "km": "139.000",
+        "media": "42.043"
+      },
+      {
+        "gara_id": "GIRO_DELLE_MARCHE_IN_ROSA_2026-05-10_ELI_F",
+        "nome_gara": "GIRO DELLE MARCHE IN ROSA",
+        "data": "2026-05-10",
+        "posizione": 9,
+        "punti_effettivi": 2,
+        "team": "TOP GIRLS - FASSA BORTOLO",
+        "moltiplicatore": 1,
+        "tipo": "regionale",
+        "regione": "MARCHE",
+        "km": "100.000",
+        "media": "35.294"
+      },
+      {
+        "gara_id": "GIRO_DELLE_MARCHE_IN_ROSA_2026-05-09_ELI_F",
+        "nome_gara": "GIRO DELLE MARCHE IN ROSA",
+        "data": "2026-05-09",
+        "posizione": 5,
+        "punti_effettivi": 6,
+        "team": "TOP GIRLS - FASSA BORTOLO",
+        "moltiplicatore": 1,
+        "tipo": "regionale",
+        "regione": "MARCHE",
+        "km": "90.000",
+        "media": "36.986"
+      },
+      {
+        "gara_id": "TROFEO_ARTI_E_MESTIERI_DELLA_TRADIZIONE_MUGELLANA_2026-02-14_ELI_F",
+        "nome_gara": "TROFEO ARTI E MESTIERI DELLA TRADIZIONE MUGELLANA",
+        "data": "2026-02-14",
+        "posizione": 5,
+        "punti_effettivi": 12,
+        "team": "TOP GIRLS - FASSA BORTOLO",
+        "moltiplicatore": 2,
+        "tipo": "nazionale",
+        "regione": "TOSCANA",
+        "km": "83.920",
+        "media": "38.422"
+      }
+    ]
+  },
+  "VOLSTAD_ALEXANDRA": {
+    "id": "VOLSTAD_ALEXANDRA",
+    "nome": "ALEXANDRA",
+    "cognome": "VOLSTAD",
+    "team_attuale": "EF EDUCATION OATLY",
+    "team_id": "EF_EDUCATION_OATLY",
+    "categoria": "ELI_F",
+    "genere": "F",
+    "punti_totali": 3,
+    "risultati": [
+      {
+        "gara_id": "GIRO_D_ITALIA_WOMEN_SESTA_TAPPA_2026-06-04_ELI_F",
+        "nome_gara": "GIRO D'ITALIA WOMEN SESTA TAPPA",
+        "data": "2026-06-04",
+        "posizione": 10,
+        "punti_effettivi": 3,
+        "team": "EF EDUCATION OATLY",
+        "moltiplicatore": 3,
+        "tipo": "internazionale",
+        "regione": "UNDER",
+        "km": "159.000",
+        "media": ""
+      }
+    ]
+  },
   "VOLLERING_DEMI": {
     "id": "VOLLERING_DEMI",
     "nome": "DEMI",
@@ -32080,108 +32616,6 @@
       }
     ]
   },
-  "BALSAMO_ELISA": {
-    "id": "BALSAMO_ELISA",
-    "nome": "ELISA",
-    "cognome": "BALSAMO",
-    "team_attuale": "LIDL - TREK",
-    "team_id": "LIDL_TREK",
-    "categoria": "ELI_F",
-    "genere": "F",
-    "punti_totali": 144,
-    "risultati": [
-      {
-        "gara_id": "GIRO_D_ITALIA_WOMEN_TERZA_TAPPA_2026-06-01_ELI_F",
-        "nome_gara": "GIRO D'ITALIA WOMEN TERZA TAPPA",
-        "data": "2026-06-01",
-        "posizione": 1,
-        "punti_effettivi": 45,
-        "team": "LIDL - TREK",
-        "moltiplicatore": 3,
-        "tipo": "internazionale",
-        "regione": "UNDER",
-        "km": "156.000",
-        "media": "41.839"
-      },
-      {
-        "gara_id": "GIRO_D_ITALIA_WOMEN_SECONDA_TAPPA_2026-05-31_ELI_F",
-        "nome_gara": "GIRO D'ITALIA WOMEN SECONDA TAPPA",
-        "data": "2026-05-31",
-        "posizione": 1,
-        "punti_effettivi": 45,
-        "team": "LIDL - TREK",
-        "moltiplicatore": 3,
-        "tipo": "internazionale",
-        "regione": "UNDER",
-        "km": "156.000",
-        "media": "39.358"
-      },
-      {
-        "gara_id": "GIRO_D_ITALIA_WOMEN_PRIMA_TAPPA_2026-05-30_ELI_F",
-        "nome_gara": "GIRO D'ITALIA WOMEN PRIMA TAPPA",
-        "data": "2026-05-30",
-        "posizione": 1,
-        "punti_effettivi": 45,
-        "team": "LIDL - TREK",
-        "moltiplicatore": 3,
-        "tipo": "internazionale",
-        "regione": "LOMBARDIA",
-        "km": "139.000",
-        "media": "42.043"
-      },
-      {
-        "gara_id": "MILANO_SANREMO_DONNE_2026-03-21_ELI_F",
-        "nome_gara": "MILANO SANREMO DONNE",
-        "data": "2026-03-21",
-        "posizione": 8,
-        "punti_effettivi": 9,
-        "team": "LIDL - TREK",
-        "moltiplicatore": 3,
-        "tipo": "internazionale",
-        "regione": "LIGURIA",
-        "km": "156.000",
-        "media": "41.182"
-      }
-    ]
-  },
-  "WILLIAMS_LILY": {
-    "id": "WILLIAMS_LILY",
-    "nome": "LILY",
-    "cognome": "WILLIAMS",
-    "team_attuale": "HUMAN POWERED HEALTH",
-    "team_id": "HUMAN_POWERED_HEALTH",
-    "categoria": "ELI_F",
-    "genere": "F",
-    "punti_totali": 42,
-    "risultati": [
-      {
-        "gara_id": "GIRO_D_ITALIA_WOMEN_TERZA_TAPPA_2026-06-01_ELI_F",
-        "nome_gara": "GIRO D'ITALIA WOMEN TERZA TAPPA",
-        "data": "2026-06-01",
-        "posizione": 2,
-        "punti_effettivi": 36,
-        "team": "HUMAN POWERED HEALTH",
-        "moltiplicatore": 3,
-        "tipo": "internazionale",
-        "regione": "UNDER",
-        "km": "156.000",
-        "media": "41.839"
-      },
-      {
-        "gara_id": "GIRO_D_ITALIA_WOMEN_PRIMA_TAPPA_2026-05-30_ELI_F",
-        "nome_gara": "GIRO D'ITALIA WOMEN PRIMA TAPPA",
-        "data": "2026-05-30",
-        "posizione": 9,
-        "punti_effettivi": 6,
-        "team": "HUMAN POWERED HEALTH",
-        "moltiplicatore": 3,
-        "tipo": "internazionale",
-        "regione": "LOMBARDIA",
-        "km": "139.000",
-        "media": "42.043"
-      }
-    ]
-  },
   "GERRITSE_FEMKE": {
     "id": "GERRITSE_FEMKE",
     "nome": "FEMKE",
@@ -32280,57 +32714,6 @@
         "regione": "UNDER",
         "km": "156.000",
         "media": "41.839"
-      }
-    ]
-  },
-  "GERY_CELIA": {
-    "id": "GERY_CELIA",
-    "nome": "CELIA",
-    "cognome": "GERY",
-    "team_attuale": "FDJ UNITED - SUEZ",
-    "team_id": "FDJ_UNITED_SUEZ",
-    "categoria": "ELI_F",
-    "genere": "F",
-    "punti_totali": 42,
-    "risultati": [
-      {
-        "gara_id": "GIRO_D_ITALIA_WOMEN_TERZA_TAPPA_2026-06-01_ELI_F",
-        "nome_gara": "GIRO D'ITALIA WOMEN TERZA TAPPA",
-        "data": "2026-06-01",
-        "posizione": 8,
-        "punti_effettivi": 9,
-        "team": "FDJ UNITED - SUEZ",
-        "moltiplicatore": 3,
-        "tipo": "internazionale",
-        "regione": "UNDER",
-        "km": "156.000",
-        "media": "41.839"
-      },
-      {
-        "gara_id": "GIRO_D_ITALIA_WOMEN_PRIMA_TAPPA_2026-05-30_ELI_F",
-        "nome_gara": "GIRO D'ITALIA WOMEN PRIMA TAPPA",
-        "data": "2026-05-30",
-        "posizione": 8,
-        "punti_effettivi": 9,
-        "team": "FDJ UNITED - SUEZ",
-        "moltiplicatore": 3,
-        "tipo": "internazionale",
-        "regione": "LOMBARDIA",
-        "km": "139.000",
-        "media": "42.043"
-      },
-      {
-        "gara_id": "GIRO_DELL_APPENNINO_DONNE_2026-03-22_ELI_F",
-        "nome_gara": "GIRO DELL'APPENNINO DONNE",
-        "data": "2026-03-22",
-        "posizione": 4,
-        "punti_effettivi": 24,
-        "team": "FDJ UNITED - SUEZ",
-        "moltiplicatore": 3,
-        "tipo": "internazionale",
-        "regione": "LIGURIA",
-        "km": "111.000",
-        "media": "40.583"
       }
     ]
   },
@@ -54985,95 +55368,6 @@
       }
     ]
   },
-  "GILLESPIE_LARA": {
-    "id": "GILLESPIE_LARA",
-    "nome": "LARA",
-    "cognome": "GILLESPIE",
-    "team_attuale": "UAE TEAM ADQ",
-    "team_id": "UAE_TEAM_ADQ",
-    "categoria": "ELI_F",
-    "genere": "F",
-    "punti_totali": 72,
-    "risultati": [
-      {
-        "gara_id": "GIRO_D_ITALIA_WOMEN_SECONDA_TAPPA_2026-05-31_ELI_F",
-        "nome_gara": "GIRO D'ITALIA WOMEN SECONDA TAPPA",
-        "data": "2026-05-31",
-        "posizione": 2,
-        "punti_effettivi": 36,
-        "team": "UAE TEAM ADQ",
-        "moltiplicatore": 3,
-        "tipo": "internazionale",
-        "regione": "UNDER",
-        "km": "156.000",
-        "media": "39.358"
-      },
-      {
-        "gara_id": "GIRO_D_ITALIA_WOMEN_PRIMA_TAPPA_2026-05-30_ELI_F",
-        "nome_gara": "GIRO D'ITALIA WOMEN PRIMA TAPPA",
-        "data": "2026-05-30",
-        "posizione": 2,
-        "punti_effettivi": 36,
-        "team": "UAE TEAM ADQ",
-        "moltiplicatore": 3,
-        "tipo": "internazionale",
-        "regione": "LOMBARDIA",
-        "km": "139.000",
-        "media": "42.043"
-      }
-    ]
-  },
-  "CONSONNI_CHIARA": {
-    "id": "CONSONNI_CHIARA",
-    "nome": "CHIARA",
-    "cognome": "CONSONNI",
-    "team_attuale": "CANYON SRAM ZONDACRYPTO",
-    "team_id": "CANYON_SRAM_ZONDACRYPTO",
-    "categoria": "ELI_F",
-    "genere": "F",
-    "punti_totali": 63,
-    "risultati": [
-      {
-        "gara_id": "GIRO_D_ITALIA_WOMEN_SECONDA_TAPPA_2026-05-31_ELI_F",
-        "nome_gara": "GIRO D'ITALIA WOMEN SECONDA TAPPA",
-        "data": "2026-05-31",
-        "posizione": 3,
-        "punti_effettivi": 30,
-        "team": "CANYON SRAM ZONDACRYPTO",
-        "moltiplicatore": 3,
-        "tipo": "internazionale",
-        "regione": "UNDER",
-        "km": "156.000",
-        "media": "39.358"
-      },
-      {
-        "gara_id": "GIRO_D_ITALIA_WOMEN_PRIMA_TAPPA_2026-05-30_ELI_F",
-        "nome_gara": "GIRO D'ITALIA WOMEN PRIMA TAPPA",
-        "data": "2026-05-30",
-        "posizione": 3,
-        "punti_effettivi": 30,
-        "team": "CANYON SRAM ZONDACRYPTO",
-        "moltiplicatore": 3,
-        "tipo": "internazionale",
-        "regione": "LOMBARDIA",
-        "km": "139.000",
-        "media": "42.043"
-      },
-      {
-        "gara_id": "MILANO_SANREMO_DONNE_2026-03-21_ELI_F",
-        "nome_gara": "MILANO SANREMO DONNE",
-        "data": "2026-03-21",
-        "posizione": 10,
-        "punti_effettivi": 3,
-        "team": "CANYON SRAM ZONDACRYPTO",
-        "moltiplicatore": 3,
-        "tipo": "internazionale",
-        "regione": "LIGURIA",
-        "km": "156.000",
-        "media": "41.182"
-      }
-    ]
-  },
   "KOOL_CHARLOTTE": {
     "id": "KOOL_CHARLOTTE",
     "nome": "CHARLOTTE",
@@ -55172,108 +55466,6 @@
         "regione": "UNDER",
         "km": "156.000",
         "media": "39.358"
-      }
-    ]
-  },
-  "COLES_LYSTER_MAGGIE": {
-    "id": "COLES_LYSTER_MAGGIE",
-    "nome": "MAGGIE",
-    "cognome": "COLES-LYSTER",
-    "team_attuale": "HUMAN POWERED HEALTH",
-    "team_id": "HUMAN_POWERED_HEALTH",
-    "categoria": "ELI_F",
-    "genere": "F",
-    "punti_totali": 12,
-    "risultati": [
-      {
-        "gara_id": "GIRO_D_ITALIA_WOMEN_SECONDA_TAPPA_2026-05-31_ELI_F",
-        "nome_gara": "GIRO D'ITALIA WOMEN SECONDA TAPPA",
-        "data": "2026-05-31",
-        "posizione": 7,
-        "punti_effettivi": 12,
-        "team": "HUMAN POWERED HEALTH",
-        "moltiplicatore": 3,
-        "tipo": "internazionale",
-        "regione": "UNDER",
-        "km": "156.000",
-        "media": "39.358"
-      }
-    ]
-  },
-  "ZAMBELLI_ALESSIA": {
-    "id": "ZAMBELLI_ALESSIA",
-    "nome": "ALESSIA",
-    "cognome": "ZAMBELLI",
-    "team_attuale": "TOP GIRLS - FASSA BORTOLO",
-    "team_id": "TOP_GIRLS_FASSA_BORTOLO",
-    "categoria": "ELI_F",
-    "genere": "F",
-    "punti_totali": 32,
-    "risultati": [
-      {
-        "gara_id": "GIRO_D_ITALIA_WOMEN_SECONDA_TAPPA_2026-05-31_ELI_F",
-        "nome_gara": "GIRO D'ITALIA WOMEN SECONDA TAPPA",
-        "data": "2026-05-31",
-        "posizione": 8,
-        "punti_effettivi": 9,
-        "team": "TOP GIRLS - FASSA BORTOLO",
-        "moltiplicatore": 3,
-        "tipo": "internazionale",
-        "regione": "UNDER",
-        "km": "156.000",
-        "media": "39.358"
-      },
-      {
-        "gara_id": "GIRO_D_ITALIA_WOMEN_PRIMA_TAPPA_2026-05-30_ELI_F",
-        "nome_gara": "GIRO D'ITALIA WOMEN PRIMA TAPPA",
-        "data": "2026-05-30",
-        "posizione": 10,
-        "punti_effettivi": 3,
-        "team": "TOP GIRLS - FASSA BORTOLO",
-        "moltiplicatore": 3,
-        "tipo": "internazionale",
-        "regione": "LOMBARDIA",
-        "km": "139.000",
-        "media": "42.043"
-      },
-      {
-        "gara_id": "GIRO_DELLE_MARCHE_IN_ROSA_2026-05-10_ELI_F",
-        "nome_gara": "GIRO DELLE MARCHE IN ROSA",
-        "data": "2026-05-10",
-        "posizione": 9,
-        "punti_effettivi": 2,
-        "team": "TOP GIRLS - FASSA BORTOLO",
-        "moltiplicatore": 1,
-        "tipo": "regionale",
-        "regione": "MARCHE",
-        "km": "100.000",
-        "media": "35.294"
-      },
-      {
-        "gara_id": "GIRO_DELLE_MARCHE_IN_ROSA_2026-05-09_ELI_F",
-        "nome_gara": "GIRO DELLE MARCHE IN ROSA",
-        "data": "2026-05-09",
-        "posizione": 5,
-        "punti_effettivi": 6,
-        "team": "TOP GIRLS - FASSA BORTOLO",
-        "moltiplicatore": 1,
-        "tipo": "regionale",
-        "regione": "MARCHE",
-        "km": "90.000",
-        "media": "36.986"
-      },
-      {
-        "gara_id": "TROFEO_ARTI_E_MESTIERI_DELLA_TRADIZIONE_MUGELLANA_2026-02-14_ELI_F",
-        "nome_gara": "TROFEO ARTI E MESTIERI DELLA TRADIZIONE MUGELLANA",
-        "data": "2026-02-14",
-        "posizione": 5,
-        "punti_effettivi": 12,
-        "team": "TOP GIRLS - FASSA BORTOLO",
-        "moltiplicatore": 2,
-        "tipo": "nazionale",
-        "regione": "TOSCANA",
-        "km": "83.920",
-        "media": "38.422"
       }
     ]
   },
@@ -55818,56 +56010,6 @@
         "regione": "PUGLIA",
         "km": "6.200",
         "media": ""
-      }
-    ]
-  },
-  "BAKER_GEORGIA": {
-    "id": "BAKER_GEORGIA",
-    "nome": "GEORGIA",
-    "cognome": "BAKER",
-    "team_attuale": "LIV-ALULA JAYCO",
-    "team_id": "LIV_ALULA_JAYCO",
-    "categoria": "ELI_F",
-    "genere": "F",
-    "punti_totali": 24,
-    "risultati": [
-      {
-        "gara_id": "GIRO_D_ITALIA_WOMEN_PRIMA_TAPPA_2026-05-30_ELI_F",
-        "nome_gara": "GIRO D'ITALIA WOMEN PRIMA TAPPA",
-        "data": "2026-05-30",
-        "posizione": 4,
-        "punti_effettivi": 24,
-        "team": "LIV-ALULA JAYCO",
-        "moltiplicatore": 3,
-        "tipo": "internazionale",
-        "regione": "LOMBARDIA",
-        "km": "139.000",
-        "media": "42.043"
-      }
-    ]
-  },
-  "VERHULST_WILD_GLADYS": {
-    "id": "VERHULST_WILD_GLADYS",
-    "nome": "GLADYS",
-    "cognome": "VERHULST-WILD",
-    "team_attuale": "AG INSURANCE SOUDAL",
-    "team_id": "AG_INSURANCE_SOUDAL",
-    "categoria": "ELI_F",
-    "genere": "F",
-    "punti_totali": 12,
-    "risultati": [
-      {
-        "gara_id": "GIRO_D_ITALIA_WOMEN_PRIMA_TAPPA_2026-05-30_ELI_F",
-        "nome_gara": "GIRO D'ITALIA WOMEN PRIMA TAPPA",
-        "data": "2026-05-30",
-        "posizione": 7,
-        "punti_effettivi": 12,
-        "team": "AG INSURANCE SOUDAL",
-        "moltiplicatore": 3,
-        "tipo": "internazionale",
-        "regione": "LOMBARDIA",
-        "km": "139.000",
-        "media": "42.043"
       }
     ]
   },
