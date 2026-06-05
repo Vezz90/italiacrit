@@ -41,36 +41,34 @@ italiacrit/
 ├── index.html                     ← SPA shell
 ├── style.css                      ← Design system completo
 ├── app.js                         ← Router hash + renderer
-├── requirements.txt
-└── setup.bat                      ← Setup rapido Windows
+├── server/                        ← Backend Node (auth, foto, video, API)
+└── requirements.txt               ← Dipendenze scraper Python
 ```
 
 ---
 
-## Setup Locale (Windows)
+## Setup Locale
 
-### Prerequisiti
-- Python 3.11+
-- pip
-
-### Installazione rapida
-```bat
-setup.bat
-```
-
-### Manuale
+### Scraper (Python 3.11+)
 ```bash
 pip install -r requirements.txt
-playwright install chromium
 
-# Genera dati demo (senza internet / FCI)
-python scraper/main.py --seed
+# Scraping reale risultati + classifiche
+python scraper/fci_complete_scraper.py
+```
+Lo scraping in produzione gira automaticamente via GitHub Actions
+(`.github/workflows/scrape.yml`).
 
-# Scraping reale
-python scraper/main.py
+### Backend (Node)
+```bash
+cd server
+npm install
+node server.js        # oppure: start.bat (Windows)
 ```
 
-Poi apri `index.html` nel browser (file:// funziona, o usa un server locale).
+### Frontend
+Apri `index.html` nel browser (o servi la cartella con un server statico).
+In produzione è pubblicato su GitHub Pages.
 
 ---
 

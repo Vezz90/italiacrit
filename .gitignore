@@ -6,6 +6,12 @@ __pycache__/
 node_modules/
 *.log
 
+# DB SQLite locale (il server usa PostgreSQL) e upload locali (produzione: Supabase)
+server/*.db
+server/*.db-shm
+server/*.db-wal
+server/uploads/
+
 # Dati scaricati dal bot
 data/*.json
 data/*.html
