@@ -1,4 +1,553 @@
 {
+  "GERY_CELIA": {
+    "id": "GERY_CELIA",
+    "nome": "CELIA",
+    "cognome": "GERY",
+    "team_attuale": "FDJ UNITED - SUEZ",
+    "team_id": "FDJ_UNITED_SUEZ",
+    "categoria": "ELI_F",
+    "genere": "F",
+    "punti_totali": 111,
+    "risultati": [
+      {
+        "gara_id": "GIRO_D_ITALIA_WOMEN_SETTIMA_TAPPA_2026-06-05_ELI_F",
+        "nome_gara": "GIRO D'ITALIA WOMEN SETTIMA TAPPA",
+        "data": "2026-06-05",
+        "posizione": 1,
+        "punti_effettivi": 45,
+        "team": "FDJ UNITED - SUEZ",
+        "moltiplicatore": 3,
+        "tipo": "internazionale",
+        "regione": "UNDER",
+        "km": "159.000",
+        "media": ""
+      },
+      {
+        "gara_id": "GIRO_D_ITALIA_WOMEN_SESTA_TAPPA_2026-06-04_ELI_F",
+        "nome_gara": "GIRO D'ITALIA WOMEN SESTA TAPPA",
+        "data": "2026-06-04",
+        "posizione": 4,
+        "punti_effettivi": 24,
+        "team": "FDJ UNITED - SUEZ",
+        "moltiplicatore": 3,
+        "tipo": "internazionale",
+        "regione": "UNDER",
+        "km": "159.000",
+        "media": ""
+      },
+      {
+        "gara_id": "GIRO_D_ITALIA_WOMEN_TERZA_TAPPA_2026-06-01_ELI_F",
+        "nome_gara": "GIRO D'ITALIA WOMEN TERZA TAPPA",
+        "data": "2026-06-01",
+        "posizione": 8,
+        "punti_effettivi": 9,
+        "team": "FDJ UNITED - SUEZ",
+        "moltiplicatore": 3,
+        "tipo": "internazionale",
+        "regione": "UNDER",
+        "km": "156.000",
+        "media": "41.839"
+      },
+      {
+        "gara_id": "GIRO_D_ITALIA_WOMEN_PRIMA_TAPPA_2026-05-30_ELI_F",
+        "nome_gara": "GIRO D'ITALIA WOMEN PRIMA TAPPA",
+        "data": "2026-05-30",
+        "posizione": 8,
+        "punti_effettivi": 9,
+        "team": "FDJ UNITED - SUEZ",
+        "moltiplicatore": 3,
+        "tipo": "internazionale",
+        "regione": "LOMBARDIA",
+        "km": "139.000",
+        "media": "42.043"
+      },
+      {
+        "gara_id": "GIRO_DELL_APPENNINO_DONNE_2026-03-22_ELI_F",
+        "nome_gara": "GIRO DELL'APPENNINO DONNE",
+        "data": "2026-03-22",
+        "posizione": 4,
+        "punti_effettivi": 24,
+        "team": "FDJ UNITED - SUEZ",
+        "moltiplicatore": 3,
+        "tipo": "internazionale",
+        "regione": "LIGURIA",
+        "km": "111.000",
+        "media": "40.583"
+      }
+    ]
+  },
+  "BRAND_LUCINDA": {
+    "id": "BRAND_LUCINDA",
+    "nome": "LUCINDA",
+    "cognome": "BRAND",
+    "team_attuale": "LIDL - TREK",
+    "team_id": "LIDL_TREK",
+    "categoria": "ELI_F",
+    "genere": "F",
+    "punti_totali": 72,
+    "risultati": [
+      {
+        "gara_id": "GIRO_D_ITALIA_WOMEN_SETTIMA_TAPPA_2026-06-05_ELI_F",
+        "nome_gara": "GIRO D'ITALIA WOMEN SETTIMA TAPPA",
+        "data": "2026-06-05",
+        "posizione": 2,
+        "punti_effettivi": 36,
+        "team": "LIDL - TREK",
+        "moltiplicatore": 3,
+        "tipo": "internazionale",
+        "regione": "UNDER",
+        "km": "159.000",
+        "media": ""
+      },
+      {
+        "gara_id": "GIRO_DELL_APPENNINO_DONNE_2026-03-22_ELI_F",
+        "nome_gara": "GIRO DELL'APPENNINO DONNE",
+        "data": "2026-03-22",
+        "posizione": 2,
+        "punti_effettivi": 36,
+        "team": "LIDL - TREK",
+        "moltiplicatore": 3,
+        "tipo": "internazionale",
+        "regione": "LIGURIA",
+        "km": "111.000",
+        "media": "40.583"
+      }
+    ]
+  },
+  "PEGOLO_CHANTAL": {
+    "id": "PEGOLO_CHANTAL",
+    "nome": "CHANTAL",
+    "cognome": "PEGOLO",
+    "team_attuale": "ISOLMANT - PREMAC - VITTORIA",
+    "team_id": "ISOLMANT_PREMAC_VITTORIA",
+    "categoria": "ELI_F",
+    "genere": "F",
+    "punti_totali": 77,
+    "risultati": [
+      {
+        "gara_id": "GIRO_D_ITALIA_WOMEN_SETTIMA_TAPPA_2026-06-05_ELI_F",
+        "nome_gara": "GIRO D'ITALIA WOMEN SETTIMA TAPPA",
+        "data": "2026-06-05",
+        "posizione": 3,
+        "punti_effettivi": 30,
+        "team": "ISOLMANT - PREMAC - VITTORIA",
+        "moltiplicatore": 3,
+        "tipo": "internazionale",
+        "regione": "UNDER",
+        "km": "159.000",
+        "media": ""
+      },
+      {
+        "gara_id": "GIRO_DELLE_MARCHE_IN_ROSA_2026-05-10_ELI_F",
+        "nome_gara": "GIRO DELLE MARCHE IN ROSA",
+        "data": "2026-05-10",
+        "posizione": 5,
+        "punti_effettivi": 6,
+        "team": "ISOLMANT - PREMAC - VITTORIA",
+        "moltiplicatore": 1,
+        "tipo": "regionale",
+        "regione": "MARCHE",
+        "km": "100.000",
+        "media": "35.294"
+      },
+      {
+        "gara_id": "GIRO_DELLE_MARCHE_IN_ROSA_2026-05-09_ELI_F",
+        "nome_gara": "GIRO DELLE MARCHE IN ROSA",
+        "data": "2026-05-09",
+        "posizione": 9,
+        "punti_effettivi": 2,
+        "team": "ISOLMANT - PREMAC - VITTORIA",
+        "moltiplicatore": 1,
+        "tipo": "regionale",
+        "regione": "MARCHE",
+        "km": "90.000",
+        "media": "36.986"
+      },
+      {
+        "gara_id": "GRAN_PREMIO_DELLA_LIBERAZIONE_DONNE_2026-04-25_ELI_F",
+        "nome_gara": "GRAN PREMIO DELLA LIBERAZIONE DONNE",
+        "data": "2026-04-25",
+        "posizione": 4,
+        "punti_effettivi": 24,
+        "team": "ISOLMANT - PREMAC - VITTORIA",
+        "moltiplicatore": 3,
+        "tipo": "internazionale",
+        "regione": "LAZIO",
+        "km": "96.000",
+        "media": "38.736"
+      },
+      {
+        "gara_id": "DONNE_OPEN_2026-04-11_ELI_F",
+        "nome_gara": "DONNE OPEN",
+        "data": "2026-04-11",
+        "posizione": 1,
+        "punti_effettivi": 15,
+        "team": "ISOLMANT - PREMAC - VITTORIA",
+        "moltiplicatore": 1,
+        "tipo": "regionale",
+        "regione": "PIEMONTE",
+        "km": "81.000",
+        "media": "41.134"
+      }
+    ]
+  },
+  "JACKSON_ALISON": {
+    "id": "JACKSON_ALISON",
+    "nome": "ALISON",
+    "cognome": "JACKSON",
+    "team_attuale": "ST MICHEL-PREFERENCE HOME-AUBER93",
+    "team_id": "ST_MICHEL_PREFERENCE_HOME_AUBER93",
+    "categoria": "ELI_F",
+    "genere": "F",
+    "punti_totali": 24,
+    "risultati": [
+      {
+        "gara_id": "GIRO_D_ITALIA_WOMEN_SETTIMA_TAPPA_2026-06-05_ELI_F",
+        "nome_gara": "GIRO D'ITALIA WOMEN SETTIMA TAPPA",
+        "data": "2026-06-05",
+        "posizione": 4,
+        "punti_effettivi": 24,
+        "team": "ST MICHEL-PREFERENCE HOME-AUBER93",
+        "moltiplicatore": 3,
+        "tipo": "internazionale",
+        "regione": "UNDER",
+        "km": "159.000",
+        "media": ""
+      }
+    ]
+  },
+  "LONGO_BORGHINI_ELISA": {
+    "id": "LONGO_BORGHINI_ELISA",
+    "nome": "BORGHINI ELISA",
+    "cognome": "LONGO",
+    "team_attuale": "UAE TEAM ADQ",
+    "team_id": "UAE_TEAM_ADQ",
+    "categoria": "ELI_F",
+    "genere": "F",
+    "punti_totali": 135,
+    "risultati": [
+      {
+        "gara_id": "GIRO_D_ITALIA_WOMEN_SETTIMA_TAPPA_2026-06-05_ELI_F",
+        "nome_gara": "GIRO D'ITALIA WOMEN SETTIMA TAPPA",
+        "data": "2026-06-05",
+        "posizione": 5,
+        "punti_effettivi": 18,
+        "team": "UAE TEAM ADQ",
+        "moltiplicatore": 3,
+        "tipo": "internazionale",
+        "regione": "UNDER",
+        "km": "159.000",
+        "media": ""
+      },
+      {
+        "gara_id": "GIRO_D_ITALIA_WOMEN_QUINTA_TAPPA_2026-06-03_ELI_F",
+        "nome_gara": "GIRO D'ITALIA WOMEN QUINTA TAPPA",
+        "data": "2026-06-03",
+        "posizione": 5,
+        "punti_effettivi": 18,
+        "team": "UAE TEAM ADQ",
+        "moltiplicatore": 3,
+        "tipo": "internazionale",
+        "regione": "UNDER",
+        "km": "146.000",
+        "media": "33.209"
+      },
+      {
+        "gara_id": "GIRO_D_ITALIA_WOMEN_QUARTA_TAPPA_CRONOSCALATA_2026-06-02_ELI_F",
+        "nome_gara": "GIRO D'ITALIA WOMEN QUARTA TAPPA CRONOSCALATA",
+        "data": "2026-06-02",
+        "posizione": 8,
+        "punti_effettivi": 6,
+        "team": "UAE TEAM ADQ",
+        "moltiplicatore": 2,
+        "tipo": "nazionale",
+        "regione": "ABRUZZO",
+        "km": "12.700",
+        "media": "24.089"
+      },
+      {
+        "gara_id": "GIRO_D_ITALIA_WOMEN_TERZA_TAPPA_2026-06-01_ELI_F",
+        "nome_gara": "GIRO D'ITALIA WOMEN TERZA TAPPA",
+        "data": "2026-06-01",
+        "posizione": 4,
+        "punti_effettivi": 24,
+        "team": "UAE TEAM ADQ",
+        "moltiplicatore": 3,
+        "tipo": "internazionale",
+        "regione": "UNDER",
+        "km": "156.000",
+        "media": "41.839"
+      },
+      {
+        "gara_id": "ORO_IN_EURO_2026-03-08_ELI_F",
+        "nome_gara": "ORO IN EURO",
+        "data": "2026-03-08",
+        "posizione": 1,
+        "punti_effettivi": 45,
+        "team": "UAE TEAM ADQ",
+        "moltiplicatore": 3,
+        "tipo": "internazionale",
+        "regione": "TOSCANA",
+        "km": "106.400",
+        "media": "43.111"
+      },
+      {
+        "gara_id": "12_STRADE_BIANCHE_DONNE_2026-03-07_ELI_F",
+        "nome_gara": "12 STRADE BIANCHE DONNE",
+        "data": "2026-03-07",
+        "posizione": 4,
+        "punti_effettivi": 24,
+        "team": "UAE TEAM ADQ",
+        "moltiplicatore": 3,
+        "tipo": "internazionale",
+        "regione": "TOSCANA",
+        "km": "133.000",
+        "media": "36.996"
+      }
+    ]
+  },
+  "SEGATO_GAIA": {
+    "id": "SEGATO_GAIA",
+    "nome": "GAIA",
+    "cognome": "SEGATO",
+    "team_attuale": "VINI FANTINI - BEPINK",
+    "team_id": "VINI_FANTINI_BEPINK",
+    "categoria": "ELI_F",
+    "genere": "F",
+    "punti_totali": 17,
+    "risultati": [
+      {
+        "gara_id": "GIRO_D_ITALIA_WOMEN_SETTIMA_TAPPA_2026-06-05_ELI_F",
+        "nome_gara": "GIRO D'ITALIA WOMEN SETTIMA TAPPA",
+        "data": "2026-06-05",
+        "posizione": 6,
+        "punti_effettivi": 15,
+        "team": "VINI FANTINI - BEPINK",
+        "moltiplicatore": 3,
+        "tipo": "internazionale",
+        "regione": "UNDER",
+        "km": "159.000",
+        "media": ""
+      },
+      {
+        "gara_id": "DONNE_OPEN_2026-04-11_ELI_F",
+        "nome_gara": "DONNE OPEN",
+        "data": "2026-04-11",
+        "posizione": 9,
+        "punti_effettivi": 2,
+        "team": "VINI FANTINI - BEPINK",
+        "moltiplicatore": 1,
+        "tipo": "regionale",
+        "regione": "PIEMONTE",
+        "km": "81.000",
+        "media": "41.134"
+      }
+    ]
+  },
+  "GILLESPIE_LARA": {
+    "id": "GILLESPIE_LARA",
+    "nome": "LARA",
+    "cognome": "GILLESPIE",
+    "team_attuale": "UAE TEAM ADQ",
+    "team_id": "UAE_TEAM_ADQ",
+    "categoria": "ELI_F",
+    "genere": "F",
+    "punti_totali": 96,
+    "risultati": [
+      {
+        "gara_id": "GIRO_D_ITALIA_WOMEN_SETTIMA_TAPPA_2026-06-05_ELI_F",
+        "nome_gara": "GIRO D'ITALIA WOMEN SETTIMA TAPPA",
+        "data": "2026-06-05",
+        "posizione": 7,
+        "punti_effettivi": 12,
+        "team": "UAE TEAM ADQ",
+        "moltiplicatore": 3,
+        "tipo": "internazionale",
+        "regione": "UNDER",
+        "km": "159.000",
+        "media": ""
+      },
+      {
+        "gara_id": "GIRO_D_ITALIA_WOMEN_SESTA_TAPPA_2026-06-04_ELI_F",
+        "nome_gara": "GIRO D'ITALIA WOMEN SESTA TAPPA",
+        "data": "2026-06-04",
+        "posizione": 7,
+        "punti_effettivi": 12,
+        "team": "UAE TEAM ADQ",
+        "moltiplicatore": 3,
+        "tipo": "internazionale",
+        "regione": "UNDER",
+        "km": "159.000",
+        "media": ""
+      },
+      {
+        "gara_id": "GIRO_D_ITALIA_WOMEN_SECONDA_TAPPA_2026-05-31_ELI_F",
+        "nome_gara": "GIRO D'ITALIA WOMEN SECONDA TAPPA",
+        "data": "2026-05-31",
+        "posizione": 2,
+        "punti_effettivi": 36,
+        "team": "UAE TEAM ADQ",
+        "moltiplicatore": 3,
+        "tipo": "internazionale",
+        "regione": "UNDER",
+        "km": "156.000",
+        "media": "39.358"
+      },
+      {
+        "gara_id": "GIRO_D_ITALIA_WOMEN_PRIMA_TAPPA_2026-05-30_ELI_F",
+        "nome_gara": "GIRO D'ITALIA WOMEN PRIMA TAPPA",
+        "data": "2026-05-30",
+        "posizione": 2,
+        "punti_effettivi": 36,
+        "team": "UAE TEAM ADQ",
+        "moltiplicatore": 3,
+        "tipo": "internazionale",
+        "regione": "LOMBARDIA",
+        "km": "139.000",
+        "media": "42.043"
+      }
+    ]
+  },
+  "CONSONNI_CHIARA": {
+    "id": "CONSONNI_CHIARA",
+    "nome": "CHIARA",
+    "cognome": "CONSONNI",
+    "team_attuale": "CANYON SRAM ZONDACRYPTO",
+    "team_id": "CANYON_SRAM_ZONDACRYPTO",
+    "categoria": "ELI_F",
+    "genere": "F",
+    "punti_totali": 90,
+    "risultati": [
+      {
+        "gara_id": "GIRO_D_ITALIA_WOMEN_SETTIMA_TAPPA_2026-06-05_ELI_F",
+        "nome_gara": "GIRO D'ITALIA WOMEN SETTIMA TAPPA",
+        "data": "2026-06-05",
+        "posizione": 8,
+        "punti_effettivi": 9,
+        "team": "CANYON SRAM ZONDACRYPTO",
+        "moltiplicatore": 3,
+        "tipo": "internazionale",
+        "regione": "UNDER",
+        "km": "159.000",
+        "media": ""
+      },
+      {
+        "gara_id": "GIRO_D_ITALIA_WOMEN_SESTA_TAPPA_2026-06-04_ELI_F",
+        "nome_gara": "GIRO D'ITALIA WOMEN SESTA TAPPA",
+        "data": "2026-06-04",
+        "posizione": 5,
+        "punti_effettivi": 18,
+        "team": "CANYON SRAM ZONDACRYPTO",
+        "moltiplicatore": 3,
+        "tipo": "internazionale",
+        "regione": "UNDER",
+        "km": "159.000",
+        "media": ""
+      },
+      {
+        "gara_id": "GIRO_D_ITALIA_WOMEN_SECONDA_TAPPA_2026-05-31_ELI_F",
+        "nome_gara": "GIRO D'ITALIA WOMEN SECONDA TAPPA",
+        "data": "2026-05-31",
+        "posizione": 3,
+        "punti_effettivi": 30,
+        "team": "CANYON SRAM ZONDACRYPTO",
+        "moltiplicatore": 3,
+        "tipo": "internazionale",
+        "regione": "UNDER",
+        "km": "156.000",
+        "media": "39.358"
+      },
+      {
+        "gara_id": "GIRO_D_ITALIA_WOMEN_PRIMA_TAPPA_2026-05-30_ELI_F",
+        "nome_gara": "GIRO D'ITALIA WOMEN PRIMA TAPPA",
+        "data": "2026-05-30",
+        "posizione": 3,
+        "punti_effettivi": 30,
+        "team": "CANYON SRAM ZONDACRYPTO",
+        "moltiplicatore": 3,
+        "tipo": "internazionale",
+        "regione": "LOMBARDIA",
+        "km": "139.000",
+        "media": "42.043"
+      },
+      {
+        "gara_id": "MILANO_SANREMO_DONNE_2026-03-21_ELI_F",
+        "nome_gara": "MILANO SANREMO DONNE",
+        "data": "2026-03-21",
+        "posizione": 10,
+        "punti_effettivi": 3,
+        "team": "CANYON SRAM ZONDACRYPTO",
+        "moltiplicatore": 3,
+        "tipo": "internazionale",
+        "regione": "LIGURIA",
+        "km": "156.000",
+        "media": "41.182"
+      }
+    ]
+  },
+  "COUZENS_MILLIE": {
+    "id": "COUZENS_MILLIE",
+    "nome": "MILLIE",
+    "cognome": "COUZENS",
+    "team_attuale": "FENIX-PREMIER TECH",
+    "team_id": "FENIX_PREMIER_TECH",
+    "categoria": "ELI_F",
+    "genere": "F",
+    "punti_totali": 21,
+    "risultati": [
+      {
+        "gara_id": "GIRO_D_ITALIA_WOMEN_SETTIMA_TAPPA_2026-06-05_ELI_F",
+        "nome_gara": "GIRO D'ITALIA WOMEN SETTIMA TAPPA",
+        "data": "2026-06-05",
+        "posizione": 9,
+        "punti_effettivi": 6,
+        "team": "FENIX-PREMIER TECH",
+        "moltiplicatore": 3,
+        "tipo": "internazionale",
+        "regione": "UNDER",
+        "km": "159.000",
+        "media": ""
+      },
+      {
+        "gara_id": "ORO_IN_EURO_2026-03-08_ELI_F",
+        "nome_gara": "ORO IN EURO",
+        "data": "2026-03-08",
+        "posizione": 6,
+        "punti_effettivi": 15,
+        "team": "FENIX-PREMIER TECH",
+        "moltiplicatore": 3,
+        "tipo": "internazionale",
+        "regione": "TOSCANA",
+        "km": "106.400",
+        "media": "43.111"
+      }
+    ]
+  },
+  "NELSON_JOSIE": {
+    "id": "NELSON_JOSIE",
+    "nome": "JOSIE",
+    "cognome": "NELSON",
+    "team_attuale": "TEAM PICNIC POSTNL",
+    "team_id": "TEAM_PICNIC_POSTNL",
+    "categoria": "ELI_F",
+    "genere": "F",
+    "punti_totali": 3,
+    "risultati": [
+      {
+        "gara_id": "GIRO_D_ITALIA_WOMEN_SETTIMA_TAPPA_2026-06-05_ELI_F",
+        "nome_gara": "GIRO D'ITALIA WOMEN SETTIMA TAPPA",
+        "data": "2026-06-05",
+        "posizione": 10,
+        "punti_effettivi": 3,
+        "team": "TEAM PICNIC POSTNL",
+        "moltiplicatore": 3,
+        "tipo": "internazionale",
+        "regione": "UNDER",
+        "km": "159.000",
+        "media": ""
+      }
+    ]
+  },
   "BALSAMO_ELISA": {
     "id": "BALSAMO_ELISA",
     "nome": "ELISA",
@@ -152,134 +701,6 @@
       }
     ]
   },
-  "GERY_CELIA": {
-    "id": "GERY_CELIA",
-    "nome": "CELIA",
-    "cognome": "GERY",
-    "team_attuale": "FDJ UNITED - SUEZ",
-    "team_id": "FDJ_UNITED_SUEZ",
-    "categoria": "ELI_F",
-    "genere": "F",
-    "punti_totali": 66,
-    "risultati": [
-      {
-        "gara_id": "GIRO_D_ITALIA_WOMEN_SESTA_TAPPA_2026-06-04_ELI_F",
-        "nome_gara": "GIRO D'ITALIA WOMEN SESTA TAPPA",
-        "data": "2026-06-04",
-        "posizione": 4,
-        "punti_effettivi": 24,
-        "team": "FDJ UNITED - SUEZ",
-        "moltiplicatore": 3,
-        "tipo": "internazionale",
-        "regione": "UNDER",
-        "km": "159.000",
-        "media": ""
-      },
-      {
-        "gara_id": "GIRO_D_ITALIA_WOMEN_TERZA_TAPPA_2026-06-01_ELI_F",
-        "nome_gara": "GIRO D'ITALIA WOMEN TERZA TAPPA",
-        "data": "2026-06-01",
-        "posizione": 8,
-        "punti_effettivi": 9,
-        "team": "FDJ UNITED - SUEZ",
-        "moltiplicatore": 3,
-        "tipo": "internazionale",
-        "regione": "UNDER",
-        "km": "156.000",
-        "media": "41.839"
-      },
-      {
-        "gara_id": "GIRO_D_ITALIA_WOMEN_PRIMA_TAPPA_2026-05-30_ELI_F",
-        "nome_gara": "GIRO D'ITALIA WOMEN PRIMA TAPPA",
-        "data": "2026-05-30",
-        "posizione": 8,
-        "punti_effettivi": 9,
-        "team": "FDJ UNITED - SUEZ",
-        "moltiplicatore": 3,
-        "tipo": "internazionale",
-        "regione": "LOMBARDIA",
-        "km": "139.000",
-        "media": "42.043"
-      },
-      {
-        "gara_id": "GIRO_DELL_APPENNINO_DONNE_2026-03-22_ELI_F",
-        "nome_gara": "GIRO DELL'APPENNINO DONNE",
-        "data": "2026-03-22",
-        "posizione": 4,
-        "punti_effettivi": 24,
-        "team": "FDJ UNITED - SUEZ",
-        "moltiplicatore": 3,
-        "tipo": "internazionale",
-        "regione": "LIGURIA",
-        "km": "111.000",
-        "media": "40.583"
-      }
-    ]
-  },
-  "CONSONNI_CHIARA": {
-    "id": "CONSONNI_CHIARA",
-    "nome": "CHIARA",
-    "cognome": "CONSONNI",
-    "team_attuale": "CANYON SRAM ZONDACRYPTO",
-    "team_id": "CANYON_SRAM_ZONDACRYPTO",
-    "categoria": "ELI_F",
-    "genere": "F",
-    "punti_totali": 81,
-    "risultati": [
-      {
-        "gara_id": "GIRO_D_ITALIA_WOMEN_SESTA_TAPPA_2026-06-04_ELI_F",
-        "nome_gara": "GIRO D'ITALIA WOMEN SESTA TAPPA",
-        "data": "2026-06-04",
-        "posizione": 5,
-        "punti_effettivi": 18,
-        "team": "CANYON SRAM ZONDACRYPTO",
-        "moltiplicatore": 3,
-        "tipo": "internazionale",
-        "regione": "UNDER",
-        "km": "159.000",
-        "media": ""
-      },
-      {
-        "gara_id": "GIRO_D_ITALIA_WOMEN_SECONDA_TAPPA_2026-05-31_ELI_F",
-        "nome_gara": "GIRO D'ITALIA WOMEN SECONDA TAPPA",
-        "data": "2026-05-31",
-        "posizione": 3,
-        "punti_effettivi": 30,
-        "team": "CANYON SRAM ZONDACRYPTO",
-        "moltiplicatore": 3,
-        "tipo": "internazionale",
-        "regione": "UNDER",
-        "km": "156.000",
-        "media": "39.358"
-      },
-      {
-        "gara_id": "GIRO_D_ITALIA_WOMEN_PRIMA_TAPPA_2026-05-30_ELI_F",
-        "nome_gara": "GIRO D'ITALIA WOMEN PRIMA TAPPA",
-        "data": "2026-05-30",
-        "posizione": 3,
-        "punti_effettivi": 30,
-        "team": "CANYON SRAM ZONDACRYPTO",
-        "moltiplicatore": 3,
-        "tipo": "internazionale",
-        "regione": "LOMBARDIA",
-        "km": "139.000",
-        "media": "42.043"
-      },
-      {
-        "gara_id": "MILANO_SANREMO_DONNE_2026-03-21_ELI_F",
-        "nome_gara": "MILANO SANREMO DONNE",
-        "data": "2026-03-21",
-        "posizione": 10,
-        "punti_effettivi": 3,
-        "team": "CANYON SRAM ZONDACRYPTO",
-        "moltiplicatore": 3,
-        "tipo": "internazionale",
-        "regione": "LIGURIA",
-        "km": "156.000",
-        "media": "41.182"
-      }
-    ]
-  },
   "VERHULST_WILD_GLADYS": {
     "id": "VERHULST_WILD_GLADYS",
     "nome": "GLADYS",
@@ -310,57 +731,6 @@
         "posizione": 7,
         "punti_effettivi": 12,
         "team": "AG INSURANCE SOUDAL",
-        "moltiplicatore": 3,
-        "tipo": "internazionale",
-        "regione": "LOMBARDIA",
-        "km": "139.000",
-        "media": "42.043"
-      }
-    ]
-  },
-  "GILLESPIE_LARA": {
-    "id": "GILLESPIE_LARA",
-    "nome": "LARA",
-    "cognome": "GILLESPIE",
-    "team_attuale": "UAE TEAM ADQ",
-    "team_id": "UAE_TEAM_ADQ",
-    "categoria": "ELI_F",
-    "genere": "F",
-    "punti_totali": 84,
-    "risultati": [
-      {
-        "gara_id": "GIRO_D_ITALIA_WOMEN_SESTA_TAPPA_2026-06-04_ELI_F",
-        "nome_gara": "GIRO D'ITALIA WOMEN SESTA TAPPA",
-        "data": "2026-06-04",
-        "posizione": 7,
-        "punti_effettivi": 12,
-        "team": "UAE TEAM ADQ",
-        "moltiplicatore": 3,
-        "tipo": "internazionale",
-        "regione": "UNDER",
-        "km": "159.000",
-        "media": ""
-      },
-      {
-        "gara_id": "GIRO_D_ITALIA_WOMEN_SECONDA_TAPPA_2026-05-31_ELI_F",
-        "nome_gara": "GIRO D'ITALIA WOMEN SECONDA TAPPA",
-        "data": "2026-05-31",
-        "posizione": 2,
-        "punti_effettivi": 36,
-        "team": "UAE TEAM ADQ",
-        "moltiplicatore": 3,
-        "tipo": "internazionale",
-        "regione": "UNDER",
-        "km": "156.000",
-        "media": "39.358"
-      },
-      {
-        "gara_id": "GIRO_D_ITALIA_WOMEN_PRIMA_TAPPA_2026-05-30_ELI_F",
-        "nome_gara": "GIRO D'ITALIA WOMEN PRIMA TAPPA",
-        "data": "2026-05-30",
-        "posizione": 2,
-        "punti_effettivi": 36,
-        "team": "UAE TEAM ADQ",
         "moltiplicatore": 3,
         "tipo": "internazionale",
         "regione": "LOMBARDIA",
@@ -684,83 +1054,6 @@
         "regione": "ABRUZZO",
         "km": "12.700",
         "media": "24.089"
-      }
-    ]
-  },
-  "LONGO_BORGHINI_ELISA": {
-    "id": "LONGO_BORGHINI_ELISA",
-    "nome": "BORGHINI ELISA",
-    "cognome": "LONGO",
-    "team_attuale": "UAE TEAM ADQ",
-    "team_id": "UAE_TEAM_ADQ",
-    "categoria": "ELI_F",
-    "genere": "F",
-    "punti_totali": 117,
-    "risultati": [
-      {
-        "gara_id": "GIRO_D_ITALIA_WOMEN_QUINTA_TAPPA_2026-06-03_ELI_F",
-        "nome_gara": "GIRO D'ITALIA WOMEN QUINTA TAPPA",
-        "data": "2026-06-03",
-        "posizione": 5,
-        "punti_effettivi": 18,
-        "team": "UAE TEAM ADQ",
-        "moltiplicatore": 3,
-        "tipo": "internazionale",
-        "regione": "UNDER",
-        "km": "146.000",
-        "media": "33.209"
-      },
-      {
-        "gara_id": "GIRO_D_ITALIA_WOMEN_QUARTA_TAPPA_CRONOSCALATA_2026-06-02_ELI_F",
-        "nome_gara": "GIRO D'ITALIA WOMEN QUARTA TAPPA CRONOSCALATA",
-        "data": "2026-06-02",
-        "posizione": 8,
-        "punti_effettivi": 6,
-        "team": "UAE TEAM ADQ",
-        "moltiplicatore": 2,
-        "tipo": "nazionale",
-        "regione": "ABRUZZO",
-        "km": "12.700",
-        "media": "24.089"
-      },
-      {
-        "gara_id": "GIRO_D_ITALIA_WOMEN_TERZA_TAPPA_2026-06-01_ELI_F",
-        "nome_gara": "GIRO D'ITALIA WOMEN TERZA TAPPA",
-        "data": "2026-06-01",
-        "posizione": 4,
-        "punti_effettivi": 24,
-        "team": "UAE TEAM ADQ",
-        "moltiplicatore": 3,
-        "tipo": "internazionale",
-        "regione": "UNDER",
-        "km": "156.000",
-        "media": "41.839"
-      },
-      {
-        "gara_id": "ORO_IN_EURO_2026-03-08_ELI_F",
-        "nome_gara": "ORO IN EURO",
-        "data": "2026-03-08",
-        "posizione": 1,
-        "punti_effettivi": 45,
-        "team": "UAE TEAM ADQ",
-        "moltiplicatore": 3,
-        "tipo": "internazionale",
-        "regione": "TOSCANA",
-        "km": "106.400",
-        "media": "43.111"
-      },
-      {
-        "gara_id": "12_STRADE_BIANCHE_DONNE_2026-03-07_ELI_F",
-        "nome_gara": "12 STRADE BIANCHE DONNE",
-        "data": "2026-03-07",
-        "posizione": 4,
-        "punti_effettivi": 24,
-        "team": "UAE TEAM ADQ",
-        "moltiplicatore": 3,
-        "tipo": "internazionale",
-        "regione": "TOSCANA",
-        "km": "133.000",
-        "media": "36.996"
       }
     ]
   },
@@ -79090,70 +79383,6 @@
       }
     ]
   },
-  "PEGOLO_CHANTAL": {
-    "id": "PEGOLO_CHANTAL",
-    "nome": "CHANTAL",
-    "cognome": "PEGOLO",
-    "team_attuale": "ISOLMANT - PREMAC - VITTORIA",
-    "team_id": "ISOLMANT_PREMAC_VITTORIA",
-    "categoria": "ELI_F",
-    "genere": "F",
-    "punti_totali": 47,
-    "risultati": [
-      {
-        "gara_id": "GIRO_DELLE_MARCHE_IN_ROSA_2026-05-10_ELI_F",
-        "nome_gara": "GIRO DELLE MARCHE IN ROSA",
-        "data": "2026-05-10",
-        "posizione": 5,
-        "punti_effettivi": 6,
-        "team": "ISOLMANT - PREMAC - VITTORIA",
-        "moltiplicatore": 1,
-        "tipo": "regionale",
-        "regione": "MARCHE",
-        "km": "100.000",
-        "media": "35.294"
-      },
-      {
-        "gara_id": "GIRO_DELLE_MARCHE_IN_ROSA_2026-05-09_ELI_F",
-        "nome_gara": "GIRO DELLE MARCHE IN ROSA",
-        "data": "2026-05-09",
-        "posizione": 9,
-        "punti_effettivi": 2,
-        "team": "ISOLMANT - PREMAC - VITTORIA",
-        "moltiplicatore": 1,
-        "tipo": "regionale",
-        "regione": "MARCHE",
-        "km": "90.000",
-        "media": "36.986"
-      },
-      {
-        "gara_id": "GRAN_PREMIO_DELLA_LIBERAZIONE_DONNE_2026-04-25_ELI_F",
-        "nome_gara": "GRAN PREMIO DELLA LIBERAZIONE DONNE",
-        "data": "2026-04-25",
-        "posizione": 4,
-        "punti_effettivi": 24,
-        "team": "ISOLMANT - PREMAC - VITTORIA",
-        "moltiplicatore": 3,
-        "tipo": "internazionale",
-        "regione": "LAZIO",
-        "km": "96.000",
-        "media": "38.736"
-      },
-      {
-        "gara_id": "DONNE_OPEN_2026-04-11_ELI_F",
-        "nome_gara": "DONNE OPEN",
-        "data": "2026-04-11",
-        "posizione": 1,
-        "punti_effettivi": 15,
-        "team": "ISOLMANT - PREMAC - VITTORIA",
-        "moltiplicatore": 1,
-        "tipo": "regionale",
-        "regione": "PIEMONTE",
-        "km": "81.000",
-        "media": "41.134"
-      }
-    ]
-  },
   "REGHINI_CHIARA": {
     "id": "REGHINI_CHIARA",
     "nome": "CHIARA",
@@ -100491,31 +100720,6 @@
       }
     ]
   },
-  "SEGATO_GAIA": {
-    "id": "SEGATO_GAIA",
-    "nome": "GAIA",
-    "cognome": "SEGATO",
-    "team_attuale": "VINI FANTINI - BEPINK",
-    "team_id": "VINI_FANTINI_BEPINK",
-    "categoria": "ELI_F",
-    "genere": "F",
-    "punti_totali": 2,
-    "risultati": [
-      {
-        "gara_id": "DONNE_OPEN_2026-04-11_ELI_F",
-        "nome_gara": "DONNE OPEN",
-        "data": "2026-04-11",
-        "posizione": 9,
-        "punti_effettivi": 2,
-        "team": "VINI FANTINI - BEPINK",
-        "moltiplicatore": 1,
-        "tipo": "regionale",
-        "regione": "PIEMONTE",
-        "km": "81.000",
-        "media": "41.134"
-      }
-    ]
-  },
   "ARICI_SOFIA": {
     "id": "ARICI_SOFIA",
     "nome": "SOFIA",
@@ -104124,31 +104328,6 @@
       }
     ]
   },
-  "BRAND_LUCINDA": {
-    "id": "BRAND_LUCINDA",
-    "nome": "LUCINDA",
-    "cognome": "BRAND",
-    "team_attuale": "LIDL - TREK",
-    "team_id": "LIDL_TREK",
-    "categoria": "ELI_F",
-    "genere": "F",
-    "punti_totali": 36,
-    "risultati": [
-      {
-        "gara_id": "GIRO_DELL_APPENNINO_DONNE_2026-03-22_ELI_F",
-        "nome_gara": "GIRO DELL'APPENNINO DONNE",
-        "data": "2026-03-22",
-        "posizione": 2,
-        "punti_effettivi": 36,
-        "team": "LIDL - TREK",
-        "moltiplicatore": 3,
-        "tipo": "internazionale",
-        "regione": "LIGURIA",
-        "km": "111.000",
-        "media": "40.583"
-      }
-    ]
-  },
   "VAN_DAM_SARAH": {
     "id": "VAN_DAM_SARAH",
     "nome": "SARAH",
@@ -105496,31 +105675,6 @@
         "posizione": 2,
         "punti_effettivi": 36,
         "team": "UAE TEAM ADQ",
-        "moltiplicatore": 3,
-        "tipo": "internazionale",
-        "regione": "TOSCANA",
-        "km": "106.400",
-        "media": "43.111"
-      }
-    ]
-  },
-  "COUZENS_MILLIE": {
-    "id": "COUZENS_MILLIE",
-    "nome": "MILLIE",
-    "cognome": "COUZENS",
-    "team_attuale": "FENIX-PREMIER TECH",
-    "team_id": "FENIX_PREMIER_TECH",
-    "categoria": "ELI_F",
-    "genere": "F",
-    "punti_totali": 15,
-    "risultati": [
-      {
-        "gara_id": "ORO_IN_EURO_2026-03-08_ELI_F",
-        "nome_gara": "ORO IN EURO",
-        "data": "2026-03-08",
-        "posizione": 6,
-        "punti_effettivi": 15,
-        "team": "FENIX-PREMIER TECH",
         "moltiplicatore": 3,
         "tipo": "internazionale",
         "regione": "TOSCANA",
