@@ -1,4 +1,4 @@
-const CACHE_NAME = 'italiacrit-cache-v160';
+const CACHE_NAME = 'italiacrit-cache-v161';
 
 // File statici: messi in cache e serviti velocemente
 const STATIC_ASSETS = [
@@ -27,6 +27,15 @@ self.addEventListener('activate', event => {
 
 self.addEventListener('fetch', event => {
   const url = event.request.url;
+
+  // ── API DINAMICHE: sempre dalla rete, MAI dalla cache del service worker ──
+  // Foto gara, video, code di approvazione, classifiche live ecc. cambiano in
+  // continuazione: se il SW le servisse dalla cache (strategia cache-first di
+  // default), i nuovi caricamenti non apparirebbero finché non si svuota la
+  // cache. Lasciamo gestire la richiesta al browser (rete), senza cache SW.
+  if (url.includes('/api/') || url.includes('.onrender.com')) {
+    return; // niente respondWith → fetch di rete normale
+  }
 
   // ── STRATEGIA NETWORK-FIRST per le immagini/foto profilo ──
   // Le foto vengono sovrascritte mantenendo lo stesso URL: senza questa
