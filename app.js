@@ -8634,6 +8634,7 @@ async function refreshVideos() {
 function invalidatePhotoCache() {
   _risPhotosMap = null;
   _risPhotosByAtleta = null;
+  _risExtPhotosMap = null;
 }
 
 // Dopo QUALSIASI modifica a foto/video: ricarica i dati freschi dal server e
@@ -12017,7 +12018,8 @@ async function renderGara(gara_id) {
     // - se c'è già una foto caricata  → l'album viene aggiunto SOTTO, così non
     //   resta nascosto solo perché esiste una foto manuale.
     {
-      const _pm = await loadRisPhotos();
+      await loadRisPhotos();
+      const _pm = _risExtPhotosMap || {}; // SOLO album esterni (xpix/IC)
       const _esBase  = primaryGaraId.replace(/_ES[12]_([MF])$/, '');
       const _es2Id   = primaryGaraId.replace(/_ES1_([MF])$/, '_ES2_$1');
       const _extPhoto = _pm[primaryGaraId]
@@ -15363,6 +15365,7 @@ window.risSetSearch = (v) => {
 
 let _risPhotosMap = null;
 let _risPhotosByAtleta = null; // atleta_id → [photoObj,...] (foto taggate)
+let _risExtPhotosMap = null;   // SOLO album esterni (xpix/IC), non sovrascritti dalle foto caricate
 async function loadRisPhotos() {
   if (_risPhotosMap) return _risPhotosMap;
   try {
@@ -15380,6 +15383,20 @@ async function loadRisPhotos() {
         _risPhotosByAtleta[aid].push(p);
       }
     });
+    // Mappa SOLO album esterni (xpix/IC) — NON sovrascritta dalle foto caricate,
+    // così un album resta accessibile anche se c'è già una foto manuale.
+    _risExtPhotosMap = {};
+    const _extAlias = p => {
+      if (!p.gara_id) return;
+      if (!_risExtPhotosMap[p.gara_id]) _risExtPhotosMap[p.gara_id] = p;
+      const noNum = p.gara_id.replace(/^\d+_/, '');
+      if (noNum !== p.gara_id && !_risExtPhotosMap[noNum]) _risExtPhotosMap[noNum] = p;
+      const noSuffix = p.gara_id.replace(/_[A-Z0-9]+_[MF]$/, '');
+      if (noSuffix !== p.gara_id && !_risExtPhotosMap[noSuffix]) _risExtPhotosMap[noSuffix] = p;
+    };
+    (d3.photos || []).forEach(_extAlias); // ic
+    (d2.photos || []).forEach(_extAlias); // xpix (non sovrascrive ic per stessa chiave)
+
     _risPhotosMap = {};
     // Priorità: italiaciclismo < xpix < uploaded
     (d3.photos || []).forEach(p => { if (p.gara_id && !_risPhotosMap[p.gara_id]) _risPhotosMap[p.gara_id] = p; });
