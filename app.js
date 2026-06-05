@@ -12012,10 +12012,12 @@ async function renderGara(gara_id) {
         </div>`
       : (!featuredPhoto ? `<p style="color:var(--text-muted);font-size:0.875rem;margin:8px 0 0">Nessuna foto ancora. Sii il primo a condividerne una!</p>` : '');
 
-    // Fallback: se non ci sono foto caricate manualmente, usa xpix o IC
-    if (!featuredPhoto) {
+    // Album esterno (xpix / ciclismo.info): mostralo SEMPRE.
+    // - se NON c'è una foto caricata → diventa l'hero + gallery
+    // - se c'è già una foto caricata  → l'album viene aggiunto SOTTO, così non
+    //   resta nascosto solo perché esiste una foto manuale.
+    {
       const _pm = await loadRisPhotos();
-      // Prova tutte le varianti possibili del gara_id (incluse ES1/ES2 per Esordienti)
       const _esBase  = primaryGaraId.replace(/_ES[12]_([MF])$/, '');
       const _es2Id   = primaryGaraId.replace(/_ES1_([MF])$/, '_ES2_$1');
       const _extPhoto = _pm[primaryGaraId]
@@ -12028,48 +12030,50 @@ async function renderGara(gara_id) {
         const _isXpix = (_extPhoto.album_slug || _extPhoto.source === 'xpix');
         const _srcLabel = _isXpix ? 'xpix.it' : 'ciclismo.info';
         const _photoSource = _isXpix ? 'xpix' : 'ic';
-        // Chiave reale nella sorgente (xpix_photos / ic_photos)
         const _xpixKey = _extPhoto.gara_id || primaryGaraId;
         const _isEs = /_ES[12]_[MF]$/.test(_xpixKey);
-        const _removeBtn = (authUser()?.role === 'admin')
-          ? `<div style="position:absolute;top:6px;right:6px;display:flex;flex-direction:column;gap:3px;z-index:3" onclick="event.stopPropagation()">
-               ${_isEs ? `<button onclick="window.adminPhotoExtendBoth('${esc(_photoSource)}','${esc(_xpixKey)}')"
-                 style="background:rgba(22,163,74,.9);color:#fff;border:none;padding:3px 8px;border-radius:4px;font-size:.7rem;cursor:pointer;white-space:nowrap">🏅 Anche altro anno</button>` : ''}
-               <button onclick="window.adminPhotoMove('${esc(_photoSource)}','${esc(_xpixKey)}')"
-                 style="background:rgba(37,99,235,.9);color:#fff;border:none;padding:3px 8px;border-radius:4px;font-size:.7rem;cursor:pointer;white-space:nowrap">🔀 Sposta gara</button>
-               <button onclick="window.adminPhotoRemove('${esc(_photoSource)}','${esc(_xpixKey)}')"
-                 style="background:rgba(220,38,38,.9);color:#fff;border:none;padding:3px 8px;border-radius:4px;font-size:.7rem;cursor:pointer;white-space:nowrap">🗑 Rimuovi</button>
-             </div>` : '';
-        _heroPhotoEl = `<div class="gara-media-half gara-media-photo" onclick="window.openPhotoLightbox('${_src}')" style="cursor:zoom-in;position:relative">
-           <img id="gara-hero-img" src="${_src}" alt="Foto gara" loading="lazy"/>
-           <div class="gara-photo-hint">🔍 Clicca per la foto intera</div>
-           <div style="position:absolute;bottom:6px;left:8px;font-size:0.65rem;color:rgba(255,255,255,.7);background:rgba(0,0,0,.45);padding:2px 6px;border-radius:3px">📷 ${_srcLabel}</div>
-           ${_removeBtn}
-         </div>`;
-        // Gallery con tutte le foto dell'album (se disponibili)
-        const _allPics = _extPhoto.photos && _extPhoto.photos.length > 1 ? _extPhoto.photos : [];
-        if (_allPics.length > 1) {
-          const _isAdminPhoto = authUser()?.role === 'admin';
-          _gallery = `
-            <div class="profile-media-grid" style="margin-top:12px">
-              ${_allPics.map((u, idx) => `
-                <div class="profile-media-card" onclick="window.openPhotoLightbox('${esc(icProxy(u))}')" style="cursor:zoom-in;position:relative">
-                  <img src="${esc(icProxy(u))}" alt="Foto ${idx+1}" loading="lazy" style="width:100%;height:100%;object-fit:cover"/>
-                  ${_isAdminPhoto && idx > 0 ? `<button onclick="event.stopPropagation();window.adminPhotoPromote('${esc(_photoSource)}','${esc(_xpixKey)}','${esc(u.replace(/'/g,"\\'"))}')"
-                    style="position:absolute;top:4px;right:4px;background:rgba(245,158,11,.95);color:#fff;border:none;padding:3px 7px;border-radius:4px;font-size:.66rem;cursor:pointer;font-weight:700;z-index:2">⭐ Principale</button>` : ''}
-                </div>`).join('')}
-            </div>
-            ${_extPhoto.album_page ? `<div style="margin-top:8px;font-size:.8rem">
-              <a href="${esc(_extPhoto.album_page)}" target="_blank" rel="noopener" style="color:var(--accent)">
-                📷 Apri album completo su xpix.it (${_extPhoto.photos.length} foto) ↗
-              </a></div>` : ''}`;
-        } else if (_extPhoto.album_page) {
-          _gallery = `<div style="margin-top:8px;font-size:.8rem">
-            <a href="${esc(_extPhoto.album_page)}" target="_blank" rel="noopener" style="color:var(--accent)">
-              📷 Apri album completo su xpix.it ↗
-            </a></div>`;
+        const _isAdminPhoto = authUser()?.role === 'admin';
+        // Tutte le foto dell'album (inclusa la principale)
+        const _allPics = (_extPhoto.photos && _extPhoto.photos.length) ? _extPhoto.photos : [_extPhoto.url];
+        const _albumGridHtml = `
+          <div class="profile-media-grid" style="margin-top:12px">
+            ${_allPics.map((u, idx) => `
+              <div class="profile-media-card" onclick="window.openPhotoLightbox('${esc(icProxy(u))}')" style="cursor:zoom-in;position:relative">
+                <img src="${esc(icProxy(u))}" alt="Foto ${idx+1}" loading="lazy" style="width:100%;height:100%;object-fit:cover"/>
+                ${_isAdminPhoto && idx > 0 ? `<button onclick="event.stopPropagation();window.adminPhotoPromote('${esc(_photoSource)}','${esc(_xpixKey)}','${esc(u.replace(/'/g,"\\'"))}')"
+                  style="position:absolute;top:4px;right:4px;background:rgba(245,158,11,.95);color:#fff;border:none;padding:3px 7px;border-radius:4px;font-size:.66rem;cursor:pointer;font-weight:700;z-index:2">⭐ Principale</button>` : ''}
+              </div>`).join('')}
+          </div>
+          ${_extPhoto.album_page ? `<div style="margin-top:8px;font-size:.8rem">
+            <a href="${esc(_extPhoto.album_page)}" target="_blank" rel="noopener" style="color:var(--accent)">📷 Apri album completo su ${_srcLabel} (${_allPics.length} foto) ↗</a></div>` : ''}`;
+
+        if (!featuredPhoto) {
+          // Nessuna foto caricata → album come hero + gallery
+          const _removeBtn = _isAdminPhoto
+            ? `<div style="position:absolute;top:6px;right:6px;display:flex;flex-direction:column;gap:3px;z-index:3" onclick="event.stopPropagation()">
+                 ${_isEs ? `<button onclick="window.adminPhotoExtendBoth('${esc(_photoSource)}','${esc(_xpixKey)}')" style="background:rgba(22,163,74,.9);color:#fff;border:none;padding:3px 8px;border-radius:4px;font-size:.7rem;cursor:pointer;white-space:nowrap">🏅 Anche altro anno</button>` : ''}
+                 <button onclick="window.adminPhotoMove('${esc(_photoSource)}','${esc(_xpixKey)}')" style="background:rgba(37,99,235,.9);color:#fff;border:none;padding:3px 8px;border-radius:4px;font-size:.7rem;cursor:pointer;white-space:nowrap">🔀 Sposta gara</button>
+                 <button onclick="window.adminPhotoRemove('${esc(_photoSource)}','${esc(_xpixKey)}')" style="background:rgba(220,38,38,.9);color:#fff;border:none;padding:3px 8px;border-radius:4px;font-size:.7rem;cursor:pointer;white-space:nowrap">🗑 Rimuovi</button>
+               </div>` : '';
+          _heroPhotoEl = `<div class="gara-media-half gara-media-photo" onclick="window.openPhotoLightbox('${_src}')" style="cursor:zoom-in;position:relative">
+             <img id="gara-hero-img" src="${_src}" alt="Foto gara" loading="lazy"/>
+             <div class="gara-photo-hint">🔍 Clicca per la foto intera</div>
+             <div style="position:absolute;bottom:6px;left:8px;font-size:0.65rem;color:rgba(255,255,255,.7);background:rgba(0,0,0,.45);padding:2px 6px;border-radius:3px">📷 ${_srcLabel}</div>
+             ${_removeBtn}
+           </div>`;
+          _gallery = (_allPics.length > 1) ? _albumGridHtml
+                   : (_extPhoto.album_page ? `<div style="margin-top:8px;font-size:.8rem"><a href="${esc(_extPhoto.album_page)}" target="_blank" rel="noopener" style="color:var(--accent)">📷 Apri album completo su ${_srcLabel} ↗</a></div>` : '');
         } else {
-          _gallery = '';
+          // C'è già una foto caricata → aggiungi l'album esterno SOTTO la gallery
+          const _albumAdminBtns = _isAdminPhoto
+            ? ` <button onclick="window.adminPhotoMove('${esc(_photoSource)}','${esc(_xpixKey)}')" style="background:rgba(37,99,235,.9);color:#fff;border:none;padding:2px 8px;border-radius:4px;font-size:.66rem;cursor:pointer;margin-left:6px">🔀 Sposta</button>`
+              + ` <button onclick="window.adminPhotoRemove('${esc(_photoSource)}','${esc(_xpixKey)}')" style="background:rgba(220,38,38,.9);color:#fff;border:none;padding:2px 8px;border-radius:4px;font-size:.66rem;cursor:pointer">🗑 Rimuovi album</button>`
+            : '';
+          _gallery = (_gallery || '') + `
+            <div style="margin-top:16px">
+              <div class="comp-section-title" style="font-size:.85rem;border:none;padding:0">📷 Album ${_srcLabel} (${_allPics.length} foto)${_albumAdminBtns}</div>
+              ${_albumGridHtml}
+            </div>`;
         }
       }
     }
