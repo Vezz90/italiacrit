@@ -1961,6 +1961,7 @@ window.addEventListener('load', async () => {
             updateMetaUI();
           } else {
             globalData = await loadAll();
+            _racesIndexCache = null; // dati aggiornati → rigenera l'indice gare
             updateMetaUI();
             route(); // Ri-renderizza la dashboard corrente con i nuovi dati
           }
@@ -15082,6 +15083,25 @@ async function _loadMediaProfiles() {
   return _mediaProfilesCache;
 }
 
+// Indice gare (eventi) della stagione caricata, per la ricerca. Una voce per
+// edizione (le categorie della stessa gara sono raggruppate). In cache per anno.
+let _racesIndexCache = null, _racesIndexYear = null;
+function getRacesIndex() {
+  const y = _loadedSeasonYear();
+  if (_racesIndexCache && _racesIndexYear === y) return _racesIndexCache;
+  const map = {};
+  for (const r of (globalData.resultsRaw || [])) {
+    if (!r.gara_id || !r.nome_gara) continue;
+    const ekey = r.gara_id.replace(/_[A-Z0-9]+_[MF]$/, ''); // togli categoria → raggruppa l'edizione
+    if (!map[ekey]) {
+      map[ekey] = { nome: r.nome_gara, data: r.data || '', regione: r.regione || '', gara_id: r.gara_id, _nl: (r.nome_gara || '').toLowerCase() };
+    }
+  }
+  _racesIndexCache = Object.values(map).sort((a, b) => (b.data || '').localeCompare(a.data || ''));
+  _racesIndexYear = y;
+  return _racesIndexCache;
+}
+
 function doSearch(q, dropdown) {
   if (!dropdown) dropdown = document.getElementById('search-results-dropdown');
   if (!q.trim() || !globalData) {
@@ -15110,19 +15130,31 @@ function doSearch(q, dropdown) {
     if (results.length >= 8) break;
   }
 
+  // Cerca gare (eventi) della stagione caricata
+  let _gc = 0;
+  for (const ev of getRacesIndex()) {
+    if (ev._nl.includes(ql)) {
+      results.push({ type: 'gara', id: ev.gara_id, display: ev.nome, sub: [fmtDateShort(ev.data), ev.regione].filter(Boolean).join(' · ') });
+      if (++_gc >= 5) break;
+    }
+  }
+
   // Mostra subito quello che abbiamo, poi aggiunge media in async
   const renderDropdown = (list) => {
     if (!list.length) {
       dropdown.innerHTML = '<div class="search-result-item"><span class="search-result-sub">Nessun risultato</span></div>';
     } else {
-      dropdown.innerHTML = list.map(r => `
-        <div class="search-result-item" onclick="goTo('#/${r.type === 'media' ? 'media' : r.type}/${r.id}'); window.closeAllSearchDropdowns()">
+      dropdown.innerHTML = list.map(r => {
+        const lbl = r.type === 'atleta' ? 'ATLETA' : r.type === 'media' ? '📷 FOTOGRAFO' : r.type === 'gara' ? '🏁 GARA' : 'TEAM';
+        return `
+        <div class="search-result-item" onclick="goTo('#/${r.type === 'media' ? 'media' : r.type}/${encodeURIComponent(r.id)}'); window.closeAllSearchDropdowns()">
           <div>
-            <div class="search-result-label">${r.type === 'atleta' ? 'ATLETA' : r.type === 'media' ? '📷 FOTOGRAFO' : 'TEAM'}</div>
+            <div class="search-result-label">${lbl}</div>
             <div class="search-result-name">${esc(r.display)}</div>
             <div class="search-result-sub">${esc(r.sub)}</div>
           </div>
-        </div>`).join('');
+        </div>`;
+      }).join('');
     }
     dropdown.style.display = 'block';
   };
