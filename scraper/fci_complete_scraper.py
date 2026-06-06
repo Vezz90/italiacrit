@@ -720,7 +720,43 @@ async def run_cycle():
     
     meta_info = {"last_update": datetime.now().isoformat()}
     wj(DATA_DIR/"meta.json", meta_info)
-    
+
+    # ─── ARCHIVIO STAGIONALE (storicità) ──────────────────────────────────
+    # Oltre alla stagione "live" in data/, salviamo uno snapshot CONGELATO in
+    # data/seasons/{CURRENT_YEAR}/. Così, quando l'anno prossimo lo scraper
+    # riparte da capo (sovrascrivendo data/), i dati di questa stagione restano
+    # disponibili in modo permanente per profili/classifiche/gare storiche.
+    try:
+        season_dir = DATA_DIR / "seasons" / str(CURRENT_YEAR)
+        (season_dir / "rankings").mkdir(parents=True, exist_ok=True)
+        (season_dir / "team_rankings").mkdir(parents=True, exist_ok=True)
+        wj(season_dir / "results_raw.json", clean_results)
+        wj(season_dir / "athletes.json", athletes)
+        wj(season_dir / "teams.json", teams)
+        wj(season_dir / "calendar.json", calendar)
+        for code, rows in a_rank.items(): wj(season_dir / f"rankings/{code}.json", rows)
+        for code, rows in t_rank.items(): wj(season_dir / f"team_rankings/{code}.json", rows)
+        n_races = len({r.get("gara_id") for r in clean_results if r.get("gara_id")})
+        wj(season_dir / "meta.json", {
+            "season": CURRENT_YEAR,
+            "last_update": meta_info["last_update"],
+            "n_results": len(clean_results),
+            "n_athletes": len(athletes),
+            "n_teams": len(teams),
+            "n_races": n_races,
+        })
+        # Indice delle stagioni disponibili (per il selettore stagione nel frontend)
+        seasons_root = DATA_DIR / "seasons"
+        available = sorted([p.name for p in seasons_root.iterdir() if p.is_dir() and p.name.isdigit()])
+        wj(seasons_root / "index.json", {
+            "current": CURRENT_YEAR,
+            "seasons": available,
+            "updated": meta_info["last_update"],
+        })
+        print(f"Snapshot stagione {CURRENT_YEAR} salvato in data/seasons/{CURRENT_YEAR}/ ({n_races} gare).")
+    except Exception as e:
+        print(f"[ARCHIVIO] Errore salvataggio snapshot stagionale: {e}")
+
     print(f"\nCiclo completato: {len(all_results)} risultati totali.")
 
 async def main():
