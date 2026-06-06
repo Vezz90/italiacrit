@@ -2,9 +2,9 @@
   {
     "team_id": "BIESSE_CARRERA_PREMAC",
     "team_nome": "BIESSE - CARRERA - PREMAC",
-    "punti": 326,
-    "vittorie": 4,
-    "p1": 4,
+    "punti": 341,
+    "vittorie": 5,
+    "p1": 5,
     "p2": 5,
     "p3": 5,
     "pout": 25,
@@ -14,14 +14,26 @@
   {
     "team_id": "BFT_BURZONI",
     "team_nome": "BFT BURZONI",
-    "punti": 262,
+    "punti": 287,
     "vittorie": 5,
     "p1": 5,
-    "p2": 5,
-    "p3": 2,
-    "pout": 10,
-    "n_atleti": 5,
+    "p2": 6,
+    "p3": 3,
+    "pout": 12,
+    "n_atleti": 6,
     "pos": 2
+  },
+  {
+    "team_id": "BREGANZE_MILLENIUM",
+    "team_nome": "BREGANZE MILLENIUM",
+    "punti": 152,
+    "vittorie": 3,
+    "p1": 3,
+    "p2": 1,
+    "p3": 0,
+    "pout": 13,
+    "n_atleti": 5,
+    "pos": 3
   },
   {
     "team_id": "LIBERTAS_CERESETTO",
@@ -33,42 +45,30 @@
     "p3": 2,
     "pout": 16,
     "n_atleti": 5,
-    "pos": 3
+    "pos": 4
   },
   {
     "team_id": "PETRUCCI_GAUSS_CYCLING_TEAM",
     "team_nome": "PETRUCCI GAUSS CYCLING TEAM",
-    "punti": 139,
+    "punti": 146,
     "vittorie": 3,
     "p1": 3,
     "p2": 1,
     "p3": 2,
-    "pout": 9,
-    "n_atleti": 6,
-    "pos": 4
-  },
-  {
-    "team_id": "BREGANZE_MILLENIUM",
-    "team_nome": "BREGANZE MILLENIUM",
-    "punti": 138,
-    "vittorie": 3,
-    "p1": 3,
-    "p2": 1,
-    "p3": 0,
     "pout": 11,
-    "n_atleti": 5,
+    "n_atleti": 7,
     "pos": 5
   },
   {
     "team_id": "BRESCIA_F_MAGNI_FLANDRES_LOVE",
     "team_nome": "BRESCIA - F. MAGNI - FLANDRES LOVE",
-    "punti": 123,
+    "punti": 128,
     "vittorie": 0,
     "p1": 0,
     "p2": 2,
     "p3": 4,
-    "pout": 8,
-    "n_atleti": 5,
+    "pout": 9,
+    "n_atleti": 6,
     "pos": 6
   },
   {

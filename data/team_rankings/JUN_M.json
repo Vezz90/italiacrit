@@ -36,6 +36,18 @@
     "pos": 3
   },
   {
+    "team_id": "TEAM_GUERRINI_SENAGHESE",
+    "team_nome": "TEAM GUERRINI SENAGHESE",
+    "punti": 415,
+    "vittorie": 5,
+    "p1": 5,
+    "p2": 4,
+    "p3": 5,
+    "pout": 26,
+    "n_atleti": 11,
+    "pos": 4
+  },
+  {
     "team_id": "NORDEST_PETRUCCI_ASSALI_STEFEN",
     "team_nome": "NORDEST PETRUCCI ASSALI STEFEN",
     "punti": 403,
@@ -45,18 +57,6 @@
     "p3": 1,
     "pout": 20,
     "n_atleti": 9,
-    "pos": 4
-  },
-  {
-    "team_id": "TEAM_GUERRINI_SENAGHESE",
-    "team_nome": "TEAM GUERRINI SENAGHESE",
-    "punti": 382,
-    "vittorie": 4,
-    "p1": 4,
-    "p2": 4,
-    "p3": 4,
-    "pout": 25,
-    "n_atleti": 11,
     "pos": 5
   },
   {
@@ -206,10 +206,10 @@
   {
     "team_id": "TEAM_GENERAL_SYSTEM",
     "team_nome": "TEAM GENERAL SYSTEM",
-    "punti": 177,
+    "punti": 189,
     "vittorie": 2,
     "p1": 2,
-    "p2": 2,
+    "p2": 3,
     "p3": 0,
     "pout": 16,
     "n_atleti": 5,
@@ -290,24 +290,24 @@
   {
     "team_id": "G_S_GIOVANI_GIUSSANESI_A_S_D",
     "team_nome": "G.S.GIOVANI GIUSSANESI A.S.D.",
-    "punti": 87,
+    "punti": 93,
     "vittorie": 0,
     "p1": 0,
     "p2": 0,
     "p3": 3,
-    "pout": 6,
-    "n_atleti": 5,
+    "pout": 7,
+    "n_atleti": 6,
     "pos": 25
   },
   {
     "team_id": "FDB_SPORT_CLUB",
     "team_nome": "FDB SPORT CLUB",
-    "punti": 87,
+    "punti": 89,
     "vittorie": 0,
     "p1": 0,
     "p2": 2,
     "p3": 2,
-    "pout": 9,
+    "pout": 10,
     "n_atleti": 5,
     "pos": 26
   },
@@ -528,6 +528,18 @@
     "pos": 44
   },
   {
+    "team_id": "SIDERMEC_SLP",
+    "team_nome": "SIDERMEC - SLP",
+    "punti": 52,
+    "vittorie": 0,
+    "p1": 0,
+    "p2": 0,
+    "p3": 0,
+    "pout": 13,
+    "n_atleti": 7,
+    "pos": 45
+  },
+  {
     "team_id": "ARKITANO_MTB_CLUB",
     "team_nome": "ARKITANO MTB CLUB",
     "punti": 51,
@@ -537,7 +549,7 @@
     "p3": 1,
     "pout": 2,
     "n_atleti": 1,
-    "pos": 45
+    "pos": 46
   },
   {
     "team_id": "CANNIBAL_BAHRAIN_VICTORIUS",
@@ -549,7 +561,7 @@
     "p3": 1,
     "pout": 3,
     "n_atleti": 2,
-    "pos": 46
+    "pos": 47
   },
   {
     "team_id": "KK_NOVO_MESTO",
@@ -561,7 +573,7 @@
     "p3": 0,
     "pout": 2,
     "n_atleti": 4,
-    "pos": 47
+    "pos": 48
   },
   {
     "team_id": "CANNEDU_ITTIRI_A_MANCA_ASD",
@@ -573,18 +585,6 @@
     "p3": 1,
     "pout": 5,
     "n_atleti": 2,
-    "pos": 48
-  },
-  {
-    "team_id": "SIDERMEC_SLP",
-    "team_nome": "SIDERMEC - SLP",
-    "punti": 48,
-    "vittorie": 0,
-    "p1": 0,
-    "p2": 0,
-    "p3": 0,
-    "pout": 11,
-    "n_atleti": 5,
     "pos": 49
   },
   {
@@ -1128,6 +1128,18 @@
     "pos": 94
   },
   {
+    "team_id": "C_C_FORTI_E_VELOCI",
+    "team_nome": "C.C. FORTI E VELOCI",
+    "punti": 5,
+    "vittorie": 0,
+    "p1": 0,
+    "p2": 0,
+    "p3": 0,
+    "pout": 1,
+    "n_atleti": 1,
+    "pos": 95
+  },
+  {
     "team_id": "CANTURINO_1902_A_S_D",
     "team_nome": "CANTURINO 1902 A.S.D.",
     "punti": 5,
@@ -1137,7 +1149,7 @@
     "p3": 0,
     "pout": 2,
     "n_atleti": 2,
-    "pos": 95
+    "pos": 96
   },
   {
     "team_id": "FERALPI_MONTECLARENSE_ASD",
@@ -1149,7 +1161,7 @@
     "p3": 0,
     "pout": 2,
     "n_atleti": 2,
-    "pos": 96
+    "pos": 97
   },
   {
     "team_id": "GRUPPO_SPORTIVO_PARMENSE",
@@ -1161,7 +1173,19 @@
     "p3": 0,
     "pout": 1,
     "n_atleti": 1,
-    "pos": 97
+    "pos": 98
+  },
+  {
+    "team_id": "GS_FIUMICELLO_1971",
+    "team_nome": "GS FIUMICELLO 1971",
+    "punti": 4,
+    "vittorie": 0,
+    "p1": 0,
+    "p2": 0,
+    "p3": 0,
+    "pout": 1,
+    "n_atleti": 1,
+    "pos": 99
   },
   {
     "team_id": "GI_ESSE_PRO_CYCLING",
@@ -1173,7 +1197,7 @@
     "p3": 0,
     "pout": 1,
     "n_atleti": 1,
-    "pos": 98
+    "pos": 100
   },
   {
     "team_id": "DAL_RISO_AL_ROSA",
@@ -1185,7 +1209,7 @@
     "p3": 0,
     "pout": 1,
     "n_atleti": 1,
-    "pos": 99
+    "pos": 101
   },
   {
     "team_id": "ST_KILDA_CYCLING_CLUB",
@@ -1197,7 +1221,7 @@
     "p3": 0,
     "pout": 1,
     "n_atleti": 1,
-    "pos": 100
+    "pos": 102
   },
   {
     "team_id": "AUDAX_FIORMONTI",
@@ -1209,7 +1233,7 @@
     "p3": 0,
     "pout": 2,
     "n_atleti": 2,
-    "pos": 101
+    "pos": 103
   },
   {
     "team_id": "U_S_MONTECORONA",
@@ -1221,7 +1245,7 @@
     "p3": 0,
     "pout": 1,
     "n_atleti": 1,
-    "pos": 102
+    "pos": 104
   },
   {
     "team_id": "G_S_BAREGGESE_A_S_D",
@@ -1233,7 +1257,7 @@
     "p3": 0,
     "pout": 1,
     "n_atleti": 1,
-    "pos": 103
+    "pos": 105
   },
   {
     "team_id": "SVEZIA",
@@ -1245,6 +1269,6 @@
     "p3": 0,
     "pout": 1,
     "n_atleti": 1,
-    "pos": 104
+    "pos": 106
   }
 ]
