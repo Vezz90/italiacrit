@@ -2115,11 +2115,26 @@ function setPage(html) {
     clearInterval(window.homeHeroInterval);
     window.homeHeroInterval = null;
   }
-  const _seasonBar = _shouldShowSeasonBar() ? seasonBarHtml() : '';
-  app.innerHTML = `<main class="page page-enter">${_seasonBar}${html}</main>`;
+  app.innerHTML = `<main class="page page-enter">${html}</main>`;
   window.scrollTo({ top: 0, behavior: 'instant' });
+  placeSeasonBar();
   updateNavContextChip();
   updateSeasonChip();
+}
+
+// Inserisce la barra "STAGIONE" SOTTO l'header della pagina (dopo .pg-header
+// o il primo .section-header), non sopra. Idempotente.
+function placeSeasonBar() {
+  document.getElementById('season-bar-slot')?.remove();
+  if (!_shouldShowSeasonBar()) return;
+  const main = app.querySelector('.page');
+  if (!main) return;
+  const slot = document.createElement('div');
+  slot.id = 'season-bar-slot';
+  slot.innerHTML = seasonBarHtml();
+  const hdr = main.querySelector('.pg-header, .section-header');
+  if (hdr) hdr.insertAdjacentElement('afterend', slot);
+  else main.insertAdjacentElement('afterbegin', slot);
 }
 
 
@@ -15546,6 +15561,9 @@ async function renderRisultati() {
         </div>`;
     }).join('') || '<div class="empty-state">Nessuna gara trovata</div>';
   }
+  // La pagina Risultati usa una shell persistente (no setPage sui re-render):
+  // assicura che la barra stagione sotto l'header sia presente/aggiornata.
+  placeSeasonBar();
 }
 
 // ── SHARE ENGINE v3 ─────────────────────────────────────
