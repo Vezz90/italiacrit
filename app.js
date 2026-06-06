@@ -2133,7 +2133,7 @@ function placeSeasonBar() {
   const slot = document.createElement('div');
   slot.id = 'season-bar-slot';
   slot.innerHTML = seasonBarHtml();
-  const hdr = main.querySelector('.pg-header, .section-header');
+  const hdr = main.querySelector('.pg-header, .section-header, .em-hero, .itc-dash-hero');
   if (hdr) hdr.insertAdjacentElement('afterend', slot);
   else main.insertAdjacentElement('afterbegin', slot);
 }
@@ -15130,12 +15130,14 @@ function doSearch(q, dropdown) {
     if (results.length >= 8) break;
   }
 
-  // Cerca gare (eventi) della stagione caricata
+  // Cerca gare (eventi): match per TOKEN come nel filtro Risultati — basta
+  // scrivere una parte qualsiasi del nome (anche più parole, in qualsiasi ordine).
+  const _qTokens = ql.split(/\s+/).filter(Boolean);
   let _gc = 0;
   for (const ev of getRacesIndex()) {
-    if (ev._nl.includes(ql)) {
+    if (_qTokens.every(t => ev._nl.includes(t) || (ev.regione || '').toLowerCase().includes(t))) {
       results.push({ type: 'gara', id: ev.gara_id, display: ev.nome, sub: [fmtDateShort(ev.data), ev.regione].filter(Boolean).join(' · ') });
-      if (++_gc >= 5) break;
+      if (++_gc >= 10) break;
     }
   }
 
