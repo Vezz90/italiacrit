@@ -1791,52 +1791,39 @@ window.setSeason = async (year) => {
 };
 
 // Chip selettore stagione nella navbar (sempre visibile).
+// Il selettore stagione NON sta più nella navbar (su mobile era troppo
+// appiccicato): viene mostrato come barra SOTTO l'header, in cima al contenuto.
+// updateSeasonChip rimuove solo un eventuale vecchio chip residuo nella navbar.
 function updateSeasonChip() {
-  const idx = _seasonsIndex || { current: currentSeason, seasons: [] };
-  let chip = document.getElementById('season-chip');
-  if (!chip) {
-    chip = document.createElement('div');
-    chip.id = 'season-chip';
-    chip.className = 'ctx-chip';
-    chip.style.cssText = 'cursor:pointer;display:inline-flex;align-items:center;gap:5px';
-    const navbar = document.getElementById('navbar');
-    const ctx = document.getElementById('ctx-chip');
-    const badge = document.getElementById('badge-live');
-    if (navbar) { if (ctx) navbar.insertBefore(chip, ctx); else if (badge) navbar.insertBefore(chip, badge); else navbar.appendChild(chip); }
-  }
-  const shown = activeSeason || idx.current || currentSeason || '—';
-  const isPast = !!activeSeason;
-  chip.style.background = isPast ? 'var(--accent,#e8001d)' : 'var(--bg-elevated,#1e293b)';
-  chip.style.color = isPast ? '#fff' : 'var(--text-secondary,#94a3b8)';
-  chip.style.border = '1px solid var(--border-subtle,#334155)';
-  chip.style.borderRadius = '14px';
-  chip.style.padding = '3px 10px';
-  chip.style.fontSize = '.78rem';
-  chip.style.fontWeight = '700';
-  chip.innerHTML = `🗓 ${shown}${isPast ? ' <span style="font-weight:400;opacity:.85">(storico)</span>' : ''} <span style="opacity:.6">▾</span>`;
-  chip.onclick = () => openSeasonSwitcher();
+  document.getElementById('season-chip')?.remove();
 }
 
-function openSeasonSwitcher() {
+// Su quali pagine mostrare la barra stagione globale (le pagine con selettore
+// proprio — profili atleta/team e gara — e le pagine account sono escluse).
+function _shouldShowSeasonBar() {
+  const h = (location.hash || '#/').split('?')[0];
+  if (/^#\/atleta\//.test(h) || /^#\/team\/[^/]+/.test(h) || /^#\/gara\//.test(h)) return false;
+  if (/^#\/(login|register|messaggi|regolamento|media)\b/.test(h)) return false;
+  if (h === '#/' || h === '') return false;
+  return true;
+}
+
+// Barra "STAGIONE" da mettere sotto l'header in cima alle pagine.
+function seasonBarHtml() {
   const idx = _seasonsIndex || { current: currentSeason, seasons: [] };
-  const seasons = [...new Set([...(idx.seasons || []).map(String), String(idx.current || currentSeason || '')])]
-    .filter(Boolean).sort().reverse();
+  const years = _availableSeasonYears();
+  if (!years.length) return '';
   const cur = String(idx.current || currentSeason || '');
-  const overlay = document.createElement('div');
-  overlay.style.cssText = 'position:fixed;inset:0;background:rgba(0,0,0,.55);z-index:10001;display:flex;align-items:flex-start;justify-content:center;padding-top:72px';
-  overlay.onclick = (e) => { if (e.target === overlay) overlay.remove(); };
-  overlay.innerHTML = `
-    <div style="background:var(--bg-card);border:1px solid var(--border-subtle);border-radius:var(--r-lg);padding:14px;width:240px;box-shadow:0 8px 32px rgba(0,0,0,.4)">
-      <div style="font-size:.72rem;color:var(--text-muted);font-weight:700;letter-spacing:.05em;margin-bottom:8px">STAGIONE</div>
-      ${seasons.map(s => {
-        const isCur = s === cur;
-        const isActive = String(activeSeason || cur) === s;
-        return `<button onclick="window.setSeason('${isCur ? 'current' : s}');this.closest('[style*=fixed]').remove()"
-          style="display:flex;width:100%;justify-content:space-between;align-items:center;gap:8px;padding:9px 10px;margin-bottom:4px;border:none;border-radius:var(--r-sm);cursor:pointer;font-size:.85rem;font-weight:600;background:${isActive ? 'var(--accent,#e8001d)' : 'var(--bg-elevated)'};color:${isActive ? '#fff' : 'var(--text-primary)'}">
-          <span>🗓 ${s}${isCur ? ' · in corso' : ''}</span>${isActive ? '<span>✓</span>' : ''}</button>`;
-      }).join('')}
-    </div>`;
-  document.body.appendChild(overlay);
+  const sel = String(activeSeason || cur || '');
+  return `<div class="season-bar" style="display:flex;align-items:center;gap:8px;flex-wrap:wrap;margin:0 0 18px">
+    <span style="font-size:.72rem;color:var(--text-muted);font-weight:800;letter-spacing:.06em">STAGIONE</span>
+    ${years.map(y => {
+      const on = String(y) === sel;
+      const isCur = String(y) === cur;
+      return `<button onclick="window.setSeason('${isCur ? 'current' : y}')" style="padding:6px 15px;border-radius:16px;border:1px solid var(--border-subtle);cursor:pointer;font-size:.85rem;font-weight:700;background:${on ? 'var(--accent,#e8001d)' : 'var(--bg-elevated)'};color:${on ? '#fff' : 'var(--text-secondary)'}">${y}</button>`;
+    }).join('')}
+    ${activeSeason ? '<span style="font-size:.72rem;color:var(--text-muted);font-style:italic">stai guardando una stagione passata</span>' : ''}
+  </div>`;
 }
 
 
@@ -2128,7 +2115,8 @@ function setPage(html) {
     clearInterval(window.homeHeroInterval);
     window.homeHeroInterval = null;
   }
-  app.innerHTML = `<main class="page page-enter">${html}</main>`;
+  const _seasonBar = _shouldShowSeasonBar() ? seasonBarHtml() : '';
+  app.innerHTML = `<main class="page page-enter">${_seasonBar}${html}</main>`;
   window.scrollTo({ top: 0, behavior: 'instant' });
   updateNavContextChip();
   updateSeasonChip();
