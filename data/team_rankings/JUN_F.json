@@ -2,12 +2,12 @@
   {
     "team_id": "BIESSE_CARRERA_PREMAC",
     "team_nome": "BIESSE - CARRERA - PREMAC",
-    "punti": 318,
+    "punti": 326,
     "vittorie": 4,
     "p1": 4,
     "p2": 5,
     "p3": 5,
-    "pout": 24,
+    "pout": 25,
     "n_atleti": 8,
     "pos": 1
   },
@@ -26,50 +26,62 @@
   {
     "team_id": "LIBERTAS_CERESETTO",
     "team_nome": "LIBERTAS CERESETTO",
-    "punti": 146,
+    "punti": 149,
     "vittorie": 0,
     "p1": 0,
     "p2": 2,
     "p3": 2,
-    "pout": 15,
+    "pout": 16,
     "n_atleti": 5,
     "pos": 3
   },
   {
+    "team_id": "PETRUCCI_GAUSS_CYCLING_TEAM",
+    "team_nome": "PETRUCCI GAUSS CYCLING TEAM",
+    "punti": 139,
+    "vittorie": 3,
+    "p1": 3,
+    "p2": 1,
+    "p3": 2,
+    "pout": 9,
+    "n_atleti": 6,
+    "pos": 4
+  },
+  {
     "team_id": "BREGANZE_MILLENIUM",
     "team_nome": "BREGANZE MILLENIUM",
-    "punti": 137,
+    "punti": 138,
     "vittorie": 3,
     "p1": 3,
     "p2": 1,
     "p3": 0,
-    "pout": 10,
+    "pout": 11,
     "n_atleti": 5,
-    "pos": 4
-  },
-  {
-    "team_id": "PETRUCCI_GAUSS_CYCLING_TEAM",
-    "team_nome": "PETRUCCI GAUSS CYCLING TEAM",
-    "punti": 129,
-    "vittorie": 3,
-    "p1": 3,
-    "p2": 1,
-    "p3": 1,
-    "pout": 9,
-    "n_atleti": 6,
     "pos": 5
   },
   {
     "team_id": "BRESCIA_F_MAGNI_FLANDRES_LOVE",
     "team_nome": "BRESCIA - F. MAGNI - FLANDRES LOVE",
-    "punti": 112,
+    "punti": 123,
     "vittorie": 0,
     "p1": 0,
     "p2": 2,
     "p3": 4,
-    "pout": 5,
-    "n_atleti": 4,
+    "pout": 8,
+    "n_atleti": 5,
     "pos": 6
+  },
+  {
+    "team_id": "TEAM_WILIER_BREGANZE",
+    "team_nome": "TEAM WILIER BREGANZE",
+    "punti": 85,
+    "vittorie": 1,
+    "p1": 1,
+    "p2": 1,
+    "p3": 1,
+    "pout": 14,
+    "n_atleti": 6,
+    "pos": 7
   },
   {
     "team_id": "U_C_CONSCIO_PEDALE_DEL_SILE",
@@ -81,7 +93,7 @@
     "p3": 0,
     "pout": 11,
     "n_atleti": 3,
-    "pos": 7
+    "pos": 8
   },
   {
     "team_id": "A_R_MONEX_PRO_CYCLING_TEAM",
@@ -93,7 +105,7 @@
     "p3": 1,
     "pout": 4,
     "n_atleti": 4,
-    "pos": 8
+    "pos": 9
   },
   {
     "team_id": "CICLISTICA_OMNIA_IMOLA",
@@ -105,18 +117,6 @@
     "p3": 1,
     "pout": 5,
     "n_atleti": 4,
-    "pos": 9
-  },
-  {
-    "team_id": "TEAM_WILIER_BREGANZE",
-    "team_nome": "TEAM WILIER BREGANZE",
-    "punti": 52,
-    "vittorie": 0,
-    "p1": 0,
-    "p2": 0,
-    "p3": 1,
-    "pout": 13,
-    "n_atleti": 6,
     "pos": 10
   },
   {
