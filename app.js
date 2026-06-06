@@ -1183,6 +1183,15 @@ async function loadAll() {
     loadJson('data/extra_roster.json').catch(() => ({})),
   ]);
 
+  return processLoadedData({ calendar, resultsRaw, athletes, teams, meta, raceDetails, videos, extraRoster });
+}
+
+// Processa i dati grezzi (stagione live o archivio data/seasons/{anno}/) in un
+// oggetto globalData. Riusato sia da loadAll sia dallo switch di stagione, così
+// le stagioni passate ricevono ESATTAMENTE lo stesso trattamento (fix genere,
+// cognomi composti, rank_dopo_gara, indici, garaToCalId, merge roster).
+function processLoadedData({ calendar, resultsRaw, athletes, teams, meta, raceDetails, videos, extraRoster }) {
+
   // Applica correzioni genere
   if (athletes) {
     for (const [id, fix] of Object.entries(ATHLETE_GENDER_FIXES)) {
@@ -1378,7 +1387,8 @@ const RANKING_CODES = [
 ];
 
 async function loadRanking(code) {
-  const data = await loadJson(`data/rankings/${code}.json`) || [];
+  const _rbase = activeSeason ? `data/seasons/${activeSeason}/rankings` : 'data/rankings';
+  const data = await loadJson(`${_rbase}/${code}.json`) || [];
   // Correggi i cognomi composti spezzati dallo scraper, allineandoli ai
   // dati già normalizzati in athletes (fallback: ricostruzione particelle).
   const athMap = globalData && globalData.athletes;
@@ -1402,7 +1412,8 @@ async function loadRanking(code) {
 }
 
 async function loadTeamRanking(code) {
-  const data = await loadJson(`data/team_rankings/${code}.json`);
+  const _tbase = activeSeason ? `data/seasons/${activeSeason}/team_rankings` : 'data/team_rankings';
+  const data = await loadJson(`${_tbase}/${code}.json`);
   return data || [];
 }
 
@@ -1716,6 +1727,118 @@ const footer_update = document.getElementById('footer-update');
 
 let globalData = null;
 
+// ── Stagioni (storicità) ──────────────────────────────────────────
+// La stagione mostrata di default è SEMPRE quella in corso (live, da data/).
+// L'utente può passare a una stagione passata, caricata da data/seasons/{anno}/.
+let currentSeason   = null;   // anno della stagione live (da data/seasons/index.json)
+let activeSeason    = null;   // anno selezionato; null = stagione corrente (live)
+let _liveGlobalData = null;   // backup del globalData live mentre si guarda il passato
+let _seasonsIndex   = null;   // { current, seasons:[...] }
+
+async function loadSeasonsIndex() {
+  if (_seasonsIndex) return _seasonsIndex;
+  try { _seasonsIndex = await loadJson('data/seasons/index.json'); } catch { _seasonsIndex = null; }
+  if (!_seasonsIndex || !Array.isArray(_seasonsIndex.seasons)) _seasonsIndex = { current: null, seasons: [] };
+  currentSeason = _seasonsIndex.current || currentSeason;
+  return _seasonsIndex;
+}
+
+// Passa a una stagione: year = anno (numero/stringa) oppure null/'current' per la live.
+window.setSeason = async (year) => {
+  const idx = await loadSeasonsIndex();
+  const cur = idx.current;
+  const yNum = (year === 'current' || year == null) ? null : Number(year);
+
+  // Tornare alla stagione corrente (live)
+  if (yNum == null || yNum === cur) {
+    if (_liveGlobalData) { globalData = _liveGlobalData; _liveGlobalData = null; }
+    activeSeason = null;
+    invalidatePhotoCache();
+    updateSeasonChip();
+    route();
+    return;
+  }
+  // Stagione passata
+  if (!idx.seasons.map(String).includes(String(yNum))) { showToast('Stagione non disponibile', 'error'); return; }
+  try {
+    showToast('Carico la stagione ' + yNum + '…', 'info');
+    const base = `data/seasons/${yNum}`;
+    const [calendar, resultsRaw, athletes, teams, smeta] = await Promise.all([
+      loadJson(`${base}/calendar.json`),
+      loadJson(`${base}/results_raw.json`),
+      loadJson(`${base}/athletes.json`),
+      loadJson(`${base}/teams.json`),
+      loadJson(`${base}/meta.json`).catch(() => ({})),
+    ]);
+    if (!_liveGlobalData) _liveGlobalData = globalData; // backup live una sola volta
+    const live = _liveGlobalData || globalData || {};
+    // I media (foto/video) vivono nel DB per gara_id (che contiene l'anno):
+    // restano validi per ogni stagione, quindi riusiamo quelli live.
+    globalData = processLoadedData({
+      calendar, resultsRaw, athletes, teams,
+      meta: smeta || {},
+      raceDetails: live.raceDetails || {},
+      videos: live.videos || {},
+      extraRoster: {},
+    });
+    activeSeason = yNum;
+    invalidatePhotoCache();
+    updateSeasonChip();
+    route();
+  } catch (e) {
+    showToast('Errore caricamento stagione: ' + e.message, 'error');
+  }
+};
+
+// Chip selettore stagione nella navbar (sempre visibile).
+function updateSeasonChip() {
+  const idx = _seasonsIndex || { current: currentSeason, seasons: [] };
+  let chip = document.getElementById('season-chip');
+  if (!chip) {
+    chip = document.createElement('div');
+    chip.id = 'season-chip';
+    chip.className = 'ctx-chip';
+    chip.style.cssText = 'cursor:pointer;display:inline-flex;align-items:center;gap:5px';
+    const navbar = document.getElementById('navbar');
+    const ctx = document.getElementById('ctx-chip');
+    const badge = document.getElementById('badge-live');
+    if (navbar) { if (ctx) navbar.insertBefore(chip, ctx); else if (badge) navbar.insertBefore(chip, badge); else navbar.appendChild(chip); }
+  }
+  const shown = activeSeason || idx.current || currentSeason || '—';
+  const isPast = !!activeSeason;
+  chip.style.background = isPast ? 'var(--accent,#e8001d)' : 'var(--bg-elevated,#1e293b)';
+  chip.style.color = isPast ? '#fff' : 'var(--text-secondary,#94a3b8)';
+  chip.style.border = '1px solid var(--border-subtle,#334155)';
+  chip.style.borderRadius = '14px';
+  chip.style.padding = '3px 10px';
+  chip.style.fontSize = '.78rem';
+  chip.style.fontWeight = '700';
+  chip.innerHTML = `🗓 ${shown}${isPast ? ' <span style="font-weight:400;opacity:.85">(storico)</span>' : ''} <span style="opacity:.6">▾</span>`;
+  chip.onclick = () => openSeasonSwitcher();
+}
+
+function openSeasonSwitcher() {
+  const idx = _seasonsIndex || { current: currentSeason, seasons: [] };
+  const seasons = [...new Set([...(idx.seasons || []).map(String), String(idx.current || currentSeason || '')])]
+    .filter(Boolean).sort().reverse();
+  const cur = String(idx.current || currentSeason || '');
+  const overlay = document.createElement('div');
+  overlay.style.cssText = 'position:fixed;inset:0;background:rgba(0,0,0,.55);z-index:10001;display:flex;align-items:flex-start;justify-content:center;padding-top:72px';
+  overlay.onclick = (e) => { if (e.target === overlay) overlay.remove(); };
+  overlay.innerHTML = `
+    <div style="background:var(--bg-card);border:1px solid var(--border-subtle);border-radius:var(--r-lg);padding:14px;width:240px;box-shadow:0 8px 32px rgba(0,0,0,.4)">
+      <div style="font-size:.72rem;color:var(--text-muted);font-weight:700;letter-spacing:.05em;margin-bottom:8px">STAGIONE</div>
+      ${seasons.map(s => {
+        const isCur = s === cur;
+        const isActive = String(activeSeason || cur) === s;
+        return `<button onclick="window.setSeason('${isCur ? 'current' : s}');this.closest('[style*=fixed]').remove()"
+          style="display:flex;width:100%;justify-content:space-between;align-items:center;gap:8px;padding:9px 10px;margin-bottom:4px;border:none;border-radius:var(--r-sm);cursor:pointer;font-size:.85rem;font-weight:600;background:${isActive ? 'var(--accent,#e8001d)' : 'var(--bg-elevated)'};color:${isActive ? '#fff' : 'var(--text-primary)'}">
+          <span>🗓 ${s}${isCur ? ' · in corso' : ''}</span>${isActive ? '<span>✓</span>' : ''}</button>`;
+      }).join('')}
+    </div>`;
+  document.body.appendChild(overlay);
+}
+
 
 window.addEventListener('hashchange', route);
 // ── SERVICE WORKER + PUSH NOTIFICATIONS ──────────────────────
@@ -1814,6 +1937,8 @@ function _renderPushButton() {
 window.addEventListener('load', async () => {
   globalData = await loadAll();
   updateMetaUI();
+  await loadSeasonsIndex();
+  updateSeasonChip();
 
   document.getElementById('initial-loader')?.remove();
   initTheme();
@@ -1836,14 +1961,22 @@ window.addEventListener('load', async () => {
       const r = await fetch('data/meta.json', { cache: 'no-store' });
       const newMeta = await r.json();
       if (newMeta && newMeta.last_update) {
-        if (!globalData.meta || newMeta.last_update !== globalData.meta.last_update) {
+        const _baseMeta = (activeSeason ? (_liveGlobalData && _liveGlobalData.meta) : globalData.meta);
+        if (!_baseMeta || newMeta.last_update !== _baseMeta.last_update) {
           console.log("Novità dal backend! Ricarico i dati silenziosamente...");
           // Invalida cache in memoria
           for (let k in cache) delete cache[k];
-          
-          globalData = await loadAll();
-          updateMetaUI();
-          route(); // Ri-renderizza la dashboard corrente con i nuovi dati
+
+          if (activeSeason) {
+            // Stiamo guardando una stagione passata: aggiorna SOLO il backup live,
+            // senza toccare la vista storica corrente.
+            _liveGlobalData = await loadAll();
+            updateMetaUI();
+          } else {
+            globalData = await loadAll();
+            updateMetaUI();
+            route(); // Ri-renderizza la dashboard corrente con i nuovi dati
+          }
         }
       }
     } catch (e) {
@@ -1998,6 +2131,7 @@ function setPage(html) {
   app.innerHTML = `<main class="page page-enter">${html}</main>`;
   window.scrollTo({ top: 0, behavior: 'instant' });
   updateNavContextChip();
+  updateSeasonChip();
 }
 
 
