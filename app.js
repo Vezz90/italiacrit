@@ -2040,6 +2040,7 @@ function route() {
   if (match('/classifica')) return renderClassifica();
   if (match('/atleti')) return renderAtletiList();
   if (match('/team')) return renderTeamList();
+  if (match('/gare')) return renderGare();
   if (match('/risultati')) {
     // Reset generic filters, then re-apply hub context if active
     risSearchQuery = ''; risQueryCat = ''; risQueryMonth = ''; risQueryRegion = ''; risQueryGenere = '';
@@ -2087,7 +2088,7 @@ function updateNavActive(hash) {
 
   const seg = (hash.replace(/^#\//, '').split('/')[0] || '');
 
-  const CLASS_SEGS   = ['classifica', 'atleti', 'team', 'atleta'];
+  const CLASS_SEGS   = ['classifica', 'atleti', 'team', 'atleta', 'gare', 'gara'];
   const ANALISI_SEGS = ['statistiche', 'comparatore'];
   const ACCOUNT_SEGS = ['login', 'register', 'profilo'];
 
@@ -2100,6 +2101,7 @@ function updateNavActive(hash) {
     document.getElementById('nav-class')?.classList.toggle('active',  seg === 'classifica');
     document.getElementById('nav-atleti')?.classList.toggle('active', seg === 'atleti');
     document.getElementById('nav-team')?.classList.toggle('active',   seg === 'team');
+    document.getElementById('nav-gare')?.classList.toggle('active',   seg === 'gare' || seg === 'gara');
   } else if (ANALISI_SEGS.includes(seg)) {
     document.getElementById('nav-analisi-btn')?.classList.add('active');
     document.getElementById('nav-stats')?.classList.toggle('active', seg === 'statistiche');
@@ -2133,7 +2135,12 @@ function placeSeasonBar() {
   const slot = document.createElement('div');
   slot.id = 'season-bar-slot';
   slot.innerHTML = seasonBarHtml();
-  const hdr = main.querySelector('.pg-header, .section-header, .em-hero, .itc-dash-hero');
+  // Hub: l'hero è a tutta larghezza e il contenuto sta in .itc-sections
+  // (centrato e con padding). Mettiamo la barra DENTRO .itc-sections così è
+  // allineata al contenuto come nelle altre pagine, non a filo a sinistra.
+  const sections = main.querySelector('.itc-sections');
+  if (sections) { sections.insertAdjacentElement('afterbegin', slot); return; }
+  const hdr = main.querySelector('.pg-header, .section-header, .em-hero');
   if (hdr) hdr.insertAdjacentElement('afterend', slot);
   else main.insertAdjacentElement('afterbegin', slot);
 }
@@ -2812,6 +2819,7 @@ function renderHubSubpage(hubCode, subpage) {
     case 'classifica':   return renderClassifica();
     case 'atleti':       return renderAtletiList();
     case 'team':         return renderTeamList();
+    case 'gare':         return renderGare();
     case 'calendario':   return renderCalendario();
     case 'statistiche':  return renderStatistiche();
     case 'comparatore':  return renderComparatore();
@@ -13414,6 +13422,59 @@ async function renderAtletiList() {
     `;
   };
   window.filterAtletiList(atlSearch);
+}
+
+// ── GARE: elenco di TUTTE le gare registrate (stagione caricata) ──────
+let gareSearch = '';
+const _GARE_CAT_ORDER = ['ELI_M','ELI_F','JUN_M','JUN_F','AL_M','AL_F','ES1_M','ES1_F','ES2_M','ES2_F'];
+function _gareListHtml() {
+  const events = window._gareEvents || [];
+  const toks = (gareSearch || '').toLowerCase().split(/\s+/).filter(Boolean);
+  const filtered = events.filter(e => {
+    if (!toks.length) return true;
+    const hay = (e.base + ' ' + e.regione).toLowerCase();
+    return toks.every(t => hay.includes(t));
+  });
+  if (!filtered.length) return '<div class="empty-state" style="padding:24px 0">Nessuna gara trovata</div>';
+  return filtered.map(e => {
+    const cats = Object.entries(e.cats).sort((a, b) => _GARE_CAT_ORDER.indexOf(a[0]) - _GARE_CAT_ORDER.indexOf(b[0]));
+    const mainGid = cats[0] ? cats[0][1] : '';
+    const catBtns = cats.map(([code, gid]) =>
+      `<button class="tab-btn" onclick="event.stopPropagation();location.hash='#/gara/${esc(gid)}'" style="font-size:.7rem;padding:3px 10px">${esc(catLabel(code))}</button>`).join('');
+    return `<div onclick="location.hash='#/gara/${esc(mainGid)}'" style="display:flex;justify-content:space-between;align-items:center;gap:12px;flex-wrap:wrap;padding:12px 14px;border:1px solid var(--border-subtle);border-radius:var(--r-md);background:var(--bg-card);cursor:pointer;margin-bottom:8px">
+      <div style="min-width:0;flex:1">
+        <div style="font-weight:700;font-size:.95rem">${esc(e.base)}</div>
+        <div style="font-size:.75rem;color:var(--text-muted)">${fmtDateShort(e.data)}${e.regione && isRealRegion(e.regione) ? ' · ' + esc(e.regione) : ''}${cats.length > 1 ? ` · ${cats.length} categorie` : ''}</div>
+      </div>
+      <div style="display:flex;flex-wrap:wrap;gap:5px;justify-content:flex-end">${catBtns}</div>
+    </div>`;
+  }).join('');
+}
+window.setGareSearch = (v) => { gareSearch = v; const el = document.getElementById('gare-list'); if (el) el.innerHTML = _gareListHtml(); };
+async function renderGare() {
+  if (!globalData) return;
+  // Raggruppa per NOME base + data (un evento, anche con più categorie)
+  const groups = {};
+  for (const r of globalData.resultsRaw) {
+    if (!r.gara_id || !r.data || !r.nome_gara) continue;
+    const base = _raceBaseName(r.nome_gara);
+    if (!base) continue;
+    const key = base + '|' + r.data;
+    if (!groups[key]) groups[key] = { base, data: r.data, regione: r.regione || '', cats: {} };
+    const code = getRankingFileCode(r);
+    if (code && !groups[key].cats[code]) groups[key].cats[code] = r.gara_id;
+  }
+  window._gareEvents = Object.values(groups).sort((a, b) => (b.data || '').localeCompare(a.data || ''));
+  const _inpStyle = 'width:100%;max-width:420px;box-sizing:border-box;padding:9px 12px;border:1px solid var(--border-subtle);border-radius:var(--r-sm);background:var(--bg-elevated);color:var(--text-primary);font-size:.9rem';
+  setPage(`
+    <div class="pg-header">
+      <h1 class="pg-title">GARE</h1>
+      <div style="color:var(--text-muted);font-size:.85rem;margin-bottom:10px">${window._gareEvents.length} gare registrate</div>
+      <input id="gare-search" type="search" placeholder="Cerca una gara…  (anche solo una parte del nome)" autocomplete="off"
+        oninput="window.setGareSearch(this.value)" value="${esc(gareSearch)}" style="${_inpStyle}"/>
+    </div>
+    <div id="gare-list">${_gareListHtml()}</div>
+  `);
 }
 
 async function renderTeamList() {
