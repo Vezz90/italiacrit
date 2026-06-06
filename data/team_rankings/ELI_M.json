@@ -14,13 +14,13 @@
   {
     "team_id": "TEAM_TECHNIPES_INEMILIAROMAGNA",
     "team_nome": "TEAM TECHNIPES #INEMILIAROMAGNA",
-    "punti": 626,
-    "vittorie": 5,
-    "p1": 5,
+    "punti": 653,
+    "vittorie": 6,
+    "p1": 6,
     "p2": 5,
     "p3": 6,
-    "pout": 21,
-    "n_atleti": 11,
+    "pout": 23,
+    "n_atleti": 12,
     "pos": 2
   },
   {
@@ -38,13 +38,13 @@
   {
     "team_id": "GENERAL_STORE_ESSEGIBI_F_LLI_CURIA",
     "team_nome": "GENERAL STORE -ESSEGIBI-F.LLI CURIA",
-    "punti": 432,
+    "punti": 458,
     "vittorie": 4,
     "p1": 4,
     "p2": 2,
-    "p3": 3,
-    "pout": 17,
-    "n_atleti": 11,
+    "p3": 4,
+    "pout": 21,
+    "n_atleti": 12,
     "pos": 4
   },
   {
@@ -120,6 +120,18 @@
     "pos": 10
   },
   {
+    "team_id": "MG_K_VIS_COSTRUZIONI_E_AMBIENTE",
+    "team_nome": "MG K-VIS COSTRUZIONI E AMBIENTE",
+    "punti": 187,
+    "vittorie": 1,
+    "p1": 1,
+    "p2": 5,
+    "p3": 1,
+    "pout": 7,
+    "n_atleti": 9,
+    "pos": 11
+  },
+  {
     "team_id": "U_C_TREVIGIANI_ENERGIAPURA_MARCHIOL",
     "team_nome": "U.C TREVIGIANI ENERGIAPURA MARCHIOL",
     "punti": 179,
@@ -129,18 +141,6 @@
     "p3": 4,
     "pout": 9,
     "n_atleti": 5,
-    "pos": 11
-  },
-  {
-    "team_id": "MG_K_VIS_COSTRUZIONI_E_AMBIENTE",
-    "team_nome": "MG K-VIS COSTRUZIONI E AMBIENTE",
-    "punti": 175,
-    "vittorie": 1,
-    "p1": 1,
-    "p2": 4,
-    "p3": 1,
-    "pout": 7,
-    "n_atleti": 9,
     "pos": 12
   },
   {
@@ -576,8 +576,8 @@
     "pos": 48
   },
   {
-    "team_id": "DEKA_RIDERS_TEAM_ASD",
-    "team_nome": "DEKA RIDERS TEAM ASD",
+    "team_id": "GARLASCHESE_A_S_D",
+    "team_nome": "GARLASCHESE A.S.D.",
     "punti": 17,
     "vittorie": 0,
     "p1": 0,
@@ -588,14 +588,14 @@
     "pos": 49
   },
   {
-    "team_id": "GARLASCHESE_A_S_D",
-    "team_nome": "GARLASCHESE A.S.D.",
-    "punti": 16,
+    "team_id": "DEKA_RIDERS_TEAM_ASD",
+    "team_nome": "DEKA RIDERS TEAM ASD",
+    "punti": 17,
     "vittorie": 0,
     "p1": 0,
     "p2": 0,
     "p3": 0,
-    "pout": 1,
+    "pout": 2,
     "n_atleti": 1,
     "pos": 50
   },
