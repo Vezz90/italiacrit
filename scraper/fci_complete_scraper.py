@@ -1,4 +1,4 @@
-import asyncio, requests, json, re, sys, time, unicodedata, html as HTMLMOD, argparse, logging
+import asyncio, requests, json, re, sys, time, unicodedata, html as HTMLMOD, argparse, logging, os
 from bs4 import BeautifulSoup
 from pathlib import Path
 from datetime import datetime
@@ -10,7 +10,10 @@ except (ImportError, ValueError):
     from calendar_scraper import scrape_calendar_fci
     from _regions import extract_region
 
-CURRENT_YEAR = 2026
+# La stagione coincide con l'anno solare (finisce il 31/12): il rollover è
+# automatico a Capodanno. Si può forzare un anno specifico con ITC_SEASON
+# (utile per fare il backfill di stagioni passate dalla FCI).
+CURRENT_YEAR = int(os.environ.get("ITC_SEASON") or datetime.now().year)
 DATA_DIR = Path(__file__).parent.parent / "data"
 
 # ═══════════════════════════════════════════════════════════════
@@ -615,7 +618,15 @@ async def run_cycle():
         try:
             with open(results_path, "r", encoding="utf-8") as f:
                 all_results = json.load(f)
-            print(f"Caricati {len(all_results)} risultati esistenti. Ricalcolo moltiplicatori...")
+            # La stagione live contiene SOLO l'anno corrente. Al rollover (1° gennaio)
+            # i risultati dell'anno precedente vengono esclusi dal set live: restano
+            # comunque congelati in data/seasons/{anno}/. Così live = stagione in corso
+            # e ogni archivio resta monostagione.
+            _before = len(all_results)
+            all_results = [r for r in all_results if str(r.get("data", "")).startswith(str(CURRENT_YEAR))]
+            if len(all_results) != _before:
+                print(f"Filtrati {_before - len(all_results)} risultati di stagioni precedenti (live = {CURRENT_YEAR}).")
+            print(f"Caricati {len(all_results)} risultati {CURRENT_YEAR}. Ricalcolo moltiplicatori...")
             # Riapplica le regole di moltiplicatore e normalizza ID (unificazione doppioni)
             for r in all_results:
                 # Pulizia ex-aequo dai dati storici (annotazioni tipo "(6° - EXEQUO)")
