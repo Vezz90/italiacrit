@@ -10352,6 +10352,23 @@ function raceSeriesKey(garaId) {
   return s + (cat ? '__' + cat : '');
 }
 
+// Nome "base" di una gara: l'FCI nomina ogni categoria con parole extra
+// (es. "…DONNE ESORDIENTI SECONDO ANNO"). Togliamo il numero di edizione e
+// la coda di parole-categoria per ottenere il nome unico della gara, così
+// le varie categorie/edizioni si possono raggruppare in un'unica pagina.
+const _CAT_NOISE_WORDS = new Set([
+  'DONNE','UOMINI','MASCHILE','FEMMINILE','ESORDIENTI','ESORDIENTE','PRIMO','SECONDO',
+  'ANNO','ALLIEVI','ALLIEVE','JUNIORES','JUNIOR','ELITE','UNDER','U23','U-23','GARA',
+  'UNICA','PROVA','VALIDA','CAMPIONATO','REGIONALE','OPEN','MASCHILI','FEMMINILI'
+]);
+function _raceBaseName(nome) {
+  let s = String(nome || '').toUpperCase().replace(/[’'`.\-–,]/g, ' ');
+  s = s.replace(/^\s*\d+\s*[°^ª]?\s*/, ''); // numero di edizione iniziale
+  let toks = s.split(/\s+/).filter(Boolean);
+  while (toks.length > 1 && _CAT_NOISE_WORDS.has(toks[toks.length - 1])) toks.pop();
+  return toks.join(' ').trim();
+}
+
 // Apre l'edizione di una gara di un altro anno: passa alla stagione giusta
 // (riusa il selettore globale) e naviga alla pagina di quell'edizione.
 window.openRaceEdition = async (garaId, year) => {
@@ -11602,6 +11619,34 @@ async function renderGara(gara_id) {
     );
   const tipo = results[0]?.tipo || calEntry?.tipo || 'regionale';
 
+  // ── Schede categoria dello STESSO evento (stessa data + stesso nome base) ──
+  // Permette di navigare tra le categorie della gara (Elite/Juniores/Allievi/
+  // Esordienti) come "schede risultato", stile PCS.
+  const _evBase = _raceBaseName(name);
+  const _catGroups = {};
+  if (_evBase && data) {
+    for (const r of resultsRaw) {
+      if (!r.gara_id || r.data !== data) continue;
+      if (_raceBaseName(r.nome_gara) !== _evBase) continue;
+      const code = getRankingFileCode(r);
+      if (!code) continue;
+      // Usa il gara_id REALE (gli esordienti 1°/2° anno possono avere nomi
+      // diversi → niente link costruiti che potrebbero non esistere).
+      if (!_catGroups[code]) _catGroups[code] = { code, gid: r.gara_id, label: catLabel(code) };
+    }
+  }
+  const _curCode = (() => {
+    const m = gara_id.match(/_([A-Z0-9]+)_([MF])$/);
+    return m ? `${m[1]}_${m[2]}` : '';
+  })();
+  const _CAT_TAB_ORDER = ['ELI_M','ELI_F','JUN_M','JUN_F','AL_M','AL_F','ES1_M','ES1_F','ES2_M','ES2_F'];
+  const _catList = Object.values(_catGroups)
+    .sort((a, b) => _CAT_TAB_ORDER.indexOf(a.code) - _CAT_TAB_ORDER.indexOf(b.code));
+  const _catTabsHtml = _catList.length > 1 ? `
+    <div class="tab-group" role="tablist" aria-label="Categorie della gara" style="display:flex;flex-wrap:wrap;gap:8px;margin:14px 0 2px">
+      ${_catList.map(c => `<button class="tab-btn ${c.code === _curCode ? 'active-cat' : ''}" onclick="location.hash='#/gara/${esc(c.gid)}'">${esc(c.label)}</button>`).join('')}
+    </div>` : '';
+
   const _buildRows = (arr) => {
     let _prevTempo = null;
     let _lastGapSec = 0; // ultimo distacco valido — ereditato dai corridori S.T.
@@ -12048,6 +12093,7 @@ async function renderGara(gara_id) {
         ${isEsordienti && results2.length ? `<button class="btn-share" onclick="window.triggerShareGara2()"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="18" cy="5" r="3"/><circle cx="6" cy="12" r="3"/><circle cx="18" cy="19" r="3"/><line x1="8.59" y1="13.51" x2="15.42" y2="17.49"/><line x1="15.41" y1="6.51" x2="8.59" y2="10.49"/></svg> Condividi Risultati 2° Anno</button>` : ''}
         ${adminEditBtn('gara', primaryGaraId)}
       </div>
+    ${_catTabsHtml}
     ${racePhotosHtml}
     ${extraVideosHtml}
     ${siRaceIntelHtml}
@@ -15130,13 +15176,18 @@ function doSearch(q, dropdown) {
     if (results.length >= 8) break;
   }
 
-  // Cerca gare (eventi): match per TOKEN come nel filtro Risultati — basta
-  // scrivere una parte qualsiasi del nome (anche più parole, in qualsiasi ordine).
+  // Cerca gare: una sola voce per NOME gara (niente edizione). Match per token
+  // (come il filtro Risultati): basta scrivere una parte qualsiasi del nome.
   const _qTokens = ql.split(/\s+/).filter(Boolean);
+  const _seenBase = new Set();
   let _gc = 0;
   for (const ev of getRacesIndex()) {
-    if (_qTokens.every(t => ev._nl.includes(t) || (ev.regione || '').toLowerCase().includes(t))) {
-      results.push({ type: 'gara', id: ev.gara_id, display: ev.nome, sub: [fmtDateShort(ev.data), ev.regione].filter(Boolean).join(' · ') });
+    const base = _raceBaseName(ev.nome);
+    if (!base || _seenBase.has(base)) continue;
+    const hay = (base + ' ' + ev.nome + ' ' + (ev.regione || '')).toLowerCase();
+    if (_qTokens.every(t => hay.includes(t))) {
+      _seenBase.add(base);
+      results.push({ type: 'gara', id: ev.gara_id, display: base, sub: '' });
       if (++_gc >= 10) break;
     }
   }
