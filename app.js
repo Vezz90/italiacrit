@@ -10323,6 +10323,90 @@ async function loadSeasonTeams(year) {
   _seasonTeamCache[year] = data;
   return data;
 }
+const _seasonResCache = {};
+async function loadSeasonResults(year) {
+  if (String(year) === _loadedSeasonYear()) return globalData.resultsRaw;
+  if (_seasonResCache[year]) return _seasonResCache[year];
+  const data = await loadJson(`data/seasons/${year}/results_raw.json`).catch(() => null) || [];
+  _seasonResCache[year] = data;
+  return data;
+}
+// Identità "serie" di una gara: stesso evento attraverso le edizioni/anni.
+// Toglie il numero di edizione iniziale (44_…), la data, normalizza nome ed
+// esordienti, mantiene la categoria → così le edizioni 2025/2026/… combaciano.
+function raceSeriesKey(garaId) {
+  let s = String(garaId || '');
+  const catM = s.match(/_([A-Z0-9]+)_([MF])$/);
+  let cat = '';
+  if (catM) { cat = catM[1].replace(/^ES[12]$/, 'ES') + '_' + catM[2]; s = s.slice(0, catM.index); }
+  s = s.replace(/_\d{4}-\d{2}-\d{2}.*$/, '');   // togli data (+ eventuale coda)
+  s = s.replace(/^\d+_/, '');                    // togli numero edizione iniziale
+  s = s.replace(/(?<![A-Z0-9])G_P(?![A-Z0-9])/g, 'GRAN_PREMIO')
+       .replace(/(?<![A-Z0-9])GP(?![A-Z0-9])/g, 'GRAN_PREMIO')
+       .replace(/(?<![A-Z0-9])GRANPREMIO(?![A-Z0-9])/g, 'GRAN_PREMIO')
+       .replace(/_+/g, '_').replace(/^_|_$/g, '');
+  return s + (cat ? '__' + cat : '');
+}
+
+// Apre l'edizione di una gara di un altro anno: passa alla stagione giusta
+// (riusa il selettore globale) e naviga alla pagina di quell'edizione.
+window.openRaceEdition = async (garaId, year) => {
+  const loaded = _loadedSeasonYear();
+  if (String(year) !== String(loaded)) {
+    const cur = String((_seasonsIndex && _seasonsIndex.current) || currentSeason || '');
+    await setSeason(String(year) === cur ? 'current' : String(year));
+  }
+  location.hash = '#/gara/' + garaId;
+};
+
+// Costruisce e inietta l'albo d'oro (tutte le edizioni della stessa gara
+// attraverso gli anni) nella pagina gara. Lazy: carica le altre stagioni solo
+// se esistono, così con una sola stagione non rallenta nulla.
+async function _injectRaceAlboDoro(garaId) {
+  const el = document.getElementById('race-albo-doro');
+  if (!el) return;
+  await loadSeasonsIndex();
+  const years = _availableSeasonYears();
+  const key = raceSeriesKey(garaId);
+  const editions = [];
+  for (const y of years) {
+    let res;
+    try { res = await loadSeasonResults(y); } catch { continue; }
+    const byGara = {};
+    for (const r of (res || [])) {
+      if (!r.gara_id || raceSeriesKey(r.gara_id) !== key) continue;
+      (byGara[r.gara_id] = byGara[r.gara_id] || []).push(r);
+    }
+    for (const [gid, rows] of Object.entries(byGara)) {
+      rows.sort((a, b) => (a.posizione || 99) - (b.posizione || 99));
+      const w = rows[0] || {};
+      editions.push({ year: y, gara_id: gid, data: w.data || '', nome: w.nome_gara || gid,
+        winner: { cognome: w.cognome || '', nome: w.nome || '', team: w.team || '', atleta_id: w.atleta_id || '' } });
+    }
+  }
+  editions.sort((a, b) => String(b.year).localeCompare(String(a.year)) || (b.data || '').localeCompare(a.data || ''));
+  if (editions.length <= 1) { el.innerHTML = ''; return; } // niente albo per una sola edizione
+
+  el.innerHTML = `
+    <div class="section-header" style="margin-top:24px">
+      <span class="section-title">🏆 ALBO D'ORO — EDIZIONI</span><span class="section-line"></span>
+    </div>
+    <div style="display:flex;flex-direction:column;gap:6px">
+      ${editions.map(e => {
+        const cur = e.gara_id === garaId && String(e.year) === _loadedSeasonYear();
+        return `<div onclick="window.openRaceEdition('${esc(e.gara_id)}','${e.year}')"
+          style="display:flex;align-items:center;gap:12px;padding:9px 12px;border:1px solid var(--border-subtle);border-radius:var(--r-sm);cursor:pointer;background:${cur ? 'var(--bg-elevated)' : 'var(--bg-card)'};${cur ? 'box-shadow:inset 3px 0 0 var(--accent,#e8001d)' : ''}">
+          <span style="font-family:var(--font-heading);font-weight:800;font-size:1rem;min-width:48px">${e.year}</span>
+          <span style="font-size:1rem">🥇</span>
+          <span style="flex:1;min-width:0">
+            <span style="font-weight:700">${esc(e.winner.cognome)} ${esc(e.winner.nome)}</span>
+            <span style="color:var(--text-muted);font-size:.82rem;margin-left:6px">${esc(e.winner.team)}</span>
+          </span>
+          ${cur ? '<span style="font-size:.7rem;color:var(--accent,#e8001d);font-weight:700">QUESTA</span>' : '<span style="color:var(--text-muted)">→</span>'}
+        </div>`;
+      }).join('')}
+    </div>`;
+}
 function _availableSeasonYears() {
   const idx = _seasonsIndex || { current: currentSeason, seasons: [] };
   const set = new Set([...(idx.seasons || []).map(String)]);
@@ -11972,8 +12056,12 @@ async function renderGara(gara_id) {
         <tbody>${tableRows || '<tr><td colspan="7" class="empty-state">Nessuna classifica disponibile</td></tr>'}</tbody>
       </table>
     </div>
+    <div id="race-albo-doro" style="margin-top:8px"></div>
     ${detailsHtml}
   `);
+
+  // Albo d'oro delle edizioni (stile PCS) — riempito async per non bloccare la pagina
+  _injectRaceAlboDoro(primaryGaraId);
 
   // Scroll orizzontale dello strip
   window._mgScroll = function(stripId, dir) {
