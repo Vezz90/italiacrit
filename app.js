@@ -10160,10 +10160,14 @@ function buildProfileMedia(risultati, photosMap, videos, opts = {}) {
   // Mostra le foto dove l'atleta (o un atleta del team) è stato taggato
   // esplicitamente, anche se NON è il vincitore della gara.
   const taggedIds = opts.atletaIds || [];
+  // Filtro per anno (storicità): mostra solo i media della stagione selezionata.
+  const _yfilter = opts.year ? String(opts.year) : null;
+  const _yearOf = (gid) => { const m = String(gid || '').match(/_(\d{4})-\d{2}-\d{2}/); return m ? m[1] : null; };
   if (taggedIds.length && _risPhotosByAtleta) {
     const seenTag = new Set(winPhotos.map(w => w.photo && w.photo.id).filter(Boolean));
     for (const aid of taggedIds) {
       for (const p of (_risPhotosByAtleta[aid] || [])) {
+        if (_yfilter && _yearOf(p.gara_id) && _yearOf(p.gara_id) !== _yfilter) continue;
         if (p.id && seenTag.has(p.id)) continue;
         if (p.id) seenTag.add(p.id);
         const rr = (globalData && globalData.resultsRaw || []).find(x => x.gara_id === p.gara_id && x.atleta_id === aid)
@@ -10192,6 +10196,7 @@ function buildProfileMedia(risultati, photosMap, videos, opts = {}) {
     const tagSet = new Set(taggedIds);
     const seenVidUrl = new Set(top10Vids.map(t => t.video && t.video.url).filter(Boolean));
     for (const [gkey, list] of Object.entries(_vids)) {
+      if (_yfilter && _yearOf(gkey) && _yearOf(gkey) !== _yfilter) continue;
       for (const v of (list || [])) {
         const vids2 = String(v.atleta_ids || '').split(',').map(s => s.trim()).filter(Boolean);
         if (!vids2.some(id => tagSet.has(id))) continue;
@@ -10296,12 +10301,65 @@ function buildProfileMedia(risultati, photosMap, videos, opts = {}) {
   <div class="profile-media-section">${inner}</div>`;
 }
 
-async function renderAtleta(atleta_id) {
+// ── Storicità nei profili: dati per stagione ──────────────────────
+const _seasonAthCache = {};
+const _seasonTeamCache = {};
+// Anno della stagione attualmente caricata in globalData (live o globale).
+function _loadedSeasonYear() {
+  return String(activeSeason || currentSeason || (_seasonsIndex && _seasonsIndex.current) || new Date().getFullYear());
+}
+async function loadSeasonAthletes(year) {
+  if (String(year) === _loadedSeasonYear()) return globalData.athletes;
+  if (_seasonAthCache[year]) return _seasonAthCache[year];
+  const data = await loadJson(`data/seasons/${year}/athletes.json`).catch(() => null) || {};
+  for (const id in data) { const ath = data[id]; if (ath) { const f = fixCompoundSurname(ath.cognome, ath.nome); ath.cognome = f.cognome; ath.nome = f.nome; } }
+  _seasonAthCache[year] = data;
+  return data;
+}
+async function loadSeasonTeams(year) {
+  if (String(year) === _loadedSeasonYear()) return globalData.teams;
+  if (_seasonTeamCache[year]) return _seasonTeamCache[year];
+  const data = await loadJson(`data/seasons/${year}/teams.json`).catch(() => null) || {};
+  _seasonTeamCache[year] = data;
+  return data;
+}
+function _availableSeasonYears() {
+  const idx = _seasonsIndex || { current: currentSeason, seasons: [] };
+  const set = new Set([...(idx.seasons || []).map(String)]);
+  if (idx.current) set.add(String(idx.current));
+  if (currentSeason) set.add(String(currentSeason));
+  return [...set].filter(Boolean).sort().reverse();
+}
+// Riga di bottoni-anno da mettere SOTTO al riepilogo del profilo.
+function profileYearRow(kind, id, selYear) {
+  const years = _availableSeasonYears();
+  const fn = kind === 'team' ? 'setTeamYear' : 'setAtletaYear';
+  return `<div class="profile-year-row" style="display:flex;gap:6px;flex-wrap:wrap;align-items:center;margin:14px 0 2px">
+    <span style="font-size:.72rem;color:var(--text-muted);font-weight:700;letter-spacing:.04em;margin-right:4px">STAGIONE</span>
+    ${years.map(y => {
+      const on = String(y) === String(selYear);
+      return `<button onclick="window.${fn}('${esc(id)}','${y}')" style="padding:5px 13px;border-radius:14px;border:1px solid var(--border-subtle);cursor:pointer;font-size:.82rem;font-weight:700;background:${on ? 'var(--accent,#e8001d)' : 'var(--bg-elevated)'};color:${on ? '#fff' : 'var(--text-secondary)'}">${y}</button>`;
+    }).join('')}
+  </div>`;
+}
+window.setAtletaYear = (id, year) => renderAtleta(id, { year });
+window.setTeamYear   = (id, year) => renderTeam(id, { year });
+
+async function renderAtleta(atleta_id, opts = {}) {
   if (!globalData) return;
   const { athletes, calendar } = globalData;
 
-  const a = athletes[atleta_id];
-  if (!a) return renderNotFound();
+  const aLive = athletes[atleta_id];
+  if (!aLive) return renderNotFound();
+
+  // ── Anno selezionato (storicità): default = stagione caricata ──
+  await loadSeasonsIndex();
+  const selYear       = String(opts.year || _loadedSeasonYear());
+  const _isLoadedYear = selYear === _loadedSeasonYear();
+  const seasonAth     = _isLoadedYear ? athletes : await loadSeasonAthletes(selYear);
+  const aSel          = _isLoadedYear ? aLive : (seasonAth[atleta_id] || null);
+  const a             = aSel || aLive;     // identità dal record dell'anno (o live)
+  const _hasYearData  = !!aSel;
 
   // Registra visualizzazione per Popular Today
   trackAthleteView(atleta_id, a.cognome || '', a.nome || '');
@@ -10310,7 +10368,7 @@ async function renderAtleta(atleta_id) {
   const calMap = {};
   for (const g of calendar) calMap[g.id] = g;
 
-  const risultati = (a.risultati || []).sort((x,y) => (y.data||'').localeCompare(x.data||''));
+  const risultati = (_hasYearData ? (aSel.risultati || []) : []).slice().sort((x,y) => (y.data||'').localeCompare(x.data||''));
 
   // Stats
   const p1 = risultati.filter(r => r.posizione === 1).length;
@@ -10326,7 +10384,7 @@ async function renderAtleta(atleta_id) {
   // Recupero ranking asincrono per evitare crash
   const rCode = getRankingFileCode(a.categoria);
   const [currentRanking, atletaOv, photosMap, teamOvAtleta] = await Promise.all([
-    rCode ? loadRanking(rCode) : Promise.resolve([]),
+    rCode ? (_isLoadedYear ? loadRanking(rCode) : loadJson(`data/seasons/${selYear}/rankings/${rCode}.json`).catch(() => [])) : Promise.resolve([]),
     getEntityOverrides('atleta', atleta_id),
     loadRisPhotos(),
     a.team_id ? getEntityOverrides('team', a.team_id).catch(() => ({})) : Promise.resolve({}),
@@ -10424,8 +10482,20 @@ async function renderAtleta(atleta_id) {
 
   window._shareAtletaData = {_id:atleta_id,cognome:displayCognome,nome:displayNome,cat:catLabel(a.categoria),team:displayTeam,punti:a.punti_totali,pos:globalPos,p1:p1,p2:p2,p3:p3,gare:top10};
 
-  // Sport Intelligence computations
-  const { resultsRaw: _siRaw } = globalData;
+  // Sport Intelligence computations — sui risultati dell'ANNO selezionato.
+  // Per la stagione caricata usiamo globalData.resultsRaw; per un anno passato
+  // ricostruiamo un resultsRaw equivalente dai record archiviati dell'atleta.
+  let _siRaw;
+  if (_isLoadedYear) {
+    _siRaw = globalData.resultsRaw;
+  } else {
+    _siRaw = [];
+    for (const [id, ath] of Object.entries(seasonAth)) {
+      for (const r of (ath.risultati || [])) {
+        _siRaw.push({ ...r, atleta_id: id, cognome: ath.cognome, nome: ath.nome, genere: ath.genere, categoria: ath.categoria, team_id: ath.team_id });
+      }
+    }
+  }
   const _siLastDate = _siRaw.reduce((max, r) => (r.data||'') > max ? r.data : max, '');
   const aiStreak    = siStreak(atleta_id, _siRaw);
   const aiMomentum  = siMomentum(atleta_id, _siRaw, _siLastDate);
@@ -10495,7 +10565,7 @@ async function renderAtleta(atleta_id) {
     </div>` : '';
 
   // Build badge strip
-  const _badges = getAthleteBadges(atleta_id, globalData.resultsRaw, rCode, aRankObj);
+  const _badges = getAthleteBadges(atleta_id, _siRaw, rCode, aRankObj);
   const _badgeStripHtml = _badges.length ? `
     <div class="ath-badge-strip">
       ${_badges.map(b => `<span class="ath-badge ath-badge--${b.cls||'default'}">${b.icon} ${b.label}</span>`).join('')}
@@ -10506,17 +10576,18 @@ async function renderAtleta(atleta_id) {
 
   setPage(`
     ${headerHtml}
+    ${profileYearRow('atleta', atleta_id, selYear)}
     ${_badgeStripHtml}
-    ${sparkHtml ? `<div class="sparkline-wrap"><div class="sparkline-title">ANDAMENTO PUNTI — STAGIONE ${new Date().getFullYear()}</div>${sparkHtml}</div>` : ''}
+    ${sparkHtml ? `<div class="sparkline-wrap"><div class="sparkline-title">ANDAMENTO PUNTI — STAGIONE ${esc(selYear)}</div>${sparkHtml}</div>` : ''}
     <div style="margin: 8px 0 20px;display:flex;gap:10px;align-items:center;flex-wrap:wrap">
       <button class="btn-share" onclick="window.triggerShareAtleta()"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="18" cy="5" r="3"/><circle cx="6" cy="12" r="3"/><circle cx="18" cy="19" r="3"/><line x1="8.59" y1="13.51" x2="15.42" y2="17.49"/><line x1="15.41" y1="6.51" x2="8.59" y2="10.49"/></svg> Condividi Profilo</button>
       <button class="btn-share" onclick="window.openComparatore('${esc(atleta_id)}','atleta')">⚖ Compara</button>
       <button class="watch-btn ${_watched ? 'watch-btn--active' : ''}" id="watch-btn-${esc(atleta_id)}" onclick="window.toggleWatch('${esc(atleta_id)}','${esc(displayCognome)}','${esc(displayNome)}')">${_watched ? '<span>★</span> Seguito' : '<span>☆</span> Segui'}</button>
       ${adminEditBtn('atleta', atleta_id)}
     </div>
-    ${buildProfileMedia(risultati, photosMap, globalData.videos, { atletaIds: [atleta_id] })}
+    ${buildProfileMedia(risultati, photosMap, globalData.videos, { atletaIds: [atleta_id], year: selYear })}
     <div class="section-header" style="margin-top:28px">
-      <span class="section-title">RISULTATI STAGIONE</span>
+      <span class="section-title">RISULTATI ${esc(selYear)}</span>
       <span class="section-line"></span>
     </div>
       <table class="results-table atleta-results">
@@ -10609,12 +10680,31 @@ let teamViewCat = '';
 let teamViewId = '';
 
 // ── TEAM ──────────────────────────────────────────────────────
-async function renderTeam(team_id) {
+async function renderTeam(team_id, opts = {}) {
   if (!globalData) return;
-  const { teams, athletes } = globalData;
 
-  const t = teams[team_id];
-  if (!t) return renderNotFound();
+  const tLive = globalData.teams[team_id];
+  if (!tLive) return renderNotFound();
+
+  // ── Anno selezionato (storicità): default = stagione caricata ──
+  await loadSeasonsIndex();
+  const selYear       = String(opts.year || _loadedSeasonYear());
+  const _isLoadedYear = selYear === _loadedSeasonYear();
+  const teams         = _isLoadedYear ? globalData.teams    : await loadSeasonTeams(selYear);
+  const athletes      = _isLoadedYear ? globalData.athletes : await loadSeasonAthletes(selYear);
+  const t = teams[team_id] || tLive;
+  // resultsRaw equivalente per l'anno selezionato (loaded → globalData; passato → dai record archiviati)
+  let seasonRaw;
+  if (_isLoadedYear) {
+    seasonRaw = globalData.resultsRaw;
+  } else {
+    seasonRaw = [];
+    for (const [id, ath] of Object.entries(athletes)) {
+      for (const r of (ath.risultati || [])) {
+        seasonRaw.push({ ...r, atleta_id: id, cognome: ath.cognome, nome: ath.nome, genere: ath.genere, categoria: ath.categoria, team_id: ath.team_id });
+      }
+    }
+  }
 
   // Reset category view if switching team
   if (teamViewId !== team_id) {
@@ -10646,7 +10736,7 @@ async function renderTeam(team_id) {
 
   window.setTeamDetailCat = (cat) => {
     teamViewCat = cat;
-    renderTeam(team_id);
+    renderTeam(team_id, { year: selYear });
   };
 
   const catTabsHtml = teamCats.length > 1 ? `
@@ -10710,9 +10800,12 @@ async function renderTeam(team_id) {
       </tr>`;
     }).join('');
 
-  // Caricamento classifiche team + override foto in parallelo
+  // Caricamento classifiche team + override foto in parallelo (per l'anno selezionato)
+  const _loadTRank = (c) => _isLoadedYear
+    ? loadTeamRanking(c)
+    : loadJson(`data/seasons/${selYear}/team_rankings/${c}.json`).catch(() => []);
   const [teamRankings, teamOv, teamPhotosMap] = await Promise.all([
-    Promise.all(RANKING_CODES.map(c => loadTeamRanking(c))),
+    Promise.all(RANKING_CODES.map(_loadTRank)),
     getEntityOverrides('team', team_id),
     loadRisPhotos(),
   ]);
@@ -10725,11 +10818,11 @@ async function renderTeam(team_id) {
   const topC = tCatRanks.slice().sort((a,b)=>b.pts - a.pts)[0];
 
   // ── INTELLIGENCE ──────────────────────────────────────────────
-  const allTeamRes  = globalData.resultsRaw.filter(r => r.team_id === team_id && r.posizione && r.data);
+  const allTeamRes  = seasonRaw.filter(r => r.team_id === team_id && r.posizione && r.data);
   const lastDateGlobal = allTeamRes.reduce((mx,r) => r.data > mx ? r.data : mx, '');
 
   // Category-scoped raw for per-cat mission/strengths/momentum
-  const catScopedRaw = globalData.resultsRaw.filter(r => (getRankingFileCode(r)||r.categoria) === teamViewCat);
+  const catScopedRaw = seasonRaw.filter(r => (getRankingFileCode(r)||r.categoria) === teamViewCat);
   const catCatRanks  = tCatRanks.filter(rk => rk.cat === teamViewCat);
 
   const mission   = siTeamMission(team_id, catScopedRaw, catCatRanks);
@@ -10879,6 +10972,7 @@ async function renderTeam(team_id) {
       </div>
       ${headerStats}
     </div>
+    ${profileYearRow('team', team_id, selYear)}
     <div style="margin-top:12px;display:flex;gap:10px;align-items:center;flex-wrap:wrap">
       <button class="btn-share" onclick="window.triggerShareTeam()"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="18" cy="5" r="3"/><circle cx="6" cy="12" r="3"/><circle cx="18" cy="19" r="3"/><line x1="8.59" y1="13.51" x2="15.42" y2="17.49"/><line x1="15.41" y1="6.51" x2="8.59" y2="10.49"/></svg> Condividi Team</button>
       <button class="watch-btn ${_teamWatched ? 'watch-btn--active' : ''}" id="watch-btn-${esc(team_id)}" onclick="window.toggleWatchTeam('${esc(team_id)}')">${_teamWatched ? '<span>★</span> Seguito' : '<span>☆</span> Segui'}</button>
@@ -10896,7 +10990,7 @@ async function renderTeam(team_id) {
     <div class="team-performers-list" style="margin-bottom:28px">${topPerfHtml}</div>
 
     ${buildProfileMedia(
-      globalData.resultsRaw.filter(r =>
+      seasonRaw.filter(r =>
         r.team_id === team_id &&
         r.posizione &&
         r.data &&
@@ -10906,7 +11000,8 @@ async function renderTeam(team_id) {
       globalData.videos,
       {
         showAthleteName: true,
-        atletaIds: [...new Set(globalData.resultsRaw
+        year: selYear,
+        atletaIds: [...new Set(seasonRaw
           .filter(r => r.team_id === team_id && r.atleta_id)
           .map(r => r.atleta_id))],
       }
