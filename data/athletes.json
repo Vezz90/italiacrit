@@ -1,4 +1,644 @@
 {
+  "BOZICEVICH_MATTEO_LAPO": {
+    "id": "BOZICEVICH_MATTEO_LAPO",
+    "nome": "MATTEO LAPO",
+    "cognome": "BOZICEVICH",
+    "team_attuale": "POLISPORTIVA TRIPETETOLO SEANESE",
+    "team_id": "POLISPORTIVA_TRIPETETOLO_SEANESE",
+    "categoria": "ELI_M",
+    "genere": "M",
+    "punti_totali": 30,
+    "risultati": [
+      {
+        "gara_id": "6_TROFEO_COMUNE_DI_LASTRA_A_SIGNA_PROVA_VALIDA_CAMPIONATO_REGIONALE_2026-06-06_ELI_M",
+        "nome_gara": "6 TROFEO COMUNE DI LASTRA A SIGNA PROVA VALIDA CAMPIONATO REGIONALE",
+        "data": "2026-06-06",
+        "posizione": 1,
+        "punti_effettivi": 30,
+        "team": "POLISPORTIVA TRIPETETOLO SEANESE",
+        "moltiplicatore": 2,
+        "tipo": "regionale",
+        "regione": "TOSCANA",
+        "km": "138.800",
+        "media": "44.270"
+      }
+    ]
+  },
+  "CRESCIOLI_GIOSUE": {
+    "id": "CRESCIOLI_GIOSUE",
+    "nome": "GIOSUE'",
+    "cognome": "CRESCIOLI",
+    "team_attuale": "GALLINA LUCCHINI ECOTEK",
+    "team_id": "GALLINA_LUCCHINI_ECOTEK",
+    "categoria": "ELI_M",
+    "genere": "M",
+    "punti_totali": 96,
+    "risultati": [
+      {
+        "gara_id": "6_TROFEO_COMUNE_DI_LASTRA_A_SIGNA_PROVA_VALIDA_CAMPIONATO_REGIONALE_2026-06-06_ELI_M",
+        "nome_gara": "6 TROFEO COMUNE DI LASTRA A SIGNA PROVA VALIDA CAMPIONATO REGIONALE",
+        "data": "2026-06-06",
+        "posizione": 2,
+        "punti_effettivi": 24,
+        "team": "GALLINA LUCCHINI ECOTEK",
+        "moltiplicatore": 2,
+        "tipo": "regionale",
+        "regione": "TOSCANA",
+        "km": "138.800",
+        "media": "44.270"
+      },
+      {
+        "gara_id": "28_FIORANO_FIORANO_2026-06-02_ELI_M",
+        "nome_gara": "28 FIORANO FIORANO",
+        "data": "2026-06-02",
+        "posizione": 7,
+        "punti_effettivi": 8,
+        "team": "GALLINA LUCCHINI ECOTEK",
+        "moltiplicatore": 2,
+        "tipo": "nazionale",
+        "regione": "EMILIA ROMAGNA",
+        "km": "176.000",
+        "media": "43.487"
+      },
+      {
+        "gara_id": "9_TROFEO_CITTA_DI_SAN_GIOVANNI_VALDARNO_2026-05-31_ELI_M",
+        "nome_gara": "9 TROFEO CITTA' DI SAN GIOVANNI VALDARNO",
+        "data": "2026-05-31",
+        "posizione": 5,
+        "punti_effettivi": 12,
+        "team": "GALLINA LUCCHINI ECOTEK",
+        "moltiplicatore": 2,
+        "tipo": "nazionale",
+        "regione": "TOSCANA",
+        "km": "174.000",
+        "media": "40.296"
+      },
+      {
+        "gara_id": "44_DUE_GIORNI_MARCHIGIANA_GRAN_PREMIO_SANTA_RITA_2026-05-23_ELI_M",
+        "nome_gara": "44 DUE GIORNI MARCHIGIANA GRAN PREMIO SANTA RITA",
+        "data": "2026-05-23",
+        "posizione": 8,
+        "punti_effettivi": 9,
+        "team": "GALLINA LUCCHINI ECOTEK",
+        "moltiplicatore": 3,
+        "tipo": "internazionale",
+        "regione": "MARCHE",
+        "km": "170.300",
+        "media": ""
+      },
+      {
+        "gara_id": "72_TROFEO_MATTEOTTI_2026-05-17_ELI_M",
+        "nome_gara": "72 TROFEO MATTEOTTI",
+        "data": "2026-05-17",
+        "posizione": 1,
+        "punti_effettivi": 30,
+        "team": "GALLINA LUCCHINI ECOTEK",
+        "moltiplicatore": 2,
+        "tipo": "nazionale",
+        "regione": "TOSCANA",
+        "km": "153.200",
+        "media": "41.738"
+      },
+      {
+        "gara_id": "2_MEMORIAL_GIORDANO_MIGNOLLI_2026-05-09_ELI_M",
+        "nome_gara": "2 MEMORIAL GIORDANO MIGNOLLI",
+        "data": "2026-05-09",
+        "posizione": 5,
+        "punti_effettivi": 6,
+        "team": "GALLINA LUCCHINI ECOTEK",
+        "moltiplicatore": 1,
+        "tipo": "regionale",
+        "regione": "VENETO",
+        "km": "137.900",
+        "media": "43.448"
+      },
+      {
+        "gara_id": "79_TROFEO_VISENTINI_2026-04-06_ELI_M",
+        "nome_gara": "79 TROFEO VISENTINI",
+        "data": "2026-04-06",
+        "posizione": 5,
+        "punti_effettivi": 6,
+        "team": "GALLINA LUCCHINI ECOTEK",
+        "moltiplicatore": 1,
+        "tipo": "regionale",
+        "regione": "VENETO",
+        "km": "83.000",
+        "media": "46.005"
+      },
+      {
+        "gara_id": "PASQUALANDO_2026-04-04_ELI_M",
+        "nome_gara": "PASQUALANDO",
+        "data": "2026-04-04",
+        "posizione": 10,
+        "punti_effettivi": 1,
+        "team": "GALLINA LUCCHINI ECOTEK",
+        "moltiplicatore": 1,
+        "tipo": "regionale",
+        "regione": "TOSCANA",
+        "km": "101.200",
+        "media": ""
+      }
+    ]
+  },
+  "GIALLI_MATTEO": {
+    "id": "GIALLI_MATTEO",
+    "nome": "MATTEO",
+    "cognome": "GIALLI",
+    "team_attuale": "TEAM HOPPLA'",
+    "team_id": "TEAM_HOPPLA",
+    "categoria": "ELI_M",
+    "genere": "M",
+    "punti_totali": 83,
+    "risultati": [
+      {
+        "gara_id": "6_TROFEO_COMUNE_DI_LASTRA_A_SIGNA_PROVA_VALIDA_CAMPIONATO_REGIONALE_2026-06-06_ELI_M",
+        "nome_gara": "6 TROFEO COMUNE DI LASTRA A SIGNA PROVA VALIDA CAMPIONATO REGIONALE",
+        "data": "2026-06-06",
+        "posizione": 3,
+        "punti_effettivi": 20,
+        "team": "TEAM HOPPLA'",
+        "moltiplicatore": 2,
+        "tipo": "regionale",
+        "regione": "TOSCANA",
+        "km": "138.800",
+        "media": "44.270"
+      },
+      {
+        "gara_id": "37_GRAN_PREMIO_INDUSTRIE_DEL_MARMO_UNDER23_2026-05-10_ELI_M",
+        "nome_gara": "37 GRAN PREMIO INDUSTRIE DEL MARMO UNDER23",
+        "data": "2026-05-10",
+        "posizione": 1,
+        "punti_effettivi": 45,
+        "team": "TEAM HOPPLA'",
+        "moltiplicatore": 3,
+        "tipo": "internazionale",
+        "regione": "TOSCANA",
+        "km": "179.500",
+        "media": "41.527"
+      },
+      {
+        "gara_id": "57_COPPA_PENNA_2026-05-01_ELI_M",
+        "nome_gara": "57 COPPA PENNA",
+        "data": "2026-05-01",
+        "posizione": 5,
+        "punti_effettivi": 6,
+        "team": "TEAM HOPPLA'",
+        "moltiplicatore": 1,
+        "tipo": "regionale",
+        "regione": "TOSCANA",
+        "km": "136.400",
+        "media": "42.867"
+      },
+      {
+        "gara_id": "32_MEMORIAL_POLESE_2026-02-28_ELI_M",
+        "nome_gara": "32 MEMORIAL POLESE",
+        "data": "2026-02-28",
+        "posizione": 5,
+        "punti_effettivi": 12,
+        "team": "TEAM HOPPLA'",
+        "moltiplicatore": 2,
+        "tipo": "nazionale",
+        "regione": "VENETO",
+        "km": "168.080",
+        "media": "43.466"
+      }
+    ]
+  },
+  "TESSIORE_TOMMASO": {
+    "id": "TESSIORE_TOMMASO",
+    "nome": "TOMMASO",
+    "cognome": "TESSIORE",
+    "team_attuale": "CICLISTICA ROSTESE",
+    "team_id": "CICLISTICA_ROSTESE",
+    "categoria": "ELI_M",
+    "genere": "M",
+    "punti_totali": 70,
+    "risultati": [
+      {
+        "gara_id": "6_TROFEO_COMUNE_DI_LASTRA_A_SIGNA_PROVA_VALIDA_CAMPIONATO_REGIONALE_2026-06-06_ELI_M",
+        "nome_gara": "6 TROFEO COMUNE DI LASTRA A SIGNA PROVA VALIDA CAMPIONATO REGIONALE",
+        "data": "2026-06-06",
+        "posizione": 4,
+        "punti_effettivi": 16,
+        "team": "CICLISTICA ROSTESE",
+        "moltiplicatore": 2,
+        "tipo": "regionale",
+        "regione": "TOSCANA",
+        "km": "138.800",
+        "media": "44.270"
+      },
+      {
+        "gara_id": "70_GIRO_CICLISTICO_DEL_MONTALBANO_2026-05-30_ELI_M",
+        "nome_gara": "70 GIRO CICLISTICO DEL MONTALBANO",
+        "data": "2026-05-30",
+        "posizione": 3,
+        "punti_effettivi": 20,
+        "team": "CICLISTICA ROSTESE",
+        "moltiplicatore": 2,
+        "tipo": "nazionale",
+        "regione": "TOSCANA",
+        "km": "155.200",
+        "media": "41.571"
+      },
+      {
+        "gara_id": "72_TROFEO_MATTEOTTI_2026-05-17_ELI_M",
+        "nome_gara": "72 TROFEO MATTEOTTI",
+        "data": "2026-05-17",
+        "posizione": 10,
+        "punti_effettivi": 2,
+        "team": "CICLISTICA ROSTESE",
+        "moltiplicatore": 2,
+        "tipo": "nazionale",
+        "regione": "TOSCANA",
+        "km": "153.200",
+        "media": "41.738"
+      },
+      {
+        "gara_id": "12_MEMORIAL_DANIELE_TORTOLI_2026-05-03_ELI_M",
+        "nome_gara": "12 MEMORIAL DANIELE TORTOLI",
+        "data": "2026-05-03",
+        "posizione": 2,
+        "punti_effettivi": 24,
+        "team": "CICLISTICA ROSTESE",
+        "moltiplicatore": 2,
+        "tipo": "nazionale",
+        "regione": "TOSCANA",
+        "km": "176.600",
+        "media": "41.134"
+      },
+      {
+        "gara_id": "57_COPPA_PENNA_2026-05-01_ELI_M",
+        "nome_gara": "57 COPPA PENNA",
+        "data": "2026-05-01",
+        "posizione": 4,
+        "punti_effettivi": 8,
+        "team": "CICLISTICA ROSTESE",
+        "moltiplicatore": 1,
+        "tipo": "regionale",
+        "regione": "TOSCANA",
+        "km": "136.400",
+        "media": "42.867"
+      }
+    ]
+  },
+  "BRUNO_ANDREA_ALFIO": {
+    "id": "BRUNO_ANDREA_ALFIO",
+    "nome": "ANDREA ALFIO",
+    "cognome": "BRUNO",
+    "team_attuale": "TEAM HOPPLA'",
+    "team_id": "TEAM_HOPPLA",
+    "categoria": "ELI_M",
+    "genere": "M",
+    "punti_totali": 89,
+    "risultati": [
+      {
+        "gara_id": "6_TROFEO_COMUNE_DI_LASTRA_A_SIGNA_PROVA_VALIDA_CAMPIONATO_REGIONALE_2026-06-06_ELI_M",
+        "nome_gara": "6 TROFEO COMUNE DI LASTRA A SIGNA PROVA VALIDA CAMPIONATO REGIONALE",
+        "data": "2026-06-06",
+        "posizione": 5,
+        "punti_effettivi": 12,
+        "team": "TEAM HOPPLA'",
+        "moltiplicatore": 2,
+        "tipo": "regionale",
+        "regione": "TOSCANA",
+        "km": "138.800",
+        "media": "44.270"
+      },
+      {
+        "gara_id": "72_TROFEO_MATTEOTTI_2026-05-17_ELI_M",
+        "nome_gara": "72 TROFEO MATTEOTTI",
+        "data": "2026-05-17",
+        "posizione": 4,
+        "punti_effettivi": 16,
+        "team": "TEAM HOPPLA'",
+        "moltiplicatore": 2,
+        "tipo": "nazionale",
+        "regione": "TOSCANA",
+        "km": "153.200",
+        "media": "41.738"
+      },
+      {
+        "gara_id": "10_GRAN_PREMIO_CITTA_DI_PONTEDERA_2026-05-16_ELI_M",
+        "nome_gara": "10 GRAN PREMIO CITTA' DI PONTEDERA",
+        "data": "2026-05-16",
+        "posizione": 6,
+        "punti_effettivi": 10,
+        "team": "TEAM HOPPLA'",
+        "moltiplicatore": 2,
+        "tipo": "nazionale",
+        "regione": "TOSCANA",
+        "km": "166.000",
+        "media": "43.816"
+      },
+      {
+        "gara_id": "2_MEMORIAL_GIORDANO_MIGNOLLI_2026-05-09_ELI_M",
+        "nome_gara": "2 MEMORIAL GIORDANO MIGNOLLI",
+        "data": "2026-05-09",
+        "posizione": 4,
+        "punti_effettivi": 8,
+        "team": "TEAM HOPPLA'",
+        "moltiplicatore": 1,
+        "tipo": "regionale",
+        "regione": "VENETO",
+        "km": "137.900",
+        "media": "43.448"
+      },
+      {
+        "gara_id": "57_COPPA_PENNA_2026-05-01_ELI_M",
+        "nome_gara": "57 COPPA PENNA",
+        "data": "2026-05-01",
+        "posizione": 8,
+        "punti_effettivi": 3,
+        "team": "TEAM HOPPLA'",
+        "moltiplicatore": 1,
+        "tipo": "regionale",
+        "regione": "TOSCANA",
+        "km": "136.400",
+        "media": "42.867"
+      },
+      {
+        "gara_id": "PASQUALANDO_2026-04-04_ELI_M",
+        "nome_gara": "PASQUALANDO",
+        "data": "2026-04-04",
+        "posizione": 2,
+        "punti_effettivi": 12,
+        "team": "TEAM HOPPLA'",
+        "moltiplicatore": 1,
+        "tipo": "regionale",
+        "regione": "TOSCANA",
+        "km": "101.200",
+        "media": ""
+      },
+      {
+        "gara_id": "64_COPPA_FIERA_DI_MERCATALE_2026-03-31_ELI_M",
+        "nome_gara": "64 COPPA FIERA DI MERCATALE",
+        "data": "2026-03-31",
+        "posizione": 3,
+        "punti_effettivi": 10,
+        "team": "TEAM HOPPLA'",
+        "moltiplicatore": 1,
+        "tipo": "regionale",
+        "regione": "TOSCANA",
+        "km": "144.000",
+        "media": "41.094"
+      },
+      {
+        "gara_id": "51_COPPA_MARTIRI_DI_MONTEMAGGIO_2026-03-29_ELI_M",
+        "nome_gara": "51 COPPA MARTIRI DI MONTEMAGGIO",
+        "data": "2026-03-29",
+        "posizione": 2,
+        "punti_effettivi": 12,
+        "team": "TEAM HOPPLA'",
+        "moltiplicatore": 1,
+        "tipo": "regionale",
+        "regione": "TOSCANA",
+        "km": "146.000",
+        "media": "40.534"
+      },
+      {
+        "gara_id": "39_FIRENZE_EMPOLI_2026-02-21_ELI_M",
+        "nome_gara": "39 FIRENZE EMPOLI",
+        "data": "2026-02-21",
+        "posizione": 8,
+        "punti_effettivi": 6,
+        "team": "TEAM HOPPLA'",
+        "moltiplicatore": 2,
+        "tipo": "nazionale",
+        "regione": "TOSCANA",
+        "km": "149.000",
+        "media": "42.393"
+      }
+    ]
+  },
+  "GIANNELLI_ALESSIO": {
+    "id": "GIANNELLI_ALESSIO",
+    "nome": "ALESSIO",
+    "cognome": "GIANNELLI",
+    "team_attuale": "VPM MORETTI SCS",
+    "team_id": "VPM_MORETTI_SCS",
+    "categoria": "ELI_M",
+    "genere": "M",
+    "punti_totali": 75,
+    "risultati": [
+      {
+        "gara_id": "6_TROFEO_COMUNE_DI_LASTRA_A_SIGNA_PROVA_VALIDA_CAMPIONATO_REGIONALE_2026-06-06_ELI_M",
+        "nome_gara": "6 TROFEO COMUNE DI LASTRA A SIGNA PROVA VALIDA CAMPIONATO REGIONALE",
+        "data": "2026-06-06",
+        "posizione": 6,
+        "punti_effettivi": 10,
+        "team": "VPM MORETTI SCS",
+        "moltiplicatore": 2,
+        "tipo": "regionale",
+        "regione": "TOSCANA",
+        "km": "138.800",
+        "media": "44.270"
+      },
+      {
+        "gara_id": "72_TROFEO_MATTEOTTI_2026-05-17_ELI_M",
+        "nome_gara": "72 TROFEO MATTEOTTI",
+        "data": "2026-05-17",
+        "posizione": 6,
+        "punti_effettivi": 10,
+        "team": "VPM MORETTI SCS",
+        "moltiplicatore": 2,
+        "tipo": "nazionale",
+        "regione": "TOSCANA",
+        "km": "153.200",
+        "media": "41.738"
+      },
+      {
+        "gara_id": "57_COPPA_PENNA_2026-05-01_ELI_M",
+        "nome_gara": "57 COPPA PENNA",
+        "data": "2026-05-01",
+        "posizione": 9,
+        "punti_effettivi": 2,
+        "team": "VPM MORETTI SCS",
+        "moltiplicatore": 1,
+        "tipo": "regionale",
+        "regione": "TOSCANA",
+        "km": "136.400",
+        "media": "42.867"
+      },
+      {
+        "gara_id": "71_GRAN_PREMIO_PRETOLA_PROVA_VALIDA_CAMPIONATO_REGIONALE_2026-04-19_ELI_M",
+        "nome_gara": "71 GRAN PREMIO PRETOLA PROVA VALIDA CAMPIONATO REGIONALE",
+        "data": "2026-04-19",
+        "posizione": 1,
+        "punti_effettivi": 30,
+        "team": "VPM MORETTI SCS",
+        "moltiplicatore": 2,
+        "tipo": "regionale",
+        "regione": "UMBRIA",
+        "km": "143.000",
+        "media": "43.116"
+      },
+      {
+        "gara_id": "72_COPPA_MARIA_SS_DELLA_STELLA_2026-04-12_ELI_M",
+        "nome_gara": "72 COPPA MARIA SS DELLA STELLA",
+        "data": "2026-04-12",
+        "posizione": 1,
+        "punti_effettivi": 15,
+        "team": "VPM MORETTI SCS",
+        "moltiplicatore": 1,
+        "tipo": "regionale",
+        "regione": "PUGLIA",
+        "km": "107.000",
+        "media": "45.441"
+      },
+      {
+        "gara_id": "50_COPPA_CADUTI_DI_REDA_2026-04-05_ELI_M",
+        "nome_gara": "50 COPPA CADUTI DI REDA",
+        "data": "2026-04-05",
+        "posizione": 7,
+        "punti_effettivi": 8,
+        "team": "VPM MORETTI SCS",
+        "moltiplicatore": 2,
+        "tipo": "nazionale",
+        "regione": "EMILIA ROMAGNA",
+        "km": "148.300",
+        "media": "41.788"
+      }
+    ]
+  },
+  "DE_LAURENTIIS_GIUSEPPE": {
+    "id": "DE_LAURENTIIS_GIUSEPPE",
+    "nome": "LAURENTIIS GIUSEPPE",
+    "cognome": "DE",
+    "team_attuale": "VPM MORETTI SCS",
+    "team_id": "VPM_MORETTI_SCS",
+    "categoria": "ELI_M",
+    "genere": "M",
+    "punti_totali": 14,
+    "risultati": [
+      {
+        "gara_id": "6_TROFEO_COMUNE_DI_LASTRA_A_SIGNA_PROVA_VALIDA_CAMPIONATO_REGIONALE_2026-06-06_ELI_M",
+        "nome_gara": "6 TROFEO COMUNE DI LASTRA A SIGNA PROVA VALIDA CAMPIONATO REGIONALE",
+        "data": "2026-06-06",
+        "posizione": 7,
+        "punti_effettivi": 8,
+        "team": "VPM MORETTI SCS",
+        "moltiplicatore": 2,
+        "tipo": "regionale",
+        "regione": "TOSCANA",
+        "km": "138.800",
+        "media": "44.270"
+      },
+      {
+        "gara_id": "47_COPPA_ARDIGO_2026-04-25_ELI_M",
+        "nome_gara": "47 COPPA ARDIGO'",
+        "data": "2026-04-25",
+        "posizione": 5,
+        "punti_effettivi": 6,
+        "team": "VPM MORETTI SCS",
+        "moltiplicatore": 1,
+        "tipo": "regionale",
+        "regione": "LOMBARDIA",
+        "km": "134.000",
+        "media": "47.622"
+      }
+    ]
+  },
+  "FRIUS_ALESSIO": {
+    "id": "FRIUS_ALESSIO",
+    "nome": "ALESSIO",
+    "cognome": "FRIUS",
+    "team_attuale": "GS MALTINTI LAMPADARI BANCA CAMBIANO",
+    "team_id": "GS_MALTINTI_LAMPADARI_BANCA_CAMBIANO",
+    "categoria": "ELI_M",
+    "genere": "M",
+    "punti_totali": 7,
+    "risultati": [
+      {
+        "gara_id": "6_TROFEO_COMUNE_DI_LASTRA_A_SIGNA_PROVA_VALIDA_CAMPIONATO_REGIONALE_2026-06-06_ELI_M",
+        "nome_gara": "6 TROFEO COMUNE DI LASTRA A SIGNA PROVA VALIDA CAMPIONATO REGIONALE",
+        "data": "2026-06-06",
+        "posizione": 8,
+        "punti_effettivi": 6,
+        "team": "GS MALTINTI LAMPADARI BANCA CAMBIANO",
+        "moltiplicatore": 2,
+        "tipo": "regionale",
+        "regione": "TOSCANA",
+        "km": "138.800",
+        "media": "44.270"
+      },
+      {
+        "gara_id": "57_COPPA_PENNA_2026-05-01_ELI_M",
+        "nome_gara": "57 COPPA PENNA",
+        "data": "2026-05-01",
+        "posizione": 10,
+        "punti_effettivi": 1,
+        "team": "GS MALTINTI LAMPADARI BANCA CAMBIANO",
+        "moltiplicatore": 1,
+        "tipo": "regionale",
+        "regione": "TOSCANA",
+        "km": "136.400",
+        "media": "42.867"
+      }
+    ]
+  },
+  "PASCARELLA_MICHELE": {
+    "id": "PASCARELLA_MICHELE",
+    "nome": "MICHELE",
+    "cognome": "PASCARELLA",
+    "team_attuale": "NIPPO NUOVACOMAUTO OBOR",
+    "team_id": "NIPPO_NUOVACOMAUTO_OBOR",
+    "categoria": "ELI_M",
+    "genere": "M",
+    "punti_totali": 8,
+    "risultati": [
+      {
+        "gara_id": "6_TROFEO_COMUNE_DI_LASTRA_A_SIGNA_PROVA_VALIDA_CAMPIONATO_REGIONALE_2026-06-06_ELI_M",
+        "nome_gara": "6 TROFEO COMUNE DI LASTRA A SIGNA PROVA VALIDA CAMPIONATO REGIONALE",
+        "data": "2026-06-06",
+        "posizione": 9,
+        "punti_effettivi": 4,
+        "team": "NIPPO NUOVACOMAUTO OBOR",
+        "moltiplicatore": 2,
+        "tipo": "regionale",
+        "regione": "TOSCANA",
+        "km": "138.800",
+        "media": "44.270"
+      },
+      {
+        "gara_id": "9_TROFEO_CITTA_DI_SAN_GIOVANNI_VALDARNO_2026-05-31_ELI_M",
+        "nome_gara": "9 TROFEO CITTA' DI SAN GIOVANNI VALDARNO",
+        "data": "2026-05-31",
+        "posizione": 9,
+        "punti_effettivi": 4,
+        "team": "NIPPO NUOVACOMAUTO OBOR",
+        "moltiplicatore": 2,
+        "tipo": "nazionale",
+        "regione": "TOSCANA",
+        "km": "174.000",
+        "media": "40.296"
+      }
+    ]
+  },
+  "MILITELLO_JACOPO": {
+    "id": "MILITELLO_JACOPO",
+    "nome": "JACOPO",
+    "cognome": "MILITELLO",
+    "team_attuale": "GALLINA LUCCHINI ECOTEK",
+    "team_id": "GALLINA_LUCCHINI_ECOTEK",
+    "categoria": "ELI_M",
+    "genere": "M",
+    "punti_totali": 2,
+    "risultati": [
+      {
+        "gara_id": "6_TROFEO_COMUNE_DI_LASTRA_A_SIGNA_PROVA_VALIDA_CAMPIONATO_REGIONALE_2026-06-06_ELI_M",
+        "nome_gara": "6 TROFEO COMUNE DI LASTRA A SIGNA PROVA VALIDA CAMPIONATO REGIONALE",
+        "data": "2026-06-06",
+        "posizione": 10,
+        "punti_effettivi": 2,
+        "team": "GALLINA LUCCHINI ECOTEK",
+        "moltiplicatore": 2,
+        "tipo": "regionale",
+        "regione": "TOSCANA",
+        "km": "138.800",
+        "media": "44.270"
+      }
+    ]
+  },
   "MUNTEANU_DAVID_ALEXANDRU": {
     "id": "MUNTEANU_DAVID_ALEXANDRU",
     "nome": "DAVID ALEXANDRU",
@@ -11975,109 +12615,6 @@
         "regione": "TOSCANA",
         "km": "120.900",
         "media": "44.353"
-      }
-    ]
-  },
-  "CRESCIOLI_GIOSUE": {
-    "id": "CRESCIOLI_GIOSUE",
-    "nome": "GIOSUE'",
-    "cognome": "CRESCIOLI",
-    "team_attuale": "GALLINA LUCCHINI ECOTEK",
-    "team_id": "GALLINA_LUCCHINI_ECOTEK",
-    "categoria": "ELI_M",
-    "genere": "M",
-    "punti_totali": 72,
-    "risultati": [
-      {
-        "gara_id": "28_FIORANO_FIORANO_2026-06-02_ELI_M",
-        "nome_gara": "28 FIORANO FIORANO",
-        "data": "2026-06-02",
-        "posizione": 7,
-        "punti_effettivi": 8,
-        "team": "GALLINA LUCCHINI ECOTEK",
-        "moltiplicatore": 2,
-        "tipo": "nazionale",
-        "regione": "EMILIA ROMAGNA",
-        "km": "176.000",
-        "media": "43.487"
-      },
-      {
-        "gara_id": "9_TROFEO_CITTA_DI_SAN_GIOVANNI_VALDARNO_2026-05-31_ELI_M",
-        "nome_gara": "9 TROFEO CITTA' DI SAN GIOVANNI VALDARNO",
-        "data": "2026-05-31",
-        "posizione": 5,
-        "punti_effettivi": 12,
-        "team": "GALLINA LUCCHINI ECOTEK",
-        "moltiplicatore": 2,
-        "tipo": "nazionale",
-        "regione": "TOSCANA",
-        "km": "174.000",
-        "media": "40.296"
-      },
-      {
-        "gara_id": "44_DUE_GIORNI_MARCHIGIANA_GRAN_PREMIO_SANTA_RITA_2026-05-23_ELI_M",
-        "nome_gara": "44 DUE GIORNI MARCHIGIANA GRAN PREMIO SANTA RITA",
-        "data": "2026-05-23",
-        "posizione": 8,
-        "punti_effettivi": 9,
-        "team": "GALLINA LUCCHINI ECOTEK",
-        "moltiplicatore": 3,
-        "tipo": "internazionale",
-        "regione": "MARCHE",
-        "km": "170.300",
-        "media": ""
-      },
-      {
-        "gara_id": "72_TROFEO_MATTEOTTI_2026-05-17_ELI_M",
-        "nome_gara": "72 TROFEO MATTEOTTI",
-        "data": "2026-05-17",
-        "posizione": 1,
-        "punti_effettivi": 30,
-        "team": "GALLINA LUCCHINI ECOTEK",
-        "moltiplicatore": 2,
-        "tipo": "nazionale",
-        "regione": "TOSCANA",
-        "km": "153.200",
-        "media": "41.738"
-      },
-      {
-        "gara_id": "2_MEMORIAL_GIORDANO_MIGNOLLI_2026-05-09_ELI_M",
-        "nome_gara": "2 MEMORIAL GIORDANO MIGNOLLI",
-        "data": "2026-05-09",
-        "posizione": 5,
-        "punti_effettivi": 6,
-        "team": "GALLINA LUCCHINI ECOTEK",
-        "moltiplicatore": 1,
-        "tipo": "regionale",
-        "regione": "VENETO",
-        "km": "137.900",
-        "media": "43.448"
-      },
-      {
-        "gara_id": "79_TROFEO_VISENTINI_2026-04-06_ELI_M",
-        "nome_gara": "79 TROFEO VISENTINI",
-        "data": "2026-04-06",
-        "posizione": 5,
-        "punti_effettivi": 6,
-        "team": "GALLINA LUCCHINI ECOTEK",
-        "moltiplicatore": 1,
-        "tipo": "regionale",
-        "regione": "VENETO",
-        "km": "83.000",
-        "media": "46.005"
-      },
-      {
-        "gara_id": "PASQUALANDO_2026-04-04_ELI_M",
-        "nome_gara": "PASQUALANDO",
-        "data": "2026-04-04",
-        "posizione": 10,
-        "punti_effettivi": 1,
-        "team": "GALLINA LUCCHINI ECOTEK",
-        "moltiplicatore": 1,
-        "tipo": "regionale",
-        "regione": "TOSCANA",
-        "km": "101.200",
-        "media": ""
       }
     ]
   },
@@ -38594,31 +39131,6 @@
       }
     ]
   },
-  "PASCARELLA_MICHELE": {
-    "id": "PASCARELLA_MICHELE",
-    "nome": "MICHELE",
-    "cognome": "PASCARELLA",
-    "team_attuale": "NIPPO NUOVACOMAUTO OBOR",
-    "team_id": "NIPPO_NUOVACOMAUTO_OBOR",
-    "categoria": "ELI_M",
-    "genere": "M",
-    "punti_totali": 4,
-    "risultati": [
-      {
-        "gara_id": "9_TROFEO_CITTA_DI_SAN_GIOVANNI_VALDARNO_2026-05-31_ELI_M",
-        "nome_gara": "9 TROFEO CITTA' DI SAN GIOVANNI VALDARNO",
-        "data": "2026-05-31",
-        "posizione": 9,
-        "punti_effettivi": 4,
-        "team": "NIPPO NUOVACOMAUTO OBOR",
-        "moltiplicatore": 2,
-        "tipo": "nazionale",
-        "regione": "TOSCANA",
-        "km": "174.000",
-        "media": "40.296"
-      }
-    ]
-  },
   "FRIGO_NICOLAS": {
     "id": "FRIGO_NICOLAS",
     "nome": "NICOLAS",
@@ -59600,70 +60112,6 @@
       }
     ]
   },
-  "TESSIORE_TOMMASO": {
-    "id": "TESSIORE_TOMMASO",
-    "nome": "TOMMASO",
-    "cognome": "TESSIORE",
-    "team_attuale": "CICLISTICA ROSTESE",
-    "team_id": "CICLISTICA_ROSTESE",
-    "categoria": "ELI_M",
-    "genere": "M",
-    "punti_totali": 54,
-    "risultati": [
-      {
-        "gara_id": "70_GIRO_CICLISTICO_DEL_MONTALBANO_2026-05-30_ELI_M",
-        "nome_gara": "70 GIRO CICLISTICO DEL MONTALBANO",
-        "data": "2026-05-30",
-        "posizione": 3,
-        "punti_effettivi": 20,
-        "team": "CICLISTICA ROSTESE",
-        "moltiplicatore": 2,
-        "tipo": "nazionale",
-        "regione": "TOSCANA",
-        "km": "155.200",
-        "media": "41.571"
-      },
-      {
-        "gara_id": "72_TROFEO_MATTEOTTI_2026-05-17_ELI_M",
-        "nome_gara": "72 TROFEO MATTEOTTI",
-        "data": "2026-05-17",
-        "posizione": 10,
-        "punti_effettivi": 2,
-        "team": "CICLISTICA ROSTESE",
-        "moltiplicatore": 2,
-        "tipo": "nazionale",
-        "regione": "TOSCANA",
-        "km": "153.200",
-        "media": "41.738"
-      },
-      {
-        "gara_id": "12_MEMORIAL_DANIELE_TORTOLI_2026-05-03_ELI_M",
-        "nome_gara": "12 MEMORIAL DANIELE TORTOLI",
-        "data": "2026-05-03",
-        "posizione": 2,
-        "punti_effettivi": 24,
-        "team": "CICLISTICA ROSTESE",
-        "moltiplicatore": 2,
-        "tipo": "nazionale",
-        "regione": "TOSCANA",
-        "km": "176.600",
-        "media": "41.134"
-      },
-      {
-        "gara_id": "57_COPPA_PENNA_2026-05-01_ELI_M",
-        "nome_gara": "57 COPPA PENNA",
-        "data": "2026-05-01",
-        "posizione": 4,
-        "punti_effettivi": 8,
-        "team": "CICLISTICA ROSTESE",
-        "moltiplicatore": 1,
-        "tipo": "regionale",
-        "regione": "TOSCANA",
-        "km": "136.400",
-        "media": "42.867"
-      }
-    ]
-  },
   "BAGNARA_LUCA": {
     "id": "BAGNARA_LUCA",
     "nome": "LUCA",
@@ -72977,199 +73425,6 @@
       }
     ]
   },
-  "BRUNO_ANDREA_ALFIO": {
-    "id": "BRUNO_ANDREA_ALFIO",
-    "nome": "ANDREA ALFIO",
-    "cognome": "BRUNO",
-    "team_attuale": "TEAM HOPPLA'",
-    "team_id": "TEAM_HOPPLA",
-    "categoria": "ELI_M",
-    "genere": "M",
-    "punti_totali": 77,
-    "risultati": [
-      {
-        "gara_id": "72_TROFEO_MATTEOTTI_2026-05-17_ELI_M",
-        "nome_gara": "72 TROFEO MATTEOTTI",
-        "data": "2026-05-17",
-        "posizione": 4,
-        "punti_effettivi": 16,
-        "team": "TEAM HOPPLA'",
-        "moltiplicatore": 2,
-        "tipo": "nazionale",
-        "regione": "TOSCANA",
-        "km": "153.200",
-        "media": "41.738"
-      },
-      {
-        "gara_id": "10_GRAN_PREMIO_CITTA_DI_PONTEDERA_2026-05-16_ELI_M",
-        "nome_gara": "10 GRAN PREMIO CITTA' DI PONTEDERA",
-        "data": "2026-05-16",
-        "posizione": 6,
-        "punti_effettivi": 10,
-        "team": "TEAM HOPPLA'",
-        "moltiplicatore": 2,
-        "tipo": "nazionale",
-        "regione": "TOSCANA",
-        "km": "166.000",
-        "media": "43.816"
-      },
-      {
-        "gara_id": "2_MEMORIAL_GIORDANO_MIGNOLLI_2026-05-09_ELI_M",
-        "nome_gara": "2 MEMORIAL GIORDANO MIGNOLLI",
-        "data": "2026-05-09",
-        "posizione": 4,
-        "punti_effettivi": 8,
-        "team": "TEAM HOPPLA'",
-        "moltiplicatore": 1,
-        "tipo": "regionale",
-        "regione": "VENETO",
-        "km": "137.900",
-        "media": "43.448"
-      },
-      {
-        "gara_id": "57_COPPA_PENNA_2026-05-01_ELI_M",
-        "nome_gara": "57 COPPA PENNA",
-        "data": "2026-05-01",
-        "posizione": 8,
-        "punti_effettivi": 3,
-        "team": "TEAM HOPPLA'",
-        "moltiplicatore": 1,
-        "tipo": "regionale",
-        "regione": "TOSCANA",
-        "km": "136.400",
-        "media": "42.867"
-      },
-      {
-        "gara_id": "PASQUALANDO_2026-04-04_ELI_M",
-        "nome_gara": "PASQUALANDO",
-        "data": "2026-04-04",
-        "posizione": 2,
-        "punti_effettivi": 12,
-        "team": "TEAM HOPPLA'",
-        "moltiplicatore": 1,
-        "tipo": "regionale",
-        "regione": "TOSCANA",
-        "km": "101.200",
-        "media": ""
-      },
-      {
-        "gara_id": "64_COPPA_FIERA_DI_MERCATALE_2026-03-31_ELI_M",
-        "nome_gara": "64 COPPA FIERA DI MERCATALE",
-        "data": "2026-03-31",
-        "posizione": 3,
-        "punti_effettivi": 10,
-        "team": "TEAM HOPPLA'",
-        "moltiplicatore": 1,
-        "tipo": "regionale",
-        "regione": "TOSCANA",
-        "km": "144.000",
-        "media": "41.094"
-      },
-      {
-        "gara_id": "51_COPPA_MARTIRI_DI_MONTEMAGGIO_2026-03-29_ELI_M",
-        "nome_gara": "51 COPPA MARTIRI DI MONTEMAGGIO",
-        "data": "2026-03-29",
-        "posizione": 2,
-        "punti_effettivi": 12,
-        "team": "TEAM HOPPLA'",
-        "moltiplicatore": 1,
-        "tipo": "regionale",
-        "regione": "TOSCANA",
-        "km": "146.000",
-        "media": "40.534"
-      },
-      {
-        "gara_id": "39_FIRENZE_EMPOLI_2026-02-21_ELI_M",
-        "nome_gara": "39 FIRENZE EMPOLI",
-        "data": "2026-02-21",
-        "posizione": 8,
-        "punti_effettivi": 6,
-        "team": "TEAM HOPPLA'",
-        "moltiplicatore": 2,
-        "tipo": "nazionale",
-        "regione": "TOSCANA",
-        "km": "149.000",
-        "media": "42.393"
-      }
-    ]
-  },
-  "GIANNELLI_ALESSIO": {
-    "id": "GIANNELLI_ALESSIO",
-    "nome": "ALESSIO",
-    "cognome": "GIANNELLI",
-    "team_attuale": "VPM MORETTI SCS",
-    "team_id": "VPM_MORETTI_SCS",
-    "categoria": "ELI_M",
-    "genere": "M",
-    "punti_totali": 65,
-    "risultati": [
-      {
-        "gara_id": "72_TROFEO_MATTEOTTI_2026-05-17_ELI_M",
-        "nome_gara": "72 TROFEO MATTEOTTI",
-        "data": "2026-05-17",
-        "posizione": 6,
-        "punti_effettivi": 10,
-        "team": "VPM MORETTI SCS",
-        "moltiplicatore": 2,
-        "tipo": "nazionale",
-        "regione": "TOSCANA",
-        "km": "153.200",
-        "media": "41.738"
-      },
-      {
-        "gara_id": "57_COPPA_PENNA_2026-05-01_ELI_M",
-        "nome_gara": "57 COPPA PENNA",
-        "data": "2026-05-01",
-        "posizione": 9,
-        "punti_effettivi": 2,
-        "team": "VPM MORETTI SCS",
-        "moltiplicatore": 1,
-        "tipo": "regionale",
-        "regione": "TOSCANA",
-        "km": "136.400",
-        "media": "42.867"
-      },
-      {
-        "gara_id": "71_GRAN_PREMIO_PRETOLA_PROVA_VALIDA_CAMPIONATO_REGIONALE_2026-04-19_ELI_M",
-        "nome_gara": "71 GRAN PREMIO PRETOLA PROVA VALIDA CAMPIONATO REGIONALE",
-        "data": "2026-04-19",
-        "posizione": 1,
-        "punti_effettivi": 30,
-        "team": "VPM MORETTI SCS",
-        "moltiplicatore": 2,
-        "tipo": "regionale",
-        "regione": "UMBRIA",
-        "km": "143.000",
-        "media": "43.116"
-      },
-      {
-        "gara_id": "72_COPPA_MARIA_SS_DELLA_STELLA_2026-04-12_ELI_M",
-        "nome_gara": "72 COPPA MARIA SS DELLA STELLA",
-        "data": "2026-04-12",
-        "posizione": 1,
-        "punti_effettivi": 15,
-        "team": "VPM MORETTI SCS",
-        "moltiplicatore": 1,
-        "tipo": "regionale",
-        "regione": "PUGLIA",
-        "km": "107.000",
-        "media": "45.441"
-      },
-      {
-        "gara_id": "50_COPPA_CADUTI_DI_REDA_2026-04-05_ELI_M",
-        "nome_gara": "50 COPPA CADUTI DI REDA",
-        "data": "2026-04-05",
-        "posizione": 7,
-        "punti_effettivi": 8,
-        "team": "VPM MORETTI SCS",
-        "moltiplicatore": 2,
-        "tipo": "nazionale",
-        "regione": "EMILIA ROMAGNA",
-        "km": "148.300",
-        "media": "41.788"
-      }
-    ]
-  },
   "PADOVAN_NICOLA": {
     "id": "PADOVAN_NICOLA",
     "nome": "NICOLA",
@@ -80903,57 +81158,6 @@
         "regione": "TOSCANA",
         "km": "123.000",
         "media": "41.403"
-      }
-    ]
-  },
-  "GIALLI_MATTEO": {
-    "id": "GIALLI_MATTEO",
-    "nome": "MATTEO",
-    "cognome": "GIALLI",
-    "team_attuale": "TEAM HOPPLA'",
-    "team_id": "TEAM_HOPPLA",
-    "categoria": "ELI_M",
-    "genere": "M",
-    "punti_totali": 63,
-    "risultati": [
-      {
-        "gara_id": "37_GRAN_PREMIO_INDUSTRIE_DEL_MARMO_UNDER23_2026-05-10_ELI_M",
-        "nome_gara": "37 GRAN PREMIO INDUSTRIE DEL MARMO UNDER23",
-        "data": "2026-05-10",
-        "posizione": 1,
-        "punti_effettivi": 45,
-        "team": "TEAM HOPPLA'",
-        "moltiplicatore": 3,
-        "tipo": "internazionale",
-        "regione": "TOSCANA",
-        "km": "179.500",
-        "media": "41.527"
-      },
-      {
-        "gara_id": "57_COPPA_PENNA_2026-05-01_ELI_M",
-        "nome_gara": "57 COPPA PENNA",
-        "data": "2026-05-01",
-        "posizione": 5,
-        "punti_effettivi": 6,
-        "team": "TEAM HOPPLA'",
-        "moltiplicatore": 1,
-        "tipo": "regionale",
-        "regione": "TOSCANA",
-        "km": "136.400",
-        "media": "42.867"
-      },
-      {
-        "gara_id": "32_MEMORIAL_POLESE_2026-02-28_ELI_M",
-        "nome_gara": "32 MEMORIAL POLESE",
-        "data": "2026-02-28",
-        "posizione": 5,
-        "punti_effettivi": 12,
-        "team": "TEAM HOPPLA'",
-        "moltiplicatore": 2,
-        "tipo": "nazionale",
-        "regione": "VENETO",
-        "km": "168.080",
-        "media": "43.466"
       }
     ]
   },
@@ -92163,31 +92367,6 @@
       }
     ]
   },
-  "FRIUS_ALESSIO": {
-    "id": "FRIUS_ALESSIO",
-    "nome": "ALESSIO",
-    "cognome": "FRIUS",
-    "team_attuale": "GS MALTINTI LAMPADARI BANCA CAMBIANO",
-    "team_id": "GS_MALTINTI_LAMPADARI_BANCA_CAMBIANO",
-    "categoria": "ELI_M",
-    "genere": "M",
-    "punti_totali": 1,
-    "risultati": [
-      {
-        "gara_id": "57_COPPA_PENNA_2026-05-01_ELI_M",
-        "nome_gara": "57 COPPA PENNA",
-        "data": "2026-05-01",
-        "posizione": 10,
-        "punti_effettivi": 1,
-        "team": "GS MALTINTI LAMPADARI BANCA CAMBIANO",
-        "moltiplicatore": 1,
-        "tipo": "regionale",
-        "regione": "TOSCANA",
-        "km": "136.400",
-        "media": "42.867"
-      }
-    ]
-  },
   "DALCANALE_MICHELE": {
     "id": "DALCANALE_MICHELE",
     "nome": "MICHELE",
@@ -97410,31 +97589,6 @@
         "posizione": 4,
         "punti_effettivi": 8,
         "team": "GALLINA LUCCHINI ECOTEK",
-        "moltiplicatore": 1,
-        "tipo": "regionale",
-        "regione": "LOMBARDIA",
-        "km": "134.000",
-        "media": "47.622"
-      }
-    ]
-  },
-  "DE_LAURENTIIS_GIUSEPPE": {
-    "id": "DE_LAURENTIIS_GIUSEPPE",
-    "nome": "LAURENTIIS GIUSEPPE",
-    "cognome": "DE",
-    "team_attuale": "VPM MORETTI SCS",
-    "team_id": "VPM_MORETTI_SCS",
-    "categoria": "ELI_M",
-    "genere": "M",
-    "punti_totali": 6,
-    "risultati": [
-      {
-        "gara_id": "47_COPPA_ARDIGO_2026-04-25_ELI_M",
-        "nome_gara": "47 COPPA ARDIGO'",
-        "data": "2026-04-25",
-        "posizione": 5,
-        "punti_effettivi": 6,
-        "team": "VPM MORETTI SCS",
         "moltiplicatore": 1,
         "tipo": "regionale",
         "regione": "LOMBARDIA",

@@ -50,12 +50,12 @@
   {
     "team_id": "TEAM_HOPPLA",
     "team_nome": "TEAM HOPPLA'",
-    "punti": 339,
+    "punti": 371,
     "vittorie": 4,
     "p1": 4,
     "p2": 3,
-    "p3": 3,
-    "pout": 17,
+    "p3": 4,
+    "pout": 18,
     "n_atleti": 7,
     "pos": 5
   },
@@ -132,6 +132,18 @@
     "pos": 11
   },
   {
+    "team_id": "CICLISTICA_ROSTESE",
+    "team_nome": "CICLISTICA ROSTESE",
+    "punti": 182,
+    "vittorie": 2,
+    "p1": 2,
+    "p2": 1,
+    "p3": 3,
+    "pout": 11,
+    "n_atleti": 5,
+    "pos": 12
+  },
+  {
     "team_id": "U_C_TREVIGIANI_ENERGIAPURA_MARCHIOL",
     "team_nome": "U.C TREVIGIANI ENERGIAPURA MARCHIOL",
     "punti": 179,
@@ -140,18 +152,6 @@
     "p2": 0,
     "p3": 4,
     "pout": 9,
-    "n_atleti": 5,
-    "pos": 12
-  },
-  {
-    "team_id": "CICLISTICA_ROSTESE",
-    "team_nome": "CICLISTICA ROSTESE",
-    "punti": 166,
-    "vittorie": 2,
-    "p1": 2,
-    "p2": 1,
-    "p3": 3,
-    "pout": 10,
     "n_atleti": 5,
     "pos": 13
   },
@@ -168,6 +168,30 @@
     "pos": 14
   },
   {
+    "team_id": "GALLINA_LUCCHINI_ECOTEK",
+    "team_nome": "GALLINA LUCCHINI ECOTEK",
+    "punti": 148,
+    "vittorie": 1,
+    "p1": 1,
+    "p2": 1,
+    "p3": 1,
+    "pout": 14,
+    "n_atleti": 7,
+    "pos": 15
+  },
+  {
+    "team_id": "VPM_MORETTI_SCS",
+    "team_nome": "VPM MORETTI SCS",
+    "punti": 141,
+    "vittorie": 2,
+    "p1": 2,
+    "p2": 0,
+    "p3": 1,
+    "pout": 15,
+    "n_atleti": 9,
+    "pos": 16
+  },
+  {
     "team_id": "MULTICAR_GRUPPO_AMARU",
     "team_nome": "MULTICAR GRUPPO AMARU'",
     "punti": 135,
@@ -177,7 +201,7 @@
     "p3": 2,
     "pout": 2,
     "n_atleti": 3,
-    "pos": 15
+    "pos": 17
   },
   {
     "team_id": "BAHRAIN_VICTORIOUS_DEVELOPMENT_TEAM",
@@ -188,30 +212,6 @@
     "p2": 1,
     "p3": 1,
     "pout": 3,
-    "n_atleti": 6,
-    "pos": 16
-  },
-  {
-    "team_id": "VPM_MORETTI_SCS",
-    "team_nome": "VPM MORETTI SCS",
-    "punti": 123,
-    "vittorie": 2,
-    "p1": 2,
-    "p2": 0,
-    "p3": 1,
-    "pout": 13,
-    "n_atleti": 9,
-    "pos": 17
-  },
-  {
-    "team_id": "GALLINA_LUCCHINI_ECOTEK",
-    "team_nome": "GALLINA LUCCHINI ECOTEK",
-    "punti": 122,
-    "vittorie": 1,
-    "p1": 1,
-    "p2": 0,
-    "p3": 1,
-    "pout": 13,
     "n_atleti": 6,
     "pos": 18
   },
@@ -252,6 +252,18 @@
     "pos": 21
   },
   {
+    "team_id": "POLISPORTIVA_TRIPETETOLO_SEANESE",
+    "team_nome": "POLISPORTIVA TRIPETETOLO SEANESE",
+    "punti": 93,
+    "vittorie": 1,
+    "p1": 1,
+    "p2": 0,
+    "p3": 1,
+    "pout": 7,
+    "n_atleti": 5,
+    "pos": 22
+  },
+  {
     "team_id": "CAMPANA_IMBALLAGGI_MORBIATO_TRENTINO",
     "team_nome": "CAMPANA IMBALLAGGI MORBIATO TRENTINO",
     "punti": 84,
@@ -261,7 +273,7 @@
     "p3": 3,
     "pout": 9,
     "n_atleti": 4,
-    "pos": 22
+    "pos": 23
   },
   {
     "team_id": "PC_BAIX_EBRE_TORTOSA",
@@ -273,7 +285,7 @@
     "p3": 1,
     "pout": 5,
     "n_atleti": 3,
-    "pos": 23
+    "pos": 24
   },
   {
     "team_id": "ASD_SWATT_CLUB",
@@ -285,7 +297,7 @@
     "p3": 0,
     "pout": 3,
     "n_atleti": 4,
-    "pos": 24
+    "pos": 25
   },
   {
     "team_id": "ASD_G_C_SISSIO_TEAM",
@@ -297,7 +309,7 @@
     "p3": 0,
     "pout": 9,
     "n_atleti": 7,
-    "pos": 25
+    "pos": 26
   },
   {
     "team_id": "OVERALL_TRE_COLLI_CYCLING_TEAM",
@@ -309,18 +321,6 @@
     "p3": 1,
     "pout": 3,
     "n_atleti": 3,
-    "pos": 26
-  },
-  {
-    "team_id": "POLISPORTIVA_TRIPETETOLO_SEANESE",
-    "team_nome": "POLISPORTIVA TRIPETETOLO SEANESE",
-    "punti": 63,
-    "vittorie": 0,
-    "p1": 0,
-    "p2": 0,
-    "p3": 1,
-    "pout": 7,
-    "n_atleti": 4,
     "pos": 27
   },
   {
@@ -444,6 +444,18 @@
     "pos": 37
   },
   {
+    "team_id": "NIPPO_NUOVACOMAUTO_OBOR",
+    "team_nome": "NIPPO NUOVACOMAUTO OBOR",
+    "punti": 37,
+    "vittorie": 0,
+    "p1": 0,
+    "p2": 0,
+    "p3": 0,
+    "pout": 7,
+    "n_atleti": 4,
+    "pos": 38
+  },
+  {
     "team_id": "MADONE_TEAM_BIKE_SICILIA",
     "team_nome": "MADONE-TEAM BIKE SICILIA",
     "punti": 35,
@@ -453,7 +465,7 @@
     "p3": 1,
     "pout": 4,
     "n_atleti": 2,
-    "pos": 38
+    "pos": 39
   },
   {
     "team_id": "BELTRAMI_TSA_LA_RISORSA_UMANA_VC_RE",
@@ -465,18 +477,6 @@
     "p3": 1,
     "pout": 1,
     "n_atleti": 3,
-    "pos": 39
-  },
-  {
-    "team_id": "NIPPO_NUOVACOMAUTO_OBOR",
-    "team_nome": "NIPPO NUOVACOMAUTO OBOR",
-    "punti": 33,
-    "vittorie": 0,
-    "p1": 0,
-    "p2": 0,
-    "p3": 0,
-    "pout": 6,
-    "n_atleti": 4,
     "pos": 40
   },
   {
@@ -624,6 +624,18 @@
     "pos": 52
   },
   {
+    "team_id": "GS_MALTINTI_LAMPADARI_BANCA_CAMBIANO",
+    "team_nome": "GS MALTINTI LAMPADARI BANCA CAMBIANO",
+    "punti": 12,
+    "vittorie": 0,
+    "p1": 0,
+    "p2": 0,
+    "p3": 0,
+    "pout": 3,
+    "n_atleti": 2,
+    "pos": 53
+  },
+  {
     "team_id": "S_C_VALLE_SERIANA_CENE_A_S_D",
     "team_nome": "S.C. VALLE SERIANA - CENE A.S.D.",
     "punti": 12,
@@ -633,7 +645,7 @@
     "p3": 0,
     "pout": 2,
     "n_atleti": 1,
-    "pos": 53
+    "pos": 54
   },
   {
     "team_id": "ASD_TEAM_MOOVEO",
@@ -645,7 +657,7 @@
     "p3": 0,
     "pout": 0,
     "n_atleti": 1,
-    "pos": 54
+    "pos": 55
   },
   {
     "team_id": "U_C_PREGNANA",
@@ -657,7 +669,7 @@
     "p3": 0,
     "pout": 3,
     "n_atleti": 3,
-    "pos": 55
+    "pos": 56
   },
   {
     "team_id": "U_C_MONACO",
@@ -669,7 +681,7 @@
     "p3": 0,
     "pout": 2,
     "n_atleti": 2,
-    "pos": 56
+    "pos": 57
   },
   {
     "team_id": "TEAM_PROMOTECH_MG_K_VIS",
@@ -681,7 +693,7 @@
     "p3": 0,
     "pout": 2,
     "n_atleti": 1,
-    "pos": 57
+    "pos": 58
   },
   {
     "team_id": "SLOVENIA_NATIONAL_TEAM",
@@ -693,18 +705,6 @@
     "p3": 0,
     "pout": 2,
     "n_atleti": 1,
-    "pos": 58
-  },
-  {
-    "team_id": "GS_MALTINTI_LAMPADARI_BANCA_CAMBIANO",
-    "team_nome": "GS MALTINTI LAMPADARI BANCA CAMBIANO",
-    "punti": 6,
-    "vittorie": 0,
-    "p1": 0,
-    "p2": 0,
-    "p3": 0,
-    "pout": 2,
-    "n_atleti": 2,
     "pos": 59
   },
   {
