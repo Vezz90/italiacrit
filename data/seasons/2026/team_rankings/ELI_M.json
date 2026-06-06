@@ -2,12 +2,12 @@
   {
     "team_id": "A_S_D_S_C_PADOVANI",
     "team_nome": "A.S.D. S.C. PADOVANI",
-    "punti": 766,
+    "punti": 790,
     "vittorie": 7,
     "p1": 7,
     "p2": 10,
-    "p3": 4,
-    "pout": 22,
+    "p3": 5,
+    "pout": 24,
     "n_atleti": 10,
     "pos": 1
   },
@@ -26,10 +26,10 @@
   {
     "team_id": "BELTRAMI_TSA_TRE_COLLI",
     "team_nome": "BELTRAMI TSA TRE COLLI",
-    "punti": 497,
+    "punti": 509,
     "vittorie": 3,
     "p1": 3,
-    "p2": 5,
+    "p2": 6,
     "p3": 4,
     "pout": 24,
     "n_atleti": 8,
@@ -62,9 +62,9 @@
   {
     "team_id": "SOLME_OLMO_ARVEDI",
     "team_nome": "SOLME - OLMO - ARVEDI",
-    "punti": 310,
-    "vittorie": 3,
-    "p1": 3,
+    "punti": 325,
+    "vittorie": 4,
+    "p1": 4,
     "p2": 3,
     "p3": 2,
     "pout": 16,
@@ -266,12 +266,12 @@
   {
     "team_id": "CAMPANA_IMBALLAGGI_MORBIATO_TRENTINO",
     "team_nome": "CAMPANA IMBALLAGGI MORBIATO TRENTINO",
-    "punti": 84,
+    "punti": 87,
     "vittorie": 0,
     "p1": 0,
     "p2": 0,
     "p3": 3,
-    "pout": 9,
+    "pout": 10,
     "n_atleti": 4,
     "pos": 23
   },
@@ -324,6 +324,18 @@
     "pos": 27
   },
   {
+    "team_id": "GRAGNANO_SPORTING_CLUB",
+    "team_nome": "GRAGNANO SPORTING CLUB",
+    "punti": 60,
+    "vittorie": 0,
+    "p1": 0,
+    "p2": 0,
+    "p3": 1,
+    "pout": 5,
+    "n_atleti": 4,
+    "pos": 28
+  },
+  {
     "team_id": "UAE_TEAM_EMIRATES_GEN_Z",
     "team_nome": "UAE TEAM EMIRATES GEN-Z",
     "punti": 60,
@@ -333,18 +345,6 @@
     "p3": 0,
     "pout": 5,
     "n_atleti": 4,
-    "pos": 28
-  },
-  {
-    "team_id": "GRAGNANO_SPORTING_CLUB",
-    "team_nome": "GRAGNANO SPORTING CLUB",
-    "punti": 58,
-    "vittorie": 0,
-    "p1": 0,
-    "p2": 0,
-    "p3": 1,
-    "pout": 4,
-    "n_atleti": 3,
     "pos": 29
   },
   {
@@ -396,6 +396,18 @@
     "pos": 33
   },
   {
+    "team_id": "RIME_DRALI",
+    "team_nome": "RIME DRALI",
+    "punti": 47,
+    "vittorie": 0,
+    "p1": 0,
+    "p2": 0,
+    "p3": 1,
+    "pout": 8,
+    "n_atleti": 4,
+    "pos": 34
+  },
+  {
     "team_id": "ASD_VELO_CLUB_AVEZZANO_BIKE_LINEAORO",
     "team_nome": "ASD VELO CLUB AVEZZANO BIKE LINEAORO",
     "punti": 46,
@@ -405,7 +417,19 @@
     "p3": 0,
     "pout": 4,
     "n_atleti": 3,
-    "pos": 34
+    "pos": 35
+  },
+  {
+    "team_id": "GOODSHOP_YOYOGURT",
+    "team_nome": "GOODSHOP YOYOGURT",
+    "punti": 43,
+    "vittorie": 1,
+    "p1": 1,
+    "p2": 0,
+    "p3": 0,
+    "pout": 6,
+    "n_atleti": 3,
+    "pos": 36
   },
   {
     "team_id": "NEUTRAL_TEAM",
@@ -417,30 +441,6 @@
     "p3": 0,
     "pout": 1,
     "n_atleti": 2,
-    "pos": 35
-  },
-  {
-    "team_id": "RIME_DRALI",
-    "team_nome": "RIME DRALI",
-    "punti": 42,
-    "vittorie": 0,
-    "p1": 0,
-    "p2": 0,
-    "p3": 1,
-    "pout": 7,
-    "n_atleti": 4,
-    "pos": 36
-  },
-  {
-    "team_id": "GOODSHOP_YOYOGURT",
-    "team_nome": "GOODSHOP YOYOGURT",
-    "punti": 39,
-    "vittorie": 1,
-    "p1": 1,
-    "p2": 0,
-    "p3": 0,
-    "pout": 5,
-    "n_atleti": 3,
     "pos": 37
   },
   {
@@ -744,6 +744,18 @@
     "pos": 62
   },
   {
+    "team_id": "B_TEAM_CYCLING_PROJECT",
+    "team_nome": "B-TEAM CYCLING PROJECT",
+    "punti": 1,
+    "vittorie": 0,
+    "p1": 0,
+    "p2": 0,
+    "p3": 0,
+    "pout": 1,
+    "n_atleti": 1,
+    "pos": 63
+  },
+  {
     "team_id": "VPT_WHY_SPORT",
     "team_nome": "VPT WHY SPORT",
     "punti": 1,
@@ -753,6 +765,6 @@
     "p3": 0,
     "pout": 1,
     "n_atleti": 1,
-    "pos": 63
+    "pos": 64
   }
 ]
