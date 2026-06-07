@@ -5,12 +5,12 @@
     "nome": "CARLOTTA",
     "team_id": "OFF_ALBERTI_U_C_VAL_D_ILLASI",
     "team_nome": "OFF.ALBERTI U.C. VAL D'ILLASI",
-    "punti": 179,
+    "punti": 189,
     "vittorie": 9,
-    "gare": 14,
+    "gare": 15,
     "p1": 9,
     "p2": 2,
-    "p3": 1,
+    "p3": 2,
     "pout": 2,
     "pos": 1,
     "trend": 0
@@ -21,13 +21,13 @@
     "nome": "ALESSANDRA",
     "team_id": "SCUOLA_CICLISMO_VERSO_L_IRIDE",
     "team_nome": "SCUOLA CICLISMO VERSO L'IRIDE",
-    "punti": 152,
+    "punti": 158,
     "vittorie": 3,
-    "gare": 14,
+    "gare": 15,
     "p1": 3,
     "p2": 4,
     "p3": 3,
-    "pout": 4,
+    "pout": 5,
     "pos": 2,
     "trend": 0
   },
@@ -37,10 +37,10 @@
     "nome": "AURORA",
     "team_id": "S_C_CESANO_MADERNO",
     "team_nome": "S.C. CESANO MADERNO",
-    "punti": 132,
-    "vittorie": 4,
-    "gare": 13,
-    "p1": 4,
+    "punti": 147,
+    "vittorie": 5,
+    "gare": 14,
+    "p1": 5,
     "p2": 2,
     "p3": 3,
     "pout": 4,
@@ -53,11 +53,11 @@
     "nome": "MYA",
     "team_id": "HG_CYCLING_TEAM",
     "team_nome": "HG CYCLING TEAM",
-    "punti": 98,
+    "punti": 110,
     "vittorie": 3,
-    "gare": 8,
+    "gare": 9,
     "p1": 3,
-    "p2": 3,
+    "p2": 4,
     "p3": 0,
     "pout": 2,
     "pos": 4,
@@ -69,13 +69,13 @@
     "nome": "EMANUELA",
     "team_id": "HG_CYCLING_TEAM",
     "team_nome": "HG CYCLING TEAM",
-    "punti": 92,
+    "punti": 95,
     "vittorie": 2,
-    "gare": 10,
+    "gare": 11,
     "p1": 2,
     "p2": 0,
     "p3": 1,
-    "pout": 7,
+    "pout": 8,
     "pos": 5,
     "trend": 0
   },
@@ -101,15 +101,31 @@
     "nome": "GIORGIA",
     "team_id": "U_C_GIORGIONE",
     "team_nome": "U.C. GIORGIONE",
-    "punti": 79,
+    "punti": 84,
     "vittorie": 0,
-    "gare": 12,
+    "gare": 13,
     "p1": 0,
     "p2": 2,
     "p3": 2,
-    "pout": 8,
+    "pout": 9,
     "pos": 7,
     "trend": 0
+  },
+  {
+    "atleta_id": "SPINONI_MICHELLE",
+    "cognome": "SPINONI",
+    "nome": "MICHELLE",
+    "team_id": "S_C_CESANO_MADERNO",
+    "team_nome": "S.C. CESANO MADERNO",
+    "punti": 73,
+    "vittorie": 0,
+    "gare": 12,
+    "p1": 0,
+    "p2": 1,
+    "p3": 2,
+    "pout": 9,
+    "pos": 8,
+    "trend": 1
   },
   {
     "atleta_id": "DONANZAN_MARGHERITA",
@@ -124,24 +140,8 @@
     "p2": 1,
     "p3": 1,
     "pout": 5,
-    "pos": 8,
-    "trend": 0
-  },
-  {
-    "atleta_id": "SPINONI_MICHELLE",
-    "cognome": "SPINONI",
-    "nome": "MICHELLE",
-    "team_id": "S_C_CESANO_MADERNO",
-    "team_nome": "S.C. CESANO MADERNO",
-    "punti": 65,
-    "vittorie": 0,
-    "gare": 11,
-    "p1": 0,
-    "p2": 1,
-    "p3": 2,
-    "pout": 8,
     "pos": 9,
-    "trend": 0
+    "trend": -1
   },
   {
     "atleta_id": "CONSOLI_FRANCESCA",
@@ -432,6 +432,22 @@
     "trend": 0
   },
   {
+    "atleta_id": "DASOLI_EMMA",
+    "cognome": "DASOLI",
+    "nome": "EMMA",
+    "team_id": "SPORT_CLUB_BRESCIA_FLANDRES_LOVE",
+    "team_nome": "SPORT CLUB BRESCIA - FLANDRES LOVE",
+    "punti": 21,
+    "vittorie": 0,
+    "gare": 4,
+    "p1": 0,
+    "p2": 0,
+    "p3": 0,
+    "pout": 4,
+    "pos": 28,
+    "trend": 3
+  },
+  {
     "atleta_id": "BARONE_MAELA",
     "cognome": "BARONE",
     "nome": "MAELA",
@@ -444,8 +460,8 @@
     "p2": 0,
     "p3": 0,
     "pout": 5,
-    "pos": 28,
-    "trend": 0
+    "pos": 29,
+    "trend": -1
   },
   {
     "atleta_id": "SELLA_ANNA",
@@ -460,8 +476,8 @@
     "p2": 0,
     "p3": 0,
     "pout": 5,
-    "pos": 29,
-    "trend": 0
+    "pos": 30,
+    "trend": -1
   },
   {
     "atleta_id": "VETTORELLO_GAIA",
@@ -476,24 +492,8 @@
     "p2": 0,
     "p3": 0,
     "pout": 6,
-    "pos": 30,
-    "trend": 0
-  },
-  {
-    "atleta_id": "DASOLI_EMMA",
-    "cognome": "DASOLI",
-    "nome": "EMMA",
-    "team_id": "SPORT_CLUB_BRESCIA_FLANDRES_LOVE",
-    "team_nome": "SPORT CLUB BRESCIA - FLANDRES LOVE",
-    "punti": 19,
-    "vittorie": 0,
-    "gare": 3,
-    "p1": 0,
-    "p2": 0,
-    "p3": 0,
-    "pout": 3,
     "pos": 31,
-    "trend": 0
+    "trend": -1
   },
   {
     "atleta_id": "RAMPON_SOFIA",
@@ -736,6 +736,22 @@
     "trend": 0
   },
   {
+    "atleta_id": "BREDA_ILARIA",
+    "cognome": "BREDA",
+    "nome": "ILARIA",
+    "team_id": "ASS_NE_CICLISTICA_DILETT_VALVASONE",
+    "team_nome": "ASS.NE CICLISTICA DILETT. VALVASONE",
+    "punti": 4,
+    "vittorie": 0,
+    "gare": 1,
+    "p1": 0,
+    "p2": 0,
+    "p3": 0,
+    "pout": 1,
+    "pos": 47,
+    "trend": null
+  },
+  {
     "atleta_id": "MARTIN_SOFIA",
     "cognome": "MARTIN",
     "nome": "SOFIA",
@@ -748,8 +764,8 @@
     "p2": 0,
     "p3": 0,
     "pout": 1,
-    "pos": 47,
-    "trend": 0
+    "pos": 48,
+    "trend": -1
   },
   {
     "atleta_id": "PAGANELLI_ANITA",
@@ -764,8 +780,8 @@
     "p2": 0,
     "p3": 0,
     "pout": 1,
-    "pos": 48,
-    "trend": 0
+    "pos": 49,
+    "trend": -1
   },
   {
     "atleta_id": "FASSIH_YOUSRA",
@@ -780,8 +796,8 @@
     "p2": 0,
     "p3": 0,
     "pout": 1,
-    "pos": 49,
-    "trend": 0
+    "pos": 50,
+    "trend": -1
   },
   {
     "atleta_id": "BROLLO_VALENTINA",
@@ -796,8 +812,8 @@
     "p2": 0,
     "p3": 0,
     "pout": 1,
-    "pos": 50,
-    "trend": 0
+    "pos": 51,
+    "trend": -1
   },
   {
     "atleta_id": "DAOUKHA_FATIMA_ZAHRAA",
@@ -812,8 +828,8 @@
     "p2": 0,
     "p3": 0,
     "pout": 1,
-    "pos": 51,
-    "trend": 0
+    "pos": 52,
+    "trend": -1
   },
   {
     "atleta_id": "BORGATO_NOEMI",
@@ -828,8 +844,24 @@
     "p2": 0,
     "p3": 0,
     "pout": 1,
-    "pos": 52,
-    "trend": 0
+    "pos": 53,
+    "trend": -1
+  },
+  {
+    "atleta_id": "NEGRENTE_VANIA",
+    "cognome": "NEGRENTE",
+    "nome": "VANIA",
+    "team_id": "ASD_TEAM_PETRUCCI",
+    "team_nome": "ASD TEAM PETRUCCI",
+    "punti": 2,
+    "vittorie": 0,
+    "gare": 2,
+    "p1": 0,
+    "p2": 0,
+    "p3": 0,
+    "pout": 2,
+    "pos": 54,
+    "trend": 7
   },
   {
     "atleta_id": "ZAGO_ELISA",
@@ -844,8 +876,8 @@
     "p2": 0,
     "p3": 0,
     "pout": 1,
-    "pos": 53,
-    "trend": 0
+    "pos": 55,
+    "trend": -2
   },
   {
     "atleta_id": "BORSETTO_LINDA",
@@ -860,8 +892,8 @@
     "p2": 0,
     "p3": 0,
     "pout": 1,
-    "pos": 54,
-    "trend": 0
+    "pos": 56,
+    "trend": -2
   },
   {
     "atleta_id": "NESI_CARLOTTA",
@@ -876,8 +908,8 @@
     "p2": 0,
     "p3": 0,
     "pout": 1,
-    "pos": 55,
-    "trend": 0
+    "pos": 57,
+    "trend": -2
   },
   {
     "atleta_id": "POCHI_GAIA",
@@ -892,8 +924,8 @@
     "p2": 0,
     "p3": 0,
     "pout": 1,
-    "pos": 56,
-    "trend": 0
+    "pos": 58,
+    "trend": -2
   },
   {
     "atleta_id": "PARETTA_AURORA",
@@ -908,8 +940,8 @@
     "p2": 0,
     "p3": 0,
     "pout": 1,
-    "pos": 57,
-    "trend": 0
+    "pos": 59,
+    "trend": -2
   },
   {
     "atleta_id": "ROTA_MARTINA",
@@ -924,8 +956,8 @@
     "p2": 0,
     "p3": 0,
     "pout": 1,
-    "pos": 58,
-    "trend": 0
+    "pos": 60,
+    "trend": -2
   },
   {
     "atleta_id": "CECCHINI_CARLOTTA",
@@ -940,8 +972,8 @@
     "p2": 0,
     "p3": 0,
     "pout": 1,
-    "pos": 59,
-    "trend": 0
+    "pos": 61,
+    "trend": -2
   },
   {
     "atleta_id": "CAPOMOLLA_SABRINA",
@@ -956,24 +988,8 @@
     "p2": 0,
     "p3": 0,
     "pout": 1,
-    "pos": 60,
-    "trend": 0
-  },
-  {
-    "atleta_id": "NEGRENTE_VANIA",
-    "cognome": "NEGRENTE",
-    "nome": "VANIA",
-    "team_id": "ASD_TEAM_PETRUCCI",
-    "team_nome": "ASD TEAM PETRUCCI",
-    "punti": 1,
-    "vittorie": 0,
-    "gare": 1,
-    "p1": 0,
-    "p2": 0,
-    "p3": 0,
-    "pout": 1,
-    "pos": 61,
-    "trend": 0
+    "pos": 62,
+    "trend": -2
   },
   {
     "atleta_id": "MARTENSINI_MATILDE",
@@ -988,7 +1004,7 @@
     "p2": 0,
     "p3": 0,
     "pout": 1,
-    "pos": 62,
-    "trend": 0
+    "pos": 63,
+    "trend": -1
   }
 ]

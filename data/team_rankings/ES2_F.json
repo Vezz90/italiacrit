@@ -2,47 +2,47 @@
   {
     "team_id": "SCUOLA_CICLISMO_VERSO_L_IRIDE",
     "team_nome": "SCUOLA CICLISMO VERSO L'IRIDE",
-    "punti": 229,
+    "punti": 235,
     "vittorie": 4,
     "p1": 4,
     "p2": 4,
     "p3": 5,
-    "pout": 15,
+    "pout": 16,
     "n_atleti": 4,
     "pos": 1
   },
   {
-    "team_id": "HG_CYCLING_TEAM",
-    "team_nome": "HG CYCLING TEAM",
-    "punti": 204,
+    "team_id": "S_C_CESANO_MADERNO",
+    "team_nome": "S.C. CESANO MADERNO",
+    "punti": 220,
     "vittorie": 5,
     "p1": 5,
     "p2": 3,
-    "p3": 1,
+    "p3": 5,
     "pout": 13,
-    "n_atleti": 4,
+    "n_atleti": 2,
     "pos": 2
   },
   {
-    "team_id": "S_C_CESANO_MADERNO",
-    "team_nome": "S.C. CESANO MADERNO",
-    "punti": 197,
-    "vittorie": 4,
-    "p1": 4,
-    "p2": 3,
-    "p3": 5,
-    "pout": 12,
-    "n_atleti": 2,
+    "team_id": "HG_CYCLING_TEAM",
+    "team_nome": "HG CYCLING TEAM",
+    "punti": 219,
+    "vittorie": 5,
+    "p1": 5,
+    "p2": 4,
+    "p3": 1,
+    "pout": 14,
+    "n_atleti": 4,
     "pos": 3
   },
   {
     "team_id": "OFF_ALBERTI_U_C_VAL_D_ILLASI",
     "team_nome": "OFF.ALBERTI U.C. VAL D'ILLASI",
-    "punti": 179,
+    "punti": 189,
     "vittorie": 9,
     "p1": 9,
     "p2": 2,
-    "p3": 1,
+    "p3": 2,
     "pout": 2,
     "n_atleti": 1,
     "pos": 4
@@ -72,27 +72,27 @@
     "pos": 6
   },
   {
-    "team_id": "SPORT_CLUB_BRESCIA_FLANDRES_LOVE",
-    "team_nome": "SPORT CLUB BRESCIA - FLANDRES LOVE",
-    "punti": 81,
-    "vittorie": 0,
-    "p1": 0,
-    "p2": 2,
-    "p3": 1,
-    "pout": 11,
-    "n_atleti": 3,
-    "pos": 7
-  },
-  {
     "team_id": "U_C_GIORGIONE",
     "team_nome": "U.C. GIORGIONE",
-    "punti": 81,
+    "punti": 86,
     "vittorie": 0,
     "p1": 0,
     "p2": 2,
     "p3": 2,
-    "pout": 9,
+    "pout": 10,
     "n_atleti": 2,
+    "pos": 7
+  },
+  {
+    "team_id": "SPORT_CLUB_BRESCIA_FLANDRES_LOVE",
+    "team_nome": "SPORT CLUB BRESCIA - FLANDRES LOVE",
+    "punti": 83,
+    "vittorie": 0,
+    "p1": 0,
+    "p2": 2,
+    "p3": 1,
+    "pout": 12,
+    "n_atleti": 3,
     "pos": 8
   },
   {
@@ -254,12 +254,12 @@
   {
     "team_id": "ASD_TEAM_PETRUCCI",
     "team_nome": "ASD TEAM PETRUCCI",
-    "punti": 18,
+    "punti": 19,
     "vittorie": 0,
     "p1": 0,
     "p2": 0,
     "p3": 0,
-    "pout": 4,
+    "pout": 5,
     "n_atleti": 2,
     "pos": 22
   },
@@ -324,6 +324,18 @@
     "pos": 27
   },
   {
+    "team_id": "ASS_NE_CICLISTICA_DILETT_VALVASONE",
+    "team_nome": "ASS.NE CICLISTICA DILETT. VALVASONE",
+    "punti": 4,
+    "vittorie": 0,
+    "p1": 0,
+    "p2": 0,
+    "p3": 0,
+    "pout": 1,
+    "n_atleti": 1,
+    "pos": 28
+  },
+  {
     "team_id": "U_S_SCUOLA_CICLISMO_VO",
     "team_nome": "U.S.SCUOLA CICLISMO VO'",
     "punti": 3,
@@ -333,7 +345,7 @@
     "p3": 0,
     "pout": 1,
     "n_atleti": 1,
-    "pos": 28
+    "pos": 29
   },
   {
     "team_id": "GS_CAPANNORI",
@@ -345,7 +357,7 @@
     "p3": 0,
     "pout": 1,
     "n_atleti": 1,
-    "pos": 29
+    "pos": 30
   },
   {
     "team_id": "BIKERS_PETOSINO_SCUOLA_MTB",
@@ -357,7 +369,7 @@
     "p3": 0,
     "pout": 1,
     "n_atleti": 1,
-    "pos": 30
+    "pos": 31
   },
   {
     "team_id": "G_S_CICLI_FIORIN_CYCLING_TEAM_ASD",
@@ -369,7 +381,7 @@
     "p3": 0,
     "pout": 1,
     "n_atleti": 1,
-    "pos": 31
+    "pos": 32
   },
   {
     "team_id": "SAMABIKE",
@@ -381,6 +393,6 @@
     "p3": 0,
     "pout": 1,
     "n_atleti": 1,
-    "pos": 32
+    "pos": 33
   }
 ]
