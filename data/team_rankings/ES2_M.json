@@ -120,6 +120,18 @@
     "pos": 10
   },
   {
+    "team_id": "C_C_FORTI_E_VELOCI",
+    "team_nome": "C.C. FORTI E VELOCI",
+    "punti": 211,
+    "vittorie": 2,
+    "p1": 2,
+    "p2": 7,
+    "p3": 3,
+    "pout": 17,
+    "n_atleti": 6,
+    "pos": 11
+  },
+  {
     "team_id": "SAMABIKE",
     "team_nome": "SAMABIKE",
     "punti": 202,
@@ -129,18 +141,6 @@
     "p3": 3,
     "pout": 3,
     "n_atleti": 2,
-    "pos": 11
-  },
-  {
-    "team_id": "C_C_FORTI_E_VELOCI",
-    "team_nome": "C.C. FORTI E VELOCI",
-    "punti": 194,
-    "vittorie": 1,
-    "p1": 1,
-    "p2": 7,
-    "p3": 3,
-    "pout": 16,
-    "n_atleti": 6,
     "pos": 12
   },
   {
@@ -156,6 +156,18 @@
     "pos": 13
   },
   {
+    "team_id": "ASD_VELOCE_CLUB_BORGO",
+    "team_nome": "ASD VELOCE CLUB BORGO",
+    "punti": 167,
+    "vittorie": 2,
+    "p1": 2,
+    "p2": 1,
+    "p3": 6,
+    "pout": 14,
+    "n_atleti": 3,
+    "pos": 14
+  },
+  {
     "team_id": "VC_CREMONESE",
     "team_nome": "VC CREMONESE",
     "punti": 162,
@@ -165,7 +177,7 @@
     "p3": 3,
     "pout": 4,
     "n_atleti": 2,
-    "pos": 14
+    "pos": 15
   },
   {
     "team_id": "U_S_SCUOLA_CICLISMO_VO",
@@ -177,7 +189,7 @@
     "p3": 2,
     "pout": 12,
     "n_atleti": 3,
-    "pos": 15
+    "pos": 16
   },
   {
     "team_id": "S_C_MINCIO_CHIESE_A_S_D",
@@ -189,7 +201,7 @@
     "p3": 2,
     "pout": 12,
     "n_atleti": 4,
-    "pos": 16
+    "pos": 17
   },
   {
     "team_id": "VIGOR_CYCLING_TEAM",
@@ -201,7 +213,7 @@
     "p3": 5,
     "pout": 9,
     "n_atleti": 2,
-    "pos": 17
+    "pos": 18
   },
   {
     "team_id": "IND_FORNITURE_MORO_C_G_CAPITAL",
@@ -213,7 +225,7 @@
     "p3": 1,
     "pout": 10,
     "n_atleti": 4,
-    "pos": 18
+    "pos": 19
   },
   {
     "team_id": "G_S_PREALPINO_A_S_D",
@@ -225,18 +237,6 @@
     "p3": 0,
     "pout": 17,
     "n_atleti": 4,
-    "pos": 19
-  },
-  {
-    "team_id": "ASD_VELOCE_CLUB_BORGO",
-    "team_nome": "ASD VELOCE CLUB BORGO",
-    "punti": 146,
-    "vittorie": 2,
-    "p1": 2,
-    "p2": 1,
-    "p3": 5,
-    "pout": 12,
-    "n_atleti": 3,
     "pos": 20
   },
   {
@@ -252,6 +252,18 @@
     "pos": 21
   },
   {
+    "team_id": "TEAM_BOSCO_DI_ORSAGO",
+    "team_nome": "TEAM BOSCO DI ORSAGO",
+    "punti": 139,
+    "vittorie": 0,
+    "p1": 0,
+    "p2": 2,
+    "p3": 3,
+    "pout": 15,
+    "n_atleti": 4,
+    "pos": 22
+  },
+  {
     "team_id": "ASD_PEDALE_CASALESE_ARMOFER",
     "team_nome": "ASD PEDALE CASALESE ARMOFER",
     "punti": 122,
@@ -261,18 +273,6 @@
     "p3": 4,
     "pout": 18,
     "n_atleti": 2,
-    "pos": 22
-  },
-  {
-    "team_id": "TEAM_BOSCO_DI_ORSAGO",
-    "team_nome": "TEAM BOSCO DI ORSAGO",
-    "punti": 121,
-    "vittorie": 0,
-    "p1": 0,
-    "p2": 1,
-    "p3": 3,
-    "pout": 13,
-    "n_atleti": 4,
     "pos": 23
   },
   {
@@ -288,6 +288,18 @@
     "pos": 24
   },
   {
+    "team_id": "V_CYCLING_ARICI_CLAUDIA_PITON",
+    "team_nome": "V CYCLING - ARICI CLAUDIA - PITON",
+    "punti": 99,
+    "vittorie": 1,
+    "p1": 1,
+    "p2": 0,
+    "p3": 0,
+    "pout": 20,
+    "n_atleti": 3,
+    "pos": 25
+  },
+  {
     "team_id": "G_S_ALZATE_BRIANZA_SYSTEM_CAR",
     "team_nome": "G.S. ALZATE BRIANZA - SYSTEM CAR",
     "punti": 99,
@@ -296,18 +308,6 @@
     "p2": 2,
     "p3": 1,
     "pout": 15,
-    "n_atleti": 3,
-    "pos": 25
-  },
-  {
-    "team_id": "V_CYCLING_ARICI_CLAUDIA_PITON",
-    "team_nome": "V CYCLING - ARICI CLAUDIA - PITON",
-    "punti": 95,
-    "vittorie": 1,
-    "p1": 1,
-    "p2": 0,
-    "p3": 0,
-    "pout": 19,
     "n_atleti": 3,
     "pos": 26
   },
@@ -444,6 +444,18 @@
     "pos": 37
   },
   {
+    "team_id": "GOTTARDO_GIOCHI_CANEVA",
+    "team_nome": "GOTTARDO GIOCHI CANEVA",
+    "punti": 75,
+    "vittorie": 0,
+    "p1": 0,
+    "p2": 1,
+    "p3": 1,
+    "pout": 8,
+    "n_atleti": 2,
+    "pos": 38
+  },
+  {
     "team_id": "V_C_LUGANO",
     "team_nome": "V.C. LUGANO",
     "punti": 74,
@@ -453,7 +465,7 @@
     "p3": 1,
     "pout": 8,
     "n_atleti": 2,
-    "pos": 38
+    "pos": 39
   },
   {
     "team_id": "POL_ALBERGO_OLIVETO",
@@ -465,7 +477,7 @@
     "p3": 1,
     "pout": 2,
     "n_atleti": 1,
-    "pos": 39
+    "pos": 40
   },
   {
     "team_id": "GS_BERTI_MOBILI_BENASSI",
@@ -477,7 +489,7 @@
     "p3": 0,
     "pout": 11,
     "n_atleti": 2,
-    "pos": 40
+    "pos": 41
   },
   {
     "team_id": "NONSOLOBIKE",
@@ -489,18 +501,6 @@
     "p3": 0,
     "pout": 3,
     "n_atleti": 1,
-    "pos": 41
-  },
-  {
-    "team_id": "GOTTARDO_GIOCHI_CANEVA",
-    "team_nome": "GOTTARDO GIOCHI CANEVA",
-    "punti": 69,
-    "vittorie": 0,
-    "p1": 0,
-    "p2": 1,
-    "p3": 1,
-    "pout": 7,
-    "n_atleti": 2,
     "pos": 42
   },
   {
