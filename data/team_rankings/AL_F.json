@@ -2,14 +2,38 @@
   {
     "team_id": "SPORT_CLUB_BRESCIA_FLANDRES_LOVE",
     "team_nome": "SPORT CLUB BRESCIA - FLANDRES LOVE",
-    "punti": 213,
+    "punti": 223,
     "vittorie": 5,
     "p1": 5,
     "p2": 3,
-    "p3": 2,
+    "p3": 3,
     "pout": 14,
     "n_atleti": 5,
     "pos": 1
+  },
+  {
+    "team_id": "VANGI_LADIES_CYCLING_TEAM",
+    "team_nome": "VANGI LADIES CYCLING TEAM",
+    "punti": 205,
+    "vittorie": 4,
+    "p1": 4,
+    "p2": 5,
+    "p3": 1,
+    "pout": 17,
+    "n_atleti": 5,
+    "pos": 2
+  },
+  {
+    "team_id": "S_C_CESANO_MADERNO",
+    "team_nome": "S.C. CESANO MADERNO",
+    "punti": 195,
+    "vittorie": 4,
+    "p1": 4,
+    "p2": 3,
+    "p3": 2,
+    "pout": 19,
+    "n_atleti": 6,
+    "pos": 3
   },
   {
     "team_id": "U_C_GIORGIONE",
@@ -21,30 +45,6 @@
     "p3": 4,
     "pout": 9,
     "n_atleti": 5,
-    "pos": 2
-  },
-  {
-    "team_id": "VANGI_LADIES_CYCLING_TEAM",
-    "team_nome": "VANGI LADIES CYCLING TEAM",
-    "punti": 185,
-    "vittorie": 3,
-    "p1": 3,
-    "p2": 5,
-    "p3": 1,
-    "pout": 16,
-    "n_atleti": 5,
-    "pos": 3
-  },
-  {
-    "team_id": "S_C_CESANO_MADERNO",
-    "team_nome": "S.C. CESANO MADERNO",
-    "punti": 183,
-    "vittorie": 4,
-    "p1": 4,
-    "p2": 2,
-    "p3": 2,
-    "pout": 19,
-    "n_atleti": 6,
     "pos": 4
   },
   {
@@ -62,12 +62,12 @@
   {
     "team_id": "BIESSE_CARRERA_PREMAC",
     "team_nome": "BIESSE - CARRERA - PREMAC",
-    "punti": 151,
+    "punti": 159,
     "vittorie": 5,
     "p1": 5,
     "p2": 2,
     "p3": 1,
-    "pout": 5,
+    "pout": 6,
     "n_atleti": 1,
     "pos": 6
   },
@@ -122,24 +122,24 @@
   {
     "team_id": "JU_GREEN_A_S_D_GORLA_MINORE",
     "team_nome": "JU GREEN A.S.D. GORLA MINORE",
-    "punti": 62,
+    "punti": 65,
     "vittorie": 0,
     "p1": 0,
     "p2": 1,
     "p3": 1,
-    "pout": 9,
+    "pout": 10,
     "n_atleti": 2,
     "pos": 11
   },
   {
     "team_id": "GS_CICLI_FIORIN_ASD",
     "team_nome": "GS CICLI FIORIN ASD",
-    "punti": 58,
+    "punti": 59,
     "vittorie": 0,
     "p1": 0,
     "p2": 1,
     "p3": 1,
-    "pout": 14,
+    "pout": 15,
     "n_atleti": 6,
     "pos": 12
   },
@@ -170,14 +170,26 @@
   {
     "team_id": "ASS_NE_CICLISTICA_DILETT_VALVASONE",
     "team_nome": "ASS.NE CICLISTICA DILETT. VALVASONE",
-    "punti": 41,
+    "punti": 43,
     "vittorie": 0,
     "p1": 0,
     "p2": 1,
     "p3": 0,
-    "pout": 7,
+    "pout": 8,
     "n_atleti": 2,
     "pos": 15
+  },
+  {
+    "team_id": "A_R_MONEX_PRO_CYCLING_TEAM",
+    "team_nome": "A.R.MONEX PRO CYCLING TEAM",
+    "punti": 38,
+    "vittorie": 0,
+    "p1": 0,
+    "p2": 0,
+    "p3": 1,
+    "pout": 6,
+    "n_atleti": 4,
+    "pos": 16
   },
   {
     "team_id": "BICIFESTIVAL",
@@ -189,7 +201,7 @@
     "p3": 1,
     "pout": 6,
     "n_atleti": 3,
-    "pos": 16
+    "pos": 17
   },
   {
     "team_id": "ASD_FUSION_BIKE",
@@ -201,19 +213,19 @@
     "p3": 0,
     "pout": 5,
     "n_atleti": 2,
-    "pos": 17
+    "pos": 18
   },
   {
-    "team_id": "A_R_MONEX_PRO_CYCLING_TEAM",
-    "team_nome": "A.R.MONEX PRO CYCLING TEAM",
+    "team_id": "HG_CYCLING_TEAM",
+    "team_nome": "HG CYCLING TEAM",
     "punti": 32,
     "vittorie": 0,
     "p1": 0,
     "p2": 0,
     "p3": 1,
     "pout": 5,
-    "n_atleti": 3,
-    "pos": 18
+    "n_atleti": 2,
+    "pos": 19
   },
   {
     "team_id": "TEAM_CESARO_NERI_LUCCHINI",
@@ -225,7 +237,7 @@
     "p3": 1,
     "pout": 1,
     "n_atleti": 1,
-    "pos": 19
+    "pos": 20
   },
   {
     "team_id": "VELO_CLUB_SARROCH",
@@ -237,7 +249,7 @@
     "p3": 0,
     "pout": 0,
     "n_atleti": 1,
-    "pos": 20
+    "pos": 21
   },
   {
     "team_id": "BLU_TEAM",
@@ -249,18 +261,6 @@
     "p3": 0,
     "pout": 2,
     "n_atleti": 1,
-    "pos": 21
-  },
-  {
-    "team_id": "HG_CYCLING_TEAM",
-    "team_nome": "HG CYCLING TEAM",
-    "punti": 28,
-    "vittorie": 0,
-    "p1": 0,
-    "p2": 0,
-    "p3": 1,
-    "pout": 4,
-    "n_atleti": 2,
     "pos": 22
   },
   {

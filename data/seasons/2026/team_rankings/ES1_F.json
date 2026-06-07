@@ -1,26 +1,26 @@
 [
   {
+    "team_id": "GS_CAPANNORI",
+    "team_nome": "GS CAPANNORI",
+    "punti": 247,
+    "vittorie": 4,
+    "p1": 4,
+    "p2": 6,
+    "p3": 3,
+    "pout": 18,
+    "n_atleti": 5,
+    "pos": 1
+  },
+  {
     "team_id": "U_C_GIORGIONE",
     "team_nome": "U.C. GIORGIONE",
-    "punti": 234,
+    "punti": 239,
     "vittorie": 6,
     "p1": 6,
     "p2": 5,
     "p3": 3,
-    "pout": 14,
+    "pout": 15,
     "n_atleti": 6,
-    "pos": 1
-  },
-  {
-    "team_id": "GS_CAPANNORI",
-    "team_nome": "GS CAPANNORI",
-    "punti": 229,
-    "vittorie": 4,
-    "p1": 4,
-    "p2": 5,
-    "p3": 3,
-    "pout": 17,
-    "n_atleti": 5,
     "pos": 2
   },
   {
@@ -48,38 +48,38 @@
     "pos": 4
   },
   {
-    "team_id": "S_C_CESANO_MADERNO",
-    "team_nome": "S.C. CESANO MADERNO",
-    "punti": 142,
-    "vittorie": 0,
-    "p1": 0,
-    "p2": 2,
-    "p3": 3,
-    "pout": 23,
-    "n_atleti": 5,
-    "pos": 5
-  },
-  {
     "team_id": "SCUOLA_CICLISMO_VERSO_L_IRIDE",
     "team_nome": "SCUOLA CICLISMO VERSO L'IRIDE",
-    "punti": 138,
-    "vittorie": 5,
-    "p1": 5,
+    "punti": 153,
+    "vittorie": 6,
+    "p1": 6,
     "p2": 0,
     "p3": 1,
     "pout": 12,
     "n_atleti": 3,
+    "pos": 5
+  },
+  {
+    "team_id": "S_C_CESANO_MADERNO",
+    "team_nome": "S.C. CESANO MADERNO",
+    "punti": 143,
+    "vittorie": 0,
+    "p1": 0,
+    "p2": 2,
+    "p3": 3,
+    "pout": 24,
+    "n_atleti": 5,
     "pos": 6
   },
   {
     "team_id": "UC_DONORATICO",
     "team_nome": "UC DONORATICO",
-    "punti": 131,
+    "punti": 138,
     "vittorie": 1,
     "p1": 1,
     "p2": 3,
     "p3": 3,
-    "pout": 7,
+    "pout": 9,
     "n_atleti": 2,
     "pos": 7
   },
@@ -108,16 +108,28 @@
     "pos": 9
   },
   {
+    "team_id": "SPORT_CLUB_BRESCIA_FLANDRES_LOVE",
+    "team_nome": "SPORT CLUB BRESCIA - FLANDRES LOVE",
+    "punti": 67,
+    "vittorie": 0,
+    "p1": 0,
+    "p2": 1,
+    "p3": 1,
+    "pout": 7,
+    "n_atleti": 1,
+    "pos": 10
+  },
+  {
     "team_id": "MADIGNANESE_CICLISMO_A_S_D",
     "team_nome": "MADIGNANESE CICLISMO A.S.D",
-    "punti": 61,
+    "punti": 63,
     "vittorie": 1,
     "p1": 1,
     "p2": 1,
     "p3": 1,
-    "pout": 4,
+    "pout": 5,
     "n_atleti": 1,
-    "pos": 10
+    "pos": 11
   },
   {
     "team_id": "BICIFESTIVAL",
@@ -128,18 +140,6 @@
     "p2": 1,
     "p3": 1,
     "pout": 6,
-    "n_atleti": 1,
-    "pos": 11
-  },
-  {
-    "team_id": "SPORT_CLUB_BRESCIA_FLANDRES_LOVE",
-    "team_nome": "SPORT CLUB BRESCIA - FLANDRES LOVE",
-    "punti": 57,
-    "vittorie": 0,
-    "p1": 0,
-    "p2": 1,
-    "p3": 0,
-    "pout": 7,
     "n_atleti": 1,
     "pos": 12
   },
@@ -168,6 +168,18 @@
     "pos": 14
   },
   {
+    "team_id": "BUSTO_GAROLFO",
+    "team_nome": "BUSTO GAROLFO",
+    "punti": 37,
+    "vittorie": 0,
+    "p1": 0,
+    "p2": 0,
+    "p3": 0,
+    "pout": 8,
+    "n_atleti": 1,
+    "pos": 15
+  },
+  {
     "team_id": "G_C_SOSSANO_1975",
     "team_nome": "G.C. SOSSANO 1975",
     "punti": 31,
@@ -177,7 +189,7 @@
     "p3": 0,
     "pout": 7,
     "n_atleti": 1,
-    "pos": 15
+    "pos": 16
   },
   {
     "team_id": "SAMABIKE",
@@ -189,7 +201,7 @@
     "p3": 0,
     "pout": 0,
     "n_atleti": 1,
-    "pos": 16
+    "pos": 17
   },
   {
     "team_id": "KTM_ACADEMY_LE_MARMOTTE",
@@ -200,18 +212,6 @@
     "p2": 0,
     "p3": 1,
     "pout": 1,
-    "n_atleti": 1,
-    "pos": 17
-  },
-  {
-    "team_id": "BUSTO_GAROLFO",
-    "team_nome": "BUSTO GAROLFO",
-    "punti": 29,
-    "vittorie": 0,
-    "p1": 0,
-    "p2": 0,
-    "p3": 0,
-    "pout": 7,
     "n_atleti": 1,
     "pos": 18
   },
