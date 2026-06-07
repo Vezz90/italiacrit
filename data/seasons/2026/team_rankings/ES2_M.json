@@ -60,6 +60,18 @@
     "pos": 5
   },
   {
+    "team_id": "TEAM_NIBALI",
+    "team_nome": "TEAM NIBALI",
+    "punti": 216,
+    "vittorie": 2,
+    "p1": 2,
+    "p2": 4,
+    "p3": 5,
+    "pout": 18,
+    "n_atleti": 5,
+    "pos": 6
+  },
+  {
     "team_id": "MAZZANO_A_S_D",
     "team_nome": "MAZZANO A.S.D.",
     "punti": 215,
@@ -69,7 +81,7 @@
     "p3": 3,
     "pout": 12,
     "n_atleti": 4,
-    "pos": 6
+    "pos": 7
   },
   {
     "team_id": "UC_EMPOLESE",
@@ -81,7 +93,7 @@
     "p3": 5,
     "pout": 31,
     "n_atleti": 4,
-    "pos": 7
+    "pos": 8
   },
   {
     "team_id": "S_C_COTIGNOLESE",
@@ -93,7 +105,7 @@
     "p3": 1,
     "pout": 11,
     "n_atleti": 2,
-    "pos": 8
+    "pos": 9
   },
   {
     "team_id": "SAMABIKE",
@@ -105,7 +117,7 @@
     "p3": 3,
     "pout": 3,
     "n_atleti": 2,
-    "pos": 9
+    "pos": 10
   },
   {
     "team_id": "C_C_FORTI_E_VELOCI",
@@ -117,7 +129,7 @@
     "p3": 3,
     "pout": 16,
     "n_atleti": 6,
-    "pos": 10
+    "pos": 11
   },
   {
     "team_id": "ASD_GUBBIO_CICLISMO_MOCAIANA",
@@ -129,18 +141,6 @@
     "p3": 4,
     "pout": 11,
     "n_atleti": 3,
-    "pos": 11
-  },
-  {
-    "team_id": "TEAM_NIBALI",
-    "team_nome": "TEAM NIBALI",
-    "punti": 190,
-    "vittorie": 2,
-    "p1": 2,
-    "p2": 3,
-    "p3": 5,
-    "pout": 16,
-    "n_atleti": 5,
     "pos": 12
   },
   {
@@ -396,6 +396,18 @@
     "pos": 33
   },
   {
+    "team_id": "MULTICAR_GRUPPO_AMARU",
+    "team_nome": "MULTICAR GRUPPO AMARU'",
+    "punti": 82,
+    "vittorie": 3,
+    "p1": 3,
+    "p2": 2,
+    "p3": 0,
+    "pout": 2,
+    "n_atleti": 1,
+    "pos": 34
+  },
+  {
     "team_id": "S_C_VILLA_S_ANTONIO_CICLI_COCCI",
     "team_nome": "S.C. VILLA S.ANTONIO CICLI COCCI",
     "punti": 80,
@@ -405,7 +417,7 @@
     "p3": 2,
     "pout": 5,
     "n_atleti": 1,
-    "pos": 34
+    "pos": 35
   },
   {
     "team_id": "PEDALE_TOSCANO_PONTICINO",
@@ -417,7 +429,7 @@
     "p3": 0,
     "pout": 11,
     "n_atleti": 3,
-    "pos": 35
+    "pos": 36
   },
   {
     "team_id": "V_C_LUGANO",
@@ -429,7 +441,7 @@
     "p3": 1,
     "pout": 8,
     "n_atleti": 2,
-    "pos": 36
+    "pos": 37
   },
   {
     "team_id": "POL_ALBERGO_OLIVETO",
@@ -441,7 +453,7 @@
     "p3": 1,
     "pout": 2,
     "n_atleti": 1,
-    "pos": 37
+    "pos": 38
   },
   {
     "team_id": "GS_BERTI_MOBILI_BENASSI",
@@ -453,7 +465,7 @@
     "p3": 0,
     "pout": 11,
     "n_atleti": 2,
-    "pos": 38
+    "pos": 39
   },
   {
     "team_id": "NONSOLOBIKE",
@@ -465,7 +477,7 @@
     "p3": 0,
     "pout": 3,
     "n_atleti": 1,
-    "pos": 39
+    "pos": 40
   },
   {
     "team_id": "ASD_G_C_FAUSTO_COPPI",
@@ -477,7 +489,7 @@
     "p3": 0,
     "pout": 16,
     "n_atleti": 4,
-    "pos": 40
+    "pos": 41
   },
   {
     "team_id": "GOTTARDO_GIOCHI_CANEVA",
@@ -489,18 +501,6 @@
     "p3": 1,
     "pout": 7,
     "n_atleti": 2,
-    "pos": 41
-  },
-  {
-    "team_id": "MULTICAR_GRUPPO_AMARU",
-    "team_nome": "MULTICAR GRUPPO AMARU'",
-    "punti": 67,
-    "vittorie": 2,
-    "p1": 2,
-    "p2": 2,
-    "p3": 0,
-    "pout": 2,
-    "n_atleti": 1,
     "pos": 42
   },
   {
@@ -516,6 +516,18 @@
     "pos": 43
   },
   {
+    "team_id": "STAR_CYCLING_LAB",
+    "team_nome": "STAR CYCLING LAB",
+    "punti": 65,
+    "vittorie": 0,
+    "p1": 0,
+    "p2": 0,
+    "p3": 1,
+    "pout": 14,
+    "n_atleti": 4,
+    "pos": 44
+  },
+  {
     "team_id": "ASD_FUSION_BIKE",
     "team_nome": "ASD FUSION BIKE",
     "punti": 64,
@@ -525,7 +537,7 @@
     "p3": 1,
     "pout": 9,
     "n_atleti": 3,
-    "pos": 44
+    "pos": 45
   },
   {
     "team_id": "UC_GODIGESE_ABRA_IRIDE",
@@ -537,7 +549,7 @@
     "p3": 2,
     "pout": 8,
     "n_atleti": 2,
-    "pos": 45
+    "pos": 46
   },
   {
     "team_id": "G_C_SOSSANO_1975",
@@ -549,7 +561,7 @@
     "p3": 1,
     "pout": 10,
     "n_atleti": 3,
-    "pos": 46
+    "pos": 47
   },
   {
     "team_id": "A_S_D_POSTUMIA_73_D_L_CICLISMO",
@@ -561,7 +573,7 @@
     "p3": 0,
     "pout": 6,
     "n_atleti": 2,
-    "pos": 47
+    "pos": 48
   },
   {
     "team_id": "PEDALE_OSSOLANO",
@@ -573,7 +585,7 @@
     "p3": 2,
     "pout": 2,
     "n_atleti": 1,
-    "pos": 48
+    "pos": 49
   },
   {
     "team_id": "TEAM_GIUNIGOR_B_BIKE",
@@ -585,7 +597,7 @@
     "p3": 2,
     "pout": 6,
     "n_atleti": 1,
-    "pos": 49
+    "pos": 50
   },
   {
     "team_id": "UC_PIANO_DI_MOMMIO_SPEEDY_BIKE",
@@ -597,7 +609,7 @@
     "p3": 0,
     "pout": 10,
     "n_atleti": 3,
-    "pos": 50
+    "pos": 51
   },
   {
     "team_id": "I_CINGHIALI_EVO",
@@ -609,7 +621,7 @@
     "p3": 1,
     "pout": 6,
     "n_atleti": 2,
-    "pos": 51
+    "pos": 52
   },
   {
     "team_id": "SESTU_BIKE_A_S_D",
@@ -621,7 +633,7 @@
     "p3": 0,
     "pout": 15,
     "n_atleti": 3,
-    "pos": 52
+    "pos": 53
   },
   {
     "team_id": "UNIONE_CICLISTICA_MIRANO",
@@ -633,7 +645,7 @@
     "p3": 0,
     "pout": 8,
     "n_atleti": 1,
-    "pos": 53
+    "pos": 54
   },
   {
     "team_id": "PEDALE_SARZANESE",
@@ -645,7 +657,7 @@
     "p3": 1,
     "pout": 12,
     "n_atleti": 2,
-    "pos": 54
+    "pos": 55
   },
   {
     "team_id": "OXYGEN_EBIKE_STORE_BRESCIA",
@@ -657,18 +669,6 @@
     "p3": 1,
     "pout": 2,
     "n_atleti": 1,
-    "pos": 55
-  },
-  {
-    "team_id": "STAR_CYCLING_LAB",
-    "team_nome": "STAR CYCLING LAB",
-    "punti": 56,
-    "vittorie": 0,
-    "p1": 0,
-    "p2": 0,
-    "p3": 1,
-    "pout": 11,
-    "n_atleti": 3,
     "pos": 56
   },
   {
@@ -696,6 +696,18 @@
     "pos": 58
   },
   {
+    "team_id": "A_S_D_PROBIKE_ERICE",
+    "team_nome": "A.S.D. PROBIKE ERICE",
+    "punti": 51,
+    "vittorie": 0,
+    "p1": 0,
+    "p2": 1,
+    "p3": 1,
+    "pout": 7,
+    "n_atleti": 2,
+    "pos": 59
+  },
+  {
     "team_id": "SAN_GEO_A_S_D",
     "team_nome": "SAN GEO A.S.D.",
     "punti": 47,
@@ -705,7 +717,7 @@
     "p3": 0,
     "pout": 10,
     "n_atleti": 2,
-    "pos": 59
+    "pos": 60
   },
   {
     "team_id": "POL_MILLELUCI_CICLISMO",
@@ -716,18 +728,6 @@
     "p2": 1,
     "p3": 1,
     "pout": 7,
-    "n_atleti": 2,
-    "pos": 60
-  },
-  {
-    "team_id": "A_S_D_PROBIKE_ERICE",
-    "team_nome": "A.S.D. PROBIKE ERICE",
-    "punti": 46,
-    "vittorie": 0,
-    "p1": 0,
-    "p2": 1,
-    "p3": 1,
-    "pout": 6,
     "n_atleti": 2,
     "pos": 61
   },
@@ -780,6 +780,18 @@
     "pos": 65
   },
   {
+    "team_id": "ASD_LPM_GROUP",
+    "team_nome": "ASD LPM GROUP",
+    "punti": 36,
+    "vittorie": 0,
+    "p1": 0,
+    "p2": 0,
+    "p3": 2,
+    "pout": 3,
+    "n_atleti": 1,
+    "pos": 66
+  },
+  {
     "team_id": "UC_FOEN_MICTU",
     "team_nome": "UC FOEN MICTU",
     "punti": 35,
@@ -789,7 +801,7 @@
     "p3": 1,
     "pout": 3,
     "n_atleti": 2,
-    "pos": 66
+    "pos": 67
   },
   {
     "team_id": "CANNEDU_ITTIRI_A_MANCA_ASD",
@@ -801,7 +813,7 @@
     "p3": 0,
     "pout": 9,
     "n_atleti": 2,
-    "pos": 67
+    "pos": 68
   },
   {
     "team_id": "KD_SLOGA_1902_IDRIJA",
@@ -813,7 +825,7 @@
     "p3": 0,
     "pout": 3,
     "n_atleti": 1,
-    "pos": 68
+    "pos": 69
   },
   {
     "team_id": "U_C_PESSANO_A_S_D",
@@ -825,7 +837,7 @@
     "p3": 1,
     "pout": 6,
     "n_atleti": 3,
-    "pos": 69
+    "pos": 70
   },
   {
     "team_id": "S_C_OZIERESE",
@@ -837,7 +849,7 @@
     "p3": 0,
     "pout": 1,
     "n_atleti": 1,
-    "pos": 70
+    "pos": 71
   },
   {
     "team_id": "TEAM_SERIO",
@@ -849,7 +861,7 @@
     "p3": 1,
     "pout": 5,
     "n_atleti": 2,
-    "pos": 71
+    "pos": 72
   },
   {
     "team_id": "S_C_TERRANOVA_FANCELLO_CICLI",
@@ -861,7 +873,7 @@
     "p3": 0,
     "pout": 7,
     "n_atleti": 2,
-    "pos": 72
+    "pos": 73
   },
   {
     "team_id": "BANNIA_ASS_SPORT_DILETT",
@@ -873,7 +885,7 @@
     "p3": 0,
     "pout": 2,
     "n_atleti": 1,
-    "pos": 73
+    "pos": 74
   },
   {
     "team_id": "PEDALE_MARENESE_GINO_BARTALI",
@@ -885,7 +897,7 @@
     "p3": 0,
     "pout": 7,
     "n_atleti": 2,
-    "pos": 74
+    "pos": 75
   },
   {
     "team_id": "U_C_SANGIULIANESE",
@@ -897,7 +909,7 @@
     "p3": 0,
     "pout": 0,
     "n_atleti": 2,
-    "pos": 75
+    "pos": 76
   },
   {
     "team_id": "CAMB_KE",
@@ -909,7 +921,7 @@
     "p3": 0,
     "pout": 5,
     "n_atleti": 2,
-    "pos": 76
+    "pos": 77
   },
   {
     "team_id": "VELO_CLUB_SARROCH",
@@ -921,7 +933,7 @@
     "p3": 0,
     "pout": 4,
     "n_atleti": 1,
-    "pos": 77
+    "pos": 78
   },
   {
     "team_id": "FDB_SPORT_CLUB",
@@ -933,7 +945,7 @@
     "p3": 0,
     "pout": 3,
     "n_atleti": 1,
-    "pos": 78
+    "pos": 79
   },
   {
     "team_id": "ASS_CICLISTICA_RECANATI",
@@ -945,7 +957,7 @@
     "p3": 0,
     "pout": 7,
     "n_atleti": 3,
-    "pos": 79
+    "pos": 80
   },
   {
     "team_id": "VELO_CLUB_CATTOLICA",
@@ -957,7 +969,7 @@
     "p3": 0,
     "pout": 6,
     "n_atleti": 3,
-    "pos": 80
+    "pos": 81
   },
   {
     "team_id": "G_C_POSTIOMA",
@@ -967,18 +979,6 @@
     "p1": 0,
     "p2": 1,
     "p3": 0,
-    "pout": 3,
-    "n_atleti": 1,
-    "pos": 81
-  },
-  {
-    "team_id": "ASD_LPM_GROUP",
-    "team_nome": "ASD LPM GROUP",
-    "punti": 26,
-    "vittorie": 0,
-    "p1": 0,
-    "p2": 0,
-    "p3": 1,
     "pout": 3,
     "n_atleti": 1,
     "pos": 82
@@ -1332,6 +1332,18 @@
     "pos": 111
   },
   {
+    "team_id": "A_S_D_AF_ARREDAMENTI_TEAM_CICLING",
+    "team_nome": "A.S.D. AF ARREDAMENTI TEAM CICLING",
+    "punti": 9,
+    "vittorie": 0,
+    "p1": 0,
+    "p2": 0,
+    "p3": 0,
+    "pout": 4,
+    "n_atleti": 1,
+    "pos": 112
+  },
+  {
     "team_id": "S_C_FONTANAFREDDA",
     "team_nome": "S. C. FONTANAFREDDA",
     "punti": 9,
@@ -1341,7 +1353,7 @@
     "p3": 0,
     "pout": 3,
     "n_atleti": 2,
-    "pos": 112
+    "pos": 113
   },
   {
     "team_id": "G_S_TAVO_BONIN_BIKE",
@@ -1353,7 +1365,7 @@
     "p3": 0,
     "pout": 2,
     "n_atleti": 2,
-    "pos": 113
+    "pos": 114
   },
   {
     "team_id": "SC_POTENTIA_RINASCITA_ASD",
@@ -1365,7 +1377,7 @@
     "p3": 0,
     "pout": 2,
     "n_atleti": 2,
-    "pos": 114
+    "pos": 115
   },
   {
     "team_id": "G_S_CERNUSCHESE_TINO_GADDA_A_S_D",
@@ -1377,18 +1389,6 @@
     "p3": 0,
     "pout": 2,
     "n_atleti": 2,
-    "pos": 115
-  },
-  {
-    "team_id": "A_S_D_AF_ARREDAMENTI_TEAM_CICLING",
-    "team_nome": "A.S.D. AF ARREDAMENTI TEAM CICLING",
-    "punti": 8,
-    "vittorie": 0,
-    "p1": 0,
-    "p2": 0,
-    "p3": 0,
-    "pout": 3,
-    "n_atleti": 1,
     "pos": 116
   },
   {
