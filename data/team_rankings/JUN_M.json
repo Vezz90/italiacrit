@@ -36,6 +36,18 @@
     "pos": 3
   },
   {
+    "team_id": "TEAM_GUERRINI_SENAGHESE",
+    "team_nome": "TEAM GUERRINI SENAGHESE",
+    "punti": 446,
+    "vittorie": 6,
+    "p1": 6,
+    "p2": 4,
+    "p3": 6,
+    "pout": 27,
+    "n_atleti": 11,
+    "pos": 4
+  },
+  {
     "team_id": "NORDEST_PETRUCCI_ASSALI_STEFEN",
     "team_nome": "NORDEST PETRUCCI ASSALI STEFEN",
     "punti": 433,
@@ -45,29 +57,17 @@
     "p3": 1,
     "pout": 20,
     "n_atleti": 9,
-    "pos": 4
-  },
-  {
-    "team_id": "TEAM_GUERRINI_SENAGHESE",
-    "team_nome": "TEAM GUERRINI SENAGHESE",
-    "punti": 415,
-    "vittorie": 5,
-    "p1": 5,
-    "p2": 4,
-    "p3": 5,
-    "pout": 26,
-    "n_atleti": 11,
     "pos": 5
   },
   {
     "team_id": "CICLISTICA_TREVIGLIESE",
     "team_nome": "CICLISTICA TREVIGLIESE",
-    "punti": 382,
+    "punti": 400,
     "vittorie": 1,
     "p1": 1,
-    "p2": 3,
+    "p2": 4,
     "p3": 7,
-    "pout": 24,
+    "pout": 26,
     "n_atleti": 9,
     "pos": 6
   },
@@ -180,6 +180,18 @@
     "pos": 15
   },
   {
+    "team_id": "ETHICA_ZERO24_CYCLING_TEAM_ECOTEK",
+    "team_nome": "ETHICA ZERO24 CYCLING TEAM ECOTEK",
+    "punti": 210,
+    "vittorie": 4,
+    "p1": 4,
+    "p2": 4,
+    "p3": 1,
+    "pout": 7,
+    "n_atleti": 5,
+    "pos": 16
+  },
+  {
     "team_id": "A_R_MONEX_PRO_CYCLING_TEAM",
     "team_nome": "A.R.MONEX PRO CYCLING TEAM",
     "punti": 208,
@@ -189,18 +201,6 @@
     "p3": 2,
     "pout": 5,
     "n_atleti": 3,
-    "pos": 16
-  },
-  {
-    "team_id": "ETHICA_ZERO24_CYCLING_TEAM_ECOTEK",
-    "team_nome": "ETHICA ZERO24 CYCLING TEAM ECOTEK",
-    "punti": 202,
-    "vittorie": 4,
-    "p1": 4,
-    "p2": 4,
-    "p3": 1,
-    "pout": 6,
-    "n_atleti": 4,
     "pos": 17
   },
   {
@@ -362,12 +362,12 @@
   {
     "team_id": "G_S_MASSI_SUPERMERCATI_PONTIDA",
     "team_nome": "G.S. MASSI' SUPERMERCATI PONTIDA",
-    "punti": 78,
+    "punti": 79,
     "vittorie": 2,
     "p1": 2,
     "p2": 0,
     "p3": 1,
-    "pout": 3,
+    "pout": 4,
     "n_atleti": 3,
     "pos": 31
   },
@@ -408,6 +408,18 @@
     "pos": 34
   },
   {
+    "team_id": "S_C_ROMANESE_ASD",
+    "team_nome": "S.C. ROMANESE ASD",
+    "punti": 68,
+    "vittorie": 0,
+    "p1": 0,
+    "p2": 0,
+    "p3": 0,
+    "pout": 11,
+    "n_atleti": 2,
+    "pos": 35
+  },
+  {
     "team_id": "S_C_MONTEPONI_A_S_D",
     "team_nome": "S.C. MONTEPONI A.S.D.",
     "punti": 65,
@@ -417,18 +429,6 @@
     "p3": 0,
     "pout": 1,
     "n_atleti": 1,
-    "pos": 35
-  },
-  {
-    "team_id": "S_C_ROMANESE_ASD",
-    "team_nome": "S.C. ROMANESE ASD",
-    "punti": 63,
-    "vittorie": 0,
-    "p1": 0,
-    "p2": 0,
-    "p3": 0,
-    "pout": 10,
-    "n_atleti": 2,
     "pos": 36
   },
   {
@@ -756,6 +756,18 @@
     "pos": 63
   },
   {
+    "team_id": "S_C_CENE_A_S_D",
+    "team_nome": "S. C. CENE A. S. D.",
+    "punti": 30,
+    "vittorie": 0,
+    "p1": 0,
+    "p2": 1,
+    "p3": 1,
+    "pout": 2,
+    "n_atleti": 3,
+    "pos": 64
+  },
+  {
     "team_id": "BIESSE_CARRERA_PREMAC",
     "team_nome": "BIESSE - CARRERA - PREMAC",
     "punti": 30,
@@ -765,7 +777,7 @@
     "p3": 0,
     "pout": 5,
     "n_atleti": 3,
-    "pos": 64
+    "pos": 65
   },
   {
     "team_id": "STAR_CYCLING_LAB",
@@ -777,7 +789,7 @@
     "p3": 0,
     "pout": 7,
     "n_atleti": 3,
-    "pos": 65
+    "pos": 66
   },
   {
     "team_id": "MULTICAR_GRUPPO_AMARU",
@@ -789,18 +801,6 @@
     "p3": 1,
     "pout": 1,
     "n_atleti": 2,
-    "pos": 66
-  },
-  {
-    "team_id": "S_C_CENE_A_S_D",
-    "team_nome": "S. C. CENE A. S. D.",
-    "punti": 27,
-    "vittorie": 0,
-    "p1": 0,
-    "p2": 1,
-    "p3": 1,
-    "pout": 1,
-    "n_atleti": 3,
     "pos": 67
   },
   {
