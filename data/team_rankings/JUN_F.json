@@ -2,9 +2,9 @@
   {
     "team_id": "BIESSE_CARRERA_PREMAC",
     "team_nome": "BIESSE - CARRERA - PREMAC",
-    "punti": 349,
-    "vittorie": 5,
-    "p1": 5,
+    "punti": 394,
+    "vittorie": 6,
+    "p1": 6,
     "p2": 5,
     "p3": 5,
     "pout": 26,
@@ -48,63 +48,63 @@
     "pos": 4
   },
   {
+    "team_id": "BRESCIA_F_MAGNI_FLANDRES_LOVE",
+    "team_nome": "BRESCIA - F. MAGNI - FLANDRES LOVE",
+    "punti": 158,
+    "vittorie": 0,
+    "p1": 0,
+    "p2": 2,
+    "p3": 5,
+    "pout": 9,
+    "n_atleti": 6,
+    "pos": 5
+  },
+  {
     "team_id": "PETRUCCI_GAUSS_CYCLING_TEAM",
     "team_nome": "PETRUCCI GAUSS CYCLING TEAM",
-    "punti": 146,
+    "punti": 155,
     "vittorie": 3,
     "p1": 3,
     "p2": 1,
     "p3": 2,
-    "pout": 11,
+    "pout": 12,
     "n_atleti": 7,
-    "pos": 5
-  },
-  {
-    "team_id": "BRESCIA_F_MAGNI_FLANDRES_LOVE",
-    "team_nome": "BRESCIA - F. MAGNI - FLANDRES LOVE",
-    "punti": 128,
-    "vittorie": 0,
-    "p1": 0,
-    "p2": 2,
-    "p3": 4,
-    "pout": 9,
-    "n_atleti": 6,
     "pos": 6
-  },
-  {
-    "team_id": "TEAM_WILIER_BREGANZE",
-    "team_nome": "TEAM WILIER BREGANZE",
-    "punti": 88,
-    "vittorie": 1,
-    "p1": 1,
-    "p2": 1,
-    "p3": 1,
-    "pout": 15,
-    "n_atleti": 6,
-    "pos": 7
   },
   {
     "team_id": "U_C_CONSCIO_PEDALE_DEL_SILE",
     "team_nome": "U.C.CONSCIO PEDALE DEL SILE",
-    "punti": 82,
+    "punti": 127,
     "vittorie": 2,
     "p1": 2,
     "p2": 0,
     "p3": 0,
-    "pout": 12,
-    "n_atleti": 3,
-    "pos": 8
+    "pout": 15,
+    "n_atleti": 4,
+    "pos": 7
   },
   {
     "team_id": "A_R_MONEX_PRO_CYCLING_TEAM",
     "team_nome": "A.R.MONEX PRO CYCLING TEAM",
-    "punti": 75,
+    "punti": 123,
     "vittorie": 1,
     "p1": 1,
-    "p2": 0,
+    "p2": 1,
     "p3": 1,
-    "pout": 5,
-    "n_atleti": 4,
+    "pout": 6,
+    "n_atleti": 5,
+    "pos": 8
+  },
+  {
+    "team_id": "TEAM_WILIER_BREGANZE",
+    "team_nome": "TEAM WILIER BREGANZE",
+    "punti": 106,
+    "vittorie": 1,
+    "p1": 1,
+    "p2": 1,
+    "p3": 1,
+    "pout": 16,
+    "n_atleti": 6,
     "pos": 9
   },
   {
@@ -228,6 +228,18 @@
     "pos": 19
   },
   {
+    "team_id": "S_C_V_BIKE_CADORAGO_ASD",
+    "team_nome": "S.C.V. BIKE CADORAGO ASD",
+    "punti": 3,
+    "vittorie": 0,
+    "p1": 0,
+    "p2": 0,
+    "p3": 0,
+    "pout": 1,
+    "n_atleti": 1,
+    "pos": 20
+  },
+  {
     "team_id": "GIFU_DAIICHI_HIGH_SCHOOL",
     "team_nome": "GIFU DAIICHI HIGH SCHOOL",
     "punti": 3,
@@ -237,7 +249,7 @@
     "p3": 0,
     "pout": 1,
     "n_atleti": 1,
-    "pos": 20
+    "pos": 21
   },
   {
     "team_id": "FRANCIA",
@@ -249,6 +261,6 @@
     "p3": 0,
     "pout": 1,
     "n_atleti": 1,
-    "pos": 21
+    "pos": 22
   }
 ]

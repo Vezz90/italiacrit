@@ -1,5 +1,17 @@
 [
   {
+    "team_id": "VANGI_LADIES_CYCLING_TEAM",
+    "team_nome": "VANGI LADIES CYCLING TEAM",
+    "punti": 224,
+    "vittorie": 5,
+    "p1": 5,
+    "p2": 5,
+    "p3": 1,
+    "pout": 18,
+    "n_atleti": 6,
+    "pos": 1
+  },
+  {
     "team_id": "SPORT_CLUB_BRESCIA_FLANDRES_LOVE",
     "team_nome": "SPORT CLUB BRESCIA - FLANDRES LOVE",
     "punti": 223,
@@ -8,18 +20,6 @@
     "p2": 3,
     "p3": 3,
     "pout": 14,
-    "n_atleti": 5,
-    "pos": 1
-  },
-  {
-    "team_id": "VANGI_LADIES_CYCLING_TEAM",
-    "team_nome": "VANGI LADIES CYCLING TEAM",
-    "punti": 205,
-    "vittorie": 4,
-    "p1": 4,
-    "p2": 5,
-    "p3": 1,
-    "pout": 17,
     "n_atleti": 5,
     "pos": 2
   },
@@ -74,13 +74,13 @@
   {
     "team_id": "POL_FIUMICINESE_FA_I_T_ADRIATICA",
     "team_nome": "POL. FIUMICINESE FA.I.T. ADRIATICA",
-    "punti": 128,
+    "punti": 142,
     "vittorie": 0,
     "p1": 0,
     "p2": 1,
     "p3": 3,
-    "pout": 9,
-    "n_atleti": 2,
+    "pout": 12,
+    "n_atleti": 5,
     "pos": 7
   },
   {
@@ -156,6 +156,30 @@
     "pos": 13
   },
   {
+    "team_id": "BICIFESTIVAL",
+    "team_nome": "BICIFESTIVAL",
+    "punti": 51,
+    "vittorie": 0,
+    "p1": 0,
+    "p2": 1,
+    "p3": 1,
+    "pout": 7,
+    "n_atleti": 4,
+    "pos": 14
+  },
+  {
+    "team_id": "HG_CYCLING_TEAM",
+    "team_nome": "HG CYCLING TEAM",
+    "punti": 51,
+    "vittorie": 0,
+    "p1": 0,
+    "p2": 0,
+    "p3": 2,
+    "pout": 7,
+    "n_atleti": 4,
+    "pos": 15
+  },
+  {
     "team_id": "A_S_D_AVIS_BIKE_RUVO",
     "team_nome": "A.S.D. AVIS BIKE RUVO",
     "punti": 45,
@@ -165,7 +189,7 @@
     "p3": 1,
     "pout": 1,
     "n_atleti": 3,
-    "pos": 14
+    "pos": 16
   },
   {
     "team_id": "ASS_NE_CICLISTICA_DILETT_VALVASONE",
@@ -177,7 +201,7 @@
     "p3": 0,
     "pout": 8,
     "n_atleti": 2,
-    "pos": 15
+    "pos": 17
   },
   {
     "team_id": "A_R_MONEX_PRO_CYCLING_TEAM",
@@ -189,19 +213,7 @@
     "p3": 1,
     "pout": 6,
     "n_atleti": 4,
-    "pos": 16
-  },
-  {
-    "team_id": "BICIFESTIVAL",
-    "team_nome": "BICIFESTIVAL",
-    "punti": 37,
-    "vittorie": 0,
-    "p1": 0,
-    "p2": 0,
-    "p3": 1,
-    "pout": 6,
-    "n_atleti": 3,
-    "pos": 17
+    "pos": 18
   },
   {
     "team_id": "ASD_FUSION_BIKE",
@@ -211,18 +223,6 @@
     "p1": 0,
     "p2": 0,
     "p3": 0,
-    "pout": 5,
-    "n_atleti": 2,
-    "pos": 18
-  },
-  {
-    "team_id": "HG_CYCLING_TEAM",
-    "team_nome": "HG CYCLING TEAM",
-    "punti": 32,
-    "vittorie": 0,
-    "p1": 0,
-    "p2": 0,
-    "p3": 1,
     "pout": 5,
     "n_atleti": 2,
     "pos": 19
