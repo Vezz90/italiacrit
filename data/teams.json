@@ -4223,7 +4223,7 @@
         "tipo": "internazionale",
         "regione": "JUNIORES",
         "km": "15.000",
-        "media": ""
+        "media": "44.000"
       },
       {
         "gara_id": "54_COPPA_DELLA_PACE_51_TROFEO_FRATELLI_ANELLI_UNDER23_2026-06-07_ELI_M",
@@ -5632,10 +5632,11 @@
   "A_R_MONEX_PRO_CYCLING_TEAM": {
     "id": "A_R_MONEX_PRO_CYCLING_TEAM",
     "nome": "A.R.MONEX PRO CYCLING TEAM",
-    "punti_totali": 615,
+    "punti_totali": 621,
     "atleti": [
       "ALHACH_SJOGREN_GAETTANA",
       "GARCIA_BARENO_DOMINGUEZ_NABYENKA",
+      "ZAMUDIO_GARCIA_MAYTE",
       "PARADES_SANCHEZ_ANDREA",
       "SEGURA_MEDINA_IVAN",
       "PROBERT_GONZALES_PAUL",
@@ -5648,7 +5649,6 @@
       "DAVILA_JIMENEZ_SALVADOR",
       "PAREDES_SANCHEZ_ANDREA",
       "CALVILLO_REYES_ANGEL",
-      "ZAMUDIO_GARCIA_MAYTE",
       "PENEDA_SOTO_NATALIA",
       "MORALES_NAVARRO_ANA_REGINA",
       "CRUZ_SALGADO_FERNANDA_GUADALUPE"
@@ -5667,7 +5667,7 @@
         "tipo": "internazionale",
         "regione": "JUNIORES",
         "km": "15.000",
-        "media": ""
+        "media": "44.000"
       },
       {
         "gara_id": "INTERNAZIONALE_PORTO_SAN_GIORGIO_MEMORIAL_M_DE_ANGELIS_CRONOMETRO_2026-06-12_JUN_F",
@@ -5682,7 +5682,22 @@
         "tipo": "internazionale",
         "regione": "JUNIORES",
         "km": "15.000",
-        "media": ""
+        "media": "44.000"
+      },
+      {
+        "gara_id": "INTERNAZIONALE_PORTO_SAN_GIORGIO_MEMORIAL_M_DE_ANGELIS_CRONOMETRO_2026-06-12_ELI_F",
+        "nome_gara": "INTERNAZIONALE PORTO SAN GIORGIO MEMORIAL M DE ANGELIS CRONOMETRO",
+        "data": "2026-06-12",
+        "atleta_id": "ZAMUDIO_GARCIA_MAYTE",
+        "atleta_cognome": "ZAMUDIO GARCIA",
+        "atleta_nome": "MAYTE",
+        "posizione": 9,
+        "punti_effettivi": 6,
+        "moltiplicatore": 3,
+        "tipo": "internazionale",
+        "regione": "UNDER",
+        "km": "15.000",
+        "media": "45.000"
       },
       {
         "gara_id": "42_GRAN_PREMIO_CICLISTI_DI_ARCADE_2026-06-07_JUN_F",
@@ -6467,10 +6482,10 @@
     ],
     "punti_per_cat": {
       "JUN_F": 123,
+      "ELI_F": 12,
       "AL_F": 38,
       "AL_M": 240,
-      "JUN_M": 208,
-      "ELI_F": 6
+      "JUN_M": 208
     }
   },
   "BRESCIA_F_MAGNI_FLANDRES_LOVE": {
@@ -6500,7 +6515,7 @@
         "tipo": "internazionale",
         "regione": "JUNIORES",
         "km": "15.000",
-        "media": ""
+        "media": "44.000"
       },
       {
         "gara_id": "SECONDO_TROFEO_BIKE_SERVICE_CRONOMETRO_2026-06-06_JUN_F",
@@ -6779,7 +6794,7 @@
         "tipo": "internazionale",
         "regione": "JUNIORES",
         "km": "15.000",
-        "media": ""
+        "media": "44.000"
       },
       {
         "gara_id": "INTERNAZIONALE_PORTO_SAN_GIORGIO_MEMORIAL_M_DE_ANGELIS_CRONOMETRO_2026-06-12_JUN_F",
@@ -6794,7 +6809,7 @@
         "tipo": "internazionale",
         "regione": "JUNIORES",
         "km": "15.000",
-        "media": ""
+        "media": "44.000"
       },
       {
         "gara_id": "INTERNAZIONALE_PORTO_SAN_GIORGIO_MEMORIAL_M_DE_ANGELIS_CRONOMETRO_2026-06-12_JUN_F",
@@ -6809,7 +6824,7 @@
         "tipo": "internazionale",
         "regione": "JUNIORES",
         "km": "15.000",
-        "media": ""
+        "media": "44.000"
       },
       {
         "gara_id": "42_GRAN_PREMIO_CICLISTI_DI_ARCADE_2026-06-07_JUN_F",
@@ -7612,7 +7627,7 @@
         "tipo": "internazionale",
         "regione": "JUNIORES",
         "km": "15.000",
-        "media": ""
+        "media": "44.000"
       },
       {
         "gara_id": "42_GRAN_PREMIO_CICLISTI_DI_ARCADE_2026-06-07_ELI_F",
@@ -8114,7 +8129,7 @@
         "tipo": "internazionale",
         "regione": "JUNIORES",
         "km": "15.000",
-        "media": ""
+        "media": "44.000"
       },
       {
         "gara_id": "SECONDO_TROFEO_BIKE_SERVICE_CRONOMETRO_2026-06-06_JUN_F",
@@ -8473,7 +8488,7 @@
         "tipo": "internazionale",
         "regione": "JUNIORES",
         "km": "15.000",
-        "media": ""
+        "media": "44.000"
       }
     ],
     "punti_per_cat": {
@@ -11185,6 +11200,365 @@
       "ES1_F": 219,
       "ES1_M": 13,
       "ES2_M": 15
+    }
+  },
+  "WCC_UCI_WORLD_CYCLING_CENTRE": {
+    "id": "WCC_UCI_WORLD_CYCLING_CENTRE",
+    "nome": "WCC - UCI WORLD CYCLING CENTRE",
+    "punti_totali": 122,
+    "atleti": [
+      "REVELO_NATALIE",
+      "MWAMIKAZI_JAZILLA",
+      "KOLYZHUK_ANNA",
+      "MONSALVEZ_FLORENCIA"
+    ],
+    "risultati": [
+      {
+        "gara_id": "INTERNAZIONALE_PORTO_SAN_GIORGIO_MEMORIAL_M_DE_ANGELIS_CRONOMETRO_2026-06-12_ELI_F",
+        "nome_gara": "INTERNAZIONALE PORTO SAN GIORGIO MEMORIAL M DE ANGELIS CRONOMETRO",
+        "data": "2026-06-12",
+        "atleta_id": "REVELO_NATALIE",
+        "atleta_cognome": "REVELO",
+        "atleta_nome": "NATALIE",
+        "posizione": 1,
+        "punti_effettivi": 45,
+        "moltiplicatore": 3,
+        "tipo": "internazionale",
+        "regione": "UNDER",
+        "km": "15.000",
+        "media": "45.000"
+      },
+      {
+        "gara_id": "INTERNAZIONALE_PORTO_SAN_GIORGIO_MEMORIAL_M_DE_ANGELIS_CRONOMETRO_2026-06-12_ELI_F",
+        "nome_gara": "INTERNAZIONALE PORTO SAN GIORGIO MEMORIAL M DE ANGELIS CRONOMETRO",
+        "data": "2026-06-12",
+        "atleta_id": "MWAMIKAZI_JAZILLA",
+        "atleta_cognome": "MWAMIKAZI",
+        "atleta_nome": "JAZILLA",
+        "posizione": 2,
+        "punti_effettivi": 36,
+        "moltiplicatore": 3,
+        "tipo": "internazionale",
+        "regione": "UNDER",
+        "km": "15.000",
+        "media": "45.000"
+      },
+      {
+        "gara_id": "INTERNAZIONALE_PORTO_SAN_GIORGIO_MEMORIAL_M_DE_ANGELIS_CRONOMETRO_2026-06-12_ELI_F",
+        "nome_gara": "INTERNAZIONALE PORTO SAN GIORGIO MEMORIAL M DE ANGELIS CRONOMETRO",
+        "data": "2026-06-12",
+        "atleta_id": "KOLYZHUK_ANNA",
+        "atleta_cognome": "KOLYZHUK",
+        "atleta_nome": "ANNA",
+        "posizione": 4,
+        "punti_effettivi": 24,
+        "moltiplicatore": 3,
+        "tipo": "internazionale",
+        "regione": "UNDER",
+        "km": "15.000",
+        "media": "45.000"
+      },
+      {
+        "gara_id": "GIRO_DELLE_MARCHE_IN_ROSA_2026-05-10_ELI_F",
+        "nome_gara": "GIRO DELLE MARCHE IN ROSA",
+        "data": "2026-05-10",
+        "atleta_id": "MONSALVEZ_FLORENCIA",
+        "atleta_cognome": "MONSALVEZ",
+        "atleta_nome": "FLORENCIA",
+        "posizione": 2,
+        "punti_effettivi": 12,
+        "moltiplicatore": 1,
+        "tipo": "regionale",
+        "regione": "MARCHE",
+        "km": "100.000",
+        "media": "35.294"
+      },
+      {
+        "gara_id": "GIRO_DELLE_MARCHE_IN_ROSA_2026-05-09_ELI_F",
+        "nome_gara": "GIRO DELLE MARCHE IN ROSA",
+        "data": "2026-05-09",
+        "atleta_id": "MONSALVEZ_FLORENCIA",
+        "atleta_cognome": "MONSALVEZ",
+        "atleta_nome": "FLORENCIA",
+        "posizione": 6,
+        "punti_effettivi": 5,
+        "moltiplicatore": 1,
+        "tipo": "regionale",
+        "regione": "MARCHE",
+        "km": "90.000",
+        "media": "36.986"
+      }
+    ],
+    "punti_per_cat": {
+      "ELI_F": 122
+    }
+  },
+  "HORIZONS_CYCLING_CLUB": {
+    "id": "HORIZONS_CYCLING_CLUB",
+    "nome": "HORIZONS CYCLING CLUB",
+    "punti_totali": 116,
+    "atleti": [
+      "DE_GRANDIS_MICHELA",
+      "VALLOTTO_GIULIA",
+      "ONGARATO_LIVIELLE",
+      "PIGOLOTTI_REBEKKA"
+    ],
+    "risultati": [
+      {
+        "gara_id": "INTERNAZIONALE_PORTO_SAN_GIORGIO_MEMORIAL_M_DE_ANGELIS_CRONOMETRO_2026-06-12_ELI_F",
+        "nome_gara": "INTERNAZIONALE PORTO SAN GIORGIO MEMORIAL M DE ANGELIS CRONOMETRO",
+        "data": "2026-06-12",
+        "atleta_id": "DE_GRANDIS_MICHELA",
+        "atleta_cognome": "DE",
+        "atleta_nome": "GRANDIS MICHELA",
+        "posizione": 3,
+        "punti_effettivi": 30,
+        "moltiplicatore": 3,
+        "tipo": "internazionale",
+        "regione": "UNDER",
+        "km": "15.000",
+        "media": "45.000"
+      },
+      {
+        "gara_id": "INTERNAZIONALE_PORTO_SAN_GIORGIO_MEMORIAL_M_DE_ANGELIS_CRONOMETRO_2026-06-12_ELI_F",
+        "nome_gara": "INTERNAZIONALE PORTO SAN GIORGIO MEMORIAL M DE ANGELIS CRONOMETRO",
+        "data": "2026-06-12",
+        "atleta_id": "VALLOTTO_GIULIA",
+        "atleta_cognome": "VALLOTTO",
+        "atleta_nome": "GIULIA",
+        "posizione": 6,
+        "punti_effettivi": 15,
+        "moltiplicatore": 3,
+        "tipo": "internazionale",
+        "regione": "UNDER",
+        "km": "15.000",
+        "media": "45.000"
+      },
+      {
+        "gara_id": "INTERNAZIONALE_PORTO_SAN_GIORGIO_MEMORIAL_M_DE_ANGELIS_CRONOMETRO_2026-06-12_ELI_F",
+        "nome_gara": "INTERNAZIONALE PORTO SAN GIORGIO MEMORIAL M DE ANGELIS CRONOMETRO",
+        "data": "2026-06-12",
+        "atleta_id": "ONGARATO_LIVIELLE",
+        "atleta_cognome": "ONGARATO",
+        "atleta_nome": "LIVIELLE",
+        "posizione": 7,
+        "punti_effettivi": 12,
+        "moltiplicatore": 3,
+        "tipo": "internazionale",
+        "regione": "UNDER",
+        "km": "15.000",
+        "media": "45.000"
+      },
+      {
+        "gara_id": "INTERNAZIONALE_PORTO_SAN_GIORGIO_MEMORIAL_M_DE_ANGELIS_CRONOMETRO_2026-06-12_ELI_F",
+        "nome_gara": "INTERNAZIONALE PORTO SAN GIORGIO MEMORIAL M DE ANGELIS CRONOMETRO",
+        "data": "2026-06-12",
+        "atleta_id": "PIGOLOTTI_REBEKKA",
+        "atleta_cognome": "PIGOLOTTI",
+        "atleta_nome": "REBEKKA",
+        "posizione": 8,
+        "punti_effettivi": 9,
+        "moltiplicatore": 3,
+        "tipo": "internazionale",
+        "regione": "UNDER",
+        "km": "15.000",
+        "media": "45.000"
+      },
+      {
+        "gara_id": "42_GRAN_PREMIO_CICLISTI_DI_ARCADE_2026-06-07_ELI_F",
+        "nome_gara": "42 GRAN PREMIO CICLISTI DI ARCADE",
+        "data": "2026-06-07",
+        "atleta_id": "DE_GRANDIS_MICHELA",
+        "atleta_cognome": "DE",
+        "atleta_nome": "GRANDIS MICHELA",
+        "posizione": 2,
+        "punti_effettivi": 12,
+        "moltiplicatore": 1,
+        "tipo": "regionale",
+        "regione": "VENETO",
+        "km": "109.100",
+        "media": "39.003"
+      },
+      {
+        "gara_id": "42_GRAN_PREMIO_CICLISTI_DI_ARCADE_2026-06-07_ELI_F",
+        "nome_gara": "42 GRAN PREMIO CICLISTI DI ARCADE",
+        "data": "2026-06-07",
+        "atleta_id": "PIGOLOTTI_REBEKKA",
+        "atleta_cognome": "PIGOLOTTI",
+        "atleta_nome": "REBEKKA",
+        "posizione": 6,
+        "punti_effettivi": 5,
+        "moltiplicatore": 1,
+        "tipo": "regionale",
+        "regione": "VENETO",
+        "km": "109.100",
+        "media": "39.003"
+      },
+      {
+        "gara_id": "GRAN_PREMIO_CITTA_DI_CORRIDONIA_2026-05-31_ELI_F",
+        "nome_gara": "GRAN PREMIO CITTA' DI CORRIDONIA",
+        "data": "2026-05-31",
+        "atleta_id": "VALLOTTO_GIULIA",
+        "atleta_cognome": "VALLOTTO",
+        "atleta_nome": "GIULIA",
+        "posizione": 6,
+        "punti_effettivi": 5,
+        "moltiplicatore": 1,
+        "tipo": "regionale",
+        "regione": "MARCHE",
+        "km": "81.800",
+        "media": "40.136"
+      },
+      {
+        "gara_id": "2_TROFEO_ROSA_MONTALTO_PROVA_VALIDA_CAMPIONATO_REGIONALE_2026-05-02_ELI_F",
+        "nome_gara": "2 TROFEO ROSA MONTALTO PROVA VALIDA CAMPIONATO REGIONALE",
+        "data": "2026-05-02",
+        "atleta_id": "PIGOLOTTI_REBEKKA",
+        "atleta_cognome": "PIGOLOTTI",
+        "atleta_nome": "REBEKKA",
+        "posizione": 7,
+        "punti_effettivi": 8,
+        "moltiplicatore": 2,
+        "tipo": "regionale",
+        "regione": "TOSCANA",
+        "km": "87.700",
+        "media": "35.861"
+      },
+      {
+        "gara_id": "2_TROFEO_CASSA_DI_RISPARMIO_DI_FOSSANO_2026-04-12_ELI_F",
+        "nome_gara": "2 TROFEO CASSA DI RISPARMIO DI FOSSANO",
+        "data": "2026-04-12",
+        "atleta_id": "PIGOLOTTI_REBEKKA",
+        "atleta_cognome": "PIGOLOTTI",
+        "atleta_nome": "REBEKKA",
+        "posizione": 8,
+        "punti_effettivi": 3,
+        "moltiplicatore": 1,
+        "tipo": "regionale",
+        "regione": "PIEMONTE",
+        "km": "94.000",
+        "media": "39.929"
+      },
+      {
+        "gara_id": "PASQUALANDO_2026-04-05_ELI_F",
+        "nome_gara": "PASQUALANDO",
+        "data": "2026-04-05",
+        "atleta_id": "DE_GRANDIS_MICHELA",
+        "atleta_cognome": "DE",
+        "atleta_nome": "GRANDIS MICHELA",
+        "posizione": 4,
+        "punti_effettivi": 8,
+        "moltiplicatore": 1,
+        "tipo": "regionale",
+        "regione": "TOSCANA",
+        "km": "63.800",
+        "media": "41.102"
+      },
+      {
+        "gara_id": "PASQUALANDO_2026-04-05_ELI_F",
+        "nome_gara": "PASQUALANDO",
+        "data": "2026-04-05",
+        "atleta_id": "PIGOLOTTI_REBEKKA",
+        "atleta_cognome": "PIGOLOTTI",
+        "atleta_nome": "REBEKKA",
+        "posizione": 10,
+        "punti_effettivi": 1,
+        "moltiplicatore": 1,
+        "tipo": "regionale",
+        "regione": "TOSCANA",
+        "km": "63.800",
+        "media": "41.102"
+      },
+      {
+        "gara_id": "TROFEO_ARTI_E_MESTIERI_DELLA_TRADIZIONE_MUGELLANA_2026-02-14_ELI_F",
+        "nome_gara": "TROFEO ARTI E MESTIERI DELLA TRADIZIONE MUGELLANA",
+        "data": "2026-02-14",
+        "atleta_id": "DE_GRANDIS_MICHELA",
+        "atleta_cognome": "DE",
+        "atleta_nome": "GRANDIS MICHELA",
+        "posizione": 7,
+        "punti_effettivi": 8,
+        "moltiplicatore": 2,
+        "tipo": "nazionale",
+        "regione": "TOSCANA",
+        "km": "83.920",
+        "media": "38.422"
+      }
+    ],
+    "punti_per_cat": {
+      "ELI_F": 116
+    }
+  },
+  "LOTTO_INTERNARCHE_LADIES": {
+    "id": "LOTTO_INTERNARCHE_LADIES",
+    "nome": "LOTTO INTERNARCHE' LADIES",
+    "punti_totali": 18,
+    "atleti": [
+      "HINOJOSA_CRUZ_ROMINA"
+    ],
+    "risultati": [
+      {
+        "gara_id": "INTERNAZIONALE_PORTO_SAN_GIORGIO_MEMORIAL_M_DE_ANGELIS_CRONOMETRO_2026-06-12_ELI_F",
+        "nome_gara": "INTERNAZIONALE PORTO SAN GIORGIO MEMORIAL M DE ANGELIS CRONOMETRO",
+        "data": "2026-06-12",
+        "atleta_id": "HINOJOSA_CRUZ_ROMINA",
+        "atleta_cognome": "HINOJOSA",
+        "atleta_nome": "CRUZ ROMINA",
+        "posizione": 5,
+        "punti_effettivi": 18,
+        "moltiplicatore": 3,
+        "tipo": "internazionale",
+        "regione": "UNDER",
+        "km": "15.000",
+        "media": "45.000"
+      }
+    ],
+    "punti_per_cat": {
+      "ELI_F": 18
+    }
+  },
+  "A_S_D_CLUB_CORRIDONIA_S_C": {
+    "id": "A_S_D_CLUB_CORRIDONIA_S_C",
+    "nome": "A.S.D. CLUB CORRIDONIA S.C.",
+    "punti_totali": 4,
+    "atleti": [
+      "LUGLI_ELISA",
+      "CESCA_BEATRICE"
+    ],
+    "risultati": [
+      {
+        "gara_id": "INTERNAZIONALE_PORTO_SAN_GIORGIO_MEMORIAL_M_DE_ANGELIS_CRONOMETRO_2026-06-12_ELI_F",
+        "nome_gara": "INTERNAZIONALE PORTO SAN GIORGIO MEMORIAL M DE ANGELIS CRONOMETRO",
+        "data": "2026-06-12",
+        "atleta_id": "LUGLI_ELISA",
+        "atleta_cognome": "LUGLI",
+        "atleta_nome": "ELISA",
+        "posizione": 10,
+        "punti_effettivi": 3,
+        "moltiplicatore": 3,
+        "tipo": "internazionale",
+        "regione": "UNDER",
+        "km": "15.000",
+        "media": "45.000"
+      },
+      {
+        "gara_id": "2_TROFEO_CASSA_DI_RISPARMIO_DI_FOSSANO_2026-04-12_ELI_F",
+        "nome_gara": "2 TROFEO CASSA DI RISPARMIO DI FOSSANO",
+        "data": "2026-04-12",
+        "atleta_id": "CESCA_BEATRICE",
+        "atleta_cognome": "CESCA",
+        "atleta_nome": "BEATRICE",
+        "posizione": 10,
+        "punti_effettivi": 1,
+        "moltiplicatore": 1,
+        "tipo": "regionale",
+        "regione": "PIEMONTE",
+        "km": "94.000",
+        "media": "39.929"
+      }
+    ],
+    "punti_per_cat": {
+      "ELI_F": 4
     }
   },
   "UAE_TEAM_ADQ": {
@@ -23675,141 +24049,6 @@
     ],
     "punti_per_cat": {
       "ELI_F": 67
-    }
-  },
-  "HORIZONS_CYCLING_CLUB": {
-    "id": "HORIZONS_CYCLING_CLUB",
-    "nome": "HORIZONS CYCLING CLUB",
-    "punti_totali": 50,
-    "atleti": [
-      "DE_GRANDIS_MICHELA",
-      "PIGOLOTTI_REBEKKA",
-      "VALLOTTO_GIULIA"
-    ],
-    "risultati": [
-      {
-        "gara_id": "42_GRAN_PREMIO_CICLISTI_DI_ARCADE_2026-06-07_ELI_F",
-        "nome_gara": "42 GRAN PREMIO CICLISTI DI ARCADE",
-        "data": "2026-06-07",
-        "atleta_id": "DE_GRANDIS_MICHELA",
-        "atleta_cognome": "DE",
-        "atleta_nome": "GRANDIS MICHELA",
-        "posizione": 2,
-        "punti_effettivi": 12,
-        "moltiplicatore": 1,
-        "tipo": "regionale",
-        "regione": "VENETO",
-        "km": "109.100",
-        "media": "39.003"
-      },
-      {
-        "gara_id": "42_GRAN_PREMIO_CICLISTI_DI_ARCADE_2026-06-07_ELI_F",
-        "nome_gara": "42 GRAN PREMIO CICLISTI DI ARCADE",
-        "data": "2026-06-07",
-        "atleta_id": "PIGOLOTTI_REBEKKA",
-        "atleta_cognome": "PIGOLOTTI",
-        "atleta_nome": "REBEKKA",
-        "posizione": 6,
-        "punti_effettivi": 5,
-        "moltiplicatore": 1,
-        "tipo": "regionale",
-        "regione": "VENETO",
-        "km": "109.100",
-        "media": "39.003"
-      },
-      {
-        "gara_id": "GRAN_PREMIO_CITTA_DI_CORRIDONIA_2026-05-31_ELI_F",
-        "nome_gara": "GRAN PREMIO CITTA' DI CORRIDONIA",
-        "data": "2026-05-31",
-        "atleta_id": "VALLOTTO_GIULIA",
-        "atleta_cognome": "VALLOTTO",
-        "atleta_nome": "GIULIA",
-        "posizione": 6,
-        "punti_effettivi": 5,
-        "moltiplicatore": 1,
-        "tipo": "regionale",
-        "regione": "MARCHE",
-        "km": "81.800",
-        "media": "40.136"
-      },
-      {
-        "gara_id": "2_TROFEO_ROSA_MONTALTO_PROVA_VALIDA_CAMPIONATO_REGIONALE_2026-05-02_ELI_F",
-        "nome_gara": "2 TROFEO ROSA MONTALTO PROVA VALIDA CAMPIONATO REGIONALE",
-        "data": "2026-05-02",
-        "atleta_id": "PIGOLOTTI_REBEKKA",
-        "atleta_cognome": "PIGOLOTTI",
-        "atleta_nome": "REBEKKA",
-        "posizione": 7,
-        "punti_effettivi": 8,
-        "moltiplicatore": 2,
-        "tipo": "regionale",
-        "regione": "TOSCANA",
-        "km": "87.700",
-        "media": "35.861"
-      },
-      {
-        "gara_id": "2_TROFEO_CASSA_DI_RISPARMIO_DI_FOSSANO_2026-04-12_ELI_F",
-        "nome_gara": "2 TROFEO CASSA DI RISPARMIO DI FOSSANO",
-        "data": "2026-04-12",
-        "atleta_id": "PIGOLOTTI_REBEKKA",
-        "atleta_cognome": "PIGOLOTTI",
-        "atleta_nome": "REBEKKA",
-        "posizione": 8,
-        "punti_effettivi": 3,
-        "moltiplicatore": 1,
-        "tipo": "regionale",
-        "regione": "PIEMONTE",
-        "km": "94.000",
-        "media": "39.929"
-      },
-      {
-        "gara_id": "PASQUALANDO_2026-04-05_ELI_F",
-        "nome_gara": "PASQUALANDO",
-        "data": "2026-04-05",
-        "atleta_id": "DE_GRANDIS_MICHELA",
-        "atleta_cognome": "DE",
-        "atleta_nome": "GRANDIS MICHELA",
-        "posizione": 4,
-        "punti_effettivi": 8,
-        "moltiplicatore": 1,
-        "tipo": "regionale",
-        "regione": "TOSCANA",
-        "km": "63.800",
-        "media": "41.102"
-      },
-      {
-        "gara_id": "PASQUALANDO_2026-04-05_ELI_F",
-        "nome_gara": "PASQUALANDO",
-        "data": "2026-04-05",
-        "atleta_id": "PIGOLOTTI_REBEKKA",
-        "atleta_cognome": "PIGOLOTTI",
-        "atleta_nome": "REBEKKA",
-        "posizione": 10,
-        "punti_effettivi": 1,
-        "moltiplicatore": 1,
-        "tipo": "regionale",
-        "regione": "TOSCANA",
-        "km": "63.800",
-        "media": "41.102"
-      },
-      {
-        "gara_id": "TROFEO_ARTI_E_MESTIERI_DELLA_TRADIZIONE_MUGELLANA_2026-02-14_ELI_F",
-        "nome_gara": "TROFEO ARTI E MESTIERI DELLA TRADIZIONE MUGELLANA",
-        "data": "2026-02-14",
-        "atleta_id": "DE_GRANDIS_MICHELA",
-        "atleta_cognome": "DE",
-        "atleta_nome": "GRANDIS MICHELA",
-        "posizione": 7,
-        "punti_effettivi": 8,
-        "moltiplicatore": 2,
-        "tipo": "nazionale",
-        "regione": "TOSCANA",
-        "km": "83.920",
-        "media": "38.422"
-      }
-    ],
-    "punti_per_cat": {
-      "ELI_F": 50
     }
   },
   "FANINI_PRO_CYCLING": {
@@ -108985,49 +109224,6 @@
       "JUN_M": 27
     }
   },
-  "WCC_UCI_WORLD_CYCLING_CENTRE": {
-    "id": "WCC_UCI_WORLD_CYCLING_CENTRE",
-    "nome": "WCC - UCI WORLD CYCLING CENTRE",
-    "punti_totali": 17,
-    "atleti": [
-      "MONSALVEZ_FLORENCIA"
-    ],
-    "risultati": [
-      {
-        "gara_id": "GIRO_DELLE_MARCHE_IN_ROSA_2026-05-10_ELI_F",
-        "nome_gara": "GIRO DELLE MARCHE IN ROSA",
-        "data": "2026-05-10",
-        "atleta_id": "MONSALVEZ_FLORENCIA",
-        "atleta_cognome": "MONSALVEZ",
-        "atleta_nome": "FLORENCIA",
-        "posizione": 2,
-        "punti_effettivi": 12,
-        "moltiplicatore": 1,
-        "tipo": "regionale",
-        "regione": "MARCHE",
-        "km": "100.000",
-        "media": "35.294"
-      },
-      {
-        "gara_id": "GIRO_DELLE_MARCHE_IN_ROSA_2026-05-09_ELI_F",
-        "nome_gara": "GIRO DELLE MARCHE IN ROSA",
-        "data": "2026-05-09",
-        "atleta_id": "MONSALVEZ_FLORENCIA",
-        "atleta_cognome": "MONSALVEZ",
-        "atleta_nome": "FLORENCIA",
-        "posizione": 6,
-        "punti_effettivi": 5,
-        "moltiplicatore": 1,
-        "tipo": "regionale",
-        "regione": "MARCHE",
-        "km": "90.000",
-        "media": "36.986"
-      }
-    ],
-    "punti_per_cat": {
-      "ELI_F": 17
-    }
-  },
   "CICLISTICA_OMNIA_IMOLA": {
     "id": "CICLISTICA_OMNIA_IMOLA",
     "nome": "CICLISTICA OMNIA IMOLA",
@@ -112618,34 +112814,6 @@
     ],
     "punti_per_cat": {
       "JUN_M": 3
-    }
-  },
-  "A_S_D_CLUB_CORRIDONIA_S_C": {
-    "id": "A_S_D_CLUB_CORRIDONIA_S_C",
-    "nome": "A.S.D. CLUB CORRIDONIA S.C.",
-    "punti_totali": 1,
-    "atleti": [
-      "CESCA_BEATRICE"
-    ],
-    "risultati": [
-      {
-        "gara_id": "2_TROFEO_CASSA_DI_RISPARMIO_DI_FOSSANO_2026-04-12_ELI_F",
-        "nome_gara": "2 TROFEO CASSA DI RISPARMIO DI FOSSANO",
-        "data": "2026-04-12",
-        "atleta_id": "CESCA_BEATRICE",
-        "atleta_cognome": "CESCA",
-        "atleta_nome": "BEATRICE",
-        "posizione": 10,
-        "punti_effettivi": 1,
-        "moltiplicatore": 1,
-        "tipo": "regionale",
-        "regione": "PIEMONTE",
-        "km": "94.000",
-        "media": "39.929"
-      }
-    ],
-    "punti_per_cat": {
-      "ELI_F": 1
     }
   },
   "JAM_S_BIKE_TEAM_BUJA": {

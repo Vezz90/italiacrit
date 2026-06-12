@@ -1011,7 +1011,7 @@
         "tipo": "internazionale",
         "regione": "JUNIORES",
         "km": "15.000",
-        "media": ""
+        "media": "44.000"
       },
       {
         "gara_id": "42_GRAN_PREMIO_CICLISTI_DI_ARCADE_2026-06-07_JUN_F",
@@ -1166,7 +1166,7 @@
         "tipo": "internazionale",
         "regione": "JUNIORES",
         "km": "15.000",
-        "media": ""
+        "media": "44.000"
       },
       {
         "gara_id": "42_GRAN_PREMIO_CICLISTI_DI_ARCADE_2026-06-07_JUN_F",
@@ -1230,7 +1230,7 @@
         "tipo": "internazionale",
         "regione": "JUNIORES",
         "km": "15.000",
-        "media": ""
+        "media": "44.000"
       },
       {
         "gara_id": "SECONDO_TROFEO_BIKE_SERVICE_CRONOMETRO_2026-06-06_JUN_F",
@@ -1268,7 +1268,7 @@
         "tipo": "internazionale",
         "regione": "JUNIORES",
         "km": "15.000",
-        "media": ""
+        "media": "44.000"
       },
       {
         "gara_id": "42_GRAN_PREMIO_CICLISTI_DI_ARCADE_2026-06-07_JUN_F",
@@ -1410,7 +1410,7 @@
         "tipo": "internazionale",
         "regione": "JUNIORES",
         "km": "15.000",
-        "media": ""
+        "media": "44.000"
       },
       {
         "gara_id": "GRAN_PREMIO_CITTA_DI_CORRIDONIA_2026-05-31_JUN_F",
@@ -1474,7 +1474,7 @@
         "tipo": "internazionale",
         "regione": "JUNIORES",
         "km": "15.000",
-        "media": ""
+        "media": "44.000"
       }
     ]
   },
@@ -1499,7 +1499,7 @@
         "tipo": "internazionale",
         "regione": "JUNIORES",
         "km": "15.000",
-        "media": ""
+        "media": "44.000"
       }
     ]
   },
@@ -1524,7 +1524,7 @@
         "tipo": "internazionale",
         "regione": "JUNIORES",
         "km": "15.000",
-        "media": ""
+        "media": "44.000"
       },
       {
         "gara_id": "SECONDO_TROFEO_BIKE_SERVICE_CRONOMETRO_2026-06-06_JUN_F",
@@ -1601,7 +1601,7 @@
         "tipo": "internazionale",
         "regione": "JUNIORES",
         "km": "15.000",
-        "media": ""
+        "media": "44.000"
       },
       {
         "gara_id": "GRAN_PREMIO_CITTA_DI_CORRIDONIA_2026-05-31_JUN_F",
@@ -1639,7 +1639,7 @@
         "tipo": "internazionale",
         "regione": "JUNIORES",
         "km": "15.000",
-        "media": ""
+        "media": "44.000"
       }
     ]
   },
@@ -2150,6 +2150,399 @@
         "regione": "ALLIEVE",
         "km": "6.600",
         "media": ""
+      }
+    ]
+  },
+  "REVELO_NATALIE": {
+    "id": "REVELO_NATALIE",
+    "nome": "NATALIE",
+    "cognome": "REVELO",
+    "team_attuale": "WCC - UCI WORLD CYCLING CENTRE",
+    "team_id": "WCC_UCI_WORLD_CYCLING_CENTRE",
+    "categoria": "ELI_F",
+    "genere": "F",
+    "punti_totali": 45,
+    "risultati": [
+      {
+        "gara_id": "INTERNAZIONALE_PORTO_SAN_GIORGIO_MEMORIAL_M_DE_ANGELIS_CRONOMETRO_2026-06-12_ELI_F",
+        "nome_gara": "INTERNAZIONALE PORTO SAN GIORGIO MEMORIAL M DE ANGELIS CRONOMETRO",
+        "data": "2026-06-12",
+        "posizione": 1,
+        "punti_effettivi": 45,
+        "team": "WCC - UCI WORLD CYCLING CENTRE",
+        "moltiplicatore": 3,
+        "tipo": "internazionale",
+        "regione": "UNDER",
+        "km": "15.000",
+        "media": "45.000"
+      }
+    ]
+  },
+  "MWAMIKAZI_JAZILLA": {
+    "id": "MWAMIKAZI_JAZILLA",
+    "nome": "JAZILLA",
+    "cognome": "MWAMIKAZI",
+    "team_attuale": "WCC - UCI WORLD CYCLING CENTRE",
+    "team_id": "WCC_UCI_WORLD_CYCLING_CENTRE",
+    "categoria": "ELI_F",
+    "genere": "F",
+    "punti_totali": 36,
+    "risultati": [
+      {
+        "gara_id": "INTERNAZIONALE_PORTO_SAN_GIORGIO_MEMORIAL_M_DE_ANGELIS_CRONOMETRO_2026-06-12_ELI_F",
+        "nome_gara": "INTERNAZIONALE PORTO SAN GIORGIO MEMORIAL M DE ANGELIS CRONOMETRO",
+        "data": "2026-06-12",
+        "posizione": 2,
+        "punti_effettivi": 36,
+        "team": "WCC - UCI WORLD CYCLING CENTRE",
+        "moltiplicatore": 3,
+        "tipo": "internazionale",
+        "regione": "UNDER",
+        "km": "15.000",
+        "media": "45.000"
+      }
+    ]
+  },
+  "DE_GRANDIS_MICHELA": {
+    "id": "DE_GRANDIS_MICHELA",
+    "nome": "GRANDIS MICHELA",
+    "cognome": "DE",
+    "team_attuale": "HORIZONS CYCLING CLUB",
+    "team_id": "HORIZONS_CYCLING_CLUB",
+    "categoria": "ELI_F",
+    "genere": "F",
+    "punti_totali": 58,
+    "risultati": [
+      {
+        "gara_id": "INTERNAZIONALE_PORTO_SAN_GIORGIO_MEMORIAL_M_DE_ANGELIS_CRONOMETRO_2026-06-12_ELI_F",
+        "nome_gara": "INTERNAZIONALE PORTO SAN GIORGIO MEMORIAL M DE ANGELIS CRONOMETRO",
+        "data": "2026-06-12",
+        "posizione": 3,
+        "punti_effettivi": 30,
+        "team": "HORIZONS CYCLING CLUB",
+        "moltiplicatore": 3,
+        "tipo": "internazionale",
+        "regione": "UNDER",
+        "km": "15.000",
+        "media": "45.000"
+      },
+      {
+        "gara_id": "42_GRAN_PREMIO_CICLISTI_DI_ARCADE_2026-06-07_ELI_F",
+        "nome_gara": "42 GRAN PREMIO CICLISTI DI ARCADE",
+        "data": "2026-06-07",
+        "posizione": 2,
+        "punti_effettivi": 12,
+        "team": "HORIZONS CYCLING CLUB",
+        "moltiplicatore": 1,
+        "tipo": "regionale",
+        "regione": "VENETO",
+        "km": "109.100",
+        "media": "39.003"
+      },
+      {
+        "gara_id": "PASQUALANDO_2026-04-05_ELI_F",
+        "nome_gara": "PASQUALANDO",
+        "data": "2026-04-05",
+        "posizione": 4,
+        "punti_effettivi": 8,
+        "team": "HORIZONS CYCLING CLUB",
+        "moltiplicatore": 1,
+        "tipo": "regionale",
+        "regione": "TOSCANA",
+        "km": "63.800",
+        "media": "41.102"
+      },
+      {
+        "gara_id": "TROFEO_ARTI_E_MESTIERI_DELLA_TRADIZIONE_MUGELLANA_2026-02-14_ELI_F",
+        "nome_gara": "TROFEO ARTI E MESTIERI DELLA TRADIZIONE MUGELLANA",
+        "data": "2026-02-14",
+        "posizione": 7,
+        "punti_effettivi": 8,
+        "team": "HORIZONS CYCLING CLUB",
+        "moltiplicatore": 2,
+        "tipo": "nazionale",
+        "regione": "TOSCANA",
+        "km": "83.920",
+        "media": "38.422"
+      }
+    ]
+  },
+  "KOLYZHUK_ANNA": {
+    "id": "KOLYZHUK_ANNA",
+    "nome": "ANNA",
+    "cognome": "KOLYZHUK",
+    "team_attuale": "WCC - UCI WORLD CYCLING CENTRE",
+    "team_id": "WCC_UCI_WORLD_CYCLING_CENTRE",
+    "categoria": "ELI_F",
+    "genere": "F",
+    "punti_totali": 24,
+    "risultati": [
+      {
+        "gara_id": "INTERNAZIONALE_PORTO_SAN_GIORGIO_MEMORIAL_M_DE_ANGELIS_CRONOMETRO_2026-06-12_ELI_F",
+        "nome_gara": "INTERNAZIONALE PORTO SAN GIORGIO MEMORIAL M DE ANGELIS CRONOMETRO",
+        "data": "2026-06-12",
+        "posizione": 4,
+        "punti_effettivi": 24,
+        "team": "WCC - UCI WORLD CYCLING CENTRE",
+        "moltiplicatore": 3,
+        "tipo": "internazionale",
+        "regione": "UNDER",
+        "km": "15.000",
+        "media": "45.000"
+      }
+    ]
+  },
+  "HINOJOSA_CRUZ_ROMINA": {
+    "id": "HINOJOSA_CRUZ_ROMINA",
+    "nome": "CRUZ ROMINA",
+    "cognome": "HINOJOSA",
+    "team_attuale": "LOTTO INTERNARCHE' LADIES",
+    "team_id": "LOTTO_INTERNARCHE_LADIES",
+    "categoria": "ELI_F",
+    "genere": "F",
+    "punti_totali": 18,
+    "risultati": [
+      {
+        "gara_id": "INTERNAZIONALE_PORTO_SAN_GIORGIO_MEMORIAL_M_DE_ANGELIS_CRONOMETRO_2026-06-12_ELI_F",
+        "nome_gara": "INTERNAZIONALE PORTO SAN GIORGIO MEMORIAL M DE ANGELIS CRONOMETRO",
+        "data": "2026-06-12",
+        "posizione": 5,
+        "punti_effettivi": 18,
+        "team": "LOTTO INTERNARCHE' LADIES",
+        "moltiplicatore": 3,
+        "tipo": "internazionale",
+        "regione": "UNDER",
+        "km": "15.000",
+        "media": "45.000"
+      }
+    ]
+  },
+  "VALLOTTO_GIULIA": {
+    "id": "VALLOTTO_GIULIA",
+    "nome": "GIULIA",
+    "cognome": "VALLOTTO",
+    "team_attuale": "HORIZONS CYCLING CLUB",
+    "team_id": "HORIZONS_CYCLING_CLUB",
+    "categoria": "ELI_F",
+    "genere": "F",
+    "punti_totali": 22,
+    "risultati": [
+      {
+        "gara_id": "INTERNAZIONALE_PORTO_SAN_GIORGIO_MEMORIAL_M_DE_ANGELIS_CRONOMETRO_2026-06-12_ELI_F",
+        "nome_gara": "INTERNAZIONALE PORTO SAN GIORGIO MEMORIAL M DE ANGELIS CRONOMETRO",
+        "data": "2026-06-12",
+        "posizione": 6,
+        "punti_effettivi": 15,
+        "team": "HORIZONS CYCLING CLUB",
+        "moltiplicatore": 3,
+        "tipo": "internazionale",
+        "regione": "UNDER",
+        "km": "15.000",
+        "media": "45.000"
+      },
+      {
+        "gara_id": "GRAN_PREMIO_CITTA_DI_CORRIDONIA_2026-05-31_ELI_F",
+        "nome_gara": "GRAN PREMIO CITTA' DI CORRIDONIA",
+        "data": "2026-05-31",
+        "posizione": 6,
+        "punti_effettivi": 5,
+        "team": "HORIZONS CYCLING CLUB",
+        "moltiplicatore": 1,
+        "tipo": "regionale",
+        "regione": "MARCHE",
+        "km": "81.800",
+        "media": "40.136"
+      },
+      {
+        "gara_id": "18_TROFEO_AUTOTRASPORTI_CHIARCOSSO_DONNE_ESORDIENTI_PRIMO_ANNO_2026-05-17_ES1_F",
+        "nome_gara": "18 TROFEO AUTOTRASPORTI CHIARCOSSO DONNE ESORDIENTI PRIMO ANNO",
+        "data": "2026-05-17",
+        "posizione": 9,
+        "punti_effettivi": 2,
+        "team": "U.C. GIORGIONE",
+        "moltiplicatore": 1,
+        "tipo": "regionale",
+        "regione": "ESORDIENTI",
+        "km": "28.500",
+        "media": "35.899"
+      }
+    ]
+  },
+  "ONGARATO_LIVIELLE": {
+    "id": "ONGARATO_LIVIELLE",
+    "nome": "LIVIELLE",
+    "cognome": "ONGARATO",
+    "team_attuale": "HORIZONS CYCLING CLUB",
+    "team_id": "HORIZONS_CYCLING_CLUB",
+    "categoria": "ELI_F",
+    "genere": "F",
+    "punti_totali": 12,
+    "risultati": [
+      {
+        "gara_id": "INTERNAZIONALE_PORTO_SAN_GIORGIO_MEMORIAL_M_DE_ANGELIS_CRONOMETRO_2026-06-12_ELI_F",
+        "nome_gara": "INTERNAZIONALE PORTO SAN GIORGIO MEMORIAL M DE ANGELIS CRONOMETRO",
+        "data": "2026-06-12",
+        "posizione": 7,
+        "punti_effettivi": 12,
+        "team": "HORIZONS CYCLING CLUB",
+        "moltiplicatore": 3,
+        "tipo": "internazionale",
+        "regione": "UNDER",
+        "km": "15.000",
+        "media": "45.000"
+      }
+    ]
+  },
+  "PIGOLOTTI_REBEKKA": {
+    "id": "PIGOLOTTI_REBEKKA",
+    "nome": "REBEKKA",
+    "cognome": "PIGOLOTTI",
+    "team_attuale": "HORIZONS CYCLING CLUB",
+    "team_id": "HORIZONS_CYCLING_CLUB",
+    "categoria": "ELI_F",
+    "genere": "F",
+    "punti_totali": 26,
+    "risultati": [
+      {
+        "gara_id": "INTERNAZIONALE_PORTO_SAN_GIORGIO_MEMORIAL_M_DE_ANGELIS_CRONOMETRO_2026-06-12_ELI_F",
+        "nome_gara": "INTERNAZIONALE PORTO SAN GIORGIO MEMORIAL M DE ANGELIS CRONOMETRO",
+        "data": "2026-06-12",
+        "posizione": 8,
+        "punti_effettivi": 9,
+        "team": "HORIZONS CYCLING CLUB",
+        "moltiplicatore": 3,
+        "tipo": "internazionale",
+        "regione": "UNDER",
+        "km": "15.000",
+        "media": "45.000"
+      },
+      {
+        "gara_id": "42_GRAN_PREMIO_CICLISTI_DI_ARCADE_2026-06-07_ELI_F",
+        "nome_gara": "42 GRAN PREMIO CICLISTI DI ARCADE",
+        "data": "2026-06-07",
+        "posizione": 6,
+        "punti_effettivi": 5,
+        "team": "HORIZONS CYCLING CLUB",
+        "moltiplicatore": 1,
+        "tipo": "regionale",
+        "regione": "VENETO",
+        "km": "109.100",
+        "media": "39.003"
+      },
+      {
+        "gara_id": "2_TROFEO_ROSA_MONTALTO_PROVA_VALIDA_CAMPIONATO_REGIONALE_2026-05-02_ELI_F",
+        "nome_gara": "2 TROFEO ROSA MONTALTO PROVA VALIDA CAMPIONATO REGIONALE",
+        "data": "2026-05-02",
+        "posizione": 7,
+        "punti_effettivi": 8,
+        "team": "HORIZONS CYCLING CLUB",
+        "moltiplicatore": 2,
+        "tipo": "regionale",
+        "regione": "TOSCANA",
+        "km": "87.700",
+        "media": "35.861"
+      },
+      {
+        "gara_id": "2_TROFEO_CASSA_DI_RISPARMIO_DI_FOSSANO_2026-04-12_ELI_F",
+        "nome_gara": "2 TROFEO CASSA DI RISPARMIO DI FOSSANO",
+        "data": "2026-04-12",
+        "posizione": 8,
+        "punti_effettivi": 3,
+        "team": "HORIZONS CYCLING CLUB",
+        "moltiplicatore": 1,
+        "tipo": "regionale",
+        "regione": "PIEMONTE",
+        "km": "94.000",
+        "media": "39.929"
+      },
+      {
+        "gara_id": "PASQUALANDO_2026-04-05_ELI_F",
+        "nome_gara": "PASQUALANDO",
+        "data": "2026-04-05",
+        "posizione": 10,
+        "punti_effettivi": 1,
+        "team": "HORIZONS CYCLING CLUB",
+        "moltiplicatore": 1,
+        "tipo": "regionale",
+        "regione": "TOSCANA",
+        "km": "63.800",
+        "media": "41.102"
+      }
+    ]
+  },
+  "ZAMUDIO_GARCIA_MAYTE": {
+    "id": "ZAMUDIO_GARCIA_MAYTE",
+    "nome": "MAYTE",
+    "cognome": "ZAMUDIO GARCIA",
+    "team_attuale": "A.R.MONEX PRO CYCLING TEAM",
+    "team_id": "A_R_MONEX_PRO_CYCLING_TEAM",
+    "categoria": "ELI_F",
+    "genere": "F",
+    "punti_totali": 28,
+    "risultati": [
+      {
+        "gara_id": "INTERNAZIONALE_PORTO_SAN_GIORGIO_MEMORIAL_M_DE_ANGELIS_CRONOMETRO_2026-06-12_ELI_F",
+        "nome_gara": "INTERNAZIONALE PORTO SAN GIORGIO MEMORIAL M DE ANGELIS CRONOMETRO",
+        "data": "2026-06-12",
+        "posizione": 9,
+        "punti_effettivi": 6,
+        "team": "A.R.MONEX PRO CYCLING TEAM",
+        "moltiplicatore": 3,
+        "tipo": "internazionale",
+        "regione": "UNDER",
+        "km": "15.000",
+        "media": "45.000"
+      },
+      {
+        "gara_id": "2_TROFEO_ROSA_MONTALTO_PROVA_VALIDA_CAMPIONATO_REGIONALE_2026-05-02_ELI_F",
+        "nome_gara": "2 TROFEO ROSA MONTALTO PROVA VALIDA CAMPIONATO REGIONALE",
+        "data": "2026-05-02",
+        "posizione": 8,
+        "punti_effettivi": 6,
+        "team": "A.R.MONEX PRO CYCLING TEAM",
+        "moltiplicatore": 2,
+        "tipo": "regionale",
+        "regione": "TOSCANA",
+        "km": "87.700",
+        "media": "35.861"
+      },
+      {
+        "gara_id": "DONNE_OPEN_PROVA_VALIDA_CAMPIONATO_REGIONALE_DONNE_JUNIORES_2026-04-11_JUN_F",
+        "nome_gara": "DONNE OPEN PROVA VALIDA CAMPIONATO REGIONALE DONNE JUNIORES",
+        "data": "2026-04-11",
+        "posizione": 4,
+        "punti_effettivi": 16,
+        "team": "A.R.MONEX PRO CYCLING TEAM",
+        "moltiplicatore": 2,
+        "tipo": "regionale",
+        "regione": "PIEMONTE",
+        "km": "81.000",
+        "media": "41.094"
+      }
+    ]
+  },
+  "LUGLI_ELISA": {
+    "id": "LUGLI_ELISA",
+    "nome": "ELISA",
+    "cognome": "LUGLI",
+    "team_attuale": "A.S.D. CLUB CORRIDONIA S.C.",
+    "team_id": "A_S_D_CLUB_CORRIDONIA_S_C",
+    "categoria": "ELI_F",
+    "genere": "F",
+    "punti_totali": 3,
+    "risultati": [
+      {
+        "gara_id": "INTERNAZIONALE_PORTO_SAN_GIORGIO_MEMORIAL_M_DE_ANGELIS_CRONOMETRO_2026-06-12_ELI_F",
+        "nome_gara": "INTERNAZIONALE PORTO SAN GIORGIO MEMORIAL M DE ANGELIS CRONOMETRO",
+        "data": "2026-06-12",
+        "posizione": 10,
+        "punti_effettivi": 3,
+        "team": "A.S.D. CLUB CORRIDONIA S.C.",
+        "moltiplicatore": 3,
+        "tipo": "internazionale",
+        "regione": "UNDER",
+        "km": "15.000",
+        "media": "45.000"
       }
     ]
   },
@@ -6410,57 +6803,6 @@
       }
     ]
   },
-  "DE_GRANDIS_MICHELA": {
-    "id": "DE_GRANDIS_MICHELA",
-    "nome": "GRANDIS MICHELA",
-    "cognome": "DE",
-    "team_attuale": "HORIZONS CYCLING CLUB",
-    "team_id": "HORIZONS_CYCLING_CLUB",
-    "categoria": "ELI_F",
-    "genere": "F",
-    "punti_totali": 28,
-    "risultati": [
-      {
-        "gara_id": "42_GRAN_PREMIO_CICLISTI_DI_ARCADE_2026-06-07_ELI_F",
-        "nome_gara": "42 GRAN PREMIO CICLISTI DI ARCADE",
-        "data": "2026-06-07",
-        "posizione": 2,
-        "punti_effettivi": 12,
-        "team": "HORIZONS CYCLING CLUB",
-        "moltiplicatore": 1,
-        "tipo": "regionale",
-        "regione": "VENETO",
-        "km": "109.100",
-        "media": "39.003"
-      },
-      {
-        "gara_id": "PASQUALANDO_2026-04-05_ELI_F",
-        "nome_gara": "PASQUALANDO",
-        "data": "2026-04-05",
-        "posizione": 4,
-        "punti_effettivi": 8,
-        "team": "HORIZONS CYCLING CLUB",
-        "moltiplicatore": 1,
-        "tipo": "regionale",
-        "regione": "TOSCANA",
-        "km": "63.800",
-        "media": "41.102"
-      },
-      {
-        "gara_id": "TROFEO_ARTI_E_MESTIERI_DELLA_TRADIZIONE_MUGELLANA_2026-02-14_ELI_F",
-        "nome_gara": "TROFEO ARTI E MESTIERI DELLA TRADIZIONE MUGELLANA",
-        "data": "2026-02-14",
-        "posizione": 7,
-        "punti_effettivi": 8,
-        "team": "HORIZONS CYCLING CLUB",
-        "moltiplicatore": 2,
-        "tipo": "nazionale",
-        "regione": "TOSCANA",
-        "km": "83.920",
-        "media": "38.422"
-      }
-    ]
-  },
   "ALTUKHOVA_MARYNA": {
     "id": "ALTUKHOVA_MARYNA",
     "nome": "MARYNA",
@@ -6611,70 +6953,6 @@
         "regione": "PIEMONTE",
         "km": "81.000",
         "media": "41.134"
-      }
-    ]
-  },
-  "PIGOLOTTI_REBEKKA": {
-    "id": "PIGOLOTTI_REBEKKA",
-    "nome": "REBEKKA",
-    "cognome": "PIGOLOTTI",
-    "team_attuale": "HORIZONS CYCLING CLUB",
-    "team_id": "HORIZONS_CYCLING_CLUB",
-    "categoria": "ELI_F",
-    "genere": "F",
-    "punti_totali": 17,
-    "risultati": [
-      {
-        "gara_id": "42_GRAN_PREMIO_CICLISTI_DI_ARCADE_2026-06-07_ELI_F",
-        "nome_gara": "42 GRAN PREMIO CICLISTI DI ARCADE",
-        "data": "2026-06-07",
-        "posizione": 6,
-        "punti_effettivi": 5,
-        "team": "HORIZONS CYCLING CLUB",
-        "moltiplicatore": 1,
-        "tipo": "regionale",
-        "regione": "VENETO",
-        "km": "109.100",
-        "media": "39.003"
-      },
-      {
-        "gara_id": "2_TROFEO_ROSA_MONTALTO_PROVA_VALIDA_CAMPIONATO_REGIONALE_2026-05-02_ELI_F",
-        "nome_gara": "2 TROFEO ROSA MONTALTO PROVA VALIDA CAMPIONATO REGIONALE",
-        "data": "2026-05-02",
-        "posizione": 7,
-        "punti_effettivi": 8,
-        "team": "HORIZONS CYCLING CLUB",
-        "moltiplicatore": 2,
-        "tipo": "regionale",
-        "regione": "TOSCANA",
-        "km": "87.700",
-        "media": "35.861"
-      },
-      {
-        "gara_id": "2_TROFEO_CASSA_DI_RISPARMIO_DI_FOSSANO_2026-04-12_ELI_F",
-        "nome_gara": "2 TROFEO CASSA DI RISPARMIO DI FOSSANO",
-        "data": "2026-04-12",
-        "posizione": 8,
-        "punti_effettivi": 3,
-        "team": "HORIZONS CYCLING CLUB",
-        "moltiplicatore": 1,
-        "tipo": "regionale",
-        "regione": "PIEMONTE",
-        "km": "94.000",
-        "media": "39.929"
-      },
-      {
-        "gara_id": "PASQUALANDO_2026-04-05_ELI_F",
-        "nome_gara": "PASQUALANDO",
-        "data": "2026-04-05",
-        "posizione": 10,
-        "punti_effettivi": 1,
-        "team": "HORIZONS CYCLING CLUB",
-        "moltiplicatore": 1,
-        "tipo": "regionale",
-        "regione": "TOSCANA",
-        "km": "63.800",
-        "media": "41.102"
       }
     ]
   },
@@ -65698,44 +65976,6 @@
       }
     ]
   },
-  "VALLOTTO_GIULIA": {
-    "id": "VALLOTTO_GIULIA",
-    "nome": "GIULIA",
-    "cognome": "VALLOTTO",
-    "team_attuale": "HORIZONS CYCLING CLUB",
-    "team_id": "HORIZONS_CYCLING_CLUB",
-    "categoria": "ELI_F",
-    "genere": "F",
-    "punti_totali": 7,
-    "risultati": [
-      {
-        "gara_id": "GRAN_PREMIO_CITTA_DI_CORRIDONIA_2026-05-31_ELI_F",
-        "nome_gara": "GRAN PREMIO CITTA' DI CORRIDONIA",
-        "data": "2026-05-31",
-        "posizione": 6,
-        "punti_effettivi": 5,
-        "team": "HORIZONS CYCLING CLUB",
-        "moltiplicatore": 1,
-        "tipo": "regionale",
-        "regione": "MARCHE",
-        "km": "81.800",
-        "media": "40.136"
-      },
-      {
-        "gara_id": "18_TROFEO_AUTOTRASPORTI_CHIARCOSSO_DONNE_ESORDIENTI_PRIMO_ANNO_2026-05-17_ES1_F",
-        "nome_gara": "18 TROFEO AUTOTRASPORTI CHIARCOSSO DONNE ESORDIENTI PRIMO ANNO",
-        "data": "2026-05-17",
-        "posizione": 9,
-        "punti_effettivi": 2,
-        "team": "U.C. GIORGIONE",
-        "moltiplicatore": 1,
-        "tipo": "regionale",
-        "regione": "ESORDIENTI",
-        "km": "28.500",
-        "media": "35.899"
-      }
-    ]
-  },
   "LUCIANI_GIULIA": {
     "id": "LUCIANI_GIULIA",
     "nome": "GIULIA",
@@ -99887,44 +100127,6 @@
         "regione": "TOSCANA",
         "km": "87.700",
         "media": "35.861"
-      }
-    ]
-  },
-  "ZAMUDIO_GARCIA_MAYTE": {
-    "id": "ZAMUDIO_GARCIA_MAYTE",
-    "nome": "MAYTE",
-    "cognome": "ZAMUDIO GARCIA",
-    "team_attuale": "A.R.MONEX PRO CYCLING TEAM",
-    "team_id": "A_R_MONEX_PRO_CYCLING_TEAM",
-    "categoria": "ELI_F",
-    "genere": "F",
-    "punti_totali": 22,
-    "risultati": [
-      {
-        "gara_id": "2_TROFEO_ROSA_MONTALTO_PROVA_VALIDA_CAMPIONATO_REGIONALE_2026-05-02_ELI_F",
-        "nome_gara": "2 TROFEO ROSA MONTALTO PROVA VALIDA CAMPIONATO REGIONALE",
-        "data": "2026-05-02",
-        "posizione": 8,
-        "punti_effettivi": 6,
-        "team": "A.R.MONEX PRO CYCLING TEAM",
-        "moltiplicatore": 2,
-        "tipo": "regionale",
-        "regione": "TOSCANA",
-        "km": "87.700",
-        "media": "35.861"
-      },
-      {
-        "gara_id": "DONNE_OPEN_PROVA_VALIDA_CAMPIONATO_REGIONALE_DONNE_JUNIORES_2026-04-11_JUN_F",
-        "nome_gara": "DONNE OPEN PROVA VALIDA CAMPIONATO REGIONALE DONNE JUNIORES",
-        "data": "2026-04-11",
-        "posizione": 4,
-        "punti_effettivi": 16,
-        "team": "A.R.MONEX PRO CYCLING TEAM",
-        "moltiplicatore": 2,
-        "tipo": "regionale",
-        "regione": "PIEMONTE",
-        "km": "81.000",
-        "media": "41.094"
       }
     ]
   },
