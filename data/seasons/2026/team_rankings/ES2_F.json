@@ -2,14 +2,26 @@
   {
     "team_id": "SCUOLA_CICLISMO_VERSO_L_IRIDE",
     "team_nome": "SCUOLA CICLISMO VERSO L'IRIDE",
-    "punti": 235,
-    "vittorie": 4,
-    "p1": 4,
+    "punti": 250,
+    "vittorie": 5,
+    "p1": 5,
     "p2": 4,
     "p3": 5,
     "pout": 16,
     "n_atleti": 4,
     "pos": 1
+  },
+  {
+    "team_id": "HG_CYCLING_TEAM",
+    "team_nome": "HG CYCLING TEAM",
+    "punti": 231,
+    "vittorie": 5,
+    "p1": 5,
+    "p2": 5,
+    "p3": 1,
+    "pout": 14,
+    "n_atleti": 5,
+    "pos": 2
   },
   {
     "team_id": "S_C_CESANO_MADERNO",
@@ -21,18 +33,6 @@
     "p3": 5,
     "pout": 13,
     "n_atleti": 2,
-    "pos": 2
-  },
-  {
-    "team_id": "HG_CYCLING_TEAM",
-    "team_nome": "HG CYCLING TEAM",
-    "punti": 219,
-    "vittorie": 5,
-    "p1": 5,
-    "p2": 4,
-    "p3": 1,
-    "pout": 14,
-    "n_atleti": 4,
     "pos": 3
   },
   {

@@ -26,12 +26,12 @@
   {
     "team_id": "PEDALE_RIMINESE_FRECCE_ROSSE",
     "team_nome": "PEDALE RIMINESE FRECCE ROSSE",
-    "punti": 290,
-    "vittorie": 4,
-    "p1": 4,
-    "p2": 6,
+    "punti": 327,
+    "vittorie": 5,
+    "p1": 5,
+    "p2": 7,
     "p3": 6,
-    "pout": 14,
+    "pout": 17,
     "n_atleti": 5,
     "pos": 3
   },
@@ -194,12 +194,12 @@
   {
     "team_id": "SC_POTENTIA_RINASCITA_ASD",
     "team_nome": "SC POTENTIA-RINASCITA ASD",
-    "punti": 126,
+    "punti": 132,
     "vittorie": 3,
     "p1": 3,
     "p2": 3,
     "p3": 2,
-    "pout": 3,
+    "pout": 4,
     "n_atleti": 1,
     "pos": 17
   },
@@ -504,6 +504,18 @@
     "pos": 42
   },
   {
+    "team_id": "ASD_GUBBIO_CICLISMO_MOCAIANA",
+    "team_nome": "ASD GUBBIO CICLISMO MOCAIANA",
+    "punti": 76,
+    "vittorie": 1,
+    "p1": 1,
+    "p2": 1,
+    "p3": 1,
+    "pout": 6,
+    "n_atleti": 2,
+    "pos": 43
+  },
+  {
     "team_id": "A_S_A_C_I_EVONACICLI",
     "team_nome": "A.S.A.C.I. - EVONACICLI",
     "punti": 76,
@@ -513,7 +525,7 @@
     "p3": 1,
     "pout": 13,
     "n_atleti": 3,
-    "pos": 43
+    "pos": 44
   },
   {
     "team_id": "ASD_G_C_FAUSTO_COPPI",
@@ -525,7 +537,7 @@
     "p3": 1,
     "pout": 11,
     "n_atleti": 4,
-    "pos": 44
+    "pos": 45
   },
   {
     "team_id": "STAR_CYCLING_LAB",
@@ -537,7 +549,7 @@
     "p3": 0,
     "pout": 14,
     "n_atleti": 3,
-    "pos": 45
+    "pos": 46
   },
   {
     "team_id": "BUSTESE_OLONIA_A_S_D",
@@ -549,7 +561,7 @@
     "p3": 0,
     "pout": 13,
     "n_atleti": 4,
-    "pos": 46
+    "pos": 47
   },
   {
     "team_id": "G_S_MOSOLE",
@@ -561,18 +573,6 @@
     "p3": 1,
     "pout": 8,
     "n_atleti": 1,
-    "pos": 47
-  },
-  {
-    "team_id": "ASD_GUBBIO_CICLISMO_MOCAIANA",
-    "team_nome": "ASD GUBBIO CICLISMO MOCAIANA",
-    "punti": 68,
-    "vittorie": 1,
-    "p1": 1,
-    "p2": 1,
-    "p3": 1,
-    "pout": 5,
-    "n_atleti": 2,
     "pos": 48
   },
   {
@@ -636,6 +636,18 @@
     "pos": 53
   },
   {
+    "team_id": "GS_PIANELLO",
+    "team_nome": "GS PIANELLO",
+    "punti": 65,
+    "vittorie": 0,
+    "p1": 0,
+    "p2": 0,
+    "p3": 1,
+    "pout": 12,
+    "n_atleti": 4,
+    "pos": 54
+  },
+  {
     "team_id": "UC_COLTANO_GRUBE_COSTRUZIONI",
     "team_nome": "UC COLTANO GRUBE COSTRUZIONI",
     "punti": 64,
@@ -645,7 +657,7 @@
     "p3": 2,
     "pout": 12,
     "n_atleti": 3,
-    "pos": 54
+    "pos": 55
   },
   {
     "team_id": "A_S_D_PROBIKE_ERICE",
@@ -657,7 +669,7 @@
     "p3": 2,
     "pout": 7,
     "n_atleti": 2,
-    "pos": 55
+    "pos": 56
   },
   {
     "team_id": "I_CINGHIALI_EVO",
@@ -669,7 +681,7 @@
     "p3": 1,
     "pout": 9,
     "n_atleti": 2,
-    "pos": 56
+    "pos": 57
   },
   {
     "team_id": "VC_CREMONESE",
@@ -681,7 +693,7 @@
     "p3": 0,
     "pout": 9,
     "n_atleti": 1,
-    "pos": 57
+    "pos": 58
   },
   {
     "team_id": "ASD_CICLOTOUR",
@@ -693,7 +705,7 @@
     "p3": 0,
     "pout": 3,
     "n_atleti": 1,
-    "pos": 58
+    "pos": 59
   },
   {
     "team_id": "UC_FOEN_MICTU",
@@ -705,7 +717,7 @@
     "p3": 0,
     "pout": 6,
     "n_atleti": 2,
-    "pos": 59
+    "pos": 60
   },
   {
     "team_id": "PEDALE_SARZANESE",
@@ -717,7 +729,7 @@
     "p3": 0,
     "pout": 9,
     "n_atleti": 3,
-    "pos": 60
+    "pos": 61
   },
   {
     "team_id": "GS_BERTI_MOBILI_BENASSI",
@@ -729,7 +741,7 @@
     "p3": 0,
     "pout": 8,
     "n_atleti": 2,
-    "pos": 61
+    "pos": 62
   },
   {
     "team_id": "G_C_SOSSANO_1975",
@@ -741,7 +753,7 @@
     "p3": 0,
     "pout": 6,
     "n_atleti": 1,
-    "pos": 62
+    "pos": 63
   },
   {
     "team_id": "A_S_D_CICLISTICA_MONSELICE",
@@ -753,7 +765,7 @@
     "p3": 0,
     "pout": 12,
     "n_atleti": 2,
-    "pos": 63
+    "pos": 64
   },
   {
     "team_id": "TEAM_CORATTI",
@@ -765,7 +777,7 @@
     "p3": 1,
     "pout": 9,
     "n_atleti": 3,
-    "pos": 64
+    "pos": 65
   },
   {
     "team_id": "G_S_ALTO_ADIGE_SUDTIROLPOST",
@@ -777,7 +789,7 @@
     "p3": 2,
     "pout": 9,
     "n_atleti": 4,
-    "pos": 65
+    "pos": 66
   },
   {
     "team_id": "ASD_FUSION_BIKE",
@@ -789,18 +801,6 @@
     "p3": 1,
     "pout": 8,
     "n_atleti": 2,
-    "pos": 66
-  },
-  {
-    "team_id": "GS_PIANELLO",
-    "team_nome": "GS PIANELLO",
-    "punti": 50,
-    "vittorie": 0,
-    "p1": 0,
-    "p2": 0,
-    "p3": 0,
-    "pout": 10,
-    "n_atleti": 4,
     "pos": 67
   },
   {

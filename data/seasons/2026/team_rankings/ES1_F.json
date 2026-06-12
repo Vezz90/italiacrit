@@ -1,5 +1,17 @@
 [
   {
+    "team_id": "POL_FIUMICINESE_FA_I_T_ADRIATICA",
+    "team_nome": "POL. FIUMICINESE FA.I.T. ADRIATICA",
+    "punti": 256,
+    "vittorie": 7,
+    "p1": 7,
+    "p2": 4,
+    "p3": 4,
+    "pout": 7,
+    "n_atleti": 3,
+    "pos": 1
+  },
+  {
     "team_id": "GS_CAPANNORI",
     "team_nome": "GS CAPANNORI",
     "punti": 247,
@@ -9,7 +21,7 @@
     "p3": 3,
     "pout": 18,
     "n_atleti": 5,
-    "pos": 1
+    "pos": 2
   },
   {
     "team_id": "U_C_GIORGIONE",
@@ -21,18 +33,6 @@
     "p3": 3,
     "pout": 15,
     "n_atleti": 6,
-    "pos": 2
-  },
-  {
-    "team_id": "POL_FIUMICINESE_FA_I_T_ADRIATICA",
-    "team_nome": "POL. FIUMICINESE FA.I.T. ADRIATICA",
-    "punti": 219,
-    "vittorie": 6,
-    "p1": 6,
-    "p2": 3,
-    "p3": 3,
-    "pout": 7,
-    "n_atleti": 2,
     "pos": 3
   },
   {
