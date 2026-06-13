@@ -233,19 +233,20 @@ img { max-width: 100%; display: block; }
   border-radius: 50%;
   animation: blink-dot 1s infinite;
 }
-/* Selettore lingua (navbar) */
+/* Selettore lingua (navbar) — solo bandiera, compatto */
 .lang-select {
   margin-left: 14px;
   background: #1a1a1a;
   color: #f0f0f0;
   border: 1px solid rgba(255,255,255,0.1);
-  border-radius: 4px;
-  font-family: var(--font-body);
-  font-size: 0.82rem;
-  padding: 5px 8px;
+  border-radius: 6px;
+  font-size: 1.05rem;
+  line-height: 1;
+  padding: 5px 6px;
   cursor: pointer;
   outline: none;
   flex-shrink: 0;
+  text-align: center;
 }
 .lang-select:focus { border-color: var(--red-hot); }
 .lang-select option { background: #1a1a1a; color: #f0f0f0; }
@@ -265,10 +266,19 @@ img { max-width: 100%; display: block; }
 }
 /* Google Translate: nascondi widget e banner, evita lo shift del body */
 #google_translate_element { display: none !important; }
-.goog-te-banner-frame, .goog-te-gadget-icon, #goog-gt-tt, .goog-te-balloon-frame { display: none !important; }
+.goog-te-banner-frame,
+.goog-te-banner-frame.skiptranslate,
+iframe.goog-te-banner-frame,
+.goog-te-gadget,
+.goog-te-gadget-icon,
+.goog-te-balloon-frame,
+#goog-gt-tt,
+.VIpgJd-ZVi9od-aZ2wEe-wOHMyf,
+.skiptranslate { display: none !important; }
 .goog-tooltip, .goog-tooltip:hover { display: none !important; }
 .goog-text-highlight { background: none !important; box-shadow: none !important; }
-body { top: 0 !important; }
+/* Google sposta il body di ~40px per il banner: forziamo lo stato originale */
+body { top: 0 !important; position: static !important; }
 /* Hamburger (mobile) */
 #nav-hamburger {
   display: none;
@@ -1246,8 +1256,8 @@ footer .footer-sep { color: var(--red-hot); margin: 0 8px; }
   #ctx-chip .ctx-chip-lbl { max-width: none; }
   /* La ricerca esce dalla navbar e va sotto l'header (#mobile-search-bar) */
   .nav-search-wrap { display: none; }
-  /* Lingua gestita dal drawer su mobile */
-  #lang-select { display: none; }
+  /* Selettore lingua (bandiera) visibile anche su mobile, compatto */
+  .lang-select { margin-left: 6px; order: 3; padding: 4px 4px; font-size: 1rem; }
   .theme-toggle { order: 4; margin-left: auto; flex-shrink: 0; }
   #nav-hamburger { order: 5; margin-left: 6px; flex-shrink: 0; }
   /* Barra ricerca mobile: fissa sotto l'header, prima del contenuto */

@@ -2039,6 +2039,7 @@ function route() {
     return renderClassifica();
   }
   if (match('/classifica')) return renderClassifica();
+  if (match('/albo')) return renderAlboDoro();
   if (match('/atleti')) return renderAtletiList();
   if (match('/team')) return renderTeamList();
   if (match('/gare')) return renderGare();
@@ -2089,7 +2090,7 @@ function updateNavActive(hash) {
 
   const seg = (hash.replace(/^#\//, '').split('/')[0] || '');
 
-  const CLASS_SEGS   = ['classifica', 'atleti', 'team', 'atleta', 'gare', 'gara'];
+  const CLASS_SEGS   = ['classifica', 'albo', 'atleti', 'team', 'atleta', 'gare', 'gara'];
   const ANALISI_SEGS = ['statistiche', 'comparatore'];
   const ACCOUNT_SEGS = ['login', 'register', 'profilo'];
 
@@ -2100,6 +2101,7 @@ function updateNavActive(hash) {
   } else if (CLASS_SEGS.includes(seg)) {
     document.getElementById('nav-class-btn')?.classList.add('active');
     document.getElementById('nav-class')?.classList.toggle('active',  seg === 'classifica');
+    document.getElementById('nav-albo')?.classList.toggle('active',   seg === 'albo');
     document.getElementById('nav-atleti')?.classList.toggle('active', seg === 'atleti');
     document.getElementById('nav-team')?.classList.toggle('active',   seg === 'team');
     document.getElementById('nav-gare')?.classList.toggle('active',   seg === 'gare' || seg === 'gara');
@@ -6081,7 +6083,7 @@ async function _renderNavBars() {
   const BARS = [
     { href:'#/risultati',   num:'01', label:'Risultati',   desc:'Gare recenti, podi e classifiche per categoria e regione', subs: null },
     { href:'#/classifica',  num:'02', label:'Classifiche', desc:'Ranking atleti, team e classifica generale della stagione',
-      subs:[{l:'Classifica',h:'#/classifica'},{l:'Atleti',h:'#/atleti'},{l:'Team',h:'#/team'}] },
+      subs:[{l:'Classifica',h:'#/classifica'},{l:'Albo d\'Oro',h:'#/albo'},{l:'Atleti',h:'#/atleti'},{l:'Team',h:'#/team'}] },
     { href:'#/calendario',  num:'03', label:'Calendario',  desc:'Prossime gare e calendario stagionale completo', subs: null },
     { href:'#/statistiche', num:'04', label:'Analisi',     desc:'Statistiche, comparatore atleti e trend stagionali',
       subs:[{l:'Statistiche',h:'#/statistiche'},{l:'Comparatore',h:'#/comparatore'}] },
@@ -6423,22 +6425,25 @@ async function _seasonChampion(year, code, isTeam) {
   return top || null;
 }
 
-async function _injectClassificaAlboDoro() {
-  const host = document.getElementById('rank-albo-doro');
-  if (!host) return;
-  const code = rankCat;
-  const isTeam = rankView === 'team';
+// Campioni (1° classificato) di ogni stagione disponibile per una categoria.
+async function _alboDoroRows(code, isTeam) {
   const years = _availableSeasonYears(); // ordine decrescente
   const cur = String((_seasonsIndex && _seasonsIndex.current) || currentSeason || '');
-
   const rows = await Promise.all(years.map(async y => ({
     year: y, isCur: String(y) === cur, champ: await _seasonChampion(y, code, isTeam),
   })));
-  const valid = rows.filter(r => r.champ);
-  // Se l'host nel frattempo è cambiato (l'utente ha cambiato categoria/vista), esci
-  if (document.getElementById('rank-albo-doro') !== host) return;
-  if (!valid.length) { host.innerHTML = ''; return; }
+  return rows.filter(r => r.champ);
+}
 
+// HTML della card Albo d'Oro (riutilizzata in classifica e nella pagina dedicata).
+function _alboDoroCardHtml(code, isTeam, valid, opts) {
+  opts = opts || {};
+  const head = `<div class="albo-doro-head">
+      ${opts.eyebrow !== false ? `<div class="pg-eyebrow">ALBO D'ORO</div>` : ''}
+      <h2>${esc(catLabel(code))}${isTeam ? ' · Team' : ''}</h2>
+      <p>${valid.length ? 'I vincitori della classifica stagionale, anno per anno.' : 'Ancora nessun campione registrato per questa categoria.'}</p>
+    </div>`;
+  if (!valid.length) return opts.showEmpty ? `<section class="albo-doro-card">${head}</section>` : '';
   const itemsHtml = valid.map(r => {
     const c = r.champ;
     const name = isTeam ? esc(c.team_nome || '') : esc(((c.cognome || '') + ' ' + (c.nome || '')).trim());
@@ -6451,16 +6456,63 @@ async function _injectClassificaAlboDoro() {
       <span class="albo-champ"><span class="albo-trophy">🏆</span><span class="albo-name">${name}</span><span class="albo-sub">${sub}</span></span>
     </a>`;
   }).join('');
+  return `<section class="albo-doro-card">${head}<div class="albo-doro-list">${itemsHtml}</div></section>`;
+}
 
-  host.innerHTML = `
-    <section class="albo-doro-card">
-      <div class="albo-doro-head">
-        <div class="pg-eyebrow">ALBO D'ORO</div>
-        <h2>${esc(catLabel(code))}${isTeam ? ' · Team' : ''}</h2>
-        <p>I vincitori della classifica stagionale, anno per anno.</p>
-      </div>
-      <div class="albo-doro-list">${itemsHtml}</div>
-    </section>`;
+async function _injectClassificaAlboDoro() {
+  const host = document.getElementById('rank-albo-doro');
+  if (!host) return;
+  const code = rankCat;
+  const isTeam = rankView === 'team';
+  const valid = await _alboDoroRows(code, isTeam);
+  // Se l'host nel frattempo è cambiato (l'utente ha cambiato categoria/vista), esci
+  if (document.getElementById('rank-albo-doro') !== host) return;
+  host.innerHTML = _alboDoroCardHtml(code, isTeam, valid, { eyebrow: true });
+}
+
+// ── PAGINA ALBO D'ORO (menu Classifiche) ──────────────────────────
+let alboGender = 'M', alboCat = 'ES1_M', alboView = 'atleti';
+window.setAlboGender = (g) => { alboGender = g; alboCat = g === 'M' ? 'ES1_M' : 'ES1_F'; renderAlboDoro(); };
+window.setAlboCat    = (c) => { alboCat = c; renderAlboDoro(); };
+window.setAlboView   = (v) => { alboView = v; renderAlboDoro(); };
+
+async function renderAlboDoro() {
+  if (!globalData) return;
+  if ((alboGender === 'M' && alboCat.endsWith('_F')) || (alboGender === 'F' && !alboCat.endsWith('_F'))) {
+    alboCat = alboGender === 'M' ? 'ES1_M' : 'ES1_F';
+  }
+  const catsMale   = ['ES1_M','ES2_M','AL_M','JUN_M','ELI_M'];
+  const catsFemale = ['ES1_F','ES2_F','AL_F','JUN_F','ELI_F'];
+  const cats = alboGender === 'M' ? catsMale : catsFemale;
+
+  const genderTabs = ['M','F'].map(g =>
+    `<button class="tab-btn ${alboGender===g?'active-gender':''}" onclick="setAlboGender('${g}')">${g==='M'?'UOMINI':'DONNE'}</button>`
+  ).join('');
+  const catTabs = cats.map(c =>
+    `<button class="tab-btn ${alboCat===c?'active-cat':''}" onclick="setAlboCat('${c}')">${catLabel(c)}</button>`
+  ).join('');
+  const viewTabs = `<div class="tab-group" role="tablist" aria-label="Vista" style="margin-left:auto">
+      <button class="tab-btn ${alboView==='atleti'?'active-cat':''}" onclick="setAlboView('atleti')">ATLETI</button>
+      <button class="tab-btn ${alboView==='team'?'active-cat':''}" onclick="setAlboView('team')">TEAM</button>
+    </div>`;
+
+  setPage(`
+    <div class="pg-header">
+      <div class="pg-eyebrow">STORICITÀ</div>
+      <h1 class="pg-title">ALBO D'ORO</h1>
+    </div>
+    <p style="color:var(--text-muted);margin:-4px 0 16px;max-width:680px">I campioni di ogni stagione, categoria per categoria. Si arricchisce automaticamente al termine di ogni annata (31/12).</p>
+    <div class="ranking-controls">
+      <div class="tab-group" role="tablist" aria-label="Seleziona genere">${genderTabs}</div>
+      <div class="tab-group" role="tablist" aria-label="Seleziona categoria">${catTabs}</div>
+      <div class="ranking-filter-bar" style="border-top:1px solid var(--border-subtle); padding-top:12px">${viewTabs}</div>
+    </div>
+    <div id="albo-page-host"><p style="color:var(--text-muted)">Caricamento…</p></div>
+  `);
+
+  const valid = await _alboDoroRows(alboCat, alboView === 'team');
+  const hostEl = document.getElementById('albo-page-host');
+  if (hostEl) hostEl.innerHTML = _alboDoroCardHtml(alboCat, alboView === 'team', valid, { eyebrow: false, showEmpty: true });
 }
 
 async function updateRankTable() {
@@ -15351,26 +15403,44 @@ window.goTo = (hash) => { window.location.hash = hash; };
 // Pilota il widget Google Translate tramite il cookie `googtrans`, così la
 // scelta resta persistente tra le pagine. 'it' = lingua originale.
 window.setLang = (lang) => {
-  const val = (!lang || lang === 'it') ? '' : '/it/' + lang;
-  try { localStorage.setItem('ics-lang', lang || 'it'); } catch {}
-  // Cookie sull'host corrente e sul dominio padre (per i sottodomini)
+  lang = lang || 'it';
+  try { localStorage.setItem('ics-lang', lang); } catch {}
+  // Tieni allineati i due selettori (navbar + drawer)
+  ['lang-select', 'lang-select-m'].forEach(id => {
+    const el = document.getElementById(id);
+    if (el) el.value = lang;
+  });
+  // Cookie per persistenza tra ricariche/sessioni (host + dominio padre)
+  const val = lang === 'it' ? '' : '/it/' + lang;
   const host = location.hostname;
   document.cookie = 'googtrans=' + val + ';path=/';
   if (host && host.indexOf('.') !== -1) {
     document.cookie = 'googtrans=' + val + ';path=/;domain=.' + host;
   }
-  // Prova a tradurre live (senza reload); se il combo non è pronto, ricarica
-  const combo = document.querySelector('.goog-te-combo');
-  if (combo) {
-    combo.value = lang === 'it' ? '' : lang;
-    combo.dispatchEvent(new Event('change'));
-    if (!val) location.reload(); // tornare all'originale richiede il reload
-  } else {
-    location.reload();
-  }
+  // Tornare all'originale (italiano) in modo pulito richiede il reload
+  if (lang === 'it') { location.reload(); return; }
+  // Altrimenti traduci in-page via il combo nascosto del widget Google:
+  // niente reload, niente banner (nascosto via CSS).
+  _applyGoogleLang(lang, 0);
 };
 
-// Allinea i selettori (navbar + drawer) alla lingua salvata
+// Applica la lingua pilotando il <select> nascosto creato dal widget Google.
+// Riprova finché il widget non è pronto (caricamento async).
+function _applyGoogleLang(lang, tries) {
+  tries = tries || 0;
+  const combo = document.querySelector('.goog-te-combo');
+  if (!combo) {
+    if (tries < 30) setTimeout(() => _applyGoogleLang(lang, tries + 1), 300);
+    return;
+  }
+  const target = lang === 'it' ? '' : lang;
+  if (combo.value !== target) {
+    combo.value = target;
+    combo.dispatchEvent(new Event('change'));
+  }
+}
+
+// Allinea i selettori alla lingua salvata e ri-applica la traduzione al load
 function initLang() {
   let lang = 'it';
   try { lang = localStorage.getItem('ics-lang') || 'it'; } catch {}
@@ -15378,6 +15448,7 @@ function initLang() {
     const el = document.getElementById(id);
     if (el) el.value = lang;
   });
+  if (lang && lang !== 'it') _applyGoogleLang(lang, 0);
 }
 
 // Rimuove il suffisso categoria (_AL_M, _ES1_F…) per ottenere il calendario ID

@@ -28,7 +28,7 @@
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
   <link href="https://fonts.googleapis.com/css2?family=Inter+Tight:wght@400;600;700;800;900&display=swap" rel="stylesheet" />
-  <link rel="stylesheet" href="style.css?v=13" />
+  <link rel="stylesheet" href="style.css?v=14" />
   <link rel="stylesheet" href="design.css?v=123" />
   <link rel="manifest" href="manifest.json" />
   <meta name="theme-color" content="#e8001d" />
@@ -58,6 +58,7 @@
       </button>
       <div class="nav-group-panel" role="menu">
         <a href="#/classifica" class="nav-group-item" id="nav-class"   role="menuitem">Classifica</a>
+        <a href="#/albo"       class="nav-group-item" id="nav-albo"    role="menuitem">Albo d'Oro</a>
         <a href="#/atleti"     class="nav-group-item" id="nav-atleti"  role="menuitem">Atleti</a>
         <a href="#/team"       class="nav-group-item" id="nav-team"    role="menuitem">Team</a>
         <a href="#/gare"       class="nav-group-item" id="nav-gare"    role="menuitem">Gare</a>
@@ -105,13 +106,13 @@
     <span class="notif-badge" id="notif-badge" style="display:none">0</span>
   </button>
   <select id="lang-select" class="lang-select" aria-label="Seleziona lingua / Select language" onchange="window.setLang(this.value)" title="Lingua / Language">
-    <option value="it">🇮🇹 Italiano</option>
-    <option value="en">🇬🇧 English</option>
-    <option value="es">🇪🇸 Español</option>
-    <option value="fr">🇫🇷 Français</option>
-    <option value="de">🇩🇪 Deutsch</option>
-    <option value="pt">🇵🇹 Português</option>
-    <option value="nl">🇳🇱 Nederlands</option>
+    <option value="it">🇮🇹</option>
+    <option value="en">🇬🇧</option>
+    <option value="es">🇪🇸</option>
+    <option value="fr">🇫🇷</option>
+    <option value="de">🇩🇪</option>
+    <option value="pt">🇵🇹</option>
+    <option value="nl">🇳🇱</option>
   </select>
   <button class="theme-toggle" id="theme-toggle" aria-label="Cambia tema">
     <svg class="theme-icon-sun" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 3v1m0 16v1m9-9h-1M4 9H3m15.364-6.364l-.707.707M6.343 17.657l-.707.707M16.243 17.243l.707.707M7.757 7.757l.707-.707M12 8a4 4 0 100 8 4 4 0 000-8z"/></svg>
@@ -135,6 +136,7 @@
   <a href="#/risultati"   class="nav-link" id="drawer-risultati">Risultati</a>
   <div class="drawer-section-label">CLASSIFICHE</div>
   <a href="#/classifica"  class="nav-link" id="drawer-class">Classifica</a>
+  <a href="#/albo"        class="nav-link" id="drawer-albo">Albo d'Oro</a>
   <a href="#/atleti"      class="nav-link" id="drawer-atleti">Atleti</a>
   <a href="#/team"        class="nav-link" id="drawer-team">Team</a>
   <a href="#/gare"        class="nav-link" id="drawer-gare">Gare</a>
@@ -200,6 +202,6 @@ function googleTranslateElementInit() {
 }
 </script>
 <script src="//translate.google.com/translate_a/element.js?cb=googleTranslateElementInit" async></script>
-<script src="app.js?v=384" defer></script>
+<script src="app.js?v=385" defer></script>
 </body>
 </html>
