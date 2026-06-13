@@ -2922,7 +2922,7 @@ function _itcBuildGate() {
   return '<div class="itc-gate-grain"></div>' +
 
     '<header class="itc-gate-hdr">' +
-      '<img src="assets/logo.png?v=2" class="itc-gate-logo" alt="ItaliacritResultati"/>' +
+      '<img src="assets/logo.png?v=3" class="itc-gate-logo" alt="ItaliacritResultati"/>' +
       '<p class="itc-gate-tagline">The Home of Italian Cycling</p>' +
     '</header>' +
 
@@ -15737,7 +15737,7 @@ async function _getLogo() {
     const img = new Image(); img.crossOrigin = 'anonymous';
     img.onload = () => { _shareLogoImg = img; res(img); };
     img.onerror = () => res(null);
-    img.src = 'assets/logo.png?v=2';
+    img.src = 'assets/logo.png?v=3';
   });
 }
 

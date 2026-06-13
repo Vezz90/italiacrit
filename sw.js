@@ -1,4 +1,4 @@
-const CACHE_NAME = 'italiacrit-cache-v179';
+const CACHE_NAME = 'italiacrit-cache-v180';
 
 // File statici: messi in cache e serviti velocemente
 const STATIC_ASSETS = [
@@ -121,8 +121,8 @@ self.addEventListener('push', event => {
   const title = data.title || 'ItaliacritResultati';
   const options = {
     body: data.body || '',
-    icon: './assets/logo.png?v=2',
-    badge: './assets/logo.png?v=2',
+    icon: './assets/logo.png?v=3',
+    badge: './assets/logo.png?v=3',
     data: { url: data.url || '/' },
     vibrate: [100, 50, 100],
   };
