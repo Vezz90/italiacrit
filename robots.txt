@@ -1,4 +1,4 @@
 User-agent: *
 Allow: /
 
-Sitemap: https://vezz90.github.io/italiacrit/sitemap.xml
+Sitemap: https://italiacyclingstats.com/sitemap.xml
