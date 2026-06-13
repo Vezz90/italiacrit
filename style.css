@@ -233,6 +233,42 @@ img { max-width: 100%; display: block; }
   border-radius: 50%;
   animation: blink-dot 1s infinite;
 }
+/* Selettore lingua (navbar) */
+.lang-select {
+  margin-left: 14px;
+  background: #1a1a1a;
+  color: #f0f0f0;
+  border: 1px solid rgba(255,255,255,0.1);
+  border-radius: 4px;
+  font-family: var(--font-body);
+  font-size: 0.82rem;
+  padding: 5px 8px;
+  cursor: pointer;
+  outline: none;
+  flex-shrink: 0;
+}
+.lang-select:focus { border-color: var(--red-hot); }
+.lang-select option { background: #1a1a1a; color: #f0f0f0; }
+/* Selettore lingua (drawer mobile) */
+.lang-select-m {
+  width: 100%;
+  background: var(--bg-elevated, #1a1a1a);
+  color: var(--text-primary, #f0f0f0);
+  border: 1px solid var(--border-subtle, rgba(255,255,255,0.1));
+  border-radius: 6px;
+  font-family: var(--font-body);
+  font-size: 0.95rem;
+  padding: 10px 12px;
+  margin-top: 4px;
+  cursor: pointer;
+  outline: none;
+}
+/* Google Translate: nascondi widget e banner, evita lo shift del body */
+#google_translate_element { display: none !important; }
+.goog-te-banner-frame, .goog-te-gadget-icon, #goog-gt-tt, .goog-te-balloon-frame { display: none !important; }
+.goog-tooltip, .goog-tooltip:hover { display: none !important; }
+.goog-text-highlight { background: none !important; box-shadow: none !important; }
+body { top: 0 !important; }
 /* Hamburger (mobile) */
 #nav-hamburger {
   display: none;
@@ -311,6 +347,8 @@ body:not(.light-mode) .theme-icon-moon { display: none; }
   overflow: hidden;
   box-shadow: 0 8px 32px rgba(0,0,0,0.6);
 }
+/* Barra di ricerca mobile (sotto l'header) — nascosta su desktop */
+#mobile-search-bar { display: none; }
 .search-result-item {
   padding: 10px 14px;
   border-bottom: 1px solid var(--border-subtle);
@@ -1206,25 +1244,57 @@ footer .footer-sep { color: var(--red-hot); margin: 0 8px; }
     justify-content: center;
   }
   #ctx-chip .ctx-chip-lbl { max-width: none; }
-  /* Gruppo destra */
-  .nav-search-wrap {
-    display: flex;
-    margin-left: 0;
-    flex-shrink: 1;
-    min-width: 0;
-    max-width: 120px;
-    order: 3;
-  }
-  .theme-toggle { order: 4; margin-left: 6px; flex-shrink: 0; }
+  /* La ricerca esce dalla navbar e va sotto l'header (#mobile-search-bar) */
+  .nav-search-wrap { display: none; }
+  /* Lingua gestita dal drawer su mobile */
+  #lang-select { display: none; }
+  .theme-toggle { order: 4; margin-left: auto; flex-shrink: 0; }
   #nav-hamburger { order: 5; margin-left: 6px; flex-shrink: 0; }
-  #nav-search {
-    width: 100% !important;
-    font-size: 0.78rem;
-    padding: 5px 8px;
+  /* Barra ricerca mobile: fissa sotto l'header, prima del contenuto */
+  #mobile-search-bar {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    position: fixed;
+    top: var(--nav-h, 56px); left: 0; right: 0;
+    z-index: 95;
+    height: 52px;
+    padding: 0 12px;
+    background: #0a0a0a;
+    border-bottom: 1px solid rgba(255,255,255,0.08);
   }
-  /* Dropdown allineato a destra per non uscire dallo schermo */
+  #mobile-search-bar .m-search-icon { color: #777; flex-shrink: 0; }
+  #m-search {
+    flex: 1;
+    min-width: 0;
+    background: #1a1a1a;
+    border: 1px solid rgba(255,255,255,0.1);
+    color: #f0f0f0;
+    font-family: var(--font-body);
+    font-size: 0.9rem;
+    padding: 8px 12px;
+    border-radius: 6px;
+    outline: none;
+  }
+  #m-search::placeholder { color: #555; }
+  #m-search:focus { border-color: var(--red-hot); }
+  #m-search-dropdown {
+    position: absolute;
+    top: 100%;
+    left: 12px; right: 12px;
+    background: var(--bg-card);
+    border: 1px solid var(--border-subtle);
+    border-radius: 6px;
+    margin-top: 4px;
+    max-height: 70vh;
+    overflow-y: auto;
+    z-index: 200;
+    box-shadow: 0 8px 32px rgba(0,0,0,0.6);
+  }
+  /* Dropdown navbar (drawer) allineato a destra per non uscire dallo schermo */
   #search-results-dropdown { right: 0; left: auto; width: 260px; }
-  #app { padding-top: 60px; }
+  /* Offset contenuto: header (60) + barra ricerca (52) */
+  #app { padding-top: 112px; }
   #nav-drawer { top: 60px; }
   /* Separatore rimosso su mobile */
   .nav-sep { display: none; }

@@ -28,8 +28,8 @@
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
   <link href="https://fonts.googleapis.com/css2?family=Inter+Tight:wght@400;600;700;800;900&display=swap" rel="stylesheet" />
-  <link rel="stylesheet" href="style.css?v=12" />
-  <link rel="stylesheet" href="design.css?v=122" />
+  <link rel="stylesheet" href="style.css?v=13" />
+  <link rel="stylesheet" href="design.css?v=123" />
   <link rel="manifest" href="manifest.json" />
   <meta name="theme-color" content="#e8001d" />
   <script type="application/ld+json">
@@ -104,6 +104,15 @@
     <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" width="20" height="20" aria-hidden="true"><path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9"/><path d="M13.73 21a2 2 0 0 1-3.46 0"/></svg>
     <span class="notif-badge" id="notif-badge" style="display:none">0</span>
   </button>
+  <select id="lang-select" class="lang-select" aria-label="Seleziona lingua / Select language" onchange="window.setLang(this.value)" title="Lingua / Language">
+    <option value="it">🇮🇹 Italiano</option>
+    <option value="en">🇬🇧 English</option>
+    <option value="es">🇪🇸 Español</option>
+    <option value="fr">🇫🇷 Français</option>
+    <option value="de">🇩🇪 Deutsch</option>
+    <option value="pt">🇵🇹 Português</option>
+    <option value="nl">🇳🇱 Nederlands</option>
+  </select>
   <button class="theme-toggle" id="theme-toggle" aria-label="Cambia tema">
     <svg class="theme-icon-sun" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 3v1m0 16v1m9-9h-1M4 9H3m15.364-6.364l-.707.707M6.343 17.657l-.707.707M16.243 17.243l.707.707M7.757 7.757l.707-.707M12 8a4 4 0 100 8 4 4 0 000-8z"/></svg>
     <svg class="theme-icon-moon" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20.354 15.354A9 9 0 018.646 3.646 9.003 9.003 0 0012 21a9.003 9.003 0 008.354-5.646z"/></svg>
@@ -112,6 +121,13 @@
     <span></span><span></span><span></span>
   </button>
 </nav>
+
+<!-- Barra di ricerca mobile: sotto l'header, prima del contenuto (solo su mobile) -->
+<div id="mobile-search-bar" role="search">
+  <svg class="m-search-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" width="18" height="18" aria-hidden="true"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
+  <input type="search" id="m-search" placeholder="Cerca atleta, team o gara…" autocomplete="off" aria-label="Cerca atleta, team o gara" />
+  <div id="m-search-dropdown" role="listbox" aria-label="Risultati ricerca" style="display:none"></div>
+</div>
 
 <!-- Mobile drawer (flat — no dropdowns su mobile) -->
 <div id="nav-drawer" role="dialog" aria-label="Menu mobile">
@@ -129,7 +145,20 @@
   <div class="drawer-section-label" id="drawer-section-msg" style="display:none">ACCOUNT</div>
   <a href="#/messaggi"    class="nav-link" id="drawer-msg" style="display:none">Messaggi <span class="drawer-msg-badge" id="drawer-msg-badge" style="display:none">0</span></a>
   <a href="#/login"       class="nav-link" id="drawer-login">Login / Profilo</a>
+  <div class="drawer-section-label">LINGUA / LANGUAGE</div>
+  <select id="lang-select-m" class="lang-select-m" aria-label="Seleziona lingua / Select language" onchange="window.setLang(this.value)">
+    <option value="it">🇮🇹 Italiano</option>
+    <option value="en">🇬🇧 English</option>
+    <option value="es">🇪🇸 Español</option>
+    <option value="fr">🇫🇷 Français</option>
+    <option value="de">🇩🇪 Deutsch</option>
+    <option value="pt">🇵🇹 Português</option>
+    <option value="nl">🇳🇱 Nederlands</option>
+  </select>
 </div>
+
+<!-- Traduzione automatica (Google) — pilotata dal selettore lingua -->
+<div id="google_translate_element" aria-hidden="true"></div>
 
 <!-- ══════════════════════════════════════════════════════════ -->
 <!--  APP ROOT                                                  -->
@@ -160,6 +189,17 @@
   </span>
 </footer>
 
-<script src="app.js?v=382" defer></script>
+<!-- Google Website Translator: traduce automaticamente tutta l'interfaccia -->
+<script>
+function googleTranslateElementInit() {
+  new google.translate.TranslateElement({
+    pageLanguage: 'it',
+    includedLanguages: 'it,en,es,fr,de,pt,nl',
+    autoDisplay: false
+  }, 'google_translate_element');
+}
+</script>
+<script src="//translate.google.com/translate_a/element.js?cb=googleTranslateElementInit" async></script>
+<script src="app.js?v=384" defer></script>
 </body>
 </html>

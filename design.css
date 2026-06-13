@@ -1780,7 +1780,8 @@ a.hcal-row:hover {
 
   #navbar { height: var(--nav-h); padding: 0 12px; }
   .nav-logo-img { height: 38px; }
-  #app { padding-top: var(--nav-h); }
+  /* +52px per la barra di ricerca mobile fissa sotto l'header */
+  #app { padding-top: calc(var(--nav-h) + 52px); }
   #nav-drawer { top: var(--nav-h); }
 
   /* Chip si espande tra logo e search */
@@ -11640,4 +11641,69 @@ main.page:has(.itc-dash) {
   .dash-actions-grid { grid-template-columns: repeat(3, 1fr); }
   .dash-collect-grid { grid-template-columns: repeat(4, 1fr); }
   .pg-gallery { grid-template-columns: 1fr; }
+}
+
+/* ── ALBO D'ORO (classifiche storiche) ───────────────────────────── */
+.albo-doro-card {
+  margin: 28px 0 8px;
+  background: var(--bg-card);
+  border: 1px solid var(--border-subtle);
+  border-radius: 12px;
+  overflow: hidden;
+}
+.albo-doro-head {
+  padding: 18px 20px 10px;
+  border-bottom: 1px solid var(--border-subtle);
+}
+.albo-doro-head h2 {
+  margin: 2px 0 4px;
+  font-family: var(--font-heading);
+  font-size: 1.25rem;
+  font-weight: 800;
+  color: var(--text-primary);
+}
+.albo-doro-head p {
+  margin: 0;
+  font-size: 0.85rem;
+  color: var(--text-muted);
+}
+.albo-doro-list { display: flex; flex-direction: column; }
+.albo-row {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  padding: 12px 20px;
+  border-bottom: 1px solid var(--border-subtle);
+  text-decoration: none;
+  transition: background 0.12s;
+}
+.albo-row:last-child { border-bottom: none; }
+.albo-row:hover { background: var(--bg-elevated); }
+.albo-year {
+  flex-shrink: 0;
+  width: 64px;
+  font-family: var(--font-heading);
+  font-weight: 800;
+  font-size: 1.05rem;
+  color: var(--accent, #e8001d);
+}
+.albo-year em {
+  display: block;
+  font-style: normal;
+  font-size: 0.62rem;
+  font-weight: 700;
+  letter-spacing: 0.04em;
+  color: var(--text-muted);
+}
+.albo-champ { display: flex; align-items: baseline; flex-wrap: wrap; gap: 4px 10px; min-width: 0; }
+.albo-trophy { font-size: 1rem; }
+.albo-name {
+  font-family: var(--font-heading);
+  font-weight: 700;
+  color: var(--text-primary);
+}
+.albo-sub { font-size: 0.82rem; color: var(--text-secondary); }
+@media (max-width: 640px) {
+  .albo-row { gap: 12px; padding: 11px 14px; align-items: flex-start; }
+  .albo-year { width: 50px; font-size: 0.95rem; }
 }
