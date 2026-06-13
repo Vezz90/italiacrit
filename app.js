@@ -16282,7 +16282,7 @@ function _drawGara(ctx, W, H, d, logo, regionLogo) {
   const hH = Math.round(H * 0.095);
   let logoRight = pad;
   if (logo) {
-    const lH = Math.round(hH * 0.86);
+    const lH = Math.round(hH * 0.70);
     const lW = Math.round(lH * logo.naturalWidth / logo.naturalHeight);
     ctx.drawImage(logo, pad, Math.round((hH - lH) / 2), lW, lH);
     logoRight = pad + lW;
@@ -16392,84 +16392,149 @@ function _drawGara(ctx, W, H, d, logo, regionLogo) {
 }
 
 // ── ATLETA CARD ────────────────────────────────────────────
+// ── Helper: rettangolo arrotondato (fallback se roundRect non c'è) ──
+function _rr(ctx, x, y, w, h, r) {
+  if (ctx.roundRect) { ctx.beginPath(); ctx.roundRect(x, y, w, h, r); }
+  else { ctx.beginPath(); ctx.rect(x, y, w, h); }
+}
+// ── Helper: box "hero" con numero grande + etichetta ──
+function _statHero(ctx, x, y, w, h, val, label, style) {
+  const r = Math.round(h * 0.10);
+  ctx.fillStyle = 'rgba(255,255,255,0.045)'; _rr(ctx, x, y, w, h, r); ctx.fill();
+  ctx.strokeStyle = 'rgba(255,255,255,0.09)'; ctx.lineWidth = 1.5; _rr(ctx, x, y, w, h, r); ctx.stroke();
+  const fsV = Math.round(h * 0.44);
+  ctx.font = `900 ${fsV}px 'Inter Tight',sans-serif`;
+  ctx.textAlign = 'center'; ctx.textBaseline = 'alphabetic';
+  if (style === 'grad') { const g = ctx.createLinearGradient(x, y, x + w, y); g.addColorStop(0, '#e8001d'); g.addColorStop(1, '#f5c400'); ctx.fillStyle = g; }
+  else ctx.fillStyle = '#f5c400';
+  ctx.fillText(String(val), x + w / 2, y + Math.round(h * 0.56));
+  const fsL = Math.round(h * 0.135);
+  ctx.font = `600 ${fsL}px 'Inter Tight',sans-serif`; ctx.fillStyle = 'rgba(255,255,255,0.46)';
+  ctx.letterSpacing = '1px'; ctx.fillText(label, x + w / 2, y + Math.round(h * 0.83));
+  ctx.letterSpacing = '0px'; ctx.textAlign = 'left';
+}
+// ── Helper: cella statistica con accento colorato in alto ──
+function _statCell(ctx, x, y, w, h, val, label, color) {
+  const r = Math.round(Math.min(w, h) * 0.09);
+  ctx.fillStyle = 'rgba(255,255,255,0.04)'; _rr(ctx, x, y, w, h, r); ctx.fill();
+  ctx.fillStyle = color; _rr(ctx, x, y, w, Math.max(3, Math.round(h * 0.035)), 2); ctx.fill();
+  const fsV = Math.min(Math.round(h * 0.40), Math.round(w * 0.52));
+  ctx.font = `900 ${fsV}px 'Inter Tight',sans-serif`; ctx.fillStyle = color;
+  ctx.textAlign = 'center'; ctx.textBaseline = 'alphabetic';
+  ctx.fillText(String(val), x + w / 2, y + Math.round(h * 0.56));
+  const fsL = Math.min(Math.round(h * 0.13), Math.round(w * 0.15));
+  ctx.font = `600 ${fsL}px 'Inter Tight',sans-serif`; ctx.fillStyle = 'rgba(255,255,255,0.42)';
+  ctx.fillText(label, x + w / 2, y + Math.round(h * 0.80));
+  ctx.textAlign = 'left';
+}
+
 function _drawAtleta(ctx, W, H, d) {
   const {cognome,nome,cat,team,punti,pos,p1,p2,p3,gare} = d;
-  const hB=Math.round(H*0.09),fB=Math.round(H*0.06),pad=Math.round(W*0.048);
-  let y = hB + Math.round(H*0.05);
-  // Cognome
-  const fsC=Math.round(W*(cognome.length>12?0.065:0.085));
-  ctx.font=`900 ${fsC}px 'Inter Tight','Inter Tight',sans-serif`; ctx.fillStyle='#f0f0f0';
+  const hB=Math.round(H*0.09), fB=Math.round(H*0.06), pad=Math.round(W*0.055);
+  const cTop = hB + Math.round(H*0.025);
+  const cBot = H - fB - Math.round(H*0.02);
+  const cH   = cBot - cTop;
+
+  // ── Blocco nome ──
+  let y = cTop;
+  const fsC=Math.round(W*(cognome.length>12?0.072:0.092));
+  ctx.font=`900 ${fsC}px 'Inter Tight',sans-serif`; ctx.fillStyle='#f4f4f4';
+  ctx.textAlign='left'; ctx.textBaseline='alphabetic';
   y=_wrap(ctx,cognome.toUpperCase(),pad,y+fsC,W-pad*2,fsC*1.05);
-  // Nome
-  const fsN=Math.round(fsC*0.44);
-  ctx.font=`600 ${fsN}px 'Inter Tight',sans-serif`; ctx.fillStyle='#e8001d';
-  ctx.fillText(nome.toUpperCase(),pad,y); y+=fsN*1.4;
-  // Cat + Team
-  const fsI=Math.round(W*0.024);
-  ctx.font=`600 ${fsI}px 'Inter Tight',sans-serif`; ctx.fillStyle='#777';
-  ctx.fillText(cat,pad,y); y+=fsI*1.3;
-  ctx.font=`400 ${fsI}px 'Inter Tight',sans-serif`; ctx.fillStyle='#555';
-  ctx.fillText(team.substring(0,40),pad,y); y+=fsI*1.8;
-  // Separatore
-  ctx.fillStyle='rgba(232,0,29,0.25)'; ctx.fillRect(pad,y,W-pad*2,1); y+=Math.round(H*0.035);
-  // Punti + Pos
-  const fsP=Math.round(W*0.11);
-  const g=ctx.createLinearGradient(pad,y,pad+fsP*3,y);
-  g.addColorStop(0,'#e8001d'); g.addColorStop(1,'#f5c400');
-  ctx.font=`900 ${fsP}px 'Inter Tight','Inter Tight',sans-serif`; ctx.fillStyle=g;
-  ctx.fillText(punti,pad,y+fsP);
-  const fsL=Math.round(W*0.019);
-  ctx.font=`600 ${fsL}px 'Inter Tight',sans-serif`; ctx.fillStyle='rgba(255,255,255,0.38)';
-  ctx.fillText('PUNTI STAGIONE',pad,y+fsP+fsL*1.4);
-  if (pos&&pos!=='-') {
-    ctx.font=`900 ${fsP}px 'Inter Tight','Inter Tight',sans-serif`; ctx.fillStyle='#f5c400'; ctx.textAlign='right';
-    ctx.fillText(`${pos}°`,W-pad,y+fsP);
-    ctx.font=`600 ${fsL}px 'Inter Tight',sans-serif`; ctx.fillStyle='rgba(255,255,255,0.38)';
-    ctx.fillText('IN CLASSIFICA',W-pad,y+fsP+fsL*1.4); ctx.textAlign='left';
+  const fsN=Math.round(fsC*0.46);
+  ctx.font=`700 ${fsN}px 'Inter Tight',sans-serif`; ctx.fillStyle='#e8001d';
+  ctx.fillText(nome.toUpperCase(),pad,y); y+=Math.round(fsN*1.5);
+  // Cat · Team
+  const fsI=Math.round(W*0.026);
+  ctx.font=`600 ${fsI}px 'Inter Tight',sans-serif`; ctx.fillStyle='rgba(255,255,255,0.55)';
+  const catTxt=(cat||'').toUpperCase();
+  ctx.fillText(catTxt,pad,y);
+  if (team) {
+    const cw=ctx.measureText(catTxt).width;
+    ctx.fillStyle='rgba(255,255,255,0.28)'; const sep='   ·   '; ctx.fillText(sep,pad+cw,y);
+    const sw=ctx.measureText(sep).width;
+    ctx.font=`400 ${fsI}px 'Inter Tight',sans-serif`; ctx.fillStyle='rgba(255,255,255,0.42)';
+    ctx.fillText(team.substring(0,38),pad+cw+sw,y);
   }
-  // Stat bar
-  const stH=Math.round(H*0.12),stY=H-fB-stH-Math.round(H*0.01);
-  ctx.fillStyle='rgba(255,255,255,0.04)'; ctx.fillRect(pad,stY,W-pad*2,stH);
-  [['1°','#f5c400',p1],['2°','#b0b0b0',p2],['3°','#cd7f32',p3],['GARE','#f0f0f0',gare]].forEach(([l,c,v],i)=>{
-    const sw=(W-pad*2)/4, sx=pad+i*sw+sw/2;
-    ctx.font=`900 ${Math.round(stH*0.48)}px 'Inter Tight','Inter Tight',sans-serif`; ctx.fillStyle=c; ctx.textAlign='center';
-    ctx.fillText(v,sx,stY+Math.round(stH*0.58));
-    ctx.font=`600 ${Math.round(stH*0.2)}px 'Inter Tight',sans-serif`; ctx.fillStyle='rgba(255,255,255,0.35)';
-    ctx.fillText(l,sx,stY+Math.round(stH*0.83));
-  }); ctx.textAlign='left';
+
+  // ── Hero: PUNTI + POSIZIONE ──
+  const heroTop=y+Math.round(H*0.04);
+  const heroH=Math.round(cH*0.30);
+  const gap=Math.round(W*0.03);
+  const boxW=(W-pad*2-gap)/2;
+  _statHero(ctx,pad,heroTop,boxW,heroH,punti,'PUNTI STAGIONE','grad');
+  _statHero(ctx,pad+boxW+gap,heroTop,boxW,heroH,(pos&&pos!=='-')?`${pos}°`:'—','IN CLASSIFICA','gold');
+
+  // ── Griglia statistiche (riempie lo spazio fino al footer) ──
+  const gridTop=heroTop+heroH+Math.round(H*0.035);
+  const gridH=cBot-gridTop;
+  const cells=[['VITTORIE',p1,'#f5c400'],['2° POSTI',p2,'#cfcfcf'],['3° POSTI',p3,'#cd7f32'],['GARE',gare,'#f0f0f0']];
+  const cgap=Math.round(W*0.025);
+  const cw=(W-pad*2-cgap*3)/4;
+  cells.forEach((c,i)=>_statCell(ctx,pad+i*(cw+cgap),gridTop,cw,gridH,c[1],c[0],c[2]));
 }
 
 // ── TEAM CARD ──────────────────────────────────────────────
 function _drawTeam(ctx, W, H, d) {
   const {nome,cat,punti,pos,atleti} = d;
-  const hB=Math.round(H*0.09),fB=Math.round(H*0.06),pad=Math.round(W*0.048);
-  let y=hB+Math.round(H*0.04);
-  const fsN=Math.round(W*(nome.length>20?0.05:0.065));
-  ctx.font=`900 ${fsN}px 'Inter Tight','Inter Tight',sans-serif`; ctx.fillStyle='#f0f0f0';
+  const hB=Math.round(H*0.09), fB=Math.round(H*0.06), pad=Math.round(W*0.055);
+  const cTop=hB+Math.round(H*0.025), cBot=H-fB-Math.round(H*0.02), cH=cBot-cTop;
+
+  // ── Nome team ──
+  let y=cTop;
+  const fsN=Math.round(W*(nome.length>20?0.052:0.07));
+  ctx.font=`900 ${fsN}px 'Inter Tight',sans-serif`; ctx.fillStyle='#f4f4f4';
+  ctx.textAlign='left'; ctx.textBaseline='alphabetic';
   y=_wrap(ctx,nome.toUpperCase(),pad,y+fsN,W-pad*2,fsN*1.08);
-  ctx.font=`600 ${Math.round(W*0.026)}px 'Inter Tight',sans-serif`; ctx.fillStyle='#e8001d';
-  ctx.fillText(cat,pad,y); y+=Math.round(W*0.026)*1.5;
-  ctx.fillStyle='rgba(232,0,29,0.25)'; ctx.fillRect(pad,y,W-pad*2,1); y+=Math.round(H*0.03);
-  const fsP=Math.round(W*0.1);
-  const g=ctx.createLinearGradient(pad,y,pad+fsP*4,y);
-  g.addColorStop(0,'#e8001d'); g.addColorStop(1,'#f5c400');
-  ctx.font=`900 ${fsP}px 'Inter Tight','Inter Tight',sans-serif`; ctx.fillStyle=g;
-  ctx.fillText(punti,pad,y+fsP);
-  const fsL=Math.round(W*0.018);
-  ctx.font=`600 ${fsL}px 'Inter Tight',sans-serif`; ctx.fillStyle='rgba(255,255,255,0.38)';
-  ctx.fillText('PUNTI',pad,y+fsP+fsL*1.4);
-  if(pos){ctx.font=`900 ${fsP}px 'Inter Tight','Inter Tight',sans-serif`;ctx.fillStyle='#f5c400';ctx.textAlign='right';ctx.fillText(`${pos}°`,W-pad,y+fsP);ctx.textAlign='left';}
-  y+=fsP+Math.round(H*0.07);
-  const lMax=Math.min(atleti.length,5),lH=H-fB-y-8,rH=Math.round(lH/lMax);
-  ctx.fillStyle='rgba(255,255,255,0.03)'; ctx.fillRect(pad,y,W-pad*2,lH);
+  const fsCat=Math.round(W*0.028);
+  ctx.font=`700 ${fsCat}px 'Inter Tight',sans-serif`; ctx.fillStyle='#e8001d';
+  ctx.fillText((cat||'').toUpperCase(),pad,y);
+
+  // ── Hero: PUNTI + POSIZIONE ──
+  const heroTop=y+Math.round(H*0.035);
+  const heroH=Math.round(cH*0.26);
+  const gap=Math.round(W*0.03);
+  const boxW=(W-pad*2-gap)/2;
+  _statHero(ctx,pad,heroTop,boxW,heroH,punti,'PUNTI TEAM','grad');
+  _statHero(ctx,pad+boxW+gap,heroTop,boxW,heroH,(pos?`${pos}°`:'—'),'IN CLASSIFICA','gold');
+
+  // ── Lista TOP ATLETI (riempie lo spazio) ──
+  const labelY=heroTop+heroH+Math.round(H*0.045);
+  const fsLbl=Math.round(W*0.023);
+  ctx.font=`700 ${fsLbl}px 'Inter Tight',sans-serif`; ctx.fillStyle='rgba(255,255,255,0.45)';
+  ctx.letterSpacing='1.5px'; ctx.textAlign='left'; ctx.textBaseline='alphabetic';
+  ctx.fillText('TOP ATLETI',pad,labelY); ctx.letterSpacing='0px';
+  const rosterTop=labelY+Math.round(H*0.018);
+  const lMax=Math.min(atleti.length,6);
+  if (!lMax) return;
+  const rH=Math.round((cBot-rosterTop)/lMax);
+  const medals=['#f5c400','#cfcfcf','#cd7f32'];
   atleti.slice(0,lMax).forEach((a,i)=>{
-    const ry=y+i*rH,fsA=Math.round(rH*0.34),fsT=Math.round(rH*0.22);
+    const ry=rosterTop+i*rH, mid=ry+rH/2;
+    const medal=i<3?medals[i]:null;
+    if(i%2===0){ ctx.fillStyle='rgba(255,255,255,0.028)'; _rr(ctx,pad,ry+2,W-pad*2,rH-4,Math.round(rH*0.12)); ctx.fill(); }
+    // pill posizione
+    const pillH=Math.min(Math.round(rH*0.5),Math.round(W*0.052)), pillW=Math.round(pillH*1.4);
+    const pillX=pad+Math.round(W*0.012);
+    ctx.fillStyle=medal||'rgba(255,255,255,0.09)';
+    _rr(ctx,pillX,mid-pillH/2,pillW,pillH,Math.round(pillH*0.25)); ctx.fill();
+    ctx.font=`800 ${Math.round(pillH*0.58)}px 'Inter Tight',sans-serif`;
+    ctx.fillStyle=medal?'#1a1200':'rgba(255,255,255,0.5)'; ctx.textAlign='center'; ctx.textBaseline='middle';
+    ctx.fillText(String(i+1),pillX+pillW/2,mid+1);
+    // nome
+    const nameX=pillX+pillW+Math.round(W*0.028);
+    const ptsResW=Math.round(W*0.15);
+    const nameMaxW=W-pad-ptsResW-nameX;
+    const fsA=Math.min(Math.round(rH*0.40),Math.round(W*0.036));
     ctx.font=`700 ${fsA}px 'Inter Tight',sans-serif`; ctx.fillStyle=i===0?'#f5c400':'#f0f0f0';
-    ctx.fillText(`${i+1}.  ${(a.cognome||'').toUpperCase()} ${(a.nome||'').toUpperCase()}`.substring(0,32),pad+8,ry+rH*0.44);
-    ctx.font=`400 ${fsT}px 'Inter Tight',sans-serif`; ctx.fillStyle='#555';
-    ctx.fillText((a.team||a.team_attuale||'').substring(0,36),pad+8,ry+rH*0.74);
-    ctx.font=`900 ${Math.round(rH*0.42)}px 'Inter Tight','Inter Tight',sans-serif`; ctx.fillStyle='#f5c400'; ctx.textAlign='right';
-    ctx.fillText(a.puntiCat||0,W-pad,ry+rH*0.55); ctx.textAlign='left';
+    ctx.textAlign='left'; ctx.textBaseline='middle';
+    let nm=`${(a.cognome||'').toUpperCase()} ${(a.nome||'')}`.trim();
+    while(nm.length>3 && ctx.measureText(nm).width>nameMaxW) nm=nm.slice(0,-1);
+    ctx.fillText(nm,nameX,mid);
+    // punti
+    ctx.font=`800 ${fsA}px 'Inter Tight',sans-serif`; ctx.fillStyle='#f5c400'; ctx.textAlign='right';
+    ctx.fillText(String(a.puntiCat||0),W-pad,mid);
+    ctx.textAlign='left'; ctx.textBaseline='alphabetic';
   });
 }
 
