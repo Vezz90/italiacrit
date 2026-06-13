@@ -11,19 +11,19 @@
   "categories": ["sports"],
   "icons": [
     {
-      "src": "assets/logo.png",
+      "src": "assets/logo.png?v=2",
       "sizes": "192x192",
       "type": "image/png",
       "purpose": "any"
     },
     {
-      "src": "assets/logo.png",
+      "src": "assets/logo.png?v=2",
       "sizes": "512x512",
       "type": "image/png",
       "purpose": "any"
     },
     {
-      "src": "assets/logo.png",
+      "src": "assets/logo.png?v=2",
       "sizes": "512x512",
       "type": "image/png",
       "purpose": "maskable"
