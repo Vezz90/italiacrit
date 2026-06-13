@@ -2,9 +2,9 @@
   {
     "team_id": "TEAM_VANGI_TOMMASINI_IL_PIRATA",
     "team_nome": "TEAM VANGI TOMMASINI IL PIRATA",
-    "punti": 855,
-    "vittorie": 11,
-    "p1": 11,
+    "punti": 870,
+    "vittorie": 12,
+    "p1": 12,
     "p2": 11,
     "p3": 9,
     "pout": 32,
@@ -74,12 +74,12 @@
   {
     "team_id": "TEAM_NERI_SOTTOLI_LUCCHINI_ENERGY",
     "team_nome": "TEAM NERI SOTTOLI LUCCHINI ENERGY",
-    "punti": 397,
+    "punti": 416,
     "vittorie": 0,
     "p1": 0,
     "p2": 6,
-    "p3": 4,
-    "pout": 29,
+    "p3": 5,
+    "pout": 31,
     "n_atleti": 7,
     "pos": 7
   },
@@ -134,12 +134,12 @@
   {
     "team_id": "CPS_PROFESSIONAL_TEAM",
     "team_nome": "CPS PROFESSIONAL TEAM",
-    "punti": 293,
+    "punti": 304,
     "vittorie": 4,
     "p1": 4,
     "p2": 3,
     "p3": 6,
-    "pout": 22,
+    "pout": 24,
     "n_atleti": 11,
     "pos": 12
   },
@@ -170,12 +170,12 @@
   {
     "team_id": "POLISPORTIVA_MONSUMMANESE",
     "team_nome": "POLISPORTIVA MONSUMMANESE",
-    "punti": 242,
+    "punti": 257,
     "vittorie": 5,
     "p1": 5,
-    "p2": 2,
+    "p2": 3,
     "p3": 5,
-    "pout": 18,
+    "pout": 19,
     "n_atleti": 10,
     "pos": 15
   },
@@ -360,6 +360,18 @@
     "pos": 30
   },
   {
+    "team_id": "SS_AQUILA",
+    "team_nome": "SS AQUILA",
+    "punti": 85,
+    "vittorie": 0,
+    "p1": 0,
+    "p2": 0,
+    "p3": 2,
+    "pout": 9,
+    "n_atleti": 3,
+    "pos": 31
+  },
+  {
     "team_id": "CYCLING_TEAM_NIAL_NIZZOLI_ALMO",
     "team_nome": "CYCLING TEAM NIAL NIZZOLI ALMO",
     "punti": 85,
@@ -369,18 +381,6 @@
     "p3": 0,
     "pout": 17,
     "n_atleti": 7,
-    "pos": 31
-  },
-  {
-    "team_id": "SS_AQUILA",
-    "team_nome": "SS AQUILA",
-    "punti": 83,
-    "vittorie": 0,
-    "p1": 0,
-    "p2": 0,
-    "p3": 2,
-    "pout": 8,
-    "n_atleti": 3,
     "pos": 32
   },
   {
@@ -660,6 +660,18 @@
     "pos": 55
   },
   {
+    "team_id": "MASTROMARCO_FC_NIBALI",
+    "team_nome": "MASTROMARCO FC NIBALI",
+    "punti": 43,
+    "vittorie": 1,
+    "p1": 1,
+    "p2": 1,
+    "p3": 0,
+    "pout": 4,
+    "n_atleti": 2,
+    "pos": 56
+  },
+  {
     "team_id": "VELEKA_TEAM",
     "team_nome": "VELEKA TEAM",
     "punti": 42,
@@ -669,7 +681,7 @@
     "p3": 1,
     "pout": 3,
     "n_atleti": 5,
-    "pos": 56
+    "pos": 57
   },
   {
     "team_id": "VIGNA_FIORITA_BORGO_MOLINO",
@@ -680,18 +692,6 @@
     "p2": 1,
     "p3": 0,
     "pout": 6,
-    "n_atleti": 2,
-    "pos": 57
-  },
-  {
-    "team_id": "MASTROMARCO_FC_NIBALI",
-    "team_nome": "MASTROMARCO FC NIBALI",
-    "punti": 39,
-    "vittorie": 1,
-    "p1": 1,
-    "p2": 1,
-    "p3": 0,
-    "pout": 3,
     "n_atleti": 2,
     "pos": 58
   },
