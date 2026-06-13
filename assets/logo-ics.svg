@@ -1,0 +1,11 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 560 200" role="img" aria-label="ICS - Italia Cycling Stats">
+  <title>ICS - Italia Cycling Stats</title>
+  <polygon points="44,42 138,42 110,74 16,74" fill="#16a34a"/>
+  <polygon points="54,76 148,76 120,108 26,108" fill="#ffffff"/>
+  <polygon points="64,110 158,110 130,142 36,142" fill="#e8001d"/>
+  <text x="172" y="130" font-family="'Inter Tight','Arial Narrow',Arial,sans-serif" font-weight="900" font-style="italic" font-size="124" letter-spacing="-5" fill="#ffffff">ICS</text>
+  <polygon points="178,142 256,142 250,152 172,152" fill="#16a34a"/>
+  <polygon points="258,142 336,142 330,152 252,152" fill="#ffffff"/>
+  <polygon points="338,142 438,142 432,152 332,152" fill="#e8001d"/>
+  <text x="305" y="180" text-anchor="middle" font-family="'Inter Tight',Arial,sans-serif" font-weight="700" font-style="italic" font-size="27" letter-spacing="0.5" fill="#ffffff">Italia Cycling Stats</text>
+</svg>
