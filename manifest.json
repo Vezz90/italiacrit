@@ -1,21 +1,32 @@
 {
-  "name": "Italiacrit - Elite Cycling Platform",
+  "name": "Italiacrit - Risultati Ciclismo Italiano",
   "short_name": "Italiacrit",
-  "description": "Risultati e Classifiche del ciclismo dilettantistico italiano. H2H, Palmarès e statistiche globali.",
+  "description": "Risultati, classifiche, gare e statistiche del ciclismo agonistico italiano su strada. Esordienti, Allievi, Juniores, Under23 ed Elite.",
   "start_url": "./",
+  "scope": "./",
   "display": "standalone",
   "background_color": "#0a0a0a",
   "theme_color": "#e8001d",
+  "lang": "it",
+  "categories": ["sports"],
   "icons": [
     {
-      "src": "data:image/svg+xml;base64,PHN2ZyB2aWV3Qm94PSIwIDAgMTkyIDE5MiIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj48cmVjdCB3aWR0aD0iMTkyIiBoZWlnaHQ9IjE5MiIgZmlsbD0iIzBhMGEwYSIvPjx0ZXh0IHg9Ijk2IiB5PSIxMTAiIGZvbnQtZmFtaWx5PSJzYW5zLXNlcmlmIiBmb250LXNpemU9IjgwIiBmaWxsPSIjZTgwMDFkIiB0ZXh0LWFuY2hvcj0ibWlkZGxlIj5JQzwvdGV4dD48L3N2Zz4=",
+      "src": "assets/logo2.png",
       "sizes": "192x192",
-      "type": "image/svg+xml"
+      "type": "image/png",
+      "purpose": "any"
     },
     {
-      "src": "data:image/svg+xml;base64,PHN2ZyB2aWV3Qm94PSIwIDAgNTEyIDUxMiIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj48cmVjdCB3aWR0aD0iNTEyIiBoZWlnaHQ9IjUxMiIgZmlsbD0iIzBhMGEwYSIvPjx0ZXh0IHg9IjI1NiIgeT0iMjgwIiBmb250LWZhbWlseT0ic2Fucy1zZXJpZiIgZm9udC1zaXplPSIyMDAiIGZpbGw9IiNlODAwMWQiIHRleHQtYW5jaG9yPSJtaWRkbGUiPklDPC90ZXh0Pjwvc3ZnPg==",
+      "src": "assets/logo2.png",
       "sizes": "512x512",
-      "type": "image/svg+xml"
+      "type": "image/png",
+      "purpose": "any"
+    },
+    {
+      "src": "assets/logo2.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "maskable"
     }
   ]
 }
