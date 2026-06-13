@@ -7947,6 +7947,10 @@ body[data-hub] .loading-bar { background: var(--hub-color) !important; }
   transition: opacity .6s ease .1s, transform .6s ease .1s;
 }
 .itc-gate--in .itc-gate-logo { opacity: 1; transform: none; }
+/* Su mobile il logo della gate è troppo grande (è largo): lo riduciamo */
+@media (max-width: 640px) {
+  .itc-gate-logo { height: clamp(40px, 7vh, 64px); max-width: 60vw; object-fit: contain; }
+}
 
 .itc-gate-tagline {
   margin-top: 8px;
@@ -11668,18 +11672,15 @@ main.page:has(.itc-dash) {
   color: var(--text-muted);
 }
 .albo-doro-list { display: flex; flex-direction: column; }
-.albo-row {
+/* Una stagione = anno + podio (primi 3) */
+.albo-season {
   display: flex;
-  align-items: center;
-  gap: 16px;
-  padding: 12px 20px;
+  gap: 18px;
+  padding: 14px 20px;
   border-bottom: 1px solid var(--border-subtle);
-  text-decoration: none;
-  transition: background 0.12s;
 }
-.albo-row:last-child { border-bottom: none; }
-.albo-row:hover { background: var(--bg-elevated); }
-.albo-year {
+.albo-season:last-child { border-bottom: none; }
+.albo-season-year {
   flex-shrink: 0;
   width: 64px;
   font-family: var(--font-heading);
@@ -11687,7 +11688,7 @@ main.page:has(.itc-dash) {
   font-size: 1.05rem;
   color: var(--accent, #e8001d);
 }
-.albo-year em {
+.albo-season-year em {
   display: block;
   font-style: normal;
   font-size: 0.62rem;
@@ -11695,15 +11696,29 @@ main.page:has(.itc-dash) {
   letter-spacing: 0.04em;
   color: var(--text-muted);
 }
-.albo-champ { display: flex; align-items: baseline; flex-wrap: wrap; gap: 4px 10px; min-width: 0; }
-.albo-trophy { font-size: 1rem; }
+.albo-podium { flex: 1; display: flex; flex-direction: column; gap: 7px; min-width: 0; }
+.albo-pod {
+  display: flex;
+  align-items: baseline;
+  gap: 9px;
+  text-decoration: none;
+  padding: 3px 6px;
+  margin: 0 -6px;
+  border-radius: 6px;
+  transition: background 0.12s;
+}
+.albo-pod:hover { background: var(--bg-elevated); }
+.albo-medal { flex-shrink: 0; font-size: 1rem; width: 22px; text-align: center; }
+.albo-pod-main { display: flex; align-items: baseline; flex-wrap: wrap; gap: 3px 10px; min-width: 0; }
 .albo-name {
   font-family: var(--font-heading);
   font-weight: 700;
   color: var(--text-primary);
 }
+.albo-pod-1 .albo-name { font-size: 1.05rem; }
 .albo-sub { font-size: 0.82rem; color: var(--text-secondary); }
 @media (max-width: 640px) {
-  .albo-row { gap: 12px; padding: 11px 14px; align-items: flex-start; }
-  .albo-year { width: 50px; font-size: 0.95rem; }
+  .albo-season { gap: 12px; padding: 12px 14px; }
+  .albo-season-year { width: 46px; font-size: 0.95rem; }
+  .albo-pod-1 .albo-name { font-size: 1rem; }
 }

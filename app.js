@@ -6410,9 +6410,9 @@ async function renderClassifica() {
 }
 
 // ── ALBO D'ORO CLASSIFICHE (storicità) ────────────────────────────
-// Per la categoria selezionata, mostra il campione (1° classificato) di ogni
-// stagione disponibile. Si arricchisce automaticamente con l'avanzare degli anni.
-async function _seasonChampion(year, code, isTeam) {
+// Per la categoria selezionata, mostra il podio (primi 3) di ogni stagione
+// disponibile. Si arricchisce automaticamente con l'avanzare degli anni.
+async function _seasonPodium(year, code, isTeam) {
   const dir = isTeam ? 'team_rankings' : 'rankings';
   const cur = String((_seasonsIndex && _seasonsIndex.current) || currentSeason || '');
   let data = await loadJson(`data/seasons/${year}/${dir}/${code}.json`);
@@ -6420,19 +6420,22 @@ async function _seasonChampion(year, code, isTeam) {
     data = await loadJson(`data/${dir}/${code}.json`);
   }
   if (!Array.isArray(data) || !data.length) return null;
-  let top = data.find(x => x.pos === 1);
-  if (!top) top = data.slice().sort((a, b) => (b.punti || 0) - (a.punti || 0))[0];
-  return top || null;
+  const sorted = data.slice().sort((a, b) => {
+    const pa = a.pos || 9999, pb = b.pos || 9999;
+    if (pa !== pb) return pa - pb;
+    return (b.punti || 0) - (a.punti || 0);
+  });
+  return sorted.slice(0, 3);
 }
 
-// Campioni (1° classificato) di ogni stagione disponibile per una categoria.
+// Podio di ogni stagione disponibile per una categoria.
 async function _alboDoroRows(code, isTeam) {
   const years = _availableSeasonYears(); // ordine decrescente
   const cur = String((_seasonsIndex && _seasonsIndex.current) || currentSeason || '');
   const rows = await Promise.all(years.map(async y => ({
-    year: y, isCur: String(y) === cur, champ: await _seasonChampion(y, code, isTeam),
+    year: y, isCur: String(y) === cur, podium: await _seasonPodium(y, code, isTeam),
   })));
-  return rows.filter(r => r.champ);
+  return rows.filter(r => r.podium && r.podium.length);
 }
 
 // HTML della card Albo d'Oro (riutilizzata in classifica e nella pagina dedicata).
@@ -6441,22 +6444,28 @@ function _alboDoroCardHtml(code, isTeam, valid, opts) {
   const head = `<div class="albo-doro-head">
       ${opts.eyebrow !== false ? `<div class="pg-eyebrow">ALBO D'ORO</div>` : ''}
       <h2>${esc(catLabel(code))}${isTeam ? ' · Team' : ''}</h2>
-      <p>${valid.length ? 'I vincitori della classifica stagionale, anno per anno.' : 'Ancora nessun campione registrato per questa categoria.'}</p>
+      <p>${valid.length ? 'Il podio della classifica stagionale, anno per anno.' : 'Ancora nessun podio registrato per questa categoria.'}</p>
     </div>`;
   if (!valid.length) return opts.showEmpty ? `<section class="albo-doro-card">${head}</section>` : '';
-  const itemsHtml = valid.map(r => {
-    const c = r.champ;
-    const name = isTeam ? esc(c.team_nome || '') : esc(((c.cognome || '') + ' ' + (c.nome || '')).trim());
-    const href = isTeam ? ('#/team/' + encodeURIComponent(c.team_id)) : ('#/atleta/' + encodeURIComponent(c.atleta_id));
-    const sub = isTeam
-      ? `${c.punti || 0} pti · ${c.vittorie || 0} vitt.`
-      : `${esc(c.team_nome || '')} · ${c.punti || 0} pti · ${c.vittorie || 0} vitt.`;
-    return `<a class="albo-row" href="${href}">
-      <span class="albo-year">${r.year}${r.isCur ? ' <em>in&nbsp;corso</em>' : ''}</span>
-      <span class="albo-champ"><span class="albo-trophy">🏆</span><span class="albo-name">${name}</span><span class="albo-sub">${sub}</span></span>
-    </a>`;
+  const medals = ['🥇', '🥈', '🥉'];
+  const seasonsHtml = valid.map(r => {
+    const podHtml = r.podium.map((c, i) => {
+      const name = isTeam ? esc(c.team_nome || '') : esc(((c.cognome || '') + ' ' + (c.nome || '')).trim());
+      const href = isTeam ? ('#/team/' + encodeURIComponent(c.team_id)) : ('#/atleta/' + encodeURIComponent(c.atleta_id));
+      const sub = isTeam
+        ? `${c.punti || 0} pti · ${c.vittorie || 0} vitt.`
+        : `${esc(c.team_nome || '')} · ${c.punti || 0} pti`;
+      return `<a class="albo-pod albo-pod-${i + 1}" href="${href}">
+        <span class="albo-medal">${medals[i] || ''}</span>
+        <span class="albo-pod-main"><span class="albo-name">${name}</span><span class="albo-sub">${sub}</span></span>
+      </a>`;
+    }).join('');
+    return `<div class="albo-season">
+      <div class="albo-season-year">${r.year}${r.isCur ? ' <em>in&nbsp;corso</em>' : ''}</div>
+      <div class="albo-podium">${podHtml}</div>
+    </div>`;
   }).join('');
-  return `<section class="albo-doro-card">${head}<div class="albo-doro-list">${itemsHtml}</div></section>`;
+  return `<section class="albo-doro-card">${head}<div class="albo-doro-list">${seasonsHtml}</div></section>`;
 }
 
 async function _injectClassificaAlboDoro() {
