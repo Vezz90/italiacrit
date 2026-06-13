@@ -15176,6 +15176,50 @@ async function renderComparatore() {
   window.setCompB      = v => { compB=v; renderComparatore(); };
 }
 
+// ── CONDIVIDI L'APP ───────────────────────────────────────────
+// Apre il pannello di condivisione nativo del telefono (WhatsApp, Telegram,
+// ecc.) tramite la Web Share API. Su desktop mostra un piccolo menu di link.
+window.shareApp = async () => {
+  const url = 'https://italiacyclingstats.com';
+  const title = 'ICS — Italia Cycling Stats';
+  const text = 'ICS — Italia Cycling Stats: risultati, classifiche e statistiche del ciclismo italiano agonistico. Dai un\'occhiata!';
+  document.getElementById('nav-drawer')?.classList.remove('open');
+  if (navigator.share) {
+    try { await navigator.share({ title, text, url }); } catch (e) { /* annullato dall'utente */ }
+    return;
+  }
+  _openShareAppModal(url, text);
+};
+
+function _openShareAppModal(url, text) {
+  document.getElementById('share-app-overlay')?.remove();
+  const enc    = encodeURIComponent(text + ' ' + url);
+  const encUrl = encodeURIComponent(url);
+  const overlay = document.createElement('div');
+  overlay.className = 'share-app-overlay';
+  overlay.id = 'share-app-overlay';
+  overlay.innerHTML = `
+    <div class="share-app-box" role="dialog" aria-label="Condividi">
+      <button class="share-app-close" aria-label="Chiudi" onclick="this.closest('.share-app-overlay').remove()">✕</button>
+      <div class="share-app-title">Condividi ICS</div>
+      <div class="share-app-grid">
+        <a class="share-app-btn wa" href="https://wa.me/?text=${enc}" target="_blank" rel="noopener">WhatsApp</a>
+        <a class="share-app-btn tg" href="https://t.me/share/url?url=${encUrl}&text=${encodeURIComponent(text)}" target="_blank" rel="noopener">Telegram</a>
+        <a class="share-app-btn em" href="mailto:?subject=${encodeURIComponent('ICS — Italia Cycling Stats')}&body=${enc}">Email</a>
+        <button class="share-app-btn cp" onclick="window._copyShareLink('${url}')">Copia link</button>
+      </div>
+    </div>`;
+  overlay.addEventListener('click', e => { if (e.target === overlay) overlay.remove(); });
+  document.body.appendChild(overlay);
+}
+
+window._copyShareLink = (url) => {
+  (navigator.clipboard?.writeText(url) || Promise.reject())
+    .then(() => showToast('Link copiato!', 'success'))
+    .catch(() => showToast('Copia: ' + url, 'info'));
+  document.getElementById('share-app-overlay')?.remove();
+};
+
 // ── SHARE BATTLE ──────────────────────────────────────────────
 window.shareBattle = (url, title) => {
   if (navigator.share) {

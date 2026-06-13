@@ -28,7 +28,7 @@
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
   <link href="https://fonts.googleapis.com/css2?family=Inter+Tight:wght@400;600;700;800;900&display=swap" rel="stylesheet" />
-  <link rel="stylesheet" href="style.css?v=14" />
+  <link rel="stylesheet" href="style.css?v=15" />
   <link rel="stylesheet" href="design.css?v=124" />
   <link rel="manifest" href="manifest.json" />
   <meta name="theme-color" content="#e8001d" />
@@ -147,6 +147,7 @@
   <div class="drawer-section-label" id="drawer-section-msg" style="display:none">ACCOUNT</div>
   <a href="#/messaggi"    class="nav-link" id="drawer-msg" style="display:none">Messaggi <span class="drawer-msg-badge" id="drawer-msg-badge" style="display:none">0</span></a>
   <a href="#/login"       class="nav-link" id="drawer-login">Login / Profilo</a>
+  <button class="nav-link drawer-share-btn" id="drawer-share" onclick="window.shareApp()">📤 Condividi l'app</button>
   <div class="drawer-section-label">LINGUA / LANGUAGE</div>
   <select id="lang-select-m" class="lang-select-m" aria-label="Seleziona lingua / Select language" onchange="window.setLang(this.value)">
     <option value="it">🇮🇹 Italiano</option>
@@ -184,6 +185,8 @@
   <span class="footer-sep">•</span>
   <a href="#/regolamento" class="footer-link">Regolamento</a>
   <span class="footer-sep">•</span>
+  <button class="footer-link" style="background:none;border:none;cursor:pointer;font:inherit" onclick="window.shareApp()">📤 Condividi</button>
+  <span class="footer-sep">•</span>
   <button id="push-toggle-btn" style="display:none;background:transparent;border:1px solid var(--accent,#e8001d);color:var(--accent,#e8001d);padding:3px 12px;border-radius:14px;font-size:.78rem;cursor:pointer;font-weight:600">🔔 Attiva notifiche</button>
   <br/>
   <span style="font-size:0.75rem;margin-top:4px;display:block">
@@ -202,6 +205,6 @@ function googleTranslateElementInit() {
 }
 </script>
 <script src="//translate.google.com/translate_a/element.js?cb=googleTranslateElementInit" async></script>
-<script src="app.js?v=386" defer></script>
+<script src="app.js?v=387" defer></script>
 </body>
 </html>
