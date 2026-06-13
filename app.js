@@ -15958,10 +15958,9 @@ async function _getLogo() {
   });
 }
 
-// Mappa regione → file logo (per sostituire il testo nella card gara)
-const REGION_LOGOS = {
-  'TOSCANA': 'assets/toscana-crit-logo.png',
-};
+// Mappa regione → file logo (per sostituire il testo nella card gara).
+// Vuota: tutte le regioni — Toscana compresa — vengono mostrate come testo.
+const REGION_LOGOS = {};
 async function _getRegionLogo(region) {
   const src = REGION_LOGOS[(region||'').toUpperCase()];
   if (!src) return null;
@@ -16039,14 +16038,14 @@ function _header(ctx, logo, W, H, classData) {
   // Logo ITC grande
   let logoRight = 18;
   if (logo) {
-    const lH = Math.round(bH * 0.92), lW = Math.round(lH * logo.naturalWidth / logo.naturalHeight);
+    const lH = Math.round(bH * 0.76), lW = Math.round(lH * logo.naturalWidth / logo.naturalHeight);
     ctx.drawImage(logo, 18, Math.round((bH - lH) / 2), lW, lH);
     logoRight = 18 + lW;
   }
   const isRegio = classData && classData.scope === 'regionale' && classData.region;
-  // ── Wordmark accanto al logo, TUTTO MAIUSCOLO (es. TOSCANACRIT) ──
+  // ── Wordmark accanto al logo: solo il nome della regione (es. TOSCANA) ──
   const brand = isRegio
-    ? (classData.region.replace(/\s+/g, '') + 'CRIT').toUpperCase()
+    ? classData.region.toUpperCase()
     : 'ICS';
   {
     // separatore verticale sottile
@@ -16283,7 +16282,7 @@ function _drawGara(ctx, W, H, d, logo, regionLogo) {
   const hH = Math.round(H * 0.095);
   let logoRight = pad;
   if (logo) {
-    const lH = Math.round(hH * 1.05);
+    const lH = Math.round(hH * 0.86);
     const lW = Math.round(lH * logo.naturalWidth / logo.naturalHeight);
     ctx.drawImage(logo, pad, Math.round((hH - lH) / 2), lW, lH);
     logoRight = pad + lW;
