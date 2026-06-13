@@ -62,12 +62,12 @@
   {
     "team_id": "ISOLMANT_PREMAC_VITTORIA",
     "team_nome": "ISOLMANT - PREMAC - VITTORIA",
-    "punti": 204,
+    "punti": 220,
     "vittorie": 3,
     "p1": 3,
     "p2": 3,
-    "p3": 2,
-    "pout": 9,
+    "p3": 3,
+    "pout": 10,
     "n_atleti": 7,
     "pos": 6
   },
@@ -122,12 +122,12 @@
   {
     "team_id": "HORIZONS_CYCLING_CLUB",
     "team_nome": "HORIZONS CYCLING CLUB",
-    "punti": 116,
+    "punti": 121,
     "vittorie": 0,
     "p1": 0,
     "p2": 1,
     "p3": 1,
-    "pout": 10,
+    "pout": 11,
     "n_atleti": 4,
     "pos": 11
   },
@@ -146,14 +146,26 @@
   {
     "team_id": "BIESSE_CARRERA_PREMAC",
     "team_nome": "BIESSE - CARRERA - PREMAC",
-    "punti": 90,
+    "punti": 93,
     "vittorie": 1,
     "p1": 1,
     "p2": 1,
     "p3": 1,
-    "pout": 6,
+    "pout": 8,
     "n_atleti": 5,
     "pos": 13
+  },
+  {
+    "team_id": "BORN_TO_WIN_BTC_CITY_LJUBLJANA",
+    "team_nome": "BORN TO WIN BTC CITY LJUBLJANA",
+    "punti": 90,
+    "vittorie": 3,
+    "p1": 3,
+    "p2": 0,
+    "p3": 0,
+    "pout": 9,
+    "n_atleti": 4,
+    "pos": 14
   },
   {
     "team_id": "TOYOTA_VALENCIA_SAV",
@@ -165,7 +177,7 @@
     "p3": 1,
     "pout": 1,
     "n_atleti": 1,
-    "pos": 14
+    "pos": 15
   },
   {
     "team_id": "NEXETIS_TEAM",
@@ -177,7 +189,7 @@
     "p3": 1,
     "pout": 1,
     "n_atleti": 3,
-    "pos": 15
+    "pos": 16
   },
   {
     "team_id": "LIV_ALULA_JAYCO",
@@ -189,7 +201,7 @@
     "p3": 1,
     "pout": 4,
     "n_atleti": 2,
-    "pos": 16
+    "pos": 17
   },
   {
     "team_id": "EF_EDUCATION_OATLY",
@@ -201,7 +213,7 @@
     "p3": 0,
     "pout": 5,
     "n_atleti": 3,
-    "pos": 17
+    "pos": 18
   },
   {
     "team_id": "MOVISTAR_TEAM_ACADEMY",
@@ -213,18 +225,6 @@
     "p3": 0,
     "pout": 4,
     "n_atleti": 2,
-    "pos": 18
-  },
-  {
-    "team_id": "BORN_TO_WIN",
-    "team_nome": "BORN TO WIN",
-    "punti": 67,
-    "vittorie": 2,
-    "p1": 2,
-    "p2": 0,
-    "p3": 0,
-    "pout": 8,
-    "n_atleti": 3,
     "pos": 19
   },
   {
@@ -350,14 +350,26 @@
   {
     "team_id": "TORELLI_CYCLING_TEAM",
     "team_nome": "TORELLI CYCLING TEAM",
-    "punti": 29,
+    "punti": 32,
     "vittorie": 0,
     "p1": 0,
     "p2": 1,
     "p3": 0,
-    "pout": 1,
+    "pout": 2,
     "n_atleti": 1,
     "pos": 30
+  },
+  {
+    "team_id": "AR_MONEX_WMN_PRO_CYCLING_TEAM",
+    "team_nome": "AR MONEX WMN PRO CYCLING TEAM",
+    "punti": 28,
+    "vittorie": 0,
+    "p1": 0,
+    "p2": 1,
+    "p3": 1,
+    "pout": 1,
+    "n_atleti": 1,
+    "pos": 31
   },
   {
     "team_id": "ST_MICHEL_PREFERENCE_HOME_AUBER93",
@@ -369,7 +381,7 @@
     "p3": 0,
     "pout": 2,
     "n_atleti": 2,
-    "pos": 31
+    "pos": 32
   },
   {
     "team_id": "LOTTO_INTERNARCHE_LADIES",
@@ -381,7 +393,7 @@
     "p3": 0,
     "pout": 1,
     "n_atleti": 1,
-    "pos": 32
+    "pos": 33
   },
   {
     "team_id": "TEAM_PICNIC_POSTNL",
@@ -393,18 +405,6 @@
     "p3": 0,
     "pout": 2,
     "n_atleti": 2,
-    "pos": 33
-  },
-  {
-    "team_id": "AR_MONEX_WMN_PRO_CYCLING_TEAM",
-    "team_nome": "AR MONEX WMN PRO CYCLING TEAM",
-    "punti": 16,
-    "vittorie": 0,
-    "p1": 0,
-    "p2": 0,
-    "p3": 1,
-    "pout": 1,
-    "n_atleti": 1,
     "pos": 34
   },
   {
@@ -480,6 +480,18 @@
     "pos": 40
   },
   {
+    "team_id": "TEAM_CINGOLANI_SPECIALIZED",
+    "team_nome": "TEAM CINGOLANI-SPECIALIZED",
+    "punti": 4,
+    "vittorie": 0,
+    "p1": 0,
+    "p2": 0,
+    "p3": 0,
+    "pout": 1,
+    "n_atleti": 1,
+    "pos": 41
+  },
+  {
     "team_id": "A_S_D_CLUB_CORRIDONIA_S_C",
     "team_nome": "A.S.D. CLUB CORRIDONIA S.C.",
     "punti": 4,
@@ -489,6 +501,6 @@
     "p3": 0,
     "pout": 2,
     "n_atleti": 2,
-    "pos": 41
+    "pos": 42
   }
 ]

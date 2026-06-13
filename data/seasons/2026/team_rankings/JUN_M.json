@@ -62,12 +62,12 @@
   {
     "team_id": "CICLISTICA_TREVIGLIESE",
     "team_nome": "CICLISTICA TREVIGLIESE",
-    "punti": 400,
-    "vittorie": 1,
-    "p1": 1,
+    "punti": 433,
+    "vittorie": 2,
+    "p1": 2,
     "p2": 4,
-    "p3": 7,
-    "pout": 26,
+    "p3": 8,
+    "pout": 27,
     "n_atleti": 9,
     "pos": 6
   },
@@ -110,12 +110,12 @@
   {
     "team_id": "TEAM_ECOTEK_ZERO24",
     "team_nome": "TEAM ECOTEK ZERO24",
-    "punti": 319,
+    "punti": 320,
     "vittorie": 6,
     "p1": 6,
     "p2": 9,
     "p3": 2,
-    "pout": 17,
+    "pout": 18,
     "n_atleti": 9,
     "pos": 10
   },
@@ -158,10 +158,10 @@
   {
     "team_id": "ETHICA_ZERO24_CYCLING_TEAM_ECOTEK",
     "team_nome": "ETHICA ZERO24 CYCLING TEAM ECOTEK",
-    "punti": 267,
+    "punti": 279,
     "vittorie": 5,
     "p1": 5,
-    "p2": 4,
+    "p2": 5,
     "p3": 1,
     "pout": 8,
     "n_atleti": 5,
@@ -266,12 +266,12 @@
   {
     "team_id": "A_S_D_CICLISTICA_MONSELICE",
     "team_nome": "A.S.D. CICLISTICA MONSELICE",
-    "punti": 141,
+    "punti": 146,
     "vittorie": 0,
     "p1": 0,
     "p2": 3,
     "p3": 3,
-    "pout": 6,
+    "pout": 7,
     "n_atleti": 2,
     "pos": 23
   },
@@ -314,12 +314,12 @@
   {
     "team_id": "FDB_SPORT_CLUB",
     "team_nome": "FDB SPORT CLUB",
-    "punti": 95,
+    "punti": 99,
     "vittorie": 0,
     "p1": 0,
     "p2": 2,
     "p3": 2,
-    "pout": 11,
+    "pout": 12,
     "n_atleti": 5,
     "pos": 27
   },
@@ -348,6 +348,18 @@
     "pos": 29
   },
   {
+    "team_id": "FAIZANE_CSZ_SANDRIGO_BIKE",
+    "team_nome": "FAIZANE' CSZ SANDRIGO BIKE",
+    "punti": 85,
+    "vittorie": 0,
+    "p1": 0,
+    "p2": 1,
+    "p3": 0,
+    "pout": 16,
+    "n_atleti": 6,
+    "pos": 30
+  },
+  {
     "team_id": "CYCLING_TEAM_NIAL_NIZZOLI_ALMO",
     "team_nome": "CYCLING TEAM NIAL NIZZOLI ALMO",
     "punti": 85,
@@ -357,7 +369,7 @@
     "p3": 0,
     "pout": 17,
     "n_atleti": 7,
-    "pos": 30
+    "pos": 31
   },
   {
     "team_id": "SS_AQUILA",
@@ -369,18 +381,6 @@
     "p3": 2,
     "pout": 8,
     "n_atleti": 3,
-    "pos": 31
-  },
-  {
-    "team_id": "FAIZANE_CSZ_SANDRIGO_BIKE",
-    "team_nome": "FAIZANE' CSZ SANDRIGO BIKE",
-    "punti": 80,
-    "vittorie": 0,
-    "p1": 0,
-    "p2": 1,
-    "p3": 0,
-    "pout": 14,
-    "n_atleti": 6,
     "pos": 32
   },
   {
@@ -1152,6 +1152,18 @@
     "pos": 96
   },
   {
+    "team_id": "VEGA_VITALCARE_DYNATEK",
+    "team_nome": "VEGA VITALCARE DYNATEK",
+    "punti": 6,
+    "vittorie": 0,
+    "p1": 0,
+    "p2": 0,
+    "p3": 0,
+    "pout": 1,
+    "n_atleti": 1,
+    "pos": 97
+  },
+  {
     "team_id": "DECATHLON_CMA_CGM_U19_TEAM",
     "team_nome": "DECATHLON CMA CGM U19 TEAM",
     "punti": 6,
@@ -1161,7 +1173,7 @@
     "p3": 0,
     "pout": 1,
     "n_atleti": 1,
-    "pos": 97
+    "pos": 98
   },
   {
     "team_id": "V_C_ORSAGO_OROGILDO",
@@ -1173,7 +1185,7 @@
     "p3": 0,
     "pout": 2,
     "n_atleti": 2,
-    "pos": 98
+    "pos": 99
   },
   {
     "team_id": "TEAM_NEO_SOLUTIONS",
@@ -1185,7 +1197,7 @@
     "p3": 0,
     "pout": 1,
     "n_atleti": 1,
-    "pos": 99
+    "pos": 100
   },
   {
     "team_id": "C_C_FORTI_E_VELOCI",
@@ -1197,7 +1209,7 @@
     "p3": 0,
     "pout": 1,
     "n_atleti": 1,
-    "pos": 100
+    "pos": 101
   },
   {
     "team_id": "CANTURINO_1902_A_S_D",
@@ -1209,7 +1221,7 @@
     "p3": 0,
     "pout": 2,
     "n_atleti": 2,
-    "pos": 101
+    "pos": 102
   },
   {
     "team_id": "FERALPI_MONTECLARENSE_ASD",
@@ -1221,7 +1233,7 @@
     "p3": 0,
     "pout": 2,
     "n_atleti": 2,
-    "pos": 102
+    "pos": 103
   },
   {
     "team_id": "GRUPPO_SPORTIVO_PARMENSE",
@@ -1233,7 +1245,7 @@
     "p3": 0,
     "pout": 1,
     "n_atleti": 1,
-    "pos": 103
+    "pos": 104
   },
   {
     "team_id": "GS_FIUMICELLO_1971",
@@ -1245,7 +1257,7 @@
     "p3": 0,
     "pout": 1,
     "n_atleti": 1,
-    "pos": 104
+    "pos": 105
   },
   {
     "team_id": "GI_ESSE_PRO_CYCLING",
@@ -1257,7 +1269,7 @@
     "p3": 0,
     "pout": 1,
     "n_atleti": 1,
-    "pos": 105
+    "pos": 106
   },
   {
     "team_id": "DAL_RISO_AL_ROSA",
@@ -1269,7 +1281,7 @@
     "p3": 0,
     "pout": 1,
     "n_atleti": 1,
-    "pos": 106
+    "pos": 107
   },
   {
     "team_id": "ST_KILDA_CYCLING_CLUB",
@@ -1281,7 +1293,7 @@
     "p3": 0,
     "pout": 1,
     "n_atleti": 1,
-    "pos": 107
+    "pos": 108
   },
   {
     "team_id": "AUDAX_FIORMONTI",
@@ -1293,7 +1305,7 @@
     "p3": 0,
     "pout": 2,
     "n_atleti": 2,
-    "pos": 108
+    "pos": 109
   },
   {
     "team_id": "U_S_MONTECORONA",
@@ -1305,7 +1317,7 @@
     "p3": 0,
     "pout": 1,
     "n_atleti": 1,
-    "pos": 109
+    "pos": 110
   },
   {
     "team_id": "G_S_BAREGGESE_A_S_D",
@@ -1317,7 +1329,7 @@
     "p3": 0,
     "pout": 1,
     "n_atleti": 1,
-    "pos": 110
+    "pos": 111
   },
   {
     "team_id": "SVEZIA",
@@ -1329,6 +1341,6 @@
     "p3": 0,
     "pout": 1,
     "n_atleti": 1,
-    "pos": 111
+    "pos": 112
   }
 ]

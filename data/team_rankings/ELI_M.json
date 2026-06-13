@@ -38,24 +38,24 @@
   {
     "team_id": "GENERAL_STORE_ESSEGIBI_F_LLI_CURIA",
     "team_nome": "GENERAL STORE -ESSEGIBI-F.LLI CURIA",
-    "punti": 458,
-    "vittorie": 4,
-    "p1": 4,
+    "punti": 504,
+    "vittorie": 5,
+    "p1": 5,
     "p2": 2,
     "p3": 4,
-    "pout": 21,
+    "pout": 22,
     "n_atleti": 12,
     "pos": 4
   },
   {
     "team_id": "TEAM_HOPPLA",
     "team_nome": "TEAM HOPPLA'",
-    "punti": 371,
+    "punti": 405,
     "vittorie": 4,
     "p1": 4,
-    "p2": 3,
+    "p2": 4,
     "p3": 4,
-    "pout": 18,
+    "pout": 19,
     "n_atleti": 7,
     "pos": 5
   },
@@ -86,12 +86,12 @@
   {
     "team_id": "VEGA_VITALCARE_DYNATEK",
     "team_nome": "VEGA VITALCARE DYNATEK",
-    "punti": 253,
+    "punti": 281,
     "vittorie": 0,
     "p1": 0,
     "p2": 3,
-    "p3": 1,
-    "pout": 16,
+    "p3": 2,
+    "pout": 17,
     "n_atleti": 7,
     "pos": 8
   },
@@ -134,12 +134,12 @@
   {
     "team_id": "CICLISTICA_ROSTESE",
     "team_nome": "CICLISTICA ROSTESE",
-    "punti": 182,
+    "punti": 186,
     "vittorie": 2,
     "p1": 2,
     "p2": 1,
     "p3": 3,
-    "pout": 11,
+    "pout": 12,
     "n_atleti": 5,
     "pos": 12
   },
@@ -168,6 +168,18 @@
     "pos": 14
   },
   {
+    "team_id": "VPM_MORETTI_SCS",
+    "team_nome": "VPM MORETTI SCS",
+    "punti": 153,
+    "vittorie": 2,
+    "p1": 2,
+    "p2": 0,
+    "p3": 1,
+    "pout": 16,
+    "n_atleti": 9,
+    "pos": 15
+  },
+  {
     "team_id": "GALLINA_LUCCHINI_ECOTEK",
     "team_nome": "GALLINA LUCCHINI ECOTEK",
     "punti": 148,
@@ -177,18 +189,6 @@
     "p3": 1,
     "pout": 14,
     "n_atleti": 7,
-    "pos": 15
-  },
-  {
-    "team_id": "VPM_MORETTI_SCS",
-    "team_nome": "VPM MORETTI SCS",
-    "punti": 141,
-    "vittorie": 2,
-    "p1": 2,
-    "p2": 0,
-    "p3": 1,
-    "pout": 15,
-    "n_atleti": 9,
     "pos": 16
   },
   {
@@ -312,6 +312,18 @@
     "pos": 26
   },
   {
+    "team_id": "GRAGNANO_SPORTING_CLUB",
+    "team_nome": "GRAGNANO SPORTING CLUB",
+    "punti": 66,
+    "vittorie": 0,
+    "p1": 0,
+    "p2": 0,
+    "p3": 1,
+    "pout": 6,
+    "n_atleti": 5,
+    "pos": 27
+  },
+  {
     "team_id": "OVERALL_TRE_COLLI_CYCLING_TEAM",
     "team_nome": "OVERALL TRE COLLI CYCLING TEAM",
     "punti": 63,
@@ -321,18 +333,6 @@
     "p3": 1,
     "pout": 3,
     "n_atleti": 3,
-    "pos": 27
-  },
-  {
-    "team_id": "GRAGNANO_SPORTING_CLUB",
-    "team_nome": "GRAGNANO SPORTING CLUB",
-    "punti": 60,
-    "vittorie": 0,
-    "p1": 0,
-    "p2": 0,
-    "p3": 1,
-    "pout": 5,
-    "n_atleti": 4,
     "pos": 28
   },
   {
@@ -638,12 +638,12 @@
   {
     "team_id": "GS_MALTINTI_LAMPADARI_BANCA_CAMBIANO",
     "team_nome": "GS MALTINTI LAMPADARI BANCA CAMBIANO",
-    "punti": 12,
+    "punti": 14,
     "vittorie": 0,
     "p1": 0,
     "p2": 0,
     "p3": 0,
-    "pout": 3,
+    "pout": 4,
     "n_atleti": 2,
     "pos": 54
   },
