@@ -1,5 +1,5 @@
 /* ============================================================
-   ItaliacritResultati — app.js  v203
+   Italia Cycling Stats — app.js  v203
    Hash Router + Page Renderers
    Legge i JSON statici da data/ via fetch()
    ============================================================ */
@@ -2147,7 +2147,7 @@ function placeSeasonBar() {
 
 
 // ════════════════════════════════════════════════════════════════════
-//  ITALIACRIT MULTI-HUB SYSTEM
+//  ICS MULTI-HUB SYSTEM
 //  One platform, contextual category ecosystems
 // ════════════════════════════════════════════════════════════════════
 
@@ -2354,7 +2354,7 @@ function buildNetworkSection(resultsRaw, calendar) {
 
   return '<section class="em-network">' +
     '<div class="em-network-header">' +
-      '<div class="em-network-eyebrow">🌐 ITALIACRIT NETWORK</div>' +
+      '<div class="em-network-eyebrow">🌐 ICS NETWORK</div>' +
       '<h2 class="em-network-title">Scegli il tuo ecosistema</h2>' +
       '<div class="em-network-sub">Ogni categoria ha il suo mondo — risultati, classifica, rivalità</div>' +
     '</div>' +
@@ -2706,7 +2706,7 @@ async function _renderHubHomeLegacy(hubCode) {
   const heroHtml = '<section class="em-hero">' +
     '<div class="em-hero-content em-hero-content--centered">' +
       '<div class="em-hero-left">' +
-        '<div class="em-eyebrow">ITALIACRIT · ' + hub.icon + ' ' + hub.label.toUpperCase() + '</div>' +
+        '<div class="em-eyebrow">ICS · ' + hub.icon + ' ' + hub.label.toUpperCase() + '</div>' +
         '<h1 class="em-title hub-cat-title">' + esc(hub.label.toUpperCase()) + '</h1>' +
         '<p class="em-subtitle">' + esc(hub.desc) + '</p>' +
       '</div>' +
@@ -2922,7 +2922,7 @@ function _itcBuildGate() {
   return '<div class="itc-gate-grain"></div>' +
 
     '<header class="itc-gate-hdr">' +
-      '<img src="assets/logo.png?v=3" class="itc-gate-logo" alt="ItaliacritResultati"/>' +
+      '<img src="assets/logo.png?v=3" class="itc-gate-logo" alt="Italia Cycling Stats"/>' +
       '<p class="itc-gate-tagline">The Home of Italian Cycling</p>' +
     '</header>' +
 
@@ -6093,7 +6093,7 @@ async function _renderNavBars() {
   const eyebrow  = hub
     ? `${hub.icon || ''} ${hub.gender === 'M' ? 'Maschile' : hub.gender === 'F' ? 'Femminile' : ''}`
     : 'Ciclismo Agonistico Italiano';
-  const heroTitle = hub ? hub.label.toUpperCase() : 'Italiacrit<br>Risultati';
+  const heroTitle = hub ? hub.label.toUpperCase() : 'Italia Cycling<br>Stats';
   const heroSub   = hub
     ? `${hub.desc || ''} — scegli una sezione.`
     : 'Classifiche, risultati e statistiche del ciclismo su strada italiano.';
@@ -7056,7 +7056,7 @@ window.adminNav = async function(section) {
       main.innerHTML = `
         <div class="admin-page-header">
           <h1 class="admin-page-title">📊 Dashboard</h1>
-          <p class="admin-page-sub">Benvenuto nel pannello di gestione ItaliacritResultati.</p>
+          <p class="admin-page-sub">Benvenuto nel pannello di gestione Italia Cycling Stats.</p>
         </div>
         <div class="admin-overview-grid">
           <div class="admin-stat-card" onclick="adminNav('foto-pending')" style="cursor:pointer">
@@ -15059,7 +15059,7 @@ async function renderComparatore() {
 // ── SHARE BATTLE ──────────────────────────────────────────────
 window.shareBattle = (url, title) => {
   if (navigator.share) {
-    navigator.share({ title: `ItaliacritResultati — ${title}`, url })
+    navigator.share({ title: `Italia Cycling Stats — ${title}`, url })
       .catch(() => {});
   } else {
     navigator.clipboard?.writeText(url).then(() => {
@@ -15073,7 +15073,7 @@ window.shareBattle = (url, title) => {
 function renderRegolamento() {
   setPage(`
     <div class="pg-header">
-      <div class="pg-eyebrow">Italiacrit · Sistema di Punteggio</div>
+      <div class="pg-eyebrow">ICS · Sistema di Punteggio</div>
       <h1 class="pg-title">Regolamento</h1>
     </div>
 
@@ -15136,7 +15136,7 @@ function renderRegolamento() {
     <div style="background:var(--bg-card);border:1px solid var(--border-subtle);border-radius:var(--r-lg);padding:24px;border-left:3px solid var(--border-subtle);">
       <div style="font-size:0.58rem;font-weight:800;letter-spacing:0.2em;color:var(--text-muted);text-transform:uppercase;margin-bottom:8px;">Nota</div>
       <p style="color:var(--text-secondary);font-size:0.875rem;line-height:1.6;margin:0">
-        Il sistema di punteggio di <strong style="color:var(--text-primary)">Italiacrit</strong> è progettato per valorizzare la costanza e la qualità delle prestazioni sulle gare su strada. I dati sono elaborati a partire dai risultati ufficiali FCI. Progetto indipendente, non affiliato alla Federazione Ciclistica Italiana.
+        Il sistema di punteggio di <strong style="color:var(--text-primary)">Italia Cycling Stats (ICS)</strong> è progettato per valorizzare la costanza e la qualità delle prestazioni sulle gare su strada. I dati sono elaborati a partire dai risultati ufficiali FCI. Progetto indipendente, non affiliato alla Federazione Ciclistica Italiana.
       </p>
     </div>
   `);
@@ -15724,7 +15724,7 @@ const SHARE_PLATFORMS = {
   twitter:   { w:1200, h:675,  label:'Twitter/X', color:'#1DA1F2', cls:'plat-twitter' },
   whatsapp:  { w:1080, h:1080, label:'WhatsApp', color:'#25D366', cls:'plat-whatsapp' }
 };
-const SHARE_URL = 'italiacrit.it';
+const SHARE_URL = 'italiacyclingstats.com';
 const SHARE_TAG = '#italiacrit #ciclismo';
 window._shareGaraData = null; window._shareAtletaData = null; window._shareTeamData = null;
 let _shareType, _sharePayload, _sharePlatKey = 'instagram';
@@ -15830,7 +15830,7 @@ function _header(ctx, logo, W, H, classData) {
   // ── Wordmark accanto al logo, TUTTO MAIUSCOLO (es. TOSCANACRIT) ──
   const brand = isRegio
     ? (classData.region.replace(/\s+/g, '') + 'CRIT').toUpperCase()
-    : 'ITALIACRIT';
+    : 'ICS';
   {
     // separatore verticale sottile
     ctx.fillStyle = 'rgba(255,255,255,0.16)';
@@ -15870,7 +15870,7 @@ function _header(ctx, logo, W, H, classData) {
     ctx.font = `600 ${fs}px 'Inter Tight',sans-serif`;
     ctx.letterSpacing = '2px';
     ctx.fillStyle = 'rgba(255,255,255,0.82)'; ctx.textAlign = 'right';
-    ctx.fillText('ITALIACRIT', W - 18, Math.round(bH * 0.50));
+    ctx.fillText('ICS', W - 18, Math.round(bH * 0.50));
     ctx.letterSpacing = '0px';
     ctx.font = `400 ${Math.round(fs * 0.50)}px 'Inter Tight',sans-serif`;
     ctx.fillStyle = 'rgba(255,255,255,0.30)';
@@ -16074,8 +16074,8 @@ function _drawGara(ctx, W, H, d, logo, regionLogo) {
     const fsLg = Math.round(hH * 0.42);
     ctx.font = `900 ${fsLg}px 'Inter Tight','Inter Tight',sans-serif`;
     ctx.fillStyle = '#ffffff';
-    ctx.fillText('ITALIACRIT', pad, Math.round(hH * 0.64));
-    logoRight = pad + ctx.measureText('ITALIACRIT').width;
+    ctx.fillText('ICS', pad, Math.round(hH * 0.64));
+    logoRight = pad + ctx.measureText('ICS').width;
   }
   // Regione (o luogo) accanto al logo — usa logo regionale se disponibile
   const regTxt = (region || luogo || '').toUpperCase();
@@ -16461,7 +16461,7 @@ window.nativeShare=async function(){
       const blob=await new Promise(r=>canvas.toBlob(r,'image/png'));
       const f=new File([blob],filename,{type:'image/png'});
       if(navigator.canShare({files:[f]})){
-        await navigator.share({title:'ItaliacritResultati',files:[f]});
+        await navigator.share({title:'Italia Cycling Stats',files:[f]});
         if(btn){btn.disabled=false;btn.textContent='↗ Condividi';}
         return;
       }
@@ -16544,7 +16544,7 @@ function renderLogin() {
     <div class="auth-wrap">
       <div style="width:100%;max-width:420px">
         <div class="auth-brand">
-          <div class="auth-brand-name">ITALIACRIT</div>
+          <div class="auth-brand-name">ICS</div>
           <div class="auth-brand-sub">Risultati Ciclismo Italiano</div>
         </div>
         <div class="auth-card">
@@ -16766,7 +16766,7 @@ function renderRegister() {
     <div class="auth-wrap">
       <div style="width:100%;max-width:420px">
         <div class="auth-brand">
-          <div class="auth-brand-name">ITALIACRIT</div>
+          <div class="auth-brand-name">ICS</div>
           <div class="auth-brand-sub">Risultati Ciclismo Italiano</div>
         </div>
         <div class="auth-card">
@@ -17924,7 +17924,7 @@ async function _dashMedia(el, user, profile) {
         <div class="dash-card">
           <div class="dash-card-title"><span>🔗</span>Aggancia un profilo già esistente</div>
           <p style="font-size:.85rem;color:var(--text-muted);line-height:1.5">
-            Se le tue foto sono già presenti su Italiacrit (importate da xpix.it o italiaciclismo.net),
+            Se le tue foto sono già presenti su Italia Cycling Stats (importate da xpix.it o italiaciclismo.net),
             puoi rivendicare quel profilo invece di crearne uno nuovo. La richiesta sarà verificata dall'admin.
           </p>
           <div id="dash-media-claim-list"><div class="admin-loading">Caricamento profili disponibili…</div></div>

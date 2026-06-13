@@ -1,4 +1,4 @@
-const CACHE_NAME = 'italiacrit-cache-v181';
+const CACHE_NAME = 'italiacrit-cache-v182';
 
 // File statici: messi in cache e serviti velocemente
 const STATIC_ASSETS = [
@@ -117,8 +117,8 @@ self.addEventListener('fetch', event => {
 // ── PUSH NOTIFICATIONS ──────────────────────────────────────────────
 self.addEventListener('push', event => {
   let data = {};
-  try { data = event.data ? event.data.json() : {}; } catch { data = { title: 'ItaliacritResultati', body: event.data ? event.data.text() : '' }; }
-  const title = data.title || 'ItaliacritResultati';
+  try { data = event.data ? event.data.json() : {}; } catch { data = { title: 'Italia Cycling Stats', body: event.data ? event.data.text() : '' }; }
+  const title = data.title || 'Italia Cycling Stats';
   const options = {
     body: data.body || '',
     icon: './assets/logo.png?v=3',

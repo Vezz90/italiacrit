@@ -1,6 +1,6 @@
 {
-  "name": "Italiacrit - Risultati Ciclismo Italiano",
-  "short_name": "Italiacrit",
+  "name": "Italia Cycling Stats",
+  "short_name": "ICS",
   "description": "Risultati, classifiche, gare e statistiche del ciclismo agonistico italiano su strada. Esordienti, Allievi, Juniores, Under23 ed Elite.",
   "start_url": "./",
   "scope": "./",
@@ -8,7 +8,9 @@
   "background_color": "#0a0a0a",
   "theme_color": "#e8001d",
   "lang": "it",
-  "categories": ["sports"],
+  "categories": [
+    "sports"
+  ],
   "icons": [
     {
       "src": "assets/logo.png?v=3",
