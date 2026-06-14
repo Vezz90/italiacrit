@@ -2,12 +2,12 @@
   {
     "team_id": "A_S_D_CICLISTICA_MONSELICE",
     "team_nome": "A.S.D. CICLISTICA MONSELICE",
-    "punti": 497,
+    "punti": 512,
     "vittorie": 12,
     "p1": 12,
     "p2": 9,
     "p3": 8,
-    "pout": 23,
+    "pout": 26,
     "n_atleti": 7,
     "pos": 1
   },
@@ -36,28 +36,40 @@
     "pos": 3
   },
   {
+    "team_id": "BORGO_MOLINO_VIGNA_FIORITA",
+    "team_nome": "BORGO MOLINO-VIGNA FIORITA",
+    "punti": 330,
+    "vittorie": 6,
+    "p1": 6,
+    "p2": 8,
+    "p3": 2,
+    "pout": 19,
+    "n_atleti": 6,
+    "pos": 4
+  },
+  {
     "team_id": "IND_FORNITURE_MORO_C_G_CAPITAL",
     "team_nome": "IND. FORNITURE MORO-C&G CAPITAL",
-    "punti": 316,
+    "punti": 322,
     "vittorie": 4,
     "p1": 4,
     "p2": 7,
     "p3": 5,
-    "pout": 17,
+    "pout": 20,
     "n_atleti": 8,
-    "pos": 4
+    "pos": 5
   },
   {
-    "team_id": "BORGO_MOLINO_VIGNA_FIORITA",
-    "team_nome": "BORGO MOLINO-VIGNA FIORITA",
-    "punti": 310,
+    "team_id": "FERALPI_MONTECLARENSE_ASD",
+    "team_nome": "FERALPI MONTECLARENSE ASD",
+    "punti": 294,
     "vittorie": 6,
     "p1": 6,
-    "p2": 7,
-    "p3": 2,
-    "pout": 17,
-    "n_atleti": 5,
-    "pos": 5
+    "p2": 4,
+    "p3": 5,
+    "pout": 25,
+    "n_atleti": 8,
+    "pos": 6
   },
   {
     "team_id": "POOL_CANTU_SOVICO_GB_TEAM",
@@ -69,7 +81,7 @@
     "p3": 6,
     "pout": 18,
     "n_atleti": 7,
-    "pos": 6
+    "pos": 7
   },
   {
     "team_id": "TEAM_CORATTI",
@@ -81,7 +93,7 @@
     "p3": 1,
     "pout": 22,
     "n_atleti": 5,
-    "pos": 7
+    "pos": 8
   },
   {
     "team_id": "IL_PIRATA_VANGI_OTC",
@@ -93,7 +105,7 @@
     "p3": 7,
     "pout": 27,
     "n_atleti": 7,
-    "pos": 8
+    "pos": 9
   },
   {
     "team_id": "AC_F_BESSI_CALENZANO_DONORATICO",
@@ -105,19 +117,31 @@
     "p3": 2,
     "pout": 19,
     "n_atleti": 6,
-    "pos": 9
+    "pos": 10
   },
   {
     "team_id": "S_C_COTIGNOLESE",
     "team_nome": "S.C.COTIGNOLESE",
-    "punti": 268,
+    "punti": 279,
     "vittorie": 5,
     "p1": 5,
     "p2": 6,
     "p3": 4,
-    "pout": 14,
+    "pout": 16,
     "n_atleti": 6,
-    "pos": 10
+    "pos": 11
+  },
+  {
+    "team_id": "A_R_MONEX_PRO_CYCLING_TEAM",
+    "team_nome": "A.R.MONEX PRO CYCLING TEAM",
+    "punti": 272,
+    "vittorie": 4,
+    "p1": 4,
+    "p2": 5,
+    "p3": 3,
+    "pout": 18,
+    "n_atleti": 6,
+    "pos": 12
   },
   {
     "team_id": "CYCLING_TEAM_NIAL_NIZZOLI_ALMO",
@@ -129,30 +153,6 @@
     "p3": 4,
     "pout": 19,
     "n_atleti": 8,
-    "pos": 11
-  },
-  {
-    "team_id": "FERALPI_MONTECLARENSE_ASD",
-    "team_nome": "FERALPI MONTECLARENSE ASD",
-    "punti": 257,
-    "vittorie": 5,
-    "p1": 5,
-    "p2": 4,
-    "p3": 4,
-    "pout": 22,
-    "n_atleti": 8,
-    "pos": 12
-  },
-  {
-    "team_id": "A_R_MONEX_PRO_CYCLING_TEAM",
-    "team_nome": "A.R.MONEX PRO CYCLING TEAM",
-    "punti": 240,
-    "vittorie": 3,
-    "p1": 3,
-    "p2": 4,
-    "p3": 3,
-    "pout": 17,
-    "n_atleti": 6,
     "pos": 13
   },
   {
@@ -182,14 +182,26 @@
   {
     "team_id": "S_C_ROMANESE_ASD",
     "team_nome": "S.C. ROMANESE ASD",
-    "punti": 212,
+    "punti": 220,
     "vittorie": 3,
     "p1": 3,
     "p2": 2,
     "p3": 6,
-    "pout": 16,
+    "pout": 17,
     "n_atleti": 6,
     "pos": 16
+  },
+  {
+    "team_id": "TEAM_SENAGHESE_GUERRINI",
+    "team_nome": "TEAM SENAGHESE GUERRINI",
+    "punti": 207,
+    "vittorie": 2,
+    "p1": 2,
+    "p2": 4,
+    "p3": 1,
+    "pout": 27,
+    "n_atleti": 5,
+    "pos": 17
   },
   {
     "team_id": "S_C_RECANATI_MARINELLI_CANTARINI",
@@ -201,18 +213,6 @@
     "p3": 5,
     "pout": 14,
     "n_atleti": 4,
-    "pos": 17
-  },
-  {
-    "team_id": "TEAM_SENAGHESE_GUERRINI",
-    "team_nome": "TEAM SENAGHESE GUERRINI",
-    "punti": 189,
-    "vittorie": 2,
-    "p1": 2,
-    "p2": 3,
-    "p3": 1,
-    "pout": 26,
-    "n_atleti": 5,
     "pos": 18
   },
   {
@@ -228,6 +228,18 @@
     "pos": 19
   },
   {
+    "team_id": "ACCADEMIA_CICLISTICA",
+    "team_nome": "ACCADEMIA CICLISTICA",
+    "punti": 181,
+    "vittorie": 4,
+    "p1": 4,
+    "p2": 3,
+    "p3": 2,
+    "pout": 14,
+    "n_atleti": 8,
+    "pos": 20
+  },
+  {
     "team_id": "C_C_FORTI_E_VELOCI",
     "team_nome": "C.C. FORTI E VELOCI",
     "punti": 180,
@@ -237,7 +249,7 @@
     "p3": 4,
     "pout": 19,
     "n_atleti": 5,
-    "pos": 20
+    "pos": 21
   },
   {
     "team_id": "MADONNA_DI_CAMPAGNA",
@@ -249,52 +261,40 @@
     "p3": 0,
     "pout": 13,
     "n_atleti": 3,
-    "pos": 21
-  },
-  {
-    "team_id": "ACCADEMIA_CICLISTICA",
-    "team_nome": "ACCADEMIA CICLISTICA",
-    "punti": 163,
-    "vittorie": 4,
-    "p1": 4,
-    "p2": 2,
-    "p3": 2,
-    "pout": 13,
-    "n_atleti": 8,
     "pos": 22
-  },
-  {
-    "team_id": "POL_FIUMICINESE_FA_I_T_ADRIATICA",
-    "team_nome": "POL. FIUMICINESE FA.I.T. ADRIATICA",
-    "punti": 152,
-    "vittorie": 0,
-    "p1": 0,
-    "p2": 2,
-    "p3": 3,
-    "pout": 26,
-    "n_atleti": 7,
-    "pos": 23
   },
   {
     "team_id": "A_S_D_SACILESE",
     "team_nome": "A.S.D. SACILESE",
-    "punti": 150,
+    "punti": 163,
     "vittorie": 0,
     "p1": 0,
     "p2": 5,
     "p3": 0,
-    "pout": 17,
-    "n_atleti": 3,
+    "pout": 20,
+    "n_atleti": 4,
+    "pos": 23
+  },
+  {
+    "team_id": "POL_FIUMICINESE_FA_I_T_ADRIATICA",
+    "team_nome": "POL. FIUMICINESE FA.I.T. ADRIATICA",
+    "punti": 162,
+    "vittorie": 0,
+    "p1": 0,
+    "p2": 2,
+    "p3": 4,
+    "pout": 26,
+    "n_atleti": 7,
     "pos": 24
   },
   {
     "team_id": "GCD_PEDALE_MANZANESE",
     "team_nome": "GCD PEDALE MANZANESE",
-    "punti": 143,
+    "punti": 153,
     "vittorie": 6,
     "p1": 6,
     "p2": 1,
-    "p3": 2,
+    "p3": 3,
     "pout": 4,
     "n_atleti": 3,
     "pos": 25
@@ -314,14 +314,26 @@
   {
     "team_id": "ASD_PEDALE_CASALESE_ARMOFER",
     "team_nome": "ASD PEDALE CASALESE ARMOFER",
-    "punti": 131,
+    "punti": 136,
     "vittorie": 0,
     "p1": 0,
     "p2": 2,
     "p3": 3,
-    "pout": 17,
+    "pout": 18,
     "n_atleti": 5,
     "pos": 27
+  },
+  {
+    "team_id": "ASD_TEAM_PETRUCCI",
+    "team_nome": "ASD TEAM PETRUCCI",
+    "punti": 128,
+    "vittorie": 2,
+    "p1": 2,
+    "p2": 1,
+    "p3": 5,
+    "pout": 7,
+    "n_atleti": 4,
+    "pos": 28
   },
   {
     "team_id": "MULTICAR_GRUPPO_AMARU",
@@ -333,7 +345,7 @@
     "p3": 0,
     "pout": 6,
     "n_atleti": 2,
-    "pos": 28
+    "pos": 29
   },
   {
     "team_id": "PIESSE_CYCLING_TEAM",
@@ -345,7 +357,7 @@
     "p3": 4,
     "pout": 3,
     "n_atleti": 2,
-    "pos": 29
+    "pos": 30
   },
   {
     "team_id": "CAMB_KE",
@@ -357,7 +369,7 @@
     "p3": 1,
     "pout": 12,
     "n_atleti": 5,
-    "pos": 30
+    "pos": 31
   },
   {
     "team_id": "LIBERTAS_RAIFFEISEN_LAIVES_ASD",
@@ -369,7 +381,7 @@
     "p3": 4,
     "pout": 9,
     "n_atleti": 3,
-    "pos": 31
+    "pos": 32
   },
   {
     "team_id": "VELO_CLUB_CATTOLICA",
@@ -381,7 +393,7 @@
     "p3": 1,
     "pout": 22,
     "n_atleti": 10,
-    "pos": 32
+    "pos": 33
   },
   {
     "team_id": "TEAM_VALDINIEVOLE_A_S_D",
@@ -393,7 +405,7 @@
     "p3": 2,
     "pout": 15,
     "n_atleti": 4,
-    "pos": 33
+    "pos": 34
   },
   {
     "team_id": "S_C_PATTADA",
@@ -405,18 +417,6 @@
     "p3": 1,
     "pout": 4,
     "n_atleti": 2,
-    "pos": 34
-  },
-  {
-    "team_id": "ASD_TEAM_PETRUCCI",
-    "team_nome": "ASD TEAM PETRUCCI",
-    "punti": 113,
-    "vittorie": 1,
-    "p1": 1,
-    "p2": 1,
-    "p3": 5,
-    "pout": 7,
-    "n_atleti": 4,
     "pos": 35
   },
   {
@@ -672,6 +672,30 @@
     "pos": 56
   },
   {
+    "team_id": "TEAM_RAP_TIROL",
+    "team_nome": "TEAM RAP TIROL",
+    "punti": 51,
+    "vittorie": 1,
+    "p1": 1,
+    "p2": 0,
+    "p3": 2,
+    "pout": 4,
+    "n_atleti": 4,
+    "pos": 57
+  },
+  {
+    "team_id": "PEDALE_BREMBILLESE",
+    "team_nome": "PEDALE BREMBILLESE",
+    "punti": 51,
+    "vittorie": 0,
+    "p1": 0,
+    "p2": 0,
+    "p3": 0,
+    "pout": 14,
+    "n_atleti": 3,
+    "pos": 58
+  },
+  {
     "team_id": "SS_AQUILA",
     "team_nome": "SS AQUILA",
     "punti": 49,
@@ -681,19 +705,7 @@
     "p3": 1,
     "pout": 7,
     "n_atleti": 2,
-    "pos": 57
-  },
-  {
-    "team_id": "PEDALE_BREMBILLESE",
-    "team_nome": "PEDALE BREMBILLESE",
-    "punti": 49,
-    "vittorie": 0,
-    "p1": 0,
-    "p2": 0,
-    "p3": 0,
-    "pout": 13,
-    "n_atleti": 3,
-    "pos": 58
+    "pos": 59
   },
   {
     "team_id": "VIGOR_CYCLING_TEAM",
@@ -705,7 +717,7 @@
     "p3": 1,
     "pout": 7,
     "n_atleti": 3,
-    "pos": 59
+    "pos": 60
   },
   {
     "team_id": "GS_CARTURA_NALIN",
@@ -717,7 +729,19 @@
     "p3": 0,
     "pout": 11,
     "n_atleti": 5,
-    "pos": 60
+    "pos": 61
+  },
+  {
+    "team_id": "FAIZANE_CSZ_SANDRIGO_BIKE",
+    "team_nome": "FAIZANE' CSZ SANDRIGO BIKE",
+    "punti": 44,
+    "vittorie": 0,
+    "p1": 0,
+    "p2": 2,
+    "p3": 1,
+    "pout": 7,
+    "n_atleti": 3,
+    "pos": 62
   },
   {
     "team_id": "UC_COLTANO_GRUBE_COSTRUZIONI",
@@ -729,19 +753,7 @@
     "p3": 1,
     "pout": 7,
     "n_atleti": 3,
-    "pos": 61
-  },
-  {
-    "team_id": "FAIZANE_CSZ_SANDRIGO_BIKE",
-    "team_nome": "FAIZANE' CSZ SANDRIGO BIKE",
-    "punti": 43,
-    "vittorie": 0,
-    "p1": 0,
-    "p2": 2,
-    "p3": 1,
-    "pout": 6,
-    "n_atleti": 3,
-    "pos": 62
+    "pos": 63
   },
   {
     "team_id": "LIBERTAS_CERESETTO",
@@ -753,7 +765,7 @@
     "p3": 1,
     "pout": 8,
     "n_atleti": 3,
-    "pos": 63
+    "pos": 64
   },
   {
     "team_id": "QUILIANO_BIKE_SPEED_WHEEL",
@@ -765,7 +777,7 @@
     "p3": 2,
     "pout": 1,
     "n_atleti": 1,
-    "pos": 64
+    "pos": 65
   },
   {
     "team_id": "MADONE_TEAM_BIKE_SICILIA",
@@ -777,7 +789,7 @@
     "p3": 0,
     "pout": 8,
     "n_atleti": 2,
-    "pos": 65
+    "pos": 66
   },
   {
     "team_id": "TEAM_BIKE_SIRACUSA",
@@ -789,7 +801,7 @@
     "p3": 1,
     "pout": 6,
     "n_atleti": 2,
-    "pos": 66
+    "pos": 67
   },
   {
     "team_id": "TEAM_PIU_SPORT",
@@ -801,7 +813,7 @@
     "p3": 0,
     "pout": 6,
     "n_atleti": 3,
-    "pos": 67
+    "pos": 68
   },
   {
     "team_id": "A_D_PED_AZZURRO_RINASCITA",
@@ -813,7 +825,7 @@
     "p3": 0,
     "pout": 7,
     "n_atleti": 1,
-    "pos": 68
+    "pos": 69
   },
   {
     "team_id": "POMORIE",
@@ -825,7 +837,7 @@
     "p3": 0,
     "pout": 2,
     "n_atleti": 1,
-    "pos": 69
+    "pos": 70
   },
   {
     "team_id": "S_C_MINCIO_CHIESE_A_S_D",
@@ -837,7 +849,7 @@
     "p3": 1,
     "pout": 5,
     "n_atleti": 3,
-    "pos": 70
+    "pos": 71
   },
   {
     "team_id": "ARDENS_CYCLING_TEAM",
@@ -849,7 +861,7 @@
     "p3": 0,
     "pout": 9,
     "n_atleti": 3,
-    "pos": 71
+    "pos": 72
   },
   {
     "team_id": "SESTU_BIKE_A_S_D",
@@ -861,7 +873,7 @@
     "p3": 2,
     "pout": 5,
     "n_atleti": 1,
-    "pos": 72
+    "pos": 73
   },
   {
     "team_id": "A_S_D_AF_ARREDAMENTI_TEAM_CICLING",
@@ -873,7 +885,7 @@
     "p3": 0,
     "pout": 4,
     "n_atleti": 1,
-    "pos": 73
+    "pos": 74
   },
   {
     "team_id": "CRAZY_WHEELS_CYCLING_ACADEMY",
@@ -885,7 +897,19 @@
     "p3": 0,
     "pout": 6,
     "n_atleti": 1,
-    "pos": 74
+    "pos": 75
+  },
+  {
+    "team_id": "FDB_SPORT_CLUB",
+    "team_nome": "FDB SPORT CLUB",
+    "punti": 34,
+    "vittorie": 0,
+    "p1": 0,
+    "p2": 0,
+    "p3": 0,
+    "pout": 8,
+    "n_atleti": 3,
+    "pos": 76
   },
   {
     "team_id": "V_C_BASSANO_1892",
@@ -897,19 +921,7 @@
     "p3": 2,
     "pout": 4,
     "n_atleti": 2,
-    "pos": 75
-  },
-  {
-    "team_id": "FDB_SPORT_CLUB",
-    "team_nome": "FDB SPORT CLUB",
-    "punti": 33,
-    "vittorie": 0,
-    "p1": 0,
-    "p2": 0,
-    "p3": 0,
-    "pout": 7,
-    "n_atleti": 3,
-    "pos": 76
+    "pos": 77
   },
   {
     "team_id": "C_S_LIBERTAS_SCORZE",
@@ -921,7 +933,7 @@
     "p3": 1,
     "pout": 6,
     "n_atleti": 4,
-    "pos": 77
+    "pos": 78
   },
   {
     "team_id": "PEDALE_OSSOLANO",
@@ -933,7 +945,7 @@
     "p3": 0,
     "pout": 8,
     "n_atleti": 4,
-    "pos": 78
+    "pos": 79
   },
   {
     "team_id": "MEBLO_JOGI_PRO_CONCRETE",
@@ -945,7 +957,7 @@
     "p3": 0,
     "pout": 6,
     "n_atleti": 3,
-    "pos": 79
+    "pos": 80
   },
   {
     "team_id": "NONSOLOBIKE",
@@ -957,7 +969,7 @@
     "p3": 0,
     "pout": 3,
     "n_atleti": 2,
-    "pos": 80
+    "pos": 81
   },
   {
     "team_id": "GS_ASPIRATORI_OTELLI_ALCHEM_CWC",
@@ -969,7 +981,7 @@
     "p3": 0,
     "pout": 3,
     "n_atleti": 3,
-    "pos": 81
+    "pos": 82
   },
   {
     "team_id": "ASD_ROBUR_BARCELLONA",
@@ -981,7 +993,7 @@
     "p3": 0,
     "pout": 7,
     "n_atleti": 2,
-    "pos": 82
+    "pos": 83
   },
   {
     "team_id": "S_C_SAN_FELICE_A_S_D",
@@ -993,7 +1005,7 @@
     "p3": 0,
     "pout": 5,
     "n_atleti": 1,
-    "pos": 83
+    "pos": 84
   },
   {
     "team_id": "A_S_D_PROBIKE_ERICE",
@@ -1005,7 +1017,7 @@
     "p3": 1,
     "pout": 4,
     "n_atleti": 2,
-    "pos": 84
+    "pos": 85
   },
   {
     "team_id": "S_C_TORRILE_PR",
@@ -1017,7 +1029,7 @@
     "p3": 1,
     "pout": 4,
     "n_atleti": 2,
-    "pos": 85
+    "pos": 86
   },
   {
     "team_id": "POOL_BIKE_SERRAMANNA",
@@ -1029,7 +1041,7 @@
     "p3": 0,
     "pout": 6,
     "n_atleti": 1,
-    "pos": 86
+    "pos": 87
   },
   {
     "team_id": "POGI_TEAM_UAE_GENERALI",
@@ -1041,7 +1053,19 @@
     "p3": 0,
     "pout": 3,
     "n_atleti": 3,
-    "pos": 87
+    "pos": 88
+  },
+  {
+    "team_id": "CICLISTICA_PIERIS",
+    "team_nome": "CICLISTICA PIERIS",
+    "punti": 22,
+    "vittorie": 0,
+    "p1": 0,
+    "p2": 0,
+    "p3": 0,
+    "pout": 7,
+    "n_atleti": 3,
+    "pos": 89
   },
   {
     "team_id": "S_C_CAVRIAGO",
@@ -1053,7 +1077,7 @@
     "p3": 0,
     "pout": 4,
     "n_atleti": 1,
-    "pos": 88
+    "pos": 90
   },
   {
     "team_id": "ROTOGAL_GUADENSE",
@@ -1065,19 +1089,7 @@
     "p3": 0,
     "pout": 6,
     "n_atleti": 3,
-    "pos": 89
-  },
-  {
-    "team_id": "CICLISTICA_PIERIS",
-    "team_nome": "CICLISTICA PIERIS",
-    "punti": 21,
-    "vittorie": 0,
-    "p1": 0,
-    "p2": 0,
-    "p3": 0,
-    "pout": 6,
-    "n_atleti": 2,
-    "pos": 90
+    "pos": 91
   },
   {
     "team_id": "SOC_SPORT_SANFIORESE",
@@ -1089,7 +1101,7 @@
     "p3": 1,
     "pout": 3,
     "n_atleti": 2,
-    "pos": 91
+    "pos": 92
   },
   {
     "team_id": "V_CYCLING_ARICI_CLAUDIA_PITON",
@@ -1101,7 +1113,7 @@
     "p3": 0,
     "pout": 3,
     "n_atleti": 2,
-    "pos": 92
+    "pos": 93
   },
   {
     "team_id": "LA_TERMOPIAVE_VALCAVASIA_JUNIOR_TEAM",
@@ -1113,7 +1125,19 @@
     "p3": 1,
     "pout": 1,
     "n_atleti": 2,
-    "pos": 93
+    "pos": 94
+  },
+  {
+    "team_id": "CICLISTICA_BUJESE_DIGAS",
+    "team_nome": "CICLISTICA BUJESE - DIGAS",
+    "punti": 19,
+    "vittorie": 0,
+    "p1": 0,
+    "p2": 0,
+    "p3": 1,
+    "pout": 3,
+    "n_atleti": 1,
+    "pos": 95
   },
   {
     "team_id": "G_S_LUPI_VALLE_D_AOSTA",
@@ -1125,7 +1149,7 @@
     "p3": 1,
     "pout": 4,
     "n_atleti": 2,
-    "pos": 94
+    "pos": 96
   },
   {
     "team_id": "GS_BUTESE",
@@ -1137,7 +1161,7 @@
     "p3": 0,
     "pout": 5,
     "n_atleti": 1,
-    "pos": 95
+    "pos": 97
   },
   {
     "team_id": "TEAM_FACT_ACADEMY",
@@ -1149,7 +1173,7 @@
     "p3": 0,
     "pout": 3,
     "n_atleti": 2,
-    "pos": 96
+    "pos": 98
   },
   {
     "team_id": "CICLISTICA_ROSTESE",
@@ -1161,19 +1185,7 @@
     "p3": 0,
     "pout": 0,
     "n_atleti": 1,
-    "pos": 97
-  },
-  {
-    "team_id": "CICLISTICA_BUJESE_DIGAS",
-    "team_nome": "CICLISTICA BUJESE - DIGAS",
-    "punti": 15,
-    "vittorie": 0,
-    "p1": 0,
-    "p2": 0,
-    "p3": 1,
-    "pout": 2,
-    "n_atleti": 1,
-    "pos": 98
+    "pos": 99
   },
   {
     "team_id": "CICLISTICA_BORDIGHERA",
@@ -1185,7 +1197,7 @@
     "p3": 1,
     "pout": 1,
     "n_atleti": 2,
-    "pos": 99
+    "pos": 100
   },
   {
     "team_id": "INFOCARS_ESTEMOTOR",
@@ -1197,7 +1209,7 @@
     "p3": 0,
     "pout": 4,
     "n_atleti": 1,
-    "pos": 100
+    "pos": 101
   },
   {
     "team_id": "CAMPANA_IMBALLAGGI_MORBIATO_TRENTINO",
@@ -1209,7 +1221,7 @@
     "p3": 0,
     "pout": 4,
     "n_atleti": 2,
-    "pos": 101
+    "pos": 102
   },
   {
     "team_id": "ASD_DP66_PINARELLO",
@@ -1221,18 +1233,6 @@
     "p3": 0,
     "pout": 2,
     "n_atleti": 1,
-    "pos": 102
-  },
-  {
-    "team_id": "RC_ARBO_WORGL",
-    "team_nome": "RC ARBO WORGL",
-    "punti": 14,
-    "vittorie": 0,
-    "p1": 0,
-    "p2": 0,
-    "p3": 1,
-    "pout": 2,
-    "n_atleti": 3,
     "pos": 103
   },
   {
