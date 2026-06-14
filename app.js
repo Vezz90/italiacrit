@@ -9021,6 +9021,11 @@ function renderXpixQueue() {
               Gara: <strong>${esc(item.approved_gara_id||item.approved_gara_ids?.[0]||'—')}</strong>
             </div>
           </div>
+          <button onclick="window.xpixRestore('${esc(item.id)}',this)"
+            style="flex:0 0 auto;background:transparent;border:1px solid #16a34a;color:#16a34a;padding:4px 10px;border-radius:5px;cursor:pointer;font-size:.75rem;white-space:nowrap"
+            title="Rimetti in coda per ri-pubblicare (anche su un'altra gara) e taggare il corridore">
+            ↩ Rimetti in coda
+          </button>
           <button onclick="window.xpixRelinkGara('${esc(item.approved_gara_id||item.approved_gara_ids?.[0]||'')}',this,'${esc(item.album_slug||'')}')"
             style="flex:0 0 auto;background:transparent;border:1px solid #6366f1;color:#6366f1;padding:4px 10px;border-radius:5px;cursor:pointer;font-size:.75rem;white-space:nowrap">
             🔗 Cambia gara
