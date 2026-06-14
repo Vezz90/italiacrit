@@ -9117,6 +9117,16 @@ function renderXpixQueue() {
         <input type="checkbox" id="xpixq-both-cb-${esc(item.id)}" style="cursor:pointer" />
         🏅 Pubblica per <strong>entrambi gli anni</strong> (1° + 2°)
       </label>
+      <!-- Tag corridore nella foto selezionata (così appare sul suo profilo) -->
+      <div style="margin-bottom:8px">
+        <div style="position:relative">
+          <input type="text" id="xpixr-input-${esc(item.id)}" placeholder="🏷 Corridore nella foto selezionata (opzionale)…"
+            autocomplete="off" oninput="window.xpixSearchRider('${esc(item.id)}',this.value)"
+            style="width:100%;box-sizing:border-box;padding:5px 8px;border:1px solid var(--border);border-radius:5px;background:var(--bg-primary);color:var(--text-primary);font-size:.78rem" />
+          <div id="xpixr-sr-${esc(item.id)}" style="display:none;position:absolute;left:0;right:0;top:100%;background:var(--bg-card);border:1px solid var(--border);border-radius:5px;max-height:160px;overflow-y:auto;z-index:5;box-shadow:0 6px 20px rgba(0,0,0,.25)"></div>
+        </div>
+        <div id="xpixr-chips-${esc(item.id)}" style="display:flex;flex-wrap:wrap;gap:5px;margin-top:5px"></div>
+      </div>
       <div style="display:flex;gap:6px;flex-wrap:wrap">
         <button onclick="window.xpixApprove('${esc(item.id)}')"
           style="background:#16a34a;color:#fff;border:none;padding:5px 14px;border-radius:5px;cursor:pointer;font-size:.78rem;font-weight:700">
@@ -9217,6 +9227,44 @@ window.xpixDiagnose = async () => {
 
 // Mappa id → URL foto selezionata dall'admin
 const _xpixItemPhotoMap = {};
+const _xpixItemAtletaMap = {};   // id → [{id,label}] corridori taggati sulla foto
+
+window.xpixSearchRider = (id, q) => {
+  const dd = document.getElementById('xpixr-sr-' + id);
+  if (!dd) return;
+  if (!q || q.length < 2) { dd.innerHTML = ''; dd.style.display = 'none'; return; }
+  const ql = q.toLowerCase();
+  const chosen = new Set((_xpixItemAtletaMap[id] || []).map(t => t.id));
+  const matches = Object.entries(globalData?.athletes || {})
+    .filter(([aid, a]) => !chosen.has(aid) && `${a.cognome||''} ${a.nome||''}`.toLowerCase().includes(ql))
+    .slice(0, 8);
+  dd.innerHTML = matches.map(([aid, a]) => {
+    const label = `${a.cognome||''} ${a.nome||''}`.trim();
+    return `<div onclick="window.xpixAddRider('${esc(id)}','${esc(aid)}','${esc(label)}')"
+      style="padding:6px 10px;cursor:pointer;font-size:.78rem;border-bottom:1px solid var(--border-subtle)">${esc(label)}</div>`;
+  }).join('') || '<div style="padding:6px 10px;font-size:.78rem;color:var(--text-muted)">Nessun corridore</div>';
+  dd.style.display = 'block';
+};
+window.xpixAddRider = (id, aid, label) => {
+  if (!_xpixItemAtletaMap[id]) _xpixItemAtletaMap[id] = [];
+  if (!_xpixItemAtletaMap[id].some(t => t.id === aid)) _xpixItemAtletaMap[id].push({ id: aid, label });
+  const inp = document.getElementById('xpixr-input-' + id); if (inp) inp.value = '';
+  const dd = document.getElementById('xpixr-sr-' + id); if (dd) { dd.innerHTML = ''; dd.style.display = 'none'; }
+  _xpixRenderRiderChips(id);
+};
+window.xpixRemoveRider = (id, aid) => {
+  _xpixItemAtletaMap[id] = (_xpixItemAtletaMap[id] || []).filter(t => t.id !== aid);
+  _xpixRenderRiderChips(id);
+};
+function _xpixRenderRiderChips(id) {
+  const box = document.getElementById('xpixr-chips-' + id);
+  if (!box) return;
+  box.innerHTML = (_xpixItemAtletaMap[id] || []).map(t =>
+    `<span style="display:inline-flex;align-items:center;gap:4px;background:#16a34a22;border:1px solid #16a34a;border-radius:12px;padding:2px 8px;font-size:.72rem;color:#16a34a">
+      ${esc(t.label)}
+      <span onclick="window.xpixRemoveRider('${esc(id)}','${esc(t.id)}')" style="cursor:pointer;font-weight:700">×</span>
+    </span>`).join('');
+}
 
 window.xpixSelectPhoto = (id, imgEl) => {
   // Deseleziona tutte le foto del blocco
@@ -9296,11 +9344,13 @@ window.xpixApprove = async (id) => {
   // Esordienti + checkbox "entrambi gli anni" → pubblica su ES1 ed ES2
   const bothCb = document.getElementById('xpixq-both-cb-' + id);
   const targets = (bothCb && bothCb.checked) ? _esBothGaraIds(garaId) : [garaId];
+  // Tag corridori sulla foto selezionata (CSV) — opzionale
+  const tagCsv = (_xpixItemAtletaMap[id] || []).map(t => t.id).join(',');
   try {
     for (const gid of targets) {
       await apiCall(`/admin/xpix/queue/${id}/approve`, {
         method: 'POST',
-        body: { gara_id: gid, selected_photo_url: selectedPhotoUrl },
+        body: { gara_id: gid, selected_photo_url: selectedPhotoUrl, atleta_ids: tagCsv },
       });
     }
     if (item) {
@@ -9320,8 +9370,11 @@ window.xpixApprove = async (id) => {
       banner.innerHTML = `✓ Pubblicato per: ${approvedList} &nbsp;—&nbsp; <span style="font-weight:400;color:var(--text-muted)">Puoi selezionare un'altra gara (es. versione ♀) e pubblicare di nuovo</span>`;
       if (!block.querySelector('.xpix-approved-banner')) block.insertBefore(banner, block.firstChild);
       else block.replaceChild(banner, block.querySelector('.xpix-approved-banner'));
-      // Reset selezione gara per permettere subito una seconda approvazione
+      // Reset selezione gara + tag corridore per la seconda approvazione
       _xpixItemGaraMap[id] = '';
+      _xpixItemAtletaMap[id] = [];
+      _xpixRenderRiderChips(id);
+      const ri = document.getElementById('xpixr-input-' + id); if (ri) ri.value = '';
       const sel = block.querySelector('select');
       if (sel) sel.value = '';
     }
@@ -15626,6 +15679,17 @@ async function loadRisPhotos() {
       for (const aid of ids) {
         if (!_risPhotosByAtleta[aid]) _risPhotosByAtleta[aid] = [];
         _risPhotosByAtleta[aid].push(p);
+      }
+    });
+    // Foto xpix taggate a un corridore (mappa photoUrl → CSV atleti, per gara)
+    (d2.photos || []).forEach(p => {
+      if (!p.tags) return;
+      for (const [photoUrl, csv] of Object.entries(p.tags)) {
+        const ids = String(csv || '').split(',').map(s => s.trim()).filter(Boolean);
+        for (const aid of ids) {
+          if (!_risPhotosByAtleta[aid]) _risPhotosByAtleta[aid] = [];
+          _risPhotosByAtleta[aid].push({ url: photoUrl, gara_id: p.gara_id, caption: p.album_name || '', source: 'xpix' });
+        }
       }
     });
     // Mappa SOLO album esterni (xpix/IC) — NON sovrascritta dalle foto caricate,

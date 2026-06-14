@@ -1638,8 +1638,11 @@ app.get('/api/admin/xpix/diagnose', requireAdmin, async (req, res) => {
 // POST approva: salva la foto xpix come foto della gara
 app.post('/api/admin/xpix/queue/:id/approve', requireAdmin, async (req, res) => {
   try {
-    const { gara_id, selected_photo_url } = req.body;
+    const { gara_id, selected_photo_url, atleta_ids } = req.body;
     if (!gara_id) return res.status(400).json({ error: 'gara_id obbligatorio' });
+    // Tag corridori (CSV) da applicare ALLA foto selezionata, così appare sul
+    // profilo dell'atleta indicato (oltre che nella gallery della gara).
+    const tagCsv = String(atleta_ids || '').split(',').map(s => s.trim()).filter(Boolean).join(',');
 
     const queue = await readXpixQueue();
     const i = queue.findIndex(q => q.id === req.params.id);
@@ -1658,6 +1661,10 @@ app.post('/api/admin/xpix/queue/:id/approve', requireAdmin, async (req, res) => 
 
     // Salva foto selezionata (hero) + intero array per la gallery
     const chosenUrl = selected_photo_url || item.photo_url || albumPhotos[0];
+    // Preserva i tag già assegnati (più approvazioni della stessa gara con foto
+    // diverse → ogni foto può avere il suo corridore) e aggiungi quello nuovo.
+    const prevTags = (photos[gara_id] && photos[gara_id].tags) || {};
+    if (tagCsv) prevTags[chosenUrl] = tagCsv;
     photos[gara_id] = {
       url:        chosenUrl,
       photos:     albumPhotos.length ? albumPhotos : [chosenUrl],
@@ -1666,6 +1673,7 @@ app.post('/api/admin/xpix/queue/:id/approve', requireAdmin, async (req, res) => 
       album_page: item.album_page,
       source:     'xpix',
       gara_id,
+      tags:       prevTags,
       approved_at: new Date().toISOString(),
     };
     await writeXpixPhotos(photos);
