@@ -1,5 +1,17 @@
 [
   {
+    "team_id": "POL_FIUMICINESE_FA_I_T_ADRIATICA",
+    "team_nome": "POL. FIUMICINESE FA.I.T. ADRIATICA",
+    "punti": 276,
+    "vittorie": 7,
+    "p1": 7,
+    "p2": 5,
+    "p3": 4,
+    "pout": 8,
+    "n_atleti": 3,
+    "pos": 1
+  },
+  {
     "team_id": "U_C_GIORGIONE",
     "team_nome": "U.C. GIORGIONE",
     "punti": 269,
@@ -9,29 +21,17 @@
     "p3": 3,
     "pout": 18,
     "n_atleti": 6,
-    "pos": 1
-  },
-  {
-    "team_id": "POL_FIUMICINESE_FA_I_T_ADRIATICA",
-    "team_nome": "POL. FIUMICINESE FA.I.T. ADRIATICA",
-    "punti": 256,
-    "vittorie": 7,
-    "p1": 7,
-    "p2": 4,
-    "p3": 4,
-    "pout": 7,
-    "n_atleti": 3,
     "pos": 2
   },
   {
     "team_id": "GS_CAPANNORI",
     "team_nome": "GS CAPANNORI",
-    "punti": 247,
-    "vittorie": 4,
-    "p1": 4,
+    "punti": 266,
+    "vittorie": 5,
+    "p1": 5,
     "p2": 6,
     "p3": 3,
-    "pout": 18,
+    "pout": 19,
     "n_atleti": 5,
     "pos": 3
   },
@@ -62,24 +62,24 @@
   {
     "team_id": "S_C_CESANO_MADERNO",
     "team_nome": "S.C. CESANO MADERNO",
-    "punti": 143,
+    "punti": 152,
     "vittorie": 0,
     "p1": 0,
     "p2": 2,
     "p3": 3,
-    "pout": 24,
+    "pout": 26,
     "n_atleti": 5,
     "pos": 6
   },
   {
     "team_id": "UC_DONORATICO",
     "team_nome": "UC DONORATICO",
-    "punti": 138,
+    "punti": 150,
     "vittorie": 1,
     "p1": 1,
     "p2": 3,
-    "p3": 3,
-    "pout": 9,
+    "p3": 4,
+    "pout": 10,
     "n_atleti": 2,
     "pos": 7
   },
@@ -158,12 +158,12 @@
   {
     "team_id": "TEAM_FABIANA_LUPERINI_ASD",
     "team_nome": "TEAM FABIANA LUPERINI ASD",
-    "punti": 42,
+    "punti": 43,
     "vittorie": 0,
     "p1": 0,
     "p2": 1,
     "p3": 1,
-    "pout": 5,
+    "pout": 6,
     "n_atleti": 2,
     "pos": 14
   },
@@ -276,6 +276,18 @@
     "pos": 23
   },
   {
+    "team_id": "ASD_EFFETTO_CICLISMO_NOI_SPORT",
+    "team_nome": "ASD EFFETTO CICLISMO - NOI SPORT",
+    "punti": 22,
+    "vittorie": 0,
+    "p1": 0,
+    "p2": 0,
+    "p3": 0,
+    "pout": 3,
+    "n_atleti": 1,
+    "pos": 24
+  },
+  {
     "team_id": "ASD_TEAM_FEMMINILE_TRENTINO",
     "team_nome": "ASD TEAM FEMMINILE TRENTINO",
     "punti": 21,
@@ -285,18 +297,6 @@
     "p3": 0,
     "pout": 2,
     "n_atleti": 2,
-    "pos": 24
-  },
-  {
-    "team_id": "ASD_EFFETTO_CICLISMO_NOI_SPORT",
-    "team_nome": "ASD EFFETTO CICLISMO - NOI SPORT",
-    "punti": 17,
-    "vittorie": 0,
-    "p1": 0,
-    "p2": 0,
-    "p3": 0,
-    "pout": 2,
-    "n_atleti": 1,
     "pos": 25
   },
   {
