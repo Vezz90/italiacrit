@@ -26,7 +26,7 @@
   {
     "team_id": "TEAM_GUERRINI_SENAGHESE",
     "team_nome": "TEAM GUERRINI SENAGHESE",
-    "punti": 515,
+    "punti": 512,
     "vittorie": 7,
     "p1": 7,
     "p2": 4,
@@ -206,12 +206,12 @@
   {
     "team_id": "TEAM_GENERAL_SYSTEM",
     "team_nome": "TEAM GENERAL SYSTEM",
-    "punti": 230,
+    "punti": 224,
     "vittorie": 2,
     "p1": 2,
     "p2": 4,
     "p3": 1,
-    "pout": 20,
+    "pout": 19,
     "n_atleti": 6,
     "pos": 18
   },
@@ -492,6 +492,18 @@
     "pos": 41
   },
   {
+    "team_id": "SIDERMEC_SLP",
+    "team_nome": "SIDERMEC - SLP",
+    "punti": 71,
+    "vittorie": 0,
+    "p1": 0,
+    "p2": 0,
+    "p3": 0,
+    "pout": 16,
+    "n_atleti": 7,
+    "pos": 42
+  },
+  {
     "team_id": "S_C_ROMANESE_ASD",
     "team_nome": "S.C. ROMANESE ASD",
     "punti": 68,
@@ -501,18 +513,6 @@
     "p3": 0,
     "pout": 11,
     "n_atleti": 2,
-    "pos": 42
-  },
-  {
-    "team_id": "SIDERMEC_SLP",
-    "team_nome": "SIDERMEC - SLP",
-    "punti": 62,
-    "vittorie": 0,
-    "p1": 0,
-    "p2": 0,
-    "p3": 0,
-    "pout": 15,
-    "n_atleti": 7,
     "pos": 43
   },
   {
