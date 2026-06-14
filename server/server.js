@@ -2008,19 +2008,24 @@ async function autoICSync() {
 
 app.post('/api/admin/ic/queue/:id/approve', requireAdmin, async (req, res) => {
   try {
-    const { gara_id, selected_photo_url } = req.body;
+    const { gara_id, selected_photo_url, atleta_ids } = req.body;
     if (!gara_id) return res.status(400).json({ error: 'gara_id obbligatorio' });
+    const tagCsv = String(atleta_ids || '').split(',').map(s => s.trim()).filter(Boolean).join(',');
     const queue = await readICQueue();
     const i = queue.findIndex(q => q.id === req.params.id);
     if (i === -1) return res.status(404).json({ error: 'Non trovato' });
     const item   = queue[i];
     const photos = await readICPhotos();
+    const chosenUrl = selected_photo_url || item.photo_url;
+    const prevTags = (photos[gara_id] && photos[gara_id].tags) || {};
+    if (tagCsv) prevTags[chosenUrl] = tagCsv;
     photos[gara_id] = {
-      url:        selected_photo_url || item.photo_url,
+      url:        chosenUrl,
       gara_url:   item.gara_url,
       name:       item.name,
       gara_id,
       source:     'italiaciclismo',
+      tags:       prevTags,
       approved_at: new Date().toISOString(),
     };
     await writeICPhotos(photos);

@@ -9471,6 +9471,44 @@ window.xpixRefreshPhotos = async (id) => {
 let _icQueue = [];
 let _icItemGaraMap  = {};
 let _icItemPhotoMap = {};
+let _icItemAtletaMap = {};   // id → [{id,label}] corridori taggati sulla foto
+
+window.icSearchRider = (id, q) => {
+  const dd = document.getElementById('icr-sr-' + id);
+  if (!dd) return;
+  if (!q || q.length < 2) { dd.innerHTML = ''; dd.style.display = 'none'; return; }
+  const ql = q.toLowerCase();
+  const chosen = new Set((_icItemAtletaMap[id] || []).map(t => t.id));
+  const matches = Object.entries(globalData?.athletes || {})
+    .filter(([aid, a]) => !chosen.has(aid) && `${a.cognome||''} ${a.nome||''}`.toLowerCase().includes(ql))
+    .slice(0, 8);
+  dd.innerHTML = matches.map(([aid, a]) => {
+    const label = `${a.cognome||''} ${a.nome||''}`.trim();
+    return `<div onclick="window.icAddRider('${esc(id)}','${esc(aid)}','${esc(label)}')"
+      style="padding:6px 10px;cursor:pointer;font-size:.78rem;border-bottom:1px solid var(--border-subtle)">${esc(label)}</div>`;
+  }).join('') || '<div style="padding:6px 10px;font-size:.78rem;color:var(--text-muted)">Nessun corridore</div>';
+  dd.style.display = 'block';
+};
+window.icAddRider = (id, aid, label) => {
+  if (!_icItemAtletaMap[id]) _icItemAtletaMap[id] = [];
+  if (!_icItemAtletaMap[id].some(t => t.id === aid)) _icItemAtletaMap[id].push({ id: aid, label });
+  const inp = document.getElementById('icr-input-' + id); if (inp) inp.value = '';
+  const dd = document.getElementById('icr-sr-' + id); if (dd) { dd.innerHTML = ''; dd.style.display = 'none'; }
+  _icRenderRiderChips(id);
+};
+window.icRemoveRider = (id, aid) => {
+  _icItemAtletaMap[id] = (_icItemAtletaMap[id] || []).filter(t => t.id !== aid);
+  _icRenderRiderChips(id);
+};
+function _icRenderRiderChips(id) {
+  const box = document.getElementById('icr-chips-' + id);
+  if (!box) return;
+  box.innerHTML = (_icItemAtletaMap[id] || []).map(t =>
+    `<span style="display:inline-flex;align-items:center;gap:4px;background:#16a34a22;border:1px solid #16a34a;border-radius:12px;padding:2px 8px;font-size:.72rem;color:#16a34a">
+      ${esc(t.label)}
+      <span onclick="window.icRemoveRider('${esc(id)}','${esc(t.id)}')" style="cursor:pointer;font-weight:700">×</span>
+    </span>`).join('');
+}
 
 function _icScore(icName, icDate, race) {
   // Usa la stessa logica di xpix/yt ma con data esatta come bonus maggiore
@@ -9570,6 +9608,16 @@ function renderICQueue() {
         <input type="checkbox" id="icq-both-cb-${esc(item.id)}" style="cursor:pointer" />
         🏅 Pubblica per <strong>entrambi gli anni</strong> (1° + 2°)
       </label>
+      <!-- Tag corridore nella foto selezionata (così appare sul suo profilo) -->
+      <div style="margin-bottom:8px">
+        <div style="position:relative">
+          <input type="text" id="icr-input-${esc(item.id)}" placeholder="🏷 Corridore nella foto selezionata (opzionale)…"
+            autocomplete="off" oninput="window.icSearchRider('${esc(item.id)}',this.value)"
+            style="width:100%;box-sizing:border-box;padding:5px 8px;border:1px solid var(--border);border-radius:5px;background:var(--bg-primary);color:var(--text-primary);font-size:.78rem" />
+          <div id="icr-sr-${esc(item.id)}" style="display:none;position:absolute;left:0;right:0;top:100%;background:var(--bg-card);border:1px solid var(--border);border-radius:5px;max-height:160px;overflow-y:auto;z-index:5;box-shadow:0 6px 20px rgba(0,0,0,.25)"></div>
+        </div>
+        <div id="icr-chips-${esc(item.id)}" style="display:flex;flex-wrap:wrap;gap:5px;margin-top:5px"></div>
+      </div>
       <div style="display:flex;gap:6px;flex-wrap:wrap">
         <button onclick="window.icApprove('${esc(item.id)}')"
           style="background:#16a34a;color:#fff;border:none;padding:5px 14px;border-radius:5px;cursor:pointer;font-size:.78rem;font-weight:700">✓ Pubblica foto</button>
@@ -9665,9 +9713,10 @@ window.icApprove = async (id) => {
   if (!selectedPhotoUrl) { showToast('Nessuna foto selezionata','error'); return; }
   const bothCb = document.getElementById('icq-both-cb-' + id);
   const targets = (bothCb && bothCb.checked) ? _esBothGaraIds(garaId) : [garaId];
+  const tagCsv = (_icItemAtletaMap[id] || []).map(t => t.id).join(',');
   try {
     for (const gid of targets) {
-      await apiCall(`/admin/ic/queue/${id}/approve`, { method:'POST', body:{ gara_id:gid, selected_photo_url:selectedPhotoUrl } });
+      await apiCall(`/admin/ic/queue/${id}/approve`, { method:'POST', body:{ gara_id:gid, selected_photo_url:selectedPhotoUrl, atleta_ids: tagCsv } });
     }
     document.getElementById('icq-'+id)?.remove();
     const it = _icQueue.find(q=>q.id===id); if(it) it.status='approved';
@@ -15681,17 +15730,20 @@ async function loadRisPhotos() {
         _risPhotosByAtleta[aid].push(p);
       }
     });
-    // Foto xpix taggate a un corridore (mappa photoUrl → CSV atleti, per gara)
-    (d2.photos || []).forEach(p => {
+    // Foto esterne taggate a un corridore (xpix + ciclismo.info):
+    // mappa photoUrl → CSV atleti, per gara → indice per profilo atleta.
+    const _indexExtTags = (arr, src) => (arr || []).forEach(p => {
       if (!p.tags) return;
       for (const [photoUrl, csv] of Object.entries(p.tags)) {
         const ids = String(csv || '').split(',').map(s => s.trim()).filter(Boolean);
         for (const aid of ids) {
           if (!_risPhotosByAtleta[aid]) _risPhotosByAtleta[aid] = [];
-          _risPhotosByAtleta[aid].push({ url: photoUrl, gara_id: p.gara_id, caption: p.album_name || '', source: 'xpix' });
+          _risPhotosByAtleta[aid].push({ url: photoUrl, gara_id: p.gara_id, caption: p.album_name || p.name || '', source: src });
         }
       }
     });
+    _indexExtTags(d2.photos, 'xpix');  // xpix
+    _indexExtTags(d3.photos, 'italiaciclismo');  // ciclismo.info
     // Mappa SOLO album esterni (xpix/IC) — NON sovrascritta dalle foto caricate,
     // così un album resta accessibile anche se c'è già una foto manuale.
     _risExtPhotosMap = {};
