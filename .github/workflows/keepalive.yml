@@ -1,10 +1,13 @@
 name: Keep-Alive
 
-# Gira ogni 10 minuti — Render free dorme dopo ~15 min di inattività,
-# quindi 10 min garantisce margine anche se GitHub Actions ritarda il cron.
+# Gira ogni 10 minuti — Render free dorme dopo ~15 min di inattività.
 # Chiama /api/cron/tick che: (1) tiene sveglio Render, (2) lancia le sync
-# foto/video in background (throttle interno 25 min) — così le sync girano
-# anche se l'setInterval interno di Render si è fermato per uno sleep.
+# foto/video, (3) ogni 30 min triggera lo scrape via API GitHub.
+# NB: il cron di GitHub è inaffidabile; per orari regolari usare un pinger
+# esterno (es. cron-job.org / UptimeRobot) verso /api/cron/tick. Questo
+# workflow resta come fallback "best effort".
+# Non committa più nulla: i commit ogni 10 min causavano conflitti di push
+# e build di Pages inutili.
 on:
   schedule:
     - cron: '*/10 * * * *'
@@ -30,19 +33,3 @@ jobs:
             sleep 10
           done
           exit 0
-
-      - name: Keep repo active (prevent GitHub Actions throttling)
-        uses: actions/checkout@v5
-        with:
-          token: ${{ secrets.GITHUB_TOKEN }}
-
-      - name: Touch keepalive timestamp
-        run: |
-          mkdir -p .github
-          echo "$(date -u '+%Y-%m-%dT%H:%M:%SZ')" > .github/keepalive.txt
-          git config user.email "bot@italiacrit.it"
-          git config user.name "ItaliacritBot"
-          git add .github/keepalive.txt
-          git diff --staged --quiet || git commit -m "keepalive: $(date -u '+%Y-%m-%d %H:%M') UTC"
-          git pull --rebase origin main
-          git push
