@@ -1,5 +1,17 @@
 [
   {
+    "team_id": "U_C_GIORGIONE",
+    "team_nome": "U.C. GIORGIONE",
+    "punti": 269,
+    "vittorie": 7,
+    "p1": 7,
+    "p2": 5,
+    "p3": 3,
+    "pout": 18,
+    "n_atleti": 6,
+    "pos": 1
+  },
+  {
     "team_id": "POL_FIUMICINESE_FA_I_T_ADRIATICA",
     "team_nome": "POL. FIUMICINESE FA.I.T. ADRIATICA",
     "punti": 256,
@@ -9,7 +21,7 @@
     "p3": 4,
     "pout": 7,
     "n_atleti": 3,
-    "pos": 1
+    "pos": 2
   },
   {
     "team_id": "GS_CAPANNORI",
@@ -21,19 +33,19 @@
     "p3": 3,
     "pout": 18,
     "n_atleti": 5,
-    "pos": 2
+    "pos": 3
   },
   {
-    "team_id": "U_C_GIORGIONE",
-    "team_nome": "U.C. GIORGIONE",
-    "punti": 239,
+    "team_id": "SCUOLA_CICLISMO_VERSO_L_IRIDE",
+    "team_nome": "SCUOLA CICLISMO VERSO L'IRIDE",
+    "punti": 169,
     "vittorie": 6,
     "p1": 6,
-    "p2": 5,
-    "p3": 3,
-    "pout": 15,
-    "n_atleti": 6,
-    "pos": 3
+    "p2": 0,
+    "p3": 2,
+    "pout": 13,
+    "n_atleti": 3,
+    "pos": 4
   },
   {
     "team_id": "A_S_A_C_I_EVONACICLI",
@@ -45,18 +57,6 @@
     "p3": 3,
     "pout": 5,
     "n_atleti": 5,
-    "pos": 4
-  },
-  {
-    "team_id": "SCUOLA_CICLISMO_VERSO_L_IRIDE",
-    "team_nome": "SCUOLA CICLISMO VERSO L'IRIDE",
-    "punti": 153,
-    "vittorie": 6,
-    "p1": 6,
-    "p2": 0,
-    "p3": 1,
-    "pout": 12,
-    "n_atleti": 3,
     "pos": 5
   },
   {
@@ -86,12 +86,12 @@
   {
     "team_id": "G_S_MOSOLE",
     "team_nome": "G.S. MOSOLE",
-    "punti": 105,
+    "punti": 109,
     "vittorie": 1,
     "p1": 1,
     "p2": 1,
     "p3": 4,
-    "pout": 12,
+    "pout": 13,
     "n_atleti": 2,
     "pos": 8
   },
@@ -110,10 +110,10 @@
   {
     "team_id": "SPORT_CLUB_BRESCIA_FLANDRES_LOVE",
     "team_nome": "SPORT CLUB BRESCIA - FLANDRES LOVE",
-    "punti": 67,
+    "punti": 79,
     "vittorie": 0,
     "p1": 0,
-    "p2": 1,
+    "p2": 2,
     "p3": 1,
     "pout": 7,
     "n_atleti": 1,
@@ -146,12 +146,12 @@
   {
     "team_id": "U_C_CONSCIO_PEDALE_DEL_SILE",
     "team_nome": "U.C.CONSCIO PEDALE DEL SILE",
-    "punti": 50,
+    "punti": 53,
     "vittorie": 1,
     "p1": 1,
     "p2": 1,
     "p3": 0,
-    "pout": 4,
+    "pout": 5,
     "n_atleti": 1,
     "pos": 13
   },
@@ -266,12 +266,12 @@
   {
     "team_id": "COMAL_TRENTINO_CYCLING_ACADEMY",
     "team_nome": "COMAL TRENTINO CYCLING ACADEMY",
-    "punti": 21,
+    "punti": 22,
     "vittorie": 0,
     "p1": 0,
     "p2": 0,
     "p3": 0,
-    "pout": 7,
+    "pout": 8,
     "n_atleti": 1,
     "pos": 23
   },
