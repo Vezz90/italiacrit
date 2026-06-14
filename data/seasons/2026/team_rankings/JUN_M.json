@@ -132,6 +132,18 @@
     "pos": 11
   },
   {
+    "team_id": "ETHICA_ZERO24_CYCLING_TEAM_ECOTEK",
+    "team_nome": "ETHICA ZERO24 CYCLING TEAM ECOTEK",
+    "punti": 313,
+    "vittorie": 6,
+    "p1": 6,
+    "p2": 6,
+    "p3": 1,
+    "pout": 10,
+    "n_atleti": 6,
+    "pos": 12
+  },
+  {
     "team_id": "CPS_PROFESSIONAL_TEAM",
     "team_nome": "CPS PROFESSIONAL TEAM",
     "punti": 304,
@@ -141,7 +153,7 @@
     "p3": 6,
     "pout": 24,
     "n_atleti": 11,
-    "pos": 12
+    "pos": 13
   },
   {
     "team_id": "POLISPORTIVA_MONSUMMANESE",
@@ -153,7 +165,7 @@
     "p3": 6,
     "pout": 21,
     "n_atleti": 10,
-    "pos": 13
+    "pos": 14
   },
   {
     "team_id": "ACCADEMIA_CICLISTICA",
@@ -165,18 +177,6 @@
     "p3": 2,
     "pout": 11,
     "n_atleti": 4,
-    "pos": 14
-  },
-  {
-    "team_id": "ETHICA_ZERO24_CYCLING_TEAM_ECOTEK",
-    "team_nome": "ETHICA ZERO24 CYCLING TEAM ECOTEK",
-    "punti": 279,
-    "vittorie": 5,
-    "p1": 5,
-    "p2": 5,
-    "p3": 1,
-    "pout": 8,
-    "n_atleti": 5,
     "pos": 15
   },
   {
@@ -206,13 +206,13 @@
   {
     "team_id": "TEAM_GENERAL_SYSTEM",
     "team_nome": "TEAM GENERAL SYSTEM",
-    "punti": 212,
+    "punti": 230,
     "vittorie": 2,
     "p1": 2,
     "p2": 4,
-    "p3": 0,
-    "pout": 19,
-    "n_atleti": 5,
+    "p3": 1,
+    "pout": 20,
+    "n_atleti": 6,
     "pos": 18
   },
   {
@@ -504,6 +504,18 @@
     "pos": 42
   },
   {
+    "team_id": "SIDERMEC_SLP",
+    "team_nome": "SIDERMEC - SLP",
+    "punti": 62,
+    "vittorie": 0,
+    "p1": 0,
+    "p2": 0,
+    "p3": 0,
+    "pout": 15,
+    "n_atleti": 7,
+    "pos": 43
+  },
+  {
     "team_id": "GOTTARDO_GIOCHI_CANEVA",
     "team_nome": "GOTTARDO GIOCHI CANEVA",
     "punti": 62,
@@ -513,7 +525,7 @@
     "p3": 0,
     "pout": 6,
     "n_atleti": 2,
-    "pos": 43
+    "pos": 44
   },
   {
     "team_id": "LIBERTAS_CERESETTO",
@@ -525,7 +537,7 @@
     "p3": 1,
     "pout": 7,
     "n_atleti": 4,
-    "pos": 44
+    "pos": 45
   },
   {
     "team_id": "CANADA",
@@ -537,7 +549,7 @@
     "p3": 1,
     "pout": 3,
     "n_atleti": 2,
-    "pos": 45
+    "pos": 46
   },
   {
     "team_id": "CANNEDU_ITTIRI_A_MANCA_ASD",
@@ -549,7 +561,7 @@
     "p3": 1,
     "pout": 7,
     "n_atleti": 2,
-    "pos": 46
+    "pos": 47
   },
   {
     "team_id": "VENETO",
@@ -561,7 +573,7 @@
     "p3": 1,
     "pout": 2,
     "n_atleti": 2,
-    "pos": 47
+    "pos": 48
   },
   {
     "team_id": "STATI_UNITI",
@@ -573,7 +585,7 @@
     "p3": 1,
     "pout": 4,
     "n_atleti": 2,
-    "pos": 48
+    "pos": 49
   },
   {
     "team_id": "ASD_PEDALE_CASALESE_ARMOFER",
@@ -585,7 +597,7 @@
     "p3": 0,
     "pout": 10,
     "n_atleti": 7,
-    "pos": 49
+    "pos": 50
   },
   {
     "team_id": "FRANCIA",
@@ -597,18 +609,6 @@
     "p3": 0,
     "pout": 5,
     "n_atleti": 3,
-    "pos": 50
-  },
-  {
-    "team_id": "SIDERMEC_SLP",
-    "team_nome": "SIDERMEC - SLP",
-    "punti": 52,
-    "vittorie": 0,
-    "p1": 0,
-    "p2": 0,
-    "p3": 0,
-    "pout": 13,
-    "n_atleti": 7,
     "pos": 51
   },
   {
@@ -744,6 +744,18 @@
     "pos": 62
   },
   {
+    "team_id": "TRIS_STAMPI_FIOR_DI_GRANO",
+    "team_nome": "TRIS STAMPI FIOR DI GRANO",
+    "punti": 38,
+    "vittorie": 0,
+    "p1": 0,
+    "p2": 0,
+    "p3": 1,
+    "pout": 7,
+    "n_atleti": 4,
+    "pos": 63
+  },
+  {
     "team_id": "S_C_CENE_A_S_D",
     "team_nome": "S. C. CENE A. S. D.",
     "punti": 34,
@@ -753,18 +765,6 @@
     "p3": 1,
     "pout": 3,
     "n_atleti": 3,
-    "pos": 63
-  },
-  {
-    "team_id": "TRIS_STAMPI_FIOR_DI_GRANO",
-    "team_nome": "TRIS STAMPI FIOR DI GRANO",
-    "punti": 34,
-    "vittorie": 0,
-    "p1": 0,
-    "p2": 0,
-    "p3": 1,
-    "pout": 5,
-    "n_atleti": 4,
     "pos": 64
   },
   {
