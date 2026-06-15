@@ -11370,12 +11370,32 @@ function openPhotoLightbox(src, opts = {}) {
   const lb = document.createElement('div');
   lb.id = 'photo-lightbox';
   lb.onclick = () => lb.remove();
-  const isAdmin = authUser()?.role === 'admin';
-  const tagBtn = (isAdmin && opts.photoId && opts.garaId)
-    ? `<button onclick="event.stopPropagation();window._openTagPanel({kind:'photo',photoId:${opts.photoId},garaId:'${esc(String(opts.garaId))}',current:'${esc(String(opts.current||''))}'})"
-         style="position:fixed;bottom:20px;left:50%;transform:translateX(-50%);z-index:10000;background:rgba(37,99,235,.95);color:#fff;border:none;padding:9px 16px;border-radius:20px;font-size:.85rem;font-weight:600;cursor:pointer;box-shadow:0 4px 14px rgba(0,0,0,.4)">🏷 Tagga corridori</button>`
+  const user = authUser();
+  const isAdmin = user?.role === 'admin';
+
+  // ── Crediti / didascalia in basso ──
+  const credit = [opts.caption, opts.credit ? '📷 ' + opts.credit : ''].filter(Boolean).join('  ·  ');
+  const creditHtml = credit
+    ? `<div style="position:fixed;bottom:18px;left:50%;transform:translateX(-50%);max-width:92vw;z-index:10000;background:rgba(0,0,0,.62);color:#fff;padding:7px 16px;border-radius:16px;font-size:.84rem;text-align:center;pointer-events:none">${esc(credit)}</div>`
     : '';
-  lb.innerHTML = `<img src="${src}" alt="Foto gara"/>${tagBtn}`;
+
+  // ── Tag corridori in alto (con istruzioni) ──
+  const wrap = (inner) => `<div style="position:fixed;top:16px;left:50%;transform:translateX(-50%);z-index:10000;display:flex;flex-direction:column;align-items:center;gap:4px;max-width:92vw;text-align:center">${inner}</div>`;
+  const btnStyle = 'background:rgba(37,99,235,.95);color:#fff;border:none;padding:9px 16px;border-radius:20px;font-size:.85rem;font-weight:600;cursor:pointer;box-shadow:0 4px 14px rgba(0,0,0,.4)';
+  const hintStyle = 'font-size:.72rem;color:rgba(255,255,255,.75)';
+  let tagHtml = '';
+  if (opts.photoId && opts.garaId) {
+    if (isAdmin) {
+      tagHtml = wrap(`<button onclick="event.stopPropagation();window._openTagPanel({kind:'photo',photoId:${opts.photoId},garaId:'${esc(String(opts.garaId))}',current:'${esc(String(opts.current||''))}'})" style="${btnStyle}">🏷 Tagga corridori</button>
+        <span style="${hintStyle}">Cerca e tagga i corridori presenti nella foto</span>`);
+    } else if (user) {
+      tagHtml = wrap(`<button onclick="event.stopPropagation();window.selfTagPhoto(${opts.photoId})" style="${btnStyle}">🏷 Sono io in questa foto</button>
+        <span style="${hintStyle}">Segnala che sei tu il corridore ritratto</span>`);
+    } else {
+      tagHtml = wrap(`<div style="${hintStyle};background:rgba(0,0,0,.5);padding:6px 12px;border-radius:14px"><a href="#/login" style="color:#fff;text-decoration:underline">Accedi</a> per segnalare che sei tu nella foto</div>`);
+    }
+  }
+  lb.innerHTML = `<img src="${src}" alt="Foto gara"/>${creditHtml}${tagHtml}`;
   document.body.appendChild(lb);
 }
 window.openPhotoLightbox = openPhotoLightbox;
@@ -12140,7 +12160,7 @@ async function renderGara(gara_id) {
       .filter(Boolean).join(' — ');
     const _heroTagNames = featuredPhoto ? String(featuredPhoto.atleta_ids||'').split(',').map(s=>s.trim()).filter(Boolean).map(id=>{const a=globalData?.athletes?.[id]; return a?`<a href="#/atleta/${esc(id)}" style="color:#fff;text-decoration:underline" onclick="event.stopPropagation()">${esc(a.cognome)} ${esc(a.nome)}</a>`:'';}).filter(Boolean).join(', ') : '';
     _heroPhotoEl = featuredPhoto
-      ? `<div class="gara-media-half gara-media-photo" id="gal-photo-${featuredPhoto.id}" data-caption="${esc(featuredPhoto.caption||'')}" data-photographer="${esc(featuredPhoto.photographer||'')}" data-atleta-ids="${esc(featuredPhoto.atleta_ids||'')}" onclick="window.openPhotoLightbox('${PHOTOS_BASE}/photos/${esc(featuredPhoto.filename)}',{photoId:${featuredPhoto.id},garaId:'${esc(featuredPhoto._gkey||primaryGaraId)}',current:'${esc(featuredPhoto.atleta_ids||'')}'})" style="cursor:zoom-in">
+      ? `<div class="gara-media-half gara-media-photo" id="gal-photo-${featuredPhoto.id}" data-caption="${esc(featuredPhoto.caption||'')}" data-photographer="${esc(featuredPhoto.photographer||'')}" data-atleta-ids="${esc(featuredPhoto.atleta_ids||'')}" onclick="window.openPhotoLightbox('${PHOTOS_BASE}/photos/${esc(featuredPhoto.filename)}',{photoId:${featuredPhoto.id},garaId:'${esc(featuredPhoto._gkey||primaryGaraId)}',current:'${esc(featuredPhoto.atleta_ids||'')}',caption:'${esc((featuredPhoto.caption||'').replace(/'/g,''))}',credit:'${esc(((featuredPhoto.photographer||featuredPhoto.display_name)||'').replace(/'/g,''))}'})" style="cursor:zoom-in">
            <img id="gara-hero-img" src="${PHOTOS_BASE}/photos/${esc(featuredPhoto.filename)}" alt="${esc(featuredPhoto.caption||'Foto gara')}" loading="lazy"/>
            <div class="gara-photo-hint">🔍 Clicca per la foto intera</div>
            ${_heroCredit ? `<div style="position:absolute;bottom:0;left:0;right:0;background:linear-gradient(transparent,rgba(0,0,0,.75));color:#fff;font-size:0.7rem;padding:14px 10px 6px;line-height:1.3">${esc(_heroCredit)}${_heroTagNames ? `<div style="margin-top:3px">🏷 ${_heroTagNames}</div>` : ''}</div>` : (_heroTagNames ? `<div style="position:absolute;bottom:0;left:0;right:0;background:linear-gradient(transparent,rgba(0,0,0,.75));color:#fff;font-size:0.7rem;padding:14px 10px 6px">🏷 ${_heroTagNames}</div>` : '')}
@@ -12158,7 +12178,7 @@ async function renderGara(gara_id) {
             data-caption="${esc(p.caption||'')}"
             data-photographer="${esc(p.photographer||'')}"
             data-atleta-ids="${esc(p.atleta_ids||'')}">
-            <img src="${PHOTOS_BASE}/photos/${esc(p.filename)}" alt="${esc(p.caption||'Foto gara')}" loading="lazy" onclick="window.openPhotoLightbox('${PHOTOS_BASE}/photos/${esc(p.filename)}',{photoId:${p.id},garaId:'${esc(p._gkey||primaryGaraId)}',current:'${esc(p.atleta_ids||'')}'})" style="cursor:zoom-in"/>
+            <img src="${PHOTOS_BASE}/photos/${esc(p.filename)}" alt="${esc(p.caption||'Foto gara')}" loading="lazy" onclick="window.openPhotoLightbox('${PHOTOS_BASE}/photos/${esc(p.filename)}',{photoId:${p.id},garaId:'${esc(p._gkey||primaryGaraId)}',current:'${esc(p.atleta_ids||'')}',caption:'${esc((p.caption||'').replace(/'/g,''))}',credit:'${esc(((p.photographer||p.display_name)||'').replace(/'/g,''))}'})" style="cursor:zoom-in"/>
             ${isEsordienti && /_ES2_[MF]$/.test(p._gkey||'') ? `<div style="position:absolute;top:4px;left:36px;background:rgba(99,102,241,.92);color:#fff;font-size:.6rem;font-weight:700;padding:1px 6px;border-radius:3px;z-index:9">2° Anno</div>` : (isEsordienti && /_ES1_[MF]$/.test(p._gkey||'') ? `<div style="position:absolute;top:4px;left:36px;background:rgba(99,102,241,.92);color:#fff;font-size:.6rem;font-weight:700;padding:1px 6px;border-radius:3px;z-index:9">1° Anno</div>` : '')}
             <div class="race-gallery-caption">${[p.caption, p.photographer ? '📷 '+p.photographer : '', p.display_name].filter(Boolean).join(' — ')}</div>
             ${(() => { const nm = String(p.atleta_ids||'').split(',').map(s=>s.trim()).filter(Boolean).map(id=>{const a=globalData?.athletes?.[id]; return a?`<a href="#/atleta/${esc(id)}" style="color:#fff;text-decoration:underline" onclick="event.stopPropagation()">${esc(a.cognome)} ${esc(a.nome)}</a>`:'';}).filter(Boolean).join(', '); return nm ? `<div style="position:absolute;bottom:4px;left:6px;right:6px;font-size:.62rem;color:#fff;background:rgba(0,0,0,.5);padding:2px 6px;border-radius:4px;z-index:8">🏷 ${nm}</div>` : ''; })()}
@@ -12199,7 +12219,7 @@ async function renderGara(gara_id) {
         const _albumGridHtml = `
           <div class="profile-media-grid" style="margin-top:12px">
             ${_allPics.map((u, idx) => `
-              <div class="profile-media-card" onclick="window.openPhotoLightbox('${esc(icProxy(u))}')" style="cursor:zoom-in;position:relative">
+              <div class="profile-media-card" onclick="window.openPhotoLightbox('${esc(icProxy(u))}',{credit:'${esc(_srcLabel)}'})" style="cursor:zoom-in;position:relative">
                 <img src="${esc(icProxy(u))}" alt="Foto ${idx+1}" loading="lazy" style="width:100%;height:100%;object-fit:cover"/>
                 ${_isAdminPhoto && idx > 0 ? `<button onclick="event.stopPropagation();window.adminPhotoPromote('${esc(_photoSource)}','${esc(_xpixKey)}','${esc(u.replace(/'/g,"\\'"))}')"
                   style="position:absolute;top:4px;right:4px;background:rgba(245,158,11,.95);color:#fff;border:none;padding:3px 7px;border-radius:4px;font-size:.66rem;cursor:pointer;font-weight:700;z-index:2">⭐ Principale</button>` : ''}
