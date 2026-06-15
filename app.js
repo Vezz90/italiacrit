@@ -15981,9 +15981,9 @@ async function renderRisultati() {
       const raceVideos = (globalData.videos || {})[raceCalId] ||
                          (globalData.videos || {})[race.id] || [];
       const featuredVideo = raceVideos[0] || null;
-      const featuredVideoId = featuredVideo
-        ? ytId(featuredVideo.url)
-        : null;
+      const _vKind = featuredVideo ? videoKind(featuredVideo.url) : null;
+      const featuredVideoId = (_vKind === 'yt') ? ytId(featuredVideo.url) : null;
+      const hasVideoTile = _vKind === 'yt' || _vKind === 'file';
 
       const catSections = categories.map(([catName, catData]) => {
         const sortedCatRes = (catData.results || []).sort((a,b) => a.posizione - b.posizione);
@@ -16036,7 +16036,7 @@ async function renderRisultati() {
           </div>`;
       }).join(categories.length > 1 ? '<div class="ris-cat-divider"></div>' : '');
 
-      const _photoSrcRis = featuredPhoto?.url || (featuredPhoto?.filename ? `${PHOTOS_BASE}/photos/${featuredPhoto.filename}` : '');
+      const _photoSrcRis = featuredPhoto?.url ? icProxy(featuredPhoto.url) : (featuredPhoto?.filename ? `${PHOTOS_BASE}/photos/${featuredPhoto.filename}` : '');
       const _photoCreditRis = (() => {
         if (!featuredPhoto) return '';
         if (featuredPhoto.photographer) return '📷 ' + featuredPhoto.photographer;
@@ -16046,22 +16046,26 @@ async function renderRisultati() {
         return '';
       })();
       const photoEl = _photoSrcRis
-        ? `<a href="#/gara/${esc(race.id)}" class="ris-card-photo${featuredVideoId ? ' ris-media-half' : ''}">
+        ? `<a href="#/gara/${esc(race.id)}" class="ris-card-photo${hasVideoTile ? ' ris-media-half' : ''}">
              <img src="${esc(_photoSrcRis)}" alt="Foto gara" loading="lazy"/>
              ${_photoCreditRis ? `<div class="ris-photo-credit">${esc(_photoCreditRis)}</div>` : ''}
            </a>`
         : '';
-      const videoEl = featuredVideoId
+      const _vTitleRis = featuredVideo ? esc((featuredVideo.title || '').replace(/'/g, "\\'")) : '';
+      const videoEl = hasVideoTile
         ? `<div class="ris-card-video-thumb${featuredPhoto ? ' ris-media-half' : ''}"
-               onclick="window.openVideoModal('${featuredVideoId}','${esc((featuredVideo.title||'').replace(/'/g,"\\'"))}')">
-             <img src="https://img.youtube.com/vi/${featuredVideoId}/hqdefault.jpg"
-                  alt="${esc(featuredVideo.title)}" loading="lazy"/>
+               onclick="${_vKind === 'yt'
+                 ? `window.openVideoModal('${featuredVideoId}','${_vTitleRis}')`
+                 : `window.openVideoFileModal('${esc(featuredVideo.url)}','${_vTitleRis}')`}">
+             ${_vKind === 'yt'
+               ? `<img src="https://img.youtube.com/vi/${featuredVideoId}/hqdefault.jpg" alt="${esc(featuredVideo.title||'Video')}" loading="lazy"/>`
+               : `<video src="${esc(featuredVideo.url)}#t=0.1" preload="metadata" muted playsinline style="width:100%;height:100%;object-fit:cover"></video>`}
              <div class="ris-video-play"><span>▶</span></div>
-             <div class="ris-video-channel">${esc(featuredVideo.channel)}</div>
+             ${featuredVideo.channel ? `<div class="ris-video-channel">${esc(featuredVideo.channel)}</div>` : ''}
            </div>`
         : '';
       const mediaPanel = (photoEl || videoEl)
-        ? `<div class="ris-card-media${featuredPhoto && featuredVideoId ? ' ris-card-media-split' : ''}">${photoEl}${videoEl}</div>`
+        ? `<div class="ris-card-media${featuredPhoto && hasVideoTile ? ' ris-card-media-split' : ''}">${photoEl}${videoEl}</div>`
         : '';
 
       const cardTier = race.campionato_italiano ? 'ris-card-ci'
