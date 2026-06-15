@@ -6613,5 +6613,19 @@
     "info": [
       "4 COPPA ANTONIO ZANON - DA Strada 4 COPPA ANTONIO ZANON - DA ID Gara: 182299 | <br><b>Data:</b> 27/09/2026 INFORMAZIONI GENERALI <br><b>Località:</b> BOLZANO/BOZEN <br><b>Provincia:</b> BZ <br><b>Categoria:</b> (1.25) Donne Allieve <br><b>Categorie Ammesse:</b> Donne Allieve Tipo di Accesso: Libera <br><b>Categoria Geografica:</b> Regionale <br><b>Specifica Gara:</b> Campionato Provinciale Alto Adige <br><b>Tipo di Gara:</b> Criterium Tipo di Percorso: In linea <br><b>Tipo di Programma:</b> STRADA REGIONALE <br><b>Approvazione:</b> In fase di approvazione ORGANIZZATORE <br><b>Nome:</b> ASSOCIAZ.SPORTIVA CICLISTICA ADRIANA BZ <br><b>Indirizzo:</b> VIA DUCA D'AOSTA 46/1 <br><b>CAP:</b> 39100 <br><b>Città:</b> BOLZANO <br><b>Provincia:</b> BZ <br><b>Telefono:</b> 3472216796 <br><b>Email:</b> CICLISTICADRIANA@HOTMAIL.IT ISCRIZIONI <br><b>Luogo:</b> asd Ciclistica adriana Bolzano <br><b>Indirizzo:</b> via duca d asota 46, 39100 bolzano, BZ <br><b>Telefono:</b> 3474261490 <br><b>Email:</b> ciclisticadriana@hotmail.it"
     ]
+  },
+  "TROFEO_SPORTING_CLUB_PETRUCCI_COSMOBIKE_2026-08-23": {
+    "raceid": "179676",
+    "fci_url": "https://www.federciclismo.it/ricerca-gare/dettaglio-gara/?raceid=179676&site=strada_it",
+    "info": [
+      "TROFEO SPORTING CLUB PETRUCCI COSMOBIKE Strada TROFEO SPORTING CLUB PETRUCCI COSMOBIKE ID Gara: 179676 | <br><b>Data:</b> 02/08/2026 INFORMAZIONI GENERALI Localita: CUSTOZA DI SOMMACAMPAGNA <br><b>Provincia:</b> VR <br><b>Categoria:</b> (1.30) Esordienti 1°/2° anno <br><b>Categoria Geografica:</b> Regionale <br><b>Tipo di Gara:</b> Criterium <br><b>Tipo di Programma:</b> STRADA REGIONALE <br><b>Approvazione:</b> In fase di approvazione ORGANIZZATORE <br><b>Nome:</b> ASD SPORTING CLUB PETRUCCI COSMOBIKE <br><b>Indirizzo:</b> VIA DANTE ALIGHIERI 2 <br><b>CAP:</b> 37064 Citta: POVEGLIANO VERONESE <br><b>Provincia:</b> VR <br><b>Telefono:</b> 3385301966 <br><b>Email:</b> joseph.ongaro@libero.it ISCRIZIONI <br><b>Indirizzo:</b> , , AGGIUNGI QUESTA GARA AL CALENDARIO"
+    ],
+    "luogo_ritrovo": null,
+    "indirizzo_ritrovo": "VIA DANTE ALIGHIERI 2",
+    "orario_partenza": null,
+    "km": null,
+    "location_str": "VIA DANTE ALIGHIERI 2, Italia",
+    "lat": 43.77092,
+    "lng": 11.2569
   }
 }
