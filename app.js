@@ -11385,14 +11385,11 @@ function openPhotoLightbox(src, opts = {}) {
   const hintStyle = 'font-size:.72rem;color:rgba(255,255,255,.75)';
   let tagHtml = '';
   if (opts.photoId && opts.garaId) {
-    if (isAdmin) {
+    if (user) {
       tagHtml = wrap(`<button onclick="event.stopPropagation();window._openTagPanel({kind:'photo',photoId:${opts.photoId},garaId:'${esc(String(opts.garaId))}',current:'${esc(String(opts.current||''))}'})" style="${btnStyle}">🏷 Tagga corridori</button>
-        <span style="${hintStyle}">Cerca e tagga i corridori presenti nella foto</span>`);
-    } else if (user) {
-      tagHtml = wrap(`<button onclick="event.stopPropagation();window.selfTagPhoto(${opts.photoId})" style="${btnStyle}">🏷 Sono io in questa foto</button>
-        <span style="${hintStyle}">Segnala che sei tu il corridore ritratto</span>`);
+        <span style="${hintStyle}">${isAdmin ? 'Cerca e tagga i corridori presenti nella foto' : 'Sei tu o conosci chi è ritratto? Cerca e taggalo'}</span>`);
     } else {
-      tagHtml = wrap(`<div style="${hintStyle};background:rgba(0,0,0,.5);padding:6px 12px;border-radius:14px"><a href="#/login" style="color:#fff;text-decoration:underline">Accedi</a> per segnalare che sei tu nella foto</div>`);
+      tagHtml = wrap(`<div style="${hintStyle};background:rgba(0,0,0,.5);padding:6px 12px;border-radius:14px"><a href="#/login" style="color:#fff;text-decoration:underline">Accedi</a> per taggare i corridori nella foto</div>`);
     }
   }
   lb.innerHTML = `<img src="${src}" alt="Foto gara"/>${creditHtml}${tagHtml}`;
@@ -11419,12 +11416,21 @@ function _mediaTopTen(garaId) {
 // dei presenti vuole ritrovarsi anche se non è tra i primi 10. I primi 10
 // della gara sono offerti come scorciatoia.
 window._openTagPanel = (opts) => {
-  if (authUser()?.role !== 'admin') { showToast('Solo l\'admin può taggare altri corridori', 'info'); return; }
+  const user = authUser();
+  if (!user) { showToast('Accedi per taggare i corridori', 'info'); return; }
+  const isAdmin = user.role === 'admin';
+  // I video restano taggabili solo dall'admin; le foto da tutti gli iscritti.
+  if (!isAdmin && opts.kind !== 'photo') { showToast('Solo l\'admin può taggare i video', 'info'); return; }
   const current = String(opts.current || '').split(',').map(s => s.trim()).filter(Boolean);
-  window._rpTags = current.map(aid => {
+  // Admin: pre-carica i tag esistenti (può anche rimuoverli).
+  // Iscritto: parte vuoto e può solo AGGIUNGERE (non rimuove i tag altrui).
+  window._rpTags = isAdmin ? current.map(aid => {
     const a = globalData?.athletes?.[aid];
     return { id: aid, label: a ? `${a.cognome} ${a.nome}`.trim() : aid };
-  });
+  }) : [];
+  const _curNote = (!isAdmin && current.length)
+    ? `<div style="font-size:.72rem;color:var(--text-muted);margin:0 0 8px">Già taggati: ${current.map(aid => { const a = globalData?.athletes?.[aid]; return esc(a ? `${a.cognome} ${a.nome}`.trim() : aid); }).join(', ')}</div>`
+    : '';
   const top = _mediaTopTen(opts.garaId).filter(r => !current.includes(r.atleta_id)).slice(0, 10);
   const inpStyle = 'width:100%;box-sizing:border-box;padding:8px 10px;border:1px solid var(--border-subtle);border-radius:var(--r-sm);font-size:0.875rem;background:var(--bg-primary);color:var(--text-primary);margin-bottom:10px';
   const overlay = document.createElement('div');
@@ -11440,6 +11446,7 @@ window._openTagPanel = (opts) => {
         <input type="text" id="rp-rider-search" placeholder="Cerca un corridore…" autocomplete="off" style="${inpStyle}"/>
         <div id="rp-rider-dd" style="display:none;position:absolute;left:0;right:0;top:calc(100% - 4px);background:var(--bg-card);border:1px solid var(--border-subtle);border-radius:var(--r-sm);max-height:210px;overflow:auto;z-index:5;box-shadow:0 6px 20px rgba(0,0,0,.25)"></div>
       </div>
+      ${_curNote}
       <div id="rp-rider-chips" style="display:flex;flex-wrap:wrap;gap:6px;margin-bottom:10px"></div>
       ${top.length ? `<div style="font-size:.72rem;color:var(--text-muted);margin:2px 0 5px">Aggiungi rapido (top 10):</div>
       <div style="display:flex;flex-wrap:wrap;gap:5px;margin-bottom:8px">
@@ -11460,7 +11467,12 @@ window._openTagPanel = (opts) => {
     const btn = overlay.querySelector('#tg-save'); btn.disabled = true; btn.textContent = 'Salvataggio…';
     try {
       if (opts.kind === 'photo') {
-        await apiCall(`/admin/race-photos/${opts.photoId}`, { method: 'PATCH', body: { atleta_ids: csv } });
+        if (isAdmin) {
+          await apiCall(`/admin/race-photos/${opts.photoId}`, { method: 'PATCH', body: { atleta_ids: csv } });
+        } else {
+          // Iscritto: aggiunge i corridori selezionati (merge lato server)
+          await apiCall(`/race-photos/${opts.photoId}/tag`, { method: 'POST', body: { atleta_ids: csv } });
+        }
       } else {
         await apiCall(`/admin/videos/${encodeURIComponent(opts.srcKey)}/${opts.srcIdx}/tags`, { method: 'POST', body: { atleta_ids: csv } });
       }

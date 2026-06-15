@@ -745,6 +745,23 @@ app.post('/api/race-photos/:id/self-tag', requireAuth, async (req, res) => {
   } catch (e) { res.status(500).json({ error: e.message }); }
 });
 
+// Tag corridori da parte di un utente iscritto (qualsiasi ruolo loggato).
+// AGGIUNGE i corridori indicati ai tag esistenti (merge): un utente non può
+// rimuovere i tag messi da altri. La rimozione resta all'admin.
+app.post('/api/race-photos/:id/tag', requireAuth, async (req, res) => {
+  try {
+    const photo = await queries.getRacePhotoById(req.params.id);
+    if (!photo) return res.status(404).json({ error: 'Foto non trovata' });
+    const add = String(req.body.atleta_ids || '').split(',').map(s => s.trim()).filter(Boolean);
+    if (!add.length) return res.status(400).json({ error: 'Nessun corridore selezionato' });
+    const cur = new Set(String(photo.atleta_ids || '').split(',').map(s => s.trim()).filter(Boolean));
+    add.forEach(id => cur.add(id));
+    const csv = [...cur].join(',');
+    await queries.setRacePhotoTags(req.params.id, csv);
+    res.json({ ok: true, atleta_ids: csv });
+  } catch (e) { res.status(500).json({ error: e.message }); }
+});
+
 app.delete('/api/admin/race-photos/:id', requireAdmin, async (req, res) => {
   try {
     const photo = await queries.getRacePhotoById(req.params.id);
