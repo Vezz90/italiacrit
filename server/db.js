@@ -336,6 +336,10 @@ const queries = {
   getAthleteProfile: (user_id) =>
     one(`SELECT * FROM athlete_profiles WHERE user_id = $1`, [user_id]),
 
+  // Account collegati a un atleta_id (per notificare chi viene taggato).
+  getProfilesByAtletaId: (atleta_id) =>
+    all(`SELECT user_id, status FROM athlete_profiles WHERE atleta_id = $1`, [atleta_id]),
+
   createAthleteProfile: ({ user_id, atleta_id, fci_code, first_name, last_name, team, birth_year, status }) =>
     run(
       `INSERT INTO athlete_profiles (user_id, atleta_id, fci_code, first_name, last_name, team, birth_year, status)

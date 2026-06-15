@@ -109,6 +109,49 @@ async function sendPushToAll({ title, body, url }) {
   return { sent };
 }
 
+// Invia una push alle sole subscription di un utente specifico
+async function sendPushToUser(userId, { title, body, url }) {
+  if (!webpush || !VAPID_PUBLIC || !VAPID_PRIVATE || !userId) return { sent: 0 };
+  let sent = 0;
+  try {
+    const subs = await rawQuery(`SELECT * FROM push_subscriptions WHERE user_id=$1`, [userId]).then(r => r.rows);
+    const payload = JSON.stringify({ title, body, url: url || '/' });
+    await Promise.all(subs.map(async s => {
+      try {
+        await webpush.sendNotification({ endpoint: s.endpoint, keys: { p256dh: s.p256dh, auth: s.auth } }, payload);
+        sent++;
+      } catch (err) {
+        if (err.statusCode === 410 || err.statusCode === 404)
+          await rawQuery(`DELETE FROM push_subscriptions WHERE endpoint=$1`, [s.endpoint]).catch(() => {});
+      }
+    }));
+  } catch (e) { console.warn('[push] sendToUser:', e.message); }
+  return { sent };
+}
+
+// Notifica gli atleti appena taggati in una foto (esclude chi si auto-tagga).
+async function notifyPhotoTag(photo, addedIds, taggerUserId) {
+  for (const aid of (addedIds || [])) {
+    try {
+      const profs = await queries.getProfilesByAtletaId(aid);
+      for (const p of profs) {
+        if (!p.user_id) continue;
+        if (['active', 'approved'].indexOf(p.status) === -1) continue;
+        if (taggerUserId && Number(p.user_id) === Number(taggerUserId)) continue; // auto-tag → niente notifica
+        const url = photo.gara_id ? `/#/gara/${encodeURIComponent(photo.gara_id)}` : '/';
+        await sendNotification({
+          user_id: p.user_id,
+          type: 'photo_tag',
+          title: '🏷 Sei stato taggato in una foto',
+          body: 'Qualcuno ti ha taggato in una foto di gara. Aprila per vederla o per rimuovere il tag.',
+          data: { gara_id: photo.gara_id, photo_id: photo.id },
+        });
+        await sendPushToUser(p.user_id, { title: '🏷 Sei in una foto!', body: 'Sei stato taggato in una foto di gara.', url });
+      }
+    } catch (e) { console.warn('[notify photo_tag]', e.message); }
+  }
+}
+
 // ── Supabase Storage ──────────────────────────────────────────────────────────
 const SUPABASE_URL    = process.env.SUPABASE_URL;
 const SUPABASE_SECRET = process.env.SUPABASE_SECRET;
@@ -328,6 +371,7 @@ app.post('/api/auth/login', async (req, res) => {
 
     await queries.updateLastLogin(user.id);
     const safe = await queries.getUserById(user.id);
+    try { const _p = await queries.getAthleteProfile(user.id); if (_p?.atleta_id) safe.atleta_id = _p.atleta_id; } catch {}
     res.json({ token: makeToken(safe), user: safe });
   } catch (e) {
     res.status(500).json({ error: 'Errore durante il login' });
@@ -338,6 +382,7 @@ app.get('/api/auth/me', requireAuth, async (req, res) => {
   try {
     const user = await queries.getUserById(req.user.id);
     if (!user) return res.status(404).json({ error: 'Utente non trovato' });
+    try { const _p = await queries.getAthleteProfile(req.user.id); if (_p?.atleta_id) user.atleta_id = _p.atleta_id; } catch {}
     // Restituisce anche un token fresco: così eventuali cambi di ruolo
     // (es. fatti dall'admin) si propagano alla sessione dopo un refresh.
     res.json({ user, token: makeToken(user) });
@@ -713,8 +758,11 @@ app.patch('/api/admin/race-photos/:id', requireAdmin, async (req, res) => {
     if (gara_id) await queries.updateRacePhotoGara(req.params.id, gara_id);
     // Tag corridori (l'admin può impostare la lista completa)
     if (atleta_ids !== undefined) {
-      const tags = String(atleta_ids || '').split(',').map(s => s.trim()).filter(Boolean);
-      await queries.setRacePhotoTags(req.params.id, [...new Set(tags)].join(','));
+      const photo = await queries.getRacePhotoById(req.params.id);
+      const prevSet = new Set(String(photo?.atleta_ids || '').split(',').map(s => s.trim()).filter(Boolean));
+      const tags = [...new Set(String(atleta_ids || '').split(',').map(s => s.trim()).filter(Boolean))];
+      await queries.setRacePhotoTags(req.params.id, tags.join(','));
+      if (photo) notifyPhotoTag(photo, tags.filter(id => !prevSet.has(id)), req.user.id);
     }
     res.json({ ok: true });
   } catch (e) { res.status(500).json({ error: e.message }); }
@@ -732,7 +780,7 @@ app.post('/api/race-photos/:id/self-tag', requireAuth, async (req, res) => {
       targetId = String(req.body.atleta_id).trim();
     } else {
       const prof = await queries.getAthleteProfile(req.user.id);
-      if (!prof || prof.status !== 'approved' || !prof.atleta_id)
+      if (!prof || !['active','approved'].includes(prof.status) || !prof.atleta_id)
         return res.status(403).json({ error: 'Solo gli atleti verificati possono taggarsi' });
       targetId = String(prof.atleta_id).trim();
     }
@@ -755,9 +803,11 @@ app.post('/api/race-photos/:id/tag', requireAuth, async (req, res) => {
     const add = String(req.body.atleta_ids || '').split(',').map(s => s.trim()).filter(Boolean);
     if (!add.length) return res.status(400).json({ error: 'Nessun corridore selezionato' });
     const cur = new Set(String(photo.atleta_ids || '').split(',').map(s => s.trim()).filter(Boolean));
+    const newlyAdded = add.filter(id => !cur.has(id));
     add.forEach(id => cur.add(id));
     const csv = [...cur].join(',');
     await queries.setRacePhotoTags(req.params.id, csv);
+    notifyPhotoTag(photo, newlyAdded, req.user.id); // notifica i taggati (no auto-tag)
     res.json({ ok: true, atleta_ids: csv });
   } catch (e) { res.status(500).json({ error: e.message }); }
 });
@@ -1210,7 +1260,7 @@ app.post('/api/videos/:calId/:idx/self-tag', requireAuth, async (req, res) => {
       targetId = String(req.body.atleta_id).trim();
     } else {
       const prof = await queries.getAthleteProfile(req.user.id);
-      if (!prof || prof.status !== 'approved' || !prof.atleta_id)
+      if (!prof || !['active','approved'].includes(prof.status) || !prof.atleta_id)
         return res.status(403).json({ error: 'Solo gli atleti verificati possono taggarsi' });
       targetId = String(prof.atleta_id).trim();
     }

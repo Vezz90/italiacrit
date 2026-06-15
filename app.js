@@ -11386,8 +11386,14 @@ function openPhotoLightbox(src, opts = {}) {
   let tagHtml = '';
   if (opts.photoId && opts.garaId) {
     if (user) {
+      const myId = user.atleta_id;
+      const iAmTagged = myId && String(opts.current || '').split(',').map(s => s.trim()).includes(String(myId));
+      const removeBtn = iAmTagged
+        ? `<button onclick="event.stopPropagation();window.selfUntagPhoto(${opts.photoId})" style="background:rgba(220,38,38,.92);color:#fff;border:none;padding:7px 14px;border-radius:18px;font-size:.8rem;font-weight:600;cursor:pointer;margin-top:2px">✕ Rimuovi il mio tag</button>`
+        : '';
       tagHtml = wrap(`<button onclick="event.stopPropagation();window._openTagPanel({kind:'photo',photoId:${opts.photoId},garaId:'${esc(String(opts.garaId))}',current:'${esc(String(opts.current||''))}'})" style="${btnStyle}">🏷 Tagga corridori</button>
-        <span style="${hintStyle}">${isAdmin ? 'Cerca e tagga i corridori presenti nella foto' : 'Sei tu o conosci chi è ritratto? Cerca e taggalo'}</span>`);
+        <span style="${hintStyle}">${isAdmin ? 'Cerca e tagga i corridori presenti nella foto' : 'Sei tu o conosci chi è ritratto? Cerca e taggalo'}</span>
+        ${removeBtn}`);
     } else {
       tagHtml = wrap(`<div style="${hintStyle};background:rgba(0,0,0,.5);padding:6px 12px;border-radius:14px"><a href="#/login" style="color:#fff;text-decoration:underline">Accedi</a> per taggare i corridori nella foto</div>`);
     }
@@ -11595,6 +11601,19 @@ window.selfTagPhoto = async function(id) {
   try {
     await apiCall(`/race-photos/${id}/self-tag`, { method: 'POST', body: { tagged: true } });
     showToast('🏷 Ti sei taggato in questa foto ✓');
+    await refreshMediaAndRerender({ videos: false });
+  } catch (e) {
+    showToast(e.message || 'Errore', 'error');
+  }
+};
+
+// Rimuove il PROPRIO tag da una foto (in qualsiasi momento)
+window.selfUntagPhoto = async function(id) {
+  if (!authUser()) { showToast('Accedi', 'info'); return; }
+  try {
+    await apiCall(`/race-photos/${id}/self-tag`, { method: 'POST', body: { tagged: false } });
+    document.getElementById('photo-lightbox')?.remove();
+    showToast('Tag rimosso ✓');
     await refreshMediaAndRerender({ videos: false });
   } catch (e) {
     showToast(e.message || 'Errore', 'error');
