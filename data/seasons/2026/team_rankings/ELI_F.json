@@ -72,6 +72,18 @@
     "pos": 6
   },
   {
+    "team_id": "WCC_UCI_WORLD_CYCLING_CENTRE",
+    "team_nome": "WCC - UCI WORLD CYCLING CENTRE",
+    "punti": 145,
+    "vittorie": 2,
+    "p1": 2,
+    "p2": 2,
+    "p3": 0,
+    "pout": 3,
+    "n_atleti": 4,
+    "pos": 7
+  },
+  {
     "team_id": "TOP_GIRLS_FASSA_BORTOLO",
     "team_nome": "TOP GIRLS - FASSA BORTOLO",
     "punti": 143,
@@ -81,7 +93,7 @@
     "p3": 0,
     "pout": 14,
     "n_atleti": 8,
-    "pos": 7
+    "pos": 8
   },
   {
     "team_id": "TEAM_VISMA_LEASE_A_BIKE",
@@ -93,7 +105,19 @@
     "p3": 1,
     "pout": 9,
     "n_atleti": 5,
-    "pos": 8
+    "pos": 9
+  },
+  {
+    "team_id": "HORIZONS_CYCLING_CLUB",
+    "team_nome": "HORIZONS CYCLING CLUB",
+    "punti": 126,
+    "vittorie": 0,
+    "p1": 0,
+    "p2": 1,
+    "p3": 1,
+    "pout": 12,
+    "n_atleti": 4,
+    "pos": 10
   },
   {
     "team_id": "FENIX_PREMIER_TECH",
@@ -105,31 +129,19 @@
     "p3": 0,
     "pout": 8,
     "n_atleti": 3,
-    "pos": 9
+    "pos": 11
   },
   {
-    "team_id": "WCC_UCI_WORLD_CYCLING_CENTRE",
-    "team_nome": "WCC - UCI WORLD CYCLING CENTRE",
-    "punti": 122,
+    "team_id": "BIESSE_CARRERA_PREMAC",
+    "team_nome": "BIESSE - CARRERA - PREMAC",
+    "punti": 99,
     "vittorie": 1,
     "p1": 1,
-    "p2": 2,
-    "p3": 0,
-    "pout": 2,
-    "n_atleti": 4,
-    "pos": 10
-  },
-  {
-    "team_id": "HORIZONS_CYCLING_CLUB",
-    "team_nome": "HORIZONS CYCLING CLUB",
-    "punti": 121,
-    "vittorie": 0,
-    "p1": 0,
     "p2": 1,
     "p3": 1,
-    "pout": 11,
-    "n_atleti": 4,
-    "pos": 11
+    "pout": 9,
+    "n_atleti": 5,
+    "pos": 12
   },
   {
     "team_id": "HUMAN_POWERED_HEALTH",
@@ -141,29 +153,17 @@
     "p3": 0,
     "pout": 3,
     "n_atleti": 2,
-    "pos": 12
-  },
-  {
-    "team_id": "BIESSE_CARRERA_PREMAC",
-    "team_nome": "BIESSE - CARRERA - PREMAC",
-    "punti": 93,
-    "vittorie": 1,
-    "p1": 1,
-    "p2": 1,
-    "p3": 1,
-    "pout": 8,
-    "n_atleti": 5,
     "pos": 13
   },
   {
     "team_id": "BORN_TO_WIN_BTC_CITY_LJUBLJANA",
     "team_nome": "BORN TO WIN BTC CITY LJUBLJANA",
-    "punti": 90,
+    "punti": 95,
     "vittorie": 3,
     "p1": 3,
     "p2": 0,
     "p3": 0,
-    "pout": 9,
+    "pout": 11,
     "n_atleti": 4,
     "pos": 14
   },
@@ -230,13 +230,13 @@
   {
     "team_id": "AROMITALIA_VAIANO",
     "team_nome": "AROMITALIA VAIANO",
-    "punti": 61,
+    "punti": 75,
     "vittorie": 1,
     "p1": 1,
     "p2": 0,
-    "p3": 0,
-    "pout": 3,
-    "n_atleti": 4,
+    "p3": 1,
+    "pout": 4,
+    "n_atleti": 5,
     "pos": 20
   },
   {
@@ -264,6 +264,18 @@
     "pos": 22
   },
   {
+    "team_id": "FANINI_PRO_CYCLING",
+    "team_nome": "FANINI PRO CYCLING",
+    "punti": 45,
+    "vittorie": 0,
+    "p1": 0,
+    "p2": 1,
+    "p3": 1,
+    "pout": 4,
+    "n_atleti": 3,
+    "pos": 23
+  },
+  {
     "team_id": "VINI_FANTINI_BEPINK",
     "team_nome": "VINI FANTINI - BEPINK",
     "punti": 40,
@@ -273,7 +285,7 @@
     "p3": 0,
     "pout": 7,
     "n_atleti": 6,
-    "pos": 23
+    "pos": 24
   },
   {
     "team_id": "UNO_X_MOBILITY",
@@ -285,7 +297,7 @@
     "p3": 0,
     "pout": 4,
     "n_atleti": 3,
-    "pos": 24
+    "pos": 25
   },
   {
     "team_id": "ZHIRAF",
@@ -297,7 +309,7 @@
     "p3": 2,
     "pout": 4,
     "n_atleti": 3,
-    "pos": 25
+    "pos": 26
   },
   {
     "team_id": "UAE_DEVELOPMENT_TEAM",
@@ -309,7 +321,7 @@
     "p3": 0,
     "pout": 1,
     "n_atleti": 2,
-    "pos": 26
+    "pos": 27
   },
   {
     "team_id": "TEAM_MENDELSPECK_E_WORK",
@@ -321,18 +333,6 @@
     "p3": 1,
     "pout": 3,
     "n_atleti": 2,
-    "pos": 27
-  },
-  {
-    "team_id": "FANINI_PRO_CYCLING",
-    "team_nome": "FANINI PRO CYCLING",
-    "punti": 33,
-    "vittorie": 0,
-    "p1": 0,
-    "p2": 0,
-    "p3": 1,
-    "pout": 4,
-    "n_atleti": 3,
     "pos": 28
   },
   {
@@ -434,12 +434,12 @@
   {
     "team_id": "A_R_MONEX_PRO_CYCLING_TEAM",
     "team_nome": "A.R.MONEX PRO CYCLING TEAM",
-    "punti": 12,
+    "punti": 13,
     "vittorie": 0,
     "p1": 0,
     "p2": 0,
     "p3": 0,
-    "pout": 2,
+    "pout": 3,
     "n_atleti": 1,
     "pos": 37
   },
