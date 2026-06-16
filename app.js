@@ -5165,20 +5165,8 @@ async function renderHubBars() {
   const _snapNowE1        = es1Code?computeRankSnapshot(hubResES1,es1Code,null):{};
   const _snapBeforeLastE1 = es1Code?computeRankSnapshot(hubResES1,es1Code,lastDateES1):{};
 
-  // Se "before-last" è quasi vuoto (meno di 3 atleti con punti prima dell'ultima gara),
-  // fallback a snapshot 14gg fa per avere movers significativi
-  function _pickSnapBefore(resSet, catCode, lastD, snapBeforeResult) {
-    if (Object.keys(snapBeforeResult).length >= 3) return snapBeforeResult;
-    const d14 = new Date(lastD || new Date()); d14.setDate(d14.getDate() - 14);
-    return computeRankSnapshot(resSet, catCode, d14.toISOString().split('T')[0]);
-  }
-  const _snapBL   = _pickSnapBefore(hubResES2, mainCat, lastDateES2, _snapBeforeLast);
-  const _snapBLE1 = es1Code ? _pickSnapBefore(hubResES1, es1Code, lastDateES1, _snapBeforeLastE1) : {};
-
   // ── Movers: diff diretto fra i due snapshot (non dipende dagli atleta_id del file ranking) ──
-  // Questo evita il mismatch fra atleta_id del JSON ranking e quelli di resultsRaw.
   function computeMovers(snapNow, snapBefore, resSet, posLimit = 30) {
-    // Lookup nomi da resultsRaw
     const nameLookup = {};
     for (const r of resSet) {
       if (r.atleta_id && !nameLookup[r.atleta_id])
@@ -5198,9 +5186,30 @@ async function renderHubBars() {
       dn: list.filter(m => m.gain <= -1 && (m.pos - m.gain) <= posLimit).sort((a,b) => a.gain - b.gain).slice(0, 5),
     };
   }
-  const movers    = computeMovers(_snapNow,  _snapBL,   hubResES2);
+
+  // Prova finestre temporali crescenti finché trova movers significativi.
+  // Questo gestisce sia "snapshot before-last vuoto" sia "nessun movimento nell'ultima gara".
+  function _bestMovers(snapNow, resSet, catCode, lastD, posLimit = 30) {
+    const windows = [lastD, 7, 14, 21, 30, 45, 60]; // prima: "before-last"; poi: N giorni fa
+    for (const w of windows) {
+      let cutDate;
+      if (typeof w === 'string') {
+        cutDate = w; // la data dell'ultima gara
+      } else {
+        const d = new Date(lastD || new Date()); d.setDate(d.getDate() - w);
+        cutDate = d.toISOString().split('T')[0];
+      }
+      const snapBefore = computeRankSnapshot(resSet, catCode, cutDate);
+      if (Object.keys(snapBefore).length < 3) continue; // troppo vuoto, prova finestra più ampia
+      const mv = computeMovers(snapNow, snapBefore, resSet, posLimit);
+      if (mv.up.length + mv.dn.length >= 2) return mv; // trovati abbastanza movers
+    }
+    return { up: [], dn: [] };
+  }
+
+  const movers    = _bestMovers(_snapNow,  hubResES2, mainCat, lastDateES2);
   const moversES1 = isEsordienti
-    ? computeMovers(_snapNowE1, _snapBLE1, hubResES1)
+    ? _bestMovers(_snapNowE1, hubResES1, es1Code, lastDateES1)
     : { up: [], dn: [] };
 
   // Pre-carica foto atleta on fire:
