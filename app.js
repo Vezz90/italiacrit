@@ -1936,6 +1936,8 @@ window.addEventListener('load', async () => {
   initLang();
   registerServiceWorker();
   setTimeout(_renderPushButton, 800);
+  _loadFollows();
+  _initAiWidget();
 
   // Logo click → cinematic entry
   document.getElementById('nav-logo-link')?.addEventListener('click', function(e) {
@@ -10934,6 +10936,7 @@ async function renderAtleta(atleta_id, opts = {}) {
             <span class="athlete-cognome">${esc(displayCognome)}</span>
             <span class="athlete-nome">${esc(displayNome)}</span>
             <span id="atleta-msg-btn"></span>
+            <span id="atleta-follow-btn"></span>
           </div>
           <div class="athlete-pts-display">
             <div class="athlete-pts-dot"></div>
@@ -11120,9 +11123,183 @@ async function renderAtleta(atleta_id, opts = {}) {
 
   // Inject bottone messaggio in modo async (lookup non blocca il render)
   _injectMsgBtn('atleta-msg-btn', atleta_id, null, null);
+  _injectFollowBtn('atleta-follow-btn', 'atleta', atleta_id);
 }
 
-// Inietta bottone "Scrivi messaggio" dopo aver verificato se l'utente ha un account
+// ── Follow system ─────────────────────────────────────────────────────────────
+let _userFollows = { atleti: new Set(), teams: new Set() };
+
+async function _loadFollows() {
+  const user = authUser();
+  if (!user) return;
+  try {
+    const { atleti = [], teams = [] } = await apiCall('/follow/list');
+    _userFollows = { atleti: new Set(atleti), teams: new Set(teams) };
+  } catch { /* silenzioso */ }
+}
+
+async function _injectFollowBtn(spanId, type, id) {
+  const span = document.getElementById(spanId);
+  if (!span) return;
+  const user = authUser();
+  if (!user) return;
+  const isFollowing = type === 'atleta' ? _userFollows.atleti.has(id) : _userFollows.teams.has(id);
+  const render = (following) => {
+    span.innerHTML = `<button id="follow-btn-${spanId}" onclick="window.toggleFollow('${esc(type)}','${esc(id)}','${spanId}')"
+      style="display:inline-flex;align-items:center;gap:5px;padding:5px 12px;border-radius:14px;font-size:.78rem;font-weight:600;cursor:pointer;border:1px solid ${following?'var(--accent)':'var(--border-subtle)'};background:${following?'var(--accent)':'transparent'};color:${following?'#fff':'var(--text-primary)'};transition:all .15s">
+      ${following ? '★ Seguito' : '☆ Segui'}
+    </button>`;
+  };
+  render(isFollowing);
+}
+
+window.toggleFollow = async function(type, id, spanId) {
+  const user = authUser();
+  if (!user) { showToast('Accedi per seguire', 'info'); return; }
+  const btn = document.getElementById(`follow-btn-${spanId}`);
+  if (btn) { btn.disabled = true; btn.textContent = '…'; }
+  try {
+    const { following } = await apiCall(`/follow/${type}/${encodeURIComponent(id)}`, { method: 'POST' });
+    if (type === 'atleta') { following ? _userFollows.atleti.add(id) : _userFollows.atleti.delete(id); }
+    else { following ? _userFollows.teams.add(id) : _userFollows.teams.delete(id); }
+    const span = document.getElementById(spanId);
+    if (span) {
+      span.innerHTML = `<button id="follow-btn-${spanId}" onclick="window.toggleFollow('${esc(type)}','${esc(id)}','${spanId}')"
+        style="display:inline-flex;align-items:center;gap:5px;padding:5px 12px;border-radius:14px;font-size:.78rem;font-weight:600;cursor:pointer;border:1px solid ${following?'var(--accent)':'var(--border-subtle)'};background:${following?'var(--accent)':'transparent'};color:${following?'#fff':'var(--text-primary)'}">
+        ${following ? '★ Seguito' : '☆ Segui'}
+      </button>`;
+    }
+    showToast(following ? '★ Ora segui questo ' + (type === 'atleta' ? 'atleta' : 'team') : 'Non segui più');
+  } catch(e) { showToast(e.message, 'error'); if (btn) { btn.disabled = false; } }
+};
+
+// ── Commenti gare ─────────────────────────────────────────────────────────────
+async function _loadGaraComments(garaId) {
+  const el = document.getElementById('gara-comments-section');
+  if (!el) return;
+  const user = authUser();
+  try {
+    const { comments = [] } = await apiCall(`/comments/${encodeURIComponent(garaId)}`);
+    const inpStyle = 'flex:1;padding:8px 12px;border:1px solid var(--border-subtle);border-radius:var(--r-sm);font-size:.85rem;background:var(--bg-primary);color:var(--text-primary)';
+    el.innerHTML = `
+      <div style="border-top:1px solid var(--border-subtle);padding-top:20px;margin-top:4px">
+        <h3 style="font-size:.95rem;font-weight:700;margin:0 0 14px;display:flex;align-items:center;gap:6px">
+          💬 Commenti <span style="font-size:.78rem;font-weight:400;color:var(--text-muted)">(${comments.length})</span>
+        </h3>
+        ${user ? `<form id="comment-form" style="display:flex;gap:8px;margin-bottom:16px">
+          <input id="comment-input" type="text" placeholder="Scrivi un commento… (max 500 caratteri)" maxlength="500" style="${inpStyle}" autocomplete="off"/>
+          <button type="submit" style="padding:8px 16px;background:var(--red-hot);color:#fff;border:none;border-radius:var(--r-sm);font-weight:600;cursor:pointer;white-space:nowrap">Invia</button>
+        </form>` : `<div style="font-size:.83rem;color:var(--text-muted);margin-bottom:14px"><a href="#/login" style="color:var(--accent)">Accedi</a> per lasciare un commento.</div>`}
+        <div id="comments-list">
+          ${comments.length ? comments.map(c => _commentHtml(c, user)).join('') : '<div style="color:var(--text-muted);font-size:.85rem;font-style:italic">Nessun commento ancora. Sii il primo!</div>'}
+        </div>
+      </div>`;
+    if (user) {
+      document.getElementById('comment-form').onsubmit = async (e) => {
+        e.preventDefault();
+        const inp = document.getElementById('comment-input');
+        const body = inp.value.trim();
+        if (!body) return;
+        try {
+          const { comment } = await apiCall(`/comments/${encodeURIComponent(garaId)}`, { method: 'POST', body: { body } });
+          const list = document.getElementById('comments-list');
+          if (list) {
+            const empty = list.querySelector('div[style*="italic"]');
+            if (empty) empty.remove();
+            list.insertAdjacentHTML('beforeend', _commentHtml(comment, user));
+          }
+          inp.value = '';
+          const h3 = el.querySelector('h3 span');
+          if (h3) h3.textContent = `(${(comments.length + 1)})`;
+        } catch(err) { showToast(err.message, 'error'); }
+      };
+    }
+  } catch { el.innerHTML = ''; }
+}
+
+function _commentHtml(c, user) {
+  const isOwn = user && c.user_id === user.id;
+  const isAdmin = user?.role === 'admin';
+  const time = new Date(c.created_at).toLocaleString('it-IT', { day:'numeric', month:'short', hour:'2-digit', minute:'2-digit' });
+  return `<div id="cmt-${c.id}" style="display:flex;gap:10px;padding:10px 0;border-bottom:1px solid var(--border-subtle)">
+    <div style="width:32px;height:32px;border-radius:50%;background:var(--bg-elevated);display:flex;align-items:center;justify-content:center;font-size:.85rem;font-weight:700;flex-shrink:0">${esc((c.display_name||'?')[0].toUpperCase())}</div>
+    <div style="flex:1;min-width:0">
+      <div style="display:flex;align-items:baseline;gap:8px;margin-bottom:3px">
+        <span style="font-size:.82rem;font-weight:700">${esc(c.display_name)}</span>
+        <span style="font-size:.72rem;color:var(--text-muted)">${time}</span>
+      </div>
+      <div style="font-size:.85rem;line-height:1.5;word-break:break-word">${esc(c.body)}</div>
+    </div>
+    ${(isOwn || isAdmin) ? `<button onclick="window._deleteComment(${c.id})" style="background:none;border:none;color:var(--text-muted);cursor:pointer;font-size:.8rem;flex-shrink:0;align-self:flex-start;padding:2px 4px" title="Elimina">✕</button>` : ''}
+  </div>`;
+}
+
+window._deleteComment = async (id) => {
+  if (!confirm('Eliminare il commento?')) return;
+  try {
+    await apiCall(`/comments/${id}`, { method: 'DELETE' });
+    document.getElementById(`cmt-${id}`)?.remove();
+    showToast('Commento eliminato');
+  } catch(e) { showToast(e.message, 'error'); }
+};
+
+// ── AI Chat Widget ─────────────────────────────────────────────────────────────
+function _initAiWidget() {
+  if (document.getElementById('ai-widget-btn')) return;
+  const btn = document.createElement('button');
+  btn.id = 'ai-widget-btn';
+  btn.innerHTML = '🤖';
+  btn.title = 'Assistente ICS';
+  btn.style.cssText = 'position:fixed;bottom:80px;right:18px;z-index:8000;width:48px;height:48px;border-radius:50%;background:var(--red-hot);color:#fff;border:none;font-size:1.4rem;cursor:pointer;box-shadow:0 4px 16px rgba(0,0,0,.35);display:flex;align-items:center;justify-content:center;transition:transform .15s';
+  btn.onclick = window.toggleAiChat;
+  document.body.appendChild(btn);
+}
+
+window.toggleAiChat = function() {
+  let panel = document.getElementById('ai-chat-panel');
+  if (panel) { panel.remove(); return; }
+  panel = document.createElement('div');
+  panel.id = 'ai-chat-panel';
+  panel.style.cssText = 'position:fixed;bottom:140px;right:18px;z-index:8001;width:320px;max-height:460px;background:var(--bg-card);border:1px solid var(--border-subtle);border-radius:var(--r-lg);box-shadow:0 8px 32px rgba(0,0,0,.35);display:flex;flex-direction:column;overflow:hidden';
+  panel.innerHTML = `
+    <div style="padding:12px 14px;border-bottom:1px solid var(--border-subtle);display:flex;justify-content:space-between;align-items:center;background:var(--red-hot)">
+      <span style="font-weight:700;color:#fff;font-size:.9rem">🤖 Assistente ICS</span>
+      <button onclick="document.getElementById('ai-chat-panel')?.remove()" style="background:none;border:none;color:rgba(255,255,255,.8);cursor:pointer;font-size:1.1rem;line-height:1">✕</button>
+    </div>
+    <div id="ai-messages" style="flex:1;overflow-y:auto;padding:12px;display:flex;flex-direction:column;gap:8px">
+      <div style="background:var(--bg-elevated);padding:9px 12px;border-radius:10px 10px 10px 2px;font-size:.82rem;color:var(--text-primary)">Ciao! Sono l'assistente di ICS. Chiedimi dei risultati, degli atleti o delle gare 🚴</div>
+    </div>
+    <form id="ai-form" style="padding:10px;border-top:1px solid var(--border-subtle);display:flex;gap:6px">
+      <input id="ai-input" type="text" placeholder="Chiedi qualcosa…" autocomplete="off" style="flex:1;padding:7px 10px;border:1px solid var(--border-subtle);border-radius:var(--r-sm);font-size:.82rem;background:var(--bg-primary);color:var(--text-primary)"/>
+      <button type="submit" style="padding:7px 12px;background:var(--red-hot);color:#fff;border:none;border-radius:var(--r-sm);font-weight:700;cursor:pointer;font-size:.82rem">↑</button>
+    </form>`;
+  document.body.appendChild(panel);
+  document.getElementById('ai-input')?.focus();
+  document.getElementById('ai-form').onsubmit = async (e) => {
+    e.preventDefault();
+    const inp = document.getElementById('ai-input');
+    const question = (inp?.value || '').trim();
+    if (!question) return;
+    inp.value = '';
+    const msgs = document.getElementById('ai-messages');
+    if (!msgs) return;
+    msgs.insertAdjacentHTML('beforeend', `<div style="background:var(--red-hot);color:#fff;padding:9px 12px;border-radius:10px 10px 2px 10px;font-size:.82rem;align-self:flex-end;max-width:85%">${esc(question)}</div>`);
+    const loadId = 'ai-loading-' + Date.now();
+    msgs.insertAdjacentHTML('beforeend', `<div id="${loadId}" style="background:var(--bg-elevated);padding:9px 12px;border-radius:10px 10px 10px 2px;font-size:.82rem;color:var(--text-muted)">⏳ Sto pensando…</div>`);
+    msgs.scrollTop = msgs.scrollHeight;
+    try {
+      const { answer } = await apiCall('/ai/ask', { method: 'POST', body: { question } });
+      document.getElementById(loadId)?.remove();
+      msgs.insertAdjacentHTML('beforeend', `<div style="background:var(--bg-elevated);padding:9px 12px;border-radius:10px 10px 10px 2px;font-size:.82rem;color:var(--text-primary);line-height:1.5">${esc(answer)}</div>`);
+    } catch(err) {
+      document.getElementById(loadId)?.remove();
+      msgs.insertAdjacentHTML('beforeend', `<div style="background:var(--bg-elevated);padding:9px 12px;border-radius:10px 10px 10px 2px;font-size:.82rem;color:#ef4444">${esc(err.message)}</div>`);
+    }
+    msgs.scrollTop = msgs.scrollHeight;
+  };
+};
+
+// ── Inietta bottone "Scrivi messaggio" dopo aver verificato se l'utente ha un account
 async function _injectMsgBtn(spanId, atleta_id, team_name, media_profile_id) {
   const span = document.getElementById(spanId);
   if (!span) return;
@@ -11486,6 +11663,7 @@ async function renderTeam(team_id, opts = {}) {
         <div class="team-header-name-block">
           <div class="team-name-display">${nationFlagPrefix(t.nome)}${esc(t.nome)}</div>
           <span id="team-msg-btn"></span>
+          <span id="team-follow-btn"></span>
           ${entitySocialLinksHtml(teamOv, ['instagram','facebook','strava','website'])}
         </div>
       </div>
@@ -11540,8 +11718,8 @@ async function renderTeam(team_id, opts = {}) {
   `);
 
   // Bottone messaggio team (async, non blocca il render)
-  // Cerchiamo il team_profile tramite nome team
   _injectMsgBtn('team-msg-btn', null, team_id, null);
+  _injectFollowBtn('team-follow-btn', 'team', team_id);
 }
 
 // ── Photo helpers (top-level so always available) ────────────
@@ -12647,10 +12825,12 @@ async function renderGara(gara_id) {
     </div>
     <div id="race-albo-doro" style="margin-top:8px"></div>
     ${detailsHtml}
+    <div id="gara-comments-section" style="margin-top:28px"></div>
   `);
 
   // Albo d'oro delle edizioni (stile PCS) — riempito async per non bloccare la pagina
   _injectRaceAlboDoro(primaryGaraId);
+  _loadGaraComments(primaryGaraId);
 
   // Scroll orizzontale dello strip
   window._mgScroll = function(stripId, dir) {
@@ -17294,6 +17474,7 @@ window.submitLogin = async function(e) {
     const { token, user } = await apiCall('/auth/login', { method: 'POST', body: { email, password: pwd } });
     authSave(token, user);
     updateNavLoginState();
+    _loadFollows();
     window.location.hash = user.role === 'admin' ? '/admin' : '/profilo';
   } catch (err) {
     errEl.textContent = err.message; errEl.style.display = 'block';
@@ -17682,6 +17863,7 @@ window.submitRegister = async function(e) {
     const { token, user } = await apiCall('/auth/register', { method: 'POST', body: { email, password, role, display_name: finalDisplayName } });
     authSave(token, user);
     updateNavLoginState();
+    _loadFollows();
 
     // Per l'atleta: collega subito il profilo
     if (role === 'atleta') {

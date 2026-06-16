@@ -745,6 +745,26 @@ const queries = {
 
   getUserByTeamProfileId: (team_profile_id) =>
     one(`SELECT u.id, u.display_name, u.role FROM users u JOIN team_profiles tp ON tp.user_id=u.id WHERE tp.id=$1 AND tp.status='active' LIMIT 1`, [team_profile_id]),
+
+  // ── Follow atleti ──────────────────────────────────────────────────────────
+  getAtletaFollows:       (user_id)              => all(`SELECT atleta_id FROM athlete_follows WHERE user_id=$1`, [user_id]),
+  followAtleta:           (user_id, atleta_id)   => one(`INSERT INTO athlete_follows (user_id, atleta_id) VALUES ($1,$2) ON CONFLICT DO NOTHING RETURNING id`, [user_id, atleta_id]),
+  unfollowAtleta:         (user_id, atleta_id)   => run(`DELETE FROM athlete_follows WHERE user_id=$1 AND atleta_id=$2`, [user_id, atleta_id]),
+  getFollowersByAtleta:   (atleta_id)            => all(`SELECT user_id FROM athlete_follows WHERE atleta_id=$1`, [atleta_id]),
+  getAllAtletaFollows:     ()                     => all(`SELECT user_id, atleta_id FROM athlete_follows`, []),
+
+  // ── Follow team ────────────────────────────────────────────────────────────
+  getTeamFollows:         (user_id)              => all(`SELECT team_id FROM team_follows WHERE user_id=$1`, [user_id]),
+  followTeam:             (user_id, team_id)     => one(`INSERT INTO team_follows (user_id, team_id) VALUES ($1,$2) ON CONFLICT DO NOTHING RETURNING id`, [user_id, team_id]),
+  unfollowTeam:           (user_id, team_id)     => run(`DELETE FROM team_follows WHERE user_id=$1 AND team_id=$2`, [user_id, team_id]),
+  getFollowersByTeam:     (team_id)              => all(`SELECT user_id FROM team_follows WHERE team_id=$1`, [team_id]),
+
+  // ── Commenti gare ──────────────────────────────────────────────────────────
+  getGaraComments:   (gara_id)                          => all(`SELECT id, gara_id, user_id, display_name, body, created_at FROM race_comments WHERE gara_id=$1 AND deleted=false ORDER BY created_at ASC`, [gara_id]),
+  addGaraComment:    (gara_id, user_id, display_name, body) => one(`INSERT INTO race_comments (gara_id, user_id, display_name, body) VALUES ($1,$2,$3,$4) RETURNING *`, [gara_id, user_id, display_name, body]),
+  deleteGaraComment: (id, user_id, is_admin)            => is_admin
+    ? run(`UPDATE race_comments SET deleted=true WHERE id=$1`, [id])
+    : run(`UPDATE race_comments SET deleted=true WHERE id=$1 AND user_id=$2`, [id, user_id]),
 };
 
 module.exports = { queries, init, rawQuery: (sql, params) => pool.query(sql, params) };

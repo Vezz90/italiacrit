@@ -1,1 +1,11 @@
-{"version":"0.0.1","configurations":[{"name":"italiacrit","runtimeExecutable":"npx","runtimeArgs":["serve","-p","3333","."],"port":3333}]}
+{
+  "version": "0.0.1",
+  "configurations": [
+    {
+      "name": "italiacrit-frontend",
+      "runtimeExecutable": "npx",
+      "runtimeArgs": ["serve", "-p", "5500", "."],
+      "port": 5500
+    }
+  ]
+}

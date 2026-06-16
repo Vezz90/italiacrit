@@ -300,6 +300,8 @@ function ogHtml({ title, desc, img, redirect }) {
 </body></html>`;
 }
 
+const API_BASE_URL = 'https://italiacrit.onrender.com';
+
 app.get('/og/gara/:id', async (req, res) => {
   const id  = req.params.id;
   const cal = (readDataJson('calendar.json') || []).find(g => g.id === id);
@@ -307,14 +309,11 @@ app.get('/og/gara/:id', async (req, res) => {
     .filter(r => r.gara_id === id)
     .sort((a,b) => a.posizione - b.posizione);
   const winner = results[0];
-
   const title = cal?.nome || id.replace(/_/g,' ');
   const date  = cal?.data ? new Date(cal.data).toLocaleDateString('it-IT',{day:'numeric',month:'long',year:'numeric'}) : '';
   const top3  = results.slice(0,3).map((r,i)=>`${i+1}° ${r.cognome} ${r.nome}`).join(' · ');
   const desc  = [date, top3].filter(Boolean).join(' — ');
-
-  // Foto: prova foto vincitore, poi nessuna (usa default)
-  const img = winner ? await getEntityPhoto('atleta', winner.atleta_id) : null;
+  const img   = `${API_BASE_URL}/api/og-image/gara/${encodeURIComponent(id)}`;
   const redirect = `${SITE_URL}/#/gara/${encodeURIComponent(id)}`;
   res.setHeader('Content-Type','text/html');
   res.send(ogHtml({ title, desc, img, redirect }));
@@ -326,7 +325,7 @@ app.get('/og/atleta/:id', async (req, res) => {
   const ath      = athletes[id] || {};
   const title    = `${ath.cognome||''} ${ath.nome||''}`.trim() || id;
   const desc     = [ath.team_attuale, ath.categoria].filter(Boolean).join(' · ') || 'Atleta ItaliacritResultati';
-  const img      = await getEntityPhoto('atleta', id);
+  const img      = `${API_BASE_URL}/api/og-image/atleta/${encodeURIComponent(id)}`;
   const redirect = `${SITE_URL}/#/atleta/${encodeURIComponent(id)}`;
   res.setHeader('Content-Type','text/html');
   res.send(ogHtml({ title, desc, img, redirect }));
@@ -338,7 +337,7 @@ app.get('/og/team/:id', async (req, res) => {
   const team  = teams[id] || {};
   const title = team.nome || id.replace(/_/g,' ');
   const desc  = `Team — ItaliacritResultati`;
-  const img   = await getEntityPhoto('team', id);
+  const img   = `${API_BASE_URL}/api/og-image/team/${encodeURIComponent(id)}`;
   const redirect = `${SITE_URL}/#/team/${encodeURIComponent(id)}`;
   res.setHeader('Content-Type','text/html');
   res.send(ogHtml({ title, desc, img, redirect }));
@@ -1089,8 +1088,9 @@ app.post('/api/internal/notify-results', async (req, res) => {
       body:  body  || (count ? `${count} nuove gare aggiornate` : 'Le classifiche sono state aggiornate'),
       url: '/#/risultati',
     });
-    // Accoda post social in background (non blocca la risposta)
+    // Background: accoda post social + notifica follower
     queueSocialPostsForToday().catch(e => console.warn('[social] queue error:', e.message));
+    notifyFollowers().catch(e => console.warn('[follow] notify error:', e.message));
     res.json({ ok: true, ...r });
   } catch (e) { res.status(500).json({ error: e.message }); }
 });
@@ -3264,6 +3264,353 @@ async function autoXpixSync() {
     console.warn('[xpix-auto] Errore:', e.message);
   }
 }
+
+// ══════════════════════════════════════════════════════════════════════════════
+// ── FOLLOW ATLETI / TEAM ──────────────────────────────────────────────────────
+// ══════════════════════════════════════════════════════════════════════════════
+
+// Restituisce la lista completa dei follow dell'utente
+app.get('/api/follow/list', requireAuth, async (req, res) => {
+  try {
+    const [atleti, teams] = await Promise.all([
+      queries.getAtletaFollows(req.user.id),
+      queries.getTeamFollows(req.user.id),
+    ]);
+    res.json({ atleti: atleti.map(r => r.atleta_id), teams: teams.map(r => r.team_id) });
+  } catch (e) { res.status(500).json({ error: e.message }); }
+});
+
+// Toggle follow atleta
+app.post('/api/follow/atleta/:id', requireAuth, async (req, res) => {
+  try {
+    const atletaId = req.params.id;
+    const existing = await queries.getFollowersByAtleta(atletaId).then(rows => rows.some(r => r.user_id === req.user.id));
+    if (existing) {
+      await queries.unfollowAtleta(req.user.id, atletaId);
+      res.json({ following: false });
+    } else {
+      await queries.followAtleta(req.user.id, atletaId);
+      res.json({ following: true });
+    }
+  } catch (e) { res.status(500).json({ error: e.message }); }
+});
+
+// Toggle follow team
+app.post('/api/follow/team/:id', requireAuth, async (req, res) => {
+  try {
+    const teamId = req.params.id;
+    const existing = await queries.getFollowersByTeam(teamId).then(rows => rows.some(r => r.user_id === req.user.id));
+    if (existing) {
+      await queries.unfollowTeam(req.user.id, teamId);
+      res.json({ following: false });
+    } else {
+      await queries.followTeam(req.user.id, teamId);
+      res.json({ following: true });
+    }
+  } catch (e) { res.status(500).json({ error: e.message }); }
+});
+
+// ── Notifica follower dopo scrape ─────────────────────────────────────────────
+// Chiamata da notify-results: trova atleti con nuovi risultati oggi e notifica
+// i loro follower (esclude l'atleta stesso se ha un profilo utente).
+async function notifyFollowers() {
+  try {
+    const results = readDataJson('results_raw.json') || [];
+    const today     = new Date().toISOString().slice(0, 10);
+    const yesterday = new Date(Date.now() - 86400000).toISOString().slice(0, 10);
+    // Atleti con risultati recenti
+    const recentAtleti = new Set();
+    const atletaResults = {}; // atleta_id → best result today
+    for (const r of results) {
+      const d = (r.data_gara || r.date || '').slice(0, 10);
+      if (d !== today && d !== yesterday) continue;
+      if (!r.atleta_id) continue;
+      recentAtleti.add(r.atleta_id);
+      if (!atletaResults[r.atleta_id] || Number(r.posizione) < Number(atletaResults[r.atleta_id].posizione))
+        atletaResults[r.atleta_id] = r;
+    }
+    if (!recentAtleti.size) return;
+    // Carica tutti i follow in un unico query per efficienza
+    const allFollows = await queries.getAllAtletaFollows();
+    const byAtleta = {}; // atleta_id → Set<user_id>
+    for (const { user_id, atleta_id } of allFollows) {
+      if (!byAtleta[atleta_id]) byAtleta[atleta_id] = new Set();
+      byAtleta[atleta_id].add(user_id);
+    }
+    for (const atletaId of recentAtleti) {
+      const followers = byAtleta[atletaId];
+      if (!followers?.size) continue;
+      const r = atletaResults[atletaId];
+      const nome = `${r.cognome || ''} ${r.nome || ''}`.trim();
+      const pos  = r.posizione ? `${r.posizione}° posto` : 'nuovo risultato';
+      const gara = r.nome_gara || r.gara_id || '';
+      for (const userId of followers) {
+        sendPushToUser(userId, {
+          title: `🚴 ${nome} — ${pos}`,
+          body:  `${gara}${r.categoria ? ' · ' + r.categoria : ''}`,
+          url:   `/#/gara/${encodeURIComponent(r.gara_id || '')}`,
+        }).catch(() => {});
+      }
+    }
+    console.log(`[follow] Notifiche follower inviate per ${recentAtleti.size} atleti`);
+  } catch (e) { console.warn('[follow] notifyFollowers error:', e.message); }
+}
+
+// ══════════════════════════════════════════════════════════════════════════════
+// ── COMMENTI GARE ─────────────────────────────────────────────────────────────
+// ══════════════════════════════════════════════════════════════════════════════
+
+app.get('/api/comments/:garaId', async (req, res) => {
+  try {
+    const comments = await queries.getGaraComments(req.params.garaId);
+    res.json({ comments });
+  } catch (e) { res.status(500).json({ error: e.message }); }
+});
+
+app.post('/api/comments/:garaId', requireAuth, async (req, res) => {
+  try {
+    const body = (req.body.body || '').trim();
+    if (!body || body.length > 500) return res.status(400).json({ error: 'Commento non valido (max 500 caratteri)' });
+    const user = await queries.getUserById(req.user.id);
+    const display_name = user.display_name || user.email.split('@')[0];
+    const comment = await queries.addGaraComment(req.params.garaId, req.user.id, display_name, body);
+    res.json({ ok: true, comment });
+  } catch (e) { res.status(500).json({ error: e.message }); }
+});
+
+app.delete('/api/comments/:id', requireAuth, async (req, res) => {
+  try {
+    const isAdmin = req.user.role === 'admin';
+    await queries.deleteGaraComment(req.params.id, req.user.id, isAdmin);
+    res.json({ ok: true });
+  } catch (e) { res.status(500).json({ error: e.message }); }
+});
+
+// ══════════════════════════════════════════════════════════════════════════════
+// ── AI ASSISTANT ──────────────────────────────────────────────────────────────
+// ══════════════════════════════════════════════════════════════════════════════
+
+const _aiRateLimit = new Map(); // ip → { count, resetAt }
+function checkAiRateLimit(ip) {
+  const now = Date.now();
+  const entry = _aiRateLimit.get(ip);
+  if (!entry || entry.resetAt < now) {
+    _aiRateLimit.set(ip, { count: 1, resetAt: now + 60 * 60 * 1000 });
+    return true;
+  }
+  if (entry.count >= 30) return false;
+  entry.count++;
+  return true;
+}
+
+app.post('/api/ai/ask', async (req, res) => {
+  try {
+    const ip = req.ip || req.headers['x-forwarded-for'] || 'unknown';
+    if (!checkAiRateLimit(ip)) return res.status(429).json({ error: 'Troppo richieste — riprova tra un\'ora' });
+    const question = (req.body.question || '').trim().slice(0, 400);
+    if (!question) return res.status(400).json({ error: 'Domanda vuota' });
+    const ai = getAnthropic();
+    if (!ai) return res.status(503).json({ error: 'AI non disponibile al momento' });
+
+    // Costruisce contesto rilevante dai dati del sito
+    const results  = readDataJson('results_raw.json') || [];
+    const calendar = readDataJson('calendar.json')    || [];
+    const q = question.toLowerCase();
+
+    // Estrai le ultime gare (top 50 risultati recenti per contesto)
+    const recentResults = results.slice(-200);
+    // Cerca gare pertinenti alla domanda
+    const matchedRaces = calendar.filter(g =>
+      g.nome && (q.includes(g.nome.toLowerCase().slice(0, 8)) || q.includes((g.id || '').toLowerCase().slice(0, 8)))
+    ).slice(0, 3);
+    // Top classifiche rapide (primi 3 per categoria dall'ultimo batch di risultati)
+    const byGara = {};
+    for (const r of recentResults) {
+      if (!r.gara_id) continue;
+      if (!byGara[r.gara_id]) byGara[r.gara_id] = [];
+      byGara[r.gara_id].push(r);
+    }
+    const latestGare = Object.entries(byGara).slice(-5).map(([id, rows]) => {
+      const sorted = rows.sort((a,b) => Number(a.posizione)-Number(b.posizione));
+      const top3 = sorted.filter(r => Number(r.posizione) <= 3);
+      return `${id}: ${top3.map(r=>`${r.posizione}° ${r.cognome} ${r.nome} (${r.team||''})`).join(', ')}`;
+    });
+
+    const systemPrompt = `Sei l'assistente di ICS (Italia Cycling Stats), sito di statistiche del ciclismo agonistico italiano.
+Rispondi in italiano, in modo conciso (max 3-4 frasi). Basa le risposte SOLO sui dati forniti, senza inventare.
+Se non hai i dati per rispondere, dillo chiaramente e suggerisci di consultare il sito.
+
+DATI DISPONIBILI:
+Ultime gare con risultati:
+${latestGare.join('\n')}
+
+${matchedRaces.length ? 'Gare pertinenti alla domanda:\n' + matchedRaces.map(g=>`- ${g.nome} (${g.data||''}, ${g.localita||''})`).join('\n') : ''}
+
+Sito: italiacyclingstats.com — classifiche, risultati, atleti, team, calendario gare italiane (Esordienti, Allievi, Juniores, Under23, Elite).`;
+
+    const msg = await ai.messages.create({
+      model: 'claude-haiku-4-5-20251001',
+      max_tokens: 350,
+      system: systemPrompt,
+      messages: [{ role: 'user', content: question }]
+    });
+    res.json({ answer: msg.content[0].text.trim() });
+  } catch (e) { res.status(500).json({ error: e.message }); }
+});
+
+// ══════════════════════════════════════════════════════════════════════════════
+// ── OG IMAGE DINAMICHE ────────────────────────────────────────────────────────
+// ══════════════════════════════════════════════════════════════════════════════
+
+const _ogCache = new Map(); // key → { buf, ts }
+const OG_TTL   = 30 * 60 * 1000; // 30 minuti
+
+function buildOgSvg({ title, subtitle, badge, stats = [], accent = '#e8001d' }) {
+  const esc = s => String(s || '').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');
+  const statsHtml = stats.slice(0, 4).map((s, i) => {
+    const x = 60 + i * 270;
+    return `<rect x="${x}" y="390" width="240" height="100" rx="12" fill="rgba(255,255,255,0.07)"/>
+    <text x="${x+120}" y="440" font-family="Arial,Helvetica,sans-serif" font-size="34" font-weight="bold" fill="white" text-anchor="middle">${esc(s.value)}</text>
+    <text x="${x+120}" y="468" font-family="Arial,Helvetica,sans-serif" font-size="16" fill="#94a3b8" text-anchor="middle">${esc(s.label)}</text>`;
+  }).join('');
+  return `<svg width="1200" height="630" xmlns="http://www.w3.org/2000/svg">
+  <defs>
+    <linearGradient id="bg" x1="0" y1="0" x2="1200" y2="630" gradientUnits="userSpaceOnUse">
+      <stop offset="0%" stop-color="#0f172a"/>
+      <stop offset="100%" stop-color="#1e293b"/>
+    </linearGradient>
+  </defs>
+  <rect width="1200" height="630" fill="url(#bg)"/>
+  <rect x="0" y="0" width="10" height="630" fill="${esc(accent)}"/>
+  <rect x="0" y="560" width="1200" height="70" fill="rgba(0,0,0,0.3)"/>
+  <text x="60" y="80" font-family="Arial,Helvetica,sans-serif" font-size="22" fill="#64748b" font-weight="600" letter-spacing="2">ICS — ITALIA CYCLING STATS</text>
+  ${badge ? `<rect x="60" y="100" width="${Math.min(badge.length*11+24,320)}" height="36" rx="8" fill="${esc(accent)}"/>
+  <text x="72" y="123" font-family="Arial,Helvetica,sans-serif" font-size="18" fill="white" font-weight="700">${esc(badge)}</text>` : ''}
+  <text x="60" y="${badge ? 230 : 190}" font-family="Arial,Helvetica,sans-serif" font-size="64" font-weight="900" fill="white" dominant-baseline="auto">${esc(title.slice(0, 28))}${title.length > 28 ? '…' : ''}</text>
+  <text x="60" y="${badge ? 295 : 255}" font-family="Arial,Helvetica,sans-serif" font-size="34" fill="#94a3b8">${esc(subtitle.slice(0, 55))}${subtitle.length > 55 ? '…' : ''}</text>
+  ${statsHtml}
+  <text x="60" y="597" font-family="Arial,Helvetica,sans-serif" font-size="20" fill="#e8001d" font-weight="600">italiacyclingstats.com</text>
+  <text x="1140" y="597" font-family="Arial,Helvetica,sans-serif" font-size="20" fill="#475569" text-anchor="end">🇮🇹 Ciclismo Italiano</text>
+</svg>`;
+}
+
+async function renderOgPng(svgStr) {
+  try {
+    const sharp = require('sharp');
+    return await sharp(Buffer.from(svgStr)).png().toBuffer();
+  } catch (e) {
+    // Se sharp non supporta SVG, restituisci null (fallback al logo statico)
+    console.warn('[og-image] sharp SVG error:', e.message);
+    return null;
+  }
+}
+
+app.get('/api/og-image/atleta/:id', async (req, res) => {
+  try {
+    const atletaId = req.params.id;
+    const cacheKey = `atleta_${atletaId}`;
+    const cached = _ogCache.get(cacheKey);
+    if (cached && Date.now() - cached.ts < OG_TTL) {
+      res.setHeader('Content-Type', 'image/png');
+      res.setHeader('Cache-Control', 'public, max-age=1800');
+      return res.send(cached.buf);
+    }
+    const results = readDataJson('results_raw.json') || [];
+    const atletaRows = results.filter(r => r.atleta_id === atletaId);
+    if (!atletaRows.length) return res.redirect('/assets/og-default.png');
+    const a = atletaRows[0];
+    const nome = `${a.cognome || ''} ${a.nome || ''}`.trim();
+    const team = a.team || '';
+    const wins  = atletaRows.filter(r => Number(r.posizione) === 1).length;
+    const top3  = atletaRows.filter(r => Number(r.posizione) <= 3).length;
+    const races  = new Set(atletaRows.map(r => r.gara_id)).size;
+    const svg = buildOgSvg({
+      title: nome, subtitle: team,
+      badge: a.categoria || '',
+      stats: [
+        { value: wins,  label: 'Vittorie' },
+        { value: top3,  label: 'Podi' },
+        { value: races, label: 'Gare' },
+      ]
+    });
+    const buf = await renderOgPng(svg);
+    if (!buf) return res.redirect('/assets/og-default.png');
+    _ogCache.set(cacheKey, { buf, ts: Date.now() });
+    res.setHeader('Content-Type', 'image/png');
+    res.setHeader('Cache-Control', 'public, max-age=1800');
+    res.send(buf);
+  } catch (e) { res.redirect('/assets/og-default.png'); }
+});
+
+app.get('/api/og-image/gara/:id', async (req, res) => {
+  try {
+    const garaId = decodeURIComponent(req.params.id);
+    const cacheKey = `gara_${garaId}`;
+    const cached = _ogCache.get(cacheKey);
+    if (cached && Date.now() - cached.ts < OG_TTL) {
+      res.setHeader('Content-Type', 'image/png');
+      res.setHeader('Cache-Control', 'public, max-age=1800');
+      return res.send(cached.buf);
+    }
+    const results  = readDataJson('results_raw.json') || [];
+    const calendar = readDataJson('calendar.json') || [];
+    const garaRows = results.filter(r => r.gara_id === garaId).sort((a,b) => Number(a.posizione)-Number(b.posizione));
+    const cal      = calendar.find(g => g.id === garaId);
+    if (!garaRows.length) return res.redirect('/assets/og-default.png');
+    const winner = garaRows.find(r => Number(r.posizione) === 1);
+    const title  = cal?.nome || garaId.split('_').slice(0, -2).join(' ');
+    const date   = (cal?.data || winner?.data_gara || '').slice(0, 10);
+    const svg = buildOgSvg({
+      title,
+      subtitle: winner ? `🥇 ${winner.cognome} ${winner.nome} — ${winner.team || ''}` : '',
+      badge: (cal?.categoria || winner?.categoria || '').replace(/_/g, ' '),
+      stats: garaRows.slice(0, 3).map(r => ({ value: `${r.posizione}°`, label: `${r.cognome} ${r.nome}`.trim().slice(0,16) })),
+    });
+    const buf = await renderOgPng(svg);
+    if (!buf) return res.redirect('/assets/og-default.png');
+    _ogCache.set(cacheKey, { buf, ts: Date.now() });
+    res.setHeader('Content-Type', 'image/png');
+    res.setHeader('Cache-Control', 'public, max-age=1800');
+    res.send(buf);
+  } catch (e) { res.redirect('/assets/og-default.png'); }
+});
+
+app.get('/api/og-image/team/:id', async (req, res) => {
+  try {
+    const teamId = decodeURIComponent(req.params.id);
+    const cacheKey = `team_${teamId}`;
+    const cached = _ogCache.get(cacheKey);
+    if (cached && Date.now() - cached.ts < OG_TTL) {
+      res.setHeader('Content-Type', 'image/png');
+      res.setHeader('Cache-Control', 'public, max-age=1800');
+      return res.send(cached.buf);
+    }
+    const results  = readDataJson('results_raw.json') || [];
+    const teamRows = results.filter(r => (r.team || '') === teamId);
+    if (!teamRows.length) return res.redirect('/assets/og-default.png');
+    const wins  = teamRows.filter(r => Number(r.posizione) === 1).length;
+    const top3  = teamRows.filter(r => Number(r.posizione) <= 3).length;
+    const races = new Set(teamRows.map(r => r.gara_id)).size;
+    const riders = new Set(teamRows.map(r => r.atleta_id)).size;
+    const svg = buildOgSvg({
+      title: teamId.length > 28 ? teamId.slice(0,27)+'…' : teamId,
+      subtitle: 'Team · Ciclismo Italiano',
+      badge: 'TEAM',
+      stats: [
+        { value: wins,  label: 'Vittorie' },
+        { value: top3,  label: 'Podi' },
+        { value: races, label: 'Gare' },
+        { value: riders, label: 'Corridori' },
+      ]
+    });
+    const buf = await renderOgPng(svg);
+    if (!buf) return res.redirect('/assets/og-default.png');
+    _ogCache.set(cacheKey, { buf, ts: Date.now() });
+    res.setHeader('Content-Type', 'image/png');
+    res.setHeader('Cache-Control', 'public, max-age=1800');
+    res.send(buf);
+  } catch (e) { res.redirect('/assets/og-default.png'); }
+});
 
 init()
   .then(async () => {
