@@ -5202,7 +5202,7 @@ async function renderHubBars() {
       const snapBefore = computeRankSnapshot(resSet, catCode, cutDate);
       if (Object.keys(snapBefore).length < 3) continue; // troppo vuoto, prova finestra più ampia
       const mv = computeMovers(snapNow, snapBefore, resSet, posLimit);
-      if (mv.up.length + mv.dn.length >= 2) return mv; // trovati abbastanza movers
+      if (mv.up.length + mv.dn.length >= 1) return mv; // trovati abbastanza movers
     }
     return { up: [], dn: [] };
   }

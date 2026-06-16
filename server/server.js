@@ -3416,6 +3416,11 @@ app.post('/api/ai/ask', async (req, res) => {
     const calendar = readDataJson('calendar.json')    || [];
     const q = question.toLowerCase();
 
+    // ── Intervallo date dati disponibili ──────────────────────────────────────
+    const allDates = results.map(r => r.data).filter(Boolean).sort();
+    const dataFrom = allDates[0] || '?';
+    const dataTo   = allDates[allDates.length - 1] || '?';
+
     // ── Helper: catCode da un risultato ──────────────────────────────────────
     function getCatCode(r) {
       const m = (r.gara_id || '').match(/_([A-Z0-9]+)_([MF])$/);
@@ -3526,6 +3531,64 @@ Classifica punti: ${topPts.map((a,i)=>`${i+1}. ${a.nome} (${a.team}) ${a.pts}pt`
 Classifica vittorie: ${topWinners.map((a,i)=>`${i+1}. ${a.nome} (${a.team}) ${a.wins}V`).join(' | ')}`);
     }
 
+    // ── Movers per categoria ──────────────────────────────────────────────────
+    function srvRankSnapshot(resSet, catCode, beforeDate) {
+      const pts = {};
+      for (const r of resSet) {
+        if (getCatCode(r) !== catCode || !r.atleta_id || !r.data) continue;
+        if (beforeDate && r.data >= beforeDate) continue;
+        pts[r.atleta_id] = (pts[r.atleta_id] || 0) + (r.punti_effettivi || 0);
+      }
+      const rankMap = {};
+      Object.entries(pts).filter(([,v])=>v>0).sort(([,a],[,b])=>b-a)
+        .forEach(([id],i)=>{ rankMap[id]=i+1; });
+      return rankMap;
+    }
+    function srvComputeMovers(snapNow, snapBefore, resSet, posLimit=30) {
+      const names = {};
+      for (const r of resSet) {
+        if (r.atleta_id && !names[r.atleta_id])
+          names[r.atleta_id] = `${r.cognome||''} ${r.nome||''}`.trim() + (r.team ? ` (${r.team})` : '');
+      }
+      const list = [];
+      for (const [aid, posNow] of Object.entries(snapNow)) {
+        const posOld = snapBefore[aid];
+        if (!posOld || posOld === posNow) continue;
+        const gain = posOld - posNow;
+        list.push({ aid, name: names[aid]||aid, pos: posNow, gain });
+      }
+      return {
+        up: list.filter(m=>m.gain>=1&&m.pos<=posLimit).sort((a,b)=>b.gain-a.gain).slice(0,5),
+        dn: list.filter(m=>m.gain<=-1&&(m.pos-m.gain)<=posLimit).sort((a,b)=>a.gain-b.gain).slice(0,5),
+      };
+    }
+    // Calcola movers per le categorie rilevanti (o ELI_M di default)
+    const moversCats = matchedCats.length > 0 ? matchedCats.slice(0, 3) : ['ELI_M','JUN_M'];
+    const moversBlocks = [];
+    for (const catCode of moversCats) {
+      const catRes = results.filter(r => getCatCode(r) === catCode);
+      if (catRes.length < 5) continue;
+      const lastD = catRes.reduce((mx,r)=>(r.data||'')>mx?r.data:mx,'');
+      const snapNow = srvRankSnapshot(catRes, catCode, null);
+      const windows = [lastD, 7, 14, 21, 30, 45, 60];
+      let best = null;
+      for (const w of windows) {
+        const cutDate = typeof w === 'string' ? w : (()=>{const d=new Date(lastD||new Date());d.setDate(d.getDate()-w);return d.toISOString().split('T')[0];})();
+        const snapBefore = srvRankSnapshot(catRes, catCode, cutDate);
+        if (Object.keys(snapBefore).length < 3) continue;
+        const mv = srvComputeMovers(snapNow, snapBefore, catRes);
+        if (mv.up.length + mv.dn.length >= 1) { best = { mv, cutDate }; break; }
+      }
+      if (best) {
+        const { mv, cutDate } = best;
+        const lines = [
+          ...mv.up.map(m=>`  ↑ +${m.gain} pos → #${m.pos}: ${m.name}`),
+          ...mv.dn.map(m=>`  ↓ ${m.gain} pos → #${m.pos}: ${m.name}`),
+        ];
+        moversBlocks.push(`MOVERS ${catCode} (vs ${cutDate}):\n${lines.join('\n')}`);
+      }
+    }
+
     // ── Ultime gare ───────────────────────────────────────────────────────────
     const byGaraLatest = {};
     for (const r of results) {
@@ -3557,6 +3620,7 @@ Classifica vittorie: ${topWinners.map((a,i)=>`${i+1}. ${a.nome} (${a.team}) ${a.
     if (atletaBlocks.length) contextParts.push(atletaBlocks.join('\n\n'));
     if (catBlocks.length) contextParts.push(catBlocks.join('\n\n'));
     if (gareBlock.length) contextParts.push(gareBlock.join('\n\n'));
+    if (moversBlocks.length) contextParts.push(moversBlocks.join('\n\n'));
     contextParts.push(`ULTIME GARE:\n${latestGare.join('\n')}`);
     if (prossimeGare.length) contextParts.push(`PROSSIME GARE:\n${prossimeGare.join('\n')}`);
 
@@ -3566,6 +3630,7 @@ Classifica vittorie: ${topWinners.map((a,i)=>`${i+1}. ${a.nome} (${a.team}) ${a.
     const hasCatData     = catBlocks.length > 0;
 
     const systemPrompt = `Sei VEZZ, l'assistente AI di ICS (Italia Cycling Stats), esperto di ciclismo agonistico italiano.
+Il tuo archivio dati copre il periodo: ${dataFrom} → ${dataTo}.
 
 REGOLE ASSOLUTE — rispettale sempre:
 1. Rispondi SOLO in italiano, in modo diretto e completo.
@@ -3575,6 +3640,7 @@ REGOLE ASSOLUTE — rispettale sempre:
 5. Quando parli di un atleta, dai SEMPRE: team attuale, categoria, n° vittorie, n° podi, risultati recenti. Non limitarti a 1-2 info.
 6. Se la domanda è ambigua (es. il nome della gara non è esatto), mostra i dati più vicini che hai e spiega brevemente il nome corretto.
 7. Dì "non ho questi dati" SOLO per cose davvero assenti: notizie esterne, contratti, doping, classifiche di anni non in archivio.
+8. Nella sezione MOVERS trovi gli atleti che hanno guadagnato/perso posizioni in classifica di recente — usala per rispondere a domande su chi sta salendo/scendendo.
 
 ${hasRaceData ? '⚠️ ATTENZIONE: Ho trovato dati SPECIFICI sulla gara richiesta — presentali come risposta principale.\n' : ''}${hasAthleteData ? '⚠️ ATTENZIONE: Ho trovato dati SPECIFICI sull\'atleta richiesto — presentali come risposta principale.\n' : ''}${hasCatData ? '⚠️ ATTENZIONE: Ho trovato classifiche SPECIFICHE per la categoria richiesta — presentale come risposta principale.\n' : ''}
 DATI DISPONIBILI:
