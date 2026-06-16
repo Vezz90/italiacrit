@@ -5155,13 +5155,26 @@ async function renderHubBars() {
   const fireAthES1 = isEsordienti?computeFireForSet(hubResES1):null;
 
   // ── Movers — basati su snapshot di classifica reali ──────────────
-  // Confronto: classifica attuale vs classifica PRIMA dell'ultima gara
+  // Confronto: classifica attuale vs classifica PRIMA dell'ultima gara.
+  // Fallback a finestra 14gg se lo snapshot "before-last" è troppo piccolo
+  // (es. inizio stagione con una sola gara o gare tutte nella stessa data).
   const lastDateES2 = hubResES2.reduce((mx,r)=>(r.data||'')>mx?r.data:mx,'') || lastDate;
   const lastDateES1 = hubResES1.reduce((mx,r)=>(r.data||'')>mx?r.data:mx,'') || lastDate;
   const _snapNow          = computeRankSnapshot(hubResES2, mainCat, null);
   const _snapBeforeLast   = computeRankSnapshot(hubResES2, mainCat, lastDateES2);
   const _snapNowE1        = es1Code?computeRankSnapshot(hubResES1,es1Code,null):{};
   const _snapBeforeLastE1 = es1Code?computeRankSnapshot(hubResES1,es1Code,lastDateES1):{};
+
+  // Se "before-last" è quasi vuoto (meno di 3 atleti con punti prima dell'ultima gara),
+  // fallback a snapshot 14gg fa per avere movers significativi
+  function _pickSnapBefore(resSet, catCode, lastD, snapBeforeResult) {
+    if (Object.keys(snapBeforeResult).length >= 3) return snapBeforeResult;
+    const d14 = new Date(lastD || new Date()); d14.setDate(d14.getDate() - 14);
+    return computeRankSnapshot(resSet, catCode, d14.toISOString().split('T')[0]);
+  }
+  const _snapBL   = _pickSnapBefore(hubResES2, mainCat, lastDateES2, _snapBeforeLast);
+  const _snapBLE1 = es1Code ? _pickSnapBefore(hubResES1, es1Code, lastDateES1, _snapBeforeLastE1) : {};
+
   // ── Movers: usa snapshot before-last (= logica identica alla classifica page) ──
   function computeMovers(ranking, snapNow, snapBefore, posLimit = 30) {
     const list = ranking.map(a => {
@@ -5179,9 +5192,9 @@ async function renderHubBars() {
     };
   }
   // Usa il ranking COMPLETO per i movers (non limitato a top10)
-  const movers    = computeMovers(_hubRankFull,    _snapNow,   _snapBeforeLast);
+  const movers    = computeMovers(_hubRankFull,    _snapNow,  _snapBL);
   const moversES1 = isEsordienti && _hubRankES1Full
-    ? computeMovers(_hubRankES1Full, _snapNowE1, _snapBeforeLastE1)
+    ? computeMovers(_hubRankES1Full, _snapNowE1, _snapBLE1)
     : { up: [], dn: [] };
 
   // Pre-carica foto atleta on fire:

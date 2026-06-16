@@ -3412,41 +3412,154 @@ app.post('/api/ai/ask', async (req, res) => {
     const ai = getAnthropic();
     if (!ai) return res.status(503).json({ error: 'AI non disponibile al momento' });
 
-    // Costruisce contesto rilevante dai dati del sito
     const results  = readDataJson('results_raw.json') || [];
     const calendar = readDataJson('calendar.json')    || [];
     const q = question.toLowerCase();
 
-    // Estrai le ultime gare (top 50 risultati recenti per contesto)
-    const recentResults = results.slice(-200);
-    // Cerca gare pertinenti alla domanda
-    const matchedRaces = calendar.filter(g =>
-      g.nome && (q.includes(g.nome.toLowerCase().slice(0, 8)) || q.includes((g.id || '').toLowerCase().slice(0, 8)))
-    ).slice(0, 3);
-    // Top classifiche rapide (primi 3 per categoria dall'ultimo batch di risultati)
-    const byGara = {};
-    for (const r of recentResults) {
-      if (!r.gara_id) continue;
-      if (!byGara[r.gara_id]) byGara[r.gara_id] = [];
-      byGara[r.gara_id].push(r);
+    // ── Helper: catCode da un risultato ──────────────────────────────────────
+    function getCatCode(r) {
+      const m = (r.gara_id || '').match(/_([A-Z0-9]+)_([MF])$/);
+      if (m) { let b = m[1]; if (b.startsWith('AL')) b = 'AL'; const g = r.genere === 'F' ? 'F' : r.genere === 'M' ? 'M' : m[2]; return `${b}_${g}`; }
+      if (r.categoria && /^[A-Z0-9]+_[MF]$/.test(r.categoria)) return r.categoria;
+      return null;
     }
-    const latestGare = Object.entries(byGara).slice(-5).map(([id, rows]) => {
-      const sorted = rows.sort((a,b) => Number(a.posizione)-Number(b.posizione));
-      const top3 = sorted.filter(r => Number(r.posizione) <= 3);
-      return `${id}: ${top3.map(r=>`${r.posizione}° ${r.cognome} ${r.nome} (${r.team||''})`).join(', ')}`;
-    });
 
-    const systemPrompt = `Sei l'assistente di ICS (Italia Cycling Stats), sito di statistiche del ciclismo agonistico italiano.
-Rispondi in italiano, in modo conciso (max 3-4 frasi). Basa le risposte SOLO sui dati forniti, senza inventare.
-Se non hai i dati per rispondere, dillo chiaramente e suggerisci di consultare il sito.
+    // ── Rilevamento categoria ─────────────────────────────────────────────────
+    const CAT_MAP = [
+      { code:'AL_M',  kws:['allievi','allievo'] },
+      { code:'AL_F',  kws:['allieve','allieva','donne alliev'] },
+      { code:'JUN_M', kws:['juniores','junior','juniori'] },
+      { code:'JUN_F', kws:['juniores donne','junior donne','junior femmin'] },
+      { code:'ELI_M', kws:['elite','under 23','under23','u23'] },
+      { code:'ELI_F', kws:['elite donne','donne elite','elite femmin'] },
+      { code:'ES_M',  kws:['esordienti','esordiente'] },
+      { code:'ES_F',  kws:['esordienti donne','donne esordienti'] },
+    ];
+    const matchedCats = CAT_MAP.filter(c => c.kws.some(kw => q.includes(kw))).map(c => c.code);
+
+    // ── Rilevamento atleta (fuzzy match su cognome) ───────────────────────────
+    const athleteMap = {};
+    for (const r of results) {
+      if (!r.atleta_id || !r.cognome) continue;
+      const key = r.atleta_id;
+      if (!athleteMap[key]) athleteMap[key] = { id: key, cognome: r.cognome.toLowerCase(), nome: r.nome || '', fullName: `${r.cognome} ${r.nome || ''}`.trim(), team: r.team || '', cat: getCatCode(r) };
+    }
+    const matchedAthletes = Object.values(athleteMap).filter(a =>
+      a.cognome.length >= 4 && q.includes(a.cognome)
+    );
+
+    // ── Rilevamento gara nella domanda ────────────────────────────────────────
+    const gareInDomanda = [];
+    {
+      const byGaraId = {};
+      for (const r of results) {
+        if (!r.gara_id) continue;
+        if (!byGaraId[r.gara_id]) byGaraId[r.gara_id] = { nome: r.nome_gara || r.gara_id, data: r.data || '', rows: [] };
+        byGaraId[r.gara_id].rows.push(r);
+      }
+      for (const [gid, g] of Object.entries(byGaraId)) {
+        const nomeLow = g.nome.toLowerCase();
+        if (nomeLow.length >= 5 && q.includes(nomeLow.slice(0, Math.min(nomeLow.length, 12)))) {
+          const sorted = g.rows.sort((a,b) => Number(a.posizione)-Number(b.posizione));
+          gareInDomanda.push({ gid, nome: g.nome, data: g.data, top5: sorted.filter(r => Number(r.posizione) <= 5) });
+        }
+      }
+    }
+
+    // ── Profilo atleta completo ───────────────────────────────────────────────
+    const atletaBlocks = [];
+    for (const ath of matchedAthletes.slice(0, 2)) {
+      const athRes = results.filter(r => r.atleta_id === ath.id);
+      const wins = athRes.filter(r => Number(r.posizione) === 1);
+      const podiums = athRes.filter(r => Number(r.posizione) <= 3);
+      const lastDate = athRes.reduce((mx, r) => (r.data||'') > mx ? r.data : mx, '');
+      const cut30 = new Date(lastDate || new Date()); cut30.setDate(cut30.getDate()-30);
+      const recent = athRes.filter(r => r.data && r.data >= cut30.toISOString().split('T')[0]).sort((a,b)=>(b.data||'').localeCompare(a.data||''));
+      const cats = [...new Set(athRes.map(r=>getCatCode(r)).filter(Boolean))];
+      const teamNow = athRes.sort((a,b)=>(b.data||'').localeCompare(a.data||''))[0]?.team || ath.team;
+      const recentLines = recent.slice(0, 8).map(r => `  ${r.data} — ${r.nome_gara||r.gara_id} → ${r.posizione}° (${r.punti_effettivi||0}pt)`);
+      atletaBlocks.push(`ATLETA: ${ath.fullName.toUpperCase()}
+Team attuale: ${teamNow}
+Categoria: ${cats.join(', ')}
+Stagione: ${wins.length} vittorie, ${podiums.length} podi, ${athRes.length} gare disputate
+Risultati recenti (ultimi 30gg):
+${recentLines.join('\n') || '  nessuna gara recente'}`);
+    }
+
+    // ── Statistiche categoria (vittorie, punti) ───────────────────────────────
+    const catBlocks = [];
+    const catsToShow = matchedCats.length > 0 ? matchedCats : [];
+    for (const catCode of catsToShow) {
+      const catRes = results.filter(r => getCatCode(r) === catCode);
+      if (!catRes.length) continue;
+      // Vittorie
+      const winsMap = {};
+      for (const r of catRes) {
+        if (Number(r.posizione) !== 1 || !r.atleta_id) continue;
+        if (!winsMap[r.atleta_id]) winsMap[r.atleta_id] = { nome: `${r.cognome} ${r.nome}`, team: r.team||'', wins: 0, podiums: 0 };
+        winsMap[r.atleta_id].wins++;
+      }
+      for (const r of catRes) {
+        if (Number(r.posizione) > 3 || !r.atleta_id || !winsMap[r.atleta_id]) continue;
+        winsMap[r.atleta_id].podiums++;
+      }
+      const topWinners = Object.values(winsMap).sort((a,b)=>b.wins-a.wins).slice(0,10);
+      // Punti (classifica)
+      const ptsMap = {};
+      for (const r of catRes) {
+        if (!r.atleta_id) continue;
+        if (!ptsMap[r.atleta_id]) ptsMap[r.atleta_id] = { nome:`${r.cognome} ${r.nome}`, team:r.team||'', pts:0 };
+        ptsMap[r.atleta_id].pts += r.punti_effettivi || 0;
+      }
+      const topPts = Object.values(ptsMap).sort((a,b)=>b.pts-a.pts).slice(0,5);
+      catBlocks.push(`CATEGORIA ${catCode}:
+Classifica punti: ${topPts.map((a,i)=>`${i+1}. ${a.nome} (${a.team}) ${a.pts}pt`).join(' | ')}
+Classifica vittorie: ${topWinners.map((a,i)=>`${i+1}. ${a.nome} (${a.team}) ${a.wins}V`).join(' | ')}`);
+    }
+
+    // ── Ultime gare ───────────────────────────────────────────────────────────
+    const byGaraLatest = {};
+    for (const r of results) {
+      if (!r.gara_id) continue;
+      if (!byGaraLatest[r.gara_id]) byGaraLatest[r.gara_id] = { data: r.data||'', rows: [] };
+      byGaraLatest[r.gara_id].rows.push(r);
+    }
+    const latestGare = Object.entries(byGaraLatest)
+      .sort(([,a],[,b]) => b.data.localeCompare(a.data))
+      .slice(0, 5)
+      .map(([id, { rows }]) => {
+        const sorted = rows.sort((a,b)=>Number(a.posizione)-Number(b.posizione));
+        const top3 = sorted.filter(r=>Number(r.posizione)<=3);
+        return `${id} (${rows[0]?.data||''}): ${top3.map(r=>`${r.posizione}° ${r.cognome} ${r.nome} (${r.team||''})`).join(', ')}`;
+      });
+
+    // ── Gare specifiche nominate nella domanda ────────────────────────────────
+    const gareBlock = gareInDomanda.slice(0, 2).map(g =>
+      `GARA: ${g.nome} (${g.data})\n${g.top5.map(r=>`  ${r.posizione}° ${r.cognome} ${r.nome} (${r.team||''})`).join('\n')}`
+    );
+
+    // ── Calendario rilevante ──────────────────────────────────────────────────
+    const today = new Date().toISOString().split('T')[0];
+    const prossimeGare = calendar.filter(g => g.data >= today).sort((a,b)=>(a.data||'').localeCompare(b.data||'')).slice(0, 5)
+      .map(g => `${g.data} — ${g.nome||''} (${g.localita||''})`);
+
+    // ── System prompt finale ──────────────────────────────────────────────────
+    const contextParts = [];
+    if (atletaBlocks.length) contextParts.push(atletaBlocks.join('\n\n'));
+    if (catBlocks.length) contextParts.push(catBlocks.join('\n\n'));
+    if (gareBlock.length) contextParts.push(gareBlock.join('\n\n'));
+    contextParts.push(`ULTIME GARE:\n${latestGare.join('\n')}`);
+    if (prossimeGare.length) contextParts.push(`PROSSIME GARE:\n${prossimeGare.join('\n')}`);
+
+    const systemPrompt = `Sei l'assistente di ICS (Italia Cycling Stats), esperto di ciclismo agonistico italiano.
+Hai accesso ai dati completi del sito: risultati, classifiche, atleti, gare, calendario.
+Rispondi in italiano in modo preciso e diretto. Usa i dati forniti per dare risposte dettagliate — non limitarti a 1-2 informazioni, usa tutto ciò che hai.
+Non dire mai "ti consiglio di consultare il sito" se hai già i dati: dai direttamente la risposta completa.
+Dì "non ho questi dati" solo se la risposta richiede informazioni davvero assenti (es. doping, contratti, notizie esterne).
 
 DATI DISPONIBILI:
-Ultime gare con risultati:
-${latestGare.join('\n')}
-
-${matchedRaces.length ? 'Gare pertinenti alla domanda:\n' + matchedRaces.map(g=>`- ${g.nome} (${g.data||''}, ${g.localita||''})`).join('\n') : ''}
-
-Sito: italiacyclingstats.com — classifiche, risultati, atleti, team, calendario gare italiane (Esordienti, Allievi, Juniores, Under23, Elite).`;
+${contextParts.join('\n\n')}
+`;
 
     const msg = await ai.messages.create({
       model: 'claude-haiku-4-5-20251001',
