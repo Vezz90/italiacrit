@@ -1,4 +1,358 @@
 {
+  "SCHOOFS_JASPER": {
+    "id": "SCHOOFS_JASPER",
+    "nome": "JASPER",
+    "cognome": "SCHOOFS",
+    "team_attuale": "SOUDAL QUICK-STEP DEVO TEAM",
+    "team_id": "SOUDAL_QUICK_STEP_DEVO_TEAM",
+    "categoria": "ELI_M",
+    "genere": "M",
+    "punti_totali": 45,
+    "risultati": [
+      {
+        "gara_id": "GIRO_D_ITALIA_NEXT_GEN_TERZA_TAPPA_2026-06-16_ELI_M",
+        "nome_gara": "GIRO D'ITALIA NEXT GEN TERZA TAPPA",
+        "data": "2026-06-16",
+        "posizione": 1,
+        "punti_effettivi": 45,
+        "team": "SOUDAL QUICK-STEP DEVO TEAM",
+        "moltiplicatore": 3,
+        "tipo": "internazionale",
+        "regione": "UNDER",
+        "km": "166.000",
+        "media": "39.716"
+      }
+    ]
+  },
+  "ZANINI_SIMONE": {
+    "id": "ZANINI_SIMONE",
+    "nome": "SIMONE",
+    "cognome": "ZANINI",
+    "team_attuale": "XDS ASTANA DEVELOPMENT TEAM",
+    "team_id": "XDS_ASTANA_DEVELOPMENT_TEAM",
+    "categoria": "ELI_M",
+    "genere": "M",
+    "punti_totali": 54,
+    "risultati": [
+      {
+        "gara_id": "GIRO_D_ITALIA_NEXT_GEN_TERZA_TAPPA_2026-06-16_ELI_M",
+        "nome_gara": "GIRO D'ITALIA NEXT GEN TERZA TAPPA",
+        "data": "2026-06-16",
+        "posizione": 2,
+        "punti_effettivi": 36,
+        "team": "XDS ASTANA DEVELOPMENT TEAM",
+        "moltiplicatore": 3,
+        "tipo": "internazionale",
+        "regione": "UNDER",
+        "km": "166.000",
+        "media": "39.716"
+      },
+      {
+        "gara_id": "19_TROFEO_CITTA_DI_SAN_VENDEMIANO_UNDER23_2026-04-12_ELI_M",
+        "nome_gara": "19 TROFEO CITTA' DI SAN VENDEMIANO UNDER23",
+        "data": "2026-04-12",
+        "posizione": 5,
+        "punti_effettivi": 18,
+        "team": "XDS ASTANA DEVELOPMENT TEAM",
+        "moltiplicatore": 3,
+        "tipo": "internazionale",
+        "regione": "VENETO",
+        "km": "171.600",
+        "media": "44.730"
+      }
+    ]
+  },
+  "VANHUFFEL_MATTEO": {
+    "id": "VANHUFFEL_MATTEO",
+    "nome": "MATTEO",
+    "cognome": "VANHUFFEL",
+    "team_attuale": "DEVELOPMENT TEAM PICNIC POSTNL",
+    "team_id": "DEVELOPMENT_TEAM_PICNIC_POSTNL",
+    "categoria": "ELI_M",
+    "genere": "M",
+    "punti_totali": 30,
+    "risultati": [
+      {
+        "gara_id": "GIRO_D_ITALIA_NEXT_GEN_TERZA_TAPPA_2026-06-16_ELI_M",
+        "nome_gara": "GIRO D'ITALIA NEXT GEN TERZA TAPPA",
+        "data": "2026-06-16",
+        "posizione": 3,
+        "punti_effettivi": 30,
+        "team": "DEVELOPMENT TEAM PICNIC POSTNL",
+        "moltiplicatore": 3,
+        "tipo": "internazionale",
+        "regione": "UNDER",
+        "km": "166.000",
+        "media": "39.716"
+      }
+    ]
+  },
+  "DIJKMAN_DAAN": {
+    "id": "DIJKMAN_DAAN",
+    "nome": "DAAN",
+    "cognome": "DIJKMAN",
+    "team_attuale": "UAE TEAM EMIRATES GEN-Z",
+    "team_id": "UAE_TEAM_EMIRATES_GEN_Z",
+    "categoria": "ELI_M",
+    "genere": "M",
+    "punti_totali": 24,
+    "risultati": [
+      {
+        "gara_id": "GIRO_D_ITALIA_NEXT_GEN_TERZA_TAPPA_2026-06-16_ELI_M",
+        "nome_gara": "GIRO D'ITALIA NEXT GEN TERZA TAPPA",
+        "data": "2026-06-16",
+        "posizione": 4,
+        "punti_effettivi": 24,
+        "team": "UAE TEAM EMIRATES GEN-Z",
+        "moltiplicatore": 3,
+        "tipo": "internazionale",
+        "regione": "UNDER",
+        "km": "166.000",
+        "media": "39.716"
+      }
+    ]
+  },
+  "MELLANO_LUDOVICO_MARIA": {
+    "id": "MELLANO_LUDOVICO_MARIA",
+    "nome": "LUDOVICO MARIA",
+    "cognome": "MELLANO",
+    "team_attuale": "XDS ASTANA DEVELOPMENT TEAM",
+    "team_id": "XDS_ASTANA_DEVELOPMENT_TEAM",
+    "categoria": "ELI_M",
+    "genere": "M",
+    "punti_totali": 45,
+    "risultati": [
+      {
+        "gara_id": "GIRO_D_ITALIA_NEXT_GEN_TERZA_TAPPA_2026-06-16_ELI_M",
+        "nome_gara": "GIRO D'ITALIA NEXT GEN TERZA TAPPA",
+        "data": "2026-06-16",
+        "posizione": 5,
+        "punti_effettivi": 18,
+        "team": "XDS ASTANA DEVELOPMENT TEAM",
+        "moltiplicatore": 3,
+        "tipo": "internazionale",
+        "regione": "UNDER",
+        "km": "166.000",
+        "media": "39.716"
+      },
+      {
+        "gara_id": "37_GRAN_PREMIO_INDUSTRIE_DEL_MARMO_UNDER23_2026-05-10_ELI_M",
+        "nome_gara": "37 GRAN PREMIO INDUSTRIE DEL MARMO UNDER23",
+        "data": "2026-05-10",
+        "posizione": 5,
+        "punti_effettivi": 18,
+        "team": "XDS ASTANA DEVELOPMENT TEAM",
+        "moltiplicatore": 3,
+        "tipo": "internazionale",
+        "regione": "TOSCANA",
+        "km": "179.500",
+        "media": "41.527"
+      },
+      {
+        "gara_id": "87_GIRO_DEL_BELVEDERE_UNDER23_2026-04-06_ELI_M",
+        "nome_gara": "87 GIRO DEL BELVEDERE UNDER23",
+        "data": "2026-04-06",
+        "posizione": 8,
+        "punti_effettivi": 9,
+        "team": "XDS ASTANA DEVELOPMENT TEAM",
+        "moltiplicatore": 3,
+        "tipo": "internazionale",
+        "regione": "VENETO",
+        "km": "168.000",
+        "media": "43.065"
+      }
+    ]
+  },
+  "BASSET_PIERRE_HENRY": {
+    "id": "BASSET_PIERRE_HENRY",
+    "nome": "PIERRE HENRY",
+    "cognome": "BASSET",
+    "team_attuale": "XDS ASTANA DEVELOPMENT TEAM",
+    "team_id": "XDS_ASTANA_DEVELOPMENT_TEAM",
+    "categoria": "ELI_M",
+    "genere": "M",
+    "punti_totali": 15,
+    "risultati": [
+      {
+        "gara_id": "GIRO_D_ITALIA_NEXT_GEN_TERZA_TAPPA_2026-06-16_ELI_M",
+        "nome_gara": "GIRO D'ITALIA NEXT GEN TERZA TAPPA",
+        "data": "2026-06-16",
+        "posizione": 6,
+        "punti_effettivi": 15,
+        "team": "XDS ASTANA DEVELOPMENT TEAM",
+        "moltiplicatore": 3,
+        "tipo": "internazionale",
+        "regione": "UNDER",
+        "km": "166.000",
+        "media": "39.716"
+      }
+    ]
+  },
+  "ANASTASIA_TOMMASO": {
+    "id": "ANASTASIA_TOMMASO",
+    "nome": "TOMMASO",
+    "cognome": "ANASTASIA",
+    "team_attuale": "TEAM TECHNIPES #INEMILIAROMAGNA",
+    "team_id": "TEAM_TECHNIPES_INEMILIAROMAGNA",
+    "categoria": "ELI_M",
+    "genere": "M",
+    "punti_totali": 51,
+    "risultati": [
+      {
+        "gara_id": "GIRO_D_ITALIA_NEXT_GEN_TERZA_TAPPA_2026-06-16_ELI_M",
+        "nome_gara": "GIRO D'ITALIA NEXT GEN TERZA TAPPA",
+        "data": "2026-06-16",
+        "posizione": 7,
+        "punti_effettivi": 12,
+        "team": "TEAM TECHNIPES #INEMILIAROMAGNA",
+        "moltiplicatore": 3,
+        "tipo": "internazionale",
+        "regione": "UNDER",
+        "km": "166.000",
+        "media": "39.716"
+      },
+      {
+        "gara_id": "79_GRAN_PREMIO_DELLA_LIBERAZIONE_UNDER23_2026-04-25_ELI_M",
+        "nome_gara": "79 GRAN PREMIO DELLA LIBERAZIONE UNDER23",
+        "data": "2026-04-25",
+        "posizione": 3,
+        "punti_effettivi": 30,
+        "team": "TEAM TECHNIPES #INEMILIAROMAGNA",
+        "moltiplicatore": 3,
+        "tipo": "internazionale",
+        "regione": "LAZIO",
+        "km": "138.000",
+        "media": "42.898"
+      },
+      {
+        "gara_id": "19_TROFEO_CITTA_DI_SAN_VENDEMIANO_UNDER23_2026-04-12_ELI_M",
+        "nome_gara": "19 TROFEO CITTA' DI SAN VENDEMIANO UNDER23",
+        "data": "2026-04-12",
+        "posizione": 8,
+        "punti_effettivi": 9,
+        "team": "TEAM TECHNIPES #INEMILIAROMAGNA",
+        "moltiplicatore": 3,
+        "tipo": "internazionale",
+        "regione": "VENETO",
+        "km": "171.600",
+        "media": "44.730"
+      }
+    ]
+  },
+  "VALJAVEC_ERAZEM": {
+    "id": "VALJAVEC_ERAZEM",
+    "nome": "ERAZEM",
+    "cognome": "VALJAVEC",
+    "team_attuale": "SOUDAL QUICK-STEP DEVO TEAM",
+    "team_id": "SOUDAL_QUICK_STEP_DEVO_TEAM",
+    "categoria": "ELI_M",
+    "genere": "M",
+    "punti_totali": 9,
+    "risultati": [
+      {
+        "gara_id": "GIRO_D_ITALIA_NEXT_GEN_TERZA_TAPPA_2026-06-16_ELI_M",
+        "nome_gara": "GIRO D'ITALIA NEXT GEN TERZA TAPPA",
+        "data": "2026-06-16",
+        "posizione": 8,
+        "punti_effettivi": 9,
+        "team": "SOUDAL QUICK-STEP DEVO TEAM",
+        "moltiplicatore": 3,
+        "tipo": "internazionale",
+        "regione": "UNDER",
+        "km": "166.000",
+        "media": "39.716"
+      }
+    ]
+  },
+  "BORREMANS_KASPER_TOBIAS": {
+    "id": "BORREMANS_KASPER_TOBIAS",
+    "nome": "KASPER TOBIAS",
+    "cognome": "BORREMANS",
+    "team_attuale": "BAHRAIN VICTORIOUS DEVELOPMENT TEAM",
+    "team_id": "BAHRAIN_VICTORIOUS_DEVELOPMENT_TEAM",
+    "categoria": "ELI_M",
+    "genere": "M",
+    "punti_totali": 12,
+    "risultati": [
+      {
+        "gara_id": "GIRO_D_ITALIA_NEXT_GEN_TERZA_TAPPA_2026-06-16_ELI_M",
+        "nome_gara": "GIRO D'ITALIA NEXT GEN TERZA TAPPA",
+        "data": "2026-06-16",
+        "posizione": 9,
+        "punti_effettivi": 6,
+        "team": "BAHRAIN VICTORIOUS DEVELOPMENT TEAM",
+        "moltiplicatore": 3,
+        "tipo": "internazionale",
+        "regione": "UNDER",
+        "km": "166.000",
+        "media": "39.716"
+      },
+      {
+        "gara_id": "87_GIRO_DEL_BELVEDERE_UNDER23_2026-04-06_ELI_M",
+        "nome_gara": "87 GIRO DEL BELVEDERE UNDER23",
+        "data": "2026-04-06",
+        "posizione": 9,
+        "punti_effettivi": 6,
+        "team": "BAHRAIN VICTORIOUS DEVELOPMENT TEAM",
+        "moltiplicatore": 3,
+        "tipo": "internazionale",
+        "regione": "VENETO",
+        "km": "168.000",
+        "media": "43.065"
+      }
+    ]
+  },
+  "NEGRENTE_MATTIA": {
+    "id": "NEGRENTE_MATTIA",
+    "nome": "MATTIA",
+    "cognome": "NEGRENTE",
+    "team_attuale": "XDS ASTANA DEVELOPMENT TEAM",
+    "team_id": "XDS_ASTANA_DEVELOPMENT_TEAM",
+    "categoria": "ELI_M",
+    "genere": "M",
+    "punti_totali": 36,
+    "risultati": [
+      {
+        "gara_id": "GIRO_D_ITALIA_NEXT_GEN_TERZA_TAPPA_2026-06-16_ELI_M",
+        "nome_gara": "GIRO D'ITALIA NEXT GEN TERZA TAPPA",
+        "data": "2026-06-16",
+        "posizione": 10,
+        "punti_effettivi": 3,
+        "team": "XDS ASTANA DEVELOPMENT TEAM",
+        "moltiplicatore": 3,
+        "tipo": "internazionale",
+        "regione": "UNDER",
+        "km": "166.000",
+        "media": "39.716"
+      },
+      {
+        "gara_id": "30_GIRO_DELLA_PROVINCIA_DI_BIELLA_84_TORINO_BIELLA_2026-04-19_ELI_M",
+        "nome_gara": "30 GIRO DELLA PROVINCIA DI BIELLA 84 TORINO BIELLA",
+        "data": "2026-04-19",
+        "posizione": 5,
+        "punti_effettivi": 18,
+        "team": "XDS ASTANA DEVELOPMENT TEAM",
+        "moltiplicatore": 3,
+        "tipo": "internazionale",
+        "regione": "PIEMONTE",
+        "km": "143.000",
+        "media": "42.336"
+      },
+      {
+        "gara_id": "87_GIRO_DEL_BELVEDERE_UNDER23_2026-04-06_ELI_M",
+        "nome_gara": "87 GIRO DEL BELVEDERE UNDER23",
+        "data": "2026-04-06",
+        "posizione": 6,
+        "punti_effettivi": 15,
+        "team": "XDS ASTANA DEVELOPMENT TEAM",
+        "moltiplicatore": 3,
+        "tipo": "internazionale",
+        "regione": "VENETO",
+        "km": "168.000",
+        "media": "43.065"
+      }
+    ]
+  },
   "DONATI_DAVIDE": {
     "id": "DONATI_DAVIDE",
     "nome": "DAVIDE",
@@ -104058,44 +104412,6 @@
       }
     ]
   },
-  "MELLANO_LUDOVICO_MARIA": {
-    "id": "MELLANO_LUDOVICO_MARIA",
-    "nome": "LUDOVICO MARIA",
-    "cognome": "MELLANO",
-    "team_attuale": "XDS ASTANA DEVELOPMENT TEAM",
-    "team_id": "XDS_ASTANA_DEVELOPMENT_TEAM",
-    "categoria": "ELI_M",
-    "genere": "M",
-    "punti_totali": 27,
-    "risultati": [
-      {
-        "gara_id": "37_GRAN_PREMIO_INDUSTRIE_DEL_MARMO_UNDER23_2026-05-10_ELI_M",
-        "nome_gara": "37 GRAN PREMIO INDUSTRIE DEL MARMO UNDER23",
-        "data": "2026-05-10",
-        "posizione": 5,
-        "punti_effettivi": 18,
-        "team": "XDS ASTANA DEVELOPMENT TEAM",
-        "moltiplicatore": 3,
-        "tipo": "internazionale",
-        "regione": "TOSCANA",
-        "km": "179.500",
-        "media": "41.527"
-      },
-      {
-        "gara_id": "87_GIRO_DEL_BELVEDERE_UNDER23_2026-04-06_ELI_M",
-        "nome_gara": "87 GIRO DEL BELVEDERE UNDER23",
-        "data": "2026-04-06",
-        "posizione": 8,
-        "punti_effettivi": 9,
-        "team": "XDS ASTANA DEVELOPMENT TEAM",
-        "moltiplicatore": 3,
-        "tipo": "internazionale",
-        "regione": "VENETO",
-        "km": "168.000",
-        "media": "43.065"
-      }
-    ]
-  },
   "BAMBAGIONI_TOMMASO": {
     "id": "BAMBAGIONI_TOMMASO",
     "nome": "TOMMASO",
@@ -114767,44 +115083,6 @@
       }
     ]
   },
-  "ANASTASIA_TOMMASO": {
-    "id": "ANASTASIA_TOMMASO",
-    "nome": "TOMMASO",
-    "cognome": "ANASTASIA",
-    "team_attuale": "TEAM TECHNIPES #INEMILIAROMAGNA",
-    "team_id": "TEAM_TECHNIPES_INEMILIAROMAGNA",
-    "categoria": "ELI_M",
-    "genere": "M",
-    "punti_totali": 39,
-    "risultati": [
-      {
-        "gara_id": "79_GRAN_PREMIO_DELLA_LIBERAZIONE_UNDER23_2026-04-25_ELI_M",
-        "nome_gara": "79 GRAN PREMIO DELLA LIBERAZIONE UNDER23",
-        "data": "2026-04-25",
-        "posizione": 3,
-        "punti_effettivi": 30,
-        "team": "TEAM TECHNIPES #INEMILIAROMAGNA",
-        "moltiplicatore": 3,
-        "tipo": "internazionale",
-        "regione": "LAZIO",
-        "km": "138.000",
-        "media": "42.898"
-      },
-      {
-        "gara_id": "19_TROFEO_CITTA_DI_SAN_VENDEMIANO_UNDER23_2026-04-12_ELI_M",
-        "nome_gara": "19 TROFEO CITTA' DI SAN VENDEMIANO UNDER23",
-        "data": "2026-04-12",
-        "posizione": 8,
-        "punti_effettivi": 9,
-        "team": "TEAM TECHNIPES #INEMILIAROMAGNA",
-        "moltiplicatore": 3,
-        "tipo": "internazionale",
-        "regione": "VENETO",
-        "km": "171.600",
-        "media": "44.730"
-      }
-    ]
-  },
   "FUGGER_HEIMO": {
     "id": "FUGGER_HEIMO",
     "nome": "HEIMO",
@@ -116500,44 +116778,6 @@
       }
     ]
   },
-  "NEGRENTE_MATTIA": {
-    "id": "NEGRENTE_MATTIA",
-    "nome": "MATTIA",
-    "cognome": "NEGRENTE",
-    "team_attuale": "XDS ASTANA DEVELOPMENT TEAM",
-    "team_id": "XDS_ASTANA_DEVELOPMENT_TEAM",
-    "categoria": "ELI_M",
-    "genere": "M",
-    "punti_totali": 33,
-    "risultati": [
-      {
-        "gara_id": "30_GIRO_DELLA_PROVINCIA_DI_BIELLA_84_TORINO_BIELLA_2026-04-19_ELI_M",
-        "nome_gara": "30 GIRO DELLA PROVINCIA DI BIELLA 84 TORINO BIELLA",
-        "data": "2026-04-19",
-        "posizione": 5,
-        "punti_effettivi": 18,
-        "team": "XDS ASTANA DEVELOPMENT TEAM",
-        "moltiplicatore": 3,
-        "tipo": "internazionale",
-        "regione": "PIEMONTE",
-        "km": "143.000",
-        "media": "42.336"
-      },
-      {
-        "gara_id": "87_GIRO_DEL_BELVEDERE_UNDER23_2026-04-06_ELI_M",
-        "nome_gara": "87 GIRO DEL BELVEDERE UNDER23",
-        "data": "2026-04-06",
-        "posizione": 6,
-        "punti_effettivi": 15,
-        "team": "XDS ASTANA DEVELOPMENT TEAM",
-        "moltiplicatore": 3,
-        "tipo": "internazionale",
-        "regione": "VENETO",
-        "km": "168.000",
-        "media": "43.065"
-      }
-    ]
-  },
   "ANDERSEN_KASPER": {
     "id": "ANDERSEN_KASPER",
     "nome": "KASPER",
@@ -118025,31 +118265,6 @@
         "posizione": 1,
         "punti_effettivi": 45,
         "team": "BAHRAIN VICTORIOUS DEVELOPMENT TEAM",
-        "moltiplicatore": 3,
-        "tipo": "internazionale",
-        "regione": "VENETO",
-        "km": "171.600",
-        "media": "44.730"
-      }
-    ]
-  },
-  "ZANINI_SIMONE": {
-    "id": "ZANINI_SIMONE",
-    "nome": "SIMONE",
-    "cognome": "ZANINI",
-    "team_attuale": "XDS ASTANA DEVELOPMENT TEAM",
-    "team_id": "XDS_ASTANA_DEVELOPMENT_TEAM",
-    "categoria": "ELI_M",
-    "genere": "M",
-    "punti_totali": 18,
-    "risultati": [
-      {
-        "gara_id": "19_TROFEO_CITTA_DI_SAN_VENDEMIANO_UNDER23_2026-04-12_ELI_M",
-        "nome_gara": "19 TROFEO CITTA' DI SAN VENDEMIANO UNDER23",
-        "data": "2026-04-12",
-        "posizione": 5,
-        "punti_effettivi": 18,
-        "team": "XDS ASTANA DEVELOPMENT TEAM",
         "moltiplicatore": 3,
         "tipo": "internazionale",
         "regione": "VENETO",
@@ -119668,31 +119883,6 @@
         "posizione": 5,
         "punti_effettivi": 18,
         "team": "TIROL KTM CYCLING TEAM",
-        "moltiplicatore": 3,
-        "tipo": "internazionale",
-        "regione": "VENETO",
-        "km": "168.000",
-        "media": "43.065"
-      }
-    ]
-  },
-  "BORREMANS_KASPER_TOBIAS": {
-    "id": "BORREMANS_KASPER_TOBIAS",
-    "nome": "KASPER TOBIAS",
-    "cognome": "BORREMANS",
-    "team_attuale": "BAHRAIN VICTORIOUS DEVELOPMENT TEAM",
-    "team_id": "BAHRAIN_VICTORIOUS_DEVELOPMENT_TEAM",
-    "categoria": "ELI_M",
-    "genere": "M",
-    "punti_totali": 6,
-    "risultati": [
-      {
-        "gara_id": "87_GIRO_DEL_BELVEDERE_UNDER23_2026-04-06_ELI_M",
-        "nome_gara": "87 GIRO DEL BELVEDERE UNDER23",
-        "data": "2026-04-06",
-        "posizione": 9,
-        "punti_effettivi": 6,
-        "team": "BAHRAIN VICTORIOUS DEVELOPMENT TEAM",
         "moltiplicatore": 3,
         "tipo": "internazionale",
         "regione": "VENETO",
