@@ -3561,11 +3561,19 @@ DATI DISPONIBILI:
 ${contextParts.join('\n\n')}
 `;
 
+    // Multi-turn: aggiungi history precedente (max 6 scambi passati)
+    const rawHistory = Array.isArray(req.body.history) ? req.body.history : [];
+    const safeHistory = rawHistory
+      .filter(m => (m.role === 'user' || m.role === 'assistant') && typeof m.content === 'string' && m.content.trim())
+      .slice(-10)
+      .map(m => ({ role: m.role, content: m.content.trim().slice(0, 600) }));
+    const messages = [...safeHistory, { role: 'user', content: question }];
+
     const msg = await ai.messages.create({
       model: 'claude-haiku-4-5-20251001',
-      max_tokens: 350,
+      max_tokens: 400,
       system: systemPrompt,
-      messages: [{ role: 'user', content: question }]
+      messages
     });
     res.json({ answer: msg.content[0].text.trim() });
   } catch (e) { res.status(500).json({ error: e.message }); }

@@ -11256,14 +11256,36 @@ window._deleteComment = async (id) => {
   } catch(e) { showToast(e.message, 'error'); }
 };
 
-// ── AI Chat Widget ─────────────────────────────────────────────────────────────
+// ── FAUSTO — AI Chat Widget ────────────────────────────────────────────────────
+const _FAUSTO_SVG = `<svg viewBox="0 0 40 40" xmlns="http://www.w3.org/2000/svg" width="28" height="28">
+  <!-- casco -->
+  <ellipse cx="20" cy="16" rx="11" ry="9" fill="#fff" opacity=".95"/>
+  <path d="M9 16 Q9 8 20 7 Q31 8 31 16" fill="#e8001d"/>
+  <!-- vento/righe casco -->
+  <path d="M12 10 Q16 8 20 8" stroke="#fff" stroke-width="1.2" fill="none" opacity=".6"/>
+  <path d="M14 12 Q18 10 23 10" stroke="#fff" stroke-width="1" fill="none" opacity=".4"/>
+  <!-- visiera -->
+  <ellipse cx="20" cy="24" rx="7" ry="3" fill="#1e293b" opacity=".8"/>
+  <path d="M13 24 Q20 28 27 24" stroke="#e8001d" stroke-width="1.5" fill="none"/>
+  <!-- occhiale -->
+  <rect x="14" y="21" width="5" height="3" rx="1.5" fill="#0ea5e9" opacity=".9"/>
+  <rect x="21" y="21" width="5" height="3" rx="1.5" fill="#0ea5e9" opacity=".9"/>
+  <line x1="19" y1="22.5" x2="21" y2="22.5" stroke="#1e293b" stroke-width="1"/>
+  <!-- naso/bocca -->
+  <ellipse cx="20" cy="27" rx="2" ry="1" fill="#fbbf24" opacity=".7"/>
+</svg>`;
+
+let _faustoHistory = []; // conversazione multi-turno
+
 function _initAiWidget() {
   if (document.getElementById('ai-widget-btn')) return;
   const btn = document.createElement('button');
   btn.id = 'ai-widget-btn';
-  btn.innerHTML = '🤖';
-  btn.title = 'Assistente ICS';
-  btn.style.cssText = 'position:fixed;bottom:80px;right:18px;z-index:8000;width:48px;height:48px;border-radius:50%;background:var(--red-hot);color:#fff;border:none;font-size:1.4rem;cursor:pointer;box-shadow:0 4px 16px rgba(0,0,0,.35);display:flex;align-items:center;justify-content:center;transition:transform .15s';
+  btn.innerHTML = _FAUSTO_SVG;
+  btn.title = 'Chatta con FAUSTO';
+  btn.style.cssText = 'position:fixed;bottom:80px;right:18px;z-index:8000;width:52px;height:52px;border-radius:50%;background:var(--red-hot);color:#fff;border:none;cursor:pointer;box-shadow:0 4px 16px rgba(0,0,0,.4);display:flex;align-items:center;justify-content:center;transition:transform .15s';
+  btn.onmouseenter = () => { btn.style.transform = 'scale(1.1)'; };
+  btn.onmouseleave = () => { btn.style.transform = ''; };
   btn.onclick = window.toggleAiChat;
   document.body.appendChild(btn);
 }
@@ -11271,44 +11293,74 @@ function _initAiWidget() {
 window.toggleAiChat = function() {
   let panel = document.getElementById('ai-chat-panel');
   if (panel) { panel.remove(); return; }
+  _faustoHistory = [];
   panel = document.createElement('div');
   panel.id = 'ai-chat-panel';
-  panel.style.cssText = 'position:fixed;bottom:140px;right:18px;z-index:8001;width:320px;max-height:460px;background:var(--bg-card);border:1px solid var(--border-subtle);border-radius:var(--r-lg);box-shadow:0 8px 32px rgba(0,0,0,.35);display:flex;flex-direction:column;overflow:hidden';
-  panel.innerHTML = `
-    <div style="padding:12px 14px;border-bottom:1px solid var(--border-subtle);display:flex;justify-content:space-between;align-items:center;background:var(--red-hot)">
-      <span style="font-weight:700;color:#fff;font-size:.9rem">🤖 Assistente ICS</span>
-      <button onclick="document.getElementById('ai-chat-panel')?.remove()" style="background:none;border:none;color:rgba(255,255,255,.8);cursor:pointer;font-size:1.1rem;line-height:1">✕</button>
+  panel.style.cssText = 'position:fixed;bottom:144px;right:18px;z-index:8001;width:330px;max-height:480px;background:var(--bg-card);border:1px solid var(--border-subtle);border-radius:var(--r-lg);box-shadow:0 8px 32px rgba(0,0,0,.35);display:flex;flex-direction:column;overflow:hidden;animation:faustoSlide .2s ease';
+  panel.innerHTML = `<style>@keyframes faustoSlide{from{opacity:0;transform:translateY(12px)}to{opacity:1;transform:translateY(0)}}</style>
+    <div style="padding:11px 14px;display:flex;align-items:center;gap:10px;background:linear-gradient(135deg,#b91c1c,#e8001d);flex-shrink:0">
+      <div style="width:36px;height:36px;border-radius:50%;background:rgba(255,255,255,.15);display:flex;align-items:center;justify-content:center;flex-shrink:0">${_FAUSTO_SVG}</div>
+      <div style="flex:1;min-width:0">
+        <div style="font-weight:800;color:#fff;font-size:.88rem;letter-spacing:.5px">FAUSTO</div>
+        <div style="font-size:.68rem;color:rgba(255,255,255,.7);letter-spacing:.3px">Assistente ICS · Powered by AI</div>
+      </div>
+      <button onclick="window.toggleAiChat()" style="background:none;border:none;color:rgba(255,255,255,.8);cursor:pointer;font-size:1.1rem;line-height:1;padding:2px 4px">✕</button>
     </div>
     <div id="ai-messages" style="flex:1;overflow-y:auto;padding:12px;display:flex;flex-direction:column;gap:8px">
-      <div style="background:var(--bg-elevated);padding:9px 12px;border-radius:10px 10px 10px 2px;font-size:.82rem;color:var(--text-primary)">Ciao! Sono l'assistente di ICS. Chiedimi dei risultati, degli atleti o delle gare 🚴</div>
+      <div style="background:var(--bg-elevated);padding:9px 12px;border-radius:10px 10px 10px 2px;font-size:.82rem;color:var(--text-primary);line-height:1.5">Ciao! Sono <strong>FAUSTO</strong>, l'assistente di ICS 🚴<br>Chiedimi di atleti, classifiche, gare o risultati — ricordo la nostra conversazione.</div>
     </div>
-    <form id="ai-form" style="padding:10px;border-top:1px solid var(--border-subtle);display:flex;gap:6px">
-      <input id="ai-input" type="text" placeholder="Chiedi qualcosa…" autocomplete="off" style="flex:1;padding:7px 10px;border:1px solid var(--border-subtle);border-radius:var(--r-sm);font-size:.82rem;background:var(--bg-primary);color:var(--text-primary)"/>
-      <button type="submit" style="padding:7px 12px;background:var(--red-hot);color:#fff;border:none;border-radius:var(--r-sm);font-weight:700;cursor:pointer;font-size:.82rem">↑</button>
+    <form id="ai-form" style="padding:10px;border-top:1px solid var(--border-subtle);display:flex;gap:6px;flex-shrink:0">
+      <input id="ai-input" type="text" placeholder="Chiedi a FAUSTO…" autocomplete="off" style="flex:1;padding:7px 10px;border:1px solid var(--border-subtle);border-radius:var(--r-sm);font-size:.82rem;background:var(--bg-primary);color:var(--text-primary)"/>
+      <button type="submit" id="ai-send-btn" style="padding:7px 13px;background:var(--red-hot);color:#fff;border:none;border-radius:var(--r-sm);font-weight:700;cursor:pointer;font-size:.85rem">↑</button>
     </form>`;
   document.body.appendChild(panel);
   document.getElementById('ai-input')?.focus();
+
   document.getElementById('ai-form').onsubmit = async (e) => {
     e.preventDefault();
     const inp = document.getElementById('ai-input');
+    const sendBtn = document.getElementById('ai-send-btn');
     const question = (inp?.value || '').trim();
     if (!question) return;
     inp.value = '';
+    if (sendBtn) { sendBtn.disabled = true; sendBtn.textContent = '…'; }
+
     const msgs = document.getElementById('ai-messages');
     if (!msgs) return;
-    msgs.insertAdjacentHTML('beforeend', `<div style="background:var(--red-hot);color:#fff;padding:9px 12px;border-radius:10px 10px 2px 10px;font-size:.82rem;align-self:flex-end;max-width:85%">${esc(question)}</div>`);
-    const loadId = 'ai-loading-' + Date.now();
-    msgs.insertAdjacentHTML('beforeend', `<div id="${loadId}" style="background:var(--bg-elevated);padding:9px 12px;border-radius:10px 10px 10px 2px;font-size:.82rem;color:var(--text-muted)">⏳ Sto pensando…</div>`);
+
+    // Bolla utente
+    msgs.insertAdjacentHTML('beforeend',
+      `<div style="background:var(--red-hot);color:#fff;padding:9px 12px;border-radius:10px 10px 2px 10px;font-size:.82rem;align-self:flex-end;max-width:88%;word-break:break-word">${esc(question)}</div>`);
+    // Bolla typing
+    const loadId = 'fausto-loading-' + Date.now();
+    msgs.insertAdjacentHTML('beforeend',
+      `<div id="${loadId}" style="background:var(--bg-elevated);padding:9px 12px;border-radius:10px 10px 10px 2px;font-size:.82rem;color:var(--text-muted);display:flex;gap:4px;align-items:center">
+        <span style="animation:fDot 1s infinite .0s both;display:inline-block">●</span>
+        <span style="animation:fDot 1s infinite .2s both;display:inline-block">●</span>
+        <span style="animation:fDot 1s infinite .4s both;display:inline-block">●</span>
+        <style>@keyframes fDot{0%,80%,100%{opacity:.2}40%{opacity:1}}</style>
+      </div>`);
     msgs.scrollTop = msgs.scrollHeight;
+
+    // Aggiunge alla history multi-turno
+    _faustoHistory.push({ role: 'user', content: question });
+    // Limita a ultimi 6 scambi
+    if (_faustoHistory.length > 12) _faustoHistory = _faustoHistory.slice(-12);
+
     try {
-      const { answer } = await apiCall('/ai/ask', { method: 'POST', body: { question } });
+      const { answer } = await apiCall('/ai/ask', { method: 'POST', body: { question, history: _faustoHistory.slice(0, -1) } });
       document.getElementById(loadId)?.remove();
-      msgs.insertAdjacentHTML('beforeend', `<div style="background:var(--bg-elevated);padding:9px 12px;border-radius:10px 10px 10px 2px;font-size:.82rem;color:var(--text-primary);line-height:1.5">${esc(answer)}</div>`);
+      msgs.insertAdjacentHTML('beforeend',
+        `<div style="background:var(--bg-elevated);padding:9px 12px;border-radius:10px 10px 10px 2px;font-size:.82rem;color:var(--text-primary);line-height:1.55">${esc(answer)}</div>`);
+      _faustoHistory.push({ role: 'assistant', content: answer });
     } catch(err) {
       document.getElementById(loadId)?.remove();
-      msgs.insertAdjacentHTML('beforeend', `<div style="background:var(--bg-elevated);padding:9px 12px;border-radius:10px 10px 10px 2px;font-size:.82rem;color:#ef4444">${esc(err.message)}</div>`);
+      msgs.insertAdjacentHTML('beforeend',
+        `<div style="background:var(--bg-elevated);padding:9px 12px;border-radius:10px 10px 10px 2px;font-size:.82rem;color:#ef4444">${esc(err.message)}</div>`);
+      _faustoHistory.pop();
     }
     msgs.scrollTop = msgs.scrollHeight;
+    if (sendBtn) { sendBtn.disabled = false; sendBtn.textContent = '↑'; }
   };
 };
 
