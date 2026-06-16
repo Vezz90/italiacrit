@@ -30,6 +30,18 @@ let _transporter = null;
   }
 })();
 
+// ── Anthropic (Claude) — usato per caption social media ──────────────────────
+let _anthropic = null;
+function getAnthropic() {
+  if (!_anthropic && process.env.ANTHROPIC_API_KEY) {
+    try {
+      const { Anthropic } = require('@anthropic-ai/sdk');
+      _anthropic = new Anthropic({ apiKey: process.env.ANTHROPIC_API_KEY });
+    } catch (e) { console.warn('[anthropic] SDK non installato:', e.message); }
+  }
+  return _anthropic;
+}
+
 async function sendEmail({ to, subject, html, text }) {
   if (!_transporter) return;
   const from = process.env.SMTP_FROM || `"ItaliacritResultati" <${process.env.SMTP_USER}>`;
@@ -812,6 +824,55 @@ app.post('/api/race-photos/:id/tag', requireAuth, async (req, res) => {
   } catch (e) { res.status(500).json({ error: e.message }); }
 });
 
+// Tag corridori su una foto di album ESTERNO (xpix / ciclismo.info).
+// Le foto esterne non sono in race_photos: i tag vivono nella mappa
+// entry.tags{ photoUrl: csv }. Add-only (merge) + notifica ai taggati.
+app.post('/api/ext-photos/tag', requireAuth, async (req, res) => {
+  try {
+    const { source, gara_id, photo_url, atleta_ids } = req.body || {};
+    if (!gara_id || !photo_url) return res.status(400).json({ error: 'Dati mancanti' });
+    const store = source === 'ic'
+      ? { read: readICPhotos, write: writeICPhotos }
+      : { read: readXpixPhotos, write: writeXpixPhotos };
+    const photos = await store.read();
+    const entry = photos[gara_id];
+    if (!entry) return res.status(404).json({ error: 'Foto non trovata' });
+    const add = String(atleta_ids || '').split(',').map(s => s.trim()).filter(Boolean);
+    if (!add.length) return res.status(400).json({ error: 'Nessun corridore selezionato' });
+    if (!entry.tags) entry.tags = {};
+    const cur = new Set(String(entry.tags[photo_url] || '').split(',').map(s => s.trim()).filter(Boolean));
+    const newly = add.filter(id => !cur.has(id));
+    add.forEach(id => cur.add(id));
+    entry.tags[photo_url] = [...cur].join(',');
+    await store.write(photos);
+    notifyPhotoTag({ gara_id, id: null }, newly, req.user.id);
+    res.json({ ok: true, atleta_ids: entry.tags[photo_url] });
+  } catch (e) { res.status(500).json({ error: e.message }); }
+});
+
+// Rimuove il proprio tag da una foto di album esterno. Solo il proprietario
+// dell'atleta_id (o un admin) può rimuovere.
+app.post('/api/ext-photos/untag', requireAuth, async (req, res) => {
+  try {
+    const { source, gara_id, photo_url, atleta_id } = req.body || {};
+    if (!gara_id || !photo_url || !atleta_id) return res.status(400).json({ error: 'Dati mancanti' });
+    const profiles = await queries.getProfilesByAtletaId(atleta_id);
+    const owns = profiles.some(p => p.user_id === req.user.id) || req.user.role === 'admin';
+    if (!owns) return res.status(403).json({ error: 'Non autorizzato' });
+    const store = source === 'ic'
+      ? { read: readICPhotos, write: writeICPhotos }
+      : { read: readXpixPhotos, write: writeXpixPhotos };
+    const photos = await store.read();
+    const entry = photos[gara_id];
+    if (!entry) return res.status(404).json({ error: 'Foto non trovata' });
+    if (!entry.tags?.[photo_url]) return res.json({ ok: true, atleta_ids: '' });
+    const remaining = String(entry.tags[photo_url]).split(',').map(s => s.trim()).filter(id => id && id !== String(atleta_id));
+    entry.tags[photo_url] = remaining.join(',');
+    await store.write(photos);
+    res.json({ ok: true, atleta_ids: entry.tags[photo_url] });
+  } catch (e) { res.status(500).json({ error: e.message }); }
+});
+
 app.delete('/api/admin/race-photos/:id', requireAdmin, async (req, res) => {
   try {
     const photo = await queries.getRacePhotoById(req.params.id);
@@ -920,6 +981,37 @@ app.get('/api/cron/test-scrape', async (req, res) => {
   ghReq.write(body); ghReq.end();
 });
 
+// ── Admin: Scraper status + manual trigger ────────────────────────────────────
+app.get('/api/admin/scraper/status', requireAdmin, async (req, res) => {
+  const token = process.env.GH_DISPATCH_TOKEN;
+  const repo  = process.env.GH_REPO || 'Vezz90/italiacrit';
+  let lastRun = null;
+  if (token) {
+    try {
+      const ghRes = await fetch(`https://api.github.com/repos/${repo}/actions/workflows/scrape.yml/runs?per_page=1`, {
+        headers: { 'Authorization': `Bearer ${token}`, 'Accept': 'application/vnd.github.v3+json', 'User-Agent': 'ItaliacritServer/1.0' }
+      });
+      const data = await ghRes.json();
+      const run = data.workflow_runs?.[0];
+      if (run) lastRun = { id: run.id, status: run.status, conclusion: run.conclusion, created_at: run.created_at, updated_at: run.updated_at, html_url: run.html_url };
+    } catch (e) { /* non bloccare */ }
+  }
+  res.json({
+    token_set:      !!token,
+    anthropic_set:  !!process.env.ANTHROPIC_API_KEY,
+    fb_set:         !!(process.env.FB_PAGE_ID && process.env.FB_PAGE_TOKEN),
+    last_trigger_ts: _lastScrapeTrigger || null,
+    last_sync_ts:    _lastCronSync      || null,
+    last_gh_run:     lastRun,
+  });
+});
+
+app.post('/api/admin/scraper/trigger', requireAdmin, async (req, res) => {
+  if (!process.env.GH_DISPATCH_TOKEN) return res.status(400).json({ error: 'GH_DISPATCH_TOKEN non configurato su Render' });
+  triggerScrapeWorkflow();
+  res.json({ ok: true, message: 'Dispatch inviato a GitHub Actions — controlla lo stato tra 1-2 minuti' });
+});
+
 app.get('/api/cron/tick', (req, res) => {
   res.json({ ok: true, ts: new Date().toISOString() });
   const now = Date.now();
@@ -997,6 +1089,8 @@ app.post('/api/internal/notify-results', async (req, res) => {
       body:  body  || (count ? `${count} nuove gare aggiornate` : 'Le classifiche sono state aggiornate'),
       url: '/#/risultati',
     });
+    // Accoda post social in background (non blocca la risposta)
+    queueSocialPostsForToday().catch(e => console.warn('[social] queue error:', e.message));
     res.json({ ok: true, ...r });
   } catch (e) { res.status(500).json({ error: e.message }); }
 });
@@ -1907,6 +2001,104 @@ async function writeICPhotos(obj) {
   fs.writeFileSync(IC_PHOTOS_PATH, JSON.stringify(obj, null, 2));
 }
 
+// ── Social Post Queue ─────────────────────────────────────────────────────────
+const SOCIAL_QUEUE_KEY  = 'social_queue';
+const SOCIAL_QUEUE_PATH = path.join(__dirname, '../data/social-queue.json');
+
+async function readSocialQueue() {
+  if (supabase) {
+    const { data } = await supabase.from('kv_store').select('value').eq('key', SOCIAL_QUEUE_KEY).single();
+    return data?.value || [];
+  }
+  try { return JSON.parse(fs.readFileSync(SOCIAL_QUEUE_PATH, 'utf8')); } catch { return []; }
+}
+async function writeSocialQueue(arr) {
+  if (supabase) {
+    await supabase.from('kv_store').upsert({ key: SOCIAL_QUEUE_KEY, value: arr, updated_at: new Date().toISOString() });
+    return;
+  }
+  fs.writeFileSync(SOCIAL_QUEUE_PATH, JSON.stringify(arr, null, 2));
+}
+
+async function generateSocialCaption({ nome_gara, winner_label, category, winner_team, date, link }) {
+  const ai = getAnthropic();
+  if (!ai) return `🏁 ${nome_gara}\n🥇 ${winner_label}${category ? ' — ' + category : ''}\n🔗 ${link}`;
+  try {
+    const msg = await ai.messages.create({
+      model: 'claude-haiku-4-5-20251001',
+      max_tokens: 300,
+      messages: [{
+        role: 'user',
+        content: `Scrivi una caption per Facebook in italiano per questo risultato di ciclismo su strada. Massimo 220 caratteri totali incluso link. Includi emoji sportive, tono entusiasta. Termina con il link. Non inventare dettagli non forniti.
+
+Gara: ${nome_gara}
+Vincitore/Vincitrice: ${winner_label}
+Categoria: ${category || '—'}
+Team: ${winner_team || '—'}
+Data: ${date || '—'}
+Link: ${link}`
+      }]
+    });
+    return msg.content[0].text.trim();
+  } catch (e) {
+    console.warn('[social] Claude caption error:', e.message);
+    return `🏁 ${nome_gara}\n🥇 ${winner_label}${category ? ' (' + category + ')' : ''}\n🔗 ${link}`;
+  }
+}
+
+async function postToFacebook(caption, photoUrl) {
+  const pageId = process.env.FB_PAGE_ID;
+  const token  = process.env.FB_PAGE_TOKEN;
+  if (!pageId || !token) throw new Error('FB_PAGE_ID o FB_PAGE_TOKEN non configurati su Render');
+  const endpoint = photoUrl
+    ? `https://graph.facebook.com/v19.0/${pageId}/photos`
+    : `https://graph.facebook.com/v19.0/${pageId}/feed`;
+  const body = photoUrl
+    ? { url: photoUrl, caption, access_token: token }
+    : { message: caption, access_token: token };
+  const r = await fetch(endpoint, { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(body) });
+  const data = await r.json();
+  if (data.error) throw new Error(`Facebook API: ${data.error.message} (code ${data.error.code})`);
+  return data;
+}
+
+// Genera e accoda un post per ogni gara con risultato di oggi/ieri ancora non in coda.
+async function queueSocialPostsForToday() {
+  try {
+    const results = readDataJson('results_raw.json') || [];
+    const today     = new Date().toISOString().slice(0, 10);
+    const yesterday = new Date(Date.now() - 86400000).toISOString().slice(0, 10);
+    const winners = {};
+    for (const r of results) {
+      const d = (r.data_gara || r.date || '').slice(0, 10);
+      if (d !== today && d !== yesterday) continue;
+      if (Number(r.posizione) !== 1 || !r.gara_id) continue;
+      if (!winners[r.gara_id]) winners[r.gara_id] = r;
+    }
+    const garaIds = Object.keys(winners);
+    if (!garaIds.length) return;
+    const queue = await readSocialQueue();
+    const existing = new Set(queue.map(p => p.gara_id));
+    const xpix = await readXpixPhotos();
+    const ic   = await readICPhotos();
+    for (const garaId of garaIds) {
+      if (existing.has(garaId)) continue;
+      const r = winners[garaId];
+      const nome_gara    = r.nome_gara || garaId;
+      const winner_label = `${r.cognome || ''} ${r.nome || ''}`.trim();
+      const category     = r.categoria || r.category || '';
+      const winner_team  = r.team || '';
+      const date         = (r.data_gara || r.date || '').slice(0, 10);
+      const link         = `https://italiacyclingstats.com/#/gara/${encodeURIComponent(garaId)}`;
+      const photoUrl     = xpix[garaId]?.url || ic[garaId]?.url || null;
+      const caption = await generateSocialCaption({ nome_gara, winner_label, category, winner_team, date, link });
+      queue.push({ id: `${garaId}_${Date.now()}`, created_at: new Date().toISOString(), gara_id: garaId, gara_name: nome_gara, winner: winner_label, category, winner_team, date, caption, photo_url: photoUrl, link, status: 'pending', fb_post_id: null });
+    }
+    await writeSocialQueue(queue);
+    console.log(`[social] ${garaIds.length} gare controllate, ${garaIds.filter(g => !existing.has(g)).length} nuovi post in coda`);
+  } catch (e) { console.warn('[social] queueSocialPostsForToday error:', e.message); }
+}
+
 app.get('/api/admin/ic/queue', requireAdmin, async (req, res) => {
   try { res.json({ queue: await readICQueue() }); }
   catch (e) { res.status(500).json({ error: e.message }); }
@@ -2594,6 +2786,62 @@ app.post('/api/media/photo/by-url/request-purchase', requireAuth, async (req, re
     });
 
     res.json({ ok: true });
+  } catch (e) { res.status(500).json({ error: e.message }); }
+});
+
+// ── Admin: Social Post Queue ──────────────────────────────────────────────────
+
+app.get('/api/admin/social/queue', requireAdmin, async (req, res) => {
+  try { res.json({ queue: await readSocialQueue() }); }
+  catch (e) { res.status(500).json({ error: e.message }); }
+});
+
+// Pubblica su Facebook (con eventuale caption modificata dall'admin)
+app.post('/api/admin/social/:id/approve', requireAdmin, async (req, res) => {
+  try {
+    const queue = await readSocialQueue();
+    const idx = queue.findIndex(p => p.id === req.params.id);
+    if (idx < 0) return res.status(404).json({ error: 'Post non trovato' });
+    const post = queue[idx];
+    const finalCaption = ((req.body.caption || post.caption) + '').trim();
+    const fbResult = await postToFacebook(finalCaption, post.photo_url);
+    queue[idx] = { ...post, caption: finalCaption, status: 'posted', fb_post_id: fbResult.id || fbResult.post_id || null, posted_at: new Date().toISOString() };
+    await writeSocialQueue(queue);
+    res.json({ ok: true, fb: fbResult });
+  } catch (e) { res.status(500).json({ error: e.message }); }
+});
+
+app.post('/api/admin/social/:id/reject', requireAdmin, async (req, res) => {
+  try {
+    const queue = await readSocialQueue();
+    const idx = queue.findIndex(p => p.id === req.params.id);
+    if (idx < 0) return res.status(404).json({ error: 'Post non trovato' });
+    queue[idx].status = 'rejected';
+    await writeSocialQueue(queue);
+    res.json({ ok: true });
+  } catch (e) { res.status(500).json({ error: e.message }); }
+});
+
+// Rigenera la caption con Claude
+app.post('/api/admin/social/:id/regenerate', requireAdmin, async (req, res) => {
+  try {
+    const queue = await readSocialQueue();
+    const idx = queue.findIndex(p => p.id === req.params.id);
+    if (idx < 0) return res.status(404).json({ error: 'Post non trovato' });
+    const post = queue[idx];
+    const caption = await generateSocialCaption({ nome_gara: post.gara_name, winner_label: post.winner, category: post.category, winner_team: post.winner_team, date: post.date, link: post.link });
+    queue[idx] = { ...post, caption, status: 'pending' };
+    await writeSocialQueue(queue);
+    res.json({ ok: true, caption });
+  } catch (e) { res.status(500).json({ error: e.message }); }
+});
+
+// Trigger manuale accodamento post social (utile per test)
+app.post('/api/admin/social/queue-now', requireAdmin, async (req, res) => {
+  try {
+    await queueSocialPostsForToday();
+    const queue = await readSocialQueue();
+    res.json({ ok: true, total: queue.length, pending: queue.filter(p => p.status === 'pending').length });
   } catch (e) { res.status(500).json({ error: e.message }); }
 });
 

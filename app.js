@@ -7137,6 +7137,15 @@ async function renderAdmin() {
           <span class="admin-nav-icon">🏁</span> Gare / Risultati
         </div>
 
+        <div class="admin-nav-group">Social & Automazione</div>
+        <div class="admin-nav-item" data-section="social-queue" onclick="adminNav('social-queue')">
+          <span class="admin-nav-icon">📣</span> Coda Social
+          <span class="admin-nav-badge" id="badge-social"></span>
+        </div>
+        <div class="admin-nav-item" data-section="scraper" onclick="adminNav('scraper')">
+          <span class="admin-nav-icon">🤖</span> Scraper & Config
+        </div>
+
         <div class="admin-nav-group">Struttura sito</div>
         <div class="admin-nav-item" data-section="pannelli-ruolo" onclick="adminNav('pannelli-ruolo')">
           <span class="admin-nav-icon">👤</span> Pannelli per ruolo
@@ -7209,16 +7218,22 @@ window.adminNav = async function(section) {
             <div class="admin-stat-label">Utenti registrati</div>
             <div class="admin-stat-value" id="ov-utenti">—</div>
           </div>
+          <div class="admin-stat-card" onclick="adminNav('social-queue')" style="cursor:pointer">
+            <div class="admin-stat-icon">📣</div>
+            <div class="admin-stat-label">Social in coda</div>
+            <div class="admin-stat-value" id="ov-social">—</div>
+          </div>
         </div>`;
       // Carica i contatori
       try {
-        const [photos, xpixQ, vidPend, ytQ, pendProf, usersD] = await Promise.all([
+        const [photos, xpixQ, vidPend, ytQ, pendProf, usersD, socialQ] = await Promise.all([
           apiCall('/admin/race-photos/pending').catch(()=>({photos:[]})),
           apiCall('/admin/xpix/queue').catch(()=>({queue:[]})),
           apiCall('/admin/videos/pending').catch(()=>({videos:[]})),
           apiCall('/admin/yt/queue').catch(()=>({queue:[]})),
           fetch(`${API_BASE}/admin/pending`, { headers: { Authorization: `Bearer ${authToken()}` } }).then(r=>r.json()).catch(()=>({pending:[]})),
           fetch(`${API_BASE}/admin/users`,   { headers: { Authorization: `Bearer ${authToken()}` } }).then(r=>r.json()).catch(()=>({users:[]})),
+          apiCall('/admin/social/queue').catch(()=>({queue:[]})),
         ]);
         const setPending = (id, n) => { const el = document.getElementById(id); if (el) el.textContent = n; };
         const fotoPend    = (photos.photos||[]).length;
@@ -7227,12 +7242,14 @@ window.adminNav = async function(section) {
         const ytPend      = (ytQ.queue||[]).filter(q=>q.status==='pending').length;
         const profPend    = (pendProf.pending||[]).length;
         const utentiCount = (usersD.users||[]).length;
+        const socialPend  = (socialQ.queue||[]).filter(q=>q.status==='pending').length;
         setPending('ov-foto-pending', fotoPend);
         setPending('ov-xpix', xpixPend);
         setPending('ov-video-pending', vidPend2);
         setPending('ov-yt', ytPend);
         setPending('ov-profili-pending', profPend);
         setPending('ov-utenti', utentiCount);
+        setPending('ov-social', socialPend);
         // Aggiorna badge sidebar
         const setBadge = (id, n) => { const el = document.getElementById(id); if (el) { el.textContent = n > 0 ? n : ''; el.style.display = n > 0 ? '' : 'none'; } };
         setBadge('badge-foto-pending', fotoPend);
@@ -7240,6 +7257,7 @@ window.adminNav = async function(section) {
         setBadge('badge-video-pending', vidPend2);
         setBadge('badge-yt', ytPend);
         setBadge('badge-profili-pending', profPend);
+        setBadge('badge-social', socialPend);
       } catch(e) { /* ignora */ }
 
       // Sezione account di prova
@@ -8407,6 +8425,167 @@ window.adminNav = async function(section) {
         </div>`;
       break;
     }
+
+    // ── SOCIAL QUEUE ──────────────────────────────────────────────
+    case 'social-queue': {
+      main.innerHTML = '<div class="admin-loading">Caricamento coda social…</div>';
+      try {
+        const { queue = [] } = await apiCall('/admin/social/queue');
+        const pending  = queue.filter(p => p.status === 'pending');
+        const done     = queue.filter(p => p.status !== 'pending').slice(-10).reverse();
+        const fbSet    = true; // mostrato nel pannello scraper
+        const statusBadge = s => {
+          const m = { posted:'✅ Pubblicato', rejected:'❌ Rifiutato', pending:'⏳ In attesa' };
+          const c = { posted:'#22c55e', rejected:'#ef4444', pending:'#f59e0b' };
+          return `<span style="background:${c[s]||'#888'};color:#fff;font-size:.7rem;padding:2px 8px;border-radius:10px;font-weight:700">${m[s]||s}</span>`;
+        };
+        const renderCard = (p, editable) => `
+          <div id="sq-${p.id}" style="background:var(--bg-card);border:1px solid var(--border-subtle);border-radius:var(--r-lg);padding:16px;display:flex;gap:14px;align-items:flex-start">
+            ${p.photo_url ? `<img src="${esc(p.photo_url)}" style="width:90px;height:90px;object-fit:cover;border-radius:8px;flex-shrink:0" loading="lazy"/>` : `<div style="width:90px;height:90px;background:var(--bg-elevated);border-radius:8px;flex-shrink:0;display:flex;align-items:center;justify-content:center;font-size:2rem">📷</div>`}
+            <div style="flex:1;min-width:0">
+              <div style="font-weight:700;margin-bottom:2px">${esc(p.gara_name)}</div>
+              <div style="font-size:.78rem;color:var(--text-muted);margin-bottom:8px">🥇 ${esc(p.winner||'—')} · ${esc(p.category||'')} · ${esc(p.date||'')}</div>
+              ${editable
+                ? `<textarea id="sq-cap-${p.id}" style="width:100%;box-sizing:border-box;height:80px;padding:7px 9px;border:1px solid var(--border-subtle);border-radius:var(--r-sm);font-size:.82rem;background:var(--bg-primary);color:var(--text-primary);resize:vertical;margin-bottom:8px">${esc(p.caption)}</textarea>
+                   <div id="sq-err-${p.id}" style="color:#ef4444;font-size:.76rem;margin-bottom:6px;display:none"></div>
+                   <div style="display:flex;gap:6px;flex-wrap:wrap">
+                     <button onclick="window._sqApprove('${p.id}')" style="background:#22c55e;color:#fff;border:none;padding:6px 14px;border-radius:var(--r-sm);font-size:.8rem;font-weight:600;cursor:pointer">✅ Pubblica su Facebook</button>
+                     <button onclick="window._sqRegenerate('${p.id}')" style="background:var(--bg-elevated);border:1px solid var(--border-subtle);padding:6px 12px;border-radius:var(--r-sm);font-size:.8rem;cursor:pointer;color:var(--text-primary)">🔄 Rigenera</button>
+                     <button onclick="window._sqReject('${p.id}')" style="background:#ef4444;color:#fff;border:none;padding:6px 12px;border-radius:var(--r-sm);font-size:.8rem;cursor:pointer">❌ Rifiuta</button>
+                   </div>`
+                : `<div style="font-size:.82rem;color:var(--text-muted);white-space:pre-wrap;margin-bottom:6px">${esc(p.caption)}</div>
+                   ${statusBadge(p.status)}
+                   ${p.posted_at ? `<span style="font-size:.72rem;color:var(--text-muted);margin-left:8px">${p.posted_at.slice(0,16).replace('T',' ')}</span>` : ''}`
+              }
+            </div>
+          </div>`;
+        main.innerHTML = `
+          <div class="admin-page-header">
+            <h1 class="admin-page-title">📣 Coda Social Media</h1>
+            <p class="admin-page-sub">Post generati automaticamente dopo ogni scrape. Revisiona e pubblica su Facebook.</p>
+          </div>
+          <div style="display:flex;gap:10px;margin-bottom:20px;flex-wrap:wrap">
+            <button onclick="window._sqQueueNow()" style="background:var(--red-hot);color:#fff;border:none;padding:8px 18px;border-radius:var(--r-sm);font-weight:600;cursor:pointer">🔄 Genera post adesso</button>
+          </div>
+          ${pending.length
+            ? `<h3 style="margin:0 0 12px;font-size:1rem">⏳ In attesa di approvazione (${pending.length})</h3>
+               <div style="display:flex;flex-direction:column;gap:12px;margin-bottom:28px">${pending.map(p => renderCard(p, true)).join('')}</div>`
+            : `<div style="color:var(--text-muted);padding:20px 0 28px;font-style:italic">Nessun post in attesa. I nuovi post vengono generati automaticamente dopo ogni scrape.</div>`}
+          ${done.length ? `<h3 style="margin:0 0 12px;font-size:1rem">📋 Ultimi processati</h3>
+            <div style="display:flex;flex-direction:column;gap:10px">${done.map(p => renderCard(p, false)).join('')}</div>` : ''}`;
+
+        window._sqApprove = async (id) => {
+          const caption = document.getElementById(`sq-cap-${id}`)?.value?.trim() || '';
+          const errEl = document.getElementById(`sq-err-${id}`);
+          try {
+            await apiCall(`/admin/social/${id}/approve`, { method: 'POST', body: { caption } });
+            showToast('✅ Pubblicato su Facebook!');
+            adminNav('social-queue');
+          } catch(e) { if(errEl){ errEl.textContent = e.message; errEl.style.display = 'block'; } else showToast(e.message,'error'); }
+        };
+        window._sqReject = async (id) => {
+          await apiCall(`/admin/social/${id}/reject`, { method: 'POST' });
+          showToast('Post rifiutato');
+          adminNav('social-queue');
+        };
+        window._sqRegenerate = async (id) => {
+          const errEl = document.getElementById(`sq-err-${id}`);
+          try {
+            const { caption } = await apiCall(`/admin/social/${id}/regenerate`, { method: 'POST' });
+            const ta = document.getElementById(`sq-cap-${id}`);
+            if (ta) ta.value = caption;
+            showToast('Caption rigenerata ✓');
+          } catch(e) { if(errEl){ errEl.textContent = e.message; errEl.style.display = 'block'; } else showToast(e.message,'error'); }
+        };
+        window._sqQueueNow = async () => {
+          try {
+            const r = await apiCall('/admin/social/queue-now', { method: 'POST' });
+            showToast(`✓ Controllato — ${r.pending} post in attesa`);
+            adminNav('social-queue');
+          } catch(e) { showToast(e.message, 'error'); }
+        };
+
+        // Badge sidebar
+        const badge = document.getElementById('badge-social');
+        if (badge) { badge.textContent = pending.length || ''; badge.style.display = pending.length ? '' : 'none'; }
+      } catch(e) {
+        main.innerHTML = `<div style="color:#ef4444;padding:20px">Errore: ${esc(e.message)}</div>`;
+      }
+      break;
+    }
+
+    // ── SCRAPER & CONFIG ──────────────────────────────────────────
+    case 'scraper': {
+      main.innerHTML = '<div class="admin-loading">Caricamento stato scraper…</div>';
+      try {
+        const s = await apiCall('/admin/scraper/status');
+        const tick = ts => ts ? new Date(ts).toLocaleString('it') : '—';
+        const badge = (ok, yes, no) => `<span style="display:inline-block;padding:2px 10px;border-radius:10px;font-size:.78rem;font-weight:700;background:${ok?'#22c55e':'#ef4444'};color:#fff">${ok ? '✅ '+yes : '❌ '+no}</span>`;
+        const run = s.last_gh_run;
+        const runColor = { success:'#22c55e', failure:'#ef4444', cancelled:'#f59e0b' };
+        const runHtml = run
+          ? `<a href="${esc(run.html_url)}" target="_blank" rel="noopener" style="color:var(--accent)">
+               Ultimo run GitHub Actions — <strong>${run.conclusion || run.status}</strong> · ${new Date(run.updated_at||run.created_at).toLocaleString('it')}
+             </a>`
+          : `<span style="color:var(--text-muted)">Nessun run trovato (serve GH_DISPATCH_TOKEN)</span>`;
+        main.innerHTML = `
+          <div class="admin-page-header">
+            <h1 class="admin-page-title">🤖 Scraper & Configurazione</h1>
+            <p class="admin-page-sub">Stato delle variabili d'ambiente e dello scraper GitHub Actions.</p>
+          </div>
+
+          <div style="display:grid;gap:12px;grid-template-columns:repeat(auto-fill,minmax(280px,1fr));margin-bottom:24px">
+            <div style="background:var(--bg-card);border:1px solid var(--border-subtle);border-radius:var(--r-lg);padding:16px">
+              <div style="font-weight:700;margin-bottom:10px">🔑 Credenziali</div>
+              <div style="display:flex;flex-direction:column;gap:8px">
+                <div style="display:flex;justify-content:space-between;align-items:center"><span style="font-size:.85rem">GH_DISPATCH_TOKEN</span>${badge(s.token_set,'Configurato','Mancante')}</div>
+                <div style="display:flex;justify-content:space-between;align-items:center"><span style="font-size:.85rem">ANTHROPIC_API_KEY</span>${badge(s.anthropic_set,'Configurato','Mancante — captions di fallback')}</div>
+                <div style="display:flex;justify-content:space-between;align-items:center"><span style="font-size:.85rem">FB_PAGE_ID + FB_PAGE_TOKEN</span>${badge(s.fb_set,'Configurati','Mancanti — social disabilitato')}</div>
+              </div>
+            </div>
+            <div style="background:var(--bg-card);border:1px solid var(--border-subtle);border-radius:var(--r-lg);padding:16px">
+              <div style="font-weight:700;margin-bottom:10px">⏱ Ultimo trigger scrape</div>
+              <div style="font-size:.9rem;margin-bottom:4px">${tick(s.last_trigger_ts)}</div>
+              <div style="font-size:.78rem;color:var(--text-muted)">Ultima sync foto/video: ${tick(s.last_sync_ts)}</div>
+              <div style="font-size:.82rem;margin-top:10px">${runHtml}</div>
+            </div>
+          </div>
+
+          <div style="display:flex;gap:10px;margin-bottom:28px;flex-wrap:wrap">
+            <button id="trigger-scrape-btn" onclick="window._triggerScrape()" style="background:var(--red-hot);color:#fff;border:none;padding:9px 20px;border-radius:var(--r-sm);font-weight:600;cursor:pointer">🚀 Trigger scrape manuale</button>
+            <button onclick="adminNav('scraper')" style="background:var(--bg-elevated);border:1px solid var(--border-subtle);padding:9px 16px;border-radius:var(--r-sm);cursor:pointer;color:var(--text-primary)">🔄 Aggiorna stato</button>
+          </div>
+
+          <details style="background:var(--bg-card);border:1px solid var(--border-subtle);border-radius:var(--r-lg);padding:16px">
+            <summary style="cursor:pointer;font-weight:700;font-size:.95rem">📋 Setup completo — variabili da configurare su Render</summary>
+            <div style="margin-top:14px;font-size:.85rem;line-height:1.7;color:var(--text-primary)">
+              <p><strong>1. GH_DISPATCH_TOKEN</strong> — PAT GitHub con scope <code>actions:write</code>.<br>
+              Vai su github.com → Settings → Developer settings → Personal access tokens → Tokens (classic) → Generate new token. Scope: <code>repo</code> (include workflow).</p>
+              <p><strong>2. ANTHROPIC_API_KEY</strong> — Chiave API Anthropic.<br>
+              Da <code>console.anthropic.com</code> → API Keys → Create Key.</p>
+              <p><strong>3. FB_PAGE_ID</strong> — ID numerico della tua pagina Facebook.<br>
+              Dal pannello Facebook Business Suite o tramite Graph API Explorer: <code>GET /me/accounts</code>.</p>
+              <p><strong>4. FB_PAGE_TOKEN</strong> — Page Access Token (non scade mai se generato correttamente).<br>
+              Graph API Explorer → seleziona la pagina → genera token con scope <code>pages_manage_posts</code>.</p>
+              <p><strong>5. Pinger esterno</strong> — GitHub Actions cron è inaffidabile. Configura <a href="https://cron-job.org" target="_blank" rel="noopener" style="color:var(--accent)">cron-job.org</a> per fare GET su <code>https://italiacrit.onrender.com/api/cron/tick</code> ogni 10 minuti.</p>
+            </div>
+          </details>`;
+
+        window._triggerScrape = async () => {
+          const btn = document.getElementById('trigger-scrape-btn');
+          if (btn) { btn.disabled = true; btn.textContent = '⏳ Invio…'; }
+          try {
+            const r = await apiCall('/admin/scraper/trigger', { method: 'POST' });
+            showToast('🚀 ' + r.message);
+          } catch(e) { showToast(e.message, 'error'); }
+          if (btn) { btn.disabled = false; btn.textContent = '🚀 Trigger scrape manuale'; }
+        };
+      } catch(e) {
+        main.innerHTML = `<div style="color:#ef4444;padding:20px">Errore: ${esc(e.message)}</div>`;
+      }
+      break;
+    }
+
   }
 }
 
@@ -11383,25 +11562,94 @@ function openPhotoLightbox(src, opts = {}) {
   const wrap = (inner) => `<div style="position:fixed;top:16px;left:50%;transform:translateX(-50%);z-index:10000;display:flex;flex-direction:column;align-items:center;gap:4px;max-width:92vw;text-align:center">${inner}</div>`;
   const btnStyle = 'background:rgba(37,99,235,.95);color:#fff;border:none;padding:9px 16px;border-radius:20px;font-size:.85rem;font-weight:600;cursor:pointer;box-shadow:0 4px 14px rgba(0,0,0,.4)';
   const hintStyle = 'font-size:.72rem;color:rgba(255,255,255,.75)';
+  const redStyle = 'background:rgba(220,38,38,.92);color:#fff;border:none;padding:7px 14px;border-radius:18px;font-size:.8rem;font-weight:600;cursor:pointer;margin-top:2px';
   let tagHtml = '';
+  // Foto caricate (race_photos): hanno photoId
   if (opts.photoId && opts.garaId) {
     if (user) {
       const myId = user.atleta_id;
       const iAmTagged = myId && String(opts.current || '').split(',').map(s => s.trim()).includes(String(myId));
-      const removeBtn = iAmTagged
-        ? `<button onclick="event.stopPropagation();window.selfUntagPhoto(${opts.photoId})" style="background:rgba(220,38,38,.92);color:#fff;border:none;padding:7px 14px;border-radius:18px;font-size:.8rem;font-weight:600;cursor:pointer;margin-top:2px">✕ Rimuovi il mio tag</button>`
-        : '';
+      const removeBtn = iAmTagged ? `<button onclick="event.stopPropagation();window.selfUntagPhoto(${opts.photoId})" style="${redStyle}">✕ Rimuovi il mio tag</button>` : '';
       tagHtml = wrap(`<button onclick="event.stopPropagation();window._openTagPanel({kind:'photo',photoId:${opts.photoId},garaId:'${esc(String(opts.garaId))}',current:'${esc(String(opts.current||''))}'})" style="${btnStyle}">🏷 Tagga corridori</button>
         <span style="${hintStyle}">${isAdmin ? 'Cerca e tagga i corridori presenti nella foto' : 'Sei tu o conosci chi è ritratto? Cerca e taggalo'}</span>
         ${removeBtn}`);
     } else {
       tagHtml = wrap(`<div style="${hintStyle};background:rgba(0,0,0,.5);padding:6px 12px;border-radius:14px"><a href="#/login" style="color:#fff;text-decoration:underline">Accedi</a> per taggare i corridori nella foto</div>`);
     }
+  } else if (opts.ext && opts.ext.garaId && opts.ext.url) {
+    // Foto di album esterno (xpix / ciclismo.info)
+    if (user) {
+      const myId = user.atleta_id;
+      const iAmTagged = myId && String(opts.ext.current || '').split(',').map(s => s.trim()).includes(String(myId));
+      const removeBtn = iAmTagged ? `<button onclick="event.stopPropagation();window.extUntagPhoto('${esc(opts.ext.source)}','${esc(opts.ext.garaId)}','${esc(opts.ext.url)}')" style="${redStyle}">✕ Rimuovi il mio tag</button>` : '';
+      tagHtml = wrap(`<button onclick="event.stopPropagation();window._openTagPanel({kind:'extphoto',source:'${esc(opts.ext.source)}',garaId:'${esc(opts.ext.garaId)}',photoUrl:'${esc(opts.ext.url)}',current:'${esc(opts.ext.current||'')}'})" style="${btnStyle}">🏷 Tagga corridori</button>
+        <span style="${hintStyle}">Sei tu o conosci chi è ritratto? Cerca e taggalo</span>
+        ${removeBtn}`);
+    } else {
+      tagHtml = wrap(`<div style="${hintStyle};background:rgba(0,0,0,.5);padding:6px 12px;border-radius:14px"><a href="#/login" style="color:#fff;text-decoration:underline">Accedi</a> per taggare i corridori nella foto</div>`);
+    }
   }
-  lb.innerHTML = `<img src="${src}" alt="Foto gara"/>${creditHtml}${tagHtml}`;
+  // ── Acquista (album esterno → sito della fonte) ──
+  const buyHtml = (opts.ext && opts.ext.albumPage)
+    ? `<a href="${esc(opts.ext.albumPage)}" target="_blank" rel="noopener" onclick="event.stopPropagation()" style="position:fixed;bottom:18px;right:18px;z-index:10001;background:#f59e0b;color:#000;padding:9px 16px;border-radius:20px;font-size:.85rem;font-weight:700;cursor:pointer;box-shadow:0 4px 14px rgba(0,0,0,.4);text-decoration:none">🛒 Acquista su ${esc(opts.ext.srcLabel || 'sito')}</a>`
+    : '';
+  // ── Acquista (foto di fotografo registrato → richiesta via email/notifica) ──
+  const photographerBuyHtml = (opts.photoId && opts.credit && !opts.ext)
+    ? `<button onclick="event.stopPropagation();window.openPhotoPurchaseModal('${esc(src)}','${esc(opts.credit.replace(/'/g,"\\'"))}','${esc((opts.caption||'').replace(/'/g,"\\'"))}','${esc(String(opts.garaId||''))}')" style="position:fixed;bottom:18px;right:18px;z-index:10001;background:#f59e0b;color:#000;padding:9px 16px;border-radius:20px;font-size:.85rem;font-weight:700;cursor:pointer;box-shadow:0 4px 14px rgba(0,0,0,.4);border:none">🛒 Acquista foto</button>`
+    : '';
+  lb.innerHTML = `<img src="${src}" alt="Foto gara"/>${creditHtml}${tagHtml}${buyHtml}${photographerBuyHtml}`;
   document.body.appendChild(lb);
 }
 window.openPhotoLightbox = openPhotoLightbox;
+
+// Rimuove il proprio tag da una foto di album esterno (xpix / ciclismo.info)
+window.extUntagPhoto = async function(source, garaId, photoUrl) {
+  const user = authUser();
+  if (!user?.atleta_id) { showToast('Nessun profilo atleta collegato', 'error'); return; }
+  try {
+    await apiCall(`/ext-photos/untag`, { method: 'POST', body: { source, gara_id: garaId, photo_url: photoUrl, atleta_id: String(user.atleta_id) } });
+    document.getElementById('photo-lightbox')?.remove();
+    showToast('Tag rimosso ✓');
+    await refreshMediaAndRerender({ videos: false });
+  } catch (e) { showToast('Errore: ' + e.message, 'error'); }
+};
+
+// Modale richiesta acquisto foto a fotografo registrato
+window.openPhotoPurchaseModal = function(src, photographerName, albumTitle, garaId) {
+  const user = authUser();
+  if (!user) { showToast('Accedi per inviare una richiesta', 'info'); window.location.hash = '#/login'; return; }
+  const overlay = document.createElement('div');
+  overlay.style.cssText = 'position:fixed;inset:0;background:rgba(0,0,0,.65);z-index:10002;display:flex;align-items:center;justify-content:center;padding:16px';
+  overlay.onclick = e => { if (e.target === overlay) overlay.remove(); };
+  overlay.innerHTML = `
+    <div style="background:var(--bg-card);border-radius:var(--r-lg);padding:20px;width:100%;max-width:420px;box-shadow:0 8px 32px rgba(0,0,0,.4)">
+      <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:12px">
+        <strong>🛒 Richiesta acquisto foto</strong>
+        <button onclick="this.closest('[style*=fixed]').remove()" style="background:none;border:none;font-size:1.3rem;cursor:pointer;color:var(--text-muted)">✕</button>
+      </div>
+      <p style="font-size:.85rem;color:var(--text-muted);margin:0 0 12px">Stai contattando il fotografo <strong>${esc(photographerName)}</strong>. Riceverà i tuoi dati di contatto e una notifica nel profilo.</p>
+      <textarea id="purchase-msg" placeholder="Messaggio opzionale — es. formato desiderato, utilizzo previsto, dimensioni…" style="width:100%;box-sizing:border-box;height:90px;padding:8px 10px;border:1px solid var(--border-subtle);border-radius:var(--r-sm);font-size:.85rem;background:var(--bg-primary);color:var(--text-primary);resize:vertical;margin-bottom:10px"></textarea>
+      <div id="purchase-err" style="color:#EF4444;font-size:.78rem;margin-bottom:8px;display:none"></div>
+      <button id="purchase-send" style="width:100%;padding:9px;background:var(--red-hot);color:#fff;border:none;border-radius:var(--r-sm);font-weight:600;cursor:pointer">Invia richiesta al fotografo</button>
+    </div>`;
+  document.body.appendChild(overlay);
+  overlay.querySelector('#purchase-send').onclick = async () => {
+    const btn = overlay.querySelector('#purchase-send');
+    const message = overlay.querySelector('#purchase-msg').value.trim();
+    btn.disabled = true; btn.textContent = 'Invio…';
+    try {
+      await apiCall('/media/photo/by-url/request-purchase', {
+        method: 'POST',
+        body: { src, album_title: albumTitle || garaId || '', photographer_name: photographerName, message }
+      });
+      overlay.remove();
+      showToast('✓ Richiesta inviata al fotografo!');
+    } catch(e) {
+      const er = overlay.querySelector('#purchase-err'); er.textContent = e.message; er.style.display = 'block';
+      btn.disabled = false; btn.textContent = 'Invia richiesta al fotografo';
+    }
+  };
+};
 
 // Top-10 di una gara (per esordienti include ES1+ES2), per il pannello di tag.
 function _mediaTopTen(garaId) {
@@ -11425,16 +11673,18 @@ window._openTagPanel = (opts) => {
   const user = authUser();
   if (!user) { showToast('Accedi per taggare i corridori', 'info'); return; }
   const isAdmin = user.role === 'admin';
-  // I video restano taggabili solo dall'admin; le foto da tutti gli iscritti.
-  if (!isAdmin && opts.kind !== 'photo') { showToast('Solo l\'admin può taggare i video', 'info'); return; }
+  // I video restano taggabili solo dall'admin; foto (caricate o esterne) da tutti.
+  if (!isAdmin && opts.kind === 'video') { showToast('Solo l\'admin può taggare i video', 'info'); return; }
+  // Le foto esterne (xpix/IC) sono sempre in sola aggiunta (merge), anche per admin.
+  const addOnly = !isAdmin || opts.kind === 'extphoto';
   const current = String(opts.current || '').split(',').map(s => s.trim()).filter(Boolean);
-  // Admin: pre-carica i tag esistenti (può anche rimuoverli).
-  // Iscritto: parte vuoto e può solo AGGIUNGERE (non rimuove i tag altrui).
-  window._rpTags = isAdmin ? current.map(aid => {
+  // Admin (foto caricate): pre-carica i tag esistenti (può rimuoverli).
+  // Altrimenti: parte vuoto e può solo AGGIUNGERE (non rimuove i tag altrui).
+  window._rpTags = (!addOnly) ? current.map(aid => {
     const a = globalData?.athletes?.[aid];
     return { id: aid, label: a ? `${a.cognome} ${a.nome}`.trim() : aid };
   }) : [];
-  const _curNote = (!isAdmin && current.length)
+  const _curNote = (addOnly && current.length)
     ? `<div style="font-size:.72rem;color:var(--text-muted);margin:0 0 8px">Già taggati: ${current.map(aid => { const a = globalData?.athletes?.[aid]; return esc(a ? `${a.cognome} ${a.nome}`.trim() : aid); }).join(', ')}</div>`
     : '';
   const top = _mediaTopTen(opts.garaId).filter(r => !current.includes(r.atleta_id)).slice(0, 10);
@@ -11472,7 +11722,10 @@ window._openTagPanel = (opts) => {
     const csv = (window._rpTags || []).map(t => t.id).join(',');
     const btn = overlay.querySelector('#tg-save'); btn.disabled = true; btn.textContent = 'Salvataggio…';
     try {
-      if (opts.kind === 'photo') {
+      if (opts.kind === 'extphoto') {
+        // Foto album esterno (xpix/IC): aggiunge i tag (merge lato server)
+        await apiCall(`/ext-photos/tag`, { method: 'POST', body: { source: opts.source, gara_id: opts.garaId, photo_url: opts.photoUrl, atleta_ids: csv } });
+      } else if (opts.kind === 'photo') {
         if (isAdmin) {
           await apiCall(`/admin/race-photos/${opts.photoId}`, { method: 'PATCH', body: { atleta_ids: csv } });
         } else {
@@ -12250,7 +12503,7 @@ async function renderGara(gara_id) {
         const _albumGridHtml = `
           <div class="profile-media-grid" style="margin-top:12px">
             ${_allPics.map((u, idx) => `
-              <div class="profile-media-card" onclick="window.openPhotoLightbox('${esc(icProxy(u))}',{credit:'${esc(_srcLabel)}'})" style="cursor:zoom-in;position:relative">
+              <div class="profile-media-card" onclick="window.openPhotoLightbox('${esc(icProxy(u))}',{credit:'${esc(_srcLabel)}',ext:{source:'${esc(_photoSource)}',garaId:'${esc(_xpixKey)}',url:'${esc(u.replace(/'/g,"\\'"))}',albumPage:'${esc((_extPhoto.album_page||'').replace(/'/g,"\\'"))}',srcLabel:'${esc(_srcLabel)}',current:'${esc(((_extPhoto.tags||{})[u]||''))}'}})" style="cursor:zoom-in;position:relative">
                 <img src="${esc(icProxy(u))}" alt="Foto ${idx+1}" loading="lazy" style="width:100%;height:100%;object-fit:cover"/>
                 ${_isAdminPhoto && idx > 0 ? `<button onclick="event.stopPropagation();window.adminPhotoPromote('${esc(_photoSource)}','${esc(_xpixKey)}','${esc(u.replace(/'/g,"\\'"))}')"
                   style="position:absolute;top:4px;right:4px;background:rgba(245,158,11,.95);color:#fff;border:none;padding:3px 7px;border-radius:4px;font-size:.66rem;cursor:pointer;font-weight:700;z-index:2">⭐ Principale</button>` : ''}
@@ -12267,7 +12520,7 @@ async function renderGara(gara_id) {
                  <button onclick="window.adminPhotoMove('${esc(_photoSource)}','${esc(_xpixKey)}')" style="background:rgba(37,99,235,.9);color:#fff;border:none;padding:3px 8px;border-radius:4px;font-size:.7rem;cursor:pointer;white-space:nowrap">🔀 Sposta gara</button>
                  <button onclick="window.adminPhotoRemove('${esc(_photoSource)}','${esc(_xpixKey)}')" style="background:rgba(220,38,38,.9);color:#fff;border:none;padding:3px 8px;border-radius:4px;font-size:.7rem;cursor:pointer;white-space:nowrap">🗑 Rimuovi</button>
                </div>` : '';
-          _heroPhotoEl = `<div class="gara-media-half gara-media-photo" onclick="window.openPhotoLightbox('${_src}')" style="cursor:zoom-in;position:relative">
+          _heroPhotoEl = `<div class="gara-media-half gara-media-photo" onclick="window.openPhotoLightbox('${_src}',{ext:{source:'${esc(_photoSource)}',garaId:'${esc(_xpixKey)}',url:'${esc(_extPhoto.url.replace(/'/g,"\\'"))}',albumPage:'${esc((_extPhoto.album_page||'').replace(/'/g,"\\'"))}',srcLabel:'${esc(_srcLabel)}',current:'${esc(((_extPhoto.tags||{})[_extPhoto.url]||''))}'}})" style="cursor:zoom-in;position:relative">
              <img id="gara-hero-img" src="${_src}" alt="Foto gara" loading="lazy"/>
              <div class="gara-photo-hint">🔍 Clicca per la foto intera</div>
              <div style="position:absolute;bottom:6px;left:8px;font-size:0.65rem;color:rgba(255,255,255,.7);background:rgba(0,0,0,.45);padding:2px 6px;border-radius:3px">📷 ${_srcLabel}</div>
