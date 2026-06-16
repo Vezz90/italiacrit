@@ -1,5 +1,21 @@
 [
   {
+    "atleta_id": "ACUTI_MARIA",
+    "cognome": "ACUTI",
+    "nome": "MARIA",
+    "team_id": "BIESSE_CARRERA_PREMAC",
+    "team_nome": "BIESSE - CARRERA - PREMAC",
+    "punti": 175,
+    "vittorie": 6,
+    "gare": 13,
+    "p1": 6,
+    "p2": 0,
+    "p3": 0,
+    "pout": 7,
+    "pos": 1,
+    "trend": 0
+  },
+  {
     "atleta_id": "ROSSIGNOLI_MATILDE",
     "cognome": "ROSSIGNOLI",
     "nome": "MATILDE",
@@ -12,22 +28,6 @@
     "p2": 6,
     "p3": 1,
     "pout": 2,
-    "pos": 1,
-    "trend": 0
-  },
-  {
-    "atleta_id": "ACUTI_MARIA",
-    "cognome": "ACUTI",
-    "nome": "MARIA",
-    "team_id": "BIESSE_CARRERA_PREMAC",
-    "team_nome": "BIESSE - CARRERA - PREMAC",
-    "punti": 160,
-    "vittorie": 5,
-    "gare": 12,
-    "p1": 5,
-    "p2": 0,
-    "p3": 0,
-    "pout": 7,
     "pos": 2,
     "trend": 0
   },
@@ -133,14 +133,30 @@
     "nome": "SJOGREN GAETTANA",
     "team_id": "A_R_MONEX_PRO_CYCLING_TEAM",
     "team_nome": "A.R.MONEX PRO CYCLING TEAM",
-    "punti": 58,
+    "punti": 63,
     "vittorie": 0,
-    "gare": 4,
+    "gare": 5,
     "p1": 0,
     "p2": 1,
     "p3": 1,
-    "pout": 2,
+    "pout": 3,
     "pos": 9,
+    "trend": 0
+  },
+  {
+    "atleta_id": "PETRIS_CARLOTTA",
+    "cognome": "PETRIS",
+    "nome": "CARLOTTA",
+    "team_id": "LIBERTAS_CERESETTO",
+    "team_nome": "LIBERTAS CERESETTO",
+    "punti": 59,
+    "vittorie": 0,
+    "gare": 6,
+    "p1": 0,
+    "p2": 1,
+    "p3": 1,
+    "pout": 4,
+    "pos": 10,
     "trend": 0
   },
   {
@@ -156,22 +172,6 @@
     "p2": 0,
     "p3": 2,
     "pout": 4,
-    "pos": 10,
-    "trend": 0
-  },
-  {
-    "atleta_id": "PETRIS_CARLOTTA",
-    "cognome": "PETRIS",
-    "nome": "CARLOTTA",
-    "team_id": "LIBERTAS_CERESETTO",
-    "team_nome": "LIBERTAS CERESETTO",
-    "punti": 53,
-    "vittorie": 0,
-    "gare": 5,
-    "p1": 0,
-    "p2": 1,
-    "p3": 1,
-    "pout": 3,
     "pos": 11,
     "trend": 0
   },
@@ -192,19 +192,35 @@
     "trend": 0
   },
   {
+    "atleta_id": "CAFUERI_RACHELE",
+    "cognome": "CAFUERI",
+    "nome": "RACHELE",
+    "team_id": "LIBERTAS_CERESETTO",
+    "team_nome": "LIBERTAS CERESETTO",
+    "punti": 48,
+    "vittorie": 0,
+    "gare": 7,
+    "p1": 0,
+    "p2": 1,
+    "p3": 0,
+    "pout": 6,
+    "pos": 13,
+    "trend": 0
+  },
+  {
     "atleta_id": "SAVORGNANO_AMBRA",
     "cognome": "SAVORGNANO",
     "nome": "AMBRA",
     "team_id": "LIBERTAS_CERESETTO",
     "team_nome": "LIBERTAS CERESETTO",
-    "punti": 44,
+    "punti": 47,
     "vittorie": 0,
-    "gare": 6,
+    "gare": 7,
     "p1": 0,
     "p2": 1,
     "p3": 1,
-    "pout": 4,
-    "pos": 13,
+    "pout": 5,
+    "pos": 14,
     "trend": 0
   },
   {
@@ -220,7 +236,7 @@
     "p2": 0,
     "p3": 0,
     "pout": 5,
-    "pos": 14,
+    "pos": 15,
     "trend": 0
   },
   {
@@ -236,7 +252,7 @@
     "p2": 0,
     "p3": 0,
     "pout": 7,
-    "pos": 15,
+    "pos": 16,
     "trend": 0
   },
   {
@@ -252,22 +268,6 @@
     "p2": 1,
     "p3": 1,
     "pout": 2,
-    "pos": 16,
-    "trend": 0
-  },
-  {
-    "atleta_id": "CAFUERI_RACHELE",
-    "cognome": "CAFUERI",
-    "nome": "RACHELE",
-    "team_id": "LIBERTAS_CERESETTO",
-    "team_nome": "LIBERTAS CERESETTO",
-    "punti": 36,
-    "vittorie": 0,
-    "gare": 6,
-    "p1": 0,
-    "p2": 0,
-    "p3": 0,
-    "pout": 6,
     "pos": 17,
     "trend": 0
   },
@@ -464,6 +464,22 @@
     "trend": 0
   },
   {
+    "atleta_id": "GARCIA_BARENO_DOMINGUEZ_NABYENKA",
+    "cognome": "GARCIA",
+    "nome": "BARENO DOMINGUEZ NABYENKA",
+    "team_id": "A_R_MONEX_PRO_CYCLING_TEAM",
+    "team_nome": "A.R.MONEX PRO CYCLING TEAM",
+    "punti": 22,
+    "vittorie": 0,
+    "gare": 2,
+    "p1": 0,
+    "p2": 0,
+    "p3": 1,
+    "pout": 1,
+    "pos": 30,
+    "trend": 0
+  },
+  {
     "atleta_id": "BERNI_NICOLETTA",
     "cognome": "BERNI",
     "nome": "NICOLETTA",
@@ -476,7 +492,7 @@
     "p2": 0,
     "p3": 0,
     "pout": 4,
-    "pos": 30,
+    "pos": 31,
     "trend": 0
   },
   {
@@ -492,7 +508,7 @@
     "p2": 0,
     "p3": 1,
     "pout": 2,
-    "pos": 31,
+    "pos": 32,
     "trend": 0
   },
   {
@@ -508,7 +524,7 @@
     "p2": 0,
     "p3": 0,
     "pout": 1,
-    "pos": 32,
+    "pos": 33,
     "trend": 0
   },
   {
@@ -524,7 +540,7 @@
     "p2": 0,
     "p3": 0,
     "pout": 2,
-    "pos": 33,
+    "pos": 34,
     "trend": 0
   },
   {
@@ -540,7 +556,7 @@
     "p2": 0,
     "p3": 0,
     "pout": 1,
-    "pos": 34,
+    "pos": 35,
     "trend": 0
   },
   {
@@ -556,7 +572,7 @@
     "p2": 0,
     "p3": 0,
     "pout": 1,
-    "pos": 35,
+    "pos": 36,
     "trend": 0
   },
   {
@@ -572,7 +588,7 @@
     "p2": 0,
     "p3": 0,
     "pout": 1,
-    "pos": 36,
+    "pos": 37,
     "trend": 0
   },
   {
@@ -588,23 +604,23 @@
     "p2": 0,
     "p3": 0,
     "pout": 1,
-    "pos": 37,
+    "pos": 38,
     "trend": 0
   },
   {
-    "atleta_id": "GARCIA_BARENO_DOMINGUEZ_NABYENKA",
-    "cognome": "GARCIA",
-    "nome": "BARENO DOMINGUEZ NABYENKA",
-    "team_id": "A_R_MONEX_PRO_CYCLING_TEAM",
-    "team_nome": "A.R.MONEX PRO CYCLING TEAM",
+    "atleta_id": "D_AGNESE_ELENA",
+    "cognome": "D'AGNESE",
+    "nome": "ELENA",
+    "team_id": "LIBERTAS_CERESETTO",
+    "team_nome": "LIBERTAS CERESETTO",
     "punti": 12,
     "vittorie": 0,
-    "gare": 1,
+    "gare": 3,
     "p1": 0,
     "p2": 0,
     "p3": 0,
-    "pout": 1,
-    "pos": 38,
+    "pout": 3,
+    "pos": 39,
     "trend": 0
   },
   {
@@ -620,7 +636,7 @@
     "p2": 0,
     "p3": 0,
     "pout": 4,
-    "pos": 39,
+    "pos": 40,
     "trend": 0
   },
   {
@@ -636,7 +652,7 @@
     "p2": 0,
     "p3": 0,
     "pout": 2,
-    "pos": 40,
+    "pos": 41,
     "trend": 0
   },
   {
@@ -652,7 +668,7 @@
     "p2": 0,
     "p3": 0,
     "pout": 2,
-    "pos": 41,
+    "pos": 42,
     "trend": 0
   },
   {
@@ -668,7 +684,7 @@
     "p2": 0,
     "p3": 0,
     "pout": 1,
-    "pos": 42,
+    "pos": 43,
     "trend": 0
   },
   {
@@ -684,7 +700,7 @@
     "p2": 0,
     "p3": 1,
     "pout": 0,
-    "pos": 43,
+    "pos": 44,
     "trend": 0
   },
   {
@@ -700,7 +716,23 @@
     "p2": 0,
     "p3": 0,
     "pout": 1,
-    "pos": 44,
+    "pos": 45,
+    "trend": 0
+  },
+  {
+    "atleta_id": "GIANGRASSO_ELISA",
+    "cognome": "GIANGRASSO",
+    "nome": "ELISA",
+    "team_id": "LIBERTAS_CERESETTO",
+    "team_nome": "LIBERTAS CERESETTO",
+    "punti": 8,
+    "vittorie": 0,
+    "gare": 1,
+    "p1": 0,
+    "p2": 0,
+    "p3": 0,
+    "pout": 1,
+    "pos": 46,
     "trend": 0
   },
   {
@@ -716,7 +748,7 @@
     "p2": 0,
     "p3": 0,
     "pout": 1,
-    "pos": 45,
+    "pos": 47,
     "trend": 0
   },
   {
@@ -732,23 +764,7 @@
     "p2": 0,
     "p3": 0,
     "pout": 2,
-    "pos": 46,
-    "trend": 0
-  },
-  {
-    "atleta_id": "D_AGNESE_ELENA",
-    "cognome": "D'AGNESE",
-    "nome": "ELENA",
-    "team_id": "LIBERTAS_CERESETTO",
-    "team_nome": "LIBERTAS CERESETTO",
-    "punti": 8,
-    "vittorie": 0,
-    "gare": 2,
-    "p1": 0,
-    "p2": 0,
-    "p3": 0,
-    "pout": 2,
-    "pos": 47,
+    "pos": 48,
     "trend": 0
   },
   {
@@ -764,7 +780,7 @@
     "p2": 0,
     "p3": 0,
     "pout": 2,
-    "pos": 48,
+    "pos": 49,
     "trend": 0
   },
   {
@@ -780,7 +796,7 @@
     "p2": 0,
     "p3": 0,
     "pout": 1,
-    "pos": 49,
+    "pos": 50,
     "trend": 0
   },
   {
@@ -796,7 +812,7 @@
     "p2": 0,
     "p3": 0,
     "pout": 1,
-    "pos": 50,
+    "pos": 51,
     "trend": 0
   },
   {
@@ -812,7 +828,7 @@
     "p2": 0,
     "p3": 0,
     "pout": 2,
-    "pos": 51,
+    "pos": 52,
     "trend": 0
   },
   {
@@ -828,7 +844,7 @@
     "p2": 0,
     "p3": 0,
     "pout": 2,
-    "pos": 52,
+    "pos": 53,
     "trend": 0
   },
   {
@@ -844,7 +860,7 @@
     "p2": 0,
     "p3": 0,
     "pout": 1,
-    "pos": 53,
+    "pos": 54,
     "trend": 0
   },
   {
@@ -860,7 +876,23 @@
     "p2": 0,
     "p3": 0,
     "pout": 1,
-    "pos": 54,
+    "pos": 55,
+    "trend": 0
+  },
+  {
+    "atleta_id": "INVERNIZZI_VIOLA",
+    "cognome": "INVERNIZZI",
+    "nome": "VIOLA",
+    "team_id": "PETRUCCI_GAUSS_CYCLING_TEAM",
+    "team_nome": "PETRUCCI GAUSS CYCLING TEAM",
+    "punti": 5,
+    "vittorie": 0,
+    "gare": 2,
+    "p1": 0,
+    "p2": 0,
+    "p3": 0,
+    "pout": 2,
+    "pos": 56,
     "trend": 0
   },
   {
@@ -876,7 +908,7 @@
     "p2": 0,
     "p3": 0,
     "pout": 1,
-    "pos": 55,
+    "pos": 57,
     "trend": 0
   },
   {
@@ -892,7 +924,7 @@
     "p2": 0,
     "p3": 0,
     "pout": 1,
-    "pos": 56,
+    "pos": 58,
     "trend": 0
   },
   {
@@ -908,7 +940,7 @@
     "p2": 0,
     "p3": 0,
     "pout": 1,
-    "pos": 57,
+    "pos": 59,
     "trend": 0
   },
   {
@@ -924,7 +956,7 @@
     "p2": 0,
     "p3": 0,
     "pout": 2,
-    "pos": 58,
+    "pos": 60,
     "trend": 0
   },
   {
@@ -940,7 +972,7 @@
     "p2": 0,
     "p3": 0,
     "pout": 1,
-    "pos": 59,
+    "pos": 61,
     "trend": 0
   },
   {
@@ -956,7 +988,7 @@
     "p2": 0,
     "p3": 0,
     "pout": 1,
-    "pos": 60,
+    "pos": 62,
     "trend": 0
   },
   {
@@ -972,7 +1004,7 @@
     "p2": 0,
     "p3": 0,
     "pout": 1,
-    "pos": 61,
+    "pos": 63,
     "trend": 0
   },
   {
@@ -988,7 +1020,7 @@
     "p2": 0,
     "p3": 0,
     "pout": 1,
-    "pos": 62,
+    "pos": 64,
     "trend": 0
   },
   {
@@ -1004,23 +1036,7 @@
     "p2": 0,
     "p3": 0,
     "pout": 1,
-    "pos": 63,
-    "trend": 0
-  },
-  {
-    "atleta_id": "INVERNIZZI_VIOLA",
-    "cognome": "INVERNIZZI",
-    "nome": "VIOLA",
-    "team_id": "PETRUCCI_GAUSS_CYCLING_TEAM",
-    "team_nome": "PETRUCCI GAUSS CYCLING TEAM",
-    "punti": 3,
-    "vittorie": 0,
-    "gare": 1,
-    "p1": 0,
-    "p2": 0,
-    "p3": 0,
-    "pout": 1,
-    "pos": 64,
+    "pos": 65,
     "trend": 0
   },
   {
@@ -1036,7 +1052,7 @@
     "p2": 0,
     "p3": 0,
     "pout": 1,
-    "pos": 65,
+    "pos": 66,
     "trend": 0
   },
   {
@@ -1052,7 +1068,7 @@
     "p2": 0,
     "p3": 0,
     "pout": 1,
-    "pos": 66,
+    "pos": 67,
     "trend": 0
   },
   {
@@ -1068,7 +1084,7 @@
     "p2": 0,
     "p3": 0,
     "pout": 1,
-    "pos": 67,
+    "pos": 68,
     "trend": 0
   },
   {
@@ -1084,7 +1100,7 @@
     "p2": 0,
     "p3": 0,
     "pout": 1,
-    "pos": 68,
+    "pos": 69,
     "trend": 0
   }
 ]

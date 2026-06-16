@@ -2,9 +2,9 @@
   {
     "team_id": "BIESSE_CARRERA_PREMAC",
     "team_nome": "BIESSE - CARRERA - PREMAC",
-    "punti": 409,
-    "vittorie": 7,
-    "p1": 7,
+    "punti": 424,
+    "vittorie": 8,
+    "p1": 8,
     "p2": 5,
     "p3": 5,
     "pout": 26,
@@ -24,6 +24,18 @@
     "pos": 2
   },
   {
+    "team_id": "LIBERTAS_CERESETTO",
+    "team_nome": "LIBERTAS CERESETTO",
+    "punti": 202,
+    "vittorie": 0,
+    "p1": 0,
+    "p2": 3,
+    "p3": 2,
+    "pout": 25,
+    "n_atleti": 6,
+    "pos": 3
+  },
+  {
     "team_id": "BRESCIA_F_MAGNI_FLANDRES_LOVE",
     "team_nome": "BRESCIA - F. MAGNI - FLANDRES LOVE",
     "punti": 170,
@@ -33,19 +45,19 @@
     "p3": 6,
     "pout": 10,
     "n_atleti": 6,
-    "pos": 3
+    "pos": 4
   },
   {
-    "team_id": "LIBERTAS_CERESETTO",
-    "team_nome": "LIBERTAS CERESETTO",
-    "punti": 169,
-    "vittorie": 0,
-    "p1": 0,
-    "p2": 2,
+    "team_id": "PETRUCCI_GAUSS_CYCLING_TEAM",
+    "team_nome": "PETRUCCI GAUSS CYCLING TEAM",
+    "punti": 162,
+    "vittorie": 3,
+    "p1": 3,
+    "p2": 1,
     "p3": 2,
-    "pout": 21,
-    "n_atleti": 5,
-    "pos": 4
+    "pout": 14,
+    "n_atleti": 7,
+    "pos": 5
   },
   {
     "team_id": "BREGANZE_MILLENIUM",
@@ -57,19 +69,19 @@
     "p3": 1,
     "pout": 13,
     "n_atleti": 5,
-    "pos": 5
+    "pos": 6
   },
   {
-    "team_id": "PETRUCCI_GAUSS_CYCLING_TEAM",
-    "team_nome": "PETRUCCI GAUSS CYCLING TEAM",
-    "punti": 160,
-    "vittorie": 3,
-    "p1": 3,
+    "team_id": "A_R_MONEX_PRO_CYCLING_TEAM",
+    "team_nome": "A.R.MONEX PRO CYCLING TEAM",
+    "punti": 146,
+    "vittorie": 1,
+    "p1": 1,
     "p2": 1,
     "p3": 2,
-    "pout": 13,
-    "n_atleti": 7,
-    "pos": 6
+    "pout": 8,
+    "n_atleti": 6,
+    "pos": 7
   },
   {
     "team_id": "U_C_CONSCIO_PEDALE_DEL_SILE",
@@ -81,18 +93,6 @@
     "p3": 0,
     "pout": 16,
     "n_atleti": 5,
-    "pos": 7
-  },
-  {
-    "team_id": "A_R_MONEX_PRO_CYCLING_TEAM",
-    "team_nome": "A.R.MONEX PRO CYCLING TEAM",
-    "punti": 131,
-    "vittorie": 1,
-    "p1": 1,
-    "p2": 1,
-    "p3": 1,
-    "pout": 7,
-    "n_atleti": 6,
     "pos": 8
   },
   {
