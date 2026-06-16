@@ -3448,9 +3448,12 @@ app.post('/api/ai/ask', async (req, res) => {
       a.cognome.length >= 4 && q.includes(a.cognome)
     );
 
-    // ── Rilevamento gara nella domanda ────────────────────────────────────────
+    // ── Rilevamento gara nella domanda (word-based, robusto a trattini/spazi/numeri) ──
     const gareInDomanda = [];
     {
+      const stopWords = new Set(['di','del','della','dei','delle','degli','il','lo','la','le','un','una','al','alla','gara','corsa','trofeo','gran','premio','coppa','giro','in','a','e']);
+      // Parole significative nella domanda (min 4 chars, no stop words)
+      const qWords = q.replace(/[''°\-]/g, ' ').split(/\s+/).filter(w => w.length >= 4 && !stopWords.has(w));
       const byGaraId = {};
       for (const r of results) {
         if (!r.gara_id) continue;
@@ -3458,12 +3461,18 @@ app.post('/api/ai/ask', async (req, res) => {
         byGaraId[r.gara_id].rows.push(r);
       }
       for (const [gid, g] of Object.entries(byGaraId)) {
-        const nomeLow = g.nome.toLowerCase();
-        if (nomeLow.length >= 5 && q.includes(nomeLow.slice(0, Math.min(nomeLow.length, 12)))) {
+        const nomeLow = g.nome.toLowerCase().replace(/[''°\-]/g, ' ');
+        const nomeWords = nomeLow.split(/\s+/).filter(w => w.length >= 4 && !stopWords.has(w));
+        // Match se almeno 2 parole significative della gara compaiono nella domanda (o 1 se il nome è corto)
+        const hits = nomeWords.filter(w => qWords.some(qw => qw.includes(w) || w.includes(qw)));
+        const threshold = nomeWords.length >= 3 ? 2 : 1;
+        if (hits.length >= threshold) {
           const sorted = g.rows.sort((a,b) => Number(a.posizione)-Number(b.posizione));
           gareInDomanda.push({ gid, nome: g.nome, data: g.data, top5: sorted.filter(r => Number(r.posizione) <= 5) });
         }
       }
+      // Ordina per data più recente, prende max 3
+      gareInDomanda.sort((a,b) => (b.data||'').localeCompare(a.data||'')).splice(3);
     }
 
     // ── Profilo atleta completo ───────────────────────────────────────────────
@@ -3571,7 +3580,7 @@ ${contextParts.join('\n\n')}
 
     const msg = await ai.messages.create({
       model: 'claude-haiku-4-5-20251001',
-      max_tokens: 400,
+      max_tokens: 600,
       system: systemPrompt,
       messages
     });

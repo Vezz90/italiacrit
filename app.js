@@ -5175,26 +5175,32 @@ async function renderHubBars() {
   const _snapBL   = _pickSnapBefore(hubResES2, mainCat, lastDateES2, _snapBeforeLast);
   const _snapBLE1 = es1Code ? _pickSnapBefore(hubResES1, es1Code, lastDateES1, _snapBeforeLastE1) : {};
 
-  // ── Movers: usa snapshot before-last (= logica identica alla classifica page) ──
-  function computeMovers(ranking, snapNow, snapBefore, posLimit = 30) {
-    const list = ranking.map(a => {
-      const now = snapNow[a.atleta_id], old = snapBefore[a.atleta_id];
-      if (!now || !old) return null;
-      const gain = old - now; // positivo = salito, negativo = sceso
-      return { atleta_id:a.atleta_id, cognome:a.cognome, nome:a.nome,
-               team:a.team_attuale||a.team||'', pos:now, gain, pts:a.punti||0 };
-    }).filter(Boolean);
+  // ── Movers: diff diretto fra i due snapshot (non dipende dagli atleta_id del file ranking) ──
+  // Questo evita il mismatch fra atleta_id del JSON ranking e quelli di resultsRaw.
+  function computeMovers(snapNow, snapBefore, resSet, posLimit = 30) {
+    // Lookup nomi da resultsRaw
+    const nameLookup = {};
+    for (const r of resSet) {
+      if (r.atleta_id && !nameLookup[r.atleta_id])
+        nameLookup[r.atleta_id] = { cognome: r.cognome || '', nome: r.nome || '', team: r.team || '' };
+    }
+    const list = [];
+    for (const [aid, posNow] of Object.entries(snapNow)) {
+      const posOld = snapBefore[aid];
+      if (!posOld) continue;
+      const gain = posOld - posNow; // positivo = salito in classifica
+      if (gain === 0) continue;
+      const info = nameLookup[aid] || {};
+      list.push({ atleta_id: aid, cognome: info.cognome, nome: info.nome, team: info.team, pos: posNow, gain });
+    }
     return {
-      // UP: arrivati/rimasti dentro top posLimit
       up: list.filter(m => m.gain >= 1 && m.pos <= posLimit).sort((a,b) => b.gain - a.gain).slice(0, 5),
-      // DOWN: erano dentro top posLimit e sono scesi
       dn: list.filter(m => m.gain <= -1 && (m.pos - m.gain) <= posLimit).sort((a,b) => a.gain - b.gain).slice(0, 5),
     };
   }
-  // Usa il ranking COMPLETO per i movers (non limitato a top10)
-  const movers    = computeMovers(_hubRankFull,    _snapNow,  _snapBL);
-  const moversES1 = isEsordienti && _hubRankES1Full
-    ? computeMovers(_hubRankES1Full, _snapNowE1, _snapBLE1)
+  const movers    = computeMovers(_snapNow,  _snapBL,   hubResES2);
+  const moversES1 = isEsordienti
+    ? computeMovers(_snapNowE1, _snapBLE1, hubResES1)
     : { up: [], dn: [] };
 
   // Pre-carica foto atleta on fire:
@@ -11256,33 +11262,40 @@ window._deleteComment = async (id) => {
   } catch(e) { showToast(e.message, 'error'); }
 };
 
-// ── FAUSTO — AI Chat Widget ────────────────────────────────────────────────────
-const _FAUSTO_SVG = `<svg viewBox="0 0 40 40" xmlns="http://www.w3.org/2000/svg" width="28" height="28">
-  <!-- casco -->
-  <ellipse cx="20" cy="16" rx="11" ry="9" fill="#fff" opacity=".95"/>
-  <path d="M9 16 Q9 8 20 7 Q31 8 31 16" fill="#e8001d"/>
-  <!-- vento/righe casco -->
-  <path d="M12 10 Q16 8 20 8" stroke="#fff" stroke-width="1.2" fill="none" opacity=".6"/>
-  <path d="M14 12 Q18 10 23 10" stroke="#fff" stroke-width="1" fill="none" opacity=".4"/>
-  <!-- visiera -->
-  <ellipse cx="20" cy="24" rx="7" ry="3" fill="#1e293b" opacity=".8"/>
-  <path d="M13 24 Q20 28 27 24" stroke="#e8001d" stroke-width="1.5" fill="none"/>
-  <!-- occhiale -->
-  <rect x="14" y="21" width="5" height="3" rx="1.5" fill="#0ea5e9" opacity=".9"/>
-  <rect x="21" y="21" width="5" height="3" rx="1.5" fill="#0ea5e9" opacity=".9"/>
-  <line x1="19" y1="22.5" x2="21" y2="22.5" stroke="#1e293b" stroke-width="1"/>
-  <!-- naso/bocca -->
-  <ellipse cx="20" cy="27" rx="2" ry="1" fill="#fbbf24" opacity=".7"/>
+// ── VEZZ — AI Chat Widget ──────────────────────────────────────────────────────
+const _VEZZ_SVG = `<svg viewBox="0 0 40 40" xmlns="http://www.w3.org/2000/svg" width="26" height="26">
+  <!-- ciclista stilizzato in corsa, vista laterale -->
+  <!-- ruota posteriore -->
+  <circle cx="11" cy="29" r="7" fill="none" stroke="#fff" stroke-width="2.2" opacity=".95"/>
+  <circle cx="11" cy="29" r="1.8" fill="#fff" opacity=".8"/>
+  <!-- ruota anteriore -->
+  <circle cx="31" cy="29" r="7" fill="none" stroke="#fff" stroke-width="2.2" opacity=".95"/>
+  <circle cx="31" cy="29" r="1.8" fill="#fff" opacity=".8"/>
+  <!-- telaio: triangolo principale -->
+  <polyline points="11,29 20,16 31,29" fill="none" stroke="#fff" stroke-width="2" stroke-linejoin="round" opacity=".9"/>
+  <!-- tubo piantone sella -->
+  <line x1="20" y1="16" x2="17" y2="29" stroke="#fff" stroke-width="1.8" stroke-linecap="round" opacity=".8"/>
+  <!-- manubrio -->
+  <line x1="28" y1="20" x2="31" y2="22" stroke="#fff" stroke-width="1.8" stroke-linecap="round" opacity=".9"/>
+  <!-- forcella -->
+  <line x1="29" y1="20" x2="31" y2="29" stroke="#fff" stroke-width="1.6" stroke-linecap="round" opacity=".7"/>
+  <!-- corpo corridore (aerobico, chinato in avanti) -->
+  <circle cx="22" cy="13" r="3.2" fill="#fff" opacity=".95"/>
+  <path d="M22 16 Q24 20 28 20" stroke="#fff" stroke-width="2" fill="none" stroke-linecap="round" opacity=".9"/>
+  <!-- linee velocità -->
+  <line x1="2" y1="18" x2="7" y2="18" stroke="#fff" stroke-width="1.4" stroke-linecap="round" opacity=".5"/>
+  <line x1="1" y1="22" x2="6" y2="22" stroke="#fff" stroke-width="1" stroke-linecap="round" opacity=".35"/>
+  <line x1="3" y1="26" x2="7" y2="26" stroke="#fff" stroke-width="1" stroke-linecap="round" opacity=".25"/>
 </svg>`;
 
-let _faustoHistory = []; // conversazione multi-turno
+let _vezzHistory = []; // conversazione multi-turno
 
 function _initAiWidget() {
   if (document.getElementById('ai-widget-btn')) return;
   const btn = document.createElement('button');
   btn.id = 'ai-widget-btn';
-  btn.innerHTML = _FAUSTO_SVG;
-  btn.title = 'Chatta con FAUSTO';
+  btn.innerHTML = _VEZZ_SVG;
+  btn.title = 'Chatta con VEZZ';
   btn.style.cssText = 'position:fixed;bottom:80px;right:18px;z-index:8000;width:52px;height:52px;border-radius:50%;background:var(--red-hot);color:#fff;border:none;cursor:pointer;box-shadow:0 4px 16px rgba(0,0,0,.4);display:flex;align-items:center;justify-content:center;transition:transform .15s';
   btn.onmouseenter = () => { btn.style.transform = 'scale(1.1)'; };
   btn.onmouseleave = () => { btn.style.transform = ''; };
@@ -11293,24 +11306,24 @@ function _initAiWidget() {
 window.toggleAiChat = function() {
   let panel = document.getElementById('ai-chat-panel');
   if (panel) { panel.remove(); return; }
-  _faustoHistory = [];
+  _vezzHistory = [];
   panel = document.createElement('div');
   panel.id = 'ai-chat-panel';
-  panel.style.cssText = 'position:fixed;bottom:144px;right:18px;z-index:8001;width:330px;max-height:480px;background:var(--bg-card);border:1px solid var(--border-subtle);border-radius:var(--r-lg);box-shadow:0 8px 32px rgba(0,0,0,.35);display:flex;flex-direction:column;overflow:hidden;animation:faustoSlide .2s ease';
-  panel.innerHTML = `<style>@keyframes faustoSlide{from{opacity:0;transform:translateY(12px)}to{opacity:1;transform:translateY(0)}}</style>
+  panel.style.cssText = 'position:fixed;bottom:144px;right:18px;z-index:8001;width:330px;max-height:480px;background:var(--bg-card);border:1px solid var(--border-subtle);border-radius:var(--r-lg);box-shadow:0 8px 32px rgba(0,0,0,.35);display:flex;flex-direction:column;overflow:hidden;animation:vezzSlide .2s ease';
+  panel.innerHTML = `<style>@keyframes vezzSlide{from{opacity:0;transform:translateY(12px)}to{opacity:1;transform:translateY(0)}}@keyframes vDot{0%,80%,100%{opacity:.2}40%{opacity:1}}</style>
     <div style="padding:11px 14px;display:flex;align-items:center;gap:10px;background:linear-gradient(135deg,#b91c1c,#e8001d);flex-shrink:0">
-      <div style="width:36px;height:36px;border-radius:50%;background:rgba(255,255,255,.15);display:flex;align-items:center;justify-content:center;flex-shrink:0">${_FAUSTO_SVG}</div>
+      <div style="width:38px;height:38px;border-radius:50%;background:rgba(255,255,255,.15);display:flex;align-items:center;justify-content:center;flex-shrink:0">${_VEZZ_SVG}</div>
       <div style="flex:1;min-width:0">
-        <div style="font-weight:800;color:#fff;font-size:.88rem;letter-spacing:.5px">FAUSTO</div>
-        <div style="font-size:.68rem;color:rgba(255,255,255,.7);letter-spacing:.3px">Assistente ICS · Powered by AI</div>
+        <div style="font-weight:900;color:#fff;font-size:.92rem;letter-spacing:1.5px">VEZZ</div>
+        <div style="font-size:.67rem;color:rgba(255,255,255,.65);letter-spacing:.2px">Assistente AI · ICS</div>
       </div>
-      <button onclick="window.toggleAiChat()" style="background:none;border:none;color:rgba(255,255,255,.8);cursor:pointer;font-size:1.1rem;line-height:1;padding:2px 4px">✕</button>
+      <button onclick="window.toggleAiChat()" style="background:none;border:none;color:rgba(255,255,255,.7);cursor:pointer;font-size:1.1rem;line-height:1;padding:2px 6px">✕</button>
     </div>
     <div id="ai-messages" style="flex:1;overflow-y:auto;padding:12px;display:flex;flex-direction:column;gap:8px">
-      <div style="background:var(--bg-elevated);padding:9px 12px;border-radius:10px 10px 10px 2px;font-size:.82rem;color:var(--text-primary);line-height:1.5">Ciao! Sono <strong>FAUSTO</strong>, l'assistente di ICS 🚴<br>Chiedimi di atleti, classifiche, gare o risultati — ricordo la nostra conversazione.</div>
+      <div style="background:var(--bg-elevated);padding:9px 12px;border-radius:10px 10px 10px 2px;font-size:.82rem;color:var(--text-primary);line-height:1.5">Ciao! Sono <strong>VEZZ</strong>, l'assistente AI di ICS 🚴<br>Chiedimi di atleti, classifiche, gare, risultati — ricordo il filo della nostra conversazione.</div>
     </div>
     <form id="ai-form" style="padding:10px;border-top:1px solid var(--border-subtle);display:flex;gap:6px;flex-shrink:0">
-      <input id="ai-input" type="text" placeholder="Chiedi a FAUSTO…" autocomplete="off" style="flex:1;padding:7px 10px;border:1px solid var(--border-subtle);border-radius:var(--r-sm);font-size:.82rem;background:var(--bg-primary);color:var(--text-primary)"/>
+      <input id="ai-input" type="text" placeholder="Chiedi a VEZZ…" autocomplete="off" style="flex:1;padding:7px 10px;border:1px solid var(--border-subtle);border-radius:var(--r-sm);font-size:.82rem;background:var(--bg-primary);color:var(--text-primary)"/>
       <button type="submit" id="ai-send-btn" style="padding:7px 13px;background:var(--red-hot);color:#fff;border:none;border-radius:var(--r-sm);font-weight:700;cursor:pointer;font-size:.85rem">↑</button>
     </form>`;
   document.body.appendChild(panel);
@@ -11328,36 +11341,31 @@ window.toggleAiChat = function() {
     const msgs = document.getElementById('ai-messages');
     if (!msgs) return;
 
-    // Bolla utente
     msgs.insertAdjacentHTML('beforeend',
       `<div style="background:var(--red-hot);color:#fff;padding:9px 12px;border-radius:10px 10px 2px 10px;font-size:.82rem;align-self:flex-end;max-width:88%;word-break:break-word">${esc(question)}</div>`);
-    // Bolla typing
-    const loadId = 'fausto-loading-' + Date.now();
+    const loadId = 'vezz-loading-' + Date.now();
     msgs.insertAdjacentHTML('beforeend',
-      `<div id="${loadId}" style="background:var(--bg-elevated);padding:9px 12px;border-radius:10px 10px 10px 2px;font-size:.82rem;color:var(--text-muted);display:flex;gap:4px;align-items:center">
-        <span style="animation:fDot 1s infinite .0s both;display:inline-block">●</span>
-        <span style="animation:fDot 1s infinite .2s both;display:inline-block">●</span>
-        <span style="animation:fDot 1s infinite .4s both;display:inline-block">●</span>
-        <style>@keyframes fDot{0%,80%,100%{opacity:.2}40%{opacity:1}}</style>
+      `<div id="${loadId}" style="background:var(--bg-elevated);padding:9px 14px;border-radius:10px 10px 10px 2px;font-size:.82rem;color:var(--text-muted);display:flex;gap:5px;align-items:center">
+        <span style="animation:vDot 1s infinite .0s both;display:inline-block">●</span>
+        <span style="animation:vDot 1s infinite .2s both;display:inline-block">●</span>
+        <span style="animation:vDot 1s infinite .4s both;display:inline-block">●</span>
       </div>`);
     msgs.scrollTop = msgs.scrollHeight;
 
-    // Aggiunge alla history multi-turno
-    _faustoHistory.push({ role: 'user', content: question });
-    // Limita a ultimi 6 scambi
-    if (_faustoHistory.length > 12) _faustoHistory = _faustoHistory.slice(-12);
+    _vezzHistory.push({ role: 'user', content: question });
+    if (_vezzHistory.length > 12) _vezzHistory = _vezzHistory.slice(-12);
 
     try {
-      const { answer } = await apiCall('/ai/ask', { method: 'POST', body: { question, history: _faustoHistory.slice(0, -1) } });
+      const { answer } = await apiCall('/ai/ask', { method: 'POST', body: { question, history: _vezzHistory.slice(0, -1) } });
       document.getElementById(loadId)?.remove();
       msgs.insertAdjacentHTML('beforeend',
         `<div style="background:var(--bg-elevated);padding:9px 12px;border-radius:10px 10px 10px 2px;font-size:.82rem;color:var(--text-primary);line-height:1.55">${esc(answer)}</div>`);
-      _faustoHistory.push({ role: 'assistant', content: answer });
+      _vezzHistory.push({ role: 'assistant', content: answer });
     } catch(err) {
       document.getElementById(loadId)?.remove();
       msgs.insertAdjacentHTML('beforeend',
         `<div style="background:var(--bg-elevated);padding:9px 12px;border-radius:10px 10px 10px 2px;font-size:.82rem;color:#ef4444">${esc(err.message)}</div>`);
-      _faustoHistory.pop();
+      _vezzHistory.pop();
     }
     msgs.scrollTop = msgs.scrollHeight;
     if (sendBtn) { sendBtn.disabled = false; sendBtn.textContent = '↑'; }
