@@ -3517,14 +3517,35 @@ app.post('/api/ai/ask', async (req, res) => {
           const hits = nomeWords.filter(w => qWords.some(qw => qw.includes(w) || w.includes(qw)));
           if (hits.length >= 1) suggestions.push({ gid, nome: g.nome, data: g.data, hits: hits.length });
         }
-        suggestions.sort((a,b) => (b.hits - a.hits) || (b.data||'').localeCompare(a.data||'')).splice(8);
+        suggestions.sort((a,b) => (b.hits - a.hits) || (b.data||'').localeCompare(a.data||'')).splice(12);
         if (suggestions.length > 0) {
-          // Aggiungiamo il blocco suggerimenti al context
           const suggLines = suggestions.map(s => `  - ${s.nome} (${s.data})`).join('\n');
           contextParts.push(`GARE SIMILI TROVATE (nessuna corrispondenza esatta — mostra queste come opzioni all'utente):\n${suggLines}`);
         }
       }
     }
+    // Salvo i suggerimenti strutturati per passarli al frontend come bottoni
+    const _aiSuggestions = (gareInDomanda.length === 0)
+      ? ((() => {
+          const byGaraId2 = {};
+          for (const r of results) {
+            if (!r.gara_id) continue;
+            if (!byGaraId2[r.gara_id]) byGaraId2[r.gara_id] = { nome: r.nome_gara||r.gara_id, data: r.data||'', gid: r.gara_id };
+          }
+          const stopW2 = new Set(['di','del','della','dei','delle','degli','il','lo','la','le','un','una','al','alla','in','a','e','per','su','con']);
+          const qW2 = q.replace(/[''°\-]/g,' ').split(/\s+/).filter(w=>w.length>=3&&!stopW2.has(w));
+          return Object.values(byGaraId2)
+            .map(g => {
+              const nw = g.nome.toLowerCase().replace(/[''°\-]/g,' ').split(/\s+/).filter(w=>w.length>=3&&!stopW2.has(w));
+              const h = nw.filter(w=>qW2.some(qw=>qw.includes(w)||w.includes(qw))).length;
+              return { ...g, hits: h };
+            })
+            .filter(g=>g.hits>=1)
+            .sort((a,b)=>(b.hits-a.hits)||(b.data||'').localeCompare(a.data||''))
+            .slice(0,10)
+            .map(g=>({ nome: g.nome, data: g.data, gara_id: g.gid }));
+        })())
+      : [];
 
     // ── Profilo atleta completo ───────────────────────────────────────────────
     const atletaBlocks = [];
@@ -3724,7 +3745,7 @@ ${contextParts.join('\n\n')}
       system: systemPrompt,
       messages
     });
-    res.json({ answer: msg.content[0].text.trim() });
+    res.json({ answer: msg.content[0].text.trim(), suggestions: _aiSuggestions });
   } catch (e) { res.status(500).json({ error: e.message }); }
 });
 

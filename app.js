@@ -11365,10 +11365,20 @@ window.toggleAiChat = function() {
     if (_vezzHistory.length > 12) _vezzHistory = _vezzHistory.slice(-12);
 
     try {
-      const { answer } = await apiCall('/ai/ask', { method: 'POST', body: { question, history: _vezzHistory.slice(0, -1) } });
+      const { answer, suggestions } = await apiCall('/ai/ask', { method: 'POST', body: { question, history: _vezzHistory.slice(0, -1) } });
       document.getElementById(loadId)?.remove();
       msgs.insertAdjacentHTML('beforeend',
-        `<div style="background:var(--bg-elevated);padding:9px 12px;border-radius:10px 10px 10px 2px;font-size:.82rem;color:var(--text-primary);line-height:1.55">${esc(answer)}</div>`);
+        `<div style="background:var(--bg-elevated);padding:9px 12px;border-radius:10px 10px 10px 2px;font-size:.82rem;color:var(--text-primary);line-height:1.55;white-space:pre-wrap">${esc(answer)}</div>`);
+      if (suggestions && suggestions.length > 0) {
+        const btns = suggestions.map(s =>
+          `<button onclick="window._vezzAsk('dimmi i risultati di ${esc(s.nome)}')"
+            style="text-align:left;padding:6px 10px;background:var(--bg-primary);border:1px solid var(--border-subtle);border-radius:20px;font-size:.75rem;color:var(--text-primary);cursor:pointer;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;max-width:100%">
+            <span style="color:var(--red-hot);font-weight:700;margin-right:4px">▸</span>${esc(s.nome)}<span style="color:var(--text-muted);margin-left:5px">${s.data}</span>
+          </button>`
+        ).join('');
+        msgs.insertAdjacentHTML('beforeend',
+          `<div style="display:flex;flex-direction:column;gap:4px;margin-top:2px">${btns}</div>`);
+      }
       _vezzHistory.push({ role: 'assistant', content: answer });
     } catch(err) {
       document.getElementById(loadId)?.remove();
@@ -11378,6 +11388,15 @@ window.toggleAiChat = function() {
     }
     msgs.scrollTop = msgs.scrollHeight;
     if (sendBtn) { sendBtn.disabled = false; sendBtn.textContent = '↑'; }
+  };
+
+  // Funzione globale per submit programmatico (bottoni suggerimento)
+  window._vezzAsk = function(text) {
+    const inp = document.getElementById('ai-input');
+    const form = document.getElementById('ai-form');
+    if (!inp || !form) return;
+    inp.value = text;
+    form.dispatchEvent(new Event('submit', { bubbles: true, cancelable: true }));
   };
 };
 
