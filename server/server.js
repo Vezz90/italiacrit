@@ -1,4 +1,5 @@
 const express        = require('express');
+const compression    = require('compression');
 const cors           = require('cors');
 const bcrypt         = require('bcryptjs');
 const jwt            = require('jsonwebtoken');
@@ -218,13 +219,20 @@ async function deletePhoto(filename) {
   }
 }
 
+app.use(compression());
 app.use(cors({ origin: '*' }));
 app.options('*', cors());
 app.use(express.json());
 app.use('/photos', express.static(UPLOADS_DIR));
 
 const FRONTEND_DIR = path.join(__dirname, '..');
-app.use(express.static(FRONTEND_DIR));
+app.use(express.static(FRONTEND_DIR, {
+  setHeaders(res, filePath) {
+    if (filePath.endsWith('.json')) res.setHeader('Cache-Control', 'public, max-age=300');
+    else if (/\.(png|jpg|jpeg|webp|svg|ico|woff2?)$/.test(filePath)) res.setHeader('Cache-Control', 'public, max-age=86400');
+    else if (/\.(js|css)$/.test(filePath)) res.setHeader('Cache-Control', 'public, max-age=3600');
+  }
+}));
 
 // ── Auth middleware ───────────────────────────────────────────────────────────
 
@@ -2047,7 +2055,7 @@ async function generateSocialCaption({ nome_gara, winner_label, category, winner
   if (!ai) return `🏁 ${nome_gara}\n🥇 ${winner_label}${category ? ' — ' + category : ''}\n🔗 ${link}`;
   try {
     const msg = await ai.messages.create({
-      model: 'claude-haiku-4-5-20251001',
+      model: 'claude-sonnet-4-6',
       max_tokens: 300,
       messages: [{
         role: 'user',
@@ -3435,10 +3443,10 @@ app.post('/api/ai/ask', async (req, res) => {
     if (!ai) return res.status(503).json({ error: 'AI non disponibile al momento' });
 
     // Legge da GitHub Pages (stessa fonte del frontend → dati intera stagione).
-    // readDataJsonFromGH usa cache 30min + fallback locale in caso di errore.
-    const [results, calendar] = await Promise.all([
+    const [results, calendar, teamsRaw] = await Promise.all([
       readDataJsonFromGH('results_raw.json').then(d => d || []),
       readDataJsonFromGH('calendar.json').then(d => d || []),
+      readDataJsonFromGH('teams.json').then(d => d || {}),
     ]);
     const q = question.toLowerCase();
 
@@ -3656,6 +3664,29 @@ Classifica vittorie: ${topWinners.map((a,i)=>`${i+1}. ${a.nome} (${a.team}) ${a.
       }
     }
 
+    // ── Dati team ─────────────────────────────────────────────────────────────
+    const teamsList = Object.values(teamsRaw);
+    let teamBlock = '';
+    if (teamsList.length > 0) {
+      // Controlla se la domanda menziona un team specifico
+      const matchedTeams = teamsList.filter(t => {
+        const tNorm = (t.nome || '').toLowerCase().replace(/[^a-z0-9 ]/g, ' ');
+        return tNorm.split(/\s+/).some(w => w.length >= 4 && q.includes(w));
+      });
+      if (matchedTeams.length > 0) {
+        teamBlock = matchedTeams.slice(0, 2).map(t => {
+          const recentRes = (t.risultati || []).sort((a,b)=>(b.data||'').localeCompare(a.data||'')).slice(0,5);
+          const roster = (t.atleti || []).map(id => id.replace(/_/g,' ')).join(', ');
+          return `TEAM: ${t.nome}\nPunti totali: ${t.punti_totali||0}\nRoster: ${roster||'—'}\nUltimi risultati:\n${recentRes.map(r=>`  ${r.data} — ${r.nome_gara} → ${r.posizione||'?'}° (${r.atleta_cognome} ${r.atleta_nome})`).join('\n')}`;
+        }).join('\n\n');
+      } else {
+        // Classifica top 10 team sempre disponibile
+        const topTeams = teamsList.sort((a,b)=>(b.punti_totali||0)-(a.punti_totali||0)).slice(0,10);
+        teamBlock = `TOP TEAM (punti stagione):\n${topTeams.map((t,i)=>`  ${i+1}. ${t.nome} — ${t.punti_totali||0}pt`).join('\n')}`;
+      }
+      contextParts.push(teamBlock);
+    }
+
     // ── Ultime gare ───────────────────────────────────────────────────────────
     const byGaraLatest = {};
     for (const r of results) {
@@ -3740,7 +3771,7 @@ ${contextParts.join('\n\n')}
     const messages = [...safeHistory, { role: 'user', content: question }];
 
     const msg = await ai.messages.create({
-      model: 'claude-haiku-4-5-20251001',
+      model: 'claude-sonnet-4-6',
       max_tokens: 600,
       system: systemPrompt,
       messages

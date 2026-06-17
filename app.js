@@ -11305,7 +11305,9 @@ function _initAiWidget() {
   btn.id = 'ai-widget-btn';
   btn.innerHTML = _VEZZ_SVG;
   btn.title = 'Chatta con VEZZ';
-  btn.style.cssText = 'position:fixed;bottom:80px;right:18px;z-index:8000;width:52px;height:52px;border-radius:50%;background:var(--red-hot);color:#fff;border:none;cursor:pointer;box-shadow:0 4px 16px rgba(0,0,0,.4);display:flex;align-items:center;justify-content:center;transition:transform .15s';
+  btn.style.cssText = 'position:fixed;bottom:80px;right:18px;z-index:8000;width:52px;height:52px;border-radius:50%;background:var(--red-hot);color:#fff;border:none;cursor:pointer;box-shadow:0 4px 16px rgba(0,0,0,.4);display:flex;align-items:center;justify-content:center;transition:transform .15s;';
+  // Su mobile alza il bottone sopra la bottom bar del browser
+  if (window.innerWidth < 640) btn.style.bottom = '100px';
   btn.onmouseenter = () => { btn.style.transform = 'scale(1.1)'; };
   btn.onmouseleave = () => { btn.style.transform = ''; };
   btn.onclick = window.toggleAiChat;
@@ -11318,7 +11320,10 @@ window.toggleAiChat = function() {
   _vezzHistory = [];
   panel = document.createElement('div');
   panel.id = 'ai-chat-panel';
-  panel.style.cssText = 'position:fixed;bottom:144px;right:18px;z-index:8001;width:330px;max-height:480px;background:var(--bg-card);border:1px solid var(--border-subtle);border-radius:var(--r-lg);box-shadow:0 8px 32px rgba(0,0,0,.35);display:flex;flex-direction:column;overflow:hidden;animation:vezzSlide .2s ease';
+  const isMobile = window.innerWidth < 640;
+  panel.style.cssText = isMobile
+    ? 'position:fixed;bottom:0;left:0;right:0;z-index:8001;width:100%;max-height:70vh;background:var(--bg-card);border-top:1px solid var(--border-subtle);border-radius:18px 18px 0 0;box-shadow:0 -4px 24px rgba(0,0,0,.3);display:flex;flex-direction:column;overflow:hidden;animation:vezzSlide .2s ease'
+    : 'position:fixed;bottom:144px;right:18px;z-index:8001;width:330px;max-height:480px;background:var(--bg-card);border:1px solid var(--border-subtle);border-radius:var(--r-lg);box-shadow:0 8px 32px rgba(0,0,0,.35);display:flex;flex-direction:column;overflow:hidden;animation:vezzSlide .2s ease';
   panel.innerHTML = `<style>@keyframes vezzSlide{from{opacity:0;transform:translateY(12px)}to{opacity:1;transform:translateY(0)}}@keyframes vDot{0%,80%,100%{opacity:.2}40%{opacity:1}}</style>
     <div style="padding:11px 14px;display:flex;align-items:center;gap:10px;background:linear-gradient(135deg,#b91c1c,#e8001d);flex-shrink:0">
       <div style="width:38px;height:38px;border-radius:50%;background:rgba(255,255,255,.15);display:flex;align-items:center;justify-content:center;flex-shrink:0">${_VEZZ_SVG}</div>
@@ -11330,6 +11335,12 @@ window.toggleAiChat = function() {
     </div>
     <div id="ai-messages" style="flex:1;overflow-y:auto;padding:12px;display:flex;flex-direction:column;gap:8px">
       <div style="background:var(--bg-elevated);padding:9px 12px;border-radius:10px 10px 10px 2px;font-size:.82rem;color:var(--text-primary);line-height:1.5">Ciao! Sono <strong>VEZZ</strong>, l'assistente AI di ICS 🚴<br>Chiedimi di atleti, classifiche, gare, risultati — ricordo il filo della nostra conversazione.</div>
+      <div style="display:flex;flex-wrap:wrap;gap:5px;margin-top:2px">${[
+        'Chi comanda la classifica Elite?',
+        'Ultime gare disputate',
+        'Chi sta salendo in classifica?',
+        'Top team della stagione',
+      ].map(q=>`<button onclick="window._vezzAsk('${q}')" style="padding:5px 10px;background:var(--bg-primary);border:1px solid var(--border-subtle);border-radius:14px;font-size:.72rem;color:var(--text-secondary);cursor:pointer;white-space:nowrap">${q}</button>`).join('')}</div>
     </div>
     <form id="ai-form" style="padding:10px;border-top:1px solid var(--border-subtle);display:flex;gap:6px;flex-shrink:0">
       <input id="ai-input" type="text" placeholder="Chiedi a VEZZ…" autocomplete="off" style="flex:1;padding:7px 10px;border:1px solid var(--border-subtle);border-radius:var(--r-sm);font-size:.82rem;background:var(--bg-primary);color:var(--text-primary)"/>
@@ -16077,13 +16088,22 @@ function doSearch(q, dropdown) {
   const ql = q.toLowerCase();
   const results = [];
 
-  // Cerca atleti
+  // Fuzzy match: ogni token >= 4 chars prova anche senza l'ultima lettera
+  // es. "loren" → prova "loren" poi "lore" → trova "lorello"
+  function fuzzyIncludes(haystack, queryStr) {
+    return queryStr.split(/\s+/).filter(Boolean).every(t => {
+      if (haystack.includes(t)) return true;
+      return t.length >= 4 && haystack.includes(t.slice(0, -1));
+    });
+  }
+
+  // Cerca atleti (fuzzy)
   for (const [id, a] of Object.entries(athletes)) {
     const name = `${a.cognome||''} ${a.nome||''}`.toLowerCase();
-    if (name.includes(ql)) {
+    if (fuzzyIncludes(name, ql)) {
       results.push({ type: 'atleta', id, display: `${a.cognome} ${a.nome}`, sub: a.team_attuale||'' });
     }
-    if (results.length >= 5) break;
+    if (results.length >= 6) break;
   }
 
   // Cerca team
