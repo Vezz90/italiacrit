@@ -2450,7 +2450,7 @@ async function _renderHubHomeLegacy(hubCode) {
       } else {
         // Inferisce dal nome categoria quando il campo genere manca
         const cat = (g.categoria||'').toLowerCase();
-        const isFem = /donne|femmin|alliev[ae]$/.test(cat);
+        const isFem = /donne|femmin|allieve/.test(cat);
         const isMas = /uomini|maschil/.test(cat);
         if (isFem && hub.gender !== 'F') return false;
         if (isMas && hub.gender !== 'M') return false;
