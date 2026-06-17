@@ -3499,11 +3499,12 @@ app.post('/api/ai/ask', async (req, res) => {
         const threshold = nomeWords.length >= 3 ? 2 : 1;
         if (hits.length >= threshold) {
           const sorted = g.rows.sort((a,b) => Number(a.posizione)-Number(b.posizione));
-          gareInDomanda.push({ gid, nome: g.nome, data: g.data, top5: sorted.filter(r => Number(r.posizione) <= 5) });
+          gareInDomanda.push({ gid, nome: g.nome, data: g.data, hits: hits.length, top5: sorted.filter(r => Number(r.posizione) <= 5) });
         }
       }
-      // Ordina per data più recente, prende max 3
-      gareInDomanda.sort((a,b) => (b.data||'').localeCompare(a.data||'')).splice(3);
+      // Ordina prima per numero di parole corrispondenti (match più preciso in cima),
+      // poi per data più recente come tiebreaker. Tiene max 5 risultati.
+      gareInDomanda.sort((a,b) => (b.hits - a.hits) || (b.data||'').localeCompare(a.data||'')).splice(5);
     }
 
     // ── Profilo atleta completo ───────────────────────────────────────────────
@@ -3632,8 +3633,10 @@ Classifica vittorie: ${topWinners.map((a,i)=>`${i+1}. ${a.nome} (${a.team}) ${a.
       });
 
     // ── Gare specifiche nominate nella domanda ────────────────────────────────
-    const gareBlock = gareInDomanda.slice(0, 2).map(g =>
-      `GARA: ${g.nome} (${g.data})\n${g.top5.map(r=>`  ${r.posizione}° ${r.cognome} ${r.nome} (${r.team||''})`).join('\n')}`
+    // Mostra tutte le gare trovate (già ordinate per rilevanza); max 5
+    const gareBlock = gareInDomanda.map(g =>
+      `GARA: ${g.nome} (${g.data}, ${g.hits} parole corrispondenti)\n` +
+      g.top5.map(r=>`  ${r.posizione}° ${r.cognome} ${r.nome} (${r.team||''})`).join('\n')
     );
 
     // ── Calendario rilevante ──────────────────────────────────────────────────
