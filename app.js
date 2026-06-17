@@ -5394,11 +5394,23 @@ async function renderHubBars() {
         ? (teamId ? `<a href="#/team/${encodeURIComponent(teamId)}" onclick="event.stopPropagation()">${esc(teamName)}</a>` : esc(teamName))
         : '';
       const gap=i===0?'':`<span class="itc-rank-gap">−${leaderPts-a.punti}</span>`;
+      // Forma recente: ultimi 5 risultati come barre colorate (altezza ∝ posizione inversa)
+      const _last5 = hubResES2
+        .filter(r => r.atleta_id===a.atleta_id && getRankingFileCode(r)===catCode && r.posizione)
+        .sort((x,y)=>(y.data||'').localeCompare(x.data||'')).slice(0,5).reverse();
+      const formaHtml = _last5.length >= 2 ? `<div style="display:flex;align-items:flex-end;gap:2px;height:14px;margin-top:3px">${
+        _last5.map(r=>{
+          const h = Math.max(3, Math.round(14*(1-Math.min(r.posizione,30)/30)));
+          const col = r.posizione===1?'var(--gold)':r.posizione<=3?'#cd7f32':r.posizione<=10?'var(--text-muted)':'var(--border-subtle)';
+          return `<span style="display:inline-block;width:5px;height:${h}px;background:${col};border-radius:1px" title="${r.posizione}° ${esc(r.nome_gara||'')} (${r.data||''})"></span>`;
+        }).join('')
+      }</div>` : '';
       return `<div class="itc-rank-row${i===0?' itc-rank-row--leader':''}" onclick="location.hash='#/atleta/${encodeURIComponent(a.atleta_id)}'">
         <span class="itc-rank-pos itc-rank-pos-${i<3?i+1:'x'}">${i+1}</span>
         <div class="itc-rank-info">
           <div class="itc-rank-name">${esc(a.cognome)} ${esc(a.nome)}${trendHtml}</div>
           ${teamHtml ? `<div class="itc-rank-sub">${teamHtml}</div>` : ''}
+          ${formaHtml}
         </div>
         ${gap}
         <span class="itc-rank-pts">${a.punti}<small>pt</small></span>
@@ -6040,10 +6052,34 @@ async function renderHubBars() {
   const _rookieHtml   = buildRookieCard();
   const _watchHtml    = buildWatchlistCard();
 
+  // ── Prossima gara in evidenza (nei prossimi 7 giorni) ────────────
+  const _nextRaces7 = upcomingAll.filter(g => {
+    const cut7 = new Date(todayStr); cut7.setDate(cut7.getDate() + 7);
+    return (g.data||'') <= cut7.toISOString().split('T')[0];
+  });
+  let _nextRaceHtml = '';
+  if (_nextRaces7.length > 0) {
+    const nr = _nextRaces7[0];
+    const dys = Math.round((new Date(nr.data+'T00:00:00') - new Date(todayStr+'T00:00:00')) / 86400000);
+    const cntLabel = dys === 0 ? 'OGGI' : dys === 1 ? 'DOMANI' : `TRA ${dys} GIORNI`;
+    const moreTxt = _nextRaces7.length > 1
+      ? `<span style="font-size:.72rem;color:var(--text-muted);margin-left:8px">+${_nextRaces7.length-1} questa settimana</span>`
+      : '';
+    _nextRaceHtml = `<div class="itc-card" style="cursor:pointer;border-left:3px solid var(--red-hot)" onclick="location.hash='#/calendario'">
+      <div class="itc-card-hdr" style="margin-bottom:8px">
+        <span class="itc-card-title">PROSSIMA GARA</span>
+        <span style="background:var(--red-hot);color:#fff;font-size:.68rem;font-weight:700;padding:2px 9px;border-radius:10px;letter-spacing:.05em">${cntLabel}</span>
+      </div>
+      <div style="font-weight:700;font-size:.95rem;color:var(--text-primary);margin-bottom:4px">${esc(nr.nome||nr.base||'')}</div>
+      <div style="font-size:.78rem;color:var(--text-muted)">${fmtDateShort(nr.data)}${nr.luogo||nr.regione ? ' · '+esc(nr.luogo||nr.regione||'') : ''}${moreTxt}</div>
+    </div>`;
+  }
+
   // Layout: per esordienti i blocchi rider sono già itc-dual internamente
   // → non li annidiamo in altro dual; team va sotto.
   // Per tutti gli altri: ogni riga = itc-dual rider|team.
   const sectionsInner = isEsordienti ? `
+    ${_nextRaceHtml}
     ${_rFireHtml}
     ${_tFireHtml}
     ${_rRankHtml}
@@ -6055,6 +6091,7 @@ async function renderHubBars() {
     <div class="itc-dual">${_rFeedHtml}${_tFeedHtml}</div>
     <div class="itc-dual">${_popularHtml}${_calHtml}</div>
   ` : `
+    ${_nextRaceHtml}
     <div class="itc-dual">${_rFireHtml}${_tFireHtml}</div>
     <div class="itc-dual">${_rRankHtml}${_tRankHtml}</div>
     <div class="itc-dual">${_rMovHtml}${_tMovHtml}</div>
@@ -11010,7 +11047,8 @@ async function renderAtleta(atleta_id, opts = {}) {
       </div>
     </div>`;
 
-  const sparkHtml = sparkPoints.length ? buildSparkline(sparkPoints, risultati.slice(0,20).reverse()) : '';
+  const sparkHtml   = sparkPoints.length ? buildSparkline(sparkPoints, risultati.slice(0,20).reverse()) : '';
+  const cumulHtml   = buildCumulChart(risultati);
 
   const tableRows = risultati.map(r => {
     const mult = r.moltiplicatore || 1;
@@ -11128,7 +11166,8 @@ async function renderAtleta(atleta_id, opts = {}) {
     ${headerHtml}
     ${profileYearRow('atleta', atleta_id, selYear)}
     ${_badgeStripHtml}
-    ${sparkHtml ? `<div class="sparkline-wrap"><div class="sparkline-title">ANDAMENTO PUNTI — STAGIONE ${esc(selYear)}</div>${sparkHtml}</div>` : ''}
+    ${cumulHtml}
+    ${sparkHtml ? `<div class="sparkline-wrap"><div class="sparkline-title">ANDAMENTO PUNTI GARA PER GARA — STAGIONE ${esc(selYear)}</div>${sparkHtml}</div>` : ''}
     <div style="margin: 8px 0 20px;display:flex;gap:10px;align-items:center;flex-wrap:wrap">
       <button class="btn-share" onclick="window.triggerShareAtleta()"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="18" cy="5" r="3"/><circle cx="6" cy="12" r="3"/><circle cx="18" cy="19" r="3"/><line x1="8.59" y1="13.51" x2="15.42" y2="17.49"/><line x1="15.41" y1="6.51" x2="8.59" y2="10.49"/></svg> Condividi Profilo</button>
       <button class="btn-share" onclick="window.openComparatore('${esc(atleta_id)}','atleta')">⚖ Compara</button>
@@ -11483,6 +11522,67 @@ window.showSparkTip = (evt, el) => {
 window.hideSparkTip = () => {
   document.getElementById('sparkline-tooltip').style.display = 'none';
 };
+
+function buildCumulChart(risultati) {
+  const sorted = [...risultati]
+    .filter(r => (r.punti_effettivi || 0) > 0)
+    .sort((a, b) => (a.data || '').localeCompare(b.data || ''));
+  if (sorted.length < 3) return '';
+
+  let cum = 0;
+  const pts = sorted.map(r => {
+    cum += r.punti_effettivi || 0;
+    return { date: (r.data || '').slice(5), nome: r.nome_gara || '', added: r.punti_effettivi || 0, cum, pos: r.posizione || 0 };
+  });
+
+  const W = 800, H = 90, PL = 38, PR = 10, PT = 8, PB = 18;
+  const maxC = pts[pts.length - 1].cum;
+  const n = pts.length;
+  const xf = i => PL + (i / Math.max(n - 1, 1)) * (W - PL - PR);
+  const yf = v => PT + (1 - v / maxC) * (H - PT - PB);
+
+  const linePts = pts.map((p, i) => `${xf(i).toFixed(1)},${yf(p.cum).toFixed(1)}`).join(' ');
+  const area = `M${xf(0).toFixed(1)},${yf(pts[0].cum).toFixed(1)} ${pts.slice(1).map((_, i) => `L${xf(i+1).toFixed(1)},${yf(pts[i+1].cum).toFixed(1)}`).join(' ')} L${xf(n-1).toFixed(1)},${H-PB} L${xf(0).toFixed(1)},${H-PB} Z`;
+
+  const yTicks = [maxC, Math.round(maxC / 2)].map(v =>
+    `<text x="${PL-4}" y="${yf(v).toFixed(1)}" font-size="8" fill="var(--text-muted)" text-anchor="end" dominant-baseline="middle">${v}</text>`
+  ).join('');
+
+  const xIdxs = [...new Set([0, Math.floor(n / 2), n - 1])];
+  const xLabels = xIdxs.map(i =>
+    `<text x="${xf(i).toFixed(1)}" y="${H - 3}" font-size="8" fill="var(--text-muted)" text-anchor="middle">${pts[i].date}</text>`
+  ).join('');
+
+  const dots = pts.map((p, i) => {
+    const fill = p.pos === 1 ? 'var(--gold)' : 'var(--red-hot)';
+    const r = p.pos === 1 ? 5 : 3;
+    return `<circle cx="${xf(i).toFixed(1)}" cy="${yf(p.cum).toFixed(1)}" r="${r}"
+      fill="${fill}" stroke="var(--bg-card)" stroke-width="1.5"
+      data-label="${esc(p.nome)} · +${p.added}pt → tot. ${p.cum}pt"
+      onmouseenter="showSparkTip(event,this)" onmouseleave="hideSparkTip()"
+      style="cursor:pointer"/>`;
+  }).join('');
+
+  return `<div class="sparkline-wrap">
+    <div class="sparkline-title">PROGRESSIONE PUNTI — STAGIONE</div>
+    <div style="position:relative">
+      <svg viewBox="0 0 ${W} ${H}" style="width:100%;display:block;overflow:visible" preserveAspectRatio="none">
+        <defs>
+          <linearGradient id="cumul-grad" x1="0" y1="0" x2="0" y2="1">
+            <stop offset="0%" stop-color="var(--red-hot)" stop-opacity="0.25"/>
+            <stop offset="100%" stop-color="var(--red-hot)" stop-opacity="0"/>
+          </linearGradient>
+        </defs>
+        <line x1="${PL}" y1="${H-PB}" x2="${W-PR}" y2="${H-PB}" stroke="var(--border-subtle)" stroke-width="1"/>
+        <path d="${area}" fill="url(#cumul-grad)"/>
+        <polyline points="${linePts}" fill="none" stroke="var(--red-hot)" stroke-width="2.5" stroke-linejoin="round" stroke-linecap="round"/>
+        ${yTicks}
+        ${xLabels}
+        ${dots}
+      </svg>
+    </div>
+  </div>`;
+}
 
 let teamViewCat = '';
 let teamViewId = '';
