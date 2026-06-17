@@ -3482,9 +3482,11 @@ app.post('/api/ai/ask', async (req, res) => {
     // ── Rilevamento gara nella domanda (word-based, robusto a trattini/spazi/numeri) ──
     const gareInDomanda = [];
     {
-      const stopWords = new Set(['di','del','della','dei','delle','degli','il','lo','la','le','un','una','al','alla','gara','corsa','trofeo','gran','premio','coppa','giro','in','a','e']);
-      // Parole significative nella domanda (min 4 chars, no stop words)
-      const qWords = q.replace(/[''°\-]/g, ' ').split(/\s+/).filter(w => w.length >= 4 && !stopWords.has(w));
+      // stopWords per il match esatto: NON include "giro", "trofeo", "coppa", "gran", "premio"
+      // perché fanno parte di nomi propri di gare ("Giro della Pace", "Trofeo Laigueglia" ecc.)
+      const stopWords = new Set(['di','del','della','dei','delle','degli','il','lo','la','le','un','una','al','alla','in','a','e','per','su','con']);
+      // Parole significative nella domanda (min 3 chars, no stop words)
+      const qWords = q.replace(/[''°\-]/g, ' ').split(/\s+/).filter(w => w.length >= 3 && !stopWords.has(w));
       const byGaraId = {};
       for (const r of results) {
         if (!r.gara_id) continue;
@@ -3493,8 +3495,7 @@ app.post('/api/ai/ask', async (req, res) => {
       }
       for (const [gid, g] of Object.entries(byGaraId)) {
         const nomeLow = g.nome.toLowerCase().replace(/[''°\-]/g, ' ');
-        const nomeWords = nomeLow.split(/\s+/).filter(w => w.length >= 4 && !stopWords.has(w));
-        // Match se almeno 2 parole significative della gara compaiono nella domanda (o 1 se il nome è corto)
+        const nomeWords = nomeLow.split(/\s+/).filter(w => w.length >= 3 && !stopWords.has(w));
         const hits = nomeWords.filter(w => qWords.some(qw => qw.includes(w) || w.includes(qw)));
         const threshold = nomeWords.length >= 3 ? 2 : 1;
         if (hits.length >= threshold) {
@@ -3502,9 +3503,27 @@ app.post('/api/ai/ask', async (req, res) => {
           gareInDomanda.push({ gid, nome: g.nome, data: g.data, hits: hits.length, top5: sorted.filter(r => Number(r.posizione) <= 5) });
         }
       }
-      // Ordina prima per numero di parole corrispondenti (match più preciso in cima),
-      // poi per data più recente come tiebreaker. Tiene max 5 risultati.
+      // Ordina: prima per hit count (match più preciso), poi per data più recente. Max 5.
       gareInDomanda.sort((a,b) => (b.hits - a.hits) || (b.data||'').localeCompare(a.data||'')).splice(5);
+
+      // ── Suggerimenti quando non si trova la gara esatta ─────────────────────
+      // Se non ci sono match precisi, cerca con soglia 1 parola su parole più corte (>=3 chars)
+      // e propone le 5 gare più simili come opzioni.
+      if (gareInDomanda.length === 0 && qWords.length > 0) {
+        const suggestions = [];
+        for (const [gid, g] of Object.entries(byGaraId)) {
+          const nomeLow = g.nome.toLowerCase().replace(/[''°\-]/g, ' ');
+          const nomeWords = nomeLow.split(/\s+/).filter(w => w.length >= 3 && !stopWords.has(w));
+          const hits = nomeWords.filter(w => qWords.some(qw => qw.includes(w) || w.includes(qw)));
+          if (hits.length >= 1) suggestions.push({ gid, nome: g.nome, data: g.data, hits: hits.length });
+        }
+        suggestions.sort((a,b) => (b.hits - a.hits) || (b.data||'').localeCompare(a.data||'')).splice(8);
+        if (suggestions.length > 0) {
+          // Aggiungiamo il blocco suggerimenti al context
+          const suggLines = suggestions.map(s => `  - ${s.nome} (${s.data})`).join('\n');
+          contextParts.push(`GARE SIMILI TROVATE (nessuna corrispondenza esatta — mostra queste come opzioni all'utente):\n${suggLines}`);
+        }
+      }
     }
 
     // ── Profilo atleta completo ───────────────────────────────────────────────
@@ -3666,8 +3685,9 @@ REGOLE — rispettale sempre:
 2. I dati qui sotto sono la tua fonte di verità. Se trovi dati pertinenti, usali senza esitare.
 3. NON dire mai "non ho dati" se nei DATI qui sotto c'è qualcosa di rilevante.
 4. Se la domanda è ambigua, mostra i dati più vicini e spiega brevemente il nome corretto.
-5. Dì "non ho questi dati" SOLO per cose davvero assenti: notizie esterne, contratti, doping, anni non in archivio.
-6. Nella sezione MOVERS trovi chi ha guadagnato/perso posizioni di recente.
+5. Se vedi la sezione "GARE SIMILI TROVATE", NON dire "non ho dati" — presentala all'utente come lista di opzioni con la frase: "Non ho trovato '[nome cercato]' nell'archivio. Forse intendevi una di queste?" seguita dalla lista numerata delle gare simili.
+6. Dì "non ho questi dati" SOLO per cose davvero assenti: notizie esterne, contratti, doping, anni non in archivio.
+7. Nella sezione MOVERS trovi chi ha guadagnato/perso posizioni di recente.
 
 STILE DI RISPOSTA — applica sempre questo formato:
 - Niente emoji, niente frasi introduttive tipo "Ho trovato la gara che cerchi!" — vai diretto ai dati.
