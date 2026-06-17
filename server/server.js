@@ -267,6 +267,28 @@ function readDataJson(file) {
   catch { return null; }
 }
 
+// Cache per i file letti da GitHub Pages (fonte di verità uguale al frontend).
+// Aggiornamento automatico ogni 30 minuti; fallback al file locale in caso di errore.
+const _ghCache = {};
+const GH_CACHE_TTL = 30 * 60 * 1000;
+async function readDataJsonFromGH(file) {
+  const cached = _ghCache[file];
+  if (cached && (Date.now() - cached.ts) < GH_CACHE_TTL) return cached.data;
+  try {
+    const url = `${SITE_URL}/data/${encodeURIComponent(file)}`;
+    const resp = await fetch(url, { headers: { 'Accept': 'application/json' }, signal: AbortSignal.timeout(8000) });
+    if (!resp.ok) throw new Error(`HTTP ${resp.status}`);
+    const data = await resp.json();
+    _ghCache[file] = { data, ts: Date.now() };
+    return data;
+  } catch (e) {
+    console.warn(`[GH fetch] ${file} failed (${e.message}), using local fallback`);
+    const local = readDataJson(file);
+    if (local) _ghCache[file] = { data: local, ts: Date.now() - GH_CACHE_TTL + 5 * 60 * 1000 }; // riprova fra 5min
+    return local;
+  }
+}
+
 async function getEntityPhoto(type, id) {
   try {
     const ov = await queries.getEntityOverrides(type, id);
@@ -3412,8 +3434,12 @@ app.post('/api/ai/ask', async (req, res) => {
     const ai = getAnthropic();
     if (!ai) return res.status(503).json({ error: 'AI non disponibile al momento' });
 
-    const results  = readDataJson('results_raw.json') || [];
-    const calendar = readDataJson('calendar.json')    || [];
+    // Legge da GitHub Pages (stessa fonte del frontend → dati intera stagione).
+    // readDataJsonFromGH usa cache 30min + fallback locale in caso di errore.
+    const [results, calendar] = await Promise.all([
+      readDataJsonFromGH('results_raw.json').then(d => d || []),
+      readDataJsonFromGH('calendar.json').then(d => d || []),
+    ]);
     const q = question.toLowerCase();
 
     // ── Intervallo date dati disponibili ──────────────────────────────────────
