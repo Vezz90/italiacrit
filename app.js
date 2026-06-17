@@ -2441,11 +2441,27 @@ async function _renderHubHomeLegacy(hubCode) {
   const recentWins = hubRes.filter(function(r){ return r.data >= cut7 && r.posizione === 1; })
     .sort(function(a,b){ return b.data.localeCompare(a.data); }).slice(0, 5);
 
+  // Hub calendar filter — rispetta genere anche quando g.genere è assente
+  function calMatchesHub(g) {
+    if (hub.catFilter && !(g.categoria||'').toLowerCase().includes(hub.catFilter.toLowerCase())) return false;
+    if (hub.gender) {
+      if (g.genere) {
+        if (g.genere !== hub.gender) return false;
+      } else {
+        // Inferisce dal nome categoria quando il campo genere manca
+        const cat = (g.categoria||'').toLowerCase();
+        const isFem = /donne|femmin|alliev[ae]$/.test(cat);
+        const isMas = /uomini|maschil/.test(cat);
+        if (isFem && hub.gender !== 'F') return false;
+        if (isMas && hub.gender !== 'M') return false;
+      }
+    }
+    return true;
+  }
+
   // Upcoming hub races (all, no slice — will group for esordienti)
   const upcomingAll = calendar.filter(function(g) {
-    if (g.genere && g.genere !== hub.gender) return false;
-    if (hub.catFilter && !(g.categoria||'').toLowerCase().includes(hub.catFilter.toLowerCase())) return false;
-    return (g.data||'') >= todayStr;
+    return calMatchesHub(g) && (g.data||'') >= todayStr;
   }).sort(function(a,b){ return a.data.localeCompare(b.data); });
 
   // ── Helper: spotlight card ─────────────────────────────────────
@@ -5715,11 +5731,8 @@ async function renderHubBars() {
 
   // ── Prossime gare ─────────────────────────────────────────────────
   function buildCalCard() {
-    const upcoming=calendar.filter(g=>{
-      if(g.genere&&g.genere!==hub.gender) return false;
-      if(hub.catFilter&&!(g.categoria||'').toLowerCase().includes(hub.catFilter.toLowerCase())) return false;
-      return (g.data||'')>=todayStr;
-    }).sort((a,b)=>a.data.localeCompare(b.data)).slice(0,4);
+    const upcoming=calendar.filter(g=>calMatchesHub(g)&&(g.data||'')>=todayStr)
+      .sort((a,b)=>a.data.localeCompare(b.data)).slice(0,4);
     if(!upcoming.length) return '';
     const DAY=['DOM','LUN','MAR','MER','GIO','VEN','SAB'];
     const MESI=['gen','feb','mar','apr','mag','giu','lug','ago','set','ott','nov','dic'];
@@ -6053,10 +6066,8 @@ async function renderHubBars() {
   const _watchHtml    = buildWatchlistCard();
 
   // ── Prossima gara in evidenza (nei prossimi 7 giorni) ────────────
-  const _nextRaces7 = upcomingAll.filter(g => {
-    const cut7 = new Date(todayStr); cut7.setDate(cut7.getDate() + 7);
-    return (g.data||'') <= cut7.toISOString().split('T')[0];
-  });
+  const _cut7Str = (() => { const d = new Date(todayStr); d.setDate(d.getDate() + 7); return d.toISOString().split('T')[0]; })();
+  const _nextRaces7 = upcomingAll.filter(g => (g.data||'') <= _cut7Str);
   let _nextRaceHtml = '';
   if (_nextRaces7.length > 0) {
     const nr = _nextRaces7[0];
