@@ -2448,10 +2448,10 @@ async function _renderHubHomeLegacy(hubCode) {
       if (g.genere) {
         if (g.genere !== hub.gender) return false;
       } else {
-        // Inferisce dal nome categoria quando il campo genere manca
-        const cat = (g.categoria||'').toLowerCase();
-        const isFem = /donne|femmin|allieve/.test(cat);
-        const isMas = /uomini|maschil/.test(cat);
+        // Inferisce dal nome gara + categoria quando il campo genere manca
+        const combined = ((g.categoria||'') + ' ' + (g.nome||'')).toLowerCase();
+        const isFem = /donne|femmin|allieve/.test(combined);
+        const isMas = /uomini|maschil/.test(combined);
         if (isFem && hub.gender !== 'F') return false;
         if (isMas && hub.gender !== 'M') return false;
       }
