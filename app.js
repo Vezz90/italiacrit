@@ -11223,7 +11223,7 @@ async function renderAtleta(atleta_id, opts = {}) {
     </tr>`;
   }).join('');
 
-  window._shareAtletaData = {_id:atleta_id,cognome:displayCognome,nome:displayNome,cat:catLabel(a.categoria),team:displayTeam,punti:a.punti_totali,pos:globalPos,p1:p1,p2:p2,p3:p3,p4_10:pout,gare:top10};
+  window._shareAtletaData = {_id:atleta_id,cognome:displayCognome,nome:displayNome,cat:catLabel(a.categoria),team:displayTeam,punti:a.punti_totali,pos:globalPos,p1:p1,p2:p2,p3:p3,p4_10:pout,gare:top10,photo_url:atletaOv.photo_url?`${MEDIA_BASE}${atletaOv.photo_url}`:null};
 
   // Confronto stagione precedente — caricato in background (non blocca render)
   const _prevSeasonYear = String(parseInt(selYear) - 1);
@@ -11995,6 +11995,7 @@ async function renderTeam(team_id, opts = {}) {
   const topPerfHtml = topPerformers.length ? topPerformers.map((p,i) => {
     return `<div class="team-performer-card">
       <div class="team-perf-rank" style="color:${_rankAccents[i] || 'var(--text-muted)'}">${i+1}</div>
+      <span class="rk-av-wrap" data-aid="${esc(p.id)}"></span>
       <div class="team-perf-info">
         <div class="team-perf-name"><a href="#/atleta/${esc(p.id)}">${esc(p.cognome)} <span style="font-weight:400">${esc(p.nome)}</span></a></div>
       </div>
@@ -12158,6 +12159,26 @@ async function renderTeam(team_id, opts = {}) {
   // Bottone messaggio team (async, non blocca il render)
   _injectMsgBtn('team-msg-btn', null, team_id, null);
   _injectFollowBtn('team-follow-btn', 'team', team_id);
+
+  // Foto atleti nella lista CORRIDORI CHIAVE (batch async, identico alla classifica)
+  const _perfSpans = [...document.querySelectorAll('.team-performers-list .rk-av-wrap[data-aid]')];
+  if (_perfSpans.length) {
+    const _errSvg = `<span class="rk-av-placeholder"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><circle cx="12" cy="8" r="4"/><path d="M4 20c0-4 3.6-7 8-7s8 3 8 7"/></svg></span>`;
+    const batchSize = 8;
+    for (let i = 0; i < _perfSpans.length; i += batchSize) {
+      await Promise.all(_perfSpans.slice(i, i + batchSize).map(async span => {
+        if (!document.contains(span)) return;
+        const aid = span.dataset.aid;
+        const ov = await getEntityOverrides('atleta', aid).catch(() => ({}));
+        if (!document.contains(span)) return;
+        if (ov.photo_url) {
+          span.innerHTML = `<img src="${MEDIA_BASE}${esc(ov.photo_url)}" alt="" class="rk-av-img" onerror="this.parentNode.innerHTML='${_errSvg.replace(/'/g, "\\'")}'" >`;
+        } else {
+          span.innerHTML = _errSvg;
+        }
+      }));
+    }
+  }
 }
 
 // ── Photo helpers (top-level so always available) ────────────
@@ -17457,19 +17478,39 @@ function _statCell(ctx, x, y, w, h, val, label, color) {
   ctx.textAlign = 'left';
 }
 
-function _drawAtleta(ctx, W, H, d) {
+function _drawAtleta(ctx, W, H, d, athImg) {
   const {cognome,nome,cat,team,punti,pos,p1,p2,p3,gare} = d;
   const hB=Math.round(H*0.09), fB=Math.round(H*0.06), pad=Math.round(W*0.055);
   const cTop = hB + Math.round(H*0.025);
   const cBot = H - fB - Math.round(H*0.02);
   const cH   = cBot - cTop;
 
-  // ── Blocco nome ──
+  // ── Foto corridore (cerchio in alto a destra) ──
+  const phD = athImg ? Math.round(W * 0.22) : 0; // diametro cerchio
+  const phX = athImg ? W - pad - phD : 0;
+  const phY = athImg ? cTop + Math.round(H * 0.01) : 0;
+  if (athImg) {
+    ctx.save();
+    ctx.beginPath();
+    ctx.arc(phX + phD/2, phY + phD/2, phD/2, 0, Math.PI*2);
+    ctx.clip();
+    // disegna ritagliando dall'alto (viso in cima)
+    const scale = Math.max(phD / athImg.naturalWidth, phD / athImg.naturalHeight);
+    const sw = athImg.naturalWidth * scale, sh = athImg.naturalHeight * scale;
+    ctx.drawImage(athImg, phX + (phD - sw)/2, phY, sw, sh);
+    ctx.restore();
+    // bordo sottile
+    ctx.strokeStyle = 'rgba(255,255,255,0.18)'; ctx.lineWidth = Math.round(W*0.004);
+    ctx.beginPath(); ctx.arc(phX + phD/2, phY + phD/2, phD/2, 0, Math.PI*2); ctx.stroke();
+  }
+
+  // ── Blocco nome (larghezza ridotta se c'è la foto) ──
+  const nameMaxW = athImg ? (phX - pad - Math.round(W*0.03)) : (W - pad*2);
   let y = cTop;
   const fsC=Math.round(W*(cognome.length>12?0.072:0.092));
   ctx.font=`900 ${fsC}px 'Inter Tight',sans-serif`; ctx.fillStyle='#f4f4f4';
   ctx.textAlign='left'; ctx.textBaseline='alphabetic';
-  y=_wrap(ctx,cognome.toUpperCase(),pad,y+fsC,W-pad*2,fsC*1.05);
+  y=_wrap(ctx,cognome.toUpperCase(),pad,y+fsC,nameMaxW,fsC*1.05);
   const fsN=Math.round(fsC*0.46);
   ctx.font=`700 ${fsN}px 'Inter Tight',sans-serif`; ctx.fillStyle='#e8001d';
   ctx.fillText(nome.toUpperCase(),pad,y); y+=Math.round(fsN*1.55);
@@ -17660,7 +17701,17 @@ async function generateShareCanvas(type, payload, platKey) {
     _drawGara(ctx,p.w,p.h,payload,logo,regionLogo);
   } else {
     _header(ctx,logo,p.w,p.h, type==='class'?payload:null, (type==='atleta'||type==='team')?payload.cat:null); _footer(ctx,p.w,p.h);
-    if(type==='atleta') _drawAtleta(ctx,p.w,p.h,payload);
+    if(type==='atleta') {
+      let athImg = null;
+      if (payload.photo_url) {
+        athImg = await new Promise(resolve => {
+          const i = new Image(); i.crossOrigin = 'anonymous';
+          i.onload = () => resolve(i); i.onerror = () => resolve(null);
+          i.src = payload.photo_url;
+        });
+      }
+      _drawAtleta(ctx,p.w,p.h,payload,athImg);
+    }
     else if(type==='team')  _drawTeam(ctx,p.w,p.h,payload);
     else if(type==='class') _drawClass(ctx,p.w,p.h,payload);
   }
