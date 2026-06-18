@@ -11219,7 +11219,6 @@ async function renderAtleta(atleta_id, opts = {}) {
     <div id="season-compare-inject"></div>
     ${_badgeStripHtml}
     ${cumulHtml}
-    ${sparkHtml ? `<div class="sparkline-wrap"><div class="sparkline-title">ANDAMENTO PUNTI GARA PER GARA — STAGIONE ${esc(selYear)}</div>${sparkHtml}</div>` : ''}
     <div style="margin: 8px 0 20px;display:flex;gap:10px;align-items:center;flex-wrap:wrap">
       <button class="btn-share" onclick="window.triggerShareAtleta()"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="18" cy="5" r="3"/><circle cx="6" cy="12" r="3"/><circle cx="18" cy="19" r="3"/><line x1="8.59" y1="13.51" x2="15.42" y2="17.49"/><line x1="15.41" y1="6.51" x2="8.59" y2="10.49"/></svg> Condividi Profilo</button>
       <button class="btn-share" onclick="window.openComparatore('${esc(atleta_id)}','atleta')">⚖ Compara</button>
