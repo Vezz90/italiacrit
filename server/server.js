@@ -269,6 +269,16 @@ function requireAdmin(req, res, next) {
   });
 }
 
+// In locale senza DB l'autenticazione non è disponibile: accetta le richieste
+// che arrivano da localhost senza token (solo per endpoint import)
+function requireAdminOrLocal(req, res, next) {
+  const ip = req.ip || req.connection.remoteAddress || '';
+  const isLocal = ip === '127.0.0.1' || ip === '::1' || ip === '::ffff:127.0.0.1';
+  const { queries } = require('./db');
+  if (isLocal && !process.env.DATABASE_URL) return next();
+  requireAdmin(req, res, next);
+}
+
 function makeToken(user) {
   return jwt.sign(
     { id: user.id, email: user.email, role: user.role, display_name: user.display_name },
@@ -1545,7 +1555,9 @@ app.get('/api/admin/pcs-import/status', requireAdmin, (req, res) => {
 
 let _fullImportJob = null; // { running, log[], startedAt, exitCode }
 
-app.post('/api/admin/full-import', requireAdmin, (req, res) => {
+app.post('/api/admin/full-import', requireAdminOrLocal, (req, res) => {
+  // Questo script apre un browser sul PC locale — non può girare su Render
+  if (process.env.RENDER) return res.status(400).json({ error: 'Import disponibile solo in locale (non su Render). Usa Avvia.bat e accedi a localhost:8002.' });
   if (_fullImportJob?.running) return res.status(409).json({ error: 'Import già in corso' });
 
   const { spawn } = require('child_process');
@@ -1595,12 +1607,12 @@ app.post('/api/admin/full-import', requireAdmin, (req, res) => {
   });
 });
 
-app.get('/api/admin/full-import/status', requireAdmin, (req, res) => {
+app.get('/api/admin/full-import/status', requireAdminOrLocal, (req, res) => {
   if (!_fullImportJob) return res.json({ running: false, log: [], startedAt: null });
   res.json(_fullImportJob);
 });
 
-app.delete('/api/admin/full-import', requireAdmin, (req, res) => {
+app.delete('/api/admin/full-import', requireAdminOrLocal, (req, res) => {
   if (_fullImportJob) _fullImportJob = { ..._fullImportJob, running: false, log: [...(_fullImportJob.log||[]), '--- Reset manuale ---'] };
   res.json({ ok: true });
 });

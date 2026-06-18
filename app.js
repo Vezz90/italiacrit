@@ -7195,7 +7195,8 @@ let _adminSection = 'overview';
 async function renderAdmin() {
   if (!globalData) return;
   const user = authUser();
-  if (!user || user.role !== 'admin') {
+  const isLocal = location.hostname === 'localhost' || location.hostname === '127.0.0.1';
+  if (!isLocal && (!user || user.role !== 'admin')) {
     setPage(`<div style="text-align:center;padding:80px 20px">
       <h2 style="font-family:var(--font-display);color:var(--red-hot)">Accesso negato</h2>
       <p style="color:var(--text-muted);margin:16px 0">Questa sezione è riservata agli amministratori.</p>
@@ -8702,21 +8703,35 @@ window.adminNav = async function(section) {
         await _renderImportStatus();
       };
 
+      const _isLocal = location.hostname === 'localhost' || location.hostname === '127.0.0.1';
+
       main.innerHTML = `
         <div class="admin-page-header">
-          <h1 class="admin-page-title">🌐 Import Foto &amp; Social</h1>
+          <h1 class="admin-page-title">📸 Import Foto &amp; Social</h1>
           <p class="admin-page-sub">
             Importa automaticamente foto profilo e link social per atleti e team
             da ProCyclingStats e First Cycling.<br>
-            <strong>Requisito:</strong> il server locale deve essere avviato con
-            <code>$env:SUPABASE_SECRET = "…"</code> prima di fare <code>node server.js</code>.
+            Apre Brave/Chrome sul tuo PC per navigare i siti — funziona <strong>solo in locale</strong>.
           </p>
         </div>
+
+        ${!_isLocal ? `
+        <div style="background:#fef2f2;border:2px solid #ef4444;border-radius:var(--r-lg);padding:16px 20px;margin-bottom:16px;display:flex;gap:12px;align-items:flex-start">
+          <span style="font-size:1.4rem;line-height:1">⚠️</span>
+          <div>
+            <div style="font-weight:700;color:#dc2626;margin-bottom:4px">Stai usando il server di produzione (Render)</div>
+            <div style="font-size:.85rem;color:#7f1d1d">
+              Questo import apre un browser sul tuo PC — non può girare su Render.<br>
+              Per usarlo: fai doppio click su <strong>Avvia.bat</strong> nella cartella del progetto,
+              poi accedi a <strong>localhost:8002/#/admin</strong>.
+            </div>
+          </div>
+        </div>` : ''}
 
         <div style="background:var(--bg-card);border:1px solid var(--border-subtle);border-radius:var(--r-lg);padding:20px;margin-bottom:16px">
           <div style="display:flex;align-items:center;gap:12px;margin-bottom:18px">
             <strong>Stato</strong>
-            <span id="import-status-badge" style="background:#22c55e;color:#fff;padding:3px 12px;border-radius:10px;font-size:.78rem;font-weight:700">Inattivo</span>
+            <span id="import-status-badge" style="background:${_isLocal ? '#22c55e' : '#6b7280'};color:#fff;padding:3px 12px;border-radius:10px;font-size:.78rem;font-weight:700">${_isLocal ? 'Inattivo' : 'Non disponibile in produzione'}</span>
           </div>
 
           <!-- ProCyclingStats -->

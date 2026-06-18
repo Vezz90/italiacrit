@@ -1,24 +1,33 @@
 const { Pool } = require('pg');
 const bcrypt    = require('bcryptjs');
 
-const pool = new Pool({
-  connectionString: process.env.DATABASE_URL,
-  ssl: process.env.DATABASE_URL ? { rejectUnauthorized: false } : false,
-});
+const DB_AVAILABLE = !!process.env.DATABASE_URL;
+
+const pool = DB_AVAILABLE
+  ? new Pool({
+      connectionString: process.env.DATABASE_URL,
+      ssl: { rejectUnauthorized: false },
+    })
+  : null;
 
 // ── Helpers ──────────────────────────────────────────────────────────────────
 
+const DB_MISSING_ERR = 'DATABASE_URL non impostato — funzione non disponibile in locale';
+
 async function one(sql, params = []) {
+  if (!pool) throw new Error(DB_MISSING_ERR);
   const { rows } = await pool.query(sql, params);
   return rows[0] || null;
 }
 
 async function all(sql, params = []) {
+  if (!pool) throw new Error(DB_MISSING_ERR);
   const { rows } = await pool.query(sql, params);
   return rows;
 }
 
 async function run(sql, params = []) {
+  if (!pool) throw new Error(DB_MISSING_ERR);
   return pool.query(sql, params);
 }
 
@@ -262,6 +271,10 @@ async function migrate() {
 }
 
 async function init() {
+  if (!DB_AVAILABLE) {
+    console.warn('[db] DATABASE_URL mancante — modalità locale senza DB (solo import Playwright disponibile)');
+    return;
+  }
   await createSchema();
   await migrate();
   await seedAdmin();
