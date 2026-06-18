@@ -1828,6 +1828,7 @@ function seasonBarHtml() {
 
 
 window.addEventListener('hashchange', route);
+window.addEventListener('hashchange', function() { if (window._closePicker) window._closePicker(); });
 // ── SERVICE WORKER + PUSH NOTIFICATIONS ──────────────────────
 let _swRegistration = null;
 function registerServiceWorker() {
@@ -3138,7 +3139,12 @@ function _buildPickerRows(gender) {
 }
 
 function showCategoryPicker() {
-  if (document.getElementById('itc-picker')) return;
+  var stale = document.getElementById('itc-picker');
+  if (stale) {
+    // If it's already fully open, do nothing; if it's closing/stale, nuke it and reopen
+    if (!stale.classList.contains('itc-picker--out')) return;
+    stale.parentNode && stale.parentNode.removeChild(stale);
+  }
   document.body.style.overflow = 'hidden';
 
   var el = document.createElement('div');
