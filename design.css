@@ -11390,7 +11390,7 @@ main.page:has(.itc-dash) {
   vertical-align: middle;
 }
 .rk-av-img {
-  width: 34px; height: 34px; border-radius: 50%; object-fit: cover;
+  width: 34px; height: 34px; border-radius: 50%; object-fit: cover; object-position: top center;
   border: 2px solid var(--border-subtle); display: block;
 }
 .rk-av-placeholder {
