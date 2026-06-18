@@ -1490,6 +1490,41 @@ app.patch('/api/admin/videos/:calId/:idx', requireAdmin, async (req, res) => {
 });
 
 // ══════════════════════════════════════════════════════════════════════════════
+// PCS Photo Import (admin)
+// ══════════════════════════════════════════════════════════════════════════════
+
+const { importPcsPhotos } = require('./pcs-scraper');
+
+// Stato import in memoria — un solo job alla volta
+let _pcsImportJob = null; // { running, log[], stats }
+
+app.post('/api/admin/pcs-import', requireAdmin, async (req, res) => {
+  if (_pcsImportJob?.running) return res.status(409).json({ error: 'Import già in corso' });
+
+  const cats = req.body.cats || ['ELI_M', 'ELI_F', 'JUN_M', 'JUN_F'];
+  const skipExisting = req.body.skipExisting !== false;
+
+  _pcsImportJob = { running: true, log: [], stats: null, startedAt: new Date().toISOString() };
+  res.json({ ok: true, message: 'Import avviato in background' });
+
+  importPcsPhotos(supabase, queries, {
+    cats,
+    skipExisting,
+    onProgress: msg => {
+      console.log(msg);
+      if (_pcsImportJob) _pcsImportJob.log.push(msg);
+    },
+  })
+    .then(stats => { if (_pcsImportJob) { _pcsImportJob.running = false; _pcsImportJob.stats = stats; } })
+    .catch(e  => { if (_pcsImportJob) { _pcsImportJob.running = false; _pcsImportJob.log.push('ERRORE: ' + e.message); } });
+});
+
+app.get('/api/admin/pcs-import/status', requireAdmin, (req, res) => {
+  if (!_pcsImportJob) return res.json({ running: false, log: [], stats: null });
+  res.json(_pcsImportJob);
+});
+
+// ══════════════════════════════════════════════════════════════════════════════
 // YouTube Auto-Scraper
 // ══════════════════════════════════════════════════════════════════════════════
 const { DEFAULT_CHANNELS, fetchAllChannels } = require('./youtube-scraper');
@@ -3459,6 +3494,96 @@ app.delete('/api/comments/:id', requireAuth, async (req, res) => {
     await queries.deleteGaraComment(req.params.id, req.user.id, isAdmin);
     res.json({ ok: true });
   } catch (e) { res.status(500).json({ error: e.message }); }
+});
+
+// ══════════════════════════════════════════════════════════════════════════════
+// ── PCS PHOTO PROXY ───────────────────────────────────────────────────────────
+// Fetches rider profile photos from ProCyclingStats (hotlink-protected) and
+// caches them in Supabase Storage so subsequent requests are served from CDN.
+// ══════════════════════════════════════════════════════════════════════════════
+
+function pcsSlug(name) {
+  return (name || '')
+    .normalize('NFD')
+    .replace(/[̀-ͯ]/g, '')
+    .toLowerCase()
+    .replace(/[^a-z0-9]+/g, '-')
+    .replace(/^-+|-+$/g, '');
+}
+
+// In-memory cache: slug → { url, ts } (url can be null = not found)
+const _pcsCache = new Map();
+const PCS_CACHE_TTL = 24 * 60 * 60 * 1000; // 24h
+
+app.get('/api/pcs-photo', async (req, res) => {
+  const name = (req.query.name || '').trim();
+  if (!name) return res.json({ url: null });
+
+  const slug = pcsSlug(name);
+  if (!slug) return res.json({ url: null });
+
+  // In-memory cache hit
+  const cached = _pcsCache.get(slug);
+  if (cached && (Date.now() - cached.ts) < PCS_CACHE_TTL) {
+    return res.json({ url: cached.url });
+  }
+
+  const storagePath = `pcs/${slug}.jpeg`;
+  const publicUrl   = `${SUPABASE_PUB}/photos/${storagePath}`;
+
+  // Check Supabase: try to list the file in the pcs/ folder
+  if (supabase) {
+    try {
+      const { data: listed } = await supabase.storage.from('photos').list('pcs', { search: `${slug}.jpeg`, limit: 1 });
+      if (listed?.some(f => f.name === `${slug}.jpeg`)) {
+        _pcsCache.set(slug, { url: publicUrl, ts: Date.now() });
+        return res.json({ url: publicUrl });
+      }
+    } catch {}
+  }
+
+  // Fetch from PCS
+  const pcsUrl = `https://www.procyclingstats.com/images/riders/lg/${slug}.jpeg`;
+  try {
+    const pcsRes = await fetch(pcsUrl, {
+      headers: {
+        'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/124.0 Safari/537.36',
+        'Referer':    'https://www.procyclingstats.com/',
+        'Accept':     'image/jpeg,image/*,*/*',
+      },
+      signal: AbortSignal.timeout(10000),
+    });
+
+    if (!pcsRes.ok) {
+      _pcsCache.set(slug, { url: null, ts: Date.now() });
+      return res.json({ url: null });
+    }
+
+    const buffer = Buffer.from(await pcsRes.arrayBuffer());
+
+    // Save to Supabase for permanent caching
+    if (supabase) {
+      try {
+        const { error } = await supabase.storage.from('photos').upload(storagePath, buffer, {
+          contentType: 'image/jpeg',
+          upsert: true,
+        });
+        if (!error) {
+          _pcsCache.set(slug, { url: publicUrl, ts: Date.now() });
+          return res.json({ url: publicUrl });
+        }
+      } catch {}
+    }
+
+    // Supabase unavailable — proxy the image directly
+    _pcsCache.set(slug, { url: null, ts: Date.now() }); // don't cache proxied responses
+    res.setHeader('Content-Type', 'image/jpeg');
+    res.setHeader('Cache-Control', 'public, max-age=86400');
+    res.send(buffer);
+  } catch {
+    _pcsCache.set(slug, { url: null, ts: Date.now() });
+    res.json({ url: null });
+  }
 });
 
 // ══════════════════════════════════════════════════════════════════════════════

@@ -5264,26 +5264,36 @@ async function renderHubBars() {
   const _allPhotosMap = {};
   allPhotos.forEach(p => { if (p.gara_id && !_allPhotosMap[p.gara_id]) _allPhotosMap[p.gara_id] = p.url; });
 
-  function pickAthPhoto(athObj, resSet) {
-    // Prova override prima
-    // (restituisce promise — chiamato sempre con await)
-    return getEntityOverrides('atleta', athObj.atleta_id)
-      .then(ov => {
-        if (ov.photo_url) return `${MEDIA_BASE}${ov.photo_url}`;
-        // Fallback: cerca una gara vinta con foto disponibile
-        const wins = [...resSet]
-          .filter(r => r.atleta_id === athObj.atleta_id && r.posizione === 1)
-          .sort((a, b) => (b.data || '').localeCompare(a.data || ''));
-        for (const w of wins) {
-          if (_allPhotosMap[w.gara_id]) return _allPhotosMap[w.gara_id];
-          // Prova anche con match parziale (tronca suffisso _CAT_G)
-          const base = w.gara_id.replace(/_[A-Z0-9]+_[MF]$/, '');
-          const key = Object.keys(_allPhotosMap).find(k => k.startsWith(base));
-          if (key) return _allPhotosMap[key];
+  async function pickAthPhoto(athObj, resSet) {
+    try {
+      const ov = await getEntityOverrides('atleta', athObj.atleta_id);
+      if (ov.photo_url) return `${MEDIA_BASE}${ov.photo_url}`;
+    } catch {}
+
+    // Fallback: cerca una gara vinta con foto disponibile
+    const wins = [...resSet]
+      .filter(r => r.atleta_id === athObj.atleta_id && r.posizione === 1)
+      .sort((a, b) => (b.data || '').localeCompare(a.data || ''));
+    for (const w of wins) {
+      if (_allPhotosMap[w.gara_id]) return _allPhotosMap[w.gara_id];
+      const base = w.gara_id.replace(/_[A-Z0-9]+_[MF]$/, '');
+      const key = Object.keys(_allPhotosMap).find(k => k.startsWith(base));
+      if (key) return _allPhotosMap[key];
+    }
+
+    // PCS fallback per Elite/U23 e Juniores
+    if (hub._code && /^(elite|juniores)/.test(hub._code)) {
+      try {
+        const fullName = `${athObj.nome || ''} ${athObj.cognome || ''}`.trim();
+        if (fullName) {
+          const r = await fetch(`${API_BASE}/pcs-photo?name=${encodeURIComponent(fullName)}`);
+          const j = await r.json();
+          if (j.url) return j.url;
         }
-        return null;
-      })
-      .catch(() => null);
+      } catch {}
+    }
+
+    return null;
   }
 
   let fireAthPhoto    = null;
@@ -7221,6 +7231,9 @@ async function renderAdmin() {
           <span class="admin-nav-icon" style="color:#f59e0b">📷</span> ciclismo.info Auto-Sync
           <span class="admin-nav-badge" id="badge-ic"></span>
         </div>
+        <div class="admin-nav-item" data-section="pcs-import" onclick="adminNav('pcs-import')">
+          <span class="admin-nav-icon" style="color:#a78bfa">🌐</span> PCS Foto Profilo
+        </div>
 
         <div class="admin-nav-group">Video</div>
         <div class="admin-nav-item" data-section="video-pending" onclick="adminNav('video-pending')">
@@ -8643,6 +8656,87 @@ window.adminNav = async function(section) {
     }
 
     // ── SCRAPER & CONFIG ──────────────────────────────────────────
+    case 'pcs-import': {
+      const _renderPcsStatus = async () => {
+        try {
+          const s = await apiCall('/admin/pcs-import/status');
+          const logHtml = s.log && s.log.length
+            ? `<pre style="background:var(--bg-input);border:1px solid var(--border-subtle);border-radius:6px;padding:12px;font-size:.78rem;max-height:340px;overflow:auto;white-space:pre-wrap;word-break:break-all">${esc(s.log.join('\n'))}</pre>`
+            : `<p style="color:var(--text-muted);font-size:.85rem">Nessun log disponibile.</p>`;
+          const statsHtml = s.stats
+            ? `<div style="display:flex;gap:16px;flex-wrap:wrap;margin:12px 0">
+                <span style="background:var(--bg-elevated);padding:6px 14px;border-radius:20px;font-size:.85rem">✅ Salvati: <strong>${s.stats.done}</strong></span>
+                <span style="background:var(--bg-elevated);padding:6px 14px;border-radius:20px;font-size:.85rem">⏭ Già esistenti: <strong>${s.stats.skipped}</strong></span>
+                <span style="background:var(--bg-elevated);padding:6px 14px;border-radius:20px;font-size:.85rem">❓ Non su PCS: <strong>${s.stats.notFound}</strong></span>
+                <span style="background:var(--bg-elevated);padding:6px 14px;border-radius:20px;font-size:.85rem">❌ Errori: <strong>${s.stats.errors}</strong></span>
+              </div>`
+            : '';
+          const statusBadge = s.running
+            ? `<span style="background:#f59e0b;color:#000;padding:3px 12px;border-radius:10px;font-size:.78rem;font-weight:700">⏳ IN CORSO…</span>`
+            : `<span style="background:#22c55e;color:#fff;padding:3px 12px;border-radius:10px;font-size:.78rem;font-weight:700">Inattivo</span>`;
+          document.getElementById('pcs-status-badge').outerHTML = `<span id="pcs-status-badge">${statusBadge}</span>`;
+          document.getElementById('pcs-stats-area').innerHTML = statsHtml;
+          document.getElementById('pcs-log-area').innerHTML   = logHtml;
+          if (s.running) setTimeout(_renderPcsStatus, 3000);
+        } catch(e) {
+          document.getElementById('pcs-log-area').innerHTML = `<p style="color:#ef4444">Errore: ${esc(e.message)}</p>`;
+        }
+      };
+
+      main.innerHTML = `
+        <div class="admin-page-header">
+          <h1 class="admin-page-title">🌐 PCS Foto Profilo</h1>
+          <p class="admin-page-sub">Importa automaticamente le foto profilo da ProCyclingStats per tutti gli atleti Elite/U23 e Juniores senza foto.</p>
+        </div>
+
+        <div style="background:var(--bg-card);border:1px solid var(--border-subtle);border-radius:var(--r-lg);padding:20px;margin-bottom:20px">
+          <div style="display:flex;align-items:center;gap:12px;margin-bottom:16px">
+            <strong style="font-size:1rem">Stato import</strong>
+            <span id="pcs-status-badge"><span style="background:#22c55e;color:#fff;padding:3px 12px;border-radius:10px;font-size:.78rem;font-weight:700">Inattivo</span></span>
+          </div>
+          <p style="font-size:.85rem;color:var(--text-muted);margin-bottom:16px">
+            Scarica la foto di ogni atleta da <code>procyclingstats.com/images/riders/lg/nome-cognome.jpeg</code>,
+            la salva su Supabase Storage e la imposta come foto profilo nella scheda atleta —
+            come faresti tu manualmente uno per uno.
+            Gli atleti che hanno già una foto vengono saltati.
+          </p>
+          <div style="display:flex;gap:10px;flex-wrap:wrap">
+            <button id="pcs-start-btn" onclick="window._startPcsImport()"
+              style="background:var(--accent);color:#fff;border:none;padding:9px 20px;border-radius:var(--r-sm);font-weight:600;cursor:pointer">
+              🚀 Avvia import foto PCS
+            </button>
+            <button onclick="_renderPcsStatus()"
+              style="background:var(--bg-elevated);border:1px solid var(--border-subtle);padding:9px 16px;border-radius:var(--r-sm);cursor:pointer;color:var(--text-primary)">
+              🔄 Aggiorna stato
+            </button>
+          </div>
+        </div>
+
+        <div id="pcs-stats-area"></div>
+
+        <div style="background:var(--bg-card);border:1px solid var(--border-subtle);border-radius:var(--r-lg);padding:16px">
+          <div style="font-weight:700;margin-bottom:10px;font-size:.9rem">📋 Log</div>
+          <div id="pcs-log-area"><p style="color:var(--text-muted);font-size:.85rem">Nessun log disponibile.</p></div>
+        </div>
+      `;
+
+      window._startPcsImport = async () => {
+        const btn = document.getElementById('pcs-start-btn');
+        if (btn) { btn.disabled = true; btn.textContent = '⏳ Avvio…'; }
+        try {
+          await apiCall('/admin/pcs-import', { method: 'POST', body: { skipExisting: true } });
+          showToast('Import avviato! Le foto verranno caricate in background.');
+          setTimeout(_renderPcsStatus, 1500);
+        } catch(e) {
+          showToast(e.message, 'error');
+          if (btn) { btn.disabled = false; btn.textContent = '🚀 Avvia import foto PCS'; }
+        }
+      };
+
+      await _renderPcsStatus();
+      break;
+    }
+
     case 'scraper': {
       main.innerHTML = '<div class="admin-loading">Caricamento stato scraper…</div>';
       try {
