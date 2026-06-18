@@ -1552,10 +1552,12 @@ app.post('/api/admin/full-import', requireAdmin, (req, res) => {
   const mode = req.body.mode || 'all'; // 'all' | 'athletes' | 'teams'
   const force = !!req.body.force;
 
+  // mode: 'all' | 'athletes' | 'teams' | 'fc' | 'fc-athletes' | 'fc-teams'
   const scriptArgs = [];
-  if (mode === 'athletes') scriptArgs.push('--athletes');
-  if (mode === 'teams')    scriptArgs.push('--teams');
-  if (force)               scriptArgs.push('--force');
+  if (mode === 'athletes' || mode === 'fc-athletes') scriptArgs.push('--athletes');
+  if (mode === 'teams'    || mode === 'fc-teams')    scriptArgs.push('--teams');
+  if (mode.startsWith('fc'))                         scriptArgs.push('--fc');
+  if (force)                                         scriptArgs.push('--force');
 
   const scriptPath = path.join(__dirname, 'run-import.js');
   const secret = process.env.SUPABASE_SECRET;

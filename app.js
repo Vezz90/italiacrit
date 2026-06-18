@@ -7232,7 +7232,7 @@ async function renderAdmin() {
           <span class="admin-nav-badge" id="badge-ic"></span>
         </div>
         <div class="admin-nav-item" data-section="pcs-import" onclick="adminNav('pcs-import')">
-          <span class="admin-nav-icon" style="color:#a78bfa">🌐</span> PCS Foto Profilo
+          <span class="admin-nav-icon" style="color:#a78bfa">📸</span> Import Foto &amp; Social
         </div>
 
         <div class="admin-nav-group">Video</div>
@@ -8719,29 +8719,64 @@ window.adminNav = async function(section) {
             <span id="import-status-badge" style="background:#22c55e;color:#fff;padding:3px 12px;border-radius:10px;font-size:.78rem;font-weight:700">Inattivo</span>
           </div>
 
-          <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:12px;margin-bottom:14px">
+          <!-- ProCyclingStats -->
+          <div style="margin-bottom:6px;font-size:.78rem;font-weight:700;color:var(--text-muted);letter-spacing:.05em;text-transform:uppercase">ProCyclingStats</div>
+          <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:12px;margin-bottom:18px">
             <div style="background:var(--bg-elevated);border-radius:var(--r-md);padding:16px">
               <div style="font-weight:700;margin-bottom:6px;font-size:.9rem">👤 Solo Atleti</div>
-              <p style="font-size:.8rem;color:var(--text-muted);margin-bottom:12px">Foto + Instagram + Twitter + Strava per tutti gli atleti senza dati.</p>
-              <button id="import-btn-athletes" onclick="window._startImport('athletes','Import Atleti')"
+              <p style="font-size:.8rem;color:var(--text-muted);margin-bottom:12px">Foto + social per tutti gli atleti senza dati (PCS primario).</p>
+              <button id="import-btn-athletes" onclick="window._startImport('athletes','Import Atleti PCS')"
                 style="width:100%;background:var(--accent);color:#fff;border:none;padding:8px 14px;border-radius:var(--r-sm);font-weight:600;cursor:pointer;font-size:.85rem">
-                🚀 Avvia import atleti
+                🚀 Avvia
               </button>
             </div>
             <div style="background:var(--bg-elevated);border-radius:var(--r-md);padding:16px">
               <div style="font-weight:700;margin-bottom:6px;font-size:.9rem">🏆 Solo Team</div>
-              <p style="font-size:.8rem;color:var(--text-muted);margin-bottom:12px">Logo + Instagram + Twitter + sito per tutti i team senza dati.</p>
-              <button id="import-btn-teams" onclick="window._startImport('teams','Import Team')"
+              <p style="font-size:.8rem;color:var(--text-muted);margin-bottom:12px">Logo + social per tutti i team senza dati (PCS primario).</p>
+              <button id="import-btn-teams" onclick="window._startImport('teams','Import Team PCS')"
                 style="width:100%;background:var(--accent);color:#fff;border:none;padding:8px 14px;border-radius:var(--r-sm);font-weight:600;cursor:pointer;font-size:.85rem">
-                🚀 Avvia import team
+                🚀 Avvia
               </button>
             </div>
             <div style="background:var(--bg-elevated);border-radius:var(--r-md);padding:16px;border:2px solid var(--accent)">
-              <div style="font-weight:700;margin-bottom:6px;font-size:.9rem">⚡ Tutto</div>
-              <p style="font-size:.8rem;color:var(--text-muted);margin-bottom:12px">Atleti + Team in una sola passata. Può richiedere 30–60 min.</p>
-              <button id="import-btn-all" onclick="window._startImport('all','Import Completo')"
+              <div style="font-weight:700;margin-bottom:6px;font-size:.9rem">⚡ PCS Completo</div>
+              <p style="font-size:.8rem;color:var(--text-muted);margin-bottom:12px">Atleti + Team in una sola passata. 30–60 min.</p>
+              <button id="import-btn-all" onclick="window._startImport('all','Import Completo PCS')"
                 style="width:100%;background:var(--accent);color:#fff;border:none;padding:8px 14px;border-radius:var(--r-sm);font-weight:600;cursor:pointer;font-size:.85rem">
-                🚀 Avvia import completo
+                🚀 Avvia
+              </button>
+            </div>
+          </div>
+
+          <!-- First Cycling -->
+          <div style="margin-bottom:6px;font-size:.78rem;font-weight:700;color:var(--text-muted);letter-spacing:.05em;text-transform:uppercase">First Cycling</div>
+          <p style="font-size:.8rem;color:var(--text-muted);margin-bottom:10px">
+            Processa <em>tutti</em> gli atleti (anche chi ha già la foto PCS) per raccogliere foto mancanti e social.
+            Ideale per Elite/U23 su squadre continentali e loghi team.
+          </p>
+          <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:12px;margin-bottom:14px">
+            <div style="background:var(--bg-elevated);border-radius:var(--r-md);padding:16px;border:1px solid #7c3aed44">
+              <div style="font-weight:700;margin-bottom:6px;font-size:.9rem">🚴 FC Atleti</div>
+              <p style="font-size:.8rem;color:var(--text-muted);margin-bottom:12px">Foto + social per atleti da First Cycling. Integra chi ha già la foto PCS.</p>
+              <button id="import-btn-fc-athletes" onclick="window._startImport('fc-athletes','Import Atleti FC')"
+                style="width:100%;background:#7c3aed;color:#fff;border:none;padding:8px 14px;border-radius:var(--r-sm);font-weight:600;cursor:pointer;font-size:.85rem">
+                🚴 Avvia
+              </button>
+            </div>
+            <div style="background:var(--bg-elevated);border-radius:var(--r-md);padding:16px;border:1px solid #7c3aed44">
+              <div style="font-weight:700;margin-bottom:6px;font-size:.9rem">🏅 FC Team</div>
+              <p style="font-size:.8rem;color:var(--text-muted);margin-bottom:12px">Logo + social per team da First Cycling. Integra chi ha già il logo PCS.</p>
+              <button id="import-btn-fc-teams" onclick="window._startImport('fc-teams','Import Team FC')"
+                style="width:100%;background:#7c3aed;color:#fff;border:none;padding:8px 14px;border-radius:var(--r-sm);font-weight:600;cursor:pointer;font-size:.85rem">
+                🏅 Avvia
+              </button>
+            </div>
+            <div style="background:var(--bg-elevated);border-radius:var(--r-md);padding:16px;border:2px solid #7c3aed">
+              <div style="font-weight:700;margin-bottom:6px;font-size:.9rem">🌐 FC Completo</div>
+              <p style="font-size:.8rem;color:var(--text-muted);margin-bottom:12px">Atleti + Team da First Cycling in una sola passata.</p>
+              <button id="import-btn-fc" onclick="window._startImport('fc','Import FC Completo')"
+                style="width:100%;background:#7c3aed;color:#fff;border:none;padding:8px 14px;border-radius:var(--r-sm);font-weight:600;cursor:pointer;font-size:.85rem">
+                🌐 Avvia
               </button>
             </div>
           </div>
