@@ -5145,8 +5145,7 @@ async function renderHubBars() {
   const hub = activeHub || null;
   // No hub = general nav bars fallback
   if (!hub || !hub._code) return _renderNavBars();
-  setPage('<div class="loading-bar"></div>'); // pulisce subito il vecchio contenuto
-  if (!globalData) return;
+  if (!globalData) { setPage('<div class="loading-bar"></div>'); return; }
 
   const hubCode   = hub._code;
   const hubColor  = hub.color || '#FF6B00';
