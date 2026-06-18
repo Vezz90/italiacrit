@@ -12163,7 +12163,9 @@ async function renderTeam(team_id, opts = {}) {
   // Foto atleti nella lista CORRIDORI CHIAVE (batch async, identico alla classifica)
   const _perfSpans = [...document.querySelectorAll('.team-performers-list .rk-av-wrap[data-aid]')];
   if (_perfSpans.length) {
-    const _errSvg = `<span class="rk-av-placeholder"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><circle cx="12" cy="8" r="4"/><path d="M4 20c0-4 3.6-7 8-7s8 3 8 7"/></svg></span>`;
+    const _ph = `<span class=rk-av-placeholder><svg width=20 height=20 viewBox='0 0 24 24' fill='none' stroke='currentColor' stroke-width='1.5'><circle cx='12' cy='8' r='4'/><path d='M4 20c0-4 3.6-7 8-7s8 3 8 7'/></svg></span>`;
+    // Pre-popola subito il placeholder (visibile immediatamente)
+    _perfSpans.forEach(s => { s.innerHTML = _ph; });
     const batchSize = 8;
     for (let i = 0; i < _perfSpans.length; i += batchSize) {
       await Promise.all(_perfSpans.slice(i, i + batchSize).map(async span => {
@@ -12172,9 +12174,7 @@ async function renderTeam(team_id, opts = {}) {
         const ov = await getEntityOverrides('atleta', aid).catch(() => ({}));
         if (!document.contains(span)) return;
         if (ov.photo_url) {
-          span.innerHTML = `<img src="${MEDIA_BASE}${esc(ov.photo_url)}" alt="" class="rk-av-img" onerror="this.parentNode.innerHTML='${_errSvg.replace(/'/g, "\\'")}'" >`;
-        } else {
-          span.innerHTML = _errSvg;
+          span.innerHTML = `<img src="${MEDIA_BASE}${esc(ov.photo_url)}" alt="" class="rk-av-img" onerror="this.parentNode.innerHTML='${_ph}'">`;
         }
       }));
     }
@@ -17704,11 +17704,21 @@ async function generateShareCanvas(type, payload, platKey) {
     if(type==='atleta') {
       let athImg = null;
       if (payload.photo_url) {
-        athImg = await new Promise(resolve => {
-          const i = new Image(); i.crossOrigin = 'anonymous';
-          i.onload = () => resolve(i); i.onerror = () => resolve(null);
-          i.src = payload.photo_url;
-        });
+        // Usa fetch+blob per evitare problemi CORS da cache browser
+        athImg = await (async () => {
+          try {
+            const resp = await fetch(payload.photo_url, { mode: 'cors', cache: 'no-store' });
+            if (!resp.ok) return null;
+            const blob = await resp.blob();
+            const blobUrl = URL.createObjectURL(blob);
+            return await new Promise(resolve => {
+              const i = new Image();
+              i.onload = () => { URL.revokeObjectURL(blobUrl); resolve(i); };
+              i.onerror = () => { URL.revokeObjectURL(blobUrl); resolve(null); };
+              i.src = blobUrl;
+            });
+          } catch { return null; }
+        })();
       }
       _drawAtleta(ctx,p.w,p.h,payload,athImg);
     }
