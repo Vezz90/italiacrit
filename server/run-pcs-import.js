@@ -146,7 +146,7 @@ const sleep = ms => new Promise(r => setTimeout(r, ms));
       entity_type: 'atleta',
       entity_id:   ath.atleta_id,
       field:       'photo_url',
-      new_value:   `/pcs/${slug}.jpeg`,
+      new_value:   `/photos/pcs/${slug}.jpeg`,
       edited_by:   null,
     }, { onConflict: 'entity_type,entity_id,field' });
     if (dbErr) { console.log(`ERRORE DB: ${dbErr.message}`); errors++; continue; }

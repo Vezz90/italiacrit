@@ -148,7 +148,7 @@ function photoAreaHtml(entityType, entityId, photoUrl, initials, shape = 'circle
   const canUp  = canUploadPhoto(entityType);
   const imgEl  = photoUrl
     ? `<img data-photo-id="${esc(entityId)}" src="${MEDIA_BASE}${esc(photoUrl)}"
-           alt="Foto" style="width:100%;height:100%;object-fit:cover;border-radius:${radius};display:block">`
+           alt="Foto" style="width:100%;height:100%;object-fit:cover;object-position:top center;border-radius:${radius};display:block">`
     : `<div data-photo-id="${esc(entityId)}" style="width:100%;height:100%;border-radius:${radius};
            background:var(--bg-elevated);display:flex;align-items:center;justify-content:center;
            font-family:var(--font-display);font-size:${shape==='circle'?'1.8':'1.6'}rem;
@@ -426,7 +426,7 @@ async function _uploadPhotoBlob(blob, entityType, entityId, filename) {
       const newImg = document.createElement('img');
       newImg.src = `${MEDIA_BASE}${bustedUrl}`;
       newImg.setAttribute('data-photo-id', entityId);
-      newImg.style.cssText = `width:100%;height:100%;object-fit:cover;border-radius:${radius};display:block`;
+      newImg.style.cssText = `width:100%;height:100%;object-fit:cover;object-position:top center;border-radius:${radius};display:block`;
       target.replaceWith(newImg);
     }
     const toast = document.createElement('div');

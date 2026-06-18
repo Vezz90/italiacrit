@@ -69,7 +69,7 @@ http.createServer(async (req, res) => {
           entity_type: 'atleta',
           entity_id:   atletaId,
           field:       'photo_url',
-          new_value:   `/pcs/${slug}.jpeg`,
+          new_value:   `/photos/pcs/${slug}.jpeg`,
           edited_by:   null,
         }, { onConflict: 'entity_type,entity_id,field' });
         if (dbErr) throw new Error(dbErr.message);
