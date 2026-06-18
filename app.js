@@ -6110,6 +6110,8 @@ async function renderHubBars() {
   const _watchHtml    = buildWatchlistCard();
 
   // ── Prossima gara in evidenza (nei prossimi 7 giorni) ────────────
+  const upcomingAll = calendar.filter(g => calMatchesHub(g) && (g.data||'') >= todayStr)
+    .sort((a,b) => a.data.localeCompare(b.data));
   const _cut7Str = (() => { const d = new Date(todayStr); d.setDate(d.getDate() + 7); return d.toISOString().split('T')[0]; })();
   const _nextRaces7 = upcomingAll.filter(g => (g.data||'') <= _cut7Str);
   let _nextRaceHtml = '';
