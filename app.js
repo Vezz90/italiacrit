@@ -2130,6 +2130,28 @@ function setPage(html) {
   updateSeasonChip();
 }
 
+function setPageMeta(title, desc) {
+  const t = title ? `${title} | ICS` : 'ICS — Italia Cycling Stats';
+  const d = desc  || 'Classifiche e risultati del ciclismo agonistico italiano su strada';
+  document.title = t;
+  const setMeta = (sel, val) => document.querySelector(sel)?.setAttribute('content', val);
+  setMeta('meta[property="og:title"]',       t);
+  setMeta('meta[property="og:description"]', d);
+  setMeta('meta[property="og:url"]',         window.location.href);
+  setMeta('meta[name="twitter:title"]',      t);
+  setMeta('meta[name="twitter:description"]',d);
+}
+
+function setSchemaOrg(obj) {
+  document.getElementById('page-schema-ld')?.remove();
+  if (!obj) return;
+  const s = document.createElement('script');
+  s.type = 'application/ld+json';
+  s.id   = 'page-schema-ld';
+  s.textContent = JSON.stringify(obj);
+  document.head.appendChild(s);
+}
+
 // Inserisce la barra "STAGIONE" SOTTO l'header della pagina (dopo .pg-header
 // o il primo .section-header), non sopra. Idempotente.
 function placeSeasonBar() {
@@ -11081,6 +11103,11 @@ async function renderAtleta(atleta_id, opts = {}) {
 
   window._shareAtletaData = {_id:atleta_id,cognome:displayCognome,nome:displayNome,cat:catLabel(a.categoria),team:displayTeam,punti:a.punti_totali,pos:globalPos,p1:p1,p2:p2,p3:p3,p4_10:pout,gare:top10};
 
+  // Confronto stagione precedente — caricato in background (non blocca render)
+  const _prevSeasonYear = String(parseInt(selYear) - 1);
+  const _prevAthPromise = loadSeasonAthletes(_prevSeasonYear)
+    .then(aths => aths[atleta_id] || null).catch(() => null);
+
   // Sport Intelligence computations — sui risultati dell'ANNO selezionato.
   // Per la stagione caricata usiamo globalData.resultsRaw; per un anno passato
   // ricostruiamo un resultsRaw equivalente dai record archiviati dell'atleta.
@@ -11173,9 +11200,23 @@ async function renderAtleta(atleta_id, opts = {}) {
   // Watch button state
   const _watched = isWatched(atleta_id);
 
+  setPageMeta(
+    `${displayCognome} ${displayNome}`,
+    [catLabel(a.categoria), displayTeam, a.punti_totali ? `${a.punti_totali} pt` : '', p1 ? `${p1} vitt.` : ''].filter(Boolean).join(' · ')
+  );
+  setSchemaOrg({
+    '@context':'https://schema.org','@type':'Person',
+    name:`${displayCognome} ${displayNome}`,
+    identifier: atleta_id,
+    url: window.location.href,
+    ...(displayTeam ? { memberOf:{ '@type':'SportsTeam', name: displayTeam } } : {}),
+    description: `${catLabel(a.categoria)} — ciclismo italiano`,
+  });
+
   setPage(`
     ${headerHtml}
     ${profileYearRow('atleta', atleta_id, selYear)}
+    <div id="season-compare-inject"></div>
     ${_badgeStripHtml}
     ${cumulHtml}
     ${sparkHtml ? `<div class="sparkline-wrap"><div class="sparkline-title">ANDAMENTO PUNTI GARA PER GARA — STAGIONE ${esc(selYear)}</div>${sparkHtml}</div>` : ''}
@@ -11202,6 +11243,29 @@ async function renderAtleta(atleta_id, opts = {}) {
   // Inject bottone messaggio in modo async (lookup non blocca il render)
   _injectMsgBtn('atleta-msg-btn', atleta_id, null, null);
   _injectFollowBtn('atleta-follow-btn', 'atleta', atleta_id);
+
+  // Confronto stagione precedente — iniettato quando la promise è pronta
+  _prevAthPromise.then(prevA => {
+    const el = document.getElementById('season-compare-inject');
+    if (!el || !prevA) return;
+    const cur = { pts: a.punti_totali||0, vit: p1||0, pod: (p1+p2+p3)||0, gare: top10||0 };
+    const prv = { pts: prevA.punti_totali||0, vit: prevA.vittorie||0, pod: (prevA.vittorie||0)+(prevA.secondi||0)+(prevA.terzi||0), gare: (prevA.risultati||[]).length };
+    if (!prv.pts && !prv.gare) return; // nessun dato utile
+    const arrow = (n, p) => n > p ? `<span style="color:#22c55e;font-size:.7rem;margin-left:3px">▲${n-p}</span>` : n < p ? `<span style="color:#ef4444;font-size:.7rem;margin-left:3px">▼${p-n}</span>` : '';
+    el.innerHTML = `<div style="display:flex;align-items:stretch;gap:0;margin:10px 0 4px;border:1px solid var(--border-subtle);border-radius:12px;overflow:hidden;font-size:.82rem">
+      <div style="flex:1;padding:10px 14px;background:var(--bg-elevated)">
+        <div style="font-size:.65rem;font-weight:700;color:var(--text-muted);letter-spacing:.05em;margin-bottom:6px">${_prevSeasonYear}</div>
+        <div style="font-size:1.3rem;font-weight:900;color:var(--text-primary)">${prv.pts}<span style="font-size:.72rem;font-weight:400;margin-left:3px">pt</span></div>
+        <div style="color:var(--text-muted);margin-top:3px">${prv.vit} vitt. · ${prv.pod} podi · ${prv.gare} gare</div>
+      </div>
+      <div style="display:flex;align-items:center;padding:0 10px;background:var(--bg-card);font-size:.72rem;color:var(--text-muted);font-weight:700">VS</div>
+      <div style="flex:1;padding:10px 14px;background:var(--bg-elevated);border-left:2px solid var(--red-hot)">
+        <div style="font-size:.65rem;font-weight:700;color:var(--red-hot);letter-spacing:.05em;margin-bottom:6px">${selYear} ★</div>
+        <div style="font-size:1.3rem;font-weight:900;color:var(--red-hot)">${cur.pts}${arrow(cur.pts,prv.pts)}<span style="font-size:.72rem;font-weight:400;margin-left:3px;color:var(--text-primary)">pt</span></div>
+        <div style="color:var(--text-muted);margin-top:3px">${cur.vit} vitt.${arrow(cur.vit,prv.vit)} · ${cur.pod} podi${arrow(cur.pod,prv.pod)} · ${cur.gare} gare${arrow(cur.gare,prv.gare)}</div>
+      </div>
+    </div>`;
+  });
 }
 
 // ── Follow system ─────────────────────────────────────────────────────────────
@@ -11349,6 +11413,34 @@ const _VEZZ_SVG = `<svg viewBox="0 0 40 40" xmlns="http://www.w3.org/2000/svg" w
 
 let _vezzHistory = []; // conversazione multi-turno
 
+// Trasforma i nomi atleta nella risposta VEZZ in link cliccabili
+function linkifyAthletes(text) {
+  const athletes = globalData?.athletes;
+  if (!athletes) return esc(text);
+  if (!linkifyAthletes._map) {
+    // Costruisce la mappa solo una volta per sessione
+    const m = {};
+    for (const [id, a] of Object.entries(athletes)) {
+      const full = `${(a.cognome||'').trim().toUpperCase()} ${(a.nome||'').trim().toUpperCase()}`.trim();
+      const rev  = `${(a.nome||'').trim().toUpperCase()} ${(a.cognome||'').trim().toUpperCase()}`.trim();
+      if (full.length > 4) m[full] = id;
+      if (rev.length > 4 && rev !== full) m[rev] = id;
+    }
+    linkifyAthletes._map = m;
+  }
+  const map   = linkifyAthletes._map;
+  const names = Object.keys(map).sort((a, b) => b.length - a.length);
+  let html = esc(text);
+  for (const name of names) {
+    const re = new RegExp(`\\b${name.replace(/[-[\]{}()*+?.,\\^$|#\s]/g, '\\$&')}\\b`, 'gi');
+    if (!re.test(html)) continue;
+    const id = map[name];
+    html = html.replace(re, m =>
+      `<a href="#/atleta/${id}" style="color:var(--red-hot);font-weight:700;text-decoration:none">${m}</a>`);
+  }
+  return html;
+}
+
 function _initAiWidget() {
   if (document.getElementById('ai-widget-btn')) return;
   const btn = document.createElement('button');
@@ -11429,7 +11521,7 @@ window.toggleAiChat = function() {
       const { answer, suggestions } = await apiCall('/ai/ask', { method: 'POST', body: { question, history: _vezzHistory.slice(0, -1) } });
       document.getElementById(loadId)?.remove();
       msgs.insertAdjacentHTML('beforeend',
-        `<div style="background:var(--bg-elevated);padding:9px 12px;border-radius:10px 10px 10px 2px;font-size:.82rem;color:var(--text-primary);line-height:1.55;white-space:pre-wrap">${esc(answer)}</div>`);
+        `<div style="background:var(--bg-elevated);padding:9px 12px;border-radius:10px 10px 10px 2px;font-size:.82rem;color:var(--text-primary);line-height:1.55;white-space:pre-wrap">${linkifyAthletes(answer)}</div>`);
       if (suggestions && suggestions.length > 0) {
         const btns = suggestions.map(s =>
           `<button onclick="window._vezzAsk('dimmi i risultati di ${esc(s.nome)}')"
@@ -11879,6 +11971,8 @@ async function renderTeam(team_id, opts = {}) {
 
   window._shareTeamData = {_id:team_id,nome:t.nome,cat:catLabel(teamViewCat),punti:catPuntiTotali,pos:currentRank?currentRank.pos:null,p1:p1,p2:p2,p3:p3,p4_10:pout,atleti:atletiList.slice(0,5)};
   const _teamWatched = isWatched(team_id);
+  setPageMeta(t.nome, `${atletiList.length} atleti${catPuntiTotali ? ' · ' + catPuntiTotali + ' pt' : ''} — Italia Cycling Stats`);
+  setSchemaOrg({ '@context':'https://schema.org','@type':'SportsTeam', name:t.nome, identifier:team_id, url:window.location.href });
   setPage(`
     <div class="team-header">
       <div class="team-header-identity">
@@ -13013,6 +13107,18 @@ async function renderGara(gara_id) {
   const siRaceIntelHtml = '';
 
   window._currentGaraId = primaryGaraId;
+  const _winner = results1[0];
+  const _top3Str = results.slice(0,3).map((r,i)=>`${i+1}° ${r.cognome} ${r.nome}`).join(' · ');
+  setPageMeta(name, [fmtDate(data), calEntry?.luogo||calEntry?.regione||'', _top3Str].filter(Boolean).join(' — '));
+  setSchemaOrg({
+    '@context':'https://schema.org','@type':'SportsEvent',
+    name, startDate: data,
+    description: `${catLabel(cat)} — ciclismo italiano su strada`,
+    url: window.location.href,
+    location: { '@type':'Place', name: calEntry?.luogo||calEntry?.regione||'Italia' },
+    organizer: { '@type':'Organization', name:'Federazione Ciclistica Italiana', url:'https://www.federciclismo.it' },
+    ...(_winner ? { winner: { '@type':'Person', name:`${_winner.cognome} ${_winner.nome}`, identifier: _winner.atleta_id } } : {}),
+  });
   setPage(`
     <div class="race-header">
       <div class="race-name-display">${esc(name)}</div>

@@ -334,16 +334,18 @@ const API_BASE_URL = 'https://italiacrit.onrender.com';
 
 app.get('/og/gara/:id', async (req, res) => {
   const id  = req.params.id;
-  const cal = (readDataJson('calendar.json') || []).find(g => g.id === id);
-  const results = (readDataJson('results_raw.json') || [])
-    .filter(r => r.gara_id === id)
-    .sort((a,b) => a.posizione - b.posizione);
-  const winner = results[0];
-  const title = cal?.nome || id.replace(/_/g,' ');
-  const date  = cal?.data ? new Date(cal.data).toLocaleDateString('it-IT',{day:'numeric',month:'long',year:'numeric'}) : '';
-  const top3  = results.slice(0,3).map((r,i)=>`${i+1}° ${r.cognome} ${r.nome}`).join(' · ');
-  const desc  = [date, top3].filter(Boolean).join(' — ');
-  const img   = `${API_BASE_URL}/api/og-image/gara/${encodeURIComponent(id)}`;
+  const [calRaw, resultsRaw] = await Promise.all([
+    readDataJsonFromGH('calendar.json'),
+    readDataJsonFromGH('results_raw.json'),
+  ]);
+  const cal     = (calRaw || []).find(g => g.id === id);
+  const results = (resultsRaw || []).filter(r => r.gara_id === id).sort((a,b) => a.posizione - b.posizione);
+  const title   = cal?.nome || id.replace(/_/g,' ');
+  const date    = cal?.data ? new Date(cal.data).toLocaleDateString('it-IT',{day:'numeric',month:'long',year:'numeric'}) : '';
+  const top3    = results.slice(0,3).map((r,i)=>`${i+1}° ${r.cognome} ${r.nome}`).join(' · ');
+  const luogo   = cal?.luogo || cal?.regione || '';
+  const desc    = [date, luogo, top3].filter(Boolean).join(' — ');
+  const img     = `${API_BASE_URL}/api/og-image/gara/${encodeURIComponent(id)}`;
   const redirect = `${SITE_URL}/#/gara/${encodeURIComponent(id)}`;
   res.setHeader('Content-Type','text/html');
   res.send(ogHtml({ title, desc, img, redirect }));
@@ -351,10 +353,15 @@ app.get('/og/gara/:id', async (req, res) => {
 
 app.get('/og/atleta/:id', async (req, res) => {
   const id       = req.params.id;
-  const athletes = readDataJson('athletes.json') || {};
+  const athletes = await readDataJsonFromGH('athletes.json') || {};
   const ath      = athletes[id] || {};
   const title    = `${ath.cognome||''} ${ath.nome||''}`.trim() || id;
-  const desc     = [ath.team_attuale, ath.categoria].filter(Boolean).join(' · ') || 'Atleta ItaliacritResultati';
+  const catMap   = {ELI_M:'Elite',ELI_F:'Elite Donne',JUN_M:'Juniores',JUN_F:'Juniores Donne',AL_M:'Allievi',AL_F:'Allieve',ES1_M:'Esordienti 1°',ES2_M:'Esordienti 2°',ES1_F:'Esordienti 1° Donne',ES2_F:'Esordienti 2° Donne'};
+  const cat      = catMap[ath.categoria] || ath.categoria || '';
+  const parts    = [cat, ath.team_attuale].filter(Boolean);
+  if (ath.punti_totali) parts.push(`${ath.punti_totali} pt`);
+  if (ath.vittorie)     parts.push(`${ath.vittorie} vitt.`);
+  const desc     = parts.join(' · ') || 'Ciclista — Italia Cycling Stats';
   const img      = `${API_BASE_URL}/api/og-image/atleta/${encodeURIComponent(id)}`;
   const redirect = `${SITE_URL}/#/atleta/${encodeURIComponent(id)}`;
   res.setHeader('Content-Type','text/html');
@@ -363,14 +370,52 @@ app.get('/og/atleta/:id', async (req, res) => {
 
 app.get('/og/team/:id', async (req, res) => {
   const id    = req.params.id;
-  const teams = readDataJson('teams.json') || {};
-  const team  = teams[id] || {};
+  const [teams, athletes] = await Promise.all([
+    readDataJsonFromGH('teams.json'),
+    readDataJsonFromGH('athletes.json'),
+  ]);
+  const team  = (teams || {})[id] || {};
   const title = team.nome || id.replace(/_/g,' ');
-  const desc  = `Team — ItaliacritResultati`;
+  const riders = Object.values(athletes || {}).filter(a => a.team_id === id).length;
+  const desc  = riders ? `${riders} corridori — Italia Cycling Stats` : 'Team — Italia Cycling Stats';
   const img   = `${API_BASE_URL}/api/og-image/team/${encodeURIComponent(id)}`;
   const redirect = `${SITE_URL}/#/team/${encodeURIComponent(id)}`;
   res.setHeader('Content-Type','text/html');
   res.send(ogHtml({ title, desc, img, redirect }));
+});
+
+// ── Sitemap.xml ───────────────────────────────────────────────────────────────
+app.get('/sitemap.xml', async (req, res) => {
+  try {
+    const CANONICAL = 'https://italiacyclingstats.com';
+    const [athletes, resultsRaw] = await Promise.all([
+      readDataJsonFromGH('athletes.json'),
+      readDataJsonFromGH('results_raw.json'),
+    ]);
+    const urls = [
+      { loc: `${CANONICAL}/`,              priority: '1.0', changefreq: 'daily' },
+      { loc: `${CANONICAL}/#/risultati`,   priority: '0.9', changefreq: 'daily' },
+      { loc: `${CANONICAL}/#/classifica`,  priority: '0.8', changefreq: 'weekly' },
+      { loc: `${CANONICAL}/#/calendario`,  priority: '0.7', changefreq: 'weekly' },
+      { loc: `${CANONICAL}/#/atleti`,      priority: '0.7', changefreq: 'weekly' },
+      { loc: `${CANONICAL}/#/albo`,        priority: '0.6', changefreq: 'monthly' },
+    ];
+    for (const id of Object.keys(athletes || {})) {
+      if (id) urls.push({ loc: `${CANONICAL}/og/atleta/${encodeURIComponent(id)}`, priority: '0.7', changefreq: 'weekly' });
+    }
+    const garaIds = [...new Set((resultsRaw || []).map(r => r.gara_id).filter(Boolean))];
+    for (const gid of garaIds) {
+      urls.push({ loc: `${CANONICAL}/og/gara/${encodeURIComponent(gid)}`, priority: '0.6', changefreq: 'monthly' });
+    }
+    const xml = `<?xml version="1.0" encoding="UTF-8"?>\n<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">\n${
+      urls.map(u => `  <url><loc>${u.loc}</loc><changefreq>${u.changefreq}</changefreq><priority>${u.priority}</priority></url>`).join('\n')
+    }\n</urlset>`;
+    res.setHeader('Content-Type', 'application/xml; charset=utf-8');
+    res.setHeader('Cache-Control', 'public, max-age=3600');
+    res.send(xml);
+  } catch (e) {
+    res.status(500).send('<!-- sitemap error -->');
+  }
 });
 
 // ── Auth routes ───────────────────────────────────────────────────────────────
