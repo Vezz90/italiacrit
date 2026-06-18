@@ -5760,6 +5760,20 @@ async function renderHubBars() {
   }
 
   // ── Prossime gare ─────────────────────────────────────────────────
+  function calMatchesHub(g) {
+    if (hub.catFilter && !(g.categoria||'').toLowerCase().includes(hub.catFilter.toLowerCase())) return false;
+    if (hub.gender) {
+      if (g.genere) { if (g.genere !== hub.gender) return false; }
+      else {
+        const combined = ((g.categoria||'') + ' ' + (g.nome||'')).toLowerCase();
+        const isFem = /donne|femmin|allieve/.test(combined);
+        const isMas = /uomini|maschil/.test(combined);
+        if (isFem && hub.gender !== 'F') return false;
+        if (isMas && hub.gender !== 'M') return false;
+      }
+    }
+    return true;
+  }
   function buildCalCard() {
     const upcoming=calendar.filter(g=>calMatchesHub(g)&&(g.data||'')>=todayStr)
       .sort((a,b)=>a.data.localeCompare(b.data)).slice(0,4);
