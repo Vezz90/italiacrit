@@ -1525,6 +1525,70 @@ app.get('/api/admin/pcs-import/status', requireAdmin, (req, res) => {
 });
 
 // ══════════════════════════════════════════════════════════════════════════════
+// Import completo (Playwright) — foto + social per atleti e team
+// ══════════════════════════════════════════════════════════════════════════════
+
+let _fullImportJob = null; // { running, log[], startedAt, exitCode }
+
+app.post('/api/admin/full-import', requireAdmin, (req, res) => {
+  if (_fullImportJob?.running) return res.status(409).json({ error: 'Import già in corso' });
+
+  const { spawn } = require('child_process');
+  const mode = req.body.mode || 'all'; // 'all' | 'athletes' | 'teams'
+  const force = !!req.body.force;
+
+  const scriptArgs = [];
+  if (mode === 'athletes') scriptArgs.push('--athletes');
+  if (mode === 'teams')    scriptArgs.push('--teams');
+  if (force)               scriptArgs.push('--force');
+
+  const scriptPath = path.join(__dirname, 'run-import.js');
+  const secret = process.env.SUPABASE_SECRET;
+  if (!secret) return res.status(500).json({ error: 'SUPABASE_SECRET non impostato sul server' });
+
+  _fullImportJob = { running: true, log: [], startedAt: new Date().toISOString(), exitCode: null };
+  res.json({ ok: true, message: 'Import avviato — apri Chrome e attendi' });
+
+  const proc = spawn(process.execPath, [scriptPath, ...scriptArgs], {
+    env: { ...process.env, SUPABASE_SECRET: secret },
+    cwd: __dirname,
+  });
+
+  const onLine = line => {
+    if (!_fullImportJob) return;
+    console.log('[import]', line);
+    _fullImportJob.log.push(line);
+    if (_fullImportJob.log.length > 2000) _fullImportJob.log.shift();
+  };
+
+  let buf = '';
+  proc.stdout.on('data', d => {
+    buf += d.toString();
+    const lines = buf.split('\n');
+    buf = lines.pop();
+    lines.forEach(onLine);
+  });
+  proc.stderr.on('data', d => {
+    d.toString().split('\n').filter(Boolean).forEach(l => onLine('[ERR] ' + l));
+  });
+  proc.on('close', code => {
+    if (buf) onLine(buf);
+    if (_fullImportJob) { _fullImportJob.running = false; _fullImportJob.exitCode = code; }
+    console.log('[import] terminato con codice', code);
+  });
+});
+
+app.get('/api/admin/full-import/status', requireAdmin, (req, res) => {
+  if (!_fullImportJob) return res.json({ running: false, log: [], startedAt: null });
+  res.json(_fullImportJob);
+});
+
+app.delete('/api/admin/full-import', requireAdmin, (req, res) => {
+  if (_fullImportJob) _fullImportJob = { ..._fullImportJob, running: false, log: [...(_fullImportJob.log||[]), '--- Reset manuale ---'] };
+  res.json({ ok: true });
+});
+
+// ══════════════════════════════════════════════════════════════════════════════
 // YouTube Auto-Scraper
 // ══════════════════════════════════════════════════════════════════════════════
 const { DEFAULT_CHANNELS, fetchAllChannels } = require('./youtube-scraper');

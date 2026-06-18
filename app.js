@@ -8657,83 +8657,118 @@ window.adminNav = async function(section) {
 
     // ── SCRAPER & CONFIG ──────────────────────────────────────────
     case 'pcs-import': {
-      const _renderPcsStatus = async () => {
+      // ── helpers ──
+      const _logBox = () => document.getElementById('import-log-area');
+      const _badge  = () => document.getElementById('import-status-badge');
+
+      const _renderImportStatus = async () => {
         try {
-          const s = await apiCall('/admin/pcs-import/status');
-          const logHtml = s.log && s.log.length
-            ? `<pre style="background:var(--bg-input);border:1px solid var(--border-subtle);border-radius:6px;padding:12px;font-size:.78rem;max-height:340px;overflow:auto;white-space:pre-wrap;word-break:break-all">${esc(s.log.join('\n'))}</pre>`
-            : `<p style="color:var(--text-muted);font-size:.85rem">Nessun log disponibile.</p>`;
-          const statsHtml = s.stats
-            ? `<div style="display:flex;gap:16px;flex-wrap:wrap;margin:12px 0">
-                <span style="background:var(--bg-elevated);padding:6px 14px;border-radius:20px;font-size:.85rem">✅ Salvati: <strong>${s.stats.done}</strong></span>
-                <span style="background:var(--bg-elevated);padding:6px 14px;border-radius:20px;font-size:.85rem">⏭ Già esistenti: <strong>${s.stats.skipped}</strong></span>
-                <span style="background:var(--bg-elevated);padding:6px 14px;border-radius:20px;font-size:.85rem">❓ Non su PCS: <strong>${s.stats.notFound}</strong></span>
-                <span style="background:var(--bg-elevated);padding:6px 14px;border-radius:20px;font-size:.85rem">❌ Errori: <strong>${s.stats.errors}</strong></span>
-              </div>`
-            : '';
-          const statusBadge = s.running
-            ? `<span style="background:#f59e0b;color:#000;padding:3px 12px;border-radius:10px;font-size:.78rem;font-weight:700">⏳ IN CORSO…</span>`
-            : `<span style="background:#22c55e;color:#fff;padding:3px 12px;border-radius:10px;font-size:.78rem;font-weight:700">Inattivo</span>`;
-          document.getElementById('pcs-status-badge').outerHTML = `<span id="pcs-status-badge">${statusBadge}</span>`;
-          document.getElementById('pcs-stats-area').innerHTML = statsHtml;
-          document.getElementById('pcs-log-area').innerHTML   = logHtml;
-          if (s.running) setTimeout(_renderPcsStatus, 3000);
+          const s = await apiCall('/admin/full-import/status');
+          const running = s.running;
+          if (_badge()) _badge().outerHTML = running
+            ? `<span id="import-status-badge" style="background:#f59e0b;color:#000;padding:3px 12px;border-radius:10px;font-size:.78rem;font-weight:700">⏳ IN CORSO…</span>`
+            : `<span id="import-status-badge" style="background:#22c55e;color:#fff;padding:3px 12px;border-radius:10px;font-size:.78rem;font-weight:700">Inattivo</span>`;
+          if (_logBox()) {
+            const lines = s.log || [];
+            _logBox().innerHTML = lines.length
+              ? `<pre style="background:var(--bg-input);border:1px solid var(--border-subtle);border-radius:6px;padding:12px;font-size:.78rem;max-height:400px;overflow:auto;white-space:pre-wrap;word-break:break-all">${esc(lines.join('\n'))}</pre>`
+              : `<p style="color:var(--text-muted);font-size:.85rem">Nessun log.</p>`;
+            // auto-scroll al fondo
+            const pre = _logBox().querySelector('pre');
+            if (pre) pre.scrollTop = pre.scrollHeight;
+          }
+          if (running) setTimeout(_renderImportStatus, 3000);
         } catch(e) {
-          document.getElementById('pcs-log-area').innerHTML = `<p style="color:#ef4444">Errore: ${esc(e.message)}</p>`;
+          if (_logBox()) _logBox().innerHTML = `<p style="color:#ef4444">Errore: ${esc(e.message)}</p>`;
         }
+      };
+
+      const _startImport = async (mode, label) => {
+        const btn = document.getElementById(`import-btn-${mode}`);
+        if (btn) { btn.disabled = true; btn.textContent = '⏳ Avvio…'; }
+        try {
+          await apiCall('/admin/full-import', { method: 'POST', body: { mode } });
+          showToast(`${label} avviato — si aprirà Chrome automaticamente.`);
+          setTimeout(_renderImportStatus, 1500);
+        } catch(e) {
+          showToast(e.message, 'error');
+          if (btn) { btn.disabled = false; btn.textContent = label; }
+        }
+      };
+
+      const _resetImport = async () => {
+        await apiCall('/admin/full-import', { method: 'DELETE' }).catch(() => {});
+        showToast('Log resettato.');
+        await _renderImportStatus();
       };
 
       main.innerHTML = `
         <div class="admin-page-header">
-          <h1 class="admin-page-title">🌐 PCS Foto Profilo</h1>
-          <p class="admin-page-sub">Importa automaticamente le foto profilo da ProCyclingStats per tutti gli atleti Elite/U23 e Juniores senza foto.</p>
-        </div>
-
-        <div style="background:var(--bg-card);border:1px solid var(--border-subtle);border-radius:var(--r-lg);padding:20px;margin-bottom:20px">
-          <div style="display:flex;align-items:center;gap:12px;margin-bottom:16px">
-            <strong style="font-size:1rem">Stato import</strong>
-            <span id="pcs-status-badge"><span style="background:#22c55e;color:#fff;padding:3px 12px;border-radius:10px;font-size:.78rem;font-weight:700">Inattivo</span></span>
-          </div>
-          <p style="font-size:.85rem;color:var(--text-muted);margin-bottom:16px">
-            Scarica la foto di ogni atleta da <code>procyclingstats.com/images/riders/lg/nome-cognome.jpeg</code>,
-            la salva su Supabase Storage e la imposta come foto profilo nella scheda atleta —
-            come faresti tu manualmente uno per uno.
-            Gli atleti che hanno già una foto vengono saltati.
+          <h1 class="admin-page-title">🌐 Import Foto &amp; Social</h1>
+          <p class="admin-page-sub">
+            Importa automaticamente foto profilo e link social per atleti e team
+            da ProCyclingStats e First Cycling.<br>
+            <strong>Requisito:</strong> il server locale deve essere avviato con
+            <code>$env:SUPABASE_SECRET = "…"</code> prima di fare <code>node server.js</code>.
           </p>
-          <div style="display:flex;gap:10px;flex-wrap:wrap">
-            <button id="pcs-start-btn" onclick="window._startPcsImport()"
-              style="background:var(--accent);color:#fff;border:none;padding:9px 20px;border-radius:var(--r-sm);font-weight:600;cursor:pointer">
-              🚀 Avvia import foto PCS
+        </div>
+
+        <div style="background:var(--bg-card);border:1px solid var(--border-subtle);border-radius:var(--r-lg);padding:20px;margin-bottom:16px">
+          <div style="display:flex;align-items:center;gap:12px;margin-bottom:18px">
+            <strong>Stato</strong>
+            <span id="import-status-badge" style="background:#22c55e;color:#fff;padding:3px 12px;border-radius:10px;font-size:.78rem;font-weight:700">Inattivo</span>
+          </div>
+
+          <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:12px;margin-bottom:14px">
+            <div style="background:var(--bg-elevated);border-radius:var(--r-md);padding:16px">
+              <div style="font-weight:700;margin-bottom:6px;font-size:.9rem">👤 Solo Atleti</div>
+              <p style="font-size:.8rem;color:var(--text-muted);margin-bottom:12px">Foto + Instagram + Twitter + Strava per tutti gli atleti senza dati.</p>
+              <button id="import-btn-athletes" onclick="window._startImport('athletes','Import Atleti')"
+                style="width:100%;background:var(--accent);color:#fff;border:none;padding:8px 14px;border-radius:var(--r-sm);font-weight:600;cursor:pointer;font-size:.85rem">
+                🚀 Avvia import atleti
+              </button>
+            </div>
+            <div style="background:var(--bg-elevated);border-radius:var(--r-md);padding:16px">
+              <div style="font-weight:700;margin-bottom:6px;font-size:.9rem">🏆 Solo Team</div>
+              <p style="font-size:.8rem;color:var(--text-muted);margin-bottom:12px">Logo + Instagram + Twitter + sito per tutti i team senza dati.</p>
+              <button id="import-btn-teams" onclick="window._startImport('teams','Import Team')"
+                style="width:100%;background:var(--accent);color:#fff;border:none;padding:8px 14px;border-radius:var(--r-sm);font-weight:600;cursor:pointer;font-size:.85rem">
+                🚀 Avvia import team
+              </button>
+            </div>
+            <div style="background:var(--bg-elevated);border-radius:var(--r-md);padding:16px;border:2px solid var(--accent)">
+              <div style="font-weight:700;margin-bottom:6px;font-size:.9rem">⚡ Tutto</div>
+              <p style="font-size:.8rem;color:var(--text-muted);margin-bottom:12px">Atleti + Team in una sola passata. Può richiedere 30–60 min.</p>
+              <button id="import-btn-all" onclick="window._startImport('all','Import Completo')"
+                style="width:100%;background:var(--accent);color:#fff;border:none;padding:8px 14px;border-radius:var(--r-sm);font-weight:600;cursor:pointer;font-size:.85rem">
+                🚀 Avvia import completo
+              </button>
+            </div>
+          </div>
+
+          <div style="display:flex;gap:10px">
+            <button onclick="window._renderImportStatus()"
+              style="background:var(--bg-input);border:1px solid var(--border-subtle);padding:7px 14px;border-radius:var(--r-sm);cursor:pointer;color:var(--text-primary);font-size:.85rem">
+              🔄 Aggiorna log
             </button>
-            <button onclick="_renderPcsStatus()"
-              style="background:var(--bg-elevated);border:1px solid var(--border-subtle);padding:9px 16px;border-radius:var(--r-sm);cursor:pointer;color:var(--text-primary)">
-              🔄 Aggiorna stato
+            <button onclick="window._resetImport()"
+              style="background:var(--bg-input);border:1px solid var(--border-subtle);padding:7px 14px;border-radius:var(--r-sm);cursor:pointer;color:var(--text-muted);font-size:.85rem">
+              🗑 Reset log
             </button>
           </div>
         </div>
-
-        <div id="pcs-stats-area"></div>
 
         <div style="background:var(--bg-card);border:1px solid var(--border-subtle);border-radius:var(--r-lg);padding:16px">
-          <div style="font-weight:700;margin-bottom:10px;font-size:.9rem">📋 Log</div>
-          <div id="pcs-log-area"><p style="color:var(--text-muted);font-size:.85rem">Nessun log disponibile.</p></div>
+          <div style="font-weight:700;margin-bottom:10px;font-size:.9rem">📋 Log in tempo reale</div>
+          <div id="import-log-area"><p style="color:var(--text-muted);font-size:.85rem">Nessun log.</p></div>
         </div>
       `;
 
-      window._startPcsImport = async () => {
-        const btn = document.getElementById('pcs-start-btn');
-        if (btn) { btn.disabled = true; btn.textContent = '⏳ Avvio…'; }
-        try {
-          await apiCall('/admin/pcs-import', { method: 'POST', body: { skipExisting: true } });
-          showToast('Import avviato! Le foto verranno caricate in background.');
-          setTimeout(_renderPcsStatus, 1500);
-        } catch(e) {
-          showToast(e.message, 'error');
-          if (btn) { btn.disabled = false; btn.textContent = '🚀 Avvia import foto PCS'; }
-        }
-      };
+      window._startImport       = _startImport;
+      window._renderImportStatus = _renderImportStatus;
+      window._resetImport        = _resetImport;
 
-      await _renderPcsStatus();
+      await _renderImportStatus();
       break;
     }
 

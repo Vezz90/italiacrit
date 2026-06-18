@@ -20,17 +20,132 @@ if (!SUPABASE_SECRET) { console.error('Imposta $env:SUPABASE_SECRET'); process.e
 const DATA_DIR = path.join(__dirname, '..', 'data', 'rankings');
 const CATS     = ['ELI_M', 'ELI_F', 'JUN_M', 'JUN_F'];
 
-// atleta_id = COGNOME_PARTI_NOME  (es. LONGO_BORGHINI_ELISA → elisa-longo-borghini)
+function normalizeStr(s) {
+  return s.normalize('NFD').replace(/[̀-ͯ]/g, '').toLowerCase()
+    .replace(/[^a-z0-9]+/g, '-').replace(/^-+|-+$/g, '');
+}
+
+// Usa nome e cognome reali dall'oggetto atleta (più accurato del solo ID)
+function pcsSlugFromAth(ath) {
+  return `${normalizeStr(ath.nome)}-${normalizeStr(ath.cognome)}`;
+}
+
+// Fallback da ID solo (per retrocompatibilità)
 function pcsSlugFromId(atleta_id) {
   const parts = atleta_id.split('_');
   const givenName = parts[parts.length - 1];
   const surname   = parts.slice(0, -1).join(' ');
-  return `${givenName} ${surname}`.trim()
-    .normalize('NFD').replace(/[̀-ͯ]/g, '').toLowerCase()
-    .replace(/[^a-z0-9]+/g, '-').replace(/^-+|-+$/g, '');
+  return normalizeStr(`${givenName} ${surname}`);
+}
+
+function namesFromAth(ath) {
+  const normalize = s => s.normalize('NFD').replace(/[̀-ͯ]/g, '').toLowerCase();
+  return { givenName: normalize(ath.nome), surname: normalize(ath.cognome) };
 }
 
 const sleep = ms => new Promise(r => setTimeout(r, ms));
+
+/**
+ * Naviga a una pagina corridore PCS e scarica la sua foto.
+ * Ritorna { buf: Buffer|null, notFound: boolean }
+ *   buf      = dati JPEG, o null se la pagina esiste ma non ha foto
+ *   notFound = true se la pagina ha restituito pagenotfound/404
+ *
+ * Approccio: legge il src dell'<img> direttamente dal DOM (funziona
+ * anche con lazy-loading) poi fetcha l'immagine con le credenziali
+ * della sessione corrente.
+ */
+async function tryFetchRiderImage(page, riderUrl) {
+  try {
+    await page.goto(riderUrl, { waitUntil: 'domcontentloaded', timeout: 15000 });
+  } catch {
+    return { buf: null, notFound: false };
+  }
+
+  if (page.url().includes('pagenotfound') || page.url().includes('404')) {
+    return { buf: null, notFound: true };
+  }
+
+  // Piccolo scroll per triggerare eventuale lazy-load
+  await page.evaluate(() => window.scrollTo(0, 200)).catch(() => {});
+  await sleep(800);
+
+  // Estrai l'URL dell'immagine corridore direttamente dal DOM
+  const imgSrc = await page.evaluate(() => {
+    const img = [...document.querySelectorAll('img')]
+      .find(i => i.src && i.src.includes('/images/riders/'));
+    // Alcuni rider hanno solo data-src (lazy) ma non ancora src popolato
+    if (img) return img.src || img.dataset.src || null;
+    // Fallback: cerca negli attributi data-src
+    const lazy = [...document.querySelectorAll('[data-src*="/images/riders/"]')];
+    return lazy.length ? lazy[0].dataset.src : null;
+  }).catch(() => null);
+
+  if (!imgSrc) return { buf: null, notFound: false };
+
+  // Fetch immagine usando il contesto browser (credenziali Cloudflare incluse)
+  const bytes = await page.evaluate(async (url) => {
+    try {
+      const r = await fetch(url, { credentials: 'include' });
+      if (!r.ok) return null;
+      const ab = await r.arrayBuffer();
+      return Array.from(new Uint8Array(ab));
+    } catch { return null; }
+  }, imgSrc).catch(() => null);
+
+  if (!bytes || bytes.length < 1000) return { buf: null, notFound: false };
+  const buf = Buffer.from(bytes);
+  if (buf[0] !== 0xFF || buf[1] !== 0xD8) return { buf: null, notFound: false };
+  return { buf, notFound: false };
+}
+
+/**
+ * Cerca il corridore su PCS tramite la pagina di ricerca.
+ * Ritorna la slug corretta (es. "simone-buda-2006") o null se non trovata.
+ */
+async function findPcsSlugViaSearch(page, ath) {
+  const { givenName, surname } = namesFromAth(ath);
+  const searchTerm = `${givenName} ${surname}`;
+
+  try {
+    await page.goto(
+      `https://www.procyclingstats.com/search.php?search=${encodeURIComponent(searchTerm)}`,
+      { waitUntil: 'domcontentloaded', timeout: 15000 }
+    );
+  } catch {
+    return null;
+  }
+
+  // Estrai tutti gli href che puntano a /rider/SLUG
+  const hrefs = await page.evaluate(() => {
+    return [...document.querySelectorAll('a[href]')]
+      .map(a => a.getAttribute('href'))
+      .filter(h => h && /\/rider\/[a-z0-9-]+/.test(h));
+  }).catch(() => []);
+
+  if (!hrefs.length) return null;
+
+  // Filtra: prendi quello che contiene sia nome che cognome nel slug
+  const { givenName: gn, surname: sn } = namesFromAth(ath);
+  const gnParts = gn.split(' ');
+  const snParts = sn.split(' ');
+
+  const scored = hrefs.map(h => {
+    const match = h.match(/\/rider\/([a-z0-9-]+)/);
+    if (!match) return null;
+    const slug = match[1];
+    let score = 0;
+    for (const p of gnParts) if (slug.includes(p)) score++;
+    for (const p of snParts) if (slug.includes(p)) score++;
+    return { slug, score };
+  }).filter(Boolean);
+
+  scored.sort((a, b) => b.score - a.score);
+
+  const best = scored[0];
+  if (!best || best.score === 0) return null;
+  return best.slug;
+}
 
 (async () => {
   const { createClient } = require('@supabase/supabase-js');
@@ -95,46 +210,34 @@ const sleep = ms => new Promise(r => setTimeout(r, ms));
 
   for (let i = 0; i < toProcess.length; i++) {
     const ath  = toProcess[i];
-    const slug = pcsSlugFromId(ath.atleta_id);
+    let   slug = pcsSlugFromAth(ath);
     process.stdout.write(`(${i+1}/${toProcess.length}) ${slug} … `);
 
-    // Intercetta l'immagine corridore mentre la pagina carica
-    let buf = null;
-    const imageCapture = new Promise(resolve => {
-      const handler = async response => {
-        const url = response.url();
-        if (url.includes('/images/riders/') && response.ok()) {
-          page.off('response', handler);
-          try {
-            const b = await response.body();
-            if (b.length >= 1000 && b[0] === 0xFF && b[1] === 0xD8) resolve(b);
-            else resolve(null);
-          } catch { resolve(null); }
-        }
-      };
-      page.on('response', handler);
-      setTimeout(() => { page.off('response', handler); resolve(null); }, 8000);
-    });
+    // Primo tentativo: slug diretta (nome-cognome)
+    let { buf, notFound: nf } = await tryFetchRiderImage(
+      page, `https://www.procyclingstats.com/rider/${slug}`
+    );
 
-    try {
-      await page.goto(`https://www.procyclingstats.com/rider/${slug}`, {
-        waitUntil: 'domcontentloaded',
-        timeout: 15000,
-      });
-      // Se redirect a pagenotfound, corridore non su PCS
-      if (page.url().includes('pagenotfound') || page.url().includes('404')) {
-        console.log('non su PCS');
-        notFound++;
-        continue;
+    // Fallback: se non trovato su PCS, cerca tramite search
+    if (nf) {
+      process.stdout.write('search… ');
+      const foundSlug = await findPcsSlugViaSearch(page, ath);
+      if (foundSlug && foundSlug !== slug) {
+        process.stdout.write(`${foundSlug} … `);
+        slug = foundSlug;
+        const res2 = await tryFetchRiderImage(
+          page, `https://www.procyclingstats.com/rider/${slug}`
+        );
+        buf = res2.buf;
+        nf  = res2.notFound;
       }
-    } catch {
-      console.log('timeout');
+    }
+
+    if (nf || !buf) {
+      console.log(nf ? 'non su PCS' : 'no foto');
       notFound++;
       continue;
     }
-
-    buf = await imageCapture;
-    if (!buf) { console.log('no foto'); notFound++; continue; }
 
     // Upload Supabase Storage
     const { error: upErr } = await sb.storage.from('photos')
