@@ -78,32 +78,29 @@ async function sleep(ms) { return new Promise(r => setTimeout(r, ms)); }
   const toProcess = athletes.filter(a => !withPhoto.has(a.atleta_id));
   console.log(`${withPhoto.size} già con foto — ${toProcess.length} da processare\n`);
 
-  // 3. Avvia Chrome (usa il Chrome installato sul PC)
-  console.log('Avvio Chrome…');
+  // 3. Avvia Chrome visibile (headless: false bypassa il rilevamento bot di Cloudflare)
+  console.log('Avvio Chrome (visibile, per bypassare Cloudflare)…');
   let browser;
   try {
-    browser = await chromium.launch({ channel: 'chrome', headless: true });
+    browser = await chromium.launch({ channel: 'chrome', headless: false });
   } catch {
-    // Fallback: Chromium di Playwright (potrebbe essere bloccato da Cloudflare)
     console.log('Chrome non trovato, uso Chromium di Playwright…');
-    browser = await chromium.launch({ headless: true });
+    browser = await chromium.launch({ headless: false });
   }
-  const context = await browser.newContext({
-    userAgent: 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/124.0.0.0 Safari/537.36',
-    locale: 'it-IT',
-  });
+  const context = await browser.newContext({ locale: 'it-IT' });
   const page = await context.newPage();
 
-  // Visita PCS una volta per ottenere cookie Cloudflare
-  console.log('Visita PCS per cookie Cloudflare…');
+  // Visita PCS homepage e aspetta che Cloudflare completi l'eventuale challenge
+  console.log('Visita PCS per superare Cloudflare (attendi ~5 sec)…');
   try {
     await page.goto('https://www.procyclingstats.com/', {
-      waitUntil: 'domcontentloaded',
+      waitUntil: 'networkidle',
       timeout: 30000,
     });
-    await sleep(2000); // aspetta eventuali challenge JS
+    await sleep(3000);
   } catch (e) {
     console.log(`Avviso homepage PCS: ${e.message}`);
+    await sleep(3000);
   }
 
   let done = 0, notFound = 0, errors = 0;
@@ -113,29 +110,21 @@ async function sleep(ms) { return new Promise(r => setTimeout(r, ms)); }
     const slug = pcsSlug(ath.nome, ath.cognome);
     process.stdout.write(`(${i + 1}/${toProcess.length}) ${ath.nome} ${ath.cognome} → ${slug} … `);
 
-    await sleep(300);
+    await sleep(250);
 
-    // Scarica l'immagine tramite fetch() nel contesto browser (con cookie Cloudflare)
+    // Naviga direttamente sull'URL immagine — usa il browser reale con cookie Cloudflare
     const url = `https://www.procyclingstats.com/images/riders/lg/${slug}.jpeg`;
     let buf = null;
     try {
-      const result = await page.evaluate(async (imgUrl) => {
-        try {
-          const res = await fetch(imgUrl, { credentials: 'include' });
-          if (!res.ok) return null;
-          const ab = await res.arrayBuffer();
-          return Array.from(new Uint8Array(ab));
-        } catch {
-          return null;
+      const response = await page.goto(url, { waitUntil: 'load', timeout: 20000 });
+      if (response && response.ok()) {
+        const body = await response.body();
+        if (body.length >= 1000 && body[0] === 0xFF && body[1] === 0xD8) {
+          buf = body;
         }
-      }, url);
-
-      if (result && result.length >= 1000) {
-        buf = Buffer.from(result);
-        if (buf[0] !== 0xFF || buf[1] !== 0xD8) buf = null; // non JPEG
       }
     } catch (e) {
-      console.log(`ERRORE fetch: ${e.message}`);
+      console.log(`ERRORE nav: ${e.message}`);
       errors++;
       continue;
     }
@@ -164,11 +153,11 @@ async function sleep(ms) { return new Promise(r => setTimeout(r, ms)); }
     console.log('✓ salvato');
     done++;
 
-    // Ogni 50 atleti, rivisita PCS per rinnovare i cookie
-    if ((i + 1) % 50 === 0) {
+    // Ogni 30 atleti torna alla homepage per rinnovare i cookie
+    if ((i + 1) % 30 === 0) {
       try {
         await page.goto('https://www.procyclingstats.com/', { waitUntil: 'domcontentloaded', timeout: 15000 });
-        await sleep(1500);
+        await sleep(2000);
       } catch {}
     }
   }
