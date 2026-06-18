@@ -15558,6 +15558,22 @@ async function renderComparatore() {
     </div>`;
   };
 
+  // ── CVS ROW (nuovo comparatore) ───────────────────────────────
+  const cvsRow = (vA, vB, label, fmt='', inv=false) => {
+    const nA=parseFloat(vA)||0, nB=parseFloat(vB)||0;
+    const max=Math.max(nA,nB)||1;
+    const pA=Math.round(nA/max*100), pB=Math.round(nB/max*100);
+    const wA=inv?(nA>0&&nA<nB):nA>nB, wB=inv?(nB>0&&nB<nA):nB>nA;
+    return `<div class="cvs-row ${wA?'cvs-win-a':wB?'cvs-win-b':''}">
+      <div class="cvs-row-val cvs-row-val-a">${vA}${fmt}</div>
+      <div class="cvs-row-center">
+        <div class="cvs-row-label">${label}</div>
+        <div class="cvs-row-bar"><div class="cvs-bar-a" style="width:${inv?pB:pA}%"></div><div class="cvs-bar-b" style="width:${inv?pA:pB}%"></div></div>
+      </div>
+      <div class="cvs-row-val cvs-row-val-b">${vB}${fmt}</div>
+    </div>`;
+  };
+
   // ── HEAD TO HEAD ──────────────────────────────────────────────
   const buildH2H = (aRes, bRes, nA, nB) => {
     const shared = aRes.filter(r => bRes.some(s => s.gara_id===r.gara_id));
@@ -15577,15 +15593,15 @@ async function renderComparatore() {
       <div class="comp-section-title">Testa a Testa Diretto</div>
       <div class="h2h-score-bar">
         <div class="h2h-score-side">
-          <span class="h2h-score-num" style="color:#D97706">${wA}</span>
+          <span class="h2h-score-num" style="color:var(--red-hot)">${wA}</span>
           <span class="h2h-score-label">${esc(cName(nA))}</span>
         </div>
         <div class="h2h-score-center">
-          <div class="h2h-bar-track"><div class="h2h-bar-fill" style="width:${pA}%"></div></div>
+          <div class="h2h-bar-track"><div class="h2h-bar-fill" style="width:${pA}%;background:var(--red-hot)"></div></div>
           <div class="h2h-score-sub">${shared.length} gare in comune</div>
         </div>
         <div class="h2h-score-side h2h-score-right">
-          <span class="h2h-score-num" style="color:#16A34A">${wB}</span>
+          <span class="h2h-score-num" style="color:#2563EB">${wB}</span>
           <span class="h2h-score-label">${esc(cName(nB))}</span>
         </div>
       </div>
@@ -15624,7 +15640,7 @@ async function renderComparatore() {
     const total = scoreA + scoreB;
     const leadA = scoreA > scoreB, leadB = scoreB > scoreA;
     const winnerName = leadA ? nA : leadB ? nB : null;
-    const winnerColor = leadA ? '#D97706' : leadB ? '#16A34A' : 'var(--text-muted)';
+    const winnerColor = leadA ? 'var(--red-hot)' : leadB ? '#2563EB' : 'var(--text-muted)';
     const verdictText = winnerName
       ? `🏆 ${esc(cName(winnerName))}`
       : 'PARI';
@@ -15645,9 +15661,9 @@ async function renderComparatore() {
     if(!bA.length && !bB.length) return '';
     const chips = (arr, col) => arr.map(b=>`<span class="comp-badge" style="border-color:${col};color:${col}">${b}</span>`).join('');
     return `<div class="battle-badge-row">
-      <div class="battle-badges-side battle-badges-a">${chips(bA,'#D97706')}</div>
+      <div class="battle-badges-side battle-badges-a">${chips(bA,'var(--red-hot)')}</div>
       <div></div>
-      <div class="battle-badges-side battle-badges-b">${chips(bB,'#16A34A')}</div>
+      <div class="battle-badges-side battle-badges-b">${chips(bB,'#2563EB')}</div>
     </div>`;
   };
 
@@ -15751,129 +15767,101 @@ async function renderComparatore() {
 
     // Share URL
     const shareUrl = `${location.origin}${location.pathname}#/comparatore?a=${encodeURIComponent(compA)}&b=${encodeURIComponent(compB)}&g=${compGender}${compCat?'&cat='+encodeURIComponent(compCat):''}`;
+    const shareTitle = `${nA} vs ${nB}`;
 
     return `
-      <!-- Selettori compatti -->
       <div class="comp-selectors-compact">
         ${buildCompAc('a', acItems, compA)}
         <span class="comp-vs-sm">VS</span>
         ${buildCompAc('b', acItems, compB)}
       </div>
 
-      <!-- ① BATTLE ARENA -->
-      <div class="battle-arena">
-        <div class="battle-side battle-side-a">
-          <div class="battle-avatar battle-avatar-a">${iA}</div>
-          <div class="battle-name">${esc(nA)}</div>
-          <div class="battle-team">${esc(aD.team_attuale||'—')}</div>
-          <div class="battle-stats-row">
-            <div class="battle-stat">
-              <div class="battle-stat-val" style="color:#D97706">${sA.wins}</div>
-              <div class="battle-stat-lbl">Vitt.</div>
-            </div>
-            <div class="battle-stat">
-              <div class="battle-stat-val">${sA.podi}</div>
-              <div class="battle-stat-lbl">Podi</div>
-            </div>
-            <div class="battle-stat">
-              <div class="battle-stat-val">${sA.pts}</div>
-              <div class="battle-stat-lbl">Pt</div>
-            </div>
+      <!-- HERO DUEL -->
+      <div class="cvs-hero">
+        <div class="cvs-card cvs-card-a">
+          <div class="cvs-avatar cvs-avatar-a">${iA}</div>
+          <div class="cvs-firstname">${esc(aD.nome||'')}</div>
+          <div class="cvs-name">${esc(aD.cognome||'')}</div>
+          <div class="cvs-team">${esc(aD.team_attuale||'—')}</div>
+          <div class="cvs-kpis">
+            <div class="cvs-kpi"><span class="cvs-kpi-n" style="color:var(--red-hot)">${sA.wins}</span><span class="cvs-kpi-l">&nbsp;VITT</span></div>
+            <div class="cvs-kpi-div"></div>
+            <div class="cvs-kpi"><span class="cvs-kpi-n">${sA.podi}</span><span class="cvs-kpi-l">&nbsp;PODI</span></div>
+            <div class="cvs-kpi-div"></div>
+            <div class="cvs-kpi"><span class="cvs-kpi-n">${sA.pts}</span><span class="cvs-kpi-l">&nbsp;PT</span></div>
           </div>
-          <div class="battle-form-strip">${formPills(sA.recent8)}</div>
-          <div class="battle-trend" style="color:${sA.trend.color}">${sA.trend.label}</div>
+          <div class="cvs-form">${formPills(sA.recent8)}</div>
         </div>
 
-        <div class="battle-vs">
-          <div class="battle-vs-text">VS</div>
-        </div>
-
-        <div class="battle-side battle-side-b">
-          <div class="battle-avatar battle-avatar-b">${iB}</div>
-          <div class="battle-name">${esc(nB)}</div>
-          <div class="battle-team">${esc(bD.team_attuale||'—')}</div>
-          <div class="battle-stats-row">
-            <div class="battle-stat">
-              <div class="battle-stat-val" style="color:#16A34A">${sB.wins}</div>
-              <div class="battle-stat-lbl">Vitt.</div>
-            </div>
-            <div class="battle-stat">
-              <div class="battle-stat-val">${sB.podi}</div>
-              <div class="battle-stat-lbl">Podi</div>
-            </div>
-            <div class="battle-stat">
-              <div class="battle-stat-val">${sB.pts}</div>
-              <div class="battle-stat-lbl">Pt</div>
-            </div>
+        <div class="cvs-center-col">
+          <div class="cvs-vs-label">SFIDA</div>
+          <div class="cvs-score-nums">
+            <span style="color:var(--red-hot)">${verdict.scoreA}</span>
+            <span style="color:#2563EB">${verdict.scoreB}</span>
           </div>
-          <div class="battle-form-strip">${formPills(sB.recent8)}</div>
-          <div class="battle-trend" style="color:${sB.trend.color}">${sB.trend.label}</div>
-        </div>
-      </div>
-
-      <!-- ② VERDICT PANEL -->
-      <div class="battle-verdict">
-        <div class="battle-verdict-score battle-verdict-score-a">${verdict.scoreA}</div>
-        <div class="battle-verdict-mid">
-          <div class="battle-verdict-label">Metriche vinte</div>
-          <div class="battle-verdict-winner" style="color:${verdict.winnerColor}">${verdict.verdictText}</div>
-          <div class="battle-verdict-sub">${verdict.subText}</div>
-          <button class="battle-share-btn" onclick="window.shareBattle(${JSON.stringify(shareUrl)}, ${JSON.stringify(nA + ' vs ' + nB)})">
-            <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><circle cx="18" cy="5" r="3"/><circle cx="6" cy="12" r="3"/><circle cx="18" cy="19" r="3"/><line x1="8.59" y1="13.51" x2="15.42" y2="17.49"/><line x1="15.41" y1="6.51" x2="8.59" y2="10.49"/></svg>
-            Condividi sfida
+          <div class="cvs-score-bar">
+            <div class="cvs-score-fill-a" style="flex:${verdict.scoreA||1}"></div>
+            <div class="cvs-score-fill-b" style="flex:${verdict.scoreB||1}"></div>
+          </div>
+          <div class="cvs-verdict-lbl">METRICHE</div>
+          <div class="cvs-verdict-val" style="color:${verdict.winnerColor}">${verdict.verdictText}</div>
+          <button class="cvs-share-btn" onclick="window.shareBattle(${JSON.stringify(shareUrl)},${JSON.stringify(shareTitle)})">
+            <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><circle cx="18" cy="5" r="3"/><circle cx="6" cy="12" r="3"/><circle cx="18" cy="19" r="3"/><line x1="8.59" y1="13.51" x2="15.42" y2="17.49"/><line x1="15.41" y1="6.51" x2="8.59" y2="10.49"/></svg>
+            Condividi
           </button>
         </div>
-        <div class="battle-verdict-score battle-verdict-score-b">${verdict.scoreB}</div>
+
+        <div class="cvs-card cvs-card-b">
+          <div class="cvs-avatar cvs-avatar-b">${iB}</div>
+          <div class="cvs-firstname">${esc(bD.nome||'')}</div>
+          <div class="cvs-name">${esc(bD.cognome||'')}</div>
+          <div class="cvs-team">${esc(bD.team_attuale||'—')}</div>
+          <div class="cvs-kpis">
+            <div class="cvs-kpi"><span class="cvs-kpi-n" style="color:#2563EB">${sB.wins}</span><span class="cvs-kpi-l">&nbsp;VITT</span></div>
+            <div class="cvs-kpi-div"></div>
+            <div class="cvs-kpi"><span class="cvs-kpi-n">${sB.podi}</span><span class="cvs-kpi-l">&nbsp;PODI</span></div>
+            <div class="cvs-kpi-div"></div>
+            <div class="cvs-kpi"><span class="cvs-kpi-n">${sB.pts}</span><span class="cvs-kpi-l">&nbsp;PT</span></div>
+          </div>
+          <div class="cvs-form">${formPills(sB.recent8)}</div>
+        </div>
       </div>
 
-      <!-- ③ BADGE ACHIEVEMENTS -->
+      <!-- ACHIEVEMENTS -->
       ${buildBattleBadges(sA, sB, nA, nB)}
 
-      <!-- ④ ROUND BY ROUND -->
-      <div class="battle-rounds">
-        <div class="battle-rounds-header">
-          <span class="battle-rounds-title">Round by Round</span>
-          <span style="font-size:0.65rem;color:var(--text-muted)">su stagione completa</span>
+      <!-- METRIC TABLE -->
+      <div class="cvs-table">
+        <div class="cvs-table-hdr">
+          <span style="color:var(--red-hot);font-weight:800;font-size:.78rem">${esc(cName(nA))}</span>
+          <span style="font-size:.58rem;font-weight:800;letter-spacing:.1em;color:var(--text-muted);text-transform:uppercase">METRICHE</span>
+          <span style="color:#2563EB;font-weight:800;font-size:.78rem">${esc(cName(nB))}</span>
         </div>
-        ${battleRound(sA.pts,          sB.pts,          'PUNTI',              ' pt')}
-        ${battleRound(sA.wins,         sB.wins,         'VITTORIE')}
-        ${battleRound(sA.podi,         sB.podi,         'PODI (TOP 3)')}
-        ${battleRound(sA.top5,         sB.top5,         'TOP 5')}
-        ${battleRound(sA.top10,        sB.top10,        'TOP 10')}
-        ${battleRound(sA.gare,         sB.gare,         'GARE CON RISULTATO')}
-        ${battleRound(sA.convRate,     sB.convRate,     'VITTORIE SUI RISULTATI', '%')}
-        ${battleRound(sA.podioRate,    sB.podioRate,    'PODI SUI RISULTATI',     '%')}
-        ${battleRound(sA.consistRate,  sB.consistRate,  'REGOLARITÀ TOP-10',      '%')}
-        ${sA.avgPos!=='—'&&sB.avgPos!=='—' ? battleRound(sA.avgPos+'°', sB.avgPos+'°', 'POSIZIONE MEDIA', '', true) : ''}
-        ${battleRound(sA.recent5pts,   sB.recent5pts,   'FORMA RECENTE (5 ris.)', ' pt')}
+        ${cvsRow(sA.pts,         sB.pts,         'PUNTI')}
+        ${cvsRow(sA.wins,        sB.wins,        'VITTORIE')}
+        ${cvsRow(sA.podi,        sB.podi,        'PODI')}
+        ${cvsRow(sA.top5,        sB.top5,        'TOP 5')}
+        ${cvsRow(sA.top10,       sB.top10,       'TOP 10')}
+        ${cvsRow(sA.gare,        sB.gare,        'GARE')}
+        ${cvsRow(sA.convRate,    sB.convRate,    'VITT.%',    '%')}
+        ${cvsRow(sA.podioRate,   sB.podioRate,   'PODI%',     '%')}
+        ${cvsRow(sA.consistRate, sB.consistRate, 'TOP-10%',   '%')}
+        ${cvsRow(sA.recent5pts,  sB.recent5pts,  'FORMA REC.')}
+        ${sA.avgPos!=='—'&&sB.avgPos!=='—'?cvsRow(sA.avgPos,sB.avgPos,'POS. MEDIA','°',true):''}
       </div>
 
-      <!-- ⑤ TREND -->
-      <div class="comp-section">
-        <div class="comp-section-title">Trend & Profilo</div>
-        <div class="comp-trend-row">
-          <div style="text-align:right">
-            <div class="comp-trend-val" style="color:${sA.trend.color}">${sA.trend.label}</div>
-            <div class="comp-trend-lbl">ultimi 6 risultati</div>
-          </div>
-          <div class="comp-trend-mid">TREND</div>
-          <div>
-            <div class="comp-trend-val" style="color:${sB.trend.color}">${sB.trend.label}</div>
-            <div class="comp-trend-lbl">ultimi 6 risultati</div>
-          </div>
-        </div>
-        ${buildDistProfile(aRes, bRes, nA, nB)}
-      </div>
+      <!-- PROFILO PER DISTANZA -->
+      ${buildDistProfile(aRes, bRes, nA, nB)}
 
-      <!-- ⑥ TESTA A TESTA DIRETTO -->
+      <!-- H2H -->
       ${buildH2H(aRes, bRes, nA, nB)}
 
-      <!-- ⑦ ULTIMI RISULTATI -->
+      <!-- ULTIMI RISULTATI -->
       <div class="comp-section">
         <div class="comp-section-title">Ultimi Risultati</div>
         <div class="comp-recent-split">
-          ${buildRecentResults(aRes, nA, '#D97706')}
-          ${buildRecentResults(bRes, nB, '#16A34A')}
+          ${buildRecentResults(aRes, nA, 'var(--red-hot)')}
+          ${buildRecentResults(bRes, nB, '#2563EB')}
         </div>
       </div>`;
   };
@@ -15944,6 +15932,7 @@ async function renderComparatore() {
     const verdict = buildVerdict(sA, sB, nA, nB);
 
     const shareUrl = `${location.origin}${location.pathname}#/comparatore?a=${encodeURIComponent(compA)}&b=${encodeURIComponent(compB)}&g=${compGender}&mode=team${compCat?'&cat='+encodeURIComponent(compCat):''}`;
+    const shareTitle = `${nA} vs ${nB}`;
 
     return `
       <div class="comp-selectors-compact">
@@ -15952,101 +15941,82 @@ async function renderComparatore() {
         ${buildCompAc('b', acItemsT, compB)}
       </div>
 
-      <!-- BATTLE ARENA TEAM -->
-      <div class="battle-arena">
-        <div class="battle-side battle-side-a">
-          <div class="battle-avatar battle-avatar-a" style="border-radius:12px;font-size:1.1rem">${iA}</div>
-          <div class="battle-name">${esc(nA)}</div>
-          <div class="battle-team">${sA.atleti} corridori schierati</div>
-          <div class="battle-stats-row">
-            <div class="battle-stat">
-              <div class="battle-stat-val" style="color:#D97706">${sA.wins}</div>
-              <div class="battle-stat-lbl">Vitt.</div>
-            </div>
-            <div class="battle-stat">
-              <div class="battle-stat-val">${sA.podi}</div>
-              <div class="battle-stat-lbl">Podi</div>
-            </div>
-            <div class="battle-stat">
-              <div class="battle-stat-val">${sA.pts}</div>
-              <div class="battle-stat-lbl">Pt</div>
-            </div>
+      <!-- HERO DUEL TEAM -->
+      <div class="cvs-hero">
+        <div class="cvs-card cvs-card-a">
+          <div class="cvs-avatar cvs-avatar-a">${iA}</div>
+          <div class="cvs-name">${esc(nA)}</div>
+          <div class="cvs-team">${sA.atleti} corridori schierati</div>
+          <div class="cvs-kpis">
+            <div class="cvs-kpi"><span class="cvs-kpi-n" style="color:var(--red-hot)">${sA.wins}</span><span class="cvs-kpi-l">&nbsp;VITT</span></div>
+            <div class="cvs-kpi-div"></div>
+            <div class="cvs-kpi"><span class="cvs-kpi-n">${sA.podi}</span><span class="cvs-kpi-l">&nbsp;PODI</span></div>
+            <div class="cvs-kpi-div"></div>
+            <div class="cvs-kpi"><span class="cvs-kpi-n">${sA.pts}</span><span class="cvs-kpi-l">&nbsp;PT</span></div>
           </div>
-          <div class="battle-trend" style="color:${sA.trend.color}">${sA.trend.label}</div>
+          <div style="margin-top:8px;font-size:.75rem;font-weight:700;color:${sA.trend.color}">${sA.trend.label} trend</div>
         </div>
-        <div class="battle-vs"><div class="battle-vs-text">VS</div></div>
-        <div class="battle-side battle-side-b">
-          <div class="battle-avatar battle-avatar-b" style="border-radius:12px">${iB}</div>
-          <div class="battle-name">${esc(nB)}</div>
-          <div class="battle-team">${sB.atleti} corridori schierati</div>
-          <div class="battle-stats-row">
-            <div class="battle-stat">
-              <div class="battle-stat-val" style="color:#16A34A">${sB.wins}</div>
-              <div class="battle-stat-lbl">Vitt.</div>
-            </div>
-            <div class="battle-stat">
-              <div class="battle-stat-val">${sB.podi}</div>
-              <div class="battle-stat-lbl">Podi</div>
-            </div>
-            <div class="battle-stat">
-              <div class="battle-stat-val">${sB.pts}</div>
-              <div class="battle-stat-lbl">Pt</div>
-            </div>
-          </div>
-          <div class="battle-trend" style="color:${sB.trend.color}">${sB.trend.label}</div>
-        </div>
-      </div>
 
-      <!-- VERDICT TEAM -->
-      <div class="battle-verdict">
-        <div class="battle-verdict-score battle-verdict-score-a">${verdict.scoreA}</div>
-        <div class="battle-verdict-mid">
-          <div class="battle-verdict-label">Metriche vinte</div>
-          <div class="battle-verdict-winner" style="color:${verdict.winnerColor}">${verdict.verdictText}</div>
-          <div class="battle-verdict-sub">${verdict.subText}</div>
-          <button class="battle-share-btn" onclick="window.shareBattle(${JSON.stringify(shareUrl)}, ${JSON.stringify(nA + ' vs ' + nB)})">
-            <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><circle cx="18" cy="5" r="3"/><circle cx="6" cy="12" r="3"/><circle cx="18" cy="19" r="3"/><line x1="8.59" y1="13.51" x2="15.42" y2="17.49"/><line x1="15.41" y1="6.51" x2="8.59" y2="10.49"/></svg>
-            Condividi sfida
+        <div class="cvs-center-col">
+          <div class="cvs-vs-label">SFIDA</div>
+          <div class="cvs-score-nums">
+            <span style="color:var(--red-hot)">${verdict.scoreA}</span>
+            <span style="color:#2563EB">${verdict.scoreB}</span>
+          </div>
+          <div class="cvs-score-bar">
+            <div class="cvs-score-fill-a" style="flex:${verdict.scoreA||1}"></div>
+            <div class="cvs-score-fill-b" style="flex:${verdict.scoreB||1}"></div>
+          </div>
+          <div class="cvs-verdict-lbl">METRICHE</div>
+          <div class="cvs-verdict-val" style="color:${verdict.winnerColor}">${verdict.verdictText}</div>
+          <button class="cvs-share-btn" onclick="window.shareBattle(${JSON.stringify(shareUrl)},${JSON.stringify(shareTitle)})">
+            <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><circle cx="18" cy="5" r="3"/><circle cx="6" cy="12" r="3"/><circle cx="18" cy="19" r="3"/><line x1="8.59" y1="13.51" x2="15.42" y2="17.49"/><line x1="15.41" y1="6.51" x2="8.59" y2="10.49"/></svg>
+            Condividi
           </button>
         </div>
-        <div class="battle-verdict-score battle-verdict-score-b">${verdict.scoreB}</div>
+
+        <div class="cvs-card cvs-card-b">
+          <div class="cvs-avatar cvs-avatar-b">${iB}</div>
+          <div class="cvs-name">${esc(nB)}</div>
+          <div class="cvs-team">${sB.atleti} corridori schierati</div>
+          <div class="cvs-kpis">
+            <div class="cvs-kpi"><span class="cvs-kpi-n" style="color:#2563EB">${sB.wins}</span><span class="cvs-kpi-l">&nbsp;VITT</span></div>
+            <div class="cvs-kpi-div"></div>
+            <div class="cvs-kpi"><span class="cvs-kpi-n">${sB.podi}</span><span class="cvs-kpi-l">&nbsp;PODI</span></div>
+            <div class="cvs-kpi-div"></div>
+            <div class="cvs-kpi"><span class="cvs-kpi-n">${sB.pts}</span><span class="cvs-kpi-l">&nbsp;PT</span></div>
+          </div>
+          <div style="margin-top:8px;font-size:.75rem;font-weight:700;color:${sB.trend.color}">${sB.trend.label} trend</div>
+        </div>
       </div>
 
       ${buildBattleBadges(sA, sB, nA, nB)}
 
-      <div class="comp-section">
-        <div class="comp-section-title">Statistiche Team</div>
-        <div class="comp-stats-grid">
-          ${mBar(sA.pts,    sB.pts,    'PUNTI',              ' pt', true)}
-          ${mBar(sA.wins,   sB.wins,   'VITTORIE')}
-          ${mBar(sA.podi,   sB.podi,   'PODI (TOP 3)')}
-          ${mBar(sA.top5,   sB.top5,   'TOP 5')}
-          ${mBar(sA.top10,  sB.top10,  'TOP 10')}
-          ${mBar(sA.gare,   sB.gare,   'GARE CON RISULTATO')}
-          ${mBar(sA.convRate,    sB.convRate,    'VITTORIE SUI RISULTATI', '%')}
-          ${mBar(sA.podioRate,   sB.podioRate,   'PODI SUI RISULTATI',     '%')}
-          ${mBar(sA.consistRate, sB.consistRate, 'REGOLARITÀ TOP-10',      '%')}
-          ${mBar(sA.recent5pts,  sB.recent5pts,  'FORMA RECENTE (5 ris.)', ' pt')}
-          ${mBar(sA.atleti, sB.atleti, 'CORRIDORI SCHIERATI')}
+      <!-- METRIC TABLE TEAM -->
+      <div class="cvs-table">
+        <div class="cvs-table-hdr">
+          <span style="color:var(--red-hot);font-weight:800;font-size:.78rem">${esc(nA)}</span>
+          <span style="font-size:.58rem;font-weight:800;letter-spacing:.1em;color:var(--text-muted);text-transform:uppercase">METRICHE</span>
+          <span style="color:#2563EB;font-weight:800;font-size:.78rem">${esc(nB)}</span>
         </div>
-        <div class="comp-trend-row">
-          <div style="text-align:right">
-            <div class="comp-trend-val" style="color:${sA.trend.color}">${sA.trend.label}</div>
-            <div class="comp-trend-lbl">ultimi 6 risultati</div>
-          </div>
-          <div class="comp-trend-mid">TREND</div>
-          <div>
-            <div class="comp-trend-val" style="color:${sB.trend.color}">${sB.trend.label}</div>
-            <div class="comp-trend-lbl">ultimi 6 risultati</div>
-          </div>
-        </div>
+        ${cvsRow(sA.pts,         sB.pts,         'PUNTI')}
+        ${cvsRow(sA.wins,        sB.wins,        'VITTORIE')}
+        ${cvsRow(sA.podi,        sB.podi,        'PODI')}
+        ${cvsRow(sA.top5,        sB.top5,        'TOP 5')}
+        ${cvsRow(sA.top10,       sB.top10,       'TOP 10')}
+        ${cvsRow(sA.gare,        sB.gare,        'GARE')}
+        ${cvsRow(sA.atleti,      sB.atleti,      'CORRIDORI')}
+        ${cvsRow(sA.convRate,    sB.convRate,    'VITT.%',    '%')}
+        ${cvsRow(sA.podioRate,   sB.podioRate,   'PODI%',     '%')}
+        ${cvsRow(sA.consistRate, sB.consistRate, 'TOP-10%',   '%')}
+        ${cvsRow(sA.recent5pts,  sB.recent5pts,  'FORMA REC.')}
       </div>
 
       <div class="comp-section">
         <div class="comp-section-title">Ultimi Risultati</div>
         <div class="comp-recent-split">
-          ${buildRecentResults(aRes, nA, '#D97706')}
-          ${buildRecentResults(bRes, nB, '#16A34A')}
+          ${buildRecentResults(aRes, nA, 'var(--red-hot)')}
+          ${buildRecentResults(bRes, nB, '#2563EB')}
         </div>
       </div>`;
   };
