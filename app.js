@@ -15558,19 +15558,19 @@ async function renderComparatore() {
     </div>`;
   };
 
-  // ── CVS ROW (nuovo comparatore) ───────────────────────────────
-  const cvsRow = (vA, vB, label, fmt='', inv=false) => {
+  // ── CVS CARD (metrica singola — nessuna barra) ────────────────
+  const cvsCard = (vA, vB, label, sA, sB, fmt='', inv=false) => {
     const nA=parseFloat(vA)||0, nB=parseFloat(vB)||0;
-    const max=Math.max(nA,nB)||1;
-    const pA=Math.round(nA/max*100), pB=Math.round(nB/max*100);
     const wA=inv?(nA>0&&nA<nB):nA>nB, wB=inv?(nB>0&&nB<nA):nB>nA;
-    return `<div class="cvs-row ${wA?'cvs-win-a':wB?'cvs-win-b':''}">
-      <div class="cvs-row-val cvs-row-val-a">${vA}${fmt}</div>
-      <div class="cvs-row-center">
-        <div class="cvs-row-label">${label}</div>
-        <div class="cvs-row-bar"><div class="cvs-bar-a" style="width:${inv?pB:pA}%"></div><div class="cvs-bar-b" style="width:${inv?pA:pB}%"></div></div>
+    const clA=wA?'cvs-sv-n-win-a':wB?'cvs-sv-n-lose':'';
+    const clB=wB?'cvs-sv-n-win-b':wA?'cvs-sv-n-lose':'';
+    return `<div class="cvs-stat-card">
+      <div class="cvs-stat-label">${label}</div>
+      <div class="cvs-stat-vals">
+        <div class="cvs-sv"><span class="cvs-sv-n ${clA}">${vA}${fmt}</span><span class="cvs-sv-who">${sA}</span></div>
+        <div class="cvs-sv-div"></div>
+        <div class="cvs-sv cvs-sv-right"><span class="cvs-sv-n ${clB}">${vB}${fmt}</span><span class="cvs-sv-who">${sB}</span></div>
       </div>
-      <div class="cvs-row-val cvs-row-val-b">${vB}${fmt}</div>
     </div>`;
   };
 
@@ -15768,6 +15768,9 @@ async function renderComparatore() {
     // Share URL
     const shareUrl = `${location.origin}${location.pathname}#/comparatore?a=${encodeURIComponent(compA)}&b=${encodeURIComponent(compB)}&g=${compGender}${compCat?'&cat='+encodeURIComponent(compCat):''}`;
     const shareTitle = `${nA} vs ${nB}`;
+    const shortA = cName(nA);
+    const shortB = cName(nB);
+    const card = (vA, vB, label, fmt='', inv=false) => cvsCard(vA, vB, label, shortA, shortB, fmt, inv);
 
     return `
       <div class="comp-selectors-compact">
@@ -15830,24 +15833,19 @@ async function renderComparatore() {
       <!-- ACHIEVEMENTS -->
       ${buildBattleBadges(sA, sB, nA, nB)}
 
-      <!-- METRIC TABLE -->
-      <div class="cvs-table">
-        <div class="cvs-table-hdr">
-          <span style="color:var(--red-hot);font-weight:800;font-size:.78rem">${esc(cName(nA))}</span>
-          <span style="font-size:.58rem;font-weight:800;letter-spacing:.1em;color:var(--text-muted);text-transform:uppercase">METRICHE</span>
-          <span style="color:#2563EB;font-weight:800;font-size:.78rem">${esc(cName(nB))}</span>
-        </div>
-        ${cvsRow(sA.pts,         sB.pts,         'PUNTI')}
-        ${cvsRow(sA.wins,        sB.wins,        'VITTORIE')}
-        ${cvsRow(sA.podi,        sB.podi,        'PODI')}
-        ${cvsRow(sA.top5,        sB.top5,        'TOP 5')}
-        ${cvsRow(sA.top10,       sB.top10,       'TOP 10')}
-        ${cvsRow(sA.gare,        sB.gare,        'GARE')}
-        ${cvsRow(sA.convRate,    sB.convRate,    'VITT.%',    '%')}
-        ${cvsRow(sA.podioRate,   sB.podioRate,   'PODI%',     '%')}
-        ${cvsRow(sA.consistRate, sB.consistRate, 'TOP-10%',   '%')}
-        ${cvsRow(sA.recent5pts,  sB.recent5pts,  'FORMA REC.')}
-        ${sA.avgPos!=='—'&&sB.avgPos!=='—'?cvsRow(sA.avgPos,sB.avgPos,'POS. MEDIA','°',true):''}
+      <!-- METRIC CARDS -->
+      <div class="cvs-stat-grid">
+        ${card(sA.pts,         sB.pts,         'Punti')}
+        ${card(sA.wins,        sB.wins,        'Vittorie')}
+        ${card(sA.podi,        sB.podi,        'Podi')}
+        ${card(sA.top5,        sB.top5,        'Top 5')}
+        ${card(sA.top10,       sB.top10,       'Top 10')}
+        ${card(sA.gare,        sB.gare,        'Gare')}
+        ${card(sA.convRate,    sB.convRate,    'Vitt. %',   '%')}
+        ${card(sA.podioRate,   sB.podioRate,   'Podi %',    '%')}
+        ${card(sA.consistRate, sB.consistRate, 'Top-10 %',  '%')}
+        ${card(sA.recent5pts,  sB.recent5pts,  'Forma rec.')}
+        ${sA.avgPos!=='—'&&sB.avgPos!=='—'?card(sA.avgPos,sB.avgPos,'Pos. media','°',true):''}
       </div>
 
       <!-- PROFILO PER DISTANZA -->
@@ -15933,6 +15931,9 @@ async function renderComparatore() {
 
     const shareUrl = `${location.origin}${location.pathname}#/comparatore?a=${encodeURIComponent(compA)}&b=${encodeURIComponent(compB)}&g=${compGender}&mode=team${compCat?'&cat='+encodeURIComponent(compCat):''}`;
     const shareTitle = `${nA} vs ${nB}`;
+    const shortA = esc(nA);
+    const shortB = esc(nB);
+    const card = (vA, vB, label, fmt='', inv=false) => cvsCard(vA, vB, label, shortA, shortB, fmt, inv);
 
     return `
       <div class="comp-selectors-compact">
@@ -15992,24 +15993,19 @@ async function renderComparatore() {
 
       ${buildBattleBadges(sA, sB, nA, nB)}
 
-      <!-- METRIC TABLE TEAM -->
-      <div class="cvs-table">
-        <div class="cvs-table-hdr">
-          <span style="color:var(--red-hot);font-weight:800;font-size:.78rem">${esc(nA)}</span>
-          <span style="font-size:.58rem;font-weight:800;letter-spacing:.1em;color:var(--text-muted);text-transform:uppercase">METRICHE</span>
-          <span style="color:#2563EB;font-weight:800;font-size:.78rem">${esc(nB)}</span>
-        </div>
-        ${cvsRow(sA.pts,         sB.pts,         'PUNTI')}
-        ${cvsRow(sA.wins,        sB.wins,        'VITTORIE')}
-        ${cvsRow(sA.podi,        sB.podi,        'PODI')}
-        ${cvsRow(sA.top5,        sB.top5,        'TOP 5')}
-        ${cvsRow(sA.top10,       sB.top10,       'TOP 10')}
-        ${cvsRow(sA.gare,        sB.gare,        'GARE')}
-        ${cvsRow(sA.atleti,      sB.atleti,      'CORRIDORI')}
-        ${cvsRow(sA.convRate,    sB.convRate,    'VITT.%',    '%')}
-        ${cvsRow(sA.podioRate,   sB.podioRate,   'PODI%',     '%')}
-        ${cvsRow(sA.consistRate, sB.consistRate, 'TOP-10%',   '%')}
-        ${cvsRow(sA.recent5pts,  sB.recent5pts,  'FORMA REC.')}
+      <!-- METRIC CARDS TEAM -->
+      <div class="cvs-stat-grid">
+        ${card(sA.pts,         sB.pts,         'Punti')}
+        ${card(sA.wins,        sB.wins,        'Vittorie')}
+        ${card(sA.podi,        sB.podi,        'Podi')}
+        ${card(sA.top5,        sB.top5,        'Top 5')}
+        ${card(sA.top10,       sB.top10,       'Top 10')}
+        ${card(sA.gare,        sB.gare,        'Gare')}
+        ${card(sA.atleti,      sB.atleti,      'Corridori')}
+        ${card(sA.convRate,    sB.convRate,    'Vitt. %',   '%')}
+        ${card(sA.podioRate,   sB.podioRate,   'Podi %',    '%')}
+        ${card(sA.consistRate, sB.consistRate, 'Top-10 %',  '%')}
+        ${card(sA.recent5pts,  sB.recent5pts,  'Forma rec.')}
       </div>
 
       <div class="comp-section">
