@@ -1,11 +1,26 @@
+const path = require('path');
+const fs   = require('fs');
+
+// Carica variabili da .env.local (solo in locale, mai in produzione)
+// Le variabili già presenti nell'ambiente hanno precedenza.
+(function loadEnvLocal() {
+  const envPath = path.join(__dirname, '.env.local');
+  if (!fs.existsSync(envPath)) return;
+  fs.readFileSync(envPath, 'utf8').split('\n').forEach(line => {
+    const m = line.match(/^([^#=\s]+)\s*=\s*(.*)$/);
+    if (!m) return;
+    const [, key, raw] = m;
+    if (!process.env[key]) process.env[key] = raw.trim().replace(/^(['"])(.*)\1$/, '$2');
+  });
+  console.log('[env] Caricate variabili da .env.local');
+})();
+
 const express        = require('express');
 const compression    = require('compression');
 const cors           = require('cors');
 const bcrypt         = require('bcryptjs');
 const jwt            = require('jsonwebtoken');
 const multer         = require('multer');
-const path           = require('path');
-const fs             = require('fs');
 const { queries, init, rawQuery } = require('./db');
 
 const app  = express();
