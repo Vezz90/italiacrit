@@ -5142,6 +5142,7 @@ function renderHome() {
 
 // ── HUB DASHBOARD — Landing page con dati, classifiche e rivalità ─
 async function renderHubBars() {
+  try {
   const hub = activeHub || null;
   // No hub = general nav bars fallback
   if (!hub || !hub._code) return _renderNavBars();
@@ -6182,6 +6183,10 @@ async function renderHubBars() {
       const t = setInterval(slide, 6000);
       window.addEventListener('hashchange', ()=>clearInterval(t), {once:true});
     }
+  }
+  } catch(e) {
+    console.error('[renderHubBars]', e);
+    setPage(`<div class="page" style="padding:40px 24px;color:var(--text-muted)">Errore nel caricamento hub: ${e.message}</div>`);
   }
 }
 
