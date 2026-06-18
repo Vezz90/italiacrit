@@ -11922,7 +11922,12 @@ async function renderTeam(team_id, opts = {}) {
           <a href="#/gara/${esc(r.gara_id)}">${esc(r.nome_gara)}</a>
           <div class="td-team-mobile"><a href="#/atleta/${esc(r.atleta_id)}" style="color:var(--text-secondary)">${esc(r.atleta_cognome)} ${esc(r.atleta_nome)}</a></div>
         </td>
-        <td class="td-hide-mobile"><a href="#/atleta/${esc(r.atleta_id)}" style="color:var(--text-primary);font-family:var(--font-heading);font-weight:700">${esc(r.atleta_cognome)} ${esc(r.atleta_nome)}</a></td>
+        <td class="td-hide-mobile" style="font-family:var(--font-heading);font-weight:700">
+          <div style="display:flex;align-items:center">
+            <span class="rk-av-wrap" data-aid="${esc(r.atleta_id)}"></span>
+            <a href="#/atleta/${esc(r.atleta_id)}" style="color:var(--text-primary)">${esc(r.atleta_cognome)} ${esc(r.atleta_nome)}</a>
+          </div>
+        </td>
         <td class="td-pos ${posClass(r.posizione)}">${r.posizione}°</td>
         <td class="td-hide-mobile" style="text-align:center">${badgeMult(r.moltiplicatore || 1, r.tipo)}</td>
         <td class="td-hide-mobile" style="text-align:right">${esc(r.km || '—')}</td>
@@ -12160,8 +12165,8 @@ async function renderTeam(team_id, opts = {}) {
   _injectMsgBtn('team-msg-btn', null, team_id, null);
   _injectFollowBtn('team-follow-btn', 'team', team_id);
 
-  // Foto atleti nella lista CORRIDORI CHIAVE (batch async, identico alla classifica)
-  const _perfSpans = [...document.querySelectorAll('.team-performers-list .rk-av-wrap[data-aid]')];
+  // Foto atleti nella lista CORRIDORI CHIAVE + tabella risultati (batch async)
+  const _perfSpans = [...document.querySelectorAll('.team-performers-list .rk-av-wrap[data-aid], .team-results .rk-av-wrap[data-aid]')];
   if (_perfSpans.length) {
     const _ph = `<span class=rk-av-placeholder><svg width=20 height=20 viewBox='0 0 24 24' fill='none' stroke='currentColor' stroke-width='1.5'><circle cx='12' cy='8' r='4'/><path d='M4 20c0-4 3.6-7 8-7s8 3 8 7'/></svg></span>`;
     // Pre-popola subito il placeholder (visibile immediatamente)
@@ -12863,8 +12868,13 @@ async function renderGara(gara_id) {
       return `<tr>
         <td class="td-pos ${pClass} ${r.posizione===1?'win':''}">${r.posizione}°</td>
         <td style="font-family:var(--font-heading);font-weight:700">
-          <a href="#/atleta/${esc(r.atleta_id)}">${esc(r.cognome)} ${esc(r.nome)}</a>
-          <div class="td-team-mobile"><a href="#/team/${esc(r.team_id)}" style="color:var(--text-secondary)">${esc(r.team)}</a></div>
+          <div style="display:flex;align-items:center">
+            <span class="rk-av-wrap" data-aid="${esc(r.atleta_id)}"></span>
+            <div>
+              <a href="#/atleta/${esc(r.atleta_id)}">${esc(r.cognome)} ${esc(r.nome)}</a>
+              <div class="td-team-mobile"><a href="#/team/${esc(r.team_id)}" style="color:var(--text-secondary)">${esc(r.team)}</a></div>
+            </div>
+          </div>
         </td>
         <td class="td-hide-mobile"><a href="#/team/${esc(r.team_id)}" style="color:var(--text-secondary)">${esc(r.team)}</a></td>
         <td class="td-time">${esc(tempoDisplay)}</td>
@@ -13298,6 +13308,26 @@ async function renderGara(gara_id) {
     ${detailsHtml}
     <div id="gara-comments-section" style="margin-top:28px"></div>
   `);
+
+  // Foto atleti nella tabella risultati (batch async)
+  {
+    const _ph = `<span class=rk-av-placeholder><svg width=20 height=20 viewBox='0 0 24 24' fill='none' stroke='currentColor' stroke-width='1.5'><circle cx='12' cy='8' r='4'/><path d='M4 20c0-4 3.6-7 8-7s8 3 8 7'/></svg></span>`;
+    const _garaSpans = [...document.querySelectorAll('.results-table .rk-av-wrap[data-aid]')];
+    _garaSpans.forEach(s => { s.innerHTML = _ph; });
+    const _bsz = 8;
+    (async () => {
+      for (let i = 0; i < _garaSpans.length; i += _bsz) {
+        await Promise.all(_garaSpans.slice(i, i + _bsz).map(async span => {
+          if (!document.contains(span)) return;
+          const ov = await getEntityOverrides('atleta', span.dataset.aid).catch(() => ({}));
+          if (!document.contains(span)) return;
+          if (ov.photo_url) {
+            span.innerHTML = `<img src="${MEDIA_BASE}${esc(ov.photo_url)}" alt="" class="rk-av-img" onerror="this.parentNode.innerHTML='${_ph}'">`;
+          }
+        }));
+      }
+    })();
+  }
 
   // Albo d'oro delle edizioni (stile PCS) — riempito async per non bloccare la pagina
   _injectRaceAlboDoro(primaryGaraId);
