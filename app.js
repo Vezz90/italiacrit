@@ -2007,6 +2007,7 @@ function route() {
       activeHub._code = hubCode;
       applyHubFilters(activeHub);
       try { localStorage.setItem('itcContext', hubCode); } catch(e) {}
+      updateNavContextChip(); // aggiorna il chip subito, senza aspettare il caricamento async
       // Sotto-pagine specifiche (classifica/atleti/team interne all'hub) rimangono
       if (hubSub && hubSub !== 'home') return renderHubSubpage(hubCode, hubSub);
       // Home hub → nuove barre
@@ -5144,7 +5145,8 @@ async function renderHubBars() {
   const hub = activeHub || null;
   // No hub = general nav bars fallback
   if (!hub || !hub._code) return _renderNavBars();
-  if (!globalData) { setPage('<div class="loading-bar"></div>'); return; }
+  setPage('<div class="loading-bar"></div>'); // pulisce subito il vecchio contenuto
+  if (!globalData) return;
 
   const hubCode   = hub._code;
   const hubColor  = hub.color || '#FF6B00';
