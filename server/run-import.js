@@ -365,18 +365,29 @@ async function getExistingIds(sb, entityType, field) {
 
   console.log(`=== Import foto + social [${FC_ONLY ? 'First Cycling' : PCS_ONLY ? 'PCS only' : 'PCS → FC'}] ===\n`);
 
-  // Cerca Brave (preferito dall'utente), poi Chrome, poi Chromium bundled
+  // Cerca Brave, poi Chrome, poi Chromium bundled
   const bravePaths = [
     'C:\\Program Files\\BraveSoftware\\Brave-Browser\\Application\\brave.exe',
+    'C:\\Users\\vezza\\AppData\\Local\\BraveSoftware\\Brave-Browser\\Application\\brave.exe',
     (process.env.LOCALAPPDATA || '') + '\\BraveSoftware\\Brave-Browser\\Application\\brave.exe',
   ];
-  const bravePath = bravePaths.find(p => fs.existsSync(p));
+  const bravePath = bravePaths.find(p => { const ok = fs.existsSync(p); console.log(`Brave check: ${p} → ${ok}`); return ok; });
 
   let browser;
   if (bravePath) {
-    console.log(`Uso Brave: ${bravePath}`);
-    try { browser = await chromium.launch({ executablePath: bravePath, headless: false }); }
-    catch(e) { console.log('Brave non si avvia, provo Chrome:', e.message); }
+    console.log(`>>> Lancio Brave: ${bravePath}`);
+    try {
+      browser = await chromium.launch({
+        executablePath: bravePath,
+        headless: false,
+        args: ['--no-sandbox', '--disable-blink-features=AutomationControlled'],
+      });
+      console.log('>>> Brave avviato OK');
+    } catch(e) {
+      console.log(`>>> Brave fallito (${e.message}), provo Chrome`);
+    }
+  } else {
+    console.log('>>> Brave non trovato nei path noti, uso Chrome');
   }
   if (!browser) {
     try { browser = await chromium.launch({ channel: 'chrome', headless: false }); }

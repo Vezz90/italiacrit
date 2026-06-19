@@ -3927,6 +3927,9 @@ Classifica vittorie: ${topWinners.map((a,i)=>`${i+1}. ${a.nome} (${a.team}) ${a.
       }
     }
 
+    // ── Raccolta contesto finale (dichiarata qui per usarla anche nel blocco team) ──
+    const contextParts = [];
+
     // ── Dati team ─────────────────────────────────────────────────────────────
     const teamsList = Object.values(teamsRaw);
     let teamBlock = '';
@@ -3979,7 +3982,6 @@ Classifica vittorie: ${topWinners.map((a,i)=>`${i+1}. ${a.nome} (${a.team}) ${a.
       .map(g => `${g.data} — ${g.nome||''} (${g.localita||''})`);
 
     // ── System prompt finale ──────────────────────────────────────────────────
-    const contextParts = [];
     if (atletaBlocks.length) contextParts.push(atletaBlocks.join('\n\n'));
     if (catBlocks.length) contextParts.push(catBlocks.join('\n\n'));
     if (gareBlock.length) contextParts.push(gareBlock.join('\n\n'));
