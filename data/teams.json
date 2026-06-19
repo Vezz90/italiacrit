@@ -26765,17 +26765,17 @@
   "BIESSE_CARRERA_PREMAC": {
     "id": "BIESSE_CARRERA_PREMAC",
     "nome": "BIESSE - CARRERA - PREMAC",
-    "punti_totali": 1038,
+    "punti_totali": 1044,
     "atleti": [
       "ACUTI_MARIA",
       "BONELLI_CONCETTA_GIULIA",
       "GIANGRANDE_GIORGIA",
       "ZAMBELLI_GIULIA",
+      "MINOIA_ALESSANDRO",
       "SANFILIPPO_CRISTIAN",
       "REZZONICO_ALINE",
       "MARININI_NINA",
       "MILESI_ALESSIA",
-      "MINOIA_ALESSANDRO",
       "IZOTOVA_ANNA",
       "BIANCHI_ELISA",
       "LOCATELLI_ALESSIA",
@@ -26869,6 +26869,21 @@
         "regione": "MARCHE",
         "km": "105.000",
         "media": "37.990"
+      },
+      {
+        "gara_id": "TROFEO_ROBERTI_2026-06-13_JUN_M",
+        "nome_gara": "TROFEO ROBERTI",
+        "data": "2026-06-13",
+        "atleta_id": "MINOIA_ALESSANDRO",
+        "atleta_cognome": "MINOIA",
+        "atleta_nome": "ALESSANDRO",
+        "posizione": 5,
+        "punti_effettivi": 6,
+        "moltiplicatore": 1,
+        "tipo": "regionale",
+        "regione": "LOMBARDIA",
+        "km": "113.600",
+        "media": "40.872"
       },
       {
         "gara_id": "INTERNAZIONALE_PORTO_SAN_GIORGIO_MEMORIAL_M_DE_ANGELIS_CRONOMETRO_2026-06-12_JUN_F",
@@ -28284,9 +28299,9 @@
     "punti_per_cat": {
       "JUN_F": 424,
       "ELI_F": 99,
+      "JUN_M": 36,
       "ELI_M": 326,
-      "AL_F": 159,
-      "JUN_M": 30
+      "AL_F": 159
     }
   },
   "LIBERTAS_CERESETTO": {
@@ -96869,11 +96884,10 @@
   "VEGA_VITALCARE_DYNATEK": {
     "id": "VEGA_VITALCARE_DYNATEK",
     "nome": "VEGA VITALCARE DYNATEK",
-    "punti_totali": 287,
+    "punti_totali": 281,
     "atleti": [
       "BAGNARA_LUCA",
       "FERMANELLI_MARCO",
-      "MINOIA_SEBASTIANO",
       "FRATICELLI_LUCA",
       "DIGNANI_FILIPPO",
       "MEROLA_MARCO",
@@ -96910,21 +96924,6 @@
         "regione": "TOSCANA",
         "km": "146.000",
         "media": "41.751"
-      },
-      {
-        "gara_id": "TROFEO_ROBERTI_2026-06-13_JUN_M",
-        "nome_gara": "TROFEO ROBERTI",
-        "data": "2026-06-13",
-        "atleta_id": "MINOIA_SEBASTIANO",
-        "atleta_cognome": "MINOIA",
-        "atleta_nome": "SEBASTIANO",
-        "posizione": 5,
-        "punti_effettivi": 6,
-        "moltiplicatore": 1,
-        "tipo": "regionale",
-        "regione": "LOMBARDIA",
-        "km": "113.600",
-        "media": "40.872"
       },
       {
         "gara_id": "54_COPPA_DELLA_PACE_51_TROFEO_FRATELLI_ANELLI_UNDER23_2026-06-07_ELI_M",
@@ -97228,8 +97227,7 @@
       }
     ],
     "punti_per_cat": {
-      "ELI_M": 281,
-      "JUN_M": 6
+      "ELI_M": 281
     }
   },
   "VPM_MORETTI_SCS": {

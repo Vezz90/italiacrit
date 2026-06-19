@@ -51793,15 +51793,15 @@
       }
     ]
   },
-  "MINOIA_SEBASTIANO": {
-    "id": "MINOIA_SEBASTIANO",
-    "nome": "SEBASTIANO",
+  "MINOIA_ALESSANDRO": {
+    "id": "MINOIA_ALESSANDRO",
+    "nome": "ALESSANDRO",
     "cognome": "MINOIA",
-    "team_attuale": "VEGA VITALCARE DYNATEK",
-    "team_id": "VEGA_VITALCARE_DYNATEK",
+    "team_attuale": "BIESSE - CARRERA - PREMAC",
+    "team_id": "BIESSE_CARRERA_PREMAC",
     "categoria": "JUN_M",
     "genere": "M",
-    "punti_totali": 6,
+    "punti_totali": 24,
     "risultati": [
       {
         "gara_id": "TROFEO_ROBERTI_2026-06-13_JUN_M",
@@ -51809,12 +51809,51 @@
         "data": "2026-06-13",
         "posizione": 5,
         "punti_effettivi": 6,
-        "team": "VEGA VITALCARE DYNATEK",
+        "team": "BIESSE - CARRERA - PREMAC",
         "moltiplicatore": 1,
         "tipo": "regionale",
         "regione": "LOMBARDIA",
         "km": "113.600",
         "media": "40.872"
+      },
+      {
+        "gara_id": "39_BRESCIA_MONTE_MAGNO_2026-06-02_JUN_M",
+        "nome_gara": "39 BRESCIA MONTE MAGNO",
+        "data": "2026-06-02",
+        "posizione": 5,
+        "punti_effettivi": 6,
+        "team": "BIESSE - CARRERA - PREMAC",
+        "moltiplicatore": 1,
+        "tipo": "regionale",
+        "regione": "LOMBARDIA",
+        "km": "81.500",
+        "media": "38.514"
+      },
+      {
+        "gara_id": "2_TROFEO_EDIL_GROUP_COSTRUZIONI_PICCOLO_FIANDRE_2026-05-09_JUN_M",
+        "nome_gara": "2 TROFEO EDIL GROUP COSTRUZIONI PICCOLO FIANDRE",
+        "data": "2026-05-09",
+        "posizione": 5,
+        "punti_effettivi": 6,
+        "team": "BIESSE - CARRERA - PREMAC",
+        "moltiplicatore": 1,
+        "tipo": "regionale",
+        "regione": "LOMBARDIA",
+        "km": "114.000",
+        "media": "38.816"
+      },
+      {
+        "gara_id": "46_PICCOLA_SAN_GEO_2026-03-15_JUN_M",
+        "nome_gara": "46 PICCOLA SAN GEO",
+        "data": "2026-03-15",
+        "posizione": 5,
+        "punti_effettivi": 6,
+        "team": "BIESSE - CARRERA - PREMAC",
+        "moltiplicatore": 1,
+        "tipo": "regionale",
+        "regione": "LOMBARDIA",
+        "km": "99.200",
+        "media": "40.744"
       }
     ]
   },
@@ -78999,57 +79038,6 @@
         "regione": "EMILIA ROMAGNA",
         "km": "85.500",
         "media": "46.978"
-      }
-    ]
-  },
-  "MINOIA_ALESSANDRO": {
-    "id": "MINOIA_ALESSANDRO",
-    "nome": "ALESSANDRO",
-    "cognome": "MINOIA",
-    "team_attuale": "BIESSE - CARRERA - PREMAC",
-    "team_id": "BIESSE_CARRERA_PREMAC",
-    "categoria": "JUN_M",
-    "genere": "M",
-    "punti_totali": 18,
-    "risultati": [
-      {
-        "gara_id": "39_BRESCIA_MONTE_MAGNO_2026-06-02_JUN_M",
-        "nome_gara": "39 BRESCIA MONTE MAGNO",
-        "data": "2026-06-02",
-        "posizione": 5,
-        "punti_effettivi": 6,
-        "team": "BIESSE - CARRERA - PREMAC",
-        "moltiplicatore": 1,
-        "tipo": "regionale",
-        "regione": "LOMBARDIA",
-        "km": "81.500",
-        "media": "38.514"
-      },
-      {
-        "gara_id": "2_TROFEO_EDIL_GROUP_COSTRUZIONI_PICCOLO_FIANDRE_2026-05-09_JUN_M",
-        "nome_gara": "2 TROFEO EDIL GROUP COSTRUZIONI PICCOLO FIANDRE",
-        "data": "2026-05-09",
-        "posizione": 5,
-        "punti_effettivi": 6,
-        "team": "BIESSE - CARRERA - PREMAC",
-        "moltiplicatore": 1,
-        "tipo": "regionale",
-        "regione": "LOMBARDIA",
-        "km": "114.000",
-        "media": "38.816"
-      },
-      {
-        "gara_id": "46_PICCOLA_SAN_GEO_2026-03-15_JUN_M",
-        "nome_gara": "46 PICCOLA SAN GEO",
-        "data": "2026-03-15",
-        "posizione": 5,
-        "punti_effettivi": 6,
-        "team": "BIESSE - CARRERA - PREMAC",
-        "moltiplicatore": 1,
-        "tipo": "regionale",
-        "regione": "LOMBARDIA",
-        "km": "99.200",
-        "media": "40.744"
       }
     ]
   },
