@@ -1,4 +1,371 @@
 {
+  "FINN_LORENZO_MARK": {
+    "id": "FINN_LORENZO_MARK",
+    "nome": "LORENZO MARK",
+    "cognome": "FINN",
+    "team_attuale": "RED BULL-BORA-HANSGROHE ROOKIES",
+    "team_id": "RED_BULL_BORA_HANSGROHE_ROOKIES",
+    "categoria": "ELI_M",
+    "genere": "M",
+    "punti_totali": 135,
+    "risultati": [
+      {
+        "gara_id": "GIRO_D_ITALIA_NEXT_GEN_SESTA_TAPPA_2026-06-19_ELI_M",
+        "nome_gara": "GIRO D'ITALIA NEXT GEN SESTA TAPPA",
+        "data": "2026-06-19",
+        "posizione": 1,
+        "punti_effettivi": 45,
+        "team": "RED BULL-BORA-HANSGROHE ROOKIES",
+        "moltiplicatore": 3,
+        "tipo": "internazionale",
+        "regione": "UNDER",
+        "km": "155.000",
+        "media": "38.621"
+      },
+      {
+        "gara_id": "63_GRAN_PREMIO_PALIO_DEL_RECIOTO_UNDER23_2026-04-07_ELI_M",
+        "nome_gara": "63 GRAN PREMIO PALIO DEL RECIOTO UNDER23",
+        "data": "2026-04-07",
+        "posizione": 1,
+        "punti_effettivi": 45,
+        "team": "RED BULL-BORA-HANSGROHE ROOKIES",
+        "moltiplicatore": 3,
+        "tipo": "internazionale",
+        "regione": "VENETO",
+        "km": "147.000",
+        "media": "36.598"
+      },
+      {
+        "gara_id": "87_GIRO_DEL_BELVEDERE_UNDER23_2026-04-06_ELI_M",
+        "nome_gara": "87 GIRO DEL BELVEDERE UNDER23",
+        "data": "2026-04-06",
+        "posizione": 1,
+        "punti_effettivi": 45,
+        "team": "RED BULL-BORA-HANSGROHE ROOKIES",
+        "moltiplicatore": 3,
+        "tipo": "internazionale",
+        "regione": "VENETO",
+        "km": "168.000",
+        "media": "43.065"
+      }
+    ]
+  },
+  "RAMIREZ_TORRES_MATEO_PABLO": {
+    "id": "RAMIREZ_TORRES_MATEO_PABLO",
+    "nome": "TORRES MATEO PABLO",
+    "cognome": "RAMIREZ",
+    "team_attuale": "UAE TEAM EMIRATES GEN-Z",
+    "team_id": "UAE_TEAM_EMIRATES_GEN_Z",
+    "categoria": "ELI_M",
+    "genere": "M",
+    "punti_totali": 36,
+    "risultati": [
+      {
+        "gara_id": "GIRO_D_ITALIA_NEXT_GEN_SESTA_TAPPA_2026-06-19_ELI_M",
+        "nome_gara": "GIRO D'ITALIA NEXT GEN SESTA TAPPA",
+        "data": "2026-06-19",
+        "posizione": 2,
+        "punti_effettivi": 36,
+        "team": "UAE TEAM EMIRATES GEN-Z",
+        "moltiplicatore": 3,
+        "tipo": "internazionale",
+        "regione": "UNDER",
+        "km": "155.000",
+        "media": "38.621"
+      }
+    ]
+  },
+  "RIBEIRO_BRAVO_HENRIQUE": {
+    "id": "RIBEIRO_BRAVO_HENRIQUE",
+    "nome": "HENRIQUE",
+    "cognome": "RIBEIRO BRAVO",
+    "team_attuale": "SOUDAL QUICK-STEP DEVO TEAM",
+    "team_id": "SOUDAL_QUICK_STEP_DEVO_TEAM",
+    "categoria": "ELI_M",
+    "genere": "M",
+    "punti_totali": 30,
+    "risultati": [
+      {
+        "gara_id": "GIRO_D_ITALIA_NEXT_GEN_SESTA_TAPPA_2026-06-19_ELI_M",
+        "nome_gara": "GIRO D'ITALIA NEXT GEN SESTA TAPPA",
+        "data": "2026-06-19",
+        "posizione": 3,
+        "punti_effettivi": 30,
+        "team": "SOUDAL QUICK-STEP DEVO TEAM",
+        "moltiplicatore": 3,
+        "tipo": "internazionale",
+        "regione": "UNDER",
+        "km": "155.000",
+        "media": "38.621"
+      }
+    ]
+  },
+  "BLANC_GUSTAVE": {
+    "id": "BLANC_GUSTAVE",
+    "nome": "GUSTAVE",
+    "cognome": "BLANC",
+    "team_attuale": "RED BULL-BORA-HANSGROHE ROOKIES",
+    "team_id": "RED_BULL_BORA_HANSGROHE_ROOKIES",
+    "categoria": "ELI_M",
+    "genere": "M",
+    "punti_totali": 24,
+    "risultati": [
+      {
+        "gara_id": "GIRO_D_ITALIA_NEXT_GEN_SESTA_TAPPA_2026-06-19_ELI_M",
+        "nome_gara": "GIRO D'ITALIA NEXT GEN SESTA TAPPA",
+        "data": "2026-06-19",
+        "posizione": 4,
+        "punti_effettivi": 24,
+        "team": "RED BULL-BORA-HANSGROHE ROOKIES",
+        "moltiplicatore": 3,
+        "tipo": "internazionale",
+        "regione": "UNDER",
+        "km": "155.000",
+        "media": "38.621"
+      }
+    ]
+  },
+  "ARSAC_REMI": {
+    "id": "ARSAC_REMI",
+    "nome": "REMI",
+    "cognome": "ARSAC",
+    "team_attuale": "DECATHLON CMA CGM DEVELOPMENT TEAM",
+    "team_id": "DECATHLON_CMA_CGM_DEVELOPMENT_TEAM",
+    "categoria": "ELI_M",
+    "genere": "M",
+    "punti_totali": 36,
+    "risultati": [
+      {
+        "gara_id": "GIRO_D_ITALIA_NEXT_GEN_SESTA_TAPPA_2026-06-19_ELI_M",
+        "nome_gara": "GIRO D'ITALIA NEXT GEN SESTA TAPPA",
+        "data": "2026-06-19",
+        "posizione": 5,
+        "punti_effettivi": 18,
+        "team": "DECATHLON CMA CGM DEVELOPMENT TEAM",
+        "moltiplicatore": 3,
+        "tipo": "internazionale",
+        "regione": "UNDER",
+        "km": "155.000",
+        "media": "38.621"
+      },
+      {
+        "gara_id": "77_TROFEO_PIVA_UNDER23_2026-04-05_ELI_M",
+        "nome_gara": "77 TROFEO PIVA UNDER23",
+        "data": "2026-04-05",
+        "posizione": 5,
+        "punti_effettivi": 18,
+        "team": "DECATHLON CMA CGM DEVELOPMENT TEAM",
+        "moltiplicatore": 3,
+        "tipo": "internazionale",
+        "regione": "VENETO",
+        "km": "179.800",
+        "media": "40.304"
+      }
+    ]
+  },
+  "VANHUFFEL_MATTEO": {
+    "id": "VANHUFFEL_MATTEO",
+    "nome": "MATTEO",
+    "cognome": "VANHUFFEL",
+    "team_attuale": "DEVELOPMENT TEAM PICNIC POSTNL",
+    "team_id": "DEVELOPMENT_TEAM_PICNIC_POSTNL",
+    "categoria": "ELI_M",
+    "genere": "M",
+    "punti_totali": 45,
+    "risultati": [
+      {
+        "gara_id": "GIRO_D_ITALIA_NEXT_GEN_SESTA_TAPPA_2026-06-19_ELI_M",
+        "nome_gara": "GIRO D'ITALIA NEXT GEN SESTA TAPPA",
+        "data": "2026-06-19",
+        "posizione": 6,
+        "punti_effettivi": 15,
+        "team": "DEVELOPMENT TEAM PICNIC POSTNL",
+        "moltiplicatore": 3,
+        "tipo": "internazionale",
+        "regione": "UNDER",
+        "km": "155.000",
+        "media": "38.621"
+      },
+      {
+        "gara_id": "GIRO_D_ITALIA_NEXT_GEN_TERZA_TAPPA_2026-06-16_ELI_M",
+        "nome_gara": "GIRO D'ITALIA NEXT GEN TERZA TAPPA",
+        "data": "2026-06-16",
+        "posizione": 3,
+        "punti_effettivi": 30,
+        "team": "DEVELOPMENT TEAM PICNIC POSTNL",
+        "moltiplicatore": 3,
+        "tipo": "internazionale",
+        "regione": "UNDER",
+        "km": "166.000",
+        "media": "39.716"
+      }
+    ]
+  },
+  "SPARFEL_AUBIN": {
+    "id": "SPARFEL_AUBIN",
+    "nome": "AUBIN",
+    "cognome": "SPARFEL",
+    "team_attuale": "DECATHLON CMA CGM DEVELOPMENT TEAM",
+    "team_id": "DECATHLON_CMA_CGM_DEVELOPMENT_TEAM",
+    "categoria": "ELI_M",
+    "genere": "M",
+    "punti_totali": 90,
+    "risultati": [
+      {
+        "gara_id": "GIRO_D_ITALIA_NEXT_GEN_SESTA_TAPPA_2026-06-19_ELI_M",
+        "nome_gara": "GIRO D'ITALIA NEXT GEN SESTA TAPPA",
+        "data": "2026-06-19",
+        "posizione": 7,
+        "punti_effettivi": 12,
+        "team": "DECATHLON CMA CGM DEVELOPMENT TEAM",
+        "moltiplicatore": 3,
+        "tipo": "internazionale",
+        "regione": "UNDER",
+        "km": "155.000",
+        "media": "38.621"
+      },
+      {
+        "gara_id": "GIRO_D_ITALIA_NEXT_GEN_QUINTA_TAPPA_2026-06-18_ELI_M",
+        "nome_gara": "GIRO D'ITALIA NEXT GEN QUINTA TAPPA",
+        "data": "2026-06-18",
+        "posizione": 4,
+        "punti_effettivi": 24,
+        "team": "DECATHLON CMA CGM DEVELOPMENT TEAM",
+        "moltiplicatore": 3,
+        "tipo": "internazionale",
+        "regione": "UNDER",
+        "km": "139.000",
+        "media": "40.209"
+      },
+      {
+        "gara_id": "GIRO_D_ITALIA_NEXT_GEN_SECONDA_TAPPA_2026-06-15_ELI_M",
+        "nome_gara": "GIRO D'ITALIA NEXT GEN SECONDA TAPPA",
+        "data": "2026-06-15",
+        "posizione": 3,
+        "punti_effettivi": 30,
+        "team": "DECATHLON CMA CGM DEVELOPMENT TEAM",
+        "moltiplicatore": 3,
+        "tipo": "internazionale",
+        "regione": "UNDER",
+        "km": "154.000",
+        "media": "48.597"
+      },
+      {
+        "gara_id": "GIRO_D_ITALIA_NEXT_GEN_PRIMA_TAPPA_2026-06-14_ELI_M",
+        "nome_gara": "GIRO D'ITALIA NEXT GEN PRIMA TAPPA",
+        "data": "2026-06-14",
+        "posizione": 7,
+        "punti_effettivi": 12,
+        "team": "DECATHLON CMA CGM DEVELOPMENT TEAM",
+        "moltiplicatore": 3,
+        "tipo": "internazionale",
+        "regione": "LOMBARDIA",
+        "km": "168.000",
+        "media": "45.236"
+      },
+      {
+        "gara_id": "87_GIRO_DEL_BELVEDERE_UNDER23_2026-04-06_ELI_M",
+        "nome_gara": "87 GIRO DEL BELVEDERE UNDER23",
+        "data": "2026-04-06",
+        "posizione": 7,
+        "punti_effettivi": 12,
+        "team": "DECATHLON CMA CGM DEVELOPMENT TEAM",
+        "moltiplicatore": 3,
+        "tipo": "internazionale",
+        "regione": "VENETO",
+        "km": "168.000",
+        "media": "43.065"
+      }
+    ]
+  },
+  "CUBILLAS_SALVADOR_JAVIER": {
+    "id": "CUBILLAS_SALVADOR_JAVIER",
+    "nome": "SALVADOR JAVIER",
+    "cognome": "CUBILLAS",
+    "team_attuale": "MOVISTAR TEAM ACADEMY",
+    "team_id": "MOVISTAR_TEAM_ACADEMY",
+    "categoria": "ELI_M",
+    "genere": "M",
+    "punti_totali": 9,
+    "risultati": [
+      {
+        "gara_id": "GIRO_D_ITALIA_NEXT_GEN_SESTA_TAPPA_2026-06-19_ELI_M",
+        "nome_gara": "GIRO D'ITALIA NEXT GEN SESTA TAPPA",
+        "data": "2026-06-19",
+        "posizione": 8,
+        "punti_effettivi": 9,
+        "team": "MOVISTAR TEAM ACADEMY",
+        "moltiplicatore": 3,
+        "tipo": "internazionale",
+        "regione": "UNDER",
+        "km": "155.000",
+        "media": "38.621"
+      }
+    ]
+  },
+  "ROWE_ELLIOT": {
+    "id": "ROWE_ELLIOT",
+    "nome": "ELLIOT",
+    "cognome": "ROWE",
+    "team_attuale": "TEAM VISMA | LEASE A BIKE DEVELOPMENT",
+    "team_id": "TEAM_VISMA_LEASE_A_BIKE_DEVELOPMENT",
+    "categoria": "ELI_M",
+    "genere": "M",
+    "punti_totali": 21,
+    "risultati": [
+      {
+        "gara_id": "GIRO_D_ITALIA_NEXT_GEN_SESTA_TAPPA_2026-06-19_ELI_M",
+        "nome_gara": "GIRO D'ITALIA NEXT GEN SESTA TAPPA",
+        "data": "2026-06-19",
+        "posizione": 9,
+        "punti_effettivi": 6,
+        "team": "TEAM VISMA | LEASE A BIKE DEVELOPMENT",
+        "moltiplicatore": 3,
+        "tipo": "internazionale",
+        "regione": "UNDER",
+        "km": "155.000",
+        "media": "38.621"
+      },
+      {
+        "gara_id": "GIRO_D_ITALIA_NEXT_GEN_QUINTA_TAPPA_2026-06-18_ELI_M",
+        "nome_gara": "GIRO D'ITALIA NEXT GEN QUINTA TAPPA",
+        "data": "2026-06-18",
+        "posizione": 6,
+        "punti_effettivi": 15,
+        "team": "TEAM VISMA | LEASE A BIKE DEVELOPMENT",
+        "moltiplicatore": 3,
+        "tipo": "internazionale",
+        "regione": "UNDER",
+        "km": "139.000",
+        "media": "40.209"
+      }
+    ]
+  },
+  "RAFFERTY_ADAM": {
+    "id": "RAFFERTY_ADAM",
+    "nome": "ADAM",
+    "cognome": "RAFFERTY",
+    "team_attuale": "WWV HAGENS BERMAN - JAYCO",
+    "team_id": "WWV_HAGENS_BERMAN_JAYCO",
+    "categoria": "ELI_M",
+    "genere": "M",
+    "punti_totali": 3,
+    "risultati": [
+      {
+        "gara_id": "GIRO_D_ITALIA_NEXT_GEN_SESTA_TAPPA_2026-06-19_ELI_M",
+        "nome_gara": "GIRO D'ITALIA NEXT GEN SESTA TAPPA",
+        "data": "2026-06-19",
+        "posizione": 10,
+        "punti_effettivi": 3,
+        "team": "WWV HAGENS BERMAN - JAYCO",
+        "moltiplicatore": 3,
+        "tipo": "internazionale",
+        "regione": "UNDER",
+        "km": "155.000",
+        "media": "38.621"
+      }
+    ]
+  },
   "VAN_KERCKHOVE_MATISSE": {
     "id": "VAN_KERCKHOVE_MATISSE",
     "nome": "MATISSE",
@@ -178,70 +545,6 @@
       }
     ]
   },
-  "SPARFEL_AUBIN": {
-    "id": "SPARFEL_AUBIN",
-    "nome": "AUBIN",
-    "cognome": "SPARFEL",
-    "team_attuale": "DECATHLON CMA CGM DEVELOPMENT TEAM",
-    "team_id": "DECATHLON_CMA_CGM_DEVELOPMENT_TEAM",
-    "categoria": "ELI_M",
-    "genere": "M",
-    "punti_totali": 78,
-    "risultati": [
-      {
-        "gara_id": "GIRO_D_ITALIA_NEXT_GEN_QUINTA_TAPPA_2026-06-18_ELI_M",
-        "nome_gara": "GIRO D'ITALIA NEXT GEN QUINTA TAPPA",
-        "data": "2026-06-18",
-        "posizione": 4,
-        "punti_effettivi": 24,
-        "team": "DECATHLON CMA CGM DEVELOPMENT TEAM",
-        "moltiplicatore": 3,
-        "tipo": "internazionale",
-        "regione": "UNDER",
-        "km": "139.000",
-        "media": "40.209"
-      },
-      {
-        "gara_id": "GIRO_D_ITALIA_NEXT_GEN_SECONDA_TAPPA_2026-06-15_ELI_M",
-        "nome_gara": "GIRO D'ITALIA NEXT GEN SECONDA TAPPA",
-        "data": "2026-06-15",
-        "posizione": 3,
-        "punti_effettivi": 30,
-        "team": "DECATHLON CMA CGM DEVELOPMENT TEAM",
-        "moltiplicatore": 3,
-        "tipo": "internazionale",
-        "regione": "UNDER",
-        "km": "154.000",
-        "media": "48.597"
-      },
-      {
-        "gara_id": "GIRO_D_ITALIA_NEXT_GEN_PRIMA_TAPPA_2026-06-14_ELI_M",
-        "nome_gara": "GIRO D'ITALIA NEXT GEN PRIMA TAPPA",
-        "data": "2026-06-14",
-        "posizione": 7,
-        "punti_effettivi": 12,
-        "team": "DECATHLON CMA CGM DEVELOPMENT TEAM",
-        "moltiplicatore": 3,
-        "tipo": "internazionale",
-        "regione": "LOMBARDIA",
-        "km": "168.000",
-        "media": "45.236"
-      },
-      {
-        "gara_id": "87_GIRO_DEL_BELVEDERE_UNDER23_2026-04-06_ELI_M",
-        "nome_gara": "87 GIRO DEL BELVEDERE UNDER23",
-        "data": "2026-04-06",
-        "posizione": 7,
-        "punti_effettivi": 12,
-        "team": "DECATHLON CMA CGM DEVELOPMENT TEAM",
-        "moltiplicatore": 3,
-        "tipo": "internazionale",
-        "regione": "VENETO",
-        "km": "168.000",
-        "media": "43.065"
-      }
-    ]
-  },
   "SCALCO_MATTEO": {
     "id": "SCALCO_MATTEO",
     "nome": "MATTEO",
@@ -277,31 +580,6 @@
         "regione": "VENETO",
         "km": "147.000",
         "media": "36.598"
-      }
-    ]
-  },
-  "ROWE_ELLIOT": {
-    "id": "ROWE_ELLIOT",
-    "nome": "ELLIOT",
-    "cognome": "ROWE",
-    "team_attuale": "TEAM VISMA | LEASE A BIKE DEVELOPMENT",
-    "team_id": "TEAM_VISMA_LEASE_A_BIKE_DEVELOPMENT",
-    "categoria": "ELI_M",
-    "genere": "M",
-    "punti_totali": 15,
-    "risultati": [
-      {
-        "gara_id": "GIRO_D_ITALIA_NEXT_GEN_QUINTA_TAPPA_2026-06-18_ELI_M",
-        "nome_gara": "GIRO D'ITALIA NEXT GEN QUINTA TAPPA",
-        "data": "2026-06-18",
-        "posizione": 6,
-        "punti_effettivi": 15,
-        "team": "TEAM VISMA | LEASE A BIKE DEVELOPMENT",
-        "moltiplicatore": 3,
-        "tipo": "internazionale",
-        "regione": "UNDER",
-        "km": "139.000",
-        "media": "40.209"
       }
     ]
   },
@@ -964,31 +1242,6 @@
         "regione": "VENETO",
         "km": "171.600",
         "media": "44.730"
-      }
-    ]
-  },
-  "VANHUFFEL_MATTEO": {
-    "id": "VANHUFFEL_MATTEO",
-    "nome": "MATTEO",
-    "cognome": "VANHUFFEL",
-    "team_attuale": "DEVELOPMENT TEAM PICNIC POSTNL",
-    "team_id": "DEVELOPMENT_TEAM_PICNIC_POSTNL",
-    "categoria": "ELI_M",
-    "genere": "M",
-    "punti_totali": 30,
-    "risultati": [
-      {
-        "gara_id": "GIRO_D_ITALIA_NEXT_GEN_TERZA_TAPPA_2026-06-16_ELI_M",
-        "nome_gara": "GIRO D'ITALIA NEXT GEN TERZA TAPPA",
-        "data": "2026-06-16",
-        "posizione": 3,
-        "punti_effettivi": 30,
-        "team": "DEVELOPMENT TEAM PICNIC POSTNL",
-        "moltiplicatore": 3,
-        "tipo": "internazionale",
-        "regione": "UNDER",
-        "km": "166.000",
-        "media": "39.716"
       }
     ]
   },
@@ -119996,44 +120249,6 @@
       }
     ]
   },
-  "FINN_LORENZO_MARK": {
-    "id": "FINN_LORENZO_MARK",
-    "nome": "LORENZO MARK",
-    "cognome": "FINN",
-    "team_attuale": "RED BULL-BORA-HANSGROHE ROOKIES",
-    "team_id": "RED_BULL_BORA_HANSGROHE_ROOKIES",
-    "categoria": "ELI_M",
-    "genere": "M",
-    "punti_totali": 90,
-    "risultati": [
-      {
-        "gara_id": "63_GRAN_PREMIO_PALIO_DEL_RECIOTO_UNDER23_2026-04-07_ELI_M",
-        "nome_gara": "63 GRAN PREMIO PALIO DEL RECIOTO UNDER23",
-        "data": "2026-04-07",
-        "posizione": 1,
-        "punti_effettivi": 45,
-        "team": "RED BULL-BORA-HANSGROHE ROOKIES",
-        "moltiplicatore": 3,
-        "tipo": "internazionale",
-        "regione": "VENETO",
-        "km": "147.000",
-        "media": "36.598"
-      },
-      {
-        "gara_id": "87_GIRO_DEL_BELVEDERE_UNDER23_2026-04-06_ELI_M",
-        "nome_gara": "87 GIRO DEL BELVEDERE UNDER23",
-        "data": "2026-04-06",
-        "posizione": 1,
-        "punti_effettivi": 45,
-        "team": "RED BULL-BORA-HANSGROHE ROOKIES",
-        "moltiplicatore": 3,
-        "tipo": "internazionale",
-        "regione": "VENETO",
-        "km": "168.000",
-        "media": "43.065"
-      }
-    ]
-  },
   "BOLDYREV_MATVEI": {
     "id": "BOLDYREV_MATVEI",
     "nome": "MATVEI",
@@ -120794,31 +121009,6 @@
         "posizione": 3,
         "punti_effettivi": 30,
         "team": "BAHRAIN VICTORIOUS DEVELOPMENT TEAM",
-        "moltiplicatore": 3,
-        "tipo": "internazionale",
-        "regione": "VENETO",
-        "km": "179.800",
-        "media": "40.304"
-      }
-    ]
-  },
-  "ARSAC_REMI": {
-    "id": "ARSAC_REMI",
-    "nome": "REMI",
-    "cognome": "ARSAC",
-    "team_attuale": "DECATHLON CMA CGM DEVELOPMENT TEAM",
-    "team_id": "DECATHLON_CMA_CGM_DEVELOPMENT_TEAM",
-    "categoria": "ELI_M",
-    "genere": "M",
-    "punti_totali": 18,
-    "risultati": [
-      {
-        "gara_id": "77_TROFEO_PIVA_UNDER23_2026-04-05_ELI_M",
-        "nome_gara": "77 TROFEO PIVA UNDER23",
-        "data": "2026-04-05",
-        "posizione": 5,
-        "punti_effettivi": 18,
-        "team": "DECATHLON CMA CGM DEVELOPMENT TEAM",
         "moltiplicatore": 3,
         "tipo": "internazionale",
         "regione": "VENETO",

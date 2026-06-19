@@ -1,16 +1,682 @@
 {
+  "RED_BULL_BORA_HANSGROHE_ROOKIES": {
+    "id": "RED_BULL_BORA_HANSGROHE_ROOKIES",
+    "nome": "RED BULL-BORA-HANSGROHE ROOKIES",
+    "punti_totali": 285,
+    "atleti": [
+      "FINN_LORENZO_MARK",
+      "BLANC_GUSTAVE",
+      "DONATI_DAVIDE",
+      "BOCK_MAX",
+      "FIETZKE_PAUL"
+    ],
+    "risultati": [
+      {
+        "gara_id": "GIRO_D_ITALIA_NEXT_GEN_SESTA_TAPPA_2026-06-19_ELI_M",
+        "nome_gara": "GIRO D'ITALIA NEXT GEN SESTA TAPPA",
+        "data": "2026-06-19",
+        "atleta_id": "FINN_LORENZO_MARK",
+        "atleta_cognome": "FINN",
+        "atleta_nome": "LORENZO MARK",
+        "posizione": 1,
+        "punti_effettivi": 45,
+        "moltiplicatore": 3,
+        "tipo": "internazionale",
+        "regione": "UNDER",
+        "km": "155.000",
+        "media": "38.621"
+      },
+      {
+        "gara_id": "GIRO_D_ITALIA_NEXT_GEN_SESTA_TAPPA_2026-06-19_ELI_M",
+        "nome_gara": "GIRO D'ITALIA NEXT GEN SESTA TAPPA",
+        "data": "2026-06-19",
+        "atleta_id": "BLANC_GUSTAVE",
+        "atleta_cognome": "BLANC",
+        "atleta_nome": "GUSTAVE",
+        "posizione": 4,
+        "punti_effettivi": 24,
+        "moltiplicatore": 3,
+        "tipo": "internazionale",
+        "regione": "UNDER",
+        "km": "155.000",
+        "media": "38.621"
+      },
+      {
+        "gara_id": "GIRO_D_ITALIA_NEXT_GEN_QUARTA_TAPPA_2026-06-17_ELI_M",
+        "nome_gara": "GIRO D'ITALIA NEXT GEN QUARTA TAPPA",
+        "data": "2026-06-17",
+        "atleta_id": "DONATI_DAVIDE",
+        "atleta_cognome": "DONATI",
+        "atleta_nome": "DAVIDE",
+        "posizione": 3,
+        "punti_effettivi": 30,
+        "moltiplicatore": 3,
+        "tipo": "internazionale",
+        "regione": "UNDER",
+        "km": "154.000",
+        "media": "47.600"
+      },
+      {
+        "gara_id": "GIRO_D_ITALIA_NEXT_GEN_SECONDA_TAPPA_2026-06-15_ELI_M",
+        "nome_gara": "GIRO D'ITALIA NEXT GEN SECONDA TAPPA",
+        "data": "2026-06-15",
+        "atleta_id": "DONATI_DAVIDE",
+        "atleta_cognome": "DONATI",
+        "atleta_nome": "DAVIDE",
+        "posizione": 1,
+        "punti_effettivi": 45,
+        "moltiplicatore": 3,
+        "tipo": "internazionale",
+        "regione": "UNDER",
+        "km": "154.000",
+        "media": "48.597"
+      },
+      {
+        "gara_id": "GIRO_D_ITALIA_NEXT_GEN_PRIMA_TAPPA_2026-06-14_ELI_M",
+        "nome_gara": "GIRO D'ITALIA NEXT GEN PRIMA TAPPA",
+        "data": "2026-06-14",
+        "atleta_id": "DONATI_DAVIDE",
+        "atleta_cognome": "DONATI",
+        "atleta_nome": "DAVIDE",
+        "posizione": 3,
+        "punti_effettivi": 30,
+        "moltiplicatore": 3,
+        "tipo": "internazionale",
+        "regione": "LOMBARDIA",
+        "km": "168.000",
+        "media": "45.236"
+      },
+      {
+        "gara_id": "63_GRAN_PREMIO_PALIO_DEL_RECIOTO_UNDER23_2026-04-07_ELI_M",
+        "nome_gara": "63 GRAN PREMIO PALIO DEL RECIOTO UNDER23",
+        "data": "2026-04-07",
+        "atleta_id": "FINN_LORENZO_MARK",
+        "atleta_cognome": "FINN",
+        "atleta_nome": "LORENZO MARK",
+        "posizione": 1,
+        "punti_effettivi": 45,
+        "moltiplicatore": 3,
+        "tipo": "internazionale",
+        "regione": "VENETO",
+        "km": "147.000",
+        "media": "36.598"
+      },
+      {
+        "gara_id": "63_GRAN_PREMIO_PALIO_DEL_RECIOTO_UNDER23_2026-04-07_ELI_M",
+        "nome_gara": "63 GRAN PREMIO PALIO DEL RECIOTO UNDER23",
+        "data": "2026-04-07",
+        "atleta_id": "BOCK_MAX",
+        "atleta_cognome": "BOCK",
+        "atleta_nome": "MAX",
+        "posizione": 6,
+        "punti_effettivi": 15,
+        "moltiplicatore": 3,
+        "tipo": "internazionale",
+        "regione": "VENETO",
+        "km": "147.000",
+        "media": "36.598"
+      },
+      {
+        "gara_id": "87_GIRO_DEL_BELVEDERE_UNDER23_2026-04-06_ELI_M",
+        "nome_gara": "87 GIRO DEL BELVEDERE UNDER23",
+        "data": "2026-04-06",
+        "atleta_id": "FINN_LORENZO_MARK",
+        "atleta_cognome": "FINN",
+        "atleta_nome": "LORENZO MARK",
+        "posizione": 1,
+        "punti_effettivi": 45,
+        "moltiplicatore": 3,
+        "tipo": "internazionale",
+        "regione": "VENETO",
+        "km": "168.000",
+        "media": "43.065"
+      },
+      {
+        "gara_id": "77_TROFEO_PIVA_UNDER23_2026-04-05_ELI_M",
+        "nome_gara": "77 TROFEO PIVA UNDER23",
+        "data": "2026-04-05",
+        "atleta_id": "FIETZKE_PAUL",
+        "atleta_cognome": "FIETZKE",
+        "atleta_nome": "PAUL",
+        "posizione": 9,
+        "punti_effettivi": 6,
+        "moltiplicatore": 3,
+        "tipo": "internazionale",
+        "regione": "VENETO",
+        "km": "179.800",
+        "media": "40.304"
+      }
+    ],
+    "punti_per_cat": {
+      "ELI_M": 285
+    }
+  },
+  "UAE_TEAM_EMIRATES_GEN_Z": {
+    "id": "UAE_TEAM_EMIRATES_GEN_Z",
+    "nome": "UAE TEAM EMIRATES GEN-Z",
+    "punti_totali": 129,
+    "atleti": [
+      "RAMIREZ_TORRES_MATEO_PABLO",
+      "DIJKMAN_DAAN",
+      "MAUSS_MORITZ",
+      "FUGGER_HEIMO",
+      "VAN_DEN_WIJNGAERT_MATTEO",
+      "FREIRE_MARCOS",
+      "BOLDYREV_MATVEI"
+    ],
+    "risultati": [
+      {
+        "gara_id": "GIRO_D_ITALIA_NEXT_GEN_SESTA_TAPPA_2026-06-19_ELI_M",
+        "nome_gara": "GIRO D'ITALIA NEXT GEN SESTA TAPPA",
+        "data": "2026-06-19",
+        "atleta_id": "RAMIREZ_TORRES_MATEO_PABLO",
+        "atleta_cognome": "RAMIREZ",
+        "atleta_nome": "TORRES MATEO PABLO",
+        "posizione": 2,
+        "punti_effettivi": 36,
+        "moltiplicatore": 3,
+        "tipo": "internazionale",
+        "regione": "UNDER",
+        "km": "155.000",
+        "media": "38.621"
+      },
+      {
+        "gara_id": "GIRO_D_ITALIA_NEXT_GEN_TERZA_TAPPA_2026-06-16_ELI_M",
+        "nome_gara": "GIRO D'ITALIA NEXT GEN TERZA TAPPA",
+        "data": "2026-06-16",
+        "atleta_id": "DIJKMAN_DAAN",
+        "atleta_cognome": "DIJKMAN",
+        "atleta_nome": "DAAN",
+        "posizione": 4,
+        "punti_effettivi": 24,
+        "moltiplicatore": 3,
+        "tipo": "internazionale",
+        "regione": "UNDER",
+        "km": "166.000",
+        "media": "39.716"
+      },
+      {
+        "gara_id": "GIRO_D_ITALIA_NEXT_GEN_PRIMA_TAPPA_2026-06-14_ELI_M",
+        "nome_gara": "GIRO D'ITALIA NEXT GEN PRIMA TAPPA",
+        "data": "2026-06-14",
+        "atleta_id": "MAUSS_MORITZ",
+        "atleta_cognome": "MAUSS",
+        "atleta_nome": "MORITZ",
+        "posizione": 8,
+        "punti_effettivi": 9,
+        "moltiplicatore": 3,
+        "tipo": "internazionale",
+        "regione": "LOMBARDIA",
+        "km": "168.000",
+        "media": "45.236"
+      },
+      {
+        "gara_id": "79_GRAN_PREMIO_DELLA_LIBERAZIONE_UNDER23_2026-04-25_ELI_M",
+        "nome_gara": "79 GRAN PREMIO DELLA LIBERAZIONE UNDER23",
+        "data": "2026-04-25",
+        "atleta_id": "FUGGER_HEIMO",
+        "atleta_cognome": "FUGGER",
+        "atleta_nome": "HEIMO",
+        "posizione": 7,
+        "punti_effettivi": 12,
+        "moltiplicatore": 3,
+        "tipo": "internazionale",
+        "regione": "LAZIO",
+        "km": "138.000",
+        "media": "42.898"
+      },
+      {
+        "gara_id": "79_GRAN_PREMIO_DELLA_LIBERAZIONE_UNDER23_2026-04-25_ELI_M",
+        "nome_gara": "79 GRAN PREMIO DELLA LIBERAZIONE UNDER23",
+        "data": "2026-04-25",
+        "atleta_id": "VAN_DEN_WIJNGAERT_MATTEO",
+        "atleta_cognome": "VAN DEN WIJNGAERT",
+        "atleta_nome": "MATTEO",
+        "posizione": 8,
+        "punti_effettivi": 9,
+        "moltiplicatore": 3,
+        "tipo": "internazionale",
+        "regione": "LAZIO",
+        "km": "138.000",
+        "media": "42.898"
+      },
+      {
+        "gara_id": "79_GRAN_PREMIO_DELLA_LIBERAZIONE_UNDER23_2026-04-25_ELI_M",
+        "nome_gara": "79 GRAN PREMIO DELLA LIBERAZIONE UNDER23",
+        "data": "2026-04-25",
+        "atleta_id": "FREIRE_MARCOS",
+        "atleta_cognome": "FREIRE",
+        "atleta_nome": "MARCOS",
+        "posizione": 9,
+        "punti_effettivi": 6,
+        "moltiplicatore": 3,
+        "tipo": "internazionale",
+        "regione": "LAZIO",
+        "km": "138.000",
+        "media": "42.898"
+      },
+      {
+        "gara_id": "63_GRAN_PREMIO_PALIO_DEL_RECIOTO_UNDER23_2026-04-07_ELI_M",
+        "nome_gara": "63 GRAN PREMIO PALIO DEL RECIOTO UNDER23",
+        "data": "2026-04-07",
+        "atleta_id": "BOLDYREV_MATVEI",
+        "atleta_cognome": "BOLDYREV",
+        "atleta_nome": "MATVEI",
+        "posizione": 5,
+        "punti_effettivi": 18,
+        "moltiplicatore": 3,
+        "tipo": "internazionale",
+        "regione": "VENETO",
+        "km": "147.000",
+        "media": "36.598"
+      },
+      {
+        "gara_id": "77_TROFEO_PIVA_UNDER23_2026-04-05_ELI_M",
+        "nome_gara": "77 TROFEO PIVA UNDER23",
+        "data": "2026-04-05",
+        "atleta_id": "BOLDYREV_MATVEI",
+        "atleta_cognome": "BOLDYREV",
+        "atleta_nome": "MATVEI",
+        "posizione": 6,
+        "punti_effettivi": 15,
+        "moltiplicatore": 3,
+        "tipo": "internazionale",
+        "regione": "VENETO",
+        "km": "179.800",
+        "media": "40.304"
+      }
+    ],
+    "punti_per_cat": {
+      "ELI_M": 129
+    }
+  },
+  "SOUDAL_QUICK_STEP_DEVO_TEAM": {
+    "id": "SOUDAL_QUICK_STEP_DEVO_TEAM",
+    "nome": "SOUDAL QUICK-STEP DEVO TEAM",
+    "punti_totali": 84,
+    "atleti": [
+      "RIBEIRO_BRAVO_HENRIQUE",
+      "SCHOOFS_JASPER",
+      "VALJAVEC_ERAZEM"
+    ],
+    "risultati": [
+      {
+        "gara_id": "GIRO_D_ITALIA_NEXT_GEN_SESTA_TAPPA_2026-06-19_ELI_M",
+        "nome_gara": "GIRO D'ITALIA NEXT GEN SESTA TAPPA",
+        "data": "2026-06-19",
+        "atleta_id": "RIBEIRO_BRAVO_HENRIQUE",
+        "atleta_cognome": "RIBEIRO BRAVO",
+        "atleta_nome": "HENRIQUE",
+        "posizione": 3,
+        "punti_effettivi": 30,
+        "moltiplicatore": 3,
+        "tipo": "internazionale",
+        "regione": "UNDER",
+        "km": "155.000",
+        "media": "38.621"
+      },
+      {
+        "gara_id": "GIRO_D_ITALIA_NEXT_GEN_TERZA_TAPPA_2026-06-16_ELI_M",
+        "nome_gara": "GIRO D'ITALIA NEXT GEN TERZA TAPPA",
+        "data": "2026-06-16",
+        "atleta_id": "SCHOOFS_JASPER",
+        "atleta_cognome": "SCHOOFS",
+        "atleta_nome": "JASPER",
+        "posizione": 1,
+        "punti_effettivi": 45,
+        "moltiplicatore": 3,
+        "tipo": "internazionale",
+        "regione": "UNDER",
+        "km": "166.000",
+        "media": "39.716"
+      },
+      {
+        "gara_id": "GIRO_D_ITALIA_NEXT_GEN_TERZA_TAPPA_2026-06-16_ELI_M",
+        "nome_gara": "GIRO D'ITALIA NEXT GEN TERZA TAPPA",
+        "data": "2026-06-16",
+        "atleta_id": "VALJAVEC_ERAZEM",
+        "atleta_cognome": "VALJAVEC",
+        "atleta_nome": "ERAZEM",
+        "posizione": 8,
+        "punti_effettivi": 9,
+        "moltiplicatore": 3,
+        "tipo": "internazionale",
+        "regione": "UNDER",
+        "km": "166.000",
+        "media": "39.716"
+      }
+    ],
+    "punti_per_cat": {
+      "ELI_M": 84
+    }
+  },
+  "DECATHLON_CMA_CGM_DEVELOPMENT_TEAM": {
+    "id": "DECATHLON_CMA_CGM_DEVELOPMENT_TEAM",
+    "nome": "DECATHLON CMA CGM DEVELOPMENT TEAM",
+    "punti_totali": 171,
+    "atleti": [
+      "ARSAC_REMI",
+      "SPARFEL_AUBIN",
+      "HAUGLAND_KASPER"
+    ],
+    "risultati": [
+      {
+        "gara_id": "GIRO_D_ITALIA_NEXT_GEN_SESTA_TAPPA_2026-06-19_ELI_M",
+        "nome_gara": "GIRO D'ITALIA NEXT GEN SESTA TAPPA",
+        "data": "2026-06-19",
+        "atleta_id": "ARSAC_REMI",
+        "atleta_cognome": "ARSAC",
+        "atleta_nome": "REMI",
+        "posizione": 5,
+        "punti_effettivi": 18,
+        "moltiplicatore": 3,
+        "tipo": "internazionale",
+        "regione": "UNDER",
+        "km": "155.000",
+        "media": "38.621"
+      },
+      {
+        "gara_id": "GIRO_D_ITALIA_NEXT_GEN_SESTA_TAPPA_2026-06-19_ELI_M",
+        "nome_gara": "GIRO D'ITALIA NEXT GEN SESTA TAPPA",
+        "data": "2026-06-19",
+        "atleta_id": "SPARFEL_AUBIN",
+        "atleta_cognome": "SPARFEL",
+        "atleta_nome": "AUBIN",
+        "posizione": 7,
+        "punti_effettivi": 12,
+        "moltiplicatore": 3,
+        "tipo": "internazionale",
+        "regione": "UNDER",
+        "km": "155.000",
+        "media": "38.621"
+      },
+      {
+        "gara_id": "GIRO_D_ITALIA_NEXT_GEN_QUINTA_TAPPA_2026-06-18_ELI_M",
+        "nome_gara": "GIRO D'ITALIA NEXT GEN QUINTA TAPPA",
+        "data": "2026-06-18",
+        "atleta_id": "SPARFEL_AUBIN",
+        "atleta_cognome": "SPARFEL",
+        "atleta_nome": "AUBIN",
+        "posizione": 4,
+        "punti_effettivi": 24,
+        "moltiplicatore": 3,
+        "tipo": "internazionale",
+        "regione": "UNDER",
+        "km": "139.000",
+        "media": "40.209"
+      },
+      {
+        "gara_id": "GIRO_D_ITALIA_NEXT_GEN_SECONDA_TAPPA_2026-06-15_ELI_M",
+        "nome_gara": "GIRO D'ITALIA NEXT GEN SECONDA TAPPA",
+        "data": "2026-06-15",
+        "atleta_id": "SPARFEL_AUBIN",
+        "atleta_cognome": "SPARFEL",
+        "atleta_nome": "AUBIN",
+        "posizione": 3,
+        "punti_effettivi": 30,
+        "moltiplicatore": 3,
+        "tipo": "internazionale",
+        "regione": "UNDER",
+        "km": "154.000",
+        "media": "48.597"
+      },
+      {
+        "gara_id": "GIRO_D_ITALIA_NEXT_GEN_PRIMA_TAPPA_2026-06-14_ELI_M",
+        "nome_gara": "GIRO D'ITALIA NEXT GEN PRIMA TAPPA",
+        "data": "2026-06-14",
+        "atleta_id": "HAUGLAND_KASPER",
+        "atleta_cognome": "HAUGLAND",
+        "atleta_nome": "KASPER",
+        "posizione": 1,
+        "punti_effettivi": 45,
+        "moltiplicatore": 3,
+        "tipo": "internazionale",
+        "regione": "LOMBARDIA",
+        "km": "168.000",
+        "media": "45.236"
+      },
+      {
+        "gara_id": "GIRO_D_ITALIA_NEXT_GEN_PRIMA_TAPPA_2026-06-14_ELI_M",
+        "nome_gara": "GIRO D'ITALIA NEXT GEN PRIMA TAPPA",
+        "data": "2026-06-14",
+        "atleta_id": "SPARFEL_AUBIN",
+        "atleta_cognome": "SPARFEL",
+        "atleta_nome": "AUBIN",
+        "posizione": 7,
+        "punti_effettivi": 12,
+        "moltiplicatore": 3,
+        "tipo": "internazionale",
+        "regione": "LOMBARDIA",
+        "km": "168.000",
+        "media": "45.236"
+      },
+      {
+        "gara_id": "87_GIRO_DEL_BELVEDERE_UNDER23_2026-04-06_ELI_M",
+        "nome_gara": "87 GIRO DEL BELVEDERE UNDER23",
+        "data": "2026-04-06",
+        "atleta_id": "SPARFEL_AUBIN",
+        "atleta_cognome": "SPARFEL",
+        "atleta_nome": "AUBIN",
+        "posizione": 7,
+        "punti_effettivi": 12,
+        "moltiplicatore": 3,
+        "tipo": "internazionale",
+        "regione": "VENETO",
+        "km": "168.000",
+        "media": "43.065"
+      },
+      {
+        "gara_id": "77_TROFEO_PIVA_UNDER23_2026-04-05_ELI_M",
+        "nome_gara": "77 TROFEO PIVA UNDER23",
+        "data": "2026-04-05",
+        "atleta_id": "ARSAC_REMI",
+        "atleta_cognome": "ARSAC",
+        "atleta_nome": "REMI",
+        "posizione": 5,
+        "punti_effettivi": 18,
+        "moltiplicatore": 3,
+        "tipo": "internazionale",
+        "regione": "VENETO",
+        "km": "179.800",
+        "media": "40.304"
+      }
+    ],
+    "punti_per_cat": {
+      "ELI_M": 171
+    }
+  },
+  "DEVELOPMENT_TEAM_PICNIC_POSTNL": {
+    "id": "DEVELOPMENT_TEAM_PICNIC_POSTNL",
+    "nome": "DEVELOPMENT TEAM PICNIC POSTNL",
+    "punti_totali": 45,
+    "atleti": [
+      "VANHUFFEL_MATTEO"
+    ],
+    "risultati": [
+      {
+        "gara_id": "GIRO_D_ITALIA_NEXT_GEN_SESTA_TAPPA_2026-06-19_ELI_M",
+        "nome_gara": "GIRO D'ITALIA NEXT GEN SESTA TAPPA",
+        "data": "2026-06-19",
+        "atleta_id": "VANHUFFEL_MATTEO",
+        "atleta_cognome": "VANHUFFEL",
+        "atleta_nome": "MATTEO",
+        "posizione": 6,
+        "punti_effettivi": 15,
+        "moltiplicatore": 3,
+        "tipo": "internazionale",
+        "regione": "UNDER",
+        "km": "155.000",
+        "media": "38.621"
+      },
+      {
+        "gara_id": "GIRO_D_ITALIA_NEXT_GEN_TERZA_TAPPA_2026-06-16_ELI_M",
+        "nome_gara": "GIRO D'ITALIA NEXT GEN TERZA TAPPA",
+        "data": "2026-06-16",
+        "atleta_id": "VANHUFFEL_MATTEO",
+        "atleta_cognome": "VANHUFFEL",
+        "atleta_nome": "MATTEO",
+        "posizione": 3,
+        "punti_effettivi": 30,
+        "moltiplicatore": 3,
+        "tipo": "internazionale",
+        "regione": "UNDER",
+        "km": "166.000",
+        "media": "39.716"
+      }
+    ],
+    "punti_per_cat": {
+      "ELI_M": 45
+    }
+  },
+  "MOVISTAR_TEAM_ACADEMY": {
+    "id": "MOVISTAR_TEAM_ACADEMY",
+    "nome": "MOVISTAR TEAM ACADEMY",
+    "punti_totali": 96,
+    "atleti": [
+      "CUBILLAS_SALVADOR_JAVIER",
+      "PARETA_SALA_ROGER",
+      "REUSSER_MARLEN",
+      "SIERRA_ARLENIS"
+    ],
+    "risultati": [
+      {
+        "gara_id": "GIRO_D_ITALIA_NEXT_GEN_SESTA_TAPPA_2026-06-19_ELI_M",
+        "nome_gara": "GIRO D'ITALIA NEXT GEN SESTA TAPPA",
+        "data": "2026-06-19",
+        "atleta_id": "CUBILLAS_SALVADOR_JAVIER",
+        "atleta_cognome": "CUBILLAS",
+        "atleta_nome": "SALVADOR JAVIER",
+        "posizione": 8,
+        "punti_effettivi": 9,
+        "moltiplicatore": 3,
+        "tipo": "internazionale",
+        "regione": "UNDER",
+        "km": "155.000",
+        "media": "38.621"
+      },
+      {
+        "gara_id": "GIRO_D_ITALIA_NEXT_GEN_QUARTA_TAPPA_2026-06-17_ELI_M",
+        "nome_gara": "GIRO D'ITALIA NEXT GEN QUARTA TAPPA",
+        "data": "2026-06-17",
+        "atleta_id": "PARETA_SALA_ROGER",
+        "atleta_cognome": "PARETA SALA",
+        "atleta_nome": "ROGER",
+        "posizione": 8,
+        "punti_effettivi": 9,
+        "moltiplicatore": 3,
+        "tipo": "internazionale",
+        "regione": "UNDER",
+        "km": "154.000",
+        "media": "47.600"
+      },
+      {
+        "gara_id": "GIRO_D_ITALIA_WOMEN_OTTAVA_TAPPA_2026-06-06_ELI_F",
+        "nome_gara": "GIRO D'ITALIA WOMEN OTTAVA TAPPA",
+        "data": "2026-06-06",
+        "atleta_id": "REUSSER_MARLEN",
+        "atleta_cognome": "REUSSER",
+        "atleta_nome": "MARLEN",
+        "posizione": 6,
+        "punti_effettivi": 15,
+        "moltiplicatore": 3,
+        "tipo": "internazionale",
+        "regione": "UNDER",
+        "km": "105.000",
+        "media": "31.181"
+      },
+      {
+        "gara_id": "GIRO_D_ITALIA_WOMEN_QUINTA_TAPPA_2026-06-03_ELI_F",
+        "nome_gara": "GIRO D'ITALIA WOMEN QUINTA TAPPA",
+        "data": "2026-06-03",
+        "atleta_id": "REUSSER_MARLEN",
+        "atleta_cognome": "REUSSER",
+        "atleta_nome": "MARLEN",
+        "posizione": 7,
+        "punti_effettivi": 12,
+        "moltiplicatore": 3,
+        "tipo": "internazionale",
+        "regione": "UNDER",
+        "km": "146.000",
+        "media": "33.209"
+      },
+      {
+        "gara_id": "GIRO_D_ITALIA_WOMEN_QUARTA_TAPPA_CRONOSCALATA_2026-06-02_ELI_F",
+        "nome_gara": "GIRO D'ITALIA WOMEN QUARTA TAPPA CRONOSCALATA",
+        "data": "2026-06-02",
+        "atleta_id": "REUSSER_MARLEN",
+        "atleta_cognome": "REUSSER",
+        "atleta_nome": "MARLEN",
+        "posizione": 2,
+        "punti_effettivi": 24,
+        "moltiplicatore": 2,
+        "tipo": "nazionale",
+        "regione": "ABRUZZO",
+        "km": "12.700",
+        "media": "24.089"
+      },
+      {
+        "gara_id": "GIRO_D_ITALIA_WOMEN_TERZA_TAPPA_2026-06-01_ELI_F",
+        "nome_gara": "GIRO D'ITALIA WOMEN TERZA TAPPA",
+        "data": "2026-06-01",
+        "atleta_id": "REUSSER_MARLEN",
+        "atleta_cognome": "REUSSER",
+        "atleta_nome": "MARLEN",
+        "posizione": 7,
+        "punti_effettivi": 12,
+        "moltiplicatore": 3,
+        "tipo": "internazionale",
+        "regione": "UNDER",
+        "km": "156.000",
+        "media": "41.839"
+      },
+      {
+        "gara_id": "GIRO_D_ITALIA_WOMEN_SECONDA_TAPPA_2026-05-31_ELI_F",
+        "nome_gara": "GIRO D'ITALIA WOMEN SECONDA TAPPA",
+        "data": "2026-05-31",
+        "atleta_id": "SIERRA_ARLENIS",
+        "atleta_cognome": "SIERRA",
+        "atleta_nome": "ARLENIS",
+        "posizione": 6,
+        "punti_effettivi": 15,
+        "moltiplicatore": 3,
+        "tipo": "internazionale",
+        "regione": "UNDER",
+        "km": "156.000",
+        "media": "39.358"
+      }
+    ],
+    "punti_per_cat": {
+      "ELI_M": 18,
+      "ELI_F": 78
+    }
+  },
   "TEAM_VISMA_LEASE_A_BIKE_DEVELOPMENT": {
     "id": "TEAM_VISMA_LEASE_A_BIKE_DEVELOPMENT",
     "nome": "TEAM VISMA | LEASE A BIKE DEVELOPMENT",
-    "punti_totali": 144,
+    "punti_totali": 150,
     "atleti": [
-      "VAN_KERCKHOVE_MATISSE",
       "ROWE_ELLIOT",
+      "VAN_KERCKHOVE_MATISSE",
       "TAILLIEU_ALDO",
       "GOSZCZURNY_PATRYK",
       "SMITH_WILLIAM"
     ],
     "risultati": [
+      {
+        "gara_id": "GIRO_D_ITALIA_NEXT_GEN_SESTA_TAPPA_2026-06-19_ELI_M",
+        "nome_gara": "GIRO D'ITALIA NEXT GEN SESTA TAPPA",
+        "data": "2026-06-19",
+        "atleta_id": "ROWE_ELLIOT",
+        "atleta_cognome": "ROWE",
+        "atleta_nome": "ELLIOT",
+        "posizione": 9,
+        "punti_effettivi": 6,
+        "moltiplicatore": 3,
+        "tipo": "internazionale",
+        "regione": "UNDER",
+        "km": "155.000",
+        "media": "38.621"
+      },
       {
         "gara_id": "GIRO_D_ITALIA_NEXT_GEN_QUINTA_TAPPA_2026-06-18_ELI_M",
         "nome_gara": "GIRO D'ITALIA NEXT GEN QUINTA TAPPA",
@@ -88,7 +754,146 @@
       }
     ],
     "punti_per_cat": {
-      "ELI_M": 144
+      "ELI_M": 150
+    }
+  },
+  "WWV_HAGENS_BERMAN_JAYCO": {
+    "id": "WWV_HAGENS_BERMAN_JAYCO",
+    "nome": "WWV HAGENS BERMAN - JAYCO",
+    "punti_totali": 66,
+    "atleti": [
+      "RAFFERTY_ADAM",
+      "SMITHSON_JED",
+      "SERANGELI_GIACOMO",
+      "WIGGINS_MICHEAL_BEN",
+      "WRIGHT_CONNOR",
+      "SPANJAARD_SJOERD"
+    ],
+    "risultati": [
+      {
+        "gara_id": "GIRO_D_ITALIA_NEXT_GEN_SESTA_TAPPA_2026-06-19_ELI_M",
+        "nome_gara": "GIRO D'ITALIA NEXT GEN SESTA TAPPA",
+        "data": "2026-06-19",
+        "atleta_id": "RAFFERTY_ADAM",
+        "atleta_cognome": "RAFFERTY",
+        "atleta_nome": "ADAM",
+        "posizione": 10,
+        "punti_effettivi": 3,
+        "moltiplicatore": 3,
+        "tipo": "internazionale",
+        "regione": "UNDER",
+        "km": "155.000",
+        "media": "38.621"
+      },
+      {
+        "gara_id": "GIRO_D_ITALIA_NEXT_GEN_QUARTA_TAPPA_2026-06-17_ELI_M",
+        "nome_gara": "GIRO D'ITALIA NEXT GEN QUARTA TAPPA",
+        "data": "2026-06-17",
+        "atleta_id": "SMITHSON_JED",
+        "atleta_cognome": "SMITHSON",
+        "atleta_nome": "JED",
+        "posizione": 10,
+        "punti_effettivi": 3,
+        "moltiplicatore": 3,
+        "tipo": "internazionale",
+        "regione": "UNDER",
+        "km": "154.000",
+        "media": "47.600"
+      },
+      {
+        "gara_id": "GIRO_D_ITALIA_NEXT_GEN_SECONDA_TAPPA_2026-06-15_ELI_M",
+        "nome_gara": "GIRO D'ITALIA NEXT GEN SECONDA TAPPA",
+        "data": "2026-06-15",
+        "atleta_id": "SMITHSON_JED",
+        "atleta_cognome": "SMITHSON",
+        "atleta_nome": "JED",
+        "posizione": 8,
+        "punti_effettivi": 9,
+        "moltiplicatore": 3,
+        "tipo": "internazionale",
+        "regione": "UNDER",
+        "km": "154.000",
+        "media": "48.597"
+      },
+      {
+        "gara_id": "54_COPPA_DELLA_PACE_51_TROFEO_FRATELLI_ANELLI_UNDER23_2026-06-07_ELI_M",
+        "nome_gara": "54 COPPA DELLA PACE 51 TROFEO FRATELLI ANELLI UNDER23",
+        "data": "2026-06-07",
+        "atleta_id": "SERANGELI_GIACOMO",
+        "atleta_cognome": "SERANGELI",
+        "atleta_nome": "GIACOMO",
+        "posizione": 5,
+        "punti_effettivi": 18,
+        "moltiplicatore": 3,
+        "tipo": "internazionale",
+        "regione": "EMILIA ROMAGNA",
+        "km": "173.900",
+        "media": "42.200"
+      },
+      {
+        "gara_id": "54_COPPA_DELLA_PACE_51_TROFEO_FRATELLI_ANELLI_UNDER23_2026-06-07_ELI_M",
+        "nome_gara": "54 COPPA DELLA PACE 51 TROFEO FRATELLI ANELLI UNDER23",
+        "data": "2026-06-07",
+        "atleta_id": "WIGGINS_MICHEAL_BEN",
+        "atleta_cognome": "WIGGINS",
+        "atleta_nome": "MICHEAL BEN",
+        "posizione": 9,
+        "punti_effettivi": 6,
+        "moltiplicatore": 3,
+        "tipo": "internazionale",
+        "regione": "EMILIA ROMAGNA",
+        "km": "173.900",
+        "media": "42.200"
+      },
+      {
+        "gara_id": "15_GIRO_DI_PRIMAVERA_2026-04-26_JUN_M",
+        "nome_gara": "15 GIRO DI PRIMAVERA",
+        "data": "2026-04-26",
+        "atleta_id": "WRIGHT_CONNOR",
+        "atleta_cognome": "WRIGHT",
+        "atleta_nome": "CONNOR",
+        "posizione": 5,
+        "punti_effettivi": 18,
+        "moltiplicatore": 3,
+        "tipo": "internazionale",
+        "regione": "VENETO",
+        "km": "129.100",
+        "media": "41.604"
+      },
+      {
+        "gara_id": "71_COPPA_MONTES_GRAN_PREMIO_DELLA_RESISTENZA_2026-04-25_JUN_M",
+        "nome_gara": "71 COPPA MONTES GRAN PREMIO DELLA RESISTENZA",
+        "data": "2026-04-25",
+        "atleta_id": "SPANJAARD_SJOERD",
+        "atleta_cognome": "SPANJAARD",
+        "atleta_nome": "SJOERD",
+        "posizione": 9,
+        "punti_effettivi": 6,
+        "moltiplicatore": 3,
+        "tipo": "internazionale",
+        "regione": "FRIULI VENEZIA GIULIA",
+        "km": "119.000",
+        "media": "42.930"
+      },
+      {
+        "gara_id": "71_COPPA_MONTES_GRAN_PREMIO_DELLA_RESISTENZA_2026-04-25_JUN_M",
+        "nome_gara": "71 COPPA MONTES GRAN PREMIO DELLA RESISTENZA",
+        "data": "2026-04-25",
+        "atleta_id": "WRIGHT_CONNOR",
+        "atleta_cognome": "WRIGHT",
+        "atleta_nome": "CONNOR",
+        "posizione": 10,
+        "punti_effettivi": 3,
+        "moltiplicatore": 3,
+        "tipo": "internazionale",
+        "regione": "FRIULI VENEZIA GIULIA",
+        "km": "119.000",
+        "media": "42.930"
+      }
+    ],
+    "punti_per_cat": {
+      "ELI_M": 39,
+      "JUN_M": 27
     }
   },
   "GENERAL_STORE_ESSEGIBI_F_LLI_CURIA": {
@@ -711,111 +1516,6 @@
     ],
     "punti_per_cat": {
       "ELI_M": 45
-    }
-  },
-  "DECATHLON_CMA_CGM_DEVELOPMENT_TEAM": {
-    "id": "DECATHLON_CMA_CGM_DEVELOPMENT_TEAM",
-    "nome": "DECATHLON CMA CGM DEVELOPMENT TEAM",
-    "punti_totali": 141,
-    "atleti": [
-      "SPARFEL_AUBIN",
-      "HAUGLAND_KASPER",
-      "ARSAC_REMI"
-    ],
-    "risultati": [
-      {
-        "gara_id": "GIRO_D_ITALIA_NEXT_GEN_QUINTA_TAPPA_2026-06-18_ELI_M",
-        "nome_gara": "GIRO D'ITALIA NEXT GEN QUINTA TAPPA",
-        "data": "2026-06-18",
-        "atleta_id": "SPARFEL_AUBIN",
-        "atleta_cognome": "SPARFEL",
-        "atleta_nome": "AUBIN",
-        "posizione": 4,
-        "punti_effettivi": 24,
-        "moltiplicatore": 3,
-        "tipo": "internazionale",
-        "regione": "UNDER",
-        "km": "139.000",
-        "media": "40.209"
-      },
-      {
-        "gara_id": "GIRO_D_ITALIA_NEXT_GEN_SECONDA_TAPPA_2026-06-15_ELI_M",
-        "nome_gara": "GIRO D'ITALIA NEXT GEN SECONDA TAPPA",
-        "data": "2026-06-15",
-        "atleta_id": "SPARFEL_AUBIN",
-        "atleta_cognome": "SPARFEL",
-        "atleta_nome": "AUBIN",
-        "posizione": 3,
-        "punti_effettivi": 30,
-        "moltiplicatore": 3,
-        "tipo": "internazionale",
-        "regione": "UNDER",
-        "km": "154.000",
-        "media": "48.597"
-      },
-      {
-        "gara_id": "GIRO_D_ITALIA_NEXT_GEN_PRIMA_TAPPA_2026-06-14_ELI_M",
-        "nome_gara": "GIRO D'ITALIA NEXT GEN PRIMA TAPPA",
-        "data": "2026-06-14",
-        "atleta_id": "HAUGLAND_KASPER",
-        "atleta_cognome": "HAUGLAND",
-        "atleta_nome": "KASPER",
-        "posizione": 1,
-        "punti_effettivi": 45,
-        "moltiplicatore": 3,
-        "tipo": "internazionale",
-        "regione": "LOMBARDIA",
-        "km": "168.000",
-        "media": "45.236"
-      },
-      {
-        "gara_id": "GIRO_D_ITALIA_NEXT_GEN_PRIMA_TAPPA_2026-06-14_ELI_M",
-        "nome_gara": "GIRO D'ITALIA NEXT GEN PRIMA TAPPA",
-        "data": "2026-06-14",
-        "atleta_id": "SPARFEL_AUBIN",
-        "atleta_cognome": "SPARFEL",
-        "atleta_nome": "AUBIN",
-        "posizione": 7,
-        "punti_effettivi": 12,
-        "moltiplicatore": 3,
-        "tipo": "internazionale",
-        "regione": "LOMBARDIA",
-        "km": "168.000",
-        "media": "45.236"
-      },
-      {
-        "gara_id": "87_GIRO_DEL_BELVEDERE_UNDER23_2026-04-06_ELI_M",
-        "nome_gara": "87 GIRO DEL BELVEDERE UNDER23",
-        "data": "2026-04-06",
-        "atleta_id": "SPARFEL_AUBIN",
-        "atleta_cognome": "SPARFEL",
-        "atleta_nome": "AUBIN",
-        "posizione": 7,
-        "punti_effettivi": 12,
-        "moltiplicatore": 3,
-        "tipo": "internazionale",
-        "regione": "VENETO",
-        "km": "168.000",
-        "media": "43.065"
-      },
-      {
-        "gara_id": "77_TROFEO_PIVA_UNDER23_2026-04-05_ELI_M",
-        "nome_gara": "77 TROFEO PIVA UNDER23",
-        "data": "2026-04-05",
-        "atleta_id": "ARSAC_REMI",
-        "atleta_cognome": "ARSAC",
-        "atleta_nome": "REMI",
-        "posizione": 5,
-        "punti_effettivi": 18,
-        "moltiplicatore": 3,
-        "tipo": "internazionale",
-        "regione": "VENETO",
-        "km": "179.800",
-        "media": "40.304"
-      }
-    ],
-    "punti_per_cat": {
-      "ELI_M": 141
     }
   },
   "XDS_ASTANA_DEVELOPMENT_TEAM": {
@@ -2988,127 +3688,6 @@
       "ELI_M": 761
     }
   },
-  "RED_BULL_BORA_HANSGROHE_ROOKIES": {
-    "id": "RED_BULL_BORA_HANSGROHE_ROOKIES",
-    "nome": "RED BULL-BORA-HANSGROHE ROOKIES",
-    "punti_totali": 216,
-    "atleti": [
-      "DONATI_DAVIDE",
-      "FINN_LORENZO_MARK",
-      "BOCK_MAX",
-      "FIETZKE_PAUL"
-    ],
-    "risultati": [
-      {
-        "gara_id": "GIRO_D_ITALIA_NEXT_GEN_QUARTA_TAPPA_2026-06-17_ELI_M",
-        "nome_gara": "GIRO D'ITALIA NEXT GEN QUARTA TAPPA",
-        "data": "2026-06-17",
-        "atleta_id": "DONATI_DAVIDE",
-        "atleta_cognome": "DONATI",
-        "atleta_nome": "DAVIDE",
-        "posizione": 3,
-        "punti_effettivi": 30,
-        "moltiplicatore": 3,
-        "tipo": "internazionale",
-        "regione": "UNDER",
-        "km": "154.000",
-        "media": "47.600"
-      },
-      {
-        "gara_id": "GIRO_D_ITALIA_NEXT_GEN_SECONDA_TAPPA_2026-06-15_ELI_M",
-        "nome_gara": "GIRO D'ITALIA NEXT GEN SECONDA TAPPA",
-        "data": "2026-06-15",
-        "atleta_id": "DONATI_DAVIDE",
-        "atleta_cognome": "DONATI",
-        "atleta_nome": "DAVIDE",
-        "posizione": 1,
-        "punti_effettivi": 45,
-        "moltiplicatore": 3,
-        "tipo": "internazionale",
-        "regione": "UNDER",
-        "km": "154.000",
-        "media": "48.597"
-      },
-      {
-        "gara_id": "GIRO_D_ITALIA_NEXT_GEN_PRIMA_TAPPA_2026-06-14_ELI_M",
-        "nome_gara": "GIRO D'ITALIA NEXT GEN PRIMA TAPPA",
-        "data": "2026-06-14",
-        "atleta_id": "DONATI_DAVIDE",
-        "atleta_cognome": "DONATI",
-        "atleta_nome": "DAVIDE",
-        "posizione": 3,
-        "punti_effettivi": 30,
-        "moltiplicatore": 3,
-        "tipo": "internazionale",
-        "regione": "LOMBARDIA",
-        "km": "168.000",
-        "media": "45.236"
-      },
-      {
-        "gara_id": "63_GRAN_PREMIO_PALIO_DEL_RECIOTO_UNDER23_2026-04-07_ELI_M",
-        "nome_gara": "63 GRAN PREMIO PALIO DEL RECIOTO UNDER23",
-        "data": "2026-04-07",
-        "atleta_id": "FINN_LORENZO_MARK",
-        "atleta_cognome": "FINN",
-        "atleta_nome": "LORENZO MARK",
-        "posizione": 1,
-        "punti_effettivi": 45,
-        "moltiplicatore": 3,
-        "tipo": "internazionale",
-        "regione": "VENETO",
-        "km": "147.000",
-        "media": "36.598"
-      },
-      {
-        "gara_id": "63_GRAN_PREMIO_PALIO_DEL_RECIOTO_UNDER23_2026-04-07_ELI_M",
-        "nome_gara": "63 GRAN PREMIO PALIO DEL RECIOTO UNDER23",
-        "data": "2026-04-07",
-        "atleta_id": "BOCK_MAX",
-        "atleta_cognome": "BOCK",
-        "atleta_nome": "MAX",
-        "posizione": 6,
-        "punti_effettivi": 15,
-        "moltiplicatore": 3,
-        "tipo": "internazionale",
-        "regione": "VENETO",
-        "km": "147.000",
-        "media": "36.598"
-      },
-      {
-        "gara_id": "87_GIRO_DEL_BELVEDERE_UNDER23_2026-04-06_ELI_M",
-        "nome_gara": "87 GIRO DEL BELVEDERE UNDER23",
-        "data": "2026-04-06",
-        "atleta_id": "FINN_LORENZO_MARK",
-        "atleta_cognome": "FINN",
-        "atleta_nome": "LORENZO MARK",
-        "posizione": 1,
-        "punti_effettivi": 45,
-        "moltiplicatore": 3,
-        "tipo": "internazionale",
-        "regione": "VENETO",
-        "km": "168.000",
-        "media": "43.065"
-      },
-      {
-        "gara_id": "77_TROFEO_PIVA_UNDER23_2026-04-05_ELI_M",
-        "nome_gara": "77 TROFEO PIVA UNDER23",
-        "data": "2026-04-05",
-        "atleta_id": "FIETZKE_PAUL",
-        "atleta_cognome": "FIETZKE",
-        "atleta_nome": "PAUL",
-        "posizione": 9,
-        "punti_effettivi": 6,
-        "moltiplicatore": 3,
-        "tipo": "internazionale",
-        "regione": "VENETO",
-        "km": "179.800",
-        "media": "40.304"
-      }
-    ],
-    "punti_per_cat": {
-      "ELI_M": 216
-    }
-  },
   "TEAM_DRALI_REPSOL": {
     "id": "TEAM_DRALI_REPSOL",
     "nome": "TEAM DRALI - REPSOL",
@@ -3137,112 +3716,6 @@
       "ELI_M": 12
     }
   },
-  "MOVISTAR_TEAM_ACADEMY": {
-    "id": "MOVISTAR_TEAM_ACADEMY",
-    "nome": "MOVISTAR TEAM ACADEMY",
-    "punti_totali": 87,
-    "atleti": [
-      "PARETA_SALA_ROGER",
-      "REUSSER_MARLEN",
-      "SIERRA_ARLENIS"
-    ],
-    "risultati": [
-      {
-        "gara_id": "GIRO_D_ITALIA_NEXT_GEN_QUARTA_TAPPA_2026-06-17_ELI_M",
-        "nome_gara": "GIRO D'ITALIA NEXT GEN QUARTA TAPPA",
-        "data": "2026-06-17",
-        "atleta_id": "PARETA_SALA_ROGER",
-        "atleta_cognome": "PARETA SALA",
-        "atleta_nome": "ROGER",
-        "posizione": 8,
-        "punti_effettivi": 9,
-        "moltiplicatore": 3,
-        "tipo": "internazionale",
-        "regione": "UNDER",
-        "km": "154.000",
-        "media": "47.600"
-      },
-      {
-        "gara_id": "GIRO_D_ITALIA_WOMEN_OTTAVA_TAPPA_2026-06-06_ELI_F",
-        "nome_gara": "GIRO D'ITALIA WOMEN OTTAVA TAPPA",
-        "data": "2026-06-06",
-        "atleta_id": "REUSSER_MARLEN",
-        "atleta_cognome": "REUSSER",
-        "atleta_nome": "MARLEN",
-        "posizione": 6,
-        "punti_effettivi": 15,
-        "moltiplicatore": 3,
-        "tipo": "internazionale",
-        "regione": "UNDER",
-        "km": "105.000",
-        "media": "31.181"
-      },
-      {
-        "gara_id": "GIRO_D_ITALIA_WOMEN_QUINTA_TAPPA_2026-06-03_ELI_F",
-        "nome_gara": "GIRO D'ITALIA WOMEN QUINTA TAPPA",
-        "data": "2026-06-03",
-        "atleta_id": "REUSSER_MARLEN",
-        "atleta_cognome": "REUSSER",
-        "atleta_nome": "MARLEN",
-        "posizione": 7,
-        "punti_effettivi": 12,
-        "moltiplicatore": 3,
-        "tipo": "internazionale",
-        "regione": "UNDER",
-        "km": "146.000",
-        "media": "33.209"
-      },
-      {
-        "gara_id": "GIRO_D_ITALIA_WOMEN_QUARTA_TAPPA_CRONOSCALATA_2026-06-02_ELI_F",
-        "nome_gara": "GIRO D'ITALIA WOMEN QUARTA TAPPA CRONOSCALATA",
-        "data": "2026-06-02",
-        "atleta_id": "REUSSER_MARLEN",
-        "atleta_cognome": "REUSSER",
-        "atleta_nome": "MARLEN",
-        "posizione": 2,
-        "punti_effettivi": 24,
-        "moltiplicatore": 2,
-        "tipo": "nazionale",
-        "regione": "ABRUZZO",
-        "km": "12.700",
-        "media": "24.089"
-      },
-      {
-        "gara_id": "GIRO_D_ITALIA_WOMEN_TERZA_TAPPA_2026-06-01_ELI_F",
-        "nome_gara": "GIRO D'ITALIA WOMEN TERZA TAPPA",
-        "data": "2026-06-01",
-        "atleta_id": "REUSSER_MARLEN",
-        "atleta_cognome": "REUSSER",
-        "atleta_nome": "MARLEN",
-        "posizione": 7,
-        "punti_effettivi": 12,
-        "moltiplicatore": 3,
-        "tipo": "internazionale",
-        "regione": "UNDER",
-        "km": "156.000",
-        "media": "41.839"
-      },
-      {
-        "gara_id": "GIRO_D_ITALIA_WOMEN_SECONDA_TAPPA_2026-05-31_ELI_F",
-        "nome_gara": "GIRO D'ITALIA WOMEN SECONDA TAPPA",
-        "data": "2026-05-31",
-        "atleta_id": "SIERRA_ARLENIS",
-        "atleta_cognome": "SIERRA",
-        "atleta_nome": "ARLENIS",
-        "posizione": 6,
-        "punti_effettivi": 15,
-        "moltiplicatore": 3,
-        "tipo": "internazionale",
-        "regione": "UNDER",
-        "km": "156.000",
-        "media": "39.358"
-      }
-    ],
-    "punti_per_cat": {
-      "ELI_M": 9,
-      "ELI_F": 78
-    }
-  },
   "TUDOR_PRO_CYCLING_U23": {
     "id": "TUDOR_PRO_CYCLING_U23",
     "nome": "TUDOR PRO CYCLING U23",
@@ -3269,324 +3742,6 @@
     ],
     "punti_per_cat": {
       "ELI_M": 6
-    }
-  },
-  "WWV_HAGENS_BERMAN_JAYCO": {
-    "id": "WWV_HAGENS_BERMAN_JAYCO",
-    "nome": "WWV HAGENS BERMAN - JAYCO",
-    "punti_totali": 63,
-    "atleti": [
-      "SMITHSON_JED",
-      "SERANGELI_GIACOMO",
-      "WIGGINS_MICHEAL_BEN",
-      "WRIGHT_CONNOR",
-      "SPANJAARD_SJOERD"
-    ],
-    "risultati": [
-      {
-        "gara_id": "GIRO_D_ITALIA_NEXT_GEN_QUARTA_TAPPA_2026-06-17_ELI_M",
-        "nome_gara": "GIRO D'ITALIA NEXT GEN QUARTA TAPPA",
-        "data": "2026-06-17",
-        "atleta_id": "SMITHSON_JED",
-        "atleta_cognome": "SMITHSON",
-        "atleta_nome": "JED",
-        "posizione": 10,
-        "punti_effettivi": 3,
-        "moltiplicatore": 3,
-        "tipo": "internazionale",
-        "regione": "UNDER",
-        "km": "154.000",
-        "media": "47.600"
-      },
-      {
-        "gara_id": "GIRO_D_ITALIA_NEXT_GEN_SECONDA_TAPPA_2026-06-15_ELI_M",
-        "nome_gara": "GIRO D'ITALIA NEXT GEN SECONDA TAPPA",
-        "data": "2026-06-15",
-        "atleta_id": "SMITHSON_JED",
-        "atleta_cognome": "SMITHSON",
-        "atleta_nome": "JED",
-        "posizione": 8,
-        "punti_effettivi": 9,
-        "moltiplicatore": 3,
-        "tipo": "internazionale",
-        "regione": "UNDER",
-        "km": "154.000",
-        "media": "48.597"
-      },
-      {
-        "gara_id": "54_COPPA_DELLA_PACE_51_TROFEO_FRATELLI_ANELLI_UNDER23_2026-06-07_ELI_M",
-        "nome_gara": "54 COPPA DELLA PACE 51 TROFEO FRATELLI ANELLI UNDER23",
-        "data": "2026-06-07",
-        "atleta_id": "SERANGELI_GIACOMO",
-        "atleta_cognome": "SERANGELI",
-        "atleta_nome": "GIACOMO",
-        "posizione": 5,
-        "punti_effettivi": 18,
-        "moltiplicatore": 3,
-        "tipo": "internazionale",
-        "regione": "EMILIA ROMAGNA",
-        "km": "173.900",
-        "media": "42.200"
-      },
-      {
-        "gara_id": "54_COPPA_DELLA_PACE_51_TROFEO_FRATELLI_ANELLI_UNDER23_2026-06-07_ELI_M",
-        "nome_gara": "54 COPPA DELLA PACE 51 TROFEO FRATELLI ANELLI UNDER23",
-        "data": "2026-06-07",
-        "atleta_id": "WIGGINS_MICHEAL_BEN",
-        "atleta_cognome": "WIGGINS",
-        "atleta_nome": "MICHEAL BEN",
-        "posizione": 9,
-        "punti_effettivi": 6,
-        "moltiplicatore": 3,
-        "tipo": "internazionale",
-        "regione": "EMILIA ROMAGNA",
-        "km": "173.900",
-        "media": "42.200"
-      },
-      {
-        "gara_id": "15_GIRO_DI_PRIMAVERA_2026-04-26_JUN_M",
-        "nome_gara": "15 GIRO DI PRIMAVERA",
-        "data": "2026-04-26",
-        "atleta_id": "WRIGHT_CONNOR",
-        "atleta_cognome": "WRIGHT",
-        "atleta_nome": "CONNOR",
-        "posizione": 5,
-        "punti_effettivi": 18,
-        "moltiplicatore": 3,
-        "tipo": "internazionale",
-        "regione": "VENETO",
-        "km": "129.100",
-        "media": "41.604"
-      },
-      {
-        "gara_id": "71_COPPA_MONTES_GRAN_PREMIO_DELLA_RESISTENZA_2026-04-25_JUN_M",
-        "nome_gara": "71 COPPA MONTES GRAN PREMIO DELLA RESISTENZA",
-        "data": "2026-04-25",
-        "atleta_id": "SPANJAARD_SJOERD",
-        "atleta_cognome": "SPANJAARD",
-        "atleta_nome": "SJOERD",
-        "posizione": 9,
-        "punti_effettivi": 6,
-        "moltiplicatore": 3,
-        "tipo": "internazionale",
-        "regione": "FRIULI VENEZIA GIULIA",
-        "km": "119.000",
-        "media": "42.930"
-      },
-      {
-        "gara_id": "71_COPPA_MONTES_GRAN_PREMIO_DELLA_RESISTENZA_2026-04-25_JUN_M",
-        "nome_gara": "71 COPPA MONTES GRAN PREMIO DELLA RESISTENZA",
-        "data": "2026-04-25",
-        "atleta_id": "WRIGHT_CONNOR",
-        "atleta_cognome": "WRIGHT",
-        "atleta_nome": "CONNOR",
-        "posizione": 10,
-        "punti_effettivi": 3,
-        "moltiplicatore": 3,
-        "tipo": "internazionale",
-        "regione": "FRIULI VENEZIA GIULIA",
-        "km": "119.000",
-        "media": "42.930"
-      }
-    ],
-    "punti_per_cat": {
-      "ELI_M": 36,
-      "JUN_M": 27
-    }
-  },
-  "SOUDAL_QUICK_STEP_DEVO_TEAM": {
-    "id": "SOUDAL_QUICK_STEP_DEVO_TEAM",
-    "nome": "SOUDAL QUICK-STEP DEVO TEAM",
-    "punti_totali": 54,
-    "atleti": [
-      "SCHOOFS_JASPER",
-      "VALJAVEC_ERAZEM"
-    ],
-    "risultati": [
-      {
-        "gara_id": "GIRO_D_ITALIA_NEXT_GEN_TERZA_TAPPA_2026-06-16_ELI_M",
-        "nome_gara": "GIRO D'ITALIA NEXT GEN TERZA TAPPA",
-        "data": "2026-06-16",
-        "atleta_id": "SCHOOFS_JASPER",
-        "atleta_cognome": "SCHOOFS",
-        "atleta_nome": "JASPER",
-        "posizione": 1,
-        "punti_effettivi": 45,
-        "moltiplicatore": 3,
-        "tipo": "internazionale",
-        "regione": "UNDER",
-        "km": "166.000",
-        "media": "39.716"
-      },
-      {
-        "gara_id": "GIRO_D_ITALIA_NEXT_GEN_TERZA_TAPPA_2026-06-16_ELI_M",
-        "nome_gara": "GIRO D'ITALIA NEXT GEN TERZA TAPPA",
-        "data": "2026-06-16",
-        "atleta_id": "VALJAVEC_ERAZEM",
-        "atleta_cognome": "VALJAVEC",
-        "atleta_nome": "ERAZEM",
-        "posizione": 8,
-        "punti_effettivi": 9,
-        "moltiplicatore": 3,
-        "tipo": "internazionale",
-        "regione": "UNDER",
-        "km": "166.000",
-        "media": "39.716"
-      }
-    ],
-    "punti_per_cat": {
-      "ELI_M": 54
-    }
-  },
-  "DEVELOPMENT_TEAM_PICNIC_POSTNL": {
-    "id": "DEVELOPMENT_TEAM_PICNIC_POSTNL",
-    "nome": "DEVELOPMENT TEAM PICNIC POSTNL",
-    "punti_totali": 30,
-    "atleti": [
-      "VANHUFFEL_MATTEO"
-    ],
-    "risultati": [
-      {
-        "gara_id": "GIRO_D_ITALIA_NEXT_GEN_TERZA_TAPPA_2026-06-16_ELI_M",
-        "nome_gara": "GIRO D'ITALIA NEXT GEN TERZA TAPPA",
-        "data": "2026-06-16",
-        "atleta_id": "VANHUFFEL_MATTEO",
-        "atleta_cognome": "VANHUFFEL",
-        "atleta_nome": "MATTEO",
-        "posizione": 3,
-        "punti_effettivi": 30,
-        "moltiplicatore": 3,
-        "tipo": "internazionale",
-        "regione": "UNDER",
-        "km": "166.000",
-        "media": "39.716"
-      }
-    ],
-    "punti_per_cat": {
-      "ELI_M": 30
-    }
-  },
-  "UAE_TEAM_EMIRATES_GEN_Z": {
-    "id": "UAE_TEAM_EMIRATES_GEN_Z",
-    "nome": "UAE TEAM EMIRATES GEN-Z",
-    "punti_totali": 93,
-    "atleti": [
-      "DIJKMAN_DAAN",
-      "MAUSS_MORITZ",
-      "FUGGER_HEIMO",
-      "VAN_DEN_WIJNGAERT_MATTEO",
-      "FREIRE_MARCOS",
-      "BOLDYREV_MATVEI"
-    ],
-    "risultati": [
-      {
-        "gara_id": "GIRO_D_ITALIA_NEXT_GEN_TERZA_TAPPA_2026-06-16_ELI_M",
-        "nome_gara": "GIRO D'ITALIA NEXT GEN TERZA TAPPA",
-        "data": "2026-06-16",
-        "atleta_id": "DIJKMAN_DAAN",
-        "atleta_cognome": "DIJKMAN",
-        "atleta_nome": "DAAN",
-        "posizione": 4,
-        "punti_effettivi": 24,
-        "moltiplicatore": 3,
-        "tipo": "internazionale",
-        "regione": "UNDER",
-        "km": "166.000",
-        "media": "39.716"
-      },
-      {
-        "gara_id": "GIRO_D_ITALIA_NEXT_GEN_PRIMA_TAPPA_2026-06-14_ELI_M",
-        "nome_gara": "GIRO D'ITALIA NEXT GEN PRIMA TAPPA",
-        "data": "2026-06-14",
-        "atleta_id": "MAUSS_MORITZ",
-        "atleta_cognome": "MAUSS",
-        "atleta_nome": "MORITZ",
-        "posizione": 8,
-        "punti_effettivi": 9,
-        "moltiplicatore": 3,
-        "tipo": "internazionale",
-        "regione": "LOMBARDIA",
-        "km": "168.000",
-        "media": "45.236"
-      },
-      {
-        "gara_id": "79_GRAN_PREMIO_DELLA_LIBERAZIONE_UNDER23_2026-04-25_ELI_M",
-        "nome_gara": "79 GRAN PREMIO DELLA LIBERAZIONE UNDER23",
-        "data": "2026-04-25",
-        "atleta_id": "FUGGER_HEIMO",
-        "atleta_cognome": "FUGGER",
-        "atleta_nome": "HEIMO",
-        "posizione": 7,
-        "punti_effettivi": 12,
-        "moltiplicatore": 3,
-        "tipo": "internazionale",
-        "regione": "LAZIO",
-        "km": "138.000",
-        "media": "42.898"
-      },
-      {
-        "gara_id": "79_GRAN_PREMIO_DELLA_LIBERAZIONE_UNDER23_2026-04-25_ELI_M",
-        "nome_gara": "79 GRAN PREMIO DELLA LIBERAZIONE UNDER23",
-        "data": "2026-04-25",
-        "atleta_id": "VAN_DEN_WIJNGAERT_MATTEO",
-        "atleta_cognome": "VAN DEN WIJNGAERT",
-        "atleta_nome": "MATTEO",
-        "posizione": 8,
-        "punti_effettivi": 9,
-        "moltiplicatore": 3,
-        "tipo": "internazionale",
-        "regione": "LAZIO",
-        "km": "138.000",
-        "media": "42.898"
-      },
-      {
-        "gara_id": "79_GRAN_PREMIO_DELLA_LIBERAZIONE_UNDER23_2026-04-25_ELI_M",
-        "nome_gara": "79 GRAN PREMIO DELLA LIBERAZIONE UNDER23",
-        "data": "2026-04-25",
-        "atleta_id": "FREIRE_MARCOS",
-        "atleta_cognome": "FREIRE",
-        "atleta_nome": "MARCOS",
-        "posizione": 9,
-        "punti_effettivi": 6,
-        "moltiplicatore": 3,
-        "tipo": "internazionale",
-        "regione": "LAZIO",
-        "km": "138.000",
-        "media": "42.898"
-      },
-      {
-        "gara_id": "63_GRAN_PREMIO_PALIO_DEL_RECIOTO_UNDER23_2026-04-07_ELI_M",
-        "nome_gara": "63 GRAN PREMIO PALIO DEL RECIOTO UNDER23",
-        "data": "2026-04-07",
-        "atleta_id": "BOLDYREV_MATVEI",
-        "atleta_cognome": "BOLDYREV",
-        "atleta_nome": "MATVEI",
-        "posizione": 5,
-        "punti_effettivi": 18,
-        "moltiplicatore": 3,
-        "tipo": "internazionale",
-        "regione": "VENETO",
-        "km": "147.000",
-        "media": "36.598"
-      },
-      {
-        "gara_id": "77_TROFEO_PIVA_UNDER23_2026-04-05_ELI_M",
-        "nome_gara": "77 TROFEO PIVA UNDER23",
-        "data": "2026-04-05",
-        "atleta_id": "BOLDYREV_MATVEI",
-        "atleta_cognome": "BOLDYREV",
-        "atleta_nome": "MATVEI",
-        "posizione": 6,
-        "punti_effettivi": 15,
-        "moltiplicatore": 3,
-        "tipo": "internazionale",
-        "regione": "VENETO",
-        "km": "179.800",
-        "media": "40.304"
-      }
-    ],
-    "punti_per_cat": {
-      "ELI_M": 93
     }
   },
   "U_C_TREVIGIANI_ENERGIAPURA_MARCHIOL": {
