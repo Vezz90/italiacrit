@@ -1,5 +1,17 @@
 [
   {
+    "id": "mqkwdcwei7mbn",
+    "channel_id": "toscana_sprint",
+    "channel_name": "ToscanaSprint",
+    "url": "https://www.youtube.com/watch?v=gFkcdlvNeYQ",
+    "title": "55° TROFEO CITTA' DI LUCCA - CAMPIOANTO ITALIANO UNDER 23",
+    "published_at": "2026-06-19",
+    "thumbnail": "https://i4.ytimg.com/vi/gFkcdlvNeYQ/hqdefault.jpg",
+    "status": "pending",
+    "suggested_gara_id": null,
+    "added_at": "2026-06-19T12:20:45.326Z"
+  },
+  {
     "id": "mqjxi11eohb9d",
     "channel_id": "toscana_sprint",
     "channel_name": "ToscanaSprint",
