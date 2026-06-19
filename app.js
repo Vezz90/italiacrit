@@ -2409,6 +2409,37 @@ async function renderHubHome(hubCode) {
   return _renderHubHomeLegacy(hubCode);
 }
 
+// ── Carousel gare in arrivo ──────────────────────────────────────────────────
+window._hucState = window._hucState || {};
+window._hucGo = function(cid, idx) {
+  var ct = document.getElementById(cid);
+  if (!ct) return;
+  var slides = ct.querySelectorAll('.huc-slide');
+  var dots   = ct.querySelectorAll('.huc-dot');
+  var total  = slides.length;
+  if (idx < 0) idx = total - 1;
+  if (idx >= total) idx = 0;
+  slides.forEach(function(s, i) { s.style.display = i === idx ? 'flex' : 'none'; });
+  dots.forEach(function(d, i) {
+    var active = i === idx;
+    d.style.width      = active ? '16px' : '6px';
+    d.style.background = active ? 'var(--red-hot)' : 'var(--border-subtle)';
+  });
+  if (window._hucState[cid]) window._hucState[cid].idx = idx;
+};
+window._hucNext = function(cid) {
+  var st = window._hucState[cid]; if (!st) return;
+  window._hucGo(cid, st.idx + 1);
+  clearInterval(st.timer);
+  st.timer = setInterval(function(){ window._hucNext(cid); }, 4000);
+};
+window._hucPrev = function(cid) {
+  var st = window._hucState[cid]; if (!st) return;
+  window._hucGo(cid, st.idx - 1);
+  clearInterval(st.timer);
+  st.timer = setInterval(function(){ window._hucNext(cid); }, 4000);
+};
+
 // ── LEGACY HUB (archivio — non più usato direttamente) ────────
 async function _renderHubHomeLegacy(hubCode) {
   if (!globalData) return;
@@ -2816,40 +2847,77 @@ async function _renderHubHomeLegacy(hubCode) {
     ? dualWrap(buildNewsHtml(hubResES1, 'ESORDIENTI 1° ANNO'), buildNewsHtml(hubResES2, 'ESORDIENTI 2° ANNO'))
     : buildNewsHtml(hubRes, hub.label.toUpperCase() + ' · NEWSROOM');
 
-  // ── 6. PROSSIME GARE — solo il prossimo fine settimana ──────────
+  // ── 6. PROSSIME GARE — carousel del prossimo fine settimana (in alto) ──────
   let upHtml = '';
+  let _hucCount = 0;
+  const _hucCid = 'huc-' + hubCode;
   if (upcomingAll.length) {
-    // Trova il weekend del primo evento in arrivo e mostra solo quello
     const nextWk = weekendKey(upcomingAll[0].data);
     const nextWkRaces = upcomingAll.filter(function(g){ return weekendKey(g.data) === nextWk; });
+    _hucCount = nextWkRaces.length;
     const satD = new Date(nextWk + 'T00:00:00');
     const sunD = new Date(satD); sunD.setDate(satD.getDate() + 1);
     const wkLabel = satD.getDate() + '–' + sunD.getDate() + ' ' + MONTHS_SHORT[satD.getMonth()] + ' ' + satD.getFullYear();
     const DAY_NAMES = ['DOM','LUN','MAR','MER','GIO','VEN','SAB'];
-    upHtml = '<section class="hub-upcoming-weekend">' +
-      '<div class="hub-section-header hub-section-header--wide">' +
-        '<div class="hub-section-label">PROSSIMO FINE SETTIMANA &nbsp;<span class="hub-wk-date">' + wkLabel + '</span></div>' +
-        '<a href="#/calendario" class="hub-section-more">Calendario &rarr;</a>' +
-      '</div>' +
-      '<div class="hub-last-list">' +
-        nextWkRaces.map(function(g) {
-          const gd   = new Date(g.data + 'T00:00:00');
-          const days = Math.round((gd - new Date(todayStr + 'T00:00:00')) / 86400000);
-          const dayLabel = days === 0 ? '<span class="hub-ug-oggi">OGGI</span>'
-                         : days === 1 ? '<span class="hub-ug-domani">DOMANI</span>'
-                         : DAY_NAMES[gd.getDay()];
-          return '<div class="hub-last-row" onclick="location.hash=\'#/calendario/' + encodeURIComponent(g.id) + '\'">' +
-            '<span class="hub-last-date">' + dayLabel + '</span>' +
-            '<span class="hub-last-cat">' + esc(catLabel(g.categoria)||g.categoria||'') + '</span>' +
-            '<span class="hub-last-name">' + esc(g.nome) + '</span>' +
-            '<span class="hub-last-winner" style="opacity:.5">' + esc(g.luogo||g.regione||'') + '</span>' +
-          '</div>';
-        }).join('') +
-      '</div>' +
-    '</section>';
+
+    const slidesHtml = nextWkRaces.map(function(g, i) {
+      const gd   = new Date(g.data + 'T00:00:00');
+      const days = Math.round((gd - new Date(todayStr + 'T00:00:00')) / 86400000);
+      const dayLabel = days === 0 ? 'OGGI' : days === 1 ? 'DOMANI' : DAY_NAMES[gd.getDay()];
+      const dayColor = days === 0 ? 'var(--red-hot)' : days === 1 ? '#f59e0b' : 'var(--text-muted)';
+      return '<div class="huc-slide" ' +
+        'style="display:' + (i===0?'flex':'none') + ';flex-direction:column;align-items:center;' +
+        'justify-content:center;padding:14px 20px 8px;cursor:pointer;min-height:82px;gap:2px;text-align:center" ' +
+        'onclick="location.hash=\'#/gara/' + encodeURIComponent(g.id) + '\'">' +
+        '<div style="font-size:.68rem;font-weight:800;letter-spacing:.12em;color:' + dayColor + '">' + dayLabel + '</div>' +
+        '<div style="font-size:.95rem;font-weight:700;color:var(--text-primary);line-height:1.25;margin:3px 0 2px">' + esc(g.nome) + '</div>' +
+        '<div style="font-size:.73rem;color:var(--text-muted)">' + esc(g.luogo||g.regione||'') + (g.luogo&&g.regione?' · ':'') + esc(g.regione&&g.luogo?'':'') + '</div>' +
+        '<div style="font-size:.68rem;color:var(--text-muted);opacity:.75">' + esc(catLabel(g.categoria)||g.categoria||'') + '</div>' +
+        '</div>';
+    }).join('');
+
+    const dotsHtml = _hucCount > 1
+      ? '<div style="display:flex;gap:5px;justify-content:center;padding:4px 0 10px">' +
+          nextWkRaces.map(function(_, i) {
+            return '<span class="huc-dot" onclick="window._hucGo(\'' + _hucCid + '\',' + i + ')" ' +
+              'style="display:inline-block;width:' + (i===0?'16px':'6px') + ';height:6px;border-radius:3px;' +
+              'background:' + (i===0?'var(--red-hot)':'var(--border-subtle)') + ';transition:all .3s;cursor:pointer"></span>';
+          }).join('') +
+        '</div>'
+      : '';
+
+    const navHtml = _hucCount > 1
+      ? '<div style="display:flex;gap:0">' +
+          '<button onclick="window._hucPrev(\'' + _hucCid + '\')" style="background:none;border:none;color:var(--text-muted);cursor:pointer;font-size:1.15rem;padding:0 8px;line-height:1">‹</button>' +
+          '<button onclick="window._hucNext(\'' + _hucCid + '\')" style="background:none;border:none;color:var(--text-muted);cursor:pointer;font-size:1.15rem;padding:0 8px;line-height:1">›</button>' +
+        '</div>'
+      : '';
+
+    upHtml =
+      '<section style="background:var(--bg-card);border:1px solid var(--border-subtle);' +
+        'border-radius:var(--r-lg);margin:0 0 12px;overflow:hidden">' +
+        '<div style="display:flex;align-items:center;justify-content:space-between;' +
+          'padding:7px 12px;border-bottom:1px solid var(--border-subtle)">' +
+          '<div style="font-size:.68rem;font-weight:700;letter-spacing:.08em;color:var(--text-muted)">' +
+            'PROSSIMO FINE SETTIMANA &nbsp;<span style="color:var(--text-secondary)">' + wkLabel + '</span>' +
+            '&nbsp;<span style="opacity:.5">(' + _hucCount + ' ' + (_hucCount===1?'gara':'gare') + ')</span>' +
+          '</div>' +
+          navHtml +
+        '</div>' +
+        '<div id="' + _hucCid + '">' + slidesHtml + dotsHtml + '</div>' +
+      '</section>';
   }
 
-  setPage(heroHtml + champStatusHtml + lastResultsHtml + spotlightHtml + rankHtml + rivalHtml + newsHtml + upHtml);
+  // upHtml va PRIMA dei risultati (in alto nell'hub)
+  setPage(heroHtml + upHtml + champStatusHtml + lastResultsHtml + spotlightHtml + rankHtml + rivalHtml + newsHtml);
+
+  // Avvia auto-advance carousel
+  if (_hucCount > 1) {
+    if (window._hucState[_hucCid] && window._hucState[_hucCid].timer)
+      clearInterval(window._hucState[_hucCid].timer);
+    window._hucState[_hucCid] = { idx: 0, total: _hucCount };
+    window._hucState[_hucCid].timer = setInterval(function(){ window._hucNext(_hucCid); }, 4000);
+  }
 }
 
 // ── Hub subpage dispatcher ────────────────────────────────────────────
