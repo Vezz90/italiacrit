@@ -2514,10 +2514,18 @@ async function _renderHubHomeLegacy(hubCode) {
     return true;
   }
 
-  // Upcoming hub races (all, no slice — will group for esordienti)
+  // Upcoming hub races (filtrate per hub — usate solo per il ticker)
   const upcomingAll = calendar.filter(function(g) {
     return calMatchesHub(g) && (g.data||'') >= todayStr;
   }).sort(function(a,b){ return a.data.localeCompare(b.data); });
+
+  // Tutte le gare del prossimo fine settimana (NESSUN filtro hub) — per il carousel
+  const _allUpcoming = calendar.filter(function(g){ return (g.data||'') >= todayStr; })
+    .sort(function(a,b){ return a.data.localeCompare(b.data); });
+  const _carouselWk  = _allUpcoming.length ? weekendKey(_allUpcoming[0].data) : null;
+  const upcomingCarousel = _carouselWk
+    ? _allUpcoming.filter(function(g){ return weekendKey(g.data) === _carouselWk; })
+    : [];
 
   // ── Helper: spotlight card ─────────────────────────────────────
   function buildSpotlightHtml(ath, streak, catCode) {
@@ -2851,11 +2859,10 @@ async function _renderHubHomeLegacy(hubCode) {
   let upHtml = '';
   let _hucCount = 0;
   const _hucCid = 'huc-' + hubCode;
-  if (upcomingAll.length) {
-    const nextWk = weekendKey(upcomingAll[0].data);
-    const nextWkRaces = upcomingAll.filter(function(g){ return weekendKey(g.data) === nextWk; });
+  if (upcomingCarousel.length) {
+    const nextWkRaces = upcomingCarousel; // già filtrate al weekend più vicino
     _hucCount = nextWkRaces.length;
-    const satD = new Date(nextWk + 'T00:00:00');
+    const satD = new Date(_carouselWk + 'T00:00:00');
     const sunD = new Date(satD); sunD.setDate(satD.getDate() + 1);
     const wkLabel = satD.getDate() + '–' + sunD.getDate() + ' ' + MONTHS_SHORT[satD.getMonth()] + ' ' + satD.getFullYear();
     const DAY_NAMES = ['DOM','LUN','MAR','MER','GIO','VEN','SAB'];
@@ -12939,6 +12946,48 @@ async function renderGara(gara_id) {
   const results = [...results1, ...results2];
 
   if (!results.length && !calEntry) return renderNotFound();
+
+  // Gara futura: mostra scheda pre-gara dal calendario
+  if (!results.length && calEntry) {
+    const d = new Date((calEntry.data || '') + 'T00:00:00');
+    const todayS = new Date().toISOString().split('T')[0];
+    const daysLeft = Math.round((d - new Date(todayS + 'T00:00:00')) / 86400000);
+    const dLabel = daysLeft === 0 ? 'OGGI' : daysLeft === 1 ? 'DOMANI' : `tra ${daysLeft} giorni`;
+    const fmtDate = d.getDate() + ' ' + ['gen','feb','mar','apr','mag','giu','lug','ago','set','ott','nov','dic'][d.getMonth()] + ' ' + d.getFullYear();
+    const cats = [calEntry.categoria, calEntry.categoria2, calEntry.categoria3].filter(Boolean);
+    setPage(`
+      <div style="max-width:640px;margin:40px auto;padding:0 16px">
+        <button onclick="history.back()" style="background:none;border:none;color:var(--text-muted);cursor:pointer;font-size:.85rem;margin-bottom:18px;padding:0">← Torna indietro</button>
+        <div style="background:var(--bg-card);border:1px solid var(--border-subtle);border-radius:var(--r-lg);overflow:hidden">
+          <div style="background:var(--red-hot);padding:18px 20px">
+            <div style="font-size:.7rem;font-weight:700;letter-spacing:.1em;color:rgba(255,255,255,.7);margin-bottom:6px">GARA IN PROGRAMMA · ${esc(dLabel.toUpperCase())}</div>
+            <div style="font-size:1.3rem;font-weight:900;color:#fff;line-height:1.2">${esc(calEntry.nome || gara_id)}</div>
+          </div>
+          <div style="padding:18px 20px;display:flex;flex-direction:column;gap:10px">
+            <div style="display:flex;gap:10px;flex-wrap:wrap">
+              <div style="background:var(--bg-elevated);border-radius:var(--r-sm);padding:8px 14px;flex:1;min-width:120px">
+                <div style="font-size:.65rem;color:var(--text-muted);font-weight:700;letter-spacing:.06em;margin-bottom:3px">DATA</div>
+                <div style="font-weight:700">${fmtDate}</div>
+              </div>
+              ${calEntry.luogo ? `<div style="background:var(--bg-elevated);border-radius:var(--r-sm);padding:8px 14px;flex:1;min-width:120px">
+                <div style="font-size:.65rem;color:var(--text-muted);font-weight:700;letter-spacing:.06em;margin-bottom:3px">LUOGO</div>
+                <div style="font-weight:700">${esc(calEntry.luogo)}</div>
+              </div>` : ''}
+              ${calEntry.regione ? `<div style="background:var(--bg-elevated);border-radius:var(--r-sm);padding:8px 14px;flex:1;min-width:120px">
+                <div style="font-size:.65rem;color:var(--text-muted);font-weight:700;letter-spacing:.06em;margin-bottom:3px">REGIONE</div>
+                <div style="font-weight:700">${esc(calEntry.regione)}</div>
+              </div>` : ''}
+            </div>
+            ${cats.length ? `<div style="background:var(--bg-elevated);border-radius:var(--r-sm);padding:8px 14px">
+              <div style="font-size:.65rem;color:var(--text-muted);font-weight:700;letter-spacing:.06em;margin-bottom:6px">CATEGORIE</div>
+              <div style="display:flex;gap:6px;flex-wrap:wrap">${cats.map(c => `<span style="background:var(--red-hot);color:#fff;font-size:.72rem;font-weight:700;padding:3px 8px;border-radius:10px">${esc(catLabel(c)||c)}</span>`).join('')}</div>
+            </div>` : ''}
+            <div style="color:var(--text-muted);font-size:.82rem;padding:4px 0">I risultati saranno disponibili dopo lo svolgimento della gara.</div>
+          </div>
+        </div>
+      </div>`);
+    return;
+  }
 
   const name = results[0]?.nome_gara || calEntry?.nome || gara_id;
   const data = results[0]?.data || calEntry?.data || '';
