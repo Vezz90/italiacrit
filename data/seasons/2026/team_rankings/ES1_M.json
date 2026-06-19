@@ -12,18 +12,6 @@
     "pos": 1
   },
   {
-    "team_id": "PEDALE_RIMINESE_FRECCE_ROSSE",
-    "team_nome": "PEDALE RIMINESE FRECCE ROSSE",
-    "punti": 427,
-    "vittorie": 6,
-    "p1": 6,
-    "p2": 7,
-    "p3": 6,
-    "pout": 19,
-    "n_atleti": 5,
-    "pos": 2
-  },
-  {
     "team_id": "CICLISTICA_TREVIGLIESE",
     "team_nome": "CICLISTICA TREVIGLIESE",
     "punti": 396,
@@ -33,6 +21,18 @@
     "p3": 9,
     "pout": 35,
     "n_atleti": 6,
+    "pos": 2
+  },
+  {
+    "team_id": "PEDALE_RIMINESE_FRECCE_ROSSE",
+    "team_nome": "PEDALE RIMINESE FRECCE ROSSE",
+    "punti": 353,
+    "vittorie": 6,
+    "p1": 6,
+    "p2": 7,
+    "p3": 6,
+    "pout": 19,
+    "n_atleti": 5,
     "pos": 3
   },
   {
@@ -144,18 +144,6 @@
     "pos": 12
   },
   {
-    "team_id": "SC_POTENTIA_RINASCITA_ASD",
-    "team_nome": "SC POTENTIA-RINASCITA ASD",
-    "punti": 159,
-    "vittorie": 4,
-    "p1": 4,
-    "p2": 3,
-    "p3": 2,
-    "pout": 4,
-    "n_atleti": 1,
-    "pos": 13
-  },
-  {
     "team_id": "FERALPI_MONTECLARENSE_ASD",
     "team_nome": "FERALPI MONTECLARENSE ASD",
     "punti": 156,
@@ -165,7 +153,7 @@
     "p3": 2,
     "pout": 13,
     "n_atleti": 2,
-    "pos": 14
+    "pos": 13
   },
   {
     "team_id": "FDB_SPORT_CLUB",
@@ -177,7 +165,7 @@
     "p3": 1,
     "pout": 5,
     "n_atleti": 1,
-    "pos": 15
+    "pos": 14
   },
   {
     "team_id": "MAZZANO_A_S_D",
@@ -189,6 +177,18 @@
     "p3": 0,
     "pout": 6,
     "n_atleti": 4,
+    "pos": 15
+  },
+  {
+    "team_id": "SC_POTENTIA_RINASCITA_ASD",
+    "team_nome": "SC POTENTIA-RINASCITA ASD",
+    "punti": 147,
+    "vittorie": 4,
+    "p1": 4,
+    "p2": 3,
+    "p3": 2,
+    "pout": 4,
+    "n_atleti": 1,
     "pos": 16
   },
   {
@@ -312,18 +312,6 @@
     "pos": 26
   },
   {
-    "team_id": "GS_PIANELLO",
-    "team_nome": "GS PIANELLO",
-    "punti": 116,
-    "vittorie": 0,
-    "p1": 0,
-    "p2": 0,
-    "p3": 2,
-    "pout": 14,
-    "n_atleti": 4,
-    "pos": 27
-  },
-  {
     "team_id": "SEI_SPORT",
     "team_nome": "SEI SPORT",
     "punti": 115,
@@ -333,7 +321,7 @@
     "p3": 2,
     "pout": 5,
     "n_atleti": 2,
-    "pos": 28
+    "pos": 27
   },
   {
     "team_id": "V_CYCLING_ARICI_CLAUDIA_PITON",
@@ -345,7 +333,7 @@
     "p3": 0,
     "pout": 8,
     "n_atleti": 1,
-    "pos": 29
+    "pos": 28
   },
   {
     "team_id": "ASD_TEAM_PETRUCCI",
@@ -357,7 +345,7 @@
     "p3": 1,
     "pout": 22,
     "n_atleti": 5,
-    "pos": 30
+    "pos": 29
   },
   {
     "team_id": "UC_GODIGESE_ABRA_IRIDE",
@@ -369,19 +357,7 @@
     "p3": 4,
     "pout": 10,
     "n_atleti": 3,
-    "pos": 31
-  },
-  {
-    "team_id": "ASD_GUBBIO_CICLISMO_MOCAIANA",
-    "team_nome": "ASD GUBBIO CICLISMO MOCAIANA",
-    "punti": 104,
-    "vittorie": 1,
-    "p1": 1,
-    "p2": 2,
-    "p3": 1,
-    "pout": 6,
-    "n_atleti": 2,
-    "pos": 32
+    "pos": 30
   },
   {
     "team_id": "A_S_D_POSTUMIA_73_D_L_CICLISMO",
@@ -393,7 +369,7 @@
     "p3": 0,
     "pout": 16,
     "n_atleti": 4,
-    "pos": 33
+    "pos": 31
   },
   {
     "team_id": "S_C_TERRANOVA_FANCELLO_CICLI",
@@ -405,7 +381,7 @@
     "p3": 3,
     "pout": 4,
     "n_atleti": 1,
-    "pos": 34
+    "pos": 32
   },
   {
     "team_id": "A_S_D_PEDALE_CASTELLANO",
@@ -417,7 +393,7 @@
     "p3": 3,
     "pout": 11,
     "n_atleti": 2,
-    "pos": 35
+    "pos": 33
   },
   {
     "team_id": "CAMB_KE",
@@ -429,7 +405,7 @@
     "p3": 0,
     "pout": 12,
     "n_atleti": 2,
-    "pos": 36
+    "pos": 34
   },
   {
     "team_id": "A_S_D_SACILESE",
@@ -441,7 +417,7 @@
     "p3": 2,
     "pout": 7,
     "n_atleti": 3,
-    "pos": 37
+    "pos": 35
   },
   {
     "team_id": "BUSTO_GAROLFO",
@@ -453,7 +429,7 @@
     "p3": 0,
     "pout": 17,
     "n_atleti": 5,
-    "pos": 38
+    "pos": 36
   },
   {
     "team_id": "A_S_D_GDS_TEAM_COMPETITION",
@@ -465,7 +441,7 @@
     "p3": 2,
     "pout": 1,
     "n_atleti": 1,
-    "pos": 39
+    "pos": 37
   },
   {
     "team_id": "G_S_ALZATE_BRIANZA_SYSTEM_CAR",
@@ -477,7 +453,7 @@
     "p3": 2,
     "pout": 9,
     "n_atleti": 1,
-    "pos": 40
+    "pos": 38
   },
   {
     "team_id": "G_S_RONCO_MAURIGI_DELIO_GALLINA",
@@ -489,7 +465,7 @@
     "p3": 1,
     "pout": 19,
     "n_atleti": 3,
-    "pos": 41
+    "pos": 39
   },
   {
     "team_id": "S_C_PATTADA",
@@ -501,6 +477,30 @@
     "p3": 2,
     "pout": 8,
     "n_atleti": 3,
+    "pos": 40
+  },
+  {
+    "team_id": "ASD_GUBBIO_CICLISMO_MOCAIANA",
+    "team_nome": "ASD GUBBIO CICLISMO MOCAIANA",
+    "punti": 88,
+    "vittorie": 1,
+    "p1": 1,
+    "p2": 2,
+    "p3": 1,
+    "pout": 6,
+    "n_atleti": 2,
+    "pos": 41
+  },
+  {
+    "team_id": "GS_PIANELLO",
+    "team_nome": "GS PIANELLO",
+    "punti": 86,
+    "vittorie": 0,
+    "p1": 0,
+    "p2": 0,
+    "p3": 2,
+    "pout": 14,
+    "n_atleti": 4,
     "pos": 42
   },
   {
