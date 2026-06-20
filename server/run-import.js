@@ -207,24 +207,27 @@ async function searchPcsRider(page, ath) {
 // ─── First Cycling ─────────────────────────────────────────────────────────
 
 // Aspetta che Cloudflare finisca la verifica automatica e carichi la pagina vera.
-// La challenge di CF si auto-risolve in 3-8 secondi se il browser passa il JS test.
-async function waitPassCF(page, timeout = 15000) {
-  const isCF = await page.evaluate(() =>
-    /just a moment|ci siamo quasi|checking your browser|verifica di sicurezza/i.test(document.title) ||
-    !!document.querySelector('#challenge-running, .cf-browser-verification, #cf-spinner')
+// CF risolve la challenge in-place con JS (senza navigazione), quindi usiamo polling.
+async function waitPassCF(page, timeout = 20000) {
+  const isCF = () => page.evaluate(() =>
+    /just a moment|ci siamo quasi|checking your browser|verifica di sicurezza|un momento/i.test(document.title) ||
+    !!document.querySelector('#challenge-running, .cf-browser-verification, #cf-spinner, [id^="cf-"]')
   ).catch(() => false);
 
-  if (!isCF) return; // nessuna challenge, già sulla pagina giusta
+  if (!(await isCF())) return; // nessuna challenge
 
-  console.log('       [CF challenge rilevata, attendo risoluzione automatica…]');
-  try {
-    // Aspetta la navigazione successiva (CF redirige alla pagina reale dopo la verifica)
-    await page.waitForNavigation({ waitUntil: 'domcontentloaded', timeout });
-    await sleep(800); // piccola pausa post-redirect
-  } catch {
-    // Se scade il timeout, proviamo comunque a leggere quello che c'è
-    console.log('       [CF timeout — procedo comunque]');
+  process.stdout.write('\n       [CF challenge — attendo');
+  const start = Date.now();
+  while (Date.now() - start < timeout) {
+    await sleep(600);
+    process.stdout.write('.');
+    if (!(await isCF())) {
+      process.stdout.write(' OK]\n       ');
+      await sleep(1000); // pausa dopo risoluzione
+      return;
+    }
   }
+  process.stdout.write(' TIMEOUT — procedo comunque]\n       ');
 }
 
 async function searchFirstCycling(page, name, type = 'riders') {
