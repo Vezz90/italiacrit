@@ -762,6 +762,19 @@ app.post('/api/admin/override/entity', requireAdmin, async (req, res) => {
     const { entity_type, entity_id, field, new_value } = req.body;
     if (!entity_type || !entity_id || !field) return res.status(400).json({ error: 'Campi mancanti' });
     await queries.setEntityOverride({ entity_type, entity_id, field, new_value, edited_by: req.user.id });
+
+    // Sincronizza extra_roster.json per nomi team e team_id atleti
+    const rosterPath = path.join(__dirname, '..', 'data', 'extra_roster.json');
+    try {
+      const roster = JSON.parse(fs.readFileSync(rosterPath, 'utf8'));
+      if (entity_type === 'team' && field === 'nome' && roster[entity_id]) {
+        roster[entity_id].nome = new_value;
+        fs.writeFileSync(rosterPath, JSON.stringify(roster, null, 2), 'utf8');
+      }
+    } catch (fsErr) {
+      console.warn('[admin] sync extra_roster.json fallito:', fsErr.message);
+    }
+
     res.json({ ok: true });
   } catch (e) { res.status(500).json({ error: e.message }); }
 });
@@ -1759,7 +1772,7 @@ app.get('/api/pcs-results/gare-atleta/:atletaId', async (req, res) => {
       .from('pcs_gara_results')
       .select('gara_id, posizione, distacco, pcs_race_slug, rider_name, team_name')
       .eq('atleta_id', req.params.atletaId)
-      .like('gara_id', `%-${season}-%`)
+      .like('gara_id', `%${season}-%`)
       .order('gara_id', { ascending: false })
       .limit(200);
     if (error) throw error;
@@ -1778,7 +1791,7 @@ app.get('/api/pcs-results/gare-team/:teamId', async (req, res) => {
       .from('pcs_gara_results')
       .select('gara_id, atleta_id, posizione, distacco, pcs_race_slug, rider_name, team_name')
       .in('atleta_id', atletiIds)
-      .like('gara_id', `%-${season}-%`)
+      .like('gara_id', `%${season}-%`)
       .order('gara_id', { ascending: false })
       .limit(500);
     if (error) throw error;
