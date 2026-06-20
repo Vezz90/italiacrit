@@ -67,18 +67,29 @@ async function extractSocialsFromPage(page) {
       if (!result.facebook  && /facebook\.com\/(?!sharer)[^/?"#]+/.test(h)) result.facebook = h;
       if (!result.youtube   && /youtube\.com\/(c\/|channel\/|@)[^?"#]+/.test(h)) result.youtube = h;
     }
-    // Sito personale: link esterno non social e non del sito corrente
+    // Sito personale: link esterno che sembra un vero sito web dell'atleta/team.
+    // Criteri: non è un social/stats noto, non è Cloudflare/CDN/analytics/sponsor generico,
+    // il testo del link o l'href contiene "www" oppure l'anchor text è significativo.
     const curHost = location.hostname;
-    const ext = [...document.querySelectorAll('a[href^="http"]')]
-      .map(a => a.href)
-      .find(h => {
-        try {
-          const u = new URL(h);
-          return u.hostname !== curHost &&
-            !/(procyclingstats|firstcycling|instagram|twitter|x\.com|strava|facebook|youtube|google)/.test(u.hostname);
-        } catch { return false; }
-      });
-    if (ext) result.website = ext;
+    const BLOCKLIST = /(procyclingstats|firstcycling|instagram|twitter|x\.com|strava|facebook|youtube|google|cloudflare|cdn-cgi|challenges\.|doubleclick|analytics|googletag|adservice|scorecard|omtrdc|bing\.com|amazon|aliexpress|paypal|awin|affiliat|tracking|redirect|banner|sponsor|kit\.fontawesome|jquery|bootstrapcdn|unpkg\.com|cdnjs)/i;
+    const candidates = [...document.querySelectorAll('a[href^="http"]')];
+    const ext = candidates.find(a => {
+      try {
+        const u = new URL(a.href);
+        if (u.hostname === curHost) return false;
+        if (BLOCKLIST.test(u.hostname) || BLOCKLIST.test(a.href)) return false;
+        // Deve avere almeno un dominio di secondo livello reale (es. esempio.it, non solo IP)
+        if (!/\.[a-z]{2,}$/i.test(u.hostname)) return false;
+        // Il testo visibile del link o l'href deve suggerire che è un sito personale/team
+        const txt = (a.textContent || '').trim().toLowerCase();
+        const href = a.href.toLowerCase();
+        // Accetta se: testo ha "www", o href ha "www.", o testo sembra un dominio
+        const looksLikeSite = txt.includes('www') || href.includes('www.') ||
+          /\.(it|com|eu|net|org|sport|cc|cycling|bike|ciclismo)/.test(href);
+        return looksLikeSite;
+      } catch { return false; }
+    });
+    if (ext) result.website = ext.href;
     return result;
   }).catch(() => ({}));
 }
