@@ -12997,21 +12997,29 @@ async function renderGara(gara_id) {
 
   if (!results.length && !calEntry) return renderNotFound();
 
-  // Gara futura: mostra scheda pre-gara dal calendario
+  // Gara futura: mostra scheda pre-gara dal calendario (solo per gare non ancora svolte)
   if (!results.length && calEntry) {
-    const d = new Date((calEntry.data || '') + 'T00:00:00');
     const todayS = new Date().toISOString().split('T')[0];
+    if ((calEntry.data || '') < todayS) {
+      // Gara passata senza risultati importati → continua col render normale
+    } else {
+    const d = new Date((calEntry.data || '') + 'T00:00:00');
     const daysLeft = Math.round((d - new Date(todayS + 'T00:00:00')) / 86400000);
     const dLabel = daysLeft === 0 ? 'OGGI' : daysLeft === 1 ? 'DOMANI' : `tra ${daysLeft} giorni`;
     const fmtDate = d.getDate() + ' ' + ['gen','feb','mar','apr','mag','giu','lug','ago','set','ott','nov','dic'][d.getMonth()] + ' ' + d.getFullYear();
     const cats = [calEntry.categoria, calEntry.categoria2, calEntry.categoria3].filter(Boolean);
+    // Se il nome è solo la categoria (es. "juniores"), usa localita+data come titolo alternativo
+    const _nomeIsCat = (calEntry.nome || '').toLowerCase().trim() === (calEntry.categoria || '').toLowerCase().trim().split(' ')[0];
+    const _displayName = _nomeIsCat
+      ? (calEntry.luogo ? `Gara a ${calEntry.luogo}` : (calEntry.categoria || calEntry.nome || gara_id))
+      : (calEntry.nome || gara_id);
     setPage(`
       <div style="max-width:640px;margin:40px auto;padding:0 16px">
         <button onclick="history.back()" style="background:none;border:none;color:var(--text-muted);cursor:pointer;font-size:.85rem;margin-bottom:18px;padding:0">← Torna indietro</button>
         <div style="background:var(--bg-card);border:1px solid var(--border-subtle);border-radius:var(--r-lg);overflow:hidden">
           <div style="background:var(--red-hot);padding:18px 20px">
             <div style="font-size:.7rem;font-weight:700;letter-spacing:.1em;color:rgba(255,255,255,.7);margin-bottom:6px">GARA IN PROGRAMMA · ${esc(dLabel.toUpperCase())}</div>
-            <div style="font-size:1.3rem;font-weight:900;color:#fff;line-height:1.2">${esc(calEntry.nome || gara_id)}</div>
+            <div style="font-size:1.3rem;font-weight:900;color:#fff;line-height:1.2">${esc(_displayName)}</div>
           </div>
           <div style="padding:18px 20px;display:flex;flex-direction:column;gap:10px">
             <div style="display:flex;gap:10px;flex-wrap:wrap">
@@ -13037,7 +13045,8 @@ async function renderGara(gara_id) {
         </div>
       </div>`);
     return;
-  }
+    } // fine else (gara futura)
+  } // fine if (!results.length && calEntry)
 
   const name = results[0]?.nome_gara || calEntry?.nome || gara_id;
   const data = results[0]?.data || calEntry?.data || '';
@@ -14366,7 +14375,13 @@ async function renderCalendario(highlightId) {
             <div class="cal-month">${mon}</div>
           </div>
           <div style="flex:1;min-width:0">
-            <div class="cal-name"><a href="#/gara/${esc(garaLink)}">${esc(g.nome)}</a></div>
+            ${(() => {
+              const _nCat = (g.nome||'').toLowerCase().trim() === (g.categoria||'').toLowerCase().trim().split(' ')[0];
+              const _displayNome = _nCat
+                ? (g.luogo ? `Gara a ${g.luogo}` : (g.categoria || g.nome || g.id))
+                : (g.nome || g.id);
+              return `<div class="cal-name"><a href="#/gara/${esc(garaLink)}">${esc(_displayNome)}</a></div>`;
+            })()}
             <div class="cal-cat">
               ${esc(catLabel(g.categoria)||'')} — <span style="text-transform:capitalize;color:var(--text-muted)">${esc(g.tipo)}</span>
               ${(g.luogo || g.regione) ? (() => {
