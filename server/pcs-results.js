@@ -207,7 +207,7 @@ async function scrapeAthleteResults(page, slug, season) {
 
 // ─── Supabase ─────────────────────────────────────────────────────────────
 
-async function getAthleteSlugs(sb) {
+async function getSavedSlugs(sb) {
   const { data } = await sb.from('entity_overrides')
     .select('entity_id, new_value')
     .eq('entity_type', 'atleta')
@@ -215,6 +215,12 @@ async function getAthleteSlugs(sb) {
     .not('new_value', 'is', null)
     .limit(5000);
   return new Map((data || []).map(r => [r.entity_id, r.new_value]));
+}
+
+async function saveSlug(sb, atletaId, slug) {
+  await sb.from('entity_overrides')
+    .upsert({ entity_type: 'atleta', entity_id: atletaId, field: 'pcs_slug', new_value: slug, edited_by: null },
+      { onConflict: 'entity_type,entity_id,field' });
 }
 
 async function getAlreadyScraped(sb, atletaId, season) {
@@ -232,6 +238,36 @@ async function upsertResults(sb, rows) {
   if (error) throw error;
 }
 
+// Cerca su PCS per nome — restituisce lo slug trovato o null
+async function searchPcsRider(page, ath) {
+  try {
+    await page.goto(
+      `https://www.procyclingstats.com/search.php?search=${encodeURIComponent(`${ath.nome} ${ath.cognome}`)}`,
+      { waitUntil: 'domcontentloaded', timeout: 15000 }
+    );
+  } catch { return null; }
+
+  const hrefs = await page.evaluate(() =>
+    [...document.querySelectorAll('a[href]')]
+      .map(a => a.getAttribute('href'))
+      .filter(h => h && /\/rider\/[a-z0-9-]+$/.test(h))
+  ).catch(() => []);
+
+  if (!hrefs.length) return null;
+  const gn = normalizeStr(ath.nome);
+  const sn = normalizeStr(ath.cognome);
+  const scored = hrefs.map(h => {
+    const m = h.match(/\/rider\/([a-z0-9-]+)$/);
+    if (!m) return null;
+    const s = m[1];
+    let score = 0;
+    for (const p of gn.split('-')) if (s.includes(p)) score++;
+    for (const p of sn.split('-')) if (s.includes(p)) score++;
+    return { slug: s, score };
+  }).filter(Boolean).sort((a, b) => b.score - a.score);
+  return scored[0]?.score > 0 ? scored[0].slug : null;
+}
+
 // ─── Main ──────────────────────────────────────────────────────────────────
 
 (async () => {
@@ -243,28 +279,33 @@ async function upsertResults(sb, rows) {
 
   console.log(`=== PCS Risultati [stagione ${SEASON}] ===\n`);
 
-  // Carica slug PCS per tutti gli atleti
-  const slugMap = await getAthleteSlugs(sb);
+  // Slug già salvati in Supabase (hanno la precedenza)
+  const savedSlugs = await getSavedSlugs(sb);
+  console.log(`Slug salvati in DB: ${savedSlugs.size}\n`);
 
-  // Filtra atleti da processare
-  let atletiIds;
+  // Carica tutti gli atleti dalle ranking files (nome + cognome per derivare lo slug)
+  const athMap = new Map(); // id → { atleta_id, nome, cognome }
   if (SINGLE_ID) {
-    atletiIds = [SINGLE_ID];
+    // Cerca nei file per trovare nome/cognome
+    for (const cat of ATH_CATS) {
+      const f = path.join(RANK_DIR, `${cat}.json`);
+      if (!fs.existsSync(f)) continue;
+      for (const a of JSON.parse(fs.readFileSync(f, 'utf8'))) {
+        if (a.atleta_id === SINGLE_ID) { athMap.set(a.atleta_id, a); break; }
+      }
+    }
+    if (!athMap.size) athMap.set(SINGLE_ID, { atleta_id: SINGLE_ID, nome: '', cognome: '' });
   } else {
-    // Prendi tutti gli atleti dalle ranking files
-    const ids = new Set();
     for (const cat of ATH_CATS) {
       const f = path.join(RANK_DIR, `${cat}.json`);
       if (!fs.existsSync(f)) continue;
       for (const a of JSON.parse(fs.readFileSync(f, 'utf8')))
-        if (a.atleta_id) ids.add(a.atleta_id);
+        if (a.atleta_id && !athMap.has(a.atleta_id)) athMap.set(a.atleta_id, a);
     }
-    atletiIds = [...ids];
   }
 
-  // Mantieni solo chi ha uno slug PCS
-  const toProcess = atletiIds.filter(id => slugMap.has(id));
-  console.log(`${atletiIds.length} atleti nel sistema — ${toProcess.length} con slug PCS\n`);
+  const toProcess = [...athMap.values()];
+  console.log(`${toProcess.length} atleti da processare\n`);
 
   // Mappa calendario: data → gare
   const calMap = buildCalendarMap();
@@ -305,40 +346,63 @@ async function upsertResults(sb, rows) {
   let done = 0, noData = 0, errors = 0, totalRows = 0;
 
   for (let i = 0; i < toProcess.length; i++) {
-    const atletaId = toProcess[i];
-    const slug = slugMap.get(atletaId);
-    process.stdout.write(`(${i+1}/${toProcess.length}) [${atletaId}] slug=${slug} … `);
+    const ath = toProcess[i];
+    const atletaId = ath.atleta_id;
 
     // Controlla se già scraped (a meno di --force)
     if (!FORCE) {
       const scraped = await getAlreadyScraped(sb, atletaId, SEASON);
       if (scraped.size > 0) {
-        process.stdout.write(`già fatto (${scraped.size} risultati)\n`);
+        process.stdout.write(`(${i+1}/${toProcess.length}) ${ath.cognome} ${ath.nome} — già fatto (${scraped.size} risultati)\n`);
         done++;
         continue;
       }
     }
 
-    const { results, error, notFound } = await scrapeAthleteResults(page, slug, SEASON);
+    // Slug: usa quello salvato in DB, altrimenti deriva dal nome
+    let slug = savedSlugs.get(atletaId)
+      || `${normalizeStr(ath.nome)}-${normalizeStr(ath.cognome)}`;
 
-    if (notFound) {
-      process.stdout.write('profilo non trovato\n');
+    process.stdout.write(`(${i+1}/${toProcess.length}) ${ath.cognome} ${ath.nome} [${slug}] … `);
+
+    let res = await scrapeAthleteResults(page, slug, SEASON);
+
+    // Se non trovato, prova ricerca PCS e aggiorna lo slug
+    if (res.notFound && ath.nome && ath.cognome) {
+      process.stdout.write('non trovato, cerco… ');
+      const found = await searchPcsRider(page, ath);
+      if (found && found !== slug) {
+        slug = found;
+        process.stdout.write(`trovato come "${slug}" … `);
+        res = await scrapeAthleteResults(page, slug, SEASON);
+      }
+    }
+
+    if (res.notFound) {
+      process.stdout.write('non trovato su PCS\n');
       noData++;
       continue;
     }
-    if (error) {
-      process.stdout.write(`ERRORE: ${error}\n`);
+    if (res.error) {
+      process.stdout.write(`ERRORE: ${res.error}\n`);
       errors++;
       continue;
     }
-    if (!results.length) {
-      process.stdout.write('nessun risultato\n');
+
+    // Salva lo slug se non era già in DB
+    if (!savedSlugs.has(atletaId)) {
+      await saveSlug(sb, atletaId, slug).catch(() => {});
+      savedSlugs.set(atletaId, slug);
+    }
+
+    if (!res.results.length) {
+      process.stdout.write('nessun risultato stagionale\n');
       noData++;
       continue;
     }
 
     // Associa gara_id del circuito a ogni risultato
-    const rows = results.map(r => ({
+    const rows = res.results.map(r => ({
       atleta_id:     atletaId,
       pcs_slug:      slug,
       season:        SEASON,

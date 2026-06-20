@@ -1646,6 +1646,7 @@ const ADMIN_EDIT_FIELDS = {
   ],
   team: [
     { key: 'nome',      label: 'Nome team', type: 'text' },
+    { key: 'pcs_slug',  label: 'Slug PCS (es. team-jayco-alula-2026)', type: 'text' },
     { key: 'instagram', label: 'Instagram (@handle o URL)', type: 'text' },
     { key: 'facebook',  label: 'Facebook (URL o pagina)',   type: 'text' },
     { key: 'strava',    label: 'Strava (club ID o URL)',    type: 'text' },
@@ -9100,7 +9101,7 @@ window.adminNav = async function(section) {
           <p style="font-size:.8rem;color:var(--text-muted);margin-bottom:10px">
             Scarica i risultati della stagione corrente da ProCyclingStats per ogni atleta.
             Popola la sezione <em>Risultati oltre il 10°</em> nelle gare e <em>Altri risultati (PCS)</em> negli atleti.
-            Richiede che gli atleti abbiano già un <code>pcs_slug</code> salvato (eseguire prima l'import foto).
+            Deriva lo slug PCS dal nome dell'atleta automaticamente; lo salva per i prossimi giri.
           </p>
           <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:12px;margin-bottom:18px">
             <div style="background:var(--bg-elevated);border-radius:var(--r-md);padding:16px;border:2px solid var(--accent)">
