@@ -11655,7 +11655,7 @@ async function renderAtleta(atleta_id, opts = {}) {
     // Recupero rank atleta dopo la gara (già calcolato dallo scraper con tie-break)
     const rankVal = r.rank_dopo_gara;
     
-    return `<tr>
+    return `<tr data-date="${esc(r.data||'')}">
       <td class="td-date">${fmtDateShort(r.data)}</td>
       <td class="td-race"><a href="#/gara/${esc(r.gara_id)}">${esc(r.nome_gara)}</a></td>
       <td>${badgeCat(a.categoria)}</td>
@@ -11800,7 +11800,7 @@ async function renderAtleta(atleta_id, opts = {}) {
         <thead><tr>
           <th>DATA</th><th>GARA</th><th>CAT</th><th>POS</th><th>MOLT</th><th style="text-align:right">KM</th><th style="text-align:right">MEDIA</th><th>PTS</th>
         </tr></thead>
-        <tbody>${tableRows || '<tr><td colspan="8" class="empty-state">Nessun risultato</td></tr>'}</tbody>
+        <tbody id="atleta-results-tbody">${tableRows || '<tr><td colspan="8" class="empty-state">Nessun risultato</td></tr>'}</tbody>
       </table>
     </div>
     <div id="atleta-pcs-extra"></div>
@@ -11809,7 +11809,7 @@ async function renderAtleta(atleta_id, opts = {}) {
   // Inject bottone messaggio in modo async (lookup non blocca il render)
   _injectMsgBtn('atleta-msg-btn', atleta_id, null, null);
   _injectFollowBtn('atleta-follow-btn', 'atleta', atleta_id);
-  _loadAtletaPcsExtra(atleta_id, selYear);
+  _loadAtletaPcsExtra(atleta_id, selYear, risultati, a);
 
   // Confronto stagione precedente — iniettato quando la promise è pronta
   _prevAthPromise.then(prevA => {
@@ -12112,57 +12112,75 @@ async function _loadTeamPcsExtra(teamId, season) {
 }
 
 // ── PCS risultati extra atleta (circuito esteso + gare non in circuito) ───────
-async function _loadAtletaPcsExtra(atletaId, season) {
-  const el = document.getElementById('atleta-pcs-extra');
-  if (!el) return;
+async function _loadAtletaPcsExtra(atletaId, season, icsRisultati, athlete) {
+  const tbody = document.getElementById('atleta-results-tbody');
+  if (!tbody) return;
 
-  // Carica in parallelo: risultati stagione PCS (per-atleta) + risultati gare circuito (pos 11+)
-  const [pcsSeasonRaw, pcsGareRaw] = await Promise.all([
-    apiCall(`/pcs-results/atleta/${encodeURIComponent(atletaId)}?season=${season}`).catch(() => []),
-    apiCall(`/pcs-results/gare-atleta/${encodeURIComponent(atletaId)}?season=${season}`).catch(() => []),
-  ]);
+  // Solo risultati gare circuito (pos 11+) dal DB pcs_gara_results
+  let pcsGareRaw;
+  try {
+    pcsGareRaw = await apiCall(`/pcs-results/gare-atleta/${encodeURIComponent(atletaId)}?season=${season}`);
+  } catch { pcsGareRaw = []; }
 
-  // gara_ids già in classifica ICS (top-10) — non duplicare
-  const icsGaraIds = new Set((globalData?.athletes?.[atletaId]?.risultati || []).map(r => r.gara_id));
+  // gara_ids già nella tabella ICS — non duplicare
+  const icsGaraIds = new Set((icsRisultati || []).map(r => r.gara_id));
 
-  // PCS stagione: solo gare NON nel circuito ICS
-  const seasonExtra = Array.isArray(pcsSeasonRaw)
-    ? pcsSeasonRaw.filter(r => !r.gara_id || !icsGaraIds.has(r.gara_id))
-        .sort((a, b) => (b.data || '').localeCompare(a.data || ''))
-    : [];
-
-  // PCS gare circuito: pos 11+ (non duplicare top-10 ICS)
   const garaExtra = Array.isArray(pcsGareRaw)
     ? pcsGareRaw
         .filter(r => r.gara_id && !icsGaraIds.has(r.gara_id))
         .map(r => {
           const cal = globalData?.calendar?.find(g => g.id === r.gara_id);
           return {
-            data:          cal?.data || r.gara_id.match(/(\d{4}-\d{2}-\d{2})/)?.[1] || '',
-            gara_name:     cal?.nome || r.gara_id,
-            gara_id:       r.gara_id,
-            posizione:     r.posizione,
-            distacco:      r.distacco,
-            pcs_race_slug: r.pcs_race_slug,
+            data:      cal?.data || r.gara_id.match(/(\d{4}-\d{2}-\d{2})/)?.[1] || '',
+            gara_id:   r.gara_id,
+            nome_gara: cal?.nome || r.gara_id,
+            km:        cal?.km || '',
+            posizione: r.posizione,
           };
         })
         .sort((a, b) => (b.data || '').localeCompare(a.data || ''))
     : [];
 
-  // Unisci: prima gare circuito (con link interno), poi risultati stagione PCS
-  const all = [...garaExtra, ...seasonExtra];
-  if (!all.length) return;
+  if (!garaExtra.length) return;
 
-  const rowHtml = (r) => {
+  // Rimuovi riga "Nessun risultato" se presente
+  const emptyRow = tbody.querySelector('.empty-state');
+  if (emptyRow) emptyRow.closest('tr').remove();
+
+  for (const r of garaExtra) {
     const pClass = posClass(r.posizione);
-    const dateHtml = `<td style="white-space:nowrap;color:var(--text-muted);font-size:.8rem">${fmtDateShort(r.data)}</td>`;
-    const nameHtml = r.gara_id
-      ? `<td><a href="#/gara/${esc(r.gara_id)}">${esc(r.gara_name)}</a></td>`
-      : `<td>${r.pcs_race_slug ? `<a href="https://www.procyclingstats.com/race/${esc(r.pcs_race_slug)}" target="_blank">${esc(r.gara_name)}</a>` : esc(r.gara_name)}</td>`;
-    const posHtml  = `<td class="td-pos ${pClass}">${r.posizione}°</td>`;
-    const gapHtml  = `<td style="color:var(--text-muted);font-size:.85rem">${esc(r.distacco || (r.posizione === 1 ? '—' : ''))}</td>`;
-    return `<tr>${dateHtml}${nameHtml}${posHtml}${gapHtml}</tr>`;
-  };
+    const cat = athlete?.categoria || '';
+    const tr = document.createElement('tr');
+    tr.dataset.date = r.data;
+    tr.innerHTML = `
+      <td class="td-date">${fmtDateShort(r.data)}</td>
+      <td class="td-race"><a href="#/gara/${esc(r.gara_id)}">${esc(r.nome_gara)}</a></td>
+      <td>${badgeCat(cat)}</td>
+      <td class="td-pos ${pClass}">${r.posizione}°</td>
+      <td>—</td>
+      <td style="text-align:right">${esc(r.km || '—')}</td>
+      <td style="text-align:right">—</td>
+      <td class="td-pts">—</td>`;
+
+    // Inserisci in ordine cronologico (data desc) tra le righe esistenti
+    const existingRows = [...tbody.querySelectorAll('tr[data-date]')];
+    const after = existingRows.find(row => (row.dataset.date || '') < r.data);
+    if (after) tbody.insertBefore(tr, after);
+    else tbody.appendChild(tr);
+  }
+
+  // Risultati fuori-circuito (da pcs_results, es. gare non nel calendario ICS)
+  const el = document.getElementById('atleta-pcs-extra');
+  if (!el) return;
+  let seasonRaw;
+  try {
+    seasonRaw = await apiCall(`/pcs-results/atleta/${encodeURIComponent(atletaId)}?season=${season}`);
+  } catch { return; }
+  const seasonExtra = Array.isArray(seasonRaw)
+    ? seasonRaw.filter(r => !r.gara_id)
+        .sort((a, b) => (b.data || '').localeCompare(a.data || ''))
+    : [];
+  if (!seasonExtra.length) return;
 
   el.innerHTML = `
     <div class="section-header" style="margin-top:32px">
@@ -12172,7 +12190,16 @@ async function _loadAtletaPcsExtra(atletaId, season) {
     <div class="results-table-wrap">
       <table class="results-table atleta-results">
         <thead><tr><th>DATA</th><th>GARA</th><th>POS</th><th>DISTACCO</th></tr></thead>
-        <tbody>${all.map(rowHtml).join('')}</tbody>
+        <tbody>${seasonExtra.map(r => `
+          <tr>
+            <td class="td-date">${fmtDateShort(r.data)}</td>
+            <td>${r.pcs_race_slug
+              ? `<a href="https://www.procyclingstats.com/race/${esc(r.pcs_race_slug)}" target="_blank">${esc(r.gara_name)}</a>`
+              : esc(r.gara_name)}</td>
+            <td class="td-pos ${posClass(r.posizione)}">${r.posizione}°</td>
+            <td style="color:var(--text-muted);font-size:.85rem">${esc(r.distacco || '')}</td>
+          </tr>`).join('')}
+        </tbody>
       </table>
     </div>`;
 }
