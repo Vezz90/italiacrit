@@ -779,6 +779,23 @@ app.get('/api/admin/all-entity-overrides', requireAdmin, async (req, res) => {
   catch (e) { res.status(500).json({ error: e.message }); }
 });
 
+// ── Admin: modifica atleta (nome/cognome/team) → salva come entity overrides ──
+app.patch('/api/admin/atleti/:id', requireAdmin, async (req, res) => {
+  try {
+    const aid = req.params.id;
+    const { cognome, nome, team, team_id } = req.body;
+    const fields = [];
+    if (cognome !== undefined) fields.push({ field: 'cognome', new_value: cognome });
+    if (nome    !== undefined) fields.push({ field: 'nome',    new_value: nome    });
+    if (team    !== undefined) fields.push({ field: 'team',    new_value: team    });
+    if (team_id !== undefined) fields.push({ field: 'team_id', new_value: team_id });
+    await Promise.all(fields.map(f =>
+      queries.setEntityOverride({ entity_type: 'atleta', entity_id: aid, ...f, edited_by: req.user.id })
+    ));
+    res.json({ ok: true });
+  } catch (e) { res.status(500).json({ error: e.message }); }
+});
+
 // ── Photo upload ──────────────────────────────────────────────────────────────
 
 app.post('/api/upload/photo', requireAuth, upload.single('photo'), async (req, res) => {

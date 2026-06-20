@@ -1371,6 +1371,33 @@ function processLoadedData({ calendar, resultsRaw, athletes, teams, meta, raceDe
     teamsMerged[tid].atleti = teamAtleti;
   }
 
+  // ── Team priority: il team con più risultati vince sulle nazionali/selezioni ──
+  // Se team_attuale è una nazionale o selezione regionale, sostituiscilo col
+  // team reale più frequente tra i risultati dell'atleta.
+  const _isSelectionTeam = (t) => {
+    if (!t) return false;
+    if (nationIso(t)) return true;
+    const u = t.toUpperCase().trim();
+    if (ITALIAN_REGIONS.some(r => u === r)) return true;
+    if (/^(SELEZIONE|NAZIONALE|CT ITALIA|UNDER|REGIONALE)/.test(u)) return true;
+    return false;
+  };
+  for (const aid in athletesMerged) {
+    const a = athletesMerged[aid];
+    if (!a.risultati?.length || !_isSelectionTeam(a.team_attuale)) continue;
+    const teamCounts = {};
+    for (const r of a.risultati) {
+      if (r.team && !_isSelectionTeam(r.team)) {
+        teamCounts[r.team] = (teamCounts[r.team] || 0) + 1;
+      }
+    }
+    const best = Object.entries(teamCounts).sort((x, y) => y[1] - x[1])[0];
+    if (!best) continue;
+    a.team_attuale = best[0];
+    const matchedT = Object.values(teamsMerged).find(t => t.nome === best[0]);
+    if (matchedT) a.team_id = matchedT.id;
+  }
+
   return {
     calendar: calendar || [],
     resultsRaw: resultsRaw || [],
@@ -8272,9 +8299,15 @@ window.adminNav = async function(section) {
                 <label style="font-size:.82rem;color:var(--text-muted)">Nome
                   <input id="ae-nome" value="${esc(a.nome)}" style="display:block;width:100%;margin-top:4px;padding:8px 12px;border:1px solid var(--border);border-radius:6px;background:var(--bg-base);color:var(--text-primary);font-size:.9rem" />
                 </label>
-                <label style="font-size:.82rem;color:var(--text-muted)">Team
-                  <input id="ae-team" value="${esc(a.team)}" style="display:block;width:100%;margin-top:4px;padding:8px 12px;border:1px solid var(--border);border-radius:6px;background:var(--bg-base);color:var(--text-primary);font-size:.9rem" />
-                </label>
+                <div style="font-size:.82rem;color:var(--text-muted)">Team
+                  <div style="position:relative;margin-top:4px">
+                    <input id="ae-team" value="${esc(a.team_attuale||a.team||'')}" autocomplete="off"
+                      oninput="window._aeTeamSearch(this.value)"
+                      style="display:block;width:100%;padding:8px 12px;border:1px solid var(--border);border-radius:6px;background:var(--bg-base);color:var(--text-primary);font-size:.9rem;box-sizing:border-box" />
+                    <div id="ae-team-drop" style="display:none;position:absolute;top:100%;left:0;right:0;background:var(--bg-card);border:1px solid var(--border);border-top:none;border-radius:0 0 6px 6px;max-height:200px;overflow-y:auto;z-index:10000;font-size:.85rem"></div>
+                  </div>
+                  <div id="ae-team-id-store" data-tid="${esc(a.team_id||'')}"></div>
+                </div>
               </div>
               <div style="margin-top:18px;display:flex;gap:10px;justify-content:flex-end">
                 <button onclick="document.getElementById('admin-atleta-modal').remove()" class="dash-btn dash-btn--outline dash-btn--sm">Annulla</button>
@@ -8282,23 +8315,77 @@ window.adminNav = async function(section) {
               </div>
             </div>
           </div>`);
+
+        // Team autocomplete logic
+        window._aeTeamSearch = (q) => {
+          const drop = document.getElementById('ae-team-drop');
+          if (!drop) return;
+          const teams = globalData ? Object.values(globalData.teams || {}) : [];
+          const qn = q.trim().toLowerCase();
+          if (!qn) { drop.style.display = 'none'; return; }
+          const matches = teams
+            .filter(t => (t.nome||'').toLowerCase().includes(qn))
+            .sort((a,b) => (a.nome||'').localeCompare(b.nome||''))
+            .slice(0, 12);
+          if (!matches.length) { drop.style.display = 'none'; return; }
+          drop.innerHTML = matches.map(t => `
+            <div style="padding:8px 12px;cursor:pointer;border-bottom:1px solid var(--border-subtle)"
+              onmousedown="event.preventDefault();window._aeTeamSelect('${esc(String(t.id))}','${esc(t.nome||'')}')">
+              <span style="font-weight:600">${esc(t.nome||t.id)}</span>
+            </div>`).join('');
+          drop.style.display = 'block';
+        };
+        window._aeTeamSelect = (tid, nome) => {
+          const inp = document.getElementById('ae-team');
+          const store = document.getElementById('ae-team-id-store');
+          const drop  = document.getElementById('ae-team-drop');
+          if (inp) inp.value = nome;
+          if (store) store.dataset.tid = tid;
+          if (drop) drop.style.display = 'none';
+        };
+        // Chiudi dropdown cliccando altrove
+        setTimeout(() => {
+          document.addEventListener('click', function _close(e) {
+            if (!e.target.closest('#ae-team-drop') && e.target.id !== 'ae-team') {
+              const d = document.getElementById('ae-team-drop');
+              if (d) d.style.display = 'none';
+              document.removeEventListener('click', _close);
+            }
+          });
+        }, 50);
       };
 
       window.adminSaveAtleta = async (aid) => {
         const cognome = document.getElementById('ae-cognome')?.value.trim();
         const nome    = document.getElementById('ae-nome')?.value.trim();
         const team    = document.getElementById('ae-team')?.value.trim();
+        const team_id = document.getElementById('ae-team-id-store')?.dataset.tid || '';
         document.getElementById('admin-atleta-modal')?.remove();
         try {
+          const body = { cognome, nome, team };
+          if (team_id) body.team_id = team_id;
           const res = await fetch(`${API_BASE}/admin/atleti/${encodeURIComponent(aid)}`, {
             method: 'PATCH',
             headers: { 'Content-Type':'application/json', Authorization:`Bearer ${authToken()}` },
-            body: JSON.stringify({ cognome, nome, team }),
+            body: JSON.stringify(body),
           });
           if (!res.ok) throw new Error((await res.json()).error || `HTTP ${res.status}`);
-          // Update local cache
+          // Aggiorna la cache locale
           const a = window._adminAtletiAll.find(x => String(x.atleta_id) === String(aid));
-          if (a) { a.cognome = cognome||a.cognome; a.nome = nome||a.nome; a.team = team||a.team; }
+          if (a) {
+            if (cognome) a.cognome = cognome;
+            if (nome)    a.nome    = nome;
+            if (team)  { a.team = team; a.team_attuale = team; }
+            if (team_id) a.team_id = team_id;
+          }
+          // Aggiorna anche globalData.athletes per effetto immediato senza reload
+          if (globalData?.athletes?.[aid]) {
+            const g = globalData.athletes[aid];
+            if (cognome) g.cognome = cognome;
+            if (nome)    g.nome    = nome;
+            if (team)    g.team_attuale = team;
+            if (team_id) g.team_id = team_id;
+          }
           window._adminShowAtletiMsg(`✅ Atleta aggiornato`, true);
           window.adminFilterAtleti(document.getElementById('atleti-search')?.value||'');
         } catch(e) {
@@ -11347,6 +11434,7 @@ async function renderAtleta(atleta_id, opts = {}) {
   const displayCognome = atletaOv.cognome || a.cognome || '';
   const displayNome    = atletaOv.nome    || a.nome    || '';
   const displayTeam    = atletaOv.team    || a.team_attuale || '';
+  const displayTeamId  = atletaOv.team_id || a.team_id     || '';
 
   const initials = ((displayCognome||'?')[0] + (displayNome||'?')[0]).toUpperCase();
   const photoHtml = photoAreaHtml('atleta', atleta_id, atletaOv.photo_url || null, initials, 'circle');
@@ -11357,7 +11445,7 @@ async function renderAtleta(atleta_id, opts = {}) {
         ${badgeCat(a.categoria)}
         ${atletaOv.anno_nascita ? `<span class="badge-cat">Classe ${esc(atletaOv.anno_nascita)}</span>` : ''}
         ${a.genere === 'F' ? '<span class="badge-cat badge-genere-f">♀</span>' : ''}
-        ${a.team_id ? `<a href="#/team/${esc(a.team_id)}" style="font-family:var(--font-heading);font-size:.8rem;color:var(--text-secondary);border:1px solid var(--border-subtle);padding:2px 10px;border-radius:2px">${esc(displayTeam)} →</a>` : ''}
+        ${displayTeamId ? `<a href="#/team/${esc(displayTeamId)}" style="font-family:var(--font-heading);font-size:.8rem;color:var(--text-secondary);border:1px solid var(--border-subtle);padding:2px 10px;border-radius:2px">${esc(displayTeam)} →</a>` : ''}
       </div>
       <div class="profile-photo-row" style="display:flex;gap:20px;align-items:center;flex-wrap:wrap;margin-bottom:4px;justify-content:space-between">
         ${photoHtml}

@@ -241,6 +241,7 @@ async function waitPassCF(page, timeout = 25000) {
 }
 
 async function searchFirstCycling(page, name, type = 'riders') {
+  const pat = type === 'riders' ? 'rider.php?r=' : 'team.php?l=';
   // Prova prima nome+cognome, poi cognome+nome
   const queries = [name, name.split(' ').reverse().join(' ')];
   for (const q of queries) {
@@ -252,7 +253,13 @@ async function searchFirstCycling(page, name, type = 'riders') {
     } catch { continue; }
     await waitPassCF(page);
 
-    const pat = type === 'riders' ? 'rider.php?r=' : 'team.php?l=';
+    // FC a volte redirige direttamente al profilo quando c'è un solo risultato
+    const currentUrl = page.url();
+    if (currentUrl.includes(pat)) return currentUrl;
+
+    // Aspetta che i risultati di ricerca appaiano nel DOM (possono essere JS-rendered)
+    await page.waitForSelector(`a[href*="${pat}"]`, { timeout: 6000 }).catch(() => null);
+
     const href = await page.evaluate(pat => {
       const a = document.querySelector(`a[href*="${pat}"]`);
       return a ? a.href : null;
