@@ -11567,20 +11567,19 @@ async function renderAtleta(atleta_id, opts = {}) {
 
   // Recupero ranking asincrono per evitare crash
   const rCode = getRankingFileCode(a.categoria);
-  const [currentRanking, atletaOv, photosMap, teamOvAtleta] = await Promise.all([
-    rCode ? (_isLoadedYear ? loadRanking(rCode) : loadJson(`data/seasons/${selYear}/rankings/${rCode}.json`).catch(() => [])) : Promise.resolve([]),
-    getEntityOverrides('atleta', atleta_id),
-    loadRisPhotos(),
-    a.team_id ? getEntityOverrides('team', a.team_id).catch(() => ({})) : Promise.resolve({}),
-  ]);
-  const aRankObj = currentRanking.find(x => x.atleta_id === a.id);
-  const globalPos = aRankObj ? aRankObj.pos : '-';
-
-  // Apply admin overrides to display fields
+  const atletaOv = await getEntityOverrides('atleta', atleta_id);
   const displayCognome = atletaOv.cognome || a.cognome || '';
   const displayNome    = atletaOv.nome    || a.nome    || '';
   const displayTeam    = atletaOv.team    || a.team_attuale || '';
   const displayTeamId  = atletaOv.team_id || a.team_id     || '';
+
+  const [currentRanking, photosMap, teamOvAtleta] = await Promise.all([
+    rCode ? (_isLoadedYear ? loadRanking(rCode) : loadJson(`data/seasons/${selYear}/rankings/${rCode}.json`).catch(() => [])) : Promise.resolve([]),
+    loadRisPhotos(),
+    displayTeamId ? getEntityOverrides('team', displayTeamId).catch(() => ({})) : Promise.resolve({}),
+  ]);
+  const aRankObj = currentRanking.find(x => x.atleta_id === a.id);
+  const globalPos = aRankObj ? aRankObj.pos : '-';
 
   const initials = ((displayCognome||'?')[0] + (displayNome||'?')[0]).toUpperCase();
   const photoHtml = photoAreaHtml('atleta', atleta_id, atletaOv.photo_url || null, initials, 'circle');
@@ -11618,7 +11617,7 @@ async function renderAtleta(atleta_id, opts = {}) {
           </div>
           ${entitySocialLinksHtml(atletaOv, ['instagram','facebook','strava','website'])}
         </div>
-        ${a.team_id ? `<a href="#/team/${esc(a.team_id)}" style="flex-shrink:0;align-self:flex-start;display:flex;flex-direction:column;align-items:center;gap:6px;text-decoration:none" title="${esc(displayTeam)}">
+        ${displayTeamId ? `<a href="#/team/${esc(displayTeamId)}" style="flex-shrink:0;align-self:flex-start;display:flex;flex-direction:column;align-items:center;gap:6px;text-decoration:none" title="${esc(displayTeam)}">
           ${teamOvAtleta?.photo_url
             ? `<img src="${MEDIA_BASE}${esc(teamOvAtleta.photo_url)}" alt="${esc(displayTeam)}" style="width:64px;height:64px;object-fit:contain;border-radius:8px;border:1px solid var(--border-subtle);background:var(--bg-elevated)">`
             : `<span style="width:64px;height:64px;border-radius:8px;border:1px solid var(--border-subtle);background:var(--bg-elevated);display:flex;align-items:center;justify-content:center;color:var(--text-muted)"><svg width="30" height="30" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.2"><path d="M12 2L3 6v6c0 5.5 3.8 10.7 9 12 5.2-1.3 9-6.5 9-12V6L12 2z"/></svg></span>`

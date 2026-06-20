@@ -793,6 +793,35 @@ app.patch('/api/admin/atleti/:id', requireAdmin, async (req, res) => {
     await Promise.all(fields.map(f =>
       queries.setEntityOverride({ entity_type: 'atleta', entity_id: aid, ...f, edited_by: req.user.id })
     ));
+
+    // Sincronizza extra_roster.json: sposta l'atleta nel team corretto
+    if (team_id !== undefined) {
+      const rosterPath = path.join(__dirname, '..', 'data', 'extra_roster.json');
+      try {
+        const roster = JSON.parse(fs.readFileSync(rosterPath, 'utf8'));
+        let atletaEntry = null;
+        // Trova e rimuovi dall'attuale bucket
+        for (const [tid, bucket] of Object.entries(roster)) {
+          if (!Array.isArray(bucket.atleti)) continue;
+          const idx = bucket.atleti.findIndex(a => a.atleta_id === aid);
+          if (idx !== -1) {
+            [atletaEntry] = bucket.atleti.splice(idx, 1);
+            if (bucket.atleti.length === 0) delete roster[tid];
+            break;
+          }
+        }
+        if (atletaEntry && team_id) {
+          // Aggiorna il team nell'entry
+          atletaEntry.team_id = team_id;
+          if (!roster[team_id]) roster[team_id] = { nome: team || team_id, atleti: [] };
+          roster[team_id].atleti.push(atletaEntry);
+          fs.writeFileSync(rosterPath, JSON.stringify(roster, null, 2), 'utf8');
+        }
+      } catch (fsErr) {
+        console.warn('[admin] sync extra_roster.json fallito:', fsErr.message);
+      }
+    }
+
     res.json({ ok: true });
   } catch (e) { res.status(500).json({ error: e.message }); }
 });
