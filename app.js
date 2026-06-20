@@ -6194,27 +6194,64 @@ async function renderHubBars() {
   const _rookieHtml   = buildRookieCard();
   const _watchHtml    = buildWatchlistCard();
 
-  // ── Prossima gara in evidenza (nei prossimi 7 giorni) ────────────
-  const upcomingAll = calendar.filter(g => calMatchesHub(g) && (g.data||'') >= todayStr)
+  // ── Carousel prossime gare del fine settimana (tutte le categorie) ──
+  const _allUpcomingBars = calendar.filter(g => (g.data||'') >= todayStr)
     .sort((a,b) => a.data.localeCompare(b.data));
-  const _cut7Str = (() => { const d = new Date(todayStr); d.setDate(d.getDate() + 7); return d.toISOString().split('T')[0]; })();
-  const _nextRaces7 = upcomingAll.filter(g => (g.data||'') <= _cut7Str);
+  const _carouselWkBars = _allUpcomingBars.length ? weekendKey(_allUpcomingBars[0].data) : null;
+  const _carouselRaces = _carouselWkBars
+    ? _allUpcomingBars.filter(g => weekendKey(g.data) === _carouselWkBars)
+    : [];
+  const _hucBarsId = 'huc-bars-' + hubCode;
+  let _hucBarsCount = 0;
   let _nextRaceHtml = '';
-  if (_nextRaces7.length > 0) {
-    const nr = _nextRaces7[0];
-    const dys = Math.round((new Date(nr.data+'T00:00:00') - new Date(todayStr+'T00:00:00')) / 86400000);
-    const cntLabel = dys === 0 ? 'OGGI' : dys === 1 ? 'DOMANI' : `TRA ${dys} GIORNI`;
-    const moreTxt = _nextRaces7.length > 1
-      ? `<span style="font-size:.72rem;color:var(--text-muted);margin-left:8px">+${_nextRaces7.length-1} questa settimana</span>`
+  if (_carouselRaces.length > 0) {
+    _hucBarsCount = _carouselRaces.length;
+    const _MESI_C = ['GEN','FEB','MAR','APR','MAG','GIU','LUG','AGO','SET','OTT','NOV','DIC'];
+    const _DAY_C  = ['Dom','Lun','Mar','Mer','Gio','Ven','Sab'];
+    const satD = new Date(_carouselWkBars + 'T00:00:00');
+    const sunD = new Date(satD); sunD.setDate(satD.getDate() + 1);
+    const wkLabel = satD.getDate() + '–' + sunD.getDate() + ' ' + _MESI_C[satD.getMonth()] + ' ' + satD.getFullYear();
+
+    const slidesHtml = _carouselRaces.map((g, i) => {
+      const gd   = new Date(g.data + 'T00:00:00');
+      const days = Math.round((gd - new Date(todayStr + 'T00:00:00')) / 86400000);
+      const dayLabel = days === 0 ? 'OGGI' : days === 1 ? 'DOMANI' : _DAY_C[gd.getDay()];
+      const gId  = g.id || g.gara_id || '';
+      return '<div class="huc-slide" style="display:' + (i===0?'flex':'none') + ';flex-direction:column;align-items:center;' +
+        'padding:10px 16px;cursor:pointer;min-height:66px;justify-content:center" onclick="location.hash=\'#/gara/' + gId + '\'">' +
+        '<div style="font-size:.7rem;font-weight:700;color:var(--red-hot);letter-spacing:.08em;margin-bottom:3px">' + dayLabel + '</div>' +
+        '<div style="font-weight:700;font-size:.9rem;color:var(--text-primary);text-align:center;line-height:1.3">' + esc(g.nome||'') + '</div>' +
+        '<div style="font-size:.72rem;color:var(--text-muted);margin-top:3px">' + esc((g.luogo||g.regione||'') + (g.categoria ? ' · ' + g.categoria : '')) + '</div>' +
+        '</div>';
+    }).join('');
+
+    const dotsHtml = _hucBarsCount > 1
+      ? '<div style="display:flex;gap:5px;justify-content:center;padding:4px 0 8px">' +
+          _carouselRaces.map((_, i) =>
+            '<span class="huc-dot" onclick="window._hucGo(\'' + _hucBarsId + '\',' + i + ')" ' +
+            'style="width:6px;height:6px;border-radius:50%;background:' + (i===0?'var(--red-hot)':'var(--border-subtle)') + ';cursor:pointer;display:inline-block"></span>'
+          ).join('') +
+        '</div>'
       : '';
-    _nextRaceHtml = `<div class="itc-card" style="cursor:pointer;border-left:3px solid var(--red-hot)" onclick="location.hash='#/calendario'">
-      <div class="itc-card-hdr" style="margin-bottom:8px">
-        <span class="itc-card-title">PROSSIMA GARA</span>
-        <span style="background:var(--red-hot);color:#fff;font-size:.68rem;font-weight:700;padding:2px 9px;border-radius:10px;letter-spacing:.05em">${cntLabel}</span>
-      </div>
-      <div style="font-weight:700;font-size:.95rem;color:var(--text-primary);margin-bottom:4px">${esc(nr.nome||nr.base||'')}</div>
-      <div style="font-size:.78rem;color:var(--text-muted)">${fmtDateShort(nr.data)}${nr.luogo||nr.regione ? ' · '+esc(nr.luogo||nr.regione||'') : ''}${moreTxt}</div>
-    </div>`;
+
+    const navHtml = _hucBarsCount > 1
+      ? '<div style="display:flex;gap:0">' +
+          '<button onclick="window._hucPrev(\'' + _hucBarsId + '\')" style="background:none;border:none;color:var(--text-muted);cursor:pointer;font-size:1.15rem;padding:0 8px;line-height:1">‹</button>' +
+          '<button onclick="window._hucNext(\'' + _hucBarsId + '\')" style="background:none;border:none;color:var(--text-muted);cursor:pointer;font-size:1.15rem;padding:0 8px;line-height:1">›</button>' +
+        '</div>'
+      : '';
+
+    _nextRaceHtml = '<div class="itc-card" style="padding:0;overflow:hidden">' +
+      '<div style="display:flex;align-items:center;justify-content:space-between;padding:7px 12px;border-bottom:1px solid var(--border-subtle)">' +
+        '<div style="font-size:.68rem;font-weight:700;letter-spacing:.08em;color:var(--text-muted)">' +
+          'PROSSIMO FINE SETTIMANA &nbsp;<span style="color:var(--text-secondary)">' + wkLabel + '</span>' +
+          '&nbsp;<span style="opacity:.5">(' + _hucBarsCount + ' ' + (_hucBarsCount===1?'gara':'gare') + ')</span>' +
+        '</div>' +
+        navHtml +
+      '</div>' +
+      '<div id="' + _hucBarsId + '">' + slidesHtml + '</div>' +
+      dotsHtml +
+    '</div>';
   }
 
   // Layout: per esordienti i blocchi rider sono già itc-dual internamente
@@ -6267,6 +6304,14 @@ async function renderHubBars() {
       </div>
     </div>
   `);
+
+  // Avvia auto-advance carousel prossime gare
+  if (_hucBarsCount > 1) {
+    if (window._hucState[_hucBarsId] && window._hucState[_hucBarsId].timer)
+      clearInterval(window._hucState[_hucBarsId].timer);
+    window._hucState[_hucBarsId] = { idx: 0, total: _hucBarsCount };
+    window._hucState[_hucBarsId].timer = setInterval(function(){ window._hucNext(_hucBarsId); }, 4000);
+  }
 
   // ── Hero slideshow ───────────────────────────────────────────────
   if (allPhotos.length > 1) {
