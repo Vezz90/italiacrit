@@ -186,7 +186,8 @@ const SUPABASE_SECRET = process.env.SUPABASE_SECRET;
 let supabase = null;
 if (SUPABASE_URL && SUPABASE_SECRET) {
   const { createClient } = require('@supabase/supabase-js');
-  supabase = createClient(SUPABASE_URL, SUPABASE_SECRET);
+  const ws = require('ws');
+  supabase = createClient(SUPABASE_URL, SUPABASE_SECRET, { realtime: { transport: ws } });
   console.log('[storage] Supabase Storage attivo');
 }
 
