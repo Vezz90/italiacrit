@@ -5,10 +5,10 @@
     "nome": "CARLO",
     "team_id": "A_S_D_CICLISTICA_MONSELICE",
     "team_nome": "A.S.D. CICLISTICA MONSELICE",
-    "punti": 195,
-    "vittorie": 5,
-    "gare": 17,
-    "p1": 5,
+    "punti": 210,
+    "vittorie": 6,
+    "gare": 18,
+    "p1": 6,
     "p2": 6,
     "p3": 2,
     "pout": 4,
@@ -128,6 +128,38 @@
     "trend": 0
   },
   {
+    "atleta_id": "D_AIUTO_SEBASTIANO",
+    "cognome": "D'AIUTO",
+    "nome": "SEBASTIANO",
+    "team_id": "GCD_PEDALE_MANZANESE",
+    "team_nome": "GCD PEDALE MANZANESE",
+    "punti": 121,
+    "vittorie": 6,
+    "gare": 11,
+    "p1": 6,
+    "p2": 0,
+    "p3": 1,
+    "pout": 4,
+    "pos": 9,
+    "trend": 0
+  },
+  {
+    "atleta_id": "MENEGHELLO_RICCARDO",
+    "cognome": "MENEGHELLO",
+    "nome": "RICCARDO",
+    "team_id": "IND_FORNITURE_MORO_C_G_CAPITAL",
+    "team_nome": "IND. FORNITURE MORO-C&G CAPITAL",
+    "punti": 116,
+    "vittorie": 1,
+    "gare": 12,
+    "p1": 1,
+    "p2": 4,
+    "p3": 2,
+    "pout": 5,
+    "pos": 10,
+    "trend": 0
+  },
+  {
     "atleta_id": "MORI_ANDREA",
     "cognome": "MORI",
     "nome": "ANDREA",
@@ -140,7 +172,7 @@
     "p2": 2,
     "p3": 1,
     "pout": 9,
-    "pos": 9,
+    "pos": 11,
     "trend": 0
   },
   {
@@ -156,38 +188,6 @@
     "p2": 5,
     "p3": 1,
     "pout": 1,
-    "pos": 10,
-    "trend": 0
-  },
-  {
-    "atleta_id": "D_AIUTO_SEBASTIANO",
-    "cognome": "D'AIUTO",
-    "nome": "SEBASTIANO",
-    "team_id": "GCD_PEDALE_MANZANESE",
-    "team_nome": "GCD PEDALE MANZANESE",
-    "punti": 113,
-    "vittorie": 6,
-    "gare": 10,
-    "p1": 6,
-    "p2": 0,
-    "p3": 1,
-    "pout": 3,
-    "pos": 11,
-    "trend": 0
-  },
-  {
-    "atleta_id": "MENEGHELLO_RICCARDO",
-    "cognome": "MENEGHELLO",
-    "nome": "RICCARDO",
-    "team_id": "IND_FORNITURE_MORO_C_G_CAPITAL",
-    "team_nome": "IND. FORNITURE MORO-C&G CAPITAL",
-    "punti": 111,
-    "vittorie": 1,
-    "gare": 11,
-    "p1": 1,
-    "p2": 4,
-    "p3": 2,
-    "pout": 4,
     "pos": 12,
     "trend": 0
   },
@@ -848,6 +848,22 @@
     "trend": 0
   },
   {
+    "atleta_id": "MAGGIONI_NICOLO",
+    "cognome": "MAGGIONI",
+    "nome": "NICOLO'",
+    "team_id": "TEAM_SENAGHESE_GUERRINI",
+    "team_nome": "TEAM SENAGHESE GUERRINI",
+    "punti": 64,
+    "vittorie": 0,
+    "gare": 13,
+    "p1": 0,
+    "p2": 1,
+    "p3": 1,
+    "pout": 11,
+    "pos": 54,
+    "trend": 0
+  },
+  {
     "atleta_id": "BELANI_TOMMASO",
     "cognome": "BELANI",
     "nome": "TOMMASO",
@@ -860,7 +876,7 @@
     "p2": 0,
     "p3": 1,
     "pout": 7,
-    "pos": 54,
+    "pos": 55,
     "trend": 0
   },
   {
@@ -876,7 +892,7 @@
     "p2": 0,
     "p3": 1,
     "pout": 2,
-    "pos": 55,
+    "pos": 56,
     "trend": 0
   },
   {
@@ -892,7 +908,7 @@
     "p2": 1,
     "p3": 1,
     "pout": 10,
-    "pos": 56,
+    "pos": 57,
     "trend": 0
   },
   {
@@ -908,7 +924,7 @@
     "p2": 1,
     "p3": 2,
     "pout": 6,
-    "pos": 57,
+    "pos": 58,
     "trend": 0
   },
   {
@@ -924,7 +940,7 @@
     "p2": 1,
     "p3": 1,
     "pout": 7,
-    "pos": 58,
+    "pos": 59,
     "trend": 0
   },
   {
@@ -940,22 +956,6 @@
     "p2": 0,
     "p3": 3,
     "pout": 3,
-    "pos": 59,
-    "trend": 0
-  },
-  {
-    "atleta_id": "MAGGIONI_NICOLO",
-    "cognome": "MAGGIONI",
-    "nome": "NICOLO'",
-    "team_id": "TEAM_SENAGHESE_GUERRINI",
-    "team_nome": "TEAM SENAGHESE GUERRINI",
-    "punti": 60,
-    "vittorie": 0,
-    "gare": 12,
-    "p1": 0,
-    "p2": 1,
-    "p3": 1,
-    "pout": 10,
     "pos": 60,
     "trend": 0
   },
@@ -1920,6 +1920,22 @@
     "trend": 0
   },
   {
+    "atleta_id": "BRAMATI_ALEX_REY",
+    "cognome": "BRAMATI",
+    "nome": "ALEX REY",
+    "team_id": "TEAM_SENAGHESE_GUERRINI",
+    "team_nome": "TEAM SENAGHESE GUERRINI",
+    "punti": 32,
+    "vittorie": 0,
+    "gare": 5,
+    "p1": 0,
+    "p2": 1,
+    "p3": 0,
+    "pout": 4,
+    "pos": 121,
+    "trend": 0
+  },
+  {
     "atleta_id": "GIONFRIDDO_GABRIELE",
     "cognome": "GIONFRIDDO",
     "nome": "GABRIELE",
@@ -1932,7 +1948,7 @@
     "p2": 0,
     "p3": 1,
     "pout": 4,
-    "pos": 121,
+    "pos": 122,
     "trend": 0
   },
   {
@@ -1948,7 +1964,7 @@
     "p2": 0,
     "p3": 0,
     "pout": 4,
-    "pos": 122,
+    "pos": 123,
     "trend": 0
   },
   {
@@ -1964,7 +1980,23 @@
     "p2": 0,
     "p3": 0,
     "pout": 5,
-    "pos": 123,
+    "pos": 124,
+    "trend": 0
+  },
+  {
+    "atleta_id": "CARCANGIU_DIEGO",
+    "cognome": "CARCANGIU",
+    "nome": "DIEGO",
+    "team_id": "CICLISTICA_BUJESE_DIGAS",
+    "team_nome": "CICLISTICA BUJESE - DIGAS",
+    "punti": 31,
+    "vittorie": 0,
+    "gare": 5,
+    "p1": 0,
+    "p2": 1,
+    "p3": 1,
+    "pout": 3,
+    "pos": 125,
     "trend": 0
   },
   {
@@ -1980,7 +2012,7 @@
     "p2": 0,
     "p3": 1,
     "pout": 5,
-    "pos": 124,
+    "pos": 126,
     "trend": 0
   },
   {
@@ -1996,7 +2028,39 @@
     "p2": 1,
     "p3": 0,
     "pout": 5,
-    "pos": 125,
+    "pos": 127,
+    "trend": 0
+  },
+  {
+    "atleta_id": "CAVALLI_ALVISE",
+    "cognome": "CAVALLI",
+    "nome": "ALVISE",
+    "team_id": "V_C_BASSANO_1892",
+    "team_nome": "V.C. BASSANO 1892",
+    "punti": 30,
+    "vittorie": 0,
+    "gare": 5,
+    "p1": 0,
+    "p2": 0,
+    "p3": 2,
+    "pout": 3,
+    "pos": 128,
+    "trend": 0
+  },
+  {
+    "atleta_id": "STORTI_MICHELE",
+    "cognome": "STORTI",
+    "nome": "MICHELE",
+    "team_id": "FAIZANE_CSZ_SANDRIGO_BIKE",
+    "team_nome": "FAIZANE' CSZ SANDRIGO BIKE",
+    "punti": 30,
+    "vittorie": 0,
+    "gare": 6,
+    "p1": 0,
+    "p2": 2,
+    "p3": 0,
+    "pout": 4,
+    "pos": 129,
     "trend": 0
   },
   {
@@ -2012,7 +2076,7 @@
     "p2": 0,
     "p3": 0,
     "pout": 6,
-    "pos": 126,
+    "pos": 130,
     "trend": 0
   },
   {
@@ -2028,7 +2092,7 @@
     "p2": 0,
     "p3": 1,
     "pout": 5,
-    "pos": 127,
+    "pos": 131,
     "trend": 0
   },
   {
@@ -2044,7 +2108,7 @@
     "p2": 1,
     "p3": 0,
     "pout": 1,
-    "pos": 128,
+    "pos": 132,
     "trend": 0
   },
   {
@@ -2060,7 +2124,7 @@
     "p2": 0,
     "p3": 1,
     "pout": 2,
-    "pos": 129,
+    "pos": 133,
     "trend": 0
   },
   {
@@ -2076,7 +2140,7 @@
     "p2": 0,
     "p3": 1,
     "pout": 2,
-    "pos": 130,
+    "pos": 134,
     "trend": 0
   },
   {
@@ -2092,7 +2156,7 @@
     "p2": 1,
     "p3": 0,
     "pout": 5,
-    "pos": 131,
+    "pos": 135,
     "trend": 0
   },
   {
@@ -2108,7 +2172,7 @@
     "p2": 0,
     "p3": 0,
     "pout": 2,
-    "pos": 132,
+    "pos": 136,
     "trend": 0
   },
   {
@@ -2124,7 +2188,7 @@
     "p2": 0,
     "p3": 0,
     "pout": 6,
-    "pos": 133,
+    "pos": 137,
     "trend": 0
   },
   {
@@ -2140,7 +2204,7 @@
     "p2": 1,
     "p3": 0,
     "pout": 4,
-    "pos": 134,
+    "pos": 138,
     "trend": 0
   },
   {
@@ -2156,23 +2220,7 @@
     "p2": 0,
     "p3": 0,
     "pout": 7,
-    "pos": 135,
-    "trend": 0
-  },
-  {
-    "atleta_id": "STORTI_MICHELE",
-    "cognome": "STORTI",
-    "nome": "MICHELE",
-    "team_id": "FAIZANE_CSZ_SANDRIGO_BIKE",
-    "team_nome": "FAIZANE' CSZ SANDRIGO BIKE",
-    "punti": 27,
-    "vittorie": 0,
-    "gare": 5,
-    "p1": 0,
-    "p2": 2,
-    "p3": 0,
-    "pout": 3,
-    "pos": 136,
+    "pos": 139,
     "trend": 0
   },
   {
@@ -2188,7 +2236,7 @@
     "p2": 0,
     "p3": 0,
     "pout": 5,
-    "pos": 137,
+    "pos": 140,
     "trend": 0
   },
   {
@@ -2204,7 +2252,7 @@
     "p2": 0,
     "p3": 1,
     "pout": 4,
-    "pos": 138,
+    "pos": 141,
     "trend": 0
   },
   {
@@ -2220,7 +2268,7 @@
     "p2": 1,
     "p3": 0,
     "pout": 3,
-    "pos": 139,
+    "pos": 142,
     "trend": 0
   },
   {
@@ -2236,23 +2284,7 @@
     "p2": 0,
     "p3": 0,
     "pout": 8,
-    "pos": 140,
-    "trend": 0
-  },
-  {
-    "atleta_id": "BRAMATI_ALEX_REY",
-    "cognome": "BRAMATI",
-    "nome": "ALEX REY",
-    "team_id": "TEAM_SENAGHESE_GUERRINI",
-    "team_nome": "TEAM SENAGHESE GUERRINI",
-    "punti": 26,
-    "vittorie": 0,
-    "gare": 4,
-    "p1": 0,
-    "p2": 1,
-    "p3": 0,
-    "pout": 3,
-    "pos": 141,
+    "pos": 143,
     "trend": 0
   },
   {
@@ -2268,7 +2300,7 @@
     "p2": 1,
     "p3": 0,
     "pout": 2,
-    "pos": 142,
+    "pos": 144,
     "trend": 0
   },
   {
@@ -2284,7 +2316,7 @@
     "p2": 0,
     "p3": 0,
     "pout": 5,
-    "pos": 143,
+    "pos": 145,
     "trend": 0
   },
   {
@@ -2300,7 +2332,7 @@
     "p2": 0,
     "p3": 0,
     "pout": 5,
-    "pos": 144,
+    "pos": 146,
     "trend": 0
   },
   {
@@ -2316,7 +2348,7 @@
     "p2": 0,
     "p3": 1,
     "pout": 4,
-    "pos": 145,
+    "pos": 147,
     "trend": 0
   },
   {
@@ -2332,7 +2364,7 @@
     "p2": 0,
     "p3": 0,
     "pout": 3,
-    "pos": 146,
+    "pos": 148,
     "trend": 0
   },
   {
@@ -2348,7 +2380,7 @@
     "p2": 0,
     "p3": 1,
     "pout": 3,
-    "pos": 147,
+    "pos": 149,
     "trend": 0
   },
   {
@@ -2364,7 +2396,7 @@
     "p2": 0,
     "p3": 0,
     "pout": 2,
-    "pos": 148,
+    "pos": 150,
     "trend": 0
   },
   {
@@ -2380,7 +2412,7 @@
     "p2": 0,
     "p3": 1,
     "pout": 4,
-    "pos": 149,
+    "pos": 151,
     "trend": 0
   },
   {
@@ -2396,7 +2428,23 @@
     "p2": 0,
     "p3": 0,
     "pout": 5,
-    "pos": 150,
+    "pos": 152,
+    "trend": 0
+  },
+  {
+    "atleta_id": "TOFFUL_RICCARDO",
+    "cognome": "TOFFUL",
+    "nome": "RICCARDO",
+    "team_id": "GCD_PEDALE_MANZANESE",
+    "team_nome": "GCD PEDALE MANZANESE",
+    "punti": 22,
+    "vittorie": 0,
+    "gare": 3,
+    "p1": 0,
+    "p2": 0,
+    "p3": 2,
+    "pout": 1,
+    "pos": 153,
     "trend": 0
   },
   {
@@ -2412,7 +2460,7 @@
     "p2": 0,
     "p3": 0,
     "pout": 4,
-    "pos": 151,
+    "pos": 154,
     "trend": 0
   },
   {
@@ -2428,7 +2476,7 @@
     "p2": 0,
     "p3": 0,
     "pout": 4,
-    "pos": 152,
+    "pos": 155,
     "trend": 0
   },
   {
@@ -2444,7 +2492,7 @@
     "p2": 0,
     "p3": 0,
     "pout": 6,
-    "pos": 153,
+    "pos": 156,
     "trend": 0
   },
   {
@@ -2460,7 +2508,7 @@
     "p2": 0,
     "p3": 1,
     "pout": 2,
-    "pos": 154,
+    "pos": 157,
     "trend": 0
   },
   {
@@ -2476,7 +2524,7 @@
     "p2": 1,
     "p3": 0,
     "pout": 3,
-    "pos": 155,
+    "pos": 158,
     "trend": 0
   },
   {
@@ -2492,7 +2540,7 @@
     "p2": 1,
     "p3": 1,
     "pout": 0,
-    "pos": 156,
+    "pos": 159,
     "trend": 0
   },
   {
@@ -2508,7 +2556,7 @@
     "p2": 1,
     "p3": 1,
     "pout": 0,
-    "pos": 157,
+    "pos": 160,
     "trend": 0
   },
   {
@@ -2524,7 +2572,7 @@
     "p2": 1,
     "p3": 1,
     "pout": 0,
-    "pos": 158,
+    "pos": 161,
     "trend": 0
   },
   {
@@ -2540,7 +2588,7 @@
     "p2": 0,
     "p3": 0,
     "pout": 1,
-    "pos": 159,
+    "pos": 162,
     "trend": 0
   },
   {
@@ -2556,7 +2604,7 @@
     "p2": 1,
     "p3": 0,
     "pout": 3,
-    "pos": 160,
+    "pos": 163,
     "trend": 0
   },
   {
@@ -2572,7 +2620,7 @@
     "p2": 0,
     "p3": 1,
     "pout": 3,
-    "pos": 161,
+    "pos": 164,
     "trend": 0
   },
   {
@@ -2588,23 +2636,7 @@
     "p2": 0,
     "p3": 2,
     "pout": 0,
-    "pos": 162,
-    "trend": 0
-  },
-  {
-    "atleta_id": "TOFFUL_RICCARDO",
-    "cognome": "TOFFUL",
-    "nome": "RICCARDO",
-    "team_id": "GCD_PEDALE_MANZANESE",
-    "team_nome": "GCD PEDALE MANZANESE",
-    "punti": 20,
-    "vittorie": 0,
-    "gare": 2,
-    "p1": 0,
-    "p2": 0,
-    "p3": 2,
-    "pout": 0,
-    "pos": 163,
+    "pos": 165,
     "trend": 0
   },
   {
@@ -2620,23 +2652,7 @@
     "p2": 0,
     "p3": 2,
     "pout": 0,
-    "pos": 164,
-    "trend": 0
-  },
-  {
-    "atleta_id": "CAVALLI_ALVISE",
-    "cognome": "CAVALLI",
-    "nome": "ALVISE",
-    "team_id": "V_C_BASSANO_1892",
-    "team_nome": "V.C. BASSANO 1892",
-    "punti": 20,
-    "vittorie": 0,
-    "gare": 4,
-    "p1": 0,
-    "p2": 0,
-    "p3": 1,
-    "pout": 3,
-    "pos": 165,
+    "pos": 166,
     "trend": 0
   },
   {
@@ -2652,7 +2668,7 @@
     "p2": 0,
     "p3": 0,
     "pout": 4,
-    "pos": 166,
+    "pos": 167,
     "trend": 0
   },
   {
@@ -2668,7 +2684,7 @@
     "p2": 1,
     "p3": 0,
     "pout": 1,
-    "pos": 167,
+    "pos": 168,
     "trend": 0
   },
   {
@@ -2684,7 +2700,7 @@
     "p2": 0,
     "p3": 0,
     "pout": 3,
-    "pos": 168,
+    "pos": 169,
     "trend": 0
   },
   {
@@ -2700,7 +2716,7 @@
     "p2": 0,
     "p3": 0,
     "pout": 4,
-    "pos": 169,
+    "pos": 170,
     "trend": 0
   },
   {
@@ -2716,22 +2732,6 @@
     "p2": 1,
     "p3": 0,
     "pout": 1,
-    "pos": 170,
-    "trend": 0
-  },
-  {
-    "atleta_id": "CARCANGIU_DIEGO",
-    "cognome": "CARCANGIU",
-    "nome": "DIEGO",
-    "team_id": "CICLISTICA_BUJESE_DIGAS",
-    "team_nome": "CICLISTICA BUJESE - DIGAS",
-    "punti": 19,
-    "vittorie": 0,
-    "gare": 4,
-    "p1": 0,
-    "p2": 0,
-    "p3": 1,
-    "pout": 3,
     "pos": 171,
     "trend": 0
   },
@@ -4160,6 +4160,22 @@
     "trend": 0
   },
   {
+    "atleta_id": "CLEMENTE_GIULIO",
+    "cognome": "CLEMENTE",
+    "nome": "GIULIO",
+    "team_id": "GS_FIUMICELLO_1971",
+    "team_nome": "GS FIUMICELLO 1971",
+    "punti": 9,
+    "vittorie": 0,
+    "gare": 2,
+    "p1": 0,
+    "p2": 0,
+    "p3": 0,
+    "pout": 2,
+    "pos": 261,
+    "trend": 0
+  },
+  {
     "atleta_id": "EXENBERGER_SANDRO",
     "cognome": "EXENBERGER",
     "nome": "SANDRO",
@@ -4172,7 +4188,7 @@
     "p2": 0,
     "p3": 0,
     "pout": 2,
-    "pos": 261,
+    "pos": 262,
     "trend": 0
   },
   {
@@ -4188,7 +4204,7 @@
     "p2": 0,
     "p3": 0,
     "pout": 2,
-    "pos": 262,
+    "pos": 263,
     "trend": 0
   },
   {
@@ -4204,7 +4220,7 @@
     "p2": 0,
     "p3": 0,
     "pout": 2,
-    "pos": 263,
+    "pos": 264,
     "trend": 0
   },
   {
@@ -4220,7 +4236,7 @@
     "p2": 0,
     "p3": 0,
     "pout": 3,
-    "pos": 264,
+    "pos": 265,
     "trend": 0
   },
   {
@@ -4236,7 +4252,7 @@
     "p2": 0,
     "p3": 0,
     "pout": 2,
-    "pos": 265,
+    "pos": 266,
     "trend": 0
   },
   {
@@ -4252,7 +4268,7 @@
     "p2": 0,
     "p3": 0,
     "pout": 2,
-    "pos": 266,
+    "pos": 267,
     "trend": 0
   },
   {
@@ -4268,7 +4284,7 @@
     "p2": 0,
     "p3": 0,
     "pout": 2,
-    "pos": 267,
+    "pos": 268,
     "trend": 0
   },
   {
@@ -4284,7 +4300,7 @@
     "p2": 0,
     "p3": 0,
     "pout": 2,
-    "pos": 268,
+    "pos": 269,
     "trend": 0
   },
   {
@@ -4300,7 +4316,7 @@
     "p2": 0,
     "p3": 0,
     "pout": 1,
-    "pos": 269,
+    "pos": 270,
     "trend": 0
   },
   {
@@ -4316,22 +4332,6 @@
     "p2": 0,
     "p3": 0,
     "pout": 3,
-    "pos": 270,
-    "trend": 0
-  },
-  {
-    "atleta_id": "CLEMENTE_GIULIO",
-    "cognome": "CLEMENTE",
-    "nome": "GIULIO",
-    "team_id": "GS_FIUMICELLO_1971",
-    "team_nome": "GS FIUMICELLO 1971",
-    "punti": 8,
-    "vittorie": 0,
-    "gare": 1,
-    "p1": 0,
-    "p2": 0,
-    "p3": 0,
-    "pout": 1,
     "pos": 271,
     "trend": 0
   },
