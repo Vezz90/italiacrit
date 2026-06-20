@@ -12009,8 +12009,6 @@ async function _loadGaraPcsExt(garaId, circuitResults) {
 
 // ── PCS risultati extra team (circuito 11+ + extra fuori circuito) ───────────
 async function _loadTeamPcsExtra(teamId, season) {
-  const el = document.getElementById('team-pcs-extra');
-  if (!el) return;
   const team = globalData?.teams?.[teamId];
   if (!team) return;
   const atletiIds = (team.atleti || []).filter(Boolean);
@@ -12036,6 +12034,12 @@ async function _loadTeamPcsExtra(teamId, season) {
     .filter(r => !r.gara_id || !icsKeys.has(`${r.atleta_id}:${r.gara_id}`))
     .sort((a, b) => (b.data || '').localeCompare(a.data || ''));
 
+  // Indice nome_gara dai risultati ICS (fonte autorevole)
+  const icsNomeByGaraId = {};
+  for (const r of (globalData?.resultsRaw || [])) {
+    if (r.gara_id && r.nome_gara && !icsNomeByGaraId[r.gara_id]) icsNomeByGaraId[r.gara_id] = r.nome_gara;
+  }
+
   // Gare circuito: pos 11+ (non già in ICS)
   const garaExtra = Array.isArray(pcsGareRaw)
     ? pcsGareRaw
@@ -12043,9 +12047,10 @@ async function _loadTeamPcsExtra(teamId, season) {
         .map(r => {
           const calId = (globalData?.garaToCalId?.[r.gara_id]) || r.gara_id;
           const cal = globalData?.calendar?.find(g => g.id === calId);
+          const data = cal?.data || r.gara_id.match(/(\d{4}-\d{2}-\d{2})/)?.[1] || '';
           return {
-            data:          cal?.data || r.gara_id.match(/(\d{4}-\d{2}-\d{2})/)?.[1] || '',
-            gara_name:     cal?.nome || r.gara_id,
+            data,
+            gara_name:     icsNomeByGaraId[r.gara_id] || cal?.nome || r.gara_id,
             gara_id:       r.gara_id,
             atleta_id:     r.atleta_id,
             posizione:     r.posizione,
@@ -12072,7 +12077,7 @@ async function _loadTeamPcsExtra(teamId, season) {
   const emptyRow = tbody.querySelector('.empty-state');
   if (emptyRow) emptyRow.closest('tr').remove();
 
-  const ph = window._rkPh || '';
+  const ph = `<span class="rk-av-placeholder"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><circle cx="12" cy="8" r="4"/><path d="M4 20c0-4 3.6-7 8-7s8 3 8 7"/></svg></span>`;
   const newSpans = [];
 
   for (const r of allExtra.slice(0, 200)) {
@@ -12143,6 +12148,12 @@ async function _loadAtletaPcsExtra(atletaId, season, icsRisultati, athlete) {
   // gara_ids già nella tabella ICS — non duplicare
   const icsGaraIds = new Set((icsRisultati || []).map(r => r.gara_id));
 
+  // Nome gara autorevole dai risultati ICS (stessa fonte usata dalle righe ICS)
+  const icsNomeByGaraId = {};
+  for (const r of (globalData?.resultsRaw || [])) {
+    if (r.gara_id && r.nome_gara && !icsNomeByGaraId[r.gara_id]) icsNomeByGaraId[r.gara_id] = r.nome_gara;
+  }
+
   const garaExtra = Array.isArray(pcsGareRaw)
     ? pcsGareRaw
         .filter(r => r.gara_id && !icsGaraIds.has(r.gara_id))
@@ -12152,7 +12163,7 @@ async function _loadAtletaPcsExtra(atletaId, season, icsRisultati, athlete) {
           return {
             data:      cal?.data || r.gara_id.match(/(\d{4}-\d{2}-\d{2})/)?.[1] || '',
             gara_id:   r.gara_id,
-            nome_gara: cal?.nome || r.gara_id,
+            nome_gara: icsNomeByGaraId[r.gara_id] || cal?.nome || r.gara_id,
             km:        cal?.km || '',
             posizione: r.posizione,
           };
