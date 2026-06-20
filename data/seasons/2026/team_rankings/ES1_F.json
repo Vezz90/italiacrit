@@ -86,12 +86,12 @@
   {
     "team_id": "G_S_MOSOLE",
     "team_nome": "G.S. MOSOLE",
-    "punti": 109,
-    "vittorie": 1,
-    "p1": 1,
+    "punti": 132,
+    "vittorie": 2,
+    "p1": 2,
     "p2": 1,
     "p3": 4,
-    "pout": 13,
+    "pout": 14,
     "n_atleti": 2,
     "pos": 8
   },
@@ -180,6 +180,18 @@
     "pos": 15
   },
   {
+    "team_id": "BREGANZE_MILLENIUM",
+    "team_nome": "BREGANZE MILLENIUM",
+    "punti": 32,
+    "vittorie": 0,
+    "p1": 0,
+    "p2": 1,
+    "p3": 1,
+    "pout": 4,
+    "n_atleti": 3,
+    "pos": 16
+  },
+  {
     "team_id": "G_C_SOSSANO_1975",
     "team_nome": "G.C. SOSSANO 1975",
     "punti": 31,
@@ -189,7 +201,7 @@
     "p3": 0,
     "pout": 7,
     "n_atleti": 1,
-    "pos": 16
+    "pos": 17
   },
   {
     "team_id": "SAMABIKE",
@@ -201,7 +213,7 @@
     "p3": 0,
     "pout": 0,
     "n_atleti": 1,
-    "pos": 17
+    "pos": 18
   },
   {
     "team_id": "KTM_ACADEMY_LE_MARMOTTE",
@@ -213,7 +225,7 @@
     "p3": 1,
     "pout": 1,
     "n_atleti": 1,
-    "pos": 18
+    "pos": 19
   },
   {
     "team_id": "SALUS_CICLISTICA_SEREGNO_DE_ROSA",
@@ -225,7 +237,7 @@
     "p3": 0,
     "pout": 8,
     "n_atleti": 4,
-    "pos": 19
+    "pos": 20
   },
   {
     "team_id": "A_S_D_AMICISUPERSKI",
@@ -237,7 +249,7 @@
     "p3": 0,
     "pout": 4,
     "n_atleti": 2,
-    "pos": 20
+    "pos": 21
   },
   {
     "team_id": "S_C_PATTADA",
@@ -249,7 +261,7 @@
     "p3": 0,
     "pout": 0,
     "n_atleti": 1,
-    "pos": 21
+    "pos": 22
   },
   {
     "team_id": "B_TEAM_CYCLING_PROJECT",
@@ -261,7 +273,7 @@
     "p3": 0,
     "pout": 4,
     "n_atleti": 1,
-    "pos": 22
+    "pos": 23
   },
   {
     "team_id": "COMAL_TRENTINO_CYCLING_ACADEMY",
@@ -273,7 +285,7 @@
     "p3": 0,
     "pout": 8,
     "n_atleti": 1,
-    "pos": 23
+    "pos": 24
   },
   {
     "team_id": "ASD_EFFETTO_CICLISMO_NOI_SPORT",
@@ -285,7 +297,7 @@
     "p3": 0,
     "pout": 3,
     "n_atleti": 1,
-    "pos": 24
+    "pos": 25
   },
   {
     "team_id": "ASD_TEAM_FEMMINILE_TRENTINO",
@@ -297,7 +309,19 @@
     "p3": 0,
     "pout": 2,
     "n_atleti": 2,
-    "pos": 25
+    "pos": 26
+  },
+  {
+    "team_id": "ASS_NE_CICLISTICA_DILETT_VALVASONE",
+    "team_nome": "ASS.NE CICLISTICA DILETT. VALVASONE",
+    "punti": 13,
+    "vittorie": 0,
+    "p1": 0,
+    "p2": 0,
+    "p3": 0,
+    "pout": 4,
+    "n_atleti": 2,
+    "pos": 27
   },
   {
     "team_id": "HG_CYCLING_TEAM",
@@ -309,7 +333,19 @@
     "p3": 1,
     "pout": 1,
     "n_atleti": 1,
-    "pos": 26
+    "pos": 28
+  },
+  {
+    "team_id": "U_S_C_S_I_RUBANO",
+    "team_nome": "U.S. C.S.I. RUBANO",
+    "punti": 12,
+    "vittorie": 0,
+    "p1": 0,
+    "p2": 0,
+    "p3": 0,
+    "pout": 2,
+    "n_atleti": 1,
+    "pos": 29
   },
   {
     "team_id": "A_S_D_CICLISTICA_G_BONZAGNI",
@@ -321,31 +357,7 @@
     "p3": 0,
     "pout": 3,
     "n_atleti": 1,
-    "pos": 27
-  },
-  {
-    "team_id": "BREGANZE_MILLENIUM",
-    "team_nome": "BREGANZE MILLENIUM",
-    "punti": 7,
-    "vittorie": 0,
-    "p1": 0,
-    "p2": 0,
-    "p3": 0,
-    "pout": 3,
-    "n_atleti": 2,
-    "pos": 28
-  },
-  {
-    "team_id": "ASS_NE_CICLISTICA_DILETT_VALVASONE",
-    "team_nome": "ASS.NE CICLISTICA DILETT. VALVASONE",
-    "punti": 6,
-    "vittorie": 0,
-    "p1": 0,
-    "p2": 0,
-    "p3": 0,
-    "pout": 2,
-    "n_atleti": 2,
-    "pos": 29
+    "pos": 30
   },
   {
     "team_id": "CALDERARA_STM_RIDUTTORI",
@@ -356,18 +368,6 @@
     "p2": 0,
     "p3": 0,
     "pout": 3,
-    "n_atleti": 1,
-    "pos": 30
-  },
-  {
-    "team_id": "U_S_C_S_I_RUBANO",
-    "team_nome": "U.S. C.S.I. RUBANO",
-    "punti": 6,
-    "vittorie": 0,
-    "p1": 0,
-    "p2": 0,
-    "p3": 0,
-    "pout": 1,
     "n_atleti": 1,
     "pos": 31
   },
@@ -382,5 +382,17 @@
     "pout": 1,
     "n_atleti": 1,
     "pos": 32
+  },
+  {
+    "team_id": "ASD_GS_SORGENTE_PRADIPOZZO",
+    "team_nome": "ASD GS SORGENTE PRADIPOZZO",
+    "punti": 4,
+    "vittorie": 0,
+    "p1": 0,
+    "p2": 0,
+    "p3": 0,
+    "pout": 1,
+    "n_atleti": 1,
+    "pos": 33
   }
 ]

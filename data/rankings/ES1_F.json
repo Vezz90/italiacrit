@@ -128,6 +128,22 @@
     "trend": 0
   },
   {
+    "atleta_id": "MOINO_ALESSIA",
+    "cognome": "MOINO",
+    "nome": "ALESSIA",
+    "team_id": "G_S_MOSOLE",
+    "team_nome": "G.S. MOSOLE",
+    "punti": 74,
+    "vittorie": 1,
+    "gare": 12,
+    "p1": 1,
+    "p2": 1,
+    "p3": 1,
+    "pout": 9,
+    "pos": 9,
+    "trend": 1
+  },
+  {
     "atleta_id": "MARIANI_MARGHERITA",
     "cognome": "MARIANI",
     "nome": "MARGHERITA",
@@ -140,24 +156,8 @@
     "p2": 1,
     "p3": 1,
     "pout": 10,
-    "pos": 9,
-    "trend": 0
-  },
-  {
-    "atleta_id": "MOINO_ALESSIA",
-    "cognome": "MOINO",
-    "nome": "ALESSIA",
-    "team_id": "G_S_MOSOLE",
-    "team_nome": "G.S. MOSOLE",
-    "punti": 66,
-    "vittorie": 1,
-    "gare": 11,
-    "p1": 1,
-    "p2": 1,
-    "p3": 1,
-    "pout": 8,
     "pos": 10,
-    "trend": 0
+    "trend": -1
   },
   {
     "atleta_id": "CAMPOLI_AURORA",
@@ -176,6 +176,22 @@
     "trend": 0
   },
   {
+    "atleta_id": "GUIDOLIN_GIOIA",
+    "cognome": "GUIDOLIN",
+    "nome": "GIOIA",
+    "team_id": "G_S_MOSOLE",
+    "team_nome": "G.S. MOSOLE",
+    "punti": 58,
+    "vittorie": 1,
+    "gare": 9,
+    "p1": 1,
+    "p2": 0,
+    "p3": 3,
+    "pout": 5,
+    "pos": 12,
+    "trend": 7
+  },
+  {
     "atleta_id": "NERI_SARA",
     "cognome": "NERI",
     "nome": "SARA",
@@ -188,8 +204,8 @@
     "p2": 1,
     "p3": 1,
     "pout": 6,
-    "pos": 12,
-    "trend": 0
+    "pos": 13,
+    "trend": -1
   },
   {
     "atleta_id": "BUTTARAZZI_GIULIA",
@@ -204,8 +220,8 @@
     "p2": 1,
     "p3": 0,
     "pout": 0,
-    "pos": 13,
-    "trend": 0
+    "pos": 14,
+    "trend": -1
   },
   {
     "atleta_id": "PIN_MATILDE",
@@ -220,8 +236,8 @@
     "p2": 1,
     "p3": 0,
     "pout": 5,
-    "pos": 14,
-    "trend": 0
+    "pos": 15,
+    "trend": -1
   },
   {
     "atleta_id": "CACCIA_BEATRICE",
@@ -236,8 +252,8 @@
     "p2": 1,
     "p3": 2,
     "pout": 6,
-    "pos": 15,
-    "trend": 0
+    "pos": 16,
+    "trend": -1
   },
   {
     "atleta_id": "CIANTI_NOEMI",
@@ -252,8 +268,8 @@
     "p2": 0,
     "p3": 1,
     "pout": 9,
-    "pos": 16,
-    "trend": 0
+    "pos": 17,
+    "trend": -1
   },
   {
     "atleta_id": "BUTTARAZZI_SOFIA",
@@ -268,8 +284,8 @@
     "p2": 3,
     "p3": 1,
     "pout": 0,
-    "pos": 17,
-    "trend": 0
+    "pos": 18,
+    "trend": -1
   },
   {
     "atleta_id": "SFORZINI_SELENE",
@@ -284,24 +300,8 @@
     "p2": 1,
     "p3": 1,
     "pout": 6,
-    "pos": 18,
-    "trend": 0
-  },
-  {
-    "atleta_id": "GUIDOLIN_GIOIA",
-    "cognome": "GUIDOLIN",
-    "nome": "GIOIA",
-    "team_id": "G_S_MOSOLE",
-    "team_nome": "G.S. MOSOLE",
-    "punti": 43,
-    "vittorie": 0,
-    "gare": 8,
-    "p1": 0,
-    "p2": 0,
-    "p3": 3,
-    "pout": 5,
     "pos": 19,
-    "trend": 0
+    "trend": -1
   },
   {
     "atleta_id": "STELLA_AURORA",
@@ -480,6 +480,22 @@
     "trend": 0
   },
   {
+    "atleta_id": "MORO_ELENA",
+    "cognome": "MORO",
+    "nome": "ELENA",
+    "team_id": "BREGANZE_MILLENIUM",
+    "team_nome": "BREGANZE MILLENIUM",
+    "punti": 18,
+    "vittorie": 0,
+    "gare": 3,
+    "p1": 0,
+    "p2": 1,
+    "p3": 0,
+    "pout": 2,
+    "pos": 31,
+    "trend": 18
+  },
+  {
     "atleta_id": "GAZZOLI_GIULIA",
     "cognome": "GAZZOLI",
     "nome": "GIULIA",
@@ -492,8 +508,8 @@
     "p2": 0,
     "p3": 1,
     "pout": 1,
-    "pos": 31,
-    "trend": 0
+    "pos": 32,
+    "trend": -1
   },
   {
     "atleta_id": "GALLI_MARTINA",
@@ -508,8 +524,8 @@
     "p2": 0,
     "p3": 0,
     "pout": 4,
-    "pos": 32,
-    "trend": 0
+    "pos": 33,
+    "trend": -1
   },
   {
     "atleta_id": "BORDIGNON_NAMI_LUCE",
@@ -524,8 +540,8 @@
     "p2": 0,
     "p3": 0,
     "pout": 3,
-    "pos": 33,
-    "trend": 0
+    "pos": 34,
+    "trend": -1
   },
   {
     "atleta_id": "ALFANO_VITTORIA",
@@ -540,8 +556,8 @@
     "p2": 0,
     "p3": 1,
     "pout": 1,
-    "pos": 34,
-    "trend": 0
+    "pos": 35,
+    "trend": -1
   },
   {
     "atleta_id": "MAZZA_CARMEN",
@@ -556,8 +572,8 @@
     "p2": 0,
     "p3": 0,
     "pout": 2,
-    "pos": 35,
-    "trend": 0
+    "pos": 36,
+    "trend": -1
   },
   {
     "atleta_id": "TRICARICO_MARGHERITA",
@@ -572,8 +588,8 @@
     "p2": 0,
     "p3": 1,
     "pout": 1,
-    "pos": 36,
-    "trend": 0
+    "pos": 37,
+    "trend": -1
   },
   {
     "atleta_id": "FARIAS_NICOLE",
@@ -588,8 +604,24 @@
     "p2": 0,
     "p3": 0,
     "pout": 3,
-    "pos": 37,
-    "trend": 0
+    "pos": 38,
+    "trend": -1
+  },
+  {
+    "atleta_id": "BILLIATO_ARIANNA",
+    "cognome": "BILLIATO",
+    "nome": "ARIANNA",
+    "team_id": "U_S_C_S_I_RUBANO",
+    "team_nome": "U.S. C.S.I. RUBANO",
+    "punti": 12,
+    "vittorie": 0,
+    "gare": 2,
+    "p1": 0,
+    "p2": 0,
+    "p3": 0,
+    "pout": 2,
+    "pos": 39,
+    "trend": 12
   },
   {
     "atleta_id": "TESTA_CAROLINA",
@@ -604,8 +636,8 @@
     "p2": 0,
     "p3": 0,
     "pout": 4,
-    "pos": 38,
-    "trend": 0
+    "pos": 40,
+    "trend": -2
   },
   {
     "atleta_id": "MASSA_MARTINA",
@@ -620,8 +652,8 @@
     "p2": 0,
     "p3": 0,
     "pout": 2,
-    "pos": 39,
-    "trend": 0
+    "pos": 41,
+    "trend": -2
   },
   {
     "atleta_id": "TAROLLI_SARA",
@@ -636,8 +668,24 @@
     "p2": 1,
     "p3": 0,
     "pout": 0,
-    "pos": 40,
-    "trend": 0
+    "pos": 42,
+    "trend": -2
+  },
+  {
+    "atleta_id": "BAUCE_MARIA_VITTORIA",
+    "cognome": "BAUCE",
+    "nome": "MARIA VITTORIA",
+    "team_id": "BREGANZE_MILLENIUM",
+    "team_nome": "BREGANZE MILLENIUM",
+    "punti": 10,
+    "vittorie": 0,
+    "gare": 1,
+    "p1": 0,
+    "p2": 0,
+    "p3": 1,
+    "pout": 0,
+    "pos": 43,
+    "trend": null
   },
   {
     "atleta_id": "SBRIGHI_EMMA",
@@ -652,8 +700,8 @@
     "p2": 0,
     "p3": 1,
     "pout": 0,
-    "pos": 41,
-    "trend": 0
+    "pos": 44,
+    "trend": -3
   },
   {
     "atleta_id": "LODI_ATENA",
@@ -668,8 +716,8 @@
     "p2": 0,
     "p3": 0,
     "pout": 3,
-    "pos": 42,
-    "trend": 0
+    "pos": 45,
+    "trend": -3
   },
   {
     "atleta_id": "BURGER_FENNA",
@@ -684,8 +732,8 @@
     "p2": 0,
     "p3": 0,
     "pout": 4,
-    "pos": 43,
-    "trend": 0
+    "pos": 46,
+    "trend": -3
   },
   {
     "atleta_id": "ZAVATTERO_MARTINA",
@@ -700,8 +748,8 @@
     "p2": 0,
     "p3": 0,
     "pout": 3,
-    "pos": 44,
-    "trend": 0
+    "pos": 47,
+    "trend": -3
   },
   {
     "atleta_id": "MOTTA_LUCREZIA",
@@ -716,8 +764,8 @@
     "p2": 0,
     "p3": 0,
     "pout": 3,
-    "pos": 45,
-    "trend": 0
+    "pos": 48,
+    "trend": -3
   },
   {
     "atleta_id": "STEFANI_GIULIA",
@@ -732,8 +780,8 @@
     "p2": 0,
     "p3": 0,
     "pout": 2,
-    "pos": 46,
-    "trend": 0
+    "pos": 49,
+    "trend": -3
   },
   {
     "atleta_id": "BASTIANELLI_CLAUDIA",
@@ -748,8 +796,24 @@
     "p2": 0,
     "p3": 0,
     "pout": 2,
-    "pos": 47,
-    "trend": 0
+    "pos": 50,
+    "trend": -3
+  },
+  {
+    "atleta_id": "DANELUZZI_ALICE",
+    "cognome": "DANELUZZI",
+    "nome": "ALICE",
+    "team_id": "ASS_NE_CICLISTICA_DILETT_VALVASONE",
+    "team_nome": "ASS.NE CICLISTICA DILETT. VALVASONE",
+    "punti": 7,
+    "vittorie": 0,
+    "gare": 2,
+    "p1": 0,
+    "p2": 0,
+    "p3": 0,
+    "pout": 2,
+    "pos": 51,
+    "trend": 2
   },
   {
     "atleta_id": "SECCHI_MARTA_MARIA",
@@ -764,15 +828,15 @@
     "p2": 0,
     "p3": 0,
     "pout": 2,
-    "pos": 48,
-    "trend": 0
+    "pos": 52,
+    "trend": -4
   },
   {
-    "atleta_id": "MORO_ELENA",
-    "cognome": "MORO",
-    "nome": "ELENA",
-    "team_id": "BREGANZE_MILLENIUM",
-    "team_nome": "BREGANZE MILLENIUM",
+    "atleta_id": "PASIN_GAIA",
+    "cognome": "PASIN",
+    "nome": "GAIA",
+    "team_id": "ASS_NE_CICLISTICA_DILETT_VALVASONE",
+    "team_nome": "ASS.NE CICLISTICA DILETT. VALVASONE",
     "punti": 6,
     "vittorie": 0,
     "gare": 2,
@@ -780,8 +844,8 @@
     "p2": 0,
     "p3": 0,
     "pout": 2,
-    "pos": 49,
-    "trend": 0
+    "pos": 53,
+    "trend": 6
   },
   {
     "atleta_id": "PETRUCCI_AURORA",
@@ -796,24 +860,8 @@
     "p2": 0,
     "p3": 0,
     "pout": 3,
-    "pos": 50,
-    "trend": 0
-  },
-  {
-    "atleta_id": "BILLIATO_ARIANNA",
-    "cognome": "BILLIATO",
-    "nome": "ARIANNA",
-    "team_id": "U_S_C_S_I_RUBANO",
-    "team_nome": "U.S. C.S.I. RUBANO",
-    "punti": 6,
-    "vittorie": 0,
-    "gare": 1,
-    "p1": 0,
-    "p2": 0,
-    "p3": 0,
-    "pout": 1,
-    "pos": 51,
-    "trend": 0
+    "pos": 54,
+    "trend": -4
   },
   {
     "atleta_id": "VERGANI_CAMILLA",
@@ -828,24 +876,8 @@
     "p2": 0,
     "p3": 0,
     "pout": 1,
-    "pos": 52,
-    "trend": 0
-  },
-  {
-    "atleta_id": "DANELUZZI_ALICE",
-    "cognome": "DANELUZZI",
-    "nome": "ALICE",
-    "team_id": "ASS_NE_CICLISTICA_DILETT_VALVASONE",
-    "team_nome": "ASS.NE CICLISTICA DILETT. VALVASONE",
-    "punti": 5,
-    "vittorie": 0,
-    "gare": 1,
-    "p1": 0,
-    "p2": 0,
-    "p3": 0,
-    "pout": 1,
-    "pos": 53,
-    "trend": 0
+    "pos": 55,
+    "trend": -3
   },
   {
     "atleta_id": "ANNOSCIA_ANNA",
@@ -860,7 +892,39 @@
     "p2": 0,
     "p3": 0,
     "pout": 1,
-    "pos": 54,
+    "pos": 56,
+    "trend": -2
+  },
+  {
+    "atleta_id": "GEROMETTA_GIORGIA",
+    "cognome": "GEROMETTA",
+    "nome": "GIORGIA",
+    "team_id": "ASD_GS_SORGENTE_PRADIPOZZO",
+    "team_nome": "ASD GS SORGENTE PRADIPOZZO",
+    "punti": 4,
+    "vittorie": 0,
+    "gare": 1,
+    "p1": 0,
+    "p2": 0,
+    "p3": 0,
+    "pout": 1,
+    "pos": 57,
+    "trend": null
+  },
+  {
+    "atleta_id": "BISOGNIN_ILARIA",
+    "cognome": "BISOGNIN",
+    "nome": "ILARIA",
+    "team_id": "BREGANZE_MILLENIUM",
+    "team_nome": "BREGANZE MILLENIUM",
+    "punti": 4,
+    "vittorie": 0,
+    "gare": 2,
+    "p1": 0,
+    "p2": 0,
+    "p3": 0,
+    "pout": 2,
+    "pos": 58,
     "trend": 0
   },
   {
@@ -876,8 +940,8 @@
     "p2": 0,
     "p3": 0,
     "pout": 1,
-    "pos": 55,
-    "trend": 0
+    "pos": 59,
+    "trend": -4
   },
   {
     "atleta_id": "GUERRIERI_CAMILLA",
@@ -892,8 +956,8 @@
     "p2": 0,
     "p3": 0,
     "pout": 1,
-    "pos": 56,
-    "trend": 0
+    "pos": 60,
+    "trend": -4
   },
   {
     "atleta_id": "FAVARO_EMILY",
@@ -908,40 +972,8 @@
     "p2": 0,
     "p3": 0,
     "pout": 1,
-    "pos": 57,
-    "trend": 0
-  },
-  {
-    "atleta_id": "BISOGNIN_ILARIA",
-    "cognome": "BISOGNIN",
-    "nome": "ILARIA",
-    "team_id": "BREGANZE_MILLENIUM",
-    "team_nome": "BREGANZE MILLENIUM",
-    "punti": 1,
-    "vittorie": 0,
-    "gare": 1,
-    "p1": 0,
-    "p2": 0,
-    "p3": 0,
-    "pout": 1,
-    "pos": 58,
-    "trend": 0
-  },
-  {
-    "atleta_id": "PASIN_GAIA",
-    "cognome": "PASIN",
-    "nome": "GAIA",
-    "team_id": "ASS_NE_CICLISTICA_DILETT_VALVASONE",
-    "team_nome": "ASS.NE CICLISTICA DILETT. VALVASONE",
-    "punti": 1,
-    "vittorie": 0,
-    "gare": 1,
-    "p1": 0,
-    "p2": 0,
-    "p3": 0,
-    "pout": 1,
-    "pos": 59,
-    "trend": 0
+    "pos": 61,
+    "trend": -4
   },
   {
     "atleta_id": "TRAPASSI_SOFIA",
@@ -956,7 +988,7 @@
     "p2": 0,
     "p3": 0,
     "pout": 1,
-    "pos": 60,
-    "trend": 0
+    "pos": 62,
+    "trend": -2
   }
 ]

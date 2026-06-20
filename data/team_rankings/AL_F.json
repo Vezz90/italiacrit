@@ -36,6 +36,18 @@
     "pos": 3
   },
   {
+    "team_id": "U_C_CONSCIO_PEDALE_DEL_SILE",
+    "team_nome": "U.C.CONSCIO PEDALE DEL SILE",
+    "punti": 199,
+    "vittorie": 4,
+    "p1": 4,
+    "p2": 6,
+    "p3": 3,
+    "pout": 5,
+    "n_atleti": 3,
+    "pos": 4
+  },
+  {
     "team_id": "U_C_GIORGIONE",
     "team_nome": "U.C. GIORGIONE",
     "punti": 197,
@@ -45,18 +57,6 @@
     "p3": 4,
     "pout": 11,
     "n_atleti": 5,
-    "pos": 4
-  },
-  {
-    "team_id": "U_C_CONSCIO_PEDALE_DEL_SILE",
-    "team_nome": "U.C.CONSCIO PEDALE DEL SILE",
-    "punti": 182,
-    "vittorie": 3,
-    "p1": 3,
-    "p2": 6,
-    "p3": 3,
-    "pout": 4,
-    "n_atleti": 2,
     "pos": 5
   },
   {
@@ -144,6 +144,18 @@
     "pos": 12
   },
   {
+    "team_id": "ASS_NE_CICLISTICA_DILETT_VALVASONE",
+    "team_nome": "ASS.NE CICLISTICA DILETT. VALVASONE",
+    "punti": 56,
+    "vittorie": 0,
+    "p1": 0,
+    "p2": 2,
+    "p3": 0,
+    "pout": 9,
+    "n_atleti": 3,
+    "pos": 13
+  },
+  {
     "team_id": "HG_CYCLING_TEAM",
     "team_nome": "HG CYCLING TEAM",
     "punti": 56,
@@ -153,7 +165,7 @@
     "p3": 2,
     "pout": 8,
     "n_atleti": 4,
-    "pos": 13
+    "pos": 14
   },
   {
     "team_id": "U_S_SCUOLA_CICLISMO_VO",
@@ -165,7 +177,7 @@
     "p3": 2,
     "pout": 6,
     "n_atleti": 1,
-    "pos": 14
+    "pos": 15
   },
   {
     "team_id": "BICIFESTIVAL",
@@ -177,7 +189,7 @@
     "p3": 1,
     "pout": 7,
     "n_atleti": 4,
-    "pos": 15
+    "pos": 16
   },
   {
     "team_id": "A_R_MONEX_PRO_CYCLING_TEAM",
@@ -189,7 +201,7 @@
     "p3": 1,
     "pout": 7,
     "n_atleti": 4,
-    "pos": 16
+    "pos": 17
   },
   {
     "team_id": "A_S_D_AVIS_BIKE_RUVO",
@@ -201,19 +213,19 @@
     "p3": 1,
     "pout": 1,
     "n_atleti": 3,
-    "pos": 17
+    "pos": 18
   },
   {
-    "team_id": "ASS_NE_CICLISTICA_DILETT_VALVASONE",
-    "team_nome": "ASS.NE CICLISTICA DILETT. VALVASONE",
-    "punti": 43,
+    "team_id": "LIBERTAS_CERESETTO",
+    "team_nome": "LIBERTAS CERESETTO",
+    "punti": 35,
     "vittorie": 0,
     "p1": 0,
-    "p2": 1,
-    "p3": 0,
-    "pout": 8,
+    "p2": 0,
+    "p3": 1,
+    "pout": 6,
     "n_atleti": 2,
-    "pos": 18
+    "pos": 19
   },
   {
     "team_id": "ASD_FUSION_BIKE",
@@ -225,7 +237,7 @@
     "p3": 0,
     "pout": 5,
     "n_atleti": 2,
-    "pos": 19
+    "pos": 20
   },
   {
     "team_id": "TEAM_CESARO_NERI_LUCCHINI",
@@ -237,7 +249,7 @@
     "p3": 1,
     "pout": 1,
     "n_atleti": 1,
-    "pos": 20
+    "pos": 21
   },
   {
     "team_id": "VELO_CLUB_SARROCH",
@@ -249,7 +261,7 @@
     "p3": 0,
     "pout": 0,
     "n_atleti": 1,
-    "pos": 21
+    "pos": 22
   },
   {
     "team_id": "BLU_TEAM",
@@ -261,7 +273,31 @@
     "p3": 0,
     "pout": 2,
     "n_atleti": 1,
-    "pos": 22
+    "pos": 23
+  },
+  {
+    "team_id": "BREGANZE_MILLENIUM",
+    "team_nome": "BREGANZE MILLENIUM",
+    "punti": 26,
+    "vittorie": 0,
+    "p1": 0,
+    "p2": 1,
+    "p3": 0,
+    "pout": 2,
+    "n_atleti": 1,
+    "pos": 24
+  },
+  {
+    "team_id": "G_C_NOVENTANA",
+    "team_nome": "G.C. NOVENTANA",
+    "punti": 26,
+    "vittorie": 0,
+    "p1": 0,
+    "p2": 0,
+    "p3": 0,
+    "pout": 7,
+    "n_atleti": 2,
+    "pos": 25
   },
   {
     "team_id": "ASD_VELOCE_CLUB_BORGO",
@@ -273,7 +309,19 @@
     "p3": 1,
     "pout": 6,
     "n_atleti": 2,
-    "pos": 23
+    "pos": 26
+  },
+  {
+    "team_id": "A_S_D_G_C_EMIC",
+    "team_nome": "A.S.D. - G.C. EMIC",
+    "punti": 25,
+    "vittorie": 0,
+    "p1": 0,
+    "p2": 0,
+    "p3": 1,
+    "pout": 5,
+    "n_atleti": 1,
+    "pos": 27
   },
   {
     "team_id": "COMAL_TRENTINO_CYCLING_ACADEMY",
@@ -285,7 +333,7 @@
     "p3": 0,
     "pout": 6,
     "n_atleti": 4,
-    "pos": 24
+    "pos": 28
   },
   {
     "team_id": "FREE_BIKE_LT_LOGISTICA_AMBIENTALE",
@@ -297,7 +345,7 @@
     "p3": 0,
     "pout": 0,
     "n_atleti": 1,
-    "pos": 25
+    "pos": 29
   },
   {
     "team_id": "SESTU_BIKE_A_S_D",
@@ -309,31 +357,7 @@
     "p3": 0,
     "pout": 0,
     "n_atleti": 1,
-    "pos": 26
-  },
-  {
-    "team_id": "LIBERTAS_CERESETTO",
-    "team_nome": "LIBERTAS CERESETTO",
-    "punti": 22,
-    "vittorie": 0,
-    "p1": 0,
-    "p2": 0,
-    "p3": 1,
-    "pout": 4,
-    "n_atleti": 2,
-    "pos": 27
-  },
-  {
-    "team_id": "BREGANZE_MILLENIUM",
-    "team_nome": "BREGANZE MILLENIUM",
-    "punti": 20,
-    "vittorie": 0,
-    "p1": 0,
-    "p2": 1,
-    "p3": 0,
-    "pout": 1,
-    "n_atleti": 1,
-    "pos": 28
+    "pos": 30
   },
   {
     "team_id": "SAMABIKE",
@@ -345,19 +369,7 @@
     "p3": 1,
     "pout": 0,
     "n_atleti": 1,
-    "pos": 29
-  },
-  {
-    "team_id": "G_C_NOVENTANA",
-    "team_nome": "G.C. NOVENTANA",
-    "punti": 19,
-    "vittorie": 0,
-    "p1": 0,
-    "p2": 0,
-    "p3": 0,
-    "pout": 5,
-    "n_atleti": 2,
-    "pos": 30
+    "pos": 31
   },
   {
     "team_id": "I_CINGHIALI_EVO",
@@ -369,7 +381,7 @@
     "p3": 0,
     "pout": 5,
     "n_atleti": 1,
-    "pos": 31
+    "pos": 32
   },
   {
     "team_id": "G_C_SOSSANO_1975",
@@ -381,7 +393,7 @@
     "p3": 0,
     "pout": 1,
     "n_atleti": 1,
-    "pos": 32
+    "pos": 33
   },
   {
     "team_id": "G_S_CICLI_FIORIN_CYCLING_TEAM_ASD",
@@ -393,7 +405,7 @@
     "p3": 0,
     "pout": 1,
     "n_atleti": 1,
-    "pos": 33
+    "pos": 34
   },
   {
     "team_id": "PERUTNINA_PTUJ",
@@ -405,7 +417,7 @@
     "p3": 0,
     "pout": 1,
     "n_atleti": 2,
-    "pos": 34
+    "pos": 35
   },
   {
     "team_id": "TEAM_CORATTI",
@@ -416,18 +428,6 @@
     "p2": 0,
     "p3": 0,
     "pout": 0,
-    "n_atleti": 1,
-    "pos": 35
-  },
-  {
-    "team_id": "A_S_D_G_C_EMIC",
-    "team_nome": "A.S.D. - G.C. EMIC",
-    "punti": 15,
-    "vittorie": 0,
-    "p1": 0,
-    "p2": 0,
-    "p3": 0,
-    "pout": 5,
     "n_atleti": 1,
     "pos": 36
   },
