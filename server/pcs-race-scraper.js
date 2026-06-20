@@ -642,15 +642,14 @@ function makeTeamId(teamName) {
       }
 
       garaRows.push({
-        gara_id:        garaId,
-        season:         SEASON,
-        posizione:      r.posizione,
-        rider_name:     r.rider_name,
-        atleta_id:      atletaId || null,
-        team_name:      r.team_name,
-        distacco:       r.distacco,
-        pcs_race_slug:  pcsSlug,
-        pcs_rider_slug: r.pcs_rider_slug || null,
+        gara_id:       garaId,
+        season:        SEASON,
+        posizione:     r.posizione,
+        rider_name:    r.rider_name,
+        atleta_id:     atletaId || null,
+        team_name:     r.team_name,
+        distacco:      r.distacco,
+        pcs_race_slug: pcsSlug,
       });
 
       await sleep(100);
