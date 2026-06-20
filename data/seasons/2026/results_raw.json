@@ -708,7 +708,7 @@
     "team_id": "U_C_CONSCIO_PEDALE_DEL_SILE",
     "tempo": "",
     "km": "6.400",
-    "media": "",
+    "media": "42.031",
     "punti_base": 15,
     "punti_effettivi": 15
   },
@@ -729,9 +729,9 @@
     "atleta_id": "DEOTTO_EMMA",
     "team": "ASS.NE CICLISTICA DILETT. VALVASONE",
     "team_id": "ASS_NE_CICLISTICA_DILETT_VALVASONE",
-    "tempo": "",
+    "tempo": "a 11\"",
     "km": "6.400",
-    "media": "",
+    "media": "42.031",
     "punti_base": 12,
     "punti_effettivi": 12
   },
@@ -752,9 +752,9 @@
     "atleta_id": "LISORINI_NINA",
     "team": "A.S.D. - G.C. EMIC",
     "team_id": "A_S_D_G_C_EMIC",
-    "tempo": "",
+    "tempo": "a 12\"",
     "km": "6.400",
-    "media": "",
+    "media": "42.031",
     "punti_base": 10,
     "punti_effettivi": 10
   },
@@ -775,9 +775,9 @@
     "atleta_id": "PITTA_MATILDE",
     "team": "LIBERTAS CERESETTO",
     "team_id": "LIBERTAS_CERESETTO",
-    "tempo": "",
+    "tempo": "a 18\"",
     "km": "6.400",
-    "media": "",
+    "media": "42.031",
     "punti_base": 8,
     "punti_effettivi": 8
   },
@@ -798,9 +798,9 @@
     "atleta_id": "TASCA_NICOLE",
     "team": "BREGANZE MILLENIUM",
     "team_id": "BREGANZE_MILLENIUM",
-    "tempo": "",
+    "tempo": "a 36\"",
     "km": "6.400",
-    "media": "",
+    "media": "42.031",
     "punti_base": 6,
     "punti_effettivi": 6
   },
@@ -821,9 +821,9 @@
     "atleta_id": "BON_GIULIA",
     "team": "LIBERTAS CERESETTO",
     "team_id": "LIBERTAS_CERESETTO",
-    "tempo": "",
+    "tempo": "a 40\"",
     "km": "6.400",
-    "media": "",
+    "media": "42.031",
     "punti_base": 5,
     "punti_effettivi": 5
   },
@@ -844,9 +844,9 @@
     "atleta_id": "PIVA_VALENTINA",
     "team": "G.C. NOVENTANA",
     "team_id": "G_C_NOVENTANA",
-    "tempo": "",
+    "tempo": "a 44\"",
     "km": "6.400",
-    "media": "",
+    "media": "42.031",
     "punti_base": 4,
     "punti_effettivi": 4
   },
@@ -867,9 +867,9 @@
     "atleta_id": "BACCHIN_VANESSA",
     "team": "G.C. NOVENTANA",
     "team_id": "G_C_NOVENTANA",
-    "tempo": "",
+    "tempo": "a 45\"",
     "km": "6.400",
-    "media": "",
+    "media": "42.031",
     "punti_base": 3,
     "punti_effettivi": 3
   },
@@ -890,9 +890,9 @@
     "atleta_id": "DE_FRANCESCHI_MARTINA",
     "team": "U.C.CONSCIO PEDALE DEL SILE",
     "team_id": "U_C_CONSCIO_PEDALE_DEL_SILE",
-    "tempo": "",
+    "tempo": "a 48\"",
     "km": "6.400",
-    "media": "",
+    "media": "42.031",
     "punti_base": 2,
     "punti_effettivi": 2
   },
@@ -913,9 +913,9 @@
     "atleta_id": "MOMESSO_ANNA",
     "team": "ASS.NE CICLISTICA DILETT. VALVASONE",
     "team_id": "ASS_NE_CICLISTICA_DILETT_VALVASONE",
-    "tempo": "",
+    "tempo": "a 50\"",
     "km": "6.400",
-    "media": "",
+    "media": "42.031",
     "punti_base": 1,
     "punti_effettivi": 1
   },
@@ -938,7 +938,7 @@
     "team_id": "A_S_D_CICLISTICA_MONSELICE",
     "tempo": "",
     "km": "6.400",
-    "media": "",
+    "media": "47.848",
     "punti_base": 15,
     "punti_effettivi": 15
   },
@@ -959,9 +959,9 @@
     "atleta_id": "CARCANGIU_DIEGO",
     "team": "CICLISTICA BUJESE - DIGAS",
     "team_id": "CICLISTICA_BUJESE_DIGAS",
-    "tempo": "",
+    "tempo": "a 6\"",
     "km": "6.400",
-    "media": "",
+    "media": "47.848",
     "punti_base": 12,
     "punti_effettivi": 12
   },
@@ -982,9 +982,9 @@
     "atleta_id": "CAVALLI_ALVISE",
     "team": "V.C. BASSANO 1892",
     "team_id": "V_C_BASSANO_1892",
-    "tempo": "",
+    "tempo": "a 9\"",
     "km": "6.400",
-    "media": "",
+    "media": "47.848",
     "punti_base": 10,
     "punti_effettivi": 10
   },
@@ -1005,9 +1005,9 @@
     "atleta_id": "D_AIUTO_SEBASTIANO",
     "team": "GCD PEDALE MANZANESE",
     "team_id": "GCD_PEDALE_MANZANESE",
-    "tempo": "",
+    "tempo": "a 10\"",
     "km": "6.400",
-    "media": "",
+    "media": "47.848",
     "punti_base": 8,
     "punti_effettivi": 8
   },
@@ -1028,9 +1028,9 @@
     "atleta_id": "BRAMATI_ALEX_REY",
     "team": "TEAM SENAGHESE GUERRINI",
     "team_id": "TEAM_SENAGHESE_GUERRINI",
-    "tempo": "",
+    "tempo": "a 10\"",
     "km": "6.400",
-    "media": "",
+    "media": "47.848",
     "punti_base": 6,
     "punti_effettivi": 6
   },
@@ -1051,9 +1051,9 @@
     "atleta_id": "MENEGHELLO_RICCARDO",
     "team": "IND. FORNITURE MORO-C&G CAPITAL",
     "team_id": "IND_FORNITURE_MORO_C_G_CAPITAL",
-    "tempo": "",
+    "tempo": "a 14\"",
     "km": "6.400",
-    "media": "",
+    "media": "47.848",
     "punti_base": 5,
     "punti_effettivi": 5
   },
@@ -1074,9 +1074,9 @@
     "atleta_id": "MAGGIONI_NICOLO",
     "team": "TEAM SENAGHESE GUERRINI",
     "team_id": "TEAM_SENAGHESE_GUERRINI",
-    "tempo": "",
+    "tempo": "a 16\"",
     "km": "6.400",
-    "media": "",
+    "media": "47.848",
     "punti_base": 4,
     "punti_effettivi": 4
   },
@@ -1097,9 +1097,9 @@
     "atleta_id": "STORTI_MICHELE",
     "team": "FAIZANE' CSZ SANDRIGO BIKE",
     "team_id": "FAIZANE_CSZ_SANDRIGO_BIKE",
-    "tempo": "",
+    "tempo": "a 17\"",
     "km": "6.400",
-    "media": "",
+    "media": "47.848",
     "punti_base": 3,
     "punti_effettivi": 3
   },
@@ -1120,9 +1120,9 @@
     "atleta_id": "TOFFUL_RICCARDO",
     "team": "GCD PEDALE MANZANESE",
     "team_id": "GCD_PEDALE_MANZANESE",
-    "tempo": "",
+    "tempo": "a 20\"",
     "km": "6.400",
-    "media": "",
+    "media": "47.848",
     "punti_base": 2,
     "punti_effettivi": 2
   },
@@ -1143,9 +1143,9 @@
     "atleta_id": "CLEMENTE_GIULIO",
     "team": "GS FIUMICELLO 1971",
     "team_id": "GS_FIUMICELLO_1971",
-    "tempo": "",
+    "tempo": "a 22\"",
     "km": "6.400",
-    "media": "",
+    "media": "47.848",
     "punti_base": 1,
     "punti_effettivi": 1
   },
@@ -1168,7 +1168,7 @@
     "team_id": "G_S_MOSOLE",
     "tempo": "",
     "km": "4.700",
-    "media": "",
+    "media": "37.386",
     "punti_base": 15,
     "punti_effettivi": 15
   },
@@ -1191,7 +1191,7 @@
     "team_id": "BREGANZE_MILLENIUM",
     "tempo": "",
     "km": "4.700",
-    "media": "",
+    "media": "37.386",
     "punti_base": 12,
     "punti_effettivi": 12
   },
@@ -1214,7 +1214,7 @@
     "team_id": "BREGANZE_MILLENIUM",
     "tempo": "",
     "km": "4.700",
-    "media": "",
+    "media": "37.386",
     "punti_base": 10,
     "punti_effettivi": 10
   },
@@ -1237,7 +1237,7 @@
     "team_id": "G_S_MOSOLE",
     "tempo": "",
     "km": "4.700",
-    "media": "",
+    "media": "37.386",
     "punti_base": 8,
     "punti_effettivi": 8
   },
@@ -1260,7 +1260,7 @@
     "team_id": "U_S_C_S_I_RUBANO",
     "tempo": "",
     "km": "4.700",
-    "media": "",
+    "media": "37.386",
     "punti_base": 6,
     "punti_effettivi": 6
   },
@@ -1283,7 +1283,7 @@
     "team_id": "ASS_NE_CICLISTICA_DILETT_VALVASONE",
     "tempo": "",
     "km": "4.700",
-    "media": "",
+    "media": "37.386",
     "punti_base": 5,
     "punti_effettivi": 5
   },
@@ -1306,7 +1306,7 @@
     "team_id": "ASD_GS_SORGENTE_PRADIPOZZO",
     "tempo": "",
     "km": "4.700",
-    "media": "",
+    "media": "37.386",
     "punti_base": 4,
     "punti_effettivi": 4
   },
@@ -1329,7 +1329,7 @@
     "team_id": "BREGANZE_MILLENIUM",
     "tempo": "",
     "km": "4.700",
-    "media": "",
+    "media": "37.386",
     "punti_base": 3,
     "punti_effettivi": 3
   },
@@ -1352,7 +1352,7 @@
     "team_id": "ASS_NE_CICLISTICA_DILETT_VALVASONE",
     "tempo": "",
     "km": "4.700",
-    "media": "",
+    "media": "37.386",
     "punti_base": 2,
     "punti_effettivi": 2
   },
@@ -1375,7 +1375,7 @@
     "team_id": "G_C_NOVENTANA",
     "tempo": "",
     "km": "4.700",
-    "media": "",
+    "media": "40.057",
     "punti_base": 15,
     "punti_effettivi": 15
   },
@@ -1398,7 +1398,7 @@
     "team_id": "U_C_CONSCIO_PEDALE_DEL_SILE",
     "tempo": "",
     "km": "4.700",
-    "media": "",
+    "media": "40.057",
     "punti_base": 12,
     "punti_effettivi": 12
   },
@@ -1421,7 +1421,7 @@
     "team_id": "BREGANZE_MILLENIUM",
     "tempo": "",
     "km": "4.700",
-    "media": "",
+    "media": "40.057",
     "punti_base": 10,
     "punti_effettivi": 10
   },
@@ -1444,7 +1444,7 @@
     "team_id": "LIBERTAS_CERESETTO",
     "tempo": "",
     "km": "4.700",
-    "media": "",
+    "media": "40.057",
     "punti_base": 8,
     "punti_effettivi": 8
   },
@@ -1467,7 +1467,7 @@
     "team_id": "ASS_NE_CICLISTICA_DILETT_VALVASONE",
     "tempo": "",
     "km": "4.700",
-    "media": "",
+    "media": "40.057",
     "punti_base": 6,
     "punti_effettivi": 6
   },
@@ -1490,7 +1490,7 @@
     "team_id": "LIBERTAS_CERESETTO",
     "tempo": "",
     "km": "4.700",
-    "media": "",
+    "media": "40.057",
     "punti_base": 5,
     "punti_effettivi": 5
   },
@@ -1513,7 +1513,7 @@
     "team_id": "ASS_NE_CICLISTICA_DILETT_VALVASONE",
     "tempo": "",
     "km": "4.700",
-    "media": "",
+    "media": "40.057",
     "punti_base": 4,
     "punti_effettivi": 4
   },
@@ -1536,7 +1536,7 @@
     "team_id": "BREGANZE_MILLENIUM",
     "tempo": "",
     "km": "4.700",
-    "media": "",
+    "media": "40.057",
     "punti_base": 3,
     "punti_effettivi": 3
   },
@@ -1559,7 +1559,7 @@
     "team_id": "BREGANZE_MILLENIUM",
     "tempo": "",
     "km": "4.700",
-    "media": "",
+    "media": "40.057",
     "punti_base": 2,
     "punti_effettivi": 2
   },
@@ -1582,7 +1582,7 @@
     "team_id": "BREGANZE_MILLENIUM",
     "tempo": "",
     "km": "4.700",
-    "media": "",
+    "media": "40.057",
     "punti_base": 1,
     "punti_effettivi": 1
   },
@@ -1605,7 +1605,7 @@
     "team_id": "CICLISTICA_TREVIGLIESE",
     "tempo": "",
     "km": "4.700",
-    "media": "",
+    "media": "42.782",
     "punti_base": 15,
     "punti_effettivi": 15
   },
@@ -1628,7 +1628,7 @@
     "team_id": "CICLISTICA_TREVIGLIESE",
     "tempo": "",
     "km": "4.700",
-    "media": "",
+    "media": "42.782",
     "punti_base": 12,
     "punti_effettivi": 12
   },
@@ -1651,7 +1651,7 @@
     "team_id": "ASD_VELOCE_CLUB_BORGO",
     "tempo": "",
     "km": "4.700",
-    "media": "",
+    "media": "42.782",
     "punti_base": 10,
     "punti_effettivi": 10
   },
@@ -1674,7 +1674,7 @@
     "team_id": "MST_CYCLING_SANDRIGO_BIKE",
     "tempo": "",
     "km": "4.700",
-    "media": "",
+    "media": "42.782",
     "punti_base": 8,
     "punti_effettivi": 8
   },
@@ -1697,7 +1697,7 @@
     "team_id": "SOC_SPORT_SANFIORESE",
     "tempo": "",
     "km": "4.700",
-    "media": "",
+    "media": "42.782",
     "punti_base": 6,
     "punti_effettivi": 6
   },
@@ -1720,7 +1720,7 @@
     "team_id": "GOTTARDO_GIOCHI_CANEVA",
     "tempo": "",
     "km": "4.700",
-    "media": "",
+    "media": "42.782",
     "punti_base": 5,
     "punti_effettivi": 5
   },
@@ -1743,7 +1743,7 @@
     "team_id": "A_S_D_SACILESE",
     "tempo": "",
     "km": "4.700",
-    "media": "",
+    "media": "42.782",
     "punti_base": 4,
     "punti_effettivi": 4
   },
@@ -1766,7 +1766,7 @@
     "team_id": "FERALPI_MONTECLARENSE_ASD",
     "tempo": "",
     "km": "4.700",
-    "media": "",
+    "media": "42.782",
     "punti_base": 3,
     "punti_effettivi": 3
   },
@@ -1789,7 +1789,7 @@
     "team_id": "A_S_D_POSTUMIA_73_D_L_CICLISMO",
     "tempo": "",
     "km": "4.700",
-    "media": "",
+    "media": "42.782",
     "punti_base": 2,
     "punti_effettivi": 2
   },
@@ -1812,7 +1812,7 @@
     "team_id": "U_C_S_OTTAVIO_ZULIANI_A_S_D",
     "tempo": "",
     "km": "4.700",
-    "media": "",
+    "media": "42.782",
     "punti_base": 1,
     "punti_effettivi": 1
   },
@@ -1835,7 +1835,7 @@
     "team_id": "IND_FORNITURE_MORO_C_G_CAPITAL",
     "tempo": "",
     "km": "4.700",
-    "media": "",
+    "media": "44.686",
     "punti_base": 15,
     "punti_effettivi": 15
   },
@@ -1858,7 +1858,7 @@
     "team_id": "A_S_D_POSTUMIA_73_D_L_CICLISMO",
     "tempo": "",
     "km": "4.700",
-    "media": "",
+    "media": "44.686",
     "punti_base": 12,
     "punti_effettivi": 12
   },
@@ -1881,7 +1881,7 @@
     "team_id": "ASD_VELOCE_CLUB_BORGO",
     "tempo": "",
     "km": "4.700",
-    "media": "",
+    "media": "44.686",
     "punti_base": 10,
     "punti_effettivi": 10
   },
@@ -1904,7 +1904,7 @@
     "team_id": "OFF_ALBERTI_U_C_VAL_D_ILLASI",
     "tempo": "",
     "km": "4.700",
-    "media": "",
+    "media": "44.686",
     "punti_base": 8,
     "punti_effettivi": 8
   },
@@ -1927,7 +1927,7 @@
     "team_id": "G_C_POSTIOMA",
     "tempo": "",
     "km": "4.700",
-    "media": "",
+    "media": "44.686",
     "punti_base": 6,
     "punti_effettivi": 6
   },
@@ -1950,7 +1950,7 @@
     "team_id": "ASD_VELOCE_CLUB_BORGO",
     "tempo": "",
     "km": "4.700",
-    "media": "",
+    "media": "44.686",
     "punti_base": 5,
     "punti_effettivi": 5
   },
@@ -1973,7 +1973,7 @@
     "team_id": "IND_FORNITURE_MORO_C_G_CAPITAL",
     "tempo": "",
     "km": "4.700",
-    "media": "",
+    "media": "44.686",
     "punti_base": 4,
     "punti_effettivi": 4
   },
@@ -1996,7 +1996,7 @@
     "team_id": "U_C_S_OTTAVIO_ZULIANI_A_S_D",
     "tempo": "",
     "km": "4.700",
-    "media": "",
+    "media": "44.686",
     "punti_base": 3,
     "punti_effettivi": 3
   },
@@ -2019,7 +2019,7 @@
     "team_id": "A_S_D_POSTUMIA_73_D_L_CICLISMO",
     "tempo": "",
     "km": "4.700",
-    "media": "",
+    "media": "44.686",
     "punti_base": 2,
     "punti_effettivi": 2
   },
@@ -2042,7 +2042,7 @@
     "team_id": "GOTTARDO_GIOCHI_CANEVA",
     "tempo": "",
     "km": "4.700",
-    "media": "",
+    "media": "44.686",
     "punti_base": 1,
     "punti_effettivi": 1
   },
