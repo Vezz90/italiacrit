@@ -6194,8 +6194,8 @@ async function renderHubBars() {
   const _rookieHtml   = buildRookieCard();
   const _watchHtml    = buildWatchlistCard();
 
-  // ── Carousel prossime gare del fine settimana (tutte le categorie) ──
-  const _allUpcomingBars = calendar.filter(g => (g.data||'') >= todayStr)
+  // ── Carousel prossime gare del fine settimana (categoria e genere dell'hub) ──
+  const _allUpcomingBars = calendar.filter(g => calMatchesHub(g) && (g.data||'') >= todayStr)
     .sort((a,b) => a.data.localeCompare(b.data));
   const _carouselWkBars = _allUpcomingBars.length ? weekendKey(_allUpcomingBars[0].data) : null;
   const _carouselRaces = _carouselWkBars
