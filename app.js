@@ -11957,9 +11957,13 @@ async function _loadGaraPcsExt(garaId, circuitResults) {
     const teamId   = ath?.team_id || _findTeam(r.team_name) || '';
     const teamName = teamId ? (globalData?.teams?.[teamId]?.nome || r.team_name || '') : (r.team_name || '');
 
-    // Rank ICS dopo la gara — preso da resultsRaw se l'atleta è nel sistema
+    // Rank ICS: prendi il più recente rank_dopo_gara per questo atleta
+    // fino alla data della gara corrente (l'atleta PCS può non essere nella top10 ICS)
+    const garaDateStr = garaId.match(/(\d{4}-\d{2}-\d{2})/)?.[1] || '';
     const icsRes = r.atleta_id
-      ? (globalData?.resultsRaw || []).find(x => x.atleta_id === r.atleta_id && x.gara_id === garaId)
+      ? (globalData?.resultsRaw || [])
+          .filter(x => x.atleta_id === r.atleta_id && x.rank_dopo_gara && (!garaDateStr || x.data <= garaDateStr))
+          .sort((a, b) => b.data.localeCompare(a.data))[0]
       : null;
     const rkTag = icsRes?.rank_dopo_gara
       ? `<span class="ris-rank-pos">${icsRes.rank_dopo_gara}° class.</span>` : '';
@@ -12003,68 +12007,90 @@ async function _loadGaraPcsExt(garaId, circuitResults) {
   if (window._loadGaraAvatars) await window._loadGaraAvatars();
 }
 
-// ── PCS risultati extra team (aggrega risultati fuori circuito di tutti i membres) ──
+// ── PCS risultati extra team (circuito 11+ + extra fuori circuito) ───────────
 async function _loadTeamPcsExtra(teamId, season) {
   const el = document.getElementById('team-pcs-extra');
   if (!el) return;
   const team = globalData?.teams?.[teamId];
   if (!team) return;
-  const atletiIds = team.atleti || [];
+  const atletiIds = (team.atleti || []).filter(Boolean);
   if (!atletiIds.length) return;
 
-  // Fetch risultati PCS per tutti gli atleti del team in parallelo
-  const allExtra = [];
-  await Promise.all(atletiIds.map(async aid => {
-    try {
-      const data = await apiCall(`/pcs-results/atleta/${encodeURIComponent(aid)}?season=${season}`);
-      if (!Array.isArray(data)) return;
-      for (const r of data.filter(r => !r.gara_id)) {
-        allExtra.push({ ...r, atleta_id: aid });
-      }
-    } catch { /* ignora */ }
-  }));
+  // Chiavi (atleta_id:gara_id) già presenti nella classifica ICS — evita duplicati
+  const icsKeys = new Set((team.risultati || []).map(r => `${r.atleta_id}:${r.gara_id}`));
 
+  // Fetch in parallelo: pcs_results (stagione per-atleta) + pcs_gara_results (gare circuito)
+  const atletiParam = encodeURIComponent(atletiIds.join(','));
+  const [pcsSeasonAll, pcsGareRaw] = await Promise.all([
+    Promise.all(atletiIds.map(aid =>
+      apiCall(`/pcs-results/atleta/${encodeURIComponent(aid)}?season=${season}`)
+        .then(d => (Array.isArray(d) ? d : []).map(r => ({ ...r, atleta_id: aid })))
+        .catch(() => [])
+    )).then(arrs => arrs.flat()),
+    apiCall(`/pcs-results/gare-team/${encodeURIComponent(teamId)}?season=${season}&atleti=${atletiParam}`)
+      .catch(() => []),
+  ]);
+
+  // Stagione PCS: solo extra-circuito
+  const seasonExtra = pcsSeasonAll
+    .filter(r => !r.gara_id || !icsKeys.has(`${r.atleta_id}:${r.gara_id}`))
+    .sort((a, b) => (b.data || '').localeCompare(a.data || ''));
+
+  // Gare circuito: pos 11+ (non già in ICS)
+  const garaExtra = Array.isArray(pcsGareRaw)
+    ? pcsGareRaw
+        .filter(r => r.gara_id && r.atleta_id && !icsKeys.has(`${r.atleta_id}:${r.gara_id}`))
+        .map(r => {
+          const cal = globalData?.calendar?.find(g => g.id === r.gara_id);
+          return {
+            data:          cal?.data || r.gara_id.match(/(\d{4}-\d{2}-\d{2})/)?.[1] || '',
+            gara_name:     cal?.nome || r.gara_id,
+            gara_id:       r.gara_id,
+            atleta_id:     r.atleta_id,
+            posizione:     r.posizione,
+            distacco:      r.distacco,
+            pcs_race_slug: r.pcs_race_slug,
+          };
+        })
+        .sort((a, b) => (b.data || '').localeCompare(a.data || ''))
+    : [];
+
+  // Unisci: gare circuito prima, poi extra stagione
+  const allExtra = [...garaExtra, ...seasonExtra];
   if (!allExtra.length) return;
-  allExtra.sort((a, b) => (b.data || '').localeCompare(a.data || ''));
 
   const getName = (id) => {
     const a = globalData?.athletes?.[id];
     return a ? `${a.cognome} ${a.nome}` : id;
   };
-  const pcsRaceLink = (slug, name) => slug
-    ? `<a href="https://www.procyclingstats.com/race/${esc(slug)}" target="_blank">${esc(name)}</a>`
-    : esc(name);
+
+  const rowHtml = (r) => {
+    const pClass = posClass(r.posizione);
+    const dateHtml = `<td style="white-space:nowrap;color:var(--text-muted);font-size:.8rem">${fmtDateShort(r.data)}</td>`;
+    const nameHtml = r.gara_id
+      ? `<td><a href="#/gara/${esc(r.gara_id)}">${esc(r.gara_name)}</a></td>`
+      : `<td>${r.pcs_race_slug ? `<a href="https://www.procyclingstats.com/race/${esc(r.pcs_race_slug)}" target="_blank">${esc(r.gara_name)}</a>` : esc(r.gara_name)}</td>`;
+    const athHtml = `<td><span class="rk-av-wrap" data-aid="${esc(r.atleta_id)}"></span><a href="#/atleta/${esc(r.atleta_id)}">${esc(getName(r.atleta_id))}</a></td>`;
+    const posHtml  = `<td class="td-pos ${pClass}">${r.posizione}°</td>`;
+    const gapHtml  = `<td style="color:var(--text-muted);font-size:.85rem">${esc(r.distacco || '')}</td>`;
+    return `<tr>${dateHtml}${nameHtml}${athHtml}${posHtml}${gapHtml}</tr>`;
+  };
 
   el.innerHTML = `
     <div class="section-header" style="margin-top:32px">
-      <span class="section-title">ALTRI RISULTATI TEAM (PCS)</span>
+      <span class="section-title">ALTRI RISULTATI</span>
       <span class="section-line"></span>
     </div>
     <div class="results-table-wrap">
       <table class="results-table team-results">
-        <thead><tr>
-          <th>DATA</th><th>GARA</th><th>ATLETA</th><th>POS</th><th>DISTACCO</th>
-        </tr></thead>
-        <tbody>
-          ${allExtra.slice(0, 100).map(r => `
-            <tr class="ranking-row">
-              <td style="white-space:nowrap;color:var(--text-muted);font-size:.8rem">${fmtDateShort(r.data)}</td>
-              <td>${pcsRaceLink(r.pcs_race_slug, r.gara_name)}</td>
-              <td>
-                <span class="rk-av-wrap" data-aid="${esc(r.atleta_id)}"></span>
-                <a href="#/atleta/${esc(r.atleta_id)}">${esc(getName(r.atleta_id))}</a>
-              </td>
-              <td><span class="rank-num">${r.posizione}</span></td>
-              <td style="color:var(--text-muted);font-size:.85rem">${esc(r.distacco || (r.posizione === 1 ? '🏆' : ''))}</td>
-            </tr>
-          `).join('')}
-        </tbody>
+        <thead><tr><th>DATA</th><th>GARA</th><th>ATLETA</th><th>POS</th><th>DISTACCO</th></tr></thead>
+        <tbody>${allExtra.slice(0, 200).map(rowHtml).join('')}</tbody>
       </table>
     </div>`;
 
   // Foto atleti
   const spans = [...el.querySelectorAll('.rk-av-wrap[data-aid]')];
-  const ph = `<span class=rk-av-placeholder><svg width=20 height=20 viewBox='0 0 24 24' fill='none' stroke='currentColor' stroke-width='1.5'><circle cx='12' cy='8' r='4'/><path d='M4 20c0-4 3.6-7 8-7s8 3 8 7'/></svg></span>`;
+  const ph = window._rkPh || '';
   spans.forEach(s => { s.innerHTML = ph; });
   const uniqueIds = [...new Set(spans.map(s => s.dataset.aid))];
   const ovMap = {};
@@ -12074,7 +12100,13 @@ async function _loadTeamPcsExtra(teamId, season) {
   spans.forEach(span => {
     if (!document.contains(span)) return;
     const ov = ovMap[span.dataset.aid] || {};
-    if (ov.photo_url) span.innerHTML = `<img src="${MEDIA_BASE}${esc(ov.photo_url)}" alt="" class="rk-av-img" onerror="this.parentNode.innerHTML='${ph}'">`;
+    if (ov.photo_url) {
+      const img = document.createElement('img');
+      img.src = MEDIA_BASE + esc(ov.photo_url);
+      img.className = 'rk-av-img'; img.alt = '';
+      img.onerror = () => { span.innerHTML = ph; };
+      span.innerHTML = ''; span.appendChild(img);
+    }
   });
 }
 
@@ -12082,40 +12114,64 @@ async function _loadTeamPcsExtra(teamId, season) {
 async function _loadAtletaPcsExtra(atletaId, season) {
   const el = document.getElementById('atleta-pcs-extra');
   if (!el) return;
-  let data;
-  try {
-    data = await apiCall(`/pcs-results/atleta/${encodeURIComponent(atletaId)}?season=${season}`);
-  } catch { return; }
-  if (!Array.isArray(data) || !data.length) return;
 
-  // Risultati fuori circuito (gara_id null)
-  const extra = data.filter(r => !r.gara_id).sort((a, b) => (b.data || '').localeCompare(a.data || ''));
-  if (!extra.length) return;
+  // Carica in parallelo: risultati stagione PCS (per-atleta) + risultati gare circuito (pos 11+)
+  const [pcsSeasonRaw, pcsGareRaw] = await Promise.all([
+    apiCall(`/pcs-results/atleta/${encodeURIComponent(atletaId)}?season=${season}`).catch(() => []),
+    apiCall(`/pcs-results/gare-atleta/${encodeURIComponent(atletaId)}?season=${season}`).catch(() => []),
+  ]);
 
-  const pcsRaceLink = (slug, name) => slug
-    ? `<a href="https://www.procyclingstats.com/race/${esc(slug)}" target="_blank">${esc(name)}</a>`
-    : esc(name);
+  // gara_ids già in classifica ICS (top-10) — non duplicare
+  const icsGaraIds = new Set((globalData?.athletes?.[atletaId]?.risultati || []).map(r => r.gara_id));
+
+  // PCS stagione: solo gare NON nel circuito ICS
+  const seasonExtra = Array.isArray(pcsSeasonRaw)
+    ? pcsSeasonRaw.filter(r => !r.gara_id || !icsGaraIds.has(r.gara_id))
+        .sort((a, b) => (b.data || '').localeCompare(a.data || ''))
+    : [];
+
+  // PCS gare circuito: pos 11+ (non duplicare top-10 ICS)
+  const garaExtra = Array.isArray(pcsGareRaw)
+    ? pcsGareRaw
+        .filter(r => r.gara_id && !icsGaraIds.has(r.gara_id))
+        .map(r => {
+          const cal = globalData?.calendar?.find(g => g.id === r.gara_id);
+          return {
+            data:          cal?.data || r.gara_id.match(/(\d{4}-\d{2}-\d{2})/)?.[1] || '',
+            gara_name:     cal?.nome || r.gara_id,
+            gara_id:       r.gara_id,
+            posizione:     r.posizione,
+            distacco:      r.distacco,
+            pcs_race_slug: r.pcs_race_slug,
+          };
+        })
+        .sort((a, b) => (b.data || '').localeCompare(a.data || ''))
+    : [];
+
+  // Unisci: prima gare circuito (con link interno), poi risultati stagione PCS
+  const all = [...garaExtra, ...seasonExtra];
+  if (!all.length) return;
+
+  const rowHtml = (r) => {
+    const pClass = posClass(r.posizione);
+    const dateHtml = `<td style="white-space:nowrap;color:var(--text-muted);font-size:.8rem">${fmtDateShort(r.data)}</td>`;
+    const nameHtml = r.gara_id
+      ? `<td><a href="#/gara/${esc(r.gara_id)}">${esc(r.gara_name)}</a></td>`
+      : `<td>${r.pcs_race_slug ? `<a href="https://www.procyclingstats.com/race/${esc(r.pcs_race_slug)}" target="_blank">${esc(r.gara_name)}</a>` : esc(r.gara_name)}</td>`;
+    const posHtml  = `<td class="td-pos ${pClass}">${r.posizione}°</td>`;
+    const gapHtml  = `<td style="color:var(--text-muted);font-size:.85rem">${esc(r.distacco || (r.posizione === 1 ? '—' : ''))}</td>`;
+    return `<tr>${dateHtml}${nameHtml}${posHtml}${gapHtml}</tr>`;
+  };
 
   el.innerHTML = `
     <div class="section-header" style="margin-top:32px">
-      <span class="section-title">ALTRI RISULTATI (PCS)</span>
+      <span class="section-title">ALTRI RISULTATI</span>
       <span class="section-line"></span>
     </div>
     <div class="results-table-wrap">
       <table class="results-table atleta-results">
-        <thead><tr>
-          <th>DATA</th><th>GARA</th><th>POS</th><th>DISTACCO</th>
-        </tr></thead>
-        <tbody>
-          ${extra.map(r => `
-            <tr class="ranking-row">
-              <td style="white-space:nowrap;color:var(--text-muted);font-size:.8rem">${fmtDateShort(r.data)}</td>
-              <td>${pcsRaceLink(r.pcs_race_slug, r.gara_name)}</td>
-              <td><span class="rank-num">${r.posizione}</span></td>
-              <td style="color:var(--text-muted);font-size:.85rem">${esc(r.distacco || (r.posizione === 1 ? '🏆' : ''))}</td>
-            </tr>
-          `).join('')}
-        </tbody>
+        <thead><tr><th>DATA</th><th>GARA</th><th>POS</th><th>DISTACCO</th></tr></thead>
+        <tbody>${all.map(rowHtml).join('')}</tbody>
       </table>
     </div>`;
 }

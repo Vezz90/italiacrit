@@ -413,6 +413,11 @@ function splitPcsName(fullName) {
   return { nome: parts.slice(0, -1).join(' '), cognome: parts[parts.length - 1] };
 }
 
+function makeTeamId(teamName) {
+  return String(teamName || '').normalize('NFD').replace(/[̀-ͯ]/g,'')
+    .toUpperCase().replace(/[^A-Z0-9]+/g,'_').replace(/^_+|_+$/g,'');
+}
+
 // ─── Main ──────────────────────────────────────────────────────────────────────
 
 (async () => {
@@ -603,15 +608,49 @@ function splitPcsName(fullName) {
         }
       }
 
+      // 2b. Rider senza profilo PCS — crea profilo minimo dal nome
+      if (!atletaId && r.rider_name && r.rider_name.trim()) {
+        const { nome: parsedNome, cognome: parsedCognome } = splitPcsName(r.rider_name);
+        if (parsedCognome) {
+          const minId = makeAtletaId(parsedCognome, parsedNome);
+          if (!existingRosterIds.has(minId)) {
+            const teamId = findTeamId(teamsObj, r.team_name) || makeTeamId(r.team_name);
+            const categoria = inferCategoriaFromGara(garaId, null, null);
+            const genere = garaId.includes('_F') ? 'F' : 'M';
+            // Crea il team se non esiste ancora
+            if (r.team_name && !teamsObj[teamId]) {
+              teamsObj[teamId] = { id: teamId, nome: r.team_name };
+            }
+            const rKey = teamId || '_pcs_import';
+            if (!extraRoster[rKey]) {
+              extraRoster[rKey] = { nome: r.team_name || rKey, atleti: [] };
+            }
+            extraRoster[rKey].atleti.push({
+              atleta_id: minId, nome: parsedNome, cognome: parsedCognome,
+              categoria, genere,
+            });
+            existingRosterIds.add(minId);
+            rosterByNorm.set(norm, minId);
+            atletaId = minId;
+            newAtleti++;
+            process.stdout.write(`  [${r.posizione}] ${r.rider_name} → profilo minimo (${minId})\n`);
+          } else {
+            // Già creato in questa run, recupera l'id
+            atletaId = minId;
+          }
+        }
+      }
+
       garaRows.push({
-        gara_id:       garaId,
-        season:        SEASON,
-        posizione:     r.posizione,
-        rider_name:    r.rider_name,
-        atleta_id:     atletaId || null,
-        team_name:     r.team_name,
-        distacco:      r.distacco,
-        pcs_race_slug: pcsSlug,
+        gara_id:        garaId,
+        season:         SEASON,
+        posizione:      r.posizione,
+        rider_name:     r.rider_name,
+        atleta_id:      atletaId || null,
+        team_name:      r.team_name,
+        distacco:       r.distacco,
+        pcs_race_slug:  pcsSlug,
+        pcs_rider_slug: r.pcs_rider_slug || null,
       });
 
       await sleep(100);

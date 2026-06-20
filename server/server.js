@@ -1721,6 +1721,41 @@ app.get('/api/pcs-results/atleta/:atletaId', async (req, res) => {
   } catch(e) { res.status(500).json({ error: e.message }); }
 });
 
+// Risultati da pcs_gara_results per un atleta (pos 11+ nelle gare circuito)
+app.get('/api/pcs-results/gare-atleta/:atletaId', async (req, res) => {
+  const season = parseInt(req.query.season) || new Date().getFullYear();
+  try {
+    const { data, error } = await supabase
+      .from('pcs_gara_results')
+      .select('gara_id, posizione, distacco, pcs_race_slug, rider_name, team_name')
+      .eq('atleta_id', req.params.atletaId)
+      .like('gara_id', `%-${season}-%`)
+      .order('gara_id', { ascending: false })
+      .limit(200);
+    if (error) throw error;
+    res.json(data || []);
+  } catch(e) { res.status(500).json({ error: e.message }); }
+});
+
+// Risultati da pcs_gara_results per un team (pos 11+ nelle gare circuito)
+app.get('/api/pcs-results/gare-team/:teamId', async (req, res) => {
+  const season = parseInt(req.query.season) || new Date().getFullYear();
+  try {
+    // Cerca gli atleta_id del team dalla query string (passati dal frontend)
+    const atletiIds = (req.query.atleti || '').split(',').filter(Boolean);
+    if (!atletiIds.length) return res.json([]);
+    const { data, error } = await supabase
+      .from('pcs_gara_results')
+      .select('gara_id, atleta_id, posizione, distacco, pcs_race_slug, rider_name, team_name')
+      .in('atleta_id', atletiIds)
+      .like('gara_id', `%-${season}-%`)
+      .order('gara_id', { ascending: false })
+      .limit(500);
+    if (error) throw error;
+    res.json(data || []);
+  } catch(e) { res.status(500).json({ error: e.message }); }
+});
+
 // Avvia lo scraper pcs-results.js in background
 app.post('/api/admin/pcs-import', requireAdminOrLocal, (req, res) => {
   if (process.env.RENDER) return res.status(400).json({ error: 'Disponibile solo in locale' });
