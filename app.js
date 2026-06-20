@@ -11955,7 +11955,9 @@ async function _loadGaraPcsExt(garaId, circuitResults) {
     const teamName = teamId ? (globalData?.teams?.[teamId]?.nome || r.team_name || '') : (r.team_name || '');
 
     // Stesso stile colonna ATLETA delle righe principali
-    const avatarHtml = r.atleta_id ? `<span class="rk-av-wrap" data-aid="${esc(r.atleta_id)}">${ph}</span>` : '';
+    // Avatar sempre presente (placeholder se no foto / non nel sistema)
+    const avData  = r.atleta_id ? ` data-aid="${esc(r.atleta_id)}"` : '';
+    const avatarHtml = `<span class="rk-av-wrap"${avData}></span>`;
     const nameLink = r.atleta_id
       ? `<a href="#/atleta/${esc(r.atleta_id)}">${esc(name)}</a>`
       : `<span>${esc(name)}</span>`;
@@ -11984,18 +11986,10 @@ async function _loadGaraPcsExt(garaId, circuitResults) {
       <td class="td-hide-mobile" style="text-align:right">${mediaDisplay}</td>
       <td class="td-pts">—</td>`;
     tbody.appendChild(tr);
-    if (r.atleta_id) newSpans.push(tr.querySelector('.rk-av-wrap[data-aid]'));
   }
 
-  // Foto atleti per le righe PCS
-  for (let i = 0; i < newSpans.length; i += 8) {
-    await Promise.all(newSpans.slice(i, i + 8).filter(Boolean).map(async span => {
-      if (!document.contains(span)) return;
-      const ov = await getEntityOverrides('atleta', span.dataset.aid).catch(() => ({}));
-      if (!document.contains(span)) return;
-      if (ov.photo_url) span.innerHTML = `<img src="${MEDIA_BASE}${esc(ov.photo_url)}" alt="" class="rk-av-img" onerror="this.parentNode.innerHTML='${ph}'">`;
-    }));
-  }
+  // Carica foto e placeholder per le nuove righe usando la stessa funzione del resto della tabella
+  if (window._loadGaraAvatars) await window._loadGaraAvatars();
 }
 
 // ── PCS risultati extra team (aggrega risultati fuori circuito di tutti i membres) ──
@@ -14067,24 +14061,31 @@ async function renderGara(gara_id) {
   `);
 
   // Foto atleti nella tabella risultati (batch async)
-  {
-    const _ph = `<span class=rk-av-placeholder><svg width=20 height=20 viewBox='0 0 24 24' fill='none' stroke='currentColor' stroke-width='1.5'><circle cx='12' cy='8' r='4'/><path d='M4 20c0-4 3.6-7 8-7s8 3 8 7'/></svg></span>`;
-    const _garaSpans = [...document.querySelectorAll('.results-table .rk-av-wrap[data-aid]')];
-    _garaSpans.forEach(s => { s.innerHTML = _ph; });
-    const _bsz = 8;
-    (async () => {
-      for (let i = 0; i < _garaSpans.length; i += _bsz) {
-        await Promise.all(_garaSpans.slice(i, i + _bsz).map(async span => {
-          if (!document.contains(span)) return;
-          const ov = await getEntityOverrides('atleta', span.dataset.aid).catch(() => ({}));
-          if (!document.contains(span)) return;
-          if (ov.photo_url) {
-            span.innerHTML = `<img src="${MEDIA_BASE}${esc(ov.photo_url)}" alt="" class="rk-av-img" onerror="this.parentNode.innerHTML='${_ph}'">`;
-          }
-        }));
-      }
-    })();
-  }
+  // _rkPh è globale e usato anche da _loadGaraPcsExt
+  window._rkPh = `<span class="rk-av-placeholder"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><circle cx="12" cy="8" r="4"/><path d="M4 20c0-4 3.6-7 8-7s8 3 8 7"/></svg></span>`;
+  window._loadGaraAvatars = async (container) => {
+    const spans = [...(container || document).querySelectorAll('.results-table .rk-av-wrap[data-aid], #main-results-tbody .rk-av-wrap[data-aid]')];
+    spans.forEach(s => { if (!s.innerHTML.trim()) s.innerHTML = window._rkPh; });
+    for (let i = 0; i < spans.length; i += 8) {
+      await Promise.all(spans.slice(i, i + 8).map(async span => {
+        if (!document.contains(span)) return;
+        const ov = await getEntityOverrides('atleta', span.dataset.aid).catch(() => ({}));
+        if (!document.contains(span)) return;
+        if (ov.photo_url) {
+          const img = document.createElement('img');
+          img.src = MEDIA_BASE + esc(ov.photo_url);
+          img.className = 'rk-av-img';
+          img.alt = '';
+          img.onerror = () => { span.innerHTML = window._rkPh; };
+          span.innerHTML = '';
+          span.appendChild(img);
+        } else {
+          span.innerHTML = window._rkPh;
+        }
+      }));
+    }
+  };
+  window._loadGaraAvatars();
 
   // Albo d'oro delle edizioni (stile PCS) — riempito async per non bloccare la pagina
   _injectRaceAlboDoro(primaryGaraId);
