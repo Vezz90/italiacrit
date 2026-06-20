@@ -617,7 +617,7 @@ function makeTeamId(teamName) {
           if (!existingRosterIds.has(minId)) {
             const teamId = findTeamId(teamsObj, r.team_name) || makeTeamId(r.team_name);
             const categoria = inferCategoriaFromGara(garaId, null, null);
-            const genere = garaId.includes('_F') ? 'F' : 'M';
+            const genere = /_(ELI|JUN|AL|ES[12])_F(?:$|_)/.test(garaId) ? 'F' : 'M';
             // Crea il team se non esiste ancora
             if (r.team_name && !teamsObj[teamId]) {
               teamsObj[teamId] = { id: teamId, nome: r.team_name };

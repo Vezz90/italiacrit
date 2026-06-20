@@ -95,7 +95,7 @@
     ]
   },
   "NIPPO_NUOVACOMAUTO_OBOR": {
-    "nome": "Team Nippo Nuovacomauto Obor",
+    "nome": "NIPPO NUOVACOMAUTO OBOR",
     "atleti": [
       {
         "atleta_id": "ROLANDO_JOANN",
@@ -114,7 +114,7 @@
     ]
   },
   "VEGA_VITALCARE_DYNATEK": {
-    "nome": "Vega - Vitalcare - Dynatek",
+    "nome": "VEGA VITALCARE DYNATEK",
     "atleti": [
       {
         "atleta_id": "SHTIN_VALERY",
@@ -171,7 +171,7 @@
     ]
   },
   "NORDEST_PETRUCCI_ASSALI_STEFEN": {
-    "nome": "Petrucci - Team Aries",
+    "nome": "NORDEST PETRUCCI ASSALI STEFEN",
     "atleti": [
       {
         "atleta_id": "TUDURACHI_MATTEO_RICCARDO",
@@ -190,7 +190,7 @@
     ]
   },
   "U_C_TREVIGIANI_ENERGIAPURA_MARCHIOL": {
-    "nome": "UC Trevigiani - Energiapura Marchiol",
+    "nome": "U.C TREVIGIANI ENERGIAPURA MARCHIOL",
     "atleti": [
       {
         "atleta_id": "CAFUERI_TOMMASO",
@@ -216,7 +216,7 @@
     ]
   },
   "MOVISTAR_TEAM_ACADEMY": {
-    "nome": "Bike Academy Marchini Costruzioni",
+    "nome": "MOVISTAR TEAM ACADEMY",
     "atleti": [
       {
         "atleta_id": "CHIARUCCI_ANDREA",
@@ -228,7 +228,7 @@
     ]
   },
   "A_S_D_S_C_PADOVANI": {
-    "nome": "S.C. Padovani Polo Cherry Bank",
+    "nome": "A.S.D. S.C. PADOVANI",
     "atleti": [
       {
         "atleta_id": "PIGNATTI_JACOPO",
@@ -266,7 +266,7 @@
     ]
   },
   "BELTRAMI_TSA_LA_RISORSA_UMANA_VC_RE": {
-    "nome": "Beltrami TSA - La Risorsa Umana",
+    "nome": "BELTRAMI TSA-LA RISORSA UMANA-VC RE",
     "atleti": [
       {
         "atleta_id": "MISSAGLIA_NICOLO",
@@ -278,7 +278,7 @@
     ]
   },
   "POLISPORTIVA_TRIPETETOLO_SEANESE": {
-    "nome": "Polisportiva Tripetetolo",
+    "nome": "POLISPORTIVA TRIPETETOLO SEANESE",
     "atleti": [
       {
         "atleta_id": "LUCI_MATTEO",
@@ -290,7 +290,7 @@
     ]
   },
   "ASD_G_C_SISSIO_TEAM": {
-    "nome": "ASD GC Sissio Team",
+    "nome": "ASD G.C. SISSIO TEAM",
     "atleti": [
       {
         "atleta_id": "SARTORI_MARTINO",
@@ -302,7 +302,7 @@
     ]
   },
   "TEAM_HOPPLA": {
-    "nome": "Team Hopplà",
+    "nome": "TEAM HOPPLA'",
     "atleti": [
       {
         "atleta_id": "BURANI_EDOARDO",
@@ -326,7 +326,7 @@
     ]
   },
   "GENERAL_STORE_ESSEGIBI_F_LLI_CURIA": {
-    "nome": "General Store - Essegibi - F.Lli Curia",
+    "nome": "GENERAL STORE -ESSEGIBI-F.LLI CURIA",
     "atleti": [
       {
         "atleta_id": "DENTELLI_GIACOMO",
@@ -338,7 +338,7 @@
     ]
   },
   "MG_K_VIS_COSTRUZIONI_E_AMBIENTE": {
-    "nome": "Mg.K Vis Costruzioni e Ambiente",
+    "nome": "MG K-VIS COSTRUZIONI E AMBIENTE",
     "atleti": [
       {
         "atleta_id": "MARCOZZI_MATTIA",

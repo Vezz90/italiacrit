@@ -1343,7 +1343,8 @@ function processLoadedData({ calendar, resultsRaw, athletes, teams, meta, raceDe
     if (!teamsMerged[tid]) {
       teamsMerged[tid] = { id: tid, nome: entry.nome || tid, atleti: [], punti_totali: 0, risultati: [] };
     }
-    const teamNome = entry.nome || teamsMerged[tid].nome || tid;
+    // Se il team esiste già in ICS, usa il suo nome ufficiale
+    const teamNome = teamsMerged[tid].nome || entry.nome || tid;
     const teamAtleti = Array.isArray(teamsMerged[tid].atleti) ? [...teamsMerged[tid].atleti] : [];
     for (const p of entry.atleti) {
       if (!p || (!p.cognome && !p.nome)) continue;
