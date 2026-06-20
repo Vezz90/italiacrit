@@ -8,9 +8,8 @@ if "%SUPABASE_SECRET%"=="" (
   echo ERRORE: SUPABASE_SECRET non trovato in server\.env.local
   pause & exit /b 1
 )
-echo Importazione foto + social atleti e team (PCS + First Cycling in parallelo).
-echo PCS ha priorita -- vengono saltati chi ha gia una foto (usa --force per reimportare).
-echo Categorie: Elite, Junior, Allievi (M e F). Si aprono due tab nel browser.
+echo Importazione loghi e social TEAM (PCS + First Cycling in parallelo, PCS prioritario).
+echo Salta i team che hanno gia un logo. Usa --force per reimportare tutto.
 echo.
-node run-import.js
+node run-import.js --teams
 pause

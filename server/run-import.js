@@ -4,14 +4,17 @@
  *
  * Uso:
  *   $env:SUPABASE_SECRET = "..."
- *   node run-import.js [--athletes] [--teams] [--force] [--pcs] [--fc]
+ *   node run-import.js [--athletes] [--teams] [--social] [--force] [--pcs] [--fc]
  *
  *   --athletes   solo atleti  (default: entrambi)
  *   --teams      solo team    (default: entrambi)
- *   --pcs        usa solo ProCyclingStats  (default: PCS → FC fallback)
- *   --fc         usa solo First Cycling    (processa TUTTI anche se già con foto PCS,
- *                                           per raccogliere social e foto mancanti)
+ *   --social     solo social (no foto) — aggiorna TUTTI anche chi ha già la foto
+ *   --pcs        usa solo ProCyclingStats
+ *   --fc         usa solo First Cycling
  *   --force      re-importa anche chi ha già tutti i dati
+ *
+ * Comportamento default: PCS + FC in parallelo, PCS ha priorità.
+ * Salta chi ha già una foto (a meno di --social o --force).
  */
 
 const fs   = require('fs');
@@ -21,17 +24,19 @@ const SUPABASE_URL    = 'https://aqqsstsbgpapzoxllosh.supabase.co';
 const SUPABASE_SECRET = process.env.SUPABASE_SECRET;
 if (!SUPABASE_SECRET) { console.error('Imposta $env:SUPABASE_SECRET'); process.exit(1); }
 
-const args    = process.argv.slice(2);
-const DO_ATH  = !args.includes('--teams');
-const DO_TEAM = !args.includes('--athletes');
-const FORCE   = args.includes('--force');
-const PCS_ONLY = args.includes('--pcs');
-const FC_ONLY  = args.includes('--fc');
-const YEAR    = new Date().getFullYear();
+const args        = process.argv.slice(2);
+const DO_ATH      = !args.includes('--teams');
+const DO_TEAM     = !args.includes('--athletes');
+const FORCE       = args.includes('--force');
+const PCS_ONLY    = args.includes('--pcs');
+const FC_ONLY     = args.includes('--fc');
+const SOCIAL_ONLY = args.includes('--social');  // solo social, niente foto
+const YEAR        = new Date().getFullYear();
 
 const DATA_DIR = path.join(__dirname, '..', 'data');
 const RANK_DIR = path.join(DATA_DIR, 'rankings');
-const ATH_CATS = ['ELI_M', 'ELI_F', 'JUN_M', 'JUN_F'];
+// Elite, Junior e Allievi (M e F)
+const ATH_CATS = ['ELI_M', 'ELI_F', 'JUN_M', 'JUN_F', 'AL_M', 'AL_F'];
 
 // ─── Helpers ───────────────────────────────────────────────────────────────
 
@@ -351,7 +356,8 @@ async function getExistingIds(sb, entityType, field) {
   const sb = createClient(SUPABASE_URL, SUPABASE_SECRET, { realtime: { transport: ws } });
   const source = FC_ONLY ? 'fc' : 'pcs';
 
-  console.log(`=== Import foto + social [${FC_ONLY ? 'First Cycling' : PCS_ONLY ? 'PCS only' : 'PCS → FC'}] ===\n`);
+  const _mode = SOCIAL_ONLY ? 'solo social' : FC_ONLY ? 'First Cycling' : PCS_ONLY ? 'PCS only' : 'PCS + FC parallelo';
+  console.log(`=== Import [${_mode}] ===\n`);
 
   // Cerca Brave, poi Chrome, poi Chromium bundled
   const bravePaths = [
@@ -421,8 +427,9 @@ async function getExistingIds(sb, entityType, field) {
     }
     const athletes = [...athMap.values()];
 
-    // Salta sempre chi ha già la foto — anche in --fc (non sovrascrivere foto PCS con FC)
-    const withPhoto = FORCE ? new Set() : await getExistingIds(sb, 'atleta', 'photo_url');
+    // --social: processa tutti (solo per aggiornare social, non tocca le foto)
+    // default: salta chi ha già la foto
+    const withPhoto = (FORCE || SOCIAL_ONLY) ? new Set() : await getExistingIds(sb, 'atleta', 'photo_url');
     const toProcess = athletes.filter(a => !withPhoto.has(a.atleta_id));
 
     console.log(`${athletes.length} atleti — ${athletes.length - toProcess.length} già con foto — ${toProcess.length} da processare\n`);
@@ -467,7 +474,7 @@ async function getExistingIds(sb, entityType, field) {
       }
 
       const fields = {};
-      if (photo) {
+      if (photo && !SOCIAL_ONLY) {
         try {
           fields.photo_url = await uploadPhoto(sb, 'atleta', slug, photo, photoSrc);
         } catch(e) {
@@ -518,8 +525,8 @@ async function getExistingIds(sb, entityType, field) {
     const teamsRaw = JSON.parse(fs.readFileSync(path.join(DATA_DIR, 'teams.json'), 'utf8'));
     const teams = Object.values(teamsRaw).filter(t => t.id && t.nome);
 
-    // Salta chi ha già la foto anche in --fc (non sovrascrivere)
-    const withPhoto = FORCE ? new Set() : await getExistingIds(sb, 'team', 'photo_url');
+    // --social: processa tutti per aggiornare social, non tocca le foto
+    const withPhoto = (FORCE || SOCIAL_ONLY) ? new Set() : await getExistingIds(sb, 'team', 'photo_url');
     const toProcess = teams.filter(t => !withPhoto.has(t.id));
 
     console.log(`${teams.length} team — ${teams.length - toProcess.length} già con foto — ${toProcess.length} da processare\n`);
@@ -555,7 +562,7 @@ async function getExistingIds(sb, entityType, field) {
       }
 
       const fields = {};
-      if (photo) {
+      if (photo && !SOCIAL_ONLY) {
         try {
           fields.photo_url = await uploadPhoto(sb, 'team', slug, photo, photoSrc);
         } catch(e) {
