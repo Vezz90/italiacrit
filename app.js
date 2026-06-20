@@ -1632,6 +1632,7 @@ const ADMIN_EDIT_FIELDS = {
     { key: 'tipo',          label: 'Tipo gara',      type: 'select',
       options: ['regionale','nazionale','internazionale','campionato_regionale','campionato_italiano'] },
     { key: 'moltiplicatore', label: 'Moltiplicatore', type: 'select', options: ['1','2','3'] },
+    { key: 'pcs_race_slug', label: 'Slug PCS (es. giro-ciclistico-d-italia/2026/stage-6)', type: 'text' },
   ],
   atleta: [
     { key: 'nome',         label: 'Nome',    type: 'text' },
@@ -9105,13 +9106,25 @@ window.adminNav = async function(section) {
           </p>
           <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:12px;margin-bottom:18px">
             <div style="background:var(--bg-elevated);border-radius:var(--r-md);padding:16px;border:2px solid var(--accent)">
-              <div style="font-weight:700;margin-bottom:6px;font-size:.9rem">📊 Scraping risultati PCS</div>
-              <p style="font-size:.8rem;color:var(--text-muted);margin-bottom:12px">Tutti gli atleti con slug PCS. Salta chi è già stato processato in questa stagione.</p>
+              <div style="font-weight:700;margin-bottom:6px;font-size:.9rem">📊 Risultati atleti (profilo PCS)</div>
+              <p style="font-size:.8rem;color:var(--text-muted);margin-bottom:12px">Per ogni atleta del sistema, scarica tutti i suoi risultati stagionali da PCS. Deriva lo slug dal nome automaticamente.</p>
               <button onclick="window._startPcsResults(false)"
                 style="width:100%;background:var(--accent);color:#fff;border:none;padding:8px 14px;border-radius:var(--r-sm);font-weight:600;cursor:pointer;font-size:.85rem;margin-bottom:6px">
                 📊 Avvia
               </button>
               <button onclick="window._startPcsResults(true)"
+                style="width:100%;background:var(--bg-input);border:1px solid var(--border-subtle);color:var(--text-primary);padding:7px 14px;border-radius:var(--r-sm);font-weight:600;cursor:pointer;font-size:.8rem">
+                🔄 Forza rielaborazione
+              </button>
+            </div>
+            <div style="background:var(--bg-elevated);border-radius:var(--r-md);padding:16px;border:2px solid #f59e0b">
+              <div style="font-weight:700;margin-bottom:6px;font-size:.9rem">🏁 Risultati completi gara (pagina PCS)</div>
+              <p style="font-size:.8rem;color:var(--text-muted);margin-bottom:12px">Scarica <strong>tutti</strong> i finisher dalle pagine gara PCS. Richiede che ogni gara abbia uno "Slug PCS" configurato (✏ Modifica sulla pagina gara).</p>
+              <button onclick="window._startPcsRaceImport(false)"
+                style="width:100%;background:#f59e0b;color:#000;border:none;padding:8px 14px;border-radius:var(--r-sm);font-weight:600;cursor:pointer;font-size:.85rem;margin-bottom:6px">
+                🏁 Avvia
+              </button>
+              <button onclick="window._startPcsRaceImport(true)"
                 style="width:100%;background:var(--bg-input);border:1px solid var(--border-subtle);color:var(--text-primary);padding:7px 14px;border-radius:var(--r-sm);font-weight:600;cursor:pointer;font-size:.8rem">
                 🔄 Forza rielaborazione
               </button>
@@ -9146,10 +9159,21 @@ window.adminNav = async function(section) {
         }
       };
 
+      const _startPcsRaceImport = async (force) => {
+        try {
+          await apiCall('/admin/pcs-race-import', { method: 'POST', body: { force: !!force } });
+          showToast('Scraping gare PCS avviato…', 'info');
+          setTimeout(_renderImportStatus, 2000);
+        } catch(e) {
+          showToast('Errore: ' + e.message, 'error');
+        }
+      };
+
       window._startImport        = _startImport;
       window._renderImportStatus = _renderImportStatus;
       window._resetImport        = _resetImport;
       window._startPcsResults    = _startPcsResults;
+      window._startPcsRaceImport = _startPcsRaceImport;
 
       await _renderImportStatus();
       break;
@@ -11867,46 +11891,46 @@ async function _loadGaraPcsExt(garaId, circuitResults) {
   } catch { return; }
   if (!Array.isArray(data) || !data.length) return;
 
-  // Separa pos > 10 (circuito esteso) e pos <= 10 (distacchi per atleti già presenti)
   const maxCircuitPos = circuitResults.reduce((m, r) => Math.max(m, r.posizione || 0), 0);
   const ext = data.filter(r => r.posizione > maxCircuitPos).sort((a, b) => a.posizione - b.posizione);
   if (!ext.length) return;
 
-  // Risolvi nome atleta da globalData
-  const getName = (id) => {
-    const a = globalData?.athletes?.[id];
-    return a ? `${a.cognome} ${a.nome}` : id;
-  };
-  const getTeam = (id) => {
-    const a = globalData?.athletes?.[id];
-    return a?.team_attuale || '';
+  const pcsSlug = ext[0]?.pcs_race_slug || '';
+  const pcsUrl  = pcsSlug ? `https://www.procyclingstats.com/race/${esc(pcsSlug)}` : '';
+
+  // Ogni riga può avere atleta_id (nel sistema) o solo rider_name + team_name (PCS only)
+  const renderRow = (r) => {
+    const ath = r.atleta_id ? globalData?.athletes?.[r.atleta_id] : null;
+    const name = ath
+      ? `${ath.cognome} ${ath.nome}`
+      : (r.rider_name || r.gara_name || '');
+    const teamName = ath?.team_attuale || r.team_name || '';
+    const teamId   = ath?.team_id || '';
+    const nameHtml = r.atleta_id
+      ? `<span class="rk-av-wrap" data-aid="${esc(r.atleta_id)}"></span><a href="#/atleta/${esc(r.atleta_id)}">${esc(name)}</a>`
+      : `<span style="color:var(--text-secondary)">${esc(name)}</span>`;
+    const teamHtml = teamId
+      ? `<a href="#/team/${esc(teamId)}">${esc(teamName)}</a>`
+      : `<span style="color:var(--text-muted)">${esc(teamName)}</span>`;
+    return `
+      <tr class="ranking-row">
+        <td><span class="rank-num">${r.posizione}</span></td>
+        <td><div style="display:flex;align-items:center;gap:6px">${nameHtml}</div></td>
+        <td class="td-hide-mobile" style="color:var(--text-secondary);font-size:.85rem">${teamHtml}</td>
+        <td style="color:var(--text-muted);font-size:.85rem">${esc(r.distacco || '')}</td>
+      </tr>`;
   };
 
   el.innerHTML = `
     <div class="card" style="margin-top:16px;padding:0;overflow:hidden">
       <div style="padding:14px 18px 10px;border-bottom:1px solid var(--border-subtle);display:flex;align-items:center;gap:10px">
-        <span style="font-family:var(--font-display);font-size:.8rem;letter-spacing:.08em;color:var(--text-muted)">RISULTATI OLTRE IL 10° — via PCS</span>
-        <a href="https://www.procyclingstats.com/race/${esc(ext[0]?.pcs_race_slug||'')}" target="_blank"
-           style="font-size:.75rem;color:var(--text-muted);margin-left:auto">procyclingstats.com →</a>
+        <span style="font-family:var(--font-display);font-size:.8rem;letter-spacing:.08em;color:var(--text-muted)">RISULTATI OLTRE IL ${maxCircuitPos}° — via PCS</span>
+        ${pcsUrl ? `<a href="${pcsUrl}" target="_blank" style="font-size:.75rem;color:var(--text-muted);margin-left:auto">procyclingstats.com →</a>` : ''}
       </div>
       <div class="results-table-wrap">
         <table class="results-table">
           <thead><tr><th>POS</th><th>ATLETA</th><th class="td-hide-mobile">TEAM</th><th>DISTACCO</th></tr></thead>
-          <tbody>
-            ${ext.map(r => `
-              <tr class="ranking-row">
-                <td><span class="rank-num">${r.posizione}</span></td>
-                <td>
-                  <span class="rk-av-wrap" data-aid="${esc(r.atleta_id)}"></span>
-                  <a href="#/atleta/${esc(r.atleta_id)}">${esc(getName(r.atleta_id))}</a>
-                </td>
-                <td class="td-hide-mobile" style="color:var(--text-secondary);font-size:.85rem">
-                  <a href="#/team/${esc(globalData?.athletes?.[r.atleta_id]?.team_id||'')}">${esc(getTeam(r.atleta_id))}</a>
-                </td>
-                <td style="color:var(--text-muted);font-size:.85rem">${esc(r.distacco || '')}</td>
-              </tr>
-            `).join('')}
-          </tbody>
+          <tbody>${ext.map(renderRow).join('')}</tbody>
         </table>
       </div>
     </div>`;

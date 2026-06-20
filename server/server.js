@@ -1683,6 +1683,17 @@ app.post('/api/admin/import-atleta', requireAdminOrLocal, (req, res) => {
 // Risultati PCS per una gara del circuito (pos 11+, distacchi, ecc.)
 app.get('/api/pcs-results/gara/:garaId', async (req, res) => {
   try {
+    // Prima leggi dalla tabella race-page (completa), poi fallback su per-atleta
+    const { data: raceData, error: raceErr } = await supabase
+      .from('pcs_gara_results')
+      .select('atleta_id, rider_name, team_name, posizione, distacco, pcs_race_slug')
+      .eq('gara_id', req.params.garaId)
+      .order('posizione', { ascending: true })
+      .limit(300);
+    if (!raceErr && raceData && raceData.length) {
+      return res.json(raceData);
+    }
+    // Fallback: per-atleta (risultati parziali dallo scraper profilo)
     const { data, error } = await supabase
       .from('pcs_results')
       .select('atleta_id, gara_name, posizione, distacco, pcs_race_slug')
@@ -1732,6 +1743,34 @@ app.post('/api/admin/pcs-import', requireAdminOrLocal, (req, res) => {
     env: { ...process.env, SUPABASE_SECRET: secret }, cwd: __dirname,
   });
   const onLine = line => { if (_fullImportJob) { console.log('[pcs-results]', line); _fullImportJob.log.push(line); } };
+  let buf = '';
+  proc.stdout.on('data', d => { buf += d; const lines = buf.split('\n'); buf = lines.pop(); lines.forEach(onLine); });
+  proc.stderr.on('data', d => d.toString().split('\n').filter(Boolean).forEach(l => onLine('[ERR] ' + l)));
+  proc.on('close', code => { if (buf) onLine(buf); if (_fullImportJob) { _fullImportJob.running = false; _fullImportJob.exitCode = code; } });
+});
+
+// Avvia pcs-race-scraper.js in background (risultati completi pagina gara)
+app.post('/api/admin/pcs-race-import', requireAdminOrLocal, (req, res) => {
+  if (process.env.RENDER) return res.status(400).json({ error: 'Disponibile solo in locale' });
+  if (_fullImportJob?.running) return res.status(409).json({ error: 'Import già in corso' });
+
+  const { spawn } = require('child_process');
+  const scriptPath = path.join(__dirname, 'pcs-race-scraper.js');
+  const secret = process.env.SUPABASE_SECRET;
+  if (!secret) return res.status(500).json({ error: 'SUPABASE_SECRET non impostato' });
+
+  const extraArgs = [];
+  if (req.body.force)    extraArgs.push('--force');
+  if (req.body.gara_id)  extraArgs.push(`--gara-id=${req.body.gara_id}`);
+  if (req.body.season)   extraArgs.push(`--season=${req.body.season}`);
+
+  _fullImportJob = { running: true, log: [], startedAt: new Date().toISOString(), exitCode: null };
+  res.json({ ok: true, message: 'Scraping PCS gare avviato' });
+
+  const proc = spawn(process.execPath, [scriptPath, ...extraArgs], {
+    env: { ...process.env, SUPABASE_SECRET: secret }, cwd: __dirname,
+  });
+  const onLine = line => { if (_fullImportJob) { console.log('[pcs-race]', line); _fullImportJob.log.push(line); } };
   let buf = '';
   proc.stdout.on('data', d => { buf += d; const lines = buf.split('\n'); buf = lines.pop(); lines.forEach(onLine); });
   proc.stderr.on('data', d => d.toString().split('\n').filter(Boolean).forEach(l => onLine('[ERR] ' + l)));
