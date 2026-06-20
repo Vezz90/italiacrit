@@ -19,7 +19,7 @@
         "nome": "Gabriele",
         "cognome": "De Fabritiis",
         "categoria": "ELI_M",
-        "genere": "F"
+        "genere": "M"
       }
     ]
   },
@@ -31,14 +31,14 @@
         "nome": "Andrea",
         "cognome": "Donati",
         "categoria": "ELI_M",
-        "genere": "F"
+        "genere": "M"
       },
       {
         "atleta_id": "ROSSI_NICOLA",
         "nome": "Nicola",
         "cognome": "Rossi",
         "categoria": "ELI_M",
-        "genere": "F"
+        "genere": "M"
       }
     ]
   },
@@ -50,14 +50,14 @@
         "nome": "Mattia",
         "cognome": "Cincinelli",
         "categoria": "ELI_M",
-        "genere": "F"
+        "genere": "M"
       },
       {
         "atleta_id": "LEONE_ALESSIO",
         "nome": "Alessio",
         "cognome": "Leone",
         "categoria": "ELI_M",
-        "genere": "F"
+        "genere": "M"
       }
     ]
   },
@@ -69,28 +69,28 @@
         "nome": "Luca",
         "cognome": "Signorini",
         "categoria": "ELI_M",
-        "genere": "F"
+        "genere": "M"
       },
       {
         "atleta_id": "RINALDI_ANDREA",
         "nome": "Andrea",
         "cognome": "Rinaldi",
         "categoria": "ELI_M",
-        "genere": "F"
+        "genere": "M"
       },
       {
         "atleta_id": "ZANETTI_ALESSANDRO",
         "nome": "Alessandro",
         "cognome": "Zanetti",
         "categoria": "ELI_M",
-        "genere": "F"
+        "genere": "M"
       },
       {
         "atleta_id": "ARZILLI_GABRIELE",
         "nome": "Gabriele",
         "cognome": "Arzilli",
         "categoria": "ELI_M",
-        "genere": "F"
+        "genere": "M"
       }
     ]
   },
@@ -102,14 +102,14 @@
         "nome": "Joann",
         "cognome": "Rolando",
         "categoria": "ELI_M",
-        "genere": "F"
+        "genere": "M"
       },
       {
         "atleta_id": "KAMADA_KOKI",
         "nome": "Koki",
         "cognome": "Kamada",
         "categoria": "ELI_M",
-        "genere": "F"
+        "genere": "M"
       }
     ]
   },
@@ -121,7 +121,7 @@
         "nome": "Valery",
         "cognome": "Shtin",
         "categoria": "ELI_M",
-        "genere": "F"
+        "genere": "M"
       }
     ]
   },
@@ -133,14 +133,14 @@
         "nome": "Leonardo",
         "cognome": "Schiavo",
         "categoria": "ELI_M",
-        "genere": "F"
+        "genere": "M"
       },
       {
         "atleta_id": "HOVORUN_BOGDAN",
         "nome": "Bogdan",
         "cognome": "Hovorun",
         "categoria": "ELI_M",
-        "genere": "F"
+        "genere": "M"
       }
     ]
   },
@@ -152,21 +152,21 @@
         "nome": "Giovanni",
         "cognome": "Zanussi",
         "categoria": "ELI_M",
-        "genere": "F"
+        "genere": "M"
       },
       {
         "atleta_id": "PIGHIN_CHRISTIAN",
         "nome": "Christian",
         "cognome": "Pighin",
         "categoria": "ELI_M",
-        "genere": "F"
+        "genere": "M"
       },
       {
         "atleta_id": "VETTORATA_NICOLA",
         "nome": "Nicola",
         "cognome": "Vettorata",
         "categoria": "ELI_M",
-        "genere": "F"
+        "genere": "M"
       }
     ]
   },
@@ -178,14 +178,14 @@
         "nome": "Riccardo",
         "cognome": "Tudurachi Matteo",
         "categoria": "ELI_M",
-        "genere": "F"
+        "genere": "M"
       },
       {
         "atleta_id": "FESTA_MICHELE",
         "nome": "Michele",
         "cognome": "Festa",
         "categoria": "ELI_M",
-        "genere": "F"
+        "genere": "M"
       }
     ]
   },
@@ -197,21 +197,21 @@
         "nome": "Tommaso",
         "cognome": "Cafueri",
         "categoria": "ELI_M",
-        "genere": "F"
+        "genere": "M"
       },
       {
         "atleta_id": "ZANOTTO_MARCO",
         "nome": "Marco",
         "cognome": "Zanotto",
         "categoria": "ELI_M",
-        "genere": "F"
+        "genere": "M"
       },
       {
         "atleta_id": "VECCHIUTTI_FRANCESCO",
         "nome": "Francesco",
         "cognome": "Vecchiutti",
         "categoria": "ELI_M",
-        "genere": "F"
+        "genere": "M"
       }
     ]
   },
@@ -223,7 +223,7 @@
         "nome": "Andrea",
         "cognome": "Chiarucci",
         "categoria": "ELI_M",
-        "genere": "F"
+        "genere": "M"
       }
     ]
   },
@@ -235,14 +235,14 @@
         "nome": "Jacopo",
         "cognome": "Pignatti",
         "categoria": "ELI_M",
-        "genere": "F"
+        "genere": "M"
       },
       {
         "atleta_id": "QUAGLIA_TOMMASO",
         "nome": "Tommaso",
         "cognome": "Quaglia",
         "categoria": "ELI_M",
-        "genere": "F"
+        "genere": "M"
       }
     ]
   },
@@ -254,14 +254,14 @@
         "nome": "Jacopo",
         "cognome": "Sasso",
         "categoria": "ELI_M",
-        "genere": "F"
+        "genere": "M"
       },
       {
         "atleta_id": "UDERZO_RICCARDO",
         "nome": "Riccardo",
         "cognome": "Uderzo",
         "categoria": "ELI_M",
-        "genere": "F"
+        "genere": "M"
       }
     ]
   },
@@ -273,7 +273,7 @@
         "nome": "Nicolò",
         "cognome": "Missaglia",
         "categoria": "ELI_M",
-        "genere": "F"
+        "genere": "M"
       }
     ]
   },
@@ -285,7 +285,7 @@
         "nome": "Matteo",
         "cognome": "Luci",
         "categoria": "ELI_M",
-        "genere": "F"
+        "genere": "M"
       }
     ]
   },
@@ -297,7 +297,7 @@
         "nome": "Martino",
         "cognome": "Sartori",
         "categoria": "ELI_M",
-        "genere": "F"
+        "genere": "M"
       }
     ]
   },
@@ -309,7 +309,7 @@
         "nome": "Edoardo",
         "cognome": "Burani",
         "categoria": "ELI_M",
-        "genere": "F"
+        "genere": "M"
       }
     ]
   },
@@ -321,7 +321,7 @@
         "nome": "Federico",
         "cognome": "Ferranti",
         "categoria": "ELI_M",
-        "genere": "F"
+        "genere": "M"
       }
     ]
   },
@@ -333,7 +333,7 @@
         "nome": "Giacomo",
         "cognome": "Dentelli",
         "categoria": "ELI_M",
-        "genere": "F"
+        "genere": "M"
       }
     ]
   },
@@ -345,7 +345,7 @@
         "nome": "Mattia",
         "cognome": "Marcozzi",
         "categoria": "ELI_M",
-        "genere": "F"
+        "genere": "M"
       }
     ]
   }
