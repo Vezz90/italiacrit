@@ -12041,7 +12041,8 @@ async function _loadTeamPcsExtra(teamId, season) {
     ? pcsGareRaw
         .filter(r => r.gara_id && r.atleta_id && !icsKeys.has(`${r.atleta_id}:${r.gara_id}`))
         .map(r => {
-          const cal = globalData?.calendar?.find(g => g.id === r.gara_id);
+          const calId = (globalData?.garaToCalId?.[r.gara_id]) || r.gara_id;
+          const cal = globalData?.calendar?.find(g => g.id === calId);
           return {
             data:          cal?.data || r.gara_id.match(/(\d{4}-\d{2}-\d{2})/)?.[1] || '',
             gara_name:     cal?.nome || r.gara_id,
@@ -12055,49 +12056,67 @@ async function _loadTeamPcsExtra(teamId, season) {
         .sort((a, b) => (b.data || '').localeCompare(a.data || ''))
     : [];
 
-  // Unisci: gare circuito prima, poi extra stagione
+  // Unisci: gare circuito (per data desc) + extra stagione (per data desc)
   const allExtra = [...garaExtra, ...seasonExtra];
   if (!allExtra.length) return;
 
+  const tbody = document.getElementById('team-results-tbody');
+  if (!tbody) return;
+
   const getName = (id) => {
     const a = globalData?.athletes?.[id];
-    return a ? `${a.cognome} ${a.nome}` : id;
+    if (a) return { cognome: a.cognome || '', nome: a.nome || '' };
+    return { cognome: id, nome: '' };
   };
 
-  const rowHtml = (r) => {
-    const pClass = posClass(r.posizione);
-    const dateHtml = `<td style="white-space:nowrap;color:var(--text-muted);font-size:.8rem">${fmtDateShort(r.data)}</td>`;
-    const nameHtml = r.gara_id
-      ? `<td><a href="#/gara/${esc(r.gara_id)}">${esc(r.gara_name)}</a></td>`
-      : `<td>${r.pcs_race_slug ? `<a href="https://www.procyclingstats.com/race/${esc(r.pcs_race_slug)}" target="_blank">${esc(r.gara_name)}</a>` : esc(r.gara_name)}</td>`;
-    const athHtml = `<td><span class="rk-av-wrap" data-aid="${esc(r.atleta_id)}"></span><a href="#/atleta/${esc(r.atleta_id)}">${esc(getName(r.atleta_id))}</a></td>`;
-    const posHtml  = `<td class="td-pos ${pClass}">${r.posizione}°</td>`;
-    const gapHtml  = `<td style="color:var(--text-muted);font-size:.85rem">${esc(r.distacco || '')}</td>`;
-    return `<tr>${dateHtml}${nameHtml}${athHtml}${posHtml}${gapHtml}</tr>`;
-  };
+  const emptyRow = tbody.querySelector('.empty-state');
+  if (emptyRow) emptyRow.closest('tr').remove();
 
-  el.innerHTML = `
-    <div class="section-header" style="margin-top:32px">
-      <span class="section-title">ALTRI RISULTATI</span>
-      <span class="section-line"></span>
-    </div>
-    <div class="results-table-wrap">
-      <table class="results-table team-results">
-        <thead><tr><th>DATA</th><th>GARA</th><th>ATLETA</th><th>POS</th><th>DISTACCO</th></tr></thead>
-        <tbody>${allExtra.slice(0, 200).map(rowHtml).join('')}</tbody>
-      </table>
-    </div>`;
-
-  // Foto atleti
-  const spans = [...el.querySelectorAll('.rk-av-wrap[data-aid]')];
   const ph = window._rkPh || '';
-  spans.forEach(s => { s.innerHTML = ph; });
-  const uniqueIds = [...new Set(spans.map(s => s.dataset.aid))];
+  const newSpans = [];
+
+  for (const r of allExtra.slice(0, 200)) {
+    const pClass = posClass(r.posizione);
+    const { cognome, nome } = getName(r.atleta_id);
+    const raceLink = r.gara_id
+      ? `<a href="#/gara/${esc(r.gara_id)}">${esc(r.gara_name)}</a>`
+      : (r.pcs_race_slug
+          ? `<a href="https://www.procyclingstats.com/race/${esc(r.pcs_race_slug)}" target="_blank">${esc(r.gara_name)}</a>`
+          : esc(r.gara_name));
+    const tr = document.createElement('tr');
+    tr.dataset.date = r.data || '';
+    tr.innerHTML = `
+      <td class="td-date">${fmtDateShort(r.data)}</td>
+      <td class="td-race">${raceLink}
+        <div class="td-team-mobile"><a href="#/atleta/${esc(r.atleta_id)}" style="color:var(--text-secondary)">${esc(cognome)} ${esc(nome)}</a></div>
+      </td>
+      <td class="td-hide-mobile" style="font-family:var(--font-heading);font-weight:700">
+        <div style="display:flex;align-items:center">
+          <span class="rk-av-wrap" data-aid="${esc(r.atleta_id)}">${ph}</span>
+          <a href="#/atleta/${esc(r.atleta_id)}" style="color:var(--text-primary)">${esc(cognome)} ${esc(nome)}</a>
+        </div>
+      </td>
+      <td class="td-pos ${pClass}">${r.posizione}°</td>
+      <td class="td-hide-mobile" style="text-align:center">—</td>
+      <td class="td-hide-mobile" style="text-align:right">—</td>
+      <td class="td-hide-mobile" style="text-align:right">—</td>
+      <td class="td-hide-mobile" style="text-align:right"></td>
+      <td class="td-pts">—</td>`;
+    const existingRows = [...tbody.querySelectorAll('tr[data-date]')];
+    const after = existingRows.find(row => (row.dataset.date || '') < (r.data || ''));
+    if (after) tbody.insertBefore(tr, after);
+    else tbody.appendChild(tr);
+    const span = tr.querySelector('.rk-av-wrap[data-aid]');
+    if (span) newSpans.push(span);
+  }
+
+  // Foto atleti async
+  const uniqueIds = [...new Set(newSpans.map(s => s.dataset.aid))];
   const ovMap = {};
   await Promise.all(uniqueIds.map(async aid => {
     ovMap[aid] = await getEntityOverrides('atleta', aid).catch(() => ({}));
   }));
-  spans.forEach(span => {
+  newSpans.forEach(span => {
     if (!document.contains(span)) return;
     const ov = ovMap[span.dataset.aid] || {};
     if (ov.photo_url) {
@@ -12128,7 +12147,8 @@ async function _loadAtletaPcsExtra(atletaId, season, icsRisultati, athlete) {
     ? pcsGareRaw
         .filter(r => r.gara_id && !icsGaraIds.has(r.gara_id))
         .map(r => {
-          const cal = globalData?.calendar?.find(g => g.id === r.gara_id);
+          const calId = (globalData?.garaToCalId?.[r.gara_id]) || r.gara_id;
+          const cal = globalData?.calendar?.find(g => g.id === calId);
           return {
             data:      cal?.data || r.gara_id.match(/(\d{4}-\d{2}-\d{2})/)?.[1] || '',
             gara_id:   r.gara_id,
@@ -12659,6 +12679,12 @@ async function renderTeam(team_id, opts = {}) {
       atletiMap[r.atleta_id].puntiCat += (r.punti_effettivi||0);
     }
   });
+  // Aggiungi atleti del roster senza risultati ICS (0 punti)
+  for (const aid of (t.atleti || [])) {
+    if (!atletiMap[aid] && athletes[aid]) {
+      atletiMap[aid] = { id: aid, ...athletes[aid], puntiCat: 0, puntiTot: 0 };
+    }
+  }
   const atletiList = Object.values(atletiMap)
     .sort((a,b) => b.puntiTot - a.puntiTot || (a.cognome||'').localeCompare(b.cognome||''));
 
@@ -12683,7 +12709,7 @@ async function renderTeam(team_id, opts = {}) {
     .map(r => {
       // Per la scheda Team mostriamo il rank della squadra (con tie-break)
       const rankVal = r.team_rank_dopo_gara;
-      return `<tr>
+      return `<tr data-date="${esc(r.data||'')}">
         <td class="td-date">${fmtDateShort(r.data)}</td>
         <td class="td-race">
           <a href="#/gara/${esc(r.gara_id)}">${esc(r.nome_gara)}</a>
@@ -12923,10 +12949,9 @@ async function renderTeam(team_id, opts = {}) {
         <thead><tr>
           <th>DATA</th><th>GARA</th><th class="td-hide-mobile">ATLETA</th><th>POS</th><th class="td-hide-mobile" style="text-align:center">MOLT</th><th class="td-hide-mobile" style="text-align:right">KM</th><th class="td-hide-mobile" style="text-align:right">MEDIA</th><th class="td-hide-mobile" style="text-align:right">RNK</th><th>PTS</th>
         </tr></thead>
-        <tbody>${risultatiRows || '<tr><td colspan="9" class="empty-state">Nessun risultato</td></tr>'}</tbody>
+        <tbody id="team-results-tbody">${risultatiRows || '<tr><td colspan="9" class="empty-state">Nessun risultato</td></tr>'}</tbody>
       </table>
     </div>
-    <div id="team-pcs-extra"></div>
   `);
 
   // Bottone messaggio team (async, non blocca il render)
