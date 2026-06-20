@@ -1,5 +1,29 @@
 [
   {
+    "id": "mqm38kngddmdq",
+    "channel_id": "bicitv",
+    "channel_name": "BICITV",
+    "url": "https://www.youtube.com/watch?v=POP_XREMXAk",
+    "title": "Riccardo Vesco vince il Giro della Brianza ed è il Campione Regionale Lombardo 2026",
+    "published_at": "2026-06-20",
+    "thumbnail": "https://i1.ytimg.com/vi/POP_XREMXAk/hqdefault.jpg",
+    "status": "pending",
+    "suggested_gara_id": null,
+    "added_at": "2026-06-20T08:20:45.581Z"
+  },
+  {
+    "id": "mql2su8lhyxeh",
+    "channel_id": "ciclismoweb",
+    "channel_name": "ciclismoweb / ExtraCiclismo",
+    "url": "https://www.youtube.com/watch?v=4ZT4vdKoHh4",
+    "title": "9° Trofeo Cleto Maule - Gambellara (Vi)",
+    "published_at": "2026-06-19",
+    "thumbnail": "https://i1.ytimg.com/vi/4ZT4vdKoHh4/hqdefault.jpg",
+    "status": "pending",
+    "suggested_gara_id": null,
+    "added_at": "2026-06-19T15:20:45.333Z"
+  },
+  {
     "id": "mqkwdcwei7mbn",
     "channel_id": "toscana_sprint",
     "channel_name": "ToscanaSprint",
