@@ -11954,13 +11954,21 @@ async function _loadGaraPcsExt(garaId, circuitResults) {
     const teamId   = ath?.team_id || _findTeam(r.team_name) || '';
     const teamName = teamId ? (globalData?.teams?.[teamId]?.nome || r.team_name || '') : (r.team_name || '');
 
-    // Stesso stile colonna ATLETA delle righe principali
-    // Avatar sempre presente (placeholder se no foto / non nel sistema)
+    // Rank ICS dopo la gara — preso da resultsRaw se l'atleta è nel sistema
+    const icsRes = r.atleta_id
+      ? (globalData?.resultsRaw || []).find(x => x.atleta_id === r.atleta_id && x.gara_id === garaId)
+      : null;
+    const rkTag = icsRes?.rank_dopo_gara
+      ? `<span class="ris-rank-pos">${icsRes.rank_dopo_gara}° class.</span>` : '';
+
+    // Avatar sempre presente — senza data-aid per non-sistema (riceverà placeholder da _loadGaraAvatars)
     const avData  = r.atleta_id ? ` data-aid="${esc(r.atleta_id)}"` : '';
     const avatarHtml = `<span class="rk-av-wrap"${avData}></span>`;
+    // Nome in MAIUSCOLO come le righe ICS
+    const nameStyle = 'style="text-transform:uppercase"';
     const nameLink = r.atleta_id
-      ? `<a href="#/atleta/${esc(r.atleta_id)}">${esc(name)}</a>`
-      : `<span>${esc(name)}</span>`;
+      ? `<a href="#/atleta/${esc(r.atleta_id)}" ${nameStyle}>${esc(name)}</a>`
+      : `<span ${nameStyle}>${esc(name)}</span>`;
     const mobileTeam = teamId
       ? `<div class="td-team-mobile"><a href="#/team/${esc(teamId)}" style="color:var(--text-secondary)">${esc(teamName)}</a></div>`
       : `<div class="td-team-mobile" style="color:var(--text-muted)">${esc(teamName)}</div>`;
@@ -11984,11 +11992,11 @@ async function _loadGaraPcsExt(garaId, circuitResults) {
       <td class="td-time">${esc(tempoDisplay)}</td>
       <td class="td-hide-mobile" style="text-align:right">${esc(raceKm || '—')}</td>
       <td class="td-hide-mobile" style="text-align:right">${mediaDisplay}</td>
-      <td class="td-pts">—</td>`;
+      <td class="td-pts">—${rkTag}</td>`;
     tbody.appendChild(tr);
   }
 
-  // Carica foto e placeholder per le nuove righe usando la stessa funzione del resto della tabella
+  // Carica placeholder e foto per le nuove righe (incluse quelle senza atleta_id)
   if (window._loadGaraAvatars) await window._loadGaraAvatars();
 }
 
@@ -14061,26 +14069,25 @@ async function renderGara(gara_id) {
   `);
 
   // Foto atleti nella tabella risultati (batch async)
-  // _rkPh è globale e usato anche da _loadGaraPcsExt
+  // _rkPh globale — usato anche da _loadGaraPcsExt
   window._rkPh = `<span class="rk-av-placeholder"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><circle cx="12" cy="8" r="4"/><path d="M4 20c0-4 3.6-7 8-7s8 3 8 7"/></svg></span>`;
-  window._loadGaraAvatars = async (container) => {
-    const spans = [...(container || document).querySelectorAll('.results-table .rk-av-wrap[data-aid], #main-results-tbody .rk-av-wrap[data-aid]')];
-    spans.forEach(s => { if (!s.innerHTML.trim()) s.innerHTML = window._rkPh; });
-    for (let i = 0; i < spans.length; i += 8) {
-      await Promise.all(spans.slice(i, i + 8).map(async span => {
+  // Carica placeholder e foto per TUTTI i rk-av-wrap nel tbody (incluse righe PCS aggiunte dopo)
+  // data-av-done evita di rielaborare span già processati
+  window._loadGaraAvatars = async () => {
+    const spans = [...document.querySelectorAll('#main-results-tbody .rk-av-wrap:not([data-av-done])')];
+    spans.forEach(s => { s.setAttribute('data-av-done','1'); if (!s.innerHTML.trim()) s.innerHTML = window._rkPh; });
+    const withId = spans.filter(s => s.dataset.aid);
+    for (let i = 0; i < withId.length; i += 8) {
+      await Promise.all(withId.slice(i, i + 8).map(async span => {
         if (!document.contains(span)) return;
         const ov = await getEntityOverrides('atleta', span.dataset.aid).catch(() => ({}));
         if (!document.contains(span)) return;
         if (ov.photo_url) {
           const img = document.createElement('img');
           img.src = MEDIA_BASE + esc(ov.photo_url);
-          img.className = 'rk-av-img';
-          img.alt = '';
+          img.className = 'rk-av-img'; img.alt = '';
           img.onerror = () => { span.innerHTML = window._rkPh; };
-          span.innerHTML = '';
-          span.appendChild(img);
-        } else {
-          span.innerHTML = window._rkPh;
+          span.innerHTML = ''; span.appendChild(img);
         }
       }));
     }
