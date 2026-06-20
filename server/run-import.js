@@ -207,27 +207,37 @@ async function searchPcsRider(page, ath) {
 // ─── First Cycling ─────────────────────────────────────────────────────────
 
 // Aspetta che Cloudflare finisca la verifica automatica e carichi la pagina vera.
-// CF risolve la challenge in-place con JS (senza navigazione), quindi usiamo polling.
-async function waitPassCF(page, timeout = 20000) {
-  const isCF = () => page.evaluate(() =>
-    /just a moment|ci siamo quasi|checking your browser|verifica di sicurezza|un momento/i.test(document.title) ||
-    !!document.querySelector('#challenge-running, .cf-browser-verification, #cf-spinner, [id^="cf-"]')
-  ).catch(() => false);
+// CF inietta il challenge via JS, quindi aspettiamo prima che il DOM sia stabile.
+async function waitPassCF(page, timeout = 25000) {
+  // Pausa iniziale: lascia tempo a CF di iniettare il challenge nel DOM
+  await sleep(1200);
 
-  if (!(await isCF())) return; // nessuna challenge
+  const isCF = () => page.evaluate(() => {
+    const title = (document.title || '').toLowerCase();
+    const body  = (document.body?.innerText || '').toLowerCase();
+    return title.includes('just a moment') ||
+           title.includes('ci siamo quasi') ||
+           title.includes('checking your') ||
+           title.includes('un momento') ||
+           body.includes('verifica di sicurezza') ||
+           body.includes('checking your browser') ||
+           !!document.querySelector('#challenge-running, #cf-spinner, .cf-browser-verification, #challenge-form, #turnstile-wrapper');
+  }).catch(() => false);
+
+  if (!(await isCF())) return; // nessuna challenge, pagina già caricata
 
   process.stdout.write('\n       [CF challenge — attendo');
   const start = Date.now();
   while (Date.now() - start < timeout) {
-    await sleep(600);
+    await sleep(700);
     process.stdout.write('.');
     if (!(await isCF())) {
-      process.stdout.write(' OK]\n       ');
-      await sleep(1000); // pausa dopo risoluzione
+      process.stdout.write(' ✓]\n       ');
+      await sleep(1500); // pausa extra dopo risoluzione per sicurezza
       return;
     }
   }
-  process.stdout.write(' TIMEOUT — procedo comunque]\n       ');
+  process.stdout.write(' TIMEOUT]\n       ');
 }
 
 async function searchFirstCycling(page, name, type = 'riders') {
