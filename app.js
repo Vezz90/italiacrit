@@ -15125,8 +15125,16 @@ async function renderAtletiList() {
           <tbody>
             ${filtered.slice(0, 100).map(a => `
               <tr class="ranking-row">
-                <td><a href="#/atleta/${esc(a.id)}"><strong>${esc(a.cognome)} ${esc(a.nome)}</strong></a></td>
-                <td><a href="#/team/${esc(a.team_id)}" style="color:var(--text-secondary)">${esc(a.team_attuale)}</a></td>
+                <td>
+                  <div style="display:flex;align-items:center">
+                    <span class="rk-av-wrap" data-aid="${esc(a.atleta_id)}"></span>
+                    <a href="#/atleta/${esc(a.atleta_id)}"><strong>${esc(a.cognome)} ${esc(a.nome)}</strong></a>
+                  </div>
+                </td>
+                <td>
+                  <span class="rk-tl-wrap" data-tid="${esc(a.team_id||'')}"></span>
+                  <a href="#/team/${esc(a.team_id)}" style="color:var(--text-secondary)">${esc(a.team_attuale)}</a>
+                </td>
                 <td class="r"><span class="rank-pts">${a.punti_totali}</span></td>
               </tr>
             `).join('') || '<tr><td colspan="3" class="empty-state">Nessun atleta trovato in questa categoria</td></tr>'}
@@ -15134,6 +15142,7 @@ async function renderAtletiList() {
         </table>
       </div>
     `;
+    _injectRankPhotos(filtered.slice(0, 60).map(a => ({ atleta_id: a.atleta_id, team_id: a.team_id })));
   };
   window.filterAtletiList(atlSearch);
 }
@@ -15254,7 +15263,12 @@ async function renderTeamList() {
           <tbody>
             ${filtered.slice(0, 150).map((t, i) => `
               <tr class="ranking-row" style="animation-delay:${Math.min(i,20)*30}ms">
-                <td><a href="#/team/${esc(t.id)}"><strong>${nationFlagPrefix(t.nome)}${esc(t.nome)}</strong></a></td>
+                <td>
+                  <div style="display:flex;align-items:center">
+                    <span class="rk-tl-wrap" data-tid="${esc(t.id)}"></span>
+                    <a href="#/team/${esc(t.id)}"><strong>${nationFlagPrefix(t.nome)}${esc(t.nome)}</strong></a>
+                  </div>
+                </td>
                 <td class="r" style="color:var(--text-muted);font-size:0.85rem">${t.atleti ? t.atleti.length : 0}</td>
                 <td class="r"><span class="rank-pts">${t.punti_per_cat[teamCat] || 0}</span></td>
               </tr>
@@ -15263,6 +15277,7 @@ async function renderTeamList() {
         </table>
       </div>
     `;
+    _injectRankPhotos(filtered.slice(0, 60).map(t => ({ team_id: t.id })));
   };
   window.filterTeamList(teamSearch);
 }
