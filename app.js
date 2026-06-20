@@ -11881,7 +11881,7 @@ window.toggleFollow = async function(type, id, spanId) {
   } catch(e) { showToast(e.message, 'error'); if (btn) { btn.disabled = false; } }
 };
 
-// ── PCS risultati estesi gara — appende righe direttamente alla tabella principale ──
+// ── PCS risultati estesi gara — appende righe nella tabella principale con stessa grafica ──
 async function _loadGaraPcsExt(garaId, circuitResults) {
   let data;
   try {
@@ -11896,11 +11896,53 @@ async function _loadGaraPcsExt(garaId, circuitResults) {
   const tbody = document.getElementById('main-results-tbody');
   if (!tbody) return;
 
-  // Link PCS in fondo alla pagina (dentro #gara-pcs-ext)
-  const pcsSlug = ext[0]?.pcs_race_slug || '';
+  // Dati vincitore per calcolo km e media
+  const winner = circuitResults.find(r => r.posizione === 1) || circuitResults[0];
+  const raceKm = winner?.km || '';
+  const winnerSec = _winnerSeconds(raceKm, winner?.media);
+
+  // Fuzzy match team PCS → team nel sistema (normalizza + confronto parole chiave)
+  const _normTeam = s => String(s||'').normalize('NFD').replace(/[̀-ͯ]/g,'').toLowerCase().replace(/[^a-z0-9]+/g,' ').trim();
+  const _findTeam = (pcsName) => {
+    if (!pcsName || !globalData?.teams) return null;
+    const target = _normTeam(pcsName);
+    let bestId = null, bestScore = 0;
+    for (const [tid, t] of Object.entries(globalData.teams)) {
+      const tNorm = _normTeam(t.nome || tid);
+      if (tNorm === target) return tid;
+      const tWords = tNorm.split(' ').filter(w => w.length > 3);
+      const pWords = target.split(' ').filter(w => w.length > 3);
+      if (!pWords.length) continue;
+      const matched = pWords.filter(w => tWords.includes(w)).length;
+      const score = matched / Math.max(tWords.length, pWords.length);
+      if (score > bestScore && score >= 0.5) { bestScore = score; bestId = tid; }
+    }
+    return bestId;
+  };
+
+  // Parsa distacco PCS "+M:SS" o "+H:MM:SS" → secondi
+  const _parsePcsGap = (gap) => {
+    if (!gap) return 0;
+    const g = String(gap).replace(/^\+/, '').trim();
+    const parts = g.split(':').map(Number);
+    if (parts.some(isNaN)) return 0;
+    if (parts.length === 3) return parts[0]*3600 + parts[1]*60 + parts[2];
+    if (parts.length === 2) return parts[0]*60 + parts[1];
+    return parts[0] || 0;
+  };
+  // Formatta secondi → "+M'SS\"" oppure "S.T."
+  const _fmtPcsGap = (gap) => {
+    const sec = _parsePcsGap(gap);
+    if (!sec) return 'S.T.';
+    const h = Math.floor(sec / 3600), rem = sec % 3600;
+    const m = Math.floor(rem / 60), s = rem % 60;
+    return `+${h > 0 ? h + 'h ' : ''}${m}'${String(s).padStart(2,'0')}"`;
+  };
+
+  const pcsSlug = data.find(r => r.pcs_race_slug)?.pcs_race_slug || '';
   if (pcsSlug) {
     const extEl = document.getElementById('gara-pcs-ext');
-    if (extEl) extEl.innerHTML = `<div style="text-align:right;padding:6px 4px 0;font-size:.75rem;color:var(--text-muted)"><a href="https://www.procyclingstats.com/${esc(pcsSlug)}" target="_blank" style="color:var(--text-muted)">Risultati completi su procyclingstats.com →</a></div>`;
+    if (extEl) extEl.innerHTML = `<div style="text-align:right;padding:4px 4px 0;font-size:.75rem;color:var(--text-muted)"><a href="https://www.procyclingstats.com/${esc(pcsSlug)}" target="_blank" style="color:var(--text-muted)">procyclingstats.com →</a></div>`;
   }
 
   const ph = `<span class=rk-av-placeholder><svg width=20 height=20 viewBox='0 0 24 24' fill='none' stroke='currentColor' stroke-width='1.5'><circle cx='12' cy='8' r='4'/><path d='M4 20c0-4 3.6-7 8-7s8 3 8 7'/></svg></span>`;
@@ -11909,27 +11951,38 @@ async function _loadGaraPcsExt(garaId, circuitResults) {
   for (const r of ext) {
     const ath = r.atleta_id ? globalData?.athletes?.[r.atleta_id] : null;
     const name = ath ? `${ath.cognome} ${ath.nome}` : (r.rider_name || '');
-    const teamName = ath?.team_attuale || r.team_name || '';
-    const teamId   = ath?.team_id || '';
+    const teamId   = ath?.team_id || _findTeam(r.team_name) || '';
+    const teamName = teamId ? (globalData?.teams?.[teamId]?.nome || r.team_name || '') : (r.team_name || '');
 
-    const nameHtml = r.atleta_id
-      ? `<span class="rk-av-wrap" data-aid="${esc(r.atleta_id)}">${ph}</span><a href="#/atleta/${esc(r.atleta_id)}">${esc(name)}</a>`
-      : `<span style="color:var(--text-secondary)">${esc(name)}</span>`;
-    const teamHtml = teamId
-      ? `<a href="#/team/${esc(teamId)}">${esc(teamName)}</a>`
-      : `<span style="color:var(--text-muted)">${esc(teamName)}</span>`;
+    // Stesso stile colonna ATLETA delle righe principali
+    const avatarHtml = r.atleta_id ? `<span class="rk-av-wrap" data-aid="${esc(r.atleta_id)}">${ph}</span>` : '';
+    const nameLink = r.atleta_id
+      ? `<a href="#/atleta/${esc(r.atleta_id)}">${esc(name)}</a>`
+      : `<span>${esc(name)}</span>`;
+    const mobileTeam = teamId
+      ? `<div class="td-team-mobile"><a href="#/team/${esc(teamId)}" style="color:var(--text-secondary)">${esc(teamName)}</a></div>`
+      : `<div class="td-team-mobile" style="color:var(--text-muted)">${esc(teamName)}</div>`;
+    const teamColHtml = teamId
+      ? `<a href="#/team/${esc(teamId)}" style="color:var(--text-secondary)">${esc(teamName)}</a>`
+      : `<span style="color:var(--text-secondary)">${esc(teamName)}</span>`;
+
+    const pClass = posClass(r.posizione);
+    const gapSec = _parsePcsGap(r.distacco);
+    const tempoDisplay = _fmtPcsGap(r.distacco);
+    const media = winnerSec ? _realAvgSpeed(raceKm, winnerSec, gapSec) : null;
+    const mediaDisplay = media ? media.toFixed(3) : '—';
 
     const tr = document.createElement('tr');
-    tr.className = 'ranking-row';
-    // Stessa struttura della tabella principale: POS | ATLETA | TEAM | TEMPO | KM | MEDIA | PTS
     tr.innerHTML = `
-      <td><span class="rank-num">${r.posizione}</span></td>
-      <td><div style="display:flex;align-items:center;gap:6px">${nameHtml}</div></td>
-      <td class="td-hide-mobile">${teamHtml}</td>
-      <td style="color:var(--text-muted);font-size:.85rem">${esc(r.distacco || '')}</td>
-      <td class="td-hide-mobile"></td>
-      <td class="td-hide-mobile"></td>
-      <td class="td-pts"></td>`;
+      <td class="td-pos ${pClass}">${r.posizione}°</td>
+      <td style="font-family:var(--font-heading);font-weight:700">
+        <div style="display:flex;align-items:center">${avatarHtml}<div>${nameLink}${mobileTeam}</div></div>
+      </td>
+      <td class="td-hide-mobile">${teamColHtml}</td>
+      <td class="td-time">${esc(tempoDisplay)}</td>
+      <td class="td-hide-mobile" style="text-align:right">${esc(raceKm || '—')}</td>
+      <td class="td-hide-mobile" style="text-align:right">${mediaDisplay}</td>
+      <td class="td-pts">—</td>`;
     tbody.appendChild(tr);
     if (r.atleta_id) newSpans.push(tr.querySelector('.rk-av-wrap[data-aid]'));
   }
