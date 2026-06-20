@@ -13096,11 +13096,14 @@ async function renderGara(gara_id) {
     const dLabel = daysLeft === 0 ? 'OGGI' : daysLeft === 1 ? 'DOMANI' : `tra ${daysLeft} giorni`;
     const fmtDate = d.getDate() + ' ' + ['gen','feb','mar','apr','mag','giu','lug','ago','set','ott','nov','dic'][d.getMonth()] + ' ' + d.getFullYear();
     const cats = [calEntry.categoria, calEntry.categoria2, calEntry.categoria3].filter(Boolean);
-    // Se il nome è solo la categoria (es. "juniores"), usa localita+data come titolo alternativo
+    // Preferisce nome_gara da raceDetails (scraper FCI), poi fallback al nome calendario
+    const _raceDetailEntry = (globalData.raceDetails || {})[gara_id];
     const _nomeIsCat = (calEntry.nome || '').toLowerCase().trim() === (calEntry.categoria || '').toLowerCase().trim().split(' ')[0];
-    const _displayName = _nomeIsCat
-      ? (calEntry.luogo ? `Gara a ${calEntry.luogo}` : (calEntry.categoria || calEntry.nome || gara_id))
-      : (calEntry.nome || gara_id);
+    const _displayName = _raceDetailEntry?.nome_gara
+      ? _raceDetailEntry.nome_gara
+      : (_nomeIsCat
+        ? (calEntry.luogo ? `Gara a ${calEntry.luogo}` : (calEntry.categoria || calEntry.nome || gara_id))
+        : (calEntry.nome || gara_id));
     setPage(`
       <div style="max-width:640px;margin:40px auto;padding:0 16px">
         <button onclick="history.back()" style="background:none;border:none;color:var(--text-muted);cursor:pointer;font-size:.85rem;margin-bottom:18px;padding:0">← Torna indietro</button>
