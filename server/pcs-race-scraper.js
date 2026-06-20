@@ -101,12 +101,14 @@ function matchGaraId(calMap, dateStr, pcsCat, pcsName) {
 // ─── Supabase ─────────────────────────────────────────────────────────────────
 
 async function getGaraSlugs(sb) {
-  const { data } = await sb.from('entity_overrides')
+  const { data, error } = await sb.from('entity_overrides')
     .select('entity_id, new_value')
     .eq('entity_type', 'gara')
     .eq('field', 'pcs_race_slug')
     .not('new_value', 'is', null)
     .limit(2000);
+  if (error) console.error('getGaraSlugs error:', JSON.stringify(error));
+  console.log('getGaraSlugs data:', JSON.stringify(data));
   return new Map((data || []).map(r => [r.entity_id, r.new_value]));
 }
 
@@ -160,10 +162,22 @@ async function scrapeRaceResults(page, pcsSlug) {
     `https://www.procyclingstats.com/race/${pcsSlug}`,
   ];
   for (const url of urls) {
+    console.log(`  → visito: ${url}`);
     try { await page.goto(url, { waitUntil: 'domcontentloaded', timeout: 20000 }); }
-    catch { continue; }
-    if (page.url().includes('pagenotfound') || page.url().includes('404')) continue;
+    catch(e) { console.log(`    errore navigazione: ${e.message}`); continue; }
+    const finalUrl = page.url();
+    console.log(`  → URL finale: ${finalUrl}`);
+    if (finalUrl.includes('pagenotfound') || finalUrl.includes('404')) { console.log('  → 404'); continue; }
     await sleep(1200);
+
+    const debugInfo = await page.evaluate(() => ({
+      tableCount: document.querySelectorAll('table').length,
+      tableHeaders: [...document.querySelectorAll('table')].slice(0,3).map(t =>
+        [...t.querySelectorAll('th')].map(th => th.textContent.trim()).join(' | ')
+      ),
+    })).catch(() => ({}));
+    console.log(`  → tabelle trovate: ${debugInfo.tableCount}`);
+    if (debugInfo.tableHeaders) debugInfo.tableHeaders.forEach((h,i) => console.log(`    tabella[${i}]: ${h}`));
 
     const results = await page.evaluate(() => {
       const rows = [];
