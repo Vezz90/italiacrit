@@ -1,19 +1,16 @@
 'use strict';
 /**
- * Import foto + social per atleti e team
+ * Import foto + social per atleti e team (solo ProCyclingStats)
  *
  * Uso:
  *   $env:SUPABASE_SECRET = "..."
- *   node run-import.js [--athletes] [--teams] [--social] [--force] [--pcs] [--fc]
+ *   node run-import.js [--athletes] [--teams] [--social] [--force]
  *
  *   --athletes   solo atleti  (default: entrambi)
  *   --teams      solo team    (default: entrambi)
  *   --social     solo social (no foto) — aggiorna TUTTI anche chi ha già la foto
- *   --pcs        usa solo ProCyclingStats
- *   --fc         usa solo First Cycling
  *   --force      re-importa anche chi ha già tutti i dati
  *
- * Comportamento default: PCS + FC in parallelo, PCS ha priorità.
  * Salta chi ha già una foto (a meno di --social o --force).
  */
 
@@ -28,9 +25,7 @@ const args        = process.argv.slice(2);
 const DO_ATH      = !args.includes('--teams');
 const DO_TEAM     = !args.includes('--athletes');
 const FORCE       = args.includes('--force');
-const PCS_ONLY    = args.includes('--pcs');
-const FC_ONLY     = args.includes('--fc');
-const SOCIAL_ONLY = args.includes('--social');  // solo social, niente foto
+const SOCIAL_ONLY = args.includes('--social');
 const SINGLE_ID   = (args.find(a => a.startsWith('--atleta-id=')) || '').split('=')[1] || null;
 const SINGLE_NOME = (args.find(a => a.startsWith('--nome=')) || '').split('=')[1] || null;
 const SINGLE_COG  = (args.find(a => a.startsWith('--cognome=')) || '').split('=')[1] || null;
@@ -38,7 +33,6 @@ const YEAR        = new Date().getFullYear();
 
 const DATA_DIR = path.join(__dirname, '..', 'data');
 const RANK_DIR = path.join(DATA_DIR, 'rankings');
-// Elite, Junior e Allievi (M e F)
 const ATH_CATS = ['ELI_M', 'ELI_F', 'JUN_M', 'JUN_F', 'AL_M', 'AL_F'];
 
 // ─── Helpers ───────────────────────────────────────────────────────────────
@@ -70,9 +64,6 @@ async function extractSocialsFromPage(page) {
       if (!result.facebook  && /facebook\.com\/(?!sharer)[^/?"#]+/.test(h)) result.facebook = h;
       if (!result.youtube   && /youtube\.com\/(c\/|channel\/|@)[^?"#]+/.test(h)) result.youtube = h;
     }
-    // Sito personale: link esterno che sembra un vero sito web dell'atleta/team.
-    // Criteri: non è un social/stats noto, non è Cloudflare/CDN/analytics/sponsor generico,
-    // il testo del link o l'href contiene "www" oppure l'anchor text è significativo.
     const curHost = location.hostname;
     const BLOCKLIST = /(procyclingstats|firstcycling|instagram|twitter|x\.com|strava|facebook|youtube|google|cloudflare|cdn-cgi|challenges\.|doubleclick|analytics|googletag|adservice|scorecard|omtrdc|bing\.com|amazon|aliexpress|paypal|awin|affiliat|tracking|redirect|banner|sponsor|kit\.fontawesome|jquery|bootstrapcdn|unpkg\.com|cdnjs)/i;
     const candidates = [...document.querySelectorAll('a[href^="http"]')];
@@ -81,12 +72,9 @@ async function extractSocialsFromPage(page) {
         const u = new URL(a.href);
         if (u.hostname === curHost) return false;
         if (BLOCKLIST.test(u.hostname) || BLOCKLIST.test(a.href)) return false;
-        // Deve avere almeno un dominio di secondo livello reale (es. esempio.it, non solo IP)
         if (!/\.[a-z]{2,}$/i.test(u.hostname)) return false;
-        // Il testo visibile del link o l'href deve suggerire che è un sito personale/team
         const txt = (a.textContent || '').trim().toLowerCase();
         const href = a.href.toLowerCase();
-        // Accetta se: testo ha "www", o href ha "www.", o testo sembra un dominio
         const looksLikeSite = txt.includes('www') || href.includes('www.') ||
           /\.(it|com|eu|net|org|sport|cc|cycling|bike|ciclismo)/.test(href);
         return looksLikeSite;
@@ -207,177 +195,11 @@ async function searchPcsRider(page, ath) {
   return scored[0]?.score > 0 ? scored[0].slug : null;
 }
 
-// ─── First Cycling ─────────────────────────────────────────────────────────
-
-// Aspetta che Cloudflare finisca la verifica automatica e carichi la pagina vera.
-// CF inietta il challenge via JS, quindi aspettiamo prima che il DOM sia stabile.
-async function waitPassCF(page, timeout = 25000) {
-  // Pausa iniziale: lascia tempo a CF di iniettare il challenge nel DOM
-  await sleep(1200);
-
-  const isCF = () => page.evaluate(() => {
-    const title = (document.title || '').toLowerCase();
-    const body  = (document.body?.innerText || '').toLowerCase();
-    return title.includes('just a moment') ||
-           title.includes('ci siamo quasi') ||
-           title.includes('checking your') ||
-           title.includes('un momento') ||
-           body.includes('verifica di sicurezza') ||
-           body.includes('checking your browser') ||
-           !!document.querySelector('#challenge-running, #cf-spinner, .cf-browser-verification, #challenge-form, #turnstile-wrapper');
-  }).catch(() => false);
-
-  if (!(await isCF())) return; // nessuna challenge, pagina già caricata
-
-  process.stdout.write('\n       [CF challenge — attendo');
-  const start = Date.now();
-  while (Date.now() - start < timeout) {
-    await sleep(700);
-    process.stdout.write('.');
-    if (!(await isCF())) {
-      process.stdout.write(' ✓]\n       ');
-      await sleep(1500); // pausa extra dopo risoluzione per sicurezza
-      return;
-    }
-  }
-  process.stdout.write(' TIMEOUT]\n       ');
-}
-
-async function searchFirstCycling(page, name, type = 'riders') {
-  const pat = type === 'riders' ? 'rider.php?r=' : 'team.php?l=';
-  // Prova prima nome+cognome, poi cognome+nome
-  const queries = [name, name.split(' ').reverse().join(' ')];
-  for (const q of queries) {
-    try {
-      await page.goto(
-        `https://firstcycling.com/search.php?s=${encodeURIComponent(q)}&searchtype=${type}`,
-        { waitUntil: 'domcontentloaded', timeout: 15000 }
-      );
-    } catch { continue; }
-    await waitPassCF(page);
-
-    // FC a volte redirige direttamente al profilo quando c'è un solo risultato
-    const currentUrl = page.url();
-    if (currentUrl.includes(pat)) return currentUrl;
-
-    // Aspetta che i risultati di ricerca appaiano nel DOM (possono essere JS-rendered)
-    await page.waitForSelector(`a[href*="${pat}"]`, { timeout: 6000 }).catch(() => null);
-
-    const href = await page.evaluate(pat => {
-      const a = document.querySelector(`a[href*="${pat}"]`);
-      return a ? a.href : null;
-    }, pat).catch(() => null);
-
-    if (href) return href;
-  }
-  return null;
-}
-
-async function fetchFromFcRider(page, url) {
-  try {
-    await page.goto(url, { waitUntil: 'domcontentloaded', timeout: 18000 });
-  } catch { return { notFound: false }; }
-  await waitPassCF(page);
-  if (page.url().includes('search.php') || page.url().includes('404'))
-    return { notFound: true };
-
-  await page.evaluate(() => window.scrollTo(0, 300)).catch(() => {});
-  await sleep(1000);
-
-  const imgSrc = await page.evaluate(() => {
-    // First Cycling rider photo è tipicamente nel box profilo in alto a sinistra
-    // URL pattern: firstcycling.com/photos/riders/YEAR/ID.png oppure /photos/riders/ID.png
-    const candidates = [...document.querySelectorAll('img[src]')];
-
-    // 1. Cerca img con "photos/riders" nell'URL (foto profilo FC)
-    const byRiders = candidates.find(i => /\/photos\/riders\//i.test(i.src));
-    if (byRiders) return byRiders.src;
-
-    // 2. Cerca img con "photos/cyclists" o "photos/athletes"
-    const byAthletes = candidates.find(i => /\/photos\/(cyclists|athletes)\//i.test(i.src));
-    if (byAthletes) return byAthletes.src;
-
-    // 3. Prima img significativa nella sezione profilo (sinistra pagina)
-    const profileSection = document.querySelector('.rider-profile, .profile-photo, .info-left, aside');
-    if (profileSection) {
-      const img = profileSection.querySelector('img[src]');
-      if (img && img.naturalWidth >= 40) return img.src;
-    }
-
-    // 4. Fallback: prima img con larghezza >= 80px che non sia una bandiera/logo
-    const big = candidates.find(i =>
-      i.naturalWidth >= 80 && i.src.startsWith('http') &&
-      !i.src.includes('flag') && !i.src.includes('logo') &&
-      !i.src.includes('sponsor') && !i.src.includes('kit')
-    );
-    return big ? big.src : null;
-  }).catch(() => null);
-
-  let photo = null;
-  if (imgSrc && imgSrc.startsWith('http')) {
-    const bytes = await page.evaluate(async url => {
-      try {
-        const r = await fetch(url, { credentials: 'include' });
-        if (!r.ok) return null;
-        return Array.from(new Uint8Array(await r.arrayBuffer()));
-      } catch { return null; }
-    }, imgSrc).catch(() => null);
-    if (bytes && bytes.length >= 500) {
-      const buf = Buffer.from(bytes);
-      // Accetta JPEG, PNG e WebP
-      const isJpeg = buf[0] === 0xFF && buf[1] === 0xD8;
-      const isPng  = buf[0] === 0x89 && buf[1] === 0x50;
-      const isWebp = buf.slice(8, 12).toString() === 'WEBP';
-      if (isJpeg || isPng || isWebp) photo = buf;
-    }
-  }
-
-  const socials = await extractSocialsFromPage(page);
-  return { notFound: false, photo, socials };
-}
-
-async function fetchFromFcTeam(page, url) {
-  try {
-    await page.goto(url, { waitUntil: 'domcontentloaded', timeout: 18000 });
-  } catch { return { notFound: false }; }
-  await waitPassCF(page);
-  if (page.url().includes('search.php') || page.url().includes('404'))
-    return { notFound: true };
-
-  await page.evaluate(() => window.scrollTo(0, 200)).catch(() => {});
-  await sleep(800);
-
-  const imgSrc = await page.evaluate(() => {
-    // Accetta SOLO il logo ufficiale FC nella directory /photos/teams/
-    // Non usiamo fallback generici che raccolgono avatar Twitter/Instagram
-    const byTeams = [...document.querySelectorAll('img[src]')].find(i => /\/photos\/teams\//i.test(i.src));
-    return byTeams ? byTeams.src : null;
-  }).catch(() => null);
-
-  let photo = null;
-  if (imgSrc && imgSrc.startsWith('http')) {
-    const bytes = await page.evaluate(async url => {
-      try {
-        const r = await fetch(url, { credentials: 'include' });
-        if (!r.ok) return null;
-        return Array.from(new Uint8Array(await r.arrayBuffer()));
-      } catch { return null; }
-    }, imgSrc).catch(() => null);
-    if (bytes && bytes.length >= 200) photo = Buffer.from(bytes);
-  }
-
-  const socials = await extractSocialsFromPage(page);
-  return { notFound: false, photo, socials };
-}
-
 // ─── Supabase ──────────────────────────────────────────────────────────────
 
-async function uploadPhoto(sb, entityType, slug, buf, source = 'pcs') {
-  const ext = (() => {
-    if (buf[0] === 0x89 && buf[1] === 0x50) return 'png';
-    return 'jpeg';
-  })();
-  const storagePath = `${entityType}s/${source}/${slug}.${ext}`;
+async function uploadPhoto(sb, entityType, slug, buf) {
+  const ext = (buf[0] === 0x89 && buf[1] === 0x50) ? 'png' : 'jpeg';
+  const storagePath = `${entityType}s/pcs/${slug}.${ext}`;
   const { error } = await sb.storage.from('photos')
     .upload(storagePath, buf, { contentType: `image/${ext}`, upsert: true });
   if (error) throw error;
@@ -412,12 +234,9 @@ async function getExistingIds(sb, entityType, field) {
   const { chromium } = require('playwright');
 
   const sb = createClient(SUPABASE_URL, SUPABASE_SECRET, { realtime: { transport: ws } });
-  const source = FC_ONLY ? 'fc' : 'pcs';
+  const _mode = SOCIAL_ONLY ? 'solo social' : 'PCS';
+  console.log(`=== Import foto+social [${_mode}] ===\n`);
 
-  const _mode = SOCIAL_ONLY ? 'solo social' : FC_ONLY ? 'First Cycling' : PCS_ONLY ? 'PCS only' : 'PCS + FC parallelo';
-  console.log(`=== Import [${_mode}] ===\n`);
-
-  // Cerca Brave, poi Chrome, poi Chromium bundled
   const bravePaths = [
     'C:\\Program Files\\BraveSoftware\\Brave-Browser\\Application\\brave.exe',
     'C:\\Users\\vezza\\AppData\\Local\\BraveSoftware\\Brave-Browser\\Application\\brave.exe',
@@ -438,8 +257,6 @@ async function getExistingIds(sb, entityType, field) {
     } catch(e) {
       console.log(`>>> Brave fallito (${e.message}), provo Chrome`);
     }
-  } else {
-    console.log('>>> Brave non trovato nei path noti, uso Chrome');
   }
   if (!browser) {
     try { browser = await chromium.launch({ channel: 'chrome', headless: false }); }
@@ -454,23 +271,12 @@ async function getExistingIds(sb, entityType, field) {
   await context.addInitScript(() => {
     Object.defineProperty(navigator, 'webdriver', { get: () => undefined });
   });
-  // Due pagine separate: una per PCS, una per FC — girano in parallelo
-  const pcsPage = !FC_ONLY  ? await context.newPage() : null;
-  const fcPage  = !PCS_ONLY ? await context.newPage() : null;
 
-  // Sessioni iniziali in parallelo (passaggio Cloudflare)
-  console.log('Avvio sessioni…');
-  await Promise.all([
-    pcsPage ? pcsPage.goto('https://www.procyclingstats.com/', { waitUntil: 'networkidle', timeout: 30000 })
-                .then(() => sleep(2500))
-                .catch(e => { console.log(`Avviso PCS: ${e.message}`); return sleep(2000); })
-            : Promise.resolve(),
-    fcPage  ? fcPage.goto('https://firstcycling.com/', { waitUntil: 'domcontentloaded', timeout: 20000 })
-                .then(() => waitPassCF(fcPage))
-                .then(() => sleep(3000))
-                .catch(e => { console.log(`Avviso FC: ${e.message}`); })
-            : Promise.resolve(),
-  ]);
+  const page = await context.newPage();
+  console.log('Avvio sessione PCS…');
+  await page.goto('https://www.procyclingstats.com/', { waitUntil: 'networkidle', timeout: 30000 })
+    .then(() => sleep(2500))
+    .catch(e => { console.log(`Avviso PCS: ${e.message}`); return sleep(2000); });
   console.log('Pronto.\n');
 
   // ── ATLETI ────────────────────────────────────────────────────────────────
@@ -490,8 +296,6 @@ async function getExistingIds(sb, entityType, field) {
     }
     const athletes = [...athMap.values()];
 
-    // --social: processa tutti (solo per aggiornare social, non tocca le foto)
-    // default: salta chi ha già la foto
     const withPhoto = (FORCE || SOCIAL_ONLY) ? new Set() : await getExistingIds(sb, 'atleta', 'photo_url');
     const toProcess = athletes.filter(a => !withPhoto.has(a.atleta_id));
 
@@ -503,53 +307,37 @@ async function getExistingIds(sb, entityType, field) {
       const ath = toProcess[i];
       process.stdout.write(`(${i+1}/${toProcess.length}) ${ath.cognome} ${ath.nome} … `);
 
-      // PCS e FC in parallelo — PCS ha priorità sul risultato finale
-      const [pcsResult, fcResult] = await Promise.all([
-        pcsPage ? (async () => {
-          let slug = pcsAthleteSlug(ath);
-          let res  = await fetchFromPcsRider(pcsPage, slug);
-          if (res.notFound) {
-            process.stdout.write('pcs-search… ');
-            const found = await searchPcsRider(pcsPage, ath);
-            if (found) { slug = found; res = await fetchFromPcsRider(pcsPage, found); }
-          }
-          return { ...res, slug };
-        })() : Promise.resolve({ photo: null, socials: {}, slug: pcsAthleteSlug(ath) }),
+      let slug = pcsAthleteSlug(ath);
+      let result = await fetchFromPcsRider(page, slug);
+      if (result.notFound) {
+        process.stdout.write('pcs-search… ');
+        const found = await searchPcsRider(page, ath);
+        if (found) { slug = found; result = await fetchFromPcsRider(page, found); }
+      }
 
-        fcPage ? (async () => {
-          const fcUrl = await searchFirstCycling(fcPage, `${ath.nome} ${ath.cognome}`, 'riders');
-          if (!fcUrl) return { photo: null, socials: {} };
-          process.stdout.write('fc… ');
-          return fetchFromFcRider(fcPage, fcUrl);
-        })() : Promise.resolve({ photo: null, socials: {} }),
-      ]);
+      const { photo, socials } = result;
 
-      // Merge: PCS vince sempre su foto e social; FC riempie i campi mancanti
-      const photo   = pcsResult.photo || fcResult.photo;
-      const socials = { ...(fcResult.socials || {}), ...(pcsResult.socials || {}) };
-      const slug    = pcsResult.slug || pcsAthleteSlug(ath);
-      const photoSrc = pcsResult.photo ? 'pcs' : 'fc';
-
-      if (!photo && !Object.keys(socials).length) {
+      if (!photo && !Object.keys(socials || {}).length) {
         process.stdout.write('non trovato\n');
         noData++;
         continue;
       }
 
       const fields = {};
+      fields.pcs_slug = slug; // salva sempre lo slug PCS trovato
       if (photo && !SOCIAL_ONLY) {
         try {
-          fields.photo_url = await uploadPhoto(sb, 'atleta', slug, photo, photoSrc);
+          fields.photo_url = await uploadPhoto(sb, 'atleta', slug, photo);
         } catch(e) {
           process.stdout.write(`ERRORE foto: ${e.message} `);
         }
       }
 
-      if (socials.instagram) fields.instagram_url = socials.instagram;
-      if (socials.twitter)   fields.twitter_url   = socials.twitter;
-      if (socials.strava)    fields.strava_url     = socials.strava;
-      if (socials.facebook)  fields.facebook_url   = socials.facebook;
-      if (socials.website)   fields.website_url    = socials.website;
+      if (socials?.instagram) fields.instagram_url = socials.instagram;
+      if (socials?.twitter)   fields.twitter_url   = socials.twitter;
+      if (socials?.strava)    fields.strava_url     = socials.strava;
+      if (socials?.facebook)  fields.facebook_url   = socials.facebook;
+      if (socials?.website)   fields.website_url    = socials.website;
 
       if (!Object.keys(fields).length) {
         process.stdout.write('nessun dato nuovo\n');
@@ -566,7 +354,7 @@ async function getExistingIds(sb, entityType, field) {
       }
 
       const tags = [
-        fields.photo_url     ? `📷(${photoSrc})` : '',
+        fields.photo_url     ? '📷' : '',
         fields.instagram_url ? 'IG' : '',
         fields.twitter_url   ? 'TW' : '',
         fields.strava_url    ? 'ST' : '',
@@ -588,7 +376,6 @@ async function getExistingIds(sb, entityType, field) {
     const teamsRaw = JSON.parse(fs.readFileSync(path.join(DATA_DIR, 'teams.json'), 'utf8'));
     const teams = Object.values(teamsRaw).filter(t => t.id && t.nome);
 
-    // --social: processa tutti per aggiornare social, non tocca le foto
     const withPhoto = (FORCE || SOCIAL_ONLY) ? new Set() : await getExistingIds(sb, 'team', 'photo_url');
     const toProcess = teams.filter(t => !withPhoto.has(t.id));
 
@@ -601,39 +388,24 @@ async function getExistingIds(sb, entityType, field) {
       const slug = pcsTeamSlug(team);
       process.stdout.write(`(${i+1}/${toProcess.length}) ${team.nome} … `);
 
-      // PCS e FC in parallelo — PCS ha priorità
-      const [pcsResult, fcResult] = await Promise.all([
-        pcsPage ? fetchFromPcsTeam(pcsPage, slug)
-                : Promise.resolve({ photo: null, socials: {} }),
+      const result = await fetchFromPcsTeam(page, slug);
 
-        fcPage ? (async () => {
-          const fcUrl = await searchFirstCycling(fcPage, team.nome, 'teams');
-          if (!fcUrl) return { photo: null, socials: {} };
-          process.stdout.write('fc… ');
-          return fetchFromFcTeam(fcPage, fcUrl);
-        })() : Promise.resolve({ photo: null, socials: {} }),
-      ]);
-
-      const photo   = pcsResult.photo || fcResult.photo;
-      const socials = { ...(fcResult.socials || {}), ...(pcsResult.socials || {}) };
-      const photoSrc = pcsResult.photo ? 'pcs' : 'fc';
-
-      if (!photo && !Object.keys(socials).length) {
+      if (!result.photo && !Object.keys(result.socials || {}).length) {
         process.stdout.write('non trovato\n');
         noData++;
         continue;
       }
 
       const fields = {};
-      if (photo && !SOCIAL_ONLY) {
+      if (result.photo && !SOCIAL_ONLY) {
         try {
-          fields.photo_url = await uploadPhoto(sb, 'team', slug, photo, photoSrc);
+          fields.photo_url = await uploadPhoto(sb, 'team', slug, result.photo);
         } catch(e) {
           process.stdout.write(`ERRORE foto: ${e.message} `);
         }
       }
 
-      const s = socials;
+      const s = result.socials || {};
       if (s.instagram) fields.instagram_url = s.instagram;
       if (s.twitter)   fields.twitter_url   = s.twitter;
       if (s.facebook)  fields.facebook_url  = s.facebook;
@@ -654,7 +426,7 @@ async function getExistingIds(sb, entityType, field) {
       }
 
       const tags = [
-        fields.photo_url     ? `📷(${photoSrc})` : '',
+        fields.photo_url     ? '📷' : '',
         fields.instagram_url ? 'IG' : '',
         fields.twitter_url   ? 'TW' : '',
         fields.facebook_url  ? 'FB' : '',

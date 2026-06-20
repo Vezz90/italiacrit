@@ -9095,35 +9095,24 @@ window.adminNav = async function(section) {
             </div>
           </div>
 
-          <!-- First Cycling -->
-          <div style="margin-bottom:6px;font-size:.78rem;font-weight:700;color:var(--text-muted);letter-spacing:.05em;text-transform:uppercase">First Cycling</div>
+          <!-- PCS Risultati -->
+          <div style="margin-bottom:6px;font-size:.78rem;font-weight:700;color:var(--text-muted);letter-spacing:.05em;text-transform:uppercase">PCS Risultati</div>
           <p style="font-size:.8rem;color:var(--text-muted);margin-bottom:10px">
-            Processa <em>tutti</em> gli atleti (anche chi ha già la foto PCS) per raccogliere foto mancanti e social.
-            Ideale per Elite/U23 su squadre continentali e loghi team.
+            Scarica i risultati della stagione corrente da ProCyclingStats per ogni atleta.
+            Popola la sezione <em>Risultati oltre il 10°</em> nelle gare e <em>Altri risultati (PCS)</em> negli atleti.
+            Richiede che gli atleti abbiano già un <code>pcs_slug</code> salvato (eseguire prima l'import foto).
           </p>
-          <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:12px;margin-bottom:14px">
-            <div style="background:var(--bg-elevated);border-radius:var(--r-md);padding:16px;border:1px solid #7c3aed44">
-              <div style="font-weight:700;margin-bottom:6px;font-size:.9rem">🚴 FC Atleti</div>
-              <p style="font-size:.8rem;color:var(--text-muted);margin-bottom:12px">Foto + social per atleti da First Cycling. Integra chi ha già la foto PCS.</p>
-              <button id="import-btn-fc-athletes" onclick="window._startImport('fc-athletes','Import Atleti FC')"
-                style="width:100%;background:#7c3aed;color:#fff;border:none;padding:8px 14px;border-radius:var(--r-sm);font-weight:600;cursor:pointer;font-size:.85rem">
-                🚴 Avvia
+          <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:12px;margin-bottom:18px">
+            <div style="background:var(--bg-elevated);border-radius:var(--r-md);padding:16px;border:2px solid var(--accent)">
+              <div style="font-weight:700;margin-bottom:6px;font-size:.9rem">📊 Scraping risultati PCS</div>
+              <p style="font-size:.8rem;color:var(--text-muted);margin-bottom:12px">Tutti gli atleti con slug PCS. Salta chi è già stato processato in questa stagione.</p>
+              <button onclick="window._startPcsResults(false)"
+                style="width:100%;background:var(--accent);color:#fff;border:none;padding:8px 14px;border-radius:var(--r-sm);font-weight:600;cursor:pointer;font-size:.85rem;margin-bottom:6px">
+                📊 Avvia
               </button>
-            </div>
-            <div style="background:var(--bg-elevated);border-radius:var(--r-md);padding:16px;border:1px solid #7c3aed44">
-              <div style="font-weight:700;margin-bottom:6px;font-size:.9rem">🏅 FC Team</div>
-              <p style="font-size:.8rem;color:var(--text-muted);margin-bottom:12px">Logo + social per team da First Cycling. Integra chi ha già il logo PCS.</p>
-              <button id="import-btn-fc-teams" onclick="window._startImport('fc-teams','Import Team FC')"
-                style="width:100%;background:#7c3aed;color:#fff;border:none;padding:8px 14px;border-radius:var(--r-sm);font-weight:600;cursor:pointer;font-size:.85rem">
-                🏅 Avvia
-              </button>
-            </div>
-            <div style="background:var(--bg-elevated);border-radius:var(--r-md);padding:16px;border:2px solid #7c3aed">
-              <div style="font-weight:700;margin-bottom:6px;font-size:.9rem">🌐 FC Completo</div>
-              <p style="font-size:.8rem;color:var(--text-muted);margin-bottom:12px">Atleti + Team da First Cycling in una sola passata.</p>
-              <button id="import-btn-fc" onclick="window._startImport('fc','Import FC Completo')"
-                style="width:100%;background:#7c3aed;color:#fff;border:none;padding:8px 14px;border-radius:var(--r-sm);font-weight:600;cursor:pointer;font-size:.85rem">
-                🌐 Avvia
+              <button onclick="window._startPcsResults(true)"
+                style="width:100%;background:var(--bg-input);border:1px solid var(--border-subtle);color:var(--text-primary);padding:7px 14px;border-radius:var(--r-sm);font-weight:600;cursor:pointer;font-size:.8rem">
+                🔄 Forza rielaborazione
               </button>
             </div>
           </div>
@@ -9146,9 +9135,20 @@ window.adminNav = async function(section) {
         </div>
       `;
 
-      window._startImport       = _startImport;
+      const _startPcsResults = async (force) => {
+        try {
+          await apiCall('/admin/pcs-import', { method: 'POST', body: { force: !!force } });
+          showToast('Scraping PCS risultati avviato…', 'info');
+          setTimeout(_renderImportStatus, 2000);
+        } catch(e) {
+          showToast('Errore avvio scraping PCS: ' + e.message, 'error');
+        }
+      };
+
+      window._startImport        = _startImport;
       window._renderImportStatus = _renderImportStatus;
       window._resetImport        = _resetImport;
+      window._startPcsResults    = _startPcsResults;
 
       await _renderImportStatus();
       break;
@@ -11777,11 +11777,13 @@ async function renderAtleta(atleta_id, opts = {}) {
         <tbody>${tableRows || '<tr><td colspan="8" class="empty-state">Nessun risultato</td></tr>'}</tbody>
       </table>
     </div>
+    <div id="atleta-pcs-extra"></div>
   `);
 
   // Inject bottone messaggio in modo async (lookup non blocca il render)
   _injectMsgBtn('atleta-msg-btn', atleta_id, null, null);
   _injectFollowBtn('atleta-follow-btn', 'atleta', atleta_id);
+  _loadAtletaPcsExtra(atleta_id, selYear);
 
   // Confronto stagione precedente — iniettato quando la promise è pronta
   _prevAthPromise.then(prevA => {
@@ -11853,6 +11855,191 @@ window.toggleFollow = async function(type, id, spanId) {
     showToast(following ? '★ Ora segui questo ' + (type === 'atleta' ? 'atleta' : 'team') : 'Non segui più');
   } catch(e) { showToast(e.message, 'error'); if (btn) { btn.disabled = false; } }
 };
+
+// ── PCS risultati estesi gara (pos 11+, atleti extra) ─────────────────────────
+async function _loadGaraPcsExt(garaId, circuitResults) {
+  const el = document.getElementById('gara-pcs-ext');
+  if (!el) return;
+  let data;
+  try {
+    data = await apiCall(`/pcs-results/gara/${encodeURIComponent(garaId)}`);
+  } catch { return; }
+  if (!Array.isArray(data) || !data.length) return;
+
+  // Separa pos > 10 (circuito esteso) e pos <= 10 (distacchi per atleti già presenti)
+  const maxCircuitPos = circuitResults.reduce((m, r) => Math.max(m, r.posizione || 0), 0);
+  const ext = data.filter(r => r.posizione > maxCircuitPos).sort((a, b) => a.posizione - b.posizione);
+  if (!ext.length) return;
+
+  // Risolvi nome atleta da globalData
+  const getName = (id) => {
+    const a = globalData?.athletes?.[id];
+    return a ? `${a.cognome} ${a.nome}` : id;
+  };
+  const getTeam = (id) => {
+    const a = globalData?.athletes?.[id];
+    return a?.team_attuale || '';
+  };
+
+  el.innerHTML = `
+    <div class="card" style="margin-top:16px;padding:0;overflow:hidden">
+      <div style="padding:14px 18px 10px;border-bottom:1px solid var(--border-subtle);display:flex;align-items:center;gap:10px">
+        <span style="font-family:var(--font-display);font-size:.8rem;letter-spacing:.08em;color:var(--text-muted)">RISULTATI OLTRE IL 10° — via PCS</span>
+        <a href="https://www.procyclingstats.com/race/${esc(ext[0]?.pcs_race_slug||'')}" target="_blank"
+           style="font-size:.75rem;color:var(--text-muted);margin-left:auto">procyclingstats.com →</a>
+      </div>
+      <div class="results-table-wrap">
+        <table class="results-table">
+          <thead><tr><th>POS</th><th>ATLETA</th><th class="td-hide-mobile">TEAM</th><th>DISTACCO</th></tr></thead>
+          <tbody>
+            ${ext.map(r => `
+              <tr class="ranking-row">
+                <td><span class="rank-num">${r.posizione}</span></td>
+                <td>
+                  <span class="rk-av-wrap" data-aid="${esc(r.atleta_id)}"></span>
+                  <a href="#/atleta/${esc(r.atleta_id)}">${esc(getName(r.atleta_id))}</a>
+                </td>
+                <td class="td-hide-mobile" style="color:var(--text-secondary);font-size:.85rem">
+                  <a href="#/team/${esc(globalData?.athletes?.[r.atleta_id]?.team_id||'')}">${esc(getTeam(r.atleta_id))}</a>
+                </td>
+                <td style="color:var(--text-muted);font-size:.85rem">${esc(r.distacco || '')}</td>
+              </tr>
+            `).join('')}
+          </tbody>
+        </table>
+      </div>
+    </div>`;
+
+  // Foto atleti nella sezione PCS ext
+  const spans = [...el.querySelectorAll('.rk-av-wrap[data-aid]')];
+  const ph = `<span class=rk-av-placeholder><svg width=20 height=20 viewBox='0 0 24 24' fill='none' stroke='currentColor' stroke-width='1.5'><circle cx='12' cy='8' r='4'/><path d='M4 20c0-4 3.6-7 8-7s8 3 8 7'/></svg></span>`;
+  spans.forEach(s => { s.innerHTML = ph; });
+  for (let i = 0; i < spans.length; i += 8) {
+    await Promise.all(spans.slice(i, i + 8).map(async span => {
+      if (!document.contains(span)) return;
+      const ov = await getEntityOverrides('atleta', span.dataset.aid).catch(() => ({}));
+      if (!document.contains(span)) return;
+      if (ov.photo_url) span.innerHTML = `<img src="${MEDIA_BASE}${esc(ov.photo_url)}" alt="" class="rk-av-img" onerror="this.parentNode.innerHTML='${ph}'">`;
+    }));
+  }
+}
+
+// ── PCS risultati extra team (aggrega risultati fuori circuito di tutti i membres) ──
+async function _loadTeamPcsExtra(teamId, season) {
+  const el = document.getElementById('team-pcs-extra');
+  if (!el) return;
+  const team = globalData?.teams?.[teamId];
+  if (!team) return;
+  const atletiIds = team.atleti || [];
+  if (!atletiIds.length) return;
+
+  // Fetch risultati PCS per tutti gli atleti del team in parallelo
+  const allExtra = [];
+  await Promise.all(atletiIds.map(async aid => {
+    try {
+      const data = await apiCall(`/pcs-results/atleta/${encodeURIComponent(aid)}?season=${season}`);
+      if (!Array.isArray(data)) return;
+      for (const r of data.filter(r => !r.gara_id)) {
+        allExtra.push({ ...r, atleta_id: aid });
+      }
+    } catch { /* ignora */ }
+  }));
+
+  if (!allExtra.length) return;
+  allExtra.sort((a, b) => (b.data || '').localeCompare(a.data || ''));
+
+  const getName = (id) => {
+    const a = globalData?.athletes?.[id];
+    return a ? `${a.cognome} ${a.nome}` : id;
+  };
+  const pcsRaceLink = (slug, name) => slug
+    ? `<a href="https://www.procyclingstats.com/race/${esc(slug)}" target="_blank">${esc(name)}</a>`
+    : esc(name);
+
+  el.innerHTML = `
+    <div class="section-header" style="margin-top:32px">
+      <span class="section-title">ALTRI RISULTATI TEAM (PCS)</span>
+      <span class="section-line"></span>
+    </div>
+    <div class="results-table-wrap">
+      <table class="results-table team-results">
+        <thead><tr>
+          <th>DATA</th><th>GARA</th><th>ATLETA</th><th>POS</th><th>DISTACCO</th>
+        </tr></thead>
+        <tbody>
+          ${allExtra.slice(0, 100).map(r => `
+            <tr class="ranking-row">
+              <td style="white-space:nowrap;color:var(--text-muted);font-size:.8rem">${fmtDateShort(r.data)}</td>
+              <td>${pcsRaceLink(r.pcs_race_slug, r.gara_name)}</td>
+              <td>
+                <span class="rk-av-wrap" data-aid="${esc(r.atleta_id)}"></span>
+                <a href="#/atleta/${esc(r.atleta_id)}">${esc(getName(r.atleta_id))}</a>
+              </td>
+              <td><span class="rank-num">${r.posizione}</span></td>
+              <td style="color:var(--text-muted);font-size:.85rem">${esc(r.distacco || (r.posizione === 1 ? '🏆' : ''))}</td>
+            </tr>
+          `).join('')}
+        </tbody>
+      </table>
+    </div>`;
+
+  // Foto atleti
+  const spans = [...el.querySelectorAll('.rk-av-wrap[data-aid]')];
+  const ph = `<span class=rk-av-placeholder><svg width=20 height=20 viewBox='0 0 24 24' fill='none' stroke='currentColor' stroke-width='1.5'><circle cx='12' cy='8' r='4'/><path d='M4 20c0-4 3.6-7 8-7s8 3 8 7'/></svg></span>`;
+  spans.forEach(s => { s.innerHTML = ph; });
+  const uniqueIds = [...new Set(spans.map(s => s.dataset.aid))];
+  const ovMap = {};
+  await Promise.all(uniqueIds.map(async aid => {
+    ovMap[aid] = await getEntityOverrides('atleta', aid).catch(() => ({}));
+  }));
+  spans.forEach(span => {
+    if (!document.contains(span)) return;
+    const ov = ovMap[span.dataset.aid] || {};
+    if (ov.photo_url) span.innerHTML = `<img src="${MEDIA_BASE}${esc(ov.photo_url)}" alt="" class="rk-av-img" onerror="this.parentNode.innerHTML='${ph}'">`;
+  });
+}
+
+// ── PCS risultati extra atleta (circuito esteso + gare non in circuito) ───────
+async function _loadAtletaPcsExtra(atletaId, season) {
+  const el = document.getElementById('atleta-pcs-extra');
+  if (!el) return;
+  let data;
+  try {
+    data = await apiCall(`/pcs-results/atleta/${encodeURIComponent(atletaId)}?season=${season}`);
+  } catch { return; }
+  if (!Array.isArray(data) || !data.length) return;
+
+  // Risultati fuori circuito (gara_id null)
+  const extra = data.filter(r => !r.gara_id).sort((a, b) => (b.data || '').localeCompare(a.data || ''));
+  if (!extra.length) return;
+
+  const pcsRaceLink = (slug, name) => slug
+    ? `<a href="https://www.procyclingstats.com/race/${esc(slug)}" target="_blank">${esc(name)}</a>`
+    : esc(name);
+
+  el.innerHTML = `
+    <div class="section-header" style="margin-top:32px">
+      <span class="section-title">ALTRI RISULTATI (PCS)</span>
+      <span class="section-line"></span>
+    </div>
+    <div class="results-table-wrap">
+      <table class="results-table atleta-results">
+        <thead><tr>
+          <th>DATA</th><th>GARA</th><th>POS</th><th>DISTACCO</th>
+        </tr></thead>
+        <tbody>
+          ${extra.map(r => `
+            <tr class="ranking-row">
+              <td style="white-space:nowrap;color:var(--text-muted);font-size:.8rem">${fmtDateShort(r.data)}</td>
+              <td>${pcsRaceLink(r.pcs_race_slug, r.gara_name)}</td>
+              <td><span class="rank-num">${r.posizione}</span></td>
+              <td style="color:var(--text-muted);font-size:.85rem">${esc(r.distacco || (r.posizione === 1 ? '🏆' : ''))}</td>
+            </tr>
+          `).join('')}
+        </tbody>
+      </table>
+    </div>`;
+}
 
 // ── Commenti gare ─────────────────────────────────────────────────────────────
 async function _loadGaraComments(garaId) {
@@ -12577,11 +12764,13 @@ async function renderTeam(team_id, opts = {}) {
         <tbody>${risultatiRows || '<tr><td colspan="9" class="empty-state">Nessun risultato</td></tr>'}</tbody>
       </table>
     </div>
+    <div id="team-pcs-extra"></div>
   `);
 
   // Bottone messaggio team (async, non blocca il render)
   _injectMsgBtn('team-msg-btn', null, team_id, null);
   _injectFollowBtn('team-follow-btn', 'team', team_id);
+  _loadTeamPcsExtra(team_id, selYear);
 
   // Foto atleti nella lista CORRIDORI CHIAVE + tabella risultati (batch async)
   const _perfSpans = [...document.querySelectorAll('.team-performers-list .rk-av-wrap[data-aid], .team-results .rk-av-wrap[data-aid]')];
@@ -13797,6 +13986,7 @@ async function renderGara(gara_id) {
         <tbody>${tableRows || '<tr><td colspan="7" class="empty-state">Nessuna classifica disponibile</td></tr>'}</tbody>
       </table>
     </div>
+    <div id="gara-pcs-ext" style="margin-top:8px"></div>
     <div id="race-albo-doro" style="margin-top:8px"></div>
     ${detailsHtml}
     <div id="gara-comments-section" style="margin-top:28px"></div>
@@ -13825,6 +14015,7 @@ async function renderGara(gara_id) {
   // Albo d'oro delle edizioni (stile PCS) — riempito async per non bloccare la pagina
   _injectRaceAlboDoro(primaryGaraId);
   _loadGaraComments(primaryGaraId);
+  _loadGaraPcsExt(primaryGaraId, results);
 
   // Scroll orizzontale dello strip
   window._mgScroll = function(stripId, dir) {

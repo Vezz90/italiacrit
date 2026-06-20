@@ -1677,6 +1677,68 @@ app.post('/api/admin/import-atleta', requireAdminOrLocal, (req, res) => {
 });
 
 // ══════════════════════════════════════════════════════════════════════════════
+// PCS Risultati — lettura dati dalla tabella pcs_results
+// ══════════════════════════════════════════════════════════════════════════════
+
+// Risultati PCS per una gara del circuito (pos 11+, distacchi, ecc.)
+app.get('/api/pcs-results/gara/:garaId', async (req, res) => {
+  try {
+    const { data, error } = await supabase
+      .from('pcs_results')
+      .select('atleta_id, gara_name, posizione, distacco, pcs_race_slug')
+      .eq('gara_id', req.params.garaId)
+      .order('posizione', { ascending: true })
+      .limit(200);
+    if (error) throw error;
+    res.json(data || []);
+  } catch(e) { res.status(500).json({ error: e.message }); }
+});
+
+// Tutti i risultati PCS per un atleta (circuito + extra)
+app.get('/api/pcs-results/atleta/:atletaId', async (req, res) => {
+  const season = parseInt(req.query.season) || new Date().getFullYear();
+  try {
+    const { data, error } = await supabase
+      .from('pcs_results')
+      .select('gara_name, data, posizione, distacco, pcs_race_slug, gara_id')
+      .eq('atleta_id', req.params.atletaId)
+      .eq('season', season)
+      .order('data', { ascending: false })
+      .limit(500);
+    if (error) throw error;
+    res.json(data || []);
+  } catch(e) { res.status(500).json({ error: e.message }); }
+});
+
+// Avvia lo scraper pcs-results.js in background
+app.post('/api/admin/pcs-import', requireAdminOrLocal, (req, res) => {
+  if (process.env.RENDER) return res.status(400).json({ error: 'Disponibile solo in locale' });
+  if (_fullImportJob?.running) return res.status(409).json({ error: 'Import già in corso' });
+
+  const { spawn } = require('child_process');
+  const scriptPath = path.join(__dirname, 'pcs-results.js');
+  const secret = process.env.SUPABASE_SECRET;
+  if (!secret) return res.status(500).json({ error: 'SUPABASE_SECRET non impostato' });
+
+  const extraArgs = [];
+  if (req.body.force)      extraArgs.push('--force');
+  if (req.body.atleta_id)  extraArgs.push(`--atleta-id=${req.body.atleta_id}`);
+  if (req.body.season)     extraArgs.push(`--season=${req.body.season}`);
+
+  _fullImportJob = { running: true, log: [], startedAt: new Date().toISOString(), exitCode: null };
+  res.json({ ok: true, message: 'Scraping PCS risultati avviato' });
+
+  const proc = spawn(process.execPath, [scriptPath, ...extraArgs], {
+    env: { ...process.env, SUPABASE_SECRET: secret }, cwd: __dirname,
+  });
+  const onLine = line => { if (_fullImportJob) { console.log('[pcs-results]', line); _fullImportJob.log.push(line); } };
+  let buf = '';
+  proc.stdout.on('data', d => { buf += d; const lines = buf.split('\n'); buf = lines.pop(); lines.forEach(onLine); });
+  proc.stderr.on('data', d => d.toString().split('\n').filter(Boolean).forEach(l => onLine('[ERR] ' + l)));
+  proc.on('close', code => { if (buf) onLine(buf); if (_fullImportJob) { _fullImportJob.running = false; _fullImportJob.exitCode = code; } });
+});
+
+// ══════════════════════════════════════════════════════════════════════════════
 // YouTube Auto-Scraper
 // ══════════════════════════════════════════════════════════════════════════════
 const { DEFAULT_CHANNELS, fetchAllChannels } = require('./youtube-scraper');
