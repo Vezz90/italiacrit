@@ -390,23 +390,22 @@ async function getExistingIds(sb, entityType, field) {
   await context.addInitScript(() => {
     Object.defineProperty(navigator, 'webdriver', { get: () => undefined });
   });
-  const page = await context.newPage();
+  // Due pagine separate: una per PCS, una per FC — girano in parallelo
+  const pcsPage = !FC_ONLY  ? await context.newPage() : null;
+  const fcPage  = !PCS_ONLY ? await context.newPage() : null;
 
-  // Sessioni iniziali (passaggio Cloudflare)
-  if (!FC_ONLY) {
-    console.log('Avvio sessione PCS…');
-    try {
-      await page.goto('https://www.procyclingstats.com/', { waitUntil: 'networkidle', timeout: 30000 });
-      await sleep(2500);
-    } catch(e) { console.log(`Avviso PCS: ${e.message}`); await sleep(2000); }
-  }
-  if (!PCS_ONLY) {
-    console.log('Avvio sessione First Cycling…');
-    try {
-      await page.goto('https://firstcycling.com/', { waitUntil: 'domcontentloaded', timeout: 20000 });
-      await sleep(2000);
-    } catch(e) { console.log(`Avviso FC: ${e.message}`); }
-  }
+  // Sessioni iniziali in parallelo (passaggio Cloudflare)
+  console.log('Avvio sessioni…');
+  await Promise.all([
+    pcsPage ? pcsPage.goto('https://www.procyclingstats.com/', { waitUntil: 'networkidle', timeout: 30000 })
+                .then(() => sleep(2500))
+                .catch(e => { console.log(`Avviso PCS: ${e.message}`); return sleep(2000); })
+            : Promise.resolve(),
+    fcPage  ? fcPage.goto('https://firstcycling.com/', { waitUntil: 'domcontentloaded', timeout: 20000 })
+                .then(() => sleep(2000))
+                .catch(e => { console.log(`Avviso FC: ${e.message}`); })
+            : Promise.resolve(),
+  ]);
   console.log('Pronto.\n');
 
   // ── ATLETI ────────────────────────────────────────────────────────────────
@@ -422,9 +421,8 @@ async function getExistingIds(sb, entityType, field) {
     }
     const athletes = [...athMap.values()];
 
-    // In modalità FC: processa TUTTI (anche chi ha già la foto PCS) per aggiungere social
-    // In modalità PCS: salta chi ha già la foto
-    const withPhoto = (FORCE || FC_ONLY) ? new Set() : await getExistingIds(sb, 'atleta', 'photo_url');
+    // Salta sempre chi ha già la foto — anche in --fc (non sovrascrivere foto PCS con FC)
+    const withPhoto = FORCE ? new Set() : await getExistingIds(sb, 'atleta', 'photo_url');
     const toProcess = athletes.filter(a => !withPhoto.has(a.atleta_id));
 
     console.log(`${athletes.length} atleti — ${athletes.length - toProcess.length} già con foto — ${toProcess.length} da processare\n`);
@@ -432,71 +430,56 @@ async function getExistingIds(sb, entityType, field) {
     let done = 0, noData = 0, errors = 0;
 
     for (let i = 0; i < toProcess.length; i++) {
-      const ath  = toProcess[i];
-      let   slug = pcsAthleteSlug(ath);
+      const ath = toProcess[i];
       process.stdout.write(`(${i+1}/${toProcess.length}) ${ath.cognome} ${ath.nome} … `);
 
-      let result = { notFound: false };
-
-      if (!FC_ONLY) {
-        // PCS diretto
-        result = await fetchFromPcsRider(page, slug);
-        // PCS search fallback
-        if (result.notFound) {
-          process.stdout.write('pcs-search… ');
-          const found = await searchPcsRider(page, ath);
-          if (found && found !== slug) {
-            slug = found;
-            result = await fetchFromPcsRider(page, slug);
+      // PCS e FC in parallelo — PCS ha priorità sul risultato finale
+      const [pcsResult, fcResult] = await Promise.all([
+        pcsPage ? (async () => {
+          let slug = pcsAthleteSlug(ath);
+          let res  = await fetchFromPcsRider(pcsPage, slug);
+          if (res.notFound) {
+            process.stdout.write('pcs-search… ');
+            const found = await searchPcsRider(pcsPage, ath);
+            if (found) { slug = found; res = await fetchFromPcsRider(pcsPage, found); }
           }
-        }
-      }
+          return { ...res, slug };
+        })() : Promise.resolve({ photo: null, socials: {}, slug: pcsAthleteSlug(ath) }),
 
-      // First Cycling (sempre in FC_ONLY, altrimenti come fallback)
-      const needFc = FC_ONLY || result.notFound || (!result.photo && !Object.keys(result.socials || {}).length);
-      if (needFc && !PCS_ONLY) {
-        process.stdout.write('fc… ');
-        const fcUrl = await searchFirstCycling(page, `${ath.nome} ${ath.cognome}`, 'riders');
-        if (fcUrl) {
-          const fcRes = await fetchFromFcRider(page, fcUrl);
-          // Se PCS non ha trovato niente, usa FC; se PCS ha trovato foto ma non social, integra
-          if (!result.photo && fcRes.photo) result.photo = fcRes.photo;
-          result.socials = { ...(fcRes.socials || {}), ...(result.socials || {}) };
-          if (!result.photo && !fcRes.photo) result.notFound = fcRes.notFound;
-        }
-      }
+        fcPage ? (async () => {
+          const fcUrl = await searchFirstCycling(fcPage, `${ath.nome} ${ath.cognome}`, 'riders');
+          if (!fcUrl) return { photo: null, socials: {} };
+          process.stdout.write('fc… ');
+          return fetchFromFcRider(fcPage, fcUrl);
+        })() : Promise.resolve({ photo: null, socials: {} }),
+      ]);
 
-      const hasSomething = result.photo || Object.keys(result.socials || {}).length > 0;
-      if (!hasSomething) {
+      // Merge: PCS vince sempre su foto e social; FC riempie i campi mancanti
+      const photo   = pcsResult.photo || fcResult.photo;
+      const socials = { ...(fcResult.socials || {}), ...(pcsResult.socials || {}) };
+      const slug    = pcsResult.slug || pcsAthleteSlug(ath);
+      const photoSrc = pcsResult.photo ? 'pcs' : 'fc';
+
+      if (!photo && !Object.keys(socials).length) {
         process.stdout.write('non trovato\n');
         noData++;
         continue;
       }
 
       const fields = {};
-
-      // Foto: salva solo se l'atleta non ha ancora una photo_url
-      if (result.photo) {
-        const alreadyHasPhoto = withPhoto.size === 0
-          ? false
-          : (await getExistingIds(sb, 'atleta', 'photo_url')).has(ath.atleta_id);
-
-        if (!alreadyHasPhoto || FORCE) {
-          try {
-            fields.photo_url = await uploadPhoto(sb, 'atleta', slug, result.photo, source);
-          } catch(e) {
-            process.stdout.write(`ERRORE foto: ${e.message} `);
-          }
+      if (photo) {
+        try {
+          fields.photo_url = await uploadPhoto(sb, 'atleta', slug, photo, photoSrc);
+        } catch(e) {
+          process.stdout.write(`ERRORE foto: ${e.message} `);
         }
       }
 
-      // Social: salva sempre quelli trovati
-      const s = result.socials || {};
-      if (s.instagram) fields.instagram_url = s.instagram;
-      if (s.twitter)   fields.twitter_url   = s.twitter;
-      if (s.strava)    fields.strava_url     = s.strava;
-      if (s.facebook)  fields.facebook_url   = s.facebook;
-      if (s.website)   fields.website_url    = s.website;
+      if (socials.instagram) fields.instagram_url = socials.instagram;
+      if (socials.twitter)   fields.twitter_url   = socials.twitter;
+      if (socials.strava)    fields.strava_url     = socials.strava;
+      if (socials.facebook)  fields.facebook_url   = socials.facebook;
+      if (socials.website)   fields.website_url    = socials.website;
 
       if (!Object.keys(fields).length) {
         process.stdout.write('nessun dato nuovo\n');
@@ -513,7 +496,7 @@ async function getExistingIds(sb, entityType, field) {
       }
 
       const tags = [
-        fields.photo_url     ? '📷' : '',
+        fields.photo_url     ? `📷(${photoSrc})` : '',
         fields.instagram_url ? 'IG' : '',
         fields.twitter_url   ? 'TW' : '',
         fields.strava_url    ? 'ST' : '',
@@ -535,7 +518,8 @@ async function getExistingIds(sb, entityType, field) {
     const teamsRaw = JSON.parse(fs.readFileSync(path.join(DATA_DIR, 'teams.json'), 'utf8'));
     const teams = Object.values(teamsRaw).filter(t => t.id && t.nome);
 
-    const withPhoto = (FORCE || FC_ONLY) ? new Set() : await getExistingIds(sb, 'team', 'photo_url');
+    // Salta chi ha già la foto anche in --fc (non sovrascrivere)
+    const withPhoto = FORCE ? new Set() : await getExistingIds(sb, 'team', 'photo_url');
     const toProcess = teams.filter(t => !withPhoto.has(t.id));
 
     console.log(`${teams.length} team — ${teams.length - toProcess.length} già con foto — ${toProcess.length} da processare\n`);
@@ -547,40 +531,39 @@ async function getExistingIds(sb, entityType, field) {
       const slug = pcsTeamSlug(team);
       process.stdout.write(`(${i+1}/${toProcess.length}) ${team.nome} … `);
 
-      let result = { notFound: false };
+      // PCS e FC in parallelo — PCS ha priorità
+      const [pcsResult, fcResult] = await Promise.all([
+        pcsPage ? fetchFromPcsTeam(pcsPage, slug)
+                : Promise.resolve({ photo: null, socials: {} }),
 
-      if (!FC_ONLY) {
-        result = await fetchFromPcsTeam(page, slug);
-      }
+        fcPage ? (async () => {
+          const fcUrl = await searchFirstCycling(fcPage, team.nome, 'teams');
+          if (!fcUrl) return { photo: null, socials: {} };
+          process.stdout.write('fc… ');
+          return fetchFromFcTeam(fcPage, fcUrl);
+        })() : Promise.resolve({ photo: null, socials: {} }),
+      ]);
 
-      const needFc = FC_ONLY || result.notFound || (!result.photo && !Object.keys(result.socials || {}).length);
-      if (needFc && !PCS_ONLY) {
-        process.stdout.write('fc… ');
-        const fcUrl = await searchFirstCycling(page, team.nome, 'teams');
-        if (fcUrl) {
-          const fcRes = await fetchFromFcTeam(page, fcUrl);
-          if (!result.photo && fcRes.photo) result.photo = fcRes.photo;
-          result.socials = { ...(fcRes.socials || {}), ...(result.socials || {}) };
-        }
-      }
+      const photo   = pcsResult.photo || fcResult.photo;
+      const socials = { ...(fcResult.socials || {}), ...(pcsResult.socials || {}) };
+      const photoSrc = pcsResult.photo ? 'pcs' : 'fc';
 
-      const hasSomething = result.photo || Object.keys(result.socials || {}).length > 0;
-      if (!hasSomething) {
+      if (!photo && !Object.keys(socials).length) {
         process.stdout.write('non trovato\n');
         noData++;
         continue;
       }
 
       const fields = {};
-      if (result.photo) {
+      if (photo) {
         try {
-          fields.photo_url = await uploadPhoto(sb, 'team', slug, result.photo, source);
+          fields.photo_url = await uploadPhoto(sb, 'team', slug, photo, photoSrc);
         } catch(e) {
           process.stdout.write(`ERRORE foto: ${e.message} `);
         }
       }
 
-      const s = result.socials || {};
+      const s = socials;
       if (s.instagram) fields.instagram_url = s.instagram;
       if (s.twitter)   fields.twitter_url   = s.twitter;
       if (s.facebook)  fields.facebook_url  = s.facebook;
@@ -601,7 +584,7 @@ async function getExistingIds(sb, entityType, field) {
       }
 
       const tags = [
-        fields.photo_url     ? '📷' : '',
+        fields.photo_url     ? `📷(${photoSrc})` : '',
         fields.instagram_url ? 'IG' : '',
         fields.twitter_url   ? 'TW' : '',
         fields.facebook_url  ? 'FB' : '',
