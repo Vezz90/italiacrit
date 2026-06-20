@@ -13104,6 +13104,26 @@ async function renderGara(gara_id) {
       : (_nomeIsCat
         ? (calEntry.luogo ? `Gara a ${calEntry.luogo}` : (calEntry.categoria || calEntry.nome || gara_id))
         : (calEntry.nome || gara_id));
+    // Blocco dettagli FCI per la vista pre-gara
+    let _preRaceDetailsHtml = '';
+    if (_raceDetailEntry?.info?.length) {
+      const _preInfoBlocks = _raceDetailEntry.info.map(t => {
+        let ft = t
+          .replace(/(INFORMAZIONI GENERALI)/g, '<strong style="color:var(--primary); font-size:1.05rem; display:block; margin-top:12px; margin-bottom:6px;">$1</strong>')
+          .replace(/(ORGANIZZATORE)/g, '<strong style="color:var(--primary); font-size:1.05rem; display:block; margin-top:20px; margin-bottom:6px;">$1</strong>')
+          .replace(/(ISCRIZIONI)/g, '<strong style="color:var(--primary); font-size:1.05rem; display:block; margin-top:20px; margin-bottom:6px;">$1</strong>')
+          .replace(/(RITROVO PROVE( \d+)?|RITROVO)/g, '<strong style="color:var(--primary); font-size:1.05rem; display:block; margin-top:20px; margin-bottom:6px;">$1 E PERCORSO</strong>');
+        return `<div style="margin-bottom:8px; font-size:0.9rem; color:var(--text-secondary); line-height:1.6;">${ft}</div>`;
+      }).join('');
+      _preRaceDetailsHtml = `
+        <div class="card" style="margin-top:16px; padding:24px;">
+          <h3 style="margin-top:0; margin-bottom:16px; font-size:1.1rem; color:var(--primary);">Informazioni e Dettagli Tecnici</h3>
+          ${_preInfoBlocks}
+          <div style="margin-top:16px;">
+            <a href="${esc(_raceDetailEntry.fci_url)}" target="_blank" class="btn-action" style="font-size:0.8rem; display:inline-block;">VAI ALLA SCHEDA FCI &rarr;</a>
+          </div>
+        </div>`;
+    }
     setPage(`
       <div style="max-width:640px;margin:40px auto;padding:0 16px">
         <button onclick="history.back()" style="background:none;border:none;color:var(--text-muted);cursor:pointer;font-size:.85rem;margin-bottom:18px;padding:0">← Torna indietro</button>
@@ -13134,6 +13154,7 @@ async function renderGara(gara_id) {
             <div style="color:var(--text-muted);font-size:.82rem;padding:4px 0">I risultati saranno disponibili dopo lo svolgimento della gara.</div>
           </div>
         </div>
+        ${_preRaceDetailsHtml}
       </div>`);
     return;
     } // fine else (gara futura)
@@ -14467,10 +14488,13 @@ async function renderCalendario(highlightId) {
           </div>
           <div style="flex:1;min-width:0">
             ${(() => {
+              const _rde = (globalData.raceDetails || {})[g.id];
               const _nCat = (g.nome||'').toLowerCase().trim() === (g.categoria||'').toLowerCase().trim().split(' ')[0];
-              const _displayNome = _nCat
-                ? (g.luogo ? `Gara a ${g.luogo}` : (g.categoria || g.nome || g.id))
-                : (g.nome || g.id);
+              const _displayNome = _rde?.nome_gara
+                ? _rde.nome_gara
+                : (_nCat
+                  ? (g.luogo ? `Gara a ${g.luogo}` : (g.categoria || g.nome || g.id))
+                  : (g.nome || g.id));
               return `<div class="cal-name"><a href="#/gara/${esc(garaLink)}">${esc(_displayNome)}</a></div>`;
             })()}
             <div class="cal-cat">
