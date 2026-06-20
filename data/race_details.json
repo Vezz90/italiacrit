@@ -2782,7 +2782,9 @@
     "orario_partenza": "13:30",
     "km": "120 Servizi: incolonnamento in Piazza Bernardi ore 13:20 per trasferimento al km 0 in località Biancanigo AGGIUNGI QUESTA GARA AL CALENDARIO Home / Ricerca Gare / Dettaglio Gara / Dettaglio Gara 70ª COPPA VALSENIO JUNIORES Strada 70ª COPPA VALSENIO JUNIORES ID Gara: 179765 | Data: 21/06/2026 INFORMAZIONI GENERALI",
     "location_str": "Piazza Bernardi, Castel Bolognese, Italia",
-    "nome_gara": "70ª COPPA VALSENIO JUNIORES"
+    "nome_gara": "70ª COPPA VALSENIO JUNIORES",
+    "lat": 44.31915,
+    "lng": 11.79946
   },
   "GP_SPORTIVI_DI_NERVESA_2026-06-21": {
     "raceid": "179851",
