@@ -196,18 +196,23 @@ function _normSocialUrl(kind, raw) {
 function entitySocialLinksHtml(ov, kinds) {
   if (!ov) return '';
   const want = k => !kinds || kinds.includes(k);
+  // Accetta sia 'instagram' che 'instagram_url' (il DB salva con _url, il file statico senza)
+  const get = k => ov[k] || ov[k + '_url'] || null;
   const out = [];
-  if (want('instagram') && ov.instagram) {
-    out.push(`<a href="${esc(_normSocialUrl('instagram', ov.instagram))}" target="_blank" rel="noopener" class="media-profile-link" aria-label="Instagram"><svg class="social-icon social-icon-ig" viewBox="0 0 24 24"><rect x="2" y="2" width="20" height="20" rx="5" ry="5"/><path d="M16 11.37A4 4 0 1 1 12.63 8 4 4 0 0 1 16 11.37z"/><line x1="17.5" y1="6.5" x2="17.51" y2="6.5"/></svg> Instagram</a>`);
+  if (want('instagram') && get('instagram')) {
+    out.push(`<a href="${esc(_normSocialUrl('instagram', get('instagram')))}" target="_blank" rel="noopener" class="media-profile-link" aria-label="Instagram"><svg class="social-icon social-icon-ig" viewBox="0 0 24 24"><rect x="2" y="2" width="20" height="20" rx="5" ry="5"/><path d="M16 11.37A4 4 0 1 1 12.63 8 4 4 0 0 1 16 11.37z"/><line x1="17.5" y1="6.5" x2="17.51" y2="6.5"/></svg> Instagram</a>`);
   }
-  if (want('facebook') && ov.facebook) {
-    out.push(`<a href="${esc(_normSocialUrl('facebook', ov.facebook))}" target="_blank" rel="noopener" class="media-profile-link" aria-label="Facebook"><svg class="social-icon social-icon-fb" viewBox="0 0 24 24"><path d="M18 2h-3a5 5 0 0 0-5 5v3H7v4h3v8h4v-8h3l1-4h-4V7a1 1 0 0 1 1-1h3z"/></svg> Facebook</a>`);
+  if (want('twitter') && get('twitter')) {
+    out.push(`<a href="${esc(_normSocialUrl('twitter', get('twitter')))}" target="_blank" rel="noopener" class="media-profile-link" aria-label="X / Twitter"><svg class="social-icon" viewBox="0 0 24 24" fill="currentColor"><path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-4.714-6.231-5.401 6.231H2.744l7.737-8.835L1.254 2.25H8.08l4.253 5.622zm-1.161 17.52h1.833L7.084 4.126H5.117z"/></svg> X</a>`);
   }
-  if (want('strava') && ov.strava) {
-    out.push(`<a href="${esc(_normSocialUrl('strava', ov.strava))}" target="_blank" rel="noopener" class="media-profile-link" aria-label="Strava"><svg class="social-icon social-icon-strava" viewBox="0 0 24 24"><path d="M15.387 17.944l-2.089-4.116h-3.065L15.387 24l5.15-10.172h-3.066m-7.008-5.599l2.836 5.598h4.172L10.463 0l-7 13.828h4.169"/></svg> Strava</a>`);
+  if (want('facebook') && get('facebook')) {
+    out.push(`<a href="${esc(_normSocialUrl('facebook', get('facebook')))}" target="_blank" rel="noopener" class="media-profile-link" aria-label="Facebook"><svg class="social-icon social-icon-fb" viewBox="0 0 24 24"><path d="M18 2h-3a5 5 0 0 0-5 5v3H7v4h3v8h4v-8h3l1-4h-4V7a1 1 0 0 1 1-1h3z"/></svg> Facebook</a>`);
   }
-  if (want('website') && ov.website) {
-    out.push(`<a href="${esc(_normSocialUrl('website', ov.website))}" target="_blank" rel="noopener" class="media-profile-link" aria-label="Sito"><svg class="social-icon" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><line x1="2" y1="12" x2="22" y2="12"/><path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"/></svg> Sito</a>`);
+  if (want('strava') && get('strava')) {
+    out.push(`<a href="${esc(_normSocialUrl('strava', get('strava')))}" target="_blank" rel="noopener" class="media-profile-link" aria-label="Strava"><svg class="social-icon social-icon-strava" viewBox="0 0 24 24"><path d="M15.387 17.944l-2.089-4.116h-3.065L15.387 24l5.15-10.172h-3.066m-7.008-5.599l2.836 5.598h4.172L10.463 0l-7 13.828h4.169"/></svg> Strava</a>`);
+  }
+  if (want('website') && get('website')) {
+    out.push(`<a href="${esc(_normSocialUrl('website', get('website')))}" target="_blank" rel="noopener" class="media-profile-link" aria-label="Sito"><svg class="social-icon" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><line x1="2" y1="12" x2="22" y2="12"/><path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"/></svg> Sito</a>`);
   }
   if (!out.length) return '';
   return `<div class="media-profile-links profile-social-links">${out.join('')}</div>`;
