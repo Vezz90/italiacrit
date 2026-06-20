@@ -19,9 +19,18 @@
 const fs   = require('fs');
 const path = require('path');
 
+(function loadEnv() {
+  const p = path.join(__dirname, '.env.local');
+  if (!fs.existsSync(p)) return;
+  fs.readFileSync(p, 'utf8').split('\n').forEach(line => {
+    const m = line.match(/^([^#=\s]+)\s*=\s*(.*)$/);
+    if (m && !process.env[m[1]]) process.env[m[1]] = m[2].trim().replace(/^(['"])(.*)\1$/, '$2');
+  });
+})();
+
 const SUPABASE_URL    = 'https://aqqsstsbgpapzoxllosh.supabase.co';
 const SUPABASE_SECRET = process.env.SUPABASE_SECRET;
-if (!SUPABASE_SECRET) { console.error('Imposta $env:SUPABASE_SECRET'); process.exit(1); }
+if (!SUPABASE_SECRET) { console.error('Imposta $env:SUPABASE_SECRET o crea server/.env.local'); process.exit(1); }
 
 const args       = process.argv.slice(2);
 const FORCE      = args.includes('--force');

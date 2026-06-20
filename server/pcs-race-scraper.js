@@ -19,9 +19,19 @@
 const fs   = require('fs');
 const path = require('path');
 
+// Carica .env.local se SUPABASE_SECRET non è già nell'ambiente
+(function loadEnv() {
+  const p = path.join(__dirname, '.env.local');
+  if (!fs.existsSync(p)) return;
+  fs.readFileSync(p, 'utf8').split('\n').forEach(line => {
+    const m = line.match(/^([^#=\s]+)\s*=\s*(.*)$/);
+    if (m && !process.env[m[1]]) process.env[m[1]] = m[2].trim().replace(/^(['"])(.*)\1$/, '$2');
+  });
+})();
+
 const SUPABASE_URL    = 'https://aqqsstsbgpapzoxllosh.supabase.co';
 const SUPABASE_SECRET = process.env.SUPABASE_SECRET;
-if (!SUPABASE_SECRET) { console.error('Imposta $env:SUPABASE_SECRET'); process.exit(1); }
+if (!SUPABASE_SECRET) { console.error('Imposta $env:SUPABASE_SECRET o crea server/.env.local'); process.exit(1); }
 
 const args      = process.argv.slice(2);
 const FORCE     = args.includes('--force');
@@ -157,16 +167,45 @@ async function uploadPhoto(sb, slug, buf) {
 // ─── PCS scraping ──────────────────────────────────────────────────────────────
 
 async function scrapeRaceResults(page, pcsSlug) {
-  const urls = [
-    `https://www.procyclingstats.com/race/${pcsSlug}/result`,
-    `https://www.procyclingstats.com/race/${pcsSlug}`,
-  ];
+  // Se lo slug include già il prefisso tipo (race/, national-race/ …) usalo direttamente
+  const PCS = 'https://www.procyclingstats.com';
+  const hasPrefixType = /^(race|national-race|stage-race|one-day-race)\//.test(pcsSlug);
+
+  let urls;
+  if (hasPrefixType) {
+    urls = [
+      `${PCS}/${pcsSlug}/result`,
+      `${PCS}/${pcsSlug}`,
+    ];
+  } else {
+    // Prova race/ e national-race/ automaticamente
+    const yearMatch = pcsSlug.match(/\/(\d{4})$/);
+    const year = yearMatch ? yearMatch[1] : '';
+    urls = [
+      `${PCS}/race/${pcsSlug}/result`,
+      `${PCS}/race/${pcsSlug}`,
+      `${PCS}/national-race/${pcsSlug}/result`,
+      `${PCS}/national-race/${pcsSlug}`,
+    ];
+  }
   for (const url of urls) {
     console.log(`  → visito: ${url}`);
-    try { await page.goto(url, { waitUntil: 'domcontentloaded', timeout: 20000 }); }
-    catch(e) { console.log(`    errore navigazione: ${e.message}`); continue; }
+    // Usa 'load' + catch per non abortire su codici HTTP non-200 (PCS restituisce 4xx su alcune pagine)
+    try { await page.goto(url, { waitUntil: 'load', timeout: 25000 }); }
+    catch(e) {
+      console.log(`    (navigazione: ${e.message.split('\n')[0]})`);
+      // Resetta il browser dopo errore di navigazione
+      await page.goto('about:blank').catch(() => {});
+      continue;
+    }
     const finalUrl = page.url();
     console.log(`  → URL finale: ${finalUrl}`);
+    if (finalUrl === 'about:blank' || finalUrl.startsWith('chrome-error://')) continue;
+    // PCS reindirizza alla homepage se la gara non esiste
+    if (finalUrl === 'https://www.procyclingstats.com/' || finalUrl === 'https://www.procyclingstats.com') {
+      console.log('  → slug non trovato su PCS (reindirizzato alla homepage)');
+      break; // inutile provare altri URL se PCS non riconosce lo slug base
+    }
     if (finalUrl.includes('pagenotfound') || finalUrl.includes('404')) { console.log('  → 404'); continue; }
     await sleep(1200);
 
@@ -210,11 +249,11 @@ async function scrapeRaceResults(page, pcsSlug) {
           const pos = parseInt(cells[iPos]?.textContent?.trim());
           if (!pos || pos < 1 || pos > 500) continue;
           const riderCell = cells[iRider];
-          const riderName = riderCell?.textContent?.trim() || '';
+          // Usa solo il testo del link /rider/ per evitare di includere il team che PCS mette nella stessa cella
+          const riderLink = riderCell?.querySelector('a[href*="/rider/"]') || riderCell?.querySelector('a');
+          const riderName = (riderLink ? riderLink.textContent : riderCell?.textContent)?.trim() || '';
           if (!riderName || riderName.length < 2) continue;
 
-          // Slug corridore dal link nella cella
-          const riderLink = riderCell?.querySelector('a');
           let pcs_rider_slug = null;
           if (riderLink) {
             const m = (riderLink.getAttribute('href') || '').match(/\/rider\/([a-z0-9-]+)/);

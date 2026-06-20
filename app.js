@@ -11881,10 +11881,8 @@ window.toggleFollow = async function(type, id, spanId) {
   } catch(e) { showToast(e.message, 'error'); if (btn) { btn.disabled = false; } }
 };
 
-// ── PCS risultati estesi gara (pos 11+, atleti extra) ─────────────────────────
+// ── PCS risultati estesi gara — appende righe direttamente alla tabella principale ──
 async function _loadGaraPcsExt(garaId, circuitResults) {
-  const el = document.getElementById('gara-pcs-ext');
-  if (!el) return;
   let data;
   try {
     data = await apiCall(`/pcs-results/gara/${encodeURIComponent(garaId)}`);
@@ -11895,52 +11893,50 @@ async function _loadGaraPcsExt(garaId, circuitResults) {
   const ext = data.filter(r => r.posizione > maxCircuitPos).sort((a, b) => a.posizione - b.posizione);
   if (!ext.length) return;
 
-  const pcsSlug = ext[0]?.pcs_race_slug || '';
-  const pcsUrl  = pcsSlug ? `https://www.procyclingstats.com/race/${esc(pcsSlug)}` : '';
+  const tbody = document.getElementById('main-results-tbody');
+  if (!tbody) return;
 
-  // Ogni riga può avere atleta_id (nel sistema) o solo rider_name + team_name (PCS only)
-  const renderRow = (r) => {
+  // Link PCS in fondo alla pagina (dentro #gara-pcs-ext)
+  const pcsSlug = ext[0]?.pcs_race_slug || '';
+  if (pcsSlug) {
+    const extEl = document.getElementById('gara-pcs-ext');
+    if (extEl) extEl.innerHTML = `<div style="text-align:right;padding:6px 4px 0;font-size:.75rem;color:var(--text-muted)"><a href="https://www.procyclingstats.com/${esc(pcsSlug)}" target="_blank" style="color:var(--text-muted)">Risultati completi su procyclingstats.com →</a></div>`;
+  }
+
+  const ph = `<span class=rk-av-placeholder><svg width=20 height=20 viewBox='0 0 24 24' fill='none' stroke='currentColor' stroke-width='1.5'><circle cx='12' cy='8' r='4'/><path d='M4 20c0-4 3.6-7 8-7s8 3 8 7'/></svg></span>`;
+  const newSpans = [];
+
+  for (const r of ext) {
     const ath = r.atleta_id ? globalData?.athletes?.[r.atleta_id] : null;
-    const name = ath
-      ? `${ath.cognome} ${ath.nome}`
-      : (r.rider_name || r.gara_name || '');
+    const name = ath ? `${ath.cognome} ${ath.nome}` : (r.rider_name || '');
     const teamName = ath?.team_attuale || r.team_name || '';
     const teamId   = ath?.team_id || '';
+
     const nameHtml = r.atleta_id
-      ? `<span class="rk-av-wrap" data-aid="${esc(r.atleta_id)}"></span><a href="#/atleta/${esc(r.atleta_id)}">${esc(name)}</a>`
+      ? `<span class="rk-av-wrap" data-aid="${esc(r.atleta_id)}">${ph}</span><a href="#/atleta/${esc(r.atleta_id)}">${esc(name)}</a>`
       : `<span style="color:var(--text-secondary)">${esc(name)}</span>`;
     const teamHtml = teamId
       ? `<a href="#/team/${esc(teamId)}">${esc(teamName)}</a>`
       : `<span style="color:var(--text-muted)">${esc(teamName)}</span>`;
-    return `
-      <tr class="ranking-row">
-        <td><span class="rank-num">${r.posizione}</span></td>
-        <td><div style="display:flex;align-items:center;gap:6px">${nameHtml}</div></td>
-        <td class="td-hide-mobile" style="color:var(--text-secondary);font-size:.85rem">${teamHtml}</td>
-        <td style="color:var(--text-muted);font-size:.85rem">${esc(r.distacco || '')}</td>
-      </tr>`;
-  };
 
-  el.innerHTML = `
-    <div class="card" style="margin-top:16px;padding:0;overflow:hidden">
-      <div style="padding:14px 18px 10px;border-bottom:1px solid var(--border-subtle);display:flex;align-items:center;gap:10px">
-        <span style="font-family:var(--font-display);font-size:.8rem;letter-spacing:.08em;color:var(--text-muted)">RISULTATI OLTRE IL ${maxCircuitPos}° — via PCS</span>
-        ${pcsUrl ? `<a href="${pcsUrl}" target="_blank" style="font-size:.75rem;color:var(--text-muted);margin-left:auto">procyclingstats.com →</a>` : ''}
-      </div>
-      <div class="results-table-wrap">
-        <table class="results-table">
-          <thead><tr><th>POS</th><th>ATLETA</th><th class="td-hide-mobile">TEAM</th><th>DISTACCO</th></tr></thead>
-          <tbody>${ext.map(renderRow).join('')}</tbody>
-        </table>
-      </div>
-    </div>`;
+    const tr = document.createElement('tr');
+    tr.className = 'ranking-row';
+    // Stessa struttura della tabella principale: POS | ATLETA | TEAM | TEMPO | KM | MEDIA | PTS
+    tr.innerHTML = `
+      <td><span class="rank-num">${r.posizione}</span></td>
+      <td><div style="display:flex;align-items:center;gap:6px">${nameHtml}</div></td>
+      <td class="td-hide-mobile">${teamHtml}</td>
+      <td style="color:var(--text-muted);font-size:.85rem">${esc(r.distacco || '')}</td>
+      <td class="td-hide-mobile"></td>
+      <td class="td-hide-mobile"></td>
+      <td class="td-pts"></td>`;
+    tbody.appendChild(tr);
+    if (r.atleta_id) newSpans.push(tr.querySelector('.rk-av-wrap[data-aid]'));
+  }
 
-  // Foto atleti nella sezione PCS ext
-  const spans = [...el.querySelectorAll('.rk-av-wrap[data-aid]')];
-  const ph = `<span class=rk-av-placeholder><svg width=20 height=20 viewBox='0 0 24 24' fill='none' stroke='currentColor' stroke-width='1.5'><circle cx='12' cy='8' r='4'/><path d='M4 20c0-4 3.6-7 8-7s8 3 8 7'/></svg></span>`;
-  spans.forEach(s => { s.innerHTML = ph; });
-  for (let i = 0; i < spans.length; i += 8) {
-    await Promise.all(spans.slice(i, i + 8).map(async span => {
+  // Foto atleti per le righe PCS
+  for (let i = 0; i < newSpans.length; i += 8) {
+    await Promise.all(newSpans.slice(i, i + 8).filter(Boolean).map(async span => {
       if (!document.contains(span)) return;
       const ov = await getEntityOverrides('atleta', span.dataset.aid).catch(() => ({}));
       if (!document.contains(span)) return;
@@ -14008,10 +14004,10 @@ async function renderGara(gara_id) {
         <thead><tr>
           <th>POS</th><th>ATLETA</th><th class="td-hide-mobile">TEAM</th><th>TEMPO</th><th class="td-hide-mobile" style="text-align:right">KM</th><th class="td-hide-mobile" style="text-align:right">MEDIA</th><th class="td-pts">PTS</th>
         </tr></thead>
-        <tbody>${tableRows || '<tr><td colspan="7" class="empty-state">Nessuna classifica disponibile</td></tr>'}</tbody>
+        <tbody id="main-results-tbody">${tableRows || '<tr><td colspan="7" class="empty-state">Nessuna classifica disponibile</td></tr>'}</tbody>
       </table>
     </div>
-    <div id="gara-pcs-ext" style="margin-top:8px"></div>
+    <div id="gara-pcs-ext"></div>
     <div id="race-albo-doro" style="margin-top:8px"></div>
     ${detailsHtml}
     <div id="gara-comments-section" style="margin-top:28px"></div>
