@@ -13,82 +13,340 @@
   },
   "GRAGNANO_SPORTING_CLUB": {
     "nome": "Gragnano Sporting Club",
-    "atleti": []
+    "atleti": [
+      {
+        "atleta_id": "DE_FABRITIIS_GABRIELE",
+        "nome": "Gabriele",
+        "cognome": "De Fabritiis",
+        "categoria": "ELI_M",
+        "genere": "F"
+      }
+    ]
   },
   "BIESSE_CARRERA_PREMAC": {
     "nome": "Biesse - Carrera - Premac",
-    "atleti": []
+    "atleti": [
+      {
+        "atleta_id": "DONATI_ANDREA",
+        "nome": "Andrea",
+        "cognome": "Donati",
+        "categoria": "ELI_M",
+        "genere": "F"
+      },
+      {
+        "atleta_id": "ROSSI_NICOLA",
+        "nome": "Nicola",
+        "cognome": "Rossi",
+        "categoria": "ELI_M",
+        "genere": "F"
+      }
+    ]
   },
   "FUTURA_TEAM": {
     "nome": "Futura Team",
-    "atleti": []
+    "atleti": [
+      {
+        "atleta_id": "CINCINELLI_MATTIA",
+        "nome": "Mattia",
+        "cognome": "Cincinelli",
+        "categoria": "ELI_M",
+        "genere": "F"
+      },
+      {
+        "atleta_id": "LEONE_ALESSIO",
+        "nome": "Alessio",
+        "cognome": "Leone",
+        "categoria": "ELI_M",
+        "genere": "F"
+      }
+    ]
   },
   "CICLISTICA_ROSTESE": {
     "nome": "Ciclistica Rostese",
-    "atleti": []
+    "atleti": [
+      {
+        "atleta_id": "SIGNORINI_LUCA",
+        "nome": "Luca",
+        "cognome": "Signorini",
+        "categoria": "ELI_M",
+        "genere": "F"
+      },
+      {
+        "atleta_id": "RINALDI_ANDREA",
+        "nome": "Andrea",
+        "cognome": "Rinaldi",
+        "categoria": "ELI_M",
+        "genere": "F"
+      },
+      {
+        "atleta_id": "ZANETTI_ALESSANDRO",
+        "nome": "Alessandro",
+        "cognome": "Zanetti",
+        "categoria": "ELI_M",
+        "genere": "F"
+      },
+      {
+        "atleta_id": "ARZILLI_GABRIELE",
+        "nome": "Gabriele",
+        "cognome": "Arzilli",
+        "categoria": "ELI_M",
+        "genere": "F"
+      }
+    ]
   },
   "NIPPO_NUOVACOMAUTO_OBOR": {
     "nome": "Team Nippo Nuovacomauto Obor",
-    "atleti": []
+    "atleti": [
+      {
+        "atleta_id": "ROLANDO_JOANN",
+        "nome": "Joann",
+        "cognome": "Rolando",
+        "categoria": "ELI_M",
+        "genere": "F"
+      },
+      {
+        "atleta_id": "KAMADA_KOKI",
+        "nome": "Koki",
+        "cognome": "Kamada",
+        "categoria": "ELI_M",
+        "genere": "F"
+      }
+    ]
   },
   "VEGA_VITALCARE_DYNATEK": {
     "nome": "Vega - Vitalcare - Dynatek",
-    "atleti": []
+    "atleti": [
+      {
+        "atleta_id": "SHTIN_VALERY",
+        "nome": "Valery",
+        "cognome": "Shtin",
+        "categoria": "ELI_M",
+        "genere": "F"
+      }
+    ]
   },
   "_pcs_import": {
     "nome": "_pcs_import",
-    "atleti": []
+    "atleti": [
+      {
+        "atleta_id": "SCHIAVO_LEONARDO",
+        "nome": "Leonardo",
+        "cognome": "Schiavo",
+        "categoria": "ELI_M",
+        "genere": "F"
+      },
+      {
+        "atleta_id": "HOVORUN_BOGDAN",
+        "nome": "Bogdan",
+        "cognome": "Hovorun",
+        "categoria": "ELI_M",
+        "genere": "F"
+      }
+    ]
   },
   "TEAM_GAIAPLAST_BIBANESE": {
     "nome": "Team Gaiaplast Bibanese",
-    "atleti": []
+    "atleti": [
+      {
+        "atleta_id": "ZANUSSI_GIOVANNI",
+        "nome": "Giovanni",
+        "cognome": "Zanussi",
+        "categoria": "ELI_M",
+        "genere": "F"
+      },
+      {
+        "atleta_id": "PIGHIN_CHRISTIAN",
+        "nome": "Christian",
+        "cognome": "Pighin",
+        "categoria": "ELI_M",
+        "genere": "F"
+      },
+      {
+        "atleta_id": "VETTORATA_NICOLA",
+        "nome": "Nicola",
+        "cognome": "Vettorata",
+        "categoria": "ELI_M",
+        "genere": "F"
+      }
+    ]
   },
   "NORDEST_PETRUCCI_ASSALI_STEFEN": {
     "nome": "Petrucci - Team Aries",
-    "atleti": []
+    "atleti": [
+      {
+        "atleta_id": "TUDURACHI_MATTEO_RICCARDO",
+        "nome": "Riccardo",
+        "cognome": "Tudurachi Matteo",
+        "categoria": "ELI_M",
+        "genere": "F"
+      },
+      {
+        "atleta_id": "FESTA_MICHELE",
+        "nome": "Michele",
+        "cognome": "Festa",
+        "categoria": "ELI_M",
+        "genere": "F"
+      }
+    ]
   },
   "U_C_TREVIGIANI_ENERGIAPURA_MARCHIOL": {
     "nome": "UC Trevigiani - Energiapura Marchiol",
-    "atleti": []
+    "atleti": [
+      {
+        "atleta_id": "CAFUERI_TOMMASO",
+        "nome": "Tommaso",
+        "cognome": "Cafueri",
+        "categoria": "ELI_M",
+        "genere": "F"
+      },
+      {
+        "atleta_id": "ZANOTTO_MARCO",
+        "nome": "Marco",
+        "cognome": "Zanotto",
+        "categoria": "ELI_M",
+        "genere": "F"
+      },
+      {
+        "atleta_id": "VECCHIUTTI_FRANCESCO",
+        "nome": "Francesco",
+        "cognome": "Vecchiutti",
+        "categoria": "ELI_M",
+        "genere": "F"
+      }
+    ]
   },
   "MOVISTAR_TEAM_ACADEMY": {
     "nome": "Bike Academy Marchini Costruzioni",
-    "atleti": []
+    "atleti": [
+      {
+        "atleta_id": "CHIARUCCI_ANDREA",
+        "nome": "Andrea",
+        "cognome": "Chiarucci",
+        "categoria": "ELI_M",
+        "genere": "F"
+      }
+    ]
   },
   "A_S_D_S_C_PADOVANI": {
     "nome": "S.C. Padovani Polo Cherry Bank",
-    "atleti": []
+    "atleti": [
+      {
+        "atleta_id": "PIGNATTI_JACOPO",
+        "nome": "Jacopo",
+        "cognome": "Pignatti",
+        "categoria": "ELI_M",
+        "genere": "F"
+      },
+      {
+        "atleta_id": "QUAGLIA_TOMMASO",
+        "nome": "Tommaso",
+        "cognome": "Quaglia",
+        "categoria": "ELI_M",
+        "genere": "F"
+      }
+    ]
   },
   "SOLME_OLMO_ARVEDI": {
     "nome": "Solme - Olmo - Arvedi",
-    "atleti": []
+    "atleti": [
+      {
+        "atleta_id": "SASSO_JACOPO",
+        "nome": "Jacopo",
+        "cognome": "Sasso",
+        "categoria": "ELI_M",
+        "genere": "F"
+      },
+      {
+        "atleta_id": "UDERZO_RICCARDO",
+        "nome": "Riccardo",
+        "cognome": "Uderzo",
+        "categoria": "ELI_M",
+        "genere": "F"
+      }
+    ]
   },
   "BELTRAMI_TSA_LA_RISORSA_UMANA_VC_RE": {
     "nome": "Beltrami TSA - La Risorsa Umana",
-    "atleti": []
+    "atleti": [
+      {
+        "atleta_id": "MISSAGLIA_NICOLO",
+        "nome": "Nicolò",
+        "cognome": "Missaglia",
+        "categoria": "ELI_M",
+        "genere": "F"
+      }
+    ]
   },
   "POLISPORTIVA_TRIPETETOLO_SEANESE": {
     "nome": "Polisportiva Tripetetolo",
-    "atleti": []
+    "atleti": [
+      {
+        "atleta_id": "LUCI_MATTEO",
+        "nome": "Matteo",
+        "cognome": "Luci",
+        "categoria": "ELI_M",
+        "genere": "F"
+      }
+    ]
   },
   "ASD_G_C_SISSIO_TEAM": {
     "nome": "ASD GC Sissio Team",
-    "atleti": []
+    "atleti": [
+      {
+        "atleta_id": "SARTORI_MARTINO",
+        "nome": "Martino",
+        "cognome": "Sartori",
+        "categoria": "ELI_M",
+        "genere": "F"
+      }
+    ]
   },
   "TEAM_HOPPLA": {
     "nome": "Team Hopplà",
-    "atleti": []
+    "atleti": [
+      {
+        "atleta_id": "BURANI_EDOARDO",
+        "nome": "Edoardo",
+        "cognome": "Burani",
+        "categoria": "ELI_M",
+        "genere": "F"
+      }
+    ]
   },
   "ARAN_CUCINE_VEJUS": {
     "nome": "Aran Cucine Vejus",
-    "atleti": []
+    "atleti": [
+      {
+        "atleta_id": "FERRANTI_FEDERICO",
+        "nome": "Federico",
+        "cognome": "Ferranti",
+        "categoria": "ELI_M",
+        "genere": "F"
+      }
+    ]
   },
   "GENERAL_STORE_ESSEGIBI_F_LLI_CURIA": {
     "nome": "General Store - Essegibi - F.Lli Curia",
-    "atleti": []
+    "atleti": [
+      {
+        "atleta_id": "DENTELLI_GIACOMO",
+        "nome": "Giacomo",
+        "cognome": "Dentelli",
+        "categoria": "ELI_M",
+        "genere": "F"
+      }
+    ]
   },
   "MG_K_VIS_COSTRUZIONI_E_AMBIENTE": {
     "nome": "Mg.K Vis Costruzioni e Ambiente",
-    "atleti": []
+    "atleti": [
+      {
+        "atleta_id": "MARCOZZI_MATTIA",
+        "nome": "Mattia",
+        "cognome": "Marcozzi",
+        "categoria": "ELI_M",
+        "genere": "F"
+      }
+    ]
   }
 }
