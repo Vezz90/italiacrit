@@ -118,7 +118,6 @@ async function getGaraSlugs(sb) {
     .not('new_value', 'is', null)
     .limit(2000);
   if (error) console.error('getGaraSlugs error:', JSON.stringify(error));
-  console.log('getGaraSlugs data:', JSON.stringify(data));
   return new Map((data || []).map(r => [r.entity_id, r.new_value]));
 }
 

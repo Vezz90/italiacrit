@@ -11901,23 +11901,26 @@ async function _loadGaraPcsExt(garaId, circuitResults) {
   const raceKm = winner?.km || '';
   const winnerSec = _winnerSeconds(raceKm, winner?.media);
 
-  // Fuzzy match team PCS → team nel sistema (normalizza + confronto parole chiave)
+  // Fuzzy match team PCS → team nel sistema
+  // Strategia: 1) esatto, 2) contenimento, 3) parola chiave >= 5 car (uguale allo scraper)
   const _normTeam = s => String(s||'').normalize('NFD').replace(/[̀-ͯ]/g,'').toLowerCase().replace(/[^a-z0-9]+/g,' ').trim();
   const _findTeam = (pcsName) => {
     if (!pcsName || !globalData?.teams) return null;
     const target = _normTeam(pcsName);
-    let bestId = null, bestScore = 0;
     for (const [tid, t] of Object.entries(globalData.teams)) {
-      const tNorm = _normTeam(t.nome || tid);
-      if (tNorm === target) return tid;
-      const tWords = tNorm.split(' ').filter(w => w.length > 3);
-      const pWords = target.split(' ').filter(w => w.length > 3);
-      if (!pWords.length) continue;
-      const matched = pWords.filter(w => tWords.includes(w)).length;
-      const score = matched / Math.max(tWords.length, pWords.length);
-      if (score > bestScore && score >= 0.5) { bestScore = score; bestId = tid; }
+      if (_normTeam(t.nome || tid) === target) return tid;
     }
-    return bestId;
+    for (const [tid, t] of Object.entries(globalData.teams)) {
+      const tn = _normTeam(t.nome || tid);
+      if (tn.includes(target) || target.includes(tn)) return tid;
+    }
+    const keywords = target.split(' ').filter(w => w.length >= 5);
+    for (const kw of keywords) {
+      for (const [tid, t] of Object.entries(globalData.teams)) {
+        if (_normTeam(t.nome || tid).includes(kw)) return tid;
+      }
+    }
+    return null;
   };
 
   // Parsa distacco PCS "+M:SS" o "+H:MM:SS" → secondi
