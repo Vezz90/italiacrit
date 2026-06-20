@@ -285,22 +285,10 @@ async function fetchFromFcTeam(page, url) {
   await sleep(800);
 
   const imgSrc = await page.evaluate(() => {
-    // Team logo FC: /photos/teams/YEAR/ID.png
-    const candidates = [...document.querySelectorAll('img[src]')];
-    const byTeams = candidates.find(i => /\/photos\/teams\//i.test(i.src));
-    if (byTeams) return byTeams.src;
-    // Fallback: logo nella sezione profilo team
-    const sec = document.querySelector('.team-profile, .team-logo, aside');
-    if (sec) {
-      const img = sec.querySelector('img[src]');
-      if (img) return img.src;
-    }
-    // Prima img non-flag
-    const big = candidates.find(i =>
-      i.src.startsWith('http') && i.naturalWidth >= 40 &&
-      !i.src.includes('flag') && !i.src.includes('kit') && !i.src.includes('sponsor')
-    );
-    return big ? big.src : null;
+    // Accetta SOLO il logo ufficiale FC nella directory /photos/teams/
+    // Non usiamo fallback generici che raccolgono avatar Twitter/Instagram
+    const byTeams = [...document.querySelectorAll('img[src]')].find(i => /\/photos\/teams\//i.test(i.src));
+    return byTeams ? byTeams.src : null;
   }).catch(() => null);
 
   let photo = null;
