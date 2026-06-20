@@ -206,6 +206,27 @@ async function searchPcsRider(page, ath) {
 
 // ─── First Cycling ─────────────────────────────────────────────────────────
 
+// Aspetta che Cloudflare finisca la verifica automatica e carichi la pagina vera.
+// La challenge di CF si auto-risolve in 3-8 secondi se il browser passa il JS test.
+async function waitPassCF(page, timeout = 15000) {
+  const isCF = await page.evaluate(() =>
+    /just a moment|ci siamo quasi|checking your browser|verifica di sicurezza/i.test(document.title) ||
+    !!document.querySelector('#challenge-running, .cf-browser-verification, #cf-spinner')
+  ).catch(() => false);
+
+  if (!isCF) return; // nessuna challenge, già sulla pagina giusta
+
+  console.log('       [CF challenge rilevata, attendo risoluzione automatica…]');
+  try {
+    // Aspetta la navigazione successiva (CF redirige alla pagina reale dopo la verifica)
+    await page.waitForNavigation({ waitUntil: 'domcontentloaded', timeout });
+    await sleep(800); // piccola pausa post-redirect
+  } catch {
+    // Se scade il timeout, proviamo comunque a leggere quello che c'è
+    console.log('       [CF timeout — procedo comunque]');
+  }
+}
+
 async function searchFirstCycling(page, name, type = 'riders') {
   // Prova prima nome+cognome, poi cognome+nome
   const queries = [name, name.split(' ').reverse().join(' ')];
@@ -216,6 +237,7 @@ async function searchFirstCycling(page, name, type = 'riders') {
         { waitUntil: 'domcontentloaded', timeout: 15000 }
       );
     } catch { continue; }
+    await waitPassCF(page);
 
     const pat = type === 'riders' ? 'rider.php?r=' : 'team.php?l=';
     const href = await page.evaluate(pat => {
@@ -232,6 +254,7 @@ async function fetchFromFcRider(page, url) {
   try {
     await page.goto(url, { waitUntil: 'domcontentloaded', timeout: 18000 });
   } catch { return { notFound: false }; }
+  await waitPassCF(page);
   if (page.url().includes('search.php') || page.url().includes('404'))
     return { notFound: true };
 
@@ -294,6 +317,7 @@ async function fetchFromFcTeam(page, url) {
   try {
     await page.goto(url, { waitUntil: 'domcontentloaded', timeout: 18000 });
   } catch { return { notFound: false }; }
+  await waitPassCF(page);
   if (page.url().includes('search.php') || page.url().includes('404'))
     return { notFound: true };
 
@@ -419,7 +443,8 @@ async function getExistingIds(sb, entityType, field) {
                 .catch(e => { console.log(`Avviso PCS: ${e.message}`); return sleep(2000); })
             : Promise.resolve(),
     fcPage  ? fcPage.goto('https://firstcycling.com/', { waitUntil: 'domcontentloaded', timeout: 20000 })
-                .then(() => sleep(2000))
+                .then(() => waitPassCF(fcPage))
+                .then(() => sleep(3000))
                 .catch(e => { console.log(`Avviso FC: ${e.message}`); })
             : Promise.resolve(),
   ]);
