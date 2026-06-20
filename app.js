@@ -1636,7 +1636,8 @@ const ADMIN_EDIT_FIELDS = {
   atleta: [
     { key: 'nome',         label: 'Nome',    type: 'text' },
     { key: 'cognome',      label: 'Cognome', type: 'text' },
-    { key: 'team',         label: 'Team',    type: 'text' },
+    { key: 'team',         label: 'Team',    type: 'team-autocomplete' },
+    { key: 'team_id',      label: 'Team ID', type: 'hidden' },
     { key: 'anno_nascita', label: 'Anno di nascita (es. 2009)', type: 'text' },
     { key: 'instagram', label: 'Instagram (@handle o URL)', type: 'text' },
     { key: 'facebook',  label: 'Facebook (URL o pagina)',   type: 'text' },
@@ -1673,9 +1674,21 @@ window.openAdminEdit = async function(entityType, entityId) {
 
   const fieldsHtml = fields.map(f => {
     const val = esc(current[f.key] || '');
+    if (f.type === 'hidden') {
+      return `<input type="hidden" id="aedit-${f.key}" value="${val}" />`;
+    }
     if (f.type === 'select') {
       const opts = f.options.map(o => `<option value="${o}" ${current[f.key] === o ? 'selected' : ''}>${o}</option>`).join('');
       return `<label class="auth-label">${f.label}<select id="aedit-${f.key}" class="auth-input">${opts}</select></label>`;
+    }
+    if (f.type === 'team-autocomplete') {
+      return `<label class="auth-label">${f.label}
+        <div style="position:relative">
+          <input type="text" id="aedit-${f.key}" class="auth-input" value="${val}" placeholder="${f.label}"
+            autocomplete="off" oninput="window._openAdminEditTeamSearch(this.value)" style="box-sizing:border-box;width:100%" />
+          <div id="aedit-team-drop" style="display:none;position:absolute;top:100%;left:0;right:0;background:var(--bg-card);border:1px solid var(--border);border-top:none;border-radius:0 0 6px 6px;max-height:200px;overflow-y:auto;z-index:10000;font-size:.85rem"></div>
+        </div>
+      </label>`;
     }
     return `<label class="auth-label">${f.label}<input type="text" id="aedit-${f.key}" class="auth-input" value="${val}" placeholder="${f.label}" /></label>`;
   }).join('');
@@ -1703,6 +1716,45 @@ window.openAdminEdit = async function(entityType, entityId) {
     </div>`;
   document.body.appendChild(overlay);
   overlay.addEventListener('click', e => { if (e.target === overlay) overlay.remove(); });
+
+  // Team autocomplete logic (solo per atleta)
+  if (entityType === 'atleta') {
+    window._openAdminEditTeamSearch = (q) => {
+      const drop = document.getElementById('aedit-team-drop');
+      if (!drop) return;
+      const teams = globalData ? Object.values(globalData.teams || {}) : [];
+      const qn = q.trim().toLowerCase();
+      if (!qn) { drop.style.display = 'none'; return; }
+      const matches = teams
+        .filter(t => (t.nome || '').toLowerCase().includes(qn))
+        .sort((a, b) => (a.nome || '').localeCompare(b.nome || ''))
+        .slice(0, 12);
+      if (!matches.length) { drop.style.display = 'none'; return; }
+      drop.innerHTML = matches.map(t => `
+        <div style="padding:8px 12px;cursor:pointer;border-bottom:1px solid var(--border-subtle)"
+          onmousedown="event.preventDefault();window._openAdminEditTeamSelect('${esc(String(t.id))}','${esc(t.nome||'')}')">
+          <span style="font-weight:600">${esc(t.nome || t.id)}</span>
+        </div>`).join('');
+      drop.style.display = 'block';
+    };
+    window._openAdminEditTeamSelect = (tid, nome) => {
+      const inp   = document.getElementById('aedit-team');
+      const idInp = document.getElementById('aedit-team_id');
+      const drop  = document.getElementById('aedit-team-drop');
+      if (inp)   inp.value = nome;
+      if (idInp) idInp.value = tid;
+      if (drop)  drop.style.display = 'none';
+    };
+    setTimeout(() => {
+      document.addEventListener('click', function _closeTeamDrop(e) {
+        if (!e.target.closest('#aedit-team-drop') && e.target.id !== 'aedit-team') {
+          const d = document.getElementById('aedit-team-drop');
+          if (d) d.style.display = 'none';
+          document.removeEventListener('click', _closeTeamDrop);
+        }
+      });
+    }, 50);
+  }
 };
 
 window.saveAdminEdit = async function(entityType, entityId) {
