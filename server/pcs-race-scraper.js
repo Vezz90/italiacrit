@@ -410,7 +410,8 @@ function splitPcsName(fullName) {
     const nome    = parts.filter(p => !upper.includes(p)).join(' ') || parts[0];
     return { nome, cognome };
   }
-  return { nome: parts.slice(0, -1).join(' '), cognome: parts[parts.length - 1] };
+  // PCS "Cognome Nome" — ultimo token = nome, il resto = cognome
+  return { nome: parts[parts.length - 1], cognome: parts.slice(0, -1).join(' ') };
 }
 
 function makeTeamId(teamName) {
@@ -561,10 +562,10 @@ function makeTeamId(teamName) {
             const categoria = inferCategoriaFromGara(garaId, profile.birthYear, profile.isFemale ? 'F' : 'M');
             const genere    = profile.isFemale ? 'F' : 'M';
 
-            // Aggiungi a extra_roster
+            // Aggiungi a extra_roster (usa nome ICS se team già esiste)
             const rKey = teamId || '_pcs_import';
             if (!extraRoster[rKey]) {
-              extraRoster[rKey] = { nome: r.team_name || rKey, atleti: [] };
+              extraRoster[rKey] = { nome: teamsObj[rKey]?.nome || r.team_name || rKey, atleti: [] };
             }
             extraRoster[rKey].atleti.push({
               atleta_id: atletaId, nome: parsedNome, cognome: parsedCognome,
@@ -623,7 +624,7 @@ function makeTeamId(teamName) {
             }
             const rKey = teamId || '_pcs_import';
             if (!extraRoster[rKey]) {
-              extraRoster[rKey] = { nome: r.team_name || rKey, atleti: [] };
+              extraRoster[rKey] = { nome: teamsObj[rKey]?.nome || r.team_name || rKey, atleti: [] };
             }
             extraRoster[rKey].atleti.push({
               atleta_id: minId, nome: parsedNome, cognome: parsedCognome,
