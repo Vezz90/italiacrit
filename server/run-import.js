@@ -31,6 +31,9 @@ const FORCE       = args.includes('--force');
 const PCS_ONLY    = args.includes('--pcs');
 const FC_ONLY     = args.includes('--fc');
 const SOCIAL_ONLY = args.includes('--social');  // solo social, niente foto
+const SINGLE_ID   = (args.find(a => a.startsWith('--atleta-id=')) || '').split('=')[1] || null;
+const SINGLE_NOME = (args.find(a => a.startsWith('--nome=')) || '').split('=')[1] || null;
+const SINGLE_COG  = (args.find(a => a.startsWith('--cognome=')) || '').split('=')[1] || null;
 const YEAR        = new Date().getFullYear();
 
 const DATA_DIR = path.join(__dirname, '..', 'data');
@@ -475,11 +478,15 @@ async function getExistingIds(sb, entityType, field) {
     console.log('── ATLETI ──────────────────────────────────────');
 
     const athMap = new Map();
-    for (const cat of ATH_CATS) {
-      const file = path.join(RANK_DIR, `${cat}.json`);
-      if (!fs.existsSync(file)) continue;
-      for (const a of JSON.parse(fs.readFileSync(file, 'utf8')))
-        if (a.atleta_id && !athMap.has(a.atleta_id)) athMap.set(a.atleta_id, a);
+    if (SINGLE_ID && SINGLE_NOME && SINGLE_COG) {
+      athMap.set(SINGLE_ID, { atleta_id: SINGLE_ID, nome: SINGLE_NOME, cognome: SINGLE_COG });
+    } else {
+      for (const cat of ATH_CATS) {
+        const file = path.join(RANK_DIR, `${cat}.json`);
+        if (!fs.existsSync(file)) continue;
+        for (const a of JSON.parse(fs.readFileSync(file, 'utf8')))
+          if (a.atleta_id && !athMap.has(a.atleta_id)) athMap.set(a.atleta_id, a);
+      }
     }
     const athletes = [...athMap.values()];
 

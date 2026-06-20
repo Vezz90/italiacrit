@@ -1765,25 +1765,84 @@ window.saveAdminEdit = async function(entityType, entityId) {
   errEl.style.display = 'none';
   try {
     const initial = window._adminEditCurrent || {};
+    const saved = {};
+    let _importNeeded = null; // { atleta_id, nome, cognome } se team cambia
     for (const f of fields) {
       const el = document.getElementById('aedit-' + f.key);
       if (!el) continue;
       const val = el.value.trim();
-      // Salva solo i campi effettivamente modificati: evita di sovrascrivere
-      // con stringa vuota i dati già presenti che non sono stati toccati.
       if (val === String(initial[f.key] ?? '').trim()) continue;
       await apiCall('/admin/override/entity', {
         method: 'POST',
         body: { entity_type: entityType, entity_id: entityId, field: f.key, new_value: val }
       });
+      saved[f.key] = val;
     }
+
+    // Aggiorna globalData in memoria per riflettere subito i cambiamenti
+    if (globalData && entityType === 'atleta' && globalData.athletes) {
+      const ath = globalData.athletes[entityId];
+      if (ath) {
+        if (saved.cognome !== undefined) ath.cognome = saved.cognome;
+        if (saved.nome    !== undefined) ath.nome    = saved.nome;
+        // Cambio team: aggiorna atleta, roster e risultati dei team
+        if (saved.team !== undefined || saved.team_id !== undefined) {
+          _importNeeded = { atleta_id: entityId, nome: ath.nome || '', cognome: ath.cognome || '' };
+          const newTeamNome = saved.team    ?? ath.team_attuale ?? '';
+          const newTeamId   = saved.team_id ?? ath.team_id ?? '';
+          const oldTeamId   = ath.team_id ?? '';
+          if (oldTeamId !== newTeamId && globalData.teams) {
+            // Rimuovi dall'old team (atleti + risultati)
+            if (oldTeamId && globalData.teams[oldTeamId]) {
+              const oldT = globalData.teams[oldTeamId];
+              if (Array.isArray(oldT.atleti)) {
+                oldT.atleti = oldT.atleti.filter(id => id !== entityId);
+              }
+              if (Array.isArray(oldT.risultati)) {
+                // Estrai i risultati dell'atleta per spostarli
+                const athResults = oldT.risultati.filter(r => r.atleta_id === entityId);
+                oldT.risultati   = oldT.risultati.filter(r => r.atleta_id !== entityId);
+                // Aggiorna team_id e team nei risultati spostati
+                athResults.forEach(r => { r.team_id = newTeamId; r.team = newTeamNome; });
+                // Aggiungi al nuovo team
+                if (newTeamId) {
+                  if (!globalData.teams[newTeamId]) {
+                    globalData.teams[newTeamId] = { id: newTeamId, nome: newTeamNome, atleti: [], risultati: [], punti_totali: 0 };
+                  }
+                  const newT = globalData.teams[newTeamId];
+                  if (!Array.isArray(newT.atleti)) newT.atleti = [];
+                  if (!newT.atleti.includes(entityId)) newT.atleti.push(entityId);
+                  if (!Array.isArray(newT.risultati)) newT.risultati = [];
+                  newT.risultati.push(...athResults);
+                  newT.punti_totali = (newT.punti_totali || 0) + athResults.reduce((s, r) => s + (r.punti_effettivi||0), 0);
+                }
+              }
+            }
+          }
+          // Aggiorna atleta
+          ath.team_attuale = newTeamNome;
+          if (newTeamId) ath.team_id = newTeamId;
+        }
+      }
+    }
+
     document.getElementById('admin-edit-overlay')?.remove();
-    // Show brief confirmation
     const toast = document.createElement('div');
     toast.style.cssText = 'position:fixed;bottom:24px;left:50%;transform:translateX(-50%);background:var(--red-hot);color:#fff;padding:10px 24px;border-radius:6px;font-family:var(--font-display);font-size:1rem;letter-spacing:.06em;z-index:9999';
     toast.textContent = 'Modifiche salvate ✓';
     document.body.appendChild(toast);
     setTimeout(() => toast.remove(), 2500);
+
+    if (_importNeeded) {
+      try {
+        await apiCall('/admin/import-atleta', { method: 'POST', body: _importNeeded });
+        const t2 = document.createElement('div');
+        t2.style.cssText = toast.style.cssText.replace('bottom:24px', 'bottom:70px');
+        t2.textContent = 'Importazione media avviata…';
+        document.body.appendChild(t2);
+        setTimeout(() => t2.remove(), 3500);
+      } catch (_) { /* import non disponibile in produzione — ignora */ }
+    }
   } catch (err) {
     errEl.textContent = 'Errore: ' + err.message; errEl.style.display = 'block';
     btn.disabled = false; btn.textContent = 'SALVA';
@@ -6918,6 +6977,15 @@ async function updateRankTable() {
       });
       ranking = Object.values(agg).sort((a,b) => b.punti - a.punti);
       ranking.forEach((r, i) => r.pos = i+1);
+    }
+
+    // Applica la correzione team (selezione → club reale) dai dati in memoria
+    for (const entry of ranking) {
+      const ath = (globalData.athletes || {})[entry.atleta_id];
+      if (ath && ath.team_attuale && ath.team_attuale !== entry.team_nome) {
+        entry.team_nome = ath.team_attuale;
+        entry.team_id   = ath.team_id   || entry.team_id;
+      }
     }
 
     // Ricalcola trend: classifica prima dell'ultimo giorno di gara vs classifica attuale.

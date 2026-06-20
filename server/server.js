@@ -1634,6 +1634,48 @@ app.delete('/api/admin/full-import', requireAdminOrLocal, (req, res) => {
   res.json({ ok: true });
 });
 
+// Import media per un singolo atleta (usato dopo cambio team)
+app.post('/api/admin/import-atleta', requireAdminOrLocal, (req, res) => {
+  if (process.env.RENDER) return res.status(400).json({ error: 'Import disponibile solo in locale' });
+  if (_fullImportJob?.running) return res.status(409).json({ error: 'Import già in corso' });
+
+  const { atleta_id, nome, cognome } = req.body || {};
+  if (!atleta_id || !nome || !cognome) return res.status(400).json({ error: 'atleta_id, nome, cognome obbligatori' });
+
+  const { spawn } = require('child_process');
+  const scriptPath = path.join(__dirname, 'run-import.js');
+  const secret = process.env.SUPABASE_SECRET;
+  if (!secret) return res.status(500).json({ error: 'SUPABASE_SECRET non impostato' });
+
+  _fullImportJob = { running: true, log: [], startedAt: new Date().toISOString(), exitCode: null };
+  res.json({ ok: true, message: `Import avviato per ${cognome} ${nome}` });
+
+  const proc = spawn(process.execPath, [
+    scriptPath,
+    '--athletes', '--force',
+    `--atleta-id=${atleta_id}`,
+    `--nome=${nome}`,
+    `--cognome=${cognome}`,
+  ], { env: { ...process.env, SUPABASE_SECRET: secret }, cwd: __dirname });
+
+  const onLine = line => {
+    if (!_fullImportJob) return;
+    console.log('[import-atleta]', line);
+    _fullImportJob.log.push(line);
+  };
+  let buf = '';
+  proc.stdout.on('data', d => {
+    buf += d.toString();
+    const lines = buf.split('\n'); buf = lines.pop(); lines.forEach(onLine);
+  });
+  proc.stderr.on('data', d => d.toString().split('\n').filter(Boolean).forEach(l => onLine('[ERR] ' + l)));
+  proc.on('close', code => {
+    if (buf) onLine(buf);
+    if (_fullImportJob) { _fullImportJob.running = false; _fullImportJob.exitCode = code; }
+    console.log('[import-atleta] terminato con codice', code);
+  });
+});
+
 // ══════════════════════════════════════════════════════════════════════════════
 // YouTube Auto-Scraper
 // ══════════════════════════════════════════════════════════════════════════════
