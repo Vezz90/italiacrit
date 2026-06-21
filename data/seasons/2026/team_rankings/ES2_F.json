@@ -1,38 +1,38 @@
 [
   {
+    "team_id": "S_C_CESANO_MADERNO",
+    "team_nome": "S.C. CESANO MADERNO",
+    "punti": 282,
+    "vittorie": 7,
+    "p1": 7,
+    "p2": 3,
+    "p3": 5,
+    "pout": 15,
+    "n_atleti": 2,
+    "pos": 1
+  },
+  {
     "team_id": "SCUOLA_CICLISMO_VERSO_L_IRIDE",
     "team_nome": "SCUOLA CICLISMO VERSO L'IRIDE",
-    "punti": 262,
+    "punti": 278,
     "vittorie": 5,
     "p1": 5,
     "p2": 4,
     "p3": 6,
-    "pout": 17,
+    "pout": 18,
     "n_atleti": 4,
-    "pos": 1
+    "pos": 2
   },
   {
     "team_id": "HG_CYCLING_TEAM",
     "team_nome": "HG CYCLING TEAM",
-    "punti": 253,
+    "punti": 263,
     "vittorie": 5,
     "p1": 5,
     "p2": 6,
     "p3": 1,
-    "pout": 16,
+    "pout": 18,
     "n_atleti": 5,
-    "pos": 2
-  },
-  {
-    "team_id": "S_C_CESANO_MADERNO",
-    "team_nome": "S.C. CESANO MADERNO",
-    "punti": 240,
-    "vittorie": 6,
-    "p1": 6,
-    "p2": 3,
-    "p3": 5,
-    "pout": 14,
-    "n_atleti": 2,
     "pos": 3
   },
   {
@@ -48,6 +48,18 @@
     "pos": 4
   },
   {
+    "team_id": "SPORT_CLUB_BRESCIA_FLANDRES_LOVE",
+    "team_nome": "SPORT CLUB BRESCIA - FLANDRES LOVE",
+    "punti": 128,
+    "vittorie": 0,
+    "p1": 0,
+    "p2": 3,
+    "p3": 2,
+    "pout": 14,
+    "n_atleti": 3,
+    "pos": 5
+  },
+  {
     "team_id": "ASD_VELOCE_CLUB_BORGO",
     "team_nome": "ASD VELOCE CLUB BORGO",
     "punti": 117,
@@ -57,19 +69,19 @@
     "p3": 1,
     "pout": 7,
     "n_atleti": 2,
-    "pos": 5
+    "pos": 6
   },
   {
-    "team_id": "SPORT_CLUB_BRESCIA_FLANDRES_LOVE",
-    "team_nome": "SPORT CLUB BRESCIA - FLANDRES LOVE",
-    "punti": 98,
-    "vittorie": 0,
-    "p1": 0,
-    "p2": 3,
-    "p3": 1,
-    "pout": 13,
+    "team_id": "MARY_J_SWEET_ANGEL_ASD",
+    "team_nome": "MARY J SWEET ANGEL ASD",
+    "punti": 91,
+    "vittorie": 1,
+    "p1": 1,
+    "p2": 2,
+    "p3": 0,
+    "pout": 11,
     "n_atleti": 3,
-    "pos": 6
+    "pos": 7
   },
   {
     "team_id": "G_C_SOSSANO_1975",
@@ -81,18 +93,6 @@
     "p3": 3,
     "pout": 16,
     "n_atleti": 6,
-    "pos": 7
-  },
-  {
-    "team_id": "MARY_J_SWEET_ANGEL_ASD",
-    "team_nome": "MARY J SWEET ANGEL ASD",
-    "punti": 87,
-    "vittorie": 1,
-    "p1": 1,
-    "p2": 2,
-    "p3": 0,
-    "pout": 10,
-    "n_atleti": 2,
     "pos": 8
   },
   {
@@ -132,6 +132,18 @@
     "pos": 11
   },
   {
+    "team_id": "ALLGOR_TATOBIKE",
+    "team_nome": "ALLGOR TATOBIKE",
+    "punti": 69,
+    "vittorie": 0,
+    "p1": 0,
+    "p2": 1,
+    "p3": 1,
+    "pout": 9,
+    "n_atleti": 2,
+    "pos": 12
+  },
+  {
     "team_id": "BREGANZE_MILLENIUM",
     "team_nome": "BREGANZE MILLENIUM",
     "punti": 68,
@@ -141,7 +153,7 @@
     "p3": 2,
     "pout": 10,
     "n_atleti": 4,
-    "pos": 12
+    "pos": 13
   },
   {
     "team_id": "A_S_A_C_I_EVONACICLI",
@@ -153,7 +165,7 @@
     "p3": 2,
     "pout": 1,
     "n_atleti": 2,
-    "pos": 13
+    "pos": 14
   },
   {
     "team_id": "UC_DONORATICO",
@@ -165,19 +177,19 @@
     "p3": 1,
     "pout": 11,
     "n_atleti": 3,
-    "pos": 14
+    "pos": 15
   },
   {
-    "team_id": "ALLGOR_TATOBIKE",
-    "team_nome": "ALLGOR TATOBIKE",
-    "punti": 63,
-    "vittorie": 0,
-    "p1": 0,
-    "p2": 1,
-    "p3": 1,
-    "pout": 8,
-    "n_atleti": 2,
-    "pos": 15
+    "team_id": "GAZZANIGHESE_ASD",
+    "team_nome": "GAZZANIGHESE ASD",
+    "punti": 51,
+    "vittorie": 1,
+    "p1": 1,
+    "p2": 2,
+    "p3": 0,
+    "pout": 0,
+    "n_atleti": 1,
+    "pos": 16
   },
   {
     "team_id": "C_C_APPENNINICO_1907",
@@ -189,7 +201,7 @@
     "p3": 1,
     "pout": 1,
     "n_atleti": 1,
-    "pos": 16
+    "pos": 17
   },
   {
     "team_id": "POL_FIUMICINESE_FA_I_T_ADRIATICA",
@@ -201,7 +213,7 @@
     "p3": 1,
     "pout": 5,
     "n_atleti": 1,
-    "pos": 17
+    "pos": 18
   },
   {
     "team_id": "BUSTO_GAROLFO",
@@ -213,7 +225,7 @@
     "p3": 1,
     "pout": 9,
     "n_atleti": 2,
-    "pos": 18
+    "pos": 19
   },
   {
     "team_id": "ASD_TIRRENO_BIKE_CICLI_FATATO",
@@ -225,7 +237,7 @@
     "p3": 0,
     "pout": 1,
     "n_atleti": 1,
-    "pos": 19
+    "pos": 20
   },
   {
     "team_id": "LIBERTAS_CERESETTO",
@@ -237,18 +249,6 @@
     "p3": 0,
     "pout": 7,
     "n_atleti": 2,
-    "pos": 20
-  },
-  {
-    "team_id": "GAZZANIGHESE_ASD",
-    "team_nome": "GAZZANIGHESE ASD",
-    "punti": 27,
-    "vittorie": 1,
-    "p1": 1,
-    "p2": 1,
-    "p3": 0,
-    "pout": 0,
-    "n_atleti": 1,
     "pos": 21
   },
   {
