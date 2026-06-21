@@ -12034,10 +12034,18 @@ async function _loadTeamPcsExtra(teamId, season) {
     .filter(r => !r.gara_id || !icsKeys.has(`${r.atleta_id}:${r.gara_id}`))
     .sort((a, b) => (b.data || '').localeCompare(a.data || ''));
 
-  // Indice nome_gara dai risultati ICS (fonte autorevole)
-  const icsNomeByGaraId = {};
+  // Indice per-gara da resultsRaw: nome, km, moltiplicatore, tipo, media
+  const icsGaraInfo = {};
   for (const r of (globalData?.resultsRaw || [])) {
-    if (r.gara_id && r.nome_gara && !icsNomeByGaraId[r.gara_id]) icsNomeByGaraId[r.gara_id] = r.nome_gara;
+    if (r.gara_id && !icsGaraInfo[r.gara_id]) {
+      icsGaraInfo[r.gara_id] = {
+        nome_gara:      r.nome_gara || '',
+        km:             r.km || '',
+        moltiplicatore: r.moltiplicatore || 1,
+        tipo:           r.tipo || '',
+        media:          r.media || '',
+      };
+    }
   }
 
   // Gare circuito: pos 11+ (non già in ICS)
@@ -12047,15 +12055,20 @@ async function _loadTeamPcsExtra(teamId, season) {
         .map(r => {
           const calId = (globalData?.garaToCalId?.[r.gara_id]) || r.gara_id;
           const cal = globalData?.calendar?.find(g => g.id === calId);
+          const info = icsGaraInfo[r.gara_id] || {};
           const data = cal?.data || r.gara_id.match(/(\d{4}-\d{2}-\d{2})/)?.[1] || '';
           return {
             data,
-            gara_name:     icsNomeByGaraId[r.gara_id] || cal?.nome || r.gara_id,
-            gara_id:       r.gara_id,
-            atleta_id:     r.atleta_id,
-            posizione:     r.posizione,
-            distacco:      r.distacco,
-            pcs_race_slug: r.pcs_race_slug,
+            gara_name:      info.nome_gara || cal?.nome || r.gara_id,
+            gara_id:        r.gara_id,
+            atleta_id:      r.atleta_id,
+            posizione:      r.posizione,
+            distacco:       r.distacco,
+            pcs_race_slug:  r.pcs_race_slug,
+            km:             info.km || cal?.km || '',
+            moltiplicatore: info.moltiplicatore || 1,
+            tipo:           info.tipo || '',
+            media:          info.media || '',
           };
         })
         .sort((a, b) => (b.data || '').localeCompare(a.data || ''))
@@ -12102,11 +12115,11 @@ async function _loadTeamPcsExtra(teamId, season) {
         </div>
       </td>
       <td class="td-pos ${pClass}">${r.posizione}°</td>
-      <td class="td-hide-mobile" style="text-align:center">—</td>
-      <td class="td-hide-mobile" style="text-align:right">—</td>
-      <td class="td-hide-mobile" style="text-align:right">—</td>
+      <td class="td-hide-mobile" style="text-align:center">${badgeMult(r.moltiplicatore || 1, r.tipo)}</td>
+      <td class="td-hide-mobile" style="text-align:right">${esc(r.km || '—')}</td>
+      <td class="td-hide-mobile" style="text-align:right">${esc(r.media || '—')}</td>
       <td class="td-hide-mobile" style="text-align:right"></td>
-      <td class="td-pts">—</td>`;
+      <td class="td-pts">0</td>`;
     const existingRows = [...tbody.querySelectorAll('tr[data-date]')];
     const after = existingRows.find(row => (row.dataset.date || '') < (r.data || ''));
     if (after) tbody.insertBefore(tr, after);
@@ -12148,10 +12161,18 @@ async function _loadAtletaPcsExtra(atletaId, season, icsRisultati, athlete) {
   // gara_ids già nella tabella ICS — non duplicare
   const icsGaraIds = new Set((icsRisultati || []).map(r => r.gara_id));
 
-  // Nome gara autorevole dai risultati ICS (stessa fonte usata dalle righe ICS)
-  const icsNomeByGaraId = {};
+  // Indice per-gara da resultsRaw: nome, km, moltiplicatore, tipo, media
+  const icsGaraInfo = {};
   for (const r of (globalData?.resultsRaw || [])) {
-    if (r.gara_id && r.nome_gara && !icsNomeByGaraId[r.gara_id]) icsNomeByGaraId[r.gara_id] = r.nome_gara;
+    if (r.gara_id && !icsGaraInfo[r.gara_id]) {
+      icsGaraInfo[r.gara_id] = {
+        nome_gara:      r.nome_gara || '',
+        km:             r.km || '',
+        moltiplicatore: r.moltiplicatore || 1,
+        tipo:           r.tipo || '',
+        media:          r.media || '',
+      };
+    }
   }
 
   const garaExtra = Array.isArray(pcsGareRaw)
@@ -12160,12 +12181,16 @@ async function _loadAtletaPcsExtra(atletaId, season, icsRisultati, athlete) {
         .map(r => {
           const calId = (globalData?.garaToCalId?.[r.gara_id]) || r.gara_id;
           const cal = globalData?.calendar?.find(g => g.id === calId);
+          const info = icsGaraInfo[r.gara_id] || {};
           return {
-            data:      cal?.data || r.gara_id.match(/(\d{4}-\d{2}-\d{2})/)?.[1] || '',
-            gara_id:   r.gara_id,
-            nome_gara: icsNomeByGaraId[r.gara_id] || cal?.nome || r.gara_id,
-            km:        cal?.km || '',
-            posizione: r.posizione,
+            data:           cal?.data || r.gara_id.match(/(\d{4}-\d{2}-\d{2})/)?.[1] || '',
+            gara_id:        r.gara_id,
+            nome_gara:      info.nome_gara || cal?.nome || r.gara_id,
+            km:             info.km || cal?.km || '',
+            moltiplicatore: info.moltiplicatore || 1,
+            tipo:           info.tipo || '',
+            media:          info.media || '',
+            posizione:      r.posizione,
           };
         })
         .sort((a, b) => (b.data || '').localeCompare(a.data || ''))
@@ -12187,10 +12212,10 @@ async function _loadAtletaPcsExtra(atletaId, season, icsRisultati, athlete) {
       <td class="td-race"><a href="#/gara/${esc(r.gara_id)}">${esc(r.nome_gara)}</a></td>
       <td>${badgeCat(cat)}</td>
       <td class="td-pos ${pClass}">${r.posizione}°</td>
-      <td>—</td>
+      <td>${badgeMult(r.moltiplicatore || 1, r.tipo)}</td>
       <td style="text-align:right">${esc(r.km || '—')}</td>
-      <td style="text-align:right">—</td>
-      <td class="td-pts">—</td>`;
+      <td style="text-align:right">${esc(r.media || '—')}</td>
+      <td class="td-pts">0</td>`;
 
     // Inserisci in ordine cronologico (data desc) tra le righe esistenti
     const existingRows = [...tbody.querySelectorAll('tr[data-date]')];
