@@ -1,19 +1,23 @@
 'use strict';
 /**
- * pcs-race-discovery.js
- * Trova automaticamente gli slug PCS per tutte le gare del circuito ICS.
- *
- * Per ogni gara_id nei risultati stagionali (o nel calendario):
- *  1. Genera slug PCS candidati dal nome gara
- *  2. Verifica su PCS con Playwright se la pagina risultati esiste
- *  3. Salva lo slug confermato in entity_overrides
+ * pcs-race-discovery.js — v2
+ * Strategia:
+ *  1. Raschia da PCS la lista completa delle gare italiane 2026
+ *     (più pagine: elite uomini, donne, under 23, juniores, nazionali)
+ *  2. Costruisce un indice PCS indicizzato per data (YYYY-MM-DD)
+ *  3. Confronta con il calendario ICS: per ogni gara ICS cerca candidati PCS
+ *     nella stessa data e calcola similarità del nome
+ *  4. Match sicuri (score ≥ soglia) → salva automaticamente in entity_overrides
+ *  5. Match incerti → stampa per revisione manuale
+ *  6. Fallback: per gare senza match tenta lo slug generato dal nome ICS
  *
  * Uso:
  *   $env:SUPABASE_SECRET = "..."
- *   node pcs-race-discovery.js [--season=YYYY] [--dry-run] [--force]
+ *   node pcs-race-discovery.js [--season=YYYY] [--dry-run] [--force] [--min-score=0.3]
  *
- * --dry-run  : verifica su PCS ma non salva nulla
- * --force    : riprocessa anche gare già configurate
+ * --dry-run      : verifica senza salvare
+ * --force        : riprocessa anche gare già configurate
+ * --min-score=N  : soglia similarità 0-1 (default 0.3)
  */
 
 const fs   = require('fs');
@@ -32,88 +36,169 @@ const SUPABASE_URL    = 'https://aqqsstsbgpapzoxllosh.supabase.co';
 const SUPABASE_SECRET = process.env.SUPABASE_SECRET;
 if (!SUPABASE_SECRET) { console.error('Imposta $env:SUPABASE_SECRET o crea server/.env.local'); process.exit(1); }
 
-const args    = process.argv.slice(2);
-const DRY_RUN = args.includes('--dry-run');
-const FORCE   = args.includes('--force');
-const SEASON  = parseInt((args.find(a => a.startsWith('--season=')) || '').split('=')[1] || '') || new Date().getFullYear();
+const args     = process.argv.slice(2);
+const DRY_RUN  = args.includes('--dry-run');
+const FORCE    = args.includes('--force');
+const SEASON   = parseInt((args.find(a => a.startsWith('--season='))   || '').split('=')[1] || '') || new Date().getFullYear();
+const MIN_SCORE = parseFloat((args.find(a => a.startsWith('--min-score=')) || '').split('=')[1] || '') || 0.3;
 
 const DATA_DIR = path.join(__dirname, '..', 'data');
-const sleep = ms => new Promise(r => setTimeout(r, ms));
+const PCS      = 'https://www.procyclingstats.com';
+const sleep    = ms => new Promise(r => setTimeout(r, ms));
 
-// ─── Generazione slug ──────────────────────────────────────────────────────────
+// ─── Normalizzazione nomi ───────────────────────────────────────────────────────
+
+function normName(s) {
+  return String(s || '')
+    .normalize('NFD').replace(/[̀-ͯ]/g, '')
+    .replace(/^\d+[°^`']\s*/u, '')           // rimuovi numero edizione
+    .toLowerCase()
+    .replace(/['''`]/g, '')
+    .replace(/[^a-z0-9\s]+/g, ' ')
+    .replace(/\s+/g, ' ').trim();
+}
 
 /**
- * Converte un nome gara in uno slug PCS (senza prefisso race/ o anno).
- * Es: "39^ FIRENZE - EMPOLI" → "firenze-empoli"
+ * Similarità Jaccard tra due stringhe normalizzate (su parole ≥ 3 char).
+ * Restituisce 0-1.
  */
+function jaccard(a, b) {
+  const wa = new Set(normName(a).split(' ').filter(w => w.length >= 3));
+  const wb = new Set(normName(b).split(' ').filter(w => w.length >= 3));
+  if (!wa.size && !wb.size) return 1;
+  if (!wa.size || !wb.size) return 0;
+  let inter = 0;
+  for (const w of wa) if (wb.has(w)) inter++;
+  return inter / (wa.size + wb.size - inter);
+}
+
+// ─── Slug da nome (fallback) ────────────────────────────────────────────────────
+
 function nameToSlug(nome) {
   return String(nome || '')
-    .normalize('NFD').replace(/[̀-ͯ]/g, '')   // rimuovi accenti
-    .replace(/^\d+[°^`']\s*/u, '')                       // rimuovi numero edizione (39^, 63°, 107°)
+    .normalize('NFD').replace(/[̀-ͯ]/g, '')
+    .replace(/^\d+[°^`']\s*/u, '')
     .toLowerCase()
-    .replace(/['''`]/g, '')                              // apostrofi
-    .replace(/[\s\-–—\/\\]+/g, '-')                     // spazi e trattini → -
-    .replace(/[^a-z0-9\-]/g, '')                        // rimuovi altri char speciali
-    .replace(/-+/g, '-')                                 // collassa doppie trattino
-    .replace(/^-+|-+$/g, '');                            // trim
+    .replace(/['''`]/g, '')
+    .replace(/[\s\-–—\/\\]+/g, '-')
+    .replace(/[^a-z0-9\-]/g, '')
+    .replace(/-+/g, '-')
+    .replace(/^-+|-+$/g, '');
 }
 
-/**
- * Genera slug candidati da un nome gara.
- * Restituisce array di slug nella forma "nome-slug/anno".
- */
-function genCandidates(nome, season) {
+function genFallbackCandidates(nome, season) {
   const base = nameToSlug(nome);
   if (!base) return [];
-
-  const candidates = [];
-
-  // Slug base
-  candidates.push(`${base}/${season}`);
-
-  // Senza prefissi comuni
-  for (const prefix of ['trofeo-', 'gran-premio-', 'gp-', 'memorial-', 'coppa-', 'circuito-', 'corsa-']) {
-    if (base.startsWith(prefix)) {
-      candidates.push(`${base.slice(prefix.length)}/${season}`);
-    }
+  const cands = [`${base}/${season}`];
+  for (const prefix of ['trofeo-', 'gran-premio-', 'gp-', 'memorial-', 'coppa-', 'circuito-', 'corsa-', 'giro-di-']) {
+    if (base.startsWith(prefix)) cands.push(`${base.slice(prefix.length)}/${season}`);
   }
-
-  // Versione abbreviata (prime 3 parole se slug è lungo)
   const parts = base.split('-');
-  if (parts.length > 4) {
-    candidates.push(`${parts.slice(0, 3).join('-')}/${season}`);
-  }
-
-  return [...new Set(candidates)];
+  if (parts.length > 4) cands.push(`${parts.slice(0, 3).join('-')}/${season}`);
+  return [...new Set(cands)];
 }
 
-// ─── Supabase ──────────────────────────────────────────────────────────────────
-
-async function getAlreadyConfigured(sb) {
-  const { data, error } = await sb.from('entity_overrides')
-    .select('entity_id, new_value')
-    .eq('entity_type', 'gara')
-    .eq('field', 'pcs_race_slug')
-    .limit(5000);
-  if (error) { console.error('Errore entity_overrides:', error.message); return new Map(); }
-  return new Map((data || []).map(r => [r.entity_id, r.new_value]));
-}
-
-async function saveSlug(sb, garaId, slug) {
-  const { error } = await sb.from('entity_overrides').upsert({
-    entity_type: 'gara', entity_id: garaId, field: 'pcs_race_slug', new_value: slug, edited_by: null
-  }, { onConflict: 'entity_type,entity_id,field' });
-  if (error) throw error;
-}
-
-// ─── PCS verifica ──────────────────────────────────────────────────────────────
-
-const PCS = 'https://www.procyclingstats.com';
+// ─── PCS: raschia lista gare ────────────────────────────────────────────────────
 
 /**
- * Verifica se uno slug PCS ha risultati disponibili.
- * Restituisce { confirmed: bool, finalSlug: string, riderCount: number }.
+ * Visita le pagine di listing PCS e ritorna tutte le gare trovate:
+ * [{ date: 'YYYY-MM-DD', name: string, slug: string }]
+ *
+ * Pagine da visitare:
+ *   /races.php?year=YYYY&circuit=1&filter=Filter   (World Tour)
+ *   /races.php?year=YYYY&circuit=&country=ITA&filter=Filter  (gare in Italia)
+ *   /races.php?year=YYYY&circuit=&category=1.1&country=ITA  (cat 1.1)
+ *   + stessa cosa per donne, juniores, under 23
  */
+async function scrapePcsRaceList(page, season) {
+  const raceMap = new Map(); // slug → { date, name, slug }
+
+  const listingUrls = [
+    // Gare in Italia (tutte le categorie)
+    `${PCS}/races.php?year=${season}&circuit=&s=race-date&continent=&country=ITA&type=&category=&profile=&filter=Filter&p=me&limit=100`,
+    // Gare women in Italia
+    `${PCS}/races.php?year=${season}&circuit=&s=race-date&continent=&country=ITA&type=women&category=&profile=&filter=Filter&p=me&limit=100`,
+    // Internazionali genere maschile con partenza/arrivo in Italia (circuit = UCI Europe Tour e simili)
+    `${PCS}/races.php?year=${season}&circuit=4&s=race-date&continent=&country=ITA&filter=Filter&p=me&limit=100`,
+    // National races Italia
+    `${PCS}/races.php?year=${season}&circuit=national&s=race-date&continent=&country=ITA&filter=Filter&p=me&limit=100`,
+  ];
+
+  for (const url of listingUrls) {
+    console.log(`  → lista: ${url}`);
+    try { await page.goto(url, { waitUntil: 'domcontentloaded', timeout: 25000 }); }
+    catch (e) { console.log(`    (skip: ${e.message.split('\n')[0]})`); continue; }
+
+    if (page.url().includes('pagenotfound') || page.url().includes('404')) continue;
+    await sleep(1000);
+
+    // Scorri tutte le pagine di questo listing
+    let pageNum = 0;
+    while (true) {
+      pageNum++;
+      const found = await page.evaluate((pcsBase, yr) => {
+        const rows = [];
+        // PCS usa tabelle con link /race/ o /national-race/
+        for (const a of document.querySelectorAll('a[href*="/race/"], a[href*="/national-race/"]')) {
+          const href = a.getAttribute('href') || '';
+          // Estrai slug (tutto tra /race/ o /national-race/ e il prossimo /)
+          const m = href.match(/\/((?:national-)?race)\/([^/?\s]+\/\d{4}(?:\/[^/?\s]*)?)/);
+          if (!m) continue;
+          const slug = m[2];
+          // Salta i profili rider e altri link
+          if (slug.includes('/stage') && !slug.endsWith('/result')) continue;
+          // Data: cerca nell'elemento padre / riga tabella
+          let dateStr = null;
+          const row = a.closest('tr');
+          if (row) {
+            const cells = [...row.querySelectorAll('td, th')];
+            for (const cell of cells) {
+              const t = cell.textContent.trim();
+              // Formato PCS: "21.02" oppure "21.02.2026" oppure "2026-02-21"
+              const dm = t.match(/^(\d{1,2})\.(\d{2})(?:\.(\d{4}))?$/);
+              if (dm) {
+                const y = dm[3] || String(yr);
+                dateStr = `${y}-${dm[2].padStart(2,'0')}-${dm[1].padStart(2,'0')}`;
+                break;
+              }
+              const iso = t.match(/^(\d{4})-(\d{2})-(\d{2})$/);
+              if (iso) { dateStr = t; break; }
+            }
+          }
+          const name = a.textContent.trim();
+          if (!slug || !name) continue;
+          rows.push({ slug, name, date: dateStr });
+        }
+        return rows;
+      }, PCS, season).catch(() => []);
+
+      for (const r of found) {
+        if (!raceMap.has(r.slug)) raceMap.set(r.slug, r);
+      }
+
+      // Cerca paginazione ("next")
+      const hasNext = await page.evaluate(() => {
+        const next = document.querySelector('a[rel="next"], .pagination a:last-child, a.next');
+        if (next && next.href && !next.href.includes('pagenotfound')) {
+          next.click(); return true;
+        }
+        return false;
+      }).catch(() => false);
+
+      if (!hasNext || pageNum > 10) break;
+      await sleep(1200);
+    }
+    await sleep(600);
+  }
+
+  // Rimuovi gare senza data (non utili per il matching)
+  const list = [...raceMap.values()].filter(r => r.date);
+  console.log(`  PCS: ${list.length} gare trovate con data`);
+  return list;
+}
+
+// ─── Verifica singolo slug (fallback) ──────────────────────────────────────────
+
 async function verifySlug(page, slug) {
   const urls = [
     `${PCS}/race/${slug}/result`,
@@ -121,95 +206,94 @@ async function verifySlug(page, slug) {
     `${PCS}/national-race/${slug}/result`,
     `${PCS}/national-race/${slug}`,
   ];
-
   for (const url of urls) {
-    try {
-      await page.goto(url, { waitUntil: 'domcontentloaded', timeout: 20000 });
-    } catch (e) {
-      await page.goto('about:blank').catch(() => {});
-      continue;
-    }
-
+    try { await page.goto(url, { waitUntil: 'domcontentloaded', timeout: 18000 }); }
+    catch { await page.goto('about:blank').catch(() => {}); continue; }
     const finalUrl = page.url();
-    if (!finalUrl || finalUrl === 'about:blank' || finalUrl.startsWith('chrome-error://')) continue;
-    if (finalUrl === `${PCS}/` || finalUrl === PCS) continue;
+    if (!finalUrl || finalUrl === 'about:blank' || finalUrl === `${PCS}/` || finalUrl === PCS) continue;
     if (finalUrl.includes('pagenotfound') || finalUrl.includes('404')) continue;
-
-    await sleep(800);
-
-    // Conta i risultati (righe con posizione numerica)
-    const riderCount = await page.evaluate(() => {
+    await sleep(700);
+    const count = await page.evaluate(() => {
       for (const table of document.querySelectorAll('table')) {
-        const headers = [...table.querySelectorAll('th')].map(th => th.textContent.trim().toLowerCase());
-        const hasPos   = headers.some(h => /rnk|pos|#/.test(h));
-        const hasRider = headers.some(h => /rider|name|cyclist/.test(h));
-        if (!hasPos && !hasRider) continue;
-        const rows = [...table.querySelectorAll('tbody tr')]
-          .filter(tr => {
-            const cells = tr.querySelectorAll('td');
-            return cells[0] && /^\d+$/.test(cells[0].textContent.trim());
-          });
-        if (rows.length > 0) return rows.length;
+        const ths = [...table.querySelectorAll('th')].map(t => t.textContent.toLowerCase());
+        if (!ths.some(h => /rnk|pos|rider|name/.test(h))) continue;
+        const n = [...table.querySelectorAll('tbody tr')]
+          .filter(tr => /^\d+$/.test(tr.querySelector('td')?.textContent?.trim() || '')).length;
+        if (n > 0) return n;
       }
       return 0;
     }).catch(() => 0);
-
-    if (riderCount > 0) {
-      // Estrai lo slug pulito dall'URL finale (rimuovi /result e dominio)
-      const cleanUrl = finalUrl
-        .replace(`${PCS}/race/`, '')
-        .replace(`${PCS}/national-race/`, '')
-        .replace('/result', '')
-        .replace(/\/$/, '');
-      return { confirmed: true, finalSlug: cleanUrl, riderCount };
-    }
+    if (count > 0) return { confirmed: true, riderCount: count };
   }
-  return { confirmed: false, finalSlug: slug, riderCount: 0 };
+  return { confirmed: false, riderCount: 0 };
 }
 
-// ─── Estrazione gara_id dai risultati ─────────────────────────────────────────
+// ─── Supabase ──────────────────────────────────────────────────────────────────
 
-/**
- * Legge results_raw.json e restituisce:
- * - garaIds: Set di gara_id unici (con suffisso categoria _ELI_M etc.)
- * - calIdFromGara: Map gara_id → calendar_id (senza suffisso categoria)
- */
-function extractGaraIds() {
-  const resultsFile = path.join(DATA_DIR, 'seasons', String(SEASON), 'results_raw.json');
-  if (!fs.existsSync(resultsFile)) return { garaIds: new Set(), calIdFromGara: new Map() };
-  const results = JSON.parse(fs.readFileSync(resultsFile, 'utf8'));
-
-  const garaIds      = new Set();
-  const calIdFromGara = new Map();
-
-  const CAT_SUFFIX = /_(ELI|JUN|AL|ES[12])_[MF]$/;
-
-  for (const r of results) {
-    if (!r.gara_id) continue;
-    garaIds.add(r.gara_id);
-    // Ricava il calendar_id rimuovendo il suffisso categoria
-    if (!calIdFromGara.has(r.gara_id)) {
-      calIdFromGara.set(r.gara_id, r.gara_id.replace(CAT_SUFFIX, ''));
-    }
-  }
-  return { garaIds, calIdFromGara };
+async function getAlreadyConfigured(sb) {
+  const { data, error } = await sb.from('entity_overrides')
+    .select('entity_id, new_value').eq('entity_type', 'gara').eq('field', 'pcs_race_slug').limit(5000);
+  if (error) { console.error('Errore:', error.message); return new Map(); }
+  return new Map((data || []).map(r => [r.entity_id, r.new_value]));
 }
 
-/**
- * Costruisce mappa calendar_id → entry del calendario.
- */
+async function saveSlug(sb, garaId, slug) {
+  const { error } = await sb.from('entity_overrides').upsert(
+    { entity_type: 'gara', entity_id: garaId, field: 'pcs_race_slug', new_value: slug, edited_by: null },
+    { onConflict: 'entity_type,entity_id,field' }
+  );
+  if (error) throw error;
+}
+
+// ─── Calendario & risultati ────────────────────────────────────────────────────
+
 function buildCalendarIndex() {
-  const calIdx = new Map();
+  const byId   = new Map();
+  const byDate = new Map();
   for (const f of [
     path.join(DATA_DIR, 'calendar.json'),
     path.join(DATA_DIR, 'seasons', String(SEASON), 'calendar.json'),
   ]) {
     if (!fs.existsSync(f)) continue;
     for (const e of JSON.parse(fs.readFileSync(f, 'utf8'))) {
-      if (e.id) calIdx.set(e.id, e);
+      if (!e.id) continue;
+      byId.set(e.id, e);
+      if (e.data) {
+        if (!byDate.has(e.data)) byDate.set(e.data, []);
+        byDate.get(e.data).push(e);
+      }
     }
   }
-  return calIdx;
+  return { byId, byDate };
+}
+
+function getRelevantGaraIds(alreadyDone, calIdx) {
+  const resultsFile = path.join(DATA_DIR, 'seasons', String(SEASON), 'results_raw.json');
+  const CAT_SUFFIX  = /_(ELI|JUN|AL|ES[12])_[MF]$/;
+
+  const garaIdsByCalId = new Map(); // calId → Set<garaId>
+
+  if (fs.existsSync(resultsFile)) {
+    for (const r of JSON.parse(fs.readFileSync(resultsFile, 'utf8'))) {
+      if (!r.gara_id) continue;
+      if (!FORCE && alreadyDone.has(r.gara_id)) continue;
+      const calId = r.gara_id.replace(CAT_SUFFIX, '');
+      const cal   = calIdx.byId.get(calId);
+      if (!cal || cal.tipo === 'regionale' || (cal.moltiplicatore || 1) < 2) continue;
+      if (!garaIdsByCalId.has(calId)) garaIdsByCalId.set(calId, new Set());
+      garaIdsByCalId.get(calId).add(r.gara_id);
+    }
+  }
+
+  // Aggiungi gare del calendario non ancora nei risultati
+  for (const [calId, cal] of calIdx.byId) {
+    if (cal.tipo === 'regionale' || (cal.moltiplicatore || 1) < 2) continue;
+    if (!garaIdsByCalId.has(calId) && !alreadyDone.has(calId)) {
+      garaIdsByCalId.set(calId, new Set([calId]));
+    }
+  }
+
+  return garaIdsByCalId;
 }
 
 // ─── Main ──────────────────────────────────────────────────────────────────────
@@ -221,66 +305,21 @@ function buildCalendarIndex() {
 
   const sb = createClient(SUPABASE_URL, SUPABASE_SECRET, { realtime: { transport: ws } });
 
-  console.log(`=== PCS Race Discovery [stagione ${SEASON}] ===`);
+  console.log(`=== PCS Race Discovery v2 [stagione ${SEASON}] ===`);
   if (DRY_RUN) console.log('  [DRY-RUN: nessun dato verrà salvato]');
+  console.log(`  Soglia similarità nome: ${MIN_SCORE}`);
   console.log('');
 
-  // Slugs già configurati
   const alreadyDone = await getAlreadyConfigured(sb);
-  console.log(`Gare già con slug PCS: ${alreadyDone.size}`);
+  console.log(`Gare già configurate: ${alreadyDone.size}\n`);
 
-  // Risultati ICS
-  const { garaIds, calIdFromGara } = extractGaraIds();
-  const calIdx = buildCalendarIndex();
-
-  // Filtra: solo gare ELI (Elite/U23) e, per gare donne, ELI_F e JUN_F
-  // Raggruppa per calendar_id per evitare di verificare due volte la stessa gara fisica
-  const todoByCalId = new Map(); // calId → Set di gara_ids
-  const CAT_SUFFIX  = /_(ELI|JUN|AL|ES[12])_[MF]$/;
-
-  for (const garaId of garaIds) {
-    if (!FORCE && alreadyDone.has(garaId)) continue;
-
-    const calId = calIdFromGara.get(garaId) || garaId;
-    const cal   = calIdx.get(calId);
-    if (!cal) continue;
-
-    // Solo nazionali e internazionali (moltiplicatore >= 2)
-    if (cal.tipo === 'regionale') continue;
-    if ((cal.moltiplicatore || 1) < 2) continue;
-
-    // Raggruppa per calId (stessa gara fisica con categorie diverse)
-    if (!todoByCalId.has(calId)) todoByCalId.set(calId, new Set());
-    todoByCalId.get(calId).add(garaId);
-  }
-
-  // Aggiungi anche le gare del calendario non ancora in results_raw
-  // (future o da scraper) che siano nazionali/internazionali
-  for (const [calId, cal] of calIdx) {
-    if (cal.tipo === 'regionale' || (cal.moltiplicatore || 1) < 2) continue;
-    if (!todoByCalId.has(calId) && !alreadyDone.has(calId)) {
-      // Gara nel calendario ma senza risultati ICS ancora — aggiungi il calId diretto
-      todoByCalId.set(calId, new Set([calId]));
-    }
-  }
-
-  const todoList = [...todoByCalId.entries()];
-  const alreadyCount = [...garaIds].filter(id => alreadyDone.has(id)).length +
-    (FORCE ? 0 : [...todoByCalId.keys()].filter(id => alreadyDone.has(id)).length);
-
-  console.log(`Gare ICS nel sistema (questa stagione): ${garaIds.size}`);
-  console.log(`Da verificare su PCS: ${todoList.length}`);
-  console.log('');
-
-  if (!todoList.length) {
-    console.log('Niente da fare — tutte le gare rilevanti hanno già uno slug PCS.');
-    process.exit(0);
-  }
+  const calIdx         = buildCalendarIndex();
+  const garaIdsByCalId = getRelevantGaraIds(alreadyDone, calIdx);
+  console.log(`Da cercare: ${garaIdsByCalId.size} gare ICS nazionali/internazionali\n`);
 
   // Browser
   const bravePaths = [
     'C:\\Program Files\\BraveSoftware\\Brave-Browser\\Application\\brave.exe',
-    'C:\\Users\\vezza\\AppData\\Local\\BraveSoftware\\Brave-Browser\\Application\\brave.exe',
     (process.env.LOCALAPPDATA || '') + '\\BraveSoftware\\Brave-Browser\\Application\\brave.exe',
   ];
   const bravePath = bravePaths.find(p => fs.existsSync(p));
@@ -289,91 +328,168 @@ function buildCalendarIndex() {
     try { browser = await chromium.launch({ executablePath: bravePath, headless: false, args: ['--no-sandbox'] }); }
     catch { /* fallback */ }
   }
-  if (!browser) {
-    try { browser = await chromium.launch({ channel: 'chrome', headless: false }); }
-    catch { browser = await chromium.launch({ headless: false }); }
-  }
-  const context = await browser.newContext({
+  if (!browser) browser = await chromium.launch({ headless: false }).catch(() => chromium.launch({ headless: true }));
+
+  const ctx = await browser.newContext({
     userAgent: 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/124.0.0.0 Safari/537.36',
     locale: 'it-IT', viewport: { width: 1280, height: 800 },
   });
-  await context.addInitScript(() => {
-    Object.defineProperty(navigator, 'webdriver', { get: () => undefined });
-  });
-  const page = await context.newPage();
-  await page.goto(PCS, { waitUntil: 'networkidle', timeout: 30000 }).catch(e => console.log(`Avviso: ${e.message}`));
-  await sleep(2000);
-  console.log('Browser pronto.\n');
+  await ctx.addInitScript(() => Object.defineProperty(navigator, 'webdriver', { get: () => undefined }));
+  const page = await ctx.newPage();
 
-  let found = 0, notFound = 0, skipped = 0;
-  const results = []; // { calId, nome, slug, garaIds, riderCount }
+  // Visita homepage PCS prima (cookie / anti-bot)
+  console.log('Connessione a PCS …');
+  await page.goto(PCS, { waitUntil: 'networkidle', timeout: 30000 }).catch(e => console.log(`  Avviso: ${e.message}`));
+  await sleep(2500);
+  console.log('');
 
-  for (let i = 0; i < todoList.length; i++) {
-    const [calId, garaIdSet] = todoList[i];
-    const cal  = calIdx.get(calId);
-    const nome = cal?.nome || calId;
+  // ── FASE 1: Raschia lista gare PCS ─────────────────────────────────────────
+  console.log('=== FASE 1: Lista gare italiane da PCS ===');
+  const pcsRaces = await scrapePcsRaceList(page, SEASON);
 
-    process.stdout.write(`[${i+1}/${todoList.length}] ${nome} (${cal?.data || '?'}) … `);
+  // Indice PCS per data
+  const pcsByDate = new Map();
+  for (const r of pcsRaces) {
+    if (!pcsByDate.has(r.date)) pcsByDate.set(r.date, []);
+    pcsByDate.get(r.date).push(r);
+  }
+  console.log(`Indice PCS: ${pcsByDate.size} date con gare\n`);
 
-    const candidates = genCandidates(nome, SEASON);
-    if (!candidates.length) { process.stdout.write('SKIP (slug vuoto)\n'); skipped++; continue; }
+  // ── FASE 2: Matching ICS ↔ PCS ─────────────────────────────────────────────
+  console.log('=== FASE 2: Matching ICS ↔ PCS ===\n');
+
+  const autoMatches     = []; // { calId, nome, icsDate, slug, score, garaIds }
+  const uncertainMatches = []; // idem, ma score < threshold per sicurezza piena
+  const noMatch         = []; // { calId, nome, icsDate, garaIds }
+
+  for (const [calId, garaIds] of garaIdsByCalId) {
+    const cal     = calIdx.byId.get(calId);
+    if (!cal) continue;
+    const icsDate = cal.data;
+    const icsNome = cal.nome || calId;
+
+    const pcsCandidates = pcsByDate.get(icsDate) || [];
+
+    if (!pcsCandidates.length) {
+      noMatch.push({ calId, nome: icsNome, icsDate, garaIds: [...garaIds] });
+      continue;
+    }
+
+    // Calcola score per ogni candidato PCS nella stessa data
+    let best = null;
+    for (const pcs of pcsCandidates) {
+      const score = jaccard(icsNome, pcs.name);
+      if (!best || score > best.score) best = { ...pcs, score };
+    }
+
+    if (best.score >= MIN_SCORE) {
+      // Match abbastanza sicuro
+      if (best.score >= 0.5) {
+        autoMatches.push({ calId, nome: icsNome, pcsName: best.name, icsDate, slug: best.slug, score: best.score, garaIds: [...garaIds] });
+      } else {
+        // Score basso — stampa come incerto
+        uncertainMatches.push({ calId, nome: icsNome, pcsName: best.name, icsDate, slug: best.slug, score: best.score, garaIds: [...garaIds] });
+      }
+    } else {
+      noMatch.push({ calId, nome: icsNome, icsDate, garaIds: [...garaIds], pcsCandidates: pcsCandidates.slice(0, 3) });
+    }
+  }
+
+  console.log(`Match automatici (score ≥ 0.5):  ${autoMatches.length}`);
+  console.log(`Match incerti   (score 0.3-0.5): ${uncertainMatches.length}`);
+  console.log(`Senza match PCS nella stessa data: ${noMatch.length}\n`);
+
+  // Stampa match incerti per revisione
+  if (uncertainMatches.length) {
+    console.log('─── Match INCERTI (confermare manualmente) ───');
+    for (const m of uncertainMatches) {
+      console.log(`  [${(m.score*100).toFixed(0)}%] ${m.nome}`);
+      console.log(`       → ${m.pcsName}  (${m.slug})`);
+    }
+    console.log('');
+  }
+
+  // ── FASE 3: Salva match automatici ─────────────────────────────────────────
+  console.log('=== FASE 3: Salvataggio match automatici ===\n');
+  let saved = 0, errSave = 0;
+
+  for (const m of autoMatches) {
+    process.stdout.write(`  [${(m.score*100).toFixed(0)}%] ${m.nome.padEnd(55)} → ${m.slug} … `);
+    if (!DRY_RUN) {
+      try {
+        for (const gid of m.garaIds) await saveSlug(sb, gid, m.slug);
+        if (!m.garaIds.includes(m.calId)) await saveSlug(sb, m.calId, m.slug).catch(() => {});
+        process.stdout.write('✓\n');
+        saved++;
+      } catch(e) {
+        process.stdout.write(`ERRORE: ${e.message}\n`);
+        errSave++;
+      }
+    } else {
+      process.stdout.write('(dry-run)\n');
+      saved++;
+    }
+  }
+
+  // ── FASE 4: Fallback slug-guessing per gare senza match PCS ───────────────
+  console.log(`\n=== FASE 4: Fallback slug-guessing (${noMatch.length} gare) ===\n`);
+  let fallbackFound = 0;
+
+  for (let i = 0; i < noMatch.length; i++) {
+    const m = noMatch[i];
+    const cands = genFallbackCandidates(m.nome, SEASON);
+    if (!cands.length) continue;
+
+    process.stdout.write(`[${i+1}/${noMatch.length}] ${m.nome.slice(0,55)} … `);
 
     let confirmed = false;
-    let finalSlug = '';
-    let riderCount = 0;
-
-    for (const candidate of candidates) {
-      const res = await verifySlug(page, candidate);
+    for (const slug of cands) {
+      const res = await verifySlug(page, slug);
       if (res.confirmed) {
+        process.stdout.write(`✓ ${slug}\n`);
+        if (!DRY_RUN) {
+          try {
+            for (const gid of m.garaIds) await saveSlug(sb, gid, slug);
+            if (!m.garaIds.includes(m.calId)) await saveSlug(sb, m.calId, slug).catch(() => {});
+            saved++;
+          } catch(e) { process.stdout.write(`  ERRORE: ${e.message}\n`); }
+        } else { saved++; }
         confirmed = true;
-        finalSlug = res.finalSlug;
-        riderCount = res.riderCount;
+        fallbackFound++;
         break;
       }
       await sleep(300);
     }
-
-    if (confirmed) {
-      process.stdout.write(`✓ ${finalSlug} (${riderCount} finisher)\n`);
-      results.push({ calId, nome, slug: finalSlug, garaIds: [...garaIdSet], riderCount });
-
-      if (!DRY_RUN) {
-        // Salva per tutti i gara_id varianti di questa gara (ELI_M, ELI_F etc.)
-        for (const gid of garaIdSet) {
-          await saveSlug(sb, gid, finalSlug).catch(e => console.error(`  ERRORE salvataggio ${gid}: ${e.message}`));
-        }
-        // Salva anche per il calId base se diverso dai gara_ids
-        if (!garaIdSet.has(calId)) {
-          await saveSlug(sb, calId, finalSlug).catch(() => {});
-        }
+    if (!confirmed) {
+      process.stdout.write(`— non trovata\n`);
+      if (m.pcsCandidates?.length) {
+        process.stdout.write(`    Candidati PCS stessa data: ${m.pcsCandidates.map(p => `${p.name} (${p.slug})`).join(' | ')}\n`);
       }
-      found++;
-    } else {
-      process.stdout.write(`— non trovata su PCS\n`);
-      notFound++;
     }
-
     await sleep(400);
   }
 
   await browser.close();
 
-  console.log('\n=== Riepilogo ===');
-  console.log(`✅ Trovate su PCS: ${found}`);
-  console.log(`❌ Non trovate:   ${notFound}`);
-  console.log(`⏭  Saltate:       ${skipped}`);
+  // ─── Riepilogo ─────────────────────────────────────────────────────────────
+  console.log('\n═══════════════════════════════════════════════');
+  console.log('=== RIEPILOGO ===');
+  console.log(`Match automatici salvati: ${saved}`);
+  console.log(`Match incerti da revisionare: ${uncertainMatches.length}`);
+  console.log(`Fallback trovati: ${fallbackFound}`);
+  console.log(`Non trovate: ${noMatch.length - fallbackFound}`);
 
-  if (results.length) {
-    console.log('\nGare trovate:');
-    for (const r of results) {
-      console.log(`  ${r.nome.padEnd(60)} → ${r.slug}`);
+  if (uncertainMatches.length) {
+    console.log('\nMatch incerti — aggiungi manualmente se corretti:');
+    for (const m of uncertainMatches) {
+      console.log(`  ${m.calId}`);
+      console.log(`    ICS: "${m.nome}" | PCS: "${m.pcsName}" | slug: ${m.slug}`);
     }
   }
 
-  if (DRY_RUN && found > 0) {
+  if (!DRY_RUN && saved > 0) {
+    console.log(`\n${saved} slug salvati → esegui ora pcs-race-scraper.js per importare i risultati.`);
+  } else if (DRY_RUN) {
     console.log('\n[DRY-RUN] Riesegui senza --dry-run per salvare.');
-  } else if (found > 0) {
-    console.log(`\n${found} slug salvati in entity_overrides.`);
-    console.log('Ora esegui pcs-race-scraper.js per importare i risultati.');
   }
 })();
