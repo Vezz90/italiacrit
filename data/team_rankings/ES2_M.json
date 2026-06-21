@@ -48,6 +48,18 @@
     "pos": 4
   },
   {
+    "team_id": "TEAM_NIBALI",
+    "team_nome": "TEAM NIBALI",
+    "punti": 280,
+    "vittorie": 3,
+    "p1": 3,
+    "p2": 4,
+    "p3": 7,
+    "pout": 23,
+    "n_atleti": 5,
+    "pos": 5
+  },
+  {
     "team_id": "MAZZANO_A_S_D",
     "team_nome": "MAZZANO A.S.D.",
     "punti": 270,
@@ -57,7 +69,7 @@
     "p3": 4,
     "pout": 16,
     "n_atleti": 4,
-    "pos": 5
+    "pos": 6
   },
   {
     "team_id": "S_C_COTIGNOLESE",
@@ -69,7 +81,7 @@
     "p3": 1,
     "pout": 14,
     "n_atleti": 2,
-    "pos": 6
+    "pos": 7
   },
   {
     "team_id": "A_S_D_CICLISTICA_2000",
@@ -81,7 +93,7 @@
     "p3": 1,
     "pout": 12,
     "n_atleti": 4,
-    "pos": 7
+    "pos": 8
   },
   {
     "team_id": "ASD_GUBBIO_CICLISMO_MOCAIANA",
@@ -93,7 +105,7 @@
     "p3": 5,
     "pout": 14,
     "n_atleti": 3,
-    "pos": 8
+    "pos": 9
   },
   {
     "team_id": "OFF_ALBERTI_U_C_VAL_D_ILLASI",
@@ -105,7 +117,7 @@
     "p3": 6,
     "pout": 16,
     "n_atleti": 4,
-    "pos": 9
+    "pos": 10
   },
   {
     "team_id": "C_C_FORTI_E_VELOCI",
@@ -117,7 +129,7 @@
     "p3": 3,
     "pout": 19,
     "n_atleti": 6,
-    "pos": 10
+    "pos": 11
   },
   {
     "team_id": "SAMABIKE",
@@ -129,18 +141,6 @@
     "p3": 3,
     "pout": 4,
     "n_atleti": 2,
-    "pos": 11
-  },
-  {
-    "team_id": "TEAM_NIBALI",
-    "team_nome": "TEAM NIBALI",
-    "punti": 241,
-    "vittorie": 2,
-    "p1": 2,
-    "p2": 4,
-    "p3": 6,
-    "pout": 21,
-    "n_atleti": 5,
     "pos": 12
   },
   {
@@ -348,6 +348,18 @@
     "pos": 29
   },
   {
+    "team_id": "MULTICAR_GRUPPO_AMARU",
+    "team_nome": "MULTICAR GRUPPO AMARU'",
+    "punti": 106,
+    "vittorie": 3,
+    "p1": 3,
+    "p2": 4,
+    "p3": 0,
+    "pout": 2,
+    "n_atleti": 1,
+    "pos": 30
+  },
+  {
     "team_id": "S_C_BRUGHERIO_SPORTIVA_ASD",
     "team_nome": "S.C. BRUGHERIO SPORTIVA ASD",
     "punti": 103,
@@ -357,7 +369,7 @@
     "p3": 0,
     "pout": 19,
     "n_atleti": 2,
-    "pos": 30
+    "pos": 31
   },
   {
     "team_id": "A_S_D_POSTUMIA_73_D_L_CICLISMO",
@@ -369,7 +381,7 @@
     "p3": 1,
     "pout": 8,
     "n_atleti": 3,
-    "pos": 31
+    "pos": 32
   },
   {
     "team_id": "G_S_RONCO_MAURIGI_DELIO_GALLINA",
@@ -381,7 +393,7 @@
     "p3": 3,
     "pout": 10,
     "n_atleti": 3,
-    "pos": 32
+    "pos": 33
   },
   {
     "team_id": "ASD_TEAM_MMBIKE_ANDRIA_RESTO_AL_SUD",
@@ -393,7 +405,7 @@
     "p3": 1,
     "pout": 11,
     "n_atleti": 1,
-    "pos": 33
+    "pos": 34
   },
   {
     "team_id": "GS_BERTI_MOBILI_BENASSI",
@@ -405,18 +417,6 @@
     "p3": 0,
     "pout": 11,
     "n_atleti": 2,
-    "pos": 34
-  },
-  {
-    "team_id": "MULTICAR_GRUPPO_AMARU",
-    "team_nome": "MULTICAR GRUPPO AMARU'",
-    "punti": 94,
-    "vittorie": 3,
-    "p1": 3,
-    "p2": 3,
-    "p3": 0,
-    "pout": 2,
-    "n_atleti": 1,
     "pos": 35
   },
   {
@@ -1236,6 +1236,18 @@
     "pos": 103
   },
   {
+    "team_id": "A_S_D_AF_ARREDAMENTI_TEAM_CICLING",
+    "team_nome": "A.S.D. AF ARREDAMENTI TEAM CICLING",
+    "punti": 16,
+    "vittorie": 0,
+    "p1": 0,
+    "p2": 0,
+    "p3": 0,
+    "pout": 6,
+    "n_atleti": 1,
+    "pos": 104
+  },
+  {
     "team_id": "POL_FIUMICINESE_FA_I_T_ADRIATICA",
     "team_nome": "POL. FIUMICINESE FA.I.T. ADRIATICA",
     "punti": 15,
@@ -1245,7 +1257,7 @@
     "p3": 0,
     "pout": 0,
     "n_atleti": 1,
-    "pos": 104
+    "pos": 105
   },
   {
     "team_id": "LEO_CONSTRUCTIONS_SSD",
@@ -1257,7 +1269,7 @@
     "p3": 0,
     "pout": 4,
     "n_atleti": 1,
-    "pos": 105
+    "pos": 106
   },
   {
     "team_id": "FOLIGNO_CYCLING_TEAM_ASD",
@@ -1269,7 +1281,7 @@
     "p3": 0,
     "pout": 3,
     "n_atleti": 1,
-    "pos": 106
+    "pos": 107
   },
   {
     "team_id": "SEI_SPORT",
@@ -1281,7 +1293,7 @@
     "p3": 0,
     "pout": 2,
     "n_atleti": 1,
-    "pos": 107
+    "pos": 108
   },
   {
     "team_id": "VELO_JUNIOR_NOVE",
@@ -1293,7 +1305,7 @@
     "p3": 0,
     "pout": 4,
     "n_atleti": 1,
-    "pos": 108
+    "pos": 109
   },
   {
     "team_id": "G_S_TAVO_BONIN_BIKE",
@@ -1305,7 +1317,7 @@
     "p3": 0,
     "pout": 3,
     "n_atleti": 2,
-    "pos": 109
+    "pos": 110
   },
   {
     "team_id": "LIBERTAS_RAIFFEISEN_LAIVES_ASD",
@@ -1317,7 +1329,7 @@
     "p3": 0,
     "pout": 4,
     "n_atleti": 1,
-    "pos": 110
+    "pos": 111
   },
   {
     "team_id": "GIALETO_CICLISMO",
@@ -1329,7 +1341,7 @@
     "p3": 0,
     "pout": 1,
     "n_atleti": 1,
-    "pos": 111
+    "pos": 112
   },
   {
     "team_id": "US_CARBONATE_ASD",
@@ -1341,18 +1353,6 @@
     "p3": 0,
     "pout": 2,
     "n_atleti": 2,
-    "pos": 112
-  },
-  {
-    "team_id": "A_S_D_AF_ARREDAMENTI_TEAM_CICLING",
-    "team_nome": "A.S.D. AF ARREDAMENTI TEAM CICLING",
-    "punti": 11,
-    "vittorie": 0,
-    "p1": 0,
-    "p2": 0,
-    "p3": 0,
-    "pout": 5,
-    "n_atleti": 1,
     "pos": 113
   },
   {
