@@ -7435,10 +7435,16 @@ async function _injectRankPhotos(items) {
         if (!span) return;
         const ov = await getEntityOverrides('atleta', a.atleta_id).catch(() => ({}));
         if (!document.contains(span)) return;
+        const _phRk = `<span class="rk-av-placeholder"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><circle cx="12" cy="8" r="4"/><path d="M4 20c0-4 3.6-7 8-7s8 3 8 7"/></svg></span>`;
         if (ov.photo_url) {
-          span.innerHTML = `<img src="${MEDIA_BASE}${esc(ov.photo_url)}" alt="" class="rk-av-img" onerror="this.parentNode.innerHTML='<span class=rk-av-placeholder><svg width=20 height=20 viewBox=\\'0 0 24 24\\' fill=\\'none\\' stroke=\\'currentColor\\' stroke-width=\\'1.5\\'><circle cx=\\'12\\' cy=\\'8\\' r=\\'4\\'/>  <path d=\\'M4 20c0-4 3.6-7 8-7s8 3 8 7\\'/></svg></span>'">`;
+          const img = document.createElement('img');
+          img.src = MEDIA_BASE + esc(ov.photo_url);
+          img.className = 'rk-av-img'; img.alt = '';
+          img.onerror = () => { span.innerHTML = _phRk; };
+          span.innerHTML = '';
+          span.appendChild(img);
         } else {
-          span.innerHTML = `<span class="rk-av-placeholder"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><circle cx="12" cy="8" r="4"/><path d="M4 20c0-4 3.6-7 8-7s8 3 8 7"/></svg></span>`;
+          span.innerHTML = _phRk;
         }
       }));
     }
@@ -13029,7 +13035,12 @@ async function renderTeam(team_id, opts = {}) {
         const ov = await getEntityOverrides('atleta', aid).catch(() => ({}));
         if (!document.contains(span)) return;
         if (ov.photo_url) {
-          span.innerHTML = `<img src="${MEDIA_BASE}${esc(ov.photo_url)}" alt="" class="rk-av-img" onerror="this.parentNode.innerHTML='${_ph}'">`;
+          const img = document.createElement('img');
+          img.src = MEDIA_BASE + esc(ov.photo_url);
+          img.className = 'rk-av-img'; img.alt = '';
+          img.onerror = () => { span.innerHTML = _ph; };
+          span.innerHTML = '';
+          span.appendChild(img);
         }
       }));
     }
