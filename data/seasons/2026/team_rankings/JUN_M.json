@@ -132,27 +132,27 @@
     "pos": 11
   },
   {
+    "team_id": "CPS_PROFESSIONAL_TEAM",
+    "team_nome": "CPS PROFESSIONAL TEAM",
+    "punti": 316,
+    "vittorie": 4,
+    "p1": 4,
+    "p2": 4,
+    "p3": 6,
+    "pout": 24,
+    "n_atleti": 11,
+    "pos": 12
+  },
+  {
     "team_id": "ETHICA_ZERO24_CYCLING_TEAM_ECOTEK",
     "team_nome": "ETHICA ZERO24 CYCLING TEAM ECOTEK",
-    "punti": 313,
+    "punti": 315,
     "vittorie": 6,
     "p1": 6,
     "p2": 6,
     "p3": 1,
-    "pout": 10,
+    "pout": 11,
     "n_atleti": 6,
-    "pos": 12
-  },
-  {
-    "team_id": "CPS_PROFESSIONAL_TEAM",
-    "team_nome": "CPS PROFESSIONAL TEAM",
-    "punti": 304,
-    "vittorie": 4,
-    "p1": 4,
-    "p2": 3,
-    "p3": 6,
-    "pout": 24,
-    "n_atleti": 11,
     "pos": 13
   },
   {
@@ -180,6 +180,18 @@
     "pos": 15
   },
   {
+    "team_id": "TEAM_GENERAL_SYSTEM",
+    "team_nome": "TEAM GENERAL SYSTEM",
+    "punti": 253,
+    "vittorie": 3,
+    "p1": 3,
+    "p2": 4,
+    "p3": 2,
+    "pout": 20,
+    "n_atleti": 7,
+    "pos": 16
+  },
+  {
     "team_id": "A_R_MONEX_PRO_CYCLING_TEAM",
     "team_nome": "A.R.MONEX PRO CYCLING TEAM",
     "punti": 244,
@@ -189,7 +201,7 @@
     "p3": 2,
     "pout": 5,
     "n_atleti": 3,
-    "pos": 16
+    "pos": 17
   },
   {
     "team_id": "TEAM_CORATTI",
@@ -201,18 +213,6 @@
     "p3": 1,
     "pout": 11,
     "n_atleti": 5,
-    "pos": 17
-  },
-  {
-    "team_id": "TEAM_GENERAL_SYSTEM",
-    "team_nome": "TEAM GENERAL SYSTEM",
-    "punti": 224,
-    "vittorie": 2,
-    "p1": 2,
-    "p2": 4,
-    "p3": 1,
-    "pout": 19,
-    "n_atleti": 6,
     "pos": 18
   },
   {
@@ -588,6 +588,18 @@
     "pos": 49
   },
   {
+    "team_id": "VELEKA_TEAM",
+    "team_nome": "VELEKA TEAM",
+    "punti": 55,
+    "vittorie": 0,
+    "p1": 0,
+    "p2": 1,
+    "p3": 1,
+    "pout": 5,
+    "n_atleti": 6,
+    "pos": 50
+  },
+  {
     "team_id": "FRANCIA",
     "team_nome": "FRANCIA",
     "punti": 54,
@@ -597,7 +609,7 @@
     "p3": 0,
     "pout": 5,
     "n_atleti": 3,
-    "pos": 50
+    "pos": 51
   },
   {
     "team_id": "VIGNA_FIORITA_BORGO_MOLINO",
@@ -609,7 +621,7 @@
     "p3": 0,
     "pout": 8,
     "n_atleti": 2,
-    "pos": 51
+    "pos": 52
   },
   {
     "team_id": "ARKITANO_MTB_CLUB",
@@ -621,7 +633,7 @@
     "p3": 1,
     "pout": 2,
     "n_atleti": 1,
-    "pos": 52
+    "pos": 53
   },
   {
     "team_id": "KK_NOVO_MESTO",
@@ -633,19 +645,19 @@
     "p3": 0,
     "pout": 2,
     "n_atleti": 4,
-    "pos": 53
+    "pos": 54
   },
   {
     "team_id": "ITALIA_NUOVA_BOLOGNA",
     "team_nome": "ITALIA NUOVA BOLOGNA",
-    "punti": 45,
+    "punti": 48,
     "vittorie": 0,
     "p1": 0,
     "p2": 0,
     "p3": 0,
-    "pout": 11,
-    "n_atleti": 4,
-    "pos": 54
+    "pout": 12,
+    "n_atleti": 5,
+    "pos": 55
   },
   {
     "team_id": "VINI_FANTINI_TRALFO",
@@ -657,7 +669,7 @@
     "p3": 0,
     "pout": 4,
     "n_atleti": 3,
-    "pos": 55
+    "pos": 56
   },
   {
     "team_id": "MASTROMARCO_FC_NIBALI",
@@ -669,18 +681,6 @@
     "p3": 0,
     "pout": 4,
     "n_atleti": 2,
-    "pos": 56
-  },
-  {
-    "team_id": "VELEKA_TEAM",
-    "team_nome": "VELEKA TEAM",
-    "punti": 42,
-    "vittorie": 0,
-    "p1": 0,
-    "p2": 1,
-    "p3": 1,
-    "pout": 3,
-    "n_atleti": 5,
     "pos": 57
   },
   {
@@ -1212,6 +1212,18 @@
     "pos": 101
   },
   {
+    "team_id": "G_S_BAREGGESE_A_S_D",
+    "team_nome": "G.S. BAREGGESE A.S.D",
+    "punti": 9,
+    "vittorie": 0,
+    "p1": 0,
+    "p2": 0,
+    "p3": 0,
+    "pout": 3,
+    "n_atleti": 3,
+    "pos": 102
+  },
+  {
     "team_id": "CASANO",
     "team_nome": "CASANO",
     "punti": 9,
@@ -1221,7 +1233,7 @@
     "p3": 0,
     "pout": 2,
     "n_atleti": 2,
-    "pos": 102
+    "pos": 103
   },
   {
     "team_id": "A_S_D_PROBIKE_ERICE",
@@ -1233,7 +1245,7 @@
     "p3": 0,
     "pout": 1,
     "n_atleti": 1,
-    "pos": 103
+    "pos": 104
   },
   {
     "team_id": "ST_KILDA_CYCLING_CLUB",
@@ -1245,7 +1257,7 @@
     "p3": 0,
     "pout": 2,
     "n_atleti": 2,
-    "pos": 104
+    "pos": 105
   },
   {
     "team_id": "FACTOR_RACING",
@@ -1257,7 +1269,7 @@
     "p3": 0,
     "pout": 1,
     "n_atleti": 1,
-    "pos": 105
+    "pos": 106
   },
   {
     "team_id": "DECATHLON_CMA_CGM_U19_TEAM",
@@ -1269,7 +1281,7 @@
     "p3": 0,
     "pout": 1,
     "n_atleti": 1,
-    "pos": 106
+    "pos": 107
   },
   {
     "team_id": "TEAM_NEO_SOLUTIONS",
@@ -1281,7 +1293,7 @@
     "p3": 0,
     "pout": 1,
     "n_atleti": 1,
-    "pos": 107
+    "pos": 108
   },
   {
     "team_id": "C_C_FORTI_E_VELOCI",
@@ -1293,7 +1305,7 @@
     "p3": 0,
     "pout": 1,
     "n_atleti": 1,
-    "pos": 108
+    "pos": 109
   },
   {
     "team_id": "FERALPI_MONTECLARENSE_ASD",
@@ -1305,7 +1317,7 @@
     "p3": 0,
     "pout": 2,
     "n_atleti": 2,
-    "pos": 109
+    "pos": 110
   },
   {
     "team_id": "GRUPPO_SPORTIVO_PARMENSE",
@@ -1317,7 +1329,7 @@
     "p3": 0,
     "pout": 1,
     "n_atleti": 1,
-    "pos": 110
+    "pos": 111
   },
   {
     "team_id": "GS_FIUMICELLO_1971",
@@ -1329,7 +1341,7 @@
     "p3": 0,
     "pout": 1,
     "n_atleti": 1,
-    "pos": 111
+    "pos": 112
   },
   {
     "team_id": "DANIMARCA",
@@ -1341,7 +1353,7 @@
     "p3": 0,
     "pout": 1,
     "n_atleti": 1,
-    "pos": 112
+    "pos": 113
   },
   {
     "team_id": "GI_ESSE_PRO_CYCLING",
@@ -1353,7 +1365,7 @@
     "p3": 0,
     "pout": 1,
     "n_atleti": 1,
-    "pos": 113
+    "pos": 114
   },
   {
     "team_id": "DAL_RISO_AL_ROSA",
@@ -1365,7 +1377,7 @@
     "p3": 0,
     "pout": 1,
     "n_atleti": 1,
-    "pos": 114
+    "pos": 115
   },
   {
     "team_id": "TSCHERNING_CYCLING_ACADEMY",
@@ -1377,7 +1389,7 @@
     "p3": 0,
     "pout": 1,
     "n_atleti": 1,
-    "pos": 115
+    "pos": 116
   },
   {
     "team_id": "AUDAX_FIORMONTI",
@@ -1389,24 +1401,12 @@
     "p3": 0,
     "pout": 2,
     "n_atleti": 2,
-    "pos": 116
+    "pos": 117
   },
   {
     "team_id": "U_S_MONTECORONA",
     "team_nome": "U.S. MONTECORONA",
     "punti": 3,
-    "vittorie": 0,
-    "p1": 0,
-    "p2": 0,
-    "p3": 0,
-    "pout": 1,
-    "n_atleti": 1,
-    "pos": 117
-  },
-  {
-    "team_id": "G_S_BAREGGESE_A_S_D",
-    "team_nome": "G.S. BAREGGESE A.S.D",
-    "punti": 2,
     "vittorie": 0,
     "p1": 0,
     "p2": 0,
