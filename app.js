@@ -12008,7 +12008,7 @@ async function _loadGaraPcsExt(garaId, circuitResults) {
 }
 
 // ── PCS risultati extra team (circuito 11+ + extra fuori circuito) ───────────
-async function _loadTeamPcsExtra(teamId, season) {
+async function _loadTeamPcsExtra(teamId, season, viewCat) {
   const team = globalData?.teams?.[teamId];
   if (!team) return;
   const atletiIds = (team.atleti || []).filter(Boolean);
@@ -12031,7 +12031,15 @@ async function _loadTeamPcsExtra(teamId, season) {
 
   // Stagione PCS: solo extra-circuito
   const seasonExtra = pcsSeasonAll
-    .filter(r => !r.gara_id || !icsKeys.has(`${r.atleta_id}:${r.gara_id}`))
+    .filter(r => {
+      if (r.gara_id && icsKeys.has(`${r.atleta_id}:${r.gara_id}`)) return false;
+      if (viewCat) {
+        const ath = globalData?.athletes?.[r.atleta_id];
+        const athCode = ath ? getRankingFileCode(ath) : '';
+        if (athCode && athCode !== viewCat) return false;
+      }
+      return true;
+    })
     .sort((a, b) => (b.data || '').localeCompare(a.data || ''));
 
   // Indice per-gara da resultsRaw: nome, km, moltiplicatore, tipo, media
@@ -12048,10 +12056,19 @@ async function _loadTeamPcsExtra(teamId, season) {
     }
   }
 
-  // Gare circuito: pos 11+ (non già in ICS)
+  // Gare circuito: pos 11+ (non già in ICS), filtrate per categoria del tab attivo
   const garaExtra = Array.isArray(pcsGareRaw)
     ? pcsGareRaw
-        .filter(r => r.gara_id && r.atleta_id && !icsKeys.has(`${r.atleta_id}:${r.gara_id}`))
+        .filter(r => {
+          if (!r.gara_id || !r.atleta_id) return false;
+          if (icsKeys.has(`${r.atleta_id}:${r.gara_id}`)) return false;
+          if (viewCat) {
+            // Categoria dalla coda del gara_id (es. _ELI_M, _JUN_F)
+            const garaCode = r.gara_id.match(/_([A-Z0-9]+_[MF])$/)?.[1] || '';
+            if (garaCode && garaCode !== viewCat) return false;
+          }
+          return true;
+        })
         .map(r => {
           const calId = (globalData?.garaToCalId?.[r.gara_id]) || r.gara_id;
           const cal = globalData?.calendar?.find(g => g.id === calId);
@@ -12996,7 +13013,7 @@ async function renderTeam(team_id, opts = {}) {
   // Bottone messaggio team (async, non blocca il render)
   _injectMsgBtn('team-msg-btn', null, team_id, null);
   _injectFollowBtn('team-follow-btn', 'team', team_id);
-  _loadTeamPcsExtra(team_id, selYear);
+  _loadTeamPcsExtra(team_id, selYear, teamViewCat);
 
   // Foto atleti nella lista CORRIDORI CHIAVE + tabella risultati (batch async)
   const _perfSpans = [...document.querySelectorAll('.team-performers-list .rk-av-wrap[data-aid], .team-results .rk-av-wrap[data-aid]')];
