@@ -1356,8 +1356,8 @@ function processLoadedData({ calendar, resultsRaw, athletes, teams, meta, raceDe
       if (!athletesMerged[aid]) {
         athletesMerged[aid] = {
           atleta_id: aid,
-          nome: p.nome || '',
-          cognome: p.cognome || '',
+          nome: (p.nome || '').toUpperCase(),
+          cognome: (p.cognome || '').toUpperCase(),
           team_attuale: teamNome,
           team_id: tid,
           categoria: p.categoria || '',
@@ -12074,8 +12074,11 @@ async function _loadTeamPcsExtra(teamId, season) {
         .sort((a, b) => (b.data || '').localeCompare(a.data || ''))
     : [];
 
-  // Unisci: gare circuito (per data desc) + extra stagione (per data desc)
-  const allExtra = [...garaExtra, ...seasonExtra];
+  // Unisci: gare circuito (per posizione asc) + extra stagione (per data desc)
+  const allExtra = [
+    ...garaExtra.sort((a, b) => (a.posizione || 9999) - (b.posizione || 9999)),
+    ...seasonExtra,
+  ];
   if (!allExtra.length) return;
 
   const tbody = document.getElementById('team-results-tbody');
@@ -12102,7 +12105,7 @@ async function _loadTeamPcsExtra(teamId, season) {
           ? `<a href="https://www.procyclingstats.com/race/${esc(r.pcs_race_slug)}" target="_blank">${esc(r.gara_name)}</a>`
           : esc(r.gara_name));
     const tr = document.createElement('tr');
-    tr.dataset.date = r.data || '';
+    tr.dataset.pos = String(r.posizione || 9999);
     tr.innerHTML = `
       <td class="td-date">${fmtDateShort(r.data)}</td>
       <td class="td-race">${raceLink}
@@ -12120,8 +12123,8 @@ async function _loadTeamPcsExtra(teamId, season) {
       <td class="td-hide-mobile" style="text-align:right">${esc(r.media || '—')}</td>
       <td class="td-hide-mobile" style="text-align:right"></td>
       <td class="td-pts">0</td>`;
-    const existingRows = [...tbody.querySelectorAll('tr[data-date]')];
-    const after = existingRows.find(row => (row.dataset.date || '') < (r.data || ''));
+    const existingRows = [...tbody.querySelectorAll('tr[data-pos]')];
+    const after = existingRows.find(row => parseInt(row.dataset.pos || '9999') > (r.posizione || 9999));
     if (after) tbody.insertBefore(tr, after);
     else tbody.appendChild(tr);
     const span = tr.querySelector('.rk-av-wrap[data-aid]');
@@ -12745,7 +12748,7 @@ async function renderTeam(team_id, opts = {}) {
     .map(r => {
       // Per la scheda Team mostriamo il rank della squadra (con tie-break)
       const rankVal = r.team_rank_dopo_gara;
-      return `<tr data-date="${esc(r.data||'')}">
+      return `<tr data-pos="${r.posizione||9999}">
         <td class="td-date">${fmtDateShort(r.data)}</td>
         <td class="td-race">
           <a href="#/gara/${esc(r.gara_id)}">${esc(r.nome_gara)}</a>
