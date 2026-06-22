@@ -246,57 +246,56 @@ async function warmupBrowser(page) {
   }
 }
 
-// ─── PCS scraping atleta ──────────────────────────────────────────────────────
+// ─── PCS scraping atleta (singola navigazione) ────────────────────────────────
 
-async function scrapeAthleteRaces(page, pcsSlug) {
-  const url = `${PCS}/rider/${pcsSlug}`;
+/**
+ * Visita la pagina dell'atleta UNA SOLA VOLTA, verifica che sia valida
+ * (DD.MM date + race links) ed estrae le gare — tutto in un singolo goto.
+ * La doppia navigazione causava 0 gare perché PCS serviva una pagina
+ * diversa (anti-bot) sulla seconda richiesta consecutiva alla stessa URL.
+ * Ritorna { found: false } oppure { found: true, slug, races: [...] }.
+ */
+async function findAthleteAndScrapeRaces(page, cognome, nome) {
+  const slug = makeRiderSlug(cognome, nome);
+  const url  = `${PCS}/rider/${slug}`;
   try { await page.goto(url, { waitUntil:'load', timeout:18000 }); }
-  catch { return []; }
-  if (/pagenotfound|404/.test(page.url())) return [];
+  catch { return { found: false }; }
+  const fu = page.url();
+  if (!fu || fu===`${PCS}/` || fu===PCS || /pagenotfound|404/.test(fu)) return { found: false };
   await sleep(1000);
 
-  const debug = await page.evaluate((season) => {
-    const raceLinks = [...document.querySelectorAll('a[href*="/race/"]')];
+  const result = await page.evaluate((season) => {
     const dateRe = /\b(\d{1,2})\.(\d{2})\b/;
-    const first5hrefs = raceLinks.slice(0, 5).map(a => a.getAttribute('href'));
-    // Conta quanti hanno anno in href
-    const withYear = raceLinks.filter(a => /\/race\/[^/]+\/\d{4}/.test(a.getAttribute('href')||'')).length;
-    // Cerca una data vicina al primo link
-    let firstDate = null;
-    if (raceLinks[0]) {
-      let el = raceLinks[0].parentElement;
-      for (let d = 0; d < 8 && el && !firstDate; d++, el = el.parentElement) {
-        for (const s of el.querySelectorAll('td,span,li,div')) {
-          const t = s.textContent.trim();
-          const dm = t.match(dateRe);
-          if (dm && t.length <= 15) { firstDate = t; break; }
-        }
-      }
-    }
-    return { total: raceLinks.length, withYear, first5hrefs, firstDate };
-  }, SEASON).catch(e => ({ error: e.message }));
-  console.log(`    [DBG] url=${page.url().replace('https://www.procyclingstats.com','')}`);
-  console.log(`    [DBG] raceLinks=${debug.total} withYear=${debug.withYear} firstDate=${debug.firstDate}`);
-  if (debug.first5hrefs) console.log(`    [DBG] hrefs: ${debug.first5hrefs.join(' | ')}`);
 
-  return page.evaluate((season) => {
+    // Validità: almeno una cella DD.MM e almeno un link /race/
+    const hasDate = [...document.querySelectorAll('td,span')].some(
+      el => /^\d{1,2}\.\d{2}$/.test(el.textContent.trim())
+    );
+    const allRaceLinks = [...document.querySelectorAll('a[href*="/race/"]')];
+    if (!hasDate || !allRaceLinks.length) {
+      return { found: false, dbg: { hasDate, raceLinks: allRaceLinks.length } };
+    }
+
+    // Debug info (visibile nel log)
+    const withYear = allRaceLinks.filter(a => /\/race\/[^/]+\/\d{4}/.test(a.getAttribute('href')||'')).length;
+    const first5hrefs = allRaceLinks.slice(0, 5).map(a => a.getAttribute('href'));
+
+    // Estrai gare dalla stessa pagina
     const rows = [];
     const seen = new Set();
-    const dateRe = /\b(\d{1,2})\.(\d{2})\b/;
-
-    for (const link of document.querySelectorAll('a[href*="/race/"]')) {
+    for (const link of allRaceLinks) {
       const href = link.getAttribute('href') || '';
-      let slug;
+      let raceSlug;
       const mYear = href.match(/\/race\/([^/?#]+\/(\d{4}))/);
       if (mYear) {
         if (parseInt(mYear[2]) !== season) continue;
-        slug = mYear[1];
+        raceSlug = mYear[1];
       } else {
         const mNoYear = href.match(/\/race\/([^/?#]+)/);
         if (!mNoYear) continue;
-        slug = `${mNoYear[1]}/${season}`;
+        raceSlug = `${mNoYear[1]}/${season}`;
       }
-      if (seen.has(slug)) continue;
+      if (seen.has(raceSlug)) continue;
 
       let dateStr = null;
       let el = link.parentElement;
@@ -321,11 +320,18 @@ async function scrapeAthleteRaces(page, pcsSlug) {
         }
       }
       if (!dateStr) continue;
-      seen.add(slug);
-      rows.push({ slug, date: dateStr, name: link.textContent.trim() });
+      seen.add(raceSlug);
+      rows.push({ slug: raceSlug, date: dateStr, name: link.textContent.trim() });
     }
-    return rows;
-  }, SEASON).catch(()=>[]);
+    return { found: true, races: rows, dbg: { raceLinks: allRaceLinks.length, withYear, first5hrefs } };
+  }, SEASON).catch(e => ({ found: false, dbg: { error: e.message } }));
+
+  const d = result.dbg || {};
+  console.log(`    [DBG] slug=${slug} raceLinks=${d.raceLinks} withYear=${d.withYear} hasDate=${d.hasDate}`);
+  if (d.first5hrefs) console.log(`    [DBG] hrefs: ${d.first5hrefs.join(' | ')}`);
+
+  if (!result.found) return { found: false };
+  return { found: true, slug, races: result.races };
 }
 
 /**
@@ -337,31 +343,6 @@ function makeRiderSlug(cognome, nome) {
   const norm = s => String(s||'').normalize('NFD').replace(/[̀-ͯ]/g,'')
     .toLowerCase().replace(/[^a-z0-9\s]/g,' ').trim().replace(/\s+/g,'-');
   return `${norm(nome)}-${norm(cognome)}`;
-}
-
-/**
- * Verifica se lo slug atleta esiste su PCS e ha risultati nella stagione corrente.
- * Usa la pagina principale (senza anno) che mostra la stagione corrente.
- * Ritorna lo slug confermato o null.
- */
-async function findAthleteOnPcs(page, cognome, nome) {
-  const slug = makeRiderSlug(cognome, nome);
-  const url  = `${PCS}/rider/${slug}`;
-  try { await page.goto(url, { waitUntil:'load', timeout:18000 }); }
-  catch { return null; }
-  const fu = page.url();
-  if (!fu || fu===`${PCS}/` || fu===PCS || /pagenotfound|404/.test(fu)) return null;
-  await sleep(700);
-  // Cerca celle con data DD.MM (indica risultati stagionali presenti)
-  // e almeno un link a una gara → profilo valido con dati stagione
-  const hasRaceResults = await page.evaluate(() => {
-    const hasDate = [...document.querySelectorAll('td,span')].some(
-      el => /^\d{1,2}\.\d{2}$/.test(el.textContent.trim())
-    );
-    const hasRaceLink = !!document.querySelector('a[href*="/race/"]');
-    return hasDate && hasRaceLink;
-  }).catch(()=>false);
-  return hasRaceResults ? slug : null;
 }
 
 // ─── Verifica singolo slug ─────────────────────────────────────────────────────
@@ -495,10 +476,10 @@ function findBestPcsMatch(icsNome, icsDate, pcsByDate) {
         if (!cognome) continue;
 
         process.stdout.write(`  [${i+1}/${candidates.length}] ${cognome} ${nome} … `);
-        const pcsSlug = await findAthleteOnPcs(page, cognome, nome);
-        if (!pcsSlug) { process.stdout.write('non trovato su PCS\n'); await sleep(400); continue; }
+        const athlete = await findAthleteAndScrapeRaces(page, cognome, nome);
+        if (!athlete.found) { process.stdout.write('non trovato su PCS\n'); await sleep(400); continue; }
 
-        const races = await scrapeAthleteRaces(page, pcsSlug);
+        const { slug: pcsSlug, races } = athlete;
         foundAthletes++;
         let added = 0;
         for (const r of races) {
