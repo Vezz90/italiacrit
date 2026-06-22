@@ -255,20 +255,40 @@ async function scrapeAthleteRaces(page, pcsSlug) {
   if (/pagenotfound|404/.test(page.url())) return [];
   await sleep(1000);
 
+  const debug = await page.evaluate((season) => {
+    const raceLinks = [...document.querySelectorAll('a[href*="/race/"]')];
+    const dateRe = /\b(\d{1,2})\.(\d{2})\b/;
+    const first5hrefs = raceLinks.slice(0, 5).map(a => a.getAttribute('href'));
+    // Conta quanti hanno anno in href
+    const withYear = raceLinks.filter(a => /\/race\/[^/]+\/\d{4}/.test(a.getAttribute('href')||'')).length;
+    // Cerca una data vicina al primo link
+    let firstDate = null;
+    if (raceLinks[0]) {
+      let el = raceLinks[0].parentElement;
+      for (let d = 0; d < 8 && el && !firstDate; d++, el = el.parentElement) {
+        for (const s of el.querySelectorAll('td,span,li,div')) {
+          const t = s.textContent.trim();
+          const dm = t.match(dateRe);
+          if (dm && t.length <= 15) { firstDate = t; break; }
+        }
+      }
+    }
+    return { total: raceLinks.length, withYear, first5hrefs, firstDate };
+  }, SEASON).catch(e => ({ error: e.message }));
+  console.log(`    [DBG] url=${page.url().replace('https://www.procyclingstats.com','')}`);
+  console.log(`    [DBG] raceLinks=${debug.total} withYear=${debug.withYear} firstDate=${debug.firstDate}`);
+  if (debug.first5hrefs) console.log(`    [DBG] hrefs: ${debug.first5hrefs.join(' | ')}`);
+
   return page.evaluate((season) => {
     const rows = [];
     const seen = new Set();
     const dateRe = /\b(\d{1,2})\.(\d{2})\b/;
 
-    // PCS rider pages usano link senza anno (/race/strade-bianche) oppure con anno.
-    // Strategia: per ogni link /race/ risali il DOM per trovare una data DD.MM vicina.
     for (const link of document.querySelectorAll('a[href*="/race/"]')) {
       const href = link.getAttribute('href') || '';
-      // Estrai lo slug della gara (con o senza anno)
       let slug;
       const mYear = href.match(/\/race\/([^/?#]+\/(\d{4}))/);
       if (mYear) {
-        // Link con anno: usa solo gare della stagione corrente
         if (parseInt(mYear[2]) !== season) continue;
         slug = mYear[1];
       } else {
@@ -278,11 +298,9 @@ async function scrapeAthleteRaces(page, pcsSlug) {
       }
       if (seen.has(slug)) continue;
 
-      // Cerca una data DD.MM risalendo il DOM (fino a 6 livelli)
       let dateStr = null;
       let el = link.parentElement;
       for (let depth = 0; depth < 6 && el && !dateStr; depth++, el = el.parentElement) {
-        // Cerca in childNodes diretti
         for (const child of el.childNodes) {
           const t = (child.textContent || '').trim();
           const dm = t.match(dateRe);
@@ -292,7 +310,6 @@ async function scrapeAthleteRaces(page, pcsSlug) {
           }
         }
         if (!dateStr) {
-          // Cerca nei sibling elementi (td/span/li)
           for (const s of el.querySelectorAll('td,span,li')) {
             const t = s.textContent.trim();
             const dm = t.match(dateRe);
