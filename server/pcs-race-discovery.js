@@ -84,16 +84,48 @@ function nameToSlug(nome) {
     .replace(/[^a-z0-9\-]/g, '').replace(/-+/g, '-').replace(/^-+|-+$/g, '');
 }
 
+// Slug speciali: pattern ICS → override slug PCS
+const SLUG_OVERRIDES = {
+  'campionato-italiano-strada-elite-e-under-23': 'italian-national-championship-road-elite-men',
+  'campionato-italiano-strada-under-23':         'italian-national-championship-road-under-23-men',
+  'campionato-italiano-strada-donne-elite-under-23': 'italian-national-championship-road-elite-women',
+  'campionato-italiano-strada-donne-juniores':   'italian-national-championship-road-junior-women',
+  'campionato-italiano-strada-juniores':         'italian-national-championship-road-junior-men',
+  'campionato-italiano-strada-allievi':          'italian-national-championship-road-u17-men',
+  'campionato-italiano-strada-donne-allieve':    'italian-national-championship-road-u17-women',
+  'giro-dell-appennino':                         'giro-dell-appennino',
+  'giro-della-toscana-femminile':                'giro-della-toscana',
+};
+
 function genCandidates(nome, season) {
   const base = nameToSlug(nome);
   if (!base) return [];
-  const c = new Set([`${base}/${season}`]);
-  for (const p of ['trofeo-','gran-premio-','gp-','memorial-','coppa-','circuito-','corsa-','giro-di-']) {
+  const c = new Set();
+
+  // Slug speciali
+  for (const [pat, override] of Object.entries(SLUG_OVERRIDES)) {
+    if (base.includes(pat.split('-')[0]) && base.includes(pat.split('-').slice(-1)[0])) {
+      c.add(`${override}/${season}`);
+    }
+  }
+
+  c.add(`${base}/${season}`);
+
+  // Rimuovi prefissi comuni
+  for (const p of ['trofeo-','gran-premio-','gp-','memorial-','coppa-','circuito-','corsa-','giro-di-','giro-del-','giro-della-','giro-dell-']) {
     if (base.startsWith(p)) c.add(`${base.slice(p.length)}/${season}`);
   }
-  const parts = base.split('-');
+
+  // Versioni abbreviate
+  const parts = base.split('-').filter(Boolean);
   if (parts.length > 3) c.add(`${parts.slice(0,3).join('-')}/${season}`);
   if (parts.length > 4) c.add(`${parts.slice(0,4).join('-')}/${season}`);
+  if (parts.length > 5) c.add(`${parts.slice(0,5).join('-')}/${season}`);
+
+  // Variante senza apostrofo: "dell'" → "dell" e "d'" → "d"
+  const noApos = base.replace(/-d-/g, '-d-').replace(/([a-z])-([a-z])/g, '$1$2');
+  if (noApos !== base) c.add(`${noApos}/${season}`);
+
   return [...c];
 }
 
@@ -257,28 +289,44 @@ async function scrapeAthleteRaces(page, pcsSlug) {
   }, SEASON).catch(()=>[]);
 }
 
-// Cerca un atleta su PCS per nome → ritorna il primo slug rider trovato
+/**
+ * Costruisce lo slug PCS direttamente dal nome/cognome ICS.
+ * PCS usa "nome-cognome" (tutto lowercase, trattini).
+ * Es: "LONGO BORGHINI" + "Elisa" → "elisa-longo-borghini"
+ */
+function makeRiderSlug(cognome, nome) {
+  const norm = s => String(s||'').normalize('NFD').replace(/[̀-ͯ]/g,'')
+    .toLowerCase().replace(/[^a-z0-9\s]/g,' ').trim().replace(/\s+/g,'-');
+  return `${norm(nome)}-${norm(cognome)}`;
+}
+
+/**
+ * Verifica se lo slug atleta esiste su PCS e ha risultati stagionali.
+ * Ritorna lo slug confermato o null.
+ */
 async function findAthleteOnPcs(page, cognome, nome) {
-  const query = encodeURIComponent(`${cognome} ${nome}`);
-  const url = `${PCS}/search/?s=${query}&type=riderlist`;
+  const slug = makeRiderSlug(cognome, nome);
+  const url  = `${PCS}/rider/${slug}/${SEASON}`;
   try { await page.goto(url, { waitUntil:'domcontentloaded', timeout:15000 }); }
   catch { return null; }
-  await sleep(600);
-
-  return page.evaluate(() => {
-    // Risultati ricerca: link /rider/xxx
-    const link = document.querySelector('a[href*="/rider/"]');
-    if (!link) return null;
-    const m = (link.getAttribute('href')||'').match(/\/rider\/([a-z0-9\-]+)/);
-    return m ? m[1] : null;
-  }).catch(()=>null);
+  const fu = page.url();
+  if (!fu || fu===`${PCS}/` || fu===PCS || /pagenotfound|404/.test(fu)) return null;
+  await sleep(500);
+  // Verifica che la pagina sia un profilo corridore con dati stagionali
+  const hasResults = await page.evaluate(() => {
+    return !!document.querySelector('table');
+  }).catch(()=>false);
+  return hasResults ? slug : null;
 }
 
 // ─── Verifica singolo slug ─────────────────────────────────────────────────────
 
 async function verifySlug(page, slug) {
+  // Per gare a tappe (stage races) prova anche /gc e /gc/result
   const urls = [
     `${PCS}/race/${slug}/result`,
+    `${PCS}/race/${slug}/gc/result`,
+    `${PCS}/race/${slug}/gc`,
     `${PCS}/race/${slug}`,
     `${PCS}/national-race/${slug}/result`,
     `${PCS}/national-race/${slug}`,
@@ -291,14 +339,15 @@ async function verifySlug(page, slug) {
     }
     const fu = page.url();
     if (!fu || fu===`${PCS}/` || fu===PCS || /pagenotfound|404/.test(fu)) continue;
-    await sleep(700);
+    await sleep(600);
     const count = await page.evaluate(() => {
       for (const table of document.querySelectorAll('table')) {
         const ths = [...table.querySelectorAll('th')].map(t=>t.textContent.toLowerCase());
-        if (!ths.some(h=>/rnk|pos|rider|name/.test(h))) continue;
+        // Accetta intestazioni tipiche sia per gare in linea sia per classifiche a tappe
+        if (!ths.some(h => /rnk|pos|#|rider|name|cyclist/.test(h))) continue;
         const n = [...table.querySelectorAll('tbody tr')]
-          .filter(tr=>/^\d+$/.test(tr.querySelector('td')?.textContent?.trim()||'')).length;
-        if (n>0) return n;
+          .filter(tr => /^\d+$/.test(tr.querySelector('td')?.textContent?.trim()||'')).length;
+        if (n > 0) return n;
       }
       return 0;
     }).catch(()=>0);
