@@ -260,21 +260,29 @@ async function scrapeAthleteRaces(page, pcsSlug) {
     const seen = new Set();
     const dateRe = /\b(\d{1,2})\.(\d{2})\b/;
 
-    // Approccio link-centrico: trova tutti i link a gare sulla pagina
-    // e risali il DOM per trovare la data nella stessa riga/elemento contenitore.
+    // PCS rider pages usano link senza anno (/race/strade-bianche) oppure con anno.
+    // Strategia: per ogni link /race/ risali il DOM per trovare una data DD.MM vicina.
     for (const link of document.querySelectorAll('a[href*="/race/"]')) {
       const href = link.getAttribute('href') || '';
-      // Estrai slug race (con anno obbligatorio per sicurezza stagione)
-      const m = href.match(/\/race\/([^/?#]+\/(\d{4}))/);
-      if (!m || parseInt(m[2]) !== season) continue;
-      const slug = m[1];
+      // Estrai lo slug della gara (con o senza anno)
+      let slug;
+      const mYear = href.match(/\/race\/([^/?#]+\/(\d{4}))/);
+      if (mYear) {
+        // Link con anno: usa solo gare della stagione corrente
+        if (parseInt(mYear[2]) !== season) continue;
+        slug = mYear[1];
+      } else {
+        const mNoYear = href.match(/\/race\/([^/?#]+)/);
+        if (!mNoYear) continue;
+        slug = `${mNoYear[1]}/${season}`;
+      }
       if (seen.has(slug)) continue;
 
       // Cerca una data DD.MM risalendo il DOM (fino a 6 livelli)
       let dateStr = null;
       let el = link.parentElement;
       for (let depth = 0; depth < 6 && el && !dateStr; depth++, el = el.parentElement) {
-        // Cerca il testo direttamente nei figli (non ricorsivo) per evitare falsi positivi
+        // Cerca in childNodes diretti
         for (const child of el.childNodes) {
           const t = (child.textContent || '').trim();
           const dm = t.match(dateRe);
@@ -284,9 +292,9 @@ async function scrapeAthleteRaces(page, pcsSlug) {
           }
         }
         if (!dateStr) {
-          // Prova anche nei td/span/li dello stesso contenitore
-          for (const sibling of el.querySelectorAll('td,span,li,div')) {
-            const t = sibling.textContent.trim();
+          // Cerca nei sibling elementi (td/span/li)
+          for (const s of el.querySelectorAll('td,span,li')) {
+            const t = s.textContent.trim();
             const dm = t.match(dateRe);
             if (dm && t.length <= 10) {
               dateStr = `${season}-${dm[2].padStart(2,'0')}-${dm[1].padStart(2,'0')}`;
@@ -327,13 +335,15 @@ async function findAthleteOnPcs(page, cognome, nome) {
   const fu = page.url();
   if (!fu || fu===`${PCS}/` || fu===PCS || /pagenotfound|404/.test(fu)) return null;
   await sleep(700);
-  // Verifica che ci siano gare della stagione corrente nella pagina
-  const hasRaceResults = await page.evaluate((season) => {
-    for (const a of document.querySelectorAll('a[href*="/race/"]')) {
-      if ((a.getAttribute('href')||'').includes(`/${season}`)) return true;
-    }
-    return false;
-  }, SEASON).catch(()=>false);
+  // Cerca celle con data DD.MM (indica risultati stagionali presenti)
+  // e almeno un link a una gara → profilo valido con dati stagione
+  const hasRaceResults = await page.evaluate(() => {
+    const hasDate = [...document.querySelectorAll('td,span')].some(
+      el => /^\d{1,2}\.\d{2}$/.test(el.textContent.trim())
+    );
+    const hasRaceLink = !!document.querySelector('a[href*="/race/"]');
+    return hasDate && hasRaceLink;
+  }).catch(()=>false);
   return hasRaceResults ? slug : null;
 }
 
