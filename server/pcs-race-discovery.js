@@ -249,37 +249,40 @@ async function warmupBrowser(page) {
 // ─── PCS scraping atleta ──────────────────────────────────────────────────────
 
 async function scrapeAthleteRaces(page, pcsSlug) {
-  const url = `${PCS}/rider/${pcsSlug}/${SEASON}`;
-  try { await page.goto(url, { waitUntil:'domcontentloaded', timeout:18000 }); }
+  const url = `${PCS}/rider/${pcsSlug}`;   // pagina principale = stagione corrente
+  try { await page.goto(url, { waitUntil:'load', timeout:18000 }); }
   catch { return []; }
   if (/pagenotfound|404/.test(page.url())) return [];
-  await sleep(800);
+  await sleep(700);
 
   return page.evaluate((season) => {
     const rows = [];
     for (const table of document.querySelectorAll('table')) {
-      const headers = [...table.querySelectorAll('th')].map(t => t.textContent.trim().toLowerCase());
-      if (!headers.some(h => /result|ris|pos|place/.test(h))) continue;
-      let iDate=-1, iRace=-1;
-      headers.forEach((h,i) => {
-        if (iDate<0 && /date|data/.test(h)) iDate=i;
-        if (iRace<0 && /race|gara|corsa/.test(h)) iRace=i;
-      });
-      if (iDate<0 || iRace<0) {
-        const first = [...(table.querySelectorAll('tbody tr')[0]?.querySelectorAll('td')||[])];
-        if (first.length>=3 && /^\d{1,2}\.\d{2}$/.test(first[0]?.textContent?.trim())) {
-          iDate=0; iRace=1;
-        } else continue;
-      }
-      for (const tr of table.querySelectorAll('tbody tr')) {
+      const bodyRows = [...table.querySelectorAll('tbody tr')];
+      if (!bodyRows.length) continue;
+
+      // Trova la colonna data (DD.MM) nella prima riga con abbastanza celle
+      const firstRow = bodyRows.find(tr => tr.querySelectorAll('td').length >= 3);
+      if (!firstRow) continue;
+      const firstCells = [...firstRow.querySelectorAll('td')];
+      const iDate = firstCells.findIndex(td => /^\d{1,2}\.\d{2}$/.test(td.textContent.trim()));
+      if (iDate < 0) continue;
+
+      // Cerca la colonna gara: prima cella (dopo la data) che ha un link /race/
+      for (const tr of bodyRows) {
         const cells = [...tr.querySelectorAll('td')];
         if (cells.length < 3) continue;
         const dm = (cells[iDate]?.textContent?.trim()||'').match(/^(\d{1,2})\.(\d{2})$/);
         if (!dm) continue;
         const date = `${season}-${dm[2].padStart(2,'0')}-${dm[1].padStart(2,'0')}`;
-        const link = cells[iRace]?.querySelector('a[href*="/race/"]');
+        // Cerca un link /race/ in qualsiasi cella della riga
+        let link = null;
+        for (let i = iDate+1; i < cells.length; i++) {
+          link = cells[i].querySelector('a[href*="/race/"]');
+          if (link) break;
+        }
         if (!link) continue;
-        const m = (link.getAttribute('href')||'').match(/\/race\/([^/?]+\/\d{4})/);
+        const m = (link.getAttribute('href')||'').match(/\/race\/([^/?#]+\/\d{4})/);
         if (!m) continue;
         rows.push({ slug:m[1], date, name:link.textContent.trim() });
       }
@@ -301,22 +304,26 @@ function makeRiderSlug(cognome, nome) {
 }
 
 /**
- * Verifica se lo slug atleta esiste su PCS e ha risultati stagionali.
+ * Verifica se lo slug atleta esiste su PCS e ha risultati nella stagione corrente.
+ * Usa la pagina principale (senza anno) che mostra la stagione corrente.
  * Ritorna lo slug confermato o null.
  */
 async function findAthleteOnPcs(page, cognome, nome) {
   const slug = makeRiderSlug(cognome, nome);
-  const url  = `${PCS}/rider/${slug}/${SEASON}`;
-  try { await page.goto(url, { waitUntil:'domcontentloaded', timeout:15000 }); }
+  const url  = `${PCS}/rider/${slug}`;   // pagina principale = stagione corrente
+  try { await page.goto(url, { waitUntil:'load', timeout:18000 }); }
   catch { return null; }
   const fu = page.url();
   if (!fu || fu===`${PCS}/` || fu===PCS || /pagenotfound|404/.test(fu)) return null;
-  await sleep(500);
-  // Verifica che la pagina sia un profilo corridore con dati stagionali
-  const hasResults = await page.evaluate(() => {
-    return !!document.querySelector('table');
+  await sleep(700);
+  // Verifica che ci siano celle con data DD.MM = risultati stagionali reali
+  const hasRaceResults = await page.evaluate(() => {
+    for (const td of document.querySelectorAll('td')) {
+      if (/^\d{1,2}\.\d{2}$/.test(td.textContent.trim())) return true;
+    }
+    return false;
   }).catch(()=>false);
-  return hasResults ? slug : null;
+  return hasRaceResults ? slug : null;
 }
 
 // ─── Verifica singolo slug ─────────────────────────────────────────────────────
