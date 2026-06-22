@@ -2,7 +2,7 @@
   {
     "team_id": "S_C_CESANO_MADERNO",
     "team_nome": "S.C. CESANO MADERNO",
-    "punti": 282,
+    "punti": 280,
     "vittorie": 7,
     "p1": 7,
     "p2": 3,
@@ -14,7 +14,7 @@
   {
     "team_id": "SCUOLA_CICLISMO_VERSO_L_IRIDE",
     "team_nome": "SCUOLA CICLISMO VERSO L'IRIDE",
-    "punti": 278,
+    "punti": 274,
     "vittorie": 5,
     "p1": 5,
     "p2": 4,
@@ -26,12 +26,12 @@
   {
     "team_id": "HG_CYCLING_TEAM",
     "team_nome": "HG CYCLING TEAM",
-    "punti": 263,
+    "punti": 259,
     "vittorie": 5,
     "p1": 5,
     "p2": 6,
     "p3": 1,
-    "pout": 18,
+    "pout": 17,
     "n_atleti": 5,
     "pos": 3
   },
@@ -62,7 +62,7 @@
   {
     "team_id": "SPORT_CLUB_BRESCIA_FLANDRES_LOVE",
     "team_nome": "SPORT CLUB BRESCIA - FLANDRES LOVE",
-    "punti": 128,
+    "punti": 126,
     "vittorie": 0,
     "p1": 0,
     "p2": 3,
@@ -70,6 +70,18 @@
     "pout": 14,
     "n_atleti": 3,
     "pos": 6
+  },
+  {
+    "team_id": "MARY_J_SWEET_ANGEL_ASD",
+    "team_nome": "MARY J SWEET ANGEL ASD",
+    "punti": 105,
+    "vittorie": 1,
+    "p1": 1,
+    "p2": 2,
+    "p3": 0,
+    "pout": 12,
+    "n_atleti": 3,
+    "pos": 7
   },
   {
     "team_id": "G_C_SOSSANO_1975",
@@ -81,7 +93,7 @@
     "p3": 3,
     "pout": 18,
     "n_atleti": 6,
-    "pos": 7
+    "pos": 8
   },
   {
     "team_id": "U_C_GIORGIONE",
@@ -93,18 +105,6 @@
     "p3": 2,
     "pout": 13,
     "n_atleti": 2,
-    "pos": 8
-  },
-  {
-    "team_id": "MARY_J_SWEET_ANGEL_ASD",
-    "team_nome": "MARY J SWEET ANGEL ASD",
-    "punti": 91,
-    "vittorie": 1,
-    "p1": 1,
-    "p2": 2,
-    "p3": 0,
-    "pout": 11,
-    "n_atleti": 3,
     "pos": 9
   },
   {
@@ -144,18 +144,6 @@
     "pos": 12
   },
   {
-    "team_id": "ALLGOR_TATOBIKE",
-    "team_nome": "ALLGOR TATOBIKE",
-    "punti": 69,
-    "vittorie": 0,
-    "p1": 0,
-    "p2": 1,
-    "p3": 1,
-    "pout": 9,
-    "n_atleti": 2,
-    "pos": 13
-  },
-  {
     "team_id": "A_S_A_C_I_EVONACICLI",
     "team_nome": "A.S.A.C.I. - EVONACICLI",
     "punti": 67,
@@ -164,6 +152,18 @@
     "p2": 2,
     "p3": 2,
     "pout": 1,
+    "n_atleti": 2,
+    "pos": 13
+  },
+  {
+    "team_id": "ALLGOR_TATOBIKE",
+    "team_nome": "ALLGOR TATOBIKE",
+    "punti": 67,
+    "vittorie": 0,
+    "p1": 0,
+    "p2": 1,
+    "p3": 1,
+    "pout": 9,
     "n_atleti": 2,
     "pos": 14
   },

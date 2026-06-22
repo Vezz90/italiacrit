@@ -21,7 +21,7 @@
     "nome": "ALESSANDRA",
     "team_id": "SCUOLA_CICLISMO_VERSO_L_IRIDE",
     "team_nome": "SCUOLA CICLISMO VERSO L'IRIDE",
-    "punti": 199,
+    "punti": 195,
     "vittorie": 4,
     "gare": 18,
     "p1": 4,
@@ -37,7 +37,7 @@
     "nome": "AURORA",
     "team_id": "S_C_CESANO_MADERNO",
     "team_nome": "S.C. CESANO MADERNO",
-    "punti": 174,
+    "punti": 172,
     "vittorie": 6,
     "gare": 16,
     "p1": 6,
@@ -53,7 +53,7 @@
     "nome": "MYA",
     "team_id": "HG_CYCLING_TEAM",
     "team_nome": "HG CYCLING TEAM",
-    "punti": 130,
+    "punti": 128,
     "vittorie": 3,
     "gare": 11,
     "p1": 3,
@@ -80,20 +80,36 @@
     "trend": 0
   },
   {
+    "atleta_id": "ZUCCOTTI_EMMA",
+    "cognome": "ZUCCOTTI",
+    "nome": "EMMA",
+    "team_id": "MARY_J_SWEET_ANGEL_ASD",
+    "team_nome": "MARY J SWEET ANGEL ASD",
+    "punti": 102,
+    "vittorie": 1,
+    "gare": 13,
+    "p1": 1,
+    "p2": 2,
+    "p3": 0,
+    "pout": 10,
+    "pos": 6,
+    "trend": 2
+  },
+  {
     "atleta_id": "SFERRAGATTA_EMANUELA",
     "cognome": "SFERRAGATTA",
     "nome": "EMANUELA",
     "team_id": "HG_CYCLING_TEAM",
     "team_nome": "HG CYCLING TEAM",
-    "punti": 101,
+    "punti": 99,
     "vittorie": 2,
-    "gare": 13,
+    "gare": 12,
     "p1": 2,
     "p2": 0,
     "p3": 1,
-    "pout": 10,
-    "pos": 6,
-    "trend": 0
+    "pout": 9,
+    "pos": 7,
+    "trend": -1
   },
   {
     "atleta_id": "GUIDOLIN_GIORGIA",
@@ -108,24 +124,8 @@
     "p2": 2,
     "p3": 2,
     "pout": 11,
-    "pos": 7,
-    "trend": 0
-  },
-  {
-    "atleta_id": "ZUCCOTTI_EMMA",
-    "cognome": "ZUCCOTTI",
-    "nome": "EMMA",
-    "team_id": "MARY_J_SWEET_ANGEL_ASD",
-    "team_nome": "MARY J SWEET ANGEL ASD",
-    "punti": 86,
-    "vittorie": 1,
-    "gare": 12,
-    "p1": 1,
-    "p2": 2,
-    "p3": 0,
-    "pout": 9,
     "pos": 8,
-    "trend": 0
+    "trend": -1
   },
   {
     "atleta_id": "DONANZAN_MARGHERITA",
@@ -277,7 +277,7 @@
     "nome": "GIULIA",
     "team_id": "ALLGOR_TATOBIKE",
     "team_nome": "ALLGOR TATOBIKE",
-    "punti": 44,
+    "punti": 42,
     "vittorie": 0,
     "gare": 5,
     "p1": 0,
@@ -400,22 +400,6 @@
     "trend": 0
   },
   {
-    "atleta_id": "DASOLI_EMMA",
-    "cognome": "DASOLI",
-    "nome": "EMMA",
-    "team_id": "SPORT_CLUB_BRESCIA_FLANDRES_LOVE",
-    "team_nome": "SPORT CLUB BRESCIA - FLANDRES LOVE",
-    "punti": 31,
-    "vittorie": 0,
-    "gare": 5,
-    "p1": 0,
-    "p2": 0,
-    "p3": 0,
-    "pout": 5,
-    "pos": 26,
-    "trend": 0
-  },
-  {
     "atleta_id": "CARLINO_LETIZIA",
     "cognome": "CARLINO",
     "nome": "LETIZIA",
@@ -428,8 +412,8 @@
     "p2": 1,
     "p3": 1,
     "pout": 1,
-    "pos": 27,
-    "trend": 0
+    "pos": 26,
+    "trend": 1
   },
   {
     "atleta_id": "PELLEGRINI_LETIZIA",
@@ -444,8 +428,24 @@
     "p2": 0,
     "p3": 1,
     "pout": 3,
+    "pos": 27,
+    "trend": 1
+  },
+  {
+    "atleta_id": "DASOLI_EMMA",
+    "cognome": "DASOLI",
+    "nome": "EMMA",
+    "team_id": "SPORT_CLUB_BRESCIA_FLANDRES_LOVE",
+    "team_nome": "SPORT CLUB BRESCIA - FLANDRES LOVE",
+    "punti": 29,
+    "vittorie": 0,
+    "gare": 5,
+    "p1": 0,
+    "p2": 0,
+    "p3": 0,
+    "pout": 5,
     "pos": 28,
-    "trend": 0
+    "trend": -2
   },
   {
     "atleta_id": "RAMPON_SOFIA",
@@ -800,22 +800,6 @@
     "trend": 0
   },
   {
-    "atleta_id": "NICCOLAI_PENELOPE",
-    "cognome": "NICCOLAI",
-    "nome": "PENELOPE",
-    "team_id": "MARY_J_SWEET_ANGEL_ASD",
-    "team_nome": "MARY J SWEET ANGEL ASD",
-    "punti": 4,
-    "vittorie": 0,
-    "gare": 1,
-    "p1": 0,
-    "p2": 0,
-    "p3": 0,
-    "pout": 1,
-    "pos": 51,
-    "trend": 0
-  },
-  {
     "atleta_id": "DAMUZZO_ELISA",
     "cognome": "DAMUZZO",
     "nome": "ELISA",
@@ -828,8 +812,8 @@
     "p2": 0,
     "p3": 0,
     "pout": 1,
-    "pos": 52,
-    "trend": 0
+    "pos": 51,
+    "trend": 1
   },
   {
     "atleta_id": "MARTIN_SOFIA",
@@ -844,8 +828,8 @@
     "p2": 0,
     "p3": 0,
     "pout": 1,
-    "pos": 53,
-    "trend": 0
+    "pos": 52,
+    "trend": 1
   },
   {
     "atleta_id": "PAGANELLI_ANITA",
@@ -860,8 +844,8 @@
     "p2": 0,
     "p3": 0,
     "pout": 1,
-    "pos": 54,
-    "trend": 0
+    "pos": 53,
+    "trend": 1
   },
   {
     "atleta_id": "FASSIH_YOUSRA",
@@ -876,8 +860,8 @@
     "p2": 0,
     "p3": 0,
     "pout": 1,
-    "pos": 55,
-    "trend": 0
+    "pos": 54,
+    "trend": 1
   },
   {
     "atleta_id": "DAOUKHA_FATIMA_ZAHRAA",
@@ -892,8 +876,8 @@
     "p2": 0,
     "p3": 0,
     "pout": 1,
-    "pos": 56,
-    "trend": 0
+    "pos": 55,
+    "trend": 1
   },
   {
     "atleta_id": "BORGATO_NOEMI",
@@ -908,8 +892,24 @@
     "p2": 0,
     "p3": 0,
     "pout": 1,
+    "pos": 56,
+    "trend": 1
+  },
+  {
+    "atleta_id": "NICCOLAI_PENELOPE",
+    "cognome": "NICCOLAI",
+    "nome": "PENELOPE",
+    "team_id": "MARY_J_SWEET_ANGEL_ASD",
+    "team_nome": "MARY J SWEET ANGEL ASD",
+    "punti": 2,
+    "vittorie": 0,
+    "gare": 1,
+    "p1": 0,
+    "p2": 0,
+    "p3": 0,
+    "pout": 1,
     "pos": 57,
-    "trend": 0
+    "trend": -6
   },
   {
     "atleta_id": "PASET_CHIARA",
