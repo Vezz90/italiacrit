@@ -781,8 +781,8 @@ app.post('/api/admin/override/entity', requireAdmin, async (req, res) => {
         const { error: sbErr } = await supabase
           .from('entity_overrides')
           .upsert(
-            { entity_type: 'gara', entity_id, pcs_race_slug: new_value || null },
-            { onConflict: 'entity_type,entity_id' }
+            { entity_type: 'gara', entity_id, field: 'pcs_race_slug', new_value: new_value || null, edited_by: null },
+            { onConflict: 'entity_type,entity_id,field' }
           );
         if (sbErr) console.warn('[admin] sync pcs_race_slug su Supabase fallito:', sbErr.message);
         else console.log(`[admin] pcs_race_slug "${new_value}" salvato su Supabase per gara ${entity_id}`);

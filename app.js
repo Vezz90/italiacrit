@@ -11893,7 +11893,18 @@ async function _loadGaraPcsExt(garaId, circuitResults) {
   try {
     data = await apiCall(`/pcs-results/gara/${encodeURIComponent(garaId)}`);
   } catch { return; }
-  if (!Array.isArray(data) || !data.length) return;
+  if (!Array.isArray(data) || !data.length) {
+    // Nessun risultato scraped: mostra comunque il link PCS se lo slug è configurato
+    try {
+      const { overrides } = await apiCall(`/admin/override/entity/gara/${encodeURIComponent(garaId)}`);
+      const slug = overrides?.pcs_race_slug;
+      if (slug) {
+        const extEl = document.getElementById('gara-pcs-ext');
+        if (extEl) extEl.innerHTML = `<div style="text-align:right;padding:4px 4px 0;font-size:.75rem;color:var(--text-muted)"><a href="https://www.procyclingstats.com/race/${esc(slug)}" target="_blank" style="color:var(--text-muted)">procyclingstats.com →</a></div>`;
+      }
+    } catch {}
+    return;
+  }
 
   const maxCircuitPos = circuitResults.reduce((m, r) => Math.max(m, r.posizione || 0), 0);
   const ext = data.filter(r => r.posizione > maxCircuitPos).sort((a, b) => a.posizione - b.posizione);
