@@ -79,12 +79,13 @@ function nameToSlug(nome) {
   return String(nome || '')
     .normalize('NFD').replace(/[̀-ͯ]/g, '')
     .replace(/^\d+[°^`']\s*/u, '')
-    .toLowerCase().replace(/['''`]/g, '')
+    .toLowerCase()
+    .replace(/['''`']/g, ' ')     // apostrofi → spazio (es: d'italia → d italia → d-italia)
     .replace(/[\s\-–—\/\\]+/g, '-')
     .replace(/[^a-z0-9\-]/g, '').replace(/-+/g, '-').replace(/^-+|-+$/g, '');
 }
 
-// Slug speciali: pattern ICS → override slug PCS
+// Slug speciali: pattern ICS → override slug PCS (ancora verificato via verifySlug)
 const SLUG_OVERRIDES = {
   'campionato-italiano-strada-elite-e-under-23': 'italian-national-championship-road-elite-men',
   'campionato-italiano-strada-under-23':         'italian-national-championship-road-under-23-men',
@@ -96,6 +97,30 @@ const SLUG_OVERRIDES = {
   'giro-dell-appennino':                         'giro-dell-appennino',
   'giro-della-toscana-femminile':                'giro-della-toscana',
 };
+
+// Gare a tappe grandi: mappatura ICS → slug PCS confermato, SENZA verifySlug.
+// Usare solo per gare di cui si conosce con certezza il slug PCS.
+// verifySlug fallisce per queste corse perché PCS le blocca aggressivamente
+// (alto traffico) o usa tabelle renderizzate via JS non visibili a domcontentloaded.
+// L'ordine è importante: pattern più specifici prima di quelli generali.
+// Ogni entry: [substring_nel_nome_normalizzato, pcs_slug].
+const DIRECT_OVERRIDES = [
+  ['giro-d-italia-women',            'giro-donne-international'],
+  ['giro-d-italia-next-gen',         'giro-next-gen'],
+  ['giro-d-italia',                  'giro-d-italia'],
+  ['tirreno-adriatico',              'tirreno-adriatico'],
+  ['tour-of-the-alps',               'tour-of-the-alps'],
+  ['settimana-internazionale-coppi', 'settimana-internazionale-coppi-e-bartali'],
+];
+
+/** Cerca in DIRECT_OVERRIDES: ritorna il slug PCS confermato, o null. */
+function findDirectOverride(nome, season) {
+  const base = nameToSlug(nome);
+  for (const [pat, slug] of DIRECT_OVERRIDES) {
+    if (base.includes(pat)) return `${slug}/${season}`;
+  }
+  return null;
+}
 
 function genCandidates(nome, season) {
   const base = nameToSlug(nome);
@@ -559,8 +584,25 @@ function findBestPcsMatch(icsNome, icsDate, pcsByDate) {
     let fallbackFound = 0;
     for (let i=0; i<noMatch.length; i++) {
       const m = noMatch[i];
-      const cands = genCandidates(m.nome, SEASON);
       process.stdout.write(`[${i+1}/${noMatch.length}] ${m.nome.slice(0,55)} … `);
+
+      // 1. Override diretto (gare a tappe note) — nessuna verifica HTTP
+      const directSlug = findDirectOverride(m.nome, SEASON);
+      if (directSlug) {
+        process.stdout.write(`✓ ${directSlug} [override]\n`);
+        if (!DRY_RUN) {
+          try { for (const gid of m.garaIds) await saveSlug(sb, gid, directSlug); saved++; }
+          catch(e) { process.stdout.write(`  ERR: ${e.message}\n`); }
+        } else { saved++; }
+        const entry = { slug:directSlug, date:m.date, name:m.nome };
+        if (!pcsByDate.has(m.date)) pcsByDate.set(m.date, []);
+        pcsByDate.get(m.date).push(entry);
+        fallbackFound++;
+        continue;
+      }
+
+      // 2. Slug-guessing + verifySlug
+      const cands = genCandidates(m.nome, SEASON);
       if (!cands.length) { process.stdout.write('skip\n'); continue; }
 
       let found = false;
@@ -572,7 +614,6 @@ function findBestPcsMatch(icsNome, icsDate, pcsByDate) {
             try { for (const gid of m.garaIds) await saveSlug(sb, gid, slug); saved++; }
             catch(e) { process.stdout.write(`  ERR: ${e.message}\n`); }
           } else { saved++; }
-          // Aggiungi alla mappa per matching futuri nella stessa run
           const entry = { slug, date:m.date, name:m.nome };
           if (!pcsByDate.has(m.date)) pcsByDate.set(m.date, []);
           pcsByDate.get(m.date).push(entry);
