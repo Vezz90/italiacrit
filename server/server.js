@@ -775,6 +775,22 @@ app.post('/api/admin/override/entity', requireAdmin, async (req, res) => {
       console.warn('[admin] sync extra_roster.json fallito:', fsErr.message);
     }
 
+    // Sincronizza pcs_race_slug su Supabase (letto da pcs-race-scraper.js)
+    if (entity_type === 'gara' && field === 'pcs_race_slug' && supabase) {
+      try {
+        const { error: sbErr } = await supabase
+          .from('entity_overrides')
+          .upsert(
+            { entity_type: 'gara', entity_id, pcs_race_slug: new_value || null },
+            { onConflict: 'entity_type,entity_id' }
+          );
+        if (sbErr) console.warn('[admin] sync pcs_race_slug su Supabase fallito:', sbErr.message);
+        else console.log(`[admin] pcs_race_slug "${new_value}" salvato su Supabase per gara ${entity_id}`);
+      } catch (sbEx) {
+        console.warn('[admin] sync pcs_race_slug su Supabase eccezione:', sbEx.message);
+      }
+    }
+
     res.json({ ok: true });
   } catch (e) { res.status(500).json({ error: e.message }); }
 });

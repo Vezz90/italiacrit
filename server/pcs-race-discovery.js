@@ -127,9 +127,9 @@ function genCandidates(nome, season) {
   if (!base) return [];
   const c = new Set();
 
-  // Slug speciali
+  // Slug speciali — solo match esatto per evitare falsi positivi su versioni femminili
   for (const [pat, override] of Object.entries(SLUG_OVERRIDES)) {
-    if (base.includes(pat.split('-')[0]) && base.includes(pat.split('-').slice(-1)[0])) {
+    if (base === pat) {
       c.add(`${override}/${season}`);
     }
   }
@@ -141,11 +141,12 @@ function genCandidates(nome, season) {
     if (base.startsWith(p)) c.add(`${base.slice(p.length)}/${season}`);
   }
 
-  // Versioni abbreviate
+  // Versioni abbreviate — skip per gare femminili (evita falsi positivi sulla gara maschile corrispondente)
+  const isWomens = /donne|women|femminile/.test(base);
   const parts = base.split('-').filter(Boolean);
-  if (parts.length > 3) c.add(`${parts.slice(0,3).join('-')}/${season}`);
-  if (parts.length > 4) c.add(`${parts.slice(0,4).join('-')}/${season}`);
-  if (parts.length > 5) c.add(`${parts.slice(0,5).join('-')}/${season}`);
+  if (parts.length > 3 && !isWomens) c.add(`${parts.slice(0,3).join('-')}/${season}`);
+  if (parts.length > 4 && !isWomens) c.add(`${parts.slice(0,4).join('-')}/${season}`);
+  if (parts.length > 5 && !isWomens) c.add(`${parts.slice(0,5).join('-')}/${season}`);
 
   // Variante senza apostrofo: "dell'" → "dell" e "d'" → "d"
   const noApos = base.replace(/-d-/g, '-d-').replace(/([a-z])-([a-z])/g, '$1$2');
