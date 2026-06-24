@@ -55916,7 +55916,7 @@
   "TEAM_CESARO_NERI_LUCCHINI": {
     "id": "TEAM_CESARO_NERI_LUCCHINI",
     "nome": "TEAM CESARO-NERI-LUCCHINI",
-    "punti_totali": 1021,
+    "punti_totali": 1047,
     "atleti": [
       "GLIOTTONE_GIOVANNI",
       "VITO_VINCENZO",
@@ -55924,6 +55924,7 @@
       "DE_VITO_LUIGI",
       "CESARO_ALESSANDRO",
       "PITEO_FRANCESCO_PIO",
+      "VARINI_ALESSANDRO",
       "RIZZUTI_TOMMASO_LUIGI",
       "SCARPA_DOMENICO",
       "MONTELLA_ANDREA",
@@ -56093,6 +56094,21 @@
         "atleta_nome": "ALESSANDRO",
         "posizione": 6,
         "punti_effettivi": 5,
+        "moltiplicatore": 1,
+        "tipo": "regionale",
+        "regione": "LAZIO",
+        "km": "37.600",
+        "media": "37.600"
+      },
+      {
+        "gara_id": "19_MEMORIAL_ANTONIO_DE_FELICE_GARA_UNICA_2026-06-14_ES2_M",
+        "nome_gara": "19 MEMORIAL ANTONIO DE FELICE GARA UNICA",
+        "data": "2026-06-14",
+        "atleta_id": "VARINI_ALESSANDRO",
+        "atleta_cognome": "VARINI",
+        "atleta_nome": "ALESSANDRO",
+        "posizione": 8,
+        "punti_effettivi": 3,
         "moltiplicatore": 1,
         "tipo": "regionale",
         "regione": "LAZIO",
@@ -56733,6 +56749,21 @@
         "gara_id": "CRONOSCALATA_CITTA_DI_FUMONE_2026-05-23_ES2_M",
         "nome_gara": "CRONOSCALATA CITTA' DI FUMONE",
         "data": "2026-05-23",
+        "atleta_id": "VARINI_ALESSANDRO",
+        "atleta_cognome": "VARINI",
+        "atleta_nome": "ALESSANDRO",
+        "posizione": 6,
+        "punti_effettivi": 5,
+        "moltiplicatore": 1,
+        "tipo": "regionale",
+        "regione": "LAZIO",
+        "km": "4.600",
+        "media": "23.000"
+      },
+      {
+        "gara_id": "CRONOSCALATA_CITTA_DI_FUMONE_2026-05-23_ES2_M",
+        "nome_gara": "CRONOSCALATA CITTA' DI FUMONE",
+        "data": "2026-05-23",
         "atleta_id": "COLETTA_FRANCESCO",
         "atleta_cognome": "COLETTA",
         "atleta_nome": "FRANCESCO",
@@ -57038,6 +57069,21 @@
         "atleta_nome": "ALESSANDRO",
         "posizione": 5,
         "punti_effettivi": 12,
+        "moltiplicatore": 2,
+        "tipo": "regionale",
+        "regione": "ABRUZZO",
+        "km": "26.400",
+        "media": ""
+      },
+      {
+        "gara_id": "26_TROFEO_PADRE_GIUSEPPE_GARA_UNICA_PROVA_VALIDA_CAMPIONATO_REGIONALE_2026-05-01_ES2_M",
+        "nome_gara": "26 TROFEO PADRE GIUSEPPE GARA UNICA PROVA VALIDA CAMPIONATO REGIONALE",
+        "data": "2026-05-01",
+        "atleta_id": "VARINI_ALESSANDRO",
+        "atleta_cognome": "VARINI",
+        "atleta_nome": "ALESSANDRO",
+        "posizione": 7,
+        "punti_effettivi": 8,
         "moltiplicatore": 2,
         "tipo": "regionale",
         "regione": "ABRUZZO",
@@ -57555,6 +57601,21 @@
         "media": "40.352"
       },
       {
+        "gara_id": "GIORNATA_AZZURRA_ESORDIENTI_GARA_UNICA_2026-04-04_ES2_M",
+        "nome_gara": "GIORNATA AZZURRA ESORDIENTI GARA UNICA",
+        "data": "2026-04-04",
+        "atleta_id": "VARINI_ALESSANDRO",
+        "atleta_cognome": "VARINI",
+        "atleta_nome": "ALESSANDRO",
+        "posizione": 7,
+        "punti_effettivi": 4,
+        "moltiplicatore": 1,
+        "tipo": "regionale",
+        "regione": "PUGLIA",
+        "km": "32.000",
+        "media": "35.186"
+      },
+      {
         "gara_id": "15_MEMORIAL_TOMMASO_CAVORSO_2026-03-29_ES1_M",
         "nome_gara": "15 MEMORIAL TOMMASO CAVORSO",
         "data": "2026-03-29",
@@ -57658,11 +57719,26 @@
         "regione": "TOSCANA",
         "km": "30.000",
         "media": "38.933"
+      },
+      {
+        "gara_id": "MEMORIAL_ENNIO_BONGIORNI_2026-03-22_ES2_M",
+        "nome_gara": "MEMORIAL ENNIO BONGIORNI",
+        "data": "2026-03-22",
+        "atleta_id": "VARINI_ALESSANDRO",
+        "atleta_cognome": "VARINI",
+        "atleta_nome": "ALESSANDRO",
+        "posizione": 5,
+        "punti_effettivi": 6,
+        "moltiplicatore": 1,
+        "tipo": "regionale",
+        "regione": "TOSCANA",
+        "km": "30.000",
+        "media": "38.933"
       }
     ],
     "punti_per_cat": {
       "AL_M": 203,
-      "ES2_M": 589,
+      "ES2_M": 615,
       "ES1_M": 198,
       "AL_F": 31
     }
@@ -57670,7 +57746,7 @@
   "TEAM_CORATTI": {
     "id": "TEAM_CORATTI",
     "nome": "TEAM CORATTI",
-    "punti_totali": 661,
+    "punti_totali": 635,
     "atleti": [
       "FIACCO_ANDREA",
       "MONTANARO_NICOLO",
@@ -57679,7 +57755,6 @@
       "FERRARI_RICCARDO",
       "ANTONELLI_ROCCO_VINCENZO",
       "BARDI_LUDOVICO",
-      "VARINI_ALESSANDRO",
       "FERRARO_LORENZO",
       "PARIS_BRIAN",
       "CAROSI_VINCENZO",
@@ -57819,21 +57894,6 @@
         "atleta_nome": "ROCCO VINCENZO",
         "posizione": 4,
         "punti_effettivi": 8,
-        "moltiplicatore": 1,
-        "tipo": "regionale",
-        "regione": "LAZIO",
-        "km": "37.600",
-        "media": "37.600"
-      },
-      {
-        "gara_id": "19_MEMORIAL_ANTONIO_DE_FELICE_GARA_UNICA_2026-06-14_ES2_M",
-        "nome_gara": "19 MEMORIAL ANTONIO DE FELICE GARA UNICA",
-        "data": "2026-06-14",
-        "atleta_id": "VARINI_ALESSANDRO",
-        "atleta_cognome": "VARINI",
-        "atleta_nome": "ALESSANDRO",
-        "posizione": 8,
-        "punti_effettivi": 3,
         "moltiplicatore": 1,
         "tipo": "regionale",
         "regione": "LAZIO",
@@ -58216,21 +58276,6 @@
         "media": "20.880"
       },
       {
-        "gara_id": "CRONOSCALATA_CITTA_DI_FUMONE_2026-05-23_ES2_M",
-        "nome_gara": "CRONOSCALATA CITTA' DI FUMONE",
-        "data": "2026-05-23",
-        "atleta_id": "VARINI_ALESSANDRO",
-        "atleta_cognome": "VARINI",
-        "atleta_nome": "ALESSANDRO",
-        "posizione": 6,
-        "punti_effettivi": 5,
-        "moltiplicatore": 1,
-        "tipo": "regionale",
-        "regione": "LAZIO",
-        "km": "4.600",
-        "media": "23.000"
-      },
-      {
         "gara_id": "2_TROFEO_ROMANELLI_TOMMASO_MEMORIAL_LUCA_ROMANELLI_2026-05-17_AL_M",
         "nome_gara": "2 TROFEO ROMANELLI TOMMASO MEMORIAL LUCA ROMANELLI",
         "data": "2026-05-17",
@@ -58389,21 +58434,6 @@
         "atleta_nome": "ROCCO VINCENZO",
         "posizione": 3,
         "punti_effettivi": 20,
-        "moltiplicatore": 2,
-        "tipo": "regionale",
-        "regione": "ABRUZZO",
-        "km": "26.400",
-        "media": ""
-      },
-      {
-        "gara_id": "26_TROFEO_PADRE_GIUSEPPE_GARA_UNICA_PROVA_VALIDA_CAMPIONATO_REGIONALE_2026-05-01_ES2_M",
-        "nome_gara": "26 TROFEO PADRE GIUSEPPE GARA UNICA PROVA VALIDA CAMPIONATO REGIONALE",
-        "data": "2026-05-01",
-        "atleta_id": "VARINI_ALESSANDRO",
-        "atleta_cognome": "VARINI",
-        "atleta_nome": "ALESSANDRO",
-        "posizione": 7,
-        "punti_effettivi": 8,
         "moltiplicatore": 2,
         "tipo": "regionale",
         "regione": "ABRUZZO",
@@ -58666,21 +58696,6 @@
         "media": ""
       },
       {
-        "gara_id": "GIORNATA_AZZURRA_ESORDIENTI_GARA_UNICA_2026-04-04_ES2_M",
-        "nome_gara": "GIORNATA AZZURRA ESORDIENTI GARA UNICA",
-        "data": "2026-04-04",
-        "atleta_id": "VARINI_ALESSANDRO",
-        "atleta_cognome": "VARINI",
-        "atleta_nome": "ALESSANDRO",
-        "posizione": 7,
-        "punti_effettivi": 4,
-        "moltiplicatore": 1,
-        "tipo": "regionale",
-        "regione": "PUGLIA",
-        "km": "32.000",
-        "media": "35.186"
-      },
-      {
         "gara_id": "TROFEO_MICHELE_SCARPONI_DUE_GIORNI_2026-04-03_JUN_M",
         "nome_gara": "TROFEO MICHELE SCARPONI DUE GIORNI",
         "data": "2026-04-03",
@@ -58724,21 +58739,6 @@
         "regione": "EMILIA ROMAGNA",
         "km": "49.000",
         "media": "43.674"
-      },
-      {
-        "gara_id": "MEMORIAL_ENNIO_BONGIORNI_2026-03-22_ES2_M",
-        "nome_gara": "MEMORIAL ENNIO BONGIORNI",
-        "data": "2026-03-22",
-        "atleta_id": "VARINI_ALESSANDRO",
-        "atleta_cognome": "VARINI",
-        "atleta_nome": "ALESSANDRO",
-        "posizione": 5,
-        "punti_effettivi": 6,
-        "moltiplicatore": 1,
-        "tipo": "regionale",
-        "regione": "TOSCANA",
-        "km": "30.000",
-        "media": "38.933"
       },
       {
         "gara_id": "75_COPPA_GIUSEPPE_CEI_2026-03-15_AL_M",
@@ -58849,7 +58849,6 @@
     "punti_per_cat": {
       "AL_M": 307,
       "ES1_M": 75,
-      "ES2_M": 26,
       "JUN_M": 238,
       "AL_F": 15
     }
