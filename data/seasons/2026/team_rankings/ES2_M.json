@@ -2,14 +2,26 @@
   {
     "team_id": "TEAM_CESARO_NERI_LUCCHINI",
     "team_nome": "TEAM CESARO-NERI-LUCCHINI",
-    "punti": 703,
-    "vittorie": 16,
-    "p1": 16,
-    "p2": 12,
-    "p3": 6,
-    "pout": 41,
-    "n_atleti": 5,
+    "punti": 589,
+    "vittorie": 14,
+    "p1": 14,
+    "p2": 10,
+    "p3": 4,
+    "pout": 33,
+    "n_atleti": 4,
     "pos": 1
+  },
+  {
+    "team_id": "IL_PIRATA_SAMA_RICAMBI_OTC",
+    "team_nome": "IL PIRATA SAMA RICAMBI OTC",
+    "punti": 466,
+    "vittorie": 7,
+    "p1": 7,
+    "p2": 7,
+    "p3": 7,
+    "pout": 28,
+    "n_atleti": 4,
+    "pos": 2
   },
   {
     "team_id": "UC_COLTANO_GRUBE_COSTRUZIONI",
@@ -21,7 +33,7 @@
     "p3": 5,
     "pout": 17,
     "n_atleti": 4,
-    "pos": 2
+    "pos": 3
   },
   {
     "team_id": "BUSTO_GAROLFO",
@@ -33,18 +45,6 @@
     "p3": 5,
     "pout": 25,
     "n_atleti": 4,
-    "pos": 3
-  },
-  {
-    "team_id": "IL_PIRATA_SAMA_RICAMBI_OTC",
-    "team_nome": "IL PIRATA SAMA RICAMBI OTC",
-    "punti": 352,
-    "vittorie": 5,
-    "p1": 5,
-    "p2": 5,
-    "p3": 5,
-    "pout": 20,
-    "n_atleti": 3,
     "pos": 4
   },
   {
