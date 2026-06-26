@@ -2,12 +2,12 @@
   {
     "team_id": "TEAM_VANGI_TOMMASINI_IL_PIRATA",
     "team_nome": "TEAM VANGI TOMMASINI IL PIRATA",
-    "punti": 879,
+    "punti": 895,
     "vittorie": 12,
     "p1": 12,
     "p2": 11,
     "p3": 9,
-    "pout": 33,
+    "pout": 34,
     "n_atleti": 12,
     "pos": 1
   },
@@ -60,6 +60,18 @@
     "pos": 5
   },
   {
+    "team_id": "TEAM_NERI_SOTTOLI_LUCCHINI_ENERGY",
+    "team_nome": "TEAM NERI SOTTOLI LUCCHINI ENERGY",
+    "punti": 478,
+    "vittorie": 1,
+    "p1": 1,
+    "p2": 7,
+    "p3": 5,
+    "pout": 32,
+    "n_atleti": 7,
+    "pos": 6
+  },
+  {
     "team_id": "NORDEST_PETRUCCI_ASSALI_STEFEN",
     "team_nome": "NORDEST PETRUCCI ASSALI STEFEN",
     "punti": 461,
@@ -69,29 +81,17 @@
     "p3": 2,
     "pout": 22,
     "n_atleti": 9,
-    "pos": 6
-  },
-  {
-    "team_id": "TEAM_NERI_SOTTOLI_LUCCHINI_ENERGY",
-    "team_nome": "TEAM NERI SOTTOLI LUCCHINI ENERGY",
-    "punti": 448,
-    "vittorie": 0,
-    "p1": 0,
-    "p2": 7,
-    "p3": 5,
-    "pout": 32,
-    "n_atleti": 7,
     "pos": 7
   },
   {
     "team_id": "AUTOZAI_CONTRI",
     "team_nome": "AUTOZAI-CONTRI",
-    "punti": 381,
+    "punti": 387,
     "vittorie": 3,
     "p1": 3,
     "p2": 4,
     "p3": 2,
-    "pout": 22,
+    "pout": 23,
     "n_atleti": 8,
     "pos": 8
   },
@@ -180,6 +180,18 @@
     "pos": 15
   },
   {
+    "team_id": "A_R_MONEX_PRO_CYCLING_TEAM",
+    "team_nome": "A.R.MONEX PRO CYCLING TEAM",
+    "punti": 260,
+    "vittorie": 1,
+    "p1": 1,
+    "p2": 3,
+    "p3": 2,
+    "pout": 7,
+    "n_atleti": 4,
+    "pos": 16
+  },
+  {
     "team_id": "TEAM_GENERAL_SYSTEM",
     "team_nome": "TEAM GENERAL SYSTEM",
     "punti": 253,
@@ -189,39 +201,27 @@
     "p3": 2,
     "pout": 20,
     "n_atleti": 7,
-    "pos": 16
-  },
-  {
-    "team_id": "A_R_MONEX_PRO_CYCLING_TEAM",
-    "team_nome": "A.R.MONEX PRO CYCLING TEAM",
-    "punti": 244,
-    "vittorie": 1,
-    "p1": 1,
-    "p2": 3,
-    "p3": 2,
-    "pout": 5,
-    "n_atleti": 3,
     "pos": 17
   },
   {
     "team_id": "TEAM_CORATTI",
     "team_nome": "TEAM CORATTI",
-    "punti": 238,
+    "punti": 248,
     "vittorie": 2,
     "p1": 2,
     "p2": 4,
     "p3": 1,
-    "pout": 11,
+    "pout": 12,
     "n_atleti": 5,
     "pos": 18
   },
   {
     "team_id": "TEAM_TIEPOLO_U19_DEVO",
     "team_nome": "TEAM TIEPOLO U19 DEVO",
-    "punti": 198,
+    "punti": 222,
     "vittorie": 0,
     "p1": 0,
-    "p2": 2,
+    "p2": 3,
     "p3": 2,
     "pout": 14,
     "n_atleti": 6,
@@ -242,11 +242,11 @@
   {
     "team_id": "A_S_D_CICLISTICA_MONSELICE",
     "team_nome": "A.S.D. CICLISTICA MONSELICE",
-    "punti": 176,
+    "punti": 196,
     "vittorie": 1,
     "p1": 1,
     "p2": 4,
-    "p3": 3,
+    "p3": 4,
     "pout": 9,
     "n_atleti": 4,
     "pos": 21
@@ -384,6 +384,18 @@
     "pos": 32
   },
   {
+    "team_id": "FAIZANE_CSZ_SANDRIGO_BIKE",
+    "team_nome": "FAIZANE' CSZ SANDRIGO BIKE",
+    "punti": 99,
+    "vittorie": 0,
+    "p1": 0,
+    "p2": 1,
+    "p3": 0,
+    "pout": 18,
+    "n_atleti": 6,
+    "pos": 33
+  },
+  {
     "team_id": "S_C_MONTEPONI_A_S_D",
     "team_nome": "S.C. MONTEPONI A.S.D.",
     "punti": 93,
@@ -393,7 +405,7 @@
     "p3": 1,
     "pout": 2,
     "n_atleti": 2,
-    "pos": 33
+    "pos": 34
   },
   {
     "team_id": "G_S_GIOVANI_GIUSSANESI_A_S_D",
@@ -404,18 +416,6 @@
     "p2": 0,
     "p3": 3,
     "pout": 7,
-    "n_atleti": 6,
-    "pos": 34
-  },
-  {
-    "team_id": "FAIZANE_CSZ_SANDRIGO_BIKE",
-    "team_nome": "FAIZANE' CSZ SANDRIGO BIKE",
-    "punti": 91,
-    "vittorie": 0,
-    "p1": 0,
-    "p2": 1,
-    "p3": 0,
-    "pout": 17,
     "n_atleti": 6,
     "pos": 35
   },
@@ -518,12 +518,12 @@
   {
     "team_id": "GOTTARDO_GIOCHI_CANEVA",
     "team_nome": "GOTTARDO GIOCHI CANEVA",
-    "punti": 62,
+    "punti": 64,
     "vittorie": 0,
     "p1": 0,
     "p2": 0,
     "p3": 0,
-    "pout": 6,
+    "pout": 7,
     "n_atleti": 2,
     "pos": 44
   },
