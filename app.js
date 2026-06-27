@@ -2022,6 +2022,11 @@ window._openPcsHtmlPasteModal = function(garaId) {
         <li>Seleziona tutto (<b>Ctrl+A</b>) e copia (<b>Ctrl+C</b>)</li>
         <li>Incolla qui sotto e clicca <b>Importa</b></li>
       </ol>
+      <div style="font-size:.78rem;color:var(--text-secondary);background:var(--bg-input,#1e293b);border:1px solid var(--border);border-radius:6px;padding:8px 10px;margin:0 0 14px;line-height:1.6">
+        ⚠️ <b>Classifica generale / tappe:</b> il <b>Ctrl+U</b> mostra la pagina <i>caricata all'inizio</i>, non la scheda che hai cliccato dopo.
+        Per importare il GC apri l'<b>URL diretto del GC</b> (es. <code>.../race/.../2026/gc</code>) in una scheda nuova e <b>poi</b> fai Ctrl+U.
+        In alternativa: <b>F12 → Elements → tasto destro su &lt;html&gt; → Copy → Copy outerHTML</b> e incolla qui (copia sempre ciò che vedi a schermo).
+      </div>
       <textarea id="pcs-html-input" placeholder="Incolla qui il sorgente HTML…"
         style="width:100%;height:160px;box-sizing:border-box;background:var(--bg-input,#1e293b);color:var(--text-primary);border:1px solid var(--border);border-radius:6px;padding:10px;font-size:.78rem;font-family:var(--font-mono);resize:vertical"></textarea>
       <div id="pcs-paste-err" style="display:none;color:var(--red-hot);font-size:.82rem;margin-top:8px"></div>
