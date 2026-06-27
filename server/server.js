@@ -1937,11 +1937,18 @@ function _findExistingTeam(pcsName, teamEntries) {
   for (const e of teamEntries) {
     if (e.nameSq === sq || e.idSq === sq) return { tid: e.tid, nome: e.nome };
   }
-  // 2) contenimento (entrambe le direzioni, proteggi da match troppo corti)
+  // 2) contenimento (entrambe le direzioni). Per evitare falsi positivi quando il
+  // nome reale è una parola corta comune (es. "VPT VENETO PROJECT TEAM" vs "VENETO"),
+  // richiedi che le due stringhe siano di lunghezza simile: il più corto deve essere
+  // almeno il 60% del più lungo. Così "TEAM MAZZOLA PGC" ~ "TEAM MAZZOLA P.G.C. U23"
+  // (82%) passa, mentre "veneto" dentro "vptvenetoprojectteam" (30%) viene scartato.
   if (sq.length >= 6) {
     for (const e of teamEntries) {
-      if (e.nameSq.length >= 6 && (e.nameSq.includes(sq) || sq.includes(e.nameSq)))
-        return { tid: e.tid, nome: e.nome };
+      if (e.nameSq.length < 6) continue;
+      if (!(e.nameSq.includes(sq) || sq.includes(e.nameSq))) continue;
+      const shorter = Math.min(sq.length, e.nameSq.length);
+      const longer  = Math.max(sq.length, e.nameSq.length);
+      if (shorter / longer >= 0.6) return { tid: e.tid, nome: e.nome };
     }
   }
   return null;
@@ -1959,6 +1966,32 @@ function _buildTeamIndex() {
     }
   } catch {}
   return out;
+}
+
+// Rivaluta il team di ogni profilo pcs_atleta: se il nome del team fa fuzzy-match
+// con un team reale (teams.json) diverso da quello salvato, aggiorna il profilo.
+// Rende "↺ Rimatch Atleti" capace di auto-correggere i team dei profili esistenti.
+async function _fixPcsAthleteTeams() {
+  if (!supabase) return 0;
+  const teamIndex = _buildTeamIndex();
+  if (!teamIndex.length) return 0;
+  let fixed = 0;
+  try {
+    const { data } = await supabase
+      .from('entity_overrides').select('id, new_value')
+      .eq('entity_type', 'pcs_atleta').eq('field', 'profile').limit(5000);
+    for (const row of (data || [])) {
+      let p; try { p = JSON.parse(row.new_value); } catch { continue; }
+      const real = _findExistingTeam(p.team_nome || '', teamIndex);
+      if (real && real.tid !== p.team_id) {
+        p.team_id = real.tid; p.team_nome = real.nome;
+        const { error } = await supabase.from('entity_overrides')
+          .update({ new_value: JSON.stringify(p) }).eq('id', row.id);
+        if (!error) fixed++;
+      }
+    }
+  } catch (e) { console.warn('[pcs] fix team profili fallito:', e.message); }
+  return fixed;
 }
 
 // Divide nome PCS "COGNOME Nome" → { cognome, nome } tutto uppercase
@@ -2269,8 +2302,11 @@ app.post('/api/admin/pcs-rematch-athletes', requireAdmin, async (req, res) => {
       }
     }
 
-    console.log(`[rematch] ${updated}/${sbRows.length} righe aggiornate, ${newAtleti} nuovi profili creati`);
-    res.json({ ok: true, updated, total: sbRows.length, newAtleti });
+    // Terzo: auto-correggi i team dei profili esistenti (fuzzy match su teams.json)
+    const teamFixed = await _fixPcsAthleteTeams();
+
+    console.log(`[rematch] ${updated}/${sbRows.length} righe aggiornate, ${newAtleti} nuovi profili, ${teamFixed} team corretti`);
+    res.json({ ok: true, updated, total: sbRows.length, newAtleti, teamFixed });
   } catch (e) { res.status(500).json({ error: e.message }); }
 });
 

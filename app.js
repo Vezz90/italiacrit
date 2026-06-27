@@ -1898,11 +1898,12 @@ window.adminPcsRematch = async function(garaId) {
   if (btn) { btn.disabled = true; btn.textContent = '⏳ Rimatch…'; }
   try {
     const result = await apiCall(`/admin/pcs-rematch-athletes?gara_id=${encodeURIComponent(garaId)}`, { method: 'POST', body: {} });
-    const nuovi = result.newAtleti ? ` — ${result.newAtleti} profili nuovi creati` : '';
-    showToast(`Rimatch: ${result.updated} atleti collegati su ${result.total}${nuovi}`);
+    const nuovi = result.newAtleti ? ` — ${result.newAtleti} profili nuovi` : '';
+    const team  = result.teamFixed ? ` — ${result.teamFixed} team corretti` : '';
+    showToast(`Rimatch: ${result.updated} atleti collegati su ${result.total}${nuovi}${team}`);
     if (btn) { btn.textContent = `✓ ${result.updated}/${result.total}`; }
-    // Se cambiano i collegamenti o nascono profili, ricarica così i link sono subito validi
-    if (result.newAtleti > 0 || result.updated > 0) await _reloadAfterPcs();
+    // Se cambiano collegamenti, profili o team, ricarica così tutto è subito valido
+    if (result.newAtleti > 0 || result.updated > 0 || result.teamFixed > 0) await _reloadAfterPcs();
     const circuitResults = (window._lastGaraResults || []);
     await _loadGaraPcsExt(garaId, circuitResults);
   } catch (e) {
@@ -12081,6 +12082,11 @@ async function _loadGaraPcsExt(garaId, circuitResults) {
   const ph = `<span class=rk-av-placeholder><svg width=20 height=20 viewBox='0 0 24 24' fill='none' stroke='currentColor' stroke-width='1.5'><circle cx='12' cy='8' r='4'/><path d='M4 20c0-4 3.6-7 8-7s8 3 8 7'/></svg></span>`;
   const newSpans = [];
 
+  // S.T. (stesso tempo): solo il primo corridore con un dato distacco mostra il
+  // tempo, i successivi con lo stesso distacco mostrano "S.T." fino al prossimo
+  // distacco diverso (come lo scraper FCI). Le medie restano calcolate sul distacco.
+  let _prevGapSec = null;
+
   for (const r of ext) {
     const ath = r.atleta_id ? globalData?.athletes?.[r.atleta_id] : null;
     const name = ath ? `${ath.cognome} ${ath.nome}` : (r.rider_name || '');
@@ -12115,7 +12121,10 @@ async function _loadGaraPcsExt(garaId, circuitResults) {
 
     const pClass = posClass(r.posizione);
     const gapSec = _parsePcsGap(r.distacco);
-    const tempoDisplay = _fmtPcsGap(r.distacco);
+    // Stesso distacco del corridore precedente → "S.T."; altrimenti mostra il tempo
+    const tempoDisplay = (_prevGapSec !== null && gapSec === _prevGapSec)
+      ? 'S.T.' : _fmtPcsGap(r.distacco);
+    _prevGapSec = gapSec;
     const media = winnerSec ? _realAvgSpeed(raceKm, winnerSec, gapSec) : null;
     const mediaDisplay = media ? media.toFixed(3) : '—';
 
