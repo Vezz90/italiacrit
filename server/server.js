@@ -2159,6 +2159,16 @@ async function _buildAthleteMapAsync() {
   return map;
 }
 
+// Estrae il primo orario valido (M:SS o H:MM:SS) dalla cella tempo di PCS.
+// PCS mette due span (visibile + nascosto) con lo stesso valore → cheerio.text()
+// li concatena ("1:501:50", "3:54:043:54:04", ",,1:50"). Prendiamo solo il primo
+// token orario così il distacco è pulito.
+function _extractPcsTime(raw) {
+  if (!raw) return null;
+  const m = String(raw).match(/\d{1,2}:\d{2}(?::\d{2})?/);
+  return m ? m[0] : null;
+}
+
 // Estrae tabella risultati dall'HTML con cheerio
 // PCS mette il link del team DENTRO la cella del rider → usa solo il primo <a> per il nome
 function _parsePcsResultsHtml(html, garaId, season, pcsSlug) {
@@ -2205,7 +2215,7 @@ function _parsePcsResultsHtml(html, garaId, season, pcsSlug) {
       const atleta_id = athleteMap.get(_normName(rider)) || null;
 
       rows.push({ gara_id: garaId, season, posizione: pos, rider_name: rider,
-        team_name: getTeamName(iTeam) || null, distacco: getFullText(iTime) || null,
+        team_name: getTeamName(iTeam) || null, distacco: _extractPcsTime(getFullText(iTime)),
         pcs_race_slug: pcsSlug, atleta_id });
     });
   });

@@ -12051,10 +12051,13 @@ async function _loadGaraPcsExt(garaId, circuitResults) {
   };
 
   // Parsa distacco PCS "+M:SS" o "+H:MM:SS" → secondi
+  // Difensivo: estrae solo il primo token orario valido (PCS può concatenare
+  // due valori uguali, es. "1:501:50" → "1:50") per evitare distacchi assurdi.
   const _parsePcsGap = (gap) => {
     if (!gap) return 0;
-    const g = String(gap).replace(/^\+/, '').trim();
-    const parts = g.split(':').map(Number);
+    const m = String(gap).match(/\d{1,2}:\d{2}(?::\d{2})?/);
+    if (!m) return 0;
+    const parts = m[0].split(':').map(Number);
     if (parts.some(isNaN)) return 0;
     if (parts.length === 3) return parts[0]*3600 + parts[1]*60 + parts[2];
     if (parts.length === 2) return parts[0]*60 + parts[1];
