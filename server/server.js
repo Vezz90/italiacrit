@@ -1872,10 +1872,47 @@ app.post('/api/admin/pcs-race-import', requireAdminOrLocal, (req, res) => {
   proc.on('close', code => { if (buf) onLine(buf); if (_fullImportJob) { _fullImportJob.running = false; _fullImportJob.exitCode = code; } });
 });
 
+// Normalizza nome per confronto (rimuove accenti, lowercase, solo alfanumerici)
+function _normName(s) {
+  return String(s || '').normalize('NFD').replace(/[̀-ͯ]/g, '')
+    .toLowerCase().replace(/[^a-z0-9]+/g, ' ').trim();
+}
+
+// Costruisce mappa nome→atleta_id dagli atleti nel sistema
+function _buildAthleteMap() {
+  const map = new Map();
+  try {
+    const athletesPath = path.join(__dirname, '..', 'data', 'athletes.json');
+    const obj = JSON.parse(fs.readFileSync(athletesPath, 'utf8'));
+    for (const [id, a] of Object.entries(obj)) {
+      const c = a.cognome || '', n = a.nome || '';
+      if (!c && !n) continue;
+      map.set(_normName(c + ' ' + n), id);
+      map.set(_normName(n + ' ' + c), id);
+    }
+  } catch {}
+  // Anche extra_roster.json
+  try {
+    const rosterPath = path.join(__dirname, '..', 'data', 'extra_roster.json');
+    const obj = JSON.parse(fs.readFileSync(rosterPath, 'utf8'));
+    for (const entry of Object.values(obj)) {
+      for (const a of (entry.atleti || [])) {
+        if (!a.atleta_id) continue;
+        const c = a.cognome || '', n = a.nome || '';
+        map.set(_normName(c + ' ' + n), a.atleta_id);
+        map.set(_normName(n + ' ' + c), a.atleta_id);
+      }
+    }
+  } catch {}
+  return map;
+}
+
 // Estrae tabella risultati dall'HTML con cheerio
+// PCS mette il link del team DENTRO la cella del rider → usa solo il primo <a> per il nome
 function _parsePcsResultsHtml(html, garaId, season, pcsSlug) {
   const cheerio = require('cheerio');
   const $ = cheerio.load(html);
+  const athleteMap = _buildAthleteMap();
   const rows = [];
   $('table').each((_, table) => {
     if (rows.length) return false;
@@ -1893,13 +1930,31 @@ function _parsePcsResultsHtml(html, garaId, season, pcsSlug) {
     $(table).find('tbody tr').each((_, tr) => {
       const cells = $(tr).find('td');
       if (cells.length < 2) return;
-      const getText = i => i >= 0 ? $(cells.get(i)).text().replace(/\s+/g, ' ').trim() : '';
-      const pos = parseInt(getText(iPos));
-      const rider = getText(iRider);
+      const getFullText = i => i >= 0 ? $(cells.get(i)).text().replace(/\s+/g, ' ').trim() : '';
+      // Per il nome corridore usa solo il primo <a> della cella (evita team link incluso da PCS)
+      const getRiderName = i => {
+        if (i < 0) return '';
+        const cell = $(cells.get(i));
+        const firstLink = cell.find('a').first();
+        return (firstLink.length ? firstLink.text() : cell.text()).replace(/\s+/g, ' ').trim();
+      };
+      const getTeamName = i => {
+        if (i < 0) return '';
+        const cell = $(cells.get(i));
+        const firstLink = cell.find('a').first();
+        return (firstLink.length ? firstLink.text() : cell.text()).replace(/\s+/g, ' ').trim();
+      };
+
+      const pos   = parseInt(getFullText(iPos));
+      const rider = getRiderName(iRider);
       if (!pos || !rider) return;
+
+      // Cerca match con atleti già nel sistema
+      const atleta_id = athleteMap.get(_normName(rider)) || null;
+
       rows.push({ gara_id: garaId, season, posizione: pos, rider_name: rider,
-        team_name: getText(iTeam) || null, distacco: getText(iTime) || null,
-        pcs_race_slug: pcsSlug, atleta_id: null });
+        team_name: getTeamName(iTeam) || null, distacco: getFullText(iTime) || null,
+        pcs_race_slug: pcsSlug, atleta_id });
     });
   });
   return rows;
