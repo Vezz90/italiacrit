@@ -1925,9 +1925,6 @@ function _makeTeamId(teamName) {
 function _squashTeam(s) {
   return String(s || '').normalize('NFD').replace(/[̀-ͯ]/g, '').toLowerCase().replace(/[^a-z0-9]+/g, '');
 }
-function _normSpace(s) {
-  return String(s || '').normalize('NFD').replace(/[̀-ͯ]/g, '').toLowerCase().replace(/[^a-z0-9]+/g, ' ').trim();
-}
 
 // Cerca un team esistente (in teams.json) con nome quasi identico al nome PCS.
 // Strategia: 1) squash esatto su nome o id, 2) contenimento squash (min 6 char).
@@ -1958,7 +1955,7 @@ function _buildTeamIndex() {
     const obj = JSON.parse(fs.readFileSync(teamsPath, 'utf8'));
     for (const [tid, t] of Object.entries(obj)) {
       const nome = t.nome || tid;
-      out.push({ tid, nome, nameSq: _squashTeam(nome), idSq: _squashTeam(tid), nameNorm: _normSpace(nome) });
+      out.push({ tid, nome, nameSq: _squashTeam(nome), idSq: _squashTeam(tid) });
     }
   } catch {}
   return out;
