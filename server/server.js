@@ -2310,6 +2310,119 @@ app.post('/api/admin/pcs-rematch-athletes', requireAdmin, async (req, res) => {
   } catch (e) { res.status(500).json({ error: e.message }); }
 });
 
+// Suggerisce, per ogni team PCS NON ancora collegato a un team reale, i possibili
+// team reali simili (parole condivise / contenimento) da unire manualmente.
+function _teamSuggestions(pcsNome, teamEntries) {
+  const sq = _squashTeam(pcsNome);
+  const STOP = new Set(['team','cycling','asd','club','sc','gs','uc','us','ssd','ciclistica','velo','pro','racing']);
+  const words = w => String(w || '').normalize('NFD').replace(/[̀-ͯ]/g, '').toLowerCase()
+    .split(/[^a-z0-9]+/).filter(x => x.length >= 4 && !STOP.has(x));
+  const pcsWords = new Set(words(pcsNome));
+  const out = [];
+  for (const e of teamEntries) {
+    let score = 0;
+    // parole significative condivise
+    const realWords = words(e.nome);
+    for (const w of realWords) if (pcsWords.has(w)) score += 3;
+    // contenimento squash
+    if (sq.length >= 5 && e.nameSq.length >= 5 && (e.nameSq.includes(sq) || sq.includes(e.nameSq))) score += 4;
+    if (score > 0) out.push({ tid: e.tid, nome: e.nome, score });
+  }
+  out.sort((a, b) => b.score - a.score);
+  return out.slice(0, 4);
+}
+
+// Elenco dei team PCS (profili pcs_atleta) con possibili corrispondenze reali
+app.get('/api/admin/pcs-team-suggestions', requireAdmin, async (req, res) => {
+  try {
+    if (!supabase) return res.status(503).json({ error: 'Supabase non disponibile' });
+    const teamIndex = _buildTeamIndex();
+    const realIds = new Set(teamIndex.map(e => e.tid));
+    const { data, error } = await supabase
+      .from('entity_overrides').select('new_value')
+      .eq('entity_type', 'pcs_atleta').eq('field', 'profile').limit(5000);
+    if (error) throw error;
+    // Raggruppa per team PCS
+    const groups = {};
+    for (const row of (data || [])) {
+      let p; try { p = JSON.parse(row.new_value); } catch { continue; }
+      const tid = p.team_id || 'SCONOSCIUTO';
+      if (realIds.has(tid)) continue;            // già un team reale → niente da suggerire
+      if (!groups[tid]) groups[tid] = { team_id: tid, team_nome: p.team_nome || tid, count: 0 };
+      groups[tid].count++;
+    }
+    const list = Object.values(groups)
+      .filter(g => g.team_id !== 'SCONOSCIUTO')
+      .map(g => ({ ...g, candidates: _teamSuggestions(g.team_nome, teamIndex) }))
+      .filter(g => g.candidates.length)
+      .sort((a, b) => b.candidates[0].score - a.candidates[0].score);
+    res.json(list);
+  } catch (e) { res.status(500).json({ error: e.message }); }
+});
+
+// Unisci tutti gli atleti di un team PCS in un team reale (o rinomina manualmente)
+app.post('/api/admin/pcs-merge-team', requireAdmin, async (req, res) => {
+  try {
+    if (!supabase) return res.status(503).json({ error: 'Supabase non disponibile' });
+    const { from_id, to_id, to_nome } = req.body || {};
+    if (!from_id || !to_id || !to_nome) return res.status(400).json({ error: 'from_id, to_id e to_nome richiesti' });
+    const { data, error } = await supabase
+      .from('entity_overrides').select('id, new_value')
+      .eq('entity_type', 'pcs_atleta').eq('field', 'profile').limit(5000);
+    if (error) throw error;
+    let updated = 0;
+    for (const row of (data || [])) {
+      let p; try { p = JSON.parse(row.new_value); } catch { continue; }
+      if ((p.team_id || 'SCONOSCIUTO') !== from_id) continue;
+      p.team_id = to_id; p.team_nome = to_nome;
+      const { error: uErr } = await supabase.from('entity_overrides')
+        .update({ new_value: JSON.stringify(p) }).eq('id', row.id);
+      if (!uErr) updated++;
+    }
+    res.json({ ok: true, updated });
+  } catch (e) { res.status(500).json({ error: e.message }); }
+});
+
+// Elenco atleti PCS con team sconosciuto o assente
+app.get('/api/admin/pcs-orphan-athletes', requireAdmin, async (req, res) => {
+  try {
+    if (!supabase) return res.status(503).json({ error: 'Supabase non disponibile' });
+    const { data, error } = await supabase
+      .from('entity_overrides').select('entity_id, new_value')
+      .eq('entity_type', 'pcs_atleta').eq('field', 'profile').limit(5000);
+    if (error) throw error;
+    const out = [];
+    for (const row of (data || [])) {
+      let p; try { p = JSON.parse(row.new_value); } catch { continue; }
+      const tid = (p.team_id || '').trim();
+      if (!tid || tid === 'SCONOSCIUTO') {
+        out.push({ atleta_id: row.entity_id, cognome: p.cognome || '', nome: p.nome || '', team_nome: p.team_nome || '' });
+      }
+    }
+    out.sort((a, b) => (a.cognome || '').localeCompare(b.cognome || ''));
+    res.json(out);
+  } catch (e) { res.status(500).json({ error: e.message }); }
+});
+
+// Assegna manualmente un team a un atleta PCS
+app.post('/api/admin/pcs-set-athlete-team', requireAdmin, async (req, res) => {
+  try {
+    if (!supabase) return res.status(503).json({ error: 'Supabase non disponibile' });
+    const { atleta_id, team_id, team_nome } = req.body || {};
+    if (!atleta_id || !team_id || !team_nome) return res.status(400).json({ error: 'atleta_id, team_id e team_nome richiesti' });
+    const { data, error } = await supabase
+      .from('entity_overrides').select('id, new_value')
+      .eq('entity_type', 'pcs_atleta').eq('field', 'profile').eq('entity_id', atleta_id).single();
+    if (error || !data) return res.status(404).json({ error: 'Profilo atleta non trovato' });
+    let p; try { p = JSON.parse(data.new_value); } catch { p = {}; }
+    p.team_id = team_id; p.team_nome = team_nome;
+    const { error: uErr } = await supabase.from('entity_overrides')
+      .update({ new_value: JSON.stringify(p) }).eq('id', data.id);
+    if (uErr) throw uErr;
+    res.json({ ok: true });
+  } catch (e) { res.status(500).json({ error: e.message }); }
+});
+
 // Import risultati PCS — prima prova HTTP fetch, poi Playwright headless come fallback
 app.post('/api/admin/gara/:garaId/pcs-import', requireAdmin, async (req, res) => {
   try {

@@ -7627,6 +7627,9 @@ async function renderAdmin() {
         <div class="admin-nav-item" data-section="pcs-import" onclick="adminNav('pcs-import')">
           <span class="admin-nav-icon" style="color:#a78bfa">📸</span> Import Foto &amp; Social
         </div>
+        <div class="admin-nav-item" data-section="pcs-fix" onclick="adminNav('pcs-fix')">
+          <span class="admin-nav-icon" style="color:#059669">🔧</span> Team &amp; Atleti PCS
+        </div>
 
         <div class="admin-nav-group">Video</div>
         <div class="admin-nav-item" data-section="video-pending" onclick="adminNav('video-pending')">
