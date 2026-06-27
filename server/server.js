@@ -1878,6 +1878,109 @@ function _normName(s) {
     .toLowerCase().replace(/[^a-z0-9]+/g, ' ').trim();
 }
 
+// Normalizza per ID (come roster-import.js: trattino, poi uppercase, poi _ al posto di -)
+function _normForId(s) {
+  return String(s || '').normalize('NFD').replace(/[̀-ͯ]/g, '')
+    .toLowerCase().replace(/[^a-z0-9]+/g, '_').replace(/^_+|_+$/g, '').toUpperCase();
+}
+
+// Genera atleta_id da cognome + nome (stesso algoritmo di roster-import.js)
+function _makeAtletaId(cognome, nome) {
+  return _normForId(cognome) + '_' + _normForId(nome);
+}
+
+// Genera team_id da nome team
+function _makeTeamId(teamName) {
+  return _normForId(teamName);
+}
+
+// Divide nome PCS "COGNOME Nome" → { cognome, nome } tutto uppercase
+// PCS: parole senza lettere minuscole = cognome; prima parola con lowercase = inizio nome
+function _parsePcsRiderName(fullName) {
+  if (!fullName) return { cognome: '', nome: '' };
+  const words = fullName.trim().split(/\s+/);
+  if (words.length === 1) return { cognome: words[0].toUpperCase(), nome: '' };
+  let firstLower = words.findIndex(w => /[a-z]/.test(w));
+  if (firstLower <= 0) firstLower = words.length - 1; // all-caps: last word = nome
+  return {
+    cognome: words.slice(0, firstLower).join(' ').toUpperCase(),
+    nome:    words.slice(firstLower).join(' ').toUpperCase(),
+  };
+}
+
+// Estrae categoria (es. ELI_M, JUN_F) dal gara_id
+function _garaIdToCategoria(garaId) {
+  const m = (garaId || '').match(/_(ELI|JUN|ESP|ALL)_(M|F)$/i);
+  return m ? m[0].slice(1).toUpperCase() : 'ELI_M';
+}
+
+// Crea atleti e team mancanti in extra_roster.json, aggiorna atleta_id nelle righe
+// Restituisce il numero di atleti nuovi creati
+async function _createMissingPcsAthletes(rows, garaId, supabaseClient) {
+  const rosterPath = path.join(__dirname, '..', 'data', 'extra_roster.json');
+  const athletesPath = path.join(__dirname, '..', 'data', 'athletes.json');
+
+  // Carica mappe esistenti
+  let roster = {};
+  try { roster = JSON.parse(fs.readFileSync(rosterPath, 'utf8')); } catch {}
+  let athletesKeys = new Set();
+  try { athletesKeys = new Set(Object.keys(JSON.parse(fs.readFileSync(athletesPath, 'utf8')))); } catch {}
+
+  // Costruisci set di atleta_id già in extra_roster
+  const rosterAtleti = new Set();
+  for (const bucket of Object.values(roster)) {
+    for (const a of (bucket.atleti || [])) rosterAtleti.add(a.atleta_id);
+  }
+
+  const categoria = _garaIdToCategoria(garaId);
+  const genere    = categoria.endsWith('_F') ? 'F' : 'M';
+  let created = 0;
+  let modified = false;
+
+  for (const row of rows) {
+    if (row.atleta_id) continue; // già matchato
+    if (!row.rider_name) continue;
+
+    const { cognome, nome } = _parsePcsRiderName(row.rider_name);
+    if (!cognome) continue;
+
+    const atletaId = _makeAtletaId(cognome, nome);
+    if (!atletaId || atletaId === '_') continue;
+
+    // Già nel sistema?
+    if (athletesKeys.has(atletaId) || rosterAtleti.has(atletaId)) {
+      row.atleta_id = atletaId;
+      continue;
+    }
+
+    // Team
+    const teamNome = (row.team_name || 'SCONOSCIUTO').toUpperCase();
+    const teamId   = _makeTeamId(teamNome);
+
+    if (!roster[teamId]) {
+      roster[teamId] = { nome: teamNome, atleti: [] };
+      modified = true;
+    }
+
+    // Aggiungi atleta al team
+    if (!roster[teamId].atleti.find(a => a.atleta_id === atletaId)) {
+      roster[teamId].atleti.push({ atleta_id: atletaId, nome: nome, cognome: cognome, categoria, genere });
+      rosterAtleti.add(atletaId);
+      modified = true;
+      created++;
+    }
+
+    row.atleta_id = atletaId;
+  }
+
+  if (modified) {
+    try { fs.writeFileSync(rosterPath, JSON.stringify(roster, null, 2), 'utf8'); }
+    catch (e) { console.warn('[pcs] extra_roster.json write failed:', e.message); }
+  }
+
+  return created;
+}
+
 // Costruisce mappa nome→atleta_id dagli atleti nel sistema
 function _buildAthleteMap() {
   const map = new Map();
@@ -2068,12 +2171,13 @@ app.post('/api/admin/gara/:garaId/pcs-import', requireAdmin, async (req, res) =>
     const parsedRows = _parsePcsResultsHtml(html, garaId, season, pcsSlug);
     if (!parsedRows.length) return res.status(422).json({ error: 'Nessun corridore trovato nella pagina PCS. Struttura tabella non riconosciuta.' });
 
+    const newAtleti = await _createMissingPcsAthletes(parsedRows, garaId);
     await supabase.from('pcs_gara_results').delete().eq('gara_id', garaId);
     const { error: insErr } = await supabase.from('pcs_gara_results').insert(parsedRows);
     if (insErr) throw insErr;
 
-    console.log(`[pcs-import] ${garaId}: ${parsedRows.length} corridori salvati`);
-    res.json({ ok: true, riders: parsedRows.length, slug: pcsSlug, url: usedUrl });
+    console.log(`[pcs-import] ${garaId}: ${parsedRows.length} corridori salvati, ${newAtleti} nuovi profili creati`);
+    res.json({ ok: true, riders: parsedRows.length, newAtleti, slug: pcsSlug, url: usedUrl });
   } catch (e) { res.status(500).json({ error: e.message }); }
 });
 
@@ -2095,12 +2199,13 @@ app.post('/api/admin/gara/:garaId/pcs-import-html', requireAdmin, async (req, re
     const parsedRows = _parsePcsResultsHtml(html, garaId, season, pcsSlug);
     if (!parsedRows.length) return res.status(422).json({ error: 'Nessun corridore trovato. Assicurati di aver incollato il sorgente della pagina risultati PCS.' });
 
+    const newAtleti = await _createMissingPcsAthletes(parsedRows, garaId);
     await supabase.from('pcs_gara_results').delete().eq('gara_id', garaId);
     const { error: insErr } = await supabase.from('pcs_gara_results').insert(parsedRows);
     if (insErr) throw insErr;
 
-    console.log(`[pcs-import-html] ${garaId}: ${parsedRows.length} corridori salvati`);
-    res.json({ ok: true, riders: parsedRows.length, slug: pcsSlug });
+    console.log(`[pcs-import-html] ${garaId}: ${parsedRows.length} corridori salvati, ${newAtleti} nuovi profili creati`);
+    res.json({ ok: true, riders: parsedRows.length, newAtleti, slug: pcsSlug });
   } catch (e) { res.status(500).json({ error: e.message }); }
 });
 

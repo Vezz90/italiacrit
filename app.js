@@ -1923,7 +1923,8 @@ window._submitPcsHtml = async function(garaId) {
     document.getElementById('pcs-paste-overlay')?.remove();
     const circuitResults = (window._lastGaraResults || []);
     await _loadGaraPcsExt(garaId, circuitResults);
-    showToast(`Importati ${result.riders} corridori da PCS`);
+    const nuovi = result.newAtleti ? ` — ${result.newAtleti} profili nuovi creati` : '';
+    showToast(`Importati ${result.riders} corridori da PCS${nuovi}`);
     const b = document.getElementById('pcs-import-btn');
     if (b) b.textContent = `✓ ${result.riders} corridori`;
   } catch (e) {
