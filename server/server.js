@@ -2251,6 +2251,10 @@ function _parsePcsResultsHtml(html, garaId, season, pcsSlug) {
   const rows = [];
   $('table').each((_, table) => {
     if (rows.length) return false;
+    // Salta le tabelle dentro i tab NASCOSTI di PCS (.hide): nelle pagine a tappe
+    // la pagina contiene sia la tappa sia il GC sia le altre classifiche, ma solo
+    // il tab attivo è visibile. Parsare la prima tabella prenderebbe quella sbagliata.
+    if ($(table).parents('.hide').length) return;
     const headers = $(table).find('th').map((_, el) => $(el).text().trim().toLowerCase()).get();
     const hasRnk   = headers.some(h => /rnk|pos|#/.test(h));
     const hasRider = headers.some(h => /rider|name|cyclist/.test(h));
