@@ -1930,11 +1930,12 @@ function _squashTeam(s) {
 // Strategia: 1) squash esatto su nome o id, 2) contenimento squash (min 6 char).
 // Niente match per singola parola: troppo rischioso (unirebbe team diversi che
 // condividono una parola comune). Restituisce { tid, nome } del team reale o null.
-function _findExistingTeam(pcsName, teamEntries) {
+function _findExistingTeam(pcsName, teamEntries, genere) {
   const sq = _squashTeam(pcsName);
   if (!sq) return null;
-  // 1) esatto su nome o id
+  // 1) esatto su nome o id (rispettando il genere)
   for (const e of teamEntries) {
+    if (!_genderOk(e, genere)) continue;
     if (e.nameSq === sq || e.idSq === sq) return { tid: e.tid, nome: e.nome };
   }
   // 2) contenimento (entrambe le direzioni). Per evitare falsi positivi quando il
@@ -1944,6 +1945,7 @@ function _findExistingTeam(pcsName, teamEntries) {
   // (82%) passa, mentre "veneto" dentro "vptvenetoprojectteam" (30%) viene scartato.
   if (sq.length >= 6) {
     for (const e of teamEntries) {
+      if (!_genderOk(e, genere)) continue;
       if (e.nameSq.length < 6) continue;
       if (!(e.nameSq.includes(sq) || sq.includes(e.nameSq))) continue;
       const shorter = Math.min(sq.length, e.nameSq.length);
@@ -1954,7 +1956,9 @@ function _findExistingTeam(pcsName, teamEntries) {
   return null;
 }
 
-// Costruisce l'indice dei team reali da teams.json (per il fuzzy match)
+// Costruisce l'indice dei team reali da teams.json (per il fuzzy match).
+// Ricava i generi (M/F) in cui ogni team compete da `punti_per_cat` (es. {JUN_M, ES1_M})
+// così non si uniscono team maschili con femminili.
 function _buildTeamIndex() {
   const out = [];
   try {
@@ -1962,10 +1966,23 @@ function _buildTeamIndex() {
     const obj = JSON.parse(fs.readFileSync(teamsPath, 'utf8'));
     for (const [tid, t] of Object.entries(obj)) {
       const nome = t.nome || tid;
-      out.push({ tid, nome, nameSq: _squashTeam(nome), idSq: _squashTeam(tid) });
+      const genders = new Set();
+      for (const cat of Object.keys(t.punti_per_cat || {})) {
+        if (cat.endsWith('_M')) genders.add('M');
+        else if (cat.endsWith('_F')) genders.add('F');
+      }
+      out.push({ tid, nome, nameSq: _squashTeam(nome), idSq: _squashTeam(tid), genders });
     }
   } catch {}
   return out;
+}
+
+// Un team reale è compatibile col genere richiesto se compete in quel genere
+// (oppure se non abbiamo dati di genere — non blocchiamo in mancanza d'info).
+function _genderOk(entry, genere) {
+  if (!genere) return true;
+  if (!entry.genders || entry.genders.size === 0) return true;
+  return entry.genders.has(genere);
 }
 
 // Rivaluta il team di ogni profilo pcs_atleta: se il nome del team fa fuzzy-match
