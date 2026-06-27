@@ -160,6 +160,22 @@
     "trend": 0
   },
   {
+    "atleta_id": "BUTTARAZZI_GIULIA",
+    "cognome": "BUTTARAZZI",
+    "nome": "GIULIA",
+    "team_id": "A_S_A_C_I_EVONACICLI",
+    "team_nome": "A.S.A.C.I. - EVONACICLI",
+    "punti": 72,
+    "vittorie": 4,
+    "gare": 5,
+    "p1": 4,
+    "p2": 1,
+    "p3": 0,
+    "pout": 0,
+    "pos": 11,
+    "trend": 5
+  },
+  {
     "atleta_id": "NERI_SARA",
     "cognome": "NERI",
     "nome": "SARA",
@@ -172,8 +188,8 @@
     "p2": 1,
     "p3": 1,
     "pout": 7,
-    "pos": 11,
-    "trend": 0
+    "pos": 12,
+    "trend": -1
   },
   {
     "atleta_id": "MARIANI_MARGHERITA",
@@ -188,8 +204,8 @@
     "p2": 1,
     "p3": 1,
     "pout": 10,
-    "pos": 12,
-    "trend": 0
+    "pos": 13,
+    "trend": -1
   },
   {
     "atleta_id": "GUIDOLIN_GIOIA",
@@ -204,8 +220,8 @@
     "p2": 0,
     "p3": 3,
     "pout": 6,
-    "pos": 13,
-    "trend": 0
+    "pos": 14,
+    "trend": -1
   },
   {
     "atleta_id": "SFORZINI_SELENE",
@@ -220,8 +236,8 @@
     "p2": 1,
     "p3": 1,
     "pout": 7,
-    "pos": 14,
-    "trend": 0
+    "pos": 15,
+    "trend": -1
   },
   {
     "atleta_id": "CACCIA_BEATRICE",
@@ -236,24 +252,24 @@
     "p2": 1,
     "p3": 2,
     "pout": 7,
-    "pos": 15,
-    "trend": 0
+    "pos": 16,
+    "trend": -1
   },
   {
-    "atleta_id": "BUTTARAZZI_GIULIA",
+    "atleta_id": "BUTTARAZZI_SOFIA",
     "cognome": "BUTTARAZZI",
-    "nome": "GIULIA",
+    "nome": "SOFIA",
     "team_id": "A_S_A_C_I_EVONACICLI",
     "team_nome": "A.S.A.C.I. - EVONACICLI",
-    "punti": 57,
-    "vittorie": 3,
-    "gare": 4,
-    "p1": 3,
-    "p2": 1,
-    "p3": 0,
+    "punti": 58,
+    "vittorie": 0,
+    "gare": 5,
+    "p1": 0,
+    "p2": 4,
+    "p3": 1,
     "pout": 0,
-    "pos": 16,
-    "trend": 0
+    "pos": 17,
+    "trend": 4
   },
   {
     "atleta_id": "PIN_MATILDE",
@@ -268,8 +284,8 @@
     "p2": 1,
     "p3": 0,
     "pout": 5,
-    "pos": 17,
-    "trend": 0
+    "pos": 18,
+    "trend": -1
   },
   {
     "atleta_id": "STELLA_AURORA",
@@ -284,8 +300,8 @@
     "p2": 0,
     "p3": 1,
     "pout": 6,
-    "pos": 18,
-    "trend": 0
+    "pos": 19,
+    "trend": -1
   },
   {
     "atleta_id": "NARDELLI_GIORGIA",
@@ -300,8 +316,8 @@
     "p2": 0,
     "p3": 0,
     "pout": 10,
-    "pos": 19,
-    "trend": 0
+    "pos": 20,
+    "trend": -1
   },
   {
     "atleta_id": "CIANTI_NOEMI",
@@ -316,24 +332,8 @@
     "p2": 0,
     "p3": 1,
     "pout": 9,
-    "pos": 20,
-    "trend": 0
-  },
-  {
-    "atleta_id": "BUTTARAZZI_SOFIA",
-    "cognome": "BUTTARAZZI",
-    "nome": "SOFIA",
-    "team_id": "A_S_A_C_I_EVONACICLI",
-    "team_nome": "A.S.A.C.I. - EVONACICLI",
-    "punti": 46,
-    "vittorie": 0,
-    "gare": 4,
-    "p1": 0,
-    "p2": 3,
-    "p3": 1,
-    "pout": 0,
     "pos": 21,
-    "trend": 0
+    "trend": -1
   },
   {
     "atleta_id": "D_EMILIO_VITTORIA",
