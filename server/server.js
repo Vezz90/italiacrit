@@ -2202,6 +2202,46 @@ function _extractPcsTime(raw) {
   return m ? m[0] : null;
 }
 
+// Converte un orario PCS ("M:SS" o "H:MM:SS") in secondi.
+function _pcsTimeToSec(raw) {
+  const t = _extractPcsTime(raw);
+  if (!t) return null;
+  const p = t.split(':').map(Number);
+  if (p.some(isNaN)) return null;
+  if (p.length === 3) return p[0] * 3600 + p[1] * 60 + p[2];
+  if (p.length === 2) return p[0] * 60 + p[1];
+  return p[0];
+}
+
+// Sceglie la colonna del DISTACCO in modo robusto: in ogni classifica il distacco
+// cresce con la posizione, quindi tra le colonne con valori orari scegliamo quella
+// i cui secondi sono monotòni crescenti (ignorando il vincitore). Questo evita di
+// leggere colonne sbagliate (es. "Today"/UCI) nelle pagine GC e cronometro PCS.
+// `iTimeHeader` (colonna dedotta dall'header) è usata solo come tiebreak.
+function _pickGapColumn(rawRows, nCols, skip, iTimeHeader) {
+  const ordered = rawRows.filter(r => r.pos >= 2).sort((a, b) => a.pos - b.pos);
+  let best = -1, bestScore = -1;
+  for (let c = 0; c < nCols; c++) {
+    if (skip.has(c)) continue;
+    const seq = ordered.map(r => r.colSec[c]);
+    const present = seq.filter(v => v != null);
+    if (present.length < Math.max(3, Math.floor(seq.length * 0.6))) continue;
+    let ok = 0, tot = 0, prev = null;
+    for (const v of seq) {
+      if (v == null) continue;
+      if (prev != null) { tot++; if (v >= prev) ok++; }
+      prev = v;
+    }
+    if (tot === 0) continue;
+    const monoFrac = ok / tot;
+    if (monoFrac < 0.85) continue;
+    // punteggio: monotonìa + copertura + bonus se è la colonna tempo da header
+    const score = monoFrac + (present.length / seq.length) * 0.05 + (c === iTimeHeader ? 0.1 : 0);
+    if (score > bestScore) { bestScore = score; best = c; }
+  }
+  return best >= 0 ? best : iTimeHeader;
+}
+
 // Estrae tabella risultati dall'HTML con cheerio
 // PCS mette il link del team DENTRO la cella del rider → usa solo il primo <a> per il nome
 function _parsePcsResultsHtml(html, garaId, season, pcsSlug) {
@@ -2222,35 +2262,46 @@ function _parsePcsResultsHtml(html, garaId, season, pcsSlug) {
       if (iTeam  < 0 && /team/.test(h))                 iTeam  = i;
       if (iTime  < 0 && /time|gap|\//.test(h))         iTime  = i;
     });
+
+    const linkFirst = cell => {
+      const c = $(cell);
+      const a = c.find('a').first();
+      return (a.length ? a.text() : c.text()).replace(/\s+/g, ' ').trim();
+    };
+    const fullText = cell => $(cell).text().replace(/\s+/g, ' ').trim();
+
+    // Primo passaggio: raccogli tutte le righe con i secondi di OGNI colonna
+    const raw = [];
+    let nCols = 0;
     $(table).find('tbody tr').each((_, tr) => {
-      const cells = $(tr).find('td');
+      const cells = $(tr).find('td').toArray();
       if (cells.length < 2) return;
-      const getFullText = i => i >= 0 ? $(cells.get(i)).text().replace(/\s+/g, ' ').trim() : '';
-      // Per il nome corridore usa solo il primo <a> della cella (evita team link incluso da PCS)
-      const getRiderName = i => {
-        if (i < 0) return '';
-        const cell = $(cells.get(i));
-        const firstLink = cell.find('a').first();
-        return (firstLink.length ? firstLink.text() : cell.text()).replace(/\s+/g, ' ').trim();
-      };
-      const getTeamName = i => {
-        if (i < 0) return '';
-        const cell = $(cells.get(i));
-        const firstLink = cell.find('a').first();
-        return (firstLink.length ? firstLink.text() : cell.text()).replace(/\s+/g, ' ').trim();
-      };
-
-      const pos   = parseInt(getFullText(iPos));
-      const rider = getRiderName(iRider);
+      nCols = Math.max(nCols, cells.length);
+      const pos = parseInt(fullText(cells[iPos]));
+      const rider = iRider >= 0 ? linkFirst(cells[iRider]) : '';
       if (!pos || !rider) return;
-
-      // Cerca match con atleti già nel sistema
-      const atleta_id = athleteMap.get(_normName(rider)) || null;
-
-      rows.push({ gara_id: garaId, season, posizione: pos, rider_name: rider,
-        team_name: getTeamName(iTeam) || null, distacco: _extractPcsTime(getFullText(iTime)),
-        pcs_race_slug: pcsSlug, atleta_id });
+      raw.push({
+        pos, rider,
+        team: iTeam >= 0 ? linkFirst(cells[iTeam]) : '',
+        colSec:  cells.map(c => _pcsTimeToSec(fullText(c))),
+        colText: cells.map(c => fullText(c)),
+      });
     });
+    if (!raw.length) return;
+
+    // Scegli la colonna distacco per monotonìa
+    const skip = new Set([iPos, iRider, iTeam].filter(i => i >= 0));
+    const gapCol = _pickGapColumn(raw, nCols, skip, iTime);
+
+    for (const r of raw) {
+      const distacco = r.pos === 1 ? null
+        : (gapCol >= 0 ? _extractPcsTime(r.colText[gapCol]) : null);
+      rows.push({
+        gara_id: garaId, season, posizione: r.pos, rider_name: r.rider,
+        team_name: r.team || null, distacco,
+        pcs_race_slug: pcsSlug, atleta_id: athleteMap.get(_normName(r.rider)) || null,
+      });
+    }
   });
   return rows;
 }
