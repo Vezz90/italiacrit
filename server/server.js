@@ -1920,6 +1920,50 @@ function _makeTeamId(teamName) {
   return _normForId(teamName);
 }
 
+// "Squash": rimuove TUTTO ciò che non è alfanumerico (anche spazi) → confronto robusto
+// "TEAM MAZZOLA PGC" e "TEAM MAZZOLA P.G.C. U23" → "teammazzolapgc" / "teammazzolapgcu23"
+function _squashTeam(s) {
+  return String(s || '').normalize('NFD').replace(/[̀-ͯ]/g, '').toLowerCase().replace(/[^a-z0-9]+/g, '');
+}
+function _normSpace(s) {
+  return String(s || '').normalize('NFD').replace(/[̀-ͯ]/g, '').toLowerCase().replace(/[^a-z0-9]+/g, ' ').trim();
+}
+
+// Cerca un team esistente (in teams.json) con nome quasi identico al nome PCS.
+// Strategia: 1) squash esatto su nome o id, 2) contenimento squash (min 6 char).
+// Niente match per singola parola: troppo rischioso (unirebbe team diversi che
+// condividono una parola comune). Restituisce { tid, nome } del team reale o null.
+function _findExistingTeam(pcsName, teamEntries) {
+  const sq = _squashTeam(pcsName);
+  if (!sq) return null;
+  // 1) esatto su nome o id
+  for (const e of teamEntries) {
+    if (e.nameSq === sq || e.idSq === sq) return { tid: e.tid, nome: e.nome };
+  }
+  // 2) contenimento (entrambe le direzioni, proteggi da match troppo corti)
+  if (sq.length >= 6) {
+    for (const e of teamEntries) {
+      if (e.nameSq.length >= 6 && (e.nameSq.includes(sq) || sq.includes(e.nameSq)))
+        return { tid: e.tid, nome: e.nome };
+    }
+  }
+  return null;
+}
+
+// Costruisce l'indice dei team reali da teams.json (per il fuzzy match)
+function _buildTeamIndex() {
+  const out = [];
+  try {
+    const teamsPath = path.join(__dirname, '..', 'data', 'teams.json');
+    const obj = JSON.parse(fs.readFileSync(teamsPath, 'utf8'));
+    for (const [tid, t] of Object.entries(obj)) {
+      const nome = t.nome || tid;
+      out.push({ tid, nome, nameSq: _squashTeam(nome), idSq: _squashTeam(tid), nameNorm: _normSpace(nome) });
+    }
+  } catch {}
+  return out;
+}
+
 // Divide nome PCS "COGNOME Nome" → { cognome, nome } tutto uppercase
 // PCS: parole senza lettere minuscole = cognome; prima parola con lowercase = inizio nome
 function _parsePcsRiderName(fullName) {
@@ -1999,6 +2043,9 @@ async function _createMissingPcsAthletes(rows, garaId) {
     } catch (e) { console.warn('[pcs] load pcs_atleta ids fallito:', e.message); }
   }
 
+  // Indice dei team reali (teams.json) per il fuzzy match
+  const teamIndex = _buildTeamIndex();
+
   const categoria = _garaIdToCategoria(garaId);
   const genere    = categoria.endsWith('_F') ? 'F' : 'M';
   const toUpsert  = [];
@@ -2022,9 +2069,15 @@ async function _createMissingPcsAthletes(rows, garaId) {
     // Già noto (anche se la riga prima non lo aveva)? niente da creare
     if (knownIds.has(atletaId)) continue;
 
-    // Crea il profilo
-    const teamNome = (row.team_name || 'SCONOSCIUTO').toUpperCase();
-    const teamId   = _makeTeamId(teamNome);
+    // Team: prima cerca un team reale (teams.json) con nome quasi identico,
+    // così l'atleta finisce nel team già esistente invece di crearne un doppione.
+    const pcsTeamNome = (row.team_name || 'SCONOSCIUTO').toUpperCase();
+    const existing    = _findExistingTeam(pcsTeamNome, teamIndex);
+    const teamId      = existing ? existing.tid  : _makeTeamId(pcsTeamNome);
+    const teamNome    = existing ? existing.nome : pcsTeamNome;
+
+    // Registra l'atleta nel roster sotto il team_id risolto (reale o nuovo) così
+    // il frontend lo associa al team corretto
     if (!roster[teamId]) { roster[teamId] = { nome: teamNome, atleti: [] }; modified = true; }
     if (!roster[teamId].atleti.find(a => a.atleta_id === atletaId)) {
       roster[teamId].atleti.push({ atleta_id: atletaId, nome, cognome, categoria, genere });
