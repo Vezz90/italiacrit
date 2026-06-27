@@ -2198,7 +2198,13 @@ async function _buildAthleteMapAsync() {
 // token orario così il distacco è pulito.
 function _extractPcsTime(raw) {
   if (!raw) return null;
-  const m = String(raw).match(/\d{1,2}:\d{2}(?::\d{2})?/);
+  const s = String(raw);
+  // Cronometro PCS: il tempo è "M.SS,hh" (punto = minuti.secondi, virgola = centesimi),
+  // es. "0.15,65" = +0:15, "29.03,54" = 29:03. Lo normalizziamo in "M:SS".
+  // La virgola distingue questo formato dalla colonna media (es. "45.838", senza virgola).
+  const tt = s.match(/(\d{1,3})\.(\d{2}),\d+/);
+  if (tt && parseInt(tt[2], 10) < 60) return `${tt[1]}:${tt[2]}`;
+  const m = s.match(/\d{1,2}:\d{2}(?::\d{2})?/);
   return m ? m[0] : null;
 }
 
