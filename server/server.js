@@ -238,7 +238,8 @@ async function deletePhoto(filename) {
 app.use(compression());
 app.use(cors({ origin: '*' }));
 app.options('*', cors());
-app.use(express.json());
+app.use(express.json({ limit: '10mb' }));
+app.use(express.urlencoded({ extended: true, limit: '10mb' }));
 app.use('/photos', express.static(UPLOADS_DIR));
 
 const FRONTEND_DIR = path.join(__dirname, '..');
