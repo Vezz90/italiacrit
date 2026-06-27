@@ -1871,7 +1871,40 @@ app.post('/api/admin/pcs-race-import', requireAdminOrLocal, (req, res) => {
   proc.on('close', code => { if (buf) onLine(buf); if (_fullImportJob) { _fullImportJob.running = false; _fullImportJob.exitCode = code; } });
 });
 
-// Import risultati PCS direttamente via HTTP (senza Playwright) — funziona su Render
+// Estrae tabella risultati dall'HTML con cheerio
+function _parsePcsResultsHtml(html, garaId, season, pcsSlug) {
+  const cheerio = require('cheerio');
+  const $ = cheerio.load(html);
+  const rows = [];
+  $('table').each((_, table) => {
+    if (rows.length) return false;
+    const headers = $(table).find('th').map((_, el) => $(el).text().trim().toLowerCase()).get();
+    const hasRnk   = headers.some(h => /rnk|pos|#/.test(h));
+    const hasRider = headers.some(h => /rider|name|cyclist/.test(h));
+    if (!hasRnk || !hasRider) return;
+    let iPos = -1, iRider = -1, iTeam = -1, iTime = -1;
+    headers.forEach((h, i) => {
+      if (iPos   < 0 && /rnk|pos|#/.test(h))           iPos   = i;
+      if (iRider < 0 && /rider|name|cyclist/.test(h))  iRider = i;
+      if (iTeam  < 0 && /team/.test(h))                 iTeam  = i;
+      if (iTime  < 0 && /time|gap|\//.test(h))         iTime  = i;
+    });
+    $(table).find('tbody tr').each((_, tr) => {
+      const cells = $(tr).find('td');
+      if (cells.length < 2) return;
+      const getText = i => i >= 0 ? $(cells.get(i)).text().replace(/\s+/g, ' ').trim() : '';
+      const pos = parseInt(getText(iPos));
+      const rider = getText(iRider);
+      if (!pos || !rider) return;
+      rows.push({ gara_id: garaId, season, posizione: pos, rider_name: rider,
+        team_name: getText(iTeam) || null, distacco: getText(iTime) || null,
+        pcs_race_slug: pcsSlug, atleta_id: null });
+    });
+  });
+  return rows;
+}
+
+// Import risultati PCS — prima prova HTTP fetch, poi Playwright headless come fallback
 app.post('/api/admin/gara/:garaId/pcs-import', requireAdmin, async (req, res) => {
   try {
     if (!supabase) return res.status(503).json({ error: 'Supabase non disponibile' });
@@ -1898,63 +1931,59 @@ app.post('/api/admin/gara/:garaId/pcs-import', requireAdmin, async (req, res) =>
       'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/124.0.0.0 Safari/537.36',
       'Accept': 'text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8',
       'Accept-Language': 'it-IT,it;q=0.9,en;q=0.8',
+      'Cache-Control': 'no-cache',
     };
 
+    const hasResults = t => t.includes('<table') && (t.toLowerCase().includes('rider') || t.toLowerCase().includes('cyclist'));
+
+    // Tentativo 1: HTTP fetch semplice
     let html = null, usedUrl = null;
     for (const url of urls) {
       try {
         const resp = await fetch(url, { headers: reqHeaders, redirect: 'follow' });
-        console.log(`[pcs-import] ${url} → ${resp.status}`);
+        console.log(`[pcs-import] fetch ${url} → ${resp.status}`);
         if (!resp.ok) continue;
         const text = await resp.text();
-        const lower = text.toLowerCase();
-        if (text.includes('<table') && (lower.includes('rider') || lower.includes('cyclist'))) {
-          html = text; usedUrl = url; break;
-        }
-      } catch (e) { console.log(`[pcs-import] errore fetch ${url}:`, e.message); }
+        if (hasResults(text)) { html = text; usedUrl = url; break; }
+      } catch (e) { console.log(`[pcs-import] fetch error: ${e.message}`); }
     }
-    if (!html) return res.status(502).json({ error: 'PCS non ha restituito una pagina con risultati (possibile anti-bot)' });
+
+    // Tentativo 2: Playwright headless (bypassa anti-bot Cloudflare)
+    if (!html) {
+      console.log('[pcs-import] fetch bloccato, provo Playwright headless…');
+      let browser;
+      try {
+        const { chromium } = require('playwright');
+        browser = await chromium.launch({ headless: true, args: ['--no-sandbox', '--disable-setuid-sandbox', '--disable-dev-shm-usage'] });
+        const ctx = await browser.newContext({
+          userAgent: 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/124.0.0.0 Safari/537.36',
+          locale: 'it-IT', viewport: { width: 1280, height: 800 },
+        });
+        await ctx.addInitScript(() => { Object.defineProperty(navigator, 'webdriver', { get: () => undefined }); });
+        const page = await ctx.newPage();
+        for (const url of urls) {
+          try {
+            await page.goto(url, { waitUntil: 'domcontentloaded', timeout: 25000 });
+            const finalUrl = page.url();
+            console.log(`[pcs-import] playwright → ${finalUrl}`);
+            if (finalUrl === 'https://www.procyclingstats.com/' || finalUrl.includes('pagenotfound')) continue;
+            await page.waitForTimeout(1500);
+            const text = await page.content();
+            if (hasResults(text)) { html = text; usedUrl = url; break; }
+          } catch (e) { console.log(`[pcs-import] playwright nav error: ${e.message}`); }
+        }
+      } catch (e) { console.log('[pcs-import] Playwright non disponibile:', e.message); }
+      finally { if (browser) await browser.close().catch(() => {}); }
+    }
+
+    if (!html) return res.status(502).json({
+      error: `PCS non ha restituito risultati. Verifica che lo slug "${pcsSlug}" esista su procyclingstats.com`
+    });
     console.log(`[pcs-import] pagina trovata: ${usedUrl}`);
 
-    // Parsea la tabella risultati con cheerio
-    const cheerio = require('cheerio');
-    const $ = cheerio.load(html);
-    const parsedRows = [];
-    $('table').each((_, table) => {
-      if (parsedRows.length) return false; // stop dopo prima tabella valida
-      const headers = $(table).find('th').map((_, el) => $(el).text().trim().toLowerCase()).get();
-      const hasRnk   = headers.some(h => /rnk|pos|#/.test(h));
-      const hasRider = headers.some(h => /rider|name|cyclist/.test(h));
-      if (!hasRnk || !hasRider) return;
-      let iPos = -1, iRider = -1, iTeam = -1, iTime = -1;
-      headers.forEach((h, i) => {
-        if (iPos   < 0 && /rnk|pos|#/.test(h))           iPos   = i;
-        if (iRider < 0 && /rider|name|cyclist/.test(h))  iRider = i;
-        if (iTeam  < 0 && /team/.test(h))                 iTeam  = i;
-        if (iTime  < 0 && /time|gap|\//.test(h))         iTime  = i;
-      });
-      $(table).find('tbody tr').each((_, tr) => {
-        const cells = $(tr).find('td');
-        if (cells.length < 2) return;
-        const getText = i => i >= 0 ? $(cells.get(i)).text().replace(/\s+/g, ' ').trim() : '';
-        const posRaw = getText(iPos);
-        const pos    = parseInt(posRaw);
-        const rider  = getText(iRider);
-        if (!pos || !rider) return;
-        parsedRows.push({
-          gara_id: garaId, season, posizione: pos,
-          rider_name: rider,
-          team_name:  getText(iTeam)  || null,
-          distacco:   getText(iTime)  || null,
-          pcs_race_slug: pcsSlug,
-          atleta_id: null,
-        });
-      });
-    });
+    const parsedRows = _parsePcsResultsHtml(html, garaId, season, pcsSlug);
+    if (!parsedRows.length) return res.status(422).json({ error: 'Nessun corridore trovato nella pagina PCS. Struttura tabella non riconosciuta.' });
 
-    if (!parsedRows.length) return res.status(422).json({ error: 'Nessun corridore trovato nella pagina PCS' });
-
-    // Cancella risultati precedenti e inserisce i nuovi
     await supabase.from('pcs_gara_results').delete().eq('gara_id', garaId);
     const { error: insErr } = await supabase.from('pcs_gara_results').insert(parsedRows);
     if (insErr) throw insErr;
