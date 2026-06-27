@@ -1873,7 +1873,8 @@ window.adminPcsRematch = async function(garaId) {
   if (btn) { btn.disabled = true; btn.textContent = '⏳ Rimatch…'; }
   try {
     const result = await apiCall(`/admin/pcs-rematch-athletes?gara_id=${encodeURIComponent(garaId)}`, { method: 'POST', body: {} });
-    showToast(`Rimatch: ${result.updated} atleti collegati su ${result.total}`);
+    const nuovi = result.newAtleti ? ` — ${result.newAtleti} profili nuovi creati` : '';
+    showToast(`Rimatch: ${result.updated} atleti collegati su ${result.total}${nuovi}`);
     if (btn) { btn.textContent = `✓ ${result.updated}/${result.total}`; }
     const circuitResults = (window._lastGaraResults || []);
     await _loadGaraPcsExt(garaId, circuitResults);

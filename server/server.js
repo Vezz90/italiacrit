@@ -2101,25 +2101,50 @@ app.post('/api/admin/pcs-rematch-athletes', requireAdmin, async (req, res) => {
     if (!supabase) return res.status(503).json({ error: 'Supabase non disponibile' });
     const garaId = req.query.gara_id || null;
 
-    const athleteMap = _buildAthleteMap();
-    if (!athleteMap.size) return res.status(500).json({ error: 'Nessun atleta trovato nel sistema' });
-
-    let query = supabase.from('pcs_gara_results').select('id, rider_name, atleta_id');
+    // Carica tutte le righe (con team_name per poter creare profili)
+    let query = supabase.from('pcs_gara_results').select('id, gara_id, rider_name, team_name, atleta_id');
     if (garaId) query = query.eq('gara_id', garaId);
-    const { data: rows, error } = await query.limit(5000);
+    const { data: sbRows, error } = await query.limit(5000);
     if (error) throw error;
-    if (!rows?.length) return res.json({ ok: true, updated: 0 });
+    if (!sbRows?.length) return res.json({ ok: true, updated: 0, newAtleti: 0 });
 
+    // Prima: match con atleti già nel sistema
+    const athleteMap = _buildAthleteMap();
     let updated = 0;
-    for (const row of rows) {
-      const matched = athleteMap.get(_normName(row.rider_name)) || null;
-      if (matched && matched !== row.atleta_id) {
-        await supabase.from('pcs_gara_results').update({ atleta_id: matched }).eq('id', row.id);
-        updated++;
+    for (const row of sbRows) {
+      if (!row.atleta_id) {
+        const matched = athleteMap.get(_normName(row.rider_name)) || null;
+        if (matched) {
+          await supabase.from('pcs_gara_results').update({ atleta_id: matched }).eq('id', row.id);
+          row.atleta_id = matched;
+          updated++;
+        }
       }
     }
-    console.log(`[rematch] ${updated}/${rows.length} righe aggiornate`);
-    res.json({ ok: true, updated, total: rows.length });
+
+    // Secondo: crea profili per chi è ancora senza atleta_id, raggruppato per gara
+    const byGara = {};
+    for (const row of sbRows) {
+      if (row.atleta_id) continue;
+      const gid = row.gara_id || garaId || 'UNKNOWN_ELI_M';
+      if (!byGara[gid]) byGara[gid] = [];
+      byGara[gid].push(row);
+    }
+
+    let newAtleti = 0;
+    for (const [gid, garaRows] of Object.entries(byGara)) {
+      newAtleti += await _createMissingPcsAthletes(garaRows, gid);
+      // Aggiorna Supabase per le righe a cui è stato assegnato atleta_id
+      for (const row of garaRows) {
+        if (row.atleta_id) {
+          await supabase.from('pcs_gara_results').update({ atleta_id: row.atleta_id }).eq('id', row.id);
+          updated++;
+        }
+      }
+    }
+
+    console.log(`[rematch] ${updated}/${sbRows.length} righe aggiornate, ${newAtleti} nuovi profili creati`);
+    res.json({ ok: true, updated, total: sbRows.length, newAtleti });
   } catch (e) { res.status(500).json({ error: e.message }); }
 });
 
