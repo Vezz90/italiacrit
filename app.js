@@ -1912,6 +1912,101 @@ window.adminPcsRematch = async function(garaId) {
   }
 };
 
+// ── Admin: correzione team/atleti PCS ──────────────────────────
+window._pcsFixData = { teams: [], orphans: [] };
+
+// Risolve il nome di un team (dall'input datalist) → { tid, nome } reale
+function _resolveTeamByName(name) {
+  const n = String(name || '').trim().toLowerCase();
+  if (!n) return null;
+  for (const [tid, t] of Object.entries(globalData?.teams || {})) {
+    if (String(t.nome || tid).trim().toLowerCase() === n) return { tid, nome: t.nome || tid };
+  }
+  return null;
+}
+
+window._renderPcsFix = async function() {
+  const teamsEl = document.getElementById('pcs-fix-teams');
+  const orphEl  = document.getElementById('pcs-fix-orphans');
+  try {
+    const [teams, orphans] = await Promise.all([
+      apiCall('/admin/pcs-team-suggestions'),
+      apiCall('/admin/pcs-orphan-athletes'),
+    ]);
+    window._pcsFixData = { teams, orphans };
+
+    // ── Team simili ──
+    if (teamsEl) {
+      teamsEl.innerHTML = teams.length ? teams.map((g, i) => `
+        <div style="border:1px solid var(--border-subtle);border-radius:var(--r-md);padding:12px 14px;margin-bottom:10px">
+          <div style="font-weight:700;margin-bottom:8px">${esc(g.team_nome)} <span style="color:var(--text-muted);font-weight:400">— ${g.count} atlet${g.count===1?'a':'i'}</span></div>
+          <div style="display:flex;flex-wrap:wrap;gap:6px;align-items:center">
+            ${g.candidates.map((c, j) => `<button onclick="window._mergePcsTeamIdx(${i},${j})" style="background:var(--bg-elevated);border:1px solid var(--border);border-radius:var(--r-sm);padding:5px 10px;font-size:.82rem;cursor:pointer">→ ${esc(c.nome)}</button>`).join('')}
+            <span style="color:var(--text-muted);font-size:.8rem;margin:0 4px">oppure</span>
+            <input list="pcs-fix-teamlist" id="merge-input-${i}" placeholder="cerca team…" style="flex:1;min-width:160px;padding:5px 8px;border:1px solid var(--border);border-radius:var(--r-sm);font-size:.82rem">
+            <button onclick="window._mergePcsTeamManual(${i})" style="background:var(--accent);color:#fff;border:none;border-radius:var(--r-sm);padding:5px 12px;font-size:.82rem;font-weight:600;cursor:pointer">Unisci</button>
+          </div>
+        </div>`).join('')
+        : `<p style="color:var(--text-muted);font-size:.85rem">Nessun team simile da unire. 🎉</p>`;
+    }
+
+    // ── Atleti senza team ──
+    if (orphEl) {
+      orphEl.innerHTML = orphans.length ? orphans.map((a, i) => `
+        <div style="display:flex;flex-wrap:wrap;gap:8px;align-items:center;border:1px solid var(--border-subtle);border-radius:var(--r-md);padding:8px 12px;margin-bottom:8px">
+          <div style="flex:1;min-width:160px;font-weight:600;text-transform:uppercase">${esc(a.cognome)} ${esc(a.nome)}</div>
+          <input list="pcs-fix-teamlist" id="orphan-input-${i}" placeholder="assegna team…" style="flex:1;min-width:160px;padding:5px 8px;border:1px solid var(--border);border-radius:var(--r-sm);font-size:.82rem">
+          <button onclick="window._setOrphanTeamIdx(${i})" style="background:var(--accent);color:#fff;border:none;border-radius:var(--r-sm);padding:5px 12px;font-size:.82rem;font-weight:600;cursor:pointer">Assegna</button>
+        </div>`).join('')
+        : `<p style="color:var(--text-muted);font-size:.85rem">Nessun atleta senza team. 🎉</p>`;
+    }
+  } catch (e) {
+    if (teamsEl) teamsEl.innerHTML = `<p style="color:#ef4444">Errore: ${esc(e.message)}</p>`;
+  }
+};
+
+async function _doMergePcsTeam(fromId, toTid, toNome) {
+  try {
+    const r = await apiCall('/admin/pcs-merge-team', { method: 'POST', body: { from_id: fromId, to_id: toTid, to_nome: toNome } });
+    showToast(`Uniti ${r.updated} atleti a ${toNome}`);
+    delete cache['data/extra_roster.json'];
+    const pcsKey = Object.keys(cache).find(k => k.includes('pcs-extra-roster'));
+    if (pcsKey) delete cache[pcsKey];
+    globalData = await loadAll();
+    await window._renderPcsFix();
+  } catch (e) { showToast('Errore: ' + e.message); }
+}
+
+window._mergePcsTeamIdx = function(i, j) {
+  const g = window._pcsFixData.teams[i]; const c = g?.candidates[j];
+  if (g && c) _doMergePcsTeam(g.team_id, c.tid, c.nome);
+};
+
+window._mergePcsTeamManual = function(i) {
+  const g = window._pcsFixData.teams[i];
+  const val = document.getElementById(`merge-input-${i}`)?.value;
+  const t = _resolveTeamByName(val);
+  if (!t) { showToast('Team non trovato — scegli dalla lista'); return; }
+  if (g) _doMergePcsTeam(g.team_id, t.tid, t.nome);
+};
+
+window._setOrphanTeamIdx = async function(i) {
+  const a = window._pcsFixData.orphans[i];
+  const val = document.getElementById(`orphan-input-${i}`)?.value;
+  const t = _resolveTeamByName(val);
+  if (!a) return;
+  if (!t) { showToast('Team non trovato — scegli dalla lista'); return; }
+  try {
+    await apiCall('/admin/pcs-set-athlete-team', { method: 'POST', body: { atleta_id: a.atleta_id, team_id: t.tid, team_nome: t.nome } });
+    showToast(`${a.cognome} ${a.nome} → ${t.nome}`);
+    delete cache['data/extra_roster.json'];
+    const pcsKey = Object.keys(cache).find(k => k.includes('pcs-extra-roster'));
+    if (pcsKey) delete cache[pcsKey];
+    globalData = await loadAll();
+    await window._renderPcsFix();
+  } catch (e) { showToast('Errore: ' + e.message); }
+};
+
 window._openPcsHtmlPasteModal = function(garaId) {
   document.getElementById('pcs-paste-overlay')?.remove();
   const ov = document.createElement('div');
@@ -9108,6 +9203,30 @@ window.adminNav = async function(section) {
       } catch(e) {
         main.innerHTML = `<div style="color:#ef4444;padding:20px">Errore: ${esc(e.message)}</div>`;
       }
+      break;
+    }
+
+    // ── TEAM & ATLETI PCS ─────────────────────────────────────────
+    case 'pcs-fix': {
+      main.innerHTML = `
+        <div class="admin-page-header">
+          <h1 class="admin-page-title">🔧 Team &amp; Atleti PCS</h1>
+          <p class="admin-page-sub">Unisci i team importati da PCS a quelli reali e assegna un team agli atleti che ne sono privi.</p>
+        </div>
+        <div style="background:var(--bg-card);border:1px solid var(--border-subtle);border-radius:var(--r-lg);padding:20px;margin-bottom:20px">
+          <h2 style="font-size:1rem;margin:0 0 4px">🔀 Team simili da unire</h2>
+          <p style="font-size:.82rem;color:var(--text-muted);margin:0 0 14px">Team PCS che potrebbero corrispondere a un team già registrato. Scegli quello giusto e unisci.</p>
+          <div id="pcs-fix-teams"><div class="admin-loading">Caricamento…</div></div>
+        </div>
+        <div style="background:var(--bg-card);border:1px solid var(--border-subtle);border-radius:var(--r-lg);padding:20px">
+          <h2 style="font-size:1rem;margin:0 0 4px">👤 Atleti senza team</h2>
+          <p style="font-size:.82rem;color:var(--text-muted);margin:0 0 14px">Atleti PCS con team sconosciuto o assente. Assegna manualmente la società.</p>
+          <div id="pcs-fix-orphans"><div class="admin-loading">Caricamento…</div></div>
+        </div>
+        <datalist id="pcs-fix-teamlist">
+          ${Object.entries(globalData?.teams || {}).map(([tid, t]) => `<option data-tid="${esc(tid)}" value="${esc(t.nome || tid)}">`).join('')}
+        </datalist>`;
+      window._renderPcsFix();
       break;
     }
 
