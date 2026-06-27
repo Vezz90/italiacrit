@@ -1633,7 +1633,7 @@ const ADMIN_EDIT_FIELDS = {
     { key: 'tipo',          label: 'Tipo gara',      type: 'select',
       options: ['regionale','nazionale','internazionale','campionato_regionale','campionato_italiano'] },
     { key: 'moltiplicatore', label: 'Moltiplicatore', type: 'select', options: ['1','2','3'] },
-    { key: 'pcs_race_slug', label: 'Slug PCS (es. giro-ciclistico-d-italia/2026/stage-6)', type: 'text' },
+    { key: 'pcs_race_slug', label: 'Slug PCS — percorso dopo procyclingstats.com/ (es. national-race/coppa-campioni/2026)', type: 'text' },
   ],
   atleta: [
     { key: 'nome',         label: 'Nome',    type: 'text' },
@@ -11916,7 +11916,7 @@ async function _loadGaraPcsExt(garaId, circuitResults) {
       const slug = overrides?.pcs_race_slug;
       if (slug) {
         const extEl = document.getElementById('gara-pcs-ext');
-        if (extEl) extEl.innerHTML = `<div style="text-align:right;padding:4px 4px 0;font-size:.75rem;color:var(--text-muted)"><a href="https://www.procyclingstats.com/race/${esc(slug)}" target="_blank" style="color:var(--text-muted)">procyclingstats.com →</a></div>`;
+        if (extEl) extEl.innerHTML = `<div style="text-align:right;padding:4px 4px 0;font-size:.75rem;color:var(--text-muted)"><a href="https://www.procyclingstats.com/${esc(slug)}" target="_blank" style="color:var(--text-muted)">procyclingstats.com →</a></div>`;
       }
     } catch {}
     return;

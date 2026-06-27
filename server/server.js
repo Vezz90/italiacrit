@@ -1917,7 +1917,7 @@ app.post('/api/admin/gara/:garaId/pcs-import', requireAdmin, async (req, res) =>
       .eq('entity_type', 'gara').eq('entity_id', garaId).eq('field', 'pcs_race_slug')
       .single();
     if (!ovRow?.new_value) return res.status(404).json({ error: 'Slug PCS non configurato per questa gara' });
-    const pcsSlug = ovRow.new_value;
+    const pcsSlug = ovRow.new_value.replace(/\/result$/, '').replace(/\/$/, '');
     const season = parseInt(pcsSlug.match(/\/(\d{4})/)?.[1]) || new Date().getFullYear();
 
     const PCS = 'https://www.procyclingstats.com';
