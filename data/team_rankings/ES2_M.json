@@ -2,13 +2,13 @@
   {
     "team_id": "TEAM_CESARO_NERI_LUCCHINI",
     "team_nome": "TEAM CESARO-NERI-LUCCHINI",
-    "punti": 615,
-    "vittorie": 14,
-    "p1": 14,
-    "p2": 10,
+    "punti": 661,
+    "vittorie": 15,
+    "p1": 15,
+    "p2": 11,
     "p3": 4,
-    "pout": 38,
-    "n_atleti": 5,
+    "pout": 42,
+    "n_atleti": 6,
     "pos": 1
   },
   {
@@ -348,6 +348,18 @@
     "pos": 29
   },
   {
+    "team_id": "ASD_TEAM_MMBIKE_ANDRIA_RESTO_AL_SUD",
+    "team_nome": "ASD TEAM MMBIKE ANDRIA RESTO AL SUD",
+    "punti": 109,
+    "vittorie": 0,
+    "p1": 0,
+    "p2": 1,
+    "p3": 2,
+    "pout": 11,
+    "n_atleti": 1,
+    "pos": 30
+  },
+  {
     "team_id": "A_S_D_POSTUMIA_73_D_L_CICLISMO",
     "team_nome": "A.S.D. POSTUMIA 73 D.L. CICLISMO",
     "punti": 107,
@@ -357,7 +369,7 @@
     "p3": 1,
     "pout": 10,
     "n_atleti": 3,
-    "pos": 30
+    "pos": 31
   },
   {
     "team_id": "MULTICAR_GRUPPO_AMARU",
@@ -369,7 +381,7 @@
     "p3": 0,
     "pout": 2,
     "n_atleti": 1,
-    "pos": 31
+    "pos": 32
   },
   {
     "team_id": "S_C_BRUGHERIO_SPORTIVA_ASD",
@@ -381,7 +393,7 @@
     "p3": 0,
     "pout": 19,
     "n_atleti": 2,
-    "pos": 32
+    "pos": 33
   },
   {
     "team_id": "G_S_RONCO_MAURIGI_DELIO_GALLINA",
@@ -393,18 +405,6 @@
     "p3": 3,
     "pout": 10,
     "n_atleti": 3,
-    "pos": 33
-  },
-  {
-    "team_id": "ASD_TEAM_MMBIKE_ANDRIA_RESTO_AL_SUD",
-    "team_nome": "ASD TEAM MMBIKE ANDRIA RESTO AL SUD",
-    "punti": 99,
-    "vittorie": 0,
-    "p1": 0,
-    "p2": 1,
-    "p3": 1,
-    "pout": 11,
-    "n_atleti": 1,
     "pos": 34
   },
   {
@@ -804,6 +804,18 @@
     "pos": 67
   },
   {
+    "team_id": "CAMB_KE",
+    "team_nome": "CAMB!KE",
+    "punti": 42,
+    "vittorie": 1,
+    "p1": 1,
+    "p2": 0,
+    "p3": 0,
+    "pout": 9,
+    "n_atleti": 2,
+    "pos": 68
+  },
+  {
     "team_id": "CANNEDU_ITTIRI_A_MANCA_ASD",
     "team_nome": "CANNEDU ITTIRI \"A. MANCA\" ASD",
     "punti": 42,
@@ -813,7 +825,7 @@
     "p3": 0,
     "pout": 10,
     "n_atleti": 2,
-    "pos": 68
+    "pos": 69
   },
   {
     "team_id": "PEDALE_RIMINESE_FRECCE_ROSSE",
@@ -825,7 +837,7 @@
     "p3": 0,
     "pout": 9,
     "n_atleti": 2,
-    "pos": 69
+    "pos": 70
   },
   {
     "team_id": "U_C_SANGIULIANESE",
@@ -837,7 +849,7 @@
     "p3": 1,
     "pout": 0,
     "n_atleti": 2,
-    "pos": 70
+    "pos": 71
   },
   {
     "team_id": "S_C_TERRANOVA_FANCELLO_CICLI",
@@ -849,7 +861,7 @@
     "p3": 0,
     "pout": 8,
     "n_atleti": 2,
-    "pos": 71
+    "pos": 72
   },
   {
     "team_id": "ASD_LPM_GROUP",
@@ -861,7 +873,7 @@
     "p3": 2,
     "pout": 3,
     "n_atleti": 1,
-    "pos": 72
+    "pos": 73
   },
   {
     "team_id": "TEAM_SERIO",
@@ -873,7 +885,7 @@
     "p3": 1,
     "pout": 6,
     "n_atleti": 2,
-    "pos": 73
+    "pos": 74
   },
   {
     "team_id": "UC_FOEN_MICTU",
@@ -885,7 +897,7 @@
     "p3": 1,
     "pout": 3,
     "n_atleti": 2,
-    "pos": 74
+    "pos": 75
   },
   {
     "team_id": "KD_SLOGA_1902_IDRIJA",
@@ -897,7 +909,7 @@
     "p3": 0,
     "pout": 4,
     "n_atleti": 1,
-    "pos": 75
+    "pos": 76
   },
   {
     "team_id": "CICLISTICA_ROSTESE",
@@ -909,7 +921,7 @@
     "p3": 1,
     "pout": 6,
     "n_atleti": 2,
-    "pos": 76
+    "pos": 77
   },
   {
     "team_id": "U_C_PESSANO_A_S_D",
@@ -921,18 +933,6 @@
     "p3": 1,
     "pout": 7,
     "n_atleti": 3,
-    "pos": 77
-  },
-  {
-    "team_id": "CAMB_KE",
-    "team_nome": "CAMB!KE",
-    "punti": 33,
-    "vittorie": 1,
-    "p1": 1,
-    "p2": 0,
-    "p3": 0,
-    "pout": 7,
-    "n_atleti": 2,
     "pos": 78
   },
   {
