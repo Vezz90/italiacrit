@@ -1177,7 +1177,7 @@ async function loadAll() {
         }
       })();
 
-  const [calendar, resultsRaw, athletes, teams, meta, raceDetails, videos, extraRoster] = await Promise.all([
+  const [calendar, resultsRaw, athletes, teams, meta, raceDetails, videos, extraRoster, pcsExtraRoster] = await Promise.all([
     loadJson('data/calendar.json'),
     loadJson('data/results_raw.json'),
     loadJson('data/athletes.json'),
@@ -1186,9 +1186,23 @@ async function loadAll() {
     loadJson('data/race_details.json'),
     videosPromise,
     loadJson('data/extra_roster.json').catch(() => ({})),
+    apiCall('/data/pcs-extra-roster').catch(() => ({})),
   ]);
 
-  return processLoadedData({ calendar, resultsRaw, athletes, teams, meta, raceDetails, videos, extraRoster });
+  // Unisci extra_roster statico con atleti PCS da Supabase
+  const mergedExtraRoster = { ...(extraRoster || {}), ...(pcsExtraRoster || {}) };
+  // Se un team è in entrambi, unisci gli atleti
+  for (const [tid, bucket] of Object.entries(pcsExtraRoster || {})) {
+    if (extraRoster?.[tid]) {
+      const existing = new Set((extraRoster[tid].atleti || []).map(a => a.atleta_id));
+      mergedExtraRoster[tid] = {
+        ...extraRoster[tid],
+        atleti: [...(extraRoster[tid].atleti || []), ...(bucket.atleti || []).filter(a => !existing.has(a.atleta_id))],
+      };
+    }
+  }
+
+  return processLoadedData({ calendar, resultsRaw, athletes, teams, meta, raceDetails, videos, extraRoster: mergedExtraRoster });
 }
 
 // Processa i dati grezzi (stagione live o archivio data/seasons/{anno}/) in un
@@ -1880,6 +1894,9 @@ window.adminPcsRematch = async function(garaId) {
     // così i link ai profili funzionano subito senza ricaricare la pagina
     if (result.newAtleti > 0) {
       delete cache['data/extra_roster.json'];
+      // Invalida anche la cache dell'endpoint pcs-extra-roster
+      const pcsKey = Object.keys(cache).find(k => k.includes('pcs-extra-roster'));
+      if (pcsKey) delete cache[pcsKey];
       globalData = await loadAll();
     }
     const circuitResults = (window._lastGaraResults || []);

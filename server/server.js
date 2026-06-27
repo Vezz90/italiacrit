@@ -1766,6 +1766,32 @@ app.get('/api/pcs-results/gara/:garaId', async (req, res) => {
 });
 
 // Tutti i risultati PCS per un atleta (circuito + extra)
+// Restituisce atleti creati da import PCS, in formato extra_roster.json (per il frontend)
+app.get('/api/data/pcs-extra-roster', async (req, res) => {
+  if (!supabase) return res.json({});
+  try {
+    const { data, error } = await supabase
+      .from('entity_overrides')
+      .select('entity_id, new_value')
+      .eq('entity_type', 'pcs_atleta')
+      .eq('field', 'profile')
+      .limit(5000);
+    if (error) throw error;
+    const result = {};
+    for (const row of (data || [])) {
+      try {
+        const p = JSON.parse(row.new_value);
+        const teamId = p.team_id || _makeTeamId(p.team_nome || '');
+        if (!result[teamId]) result[teamId] = { nome: p.team_nome || teamId, atleti: [] };
+        if (!result[teamId].atleti.find(a => a.atleta_id === row.entity_id)) {
+          result[teamId].atleti.push({ atleta_id: row.entity_id, cognome: p.cognome, nome: p.nome, categoria: p.categoria, genere: p.genere });
+        }
+      } catch {}
+    }
+    res.json(result);
+  } catch (e) { res.status(500).json({ error: e.message }); }
+});
+
 app.get('/api/pcs-results/atleta/:atletaId', async (req, res) => {
   const season = parseInt(req.query.season) || new Date().getFullYear();
   try {
@@ -1998,6 +2024,15 @@ async function _createMissingPcsAthletes(rows, garaId, supabaseClient) {
       rosterAtleti.add(atletaId);
       modified = true;
       created++;
+
+      // Salva su Supabase entity_overrides (persistente, sopravvive ai redeploy)
+      if (supabase) {
+        const profileJson = JSON.stringify({ cognome, nome, team_id: teamId, team_nome: teamNome, categoria, genere });
+        supabase.from('entity_overrides').upsert(
+          { entity_type: 'pcs_atleta', entity_id: atletaId, field: 'profile', new_value: profileJson, edited_by: null },
+          { onConflict: 'entity_type,entity_id,field' }
+        ).then(({ error: e }) => { if (e) console.warn('[pcs] Supabase upsert pcs_atleta fallito:', e.message); });
+      }
     }
 
     row.atleta_id = atletaId;
@@ -2006,7 +2041,7 @@ async function _createMissingPcsAthletes(rows, garaId, supabaseClient) {
   if (modified) {
     try { fs.writeFileSync(rosterPath, JSON.stringify(roster, null, 2), 'utf8'); }
     catch (e) { console.warn('[pcs] extra_roster.json write failed:', e.message); }
-    // Persisti su GitHub così sopravvive ai redeploy
+    // Tenta commit su GitHub (fallback — richiede scope repo sul token)
     _commitExtraRosterToGH(roster).catch(() => {});
   }
 
@@ -2037,6 +2072,29 @@ function _buildAthleteMap() {
         map.set(_normName(c + ' ' + n), a.atleta_id);
         map.set(_normName(n + ' ' + c), a.atleta_id);
       }
+    }
+  } catch {}
+  return map;
+}
+
+// Versione async che include anche gli atleti PCS salvati su Supabase
+async function _buildAthleteMapAsync() {
+  const map = _buildAthleteMap();
+  if (!supabase) return map;
+  try {
+    const { data } = await supabase
+      .from('entity_overrides')
+      .select('entity_id, new_value')
+      .eq('entity_type', 'pcs_atleta')
+      .eq('field', 'profile')
+      .limit(5000);
+    for (const row of (data || [])) {
+      try {
+        const p = JSON.parse(row.new_value);
+        const c = p.cognome || '', n = p.nome || '';
+        map.set(_normName(c + ' ' + n), row.entity_id);
+        map.set(_normName(n + ' ' + c), row.entity_id);
+      } catch {}
     }
   } catch {}
   return map;
@@ -2108,8 +2166,8 @@ app.post('/api/admin/pcs-rematch-athletes', requireAdmin, async (req, res) => {
     if (error) throw error;
     if (!sbRows?.length) return res.json({ ok: true, updated: 0, newAtleti: 0 });
 
-    // Prima: match con atleti già nel sistema
-    const athleteMap = _buildAthleteMap();
+    // Prima: match con atleti già nel sistema (inclusi quelli PCS su Supabase)
+    const athleteMap = await _buildAthleteMapAsync();
     let updated = 0;
     for (const row of sbRows) {
       if (!row.atleta_id) {
