@@ -5056,9 +5056,9 @@
     "trend": 0
   },
   {
-    "atleta_id": "ZAMUDIO_GARCIA_GIANLUIGI",
+    "atleta_id": "ZAMUDIO_PEREZ_GIANLUIGI",
     "cognome": "ZAMUDIO",
-    "nome": "GARCIA GIANLUIGI",
+    "nome": "PEREZ GIANLUIGI",
     "team_id": "A_R_MONEX_PRO_CYCLING_TEAM",
     "team_nome": "A.R.MONEX PRO CYCLING TEAM",
     "punti": 4,
@@ -5069,7 +5069,7 @@
     "p3": 0,
     "pout": 1,
     "pos": 317,
-    "trend": 0
+    "trend": null
   },
   {
     "atleta_id": "BELLIN_DAVIDE",
