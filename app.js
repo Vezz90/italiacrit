@@ -1876,6 +1876,12 @@ window.adminPcsRematch = async function(garaId) {
     const nuovi = result.newAtleti ? ` — ${result.newAtleti} profili nuovi creati` : '';
     showToast(`Rimatch: ${result.updated} atleti collegati su ${result.total}${nuovi}`);
     if (btn) { btn.textContent = `✓ ${result.updated}/${result.total}`; }
+    // Se sono stati creati nuovi profili, invalida la cache e ricarica globalData
+    // così i link ai profili funzionano subito senza ricaricare la pagina
+    if (result.newAtleti > 0) {
+      delete cache['data/extra_roster.json'];
+      globalData = await loadAll();
+    }
     const circuitResults = (window._lastGaraResults || []);
     await _loadGaraPcsExt(garaId, circuitResults);
   } catch (e) {
