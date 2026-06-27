@@ -1970,9 +1970,12 @@ async function _commitExtraRosterToGH(rosterData) {
   }
 }
 
-// Crea atleti e team mancanti in extra_roster.json, aggiorna atleta_id nelle righe
-// Restituisce il numero di atleti nuovi creati
-async function _createMissingPcsAthletes(rows, garaId, supabaseClient) {
+// Crea atleti e team mancanti, aggiorna atleta_id nelle righe.
+// Idempotente: ricrea il profilo per ogni atleta_id che non esiste ancora tra
+// gli atleti noti (athletes.json + extra_roster.json + Supabase pcs_atleta),
+// anche se la riga aveva già un atleta_id impostato da un import precedente.
+// Restituisce il numero di profili nuovi salvati su Supabase.
+async function _createMissingPcsAthletes(rows, garaId) {
   const rosterPath = path.join(__dirname, '..', 'data', 'extra_roster.json');
   const athletesPath = path.join(__dirname, '..', 'data', 'athletes.json');
 
@@ -1982,20 +1985,31 @@ async function _createMissingPcsAthletes(rows, garaId, supabaseClient) {
   let athletesKeys = new Set();
   try { athletesKeys = new Set(Object.keys(JSON.parse(fs.readFileSync(athletesPath, 'utf8')))); } catch {}
 
-  // Costruisci set di atleta_id già in extra_roster
-  const rosterAtleti = new Set();
+  // Set di atleta_id già noti: athletes.json + extra_roster.json + Supabase pcs_atleta
+  const knownIds = new Set(athletesKeys);
   for (const bucket of Object.values(roster)) {
-    for (const a of (bucket.atleti || [])) rosterAtleti.add(a.atleta_id);
+    for (const a of (bucket.atleti || [])) knownIds.add(a.atleta_id);
+  }
+  if (supabase) {
+    try {
+      const { data } = await supabase
+        .from('entity_overrides').select('entity_id')
+        .eq('entity_type', 'pcs_atleta').eq('field', 'profile').limit(5000);
+      for (const r of (data || [])) knownIds.add(r.entity_id);
+    } catch (e) { console.warn('[pcs] load pcs_atleta ids fallito:', e.message); }
   }
 
   const categoria = _garaIdToCategoria(garaId);
   const genere    = categoria.endsWith('_F') ? 'F' : 'M';
+  const toUpsert  = [];
   let created = 0;
   let modified = false;
 
   for (const row of rows) {
-    if (row.atleta_id) continue; // già matchato
     if (!row.rider_name) continue;
+
+    // Se ha già un atleta_id che corrisponde a un atleta noto, lascialo così
+    if (row.atleta_id && knownIds.has(row.atleta_id)) continue;
 
     const { cognome, nome } = _parsePcsRiderName(row.rider_name);
     if (!cognome) continue;
@@ -2003,45 +2017,40 @@ async function _createMissingPcsAthletes(rows, garaId, supabaseClient) {
     const atletaId = _makeAtletaId(cognome, nome);
     if (!atletaId || atletaId === '_') continue;
 
-    // Già nel sistema?
-    if (athletesKeys.has(atletaId) || rosterAtleti.has(atletaId)) {
-      row.atleta_id = atletaId;
-      continue;
-    }
+    row.atleta_id = atletaId;
 
-    // Team
+    // Già noto (anche se la riga prima non lo aveva)? niente da creare
+    if (knownIds.has(atletaId)) continue;
+
+    // Crea il profilo
     const teamNome = (row.team_name || 'SCONOSCIUTO').toUpperCase();
     const teamId   = _makeTeamId(teamNome);
-
-    if (!roster[teamId]) {
-      roster[teamId] = { nome: teamNome, atleti: [] };
-      modified = true;
-    }
-
-    // Aggiungi atleta al team
+    if (!roster[teamId]) { roster[teamId] = { nome: teamNome, atleti: [] }; modified = true; }
     if (!roster[teamId].atleti.find(a => a.atleta_id === atletaId)) {
-      roster[teamId].atleti.push({ atleta_id: atletaId, nome: nome, cognome: cognome, categoria, genere });
-      rosterAtleti.add(atletaId);
+      roster[teamId].atleti.push({ atleta_id: atletaId, nome, cognome, categoria, genere });
       modified = true;
-      created++;
-
-      // Salva su Supabase entity_overrides (persistente, sopravvive ai redeploy)
-      if (supabase) {
-        const profileJson = JSON.stringify({ cognome, nome, team_id: teamId, team_nome: teamNome, categoria, genere });
-        supabase.from('entity_overrides').upsert(
-          { entity_type: 'pcs_atleta', entity_id: atletaId, field: 'profile', new_value: profileJson, edited_by: null },
-          { onConflict: 'entity_type,entity_id,field' }
-        ).then(({ error: e }) => { if (e) console.warn('[pcs] Supabase upsert pcs_atleta fallito:', e.message); });
-      }
     }
+    knownIds.add(atletaId);
+    created++;
 
-    row.atleta_id = atletaId;
+    toUpsert.push({
+      entity_type: 'pcs_atleta', entity_id: atletaId, field: 'profile',
+      new_value: JSON.stringify({ cognome, nome, team_id: teamId, team_nome: teamNome, categoria, genere }),
+      edited_by: null,
+    });
+  }
+
+  // Salva su Supabase (persistente, sopravvive ai redeploy) — atteso, così sappiamo se fallisce
+  if (supabase && toUpsert.length) {
+    const { error } = await supabase.from('entity_overrides')
+      .upsert(toUpsert, { onConflict: 'entity_type,entity_id,field' });
+    if (error) console.warn('[pcs] Supabase upsert pcs_atleta fallito:', error.message);
+    else console.log(`[pcs] ${toUpsert.length} profili pcs_atleta salvati su Supabase`);
   }
 
   if (modified) {
     try { fs.writeFileSync(rosterPath, JSON.stringify(roster, null, 2), 'utf8'); }
     catch (e) { console.warn('[pcs] extra_roster.json write failed:', e.message); }
-    // Tenta commit su GitHub (fallback — richiede scope repo sul token)
     _commitExtraRosterToGH(roster).catch(() => {});
   }
 
@@ -2166,38 +2175,37 @@ app.post('/api/admin/pcs-rematch-athletes', requireAdmin, async (req, res) => {
     if (error) throw error;
     if (!sbRows?.length) return res.json({ ok: true, updated: 0, newAtleti: 0 });
 
-    // Prima: match con atleti già nel sistema (inclusi quelli PCS su Supabase)
+    // Ricorda l'atleta_id originale per capire cosa è cambiato
+    for (const row of sbRows) row._orig = row.atleta_id || null;
+
+    // Prima: match per nome con atleti già nel sistema (inclusi i PCS su Supabase)
     const athleteMap = await _buildAthleteMapAsync();
-    let updated = 0;
     for (const row of sbRows) {
       if (!row.atleta_id) {
         const matched = athleteMap.get(_normName(row.rider_name)) || null;
-        if (matched) {
-          await supabase.from('pcs_gara_results').update({ atleta_id: matched }).eq('id', row.id);
-          row.atleta_id = matched;
-          updated++;
-        }
+        if (matched) row.atleta_id = matched;
       }
     }
 
-    // Secondo: crea profili per chi è ancora senza atleta_id, raggruppato per gara
+    // Secondo: per OGNI riga, assicura un atleta_id valido e crea i profili mancanti.
+    // Idempotente: ricrea profili anche per righe con atleta_id che non esiste più
+    // (es. profili persi in un redeploy passato).
     const byGara = {};
     for (const row of sbRows) {
-      if (row.atleta_id) continue;
       const gid = row.gara_id || garaId || 'UNKNOWN_ELI_M';
-      if (!byGara[gid]) byGara[gid] = [];
-      byGara[gid].push(row);
+      (byGara[gid] ||= []).push(row);
     }
-
     let newAtleti = 0;
     for (const [gid, garaRows] of Object.entries(byGara)) {
       newAtleti += await _createMissingPcsAthletes(garaRows, gid);
-      // Aggiorna Supabase per le righe a cui è stato assegnato atleta_id
-      for (const row of garaRows) {
-        if (row.atleta_id) {
-          await supabase.from('pcs_gara_results').update({ atleta_id: row.atleta_id }).eq('id', row.id);
-          updated++;
-        }
+    }
+
+    // Aggiorna Supabase solo per le righe il cui atleta_id è cambiato
+    let updated = 0;
+    for (const row of sbRows) {
+      if (row.atleta_id && row.atleta_id !== row._orig) {
+        await supabase.from('pcs_gara_results').update({ atleta_id: row.atleta_id }).eq('id', row.id);
+        updated++;
       }
     }
 
