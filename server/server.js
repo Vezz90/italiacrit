@@ -1871,6 +1871,99 @@ app.post('/api/admin/pcs-race-import', requireAdminOrLocal, (req, res) => {
   proc.on('close', code => { if (buf) onLine(buf); if (_fullImportJob) { _fullImportJob.running = false; _fullImportJob.exitCode = code; } });
 });
 
+// Import risultati PCS direttamente via HTTP (senza Playwright) — funziona su Render
+app.post('/api/admin/gara/:garaId/pcs-import', requireAdmin, async (req, res) => {
+  try {
+    if (!supabase) return res.status(503).json({ error: 'Supabase non disponibile' });
+    const garaId = req.params.garaId;
+
+    // Leggi slug configurato su Supabase
+    const { data: ovRow } = await supabase
+      .from('entity_overrides')
+      .select('new_value')
+      .eq('entity_type', 'gara').eq('entity_id', garaId).eq('field', 'pcs_race_slug')
+      .single();
+    if (!ovRow?.new_value) return res.status(404).json({ error: 'Slug PCS non configurato per questa gara' });
+    const pcsSlug = ovRow.new_value;
+    const season = parseInt(pcsSlug.match(/\/(\d{4})/)?.[1]) || new Date().getFullYear();
+
+    const PCS = 'https://www.procyclingstats.com';
+    const hasPfx = /^(race|national-race|stage-race|one-day-race)\//.test(pcsSlug);
+    const urls = hasPfx
+      ? [`${PCS}/${pcsSlug}/result`, `${PCS}/${pcsSlug}`]
+      : [`${PCS}/race/${pcsSlug}/result`, `${PCS}/race/${pcsSlug}`,
+         `${PCS}/national-race/${pcsSlug}/result`, `${PCS}/national-race/${pcsSlug}`];
+
+    const reqHeaders = {
+      'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/124.0.0.0 Safari/537.36',
+      'Accept': 'text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8',
+      'Accept-Language': 'it-IT,it;q=0.9,en;q=0.8',
+    };
+
+    let html = null, usedUrl = null;
+    for (const url of urls) {
+      try {
+        const resp = await fetch(url, { headers: reqHeaders, redirect: 'follow' });
+        console.log(`[pcs-import] ${url} → ${resp.status}`);
+        if (!resp.ok) continue;
+        const text = await resp.text();
+        const lower = text.toLowerCase();
+        if (text.includes('<table') && (lower.includes('rider') || lower.includes('cyclist'))) {
+          html = text; usedUrl = url; break;
+        }
+      } catch (e) { console.log(`[pcs-import] errore fetch ${url}:`, e.message); }
+    }
+    if (!html) return res.status(502).json({ error: 'PCS non ha restituito una pagina con risultati (possibile anti-bot)' });
+    console.log(`[pcs-import] pagina trovata: ${usedUrl}`);
+
+    // Parsea la tabella risultati con cheerio
+    const cheerio = require('cheerio');
+    const $ = cheerio.load(html);
+    const parsedRows = [];
+    $('table').each((_, table) => {
+      if (parsedRows.length) return false; // stop dopo prima tabella valida
+      const headers = $(table).find('th').map((_, el) => $(el).text().trim().toLowerCase()).get();
+      const hasRnk   = headers.some(h => /rnk|pos|#/.test(h));
+      const hasRider = headers.some(h => /rider|name|cyclist/.test(h));
+      if (!hasRnk || !hasRider) return;
+      let iPos = -1, iRider = -1, iTeam = -1, iTime = -1;
+      headers.forEach((h, i) => {
+        if (iPos   < 0 && /rnk|pos|#/.test(h))           iPos   = i;
+        if (iRider < 0 && /rider|name|cyclist/.test(h))  iRider = i;
+        if (iTeam  < 0 && /team/.test(h))                 iTeam  = i;
+        if (iTime  < 0 && /time|gap|\//.test(h))         iTime  = i;
+      });
+      $(table).find('tbody tr').each((_, tr) => {
+        const cells = $(tr).find('td');
+        if (cells.length < 2) return;
+        const getText = i => i >= 0 ? $(cells.get(i)).text().replace(/\s+/g, ' ').trim() : '';
+        const posRaw = getText(iPos);
+        const pos    = parseInt(posRaw);
+        const rider  = getText(iRider);
+        if (!pos || !rider) return;
+        parsedRows.push({
+          gara_id: garaId, season, posizione: pos,
+          rider_name: rider,
+          team_name:  getText(iTeam)  || null,
+          distacco:   getText(iTime)  || null,
+          pcs_race_slug: pcsSlug,
+          atleta_id: null,
+        });
+      });
+    });
+
+    if (!parsedRows.length) return res.status(422).json({ error: 'Nessun corridore trovato nella pagina PCS' });
+
+    // Cancella risultati precedenti e inserisce i nuovi
+    await supabase.from('pcs_gara_results').delete().eq('gara_id', garaId);
+    const { error: insErr } = await supabase.from('pcs_gara_results').insert(parsedRows);
+    if (insErr) throw insErr;
+
+    console.log(`[pcs-import] ${garaId}: ${parsedRows.length} corridori salvati`);
+    res.json({ ok: true, riders: parsedRows.length, slug: pcsSlug, url: usedUrl });
+  } catch (e) { res.status(500).json({ error: e.message }); }
+});
+
 // ══════════════════════════════════════════════════════════════════════════════
 // YouTube Auto-Scraper
 // ══════════════════════════════════════════════════════════════════════════════
