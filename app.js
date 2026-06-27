@@ -1852,6 +1852,22 @@ window.saveAdminEdit = async function(entityType, entityId) {
   }
 };
 
+window.adminPcsImport = async function(garaId) {
+  const btn = document.getElementById('pcs-import-btn');
+  if (btn) { btn.disabled = true; btn.textContent = '⏳ Importo…'; }
+  try {
+    const result = await apiCall(`/admin/gara/${encodeURIComponent(garaId)}/pcs-import`, { method: 'POST', body: {} });
+    if (btn) { btn.textContent = `✓ ${result.riders} corridori`; }
+    // Ricarica la sezione PCS senza ricaricare tutta la pagina
+    const circuitResults = (window._lastGaraResults || []);
+    await _loadGaraPcsExt(garaId, circuitResults);
+    showToast(`Importati ${result.riders} corridori da PCS`);
+  } catch (e) {
+    showToast('Errore import PCS: ' + e.message, 'error');
+    if (btn) { btn.disabled = false; btn.textContent = '⬇ Importa PCS'; }
+  }
+};
+
 function slug(s) {
   if (!s) return '';
   return String(s).toLowerCase()
@@ -14237,6 +14253,7 @@ async function renderGara(gara_id) {
         <button class="btn-share" onclick="window.triggerShareGara()"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="18" cy="5" r="3"/><circle cx="6" cy="12" r="3"/><circle cx="18" cy="19" r="3"/><line x1="8.59" y1="13.51" x2="15.42" y2="17.49"/><line x1="15.41" y1="6.51" x2="8.59" y2="10.49"/></svg> Condividi Risultati${isEsordienti && results2.length ? ' 1° Anno' : ''}</button>
         ${isEsordienti && results2.length ? `<button class="btn-share" onclick="window.triggerShareGara2()"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="18" cy="5" r="3"/><circle cx="6" cy="12" r="3"/><circle cx="18" cy="19" r="3"/><line x1="8.59" y1="13.51" x2="15.42" y2="17.49"/><line x1="15.41" y1="6.51" x2="8.59" y2="10.49"/></svg> Condividi Risultati 2° Anno</button>` : ''}
         ${adminEditBtn('gara', primaryGaraId)}
+        ${_isAdmin ? `<button id="pcs-import-btn" class="admin-edit-btn" style="background:#7c3aed" onclick="window.adminPcsImport('${esc(primaryGaraId)}')">⬇ Importa PCS</button>` : ''}
       </div>
     ${_catTabsHtml}
     ${racePhotosHtml}
@@ -14284,6 +14301,7 @@ async function renderGara(gara_id) {
   window._loadGaraAvatars();
 
   // Albo d'oro delle edizioni (stile PCS) — riempito async per non bloccare la pagina
+  window._lastGaraResults = results;
   _injectRaceAlboDoro(primaryGaraId);
   _loadGaraComments(primaryGaraId);
   _loadGaraPcsExt(primaryGaraId, results);
