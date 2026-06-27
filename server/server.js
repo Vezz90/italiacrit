@@ -1914,6 +1914,36 @@ function _garaIdToCategoria(garaId) {
   return m ? m[0].slice(1).toUpperCase() : 'ELI_M';
 }
 
+// Committa extra_roster.json su GitHub via Contents API (usa GH_DISPATCH_TOKEN)
+async function _commitExtraRosterToGH(rosterData) {
+  const token = process.env.GH_DISPATCH_TOKEN;
+  const repo  = process.env.GH_REPO || 'Vezz90/italiacrit';
+  if (!token) { console.warn('[pcs] GH_DISPATCH_TOKEN mancante — extra_roster non persistito su GitHub'); return; }
+  try {
+    const content = Buffer.from(JSON.stringify(rosterData, null, 2), 'utf8').toString('base64');
+    const filePath = 'data/extra_roster.json';
+    const apiBase  = `https://api.github.com/repos/${repo}/contents/${filePath}`;
+    const headers  = {
+      'Authorization': `Bearer ${token}`,
+      'Accept': 'application/vnd.github+json',
+      'User-Agent': 'italiacrit-server',
+      'X-GitHub-Api-Version': '2022-11-28',
+    };
+    const getResp = await fetch(apiBase, { headers });
+    if (!getResp.ok) throw new Error(`GET SHA: HTTP ${getResp.status}`);
+    const { sha } = await getResp.json();
+    const putResp = await fetch(apiBase, {
+      method: 'PUT',
+      headers: { ...headers, 'Content-Type': 'application/json' },
+      body: JSON.stringify({ message: 'chore: add PCS athletes/teams from web import', content, sha }),
+    });
+    if (!putResp.ok) throw new Error(`PUT: HTTP ${putResp.status} — ${(await putResp.text()).slice(0, 200)}`);
+    console.log('[pcs] extra_roster.json committato su GitHub');
+  } catch (e) {
+    console.warn('[pcs] commit extra_roster su GitHub fallito:', e.message);
+  }
+}
+
 // Crea atleti e team mancanti in extra_roster.json, aggiorna atleta_id nelle righe
 // Restituisce il numero di atleti nuovi creati
 async function _createMissingPcsAthletes(rows, garaId, supabaseClient) {
@@ -1976,6 +2006,8 @@ async function _createMissingPcsAthletes(rows, garaId, supabaseClient) {
   if (modified) {
     try { fs.writeFileSync(rosterPath, JSON.stringify(roster, null, 2), 'utf8'); }
     catch (e) { console.warn('[pcs] extra_roster.json write failed:', e.message); }
+    // Persisti su GitHub così sopravvive ai redeploy
+    _commitExtraRosterToGH(roster).catch(() => {});
   }
 
   return created;
