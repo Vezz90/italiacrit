@@ -1866,15 +1866,26 @@ window.saveAdminEdit = async function(entityType, entityId) {
   }
 };
 
+// Ricarica globalData (con cache invalidata) così i profili appena creati
+// dall'import/rematch sono subito disponibili e i link non danno 404.
+async function _reloadAfterPcs() {
+  delete cache['data/extra_roster.json'];
+  const pcsKey = Object.keys(cache).find(k => k.includes('pcs-extra-roster'));
+  if (pcsKey) delete cache[pcsKey];
+  globalData = await loadAll();
+}
+
 window.adminPcsImport = async function(garaId) {
   const btn = document.getElementById('pcs-import-btn');
   if (btn) { btn.disabled = true; btn.textContent = '⏳ Importo…'; }
   try {
     const result = await apiCall(`/admin/gara/${encodeURIComponent(garaId)}/pcs-import`, { method: 'POST', body: {} });
     if (btn) { btn.textContent = `✓ ${result.riders} corridori`; }
+    if (result.newAtleti > 0) await _reloadAfterPcs();
     const circuitResults = (window._lastGaraResults || []);
     await _loadGaraPcsExt(garaId, circuitResults);
-    showToast(`Importati ${result.riders} corridori da PCS`);
+    const nuovi = result.newAtleti ? ` — ${result.newAtleti} profili nuovi creati` : '';
+    showToast(`Importati ${result.riders} corridori da PCS${nuovi}`);
   } catch (_) {
     // Import automatico bloccato da anti-bot → mostra modal incolla-HTML
     if (btn) { btn.disabled = false; btn.textContent = '⬇ Importa PCS'; }
@@ -1890,15 +1901,8 @@ window.adminPcsRematch = async function(garaId) {
     const nuovi = result.newAtleti ? ` — ${result.newAtleti} profili nuovi creati` : '';
     showToast(`Rimatch: ${result.updated} atleti collegati su ${result.total}${nuovi}`);
     if (btn) { btn.textContent = `✓ ${result.updated}/${result.total}`; }
-    // Se sono stati creati nuovi profili, invalida la cache e ricarica globalData
-    // così i link ai profili funzionano subito senza ricaricare la pagina
-    if (result.newAtleti > 0) {
-      delete cache['data/extra_roster.json'];
-      // Invalida anche la cache dell'endpoint pcs-extra-roster
-      const pcsKey = Object.keys(cache).find(k => k.includes('pcs-extra-roster'));
-      if (pcsKey) delete cache[pcsKey];
-      globalData = await loadAll();
-    }
+    // Se cambiano i collegamenti o nascono profili, ricarica così i link sono subito validi
+    if (result.newAtleti > 0 || result.updated > 0) await _reloadAfterPcs();
     const circuitResults = (window._lastGaraResults || []);
     await _loadGaraPcsExt(garaId, circuitResults);
   } catch (e) {
@@ -1945,6 +1949,7 @@ window._submitPcsHtml = async function(garaId) {
       method: 'POST', body: { html }
     });
     document.getElementById('pcs-paste-overlay')?.remove();
+    if (result.newAtleti > 0) await _reloadAfterPcs();
     const circuitResults = (window._lastGaraResults || []);
     await _loadGaraPcsExt(garaId, circuitResults);
     const nuovi = result.newAtleti ? ` — ${result.newAtleti} profili nuovi creati` : '';
