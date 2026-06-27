@@ -1868,6 +1868,21 @@ window.adminPcsImport = async function(garaId) {
   }
 };
 
+window.adminPcsRematch = async function(garaId) {
+  const btn = document.getElementById('pcs-rematch-btn');
+  if (btn) { btn.disabled = true; btn.textContent = '⏳ Rimatch…'; }
+  try {
+    const result = await apiCall(`/admin/pcs-rematch-athletes?gara_id=${encodeURIComponent(garaId)}`, { method: 'POST', body: {} });
+    showToast(`Rimatch: ${result.updated} atleti collegati su ${result.total}`);
+    if (btn) { btn.textContent = `✓ ${result.updated}/${result.total}`; }
+    const circuitResults = (window._lastGaraResults || []);
+    await _loadGaraPcsExt(garaId, circuitResults);
+  } catch (e) {
+    showToast('Errore rimatch: ' + e.message);
+    if (btn) { btn.disabled = false; btn.textContent = '↺ Rimatch Atleti'; }
+  }
+};
+
 window._openPcsHtmlPasteModal = function(garaId) {
   document.getElementById('pcs-paste-overlay')?.remove();
   const ov = document.createElement('div');
@@ -14303,6 +14318,7 @@ async function renderGara(gara_id) {
         ${isEsordienti && results2.length ? `<button class="btn-share" onclick="window.triggerShareGara2()"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="18" cy="5" r="3"/><circle cx="6" cy="12" r="3"/><circle cx="18" cy="19" r="3"/><line x1="8.59" y1="13.51" x2="15.42" y2="17.49"/><line x1="15.41" y1="6.51" x2="8.59" y2="10.49"/></svg> Condividi Risultati 2° Anno</button>` : ''}
         ${adminEditBtn('gara', primaryGaraId)}
         ${_isAdmin ? `<button id="pcs-import-btn" class="admin-edit-btn" style="background:#7c3aed" onclick="window.adminPcsImport('${esc(primaryGaraId)}')">⬇ Importa PCS</button>` : ''}
+        ${_isAdmin ? `<button id="pcs-rematch-btn" class="admin-edit-btn" style="background:#059669" onclick="window.adminPcsRematch('${esc(primaryGaraId)}')">↺ Rimatch Atleti</button>` : ''}
       </div>
     ${_catTabsHtml}
     ${racePhotosHtml}

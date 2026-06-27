@@ -1960,6 +1960,34 @@ function _parsePcsResultsHtml(html, garaId, season, pcsSlug) {
   return rows;
 }
 
+// Rimatch atleta_id su tutte le righe di pcs_gara_results già importate
+app.post('/api/admin/pcs-rematch-athletes', requireAdmin, async (req, res) => {
+  try {
+    if (!supabase) return res.status(503).json({ error: 'Supabase non disponibile' });
+    const garaId = req.query.gara_id || null;
+
+    const athleteMap = _buildAthleteMap();
+    if (!athleteMap.size) return res.status(500).json({ error: 'Nessun atleta trovato nel sistema' });
+
+    let query = supabase.from('pcs_gara_results').select('id, rider_name, atleta_id');
+    if (garaId) query = query.eq('gara_id', garaId);
+    const { data: rows, error } = await query.limit(5000);
+    if (error) throw error;
+    if (!rows?.length) return res.json({ ok: true, updated: 0 });
+
+    let updated = 0;
+    for (const row of rows) {
+      const matched = athleteMap.get(_normName(row.rider_name)) || null;
+      if (matched && matched !== row.atleta_id) {
+        await supabase.from('pcs_gara_results').update({ atleta_id: matched }).eq('id', row.id);
+        updated++;
+      }
+    }
+    console.log(`[rematch] ${updated}/${rows.length} righe aggiornate`);
+    res.json({ ok: true, updated, total: rows.length });
+  } catch (e) { res.status(500).json({ error: e.message }); }
+});
+
 // Import risultati PCS — prima prova HTTP fetch, poi Playwright headless come fallback
 app.post('/api/admin/gara/:garaId/pcs-import', requireAdmin, async (req, res) => {
   try {
