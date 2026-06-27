@@ -1993,6 +1993,33 @@ app.post('/api/admin/gara/:garaId/pcs-import', requireAdmin, async (req, res) =>
   } catch (e) { res.status(500).json({ error: e.message }); }
 });
 
+// Import risultati PCS da HTML incollato manualmente (bypassa anti-bot)
+app.post('/api/admin/gara/:garaId/pcs-import-html', requireAdmin, async (req, res) => {
+  try {
+    if (!supabase) return res.status(503).json({ error: 'Supabase non disponibile' });
+    const garaId = req.params.garaId;
+    const html   = req.body?.html;
+    if (!html || html.length < 100) return res.status(400).json({ error: 'HTML mancante o troppo corto' });
+
+    // Leggi slug da Supabase per associare i risultati
+    const { data: ovRow } = await supabase
+      .from('entity_overrides').select('new_value')
+      .eq('entity_type', 'gara').eq('entity_id', garaId).eq('field', 'pcs_race_slug').single();
+    const pcsSlug = (ovRow?.new_value || '').replace(/\/result$/, '').replace(/\/$/, '') || garaId;
+    const season  = parseInt(pcsSlug.match(/\/(\d{4})/)?.[1]) || new Date().getFullYear();
+
+    const parsedRows = _parsePcsResultsHtml(html, garaId, season, pcsSlug);
+    if (!parsedRows.length) return res.status(422).json({ error: 'Nessun corridore trovato. Assicurati di aver incollato il sorgente della pagina risultati PCS.' });
+
+    await supabase.from('pcs_gara_results').delete().eq('gara_id', garaId);
+    const { error: insErr } = await supabase.from('pcs_gara_results').insert(parsedRows);
+    if (insErr) throw insErr;
+
+    console.log(`[pcs-import-html] ${garaId}: ${parsedRows.length} corridori salvati`);
+    res.json({ ok: true, riders: parsedRows.length, slug: pcsSlug });
+  } catch (e) { res.status(500).json({ error: e.message }); }
+});
+
 // ══════════════════════════════════════════════════════════════════════════════
 // YouTube Auto-Scraper
 // ══════════════════════════════════════════════════════════════════════════════

@@ -1858,13 +1858,62 @@ window.adminPcsImport = async function(garaId) {
   try {
     const result = await apiCall(`/admin/gara/${encodeURIComponent(garaId)}/pcs-import`, { method: 'POST', body: {} });
     if (btn) { btn.textContent = `✓ ${result.riders} corridori`; }
-    // Ricarica la sezione PCS senza ricaricare tutta la pagina
     const circuitResults = (window._lastGaraResults || []);
     await _loadGaraPcsExt(garaId, circuitResults);
     showToast(`Importati ${result.riders} corridori da PCS`);
-  } catch (e) {
-    showToast('Errore import PCS: ' + e.message, 'error');
+  } catch (_) {
+    // Import automatico bloccato da anti-bot → mostra modal incolla-HTML
     if (btn) { btn.disabled = false; btn.textContent = '⬇ Importa PCS'; }
+    window._openPcsHtmlPasteModal(garaId);
+  }
+};
+
+window._openPcsHtmlPasteModal = function(garaId) {
+  document.getElementById('pcs-paste-overlay')?.remove();
+  const ov = document.createElement('div');
+  ov.id = 'pcs-paste-overlay';
+  ov.style.cssText = 'position:fixed;inset:0;background:rgba(0,0,0,.75);z-index:9999;display:flex;align-items:center;justify-content:center;padding:16px';
+  ov.innerHTML = `
+    <div style="background:var(--bg-card);border:1px solid var(--border);border-radius:12px;padding:28px;width:100%;max-width:520px;max-height:90vh;overflow-y:auto">
+      <h2 style="font-family:var(--font-display);font-size:1.2rem;color:var(--red-hot);margin:0 0 12px">INCOLLA SORGENTE PCS</h2>
+      <p style="font-size:.82rem;color:var(--text-muted);margin:0 0 6px">PCS blocca le richieste automatiche. Segui questi passi:</p>
+      <ol style="font-size:.82rem;color:var(--text-secondary);margin:0 0 14px;padding-left:18px;line-height:1.7">
+        <li>Apri la pagina risultati su <b>procyclingstats.com</b></li>
+        <li>Premi <b>Ctrl+U</b> (o tasto destro → Visualizza sorgente pagina)</li>
+        <li>Seleziona tutto (<b>Ctrl+A</b>) e copia (<b>Ctrl+C</b>)</li>
+        <li>Incolla qui sotto e clicca <b>Importa</b></li>
+      </ol>
+      <textarea id="pcs-html-input" placeholder="Incolla qui il sorgente HTML…"
+        style="width:100%;height:160px;box-sizing:border-box;background:var(--bg-input,#1e293b);color:var(--text-primary);border:1px solid var(--border);border-radius:6px;padding:10px;font-size:.78rem;font-family:var(--font-mono);resize:vertical"></textarea>
+      <div id="pcs-paste-err" style="display:none;color:var(--red-hot);font-size:.82rem;margin-top:8px"></div>
+      <div style="display:flex;gap:10px;margin-top:14px">
+        <button class="auth-btn" id="pcs-paste-save-btn" onclick="window._submitPcsHtml('${esc(garaId)}')">Importa</button>
+        <button class="auth-btn auth-btn-outline" onclick="document.getElementById('pcs-paste-overlay').remove()">Annulla</button>
+      </div>
+    </div>`;
+  document.body.appendChild(ov);
+  ov.addEventListener('click', e => { if (e.target === ov) ov.remove(); });
+};
+
+window._submitPcsHtml = async function(garaId) {
+  const html = document.getElementById('pcs-html-input')?.value.trim();
+  const errEl = document.getElementById('pcs-paste-err');
+  const btn = document.getElementById('pcs-paste-save-btn');
+  if (!html) { errEl.textContent = 'Incolla prima il sorgente HTML'; errEl.style.display = 'block'; return; }
+  btn.disabled = true; btn.textContent = 'Importo…'; errEl.style.display = 'none';
+  try {
+    const result = await apiCall(`/admin/gara/${encodeURIComponent(garaId)}/pcs-import-html`, {
+      method: 'POST', body: { html }
+    });
+    document.getElementById('pcs-paste-overlay')?.remove();
+    const circuitResults = (window._lastGaraResults || []);
+    await _loadGaraPcsExt(garaId, circuitResults);
+    showToast(`Importati ${result.riders} corridori da PCS`);
+    const b = document.getElementById('pcs-import-btn');
+    if (b) b.textContent = `✓ ${result.riders} corridori`;
+  } catch (e) {
+    errEl.textContent = 'Errore: ' + e.message; errEl.style.display = 'block';
+    btn.disabled = false; btn.textContent = 'Importa';
   }
 };
 
