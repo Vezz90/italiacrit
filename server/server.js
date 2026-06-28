@@ -1999,7 +1999,7 @@ async function _fixPcsAthleteTeams() {
       .eq('entity_type', 'pcs_atleta').eq('field', 'profile').limit(5000);
     for (const row of (data || [])) {
       let p; try { p = JSON.parse(row.new_value); } catch { continue; }
-      const real = _findExistingTeam(p.team_nome || '', teamIndex);
+      const real = _findExistingTeam(p.team_nome || '', teamIndex, p.genere);
       if (real && real.tid !== p.team_id) {
         p.team_id = real.tid; p.team_nome = real.nome;
         const { error } = await supabase.from('entity_overrides')
@@ -2119,7 +2119,7 @@ async function _createMissingPcsAthletes(rows, garaId) {
     // Team: prima cerca un team reale (teams.json) con nome quasi identico,
     // così l'atleta finisce nel team già esistente invece di crearne un doppione.
     const pcsTeamNome = (row.team_name || 'SCONOSCIUTO').toUpperCase();
-    const existing    = _findExistingTeam(pcsTeamNome, teamIndex);
+    const existing    = _findExistingTeam(pcsTeamNome, teamIndex, genere);
     const teamId      = existing ? existing.tid  : _makeTeamId(pcsTeamNome);
     const teamNome    = existing ? existing.nome : pcsTeamNome;
 
@@ -2390,7 +2390,7 @@ app.post('/api/admin/pcs-rematch-athletes', requireAdmin, async (req, res) => {
 
 // Suggerisce, per ogni team PCS NON ancora collegato a un team reale, i possibili
 // team reali simili (parole condivise / contenimento) da unire manualmente.
-function _teamSuggestions(pcsNome, teamEntries) {
+function _teamSuggestions(pcsNome, teamEntries, genere) {
   const sq = _squashTeam(pcsNome);
   const STOP = new Set(['team','cycling','asd','club','sc','gs','uc','us','ssd','ciclistica','velo','pro','racing']);
   const words = w => String(w || '').normalize('NFD').replace(/[̀-ͯ]/g, '').toLowerCase()
@@ -2398,6 +2398,7 @@ function _teamSuggestions(pcsNome, teamEntries) {
   const pcsWords = new Set(words(pcsNome));
   const out = [];
   for (const e of teamEntries) {
+    if (!_genderOk(e, genere)) continue;   // non suggerire team di genere diverso
     let score = 0;
     // parole significative condivise
     const realWords = words(e.nome);
@@ -2420,18 +2421,18 @@ app.get('/api/admin/pcs-team-suggestions', requireAdmin, async (req, res) => {
       .from('entity_overrides').select('new_value')
       .eq('entity_type', 'pcs_atleta').eq('field', 'profile').limit(5000);
     if (error) throw error;
-    // Raggruppa per team PCS
+    // Raggruppa per team PCS (tiene traccia del genere prevalente del gruppo)
     const groups = {};
     for (const row of (data || [])) {
       let p; try { p = JSON.parse(row.new_value); } catch { continue; }
       const tid = p.team_id || 'SCONOSCIUTO';
       if (realIds.has(tid)) continue;            // già un team reale → niente da suggerire
-      if (!groups[tid]) groups[tid] = { team_id: tid, team_nome: p.team_nome || tid, count: 0 };
+      if (!groups[tid]) groups[tid] = { team_id: tid, team_nome: p.team_nome || tid, count: 0, genere: p.genere || null };
       groups[tid].count++;
     }
     const list = Object.values(groups)
       .filter(g => g.team_id !== 'SCONOSCIUTO')
-      .map(g => ({ ...g, candidates: _teamSuggestions(g.team_nome, teamIndex) }))
+      .map(g => ({ ...g, candidates: _teamSuggestions(g.team_nome, teamIndex, g.genere) }))
       .filter(g => g.candidates.length)
       .sort((a, b) => b.candidates[0].score - a.candidates[0].score);
     res.json(list);
@@ -2448,6 +2449,24 @@ app.post('/api/admin/pcs-merge-team', requireAdmin, async (req, res) => {
       .from('entity_overrides').select('id, new_value')
       .eq('entity_type', 'pcs_atleta').eq('field', 'profile').limit(5000);
     if (error) throw error;
+
+    // Protezione genere: il team reale di destinazione deve competere nel genere
+    // degli atleti che stiamo spostando (evita di unire uomini con donne).
+    const targetTeam = _buildTeamIndex().find(e => e.tid === to_id);
+    const srcGeneri = new Set();
+    for (const row of (data || [])) {
+      try { const p = JSON.parse(row.new_value); if ((p.team_id || 'SCONOSCIUTO') === from_id && p.genere) srcGeneri.add(p.genere); } catch {}
+    }
+    if (targetTeam && targetTeam.genders && targetTeam.genders.size) {
+      const incompat = [...srcGeneri].filter(g => !targetTeam.genders.has(g));
+      if (incompat.length) {
+        return res.status(409).json({
+          error: `Genere incompatibile: "${to_nome}" compete in ${[...targetTeam.genders].join('/')}, ` +
+                 `ma stai spostando atleti ${incompat.join('/')}. Scegli un team del genere corretto.`,
+        });
+      }
+    }
+
     let updated = 0;
     for (const row of (data || [])) {
       let p; try { p = JSON.parse(row.new_value); } catch { continue; }

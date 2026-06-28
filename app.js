@@ -1952,12 +1952,16 @@ window._renderPcsFix = async function() {
 
     // ── Atleti senza team ──
     if (orphEl) {
-      orphEl.innerHTML = orphans.length ? orphans.map((a, i) => `
-        <div style="display:flex;flex-wrap:wrap;gap:8px;align-items:center;border:1px solid var(--border-subtle);border-radius:var(--r-md);padding:8px 12px;margin-bottom:8px">
+      orphEl.innerHTML = orphans.length ? `
+        <div style="display:flex;justify-content:flex-end;margin-bottom:10px">
+          <button onclick="window._saveAllOrphanTeams()" style="background:#059669;color:#fff;border:none;border-radius:var(--r-sm);padding:7px 16px;font-size:.85rem;font-weight:700;cursor:pointer">💾 Salva tutti i team assegnati</button>
+        </div>
+        ${orphans.map((a, i) => `
+        <div id="orphan-row-${i}" style="display:flex;flex-wrap:wrap;gap:8px;align-items:center;border:1px solid var(--border-subtle);border-radius:var(--r-md);padding:8px 12px;margin-bottom:8px">
           <div style="flex:1;min-width:160px;font-weight:600;text-transform:uppercase">${esc(a.cognome)} ${esc(a.nome)}</div>
           <input list="pcs-fix-teamlist" id="orphan-input-${i}" placeholder="assegna team…" style="flex:1;min-width:160px;padding:5px 8px;border:1px solid var(--border);border-radius:var(--r-sm);font-size:.82rem">
           <button onclick="window._setOrphanTeamIdx(${i})" style="background:var(--accent);color:#fff;border:none;border-radius:var(--r-sm);padding:5px 12px;font-size:.82rem;font-weight:600;cursor:pointer">Assegna</button>
-        </div>`).join('')
+        </div>`).join('')}`
         : `<p style="color:var(--text-muted);font-size:.85rem">Nessun atleta senza team. 🎉</p>`;
     }
   } catch (e) {
@@ -1990,6 +1994,8 @@ window._mergePcsTeamManual = function(i) {
   if (g) _doMergePcsTeam(g.team_id, t.tid, t.nome);
 };
 
+// Salva il team di un singolo atleta SENZA ricaricare la lista (così non perdi
+// gli altri input che stai compilando). Marca la riga come salvata.
 window._setOrphanTeamIdx = async function(i) {
   const a = window._pcsFixData.orphans[i];
   const val = document.getElementById(`orphan-input-${i}`)?.value;
@@ -1999,12 +2005,33 @@ window._setOrphanTeamIdx = async function(i) {
   try {
     await apiCall('/admin/pcs-set-athlete-team', { method: 'POST', body: { atleta_id: a.atleta_id, team_id: t.tid, team_nome: t.nome } });
     showToast(`${a.cognome} ${a.nome} → ${t.nome}`);
+    const row = document.getElementById(`orphan-row-${i}`);
+    if (row) { row.style.opacity = '.5'; row.querySelector('button').textContent = '✓ Salvato'; }
+    window._pcsFixData._dirty = true;
+  } catch (e) { showToast('Errore: ' + e.message); }
+};
+
+// Salva in blocco tutti gli atleti con un team valido compilato, poi ricarica una volta sola.
+window._saveAllOrphanTeams = async function() {
+  const orphans = window._pcsFixData.orphans || [];
+  let saved = 0, skipped = 0;
+  for (let i = 0; i < orphans.length; i++) {
+    const a = orphans[i];
+    const t = _resolveTeamByName(document.getElementById(`orphan-input-${i}`)?.value);
+    if (!a || !t) { if (document.getElementById(`orphan-input-${i}`)?.value) skipped++; continue; }
+    try {
+      await apiCall('/admin/pcs-set-athlete-team', { method: 'POST', body: { atleta_id: a.atleta_id, team_id: t.tid, team_nome: t.nome } });
+      saved++;
+    } catch { skipped++; }
+  }
+  showToast(`Salvati ${saved} atleti${skipped ? ` — ${skipped} saltati (team non valido)` : ''}`);
+  if (saved > 0) {
     delete cache['data/extra_roster.json'];
     const pcsKey = Object.keys(cache).find(k => k.includes('pcs-extra-roster'));
     if (pcsKey) delete cache[pcsKey];
     globalData = await loadAll();
     await window._renderPcsFix();
-  } catch (e) { showToast('Errore: ' + e.message); }
+  }
 };
 
 window._openPcsHtmlPasteModal = function(garaId) {
