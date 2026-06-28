@@ -2,23 +2,23 @@
   {
     "team_id": "UAE_TEAM_ADQ",
     "team_nome": "UAE TEAM ADQ",
-    "punti": 536,
-    "vittorie": 3,
-    "p1": 3,
+    "punti": 578,
+    "vittorie": 4,
+    "p1": 4,
     "p2": 3,
     "p3": 2,
-    "pout": 15,
+    "pout": 16,
     "n_atleti": 8,
     "pos": 1
   },
   {
     "team_id": "LIDL_TREK",
     "team_nome": "LIDL - TREK",
-    "punti": 453,
+    "punti": 473,
     "vittorie": 4,
     "p1": 4,
     "p2": 4,
-    "p3": 0,
+    "p3": 1,
     "pout": 11,
     "n_atleti": 5,
     "pos": 2
@@ -38,13 +38,13 @@
   {
     "team_id": "CANYON_SRAM_ZONDACRYPTO",
     "team_nome": "CANYON SRAM ZONDACRYPTO",
-    "punti": 286,
+    "punti": 290,
     "vittorie": 0,
     "p1": 0,
     "p2": 2,
     "p3": 5,
-    "pout": 5,
-    "n_atleti": 4,
+    "pout": 6,
+    "n_atleti": 5,
     "pos": 4
   },
   {
@@ -132,6 +132,18 @@
     "pos": 11
   },
   {
+    "team_id": "LIV_ALULA_JAYCO",
+    "team_nome": "LIV-ALULA JAYCO",
+    "punti": 111,
+    "vittorie": 0,
+    "p1": 0,
+    "p2": 1,
+    "p3": 1,
+    "pout": 4,
+    "n_atleti": 2,
+    "pos": 12
+  },
+  {
     "team_id": "BIESSE_CARRERA_PREMAC",
     "team_nome": "BIESSE - CARRERA - PREMAC",
     "punti": 99,
@@ -141,7 +153,7 @@
     "p3": 1,
     "pout": 9,
     "n_atleti": 5,
-    "pos": 12
+    "pos": 13
   },
   {
     "team_id": "HUMAN_POWERED_HEALTH",
@@ -153,7 +165,7 @@
     "p3": 0,
     "pout": 3,
     "n_atleti": 2,
-    "pos": 13
+    "pos": 14
   },
   {
     "team_id": "BORN_TO_WIN_BTC_CITY_LJUBLJANA",
@@ -165,7 +177,7 @@
     "p3": 0,
     "pout": 11,
     "n_atleti": 4,
-    "pos": 14
+    "pos": 15
   },
   {
     "team_id": "TOYOTA_VALENCIA_SAV",
@@ -177,7 +189,7 @@
     "p3": 1,
     "pout": 1,
     "n_atleti": 1,
-    "pos": 15
+    "pos": 16
   },
   {
     "team_id": "NEXETIS_TEAM",
@@ -189,18 +201,6 @@
     "p3": 1,
     "pout": 1,
     "n_atleti": 3,
-    "pos": 16
-  },
-  {
-    "team_id": "LIV_ALULA_JAYCO",
-    "team_nome": "LIV-ALULA JAYCO",
-    "punti": 87,
-    "vittorie": 0,
-    "p1": 0,
-    "p2": 0,
-    "p3": 1,
-    "pout": 4,
-    "n_atleti": 2,
     "pos": 17
   },
   {
@@ -408,6 +408,18 @@
     "pos": 34
   },
   {
+    "team_id": "FIAMME_ORO",
+    "team_nome": "FIAMME ORO",
+    "punti": 16,
+    "vittorie": 0,
+    "p1": 0,
+    "p2": 0,
+    "p3": 0,
+    "pout": 1,
+    "n_atleti": 1,
+    "pos": 35
+  },
+  {
     "team_id": "BMX_CLUB_SARRIANS",
     "team_nome": "BMX CLUB SARRIANS",
     "punti": 16,
@@ -417,7 +429,7 @@
     "p3": 0,
     "pout": 1,
     "n_atleti": 1,
-    "pos": 35
+    "pos": 36
   },
   {
     "team_id": "TEAM_WILIER_BREGANZE",
@@ -429,7 +441,7 @@
     "p3": 0,
     "pout": 3,
     "n_atleti": 1,
-    "pos": 36
+    "pos": 37
   },
   {
     "team_id": "A_R_MONEX_PRO_CYCLING_TEAM",
@@ -441,7 +453,19 @@
     "p3": 0,
     "pout": 3,
     "n_atleti": 1,
-    "pos": 37
+    "pos": 38
+  },
+  {
+    "team_id": "GS_FIAMME_AZZURRE",
+    "team_nome": "GS FIAMME AZZURRE",
+    "punti": 10,
+    "vittorie": 0,
+    "p1": 0,
+    "p2": 0,
+    "p3": 0,
+    "pout": 1,
+    "n_atleti": 1,
+    "pos": 39
   },
   {
     "team_id": "TEAM_ESSERE",
@@ -453,7 +477,7 @@
     "p3": 0,
     "pout": 1,
     "n_atleti": 1,
-    "pos": 38
+    "pos": 40
   },
   {
     "team_id": "BRESCIA_F_MAGNI_FLANDRES_LOVE",
@@ -465,7 +489,31 @@
     "p3": 1,
     "pout": 0,
     "n_atleti": 1,
-    "pos": 39
+    "pos": 41
+  },
+  {
+    "team_id": "LABORAL_KUTXA_FUNDACION_EUSKADI",
+    "team_nome": "LABORAL KUTXA - FUNDACION EUSKADI",
+    "punti": 8,
+    "vittorie": 0,
+    "p1": 0,
+    "p2": 0,
+    "p3": 0,
+    "pout": 1,
+    "n_atleti": 1,
+    "pos": 42
+  },
+  {
+    "team_id": "COFIDIS_WOMEN_TEAM",
+    "team_nome": "COFIDIS WOMEN TEAM",
+    "punti": 6,
+    "vittorie": 0,
+    "p1": 0,
+    "p2": 0,
+    "p3": 0,
+    "pout": 1,
+    "n_atleti": 1,
+    "pos": 43
   },
   {
     "team_id": "NAZIONALE_UCRAINA",
@@ -477,7 +525,7 @@
     "p3": 0,
     "pout": 2,
     "n_atleti": 1,
-    "pos": 40
+    "pos": 44
   },
   {
     "team_id": "TEAM_CINGOLANI_SPECIALIZED",
@@ -489,7 +537,7 @@
     "p3": 0,
     "pout": 1,
     "n_atleti": 1,
-    "pos": 41
+    "pos": 45
   },
   {
     "team_id": "A_S_D_CLUB_CORRIDONIA_S_C",
@@ -501,6 +549,18 @@
     "p3": 0,
     "pout": 2,
     "n_atleti": 2,
-    "pos": 42
+    "pos": 46
+  },
+  {
+    "team_id": "MOVISTAR_TEAM",
+    "team_nome": "MOVISTAR TEAM",
+    "punti": 2,
+    "vittorie": 0,
+    "p1": 0,
+    "p2": 0,
+    "p3": 0,
+    "pout": 1,
+    "n_atleti": 1,
+    "pos": 47
   }
 ]

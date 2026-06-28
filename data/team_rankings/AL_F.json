@@ -14,24 +14,24 @@
   {
     "team_id": "S_C_CESANO_MADERNO",
     "team_nome": "S.C. CESANO MADERNO",
-    "punti": 256,
+    "punti": 265,
     "vittorie": 4,
     "p1": 4,
     "p2": 4,
     "p3": 4,
-    "pout": 23,
+    "pout": 25,
     "n_atleti": 6,
     "pos": 2
   },
   {
     "team_id": "VANGI_LADIES_CYCLING_TEAM",
     "team_nome": "VANGI LADIES CYCLING TEAM",
-    "punti": 247,
+    "punti": 257,
     "vittorie": 6,
     "p1": 6,
     "p2": 5,
     "p3": 1,
-    "pout": 19,
+    "pout": 22,
     "n_atleti": 6,
     "pos": 3
   },
@@ -74,26 +74,38 @@
   {
     "team_id": "POL_FIUMICINESE_FA_I_T_ADRIATICA",
     "team_nome": "POL. FIUMICINESE FA.I.T. ADRIATICA",
-    "punti": 150,
+    "punti": 160,
     "vittorie": 0,
     "p1": 0,
     "p2": 1,
     "p3": 3,
-    "pout": 14,
+    "pout": 16,
     "n_atleti": 5,
     "pos": 7
   },
   {
     "team_id": "TEAM_FABIANA_LUPERINI_ASD",
     "team_nome": "TEAM FABIANA LUPERINI ASD",
-    "punti": 141,
+    "punti": 153,
     "vittorie": 2,
     "p1": 2,
-    "p2": 2,
+    "p2": 3,
     "p3": 2,
     "pout": 12,
     "n_atleti": 2,
     "pos": 8
+  },
+  {
+    "team_id": "A_R_MONEX_PRO_CYCLING_TEAM",
+    "team_nome": "A.R.MONEX PRO CYCLING TEAM",
+    "punti": 89,
+    "vittorie": 1,
+    "p1": 1,
+    "p2": 0,
+    "p3": 3,
+    "pout": 8,
+    "n_atleti": 5,
+    "pos": 9
   },
   {
     "team_id": "TEAM_WILIER_BREGANZE",
@@ -105,7 +117,7 @@
     "p3": 1,
     "pout": 9,
     "n_atleti": 2,
-    "pos": 9
+    "pos": 10
   },
   {
     "team_id": "A_S_D_GIOCA_IN_BICI_OGLIO_PO",
@@ -117,7 +129,7 @@
     "p3": 2,
     "pout": 9,
     "n_atleti": 4,
-    "pos": 10
+    "pos": 11
   },
   {
     "team_id": "JU_GREEN_A_S_D_GORLA_MINORE",
@@ -129,7 +141,7 @@
     "p3": 1,
     "pout": 13,
     "n_atleti": 2,
-    "pos": 11
+    "pos": 12
   },
   {
     "team_id": "GS_CICLI_FIORIN_ASD",
@@ -141,18 +153,6 @@
     "p3": 1,
     "pout": 16,
     "n_atleti": 6,
-    "pos": 12
-  },
-  {
-    "team_id": "A_R_MONEX_PRO_CYCLING_TEAM",
-    "team_nome": "A.R.MONEX PRO CYCLING TEAM",
-    "punti": 64,
-    "vittorie": 0,
-    "p1": 0,
-    "p2": 0,
-    "p3": 2,
-    "pout": 8,
-    "n_atleti": 5,
     "pos": 13
   },
   {
