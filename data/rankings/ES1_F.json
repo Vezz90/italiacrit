@@ -93,7 +93,7 @@
     "p3": 3,
     "pout": 5,
     "pos": 6,
-    "trend": 1
+    "trend": 0
   },
   {
     "atleta_id": "BICELLI_EMMA",
@@ -109,7 +109,7 @@
     "p3": 2,
     "pout": 7,
     "pos": 7,
-    "trend": -1
+    "trend": 0
   },
   {
     "atleta_id": "SAMBI_CORINNA",
@@ -173,7 +173,7 @@
     "p3": 3,
     "pout": 8,
     "pos": 11,
-    "trend": 2
+    "trend": 0
   },
   {
     "atleta_id": "BUTTARAZZI_GIULIA",
@@ -189,7 +189,7 @@
     "p3": 0,
     "pout": 0,
     "pos": 12,
-    "trend": -1
+    "trend": 0
   },
   {
     "atleta_id": "MARIANI_MARGHERITA",
@@ -205,7 +205,7 @@
     "p3": 1,
     "pout": 11,
     "pos": 13,
-    "trend": -1
+    "trend": 0
   },
   {
     "atleta_id": "SFORZINI_SELENE",
@@ -237,7 +237,7 @@
     "p3": 0,
     "pout": 11,
     "pos": 15,
-    "trend": 2
+    "trend": 0
   },
   {
     "atleta_id": "NERI_SARA",
@@ -253,7 +253,7 @@
     "p3": 1,
     "pout": 7,
     "pos": 16,
-    "trend": -1
+    "trend": 0
   },
   {
     "atleta_id": "CACCIA_BEATRICE",
@@ -269,7 +269,7 @@
     "p3": 2,
     "pout": 9,
     "pos": 17,
-    "trend": -1
+    "trend": 0
   },
   {
     "atleta_id": "BUTTARAZZI_SOFIA",
@@ -301,7 +301,7 @@
     "p3": 0,
     "pout": 6,
     "pos": 19,
-    "trend": 1
+    "trend": 0
   },
   {
     "atleta_id": "STELLA_AURORA",
@@ -317,7 +317,7 @@
     "p3": 1,
     "pout": 8,
     "pos": 20,
-    "trend": -1
+    "trend": 0
   },
   {
     "atleta_id": "CIANTI_NOEMI",
@@ -557,7 +557,7 @@
     "p3": 0,
     "pout": 3,
     "pos": 35,
-    "trend": 6
+    "trend": 0
   },
   {
     "atleta_id": "ZAVATTERO_MARTINA",
@@ -573,7 +573,7 @@
     "p3": 0,
     "pout": 4,
     "pos": 36,
-    "trend": -1
+    "trend": 0
   },
   {
     "atleta_id": "BORDIGNON_NAMI_LUCE",
@@ -589,7 +589,7 @@
     "p3": 0,
     "pout": 3,
     "pos": 37,
-    "trend": -1
+    "trend": 0
   },
   {
     "atleta_id": "ALFANO_VITTORIA",
@@ -605,7 +605,7 @@
     "p3": 1,
     "pout": 1,
     "pos": 38,
-    "trend": -1
+    "trend": 0
   },
   {
     "atleta_id": "MAZZA_CARMEN",
@@ -621,7 +621,7 @@
     "p3": 0,
     "pout": 2,
     "pos": 39,
-    "trend": -1
+    "trend": 0
   },
   {
     "atleta_id": "TRICARICO_MARGHERITA",
@@ -637,7 +637,7 @@
     "p3": 1,
     "pout": 1,
     "pos": 40,
-    "trend": -1
+    "trend": 0
   },
   {
     "atleta_id": "FARIAS_NICOLE",
@@ -653,7 +653,7 @@
     "p3": 0,
     "pout": 3,
     "pos": 41,
-    "trend": -1
+    "trend": 0
   },
   {
     "atleta_id": "TESTA_CAROLINA",
