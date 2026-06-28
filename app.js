@@ -1143,6 +1143,7 @@ function fixCompoundSurname(cognome, nome) {
 
 // Preload tutto in parallelo
 async function loadAll() {
+  _pcsRosterRetried = false;   // permetti un nuovo tentativo on-demand dopo ogni load
   // Strategia video:
   // 1. In locale → file statico (immediato)
   // 2. In produzione → prova l'API Render con timeout 5s
@@ -11800,11 +11801,47 @@ function profileYearRow(kind, id, selYear) {
 window.setAtletaYear = (id, year) => renderAtleta(id, { year });
 window.setTeamYear   = (id, year) => renderTeam(id, { year });
 
+// Carica al volo i profili atleti PCS e li inietta in globalData. Serve quando
+// il caricamento iniziale di /data/pcs-extra-roster è fallito (Render freddo) e
+// quindi gli atleti PCS-only davano 404. Si ritenta una sola volta per sessione.
+let _pcsRosterRetried = false;
+async function _ensurePcsAthletesLoaded() {
+  if (_pcsRosterRetried || !globalData) return;
+  _pcsRosterRetried = true;
+  let pcs;
+  try { pcs = await apiCall('/data/pcs-extra-roster'); } catch { return; }
+  if (!pcs || typeof pcs !== 'object') return;
+  for (const [tid, bucket] of Object.entries(pcs)) {
+    const teamNome = globalData.teams[tid]?.nome || bucket.nome || tid;
+    if (!globalData.teams[tid]) {
+      globalData.teams[tid] = { id: tid, nome: teamNome, atleti: [], punti_totali: 0, risultati: [] };
+    }
+    for (const p of (bucket.atleti || [])) {
+      const aid = String(p.atleta_id || '').toUpperCase();
+      if (!aid) continue;
+      if (!globalData.athletes[aid]) {
+        globalData.athletes[aid] = {
+          atleta_id: aid, nome: (p.nome || '').toUpperCase(), cognome: (p.cognome || '').toUpperCase(),
+          team_attuale: teamNome, team_id: tid, categoria: p.categoria || '', genere: p.genere || 'M',
+          punti_totali: 0, risultati: [], roster_only: true,
+        };
+      }
+      if (!Array.isArray(globalData.teams[tid].atleti)) globalData.teams[tid].atleti = [];
+      if (!globalData.teams[tid].atleti.includes(aid)) globalData.teams[tid].atleti.push(aid);
+    }
+  }
+}
+
 async function renderAtleta(atleta_id, opts = {}) {
   if (!globalData) return;
   const { athletes, calendar } = globalData;
 
-  const aLive = athletes[atleta_id];
+  let aLive = athletes[atleta_id];
+  if (!aLive) {
+    // Profilo non in memoria: forse i profili PCS non si sono caricati al boot. Riprova.
+    await _ensurePcsAthletesLoaded();
+    aLive = globalData.athletes[atleta_id];
+  }
   if (!aLive) return renderNotFound();
 
   // ── Anno selezionato (storicità): default = stagione caricata ──
@@ -11842,7 +11879,15 @@ async function renderAtleta(atleta_id, opts = {}) {
   const displayCognome = atletaOv.cognome || a.cognome || '';
   const displayNome    = atletaOv.nome    || a.nome    || '';
   const displayTeam    = atletaOv.team    || a.team_attuale || '';
-  const displayTeamId  = atletaOv.team_id || a.team_id     || '';
+  let   displayTeamId  = atletaOv.team_id || a.team_id     || '';
+  // Se è stato modificato solo il NOME del team (senza team_id), risolvi l'id dal
+  // nome così il link punta al team mostrato e non a quello vecchio del profilo PCS.
+  // Se il nome non corrisponde a nessun team reale, niente link (meglio di uno errato).
+  if (atletaOv.team && !atletaOv.team_id) {
+    const _tn = atletaOv.team.trim().toLowerCase();
+    const byName = Object.values(globalData.teams || {}).find(t => String(t.nome || '').trim().toLowerCase() === _tn);
+    displayTeamId = byName ? byName.id : '';
+  }
 
   const [currentRanking, photosMap, teamOvAtleta] = await Promise.all([
     rCode ? (_isLoadedYear ? loadRanking(rCode) : loadJson(`data/seasons/${selYear}/rankings/${rCode}.json`).catch(() => [])) : Promise.resolve([]),
