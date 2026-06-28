@@ -5,10 +5,10 @@
     "nome": "CARLOTTA",
     "team_id": "OFF_ALBERTI_U_C_VAL_D_ILLASI",
     "team_nome": "OFF.ALBERTI U.C. VAL D'ILLASI",
-    "punti": 219,
-    "vittorie": 11,
-    "gare": 17,
-    "p1": 11,
+    "punti": 234,
+    "vittorie": 12,
+    "gare": 18,
+    "p1": 12,
     "p2": 2,
     "p3": 2,
     "pout": 2,
@@ -21,13 +21,13 @@
     "nome": "ALESSANDRA",
     "team_id": "SCUOLA_CICLISMO_VERSO_L_IRIDE",
     "team_nome": "SCUOLA CICLISMO VERSO L'IRIDE",
-    "punti": 210,
+    "punti": 212,
     "vittorie": 5,
-    "gare": 19,
+    "gare": 20,
     "p1": 5,
     "p2": 4,
     "p3": 4,
-    "pout": 6,
+    "pout": 7,
     "pos": 2,
     "trend": 0
   },
@@ -85,13 +85,13 @@
     "nome": "EMMA",
     "team_id": "MARY_J_SWEET_ANGEL_ASD",
     "team_nome": "MARY J SWEET ANGEL ASD",
-    "punti": 112,
+    "punti": 115,
     "vittorie": 1,
-    "gare": 14,
+    "gare": 15,
     "p1": 1,
     "p2": 2,
     "p3": 1,
-    "pout": 10,
+    "pout": 11,
     "pos": 6,
     "trend": 0
   },
@@ -117,12 +117,12 @@
     "nome": "MARGHERITA",
     "team_id": "ASD_VELOCE_CLUB_BORGO",
     "team_nome": "ASD VELOCE CLUB BORGO",
-    "punti": 91,
+    "punti": 101,
     "vittorie": 1,
-    "gare": 10,
+    "gare": 11,
     "p1": 1,
     "p2": 2,
-    "p3": 2,
+    "p3": 3,
     "pout": 5,
     "pos": 8,
     "trend": 0
@@ -133,13 +133,13 @@
     "nome": "GIORGIA",
     "team_id": "U_C_GIORGIONE",
     "team_nome": "U.C. GIORGIONE",
-    "punti": 91,
+    "punti": 99,
     "vittorie": 0,
-    "gare": 15,
+    "gare": 16,
     "p1": 0,
     "p2": 2,
     "p3": 2,
-    "pout": 11,
+    "pout": 12,
     "pos": 9,
     "trend": 0
   },
@@ -160,6 +160,38 @@
     "trend": 0
   },
   {
+    "atleta_id": "MARZETTI_MICHELLE",
+    "cognome": "MARZETTI",
+    "nome": "MICHELLE",
+    "team_id": "GAZZANIGHESE_ASD",
+    "team_nome": "GAZZANIGHESE ASD",
+    "punti": 63,
+    "vittorie": 1,
+    "gare": 4,
+    "p1": 1,
+    "p2": 3,
+    "p3": 0,
+    "pout": 0,
+    "pos": 11,
+    "trend": 4
+  },
+  {
+    "atleta_id": "PELLEGRINI_GIULIA",
+    "cognome": "PELLEGRINI",
+    "nome": "GIULIA",
+    "team_id": "ASD_VELOCE_CLUB_BORGO",
+    "team_nome": "ASD VELOCE CLUB BORGO",
+    "punti": 59,
+    "vittorie": 1,
+    "gare": 8,
+    "p1": 1,
+    "p2": 2,
+    "p3": 0,
+    "pout": 5,
+    "pos": 12,
+    "trend": 1
+  },
+  {
     "atleta_id": "FERRARI_LUCREZIA",
     "cognome": "FERRARI",
     "nome": "LUCREZIA",
@@ -172,8 +204,8 @@
     "p2": 1,
     "p3": 2,
     "pout": 6,
-    "pos": 11,
-    "trend": 0
+    "pos": 13,
+    "trend": -2
   },
   {
     "atleta_id": "ANDREOLI_ALICE",
@@ -188,24 +220,8 @@
     "p2": 1,
     "p3": 1,
     "pout": 8,
-    "pos": 12,
-    "trend": 0
-  },
-  {
-    "atleta_id": "PELLEGRINI_GIULIA",
-    "cognome": "PELLEGRINI",
-    "nome": "GIULIA",
-    "team_id": "ASD_VELOCE_CLUB_BORGO",
-    "team_nome": "ASD VELOCE CLUB BORGO",
-    "punti": 54,
-    "vittorie": 1,
-    "gare": 7,
-    "p1": 1,
-    "p2": 2,
-    "p3": 0,
-    "pout": 4,
-    "pos": 13,
-    "trend": 0
+    "pos": 14,
+    "trend": -2
   },
   {
     "atleta_id": "CARLINO_MARIA_VITTORIA",
@@ -220,24 +236,8 @@
     "p2": 1,
     "p3": 1,
     "pout": 0,
-    "pos": 14,
-    "trend": 0
-  },
-  {
-    "atleta_id": "MARZETTI_MICHELLE",
-    "cognome": "MARZETTI",
-    "nome": "MICHELLE",
-    "team_id": "GAZZANIGHESE_ASD",
-    "team_nome": "GAZZANIGHESE ASD",
-    "punti": 51,
-    "vittorie": 1,
-    "gare": 3,
-    "p1": 1,
-    "p2": 2,
-    "p3": 0,
-    "pout": 0,
     "pos": 15,
-    "trend": 0
+    "trend": -1
   },
   {
     "atleta_id": "CONSOLI_FRANCESCA",
@@ -288,6 +288,22 @@
     "trend": 0
   },
   {
+    "atleta_id": "VETTORELLO_GAIA",
+    "cognome": "VETTORELLO",
+    "nome": "GAIA",
+    "team_id": "U_C_CONSCIO_PEDALE_DEL_SILE",
+    "team_nome": "U.C.CONSCIO PEDALE DEL SILE",
+    "punti": 48,
+    "vittorie": 0,
+    "gare": 10,
+    "p1": 0,
+    "p2": 1,
+    "p3": 0,
+    "pout": 9,
+    "pos": 19,
+    "trend": 2
+  },
+  {
     "atleta_id": "AFFINI_GIULIA",
     "cognome": "AFFINI",
     "nome": "GIULIA",
@@ -300,8 +316,8 @@
     "p2": 1,
     "p3": 1,
     "pout": 4,
-    "pos": 19,
-    "trend": 0
+    "pos": 20,
+    "trend": -1
   },
   {
     "atleta_id": "CARLINO_LETIZIA",
@@ -316,24 +332,8 @@
     "p2": 2,
     "p3": 1,
     "pout": 1,
-    "pos": 20,
-    "trend": 0
-  },
-  {
-    "atleta_id": "VETTORELLO_GAIA",
-    "cognome": "VETTORELLO",
-    "nome": "GAIA",
-    "team_id": "U_C_CONSCIO_PEDALE_DEL_SILE",
-    "team_nome": "U.C.CONSCIO PEDALE DEL SILE",
-    "punti": 42,
-    "vittorie": 0,
-    "gare": 9,
-    "p1": 0,
-    "p2": 1,
-    "p3": 0,
-    "pout": 8,
     "pos": 21,
-    "trend": 0
+    "trend": -1
   },
   {
     "atleta_id": "PAVIN_LAVINIA_MARIA_GIOVANNA",
@@ -464,6 +464,22 @@
     "trend": 0
   },
   {
+    "atleta_id": "LONGO_BORGHINI_MARTA_ELIZABETH",
+    "cognome": "LONGO",
+    "nome": "BORGHINI MARTA ELIZABETH",
+    "team_id": "SCUOLA_CICLISMO_VERSO_L_IRIDE",
+    "team_nome": "SCUOLA CICLISMO VERSO L'IRIDE",
+    "punti": 29,
+    "vittorie": 1,
+    "gare": 5,
+    "p1": 1,
+    "p2": 0,
+    "p3": 0,
+    "pout": 4,
+    "pos": 30,
+    "trend": 2
+  },
+  {
     "atleta_id": "DASOLI_EMMA",
     "cognome": "DASOLI",
     "nome": "EMMA",
@@ -476,8 +492,8 @@
     "p2": 0,
     "p3": 0,
     "pout": 5,
-    "pos": 30,
-    "trend": 0
+    "pos": 31,
+    "trend": -1
   },
   {
     "atleta_id": "RAMPON_SOFIA",
@@ -485,31 +501,15 @@
     "nome": "SOFIA",
     "team_id": "BREGANZE_MILLENIUM",
     "team_nome": "BREGANZE MILLENIUM",
-    "punti": 27,
+    "punti": 28,
     "vittorie": 0,
-    "gare": 4,
+    "gare": 5,
     "p1": 0,
     "p2": 0,
     "p3": 2,
-    "pout": 2,
-    "pos": 31,
-    "trend": 0
-  },
-  {
-    "atleta_id": "LONGO_BORGHINI_MARTA_ELIZABETH",
-    "cognome": "LONGO",
-    "nome": "BORGHINI MARTA ELIZABETH",
-    "team_id": "SCUOLA_CICLISMO_VERSO_L_IRIDE",
-    "team_nome": "SCUOLA CICLISMO VERSO L'IRIDE",
-    "punti": 25,
-    "vittorie": 1,
-    "gare": 4,
-    "p1": 1,
-    "p2": 0,
-    "p3": 0,
     "pout": 3,
     "pos": 32,
-    "trend": 0
+    "trend": -1
   },
   {
     "atleta_id": "DONATI_MATILDE",
