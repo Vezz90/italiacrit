@@ -2,24 +2,24 @@
   {
     "team_id": "TEAM_CESARO_NERI_LUCCHINI",
     "team_nome": "TEAM CESARO-NERI-LUCCHINI",
-    "punti": 661,
-    "vittorie": 15,
-    "p1": 15,
-    "p2": 11,
-    "p3": 4,
-    "pout": 42,
+    "punti": 712,
+    "vittorie": 16,
+    "p1": 16,
+    "p2": 12,
+    "p3": 5,
+    "pout": 44,
     "n_atleti": 6,
     "pos": 1
   },
   {
     "team_id": "IL_PIRATA_SAMA_RICAMBI_OTC",
     "team_nome": "IL PIRATA SAMA RICAMBI OTC",
-    "punti": 466,
+    "punti": 473,
     "vittorie": 7,
     "p1": 7,
     "p2": 7,
     "p3": 7,
-    "pout": 28,
+    "pout": 30,
     "n_atleti": 4,
     "pos": 2
   },
@@ -98,12 +98,12 @@
   {
     "team_id": "ASD_GUBBIO_CICLISMO_MOCAIANA",
     "team_nome": "ASD GUBBIO CICLISMO MOCAIANA",
-    "punti": 258,
+    "punti": 260,
     "vittorie": 4,
     "p1": 4,
     "p2": 5,
     "p3": 5,
-    "pout": 14,
+    "pout": 15,
     "n_atleti": 3,
     "pos": 9
   },
@@ -336,6 +336,18 @@
     "pos": 28
   },
   {
+    "team_id": "ASD_TEAM_MMBIKE_ANDRIA_RESTO_AL_SUD",
+    "team_nome": "ASD TEAM MMBIKE ANDRIA RESTO AL SUD",
+    "punti": 110,
+    "vittorie": 0,
+    "p1": 0,
+    "p2": 1,
+    "p3": 2,
+    "pout": 12,
+    "n_atleti": 1,
+    "pos": 29
+  },
+  {
     "team_id": "CRAZY_WHEELS_CYCLING_ACADEMY",
     "team_nome": "CRAZY WHEELS - CYCLING ACADEMY",
     "punti": 109,
@@ -345,18 +357,6 @@
     "p3": 1,
     "pout": 8,
     "n_atleti": 2,
-    "pos": 29
-  },
-  {
-    "team_id": "ASD_TEAM_MMBIKE_ANDRIA_RESTO_AL_SUD",
-    "team_nome": "ASD TEAM MMBIKE ANDRIA RESTO AL SUD",
-    "punti": 109,
-    "vittorie": 0,
-    "p1": 0,
-    "p2": 1,
-    "p3": 2,
-    "pout": 11,
-    "n_atleti": 1,
     "pos": 30
   },
   {
@@ -984,6 +984,18 @@
     "pos": 82
   },
   {
+    "team_id": "ASD_MORENO_DI_BIASE",
+    "team_nome": "ASD MORENO DI BIASE",
+    "punti": 29,
+    "vittorie": 0,
+    "p1": 0,
+    "p2": 2,
+    "p3": 0,
+    "pout": 1,
+    "n_atleti": 1,
+    "pos": 83
+  },
+  {
     "team_id": "S_C_D_ALMA_JUVENTUS_FANO",
     "team_nome": "S.C.D.ALMA JUVENTUS FANO",
     "punti": 29,
@@ -993,7 +1005,7 @@
     "p3": 0,
     "pout": 8,
     "n_atleti": 2,
-    "pos": 83
+    "pos": 84
   },
   {
     "team_id": "QUILIANO_BIKE_SPEED_WHEEL",
@@ -1005,7 +1017,7 @@
     "p3": 0,
     "pout": 3,
     "n_atleti": 2,
-    "pos": 84
+    "pos": 85
   },
   {
     "team_id": "A_S_D_SACILESE",
@@ -1017,7 +1029,7 @@
     "p3": 2,
     "pout": 2,
     "n_atleti": 2,
-    "pos": 85
+    "pos": 86
   },
   {
     "team_id": "SOC_SPORT_SANFIORESE",
@@ -1029,7 +1041,7 @@
     "p3": 0,
     "pout": 8,
     "n_atleti": 3,
-    "pos": 86
+    "pos": 87
   },
   {
     "team_id": "S_C_TORRILE_PR",
@@ -1041,7 +1053,7 @@
     "p3": 0,
     "pout": 6,
     "n_atleti": 1,
-    "pos": 87
+    "pos": 88
   },
   {
     "team_id": "VELO_CLUB_SARROCH",
@@ -1053,7 +1065,7 @@
     "p3": 0,
     "pout": 4,
     "n_atleti": 1,
-    "pos": 88
+    "pos": 89
   },
   {
     "team_id": "FDB_SPORT_CLUB",
@@ -1065,7 +1077,7 @@
     "p3": 0,
     "pout": 3,
     "n_atleti": 1,
-    "pos": 89
+    "pos": 90
   },
   {
     "team_id": "G_S_MOSOLE",
@@ -1077,7 +1089,7 @@
     "p3": 0,
     "pout": 3,
     "n_atleti": 1,
-    "pos": 90
+    "pos": 91
   },
   {
     "team_id": "G_S_CERNUSCHESE_TINO_GADDA_A_S_D",
@@ -1089,7 +1101,7 @@
     "p3": 0,
     "pout": 3,
     "n_atleti": 2,
-    "pos": 91
+    "pos": 92
   },
   {
     "team_id": "ALGHERO_BIKE_A_S_D",
@@ -1101,18 +1113,6 @@
     "p3": 0,
     "pout": 3,
     "n_atleti": 2,
-    "pos": 92
-  },
-  {
-    "team_id": "ASD_MORENO_DI_BIASE",
-    "team_nome": "ASD MORENO DI BIASE",
-    "punti": 24,
-    "vittorie": 0,
-    "p1": 0,
-    "p2": 2,
-    "p3": 0,
-    "pout": 0,
-    "n_atleti": 1,
     "pos": 93
   },
   {
