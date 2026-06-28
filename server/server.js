@@ -1765,18 +1765,32 @@ app.get('/api/pcs-results/gara/:garaId', async (req, res) => {
   } catch(e) { res.status(500).json({ error: e.message }); }
 });
 
+// Supabase limita di default a 1000 righe per query (il .limit(5000) viene ignorato).
+// Pagina con .range() per leggere TUTTI i profili pcs_atleta — altrimenti gli atleti
+// oltre il 1000° spariscono dal frontend (pagina 404).
+async function _fetchAllPcsProfiles(select = 'entity_id, new_value') {
+  if (!supabase) return [];
+  const all = [];
+  const PAGE = 1000;
+  for (let from = 0; ; from += PAGE) {
+    const { data, error } = await supabase
+      .from('entity_overrides').select(select)
+      .eq('entity_type', 'pcs_atleta').eq('field', 'profile')
+      .range(from, from + PAGE - 1);
+    if (error) throw error;
+    if (!data || !data.length) break;
+    all.push(...data);
+    if (data.length < PAGE) break;
+  }
+  return all;
+}
+
 // Tutti i risultati PCS per un atleta (circuito + extra)
 // Restituisce atleti creati da import PCS, in formato extra_roster.json (per il frontend)
 app.get('/api/data/pcs-extra-roster', async (req, res) => {
   if (!supabase) return res.json({});
   try {
-    const { data, error } = await supabase
-      .from('entity_overrides')
-      .select('entity_id, new_value')
-      .eq('entity_type', 'pcs_atleta')
-      .eq('field', 'profile')
-      .limit(5000);
-    if (error) throw error;
+    const data = await _fetchAllPcsProfiles();
     const result = {};
     for (const row of (data || [])) {
       try {
@@ -1994,9 +2008,7 @@ async function _fixPcsAthleteTeams() {
   if (!teamIndex.length) return 0;
   let fixed = 0;
   try {
-    const { data } = await supabase
-      .from('entity_overrides').select('id, new_value')
-      .eq('entity_type', 'pcs_atleta').eq('field', 'profile').limit(5000);
+    const data = await _fetchAllPcsProfiles('id, new_value');
     for (const row of (data || [])) {
       let p; try { p = JSON.parse(row.new_value); } catch { continue; }
       const real = _findExistingTeam(p.team_nome || '', teamIndex, p.genere);
@@ -2083,9 +2095,7 @@ async function _createMissingPcsAthletes(rows, garaId) {
   }
   if (supabase) {
     try {
-      const { data } = await supabase
-        .from('entity_overrides').select('entity_id')
-        .eq('entity_type', 'pcs_atleta').eq('field', 'profile').limit(5000);
+      const data = await _fetchAllPcsProfiles('entity_id');
       for (const r of (data || [])) knownIds.add(r.entity_id);
     } catch (e) { console.warn('[pcs] load pcs_atleta ids fallito:', e.message); }
   }
@@ -2417,10 +2427,7 @@ app.get('/api/admin/pcs-team-suggestions', requireAdmin, async (req, res) => {
     if (!supabase) return res.status(503).json({ error: 'Supabase non disponibile' });
     const teamIndex = _buildTeamIndex();
     const realIds = new Set(teamIndex.map(e => e.tid));
-    const { data, error } = await supabase
-      .from('entity_overrides').select('new_value')
-      .eq('entity_type', 'pcs_atleta').eq('field', 'profile').limit(5000);
-    if (error) throw error;
+    const data = await _fetchAllPcsProfiles('new_value');
     // Raggruppa per team PCS (tiene traccia del genere prevalente del gruppo)
     const groups = {};
     for (const row of (data || [])) {
@@ -2445,10 +2452,7 @@ app.post('/api/admin/pcs-merge-team', requireAdmin, async (req, res) => {
     if (!supabase) return res.status(503).json({ error: 'Supabase non disponibile' });
     const { from_id, to_id, to_nome } = req.body || {};
     if (!from_id || !to_id || !to_nome) return res.status(400).json({ error: 'from_id, to_id e to_nome richiesti' });
-    const { data, error } = await supabase
-      .from('entity_overrides').select('id, entity_id, new_value')
-      .eq('entity_type', 'pcs_atleta').eq('field', 'profile').limit(5000);
-    if (error) throw error;
+    const data = await _fetchAllPcsProfiles('id, entity_id, new_value');
 
     // Protezione genere: il team reale di destinazione deve competere nel genere
     // degli atleti che stiamo spostando (evita di unire uomini con donne).
@@ -2489,10 +2493,7 @@ app.post('/api/admin/pcs-merge-team', requireAdmin, async (req, res) => {
 app.get('/api/admin/pcs-orphan-athletes', requireAdmin, async (req, res) => {
   try {
     if (!supabase) return res.status(503).json({ error: 'Supabase non disponibile' });
-    const { data, error } = await supabase
-      .from('entity_overrides').select('entity_id, new_value')
-      .eq('entity_type', 'pcs_atleta').eq('field', 'profile').limit(5000);
-    if (error) throw error;
+    const data = await _fetchAllPcsProfiles('entity_id, new_value');
     const out = [];
     for (const row of (data || [])) {
       let p; try { p = JSON.parse(row.new_value); } catch { continue; }
