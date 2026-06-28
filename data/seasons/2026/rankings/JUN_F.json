@@ -496,6 +496,22 @@
     "trend": 0
   },
   {
+    "atleta_id": "SBRISSA_ILARIA",
+    "cognome": "SBRISSA",
+    "nome": "ILARIA",
+    "team_id": "BREGANZE_MILLENIUM",
+    "team_nome": "BREGANZE MILLENIUM",
+    "punti": 18,
+    "vittorie": 0,
+    "gare": 2,
+    "p1": 0,
+    "p2": 0,
+    "p3": 1,
+    "pout": 1,
+    "pos": 32,
+    "trend": 21
+  },
+  {
     "atleta_id": "MASI_AURORA",
     "cognome": "MASI",
     "nome": "AURORA",
@@ -508,8 +524,8 @@
     "p2": 0,
     "p3": 1,
     "pout": 2,
-    "pos": 32,
-    "trend": 0
+    "pos": 33,
+    "trend": -1
   },
   {
     "atleta_id": "DRHOVA_EVA",
@@ -524,8 +540,8 @@
     "p2": 0,
     "p3": 0,
     "pout": 1,
-    "pos": 33,
-    "trend": 0
+    "pos": 34,
+    "trend": -1
   },
   {
     "atleta_id": "CASSATA_VIVIENNE",
@@ -540,8 +556,8 @@
     "p2": 0,
     "p3": 0,
     "pout": 2,
-    "pos": 34,
-    "trend": 0
+    "pos": 35,
+    "trend": -1
   },
   {
     "atleta_id": "LOCATELLI_ALESSIA",
@@ -556,8 +572,8 @@
     "p2": 0,
     "p3": 0,
     "pout": 1,
-    "pos": 35,
-    "trend": 0
+    "pos": 36,
+    "trend": -1
   },
   {
     "atleta_id": "STACCHINI_CAMILLA",
@@ -572,8 +588,8 @@
     "p2": 0,
     "p3": 0,
     "pout": 1,
-    "pos": 36,
-    "trend": 0
+    "pos": 37,
+    "trend": -1
   },
   {
     "atleta_id": "DOLLAKU_GIULIA",
@@ -588,8 +604,8 @@
     "p2": 0,
     "p3": 0,
     "pout": 1,
-    "pos": 37,
-    "trend": 0
+    "pos": 38,
+    "trend": -1
   },
   {
     "atleta_id": "DE_BRUYN_ELISE",
@@ -604,8 +620,8 @@
     "p2": 0,
     "p3": 0,
     "pout": 1,
-    "pos": 38,
-    "trend": 0
+    "pos": 39,
+    "trend": -1
   },
   {
     "atleta_id": "GIANGRASSO_ELISA",
@@ -620,8 +636,8 @@
     "p2": 0,
     "p3": 0,
     "pout": 2,
-    "pos": 39,
-    "trend": 0
+    "pos": 40,
+    "trend": -1
   },
   {
     "atleta_id": "NERVO_GIORGIA",
@@ -636,8 +652,8 @@
     "p2": 1,
     "p3": 0,
     "pout": 0,
-    "pos": 40,
-    "trend": 0
+    "pos": 41,
+    "trend": -1
   },
   {
     "atleta_id": "D_AGNESE_ELENA",
@@ -652,8 +668,8 @@
     "p2": 0,
     "p3": 0,
     "pout": 3,
-    "pos": 41,
-    "trend": 0
+    "pos": 42,
+    "trend": -1
   },
   {
     "atleta_id": "LAGHI_CLARISSA",
@@ -668,8 +684,8 @@
     "p2": 0,
     "p3": 0,
     "pout": 4,
-    "pos": 42,
-    "trend": 0
+    "pos": 43,
+    "trend": -1
   },
   {
     "atleta_id": "SARTORETTO_SAMIRA",
@@ -684,8 +700,8 @@
     "p2": 0,
     "p3": 0,
     "pout": 2,
-    "pos": 43,
-    "trend": 0
+    "pos": 44,
+    "trend": -1
   },
   {
     "atleta_id": "MILESI_ALESSIA",
@@ -700,8 +716,8 @@
     "p2": 0,
     "p3": 0,
     "pout": 2,
-    "pos": 44,
-    "trend": 0
+    "pos": 45,
+    "trend": -1
   },
   {
     "atleta_id": "RIGHETTO_NICOLE",
@@ -716,8 +732,8 @@
     "p2": 0,
     "p3": 0,
     "pout": 1,
-    "pos": 45,
-    "trend": 0
+    "pos": 46,
+    "trend": -1
   },
   {
     "atleta_id": "MASSARI_GIORGIA",
@@ -732,8 +748,8 @@
     "p2": 0,
     "p3": 1,
     "pout": 0,
-    "pos": 46,
-    "trend": 0
+    "pos": 47,
+    "trend": -1
   },
   {
     "atleta_id": "DOMINGUEZ_NEIRA_ALEJANDRA",
@@ -748,8 +764,8 @@
     "p2": 0,
     "p3": 0,
     "pout": 1,
-    "pos": 47,
-    "trend": 0
+    "pos": 48,
+    "trend": -1
   },
   {
     "atleta_id": "BENUZZI_LAURA_ANNA",
@@ -764,8 +780,8 @@
     "p2": 0,
     "p3": 0,
     "pout": 1,
-    "pos": 48,
-    "trend": 0
+    "pos": 49,
+    "trend": -1
   },
   {
     "atleta_id": "PINEDA_SOTO_NATALIA",
@@ -780,8 +796,8 @@
     "p2": 0,
     "p3": 0,
     "pout": 1,
-    "pos": 49,
-    "trend": 0
+    "pos": 50,
+    "trend": -1
   },
   {
     "atleta_id": "PERUTA_SARA",
@@ -796,8 +812,8 @@
     "p2": 0,
     "p3": 0,
     "pout": 2,
-    "pos": 50,
-    "trend": 0
+    "pos": 51,
+    "trend": -1
   },
   {
     "atleta_id": "TINCHELLA_GINEVRA",
@@ -812,8 +828,8 @@
     "p2": 0,
     "p3": 0,
     "pout": 2,
-    "pos": 51,
-    "trend": 0
+    "pos": 52,
+    "trend": -1
   },
   {
     "atleta_id": "BUCCIARELLI_ANGELICA",
@@ -828,24 +844,8 @@
     "p2": 0,
     "p3": 0,
     "pout": 1,
-    "pos": 52,
-    "trend": 0
-  },
-  {
-    "atleta_id": "SBRISSA_ILARIA",
-    "cognome": "SBRISSA",
-    "nome": "ILARIA",
-    "team_id": "BREGANZE_MILLENIUM",
-    "team_nome": "BREGANZE MILLENIUM",
-    "punti": 8,
-    "vittorie": 0,
-    "gare": 1,
-    "p1": 0,
-    "p2": 0,
-    "p3": 0,
-    "pout": 1,
     "pos": 53,
-    "trend": 0
+    "trend": -1
   },
   {
     "atleta_id": "ANNIBALLI_AURORA",
