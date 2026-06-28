@@ -2446,7 +2446,7 @@ app.post('/api/admin/pcs-merge-team', requireAdmin, async (req, res) => {
     const { from_id, to_id, to_nome } = req.body || {};
     if (!from_id || !to_id || !to_nome) return res.status(400).json({ error: 'from_id, to_id e to_nome richiesti' });
     const { data, error } = await supabase
-      .from('entity_overrides').select('id, new_value')
+      .from('entity_overrides').select('id, entity_id, new_value')
       .eq('entity_type', 'pcs_atleta').eq('field', 'profile').limit(5000);
     if (error) throw error;
 
@@ -2474,7 +2474,12 @@ app.post('/api/admin/pcs-merge-team', requireAdmin, async (req, res) => {
       p.team_id = to_id; p.team_nome = to_nome;
       const { error: uErr } = await supabase.from('entity_overrides')
         .update({ new_value: JSON.stringify(p) }).eq('id', row.id);
-      if (!uErr) updated++;
+      if (!uErr) {
+        updated++;
+        // Rimuovi override atleta/team(_id) che vincerebbero sulla visualizzazione
+        await supabase.from('entity_overrides').delete()
+          .eq('entity_type', 'atleta').eq('entity_id', row.entity_id).in('field', ['team', 'team_id']);
+      }
     }
     res.json({ ok: true, updated });
   } catch (e) { res.status(500).json({ error: e.message }); }
@@ -2516,6 +2521,10 @@ app.post('/api/admin/pcs-set-athlete-team', requireAdmin, async (req, res) => {
     const { error: uErr } = await supabase.from('entity_overrides')
       .update({ new_value: JSON.stringify(p) }).eq('id', data.id);
     if (uErr) throw uErr;
+    // Rimuovi eventuali override atleta/team(_id) che vincerebbero sulla visualizzazione,
+    // così il team appena assegnato è quello mostrato e linkato.
+    await supabase.from('entity_overrides').delete()
+      .eq('entity_type', 'atleta').eq('entity_id', atleta_id).in('field', ['team', 'team_id']);
     res.json({ ok: true });
   } catch (e) { res.status(500).json({ error: e.message }); }
 });
