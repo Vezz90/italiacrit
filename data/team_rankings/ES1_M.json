@@ -122,12 +122,12 @@
   {
     "team_id": "FOLIGNO_CYCLING_TEAM_ASD",
     "team_nome": "FOLIGNO CYCLING TEAM ASD",
-    "punti": 183,
+    "punti": 188,
     "vittorie": 0,
     "p1": 0,
     "p2": 2,
     "p3": 5,
-    "pout": 20,
+    "pout": 21,
     "n_atleti": 3,
     "pos": 11
   },
@@ -168,6 +168,18 @@
     "pos": 14
   },
   {
+    "team_id": "MAZZANO_A_S_D",
+    "team_nome": "MAZZANO A.S.D.",
+    "punti": 159,
+    "vittorie": 3,
+    "p1": 3,
+    "p2": 5,
+    "p3": 1,
+    "pout": 6,
+    "n_atleti": 4,
+    "pos": 15
+  },
+  {
     "team_id": "U_S_SCUOLA_CICLISMO_VO",
     "team_nome": "U.S.SCUOLA CICLISMO VO'",
     "punti": 157,
@@ -177,7 +189,19 @@
     "p3": 2,
     "pout": 8,
     "n_atleti": 2,
-    "pos": 15
+    "pos": 16
+  },
+  {
+    "team_id": "TEAM_SERIO",
+    "team_nome": "TEAM SERIO",
+    "punti": 156,
+    "vittorie": 3,
+    "p1": 3,
+    "p2": 3,
+    "p3": 4,
+    "pout": 4,
+    "n_atleti": 1,
+    "pos": 17
   },
   {
     "team_id": "IND_FORNITURE_MORO_C_G_CAPITAL",
@@ -189,7 +213,7 @@
     "p3": 1,
     "pout": 16,
     "n_atleti": 3,
-    "pos": 16
+    "pos": 18
   },
   {
     "team_id": "HG_CYCLING_TEAM",
@@ -201,7 +225,7 @@
     "p3": 4,
     "pout": 9,
     "n_atleti": 2,
-    "pos": 17
+    "pos": 19
   },
   {
     "team_id": "FDB_SPORT_CLUB",
@@ -213,19 +237,7 @@
     "p3": 1,
     "pout": 5,
     "n_atleti": 1,
-    "pos": 18
-  },
-  {
-    "team_id": "MAZZANO_A_S_D",
-    "team_nome": "MAZZANO A.S.D.",
-    "punti": 149,
-    "vittorie": 3,
-    "p1": 3,
-    "p2": 5,
-    "p3": 0,
-    "pout": 6,
-    "n_atleti": 4,
-    "pos": 19
+    "pos": 20
   },
   {
     "team_id": "SC_POTENTIA_RINASCITA_ASD",
@@ -235,18 +247,6 @@
     "p1": 4,
     "p2": 3,
     "p3": 2,
-    "pout": 4,
-    "n_atleti": 1,
-    "pos": 20
-  },
-  {
-    "team_id": "TEAM_SERIO",
-    "team_nome": "TEAM SERIO",
-    "punti": 141,
-    "vittorie": 2,
-    "p1": 2,
-    "p2": 3,
-    "p3": 4,
     "pout": 4,
     "n_atleti": 1,
     "pos": 21
@@ -276,6 +276,18 @@
     "pos": 23
   },
   {
+    "team_id": "ARDENS_CYCLING_TEAM",
+    "team_nome": "ARDENS CYCLING TEAM",
+    "punti": 134,
+    "vittorie": 1,
+    "p1": 1,
+    "p2": 3,
+    "p3": 3,
+    "pout": 12,
+    "n_atleti": 3,
+    "pos": 24
+  },
+  {
     "team_id": "A_S_D_SACILESE",
     "team_nome": "A.S.D. SACILESE",
     "punti": 133,
@@ -285,7 +297,7 @@
     "p3": 2,
     "pout": 10,
     "n_atleti": 3,
-    "pos": 24
+    "pos": 25
   },
   {
     "team_id": "POOL_BIKE_SERRAMANNA",
@@ -297,18 +309,6 @@
     "p3": 1,
     "pout": 8,
     "n_atleti": 2,
-    "pos": 25
-  },
-  {
-    "team_id": "ARDENS_CYCLING_TEAM",
-    "team_nome": "ARDENS CYCLING TEAM",
-    "punti": 131,
-    "vittorie": 1,
-    "p1": 1,
-    "p2": 3,
-    "p3": 3,
-    "pout": 10,
-    "n_atleti": 3,
     "pos": 26
   },
   {
@@ -324,6 +324,30 @@
     "pos": 27
   },
   {
+    "team_id": "BUSTO_GAROLFO",
+    "team_nome": "BUSTO GAROLFO",
+    "punti": 123,
+    "vittorie": 0,
+    "p1": 0,
+    "p2": 3,
+    "p3": 0,
+    "pout": 20,
+    "n_atleti": 5,
+    "pos": 28
+  },
+  {
+    "team_id": "V_CYCLING_ARICI_CLAUDIA_PITON",
+    "team_nome": "V CYCLING - ARICI CLAUDIA - PITON",
+    "punti": 122,
+    "vittorie": 1,
+    "p1": 1,
+    "p2": 5,
+    "p3": 0,
+    "pout": 8,
+    "n_atleti": 1,
+    "pos": 29
+  },
+  {
     "team_id": "SEI_SPORT",
     "team_nome": "SEI SPORT",
     "punti": 120,
@@ -333,7 +357,7 @@
     "p3": 2,
     "pout": 7,
     "n_atleti": 2,
-    "pos": 28
+    "pos": 30
   },
   {
     "team_id": "CAMB_KE",
@@ -345,7 +369,7 @@
     "p3": 0,
     "pout": 13,
     "n_atleti": 2,
-    "pos": 29
+    "pos": 31
   },
   {
     "team_id": "LEO_CONSTRUCTIONS_SSD",
@@ -357,19 +381,7 @@
     "p3": 0,
     "pout": 2,
     "n_atleti": 2,
-    "pos": 30
-  },
-  {
-    "team_id": "BUSTO_GAROLFO",
-    "team_nome": "BUSTO GAROLFO",
-    "punti": 117,
-    "vittorie": 0,
-    "p1": 0,
-    "p2": 3,
-    "p3": 0,
-    "pout": 19,
-    "n_atleti": 5,
-    "pos": 31
+    "pos": 32
   },
   {
     "team_id": "A_S_D_POSTUMIA_73_D_L_CICLISMO",
@@ -381,18 +393,6 @@
     "p3": 0,
     "pout": 18,
     "n_atleti": 4,
-    "pos": 32
-  },
-  {
-    "team_id": "V_CYCLING_ARICI_CLAUDIA_PITON",
-    "team_nome": "V CYCLING - ARICI CLAUDIA - PITON",
-    "punti": 110,
-    "vittorie": 1,
-    "p1": 1,
-    "p2": 4,
-    "p3": 0,
-    "pout": 8,
-    "n_atleti": 1,
     "pos": 33
   },
   {
@@ -444,6 +444,18 @@
     "pos": 37
   },
   {
+    "team_id": "G_S_RONCO_MAURIGI_DELIO_GALLINA",
+    "team_nome": "G.S. RONCO MAURIGI DELIO GALLINA",
+    "punti": 105,
+    "vittorie": 0,
+    "p1": 0,
+    "p2": 1,
+    "p3": 1,
+    "pout": 22,
+    "n_atleti": 3,
+    "pos": 38
+  },
+  {
     "team_id": "U_C_S_OTTAVIO_ZULIANI_A_S_D",
     "team_nome": "U.C.S. OTTAVIO ZULIANI A.S.D.",
     "punti": 103,
@@ -453,7 +465,7 @@
     "p3": 5,
     "pout": 5,
     "n_atleti": 1,
-    "pos": 38
+    "pos": 39
   },
   {
     "team_id": "S_C_TERRANOVA_FANCELLO_CICLI",
@@ -465,18 +477,6 @@
     "p3": 3,
     "pout": 4,
     "n_atleti": 1,
-    "pos": 39
-  },
-  {
-    "team_id": "G_S_RONCO_MAURIGI_DELIO_GALLINA",
-    "team_nome": "G.S. RONCO MAURIGI DELIO GALLINA",
-    "punti": 101,
-    "vittorie": 0,
-    "p1": 0,
-    "p2": 1,
-    "p3": 1,
-    "pout": 21,
-    "n_atleti": 3,
     "pos": 40
   },
   {
@@ -828,6 +828,18 @@
     "pos": 69
   },
   {
+    "team_id": "A_S_D_GIOCA_IN_BICI_OGLIO_PO",
+    "team_nome": "A.S.D. GIOCA IN BICI OGLIO PO",
+    "punti": 54,
+    "vittorie": 0,
+    "p1": 0,
+    "p2": 0,
+    "p3": 2,
+    "pout": 9,
+    "n_atleti": 2,
+    "pos": 70
+  },
+  {
     "team_id": "GS_BERTI_MOBILI_BENASSI",
     "team_nome": "GS BERTI MOBILI BENASSI",
     "punti": 54,
@@ -837,7 +849,7 @@
     "p3": 0,
     "pout": 8,
     "n_atleti": 2,
-    "pos": 70
+    "pos": 71
   },
   {
     "team_id": "S_C_D_ALMA_JUVENTUS_FANO",
@@ -849,7 +861,7 @@
     "p3": 0,
     "pout": 9,
     "n_atleti": 2,
-    "pos": 71
+    "pos": 72
   },
   {
     "team_id": "VELO_CLUB_S_C_EMPOLI",
@@ -861,7 +873,7 @@
     "p3": 1,
     "pout": 6,
     "n_atleti": 1,
-    "pos": 72
+    "pos": 73
   },
   {
     "team_id": "U_S_MONTECORONA",
@@ -873,7 +885,7 @@
     "p3": 0,
     "pout": 11,
     "n_atleti": 2,
-    "pos": 73
+    "pos": 74
   },
   {
     "team_id": "U_C_GUSPINI_A_S_D",
@@ -885,7 +897,7 @@
     "p3": 0,
     "pout": 5,
     "n_atleti": 2,
-    "pos": 74
+    "pos": 75
   },
   {
     "team_id": "C_C_APPENNINICO_1907",
@@ -897,7 +909,7 @@
     "p3": 0,
     "pout": 6,
     "n_atleti": 1,
-    "pos": 75
+    "pos": 76
   },
   {
     "team_id": "A_S_D_S_C_CERETOLESE_1969",
@@ -909,18 +921,6 @@
     "p3": 2,
     "pout": 5,
     "n_atleti": 1,
-    "pos": 76
-  },
-  {
-    "team_id": "A_S_D_GIOCA_IN_BICI_OGLIO_PO",
-    "team_nome": "A.S.D. GIOCA IN BICI OGLIO PO",
-    "punti": 43,
-    "vittorie": 0,
-    "p1": 0,
-    "p2": 0,
-    "p3": 2,
-    "pout": 7,
-    "n_atleti": 2,
     "pos": 77
   },
   {
