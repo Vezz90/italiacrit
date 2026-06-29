@@ -1926,6 +1926,18 @@ function _resolveTeamByName(name) {
   return null;
 }
 
+// Come sopra, ma se il nome non corrisponde a un team esistente ne crea uno NUOVO
+// (id = slug maiuscolo del nome). Permette di aggiungere team non ancora nel sistema.
+function _resolveOrNewTeam(name) {
+  const n = String(name || '').trim();
+  if (!n) return null;
+  const existing = _resolveTeamByName(n);
+  if (existing) return existing;
+  const tid = (slug(n) || '').toUpperCase();
+  if (!tid) return null;
+  return { tid, nome: n.toUpperCase(), isNew: true };
+}
+
 window._renderPcsFix = async function() {
   const teamsEl = document.getElementById('pcs-fix-teams');
   const orphEl  = document.getElementById('pcs-fix-orphans');
@@ -1944,7 +1956,7 @@ window._renderPcsFix = async function() {
           <div style="display:flex;flex-wrap:wrap;gap:6px;align-items:center">
             ${g.candidates.map((c, j) => `<button onclick="window._mergePcsTeamIdx(${i},${j})" style="background:var(--bg-elevated);border:1px solid var(--border);border-radius:var(--r-sm);padding:5px 10px;font-size:.82rem;cursor:pointer">→ ${esc(c.nome)}</button>`).join('')}
             <span style="color:var(--text-muted);font-size:.8rem;margin:0 4px">oppure</span>
-            <input list="pcs-fix-teamlist" id="merge-input-${i}" placeholder="cerca team…" style="flex:1;min-width:160px;padding:5px 8px;border:1px solid var(--border);border-radius:var(--r-sm);font-size:.82rem">
+            <input list="pcs-fix-teamlist" id="merge-input-${i}" placeholder="cerca o scrivi un nuovo team…" style="flex:1;min-width:160px;padding:5px 8px;border:1px solid var(--border);border-radius:var(--r-sm);font-size:.82rem">
             <button onclick="window._mergePcsTeamManual(${i})" style="background:var(--accent);color:#fff;border:none;border-radius:var(--r-sm);padding:5px 12px;font-size:.82rem;font-weight:600;cursor:pointer">Unisci</button>
           </div>
         </div>`).join('')
@@ -1960,7 +1972,7 @@ window._renderPcsFix = async function() {
         ${orphans.map((a, i) => `
         <div id="orphan-row-${i}" style="display:flex;flex-wrap:wrap;gap:8px;align-items:center;border:1px solid var(--border-subtle);border-radius:var(--r-md);padding:8px 12px;margin-bottom:8px">
           <div style="flex:1;min-width:160px;font-weight:600;text-transform:uppercase">${esc(a.cognome)} ${esc(a.nome)}</div>
-          <input list="pcs-fix-teamlist" id="orphan-input-${i}" placeholder="assegna team…" style="flex:1;min-width:160px;padding:5px 8px;border:1px solid var(--border);border-radius:var(--r-sm);font-size:.82rem">
+          <input list="pcs-fix-teamlist" id="orphan-input-${i}" placeholder="scegli o scrivi un nuovo team…" style="flex:1;min-width:160px;padding:5px 8px;border:1px solid var(--border);border-radius:var(--r-sm);font-size:.82rem">
           <button onclick="window._setOrphanTeamIdx(${i})" style="background:var(--accent);color:#fff;border:none;border-radius:var(--r-sm);padding:5px 12px;font-size:.82rem;font-weight:600;cursor:pointer">Assegna</button>
         </div>`).join('')}`
         : `<p style="color:var(--text-muted);font-size:.85rem">Nessun atleta senza team. 🎉</p>`;
@@ -1990,8 +2002,8 @@ window._mergePcsTeamIdx = function(i, j) {
 window._mergePcsTeamManual = function(i) {
   const g = window._pcsFixData.teams[i];
   const val = document.getElementById(`merge-input-${i}`)?.value;
-  const t = _resolveTeamByName(val);
-  if (!t) { showToast('Team non trovato — scegli dalla lista'); return; }
+  const t = _resolveOrNewTeam(val);
+  if (!t) { showToast('Scrivi un nome team valido'); return; }
   if (g) _doMergePcsTeam(g.team_id, t.tid, t.nome);
 };
 
@@ -2000,9 +2012,9 @@ window._mergePcsTeamManual = function(i) {
 window._setOrphanTeamIdx = async function(i) {
   const a = window._pcsFixData.orphans[i];
   const val = document.getElementById(`orphan-input-${i}`)?.value;
-  const t = _resolveTeamByName(val);
+  const t = _resolveOrNewTeam(val);
   if (!a) return;
-  if (!t) { showToast('Team non trovato — scegli dalla lista'); return; }
+  if (!t) { showToast('Scrivi un nome team valido'); return; }
   try {
     await apiCall('/admin/pcs-set-athlete-team', { method: 'POST', body: { atleta_id: a.atleta_id, team_id: t.tid, team_nome: t.nome } });
     showToast(`${a.cognome} ${a.nome} → ${t.nome}`);
@@ -2018,7 +2030,7 @@ window._saveAllOrphanTeams = async function() {
   let saved = 0, skipped = 0;
   for (let i = 0; i < orphans.length; i++) {
     const a = orphans[i];
-    const t = _resolveTeamByName(document.getElementById(`orphan-input-${i}`)?.value);
+    const t = _resolveOrNewTeam(document.getElementById(`orphan-input-${i}`)?.value);
     if (!a || !t) { if (document.getElementById(`orphan-input-${i}`)?.value) skipped++; continue; }
     try {
       await apiCall('/admin/pcs-set-athlete-team', { method: 'POST', body: { atleta_id: a.atleta_id, team_id: t.tid, team_nome: t.nome } });
@@ -11841,6 +11853,27 @@ async function renderAtleta(atleta_id, opts = {}) {
     // Profilo non in memoria: forse i profili PCS non si sono caricati al boot. Riprova.
     await _ensurePcsAthletesLoaded();
     aLive = globalData.athletes[atleta_id];
+  }
+  if (!aLive) {
+    // Ultimo tentativo: carica il singolo profilo PCS on-demand (robusto se il bulk fallisce)
+    try {
+      const p = await apiCall(`/pcs-athlete/${encodeURIComponent(atleta_id)}`);
+      if (p && p.atleta_id) {
+        const tid = p.team_id || '';
+        if (tid && !globalData.teams[tid]) {
+          globalData.teams[tid] = { id: tid, nome: p.team_nome || tid, atleti: [], punti_totali: 0, risultati: [] };
+        }
+        aLive = {
+          atleta_id, nome: (p.nome || '').toUpperCase(), cognome: (p.cognome || '').toUpperCase(),
+          team_attuale: p.team_nome || '', team_id: tid, categoria: p.categoria || '', genere: p.genere || 'M',
+          punti_totali: 0, risultati: [], roster_only: true,
+        };
+        globalData.athletes[atleta_id] = aLive;
+        if (tid && globalData.teams[tid] && !globalData.teams[tid].atleti.includes(atleta_id)) {
+          globalData.teams[tid].atleti.push(atleta_id);
+        }
+      }
+    } catch {}
   }
   if (!aLive) return renderNotFound();
 

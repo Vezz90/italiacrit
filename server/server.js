@@ -1787,22 +1787,114 @@ async function _fetchAllPcsProfiles(select = 'entity_id, new_value') {
 
 // Tutti i risultati PCS per un atleta (circuito + extra)
 // Restituisce atleti creati da import PCS, in formato extra_roster.json (per il frontend)
+// Pagina tutte le righe pcs_gara_results con un atleta_id (oltre il limite di 1000 di Supabase)
+async function _fetchAllPcsResultRiders() {
+  if (!supabase) return [];
+  const all = [];
+  const PAGE = 1000;
+  for (let from = 0; ; from += PAGE) {
+    const { data, error } = await supabase
+      .from('pcs_gara_results').select('atleta_id, rider_name, team_name, gara_id')
+      .not('atleta_id', 'is', null).range(from, from + PAGE - 1);
+    if (error) throw error;
+    if (!data || !data.length) break;
+    all.push(...data);
+    if (data.length < PAGE) break;
+  }
+  return all;
+}
+
+// Pagina gli override di team su entity atleta (modifica profilo) — priorità massima
+async function _fetchAllAtletaTeamOverrides() {
+  if (!supabase) return {};
+  const map = {};
+  const PAGE = 1000;
+  for (let from = 0; ; from += PAGE) {
+    const { data, error } = await supabase
+      .from('entity_overrides').select('entity_id, field, new_value')
+      .eq('entity_type', 'atleta').in('field', ['team', 'team_id']).range(from, from + PAGE - 1);
+    if (error) throw error;
+    if (!data || !data.length) break;
+    for (const o of data) { (map[o.entity_id] ||= {})[o.field] = o.new_value; }
+    if (data.length < PAGE) break;
+  }
+  return map;
+}
+
+// Risolve identità + team di un atleta PCS unendo le fonti. Priorità del team:
+//   override atleta (team_id/team) > profilo pcs_atleta > fuzzy match nome > derivato dal nome.
+function _resolvePcsAthlete(aid, sample, profMap, ovMap, teamIndex) {
+  const prof = profMap[aid] || {};
+  const ov   = ovMap[aid]   || {};
+  let cognome = prof.cognome, nome = prof.nome;
+  if (!cognome && !nome && sample?.rider_name) {
+    const parsed = _parsePcsRiderName(sample.rider_name);
+    cognome = parsed.cognome; nome = parsed.nome;
+  }
+  const categoria = prof.categoria || _garaIdToCategoria(sample?.gara_id || '');
+  const genere    = prof.genere || (categoria.endsWith('_F') ? 'F' : 'M');
+  let teamId   = (ov.team_id || '').trim() || (prof.team_id || '').trim() || null;
+  let teamNome = (ov.team || '').trim() || prof.team_nome || sample?.team_name || 'SCONOSCIUTO';
+  if (!teamId) {
+    const real = _findExistingTeam(teamNome, teamIndex, genere);
+    if (real) { teamId = real.tid; teamNome = real.nome; }
+    else teamId = _makeTeamId(teamNome);
+  } else {
+    // se il team_id risolto è reale, usa il suo nome ufficiale
+    const realById = teamIndex.find(e => e.tid === teamId);
+    if (realById) teamNome = realById.nome;
+  }
+  return { cognome, nome, categoria, genere, team_id: teamId, team_nome: teamNome };
+}
+
 app.get('/api/data/pcs-extra-roster', async (req, res) => {
   if (!supabase) return res.json({});
   try {
-    const data = await _fetchAllPcsProfiles();
+    const [riders, profRows, ovMap] = await Promise.all([
+      _fetchAllPcsResultRiders(),
+      _fetchAllPcsProfiles(),
+      _fetchAllAtletaTeamOverrides(),
+    ]);
+    const profMap = {};
+    for (const r of profRows) { try { profMap[r.entity_id] = JSON.parse(r.new_value); } catch {} }
+    const teamIndex = _buildTeamIndex();
+
+    // dedup: prima occorrenza per atleta_id dai risultati + profili senza risultati
+    const seen = {};
+    for (const r of riders) { if (r.atleta_id && !seen[r.atleta_id]) seen[r.atleta_id] = r; }
+    for (const aid of Object.keys(profMap)) { if (!(aid in seen)) seen[aid] = null; }
+
     const result = {};
-    for (const row of (data || [])) {
-      try {
-        const p = JSON.parse(row.new_value);
-        const teamId = p.team_id || _makeTeamId(p.team_nome || '');
-        if (!result[teamId]) result[teamId] = { nome: p.team_nome || teamId, atleti: [] };
-        if (!result[teamId].atleti.find(a => a.atleta_id === row.entity_id)) {
-          result[teamId].atleti.push({ atleta_id: row.entity_id, cognome: p.cognome, nome: p.nome, categoria: p.categoria, genere: p.genere });
-        }
-      } catch {}
+    for (const aid of Object.keys(seen)) {
+      const a = _resolvePcsAthlete(aid, seen[aid], profMap, ovMap, teamIndex);
+      if (!a.cognome && !a.nome) continue;
+      if (!result[a.team_id]) result[a.team_id] = { nome: a.team_nome, atleti: [] };
+      if (!result[a.team_id].atleti.find(x => x.atleta_id === aid)) {
+        result[a.team_id].atleti.push({ atleta_id: aid, cognome: a.cognome, nome: a.nome, categoria: a.categoria, genere: a.genere });
+      }
     }
     res.json(result);
+  } catch (e) { res.status(500).json({ error: e.message }); }
+});
+
+// Profilo PCS di un singolo atleta — fallback on-demand quando non è in globalData
+app.get('/api/pcs-athlete/:id', async (req, res) => {
+  if (!supabase) return res.status(503).json({ error: 'Supabase non disponibile' });
+  try {
+    const aid = req.params.id;
+    const [profR, ovs, sample] = await Promise.all([
+      supabase.from('entity_overrides').select('new_value')
+        .eq('entity_type', 'pcs_atleta').eq('field', 'profile').eq('entity_id', aid).maybeSingle(),
+      supabase.from('entity_overrides').select('field, new_value')
+        .eq('entity_type', 'atleta').in('field', ['team', 'team_id']).eq('entity_id', aid),
+      supabase.from('pcs_gara_results').select('rider_name, team_name, gara_id')
+        .eq('atleta_id', aid).limit(1).maybeSingle(),
+    ]);
+    const profMap = {}; if (profR.data?.new_value) { try { profMap[aid] = JSON.parse(profR.data.new_value); } catch {} }
+    const ovMap = { [aid]: {} }; for (const o of (ovs.data || [])) ovMap[aid][o.field] = o.new_value;
+    if (!profMap[aid] && !sample.data && !(ovs.data || []).length) return res.status(404).json({ error: 'Atleta PCS non trovato' });
+    const a = _resolvePcsAthlete(aid, sample.data, profMap, ovMap, _buildTeamIndex());
+    res.json({ atleta_id: aid, ...a });
   } catch (e) { res.status(500).json({ error: e.message }); }
 });
 
@@ -2513,14 +2605,24 @@ app.post('/api/admin/pcs-set-athlete-team', requireAdmin, async (req, res) => {
     if (!supabase) return res.status(503).json({ error: 'Supabase non disponibile' });
     const { atleta_id, team_id, team_nome } = req.body || {};
     if (!atleta_id || !team_id || !team_nome) return res.status(400).json({ error: 'atleta_id, team_id e team_nome richiesti' });
-    const { data, error } = await supabase
-      .from('entity_overrides').select('id, new_value')
-      .eq('entity_type', 'pcs_atleta').eq('field', 'profile').eq('entity_id', atleta_id).single();
-    if (error || !data) return res.status(404).json({ error: 'Profilo atleta non trovato' });
-    let p; try { p = JSON.parse(data.new_value); } catch { p = {}; }
+    // Carica il profilo se esiste, altrimenti creane uno (anche per atleti senza profilo,
+    // es. quelli con solo override o solo righe risultato)
+    const { data: existing } = await supabase
+      .from('entity_overrides').select('new_value')
+      .eq('entity_type', 'pcs_atleta').eq('field', 'profile').eq('entity_id', atleta_id).maybeSingle();
+    let p = {};
+    if (existing?.new_value) { try { p = JSON.parse(existing.new_value); } catch {} }
+    if (!p.cognome && !p.nome) {
+      const { data: s } = await supabase.from('pcs_gara_results')
+        .select('rider_name, gara_id').eq('atleta_id', atleta_id).limit(1).maybeSingle();
+      if (s?.rider_name) { const pn = _parsePcsRiderName(s.rider_name); p.cognome = pn.cognome; p.nome = pn.nome; }
+      const cat = p.categoria || _garaIdToCategoria(s?.gara_id || '');
+      p.categoria = cat; p.genere = p.genere || (cat.endsWith('_F') ? 'F' : 'M');
+    }
     p.team_id = team_id; p.team_nome = team_nome;
-    const { error: uErr } = await supabase.from('entity_overrides')
-      .update({ new_value: JSON.stringify(p) }).eq('id', data.id);
+    const { error: uErr } = await supabase.from('entity_overrides').upsert(
+      { entity_type: 'pcs_atleta', entity_id: atleta_id, field: 'profile', new_value: JSON.stringify(p), edited_by: null },
+      { onConflict: 'entity_type,entity_id,field' });
     if (uErr) throw uErr;
     // Rimuovi eventuali override atleta/team(_id) che vincerebbero sulla visualizzazione,
     // così il team appena assegnato è quello mostrato e linkato.
