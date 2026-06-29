@@ -1831,6 +1831,12 @@ function _resolvePcsAthlete(aid, sample, profMap, ovMap, teamIndex) {
     const parsed = _parsePcsRiderName(sample.rider_name);
     cognome = parsed.cognome; nome = parsed.nome;
   }
+  // Ultimo fallback: deriva da atleta_id (COGNOME_NOME, ultimo segmento = nome)
+  if (!cognome && !nome && aid) {
+    const parts = aid.split('_');
+    nome = (parts.pop() || '').toUpperCase();
+    cognome = parts.join(' ').toUpperCase();
+  }
   const categoria = prof.categoria || _garaIdToCategoria(sample?.gara_id || '');
   const genere    = prof.genere || (categoria.endsWith('_F') ? 'F' : 'M');
   let teamId   = (ov.team_id || '').trim() || (prof.team_id || '').trim() || null;
@@ -1859,10 +1865,12 @@ app.get('/api/data/pcs-extra-roster', async (req, res) => {
     for (const r of profRows) { try { profMap[r.entity_id] = JSON.parse(r.new_value); } catch {} }
     const teamIndex = _buildTeamIndex();
 
-    // dedup: prima occorrenza per atleta_id dai risultati + profili senza risultati
+    // dedup: prima occorrenza per atleta_id dai risultati + profili + override-only
     const seen = {};
     for (const r of riders) { if (r.atleta_id && !seen[r.atleta_id]) seen[r.atleta_id] = r; }
     for (const aid of Object.keys(profMap)) { if (!(aid in seen)) seen[aid] = null; }
+    // includi anche atleti con SOLO un override di team (es. modificati a mano, senza profilo né righe)
+    for (const aid of Object.keys(ovMap)) { if (!(aid in seen)) seen[aid] = null; }
 
     const result = {};
     for (const aid of Object.keys(seen)) {
