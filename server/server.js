@@ -2087,8 +2087,10 @@ function _findExistingTeam(pcsName, teamEntries, genere) {
 
 // Costruisce l'indice dei team reali da teams.json (per il fuzzy match).
 // Ricava i generi (M/F) in cui ogni team compete da `punti_per_cat` (es. {JUN_M, ES1_M})
-// così non si uniscono team maschili con femminili.
+// così non si uniscono team maschili con femminili. Cache 5 min (teams.json è 4MB).
+let _teamIndexCache = null, _teamIndexTs = 0;
 function _buildTeamIndex() {
+  if (_teamIndexCache && (Date.now() - _teamIndexTs) < 300000) return _teamIndexCache;
   const out = [];
   try {
     const teamsPath = path.join(__dirname, '..', 'data', 'teams.json');
@@ -2103,6 +2105,7 @@ function _buildTeamIndex() {
       out.push({ tid, nome, nameSq: _squashTeam(nome), idSq: _squashTeam(tid), genders });
     }
   } catch {}
+  _teamIndexCache = out; _teamIndexTs = Date.now();
   return out;
 }
 
