@@ -13029,33 +13029,36 @@ let teamViewId = '';
 async function renderTeam(team_id, opts = {}) {
   if (!globalData) return;
 
-  // Assicura che il roster PCS sia caricato (se il fetch al boot era fallito),
-  // così gli atleti PCS assegnati a questo team compaiono nella lista corridori.
-  if (!globalData.teams[team_id] || !_pcsRosterRetried) await _ensurePcsAthletesLoaded();
+  // Assicura che il roster PCS sia caricato: se il bulk al boot ha funzionato, tutti
+  // i team hanno già i loro atleti PCS.
+  await _ensurePcsAthletesLoaded();
 
-  let tLive = globalData.teams[team_id];
-  if (!tLive) {
-    // Team non in memoria (es. team PCS creato a mano): caricalo on-demand
+  // Se il bulk NON è riuscito (o il team non c'è), carica il roster PCS di QUESTO
+  // team on-demand e uniscilo (anche se il team reale esiste già ma senza atleti PCS).
+  if (!_pcsRosterRetried || !globalData.teams[team_id]) {
     try {
       const m = await apiCall(`/pcs-team/${encodeURIComponent(team_id)}`);
       if (m && m.team_id) {
-        globalData.teams[team_id] = { id: team_id, nome: m.team_nome || team_id, atleti: [], punti_totali: 0, risultati: [] };
+        if (!globalData.teams[team_id]) {
+          globalData.teams[team_id] = { id: team_id, nome: m.team_nome || team_id, atleti: [], punti_totali: 0, risultati: [] };
+        }
         for (const p of (m.atleti || [])) {
           const aid = String(p.atleta_id || '').toUpperCase();
           if (!aid) continue;
           if (!globalData.athletes[aid]) {
             globalData.athletes[aid] = {
               atleta_id: aid, nome: (p.nome || '').toUpperCase(), cognome: (p.cognome || '').toUpperCase(),
-              team_attuale: m.team_nome || team_id, team_id, categoria: p.categoria || '', genere: p.genere || 'M',
+              team_attuale: globalData.teams[team_id].nome, team_id, categoria: p.categoria || '', genere: p.genere || 'M',
               punti_totali: 0, risultati: [], roster_only: true,
             };
           }
           if (!globalData.teams[team_id].atleti.includes(aid)) globalData.teams[team_id].atleti.push(aid);
         }
-        tLive = globalData.teams[team_id];
       }
     } catch {}
   }
+
+  const tLive = globalData.teams[team_id];
   if (!tLive) return renderNotFound();
 
   // ── Anno selezionato (storicità): default = stagione caricata ──
