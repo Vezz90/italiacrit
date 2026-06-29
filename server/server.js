@@ -1853,35 +1853,50 @@ function _resolvePcsAthlete(aid, sample, profMap, ovMap, teamIndex) {
   return { cognome, nome, categoria, genere, team_id: teamId, team_nome: teamNome };
 }
 
+// Costruisce la mappa team_id → { nome, atleti[] } di TUTTI gli atleti PCS,
+// unendo risultati + profili + override e risolvendo il team con le priorità.
+async function _buildPcsRosterMap() {
+  const [riders, profRows, ovMap] = await Promise.all([
+    _fetchAllPcsResultRiders(),
+    _fetchAllPcsProfiles(),
+    _fetchAllAtletaTeamOverrides(),
+  ]);
+  const profMap = {};
+  for (const r of profRows) { try { profMap[r.entity_id] = JSON.parse(r.new_value); } catch {} }
+  const teamIndex = _buildTeamIndex();
+
+  const seen = {};
+  for (const r of riders) { if (r.atleta_id && !seen[r.atleta_id]) seen[r.atleta_id] = r; }
+  for (const aid of Object.keys(profMap)) { if (!(aid in seen)) seen[aid] = null; }
+  for (const aid of Object.keys(ovMap)) { if (!(aid in seen)) seen[aid] = null; }
+
+  const result = {};
+  for (const aid of Object.keys(seen)) {
+    const a = _resolvePcsAthlete(aid, seen[aid], profMap, ovMap, teamIndex);
+    if (!a.cognome && !a.nome) continue;
+    if (!result[a.team_id]) result[a.team_id] = { nome: a.team_nome, atleti: [] };
+    if (!result[a.team_id].atleti.find(x => x.atleta_id === aid)) {
+      result[a.team_id].atleti.push({ atleta_id: aid, cognome: a.cognome, nome: a.nome, categoria: a.categoria, genere: a.genere });
+    }
+  }
+  return result;
+}
+
 app.get('/api/data/pcs-extra-roster', async (req, res) => {
   if (!supabase) return res.json({});
+  try { res.json(await _buildPcsRosterMap()); }
+  catch (e) { res.status(500).json({ error: e.message }); }
+});
+
+// Roster PCS di un singolo team — fallback on-demand per la pagina team
+app.get('/api/pcs-team/:teamId', async (req, res) => {
+  if (!supabase) return res.status(503).json({ error: 'Supabase non disponibile' });
   try {
-    const [riders, profRows, ovMap] = await Promise.all([
-      _fetchAllPcsResultRiders(),
-      _fetchAllPcsProfiles(),
-      _fetchAllAtletaTeamOverrides(),
-    ]);
-    const profMap = {};
-    for (const r of profRows) { try { profMap[r.entity_id] = JSON.parse(r.new_value); } catch {} }
-    const teamIndex = _buildTeamIndex();
-
-    // dedup: prima occorrenza per atleta_id dai risultati + profili + override-only
-    const seen = {};
-    for (const r of riders) { if (r.atleta_id && !seen[r.atleta_id]) seen[r.atleta_id] = r; }
-    for (const aid of Object.keys(profMap)) { if (!(aid in seen)) seen[aid] = null; }
-    // includi anche atleti con SOLO un override di team (es. modificati a mano, senza profilo né righe)
-    for (const aid of Object.keys(ovMap)) { if (!(aid in seen)) seen[aid] = null; }
-
-    const result = {};
-    for (const aid of Object.keys(seen)) {
-      const a = _resolvePcsAthlete(aid, seen[aid], profMap, ovMap, teamIndex);
-      if (!a.cognome && !a.nome) continue;
-      if (!result[a.team_id]) result[a.team_id] = { nome: a.team_nome, atleti: [] };
-      if (!result[a.team_id].atleti.find(x => x.atleta_id === aid)) {
-        result[a.team_id].atleti.push({ atleta_id: aid, cognome: a.cognome, nome: a.nome, categoria: a.categoria, genere: a.genere });
-      }
-    }
-    res.json(result);
+    const tid = req.params.teamId;
+    const map = await _buildPcsRosterMap();
+    const bucket = map[tid];
+    if (!bucket) return res.status(404).json({ error: 'Team PCS non trovato' });
+    res.json({ team_id: tid, team_nome: bucket.nome, atleti: bucket.atleti });
   } catch (e) { res.status(500).json({ error: e.message }); }
 });
 
