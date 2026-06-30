@@ -13152,6 +13152,7 @@ async function renderTeam(team_id, opts = {}) {
   const atletiRows = atletiList.map((a,i) => `
     <div class="cat-card-row">
       <span class="cat-pos ${posClass(i+1)}">${i+1}</span>
+      <span class="rk-av-wrap" data-aid="${esc(a.id)}" style="margin-right:8px"></span>
       <div>
         <div class="cat-rider-name"><a href="#/atleta/${esc(a.id)}">${esc(a.cognome)} ${esc(a.nome)}</a></div>
         <div class="cat-rider-team">${catLabel(a.categoria||'')}</div>
@@ -13423,7 +13424,7 @@ async function renderTeam(team_id, opts = {}) {
   _loadTeamPcsExtra(team_id, selYear, teamViewCat);
 
   // Foto atleti nella lista CORRIDORI CHIAVE + tabella risultati (batch async)
-  const _perfSpans = [...document.querySelectorAll('.team-performers-list .rk-av-wrap[data-aid], .team-results .rk-av-wrap[data-aid]')];
+  const _perfSpans = [...document.querySelectorAll('.team-performers-list .rk-av-wrap[data-aid], .team-roster-list .rk-av-wrap[data-aid], .team-results .rk-av-wrap[data-aid]')];
   if (_perfSpans.length) {
     const _ph = `<span class=rk-av-placeholder><svg width=20 height=20 viewBox='0 0 24 24' fill='none' stroke='currentColor' stroke-width='1.5'><circle cx='12' cy='8' r='4'/><path d='M4 20c0-4 3.6-7 8-7s8 3 8 7'/></svg></span>`;
     // Pre-popola subito il placeholder (visibile immediatamente)
