@@ -5267,6 +5267,45 @@ function buildOgSvg({ title, subtitle, badge, stats = [], accent = '#e8001d' }) 
 </svg>`;
 }
 
+// Logo ICS come data URI base64 (cache) per embeddarlo negli SVG OG
+let _ogLogoUri = null;
+function _ogLogoDataUri() {
+  if (_ogLogoUri !== null) return _ogLogoUri;
+  try {
+    const p = path.join(FRONTEND_DIR, 'assets', 'logo.png');
+    _ogLogoUri = 'data:image/png;base64,' + fs.readFileSync(p).toString('base64');
+  } catch { _ogLogoUri = ''; }
+  return _ogLogoUri;
+}
+
+// Immagine OG di fallback per una gara: logo ICS in alto + nome gara sotto.
+function buildGaraNameSvg(title, subtitle) {
+  const esc = s => String(s || '').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');
+  // Wrap del nome gara su massimo 2 righe
+  const words = String(title || '').trim().split(/\s+/);
+  const lines = []; let cur = '';
+  for (const w of words) {
+    if ((cur + ' ' + w).trim().length > 22 && cur) { lines.push(cur); cur = w; }
+    else cur = (cur ? cur + ' ' : '') + w;
+    if (lines.length === 2) break;
+  }
+  if (cur && lines.length < 2) lines.push(cur);
+  if (lines.length === 2 && words.join(' ').length > lines.join(' ').length) lines[1] += '…';
+  const fontSize = lines.some(l => l.length > 16) ? 58 : 70;
+  const startY = lines.length === 2 ? 400 : 430;
+  const titleTspans = lines.map((l, i) => `<text x="600" y="${startY + i*(fontSize+8)}" font-family="Arial,Helvetica,sans-serif" font-size="${fontSize}" font-weight="900" fill="white" text-anchor="middle">${esc(l)}</text>`).join('');
+  const logo = _ogLogoDataUri();
+  return `<svg width="1200" height="630" xmlns="http://www.w3.org/2000/svg">
+  <defs><linearGradient id="bg" x1="0" y1="0" x2="1200" y2="630" gradientUnits="userSpaceOnUse"><stop offset="0%" stop-color="#0f172a"/><stop offset="100%" stop-color="#1e293b"/></linearGradient></defs>
+  <rect width="1200" height="630" fill="url(#bg)"/>
+  <rect x="0" y="0" width="10" height="630" fill="#e8001d"/>
+  ${logo ? `<image href="${logo}" x="470" y="90" width="260" height="160" preserveAspectRatio="xMidYMid meet"/>` : `<text x="600" y="200" font-family="Arial,Helvetica,sans-serif" font-size="40" font-weight="900" fill="white" text-anchor="middle">ICS — ITALIA CYCLING STATS</text>`}
+  ${titleTspans}
+  ${subtitle ? `<text x="600" y="${startY + lines.length*(fontSize+8) + 10}" font-family="Arial,Helvetica,sans-serif" font-size="30" fill="#94a3b8" text-anchor="middle">${esc(subtitle.slice(0,60))}</text>` : ''}
+  <text x="600" y="595" font-family="Arial,Helvetica,sans-serif" font-size="22" fill="#e8001d" font-weight="600" text-anchor="middle">italiacyclingstats.com</text>
+</svg>`;
+}
+
 async function renderOgPng(svgStr) {
   try {
     const sharp = require('sharp');
@@ -5379,14 +5418,10 @@ app.get('/api/og-image/gara/:id', async (req, res) => {
       }
     } catch {}
 
-    // 2) Altrimenti immagine con il NOME della gara
+    // 2) Altrimenti immagine con logo ICS + NOME della gara sotto
     const date = cal?.data ? new Date(cal.data).toLocaleDateString('it-IT', { day: 'numeric', month: 'long', year: 'numeric' }) : '';
-    const svg = buildOgSvg({
-      title,
-      subtitle: [date, cal?.luogo || cal?.regione || ''].filter(Boolean).join(' · ') || 'Italia Cycling Stats',
-      badge: (cal?.categoria || '').replace(/_/g, ' '),
-      stats: [],
-    });
+    const subtitle = [date, cal?.luogo || cal?.regione || ''].filter(Boolean).join(' · ');
+    const svg = buildGaraNameSvg(title, subtitle);
     const buf = await renderOgPng(svg);
     if (buf) return sendPng(buf);
     return res.redirect('/assets/og-default.png');
