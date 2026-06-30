@@ -13379,6 +13379,13 @@ async function renderTeam(team_id, opts = {}) {
     </div>
     <div class="team-performers-list" style="margin-bottom:28px">${topPerfHtml}</div>
 
+    <div class="section-header" style="margin-top:28px">
+      <span class="section-title">ROSTER COMPLETO</span>
+      <span class="section-line"></span>
+      <span class="section-subtitle">${atletiList.length} atlet${atletiList.length === 1 ? 'a' : 'i'}</span>
+    </div>
+    <div class="team-roster-list" style="margin-bottom:28px">${atletiRows || '<div class="empty-state">Nessun atleta</div>'}</div>
+
     ${buildProfileMedia(
       seasonRaw.filter(r =>
         r.team_id === team_id &&
