@@ -293,7 +293,7 @@ function makeToken(user) {
 // Restituisce una pagina HTML con meta OG + redirect al SPA.
 // Usato come URL da condividere: FB scrapa qui, il click porta al sito.
 const DATA_DIR       = path.join(__dirname, '..', 'data');
-const SITE_URL       = 'https://vezz90.github.io/italiacrit';
+const SITE_URL       = 'https://italiacyclingstats.com';
 const SUPABASE_PUB   = 'https://aqqsstsbgpapzoxllosh.supabase.co/storage/v1/object/public';
 const DEFAULT_OG_IMG = `${SITE_URL}/assets/og-default.png`;
 
