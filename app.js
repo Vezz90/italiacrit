@@ -13188,31 +13188,39 @@ async function renderTeam(team_id, opts = {}) {
   (t.risultati||[]).forEach(r => {
     if (!r.atleta_id) return;
     if (!atletiMap[r.atleta_id]) {
-      atletiMap[r.atleta_id] = { id: r.atleta_id, ...athletes[r.atleta_id], puntiCat: 0, puntiTot: 0 };
+      atletiMap[r.atleta_id] = { id: r.atleta_id, ...athletes[r.atleta_id], puntiCat: 0, puntiTot: 0, cats: new Set() };
     }
     atletiMap[r.atleta_id].puntiTot += (r.punti_effettivi||0);
+    const rc = getRankingFileCode(r) || r.categoria;
+    if (rc) atletiMap[r.atleta_id].cats.add(rc);
     // puntiCat = punti solo nella categoria del tab selezionato
-    if ((getRankingFileCode(r) || r.categoria) === teamViewCat) {
+    if (rc === teamViewCat) {
       atletiMap[r.atleta_id].puntiCat += (r.punti_effettivi||0);
     }
   });
   // Aggiungi atleti del roster senza risultati ICS (0 punti)
   for (const aid of (t.atleti || [])) {
     if (!atletiMap[aid] && athletes[aid]) {
-      atletiMap[aid] = { id: aid, ...athletes[aid], puntiCat: 0, puntiTot: 0 };
+      atletiMap[aid] = { id: aid, ...athletes[aid], puntiCat: 0, puntiTot: 0, cats: new Set() };
     }
+    // assicura la categoria dell'atleta (es. roster PCS senza risultati ICS)
+    const ac = getRankingFileCode({ categoria: athletes[aid]?.categoria, genere: athletes[aid]?.genere }) || athletes[aid]?.categoria;
+    if (atletiMap[aid] && ac) atletiMap[aid].cats.add(ac);
   }
   const atletiList = Object.values(atletiMap)
     .sort((a,b) => b.puntiTot - a.puntiTot || (a.cognome||'').localeCompare(b.cognome||''));
+  // Roster filtrato alla categoria/genere del tab selezionato (teamViewCat include il genere, es. JUN_M)
+  const atletiListCat = atletiList.filter(a => a.cats.has(teamViewCat));
 
   const p1 = catRisultati.filter(r=>r.posizione===1).length;
   const p2 = catRisultati.filter(r=>r.posizione===2).length;
   const p3 = catRisultati.filter(r=>r.posizione===3).length;
   const pout = catRisultati.filter(r=>r.posizione>=4 && r.posizione<=10).length;
 
-  // Stesso layout di CORRIDORI CHIAVE (team-performer-card) per coerenza
-  const atletiRows = atletiList.map((a,i) => {
-    const valHtml = a.puntiTot > 0 ? `${a.puntiTot}<small>pts</small>` : '<span style="color:var(--text-muted)">—</span>';
+  // Stesso layout di CORRIDORI CHIAVE (team-performer-card) per coerenza.
+  // Mostra solo gli atleti della categoria/genere selezionata (teamViewCat).
+  const atletiRows = atletiListCat.map((a,i) => {
+    const valHtml = a.puntiCat > 0 ? `${a.puntiCat}<small>pts</small>` : (a.puntiTot > 0 ? `<span style="opacity:.5">${a.puntiTot}</span>` : '<span style="color:var(--text-muted)">—</span>');
     return `<div class="team-performer-card">
       <div class="team-perf-rank" style="color:var(--text-muted)">${i+1}</div>
       <span class="rk-av-wrap" data-aid="${esc(a.id)}"></span>
@@ -13413,7 +13421,7 @@ async function renderTeam(team_id, opts = {}) {
         <span class="team-stat-label">4-10</span>
       </div>
       <div class="team-stat">
-        <span class="team-stat-val">${atletiList.length}</span>
+        <span class="team-stat-val">${atletiListCat.length}</span>
         <span class="team-stat-label">Atleti</span>
       </div>
     </div>`;
@@ -13457,7 +13465,7 @@ async function renderTeam(team_id, opts = {}) {
       <span class="section-subtitle" id="team-riders-sub">${catLabel(teamViewCat)}</span>
     </div>
     <div id="team-riders-chiave" class="team-performers-list" data-sub="${esc(catLabel(teamViewCat))}" style="margin-bottom:28px">${topPerfHtml}</div>
-    <div id="team-riders-roster" class="team-roster-list" data-sub="${atletiList.length} atlet${atletiList.length === 1 ? 'a' : 'i'}" style="margin-bottom:28px;display:none">${atletiRows || '<div class="empty-state">Nessun atleta</div>'}</div>
+    <div id="team-riders-roster" class="team-roster-list" data-sub="${catLabel(teamViewCat)} · ${atletiListCat.length} atlet${atletiListCat.length === 1 ? 'a' : 'i'}" style="margin-bottom:28px;display:none">${atletiRows || '<div class="empty-state">Nessun atleta in questa categoria</div>'}</div>
 
     ${buildProfileMedia(
       seasonRaw.filter(r =>
