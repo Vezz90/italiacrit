@@ -5288,23 +5288,36 @@ app.get('/api/og-image/atleta/:id', async (req, res) => {
       res.setHeader('Cache-Control', 'public, max-age=1800');
       return res.send(cached.buf);
     }
-    const results = readDataJson('results_raw.json') || [];
-    const atletaRows = results.filter(r => r.atleta_id === atletaId);
-    if (!atletaRows.length) return res.redirect('/assets/og-default.png');
-    const a = atletaRows[0];
-    const nome = `${a.cognome || ''} ${a.nome || ''}`.trim();
-    const team = a.team || '';
-    const wins  = atletaRows.filter(r => Number(r.posizione) === 1).length;
-    const top3  = atletaRows.filter(r => Number(r.posizione) <= 3).length;
-    const races  = new Set(atletaRows.map(r => r.gara_id)).size;
+    // 1) Se l'atleta ha una foto, usala come immagine principale
+    try {
+      const photo = await getEntityPhoto('atleta', atletaId);  // URL pubblico o null
+      if (photo) {
+        const buf = await _photoToOgPng(photo);
+        if (buf) {
+          _ogCache.set(cacheKey, { buf, ts: Date.now() });
+          res.setHeader('Content-Type', 'image/png');
+          res.setHeader('Cache-Control', 'public, max-age=1800');
+          return res.send(buf);
+        }
+      }
+    } catch {}
+
+    // 2) Altrimenti scheda con nome + statistiche (athletes.json da GitHub, affidabile)
+    const athletes = (await readDataJsonFromGH('athletes.json')) || {};
+    const a = athletes[atletaId] || {};
+    const nome = `${a.cognome || ''} ${a.nome || ''}`.trim() || atletaId.replace(/_/g, ' ');
+    const ris = a.risultati || [];
+    const wins = ris.filter(r => Number(r.posizione) === 1).length;
+    const top3 = ris.filter(r => Number(r.posizione) <= 3).length;
+    const races = ris.length;
     const svg = buildOgSvg({
-      title: nome, subtitle: team,
-      badge: a.categoria || '',
-      stats: [
+      title: nome, subtitle: a.team_attuale || '',
+      badge: (a.categoria || '').replace(/_/g, ' '),
+      stats: races ? [
         { value: wins,  label: 'Vittorie' },
         { value: top3,  label: 'Podi' },
         { value: races, label: 'Gare' },
-      ]
+      ] : [],
     });
     const buf = await renderOgPng(svg);
     if (!buf) return res.redirect('/assets/og-default.png');
@@ -5315,36 +5328,68 @@ app.get('/api/og-image/atleta/:id', async (req, res) => {
   } catch (e) { res.redirect('/assets/og-default.png'); }
 });
 
-app.get('/api/og-image/gara/:id', async (req, res) => {
+// Carica una foto (file locale in uploads/ o URL) e la adatta a 1200x630 PNG
+async function _photoToOgPng(filename) {
+  if (!filename) return null;
   try {
-    const garaId = decodeURIComponent(req.params.id);
-    const cacheKey = `gara_${garaId}`;
+    const sharp = require('sharp');
+    const local = path.join(UPLOADS_DIR, filename);
+    if (fs.existsSync(local)) {
+      return await sharp(local).resize(1200, 630, { fit: 'cover' }).png().toBuffer();
+    }
+    // prova come URL (storage Supabase o /photos)
+    const url = /^https?:\/\//.test(filename)
+      ? filename
+      : `${SUPABASE_PUB}/photos/${filename.replace(/^\/+/, '')}`;
+    const r = await fetch(url, { signal: AbortSignal.timeout(6000) });
+    if (!r.ok) return null;
+    const ab = await r.arrayBuffer();
+    return await sharp(Buffer.from(ab)).resize(1200, 630, { fit: 'cover' }).png().toBuffer();
+  } catch { return null; }
+}
+
+app.get('/api/og-image/gara/:id', async (req, res) => {
+  const garaId = decodeURIComponent(req.params.id);
+  const cacheKey = `gara_${garaId}`;
+  const sendPng = (buf) => {
+    _ogCache.set(cacheKey, { buf, ts: Date.now() });
+    res.setHeader('Content-Type', 'image/png');
+    res.setHeader('Cache-Control', 'public, max-age=1800');
+    res.send(buf);
+  };
+  try {
     const cached = _ogCache.get(cacheKey);
     if (cached && Date.now() - cached.ts < OG_TTL) {
       res.setHeader('Content-Type', 'image/png');
       res.setHeader('Cache-Control', 'public, max-age=1800');
       return res.send(cached.buf);
     }
-    const results  = readDataJson('results_raw.json') || [];
-    const calendar = readDataJson('calendar.json') || [];
-    const garaRows = results.filter(r => r.gara_id === garaId).sort((a,b) => Number(a.posizione)-Number(b.posizione));
-    const cal      = calendar.find(g => g.id === garaId);
-    if (!garaRows.length) return res.redirect('/assets/og-default.png');
-    const winner = garaRows.find(r => Number(r.posizione) === 1);
-    const title  = cal?.nome || garaId.split('_').slice(0, -2).join(' ');
-    const date   = (cal?.data || winner?.data_gara || '').slice(0, 10);
+
+    // Nome gara: dal calendario (GitHub, affidabile su Render) o dall'id
+    const calendar = (await readDataJsonFromGH('calendar.json')) || [];
+    const cal = calendar.find(g => g.id === garaId);
+    const title = cal?.nome || garaId.replace(/_\d{4}-\d{2}-\d{2}_[A-Z0-9]+$/, '').replace(/_/g, ' ');
+
+    // 1) Se la gara ha una foto approvata, usala come immagine principale
+    try {
+      const photos = await queries.getApprovedRacePhotos(garaId).catch(() => []);
+      if (photos && photos.length) {
+        const buf = await _photoToOgPng(photos[0].filename || photos[0].photo_url);
+        if (buf) return sendPng(buf);
+      }
+    } catch {}
+
+    // 2) Altrimenti immagine con il NOME della gara
+    const date = cal?.data ? new Date(cal.data).toLocaleDateString('it-IT', { day: 'numeric', month: 'long', year: 'numeric' }) : '';
     const svg = buildOgSvg({
       title,
-      subtitle: winner ? `🥇 ${winner.cognome} ${winner.nome} — ${winner.team || ''}` : '',
-      badge: (cal?.categoria || winner?.categoria || '').replace(/_/g, ' '),
-      stats: garaRows.slice(0, 3).map(r => ({ value: `${r.posizione}°`, label: `${r.cognome} ${r.nome}`.trim().slice(0,16) })),
+      subtitle: [date, cal?.luogo || cal?.regione || ''].filter(Boolean).join(' · ') || 'Italia Cycling Stats',
+      badge: (cal?.categoria || '').replace(/_/g, ' '),
+      stats: [],
     });
     const buf = await renderOgPng(svg);
-    if (!buf) return res.redirect('/assets/og-default.png');
-    _ogCache.set(cacheKey, { buf, ts: Date.now() });
-    res.setHeader('Content-Type', 'image/png');
-    res.setHeader('Cache-Control', 'public, max-age=1800');
-    res.send(buf);
+    if (buf) return sendPng(buf);
+    return res.redirect('/assets/og-default.png');
   } catch (e) { res.redirect('/assets/og-default.png'); }
 });
 
