@@ -357,7 +357,9 @@ function ogHtml({ title, desc, img, redirect }) {
 </body></html>`;
 }
 
-const API_BASE_URL = 'https://italiacrit.onrender.com';
+// Dominio pubblico per le immagini OG: serve /og e /api/og-image via Cloudflare → Render,
+// così il link condiviso e l'immagine sono sul dominio reale (non onrender).
+const API_BASE_URL = 'https://italiacyclingstats.com';
 
 app.get('/og/gara/:id', async (req, res) => {
   const id  = req.params.id;
