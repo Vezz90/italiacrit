@@ -13026,6 +13026,20 @@ let teamViewCat = '';
 let teamViewId = '';
 
 // ── TEAM ──────────────────────────────────────────────────────
+// Toggle tra "Corridori chiave" e "Roster completo" nella pagina team
+window._teamRidersView = function(v) {
+  const chiave = document.getElementById('team-riders-chiave');
+  const roster = document.getElementById('team-riders-roster');
+  if (!chiave || !roster) return;
+  const showRoster = v === 'roster';
+  chiave.style.display = showRoster ? 'none' : '';
+  roster.style.display = showRoster ? '' : 'none';
+  document.getElementById('team-riders-tab-chiave')?.classList.toggle('active-cat', !showRoster);
+  document.getElementById('team-riders-tab-roster')?.classList.toggle('active-cat', showRoster);
+  const sub = document.getElementById('team-riders-sub');
+  if (sub) sub.textContent = (showRoster ? roster.dataset.sub : chiave.dataset.sub) || '';
+};
+
 async function renderTeam(team_id, opts = {}) {
   if (!globalData) return;
 
@@ -13239,15 +13253,24 @@ async function renderTeam(team_id, opts = {}) {
         id: r.atleta_id,
         cognome: ath.cognome || r.atleta_cognome || r.cognome || '',
         nome:    ath.nome    || r.atleta_nome    || r.nome    || '',
-        pts: 0, wins: 0
+        pts: 0, wins: 0, placements: 0, best: 999
       };
     }
-    catPerfMap[r.atleta_id].pts += r.punti_effettivi||0;
-    if (r.posizione === 1) catPerfMap[r.atleta_id].wins++;
+    const c = catPerfMap[r.atleta_id];
+    c.pts += r.punti_effettivi||0;
+    if (r.posizione === 1) c.wins++;
+    if (r.posizione >= 1 && r.posizione <= 10) c.placements++;
+    if (r.posizione && r.posizione < c.best) c.best = r.posizione;
   }
-  const topPerformers = Object.values(catPerfMap).filter(p => p.pts > 0).sort((a,b) => b.pts - a.pts);
+  // Includi anche chi ha vittorie/piazzamenti pur con 0 punti (es. gare senza punti campionato)
+  const topPerformers = Object.values(catPerfMap)
+    .filter(p => p.pts > 0 || p.wins > 0 || p.placements > 0)
+    .sort((a,b) => b.pts - a.pts || b.wins - a.wins || a.best - b.best);
   const _rankAccents = ['var(--gold)','var(--silver)','var(--bronze)'];
   const topPerfHtml = topPerformers.length ? topPerformers.map((p,i) => {
+    const valHtml = p.pts > 0
+      ? `${p.pts}<small>pts</small>`
+      : (p.best <= 10 ? `${p.best}°` : '—');
     return `<div class="team-performer-card">
       <div class="team-perf-rank" style="color:${_rankAccents[i] || 'var(--text-muted)'}">${i+1}</div>
       <span class="rk-av-wrap" data-aid="${esc(p.id)}"></span>
@@ -13255,10 +13278,10 @@ async function renderTeam(team_id, opts = {}) {
         <div class="team-perf-name"><a href="#/atleta/${esc(p.id)}">${esc(p.cognome)} <span style="font-weight:400">${esc(p.nome)}</span></a></div>
       </div>
       <div class="team-perf-right">
-        <div class="team-perf-pts">${p.pts}<small>pts</small></div>
+        <div class="team-perf-pts">${valHtml}</div>
       </div>
     </div>`;
-  }).join('') : '<div class="empty-state">Nessun corridore con punti in questa categoria</div>';
+  }).join('') : '<div class="empty-state">Nessun corridore con risultati in questa categoria</div>';
 
   // Identity strip HTML
   const identityHtml = `
@@ -13373,19 +13396,16 @@ async function renderTeam(team_id, opts = {}) {
 
     ${catTabsHtml}
 
-    <div class="section-header" style="margin-top:28px">
-      <span class="section-title">CORRIDORI CHIAVE</span>
+    <div class="section-header" style="margin-top:28px;align-items:center">
+      <div class="tab-group" role="tablist" style="display:flex;gap:8px">
+        <button id="team-riders-tab-chiave" class="tab-btn active-cat" onclick="window._teamRidersView('chiave')">Corridori chiave</button>
+        <button id="team-riders-tab-roster" class="tab-btn" onclick="window._teamRidersView('roster')">Roster completo</button>
+      </div>
       <span class="section-line"></span>
-      <span class="section-subtitle">${catLabel(teamViewCat)}</span>
+      <span class="section-subtitle" id="team-riders-sub">${catLabel(teamViewCat)}</span>
     </div>
-    <div class="team-performers-list" style="margin-bottom:28px">${topPerfHtml}</div>
-
-    <div class="section-header" style="margin-top:28px">
-      <span class="section-title">ROSTER COMPLETO</span>
-      <span class="section-line"></span>
-      <span class="section-subtitle">${atletiList.length} atlet${atletiList.length === 1 ? 'a' : 'i'}</span>
-    </div>
-    <div class="team-roster-list" style="margin-bottom:28px">${atletiRows || '<div class="empty-state">Nessun atleta</div>'}</div>
+    <div id="team-riders-chiave" class="team-performers-list" data-sub="${esc(catLabel(teamViewCat))}" style="margin-bottom:28px">${topPerfHtml}</div>
+    <div id="team-riders-roster" class="team-roster-list" data-sub="${atletiList.length} atlet${atletiList.length === 1 ? 'a' : 'i'}" style="margin-bottom:28px;display:none">${atletiRows || '<div class="empty-state">Nessun atleta</div>'}</div>
 
     ${buildProfileMedia(
       seasonRaw.filter(r =>
