@@ -1853,8 +1853,24 @@ function _resolvePcsAthlete(aid, sample, profMap, ovMap, teamIndex) {
   return { cognome, nome, categoria, genere, team_id: teamId, team_nome: teamNome };
 }
 
-// Costruisce la mappa team_id → { nome, atleti[] } di TUTTI gli atleti PCS,
-// unendo risultati + profili + override e risolvendo il team con le priorità.
+// Insieme delle chiavi atleti FCI (athletes.json), cache 5 min.
+let _fciKeysCache = null, _fciKeysTs = 0;
+function _fciAthleteKeys() {
+  if (_fciKeysCache && (Date.now() - _fciKeysTs) < 300000) return _fciKeysCache;
+  let keys = new Set();
+  try {
+    const p = path.join(__dirname, '..', 'data', 'athletes.json');
+    keys = new Set(Object.keys(JSON.parse(fs.readFileSync(p, 'utf8'))));
+  } catch {}
+  _fciKeysCache = keys; _fciKeysTs = Date.now();
+  return keys;
+}
+
+// Costruisce la mappa team_id → { nome, atleti[] } degli atleti PCS.
+// IMPORTANTE: include SOLO atleti PCS-only (non in athletes.json). Gli atleti FCI
+// hanno già un team dai risultati ufficiali; il loro team si cambia solo con un
+// override esplicito, applicato a parte dal frontend (così non finiscono nel team
+// sbagliato per via di un team_name PCS incoerente, es. nazionali/guest).
 async function _buildPcsRosterMap() {
   const [riders, profRows, ovMap] = await Promise.all([
     _fetchAllPcsResultRiders(),
@@ -1864,11 +1880,14 @@ async function _buildPcsRosterMap() {
   const profMap = {};
   for (const r of profRows) { try { profMap[r.entity_id] = JSON.parse(r.new_value); } catch {} }
   const teamIndex = _buildTeamIndex();
+  const fciKeys = _fciAthleteKeys();
 
   const seen = {};
   for (const r of riders) { if (r.atleta_id && !seen[r.atleta_id]) seen[r.atleta_id] = r; }
   for (const aid of Object.keys(profMap)) { if (!(aid in seen)) seen[aid] = null; }
   for (const aid of Object.keys(ovMap)) { if (!(aid in seen)) seen[aid] = null; }
+  // togli gli atleti FCI: li gestisce il frontend coi dati ufficiali + override
+  for (const aid of Object.keys(seen)) { if (fciKeys.has(aid)) delete seen[aid]; }
 
   const result = {};
   for (const aid of Object.keys(seen)) {
@@ -1885,6 +1904,14 @@ async function _buildPcsRosterMap() {
 app.get('/api/data/pcs-extra-roster', async (req, res) => {
   if (!supabase) return res.json({});
   try { res.json(await _buildPcsRosterMap()); }
+  catch (e) { res.status(500).json({ error: e.message }); }
+});
+
+// Mappa atleta_id → { team_id, team } degli override manuali di team (entity atleta).
+// Usata dal frontend per riassegnare gli atleti FCI al team scelto (atleti + risultati).
+app.get('/api/data/atleta-team-overrides', async (req, res) => {
+  if (!supabase) return res.json({});
+  try { res.json(await _fetchAllAtletaTeamOverrides()); }
   catch (e) { res.status(500).json({ error: e.message }); }
 });
 

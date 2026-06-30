@@ -1178,7 +1178,7 @@ async function loadAll() {
         }
       })();
 
-  const [calendar, resultsRaw, athletes, teams, meta, raceDetails, videos, extraRoster, pcsExtraRoster] = await Promise.all([
+  const [calendar, resultsRaw, athletes, teams, meta, raceDetails, videos, extraRoster, pcsExtraRoster, atletaTeamOv] = await Promise.all([
     loadJson('data/calendar.json'),
     loadJson('data/results_raw.json'),
     loadJson('data/athletes.json'),
@@ -1188,6 +1188,7 @@ async function loadAll() {
     videosPromise,
     loadJson('data/extra_roster.json').catch(() => ({})),
     apiCall('/data/pcs-extra-roster').catch(() => ({})),
+    apiCall('/data/atleta-team-overrides').catch(() => ({})),
   ]);
 
   // Unisci extra_roster statico con atleti PCS da Supabase
@@ -1203,7 +1204,53 @@ async function loadAll() {
     }
   }
 
-  return processLoadedData({ calendar, resultsRaw, athletes, teams, meta, raceDetails, videos, extraRoster: mergedExtraRoster });
+  const gd = processLoadedData({ calendar, resultsRaw, athletes, teams, meta, raceDetails, videos, extraRoster: mergedExtraRoster });
+  // Applica gli override manuali di team agli atleti FCI (sposta atleta + risultati nel team scelto)
+  _applyAtletaTeamOverrides(gd, atletaTeamOv);
+  return gd;
+}
+
+// Sposta un atleta (e i suoi risultati) dal vecchio team al nuovo, secondo gli override.
+// Aggiorna globalData: atleta.team_id/team_attuale, risultati (team_id/team), roster e
+// risultati dei team. Così la pagina team mostra i risultati e i punti sotto il team giusto.
+function _applyAtletaTeamOverrides(gd, overrides) {
+  if (!gd || !overrides) return;
+  for (const [aid, ov] of Object.entries(overrides)) {
+    const newTeamId   = (ov.team_id || '').trim();
+    const newTeamNome = (ov.team || '').trim();
+    if (!newTeamId) continue;
+    const ath = gd.athletes?.[aid];
+    if (!ath) continue;                 // gli atleti PCS-only sono già gestiti dal roster
+    const oldTeamId = ath.team_id || '';
+    if (oldTeamId === newTeamId) continue;
+    // crea il team nuovo se non esiste
+    if (!gd.teams[newTeamId]) {
+      gd.teams[newTeamId] = { id: newTeamId, nome: newTeamNome || newTeamId, atleti: [], risultati: [], punti_totali: 0 };
+    }
+    const newT = gd.teams[newTeamId];
+    const newNome = newT.nome || newTeamNome || newTeamId;
+    // sposta dal vecchio team
+    const oldT = gd.teams[oldTeamId];
+    if (oldT) {
+      if (Array.isArray(oldT.atleti)) oldT.atleti = oldT.atleti.filter(id => id !== aid);
+      if (Array.isArray(oldT.risultati)) {
+        const moved = oldT.risultati.filter(r => r.atleta_id === aid);
+        oldT.risultati = oldT.risultati.filter(r => r.atleta_id !== aid);
+        moved.forEach(r => { r.team_id = newTeamId; r.team = newNome; });
+        if (!Array.isArray(newT.risultati)) newT.risultati = [];
+        newT.risultati.push(...moved);
+        oldT.punti_totali = (oldT.punti_totali || 0) - moved.reduce((s, r) => s + (r.punti_effettivi || 0), 0);
+        newT.punti_totali = (newT.punti_totali || 0) + moved.reduce((s, r) => s + (r.punti_effettivi || 0), 0);
+      }
+    }
+    if (!Array.isArray(newT.atleti)) newT.atleti = [];
+    if (!newT.atleti.includes(aid)) newT.atleti.push(aid);
+    // riassegna anche le righe in resultsRaw (usate da varie viste, incl. media)
+    for (const r of (gd.resultsRaw || [])) {
+      if (r.atleta_id === aid) { r.team_id = newTeamId; r.team = newNome; }
+    }
+    ath.team_attuale = newNome; ath.team_id = newTeamId;
+  }
 }
 
 // Processa i dati grezzi (stagione live o archivio data/seasons/{anno}/) in un
@@ -13163,16 +13210,21 @@ async function renderTeam(team_id, opts = {}) {
   const p3 = catRisultati.filter(r=>r.posizione===3).length;
   const pout = catRisultati.filter(r=>r.posizione>=4 && r.posizione<=10).length;
 
-  const atletiRows = atletiList.map((a,i) => `
-    <div class="cat-card-row">
-      <span class="cat-pos ${posClass(i+1)}">${i+1}</span>
-      <span class="rk-av-wrap" data-aid="${esc(a.id)}" style="margin-right:8px"></span>
-      <div>
-        <div class="cat-rider-name"><a href="#/atleta/${esc(a.id)}">${esc(a.cognome)} ${esc(a.nome)}</a></div>
-        <div class="cat-rider-team">${catLabel(a.categoria||'')}</div>
+  // Stesso layout di CORRIDORI CHIAVE (team-performer-card) per coerenza
+  const atletiRows = atletiList.map((a,i) => {
+    const valHtml = a.puntiTot > 0 ? `${a.puntiTot}<small>pts</small>` : '<span style="color:var(--text-muted)">—</span>';
+    return `<div class="team-performer-card">
+      <div class="team-perf-rank" style="color:var(--text-muted)">${i+1}</div>
+      <span class="rk-av-wrap" data-aid="${esc(a.id)}"></span>
+      <div class="team-perf-info">
+        <div class="team-perf-name"><a href="#/atleta/${esc(a.id)}">${esc(a.cognome)} <span style="font-weight:400">${esc(a.nome)}</span></a></div>
+        <div style="font-size:.72rem;color:var(--text-muted)">${catLabel(a.categoria||'')}</div>
       </div>
-      <span class="cat-pts" title="${a.puntiCat > 0 ? a.puntiCat+' pt in questa cat.' : a.puntiTot+' pt totali'}">${a.puntiCat > 0 ? a.puntiCat : (a.puntiTot > 0 ? `<span style="opacity:.5;font-size:.8em">${a.puntiTot}</span>` : '—')}</span>
-    </div>`).join('');
+      <div class="team-perf-right">
+        <div class="team-perf-pts">${valHtml}</div>
+      </div>
+    </div>`;
+  }).join('');
 
   const risultatiRows = [...catRisultati]
     .sort((a,b) => a.posizione - b.posizione || (b.data||'').localeCompare(a.data||''))
