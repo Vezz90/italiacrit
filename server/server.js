@@ -5407,7 +5407,7 @@ app.get('/api/og-image/gara/:id', async (req, res) => {
     // Nome gara: dal calendario (GitHub, affidabile su Render) o dall'id
     const calendar = (await readDataJsonFromGH('calendar.json')) || [];
     const cal = calendar.find(g => g.id === garaId);
-    const title = cal?.nome || garaId.replace(/_\d{4}-\d{2}-\d{2}_[A-Z0-9]+$/, '').replace(/_/g, ' ');
+    const title = cal?.nome || garaId.replace(/_\d{4}-\d{2}-\d{2}_[A-Z0-9_]+$/, '').replace(/_/g, ' ');
 
     // 1) Se la gara ha una foto approvata, usala come immagine principale
     try {
