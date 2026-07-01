@@ -19329,7 +19329,7 @@ window.nativeShare=async function(){
 };
 
 // ── Open Graph URL per Facebook ────────────────────────────
-const OG_BASE = 'https://italiacyclingstats.com/og';
+const OG_BASE = 'https://italiacrit.onrender.com/og';
 function _ogUrl(type, payload) {
   const id = payload?._id;
   if (!id) return null;
