@@ -3012,8 +3012,11 @@ const XPIX_PHOTOS_PATH = path.join(__dirname, '../data/xpix_photos.json');
 
 async function readXpixQueue() {
   if (supabase) {
-    const { data, error } = await supabase.from('kv_store').select('value').eq('key', 'xpix_queue').single();
-    if (error && error.code !== 'PGRST116') console.error('[xpix_queue] read:', error.message);
+    // maybeSingle: nessuna riga → data null (ok). Errore reale → lancia, così i
+    // chiamanti (sync/approve) NON sovrascrivono la coda con un array vuoto e non
+    // perdono gli stati approvato/scartato per un errore transitorio di rete.
+    const { data, error } = await supabase.from('kv_store').select('value').eq('key', 'xpix_queue').maybeSingle();
+    if (error) throw new Error('read xpix_queue: ' + error.message);
     return data?.value || [];
   }
   try { return JSON.parse(fs.readFileSync(XPIX_QUEUE_PATH, 'utf8')); } catch { return []; }
@@ -3079,6 +3082,24 @@ app.post('/api/admin/xpix/sync', requireAdmin, async (req, res) => {
       });
       added++;
     }
+
+    // Riconcilia con le foto GIÀ pubblicate: se un album è presente in xpix_photos
+    // ma in coda risulta ancora "pending" (es. la coda era stata resettata), segnalo
+    // come approvato — così non ricompare tra le foto da approvare.
+    try {
+      const published = await readXpixPhotos();
+      const garaBySlug = {};
+      for (const [gid, ph] of Object.entries(published || {})) {
+        if (ph?.album_slug) (garaBySlug[ph.album_slug] ||= []).push(gid);
+      }
+      for (const item of queue) {
+        if (item.status === 'pending' && item.album_slug && garaBySlug[item.album_slug]) {
+          item.status = 'approved';
+          item.approved_gara_ids = garaBySlug[item.album_slug];
+          item.approved_gara_id  = garaBySlug[item.album_slug][0];
+        }
+      }
+    } catch (e) { console.warn('[xpix-sync] riconciliazione foto:', e.message); }
 
     // Mantieni tutti gli approvati/scartati + max 200 pending più recenti
     const nonPending = queue.filter(q => q.status !== 'pending');
