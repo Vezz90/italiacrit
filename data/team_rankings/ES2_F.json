@@ -252,6 +252,30 @@
     "pos": 21
   },
   {
+    "team_id": "VENETO",
+    "team_nome": "VENETO",
+    "punti": 30,
+    "vittorie": 1,
+    "p1": 1,
+    "p2": 0,
+    "p3": 0,
+    "pout": 0,
+    "n_atleti": 1,
+    "pos": 22
+  },
+  {
+    "team_id": "TOSCANA",
+    "team_nome": "TOSCANA",
+    "punti": 24,
+    "vittorie": 0,
+    "p1": 0,
+    "p2": 1,
+    "p3": 0,
+    "pout": 0,
+    "n_atleti": 1,
+    "pos": 23
+  },
+  {
     "team_id": "G_S_LUPI_VALLE_D_AOSTA",
     "team_nome": "G.S. LUPI VALLE D'AOSTA",
     "punti": 24,
@@ -261,7 +285,31 @@
     "p3": 0,
     "pout": 5,
     "n_atleti": 1,
-    "pos": 22
+    "pos": 24
+  },
+  {
+    "team_id": "VALLE_D_AOSTA",
+    "team_nome": "VALLE D'AOSTA",
+    "punti": 20,
+    "vittorie": 0,
+    "p1": 0,
+    "p2": 0,
+    "p3": 1,
+    "pout": 0,
+    "n_atleti": 1,
+    "pos": 25
+  },
+  {
+    "team_id": "TRENTO",
+    "team_nome": "TRENTO",
+    "punti": 20,
+    "vittorie": 0,
+    "p1": 0,
+    "p2": 0,
+    "p3": 0,
+    "pout": 2,
+    "n_atleti": 2,
+    "pos": 26
   },
   {
     "team_id": "ASD_TEAM_PETRUCCI",
@@ -273,7 +321,19 @@
     "p3": 0,
     "pout": 5,
     "n_atleti": 2,
-    "pos": 23
+    "pos": 27
+  },
+  {
+    "team_id": "LOMBARDIA",
+    "team_nome": "LOMBARDIA",
+    "punti": 16,
+    "vittorie": 0,
+    "p1": 0,
+    "p2": 0,
+    "p3": 0,
+    "pout": 1,
+    "n_atleti": 1,
+    "pos": 28
   },
   {
     "team_id": "ASS_NE_CICLISTICA_DILETT_VALVASONE",
@@ -285,7 +345,7 @@
     "p3": 0,
     "pout": 3,
     "n_atleti": 2,
-    "pos": 24
+    "pos": 29
   },
   {
     "team_id": "BICIFESTIVAL",
@@ -297,7 +357,7 @@
     "p3": 0,
     "pout": 4,
     "n_atleti": 3,
-    "pos": 25
+    "pos": 30
   },
   {
     "team_id": "CARISMA_TEAM",
@@ -309,7 +369,19 @@
     "p3": 0,
     "pout": 0,
     "n_atleti": 1,
-    "pos": 26
+    "pos": 31
+  },
+  {
+    "team_id": "UMBRIA",
+    "team_nome": "UMBRIA",
+    "punti": 10,
+    "vittorie": 0,
+    "p1": 0,
+    "p2": 0,
+    "p3": 0,
+    "pout": 1,
+    "n_atleti": 1,
+    "pos": 32
   },
   {
     "team_id": "GS_CAPANNORI",
@@ -321,7 +393,7 @@
     "p3": 0,
     "pout": 4,
     "n_atleti": 2,
-    "pos": 27
+    "pos": 33
   },
   {
     "team_id": "UNIONE_CICLISTICA_OSSANESGA",
@@ -333,7 +405,7 @@
     "p3": 0,
     "pout": 3,
     "n_atleti": 1,
-    "pos": 28
+    "pos": 34
   },
   {
     "team_id": "COMAL_TRENTINO_CYCLING_ACADEMY",
@@ -345,7 +417,31 @@
     "p3": 0,
     "pout": 2,
     "n_atleti": 1,
-    "pos": 29
+    "pos": 35
+  },
+  {
+    "team_id": "PIEMONTE",
+    "team_nome": "PIEMONTE",
+    "punti": 6,
+    "vittorie": 0,
+    "p1": 0,
+    "p2": 0,
+    "p3": 0,
+    "pout": 1,
+    "n_atleti": 1,
+    "pos": 36
+  },
+  {
+    "team_id": "CAMPANIA",
+    "team_nome": "CAMPANIA",
+    "punti": 4,
+    "vittorie": 0,
+    "p1": 0,
+    "p2": 0,
+    "p3": 0,
+    "pout": 1,
+    "n_atleti": 1,
+    "pos": 37
   },
   {
     "team_id": "U_S_SCUOLA_CICLISMO_VO",
@@ -357,7 +453,19 @@
     "p3": 0,
     "pout": 1,
     "n_atleti": 1,
-    "pos": 30
+    "pos": 38
+  },
+  {
+    "team_id": "MARCHE",
+    "team_nome": "MARCHE",
+    "punti": 2,
+    "vittorie": 0,
+    "p1": 0,
+    "p2": 0,
+    "p3": 0,
+    "pout": 1,
+    "n_atleti": 1,
+    "pos": 39
   },
   {
     "team_id": "BIKERS_PETOSINO_SCUOLA_MTB",
@@ -369,7 +477,7 @@
     "p3": 0,
     "pout": 1,
     "n_atleti": 1,
-    "pos": 31
+    "pos": 40
   },
   {
     "team_id": "G_S_CICLI_FIORIN_CYCLING_TEAM_ASD",
@@ -381,7 +489,7 @@
     "p3": 0,
     "pout": 1,
     "n_atleti": 1,
-    "pos": 32
+    "pos": 41
   },
   {
     "team_id": "SAMABIKE",
@@ -393,6 +501,6 @@
     "p3": 0,
     "pout": 1,
     "n_atleti": 1,
-    "pos": 33
+    "pos": 42
   }
 ]

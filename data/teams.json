@@ -30,11 +30,12 @@
   "TOSCANA": {
     "id": "TOSCANA",
     "nome": "TOSCANA",
-    "punti_totali": 72,
+    "punti_totali": 96,
     "atleti": [
       "MANNELLI_MATILDE",
       "GIUSTI_NORA",
       "GORGA_GRETA",
+      "CECCARELLI_ILARY",
       "CIANTI_NICCOLO",
       "GAGGIOLI_LUCIANO_WILLIAM",
       "AGNINI_EDOARDO"
@@ -86,6 +87,21 @@
         "media": "35.449"
       },
       {
+        "gara_id": "CAMPIONATO_ITALIANO_STRADA_DONNE_ESORDIENTI_SECONDO_ANNO_2026-07-04_ES2_F",
+        "nome_gara": "CAMPIONATO ITALIANO STRADA DONNE ESORDIENTI SECONDO ANNO",
+        "data": "2026-07-04",
+        "atleta_id": "CECCARELLI_ILARY",
+        "atleta_cognome": "CECCARELLI",
+        "atleta_nome": "ILARY",
+        "posizione": 2,
+        "punti_effettivi": 24,
+        "moltiplicatore": 2,
+        "tipo": "nazionale",
+        "regione": "BOLZANO",
+        "km": "53.200",
+        "media": "34.552"
+      },
+      {
         "gara_id": "CAMPIONATO_ITALIANO_STRADA_JUNIORES_2026-06-21_JUN_M",
         "nome_gara": "CAMPIONATO ITALIANO STRADA JUNIORES",
         "data": "2026-06-21",
@@ -133,19 +149,21 @@
     ],
     "punti_per_cat": {
       "ES1_F": 46,
+      "ES2_F": 24,
       "JUN_M": 26
     }
   },
   "LOMBARDIA": {
     "id": "LOMBARDIA",
     "nome": "LOMBARDIA",
-    "punti_totali": 78,
+    "punti_totali": 94,
     "atleti": [
       "BICELLI_EMMA",
       "NARDELLI_GIORGIA",
       "LOMBARDI_ELEONORA",
       "CAMPOLI_AURORA",
       "SFORZINI_SELENE",
+      "ZUCCOTTI_EMMA",
       "GAMBA_CHRISTIAN",
       "FRANCESCHINI_GIULIO",
       "COLELLA_FILIPPO",
@@ -227,6 +245,21 @@
         "regione": "BOLZANO",
         "km": "35.400",
         "media": "35.449"
+      },
+      {
+        "gara_id": "CAMPIONATO_ITALIANO_STRADA_DONNE_ESORDIENTI_SECONDO_ANNO_2026-07-04_ES2_F",
+        "nome_gara": "CAMPIONATO ITALIANO STRADA DONNE ESORDIENTI SECONDO ANNO",
+        "data": "2026-07-04",
+        "atleta_id": "ZUCCOTTI_EMMA",
+        "atleta_cognome": "ZUCCOTTI",
+        "atleta_nome": "EMMA",
+        "posizione": 4,
+        "punti_effettivi": 16,
+        "moltiplicatore": 2,
+        "tipo": "nazionale",
+        "regione": "BOLZANO",
+        "km": "53.200",
+        "media": "34.552"
       },
       {
         "gara_id": "CAMPIONATO_ITALIANO_STRADA_JUNIORES_2026-06-21_JUN_M",
@@ -321,15 +354,17 @@
     ],
     "punti_per_cat": {
       "ES1_F": 44,
+      "ES2_F": 16,
       "JUN_M": 34
     }
   },
   "VENETO": {
     "id": "VENETO",
     "nome": "VENETO",
-    "punti_totali": 165,
+    "punti_totali": 195,
     "atleti": [
       "BASSO_GAIA",
+      "CASAROTTI_CARLOTTA",
       "ROSSO_RICCARDO",
       "VIERO_GUIDO",
       "DALLA_BONA_THOMAS",
@@ -351,6 +386,21 @@
         "regione": "BOLZANO",
         "km": "35.400",
         "media": "35.449"
+      },
+      {
+        "gara_id": "CAMPIONATO_ITALIANO_STRADA_DONNE_ESORDIENTI_SECONDO_ANNO_2026-07-04_ES2_F",
+        "nome_gara": "CAMPIONATO ITALIANO STRADA DONNE ESORDIENTI SECONDO ANNO",
+        "data": "2026-07-04",
+        "atleta_id": "CASAROTTI_CARLOTTA",
+        "atleta_cognome": "CASAROTTI",
+        "atleta_nome": "CARLOTTA",
+        "posizione": 1,
+        "punti_effettivi": 30,
+        "moltiplicatore": 2,
+        "tipo": "nazionale",
+        "regione": "BOLZANO",
+        "km": "53.200",
+        "media": "34.552"
       },
       {
         "gara_id": "CAMPIONATO_ITALIANO_STRADA_JUNIORES_2026-06-21_JUN_M",
@@ -490,7 +540,239 @@
     ],
     "punti_per_cat": {
       "ES1_F": 12,
+      "ES2_F": 30,
       "JUN_M": 153
+    }
+  },
+  "VALLE_D_AOSTA": {
+    "id": "VALLE_D_AOSTA",
+    "nome": "VALLE D'AOSTA",
+    "punti_totali": 20,
+    "atleti": [
+      "RENZULLI_GIULIA"
+    ],
+    "risultati": [
+      {
+        "gara_id": "CAMPIONATO_ITALIANO_STRADA_DONNE_ESORDIENTI_SECONDO_ANNO_2026-07-04_ES2_F",
+        "nome_gara": "CAMPIONATO ITALIANO STRADA DONNE ESORDIENTI SECONDO ANNO",
+        "data": "2026-07-04",
+        "atleta_id": "RENZULLI_GIULIA",
+        "atleta_cognome": "RENZULLI",
+        "atleta_nome": "GIULIA",
+        "posizione": 3,
+        "punti_effettivi": 20,
+        "moltiplicatore": 2,
+        "tipo": "nazionale",
+        "regione": "BOLZANO",
+        "km": "53.200",
+        "media": "34.552"
+      }
+    ],
+    "punti_per_cat": {
+      "ES2_F": 20
+    }
+  },
+  "TRENTO": {
+    "id": "TRENTO",
+    "nome": "TRENTO",
+    "punti_totali": 20,
+    "atleti": [
+      "DONANZAN_MARGHERITA",
+      "PELLEGRINI_GIULIA"
+    ],
+    "risultati": [
+      {
+        "gara_id": "CAMPIONATO_ITALIANO_STRADA_DONNE_ESORDIENTI_SECONDO_ANNO_2026-07-04_ES2_F",
+        "nome_gara": "CAMPIONATO ITALIANO STRADA DONNE ESORDIENTI SECONDO ANNO",
+        "data": "2026-07-04",
+        "atleta_id": "DONANZAN_MARGHERITA",
+        "atleta_cognome": "DONANZAN",
+        "atleta_nome": "MARGHERITA",
+        "posizione": 5,
+        "punti_effettivi": 12,
+        "moltiplicatore": 2,
+        "tipo": "nazionale",
+        "regione": "BOLZANO",
+        "km": "53.200",
+        "media": "34.552"
+      },
+      {
+        "gara_id": "CAMPIONATO_ITALIANO_STRADA_DONNE_ESORDIENTI_SECONDO_ANNO_2026-07-04_ES2_F",
+        "nome_gara": "CAMPIONATO ITALIANO STRADA DONNE ESORDIENTI SECONDO ANNO",
+        "data": "2026-07-04",
+        "atleta_id": "PELLEGRINI_GIULIA",
+        "atleta_cognome": "PELLEGRINI",
+        "atleta_nome": "GIULIA",
+        "posizione": 7,
+        "punti_effettivi": 8,
+        "moltiplicatore": 2,
+        "tipo": "nazionale",
+        "regione": "BOLZANO",
+        "km": "53.200",
+        "media": "34.552"
+      }
+    ],
+    "punti_per_cat": {
+      "ES2_F": 20
+    }
+  },
+  "UMBRIA": {
+    "id": "UMBRIA",
+    "nome": "UMBRIA",
+    "punti_totali": 10,
+    "atleti": [
+      "LUNA_ALESSANDRA"
+    ],
+    "risultati": [
+      {
+        "gara_id": "CAMPIONATO_ITALIANO_STRADA_DONNE_ESORDIENTI_SECONDO_ANNO_2026-07-04_ES2_F",
+        "nome_gara": "CAMPIONATO ITALIANO STRADA DONNE ESORDIENTI SECONDO ANNO",
+        "data": "2026-07-04",
+        "atleta_id": "LUNA_ALESSANDRA",
+        "atleta_cognome": "LUNA",
+        "atleta_nome": "ALESSANDRA",
+        "posizione": 6,
+        "punti_effettivi": 10,
+        "moltiplicatore": 2,
+        "tipo": "nazionale",
+        "regione": "BOLZANO",
+        "km": "53.200",
+        "media": "34.552"
+      }
+    ],
+    "punti_per_cat": {
+      "ES2_F": 10
+    }
+  },
+  "PIEMONTE": {
+    "id": "PIEMONTE",
+    "nome": "PIEMONTE",
+    "punti_totali": 28,
+    "atleti": [
+      "LONGO_BORGHINI_MARTA_ELIZABETH",
+      "SOLAVAGGIONE_PIETRO"
+    ],
+    "risultati": [
+      {
+        "gara_id": "CAMPIONATO_ITALIANO_STRADA_DONNE_ESORDIENTI_SECONDO_ANNO_2026-07-04_ES2_F",
+        "nome_gara": "CAMPIONATO ITALIANO STRADA DONNE ESORDIENTI SECONDO ANNO",
+        "data": "2026-07-04",
+        "atleta_id": "LONGO_BORGHINI_MARTA_ELIZABETH",
+        "atleta_cognome": "LONGO",
+        "atleta_nome": "BORGHINI MARTA ELIZABETH",
+        "posizione": 8,
+        "punti_effettivi": 6,
+        "moltiplicatore": 2,
+        "tipo": "nazionale",
+        "regione": "BOLZANO",
+        "km": "53.200",
+        "media": "34.552"
+      },
+      {
+        "gara_id": "CAMPIONATO_ITALIANO_STRADA_JUNIORES_2026-06-21_JUN_M",
+        "nome_gara": "CAMPIONATO ITALIANO STRADA JUNIORES",
+        "data": "2026-06-21",
+        "atleta_id": "SOLAVAGGIONE_PIETRO",
+        "atleta_cognome": "SOLAVAGGIONE",
+        "atleta_nome": "PIETRO",
+        "posizione": 8,
+        "punti_effettivi": 6,
+        "moltiplicatore": 2,
+        "tipo": "nazionale",
+        "regione": "LAZIO",
+        "km": "128.600",
+        "media": ""
+      },
+      {
+        "gara_id": "CORSA_DELLA_PACE_JUNIORES_TERZA_TAPPA_2026-05-09_JUN_M",
+        "nome_gara": "CORSA DELLA PACE JUNIORES TERZA TAPPA",
+        "data": "2026-05-09",
+        "atleta_id": "SOLAVAGGIONE_PIETRO",
+        "atleta_cognome": "SOLAVAGGIONE",
+        "atleta_nome": "PIETRO",
+        "posizione": 5,
+        "punti_effettivi": 12,
+        "moltiplicatore": 2,
+        "tipo": "nazionale",
+        "regione": "TEPLICE",
+        "km": "112.100",
+        "media": "45.791"
+      },
+      {
+        "gara_id": "CORSA_DELLA_PACE_JUNIORES_SECONDA_TAPPA_SECONDA_SEMITAPPA_2026-05-08_JUN_M",
+        "nome_gara": "CORSA DELLA PACE JUNIORES SECONDA TAPPA SECONDA SEMITAPPA",
+        "data": "2026-05-08",
+        "atleta_id": "SOLAVAGGIONE_PIETRO",
+        "atleta_cognome": "SOLAVAGGIONE",
+        "atleta_nome": "PIETRO",
+        "posizione": 9,
+        "punti_effettivi": 4,
+        "moltiplicatore": 2,
+        "tipo": "nazionale",
+        "regione": "SJLNJENI ZAVOD",
+        "km": "63.800",
+        "media": "48.353"
+      }
+    ],
+    "punti_per_cat": {
+      "ES2_F": 6,
+      "JUN_M": 22
+    }
+  },
+  "CAMPANIA": {
+    "id": "CAMPANIA",
+    "nome": "CAMPANIA",
+    "punti_totali": 4,
+    "atleti": [
+      "SFERRAGATTA_EMANUELA"
+    ],
+    "risultati": [
+      {
+        "gara_id": "CAMPIONATO_ITALIANO_STRADA_DONNE_ESORDIENTI_SECONDO_ANNO_2026-07-04_ES2_F",
+        "nome_gara": "CAMPIONATO ITALIANO STRADA DONNE ESORDIENTI SECONDO ANNO",
+        "data": "2026-07-04",
+        "atleta_id": "SFERRAGATTA_EMANUELA",
+        "atleta_cognome": "SFERRAGATTA",
+        "atleta_nome": "EMANUELA",
+        "posizione": 9,
+        "punti_effettivi": 4,
+        "moltiplicatore": 2,
+        "tipo": "nazionale",
+        "regione": "BOLZANO",
+        "km": "53.200",
+        "media": "34.552"
+      }
+    ],
+    "punti_per_cat": {
+      "ES2_F": 4
+    }
+  },
+  "MARCHE": {
+    "id": "MARCHE",
+    "nome": "MARCHE",
+    "punti_totali": 2,
+    "atleti": [
+      "DAZZANI_MYA"
+    ],
+    "risultati": [
+      {
+        "gara_id": "CAMPIONATO_ITALIANO_STRADA_DONNE_ESORDIENTI_SECONDO_ANNO_2026-07-04_ES2_F",
+        "nome_gara": "CAMPIONATO ITALIANO STRADA DONNE ESORDIENTI SECONDO ANNO",
+        "data": "2026-07-04",
+        "atleta_id": "DAZZANI_MYA",
+        "atleta_cognome": "DAZZANI",
+        "atleta_nome": "MYA",
+        "posizione": 10,
+        "punti_effettivi": 2,
+        "moltiplicatore": 2,
+        "tipo": "nazionale",
+        "regione": "BOLZANO",
+        "km": "53.200",
+        "media": "34.552"
+      }
+    ],
+    "punti_per_cat": {
+      "ES2_F": 2
     }
   },
   "BARDIANI_CSF_7_SABER": {
@@ -106460,64 +106742,6 @@
     ],
     "punti_per_cat": {
       "JUN_M": 20
-    }
-  },
-  "PIEMONTE": {
-    "id": "PIEMONTE",
-    "nome": "PIEMONTE",
-    "punti_totali": 22,
-    "atleti": [
-      "SOLAVAGGIONE_PIETRO"
-    ],
-    "risultati": [
-      {
-        "gara_id": "CAMPIONATO_ITALIANO_STRADA_JUNIORES_2026-06-21_JUN_M",
-        "nome_gara": "CAMPIONATO ITALIANO STRADA JUNIORES",
-        "data": "2026-06-21",
-        "atleta_id": "SOLAVAGGIONE_PIETRO",
-        "atleta_cognome": "SOLAVAGGIONE",
-        "atleta_nome": "PIETRO",
-        "posizione": 8,
-        "punti_effettivi": 6,
-        "moltiplicatore": 2,
-        "tipo": "nazionale",
-        "regione": "LAZIO",
-        "km": "128.600",
-        "media": ""
-      },
-      {
-        "gara_id": "CORSA_DELLA_PACE_JUNIORES_TERZA_TAPPA_2026-05-09_JUN_M",
-        "nome_gara": "CORSA DELLA PACE JUNIORES TERZA TAPPA",
-        "data": "2026-05-09",
-        "atleta_id": "SOLAVAGGIONE_PIETRO",
-        "atleta_cognome": "SOLAVAGGIONE",
-        "atleta_nome": "PIETRO",
-        "posizione": 5,
-        "punti_effettivi": 12,
-        "moltiplicatore": 2,
-        "tipo": "nazionale",
-        "regione": "TEPLICE",
-        "km": "112.100",
-        "media": "45.791"
-      },
-      {
-        "gara_id": "CORSA_DELLA_PACE_JUNIORES_SECONDA_TAPPA_SECONDA_SEMITAPPA_2026-05-08_JUN_M",
-        "nome_gara": "CORSA DELLA PACE JUNIORES SECONDA TAPPA SECONDA SEMITAPPA",
-        "data": "2026-05-08",
-        "atleta_id": "SOLAVAGGIONE_PIETRO",
-        "atleta_cognome": "SOLAVAGGIONE",
-        "atleta_nome": "PIETRO",
-        "posizione": 9,
-        "punti_effettivi": 4,
-        "moltiplicatore": 2,
-        "tipo": "nazionale",
-        "regione": "SJLNJENI ZAVOD",
-        "km": "63.800",
-        "media": "48.353"
-      }
-    ],
-    "punti_per_cat": {
-      "JUN_M": 22
     }
   },
   "VELEKA_TEAM": {
