@@ -14541,21 +14541,35 @@ async function renderGara(gara_id) {
         </div>`
       : (!featuredPhoto ? `<p style="color:var(--text-muted);font-size:0.875rem;margin:8px 0 0">Nessuna foto ancora. Sii il primo a condividerne una!</p>` : '');
 
-    // Album esterno (xpix / ciclismo.info): mostralo SEMPRE.
-    // - se NON c'è una foto caricata → diventa l'hero + gallery
-    // - se c'è già una foto caricata  → l'album viene aggiunto SOTTO, così non
-    //   resta nascosto solo perché esiste una foto manuale.
+    // Album esterno (xpix / ciclismo.info): mostrali SEMPRE, ANCHE ENTRAMBI
+    // se è una gara Esordienti con album diversi per 1° e 2° anno (prima si
+    // mostrava solo il primo trovato e l'altra annata spariva).
+    // - se NON c'è una foto caricata → il primo album diventa l'hero, gli altri sotto
+    // - se c'è già una foto caricata  → tutti gli album esterni vanno SOTTO, così non
+    //   restano nascosti solo perché esiste una foto manuale.
     {
       await loadRisPhotos();
       const _pm = _risExtPhotosMap || {}; // SOLO album esterni (xpix/IC)
-      const _esBase  = primaryGaraId.replace(/_ES[12]_([MF])$/, '');
-      const _es2Id   = primaryGaraId.replace(/_ES1_([MF])$/, '_ES2_$1');
-      const _extPhoto = _pm[primaryGaraId]
-                     || _pm[gara_id]
-                     || _pm[_es2Id]
-                     || _pm[_esBase + '_ES1_M'] || _pm[_esBase + '_ES1_F']
-                     || _pm[_esBase + '_ES2_M'] || _pm[_esBase + '_ES2_F'];
-      if (_extPhoto?.url) {
+      const _esBase = primaryGaraId.replace(/_ES[12]_([MF])$/, '');
+      const _extKeyGroups = isEsordienti
+        ? [
+            { key: es1GaraId, alt: [`${_esBase}_ES1_M`, `${_esBase}_ES1_F`], badge: 'Esordienti 1° Anno' },
+            { key: es2GaraId, alt: [`${_esBase}_ES2_M`, `${_esBase}_ES2_F`], badge: 'Esordienti 2° Anno' },
+          ]
+        : [{ key: primaryGaraId, alt: [gara_id], badge: null }];
+      // Raccoglie TUTTI gli album distinti (deduplicati per URL principale),
+      // non solo il primo trovato, così nessuna annata perde le sue foto.
+      const _seenExtUrls = new Set();
+      const _extEntries = [];
+      for (const g of _extKeyGroups) {
+        const entry = _pm[g.key] || g.alt.map(k => _pm[k]).find(Boolean);
+        if (entry?.url && !_seenExtUrls.has(entry.url)) {
+          _seenExtUrls.add(entry.url);
+          _extEntries.push({ entry, badge: g.badge });
+        }
+      }
+
+      _extEntries.forEach(({ entry: _extPhoto, badge: _yearBadge }, _extIdx) => {
         const _src = esc(icProxy(_extPhoto.url));
         const _isXpix = (_extPhoto.album_slug || _extPhoto.source === 'xpix');
         const _srcLabel = _isXpix ? 'xpix.it' : 'ciclismo.info';
@@ -14563,6 +14577,7 @@ async function renderGara(gara_id) {
         const _xpixKey = _extPhoto.gara_id || primaryGaraId;
         const _isEs = /_ES[12]_[MF]$/.test(_xpixKey);
         const _isAdminPhoto = authUser()?.role === 'admin';
+        const _yearTag = _yearBadge ? ` <span style="background:rgba(99,102,241,.92);color:#fff;font-size:.62rem;font-weight:700;padding:1px 6px;border-radius:3px;margin-left:4px">${esc(_yearBadge)}</span>` : '';
         // Tutte le foto dell'album (inclusa la principale)
         const _allPics = (_extPhoto.photos && _extPhoto.photos.length) ? _extPhoto.photos : [_extPhoto.url];
         const _albumGridHtml = `
@@ -14577,8 +14592,8 @@ async function renderGara(gara_id) {
           ${_extPhoto.album_page ? `<div style="margin-top:8px;font-size:.8rem">
             <a href="${esc(_extPhoto.album_page)}" target="_blank" rel="noopener" style="color:var(--accent)">📷 Apri album completo su ${_srcLabel} (${_allPics.length} foto) ↗</a></div>` : ''}`;
 
-        if (!featuredPhoto) {
-          // Nessuna foto caricata → album come hero + gallery
+        if (!featuredPhoto && _extIdx === 0) {
+          // Nessuna foto caricata → il primo album diventa hero + gallery
           const _removeBtn = _isAdminPhoto
             ? `<div style="position:absolute;top:6px;right:6px;display:flex;flex-direction:column;gap:3px;z-index:3" onclick="event.stopPropagation()">
                  ${_isEs ? `<button onclick="window.adminPhotoExtendBoth('${esc(_photoSource)}','${esc(_xpixKey)}')" style="background:rgba(22,163,74,.9);color:#fff;border:none;padding:3px 8px;border-radius:4px;font-size:.7rem;cursor:pointer;white-space:nowrap">🏅 Anche altro anno</button>` : ''}
@@ -14588,24 +14603,24 @@ async function renderGara(gara_id) {
           _heroPhotoEl = `<div class="gara-media-half gara-media-photo" onclick="window.openPhotoLightbox('${_src}',{ext:{source:'${esc(_photoSource)}',garaId:'${esc(_xpixKey)}',url:'${esc(_extPhoto.url.replace(/'/g,"\\'"))}',albumPage:'${esc((_extPhoto.album_page||'').replace(/'/g,"\\'"))}',srcLabel:'${esc(_srcLabel)}',current:'${esc(((_extPhoto.tags||{})[_extPhoto.url]||''))}'}})" style="cursor:zoom-in;position:relative">
              <img id="gara-hero-img" src="${_src}" alt="Foto gara" loading="lazy"/>
              <div class="gara-photo-hint">🔍 Clicca per la foto intera</div>
-             <div style="position:absolute;bottom:6px;left:8px;font-size:0.65rem;color:rgba(255,255,255,.7);background:rgba(0,0,0,.45);padding:2px 6px;border-radius:3px">📷 ${_srcLabel}</div>
+             <div style="position:absolute;bottom:6px;left:8px;font-size:0.65rem;color:rgba(255,255,255,.7);background:rgba(0,0,0,.45);padding:2px 6px;border-radius:3px">📷 ${_srcLabel}${_yearTag}</div>
              ${_removeBtn}
            </div>`;
           _gallery = (_allPics.length > 1) ? _albumGridHtml
                    : (_extPhoto.album_page ? `<div style="margin-top:8px;font-size:.8rem"><a href="${esc(_extPhoto.album_page)}" target="_blank" rel="noopener" style="color:var(--accent)">📷 Apri album completo su ${_srcLabel} ↗</a></div>` : '');
         } else {
-          // C'è già una foto caricata → aggiungi l'album esterno SOTTO la gallery
+          // C'è già una foto caricata, oppure è un secondo album (altra annata) → sotto la gallery
           const _albumAdminBtns = _isAdminPhoto
             ? ` <button onclick="window.adminPhotoMove('${esc(_photoSource)}','${esc(_xpixKey)}')" style="background:rgba(37,99,235,.9);color:#fff;border:none;padding:2px 8px;border-radius:4px;font-size:.66rem;cursor:pointer;margin-left:6px">🔀 Sposta</button>`
               + ` <button onclick="window.adminPhotoRemove('${esc(_photoSource)}','${esc(_xpixKey)}')" style="background:rgba(220,38,38,.9);color:#fff;border:none;padding:2px 8px;border-radius:4px;font-size:.66rem;cursor:pointer">🗑 Rimuovi album</button>`
             : '';
           _gallery = (_gallery || '') + `
             <div style="margin-top:16px">
-              <div class="comp-section-title" style="font-size:.85rem;border:none;padding:0">📷 Album ${_srcLabel} (${_allPics.length} foto)${_albumAdminBtns}</div>
+              <div class="comp-section-title" style="font-size:.85rem;border:none;padding:0">📷 Album ${_srcLabel}${_yearTag} (${_allPics.length} foto)${_albumAdminBtns}</div>
               ${_albumGridHtml}
             </div>`;
         }
-      }
+      });
     }
   } catch(e) { console.error('renderGara photos:', e); }
 
