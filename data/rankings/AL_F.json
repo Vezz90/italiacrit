@@ -29,7 +29,7 @@
     "p3": 3,
     "pout": 5,
     "pos": 2,
-    "trend": 1
+    "trend": 0
   },
   {
     "atleta_id": "MARININI_NINA",
@@ -45,7 +45,7 @@
     "p3": 1,
     "pout": 7,
     "pos": 3,
-    "trend": -1
+    "trend": 0
   },
   {
     "atleta_id": "BRACCO_NICOLE",
@@ -93,7 +93,7 @@
     "p3": 2,
     "pout": 6,
     "pos": 6,
-    "trend": 1
+    "trend": 0
   },
   {
     "atleta_id": "TIMIS_GIORGIA_VALENTINA",
@@ -109,7 +109,7 @@
     "p3": 3,
     "pout": 5,
     "pos": 7,
-    "trend": -1
+    "trend": 0
   },
   {
     "atleta_id": "SAMBI_GINEVRA",
@@ -141,7 +141,7 @@
     "p3": 1,
     "pout": 6,
     "pos": 9,
-    "trend": 2
+    "trend": 0
   },
   {
     "atleta_id": "SANSOTTERA_PAIUSCO_ELISA",
@@ -157,7 +157,7 @@
     "p3": 1,
     "pout": 11,
     "pos": 10,
-    "trend": -1
+    "trend": 0
   },
   {
     "atleta_id": "MASINI_GRETA",
@@ -173,7 +173,7 @@
     "p3": 1,
     "pout": 7,
     "pos": 11,
-    "trend": -1
+    "trend": 0
   },
   {
     "atleta_id": "PASET_RACHELE",
@@ -285,7 +285,7 @@
     "p3": 0,
     "pout": 7,
     "pos": 18,
-    "trend": 11
+    "trend": 0
   },
   {
     "atleta_id": "ESPOSTO_GIOVANELLI_LETIZIA",
@@ -301,7 +301,7 @@
     "p3": 1,
     "pout": 6,
     "pos": 19,
-    "trend": -1
+    "trend": 0
   },
   {
     "atleta_id": "DE_GREGORIO_ELISA",
@@ -317,7 +317,7 @@
     "p3": 0,
     "pout": 0,
     "pos": 20,
-    "trend": -1
+    "trend": 0
   },
   {
     "atleta_id": "DEOTTO_EMMA",
@@ -333,7 +333,7 @@
     "p3": 0,
     "pout": 6,
     "pos": 21,
-    "trend": -1
+    "trend": 0
   },
   {
     "atleta_id": "TRALDI_ELISA",
@@ -349,7 +349,7 @@
     "p3": 1,
     "pout": 3,
     "pos": 22,
-    "trend": -1
+    "trend": 0
   },
   {
     "atleta_id": "GRASSI_MARTA",
@@ -365,7 +365,7 @@
     "p3": 0,
     "pout": 1,
     "pos": 23,
-    "trend": -1
+    "trend": 0
   },
   {
     "atleta_id": "MIGLIORANZA_ELENA",
@@ -381,7 +381,7 @@
     "p3": 1,
     "pout": 3,
     "pos": 24,
-    "trend": 6
+    "trend": 0
   },
   {
     "atleta_id": "PELLEGRINO_SASHA",
@@ -397,7 +397,7 @@
     "p3": 1,
     "pout": 2,
     "pos": 25,
-    "trend": -2
+    "trend": 0
   },
   {
     "atleta_id": "PANCHERI_IRENE",
@@ -413,7 +413,7 @@
     "p3": 0,
     "pout": 4,
     "pos": 26,
-    "trend": -2
+    "trend": 0
   },
   {
     "atleta_id": "LACAVA_MARTINA",
@@ -429,7 +429,7 @@
     "p3": 0,
     "pout": 0,
     "pos": 27,
-    "trend": -2
+    "trend": 0
   },
   {
     "atleta_id": "RICCIARDI_ELISABETTA",
@@ -445,7 +445,7 @@
     "p3": 1,
     "pout": 6,
     "pos": 28,
-    "trend": -2
+    "trend": 0
   },
   {
     "atleta_id": "BERTOLUCCI_SVEVA",
@@ -461,7 +461,7 @@
     "p3": 0,
     "pout": 2,
     "pos": 29,
-    "trend": -2
+    "trend": 0
   },
   {
     "atleta_id": "RANGEL_MATA_SOFIA",
@@ -477,7 +477,7 @@
     "p3": 2,
     "pout": 2,
     "pos": 30,
-    "trend": -2
+    "trend": 0
   },
   {
     "atleta_id": "TASCA_NICOLE",
@@ -669,7 +669,7 @@
     "p3": 0,
     "pout": 8,
     "pos": 42,
-    "trend": 7
+    "trend": 0
   },
   {
     "atleta_id": "COLOMBO_AURORA",
@@ -685,7 +685,7 @@
     "p3": 0,
     "pout": 2,
     "pos": 43,
-    "trend": -1
+    "trend": 0
   },
   {
     "atleta_id": "BANI_GIULIA",
@@ -701,7 +701,7 @@
     "p3": 0,
     "pout": 5,
     "pos": 44,
-    "trend": -1
+    "trend": 0
   },
   {
     "atleta_id": "MICCHI_SOFIA",
@@ -717,7 +717,7 @@
     "p3": 0,
     "pout": 6,
     "pos": 45,
-    "trend": -1
+    "trend": 0
   },
   {
     "atleta_id": "VENTOLA_REBECCA",
@@ -733,7 +733,7 @@
     "p3": 0,
     "pout": 3,
     "pos": 46,
-    "trend": -1
+    "trend": 0
   },
   {
     "atleta_id": "BACCHIN_VANESSA",
@@ -749,7 +749,7 @@
     "p3": 0,
     "pout": 5,
     "pos": 47,
-    "trend": -1
+    "trend": 0
   },
   {
     "atleta_id": "ROSSI_VITTORIA_TEONILLA",
@@ -765,7 +765,7 @@
     "p3": 0,
     "pout": 2,
     "pos": 48,
-    "trend": -1
+    "trend": 0
   },
   {
     "atleta_id": "SALBEGO_ARIANNA",
@@ -781,7 +781,7 @@
     "p3": 0,
     "pout": 1,
     "pos": 49,
-    "trend": -1
+    "trend": 0
   },
   {
     "atleta_id": "ROSSI_LIVIA",
