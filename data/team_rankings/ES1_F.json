@@ -168,6 +168,30 @@
     "pos": 14
   },
   {
+    "team_id": "TOSCANA",
+    "team_nome": "TOSCANA",
+    "punti": 46,
+    "vittorie": 0,
+    "p1": 0,
+    "p2": 1,
+    "p3": 0,
+    "pout": 2,
+    "n_atleti": 3,
+    "pos": 15
+  },
+  {
+    "team_id": "LOMBARDIA",
+    "team_nome": "LOMBARDIA",
+    "punti": 44,
+    "vittorie": 0,
+    "p1": 0,
+    "p2": 0,
+    "p3": 1,
+    "pout": 4,
+    "n_atleti": 5,
+    "pos": 16
+  },
+  {
     "team_id": "TEAM_FABIANA_LUPERINI_ASD",
     "team_nome": "TEAM FABIANA LUPERINI ASD",
     "punti": 43,
@@ -177,7 +201,7 @@
     "p3": 1,
     "pout": 6,
     "n_atleti": 2,
-    "pos": 15
+    "pos": 17
   },
   {
     "team_id": "BREGANZE_MILLENIUM",
@@ -189,7 +213,7 @@
     "p3": 1,
     "pout": 5,
     "n_atleti": 3,
-    "pos": 16
+    "pos": 18
   },
   {
     "team_id": "G_C_SOSSANO_1975",
@@ -201,7 +225,19 @@
     "p3": 0,
     "pout": 7,
     "n_atleti": 1,
-    "pos": 17
+    "pos": 19
+  },
+  {
+    "team_id": "EMILIA_ROMAGNA",
+    "team_nome": "EMILIA ROMAGNA",
+    "punti": 30,
+    "vittorie": 1,
+    "p1": 1,
+    "p2": 0,
+    "p3": 0,
+    "pout": 0,
+    "n_atleti": 1,
+    "pos": 20
   },
   {
     "team_id": "SAMABIKE",
@@ -213,7 +249,7 @@
     "p3": 0,
     "pout": 0,
     "n_atleti": 1,
-    "pos": 18
+    "pos": 21
   },
   {
     "team_id": "SALUS_CICLISTICA_SEREGNO_DE_ROSA",
@@ -225,7 +261,7 @@
     "p3": 0,
     "pout": 10,
     "n_atleti": 4,
-    "pos": 19
+    "pos": 22
   },
   {
     "team_id": "KTM_ACADEMY_LE_MARMOTTE",
@@ -237,7 +273,7 @@
     "p3": 1,
     "pout": 1,
     "n_atleti": 1,
-    "pos": 20
+    "pos": 23
   },
   {
     "team_id": "COMAL_TRENTINO_CYCLING_ACADEMY",
@@ -249,7 +285,7 @@
     "p3": 0,
     "pout": 9,
     "n_atleti": 1,
-    "pos": 21
+    "pos": 24
   },
   {
     "team_id": "ASD_EFFETTO_CICLISMO_NOI_SPORT",
@@ -261,7 +297,7 @@
     "p3": 0,
     "pout": 4,
     "n_atleti": 1,
-    "pos": 22
+    "pos": 25
   },
   {
     "team_id": "B_TEAM_CYCLING_PROJECT",
@@ -273,7 +309,7 @@
     "p3": 0,
     "pout": 5,
     "n_atleti": 1,
-    "pos": 23
+    "pos": 26
   },
   {
     "team_id": "A_S_D_AMICISUPERSKI",
@@ -285,7 +321,7 @@
     "p3": 0,
     "pout": 4,
     "n_atleti": 2,
-    "pos": 24
+    "pos": 27
   },
   {
     "team_id": "S_C_PATTADA",
@@ -297,7 +333,7 @@
     "p3": 0,
     "pout": 0,
     "n_atleti": 1,
-    "pos": 25
+    "pos": 28
   },
   {
     "team_id": "ASD_TEAM_FEMMINILE_TRENTINO",
@@ -309,7 +345,7 @@
     "p3": 0,
     "pout": 2,
     "n_atleti": 2,
-    "pos": 26
+    "pos": 29
   },
   {
     "team_id": "U_S_C_S_I_RUBANO",
@@ -321,7 +357,7 @@
     "p3": 0,
     "pout": 3,
     "n_atleti": 1,
-    "pos": 27
+    "pos": 30
   },
   {
     "team_id": "ASS_NE_CICLISTICA_DILETT_VALVASONE",
@@ -333,7 +369,7 @@
     "p3": 0,
     "pout": 4,
     "n_atleti": 2,
-    "pos": 28
+    "pos": 31
   },
   {
     "team_id": "HG_CYCLING_TEAM",
@@ -345,7 +381,19 @@
     "p3": 1,
     "pout": 1,
     "n_atleti": 1,
-    "pos": 29
+    "pos": 32
+  },
+  {
+    "team_id": "VENETO",
+    "team_nome": "VENETO",
+    "punti": 12,
+    "vittorie": 0,
+    "p1": 0,
+    "p2": 0,
+    "p3": 0,
+    "pout": 1,
+    "n_atleti": 1,
+    "pos": 33
   },
   {
     "team_id": "A_S_D_CICLISTICA_G_BONZAGNI",
@@ -357,7 +405,7 @@
     "p3": 0,
     "pout": 3,
     "n_atleti": 1,
-    "pos": 30
+    "pos": 34
   },
   {
     "team_id": "CALDERARA_STM_RIDUTTORI",
@@ -369,7 +417,7 @@
     "p3": 0,
     "pout": 3,
     "n_atleti": 1,
-    "pos": 31
+    "pos": 35
   },
   {
     "team_id": "SCUOLA_DI_CICLISMO_FRANCO_BALLERINI",
@@ -381,7 +429,7 @@
     "p3": 0,
     "pout": 1,
     "n_atleti": 1,
-    "pos": 32
+    "pos": 36
   },
   {
     "team_id": "ASD_GS_SORGENTE_PRADIPOZZO",
@@ -393,6 +441,6 @@
     "p3": 0,
     "pout": 1,
     "n_atleti": 1,
-    "pos": 33
+    "pos": 37
   }
 ]
