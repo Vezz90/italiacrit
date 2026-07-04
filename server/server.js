@@ -1917,6 +1917,62 @@ app.get('/api/data/atleta-team-overrides', async (req, res) => {
   catch (e) { res.status(500).json({ error: e.message }); }
 });
 
+// Righe risultato aggiunte/corrette a mano da un admin (persistono su Postgres,
+// così sopravvivono a redeploy e a nuovi passaggi dello scraper FCI, che
+// sovrascrive results_raw.json ma non tocca questa tabella). Il frontend le
+// unisce a resultsRaw al caricamento di globalData.
+app.get('/api/data/manual-results', async (req, res) => {
+  try { res.json(await queries.getAllManualResults()); }
+  catch (e) { res.status(500).json({ error: e.message }); }
+});
+
+// Stessa tabella punti-base dello scraper FCI (scraper/fci_complete_scraper.py BASE_PTS)
+const _MANUAL_BASE_PTS = { 1: 15, 2: 12, 3: 10, 4: 8, 5: 6, 6: 5, 7: 4, 8: 3, 9: 2, 10: 1 };
+
+app.post('/api/admin/gara/:garaId/manual-result', requireAdmin, async (req, res) => {
+  try {
+    const garaId = req.params.garaId;
+    const { posizione, cognome, nome, team, tempo,
+            nome_gara, data, categoria, genere, tipo, moltiplicatore,
+            campionato_regionale, campionato_italiano, regione } = req.body || {};
+    if (!posizione || !cognome) return res.status(400).json({ error: 'posizione e cognome obbligatori' });
+    const cognomeU = String(cognome).trim().toUpperCase();
+    const nomeU    = String(nome || '').trim().toUpperCase();
+    const teamU    = String(team || '').trim().toUpperCase();
+    const pos      = parseInt(posizione, 10);
+    const mult     = parseInt(moltiplicatore, 10) || 1;
+    const puntiBase = _MANUAL_BASE_PTS[pos] || 0;
+    const row = await queries.upsertManualResult({
+      gara_id: garaId,
+      posizione: pos,
+      cognome: cognomeU,
+      nome: nomeU,
+      atleta_id: _makeAtletaId(cognomeU, nomeU),
+      team: teamU,
+      team_id: teamU ? _makeTeamId(teamU) : '',
+      tempo: tempo || '',
+      nome_gara: nome_gara || '',
+      data: data || '',
+      categoria: categoria || '',
+      genere: genere || '',
+      tipo: tipo || 'regionale',
+      moltiplicatore: mult,
+      campionato_regionale: !!campionato_regionale,
+      campionato_italiano: !!campionato_italiano,
+      regione: regione || '',
+      punti_base: puntiBase,
+      punti_effettivi: puntiBase * mult,
+      edited_by: req.user.id,
+    });
+    res.json({ ok: true, row });
+  } catch (e) { res.status(500).json({ error: e.message }); }
+});
+
+app.delete('/api/admin/manual-result/:id', requireAdmin, async (req, res) => {
+  try { await queries.deleteManualResult(req.params.id); res.json({ ok: true }); }
+  catch (e) { res.status(500).json({ error: e.message }); }
+});
+
 // Roster PCS di un singolo team — fallback on-demand per la pagina team
 app.get('/api/pcs-team/:teamId', async (req, res) => {
   if (!supabase) return res.status(503).json({ error: 'Supabase non disponibile' });

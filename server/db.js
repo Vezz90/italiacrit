@@ -112,6 +112,33 @@ async function createSchema() {
       UNIQUE(risultato_key, field)
     );
 
+    CREATE TABLE IF NOT EXISTS manual_results (
+      id                    SERIAL PRIMARY KEY,
+      gara_id               TEXT NOT NULL,
+      posizione             INTEGER NOT NULL,
+      cognome               TEXT NOT NULL,
+      nome                  TEXT NOT NULL DEFAULT '',
+      atleta_id             TEXT NOT NULL,
+      team                  TEXT DEFAULT '',
+      team_id               TEXT DEFAULT '',
+      tempo                 TEXT DEFAULT '',
+      nome_gara             TEXT DEFAULT '',
+      data                  TEXT DEFAULT '',
+      categoria             TEXT DEFAULT '',
+      genere                TEXT DEFAULT '',
+      tipo                  TEXT DEFAULT '',
+      moltiplicatore        INTEGER DEFAULT 1,
+      campionato_regionale  BOOLEAN DEFAULT false,
+      campionato_italiano   BOOLEAN DEFAULT false,
+      regione               TEXT DEFAULT '',
+      punti_base            INTEGER DEFAULT 0,
+      punti_effettivi       INTEGER DEFAULT 0,
+      edited_by             INTEGER REFERENCES users(id),
+      created_at            TIMESTAMPTZ NOT NULL DEFAULT NOW(),
+      updated_at            TIMESTAMPTZ NOT NULL DEFAULT NOW(),
+      UNIQUE(gara_id, posizione)
+    );
+
     CREATE TABLE IF NOT EXISTS race_photos (
       id           SERIAL PRIMARY KEY,
       gara_id      TEXT NOT NULL,
@@ -473,6 +500,42 @@ const queries = {
 
   getAllRisultatoOverrides: () =>
     all(`SELECT * FROM risultato_overrides ORDER BY created_at DESC`),
+
+  // Manual results — aggiunti/corretti a mano da un admin (prima dello scraper
+  // o per correggere una riga scrapata). UNIQUE(gara_id, posizione): un secondo
+  // upsert sulla stessa posizione la sovrascrive (così "aggiungi" e "correggi"
+  // usano la stessa via).
+  upsertManualResult: ({ gara_id, posizione, cognome, nome, atleta_id, team, team_id, tempo,
+                          nome_gara, data, categoria, genere, tipo, moltiplicatore,
+                          campionato_regionale, campionato_italiano, regione,
+                          punti_base, punti_effettivi, edited_by }) =>
+    one(
+      `INSERT INTO manual_results
+         (gara_id, posizione, cognome, nome, atleta_id, team, team_id, tempo,
+          nome_gara, data, categoria, genere, tipo, moltiplicatore,
+          campionato_regionale, campionato_italiano, regione,
+          punti_base, punti_effettivi, edited_by, updated_at)
+       VALUES ($1,$2,$3,$4,$5,$6,$7,$8,$9,$10,$11,$12,$13,$14,$15,$16,$17,$18,$19,$20,NOW())
+       ON CONFLICT (gara_id, posizione) DO UPDATE SET
+         cognome = $3, nome = $4, atleta_id = $5, team = $6, team_id = $7, tempo = $8,
+         nome_gara = $9, data = $10, categoria = $11, genere = $12, tipo = $13,
+         moltiplicatore = $14, campionato_regionale = $15, campionato_italiano = $16,
+         regione = $17, punti_base = $18, punti_effettivi = $19, edited_by = $20, updated_at = NOW()
+       RETURNING *`,
+      [gara_id, posizione, cognome, nome, atleta_id, team, team_id, tempo,
+       nome_gara, data, categoria, genere, tipo, moltiplicatore,
+       campionato_regionale, campionato_italiano, regione,
+       punti_base, punti_effettivi, edited_by]
+    ),
+
+  getManualResults: (gara_id) =>
+    all(`SELECT * FROM manual_results WHERE gara_id = $1 ORDER BY posizione`, [gara_id]),
+
+  getAllManualResults: () =>
+    all(`SELECT * FROM manual_results ORDER BY gara_id, posizione`),
+
+  deleteManualResult: (id) =>
+    run(`DELETE FROM manual_results WHERE id = $1`, [id]),
 
   // Race photos
   insertRacePhoto: ({ gara_id, user_id, display_name, filename, caption, photographer, status, atleta_ids }) =>

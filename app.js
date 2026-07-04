@@ -1178,7 +1178,7 @@ async function loadAll() {
         }
       })();
 
-  const [calendar, resultsRaw, athletes, teams, meta, raceDetails, videos, extraRoster, pcsExtraRoster, atletaTeamOv] = await Promise.all([
+  const [calendar, resultsRaw, athletes, teams, meta, raceDetails, videos, extraRoster, pcsExtraRoster, atletaTeamOv, manualResults] = await Promise.all([
     loadJson('data/calendar.json'),
     loadJson('data/results_raw.json'),
     loadJson('data/athletes.json'),
@@ -1189,6 +1189,7 @@ async function loadAll() {
     loadJson('data/extra_roster.json').catch(() => ({})),
     apiCall('/data/pcs-extra-roster').catch(() => ({})),
     apiCall('/data/atleta-team-overrides').catch(() => ({})),
+    apiCall('/data/manual-results').catch(() => []),
   ]);
 
   // Unisci extra_roster statico con atleti PCS da Supabase
@@ -1207,7 +1208,33 @@ async function loadAll() {
   const gd = processLoadedData({ calendar, resultsRaw, athletes, teams, meta, raceDetails, videos, extraRoster: mergedExtraRoster });
   // Applica gli override manuali di team agli atleti FCI (sposta atleta + risultati nel team scelto)
   _applyAtletaTeamOverrides(gd, atletaTeamOv);
+  // Inserisce/sovrascrive i risultati aggiunti a mano da un admin (persistono su
+  // Postgres, quindi sopravvivono a un nuovo passaggio dello scraper FCI)
+  _applyManualResults(gd, manualResults);
   return gd;
+}
+
+// Unisce i risultati manuali (admin) a resultsRaw: se esiste già una riga scrapata
+// con la stessa (gara_id, posizione) viene sostituita (correzione), altrimenti la
+// riga manuale viene aggiunta (nuovo corridore non ancora scrapato).
+function _applyManualResults(gd, manualResults) {
+  if (!gd || !Array.isArray(manualResults) || !manualResults.length) return;
+  const byKey = new Map();
+  for (const r of manualResults) byKey.set(`${r.gara_id}|${r.posizione}`, r);
+  gd.resultsRaw = (gd.resultsRaw || []).filter(r => !byKey.has(`${r.gara_id}|${r.posizione}`));
+  for (const r of manualResults) {
+    gd.resultsRaw.push({
+      gara_id: r.gara_id, nome_gara: r.nome_gara || '', data: r.data || '',
+      categoria: r.categoria || '', genere: r.genere || '', tipo: r.tipo || 'regionale',
+      moltiplicatore: r.moltiplicatore || 1,
+      campionato_regionale: !!r.campionato_regionale, campionato_italiano: !!r.campionato_italiano,
+      regione: r.regione || '', posizione: r.posizione, cognome: r.cognome, nome: r.nome || '',
+      atleta_id: r.atleta_id, team: r.team || '', team_id: r.team_id || '',
+      tempo: r.tempo || '', km: '', media: '',
+      punti_base: r.punti_base || 0, punti_effettivi: r.punti_effettivi || 0,
+      _manual: true, _manualId: r.id,
+    });
+  }
 }
 
 // Sposta un atleta (e i suoi risultati) dal vecchio team al nuovo, secondo gli override.
@@ -13833,6 +13860,122 @@ window.adminPhotoRemove = async function(source, garaId) {
   } catch (e) { showToast('Errore: ' + e.message, 'error'); }
 };
 
+// ── AGGIUNGI/CORREGGI RISULTATO A MANO (admin) ──────────────────────────
+// Permette di inserire un corridore prima che arrivi lo scraper FCI, o di
+// correggere una riga già scrapata. Persiste su Postgres (manual_results),
+// quindi sopravvive a un nuovo passaggio dello scraper e a un redeploy.
+function _mrDeriveMeta(garaId, sampleRow) {
+  const calEntry = (globalData?.calendar || []).find(g => g.id === garaId);
+  const m = garaId.match(/_(ELI|JUN|ES1|ES2|ESP|AL|ALL)_(M|F)$/);
+  const catFromCode = { ELI:'Elite', JUN:'Juniores', ES1:"Esordienti 1° Anno", ES2:"Esordienti 2° Anno", ESP:'Esordienti', AL:'Allievi', ALL:'Allievi' };
+  return {
+    nome_gara: sampleRow?.nome_gara || calEntry?.nome || '',
+    data: sampleRow?.data || calEntry?.data || '',
+    categoria: sampleRow?.categoria || (m ? catFromCode[m[1]] : '') || calEntry?.categoria || '',
+    genere: sampleRow?.genere || (m ? m[2] : '') || '',
+    tipo: sampleRow?.tipo || calEntry?.tipo || 'regionale',
+    moltiplicatore: sampleRow?.moltiplicatore || calEntry?.moltiplicatore || 1,
+    campionato_regionale: sampleRow?.campionato_regionale ?? calEntry?.campionato_regionale ?? false,
+    campionato_italiano: sampleRow?.campionato_italiano ?? calEntry?.campionato_italiano ?? false,
+    regione: sampleRow?.regione || calEntry?.regione || '',
+  };
+}
+
+// Inserisce/aggiorna la riga in globalData.resultsRaw senza dover ricaricare tutto
+function _mrPatchLocal(row) {
+  if (!globalData) return;
+  globalData.resultsRaw = (globalData.resultsRaw || []).filter(r => !(r.gara_id === row.gara_id && r.posizione === row.posizione));
+  globalData.resultsRaw.push({
+    gara_id: row.gara_id, nome_gara: row.nome_gara || '', data: row.data || '',
+    categoria: row.categoria || '', genere: row.genere || '', tipo: row.tipo || 'regionale',
+    moltiplicatore: row.moltiplicatore || 1,
+    campionato_regionale: !!row.campionato_regionale, campionato_italiano: !!row.campionato_italiano,
+    regione: row.regione || '', posizione: row.posizione, cognome: row.cognome, nome: row.nome || '',
+    atleta_id: row.atleta_id, team: row.team || '', team_id: row.team_id || '',
+    tempo: row.tempo || '', km: '', media: '',
+    punti_base: row.punti_base || 0, punti_effettivi: row.punti_effettivi || 0,
+    _manual: true, _manualId: row.id,
+  });
+}
+
+window.openManualResultForm = (garaId, posizione) => {
+  const user = authUser();
+  if (!user || user.role !== 'admin') return;
+  const existing = (posizione !== undefined && posizione !== null)
+    ? (globalData?.resultsRaw || []).find(r => r.gara_id === garaId && r.posizione === posizione)
+    : null;
+  const sample = existing || (globalData?.resultsRaw || []).find(r => r.gara_id === garaId);
+  window._mrMeta = _mrDeriveMeta(garaId, sample);
+  window._mrEditing = existing || null;
+
+  const overlay = document.createElement('div');
+  overlay.id = 'modal-overlay';
+  overlay.style.cssText = 'position:fixed;inset:0;background:rgba(0,0,0,.6);z-index:9999;display:flex;align-items:center;justify-content:center;padding:16px';
+  const inpStyle = 'width:100%;box-sizing:border-box;padding:8px 10px;border:1px solid var(--border-subtle);border-radius:var(--r-sm);font-size:0.875rem;background:var(--bg-primary);color:var(--text-primary);margin-bottom:10px';
+  overlay.innerHTML = `
+    <div style="background:var(--bg-card);border-radius:var(--r-lg);padding:24px;width:100%;max-width:420px;box-shadow:0 8px 32px rgba(0,0,0,.2)">
+      <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:16px">
+        <strong style="font-size:1rem">${existing ? 'Modifica risultato' : 'Aggiungi risultato'}</strong>
+        <button onclick="this.closest('[style*=fixed]').remove()" style="background:none;border:none;font-size:1.3rem;cursor:pointer;color:var(--text-muted)">✕</button>
+      </div>
+      <p style="font-size:0.78rem;color:var(--text-muted);margin:0 0 14px">${existing ? 'Correggi i dati di questa posizione.' : 'Utile se hai i risultati prima dello scraper, o per aggiungere un corridore mancante.'}</p>
+      <label style="display:block;font-size:0.8rem;color:var(--text-secondary);margin-bottom:4px">Posizione <span style="color:var(--red-hot)">*</span></label>
+      <input type="number" id="mr-pos" min="1" value="${existing ? existing.posizione : ''}" ${existing ? 'disabled' : ''} style="${inpStyle}${existing?';opacity:.6':''}"/>
+      <label style="display:block;font-size:0.8rem;color:var(--text-secondary);margin-bottom:4px">Cognome <span style="color:var(--red-hot)">*</span></label>
+      <input type="text" id="mr-cognome" value="${esc(existing?.cognome || '')}" style="${inpStyle}"/>
+      <label style="display:block;font-size:0.8rem;color:var(--text-secondary);margin-bottom:4px">Nome</label>
+      <input type="text" id="mr-nome" value="${esc(existing?.nome || '')}" style="${inpStyle}"/>
+      <label style="display:block;font-size:0.8rem;color:var(--text-secondary);margin-bottom:4px">Team</label>
+      <input type="text" id="mr-team" value="${esc(existing?.team || '')}" style="${inpStyle}"/>
+      <label style="display:block;font-size:0.8rem;color:var(--text-secondary);margin-bottom:4px">Tempo <span style="color:var(--text-muted);font-weight:400">(vuoto = S.T., solo il vincitore ha il tempo pieno)</span></label>
+      <input type="text" id="mr-tempo" placeholder="es. 1:23:45" value="${esc(existing?.tempo || '')}" style="${inpStyle}"/>
+      <div id="mr-err" style="color:#EF4444;font-size:0.8rem;margin-bottom:8px;display:none"></div>
+      <div style="display:flex;gap:8px">
+        <button id="mr-submit" onclick="window.submitManualResult('${esc(garaId)}')" style="flex:1;padding:9px;background:var(--red-hot);color:#fff;border:none;border-radius:var(--r-sm);font-weight:600;cursor:pointer">${existing ? 'Salva' : 'Aggiungi'}</button>
+        ${existing?._manual ? `<button onclick="window.deleteManualResult(${existing._manualId},'${esc(garaId)}')" style="padding:9px 14px;background:#dc2626;color:#fff;border:none;border-radius:var(--r-sm);font-weight:600;cursor:pointer">🗑</button>` : ''}
+      </div>
+    </div>`;
+  document.body.appendChild(overlay);
+};
+
+window.submitManualResult = async (garaId) => {
+  const posizione = parseInt(document.getElementById('mr-pos')?.value, 10);
+  const cognome = (document.getElementById('mr-cognome')?.value || '').trim();
+  const nome = (document.getElementById('mr-nome')?.value || '').trim();
+  const team = (document.getElementById('mr-team')?.value || '').trim();
+  const tempo = (document.getElementById('mr-tempo')?.value || '').trim();
+  const errEl = document.getElementById('mr-err');
+  if (!posizione || posizione < 1) { errEl.textContent = 'Inserisci una posizione valida'; errEl.style.display = 'block'; return; }
+  if (!cognome) { errEl.textContent = 'Il cognome è obbligatorio'; errEl.style.display = 'block'; return; }
+  const btn = document.getElementById('mr-submit');
+  btn.disabled = true; btn.textContent = 'Salvo…';
+  try {
+    const meta = window._mrMeta || {};
+    const { row } = await apiCall(`/admin/gara/${encodeURIComponent(garaId)}/manual-result`, {
+      method: 'POST',
+      body: { posizione, cognome, nome, team, tempo, ...meta },
+    });
+    _mrPatchLocal(row);
+    document.getElementById('modal-overlay')?.remove();
+    showToast(window._mrEditing ? '✓ Risultato aggiornato' : '✓ Risultato aggiunto');
+    if (window._currentGaraId) renderGara(window._currentGaraId);
+  } catch (e) {
+    errEl.textContent = e.message; errEl.style.display = 'block';
+    btn.disabled = false; btn.textContent = window._mrEditing ? 'Salva' : 'Aggiungi';
+  }
+};
+
+window.deleteManualResult = async (id, garaId) => {
+  if (!confirm('Rimuovere questo risultato aggiunto a mano?')) return;
+  try {
+    await apiCall(`/admin/manual-result/${id}`, { method: 'DELETE' });
+    if (globalData) globalData.resultsRaw = (globalData.resultsRaw || []).filter(r => r._manualId !== id);
+    document.getElementById('modal-overlay')?.remove();
+    showToast('🗑 Risultato rimosso');
+    if (window._currentGaraId) renderGara(window._currentGaraId);
+  } catch (e) { showToast('Errore: ' + e.message, 'error'); }
+};
+
 // Un utente atleta verificato si tagga (o si toglie) da una foto gara.
 window.selfTagPhoto = async function(id) {
   if (!authUser()) { showToast('Accedi per taggarti', 'info'); return; }
@@ -14247,6 +14390,7 @@ async function renderGara(gara_id) {
     </div>` : '';
 
   const _buildRows = (arr) => {
+    const _rowIsAdmin = authUser()?.role === 'admin';
     let _prevTempo = null;
     let _lastGapSec = 0; // ultimo distacco valido — ereditato dai corridori S.T.
     // Media e tempo del vincitore (riferimento per calcolare i tempi reali degli altri)
@@ -14284,7 +14428,7 @@ async function renderGara(gara_id) {
       }
       if (r.posizione > 1) _prevTempo = r.tempo || null;
       return `<tr>
-        <td class="td-pos ${pClass} ${r.posizione===1?'win':''}">${r.posizione}°</td>
+        <td class="td-pos ${pClass} ${r.posizione===1?'win':''}">${r.posizione}°${_rowIsAdmin ? `<button onclick="event.stopPropagation();window.openManualResultForm('${esc(r.gara_id)}',${r.posizione})" title="Modifica risultato" style="margin-left:4px;background:none;border:none;cursor:pointer;font-size:.7rem;opacity:.6;vertical-align:middle">✏️</button>` : ''}</td>
         <td style="font-family:var(--font-heading);font-weight:700">
           <div style="display:flex;align-items:center">
             <span class="rk-av-wrap" data-aid="${esc(r.atleta_id)}"></span>
@@ -14725,6 +14869,10 @@ async function renderGara(gara_id) {
         ${adminEditBtn('gara', primaryGaraId)}
         ${_isAdmin ? `<button id="pcs-import-btn" class="admin-edit-btn" style="background:#7c3aed" onclick="window.adminPcsImport('${esc(primaryGaraId)}')">⬇ Importa PCS</button>` : ''}
         ${_isAdmin ? `<button id="pcs-rematch-btn" class="admin-edit-btn" style="background:#059669" onclick="window.adminPcsRematch('${esc(primaryGaraId)}')">↺ Rimatch Atleti</button>` : ''}
+        ${_isAdmin && isEsordienti
+          ? `<button class="admin-edit-btn" style="background:#0891b2" onclick="window.openManualResultForm('${esc(es1GaraId)}')">➕ Risultato 1° Anno</button>
+             <button class="admin-edit-btn" style="background:#0891b2" onclick="window.openManualResultForm('${esc(es2GaraId)}')">➕ Risultato 2° Anno</button>`
+          : (_isAdmin ? `<button class="admin-edit-btn" style="background:#0891b2" onclick="window.openManualResultForm('${esc(primaryGaraId)}')">➕ Aggiungi risultato</button>` : '')}
       </div>
     ${_catTabsHtml}
     ${racePhotosHtml}
