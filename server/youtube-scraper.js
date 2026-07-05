@@ -233,4 +233,18 @@ async function fetchAllChannels(channels) {
   return results;
 }
 
-module.exports = { DEFAULT_CHANNELS, fetchChannelVideos, fetchAllChannels, parseYouTubeRSS, resolveHandle };
+// ── Durata video: scraping della pagina watch (nessuna API key richiesta) ─────
+// Usato per capire se un video è probabilmente una diretta/live integrale
+// (durata > 1 ora): niente di certo al 100% (anche un montaggio lungo supera
+// l'ora), ma è un buon suggerimento automatico per l'admin, che poi conferma.
+async function fetchVideoDuration(videoId) {
+  try {
+    const html = await fetchURL(`https://www.youtube.com/watch?v=${videoId}`, 10000, {
+      'Cookie': 'CONSENT=YES+; VISITOR_INFO1_LIVE=',
+    });
+    const m = html.match(/"lengthSeconds"\s*:\s*"(\d+)"/);
+    return m ? parseInt(m[1], 10) : null;
+  } catch { return null; }
+}
+
+module.exports = { DEFAULT_CHANNELS, fetchChannelVideos, fetchAllChannels, parseYouTubeRSS, resolveHandle, fetchVideoDuration };

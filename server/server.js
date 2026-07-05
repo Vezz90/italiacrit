@@ -3022,7 +3022,7 @@ app.post('/api/admin/gara/:garaId/pcs-import-html', requireAdmin, async (req, re
 // ══════════════════════════════════════════════════════════════════════════════
 // YouTube Auto-Scraper
 // ══════════════════════════════════════════════════════════════════════════════
-const { DEFAULT_CHANNELS, fetchAllChannels } = require('./youtube-scraper');
+const { DEFAULT_CHANNELS, fetchAllChannels, fetchVideoDuration } = require('./youtube-scraper');
 
 const YT_CHANNELS_PATH = path.join(__dirname, '../data/youtube_channels.json');
 const YT_QUEUE_PATH    = path.join(__dirname, '../data/youtube_queue.json');
@@ -3111,6 +3111,11 @@ async function doYoutubeSync() {
       if (!_isVideoRecent(v)) continue;
       knownUrls.add(v.url);
       const id = Date.now().toString(36) + Math.random().toString(36).slice(2, 7);
+      // Durata video (scraping pagina watch, nessuna quota API): un video oltre
+      // l'ora è quasi sempre una diretta/live integrale non tagliata — usato
+      // come suggerimento automatico nella queue, l'admin conferma o toglie.
+      const videoId = (v.url.match(/[?&]v=([\w-]+)/) || [])[1];
+      const duration = videoId ? await fetchVideoDuration(videoId) : null;
       queue.push({
         id,
         channel_id:   chId,
@@ -3122,6 +3127,8 @@ async function doYoutubeSync() {
         status:       'pending',
         suggested_gara_id: null,
         added_at:     new Date().toISOString(),
+        duration_seconds: duration,
+        is_live_guess: !!(duration && duration > 3600),
       });
       added++;
     }
@@ -3170,7 +3177,7 @@ app.get('/api/admin/youtube/queue', requireAdmin, async (req, res) => {
 // POST approva: assegna video a una gara e lo pubblica
 app.post('/api/admin/youtube/queue/:id/approve', requireAdmin, async (req, res) => {
   try {
-    const { gara_id, gara_ids, title, channel } = req.body;
+    const { gara_id, gara_ids, title, channel, is_live } = req.body;
     // Supporta sia gara_id singolo che gara_ids array (per pubblicare su ES1+ES2 insieme)
     const targets = Array.isArray(gara_ids) && gara_ids.length ? gara_ids : (gara_id ? [gara_id] : []);
     if (!targets.length) return res.status(400).json({ error: 'gara_id obbligatorio' });
@@ -3190,6 +3197,8 @@ app.post('/api/admin/youtube/queue/:id/approve', requireAdmin, async (req, res) 
           description:  '',
           channel:      channel || item.channel_name || '',
           published_at: item.published_at || new Date().toISOString().slice(0, 10),
+          is_live:      !!is_live,
+          duration_seconds: item.duration_seconds || null,
         });
       }
     }
@@ -3201,6 +3210,42 @@ app.post('/api/admin/youtube/queue/:id/approve', requireAdmin, async (req, res) 
     await writeYTQueue(queue);
 
     res.json({ ok: true, targets });
+  } catch (e) { res.status(500).json({ error: e.message }); }
+});
+
+// Ricontrolla i video YouTube già pubblicati (videos.json) e marca come
+// is_live quelli con durata > 1 ora non ancora segnalati — utile per i video
+// aggiunti prima che esistesse questo flag. Un po' lento (una richiesta HTTP
+// per video, con qualche parallelismo), pensato per essere lanciato a mano
+// ogni tanto, non ad ogni sync.
+app.post('/api/admin/youtube/detect-live', requireAdmin, async (req, res) => {
+  try {
+    const videos = await readVideos();
+    const candidates = [];
+    for (const [gid, arr] of Object.entries(videos)) {
+      (arr || []).forEach((v, idx) => {
+        if (v.is_live) return;
+        const vid = (v.url || '').match(/[?&]v=([\w-]+)/)?.[1] || (v.url || '').match(/youtu\.be\/([\w-]+)/)?.[1];
+        if (!vid) return;
+        candidates.push({ gid, idx, vid });
+      });
+    }
+    let checked = 0, marked = 0;
+    const CONCURRENCY = 5;
+    for (let i = 0; i < candidates.length; i += CONCURRENCY) {
+      const batch = candidates.slice(i, i + CONCURRENCY);
+      await Promise.all(batch.map(async (c) => {
+        const dur = await fetchVideoDuration(c.vid);
+        checked++;
+        if (dur && dur > 3600) {
+          videos[c.gid][c.idx].is_live = true;
+          videos[c.gid][c.idx].duration_seconds = dur;
+          marked++;
+        }
+      }));
+    }
+    if (marked) await writeVideos(videos);
+    res.json({ ok: true, checked, marked, total: candidates.length });
   } catch (e) { res.status(500).json({ error: e.message }); }
 });
 

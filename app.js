@@ -8246,6 +8246,10 @@ window.adminNav = async function(section) {
             style="background:var(--bg-card);border:1px solid var(--border);color:var(--text-primary);padding:10px 18px;border-radius:6px;cursor:pointer;font-size:.875rem">
             ⚙️ Gestisci Canali
           </button>
+          <button onclick="window.ytDetectLive()" id="yt-detect-live-btn"
+            style="background:var(--bg-card);border:1px solid #dc2626;color:#dc2626;padding:10px 18px;border-radius:6px;cursor:pointer;font-size:.875rem">
+            🔴 Rileva dirette già pubblicate
+          </button>
           <span id="yt-sync-status" style="font-size:.8rem;color:var(--text-muted)"></span>
         </div>
         <div id="yt-channels-panel" style="display:none;background:var(--bg-card);border:1px solid var(--border);border-radius:8px;padding:16px;margin-bottom:16px">
@@ -10030,7 +10034,12 @@ function renderYTQueue() {
         <div style="font-size:.75rem;color:var(--text-muted);margin-bottom:6px">
           📺 ${esc(item.channel_name||'')} &nbsp;•&nbsp; 📅 ${esc(item.published_at||'')}
           ${score ? `&nbsp;•&nbsp; <span style="color:${scoreColor};font-weight:700">${score}% match</span>` : ''}
+          ${item.duration_seconds ? `&nbsp;•&nbsp; ⏱ ${Math.floor(item.duration_seconds/60)} min` : ''}
         </div>
+        <label style="display:flex;align-items:center;gap:6px;font-size:.78rem;color:var(--text-secondary);margin-bottom:6px;cursor:pointer">
+          <input type="checkbox" id="ytq-live-${esc(item.id)}" ${item.is_live_guess ? 'checked' : ''} style="cursor:pointer" />
+          🔴 È una diretta${item.is_live_guess ? ' <span style="color:#dc2626;font-weight:700">(rilevata automaticamente, durata &gt; 1h)</span>' : ''}
+        </label>
         <!-- Selezione gara -->
         <div style="display:flex;gap:6px;flex-wrap:wrap;align-items:center;margin-bottom:6px">
           <select onchange="window.ytSetGara('${esc(item.id)}', this.value)"
@@ -10082,6 +10091,23 @@ window.ytSync = async () => {
     if (status) status.textContent = '✗ Errore: ' + e.message;
   } finally {
     if (btn) { btn.disabled = false; btn.textContent = '🔄 Sincronizza Canali'; }
+  }
+};
+
+// ── Ricontrolla i video già pubblicati per trovare dirette non marcate ────────
+window.ytDetectLive = async () => {
+  const btn = document.getElementById('yt-detect-live-btn');
+  const status = document.getElementById('yt-sync-status');
+  if (btn) { btn.disabled = true; btn.textContent = '⏳ Controllo in corso… (può richiedere qualche minuto)'; }
+  try {
+    const r = await apiCall('/admin/youtube/detect-live', { method: 'POST' });
+    if (status) status.textContent = `✓ Controllati ${r.checked}/${r.total} video — trovate ${r.marked} dirette nuove`;
+    showToast(`🔴 ${r.marked} dirette rilevate su ${r.checked} video controllati`);
+    if (r.marked) await refreshVideos();
+  } catch (e) {
+    showToast('Errore: ' + e.message, 'error');
+  } finally {
+    if (btn) { btn.disabled = false; btn.textContent = '🔴 Rileva dirette già pubblicate'; }
   }
 };
 
@@ -10163,10 +10189,11 @@ window.ytApprove = async (id) => {
   // Se esordienti e checkbox "entrambi gli anni" attivo → pubblica su ES1+ES2
   const bothCb = document.getElementById('ytq-both-cb-' + id);
   const gara_ids = (bothCb && bothCb.checked) ? _esBothGaraIds(garaId) : [garaId];
+  const isLive = document.getElementById('ytq-live-' + id)?.checked || false;
   try {
     await apiCall(`/admin/youtube/queue/${id}/approve`, {
       method: 'POST',
-      body: { gara_ids, title: item.title, channel: item.channel_name },
+      body: { gara_ids, title: item.title, channel: item.channel_name, is_live: isLive },
     });
     document.getElementById('ytq-' + id)?.remove();
     item.status = 'approved';
@@ -19056,65 +19083,78 @@ async function renderMedia() {
   const allCats = [...allCatsSet].sort();
 
   const ytThumb = (url) => { const id = ytId(url); return id ? `https://img.youtube.com/vi/${id}/mqdefault.jpg` : ''; };
+  const _avatarLetter = (s) => esc((s || '?').trim().charAt(0).toUpperCase());
+  const _durationBadge = (sec) => {
+    if (!sec) return '';
+    const h = Math.floor(sec / 3600), m = Math.floor((sec % 3600) / 60);
+    return h > 0 ? `${h}:${String(m).padStart(2,'0')}:${String(sec%60).padStart(2,'0')}` : `${m}:${String(sec%60).padStart(2,'0')}`;
+  };
 
   const photoCardHtml = (x) => {
     const src = x.photo.filename ? `${PHOTOS_BASE}/photos/${esc(x.photo.filename)}` : esc(icProxy(x.photo.url || ''));
+    const catTxt = esc(catLabel(x.meta.categoria) || x.meta.categoria || '');
     return `<a href="#/gara/${esc(x.gara_id)}" class="yt-card">
       <div class="yt-thumb"><img src="${src}" loading="lazy" alt="${esc(x.meta.nome)}"/></div>
-      <div class="yt-card-info">
-        <div class="yt-card-title">${esc(x.meta.nome)}</div>
-        <div class="yt-card-meta">${fmtDateShort(x.meta.data)} · ${esc(catLabel(x.meta.categoria) || x.meta.categoria || '')}</div>
+      <div class="yt-card-body">
+        <div class="yt-avatar">📷</div>
+        <div class="yt-card-text">
+          <div class="yt-card-title">${esc(x.meta.nome)}</div>
+          <div class="yt-card-meta">${catTxt}</div>
+          <div class="yt-card-meta">${esc(formatTimeAgo(x.meta.data))}</div>
+        </div>
       </div>
     </a>`;
   };
   const videoCardHtml = (x) => {
     const thumb = ytThumb(x.video.url);
+    const durBadge = _durationBadge(x.video.duration_seconds);
     return `<a href="#/gara/${esc(x.gara_id)}" class="yt-card">
       <div class="yt-thumb">
         ${thumb ? `<img src="${esc(thumb)}" loading="lazy" alt="${esc(x.video.title || '')}"/>` : `<div class="yt-thumb-fallback">▶</div>`}
-        ${x.video.is_live ? `<span class="yt-badge-live">🔴 DIRETTA</span>` : ''}
+        ${x.video.is_live ? `<span class="yt-badge-live">🔴 DIRETTA</span>` : (durBadge ? `<span class="yt-badge-duration">${esc(durBadge)}</span>` : '')}
         <span class="yt-play">▶</span>
       </div>
-      <div class="yt-card-info">
-        <div class="yt-card-title">${esc(x.video.title || x.meta.nome)}</div>
-        <div class="yt-card-meta">${esc(x.video.channel || '')}${x.video.channel ? ' · ' : ''}${fmtDateShort(x.meta.data)}</div>
+      <div class="yt-card-body">
+        <div class="yt-avatar">${_avatarLetter(x.video.channel)}</div>
+        <div class="yt-card-text">
+          <div class="yt-card-title">${esc(x.video.title || x.meta.nome)}</div>
+          <div class="yt-card-meta">${esc(x.video.channel || '')}</div>
+          <div class="yt-card-meta">${esc(formatTimeAgo(x.meta.data))}</div>
+        </div>
       </div>
     </a>`;
   };
   const cardHtml = mediaTab === 'foto' ? photoCardHtml : videoCardHtml;
 
   setPage(`
-    <div class="content-wrapper">
-      <div class="section-header">
-        <h1 style="font-family:var(--font-display);font-size:var(--size-h1);margin-bottom:0">Media</h1>
-        <span class="section-line"></span>
-      </div>
-      <div class="media-tabs" style="display:flex;gap:8px;margin:14px 0;flex-wrap:wrap">
-        <button class="tab-btn ${mediaTab === 'foto' ? 'active-cat' : ''}" onclick="window.mediaSetTab('foto')">📷 Foto (${fotoItems.length})</button>
-        <button class="tab-btn ${mediaTab === 'video' ? 'active-cat' : ''}" onclick="window.mediaSetTab('video')">🎬 Video (${videoItems.length})</button>
-        <button class="tab-btn ${mediaTab === 'dirette' ? 'active-cat' : ''}" onclick="window.mediaSetTab('dirette')">🔴 Dirette (${direteItems.length})</button>
-      </div>
-      <div class="calendar-controls">
-        <input type="text" class="cal-filter-select" placeholder="Cerca gara…" style="width:100%;box-sizing:border-box;padding:12px 16px;margin-bottom:12px" oninput="window.mediaSetSearch(this.value)" value="${esc(mediaSearchQuery)}">
-        <select class="cal-filter-select" onchange="window.mediaSetGenere(this.value)">
+    <div class="yt-page">
+      <div class="yt-chips">
+        <button class="yt-chip ${mediaTab === 'foto' ? 'yt-chip-active' : ''}" onclick="window.mediaSetTab('foto')">📷 Foto <span class="yt-chip-count">${fotoItems.length}</span></button>
+        <button class="yt-chip ${mediaTab === 'video' ? 'yt-chip-active' : ''}" onclick="window.mediaSetTab('video')">🎬 Video <span class="yt-chip-count">${videoItems.length}</span></button>
+        <button class="yt-chip ${mediaTab === 'dirette' ? 'yt-chip-active' : ''}" onclick="window.mediaSetTab('dirette')">🔴 Dirette <span class="yt-chip-count">${direteItems.length}</span></button>
+        <span class="yt-chip-sep"></span>
+        <select class="yt-chip yt-chip-select" onchange="window.mediaSetGenere(this.value)">
           <option value="">Tutti i generi</option>
           <option value="M" ${mediaQueryGenere === 'M' ? 'selected' : ''}>Uomini</option>
           <option value="F" ${mediaQueryGenere === 'F' ? 'selected' : ''}>Donne</option>
         </select>
-        <select class="cal-filter-select" onchange="window.mediaSetCat(this.value)">
+        <select class="yt-chip yt-chip-select" onchange="window.mediaSetCat(this.value)">
           <option value="">Tutte le categorie</option>
           ${allCats.map(c => `<option value="${esc(c)}" ${c === mediaQueryCat ? 'selected' : ''}>${esc(catLabel(c) || c)}</option>`).join('')}
         </select>
-        <select class="cal-filter-select" onchange="window.mediaSetMonth(this.value)">
+        <select class="yt-chip yt-chip-select" onchange="window.mediaSetMonth(this.value)">
           <option value="">Tutti i mesi</option>
           ${['01','02','03','04','05','06','07','08','09','10','11','12'].map((m, i) =>
             `<option value="${m}" ${m === mediaQueryMonth ? 'selected' : ''}>${['Gennaio','Febbraio','Marzo','Aprile','Maggio','Giugno','Luglio','Agosto','Settembre','Ottobre','Novembre','Dicembre'][i]}</option>`
           ).join('')}
         </select>
-        <span class="ranking-count">${items.length} elementi</span>
+        <div class="yt-search-wrap">
+          <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
+          <input type="text" placeholder="Cerca gara…" oninput="window.mediaSetSearch(this.value)" value="${esc(mediaSearchQuery)}">
+        </div>
       </div>
       <div class="yt-grid">
-        ${items.length ? items.map(cardHtml).join('') : `<p style="color:var(--text-muted)">Nessun elemento trovato.</p>`}
+        ${items.length ? items.map(cardHtml).join('') : `<p style="color:var(--text-muted);padding:24px 4px">Nessun elemento trovato.</p>`}
       </div>
     </div>
   `);
