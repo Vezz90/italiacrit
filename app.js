@@ -1099,7 +1099,11 @@ async function loadJson(path) {
   }
 }
 
-// Correzioni genere/categoria per atlete classificate erroneamente
+// Correzioni genere/categoria per atlete classificate erroneamente. Capita
+// soprattutto in gare Esordienti/Allievi "promiscue" (uomini e donne nella
+// stessa classifica FCI): tutta la gara viene scrapata con un unico
+// genere/categoria, quindi le atlete finiscono segnate come uomini in quella
+// riga anche se altrove (altre gare) risultano correttamente donne.
 const ATHLETE_GENDER_FIXES = {
   'ANDREOLI_ALICE':       { genere:'F', categoria:'ES1_F' },
   'MASINI_GRETA':         { genere:'F', categoria:'ES2_F' },
@@ -1111,6 +1115,17 @@ const ATHLETE_GENDER_FIXES = {
   'FONTANA_GIULIA_MARIA': { genere:'F', categoria:'ES1_F' },
   'SGROI_GIADA':          { genere:'F', categoria:'ES1_F' },
   'DI_PARDO_BEATRICE':    { genere:'F', categoria:'ES1_F' },
+  'MANNELLI_MATILDE':     { genere:'F', categoria:'ES1_F' },
+  'NARDELLI_GIORGIA':     { genere:'F', categoria:'ES1_F' },
+  'LOMBARDI_ELEONORA':    { genere:'F', categoria:'ES1_F' },
+  'SFERRAGATTA_EMANUELA': { genere:'F', categoria:'ES2_F' },
+  'CIANTI_NOEMI':         { genere:'F', categoria:'ES1_F' },
+  'PODDA_MATILDE':        { genere:'F', categoria:'ES1_F' },
+  'RICCIARDI_ELISABETTA': { genere:'F', categoria:'AL_F' },
+  'BALESTRA_MELISSA':     { genere:'F', categoria:'AL_F' },
+  'GEROLI_MAIRA':         { genere:'F', categoria:'ES2_F' },
+  'VOLLERO_SUSANNA':      { genere:'F', categoria:'ES1_F' },
+  'CANCEDDA_SORAYA':      { genere:'F', categoria:'AL_F' },
 };
 
 // ── Cognomi composti ──────────────────────────────────────────────
@@ -1730,6 +1745,13 @@ function getRankingFileCode(obj) {
     if (obj.startsWith('AL')) return 'AL_' + (obj.endsWith('_F') ? 'F' : 'M');
     return obj;
   }
+  // Alcune gare Esordienti/Allievi sono "promiscue" (uomini e donne nella stessa
+  // classifica FCI, un'unica categoria/genere scrapati per l'intera gara): le
+  // singole atlete finiscono con un gara_id a suffisso _M anche se sono donne.
+  // ATHLETE_GENDER_FIXES vince sempre sul suffisso del gara_id per queste atlete
+  // note — indispensabile per team.risultati, che non ha un campo genere proprio
+  // e altrimenti erediterebbe il genere sbagliato della gara condivisa.
+  if (obj.atleta_id && ATHLETE_GENDER_FIXES[obj.atleta_id]) return ATHLETE_GENDER_FIXES[obj.atleta_id].categoria;
   // r.genere è autorevole — già corretto da ATHLETE_GENDER_FIXES in loadAll()
   // Se genere non è disponibile (es. team results), lo ricaviamo dal suffisso gara_id
   if (obj.gara_id) {
