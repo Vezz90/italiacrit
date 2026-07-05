@@ -9949,10 +9949,23 @@ function _expandEsordientiMatches(matches) {
 }
 
 function _ytFindMatches(videoTitle, maxResults = 5) {
-  const races = (globalData?.resultsRaw || []);
-  // Deduplica per gara_id
+  // Include anche le gare del CALENDARIO non ancora scrapate: una diretta va
+  // spesso in onda prima che la FCI pubblichi i risultati, quindi il video
+  // deve potersi agganciare al gara_id del calendario — quando lo scraper
+  // arriverà sulla stessa gara, il video ci sarà già.
+  const fromResults  = (globalData?.resultsRaw || []);
+  const fromCalendar = (globalData?.calendar || []).map(g => ({
+    gara_id: g.id, nome_gara: g.nome, categoria: g.categoria, genere: '', data: g.data,
+  }));
+  // resultsRaw prima: se la gara è già scrapata, usa i suoi dati (categoria/genere
+  // corretti) invece della voce di calendario per lo stesso gara_id.
   const seen = new Set();
-  const unique = races.filter(r => { if (seen.has(r.gara_id)) return false; seen.add(r.gara_id); return true; });
+  const unique = [];
+  for (const r of [...fromResults, ...fromCalendar]) {
+    if (!r.gara_id || seen.has(r.gara_id)) continue;
+    seen.add(r.gara_id);
+    unique.push(r);
+  }
 
   const matches = unique
     .map(r => ({ race: r, score: _ytScore(videoTitle, r) }))
@@ -10132,18 +10145,31 @@ function _esBothGaraIds(garaId) {
 }
 
 // ── Cerca gara per nome (ricerca live) ───────────────────────────────────────
+// Fonte unica gara_id → dati gara, resultsRaw prima (dati corretti se già
+// scrapata) e calendario a completare le gare non ancora scrapate — usata
+// sia dalla ricerca libera sia da ytPickGara per etichettare la selezione.
+function _ytAllRaceCandidates() {
+  const fromResults  = (globalData?.resultsRaw || []);
+  const fromCalendar = (globalData?.calendar || []).map(g => ({
+    gara_id: g.id, nome_gara: g.nome, categoria: g.categoria, genere: '', data: g.data,
+  }));
+  const seen = new Set();
+  const out = [];
+  for (const r of [...fromResults, ...fromCalendar]) {
+    if (!r.gara_id || seen.has(r.gara_id)) continue;
+    seen.add(r.gara_id);
+    out.push(r);
+  }
+  return out;
+}
+
 window.ytSearchGara = (id, q) => {
   const resultsEl = document.getElementById('ytq-sr-' + id);
   if (!resultsEl) return;
   if (!q || q.length < 2) { resultsEl.innerHTML = ''; return; }
-  const seen = new Set();
-  const matches = (globalData?.resultsRaw || [])
-    .filter(r => {
-      if (seen.has(r.gara_id)) return false;
-      seen.add(r.gara_id);
-      return (r.nome_gara||'').toLowerCase().includes(q.toLowerCase())
-          || r.gara_id.toLowerCase().includes(q.toLowerCase());
-    })
+  const matches = _ytAllRaceCandidates()
+    .filter(r => (r.nome_gara||'').toLowerCase().includes(q.toLowerCase())
+              || r.gara_id.toLowerCase().includes(q.toLowerCase()))
     .sort((a, b) => (b.data||'').localeCompare(a.data||''))
     .slice(0, 8);
 
@@ -10166,7 +10192,7 @@ window.ytPickGara = (id, garaId) => {
     // Rimuovi opzioni extra e aggiungi quella selezionata se non c'è
     const existing = [...sel.options].find(o => o.value === garaId);
     if (!existing) {
-      const r = (globalData?.resultsRaw || []).find(x => x.gara_id === garaId);
+      const r = _ytAllRaceCandidates().find(x => x.gara_id === garaId);
       if (r) {
         const opt = document.createElement('option');
         opt.value = garaId;
