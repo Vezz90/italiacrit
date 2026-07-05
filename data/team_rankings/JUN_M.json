@@ -2,12 +2,12 @@
   {
     "team_id": "TEAM_VANGI_TOMMASINI_IL_PIRATA",
     "team_nome": "TEAM VANGI TOMMASINI IL PIRATA",
-    "punti": 971,
+    "punti": 995,
     "vittorie": 14,
     "p1": 14,
     "p2": 11,
-    "p3": 11,
-    "pout": 37,
+    "p3": 12,
+    "pout": 40,
     "n_atleti": 13,
     "pos": 1
   },
@@ -24,6 +24,18 @@
     "pos": 2
   },
   {
+    "team_id": "TEAM_NERI_SOTTOLI_LUCCHINI_ENERGY",
+    "team_nome": "TEAM NERI SOTTOLI LUCCHINI ENERGY",
+    "punti": 577,
+    "vittorie": 3,
+    "p1": 3,
+    "p2": 8,
+    "p3": 5,
+    "pout": 37,
+    "n_atleti": 8,
+    "pos": 3
+  },
+  {
     "team_id": "TEAM_GUERRINI_SENAGHESE",
     "team_nome": "TEAM GUERRINI SENAGHESE",
     "punti": 557,
@@ -33,18 +45,6 @@
     "p3": 6,
     "pout": 32,
     "n_atleti": 12,
-    "pos": 3
-  },
-  {
-    "team_id": "TEAM_NERI_SOTTOLI_LUCCHINI_ENERGY",
-    "team_nome": "TEAM NERI SOTTOLI LUCCHINI ENERGY",
-    "punti": 554,
-    "vittorie": 2,
-    "p1": 2,
-    "p2": 8,
-    "p3": 5,
-    "pout": 35,
-    "n_atleti": 8,
     "pos": 4
   },
   {
@@ -170,10 +170,10 @@
   {
     "team_id": "CPS_PROFESSIONAL_TEAM",
     "team_nome": "CPS PROFESSIONAL TEAM",
-    "punti": 325,
+    "punti": 337,
     "vittorie": 4,
     "p1": 4,
-    "p2": 4,
+    "p2": 5,
     "p3": 6,
     "pout": 27,
     "n_atleti": 11,
@@ -204,6 +204,18 @@
     "pos": 17
   },
   {
+    "team_id": "TEAM_CORATTI",
+    "team_nome": "TEAM CORATTI",
+    "punti": 270,
+    "vittorie": 2,
+    "p1": 2,
+    "p2": 4,
+    "p3": 1,
+    "pout": 14,
+    "n_atleti": 5,
+    "pos": 18
+  },
+  {
     "team_id": "TEAM_TIEPOLO_U19_DEVO",
     "team_nome": "TEAM TIEPOLO U19 DEVO",
     "punti": 266,
@@ -213,18 +225,6 @@
     "p3": 3,
     "pout": 14,
     "n_atleti": 6,
-    "pos": 18
-  },
-  {
-    "team_id": "TEAM_CORATTI",
-    "team_nome": "TEAM CORATTI",
-    "punti": 264,
-    "vittorie": 2,
-    "p1": 2,
-    "p2": 4,
-    "p3": 1,
-    "pout": 13,
-    "n_atleti": 5,
     "pos": 19
   },
   {
@@ -686,12 +686,12 @@
   {
     "team_id": "ITALIA_NUOVA_BOLOGNA",
     "team_nome": "ITALIA NUOVA BOLOGNA",
-    "punti": 48,
+    "punti": 49,
     "vittorie": 0,
     "p1": 0,
     "p2": 0,
     "p3": 0,
-    "pout": 12,
+    "pout": 13,
     "n_atleti": 5,
     "pos": 58
   },
