@@ -1305,9 +1305,18 @@ function _patchAthleteTeamForManualRow(gd, row) {
       punti_totali: 0, risultati: [], roster_only: true,
     };
   }
+  // Il team a cui attribuire il risultato è quello ATTUALE dell'atleta (che può
+  // già riflettere un override applicato prima che questo risultato esistesse,
+  // es. un profilo PCS risolto da _resolvePcsAthlete lato server), non quello
+  // grezzo salvato sulla riga manuale — altrimenti un risultato aggiunto DOPO un
+  // cambio-team finirebbe comunque sotto il team originale (es. la squadra
+  // regionale di un campionato) invece che sotto il club vero dell'atleta.
+  const targetTeamId   = ath.team_id      || row.team_id;
+  const targetTeamNome = ath.team_attuale || row.team;
+
   const athEntry = {
     gara_id: row.gara_id, nome_gara: row.nome_gara, data: row.data, posizione: row.posizione,
-    punti_effettivi: row.punti_effettivi, team: row.team, moltiplicatore: row.moltiplicatore,
+    punti_effettivi: row.punti_effettivi, team: targetTeamNome, moltiplicatore: row.moltiplicatore,
     tipo: row.tipo, regione: row.regione, km: row.km, media: row.media,
   };
   if (!Array.isArray(ath.risultati)) ath.risultati = [];
@@ -1316,9 +1325,9 @@ function _patchAthleteTeamForManualRow(gd, row) {
   ath.punti_totali = (ath.risultati || []).reduce((s, x) => s + (x.punti_effettivi || 0), 0);
 
   // Scheda team: stesso trattamento, così risultati/punti/roster restano coerenti
-  if (row.team_id) {
-    let team = gd.teams[row.team_id];
-    if (!team) team = gd.teams[row.team_id] = { id: row.team_id, nome: row.team || row.team_id, atleti: [], risultati: [], punti_totali: 0 };
+  if (targetTeamId) {
+    let team = gd.teams[targetTeamId];
+    if (!team) team = gd.teams[targetTeamId] = { id: targetTeamId, nome: targetTeamNome || targetTeamId, atleti: [], risultati: [], punti_totali: 0 };
     if (!Array.isArray(team.atleti)) team.atleti = [];
     if (!team.atleti.includes(row.atleta_id)) team.atleti.push(row.atleta_id);
     if (!Array.isArray(team.risultati)) team.risultati = [];
