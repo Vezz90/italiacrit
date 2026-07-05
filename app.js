@@ -1230,7 +1230,7 @@ function _applyManualResults(gd, manualResults) {
       campionato_regionale: !!r.campionato_regionale, campionato_italiano: !!r.campionato_italiano,
       regione: r.regione || '', posizione: r.posizione, cognome: r.cognome, nome: r.nome || '',
       atleta_id: r.atleta_id, team: r.team || '', team_id: r.team_id || '',
-      tempo: r.tempo || '', km: '', media: '',
+      tempo: r.tempo || '', km: r.km || '', media: r.media || '',
       punti_base: r.punti_base || 0, punti_effettivi: r.punti_effettivi || 0,
       _manual: true, _manualId: r.id,
     });
@@ -13892,7 +13892,7 @@ function _mrPatchLocal(row) {
     campionato_regionale: !!row.campionato_regionale, campionato_italiano: !!row.campionato_italiano,
     regione: row.regione || '', posizione: row.posizione, cognome: row.cognome, nome: row.nome || '',
     atleta_id: row.atleta_id, team: row.team || '', team_id: row.team_id || '',
-    tempo: row.tempo || '', km: '', media: '',
+    tempo: row.tempo || '', km: row.km || '', media: row.media || '',
     punti_base: row.punti_base || 0, punti_effettivi: row.punti_effettivi || 0,
     _manual: true, _manualId: row.id,
   });
@@ -13921,14 +13921,19 @@ window.openManualResultForm = (garaId, posizione) => {
       <p style="font-size:0.78rem;color:var(--text-muted);margin:0 0 14px">${existing ? 'Correggi i dati di questa posizione.' : 'Utile se hai i risultati prima dello scraper, o per aggiungere un corridore mancante.'}</p>
       <label style="display:block;font-size:0.8rem;color:var(--text-secondary);margin-bottom:4px">Posizione <span style="color:var(--red-hot)">*</span></label>
       <input type="number" id="mr-pos" min="1" value="${existing ? existing.posizione : ''}" ${existing ? 'disabled' : ''} style="${inpStyle}${existing?';opacity:.6':''}"/>
+      <label style="display:block;font-size:0.8rem;color:var(--text-secondary);margin-bottom:4px">Cerca corridore <span style="color:var(--text-muted);font-weight:400">(se già nel sistema, compila da solo)</span></label>
+      <div style="position:relative">
+        <input type="text" id="mr-rider-search" placeholder="Cerca per cognome o nome…" autocomplete="off" style="${inpStyle}"/>
+        <div id="mr-rider-dd" style="display:none;position:absolute;left:0;right:0;top:calc(100% - 4px);background:var(--bg-card);border:1px solid var(--border-subtle);border-radius:var(--r-sm);max-height:210px;overflow:auto;z-index:5;box-shadow:0 6px 20px rgba(0,0,0,.25)"></div>
+      </div>
       <label style="display:block;font-size:0.8rem;color:var(--text-secondary);margin-bottom:4px">Cognome <span style="color:var(--red-hot)">*</span></label>
       <input type="text" id="mr-cognome" value="${esc(existing?.cognome || '')}" style="${inpStyle}"/>
       <label style="display:block;font-size:0.8rem;color:var(--text-secondary);margin-bottom:4px">Nome</label>
       <input type="text" id="mr-nome" value="${esc(existing?.nome || '')}" style="${inpStyle}"/>
       <label style="display:block;font-size:0.8rem;color:var(--text-secondary);margin-bottom:4px">Team</label>
       <input type="text" id="mr-team" value="${esc(existing?.team || '')}" style="${inpStyle}"/>
-      <label style="display:block;font-size:0.8rem;color:var(--text-secondary);margin-bottom:4px">Tempo <span style="color:var(--text-muted);font-weight:400">(vuoto = S.T., solo il vincitore ha il tempo pieno)</span></label>
-      <input type="text" id="mr-tempo" placeholder="es. 1:23:45" value="${esc(existing?.tempo || '')}" style="${inpStyle}"/>
+      <label style="display:block;font-size:0.8rem;color:var(--text-secondary);margin-bottom:4px">Distacco dal vincitore <span style="color:var(--text-muted);font-weight:400">(es. 1'23" o 45" — vuoto = S.T.; il vincitore lascialo vuoto)</span></label>
+      <input type="text" id="mr-tempo" placeholder="es. 1'23&quot;" value="${esc(existing?.tempo || '')}" style="${inpStyle}"/>
       <div id="mr-err" style="color:#EF4444;font-size:0.8rem;margin-bottom:8px;display:none"></div>
       <div style="display:flex;gap:8px">
         <button id="mr-submit" onclick="window.submitManualResult('${esc(garaId)}')" style="flex:1;padding:9px;background:var(--red-hot);color:#fff;border:none;border-radius:var(--r-sm);font-weight:600;cursor:pointer">${existing ? 'Salva' : 'Aggiungi'}</button>
@@ -13936,6 +13941,42 @@ window.openManualResultForm = (garaId, posizione) => {
       </div>
     </div>`;
   document.body.appendChild(overlay);
+  window._mrBindRiderSearch();
+};
+
+// Autocompletamento corridore: cerca fra gli atleti già nel sistema e, alla
+// selezione, compila cognome/nome/team così l'atleta_id ricalcolato dal server
+// combacia con quello esistente invece di crearne uno nuovo per errore.
+window._mrBindRiderSearch = () => {
+  const input = document.getElementById('mr-rider-search');
+  const dd = document.getElementById('mr-rider-dd');
+  if (!input || !dd) return;
+  input.addEventListener('input', function () {
+    const ql = this.value.trim().toLowerCase();
+    if (!ql || !globalData) { dd.style.display = 'none'; return; }
+    const out = [];
+    for (const [id, a] of Object.entries(globalData.athletes || {})) {
+      const name = `${a.cognome || ''} ${a.nome || ''}`.toLowerCase();
+      if (name.includes(ql)) out.push({ id, cognome: a.cognome || '', nome: a.nome || '', team: a.team_attuale || '' });
+      if (out.length >= 6) break;
+    }
+    dd.innerHTML = out.length
+      ? out.map(o => `<div class="search-result-item" style="padding:7px 10px;cursor:pointer;border-bottom:1px solid var(--border-subtle)"
+            onclick="window._mrPickRider('${esc(o.cognome.replace(/'/g,"\\'"))}','${esc(o.nome.replace(/'/g,"\\'"))}','${esc(o.team.replace(/'/g,"\\'"))}')">
+            <div style="font-size:.82rem;font-weight:600">${esc(o.cognome)} ${esc(o.nome)}</div>
+            <div style="font-size:.7rem;color:var(--text-muted)">${esc(o.team)}</div>
+          </div>`).join('')
+      : `<div style="padding:7px 10px;font-size:.78rem;color:var(--text-muted)">Nessun corridore trovato — compila i campi sotto per crearne uno nuovo</div>`;
+    dd.style.display = 'block';
+  });
+  input.addEventListener('blur', () => setTimeout(() => { if (dd) dd.style.display = 'none'; }, 180));
+};
+window._mrPickRider = (cognome, nome, team) => {
+  document.getElementById('mr-cognome').value = cognome;
+  document.getElementById('mr-nome').value = nome;
+  document.getElementById('mr-team').value = team;
+  document.getElementById('mr-rider-search').value = `${cognome} ${nome}`;
+  document.getElementById('mr-rider-dd').style.display = 'none';
 };
 
 window.submitManualResult = async (garaId) => {

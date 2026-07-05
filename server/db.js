@@ -131,6 +131,8 @@ async function createSchema() {
       campionato_regionale  BOOLEAN DEFAULT false,
       campionato_italiano   BOOLEAN DEFAULT false,
       regione               TEXT DEFAULT '',
+      km                    TEXT DEFAULT '',
+      media                 TEXT DEFAULT '',
       punti_base            INTEGER DEFAULT 0,
       punti_effettivi       INTEGER DEFAULT 0,
       edited_by             INTEGER REFERENCES users(id),
@@ -291,6 +293,10 @@ async function migrate() {
     // Permette di assegnare la foto ai profili atleta/team corretti, anche
     // quando chi è ritratto non è il vincitore della gara.
     `ALTER TABLE race_photos ADD COLUMN IF NOT EXISTS atleta_ids TEXT DEFAULT ''`,
+    // km/media del risultato manuale: normalmente ereditati dalla gara (stessi km
+    // per tutti), ma un admin può forzarli (es. prima gara mai inserita per quella corsa)
+    `ALTER TABLE manual_results ADD COLUMN IF NOT EXISTS km TEXT DEFAULT ''`,
+    `ALTER TABLE manual_results ADD COLUMN IF NOT EXISTS media TEXT DEFAULT ''`,
   ];
   for (const sql of migrations) {
     try { await run(sql); } catch (e) { console.warn('[migrate]', e.message); }
@@ -507,24 +513,25 @@ const queries = {
   // usano la stessa via).
   upsertManualResult: ({ gara_id, posizione, cognome, nome, atleta_id, team, team_id, tempo,
                           nome_gara, data, categoria, genere, tipo, moltiplicatore,
-                          campionato_regionale, campionato_italiano, regione,
+                          campionato_regionale, campionato_italiano, regione, km, media,
                           punti_base, punti_effettivi, edited_by }) =>
     one(
       `INSERT INTO manual_results
          (gara_id, posizione, cognome, nome, atleta_id, team, team_id, tempo,
           nome_gara, data, categoria, genere, tipo, moltiplicatore,
-          campionato_regionale, campionato_italiano, regione,
+          campionato_regionale, campionato_italiano, regione, km, media,
           punti_base, punti_effettivi, edited_by, updated_at)
-       VALUES ($1,$2,$3,$4,$5,$6,$7,$8,$9,$10,$11,$12,$13,$14,$15,$16,$17,$18,$19,$20,NOW())
+       VALUES ($1,$2,$3,$4,$5,$6,$7,$8,$9,$10,$11,$12,$13,$14,$15,$16,$17,$18,$19,$20,$21,$22,NOW())
        ON CONFLICT (gara_id, posizione) DO UPDATE SET
          cognome = $3, nome = $4, atleta_id = $5, team = $6, team_id = $7, tempo = $8,
          nome_gara = $9, data = $10, categoria = $11, genere = $12, tipo = $13,
          moltiplicatore = $14, campionato_regionale = $15, campionato_italiano = $16,
-         regione = $17, punti_base = $18, punti_effettivi = $19, edited_by = $20, updated_at = NOW()
+         regione = $17, km = $18, media = $19, punti_base = $20, punti_effettivi = $21,
+         edited_by = $22, updated_at = NOW()
        RETURNING *`,
       [gara_id, posizione, cognome, nome, atleta_id, team, team_id, tempo,
        nome_gara, data, categoria, genere, tipo, moltiplicatore,
-       campionato_regionale, campionato_italiano, regione,
+       campionato_regionale, campionato_italiano, regione, km, media,
        punti_base, punti_effettivi, edited_by]
     ),
 

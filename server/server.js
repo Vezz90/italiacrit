@@ -1929,10 +1929,55 @@ app.get('/api/data/manual-results', async (req, res) => {
 // Stessa tabella punti-base dello scraper FCI (scraper/fci_complete_scraper.py BASE_PTS)
 const _MANUAL_BASE_PTS = { 1: 15, 2: 12, 3: 10, 4: 8, 5: 6, 6: 5, 7: 4, 8: 3, 9: 2, 10: 1 };
 
+// I km sono uguali per tutti i corridori della stessa gara: se non specificato,
+// li prende da un'altra riga (manuale o scrapata) della stessa gara_id.
+async function _resolveManualKm(garaId) {
+  try {
+    const siblings = await queries.getManualResults(garaId);
+    const fromManual = siblings.find(r => r.km)?.km;
+    if (fromManual) return fromManual;
+  } catch {}
+  const resultsRaw = readDataJson('results_raw.json') || [];
+  const fromScraped = resultsRaw.find(r => r.gara_id === garaId && r.km)?.km;
+  return fromScraped || '';
+}
+
+// Crea il profilo pcs_atleta (Supabase + extra_roster.json) se l'atleta inserito a
+// mano non esiste ancora da nessuna parte — stesso meccanismo usato per gli atleti
+// creati dall'import PCS, così ha subito una scheda profilo e finisce nel roster
+// del team giusto invece di restare "orfano".
+async function _ensureManualAthleteProfile({ atletaId, cognome, nome, teamId, teamNome, categoria, genere }) {
+  if (_fciAthleteKeys().has(atletaId)) return false; // già un atleta FCI, non toccare
+  if (supabase) {
+    const { data: existing } = await supabase.from('entity_overrides')
+      .select('id').eq('entity_type', 'pcs_atleta').eq('field', 'profile').eq('entity_id', atletaId).maybeSingle();
+    if (existing) return false; // profilo già presente
+    const { error } = await supabase.from('entity_overrides').upsert([{
+      entity_type: 'pcs_atleta', entity_id: atletaId, field: 'profile',
+      new_value: JSON.stringify({ cognome, nome, team_id: teamId, team_nome: teamNome, categoria, genere }),
+      edited_by: null,
+    }], { onConflict: 'entity_type,entity_id,field' });
+    if (error) { console.warn('[manual-result] creazione profilo fallita:', error.message); return false; }
+  }
+  // Roster locale (fallback quando Supabase non è raggiungibile dal frontend)
+  try {
+    const rosterPath = path.join(__dirname, '..', 'data', 'extra_roster.json');
+    let roster = {};
+    try { roster = JSON.parse(fs.readFileSync(rosterPath, 'utf8')); } catch {}
+    if (!roster[teamId]) roster[teamId] = { nome: teamNome, atleti: [] };
+    if (!roster[teamId].atleti.find(a => a.atleta_id === atletaId)) {
+      roster[teamId].atleti.push({ atleta_id: atletaId, nome, cognome, categoria, genere });
+      fs.writeFileSync(rosterPath, JSON.stringify(roster, null, 2), 'utf8');
+      _commitExtraRosterToGH(roster).catch(() => {});
+    }
+  } catch (e) { console.warn('[manual-result] extra_roster.json update fallito:', e.message); }
+  return true;
+}
+
 app.post('/api/admin/gara/:garaId/manual-result', requireAdmin, async (req, res) => {
   try {
     const garaId = req.params.garaId;
-    const { posizione, cognome, nome, team, tempo,
+    const { posizione, cognome, nome, team, tempo, km, media,
             nome_gara, data, categoria, genere, tipo, moltiplicatore,
             campionato_regionale, campionato_italiano, regione } = req.body || {};
     if (!posizione || !cognome) return res.status(400).json({ error: 'posizione e cognome obbligatori' });
@@ -1942,14 +1987,36 @@ app.post('/api/admin/gara/:garaId/manual-result', requireAdmin, async (req, res)
     const pos      = parseInt(posizione, 10);
     const mult     = parseInt(moltiplicatore, 10) || 1;
     const puntiBase = _MANUAL_BASE_PTS[pos] || 0;
+    const atletaId = _makeAtletaId(cognomeU, nomeU);
+
+    // Team: fuzzy-match su teams.json (rispettando il genere) così finisce nel
+    // team reale invece di crearne uno doppione con una stringa leggermente diversa
+    let finalTeamId = teamU ? _makeTeamId(teamU) : '';
+    let finalTeamNome = teamU;
+    if (teamU) {
+      const resolved = _findExistingTeam(teamU, _buildTeamIndex(), genere || '');
+      if (resolved) { finalTeamId = resolved.tid; finalTeamNome = resolved.nome; }
+    }
+
+    // Km: se non specificato, eredita quello della gara (uguale per tutti)
+    const finalKm = km || await _resolveManualKm(garaId);
+
+    if (atletaId && atletaId !== '_') {
+      await _ensureManualAthleteProfile({
+        atletaId, cognome: cognomeU, nome: nomeU,
+        teamId: finalTeamId, teamNome: finalTeamNome,
+        categoria: categoria || '', genere: genere || '',
+      });
+    }
+
     const row = await queries.upsertManualResult({
       gara_id: garaId,
       posizione: pos,
       cognome: cognomeU,
       nome: nomeU,
-      atleta_id: _makeAtletaId(cognomeU, nomeU),
-      team: teamU,
-      team_id: teamU ? _makeTeamId(teamU) : '',
+      atleta_id: atletaId,
+      team: finalTeamNome,
+      team_id: finalTeamId,
       tempo: tempo || '',
       nome_gara: nome_gara || '',
       data: data || '',
@@ -1960,6 +2027,8 @@ app.post('/api/admin/gara/:garaId/manual-result', requireAdmin, async (req, res)
       campionato_regionale: !!campionato_regionale,
       campionato_italiano: !!campionato_italiano,
       regione: regione || '',
+      km: finalKm || '',
+      media: media || '',
       punti_base: puntiBase,
       punti_effettivi: puntiBase * mult,
       edited_by: req.user.id,
@@ -2202,21 +2271,44 @@ function _genderOk(entry, genere) {
   return entry.genders.has(genere);
 }
 
-// Rivaluta il team di ogni profilo pcs_atleta: se il nome del team fa fuzzy-match
-// con un team reale (teams.json) diverso da quello salvato, aggiorna il profilo.
-// Rende "↺ Rimatch Atleti" capace di auto-correggere i team dei profili esistenti.
+// Rivaluta categoria/genere e team di ogni profilo pcs_atleta.
+// Storicamente _garaIdToCategoria non riconosceva _AL_/_ES1_/_ES2_ e ricadeva
+// sempre su 'ELI_M': i profili creati PRIMA del fix hanno genere/categoria
+// sbagliati salvati nel JSON (es. atlete Esordienti/Allieve segnate 'M' e
+// quindi cercate/messe in un team maschile). Qui si ricalcola categoria/genere
+// da una riga campione dei risultati PCS di quell'atleta (con la regex corretta)
+// e SOLO SE cambia si aggiorna il profilo e si ri-fa il fuzzy match del team.
+// Rende "↺ Rimatch Atleti" capace di auto-correggere anche questi casi vecchi.
 async function _fixPcsAthleteTeams() {
   if (!supabase) return 0;
   const teamIndex = _buildTeamIndex();
   if (!teamIndex.length) return 0;
   let fixed = 0;
   try {
-    const data = await _fetchAllPcsProfiles('id, new_value');
+    // Prima gara nota di ogni atleta, per ricalcolare categoria/genere corretti
+    const sampleGaraByAtleta = {};
+    for (const r of await _fetchAllPcsResultRiders()) {
+      if (r.atleta_id && !sampleGaraByAtleta[r.atleta_id]) sampleGaraByAtleta[r.atleta_id] = r.gara_id;
+    }
+
+    const data = await _fetchAllPcsProfiles('id, entity_id, new_value');
     for (const row of (data || [])) {
       let p; try { p = JSON.parse(row.new_value); } catch { continue; }
+      let changed = false;
+
+      const sampleGara = sampleGaraByAtleta[row.entity_id];
+      if (sampleGara) {
+        const realCat = _garaIdToCategoria(sampleGara);
+        const realGen = realCat.endsWith('_F') ? 'F' : 'M';
+        if (realCat !== p.categoria || realGen !== p.genere) {
+          p.categoria = realCat; p.genere = realGen; changed = true;
+        }
+      }
+
       const real = _findExistingTeam(p.team_nome || '', teamIndex, p.genere);
-      if (real && real.tid !== p.team_id) {
-        p.team_id = real.tid; p.team_nome = real.nome;
+      if (real && real.tid !== p.team_id) { p.team_id = real.tid; p.team_nome = real.nome; changed = true; }
+
+      if (changed) {
         const { error } = await supabase.from('entity_overrides')
           .update({ new_value: JSON.stringify(p) }).eq('id', row.id);
         if (!error) fixed++;
@@ -2240,9 +2332,12 @@ function _parsePcsRiderName(fullName) {
   };
 }
 
-// Estrae categoria (es. ELI_M, JUN_F) dal gara_id
+// Estrae categoria (es. ELI_M, JUN_F, ES1_F) dal gara_id.
+// BUG STORICO: mancavano AL (Allievi), ES1/ES2 (Esordienti) — un gara_id che
+// finiva con _ES1_F o _AL_F non veniva mai riconosciuto e ricadeva sempre sul
+// default 'ELI_M', facendo finire atlete donne nel team/categoria maschile.
 function _garaIdToCategoria(garaId) {
-  const m = (garaId || '').match(/_(ELI|JUN|ESP|ALL)_(M|F)$/i);
+  const m = (garaId || '').match(/_(ELI|JUN|AL|ES1|ES2)_(M|F)$/i);
   return m ? m[0].slice(1).toUpperCase() : 'ELI_M';
 }
 
