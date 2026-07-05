@@ -38,14 +38,26 @@
   {
     "team_id": "BELTRAMI_TSA_TRE_COLLI",
     "team_nome": "BELTRAMI TSA TRE COLLI",
-    "punti": 525,
+    "punti": 545,
     "vittorie": 3,
     "p1": 3,
     "p2": 7,
-    "p3": 4,
+    "p3": 5,
     "pout": 25,
     "n_atleti": 9,
     "pos": 4
+  },
+  {
+    "team_id": "TEAM_HOPPLA",
+    "team_nome": "TEAM HOPPLA'",
+    "punti": 461,
+    "vittorie": 6,
+    "p1": 6,
+    "p2": 4,
+    "p3": 4,
+    "pout": 21,
+    "n_atleti": 7,
+    "pos": 5
   },
   {
     "team_id": "RED_BULL_BORA_HANSGROHE_ROOKIES",
@@ -57,18 +69,6 @@
     "p3": 3,
     "pout": 5,
     "n_atleti": 5,
-    "pos": 5
-  },
-  {
-    "team_id": "TEAM_HOPPLA",
-    "team_nome": "TEAM HOPPLA'",
-    "punti": 431,
-    "vittorie": 5,
-    "p1": 5,
-    "p2": 4,
-    "p3": 4,
-    "pout": 21,
-    "n_atleti": 7,
     "pos": 6
   },
   {
@@ -98,12 +98,12 @@
   {
     "team_id": "BIESSE_CARRERA_PREMAC",
     "team_nome": "BIESSE - CARRERA - PREMAC",
-    "punti": 332,
+    "punti": 340,
     "vittorie": 0,
     "p1": 0,
     "p2": 2,
     "p3": 2,
-    "pout": 21,
+    "pout": 22,
     "n_atleti": 11,
     "pos": 9
   },
@@ -122,12 +122,12 @@
   {
     "team_id": "VEGA_VITALCARE_DYNATEK",
     "team_nome": "VEGA VITALCARE DYNATEK",
-    "punti": 296,
+    "punti": 312,
     "vittorie": 0,
     "p1": 0,
     "p2": 3,
     "p3": 2,
-    "pout": 18,
+    "pout": 19,
     "n_atleti": 7,
     "pos": 11
   },
@@ -182,12 +182,12 @@
   {
     "team_id": "MG_K_VIS_COSTRUZIONI_E_AMBIENTE",
     "team_nome": "MG K-VIS COSTRUZIONI E AMBIENTE",
-    "punti": 187,
+    "punti": 197,
     "vittorie": 1,
     "p1": 1,
     "p2": 5,
     "p3": 1,
-    "pout": 7,
+    "pout": 8,
     "n_atleti": 9,
     "pos": 16
   },
@@ -216,6 +216,18 @@
     "pos": 18
   },
   {
+    "team_id": "GALLINA_LUCCHINI_ECOTEK",
+    "team_nome": "GALLINA LUCCHINI ECOTEK",
+    "punti": 184,
+    "vittorie": 1,
+    "p1": 1,
+    "p2": 2,
+    "p3": 1,
+    "pout": 15,
+    "n_atleti": 7,
+    "pos": 19
+  },
+  {
     "team_id": "SOUDAL_QUICK_STEP_DEVO_TEAM",
     "team_nome": "SOUDAL QUICK-STEP DEVO TEAM",
     "punti": 175,
@@ -225,7 +237,7 @@
     "p3": 2,
     "pout": 3,
     "n_atleti": 4,
-    "pos": 19
+    "pos": 20
   },
   {
     "team_id": "SOLUTION_TECH_NIPPO_RALI",
@@ -237,7 +249,7 @@
     "p3": 0,
     "pout": 3,
     "n_atleti": 5,
-    "pos": 20
+    "pos": 21
   },
   {
     "team_id": "BARDIANI_CSF_7_SABER",
@@ -249,7 +261,7 @@
     "p3": 1,
     "pout": 3,
     "n_atleti": 6,
-    "pos": 21
+    "pos": 22
   },
   {
     "team_id": "VPM_MORETTI_SCS",
@@ -261,18 +273,6 @@
     "p3": 1,
     "pout": 16,
     "n_atleti": 9,
-    "pos": 22
-  },
-  {
-    "team_id": "GALLINA_LUCCHINI_ECOTEK",
-    "team_nome": "GALLINA LUCCHINI ECOTEK",
-    "punti": 148,
-    "vittorie": 1,
-    "p1": 1,
-    "p2": 1,
-    "p3": 1,
-    "pout": 14,
-    "n_atleti": 7,
     "pos": 23
   },
   {
@@ -420,6 +420,18 @@
     "pos": 35
   },
   {
+    "team_id": "GOODSHOP_YOYOGURT",
+    "team_nome": "GOODSHOP YOYOGURT",
+    "punti": 49,
+    "vittorie": 1,
+    "p1": 1,
+    "p2": 0,
+    "p3": 0,
+    "pout": 7,
+    "n_atleti": 4,
+    "pos": 36
+  },
+  {
     "team_id": "UCRAINA",
     "team_nome": "UCRAINA",
     "punti": 48,
@@ -429,7 +441,7 @@
     "p3": 1,
     "pout": 5,
     "n_atleti": 4,
-    "pos": 36
+    "pos": 37
   },
   {
     "team_id": "PETROLIKE",
@@ -441,7 +453,7 @@
     "p3": 0,
     "pout": 5,
     "n_atleti": 3,
-    "pos": 37
+    "pos": 38
   },
   {
     "team_id": "RIME_DRALI",
@@ -453,7 +465,7 @@
     "p3": 1,
     "pout": 8,
     "n_atleti": 4,
-    "pos": 38
+    "pos": 39
   },
   {
     "team_id": "ASD_VELO_CLUB_AVEZZANO_BIKE_LINEAORO",
@@ -465,7 +477,7 @@
     "p3": 0,
     "pout": 4,
     "n_atleti": 3,
-    "pos": 39
+    "pos": 40
   },
   {
     "team_id": "LIDL_TREK_FUTURE_RACING",
@@ -477,18 +489,6 @@
     "p3": 1,
     "pout": 1,
     "n_atleti": 1,
-    "pos": 40
-  },
-  {
-    "team_id": "GOODSHOP_YOYOGURT",
-    "team_nome": "GOODSHOP YOYOGURT",
-    "punti": 43,
-    "vittorie": 1,
-    "p1": 1,
-    "p2": 0,
-    "p3": 0,
-    "pout": 6,
-    "n_atleti": 3,
     "pos": 41
   },
   {
@@ -648,16 +648,28 @@
     "pos": 54
   },
   {
-    "team_id": "GS_MALTINTI_LAMPADARI_BANCA_CAMBIANO",
-    "team_nome": "GS MALTINTI LAMPADARI BANCA CAMBIANO",
-    "punti": 17,
+    "team_id": "ZAPPI_RACING_TEAM",
+    "team_nome": "ZAPPI RACING TEAM",
+    "punti": 20,
     "vittorie": 0,
     "p1": 0,
     "p2": 0,
     "p3": 0,
-    "pout": 5,
-    "n_atleti": 3,
+    "pout": 3,
+    "n_atleti": 2,
     "pos": 55
+  },
+  {
+    "team_id": "GS_MALTINTI_LAMPADARI_BANCA_CAMBIANO",
+    "team_nome": "GS MALTINTI LAMPADARI BANCA CAMBIANO",
+    "punti": 19,
+    "vittorie": 0,
+    "p1": 0,
+    "p2": 0,
+    "p3": 0,
+    "pout": 6,
+    "n_atleti": 3,
+    "pos": 56
   },
   {
     "team_id": "GARLASCHESE_A_S_D",
@@ -669,7 +681,7 @@
     "p3": 0,
     "pout": 2,
     "n_atleti": 1,
-    "pos": 56
+    "pos": 57
   },
   {
     "team_id": "DEKA_RIDERS_TEAM_ASD",
@@ -681,18 +693,6 @@
     "p3": 0,
     "pout": 2,
     "n_atleti": 1,
-    "pos": 57
-  },
-  {
-    "team_id": "ZAPPI_RACING_TEAM",
-    "team_nome": "ZAPPI RACING TEAM",
-    "punti": 16,
-    "vittorie": 0,
-    "p1": 0,
-    "p2": 0,
-    "p3": 0,
-    "pout": 2,
-    "n_atleti": 2,
     "pos": 58
   },
   {
