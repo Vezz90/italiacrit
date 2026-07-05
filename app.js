@@ -14646,11 +14646,15 @@ async function renderGara(gara_id) {
 
   if (!results.length && !calEntry) return renderNotFound();
 
-  // Gara futura: mostra scheda pre-gara dal calendario (solo per gare non ancora svolte)
+  // Gara futura: mostra scheda pre-gara dal calendario (solo per gare non ancora svolte).
+  // Una gara di OGGI conta come "già svolta" per questo controllo: potrebbe già
+  // avere una diretta/video caricato prima ancora che la FCI pubblichi i
+  // risultati, e quella va mostrata nel layout normale (media+risultati+info),
+  // non nella scheda spoglia "in programma" che non ha alcuna sezione media.
   if (!results.length && calEntry) {
     const todayS = new Date().toISOString().split('T')[0];
-    if ((calEntry.data || '') < todayS) {
-      // Gara passata senza risultati importati → continua col render normale
+    if ((calEntry.data || '') <= todayS) {
+      // Gara di oggi o passata senza risultati importati → continua col render normale
     } else {
     const d = new Date((calEntry.data || '') + 'T00:00:00');
     const daysLeft = Math.round((d - new Date(todayS + 'T00:00:00')) / 86400000);
@@ -15238,6 +15242,8 @@ async function renderGara(gara_id) {
         ${badgeMult(mult, tipo, results1[0]?.campionato_regionale || calEntry?.campionato_regionale, results1[0]?.campionato_italiano || calEntry?.campionato_italiano)}
         ${results1[0]?.km ? `<span class="race-meta-sep">|</span><span>${esc(results1[0].km)} Km</span>` : ''}
         ${results1[0]?.media ? `<span class="race-meta-sep">|</span><span>Media: ${esc(results1[0].media)} Km/h</span>` : ''}
+        ${!results.length && calEntry?.luogo ? `<span class="race-meta-sep">|</span><span>📍 ${esc(calEntry.luogo)}</span>` : ''}
+        ${!results.length && calEntry?.regione ? `<span class="race-meta-sep">|</span><span>${esc(calEntry.regione)}</span>` : ''}
       </div>
     </div>
       <div style="margin-top:12px;display:flex;gap:10px;align-items:center;flex-wrap:wrap">
@@ -19153,6 +19159,12 @@ async function renderMedia() {
   const cardHtml = mediaTab === 'foto' ? photoCardHtml : videoCardHtml;
 
   setPage(`
+    <div class="content-wrapper">
+      <div class="section-header">
+        <h1 style="font-family:var(--font-display);font-size:var(--size-h1);margin-bottom:0">Media</h1>
+        <span class="section-line"></span>
+      </div>
+    </div>
     <div class="yt-page">
       <div class="yt-chips">
         <button class="yt-chip ${mediaTab === 'foto' ? 'yt-chip-active' : ''}" onclick="window.mediaSetTab('foto')">📷 Foto <span class="yt-chip-count">${fotoItems.length}</span></button>
