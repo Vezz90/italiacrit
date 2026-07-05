@@ -18970,6 +18970,132 @@ let _shareType, _sharePayload, _sharePlatKey = 'instagram';
 let _shareLogoImg = null;
 let _regionLogoCache = {};
 
+// ── MEDIA (foto/video/dirette per gara, stile YouTube) ───────────────────
+let mediaTab = 'foto'; // 'foto' | 'video' | 'dirette'
+let mediaQueryGenere = '';
+let mediaQueryCat = '';
+let mediaQueryMonth = '';
+let mediaSearchQuery = '';
+
+window.mediaSetTab    = (t) => { mediaTab = t; renderMedia(); };
+window.mediaSetGenere = (v) => { mediaQueryGenere = v; renderMedia(); };
+window.mediaSetCat    = (v) => { mediaQueryCat = v; renderMedia(); };
+window.mediaSetMonth  = (v) => { mediaQueryMonth = v; renderMedia(); };
+window.mediaSetSearch = (v) => { mediaSearchQuery = v; renderMedia(); };
+
+async function renderMedia() {
+  if (!globalData) return;
+  const { calendar, resultsRaw, videos } = globalData;
+  const photosMap = await loadRisPhotos(); // gara_id → foto rappresentativa (caricata/xpix/ic)
+
+  // Indice gara_id → metadati evento (nome/data/categoria/genere), da resultsRaw
+  // e in fallback dal calendario per le gare senza risultati ancora scrapati.
+  const evIndex = {};
+  for (const r of (resultsRaw || [])) {
+    if (!r.gara_id || evIndex[r.gara_id]) continue;
+    evIndex[r.gara_id] = { nome: r.nome_gara, data: r.data, categoria: r.categoria, genere: r.genere, regione: r.regione };
+  }
+  for (const g of (calendar || [])) {
+    if (!evIndex[g.id]) evIndex[g.id] = { nome: g.nome, data: g.data, categoria: g.categoria, genere: '', regione: g.regione };
+  }
+
+  let fotoItems = Object.entries(photosMap)
+    .map(([gid, p]) => ({ gara_id: gid, meta: evIndex[gid] || {}, photo: p }))
+    .filter(x => x.meta.nome && x.photo);
+
+  let videoItems = [];
+  for (const [gid, arr] of Object.entries(videos || {})) {
+    const meta = evIndex[gid] || {};
+    if (!meta.nome) continue;
+    for (const v of (arr || [])) videoItems.push({ gara_id: gid, meta, video: v });
+  }
+
+  const applyFilters = (arr) => arr.filter(x => {
+    if (mediaQueryGenere && x.meta.genere && x.meta.genere !== mediaQueryGenere) return false;
+    if (mediaQueryCat) {
+      const c = getRankingFileCode(x.meta) || x.meta.categoria;
+      if (c !== mediaQueryCat) return false;
+    }
+    if (mediaQueryMonth && x.meta.data && x.meta.data.split('-')[1] !== mediaQueryMonth) return false;
+    if (mediaSearchQuery && !(x.meta.nome || '').toLowerCase().includes(mediaSearchQuery.toLowerCase())) return false;
+    return true;
+  });
+
+  fotoItems  = applyFilters(fotoItems).sort((a, b) => (b.meta.data || '').localeCompare(a.meta.data || ''));
+  videoItems = applyFilters(videoItems).sort((a, b) => (b.meta.data || '').localeCompare(a.meta.data || ''));
+  const direteItems = videoItems.filter(x => x.video.is_live);
+
+  const items = mediaTab === 'foto' ? fotoItems : mediaTab === 'dirette' ? direteItems : videoItems;
+
+  const allCatsSet = new Set();
+  [...fotoItems, ...videoItems].forEach(x => { const c = getRankingFileCode(x.meta) || x.meta.categoria; if (c) allCatsSet.add(c); });
+  const allCats = [...allCatsSet].sort();
+
+  const ytThumb = (url) => { const id = ytId(url); return id ? `https://img.youtube.com/vi/${id}/mqdefault.jpg` : ''; };
+
+  const photoCardHtml = (x) => {
+    const src = x.photo.filename ? `${PHOTOS_BASE}/photos/${esc(x.photo.filename)}` : esc(icProxy(x.photo.url || ''));
+    return `<a href="#/gara/${esc(x.gara_id)}" class="yt-card">
+      <div class="yt-thumb"><img src="${src}" loading="lazy" alt="${esc(x.meta.nome)}"/></div>
+      <div class="yt-card-info">
+        <div class="yt-card-title">${esc(x.meta.nome)}</div>
+        <div class="yt-card-meta">${fmtDateShort(x.meta.data)} · ${esc(catLabel(x.meta.categoria) || x.meta.categoria || '')}</div>
+      </div>
+    </a>`;
+  };
+  const videoCardHtml = (x) => {
+    const thumb = ytThumb(x.video.url);
+    return `<a href="#/gara/${esc(x.gara_id)}" class="yt-card">
+      <div class="yt-thumb">
+        ${thumb ? `<img src="${esc(thumb)}" loading="lazy" alt="${esc(x.video.title || '')}"/>` : `<div class="yt-thumb-fallback">▶</div>`}
+        ${x.video.is_live ? `<span class="yt-badge-live">🔴 DIRETTA</span>` : ''}
+        <span class="yt-play">▶</span>
+      </div>
+      <div class="yt-card-info">
+        <div class="yt-card-title">${esc(x.video.title || x.meta.nome)}</div>
+        <div class="yt-card-meta">${esc(x.video.channel || '')}${x.video.channel ? ' · ' : ''}${fmtDateShort(x.meta.data)}</div>
+      </div>
+    </a>`;
+  };
+  const cardHtml = mediaTab === 'foto' ? photoCardHtml : videoCardHtml;
+
+  setPage(`
+    <div class="content-wrapper">
+      <div class="section-header">
+        <h1 style="font-family:var(--font-display);font-size:var(--size-h1);margin-bottom:0">Media</h1>
+        <span class="section-line"></span>
+      </div>
+      <div class="media-tabs" style="display:flex;gap:8px;margin:14px 0;flex-wrap:wrap">
+        <button class="tab-btn ${mediaTab === 'foto' ? 'active-cat' : ''}" onclick="window.mediaSetTab('foto')">📷 Foto (${fotoItems.length})</button>
+        <button class="tab-btn ${mediaTab === 'video' ? 'active-cat' : ''}" onclick="window.mediaSetTab('video')">🎬 Video (${videoItems.length})</button>
+        <button class="tab-btn ${mediaTab === 'dirette' ? 'active-cat' : ''}" onclick="window.mediaSetTab('dirette')">🔴 Dirette (${direteItems.length})</button>
+      </div>
+      <div class="calendar-controls">
+        <input type="text" class="cal-filter-select" placeholder="Cerca gara…" style="width:100%;box-sizing:border-box;padding:12px 16px;margin-bottom:12px" oninput="window.mediaSetSearch(this.value)" value="${esc(mediaSearchQuery)}">
+        <select class="cal-filter-select" onchange="window.mediaSetGenere(this.value)">
+          <option value="">Tutti i generi</option>
+          <option value="M" ${mediaQueryGenere === 'M' ? 'selected' : ''}>Uomini</option>
+          <option value="F" ${mediaQueryGenere === 'F' ? 'selected' : ''}>Donne</option>
+        </select>
+        <select class="cal-filter-select" onchange="window.mediaSetCat(this.value)">
+          <option value="">Tutte le categorie</option>
+          ${allCats.map(c => `<option value="${esc(c)}" ${c === mediaQueryCat ? 'selected' : ''}>${esc(catLabel(c) || c)}</option>`).join('')}
+        </select>
+        <select class="cal-filter-select" onchange="window.mediaSetMonth(this.value)">
+          <option value="">Tutti i mesi</option>
+          ${['01','02','03','04','05','06','07','08','09','10','11','12'].map((m, i) =>
+            `<option value="${m}" ${m === mediaQueryMonth ? 'selected' : ''}>${['Gennaio','Febbraio','Marzo','Aprile','Maggio','Giugno','Luglio','Agosto','Settembre','Ottobre','Novembre','Dicembre'][i]}</option>`
+          ).join('')}
+        </select>
+        <span class="ranking-count">${items.length} elementi</span>
+      </div>
+      <div class="yt-grid">
+        ${items.length ? items.map(cardHtml).join('') : `<p style="color:var(--text-muted)">Nessun elemento trovato.</p>`}
+      </div>
+    </div>
+  `);
+}
+
 async function _getLogo() {
   if (_shareLogoImg) return _shareLogoImg;
   return new Promise(res => {
