@@ -2628,7 +2628,7 @@ function route() {
   if (match('/gare')) return renderGare();
   if (match('/risultati')) {
     // Reset generic filters, then re-apply hub context if active
-    risSearchQuery = ''; risQueryCat = ''; risQueryMonth = ''; risQueryRegion = ''; risQueryGenere = '';
+    risSearchQuery = ''; risQueryCat = ''; risQueryMonth = ''; risQueryRegion = ''; risQueryGenere = ''; risQueryTipo = '';
     if (activeHub) applyHubFilters(activeHub);
     return renderRisultati();
   }
@@ -3548,7 +3548,7 @@ window.clearHubFilter = function() {
   rankGender = 'M'; rankCat = 'ES1_M'; rankFilter = ''; rankRegion = ''; rankMonth = '';
   atlGender = 'M'; atlCat = 'JUN_M'; atlSearch = '';
   teamGender = 'M'; teamCat = 'JUN_M'; teamSearch = '';
-  risQueryGenere = ''; risQueryCat = ''; risQueryMonth = ''; risQueryRegion = ''; risSearchQuery = '';
+  risQueryGenere = ''; risQueryCat = ''; risQueryMonth = ''; risQueryRegion = ''; risQueryTipo = ''; risSearchQuery = '';
   calQGenere = ''; calQCat = ''; calQMonth = ''; calQSearch = ''; calQTipo = ''; calQRegione = '';
   // Se su hub URL, vai alla classifica generale (senza riaprire la cinematic)
   if ((window.location.hash || '').startsWith('#/hub/')) {
@@ -14498,10 +14498,12 @@ async function renderGara(gara_id) {
               <div style="display:flex;gap:6px;flex-wrap:wrap">${cats.map(c => `<span style="background:var(--red-hot);color:#fff;font-size:.72rem;font-weight:700;padding:3px 8px;border-radius:10px">${esc(catLabel(c)||c)}</span>`).join('')}</div>
             </div>` : ''}
             <div style="color:var(--text-muted);font-size:.82rem;padding:4px 0">I risultati saranno disponibili dopo lo svolgimento della gara.</div>
+            ${authUser()?.role === 'admin' ? `<button class="admin-edit-btn" style="background:#0891b2;align-self:flex-start" onclick="window.openManualResultForm('${esc(primaryGaraId)}')">➕ Aggiungi risultato</button>` : ''}
           </div>
         </div>
         ${_preRaceDetailsHtml}
       </div>`);
+    window._currentGaraId = primaryGaraId;
     return;
     } // fine else (gara futura)
   } // fine if (!results.length && calEntry)
@@ -18437,6 +18439,7 @@ let risQueryGenere = '';
 let risQueryCat = '';
 let risQueryMonth = '';
 let risQueryRegion = '';
+let risQueryTipo = '';
 let risSearchQuery = '';
 let _risSearchTimer = null;
 
@@ -18444,6 +18447,7 @@ window.risSetGenere = (v) => { risQueryGenere = v; renderRisultati(); };
 window.risSetCat    = (v) => { risQueryCat = v; renderRisultati(); };
 window.risSetMonth  = (v) => { risQueryMonth = v; renderRisultati(); };
 window.risSetRegion = (v) => { risQueryRegion = v; renderRisultati(); };
+window.risSetTipo   = (v) => { risQueryTipo = v; renderRisultati(); };
 window.risSetSearch = (v) => { 
   clearTimeout(_risSearchTimer); 
   _risSearchTimer = setTimeout(() => { risSearchQuery = v; renderRisultati(); }, 300);
@@ -18579,6 +18583,11 @@ async function renderRisultati() {
   }
   if (risQueryMonth)  races = races.filter(r => r.data && r.data.split('-')[1] === risQueryMonth);
   if (risQueryRegion) races = races.filter(r => r.regione === risQueryRegion);
+  if (risQueryTipo) races = races.filter(ev => {
+    if (risQueryTipo === 'campionato_regionale') return ev.campionato_regionale;
+    if (risQueryTipo === 'campionato_italiano') return ev.campionato_italiano;
+    return ev.tipo === risQueryTipo;
+  });
   const allCatsSet = new Set();
   races.forEach(r => Object.keys(r.byCategory||{}).forEach(c => allCatsSet.add(c)));
   const allCats = [...allCatsSet].sort();
@@ -18607,6 +18616,14 @@ async function renderRisultati() {
       </select>
       <select class="cal-filter-select" id="ris-sel-cat" onchange="window.risSetCat(this.value)" aria-label="Filtra per categoria">
         <option value="">Tutte le categorie</option>
+      </select>
+      <select class="cal-filter-select" id="ris-sel-tipo" onchange="window.risSetTipo(this.value)" aria-label="Filtra per tipologia">
+        <option value="">Tutti i tipi</option>
+        <option value="regionale">Regionali ×1</option>
+        <option value="nazionale">Nazionali ×2</option>
+        <option value="internazionale">Internazionali ×3</option>
+        <option value="campionato_regionale">Campionati Regionali</option>
+        <option value="campionato_italiano">Campionati Italiani</option>
       </select>`;
 
     setPage(`
@@ -18632,11 +18649,13 @@ async function renderRisultati() {
   const selGenere = document.getElementById('ris-sel-genere');
   const selRegion = document.getElementById('ris-sel-region');
   const selCat    = document.getElementById('ris-sel-cat');
+  const selTipo   = document.getElementById('ris-sel-tipo');
   const countEl   = document.getElementById('ris-count');
   const cardsEl   = document.getElementById('ris-cards');
 
   if (selMonth)  selMonth.value  = risQueryMonth  || '';
   if (selGenere) selGenere.value = risQueryGenere || '';
+  if (selTipo)   selTipo.value   = risQueryTipo   || '';
   if (selRegion) {
     // Rebuild region options (they can change with filters)
     selRegion.innerHTML = `<option value="">Tutte le regioni</option>` +
