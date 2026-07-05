@@ -14071,8 +14071,13 @@ window._mrBindRiderSearch = () => {
   input.addEventListener('input', function () {
     const ql = this.value.trim().toLowerCase();
     if (!ql || !globalData) { dd.style.display = 'none'; return; }
+    const meta = window._mrMeta || {};
     const out = [];
     for (const [id, a] of Object.entries(globalData.athletes || {})) {
+      // Filtra alla categoria/genere della gara: evita di taggare per sbaglio
+      // un atleta di un'altra categoria omonimo o quasi.
+      if (meta.genere && a.genere && a.genere !== meta.genere) continue;
+      if (meta.categoria && a.categoria && a.categoria !== meta.categoria) continue;
       const name = `${a.cognome || ''} ${a.nome || ''}`.toLowerCase();
       if (name.includes(ql)) out.push({ id, cognome: a.cognome || '', nome: a.nome || '', team: a.team_attuale || '' });
       if (out.length >= 6) break;
@@ -14083,7 +14088,7 @@ window._mrBindRiderSearch = () => {
             <div style="font-size:.82rem;font-weight:600">${esc(o.cognome)} ${esc(o.nome)}</div>
             <div style="font-size:.7rem;color:var(--text-muted)">${esc(o.team)}</div>
           </div>`).join('')
-      : `<div style="padding:7px 10px;font-size:.78rem;color:var(--text-muted)">Nessun corridore trovato — compila i campi sotto per crearne uno nuovo</div>`;
+      : `<div style="padding:7px 10px;font-size:.78rem;color:var(--text-muted)">Nessun corridore di questa categoria trovato — compila i campi sotto per crearne uno nuovo</div>`;
     dd.style.display = 'block';
   });
   input.addEventListener('blur', () => setTimeout(() => { if (dd) dd.style.display = 'none'; }, 180));
@@ -14121,6 +14126,136 @@ window.submitManualResult = async (garaId) => {
     errEl.textContent = e.message; errEl.style.display = 'block';
     btn.disabled = false; btn.textContent = window._mrEditing ? 'Salva' : 'Aggiungi';
   }
+};
+
+// ── Inserimento risultati IN BLOCCO (più righe insieme) ─────────────────
+// Pensato per l'ordine d'arrivo completo: 10 righe pronte (posizioni 1-10),
+// più "aggiungi riga" per chi va oltre. La ricerca corridore su ogni riga è
+// filtrata a categoria+genere della gara, così non si rischia di taggare per
+// sbaglio un atleta di un'altra categoria.
+window.openManualResultBulkForm = (garaId) => {
+  const user = authUser();
+  if (!user || user.role !== 'admin') return;
+  const sample = (globalData?.resultsRaw || []).find(r => r.gara_id === garaId);
+  window._mrMeta = _mrDeriveMeta(garaId, sample);
+  window._mrBulkGaraId = garaId;
+  window._mrBulkRows = Array.from({ length: 10 }, (_, i) => ({
+    pos: i + 1, cognome: '', nome: '', team: '', tempo: '', atletaId: null,
+  }));
+
+  const overlay = document.createElement('div');
+  overlay.id = 'modal-overlay';
+  overlay.style.cssText = 'position:fixed;inset:0;background:rgba(0,0,0,.6);z-index:9999;display:flex;align-items:center;justify-content:center;padding:16px';
+  overlay.innerHTML = `
+    <div style="background:var(--bg-card);border-radius:var(--r-lg);padding:20px;width:100%;max-width:720px;max-height:88vh;overflow:auto;box-shadow:0 8px 32px rgba(0,0,0,.2)">
+      <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:6px">
+        <strong style="font-size:1rem">Aggiungi risultati — ${esc(catLabel(window._mrMeta.categoria) || window._mrMeta.categoria || '')}</strong>
+        <button onclick="this.closest('[style*=fixed]').remove()" style="background:none;border:none;font-size:1.3rem;cursor:pointer;color:var(--text-muted)">✕</button>
+      </div>
+      <p style="font-size:0.76rem;color:var(--text-muted);margin:0 0 12px">Il campo corridore cerca solo tra gli atleti di questa categoria/genere. Lascia vuote le righe che non ti servono.</p>
+      <div id="mr-bulk-rows"></div>
+      <button onclick="window._mrBulkAddRow()" style="margin:8px 0 4px;padding:6px 12px;background:var(--bg-elevated);border:1px solid var(--border-subtle);border-radius:var(--r-sm);font-size:.78rem;cursor:pointer;color:var(--text-primary)">+ Aggiungi riga</button>
+      <div id="mr-bulk-err" style="color:#EF4444;font-size:0.8rem;margin:8px 0;display:none"></div>
+      <button id="mr-bulk-submit" onclick="window.submitManualResultBulk()" style="width:100%;padding:10px;background:var(--red-hot);color:#fff;border:none;border-radius:var(--r-sm);font-weight:600;cursor:pointer;margin-top:6px">Salva risultati</button>
+    </div>`;
+  document.body.appendChild(overlay);
+  window._mrBulkRender();
+};
+
+window._mrBulkAddRow = () => {
+  const n = window._mrBulkRows.length;
+  window._mrBulkRows.push({ pos: n + 1, cognome: '', nome: '', team: '', tempo: '', atletaId: null });
+  window._mrBulkRender();
+};
+
+window._mrBulkRemoveRow = (idx) => {
+  window._mrBulkRows.splice(idx, 1);
+  window._mrBulkRender();
+};
+
+window._mrBulkRender = () => {
+  const box = document.getElementById('mr-bulk-rows');
+  if (!box) return;
+  const inp = 'width:100%;box-sizing:border-box;padding:6px 8px;border:1px solid var(--border-subtle);border-radius:var(--r-sm);font-size:0.82rem;background:var(--bg-primary);color:var(--text-primary)';
+  box.innerHTML = `
+    <div style="display:grid;grid-template-columns:52px 1fr 1fr 110px 28px;gap:6px;font-size:.68rem;color:var(--text-muted);font-weight:700;padding:0 2px 4px">
+      <div>POS</div><div>CORRIDORE</div><div>TEAM</div><div>DISTACCO</div><div></div>
+    </div>
+    ${window._mrBulkRows.map((r, idx) => `
+      <div style="display:grid;grid-template-columns:52px 1fr 1fr 110px 28px;gap:6px;margin-bottom:6px;position:relative">
+        <input type="number" min="1" value="${r.pos}" style="${inp}" oninput="window._mrBulkRows[${idx}].pos=parseInt(this.value,10)||0"/>
+        <div style="position:relative">
+          <input type="text" placeholder="Cerca corridore…" autocomplete="off" value="${esc(r.cognome ? `${r.cognome} ${r.nome}`.trim() : '')}"
+            oninput="window._mrBulkSearch(${idx}, this.value)" style="${inp}"/>
+          <div id="mr-bulk-dd-${idx}" style="display:none;position:absolute;left:0;right:0;top:100%;background:var(--bg-card);border:1px solid var(--border-subtle);border-radius:var(--r-sm);max-height:180px;overflow:auto;z-index:20;box-shadow:0 6px 20px rgba(0,0,0,.3)"></div>
+        </div>
+        <input type="text" placeholder="Team" value="${esc(r.team)}" oninput="window._mrBulkRows[${idx}].team=this.value" style="${inp}"/>
+        <input type="text" placeholder="1'23&quot;" value="${esc(r.tempo)}" oninput="window._mrBulkRows[${idx}].tempo=this.value" style="${inp}"/>
+        <button onclick="window._mrBulkRemoveRow(${idx})" title="Rimuovi riga" style="background:none;border:none;color:var(--text-muted);cursor:pointer;font-size:1rem">✕</button>
+      </div>`).join('')}
+  `;
+};
+
+// Ricerca corridore per riga N, filtrata a categoria+genere della gara (window._mrMeta)
+window._mrBulkSearch = (idx, val) => {
+  const dd = document.getElementById(`mr-bulk-dd-${idx}`);
+  window._mrBulkRows[idx].cognome = ''; // se digita a mano, non è più un match confermato finché non sceglie
+  const parts = val.trim().split(/\s+/);
+  window._mrBulkRows[idx]._raw = val;
+  if (!dd) return;
+  const ql = val.trim().toLowerCase();
+  if (!ql || !globalData) { dd.style.display = 'none'; return; }
+  const meta = window._mrMeta || {};
+  const out = [];
+  for (const [id, a] of Object.entries(globalData.athletes || {})) {
+    if (meta.genere && a.genere && a.genere !== meta.genere) continue;
+    if (meta.categoria && a.categoria && a.categoria !== meta.categoria) continue;
+    const name = `${a.cognome || ''} ${a.nome || ''}`.toLowerCase();
+    if (name.includes(ql)) out.push({ id, cognome: a.cognome || '', nome: a.nome || '', team: a.team_attuale || '' });
+    if (out.length >= 6) break;
+  }
+  dd.innerHTML = out.length
+    ? out.map(o => `<div class="search-result-item" style="padding:6px 8px;cursor:pointer;border-bottom:1px solid var(--border-subtle);font-size:.8rem"
+          onclick="window._mrBulkPick(${idx},'${esc(o.cognome.replace(/'/g,"\\'"))}','${esc(o.nome.replace(/'/g,"\\'"))}','${esc(o.team.replace(/'/g,"\\'"))}')">
+          <strong>${esc(o.cognome)}</strong> ${esc(o.nome)} <span style="color:var(--text-muted);font-size:.72rem">— ${esc(o.team)}</span>
+        </div>`).join('')
+    : `<div style="padding:6px 8px;font-size:.74rem;color:var(--text-muted)">Nessun corridore di questa categoria trovato — verrà creato nuovo</div>`;
+  dd.style.display = 'block';
+};
+window._mrBulkPick = (idx, cognome, nome, team) => {
+  window._mrBulkRows[idx].cognome = cognome;
+  window._mrBulkRows[idx].nome = nome;
+  window._mrBulkRows[idx].team = team;
+  window._mrBulkRender();
+};
+
+window.submitManualResultBulk = async () => {
+  const garaId = window._mrBulkGaraId;
+  const meta = window._mrMeta || {};
+  // Se non ha scelto dalla lista ma ha scritto qualcosa, prova a separare cognome/nome dal testo libero
+  const rows = window._mrBulkRows.filter(r => {
+    if (!r.cognome && r._raw) { const p = r._raw.trim().split(/\s+/); r.cognome = (p[0]||'').toUpperCase(); r.nome = p.slice(1).join(' ').toUpperCase(); }
+    return r.pos > 0 && r.cognome;
+  });
+  const errEl = document.getElementById('mr-bulk-err');
+  if (!rows.length) { errEl.textContent = 'Compila almeno una riga (posizione + corridore)'; errEl.style.display = 'block'; return; }
+  const btn = document.getElementById('mr-bulk-submit');
+  btn.disabled = true;
+  let ok = 0, fail = 0;
+  for (const r of rows) {
+    btn.textContent = `Salvo… ${ok + fail + 1}/${rows.length}`;
+    try {
+      const { row } = await apiCall(`/admin/gara/${encodeURIComponent(garaId)}/manual-result`, {
+        method: 'POST',
+        body: { posizione: r.pos, cognome: r.cognome, nome: r.nome, team: r.team, tempo: r.tempo, ...meta },
+      });
+      _mrPatchLocal(row);
+      ok++;
+    } catch (e) { fail++; }
+  }
+  document.getElementById('modal-overlay')?.remove();
+  showToast(fail ? `✓ ${ok} salvati, ${fail} falliti` : `✓ ${ok} risultati aggiunti`, fail ? 'error' : undefined);
+  if (window._currentGaraId) renderGara(window._currentGaraId);
 };
 
 window.deleteManualResult = async (id, garaId) => {
@@ -14498,7 +14633,7 @@ async function renderGara(gara_id) {
               <div style="display:flex;gap:6px;flex-wrap:wrap">${cats.map(c => `<span style="background:var(--red-hot);color:#fff;font-size:.72rem;font-weight:700;padding:3px 8px;border-radius:10px">${esc(catLabel(c)||c)}</span>`).join('')}</div>
             </div>` : ''}
             <div style="color:var(--text-muted);font-size:.82rem;padding:4px 0">I risultati saranno disponibili dopo lo svolgimento della gara.</div>
-            ${authUser()?.role === 'admin' ? `<button class="admin-edit-btn" style="background:#0891b2;align-self:flex-start" onclick="window.openManualResultForm('${esc(primaryGaraId)}')">➕ Aggiungi risultato</button>` : ''}
+            ${authUser()?.role === 'admin' ? `<button class="admin-edit-btn" style="background:#0891b2;align-self:flex-start" onclick="window.openManualResultBulkForm('${esc(primaryGaraId)}')">➕ Aggiungi risultati</button>` : ''}
           </div>
         </div>
         ${_preRaceDetailsHtml}
@@ -15030,9 +15165,9 @@ async function renderGara(gara_id) {
         ${_isAdmin ? `<button id="pcs-import-btn" class="admin-edit-btn" style="background:#7c3aed" onclick="window.adminPcsImport('${esc(primaryGaraId)}')">⬇ Importa PCS</button>` : ''}
         ${_isAdmin ? `<button id="pcs-rematch-btn" class="admin-edit-btn" style="background:#059669" onclick="window.adminPcsRematch('${esc(primaryGaraId)}')">↺ Rimatch Atleti</button>` : ''}
         ${_isAdmin && isEsordienti
-          ? `<button class="admin-edit-btn" style="background:#0891b2" onclick="window.openManualResultForm('${esc(es1GaraId)}')">➕ Risultato 1° Anno</button>
-             <button class="admin-edit-btn" style="background:#0891b2" onclick="window.openManualResultForm('${esc(es2GaraId)}')">➕ Risultato 2° Anno</button>`
-          : (_isAdmin ? `<button class="admin-edit-btn" style="background:#0891b2" onclick="window.openManualResultForm('${esc(primaryGaraId)}')">➕ Aggiungi risultato</button>` : '')}
+          ? `<button class="admin-edit-btn" style="background:#0891b2" onclick="window.openManualResultBulkForm('${esc(es1GaraId)}')">➕ Risultati 1° Anno</button>
+             <button class="admin-edit-btn" style="background:#0891b2" onclick="window.openManualResultBulkForm('${esc(es2GaraId)}')">➕ Risultati 2° Anno</button>`
+          : (_isAdmin ? `<button class="admin-edit-btn" style="background:#0891b2" onclick="window.openManualResultBulkForm('${esc(primaryGaraId)}')">➕ Aggiungi risultati</button>` : '')}
       </div>
     ${_catTabsHtml}
     ${racePhotosHtml}
