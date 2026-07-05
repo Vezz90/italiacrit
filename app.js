@@ -13979,15 +13979,39 @@ window.adminPhotoRemove = async function(source, garaId) {
 // Permette di inserire un corridore prima che arrivi lo scraper FCI, o di
 // correggere una riga già scrapata. Persiste su Postgres (manual_results),
 // quindi sopravvive a un nuovo passaggio dello scraper e a un redeploy.
+// Converte un'etichetta leggibile di categoria (come quelle salvate nelle righe
+// resultsRaw, es. "Esordienti 1° Anno") nel formato CODICE (es. "ES1_F") usato
+// dagli atleti (athletes.json, profili pcs_atleta) e da getRankingFileCode.
+// Senza questa normalizzazione, filtrare gli atleti confrontando l'etichetta
+// con a.categoria (che è sempre un codice) non trova mai nessuno.
+function _catLabelToCode(label, genere) {
+  if (!label) return '';
+  if (/^[A-Z0-9]+_[MF]$/.test(label)) return label; // già un codice
+  const g = genere === 'F' ? 'F' : 'M';
+  const k = label.toLowerCase();
+  let base = '';
+  if (k.includes('esordienti') || k.includes('esordient')) base = k.includes('2') ? 'ES2' : 'ES1';
+  else if (k.includes('allie')) base = 'AL';
+  else if (k.includes('junior')) base = 'JUN';
+  else if (k.includes('elite') || k.includes('under')) base = 'ELI';
+  return base ? `${base}_${g}` : '';
+}
+
 function _mrDeriveMeta(garaId, sampleRow) {
   const calEntry = (globalData?.calendar || []).find(g => g.id === garaId);
-  const m = garaId.match(/_(ELI|JUN|ES1|ES2|ESP|AL|ALL)_(M|F)$/);
-  const catFromCode = { ELI:'Elite', JUN:'Juniores', ES1:"Esordienti 1° Anno", ES2:"Esordienti 2° Anno", ESP:'Esordienti', AL:'Allievi', ALL:'Allievi' };
+  // Suffissi reali del gara_id (verificati sui dati): ELI, JUN, AL, ES1, ES2.
+  const m = garaId.match(/_(ELI|JUN|AL|ES1|ES2)_(M|F)$/);
+  const genere = m ? m[2] : (sampleRow?.genere || '');
+  // Priorità al suffisso del gara_id (sempre affidabile e già in formato codice);
+  // altrimenti normalizza l'etichetta leggibile della riga/calendario in codice.
+  const categoria = (m ? `${m[1]}_${genere}` : '')
+    || _catLabelToCode(sampleRow?.categoria, genere)
+    || _catLabelToCode(calEntry?.categoria, genere);
   return {
     nome_gara: sampleRow?.nome_gara || calEntry?.nome || '',
     data: sampleRow?.data || calEntry?.data || '',
-    categoria: sampleRow?.categoria || (m ? catFromCode[m[1]] : '') || calEntry?.categoria || '',
-    genere: sampleRow?.genere || (m ? m[2] : '') || '',
+    categoria,
+    genere,
     tipo: sampleRow?.tipo || calEntry?.tipo || 'regionale',
     moltiplicatore: sampleRow?.moltiplicatore || calEntry?.moltiplicatore || 1,
     campionato_regionale: sampleRow?.campionato_regionale ?? calEntry?.campionato_regionale ?? false,
