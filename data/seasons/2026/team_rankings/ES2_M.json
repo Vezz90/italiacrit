@@ -26,12 +26,12 @@
   {
     "team_id": "UC_COLTANO_GRUBE_COSTRUZIONI",
     "team_nome": "UC COLTANO GRUBE COSTRUZIONI",
-    "punti": 456,
+    "punti": 469,
     "vittorie": 14,
     "p1": 14,
     "p2": 8,
-    "p3": 5,
-    "pout": 17,
+    "p3": 6,
+    "pout": 18,
     "n_atleti": 4,
     "pos": 3
   },
@@ -146,12 +146,12 @@
   {
     "team_id": "UC_EMPOLESE",
     "team_nome": "UC EMPOLESE",
-    "punti": 237,
-    "vittorie": 2,
-    "p1": 2,
+    "punti": 260,
+    "vittorie": 3,
+    "p1": 3,
     "p2": 2,
     "p3": 5,
-    "pout": 34,
+    "pout": 35,
     "n_atleti": 4,
     "pos": 13
   },
@@ -420,6 +420,18 @@
     "pos": 35
   },
   {
+    "team_id": "PEDALE_TOSCANO_PONTICINO",
+    "team_nome": "PEDALE TOSCANO PONTICINO",
+    "punti": 99,
+    "vittorie": 0,
+    "p1": 0,
+    "p2": 1,
+    "p3": 0,
+    "pout": 15,
+    "n_atleti": 3,
+    "pos": 36
+  },
+  {
     "team_id": "SESTU_BIKE_A_S_D",
     "team_nome": "SESTU BIKE A.S.D.",
     "punti": 99,
@@ -429,7 +441,7 @@
     "p3": 1,
     "pout": 18,
     "n_atleti": 3,
-    "pos": 36
+    "pos": 37
   },
   {
     "team_id": "NONSOLOBIKE",
@@ -441,7 +453,7 @@
     "p3": 0,
     "pout": 4,
     "n_atleti": 1,
-    "pos": 37
+    "pos": 38
   },
   {
     "team_id": "GS_BERTI_MOBILI_BENASSI",
@@ -453,7 +465,7 @@
     "p3": 0,
     "pout": 11,
     "n_atleti": 2,
-    "pos": 38
+    "pos": 39
   },
   {
     "team_id": "DUEPPI_CYCLING_PROJECT",
@@ -465,18 +477,6 @@
     "p3": 4,
     "pout": 5,
     "n_atleti": 1,
-    "pos": 39
-  },
-  {
-    "team_id": "PEDALE_TOSCANO_PONTICINO",
-    "team_nome": "PEDALE TOSCANO PONTICINO",
-    "punti": 91,
-    "vittorie": 0,
-    "p1": 0,
-    "p2": 1,
-    "p3": 0,
-    "pout": 13,
-    "n_atleti": 3,
     "pos": 40
   },
   {
@@ -660,6 +660,18 @@
     "pos": 55
   },
   {
+    "team_id": "UC_PIANO_DI_MOMMIO_SPEEDY_BIKE",
+    "team_nome": "UC PIANO DI MOMMIO - SPEEDY BIKE",
+    "punti": 67,
+    "vittorie": 0,
+    "p1": 0,
+    "p2": 1,
+    "p3": 0,
+    "pout": 12,
+    "n_atleti": 3,
+    "pos": 56
+  },
+  {
     "team_id": "G_C_SOSSANO_1975",
     "team_nome": "G.C. SOSSANO 1975",
     "punti": 66,
@@ -669,19 +681,31 @@
     "p3": 1,
     "pout": 12,
     "n_atleti": 3,
-    "pos": 56
+    "pos": 57
   },
   {
-    "team_id": "UC_PIANO_DI_MOMMIO_SPEEDY_BIKE",
-    "team_nome": "UC PIANO DI MOMMIO - SPEEDY BIKE",
-    "punti": 66,
+    "team_id": "PEDALE_SARZANESE",
+    "team_nome": "PEDALE SARZANESE",
+    "punti": 63,
     "vittorie": 0,
     "p1": 0,
     "p2": 1,
-    "p3": 0,
-    "pout": 11,
+    "p3": 1,
+    "pout": 13,
+    "n_atleti": 2,
+    "pos": 58
+  },
+  {
+    "team_id": "UC_DONORATICO",
+    "team_nome": "UC DONORATICO",
+    "punti": 63,
+    "vittorie": 0,
+    "p1": 0,
+    "p2": 0,
+    "p3": 2,
+    "pout": 8,
     "n_atleti": 3,
-    "pos": 57
+    "pos": 59
   },
   {
     "team_id": "VELO_CLUB_CATTOLICA",
@@ -693,7 +717,7 @@
     "p3": 0,
     "pout": 10,
     "n_atleti": 3,
-    "pos": 58
+    "pos": 60
   },
   {
     "team_id": "TEAM_GIUNIGOR_B_BIKE",
@@ -705,19 +729,19 @@
     "p3": 2,
     "pout": 6,
     "n_atleti": 1,
-    "pos": 59
+    "pos": 61
   },
   {
-    "team_id": "UC_DONORATICO",
-    "team_nome": "UC DONORATICO",
+    "team_id": "POL_MILLELUCI_CICLISMO",
+    "team_nome": "POL. MILLELUCI CICLISMO",
     "punti": 59,
     "vittorie": 0,
     "p1": 0,
-    "p2": 0,
-    "p3": 2,
+    "p2": 2,
+    "p3": 1,
     "pout": 7,
-    "n_atleti": 3,
-    "pos": 60
+    "n_atleti": 2,
+    "pos": 62
   },
   {
     "team_id": "A_S_D_CICLI_TONTI_CATTOLICA",
@@ -729,19 +753,7 @@
     "p3": 1,
     "pout": 6,
     "n_atleti": 1,
-    "pos": 61
-  },
-  {
-    "team_id": "PEDALE_SARZANESE",
-    "team_nome": "PEDALE SARZANESE",
-    "punti": 58,
-    "vittorie": 0,
-    "p1": 0,
-    "p2": 1,
-    "p3": 1,
-    "pout": 12,
-    "n_atleti": 2,
-    "pos": 62
+    "pos": 63
   },
   {
     "team_id": "OXYGEN_EBIKE_STORE_BRESCIA",
@@ -753,7 +765,7 @@
     "p3": 1,
     "pout": 2,
     "n_atleti": 1,
-    "pos": 63
+    "pos": 64
   },
   {
     "team_id": "KK_NOVO_MESTO",
@@ -765,7 +777,7 @@
     "p3": 0,
     "pout": 3,
     "n_atleti": 3,
-    "pos": 64
+    "pos": 65
   },
   {
     "team_id": "GS_FIUMICELLO_1971",
@@ -777,7 +789,7 @@
     "p3": 1,
     "pout": 7,
     "n_atleti": 3,
-    "pos": 65
+    "pos": 66
   },
   {
     "team_id": "S_C_SAN_FELICE_A_S_D",
@@ -789,7 +801,7 @@
     "p3": 0,
     "pout": 7,
     "n_atleti": 1,
-    "pos": 66
+    "pos": 67
   },
   {
     "team_id": "CANNEDU_ITTIRI_A_MANCA_ASD",
@@ -801,7 +813,7 @@
     "p3": 1,
     "pout": 10,
     "n_atleti": 2,
-    "pos": 67
+    "pos": 68
   },
   {
     "team_id": "PEDALE_RIMINESE_FRECCE_ROSSE",
@@ -813,7 +825,7 @@
     "p3": 0,
     "pout": 11,
     "n_atleti": 2,
-    "pos": 68
+    "pos": 69
   },
   {
     "team_id": "UC_FOEN_MICTU",
@@ -825,7 +837,7 @@
     "p3": 2,
     "pout": 4,
     "n_atleti": 2,
-    "pos": 69
+    "pos": 70
   },
   {
     "team_id": "ASD_LPM_GROUP",
@@ -837,18 +849,6 @@
     "p3": 2,
     "pout": 4,
     "n_atleti": 1,
-    "pos": 70
-  },
-  {
-    "team_id": "POL_MILLELUCI_CICLISMO",
-    "team_nome": "POL. MILLELUCI CICLISMO",
-    "punti": 47,
-    "vittorie": 0,
-    "p1": 0,
-    "p2": 1,
-    "p3": 1,
-    "pout": 7,
-    "n_atleti": 2,
     "pos": 71
   },
   {
