@@ -2,8 +2,11 @@
   "LOMBARDIA": {
     "id": "LOMBARDIA",
     "nome": "LOMBARDIA",
-    "punti_totali": 190,
+    "punti_totali": 234,
     "atleti": [
+      "GUALTIERI_MATTEO_JACOPO",
+      "MATTEINI_SAMUELE",
+      "LONGO_RICCARDO",
       "PUPILLO_MANUEL",
       "FRAGUGLIA_NICOLO",
       "PISARRA_FABIO",
@@ -25,6 +28,51 @@
       "COLOSIO_FRANCESCO"
     ],
     "risultati": [
+      {
+        "gara_id": "CAMPIONATO_ITALIANO_STRADA_ALLIEVI_2026-07-05_AL_M",
+        "nome_gara": "CAMPIONATO ITALIANO STRADA ALLIEVI",
+        "data": "2026-07-05",
+        "atleta_id": "GUALTIERI_MATTEO_JACOPO",
+        "atleta_cognome": "GUALTIERI",
+        "atleta_nome": "MATTEO JACOPO",
+        "posizione": 1,
+        "punti_effettivi": 30,
+        "moltiplicatore": 2,
+        "tipo": "nazionale",
+        "regione": "BOLZANO",
+        "km": "80.600",
+        "media": "41.991"
+      },
+      {
+        "gara_id": "CAMPIONATO_ITALIANO_STRADA_ALLIEVI_2026-07-05_AL_M",
+        "nome_gara": "CAMPIONATO ITALIANO STRADA ALLIEVI",
+        "data": "2026-07-05",
+        "atleta_id": "MATTEINI_SAMUELE",
+        "atleta_cognome": "MATTEINI",
+        "atleta_nome": "SAMUELE",
+        "posizione": 7,
+        "punti_effettivi": 8,
+        "moltiplicatore": 2,
+        "tipo": "nazionale",
+        "regione": "BOLZANO",
+        "km": "80.600",
+        "media": "41.991"
+      },
+      {
+        "gara_id": "CAMPIONATO_ITALIANO_STRADA_ALLIEVI_2026-07-05_AL_M",
+        "nome_gara": "CAMPIONATO ITALIANO STRADA ALLIEVI",
+        "data": "2026-07-05",
+        "atleta_id": "LONGO_RICCARDO",
+        "atleta_cognome": "LONGO",
+        "atleta_nome": "RICCARDO",
+        "posizione": 8,
+        "punti_effettivi": 6,
+        "moltiplicatore": 2,
+        "tipo": "nazionale",
+        "regione": "BOLZANO",
+        "km": "80.600",
+        "media": "41.991"
+      },
       {
         "gara_id": "CAMPIONATO_ITALIANO_STRADA_2026-07-05_ES1_M",
         "nome_gara": "CAMPIONATO ITALIANO STRADA",
@@ -327,6 +375,7 @@
       }
     ],
     "punti_per_cat": {
+      "AL_M": 44,
       "ES1_M": 34,
       "ES2_M": 40,
       "AL_F": 22,
@@ -335,244 +384,13 @@
       "JUN_M": 34
     }
   },
-  "EMILIA_ROMAGNA": {
-    "id": "EMILIA_ROMAGNA",
-    "nome": "EMILIA ROMAGNA",
-    "punti_totali": 108,
-    "atleti": [
-      "PAVANI_LUCA",
-      "SANGIORGI_ALESSANDRO_MATTIA",
-      "VITALONI_THOMAS",
-      "BELLETTINI_ALESSANDRO",
-      "MASINI_GRETA",
-      "SAMBI_GINEVRA",
-      "DI_PARDO_BEATRICE"
-    ],
-    "risultati": [
-      {
-        "gara_id": "CAMPIONATO_ITALIANO_STRADA_2026-07-05_ES1_M",
-        "nome_gara": "CAMPIONATO ITALIANO STRADA",
-        "data": "2026-07-05",
-        "atleta_id": "PAVANI_LUCA",
-        "atleta_cognome": "PAVANI",
-        "atleta_nome": "LUCA",
-        "posizione": 2,
-        "punti_effettivi": 24,
-        "moltiplicatore": 2,
-        "tipo": "nazionale",
-        "regione": "BOLZANO",
-        "km": "35.400",
-        "media": "38.606"
-      },
-      {
-        "gara_id": "CAMPIONATO_ITALIANO_STRADA_2026-07-05_ES1_M",
-        "nome_gara": "CAMPIONATO ITALIANO STRADA",
-        "data": "2026-07-05",
-        "atleta_id": "SANGIORGI_ALESSANDRO_MATTIA",
-        "atleta_cognome": "SANGIORGI",
-        "atleta_nome": "ALESSANDRO MATTIA",
-        "posizione": 10,
-        "punti_effettivi": 2,
-        "moltiplicatore": 2,
-        "tipo": "nazionale",
-        "regione": "BOLZANO",
-        "km": "35.400",
-        "media": "38.606"
-      },
-      {
-        "gara_id": "CAMPIONATO_ITALIANO_STRADA_2026-07-05_ES2_M",
-        "nome_gara": "CAMPIONATO ITALIANO STRADA",
-        "data": "2026-07-05",
-        "atleta_id": "VITALONI_THOMAS",
-        "atleta_cognome": "VITALONI",
-        "atleta_nome": "THOMAS",
-        "posizione": 2,
-        "punti_effettivi": 24,
-        "moltiplicatore": 2,
-        "tipo": "nazionale",
-        "regione": "BOLZANO",
-        "km": "53.200",
-        "media": "39.925"
-      },
-      {
-        "gara_id": "CAMPIONATO_ITALIANO_STRADA_2026-07-05_ES2_M",
-        "nome_gara": "CAMPIONATO ITALIANO STRADA",
-        "data": "2026-07-05",
-        "atleta_id": "BELLETTINI_ALESSANDRO",
-        "atleta_cognome": "BELLETTINI",
-        "atleta_nome": "ALESSANDRO",
-        "posizione": 7,
-        "punti_effettivi": 8,
-        "moltiplicatore": 2,
-        "tipo": "nazionale",
-        "regione": "BOLZANO",
-        "km": "53.200",
-        "media": "39.925"
-      },
-      {
-        "gara_id": "CAMPIONATO_ITALIANO_STRADA_2026-07-04_AL_F",
-        "nome_gara": "CAMPIONATO ITALIANO STRADA",
-        "data": "2026-07-04",
-        "atleta_id": "MASINI_GRETA",
-        "atleta_cognome": "MASINI",
-        "atleta_nome": "GRETA",
-        "posizione": 5,
-        "punti_effettivi": 12,
-        "moltiplicatore": 2,
-        "tipo": "nazionale",
-        "regione": "BOLZANO",
-        "km": "71.000",
-        "media": "36.132"
-      },
-      {
-        "gara_id": "CAMPIONATO_ITALIANO_STRADA_2026-07-04_AL_F",
-        "nome_gara": "CAMPIONATO ITALIANO STRADA",
-        "data": "2026-07-04",
-        "atleta_id": "SAMBI_GINEVRA",
-        "atleta_cognome": "SAMBI",
-        "atleta_nome": "GINEVRA",
-        "posizione": 7,
-        "punti_effettivi": 8,
-        "moltiplicatore": 2,
-        "tipo": "nazionale",
-        "regione": "BOLZANO",
-        "km": "71.000",
-        "media": "36.132"
-      },
-      {
-        "gara_id": "CAMPIONATO_ITALIANO_STRADA_DONNE_ESORDIENTI_PRIMO_ANNO_2026-07-04_ES1_F",
-        "nome_gara": "CAMPIONATO ITALIANO STRADA DONNE ESORDIENTI PRIMO ANNO",
-        "data": "2026-07-04",
-        "atleta_id": "DI_PARDO_BEATRICE",
-        "atleta_cognome": "DI",
-        "atleta_nome": "PARDO BEATRICE",
-        "posizione": 1,
-        "punti_effettivi": 30,
-        "moltiplicatore": 2,
-        "tipo": "nazionale",
-        "regione": "BOLZANO",
-        "km": "35.400",
-        "media": "35.449"
-      }
-    ],
-    "punti_per_cat": {
-      "ES1_M": 26,
-      "ES2_M": 32,
-      "AL_F": 20,
-      "ES1_F": 30
-    }
-  },
-  "BOLZANO": {
-    "id": "BOLZANO",
-    "nome": "BOLZANO",
-    "punti_totali": 20,
-    "atleti": [
-      "ZANOLINI_PABLO"
-    ],
-    "risultati": [
-      {
-        "gara_id": "CAMPIONATO_ITALIANO_STRADA_2026-07-05_ES1_M",
-        "nome_gara": "CAMPIONATO ITALIANO STRADA",
-        "data": "2026-07-05",
-        "atleta_id": "ZANOLINI_PABLO",
-        "atleta_cognome": "ZANOLINI",
-        "atleta_nome": "PABLO",
-        "posizione": 3,
-        "punti_effettivi": 20,
-        "moltiplicatore": 2,
-        "tipo": "nazionale",
-        "regione": "BOLZANO",
-        "km": "35.400",
-        "media": "38.606"
-      }
-    ],
-    "punti_per_cat": {
-      "ES1_M": 20
-    }
-  },
-  "TRENTO": {
-    "id": "TRENTO",
-    "nome": "TRENTO",
-    "punti_totali": 38,
-    "atleti": [
-      "FONTANARI_LORENZO",
-      "D_AQUILIO_JACOPO",
-      "DONANZAN_MARGHERITA",
-      "PELLEGRINI_GIULIA"
-    ],
-    "risultati": [
-      {
-        "gara_id": "CAMPIONATO_ITALIANO_STRADA_2026-07-05_ES1_M",
-        "nome_gara": "CAMPIONATO ITALIANO STRADA",
-        "data": "2026-07-05",
-        "atleta_id": "FONTANARI_LORENZO",
-        "atleta_cognome": "FONTANARI",
-        "atleta_nome": "LORENZO",
-        "posizione": 4,
-        "punti_effettivi": 16,
-        "moltiplicatore": 2,
-        "tipo": "nazionale",
-        "regione": "BOLZANO",
-        "km": "35.400",
-        "media": "38.606"
-      },
-      {
-        "gara_id": "CAMPIONATO_ITALIANO_STRADA_2026-07-05_ES2_M",
-        "nome_gara": "CAMPIONATO ITALIANO STRADA",
-        "data": "2026-07-05",
-        "atleta_id": "D_AQUILIO_JACOPO",
-        "atleta_cognome": "D'AQUILIO",
-        "atleta_nome": "JACOPO",
-        "posizione": 10,
-        "punti_effettivi": 2,
-        "moltiplicatore": 2,
-        "tipo": "nazionale",
-        "regione": "BOLZANO",
-        "km": "53.200",
-        "media": "39.925"
-      },
-      {
-        "gara_id": "CAMPIONATO_ITALIANO_STRADA_DONNE_ESORDIENTI_SECONDO_ANNO_2026-07-04_ES2_F",
-        "nome_gara": "CAMPIONATO ITALIANO STRADA DONNE ESORDIENTI SECONDO ANNO",
-        "data": "2026-07-04",
-        "atleta_id": "DONANZAN_MARGHERITA",
-        "atleta_cognome": "DONANZAN",
-        "atleta_nome": "MARGHERITA",
-        "posizione": 5,
-        "punti_effettivi": 12,
-        "moltiplicatore": 2,
-        "tipo": "nazionale",
-        "regione": "BOLZANO",
-        "km": "53.200",
-        "media": "34.552"
-      },
-      {
-        "gara_id": "CAMPIONATO_ITALIANO_STRADA_DONNE_ESORDIENTI_SECONDO_ANNO_2026-07-04_ES2_F",
-        "nome_gara": "CAMPIONATO ITALIANO STRADA DONNE ESORDIENTI SECONDO ANNO",
-        "data": "2026-07-04",
-        "atleta_id": "PELLEGRINI_GIULIA",
-        "atleta_cognome": "PELLEGRINI",
-        "atleta_nome": "GIULIA",
-        "posizione": 7,
-        "punti_effettivi": 8,
-        "moltiplicatore": 2,
-        "tipo": "nazionale",
-        "regione": "BOLZANO",
-        "km": "53.200",
-        "media": "34.552"
-      }
-    ],
-    "punti_per_cat": {
-      "ES1_M": 16,
-      "ES2_M": 2,
-      "ES2_F": 20
-    }
-  },
   "VENETO": {
     "id": "VENETO",
     "nome": "VENETO",
-    "punti_totali": 255,
+    "punti_totali": 281,
     "atleti": [
+      "CASETTA_MARCO",
+      "LIBERTANI_GIOELE_ANGELO",
       "MORO_LUDOVICO",
       "BARBIERO_LUCA",
       "CUMAN_DAVIDE",
@@ -587,6 +405,36 @@
       "PADOVAN_NICOLA"
     ],
     "risultati": [
+      {
+        "gara_id": "CAMPIONATO_ITALIANO_STRADA_ALLIEVI_2026-07-05_AL_M",
+        "nome_gara": "CAMPIONATO ITALIANO STRADA ALLIEVI",
+        "data": "2026-07-05",
+        "atleta_id": "CASETTA_MARCO",
+        "atleta_cognome": "CASETTA",
+        "atleta_nome": "MARCO",
+        "posizione": 2,
+        "punti_effettivi": 24,
+        "moltiplicatore": 2,
+        "tipo": "nazionale",
+        "regione": "BOLZANO",
+        "km": "80.600",
+        "media": "41.991"
+      },
+      {
+        "gara_id": "CAMPIONATO_ITALIANO_STRADA_ALLIEVI_2026-07-05_AL_M",
+        "nome_gara": "CAMPIONATO ITALIANO STRADA ALLIEVI",
+        "data": "2026-07-05",
+        "atleta_id": "LIBERTANI_GIOELE_ANGELO",
+        "atleta_cognome": "LIBERTANI",
+        "atleta_nome": "GIOELE ANGELO",
+        "posizione": 10,
+        "punti_effettivi": 2,
+        "moltiplicatore": 2,
+        "tipo": "nazionale",
+        "regione": "BOLZANO",
+        "km": "80.600",
+        "media": "41.991"
+      },
       {
         "gara_id": "CAMPIONATO_ITALIANO_STRADA_2026-07-05_ES1_M",
         "nome_gara": "CAMPIONATO ITALIANO STRADA",
@@ -829,12 +677,369 @@
       }
     ],
     "punti_per_cat": {
+      "AL_M": 26,
       "ES1_M": 18,
       "ES2_M": 6,
       "AL_F": 36,
       "ES1_F": 12,
       "ES2_F": 30,
       "JUN_M": 153
+    }
+  },
+  "MARCHE": {
+    "id": "MARCHE",
+    "nome": "MARCHE",
+    "punti_totali": 22,
+    "atleti": [
+      "VITALI_GIULIO",
+      "DAZZANI_MYA"
+    ],
+    "risultati": [
+      {
+        "gara_id": "CAMPIONATO_ITALIANO_STRADA_ALLIEVI_2026-07-05_AL_M",
+        "nome_gara": "CAMPIONATO ITALIANO STRADA ALLIEVI",
+        "data": "2026-07-05",
+        "atleta_id": "VITALI_GIULIO",
+        "atleta_cognome": "VITALI",
+        "atleta_nome": "GIULIO",
+        "posizione": 3,
+        "punti_effettivi": 20,
+        "moltiplicatore": 2,
+        "tipo": "nazionale",
+        "regione": "BOLZANO",
+        "km": "80.600",
+        "media": "41.991"
+      },
+      {
+        "gara_id": "CAMPIONATO_ITALIANO_STRADA_DONNE_ESORDIENTI_SECONDO_ANNO_2026-07-04_ES2_F",
+        "nome_gara": "CAMPIONATO ITALIANO STRADA DONNE ESORDIENTI SECONDO ANNO",
+        "data": "2026-07-04",
+        "atleta_id": "DAZZANI_MYA",
+        "atleta_cognome": "DAZZANI",
+        "atleta_nome": "MYA",
+        "posizione": 10,
+        "punti_effettivi": 2,
+        "moltiplicatore": 2,
+        "tipo": "nazionale",
+        "regione": "BOLZANO",
+        "km": "53.200",
+        "media": "34.552"
+      }
+    ],
+    "punti_per_cat": {
+      "AL_M": 20,
+      "ES2_F": 2
+    }
+  },
+  "TRENTO": {
+    "id": "TRENTO",
+    "nome": "TRENTO",
+    "punti_totali": 58,
+    "atleti": [
+      "VOLTOLINI_VICTOR",
+      "MAGAGNOTTI_ERIK",
+      "FONTANARI_LORENZO",
+      "D_AQUILIO_JACOPO",
+      "DONANZAN_MARGHERITA",
+      "PELLEGRINI_GIULIA"
+    ],
+    "risultati": [
+      {
+        "gara_id": "CAMPIONATO_ITALIANO_STRADA_ALLIEVI_2026-07-05_AL_M",
+        "nome_gara": "CAMPIONATO ITALIANO STRADA ALLIEVI",
+        "data": "2026-07-05",
+        "atleta_id": "VOLTOLINI_VICTOR",
+        "atleta_cognome": "VOLTOLINI",
+        "atleta_nome": "VICTOR",
+        "posizione": 4,
+        "punti_effettivi": 16,
+        "moltiplicatore": 2,
+        "tipo": "nazionale",
+        "regione": "BOLZANO",
+        "km": "80.600",
+        "media": "41.991"
+      },
+      {
+        "gara_id": "CAMPIONATO_ITALIANO_STRADA_ALLIEVI_2026-07-05_AL_M",
+        "nome_gara": "CAMPIONATO ITALIANO STRADA ALLIEVI",
+        "data": "2026-07-05",
+        "atleta_id": "MAGAGNOTTI_ERIK",
+        "atleta_cognome": "MAGAGNOTTI",
+        "atleta_nome": "ERIK",
+        "posizione": 9,
+        "punti_effettivi": 4,
+        "moltiplicatore": 2,
+        "tipo": "nazionale",
+        "regione": "BOLZANO",
+        "km": "80.600",
+        "media": "41.991"
+      },
+      {
+        "gara_id": "CAMPIONATO_ITALIANO_STRADA_2026-07-05_ES1_M",
+        "nome_gara": "CAMPIONATO ITALIANO STRADA",
+        "data": "2026-07-05",
+        "atleta_id": "FONTANARI_LORENZO",
+        "atleta_cognome": "FONTANARI",
+        "atleta_nome": "LORENZO",
+        "posizione": 4,
+        "punti_effettivi": 16,
+        "moltiplicatore": 2,
+        "tipo": "nazionale",
+        "regione": "BOLZANO",
+        "km": "35.400",
+        "media": "38.606"
+      },
+      {
+        "gara_id": "CAMPIONATO_ITALIANO_STRADA_2026-07-05_ES2_M",
+        "nome_gara": "CAMPIONATO ITALIANO STRADA",
+        "data": "2026-07-05",
+        "atleta_id": "D_AQUILIO_JACOPO",
+        "atleta_cognome": "D'AQUILIO",
+        "atleta_nome": "JACOPO",
+        "posizione": 10,
+        "punti_effettivi": 2,
+        "moltiplicatore": 2,
+        "tipo": "nazionale",
+        "regione": "BOLZANO",
+        "km": "53.200",
+        "media": "39.925"
+      },
+      {
+        "gara_id": "CAMPIONATO_ITALIANO_STRADA_DONNE_ESORDIENTI_SECONDO_ANNO_2026-07-04_ES2_F",
+        "nome_gara": "CAMPIONATO ITALIANO STRADA DONNE ESORDIENTI SECONDO ANNO",
+        "data": "2026-07-04",
+        "atleta_id": "DONANZAN_MARGHERITA",
+        "atleta_cognome": "DONANZAN",
+        "atleta_nome": "MARGHERITA",
+        "posizione": 5,
+        "punti_effettivi": 12,
+        "moltiplicatore": 2,
+        "tipo": "nazionale",
+        "regione": "BOLZANO",
+        "km": "53.200",
+        "media": "34.552"
+      },
+      {
+        "gara_id": "CAMPIONATO_ITALIANO_STRADA_DONNE_ESORDIENTI_SECONDO_ANNO_2026-07-04_ES2_F",
+        "nome_gara": "CAMPIONATO ITALIANO STRADA DONNE ESORDIENTI SECONDO ANNO",
+        "data": "2026-07-04",
+        "atleta_id": "PELLEGRINI_GIULIA",
+        "atleta_cognome": "PELLEGRINI",
+        "atleta_nome": "GIULIA",
+        "posizione": 7,
+        "punti_effettivi": 8,
+        "moltiplicatore": 2,
+        "tipo": "nazionale",
+        "regione": "BOLZANO",
+        "km": "53.200",
+        "media": "34.552"
+      }
+    ],
+    "punti_per_cat": {
+      "AL_M": 20,
+      "ES1_M": 16,
+      "ES2_M": 2,
+      "ES2_F": 20
+    }
+  },
+  "FRIULI_VENEZIA_GIULIA": {
+    "id": "FRIULI_VENEZIA_GIULIA",
+    "nome": "FRIULI VENEZIA GIULIA",
+    "punti_totali": 12,
+    "atleti": [
+      "GREGORI_SIMONE"
+    ],
+    "risultati": [
+      {
+        "gara_id": "CAMPIONATO_ITALIANO_STRADA_ALLIEVI_2026-07-05_AL_M",
+        "nome_gara": "CAMPIONATO ITALIANO STRADA ALLIEVI",
+        "data": "2026-07-05",
+        "atleta_id": "GREGORI_SIMONE",
+        "atleta_cognome": "GREGORI",
+        "atleta_nome": "SIMONE",
+        "posizione": 5,
+        "punti_effettivi": 12,
+        "moltiplicatore": 2,
+        "tipo": "nazionale",
+        "regione": "BOLZANO",
+        "km": "80.600",
+        "media": "41.991"
+      }
+    ],
+    "punti_per_cat": {
+      "AL_M": 12
+    }
+  },
+  "EMILIA_ROMAGNA": {
+    "id": "EMILIA_ROMAGNA",
+    "nome": "EMILIA ROMAGNA",
+    "punti_totali": 118,
+    "atleti": [
+      "MANFREDI_LEONARDO",
+      "PAVANI_LUCA",
+      "SANGIORGI_ALESSANDRO_MATTIA",
+      "VITALONI_THOMAS",
+      "BELLETTINI_ALESSANDRO",
+      "MASINI_GRETA",
+      "SAMBI_GINEVRA",
+      "DI_PARDO_BEATRICE"
+    ],
+    "risultati": [
+      {
+        "gara_id": "CAMPIONATO_ITALIANO_STRADA_ALLIEVI_2026-07-05_AL_M",
+        "nome_gara": "CAMPIONATO ITALIANO STRADA ALLIEVI",
+        "data": "2026-07-05",
+        "atleta_id": "MANFREDI_LEONARDO",
+        "atleta_cognome": "MANFREDI",
+        "atleta_nome": "LEONARDO",
+        "posizione": 6,
+        "punti_effettivi": 10,
+        "moltiplicatore": 2,
+        "tipo": "nazionale",
+        "regione": "BOLZANO",
+        "km": "80.600",
+        "media": "41.991"
+      },
+      {
+        "gara_id": "CAMPIONATO_ITALIANO_STRADA_2026-07-05_ES1_M",
+        "nome_gara": "CAMPIONATO ITALIANO STRADA",
+        "data": "2026-07-05",
+        "atleta_id": "PAVANI_LUCA",
+        "atleta_cognome": "PAVANI",
+        "atleta_nome": "LUCA",
+        "posizione": 2,
+        "punti_effettivi": 24,
+        "moltiplicatore": 2,
+        "tipo": "nazionale",
+        "regione": "BOLZANO",
+        "km": "35.400",
+        "media": "38.606"
+      },
+      {
+        "gara_id": "CAMPIONATO_ITALIANO_STRADA_2026-07-05_ES1_M",
+        "nome_gara": "CAMPIONATO ITALIANO STRADA",
+        "data": "2026-07-05",
+        "atleta_id": "SANGIORGI_ALESSANDRO_MATTIA",
+        "atleta_cognome": "SANGIORGI",
+        "atleta_nome": "ALESSANDRO MATTIA",
+        "posizione": 10,
+        "punti_effettivi": 2,
+        "moltiplicatore": 2,
+        "tipo": "nazionale",
+        "regione": "BOLZANO",
+        "km": "35.400",
+        "media": "38.606"
+      },
+      {
+        "gara_id": "CAMPIONATO_ITALIANO_STRADA_2026-07-05_ES2_M",
+        "nome_gara": "CAMPIONATO ITALIANO STRADA",
+        "data": "2026-07-05",
+        "atleta_id": "VITALONI_THOMAS",
+        "atleta_cognome": "VITALONI",
+        "atleta_nome": "THOMAS",
+        "posizione": 2,
+        "punti_effettivi": 24,
+        "moltiplicatore": 2,
+        "tipo": "nazionale",
+        "regione": "BOLZANO",
+        "km": "53.200",
+        "media": "39.925"
+      },
+      {
+        "gara_id": "CAMPIONATO_ITALIANO_STRADA_2026-07-05_ES2_M",
+        "nome_gara": "CAMPIONATO ITALIANO STRADA",
+        "data": "2026-07-05",
+        "atleta_id": "BELLETTINI_ALESSANDRO",
+        "atleta_cognome": "BELLETTINI",
+        "atleta_nome": "ALESSANDRO",
+        "posizione": 7,
+        "punti_effettivi": 8,
+        "moltiplicatore": 2,
+        "tipo": "nazionale",
+        "regione": "BOLZANO",
+        "km": "53.200",
+        "media": "39.925"
+      },
+      {
+        "gara_id": "CAMPIONATO_ITALIANO_STRADA_2026-07-04_AL_F",
+        "nome_gara": "CAMPIONATO ITALIANO STRADA",
+        "data": "2026-07-04",
+        "atleta_id": "MASINI_GRETA",
+        "atleta_cognome": "MASINI",
+        "atleta_nome": "GRETA",
+        "posizione": 5,
+        "punti_effettivi": 12,
+        "moltiplicatore": 2,
+        "tipo": "nazionale",
+        "regione": "BOLZANO",
+        "km": "71.000",
+        "media": "36.132"
+      },
+      {
+        "gara_id": "CAMPIONATO_ITALIANO_STRADA_2026-07-04_AL_F",
+        "nome_gara": "CAMPIONATO ITALIANO STRADA",
+        "data": "2026-07-04",
+        "atleta_id": "SAMBI_GINEVRA",
+        "atleta_cognome": "SAMBI",
+        "atleta_nome": "GINEVRA",
+        "posizione": 7,
+        "punti_effettivi": 8,
+        "moltiplicatore": 2,
+        "tipo": "nazionale",
+        "regione": "BOLZANO",
+        "km": "71.000",
+        "media": "36.132"
+      },
+      {
+        "gara_id": "CAMPIONATO_ITALIANO_STRADA_DONNE_ESORDIENTI_PRIMO_ANNO_2026-07-04_ES1_F",
+        "nome_gara": "CAMPIONATO ITALIANO STRADA DONNE ESORDIENTI PRIMO ANNO",
+        "data": "2026-07-04",
+        "atleta_id": "DI_PARDO_BEATRICE",
+        "atleta_cognome": "DI",
+        "atleta_nome": "PARDO BEATRICE",
+        "posizione": 1,
+        "punti_effettivi": 30,
+        "moltiplicatore": 2,
+        "tipo": "nazionale",
+        "regione": "BOLZANO",
+        "km": "35.400",
+        "media": "35.449"
+      }
+    ],
+    "punti_per_cat": {
+      "AL_M": 10,
+      "ES1_M": 26,
+      "ES2_M": 32,
+      "AL_F": 20,
+      "ES1_F": 30
+    }
+  },
+  "BOLZANO": {
+    "id": "BOLZANO",
+    "nome": "BOLZANO",
+    "punti_totali": 20,
+    "atleti": [
+      "ZANOLINI_PABLO"
+    ],
+    "risultati": [
+      {
+        "gara_id": "CAMPIONATO_ITALIANO_STRADA_2026-07-05_ES1_M",
+        "nome_gara": "CAMPIONATO ITALIANO STRADA",
+        "data": "2026-07-05",
+        "atleta_id": "ZANOLINI_PABLO",
+        "atleta_cognome": "ZANOLINI",
+        "atleta_nome": "PABLO",
+        "posizione": 3,
+        "punti_effettivi": 20,
+        "moltiplicatore": 2,
+        "tipo": "nazionale",
+        "regione": "BOLZANO",
+        "km": "35.400",
+        "media": "38.606"
+      }
+    ],
+    "punti_per_cat": {
+      "ES1_M": 20
     }
   },
   "LIGURIA": {
@@ -26975,34 +27180,6 @@
     ],
     "punti_per_cat": {
       "ES2_F": 10
-    }
-  },
-  "MARCHE": {
-    "id": "MARCHE",
-    "nome": "MARCHE",
-    "punti_totali": 2,
-    "atleti": [
-      "DAZZANI_MYA"
-    ],
-    "risultati": [
-      {
-        "gara_id": "CAMPIONATO_ITALIANO_STRADA_DONNE_ESORDIENTI_SECONDO_ANNO_2026-07-04_ES2_F",
-        "nome_gara": "CAMPIONATO ITALIANO STRADA DONNE ESORDIENTI SECONDO ANNO",
-        "data": "2026-07-04",
-        "atleta_id": "DAZZANI_MYA",
-        "atleta_cognome": "DAZZANI",
-        "atleta_nome": "MYA",
-        "posizione": 10,
-        "punti_effettivi": 2,
-        "moltiplicatore": 2,
-        "tipo": "nazionale",
-        "regione": "BOLZANO",
-        "km": "53.200",
-        "media": "34.552"
-      }
-    ],
-    "punti_per_cat": {
-      "ES2_F": 2
     }
   },
   "TEAM_VANGI_TOMMASINI_IL_PIRATA": {
