@@ -4558,6 +4558,568 @@
       }
     ]
   },
+  "PATRUNO_EMANUELE_MATTEO": {
+    "id": "PATRUNO_EMANUELE_MATTEO",
+    "nome": "EMANUELE MATTEO",
+    "cognome": "PATRUNO",
+    "team_attuale": "POOL CANTU' - SOVICO - GB TEAM",
+    "team_id": "POOL_CANTU_SOVICO_GB_TEAM",
+    "categoria": "AL_M",
+    "genere": "M",
+    "punti_totali": 33,
+    "risultati": [
+      {
+        "gara_id": "3_GRAN_PREMIO_FRANCESCO_ZUCCHETTI_CAMPIONE_OLIMPICO_2026-07-05_AL_M",
+        "nome_gara": "3 GRAN PREMIO FRANCESCO ZUCCHETTI CAMPIONE OLIMPICO",
+        "data": "2026-07-05",
+        "posizione": 1,
+        "punti_effettivi": 15,
+        "team": "POOL CANTU' - SOVICO - GB TEAM",
+        "moltiplicatore": 1,
+        "tipo": "regionale",
+        "regione": "LOMBARDIA",
+        "km": "74.200",
+        "media": "41.108"
+      },
+      {
+        "gara_id": "6_TROFEO_BANCA_MEDIOLANUM_ABBIATEGRASSO_2026-06-02_AL_M",
+        "nome_gara": "6 TROFEO BANCA MEDIOLANUM ABBIATEGRASSO",
+        "data": "2026-06-02",
+        "posizione": 3,
+        "punti_effettivi": 10,
+        "team": "POOL CANTU' - SOVICO - GB TEAM",
+        "moltiplicatore": 1,
+        "tipo": "regionale",
+        "regione": "LOMBARDIA",
+        "km": "61.200",
+        "media": "40.352"
+      },
+      {
+        "gara_id": "7_TROFEO_GIAMPIERO_MAURI_2026-05-10_AL_M",
+        "nome_gara": "7 TROFEO GIAMPIERO MAURI",
+        "data": "2026-05-10",
+        "posizione": 9,
+        "punti_effettivi": 2,
+        "team": "POOL CANTU' - SOVICO - GB TEAM",
+        "moltiplicatore": 1,
+        "tipo": "regionale",
+        "regione": "LOMBARDIA",
+        "km": "57.000",
+        "media": "41.122"
+      },
+      {
+        "gara_id": "11_MEMORIAL_MARIO_BIANCO_2026-05-01_AL_M",
+        "nome_gara": "11 MEMORIAL MARIO BIANCO",
+        "data": "2026-05-01",
+        "posizione": 5,
+        "punti_effettivi": 6,
+        "team": "POOL CANTU' - SOVICO - GB TEAM",
+        "moltiplicatore": 1,
+        "tipo": "regionale",
+        "regione": "PIEMONTE",
+        "km": "60.000",
+        "media": "46.382"
+      }
+    ]
+  },
+  "CHIARELLO_NICOLO": {
+    "id": "CHIARELLO_NICOLO",
+    "nome": "NICOLO'",
+    "cognome": "CHIARELLO",
+    "team_attuale": "V.C. CASSANO MAGNAGO 1992",
+    "team_id": "V_C_CASSANO_MAGNAGO_1992",
+    "categoria": "AL_M",
+    "genere": "M",
+    "punti_totali": 31,
+    "risultati": [
+      {
+        "gara_id": "3_GRAN_PREMIO_FRANCESCO_ZUCCHETTI_CAMPIONE_OLIMPICO_2026-07-05_AL_M",
+        "nome_gara": "3 GRAN PREMIO FRANCESCO ZUCCHETTI CAMPIONE OLIMPICO",
+        "data": "2026-07-05",
+        "posizione": 2,
+        "punti_effettivi": 12,
+        "team": "V.C. CASSANO MAGNAGO 1992",
+        "moltiplicatore": 1,
+        "tipo": "regionale",
+        "regione": "LOMBARDIA",
+        "km": "74.200",
+        "media": "41.108"
+      },
+      {
+        "gara_id": "7_MEMORIAL_PAOLO_RIVA_CRONOSCALATA_2026-06-28_AL_M",
+        "nome_gara": "7 MEMORIAL PAOLO RIVA CRONOSCALATA",
+        "data": "2026-06-28",
+        "posizione": 3,
+        "punti_effettivi": 10,
+        "team": "V.C. CASSANO MAGNAGO 1992",
+        "moltiplicatore": 1,
+        "tipo": "regionale",
+        "regione": "LOMBARDIA",
+        "km": "2.000",
+        "media": "33.030"
+      },
+      {
+        "gara_id": "75_NOVARA_ORTA_TROFEO_E_GORLA_2026-06-07_AL_M",
+        "nome_gara": "75 NOVARA ORTA TROFEO E GORLA",
+        "data": "2026-06-07",
+        "posizione": 6,
+        "punti_effettivi": 5,
+        "team": "V.C. CASSANO MAGNAGO 1992",
+        "moltiplicatore": 1,
+        "tipo": "regionale",
+        "regione": "PIEMONTE",
+        "km": "64.700",
+        "media": "38.917"
+      },
+      {
+        "gara_id": "MEMORIAL_CELESTINO_VERCELLI_2026-06-02_AL_M",
+        "nome_gara": "MEMORIAL CELESTINO VERCELLI",
+        "data": "2026-06-02",
+        "posizione": 10,
+        "punti_effettivi": 1,
+        "team": "V.C. CASSANO MAGNAGO 1992",
+        "moltiplicatore": 1,
+        "tipo": "regionale",
+        "regione": "PIEMONTE",
+        "km": "68.500",
+        "media": "50.585"
+      },
+      {
+        "gara_id": "9_TROFEO_BCC_BRIANZA_E_LAGHI_2026-04-25_AL_M",
+        "nome_gara": "9 TROFEO BCC BRIANZA E LAGHI",
+        "data": "2026-04-25",
+        "posizione": 8,
+        "punti_effettivi": 3,
+        "team": "V.C. CASSANO MAGNAGO 1992",
+        "moltiplicatore": 1,
+        "tipo": "regionale",
+        "regione": "LOMBARDIA",
+        "km": "56.000",
+        "media": "40.514"
+      }
+    ]
+  },
+  "DE_VECCHI_LORENZO": {
+    "id": "DE_VECCHI_LORENZO",
+    "nome": "VECCHI LORENZO",
+    "cognome": "DE",
+    "team_attuale": "BUSTESE OLONIA A.S.D.",
+    "team_id": "BUSTESE_OLONIA_A_S_D",
+    "categoria": "AL_M",
+    "genere": "M",
+    "punti_totali": 65,
+    "risultati": [
+      {
+        "gara_id": "3_GRAN_PREMIO_FRANCESCO_ZUCCHETTI_CAMPIONE_OLIMPICO_2026-07-05_AL_M",
+        "nome_gara": "3 GRAN PREMIO FRANCESCO ZUCCHETTI CAMPIONE OLIMPICO",
+        "data": "2026-07-05",
+        "posizione": 3,
+        "punti_effettivi": 10,
+        "team": "BUSTESE OLONIA A.S.D.",
+        "moltiplicatore": 1,
+        "tipo": "regionale",
+        "regione": "LOMBARDIA",
+        "km": "74.200",
+        "media": "41.108"
+      },
+      {
+        "gara_id": "36_TROFEO_MARIA_ROVELLI_A_M_GARA_IN_LINEA_2026-06-28_AL_M",
+        "nome_gara": "36 TROFEO MARIA ROVELLI A M GARA IN LINEA",
+        "data": "2026-06-28",
+        "posizione": 1,
+        "punti_effettivi": 15,
+        "team": "BUSTESE OLONIA A.S.D.",
+        "moltiplicatore": 1,
+        "tipo": "regionale",
+        "regione": "LOMBARDIA",
+        "km": "53.000",
+        "media": "41.623"
+      },
+      {
+        "gara_id": "7_MEMORIAL_PAOLO_RIVA_CRONOSCALATA_2026-06-28_AL_M",
+        "nome_gara": "7 MEMORIAL PAOLO RIVA CRONOSCALATA",
+        "data": "2026-06-28",
+        "posizione": 7,
+        "punti_effettivi": 4,
+        "team": "BUSTESE OLONIA A.S.D.",
+        "moltiplicatore": 1,
+        "tipo": "regionale",
+        "regione": "LOMBARDIA",
+        "km": "2.000",
+        "media": "33.030"
+      },
+      {
+        "gara_id": "CORRI_PER_LA_MAMMA_2026-06-14_AL_M",
+        "nome_gara": "CORRI PER LA MAMMA",
+        "data": "2026-06-14",
+        "posizione": 7,
+        "punti_effettivi": 4,
+        "team": "BUSTESE OLONIA A.S.D.",
+        "moltiplicatore": 1,
+        "tipo": "regionale",
+        "regione": "LOMBARDIA",
+        "km": "79.000",
+        "media": "36.462"
+      },
+      {
+        "gara_id": "75_NOVARA_ORTA_TROFEO_E_GORLA_2026-06-07_AL_M",
+        "nome_gara": "75 NOVARA ORTA TROFEO E GORLA",
+        "data": "2026-06-07",
+        "posizione": 2,
+        "punti_effettivi": 12,
+        "team": "BUSTESE OLONIA A.S.D.",
+        "moltiplicatore": 1,
+        "tipo": "regionale",
+        "regione": "PIEMONTE",
+        "km": "64.700",
+        "media": "38.917"
+      },
+      {
+        "gara_id": "39_TROFEO_REMO_CALZOLARI_A_M_2026-05-17_AL_M",
+        "nome_gara": "39 TROFEO REMO CALZOLARI A M",
+        "data": "2026-05-17",
+        "posizione": 5,
+        "punti_effettivi": 6,
+        "team": "BUSTESE OLONIA A.S.D.",
+        "moltiplicatore": 1,
+        "tipo": "regionale",
+        "regione": "LOMBARDIA",
+        "km": "61.000",
+        "media": "42.542"
+      },
+      {
+        "gara_id": "7_TROFEO_GIAMPIERO_MAURI_2026-05-10_AL_M",
+        "nome_gara": "7 TROFEO GIAMPIERO MAURI",
+        "data": "2026-05-10",
+        "posizione": 5,
+        "punti_effettivi": 6,
+        "team": "BUSTESE OLONIA A.S.D.",
+        "moltiplicatore": 1,
+        "tipo": "regionale",
+        "regione": "LOMBARDIA",
+        "km": "57.000",
+        "media": "41.122"
+      },
+      {
+        "gara_id": "TROFEO_COMUNE_DI_ILLASI_2026-05-01_AL_M",
+        "nome_gara": "TROFEO COMUNE DI ILLASI",
+        "data": "2026-05-01",
+        "posizione": 5,
+        "punti_effettivi": 6,
+        "team": "BUSTESE OLONIA A.S.D.",
+        "moltiplicatore": 1,
+        "tipo": "regionale",
+        "regione": "VENETO",
+        "km": "63.600",
+        "media": "37.049"
+      },
+      {
+        "gara_id": "CRONOGUSSOLA_2026-04-18_AL_M",
+        "nome_gara": "CRONOGUSSOLA",
+        "data": "2026-04-18",
+        "posizione": 9,
+        "punti_effettivi": 2,
+        "team": "BUSTESE OLONIA A.S.D.",
+        "moltiplicatore": 1,
+        "tipo": "regionale",
+        "regione": "LOMBARDIA",
+        "km": "7.000",
+        "media": "47.280"
+      }
+    ]
+  },
+  "ZORCO_MATTIA": {
+    "id": "ZORCO_MATTIA",
+    "nome": "MATTIA",
+    "cognome": "ZORCO",
+    "team_attuale": "SALUS CICLISTICA SEREGNO DE ROSA",
+    "team_id": "SALUS_CICLISTICA_SEREGNO_DE_ROSA",
+    "categoria": "AL_M",
+    "genere": "M",
+    "punti_totali": 21,
+    "risultati": [
+      {
+        "gara_id": "3_GRAN_PREMIO_FRANCESCO_ZUCCHETTI_CAMPIONE_OLIMPICO_2026-07-05_AL_M",
+        "nome_gara": "3 GRAN PREMIO FRANCESCO ZUCCHETTI CAMPIONE OLIMPICO",
+        "data": "2026-07-05",
+        "posizione": 4,
+        "punti_effettivi": 8,
+        "team": "SALUS CICLISTICA SEREGNO DE ROSA",
+        "moltiplicatore": 1,
+        "tipo": "regionale",
+        "regione": "LOMBARDIA",
+        "km": "74.200",
+        "media": "41.108"
+      },
+      {
+        "gara_id": "93_MEDAGLIA_D_ORO_CITTA_DI_MONZA_2026-05-24_AL_M",
+        "nome_gara": "93 MEDAGLIA D'ORO CITTA' DI MONZA",
+        "data": "2026-05-24",
+        "posizione": 6,
+        "punti_effettivi": 5,
+        "team": "SALUS CICLISTICA SEREGNO DE ROSA",
+        "moltiplicatore": 1,
+        "tipo": "regionale",
+        "regione": "LOMBARDIA",
+        "km": "52.137",
+        "media": "44.796"
+      },
+      {
+        "gara_id": "26_MEMORIAL_MARCELLO_PERICO_1_TROFEO_CITTA_DI_SERIATE_2026-05-01_AL_M",
+        "nome_gara": "26 MEMORIAL MARCELLO PERICO 1 TROFEO CITTA' DI SERIATE",
+        "data": "2026-05-01",
+        "posizione": 4,
+        "punti_effettivi": 8,
+        "team": "SALUS CICLISTICA SEREGNO DE ROSA",
+        "moltiplicatore": 1,
+        "tipo": "regionale",
+        "regione": "LOMBARDIA",
+        "km": "62.000",
+        "media": "43.306"
+      }
+    ]
+  },
+  "RICHETTI_EMANUELE": {
+    "id": "RICHETTI_EMANUELE",
+    "nome": "EMANUELE",
+    "cognome": "RICHETTI",
+    "team_attuale": "V CYCLING - ARICI CLAUDIA - PITON",
+    "team_id": "V_CYCLING_ARICI_CLAUDIA_PITON",
+    "categoria": "AL_M",
+    "genere": "M",
+    "punti_totali": 14,
+    "risultati": [
+      {
+        "gara_id": "3_GRAN_PREMIO_FRANCESCO_ZUCCHETTI_CAMPIONE_OLIMPICO_2026-07-05_AL_M",
+        "nome_gara": "3 GRAN PREMIO FRANCESCO ZUCCHETTI CAMPIONE OLIMPICO",
+        "data": "2026-07-05",
+        "posizione": 5,
+        "punti_effettivi": 6,
+        "team": "V CYCLING - ARICI CLAUDIA - PITON",
+        "moltiplicatore": 1,
+        "tipo": "regionale",
+        "regione": "LOMBARDIA",
+        "km": "74.200",
+        "media": "41.108"
+      },
+      {
+        "gara_id": "LA_DUE_GIORNATE_DI_BORNATO_MEMORIAL_MALNATI_2026-06-28_AL_M",
+        "nome_gara": "LA DUE GIORNATE DI BORNATO MEMORIAL MALNATI",
+        "data": "2026-06-28",
+        "posizione": 9,
+        "punti_effettivi": 2,
+        "team": "V CYCLING - ARICI CLAUDIA - PITON",
+        "moltiplicatore": 1,
+        "tipo": "regionale",
+        "regione": "LOMBARDIA",
+        "km": "64.500",
+        "media": "37.253"
+      },
+      {
+        "gara_id": "30_TROFEO_COMUNE_DI_CASAZZA_2026-06-07_AL_M",
+        "nome_gara": "30 TROFEO COMUNE DI CASAZZA",
+        "data": "2026-06-07",
+        "posizione": 5,
+        "punti_effettivi": 6,
+        "team": "V CYCLING - ARICI CLAUDIA - PITON",
+        "moltiplicatore": 1,
+        "tipo": "regionale",
+        "regione": "LOMBARDIA",
+        "km": "74.000",
+        "media": "40.597"
+      }
+    ]
+  },
+  "PIEROBON_ANDREA": {
+    "id": "PIEROBON_ANDREA",
+    "nome": "ANDREA",
+    "cognome": "PIEROBON",
+    "team_attuale": "POOL CANTU' - SOVICO - GB TEAM",
+    "team_id": "POOL_CANTU_SOVICO_GB_TEAM",
+    "categoria": "AL_M",
+    "genere": "M",
+    "punti_totali": 6,
+    "risultati": [
+      {
+        "gara_id": "3_GRAN_PREMIO_FRANCESCO_ZUCCHETTI_CAMPIONE_OLIMPICO_2026-07-05_AL_M",
+        "nome_gara": "3 GRAN PREMIO FRANCESCO ZUCCHETTI CAMPIONE OLIMPICO",
+        "data": "2026-07-05",
+        "posizione": 6,
+        "punti_effettivi": 5,
+        "team": "POOL CANTU' - SOVICO - GB TEAM",
+        "moltiplicatore": 1,
+        "tipo": "regionale",
+        "regione": "LOMBARDIA",
+        "km": "74.200",
+        "media": "41.108"
+      },
+      {
+        "gara_id": "2_TROFEO_MEWA_2026-06-07_AL_M",
+        "nome_gara": "2 TROFEO MEWA",
+        "data": "2026-06-07",
+        "posizione": 10,
+        "punti_effettivi": 1,
+        "team": "POOL CANTU' - SOVICO - GB TEAM",
+        "moltiplicatore": 1,
+        "tipo": "regionale",
+        "regione": "LOMBARDIA",
+        "km": "75.000",
+        "media": "38.571"
+      }
+    ]
+  },
+  "DELBONO_LORENZO": {
+    "id": "DELBONO_LORENZO",
+    "nome": "LORENZO",
+    "cognome": "DELBONO",
+    "team_attuale": "PROGETTO CICLISMO - RODENGO S. ASD",
+    "team_id": "PROGETTO_CICLISMO_RODENGO_S_ASD",
+    "categoria": "AL_M",
+    "genere": "M",
+    "punti_totali": 5,
+    "risultati": [
+      {
+        "gara_id": "3_GRAN_PREMIO_FRANCESCO_ZUCCHETTI_CAMPIONE_OLIMPICO_2026-07-05_AL_M",
+        "nome_gara": "3 GRAN PREMIO FRANCESCO ZUCCHETTI CAMPIONE OLIMPICO",
+        "data": "2026-07-05",
+        "posizione": 7,
+        "punti_effettivi": 4,
+        "team": "PROGETTO CICLISMO - RODENGO S. ASD",
+        "moltiplicatore": 1,
+        "tipo": "regionale",
+        "regione": "LOMBARDIA",
+        "km": "74.200",
+        "media": "41.108"
+      },
+      {
+        "gara_id": "TROFEO_ECOSOLUZIONI_2026-05-17_AL_M",
+        "nome_gara": "TROFEO ECOSOLUZIONI",
+        "data": "2026-05-17",
+        "posizione": 10,
+        "punti_effettivi": 1,
+        "team": "PROGETTO CICLISMO - RODENGO S. ASD",
+        "moltiplicatore": 1,
+        "tipo": "regionale",
+        "regione": "LOMBARDIA",
+        "km": "63.900",
+        "media": "43.387"
+      }
+    ]
+  },
+  "ASTRELLI_OLIVER": {
+    "id": "ASTRELLI_OLIVER",
+    "nome": "OLIVER",
+    "cognome": "ASTRELLI",
+    "team_attuale": "1050 BIKE TEAM",
+    "team_id": "1050_BIKE_TEAM",
+    "categoria": "AL_M",
+    "genere": "M",
+    "punti_totali": 3,
+    "risultati": [
+      {
+        "gara_id": "3_GRAN_PREMIO_FRANCESCO_ZUCCHETTI_CAMPIONE_OLIMPICO_2026-07-05_AL_M",
+        "nome_gara": "3 GRAN PREMIO FRANCESCO ZUCCHETTI CAMPIONE OLIMPICO",
+        "data": "2026-07-05",
+        "posizione": 8,
+        "punti_effettivi": 3,
+        "team": "1050 BIKE TEAM",
+        "moltiplicatore": 1,
+        "tipo": "regionale",
+        "regione": "LOMBARDIA",
+        "km": "74.200",
+        "media": "41.108"
+      }
+    ]
+  },
+  "DACCO_ALESSANDRO": {
+    "id": "DACCO_ALESSANDRO",
+    "nome": "ALESSANDRO",
+    "cognome": "DACCO'",
+    "team_attuale": "ALBA OROBIA - BIASSONO",
+    "team_id": "ALBA_OROBIA_BIASSONO",
+    "categoria": "AL_M",
+    "genere": "M",
+    "punti_totali": 6,
+    "risultati": [
+      {
+        "gara_id": "3_GRAN_PREMIO_FRANCESCO_ZUCCHETTI_CAMPIONE_OLIMPICO_2026-07-05_AL_M",
+        "nome_gara": "3 GRAN PREMIO FRANCESCO ZUCCHETTI CAMPIONE OLIMPICO",
+        "data": "2026-07-05",
+        "posizione": 9,
+        "punti_effettivi": 2,
+        "team": "ALBA OROBIA - BIASSONO",
+        "moltiplicatore": 1,
+        "tipo": "regionale",
+        "regione": "LOMBARDIA",
+        "km": "74.200",
+        "media": "41.108"
+      },
+      {
+        "gara_id": "2_TROFEO_MEWA_2026-06-07_AL_M",
+        "nome_gara": "2 TROFEO MEWA",
+        "data": "2026-06-07",
+        "posizione": 7,
+        "punti_effettivi": 4,
+        "team": "ALBA OROBIA - BIASSONO",
+        "moltiplicatore": 1,
+        "tipo": "regionale",
+        "regione": "LOMBARDIA",
+        "km": "75.000",
+        "media": "38.571"
+      }
+    ]
+  },
+  "MORETTO_GIULIO_GILBERTO": {
+    "id": "MORETTO_GIULIO_GILBERTO",
+    "nome": "GIULIO GILBERTO",
+    "cognome": "MORETTO",
+    "team_attuale": "SALUS CICLISTICA SEREGNO DE ROSA",
+    "team_id": "SALUS_CICLISTICA_SEREGNO_DE_ROSA",
+    "categoria": "AL_M",
+    "genere": "M",
+    "punti_totali": 8,
+    "risultati": [
+      {
+        "gara_id": "3_GRAN_PREMIO_FRANCESCO_ZUCCHETTI_CAMPIONE_OLIMPICO_2026-07-05_AL_M",
+        "nome_gara": "3 GRAN PREMIO FRANCESCO ZUCCHETTI CAMPIONE OLIMPICO",
+        "data": "2026-07-05",
+        "posizione": 10,
+        "punti_effettivi": 1,
+        "team": "SALUS CICLISTICA SEREGNO DE ROSA",
+        "moltiplicatore": 1,
+        "tipo": "regionale",
+        "regione": "LOMBARDIA",
+        "km": "74.200",
+        "media": "41.108"
+      },
+      {
+        "gara_id": "93_MEDAGLIA_D_ORO_CITTA_DI_MONZA_2026-05-24_AL_M",
+        "nome_gara": "93 MEDAGLIA D'ORO CITTA' DI MONZA",
+        "data": "2026-05-24",
+        "posizione": 7,
+        "punti_effettivi": 4,
+        "team": "SALUS CICLISTICA SEREGNO DE ROSA",
+        "moltiplicatore": 1,
+        "tipo": "regionale",
+        "regione": "LOMBARDIA",
+        "km": "52.137",
+        "media": "44.796"
+      },
+      {
+        "gara_id": "PASQUALANDO_2026-04-05_AL_M",
+        "nome_gara": "PASQUALANDO",
+        "data": "2026-04-05",
+        "posizione": 8,
+        "punti_effettivi": 3,
+        "team": "SALUS CICLISTICA SEREGNO DE ROSA",
+        "moltiplicatore": 1,
+        "tipo": "regionale",
+        "regione": "TOSCANA",
+        "km": "55.000",
+        "media": "44.949"
+      }
+    ]
+  },
   "CERONE_ANTONIO": {
     "id": "CERONE_ANTONIO",
     "nome": "ANTONIO",
@@ -31135,44 +31697,6 @@
       }
     ]
   },
-  "RICHETTI_EMANUELE": {
-    "id": "RICHETTI_EMANUELE",
-    "nome": "EMANUELE",
-    "cognome": "RICHETTI",
-    "team_attuale": "V CYCLING - ARICI CLAUDIA - PITON",
-    "team_id": "V_CYCLING_ARICI_CLAUDIA_PITON",
-    "categoria": "AL_M",
-    "genere": "M",
-    "punti_totali": 8,
-    "risultati": [
-      {
-        "gara_id": "LA_DUE_GIORNATE_DI_BORNATO_MEMORIAL_MALNATI_2026-06-28_AL_M",
-        "nome_gara": "LA DUE GIORNATE DI BORNATO MEMORIAL MALNATI",
-        "data": "2026-06-28",
-        "posizione": 9,
-        "punti_effettivi": 2,
-        "team": "V CYCLING - ARICI CLAUDIA - PITON",
-        "moltiplicatore": 1,
-        "tipo": "regionale",
-        "regione": "LOMBARDIA",
-        "km": "64.500",
-        "media": "37.253"
-      },
-      {
-        "gara_id": "30_TROFEO_COMUNE_DI_CASAZZA_2026-06-07_AL_M",
-        "nome_gara": "30 TROFEO COMUNE DI CASAZZA",
-        "data": "2026-06-07",
-        "posizione": 5,
-        "punti_effettivi": 6,
-        "team": "V CYCLING - ARICI CLAUDIA - PITON",
-        "moltiplicatore": 1,
-        "tipo": "regionale",
-        "regione": "LOMBARDIA",
-        "km": "74.000",
-        "media": "40.597"
-      }
-    ]
-  },
   "RONDA_DANIELE": {
     "id": "RONDA_DANIELE",
     "nome": "DANIELE",
@@ -31312,122 +31836,6 @@
         "regione": "LOMBARDIA",
         "km": "55.600",
         "media": "40.257"
-      }
-    ]
-  },
-  "DE_VECCHI_LORENZO": {
-    "id": "DE_VECCHI_LORENZO",
-    "nome": "VECCHI LORENZO",
-    "cognome": "DE",
-    "team_attuale": "BUSTESE OLONIA A.S.D.",
-    "team_id": "BUSTESE_OLONIA_A_S_D",
-    "categoria": "AL_M",
-    "genere": "M",
-    "punti_totali": 55,
-    "risultati": [
-      {
-        "gara_id": "36_TROFEO_MARIA_ROVELLI_A_M_GARA_IN_LINEA_2026-06-28_AL_M",
-        "nome_gara": "36 TROFEO MARIA ROVELLI A M GARA IN LINEA",
-        "data": "2026-06-28",
-        "posizione": 1,
-        "punti_effettivi": 15,
-        "team": "BUSTESE OLONIA A.S.D.",
-        "moltiplicatore": 1,
-        "tipo": "regionale",
-        "regione": "LOMBARDIA",
-        "km": "53.000",
-        "media": "41.623"
-      },
-      {
-        "gara_id": "7_MEMORIAL_PAOLO_RIVA_CRONOSCALATA_2026-06-28_AL_M",
-        "nome_gara": "7 MEMORIAL PAOLO RIVA CRONOSCALATA",
-        "data": "2026-06-28",
-        "posizione": 7,
-        "punti_effettivi": 4,
-        "team": "BUSTESE OLONIA A.S.D.",
-        "moltiplicatore": 1,
-        "tipo": "regionale",
-        "regione": "LOMBARDIA",
-        "km": "2.000",
-        "media": "33.030"
-      },
-      {
-        "gara_id": "CORRI_PER_LA_MAMMA_2026-06-14_AL_M",
-        "nome_gara": "CORRI PER LA MAMMA",
-        "data": "2026-06-14",
-        "posizione": 7,
-        "punti_effettivi": 4,
-        "team": "BUSTESE OLONIA A.S.D.",
-        "moltiplicatore": 1,
-        "tipo": "regionale",
-        "regione": "LOMBARDIA",
-        "km": "79.000",
-        "media": "36.462"
-      },
-      {
-        "gara_id": "75_NOVARA_ORTA_TROFEO_E_GORLA_2026-06-07_AL_M",
-        "nome_gara": "75 NOVARA ORTA TROFEO E GORLA",
-        "data": "2026-06-07",
-        "posizione": 2,
-        "punti_effettivi": 12,
-        "team": "BUSTESE OLONIA A.S.D.",
-        "moltiplicatore": 1,
-        "tipo": "regionale",
-        "regione": "PIEMONTE",
-        "km": "64.700",
-        "media": "38.917"
-      },
-      {
-        "gara_id": "39_TROFEO_REMO_CALZOLARI_A_M_2026-05-17_AL_M",
-        "nome_gara": "39 TROFEO REMO CALZOLARI A M",
-        "data": "2026-05-17",
-        "posizione": 5,
-        "punti_effettivi": 6,
-        "team": "BUSTESE OLONIA A.S.D.",
-        "moltiplicatore": 1,
-        "tipo": "regionale",
-        "regione": "LOMBARDIA",
-        "km": "61.000",
-        "media": "42.542"
-      },
-      {
-        "gara_id": "7_TROFEO_GIAMPIERO_MAURI_2026-05-10_AL_M",
-        "nome_gara": "7 TROFEO GIAMPIERO MAURI",
-        "data": "2026-05-10",
-        "posizione": 5,
-        "punti_effettivi": 6,
-        "team": "BUSTESE OLONIA A.S.D.",
-        "moltiplicatore": 1,
-        "tipo": "regionale",
-        "regione": "LOMBARDIA",
-        "km": "57.000",
-        "media": "41.122"
-      },
-      {
-        "gara_id": "TROFEO_COMUNE_DI_ILLASI_2026-05-01_AL_M",
-        "nome_gara": "TROFEO COMUNE DI ILLASI",
-        "data": "2026-05-01",
-        "posizione": 5,
-        "punti_effettivi": 6,
-        "team": "BUSTESE OLONIA A.S.D.",
-        "moltiplicatore": 1,
-        "tipo": "regionale",
-        "regione": "VENETO",
-        "km": "63.600",
-        "media": "37.049"
-      },
-      {
-        "gara_id": "CRONOGUSSOLA_2026-04-18_AL_M",
-        "nome_gara": "CRONOGUSSOLA",
-        "data": "2026-04-18",
-        "posizione": 9,
-        "punti_effettivi": 2,
-        "team": "BUSTESE OLONIA A.S.D.",
-        "moltiplicatore": 1,
-        "tipo": "regionale",
-        "regione": "LOMBARDIA",
-        "km": "7.000",
-        "media": "47.280"
       }
     ]
   },
@@ -32771,70 +33179,6 @@
         "regione": "PIEMONTE",
         "km": "58.000",
         "media": "42.097"
-      }
-    ]
-  },
-  "CHIARELLO_NICOLO": {
-    "id": "CHIARELLO_NICOLO",
-    "nome": "NICOLO'",
-    "cognome": "CHIARELLO",
-    "team_attuale": "V.C. CASSANO MAGNAGO 1992",
-    "team_id": "V_C_CASSANO_MAGNAGO_1992",
-    "categoria": "AL_M",
-    "genere": "M",
-    "punti_totali": 19,
-    "risultati": [
-      {
-        "gara_id": "7_MEMORIAL_PAOLO_RIVA_CRONOSCALATA_2026-06-28_AL_M",
-        "nome_gara": "7 MEMORIAL PAOLO RIVA CRONOSCALATA",
-        "data": "2026-06-28",
-        "posizione": 3,
-        "punti_effettivi": 10,
-        "team": "V.C. CASSANO MAGNAGO 1992",
-        "moltiplicatore": 1,
-        "tipo": "regionale",
-        "regione": "LOMBARDIA",
-        "km": "2.000",
-        "media": "33.030"
-      },
-      {
-        "gara_id": "75_NOVARA_ORTA_TROFEO_E_GORLA_2026-06-07_AL_M",
-        "nome_gara": "75 NOVARA ORTA TROFEO E GORLA",
-        "data": "2026-06-07",
-        "posizione": 6,
-        "punti_effettivi": 5,
-        "team": "V.C. CASSANO MAGNAGO 1992",
-        "moltiplicatore": 1,
-        "tipo": "regionale",
-        "regione": "PIEMONTE",
-        "km": "64.700",
-        "media": "38.917"
-      },
-      {
-        "gara_id": "MEMORIAL_CELESTINO_VERCELLI_2026-06-02_AL_M",
-        "nome_gara": "MEMORIAL CELESTINO VERCELLI",
-        "data": "2026-06-02",
-        "posizione": 10,
-        "punti_effettivi": 1,
-        "team": "V.C. CASSANO MAGNAGO 1992",
-        "moltiplicatore": 1,
-        "tipo": "regionale",
-        "regione": "PIEMONTE",
-        "km": "68.500",
-        "media": "50.585"
-      },
-      {
-        "gara_id": "9_TROFEO_BCC_BRIANZA_E_LAGHI_2026-04-25_AL_M",
-        "nome_gara": "9 TROFEO BCC BRIANZA E LAGHI",
-        "data": "2026-04-25",
-        "posizione": 8,
-        "punti_effettivi": 3,
-        "team": "V.C. CASSANO MAGNAGO 1992",
-        "moltiplicatore": 1,
-        "tipo": "regionale",
-        "regione": "LOMBARDIA",
-        "km": "56.000",
-        "media": "40.514"
       }
     ]
   },
@@ -101114,31 +101458,6 @@
       }
     ]
   },
-  "DACCO_ALESSANDRO": {
-    "id": "DACCO_ALESSANDRO",
-    "nome": "ALESSANDRO",
-    "cognome": "DACCO'",
-    "team_attuale": "ALBA OROBIA - BIASSONO",
-    "team_id": "ALBA_OROBIA_BIASSONO",
-    "categoria": "AL_M",
-    "genere": "M",
-    "punti_totali": 4,
-    "risultati": [
-      {
-        "gara_id": "2_TROFEO_MEWA_2026-06-07_AL_M",
-        "nome_gara": "2 TROFEO MEWA",
-        "data": "2026-06-07",
-        "posizione": 7,
-        "punti_effettivi": 4,
-        "team": "ALBA OROBIA - BIASSONO",
-        "moltiplicatore": 1,
-        "tipo": "regionale",
-        "regione": "LOMBARDIA",
-        "km": "75.000",
-        "media": "38.571"
-      }
-    ]
-  },
   "HOIDRAG_ALEX_NICOLAE": {
     "id": "HOIDRAG_ALEX_NICOLAE",
     "nome": "ALEX NICOLAE",
@@ -101277,31 +101596,6 @@
         "regione": "LOMBARDIA",
         "km": "60.000",
         "media": "43.470"
-      }
-    ]
-  },
-  "PIEROBON_ANDREA": {
-    "id": "PIEROBON_ANDREA",
-    "nome": "ANDREA",
-    "cognome": "PIEROBON",
-    "team_attuale": "POOL CANTU' - SOVICO - GB TEAM",
-    "team_id": "POOL_CANTU_SOVICO_GB_TEAM",
-    "categoria": "AL_M",
-    "genere": "M",
-    "punti_totali": 1,
-    "risultati": [
-      {
-        "gara_id": "2_TROFEO_MEWA_2026-06-07_AL_M",
-        "nome_gara": "2 TROFEO MEWA",
-        "data": "2026-06-07",
-        "posizione": 10,
-        "punti_effettivi": 1,
-        "team": "POOL CANTU' - SOVICO - GB TEAM",
-        "moltiplicatore": 1,
-        "tipo": "regionale",
-        "regione": "LOMBARDIA",
-        "km": "75.000",
-        "media": "38.571"
       }
     ]
   },
@@ -108833,57 +109127,6 @@
         "regione": "CAMPANIA",
         "km": "50.000",
         "media": ""
-      }
-    ]
-  },
-  "PATRUNO_EMANUELE_MATTEO": {
-    "id": "PATRUNO_EMANUELE_MATTEO",
-    "nome": "EMANUELE MATTEO",
-    "cognome": "PATRUNO",
-    "team_attuale": "POOL CANTU' - SOVICO - GB TEAM",
-    "team_id": "POOL_CANTU_SOVICO_GB_TEAM",
-    "categoria": "AL_M",
-    "genere": "M",
-    "punti_totali": 18,
-    "risultati": [
-      {
-        "gara_id": "6_TROFEO_BANCA_MEDIOLANUM_ABBIATEGRASSO_2026-06-02_AL_M",
-        "nome_gara": "6 TROFEO BANCA MEDIOLANUM ABBIATEGRASSO",
-        "data": "2026-06-02",
-        "posizione": 3,
-        "punti_effettivi": 10,
-        "team": "POOL CANTU' - SOVICO - GB TEAM",
-        "moltiplicatore": 1,
-        "tipo": "regionale",
-        "regione": "LOMBARDIA",
-        "km": "61.200",
-        "media": "40.352"
-      },
-      {
-        "gara_id": "7_TROFEO_GIAMPIERO_MAURI_2026-05-10_AL_M",
-        "nome_gara": "7 TROFEO GIAMPIERO MAURI",
-        "data": "2026-05-10",
-        "posizione": 9,
-        "punti_effettivi": 2,
-        "team": "POOL CANTU' - SOVICO - GB TEAM",
-        "moltiplicatore": 1,
-        "tipo": "regionale",
-        "regione": "LOMBARDIA",
-        "km": "57.000",
-        "media": "41.122"
-      },
-      {
-        "gara_id": "11_MEMORIAL_MARIO_BIANCO_2026-05-01_AL_M",
-        "nome_gara": "11 MEMORIAL MARIO BIANCO",
-        "data": "2026-05-01",
-        "posizione": 5,
-        "punti_effettivi": 6,
-        "team": "POOL CANTU' - SOVICO - GB TEAM",
-        "moltiplicatore": 1,
-        "tipo": "regionale",
-        "regione": "PIEMONTE",
-        "km": "60.000",
-        "media": "46.382"
       }
     ]
   },
@@ -118019,82 +118262,6 @@
       }
     ]
   },
-  "ZORCO_MATTIA": {
-    "id": "ZORCO_MATTIA",
-    "nome": "MATTIA",
-    "cognome": "ZORCO",
-    "team_attuale": "SALUS CICLISTICA SEREGNO DE ROSA",
-    "team_id": "SALUS_CICLISTICA_SEREGNO_DE_ROSA",
-    "categoria": "AL_M",
-    "genere": "M",
-    "punti_totali": 13,
-    "risultati": [
-      {
-        "gara_id": "93_MEDAGLIA_D_ORO_CITTA_DI_MONZA_2026-05-24_AL_M",
-        "nome_gara": "93 MEDAGLIA D'ORO CITTA' DI MONZA",
-        "data": "2026-05-24",
-        "posizione": 6,
-        "punti_effettivi": 5,
-        "team": "SALUS CICLISTICA SEREGNO DE ROSA",
-        "moltiplicatore": 1,
-        "tipo": "regionale",
-        "regione": "LOMBARDIA",
-        "km": "52.137",
-        "media": "44.796"
-      },
-      {
-        "gara_id": "26_MEMORIAL_MARCELLO_PERICO_1_TROFEO_CITTA_DI_SERIATE_2026-05-01_AL_M",
-        "nome_gara": "26 MEMORIAL MARCELLO PERICO 1 TROFEO CITTA' DI SERIATE",
-        "data": "2026-05-01",
-        "posizione": 4,
-        "punti_effettivi": 8,
-        "team": "SALUS CICLISTICA SEREGNO DE ROSA",
-        "moltiplicatore": 1,
-        "tipo": "regionale",
-        "regione": "LOMBARDIA",
-        "km": "62.000",
-        "media": "43.306"
-      }
-    ]
-  },
-  "MORETTO_GIULIO_GILBERTO": {
-    "id": "MORETTO_GIULIO_GILBERTO",
-    "nome": "GIULIO GILBERTO",
-    "cognome": "MORETTO",
-    "team_attuale": "SALUS CICLISTICA SEREGNO DE ROSA",
-    "team_id": "SALUS_CICLISTICA_SEREGNO_DE_ROSA",
-    "categoria": "AL_M",
-    "genere": "M",
-    "punti_totali": 7,
-    "risultati": [
-      {
-        "gara_id": "93_MEDAGLIA_D_ORO_CITTA_DI_MONZA_2026-05-24_AL_M",
-        "nome_gara": "93 MEDAGLIA D'ORO CITTA' DI MONZA",
-        "data": "2026-05-24",
-        "posizione": 7,
-        "punti_effettivi": 4,
-        "team": "SALUS CICLISTICA SEREGNO DE ROSA",
-        "moltiplicatore": 1,
-        "tipo": "regionale",
-        "regione": "LOMBARDIA",
-        "km": "52.137",
-        "media": "44.796"
-      },
-      {
-        "gara_id": "PASQUALANDO_2026-04-05_AL_M",
-        "nome_gara": "PASQUALANDO",
-        "data": "2026-04-05",
-        "posizione": 8,
-        "punti_effettivi": 3,
-        "team": "SALUS CICLISTICA SEREGNO DE ROSA",
-        "moltiplicatore": 1,
-        "tipo": "regionale",
-        "regione": "TOSCANA",
-        "km": "55.000",
-        "media": "44.949"
-      }
-    ]
-  },
   "RADICE_MATTIA": {
     "id": "RADICE_MATTIA",
     "nome": "MATTIA",
@@ -122159,31 +122326,6 @@
         "regione": "TOSCANA",
         "km": "69.100",
         "media": "39.113"
-      }
-    ]
-  },
-  "DELBONO_LORENZO": {
-    "id": "DELBONO_LORENZO",
-    "nome": "LORENZO",
-    "cognome": "DELBONO",
-    "team_attuale": "PROGETTO CICLISMO - RODENGO S. ASD",
-    "team_id": "PROGETTO_CICLISMO_RODENGO_S_ASD",
-    "categoria": "AL_M",
-    "genere": "M",
-    "punti_totali": 1,
-    "risultati": [
-      {
-        "gara_id": "TROFEO_ECOSOLUZIONI_2026-05-17_AL_M",
-        "nome_gara": "TROFEO ECOSOLUZIONI",
-        "data": "2026-05-17",
-        "posizione": 10,
-        "punti_effettivi": 1,
-        "team": "PROGETTO CICLISMO - RODENGO S. ASD",
-        "moltiplicatore": 1,
-        "tipo": "regionale",
-        "regione": "LOMBARDIA",
-        "km": "63.900",
-        "media": "43.387"
       }
     ]
   },
