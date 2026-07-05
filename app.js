@@ -1214,16 +1214,20 @@ async function loadAll() {
   return gd;
 }
 
-// Unisce i risultati manuali (admin) a resultsRaw: se esiste già una riga scrapata
-// con la stessa (gara_id, posizione) viene sostituita (correzione), altrimenti la
-// riga manuale viene aggiunta (nuovo corridore non ancora scrapato).
+// Unisce i risultati manuali (admin) a resultsRaw E alle schede atleta/team: se
+// esiste già una riga scrapata con la stessa (gara_id, posizione) viene sostituita
+// (correzione), altrimenti la riga manuale viene aggiunta (nuovo corridore non
+// ancora scrapato). athletes.json/teams.json hanno risultati/punti PRE-CALCOLATI
+// dallo scraper Python — un atleta aggiunto solo a resultsRaw non compare nella
+// sua scheda profilo o in quella del team se non si aggiorna anche .risultati qui.
 function _applyManualResults(gd, manualResults) {
   if (!gd || !Array.isArray(manualResults) || !manualResults.length) return;
   const byKey = new Map();
   for (const r of manualResults) byKey.set(`${r.gara_id}|${r.posizione}`, r);
   gd.resultsRaw = (gd.resultsRaw || []).filter(r => !byKey.has(`${r.gara_id}|${r.posizione}`));
+
   for (const r of manualResults) {
-    gd.resultsRaw.push({
+    const row = {
       gara_id: r.gara_id, nome_gara: r.nome_gara || '', data: r.data || '',
       categoria: r.categoria || '', genere: r.genere || '', tipo: r.tipo || 'regionale',
       moltiplicatore: r.moltiplicatore || 1,
@@ -1233,7 +1237,42 @@ function _applyManualResults(gd, manualResults) {
       tempo: r.tempo || '', km: r.km || '', media: r.media || '',
       punti_base: r.punti_base || 0, punti_effettivi: r.punti_effettivi || 0,
       _manual: true, _manualId: r.id,
-    });
+    };
+    gd.resultsRaw.push(row);
+    if (!row.atleta_id) continue;
+
+    // Scheda atleta: crea se manca (mirror del merge extra_roster), poi aggiungi
+    // il risultato alla sua lista pre-calcolata e aggiorna il totale punti.
+    let ath = gd.athletes[row.atleta_id];
+    if (!ath) {
+      ath = gd.athletes[row.atleta_id] = {
+        atleta_id: row.atleta_id, nome: row.nome, cognome: row.cognome,
+        team_attuale: row.team, team_id: row.team_id,
+        categoria: row.categoria, genere: row.genere,
+        punti_totali: 0, risultati: [], roster_only: true,
+      };
+    }
+    const athEntry = {
+      gara_id: row.gara_id, nome_gara: row.nome_gara, data: row.data, posizione: row.posizione,
+      punti_effettivi: row.punti_effettivi, team: row.team, moltiplicatore: row.moltiplicatore,
+      tipo: row.tipo, regione: row.regione, km: row.km, media: row.media,
+    };
+    if (!Array.isArray(ath.risultati)) ath.risultati = [];
+    ath.risultati = ath.risultati.filter(x => x.gara_id !== row.gara_id); // rimuovi eventuale versione precedente
+    ath.risultati.push(athEntry);
+    ath.punti_totali = (ath.risultati || []).reduce((s, x) => s + (x.punti_effettivi || 0), 0);
+
+    // Scheda team: stesso trattamento, così risultati/punti/roster restano coerenti
+    if (row.team_id) {
+      let team = gd.teams[row.team_id];
+      if (!team) team = gd.teams[row.team_id] = { id: row.team_id, nome: row.team || row.team_id, atleti: [], risultati: [], punti_totali: 0 };
+      if (!Array.isArray(team.atleti)) team.atleti = [];
+      if (!team.atleti.includes(row.atleta_id)) team.atleti.push(row.atleta_id);
+      if (!Array.isArray(team.risultati)) team.risultati = [];
+      team.risultati = team.risultati.filter(x => !(x.gara_id === row.gara_id && x.atleta_id === row.atleta_id));
+      team.risultati.push({ ...athEntry, atleta_id: row.atleta_id, cognome: row.cognome, nome: row.nome });
+      team.punti_totali = (team.risultati || []).reduce((s, x) => s + (x.punti_effettivi || 0), 0);
+    }
   }
 }
 

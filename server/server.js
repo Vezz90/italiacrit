@@ -2285,9 +2285,15 @@ async function _fixPcsAthleteTeams() {
   if (!teamIndex.length) return 0;
   let fixed = 0;
   try {
-    // Prima gara nota di ogni atleta, per ricalcolare categoria/genere corretti
+    // Prima gara nota di ogni atleta, per ricalcolare categoria/genere corretti.
+    // Include sia le righe PCS sia i risultati inseriti a mano (manual_results):
+    // un atleta creato SOLO da un risultato manuale non ha righe in pcs_gara_results,
+    // quindi senza questa seconda fonte il suo profilo non verrebbe mai ricontrollato.
     const sampleGaraByAtleta = {};
     for (const r of await _fetchAllPcsResultRiders()) {
+      if (r.atleta_id && !sampleGaraByAtleta[r.atleta_id]) sampleGaraByAtleta[r.atleta_id] = r.gara_id;
+    }
+    for (const r of await queries.getAllManualResults()) {
       if (r.atleta_id && !sampleGaraByAtleta[r.atleta_id]) sampleGaraByAtleta[r.atleta_id] = r.gara_id;
     }
 
