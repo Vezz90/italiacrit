@@ -1,4 +1,4 @@
-const CACHE_NAME = 'italiacrit-cache-v203';
+const CACHE_NAME = 'italiacrit-cache-v204';
 
 // File statici: messi in cache e serviti velocemente
 const STATIC_ASSETS = [
@@ -87,10 +87,15 @@ self.addEventListener('fetch', event => {
   }
 
   // ── NETWORK-FIRST per app.js / index.html / *.css (codice dell'app) ──
-  // Evita di servire versioni vecchie dell'app dopo un deploy.
+  // Evita di servire versioni vecchie dell'app dopo un deploy. cache:'reload'
+  // è essenziale: senza, questo fetch può comunque essere soddisfatto dalla
+  // cache HTTP del browser (Cloudflare manda Cache-Control: max-age=14400 su
+  // questi file statici) invece di andare davvero in rete, vanificando lo
+  // scopo della strategia "network-first" — un deploy poteva restare invisibile
+  // fino a 4 ore anche dopo aver svuotato la cache del service worker.
   if (/\/(app\.js|index\.html|style\.css|design\.css)(\?|$)/.test(url) || url.endsWith('/')) {
     event.respondWith(
-      fetch(event.request)
+      fetch(event.request, { cache: 'reload' })
         .then(networkResponse => {
           const clone = networkResponse.clone();
           caches.open(CACHE_NAME).then(cache => cache.put(event.request, clone));
