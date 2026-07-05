@@ -1973,12 +1973,13 @@ window.adminPcsRematch = async function(garaId) {
   if (btn) { btn.disabled = true; btn.textContent = '⏳ Rimatch…'; }
   try {
     const result = await apiCall(`/admin/pcs-rematch-athletes?gara_id=${encodeURIComponent(garaId)}`, { method: 'POST', body: {} });
-    const nuovi = result.newAtleti ? ` — ${result.newAtleti} profili nuovi` : '';
-    const team  = result.teamFixed ? ` — ${result.teamFixed} team corretti` : '';
-    showToast(`Rimatch: ${result.updated} atleti collegati su ${result.total}${nuovi}${team}`);
+    const nuovi  = result.newAtleti ? ` — ${result.newAtleti} profili nuovi` : '';
+    const team   = result.teamFixed ? ` — ${result.teamFixed} team corretti` : '';
+    const manual = result.manualFixed ? ` — ${result.manualFixed} risultati manuali sistemati` : '';
+    showToast(`Rimatch: ${result.updated} atleti collegati su ${result.total}${nuovi}${team}${manual}`);
     if (btn) { btn.textContent = `✓ ${result.updated}/${result.total}`; }
-    // Se cambiano collegamenti, profili o team, ricarica così tutto è subito valido
-    if (result.newAtleti > 0 || result.updated > 0 || result.teamFixed > 0) await _reloadAfterPcs();
+    // Se cambiano collegamenti, profili, team o risultati manuali, ricarica così tutto è subito valido
+    if (result.newAtleti > 0 || result.updated > 0 || result.teamFixed > 0 || result.manualFixed > 0) await _reloadAfterPcs();
     const circuitResults = (window._lastGaraResults || []);
     await _loadGaraPcsExt(garaId, circuitResults);
   } catch (e) {

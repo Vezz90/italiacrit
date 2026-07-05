@@ -2641,18 +2641,63 @@ function _parsePcsResultsHtml(html, garaId, season, pcsSlug) {
   return rows;
 }
 
+// Ripassa i risultati inseriti a mano (manual_results): riempie i km mancanti
+// (ereditandoli da un'altra riga della stessa gara), crea il profilo atleta se
+// manca e ri-fa il fuzzy match del team — utile per le righe inserite prima di
+// questi fix, o quando la gara non ha righe PCS (quindi il rematch normale la
+// salterebbe del tutto).
+async function _backfillManualResults(garaId) {
+  const rows = garaId ? await queries.getManualResults(garaId) : await queries.getAllManualResults();
+  let fixed = 0;
+  for (const row of rows) {
+    let changed = false;
+    let km = row.km;
+    if (!km) { km = await _resolveManualKm(row.gara_id); if (km) changed = true; }
+
+    let teamId = row.team_id, teamNome = row.team;
+    if (row.team) {
+      const resolved = _findExistingTeam(row.team, _buildTeamIndex(), row.genere || '');
+      if (resolved && resolved.tid !== row.team_id) { teamId = resolved.tid; teamNome = resolved.nome; changed = true; }
+    }
+
+    if (row.atleta_id) {
+      const created = await _ensureManualAthleteProfile({
+        atletaId: row.atleta_id, cognome: row.cognome, nome: row.nome || '',
+        teamId, teamNome, categoria: row.categoria || '', genere: row.genere || '',
+      });
+      if (created) changed = true;
+    }
+
+    if (!changed) continue;
+    await queries.upsertManualResult({
+      gara_id: row.gara_id, posizione: row.posizione, cognome: row.cognome, nome: row.nome || '',
+      atleta_id: row.atleta_id, team: teamNome, team_id: teamId, tempo: row.tempo || '',
+      nome_gara: row.nome_gara || '', data: row.data || '', categoria: row.categoria || '',
+      genere: row.genere || '', tipo: row.tipo || 'regionale', moltiplicatore: row.moltiplicatore || 1,
+      campionato_regionale: !!row.campionato_regionale, campionato_italiano: !!row.campionato_italiano,
+      regione: row.regione || '', km: km || '', media: row.media || '',
+      punti_base: row.punti_base || 0, punti_effettivi: row.punti_effettivi || 0,
+      edited_by: row.edited_by,
+    });
+    fixed++;
+  }
+  return fixed;
+}
+
 // Rimatch atleta_id su tutte le righe di pcs_gara_results già importate
 app.post('/api/admin/pcs-rematch-athletes', requireAdmin, async (req, res) => {
   try {
-    if (!supabase) return res.status(503).json({ error: 'Supabase non disponibile' });
     const garaId = req.query.gara_id || null;
+    const manualFixed = await _backfillManualResults(garaId);
+
+    if (!supabase) return res.json({ ok: true, updated: 0, total: 0, newAtleti: 0, manualFixed });
 
     // Carica tutte le righe (con team_name per poter creare profili)
     let query = supabase.from('pcs_gara_results').select('id, gara_id, rider_name, team_name, atleta_id');
     if (garaId) query = query.eq('gara_id', garaId);
     const { data: sbRows, error } = await query.limit(5000);
     if (error) throw error;
-    if (!sbRows?.length) return res.json({ ok: true, updated: 0, newAtleti: 0 });
+    if (!sbRows?.length) return res.json({ ok: true, updated: 0, total: 0, newAtleti: 0, manualFixed });
 
     // Ricorda l'atleta_id originale per capire cosa è cambiato
     for (const row of sbRows) row._orig = row.atleta_id || null;
@@ -2691,8 +2736,8 @@ app.post('/api/admin/pcs-rematch-athletes', requireAdmin, async (req, res) => {
     // Terzo: auto-correggi i team dei profili esistenti (fuzzy match su teams.json)
     const teamFixed = await _fixPcsAthleteTeams();
 
-    console.log(`[rematch] ${updated}/${sbRows.length} righe aggiornate, ${newAtleti} nuovi profili, ${teamFixed} team corretti`);
-    res.json({ ok: true, updated, total: sbRows.length, newAtleti, teamFixed });
+    console.log(`[rematch] ${updated}/${sbRows.length} righe aggiornate, ${newAtleti} nuovi profili, ${teamFixed} team corretti, ${manualFixed} risultati manuali sistemati`);
+    res.json({ ok: true, updated, total: sbRows.length, newAtleti, teamFixed, manualFixed });
   } catch (e) { res.status(500).json({ error: e.message }); }
 });
 
