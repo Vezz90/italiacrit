@@ -5585,6 +5585,334 @@
       }
     ]
   },
+  "DE_CASSAN_DAVIDE": {
+    "id": "DE_CASSAN_DAVIDE",
+    "nome": "CASSAN DAVIDE",
+    "cognome": "DE",
+    "team_attuale": "GENERAL STORE -ESSEGIBI-F.LLI CURIA",
+    "team_id": "GENERAL_STORE_ESSEGIBI_F_LLI_CURIA",
+    "categoria": "ELI_M",
+    "genere": "M",
+    "punti_totali": 90,
+    "risultati": [
+      {
+        "gara_id": "40_GIRO_DEL_MEDIO_BRENTA_2026-07-05_ELI_M",
+        "nome_gara": "40 GIRO DEL MEDIO BRENTA",
+        "data": "2026-07-05",
+        "posizione": 1,
+        "punti_effettivi": 45,
+        "team": "GENERAL STORE -ESSEGIBI-F.LLI CURIA",
+        "moltiplicatore": 3,
+        "tipo": "internazionale",
+        "regione": "VENETO",
+        "km": "175.000",
+        "media": "40.928"
+      },
+      {
+        "gara_id": "48_GRAN_PREMIO_CITTA_DI_EMPOLI_2026-06-13_ELI_M",
+        "nome_gara": "48 GRAN PREMIO CITTA' DI EMPOLI",
+        "data": "2026-06-13",
+        "posizione": 1,
+        "punti_effettivi": 30,
+        "team": "GENERAL STORE -ESSEGIBI-F.LLI CURIA",
+        "moltiplicatore": 2,
+        "tipo": "nazionale",
+        "regione": "TOSCANA",
+        "km": "146.000",
+        "media": "41.751"
+      },
+      {
+        "gara_id": "70_TROFEO_ALCIDE_DE_GASPERI_2026-06-02_ELI_M",
+        "nome_gara": "70 TROFEO ALCIDE DE GASPERI",
+        "data": "2026-06-02",
+        "posizione": 6,
+        "punti_effettivi": 15,
+        "team": "GENERAL STORE -ESSEGIBI-F.LLI CURIA",
+        "moltiplicatore": 3,
+        "tipo": "internazionale",
+        "regione": "TRENTO",
+        "km": "156.900",
+        "media": "39.946"
+      }
+    ]
+  },
+  "GIULIANO_DARIO": {
+    "id": "GIULIANO_DARIO",
+    "nome": "DARIO",
+    "cognome": "GIULIANO",
+    "team_attuale": "TEAM POLTI VISITMALTA",
+    "team_id": "TEAM_POLTI_VISITMALTA",
+    "categoria": "ELI_M",
+    "genere": "M",
+    "punti_totali": 36,
+    "risultati": [
+      {
+        "gara_id": "40_GIRO_DEL_MEDIO_BRENTA_2026-07-05_ELI_M",
+        "nome_gara": "40 GIRO DEL MEDIO BRENTA",
+        "data": "2026-07-05",
+        "posizione": 2,
+        "punti_effettivi": 36,
+        "team": "TEAM POLTI VISITMALTA",
+        "moltiplicatore": 3,
+        "tipo": "internazionale",
+        "regione": "VENETO",
+        "km": "175.000",
+        "media": "40.928"
+      }
+    ]
+  },
+  "COVILI_LUCA": {
+    "id": "COVILI_LUCA",
+    "nome": "LUCA",
+    "cognome": "COVILI",
+    "team_attuale": "BARDIANI-CSF 7 SABER",
+    "team_id": "BARDIANI_CSF_7_SABER",
+    "categoria": "ELI_M",
+    "genere": "M",
+    "punti_totali": 45,
+    "risultati": [
+      {
+        "gara_id": "40_GIRO_DEL_MEDIO_BRENTA_2026-07-05_ELI_M",
+        "nome_gara": "40 GIRO DEL MEDIO BRENTA",
+        "data": "2026-07-05",
+        "posizione": 3,
+        "punti_effettivi": 30,
+        "team": "BARDIANI-CSF 7 SABER",
+        "moltiplicatore": 3,
+        "tipo": "internazionale",
+        "regione": "VENETO",
+        "km": "175.000",
+        "media": "40.928"
+      },
+      {
+        "gara_id": "44_DUE_GIORNI_MARCHIGIANA_GRAN_PREMIO_SANTA_RITA_2026-05-23_ELI_M",
+        "nome_gara": "44 DUE GIORNI MARCHIGIANA GRAN PREMIO SANTA RITA",
+        "data": "2026-05-23",
+        "posizione": 6,
+        "punti_effettivi": 15,
+        "team": "BARDIANI-CSF 7 SABER",
+        "moltiplicatore": 3,
+        "tipo": "internazionale",
+        "regione": "MARCHE",
+        "km": "170.300",
+        "media": ""
+      }
+    ]
+  },
+  "TERCERO_LOPEZ_FERNANDO": {
+    "id": "TERCERO_LOPEZ_FERNANDO",
+    "nome": "LOPEZ FERNANDO",
+    "cognome": "TERCERO",
+    "team_attuale": "TEAM POLTI VISITMALTA",
+    "team_id": "TEAM_POLTI_VISITMALTA",
+    "categoria": "ELI_M",
+    "genere": "M",
+    "punti_totali": 24,
+    "risultati": [
+      {
+        "gara_id": "40_GIRO_DEL_MEDIO_BRENTA_2026-07-05_ELI_M",
+        "nome_gara": "40 GIRO DEL MEDIO BRENTA",
+        "data": "2026-07-05",
+        "posizione": 4,
+        "punti_effettivi": 24,
+        "team": "TEAM POLTI VISITMALTA",
+        "moltiplicatore": 3,
+        "tipo": "internazionale",
+        "regione": "VENETO",
+        "km": "175.000",
+        "media": "40.928"
+      }
+    ]
+  },
+  "GARIBBO_NICOLO": {
+    "id": "GARIBBO_NICOLO",
+    "nome": "NICOLO'",
+    "cognome": "GARIBBO",
+    "team_attuale": "TEAM UKYO",
+    "team_id": "TEAM_UKYO",
+    "categoria": "ELI_M",
+    "genere": "M",
+    "punti_totali": 18,
+    "risultati": [
+      {
+        "gara_id": "40_GIRO_DEL_MEDIO_BRENTA_2026-07-05_ELI_M",
+        "nome_gara": "40 GIRO DEL MEDIO BRENTA",
+        "data": "2026-07-05",
+        "posizione": 5,
+        "punti_effettivi": 18,
+        "team": "TEAM UKYO",
+        "moltiplicatore": 3,
+        "tipo": "internazionale",
+        "regione": "VENETO",
+        "km": "175.000",
+        "media": "40.928"
+      }
+    ]
+  },
+  "VERRE_ALESSANDRO": {
+    "id": "VERRE_ALESSANDRO",
+    "nome": "ALESSANDRO",
+    "cognome": "VERRE",
+    "team_attuale": "MBH BANK CSB TELECOM FORT",
+    "team_id": "MBH_BANK_CSB_TELECOM_FORT",
+    "categoria": "ELI_M",
+    "genere": "M",
+    "punti_totali": 15,
+    "risultati": [
+      {
+        "gara_id": "40_GIRO_DEL_MEDIO_BRENTA_2026-07-05_ELI_M",
+        "nome_gara": "40 GIRO DEL MEDIO BRENTA",
+        "data": "2026-07-05",
+        "posizione": 6,
+        "punti_effettivi": 15,
+        "team": "MBH BANK CSB TELECOM FORT",
+        "moltiplicatore": 3,
+        "tipo": "internazionale",
+        "regione": "VENETO",
+        "km": "175.000",
+        "media": "40.928"
+      }
+    ]
+  },
+  "BAGNARA_LUCA": {
+    "id": "BAGNARA_LUCA",
+    "nome": "LUCA",
+    "cognome": "BAGNARA",
+    "team_attuale": "VEGA VITALCARE DYNATEK",
+    "team_id": "VEGA_VITALCARE_DYNATEK",
+    "categoria": "ELI_M",
+    "genere": "M",
+    "punti_totali": 48,
+    "risultati": [
+      {
+        "gara_id": "40_GIRO_DEL_MEDIO_BRENTA_2026-07-05_ELI_M",
+        "nome_gara": "40 GIRO DEL MEDIO BRENTA",
+        "data": "2026-07-05",
+        "posizione": 7,
+        "punti_effettivi": 12,
+        "team": "VEGA VITALCARE DYNATEK",
+        "moltiplicatore": 3,
+        "tipo": "internazionale",
+        "regione": "VENETO",
+        "km": "175.000",
+        "media": "40.928"
+      },
+      {
+        "gara_id": "48_GRAN_PREMIO_CITTA_DI_EMPOLI_2026-06-13_ELI_M",
+        "nome_gara": "48 GRAN PREMIO CITTA' DI EMPOLI",
+        "data": "2026-06-13",
+        "posizione": 3,
+        "punti_effettivi": 20,
+        "team": "VEGA VITALCARE DYNATEK",
+        "moltiplicatore": 2,
+        "tipo": "nazionale",
+        "regione": "TOSCANA",
+        "km": "146.000",
+        "media": "41.751"
+      },
+      {
+        "gara_id": "70_GIRO_CICLISTICO_DEL_MONTALBANO_2026-05-30_ELI_M",
+        "nome_gara": "70 GIRO CICLISTICO DEL MONTALBANO",
+        "data": "2026-05-30",
+        "posizione": 4,
+        "punti_effettivi": 16,
+        "team": "VEGA VITALCARE DYNATEK",
+        "moltiplicatore": 2,
+        "tipo": "nazionale",
+        "regione": "TOSCANA",
+        "km": "155.200",
+        "media": "41.571"
+      }
+    ]
+  },
+  "CONTI_VALERIO": {
+    "id": "CONTI_VALERIO",
+    "nome": "VALERIO",
+    "cognome": "CONTI",
+    "team_attuale": "SOLUTION TECH NIPPO RALI",
+    "team_id": "SOLUTION_TECH_NIPPO_RALI",
+    "categoria": "ELI_M",
+    "genere": "M",
+    "punti_totali": 9,
+    "risultati": [
+      {
+        "gara_id": "40_GIRO_DEL_MEDIO_BRENTA_2026-07-05_ELI_M",
+        "nome_gara": "40 GIRO DEL MEDIO BRENTA",
+        "data": "2026-07-05",
+        "posizione": 8,
+        "punti_effettivi": 9,
+        "team": "SOLUTION TECH NIPPO RALI",
+        "moltiplicatore": 3,
+        "tipo": "internazionale",
+        "regione": "VENETO",
+        "km": "175.000",
+        "media": "40.928"
+      }
+    ]
+  },
+  "QUAGLIA_TOMMASO": {
+    "id": "QUAGLIA_TOMMASO",
+    "nome": "TOMMASO",
+    "cognome": "QUAGLIA",
+    "team_attuale": "A.S.D. S.C. PADOVANI",
+    "team_id": "A_S_D_S_C_PADOVANI",
+    "categoria": "ELI_M",
+    "genere": "M",
+    "punti_totali": 12,
+    "risultati": [
+      {
+        "gara_id": "40_GIRO_DEL_MEDIO_BRENTA_2026-07-05_ELI_M",
+        "nome_gara": "40 GIRO DEL MEDIO BRENTA",
+        "data": "2026-07-05",
+        "posizione": 9,
+        "punti_effettivi": 6,
+        "team": "A.S.D. S.C. PADOVANI",
+        "moltiplicatore": 3,
+        "tipo": "internazionale",
+        "regione": "VENETO",
+        "km": "175.000",
+        "media": "40.928"
+      },
+      {
+        "gara_id": "CAMPIONATO_ITALIANO_STRADA_UNDER_23_2026-06-28_ELI_M",
+        "nome_gara": "CAMPIONATO ITALIANO STRADA UNDER 23",
+        "data": "2026-06-28",
+        "posizione": 8,
+        "punti_effettivi": 6,
+        "team": "A.S.D. S.C. PADOVANI",
+        "moltiplicatore": 2,
+        "tipo": "nazionale",
+        "regione": "TOSCANA",
+        "km": "165.700",
+        "media": "41.066"
+      }
+    ]
+  },
+  "ROJAS_NARANJO_VICENTE_RODRIGO_ANTONIO": {
+    "id": "ROJAS_NARANJO_VICENTE_RODRIGO_ANTONIO",
+    "nome": "NARANJO VICENTE RODRIGO ANTONIO",
+    "cognome": "ROJAS",
+    "team_attuale": "BARDIANI-CSF 7 SABER",
+    "team_id": "BARDIANI_CSF_7_SABER",
+    "categoria": "ELI_M",
+    "genere": "M",
+    "punti_totali": 3,
+    "risultati": [
+      {
+        "gara_id": "40_GIRO_DEL_MEDIO_BRENTA_2026-07-05_ELI_M",
+        "nome_gara": "40 GIRO DEL MEDIO BRENTA",
+        "data": "2026-07-05",
+        "posizione": 10,
+        "punti_effettivi": 3,
+        "team": "BARDIANI-CSF 7 SABER",
+        "moltiplicatore": 3,
+        "tipo": "internazionale",
+        "regione": "VENETO",
+        "km": "175.000",
+        "media": "40.928"
+      }
+    ]
+  },
   "MAGLI_LORENZO": {
     "id": "MAGLI_LORENZO",
     "nome": "LORENZO",
@@ -24364,31 +24692,6 @@
         "regione": "VENETO",
         "km": "168.000",
         "media": "43.065"
-      }
-    ]
-  },
-  "QUAGLIA_TOMMASO": {
-    "id": "QUAGLIA_TOMMASO",
-    "nome": "TOMMASO",
-    "cognome": "QUAGLIA",
-    "team_attuale": "A.S.D. S.C. PADOVANI",
-    "team_id": "A_S_D_S_C_PADOVANI",
-    "categoria": "ELI_M",
-    "genere": "M",
-    "punti_totali": 6,
-    "risultati": [
-      {
-        "gara_id": "CAMPIONATO_ITALIANO_STRADA_UNDER_23_2026-06-28_ELI_M",
-        "nome_gara": "CAMPIONATO ITALIANO STRADA UNDER 23",
-        "data": "2026-06-28",
-        "posizione": 8,
-        "punti_effettivi": 6,
-        "team": "A.S.D. S.C. PADOVANI",
-        "moltiplicatore": 2,
-        "tipo": "nazionale",
-        "regione": "TOSCANA",
-        "km": "165.700",
-        "media": "41.066"
       }
     ]
   },
@@ -97656,44 +97959,6 @@
       }
     ]
   },
-  "DE_CASSAN_DAVIDE": {
-    "id": "DE_CASSAN_DAVIDE",
-    "nome": "CASSAN DAVIDE",
-    "cognome": "DE",
-    "team_attuale": "GENERAL STORE -ESSEGIBI-F.LLI CURIA",
-    "team_id": "GENERAL_STORE_ESSEGIBI_F_LLI_CURIA",
-    "categoria": "ELI_M",
-    "genere": "M",
-    "punti_totali": 45,
-    "risultati": [
-      {
-        "gara_id": "48_GRAN_PREMIO_CITTA_DI_EMPOLI_2026-06-13_ELI_M",
-        "nome_gara": "48 GRAN PREMIO CITTA' DI EMPOLI",
-        "data": "2026-06-13",
-        "posizione": 1,
-        "punti_effettivi": 30,
-        "team": "GENERAL STORE -ESSEGIBI-F.LLI CURIA",
-        "moltiplicatore": 2,
-        "tipo": "nazionale",
-        "regione": "TOSCANA",
-        "km": "146.000",
-        "media": "41.751"
-      },
-      {
-        "gara_id": "70_TROFEO_ALCIDE_DE_GASPERI_2026-06-02_ELI_M",
-        "nome_gara": "70 TROFEO ALCIDE DE GASPERI",
-        "data": "2026-06-02",
-        "posizione": 6,
-        "punti_effettivi": 15,
-        "team": "GENERAL STORE -ESSEGIBI-F.LLI CURIA",
-        "moltiplicatore": 3,
-        "tipo": "internazionale",
-        "regione": "TRENTO",
-        "km": "156.900",
-        "media": "39.946"
-      }
-    ]
-  },
   "BRUNO_ANDREA_ALFIO": {
     "id": "BRUNO_ANDREA_ALFIO",
     "nome": "ANDREA ALFIO",
@@ -97833,44 +98098,6 @@
         "regione": "TOSCANA",
         "km": "149.000",
         "media": "42.393"
-      }
-    ]
-  },
-  "BAGNARA_LUCA": {
-    "id": "BAGNARA_LUCA",
-    "nome": "LUCA",
-    "cognome": "BAGNARA",
-    "team_attuale": "VEGA VITALCARE DYNATEK",
-    "team_id": "VEGA_VITALCARE_DYNATEK",
-    "categoria": "ELI_M",
-    "genere": "M",
-    "punti_totali": 36,
-    "risultati": [
-      {
-        "gara_id": "48_GRAN_PREMIO_CITTA_DI_EMPOLI_2026-06-13_ELI_M",
-        "nome_gara": "48 GRAN PREMIO CITTA' DI EMPOLI",
-        "data": "2026-06-13",
-        "posizione": 3,
-        "punti_effettivi": 20,
-        "team": "VEGA VITALCARE DYNATEK",
-        "moltiplicatore": 2,
-        "tipo": "nazionale",
-        "regione": "TOSCANA",
-        "km": "146.000",
-        "media": "41.751"
-      },
-      {
-        "gara_id": "70_GIRO_CICLISTICO_DEL_MONTALBANO_2026-05-30_ELI_M",
-        "nome_gara": "70 GIRO CICLISTICO DEL MONTALBANO",
-        "data": "2026-05-30",
-        "posizione": 4,
-        "punti_effettivi": 16,
-        "team": "VEGA VITALCARE DYNATEK",
-        "moltiplicatore": 2,
-        "tipo": "nazionale",
-        "regione": "TOSCANA",
-        "km": "155.200",
-        "media": "41.571"
       }
     ]
   },
@@ -121630,31 +121857,6 @@
         "regione": "TOSCANA",
         "km": "153.200",
         "media": "41.738"
-      }
-    ]
-  },
-  "COVILI_LUCA": {
-    "id": "COVILI_LUCA",
-    "nome": "LUCA",
-    "cognome": "COVILI",
-    "team_attuale": "BARDIANI-CSF 7 SABER",
-    "team_id": "BARDIANI_CSF_7_SABER",
-    "categoria": "ELI_M",
-    "genere": "M",
-    "punti_totali": 15,
-    "risultati": [
-      {
-        "gara_id": "44_DUE_GIORNI_MARCHIGIANA_GRAN_PREMIO_SANTA_RITA_2026-05-23_ELI_M",
-        "nome_gara": "44 DUE GIORNI MARCHIGIANA GRAN PREMIO SANTA RITA",
-        "data": "2026-05-23",
-        "posizione": 6,
-        "punti_effettivi": 15,
-        "team": "BARDIANI-CSF 7 SABER",
-        "moltiplicatore": 3,
-        "tipo": "internazionale",
-        "regione": "MARCHE",
-        "km": "170.300",
-        "media": ""
       }
     ]
   },
