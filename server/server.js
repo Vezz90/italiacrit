@@ -2704,15 +2704,21 @@ app.post('/api/admin/pcs-rematch-athletes', requireAdmin, async (req, res) => {
   try {
     const garaId = req.query.gara_id || null;
     const manualFixed = await _backfillManualResults(garaId);
+    // _fixPcsAthleteTeams ricontrolla TUTTI i profili pcs_atleta (non solo quelli
+    // di questa gara): deve girare sempre, non solo quando la gara ha righe PCS,
+    // altrimenti cliccare "Rimatch" su una gara FCI-nativa (senza righe PCS, es.
+    // un campionato italiano con solo risultati manuali) non correggerebbe mai
+    // categoria/genere di un profilo creato/sbagliato lì.
+    const teamFixed = await _fixPcsAthleteTeams();
 
-    if (!supabase) return res.json({ ok: true, updated: 0, total: 0, newAtleti: 0, manualFixed });
+    if (!supabase) return res.json({ ok: true, updated: 0, total: 0, newAtleti: 0, teamFixed, manualFixed });
 
     // Carica tutte le righe (con team_name per poter creare profili)
     let query = supabase.from('pcs_gara_results').select('id, gara_id, rider_name, team_name, atleta_id');
     if (garaId) query = query.eq('gara_id', garaId);
     const { data: sbRows, error } = await query.limit(5000);
     if (error) throw error;
-    if (!sbRows?.length) return res.json({ ok: true, updated: 0, total: 0, newAtleti: 0, manualFixed });
+    if (!sbRows?.length) return res.json({ ok: true, updated: 0, total: 0, newAtleti: 0, teamFixed, manualFixed });
 
     // Ricorda l'atleta_id originale per capire cosa è cambiato
     for (const row of sbRows) row._orig = row.atleta_id || null;
@@ -2747,9 +2753,6 @@ app.post('/api/admin/pcs-rematch-athletes', requireAdmin, async (req, res) => {
         updated++;
       }
     }
-
-    // Terzo: auto-correggi i team dei profili esistenti (fuzzy match su teams.json)
-    const teamFixed = await _fixPcsAthleteTeams();
 
     console.log(`[rematch] ${updated}/${sbRows.length} righe aggiornate, ${newAtleti} nuovi profili, ${teamFixed} team corretti, ${manualFixed} risultati manuali sistemati`);
     res.json({ ok: true, updated, total: sbRows.length, newAtleti, teamFixed, manualFixed });
