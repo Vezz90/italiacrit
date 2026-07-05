@@ -2658,6 +2658,7 @@ function route() {
   if (m_gara) return renderGara(m_gara[1]);
   const m_media = match('/media/:id');
   if (m_media) return renderMediaProfile(m_media[1]);
+  if (match('/media')) return renderMedia();
   const m_msgConv = match('/messaggi/:id');
   if (m_msgConv) return renderInbox(m_msgConv[1]);
   if (match('/messaggi')) return renderInbox(null);
@@ -2681,6 +2682,8 @@ function updateNavActive(hash) {
     document.getElementById('nav-risultati')?.classList.add('active');
   } else if (seg === 'calendario') {
     document.getElementById('nav-cal')?.classList.add('active');
+  } else if (seg === 'media') {
+    document.getElementById('nav-media')?.classList.add('active');
   } else if (CLASS_SEGS.includes(seg)) {
     document.getElementById('nav-class-btn')?.classList.add('active');
     document.getElementById('nav-class')?.classList.toggle('active',  seg === 'classifica');
@@ -14871,6 +14874,7 @@ async function renderGara(gara_id) {
       ${_vThumb(v)}
       <div class="gara-media-play"><span>&#9658;</span></div>
       ${isEsordienti && _yt ? `<div style="position:absolute;top:6px;left:6px;background:rgba(99,102,241,.92);color:#fff;font-size:.62rem;font-weight:700;padding:2px 7px;border-radius:3px;z-index:3">${_yt}</div>` : ''}
+      ${v.is_live ? `<div style="position:absolute;top:6px;right:6px;background:#dc2626;color:#fff;font-size:.62rem;font-weight:800;letter-spacing:.04em;padding:2px 8px;border-radius:3px;z-index:3">🔴 DIRETTA</div>` : ''}
       ${v.channel ? `<div class="gara-media-channel">${esc(v.channel)}</div>` : ''}
       ${_isAdmin ? `<div style="position:absolute;top:4px;right:4px;display:flex;flex-direction:column;gap:3px;z-index:10">
         <button onclick="event.stopPropagation();window._openTagPanel({kind:'video',srcKey:'${esc(_k)}',srcIdx:${_i},garaId:'${esc(_k)}',current:'${esc(v.atleta_ids||'')}'})" style="${_adminBtnStyle};background:#16a34a" title="Tagga corridori (top 10)">🏷 Tag</button>
@@ -14906,6 +14910,7 @@ async function renderGara(gara_id) {
                   ${_vThumb(v)}
                   <div class="gara-video-play">&#9658;</div>
                   ${isEsordienti && _yt ? `<div style="position:absolute;bottom:4px;left:4px;background:rgba(99,102,241,.9);color:#fff;font-size:.6rem;font-weight:700;padding:1px 6px;border-radius:3px">${_yt}</div>` : ''}
+                  ${v.is_live ? `<div style="position:absolute;top:4px;right:4px;background:#dc2626;color:#fff;font-size:.58rem;font-weight:800;padding:1px 6px;border-radius:3px">🔴 LIVE</div>` : ''}
                 </div>
                 <div class="gara-video-info">
                   <div class="gara-video-title">${esc(v.title)}</div>
@@ -15640,6 +15645,9 @@ async function renderGara(gara_id) {
           <div id="rp-rider-dd" style="display:none;position:absolute;left:0;right:0;top:calc(100% - 4px);background:var(--bg-card);border:1px solid var(--border-subtle);border-radius:var(--r-sm);max-height:210px;overflow:auto;z-index:5;box-shadow:0 6px 20px rgba(0,0,0,.25)"></div>
         </div>
         <div id="rp-rider-chips" style="display:flex;flex-wrap:wrap;gap:6px;margin-bottom:10px"></div>
+        <label style="display:flex;align-items:center;gap:7px;font-size:0.82rem;color:var(--text-secondary);margin-bottom:10px;cursor:pointer">
+          <input type="checkbox" id="vp-islive" style="width:auto;margin:0"/> 🔴 È una diretta
+        </label>
         <div id="vsubmit-err" style="color:#EF4444;font-size:0.8rem;margin-bottom:8px;display:none"></div>
         <button id="vsubmit-btn" onclick="window._submitVideo('${esc(garaId)}','${esc(calId)}')"
           style="width:100%;padding:9px;background:var(--red-hot);color:#fff;border:none;border-radius:var(--r-sm);font-weight:600;cursor:pointer">
@@ -15757,10 +15765,11 @@ async function renderGara(gara_id) {
       const title   = document.getElementById('vurl-title')?.value.trim();
       const channel = document.getElementById('vurl-channel')?.value.trim();
       if (!url) { err.textContent = 'Inserisci un URL YouTube'; err.style.display = 'block'; return; }
+      const isLive = document.getElementById('vp-islive')?.checked || false;
       btn.disabled = true; btn.textContent = 'Invio…';
       try {
         for (const t of targets) {
-          await apiCall('/videos/submit', { method: 'POST', body: { gara_id: t, cal_id: calId, url, title, channel, atleta_ids: tagIds } });
+          await apiCall('/videos/submit', { method: 'POST', body: { gara_id: t, cal_id: calId, url, title, channel, atleta_ids: tagIds, is_live: isLive } });
         }
         document.getElementById('modal-overlay')?.remove();
         showToast(user?.role === 'admin' ? '✓ Video pubblicato!' : '✓ Video inviato — in attesa di approvazione');

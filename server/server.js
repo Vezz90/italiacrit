@@ -1329,7 +1329,7 @@ app.get('/api/admin/videos', requireAdmin, async (req, res) => {
 // Submit URL YouTube (utenti autenticati)
 app.post('/api/videos/submit', requireAuth, async (req, res) => {
   try {
-    const { gara_id, cal_id, url, title, description, channel, atleta_ids } = req.body;
+    const { gara_id, cal_id, url, title, description, channel, atleta_ids, is_live } = req.body;
     if (!gara_id || !url) return res.status(400).json({ error: 'gara_id e url obbligatori' });
     // Usa sempre gara_id (include la categoria es. _JUN_M, _ELI_M) come chiave
     // così ogni categoria della stessa gara ha i propri video separati
@@ -1339,13 +1339,13 @@ app.post('/api/videos/submit', requireAuth, async (req, res) => {
       const videos = await readVideos();
       if (!videos[key]) videos[key] = [];
       if (videos[key].some(v => v.url === url)) return res.status(409).json({ error: 'Video già presente' });
-      videos[key].push({ url, title: title || url, description: description || '', channel: channel || req.user.display_name || 'Admin', published_at: new Date().toISOString().slice(0,10), atleta_ids: tags });
+      videos[key].push({ url, title: title || url, description: description || '', channel: channel || req.user.display_name || 'Admin', published_at: new Date().toISOString().slice(0,10), atleta_ids: tags, is_live: !!is_live });
       await writeVideos(videos);
       return res.json({ ok: true, status: 'approved' });
     }
     const pending = await readPendingVideos();
     const id = Date.now().toString(36) + Math.random().toString(36).slice(2,7);
-    pending.push({ id, gara_id, cal_id: key, type: 'youtube', url, title: title || url, description: description || '', channel: channel || '', atleta_ids: tags, submitted_by: req.user.display_name || req.user.email, submitted_at: new Date().toISOString() });
+    pending.push({ id, gara_id, cal_id: key, type: 'youtube', url, title: title || url, description: description || '', channel: channel || '', atleta_ids: tags, is_live: !!is_live, submitted_by: req.user.display_name || req.user.email, submitted_at: new Date().toISOString() });
     await writePendingVideos(pending);
     res.json({ ok: true, status: 'pending' });
   } catch(e) { res.status(500).json({ error: e.message }); }
@@ -1412,7 +1412,7 @@ app.post('/api/admin/videos/pending/:id/approve', requireAdmin, async (req, res)
     const videos = await readVideos();
     const key = v.cal_id || v.gara_id;
     if (!videos[key]) videos[key] = [];
-    videos[key].push({ url: v.url, title: v.title, description: v.description || '', channel: v.channel || v.submitted_by || '', published_at: (v.submitted_at || '').slice(0, 10), atleta_ids: v.atleta_ids || '' });
+    videos[key].push({ url: v.url, title: v.title, description: v.description || '', channel: v.channel || v.submitted_by || '', published_at: (v.submitted_at || '').slice(0, 10), atleta_ids: v.atleta_ids || '', is_live: !!v.is_live });
     await writeVideos(videos);
     pending.splice(i, 1);
     await writePendingVideos(pending);
