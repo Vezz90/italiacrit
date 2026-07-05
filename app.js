@@ -1227,12 +1227,15 @@ async function loadAll() {
   const mergedResultsRaw = _mergeManualIntoRaw(resultsRaw, manualResults);
 
   const gd = processLoadedData({ calendar, resultsRaw: mergedResultsRaw, athletes, teams, meta, raceDetails, videos, extraRoster: mergedExtraRoster });
+  // Aggiorna le schede atleta/team coi risultati manuali PRIMA dell'override di
+  // team: _applyAtletaTeamOverrides sposta i risultati già presenti nella scheda
+  // del team vecchio a quella del nuovo. Se girasse prima, per un atleta appena
+  // creato da un risultato manuale non ci sarebbe ancora nessun risultato da
+  // spostare (il cambio-team sembrerebbe applicato sul profilo ma il risultato
+  // resterebbe agganciato al team originale nella pagina team).
+  _applyManualResults(gd, manualResults);
   // Applica gli override manuali di team agli atleti FCI (sposta atleta + risultati nel team scelto)
   _applyAtletaTeamOverrides(gd, atletaTeamOv);
-  // Aggiorna anche le schede atleta/team (risultati/punti pre-calcolati da
-  // athletes.json/teams.json, non derivati da resultsRaw a runtime), così un
-  // atleta creato da un risultato manuale ha subito la scheda popolata.
-  _applyManualResults(gd, manualResults);
   return gd;
 }
 
