@@ -11690,7 +11690,11 @@ function buildProfileMedia(risultati, photosMap, videos, opts = {}) {
       seenPG.add(r.gara_id);
       winPhotos.push({ r, photo });
     }
-    if (_pos >= 1 && _pos <= 10 && videoArr.length && !seenVG.has(r.gara_id)) {
+    // Il video della gara va mostrato a TUTTI i partecipanti con una posizione
+    // valida, non solo al top 10: nelle gare regionali (piccoli campi di
+    // partenza) un solo video copre l'intera gara, quindi anche chi arriva
+    // 15° o 20° ci compare.
+    if (_pos >= 1 && videoArr.length && !seenVG.has(r.gara_id)) {
       seenVG.add(r.gara_id);
       top10Vids.push({ r, video: videoArr[0] });
     }
