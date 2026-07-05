@@ -2002,10 +2002,16 @@ app.post('/api/admin/gara/:garaId/manual-result', requireAdmin, async (req, res)
     const finalKm = km || await _resolveManualKm(garaId);
 
     if (atletaId && atletaId !== '_') {
+      // Il profilo pcs_atleta vuole la categoria in formato CODICE (es. "AL_F",
+      // "ES1_F"), non l'etichetta leggibile ("Allievi", "Esordienti 1° Anno") che
+      // arriva dal form — altrimenti getRankingFileCode non la riconosce e la
+      // pagina team non riesce a metterla nel tab/roster giusto.
+      const profCategoria = _garaIdToCategoria(garaId);
+      const profGenere = profCategoria.endsWith('_F') ? 'F' : 'M';
       await _ensureManualAthleteProfile({
         atletaId, cognome: cognomeU, nome: nomeU,
         teamId: finalTeamId, teamNome: finalTeamNome,
-        categoria: categoria || '', genere: genere || '',
+        categoria: profCategoria, genere: profGenere,
       });
     }
 
@@ -2667,9 +2673,12 @@ async function _backfillManualResults(garaId) {
     }
 
     if (row.atleta_id) {
+      // Categoria in formato codice (vedi commento nell'endpoint manual-result)
+      const profCategoria = _garaIdToCategoria(row.gara_id);
+      const profGenere = profCategoria.endsWith('_F') ? 'F' : 'M';
       const created = await _ensureManualAthleteProfile({
         atletaId: row.atleta_id, cognome: row.cognome, nome: row.nome || '',
-        teamId, teamNome, categoria: row.categoria || '', genere: row.genere || '',
+        teamId, teamNome, categoria: profCategoria, genere: profGenere,
       });
       if (created) changed = true;
     }
