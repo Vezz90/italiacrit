@@ -3251,21 +3251,25 @@ app.post('/api/admin/youtube/detect-live', requireAdmin, async (req, res) => {
       });
     }
     let checked = 0, marked = 0;
+    const reasonCounts = {}; // diagnostica: perché un video NON è stato marcato
     const CONCURRENCY = 5;
     for (let i = 0; i < candidates.length; i += CONCURRENCY) {
       const batch = candidates.slice(i, i + CONCURRENCY);
       await Promise.all(batch.map(async (c) => {
-        const { duration: dur, isLiveContent } = await fetchVideoLiveInfo(c.vid);
+        const { duration: dur, isLiveContent, reason } = await fetchVideoLiveInfo(c.vid);
         checked++;
         if (isLiveContent || (dur && dur > 3000)) { // diretta o > 50 min
           videos[c.gid][c.idx].is_live = true;
           videos[c.gid][c.idx].duration_seconds = dur;
           marked++;
+        } else {
+          const key = reason || 'short_not_live'; // fetch/parse ok, ma davvero breve e non live
+          reasonCounts[key] = (reasonCounts[key] || 0) + 1;
         }
       }));
     }
     if (marked) await writeVideos(videos);
-    res.json({ ok: true, checked, marked, total: candidates.length });
+    res.json({ ok: true, checked, marked, total: candidates.length, reasonCounts });
   } catch (e) { res.status(500).json({ error: e.message }); }
 });
 

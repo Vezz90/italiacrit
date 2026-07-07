@@ -10124,7 +10124,16 @@ window.ytDetectLive = async () => {
   if (btn) { btn.disabled = true; btn.textContent = '⏳ Controllo in corso… (può richiedere qualche minuto)'; }
   try {
     const r = await apiCall('/admin/youtube/detect-live', { method: 'POST' });
-    if (status) status.textContent = `✓ Controllati ${r.checked}/${r.total} video — trovate ${r.marked} dirette nuove`;
+    if (status) {
+      status.textContent = `✓ Controllati ${r.checked}/${r.total} video — trovate ${r.marked} dirette nuove`;
+      // Diagnostica: se non ha trovato nulla, mostra PERCHÉ (es. YouTube blocca
+      // le richieste dal server con un consent wall) invece di lasciare l'admin
+      // a chiedersi se il controllo abbia davvero funzionato.
+      if (!r.marked && r.reasonCounts && Object.keys(r.reasonCounts).length) {
+        const parts = Object.entries(r.reasonCounts).map(([k, v]) => `${k}: ${v}`).join(', ');
+        status.innerHTML += `<div style="margin-top:6px;font-size:.78rem;color:var(--text-muted)">Dettaglio: ${esc(parts)}</div>`;
+      }
+    }
     showToast(`🔴 ${r.marked} dirette rilevate su ${r.checked} video controllati`);
     if (r.marked) await refreshVideos();
   } catch (e) {

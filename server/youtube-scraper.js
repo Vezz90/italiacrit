@@ -283,10 +283,17 @@ async function fetchVideoLiveInfo(videoId) {
     });
     const player = _extractJsonAfter(html, 'var ytInitialPlayerResponse');
     const vd = player?.videoDetails;
-    if (!vd) return { duration: null, isLiveContent: false };
+    if (!vd) {
+      // Pagina scaricata ma senza ytInitialPlayerResponse.videoDetails: quasi
+      // sempre un consent wall o una pagina "sorry, unusual traffic" servita
+      // a un IP datacenter (es. Render) invece della pagina video vera.
+      const reason = /consent\.youtube\.com|unusual traffic|Prima di continuare/i.test(html)
+        ? 'consent_wall' : `no_video_details_${html.length}b`;
+      return { duration: null, isLiveContent: false, reason };
+    }
     const duration = vd.lengthSeconds != null ? parseInt(vd.lengthSeconds, 10) : null;
-    return { duration: Number.isFinite(duration) ? duration : null, isLiveContent: !!vd.isLiveContent };
-  } catch { return { duration: null, isLiveContent: false }; }
+    return { duration: Number.isFinite(duration) ? duration : null, isLiveContent: !!vd.isLiveContent, reason: null };
+  } catch (e) { return { duration: null, isLiveContent: false, reason: 'fetch_error: ' + e.message }; }
 }
 
 async function fetchVideoDuration(videoId) {
