@@ -3039,7 +3039,12 @@ app.post('/api/admin/gara/:garaId/pcs-import-html', requireAdmin, async (req, re
 // ══════════════════════════════════════════════════════════════════════════════
 // YouTube Auto-Scraper
 // ══════════════════════════════════════════════════════════════════════════════
-const { DEFAULT_CHANNELS, fetchAllChannels, fetchVideoDuration, fetchVideoLiveInfo } = require('./youtube-scraper');
+const { DEFAULT_CHANNELS, fetchAllChannels, fetchVideoDuration, fetchVideoLiveInfo, fetchVideosInfoBatch } = require('./youtube-scraper');
+// YouTube Data API v3 (opzionale): se impostata, usata al posto dello scraping
+// della pagina watch per durata/stato-diretta, perché lo scraping viene ormai
+// bloccato da YouTube (risposta 429 + redirect a un consent/CAPTCHA wall) sugli
+// IP dei server cloud come Render. Mai hardcodare: solo da env/.env.local.
+const YOUTUBE_API_KEY = process.env.YOUTUBE_API_KEY || '';
 
 const YT_CHANNELS_PATH = path.join(__dirname, '../data/youtube_channels.json');
 const YT_QUEUE_PATH    = path.join(__dirname, '../data/youtube_queue.json');
@@ -3121,37 +3126,52 @@ async function doYoutubeSync() {
     return !pubYear || pubYear >= 2026; // se non c'è anno, includi
   };
 
+  // Raccogli prima tutti i nuovi video candidati, poi chiedi durata/diretta in
+  // blocco (batch da 50 con l'API ufficiale se c'è una key, altrimenti scraping
+  // uno a uno come fallback) invece di una richiesta HTTP per video nel loop.
+  const candidates = [];
   for (const [chId, videos] of Object.entries(fetched)) {
     const ch = channels.find(c => c.id === chId);
     for (const v of videos) {
       if (knownUrls.has(v.url)) continue;
       if (!_isVideoRecent(v)) continue;
       knownUrls.add(v.url);
-      const id = Date.now().toString(36) + Math.random().toString(36).slice(2, 7);
-      // Segnale diretta (scraping pagina watch, nessuna quota API): isLiveContent
-      // è il campo autoritativo di YouTube (streaming live, anche breve); la
-      // durata > 50 min resta un fallback per chi carica la registrazione
-      // integrale come video normale senza usare l'infrastruttura live —
-      // usato come suggerimento automatico nella queue, l'admin conferma o toglie.
       const videoId = (v.url.match(/[?&]v=([\w-]+)/) || [])[1];
-      const liveInfo = videoId ? await fetchVideoLiveInfo(videoId) : { duration: null, isLiveContent: false };
-      const { duration, isLiveContent } = liveInfo;
-      queue.push({
-        id,
-        channel_id:   chId,
-        channel_name: ch?.name || chId,
-        url:          v.url,
-        title:        v.title,
-        published_at: v.published_at,
-        thumbnail:    v.thumbnail,
-        status:       'pending',
-        suggested_gara_id: null,
-        added_at:     new Date().toISOString(),
-        duration_seconds: duration,
-        is_live_guess: !!(isLiveContent || (duration && duration > 3000)), // diretta o > 50 min
-      });
-      added++;
+      candidates.push({ chId, ch, v, videoId });
     }
+  }
+
+  let liveInfoById = {};
+  if (YOUTUBE_API_KEY) {
+    liveInfoById = await fetchVideosInfoBatch(candidates.map(c => c.videoId), YOUTUBE_API_KEY);
+  }
+
+  for (const { chId, ch, v, videoId } of candidates) {
+    const id = Date.now().toString(36) + Math.random().toString(36).slice(2, 7);
+    // Segnale diretta: liveStreamingDetails/isLiveContent è il campo
+    // autoritativo di YouTube (streaming live, anche breve); la durata > 50
+    // min resta un fallback per chi carica la registrazione integrale come
+    // video normale senza usare l'infrastruttura live — usato come
+    // suggerimento automatico nella queue, l'admin conferma o toglie.
+    const liveInfo = videoId
+      ? (liveInfoById[videoId] || (YOUTUBE_API_KEY ? { duration: null, isLiveContent: false } : await fetchVideoLiveInfo(videoId)))
+      : { duration: null, isLiveContent: false };
+    const { duration, isLiveContent } = liveInfo;
+    queue.push({
+      id,
+      channel_id:   chId,
+      channel_name: ch?.name || chId,
+      url:          v.url,
+      title:        v.title,
+      published_at: v.published_at,
+      thumbnail:    v.thumbnail,
+      status:       'pending',
+      suggested_gara_id: null,
+      added_at:     new Date().toISOString(),
+      duration_seconds: duration,
+      is_live_guess: !!(isLiveContent || (duration && duration > 3000)), // diretta o > 50 min
+    });
+    added++;
   }
 
   const nonPending = queue.filter(q => q.status !== 'pending');
@@ -3234,10 +3254,12 @@ app.post('/api/admin/youtube/queue/:id/approve', requireAdmin, async (req, res) 
 });
 
 // Ricontrolla i video YouTube già pubblicati (videos.json) e marca come
-// is_live quelli con durata > 1 ora non ancora segnalati — utile per i video
-// aggiunti prima che esistesse questo flag. Un po' lento (una richiesta HTTP
-// per video, con qualche parallelismo), pensato per essere lanciato a mano
-// ogni tanto, non ad ogni sync.
+// is_live quelli con durata > 50 min o marcati diretta da YouTube, non ancora
+// segnalati — utile per i video aggiunti prima che esistesse questo flag.
+// Con YOUTUBE_API_KEY impostata usa la Data API v3 in batch da 50 (nessuna
+// nuova ricerca: sono gli stessi ID video già nel nostro DB, solo lookup);
+// senza key ripiega sullo scraping della pagina watch uno a uno, che YouTube
+// blocca sistematicamente dagli IP dei server cloud (vedi fetchVideoLiveInfo).
 app.post('/api/admin/youtube/detect-live', requireAdmin, async (req, res) => {
   try {
     const videos = await readVideos();
@@ -3252,21 +3274,34 @@ app.post('/api/admin/youtube/detect-live', requireAdmin, async (req, res) => {
     }
     let checked = 0, marked = 0;
     const reasonCounts = {}; // diagnostica: perché un video NON è stato marcato
-    const CONCURRENCY = 5;
-    for (let i = 0; i < candidates.length; i += CONCURRENCY) {
-      const batch = candidates.slice(i, i + CONCURRENCY);
-      await Promise.all(batch.map(async (c) => {
-        const { duration: dur, isLiveContent, reason } = await fetchVideoLiveInfo(c.vid);
-        checked++;
-        if (isLiveContent || (dur && dur > 3000)) { // diretta o > 50 min
-          videos[c.gid][c.idx].is_live = true;
-          videos[c.gid][c.idx].duration_seconds = dur;
-          marked++;
-        } else {
-          const key = reason || 'short_not_live'; // fetch/parse ok, ma davvero breve e non live
-          reasonCounts[key] = (reasonCounts[key] || 0) + 1;
-        }
-      }));
+
+    const _apply = (c, dur, isLiveContent, reason) => {
+      checked++;
+      if (isLiveContent || (dur && dur > 3000)) { // diretta o > 50 min
+        videos[c.gid][c.idx].is_live = true;
+        videos[c.gid][c.idx].duration_seconds = dur;
+        marked++;
+      } else {
+        const key = reason || 'short_not_live'; // fetch/parse ok, ma davvero breve e non live
+        reasonCounts[key] = (reasonCounts[key] || 0) + 1;
+      }
+    };
+
+    if (YOUTUBE_API_KEY) {
+      const infoById = await fetchVideosInfoBatch(candidates.map(c => c.vid), YOUTUBE_API_KEY);
+      for (const c of candidates) {
+        const info = infoById[c.vid] || { duration: null, isLiveContent: false, reason: 'not_returned_by_api' };
+        _apply(c, info.duration, info.isLiveContent, info.reason);
+      }
+    } else {
+      const CONCURRENCY = 5;
+      for (let i = 0; i < candidates.length; i += CONCURRENCY) {
+        const batch = candidates.slice(i, i + CONCURRENCY);
+        await Promise.all(batch.map(async (c) => {
+          const { duration: dur, isLiveContent, reason } = await fetchVideoLiveInfo(c.vid);
+          _apply(c, dur, isLiveContent, reason || 'no_api_key_scraping_fallback');
+        }));
+      }
     }
     if (marked) await writeVideos(videos);
     res.json({ ok: true, checked, marked, total: candidates.length, reasonCounts });

@@ -300,4 +300,44 @@ async function fetchVideoDuration(videoId) {
   return (await fetchVideoLiveInfo(videoId)).duration;
 }
 
-module.exports = { DEFAULT_CHANNELS, fetchChannelVideos, fetchAllChannels, parseYouTubeRSS, resolveHandle, fetchVideoDuration, fetchVideoLiveInfo };
+// Converte una durata ISO 8601 ("PT1H23M45S") in secondi.
+function _parseIsoDuration(iso) {
+  const m = (iso || '').match(/^PT(?:(\d+)H)?(?:(\d+)M)?(?:(\d+)S)?$/);
+  if (!m) return null;
+  const [, h, mi, s] = m;
+  return (parseInt(h || 0, 10) * 3600) + (parseInt(mi || 0, 10) * 60) + parseInt(s || 0, 10);
+}
+
+// ── Durata + segnale "diretta" via YouTube Data API v3 (richiede API key) ────
+// A differenza dello scraping della pagina watch, questa NON viene bloccata da
+// YouTube (è il canale ufficiale, con quota) e permette di controllare fino a
+// 50 video in UNA sola chiamata invece di una richiesta HTTP a video: per i
+// video già presenti nel nostro DB (nessuna nuova ricerca, solo lookup per ID
+// noti) bastano ~4 chiamate anche per centinaia di video.
+// liveStreamingDetails è presente sui video trasmessi come diretta (anche
+// breve, anche già conclusa) — stesso ruolo di isLiveContent nello scraping.
+async function fetchVideosInfoBatch(videoIds, apiKey) {
+  const out = {};
+  const ids = [...new Set((videoIds || []).filter(Boolean))];
+  if (!ids.length || !apiKey) return out;
+  for (let i = 0; i < ids.length; i += 50) {
+    const chunk = ids.slice(i, i + 50);
+    const url = `https://www.googleapis.com/youtube/v3/videos?part=contentDetails,liveStreamingDetails&id=${chunk.join(',')}&key=${apiKey}`;
+    try {
+      const raw = await fetchURL(url, 15000);
+      const json = JSON.parse(raw);
+      if (json.error) throw new Error(json.error.message || 'Errore API YouTube');
+      for (const item of (json.items || [])) {
+        out[item.id] = {
+          duration: _parseIsoDuration(item.contentDetails?.duration),
+          isLiveContent: !!item.liveStreamingDetails,
+        };
+      }
+    } catch (e) {
+      for (const vid of chunk) out[vid] = { duration: null, isLiveContent: false, reason: 'api_error: ' + e.message };
+    }
+  }
+  return out;
+}
+
+module.exports = { DEFAULT_CHANNELS, fetchChannelVideos, fetchAllChannels, parseYouTubeRSS, resolveHandle, fetchVideoDuration, fetchVideoLiveInfo, fetchVideosInfoBatch };
