@@ -3039,7 +3039,7 @@ app.post('/api/admin/gara/:garaId/pcs-import-html', requireAdmin, async (req, re
 // ══════════════════════════════════════════════════════════════════════════════
 // YouTube Auto-Scraper
 // ══════════════════════════════════════════════════════════════════════════════
-const { DEFAULT_CHANNELS, fetchAllChannels, fetchVideoDuration } = require('./youtube-scraper');
+const { DEFAULT_CHANNELS, fetchAllChannels, fetchVideoDuration, fetchVideoLiveInfo } = require('./youtube-scraper');
 
 const YT_CHANNELS_PATH = path.join(__dirname, '../data/youtube_channels.json');
 const YT_QUEUE_PATH    = path.join(__dirname, '../data/youtube_queue.json');
@@ -3128,11 +3128,14 @@ async function doYoutubeSync() {
       if (!_isVideoRecent(v)) continue;
       knownUrls.add(v.url);
       const id = Date.now().toString(36) + Math.random().toString(36).slice(2, 7);
-      // Durata video (scraping pagina watch, nessuna quota API): un video oltre
-      // l'ora è quasi sempre una diretta/live integrale non tagliata — usato
-      // come suggerimento automatico nella queue, l'admin conferma o toglie.
+      // Segnale diretta (scraping pagina watch, nessuna quota API): isLiveContent
+      // è il campo autoritativo di YouTube (streaming live, anche breve); la
+      // durata > 50 min resta un fallback per chi carica la registrazione
+      // integrale come video normale senza usare l'infrastruttura live —
+      // usato come suggerimento automatico nella queue, l'admin conferma o toglie.
       const videoId = (v.url.match(/[?&]v=([\w-]+)/) || [])[1];
-      const duration = videoId ? await fetchVideoDuration(videoId) : null;
+      const liveInfo = videoId ? await fetchVideoLiveInfo(videoId) : { duration: null, isLiveContent: false };
+      const { duration, isLiveContent } = liveInfo;
       queue.push({
         id,
         channel_id:   chId,
@@ -3145,7 +3148,7 @@ async function doYoutubeSync() {
         suggested_gara_id: null,
         added_at:     new Date().toISOString(),
         duration_seconds: duration,
-        is_live_guess: !!(duration && duration > 3000), // > 50 min
+        is_live_guess: !!(isLiveContent || (duration && duration > 3000)), // diretta o > 50 min
       });
       added++;
     }
@@ -3252,9 +3255,9 @@ app.post('/api/admin/youtube/detect-live', requireAdmin, async (req, res) => {
     for (let i = 0; i < candidates.length; i += CONCURRENCY) {
       const batch = candidates.slice(i, i + CONCURRENCY);
       await Promise.all(batch.map(async (c) => {
-        const dur = await fetchVideoDuration(c.vid);
+        const { duration: dur, isLiveContent } = await fetchVideoLiveInfo(c.vid);
         checked++;
-        if (dur && dur > 3000) { // > 50 min
+        if (isLiveContent || (dur && dur > 3000)) { // diretta o > 50 min
           videos[c.gid][c.idx].is_live = true;
           videos[c.gid][c.idx].duration_seconds = dur;
           marked++;

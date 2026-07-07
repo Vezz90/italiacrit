@@ -233,18 +233,64 @@ async function fetchAllChannels(channels) {
   return results;
 }
 
-// ── Durata video: scraping della pagina watch (nessuna API key richiesta) ─────
-// Usato per capire se un video è probabilmente una diretta/live integrale
-// (durata > 1 ora): niente di certo al 100% (anche un montaggio lungo supera
-// l'ora), ma è un buon suggerimento automatico per l'admin, che poi conferma.
-async function fetchVideoDuration(videoId) {
+// Estrae un oggetto JSON bilanciato (conta le graffe rispettando le stringhe)
+// che inizia dopo la prima occorrenza di `marker`. Serve per leggere
+// ytInitialPlayerResponse dalla pagina HTML: un regex "non greedy" fino al
+// primo `};` è inaffidabile perché quel JSON è enorme e può contenere `};`
+// dentro stringhe innestate (es. descrizioni video), troncando l'oggetto.
+function _extractJsonAfter(html, marker) {
+  const idx = html.indexOf(marker);
+  if (idx === -1) return null;
+  const start = html.indexOf('{', idx);
+  if (start === -1) return null;
+  let depth = 0, inStr = false, strCh = null, esc = false;
+  for (let i = start; i < html.length; i++) {
+    const c = html[i];
+    if (inStr) {
+      if (esc) esc = false;
+      else if (c === '\\') esc = true;
+      else if (c === strCh) inStr = false;
+      continue;
+    }
+    if (c === '"' || c === "'") { inStr = true; strCh = c; continue; }
+    if (c === '{') depth++;
+    else if (c === '}') {
+      depth--;
+      if (depth === 0) {
+        try { return JSON.parse(html.slice(start, i + 1)); } catch { return null; }
+      }
+    }
+  }
+  return null;
+}
+
+// ── Durata + segnale "diretta": scraping della pagina watch (nessuna API key) ──
+// Il campo autoritativo per capire se un video è (stato) uno streaming live è
+// videoDetails.isLiveContent, non la durata: uno streaming breve (es. 20 min)
+// va comunque rilevato, mentre un lungo video di montaggio normale (non
+// trasmesso in diretta) non deve scattare come falso positivo. La durata resta
+// un fallback per i canali che caricano la registrazione integrale della
+// diretta come video normale, senza usare l'infrastruttura live di YouTube
+// (in quel caso isLiveContent è false ma il video supera comunque l'ora).
+// NB: un regex "prima occorrenza di lengthSeconds nella pagina" non basta,
+// perché la pagina contiene MOLTI altri blocchi JSON (video correlati, ecc.)
+// con lo stesso nome di campo riferito ad ALTRI video: bisogna leggere
+// ytInitialPlayerResponse.videoDetails, non un match a caso nell'HTML.
+async function fetchVideoLiveInfo(videoId) {
   try {
     const html = await fetchURL(`https://www.youtube.com/watch?v=${videoId}`, 10000, {
       'Cookie': 'CONSENT=YES+; VISITOR_INFO1_LIVE=',
     });
-    const m = html.match(/"lengthSeconds"\s*:\s*"(\d+)"/);
-    return m ? parseInt(m[1], 10) : null;
-  } catch { return null; }
+    const player = _extractJsonAfter(html, 'var ytInitialPlayerResponse');
+    const vd = player?.videoDetails;
+    if (!vd) return { duration: null, isLiveContent: false };
+    const duration = vd.lengthSeconds != null ? parseInt(vd.lengthSeconds, 10) : null;
+    return { duration: Number.isFinite(duration) ? duration : null, isLiveContent: !!vd.isLiveContent };
+  } catch { return { duration: null, isLiveContent: false }; }
 }
 
-module.exports = { DEFAULT_CHANNELS, fetchChannelVideos, fetchAllChannels, parseYouTubeRSS, resolveHandle, fetchVideoDuration };
+async function fetchVideoDuration(videoId) {
+  return (await fetchVideoLiveInfo(videoId)).duration;
+}
+
+module.exports = { DEFAULT_CHANNELS, fetchChannelVideos, fetchAllChannels, parseYouTubeRSS, resolveHandle, fetchVideoDuration, fetchVideoLiveInfo };
