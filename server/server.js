@@ -3254,10 +3254,12 @@ app.post('/api/admin/youtube/queue/:id/approve', requireAdmin, async (req, res) 
   } catch (e) { res.status(500).json({ error: e.message }); }
 });
 
-// Ricontrolla i video YouTube già pubblicati (videos.json) e marca come
-// is_live quelli marcati diretta da YouTube CON durata > 1 ora (solo
-// isLiveContent prenderebbe anche "Premiere" e dirette brevi non-gara), non
-// ancora segnalati — utile per i video aggiunti prima che esistesse questo flag.
+// Ricontrolla TUTTI i video YouTube già pubblicati (videos.json) contro il
+// criterio vero (isLiveContent E durata > 1 ora): marca is_live quelli non
+// ancora segnalati che lo soddisfano, E smarca quelli già segnalati che NON
+// lo soddisfano più (falsi positivi da run precedenti, es. con la sola
+// isLiveContent, che prende anche "Premiere" e dirette brevi non-gara) — così
+// non serve controllare i video uno a uno a mano.
 // Con YOUTUBE_API_KEY impostata usa la Data API v3 in batch da 50 (nessuna
 // nuova ricerca: sono gli stessi ID video già nel nostro DB, solo lookup);
 // senza key ripiega sullo scraping della pagina watch uno a uno, che YouTube
@@ -3268,24 +3270,27 @@ app.post('/api/admin/youtube/detect-live', requireAdmin, async (req, res) => {
     const candidates = [];
     for (const [gid, arr] of Object.entries(videos)) {
       (arr || []).forEach((v, idx) => {
-        if (v.is_live) return;
         const vid = (v.url || '').match(/[?&]v=([\w-]+)/)?.[1] || (v.url || '').match(/youtu\.be\/([\w-]+)/)?.[1];
         if (!vid) return;
-        candidates.push({ gid, idx, vid });
+        candidates.push({ gid, idx, vid, wasLive: !!v.is_live });
       });
     }
-    let checked = 0, marked = 0;
+    let checked = 0, marked = 0, unmarked = 0;
     const reasonCounts = {}; // diagnostica: perché un video NON è stato marcato
 
     const _apply = (c, dur, isLiveContent, reason) => {
       checked++;
-      if (isLiveContent && dur && dur > 3600) { // diretta E > 1 ora
+      const qualifies = isLiveContent && dur && dur > 3600; // diretta E > 1 ora
+      if (qualifies && !c.wasLive) {
         videos[c.gid][c.idx].is_live = true;
         videos[c.gid][c.idx].duration_seconds = dur;
         marked++;
-      } else {
-        // fetch/parse ok, ma non qualifica: non e' una diretta, oppure lo e'
-        // ma dura meno di un'ora (interviste/clip brevi, non la gara vera)
+      } else if (!qualifies && c.wasLive) {
+        videos[c.gid][c.idx].is_live = false;
+        unmarked++;
+        const key = reason || (isLiveContent ? 'live_ma_troppo_breve' : 'non_diretta');
+        reasonCounts[key] = (reasonCounts[key] || 0) + 1;
+      } else if (!qualifies) {
         const key = reason || (isLiveContent ? 'live_ma_troppo_breve' : 'non_diretta');
         reasonCounts[key] = (reasonCounts[key] || 0) + 1;
       }
@@ -3307,8 +3312,8 @@ app.post('/api/admin/youtube/detect-live', requireAdmin, async (req, res) => {
         }));
       }
     }
-    if (marked) await writeVideos(videos);
-    res.json({ ok: true, checked, marked, total: candidates.length, reasonCounts });
+    if (marked || unmarked) await writeVideos(videos);
+    res.json({ ok: true, checked, marked, unmarked, total: candidates.length, reasonCounts });
   } catch (e) { res.status(500).json({ error: e.message }); }
 });
 

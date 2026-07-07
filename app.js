@@ -8258,7 +8258,7 @@ window.adminNav = async function(section) {
           </button>
           <button onclick="window.ytDetectLive()" id="yt-detect-live-btn"
             style="background:var(--bg-card);border:1px solid #dc2626;color:#dc2626;padding:10px 18px;border-radius:6px;cursor:pointer;font-size:.875rem">
-            🔴 Rileva dirette già pubblicate
+            🔴 Rileva/correggi dirette
           </button>
           <span id="yt-sync-status" style="font-size:.8rem;color:var(--text-muted)"></span>
         </div>
@@ -10125,21 +10125,21 @@ window.ytDetectLive = async () => {
   try {
     const r = await apiCall('/admin/youtube/detect-live', { method: 'POST' });
     if (status) {
-      status.textContent = `✓ Controllati ${r.checked}/${r.total} video — trovate ${r.marked} dirette nuove`;
-      // Diagnostica: se non ha trovato nulla, mostra PERCHÉ (es. YouTube blocca
+      status.textContent = `✓ Controllati ${r.checked}/${r.total} video — ${r.marked} dirette nuove, ${r.unmarked || 0} corrette (non erano dirette)`;
+      // Diagnostica: se non ha cambiato nulla, mostra PERCHÉ (es. YouTube blocca
       // le richieste dal server con un consent wall) invece di lasciare l'admin
       // a chiedersi se il controllo abbia davvero funzionato.
-      if (!r.marked && r.reasonCounts && Object.keys(r.reasonCounts).length) {
+      if (!r.marked && !r.unmarked && r.reasonCounts && Object.keys(r.reasonCounts).length) {
         const parts = Object.entries(r.reasonCounts).map(([k, v]) => `${k}: ${v}`).join(', ');
         status.innerHTML += `<div style="margin-top:6px;font-size:.78rem;color:var(--text-muted)">Dettaglio: ${esc(parts)}</div>`;
       }
     }
-    showToast(`🔴 ${r.marked} dirette rilevate su ${r.checked} video controllati`);
-    if (r.marked) await refreshVideos();
+    showToast(`🔴 ${r.marked} dirette nuove, ${r.unmarked || 0} corrette su ${r.checked} video controllati`);
+    if (r.marked || r.unmarked) await refreshVideos();
   } catch (e) {
     showToast('Errore: ' + e.message, 'error');
   } finally {
-    if (btn) { btn.disabled = false; btn.textContent = '🔴 Rileva dirette già pubblicate'; }
+    if (btn) { btn.disabled = false; btn.textContent = '🔴 Rileva/correggi dirette'; }
   }
 };
 
