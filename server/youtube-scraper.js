@@ -328,9 +328,17 @@ async function fetchVideosInfoBatch(videoIds, apiKey) {
       const json = JSON.parse(raw);
       if (json.error) throw new Error(json.error.message || 'Errore API YouTube');
       for (const item of (json.items || [])) {
+        const lsd = item.liveStreamingDetails;
+        // Una diretta ANCORA IN CORSO (o appena finita, prima che YouTube
+        // finalizzi i metadati) non ha liveStreamingDetails.actualEndTime, e
+        // spesso contentDetails.duration è ancora "P0D" (0) in quella finestra
+        // — richiedere una durata > 1h la escluderebbe proprio mentre è la
+        // gara vera in diretta. Se è ancora in corso vale sempre come diretta,
+        // indipendentemente dalla durata (non ancora nota).
         out[item.id] = {
           duration: _parseIsoDuration(item.contentDetails?.duration),
-          isLiveContent: !!item.liveStreamingDetails,
+          isLiveContent: !!lsd,
+          isLiveNow: !!(lsd && !lsd.actualEndTime),
         };
       }
     } catch (e) {

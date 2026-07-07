@@ -3149,15 +3149,17 @@ async function doYoutubeSync() {
 
   for (const { chId, ch, v, videoId } of candidates) {
     const id = Date.now().toString(36) + Math.random().toString(36).slice(2, 7);
-    // Segnale diretta: richiede ENTRAMBI isLiveContent (trasmesso via
-    // infrastruttura live di YouTube) E durata > 1 ora — isLiveContent da solo
-    // include anche le "Premiere" (video normali con anteprima programmata) e
-    // dirette brevi (interviste post-gara), che non sono la gara vera; usato
-    // come suggerimento automatico nella queue, l'admin conferma o toglie.
+    // Segnale diretta: richiede isLiveContent (trasmesso via infrastruttura
+    // live di YouTube) E (durata > 1 ora O ancora in corso ora) — isLiveContent
+    // da solo include anche le "Premiere" (video normali con anteprima
+    // programmata) e dirette brevi (interviste post-gara), che non sono la
+    // gara vera; una diretta ancora in corso non ha durata finalizzata, quindi
+    // conta comunque. Usato come suggerimento automatico nella queue, l'admin
+    // conferma o toglie.
     const liveInfo = videoId
-      ? (liveInfoById[videoId] || (YOUTUBE_API_KEY ? { duration: null, isLiveContent: false } : await fetchVideoLiveInfo(videoId)))
-      : { duration: null, isLiveContent: false };
-    const { duration, isLiveContent } = liveInfo;
+      ? (liveInfoById[videoId] || (YOUTUBE_API_KEY ? { duration: null, isLiveContent: false, isLiveNow: false } : await fetchVideoLiveInfo(videoId)))
+      : { duration: null, isLiveContent: false, isLiveNow: false };
+    const { duration, isLiveContent, isLiveNow } = liveInfo;
     queue.push({
       id,
       channel_id:   chId,
@@ -3170,7 +3172,7 @@ async function doYoutubeSync() {
       suggested_gara_id: null,
       added_at:     new Date().toISOString(),
       duration_seconds: duration,
-      is_live_guess: !!(isLiveContent && duration && duration > 3600), // diretta E > 1 ora
+      is_live_guess: !!(isLiveContent && (isLiveNow || (duration && duration > 3600))), // diretta E (>1h O in corso ora)
     });
     added++;
   }
@@ -3278,12 +3280,16 @@ app.post('/api/admin/youtube/detect-live', requireAdmin, async (req, res) => {
     let checked = 0, marked = 0, unmarked = 0;
     const reasonCounts = {}; // diagnostica: perché un video NON è stato marcato
 
-    const _apply = (c, dur, isLiveContent, reason) => {
+    const _apply = (c, dur, isLiveContent, isLiveNow, reason) => {
       checked++;
-      const qualifies = isLiveContent && dur && dur > 3600; // diretta E > 1 ora
+      // Una diretta ANCORA IN CORSO (isLiveNow) qualifica sempre, anche se la
+      // durata non è ancora nota/finalizzata da YouTube — altrimenti una gara
+      // trasmessa in questo momento sparirebbe dal sito proprio mentre è utile
+      // vederla, prima che il video superi "sulla carta" un'ora di durata.
+      const qualifies = isLiveContent && (isLiveNow || (dur && dur > 3600));
       if (qualifies && !c.wasLive) {
         videos[c.gid][c.idx].is_live = true;
-        videos[c.gid][c.idx].duration_seconds = dur;
+        if (dur) videos[c.gid][c.idx].duration_seconds = dur;
         marked++;
       } else if (!qualifies && c.wasLive) {
         videos[c.gid][c.idx].is_live = false;
@@ -3299,8 +3305,8 @@ app.post('/api/admin/youtube/detect-live', requireAdmin, async (req, res) => {
     if (YOUTUBE_API_KEY) {
       const infoById = await fetchVideosInfoBatch(candidates.map(c => c.vid), YOUTUBE_API_KEY);
       for (const c of candidates) {
-        const info = infoById[c.vid] || { duration: null, isLiveContent: false, reason: 'not_returned_by_api' };
-        _apply(c, info.duration, info.isLiveContent, info.reason);
+        const info = infoById[c.vid] || { duration: null, isLiveContent: false, isLiveNow: false, reason: 'not_returned_by_api' };
+        _apply(c, info.duration, info.isLiveContent, info.isLiveNow, info.reason);
       }
     } else {
       const CONCURRENCY = 5;
@@ -3308,7 +3314,7 @@ app.post('/api/admin/youtube/detect-live', requireAdmin, async (req, res) => {
         const batch = candidates.slice(i, i + CONCURRENCY);
         await Promise.all(batch.map(async (c) => {
           const { duration: dur, isLiveContent, reason } = await fetchVideoLiveInfo(c.vid);
-          _apply(c, dur, isLiveContent, reason || 'no_api_key_scraping_fallback');
+          _apply(c, dur, isLiveContent, false, reason || 'no_api_key_scraping_fallback');
         }));
       }
     }
