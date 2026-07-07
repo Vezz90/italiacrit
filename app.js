@@ -19104,6 +19104,18 @@ async function renderMedia() {
   for (const g of (calendar || [])) {
     if (!evIndex[g.id]) evIndex[g.id] = { nome: g.nome, data: g.data, categoria: g.categoria, genere: '', regione: g.regione };
   }
+  // Un video/diretta collegato PRIMA dello scraping usa il gara_id del
+  // calendario come chiave; una volta scrapata, la gara può ottenere un
+  // gara_id diverso (suffissato per categoria/genere) che non coincide più con
+  // nessuna chiave del calendario né con quella sotto cui il video è salvato —
+  // senza questo fallback il video sparirebbe silenziosamente dalla pagina
+  // Media (nessuna voce in evIndex = scartato). garaToCalId (calcolato in
+  // processLoadedData) mappa gara_id scrapato → id calendario corrispondente:
+  // lo usiamo al contrario per "prestare" i metadati reali anche alla chiave
+  // calendario originale.
+  for (const [realGaraId, calId] of Object.entries(globalData.garaToCalId || {})) {
+    if (evIndex[realGaraId] && !evIndex[calId]) evIndex[calId] = evIndex[realGaraId];
+  }
 
   let fotoItems = Object.entries(photosMap)
     .map(([gid, p]) => ({ gara_id: gid, meta: evIndex[gid] || {}, photo: p }))
