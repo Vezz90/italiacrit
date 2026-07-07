@@ -14529,14 +14529,18 @@ window.adminDeleteVideo = async function(calId, idx) {
   } catch(e) { alert('Errore: ' + e.message); }
 };
 
-window.adminEditVideo = async function(calId, idx) {
+window.adminEditVideo = async function(calId, idx, currentIsLive) {
   const newUrl = prompt('Inserisci il nuovo URL YouTube:');
   if (!newUrl) return;
   const newTitle = prompt('Titolo (lascia vuoto per non cambiarlo):') || undefined;
+  // Stato attuale come default: OK = sì diretta, Annulla = no. Mostrato nel
+  // messaggio così un admin che vuole solo correggere url/titolo, senza
+  // toccare il flag diretta, sa cosa sta confermando/cambiando.
+  const isLive = confirm(`È una diretta (🔴)? Attualmente: ${currentIsLive ? 'SÌ' : 'NO'}.\nOK = imposta SÌ, Annulla = imposta NO`);
   try {
     await apiCall(`/admin/videos/${encodeURIComponent(calId)}/${idx}`, {
       method: 'PATCH',
-      body: { url: newUrl, ...(newTitle ? { title: newTitle } : {}) },
+      body: { url: newUrl, ...(newTitle ? { title: newTitle } : {}), is_live: isLive },
     });
     if (window._currentGaraId) renderGara(window._currentGaraId);
   } catch(e) { alert('Errore: ' + e.message); }
@@ -14979,7 +14983,7 @@ async function renderGara(gara_id) {
       ${_isAdmin ? `<div style="position:absolute;top:4px;right:4px;display:flex;flex-direction:column;gap:3px;z-index:10">
         <button onclick="event.stopPropagation();window._openTagPanel({kind:'video',srcKey:'${esc(_k)}',srcIdx:${_i},garaId:'${esc(_k)}',current:'${esc(v.atleta_ids||'')}'})" style="${_adminBtnStyle};background:#16a34a" title="Tagga corridori (top 10)">🏷 Tag</button>
         ${isEsordienti ? `<button onclick="event.stopPropagation();window.adminVideoSetYear('${esc(_k)}',${_i})" style="${_adminBtnStyle};background:#6366f1" title="Cambia annata (1°/2°/entrambi)">🏅 Anno</button>` : ''}
-        <button onclick="event.stopPropagation();window.adminEditVideo('${esc(_k)}',${_i})" style="${_adminBtnStyle};background:#2563eb">✏️ Modifica</button>
+        <button onclick="event.stopPropagation();window.adminEditVideo('${esc(_k)}',${_i},${!!v.is_live})" style="${_adminBtnStyle};background:#2563eb">✏️ Modifica</button>
         <button onclick="event.stopPropagation();window.adminDeleteVideo('${esc(_k)}',${_i})" style="${_adminBtnStyle};background:#dc2626">🗑 Elimina</button>
       </div>` : ''}
       ${v.title ? `<div class="gara-video-hero-caption">${esc(v.title)}</div>` : ''}
@@ -15020,7 +15024,7 @@ async function renderGara(gara_id) {
                   <button onclick="event.stopPropagation();window.adminPromoteVideo('${esc(_k)}',${_i},'${esc(primaryGaraId)}')" style="${_adminBtnStyle};background:#f59e0b" title="Imposta come video principale">⭐</button>
                   <button onclick="event.stopPropagation();window._openTagPanel({kind:'video',srcKey:'${esc(_k)}',srcIdx:${_i},garaId:'${esc(_k)}',current:'${esc(v.atleta_ids||'')}'})" style="${_adminBtnStyle};background:#16a34a" title="Tagga corridori (top 10)">🏷</button>
                   ${isEsordienti ? `<button onclick="event.stopPropagation();window.adminVideoSetYear('${esc(_k)}',${_i})" style="${_adminBtnStyle};background:#6366f1" title="Cambia annata">🏅</button>` : ''}
-                  <button onclick="event.stopPropagation();window.adminEditVideo('${esc(_k)}',${_i})" style="${_adminBtnStyle};background:#2563eb">✏️</button>
+                  <button onclick="event.stopPropagation();window.adminEditVideo('${esc(_k)}',${_i},${!!v.is_live})" style="${_adminBtnStyle};background:#2563eb">✏️</button>
                   <button onclick="event.stopPropagation();window.adminDeleteVideo('${esc(_k)}',${_i})" style="${_adminBtnStyle};background:#dc2626">🗑</button>
                 </div>` : ''}
               </div>`;

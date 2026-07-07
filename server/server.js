@@ -1581,13 +1581,14 @@ app.post('/api/admin/videos/:calId/:idx/set-year', requireAdmin, async (req, res
 app.patch('/api/admin/videos/:calId/:idx', requireAdmin, async (req, res) => {
   try {
     const { calId, idx } = req.params;
-    const { url, title, channel } = req.body;
+    const { url, title, channel, is_live } = req.body;
     const videos = await readVideos();
     if (!videos[calId]?.[parseInt(idx)]) return res.status(404).json({ error: 'Video non trovato' });
     const v = videos[calId][parseInt(idx)];
     if (url) v.url = url;
     if (title !== undefined) v.title = title;
     if (channel !== undefined) v.channel = channel;
+    if (is_live !== undefined) v.is_live = !!is_live;
     await writeVideos(videos);
     res.json({ ok: true });
   } catch(e) { res.status(500).json({ error: e.message }); }
@@ -3148,11 +3149,11 @@ async function doYoutubeSync() {
 
   for (const { chId, ch, v, videoId } of candidates) {
     const id = Date.now().toString(36) + Math.random().toString(36).slice(2, 7);
-    // Segnale diretta: liveStreamingDetails/isLiveContent è il campo
-    // autoritativo di YouTube (streaming live, anche breve); la durata > 50
-    // min resta un fallback per chi carica la registrazione integrale come
-    // video normale senza usare l'infrastruttura live — usato come
-    // suggerimento automatico nella queue, l'admin conferma o toglie.
+    // Segnale diretta: richiede ENTRAMBI isLiveContent (trasmesso via
+    // infrastruttura live di YouTube) E durata > 1 ora — isLiveContent da solo
+    // include anche le "Premiere" (video normali con anteprima programmata) e
+    // dirette brevi (interviste post-gara), che non sono la gara vera; usato
+    // come suggerimento automatico nella queue, l'admin conferma o toglie.
     const liveInfo = videoId
       ? (liveInfoById[videoId] || (YOUTUBE_API_KEY ? { duration: null, isLiveContent: false } : await fetchVideoLiveInfo(videoId)))
       : { duration: null, isLiveContent: false };
@@ -3169,7 +3170,7 @@ async function doYoutubeSync() {
       suggested_gara_id: null,
       added_at:     new Date().toISOString(),
       duration_seconds: duration,
-      is_live_guess: !!(isLiveContent || (duration && duration > 3000)), // diretta o > 50 min
+      is_live_guess: !!(isLiveContent && duration && duration > 3600), // diretta E > 1 ora
     });
     added++;
   }
@@ -3254,8 +3255,9 @@ app.post('/api/admin/youtube/queue/:id/approve', requireAdmin, async (req, res) 
 });
 
 // Ricontrolla i video YouTube già pubblicati (videos.json) e marca come
-// is_live quelli con durata > 50 min o marcati diretta da YouTube, non ancora
-// segnalati — utile per i video aggiunti prima che esistesse questo flag.
+// is_live quelli marcati diretta da YouTube CON durata > 1 ora (solo
+// isLiveContent prenderebbe anche "Premiere" e dirette brevi non-gara), non
+// ancora segnalati — utile per i video aggiunti prima che esistesse questo flag.
 // Con YOUTUBE_API_KEY impostata usa la Data API v3 in batch da 50 (nessuna
 // nuova ricerca: sono gli stessi ID video già nel nostro DB, solo lookup);
 // senza key ripiega sullo scraping della pagina watch uno a uno, che YouTube
@@ -3277,12 +3279,14 @@ app.post('/api/admin/youtube/detect-live', requireAdmin, async (req, res) => {
 
     const _apply = (c, dur, isLiveContent, reason) => {
       checked++;
-      if (isLiveContent || (dur && dur > 3000)) { // diretta o > 50 min
+      if (isLiveContent && dur && dur > 3600) { // diretta E > 1 ora
         videos[c.gid][c.idx].is_live = true;
         videos[c.gid][c.idx].duration_seconds = dur;
         marked++;
       } else {
-        const key = reason || 'short_not_live'; // fetch/parse ok, ma davvero breve e non live
+        // fetch/parse ok, ma non qualifica: non e' una diretta, oppure lo e'
+        // ma dura meno di un'ora (interviste/clip brevi, non la gara vera)
+        const key = reason || (isLiveContent ? 'live_ma_troppo_breve' : 'non_diretta');
         reasonCounts[key] = (reasonCounts[key] || 0) + 1;
       }
     };
