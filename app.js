@@ -1220,11 +1220,21 @@ async function loadAll() {
     }
   }
 
+  // Scarta le righe manuali "superate": l'admin le inserisce PRIMA che lo
+  // scraper FCI pubblichi il risultato reale, usando il gara_id del calendario
+  // (senza suffisso categoria/genere). Quando lo scraper passa, crea una riga
+  // reale con un gara_id diverso (suffissato) per lo stesso atleta nella
+  // stessa data — senza questo filtro resterebbero ENTRAMBE le righe e
+  // l'atleta/team risulterebbe con il risultato duplicato. Il confronto è su
+  // (atleta_id, data) e non sul gara_id esatto proprio per questo motivo.
+  const _realManualKeys = new Set((resultsRaw || []).filter(r => r.atleta_id && r.data).map(r => `${r.atleta_id}|${r.data}`));
+  const activeManualResults = (manualResults || []).filter(r => !(r.atleta_id && r.data && _realManualKeys.has(`${r.atleta_id}|${r.data}`)));
+
   // I risultati manuali vanno uniti PRIMA di processLoadedData: quella funzione
   // calcola anche il rank_dopo_gara (classifica) scorrendo resultsRaw una volta
   // sola. Se il merge avvenisse dopo, le righe manuali non passerebbero mai da
   // quel calcolo e resterebbero senza posizione in classifica.
-  const mergedResultsRaw = _mergeManualIntoRaw(resultsRaw, manualResults);
+  const mergedResultsRaw = _mergeManualIntoRaw(resultsRaw, activeManualResults);
 
   const gd = processLoadedData({ calendar, resultsRaw: mergedResultsRaw, athletes, teams, meta, raceDetails, videos, extraRoster: mergedExtraRoster });
   // Aggiorna le schede atleta/team coi risultati manuali PRIMA dell'override di
@@ -1233,7 +1243,7 @@ async function loadAll() {
   // creato da un risultato manuale non ci sarebbe ancora nessun risultato da
   // spostare (il cambio-team sembrerebbe applicato sul profilo ma il risultato
   // resterebbe agganciato al team originale nella pagina team).
-  _applyManualResults(gd, manualResults);
+  _applyManualResults(gd, activeManualResults);
   // Applica gli override manuali di team agli atleti FCI (sposta atleta + risultati nel team scelto)
   _applyAtletaTeamOverrides(gd, atletaTeamOv);
   return gd;

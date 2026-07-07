@@ -1922,9 +1922,26 @@ app.get('/api/data/atleta-team-overrides', async (req, res) => {
 // sovrascrive results_raw.json ma non tocca questa tabella). Il frontend le
 // unisce a resultsRaw al caricamento di globalData.
 app.get('/api/data/manual-results', async (req, res) => {
-  try { res.json(await queries.getAllManualResults()); }
-  catch (e) { res.status(500).json({ error: e.message }); }
+  try {
+    const rows = await queries.getAllManualResults();
+    res.json(_dropSupersededManualResults(rows));
+  } catch (e) { res.status(500).json({ error: e.message }); }
 });
+
+// Una riga manuale è "superata" quando lo scraper FCI ha nel frattempo
+// pubblicato un risultato REALE per lo stesso atleta nella stessa data — il
+// gara_id scrapato spesso ha un suffisso categoria/genere diverso da quello
+// usato per l'inserimento manuale (fatto sul gara_id del calendario, ancora
+// senza suffisso), quindi il confronto va fatto su (atleta_id, data) e non
+// sul gara_id esatto. Qui la nascondiamo solo dalla risposta (il frontend fa
+// lo stesso identico filtro) senza toccare il DB: la riga resta visibile e
+// cancellabile a mano dalla pagina admin di gestione risultati.
+function _dropSupersededManualResults(rows) {
+  if (!Array.isArray(rows) || !rows.length) return rows || [];
+  const resultsRaw = readDataJson('results_raw.json') || [];
+  const realKeys = new Set(resultsRaw.filter(r => r.atleta_id && r.data).map(r => `${r.atleta_id}|${r.data}`));
+  return rows.filter(r => !(r.atleta_id && r.data && realKeys.has(`${r.atleta_id}|${r.data}`)));
+}
 
 // Stessa tabella punti-base dello scraper FCI (scraper/fci_complete_scraper.py BASE_PTS)
 const _MANUAL_BASE_PTS = { 1: 15, 2: 12, 3: 10, 4: 8, 5: 6, 6: 5, 7: 4, 8: 3, 9: 2, 10: 1 };
@@ -3128,7 +3145,7 @@ async function doYoutubeSync() {
         suggested_gara_id: null,
         added_at:     new Date().toISOString(),
         duration_seconds: duration,
-        is_live_guess: !!(duration && duration > 3600),
+        is_live_guess: !!(duration && duration > 3000), // > 50 min
       });
       added++;
     }
@@ -3237,7 +3254,7 @@ app.post('/api/admin/youtube/detect-live', requireAdmin, async (req, res) => {
       await Promise.all(batch.map(async (c) => {
         const dur = await fetchVideoDuration(c.vid);
         checked++;
-        if (dur && dur > 3600) {
+        if (dur && dur > 3000) { // > 50 min
           videos[c.gid][c.idx].is_live = true;
           videos[c.gid][c.idx].duration_seconds = dur;
           marked++;
