@@ -377,9 +377,15 @@ app.get('/og/gara/:id', async (req, res) => {
     readDataJsonFromGH('calendar.json'),
     readDataJsonFromGH('results_raw.json'),
   ]);
-  const cal     = (calRaw || []).find(g => g.id === id);
+  // Il calendario usa l'id SENZA suffisso categoria/genere (es. "..._2026-07-05"),
+  // mentre il gara_id reale scrapato di solito ce l'ha ("..._2026-07-05_ELI_M");
+  // condividendo dalla pagina di una gara già scrapata l'id nell'URL è quello
+  // suffissato, che non troverebbe mai corrispondenza esatta nel calendario —
+  // titolo/data/luogo restavano vuoti e si vedeva l'id grezzo come titolo.
+  const cal = (calRaw || []).find(g => g.id === id)
+    || (calRaw || []).find(g => g.id === id.replace(/_[A-Z0-9]+_[MF]$/, ''));
   const results = (resultsRaw || []).filter(r => r.gara_id === id).sort((a,b) => a.posizione - b.posizione);
-  const title   = cal?.nome || id.replace(/_/g,' ');
+  const title   = cal?.nome || id.replace(/_\d{4}-\d{2}-\d{2}.*$/, '').replace(/_/g,' ');
   const date    = cal?.data ? new Date(cal.data).toLocaleDateString('it-IT',{day:'numeric',month:'long',year:'numeric'}) : '';
   const top3    = results.slice(0,3).map((r,i)=>`${i+1}° ${r.cognome} ${r.nome}`).join(' · ');
   const luogo   = cal?.luogo || cal?.regione || '';
@@ -5780,10 +5786,14 @@ app.get('/api/og-image/gara/:id', async (req, res) => {
       return res.send(cached.buf);
     }
 
-    // Nome gara: dal calendario (GitHub, affidabile su Render) o dall'id
+    // Nome gara: dal calendario (GitHub, affidabile su Render) o dall'id.
+    // Il calendario usa l'id senza suffisso categoria/genere: stesso fallback
+    // di /og/gara/:id, altrimenti titolo/data/luogo restano vuoti quando si
+    // condivide dalla pagina di una gara già scrapata (id suffissato).
     const calendar = (await readDataJsonFromGH('calendar.json')) || [];
-    const cal = calendar.find(g => g.id === garaId);
-    const title = cal?.nome || garaId.replace(/_\d{4}-\d{2}-\d{2}_[A-Z0-9_]+$/, '').replace(/_/g, ' ');
+    const cal = calendar.find(g => g.id === garaId)
+      || calendar.find(g => g.id === garaId.replace(/_[A-Z0-9]+_[MF]$/, ''));
+    const title = cal?.nome || garaId.replace(/_\d{4}-\d{2}-\d{2}.*$/, '').replace(/_/g, ' ');
 
     // 1) Se la gara ha una foto, usala come immagine principale. Tre fonti
     // possibili (stessa priorità e stesso matching "fuzzy" del gara_id usati
