@@ -18795,7 +18795,13 @@ async function renderRisultati() {
         byCategory: {}
       };
     }
-    const cat = r.categoria || 'N/D';
+    // Chiave di raggruppamento normalizzata: le righe scrapate dalla FCI hanno
+    // categoria come etichetta testuale ("Allievi"), quelle inserite a mano
+    // come codice ("AL_M", vedi _mrDeriveMeta) — usare r.categoria grezzo le
+    // separava in due gruppi diversi per la stessa categoria, e lo slice
+    // "primi 3" finiva applicato al gruppetto sbagliato (solo le righe
+    // manuali, es. posizioni 11-13 invece del vero podio).
+    const cat = getRankingFileCode(r) || r.categoria || 'N/D';
     if (!eventMap[eventKey].byCategory[cat]) {
       eventMap[eventKey].byCategory[cat] = { gara_id: r.gara_id, results: [] };
     }

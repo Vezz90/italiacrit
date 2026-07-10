@@ -343,8 +343,8 @@ function ogHtml({ title, desc, img, redirect }) {
 <meta property="og:description" content="${safe(desc)}"/>
 <meta property="og:url" content="${safe(redirect)}"/>
 <meta property="og:image" content="${safe(img||DEFAULT_OG_IMG)}"/>
-<meta property="og:image:width" content="1080"/>
-<meta property="og:image:height" content="1080"/>
+<meta property="og:image:width" content="1200"/>
+<meta property="og:image:height" content="630"/>
 <meta name="twitter:card" content="summary_large_image"/>
 <meta name="twitter:title" content="${safe(title)}"/>
 <meta name="twitter:description" content="${safe(desc)}"/>
