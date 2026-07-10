@@ -333,15 +333,25 @@ async function getEntityPhoto(type, id) {
   return null;
 }
 
-function ogHtml({ title, desc, img, redirect }) {
+function ogHtml({ title, desc, img, redirect, canonical }) {
   const safe = s => String(s||'').replace(/&/g,'&amp;').replace(/"/g,'&quot;').replace(/</g,'&lt;');
+  // og:url NON deve puntare all'URL con hash (#/gara/...) della SPA: il
+  // crawler di Facebook lo "segue" per canonicalizzare, ma essendo un hash il
+  // server riceve solo il dominio nudo (GitHub Pages è statico, l'hash non
+  // arriva mai al server) e finisce per sovrascrivere titolo/immagine/
+  // descrizione già recuperati con quelli generici della home — confermato
+  // con il Debugger di condivisione di Facebook (mostra un secondo hop del
+  // redirect verso "/" nel "percorso di reindirizzamento"). og:url punta
+  // quindi a questa stessa pagina /og/... (che il crawler ha già scaricato
+  // con i dati giusti); il redirect JS verso l'hash resta solo per gli
+  // utenti umani che ci arrivano cliccando il link condiviso.
   return `<!DOCTYPE html><html><head>
 <meta charset="utf-8"/>
 <meta property="og:type" content="website"/>
 <meta property="og:site_name" content="ItaliacritResultati"/>
 <meta property="og:title" content="${safe(title)}"/>
 <meta property="og:description" content="${safe(desc)}"/>
-<meta property="og:url" content="${safe(redirect)}"/>
+<meta property="og:url" content="${safe(canonical||redirect)}"/>
 <meta property="og:image" content="${safe(img||DEFAULT_OG_IMG)}"/>
 <meta property="og:image:width" content="1200"/>
 <meta property="og:image:height" content="630"/>
@@ -376,8 +386,9 @@ app.get('/og/gara/:id', async (req, res) => {
   const desc    = [date, luogo, top3].filter(Boolean).join(' — ');
   const img     = `${API_BASE_URL}/api/og-image/gara/${encodeURIComponent(id)}`;
   const redirect = `${SITE_URL}/#/gara/${encodeURIComponent(id)}`;
+  const canonical = `${API_BASE_URL}/og/gara/${encodeURIComponent(id)}`;
   res.setHeader('Content-Type','text/html');
-  res.send(ogHtml({ title, desc, img, redirect }));
+  res.send(ogHtml({ title, desc, img, redirect, canonical }));
 });
 
 app.get('/og/atleta/:id', async (req, res) => {
@@ -393,8 +404,9 @@ app.get('/og/atleta/:id', async (req, res) => {
   const desc     = parts.join(' · ') || 'Ciclista — Italia Cycling Stats';
   const img      = `${API_BASE_URL}/api/og-image/atleta/${encodeURIComponent(id)}`;
   const redirect = `${SITE_URL}/#/atleta/${encodeURIComponent(id)}`;
+  const canonical = `${API_BASE_URL}/og/atleta/${encodeURIComponent(id)}`;
   res.setHeader('Content-Type','text/html');
-  res.send(ogHtml({ title, desc, img, redirect }));
+  res.send(ogHtml({ title, desc, img, redirect, canonical }));
 });
 
 app.get('/og/team/:id', async (req, res) => {
@@ -409,8 +421,9 @@ app.get('/og/team/:id', async (req, res) => {
   const desc  = riders ? `${riders} corridori — Italia Cycling Stats` : 'Team — Italia Cycling Stats';
   const img   = `${API_BASE_URL}/api/og-image/team/${encodeURIComponent(id)}`;
   const redirect = `${SITE_URL}/#/team/${encodeURIComponent(id)}`;
+  const canonical = `${API_BASE_URL}/og/team/${encodeURIComponent(id)}`;
   res.setHeader('Content-Type','text/html');
-  res.send(ogHtml({ title, desc, img, redirect }));
+  res.send(ogHtml({ title, desc, img, redirect, canonical }));
 });
 
 // ── Sitemap.xml ───────────────────────────────────────────────────────────────
