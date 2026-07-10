@@ -5702,11 +5702,28 @@ app.get('/api/og-image/atleta/:id', async (req, res) => {
       res.setHeader('Cache-Control', 'public, max-age=1800');
       return res.send(cached.buf);
     }
-    // 1) Se l'atleta ha una foto, usala come immagine principale
+    // Statistiche atleta (servono sia per la card foto+testo sia per quella
+    // di solo testo): athletes.json da GitHub, affidabile su Render.
+    const athletes = (await readDataJsonFromGH('athletes.json')) || {};
+    const a = athletes[atletaId] || {};
+    const nome = `${a.cognome || ''} ${a.nome || ''}`.trim() || atletaId.replace(/_/g, ' ');
+    const ris = a.risultati || [];
+    const wins = ris.filter(r => Number(r.posizione) === 1).length;
+    const top3 = ris.filter(r => Number(r.posizione) <= 3).length;
+    const races = ris.length;
+    const statsArr = races ? [
+      { value: wins,  label: 'Vittorie' },
+      { value: top3,  label: 'Podi' },
+      { value: races, label: 'Gare' },
+    ] : [];
+    const badge = (a.categoria || '').replace(/_/g, ' ');
+
+    // 1) Se l'atleta ha una foto, usala come sfondo con nome/statistiche
+    // sovrapposti (stile card social) invece della foto "nuda" senza nome.
     try {
       const photo = await getEntityPhoto('atleta', atletaId);  // URL pubblico o null
       if (photo) {
-        const buf = await _photoToOgPng(photo);
+        const buf = await _photoWithCaptionOgPng(photo, { title: nome, subtitle: a.team_attuale || '', badge, stats: statsArr });
         if (buf) {
           _ogCache.set(cacheKey, { buf, ts: Date.now() });
           res.setHeader('Content-Type', 'image/png');
@@ -5716,23 +5733,8 @@ app.get('/api/og-image/atleta/:id', async (req, res) => {
       }
     } catch {}
 
-    // 2) Altrimenti scheda con nome + statistiche (athletes.json da GitHub, affidabile)
-    const athletes = (await readDataJsonFromGH('athletes.json')) || {};
-    const a = athletes[atletaId] || {};
-    const nome = `${a.cognome || ''} ${a.nome || ''}`.trim() || atletaId.replace(/_/g, ' ');
-    const ris = a.risultati || [];
-    const wins = ris.filter(r => Number(r.posizione) === 1).length;
-    const top3 = ris.filter(r => Number(r.posizione) <= 3).length;
-    const races = ris.length;
-    const svg = buildOgSvg({
-      title: nome, subtitle: a.team_attuale || '',
-      badge: (a.categoria || '').replace(/_/g, ' '),
-      stats: races ? [
-        { value: wins,  label: 'Vittorie' },
-        { value: top3,  label: 'Podi' },
-        { value: races, label: 'Gare' },
-      ] : [],
-    });
+    // 2) Altrimenti scheda di solo testo con nome + statistiche
+    const svg = buildOgSvg({ title: nome, subtitle: a.team_attuale || '', badge, stats: statsArr });
     const buf = await renderOgPng(svg);
     if (!buf) return res.redirect('/assets/og-default.png');
     _ogCache.set(cacheKey, { buf, ts: Date.now() });
@@ -5749,14 +5751,19 @@ function _extractYouTubeId(url) {
   return m ? m[1] : null;
 }
 
-// Carica una foto (file locale in uploads/ o URL) e la adatta a 1200x630 PNG
+// Carica una foto (file locale in uploads/ o URL) e la adatta a 1200x630 PNG.
+// position:'attention' (analisi entropia/salienza di sharp) invece del
+// crop-al-centro di default: su una foto profilo verticale (es. un primo
+// piano), il centro geometrico può cadere su un dettaglio a caso (es. gli
+// occhiali) invece che sul viso — "attention" tiene la parte più rilevante
+// dell'immagine dentro l'inquadratura 1200x630.
 async function _photoToOgPng(filename) {
   if (!filename) return null;
   try {
     const sharp = require('sharp');
     const local = path.join(UPLOADS_DIR, filename);
     if (fs.existsSync(local)) {
-      return await sharp(local).resize(1200, 630, { fit: 'cover' }).png().toBuffer();
+      return await sharp(local).resize(1200, 630, { fit: 'cover', position: sharp.strategy.attention }).png().toBuffer();
     }
     // prova come URL (storage Supabase o /photos)
     const url = /^https?:\/\//.test(filename)
@@ -5765,8 +5772,48 @@ async function _photoToOgPng(filename) {
     const r = await fetch(url, { signal: AbortSignal.timeout(6000) });
     if (!r.ok) return null;
     const ab = await r.arrayBuffer();
-    return await sharp(Buffer.from(ab)).resize(1200, 630, { fit: 'cover' }).png().toBuffer();
+    return await sharp(Buffer.from(ab)).resize(1200, 630, { fit: 'cover', position: sharp.strategy.attention }).png().toBuffer();
   } catch { return null; }
+}
+
+// Foto + testo sovrapposto (nome/sottotitolo/badge/statistiche) in stile
+// "card social": striscia sfumata scura in basso per leggibilità del testo
+// su qualsiasi foto, badge categoria in alto, statistiche a pillola in
+// basso — stessa impostazione visiva delle card Instagram generate lato
+// client (generateShareCanvas), portata lato server per il preview automatico
+// di Facebook. Senza questo, una foto profilo veniva condivisa "nuda" senza
+// nome né statistiche, mentre in assenza di foto si mostrava solo testo.
+async function _photoWithCaptionOgPng(photoSource, { title, subtitle, badge, stats = [], accent = '#e8001d' }) {
+  const photoBuf = await _photoToOgPng(photoSource);
+  if (!photoBuf) return null;
+  try {
+    const sharp = require('sharp');
+    const esc = s => String(s || '').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');
+    const statsHtml = stats.slice(0, 4).map((s, i) => {
+      const x = 60 + i * 270;
+      return `<rect x="${x}" y="480" width="240" height="90" rx="12" fill="rgba(15,23,42,0.72)" stroke="rgba(255,255,255,0.15)"/>
+      <text x="${x+120}" y="524" font-family="Arial,Helvetica,sans-serif" font-size="30" font-weight="bold" fill="white" text-anchor="middle">${esc(s.value)}</text>
+      <text x="${x+120}" y="550" font-family="Arial,Helvetica,sans-serif" font-size="15" fill="#cbd5e1" text-anchor="middle">${esc(s.label)}</text>`;
+    }).join('');
+    const overlay = `<svg width="1200" height="630" xmlns="http://www.w3.org/2000/svg">
+      <defs>
+        <linearGradient id="fade" x1="0" y1="0" x2="0" y2="1">
+          <stop offset="0%" stop-color="#000000" stop-opacity="0"/>
+          <stop offset="55%" stop-color="#000000" stop-opacity="0.15"/>
+          <stop offset="100%" stop-color="#000000" stop-opacity="0.88"/>
+        </linearGradient>
+      </defs>
+      <rect width="1200" height="630" fill="url(#fade)"/>
+      <rect x="0" y="0" width="10" height="630" fill="${esc(accent)}"/>
+      ${badge ? `<rect x="60" y="40" width="${Math.min(badge.length*11+24,320)}" height="36" rx="8" fill="${esc(accent)}"/>
+      <text x="72" y="63" font-family="Arial,Helvetica,sans-serif" font-size="18" fill="white" font-weight="700">${esc(badge)}</text>` : ''}
+      <text x="60" y="${stats.length ? 420 : 480}" font-family="Arial,Helvetica,sans-serif" font-size="58" font-weight="900" fill="white">${esc(String(title||'').slice(0,28))}${String(title||'').length > 28 ? '…' : ''}</text>
+      <text x="60" y="${stats.length ? 456 : 516}" font-family="Arial,Helvetica,sans-serif" font-size="28" fill="#e2e8f0">${esc(String(subtitle||'').slice(0,55))}${String(subtitle||'').length > 55 ? '…' : ''}</text>
+      ${statsHtml}
+      <text x="60" y="600" font-family="Arial,Helvetica,sans-serif" font-size="20" fill="white" font-weight="600">italiacyclingstats.com</text>
+    </svg>`;
+    return await sharp(photoBuf).composite([{ input: Buffer.from(overlay), top: 0, left: 0 }]).png().toBuffer();
+  } catch { return photoBuf; }
 }
 
 app.get('/api/og-image/gara/:id', async (req, res) => {
@@ -5857,8 +5904,14 @@ app.get('/api/og-image/team/:id', async (req, res) => {
       res.setHeader('Cache-Control', 'public, max-age=1800');
       return res.send(cached.buf);
     }
-    const results  = readDataJson('results_raw.json') || [];
-    const teamRows = results.filter(r => (r.team || '') === teamId);
+    // Bug corretto: confrontava r.team (il NOME visualizzato, es. "Team
+    // Hoppla'") con teamId (lo slug id, es. "TEAM_HOPPLA") — non
+    // corrispondevano mai, quindi l'immagine falliva sempre e finiva sul logo
+    // generico di default. Va confrontato team_id. Anche readDataJsonFromGH
+    // invece di readDataJson (locale, non affidabile su Render), come il
+    // resto delle route OG.
+    const results  = (await readDataJsonFromGH('results_raw.json')) || [];
+    const teamRows = results.filter(r => (r.team_id || '') === teamId);
     if (!teamRows.length) return res.redirect('/assets/og-default.png');
     const wins  = teamRows.filter(r => Number(r.posizione) === 1).length;
     const top3  = teamRows.filter(r => Number(r.posizione) <= 3).length;
