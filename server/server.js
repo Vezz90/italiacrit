@@ -5736,6 +5736,13 @@ app.get('/api/og-image/atleta/:id', async (req, res) => {
   } catch (e) { res.redirect('/assets/og-default.png'); }
 });
 
+// Estrae l'id video da un URL YouTube (watch?v=, youtu.be/, embed/).
+function _extractYouTubeId(url) {
+  if (!url) return null;
+  const m = url.match(/[?&]v=([\w-]{11})/) || url.match(/youtu\.be\/([\w-]{11})/) || url.match(/embed\/([\w-]{11})/);
+  return m ? m[1] : null;
+}
+
 // Carica una foto (file locale in uploads/ o URL) e la adatta a 1200x630 PNG
 async function _photoToOgPng(filename) {
   if (!filename) return null;
@@ -5797,6 +5804,23 @@ app.get('/api/og-image/gara/:id', async (req, res) => {
           const entry = src[alias];
           if (entry && (entry.url || entry.filename)) {
             const buf = await _photoToOgPng(entry.url || entry.filename);
+            if (buf) return sendPng(buf);
+          }
+        }
+      }
+
+      // 1b) Niente foto: se c'è un video collegato, usa la sua miniatura come
+      // copertina — meglio di una card generica se almeno un contenuto reale
+      // della gara esiste. Un video può essere stato collegato usando il
+      // gara_id del calendario (prima dello scraping) invece di quello reale
+      // suffissato: stessi alias usati sopra per le foto.
+      const allVideos = await readVideos().catch(() => ({}));
+      for (const alias of aliases) {
+        const vids = allVideos[alias];
+        if (vids && vids.length) {
+          const vidId = _extractYouTubeId(vids[0].url);
+          if (vidId) {
+            const buf = await _photoToOgPng(`https://img.youtube.com/vi/${vidId}/hqdefault.jpg`);
             if (buf) return sendPng(buf);
           }
         }
