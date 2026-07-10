@@ -5722,49 +5722,59 @@ function _ogStatHero(x, y, w, h, val, label, grad) {
     <text x="${x+w/2}" y="${y+h*0.82}" font-family="Arial,Helvetica,sans-serif" font-size="15" font-weight="600" fill="rgba(255,255,255,0.46)" text-anchor="middle" letter-spacing="1">${_ogEsc(label)}</text>`;
 }
 
-// Card atleta: cognome/nome grandi, team, badge categoria in alto a destra,
+// Contenuto della card atleta (senza cornice): cognome/nome grandi, team,
 // due box "hero" (punti stagione + posizione in classifica), griglia di 4
-// statistiche colorate (oro/argento/bronzo/bianco).
-function buildAtletaCardSvg({ cognome, nome, team, badge, punti, pos, p1, p2, p3, p4_10 }) {
-  const pad = 66, cTop = 100, cBot = 578;
-  const headerRight = badge ? `<text x="1176" y="35" font-family="Arial,Helvetica,sans-serif" font-size="20" font-weight="700" fill="#e8001d" text-anchor="end" letter-spacing="1">${_ogEsc(badge.toUpperCase())}</text>` : '';
+// statistiche colorate (oro/argento/bronzo/bianco). pad parametrizzato per
+// poterlo riusare sia a piena larghezza (buildAtletaCardSvg) sia nel
+// pannello destro della card con foto (_ogSplitPhotoCard, pad più grande
+// per lasciare spazio al pannello foto a sinistra).
+function _atletaCardBody(pad, { cognome, nome, team, punti, pos, p1, p2, p3, p4_10 }) {
+  const cTop = 100, cBot = 578, right = 1200 - 66;
   const fsC = (cognome || '').length > 12 ? 56 : 72;
   const nameY = cTop + fsC;
   const nomeY = nameY + Math.round(fsC * 0.46 * 1.55);
   const teamY = nomeY + 40;
   const heroTop = teamY + 28, heroH = 128, gap = 24;
-  const boxW = (1200 - pad * 2 - gap) / 2;
+  const boxW = (right - pad - gap) / 2;
   const gridTop = heroTop + heroH + 30, gridH = cBot - gridTop;
-  const cw = (1200 - pad * 2 - 24 * 3) / 4;
+  const cw = (right - pad - 24 * 3) / 4;
   const cells = [['VITTORIE', p1, '#f5c400'], ['2° POSTI', p2, '#cfcfcf'], ['3° POSTI', p3, '#cd7f32'], ['4°-10°', p4_10, '#f0f0f0']];
-  const body = `
+  return `
     <text x="${pad}" y="${nameY}" font-family="Arial,Helvetica,sans-serif" font-size="${fsC}" font-weight="900" fill="#f4f4f4">${_ogEsc((cognome || '').toUpperCase())}</text>
     <text x="${pad}" y="${nomeY}" font-family="Arial,Helvetica,sans-serif" font-size="${Math.round(fsC * 0.46)}" font-weight="700" fill="#e8001d">${_ogEsc((nome || '').toUpperCase())}</text>
     ${team ? `<text x="${pad}" y="${teamY}" font-family="Arial,Helvetica,sans-serif" font-size="24" font-weight="600" fill="rgba(255,255,255,0.55)">${_ogEsc(team.slice(0, 40))}</text>` : ''}
     ${_ogStatHero(pad, heroTop, boxW, heroH, punti, 'PUNTI STAGIONE', true)}
     ${_ogStatHero(pad + boxW + gap, heroTop, boxW, heroH, pos ? `${pos}°` : '—', 'IN CLASSIFICA', false)}
     ${cells.map((c, i) => _ogStatCell(pad + i * (cw + 24), gridTop, cw, gridH, c[1], c[0], c[2])).join('')}`;
-  return _ogWrap(body, { headerRight });
+}
+function buildAtletaCardSvg(data) {
+  const pad = 66;
+  const headerRight = data.badge ? `<text x="1176" y="35" font-family="Arial,Helvetica,sans-serif" font-size="20" font-weight="700" fill="#e8001d" text-anchor="end" letter-spacing="1">${_ogEsc(data.badge.toUpperCase())}</text>` : '';
+  return _ogWrap(_atletaCardBody(pad, data), { headerRight });
 }
 
-// Card team: nome grande, hero punti totali, griglia statistiche (vittorie/
-// podi/gare/corridori) — versione semplificata rispetto alla card atleta
-// (niente box "miglior atleta": richiederebbe calcolare il ranking di ogni
-// singolo corridore per categoria, fuori scope per un'immagine di preview).
-function buildTeamCardSvg({ nome, badge, punti, wins, top3, races, riders }) {
-  const pad = 66, cTop = 100, cBot = 578;
-  const headerRight = `<text x="1176" y="35" font-family="Arial,Helvetica,sans-serif" font-size="20" font-weight="700" fill="#e8001d" text-anchor="end" letter-spacing="1">${_ogEsc(badge || 'TEAM')}</text>`;
+// Stesso schema per la card team (senza cornice): nome grande, hero punti
+// totali, griglia statistiche (vittorie/podi/gare/corridori) — versione
+// semplificata rispetto alla card atleta (niente box "miglior atleta":
+// richiederebbe calcolare il ranking di ogni corridore per categoria, fuori
+// scope per un'immagine di preview).
+function _teamCardBody(pad, { nome, punti, wins, top3, races, riders }) {
+  const cTop = 100, cBot = 578, right = 1200 - 66;
   const fsN = (nome || '').length > 20 ? 46 : 62;
   const nameY = cTop + fsN;
   const heroTop = nameY + 40, heroH = 150;
   const gridTop = heroTop + heroH + 34, gridH = cBot - gridTop;
-  const cw = (1200 - pad * 2 - 24 * 3) / 4;
+  const cw = (right - pad - 24 * 3) / 4;
   const cells = [['VITTORIE', wins, '#f5c400'], ['PODI', top3, '#cfcfcf'], ['GARE', races, '#cd7f32'], ['CORRIDORI', riders, '#f0f0f0']];
-  const body = `
+  return `
     <text x="${pad}" y="${nameY}" font-family="Arial,Helvetica,sans-serif" font-size="${fsN}" font-weight="900" fill="#f4f4f4">${_ogEsc((nome || '').toUpperCase().slice(0, 34))}</text>
-    ${_ogStatHero(pad, heroTop, 1200 - pad * 2, heroH, punti, 'PUNTI TOTALI STAGIONE', true)}
+    ${_ogStatHero(pad, heroTop, right - pad, heroH, punti, 'PUNTI TOTALI STAGIONE', true)}
     ${cells.map((c, i) => _ogStatCell(pad + i * (cw + 24), gridTop, cw, gridH, c[1], c[0], c[2])).join('')}`;
-  return _ogWrap(body, { headerRight });
+}
+function buildTeamCardSvg(data) {
+  const pad = 66;
+  const headerRight = `<text x="1176" y="35" font-family="Arial,Helvetica,sans-serif" font-size="20" font-weight="700" fill="#e8001d" text-anchor="end" letter-spacing="1">${_ogEsc(data.badge || 'TEAM')}</text>`;
+  return _ogWrap(_teamCardBody(pad, data), { headerRight });
 }
 
 // Card classifica: intestazione "CLASSIFICA <categoria>" (+ regione/mese se
@@ -5863,7 +5873,6 @@ app.get('/api/og-image/atleta/:id', async (req, res) => {
     const athletes = (await readDataJsonFromGH('athletes.json')) || {};
     const a = athletes[atletaId] || {};
     const cognome = a.cognome || '', nomeP = a.nome || '';
-    const nome = `${cognome} ${nomeP}`.trim() || atletaId.replace(/_/g, ' ');
     const ris = a.risultati || [];
     const p1 = ris.filter(r => Number(r.posizione) === 1).length;
     const p2 = ris.filter(r => Number(r.posizione) === 2).length;
@@ -5883,14 +5892,14 @@ app.get('/api/og-image/atleta/:id', async (req, res) => {
     }
     const cardData = { cognome, nome: nomeP, team: a.team_attuale || '', badge, punti: a.punti_totali || 0, pos, p1, p2, p3, p4_10 };
 
-    // 1) Se l'atleta ha una foto, usala come sfondo con nome/statistiche
-    // sovrapposti (stile card social) invece della foto "nuda" senza nome.
+    // 1) Se l'atleta ha una foto, mostrala nel pannello sinistro con le
+    // statistiche complete (punti, posizione, vittorie/2°/3°/4°-10°) nel
+    // pannello destro, invece di sovrapporle alla foto intera (copriva il
+    // viso e non c'era spazio per la griglia completa).
     try {
       const photo = await getEntityPhoto('atleta', atletaId);  // URL pubblico o null
       if (photo) {
-        const buf = await _photoWithCaptionOgPng(photo, { title: nome, subtitle: a.team_attuale || '', badge, stats: [
-          { value: p1, label: 'Vittorie' }, { value: p1+p2+p3, label: 'Podi' }, { value: ris.length, label: 'Gare' },
-        ] });
+        const buf = await _ogSplitPhotoCard(photo, { badge, bodyBuilder: (padX) => _atletaCardBody(padX, cardData) });
         if (buf) {
           _ogCache.set(cacheKey, { buf, ts: Date.now() });
           res.setHeader('Content-Type', 'image/png');
@@ -5918,75 +5927,91 @@ function _extractYouTubeId(url) {
   return m ? m[1] : null;
 }
 
-// Carica una foto (file locale in uploads/ o URL) e la adatta a 1200x630 PNG.
-// position:'attention' (analisi entropia/salienza di sharp) invece del
-// crop-al-centro di default: su una foto profilo verticale (es. un primo
-// piano), il centro geometrico può cadere su un dettaglio a caso (es. gli
-// occhiali) invece che sul viso — "attention" tiene la parte più rilevante
-// dell'immagine dentro l'inquadratura 1200x630.
-async function _photoToOgPng(filename) {
+// Scarica una foto (file locale in uploads/ o URL) come buffer grezzo, senza
+// ridimensionarla — il resize/crop dipende da dove verrà usata (sfondo pieno
+// per le gare, pannello stretto per le card atleta/team a due colonne).
+async function _fetchRawImageBuffer(filename) {
   if (!filename) return null;
   try {
-    const sharp = require('sharp');
     const local = path.join(UPLOADS_DIR, filename);
-    if (fs.existsSync(local)) {
-      return await sharp(local).resize(1200, 630, { fit: 'cover', position: sharp.strategy.attention }).png().toBuffer();
-    }
-    // prova come URL (storage Supabase o /photos)
+    if (fs.existsSync(local)) return fs.readFileSync(local);
     const url = /^https?:\/\//.test(filename)
       ? filename
       : `${SUPABASE_PUB}/photos/${filename.replace(/^\/+/, '')}`;
     const r = await fetch(url, { signal: AbortSignal.timeout(6000) });
     if (!r.ok) return null;
-    const ab = await r.arrayBuffer();
-    return await sharp(Buffer.from(ab)).resize(1200, 630, { fit: 'cover', position: sharp.strategy.attention }).png().toBuffer();
+    return Buffer.from(await r.arrayBuffer());
   } catch { return null; }
 }
 
-// Foto + testo sovrapposto (nome/sottotitolo/badge/statistiche): stessa
-// identità visiva delle card senza foto (_ogWrap/_ogStatCell) — accento
-// rosso a sinistra, badge categoria in alto a destra (testo, non pillola),
-// footer con micro-accento tricolore + handle — con in più una sfumatura
-// scura in basso sopra la foto per la leggibilità del testo. Prima questa
-// funzione aveva un badge a pillola in alto a SINISTRA (stile vecchio,
-// diverso dalle altre card): l'utente l'ha segnalato confrontando lo
-// screenshot di un'anteprima FB reale, che passa sempre da qui perché la
-// maggior parte degli atleti/team ha una foto profilo.
-async function _photoWithCaptionOgPng(photoSource, { title, subtitle, badge, stats = [], accent = '#e8001d' }) {
-  const photoBuf = await _photoToOgPng(photoSource);
-  if (!photoBuf) return null;
+// Carica una foto e la adatta a 1200x630 PNG (sfondo pieno, usato per le
+// gare). position:'attention' (analisi entropia/salienza di sharp) invece
+// del crop-al-centro di default: su una foto verticale il centro geometrico
+// può cadere su un dettaglio a caso invece che sul soggetto principale.
+async function _photoToOgPng(filename) {
+  const raw = await _fetchRawImageBuffer(filename);
+  if (!raw) return null;
   try {
     const sharp = require('sharp');
-    const footerH = 38;
-    const statColors = ['#f5c400', '#cfcfcf', '#cd7f32', '#f0f0f0'];
-    const statsHtml = stats.slice(0, 4).map((s, i) => {
-      const x = 60 + i * 270, w = 240, y = 486, h = 88, col = statColors[i] || accent;
-      return `<rect x="${x}" y="${y}" width="${w}" height="${h}" rx="10" fill="rgba(0,0,0,0.55)" stroke="rgba(255,255,255,0.12)"/>
-      <rect x="${x}" y="${y}" width="${w}" height="4" rx="2" fill="${col}"/>
-      <text x="${x+w/2}" y="${y+h*0.58}" font-family="Arial,Helvetica,sans-serif" font-size="28" font-weight="900" fill="${col}" text-anchor="middle">${_ogEsc(s.value)}</text>
-      <text x="${x+w/2}" y="${y+h*0.82}" font-family="Arial,Helvetica,sans-serif" font-size="14" font-weight="600" fill="rgba(255,255,255,0.7)" text-anchor="middle">${_ogEsc(s.label)}</text>`;
-    }).join('');
-    const overlay = `<svg width="1200" height="630" xmlns="http://www.w3.org/2000/svg">
+    return await sharp(raw).resize(1200, 630, { fit: 'cover', position: sharp.strategy.attention }).png().toBuffer();
+  } catch { return null; }
+}
+
+// Card atleta/team con foto: pannello FOTO a sinistra + pannello TESTO a
+// destra (nome/badge/hero punti+posizione/griglia statistiche), invece di
+// sovrapporre il testo sopra la foto intera — su una foto profilo verticale
+// il testo sovrapposto finiva per coprire il viso o essere illeggibile, e
+// mancava spazio per la griglia completa di statistiche (punti, 2°, 3°,
+// 4°-10°) che le card senza foto invece mostrano. bodyBuilder(padX) riceve
+// la x da cui parte il pannello testo e restituisce l'SVG del contenuto
+// (stesso approccio di _ogStatHero/_ogStatCell riusati dai chiamanti).
+async function _ogSplitPhotoCard(photoSource, { badge, bodyBuilder }) {
+  const W = 1200, H = 630, headerH = 58, footerH = 38, photoW = 440;
+  const raw = await _fetchRawImageBuffer(photoSource);
+  if (!raw) return null;
+  try {
+    const sharp = require('sharp');
+    const photoInsetX = 10, photoInsetY = headerH + 8;
+    const photoAreaW = photoW - photoInsetX - 6, photoAreaH = H - headerH - footerH - 16;
+    const photoLayer = await sharp(raw)
+      .resize(Math.round(photoAreaW), Math.round(photoAreaH), { fit: 'cover', position: sharp.strategy.attention })
+      .png().toBuffer();
+
+    const logo = _ogLogoDataUri();
+    const padX = photoW + 40;
+    const headerRight = badge ? `<text x="${W-24}" y="35" font-family="Arial,Helvetica,sans-serif" font-size="20" font-weight="700" fill="#e8001d" text-anchor="end" letter-spacing="1">${_ogEsc(badge.toUpperCase())}</text>` : '';
+    const chromeSvg = `<svg width="${W}" height="${H}" xmlns="http://www.w3.org/2000/svg">
       <defs>
-        <linearGradient id="fade" x1="0" y1="0" x2="0" y2="1">
-          <stop offset="0%" stop-color="#000000" stop-opacity="0"/>
-          <stop offset="50%" stop-color="#000000" stop-opacity="0.18"/>
-          <stop offset="100%" stop-color="#000000" stop-opacity="0.90"/>
+        <linearGradient id="ogBg" x1="0" y1="0" x2="0" y2="1">
+          <stop offset="0%" stop-color="#0c0e12"/><stop offset="60%" stop-color="#0a0c10"/><stop offset="100%" stop-color="#070809"/>
+        </linearGradient>
+        <radialGradient id="ogGlow" cx="92%" cy="0%" r="90%">
+          <stop offset="0%" stop-color="#e8001d" stop-opacity="0.12"/><stop offset="100%" stop-color="#e8001d" stop-opacity="0"/>
+        </radialGradient>
+        <linearGradient id="ogHero" x1="0" y1="0" x2="1" y2="0">
+          <stop offset="0%" stop-color="#e8001d"/><stop offset="100%" stop-color="#f5c400"/>
         </linearGradient>
       </defs>
-      <rect width="1200" height="630" fill="url(#fade)"/>
-      <rect x="0" y="0" width="6" height="630" fill="${_ogEsc(accent)}"/>
-      ${badge ? `<text x="1176" y="35" font-family="Arial,Helvetica,sans-serif" font-size="20" font-weight="700" fill="${_ogEsc(accent)}" text-anchor="end" letter-spacing="1">${_ogEsc(badge.toUpperCase())}</text>` : ''}
-      <text x="60" y="${stats.length ? 420 : 480}" font-family="Arial,Helvetica,sans-serif" font-size="58" font-weight="900" fill="white">${_ogEsc(String(title||'').slice(0,28))}${String(title||'').length > 28 ? '…' : ''}</text>
-      <text x="60" y="${stats.length ? 456 : 516}" font-family="Arial,Helvetica,sans-serif" font-size="28" fill="#e2e8f0">${_ogEsc(String(subtitle||'').slice(0,55))}${String(subtitle||'').length > 55 ? '…' : ''}</text>
-      ${statsHtml}
-      <rect x="24" y="${630-footerH+18}" width="14" height="3" fill="#009246"/>
-      <rect x="38" y="${630-footerH+18}" width="14" height="3" fill="#f0f0ee"/>
-      <rect x="52" y="${630-footerH+18}" width="14" height="3" fill="#ce2b37"/>
-      <text x="1176" y="${630-footerH+27}" font-family="Arial,Helvetica,sans-serif" font-size="16" fill="rgba(255,255,255,0.75)" text-anchor="end">@italiacrit · italiacyclingstats.com</text>
+      <rect width="${W}" height="${H}" fill="url(#ogBg)"/>
+      <rect width="${W}" height="${H}" fill="url(#ogGlow)"/>
+      <rect x="0" y="0" width="6" height="${H}" fill="#e8001d"/>
+      ${logo ? `<image href="${logo}" x="24" y="${Math.round((headerH-42)/2)}" width="128" height="42" preserveAspectRatio="xMidYMid meet"/>`
+             : `<text x="24" y="${Math.round(headerH*0.6)}" font-family="Arial,Helvetica,sans-serif" font-size="22" font-weight="900" fill="white">ICS</text>`}
+      ${headerRight}
+      <rect x="0" y="${headerH}" width="${W}" height="1" fill="rgba(255,255,255,0.07)"/>
+      <rect x="${photoW}" y="${headerH+10}" width="1" height="${H-headerH-footerH-20}" fill="rgba(255,255,255,0.08)"/>
+      ${bodyBuilder(padX)}
+      <rect x="0" y="${H-footerH}" width="${W}" height="1" fill="rgba(255,255,255,0.07)"/>
+      <rect x="24" y="${H-footerH+18}" width="14" height="3" fill="#009246"/>
+      <rect x="38" y="${H-footerH+18}" width="14" height="3" fill="#f0f0ee"/>
+      <rect x="52" y="${H-footerH+18}" width="14" height="3" fill="#ce2b37"/>
+      <text x="${W-24}" y="${H-footerH+27}" font-family="Arial,Helvetica,sans-serif" font-size="16" fill="rgba(255,255,255,0.35)" text-anchor="end">@italiacrit · italiacyclingstats.com</text>
     </svg>`;
-    return await sharp(photoBuf).composite([{ input: Buffer.from(overlay), top: 0, left: 0 }]).png().toBuffer();
-  } catch { return photoBuf; }
+    const chromeBuf = await sharp(Buffer.from(chromeSvg)).png().toBuffer();
+    return await sharp(chromeBuf)
+      .composite([{ input: photoLayer, left: photoInsetX, top: photoInsetY }])
+      .png().toBuffer();
+  } catch { return null; }
 }
 
 app.get('/api/og-image/gara/:id', async (req, res) => {
@@ -6095,19 +6120,15 @@ app.get('/api/og-image/team/:id', async (req, res) => {
     const top3  = teamRows.filter(r => Number(r.posizione) <= 3).length;
     const races = new Set(teamRows.map(r => r.gara_id)).size;
     const riders = new Set(teamRows.map(r => r.atleta_id)).size;
-    const statsArr = [
-      { value: wins,  label: 'Vittorie' },
-      { value: top3,  label: 'Podi' },
-      { value: races, label: 'Gare' },
-      { value: riders, label: 'Corridori' },
-    ];
+    const teamCardData = { nome: teamName, punti, wins, top3, races, riders };
 
-    // Se il team ha un logo/foto profilo (override admin), usalo come sfondo
-    // con nome/statistiche sovrapposti — stessa logica dell'atleta.
+    // Se il team ha un logo/foto profilo (override admin), mostralo nel
+    // pannello sinistro con le statistiche complete nel pannello destro —
+    // stessa logica a due pannelli dell'atleta.
     try {
       const photo = await getEntityPhoto('team', teamId);
       if (photo) {
-        const buf = await _photoWithCaptionOgPng(photo, { title: teamName, subtitle: 'Team · Ciclismo Italiano', badge: 'TEAM', stats: statsArr });
+        const buf = await _ogSplitPhotoCard(photo, { badge: 'TEAM', bodyBuilder: (padX) => _teamCardBody(padX, teamCardData) });
         if (buf) {
           _ogCache.set(cacheKey, { buf, ts: Date.now() });
           res.setHeader('Content-Type', 'image/png');
@@ -6117,7 +6138,7 @@ app.get('/api/og-image/team/:id', async (req, res) => {
       }
     } catch {}
 
-    const svg = buildTeamCardSvg({ nome: teamName, badge: 'TEAM', punti, wins, top3, races, riders });
+    const svg = buildTeamCardSvg({ ...teamCardData, badge: 'TEAM' });
     const buf = await renderOgPng(svg);
     if (!buf) return res.redirect('/assets/og-default.png');
     _ogCache.set(cacheKey, { buf, ts: Date.now() });
