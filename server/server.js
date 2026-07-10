@@ -432,6 +432,62 @@ app.get('/og/team/:id', async (req, res) => {
   res.send(ogHtml({ title, desc, img, redirect, canonical }));
 });
 
+const _CLASS_CAT_LABELS = { ELI_M:'Elite', ELI_F:'Elite Donne', JUN_M:'Juniores', JUN_F:'Juniores Donne',
+  AL_M:'Allievi', AL_F:'Allieve', ES1_M:'Esordienti 1°', ES2_M:'Esordienti 2°',
+  ES1_F:'Esordienti 1° Donne', ES2_F:'Esordienti 2° Donne' };
+const _CLASS_MONTHS = ['','Gennaio','Febbraio','Marzo','Aprile','Maggio','Giugno','Luglio','Agosto','Settembre','Ottobre','Novembre','Dicembre'];
+
+// Stesso codice categoria usato ovunque nel resto dell'app (getRankingFileCode
+// lato client), versione minima lato server: dal suffisso del gara_id, con
+// fallback su categoria se già in formato codice. Niente ATHLETE_GENDER_FIXES
+// qui (lista di correzioni curate manualmente, non critica per un aggregato).
+function _rankingCodeFromRow(r) {
+  const m = (r.gara_id || '').match(/_(ELI|JUN|AL|ES1|ES2)_(M|F)$/i);
+  if (m) return `${m[1].toUpperCase()}_${m[2].toUpperCase()}`;
+  if (r.categoria && /^[A-Z0-9]+_[MF]$/.test(r.categoria)) return r.categoria;
+  return null;
+}
+
+// Ricostruisce una classifica (top 10) dai filtri codificati nell'id
+// condiviso: "CATCODE__REGIONE_SLUG__MESE" (regione/mese opzionali, vuoti se
+// nazionale/tutto l'anno). Nessun dato salvato lato server: si rilegge
+// results_raw.json e si aggrega al volo, stessa logica di shareClassifica lato
+// client quando ci sono filtri regione/mese attivi.
+async function _computeClassRanking(rawId) {
+  const [catCode, regionSlug, month] = decodeURIComponent(rawId).split('__');
+  const resultsRaw = (await readDataJsonFromGH('results_raw.json')) || [];
+  const gender = catCode.endsWith('_F') ? 'F' : 'M';
+  const region = regionSlug ? regionSlug.replace(/_/g, ' ') : '';
+  const agg = {};
+  for (const r of resultsRaw) {
+    if (r.genere !== gender) continue;
+    if (_rankingCodeFromRow(r) !== catCode) continue;
+    if (region && (r.regione || '').toUpperCase() !== region.toUpperCase()) continue;
+    if (month && (r.data || '').split('-')[1] !== month) continue;
+    if (!r.atleta_id) continue;
+    if (!agg[r.atleta_id]) agg[r.atleta_id] = { cognome: r.cognome, nome: r.nome, team: r.team, punti: 0 };
+    agg[r.atleta_id].punti += (r.punti_effettivi || 0);
+  }
+  const ranking = Object.values(agg).sort((a, b) => b.punti - a.punti).slice(0, 10)
+    .map((r, i) => ({ ...r, pos: i + 1 }));
+  const catLabelText = _CLASS_CAT_LABELS[catCode] || catCode.replace(/_/g, ' ');
+  const scopeLabel = region ? `Classifica ${region}` : 'Classifica Nazionale';
+  const monthLabel = month ? _CLASS_MONTHS[parseInt(month, 10)] : '';
+  return { catCode, region, month, catLabelText, scopeLabel, monthLabel, ranking };
+}
+
+app.get('/og/class/:id', async (req, res) => {
+  const { catLabelText, scopeLabel, monthLabel, ranking } = await _computeClassRanking(req.params.id);
+  const title = `Classifica ${catLabelText}`;
+  const top3  = ranking.slice(0, 3).map(r => `${r.pos}° ${r.cognome} ${r.nome}`).join(' · ');
+  const desc  = [scopeLabel, monthLabel, top3].filter(Boolean).join(' — ');
+  const img   = `${API_BASE_URL}/api/og-image/class/${encodeURIComponent(req.params.id)}`;
+  const redirect  = `${SITE_URL}/#/classifiche`;
+  const canonical = `${API_BASE_URL}/og/class/${encodeURIComponent(req.params.id)}`;
+  res.setHeader('Content-Type','text/html');
+  res.send(ogHtml({ title, desc, img, redirect, canonical }));
+});
+
 // ── Sitemap.xml ───────────────────────────────────────────────────────────────
 app.get('/sitemap.xml', async (req, res) => {
   try {
@@ -5910,23 +5966,97 @@ app.get('/api/og-image/team/:id', async (req, res) => {
     // generico di default. Va confrontato team_id. Anche readDataJsonFromGH
     // invece di readDataJson (locale, non affidabile su Render), come il
     // resto delle route OG.
-    const results  = (await readDataJsonFromGH('results_raw.json')) || [];
-    const teamRows = results.filter(r => (r.team_id || '') === teamId);
+    const [results, teams] = await Promise.all([
+      readDataJsonFromGH('results_raw.json'),
+      readDataJsonFromGH('teams.json'),
+    ]);
+    const teamRows = (results || []).filter(r => (r.team_id || '') === teamId);
     if (!teamRows.length) return res.redirect('/assets/og-default.png');
+    const teamName = (teams || {})[teamId]?.nome || teamId.replace(/_/g, ' ');
     const wins  = teamRows.filter(r => Number(r.posizione) === 1).length;
     const top3  = teamRows.filter(r => Number(r.posizione) <= 3).length;
     const races = new Set(teamRows.map(r => r.gara_id)).size;
     const riders = new Set(teamRows.map(r => r.atleta_id)).size;
+    const statsArr = [
+      { value: wins,  label: 'Vittorie' },
+      { value: top3,  label: 'Podi' },
+      { value: races, label: 'Gare' },
+      { value: riders, label: 'Corridori' },
+    ];
+
+    // Se il team ha un logo/foto profilo (override admin), usalo come sfondo
+    // con nome/statistiche sovrapposti — stessa logica dell'atleta.
+    try {
+      const photo = await getEntityPhoto('team', teamId);
+      if (photo) {
+        const buf = await _photoWithCaptionOgPng(photo, { title: teamName, subtitle: 'Team · Ciclismo Italiano', badge: 'TEAM', stats: statsArr });
+        if (buf) {
+          _ogCache.set(cacheKey, { buf, ts: Date.now() });
+          res.setHeader('Content-Type', 'image/png');
+          res.setHeader('Cache-Control', 'public, max-age=1800');
+          return res.send(buf);
+        }
+      }
+    } catch {}
+
     const svg = buildOgSvg({
-      title: teamId.length > 28 ? teamId.slice(0,27)+'…' : teamId,
+      title: teamName.length > 28 ? teamName.slice(0,27)+'…' : teamName,
       subtitle: 'Team · Ciclismo Italiano',
       badge: 'TEAM',
-      stats: [
-        { value: wins,  label: 'Vittorie' },
-        { value: top3,  label: 'Podi' },
-        { value: races, label: 'Gare' },
-        { value: riders, label: 'Corridori' },
-      ]
+      stats: statsArr,
+    });
+    const buf = await renderOgPng(svg);
+    if (!buf) return res.redirect('/assets/og-default.png');
+    _ogCache.set(cacheKey, { buf, ts: Date.now() });
+    res.setHeader('Content-Type', 'image/png');
+    res.setHeader('Cache-Control', 'public, max-age=1800');
+    res.send(buf);
+  } catch (e) { res.redirect('/assets/og-default.png'); }
+});
+
+// Card "classifica top 10": stessa impostazione visiva delle altre card
+// (gradiente scuro, striscia accento, badge categoria), con una riga per
+// posizione invece delle statistiche a pillola.
+function buildClassSvg({ title, subtitle, rows = [] }) {
+  const esc = s => String(s || '').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');
+  const medal = ['#F59E0B', '#94A3B8', '#B45309'];
+  const rowsHtml = rows.slice(0, 10).map((r, i) => {
+    const y = 250 + i * 34;
+    const col = i < 3 ? medal[i] : '#475569';
+    const name = `${r.cognome || ''} ${r.nome || ''}`.trim();
+    return `<text x="60" y="${y}" font-family="Arial,Helvetica,sans-serif" font-size="24" font-weight="900" fill="${col}">${r.pos}°</text>
+    <text x="110" y="${y}" font-family="Arial,Helvetica,sans-serif" font-size="24" font-weight="700" fill="white">${esc(name.slice(0,26))}</text>
+    <text x="640" y="${y}" font-family="Arial,Helvetica,sans-serif" font-size="19" fill="#94a3b8">${esc((r.team||'').slice(0,26))}</text>
+    <text x="1140" y="${y}" font-family="Arial,Helvetica,sans-serif" font-size="24" font-weight="800" fill="#e8001d" text-anchor="end">${esc(r.punti)} pt</text>`;
+  }).join('');
+  return `<svg width="1200" height="630" xmlns="http://www.w3.org/2000/svg">
+  <defs><linearGradient id="bg" x1="0" y1="0" x2="1200" y2="630" gradientUnits="userSpaceOnUse"><stop offset="0%" stop-color="#0f172a"/><stop offset="100%" stop-color="#1e293b"/></linearGradient></defs>
+  <rect width="1200" height="630" fill="url(#bg)"/>
+  <rect x="0" y="0" width="10" height="630" fill="#e8001d"/>
+  <text x="60" y="70" font-family="Arial,Helvetica,sans-serif" font-size="22" fill="#64748b" font-weight="600" letter-spacing="2">ICS — ITALIA CYCLING STATS</text>
+  <text x="60" y="145" font-family="Arial,Helvetica,sans-serif" font-size="48" font-weight="900" fill="white">${esc(String(title||'').slice(0,32))}</text>
+  <text x="60" y="185" font-family="Arial,Helvetica,sans-serif" font-size="26" fill="#94a3b8">${esc(String(subtitle||'').slice(0,55))}</text>
+  <line x1="60" y1="205" x2="1140" y2="205" stroke="rgba(255,255,255,0.15)"/>
+  ${rowsHtml}
+  <text x="60" y="608" font-family="Arial,Helvetica,sans-serif" font-size="20" fill="#e8001d" font-weight="600">italiacyclingstats.com</text>
+</svg>`;
+}
+
+app.get('/api/og-image/class/:id', async (req, res) => {
+  try {
+    const cacheKey = `class_${req.params.id}`;
+    const cached = _ogCache.get(cacheKey);
+    if (cached && Date.now() - cached.ts < OG_TTL) {
+      res.setHeader('Content-Type', 'image/png');
+      res.setHeader('Cache-Control', 'public, max-age=1800');
+      return res.send(cached.buf);
+    }
+    const { catLabelText, scopeLabel, monthLabel, ranking } = await _computeClassRanking(req.params.id);
+    if (!ranking.length) return res.redirect('/assets/og-default.png');
+    const svg = buildClassSvg({
+      title: `Classifica ${catLabelText}`,
+      subtitle: [scopeLabel, monthLabel].filter(Boolean).join(' · '),
+      rows: ranking,
     });
     const buf = await renderOgPng(svg);
     if (!buf) return res.redirect('/assets/og-default.png');

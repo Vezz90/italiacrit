@@ -20144,7 +20144,12 @@ window.shareClassifica=async function(){
   if(!ranking||!ranking.length){alert('Nessun dato per i filtri selezionati.');return;}
   const monthNames=['','Gennaio','Febbraio','Marzo','Aprile','Maggio','Giugno','Luglio','Agosto','Settembre','Ottobre','Novembre','Dicembre'];
   const monthLabel = rankMonth ? (monthNames[parseInt(rankMonth,10)]||'') : '';
+  // _id per la condivisione FB: il server ricostruisce la classifica dagli
+  // stessi filtri (catCode/regione/mese) leggendo resultsRaw, quindi basta
+  // codificarli nell'id — nessun dato serve essere salvato lato server.
+  const _idParts = [rankCat, rankRegion ? rankRegion.toUpperCase().replace(/\s+/g,'_') : '', rankMonth || ''];
   window.showShareModal('class',{
+    _id: _idParts.join('__'),
     catLabel:catLabel(rankCat),
     scope:rankRegion?'regionale':'nazionale',
     region:rankRegion||'',
