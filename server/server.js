@@ -5943,41 +5943,47 @@ async function _photoToOgPng(filename) {
   } catch { return null; }
 }
 
-// Foto + testo sovrapposto (nome/sottotitolo/badge/statistiche) in stile
-// "card social": striscia sfumata scura in basso per leggibilità del testo
-// su qualsiasi foto, badge categoria in alto, statistiche a pillola in
-// basso — stessa impostazione visiva delle card Instagram generate lato
-// client (generateShareCanvas), portata lato server per il preview automatico
-// di Facebook. Senza questo, una foto profilo veniva condivisa "nuda" senza
-// nome né statistiche, mentre in assenza di foto si mostrava solo testo.
+// Foto + testo sovrapposto (nome/sottotitolo/badge/statistiche): stessa
+// identità visiva delle card senza foto (_ogWrap/_ogStatCell) — accento
+// rosso a sinistra, badge categoria in alto a destra (testo, non pillola),
+// footer con micro-accento tricolore + handle — con in più una sfumatura
+// scura in basso sopra la foto per la leggibilità del testo. Prima questa
+// funzione aveva un badge a pillola in alto a SINISTRA (stile vecchio,
+// diverso dalle altre card): l'utente l'ha segnalato confrontando lo
+// screenshot di un'anteprima FB reale, che passa sempre da qui perché la
+// maggior parte degli atleti/team ha una foto profilo.
 async function _photoWithCaptionOgPng(photoSource, { title, subtitle, badge, stats = [], accent = '#e8001d' }) {
   const photoBuf = await _photoToOgPng(photoSource);
   if (!photoBuf) return null;
   try {
     const sharp = require('sharp');
-    const esc = s => String(s || '').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');
+    const footerH = 38;
+    const statColors = ['#f5c400', '#cfcfcf', '#cd7f32', '#f0f0f0'];
     const statsHtml = stats.slice(0, 4).map((s, i) => {
-      const x = 60 + i * 270;
-      return `<rect x="${x}" y="480" width="240" height="90" rx="12" fill="rgba(15,23,42,0.72)" stroke="rgba(255,255,255,0.15)"/>
-      <text x="${x+120}" y="524" font-family="Arial,Helvetica,sans-serif" font-size="30" font-weight="bold" fill="white" text-anchor="middle">${esc(s.value)}</text>
-      <text x="${x+120}" y="550" font-family="Arial,Helvetica,sans-serif" font-size="15" fill="#cbd5e1" text-anchor="middle">${esc(s.label)}</text>`;
+      const x = 60 + i * 270, w = 240, y = 486, h = 88, col = statColors[i] || accent;
+      return `<rect x="${x}" y="${y}" width="${w}" height="${h}" rx="10" fill="rgba(0,0,0,0.55)" stroke="rgba(255,255,255,0.12)"/>
+      <rect x="${x}" y="${y}" width="${w}" height="4" rx="2" fill="${col}"/>
+      <text x="${x+w/2}" y="${y+h*0.58}" font-family="Arial,Helvetica,sans-serif" font-size="28" font-weight="900" fill="${col}" text-anchor="middle">${_ogEsc(s.value)}</text>
+      <text x="${x+w/2}" y="${y+h*0.82}" font-family="Arial,Helvetica,sans-serif" font-size="14" font-weight="600" fill="rgba(255,255,255,0.7)" text-anchor="middle">${_ogEsc(s.label)}</text>`;
     }).join('');
     const overlay = `<svg width="1200" height="630" xmlns="http://www.w3.org/2000/svg">
       <defs>
         <linearGradient id="fade" x1="0" y1="0" x2="0" y2="1">
           <stop offset="0%" stop-color="#000000" stop-opacity="0"/>
-          <stop offset="55%" stop-color="#000000" stop-opacity="0.15"/>
-          <stop offset="100%" stop-color="#000000" stop-opacity="0.88"/>
+          <stop offset="50%" stop-color="#000000" stop-opacity="0.18"/>
+          <stop offset="100%" stop-color="#000000" stop-opacity="0.90"/>
         </linearGradient>
       </defs>
       <rect width="1200" height="630" fill="url(#fade)"/>
-      <rect x="0" y="0" width="10" height="630" fill="${esc(accent)}"/>
-      ${badge ? `<rect x="60" y="40" width="${Math.min(badge.length*11+24,320)}" height="36" rx="8" fill="${esc(accent)}"/>
-      <text x="72" y="63" font-family="Arial,Helvetica,sans-serif" font-size="18" fill="white" font-weight="700">${esc(badge)}</text>` : ''}
-      <text x="60" y="${stats.length ? 420 : 480}" font-family="Arial,Helvetica,sans-serif" font-size="58" font-weight="900" fill="white">${esc(String(title||'').slice(0,28))}${String(title||'').length > 28 ? '…' : ''}</text>
-      <text x="60" y="${stats.length ? 456 : 516}" font-family="Arial,Helvetica,sans-serif" font-size="28" fill="#e2e8f0">${esc(String(subtitle||'').slice(0,55))}${String(subtitle||'').length > 55 ? '…' : ''}</text>
+      <rect x="0" y="0" width="6" height="630" fill="${_ogEsc(accent)}"/>
+      ${badge ? `<text x="1176" y="35" font-family="Arial,Helvetica,sans-serif" font-size="20" font-weight="700" fill="${_ogEsc(accent)}" text-anchor="end" letter-spacing="1">${_ogEsc(badge.toUpperCase())}</text>` : ''}
+      <text x="60" y="${stats.length ? 420 : 480}" font-family="Arial,Helvetica,sans-serif" font-size="58" font-weight="900" fill="white">${_ogEsc(String(title||'').slice(0,28))}${String(title||'').length > 28 ? '…' : ''}</text>
+      <text x="60" y="${stats.length ? 456 : 516}" font-family="Arial,Helvetica,sans-serif" font-size="28" fill="#e2e8f0">${_ogEsc(String(subtitle||'').slice(0,55))}${String(subtitle||'').length > 55 ? '…' : ''}</text>
       ${statsHtml}
-      <text x="60" y="600" font-family="Arial,Helvetica,sans-serif" font-size="20" fill="white" font-weight="600">italiacyclingstats.com</text>
+      <rect x="24" y="${630-footerH+18}" width="14" height="3" fill="#009246"/>
+      <rect x="38" y="${630-footerH+18}" width="14" height="3" fill="#f0f0ee"/>
+      <rect x="52" y="${630-footerH+18}" width="14" height="3" fill="#ce2b37"/>
+      <text x="1176" y="${630-footerH+27}" font-family="Arial,Helvetica,sans-serif" font-size="16" fill="rgba(255,255,255,0.75)" text-anchor="end">@italiacrit · italiacyclingstats.com</text>
     </svg>`;
     return await sharp(photoBuf).composite([{ input: Buffer.from(overlay), top: 0, left: 0 }]).png().toBuffer();
   } catch { return photoBuf; }
