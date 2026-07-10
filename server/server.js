@@ -5669,33 +5669,133 @@ ${contextParts.join('\n\n')}
 const _ogCache = new Map(); // key → { buf, ts }
 const OG_TTL   = 30 * 60 * 1000; // 30 minuti
 
-function buildOgSvg({ title, subtitle, badge, stats = [], accent = '#e8001d' }) {
-  const esc = s => String(s || '').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');
-  const statsHtml = stats.slice(0, 4).map((s, i) => {
-    const x = 60 + i * 270;
-    return `<rect x="${x}" y="390" width="240" height="100" rx="12" fill="rgba(255,255,255,0.07)"/>
-    <text x="${x+120}" y="440" font-family="Arial,Helvetica,sans-serif" font-size="34" font-weight="bold" fill="white" text-anchor="middle">${esc(s.value)}</text>
-    <text x="${x+120}" y="468" font-family="Arial,Helvetica,sans-serif" font-size="16" fill="#94a3b8" text-anchor="middle">${esc(s.label)}</text>`;
-  }).join('');
-  return `<svg width="1200" height="630" xmlns="http://www.w3.org/2000/svg">
+const _ogEsc = s => String(s || '').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');
+
+// Cornice condivisa (sfondo scuro, bagliore rosso, accento a sinistra, logo,
+// footer col tricolore) — stessa identità visiva "Velon" delle card che il
+// sito genera lato client per Instagram (generateShareCanvas/_bg/_header/
+// _footer), portata qui per il preview automatico di Facebook così le
+// immagini condivise sono coerenti indipendentemente dal canale.
+function _ogWrap(body, { headerRight } = {}) {
+  const W = 1200, H = 630, headerH = 58, footerH = 38;
+  const logo = _ogLogoDataUri();
+  return `<svg width="${W}" height="${H}" viewBox="0 0 ${W} ${H}" xmlns="http://www.w3.org/2000/svg">
   <defs>
-    <linearGradient id="bg" x1="0" y1="0" x2="1200" y2="630" gradientUnits="userSpaceOnUse">
-      <stop offset="0%" stop-color="#0f172a"/>
-      <stop offset="100%" stop-color="#1e293b"/>
+    <linearGradient id="ogBg" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0%" stop-color="#0c0e12"/><stop offset="60%" stop-color="#0a0c10"/><stop offset="100%" stop-color="#070809"/>
+    </linearGradient>
+    <radialGradient id="ogGlow" cx="92%" cy="0%" r="90%">
+      <stop offset="0%" stop-color="#e8001d" stop-opacity="0.12"/><stop offset="100%" stop-color="#e8001d" stop-opacity="0"/>
+    </radialGradient>
+    <linearGradient id="ogHero" x1="0" y1="0" x2="1" y2="0">
+      <stop offset="0%" stop-color="#e8001d"/><stop offset="100%" stop-color="#f5c400"/>
     </linearGradient>
   </defs>
-  <rect width="1200" height="630" fill="url(#bg)"/>
-  <rect x="0" y="0" width="10" height="630" fill="${esc(accent)}"/>
-  <rect x="0" y="560" width="1200" height="70" fill="rgba(0,0,0,0.3)"/>
-  <text x="60" y="80" font-family="Arial,Helvetica,sans-serif" font-size="22" fill="#64748b" font-weight="600" letter-spacing="2">ICS — ITALIA CYCLING STATS</text>
-  ${badge ? `<rect x="60" y="100" width="${Math.min(badge.length*11+24,320)}" height="36" rx="8" fill="${esc(accent)}"/>
-  <text x="72" y="123" font-family="Arial,Helvetica,sans-serif" font-size="18" fill="white" font-weight="700">${esc(badge)}</text>` : ''}
-  <text x="60" y="${badge ? 230 : 190}" font-family="Arial,Helvetica,sans-serif" font-size="64" font-weight="900" fill="white" dominant-baseline="auto">${esc(title.slice(0, 28))}${title.length > 28 ? '…' : ''}</text>
-  <text x="60" y="${badge ? 295 : 255}" font-family="Arial,Helvetica,sans-serif" font-size="34" fill="#94a3b8">${esc(subtitle.slice(0, 55))}${subtitle.length > 55 ? '…' : ''}</text>
-  ${statsHtml}
-  <text x="60" y="597" font-family="Arial,Helvetica,sans-serif" font-size="20" fill="#e8001d" font-weight="600">italiacyclingstats.com</text>
-  <text x="1140" y="597" font-family="Arial,Helvetica,sans-serif" font-size="20" fill="#475569" text-anchor="end">🇮🇹 Ciclismo Italiano</text>
+  <rect width="${W}" height="${H}" fill="url(#ogBg)"/>
+  <rect width="${W}" height="${H}" fill="url(#ogGlow)"/>
+  <rect x="0" y="0" width="6" height="${H}" fill="#e8001d"/>
+  ${logo ? `<image href="${logo}" x="24" y="${Math.round((headerH-42)/2)}" width="128" height="42" preserveAspectRatio="xMidYMid meet"/>`
+         : `<text x="24" y="${Math.round(headerH*0.6)}" font-family="Arial,Helvetica,sans-serif" font-size="22" font-weight="900" fill="white">ICS</text>`}
+  ${headerRight || ''}
+  <rect x="0" y="${headerH}" width="${W}" height="1" fill="rgba(255,255,255,0.07)"/>
+  ${body}
+  <rect x="0" y="${H-footerH}" width="${W}" height="1" fill="rgba(255,255,255,0.07)"/>
+  <rect x="24" y="${H-footerH+18}" width="14" height="3" fill="#009246"/>
+  <rect x="38" y="${H-footerH+18}" width="14" height="3" fill="#f0f0ee"/>
+  <rect x="52" y="${H-footerH+18}" width="14" height="3" fill="#ce2b37"/>
+  <text x="${W-24}" y="${H-footerH+27}" font-family="Arial,Helvetica,sans-serif" font-size="16" fill="rgba(255,255,255,0.35)" text-anchor="end">@italiacrit · italiacyclingstats.com</text>
 </svg>`;
+}
+
+function _ogStatCell(x, y, w, h, val, label, color) {
+  const fsV = Math.min(Math.round(h * 0.34), Math.round(w * 0.30));
+  return `<rect x="${x}" y="${y}" width="${w}" height="${h}" rx="10" fill="rgba(255,255,255,0.04)"/>
+    <rect x="${x}" y="${y}" width="${w}" height="4" rx="2" fill="${color}"/>
+    <text x="${x+w/2}" y="${y+h*0.58}" font-family="Arial,Helvetica,sans-serif" font-size="${fsV}" font-weight="900" fill="${color}" text-anchor="middle">${_ogEsc(val)}</text>
+    <text x="${x+w/2}" y="${y+h*0.82}" font-family="Arial,Helvetica,sans-serif" font-size="14" font-weight="600" fill="rgba(255,255,255,0.42)" text-anchor="middle" letter-spacing="0.5">${_ogEsc(label)}</text>`;
+}
+
+function _ogStatHero(x, y, w, h, val, label, grad) {
+  const fsV = Math.round(h * 0.40);
+  return `<rect x="${x}" y="${y}" width="${w}" height="${h}" rx="14" fill="rgba(255,255,255,0.045)" stroke="rgba(255,255,255,0.09)"/>
+    <text x="${x+w/2}" y="${y+h*0.58}" font-family="Arial,Helvetica,sans-serif" font-size="${fsV}" font-weight="900" fill="${grad ? 'url(#ogHero)' : '#f5c400'}" text-anchor="middle">${_ogEsc(val)}</text>
+    <text x="${x+w/2}" y="${y+h*0.82}" font-family="Arial,Helvetica,sans-serif" font-size="15" font-weight="600" fill="rgba(255,255,255,0.46)" text-anchor="middle" letter-spacing="1">${_ogEsc(label)}</text>`;
+}
+
+// Card atleta: cognome/nome grandi, team, badge categoria in alto a destra,
+// due box "hero" (punti stagione + posizione in classifica), griglia di 4
+// statistiche colorate (oro/argento/bronzo/bianco).
+function buildAtletaCardSvg({ cognome, nome, team, badge, punti, pos, p1, p2, p3, p4_10 }) {
+  const pad = 66, cTop = 100, cBot = 578;
+  const headerRight = badge ? `<text x="1176" y="35" font-family="Arial,Helvetica,sans-serif" font-size="20" font-weight="700" fill="#e8001d" text-anchor="end" letter-spacing="1">${_ogEsc(badge.toUpperCase())}</text>` : '';
+  const fsC = (cognome || '').length > 12 ? 56 : 72;
+  const nameY = cTop + fsC;
+  const nomeY = nameY + Math.round(fsC * 0.46 * 1.55);
+  const teamY = nomeY + 40;
+  const heroTop = teamY + 28, heroH = 128, gap = 24;
+  const boxW = (1200 - pad * 2 - gap) / 2;
+  const gridTop = heroTop + heroH + 30, gridH = cBot - gridTop;
+  const cw = (1200 - pad * 2 - 24 * 3) / 4;
+  const cells = [['VITTORIE', p1, '#f5c400'], ['2° POSTI', p2, '#cfcfcf'], ['3° POSTI', p3, '#cd7f32'], ['4°-10°', p4_10, '#f0f0f0']];
+  const body = `
+    <text x="${pad}" y="${nameY}" font-family="Arial,Helvetica,sans-serif" font-size="${fsC}" font-weight="900" fill="#f4f4f4">${_ogEsc((cognome || '').toUpperCase())}</text>
+    <text x="${pad}" y="${nomeY}" font-family="Arial,Helvetica,sans-serif" font-size="${Math.round(fsC * 0.46)}" font-weight="700" fill="#e8001d">${_ogEsc((nome || '').toUpperCase())}</text>
+    ${team ? `<text x="${pad}" y="${teamY}" font-family="Arial,Helvetica,sans-serif" font-size="24" font-weight="600" fill="rgba(255,255,255,0.55)">${_ogEsc(team.slice(0, 40))}</text>` : ''}
+    ${_ogStatHero(pad, heroTop, boxW, heroH, punti, 'PUNTI STAGIONE', true)}
+    ${_ogStatHero(pad + boxW + gap, heroTop, boxW, heroH, pos ? `${pos}°` : '—', 'IN CLASSIFICA', false)}
+    ${cells.map((c, i) => _ogStatCell(pad + i * (cw + 24), gridTop, cw, gridH, c[1], c[0], c[2])).join('')}`;
+  return _ogWrap(body, { headerRight });
+}
+
+// Card team: nome grande, hero punti totali, griglia statistiche (vittorie/
+// podi/gare/corridori) — versione semplificata rispetto alla card atleta
+// (niente box "miglior atleta": richiederebbe calcolare il ranking di ogni
+// singolo corridore per categoria, fuori scope per un'immagine di preview).
+function buildTeamCardSvg({ nome, badge, punti, wins, top3, races, riders }) {
+  const pad = 66, cTop = 100, cBot = 578;
+  const headerRight = `<text x="1176" y="35" font-family="Arial,Helvetica,sans-serif" font-size="20" font-weight="700" fill="#e8001d" text-anchor="end" letter-spacing="1">${_ogEsc(badge || 'TEAM')}</text>`;
+  const fsN = (nome || '').length > 20 ? 46 : 62;
+  const nameY = cTop + fsN;
+  const heroTop = nameY + 40, heroH = 150;
+  const gridTop = heroTop + heroH + 34, gridH = cBot - gridTop;
+  const cw = (1200 - pad * 2 - 24 * 3) / 4;
+  const cells = [['VITTORIE', wins, '#f5c400'], ['PODI', top3, '#cfcfcf'], ['GARE', races, '#cd7f32'], ['CORRIDORI', riders, '#f0f0f0']];
+  const body = `
+    <text x="${pad}" y="${nameY}" font-family="Arial,Helvetica,sans-serif" font-size="${fsN}" font-weight="900" fill="#f4f4f4">${_ogEsc((nome || '').toUpperCase().slice(0, 34))}</text>
+    ${_ogStatHero(pad, heroTop, 1200 - pad * 2, heroH, punti, 'PUNTI TOTALI STAGIONE', true)}
+    ${cells.map((c, i) => _ogStatCell(pad + i * (cw + 24), gridTop, cw, gridH, c[1], c[0], c[2])).join('')}`;
+  return _ogWrap(body, { headerRight });
+}
+
+// Card classifica: intestazione "CLASSIFICA <categoria>" (+ regione/mese se
+// filtrata) a destra, righe numerate con colore oro/argento/bronzo pei primi 3.
+function buildClassCardSvg({ catLabel, region, month, rows = [] }) {
+  const pad = 60, top = 88, bottom = 578;
+  const medal = ['#f5c400', '#dadada', '#cd7f32'];
+  const headerRight = `
+    <text x="1176" y="34" font-family="Arial,Helvetica,sans-serif" font-size="21" font-weight="700" fill="#f2f2f2" text-anchor="end">${_ogEsc((catLabel || '').toUpperCase())}</text>
+    <text x="${1176 - (catLabel || '').length * 12 - 14}" y="34" font-family="Arial,Helvetica,sans-serif" font-size="21" font-weight="500" fill="rgba(255,255,255,0.42)" text-anchor="end" letter-spacing="1">CLASSIFICA</text>
+    ${region ? `<text x="1176" y="50" font-family="Arial,Helvetica,sans-serif" font-size="15" font-weight="600" fill="#f5c400" text-anchor="end">${_ogEsc(region.toUpperCase())}</text>` : ''}
+    ${month ? `<text x="${region ? 1176 - region.length*9 - 14 : 1176}" y="50" font-family="Arial,Helvetica,sans-serif" font-size="15" font-weight="600" fill="rgba(255,255,255,0.45)" text-anchor="end">${_ogEsc(month.toUpperCase())}</text>` : ''}`;
+  const rH = Math.round((bottom - top - 30) / Math.max(rows.length, 1));
+  const rowsHtml = rows.slice(0, 10).map((r, i) => {
+    const ry = top + 30 + i * rH, mid = ry + rH / 2;
+    const col = i < 3 ? medal[i] : 'rgba(255,255,255,0.45)';
+    const name = `${r.cognome || ''} ${r.nome || ''}`.trim();
+    return `${i % 2 === 0 ? `<rect x="${pad}" y="${ry}" width="${1200-pad*2}" height="${rH}" fill="rgba(255,255,255,0.022)"/>` : ''}
+    ${i < 3 ? `<rect x="${pad+8}" y="${mid - rH*0.3}" width="3" height="${rH*0.6}" fill="${col}"/>` : ''}
+    <text x="${pad+30}" y="${mid+8}" font-family="Arial,Helvetica,sans-serif" font-size="22" font-weight="700" fill="${col}">${r.pos}°</text>
+    <text x="${pad+80}" y="${mid+8}" font-family="Arial,Helvetica,sans-serif" font-size="22" font-weight="700" fill="#f0f0f0">${_ogEsc(name.slice(0, 26))}</text>
+    <text x="${pad+560}" y="${mid+8}" font-family="Arial,Helvetica,sans-serif" font-size="17" fill="rgba(255,255,255,0.42)">${_ogEsc((r.team || '').slice(0, 30))}</text>
+    <text x="${1200-pad-10}" y="${mid+8}" font-family="Arial,Helvetica,sans-serif" font-size="22" font-weight="700" fill="#f5c400" text-anchor="end">${_ogEsc(r.punti)} pt</text>`;
+  }).join('');
+  const body = `
+    <text x="${pad}" y="${top+8}" font-family="Arial,Helvetica,sans-serif" font-size="13" font-weight="600" fill="rgba(255,255,255,0.34)" letter-spacing="1.5">POS</text>
+    <text x="${pad+80}" y="${top+8}" font-family="Arial,Helvetica,sans-serif" font-size="13" font-weight="600" fill="rgba(255,255,255,0.34)" letter-spacing="1.5">ATLETA</text>
+    <text x="${1200-pad-10}" y="${top+8}" font-family="Arial,Helvetica,sans-serif" font-size="13" font-weight="600" fill="rgba(255,255,255,0.34)" text-anchor="end" letter-spacing="1.5">PUNTI</text>
+    <rect x="${pad}" y="${top+16}" width="1080" height="1" fill="rgba(255,255,255,0.06)"/>
+    ${rowsHtml}`;
+  return _ogWrap(body, { headerRight });
 }
 
 // Logo ICS come data URI base64 (cache) per embeddarlo negli SVG OG
@@ -5762,24 +5862,35 @@ app.get('/api/og-image/atleta/:id', async (req, res) => {
     // di solo testo): athletes.json da GitHub, affidabile su Render.
     const athletes = (await readDataJsonFromGH('athletes.json')) || {};
     const a = athletes[atletaId] || {};
-    const nome = `${a.cognome || ''} ${a.nome || ''}`.trim() || atletaId.replace(/_/g, ' ');
+    const cognome = a.cognome || '', nomeP = a.nome || '';
+    const nome = `${cognome} ${nomeP}`.trim() || atletaId.replace(/_/g, ' ');
     const ris = a.risultati || [];
-    const wins = ris.filter(r => Number(r.posizione) === 1).length;
-    const top3 = ris.filter(r => Number(r.posizione) <= 3).length;
-    const races = ris.length;
-    const statsArr = races ? [
-      { value: wins,  label: 'Vittorie' },
-      { value: top3,  label: 'Podi' },
-      { value: races, label: 'Gare' },
-    ] : [];
+    const p1 = ris.filter(r => Number(r.posizione) === 1).length;
+    const p2 = ris.filter(r => Number(r.posizione) === 2).length;
+    const p3 = ris.filter(r => Number(r.posizione) === 3).length;
+    const p4_10 = ris.filter(r => Number(r.posizione) >= 4 && Number(r.posizione) <= 10).length;
     const badge = (a.categoria || '').replace(/_/g, ' ');
+    // Posizione in classifica di categoria: stessi criteri della pagina
+    // Classifiche (punti_totali stagionali), confrontata con gli atleti della
+    // stessa categoria/genere.
+    let pos = null;
+    if (a.categoria && a.genere) {
+      const peers = Object.values(athletes)
+        .filter(x => x.categoria === a.categoria && x.genere === a.genere && (x.punti_totali || 0) > 0)
+        .sort((x, y) => (y.punti_totali || 0) - (x.punti_totali || 0));
+      const idx = peers.findIndex(x => x.id === atletaId);
+      if (idx >= 0) pos = idx + 1;
+    }
+    const cardData = { cognome, nome: nomeP, team: a.team_attuale || '', badge, punti: a.punti_totali || 0, pos, p1, p2, p3, p4_10 };
 
     // 1) Se l'atleta ha una foto, usala come sfondo con nome/statistiche
     // sovrapposti (stile card social) invece della foto "nuda" senza nome.
     try {
       const photo = await getEntityPhoto('atleta', atletaId);  // URL pubblico o null
       if (photo) {
-        const buf = await _photoWithCaptionOgPng(photo, { title: nome, subtitle: a.team_attuale || '', badge, stats: statsArr });
+        const buf = await _photoWithCaptionOgPng(photo, { title: nome, subtitle: a.team_attuale || '', badge, stats: [
+          { value: p1, label: 'Vittorie' }, { value: p1+p2+p3, label: 'Podi' }, { value: ris.length, label: 'Gare' },
+        ] });
         if (buf) {
           _ogCache.set(cacheKey, { buf, ts: Date.now() });
           res.setHeader('Content-Type', 'image/png');
@@ -5790,7 +5901,7 @@ app.get('/api/og-image/atleta/:id', async (req, res) => {
     } catch {}
 
     // 2) Altrimenti scheda di solo testo con nome + statistiche
-    const svg = buildOgSvg({ title: nome, subtitle: a.team_attuale || '', badge, stats: statsArr });
+    const svg = buildAtletaCardSvg(cardData);
     const buf = await renderOgPng(svg);
     if (!buf) return res.redirect('/assets/og-default.png');
     _ogCache.set(cacheKey, { buf, ts: Date.now() });
@@ -5973,6 +6084,7 @@ app.get('/api/og-image/team/:id', async (req, res) => {
     const teamRows = (results || []).filter(r => (r.team_id || '') === teamId);
     if (!teamRows.length) return res.redirect('/assets/og-default.png');
     const teamName = (teams || {})[teamId]?.nome || teamId.replace(/_/g, ' ');
+    const punti = (teams || {})[teamId]?.punti_totali || 0;
     const wins  = teamRows.filter(r => Number(r.posizione) === 1).length;
     const top3  = teamRows.filter(r => Number(r.posizione) <= 3).length;
     const races = new Set(teamRows.map(r => r.gara_id)).size;
@@ -5999,12 +6111,7 @@ app.get('/api/og-image/team/:id', async (req, res) => {
       }
     } catch {}
 
-    const svg = buildOgSvg({
-      title: teamName.length > 28 ? teamName.slice(0,27)+'…' : teamName,
-      subtitle: 'Team · Ciclismo Italiano',
-      badge: 'TEAM',
-      stats: statsArr,
-    });
+    const svg = buildTeamCardSvg({ nome: teamName, badge: 'TEAM', punti, wins, top3, races, riders });
     const buf = await renderOgPng(svg);
     if (!buf) return res.redirect('/assets/og-default.png');
     _ogCache.set(cacheKey, { buf, ts: Date.now() });
@@ -6013,34 +6120,6 @@ app.get('/api/og-image/team/:id', async (req, res) => {
     res.send(buf);
   } catch (e) { res.redirect('/assets/og-default.png'); }
 });
-
-// Card "classifica top 10": stessa impostazione visiva delle altre card
-// (gradiente scuro, striscia accento, badge categoria), con una riga per
-// posizione invece delle statistiche a pillola.
-function buildClassSvg({ title, subtitle, rows = [] }) {
-  const esc = s => String(s || '').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');
-  const medal = ['#F59E0B', '#94A3B8', '#B45309'];
-  const rowsHtml = rows.slice(0, 10).map((r, i) => {
-    const y = 250 + i * 34;
-    const col = i < 3 ? medal[i] : '#475569';
-    const name = `${r.cognome || ''} ${r.nome || ''}`.trim();
-    return `<text x="60" y="${y}" font-family="Arial,Helvetica,sans-serif" font-size="24" font-weight="900" fill="${col}">${r.pos}°</text>
-    <text x="110" y="${y}" font-family="Arial,Helvetica,sans-serif" font-size="24" font-weight="700" fill="white">${esc(name.slice(0,26))}</text>
-    <text x="640" y="${y}" font-family="Arial,Helvetica,sans-serif" font-size="19" fill="#94a3b8">${esc((r.team||'').slice(0,26))}</text>
-    <text x="1140" y="${y}" font-family="Arial,Helvetica,sans-serif" font-size="24" font-weight="800" fill="#e8001d" text-anchor="end">${esc(r.punti)} pt</text>`;
-  }).join('');
-  return `<svg width="1200" height="630" xmlns="http://www.w3.org/2000/svg">
-  <defs><linearGradient id="bg" x1="0" y1="0" x2="1200" y2="630" gradientUnits="userSpaceOnUse"><stop offset="0%" stop-color="#0f172a"/><stop offset="100%" stop-color="#1e293b"/></linearGradient></defs>
-  <rect width="1200" height="630" fill="url(#bg)"/>
-  <rect x="0" y="0" width="10" height="630" fill="#e8001d"/>
-  <text x="60" y="70" font-family="Arial,Helvetica,sans-serif" font-size="22" fill="#64748b" font-weight="600" letter-spacing="2">ICS — ITALIA CYCLING STATS</text>
-  <text x="60" y="145" font-family="Arial,Helvetica,sans-serif" font-size="48" font-weight="900" fill="white">${esc(String(title||'').slice(0,32))}</text>
-  <text x="60" y="185" font-family="Arial,Helvetica,sans-serif" font-size="26" fill="#94a3b8">${esc(String(subtitle||'').slice(0,55))}</text>
-  <line x1="60" y1="205" x2="1140" y2="205" stroke="rgba(255,255,255,0.15)"/>
-  ${rowsHtml}
-  <text x="60" y="608" font-family="Arial,Helvetica,sans-serif" font-size="20" fill="#e8001d" font-weight="600">italiacyclingstats.com</text>
-</svg>`;
-}
 
 app.get('/api/og-image/class/:id', async (req, res) => {
   try {
@@ -6051,13 +6130,9 @@ app.get('/api/og-image/class/:id', async (req, res) => {
       res.setHeader('Cache-Control', 'public, max-age=1800');
       return res.send(cached.buf);
     }
-    const { catLabelText, scopeLabel, monthLabel, ranking } = await _computeClassRanking(req.params.id);
+    const { catLabelText, region, monthLabel, ranking } = await _computeClassRanking(req.params.id);
     if (!ranking.length) return res.redirect('/assets/og-default.png');
-    const svg = buildClassSvg({
-      title: `Classifica ${catLabelText}`,
-      subtitle: [scopeLabel, monthLabel].filter(Boolean).join(' · '),
-      rows: ranking,
-    });
+    const svg = buildClassCardSvg({ catLabel: catLabelText, region, month: monthLabel, rows: ranking });
     const buf = await renderOgPng(svg);
     if (!buf) return res.redirect('/assets/og-default.png');
     _ogCache.set(cacheKey, { buf, ts: Date.now() });
