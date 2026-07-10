@@ -5765,12 +5765,28 @@ app.get('/api/og-image/gara/:id', async (req, res) => {
     const cal = calendar.find(g => g.id === garaId);
     const title = cal?.nome || garaId.replace(/_\d{4}-\d{2}-\d{2}_[A-Z0-9_]+$/, '').replace(/_/g, ' ');
 
-    // 1) Se la gara ha una foto approvata, usala come immagine principale
+    // 1) Se la gara ha una foto, usala come immagine principale. Tre fonti
+    // possibili (stessa priorità e stesso matching "fuzzy" del gara_id usati
+    // lato frontend in loadRisPhotos/_extAlias): caricata a mano (race_photos)
+    // vince se presente, altrimenti xpix.it, altrimenti ciclismo.info — senza
+    // questo fallback l'immagine di condivisione FB ignorava le foto prese
+    // automaticamente dagli scraper, che sono la maggioranza dei casi.
     try {
-      const photos = await queries.getApprovedRacePhotos(garaId).catch(() => []);
-      if (photos && photos.length) {
-        const buf = await _photoToOgPng(photos[0].filename || photos[0].photo_url);
+      const uploaded = await queries.getApprovedRacePhotos(garaId).catch(() => []);
+      if (uploaded && uploaded.length) {
+        const buf = await _photoToOgPng(uploaded[0].filename || uploaded[0].photo_url);
         if (buf) return sendPng(buf);
+      }
+      const aliases = [garaId, garaId.replace(/^\d+_/, ''), garaId.replace(/_[A-Z0-9]+_[MF]$/, '')];
+      const [xpix, ic] = await Promise.all([readXpixPhotos(), readICPhotos()]);
+      for (const [src] of [[xpix], [ic]]) {
+        for (const alias of aliases) {
+          const entry = src[alias];
+          if (entry && (entry.url || entry.filename)) {
+            const buf = await _photoToOgPng(entry.url || entry.filename);
+            if (buf) return sendPng(buf);
+          }
+        }
       }
     } catch {}
 

@@ -14674,10 +14674,17 @@ async function renderGara(gara_id) {
   // avere una diretta/video caricato prima ancora che la FCI pubblichi i
   // risultati, e quella va mostrata nel layout normale (media+risultati+info),
   // non nella scheda spoglia "in programma" che non ha alcuna sezione media.
+  // Stesso discorso per una gara ancora nei prossimi giorni ma a cui l'admin ha
+  // GIÀ collegato un video/diretta in anticipo (es. link della diretta
+  // programmata, inserito prima che la gara si disputi): la scheda spoglia non
+  // ha alcuna sezione media, quindi quel video resterebbe invisibile fino al
+  // giorno della gara.
+  const _hasPreassignedVideo = !!((globalData.videos || {})[primaryGaraId]?.length);
   if (!results.length && calEntry) {
     const todayS = new Date().toISOString().split('T')[0];
-    if ((calEntry.data || '') <= todayS) {
-      // Gara di oggi o passata senza risultati importati → continua col render normale
+    if ((calEntry.data || '') <= todayS || _hasPreassignedVideo) {
+      // Gara di oggi/passata senza risultati importati, o gara futura con un
+      // video già collegato → continua col render normale
     } else {
     const d = new Date((calEntry.data || '') + 'T00:00:00');
     const daysLeft = Math.round((d - new Date(todayS + 'T00:00:00')) / 86400000);
