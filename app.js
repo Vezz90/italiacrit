@@ -18829,11 +18829,17 @@ async function renderRisultati() {
     races = races.filter(r => r.nome.toLowerCase().includes(q) || (r.regione || '').toLowerCase().includes(q));
   }
   if (risQueryGenere) races = races.filter(r => r.genere === risQueryGenere);
-  if (activeHub && activeHub.catFilter) {
-    const cf = activeHub.catFilter.toLowerCase();
+  // Filtro hub (top-nav, es. "Elite / U23"): confronta i CODICI categoria
+  // esatti (activeHub.catCodes, es. ['ELI_M']) contro le chiavi di byCategory
+  // — che ora sono sempre codici (getRankingFileCode), mai etichette testuali.
+  // Prima usava activeHub.catFilter (sottostringa tipo "Elite") confrontata
+  // contro le chiavi: funzionava quando le chiavi erano ancora etichette
+  // umane ("Elite - U23"), ma con le chiavi diventate codici ("ELI_M") la
+  // sottostringa non c'entrava più nulla ed escludeva TUTTE le gare.
+  if (activeHub && activeHub.catCodes && activeHub.catCodes.length) {
     races = races.filter(function(ev) {
       return Object.keys(ev.byCategory || {}).some(function(c) {
-        return c.toLowerCase().includes(cf);
+        return activeHub.catCodes.includes(c);
       });
     });
   }
