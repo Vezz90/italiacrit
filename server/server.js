@@ -384,15 +384,13 @@ app.get('/og/gara/:id', async (req, res) => {
   // titolo/data/luogo restavano vuoti e si vedeva l'id grezzo come titolo.
   const cal = (calRaw || []).find(g => g.id === id)
     || (calRaw || []).find(g => g.id === id.replace(/_[A-Z0-9]+_[MF]$/, ''));
-  const results = (resultsRaw || []).filter(r => r.gara_id === id).sort((a,b) => a.posizione - b.posizione);
-  const title   = cal?.nome || id.replace(/_\d{4}-\d{2}-\d{2}.*$/, '').replace(/_/g,' ');
+  const results  = (resultsRaw || []).filter(r => r.gara_id === id).sort((a,b) => a.posizione - b.posizione);
+  const raceName = cal?.nome || id.replace(/_\d{4}-\d{2}-\d{2}.*$/, '').replace(/_/g,' ');
   const raceDate = results[0]?.data || cal?.data || '';
-  const date    = cal?.data ? new Date(cal.data).toLocaleDateString('it-IT',{day:'numeric',month:'long',year:'numeric'}) : '';
-  // Podio con squadra per ognuno (nome (team) invece del solo nome) — l'utente
-  // vuole vedere anche il team di 1°/2°/3° direttamente nella descrizione del
-  // post FB, senza dover aprire il link.
-  const top3    = results.slice(0,3).map((r,i)=>`${i+1}° ${r.cognome} ${r.nome}${r.team ? ` (${r.team})` : ''}`).join(' · ');
-  const luogo   = cal?.luogo || cal?.regione || '';
+  const date     = cal?.data ? new Date(cal.data).toLocaleDateString('it-IT',{day:'numeric',month:'long',year:'numeric'}) : '';
+  // Podio con squadra per ognuno (nome (team) invece del solo nome).
+  const top3     = results.slice(0,3).map((r,i)=>`${i+1}° ${r.cognome} ${r.nome}${r.team ? ` (${r.team})` : ''}`).join(' · ');
+  const luogo    = cal?.luogo || cal?.regione || '';
   // Piccolo commento sul vincitore basato sui dati stagionali fino a questa
   // gara (vittorie ottenute finora, questa inclusa): conta le vittorie dello
   // stesso atleta nella stessa categoria/genere con data <= quella della gara.
@@ -406,7 +404,14 @@ app.get('/og/gara/:id', async (req, res) => {
     if (winsSoFar === 1) winnerComment = `Prima vittoria stagionale per ${winner.cognome} ${winner.nome}.`;
     else if (winsSoFar > 1) winnerComment = `${winsSoFar}ª vittoria stagionale per ${winner.cognome} ${winner.nome}.`;
   }
-  const desc    = [date, luogo, top3, winnerComment].filter(Boolean).join(' — ');
+  // Facebook (verificato con post reali pubblicati) non mostra MAI la
+  // descrizione per questo tipo di condivisione — né in anteprima né nel post
+  // finale — solo dominio + titolo. Per questo il vincitore va anche nel
+  // TITOLO stesso, l'unico campo che Facebook mostra sempre in modo
+  // affidabile, non solo nella descrizione (comunque generata per gli altri
+  // canali/anteprime che invece la mostrano, es. WhatsApp, Twitter).
+  const title = winner ? `${raceName} — Vince ${winner.cognome} ${winner.nome}` : raceName;
+  const desc  = [date, luogo, top3, winnerComment].filter(Boolean).join(' — ');
   const img     = `${API_BASE_URL}/api/og-image/gara/${encodeURIComponent(id)}`;
   const redirect = `${SITE_URL}/#/gara/${encodeURIComponent(id)}`;
   const canonical = `${API_BASE_URL}/og/gara/${encodeURIComponent(id)}`;
