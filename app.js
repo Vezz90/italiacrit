@@ -18948,7 +18948,7 @@ async function renderRisultati() {
 
         return `
           <div class="ris-cat-section">
-            ${categories.length > 1 ? `<div class="ris-cat-label">${cLabel}</div>` : ''}
+            <div class="ris-cat-label">${cLabel}</div>
             ${techBit ? `<div class="ris-tech-bit">${techBit}</div>` : ''}
             ${podioRows}
             ${impactStrip}

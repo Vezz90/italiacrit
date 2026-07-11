@@ -386,10 +386,27 @@ app.get('/og/gara/:id', async (req, res) => {
     || (calRaw || []).find(g => g.id === id.replace(/_[A-Z0-9]+_[MF]$/, ''));
   const results = (resultsRaw || []).filter(r => r.gara_id === id).sort((a,b) => a.posizione - b.posizione);
   const title   = cal?.nome || id.replace(/_\d{4}-\d{2}-\d{2}.*$/, '').replace(/_/g,' ');
+  const raceDate = results[0]?.data || cal?.data || '';
   const date    = cal?.data ? new Date(cal.data).toLocaleDateString('it-IT',{day:'numeric',month:'long',year:'numeric'}) : '';
-  const top3    = results.slice(0,3).map((r,i)=>`${i+1}° ${r.cognome} ${r.nome}`).join(' · ');
+  // Podio con squadra per ognuno (nome (team) invece del solo nome) — l'utente
+  // vuole vedere anche il team di 1°/2°/3° direttamente nella descrizione del
+  // post FB, senza dover aprire il link.
+  const top3    = results.slice(0,3).map((r,i)=>`${i+1}° ${r.cognome} ${r.nome}${r.team ? ` (${r.team})` : ''}`).join(' · ');
   const luogo   = cal?.luogo || cal?.regione || '';
-  const desc    = [date, luogo, top3].filter(Boolean).join(' — ');
+  // Piccolo commento sul vincitore basato sui dati stagionali fino a questa
+  // gara (vittorie ottenute finora, questa inclusa): conta le vittorie dello
+  // stesso atleta nella stessa categoria/genere con data <= quella della gara.
+  let winnerComment = '';
+  const winner = results[0];
+  if (winner?.atleta_id) {
+    const winsSoFar = (resultsRaw || []).filter(r =>
+      r.atleta_id === winner.atleta_id && Number(r.posizione) === 1 &&
+      r.genere === winner.genere && (r.data || '') <= raceDate
+    ).length;
+    if (winsSoFar === 1) winnerComment = `Prima vittoria stagionale per ${winner.cognome} ${winner.nome}.`;
+    else if (winsSoFar > 1) winnerComment = `${winsSoFar}ª vittoria stagionale per ${winner.cognome} ${winner.nome}.`;
+  }
+  const desc    = [date, luogo, top3, winnerComment].filter(Boolean).join(' — ');
   const img     = `${API_BASE_URL}/api/og-image/gara/${encodeURIComponent(id)}`;
   const redirect = `${SITE_URL}/#/gara/${encodeURIComponent(id)}`;
   const canonical = `${API_BASE_URL}/og/gara/${encodeURIComponent(id)}`;
