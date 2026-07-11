@@ -10059,13 +10059,23 @@ function renderYTQueue() {
           ${score ? `&nbsp;•&nbsp; <span style="color:${scoreColor};font-weight:700">${score}% match</span>` : ''}
           ${item.duration_seconds ? `&nbsp;•&nbsp; ⏱ ${Math.floor(item.duration_seconds/60)} min` : ''}
         </div>
+        <!-- Tipo contenuto: Video/Diretta gara richiedono una gara, Presentazione/Programma TV no -->
+        <div style="margin-bottom:6px">
+          <select id="ytq-tipo-${esc(item.id)}" onchange="window.ytSetTipo('${esc(item.id)}', this.value)"
+            style="width:100%;padding:5px 8px;border:1px solid var(--border);border-radius:5px;background:var(--bg-primary);color:var(--text-primary);font-size:.78rem">
+            <option value="gara">🏁 Video di una gara</option>
+            <option value="presentazione">🎤 Presentazione</option>
+            <option value="programma_tv">📺 Programma TV</option>
+          </select>
+        </div>
         <label style="display:flex;align-items:center;gap:6px;font-size:.78rem;color:var(--text-secondary);margin-bottom:6px;cursor:pointer">
           <input type="checkbox" id="ytq-live-${esc(item.id)}" ${item.is_live_guess ? 'checked' : ''} style="cursor:pointer" />
           🔴 È una diretta${item.is_live_guess ? ' <span style="color:#dc2626;font-weight:700">(rilevata automaticamente, durata &gt; 1h)</span>' : ''}
         </label>
-        <!-- Selezione gara -->
+        <!-- Selezione gara (nascosta per Presentazione/Programma TV) -->
+        <div id="ytq-gara-wrap-${esc(item.id)}">
         <div style="display:flex;gap:6px;flex-wrap:wrap;align-items:center;margin-bottom:6px">
-          <select onchange="window.ytSetGara('${esc(item.id)}', this.value)"
+          <select id="ytq-gara-sel-${esc(item.id)}" onchange="window.ytSetGara('${esc(item.id)}', this.value)"
             style="flex:1;min-width:180px;padding:5px 8px;border:1px solid var(--border);border-radius:5px;background:var(--bg-primary);color:var(--text-primary);font-size:.78rem">
             <option value="">— Seleziona gara —</option>
             ${optionsHtml}
@@ -10082,6 +10092,7 @@ function renderYTQueue() {
           <input type="checkbox" id="ytq-both-cb-${esc(item.id)}" style="cursor:pointer" />
           🏅 Vale per <strong>entrambi gli anni</strong> (1° + 2°)
         </label>
+        </div>
         <!-- Azioni -->
         <div style="display:flex;gap:6px;flex-wrap:wrap">
           <button onclick="window.ytApprove('${esc(item.id)}')"
@@ -10224,22 +10235,33 @@ window.ytPickGara = (id, garaId) => {
 };
 
 // ── Approva e pubblica ────────────────────────────────────────────────────────
+// Tipo contenuto (gara / presentazione / programma_tv): nasconde la
+// selezione gara quando non serve (presentazioni e programmi TV non sono
+// legati a nessuna gara specifica).
+window.ytSetTipo = (id, tipo) => {
+  const garaWrap = document.getElementById('ytq-gara-wrap-' + id);
+  if (garaWrap) garaWrap.style.display = (tipo === 'gara') ? '' : 'none';
+};
+
 window.ytApprove = async (id) => {
-  const garaId = _ytItemGaraMap[id]
-    || document.querySelector(`#ytq-${id} select`)?.value
-    || '';
-  if (!garaId || garaId === '__search__') { showToast('Seleziona prima una gara', 'error'); return; }
+  const tipo = document.getElementById('ytq-tipo-' + id)?.value || 'gara';
   const item = _ytQueue.find(q => q.id === id);
   if (!item) return;
-  // Se esordienti e checkbox "entrambi gli anni" attivo → pubblica su ES1+ES2
-  const bothCb = document.getElementById('ytq-both-cb-' + id);
-  const gara_ids = (bothCb && bothCb.checked) ? _esBothGaraIds(garaId) : [garaId];
   const isLive = document.getElementById('ytq-live-' + id)?.checked || false;
+  const body = { title: item.title, channel: item.channel_name, is_live: isLive };
+  if (tipo === 'gara') {
+    const garaId = _ytItemGaraMap[id]
+      || document.getElementById('ytq-gara-sel-' + id)?.value
+      || '';
+    if (!garaId || garaId === '__search__') { showToast('Seleziona prima una gara', 'error'); return; }
+    // Se esordienti e checkbox "entrambi gli anni" attivo → pubblica su ES1+ES2
+    const bothCb = document.getElementById('ytq-both-cb-' + id);
+    body.gara_ids = (bothCb && bothCb.checked) ? _esBothGaraIds(garaId) : [garaId];
+  } else {
+    body.tipo = tipo; // presentazione | programma_tv → bucket virtuale, nessuna gara
+  }
   try {
-    await apiCall(`/admin/youtube/queue/${id}/approve`, {
-      method: 'POST',
-      body: { gara_ids, title: item.title, channel: item.channel_name, is_live: isLive },
-    });
+    await apiCall(`/admin/youtube/queue/${id}/approve`, { method: 'POST', body });
     document.getElementById('ytq-' + id)?.remove();
     item.status = 'approved';
     showToast('✓ Video pubblicato!');
@@ -19047,7 +19069,7 @@ let _shareLogoImg = null;
 let _regionLogoCache = {};
 
 // ── MEDIA (foto/video/dirette per gara, stile YouTube) ───────────────────
-let mediaTab = 'foto'; // 'foto' | 'video' | 'dirette'
+let mediaTab = 'video'; // 'video' | 'dirette' | 'presentazioni' | 'programmi_tv'
 let mediaQueryGenere = '';
 let mediaQueryCat = '';
 let mediaQueryMonth = '';
@@ -19059,10 +19081,128 @@ window.mediaSetCat    = (v) => { mediaQueryCat = v; renderMedia(); };
 window.mediaSetMonth  = (v) => { mediaQueryMonth = v; renderMedia(); };
 window.mediaSetSearch = (v) => { mediaSearchQuery = v; renderMedia(); };
 
+// ── Presentazioni/Programmi TV: elimina (admin) ─────────────────────────────
+window.mediaDeleteExtra = async (tipo, idx) => {
+  if (!confirm('Eliminare questo video?')) return;
+  try {
+    await apiCall(`/admin/media/extra/${tipo}/${idx}`, { method: 'DELETE' });
+    await refreshVideos();
+    renderMedia();
+  } catch (e) { showToast('Errore: ' + e.message, 'error'); }
+};
+
+// ── Aggiungi manualmente (admin): Video/Diretta di una gara, oppure
+// Presentazione/Programma TV (nessuna gara da scegliere) — serve soprattutto
+// per reinserire a mano video già scartati dalla coda dello scraper canali.
+window.openMediaAddForm = () => {
+  const inpStyle = 'width:100%;box-sizing:border-box;padding:8px 10px;border:1px solid var(--border-subtle);border-radius:var(--r-sm);font-size:0.875rem;background:var(--bg-primary);color:var(--text-primary);margin-bottom:10px';
+  const overlay = document.createElement('div');
+  overlay.id = 'modal-overlay';
+  overlay.style.cssText = 'position:fixed;inset:0;background:rgba(0,0,0,.6);z-index:9999;display:flex;align-items:center;justify-content:center;padding:16px';
+  overlay.innerHTML = `
+    <div style="background:var(--bg-card);border-radius:var(--r-lg);padding:24px;width:100%;max-width:460px;box-shadow:0 8px 32px rgba(0,0,0,.3)">
+      <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:16px">
+        <strong style="font-size:1rem">Aggiungi contenuto</strong>
+        <button onclick="this.closest('[style*=fixed]').remove()" style="background:none;border:none;font-size:1.3rem;cursor:pointer;color:var(--text-muted)">✕</button>
+      </div>
+      <label style="display:block;font-size:0.8rem;color:var(--text-secondary);margin-bottom:4px">Tipo</label>
+      <select id="madd-tipo" style="${inpStyle}" onchange="window._maddSetTipo(this.value)">
+        <option value="gara">🏁 Video di una gara</option>
+        <option value="diretta">🔴 Diretta di una gara</option>
+        <option value="presentazione">🎤 Presentazione</option>
+        <option value="programma_tv">📺 Programma TV</option>
+      </select>
+      <div id="madd-gara-wrap">
+        <label style="display:block;font-size:0.8rem;color:var(--text-secondary);margin-bottom:4px">Gara</label>
+        <div style="position:relative">
+          <input type="text" id="madd-gara-search" placeholder="Cerca gara per nome…" autocomplete="off" style="${inpStyle}" oninput="window._maddSearchGara(this.value)"/>
+          <div id="madd-gara-dd" style="display:none;position:absolute;left:0;right:0;top:calc(100% - 4px);background:var(--bg-card);border:1px solid var(--border-subtle);border-radius:var(--r-sm);max-height:200px;overflow:auto;z-index:5;box-shadow:0 6px 20px rgba(0,0,0,.25)"></div>
+        </div>
+        <div id="madd-gara-picked" style="font-size:.78rem;color:var(--text-muted);margin:-4px 0 10px"></div>
+      </div>
+      <input type="url" id="madd-url" placeholder="https://www.youtube.com/watch?v=..." style="${inpStyle}"/>
+      <input type="text" id="madd-title" placeholder="Titolo" style="${inpStyle}"/>
+      <input type="text" id="madd-channel" placeholder="Canale" style="${inpStyle}"/>
+      <div id="madd-err" style="color:#EF4444;font-size:0.8rem;margin-bottom:8px;display:none"></div>
+      <button id="madd-btn" onclick="window._submitMediaAdd()" style="width:100%;padding:9px;background:var(--red-hot);color:#fff;border:none;border-radius:var(--r-sm);font-weight:600;cursor:pointer">Invia</button>
+    </div>`;
+  document.body.appendChild(overlay);
+  window._maddGaraId = null;
+  // Auto-compila titolo/canale dall'URL via oEmbed, come nel form video normale
+  document.getElementById('madd-url').addEventListener('input', function() {
+    const url = this.value.trim();
+    const vid = ytId(url);
+    if (!vid) return;
+    clearTimeout(window._maddOembedTimer);
+    window._maddOembedTimer = setTimeout(async () => {
+      try {
+        const d = await fetch(`https://www.youtube.com/oembed?url=${encodeURIComponent(url)}&format=json`).then(r => r.json());
+        const titleEl = document.getElementById('madd-title'), channelEl = document.getElementById('madd-channel');
+        if (d.title && titleEl && !titleEl.value) titleEl.value = d.title;
+        if (d.author_name && channelEl && !channelEl.value) channelEl.value = d.author_name;
+      } catch {}
+    }, 600);
+  });
+};
+
+window._maddSetTipo = (tipo) => {
+  const wrap = document.getElementById('madd-gara-wrap');
+  if (wrap) wrap.style.display = (tipo === 'gara' || tipo === 'diretta') ? '' : 'none';
+};
+
+window._maddSearchGara = (q) => {
+  const dd = document.getElementById('madd-gara-dd');
+  if (!dd) return;
+  if (!q || q.trim().length < 2) { dd.style.display = 'none'; return; }
+  const query = q.trim().toLowerCase();
+  const matches = _ytAllRaceCandidates()
+    .filter(r => (r.nome_gara || '').toLowerCase().includes(query))
+    .slice(0, 15);
+  if (!matches.length) { dd.innerHTML = '<div style="padding:8px;font-size:.78rem;color:var(--text-muted)">Nessuna gara trovata</div>'; dd.style.display = 'block'; return; }
+  dd.innerHTML = matches.map(r => {
+    const label = `${r.nome_gara} — ${r.categoria || ''} ${r.genere || ''} (${r.data || ''})`;
+    return `<div style="padding:7px 10px;cursor:pointer;font-size:.8rem;border-bottom:1px solid var(--border-subtle)" onmousedown="window._maddPickGara('${esc(r.gara_id)}','${esc(label.replace(/'/g,"\\'"))}')">${esc(label)}</div>`;
+  }).join('');
+  dd.style.display = 'block';
+};
+
+window._maddPickGara = (garaId, label) => {
+  window._maddGaraId = garaId;
+  const picked = document.getElementById('madd-gara-picked');
+  if (picked) picked.textContent = '✓ ' + label;
+  const dd = document.getElementById('madd-gara-dd');
+  if (dd) dd.style.display = 'none';
+  const search = document.getElementById('madd-gara-search');
+  if (search) search.value = '';
+};
+
+window._submitMediaAdd = async () => {
+  const err = document.getElementById('madd-err');
+  const btn = document.getElementById('madd-btn');
+  err.style.display = 'none';
+  const tipo    = document.getElementById('madd-tipo')?.value;
+  const url     = document.getElementById('madd-url')?.value.trim();
+  const title   = document.getElementById('madd-title')?.value.trim();
+  const channel = document.getElementById('madd-channel')?.value.trim();
+  if (!url) { err.textContent = 'Inserisci un URL YouTube'; err.style.display = 'block'; return; }
+  btn.disabled = true; btn.textContent = 'Invio…';
+  try {
+    if (tipo === 'gara' || tipo === 'diretta') {
+      if (!window._maddGaraId) { err.textContent = 'Seleziona una gara'; err.style.display = 'block'; btn.disabled = false; btn.textContent = 'Invia'; return; }
+      await apiCall('/videos/submit', { method: 'POST', body: { gara_id: window._maddGaraId, url, title, channel, is_live: tipo === 'diretta' } });
+    } else {
+      await apiCall('/admin/media/extra', { method: 'POST', body: { tipo, url, title, channel } });
+    }
+    document.getElementById('modal-overlay')?.remove();
+    showToast('✓ Aggiunto!');
+    await refreshVideos();
+    renderMedia();
+  } catch (e) { err.textContent = e.message; err.style.display = 'block'; btn.disabled = false; btn.textContent = 'Invia'; }
+};
+
 async function renderMedia() {
   if (!globalData) return;
   const { calendar, resultsRaw, videos } = globalData;
-  const photosMap = await loadRisPhotos(); // gara_id → foto rappresentativa (caricata/xpix/ic)
 
   // Indice gara_id → metadati evento (nome/data/categoria/genere), da resultsRaw
   // e in fallback dal calendario per le gare senza risultati ancora scrapati.
@@ -19087,36 +19227,45 @@ async function renderMedia() {
     if (evIndex[realGaraId] && !evIndex[calId]) evIndex[calId] = evIndex[realGaraId];
   }
 
-  let fotoItems = Object.entries(photosMap)
-    .map(([gid, p]) => ({ gara_id: gid, meta: evIndex[gid] || {}, photo: p }))
-    .filter(x => x.meta.nome && x.photo);
+  // Bucket "virtuali" (non legati a nessuna gara): Presentazioni/Programmi TV.
+  const EXTRA_BUCKETS = { presentazioni: '__PRESENTAZIONI__', programmi_tv: '__PROGRAMMI_TV__' };
 
   let videoItems = [];
   for (const [gid, arr] of Object.entries(videos || {})) {
+    if (gid === EXTRA_BUCKETS.presentazioni || gid === EXTRA_BUCKETS.programmi_tv) continue;
     const meta = evIndex[gid] || {};
     if (!meta.nome) continue;
     for (const v of (arr || [])) videoItems.push({ gara_id: gid, meta, video: v });
   }
+  const presentazioniItems = (videos?.[EXTRA_BUCKETS.presentazioni] || []).map((v, idx) => ({ video: v, extraIdx: idx }));
+  const programmiTvItems   = (videos?.[EXTRA_BUCKETS.programmi_tv]   || []).map((v, idx) => ({ video: v, extraIdx: idx }));
 
   const applyFilters = (arr) => arr.filter(x => {
-    if (mediaQueryGenere && x.meta.genere && x.meta.genere !== mediaQueryGenere) return false;
+    if (mediaQueryGenere && x.meta?.genere && x.meta.genere !== mediaQueryGenere) return false;
     if (mediaQueryCat) {
-      const c = getRankingFileCode(x.meta) || x.meta.categoria;
+      const c = x.meta ? (getRankingFileCode(x.meta) || x.meta.categoria) : null;
       if (c !== mediaQueryCat) return false;
     }
-    if (mediaQueryMonth && x.meta.data && x.meta.data.split('-')[1] !== mediaQueryMonth) return false;
-    if (mediaSearchQuery && !(x.meta.nome || '').toLowerCase().includes(mediaSearchQuery.toLowerCase())) return false;
+    if (mediaQueryMonth && x.meta?.data && x.meta.data.split('-')[1] !== mediaQueryMonth) return false;
+    if (mediaSearchQuery) {
+      const hay = `${x.meta?.nome || ''} ${x.video?.title || ''}`.toLowerCase();
+      if (!hay.includes(mediaSearchQuery.toLowerCase())) return false;
+    }
     return true;
   });
 
-  fotoItems  = applyFilters(fotoItems).sort((a, b) => (b.meta.data || '').localeCompare(a.meta.data || ''));
   videoItems = applyFilters(videoItems).sort((a, b) => (b.meta.data || '').localeCompare(a.meta.data || ''));
   const direteItems = videoItems.filter(x => x.video.is_live);
+  const presentazioniFiltered = applyFilters(presentazioniItems).sort((a, b) => (b.video.published_at || '').localeCompare(a.video.published_at || ''));
+  const programmiTvFiltered   = applyFilters(programmiTvItems).sort((a, b) => (b.video.published_at || '').localeCompare(a.video.published_at || ''));
 
-  const items = mediaTab === 'foto' ? fotoItems : mediaTab === 'dirette' ? direteItems : videoItems;
+  const items = mediaTab === 'dirette' ? direteItems
+    : mediaTab === 'presentazioni' ? presentazioniFiltered
+    : mediaTab === 'programmi_tv' ? programmiTvFiltered
+    : videoItems;
 
   const allCatsSet = new Set();
-  [...fotoItems, ...videoItems].forEach(x => { const c = getRankingFileCode(x.meta) || x.meta.categoria; if (c) allCatsSet.add(c); });
+  videoItems.forEach(x => { const c = getRankingFileCode(x.meta) || x.meta.categoria; if (c) allCatsSet.add(c); });
   const allCats = [...allCatsSet].sort();
 
   const ytThumb = (url) => { const id = ytId(url); return id ? `https://img.youtube.com/vi/${id}/mqdefault.jpg` : ''; };
@@ -19126,22 +19275,8 @@ async function renderMedia() {
     const h = Math.floor(sec / 3600), m = Math.floor((sec % 3600) / 60);
     return h > 0 ? `${h}:${String(m).padStart(2,'0')}:${String(sec%60).padStart(2,'0')}` : `${m}:${String(sec%60).padStart(2,'0')}`;
   };
+  const _isAdminMedia = authUser()?.role === 'admin';
 
-  const photoCardHtml = (x) => {
-    const src = x.photo.filename ? `${PHOTOS_BASE}/photos/${esc(x.photo.filename)}` : esc(icProxy(x.photo.url || ''));
-    const catTxt = esc(catLabel(x.meta.categoria) || x.meta.categoria || '');
-    return `<a href="#/gara/${esc(x.gara_id)}" class="yt-card">
-      <div class="yt-thumb"><img src="${src}" loading="lazy" alt="${esc(x.meta.nome)}"/></div>
-      <div class="yt-card-body">
-        <div class="yt-avatar">📷</div>
-        <div class="yt-card-text">
-          <div class="yt-card-title">${esc(x.meta.nome)}</div>
-          <div class="yt-card-meta">${catTxt}</div>
-          <div class="yt-card-meta">${esc(formatTimeAgo(x.meta.data))}</div>
-        </div>
-      </div>
-    </a>`;
-  };
   const videoCardHtml = (x) => {
     const thumb = ytThumb(x.video.url);
     const durBadge = _durationBadge(x.video.duration_seconds);
@@ -19161,7 +19296,35 @@ async function renderMedia() {
       </div>
     </a>`;
   };
-  const cardHtml = mediaTab === 'foto' ? photoCardHtml : videoCardHtml;
+  // Presentazioni/Programmi TV: nessuna gara collegata, il click apre
+  // direttamente il video (stesso player modale usato altrove) invece di
+  // navigare a una pagina gara che non esiste per questi contenuti.
+  const extraVideoCardHtml = (bucketKey) => (x) => {
+    const thumb = ytThumb(x.video.url);
+    const t = esc((x.video.title || '').replace(/'/g, "\\'"));
+    const vid = ytId(x.video.url);
+    const onclick = vid ? `window.openVideoModal('${vid}','${t}')` : `window.open('${esc(x.video.url)}','_blank')`;
+    return `<div class="yt-card" onclick="${onclick}" style="cursor:pointer">
+      <div class="yt-thumb">
+        ${thumb ? `<img src="${esc(thumb)}" loading="lazy" alt="${esc(x.video.title || '')}"/>` : `<div class="yt-thumb-fallback">▶</div>`}
+        <span class="yt-play">▶</span>
+        ${_isAdminMedia ? `<button onclick="event.stopPropagation();window.mediaDeleteExtra('${bucketKey}',${x.extraIdx})" style="position:absolute;top:6px;right:6px;background:rgba(220,38,38,.92);color:#fff;border:none;padding:3px 8px;border-radius:4px;font-size:.68rem;cursor:pointer;z-index:3">🗑</button>` : ''}
+      </div>
+      <div class="yt-card-body">
+        <div class="yt-avatar">${_avatarLetter(x.video.channel)}</div>
+        <div class="yt-card-text">
+          <div class="yt-card-title">${esc(x.video.title || '')}</div>
+          <div class="yt-card-meta">${esc(x.video.channel || '')}</div>
+          <div class="yt-card-meta">${esc(formatTimeAgo(x.video.published_at))}</div>
+        </div>
+      </div>
+    </div>`;
+  };
+  const cardHtml = mediaTab === 'presentazioni' ? extraVideoCardHtml('presentazione')
+    : mediaTab === 'programmi_tv' ? extraVideoCardHtml('programma_tv')
+    : videoCardHtml;
+
+  const _showRaceFilters = mediaTab === 'video' || mediaTab === 'dirette';
 
   setPage(`
     <div class="content-wrapper">
@@ -19172,10 +19335,12 @@ async function renderMedia() {
     </div>
     <div class="yt-page">
       <div class="yt-chips">
-        <button class="yt-chip ${mediaTab === 'foto' ? 'yt-chip-active' : ''}" onclick="window.mediaSetTab('foto')">📷 Foto <span class="yt-chip-count">${fotoItems.length}</span></button>
         <button class="yt-chip ${mediaTab === 'video' ? 'yt-chip-active' : ''}" onclick="window.mediaSetTab('video')">🎬 Video <span class="yt-chip-count">${videoItems.length}</span></button>
         <button class="yt-chip ${mediaTab === 'dirette' ? 'yt-chip-active' : ''}" onclick="window.mediaSetTab('dirette')">🔴 Dirette <span class="yt-chip-count">${direteItems.length}</span></button>
+        <button class="yt-chip ${mediaTab === 'presentazioni' ? 'yt-chip-active' : ''}" onclick="window.mediaSetTab('presentazioni')">🎤 Presentazioni <span class="yt-chip-count">${presentazioniFiltered.length}</span></button>
+        <button class="yt-chip ${mediaTab === 'programmi_tv' ? 'yt-chip-active' : ''}" onclick="window.mediaSetTab('programmi_tv')">📺 Programmi TV <span class="yt-chip-count">${programmiTvFiltered.length}</span></button>
         <span class="yt-chip-sep"></span>
+        ${_showRaceFilters ? `
         <select class="yt-chip yt-chip-select" onchange="window.mediaSetGenere(this.value)">
           <option value="">Tutti i generi</option>
           <option value="M" ${mediaQueryGenere === 'M' ? 'selected' : ''}>Uomini</option>
@@ -19190,11 +19355,12 @@ async function renderMedia() {
           ${['01','02','03','04','05','06','07','08','09','10','11','12'].map((m, i) =>
             `<option value="${m}" ${m === mediaQueryMonth ? 'selected' : ''}>${['Gennaio','Febbraio','Marzo','Aprile','Maggio','Giugno','Luglio','Agosto','Settembre','Ottobre','Novembre','Dicembre'][i]}</option>`
           ).join('')}
-        </select>
+        </select>` : ''}
         <div class="yt-search-wrap">
           <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
-          <input type="text" placeholder="Cerca gara…" oninput="window.mediaSetSearch(this.value)" value="${esc(mediaSearchQuery)}">
+          <input type="text" placeholder="Cerca…" oninput="window.mediaSetSearch(this.value)" value="${esc(mediaSearchQuery)}">
         </div>
+        ${_isAdminMedia ? `<button class="yt-chip" style="background:var(--red-hot);color:#fff;border-color:var(--red-hot)" onclick="window.openMediaAddForm()">➕ Aggiungi</button>` : ''}
       </div>
       <div class="yt-grid">
         ${items.length ? items.map(cardHtml).join('') : `<p style="color:var(--text-muted);padding:24px 4px">Nessun elemento trovato.</p>`}

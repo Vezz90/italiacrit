@@ -3315,11 +3315,20 @@ app.get('/api/admin/youtube/queue', requireAdmin, async (req, res) => {
 });
 
 // POST approva: assegna video a una gara e lo pubblica
+// Bucket "virtuali" nella stessa mappa videos[] (chiave = gara_id normalmente)
+// per contenuti NON legati a nessuna gara specifica: presentazioni squadra,
+// programmi TV. Riusano tutta l'infrastruttura esistente (readVideos/
+// writeVideos, la stessa pagina Media) invece di uno storage separato.
+const MEDIA_EXTRA_BUCKETS = { presentazione: '__PRESENTAZIONI__', programma_tv: '__PROGRAMMI_TV__' };
+
 app.post('/api/admin/youtube/queue/:id/approve', requireAdmin, async (req, res) => {
   try {
-    const { gara_id, gara_ids, title, channel, is_live } = req.body;
-    // Supporta sia gara_id singolo che gara_ids array (per pubblicare su ES1+ES2 insieme)
-    const targets = Array.isArray(gara_ids) && gara_ids.length ? gara_ids : (gara_id ? [gara_id] : []);
+    const { gara_id, gara_ids, title, channel, is_live, tipo } = req.body;
+    // "Presentazione"/"Programma TV": non serve nessuna gara, va nel bucket virtuale.
+    const extraBucket = MEDIA_EXTRA_BUCKETS[tipo];
+    const targets = extraBucket
+      ? [extraBucket]
+      : (Array.isArray(gara_ids) && gara_ids.length ? gara_ids : (gara_id ? [gara_id] : []));
     if (!targets.length) return res.status(400).json({ error: 'gara_id obbligatorio' });
 
     const queue = await readYTQueue();
@@ -3350,6 +3359,40 @@ app.post('/api/admin/youtube/queue/:id/approve', requireAdmin, async (req, res) 
     await writeYTQueue(queue);
 
     res.json({ ok: true, targets });
+  } catch (e) { res.status(500).json({ error: e.message }); }
+});
+
+// Aggiunta manuale diretta di Presentazioni/Programmi TV (nessuna gara da
+// scegliere) dalla pagina Media — per reinserire a mano video già scartati
+// dalla coda scraper, o per contenuti che non passano mai dallo scraper.
+app.post('/api/admin/media/extra', requireAdmin, async (req, res) => {
+  try {
+    const { tipo, url, title, channel } = req.body;
+    const bucket = MEDIA_EXTRA_BUCKETS[tipo];
+    if (!bucket) return res.status(400).json({ error: 'tipo non valido (presentazione | programma_tv)' });
+    if (!url) return res.status(400).json({ error: 'url obbligatorio' });
+    const videos = await readVideos();
+    if (!videos[bucket]) videos[bucket] = [];
+    if (videos[bucket].some(v => v.url === url)) return res.status(409).json({ error: 'Video già presente' });
+    videos[bucket].push({
+      url, title: title || url, channel: channel || '',
+      published_at: new Date().toISOString().slice(0, 10),
+    });
+    await writeVideos(videos);
+    res.json({ ok: true });
+  } catch (e) { res.status(500).json({ error: e.message }); }
+});
+
+app.delete('/api/admin/media/extra/:tipo/:idx', requireAdmin, async (req, res) => {
+  try {
+    const bucket = MEDIA_EXTRA_BUCKETS[req.params.tipo];
+    if (!bucket) return res.status(400).json({ error: 'tipo non valido' });
+    const idx = parseInt(req.params.idx, 10);
+    const videos = await readVideos();
+    if (!videos[bucket] || !videos[bucket][idx]) return res.status(404).json({ error: 'Non trovato' });
+    videos[bucket].splice(idx, 1);
+    await writeVideos(videos);
+    res.json({ ok: true });
   } catch (e) { res.status(500).json({ error: e.message }); }
 });
 
