@@ -18782,18 +18782,20 @@ async function renderRisultati() {
   const { resultsRaw, calendar } = globalData;
   const photosMap = await loadRisPhotos();
 
-  // Raggruppa per gara_id — ogni categoria ha il proprio card separato.
-  // Eccezione: Esordienti 1°/2° anno (ES1/ES2) corrono insieme → stesso card.
+  // Raggruppa per gara_id — ogni categoria ha il proprio card separato,
+  // Esordienti 1° e 2° Anno inclusi: prima venivano fusi in un'unica card
+  // con due sezioni interne (stesso gara_id normalizzato), ma l'utente vuole
+  // vederli come card distinte nell'elenco — proprio come Allievi/Juniores/
+  // Elite — con la possibilità di filtrarli separatamente dal menu categoria.
+  // La pagina della singola gara (renderGara) continua comunque a mostrare
+  // 1° e 2° anno insieme quando si apre "classifica completa", quello non
+  // cambia: qui cambia solo come appaiono nell'elenco Risultati.
   const eventMap = {};
   for (const r of resultsRaw) {
-    // Normalizza ES1 e ES2 alla stessa chiave (gareggiano insieme)
-    const eventKey = (r.gara_id || '').replace(/_ES[12]_([MF])$/, '_ES_$1')
-                     || (r.nome_gara.trim().toUpperCase() + '|' + r.data + '|' + (r.genere||'M'));
-    // For ES1/ES2: canonical id always uses ES1 so the race page link is consistent
-    const canonicalGaraId = (r.gara_id || '').replace(/_ES[12]_([MF])$/, '_ES1_$1') || r.gara_id;
+    const eventKey = r.gara_id || (r.nome_gara.trim().toUpperCase() + '|' + r.data + '|' + (r.genere||'M'));
     if (!eventMap[eventKey]) {
       eventMap[eventKey] = {
-        id: canonicalGaraId,
+        id: r.gara_id,
         nome: r.nome_gara,
         data: r.data,
         genere: r.genere,
