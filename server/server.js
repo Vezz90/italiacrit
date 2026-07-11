@@ -5724,10 +5724,9 @@ function _ogStatHero(x, y, w, h, val, label, grad) {
 
 // Contenuto della card atleta (senza cornice): cognome/nome grandi, team,
 // due box "hero" (punti stagione + posizione in classifica), griglia di 4
-// statistiche colorate (oro/argento/bronzo/bianco). pad parametrizzato per
-// poterlo riusare sia a piena larghezza (buildAtletaCardSvg) sia nel
-// pannello destro della card con foto (_ogSplitPhotoCard, pad più grande
-// per lasciare spazio al pannello foto a sinistra).
+// statistiche colorate (oro/argento/bronzo/bianco). pad tenuto come
+// parametro (usato sempre con lo stesso valore da buildAtletaCardSvg) per
+// simmetria con _teamCardBody.
 function _atletaCardBody(pad, { cognome, nome, team, punti, pos, p1, p2, p3, p4_10 }) {
   const cTop = 100, cBot = 578, right = 1200 - 66;
   const fsC = (cognome || '').length > 12 ? 56 : 72;
@@ -5892,26 +5891,18 @@ app.get('/api/og-image/atleta/:id', async (req, res) => {
     }
     const cardData = { cognome, nome: nomeP, team: a.team_attuale || '', badge, punti: a.punti_totali || 0, pos, p1, p2, p3, p4_10 };
 
-    // 1) Se l'atleta ha una foto, mostrala nel pannello sinistro con le
-    // statistiche complete (punti, posizione, vittorie/2°/3°/4°-10°) nel
-    // pannello destro, invece di sovrapporle alla foto intera (copriva il
-    // viso e non c'era spazio per la griglia completa).
+    // Card di testo piena larghezza (nome, badge, hero punti+posizione,
+    // griglia statistiche) sempre come base; se l'atleta ha una foto profilo,
+    // sovrapponiamo un avatar circolare in alto a destra — stesso layout
+    // della card "Post Quadrato" generata lato client (generateShareCanvas),
+    // indicato dall'utente come riferimento esatto da seguire.
+    const svg = buildAtletaCardSvg(cardData);
+    let buf;
     try {
       const photo = await getEntityPhoto('atleta', atletaId);  // URL pubblico o null
-      if (photo) {
-        const buf = await _ogSplitPhotoCard(photo, { badge, bodyBuilder: (padX) => _atletaCardBody(padX, cardData) });
-        if (buf) {
-          _ogCache.set(cacheKey, { buf, ts: Date.now() });
-          res.setHeader('Content-Type', 'image/png');
-          res.setHeader('Cache-Control', 'public, max-age=1800');
-          return res.send(buf);
-        }
-      }
-    } catch {}
-
-    // 2) Altrimenti scheda di solo testo con nome + statistiche
-    const svg = buildAtletaCardSvg(cardData);
-    const buf = await renderOgPng(svg);
+      buf = photo ? await _ogCardWithAvatar(svg, photo) : null;
+    } catch { buf = null; }
+    if (!buf) buf = await renderOgPng(svg);
     if (!buf) return res.redirect('/assets/og-default.png');
     _ogCache.set(cacheKey, { buf, ts: Date.now() });
     res.setHeader('Content-Type', 'image/png');
@@ -5957,61 +5948,36 @@ async function _photoToOgPng(filename) {
   } catch { return null; }
 }
 
-// Card atleta/team con foto: pannello FOTO a sinistra + pannello TESTO a
-// destra (nome/badge/hero punti+posizione/griglia statistiche), invece di
-// sovrapporre il testo sopra la foto intera — su una foto profilo verticale
-// il testo sovrapposto finiva per coprire il viso o essere illeggibile, e
-// mancava spazio per la griglia completa di statistiche (punti, 2°, 3°,
-// 4°-10°) che le card senza foto invece mostrano. bodyBuilder(padX) riceve
-// la x da cui parte il pannello testo e restituisce l'SVG del contenuto
-// (stesso approccio di _ogStatHero/_ogStatCell riusati dai chiamanti).
-async function _ogSplitPhotoCard(photoSource, { badge, bodyBuilder }) {
-  const W = 1200, H = 630, headerH = 58, footerH = 38, photoW = 440;
+// Ritaglia una foto in un cerchio (avatar), stesso trattamento della card
+// "Post Quadrato" generata lato client (generateShareCanvas/_drawAtleta):
+// avatar circolare in alto a destra, non una foto a piena pagina o a
+// pannello — è il riferimento visivo esatto indicato dall'utente.
+async function _ogCircleAvatar(photoSource, diameter) {
   const raw = await _fetchRawImageBuffer(photoSource);
   if (!raw) return null;
   try {
     const sharp = require('sharp');
-    const photoInsetX = 10, photoInsetY = headerH + 8;
-    const photoAreaW = photoW - photoInsetX - 6, photoAreaH = H - headerH - footerH - 16;
-    const photoLayer = await sharp(raw)
-      .resize(Math.round(photoAreaW), Math.round(photoAreaH), { fit: 'cover', position: sharp.strategy.attention })
-      .png().toBuffer();
-
-    const logo = _ogLogoDataUri();
-    const padX = photoW + 40;
-    const headerRight = badge ? `<text x="${W-24}" y="35" font-family="Arial,Helvetica,sans-serif" font-size="20" font-weight="700" fill="#e8001d" text-anchor="end" letter-spacing="1">${_ogEsc(badge.toUpperCase())}</text>` : '';
-    const chromeSvg = `<svg width="${W}" height="${H}" xmlns="http://www.w3.org/2000/svg">
-      <defs>
-        <linearGradient id="ogBg" x1="0" y1="0" x2="0" y2="1">
-          <stop offset="0%" stop-color="#0c0e12"/><stop offset="60%" stop-color="#0a0c10"/><stop offset="100%" stop-color="#070809"/>
-        </linearGradient>
-        <radialGradient id="ogGlow" cx="92%" cy="0%" r="90%">
-          <stop offset="0%" stop-color="#e8001d" stop-opacity="0.12"/><stop offset="100%" stop-color="#e8001d" stop-opacity="0"/>
-        </radialGradient>
-        <linearGradient id="ogHero" x1="0" y1="0" x2="1" y2="0">
-          <stop offset="0%" stop-color="#e8001d"/><stop offset="100%" stop-color="#f5c400"/>
-        </linearGradient>
-      </defs>
-      <rect width="${W}" height="${H}" fill="url(#ogBg)"/>
-      <rect width="${W}" height="${H}" fill="url(#ogGlow)"/>
-      <rect x="0" y="0" width="6" height="${H}" fill="#e8001d"/>
-      ${logo ? `<image href="${logo}" x="24" y="${Math.round((headerH-42)/2)}" width="128" height="42" preserveAspectRatio="xMidYMid meet"/>`
-             : `<text x="24" y="${Math.round(headerH*0.6)}" font-family="Arial,Helvetica,sans-serif" font-size="22" font-weight="900" fill="white">ICS</text>`}
-      ${headerRight}
-      <rect x="0" y="${headerH}" width="${W}" height="1" fill="rgba(255,255,255,0.07)"/>
-      <rect x="${photoW}" y="${headerH+10}" width="1" height="${H-headerH-footerH-20}" fill="rgba(255,255,255,0.08)"/>
-      ${bodyBuilder(padX)}
-      <rect x="0" y="${H-footerH}" width="${W}" height="1" fill="rgba(255,255,255,0.07)"/>
-      <rect x="24" y="${H-footerH+18}" width="14" height="3" fill="#009246"/>
-      <rect x="38" y="${H-footerH+18}" width="14" height="3" fill="#f0f0ee"/>
-      <rect x="52" y="${H-footerH+18}" width="14" height="3" fill="#ce2b37"/>
-      <text x="${W-24}" y="${H-footerH+27}" font-family="Arial,Helvetica,sans-serif" font-size="16" fill="rgba(255,255,255,0.35)" text-anchor="end">@italiacrit · italiacyclingstats.com</text>
-    </svg>`;
-    const chromeBuf = await sharp(Buffer.from(chromeSvg)).png().toBuffer();
-    return await sharp(chromeBuf)
-      .composite([{ input: photoLayer, left: photoInsetX, top: photoInsetY }])
-      .png().toBuffer();
+    const resized = await sharp(raw).resize(diameter, diameter, { fit: 'cover', position: sharp.strategy.attention }).toBuffer();
+    const mask = Buffer.from(`<svg width="${diameter}" height="${diameter}"><circle cx="${diameter/2}" cy="${diameter/2}" r="${diameter/2}" fill="#fff"/></svg>`);
+    const circle = await sharp(resized).composite([{ input: mask, blend: 'dest-in' }]).png().toBuffer();
+    // Bordo sottile per staccare l'avatar dallo sfondo scuro
+    const ring = Buffer.from(`<svg width="${diameter}" height="${diameter}"><circle cx="${diameter/2}" cy="${diameter/2}" r="${diameter/2-1}" fill="none" stroke="rgba(255,255,255,0.25)" stroke-width="2"/></svg>`);
+    return await sharp(circle).composite([{ input: ring }]).png().toBuffer();
   } catch { return null; }
+}
+
+// Compone la card di testo (piena larghezza, stessa identità delle card
+// senza foto) con un avatar circolare sovrapposto in alto a destra, quando
+// l'atleta/team ha una foto profilo.
+async function _ogCardWithAvatar(cardSvg, photoSource, { diameter = 150, cx = 1200 - 66 - 150, cy = 74 } = {}) {
+  const buf = await renderOgPng(cardSvg);
+  if (!buf) return null;
+  const avatar = await _ogCircleAvatar(photoSource, diameter);
+  if (!avatar) return buf;
+  try {
+    const sharp = require('sharp');
+    return await sharp(buf).composite([{ input: avatar, left: Math.round(cx), top: Math.round(cy) }]).png().toBuffer();
+  } catch { return buf; }
 }
 
 app.get('/api/og-image/gara/:id', async (req, res) => {
@@ -6122,24 +6088,16 @@ app.get('/api/og-image/team/:id', async (req, res) => {
     const riders = new Set(teamRows.map(r => r.atleta_id)).size;
     const teamCardData = { nome: teamName, punti, wins, top3, races, riders };
 
-    // Se il team ha un logo/foto profilo (override admin), mostralo nel
-    // pannello sinistro con le statistiche complete nel pannello destro —
-    // stessa logica a due pannelli dell'atleta.
+    // Card di testo piena larghezza come base, con avatar circolare in alto
+    // a destra sovrapposto se il team ha un logo/foto profilo (override
+    // admin) — stessa impostazione dell'atleta.
+    const svg = buildTeamCardSvg({ ...teamCardData, badge: 'TEAM' });
+    let buf;
     try {
       const photo = await getEntityPhoto('team', teamId);
-      if (photo) {
-        const buf = await _ogSplitPhotoCard(photo, { badge: 'TEAM', bodyBuilder: (padX) => _teamCardBody(padX, teamCardData) });
-        if (buf) {
-          _ogCache.set(cacheKey, { buf, ts: Date.now() });
-          res.setHeader('Content-Type', 'image/png');
-          res.setHeader('Cache-Control', 'public, max-age=1800');
-          return res.send(buf);
-        }
-      }
-    } catch {}
-
-    const svg = buildTeamCardSvg({ ...teamCardData, badge: 'TEAM' });
-    const buf = await renderOgPng(svg);
+      buf = photo ? await _ogCardWithAvatar(svg, photo) : null;
+    } catch { buf = null; }
+    if (!buf) buf = await renderOgPng(svg);
     if (!buf) return res.redirect('/assets/og-default.png');
     _ogCache.set(cacheKey, { buf, ts: Date.now() });
     res.setHeader('Content-Type', 'image/png');
