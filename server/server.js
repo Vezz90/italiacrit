@@ -5669,7 +5669,11 @@ ${contextParts.join('\n\n')}
 const _ogCache = new Map(); // key → { buf, ts }
 const OG_TTL   = 30 * 60 * 1000; // 30 minuti
 
-const _ogEsc = s => String(s || '').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');
+// s ?? '' (non s || ''): un valore statistico 0 (es. "3° posti: 0") è
+// legittimo e deve mostrare la cifra "0", non sparire come stringa vuota —
+// con || il numero 0 è falsy e veniva scartato, lasciando la cella statistica
+// vuota invece di mostrare "0" (bug osservato live: "3° POSTI" senza numero).
+const _ogEsc = s => String(s ?? '').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');
 
 // Cornice condivisa (sfondo scuro, bagliore rosso, accento a sinistra, logo,
 // footer col tricolore) — stessa identità visiva "Velon" delle card che il
