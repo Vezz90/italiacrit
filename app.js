@@ -14651,21 +14651,17 @@ async function renderGara(gara_id) {
   if (!globalData) return;
   const { resultsRaw, calendar } = globalData;
 
-  // ES1/ES2 Esordienti: canonicalize to ES1 and merge both results in one page
-  const esMatch = gara_id.match(/^(.+)_ES([12])_([MF])$/);
-  let isEsordienti = false, es1GaraId = gara_id, es2GaraId = null;
-  if (esMatch) {
-    isEsordienti = true;
-    const base = esMatch[1], gender = esMatch[3];
-    es1GaraId = `${base}_ES1_${gender}`;
-    es2GaraId = `${base}_ES2_${gender}`;
-  }
-  const primaryGaraId = es1GaraId; // canonical ID for photos, videos, URL
+  // Esordienti 1°/2° Anno sono categorie indipendenti come tutte le altre
+  // (Allievi, Juniores, Elite...): stesso gara_id = stessa gara, nessuna
+  // fusione speciale. In passato ES1 e ES2 venivano unite in un'unica pagina
+  // (risultati e media mischiati) — l'utente li vuole separati, ognuno con
+  // la propria griglia risultati e la propria galleria media, navigabili
+  // tramite le schede categoria (_catTabsHtml più sotto) come ogni altra
+  // categoria dello stesso evento.
+  const primaryGaraId = gara_id;
 
   const calEntry = calendar.find(g => g.id === primaryGaraId) || calendar.find(g => g.id === gara_id);
-  const results1 = resultsRaw.filter(r => r.gara_id === es1GaraId).sort((a,b) => a.posizione - b.posizione);
-  const results2 = isEsordienti ? resultsRaw.filter(r => r.gara_id === es2GaraId).sort((a,b) => a.posizione - b.posizione) : [];
-  const results = [...results1, ...results2];
+  const results = resultsRaw.filter(r => r.gara_id === gara_id).sort((a,b) => a.posizione - b.posizione);
 
   if (!results.length && !calEntry) return renderNotFound();
 
@@ -14759,7 +14755,7 @@ async function renderGara(gara_id) {
 
   const name = results[0]?.nome_gara || calEntry?.nome || gara_id;
   const data = results[0]?.data || calEntry?.data || '';
-  const cat  = isEsordienti ? 'Esordienti' : (results[0]?.categoria || calEntry?.categoria || '');
+  const cat  = results[0]?.categoria || calEntry?.categoria || '';
   // Usa moltiplicatore già calcolato dal scraper se disponibile
   const mult = results[0]?.moltiplicatore ||
     calEntry?.moltiplicatore ||
@@ -14855,17 +14851,7 @@ async function renderGara(gara_id) {
       </tr>`;
     }).join('');
   };
-  const _esCatHeader = (label) =>
-    `<tr><td colspan="7" style="background:var(--bg-card);color:var(--primary);font-family:var(--font-heading);font-weight:800;font-size:0.78rem;letter-spacing:.08em;text-transform:uppercase;padding:10px 14px;border-bottom:2px solid var(--primary)">${label}</td></tr>`;
-  let tableRows;
-  if (isEsordienti) {
-    tableRows =
-      _esCatHeader('Esordienti 1° Anno') +
-      (_buildRows(results1) || '<tr><td colspan="7" class="empty-state">Nessuna classifica disponibile</td></tr>') +
-      (results2.length ? _esCatHeader('Esordienti 2° Anno') + _buildRows(results2) : '');
-  } else {
-    tableRows = _buildRows(results);
-  }
+  const tableRows = _buildRows(results);
 
   const _calId = (globalData.garaToCalId || {})[primaryGaraId] || (globalData.garaToCalId || {})[gara_id] || primaryGaraId;
 
@@ -14915,7 +14901,6 @@ async function renderGara(gara_id) {
   const _videoKeys = [
     primaryGaraId,
     gara_id,
-    es2GaraId,  // include i video del 2° anno per le gare esordienti
     _calId,
     _calIdStripped !== _calId ? _calIdStripped : null,
     primaryGaraId.replace(/_[A-Z0-9]+_[MF]$/, ''),
@@ -14951,17 +14936,6 @@ async function renderGara(gara_id) {
        </button>`
     : '';
 
-  // Helper: costruisce un elemento video (usato per hero e side-by-side)
-  // Etichetta annata: "Entrambi" se il video è su ES1 ed ES2, altrimenti la singola
-  const _esYearOf = (v) => {
-    const keys = v._keys || [v._srcKey];
-    const has1 = keys.some(k => /_ES1_[MF]$/.test(k||''));
-    const has2 = keys.some(k => /_ES2_[MF]$/.test(k||''));
-    if (has1 && has2) return 'Entrambi gli anni';
-    if (has2) return '2° Anno';
-    if (has1) return '1° Anno';
-    return '';
-  };
   // Onclick e thumbnail per qualsiasi tipo di video (YouTube / file / link)
   const _vClick = (v) => {
     const t = esc((v.title || '').replace(/'/g, "\\'"));
@@ -14980,16 +14954,13 @@ async function renderGara(gara_id) {
     if (!isPlayableVideo(v.url) && videoKind(v.url) !== 'link') return '';
     const _k = v._srcKey || primaryGaraId;
     const _i = (v._srcIdx != null) ? v._srcIdx : idx;
-    const _yt = _esYearOf(v);
     return `<div class="${cls}" onclick="${_vClick(v)}">
       ${_vThumb(v)}
       <div class="gara-media-play"><span>&#9658;</span></div>
-      ${isEsordienti && _yt ? `<div style="position:absolute;top:6px;left:6px;background:rgba(99,102,241,.92);color:#fff;font-size:.62rem;font-weight:700;padding:2px 7px;border-radius:3px;z-index:3">${_yt}</div>` : ''}
       ${v.is_live ? `<div style="position:absolute;top:6px;right:6px;background:#dc2626;color:#fff;font-size:.62rem;font-weight:800;letter-spacing:.04em;padding:2px 8px;border-radius:3px;z-index:3">🔴 DIRETTA</div>` : ''}
       ${v.channel ? `<div class="gara-media-channel">${esc(v.channel)}</div>` : ''}
       ${_isAdmin ? `<div style="position:absolute;top:4px;right:4px;display:flex;flex-direction:column;gap:3px;z-index:10">
         <button onclick="event.stopPropagation();window._openTagPanel({kind:'video',srcKey:'${esc(_k)}',srcIdx:${_i},garaId:'${esc(_k)}',current:'${esc(v.atleta_ids||'')}'})" style="${_adminBtnStyle};background:#16a34a" title="Tagga corridori (top 10)">🏷 Tag</button>
-        ${isEsordienti ? `<button onclick="event.stopPropagation();window.adminVideoSetYear('${esc(_k)}',${_i})" style="${_adminBtnStyle};background:#6366f1" title="Cambia annata (1°/2°/entrambi)">🏅 Anno</button>` : ''}
         <button onclick="event.stopPropagation();window.adminEditVideo('${esc(_k)}',${_i},${!!v.is_live})" style="${_adminBtnStyle};background:#2563eb">✏️ Modifica</button>
         <button onclick="event.stopPropagation();window.adminDeleteVideo('${esc(_k)}',${_i})" style="${_adminBtnStyle};background:#dc2626">🗑 Elimina</button>
       </div>` : ''}
@@ -15014,13 +14985,11 @@ async function renderGara(gara_id) {
           ${extras.map((v, i) => {
             const _k = v._srcKey || primaryGaraId;
             const _i = (v._srcIdx != null) ? v._srcIdx : (startIdx + i);
-            const _yt = _esYearOf(v);
             return `
               <div class="gara-video-card" style="cursor:pointer;position:relative" onclick="${_vClick(v)}">
                 <div class="gara-video-thumb">
                   ${_vThumb(v)}
                   <div class="gara-video-play">&#9658;</div>
-                  ${isEsordienti && _yt ? `<div style="position:absolute;bottom:4px;left:4px;background:rgba(99,102,241,.9);color:#fff;font-size:.6rem;font-weight:700;padding:1px 6px;border-radius:3px">${_yt}</div>` : ''}
                   ${v.is_live ? `<div style="position:absolute;top:4px;right:4px;background:#dc2626;color:#fff;font-size:.58rem;font-weight:800;padding:1px 6px;border-radius:3px">🔴 LIVE</div>` : ''}
                 </div>
                 <div class="gara-video-info">
@@ -15030,7 +14999,6 @@ async function renderGara(gara_id) {
                 ${_isAdmin ? `<div style="position:absolute;top:4px;right:4px;display:flex;gap:3px;z-index:10">
                   <button onclick="event.stopPropagation();window.adminPromoteVideo('${esc(_k)}',${_i},'${esc(primaryGaraId)}')" style="${_adminBtnStyle};background:#f59e0b" title="Imposta come video principale">⭐</button>
                   <button onclick="event.stopPropagation();window._openTagPanel({kind:'video',srcKey:'${esc(_k)}',srcIdx:${_i},garaId:'${esc(_k)}',current:'${esc(v.atleta_ids||'')}'})" style="${_adminBtnStyle};background:#16a34a" title="Tagga corridori (top 10)">🏷</button>
-                  ${isEsordienti ? `<button onclick="event.stopPropagation();window.adminVideoSetYear('${esc(_k)}',${_i})" style="${_adminBtnStyle};background:#6366f1" title="Cambia annata">🏅</button>` : ''}
                   <button onclick="event.stopPropagation();window.adminEditVideo('${esc(_k)}',${_i},${!!v.is_live})" style="${_adminBtnStyle};background:#2563eb">✏️</button>
                   <button onclick="event.stopPropagation();window.adminDeleteVideo('${esc(_k)}',${_i})" style="${_adminBtnStyle};background:#dc2626">🗑</button>
                 </div>` : ''}
@@ -15050,8 +15018,7 @@ async function renderGara(gara_id) {
        </button>`
     : `<span style="font-size:0.8rem;color:var(--text-muted)">Accedi per caricare una foto</span>`;
   try {
-    // Per gli esordienti carica le foto di ENTRAMBE le annate (ES1 + ES2)
-    const _photoKeys = isEsordienti ? [es1GaraId, es2GaraId] : [primaryGaraId];
+    const _photoKeys = [primaryGaraId];
     const _photoArrs = await Promise.all(_photoKeys.map(k =>
       fetch(`${API_BASE}/race-photos/${encodeURIComponent(k)}`).then(r=>r.json()).catch(()=>({photos:[]}))
     ));
@@ -15083,7 +15050,6 @@ async function renderGara(gara_id) {
             data-photographer="${esc(p.photographer||'')}"
             data-atleta-ids="${esc(p.atleta_ids||'')}">
             <img src="${PHOTOS_BASE}/photos/${esc(p.filename)}" alt="${esc(p.caption||'Foto gara')}" loading="lazy" onclick="window.openPhotoLightbox('${PHOTOS_BASE}/photos/${esc(p.filename)}',{photoId:${p.id},garaId:'${esc(p._gkey||primaryGaraId)}',current:'${esc(p.atleta_ids||'')}',caption:'${esc((p.caption||'').replace(/'/g,''))}',credit:'${esc(((p.photographer||p.display_name)||'').replace(/'/g,''))}'})" style="cursor:zoom-in"/>
-            ${isEsordienti && /_ES2_[MF]$/.test(p._gkey||'') ? `<div style="position:absolute;top:4px;left:36px;background:rgba(99,102,241,.92);color:#fff;font-size:.6rem;font-weight:700;padding:1px 6px;border-radius:3px;z-index:9">2° Anno</div>` : (isEsordienti && /_ES1_[MF]$/.test(p._gkey||'') ? `<div style="position:absolute;top:4px;left:36px;background:rgba(99,102,241,.92);color:#fff;font-size:.6rem;font-weight:700;padding:1px 6px;border-radius:3px;z-index:9">1° Anno</div>` : '')}
             <div class="race-gallery-caption">${[p.caption, p.photographer ? '📷 '+p.photographer : '', p.display_name].filter(Boolean).join(' — ')}</div>
             ${(() => { const nm = String(p.atleta_ids||'').split(',').map(s=>s.trim()).filter(Boolean).map(id=>{const a=globalData?.athletes?.[id]; return a?`<a href="#/atleta/${esc(id)}" style="color:#fff;text-decoration:underline" onclick="event.stopPropagation()">${esc(a.cognome)} ${esc(a.nome)}</a>`:'';}).filter(Boolean).join(', '); return nm ? `<div style="position:absolute;bottom:4px;left:6px;right:6px;font-size:.62rem;color:#fff;background:rgba(0,0,0,.5);padding:2px 6px;border-radius:4px;z-index:8">🏷 ${nm}</div>` : ''; })()}
             ${_user && !_isAdmin ? `<button onclick="event.stopPropagation();window.selfTagPhoto(${p.id})" title="Segnala che sei tu in questa foto" style="position:absolute;bottom:4px;right:4px;z-index:10;background:rgba(37,99,235,.92);color:#fff;border:none;padding:3px 8px;border-radius:4px;font-size:.65rem;cursor:pointer;white-space:nowrap">🏷 Sono io</button>` : ''}
@@ -15096,22 +15062,14 @@ async function renderGara(gara_id) {
         </div>`
       : (!featuredPhoto ? `<p style="color:var(--text-muted);font-size:0.875rem;margin:8px 0 0">Nessuna foto ancora. Sii il primo a condividerne una!</p>` : '');
 
-    // Album esterno (xpix / ciclismo.info): mostrali SEMPRE, ANCHE ENTRAMBI
-    // se è una gara Esordienti con album diversi per 1° e 2° anno (prima si
-    // mostrava solo il primo trovato e l'altra annata spariva).
+    // Album esterno (xpix / ciclismo.info):
     // - se NON c'è una foto caricata → il primo album diventa l'hero, gli altri sotto
     // - se c'è già una foto caricata  → tutti gli album esterni vanno SOTTO, così non
     //   restano nascosti solo perché esiste una foto manuale.
     {
       await loadRisPhotos();
       const _pm = _risExtPhotosMap || {}; // SOLO album esterni (xpix/IC)
-      const _esBase = primaryGaraId.replace(/_ES[12]_([MF])$/, '');
-      const _extKeyGroups = isEsordienti
-        ? [
-            { key: es1GaraId, alt: [`${_esBase}_ES1_M`, `${_esBase}_ES1_F`], badge: 'Esordienti 1° Anno' },
-            { key: es2GaraId, alt: [`${_esBase}_ES2_M`, `${_esBase}_ES2_F`], badge: 'Esordienti 2° Anno' },
-          ]
-        : [{ key: primaryGaraId, alt: [gara_id], badge: null }];
+      const _extKeyGroups = [{ key: primaryGaraId, alt: [gara_id], badge: null }];
       // Raccoglie TUTTI gli album distinti (deduplicati per URL principale),
       // non solo il primo trovato, così nessuna annata perde le sue foto.
       const _seenExtUrls = new Set();
@@ -15219,8 +15177,8 @@ async function renderGara(gara_id) {
       ${_gallery}
     </div>`;
 
-  const _shareKm    = results1[0]?.km    || '';
-  const _shareMedia = results1[0]?.media || '';
+  const _shareKm    = results[0]?.km    || '';
+  const _shareMedia = results[0]?.media || '';
   const _mkShare = (resArr, catLabelStr, gid) => {
     const km = resArr[0]?.km || '';
     const media = resArr[0]?.media || '';
@@ -15236,18 +15194,13 @@ async function renderGara(gara_id) {
       })),
     };
   };
-  if (isEsordienti) {
-    window._shareGaraData  = _mkShare(results1, 'Esordienti 1° Anno', es1GaraId);
-    window._shareGaraData2 = results2.length ? _mkShare(results2, 'Esordienti 2° Anno', es2GaraId) : null;
-  } else {
-    window._shareGaraData  = _mkShare(results1, catLabel(cat), primaryGaraId);
-    window._shareGaraData2 = null;
-  }
+  window._shareGaraData  = _mkShare(results, catLabel(cat), primaryGaraId);
+  window._shareGaraData2 = null;
 
   const siRaceIntelHtml = '';
 
   window._currentGaraId = primaryGaraId;
-  const _winner = results1[0];
+  const _winner = results[0];
   const _top3Str = results.slice(0,3).map((r,i)=>`${i+1}° ${r.cognome} ${r.nome}`).join(' · ');
   setPageMeta(name, [fmtDate(data), calEntry?.luogo||calEntry?.regione||'', _top3Str].filter(Boolean).join(' — '));
   setSchemaOrg({
@@ -15269,23 +15222,19 @@ async function renderGara(gara_id) {
         <span class="race-meta-sep">|</span>
         <span style="text-transform:capitalize">${esc(tipo)}</span>
         <span class="race-meta-sep">|</span>
-        ${badgeMult(mult, tipo, results1[0]?.campionato_regionale || calEntry?.campionato_regionale, results1[0]?.campionato_italiano || calEntry?.campionato_italiano)}
-        ${results1[0]?.km ? `<span class="race-meta-sep">|</span><span>${esc(results1[0].km)} Km</span>` : ''}
-        ${results1[0]?.media ? `<span class="race-meta-sep">|</span><span>Media: ${esc(results1[0].media)} Km/h</span>` : ''}
+        ${badgeMult(mult, tipo, results[0]?.campionato_regionale || calEntry?.campionato_regionale, results[0]?.campionato_italiano || calEntry?.campionato_italiano)}
+        ${results[0]?.km ? `<span class="race-meta-sep">|</span><span>${esc(results[0].km)} Km</span>` : ''}
+        ${results[0]?.media ? `<span class="race-meta-sep">|</span><span>Media: ${esc(results[0].media)} Km/h</span>` : ''}
         ${!results.length && calEntry?.luogo ? `<span class="race-meta-sep">|</span><span>📍 ${esc(calEntry.luogo)}</span>` : ''}
         ${!results.length && calEntry?.regione ? `<span class="race-meta-sep">|</span><span>${esc(calEntry.regione)}</span>` : ''}
       </div>
     </div>
       <div style="margin-top:12px;display:flex;gap:10px;align-items:center;flex-wrap:wrap">
-        <button class="btn-share" onclick="window.triggerShareGara()"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="18" cy="5" r="3"/><circle cx="6" cy="12" r="3"/><circle cx="18" cy="19" r="3"/><line x1="8.59" y1="13.51" x2="15.42" y2="17.49"/><line x1="15.41" y1="6.51" x2="8.59" y2="10.49"/></svg> Condividi Risultati${isEsordienti && results2.length ? ' 1° Anno' : ''}</button>
-        ${isEsordienti && results2.length ? `<button class="btn-share" onclick="window.triggerShareGara2()"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="18" cy="5" r="3"/><circle cx="6" cy="12" r="3"/><circle cx="18" cy="19" r="3"/><line x1="8.59" y1="13.51" x2="15.42" y2="17.49"/><line x1="15.41" y1="6.51" x2="8.59" y2="10.49"/></svg> Condividi Risultati 2° Anno</button>` : ''}
+        <button class="btn-share" onclick="window.triggerShareGara()"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="18" cy="5" r="3"/><circle cx="6" cy="12" r="3"/><circle cx="18" cy="19" r="3"/><line x1="8.59" y1="13.51" x2="15.42" y2="17.49"/><line x1="15.41" y1="6.51" x2="8.59" y2="10.49"/></svg> Condividi Risultati</button>
         ${adminEditBtn('gara', primaryGaraId)}
         ${_isAdmin ? `<button id="pcs-import-btn" class="admin-edit-btn" style="background:#7c3aed" onclick="window.adminPcsImport('${esc(primaryGaraId)}')">⬇ Importa PCS</button>` : ''}
         ${_isAdmin ? `<button id="pcs-rematch-btn" class="admin-edit-btn" style="background:#059669" onclick="window.adminPcsRematch('${esc(primaryGaraId)}')">↺ Rimatch Atleti</button>` : ''}
-        ${_isAdmin && isEsordienti
-          ? `<button class="admin-edit-btn" style="background:#0891b2" onclick="window.openManualResultBulkForm('${esc(es1GaraId)}')">➕ Risultati 1° Anno</button>
-             <button class="admin-edit-btn" style="background:#0891b2" onclick="window.openManualResultBulkForm('${esc(es2GaraId)}')">➕ Risultati 2° Anno</button>`
-          : (_isAdmin ? `<button class="admin-edit-btn" style="background:#0891b2" onclick="window.openManualResultBulkForm('${esc(primaryGaraId)}')">➕ Aggiungi risultati</button>` : '')}
+        ${_isAdmin ? `<button class="admin-edit-btn" style="background:#0891b2" onclick="window.openManualResultBulkForm('${esc(primaryGaraId)}')">➕ Aggiungi risultati</button>` : ''}
       </div>
     ${_catTabsHtml}
     ${racePhotosHtml}
