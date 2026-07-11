@@ -2,9 +2,9 @@
   {
     "team_id": "BIESSE_CARRERA_PREMAC",
     "team_nome": "BIESSE - CARRERA - PREMAC",
-    "punti": 514,
-    "vittorie": 11,
-    "p1": 11,
+    "punti": 529,
+    "vittorie": 12,
+    "p1": 12,
     "p2": 5,
     "p3": 6,
     "pout": 28,
@@ -14,12 +14,12 @@
   {
     "team_id": "BFT_BURZONI",
     "team_nome": "BFT BURZONI",
-    "punti": 372,
+    "punti": 378,
     "vittorie": 6,
     "p1": 6,
     "p2": 9,
     "p3": 4,
-    "pout": 17,
+    "pout": 18,
     "n_atleti": 7,
     "pos": 2
   },
@@ -50,12 +50,12 @@
   {
     "team_id": "BRESCIA_F_MAGNI_FLANDRES_LOVE",
     "team_nome": "BRESCIA - F. MAGNI - FLANDRES LOVE",
-    "punti": 180,
+    "punti": 190,
     "vittorie": 0,
     "p1": 0,
     "p2": 2,
     "p3": 6,
-    "pout": 12,
+    "pout": 14,
     "n_atleti": 7,
     "pos": 5
   },
@@ -72,6 +72,18 @@
     "pos": 6
   },
   {
+    "team_id": "U_C_CONSCIO_PEDALE_DEL_SILE",
+    "team_nome": "U.C.CONSCIO PEDALE DEL SILE",
+    "punti": 171,
+    "vittorie": 2,
+    "p1": 2,
+    "p2": 2,
+    "p3": 0,
+    "pout": 20,
+    "n_atleti": 6,
+    "pos": 7
+  },
+  {
     "team_id": "TEAM_WILIER_BREGANZE",
     "team_nome": "TEAM WILIER BREGANZE",
     "punti": 151,
@@ -80,18 +92,6 @@
     "p2": 1,
     "p3": 1,
     "pout": 21,
-    "n_atleti": 6,
-    "pos": 7
-  },
-  {
-    "team_id": "U_C_CONSCIO_PEDALE_DEL_SILE",
-    "team_nome": "U.C.CONSCIO PEDALE DEL SILE",
-    "punti": 150,
-    "vittorie": 2,
-    "p1": 2,
-    "p2": 1,
-    "p3": 0,
-    "pout": 18,
     "n_atleti": 6,
     "pos": 8
   },
@@ -110,11 +110,11 @@
   {
     "team_id": "CICLISTICA_OMNIA_IMOLA",
     "team_nome": "CICLISTICA OMNIA IMOLA",
-    "punti": 64,
+    "punti": 74,
     "vittorie": 0,
     "p1": 0,
     "p2": 1,
-    "p3": 1,
+    "p3": 2,
     "pout": 6,
     "n_atleti": 4,
     "pos": 10
@@ -192,6 +192,18 @@
     "pos": 16
   },
   {
+    "team_id": "TEAM_MENDELSPECK_E_WORK",
+    "team_nome": "TEAM MENDELSPECK E-WORK",
+    "punti": 9,
+    "vittorie": 0,
+    "p1": 0,
+    "p2": 0,
+    "p3": 0,
+    "pout": 3,
+    "n_atleti": 3,
+    "pos": 17
+  },
+  {
     "team_id": "SPAGNA",
     "team_nome": "SPAGNA",
     "punti": 9,
@@ -201,7 +213,7 @@
     "p3": 0,
     "pout": 1,
     "n_atleti": 1,
-    "pos": 17
+    "pos": 18
   },
   {
     "team_id": "CANTURINO_1902_A_S_D",
@@ -213,18 +225,6 @@
     "p3": 0,
     "pout": 1,
     "n_atleti": 1,
-    "pos": 18
-  },
-  {
-    "team_id": "TEAM_MENDELSPECK_E_WORK",
-    "team_nome": "TEAM MENDELSPECK E-WORK",
-    "punti": 8,
-    "vittorie": 0,
-    "p1": 0,
-    "p2": 0,
-    "p3": 0,
-    "pout": 2,
-    "n_atleti": 2,
     "pos": 19
   },
   {
@@ -240,6 +240,18 @@
     "pos": 20
   },
   {
+    "team_id": "LMC_BOGOTA",
+    "team_nome": "LMC BOGOTA'",
+    "punti": 3,
+    "vittorie": 0,
+    "p1": 0,
+    "p2": 0,
+    "p3": 0,
+    "pout": 1,
+    "n_atleti": 1,
+    "pos": 21
+  },
+  {
     "team_id": "S_C_V_BIKE_CADORAGO_ASD",
     "team_nome": "S.C.V. BIKE CADORAGO ASD",
     "punti": 3,
@@ -249,7 +261,7 @@
     "p3": 0,
     "pout": 1,
     "n_atleti": 1,
-    "pos": 21
+    "pos": 22
   },
   {
     "team_id": "GIFU_DAIICHI_HIGH_SCHOOL",
@@ -261,7 +273,7 @@
     "p3": 0,
     "pout": 1,
     "n_atleti": 1,
-    "pos": 22
+    "pos": 23
   },
   {
     "team_id": "FRANCIA",
@@ -273,6 +285,6 @@
     "p3": 0,
     "pout": 1,
     "n_atleti": 1,
-    "pos": 23
+    "pos": 24
   }
 ]

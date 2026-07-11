@@ -62,13 +62,13 @@
   {
     "team_id": "ISOLMANT_PREMAC_VITTORIA",
     "team_nome": "ISOLMANT - PREMAC - VITTORIA",
-    "punti": 220,
+    "punti": 233,
     "vittorie": 3,
     "p1": 3,
-    "p2": 3,
+    "p2": 4,
     "p3": 3,
-    "pout": 10,
-    "n_atleti": 7,
+    "pout": 11,
+    "n_atleti": 8,
     "pos": 6
   },
   {
@@ -110,12 +110,12 @@
   {
     "team_id": "HORIZONS_CYCLING_CLUB",
     "team_nome": "HORIZONS CYCLING CLUB",
-    "punti": 126,
+    "punti": 131,
     "vittorie": 0,
     "p1": 0,
     "p2": 1,
     "p3": 1,
-    "pout": 12,
+    "pout": 13,
     "n_atleti": 4,
     "pos": 10
   },
@@ -146,14 +146,38 @@
   {
     "team_id": "BIESSE_CARRERA_PREMAC",
     "team_nome": "BIESSE - CARRERA - PREMAC",
-    "punti": 99,
+    "punti": 105,
     "vittorie": 1,
     "p1": 1,
     "p2": 1,
     "p3": 1,
-    "pout": 9,
+    "pout": 10,
     "n_atleti": 5,
     "pos": 13
+  },
+  {
+    "team_id": "TOYOTA_VALENCIA_SAV",
+    "team_nome": "TOYOTA VALENCIA SAV",
+    "punti": 103,
+    "vittorie": 4,
+    "p1": 4,
+    "p2": 1,
+    "p3": 1,
+    "pout": 1,
+    "n_atleti": 1,
+    "pos": 14
+  },
+  {
+    "team_id": "BORN_TO_WIN_BTC_CITY_LJUBLJANA",
+    "team_nome": "BORN TO WIN BTC CITY LJUBLJANA",
+    "punti": 103,
+    "vittorie": 3,
+    "p1": 3,
+    "p2": 0,
+    "p3": 0,
+    "pout": 12,
+    "n_atleti": 4,
+    "pos": 15
   },
   {
     "team_id": "HUMAN_POWERED_HEALTH",
@@ -165,30 +189,6 @@
     "p3": 0,
     "pout": 3,
     "n_atleti": 2,
-    "pos": 14
-  },
-  {
-    "team_id": "BORN_TO_WIN_BTC_CITY_LJUBLJANA",
-    "team_nome": "BORN TO WIN BTC CITY LJUBLJANA",
-    "punti": 95,
-    "vittorie": 3,
-    "p1": 3,
-    "p2": 0,
-    "p3": 0,
-    "pout": 11,
-    "n_atleti": 4,
-    "pos": 15
-  },
-  {
-    "team_id": "TOYOTA_VALENCIA_SAV",
-    "team_nome": "TOYOTA VALENCIA SAV",
-    "punti": 88,
-    "vittorie": 3,
-    "p1": 3,
-    "p2": 1,
-    "p3": 1,
-    "pout": 1,
-    "n_atleti": 1,
     "pos": 16
   },
   {
@@ -240,6 +240,18 @@
     "pos": 20
   },
   {
+    "team_id": "VINI_FANTINI_BEPINK",
+    "team_nome": "VINI FANTINI - BEPINK",
+    "punti": 56,
+    "vittorie": 0,
+    "p1": 0,
+    "p2": 0,
+    "p3": 1,
+    "pout": 9,
+    "n_atleti": 7,
+    "pos": 21
+  },
+  {
     "team_id": "AG_INSURANCE_SOUDAL",
     "team_nome": "AG INSURANCE SOUDAL",
     "punti": 50,
@@ -249,7 +261,7 @@
     "p3": 0,
     "pout": 6,
     "n_atleti": 3,
-    "pos": 21
+    "pos": 22
   },
   {
     "team_id": "PETRUCCI_GAUSS_CYCLING_TEAM",
@@ -261,7 +273,7 @@
     "p3": 1,
     "pout": 4,
     "n_atleti": 2,
-    "pos": 22
+    "pos": 23
   },
   {
     "team_id": "FANINI_PRO_CYCLING",
@@ -273,19 +285,19 @@
     "p3": 1,
     "pout": 4,
     "n_atleti": 3,
-    "pos": 23
+    "pos": 24
   },
   {
-    "team_id": "VINI_FANTINI_BEPINK",
-    "team_nome": "VINI FANTINI - BEPINK",
-    "punti": 40,
+    "team_id": "TEAM_MENDELSPECK_E_WORK",
+    "team_nome": "TEAM MENDELSPECK E-WORK",
+    "punti": 39,
     "vittorie": 0,
     "p1": 0,
-    "p2": 0,
-    "p3": 0,
-    "pout": 7,
-    "n_atleti": 6,
-    "pos": 24
+    "p2": 1,
+    "p3": 1,
+    "pout": 4,
+    "n_atleti": 3,
+    "pos": 25
   },
   {
     "team_id": "UNO_X_MOBILITY",
@@ -297,7 +309,7 @@
     "p3": 0,
     "pout": 4,
     "n_atleti": 3,
-    "pos": 25
+    "pos": 26
   },
   {
     "team_id": "ZHIRAF",
@@ -309,7 +321,7 @@
     "p3": 2,
     "pout": 4,
     "n_atleti": 3,
-    "pos": 26
+    "pos": 27
   },
   {
     "team_id": "UAE_DEVELOPMENT_TEAM",
@@ -320,18 +332,6 @@
     "p2": 1,
     "p3": 0,
     "pout": 1,
-    "n_atleti": 2,
-    "pos": 27
-  },
-  {
-    "team_id": "TEAM_MENDELSPECK_E_WORK",
-    "team_nome": "TEAM MENDELSPECK E-WORK",
-    "punti": 36,
-    "vittorie": 0,
-    "p1": 0,
-    "p2": 1,
-    "p3": 1,
-    "pout": 3,
     "n_atleti": 2,
     "pos": 28
   },

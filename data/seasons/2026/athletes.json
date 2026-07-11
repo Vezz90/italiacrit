@@ -1,4 +1,1232 @@
 {
+  "MINICHINO_MELANIA": {
+    "id": "MINICHINO_MELANIA",
+    "nome": "MELANIA",
+    "cognome": "MINICHINO",
+    "team_attuale": "BIESSE - CARRERA - PREMAC",
+    "team_id": "BIESSE_CARRERA_PREMAC",
+    "categoria": "JUN_F",
+    "genere": "F",
+    "punti_totali": 74,
+    "risultati": [
+      {
+        "gara_id": "9_TROFEO_A_RANCILIO_LADIES_2026-07-10_JUN_F",
+        "nome_gara": "9 TROFEO A RANCILIO LADIES",
+        "data": "2026-07-10",
+        "posizione": 1,
+        "punti_effettivi": 15,
+        "team": "BIESSE - CARRERA - PREMAC",
+        "moltiplicatore": 1,
+        "tipo": "regionale",
+        "regione": "LOMBARDIA",
+        "km": "102.000",
+        "media": "42.256"
+      },
+      {
+        "gara_id": "11_GRAN_PREMIO_TEAM9_2026-07-05_JUN_F",
+        "nome_gara": "11 GRAN PREMIO TEAM9",
+        "data": "2026-07-05",
+        "posizione": 4,
+        "punti_effettivi": 8,
+        "team": "BIESSE - CARRERA - PREMAC",
+        "moltiplicatore": 1,
+        "tipo": "regionale",
+        "regione": "EMILIA ROMAGNA",
+        "km": "86.400",
+        "media": "41.143"
+      },
+      {
+        "gara_id": "5_COPPA_GIUDICARIE_CENTRALI_CAMPIONATO_TRENTINO_DONNE_JUNIOR_2026-06-28_JUN_F",
+        "nome_gara": "5 COPPA GIUDICARIE CENTRALI CAMPIONATO TRENTINO DONNE JUNIOR",
+        "data": "2026-06-28",
+        "posizione": 9,
+        "punti_effettivi": 2,
+        "team": "BIESSE - CARRERA - PREMAC",
+        "moltiplicatore": 1,
+        "tipo": "regionale",
+        "regione": "TRENTO",
+        "km": "101.000",
+        "media": "38.133"
+      },
+      {
+        "gara_id": "TROFEO_MEMORIAL_CONIUGI_ZAMBELLI_2026-05-24_JUN_F",
+        "nome_gara": "TROFEO MEMORIAL CONIUGI ZAMBELLI",
+        "data": "2026-05-24",
+        "posizione": 5,
+        "punti_effettivi": 6,
+        "team": "BIESSE - CARRERA - PREMAC",
+        "moltiplicatore": 1,
+        "tipo": "regionale",
+        "regione": "LOMBARDIA",
+        "km": "83.622",
+        "media": "42.610"
+      },
+      {
+        "gara_id": "24_GRAN_PREMIO_ROSA_CITTA_DI_BOVOLONE_2026-05-03_JUN_F",
+        "nome_gara": "24 GRAN PREMIO ROSA CITTA' DI BOVOLONE",
+        "data": "2026-05-03",
+        "posizione": 7,
+        "punti_effettivi": 4,
+        "team": "BIESSE - CARRERA - PREMAC",
+        "moltiplicatore": 1,
+        "tipo": "regionale",
+        "regione": "VENETO",
+        "km": "59.400",
+        "media": "45.888"
+      },
+      {
+        "gara_id": "1_TROFEO_DELLA_LIBERAZIONE_COMUNE_DI_COLLESALVETTI_2026-04-25_JUN_F",
+        "nome_gara": "1 TROFEO DELLA LIBERAZIONE COMUNE DI COLLESALVETTI",
+        "data": "2026-04-25",
+        "posizione": 3,
+        "punti_effettivi": 10,
+        "team": "BIESSE - CARRERA - PREMAC",
+        "moltiplicatore": 1,
+        "tipo": "regionale",
+        "regione": "TOSCANA",
+        "km": "74.000",
+        "media": "35.990"
+      },
+      {
+        "gara_id": "TROFEO_BUSSOLATI_ASFALTI_2026-04-18_JUN_F",
+        "nome_gara": "TROFEO BUSSOLATI ASFALTI",
+        "data": "2026-04-18",
+        "posizione": 9,
+        "punti_effettivi": 2,
+        "team": "BIESSE - CARRERA - PREMAC",
+        "moltiplicatore": 1,
+        "tipo": "regionale",
+        "regione": "EMILIA ROMAGNA",
+        "km": "76.300",
+        "media": "41.606"
+      },
+      {
+        "gara_id": "PASQUALANDO_2026-04-05_JUN_F",
+        "nome_gara": "PASQUALANDO",
+        "data": "2026-04-05",
+        "posizione": 1,
+        "punti_effettivi": 15,
+        "team": "BIESSE - CARRERA - PREMAC",
+        "moltiplicatore": 1,
+        "tipo": "regionale",
+        "regione": "TOSCANA",
+        "km": "63.800",
+        "media": "41.102"
+      },
+      {
+        "gara_id": "GRAN_PREMIO_CITTA_DI_NONANTOLA_2026-03-08_JUN_F",
+        "nome_gara": "GRAN PREMIO CITTA' DI NONANTOLA",
+        "data": "2026-03-08",
+        "posizione": 2,
+        "punti_effettivi": 12,
+        "team": "BIESSE - CARRERA - PREMAC",
+        "moltiplicatore": 1,
+        "tipo": "regionale",
+        "regione": "EMILIA ROMAGNA",
+        "km": "76.000",
+        "media": "41.912"
+      }
+    ]
+  },
+  "DOLLAKU_GIULIA": {
+    "id": "DOLLAKU_GIULIA",
+    "nome": "GIULIA",
+    "cognome": "DOLLAKU",
+    "team_attuale": "U.C.CONSCIO PEDALE DEL SILE",
+    "team_id": "U_C_CONSCIO_PEDALE_DEL_SILE",
+    "categoria": "JUN_F",
+    "genere": "F",
+    "punti_totali": 27,
+    "risultati": [
+      {
+        "gara_id": "9_TROFEO_A_RANCILIO_LADIES_2026-07-10_JUN_F",
+        "nome_gara": "9 TROFEO A RANCILIO LADIES",
+        "data": "2026-07-10",
+        "posizione": 2,
+        "punti_effettivi": 12,
+        "team": "U.C.CONSCIO PEDALE DEL SILE",
+        "moltiplicatore": 1,
+        "tipo": "regionale",
+        "regione": "LOMBARDIA",
+        "km": "102.000",
+        "media": "42.256"
+      },
+      {
+        "gara_id": "INTERNAZIONALE_PORTO_SAN_GIORGIO_MEMORIAL_M_DE_ANGELIS_CRONOMETRO_2026-06-12_JUN_F",
+        "nome_gara": "INTERNAZIONALE PORTO SAN GIORGIO MEMORIAL M DE ANGELIS CRONOMETRO",
+        "data": "2026-06-12",
+        "posizione": 6,
+        "punti_effettivi": 15,
+        "team": "U.C.CONSCIO PEDALE DEL SILE",
+        "moltiplicatore": 3,
+        "tipo": "internazionale",
+        "regione": "JUNIORES",
+        "km": "15.000",
+        "media": "44.000"
+      }
+    ]
+  },
+  "ZANDRI_EVA": {
+    "id": "ZANDRI_EVA",
+    "nome": "EVA",
+    "cognome": "ZANDRI",
+    "team_attuale": "CICLISTICA OMNIA IMOLA",
+    "team_id": "CICLISTICA_OMNIA_IMOLA",
+    "categoria": "JUN_F",
+    "genere": "F",
+    "punti_totali": 49,
+    "risultati": [
+      {
+        "gara_id": "9_TROFEO_A_RANCILIO_LADIES_2026-07-10_JUN_F",
+        "nome_gara": "9 TROFEO A RANCILIO LADIES",
+        "data": "2026-07-10",
+        "posizione": 3,
+        "punti_effettivi": 10,
+        "team": "CICLISTICA OMNIA IMOLA",
+        "moltiplicatore": 1,
+        "tipo": "regionale",
+        "regione": "LOMBARDIA",
+        "km": "102.000",
+        "media": "42.256"
+      },
+      {
+        "gara_id": "INTERNAZIONALE_PORTO_SAN_GIORGIO_MEMORIAL_M_DE_ANGELIS_2026-06-13_JUN_F",
+        "nome_gara": "INTERNAZIONALE PORTO SAN GIORGIO MEMORIAL M DE ANGELIS",
+        "data": "2026-06-13",
+        "posizione": 10,
+        "punti_effettivi": 1,
+        "team": "CICLISTICA OMNIA IMOLA",
+        "moltiplicatore": 1,
+        "tipo": "regionale",
+        "regione": "MARCHE",
+        "km": "105.000",
+        "media": "37.990"
+      },
+      {
+        "gara_id": "2_TROFEO_ROSA_MONTALTO_PROVA_VALIDA_CAMPIONATO_REGIONALE_2026-05-02_JUN_F",
+        "nome_gara": "2 TROFEO ROSA MONTALTO PROVA VALIDA CAMPIONATO REGIONALE",
+        "data": "2026-05-02",
+        "posizione": 3,
+        "punti_effettivi": 20,
+        "team": "CICLISTICA OMNIA IMOLA",
+        "moltiplicatore": 2,
+        "tipo": "regionale",
+        "regione": "TOSCANA",
+        "km": "87.700",
+        "media": "35.861"
+      },
+      {
+        "gara_id": "1_TROFEO_DELLA_LIBERAZIONE_COMUNE_DI_COLLESALVETTI_2026-04-25_JUN_F",
+        "nome_gara": "1 TROFEO DELLA LIBERAZIONE COMUNE DI COLLESALVETTI",
+        "data": "2026-04-25",
+        "posizione": 2,
+        "punti_effettivi": 12,
+        "team": "CICLISTICA OMNIA IMOLA",
+        "moltiplicatore": 1,
+        "tipo": "regionale",
+        "regione": "TOSCANA",
+        "km": "74.000",
+        "media": "35.990"
+      },
+      {
+        "gara_id": "PASQUALANDO_2026-04-05_JUN_F",
+        "nome_gara": "PASQUALANDO",
+        "data": "2026-04-05",
+        "posizione": 5,
+        "punti_effettivi": 6,
+        "team": "CICLISTICA OMNIA IMOLA",
+        "moltiplicatore": 1,
+        "tipo": "regionale",
+        "regione": "TOSCANA",
+        "km": "63.800",
+        "media": "41.102"
+      }
+    ]
+  },
+  "MASI_AURORA": {
+    "id": "MASI_AURORA",
+    "nome": "AURORA",
+    "cognome": "MASI",
+    "team_attuale": "BRESCIA - F. MAGNI - FLANDRES LOVE",
+    "team_id": "BRESCIA_F_MAGNI_FLANDRES_LOVE",
+    "categoria": "JUN_F",
+    "genere": "F",
+    "punti_totali": 26,
+    "risultati": [
+      {
+        "gara_id": "9_TROFEO_A_RANCILIO_LADIES_2026-07-10_JUN_F",
+        "nome_gara": "9 TROFEO A RANCILIO LADIES",
+        "data": "2026-07-10",
+        "posizione": 4,
+        "punti_effettivi": 8,
+        "team": "BRESCIA - F. MAGNI - FLANDRES LOVE",
+        "moltiplicatore": 1,
+        "tipo": "regionale",
+        "regione": "LOMBARDIA",
+        "km": "102.000",
+        "media": "42.256"
+      },
+      {
+        "gara_id": "INTERNAZIONALE_PORTO_SAN_GIORGIO_MEMORIAL_M_DE_ANGELIS_2026-06-13_JUN_F",
+        "nome_gara": "INTERNAZIONALE PORTO SAN GIORGIO MEMORIAL M DE ANGELIS",
+        "data": "2026-06-13",
+        "posizione": 9,
+        "punti_effettivi": 2,
+        "team": "BRESCIA - F. MAGNI - FLANDRES LOVE",
+        "moltiplicatore": 1,
+        "tipo": "regionale",
+        "regione": "MARCHE",
+        "km": "105.000",
+        "media": "37.990"
+      },
+      {
+        "gara_id": "2_TROFEO_ROSA_MONTALTO_PROVA_VALIDA_CAMPIONATO_REGIONALE_2026-05-02_JUN_F",
+        "nome_gara": "2 TROFEO ROSA MONTALTO PROVA VALIDA CAMPIONATO REGIONALE",
+        "data": "2026-05-02",
+        "posizione": 8,
+        "punti_effettivi": 6,
+        "team": "BRESCIA - F. MAGNI - FLANDRES LOVE",
+        "moltiplicatore": 2,
+        "tipo": "regionale",
+        "regione": "TOSCANA",
+        "km": "87.700",
+        "media": "35.861"
+      },
+      {
+        "gara_id": "PASQUALANDO_2026-04-05_JUN_F",
+        "nome_gara": "PASQUALANDO",
+        "data": "2026-04-05",
+        "posizione": 3,
+        "punti_effettivi": 10,
+        "team": "BRESCIA - F. MAGNI - FLANDRES LOVE",
+        "moltiplicatore": 1,
+        "tipo": "regionale",
+        "regione": "TOSCANA",
+        "km": "63.800",
+        "media": "41.102"
+      }
+    ]
+  },
+  "LONGO_BORGHINI_ANNA_ABIGAIL": {
+    "id": "LONGO_BORGHINI_ANNA_ABIGAIL",
+    "nome": "BORGHINI ANNA ABIGAIL",
+    "cognome": "LONGO",
+    "team_attuale": "BFT BURZONI",
+    "team_id": "BFT_BURZONI",
+    "categoria": "JUN_F",
+    "genere": "F",
+    "punti_totali": 16,
+    "risultati": [
+      {
+        "gara_id": "9_TROFEO_A_RANCILIO_LADIES_2026-07-10_JUN_F",
+        "nome_gara": "9 TROFEO A RANCILIO LADIES",
+        "data": "2026-07-10",
+        "posizione": 5,
+        "punti_effettivi": 6,
+        "team": "BFT BURZONI",
+        "moltiplicatore": 1,
+        "tipo": "regionale",
+        "regione": "LOMBARDIA",
+        "km": "102.000",
+        "media": "42.256"
+      },
+      {
+        "gara_id": "11_GRAN_PREMIO_TEAM9_2026-07-05_JUN_F",
+        "nome_gara": "11 GRAN PREMIO TEAM9",
+        "data": "2026-07-05",
+        "posizione": 3,
+        "punti_effettivi": 10,
+        "team": "BFT BURZONI",
+        "moltiplicatore": 1,
+        "tipo": "regionale",
+        "regione": "EMILIA ROMAGNA",
+        "km": "86.400",
+        "media": "41.143"
+      }
+    ]
+  },
+  "D_APOLLONIO_REBECCA": {
+    "id": "D_APOLLONIO_REBECCA",
+    "nome": "REBECCA",
+    "cognome": "D'APOLLONIO",
+    "team_attuale": "U.C.CONSCIO PEDALE DEL SILE",
+    "team_id": "U_C_CONSCIO_PEDALE_DEL_SILE",
+    "categoria": "JUN_F",
+    "genere": "F",
+    "punti_totali": 99,
+    "risultati": [
+      {
+        "gara_id": "9_TROFEO_A_RANCILIO_LADIES_2026-07-10_JUN_F",
+        "nome_gara": "9 TROFEO A RANCILIO LADIES",
+        "data": "2026-07-10",
+        "posizione": 6,
+        "punti_effettivi": 5,
+        "team": "U.C.CONSCIO PEDALE DEL SILE",
+        "moltiplicatore": 1,
+        "tipo": "regionale",
+        "regione": "LOMBARDIA",
+        "km": "102.000",
+        "media": "42.256"
+      },
+      {
+        "gara_id": "11_GRAN_PREMIO_TEAM9_2026-07-05_JUN_F",
+        "nome_gara": "11 GRAN PREMIO TEAM9",
+        "data": "2026-07-05",
+        "posizione": 7,
+        "punti_effettivi": 4,
+        "team": "U.C.CONSCIO PEDALE DEL SILE",
+        "moltiplicatore": 1,
+        "tipo": "regionale",
+        "regione": "EMILIA ROMAGNA",
+        "km": "86.400",
+        "media": "41.143"
+      },
+      {
+        "gara_id": "INTERNAZIONALE_PORTO_SAN_GIORGIO_MEMORIAL_M_DE_ANGELIS_2026-06-13_JUN_F",
+        "nome_gara": "INTERNAZIONALE PORTO SAN GIORGIO MEMORIAL M DE ANGELIS",
+        "data": "2026-06-13",
+        "posizione": 2,
+        "punti_effettivi": 12,
+        "team": "U.C.CONSCIO PEDALE DEL SILE",
+        "moltiplicatore": 1,
+        "tipo": "regionale",
+        "regione": "MARCHE",
+        "km": "105.000",
+        "media": "37.990"
+      },
+      {
+        "gara_id": "INTERNAZIONALE_PORTO_SAN_GIORGIO_MEMORIAL_M_DE_ANGELIS_CRONOMETRO_2026-06-12_JUN_F",
+        "nome_gara": "INTERNAZIONALE PORTO SAN GIORGIO MEMORIAL M DE ANGELIS CRONOMETRO",
+        "data": "2026-06-12",
+        "posizione": 4,
+        "punti_effettivi": 24,
+        "team": "U.C.CONSCIO PEDALE DEL SILE",
+        "moltiplicatore": 3,
+        "tipo": "internazionale",
+        "regione": "JUNIORES",
+        "km": "15.000",
+        "media": "44.000"
+      },
+      {
+        "gara_id": "42_GRAN_PREMIO_CICLISTI_DI_ARCADE_2026-06-07_JUN_F",
+        "nome_gara": "42 GRAN PREMIO CICLISTI DI ARCADE",
+        "data": "2026-06-07",
+        "posizione": 7,
+        "punti_effettivi": 4,
+        "team": "U.C.CONSCIO PEDALE DEL SILE",
+        "moltiplicatore": 1,
+        "tipo": "regionale",
+        "regione": "VENETO",
+        "km": "109.100",
+        "media": "39.003"
+      },
+      {
+        "gara_id": "GRAN_PREMIO_CITTA_DI_CORRIDONIA_2026-05-31_JUN_F",
+        "nome_gara": "GRAN PREMIO CITTA' DI CORRIDONIA",
+        "data": "2026-05-31",
+        "posizione": 4,
+        "punti_effettivi": 8,
+        "team": "U.C.CONSCIO PEDALE DEL SILE",
+        "moltiplicatore": 1,
+        "tipo": "regionale",
+        "regione": "MARCHE",
+        "km": "81.800",
+        "media": "40.136"
+      },
+      {
+        "gara_id": "TROFEO_MEMORIAL_CONIUGI_ZAMBELLI_2026-05-24_JUN_F",
+        "nome_gara": "TROFEO MEMORIAL CONIUGI ZAMBELLI",
+        "data": "2026-05-24",
+        "posizione": 10,
+        "punti_effettivi": 1,
+        "team": "U.C.CONSCIO PEDALE DEL SILE",
+        "moltiplicatore": 1,
+        "tipo": "regionale",
+        "regione": "LOMBARDIA",
+        "km": "83.622",
+        "media": "42.610"
+      },
+      {
+        "gara_id": "17_CRONOROMANENGO_PROVA_VALIDA_CAMPIONATO_REGIONALE_2026-05-23_JUN_F",
+        "nome_gara": "17 CRONOROMANENGO PROVA VALIDA CAMPIONATO REGIONALE",
+        "data": "2026-05-23",
+        "posizione": 5,
+        "punti_effettivi": 12,
+        "team": "U.C.CONSCIO PEDALE DEL SILE",
+        "moltiplicatore": 2,
+        "tipo": "regionale",
+        "regione": "JUNIORES",
+        "km": "12.600",
+        "media": "43.480"
+      },
+      {
+        "gara_id": "GIRO_DELLE_MARCHE_IN_ROSA_2026-05-10_JUN_F",
+        "nome_gara": "GIRO DELLE MARCHE IN ROSA",
+        "data": "2026-05-10",
+        "posizione": 8,
+        "punti_effettivi": 3,
+        "team": "U.C.CONSCIO PEDALE DEL SILE",
+        "moltiplicatore": 1,
+        "tipo": "regionale",
+        "regione": "MARCHE",
+        "km": "100.000",
+        "media": "35.294"
+      },
+      {
+        "gara_id": "GIRO_DELLE_MARCHE_IN_ROSA_2026-05-09_JUN_F",
+        "nome_gara": "GIRO DELLE MARCHE IN ROSA",
+        "data": "2026-05-09",
+        "posizione": 5,
+        "punti_effettivi": 6,
+        "team": "U.C.CONSCIO PEDALE DEL SILE",
+        "moltiplicatore": 1,
+        "tipo": "regionale",
+        "regione": "MARCHE",
+        "km": "90.000",
+        "media": "36.986"
+      },
+      {
+        "gara_id": "4_TROFEO_ROSA_CITTA_DI_CANTU_2026-05-01_JUN_F",
+        "nome_gara": "4 TROFEO ROSA CITTA' DI CANTU'",
+        "data": "2026-05-01",
+        "posizione": 1,
+        "punti_effettivi": 15,
+        "team": "U.C.CONSCIO PEDALE DEL SILE",
+        "moltiplicatore": 1,
+        "tipo": "regionale",
+        "regione": "LOMBARDIA",
+        "km": "72.600",
+        "media": "37.151"
+      },
+      {
+        "gara_id": "TROFEO_BUSSOLATI_ASFALTI_2026-04-18_JUN_F",
+        "nome_gara": "TROFEO BUSSOLATI ASFALTI",
+        "data": "2026-04-18",
+        "posizione": 8,
+        "punti_effettivi": 3,
+        "team": "U.C.CONSCIO PEDALE DEL SILE",
+        "moltiplicatore": 1,
+        "tipo": "regionale",
+        "regione": "EMILIA ROMAGNA",
+        "km": "76.300",
+        "media": "41.606"
+      },
+      {
+        "gara_id": "2_TROFEO_CASSA_DI_RISPARMIO_DI_FOSSANO_2026-04-12_JUN_F",
+        "nome_gara": "2 TROFEO CASSA DI RISPARMIO DI FOSSANO",
+        "data": "2026-04-12",
+        "posizione": 9,
+        "punti_effettivi": 2,
+        "team": "U.C.CONSCIO PEDALE DEL SILE",
+        "moltiplicatore": 1,
+        "tipo": "regionale",
+        "regione": "PIEMONTE",
+        "km": "94.000",
+        "media": "39.929"
+      }
+    ]
+  },
+  "DE_MARCO_ELENA": {
+    "id": "DE_MARCO_ELENA",
+    "nome": "MARCO ELENA",
+    "cognome": "DE",
+    "team_attuale": "U.C.CONSCIO PEDALE DEL SILE",
+    "team_id": "U_C_CONSCIO_PEDALE_DEL_SILE",
+    "categoria": "JUN_F",
+    "genere": "F",
+    "punti_totali": 10,
+    "risultati": [
+      {
+        "gara_id": "9_TROFEO_A_RANCILIO_LADIES_2026-07-10_JUN_F",
+        "nome_gara": "9 TROFEO A RANCILIO LADIES",
+        "data": "2026-07-10",
+        "posizione": 7,
+        "punti_effettivi": 4,
+        "team": "U.C.CONSCIO PEDALE DEL SILE",
+        "moltiplicatore": 1,
+        "tipo": "regionale",
+        "regione": "LOMBARDIA",
+        "km": "102.000",
+        "media": "42.256"
+      },
+      {
+        "gara_id": "INTERNAZIONALE_PORTO_SAN_GIORGIO_MEMORIAL_M_DE_ANGELIS_2026-06-13_JUN_F",
+        "nome_gara": "INTERNAZIONALE PORTO SAN GIORGIO MEMORIAL M DE ANGELIS",
+        "data": "2026-06-13",
+        "posizione": 5,
+        "punti_effettivi": 6,
+        "team": "U.C.CONSCIO PEDALE DEL SILE",
+        "moltiplicatore": 1,
+        "tipo": "regionale",
+        "regione": "MARCHE",
+        "km": "105.000",
+        "media": "37.990"
+      }
+    ]
+  },
+  "LAMPREA_MORALES_ZARA_SOFIA": {
+    "id": "LAMPREA_MORALES_ZARA_SOFIA",
+    "nome": "ZARA SOFIA",
+    "cognome": "LAMPREA MORALES",
+    "team_attuale": "LMC BOGOTA'",
+    "team_id": "LMC_BOGOTA",
+    "categoria": "JUN_F",
+    "genere": "F",
+    "punti_totali": 3,
+    "risultati": [
+      {
+        "gara_id": "9_TROFEO_A_RANCILIO_LADIES_2026-07-10_JUN_F",
+        "nome_gara": "9 TROFEO A RANCILIO LADIES",
+        "data": "2026-07-10",
+        "posizione": 8,
+        "punti_effettivi": 3,
+        "team": "LMC BOGOTA'",
+        "moltiplicatore": 1,
+        "tipo": "regionale",
+        "regione": "LOMBARDIA",
+        "km": "102.000",
+        "media": "42.256"
+      }
+    ]
+  },
+  "CASSATA_VIVIENNE": {
+    "id": "CASSATA_VIVIENNE",
+    "nome": "VIVIENNE",
+    "cognome": "CASSATA",
+    "team_attuale": "BRESCIA - F. MAGNI - FLANDRES LOVE",
+    "team_id": "BRESCIA_F_MAGNI_FLANDRES_LOVE",
+    "categoria": "JUN_F",
+    "genere": "F",
+    "punti_totali": 19,
+    "risultati": [
+      {
+        "gara_id": "9_TROFEO_A_RANCILIO_LADIES_2026-07-10_JUN_F",
+        "nome_gara": "9 TROFEO A RANCILIO LADIES",
+        "data": "2026-07-10",
+        "posizione": 9,
+        "punti_effettivi": 2,
+        "team": "BRESCIA - F. MAGNI - FLANDRES LOVE",
+        "moltiplicatore": 1,
+        "tipo": "regionale",
+        "regione": "LOMBARDIA",
+        "km": "102.000",
+        "media": "42.256"
+      },
+      {
+        "gara_id": "GRAN_PREMIO_CONSORZIO_MARMISTI_CRONOSCALATA_2026-06-06_JUN_F",
+        "nome_gara": "GRAN PREMIO CONSORZIO MARMISTI CRONOSCALATA",
+        "data": "2026-06-06",
+        "posizione": 6,
+        "punti_effettivi": 5,
+        "team": "BRESCIA - F. MAGNI - FLANDRES LOVE",
+        "moltiplicatore": 1,
+        "tipo": "regionale",
+        "regione": "JUNIORES",
+        "km": "7.200",
+        "media": "20.220"
+      },
+      {
+        "gara_id": "2_TROFEO_ROSA_MONTALTO_PROVA_VALIDA_CAMPIONATO_REGIONALE_2026-05-02_JUN_F",
+        "nome_gara": "2 TROFEO ROSA MONTALTO PROVA VALIDA CAMPIONATO REGIONALE",
+        "data": "2026-05-02",
+        "posizione": 5,
+        "punti_effettivi": 12,
+        "team": "BRESCIA - F. MAGNI - FLANDRES LOVE",
+        "moltiplicatore": 2,
+        "tipo": "regionale",
+        "regione": "TOSCANA",
+        "km": "87.700",
+        "media": "35.861"
+      }
+    ]
+  },
+  "SANTELLA_GIULIA": {
+    "id": "SANTELLA_GIULIA",
+    "nome": "GIULIA",
+    "cognome": "SANTELLA",
+    "team_attuale": "TEAM MENDELSPECK E-WORK",
+    "team_id": "TEAM_MENDELSPECK_E_WORK",
+    "categoria": "JUN_F",
+    "genere": "F",
+    "punti_totali": 1,
+    "risultati": [
+      {
+        "gara_id": "9_TROFEO_A_RANCILIO_LADIES_2026-07-10_JUN_F",
+        "nome_gara": "9 TROFEO A RANCILIO LADIES",
+        "data": "2026-07-10",
+        "posizione": 10,
+        "punti_effettivi": 1,
+        "team": "TEAM MENDELSPECK E-WORK",
+        "moltiplicatore": 1,
+        "tipo": "regionale",
+        "regione": "LOMBARDIA",
+        "km": "102.000",
+        "media": "42.256"
+      }
+    ]
+  },
+  "VALGONEN_VALERIA": {
+    "id": "VALGONEN_VALERIA",
+    "nome": "VALERIA",
+    "cognome": "VALGONEN",
+    "team_attuale": "TOYOTA VALENCIA SAV",
+    "team_id": "TOYOTA_VALENCIA_SAV",
+    "categoria": "ELI_F",
+    "genere": "F",
+    "punti_totali": 103,
+    "risultati": [
+      {
+        "gara_id": "9_TROFEO_A_RANCILIO_LADIES_2026-07-10_ELI_F",
+        "nome_gara": "9 TROFEO A RANCILIO LADIES",
+        "data": "2026-07-10",
+        "posizione": 1,
+        "punti_effettivi": 15,
+        "team": "TOYOTA VALENCIA SAV",
+        "moltiplicatore": 1,
+        "tipo": "regionale",
+        "regione": "LOMBARDIA",
+        "km": "102.400",
+        "media": "42.490"
+      },
+      {
+        "gara_id": "17_CRONOROMANENGO_PROVA_VALIDA_CAMPIONATO_REGIONALE_2026-05-23_ELI_F",
+        "nome_gara": "17 CRONOROMANENGO PROVA VALIDA CAMPIONATO REGIONALE",
+        "data": "2026-05-23",
+        "posizione": 1,
+        "punti_effettivi": 30,
+        "team": "TOYOTA VALENCIA SAV",
+        "moltiplicatore": 2,
+        "tipo": "regionale",
+        "regione": "UNDER",
+        "km": "23.600",
+        "media": "44.320"
+      },
+      {
+        "gara_id": "GIRO_DELLE_MARCHE_IN_ROSA_2026-05-10_ELI_F",
+        "nome_gara": "GIRO DELLE MARCHE IN ROSA",
+        "data": "2026-05-10",
+        "posizione": 1,
+        "punti_effettivi": 15,
+        "team": "TOYOTA VALENCIA SAV",
+        "moltiplicatore": 1,
+        "tipo": "regionale",
+        "regione": "MARCHE",
+        "km": "100.000",
+        "media": "35.294"
+      },
+      {
+        "gara_id": "GIRO_DELLE_MARCHE_IN_ROSA_2026-05-09_ELI_F",
+        "nome_gara": "GIRO DELLE MARCHE IN ROSA",
+        "data": "2026-05-09",
+        "posizione": 3,
+        "punti_effettivi": 10,
+        "team": "TOYOTA VALENCIA SAV",
+        "moltiplicatore": 1,
+        "tipo": "regionale",
+        "regione": "MARCHE",
+        "km": "90.000",
+        "media": "36.986"
+      },
+      {
+        "gara_id": "2_TROFEO_CASSA_DI_RISPARMIO_DI_FOSSANO_2026-04-12_ELI_F",
+        "nome_gara": "2 TROFEO CASSA DI RISPARMIO DI FOSSANO",
+        "data": "2026-04-12",
+        "posizione": 1,
+        "punti_effettivi": 15,
+        "team": "TOYOTA VALENCIA SAV",
+        "moltiplicatore": 1,
+        "tipo": "regionale",
+        "regione": "PIEMONTE",
+        "km": "94.000",
+        "media": "39.929"
+      },
+      {
+        "gara_id": "DONNE_OPEN_2026-04-11_ELI_F",
+        "nome_gara": "DONNE OPEN",
+        "data": "2026-04-11",
+        "posizione": 5,
+        "punti_effettivi": 6,
+        "team": "TOYOTA VALENCIA SAV",
+        "moltiplicatore": 1,
+        "tipo": "regionale",
+        "regione": "PIEMONTE",
+        "km": "81.000",
+        "media": "41.134"
+      },
+      {
+        "gara_id": "PASQUALANDO_2026-04-05_ELI_F",
+        "nome_gara": "PASQUALANDO",
+        "data": "2026-04-05",
+        "posizione": 2,
+        "punti_effettivi": 12,
+        "team": "TOYOTA VALENCIA SAV",
+        "moltiplicatore": 1,
+        "tipo": "regionale",
+        "regione": "TOSCANA",
+        "km": "63.800",
+        "media": "41.102"
+      }
+    ]
+  },
+  "ZANETTI_EMANUELA": {
+    "id": "ZANETTI_EMANUELA",
+    "nome": "EMANUELA",
+    "cognome": "ZANETTI",
+    "team_attuale": "ISOLMANT - PREMAC - VITTORIA",
+    "team_id": "ISOLMANT_PREMAC_VITTORIA",
+    "categoria": "ELI_F",
+    "genere": "F",
+    "punti_totali": 20,
+    "risultati": [
+      {
+        "gara_id": "9_TROFEO_A_RANCILIO_LADIES_2026-07-10_ELI_F",
+        "nome_gara": "9 TROFEO A RANCILIO LADIES",
+        "data": "2026-07-10",
+        "posizione": 2,
+        "punti_effettivi": 12,
+        "team": "ISOLMANT - PREMAC - VITTORIA",
+        "moltiplicatore": 1,
+        "tipo": "regionale",
+        "regione": "LOMBARDIA",
+        "km": "102.400",
+        "media": "42.490"
+      },
+      {
+        "gara_id": "TROFEO_MEMORIAL_CONIUGI_ZAMBELLI_2026-05-24_ELI_F",
+        "nome_gara": "TROFEO MEMORIAL CONIUGI ZAMBELLI",
+        "data": "2026-05-24",
+        "posizione": 4,
+        "punti_effettivi": 8,
+        "team": "ISOLMANT - PREMAC - VITTORIA",
+        "moltiplicatore": 1,
+        "tipo": "regionale",
+        "regione": "LOMBARDIA",
+        "km": "83.622",
+        "media": "42.610"
+      }
+    ]
+  },
+  "ROSSETTI_SONIA": {
+    "id": "ROSSETTI_SONIA",
+    "nome": "SONIA",
+    "cognome": "ROSSETTI",
+    "team_attuale": "VINI FANTINI - BEPINK",
+    "team_id": "VINI_FANTINI_BEPINK",
+    "categoria": "ELI_F",
+    "genere": "F",
+    "punti_totali": 20,
+    "risultati": [
+      {
+        "gara_id": "9_TROFEO_A_RANCILIO_LADIES_2026-07-10_ELI_F",
+        "nome_gara": "9 TROFEO A RANCILIO LADIES",
+        "data": "2026-07-10",
+        "posizione": 3,
+        "punti_effettivi": 10,
+        "team": "VINI FANTINI - BEPINK",
+        "moltiplicatore": 1,
+        "tipo": "regionale",
+        "regione": "LOMBARDIA",
+        "km": "102.400",
+        "media": "42.490"
+      },
+      {
+        "gara_id": "TROFEO_ARTI_E_MESTIERI_DELLA_TRADIZIONE_MUGELLANA_2026-02-14_ELI_F",
+        "nome_gara": "TROFEO ARTI E MESTIERI DELLA TRADIZIONE MUGELLANA",
+        "data": "2026-02-14",
+        "posizione": 6,
+        "punti_effettivi": 10,
+        "team": "VINI FANTINI - BEPINK",
+        "moltiplicatore": 2,
+        "tipo": "nazionale",
+        "regione": "TOSCANA",
+        "km": "83.920",
+        "media": "38.422"
+      }
+    ]
+  },
+  "BASILICO_VALENTINA": {
+    "id": "BASILICO_VALENTINA",
+    "nome": "VALENTINA",
+    "cognome": "BASILICO",
+    "team_attuale": "BORN TO WIN BTC CITY LJUBLJANA",
+    "team_id": "BORN_TO_WIN_BTC_CITY_LJUBLJANA",
+    "categoria": "ELI_F",
+    "genere": "F",
+    "punti_totali": 67,
+    "risultati": [
+      {
+        "gara_id": "9_TROFEO_A_RANCILIO_LADIES_2026-07-10_ELI_F",
+        "nome_gara": "9 TROFEO A RANCILIO LADIES",
+        "data": "2026-07-10",
+        "posizione": 4,
+        "punti_effettivi": 8,
+        "team": "BORN TO WIN BTC CITY LJUBLJANA",
+        "moltiplicatore": 1,
+        "tipo": "regionale",
+        "regione": "LOMBARDIA",
+        "km": "102.400",
+        "media": "42.490"
+      },
+      {
+        "gara_id": "INTERNAZIONALE_URBISAGLIA_MEMORIAL_M_DE_ANGELIS_2026-06-14_ELI_F",
+        "nome_gara": "INTERNAZIONALE URBISAGLIA MEMORIAL M DE ANGELIS",
+        "data": "2026-06-14",
+        "posizione": 8,
+        "punti_effettivi": 3,
+        "team": "BORN TO WIN BTC CITY LJUBLJANA",
+        "moltiplicatore": 1,
+        "tipo": "regionale",
+        "regione": "MARCHE",
+        "km": "111.000",
+        "media": "34.154"
+      },
+      {
+        "gara_id": "INTERNAZIONALE_PORTO_SAN_GIORGIO_MEMORIAL_M_DE_ANGELIS_2026-06-13_ELI_F",
+        "nome_gara": "INTERNAZIONALE PORTO SAN GIORGIO MEMORIAL M DE ANGELIS",
+        "data": "2026-06-13",
+        "posizione": 4,
+        "punti_effettivi": 8,
+        "team": "BORN TO WIN BTC CITY LJUBLJANA",
+        "moltiplicatore": 1,
+        "tipo": "regionale",
+        "regione": "MARCHE",
+        "km": "105.000",
+        "media": "37.990"
+      },
+      {
+        "gara_id": "42_GRAN_PREMIO_CICLISTI_DI_ARCADE_2026-06-07_ELI_F",
+        "nome_gara": "42 GRAN PREMIO CICLISTI DI ARCADE",
+        "data": "2026-06-07",
+        "posizione": 1,
+        "punti_effettivi": 15,
+        "team": "BORN TO WIN BTC CITY LJUBLJANA",
+        "moltiplicatore": 1,
+        "tipo": "regionale",
+        "regione": "VENETO",
+        "km": "109.100",
+        "media": "39.003"
+      },
+      {
+        "gara_id": "GRAN_PREMIO_CITTA_DI_CORRIDONIA_2026-05-31_ELI_F",
+        "nome_gara": "GRAN PREMIO CITTA' DI CORRIDONIA",
+        "data": "2026-05-31",
+        "posizione": 1,
+        "punti_effettivi": 15,
+        "team": "BORN TO WIN BTC CITY LJUBLJANA",
+        "moltiplicatore": 1,
+        "tipo": "regionale",
+        "regione": "MARCHE",
+        "km": "81.800",
+        "media": "40.136"
+      },
+      {
+        "gara_id": "GIRO_DELLE_MARCHE_IN_ROSA_2026-05-10_ELI_F",
+        "nome_gara": "GIRO DELLE MARCHE IN ROSA",
+        "data": "2026-05-10",
+        "posizione": 8,
+        "punti_effettivi": 3,
+        "team": "BORN TO WIN BTC CITY LJUBLJANA",
+        "moltiplicatore": 1,
+        "tipo": "regionale",
+        "regione": "MARCHE",
+        "km": "100.000",
+        "media": "35.294"
+      },
+      {
+        "gara_id": "GIRO_DELLE_MARCHE_IN_ROSA_2026-05-09_ELI_F",
+        "nome_gara": "GIRO DELLE MARCHE IN ROSA",
+        "data": "2026-05-09",
+        "posizione": 8,
+        "punti_effettivi": 3,
+        "team": "BORN TO WIN BTC CITY LJUBLJANA",
+        "moltiplicatore": 1,
+        "tipo": "regionale",
+        "regione": "MARCHE",
+        "km": "90.000",
+        "media": "36.986"
+      },
+      {
+        "gara_id": "2_TROFEO_CASSA_DI_RISPARMIO_DI_FOSSANO_2026-04-12_ELI_F",
+        "nome_gara": "2 TROFEO CASSA DI RISPARMIO DI FOSSANO",
+        "data": "2026-04-12",
+        "posizione": 4,
+        "punti_effettivi": 8,
+        "team": "BORN TO WIN BTC CITY LJUBLJANA",
+        "moltiplicatore": 1,
+        "tipo": "regionale",
+        "regione": "PIEMONTE",
+        "km": "94.000",
+        "media": "39.929"
+      },
+      {
+        "gara_id": "PASQUALANDO_2026-04-05_ELI_F",
+        "nome_gara": "PASQUALANDO",
+        "data": "2026-04-05",
+        "posizione": 7,
+        "punti_effettivi": 4,
+        "team": "BORN TO WIN BTC CITY LJUBLJANA",
+        "moltiplicatore": 1,
+        "tipo": "regionale",
+        "regione": "TOSCANA",
+        "km": "63.800",
+        "media": "41.102"
+      }
+    ]
+  },
+  "REZZONICO_ALINE": {
+    "id": "REZZONICO_ALINE",
+    "nome": "ALINE",
+    "cognome": "REZZONICO",
+    "team_attuale": "BIESSE - CARRERA - PREMAC",
+    "team_id": "BIESSE_CARRERA_PREMAC",
+    "categoria": "ELI_F",
+    "genere": "F",
+    "punti_totali": 8,
+    "risultati": [
+      {
+        "gara_id": "9_TROFEO_A_RANCILIO_LADIES_2026-07-10_ELI_F",
+        "nome_gara": "9 TROFEO A RANCILIO LADIES",
+        "data": "2026-07-10",
+        "posizione": 5,
+        "punti_effettivi": 6,
+        "team": "BIESSE - CARRERA - PREMAC",
+        "moltiplicatore": 1,
+        "tipo": "regionale",
+        "regione": "LOMBARDIA",
+        "km": "102.400",
+        "media": "42.490"
+      },
+      {
+        "gara_id": "42_GRAN_PREMIO_CICLISTI_DI_ARCADE_2026-06-07_ELI_F",
+        "nome_gara": "42 GRAN PREMIO CICLISTI DI ARCADE",
+        "data": "2026-06-07",
+        "posizione": 9,
+        "punti_effettivi": 2,
+        "team": "BIESSE - CARRERA - PREMAC",
+        "moltiplicatore": 1,
+        "tipo": "regionale",
+        "regione": "VENETO",
+        "km": "109.100",
+        "media": "39.003"
+      }
+    ]
+  },
+  "PIGOLOTTI_REBEKKA": {
+    "id": "PIGOLOTTI_REBEKKA",
+    "nome": "REBEKKA",
+    "cognome": "PIGOLOTTI",
+    "team_attuale": "HORIZONS CYCLING CLUB",
+    "team_id": "HORIZONS_CYCLING_CLUB",
+    "categoria": "ELI_F",
+    "genere": "F",
+    "punti_totali": 36,
+    "risultati": [
+      {
+        "gara_id": "9_TROFEO_A_RANCILIO_LADIES_2026-07-10_ELI_F",
+        "nome_gara": "9 TROFEO A RANCILIO LADIES",
+        "data": "2026-07-10",
+        "posizione": 6,
+        "punti_effettivi": 5,
+        "team": "HORIZONS CYCLING CLUB",
+        "moltiplicatore": 1,
+        "tipo": "regionale",
+        "regione": "LOMBARDIA",
+        "km": "102.400",
+        "media": "42.490"
+      },
+      {
+        "gara_id": "INTERNAZIONALE_URBISAGLIA_MEMORIAL_M_DE_ANGELIS_2026-06-14_ELI_F",
+        "nome_gara": "INTERNAZIONALE URBISAGLIA MEMORIAL M DE ANGELIS",
+        "data": "2026-06-14",
+        "posizione": 6,
+        "punti_effettivi": 5,
+        "team": "HORIZONS CYCLING CLUB",
+        "moltiplicatore": 1,
+        "tipo": "regionale",
+        "regione": "MARCHE",
+        "km": "111.000",
+        "media": "34.154"
+      },
+      {
+        "gara_id": "INTERNAZIONALE_PORTO_SAN_GIORGIO_MEMORIAL_M_DE_ANGELIS_CRONOMETRO_2026-06-12_ELI_F",
+        "nome_gara": "INTERNAZIONALE PORTO SAN GIORGIO MEMORIAL M DE ANGELIS CRONOMETRO",
+        "data": "2026-06-12",
+        "posizione": 8,
+        "punti_effettivi": 9,
+        "team": "HORIZONS CYCLING CLUB",
+        "moltiplicatore": 3,
+        "tipo": "internazionale",
+        "regione": "UNDER",
+        "km": "15.000",
+        "media": "45.000"
+      },
+      {
+        "gara_id": "42_GRAN_PREMIO_CICLISTI_DI_ARCADE_2026-06-07_ELI_F",
+        "nome_gara": "42 GRAN PREMIO CICLISTI DI ARCADE",
+        "data": "2026-06-07",
+        "posizione": 6,
+        "punti_effettivi": 5,
+        "team": "HORIZONS CYCLING CLUB",
+        "moltiplicatore": 1,
+        "tipo": "regionale",
+        "regione": "VENETO",
+        "km": "109.100",
+        "media": "39.003"
+      },
+      {
+        "gara_id": "2_TROFEO_ROSA_MONTALTO_PROVA_VALIDA_CAMPIONATO_REGIONALE_2026-05-02_ELI_F",
+        "nome_gara": "2 TROFEO ROSA MONTALTO PROVA VALIDA CAMPIONATO REGIONALE",
+        "data": "2026-05-02",
+        "posizione": 7,
+        "punti_effettivi": 8,
+        "team": "HORIZONS CYCLING CLUB",
+        "moltiplicatore": 2,
+        "tipo": "regionale",
+        "regione": "TOSCANA",
+        "km": "87.700",
+        "media": "35.861"
+      },
+      {
+        "gara_id": "2_TROFEO_CASSA_DI_RISPARMIO_DI_FOSSANO_2026-04-12_ELI_F",
+        "nome_gara": "2 TROFEO CASSA DI RISPARMIO DI FOSSANO",
+        "data": "2026-04-12",
+        "posizione": 8,
+        "punti_effettivi": 3,
+        "team": "HORIZONS CYCLING CLUB",
+        "moltiplicatore": 1,
+        "tipo": "regionale",
+        "regione": "PIEMONTE",
+        "km": "94.000",
+        "media": "39.929"
+      },
+      {
+        "gara_id": "PASQUALANDO_2026-04-05_ELI_F",
+        "nome_gara": "PASQUALANDO",
+        "data": "2026-04-05",
+        "posizione": 10,
+        "punti_effettivi": 1,
+        "team": "HORIZONS CYCLING CLUB",
+        "moltiplicatore": 1,
+        "tipo": "regionale",
+        "regione": "TOSCANA",
+        "km": "63.800",
+        "media": "41.102"
+      }
+    ]
+  },
+  "ARICI_SOFIA": {
+    "id": "ARICI_SOFIA",
+    "nome": "SOFIA",
+    "cognome": "ARICI",
+    "team_attuale": "VINI FANTINI - BEPINK",
+    "team_id": "VINI_FANTINI_BEPINK",
+    "categoria": "ELI_F",
+    "genere": "F",
+    "punti_totali": 5,
+    "risultati": [
+      {
+        "gara_id": "9_TROFEO_A_RANCILIO_LADIES_2026-07-10_ELI_F",
+        "nome_gara": "9 TROFEO A RANCILIO LADIES",
+        "data": "2026-07-10",
+        "posizione": 7,
+        "punti_effettivi": 4,
+        "team": "VINI FANTINI - BEPINK",
+        "moltiplicatore": 1,
+        "tipo": "regionale",
+        "regione": "LOMBARDIA",
+        "km": "102.400",
+        "media": "42.490"
+      },
+      {
+        "gara_id": "DONNE_OPEN_2026-04-11_ELI_F",
+        "nome_gara": "DONNE OPEN",
+        "data": "2026-04-11",
+        "posizione": 10,
+        "punti_effettivi": 1,
+        "team": "VINI FANTINI - BEPINK",
+        "moltiplicatore": 1,
+        "tipo": "regionale",
+        "regione": "PIEMONTE",
+        "km": "81.000",
+        "media": "41.134"
+      }
+    ]
+  },
+  "DEOTTO_ELEONORA": {
+    "id": "DEOTTO_ELEONORA",
+    "nome": "ELEONORA",
+    "cognome": "DEOTTO",
+    "team_attuale": "TEAM MENDELSPECK E-WORK",
+    "team_id": "TEAM_MENDELSPECK_E_WORK",
+    "categoria": "ELI_F",
+    "genere": "F",
+    "punti_totali": 3,
+    "risultati": [
+      {
+        "gara_id": "9_TROFEO_A_RANCILIO_LADIES_2026-07-10_ELI_F",
+        "nome_gara": "9 TROFEO A RANCILIO LADIES",
+        "data": "2026-07-10",
+        "posizione": 8,
+        "punti_effettivi": 3,
+        "team": "TEAM MENDELSPECK E-WORK",
+        "moltiplicatore": 1,
+        "tipo": "regionale",
+        "regione": "LOMBARDIA",
+        "km": "102.400",
+        "media": "42.490"
+      }
+    ]
+  },
+  "VALTULINI_ELISA": {
+    "id": "VALTULINI_ELISA",
+    "nome": "ELISA",
+    "cognome": "VALTULINI",
+    "team_attuale": "VINI FANTINI - BEPINK",
+    "team_id": "VINI_FANTINI_BEPINK",
+    "categoria": "ELI_F",
+    "genere": "F",
+    "punti_totali": 2,
+    "risultati": [
+      {
+        "gara_id": "9_TROFEO_A_RANCILIO_LADIES_2026-07-10_ELI_F",
+        "nome_gara": "9 TROFEO A RANCILIO LADIES",
+        "data": "2026-07-10",
+        "posizione": 9,
+        "punti_effettivi": 2,
+        "team": "VINI FANTINI - BEPINK",
+        "moltiplicatore": 1,
+        "tipo": "regionale",
+        "regione": "LOMBARDIA",
+        "km": "102.400",
+        "media": "42.490"
+      }
+    ]
+  },
+  "ZANZI_VALENTINA": {
+    "id": "ZANZI_VALENTINA",
+    "nome": "VALENTINA",
+    "cognome": "ZANZI",
+    "team_attuale": "ISOLMANT - PREMAC - VITTORIA",
+    "team_id": "ISOLMANT_PREMAC_VITTORIA",
+    "categoria": "ELI_F",
+    "genere": "F",
+    "punti_totali": 1,
+    "risultati": [
+      {
+        "gara_id": "9_TROFEO_A_RANCILIO_LADIES_2026-07-10_ELI_F",
+        "nome_gara": "9 TROFEO A RANCILIO LADIES",
+        "data": "2026-07-10",
+        "posizione": 10,
+        "punti_effettivi": 1,
+        "team": "ISOLMANT - PREMAC - VITTORIA",
+        "moltiplicatore": 1,
+        "tipo": "regionale",
+        "regione": "LOMBARDIA",
+        "km": "102.400",
+        "media": "42.490"
+      }
+    ]
+  },
   "MAGLI_LORENZO": {
     "id": "MAGLI_LORENZO",
     "nome": "LORENZO",
@@ -11391,147 +12619,6 @@
       }
     ]
   },
-  "LONGO_BORGHINI_ANNA_ABIGAIL": {
-    "id": "LONGO_BORGHINI_ANNA_ABIGAIL",
-    "nome": "BORGHINI ANNA ABIGAIL",
-    "cognome": "LONGO",
-    "team_attuale": "BFT BURZONI",
-    "team_id": "BFT_BURZONI",
-    "categoria": "JUN_F",
-    "genere": "F",
-    "punti_totali": 10,
-    "risultati": [
-      {
-        "gara_id": "11_GRAN_PREMIO_TEAM9_2026-07-05_JUN_F",
-        "nome_gara": "11 GRAN PREMIO TEAM9",
-        "data": "2026-07-05",
-        "posizione": 3,
-        "punti_effettivi": 10,
-        "team": "BFT BURZONI",
-        "moltiplicatore": 1,
-        "tipo": "regionale",
-        "regione": "EMILIA ROMAGNA",
-        "km": "86.400",
-        "media": "41.143"
-      }
-    ]
-  },
-  "MINICHINO_MELANIA": {
-    "id": "MINICHINO_MELANIA",
-    "nome": "MELANIA",
-    "cognome": "MINICHINO",
-    "team_attuale": "BIESSE - CARRERA - PREMAC",
-    "team_id": "BIESSE_CARRERA_PREMAC",
-    "categoria": "JUN_F",
-    "genere": "F",
-    "punti_totali": 59,
-    "risultati": [
-      {
-        "gara_id": "11_GRAN_PREMIO_TEAM9_2026-07-05_JUN_F",
-        "nome_gara": "11 GRAN PREMIO TEAM9",
-        "data": "2026-07-05",
-        "posizione": 4,
-        "punti_effettivi": 8,
-        "team": "BIESSE - CARRERA - PREMAC",
-        "moltiplicatore": 1,
-        "tipo": "regionale",
-        "regione": "EMILIA ROMAGNA",
-        "km": "86.400",
-        "media": "41.143"
-      },
-      {
-        "gara_id": "5_COPPA_GIUDICARIE_CENTRALI_CAMPIONATO_TRENTINO_DONNE_JUNIOR_2026-06-28_JUN_F",
-        "nome_gara": "5 COPPA GIUDICARIE CENTRALI CAMPIONATO TRENTINO DONNE JUNIOR",
-        "data": "2026-06-28",
-        "posizione": 9,
-        "punti_effettivi": 2,
-        "team": "BIESSE - CARRERA - PREMAC",
-        "moltiplicatore": 1,
-        "tipo": "regionale",
-        "regione": "TRENTO",
-        "km": "101.000",
-        "media": "38.133"
-      },
-      {
-        "gara_id": "TROFEO_MEMORIAL_CONIUGI_ZAMBELLI_2026-05-24_JUN_F",
-        "nome_gara": "TROFEO MEMORIAL CONIUGI ZAMBELLI",
-        "data": "2026-05-24",
-        "posizione": 5,
-        "punti_effettivi": 6,
-        "team": "BIESSE - CARRERA - PREMAC",
-        "moltiplicatore": 1,
-        "tipo": "regionale",
-        "regione": "LOMBARDIA",
-        "km": "83.622",
-        "media": "42.610"
-      },
-      {
-        "gara_id": "24_GRAN_PREMIO_ROSA_CITTA_DI_BOVOLONE_2026-05-03_JUN_F",
-        "nome_gara": "24 GRAN PREMIO ROSA CITTA' DI BOVOLONE",
-        "data": "2026-05-03",
-        "posizione": 7,
-        "punti_effettivi": 4,
-        "team": "BIESSE - CARRERA - PREMAC",
-        "moltiplicatore": 1,
-        "tipo": "regionale",
-        "regione": "VENETO",
-        "km": "59.400",
-        "media": "45.888"
-      },
-      {
-        "gara_id": "1_TROFEO_DELLA_LIBERAZIONE_COMUNE_DI_COLLESALVETTI_2026-04-25_JUN_F",
-        "nome_gara": "1 TROFEO DELLA LIBERAZIONE COMUNE DI COLLESALVETTI",
-        "data": "2026-04-25",
-        "posizione": 3,
-        "punti_effettivi": 10,
-        "team": "BIESSE - CARRERA - PREMAC",
-        "moltiplicatore": 1,
-        "tipo": "regionale",
-        "regione": "TOSCANA",
-        "km": "74.000",
-        "media": "35.990"
-      },
-      {
-        "gara_id": "TROFEO_BUSSOLATI_ASFALTI_2026-04-18_JUN_F",
-        "nome_gara": "TROFEO BUSSOLATI ASFALTI",
-        "data": "2026-04-18",
-        "posizione": 9,
-        "punti_effettivi": 2,
-        "team": "BIESSE - CARRERA - PREMAC",
-        "moltiplicatore": 1,
-        "tipo": "regionale",
-        "regione": "EMILIA ROMAGNA",
-        "km": "76.300",
-        "media": "41.606"
-      },
-      {
-        "gara_id": "PASQUALANDO_2026-04-05_JUN_F",
-        "nome_gara": "PASQUALANDO",
-        "data": "2026-04-05",
-        "posizione": 1,
-        "punti_effettivi": 15,
-        "team": "BIESSE - CARRERA - PREMAC",
-        "moltiplicatore": 1,
-        "tipo": "regionale",
-        "regione": "TOSCANA",
-        "km": "63.800",
-        "media": "41.102"
-      },
-      {
-        "gara_id": "GRAN_PREMIO_CITTA_DI_NONANTOLA_2026-03-08_JUN_F",
-        "nome_gara": "GRAN PREMIO CITTA' DI NONANTOLA",
-        "data": "2026-03-08",
-        "posizione": 2,
-        "punti_effettivi": 12,
-        "team": "BIESSE - CARRERA - PREMAC",
-        "moltiplicatore": 1,
-        "tipo": "regionale",
-        "regione": "EMILIA ROMAGNA",
-        "km": "76.000",
-        "media": "41.912"
-      }
-    ]
-  },
   "GALANTE_ARIANNA": {
     "id": "GALANTE_ARIANNA",
     "nome": "ARIANNA",
@@ -11631,174 +12718,6 @@
         "regione": "PIEMONTE",
         "km": "81.000",
         "media": "41.094"
-      }
-    ]
-  },
-  "D_APOLLONIO_REBECCA": {
-    "id": "D_APOLLONIO_REBECCA",
-    "nome": "REBECCA",
-    "cognome": "D'APOLLONIO",
-    "team_attuale": "U.C.CONSCIO PEDALE DEL SILE",
-    "team_id": "U_C_CONSCIO_PEDALE_DEL_SILE",
-    "categoria": "JUN_F",
-    "genere": "F",
-    "punti_totali": 94,
-    "risultati": [
-      {
-        "gara_id": "11_GRAN_PREMIO_TEAM9_2026-07-05_JUN_F",
-        "nome_gara": "11 GRAN PREMIO TEAM9",
-        "data": "2026-07-05",
-        "posizione": 7,
-        "punti_effettivi": 4,
-        "team": "U.C.CONSCIO PEDALE DEL SILE",
-        "moltiplicatore": 1,
-        "tipo": "regionale",
-        "regione": "EMILIA ROMAGNA",
-        "km": "86.400",
-        "media": "41.143"
-      },
-      {
-        "gara_id": "INTERNAZIONALE_PORTO_SAN_GIORGIO_MEMORIAL_M_DE_ANGELIS_2026-06-13_JUN_F",
-        "nome_gara": "INTERNAZIONALE PORTO SAN GIORGIO MEMORIAL M DE ANGELIS",
-        "data": "2026-06-13",
-        "posizione": 2,
-        "punti_effettivi": 12,
-        "team": "U.C.CONSCIO PEDALE DEL SILE",
-        "moltiplicatore": 1,
-        "tipo": "regionale",
-        "regione": "MARCHE",
-        "km": "105.000",
-        "media": "37.990"
-      },
-      {
-        "gara_id": "INTERNAZIONALE_PORTO_SAN_GIORGIO_MEMORIAL_M_DE_ANGELIS_CRONOMETRO_2026-06-12_JUN_F",
-        "nome_gara": "INTERNAZIONALE PORTO SAN GIORGIO MEMORIAL M DE ANGELIS CRONOMETRO",
-        "data": "2026-06-12",
-        "posizione": 4,
-        "punti_effettivi": 24,
-        "team": "U.C.CONSCIO PEDALE DEL SILE",
-        "moltiplicatore": 3,
-        "tipo": "internazionale",
-        "regione": "JUNIORES",
-        "km": "15.000",
-        "media": "44.000"
-      },
-      {
-        "gara_id": "42_GRAN_PREMIO_CICLISTI_DI_ARCADE_2026-06-07_JUN_F",
-        "nome_gara": "42 GRAN PREMIO CICLISTI DI ARCADE",
-        "data": "2026-06-07",
-        "posizione": 7,
-        "punti_effettivi": 4,
-        "team": "U.C.CONSCIO PEDALE DEL SILE",
-        "moltiplicatore": 1,
-        "tipo": "regionale",
-        "regione": "VENETO",
-        "km": "109.100",
-        "media": "39.003"
-      },
-      {
-        "gara_id": "GRAN_PREMIO_CITTA_DI_CORRIDONIA_2026-05-31_JUN_F",
-        "nome_gara": "GRAN PREMIO CITTA' DI CORRIDONIA",
-        "data": "2026-05-31",
-        "posizione": 4,
-        "punti_effettivi": 8,
-        "team": "U.C.CONSCIO PEDALE DEL SILE",
-        "moltiplicatore": 1,
-        "tipo": "regionale",
-        "regione": "MARCHE",
-        "km": "81.800",
-        "media": "40.136"
-      },
-      {
-        "gara_id": "TROFEO_MEMORIAL_CONIUGI_ZAMBELLI_2026-05-24_JUN_F",
-        "nome_gara": "TROFEO MEMORIAL CONIUGI ZAMBELLI",
-        "data": "2026-05-24",
-        "posizione": 10,
-        "punti_effettivi": 1,
-        "team": "U.C.CONSCIO PEDALE DEL SILE",
-        "moltiplicatore": 1,
-        "tipo": "regionale",
-        "regione": "LOMBARDIA",
-        "km": "83.622",
-        "media": "42.610"
-      },
-      {
-        "gara_id": "17_CRONOROMANENGO_PROVA_VALIDA_CAMPIONATO_REGIONALE_2026-05-23_JUN_F",
-        "nome_gara": "17 CRONOROMANENGO PROVA VALIDA CAMPIONATO REGIONALE",
-        "data": "2026-05-23",
-        "posizione": 5,
-        "punti_effettivi": 12,
-        "team": "U.C.CONSCIO PEDALE DEL SILE",
-        "moltiplicatore": 2,
-        "tipo": "regionale",
-        "regione": "JUNIORES",
-        "km": "12.600",
-        "media": "43.480"
-      },
-      {
-        "gara_id": "GIRO_DELLE_MARCHE_IN_ROSA_2026-05-10_JUN_F",
-        "nome_gara": "GIRO DELLE MARCHE IN ROSA",
-        "data": "2026-05-10",
-        "posizione": 8,
-        "punti_effettivi": 3,
-        "team": "U.C.CONSCIO PEDALE DEL SILE",
-        "moltiplicatore": 1,
-        "tipo": "regionale",
-        "regione": "MARCHE",
-        "km": "100.000",
-        "media": "35.294"
-      },
-      {
-        "gara_id": "GIRO_DELLE_MARCHE_IN_ROSA_2026-05-09_JUN_F",
-        "nome_gara": "GIRO DELLE MARCHE IN ROSA",
-        "data": "2026-05-09",
-        "posizione": 5,
-        "punti_effettivi": 6,
-        "team": "U.C.CONSCIO PEDALE DEL SILE",
-        "moltiplicatore": 1,
-        "tipo": "regionale",
-        "regione": "MARCHE",
-        "km": "90.000",
-        "media": "36.986"
-      },
-      {
-        "gara_id": "4_TROFEO_ROSA_CITTA_DI_CANTU_2026-05-01_JUN_F",
-        "nome_gara": "4 TROFEO ROSA CITTA' DI CANTU'",
-        "data": "2026-05-01",
-        "posizione": 1,
-        "punti_effettivi": 15,
-        "team": "U.C.CONSCIO PEDALE DEL SILE",
-        "moltiplicatore": 1,
-        "tipo": "regionale",
-        "regione": "LOMBARDIA",
-        "km": "72.600",
-        "media": "37.151"
-      },
-      {
-        "gara_id": "TROFEO_BUSSOLATI_ASFALTI_2026-04-18_JUN_F",
-        "nome_gara": "TROFEO BUSSOLATI ASFALTI",
-        "data": "2026-04-18",
-        "posizione": 8,
-        "punti_effettivi": 3,
-        "team": "U.C.CONSCIO PEDALE DEL SILE",
-        "moltiplicatore": 1,
-        "tipo": "regionale",
-        "regione": "EMILIA ROMAGNA",
-        "km": "76.300",
-        "media": "41.606"
-      },
-      {
-        "gara_id": "2_TROFEO_CASSA_DI_RISPARMIO_DI_FOSSANO_2026-04-12_JUN_F",
-        "nome_gara": "2 TROFEO CASSA DI RISPARMIO DI FOSSANO",
-        "data": "2026-04-12",
-        "posizione": 9,
-        "punti_effettivi": 2,
-        "team": "U.C.CONSCIO PEDALE DEL SILE",
-        "moltiplicatore": 1,
-        "tipo": "regionale",
-        "regione": "PIEMONTE",
-        "km": "94.000",
-        "media": "39.929"
       }
     ]
   },
@@ -90656,96 +91575,6 @@
       }
     ]
   },
-  "PIGOLOTTI_REBEKKA": {
-    "id": "PIGOLOTTI_REBEKKA",
-    "nome": "REBEKKA",
-    "cognome": "PIGOLOTTI",
-    "team_attuale": "HORIZONS CYCLING CLUB",
-    "team_id": "HORIZONS_CYCLING_CLUB",
-    "categoria": "ELI_F",
-    "genere": "F",
-    "punti_totali": 31,
-    "risultati": [
-      {
-        "gara_id": "INTERNAZIONALE_URBISAGLIA_MEMORIAL_M_DE_ANGELIS_2026-06-14_ELI_F",
-        "nome_gara": "INTERNAZIONALE URBISAGLIA MEMORIAL M DE ANGELIS",
-        "data": "2026-06-14",
-        "posizione": 6,
-        "punti_effettivi": 5,
-        "team": "HORIZONS CYCLING CLUB",
-        "moltiplicatore": 1,
-        "tipo": "regionale",
-        "regione": "MARCHE",
-        "km": "111.000",
-        "media": "34.154"
-      },
-      {
-        "gara_id": "INTERNAZIONALE_PORTO_SAN_GIORGIO_MEMORIAL_M_DE_ANGELIS_CRONOMETRO_2026-06-12_ELI_F",
-        "nome_gara": "INTERNAZIONALE PORTO SAN GIORGIO MEMORIAL M DE ANGELIS CRONOMETRO",
-        "data": "2026-06-12",
-        "posizione": 8,
-        "punti_effettivi": 9,
-        "team": "HORIZONS CYCLING CLUB",
-        "moltiplicatore": 3,
-        "tipo": "internazionale",
-        "regione": "UNDER",
-        "km": "15.000",
-        "media": "45.000"
-      },
-      {
-        "gara_id": "42_GRAN_PREMIO_CICLISTI_DI_ARCADE_2026-06-07_ELI_F",
-        "nome_gara": "42 GRAN PREMIO CICLISTI DI ARCADE",
-        "data": "2026-06-07",
-        "posizione": 6,
-        "punti_effettivi": 5,
-        "team": "HORIZONS CYCLING CLUB",
-        "moltiplicatore": 1,
-        "tipo": "regionale",
-        "regione": "VENETO",
-        "km": "109.100",
-        "media": "39.003"
-      },
-      {
-        "gara_id": "2_TROFEO_ROSA_MONTALTO_PROVA_VALIDA_CAMPIONATO_REGIONALE_2026-05-02_ELI_F",
-        "nome_gara": "2 TROFEO ROSA MONTALTO PROVA VALIDA CAMPIONATO REGIONALE",
-        "data": "2026-05-02",
-        "posizione": 7,
-        "punti_effettivi": 8,
-        "team": "HORIZONS CYCLING CLUB",
-        "moltiplicatore": 2,
-        "tipo": "regionale",
-        "regione": "TOSCANA",
-        "km": "87.700",
-        "media": "35.861"
-      },
-      {
-        "gara_id": "2_TROFEO_CASSA_DI_RISPARMIO_DI_FOSSANO_2026-04-12_ELI_F",
-        "nome_gara": "2 TROFEO CASSA DI RISPARMIO DI FOSSANO",
-        "data": "2026-04-12",
-        "posizione": 8,
-        "punti_effettivi": 3,
-        "team": "HORIZONS CYCLING CLUB",
-        "moltiplicatore": 1,
-        "tipo": "regionale",
-        "regione": "PIEMONTE",
-        "km": "94.000",
-        "media": "39.929"
-      },
-      {
-        "gara_id": "PASQUALANDO_2026-04-05_ELI_F",
-        "nome_gara": "PASQUALANDO",
-        "data": "2026-04-05",
-        "posizione": 10,
-        "punti_effettivi": 1,
-        "team": "HORIZONS CYCLING CLUB",
-        "moltiplicatore": 1,
-        "tipo": "regionale",
-        "regione": "TOSCANA",
-        "km": "63.800",
-        "media": "41.102"
-      }
-    ]
-  },
   "LA_BELLA_ELEONORA": {
     "id": "LA_BELLA_ELEONORA",
     "nome": "BELLA ELEONORA",
@@ -90781,122 +91610,6 @@
         "regione": "TOSCANA",
         "km": "87.700",
         "media": "35.861"
-      }
-    ]
-  },
-  "BASILICO_VALENTINA": {
-    "id": "BASILICO_VALENTINA",
-    "nome": "VALENTINA",
-    "cognome": "BASILICO",
-    "team_attuale": "BORN TO WIN BTC CITY LJUBLJANA",
-    "team_id": "BORN_TO_WIN_BTC_CITY_LJUBLJANA",
-    "categoria": "ELI_F",
-    "genere": "F",
-    "punti_totali": 59,
-    "risultati": [
-      {
-        "gara_id": "INTERNAZIONALE_URBISAGLIA_MEMORIAL_M_DE_ANGELIS_2026-06-14_ELI_F",
-        "nome_gara": "INTERNAZIONALE URBISAGLIA MEMORIAL M DE ANGELIS",
-        "data": "2026-06-14",
-        "posizione": 8,
-        "punti_effettivi": 3,
-        "team": "BORN TO WIN BTC CITY LJUBLJANA",
-        "moltiplicatore": 1,
-        "tipo": "regionale",
-        "regione": "MARCHE",
-        "km": "111.000",
-        "media": "34.154"
-      },
-      {
-        "gara_id": "INTERNAZIONALE_PORTO_SAN_GIORGIO_MEMORIAL_M_DE_ANGELIS_2026-06-13_ELI_F",
-        "nome_gara": "INTERNAZIONALE PORTO SAN GIORGIO MEMORIAL M DE ANGELIS",
-        "data": "2026-06-13",
-        "posizione": 4,
-        "punti_effettivi": 8,
-        "team": "BORN TO WIN BTC CITY LJUBLJANA",
-        "moltiplicatore": 1,
-        "tipo": "regionale",
-        "regione": "MARCHE",
-        "km": "105.000",
-        "media": "37.990"
-      },
-      {
-        "gara_id": "42_GRAN_PREMIO_CICLISTI_DI_ARCADE_2026-06-07_ELI_F",
-        "nome_gara": "42 GRAN PREMIO CICLISTI DI ARCADE",
-        "data": "2026-06-07",
-        "posizione": 1,
-        "punti_effettivi": 15,
-        "team": "BORN TO WIN BTC CITY LJUBLJANA",
-        "moltiplicatore": 1,
-        "tipo": "regionale",
-        "regione": "VENETO",
-        "km": "109.100",
-        "media": "39.003"
-      },
-      {
-        "gara_id": "GRAN_PREMIO_CITTA_DI_CORRIDONIA_2026-05-31_ELI_F",
-        "nome_gara": "GRAN PREMIO CITTA' DI CORRIDONIA",
-        "data": "2026-05-31",
-        "posizione": 1,
-        "punti_effettivi": 15,
-        "team": "BORN TO WIN BTC CITY LJUBLJANA",
-        "moltiplicatore": 1,
-        "tipo": "regionale",
-        "regione": "MARCHE",
-        "km": "81.800",
-        "media": "40.136"
-      },
-      {
-        "gara_id": "GIRO_DELLE_MARCHE_IN_ROSA_2026-05-10_ELI_F",
-        "nome_gara": "GIRO DELLE MARCHE IN ROSA",
-        "data": "2026-05-10",
-        "posizione": 8,
-        "punti_effettivi": 3,
-        "team": "BORN TO WIN BTC CITY LJUBLJANA",
-        "moltiplicatore": 1,
-        "tipo": "regionale",
-        "regione": "MARCHE",
-        "km": "100.000",
-        "media": "35.294"
-      },
-      {
-        "gara_id": "GIRO_DELLE_MARCHE_IN_ROSA_2026-05-09_ELI_F",
-        "nome_gara": "GIRO DELLE MARCHE IN ROSA",
-        "data": "2026-05-09",
-        "posizione": 8,
-        "punti_effettivi": 3,
-        "team": "BORN TO WIN BTC CITY LJUBLJANA",
-        "moltiplicatore": 1,
-        "tipo": "regionale",
-        "regione": "MARCHE",
-        "km": "90.000",
-        "media": "36.986"
-      },
-      {
-        "gara_id": "2_TROFEO_CASSA_DI_RISPARMIO_DI_FOSSANO_2026-04-12_ELI_F",
-        "nome_gara": "2 TROFEO CASSA DI RISPARMIO DI FOSSANO",
-        "data": "2026-04-12",
-        "posizione": 4,
-        "punti_effettivi": 8,
-        "team": "BORN TO WIN BTC CITY LJUBLJANA",
-        "moltiplicatore": 1,
-        "tipo": "regionale",
-        "regione": "PIEMONTE",
-        "km": "94.000",
-        "media": "39.929"
-      },
-      {
-        "gara_id": "PASQUALANDO_2026-04-05_ELI_F",
-        "nome_gara": "PASQUALANDO",
-        "data": "2026-04-05",
-        "posizione": 7,
-        "punti_effettivi": 4,
-        "team": "BORN TO WIN BTC CITY LJUBLJANA",
-        "moltiplicatore": 1,
-        "tipo": "regionale",
-        "regione": "TOSCANA",
-        "km": "63.800",
-        "media": "41.102"
       }
     ]
   },
@@ -100576,31 +101289,6 @@
       }
     ]
   },
-  "DE_MARCO_ELENA": {
-    "id": "DE_MARCO_ELENA",
-    "nome": "MARCO ELENA",
-    "cognome": "DE",
-    "team_attuale": "U.C.CONSCIO PEDALE DEL SILE",
-    "team_id": "U_C_CONSCIO_PEDALE_DEL_SILE",
-    "categoria": "JUN_F",
-    "genere": "F",
-    "punti_totali": 6,
-    "risultati": [
-      {
-        "gara_id": "INTERNAZIONALE_PORTO_SAN_GIORGIO_MEMORIAL_M_DE_ANGELIS_2026-06-13_JUN_F",
-        "nome_gara": "INTERNAZIONALE PORTO SAN GIORGIO MEMORIAL M DE ANGELIS",
-        "data": "2026-06-13",
-        "posizione": 5,
-        "punti_effettivi": 6,
-        "team": "U.C.CONSCIO PEDALE DEL SILE",
-        "moltiplicatore": 1,
-        "tipo": "regionale",
-        "regione": "MARCHE",
-        "km": "105.000",
-        "media": "37.990"
-      }
-    ]
-  },
   "PERUTA_SARA": {
     "id": "PERUTA_SARA",
     "nome": "SARA",
@@ -100636,121 +101324,6 @@
         "regione": "EMILIA ROMAGNA",
         "km": "13.200",
         "media": ""
-      }
-    ]
-  },
-  "MASI_AURORA": {
-    "id": "MASI_AURORA",
-    "nome": "AURORA",
-    "cognome": "MASI",
-    "team_attuale": "BRESCIA - F. MAGNI - FLANDRES LOVE",
-    "team_id": "BRESCIA_F_MAGNI_FLANDRES_LOVE",
-    "categoria": "JUN_F",
-    "genere": "F",
-    "punti_totali": 18,
-    "risultati": [
-      {
-        "gara_id": "INTERNAZIONALE_PORTO_SAN_GIORGIO_MEMORIAL_M_DE_ANGELIS_2026-06-13_JUN_F",
-        "nome_gara": "INTERNAZIONALE PORTO SAN GIORGIO MEMORIAL M DE ANGELIS",
-        "data": "2026-06-13",
-        "posizione": 9,
-        "punti_effettivi": 2,
-        "team": "BRESCIA - F. MAGNI - FLANDRES LOVE",
-        "moltiplicatore": 1,
-        "tipo": "regionale",
-        "regione": "MARCHE",
-        "km": "105.000",
-        "media": "37.990"
-      },
-      {
-        "gara_id": "2_TROFEO_ROSA_MONTALTO_PROVA_VALIDA_CAMPIONATO_REGIONALE_2026-05-02_JUN_F",
-        "nome_gara": "2 TROFEO ROSA MONTALTO PROVA VALIDA CAMPIONATO REGIONALE",
-        "data": "2026-05-02",
-        "posizione": 8,
-        "punti_effettivi": 6,
-        "team": "BRESCIA - F. MAGNI - FLANDRES LOVE",
-        "moltiplicatore": 2,
-        "tipo": "regionale",
-        "regione": "TOSCANA",
-        "km": "87.700",
-        "media": "35.861"
-      },
-      {
-        "gara_id": "PASQUALANDO_2026-04-05_JUN_F",
-        "nome_gara": "PASQUALANDO",
-        "data": "2026-04-05",
-        "posizione": 3,
-        "punti_effettivi": 10,
-        "team": "BRESCIA - F. MAGNI - FLANDRES LOVE",
-        "moltiplicatore": 1,
-        "tipo": "regionale",
-        "regione": "TOSCANA",
-        "km": "63.800",
-        "media": "41.102"
-      }
-    ]
-  },
-  "ZANDRI_EVA": {
-    "id": "ZANDRI_EVA",
-    "nome": "EVA",
-    "cognome": "ZANDRI",
-    "team_attuale": "CICLISTICA OMNIA IMOLA",
-    "team_id": "CICLISTICA_OMNIA_IMOLA",
-    "categoria": "JUN_F",
-    "genere": "F",
-    "punti_totali": 39,
-    "risultati": [
-      {
-        "gara_id": "INTERNAZIONALE_PORTO_SAN_GIORGIO_MEMORIAL_M_DE_ANGELIS_2026-06-13_JUN_F",
-        "nome_gara": "INTERNAZIONALE PORTO SAN GIORGIO MEMORIAL M DE ANGELIS",
-        "data": "2026-06-13",
-        "posizione": 10,
-        "punti_effettivi": 1,
-        "team": "CICLISTICA OMNIA IMOLA",
-        "moltiplicatore": 1,
-        "tipo": "regionale",
-        "regione": "MARCHE",
-        "km": "105.000",
-        "media": "37.990"
-      },
-      {
-        "gara_id": "2_TROFEO_ROSA_MONTALTO_PROVA_VALIDA_CAMPIONATO_REGIONALE_2026-05-02_JUN_F",
-        "nome_gara": "2 TROFEO ROSA MONTALTO PROVA VALIDA CAMPIONATO REGIONALE",
-        "data": "2026-05-02",
-        "posizione": 3,
-        "punti_effettivi": 20,
-        "team": "CICLISTICA OMNIA IMOLA",
-        "moltiplicatore": 2,
-        "tipo": "regionale",
-        "regione": "TOSCANA",
-        "km": "87.700",
-        "media": "35.861"
-      },
-      {
-        "gara_id": "1_TROFEO_DELLA_LIBERAZIONE_COMUNE_DI_COLLESALVETTI_2026-04-25_JUN_F",
-        "nome_gara": "1 TROFEO DELLA LIBERAZIONE COMUNE DI COLLESALVETTI",
-        "data": "2026-04-25",
-        "posizione": 2,
-        "punti_effettivi": 12,
-        "team": "CICLISTICA OMNIA IMOLA",
-        "moltiplicatore": 1,
-        "tipo": "regionale",
-        "regione": "TOSCANA",
-        "km": "74.000",
-        "media": "35.990"
-      },
-      {
-        "gara_id": "PASQUALANDO_2026-04-05_JUN_F",
-        "nome_gara": "PASQUALANDO",
-        "data": "2026-04-05",
-        "posizione": 5,
-        "punti_effettivi": 6,
-        "team": "CICLISTICA OMNIA IMOLA",
-        "moltiplicatore": 1,
-        "tipo": "regionale",
-        "regione": "TOSCANA",
-        "km": "63.800",
-        "media": "41.102"
       }
     ]
   },
@@ -102123,31 +102696,6 @@
         "regione": "LOMBARDIA",
         "km": "88.000",
         "media": "40.331"
-      }
-    ]
-  },
-  "DOLLAKU_GIULIA": {
-    "id": "DOLLAKU_GIULIA",
-    "nome": "GIULIA",
-    "cognome": "DOLLAKU",
-    "team_attuale": "U.C.CONSCIO PEDALE DEL SILE",
-    "team_id": "U_C_CONSCIO_PEDALE_DEL_SILE",
-    "categoria": "JUN_F",
-    "genere": "F",
-    "punti_totali": 15,
-    "risultati": [
-      {
-        "gara_id": "INTERNAZIONALE_PORTO_SAN_GIORGIO_MEMORIAL_M_DE_ANGELIS_CRONOMETRO_2026-06-12_JUN_F",
-        "nome_gara": "INTERNAZIONALE PORTO SAN GIORGIO MEMORIAL M DE ANGELIS CRONOMETRO",
-        "data": "2026-06-12",
-        "posizione": 6,
-        "punti_effettivi": 15,
-        "team": "U.C.CONSCIO PEDALE DEL SILE",
-        "moltiplicatore": 3,
-        "tipo": "internazionale",
-        "regione": "JUNIORES",
-        "km": "15.000",
-        "media": "44.000"
       }
     ]
   },
@@ -105478,31 +106026,6 @@
         "regione": "PIEMONTE",
         "km": "94.000",
         "media": "39.929"
-      }
-    ]
-  },
-  "REZZONICO_ALINE": {
-    "id": "REZZONICO_ALINE",
-    "nome": "ALINE",
-    "cognome": "REZZONICO",
-    "team_attuale": "BIESSE - CARRERA - PREMAC",
-    "team_id": "BIESSE_CARRERA_PREMAC",
-    "categoria": "ELI_F",
-    "genere": "F",
-    "punti_totali": 2,
-    "risultati": [
-      {
-        "gara_id": "42_GRAN_PREMIO_CICLISTI_DI_ARCADE_2026-06-07_ELI_F",
-        "nome_gara": "42 GRAN PREMIO CICLISTI DI ARCADE",
-        "data": "2026-06-07",
-        "posizione": 9,
-        "punti_effettivi": 2,
-        "team": "BIESSE - CARRERA - PREMAC",
-        "moltiplicatore": 1,
-        "tipo": "regionale",
-        "regione": "VENETO",
-        "km": "109.100",
-        "media": "39.003"
       }
     ]
   },
@@ -110258,44 +110781,6 @@
         "regione": "TOSCANA",
         "km": "74.000",
         "media": "35.990"
-      }
-    ]
-  },
-  "CASSATA_VIVIENNE": {
-    "id": "CASSATA_VIVIENNE",
-    "nome": "VIVIENNE",
-    "cognome": "CASSATA",
-    "team_attuale": "BRESCIA - F. MAGNI - FLANDRES LOVE",
-    "team_id": "BRESCIA_F_MAGNI_FLANDRES_LOVE",
-    "categoria": "JUN_F",
-    "genere": "F",
-    "punti_totali": 17,
-    "risultati": [
-      {
-        "gara_id": "GRAN_PREMIO_CONSORZIO_MARMISTI_CRONOSCALATA_2026-06-06_JUN_F",
-        "nome_gara": "GRAN PREMIO CONSORZIO MARMISTI CRONOSCALATA",
-        "data": "2026-06-06",
-        "posizione": 6,
-        "punti_effettivi": 5,
-        "team": "BRESCIA - F. MAGNI - FLANDRES LOVE",
-        "moltiplicatore": 1,
-        "tipo": "regionale",
-        "regione": "JUNIORES",
-        "km": "7.200",
-        "media": "20.220"
-      },
-      {
-        "gara_id": "2_TROFEO_ROSA_MONTALTO_PROVA_VALIDA_CAMPIONATO_REGIONALE_2026-05-02_JUN_F",
-        "nome_gara": "2 TROFEO ROSA MONTALTO PROVA VALIDA CAMPIONATO REGIONALE",
-        "data": "2026-05-02",
-        "posizione": 5,
-        "punti_effettivi": 12,
-        "team": "BRESCIA - F. MAGNI - FLANDRES LOVE",
-        "moltiplicatore": 2,
-        "tipo": "regionale",
-        "regione": "TOSCANA",
-        "km": "87.700",
-        "media": "35.861"
       }
     ]
   },
@@ -121466,31 +121951,6 @@
       }
     ]
   },
-  "ZANETTI_EMANUELA": {
-    "id": "ZANETTI_EMANUELA",
-    "nome": "EMANUELA",
-    "cognome": "ZANETTI",
-    "team_attuale": "ISOLMANT - PREMAC - VITTORIA",
-    "team_id": "ISOLMANT_PREMAC_VITTORIA",
-    "categoria": "ELI_F",
-    "genere": "F",
-    "punti_totali": 8,
-    "risultati": [
-      {
-        "gara_id": "TROFEO_MEMORIAL_CONIUGI_ZAMBELLI_2026-05-24_ELI_F",
-        "nome_gara": "TROFEO MEMORIAL CONIUGI ZAMBELLI",
-        "data": "2026-05-24",
-        "posizione": 4,
-        "punti_effettivi": 8,
-        "team": "ISOLMANT - PREMAC - VITTORIA",
-        "moltiplicatore": 1,
-        "tipo": "regionale",
-        "regione": "LOMBARDIA",
-        "km": "83.622",
-        "media": "42.610"
-      }
-    ]
-  },
   "SANARINI_LINDA": {
     "id": "SANARINI_LINDA",
     "nome": "LINDA",
@@ -123786,96 +124246,6 @@
         "regione": "UNDER",
         "km": "23.600",
         "media": "48.480"
-      }
-    ]
-  },
-  "VALGONEN_VALERIA": {
-    "id": "VALGONEN_VALERIA",
-    "nome": "VALERIA",
-    "cognome": "VALGONEN",
-    "team_attuale": "TOYOTA VALENCIA SAV",
-    "team_id": "TOYOTA_VALENCIA_SAV",
-    "categoria": "ELI_F",
-    "genere": "F",
-    "punti_totali": 88,
-    "risultati": [
-      {
-        "gara_id": "17_CRONOROMANENGO_PROVA_VALIDA_CAMPIONATO_REGIONALE_2026-05-23_ELI_F",
-        "nome_gara": "17 CRONOROMANENGO PROVA VALIDA CAMPIONATO REGIONALE",
-        "data": "2026-05-23",
-        "posizione": 1,
-        "punti_effettivi": 30,
-        "team": "TOYOTA VALENCIA SAV",
-        "moltiplicatore": 2,
-        "tipo": "regionale",
-        "regione": "UNDER",
-        "km": "23.600",
-        "media": "44.320"
-      },
-      {
-        "gara_id": "GIRO_DELLE_MARCHE_IN_ROSA_2026-05-10_ELI_F",
-        "nome_gara": "GIRO DELLE MARCHE IN ROSA",
-        "data": "2026-05-10",
-        "posizione": 1,
-        "punti_effettivi": 15,
-        "team": "TOYOTA VALENCIA SAV",
-        "moltiplicatore": 1,
-        "tipo": "regionale",
-        "regione": "MARCHE",
-        "km": "100.000",
-        "media": "35.294"
-      },
-      {
-        "gara_id": "GIRO_DELLE_MARCHE_IN_ROSA_2026-05-09_ELI_F",
-        "nome_gara": "GIRO DELLE MARCHE IN ROSA",
-        "data": "2026-05-09",
-        "posizione": 3,
-        "punti_effettivi": 10,
-        "team": "TOYOTA VALENCIA SAV",
-        "moltiplicatore": 1,
-        "tipo": "regionale",
-        "regione": "MARCHE",
-        "km": "90.000",
-        "media": "36.986"
-      },
-      {
-        "gara_id": "2_TROFEO_CASSA_DI_RISPARMIO_DI_FOSSANO_2026-04-12_ELI_F",
-        "nome_gara": "2 TROFEO CASSA DI RISPARMIO DI FOSSANO",
-        "data": "2026-04-12",
-        "posizione": 1,
-        "punti_effettivi": 15,
-        "team": "TOYOTA VALENCIA SAV",
-        "moltiplicatore": 1,
-        "tipo": "regionale",
-        "regione": "PIEMONTE",
-        "km": "94.000",
-        "media": "39.929"
-      },
-      {
-        "gara_id": "DONNE_OPEN_2026-04-11_ELI_F",
-        "nome_gara": "DONNE OPEN",
-        "data": "2026-04-11",
-        "posizione": 5,
-        "punti_effettivi": 6,
-        "team": "TOYOTA VALENCIA SAV",
-        "moltiplicatore": 1,
-        "tipo": "regionale",
-        "regione": "PIEMONTE",
-        "km": "81.000",
-        "media": "41.134"
-      },
-      {
-        "gara_id": "PASQUALANDO_2026-04-05_ELI_F",
-        "nome_gara": "PASQUALANDO",
-        "data": "2026-04-05",
-        "posizione": 2,
-        "punti_effettivi": 12,
-        "team": "TOYOTA VALENCIA SAV",
-        "moltiplicatore": 1,
-        "tipo": "regionale",
-        "regione": "TOSCANA",
-        "km": "63.800",
-        "media": "41.102"
       }
     ]
   },
@@ -138941,31 +139311,6 @@
       }
     ]
   },
-  "ARICI_SOFIA": {
-    "id": "ARICI_SOFIA",
-    "nome": "SOFIA",
-    "cognome": "ARICI",
-    "team_attuale": "VINI FANTINI - BEPINK",
-    "team_id": "VINI_FANTINI_BEPINK",
-    "categoria": "ELI_F",
-    "genere": "F",
-    "punti_totali": 1,
-    "risultati": [
-      {
-        "gara_id": "DONNE_OPEN_2026-04-11_ELI_F",
-        "nome_gara": "DONNE OPEN",
-        "data": "2026-04-11",
-        "posizione": 10,
-        "punti_effettivi": 1,
-        "team": "VINI FANTINI - BEPINK",
-        "moltiplicatore": 1,
-        "tipo": "regionale",
-        "regione": "PIEMONTE",
-        "km": "81.000",
-        "media": "41.134"
-      }
-    ]
-  },
   "MARTENSINI_MATILDE": {
     "id": "MARTENSINI_MATILDE",
     "nome": "MATILDE",
@@ -143413,31 +143758,6 @@
         "posizione": 4,
         "punti_effettivi": 16,
         "team": "TOP GIRLS - FASSA BORTOLO",
-        "moltiplicatore": 2,
-        "tipo": "nazionale",
-        "regione": "TOSCANA",
-        "km": "83.920",
-        "media": "38.422"
-      }
-    ]
-  },
-  "ROSSETTI_SONIA": {
-    "id": "ROSSETTI_SONIA",
-    "nome": "SONIA",
-    "cognome": "ROSSETTI",
-    "team_attuale": "VINI FANTINI - BEPINK",
-    "team_id": "VINI_FANTINI_BEPINK",
-    "categoria": "ELI_F",
-    "genere": "F",
-    "punti_totali": 10,
-    "risultati": [
-      {
-        "gara_id": "TROFEO_ARTI_E_MESTIERI_DELLA_TRADIZIONE_MUGELLANA_2026-02-14_ELI_F",
-        "nome_gara": "TROFEO ARTI E MESTIERI DELLA TRADIZIONE MUGELLANA",
-        "data": "2026-02-14",
-        "posizione": 6,
-        "punti_effettivi": 10,
-        "team": "VINI FANTINI - BEPINK",
         "moltiplicatore": 2,
         "tipo": "nazionale",
         "regione": "TOSCANA",
