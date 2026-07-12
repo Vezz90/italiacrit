@@ -1423,21 +1423,23 @@ app.get('/api/admin/videos', requireAdmin, async (req, res) => {
   res.json(await readVideos());
 });
 
-// Recupera la data di pubblicazione REALE del video da YouTube (snippet.publishedAt),
-// per gli inserimenti manuali che altrimenti avrebbero sempre come data quella odierna
-// (rendendo inutile un ordinamento cronologico "dal più vecchio al più recente").
-// Ritorna null se non è un URL YouTube riconosciuto, manca la API key, o la chiamata fallisce
-// — in quel caso i chiamanti ricadono sulla data odierna come prima.
-async function _fetchYouTubePublishedAt(url) {
+// Recupera i metadati REALI del video da YouTube — data di pubblicazione
+// (snippet.publishedAt) e logo del canale — per gli inserimenti manuali che
+// altrimenti avrebbero sempre la data odierna (rendendo inutile un
+// ordinamento cronologico "dal più vecchio al più recente") e un'iniziale
+// generica al posto del vero logo del canale.
+// Ritorna { published_at, channel_avatar } con valori null quando non
+// disponibili (URL non riconosciuto, manca la API key, chiamata fallita) —
+// i chiamanti ricadono sulla data odierna / iniziale come prima.
+async function _fetchYouTubeVideoMeta(url) {
   const videoId = _extractYouTubeId(url);
-  if (!videoId || !YOUTUBE_API_KEY) return null;
+  if (!videoId || !YOUTUBE_API_KEY) return { published_at: null, channel_avatar: null };
   try {
-    const apiUrl = `https://www.googleapis.com/youtube/v3/videos?part=snippet&id=${videoId}&key=${YOUTUBE_API_KEY}`;
-    const r = await fetch(apiUrl, { signal: AbortSignal.timeout(8000) });
-    const json = await r.json();
-    const publishedAt = json.items?.[0]?.snippet?.publishedAt;
-    return publishedAt ? publishedAt.slice(0, 10) : null;
-  } catch { return null; }
+    const info = (await fetchVideosInfoBatch([videoId], YOUTUBE_API_KEY))[videoId];
+    if (!info) return { published_at: null, channel_avatar: null };
+    const channel_avatar = info.channelId ? await _getChannelAvatar(info.channelId) : null;
+    return { published_at: info.publishedAt || null, channel_avatar };
+  } catch { return { published_at: null, channel_avatar: null }; }
 }
 
 // Submit URL YouTube (utenti autenticati)
@@ -1449,18 +1451,18 @@ app.post('/api/videos/submit', requireAuth, async (req, res) => {
     // così ogni categoria della stessa gara ha i propri video separati
     const key = gara_id;
     const tags = [...new Set(String(atleta_ids || '').split(',').map(s => s.trim()).filter(Boolean))].join(',');
-    const realPublishedAt = await _fetchYouTubePublishedAt(url);
+    const ytMeta = await _fetchYouTubeVideoMeta(url);
     if (req.user.role === 'admin') {
       const videos = await readVideos();
       if (!videos[key]) videos[key] = [];
       if (videos[key].some(v => v.url === url)) return res.status(409).json({ error: 'Video già presente' });
-      videos[key].push({ url, title: title || url, description: description || '', channel: channel || req.user.display_name || 'Admin', published_at: realPublishedAt || new Date().toISOString().slice(0,10), atleta_ids: tags, is_live: !!is_live });
+      videos[key].push({ url, title: title || url, description: description || '', channel: channel || req.user.display_name || 'Admin', published_at: ytMeta.published_at || new Date().toISOString().slice(0,10), channel_avatar: ytMeta.channel_avatar, atleta_ids: tags, is_live: !!is_live });
       await writeVideos(videos);
       return res.json({ ok: true, status: 'approved' });
     }
     const pending = await readPendingVideos();
     const id = Date.now().toString(36) + Math.random().toString(36).slice(2,7);
-    pending.push({ id, gara_id, cal_id: key, type: 'youtube', url, title: title || url, description: description || '', channel: channel || '', atleta_ids: tags, is_live: !!is_live, published_at: realPublishedAt, submitted_by: req.user.display_name || req.user.email, submitted_at: new Date().toISOString() });
+    pending.push({ id, gara_id, cal_id: key, type: 'youtube', url, title: title || url, description: description || '', channel: channel || '', atleta_ids: tags, is_live: !!is_live, published_at: ytMeta.published_at, channel_avatar: ytMeta.channel_avatar, submitted_by: req.user.display_name || req.user.email, submitted_at: new Date().toISOString() });
     await writePendingVideos(pending);
     res.json({ ok: true, status: 'pending' });
   } catch(e) { res.status(500).json({ error: e.message }); }
@@ -1527,7 +1529,7 @@ app.post('/api/admin/videos/pending/:id/approve', requireAdmin, async (req, res)
     const videos = await readVideos();
     const key = v.cal_id || v.gara_id;
     if (!videos[key]) videos[key] = [];
-    videos[key].push({ url: v.url, title: v.title, description: v.description || '', channel: v.channel || v.submitted_by || '', published_at: v.published_at || (v.submitted_at || '').slice(0, 10), atleta_ids: v.atleta_ids || '', is_live: !!v.is_live });
+    videos[key].push({ url: v.url, title: v.title, description: v.description || '', channel: v.channel || v.submitted_by || '', published_at: v.published_at || (v.submitted_at || '').slice(0, 10), channel_avatar: v.channel_avatar || null, atleta_ids: v.atleta_ids || '', is_live: !!v.is_live });
     await writeVideos(videos);
     pending.splice(i, 1);
     await writePendingVideos(pending);
@@ -1557,12 +1559,13 @@ app.post('/api/admin/videos/:calId', requireAdmin, async (req, res) => {
     if (!videos[calId]) videos[calId] = [];
     // Evita duplicati per URL
     if (videos[calId].some(v => v.url === url)) return res.status(409).json({ error: 'Video già presente per questa gara' });
-    const realPublishedAt = await _fetchYouTubePublishedAt(url);
+    const ytMeta = await _fetchYouTubeVideoMeta(url);
     videos[calId].push({
       url, title: title || url,
       description: description || '',
       channel: channel || 'Admin',
-      published_at: realPublishedAt || new Date().toISOString().slice(0,10),
+      published_at: ytMeta.published_at || new Date().toISOString().slice(0,10),
+      channel_avatar: ytMeta.channel_avatar,
       score: 1,
     });
     await writeVideos(videos);
@@ -3156,12 +3159,24 @@ app.post('/api/admin/gara/:garaId/pcs-import-html', requireAdmin, async (req, re
 // ══════════════════════════════════════════════════════════════════════════════
 // YouTube Auto-Scraper
 // ══════════════════════════════════════════════════════════════════════════════
-const { DEFAULT_CHANNELS, fetchAllChannels, fetchVideoDuration, fetchVideoLiveInfo, fetchVideosInfoBatch } = require('./youtube-scraper');
+const { DEFAULT_CHANNELS, fetchAllChannels, fetchVideoDuration, fetchVideoLiveInfo, fetchVideosInfoBatch, fetchChannelAvatars } = require('./youtube-scraper');
 // YouTube Data API v3 (opzionale): se impostata, usata al posto dello scraping
 // della pagina watch per durata/stato-diretta, perché lo scraping viene ormai
 // bloccato da YouTube (risposta 429 + redirect a un consent/CAPTCHA wall) sugli
 // IP dei server cloud come Render. Mai hardcodare: solo da env/.env.local.
 const YOUTUBE_API_KEY = process.env.YOUTUBE_API_KEY || '';
+
+// Cache in-memory (per-processo) channelId → URL logo canale, per non rifare
+// la stessa chiamata channels.list ad ogni video dello stesso canale.
+const _channelAvatarCache = {};
+async function _getChannelAvatar(channelId) {
+  if (!channelId || !YOUTUBE_API_KEY) return null;
+  if (channelId in _channelAvatarCache) return _channelAvatarCache[channelId];
+  const map = await fetchChannelAvatars([channelId], YOUTUBE_API_KEY);
+  const url = map[channelId] || null;
+  _channelAvatarCache[channelId] = url;
+  return url;
+}
 
 const YT_CHANNELS_PATH = path.join(__dirname, '../data/youtube_channels.json');
 const YT_QUEUE_PATH    = path.join(__dirname, '../data/youtube_queue.json');
@@ -3263,6 +3278,14 @@ async function doYoutubeSync() {
     liveInfoById = await fetchVideosInfoBatch(candidates.map(c => c.videoId), YOUTUBE_API_KEY);
   }
 
+  // Loghi canale (logo reale al posto dell'iniziale generica sulle card) —
+  // un'unica chiamata batch per tutti i channelId distinti coinvolti.
+  let avatarByChannelId = {};
+  if (YOUTUBE_API_KEY) {
+    const chIds = [...new Set(Object.values(liveInfoById).map(v => v.channelId).filter(Boolean))];
+    avatarByChannelId = await fetchChannelAvatars(chIds, YOUTUBE_API_KEY);
+  }
+
   for (const { chId, ch, v, videoId } of candidates) {
     const id = Date.now().toString(36) + Math.random().toString(36).slice(2, 7);
     // Segnale diretta: richiede isLiveContent (trasmesso via infrastruttura
@@ -3282,7 +3305,8 @@ async function doYoutubeSync() {
       channel_name: ch?.name || chId,
       url:          v.url,
       title:        v.title,
-      published_at: v.published_at,
+      published_at: liveInfo.publishedAt || v.published_at,
+      channel_avatar: liveInfo.channelId ? (avatarByChannelId[liveInfo.channelId] || null) : null,
       thumbnail:    v.thumbnail,
       status:       'pending',
       suggested_gara_id: null,
@@ -3365,6 +3389,7 @@ app.post('/api/admin/youtube/queue/:id/approve', requireAdmin, async (req, res) 
           description:  '',
           channel:      channel || item.channel_name || '',
           published_at: item.published_at || new Date().toISOString().slice(0, 10),
+          channel_avatar: item.channel_avatar || null,
           is_live:      !!is_live,
           duration_seconds: item.duration_seconds || null,
         });
@@ -3393,10 +3418,11 @@ app.post('/api/admin/media/extra', requireAdmin, async (req, res) => {
     const videos = await readVideos();
     if (!videos[bucket]) videos[bucket] = [];
     if (videos[bucket].some(v => v.url === url)) return res.status(409).json({ error: 'Video già presente' });
-    const realPublishedAt = await _fetchYouTubePublishedAt(url);
+    const ytMeta = await _fetchYouTubeVideoMeta(url);
     videos[bucket].push({
       url, title: title || url, channel: channel || '',
-      published_at: realPublishedAt || new Date().toISOString().slice(0, 10),
+      published_at: ytMeta.published_at || new Date().toISOString().slice(0, 10),
+      channel_avatar: ytMeta.channel_avatar,
     });
     await writeVideos(videos);
     res.json({ ok: true });
@@ -3480,6 +3506,44 @@ app.post('/api/admin/youtube/detect-live', requireAdmin, async (req, res) => {
     }
     if (marked || unmarked) await writeVideos(videos);
     res.json({ ok: true, checked, marked, unmarked, total: candidates.length, reasonCounts });
+  } catch (e) { res.status(500).json({ error: e.message }); }
+});
+
+// Ricalcola data di pubblicazione reale + logo canale per TUTTI i video già
+// salvati in videos.json (incluse Presentazioni/Programmi TV). Serve per i
+// video aggiunti a mano PRIMA che _fetchYouTubeVideoMeta esistesse: quelli
+// hanno published_at = data di inserimento (non quella vera di YouTube),
+// che rende inutile l'ordinamento cronologico, e nessun channel_avatar
+// (mostrano l'iniziale generica). Va lanciato una tantum dall'admin.
+app.post('/api/admin/youtube/backfill-metadata', requireAdmin, async (req, res) => {
+  try {
+    if (!YOUTUBE_API_KEY) return res.status(400).json({ error: 'YOUTUBE_API_KEY non configurata' });
+    const videos = await readVideos();
+    const candidates = [];
+    for (const [gid, arr] of Object.entries(videos)) {
+      (arr || []).forEach((v, idx) => {
+        const vid = _extractYouTubeId(v.url);
+        if (!vid) return;
+        candidates.push({ gid, idx, vid });
+      });
+    }
+    const infoById = await fetchVideosInfoBatch(candidates.map(c => c.vid), YOUTUBE_API_KEY);
+    const chIds = [...new Set(Object.values(infoById).map(v => v.channelId).filter(Boolean))];
+    const avatarByChannelId = await fetchChannelAvatars(chIds, YOUTUBE_API_KEY);
+
+    let updated = 0;
+    for (const c of candidates) {
+      const info = infoById[c.vid];
+      if (!info) continue;
+      const v = videos[c.gid][c.idx];
+      let changed = false;
+      if (info.publishedAt && v.published_at !== info.publishedAt) { v.published_at = info.publishedAt; changed = true; }
+      const avatar = info.channelId ? (avatarByChannelId[info.channelId] || null) : null;
+      if (avatar && v.channel_avatar !== avatar) { v.channel_avatar = avatar; changed = true; }
+      if (changed) updated++;
+    }
+    if (updated) await writeVideos(videos);
+    res.json({ ok: true, checked: candidates.length, updated });
   } catch (e) { res.status(500).json({ error: e.message }); }
 });
 

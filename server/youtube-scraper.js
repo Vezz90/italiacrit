@@ -322,7 +322,9 @@ async function fetchVideosInfoBatch(videoIds, apiKey) {
   if (!ids.length || !apiKey) return out;
   for (let i = 0; i < ids.length; i += 50) {
     const chunk = ids.slice(i, i + 50);
-    const url = `https://www.googleapis.com/youtube/v3/videos?part=contentDetails,liveStreamingDetails&id=${chunk.join(',')}&key=${apiKey}`;
+    // snippet aggiunto per ricavare data di pubblicazione reale e channelId
+    // (usato per il logo del canale) oltre a durata/stato-diretta.
+    const url = `https://www.googleapis.com/youtube/v3/videos?part=contentDetails,liveStreamingDetails,snippet&id=${chunk.join(',')}&key=${apiKey}`;
     try {
       const raw = await fetchURL(url, 15000);
       const json = JSON.parse(raw);
@@ -339,6 +341,8 @@ async function fetchVideosInfoBatch(videoIds, apiKey) {
           duration: _parseIsoDuration(item.contentDetails?.duration),
           isLiveContent: !!lsd,
           isLiveNow: !!(lsd && !lsd.actualEndTime),
+          publishedAt: item.snippet?.publishedAt ? item.snippet.publishedAt.slice(0, 10) : null,
+          channelId: item.snippet?.channelId || null,
         };
       }
     } catch (e) {
@@ -348,4 +352,27 @@ async function fetchVideosInfoBatch(videoIds, apiKey) {
   return out;
 }
 
-module.exports = { DEFAULT_CHANNELS, fetchChannelVideos, fetchAllChannels, parseYouTubeRSS, resolveHandle, fetchVideoDuration, fetchVideoLiveInfo, fetchVideosInfoBatch };
+// ── Loghi canale via YouTube Data API v3 (batch fino a 50 channelId) ─────────
+// Usato per mostrare il vero logo del canale sulle card video invece
+// dell'iniziale generica (es. "C" per ciclismoweb, "T" per ToscanaSprint).
+async function fetchChannelAvatars(channelIds, apiKey) {
+  const out = {};
+  const ids = [...new Set((channelIds || []).filter(Boolean))];
+  if (!ids.length || !apiKey) return out;
+  for (let i = 0; i < ids.length; i += 50) {
+    const chunk = ids.slice(i, i + 50);
+    const url = `https://www.googleapis.com/youtube/v3/channels?part=snippet&id=${chunk.join(',')}&key=${apiKey}`;
+    try {
+      const raw = await fetchURL(url, 15000);
+      const json = JSON.parse(raw);
+      if (json.error) throw new Error(json.error.message || 'Errore API YouTube');
+      for (const item of (json.items || [])) {
+        const thumbs = item.snippet?.thumbnails;
+        out[item.id] = thumbs?.medium?.url || thumbs?.default?.url || null;
+      }
+    } catch { /* canale non risolto: i chiamanti ricadono sull'iniziale */ }
+  }
+  return out;
+}
+
+module.exports = { DEFAULT_CHANNELS, fetchChannelVideos, fetchAllChannels, parseYouTubeRSS, resolveHandle, fetchVideoDuration, fetchVideoLiveInfo, fetchVideosInfoBatch, fetchChannelAvatars };

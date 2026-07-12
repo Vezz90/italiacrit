@@ -19091,6 +19091,21 @@ window.mediaDeleteExtra = async (tipo, idx) => {
   } catch (e) { showToast('Errore: ' + e.message, 'error'); }
 };
 
+// Ricalcola data di pubblicazione YouTube reale + logo canale per tutti i
+// video già salvati (utile una tantum per quelli aggiunti a mano prima che
+// venissero catturati automaticamente in fase di inserimento).
+window.mediaBackfillMetadata = async (btn) => {
+  const prevText = btn.textContent;
+  btn.disabled = true; btn.textContent = '⏳ Aggiornamento…';
+  try {
+    const r = await apiCall('/admin/youtube/backfill-metadata', { method: 'POST' });
+    showToast(`✓ Aggiornati ${r.updated} di ${r.checked} video`);
+    await refreshVideos();
+    renderMedia();
+  } catch (e) { showToast('Errore: ' + e.message, 'error'); }
+  finally { btn.disabled = false; btn.textContent = prevText; }
+};
+
 // ── Aggiungi manualmente (admin): Video/Diretta di una gara, oppure
 // Presentazione/Programma TV (nessuna gara da scegliere) — serve soprattutto
 // per reinserire a mano video già scartati dalla coda dello scraper canali.
@@ -19273,6 +19288,11 @@ async function renderMedia() {
 
   const ytThumb = (url) => { const id = ytId(url); return id ? `https://img.youtube.com/vi/${id}/mqdefault.jpg` : ''; };
   const _avatarLetter = (s) => esc((s || '?').trim().charAt(0).toUpperCase());
+  // Logo reale del canale se lo conosciamo (fetchato via YouTube Data API al
+  // momento dell'inserimento), altrimenti ricade sull'iniziale colorata.
+  const _avatarHtml = (video) => video.channel_avatar
+    ? `<img class="yt-avatar" src="${esc(video.channel_avatar)}" alt="${esc(video.channel || '')}" loading="lazy"/>`
+    : `<div class="yt-avatar">${_avatarLetter(video.channel)}</div>`;
   const _durationBadge = (sec) => {
     if (!sec) return '';
     const h = Math.floor(sec / 3600), m = Math.floor((sec % 3600) / 60);
@@ -19290,7 +19310,7 @@ async function renderMedia() {
         <span class="yt-play">▶</span>
       </div>
       <div class="yt-card-body">
-        <div class="yt-avatar">${_avatarLetter(x.video.channel)}</div>
+        ${_avatarHtml(x.video)}
         <div class="yt-card-text">
           <div class="yt-card-title">${esc(x.video.title || x.meta.nome)}</div>
           <div class="yt-card-meta">${esc(x.video.channel || '')}</div>
@@ -19314,7 +19334,7 @@ async function renderMedia() {
         ${_isAdminMedia ? `<button onclick="event.stopPropagation();window.mediaDeleteExtra('${bucketKey}',${x.extraIdx})" style="position:absolute;top:6px;right:6px;background:rgba(220,38,38,.92);color:#fff;border:none;padding:3px 8px;border-radius:4px;font-size:.68rem;cursor:pointer;z-index:3">🗑</button>` : ''}
       </div>
       <div class="yt-card-body">
-        <div class="yt-avatar">${_avatarLetter(x.video.channel)}</div>
+        ${_avatarHtml(x.video)}
         <div class="yt-card-text">
           <div class="yt-card-title">${esc(x.video.title || '')}</div>
           <div class="yt-card-meta">${esc(x.video.channel || '')}</div>
@@ -19364,6 +19384,7 @@ async function renderMedia() {
           <input type="text" placeholder="Cerca…" oninput="window.mediaSetSearch(this.value)" value="${esc(mediaSearchQuery)}">
         </div>
         ${_isAdminMedia ? `<button class="yt-chip" style="background:var(--red-hot);color:#fff;border-color:var(--red-hot)" onclick="window.openMediaAddForm()">➕ Aggiungi</button>` : ''}
+        ${_isAdminMedia ? `<button class="yt-chip" onclick="window.mediaBackfillMetadata(this)">🔄 Ricalcola date/loghi</button>` : ''}
       </div>
       <div class="yt-grid">
         ${items.length ? items.map(cardHtml).join('') : `<p style="color:var(--text-muted);padding:24px 4px">Nessun elemento trovato.</p>`}
