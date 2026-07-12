@@ -2,11 +2,11 @@
   {
     "team_id": "U_C_GIORGIONE",
     "team_nome": "U.C. GIORGIONE",
-    "punti": 332,
-    "vittorie": 7,
-    "p1": 7,
+    "punti": 357,
+    "vittorie": 8,
+    "p1": 8,
     "p2": 7,
-    "p3": 5,
+    "p3": 6,
     "pout": 23,
     "n_atleti": 6,
     "pos": 1
@@ -86,12 +86,12 @@
   {
     "team_id": "G_S_MOSOLE",
     "team_nome": "G.S. MOSOLE",
-    "punti": 166,
+    "punti": 171,
     "vittorie": 2,
     "p1": 2,
     "p2": 1,
     "p3": 4,
-    "pout": 20,
+    "pout": 22,
     "n_atleti": 2,
     "pos": 8
   },
@@ -132,6 +132,18 @@
     "pos": 11
   },
   {
+    "team_id": "BICIFESTIVAL",
+    "team_nome": "BICIFESTIVAL",
+    "punti": 76,
+    "vittorie": 0,
+    "p1": 0,
+    "p2": 1,
+    "p3": 1,
+    "pout": 8,
+    "n_atleti": 1,
+    "pos": 12
+  },
+  {
     "team_id": "BUSTO_GAROLFO",
     "team_nome": "BUSTO GAROLFO",
     "punti": 73,
@@ -141,29 +153,17 @@
     "p3": 0,
     "pout": 11,
     "n_atleti": 1,
-    "pos": 12
-  },
-  {
-    "team_id": "BICIFESTIVAL",
-    "team_nome": "BICIFESTIVAL",
-    "punti": 68,
-    "vittorie": 0,
-    "p1": 0,
-    "p2": 1,
-    "p3": 1,
-    "pout": 7,
-    "n_atleti": 1,
     "pos": 13
   },
   {
     "team_id": "U_C_CONSCIO_PEDALE_DEL_SILE",
     "team_nome": "U.C.CONSCIO PEDALE DEL SILE",
-    "punti": 57,
+    "punti": 63,
     "vittorie": 1,
     "p1": 1,
     "p2": 1,
     "p3": 0,
-    "pout": 6,
+    "pout": 7,
     "n_atleti": 1,
     "pos": 14
   },
@@ -180,6 +180,18 @@
     "pos": 15
   },
   {
+    "team_id": "TEAM_FABIANA_LUPERINI_ASD",
+    "team_nome": "TEAM FABIANA LUPERINI ASD",
+    "punti": 45,
+    "vittorie": 0,
+    "p1": 0,
+    "p2": 1,
+    "p3": 1,
+    "pout": 7,
+    "n_atleti": 2,
+    "pos": 16
+  },
+  {
     "team_id": "LOMBARDIA",
     "team_nome": "LOMBARDIA",
     "punti": 44,
@@ -189,29 +201,17 @@
     "p3": 1,
     "pout": 4,
     "n_atleti": 5,
-    "pos": 16
-  },
-  {
-    "team_id": "TEAM_FABIANA_LUPERINI_ASD",
-    "team_nome": "TEAM FABIANA LUPERINI ASD",
-    "punti": 43,
-    "vittorie": 0,
-    "p1": 0,
-    "p2": 1,
-    "p3": 1,
-    "pout": 6,
-    "n_atleti": 2,
     "pos": 17
   },
   {
     "team_id": "BREGANZE_MILLENIUM",
     "team_nome": "BREGANZE MILLENIUM",
-    "punti": 33,
+    "punti": 36,
     "vittorie": 0,
     "p1": 0,
     "p2": 1,
     "p3": 1,
-    "pout": 5,
+    "pout": 6,
     "n_atleti": 3,
     "pos": 18
   },
@@ -288,6 +288,18 @@
     "pos": 24
   },
   {
+    "team_id": "U_S_C_S_I_RUBANO",
+    "team_nome": "U.S. C.S.I. RUBANO",
+    "punti": 26,
+    "vittorie": 0,
+    "p1": 0,
+    "p2": 1,
+    "p3": 0,
+    "pout": 3,
+    "n_atleti": 1,
+    "pos": 25
+  },
+  {
     "team_id": "ASD_EFFETTO_CICLISMO_NOI_SPORT",
     "team_nome": "ASD EFFETTO CICLISMO - NOI SPORT",
     "punti": 25,
@@ -297,7 +309,7 @@
     "p3": 0,
     "pout": 4,
     "n_atleti": 1,
-    "pos": 25
+    "pos": 26
   },
   {
     "team_id": "B_TEAM_CYCLING_PROJECT",
@@ -309,7 +321,7 @@
     "p3": 0,
     "pout": 5,
     "n_atleti": 1,
-    "pos": 26
+    "pos": 27
   },
   {
     "team_id": "A_S_D_AMICISUPERSKI",
@@ -321,7 +333,7 @@
     "p3": 0,
     "pout": 4,
     "n_atleti": 2,
-    "pos": 27
+    "pos": 28
   },
   {
     "team_id": "S_C_PATTADA",
@@ -333,7 +345,7 @@
     "p3": 0,
     "pout": 0,
     "n_atleti": 1,
-    "pos": 28
+    "pos": 29
   },
   {
     "team_id": "ASD_TEAM_FEMMINILE_TRENTINO",
@@ -345,29 +357,17 @@
     "p3": 0,
     "pout": 2,
     "n_atleti": 2,
-    "pos": 29
-  },
-  {
-    "team_id": "U_S_C_S_I_RUBANO",
-    "team_nome": "U.S. C.S.I. RUBANO",
-    "punti": 14,
-    "vittorie": 0,
-    "p1": 0,
-    "p2": 0,
-    "p3": 0,
-    "pout": 3,
-    "n_atleti": 1,
     "pos": 30
   },
   {
     "team_id": "ASS_NE_CICLISTICA_DILETT_VALVASONE",
     "team_nome": "ASS.NE CICLISTICA DILETT. VALVASONE",
-    "punti": 13,
+    "punti": 18,
     "vittorie": 0,
     "p1": 0,
     "p2": 0,
     "p3": 0,
-    "pout": 4,
+    "pout": 5,
     "n_atleti": 2,
     "pos": 31
   },

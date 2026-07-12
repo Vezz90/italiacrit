@@ -26,9 +26,9 @@
   {
     "team_id": "HG_CYCLING_TEAM",
     "team_nome": "HG CYCLING TEAM",
-    "punti": 289,
-    "vittorie": 6,
-    "p1": 6,
+    "punti": 304,
+    "vittorie": 7,
+    "p1": 7,
     "p2": 6,
     "p3": 1,
     "pout": 20,
@@ -38,10 +38,10 @@
   {
     "team_id": "OFF_ALBERTI_U_C_VAL_D_ILLASI",
     "team_nome": "OFF.ALBERTI U.C. VAL D'ILLASI",
-    "punti": 234,
+    "punti": 246,
     "vittorie": 12,
     "p1": 12,
-    "p2": 2,
+    "p2": 3,
     "p3": 2,
     "pout": 2,
     "n_atleti": 1,
@@ -86,11 +86,11 @@
   {
     "team_id": "U_C_GIORGIONE",
     "team_nome": "U.C. GIORGIONE",
-    "punti": 104,
+    "punti": 114,
     "vittorie": 0,
     "p1": 0,
     "p2": 2,
-    "p3": 2,
+    "p3": 3,
     "pout": 14,
     "n_atleti": 2,
     "pos": 8
@@ -98,12 +98,12 @@
   {
     "team_id": "G_C_SOSSANO_1975",
     "team_nome": "G.C. SOSSANO 1975",
-    "punti": 97,
+    "punti": 111,
     "vittorie": 0,
     "p1": 0,
     "p2": 0,
     "p3": 3,
-    "pout": 18,
+    "pout": 20,
     "n_atleti": 6,
     "pos": 9
   },
@@ -132,6 +132,18 @@
     "pos": 11
   },
   {
+    "team_id": "G_C_NOVENTANA",
+    "team_nome": "G.C. NOVENTANA",
+    "punti": 85,
+    "vittorie": 1,
+    "p1": 1,
+    "p2": 0,
+    "p3": 2,
+    "pout": 10,
+    "n_atleti": 2,
+    "pos": 12
+  },
+  {
     "team_id": "ALLGOR_TATOBIKE",
     "team_nome": "ALLGOR TATOBIKE",
     "punti": 85,
@@ -141,29 +153,17 @@
     "p3": 1,
     "pout": 12,
     "n_atleti": 2,
-    "pos": 12
-  },
-  {
-    "team_id": "G_C_NOVENTANA",
-    "team_nome": "G.C. NOVENTANA",
-    "punti": 82,
-    "vittorie": 1,
-    "p1": 1,
-    "p2": 0,
-    "p3": 2,
-    "pout": 9,
-    "n_atleti": 2,
     "pos": 13
   },
   {
     "team_id": "BREGANZE_MILLENIUM",
     "team_nome": "BREGANZE MILLENIUM",
-    "punti": 81,
+    "punti": 83,
     "vittorie": 0,
     "p1": 0,
     "p2": 2,
     "p3": 2,
-    "pout": 11,
+    "pout": 12,
     "n_atleti": 4,
     "pos": 14
   },
@@ -312,6 +312,18 @@
     "pos": 26
   },
   {
+    "team_id": "ASS_NE_CICLISTICA_DILETT_VALVASONE",
+    "team_nome": "ASS.NE CICLISTICA DILETT. VALVASONE",
+    "punti": 19,
+    "vittorie": 0,
+    "p1": 0,
+    "p2": 0,
+    "p3": 0,
+    "pout": 4,
+    "n_atleti": 2,
+    "pos": 27
+  },
+  {
     "team_id": "ASD_TEAM_PETRUCCI",
     "team_nome": "ASD TEAM PETRUCCI",
     "punti": 19,
@@ -321,7 +333,7 @@
     "p3": 0,
     "pout": 5,
     "n_atleti": 2,
-    "pos": 27
+    "pos": 28
   },
   {
     "team_id": "LOMBARDIA",
@@ -333,29 +345,17 @@
     "p3": 0,
     "pout": 1,
     "n_atleti": 1,
-    "pos": 28
-  },
-  {
-    "team_id": "ASS_NE_CICLISTICA_DILETT_VALVASONE",
-    "team_nome": "ASS.NE CICLISTICA DILETT. VALVASONE",
-    "punti": 14,
-    "vittorie": 0,
-    "p1": 0,
-    "p2": 0,
-    "p3": 0,
-    "pout": 3,
-    "n_atleti": 2,
     "pos": 29
   },
   {
     "team_id": "BICIFESTIVAL",
     "team_nome": "BICIFESTIVAL",
-    "punti": 12,
+    "punti": 13,
     "vittorie": 0,
     "p1": 0,
     "p2": 0,
     "p3": 0,
-    "pout": 4,
+    "pout": 5,
     "n_atleti": 3,
     "pos": 30
   },
@@ -408,6 +408,18 @@
     "pos": 34
   },
   {
+    "team_id": "U_S_SCUOLA_CICLISMO_VO",
+    "team_nome": "U.S.SCUOLA CICLISMO VO'",
+    "punti": 7,
+    "vittorie": 0,
+    "p1": 0,
+    "p2": 0,
+    "p3": 0,
+    "pout": 2,
+    "n_atleti": 1,
+    "pos": 35
+  },
+  {
     "team_id": "UNIONE_CICLISTICA_OSSANESGA",
     "team_nome": "UNIONE CICLISTICA OSSANESGA",
     "punti": 7,
@@ -417,7 +429,7 @@
     "p3": 0,
     "pout": 3,
     "n_atleti": 1,
-    "pos": 35
+    "pos": 36
   },
   {
     "team_id": "COMAL_TRENTINO_CYCLING_ACADEMY",
@@ -429,7 +441,7 @@
     "p3": 0,
     "pout": 2,
     "n_atleti": 1,
-    "pos": 36
+    "pos": 37
   },
   {
     "team_id": "PIEMONTE",
@@ -441,7 +453,7 @@
     "p3": 0,
     "pout": 1,
     "n_atleti": 1,
-    "pos": 37
+    "pos": 38
   },
   {
     "team_id": "CAMPANIA",
@@ -453,23 +465,11 @@
     "p3": 0,
     "pout": 1,
     "n_atleti": 1,
-    "pos": 38
+    "pos": 39
   },
   {
     "team_id": "V_C_SOMMESE",
     "team_nome": "V.C. SOMMESE",
-    "punti": 3,
-    "vittorie": 0,
-    "p1": 0,
-    "p2": 0,
-    "p3": 0,
-    "pout": 1,
-    "n_atleti": 1,
-    "pos": 39
-  },
-  {
-    "team_id": "U_S_SCUOLA_CICLISMO_VO",
-    "team_nome": "U.S.SCUOLA CICLISMO VO'",
     "punti": 3,
     "vittorie": 0,
     "p1": 0,
