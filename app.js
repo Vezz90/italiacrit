@@ -1417,6 +1417,41 @@ function processLoadedData({ calendar, resultsRaw, athletes, teams, meta, raceDe
     }
   }
 
+  // ── Split gare "gara unica" con generi misti sotto lo stesso gara_id ──────
+  // In alcune gare Esordienti/Allievi uomini e donne corrono insieme; la FCI
+  // (e quindi lo scraper) assegna un unico gara_id (suffisso _M) all'intera
+  // tabella, quindi posizione/punti_effettivi vengono calcolati sulla
+  // classifica ASSOLUTA mista invece che separatamente per genere — una donna
+  // arrivata davanti a qualche uomo mostrava la sua posizione assoluta invece
+  // di essere 1ª nella sua categoria, e gli uomini dietro di lei restavano
+  // "spostati" nella loro classifica. Una volta noto il vero genere (appena
+  // corretto sopra da ATHLETE_GENDER_FIXES), qui si spostano le righe
+  // femminili su un gara_id sintetico distinto (suffisso _F) e si riassegna
+  // posizione + punti separatamente per genere, mantenendo l'ordine di arrivo
+  // relativo originale — così l'intera UI esistente (tab categoria, pagina
+  // gara, albo d'oro, classifiche) tratta le due classifiche come gare
+  // separate, esattamente come già avviene per le gare non miste.
+  if (resultsRaw) {
+    const _byGara = {};
+    for (const r of resultsRaw) { if (!r.gara_id) continue; (_byGara[r.gara_id] ||= []).push(r); }
+    for (const [gid, rows] of Object.entries(_byGara)) {
+      if (!/_M$/.test(gid)) continue; // solo gruppi col suffisso maschile condiviso
+      if (!rows.some(r => r.genere === 'F') || !rows.some(r => r.genere === 'M')) continue; // non misto
+      const fGaraId = gid.replace(/_M$/, '_F');
+      for (const r of rows) if (r.genere === 'F') r.gara_id = fGaraId;
+      // Riassegna posizione/punti SOLO alle righe con una posizione originale
+      // valida (non tocca DNF/DNS o righe senza piazzamento), preservando
+      // l'ordine di arrivo relativo originale.
+      const ranked = rows.filter(r => Number.isFinite(r.posizione)).sort((a, b) => a.posizione - b.posizione);
+      let posM = 0, posF = 0;
+      for (const r of ranked) {
+        const mult = r.moltiplicatore || 1;
+        if (r.genere === 'F') { posF++; r.posizione = posF; r.punti_effettivi = (BASEPTS[posF] || 0) * mult; }
+        else                  { posM++; r.posizione = posM; r.punti_effettivi = (BASEPTS[posM] || 0) * mult; }
+      }
+    }
+  }
+
   // Normalizza cognome/nome in resultsRaw con i dati completi da athletes
   // (già corretti sopra). Per gli atleti non presenti in athletes.json
   // applichiamo comunque la ricostruzione dei cognomi composti.
