@@ -3355,7 +3355,11 @@ async function doYoutubeSync() {
       suggested_gara_id: null,
       added_at:     new Date().toISOString(),
       duration_seconds: duration,
-      is_live_guess: !!(isLiveContent && (isLiveNow || (duration && duration > 3600))), // diretta E (>1h O in corso ora)
+      // diretta E (>15min O in corso ora) — soglia bassa apposta: le gare
+      // Esordienti/Allievi durano spesso 40-50 min, molto meno di un'ora,
+      // ma vanno comunque riconosciute come diretta vera (non un trailer/
+      // intervista post-gara, che in genere dura pochi minuti).
+      is_live_guess: !!(isLiveContent && (isLiveNow || (duration && duration > 900))),
     });
     added++;
   }
@@ -3514,8 +3518,11 @@ app.post('/api/admin/youtube/detect-live', requireAdmin, async (req, res) => {
       // Una diretta ANCORA IN CORSO (isLiveNow) qualifica sempre, anche se la
       // durata non è ancora nota/finalizzata da YouTube — altrimenti una gara
       // trasmessa in questo momento sparirebbe dal sito proprio mentre è utile
-      // vederla, prima che il video superi "sulla carta" un'ora di durata.
-      const qualifies = isLiveContent && (isLiveNow || (dur && dur > 3600));
+      // vederla, prima che il video superi "sulla carta" la soglia di durata.
+      // Soglia bassa (15 min, non 1h): le gare Esordienti/Allievi durano
+      // spesso 40-50 min — molto meno di un'ora, ma sono dirette vere, non
+      // trailer/interviste post-gara (che durano in genere pochi minuti).
+      const qualifies = isLiveContent && (isLiveNow || (dur && dur > 900));
       if (qualifies && !c.wasLive) {
         videos[c.gid][c.idx].is_live = true;
         if (dur) videos[c.gid][c.idx].duration_seconds = dur;
