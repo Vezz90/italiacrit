@@ -7423,6 +7423,7 @@ async function renderClassifica() {
     ? '<p class="rk-intel-line">' + _rkIntelParts.join(' &middot; ') + '</p>'
     : '';
 
+  setPageMeta(`Classifica ${catLabel(rankCat)}`, `Classifica ufficiale ${catLabel(rankCat)} del ciclismo agonistico italiano, aggiornata gara dopo gara.`);
   setPage(`
     <div class="pg-header">
       <div class="pg-eyebrow">CLASSIFICA UFFICIALE</div>

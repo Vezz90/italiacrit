@@ -242,6 +242,48 @@ app.use(express.json({ limit: '10mb' }));
 app.use(express.urlencoded({ extended: true, limit: '10mb' }));
 app.use('/photos', express.static(UPLOADS_DIR));
 
+// ── Sitemap.xml ───────────────────────────────────────────────────────────────
+// DEVE stare prima di express.static (sotto): la cartella statica servita
+// contiene anche un vecchio sitemap.xml a 1 sola voce (root del repo) — se
+// questa route fosse dopo, express.static lo troverebbe e lo servirebbe
+// direttamente, senza mai raggiungere l'handler dinamico qui sotto.
+app.get('/sitemap.xml', async (req, res) => {
+  try {
+    const CANONICAL = 'https://italiacyclingstats.com';
+    const [athletes, resultsRaw, teams] = await Promise.all([
+      readDataJsonFromGH('athletes.json'),
+      readDataJsonFromGH('results_raw.json'),
+      readDataJsonFromGH('teams.json'),
+    ]);
+    const urls = [
+      { loc: `${CANONICAL}/`,              priority: '1.0', changefreq: 'daily' },
+      { loc: `${CANONICAL}/#/risultati`,   priority: '0.9', changefreq: 'daily' },
+      { loc: `${CANONICAL}/#/classifica`,  priority: '0.8', changefreq: 'weekly' },
+      { loc: `${CANONICAL}/#/calendario`,  priority: '0.7', changefreq: 'weekly' },
+      { loc: `${CANONICAL}/#/atleti`,      priority: '0.7', changefreq: 'weekly' },
+      { loc: `${CANONICAL}/#/albo`,        priority: '0.6', changefreq: 'monthly' },
+    ];
+    for (const id of Object.keys(athletes || {})) {
+      if (id) urls.push({ loc: `${CANONICAL}/og/atleta/${encodeURIComponent(id)}`, priority: '0.7', changefreq: 'weekly' });
+    }
+    const garaIds = [...new Set((resultsRaw || []).map(r => r.gara_id).filter(Boolean))];
+    for (const gid of garaIds) {
+      urls.push({ loc: `${CANONICAL}/og/gara/${encodeURIComponent(gid)}`, priority: '0.6', changefreq: 'monthly' });
+    }
+    for (const id of Object.keys(teams || {})) {
+      if (id) urls.push({ loc: `${CANONICAL}/og/team/${encodeURIComponent(id)}`, priority: '0.6', changefreq: 'weekly' });
+    }
+    const xml = `<?xml version="1.0" encoding="UTF-8"?>\n<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">\n${
+      urls.map(u => `  <url><loc>${u.loc}</loc><changefreq>${u.changefreq}</changefreq><priority>${u.priority}</priority></url>`).join('\n')
+    }\n</urlset>`;
+    res.setHeader('Content-Type', 'application/xml; charset=utf-8');
+    res.setHeader('Cache-Control', 'public, max-age=3600');
+    res.send(xml);
+  } catch (e) {
+    res.status(500).send('<!-- sitemap error -->');
+  }
+});
+
 const FRONTEND_DIR = path.join(__dirname, '..');
 app.use(express.static(FRONTEND_DIR, {
   setHeaders(res, filePath) {
@@ -586,44 +628,6 @@ app.get('/og/class/:id', async (req, res) => {
   </table>` : '';
   res.setHeader('Content-Type','text/html');
   res.send(ogHtml({ title, desc, img, redirect, canonical, bodyHtml }));
-});
-
-// ── Sitemap.xml ───────────────────────────────────────────────────────────────
-app.get('/sitemap.xml', async (req, res) => {
-  try {
-    const CANONICAL = 'https://italiacyclingstats.com';
-    const [athletes, resultsRaw, teams] = await Promise.all([
-      readDataJsonFromGH('athletes.json'),
-      readDataJsonFromGH('results_raw.json'),
-      readDataJsonFromGH('teams.json'),
-    ]);
-    const urls = [
-      { loc: `${CANONICAL}/`,              priority: '1.0', changefreq: 'daily' },
-      { loc: `${CANONICAL}/#/risultati`,   priority: '0.9', changefreq: 'daily' },
-      { loc: `${CANONICAL}/#/classifica`,  priority: '0.8', changefreq: 'weekly' },
-      { loc: `${CANONICAL}/#/calendario`,  priority: '0.7', changefreq: 'weekly' },
-      { loc: `${CANONICAL}/#/atleti`,      priority: '0.7', changefreq: 'weekly' },
-      { loc: `${CANONICAL}/#/albo`,        priority: '0.6', changefreq: 'monthly' },
-    ];
-    for (const id of Object.keys(athletes || {})) {
-      if (id) urls.push({ loc: `${CANONICAL}/og/atleta/${encodeURIComponent(id)}`, priority: '0.7', changefreq: 'weekly' });
-    }
-    const garaIds = [...new Set((resultsRaw || []).map(r => r.gara_id).filter(Boolean))];
-    for (const gid of garaIds) {
-      urls.push({ loc: `${CANONICAL}/og/gara/${encodeURIComponent(gid)}`, priority: '0.6', changefreq: 'monthly' });
-    }
-    for (const id of Object.keys(teams || {})) {
-      if (id) urls.push({ loc: `${CANONICAL}/og/team/${encodeURIComponent(id)}`, priority: '0.6', changefreq: 'weekly' });
-    }
-    const xml = `<?xml version="1.0" encoding="UTF-8"?>\n<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">\n${
-      urls.map(u => `  <url><loc>${u.loc}</loc><changefreq>${u.changefreq}</changefreq><priority>${u.priority}</priority></url>`).join('\n')
-    }\n</urlset>`;
-    res.setHeader('Content-Type', 'application/xml; charset=utf-8');
-    res.setHeader('Cache-Control', 'public, max-age=3600');
-    res.send(xml);
-  } catch (e) {
-    res.status(500).send('<!-- sitemap error -->');
-  }
 });
 
 // ── Auth routes ───────────────────────────────────────────────────────────────
