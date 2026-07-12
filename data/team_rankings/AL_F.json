@@ -38,11 +38,11 @@
   {
     "team_id": "U_C_GIORGIONE",
     "team_nome": "U.C. GIORGIONE",
-    "punti": 230,
+    "punti": 240,
     "vittorie": 5,
     "p1": 5,
     "p2": 4,
-    "p3": 4,
+    "p3": 5,
     "pout": 12,
     "n_atleti": 5,
     "pos": 4
@@ -86,14 +86,26 @@
   {
     "team_id": "TEAM_FABIANA_LUPERINI_ASD",
     "team_nome": "TEAM FABIANA LUPERINI ASD",
-    "punti": 153,
+    "punti": 157,
     "vittorie": 2,
     "p1": 2,
     "p2": 3,
     "p3": 2,
-    "pout": 12,
+    "pout": 13,
     "n_atleti": 2,
     "pos": 8
+  },
+  {
+    "team_id": "A_R_MONEX_PRO_CYCLING_TEAM",
+    "team_nome": "A.R.MONEX PRO CYCLING TEAM",
+    "punti": 112,
+    "vittorie": 2,
+    "p1": 2,
+    "p2": 0,
+    "p3": 3,
+    "pout": 9,
+    "n_atleti": 5,
+    "pos": 9
   },
   {
     "team_id": "JU_GREEN_A_S_D_GORLA_MINORE",
@@ -105,29 +117,17 @@
     "p3": 1,
     "pout": 14,
     "n_atleti": 2,
-    "pos": 9
-  },
-  {
-    "team_id": "A_R_MONEX_PRO_CYCLING_TEAM",
-    "team_nome": "A.R.MONEX PRO CYCLING TEAM",
-    "punti": 89,
-    "vittorie": 1,
-    "p1": 1,
-    "p2": 0,
-    "p3": 3,
-    "pout": 8,
-    "n_atleti": 5,
     "pos": 10
   },
   {
     "team_id": "TEAM_WILIER_BREGANZE",
     "team_nome": "TEAM WILIER BREGANZE",
-    "punti": 87,
+    "punti": 92,
     "vittorie": 1,
     "p1": 1,
     "p2": 0,
     "p3": 1,
-    "pout": 10,
+    "pout": 12,
     "n_atleti": 2,
     "pos": 11
   },
@@ -156,6 +156,18 @@
     "pos": 13
   },
   {
+    "team_id": "U_S_SCUOLA_CICLISMO_VO",
+    "team_nome": "U.S.SCUOLA CICLISMO VO'",
+    "punti": 60,
+    "vittorie": 0,
+    "p1": 0,
+    "p2": 0,
+    "p3": 2,
+    "pout": 7,
+    "n_atleti": 1,
+    "pos": 14
+  },
+  {
     "team_id": "ASS_NE_CICLISTICA_DILETT_VALVASONE",
     "team_nome": "ASS.NE CICLISTICA DILETT. VALVASONE",
     "punti": 57,
@@ -165,7 +177,7 @@
     "p3": 0,
     "pout": 10,
     "n_atleti": 3,
-    "pos": 14
+    "pos": 15
   },
   {
     "team_id": "HG_CYCLING_TEAM",
@@ -177,18 +189,6 @@
     "p3": 2,
     "pout": 8,
     "n_atleti": 4,
-    "pos": 15
-  },
-  {
-    "team_id": "U_S_SCUOLA_CICLISMO_VO",
-    "team_nome": "U.S.SCUOLA CICLISMO VO'",
-    "punti": 55,
-    "vittorie": 0,
-    "p1": 0,
-    "p2": 0,
-    "p3": 2,
-    "pout": 6,
-    "n_atleti": 1,
     "pos": 16
   },
   {
@@ -240,6 +240,18 @@
     "pos": 20
   },
   {
+    "team_id": "ASD_GS_SORGENTE_PRADIPOZZO",
+    "team_nome": "ASD GS SORGENTE PRADIPOZZO",
+    "punti": 39,
+    "vittorie": 0,
+    "p1": 0,
+    "p2": 2,
+    "p3": 1,
+    "pout": 2,
+    "n_atleti": 1,
+    "pos": 21
+  },
+  {
     "team_id": "VENETO",
     "team_nome": "VENETO",
     "punti": 36,
@@ -249,7 +261,7 @@
     "p3": 0,
     "pout": 1,
     "n_atleti": 2,
-    "pos": 21
+    "pos": 22
   },
   {
     "team_id": "FREE_BIKE_LT_LOGISTICA_AMBIENTALE",
@@ -261,7 +273,7 @@
     "p3": 0,
     "pout": 0,
     "n_atleti": 1,
-    "pos": 22
+    "pos": 23
   },
   {
     "team_id": "ASD_VELOCE_CLUB_BORGO",
@@ -273,7 +285,7 @@
     "p3": 1,
     "pout": 8,
     "n_atleti": 2,
-    "pos": 23
+    "pos": 24
   },
   {
     "team_id": "LIBERTAS_CERESETTO",
@@ -285,7 +297,7 @@
     "p3": 1,
     "pout": 6,
     "n_atleti": 2,
-    "pos": 24
+    "pos": 25
   },
   {
     "team_id": "ASD_FUSION_BIKE",
@@ -297,7 +309,19 @@
     "p3": 0,
     "pout": 5,
     "n_atleti": 2,
-    "pos": 25
+    "pos": 26
+  },
+  {
+    "team_id": "COMAL_TRENTINO_CYCLING_ACADEMY",
+    "team_nome": "COMAL TRENTINO CYCLING ACADEMY",
+    "punti": 31,
+    "vittorie": 0,
+    "p1": 0,
+    "p2": 0,
+    "p3": 0,
+    "pout": 7,
+    "n_atleti": 4,
+    "pos": 27
   },
   {
     "team_id": "VELO_CLUB_SARROCH",
@@ -309,7 +333,7 @@
     "p3": 0,
     "pout": 0,
     "n_atleti": 1,
-    "pos": 26
+    "pos": 28
   },
   {
     "team_id": "BLU_TEAM",
@@ -321,7 +345,7 @@
     "p3": 0,
     "pout": 2,
     "n_atleti": 1,
-    "pos": 27
+    "pos": 29
   },
   {
     "team_id": "I_CINGHIALI_EVO",
@@ -333,19 +357,19 @@
     "p3": 0,
     "pout": 6,
     "n_atleti": 1,
-    "pos": 28
+    "pos": 30
   },
   {
-    "team_id": "ASD_GS_SORGENTE_PRADIPOZZO",
-    "team_nome": "ASD GS SORGENTE PRADIPOZZO",
+    "team_id": "G_C_NOVENTANA",
+    "team_nome": "G.C. NOVENTANA",
     "punti": 27,
     "vittorie": 0,
     "p1": 0,
-    "p2": 1,
-    "p3": 1,
-    "pout": 2,
-    "n_atleti": 1,
-    "pos": 29
+    "p2": 0,
+    "p3": 0,
+    "pout": 8,
+    "n_atleti": 2,
+    "pos": 31
   },
   {
     "team_id": "BREGANZE_MILLENIUM",
@@ -357,19 +381,7 @@
     "p3": 0,
     "pout": 3,
     "n_atleti": 1,
-    "pos": 30
-  },
-  {
-    "team_id": "G_C_NOVENTANA",
-    "team_nome": "G.C. NOVENTANA",
-    "punti": 26,
-    "vittorie": 0,
-    "p1": 0,
-    "p2": 0,
-    "p3": 0,
-    "pout": 7,
-    "n_atleti": 2,
-    "pos": 31
+    "pos": 32
   },
   {
     "team_id": "A_S_D_G_C_EMIC",
@@ -381,18 +393,6 @@
     "p3": 1,
     "pout": 5,
     "n_atleti": 1,
-    "pos": 32
-  },
-  {
-    "team_id": "COMAL_TRENTINO_CYCLING_ACADEMY",
-    "team_nome": "COMAL TRENTINO CYCLING ACADEMY",
-    "punti": 25,
-    "vittorie": 0,
-    "p1": 0,
-    "p2": 0,
-    "p3": 0,
-    "pout": 6,
-    "n_atleti": 4,
     "pos": 33
   },
   {
