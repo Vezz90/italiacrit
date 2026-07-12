@@ -1420,25 +1420,50 @@ function processLoadedData({ calendar, resultsRaw, athletes, teams, meta, raceDe
   // ── Split gare "gara unica" con generi misti sotto lo stesso gara_id ──────
   // In alcune gare Esordienti/Allievi uomini e donne corrono insieme; la FCI
   // (e quindi lo scraper) assegna un unico gara_id (suffisso _M) all'intera
-  // tabella, quindi posizione/punti_effettivi vengono calcolati sulla
-  // classifica ASSOLUTA mista invece che separatamente per genere — una donna
+  // tabella E marca il genere 'M' per TUTTE le righe, comprese le atlete —
+  // spesso senza NESSUN segnale F da cui partire (a differenza di un errore
+  // isolato, qui manca proprio il dato). Serve quindi anche un riconoscimento
+  // per nome (solo nomi italiani inequivocabilmente femminili) per scovare le
+  // atlete che altrimenti resterebbero invisibili come tali.
+  const _FEMALE_GIVEN_NAMES = new Set([
+    'SOFIA','GIULIA','AURORA','GINEVRA','ALICE','EMMA','GIORGIA','GRETA','BEATRICE','VITTORIA',
+    'MATILDE','NICOLE','ANNA','SARA','MARTINA','CHIARA','REBECCA','ALESSIA','BIANCA','CAMILLA',
+    'ELENA','LUDOVICA','GAIA','ARIANNA','VIOLA','NOEMI','RACHELE','EMILY','ELISA','CARLOTTA',
+    'FEDERICA','ALESSANDRA','ELISABETTA','LUCIA','VALENTINA','SILVIA','FRANCESCA','MARTA','ILARIA',
+    'IRENE','SERENA','LAURA','ANGELA','ROBERTA','CRISTINA','SIMONA','PAOLA','MICHELA',
+    'BARBARA','DANIELA','ELEONORA','MELISSA','JASMINE','ASIA','DILETTA','MIRIAM','ERIKA','VERONICA',
+    'SABRINA','DEBORA','SAMUELA','SAMANTHA','VANESSA','AMBRA','AZZURRA','CELESTE','IRIS','PERLA',
+    'STELLA','LUNA','NINA','CECILIA','COSTANZA','DIANA','ILENIA','ISABEL','ISABELLA','KATIA',
+    'LETIZIA','LIVIA','MANUELA','MARGHERITA','MARIKA','MIA','NADIA','OTTAVIA','PRISCILLA','RAFFAELLA',
+    'ROSA','ROSSELLA','SABINA','SELENE','TANIA','TIZIANA','ZOE','CARMEN','EMANUELA','SORAYA','GIADA',
+    'SONIA','MILENA','LOREDANA','GIOIA','LAVINIA','ANITA','EVA','ALMA',
+  ]);
+  // "MARIA" da sola NON è nell'elenco (usata anche come secondo nome
+  // devozionale maschile, es. "GIAN MARIA") — basta che comparse insieme a un
+  // altro nome femminile inequivocabile (es. "MARIA VITTORIA") perché quel
+  // secondo token venga comunque riconosciuto.
+  const _isLikelyFemaleGivenName = (nomeStr) =>
+    !!nomeStr && String(nomeStr).toUpperCase().split(/\s+/).some(tok => _FEMALE_GIVEN_NAMES.has(tok));
+
+  // In alcune gare "gara unica" uomini e donne corrono insieme; una donna
   // arrivata davanti a qualche uomo mostrava la sua posizione assoluta invece
   // di essere 1ª nella sua categoria, e gli uomini dietro di lei restavano
-  // "spostati" nella loro classifica. Una volta noto il vero genere (appena
-  // corretto sopra da ATHLETE_GENDER_FIXES), qui si spostano le righe
-  // femminili su un gara_id sintetico distinto (suffisso _F) e si riassegna
-  // posizione + punti separatamente per genere, mantenendo l'ordine di arrivo
-  // relativo originale — così l'intera UI esistente (tab categoria, pagina
-  // gara, albo d'oro, classifiche) tratta le due classifiche come gare
-  // separate, esattamente come già avviene per le gare non miste.
+  // "spostati" nella loro classifica. Qui si individua il genere effettivo
+  // (già corretto sopra da ATHLETE_GENDER_FIXES, oppure dedotto dal nome), si
+  // spostano le righe femminili su un gara_id sintetico distinto (suffisso
+  // _F) e si riassegna posizione + punti separatamente per genere,
+  // mantenendo l'ordine di arrivo relativo originale — così l'intera UI
+  // esistente (tab categoria, pagina gara, albo d'oro, classifiche) tratta le
+  // due classifiche come gare separate, esattamente come le gare non miste.
   if (resultsRaw) {
     const _byGara = {};
     for (const r of resultsRaw) { if (!r.gara_id) continue; (_byGara[r.gara_id] ||= []).push(r); }
+    const _effGenere = (r) => (r.genere === 'F' || _isLikelyFemaleGivenName(r.nome)) ? 'F' : 'M';
     for (const [gid, rows] of Object.entries(_byGara)) {
       if (!/_M$/.test(gid)) continue; // solo gruppi col suffisso maschile condiviso
-      if (!rows.some(r => r.genere === 'F') || !rows.some(r => r.genere === 'M')) continue; // non misto
+      if (!rows.some(r => _effGenere(r) === 'F') || !rows.some(r => _effGenere(r) === 'M')) continue; // non misto
       const fGaraId = gid.replace(/_M$/, '_F');
-      for (const r of rows) if (r.genere === 'F') r.gara_id = fGaraId;
+      for (const r of rows) if (_effGenere(r) === 'F') { r.genere = 'F'; r.gara_id = fGaraId; }
       // Riassegna posizione/punti SOLO alle righe con una posizione originale
       // valida (non tocca DNF/DNS o righe senza piazzamento), preservando
       // l'ordine di arrivo relativo originale.
