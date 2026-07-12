@@ -1423,6 +1423,23 @@ app.get('/api/admin/videos', requireAdmin, async (req, res) => {
   res.json(await readVideos());
 });
 
+// Recupera la data di pubblicazione REALE del video da YouTube (snippet.publishedAt),
+// per gli inserimenti manuali che altrimenti avrebbero sempre come data quella odierna
+// (rendendo inutile un ordinamento cronologico "dal più vecchio al più recente").
+// Ritorna null se non è un URL YouTube riconosciuto, manca la API key, o la chiamata fallisce
+// — in quel caso i chiamanti ricadono sulla data odierna come prima.
+async function _fetchYouTubePublishedAt(url) {
+  const videoId = _extractYouTubeId(url);
+  if (!videoId || !YOUTUBE_API_KEY) return null;
+  try {
+    const apiUrl = `https://www.googleapis.com/youtube/v3/videos?part=snippet&id=${videoId}&key=${YOUTUBE_API_KEY}`;
+    const r = await fetch(apiUrl, { signal: AbortSignal.timeout(8000) });
+    const json = await r.json();
+    const publishedAt = json.items?.[0]?.snippet?.publishedAt;
+    return publishedAt ? publishedAt.slice(0, 10) : null;
+  } catch { return null; }
+}
+
 // Submit URL YouTube (utenti autenticati)
 app.post('/api/videos/submit', requireAuth, async (req, res) => {
   try {
@@ -1432,17 +1449,18 @@ app.post('/api/videos/submit', requireAuth, async (req, res) => {
     // così ogni categoria della stessa gara ha i propri video separati
     const key = gara_id;
     const tags = [...new Set(String(atleta_ids || '').split(',').map(s => s.trim()).filter(Boolean))].join(',');
+    const realPublishedAt = await _fetchYouTubePublishedAt(url);
     if (req.user.role === 'admin') {
       const videos = await readVideos();
       if (!videos[key]) videos[key] = [];
       if (videos[key].some(v => v.url === url)) return res.status(409).json({ error: 'Video già presente' });
-      videos[key].push({ url, title: title || url, description: description || '', channel: channel || req.user.display_name || 'Admin', published_at: new Date().toISOString().slice(0,10), atleta_ids: tags, is_live: !!is_live });
+      videos[key].push({ url, title: title || url, description: description || '', channel: channel || req.user.display_name || 'Admin', published_at: realPublishedAt || new Date().toISOString().slice(0,10), atleta_ids: tags, is_live: !!is_live });
       await writeVideos(videos);
       return res.json({ ok: true, status: 'approved' });
     }
     const pending = await readPendingVideos();
     const id = Date.now().toString(36) + Math.random().toString(36).slice(2,7);
-    pending.push({ id, gara_id, cal_id: key, type: 'youtube', url, title: title || url, description: description || '', channel: channel || '', atleta_ids: tags, is_live: !!is_live, submitted_by: req.user.display_name || req.user.email, submitted_at: new Date().toISOString() });
+    pending.push({ id, gara_id, cal_id: key, type: 'youtube', url, title: title || url, description: description || '', channel: channel || '', atleta_ids: tags, is_live: !!is_live, published_at: realPublishedAt, submitted_by: req.user.display_name || req.user.email, submitted_at: new Date().toISOString() });
     await writePendingVideos(pending);
     res.json({ ok: true, status: 'pending' });
   } catch(e) { res.status(500).json({ error: e.message }); }
@@ -1509,7 +1527,7 @@ app.post('/api/admin/videos/pending/:id/approve', requireAdmin, async (req, res)
     const videos = await readVideos();
     const key = v.cal_id || v.gara_id;
     if (!videos[key]) videos[key] = [];
-    videos[key].push({ url: v.url, title: v.title, description: v.description || '', channel: v.channel || v.submitted_by || '', published_at: (v.submitted_at || '').slice(0, 10), atleta_ids: v.atleta_ids || '', is_live: !!v.is_live });
+    videos[key].push({ url: v.url, title: v.title, description: v.description || '', channel: v.channel || v.submitted_by || '', published_at: v.published_at || (v.submitted_at || '').slice(0, 10), atleta_ids: v.atleta_ids || '', is_live: !!v.is_live });
     await writeVideos(videos);
     pending.splice(i, 1);
     await writePendingVideos(pending);
@@ -1539,11 +1557,12 @@ app.post('/api/admin/videos/:calId', requireAdmin, async (req, res) => {
     if (!videos[calId]) videos[calId] = [];
     // Evita duplicati per URL
     if (videos[calId].some(v => v.url === url)) return res.status(409).json({ error: 'Video già presente per questa gara' });
+    const realPublishedAt = await _fetchYouTubePublishedAt(url);
     videos[calId].push({
       url, title: title || url,
       description: description || '',
       channel: channel || 'Admin',
-      published_at: new Date().toISOString().slice(0,10),
+      published_at: realPublishedAt || new Date().toISOString().slice(0,10),
       score: 1,
     });
     await writeVideos(videos);
@@ -3374,9 +3393,10 @@ app.post('/api/admin/media/extra', requireAdmin, async (req, res) => {
     const videos = await readVideos();
     if (!videos[bucket]) videos[bucket] = [];
     if (videos[bucket].some(v => v.url === url)) return res.status(409).json({ error: 'Video già presente' });
+    const realPublishedAt = await _fetchYouTubePublishedAt(url);
     videos[bucket].push({
       url, title: title || url, channel: channel || '',
-      published_at: new Date().toISOString().slice(0, 10),
+      published_at: realPublishedAt || new Date().toISOString().slice(0, 10),
     });
     await writeVideos(videos);
     res.json({ ok: true });
