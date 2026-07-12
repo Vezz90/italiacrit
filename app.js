@@ -2636,6 +2636,25 @@ function _renderPushButton() {
   }
 }
 
+// ── Google Analytics: page_view per ogni "vera" pagina della SPA ───────────
+// Il sito è hash-routed (#/gara/..., #/atleta/... ecc.): niente reload di
+// pagina, quindi il page_view automatico di gtag (disattivato in index.html
+// con send_page_view:false) vedrebbe solo il primissimo caricamento. Qui si
+// invia un evento page_view a ogni cambio hash — con un piccolo ritardo per
+// lasciare al render della pagina il tempo di aggiornare document.title,
+// che altrimenti risulterebbe ancora quello della pagina precedente.
+function _trackPageView() {
+  if (typeof gtag !== 'function') return;
+  setTimeout(() => {
+    gtag('event', 'page_view', {
+      page_path: location.hash.replace(/^#/, '') || '/',
+      page_location: location.href,
+      page_title: document.title,
+    });
+  }, 300);
+}
+window.addEventListener('hashchange', _trackPageView);
+
 window.addEventListener('load', async () => {
   globalData = await loadAll();
   updateMetaUI();
@@ -2645,6 +2664,7 @@ window.addEventListener('load', async () => {
   document.getElementById('initial-loader')?.remove();
   initTheme();
   route();
+  _trackPageView(); // page_view per il primo caricamento (niente hashchange)
   initSearch();
   initMobileMenu();
   initNavDropdowns();

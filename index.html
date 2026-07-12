@@ -9,7 +9,11 @@
     function gtag(){dataLayer.push(arguments);}
     gtag('js', new Date());
 
-    gtag('config', 'G-1329Z3BXWE');
+    // send_page_view:false — il sito è una SPA con hash-routing (#/gara/...,
+    // #/atleta/... ecc.): il page_view automatico vedrebbe solo il primo
+    // caricamento. I page_view reali per ogni cambio pagina vengono inviati
+    // da app.js (vedi _trackPageView), uno per ogni vera navigazione.
+    gtag('config', 'G-1329Z3BXWE', { send_page_view: false });
   </script>
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>ICS — Italia Cycling Stats | Ciclismo Italiano Agonistico</title>
@@ -203,6 +207,6 @@ function googleTranslateElementInit() {
 }
 </script>
 <script src="//translate.google.com/translate_a/element.js?cb=googleTranslateElementInit" async></script>
-<script src="app.js?v=448" defer></script>
+<script src="app.js?v=449" defer></script>
 </body>
 </html>
