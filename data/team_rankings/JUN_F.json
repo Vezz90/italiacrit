@@ -26,24 +26,24 @@
   {
     "team_id": "LIBERTAS_CERESETTO",
     "team_nome": "LIBERTAS CERESETTO",
-    "punti": 249,
+    "punti": 255,
     "vittorie": 0,
     "p1": 0,
     "p2": 4,
     "p3": 2,
-    "pout": 30,
+    "pout": 31,
     "n_atleti": 7,
     "pos": 3
   },
   {
     "team_id": "BREGANZE_MILLENIUM",
     "team_nome": "BREGANZE MILLENIUM",
-    "punti": 215,
+    "punti": 233,
     "vittorie": 3,
     "p1": 3,
     "p2": 2,
-    "p3": 3,
-    "pout": 15,
+    "p3": 4,
+    "pout": 16,
     "n_atleti": 6,
     "pos": 4
   },
@@ -74,36 +74,36 @@
   {
     "team_id": "U_C_CONSCIO_PEDALE_DEL_SILE",
     "team_nome": "U.C.CONSCIO PEDALE DEL SILE",
-    "punti": 171,
+    "punti": 173,
     "vittorie": 2,
     "p1": 2,
     "p2": 2,
     "p3": 0,
-    "pout": 20,
+    "pout": 21,
     "n_atleti": 6,
     "pos": 7
   },
   {
     "team_id": "TEAM_WILIER_BREGANZE",
     "team_nome": "TEAM WILIER BREGANZE",
-    "punti": 151,
+    "punti": 155,
     "vittorie": 2,
     "p1": 2,
     "p2": 1,
     "p3": 1,
-    "pout": 21,
+    "pout": 22,
     "n_atleti": 6,
     "pos": 8
   },
   {
     "team_id": "A_R_MONEX_PRO_CYCLING_TEAM",
     "team_nome": "A.R.MONEX PRO CYCLING TEAM",
-    "punti": 146,
+    "punti": 151,
     "vittorie": 1,
     "p1": 1,
     "p2": 1,
     "p3": 2,
-    "pout": 8,
+    "pout": 9,
     "n_atleti": 6,
     "pos": 9
   },
@@ -168,6 +168,18 @@
     "pos": 14
   },
   {
+    "team_id": "TEAM_MENDELSPECK_E_WORK",
+    "team_nome": "TEAM MENDELSPECK E-WORK",
+    "punti": 21,
+    "vittorie": 0,
+    "p1": 0,
+    "p2": 1,
+    "p3": 0,
+    "pout": 3,
+    "n_atleti": 4,
+    "pos": 15
+  },
+  {
     "team_id": "ZHIRAF",
     "team_nome": "ZHIRAF",
     "punti": 19,
@@ -177,7 +189,19 @@
     "p3": 0,
     "pout": 3,
     "n_atleti": 3,
-    "pos": 15
+    "pos": 16
+  },
+  {
+    "team_id": "LMC_BOGOTA",
+    "team_nome": "LMC BOGOTA'",
+    "punti": 18,
+    "vittorie": 1,
+    "p1": 1,
+    "p2": 0,
+    "p3": 0,
+    "pout": 1,
+    "n_atleti": 1,
+    "pos": 17
   },
   {
     "team_id": "REPUBBLICA_CECA",
@@ -189,19 +213,19 @@
     "p3": 0,
     "pout": 1,
     "n_atleti": 1,
-    "pos": 16
+    "pos": 18
   },
   {
-    "team_id": "TEAM_MENDELSPECK_E_WORK",
-    "team_nome": "TEAM MENDELSPECK E-WORK",
-    "punti": 9,
+    "team_id": "CANTURINO_1902_A_S_D",
+    "team_nome": "CANTURINO 1902 A.S.D.",
+    "punti": 11,
     "vittorie": 0,
     "p1": 0,
     "p2": 0,
     "p3": 0,
-    "pout": 3,
-    "n_atleti": 3,
-    "pos": 17
+    "pout": 2,
+    "n_atleti": 1,
+    "pos": 19
   },
   {
     "team_id": "SPAGNA",
@@ -213,36 +237,12 @@
     "p3": 0,
     "pout": 1,
     "n_atleti": 1,
-    "pos": 18
-  },
-  {
-    "team_id": "CANTURINO_1902_A_S_D",
-    "team_nome": "CANTURINO 1902 A.S.D.",
-    "punti": 8,
-    "vittorie": 0,
-    "p1": 0,
-    "p2": 0,
-    "p3": 0,
-    "pout": 1,
-    "n_atleti": 1,
-    "pos": 19
+    "pos": 20
   },
   {
     "team_id": "POLISH_CYCLING_FEDERATION",
     "team_nome": "POLISH CYCLING FEDERATION",
     "punti": 4,
-    "vittorie": 0,
-    "p1": 0,
-    "p2": 0,
-    "p3": 0,
-    "pout": 1,
-    "n_atleti": 1,
-    "pos": 20
-  },
-  {
-    "team_id": "LMC_BOGOTA",
-    "team_nome": "LMC BOGOTA'",
-    "punti": 3,
     "vittorie": 0,
     "p1": 0,
     "p2": 0,
@@ -286,5 +286,17 @@
     "pout": 1,
     "n_atleti": 1,
     "pos": 24
+  },
+  {
+    "team_id": "A_S_D_CLUB_CORRIDONIA_S_C",
+    "team_nome": "A.S.D. CLUB CORRIDONIA S.C.",
+    "punti": 1,
+    "vittorie": 0,
+    "p1": 0,
+    "p2": 0,
+    "p3": 0,
+    "pout": 1,
+    "n_atleti": 1,
+    "pos": 25
   }
 ]
