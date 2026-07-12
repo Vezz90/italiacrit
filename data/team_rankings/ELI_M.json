@@ -2,13 +2,13 @@
   {
     "team_id": "A_S_D_S_C_PADOVANI",
     "team_nome": "A.S.D. S.C. PADOVANI",
-    "punti": 950,
+    "punti": 959,
     "vittorie": 9,
     "p1": 9,
     "p2": 11,
     "p3": 6,
-    "pout": 30,
-    "n_atleti": 12,
+    "pout": 32,
+    "n_atleti": 13,
     "pos": 1
   },
   {
@@ -26,13 +26,13 @@
   {
     "team_id": "GENERAL_STORE_ESSEGIBI_F_LLI_CURIA",
     "team_nome": "GENERAL STORE -ESSEGIBI-F.LLI CURIA",
-    "punti": 642,
-    "vittorie": 6,
-    "p1": 6,
-    "p2": 3,
+    "punti": 672,
+    "vittorie": 7,
+    "p1": 7,
+    "p2": 4,
     "p3": 4,
-    "pout": 27,
-    "n_atleti": 12,
+    "pout": 29,
+    "n_atleti": 13,
     "pos": 3
   },
   {
@@ -192,6 +192,18 @@
     "pos": 16
   },
   {
+    "team_id": "CICLISTICA_ROSTESE",
+    "team_nome": "CICLISTICA ROSTESE",
+    "punti": 199,
+    "vittorie": 2,
+    "p1": 2,
+    "p2": 1,
+    "p3": 3,
+    "pout": 14,
+    "n_atleti": 5,
+    "pos": 17
+  },
+  {
     "team_id": "MG_K_VIS_COSTRUZIONI_E_AMBIENTE",
     "team_nome": "MG K-VIS COSTRUZIONI E AMBIENTE",
     "punti": 197,
@@ -201,7 +213,7 @@
     "p3": 1,
     "pout": 8,
     "n_atleti": 9,
-    "pos": 17
+    "pos": 18
   },
   {
     "team_id": "BARDIANI_CSF_7_SABER",
@@ -213,18 +225,6 @@
     "p3": 2,
     "pout": 4,
     "n_atleti": 7,
-    "pos": 18
-  },
-  {
-    "team_id": "CICLISTICA_ROSTESE",
-    "team_nome": "CICLISTICA ROSTESE",
-    "punti": 186,
-    "vittorie": 2,
-    "p1": 2,
-    "p2": 1,
-    "p3": 3,
-    "pout": 12,
-    "n_atleti": 5,
     "pos": 19
   },
   {
@@ -314,11 +314,11 @@
   {
     "team_id": "V_C_MENDRISIO",
     "team_nome": "V.C.MENDRISIO",
-    "punti": 98,
+    "punti": 108,
     "vittorie": 1,
     "p1": 1,
     "p2": 1,
-    "p3": 0,
+    "p3": 1,
     "pout": 7,
     "n_atleti": 5,
     "pos": 27
@@ -528,6 +528,18 @@
     "pos": 44
   },
   {
+    "team_id": "BELTRAMI_TSA_LA_RISORSA_UMANA_VC_RE",
+    "team_nome": "BELTRAMI TSA-LA RISORSA UMANA-VC RE",
+    "punti": 39,
+    "vittorie": 0,
+    "p1": 0,
+    "p2": 1,
+    "p3": 1,
+    "pout": 3,
+    "n_atleti": 3,
+    "pos": 45
+  },
+  {
     "team_id": "NIPPO_NUOVACOMAUTO_OBOR",
     "team_nome": "NIPPO NUOVACOMAUTO OBOR",
     "punti": 37,
@@ -537,18 +549,6 @@
     "p3": 0,
     "pout": 7,
     "n_atleti": 4,
-    "pos": 45
-  },
-  {
-    "team_id": "BELTRAMI_TSA_LA_RISORSA_UMANA_VC_RE",
-    "team_nome": "BELTRAMI TSA-LA RISORSA UMANA-VC RE",
-    "punti": 35,
-    "vittorie": 0,
-    "p1": 0,
-    "p2": 1,
-    "p3": 1,
-    "pout": 2,
-    "n_atleti": 3,
     "pos": 46
   },
   {

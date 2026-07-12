@@ -1,4 +1,540 @@
 {
+  "BIEHL_KEVIN": {
+    "id": "BIEHL_KEVIN",
+    "nome": "KEVIN",
+    "cognome": "BIEHL",
+    "team_attuale": "GENERAL STORE -ESSEGIBI-F.LLI CURIA",
+    "team_id": "GENERAL_STORE_ESSEGIBI_F_LLI_CURIA",
+    "categoria": "ELI_M",
+    "genere": "M",
+    "punti_totali": 57,
+    "risultati": [
+      {
+        "gara_id": "43_TROFEO_M_P_FILTRI_2026-07-12_ELI_M",
+        "nome_gara": "43 TROFEO M P FILTRI",
+        "data": "2026-07-12",
+        "posizione": 1,
+        "punti_effettivi": 15,
+        "team": "GENERAL STORE -ESSEGIBI-F.LLI CURIA",
+        "moltiplicatore": 1,
+        "tipo": "regionale",
+        "regione": "UNDER",
+        "km": "145.000",
+        "media": "42.456"
+      },
+      {
+        "gara_id": "GIRO_D_ITALIA_NEXT_GEN_SETTIMA_TAPPA_2026-06-20_ELI_M",
+        "nome_gara": "GIRO D'ITALIA NEXT GEN SETTIMA TAPPA",
+        "data": "2026-06-20",
+        "posizione": 9,
+        "punti_effettivi": 6,
+        "team": "GENERAL STORE -ESSEGIBI-F.LLI CURIA",
+        "moltiplicatore": 3,
+        "tipo": "internazionale",
+        "regione": "UNDER",
+        "km": "135.000",
+        "media": "37.065"
+      },
+      {
+        "gara_id": "SECONDO_TROFEO_BIKE_SERVICE_CRONOMETRO_2026-06-06_ELI_M",
+        "nome_gara": "SECONDO TROFEO BIKE SERVICE CRONOMETRO",
+        "data": "2026-06-06",
+        "posizione": 5,
+        "punti_effettivi": 6,
+        "team": "GENERAL STORE -ESSEGIBI-F.LLI CURIA",
+        "moltiplicatore": 1,
+        "tipo": "regionale",
+        "regione": "EMILIA ROMAGNA",
+        "km": "17.300",
+        "media": ""
+      },
+      {
+        "gara_id": "63_GRAN_PREMIO_PALIO_DEL_RECIOTO_UNDER23_2026-04-07_ELI_M",
+        "nome_gara": "63 GRAN PREMIO PALIO DEL RECIOTO UNDER23",
+        "data": "2026-04-07",
+        "posizione": 3,
+        "punti_effettivi": 30,
+        "team": "GENERAL STORE -ESSEGIBI-F.LLI CURIA",
+        "moltiplicatore": 3,
+        "tipo": "internazionale",
+        "regione": "VENETO",
+        "km": "147.000",
+        "media": "36.598"
+      }
+    ]
+  },
+  "DE_CASSAN_DAVIDE": {
+    "id": "DE_CASSAN_DAVIDE",
+    "nome": "CASSAN DAVIDE",
+    "cognome": "DE",
+    "team_attuale": "GENERAL STORE -ESSEGIBI-F.LLI CURIA",
+    "team_id": "GENERAL_STORE_ESSEGIBI_F_LLI_CURIA",
+    "categoria": "ELI_M",
+    "genere": "M",
+    "punti_totali": 102,
+    "risultati": [
+      {
+        "gara_id": "43_TROFEO_M_P_FILTRI_2026-07-12_ELI_M",
+        "nome_gara": "43 TROFEO M P FILTRI",
+        "data": "2026-07-12",
+        "posizione": 2,
+        "punti_effettivi": 12,
+        "team": "GENERAL STORE -ESSEGIBI-F.LLI CURIA",
+        "moltiplicatore": 1,
+        "tipo": "regionale",
+        "regione": "UNDER",
+        "km": "145.000",
+        "media": "42.456"
+      },
+      {
+        "gara_id": "40_GIRO_DEL_MEDIO_BRENTA_2026-07-05_ELI_M",
+        "nome_gara": "40 GIRO DEL MEDIO BRENTA",
+        "data": "2026-07-05",
+        "posizione": 1,
+        "punti_effettivi": 45,
+        "team": "GENERAL STORE -ESSEGIBI-F.LLI CURIA",
+        "moltiplicatore": 3,
+        "tipo": "internazionale",
+        "regione": "VENETO",
+        "km": "175.000",
+        "media": "40.928"
+      },
+      {
+        "gara_id": "48_GRAN_PREMIO_CITTA_DI_EMPOLI_2026-06-13_ELI_M",
+        "nome_gara": "48 GRAN PREMIO CITTA' DI EMPOLI",
+        "data": "2026-06-13",
+        "posizione": 1,
+        "punti_effettivi": 30,
+        "team": "GENERAL STORE -ESSEGIBI-F.LLI CURIA",
+        "moltiplicatore": 2,
+        "tipo": "nazionale",
+        "regione": "TOSCANA",
+        "km": "146.000",
+        "media": "41.751"
+      },
+      {
+        "gara_id": "70_TROFEO_ALCIDE_DE_GASPERI_2026-06-02_ELI_M",
+        "nome_gara": "70 TROFEO ALCIDE DE GASPERI",
+        "data": "2026-06-02",
+        "posizione": 6,
+        "punti_effettivi": 15,
+        "team": "GENERAL STORE -ESSEGIBI-F.LLI CURIA",
+        "moltiplicatore": 3,
+        "tipo": "internazionale",
+        "regione": "TRENTO",
+        "km": "156.900",
+        "media": "39.946"
+      }
+    ]
+  },
+  "ZUMSTEIN_MELK": {
+    "id": "ZUMSTEIN_MELK",
+    "nome": "MELK",
+    "cognome": "ZUMSTEIN",
+    "team_attuale": "V.C.MENDRISIO",
+    "team_id": "V_C_MENDRISIO",
+    "categoria": "ELI_M",
+    "genere": "M",
+    "punti_totali": 52,
+    "risultati": [
+      {
+        "gara_id": "43_TROFEO_M_P_FILTRI_2026-07-12_ELI_M",
+        "nome_gara": "43 TROFEO M P FILTRI",
+        "data": "2026-07-12",
+        "posizione": 3,
+        "punti_effettivi": 10,
+        "team": "V.C.MENDRISIO",
+        "moltiplicatore": 1,
+        "tipo": "regionale",
+        "regione": "UNDER",
+        "km": "145.000",
+        "media": "42.456"
+      },
+      {
+        "gara_id": "19_TROFEO_CITTA_DI_SAN_VENDEMIANO_UNDER23_2026-04-12_ELI_M",
+        "nome_gara": "19 TROFEO CITTA' DI SAN VENDEMIANO UNDER23",
+        "data": "2026-04-12",
+        "posizione": 7,
+        "punti_effettivi": 12,
+        "team": "V.C.MENDRISIO",
+        "moltiplicatore": 3,
+        "tipo": "internazionale",
+        "regione": "VENETO",
+        "km": "171.600",
+        "media": "44.730"
+      },
+      {
+        "gara_id": "65_GRAN_PREMIO_SAN_GIUSEPPE_UNDER23_2026-03-15_ELI_M",
+        "nome_gara": "65 GRAN PREMIO SAN GIUSEPPE UNDER23",
+        "data": "2026-03-15",
+        "posizione": 1,
+        "punti_effettivi": 30,
+        "team": "V.C.MENDRISIO",
+        "moltiplicatore": 2,
+        "tipo": "nazionale",
+        "regione": "MARCHE",
+        "km": "153.000",
+        "media": "40.281"
+      }
+    ]
+  },
+  "FEDE_GABRIEL": {
+    "id": "FEDE_GABRIEL",
+    "nome": "GABRIEL",
+    "cognome": "FEDE",
+    "team_attuale": "CICLISTICA ROSTESE",
+    "team_id": "CICLISTICA_ROSTESE",
+    "categoria": "ELI_M",
+    "genere": "M",
+    "punti_totali": 90,
+    "risultati": [
+      {
+        "gara_id": "43_TROFEO_M_P_FILTRI_2026-07-12_ELI_M",
+        "nome_gara": "43 TROFEO M P FILTRI",
+        "data": "2026-07-12",
+        "posizione": 4,
+        "punti_effettivi": 8,
+        "team": "CICLISTICA ROSTESE",
+        "moltiplicatore": 1,
+        "tipo": "regionale",
+        "regione": "UNDER",
+        "km": "145.000",
+        "media": "42.456"
+      },
+      {
+        "gara_id": "28_FIORANO_FIORANO_2026-06-02_ELI_M",
+        "nome_gara": "28 FIORANO FIORANO",
+        "data": "2026-06-02",
+        "posizione": 9,
+        "punti_effettivi": 4,
+        "team": "CICLISTICA ROSTESE",
+        "moltiplicatore": 2,
+        "tipo": "nazionale",
+        "regione": "EMILIA ROMAGNA",
+        "km": "176.000",
+        "media": "43.487"
+      },
+      {
+        "gara_id": "10_GRAN_PREMIO_CITTA_DI_PONTEDERA_2026-05-16_ELI_M",
+        "nome_gara": "10 GRAN PREMIO CITTA' DI PONTEDERA",
+        "data": "2026-05-16",
+        "posizione": 8,
+        "punti_effettivi": 6,
+        "team": "CICLISTICA ROSTESE",
+        "moltiplicatore": 2,
+        "tipo": "nazionale",
+        "regione": "TOSCANA",
+        "km": "166.000",
+        "media": "43.816"
+      },
+      {
+        "gara_id": "2_MEMORIAL_GIORDANO_MIGNOLLI_2026-05-09_ELI_M",
+        "nome_gara": "2 MEMORIAL GIORDANO MIGNOLLI",
+        "data": "2026-05-09",
+        "posizione": 1,
+        "punti_effettivi": 15,
+        "team": "CICLISTICA ROSTESE",
+        "moltiplicatore": 1,
+        "tipo": "regionale",
+        "regione": "VENETO",
+        "km": "137.900",
+        "media": "43.448"
+      },
+      {
+        "gara_id": "57_COPPA_PENNA_2026-05-01_ELI_M",
+        "nome_gara": "57 COPPA PENNA",
+        "data": "2026-05-01",
+        "posizione": 1,
+        "punti_effettivi": 15,
+        "team": "CICLISTICA ROSTESE",
+        "moltiplicatore": 1,
+        "tipo": "regionale",
+        "regione": "TOSCANA",
+        "km": "136.400",
+        "media": "42.867"
+      },
+      {
+        "gara_id": "64_COPPA_FIERA_DI_MERCATALE_2026-03-31_ELI_M",
+        "nome_gara": "64 COPPA FIERA DI MERCATALE",
+        "data": "2026-03-31",
+        "posizione": 9,
+        "punti_effettivi": 2,
+        "team": "CICLISTICA ROSTESE",
+        "moltiplicatore": 1,
+        "tipo": "regionale",
+        "regione": "TOSCANA",
+        "km": "144.000",
+        "media": "41.094"
+      },
+      {
+        "gara_id": "64_GRAN_PREMIO_LA_TORRE_2026-02-22_ELI_M",
+        "nome_gara": "64 GRAN PREMIO LA TORRE",
+        "data": "2026-02-22",
+        "posizione": 3,
+        "punti_effettivi": 20,
+        "team": "CICLISTICA ROSTESE",
+        "moltiplicatore": 2,
+        "tipo": "nazionale",
+        "regione": "TOSCANA",
+        "km": "120.900",
+        "media": "44.353"
+      },
+      {
+        "gara_id": "102_COPPA_SAN_GEO_2026-02-14_ELI_M",
+        "nome_gara": "102 COPPA SAN GEO",
+        "data": "2026-02-14",
+        "posizione": 3,
+        "punti_effettivi": 20,
+        "team": "CICLISTICA ROSTESE",
+        "moltiplicatore": 2,
+        "tipo": "nazionale",
+        "regione": "LOMBARDIA",
+        "km": "164.600",
+        "media": "40.051"
+      }
+    ]
+  },
+  "PIGNATTI_JACOPO": {
+    "id": "PIGNATTI_JACOPO",
+    "nome": "JACOPO",
+    "cognome": "PIGNATTI",
+    "team_attuale": "A.S.D. S.C. PADOVANI",
+    "team_id": "A_S_D_S_C_PADOVANI",
+    "categoria": "ELI_M",
+    "genere": "M",
+    "punti_totali": 6,
+    "risultati": [
+      {
+        "gara_id": "43_TROFEO_M_P_FILTRI_2026-07-12_ELI_M",
+        "nome_gara": "43 TROFEO M P FILTRI",
+        "data": "2026-07-12",
+        "posizione": 5,
+        "punti_effettivi": 6,
+        "team": "A.S.D. S.C. PADOVANI",
+        "moltiplicatore": 1,
+        "tipo": "regionale",
+        "regione": "UNDER",
+        "km": "145.000",
+        "media": "42.456"
+      }
+    ]
+  },
+  "SANTAMARIA_RICCARDO": {
+    "id": "SANTAMARIA_RICCARDO",
+    "nome": "RICCARDO",
+    "cognome": "SANTAMARIA",
+    "team_attuale": "CICLISTICA ROSTESE",
+    "team_id": "CICLISTICA_ROSTESE",
+    "categoria": "ELI_M",
+    "genere": "M",
+    "punti_totali": 19,
+    "risultati": [
+      {
+        "gara_id": "43_TROFEO_M_P_FILTRI_2026-07-12_ELI_M",
+        "nome_gara": "43 TROFEO M P FILTRI",
+        "data": "2026-07-12",
+        "posizione": 6,
+        "punti_effettivi": 5,
+        "team": "CICLISTICA ROSTESE",
+        "moltiplicatore": 1,
+        "tipo": "regionale",
+        "regione": "UNDER",
+        "km": "145.000",
+        "media": "42.456"
+      },
+      {
+        "gara_id": "2_MEMORIAL_GIORDANO_MIGNOLLI_2026-05-09_ELI_M",
+        "nome_gara": "2 MEMORIAL GIORDANO MIGNOLLI",
+        "data": "2026-05-09",
+        "posizione": 6,
+        "punti_effettivi": 5,
+        "team": "CICLISTICA ROSTESE",
+        "moltiplicatore": 1,
+        "tipo": "regionale",
+        "regione": "VENETO",
+        "km": "137.900",
+        "media": "43.448"
+      },
+      {
+        "gara_id": "64_COPPA_FIERA_DI_MERCATALE_2026-03-31_ELI_M",
+        "nome_gara": "64 COPPA FIERA DI MERCATALE",
+        "data": "2026-03-31",
+        "posizione": 7,
+        "punti_effettivi": 4,
+        "team": "CICLISTICA ROSTESE",
+        "moltiplicatore": 1,
+        "tipo": "regionale",
+        "regione": "TOSCANA",
+        "km": "144.000",
+        "media": "41.094"
+      },
+      {
+        "gara_id": "51_COPPA_MARTIRI_DI_MONTEMAGGIO_2026-03-29_ELI_M",
+        "nome_gara": "51 COPPA MARTIRI DI MONTEMAGGIO",
+        "data": "2026-03-29",
+        "posizione": 6,
+        "punti_effettivi": 5,
+        "team": "CICLISTICA ROSTESE",
+        "moltiplicatore": 1,
+        "tipo": "regionale",
+        "regione": "TOSCANA",
+        "km": "146.000",
+        "media": "40.534"
+      }
+    ]
+  },
+  "DREI_RICCARDO": {
+    "id": "DREI_RICCARDO",
+    "nome": "RICCARDO",
+    "cognome": "DREI",
+    "team_attuale": "BELTRAMI TSA-LA RISORSA UMANA-VC RE",
+    "team_id": "BELTRAMI_TSA_LA_RISORSA_UMANA_VC_RE",
+    "categoria": "ELI_M",
+    "genere": "M",
+    "punti_totali": 16,
+    "risultati": [
+      {
+        "gara_id": "43_TROFEO_M_P_FILTRI_2026-07-12_ELI_M",
+        "nome_gara": "43 TROFEO M P FILTRI",
+        "data": "2026-07-12",
+        "posizione": 7,
+        "punti_effettivi": 4,
+        "team": "BELTRAMI TSA-LA RISORSA UMANA-VC RE",
+        "moltiplicatore": 1,
+        "tipo": "regionale",
+        "regione": "UNDER",
+        "km": "145.000",
+        "media": "42.456"
+      },
+      {
+        "gara_id": "102_COPPA_SAN_GEO_2026-02-14_ELI_M",
+        "nome_gara": "102 COPPA SAN GEO",
+        "data": "2026-02-14",
+        "posizione": 5,
+        "punti_effettivi": 12,
+        "team": "BELTRAMI TSA-LA RISORSA UMANA-VC RE",
+        "moltiplicatore": 2,
+        "tipo": "nazionale",
+        "regione": "LOMBARDIA",
+        "km": "164.600",
+        "media": "40.051"
+      }
+    ]
+  },
+  "SCOFET_MATTEO": {
+    "id": "SCOFET_MATTEO",
+    "nome": "MATTEO",
+    "cognome": "SCOFET",
+    "team_attuale": "A.S.D. S.C. PADOVANI",
+    "team_id": "A_S_D_S_C_PADOVANI",
+    "categoria": "ELI_M",
+    "genere": "M",
+    "punti_totali": 16,
+    "risultati": [
+      {
+        "gara_id": "43_TROFEO_M_P_FILTRI_2026-07-12_ELI_M",
+        "nome_gara": "43 TROFEO M P FILTRI",
+        "data": "2026-07-12",
+        "posizione": 8,
+        "punti_effettivi": 3,
+        "team": "A.S.D. S.C. PADOVANI",
+        "moltiplicatore": 1,
+        "tipo": "regionale",
+        "regione": "UNDER",
+        "km": "145.000",
+        "media": "42.456"
+      },
+      {
+        "gara_id": "72_TROFEO_FRARE_DE_NARDI_2026-05-03_ELI_M",
+        "nome_gara": "72 TROFEO FRARE DE NARDI",
+        "data": "2026-05-03",
+        "posizione": 3,
+        "punti_effettivi": 10,
+        "team": "A.S.D. S.C. PADOVANI",
+        "moltiplicatore": 1,
+        "tipo": "regionale",
+        "regione": "VENETO",
+        "km": "154.700",
+        "media": "41.315"
+      },
+      {
+        "gara_id": "24_GRAN_PREMIO_DE_NARDI_2026-03-01_ELI_M",
+        "nome_gara": "24 GRAN PREMIO DE NARDI",
+        "data": "2026-03-01",
+        "posizione": 8,
+        "punti_effettivi": 3,
+        "team": "A.S.D. S.C. PADOVANI",
+        "moltiplicatore": 1,
+        "tipo": "regionale",
+        "regione": "VENETO",
+        "km": "101.200",
+        "media": "46.708"
+      }
+    ]
+  },
+  "BOSIO_TOMMASO": {
+    "id": "BOSIO_TOMMASO",
+    "nome": "TOMMASO",
+    "cognome": "BOSIO",
+    "team_attuale": "GENERAL STORE -ESSEGIBI-F.LLI CURIA",
+    "team_id": "GENERAL_STORE_ESSEGIBI_F_LLI_CURIA",
+    "categoria": "ELI_M",
+    "genere": "M",
+    "punti_totali": 4,
+    "risultati": [
+      {
+        "gara_id": "43_TROFEO_M_P_FILTRI_2026-07-12_ELI_M",
+        "nome_gara": "43 TROFEO M P FILTRI",
+        "data": "2026-07-12",
+        "posizione": 9,
+        "punti_effettivi": 2,
+        "team": "GENERAL STORE -ESSEGIBI-F.LLI CURIA",
+        "moltiplicatore": 1,
+        "tipo": "regionale",
+        "regione": "UNDER",
+        "km": "145.000",
+        "media": "42.456"
+      },
+      {
+        "gara_id": "SECONDO_TROFEO_BIKE_SERVICE_CRONOMETRO_2026-06-06_ELI_M",
+        "nome_gara": "SECONDO TROFEO BIKE SERVICE CRONOMETRO",
+        "data": "2026-06-06",
+        "posizione": 9,
+        "punti_effettivi": 2,
+        "team": "GENERAL STORE -ESSEGIBI-F.LLI CURIA",
+        "moltiplicatore": 1,
+        "tipo": "regionale",
+        "regione": "EMILIA ROMAGNA",
+        "km": "17.300",
+        "media": ""
+      }
+    ]
+  },
+  "COBALCHINI_ANDREA": {
+    "id": "COBALCHINI_ANDREA",
+    "nome": "ANDREA",
+    "cognome": "COBALCHINI",
+    "team_attuale": "GENERAL STORE -ESSEGIBI-F.LLI CURIA",
+    "team_id": "GENERAL_STORE_ESSEGIBI_F_LLI_CURIA",
+    "categoria": "ELI_M",
+    "genere": "M",
+    "punti_totali": 1,
+    "risultati": [
+      {
+        "gara_id": "43_TROFEO_M_P_FILTRI_2026-07-12_ELI_M",
+        "nome_gara": "43 TROFEO M P FILTRI",
+        "data": "2026-07-12",
+        "posizione": 10,
+        "punti_effettivi": 1,
+        "team": "GENERAL STORE -ESSEGIBI-F.LLI CURIA",
+        "moltiplicatore": 1,
+        "tipo": "regionale",
+        "regione": "UNDER",
+        "km": "145.000",
+        "media": "42.456"
+      }
+    ]
+  },
   "LAMPREA_MORALES_ZARA_SOFIA": {
     "id": "LAMPREA_MORALES_ZARA_SOFIA",
     "nome": "ZARA SOFIA",
@@ -24795,57 +25331,6 @@
         "regione": "VENETO",
         "km": "28.600",
         "media": "37.440"
-      }
-    ]
-  },
-  "DE_CASSAN_DAVIDE": {
-    "id": "DE_CASSAN_DAVIDE",
-    "nome": "CASSAN DAVIDE",
-    "cognome": "DE",
-    "team_attuale": "GENERAL STORE -ESSEGIBI-F.LLI CURIA",
-    "team_id": "GENERAL_STORE_ESSEGIBI_F_LLI_CURIA",
-    "categoria": "ELI_M",
-    "genere": "M",
-    "punti_totali": 90,
-    "risultati": [
-      {
-        "gara_id": "40_GIRO_DEL_MEDIO_BRENTA_2026-07-05_ELI_M",
-        "nome_gara": "40 GIRO DEL MEDIO BRENTA",
-        "data": "2026-07-05",
-        "posizione": 1,
-        "punti_effettivi": 45,
-        "team": "GENERAL STORE -ESSEGIBI-F.LLI CURIA",
-        "moltiplicatore": 3,
-        "tipo": "internazionale",
-        "regione": "VENETO",
-        "km": "175.000",
-        "media": "40.928"
-      },
-      {
-        "gara_id": "48_GRAN_PREMIO_CITTA_DI_EMPOLI_2026-06-13_ELI_M",
-        "nome_gara": "48 GRAN PREMIO CITTA' DI EMPOLI",
-        "data": "2026-06-13",
-        "posizione": 1,
-        "punti_effettivi": 30,
-        "team": "GENERAL STORE -ESSEGIBI-F.LLI CURIA",
-        "moltiplicatore": 2,
-        "tipo": "nazionale",
-        "regione": "TOSCANA",
-        "km": "146.000",
-        "media": "41.751"
-      },
-      {
-        "gara_id": "70_TROFEO_ALCIDE_DE_GASPERI_2026-06-02_ELI_M",
-        "nome_gara": "70 TROFEO ALCIDE DE GASPERI",
-        "data": "2026-06-02",
-        "posizione": 6,
-        "punti_effettivi": 15,
-        "team": "GENERAL STORE -ESSEGIBI-F.LLI CURIA",
-        "moltiplicatore": 3,
-        "tipo": "internazionale",
-        "regione": "TRENTO",
-        "km": "156.900",
-        "media": "39.946"
       }
     ]
   },
@@ -90861,57 +91346,6 @@
       }
     ]
   },
-  "BIEHL_KEVIN": {
-    "id": "BIEHL_KEVIN",
-    "nome": "KEVIN",
-    "cognome": "BIEHL",
-    "team_attuale": "GENERAL STORE -ESSEGIBI-F.LLI CURIA",
-    "team_id": "GENERAL_STORE_ESSEGIBI_F_LLI_CURIA",
-    "categoria": "ELI_M",
-    "genere": "M",
-    "punti_totali": 42,
-    "risultati": [
-      {
-        "gara_id": "GIRO_D_ITALIA_NEXT_GEN_SETTIMA_TAPPA_2026-06-20_ELI_M",
-        "nome_gara": "GIRO D'ITALIA NEXT GEN SETTIMA TAPPA",
-        "data": "2026-06-20",
-        "posizione": 9,
-        "punti_effettivi": 6,
-        "team": "GENERAL STORE -ESSEGIBI-F.LLI CURIA",
-        "moltiplicatore": 3,
-        "tipo": "internazionale",
-        "regione": "UNDER",
-        "km": "135.000",
-        "media": "37.065"
-      },
-      {
-        "gara_id": "SECONDO_TROFEO_BIKE_SERVICE_CRONOMETRO_2026-06-06_ELI_M",
-        "nome_gara": "SECONDO TROFEO BIKE SERVICE CRONOMETRO",
-        "data": "2026-06-06",
-        "posizione": 5,
-        "punti_effettivi": 6,
-        "team": "GENERAL STORE -ESSEGIBI-F.LLI CURIA",
-        "moltiplicatore": 1,
-        "tipo": "regionale",
-        "regione": "EMILIA ROMAGNA",
-        "km": "17.300",
-        "media": ""
-      },
-      {
-        "gara_id": "63_GRAN_PREMIO_PALIO_DEL_RECIOTO_UNDER23_2026-04-07_ELI_M",
-        "nome_gara": "63 GRAN PREMIO PALIO DEL RECIOTO UNDER23",
-        "data": "2026-04-07",
-        "posizione": 3,
-        "punti_effettivi": 30,
-        "team": "GENERAL STORE -ESSEGIBI-F.LLI CURIA",
-        "moltiplicatore": 3,
-        "tipo": "internazionale",
-        "regione": "VENETO",
-        "km": "147.000",
-        "media": "36.598"
-      }
-    ]
-  },
   "PETRIS_CARLOTTA": {
     "id": "PETRIS_CARLOTTA",
     "nome": "CARLOTTA",
@@ -114107,31 +114541,6 @@
       }
     ]
   },
-  "BOSIO_TOMMASO": {
-    "id": "BOSIO_TOMMASO",
-    "nome": "TOMMASO",
-    "cognome": "BOSIO",
-    "team_attuale": "GENERAL STORE -ESSEGIBI-F.LLI CURIA",
-    "team_id": "GENERAL_STORE_ESSEGIBI_F_LLI_CURIA",
-    "categoria": "ELI_M",
-    "genere": "M",
-    "punti_totali": 2,
-    "risultati": [
-      {
-        "gara_id": "SECONDO_TROFEO_BIKE_SERVICE_CRONOMETRO_2026-06-06_ELI_M",
-        "nome_gara": "SECONDO TROFEO BIKE SERVICE CRONOMETRO",
-        "data": "2026-06-06",
-        "posizione": 9,
-        "punti_effettivi": 2,
-        "team": "GENERAL STORE -ESSEGIBI-F.LLI CURIA",
-        "moltiplicatore": 1,
-        "tipo": "regionale",
-        "regione": "EMILIA ROMAGNA",
-        "km": "17.300",
-        "media": ""
-      }
-    ]
-  },
   "CATTIVELLI_MATTEO": {
     "id": "CATTIVELLI_MATTEO",
     "nome": "MATTEO",
@@ -116022,109 +116431,6 @@
         "regione": "EMILIA ROMAGNA",
         "km": "176.000",
         "media": "43.487"
-      }
-    ]
-  },
-  "FEDE_GABRIEL": {
-    "id": "FEDE_GABRIEL",
-    "nome": "GABRIEL",
-    "cognome": "FEDE",
-    "team_attuale": "CICLISTICA ROSTESE",
-    "team_id": "CICLISTICA_ROSTESE",
-    "categoria": "ELI_M",
-    "genere": "M",
-    "punti_totali": 82,
-    "risultati": [
-      {
-        "gara_id": "28_FIORANO_FIORANO_2026-06-02_ELI_M",
-        "nome_gara": "28 FIORANO FIORANO",
-        "data": "2026-06-02",
-        "posizione": 9,
-        "punti_effettivi": 4,
-        "team": "CICLISTICA ROSTESE",
-        "moltiplicatore": 2,
-        "tipo": "nazionale",
-        "regione": "EMILIA ROMAGNA",
-        "km": "176.000",
-        "media": "43.487"
-      },
-      {
-        "gara_id": "10_GRAN_PREMIO_CITTA_DI_PONTEDERA_2026-05-16_ELI_M",
-        "nome_gara": "10 GRAN PREMIO CITTA' DI PONTEDERA",
-        "data": "2026-05-16",
-        "posizione": 8,
-        "punti_effettivi": 6,
-        "team": "CICLISTICA ROSTESE",
-        "moltiplicatore": 2,
-        "tipo": "nazionale",
-        "regione": "TOSCANA",
-        "km": "166.000",
-        "media": "43.816"
-      },
-      {
-        "gara_id": "2_MEMORIAL_GIORDANO_MIGNOLLI_2026-05-09_ELI_M",
-        "nome_gara": "2 MEMORIAL GIORDANO MIGNOLLI",
-        "data": "2026-05-09",
-        "posizione": 1,
-        "punti_effettivi": 15,
-        "team": "CICLISTICA ROSTESE",
-        "moltiplicatore": 1,
-        "tipo": "regionale",
-        "regione": "VENETO",
-        "km": "137.900",
-        "media": "43.448"
-      },
-      {
-        "gara_id": "57_COPPA_PENNA_2026-05-01_ELI_M",
-        "nome_gara": "57 COPPA PENNA",
-        "data": "2026-05-01",
-        "posizione": 1,
-        "punti_effettivi": 15,
-        "team": "CICLISTICA ROSTESE",
-        "moltiplicatore": 1,
-        "tipo": "regionale",
-        "regione": "TOSCANA",
-        "km": "136.400",
-        "media": "42.867"
-      },
-      {
-        "gara_id": "64_COPPA_FIERA_DI_MERCATALE_2026-03-31_ELI_M",
-        "nome_gara": "64 COPPA FIERA DI MERCATALE",
-        "data": "2026-03-31",
-        "posizione": 9,
-        "punti_effettivi": 2,
-        "team": "CICLISTICA ROSTESE",
-        "moltiplicatore": 1,
-        "tipo": "regionale",
-        "regione": "TOSCANA",
-        "km": "144.000",
-        "media": "41.094"
-      },
-      {
-        "gara_id": "64_GRAN_PREMIO_LA_TORRE_2026-02-22_ELI_M",
-        "nome_gara": "64 GRAN PREMIO LA TORRE",
-        "data": "2026-02-22",
-        "posizione": 3,
-        "punti_effettivi": 20,
-        "team": "CICLISTICA ROSTESE",
-        "moltiplicatore": 2,
-        "tipo": "nazionale",
-        "regione": "TOSCANA",
-        "km": "120.900",
-        "media": "44.353"
-      },
-      {
-        "gara_id": "102_COPPA_SAN_GEO_2026-02-14_ELI_M",
-        "nome_gara": "102 COPPA SAN GEO",
-        "data": "2026-02-14",
-        "posizione": 3,
-        "punti_effettivi": 20,
-        "team": "CICLISTICA ROSTESE",
-        "moltiplicatore": 2,
-        "tipo": "nazionale",
-        "regione": "LOMBARDIA",
-        "km": "164.600",
-        "media": "40.051"
       }
     ]
   },
@@ -133342,57 +133648,6 @@
       }
     ]
   },
-  "SANTAMARIA_RICCARDO": {
-    "id": "SANTAMARIA_RICCARDO",
-    "nome": "RICCARDO",
-    "cognome": "SANTAMARIA",
-    "team_attuale": "CICLISTICA ROSTESE",
-    "team_id": "CICLISTICA_ROSTESE",
-    "categoria": "ELI_M",
-    "genere": "M",
-    "punti_totali": 14,
-    "risultati": [
-      {
-        "gara_id": "2_MEMORIAL_GIORDANO_MIGNOLLI_2026-05-09_ELI_M",
-        "nome_gara": "2 MEMORIAL GIORDANO MIGNOLLI",
-        "data": "2026-05-09",
-        "posizione": 6,
-        "punti_effettivi": 5,
-        "team": "CICLISTICA ROSTESE",
-        "moltiplicatore": 1,
-        "tipo": "regionale",
-        "regione": "VENETO",
-        "km": "137.900",
-        "media": "43.448"
-      },
-      {
-        "gara_id": "64_COPPA_FIERA_DI_MERCATALE_2026-03-31_ELI_M",
-        "nome_gara": "64 COPPA FIERA DI MERCATALE",
-        "data": "2026-03-31",
-        "posizione": 7,
-        "punti_effettivi": 4,
-        "team": "CICLISTICA ROSTESE",
-        "moltiplicatore": 1,
-        "tipo": "regionale",
-        "regione": "TOSCANA",
-        "km": "144.000",
-        "media": "41.094"
-      },
-      {
-        "gara_id": "51_COPPA_MARTIRI_DI_MONTEMAGGIO_2026-03-29_ELI_M",
-        "nome_gara": "51 COPPA MARTIRI DI MONTEMAGGIO",
-        "data": "2026-03-29",
-        "posizione": 6,
-        "punti_effettivi": 5,
-        "team": "CICLISTICA ROSTESE",
-        "moltiplicatore": 1,
-        "tipo": "regionale",
-        "regione": "TOSCANA",
-        "km": "146.000",
-        "media": "40.534"
-      }
-    ]
-  },
   "CRANAGE_JOSHUA_JAMES": {
     "id": "CRANAGE_JOSHUA_JAMES",
     "nome": "JOSHUA JAMES",
@@ -133967,44 +134222,6 @@
         "regione": "LAZIO",
         "km": "138.000",
         "media": "42.898"
-      }
-    ]
-  },
-  "SCOFET_MATTEO": {
-    "id": "SCOFET_MATTEO",
-    "nome": "MATTEO",
-    "cognome": "SCOFET",
-    "team_attuale": "A.S.D. S.C. PADOVANI",
-    "team_id": "A_S_D_S_C_PADOVANI",
-    "categoria": "ELI_M",
-    "genere": "M",
-    "punti_totali": 13,
-    "risultati": [
-      {
-        "gara_id": "72_TROFEO_FRARE_DE_NARDI_2026-05-03_ELI_M",
-        "nome_gara": "72 TROFEO FRARE DE NARDI",
-        "data": "2026-05-03",
-        "posizione": 3,
-        "punti_effettivi": 10,
-        "team": "A.S.D. S.C. PADOVANI",
-        "moltiplicatore": 1,
-        "tipo": "regionale",
-        "regione": "VENETO",
-        "km": "154.700",
-        "media": "41.315"
-      },
-      {
-        "gara_id": "24_GRAN_PREMIO_DE_NARDI_2026-03-01_ELI_M",
-        "nome_gara": "24 GRAN PREMIO DE NARDI",
-        "data": "2026-03-01",
-        "posizione": 8,
-        "punti_effettivi": 3,
-        "team": "A.S.D. S.C. PADOVANI",
-        "moltiplicatore": 1,
-        "tipo": "regionale",
-        "regione": "VENETO",
-        "km": "101.200",
-        "media": "46.708"
       }
     ]
   },
@@ -140737,44 +140954,6 @@
       }
     ]
   },
-  "ZUMSTEIN_MELK": {
-    "id": "ZUMSTEIN_MELK",
-    "nome": "MELK",
-    "cognome": "ZUMSTEIN",
-    "team_attuale": "V.C.MENDRISIO",
-    "team_id": "V_C_MENDRISIO",
-    "categoria": "ELI_M",
-    "genere": "M",
-    "punti_totali": 42,
-    "risultati": [
-      {
-        "gara_id": "19_TROFEO_CITTA_DI_SAN_VENDEMIANO_UNDER23_2026-04-12_ELI_M",
-        "nome_gara": "19 TROFEO CITTA' DI SAN VENDEMIANO UNDER23",
-        "data": "2026-04-12",
-        "posizione": 7,
-        "punti_effettivi": 12,
-        "team": "V.C.MENDRISIO",
-        "moltiplicatore": 3,
-        "tipo": "internazionale",
-        "regione": "VENETO",
-        "km": "171.600",
-        "media": "44.730"
-      },
-      {
-        "gara_id": "65_GRAN_PREMIO_SAN_GIUSEPPE_UNDER23_2026-03-15_ELI_M",
-        "nome_gara": "65 GRAN PREMIO SAN GIUSEPPE UNDER23",
-        "data": "2026-03-15",
-        "posizione": 1,
-        "punti_effettivi": 30,
-        "team": "V.C.MENDRISIO",
-        "moltiplicatore": 2,
-        "tipo": "nazionale",
-        "regione": "MARCHE",
-        "km": "153.000",
-        "media": "40.281"
-      }
-    ]
-  },
   "BASSANI_TOMMY": {
     "id": "BASSANI_TOMMY",
     "nome": "TOMMY",
@@ -145990,31 +146169,6 @@
         "regione": "TOSCANA",
         "km": "120.635",
         "media": "44.911"
-      }
-    ]
-  },
-  "DREI_RICCARDO": {
-    "id": "DREI_RICCARDO",
-    "nome": "RICCARDO",
-    "cognome": "DREI",
-    "team_attuale": "BELTRAMI TSA-LA RISORSA UMANA-VC RE",
-    "team_id": "BELTRAMI_TSA_LA_RISORSA_UMANA_VC_RE",
-    "categoria": "ELI_M",
-    "genere": "M",
-    "punti_totali": 12,
-    "risultati": [
-      {
-        "gara_id": "102_COPPA_SAN_GEO_2026-02-14_ELI_M",
-        "nome_gara": "102 COPPA SAN GEO",
-        "data": "2026-02-14",
-        "posizione": 5,
-        "punti_effettivi": 12,
-        "team": "BELTRAMI TSA-LA RISORSA UMANA-VC RE",
-        "moltiplicatore": 2,
-        "tipo": "nazionale",
-        "regione": "LOMBARDIA",
-        "km": "164.600",
-        "media": "40.051"
       }
     ]
   },
