@@ -19269,13 +19269,13 @@ async function renderMedia() {
     return true;
   });
 
-  // Ordine cronologico di pubblicazione su YouTube, dal più vecchio al più
-  // recente (fallback sulla data della gara per video legacy senza published_at).
-  const byPublishedAsc = (a, b) => (a.video.published_at || a.meta?.data || '').localeCompare(b.video.published_at || b.meta?.data || '');
-  videoItems = applyFilters(videoItems).sort(byPublishedAsc);
+  // Ordine cronologico di pubblicazione su YouTube, dal più recente al più
+  // vecchio (fallback sulla data della gara per video legacy senza published_at).
+  const byPublishedDesc = (a, b) => (b.video.published_at || b.meta?.data || '').localeCompare(a.video.published_at || a.meta?.data || '');
+  videoItems = applyFilters(videoItems).sort(byPublishedDesc);
   const direteItems = videoItems.filter(x => x.video.is_live);
-  const presentazioniFiltered = applyFilters(presentazioniItems).sort(byPublishedAsc);
-  const programmiTvFiltered   = applyFilters(programmiTvItems).sort(byPublishedAsc);
+  const presentazioniFiltered = applyFilters(presentazioniItems).sort(byPublishedDesc);
+  const programmiTvFiltered   = applyFilters(programmiTvItems).sort(byPublishedDesc);
 
   const items = mediaTab === 'dirette' ? direteItems
     : mediaTab === 'presentazioni' ? presentazioniFiltered
