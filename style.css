@@ -304,8 +304,12 @@ body { top: 0 !important; position: static !important; }
   z-index: 99;
   flex-direction: column;
   padding: 20px;
+  padding-bottom: 40px;
   gap: 8px;
   animation: slide-in 0.2s ease;
+  overflow-y: auto;
+  -webkit-overflow-scrolling: touch;
+  overscroll-behavior: contain;
 }
 #nav-drawer.open { display: flex; }
 
