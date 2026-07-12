@@ -2,34 +2,34 @@
   {
     "team_id": "SPORT_CLUB_BRESCIA_FLANDRES_LOVE",
     "team_nome": "SPORT CLUB BRESCIA - FLANDRES LOVE",
-    "punti": 279,
-    "vittorie": 5,
-    "p1": 5,
+    "punti": 295,
+    "vittorie": 6,
+    "p1": 6,
     "p2": 4,
     "p3": 5,
-    "pout": 16,
+    "pout": 17,
     "n_atleti": 5,
     "pos": 1
   },
   {
     "team_id": "S_C_CESANO_MADERNO",
     "team_nome": "S.C. CESANO MADERNO",
-    "punti": 265,
+    "punti": 276,
     "vittorie": 4,
     "p1": 4,
     "p2": 4,
     "p3": 4,
-    "pout": 25,
+    "pout": 28,
     "n_atleti": 6,
     "pos": 2
   },
   {
     "team_id": "VANGI_LADIES_CYCLING_TEAM",
     "team_nome": "VANGI LADIES CYCLING TEAM",
-    "punti": 257,
+    "punti": 269,
     "vittorie": 6,
     "p1": 6,
-    "p2": 5,
+    "p2": 6,
     "p3": 1,
     "pout": 22,
     "n_atleti": 6,
@@ -74,11 +74,11 @@
   {
     "team_id": "POL_FIUMICINESE_FA_I_T_ADRIATICA",
     "team_nome": "POL. FIUMICINESE FA.I.T. ADRIATICA",
-    "punti": 160,
+    "punti": 170,
     "vittorie": 0,
     "p1": 0,
     "p2": 1,
-    "p3": 3,
+    "p3": 4,
     "pout": 16,
     "n_atleti": 5,
     "pos": 7
@@ -132,6 +132,18 @@
     "pos": 11
   },
   {
+    "team_id": "GS_CICLI_FIORIN_ASD",
+    "team_nome": "GS CICLI FIORIN ASD",
+    "punti": 87,
+    "vittorie": 0,
+    "p1": 0,
+    "p2": 1,
+    "p3": 1,
+    "pout": 20,
+    "n_atleti": 6,
+    "pos": 12
+  },
+  {
     "team_id": "A_S_D_GIOCA_IN_BICI_OGLIO_PO",
     "team_nome": "A.S.D. GIOCA IN BICI OGLIO PO",
     "punti": 76,
@@ -141,18 +153,6 @@
     "p3": 2,
     "pout": 9,
     "n_atleti": 4,
-    "pos": 12
-  },
-  {
-    "team_id": "GS_CICLI_FIORIN_ASD",
-    "team_nome": "GS CICLI FIORIN ASD",
-    "punti": 70,
-    "vittorie": 0,
-    "p1": 0,
-    "p2": 1,
-    "p3": 1,
-    "pout": 17,
-    "n_atleti": 6,
     "pos": 13
   },
   {
