@@ -19340,8 +19340,17 @@ async function renderMedia() {
   // Ordine cronologico di pubblicazione su YouTube, dal più recente al più
   // vecchio (fallback sulla data della gara per video legacy senza published_at).
   const byPublishedDesc = (a, b) => (b.video.published_at || b.meta?.data || '').localeCompare(a.video.published_at || a.meta?.data || '');
+  // Le DIRETTE vanno ordinate per data della GARA (calendario), non di
+  // pubblicazione YouTube: il video/link diretta viene spesso preparato e
+  // caricato giorni prima che la gara si disputi davvero, quindi published_at
+  // non riflette affatto quando si è svolta la gara.
+  const byRaceDateDesc = (a, b) => (b.meta?.data || b.video.published_at || '').localeCompare(a.meta?.data || a.video.published_at || '');
+
   videoItems = applyFilters(videoItems).sort(byPublishedDesc);
-  const direteItems = videoItems.filter(x => x.video.is_live);
+  // Tab "Video" e "Dirette" sono mutuamente esclusivi: una diretta non deve
+  // comparire anche tra i video normali.
+  const direteItems = videoItems.filter(x => x.video.is_live).sort(byRaceDateDesc);
+  videoItems = videoItems.filter(x => !x.video.is_live);
   const presentazioniFiltered = applyFilters(presentazioniItems).sort(byPublishedDesc);
   const programmiTvFiltered   = applyFilters(programmiTvItems).sort(byPublishedDesc);
 
@@ -19351,7 +19360,7 @@ async function renderMedia() {
     : videoItems;
 
   const allCatsSet = new Set();
-  videoItems.forEach(x => { const c = getRankingFileCode(x.meta) || x.meta.categoria; if (c) allCatsSet.add(c); });
+  [...videoItems, ...direteItems].forEach(x => { const c = getRankingFileCode(x.meta) || x.meta.categoria; if (c) allCatsSet.add(c); });
   const allCats = [...allCatsSet].sort();
 
   const ytThumb = (url) => { const id = ytId(url); return id ? `https://img.youtube.com/vi/${id}/mqdefault.jpg` : ''; };
