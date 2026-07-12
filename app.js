@@ -2940,6 +2940,13 @@ function setPageMeta(title, desc) {
   setMeta('meta[property="og:url"]',         window.location.href);
   setMeta('meta[name="twitter:title"]',      t);
   setMeta('meta[name="twitter:description"]',d);
+  setMeta('meta[name="description"]',        d);
+  // Canonical dinamico: prima restava sempre fisso sulla home (index.html),
+  // dicendo di fatto a Google che ogni pagina era solo una copia della home.
+  // Finché il routing resta hash-based il beneficio SEO è limitato (Google
+  // normalizza il frammento #... insieme all'URL base), ma è comunque
+  // corretto e propedeutico a quando gli URL diventeranno puliti.
+  document.querySelector('link[rel="canonical"]')?.setAttribute('href', window.location.href);
 }
 
 function setSchemaOrg(obj) {
@@ -7561,6 +7568,7 @@ async function renderAlboDoro() {
       <button class="tab-btn ${alboView==='team'?'active-cat':''}" onclick="setAlboView('team')">TEAM</button>
     </div>`;
 
+  setPageMeta("Albo d'Oro", "Albo d'oro delle gare di ciclismo agonistico italiano: vincitori per categoria, anno e genere.");
   setPage(`
     <div class="pg-header">
       <div class="pg-eyebrow">STORICITÀ</div>
@@ -16370,6 +16378,7 @@ async function renderCalendario(highlightId) {
     if (calView === 'mappa') renderCalMap(filtered, calendarResultsMap);
   };
 
+  setPageMeta('Calendario Gare', 'Calendario delle gare di ciclismo agonistico italiano: date, luoghi e categorie di ogni evento su tutto il territorio nazionale.');
   setPage(`
     <div class="pg-header">
       <div class="pg-eyebrow">📅 STAGIONE 2025-2026</div>
@@ -16785,6 +16794,7 @@ async function renderAtletiList() {
     <button class="tab-btn ${atlCat===c?'active-cat':''}" onclick="setAtlCat('${c}')">${catLabel(c)}</button>
   `).join('');
 
+  setPageMeta('Atleti', 'Elenco atleti del ciclismo agonistico italiano: Esordienti, Allievi, Juniores, Under23, Elite — uomini e donne.');
   setPage(`
     <div class="content-wrapper">
       <div class="section-header">
@@ -16886,6 +16896,7 @@ async function renderGare() {
   }
   window._gareEvents = Object.values(groups).sort((a, b) => (b.data || '').localeCompare(a.data || ''));
   const _inpStyle = 'width:100%;max-width:420px;box-sizing:border-box;padding:9px 12px;border:1px solid var(--border-subtle);border-radius:var(--r-sm);background:var(--bg-elevated);color:var(--text-primary);font-size:.9rem';
+  setPageMeta('Gare', `${window._gareEvents.length} gare di ciclismo agonistico italiano — cerca per nome, categoria, regione.`);
   setPage(`
     <div class="pg-header">
       <h1 class="pg-title">GARE</h1>
@@ -16917,6 +16928,7 @@ async function renderTeamList() {
     <button class="tab-btn ${teamCat===c?'active-cat':''}" onclick="setTeamCat('${c}')">${catLabel(c)}</button>
   `).join('');
 
+  setPageMeta('Team', 'Elenco team e squadre del ciclismo agonistico italiano, con punti e corridori per categoria.');
   setPage(`
     <div class="content-wrapper">
       <div class="section-header">
@@ -17321,6 +17333,7 @@ async function renderStatistiche(selectedCatKey) {
       <div style="text-align:right"><span style="font-family:var(--font-display);font-size:1.1rem;color:${r.equil>=60?'#10b981':r.equil>=35?'#f59e0b':'#ef4444'}">${r.equil}%</span><div style="font-size:.6rem;color:var(--text-muted)">equilibrio</div></div>
     </div>`).join('');
 
+  setPageMeta('Statistiche', 'Statistiche e analisi dei dati del ciclismo agonistico italiano: equilibrio tra categorie, gare, atleti.');
   setPage(`
     <div class="pg-header">
       <div class="pg-eyebrow">📊 ANALISI & DATI</div>
@@ -18414,6 +18427,7 @@ async function renderComparatore() {
   }
 
   // ── PAGE RENDER ───────────────────────────────────────────────
+  setPageMeta('Comparatore Atleti', 'Confronta due atleti del ciclismo agonistico italiano: punti, piazzamenti, vittorie, statistiche a confronto.');
   setPage(`
     <div class="pg-header">
       <div class="pg-eyebrow">⚔️ SFIDA</div>
@@ -19078,6 +19092,7 @@ async function renderRisultati() {
         <option value="campionato_italiano">Campionati Italiani</option>
       </select>`;
 
+    setPageMeta('Risultati Gare', 'Tutti i risultati delle gare di ciclismo agonistico italiano: Esordienti, Allievi, Juniores, Under23, Elite — uomini e donne.');
     setPage(`
       <div class="content-wrapper">
         <div class="section-header">
@@ -19600,6 +19615,7 @@ async function renderMedia() {
 
   const _showRaceFilters = mediaTab === 'video' || mediaTab === 'dirette';
 
+  setPageMeta('Media', 'Video, dirette, presentazioni e programmi TV delle gare di ciclismo agonistico italiano.');
   setPage(`
     <div class="content-wrapper">
       <div class="section-header">

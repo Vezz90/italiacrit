@@ -333,8 +333,17 @@ async function getEntityPhoto(type, id) {
   return null;
 }
 
-function ogHtml({ title, desc, img, redirect, canonical }) {
-  const safe = s => String(s||'').replace(/&/g,'&amp;').replace(/"/g,'&quot;').replace(/</g,'&lt;');
+// Escape HTML condiviso — usato sia da ogHtml sia dai chiamanti che
+// costruiscono bodyHtml (tabelle risultati/roster) prima di passarlo qui.
+function _ogHtmlEsc(s) {
+  return String(s||'').replace(/&/g,'&amp;').replace(/"/g,'&quot;').replace(/</g,'&lt;');
+}
+
+// Etichette leggibili per i codici categoria — condivise tra /og/atleta e /og/team.
+const _OG_CAT_MAP = {ELI_M:'Elite',ELI_F:'Elite Donne',JUN_M:'Juniores',JUN_F:'Juniores Donne',AL_M:'Allievi',AL_F:'Allieve',ES1_M:'Esordienti 1°',ES2_M:'Esordienti 2°',ES1_F:'Esordienti 1° Donne',ES2_F:'Esordienti 2° Donne'};
+
+function ogHtml({ title, desc, img, redirect, canonical, bodyHtml }) {
+  const safe = _ogHtmlEsc;
   // og:url NON deve puntare all'URL con hash (#/gara/...) della SPA: il
   // crawler di Facebook lo "segue" per canonicalizzare, ma essendo un hash il
   // server riceve solo il dominio nudo (GitHub Pages è statico, l'hash non
@@ -343,10 +352,19 @@ function ogHtml({ title, desc, img, redirect, canonical }) {
   // con il Debugger di condivisione di Facebook (mostra un secondo hop del
   // redirect verso "/" nel "percorso di reindirizzamento"). og:url punta
   // quindi a questa stessa pagina /og/... (che il crawler ha già scaricato
-  // con i dati giusti); il redirect JS verso l'hash resta solo per gli
-  // utenti umani che ci arrivano cliccando il link condiviso.
-  return `<!DOCTYPE html><html><head>
+  // con i dati giusti).
+  //
+  // NIENTE PIÙ redirect JS automatico: prima questa pagina faceva subito
+  // window.location.replace(redirect) verso l'hash della SPA — ma Googlebot
+  // ESEGUE JavaScript, quindi lo seguiva anche lui e finiva per indicizzare
+  // la pagina hash (vuota finché l'app non carica i dati) invece di questo
+  // contenuto reale. Ora la pagina resta così com'è (contenuto vero,
+  // indicizzabile) e offre un pulsante esplicito per aprire l'app completa —
+  // i bot social (Facebook/Twitter/WhatsApp) non eseguivano comunque JS,
+  // quindi per loro il comportamento non cambia: leggono solo i meta tag.
+  return `<!DOCTYPE html><html lang="it"><head>
 <meta charset="utf-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1"/>
 <meta property="og:type" content="website"/>
 <meta property="og:site_name" content="ItaliacritResultati"/>
 <meta property="og:title" content="${safe(title)}"/>
@@ -359,11 +377,22 @@ function ogHtml({ title, desc, img, redirect, canonical }) {
 <meta name="twitter:title" content="${safe(title)}"/>
 <meta name="twitter:description" content="${safe(desc)}"/>
 <meta name="twitter:image" content="${safe(img||DEFAULT_OG_IMG)}"/>
+<link rel="canonical" href="${safe(canonical||redirect)}"/>
 <title>${safe(title)}</title>
-<script>window.location.replace(${JSON.stringify(redirect)});</script>
-</head><body style="font-family:sans-serif;text-align:center;padding:40px;background:#0f172a;color:#f1f5f9">
-<p>Reindirizzamento in corso…</p>
-<a href="${safe(redirect)}" style="color:#6366f1">Clicca qui se non vieni reindirizzato</a>
+<style>
+  body{font-family:-apple-system,Segoe UI,Roboto,sans-serif;max-width:720px;margin:0 auto;padding:28px 16px 60px;background:#0f172a;color:#f1f5f9}
+  h1{font-size:1.4rem;margin:0 0 4px}
+  .og-sub{color:#94a3b8;font-size:.9rem;margin-bottom:22px}
+  table{width:100%;border-collapse:collapse;font-size:.9rem}
+  th,td{padding:8px 6px;text-align:left;border-bottom:1px solid #1e293b}
+  th{color:#94a3b8;font-weight:600;font-size:.75rem;text-transform:uppercase;letter-spacing:.03em}
+  .og-cta{display:inline-block;margin-top:28px;padding:12px 22px;background:#6366f1;color:#fff;text-decoration:none;border-radius:8px;font-weight:600}
+</style>
+</head><body>
+<h1>${safe(title)}</h1>
+${desc ? `<div class="og-sub">${safe(desc)}</div>` : ''}
+${bodyHtml || ''}
+<a class="og-cta" href="${safe(redirect)}">Apri nell'app completa →</a>
 </body></html>`;
 }
 
@@ -415,17 +444,31 @@ app.get('/og/gara/:id', async (req, res) => {
   const img     = `${API_BASE_URL}/api/og-image/gara/${encodeURIComponent(id)}`;
   const redirect = `${SITE_URL}/#/gara/${encodeURIComponent(id)}`;
   const canonical = `${API_BASE_URL}/og/gara/${encodeURIComponent(id)}`;
+  // Tabella con TUTTA la classifica (non solo il podio) — contenuto reale e
+  // indicizzabile, non solo meta tag: è la parte che rende questa pagina
+  // utile a Google oltre che ai crawler social.
+  const bodyHtml = results.length ? `<table>
+    <thead><tr><th>Pos</th><th>Atleta</th><th>Team</th><th>Punti</th></tr></thead>
+    <tbody>${results.map(r => `<tr>
+      <td>${_ogHtmlEsc(r.posizione ?? '')}°</td>
+      <td>${_ogHtmlEsc(r.cognome)} ${_ogHtmlEsc(r.nome)}</td>
+      <td>${_ogHtmlEsc(r.team || '')}</td>
+      <td>${_ogHtmlEsc(r.punti_effettivi ?? 0)}</td>
+    </tr>`).join('')}</tbody>
+  </table>` : '';
   res.setHeader('Content-Type','text/html');
-  res.send(ogHtml({ title, desc, img, redirect, canonical }));
+  res.send(ogHtml({ title, desc, img, redirect, canonical, bodyHtml }));
 });
 
 app.get('/og/atleta/:id', async (req, res) => {
   const id       = req.params.id;
-  const athletes = await readDataJsonFromGH('athletes.json') || {};
-  const ath      = athletes[id] || {};
+  const [athletes, resultsRaw] = await Promise.all([
+    readDataJsonFromGH('athletes.json'),
+    readDataJsonFromGH('results_raw.json'),
+  ]);
+  const ath      = (athletes || {})[id] || {};
   const title    = `${ath.cognome||''} ${ath.nome||''}`.trim() || id;
-  const catMap   = {ELI_M:'Elite',ELI_F:'Elite Donne',JUN_M:'Juniores',JUN_F:'Juniores Donne',AL_M:'Allievi',AL_F:'Allieve',ES1_M:'Esordienti 1°',ES2_M:'Esordienti 2°',ES1_F:'Esordienti 1° Donne',ES2_F:'Esordienti 2° Donne'};
-  const cat      = catMap[ath.categoria] || ath.categoria || '';
+  const cat      = _OG_CAT_MAP[ath.categoria] || ath.categoria || '';
   const parts    = [cat, ath.team_attuale].filter(Boolean);
   if (ath.punti_totali) parts.push(`${ath.punti_totali} pt`);
   if (ath.vittorie)     parts.push(`${ath.vittorie} vitt.`);
@@ -433,8 +476,23 @@ app.get('/og/atleta/:id', async (req, res) => {
   const img      = `${API_BASE_URL}/api/og-image/atleta/${encodeURIComponent(id)}`;
   const redirect = `${SITE_URL}/#/atleta/${encodeURIComponent(id)}`;
   const canonical = `${API_BASE_URL}/og/atleta/${encodeURIComponent(id)}`;
+  // Ultimi risultati dell'atleta — contenuto reale per l'indicizzazione,
+  // stesso pattern di filtro per atleta_id già usato altrove nel file.
+  const recent = (resultsRaw || [])
+    .filter(r => r.atleta_id === id)
+    .sort((a, b) => (b.data || '').localeCompare(a.data || ''))
+    .slice(0, 20);
+  const bodyHtml = recent.length ? `<table>
+    <thead><tr><th>Data</th><th>Gara</th><th>Pos</th><th>Punti</th></tr></thead>
+    <tbody>${recent.map(r => `<tr>
+      <td>${_ogHtmlEsc(r.data || '')}</td>
+      <td>${_ogHtmlEsc(r.nome_gara || '')}</td>
+      <td>${_ogHtmlEsc(r.posizione ?? '')}°</td>
+      <td>${_ogHtmlEsc(r.punti_effettivi ?? 0)}</td>
+    </tr>`).join('')}</tbody>
+  </table>` : '';
   res.setHeader('Content-Type','text/html');
-  res.send(ogHtml({ title, desc, img, redirect, canonical }));
+  res.send(ogHtml({ title, desc, img, redirect, canonical, bodyHtml }));
 });
 
 app.get('/og/team/:id', async (req, res) => {
@@ -445,13 +503,23 @@ app.get('/og/team/:id', async (req, res) => {
   ]);
   const team  = (teams || {})[id] || {};
   const title = team.nome || id.replace(/_/g,' ');
-  const riders = Object.values(athletes || {}).filter(a => a.team_id === id).length;
-  const desc  = riders ? `${riders} corridori — Italia Cycling Stats` : 'Team — Italia Cycling Stats';
+  const roster = Object.values(athletes || {}).filter(a => a.team_id === id)
+    .sort((a, b) => (b.punti_totali || 0) - (a.punti_totali || 0));
+  const desc  = roster.length ? `${roster.length} corridori — Italia Cycling Stats` : 'Team — Italia Cycling Stats';
   const img   = `${API_BASE_URL}/api/og-image/team/${encodeURIComponent(id)}`;
   const redirect = `${SITE_URL}/#/team/${encodeURIComponent(id)}`;
   const canonical = `${API_BASE_URL}/og/team/${encodeURIComponent(id)}`;
+  // Elenco nominale del roster — contenuto reale al posto del solo conteggio.
+  const bodyHtml = roster.length ? `<table>
+    <thead><tr><th>Atleta</th><th>Categoria</th><th>Punti</th></tr></thead>
+    <tbody>${roster.map(a => `<tr>
+      <td>${_ogHtmlEsc(a.cognome || '')} ${_ogHtmlEsc(a.nome || '')}</td>
+      <td>${_ogHtmlEsc(_OG_CAT_MAP[a.categoria] || a.categoria || '')}</td>
+      <td>${_ogHtmlEsc(a.punti_totali ?? 0)}</td>
+    </tr>`).join('')}</tbody>
+  </table>` : '';
   res.setHeader('Content-Type','text/html');
-  res.send(ogHtml({ title, desc, img, redirect, canonical }));
+  res.send(ogHtml({ title, desc, img, redirect, canonical, bodyHtml }));
 });
 
 const _CLASS_CAT_LABELS = { ELI_M:'Elite', ELI_F:'Elite Donne', JUN_M:'Juniores', JUN_F:'Juniores Donne',
@@ -506,17 +574,28 @@ app.get('/og/class/:id', async (req, res) => {
   const img   = `${API_BASE_URL}/api/og-image/class/${encodeURIComponent(req.params.id)}`;
   const redirect  = `${SITE_URL}/#/classifiche`;
   const canonical = `${API_BASE_URL}/og/class/${encodeURIComponent(req.params.id)}`;
+  // Top 10 completa (ranking già la calcola per intero) invece dei soli primi 3.
+  const bodyHtml = ranking.length ? `<table>
+    <thead><tr><th>Pos</th><th>Atleta</th><th>Team</th><th>Punti</th></tr></thead>
+    <tbody>${ranking.map(r => `<tr>
+      <td>${_ogHtmlEsc(r.pos)}°</td>
+      <td>${_ogHtmlEsc(r.cognome)} ${_ogHtmlEsc(r.nome)}</td>
+      <td>${_ogHtmlEsc(r.team || '')}</td>
+      <td>${_ogHtmlEsc(r.punti ?? 0)}</td>
+    </tr>`).join('')}</tbody>
+  </table>` : '';
   res.setHeader('Content-Type','text/html');
-  res.send(ogHtml({ title, desc, img, redirect, canonical }));
+  res.send(ogHtml({ title, desc, img, redirect, canonical, bodyHtml }));
 });
 
 // ── Sitemap.xml ───────────────────────────────────────────────────────────────
 app.get('/sitemap.xml', async (req, res) => {
   try {
     const CANONICAL = 'https://italiacyclingstats.com';
-    const [athletes, resultsRaw] = await Promise.all([
+    const [athletes, resultsRaw, teams] = await Promise.all([
       readDataJsonFromGH('athletes.json'),
       readDataJsonFromGH('results_raw.json'),
+      readDataJsonFromGH('teams.json'),
     ]);
     const urls = [
       { loc: `${CANONICAL}/`,              priority: '1.0', changefreq: 'daily' },
@@ -532,6 +611,9 @@ app.get('/sitemap.xml', async (req, res) => {
     const garaIds = [...new Set((resultsRaw || []).map(r => r.gara_id).filter(Boolean))];
     for (const gid of garaIds) {
       urls.push({ loc: `${CANONICAL}/og/gara/${encodeURIComponent(gid)}`, priority: '0.6', changefreq: 'monthly' });
+    }
+    for (const id of Object.keys(teams || {})) {
+      if (id) urls.push({ loc: `${CANONICAL}/og/team/${encodeURIComponent(id)}`, priority: '0.6', changefreq: 'weekly' });
     }
     const xml = `<?xml version="1.0" encoding="UTF-8"?>\n<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">\n${
       urls.map(u => `  <url><loc>${u.loc}</loc><changefreq>${u.changefreq}</changefreq><priority>${u.priority}</priority></url>`).join('\n')
