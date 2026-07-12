@@ -1635,6 +1635,25 @@ function processLoadedData({ calendar, resultsRaw, athletes, teams, meta, raceDe
     }
   }
 
+  // ── Correzione regione errata sui risultati ────────────────────
+  // Lo scraper Python assegna la regione a un risultato tramite fuzzy-match
+  // sul NOME della gara contro un elenco di candidati (non per data/id): un
+  // nome simile a quello di un'altra gara può quindi "rubare" la regione
+  // sbagliata (es. una gara in Toscana segnata come Campania). Il calendario
+  // (importato da un Excel curato manualmente) è la fonte più affidabile —
+  // qui si allinea la regione dei risultati a quella del calendario ogni
+  // volta che esiste una corrispondenza gara_id → calendar id, così tutti i
+  // punti dell'app che leggono r.regione (filtri Risultati/Gare/Calendario,
+  // badge, mappa) ricevono automaticamente il valore corretto.
+  if (resultsRaw) {
+    const calById = {};
+    for (const cal of (calendar || [])) if (cal.id) calById[cal.id] = cal;
+    for (const r of resultsRaw) {
+      const calEntry = calById[garaToCalId[r.gara_id]];
+      if (calEntry && calEntry.regione) r.regione = calEntry.regione;
+    }
+  }
+
   // ── Merge roster manuali (data/extra_roster.json) ─────────────
   // Aggiunge atleti senza risultati (0 punti) ai team, per dare
   // continuità anche a chi non ha ancora gareggiato o non è nei dati FCI.
