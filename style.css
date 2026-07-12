@@ -1165,6 +1165,29 @@ select.yt-chip-select {
   font-size: .68rem; font-weight: 700;
   padding: 1px 5px; border-radius: 3px; z-index: 2;
 }
+.yt-card-check {
+  position: absolute; top: 8px; right: 8px; z-index: 4;
+  width: 20px; height: 20px;
+  cursor: pointer;
+  accent-color: var(--red-hot, #e8001d);
+}
+.yt-card-selected { outline: 3px solid var(--red-hot, #e8001d); border-radius: 14px; }
+.yt-bulk-bar {
+  display: flex; align-items: center; gap: 10px; flex-wrap: wrap;
+  background: var(--bg-card); border: 1px solid var(--border-subtle);
+  border-radius: var(--r-sm, 8px);
+  padding: 10px 14px; margin: 0 0 16px;
+  font-size: .85rem; font-weight: 600;
+}
+.yt-bulk-bar button {
+  border: none; border-radius: 6px; padding: 6px 12px;
+  font-size: .8rem; font-weight: 700; cursor: pointer;
+  background: var(--red-hot, #e8001d); color: #fff;
+}
+.yt-bulk-bar button.yt-bulk-clear {
+  background: transparent; color: var(--text-secondary);
+  border: 1px solid var(--border-subtle);
+}
 
 /* Corpo card: avatar tondo a sinistra, testo a destra — come sotto un video YouTube */
 .yt-card-body { display: flex; gap: 10px; margin-top: 10px; }

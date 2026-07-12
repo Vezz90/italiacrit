@@ -3355,11 +3355,11 @@ async function doYoutubeSync() {
       suggested_gara_id: null,
       added_at:     new Date().toISOString(),
       duration_seconds: duration,
-      // diretta E (>15min O in corso ora) — soglia bassa apposta: le gare
-      // Esordienti/Allievi durano spesso 40-50 min, molto meno di un'ora,
-      // ma vanno comunque riconosciute come diretta vera (non un trailer/
-      // intervista post-gara, che in genere dura pochi minuti).
-      is_live_guess: !!(isLiveContent && (isLiveNow || (duration && duration > 900))),
+      // diretta E (>39min O in corso ora): soglia scelta per lasciar fuori
+      // gare "regolari" più brevi di un video normale (che potrebbero durare
+      // anche 15-30 min) pur restando sotto l'ora delle gare Esordienti/
+      // Allievi più lunghe, evitando falsi positivi da trailer/interviste.
+      is_live_guess: !!(isLiveContent && (isLiveNow || (duration && duration > 2340))),
     });
     added++;
   }
@@ -3519,10 +3519,10 @@ app.post('/api/admin/youtube/detect-live', requireAdmin, async (req, res) => {
       // durata non è ancora nota/finalizzata da YouTube — altrimenti una gara
       // trasmessa in questo momento sparirebbe dal sito proprio mentre è utile
       // vederla, prima che il video superi "sulla carta" la soglia di durata.
-      // Soglia bassa (15 min, non 1h): le gare Esordienti/Allievi durano
-      // spesso 40-50 min — molto meno di un'ora, ma sono dirette vere, non
-      // trailer/interviste post-gara (che durano in genere pochi minuti).
-      const qualifies = isLiveContent && (isLiveNow || (dur && dur > 900));
+      // Soglia 39 min: lascia fuori video "normali" più brevi (che potrebbero
+      // durare 15-30 min) restando sotto le gare Esordienti/Allievi più lunghe
+      // (spesso 40-50 min), evitando falsi positivi da trailer/interviste.
+      const qualifies = isLiveContent && (isLiveNow || (dur && dur > 2340));
       if (qualifies && !c.wasLive) {
         videos[c.gid][c.idx].is_live = true;
         if (dur) videos[c.gid][c.idx].duration_seconds = dur;

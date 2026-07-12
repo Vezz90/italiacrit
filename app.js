@@ -19156,6 +19156,30 @@ window.mediaDeleteExtra = async (tipo, idx) => {
   } catch (e) { showToast('Errore: ' + e.message, 'error'); }
 };
 
+// ── Selezione multipla (admin): correggere a mano la destinazione
+// Video/Diretta quando il rilevamento automatico sbaglia — es. una gara
+// corta erroneamente lasciata tra i Video normali, o viceversa.
+window._mediaSel = window._mediaSel || new Set();
+window._mediaToggleSel = (key, checked) => {
+  if (checked) window._mediaSel.add(key); else window._mediaSel.delete(key);
+  renderMedia();
+};
+window._mediaClearSel = () => { window._mediaSel.clear(); renderMedia(); };
+window._mediaBulkSetLive = async (isLive) => {
+  const keys = [...window._mediaSel];
+  if (!keys.length) return;
+  try {
+    for (const key of keys) {
+      const [garaId, idx] = key.split('::');
+      await apiCall(`/admin/videos/${encodeURIComponent(garaId)}/${idx}`, { method: 'PATCH', body: { is_live: isLive } });
+    }
+    window._mediaSel.clear();
+    showToast(`✓ Aggiornati ${keys.length} video`);
+    await refreshVideos();
+    renderMedia();
+  } catch (e) { showToast('Errore: ' + e.message, 'error'); }
+};
+
 // Ricalcola data di pubblicazione YouTube reale + logo canale per tutti i
 // video già salvati (utile una tantum per quelli aggiunti a mano prima che
 // venissero catturati automaticamente in fase di inserimento).
@@ -19318,7 +19342,7 @@ async function renderMedia() {
     // video/diretta NON va perso: si mostra comunque con i pochi dati che ha
     // (titolo del video), invece di sparire silenziosamente dalla pagina Media.
     const meta = evIndex[gid] || {};
-    for (const v of (arr || [])) videoItems.push({ gara_id: gid, meta, video: v });
+    (arr || []).forEach((v, idx) => videoItems.push({ gara_id: gid, idx, meta, video: v }));
   }
   const presentazioniItems = (videos?.[EXTRA_BUCKETS.presentazioni] || []).map((v, idx) => ({ video: v, extraIdx: idx }));
   const programmiTvItems   = (videos?.[EXTRA_BUCKETS.programmi_tv]   || []).map((v, idx) => ({ video: v, extraIdx: idx }));
@@ -19380,8 +19404,13 @@ async function renderMedia() {
   const videoCardHtml = (x) => {
     const thumb = ytThumb(x.video.url);
     const durBadge = _durationBadge(x.video.duration_seconds);
-    return `<a href="#/gara/${esc(x.gara_id)}" class="yt-card">
+    const selKey = `${x.gara_id}::${x.idx}`;
+    const isSel = (window._mediaSel || new Set()).has(selKey);
+    return `<a href="#/gara/${esc(x.gara_id)}" class="yt-card${isSel ? ' yt-card-selected' : ''}">
       <div class="yt-thumb">
+        ${_isAdminMedia ? `<input type="checkbox" class="yt-card-check" ${isSel ? 'checked' : ''}
+          onclick="event.preventDefault();event.stopPropagation();window._mediaToggleSel('${esc(selKey)}',this.checked)"
+          aria-label="Seleziona per correggere destinazione"/>` : ''}
         ${thumb ? `<img src="${esc(thumb)}" loading="lazy" alt="${esc(x.video.title || '')}"/>` : `<div class="yt-thumb-fallback">▶</div>`}
         ${x.video.is_live ? `<span class="yt-badge-live">🔴 DIRETTA</span>` : (durBadge ? `<span class="yt-badge-duration">${esc(durBadge)}</span>` : '')}
         <span class="yt-play">▶</span>
@@ -19463,6 +19492,13 @@ async function renderMedia() {
         ${_isAdminMedia ? `<button class="yt-chip" style="background:var(--red-hot);color:#fff;border-color:var(--red-hot)" onclick="window.openMediaAddForm()">➕ Aggiungi</button>` : ''}
         ${_isAdminMedia ? `<button class="yt-chip" onclick="window.mediaBackfillMetadata(this)">🔄 Ricalcola date/loghi</button>` : ''}
       </div>
+      ${_isAdminMedia && _showRaceFilters && (window._mediaSel || new Set()).size ? `
+      <div class="yt-bulk-bar">
+        <span>${(window._mediaSel || new Set()).size} selezionati</span>
+        <button onclick="window._mediaBulkSetLive(true)">🔴 Segna come Diretta</button>
+        <button onclick="window._mediaBulkSetLive(false)">🎬 Segna come Video normale</button>
+        <button class="yt-bulk-clear" onclick="window._mediaClearSel()">Annulla selezione</button>
+      </div>` : ''}
       <div class="yt-grid">
         ${items.length ? items.map(cardHtml).join('') : `<p style="color:var(--text-muted);padding:24px 4px">Nessun elemento trovato.</p>`}
       </div>
