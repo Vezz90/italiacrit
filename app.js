@@ -1086,9 +1086,16 @@ const cache = {};
 async function loadJson(path) {
   if (cache[path]) return cache[path];
   try {
-    const ts = Date.now();
-    const fetchPath = path.includes('?') ? `${path}&_t=${ts}` : `${path}?_t=${ts}`;
-    const r = await fetch(fetchPath, { cache: 'no-store' });
+    // Niente più cache-busting (?_t=timestamp) né cache:'no-store': la
+    // freschezza dei dati è già garantita dal service worker, che applica
+    // "network-first" a ogni richiesta /data/*.json (fetch reale ogni volta,
+    // cache solo come fallback offline) — vedi sw.js. Un URL con querystring
+    // variabile però NON termina in ".json", quindi bypassava proprio quella
+    // logica dedicata E impediva a Cloudflare/GitHub Pages di servire una
+    // risposta cache condivisa fra utenti, obbligando ogni caricamento a
+    // riscaricare da zero fino a ~19MB di JSON (results_raw + athletes +
+    // teams + race_details) — la causa principale della lentezza iniziale.
+    const r = await fetch(path);
     if (!r.ok) throw new Error(`HTTP ${r.status}`);
     const data = await r.json();
     cache[path] = data;
@@ -1156,6 +1163,45 @@ function fixCompoundSurname(cognome, nome) {
   return { cognome: cWords.join(' '), nome: nWords.join(' ') };
 }
 
+// Chiamate dirette a Render (senza un file statico equivalente nel repo da
+// usare come fallback, a differenza di /videos che ha data/videos.json):
+// timeout breve + valore vuoto come fallback, così un cold-start di Render
+// (anche 10-15s sul piano gratuito) non blocca l'intero avvio dell'app —
+// vedi _scheduleBackendRetry per il riallineamento in background.
+function _apiCallWithTimeout(path, timeoutMs, fallbackValue) {
+  return (async () => {
+    try {
+      const ctrl = new AbortController();
+      const timer = setTimeout(() => ctrl.abort(), timeoutMs);
+      const r = await fetch(`${API_BASE}${path}`, { signal: ctrl.signal });
+      clearTimeout(timer);
+      if (!r.ok) throw new Error('status ' + r.status);
+      return await r.json();
+    } catch {
+      _scheduleBackendRetry();
+      return fallbackValue;
+    }
+  })();
+}
+let _pendingBackendRetry = false;
+function _scheduleBackendRetry() {
+  if (_pendingBackendRetry) return;
+  _pendingBackendRetry = true;
+  // Render si sveglia in genere entro 10-15s dal primo hit "a freddo": riprova
+  // l'intero caricamento in background (l'utente vede già la pagina coi dati
+  // core, niente attesa) e sostituisce silenziosamente globalData quando
+  // pronto — stesso pattern già usato dall'auto-polling su meta.json.
+  setTimeout(async () => {
+    try {
+      globalData = await loadAll();
+      updateMetaUI();
+      route();
+      console.log('[loadAll] dati extra aggiornati dopo wake-up Render');
+    } catch (e) { console.warn('[loadAll] retry fallito:', e); }
+    finally { _pendingBackendRetry = false; }
+  }, 9000);
+}
+
 // Preload tutto in parallelo
 async function loadAll() {
   _pcsRosterRetried = false;   // permetti un nuovo tentativo on-demand dopo ogni load
@@ -1202,9 +1248,9 @@ async function loadAll() {
     loadJson('data/race_details.json'),
     videosPromise,
     loadJson('data/extra_roster.json').catch(() => ({})),
-    apiCall('/data/pcs-extra-roster').catch(() => ({})),
-    apiCall('/data/atleta-team-overrides').catch(() => ({})),
-    apiCall('/data/manual-results').catch(() => []),
+    IS_LOCAL ? apiCall('/data/pcs-extra-roster').catch(() => ({}))     : _apiCallWithTimeout('/data/pcs-extra-roster', 4000, {}),
+    IS_LOCAL ? apiCall('/data/atleta-team-overrides').catch(() => ({})) : _apiCallWithTimeout('/data/atleta-team-overrides', 4000, {}),
+    IS_LOCAL ? apiCall('/data/manual-results').catch(() => [])         : _apiCallWithTimeout('/data/manual-results', 4000, []),
   ]);
 
   // Unisci extra_roster statico con atleti PCS da Supabase
