@@ -19248,8 +19248,11 @@ async function renderMedia() {
   let videoItems = [];
   for (const [gid, arr] of Object.entries(videos || {})) {
     if (gid === EXTRA_BUCKETS.presentazioni || gid === EXTRA_BUCKETS.programmi_tv) continue;
+    // Se il gara_id non trova corrispondenza in evIndex (gara futura non
+    // ancora nel calendario, id salvato a mano che non collima, ecc.) il
+    // video/diretta NON va perso: si mostra comunque con i pochi dati che ha
+    // (titolo del video), invece di sparire silenziosamente dalla pagina Media.
     const meta = evIndex[gid] || {};
-    if (!meta.nome) continue;
     for (const v of (arr || [])) videoItems.push({ gara_id: gid, meta, video: v });
   }
   const presentazioniItems = (videos?.[EXTRA_BUCKETS.presentazioni] || []).map((v, idx) => ({ video: v, extraIdx: idx }));
@@ -19312,9 +19315,9 @@ async function renderMedia() {
       <div class="yt-card-body">
         ${_avatarHtml(x.video)}
         <div class="yt-card-text">
-          <div class="yt-card-title">${esc(x.video.title || x.meta.nome)}</div>
+          <div class="yt-card-title">${esc(x.video.title || x.meta.nome || 'Video')}</div>
           <div class="yt-card-meta">${esc(x.video.channel || '')}</div>
-          <div class="yt-card-meta">${esc(formatTimeAgo(x.meta.data))}</div>
+          <div class="yt-card-meta">${esc((x.meta.data || x.video.published_at) ? formatTimeAgo(x.meta.data || x.video.published_at) : '')}</div>
         </div>
       </div>
     </a>`;
