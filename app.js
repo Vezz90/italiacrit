@@ -11776,11 +11776,15 @@ function buildProfileMedia(risultati, photosMap, videos, opts = {}) {
     // Categoria estratta dal gara_id corrente (es. "JUN_M") — usata per il guard sul fallback video
     const _catSuffix = (r.gara_id && r.gara_id.match(/_([A-Z0-9]+_[MF])$/) || [])[1] || null;
 
-    // Cerca video: prima chiave esatta sulla SUA annata, poi base senza categoria.
+    // Cerca video: prima chiave esatta sulla SUA annata, poi il calId del
+    // calendario (un video aggiunto PRIMA dello scraping usa l'id calendario,
+    // diverso dal gara_id finale suffissato per categoria — stessa logica di
+    // fallback usata in renderGara via garaToCalId), poi base senza categoria.
     // NIENTE fallback all'altra annata ES (per "entrambi" si salva su entrambe le chiavi).
-    let videoArr = _vids[r.gara_id] || [];
+    const _calIdForGara = (globalData?.garaToCalId || {})[r.gara_id] || null;
+    let videoArr = _vids[r.gara_id] || (_calIdForGara ? _vids[_calIdForGara] : null) || [];
     if (!videoArr.length) {
-      const baseKey = r.gara_id ? r.gara_id.replace(/_[A-Z0-9]+_[MF]$/, '') : '';
+      const baseKey = (_calIdForGara || r.gara_id || '').replace(/_[A-Z0-9]+_[MF]$/, '');
       for (const [k, v] of Object.entries(_vids)) {
         if (k.startsWith(baseKey) && v.length) {
           // Guard: accetta solo video della stessa categoria per evitare cross-category leak
