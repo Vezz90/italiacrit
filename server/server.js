@@ -1423,6 +1423,49 @@ app.get('/api/admin/videos', requireAdmin, async (req, res) => {
   res.json(await readVideos());
 });
 
+// Endpoint pubblico: c'è una diretta IN CORSO ORA da segnalare all'apertura
+// del sito? Limita il controllo ai video is_live la cui gara_id contiene una
+// data entro ±1 giorno da oggi (le dirette più vecchie sono già concluse da
+// tempo, non ha senso ricontrollarle a ogni apertura) — poi verifica lo stato
+// reale su YouTube (liveStreamingDetails.actualStartTime senza actualEndTime)
+// tramite lo stesso helper già usato per la coda scraper.
+app.get('/api/live-now', async (req, res) => {
+  res.set('Cache-Control', 'no-cache');
+  try {
+    if (!YOUTUBE_API_KEY) return res.json({ live: null });
+    const videos = await readVideos();
+    const todayMs = Date.now();
+    const candidates = []; // { gid, v, videoId }
+    for (const [gid, arr] of Object.entries(videos)) {
+      for (const v of (arr || [])) {
+        if (!v.is_live) continue;
+        const m = gid.match(/_(\d{4}-\d{2}-\d{2})/);
+        if (!m) continue;
+        const dayDiff = Math.abs(todayMs - new Date(m[1] + 'T12:00:00Z').getTime()) / 86400000;
+        if (dayDiff > 1) continue;
+        const videoId = _extractYouTubeId(v.url);
+        if (!videoId) continue;
+        candidates.push({ gid, v, videoId });
+      }
+    }
+    if (!candidates.length) return res.json({ live: null });
+
+    const infoById = await fetchVideosInfoBatch(candidates.map(c => c.videoId), YOUTUBE_API_KEY);
+    const liveNow = candidates.find(c => infoById[c.videoId]?.isLiveNow);
+    if (!liveNow) return res.json({ live: null });
+
+    res.json({
+      live: {
+        gara_id: liveNow.gid,
+        title: liveNow.v.title || liveNow.gid,
+        channel: liveNow.v.channel || '',
+        url: liveNow.v.url,
+        video_id: liveNow.videoId,
+      },
+    });
+  } catch (e) { res.status(500).json({ error: e.message }); }
+});
+
 // Recupera i metadati REALI del video da YouTube — data di pubblicazione
 // (snippet.publishedAt) e logo del canale — per gli inserimenti manuali che
 // altrimenti avrebbero sempre la data odierna (rendendo inutile un

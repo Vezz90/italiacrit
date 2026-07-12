@@ -2528,6 +2528,8 @@ window.addEventListener('load', async () => {
   setTimeout(_renderPushButton, 800);
   _loadFollows();
   _initAiWidget();
+  checkLiveNowBanner();
+  setInterval(checkLiveNowBanner, 120000); // ricontrolla ogni 2 minuti
 
   // Logo click → cinematic entry
   document.getElementById('nav-logo-link')?.addEventListener('click', function(e) {
@@ -2565,6 +2567,65 @@ window.addEventListener('load', async () => {
     }
   }, 180000); // 3 minuti
 });
+
+// ── ALERT "DIRETTA IN CORSO" ────────────────────────────────────────────────
+// All'apertura del sito (e periodicamente) controlla se una gara collegata è
+// attualmente in diretta su YouTube, e se sì mostra un banner cliccabile che
+// porta l'utente direttamente alla pagina della gara. Chiuso = non riappare
+// più per QUELLA diretta in questa sessione (sessionStorage), ma torna a
+// comparire alla prossima visita/sessione se ancora in corso.
+async function checkLiveNowBanner() {
+  try {
+    const r = await fetch(`${API_BASE}/live-now`);
+    if (!r.ok) return;
+    const { live } = await r.json();
+    if (!live) { hideLiveBanner(); return; }
+    let dismissed = false;
+    try { dismissed = sessionStorage.getItem('live-dismissed-' + live.video_id) === '1'; } catch {}
+    if (dismissed) { hideLiveBanner(); return; }
+    showLiveBanner(live);
+  } catch {}
+}
+
+function showLiveBanner(live) {
+  let el = document.getElementById('live-now-banner');
+  if (!el) {
+    el = document.createElement('div');
+    el.id = 'live-now-banner';
+    el.className = 'live-now-banner';
+    document.body.appendChild(el);
+  }
+  el.dataset.videoId = live.video_id;
+  el.dataset.garaId  = live.gara_id;
+  el.innerHTML = `
+    <div class="live-now-banner-inner" onclick="window._goToLiveBanner()">
+      <span class="live-now-dot"></span>
+      <span class="live-now-text"><strong>IN DIRETTA ORA</strong> — ${esc(live.title)}${live.channel ? ' · ' + esc(live.channel) : ''}</span>
+      <span class="live-now-cta">Guarda ▸</span>
+    </div>
+    <button class="live-now-close" onclick="window._dismissLiveBanner(event)" aria-label="Chiudi">✕</button>
+  `;
+  el.style.display = 'flex';
+}
+
+function hideLiveBanner() {
+  const el = document.getElementById('live-now-banner');
+  if (el) el.style.display = 'none';
+}
+
+window._goToLiveBanner = () => {
+  const el = document.getElementById('live-now-banner');
+  const gid = el?.dataset.garaId;
+  if (gid) window.location.hash = '#/gara/' + gid;
+};
+
+window._dismissLiveBanner = (e) => {
+  e.stopPropagation();
+  const el = document.getElementById('live-now-banner');
+  const vid = el?.dataset.videoId;
+  try { if (vid) sessionStorage.setItem('live-dismissed-' + vid, '1'); } catch {}
+  hideLiveBanner();
+};
 
 function updateMetaUI() {
   if (globalData.meta?.last_update) {
