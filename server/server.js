@@ -2352,7 +2352,7 @@ app.get('/api/pcs-results/atleta/:atletaId', async (req, res) => {
   try {
     const { data, error } = await supabase
       .from('pcs_results')
-      .select('gara_name, data, posizione, distacco, pcs_race_slug, gara_id')
+      .select('gara_name, data, posizione, distacco, pcs_race_slug, gara_id, country')
       .eq('atleta_id', req.params.atletaId)
       .eq('season', season)
       .order('data', { ascending: false })

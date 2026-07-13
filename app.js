@@ -13117,6 +13117,13 @@ async function _loadTeamPcsExtra(teamId, season, viewCat) {
   });
 }
 
+// Codice paese ISO-2 (es. "fr") → emoji bandiera, via regional indicator symbols.
+function countryCodeToFlag(code) {
+  if (!code || code.length !== 2) return '';
+  const cc = code.toUpperCase();
+  return String.fromCodePoint(...[...cc].map(c => 0x1F1E6 + c.charCodeAt(0) - 65));
+}
+
 // ── PCS risultati extra atleta (circuito esteso + gare non in circuito) ───────
 async function _loadAtletaPcsExtra(atletaId, season, icsRisultati, athlete) {
   const tbody = document.getElementById('atleta-results-tbody');
@@ -13201,15 +13208,19 @@ async function _loadAtletaPcsExtra(atletaId, season, icsRisultati, athlete) {
   try {
     seasonRaw = await apiCall(`/pcs-results/atleta/${encodeURIComponent(atletaId)}?season=${season}`);
   } catch { return; }
+  // Solo risultati esteri (country valorizzato e diverso da "it") — le gare
+  // italiane non ancora abbinate al circuito ICS non vanno mostrate qui, per
+  // non confonderle con un vero palmares internazionale. Niente punteggio:
+  // queste righe sono puramente informative.
   const seasonExtra = Array.isArray(seasonRaw)
-    ? seasonRaw.filter(r => !r.gara_id)
+    ? seasonRaw.filter(r => !r.gara_id && r.country && r.country !== 'it')
         .sort((a, b) => (b.data || '').localeCompare(a.data || ''))
     : [];
   if (!seasonExtra.length) return;
 
   el.innerHTML = `
     <div class="section-header" style="margin-top:32px">
-      <span class="section-title">ALTRI RISULTATI</span>
+      <span class="section-title">RISULTATI ALL'ESTERO</span>
       <span class="section-line"></span>
     </div>
     <div class="results-table-wrap">
@@ -13218,7 +13229,7 @@ async function _loadAtletaPcsExtra(atletaId, season, icsRisultati, athlete) {
         <tbody>${seasonExtra.map(r => `
           <tr>
             <td class="td-date">${fmtDateShort(r.data)}</td>
-            <td>${r.pcs_race_slug
+            <td>${countryCodeToFlag(r.country)} ${r.pcs_race_slug
               ? `<a href="https://www.procyclingstats.com/race/${esc(r.pcs_race_slug)}" target="_blank">${esc(r.gara_name)}</a>`
               : esc(r.gara_name)}</td>
             <td class="td-pos ${posClass(r.posizione)}">${r.posizione}°</td>
