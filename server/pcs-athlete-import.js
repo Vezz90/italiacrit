@@ -389,7 +389,17 @@ async function getAthletesWithResults(sb, season) {
 // già una pagina sul sito (costruita al volo dal frontend a partire dai
 // risultati), ma restano senza foto/social/palmares se non processati anche
 // qui. rider_name è nel formato PCS "Cognome Nome" (es. "Viviani Attilio").
-async function getPhantomAthletes(sb, season) {
+//
+// ATTENZIONE duplicati: un atleta FCI con secondo nome (es. "Maya Yvette
+// Kingma") spesso compare su PCS senza ("Kingma Maya") — usare solo la prima
+// parola di rider_name come "cognome" creava un profilo fantasma duplicato
+// (KINGMA_MAYA) accanto a quello FCI vero (KINGMA_MAYA_YVETTE). fciAthletes
+// permette di riconoscere questi casi e saltarli: si prova il cognome più
+// lungo possibile (per gestire cognomi doppi come "Longo Borghini", "De
+// Angelis") confrontandolo con i cognomi FCI noti, poi si verifica che la
+// prima parola del nome coincida — se sì, il fantasma è già coperto da un
+// atleta FCI esistente e non va creato.
+async function getPhantomAthletes(sb, season, fciAthletes = new Map()) {
   const all = [];
   const PAGE = 1000;
   for (let from = 0; ; from += PAGE) {
@@ -403,14 +413,42 @@ async function getPhantomAthletes(sb, season) {
     all.push(...data);
     if (data.length < PAGE) break;
   }
+
+  // Indice cognomi FCI noti: tupla di parole (in stringa) → lista atleti
+  const normWords = s => normalizeStr(s).split(' ').filter(Boolean);
+  const fciByCognome = new Map();
+  let maxCognomeLen = 1;
+  for (const a of fciAthletes.values()) {
+    const cogWords = normWords(a.cognome);
+    if (!cogWords.length) continue;
+    maxCognomeLen = Math.max(maxCognomeLen, cogWords.length);
+    const key = cogWords.join(' ');
+    if (!fciByCognome.has(key)) fciByCognome.set(key, []);
+    fciByCognome.get(key).push({ nomeWords: normWords(a.nome) });
+  }
+
   const map = new Map();
+  let skippedDupes = 0;
   for (const r of all) {
     if (map.has(r.atleta_id)) continue;
+    const words = normWords(r.rider_name || '');
+    if (words.length) {
+      let isDupe = false;
+      for (let clen = Math.min(maxCognomeLen, words.length - 1 || 1); clen >= 1; clen--) {
+        const candidates = fciByCognome.get(words.slice(0, clen).join(' '));
+        if (!candidates) continue;
+        const nomeWords = words.slice(clen);
+        if (nomeWords.length && candidates.some(c => c.nomeWords[0] === nomeWords[0])) { isDupe = true; }
+        break; // prova solo il cognome noto più lungo possibile, non i più corti
+      }
+      if (isDupe) { skippedDupes++; continue; }
+    }
     const parts = (r.rider_name || '').trim().split(/\s+/);
     const cognome = parts[0] || r.atleta_id;
     const nome = parts.slice(1).join(' ') || cognome;
     map.set(r.atleta_id, { atleta_id: r.atleta_id, nome, cognome });
   }
+  if (skippedDupes) console.log(`[fantasma] ${skippedDupes} scartati perché già coperti da un atleta FCI con nome esteso diverso`);
   return map;
 }
 
@@ -432,32 +470,31 @@ async function upsertResults(sb, rows) {
 
   console.log(`=== PCS Import unificato (foto+social+risultati) [stagione ${SEASON}] ===\n`);
 
-  // 1. Atleti da processare
+  // 1. Atleti da processare — carica sempre tutti gli atleti FCI (serve come
+  // riferimento anti-duplicati per i "fantasma", anche in modalità --atleta-id)
+  const fciAll = new Map();
+  for (const cat of ATH_CATS) {
+    const f = path.join(RANK_DIR, `${cat}.json`);
+    if (!fs.existsSync(f)) { console.log(`Mancante: ${cat}.json`); continue; }
+    for (const a of JSON.parse(fs.readFileSync(f, 'utf8')))
+      if (a.atleta_id && !fciAll.has(a.atleta_id)) fciAll.set(a.atleta_id, a);
+  }
+
   const athMap = new Map();
   if (SINGLE_ID) {
-    for (const cat of ATH_CATS) {
-      const f = path.join(RANK_DIR, `${cat}.json`);
-      if (!fs.existsSync(f)) continue;
-      for (const a of JSON.parse(fs.readFileSync(f, 'utf8')))
-        if (a.atleta_id === SINGLE_ID) { athMap.set(a.atleta_id, a); break; }
-    }
+    if (fciAll.has(SINGLE_ID)) athMap.set(SINGLE_ID, fciAll.get(SINGLE_ID));
     if (!athMap.size) {
       // Non nei ranking FCI — prova tra gli atleti "fantasma" (pcs_gara_results)
-      const phantoms = await getPhantomAthletes(sb, SEASON);
+      const phantoms = await getPhantomAthletes(sb, SEASON, fciAll);
       if (phantoms.has(SINGLE_ID)) athMap.set(SINGLE_ID, phantoms.get(SINGLE_ID));
     }
     if (!athMap.size) { console.error(`Atleta ${SINGLE_ID} non trovato né nei ranking né tra i fantasma`); process.exit(1); }
   } else {
-    for (const cat of ATH_CATS) {
-      const f = path.join(RANK_DIR, `${cat}.json`);
-      if (!fs.existsSync(f)) { console.log(`Mancante: ${cat}.json`); continue; }
-      for (const a of JSON.parse(fs.readFileSync(f, 'utf8')))
-        if (a.atleta_id && !athMap.has(a.atleta_id)) athMap.set(a.atleta_id, a);
-    }
+    for (const [id, a] of fciAll) athMap.set(id, a);
     console.log(`${athMap.size} atleti unici in ${ATH_CATS.join(', ')}`);
 
     if (INCLUDE_PHANTOMS) {
-      const phantoms = await getPhantomAthletes(sb, SEASON);
+      const phantoms = await getPhantomAthletes(sb, SEASON, fciAll);
       let added = 0;
       for (const [id, a] of phantoms) {
         if (!athMap.has(id)) { athMap.set(id, a); added++; }
