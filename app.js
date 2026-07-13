@@ -2890,11 +2890,31 @@ function route() {
   if (match('/atleti')) return renderAtletiList();
   if (match('/team')) return renderTeamList();
   if (match('/gare')) return renderGare();
+  // Risultati filtrati per categoria con URL dedicato (SEO: "risultati esordienti"
+  // ecc. sono ricerche comuni) — es. #/risultati/ES1_M.
+  const _mRisCat = match('/risultati/:cat');
+  if (_mRisCat) {
+    risSearchQuery = ''; risQueryMonth = ''; risQueryRegion = ''; risQueryGenere = ''; risQueryTipo = '';
+    risQueryCat = decodeURIComponent(_mRisCat[1]);
+    if (activeHub) applyHubFilters(activeHub);
+    return renderRisultati();
+  }
   if (match('/risultati')) {
     // Reset generic filters, then re-apply hub context if active
     risSearchQuery = ''; risQueryCat = ''; risQueryMonth = ''; risQueryRegion = ''; risQueryGenere = ''; risQueryTipo = '';
     if (activeHub) applyHubFilters(activeHub);
     return renderRisultati();
+  }
+  // Calendario filtrato per categoria con URL dedicato — pattern a 2 segmenti
+  // (/calendario/cat/:cat), distinto da /calendario/:id (usato per evidenziare
+  // una gara specifica) grazie all'ancoraggio regex di match(), quindi nessuna
+  // collisione possibile tra i due.
+  const m_calCat = match('/calendario/cat/:cat');
+  if (m_calCat) {
+    calQGenere = ''; calQMonth = ''; calQSearch = ''; calQTipo = ''; calQRegione = '';
+    calQCat = decodeURIComponent(m_calCat[1]);
+    if (activeHub) applyHubFilters(activeHub);
+    return renderCalendario();
   }
   const m_cal = match('/calendario/:id');
   if (m_cal) {
@@ -16436,7 +16456,13 @@ async function renderCalendario(highlightId) {
     if (calView === 'mappa') renderCalMap(filtered, calendarResultsMap);
   };
 
-  setPageMeta('Calendario Gare', 'Calendario delle gare di ciclismo agonistico italiano: date, luoghi e categorie di ogni evento su tutto il territorio nazionale.');
+  const _calCatLabel = (CAL_CAT_GROUPS.find(g => g.value === calQCat) || {}).label;
+  setPageMeta(
+    _calCatLabel ? `Calendario ${_calCatLabel}` : 'Calendario Gare',
+    _calCatLabel
+      ? `Calendario delle gare di ciclismo agonistico italiano nella categoria ${_calCatLabel}: date, luoghi e regioni.`
+      : 'Calendario delle gare di ciclismo agonistico italiano: date, luoghi e categorie di ogni evento su tutto il territorio nazionale.'
+  );
   setPage(`
     <div class="pg-header">
       <div class="pg-eyebrow">📅 STAGIONE 2025-2026</div>
@@ -16498,7 +16524,16 @@ async function renderCalendario(highlightId) {
 
   window.calSetMonth  = (v) => { calQMonth = v; render(); };
   window.calSetGenere = (v) => { calQGenere = v; render(); };
-  window.calSetCat    = (v) => { calQCat = v; render(); };
+  window.calSetCat    = (v) => {
+    calQCat = v;
+    // Sincronizza la barra indirizzi con la categoria filtrata (URL
+    // riconosciuto dal router: #/calendario/cat/:cat) — replaceState per
+    // non intasare "indietro" a ogni cambio filtro. Richiede un render
+    // completo (non il solo render() interno) per aggiornare setPageMeta.
+    const path = calQCat ? '/calendario/cat/' + encodeURIComponent(calQCat) : '/calendario';
+    if (location.pathname !== path) history.replaceState(null, '', path);
+    renderCalendario();
+  };
   window.calSetTipo   = (v) => { calQTipo = v; render(); };
   window.calSetSearch = (v) => { calQSearch = v; render(); };
   window.calSetRegione = (v) => { calQRegione = v; render(); };
@@ -18953,8 +18988,15 @@ let risQueryTipo = '';
 let risSearchQuery = '';
 let _risSearchTimer = null;
 
+// Sincronizza la barra indirizzi con la categoria filtrata (URL riconosciuto
+// dal router: #/risultati/:cat) — replaceState per non intasare "indietro"
+// con ogni singolo cambio filtro, solo la vera navigazione crea history.
+function _syncRisultatiUrl() {
+  const path = risQueryCat ? '/risultati/' + encodeURIComponent(risQueryCat) : '/risultati';
+  if (location.pathname !== path) history.replaceState(null, '', path);
+}
 window.risSetGenere = (v) => { risQueryGenere = v; renderRisultati(); };
-window.risSetCat    = (v) => { risQueryCat = v; renderRisultati(); };
+window.risSetCat    = (v) => { risQueryCat = v; _syncRisultatiUrl(); renderRisultati(); };
 window.risSetMonth  = (v) => { risQueryMonth = v; renderRisultati(); };
 window.risSetRegion = (v) => { risQueryRegion = v; renderRisultati(); };
 window.risSetTipo   = (v) => { risQueryTipo = v; renderRisultati(); };
@@ -19117,6 +19159,16 @@ async function renderRisultati() {
   const allCats = [...allCatsSet].sort();
   if (risQueryCat) races = races.filter(r => r.byCategory && r.byCategory[risQueryCat]);
 
+  // Meta/canonical dinamici a ogni render (non solo al primo) — necessario
+  // perché il cambio categoria non ricrea il DOM shell (isFirstRender resta
+  // false), ma deve comunque aggiornare titolo/URL indicizzabile.
+  setPageMeta(
+    risQueryCat ? `Risultati ${catLabel(risQueryCat)}` : 'Risultati Gare',
+    risQueryCat
+      ? `Tutti i risultati delle gare di ciclismo agonistico italiano nella categoria ${catLabel(risQueryCat)}.`
+      : 'Tutti i risultati delle gare di ciclismo agonistico italiano: Esordienti, Allievi, Juniores, Under23, Elite — uomini e donne.'
+  );
+
   // ── First render: build the persistent shell ──────────────────
   const appEl = document.getElementById('app');
   if (!appEl) return;
@@ -19150,7 +19202,6 @@ async function renderRisultati() {
         <option value="campionato_italiano">Campionati Italiani</option>
       </select>`;
 
-    setPageMeta('Risultati Gare', 'Tutti i risultati delle gare di ciclismo agonistico italiano: Esordienti, Allievi, Juniores, Under23, Elite — uomini e donne.');
     setPage(`
       <div class="content-wrapper">
         <div class="section-header">
