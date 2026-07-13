@@ -16,12 +16,20 @@
  *
  * Uso:
  *   $env:SUPABASE_SECRET = "..."
- *   node pcs-athlete-import.js [--force] [--atleta-id=X] [--limit=N] [--season=YYYY]
+ *   node pcs-athlete-import.js [--force] [--atleta-id=X] [--limit=N] [--season=YYYY] [--include-phantoms]
  *
- *   --force        rilancia anche chi ha già foto E risultati di questa stagione
- *   --atleta-id=X  processa solo quell'atleta
- *   --limit=N      processa solo i primi N atleti (utile per test)
- *   --season=YYYY  stagione (default: anno corrente)
+ *   --force             rilancia anche chi ha già foto E risultati di questa stagione
+ *   --atleta-id=X       processa solo quell'atleta
+ *   --limit=N           processa solo i primi N atleti (utile per test)
+ *   --season=YYYY       stagione (default: anno corrente)
+ *   --include-phantoms  include anche gli atleti "fantasma": corridori non
+ *                        registrati con la FCI (di solito stranieri/
+ *                        professionisti) che compaiono comunque in
+ *                        pcs_gara_results (posizioni 11+ di gare del
+ *                        circuito con pagina PCS completa scrapata) — hanno
+ *                        già una pagina sul sito con i risultati base, ma
+ *                        restano senza foto/social/palmares estero se non
+ *                        processati anche da questo script.
  */
 
 const fs   = require('fs');
@@ -42,6 +50,7 @@ if (!SUPABASE_SECRET) { console.error('Imposta $env:SUPABASE_SECRET o crea serve
 
 const args      = process.argv.slice(2);
 const FORCE     = args.includes('--force');
+const INCLUDE_PHANTOMS = args.includes('--include-phantoms');
 const SINGLE_ID = (args.find(a => a.startsWith('--atleta-id=')) || '').split('=')[1] || null;
 const LIMIT     = parseInt((args.find(a => a.startsWith('--limit=')) || '').split('=')[1] || '') || null;
 const SEASON    = parseInt((args.find(a => a.startsWith('--season=')) || '').split('=')[1] || '') || new Date().getFullYear();
@@ -373,6 +382,38 @@ async function getAthletesWithResults(sb, season) {
   return new Set((data || []).map(r => r.atleta_id));
 }
 
+// Atleti "fantasma": non registrati con la FCI (di solito stranieri o
+// professionisti) ma comunque presenti in pcs_gara_results — arrivati lì
+// perché hanno corso in una gara del circuito ICS con pagina PCS completa
+// scrapata (es. un corridore di team estero al Circuito del Porto). Hanno
+// già una pagina sul sito (costruita al volo dal frontend a partire dai
+// risultati), ma restano senza foto/social/palmares se non processati anche
+// qui. rider_name è nel formato PCS "Cognome Nome" (es. "Viviani Attilio").
+async function getPhantomAthletes(sb, season) {
+  const all = [];
+  const PAGE = 1000;
+  for (let from = 0; ; from += PAGE) {
+    const { data, error } = await sb.from('pcs_gara_results')
+      .select('atleta_id, rider_name')
+      .eq('season', season)
+      .not('atleta_id', 'is', null)
+      .range(from, from + PAGE - 1);
+    if (error) throw error;
+    if (!data || !data.length) break;
+    all.push(...data);
+    if (data.length < PAGE) break;
+  }
+  const map = new Map();
+  for (const r of all) {
+    if (map.has(r.atleta_id)) continue;
+    const parts = (r.rider_name || '').trim().split(/\s+/);
+    const cognome = parts[0] || r.atleta_id;
+    const nome = parts.slice(1).join(' ') || cognome;
+    map.set(r.atleta_id, { atleta_id: r.atleta_id, nome, cognome });
+  }
+  return map;
+}
+
 async function upsertResults(sb, rows) {
   if (!rows.length) return;
   const { error } = await sb.from('pcs_results')
@@ -400,7 +441,12 @@ async function upsertResults(sb, rows) {
       for (const a of JSON.parse(fs.readFileSync(f, 'utf8')))
         if (a.atleta_id === SINGLE_ID) { athMap.set(a.atleta_id, a); break; }
     }
-    if (!athMap.size) { console.error(`Atleta ${SINGLE_ID} non trovato nei ranking`); process.exit(1); }
+    if (!athMap.size) {
+      // Non nei ranking FCI — prova tra gli atleti "fantasma" (pcs_gara_results)
+      const phantoms = await getPhantomAthletes(sb, SEASON);
+      if (phantoms.has(SINGLE_ID)) athMap.set(SINGLE_ID, phantoms.get(SINGLE_ID));
+    }
+    if (!athMap.size) { console.error(`Atleta ${SINGLE_ID} non trovato né nei ranking né tra i fantasma`); process.exit(1); }
   } else {
     for (const cat of ATH_CATS) {
       const f = path.join(RANK_DIR, `${cat}.json`);
@@ -408,10 +454,19 @@ async function upsertResults(sb, rows) {
       for (const a of JSON.parse(fs.readFileSync(f, 'utf8')))
         if (a.atleta_id && !athMap.has(a.atleta_id)) athMap.set(a.atleta_id, a);
     }
+    console.log(`${athMap.size} atleti unici in ${ATH_CATS.join(', ')}`);
+
+    if (INCLUDE_PHANTOMS) {
+      const phantoms = await getPhantomAthletes(sb, SEASON);
+      let added = 0;
+      for (const [id, a] of phantoms) {
+        if (!athMap.has(id)) { athMap.set(id, a); added++; }
+      }
+      console.log(`+ ${added} atleti "fantasma" da pcs_gara_results (non registrati FCI)`);
+    }
   }
 
   let athletes = [...athMap.values()];
-  console.log(`${athletes.length} atleti unici in ${ATH_CATS.join(', ')}`);
 
   // 2. Skip chi ha già foto E risultati di questa stagione (a meno di --force)
   const withPhoto   = FORCE ? new Set() : await getExistingPhotoIds(sb);
