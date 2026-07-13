@@ -200,7 +200,8 @@ async function extractProfileAndResults(page, season) {
         }
       }
 
-      let lastCountry = null; // vedi commento sotto sulla propagazione bandiera
+      let lastCountry = null;   // vedi commento sotto sulla propagazione bandiera
+      let lastTourName = null;  // vedi commento sotto sulla propagazione nome giro
       for (const tr of table.querySelectorAll('tbody tr')) {
         const cells = [...tr.querySelectorAll('td')];
         if (cells.length < 3) continue;
@@ -210,6 +211,7 @@ async function extractProfileAndResults(page, season) {
         const resultRaw = cells[iResult]?.textContent?.trim() || '';
         const timeRaw   = iTime >= 0 ? (cells[iTime]?.textContent?.trim() || '') : '';
         const catRaw    = iCat  >= 0 ? (cells[iCat]?.textContent?.trim()  || '') : '';
+        const rawRaceText = raceCell?.textContent?.trim() || '';
 
         // Bandiera: nelle corse a tappe SOLO la riga "riepilogo tour" porta la
         // bandierina — le singole tappe (e le righe di classifica generale/
@@ -227,14 +229,31 @@ async function extractProfileAndResults(page, season) {
         const country = ownCountry || lastCountry;
 
         const dm = dateRaw.match(/^(\d{1,2})\.(\d{2})$/);
-        if (!dm) continue;
+        if (!dm) {
+          // Righe senza data singola sono di due tipi, entrambe da saltare
+          // come risultato ma da distinguere per il nome del giro:
+          //  - la riga "titolo tour" vera e propria (es. "Ronde de l'Isard
+          //    (2.2U)"), che nel DOM usa uno <span> semplice — è questa che
+          //    vogliamo come prefisso per le tappe successive;
+          //  - le righe di riepilogo "Points classification"/"General
+          //    classification" (posizione finale nella generale/punti, non
+          //    un vero risultato di tappa), che nel DOM usano la stessa
+          //    coppia di span imob/idesk delle tappe — vanno ignorate anche
+          //    per il nome del giro, altrimenti sovrascrivono il titolo vero
+          //    con "General classificationGeneral classification".
+          const isClassificationRow = !!raceCell?.querySelector('.imob, .idesk');
+          if (rawRaceText && !isClassificationRow) lastTourName = rawRaceText;
+          continue;
+        }
         const data = `${season}-${dm[2].padStart(2,'0')}-${dm[1].padStart(2,'0')}`;
 
         const raceLink = raceCell?.querySelector('a');
-        const gara_name = raceCell?.textContent?.trim() || '';
         let pcs_race_slug = null;
+        let pcs_url = null;
+        let isStage = false;
         if (raceLink) {
           const href = raceLink.getAttribute('href') || '';
+          pcs_url = href.replace(/^\/+/, '');
           // PCS usa "race/slug/anno/result" (senza slash iniziale) per le gare
           // normali e "national-race/slug/anno/result" per quelle nazionali —
           // e per le corse a tappe l'ultimo segmento è "stage-N" invece di
@@ -245,9 +264,20 @@ async function extractProfileAndResults(page, season) {
           if (m) {
             const stagePart = m[2] && m[2] !== 'result' ? '-' + m[2].replace(/\//g, '-') : '';
             pcs_race_slug = m[1] + stagePart;
+            isStage = !!stagePart;
           }
         }
-        if (!gara_name || !pcs_race_slug) continue;
+        if (!rawRaceText || !pcs_race_slug) continue;
+
+        // Il DOM ha DUE etichette sovrapposte per le tappe (una breve per
+        // mobile "S4", una estesa per desktop "Stage 4" — entrambe presenti
+        // sempre, mostrate alternativamente via CSS), quindi il testo grezzo
+        // concatena "S4Stage 4 - Matera › Corato" senza separatore. Tenendo
+        // solo da "Stage " in poi si ottiene l'etichetta leggibile, e
+        // anteponendo il nome del giro si ottiene lo stile PCS completo.
+        const stageIdx = rawRaceText.indexOf('Stage ');
+        const cleanedLabel = stageIdx >= 0 ? rawRaceText.slice(stageIdx) : rawRaceText;
+        const gara_name = (isStage && lastTourName) ? `${lastTourName} — ${cleanedLabel}` : cleanedLabel;
 
         const posStr = resultRaw.replace(/[^0-9]/g, '');
         const posizione = posStr ? parseInt(posStr) : null;
@@ -260,7 +290,7 @@ async function extractProfileAndResults(page, season) {
           distacco = timeRaw.startsWith('+') ? timeRaw : (timeRaw ? '+' + timeRaw : null);
         }
 
-        rows.push({ data, gara_name, pcs_race_slug, posizione, distacco, cat: catRaw, country });
+        rows.push({ data, gara_name, pcs_race_slug, pcs_url, posizione, distacco, cat: catRaw, country });
       }
 
       if (rows.length > 0) break;
@@ -491,6 +521,7 @@ async function upsertResults(sb, rows) {
         posizione:     r.posizione,
         distacco:      r.distacco,
         pcs_race_slug: r.pcs_race_slug,
+        pcs_url:       r.pcs_url,
         country:       r.country,
         // Non tentare l'abbinamento al calendario ICS se sappiamo che la gara
         // è all'estero — matchGaraId() abbina solo per data (+ euristica

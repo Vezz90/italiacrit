@@ -12979,10 +12979,16 @@ async function _loadTeamPcsExtra(teamId, season, viewCat) {
       .catch(() => []),
   ]);
 
-  // Stagione PCS: solo extra-circuito
+  // Stagione PCS: solo risultati esteri (country valorizzato e diverso da
+  // "it") — stessa regola della pagina atleta. Mostrati in una sezione
+  // separata ordinata per data (non nella tabella principale, che è
+  // ordinata per posizione: mescolare risultati esteri lì li avrebbe
+  // inseriti in punti arbitrari confrontando posizioni di gare non
+  // comparabili tra loro).
   const seasonExtra = pcsSeasonAll
     .filter(r => {
-      if (r.gara_id && icsKeys.has(`${r.atleta_id}:${r.gara_id}`)) return false;
+      if (r.gara_id) return false;
+      if (!r.country || r.country === 'it') return false;
       if (viewCat) {
         const ath = globalData?.athletes?.[r.atleta_id];
         const athCode = ath ? getRankingFileCode(ath) : '';
@@ -13041,21 +13047,27 @@ async function _loadTeamPcsExtra(teamId, season, viewCat) {
         .sort((a, b) => (b.data || '').localeCompare(a.data || ''))
     : [];
 
-  // Unisci: gare circuito (per posizione asc) + extra stagione (per data desc)
-  const allExtra = [
-    ...garaExtra.sort((a, b) => (a.posizione || 9999) - (b.posizione || 9999)),
-    ...seasonExtra,
-  ];
-  if (!allExtra.length) return;
-
-  const tbody = document.getElementById('team-results-tbody');
-  if (!tbody) return;
-
   const getName = (id) => {
     const a = globalData?.athletes?.[id];
     if (a) return { cognome: a.cognome || '', nome: a.nome || '' };
     return { cognome: id, nome: '' };
   };
+
+  // Sezione "RISULTATI ALL'ESTERO" del team, sotto la tabella principale
+  const esteroEl = document.getElementById('team-pcs-extra');
+  if (esteroEl && seasonExtra.length) {
+    const rowsWithNames = seasonExtra.map(r => {
+      const { cognome, nome } = getName(r.atleta_id);
+      return { ...r, atleta_cognome: cognome, atleta_nome: nome };
+    });
+    esteroEl.innerHTML = renderPcsEsteroTable(rowsWithNames, { showAthlete: true });
+  }
+
+  const allExtra = garaExtra.sort((a, b) => (a.posizione || 9999) - (b.posizione || 9999));
+  if (!allExtra.length) return;
+
+  const tbody = document.getElementById('team-results-tbody');
+  if (!tbody) return;
 
   const emptyRow = tbody.querySelector('.empty-state');
   if (emptyRow) emptyRow.closest('tr').remove();
@@ -13066,11 +13078,7 @@ async function _loadTeamPcsExtra(teamId, season, viewCat) {
   for (const r of allExtra.slice(0, 200)) {
     const pClass = posClass(r.posizione);
     const { cognome, nome } = getName(r.atleta_id);
-    const raceLink = r.gara_id
-      ? `<a href="#/gara/${esc(r.gara_id)}">${esc(r.gara_name)}</a>`
-      : (r.pcs_race_slug
-          ? `<a href="https://www.procyclingstats.com/race/${esc(r.pcs_race_slug)}" target="_blank">${esc(r.gara_name)}</a>`
-          : esc(r.gara_name));
+    const raceLink = `<a href="#/gara/${esc(r.gara_id)}">${esc(r.gara_name)}</a>`;
     const tr = document.createElement('tr');
     tr.dataset.pos = String(r.posizione || 9999);
     tr.innerHTML = `
@@ -13122,6 +13130,49 @@ function countryCodeToFlag(code) {
   if (!code || code.length !== 2) return '';
   const cc = code.toUpperCase();
   return String.fromCodePoint(...[...cc].map(c => 0x1F1E6 + c.charCodeAt(0) - 65));
+}
+
+// Link diretto alla pagina PCS del risultato — usa il path reale scrapato
+// (pcs_url, es. "race/giro-ciclistico-d-italia/2026/stage-4") quando
+// disponibile: ricostruirlo dal solo pcs_race_slug portava a URL sbagliati
+// per le corse a tappe (lo slug salvato include un suffisso "-stage-4" per
+// evitare collisioni nel DB, che però non corrisponde al vero path PCS).
+// Fallback sul vecchio schema solo per righe importate prima di questo fix.
+function pcsResultLink(r) {
+  const path = r.pcs_url || (r.pcs_race_slug ? `race/${r.pcs_race_slug}` : null);
+  return path ? `https://www.procyclingstats.com/${path}` : null;
+}
+
+// Tabella "RISULTATI ALL'ESTERO" condivisa tra pagina atleta e pagina team —
+// stessa struttura, stesso filtro (solo country valorizzato e diverso da
+// "it"), ordinata per data decrescente, nessun punteggio (righe puramente
+// informative, per costruzione: non fanno parte del circuito ICS).
+function renderPcsEsteroTable(rows, { showAthlete = false } = {}) {
+  if (!rows.length) return '';
+  return `
+    <div class="section-header" style="margin-top:32px">
+      <span class="section-title">RISULTATI ALL'ESTERO</span>
+      <span class="section-line"></span>
+    </div>
+    <div class="results-table-wrap">
+      <table class="results-table atleta-results">
+        <thead><tr><th>DATA</th>${showAthlete ? '<th>ATLETA</th>' : ''}<th>GARA</th><th>POS</th><th>DISTACCO</th></tr></thead>
+        <tbody>${rows.map(r => {
+          const link = pcsResultLink(r);
+          return `
+          <tr>
+            <td class="td-date">${fmtDateShort(r.data)}</td>
+            ${showAthlete ? `<td><a href="#/atleta/${esc(r.atleta_id)}">${esc(r.atleta_cognome || '')} ${esc(r.atleta_nome || '')}</a></td>` : ''}
+            <td>${countryCodeToFlag(r.country)} ${link
+              ? `<a href="${esc(link)}" target="_blank">${esc(r.gara_name)}</a>`
+              : esc(r.gara_name)}</td>
+            <td class="td-pos ${posClass(r.posizione)}">${r.posizione}°</td>
+            <td style="color:var(--text-muted);font-size:.85rem">${esc(r.distacco || '')}</td>
+          </tr>`;
+        }).join('')}
+        </tbody>
+      </table>
+    </div>`;
 }
 
 // ── PCS risultati extra atleta (circuito esteso + gare non in circuito) ───────
@@ -13218,26 +13269,7 @@ async function _loadAtletaPcsExtra(atletaId, season, icsRisultati, athlete) {
     : [];
   if (!seasonExtra.length) return;
 
-  el.innerHTML = `
-    <div class="section-header" style="margin-top:32px">
-      <span class="section-title">RISULTATI ALL'ESTERO</span>
-      <span class="section-line"></span>
-    </div>
-    <div class="results-table-wrap">
-      <table class="results-table atleta-results">
-        <thead><tr><th>DATA</th><th>GARA</th><th>POS</th><th>DISTACCO</th></tr></thead>
-        <tbody>${seasonExtra.map(r => `
-          <tr>
-            <td class="td-date">${fmtDateShort(r.data)}</td>
-            <td>${countryCodeToFlag(r.country)} ${r.pcs_race_slug
-              ? `<a href="https://www.procyclingstats.com/race/${esc(r.pcs_race_slug)}" target="_blank">${esc(r.gara_name)}</a>`
-              : esc(r.gara_name)}</td>
-            <td class="td-pos ${posClass(r.posizione)}">${r.posizione}°</td>
-            <td style="color:var(--text-muted);font-size:.85rem">${esc(r.distacco || '')}</td>
-          </tr>`).join('')}
-        </tbody>
-      </table>
-    </div>`;
+  el.innerHTML = renderPcsEsteroTable(seasonExtra);
 }
 
 // ── Commenti gare ─────────────────────────────────────────────────────────────
@@ -14039,6 +14071,7 @@ async function renderTeam(team_id, opts = {}) {
         <tbody id="team-results-tbody">${risultatiRows || '<tr><td colspan="9" class="empty-state">Nessun risultato</td></tr>'}</tbody>
       </table>
     </div>
+    <div id="team-pcs-extra"></div>
   `);
 
   // Bottone messaggio team (async, non blocca il render)
