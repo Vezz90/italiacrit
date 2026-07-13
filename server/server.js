@@ -549,7 +549,7 @@ app.get('/og/team/:id', async (req, res) => {
     .sort((a, b) => (b.punti_totali || 0) - (a.punti_totali || 0));
   const desc  = roster.length ? `${roster.length} corridori — Italia Cycling Stats` : 'Team — Italia Cycling Stats';
   const img   = `${API_BASE_URL}/api/og-image/team/${encodeURIComponent(id)}`;
-  const redirect = `${SITE_URL}/#/team/${encodeURIComponent(id)}`;
+  const redirect = `${SITE_URL}/team/${encodeURIComponent(id)}`;
   const canonical = `${API_BASE_URL}/og/team/${encodeURIComponent(id)}`;
   // Elenco nominale del roster — contenuto reale al posto del solo conteggio.
   const bodyHtml = roster.length ? `<table>
@@ -614,7 +614,7 @@ app.get('/og/class/:id', async (req, res) => {
   const top3  = ranking.slice(0, 3).map(r => `${r.pos}° ${r.cognome} ${r.nome}`).join(' · ');
   const desc  = [scopeLabel, monthLabel, top3].filter(Boolean).join(' — ');
   const img   = `${API_BASE_URL}/api/og-image/class/${encodeURIComponent(req.params.id)}`;
-  const redirect  = `${SITE_URL}/#/classifiche`;
+  const redirect  = `${SITE_URL}/classifiche`;
   const canonical = `${API_BASE_URL}/og/class/${encodeURIComponent(req.params.id)}`;
   // Top 10 completa (ranking già la calcola per intero) invece dei soli primi 3.
   const bodyHtml = ranking.length ? `<table>
