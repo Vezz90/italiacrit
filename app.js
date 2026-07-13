@@ -12730,7 +12730,6 @@ async function renderAtleta(atleta_id, opts = {}) {
         <tbody id="atleta-results-tbody">${tableRows || '<tr><td colspan="8" class="empty-state">Nessun risultato</td></tr>'}</tbody>
       </table>
     </div>
-    <div id="atleta-pcs-extra"></div>
   `);
 
   // Inject bottone messaggio in modo async (lookup non blocca il render)
@@ -12980,11 +12979,9 @@ async function _loadTeamPcsExtra(teamId, season, viewCat) {
   ]);
 
   // Stagione PCS: solo risultati esteri (country valorizzato e diverso da
-  // "it") — stessa regola della pagina atleta. Mostrati in una sezione
-  // separata ordinata per data (non nella tabella principale, che è
-  // ordinata per posizione: mescolare risultati esteri lì li avrebbe
-  // inseriti in punti arbitrari confrontando posizioni di gare non
-  // comparabili tra loro).
+  // "it") — stessa regola della pagina atleta. Inseriti nella tabella
+  // principale in ordine cronologico (per data, non per posizione: non
+  // hanno un punteggio comparabile alle gare del circuito).
   const seasonExtra = pcsSeasonAll
     .filter(r => {
       if (r.gara_id) return false;
@@ -13053,18 +13050,7 @@ async function _loadTeamPcsExtra(teamId, season, viewCat) {
     return { cognome: id, nome: '' };
   };
 
-  // Sezione "RISULTATI ALL'ESTERO" del team, sotto la tabella principale
-  const esteroEl = document.getElementById('team-pcs-extra');
-  if (esteroEl && seasonExtra.length) {
-    const rowsWithNames = seasonExtra.map(r => {
-      const { cognome, nome } = getName(r.atleta_id);
-      return { ...r, atleta_cognome: cognome, atleta_nome: nome };
-    });
-    esteroEl.innerHTML = renderPcsEsteroTable(rowsWithNames, { showAthlete: true });
-  }
-
-  const allExtra = garaExtra.sort((a, b) => (a.posizione || 9999) - (b.posizione || 9999));
-  if (!allExtra.length) return;
+  if (!garaExtra.length && !seasonExtra.length) return;
 
   const tbody = document.getElementById('team-results-tbody');
   if (!tbody) return;
@@ -13075,12 +13061,15 @@ async function _loadTeamPcsExtra(teamId, season, viewCat) {
   const ph = `<span class="rk-av-placeholder"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><circle cx="12" cy="8" r="4"/><path d="M4 20c0-4 3.6-7 8-7s8 3 8 7"/></svg></span>`;
   const newSpans = [];
 
-  for (const r of allExtra.slice(0, 200)) {
+  // Gare circuito (pos 11+): posizione comparabile alle altre righe del
+  // circuito, restano inserite per posizione come il resto della tabella.
+  for (const r of garaExtra.slice(0, 200)) {
     const pClass = posClass(r.posizione);
     const { cognome, nome } = getName(r.atleta_id);
     const raceLink = `<a href="#/gara/${esc(r.gara_id)}">${esc(r.gara_name)}</a>`;
     const tr = document.createElement('tr');
     tr.dataset.pos = String(r.posizione || 9999);
+    tr.dataset.date = r.data || '';
     tr.innerHTML = `
       <td class="td-date">${fmtDateShort(r.data)}</td>
       <td class="td-race">${raceLink}
@@ -13106,6 +13095,43 @@ async function _loadTeamPcsExtra(teamId, season, viewCat) {
     if (span) newSpans.push(span);
   }
 
+  // Gare estere: nessun punteggio/posizione comparabile alle altre righe —
+  // inserite in ordine cronologico (per data) tra le righe esistenti,
+  // invece che in una sezione separata.
+  for (const r of seasonExtra) {
+    const pClass = posClass(r.posizione);
+    const { cognome, nome } = getName(r.atleta_id);
+    const link = pcsResultLink(r);
+    const raceHtml = link
+      ? `<a href="${esc(link)}" target="_blank">${esc(r.gara_name)}</a>`
+      : esc(r.gara_name);
+    const tr = document.createElement('tr');
+    tr.dataset.date = r.data || '';
+    tr.innerHTML = `
+      <td class="td-date">${fmtDateShort(r.data)}</td>
+      <td class="td-race">${countryFlagImg(r.country)} ${raceHtml}
+        <div class="td-team-mobile"><a href="#/atleta/${esc(r.atleta_id)}" style="color:var(--text-secondary)">${esc(cognome)} ${esc(nome)}</a></div>
+      </td>
+      <td class="td-hide-mobile" style="font-family:var(--font-heading);font-weight:700">
+        <div style="display:flex;align-items:center">
+          <span class="rk-av-wrap" data-aid="${esc(r.atleta_id)}">${ph}</span>
+          <a href="#/atleta/${esc(r.atleta_id)}" style="color:var(--text-primary)">${esc(cognome)} ${esc(nome)}</a>
+        </div>
+      </td>
+      <td class="td-pos ${pClass}">${r.posizione}°</td>
+      <td class="td-hide-mobile" style="text-align:center">—</td>
+      <td class="td-hide-mobile" style="text-align:right">—</td>
+      <td class="td-hide-mobile" style="text-align:right">—</td>
+      <td class="td-hide-mobile" style="text-align:right"></td>
+      <td class="td-pts">0</td>`;
+    const existingRows = [...tbody.querySelectorAll('tr[data-date]')];
+    const after = existingRows.find(row => (row.dataset.date || '') < r.data);
+    if (after) tbody.insertBefore(tr, after);
+    else tbody.appendChild(tr);
+    const span = tr.querySelector('.rk-av-wrap[data-aid]');
+    if (span) newSpans.push(span);
+  }
+
   // Foto atleti async
   const uniqueIds = [...new Set(newSpans.map(s => s.dataset.aid))];
   const ovMap = {};
@@ -13125,11 +13151,15 @@ async function _loadTeamPcsExtra(teamId, season, viewCat) {
   });
 }
 
-// Codice paese ISO-2 (es. "fr") → emoji bandiera, via regional indicator symbols.
-function countryCodeToFlag(code) {
+// Codice paese ISO-2 (es. "fr") → piccola immagine bandiera. Le bandiere
+// emoji (regional indicator symbols) NON hanno un glifo nel font di sistema
+// di Windows — Chrome/Edge su Windows mostrano solo il codice testuale
+// ("FR") invece della bandiera, quindi usiamo un'immagine reale (flagcdn.com,
+// gratuito, nessuna chiave richiesta) che rende identica su ogni piattaforma.
+function countryFlagImg(code) {
   if (!code || code.length !== 2) return '';
-  const cc = code.toUpperCase();
-  return String.fromCodePoint(...[...cc].map(c => 0x1F1E6 + c.charCodeAt(0) - 65));
+  const cc = code.toLowerCase();
+  return `<img src="https://flagcdn.com/16x12/${esc(cc)}.png" width="16" height="12" alt="${esc(cc.toUpperCase())}" style="vertical-align:middle;border-radius:2px" loading="lazy">`;
 }
 
 // Link diretto alla pagina PCS del risultato — usa il path reale scrapato
@@ -13141,38 +13171,6 @@ function countryCodeToFlag(code) {
 function pcsResultLink(r) {
   const path = r.pcs_url || (r.pcs_race_slug ? `race/${r.pcs_race_slug}` : null);
   return path ? `https://www.procyclingstats.com/${path}` : null;
-}
-
-// Tabella "RISULTATI ALL'ESTERO" condivisa tra pagina atleta e pagina team —
-// stessa struttura, stesso filtro (solo country valorizzato e diverso da
-// "it"), ordinata per data decrescente, nessun punteggio (righe puramente
-// informative, per costruzione: non fanno parte del circuito ICS).
-function renderPcsEsteroTable(rows, { showAthlete = false } = {}) {
-  if (!rows.length) return '';
-  return `
-    <div class="section-header" style="margin-top:32px">
-      <span class="section-title">RISULTATI ALL'ESTERO</span>
-      <span class="section-line"></span>
-    </div>
-    <div class="results-table-wrap">
-      <table class="results-table atleta-results">
-        <thead><tr><th>DATA</th>${showAthlete ? '<th>ATLETA</th>' : ''}<th>GARA</th><th>POS</th><th>DISTACCO</th></tr></thead>
-        <tbody>${rows.map(r => {
-          const link = pcsResultLink(r);
-          return `
-          <tr>
-            <td class="td-date">${fmtDateShort(r.data)}</td>
-            ${showAthlete ? `<td><a href="#/atleta/${esc(r.atleta_id)}">${esc(r.atleta_cognome || '')} ${esc(r.atleta_nome || '')}</a></td>` : ''}
-            <td>${countryCodeToFlag(r.country)} ${link
-              ? `<a href="${esc(link)}" target="_blank">${esc(r.gara_name)}</a>`
-              : esc(r.gara_name)}</td>
-            <td class="td-pos ${posClass(r.posizione)}">${r.posizione}°</td>
-            <td style="color:var(--text-muted);font-size:.85rem">${esc(r.distacco || '')}</td>
-          </tr>`;
-        }).join('')}
-        </tbody>
-      </table>
-    </div>`;
 }
 
 // ── PCS risultati extra atleta (circuito esteso + gare non in circuito) ───────
@@ -13221,21 +13219,40 @@ async function _loadAtletaPcsExtra(atletaId, season, icsRisultati, athlete) {
             posizione:      r.posizione,
           };
         })
-        .sort((a, b) => (b.data || '').localeCompare(a.data || ''))
     : [];
 
-  if (!garaExtra.length) return;
+  // Risultati esteri (da pcs_results, country valorizzato e diverso da "it")
+  // — vanno inseriti nella STESSA tabella cronologica, non in una sezione
+  // separata: sono comunque risultati dell'atleta nell'anno in corso, solo
+  // senza punteggio perché fuori dal circuito ICS.
+  let seasonRaw = [];
+  try {
+    seasonRaw = await apiCall(`/pcs-results/atleta/${encodeURIComponent(atletaId)}?season=${season}`);
+  } catch { /* ignora, procedi solo con garaExtra */ }
+  const esteroExtra = Array.isArray(seasonRaw)
+    ? seasonRaw.filter(r => !r.gara_id && r.country && r.country !== 'it')
+    : [];
+
+  if (!garaExtra.length && !esteroExtra.length) return;
 
   // Rimuovi riga "Nessun risultato" se presente
   const emptyRow = tbody.querySelector('.empty-state');
   if (emptyRow) emptyRow.closest('tr').remove();
 
+  const cat = athlete?.categoria || '';
+  const insertChrono = (data, html) => {
+    const tr = document.createElement('tr');
+    tr.dataset.date = data;
+    tr.innerHTML = html;
+    const existingRows = [...tbody.querySelectorAll('tr[data-date]')];
+    const after = existingRows.find(row => (row.dataset.date || '') < data);
+    if (after) tbody.insertBefore(tr, after);
+    else tbody.appendChild(tr);
+  };
+
   for (const r of garaExtra) {
     const pClass = posClass(r.posizione);
-    const cat = athlete?.categoria || '';
-    const tr = document.createElement('tr');
-    tr.dataset.date = r.data;
-    tr.innerHTML = `
+    insertChrono(r.data, `
       <td class="td-date">${fmtDateShort(r.data)}</td>
       <td class="td-race"><a href="#/gara/${esc(r.gara_id)}">${esc(r.nome_gara)}</a></td>
       <td>${badgeCat(cat)}</td>
@@ -13243,33 +13260,25 @@ async function _loadAtletaPcsExtra(atletaId, season, icsRisultati, athlete) {
       <td>${badgeMult(r.moltiplicatore || 1, r.tipo)}</td>
       <td style="text-align:right">${esc(r.km || '—')}</td>
       <td style="text-align:right">${esc(r.media || '—')}</td>
-      <td class="td-pts">0</td>`;
-
-    // Inserisci in ordine cronologico (data desc) tra le righe esistenti
-    const existingRows = [...tbody.querySelectorAll('tr[data-date]')];
-    const after = existingRows.find(row => (row.dataset.date || '') < r.data);
-    if (after) tbody.insertBefore(tr, after);
-    else tbody.appendChild(tr);
+      <td class="td-pts">0</td>`);
   }
 
-  // Risultati fuori-circuito (da pcs_results, es. gare non nel calendario ICS)
-  const el = document.getElementById('atleta-pcs-extra');
-  if (!el) return;
-  let seasonRaw;
-  try {
-    seasonRaw = await apiCall(`/pcs-results/atleta/${encodeURIComponent(atletaId)}?season=${season}`);
-  } catch { return; }
-  // Solo risultati esteri (country valorizzato e diverso da "it") — le gare
-  // italiane non ancora abbinate al circuito ICS non vanno mostrate qui, per
-  // non confonderle con un vero palmares internazionale. Niente punteggio:
-  // queste righe sono puramente informative.
-  const seasonExtra = Array.isArray(seasonRaw)
-    ? seasonRaw.filter(r => !r.gara_id && r.country && r.country !== 'it')
-        .sort((a, b) => (b.data || '').localeCompare(a.data || ''))
-    : [];
-  if (!seasonExtra.length) return;
-
-  el.innerHTML = renderPcsEsteroTable(seasonExtra);
+  for (const r of esteroExtra) {
+    const pClass = posClass(r.posizione);
+    const link = pcsResultLink(r);
+    const raceHtml = link
+      ? `<a href="${esc(link)}" target="_blank">${esc(r.gara_name)}</a>`
+      : esc(r.gara_name);
+    insertChrono(r.data, `
+      <td class="td-date">${fmtDateShort(r.data)}</td>
+      <td class="td-race">${countryFlagImg(r.country)} ${raceHtml}</td>
+      <td>${badgeCat(cat)}</td>
+      <td class="td-pos ${pClass}">${r.posizione}°</td>
+      <td>—</td>
+      <td style="text-align:right">—</td>
+      <td style="text-align:right">—</td>
+      <td class="td-pts">0</td>`);
+  }
 }
 
 // ── Commenti gare ─────────────────────────────────────────────────────────────
@@ -13815,7 +13824,7 @@ async function renderTeam(team_id, opts = {}) {
     .map(r => {
       // Per la scheda Team mostriamo il rank della squadra (con tie-break)
       const rankVal = r.team_rank_dopo_gara;
-      return `<tr data-pos="${r.posizione||9999}">
+      return `<tr data-pos="${r.posizione||9999}" data-date="${esc(r.data||'')}">
         <td class="td-date">${fmtDateShort(r.data)}</td>
         <td class="td-race">
           <a href="#/gara/${esc(r.gara_id)}">${esc(r.nome_gara)}</a>
@@ -14071,7 +14080,6 @@ async function renderTeam(team_id, opts = {}) {
         <tbody id="team-results-tbody">${risultatiRows || '<tr><td colspan="9" class="empty-state">Nessun risultato</td></tr>'}</tbody>
       </table>
     </div>
-    <div id="team-pcs-extra"></div>
   `);
 
   // Bottone messaggio team (async, non blocca il render)
