@@ -2646,14 +2646,19 @@ function _renderPushButton() {
 function _trackPageView() {
   if (typeof gtag !== 'function') return;
   setTimeout(() => {
+    // location.hash resta vuoto per le pagine navigate con URL puliti
+    // (Fase 2 SEO, via navTo/pushState) — in quel caso il path reale è in
+    // location.pathname, non nell'hash.
+    const path = location.hash ? location.hash.replace(/^#/, '') : (location.pathname || '/');
     gtag('event', 'page_view', {
-      page_path: location.hash.replace(/^#/, '') || '/',
+      page_path: path,
       page_location: location.href,
       page_title: document.title,
     });
   }, 300);
 }
 window.addEventListener('hashchange', _trackPageView);
+window.addEventListener('popstate', _trackPageView);
 
 window.addEventListener('load', async () => {
   globalData = await loadAll();
@@ -2787,8 +2792,51 @@ function updateMetaUI() {
   }
 }
 
+// Fase 2 SEO (URL puliti): se l'hash è vuoto ma il path è pulito (es.
+// /gara/xxx invece di /#/gara/xxx), lo si converte in un hash "virtuale"
+// così TUTTO il matching esistente in route() (che lavora solo sulla
+// stringa hash) continua a funzionare identico, senza dover riscrivere
+// ogni singolo pattern. I vecchi link con #/... restano prioritari e
+// funzionano esattamente come prima — nessuna rottura di retrocompatibilità.
+function _resolveVirtualHash() {
+  if (window.location.hash) return window.location.hash;
+  const p = window.location.pathname;
+  if (p && p !== '/' && p !== '/index.html') return '#' + p;
+  return '#/';
+}
+
+// Naviga a un URL pulito aggiornando la barra indirizzi (pushState) invece
+// di lasciare l'hash con #/... — usata dall'intercettazione click sotto.
+function navTo(path) {
+  if (window.location.pathname !== path) history.pushState(null, '', path);
+  route();
+  window.scrollTo(0, 0);
+}
+window.navTo = navTo;
+
+// Eleva i click sui link interni esistenti (es. <a href="#/gara/xxx">, di
+// cui ce ne sono circa 230 sparsi nel codice) a navigazione con URL pulito,
+// SENZA dover riscrivere ognuno di essi: si intercetta il click, si
+// impedisce il comportamento nativo (che assegnerebbe l'hash), e si passa
+// invece da navTo() con il path pulito equivalente. I punti che impostano
+// location.hash direttamente via JS (non tramite un <a> cliccato) non
+// passano da qui e continuano a funzionare esattamente come prima
+// (hashchange → route()) — nessuna rottura, solo un miglioramento
+// incrementale e sicuro.
+document.addEventListener('click', (e) => {
+  if (e.defaultPrevented || e.button !== 0 || e.metaKey || e.ctrlKey || e.shiftKey || e.altKey) return;
+  const a = e.target.closest && e.target.closest('a[href^="#/"]');
+  if (!a) return;
+  e.preventDefault();
+  navTo(a.getAttribute('href').slice(1));
+});
+
+// Avanti/indietro del browser con URL puliti (pushState non genera
+// hashchange, serve un listener dedicato).
+window.addEventListener('popstate', () => { route(); });
+
 function route() {
-  const hash = window.location.hash || '#/';
+  const hash = _resolveVirtualHash();
   updateNavActive(hash);
 
   // Hub — barre animate (sia generale #/hub che per categoria #/hub/CODE/)

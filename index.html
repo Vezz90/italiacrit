@@ -2,6 +2,12 @@
 <html lang="it">
 <head>
   <meta charset="UTF-8" />
+  <!-- Necessario per la Fase 2 SEO (URL puliti, es. /gara/xxx invece di
+       /#/gara/xxx): tutti gli asset sotto (app.js, style.css, data/*.json)
+       sono referenziati con path RELATIVI. Senza <base>, una navigazione
+       diretta a /gara/xxx risolverebbe questi path relativi a /gara/app.js
+       invece di /app.js, rompendo il caricamento dell'app. -->
+  <base href="/" />
   <meta name="google-site-verification" content="8bzaM6fB1nV-c8HZ1qeO0L32Vll32XVKU1pXkDpa4Mc" />
   <!-- Google tag (gtag.js) -->
   <script async src="https://www.googletagmanager.com/gtag/js?id=G-1329Z3BXWE"></script>

@@ -484,7 +484,7 @@ app.get('/og/gara/:id', async (req, res) => {
   const title = winner ? `${raceName} — Vince ${winner.cognome} ${winner.nome}` : raceName;
   const desc  = [date, luogo, top3, winnerComment].filter(Boolean).join(' — ');
   const img     = `${API_BASE_URL}/api/og-image/gara/${encodeURIComponent(id)}`;
-  const redirect = `${SITE_URL}/#/gara/${encodeURIComponent(id)}`;
+  const redirect = `${SITE_URL}/gara/${encodeURIComponent(id)}`;
   const canonical = `${API_BASE_URL}/og/gara/${encodeURIComponent(id)}`;
   // Tabella con TUTTA la classifica (non solo il podio) — contenuto reale e
   // indicizzabile, non solo meta tag: è la parte che rende questa pagina
@@ -516,7 +516,7 @@ app.get('/og/atleta/:id', async (req, res) => {
   if (ath.vittorie)     parts.push(`${ath.vittorie} vitt.`);
   const desc     = parts.join(' · ') || 'Ciclista — Italia Cycling Stats';
   const img      = `${API_BASE_URL}/api/og-image/atleta/${encodeURIComponent(id)}`;
-  const redirect = `${SITE_URL}/#/atleta/${encodeURIComponent(id)}`;
+  const redirect = `${SITE_URL}/atleta/${encodeURIComponent(id)}`;
   const canonical = `${API_BASE_URL}/og/atleta/${encodeURIComponent(id)}`;
   // Ultimi risultati dell'atleta — contenuto reale per l'indicizzazione,
   // stesso pattern di filtro per atleta_id già usato altrove nel file.
@@ -6414,6 +6414,27 @@ app.get('/api/og-image/class/:id', async (req, res) => {
     res.setHeader('Cache-Control', 'public, max-age=1800');
     res.send(buf);
   } catch (e) { res.redirect('/assets/og-default.png'); }
+});
+
+// ── SPA fallback (Fase 2 SEO: URL puliti) ───────────────────────────────────
+// DEVE essere l'ultima route (registrata dopo tutte le API e dopo
+// express.static più sopra): se nessuna route/file statico precedente ha
+// già risposto, il path non è un'API né un file reale — lo trattiamo come
+// una pagina interna della SPA (es. /gara/xxx) e serviamo comunque
+// index.html con status 200. L'app JS legge poi il vero path da
+// location.pathname e renderizza la pagina corretta lato client. Senza
+// questo, una navigazione diretta o un refresh su un URL pulito darebbe un
+// 404 reale (quel path non esiste come file sul server).
+app.get('*', (req, res, next) => {
+  const p = req.path;
+  if (p.startsWith('/api/') || p.startsWith('/og/') || p.startsWith('/data/') ||
+      p.startsWith('/uploads/') || p.startsWith('/photos/') ||
+      p === '/sitemap.xml' || p === '/robots.txt') return next();
+  // Un path con estensione (es. /assets/logo.png mancante) è una richiesta
+  // di file reale: se express.static non l'ha già servito sopra, è
+  // genuinamente mancante — meglio un 404 vero che un index.html silenzioso.
+  if (/\.[a-zA-Z0-9]+$/.test(p)) return next();
+  res.sendFile(path.join(FRONTEND_DIR, 'index.html'));
 });
 
 init()
