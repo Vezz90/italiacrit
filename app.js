@@ -13095,9 +13095,10 @@ async function _loadTeamPcsExtra(teamId, season, viewCat) {
     if (span) newSpans.push(span);
   }
 
-  // Gare estere: nessun punteggio/posizione comparabile alle altre righe —
-  // inserite in ordine cronologico (per data) tra le righe esistenti,
-  // invece che in una sezione separata.
+  // Gare estere: sulla pagina Team la tabella segue SEMPRE la stessa logica
+  // per posizione (dalla migliore a calare), come tutte le altre righe —
+  // a differenza della pagina atleta (dove l'inserimento è cronologico),
+  // qui va mantenuta la logica originale della tabella.
   for (const r of seasonExtra) {
     const pClass = posClass(r.posizione);
     const { cognome, nome } = getName(r.atleta_id);
@@ -13106,6 +13107,7 @@ async function _loadTeamPcsExtra(teamId, season, viewCat) {
       ? `<a href="${esc(link)}" target="_blank">${esc(r.gara_name)}</a>`
       : esc(r.gara_name);
     const tr = document.createElement('tr');
+    tr.dataset.pos = String(r.posizione || 9999);
     tr.dataset.date = r.data || '';
     tr.innerHTML = `
       <td class="td-date">${fmtDateShort(r.data)}</td>
@@ -13124,8 +13126,8 @@ async function _loadTeamPcsExtra(teamId, season, viewCat) {
       <td class="td-hide-mobile" style="text-align:right">—</td>
       <td class="td-hide-mobile" style="text-align:right"></td>
       <td class="td-pts">0</td>`;
-    const existingRows = [...tbody.querySelectorAll('tr[data-date]')];
-    const after = existingRows.find(row => (row.dataset.date || '') < r.data);
+    const existingRows = [...tbody.querySelectorAll('tr[data-pos]')];
+    const after = existingRows.find(row => parseInt(row.dataset.pos || '9999') > (r.posizione || 9999));
     if (after) tbody.insertBefore(tr, after);
     else tbody.appendChild(tr);
     const span = tr.querySelector('.rk-av-wrap[data-aid]');
