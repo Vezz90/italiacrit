@@ -11931,12 +11931,21 @@ window.navToRankCat  = (catCode, view) => {
   rankGender = catCode.endsWith('_F') ? 'F' : 'M';
   rankView   = view || 'atleti';
   rankFilter = ''; rankRegion = ''; rankMonth = ''; rankSort = 'punti';
-  window.location.hash = '#/classifica';
+  navTo('/classifica/' + encodeURIComponent(rankCat) + '/' + encodeURIComponent(rankView));
 };
-window.setRankGender = (g) => { rankGender = g; rankFilter = ''; rankRegion = ''; rankMonth = ''; rankSort = 'punti'; renderClassifica(); };
-window.setRankCat    = (c) => { rankCat = c; rankFilter = ''; rankRegion = ''; rankMonth = ''; rankSort = 'punti'; renderClassifica(); };
+// Sincronizza la barra indirizzi con categoria+vista correnti (URL già
+// riconosciuto dal router: #/classifica/:cat/:view, vedi route()). Usa
+// replaceState (non pushState) apposta: i filtri sono un affinamento della
+// stessa vista, non vogliamo intasare "indietro" con ogni singolo click su
+// un filtro — solo la navigazione vera e propria crea una voce di history.
+function _syncRankUrl() {
+  const path = '/classifica/' + encodeURIComponent(rankCat) + '/' + encodeURIComponent(rankView || 'atleti');
+  if (location.pathname !== path) history.replaceState(null, '', path);
+}
+window.setRankGender = (g) => { rankGender = g; rankFilter = ''; rankRegion = ''; rankMonth = ''; rankSort = 'punti'; _syncRankUrl(); renderClassifica(); };
+window.setRankCat    = (c) => { rankCat = c; rankFilter = ''; rankRegion = ''; rankMonth = ''; rankSort = 'punti'; _syncRankUrl(); renderClassifica(); };
 window.setRankFilter = (v) => { rankFilter = v; updateRankTable(); };
-window.setRankView   = (v) => { rankView = v; rankFilter = ''; rankRegion = ''; rankMonth = ''; rankSort = 'punti'; renderClassifica(); };
+window.setRankView   = (v) => { rankView = v; rankFilter = ''; rankRegion = ''; rankMonth = ''; rankSort = 'punti'; _syncRankUrl(); renderClassifica(); };
 window.setRankRegion = (v) => { rankRegion = v; updateRankTable(); };
 window.setRankMonth  = (v) => { rankMonth = v; updateRankTable(); };
 window.setRankSort   = (s) => { rankSort = s; updateRankTable(); };
