@@ -15,6 +15,19 @@ const API_BASE         = IS_LOCAL ? '/api' : `${RENDER_BASE}/api`;
 const PHOTOS_BASE      = IS_LOCAL ? '' : SUPABASE_STORAGE;
 const MEDIA_BASE       = IS_LOCAL ? '' : SUPABASE_STORAGE;
 
+// Normalizza il path di una foto salvata in entity_overrides: gli script di
+// scraping più vecchi (prima di oggi) salvavano path "corti" tipo
+// "/pcs/slug.jpeg", senza il prefisso "/photos/" del bucket Supabase — senza
+// normalizzazione l'URL finale punta a un file inesistente (404, foto non
+// mostrata). Il formato attuale include già il prefisso corretto
+// ("/photos/atletas/pcs/slug.jpeg"), quindi passa invariato.
+function mediaUrl(photoUrl) {
+  if (!photoUrl) return '';
+  if (/^https?:\/\//.test(photoUrl)) return photoUrl;
+  const path = photoUrl.startsWith('/photos/') ? photoUrl : `/photos${photoUrl.startsWith('/') ? '' : '/'}${photoUrl}`;
+  return MEDIA_BASE + path;
+}
+
 // ciclismo.info è solo HTTP → su HTTPS il browser blocca le immagini (mixed content).
 // Le facciamo passare dal proxy del server che le ri-serve via HTTPS.
 function icProxy(url) {
@@ -147,7 +160,7 @@ function photoAreaHtml(entityType, entityId, photoUrl, initials, shape = 'circle
   const radius = shape === 'circle' ? '50%' : '10px';
   const canUp  = canUploadPhoto(entityType);
   const imgEl  = photoUrl
-    ? `<img data-photo-id="${esc(entityId)}" src="${MEDIA_BASE}${esc(photoUrl)}"
+    ? `<img data-photo-id="${esc(entityId)}" src="${esc(mediaUrl(photoUrl))}"
            alt="Foto" style="width:100%;height:100%;object-fit:cover;object-position:top center;border-radius:${radius};display:block">`
     : `<div data-photo-id="${esc(entityId)}" style="width:100%;height:100%;border-radius:${radius};
            background:var(--bg-elevated);display:flex;align-items:center;justify-content:center;
@@ -271,7 +284,7 @@ window.triggerPhotoCrop = function(entityType, entityId, photoPath) {
     }
   };
   img.onerror = () => document.getElementById(`photo-file-${entityId}`)?.click();
-  img.src = MEDIA_BASE + photoPath + (photoPath.includes('?') ? '&' : '?') + '_t=' + Date.now();
+  img.src = mediaUrl(photoPath) + (photoPath.includes('?') ? '&' : '?') + '_t=' + Date.now();
 };
 
 // Avvio: legge il file scelto e apre l'editor di ritaglio invece di caricarlo subito.
@@ -8167,7 +8180,7 @@ async function _injectRankPhotos(items) {
         const _phRk = `<span class="rk-av-placeholder"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><circle cx="12" cy="8" r="4"/><path d="M4 20c0-4 3.6-7 8-7s8 3 8 7"/></svg></span>`;
         if (ov.photo_url) {
           const img = document.createElement('img');
-          img.src = MEDIA_BASE + esc(ov.photo_url);
+          img.src = mediaUrl(ov.photo_url);
           img.className = 'rk-av-img'; img.alt = '';
           img.onerror = () => { span.innerHTML = _phRk; };
           span.innerHTML = '';
@@ -8191,7 +8204,7 @@ async function _injectRankPhotos(items) {
     tableEl.querySelectorAll(`.rk-tl-wrap[data-tid="${CSS.escape(tid)}"]`).forEach(span => {
       if (!document.contains(span)) return;
       if (ov.photo_url) {
-        span.innerHTML = `<img src="${MEDIA_BASE}${esc(ov.photo_url)}" alt="" class="rk-tl-img" onerror="window._rktlErr(this)">`;
+        span.innerHTML = `<img src="${esc(mediaUrl(ov.photo_url))}" alt="" class="rk-tl-img" onerror="window._rktlErr(this)">`;
       } else {
         span.innerHTML = _shieldHtml;
       }
@@ -12547,7 +12560,7 @@ async function renderAtleta(atleta_id, opts = {}) {
         </div>
         ${displayTeamId ? `<a href="#/team/${esc(displayTeamId)}" style="flex-shrink:0;align-self:flex-start;display:flex;flex-direction:column;align-items:center;gap:6px;text-decoration:none" title="${esc(displayTeam)}">
           ${teamOvAtleta?.photo_url
-            ? `<img src="${MEDIA_BASE}${esc(teamOvAtleta.photo_url)}" alt="${esc(displayTeam)}" style="width:64px;height:64px;object-fit:contain;border-radius:8px;border:1px solid var(--border-subtle);background:var(--bg-elevated)">`
+            ? `<img src="${esc(mediaUrl(teamOvAtleta.photo_url))}" alt="${esc(displayTeam)}" style="width:64px;height:64px;object-fit:contain;border-radius:8px;border:1px solid var(--border-subtle);background:var(--bg-elevated)">`
             : `<span style="width:64px;height:64px;border-radius:8px;border:1px solid var(--border-subtle);background:var(--bg-elevated);display:flex;align-items:center;justify-content:center;color:var(--text-muted)"><svg width="30" height="30" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.2"><path d="M12 2L3 6v6c0 5.5 3.8 10.7 9 12 5.2-1.3 9-6.5 9-12V6L12 2z"/></svg></span>`
           }
           <span style="font-size:.62rem;color:var(--text-muted);text-align:center;max-width:72px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap">${esc(displayTeam)}</span>
@@ -13202,7 +13215,7 @@ async function _loadTeamPcsExtra(teamId, season, viewCat) {
     const ov = ovMap[span.dataset.aid] || {};
     if (ov.photo_url) {
       const img = document.createElement('img');
-      img.src = MEDIA_BASE + esc(ov.photo_url);
+      img.src = mediaUrl(ov.photo_url);
       img.className = 'rk-av-img'; img.alt = '';
       img.onerror = () => { span.innerHTML = ph; };
       span.innerHTML = ''; span.appendChild(img);
@@ -14191,7 +14204,7 @@ async function renderTeam(team_id, opts = {}) {
         if (!document.contains(span)) return;
         if (ov.photo_url) {
           const img = document.createElement('img');
-          img.src = MEDIA_BASE + esc(ov.photo_url);
+          img.src = mediaUrl(ov.photo_url);
           img.className = 'rk-av-img'; img.alt = '';
           img.onerror = () => { span.innerHTML = _ph; };
           span.innerHTML = '';
@@ -15730,7 +15743,7 @@ async function renderGara(gara_id) {
         if (!document.contains(span)) return;
         if (ov.photo_url) {
           const img = document.createElement('img');
-          img.src = MEDIA_BASE + esc(ov.photo_url);
+          img.src = mediaUrl(ov.photo_url);
           img.className = 'rk-av-img'; img.alt = '';
           img.onerror = () => { span.innerHTML = window._rkPh; };
           span.innerHTML = ''; span.appendChild(img);
