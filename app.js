@@ -13104,6 +13104,22 @@ async function _loadTeamPcsExtra(teamId, season, viewCat) {
   const ph = `<span class="rk-av-placeholder"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><circle cx="12" cy="8" r="4"/><path d="M4 20c0-4 3.6-7 8-7s8 3 8 7"/></svg></span>`;
   const newSpans = [];
 
+  // Trova il punto di inserimento corretto: posizione crescente come
+  // criterio primario, data decrescente come criterio secondario A PARITÀ
+  // di posizione — altrimenti tutte le righe con la stessa posizione ma
+  // inserite in un giro successivo (es. le gare estere, inserite dopo
+  // quelle del circuito) finiscono sempre in fondo al gruppo anche quando
+  // sono più recenti (bug osservato: gara estera dello stesso giorno/
+  // posizione di una italiana, ma con data più recente, mostrata dopo).
+  const findInsertionPoint = (pos, date) => {
+    const existingRows = [...tbody.querySelectorAll('tr[data-pos]')];
+    return existingRows.find(row => {
+      const rowPos = parseInt(row.dataset.pos || '9999');
+      if (rowPos !== pos) return rowPos > pos;
+      return (row.dataset.date || '') < date;
+    });
+  };
+
   // Gare circuito (pos 11+): posizione comparabile alle altre righe del
   // circuito, restano inserite per posizione come il resto della tabella.
   for (const r of garaExtra.slice(0, 200)) {
@@ -13130,8 +13146,7 @@ async function _loadTeamPcsExtra(teamId, season, viewCat) {
       <td class="td-hide-mobile" style="text-align:right">${esc(r.media || '—')}</td>
       <td class="td-hide-mobile" style="text-align:right"></td>
       <td class="td-pts">0</td>`;
-    const existingRows = [...tbody.querySelectorAll('tr[data-pos]')];
-    const after = existingRows.find(row => parseInt(row.dataset.pos || '9999') > (r.posizione || 9999));
+    const after = findInsertionPoint(r.posizione || 9999, r.data || '');
     if (after) tbody.insertBefore(tr, after);
     else tbody.appendChild(tr);
     const span = tr.querySelector('.rk-av-wrap[data-aid]');
@@ -13169,8 +13184,7 @@ async function _loadTeamPcsExtra(teamId, season, viewCat) {
       <td class="td-hide-mobile" style="text-align:right">—</td>
       <td class="td-hide-mobile" style="text-align:right"></td>
       <td class="td-pts">0</td>`;
-    const existingRows = [...tbody.querySelectorAll('tr[data-pos]')];
-    const after = existingRows.find(row => parseInt(row.dataset.pos || '9999') > (r.posizione || 9999));
+    const after = findInsertionPoint(r.posizione || 9999, r.data || '');
     if (after) tbody.insertBefore(tr, after);
     else tbody.appendChild(tr);
     const span = tr.querySelector('.rk-av-wrap[data-aid]');
