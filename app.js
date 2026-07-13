@@ -12553,22 +12553,31 @@ async function renderAtleta(atleta_id, opts = {}) {
           <span style="font-size:.62rem;color:var(--text-muted);text-align:center;max-width:72px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap">${esc(displayTeam)}</span>
         </a>` : ''}
       </div>
-      <div class="athlete-stats-bar">
-        <div class="athlete-stat">
-          <span class="athlete-stat-val" style="color:var(--gold)">${p1}</span>
-          <span class="athlete-stat-label">1° Posto</span>
+      <div class="athlete-stats-groups" style="display:flex;gap:24px;flex-wrap:wrap;margin-top:8px">
+        <div class="athlete-stats-group">
+          <div style="font-size:.68rem;letter-spacing:.06em;color:var(--text-muted);margin-bottom:4px">ITALIA</div>
+          <div class="athlete-stats-bar">
+            <div class="athlete-stat">
+              <span class="athlete-stat-val" style="color:var(--gold)">${p1}</span>
+              <span class="athlete-stat-label">1° Posto</span>
+            </div>
+            <div class="athlete-stat">
+              <span class="athlete-stat-val" style="color:var(--silver)">${p2}</span>
+              <span class="athlete-stat-label">2° Posto</span>
+            </div>
+            <div class="athlete-stat">
+              <span class="athlete-stat-val" style="color:var(--bronze)">${p3}</span>
+              <span class="athlete-stat-label">3° Posto</span>
+            </div>
+            <div class="athlete-stat">
+              <span class="athlete-stat-val" style="color:var(--text-muted)">${pout}</span>
+              <span class="athlete-stat-label">4°-10° Posti</span>
+            </div>
+          </div>
         </div>
-        <div class="athlete-stat">
-          <span class="athlete-stat-val" style="color:var(--silver)">${p2}</span>
-          <span class="athlete-stat-label">2° Posto</span>
-        </div>
-        <div class="athlete-stat">
-          <span class="athlete-stat-val" style="color:var(--bronze)">${p3}</span>
-          <span class="athlete-stat-label">3° Posto</span>
-        </div>
-        <div class="athlete-stat">
-          <span class="athlete-stat-val" style="color:var(--text-muted)">${pout}</span>
-          <span class="athlete-stat-label">4°-10° Posti</span>
+        <div class="athlete-stats-group" id="atleta-stats-estero" style="display:none">
+          <div style="font-size:.68rem;letter-spacing:.06em;color:var(--text-muted);margin-bottom:4px">ESTERO</div>
+          <div class="athlete-stats-bar"></div>
         </div>
       </div>
     </div>`;
@@ -13050,6 +13059,40 @@ async function _loadTeamPcsExtra(teamId, season, viewCat) {
     return { cognome: id, nome: '' };
   };
 
+  // Riepilogo podi "ESTERO" del team, accanto a quello "ITALIA" già presente
+  // nell'header — quadro completo a colpo d'occhio anche per il team.
+  const teamEsteroEl = document.getElementById('team-stats-estero');
+  if (teamEsteroEl && seasonExtra.length) {
+    const ep1   = seasonExtra.filter(r => r.posizione === 1).length;
+    const ep2   = seasonExtra.filter(r => r.posizione === 2).length;
+    const ep3   = seasonExtra.filter(r => r.posizione === 3).length;
+    const epout = seasonExtra.filter(r => r.posizione >= 4 && r.posizione <= 10).length;
+    teamEsteroEl.innerHTML = `
+      <div class="team-stats-row">
+        <div class="team-stat">
+          <span class="team-stat-val" style="font-size:.68rem;letter-spacing:.06em;color:var(--text-muted)">ESTERO</span>
+          <span class="team-stat-label"></span>
+        </div>
+        <div class="team-stat">
+          <span class="team-stat-val" style="color:var(--gold)">${ep1}</span>
+          <span class="team-stat-label">1°</span>
+        </div>
+        <div class="team-stat">
+          <span class="team-stat-val" style="color:var(--silver)">${ep2}</span>
+          <span class="team-stat-label">2°</span>
+        </div>
+        <div class="team-stat">
+          <span class="team-stat-val" style="color:var(--bronze)">${ep3}</span>
+          <span class="team-stat-label">3°</span>
+        </div>
+        <div class="team-stat">
+          <span class="team-stat-val" style="color:var(--text-muted)">${epout}</span>
+          <span class="team-stat-label">4-10</span>
+        </div>
+      </div>`;
+    teamEsteroEl.style.display = '';
+  }
+
   if (!garaExtra.length && !seasonExtra.length) return;
 
   const tbody = document.getElementById('team-results-tbody');
@@ -13234,6 +13277,35 @@ async function _loadAtletaPcsExtra(atletaId, season, icsRisultati, athlete) {
   const esteroExtra = Array.isArray(seasonRaw)
     ? seasonRaw.filter(r => !r.gara_id && r.country && r.country !== 'it')
     : [];
+
+  // Riepilogo podi "ESTERO" nell'header, accanto a quello "ITALIA" già
+  // presente — dà un quadro completo del corridore a colpo d'occhio.
+  const esteroStatsEl = document.getElementById('atleta-stats-estero');
+  if (esteroStatsEl && esteroExtra.length) {
+    const ep1   = esteroExtra.filter(r => r.posizione === 1).length;
+    const ep2   = esteroExtra.filter(r => r.posizione === 2).length;
+    const ep3   = esteroExtra.filter(r => r.posizione === 3).length;
+    const epout = esteroExtra.filter(r => r.posizione >= 4 && r.posizione <= 10).length;
+    const bar = esteroStatsEl.querySelector('.athlete-stats-bar');
+    if (bar) bar.innerHTML = `
+      <div class="athlete-stat">
+        <span class="athlete-stat-val" style="color:var(--gold)">${ep1}</span>
+        <span class="athlete-stat-label">1° Posto</span>
+      </div>
+      <div class="athlete-stat">
+        <span class="athlete-stat-val" style="color:var(--silver)">${ep2}</span>
+        <span class="athlete-stat-label">2° Posto</span>
+      </div>
+      <div class="athlete-stat">
+        <span class="athlete-stat-val" style="color:var(--bronze)">${ep3}</span>
+        <span class="athlete-stat-label">3° Posto</span>
+      </div>
+      <div class="athlete-stat">
+        <span class="athlete-stat-val" style="color:var(--text-muted)">${epout}</span>
+        <span class="athlete-stat-label">4°-10° Posti</span>
+      </div>`;
+    esteroStatsEl.style.display = '';
+  }
 
   if (!garaExtra.length && !esteroExtra.length) return;
 
@@ -14031,6 +14103,7 @@ async function renderTeam(team_id, opts = {}) {
         </div>
       </div>
       ${headerStats}
+      <div id="team-stats-estero" style="display:none;margin-top:6px"></div>
     </div>
     ${profileYearRow('team', team_id, selYear)}
     <div style="margin-top:12px;display:flex;gap:10px;align-items:center;flex-wrap:wrap">
