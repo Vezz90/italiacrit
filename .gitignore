@@ -30,3 +30,4 @@ data/team_rankings/
 !data/youtube_queue.json
 !data/entity_socials.json
 !data/extra_roster.json
+server/norton-root.pem

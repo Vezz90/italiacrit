@@ -68,6 +68,21 @@ function pcsAthleteSlug(ath) {
   return `${slugify(ath.nome)}-${slugify(ath.cognome)}`;
 }
 
+// PCS spesso omette i nomi centrali dallo slug (es. "Lorenzo Mark Finn" →
+// rider/lorenzo-finn, non rider/lorenzo-mark-finn) — genera varianti da
+// provare in ordine prima di ricorrere alla ricerca (search.php risulta
+// rotta: anche il form del sito, testato dal vivo, non restituisce risultati
+// via GET — probabilmente ora richiede una chiamata AJAX interna diversa).
+function pcsAthleteSlugCandidates(ath) {
+  const nomeParts = slugify(ath.nome).split('-').filter(Boolean);
+  const cognome = slugify(ath.cognome);
+  const candidates = [];
+  const add = s => { if (s && !candidates.includes(s)) candidates.push(s); };
+  add(`${nomeParts.join('-')}-${cognome}`);      // nome completo (comportamento attuale)
+  if (nomeParts.length > 1) add(`${nomeParts[0]}-${cognome}`); // solo il primo nome
+  return candidates;
+}
+
 // ─── Calendario: mappa data → gara_id (identico a pcs-results.js) ─────────
 function buildCalendarMap() {
   const map = new Map();
@@ -185,6 +200,7 @@ async function extractProfileAndResults(page, season) {
         }
       }
 
+      let lastCountry = null; // vedi commento sotto sulla propagazione bandiera
       for (const tr of table.querySelectorAll('tbody tr')) {
         const cells = [...tr.querySelectorAll('td')];
         if (cells.length < 3) continue;
@@ -195,6 +211,21 @@ async function extractProfileAndResults(page, season) {
         const timeRaw   = iTime >= 0 ? (cells[iTime]?.textContent?.trim() || '') : '';
         const catRaw    = iCat  >= 0 ? (cells[iCat]?.textContent?.trim()  || '') : '';
 
+        // Bandiera: nelle corse a tappe SOLO la riga "riepilogo tour" porta la
+        // bandierina — le singole tappe (e le righe di classifica generale/
+        // punti/ecc.) non la ripetono. Senza propagazione, ogni tappa di una
+        // corsa a tappe estera risulterebbe senza paese e verrebbe esclusa dal
+        // "palmares estero" sul frontend (bug osservato: corridore con una
+        // corsa a tappe francese, 0 risultati esteri mostrati). Va calcolata
+        // PRIMA di eventuali "continue" successivi, così la bandiera della
+        // riga di riepilogo (che viene comunque scartata per data/risultato
+        // non validi) si propaga alle tappe successive nella stessa sequenza.
+        const flagEl = raceCell?.querySelector('span.flag');
+        const flagClasses = flagEl ? [...flagEl.classList] : [];
+        const ownCountry = flagClasses.find(c => c !== 'flag') || null;
+        if (ownCountry) lastCountry = ownCountry;
+        const country = ownCountry || lastCountry;
+
         const dm = dateRaw.match(/^(\d{1,2})\.(\d{2})$/);
         if (!dm) continue;
         const data = `${season}-${dm[2].padStart(2,'0')}-${dm[1].padStart(2,'0')}`;
@@ -204,15 +235,19 @@ async function extractProfileAndResults(page, season) {
         let pcs_race_slug = null;
         if (raceLink) {
           const href = raceLink.getAttribute('href') || '';
-          const m = href.match(/\/race\/([^/]+)/);
-          if (m) pcs_race_slug = m[1];
+          // PCS usa "race/slug/anno/result" (senza slash iniziale) per le gare
+          // normali e "national-race/slug/anno/result" per quelle nazionali —
+          // e per le corse a tappe l'ultimo segmento è "stage-N" invece di
+          // "result": va incluso nello slug, altrimenti tutte le tappe della
+          // stessa corsa collidono sulla stessa chiave e si sovrascrivono a
+          // vicenda nell'upsert (onConflict atleta_id,season,pcs_race_slug).
+          const m = href.match(/(?:^|\/)(?:national-)?race\/([a-z0-9-]+)\/\d{4}\/?(.*)$/i);
+          if (m) {
+            const stagePart = m[2] && m[2] !== 'result' ? '-' + m[2].replace(/\//g, '-') : '';
+            pcs_race_slug = m[1] + stagePart;
+          }
         }
         if (!gara_name || !pcs_race_slug) continue;
-
-        // Codice paese dalla bandierina (es. class="flag it" → "it")
-        const flagEl = raceCell?.querySelector('span.flag');
-        const flagClasses = flagEl ? [...flagEl.classList] : [];
-        const country = flagClasses.find(c => c !== 'flag') || null;
 
         const posStr = resultRaw.replace(/[^0-9]/g, '');
         const posizione = posStr ? parseInt(posStr) : null;
@@ -372,8 +407,13 @@ async function upsertResults(sb, rows) {
   for (let i = 0; i < toProcess.length; i++) {
     const ath = toProcess[i];
     const atletaId = ath.atleta_id;
-    let slug = savedSlugs.get(atletaId) || pcsAthleteSlug(ath);
+    const savedSlug = savedSlugs.get(atletaId);
+    const guessedCandidates = pcsAthleteSlugCandidates(ath);
+    const candidates = savedSlug
+      ? [savedSlug, ...guessedCandidates.filter(c => c !== savedSlug)]
+      : guessedCandidates;
 
+    let slug = candidates[0];
     process.stdout.write(`(${i + 1}/${toProcess.length}) ${ath.cognome} ${ath.nome} [${slug}] … `);
 
     let nav = await gotoPcsPage(page, `https://www.procyclingstats.com/rider/${slug}/${SEASON}`, {
@@ -381,7 +421,17 @@ async function upsertResults(sb, rows) {
     });
 
     if (nav.notFound) {
-      process.stdout.write('non trovato, cerco… ');
+      for (const cand of candidates.slice(1)) {
+        process.stdout.write(`non trovato, provo "${cand}"… `);
+        const nav2 = await gotoPcsPage(page, `https://www.procyclingstats.com/rider/${cand}/${SEASON}`, {
+          onLog: msg => process.stdout.write('\n' + msg),
+        });
+        if (nav2.ok) { slug = cand; nav = nav2; break; }
+        nav = nav2;
+      }
+    }
+    if (nav.notFound) {
+      process.stdout.write('cerco… ');
       const found = await searchPcsRider(page, ath, gotoPcsPage);
       if (found && found !== slug) {
         slug = found;
@@ -442,7 +492,14 @@ async function upsertResults(sb, rows) {
         distacco:      r.distacco,
         pcs_race_slug: r.pcs_race_slug,
         country:       r.country,
-        gara_id:       matchGaraId(calMap, r.data, r.cat, r.gara_name),
+        // Non tentare l'abbinamento al calendario ICS se sappiamo che la gara
+        // è all'estero — matchGaraId() abbina solo per data (+ euristica
+        // categoria/nome), quindi una gara straniera nello stesso giorno di
+        // una gara italiana verrebbe erroneamente associata a quest'ultima
+        // (es. campionato francese abbinato al campionato italiano dello
+        // stesso giorno), facendo risultare l'atleta come se avesse corso in
+        // Italia. Abbina solo quando il paese è Italia o sconosciuto.
+        gara_id: (r.country && r.country !== 'it') ? null : matchGaraId(calMap, r.data, r.cat, r.gara_name),
       }));
       try {
         await upsertResults(sb, rows);

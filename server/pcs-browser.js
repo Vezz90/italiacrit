@@ -61,6 +61,20 @@ async function gotoPcsPage(page, url, opts = {}) {
 
   await sleep(600);
 
+  // PCS NON reindirizza a un URL diverso quando la pagina non esiste (es.
+  // slug corridore indovinato male): resta sullo stesso URL ma il contenuto
+  // è un semplice "Page not found" — il controllo sopra (solo sull'URL) non
+  // lo rileva mai, quindi lo script pensava di aver trovato il profilo,
+  // trovava foto/social/risultati vuoti e non tentava mai il fallback di
+  // ricerca. Controlla anche il testo effettivo della pagina.
+  const softNotFound = await page.evaluate(() => {
+    const h1 = document.querySelector('h1')?.textContent?.trim().toLowerCase() || '';
+    return h1 === 'page not found' || document.title.trim().toLowerCase() === 'page not found';
+  }).catch(() => false);
+  if (softNotFound) {
+    return { ok: false, notFound: true, timedOut: false };
+  }
+
   if (await isChallengePage(page)) {
     onLog('  ⏳ sfida "non sono un robot" rilevata — attendo…');
 
