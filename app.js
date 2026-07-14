@@ -1119,6 +1119,81 @@ async function loadJson(path) {
   }
 }
 
+// ── Esclusione gare estere finite per errore nei dati FCI ──────────────────
+// Lo scraper FCI a volte importa gare disputate all'estero (es. E3 Saxo
+// Classic, Corsa della Pace Juniores) dentro i risultati/punti di atleti che
+// non sono nemmeno tesserati italiani. Non possiamo correggere la fonte (i
+// file data/*.json sono generati da una pipeline esterna che non gestiamo
+// qui), quindi li filtriamo qui al caricamento: rimossi da risultati/punti
+// dell'atleta E, separatamente, sottratti dalla classifica precalcolata
+// (data/rankings/*.json), che è un file indipendente con i propri totali.
+let _excludedGaraIdsPromise = null;
+async function getExcludedGaraIds() {
+  if (!_excludedGaraIdsPromise) {
+    _excludedGaraIdsPromise = (async () => {
+      try {
+        const r = await fetch(`${API_BASE}/gara-overrides/excluded`);
+        if (!r.ok) throw new Error('HTTP ' + r.status);
+        const d = await r.json();
+        return new Set(d.excluded || []);
+      } catch (e) {
+        console.warn('getExcludedGaraIds:', e);
+        return new Set();
+      }
+    })();
+  }
+  return _excludedGaraIdsPromise;
+}
+
+// atleta_id -> { punti, gare, vittorie, p1, p2, p3, pout } rimossi dalla
+// classifica precalcolata (rankings/*.json), calcolato una volta dal
+// filtraggio di athletes.json e riusato da loadRanking per ogni categoria.
+let _garaExclusionAthDelta = new Map();
+
+function _addExclusionDelta(atletaId, r) {
+  let d = _garaExclusionAthDelta.get(atletaId);
+  if (!d) { d = { punti: 0, gare: 0, vittorie: 0, p1: 0, p2: 0, p3: 0, pout: 0 }; _garaExclusionAthDelta.set(atletaId, d); }
+  d.punti += r.punti_effettivi || 0;
+  d.gare  += 1;
+  const pos = r.posizione;
+  if (pos === 1) { d.vittorie++; d.p1++; }
+  else if (pos === 2) d.p2++;
+  else if (pos === 3) d.p3++;
+  else if (pos >= 4 && pos <= 10) d.pout++;
+}
+
+// Filtra in-place calendar/resultsRaw/athletes rimuovendo le gare escluse e
+// ricalcolando punti_totali degli atleti coinvolti. Va chiamata PRIMA di
+// processLoadedData, che copia risultati/punti_totali di athletes.json così
+// come sono (non li ricalcola da resultsRaw).
+function sanitizeExcludedGare(calendar, resultsRaw, athletes, excludedIds) {
+  if (!excludedIds || !excludedIds.size) return { calendar, resultsRaw, athletes };
+  _garaExclusionAthDelta = new Map();
+
+  const filteredCalendar = Array.isArray(calendar) ? calendar.filter(e => !excludedIds.has(e.id)) : calendar;
+  const filteredResultsRaw = Array.isArray(resultsRaw) ? resultsRaw.filter(r => !excludedIds.has(r.gara_id)) : resultsRaw;
+
+  if (athletes) {
+    for (const id in athletes) {
+      const ath = athletes[id];
+      if (!ath || !Array.isArray(ath.risultati) || !ath.risultati.length) continue;
+      let changed = false;
+      const kept = ath.risultati.filter(r => {
+        if (!excludedIds.has(r.gara_id)) return true;
+        _addExclusionDelta(id, r);
+        changed = true;
+        return false;
+      });
+      if (changed) {
+        ath.risultati = kept;
+        ath.punti_totali = kept.reduce((s, x) => s + (x.punti_effettivi || 0), 0);
+      }
+    }
+  }
+
+  return { calendar: filteredCalendar, resultsRaw: filteredResultsRaw, athletes };
+}
+
 // Correzioni genere/categoria per atlete classificate erroneamente. Capita
 // soprattutto in gare Esordienti/Allievi "promiscue" (uomini e donne nella
 // stessa classifica FCI): tutta la gara viene scrapata con un unico
@@ -1252,7 +1327,7 @@ async function loadAll() {
         }
       })();
 
-  const [calendar, resultsRaw, athletes, teams, meta, raceDetails, videos, extraRoster, pcsExtraRoster, atletaTeamOv, manualResults] = await Promise.all([
+  const [calendarRaw, resultsRawRaw, athletesRaw, teams, meta, raceDetails, videos, extraRoster, pcsExtraRoster, atletaTeamOv, manualResults, excludedGaraIds] = await Promise.all([
     loadJson('data/calendar.json'),
     loadJson('data/results_raw.json'),
     loadJson('data/athletes.json'),
@@ -1264,7 +1339,9 @@ async function loadAll() {
     IS_LOCAL ? apiCall('/data/pcs-extra-roster').catch(() => ({}))     : _apiCallWithTimeout('/data/pcs-extra-roster', 4000, {}),
     IS_LOCAL ? apiCall('/data/atleta-team-overrides').catch(() => ({})) : _apiCallWithTimeout('/data/atleta-team-overrides', 4000, {}),
     IS_LOCAL ? apiCall('/data/manual-results').catch(() => [])         : _apiCallWithTimeout('/data/manual-results', 4000, []),
+    getExcludedGaraIds(),
   ]);
+  const { calendar, resultsRaw, athletes } = sanitizeExcludedGare(calendarRaw, resultsRawRaw, athletesRaw, excludedGaraIds);
 
   // Unisci extra_roster statico con atleti PCS da Supabase
   const mergedExtraRoster = { ...(extraRoster || {}), ...(pcsExtraRoster || {}) };
@@ -2490,13 +2567,15 @@ window.setSeason = async (year) => {
   try {
     showToast('Carico la stagione ' + yNum + '…', 'info');
     const base = `data/seasons/${yNum}`;
-    const [calendar, resultsRaw, athletes, teams, smeta] = await Promise.all([
+    const [calendarRaw, resultsRawRaw, athletesRaw, teams, smeta, excludedGaraIds] = await Promise.all([
       loadJson(`${base}/calendar.json`),
       loadJson(`${base}/results_raw.json`),
       loadJson(`${base}/athletes.json`),
       loadJson(`${base}/teams.json`),
       loadJson(`${base}/meta.json`).catch(() => ({})),
+      getExcludedGaraIds(),
     ]);
+    const { calendar, resultsRaw, athletes } = sanitizeExcludedGare(calendarRaw, resultsRawRaw, athletesRaw, excludedGaraIds);
     if (!_liveGlobalData) _liveGlobalData = globalData; // backup live una sola volta
     const live = _liveGlobalData || globalData || {};
     // I media (foto/video) vivono nel DB per gara_id (che contiene l'anno):

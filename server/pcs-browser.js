@@ -45,7 +45,7 @@ async function isChallengePage(page) {
 async function gotoPcsPage(page, url, opts = {}) {
   const {
     readySelector = 'h1',
-    challengeTimeoutMs = 120000,
+    challengeTimeoutMs = 600000, // 10 min — dà tempo a un utente non sempre presente di cliccare
     onLog = () => {},
   } = opts;
 
@@ -76,28 +76,24 @@ async function gotoPcsPage(page, url, opts = {}) {
   }
 
   if (await isChallengePage(page)) {
-    onLog('  ⏳ sfida "non sono un robot" rilevata — attendo…');
-
-    // Se è un semplice Turnstile "clicca per verificare", prova un click reale.
-    try {
-      const frame = page.frames().find(f => f.url().includes('challenges.cloudflare.com'));
-      const checkbox = frame ? await frame.$('input[type="checkbox"], .cb-lb, #cb') : null;
-      if (checkbox) { await checkbox.click({ timeout: 3000 }).catch(() => {}); }
-    } catch {}
+    // Non tentiamo di risolverla in automatico (è una verifica anti-bot,
+    // va completata da una persona): ci fermiamo ad aspettare che l'utente
+    // clicchi la checkbox, poi la sessione riparte da sola.
+    onLog(`  ⏳ verifica "non sono un robot" — clicca la checkbox nel browser (attendo fino a ${Math.round(challengeTimeoutMs / 60000)} min)…`);
 
     const start = Date.now();
     let cleared = false;
     while (Date.now() - start < challengeTimeoutMs) {
-      await sleep(1500);
+      await sleep(2000);
       const stillChallenge = await isChallengePage(page);
       if (!stillChallenge) { cleared = true; break; }
     }
 
     if (!cleared) {
-      onLog('  ✗ sfida non superata entro il timeout — salto questo atleta');
+      onLog('  ✗ sfida non superata entro il timeout — salto questo atleta (riproverà al prossimo giro)');
       return { ok: false, notFound: false, timedOut: true };
     }
-    onLog('  ✓ sfida superata, continuo');
+    onLog('  ✓ verifica completata, continuo');
     await sleep(500);
   }
 
@@ -116,10 +112,10 @@ async function gotoPcsPage(page, url, opts = {}) {
 // periodica — pattern di richieste troppo regolare (200-800ms fissi, come
 // negli script precedenti) è uno dei segnali più facili da riconoscere come bot.
 async function humanDelay(index = 0) {
-  const base = 3000 + Math.random() * 5000; // 3-8s
+  const base = 5000 + Math.random() * 7000; // 5-12s
   await sleep(base);
-  if (index > 0 && index % 25 === 0) {
-    await sleep(45000 + Math.random() * 30000); // ~45-75s ogni 25 atleti
+  if (index > 0 && index % 20 === 0) {
+    await sleep(60000 + Math.random() * 60000); // ~60-120s ogni 20 atleti
   }
 }
 

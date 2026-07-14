@@ -52,6 +52,7 @@ const args      = process.argv.slice(2);
 const FORCE     = args.includes('--force');
 const INCLUDE_PHANTOMS = args.includes('--include-phantoms');
 const SINGLE_ID = (args.find(a => a.startsWith('--atleta-id=')) || '').split('=')[1] || null;
+const IDS_FILE  = (args.find(a => a.startsWith('--ids-file=')) || '').split('=')[1] || null;
 const LIMIT     = parseInt((args.find(a => a.startsWith('--limit=')) || '').split('=')[1] || '') || null;
 const SEASON    = parseInt((args.find(a => a.startsWith('--season=')) || '').split('=')[1] || '') || new Date().getFullYear();
 
@@ -483,6 +484,7 @@ async function upsertResults(sb, rows) {
   }
 
   const athMap = new Map();
+  let idsFileSlugs = null; // atleta_id -> slug confermato manualmente (da pcs-link-found.py)
   if (SINGLE_ID) {
     if (fciAll.has(SINGLE_ID)) athMap.set(SINGLE_ID, fciAll.get(SINGLE_ID));
     if (!athMap.size) {
@@ -491,6 +493,18 @@ async function upsertResults(sb, rows) {
       if (phantoms.has(SINGLE_ID)) athMap.set(SINGLE_ID, phantoms.get(SINGLE_ID));
     }
     if (!athMap.size) { console.error(`Atleta ${SINGLE_ID} non trovato né nei ranking né tra i fantasma`); process.exit(1); }
+  } else if (IDS_FILE) {
+    // Lista mirata (es. profili trovati a mano e confermati via pcs-link-found.py)
+    const entries = JSON.parse(fs.readFileSync(IDS_FILE, 'utf8'));
+    idsFileSlugs = new Map();
+    const phantoms = await getPhantomAthletes(sb, SEASON, fciAll);
+    for (const e of entries) {
+      const a = fciAll.get(e.atleta_id) || phantoms.get(e.atleta_id);
+      if (!a) { console.log(`[ids-file] ${e.atleta_id} non trovato né in FCI né tra i fantasma, salto`); continue; }
+      athMap.set(e.atleta_id, a);
+      if (e.slug) idsFileSlugs.set(e.atleta_id, e.slug);
+    }
+    console.log(`${athMap.size} atleti da --ids-file=${IDS_FILE}`);
   } else {
     for (const [id, a] of fciAll) athMap.set(id, a);
     console.log(`${athMap.size} atleti unici in ${ATH_CATS.join(', ')}`);
@@ -507,13 +521,27 @@ async function upsertResults(sb, rows) {
 
   let athletes = [...athMap.values()];
 
-  // 2. Skip chi ha già foto E risultati di questa stagione (a meno di --force)
+  // 2. La foto (una volta salvata) non serve ricontrollarla: --skip-complete
+  // salta anche chi ha già risultati, utile solo per riprendere un backfill
+  // storico interrotto. Di default invece i risultati vengono SEMPRE
+  // ricontrollati (upsert idempotente su atleta_id+season+pcs_race_slug) —
+  // altrimenti il giro settimanale non intercetterebbe mai nuovi piazzamenti
+  // o vittorie all'estero per chi ha già almeno un risultato salvato.
+  const SKIP_COMPLETE = args.includes('--skip-complete');
   const withPhoto   = FORCE ? new Set() : await getExistingPhotoIds(sb);
-  const withResults = FORCE ? new Set() : await getAthletesWithResults(sb, SEASON);
+  const withResults = (FORCE || !SKIP_COMPLETE) ? new Set() : await getAthletesWithResults(sb, SEASON);
   const savedSlugs   = await getSavedSlugs(sb);
 
-  let toProcess = athletes.filter(a => !(withPhoto.has(a.atleta_id) && withResults.has(a.atleta_id)));
+  let toProcess = idsFileSlugs
+    ? athletes // --ids-file: sono conferme manuali, si riprocessano sempre
+    : SKIP_COMPLETE
+      ? athletes.filter(a => !(withPhoto.has(a.atleta_id) && withResults.has(a.atleta_id)))
+      : athletes;
   if (LIMIT) toProcess = toProcess.slice(0, LIMIT);
+
+  if (idsFileSlugs) {
+    for (const [id, slug] of idsFileSlugs) savedSlugs.set(id, slug);
+  }
 
   console.log(`${athletes.length - toProcess.length} già completi — ${toProcess.length} da processare\n`);
   if (!toProcess.length) { console.log('Niente da fare.'); process.exit(0); }

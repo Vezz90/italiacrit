@@ -818,6 +818,48 @@ app.post('/api/profile/link-family', requireAuth, async (req, res) => {
 
 // ── Admin routes ──────────────────────────────────────────────────────────────
 
+// Gare escluse (es. gare estere finite per errore nei risultati/classifica
+// tramite lo scraper FCI — vedi gara_overrides, field='excluded'). Pubblico
+// in lettura: il frontend lo usa per filtrare i dati statici GitHub Pages
+// prima di calcolare punti/classifica, non serve autenticazione per leggerlo.
+let _excludedGareCache = null, _excludedGareCacheTs = 0;
+app.get('/api/gara-overrides/excluded', async (req, res) => {
+  try {
+    if (_excludedGareCache && (Date.now() - _excludedGareCacheTs) < 5 * 60 * 1000) {
+      return res.json({ excluded: _excludedGareCache });
+    }
+    const { data, error } = await supabase.from('gara_overrides')
+      .select('gara_id').eq('field', 'excluded').eq('new_value', 'true');
+    if (error) throw error;
+    _excludedGareCache = [...new Set((data || []).map(r => r.gara_id))];
+    _excludedGareCacheTs = Date.now();
+    res.json({ excluded: _excludedGareCache });
+  } catch (e) { res.status(500).json({ error: e.message }); }
+});
+
+app.delete('/api/admin/gare/:gara_id', requireAdmin, async (req, res) => {
+  try {
+    const gara_id = req.params.gara_id;
+    const { error } = await supabase.from('gara_overrides').insert({
+      gara_id, field: 'excluded', new_value: 'true', edited_by: req.user.id,
+    });
+    if (error) throw error;
+    _excludedGareCache = null; // invalida la cache
+    res.json({ ok: true });
+  } catch (e) { res.status(500).json({ error: e.message }); }
+});
+
+app.post('/api/admin/gare/:gara_id/restore', requireAdmin, async (req, res) => {
+  try {
+    const gara_id = req.params.gara_id;
+    const { error } = await supabase.from('gara_overrides')
+      .delete().eq('gara_id', gara_id).eq('field', 'excluded');
+    if (error) throw error;
+    _excludedGareCache = null;
+    res.json({ ok: true });
+  } catch (e) { res.status(500).json({ error: e.message }); }
+});
+
 app.get('/api/admin/users', requireAdmin, async (req, res) => {
   try { res.json({ users: await queries.getAllUsers() }); }
   catch (e) { res.status(500).json({ error: e.message }); }
