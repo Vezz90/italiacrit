@@ -90,6 +90,28 @@ function pcsAthleteSlugCandidates(ath) {
   const add = s => { if (s && !candidates.includes(s)) candidates.push(s); };
   add(`${nomeParts.join('-')}-${cognome}`);      // nome completo (comportamento attuale)
   if (nomeParts.length > 1) add(`${nomeParts[0]}-${cognome}`); // solo il primo nome
+
+  // Bug dati FCI noto: i cognomi composti a volte vengono spezzati — solo la
+  // prima parola salvata in `cognome`, il resto finisce dentro `nome` prima
+  // del vero nome proprio (es. "PEZZO ROSOLA KEVIN" → cognome:"PEZZO",
+  // nome:"ROSOLA KEVIN", nome vero "Kevin Pezzo Rosola"). Se `nome` ha più
+  // parole, prova anche: ultima parola di `nome` come nome proprio + resto
+  // di `nome` unito a `cognome` come cognome completo.
+  if (nomeParts.length > 1) {
+    const trueGivenName = nomeParts[nomeParts.length - 1];
+    const surnameRest = nomeParts.slice(0, -1);
+    add(`${trueGivenName}-${surnameRest.join('-')}-${cognome}`);
+  }
+
+  // PCS a volte tronca i cognomi doppi con trattino alla prima parte sola
+  // (es. "Costa-Staricco" → rider/giulia-costa). Prova anche solo il primo
+  // segmento del cognome, se contiene un trattino.
+  if (ath.cognome && ath.cognome.includes('-')) {
+    const firstSegment = slugify(ath.cognome.split('-')[0]);
+    add(`${nomeParts.join('-')}-${firstSegment}`);
+    if (nomeParts.length > 1) add(`${nomeParts[0]}-${firstSegment}`);
+  }
+
   return candidates;
 }
 
