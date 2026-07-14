@@ -12711,9 +12711,8 @@ async function renderAtleta(atleta_id, opts = {}) {
     
     return `<tr data-date="${esc(r.data||'')}">
       <td class="td-date">${fmtDateShort(r.data)}</td>
-      <td class="td-race"><a href="#/gara/${esc(r.gara_id)}">${esc(r.nome_gara)}</a></td>
-      <td>${badgeCat(a.categoria)}</td>
       <td class="td-pos ${pClass} ${r.posizione===1?'win':''}">${r.posizione}°</td>
+      <td class="td-race"><a href="#/gara/${esc(r.gara_id)}">${esc(r.nome_gara)}</a></td>
       <td>${badgeMult(mult, r.tipo)}</td>
       <td style="text-align:right">${esc(r.km || '—')}</td>
       <td style="text-align:right">${esc(r.media || '—')}</td>
@@ -12847,14 +12846,14 @@ async function renderAtleta(atleta_id, opts = {}) {
     </div>
     ${buildProfileMedia(risultati, photosMap, globalData.videos, { atletaIds: [atleta_id], year: selYear })}
     <div class="section-header" style="margin-top:28px">
-      <span class="section-title">RISULTATI ${esc(selYear)}</span>
+      <span class="section-title">RISULTATI ${esc(selYear)} · ${esc(catLabel(a.categoria))}</span>
       <span class="section-line"></span>
     </div>
       <table class="results-table atleta-results">
         <thead><tr>
-          <th>DATA</th><th>GARA</th><th>CAT</th><th>POS</th><th>MOLT</th><th style="text-align:right">KM</th><th style="text-align:right">MEDIA</th><th>PTS</th>
+          <th>DATA</th><th>POS</th><th>GARA</th><th>MOLT</th><th style="text-align:right">KM</th><th style="text-align:right">MEDIA</th><th>PTS</th>
         </tr></thead>
-        <tbody id="atleta-results-tbody">${tableRows || '<tr><td colspan="8" class="empty-state">Nessun risultato</td></tr>'}</tbody>
+        <tbody id="atleta-results-tbody">${tableRows || '<tr><td colspan="7" class="empty-state">Nessun risultato</td></tr>'}</tbody>
       </table>
     </div>
   `);
@@ -13251,6 +13250,7 @@ async function _loadTeamPcsExtra(teamId, season, viewCat) {
     tr.dataset.date = r.data || '';
     tr.innerHTML = `
       <td class="td-date">${fmtDateShort(r.data)}</td>
+      <td class="td-pos ${pClass}">${r.posizione}°</td>
       <td class="td-race">${raceLink}
         <div class="td-team-mobile"><a href="#/atleta/${esc(r.atleta_id)}" style="color:var(--text-secondary)">${esc(cognome)} ${esc(nome)}</a></div>
       </td>
@@ -13260,7 +13260,6 @@ async function _loadTeamPcsExtra(teamId, season, viewCat) {
           <a href="#/atleta/${esc(r.atleta_id)}" style="color:var(--text-primary)">${esc(cognome)} ${esc(nome)}</a>
         </div>
       </td>
-      <td class="td-pos ${pClass}">${r.posizione}°</td>
       <td class="td-hide-mobile" style="text-align:center">${badgeMult(r.moltiplicatore || 1, r.tipo)}</td>
       <td class="td-hide-mobile" style="text-align:right">${esc(r.km || '—')}</td>
       <td class="td-hide-mobile" style="text-align:right">${esc(r.media || '—')}</td>
@@ -13289,6 +13288,7 @@ async function _loadTeamPcsExtra(teamId, season, viewCat) {
     tr.dataset.date = r.data || '';
     tr.innerHTML = `
       <td class="td-date">${fmtDateShort(r.data)}</td>
+      <td class="td-pos ${pClass}">${r.posizione}°</td>
       <td class="td-race">${countryFlagImg(r.country)} ${raceHtml}
         <div class="td-team-mobile"><a href="#/atleta/${esc(r.atleta_id)}" style="color:var(--text-secondary)">${esc(cognome)} ${esc(nome)}</a></div>
       </td>
@@ -13298,7 +13298,6 @@ async function _loadTeamPcsExtra(teamId, season, viewCat) {
           <a href="#/atleta/${esc(r.atleta_id)}" style="color:var(--text-primary)">${esc(cognome)} ${esc(nome)}</a>
         </div>
       </td>
-      <td class="td-pos ${pClass}">${r.posizione}°</td>
       <td class="td-hide-mobile" style="text-align:center">—</td>
       <td class="td-hide-mobile" style="text-align:right">—</td>
       <td class="td-hide-mobile" style="text-align:right">—</td>
@@ -13448,7 +13447,6 @@ async function _loadAtletaPcsExtra(atletaId, season, icsRisultati, athlete) {
   const emptyRow = tbody.querySelector('.empty-state');
   if (emptyRow) emptyRow.closest('tr').remove();
 
-  const cat = athlete?.categoria || '';
   const insertChrono = (data, html) => {
     const tr = document.createElement('tr');
     tr.dataset.date = data;
@@ -13463,9 +13461,8 @@ async function _loadAtletaPcsExtra(atletaId, season, icsRisultati, athlete) {
     const pClass = posClass(r.posizione);
     insertChrono(r.data, `
       <td class="td-date">${fmtDateShort(r.data)}</td>
-      <td class="td-race"><a href="#/gara/${esc(r.gara_id)}">${esc(r.nome_gara)}</a></td>
-      <td>${badgeCat(cat)}</td>
       <td class="td-pos ${pClass}">${r.posizione}°</td>
+      <td class="td-race"><a href="#/gara/${esc(r.gara_id)}">${esc(r.nome_gara)}</a></td>
       <td>${badgeMult(r.moltiplicatore || 1, r.tipo)}</td>
       <td style="text-align:right">${esc(r.km || '—')}</td>
       <td style="text-align:right">${esc(r.media || '—')}</td>
@@ -13480,9 +13477,8 @@ async function _loadAtletaPcsExtra(atletaId, season, icsRisultati, athlete) {
       : esc(r.gara_name);
     insertChrono(r.data, `
       <td class="td-date">${fmtDateShort(r.data)}</td>
-      <td class="td-race">${countryFlagImg(r.country)} ${raceHtml}</td>
-      <td>${badgeCat(cat)}</td>
       <td class="td-pos ${pClass}">${r.posizione}°</td>
+      <td class="td-race">${countryFlagImg(r.country)} ${raceHtml}</td>
       <td>—</td>
       <td style="text-align:right">—</td>
       <td style="text-align:right">—</td>
@@ -14035,6 +14031,7 @@ async function renderTeam(team_id, opts = {}) {
       const rankVal = r.team_rank_dopo_gara;
       return `<tr data-pos="${r.posizione||9999}" data-date="${esc(r.data||'')}">
         <td class="td-date">${fmtDateShort(r.data)}</td>
+        <td class="td-pos ${posClass(r.posizione)}">${r.posizione}°</td>
         <td class="td-race">
           <a href="#/gara/${esc(r.gara_id)}">${esc(r.nome_gara)}</a>
           <div class="td-team-mobile"><a href="#/atleta/${esc(r.atleta_id)}" style="color:var(--text-secondary)">${esc(r.atleta_cognome)} ${esc(r.atleta_nome)}</a></div>
@@ -14045,7 +14042,6 @@ async function renderTeam(team_id, opts = {}) {
             <a href="#/atleta/${esc(r.atleta_id)}" style="color:var(--text-primary)">${esc(r.atleta_cognome)} ${esc(r.atleta_nome)}</a>
           </div>
         </td>
-        <td class="td-pos ${posClass(r.posizione)}">${r.posizione}°</td>
         <td class="td-hide-mobile" style="text-align:center">${badgeMult(r.moltiplicatore || 1, r.tipo)}</td>
         <td class="td-hide-mobile" style="text-align:right">${esc(r.km || '—')}</td>
         <td class="td-hide-mobile" style="text-align:right">${esc(r.media || '—')}</td>
@@ -14285,7 +14281,7 @@ async function renderTeam(team_id, opts = {}) {
     <div class="results-table-wrap">
       <table class="results-table team-results">
         <thead><tr>
-          <th>DATA</th><th>GARA</th><th class="td-hide-mobile">ATLETA</th><th>POS</th><th class="td-hide-mobile" style="text-align:center">MOLT</th><th class="td-hide-mobile" style="text-align:right">KM</th><th class="td-hide-mobile" style="text-align:right">MEDIA</th><th class="td-hide-mobile" style="text-align:right">RNK</th><th>PTS</th>
+          <th>DATA</th><th>POS</th><th>GARA</th><th class="td-hide-mobile">ATLETA</th><th class="td-hide-mobile" style="text-align:center">MOLT</th><th class="td-hide-mobile" style="text-align:right">KM</th><th class="td-hide-mobile" style="text-align:right">MEDIA</th><th class="td-hide-mobile" style="text-align:right">RNK</th><th>PTS</th>
         </tr></thead>
         <tbody id="team-results-tbody">${risultatiRows || '<tr><td colspan="9" class="empty-state">Nessun risultato</td></tr>'}</tbody>
       </table>
