@@ -13137,11 +13137,13 @@ async function _loadTeamPcsExtra(teamId, season, viewCat) {
   }
 
   // Gare circuito: pos 11+ (non già in ICS), filtrate per categoria del tab attivo
+  const excludedGaraIds = await getExcludedGaraIds();
   const garaExtra = Array.isArray(pcsGareRaw)
     ? pcsGareRaw
         .filter(r => {
           if (!r.gara_id || !r.atleta_id) return false;
           if (icsKeys.has(`${r.atleta_id}:${r.gara_id}`)) return false;
+          if (excludedGaraIds.has(r.gara_id)) return false;
           if (viewCat) {
             // Categoria dalla coda del gara_id (es. _ELI_M, _JUN_F)
             const garaCode = r.gara_id.match(/_([A-Z0-9]+_[MF])$/)?.[1] || '';
@@ -13378,9 +13380,10 @@ async function _loadAtletaPcsExtra(atletaId, season, icsRisultati, athlete) {
     }
   }
 
+  const excludedGaraIds = await getExcludedGaraIds();
   const garaExtra = Array.isArray(pcsGareRaw)
     ? pcsGareRaw
-        .filter(r => r.gara_id && !icsGaraIds.has(r.gara_id))
+        .filter(r => r.gara_id && !icsGaraIds.has(r.gara_id) && !excludedGaraIds.has(r.gara_id))
         .map(r => {
           const calId = (globalData?.garaToCalId?.[r.gara_id]) || r.gara_id;
           const cal = globalData?.calendar?.find(g => g.id === calId);
