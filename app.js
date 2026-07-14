@@ -1167,8 +1167,8 @@ function _addExclusionDelta(atletaId, r) {
 // processLoadedData, che copia risultati/punti_totali di athletes.json così
 // come sono (non li ricalcola da resultsRaw).
 function sanitizeExcludedGare(calendar, resultsRaw, athletes, excludedIds) {
-  if (!excludedIds || !excludedIds.size) return { calendar, resultsRaw, athletes };
   _garaExclusionAthDelta = new Map();
+  if (!excludedIds || !excludedIds.size) return { calendar, resultsRaw, athletes };
 
   const filteredCalendar = Array.isArray(calendar) ? calendar.filter(e => !excludedIds.has(e.id)) : calendar;
   const filteredResultsRaw = Array.isArray(resultsRaw) ? resultsRaw.filter(r => !excludedIds.has(r.gara_id)) : resultsRaw;
@@ -1848,6 +1848,32 @@ async function loadRanking(code) {
       const fixed = fixCompoundSurname(a.cognome, a.nome);
       a.cognome = fixed.cognome;
       a.nome    = fixed.nome;
+    }
+  }
+  // rankings/*.json è precalcolato indipendentemente da athletes.json (stessa
+  // pipeline esterna, stessi punti "sporchi" da gare estere) — sottrai qui il
+  // delta già calcolato in sanitizeExcludedGare e riordina/riassegna pos.
+  // `data` è l'array in cache di loadJson: guardia contro doppia sottrazione
+  // se loadRanking(code) viene chiamata più volte (succede normalmente,
+  // es. widget classifica + pagina classifica) sullo stesso array cachato.
+  if (_garaExclusionAthDelta.size && !data._exclusionApplied) {
+    data._exclusionApplied = true;
+    let touched = false;
+    for (const a of data) {
+      const d = _garaExclusionAthDelta.get(a.atleta_id);
+      if (!d) continue;
+      touched = true;
+      a.punti    = Math.max(0, (a.punti || 0) - d.punti);
+      a.gare     = Math.max(0, (a.gare || 0) - d.gare);
+      a.vittorie = Math.max(0, (a.vittorie || 0) - d.vittorie);
+      a.p1       = Math.max(0, (a.p1 || 0) - d.p1);
+      a.p2       = Math.max(0, (a.p2 || 0) - d.p2);
+      a.p3       = Math.max(0, (a.p3 || 0) - d.p3);
+      a.pout     = Math.max(0, (a.pout || 0) - d.pout);
+    }
+    if (touched) {
+      data.sort((a, b) => (b.punti || 0) - (a.punti || 0));
+      data.forEach((a, i) => { a.pos = i + 1; });
     }
   }
   // Protezione: filtra atleti del genere sbagliato (possibile errore scraper)
