@@ -1,0 +1,1672 @@
+[
+  {
+    "atleta_id": "MAGLI_LORENZO",
+    "name": "MAGLI LORENZO",
+    "slug": "lorenzo-magli"
+  },
+  {
+    "atleta_id": "FIORIN_MATTEO",
+    "name": "FIORIN MATTEO",
+    "slug": "matteo-fiorin"
+  },
+  {
+    "atleta_id": "BASSO_DAVIDE",
+    "name": "BASSO DAVIDE",
+    "slug": "davide-basso"
+  },
+  {
+    "atleta_id": "MENGHINI_ALESSIO",
+    "name": "MENGHINI ALESSIO",
+    "slug": "alessio-menghini"
+  },
+  {
+    "atleta_id": "FABBRO_RICCARDO",
+    "name": "FABBRO RICCARDO",
+    "slug": "riccardo-fabbro"
+  },
+  {
+    "atleta_id": "RAMIREZ_TORRES_MATEO_PABLO",
+    "name": "RAMIREZ TORRES MATEO PABLO",
+    "slug": "torres-mateo-pablo-ramirez"
+  },
+  {
+    "atleta_id": "PALOMBA_MARCO",
+    "name": "PALOMBA MARCO",
+    "slug": "marco-palomba"
+  },
+  {
+    "atleta_id": "CRESCIOLI_GIOSUE",
+    "name": "CRESCIOLI GIOSUE'",
+    "slug": "giosue-crescioli"
+  },
+  {
+    "atleta_id": "BOSCARO_DAVIDE",
+    "name": "BOSCARO DAVIDE",
+    "slug": "davide-boscaro"
+  },
+  {
+    "atleta_id": "DONATI_DAVIDE",
+    "name": "DONATI DAVIDE",
+    "slug": "davide-donati"
+  },
+  {
+    "atleta_id": "URSELLA_LORENZO",
+    "name": "URSELLA LORENZO",
+    "slug": "lorenzo-ursella"
+  },
+  {
+    "atleta_id": "DE_CASSAN_DAVIDE",
+    "name": "DE CASSAN DAVIDE",
+    "slug": "cassan-davide-de"
+  },
+  {
+    "atleta_id": "GIALLI_MATTEO",
+    "name": "GIALLI MATTEO",
+    "slug": "matteo-gialli"
+  },
+  {
+    "atleta_id": "RIBEIRO_BRAVO_HENRIQUE",
+    "name": "RIBEIRO BRAVO HENRIQUE",
+    "slug": "henrique-ribeiro-bravo"
+  },
+  {
+    "atleta_id": "DE_LONGHI_LORENZO",
+    "name": "DE LONGHI LORENZO",
+    "slug": "longhi-lorenzo-de"
+  },
+  {
+    "atleta_id": "BUDA_SIMONE",
+    "name": "BUDA SIMONE",
+    "slug": "simone-buda"
+  },
+  {
+    "atleta_id": "VESCO_LEONARDO",
+    "name": "VESCO LEONARDO",
+    "slug": "leonardo-vesco"
+  },
+  {
+    "atleta_id": "ROWE_ELLIOT",
+    "name": "ROWE ELLIOT",
+    "slug": "elliot-rowe"
+  },
+  {
+    "atleta_id": "NEGRENTE_MATTIA",
+    "name": "NEGRENTE MATTIA",
+    "slug": "mattia-negrente"
+  },
+  {
+    "atleta_id": "BORTOLUZZI_GIOVANNI",
+    "name": "BORTOLUZZI GIOVANNI",
+    "slug": "giovanni-bortoluzzi"
+  },
+  {
+    "atleta_id": "ROCCELLA_MARCO",
+    "name": "ROCCELLA MARCO",
+    "slug": "marco-roccella"
+  },
+  {
+    "atleta_id": "NEMBRINI_DIEGO",
+    "name": "NEMBRINI DIEGO",
+    "slug": "diego-nembrini"
+  },
+  {
+    "atleta_id": "FRATICELLI_LUCA",
+    "name": "FRATICELLI LUCA",
+    "slug": "luca-fraticelli"
+  },
+  {
+    "atleta_id": "GUERRA_ANDREA",
+    "name": "GUERRA ANDREA",
+    "slug": "andrea-guerra"
+  },
+  {
+    "atleta_id": "GERACI_SALVATORE",
+    "name": "GERACI SALVATORE",
+    "slug": "salvatore-geraci"
+  },
+  {
+    "atleta_id": "GIOIA_FRANCESCO",
+    "name": "GIOIA FRANCESCO",
+    "slug": "francesco-gioia"
+  },
+  {
+    "atleta_id": "STEFANELLI_ANDREA",
+    "name": "STEFANELLI ANDREA",
+    "slug": "andrea-stefanelli"
+  },
+  {
+    "atleta_id": "D_AIUTO_FILIPPO",
+    "name": "D'AIUTO FILIPPO",
+    "slug": "filippo-d-aiuto"
+  },
+  {
+    "atleta_id": "COLNAGHI_LUCA",
+    "name": "COLNAGHI LUCA",
+    "slug": "luca-colnaghi"
+  },
+  {
+    "atleta_id": "MANENTI_MARCO",
+    "name": "MANENTI MARCO",
+    "slug": "marco-manenti"
+  },
+  {
+    "atleta_id": "ZOCCARATO_SAMUELE",
+    "name": "ZOCCARATO SAMUELE",
+    "slug": "samuele-zoccarato"
+  },
+  {
+    "atleta_id": "PIRAS_ANDREA",
+    "name": "PIRAS ANDREA",
+    "slug": "andrea-piras"
+  },
+  {
+    "atleta_id": "COVILI_LUCA",
+    "name": "COVILI LUCA",
+    "slug": "luca-covili"
+  },
+  {
+    "atleta_id": "MICHIELSEN_THOR",
+    "name": "MICHIELSEN THOR",
+    "slug": "thor-michielsen"
+  },
+  {
+    "atleta_id": "MISHANKOV_MAKSIM",
+    "name": "MISHANKOV MAKSIM",
+    "slug": "maksim-mishankov"
+  },
+  {
+    "atleta_id": "DUNWOODY_SETH",
+    "name": "DUNWOODY SETH",
+    "slug": "seth-dunwoody"
+  },
+  {
+    "atleta_id": "ZOZULIA_ANDRII",
+    "name": "ZOZULIA ANDRII",
+    "slug": "andrii-zozulia"
+  },
+  {
+    "atleta_id": "GIULIANO_DARIO",
+    "name": "GIULIANO DARIO",
+    "slug": "dario-giuliano"
+  },
+  {
+    "atleta_id": "TAILLIEU_ALDO",
+    "name": "TAILLIEU ALDO",
+    "slug": "aldo-taillieu"
+  },
+  {
+    "atleta_id": "UMBA_LOPEZ_ABNER_SANTIAGO",
+    "name": "UMBA LOPEZ ABNER SANTIAGO",
+    "slug": "lopez-abner-santiago-umba"
+  },
+  {
+    "atleta_id": "SMITH_WILLIAM",
+    "name": "SMITH WILLIAM",
+    "slug": "william-smith"
+  },
+  {
+    "atleta_id": "CAPRA_THOMAS",
+    "name": "CAPRA THOMAS",
+    "slug": "thomas-capra"
+  },
+  {
+    "atleta_id": "PICCINI_MATTIA",
+    "name": "PICCINI MATTIA",
+    "slug": "mattia-piccini"
+  },
+  {
+    "atleta_id": "MOTTES_LORENZO",
+    "name": "MOTTES LORENZO",
+    "slug": "lorenzo-mottes"
+  },
+  {
+    "atleta_id": "BUTI_ANDREA",
+    "name": "BUTI ANDREA",
+    "slug": "andrea-buti"
+  },
+  {
+    "atleta_id": "BOCK_MAX",
+    "name": "BOCK MAX",
+    "slug": "max-bock"
+  },
+  {
+    "atleta_id": "GRIS_MARTIN",
+    "name": "GRIS MARTIN",
+    "slug": "martin-gris"
+  },
+  {
+    "atleta_id": "BOZICEVICH_MATTEO_LAPO",
+    "name": "BOZICEVICH MATTEO LAPO",
+    "slug": "matteo-lapo-bozicevich"
+  },
+  {
+    "atleta_id": "PEZZO_ROSOLA_KEVIN",
+    "name": "PEZZO ROSOLA KEVIN",
+    "slug": "rosola-kevin-pezzo"
+  },
+  {
+    "atleta_id": "MASCIARELLI_LORENZO",
+    "name": "MASCIARELLI LORENZO",
+    "slug": "lorenzo-masciarelli"
+  },
+  {
+    "atleta_id": "DE_GENDT_LEANDER",
+    "name": "DE GENDT LEANDER",
+    "slug": "gendt-leander-de"
+  },
+  {
+    "atleta_id": "PENALVER_ANIORTE_MANUEL",
+    "name": "PENALVER ANIORTE MANUEL",
+    "slug": "aniorte-manuel-penalver"
+  },
+  {
+    "atleta_id": "GABELLONI_MATTEO",
+    "name": "GABELLONI MATTEO",
+    "slug": "matteo-gabelloni"
+  },
+  {
+    "atleta_id": "ATTOLINI_LUCA",
+    "name": "ATTOLINI LUCA",
+    "slug": "luca-attolini"
+  },
+  {
+    "atleta_id": "DOVESI_MANUEL",
+    "name": "DOVESI MANUEL",
+    "slug": "manuel-dovesi"
+  },
+  {
+    "atleta_id": "ROSA_LUCA",
+    "name": "ROSA LUCA",
+    "slug": "luca-rosa"
+  },
+  {
+    "atleta_id": "PERANI_RICCARDO",
+    "name": "PERANI RICCARDO",
+    "slug": "riccardo-perani"
+  },
+  {
+    "atleta_id": "TERCERO_LOPEZ_FERNANDO",
+    "name": "TERCERO LOPEZ FERNANDO",
+    "slug": "lopez-fernando-tercero"
+  },
+  {
+    "atleta_id": "FRIGGI_VITTORIO",
+    "name": "FRIGGI VITTORIO",
+    "slug": "vittorio-friggi"
+  },
+  {
+    "atleta_id": "BORREMANS_KASPER_TOBIAS",
+    "name": "BORREMANS KASPER TOBIAS",
+    "slug": "kasper-tobias-borremans"
+  },
+  {
+    "atleta_id": "DIJKMAN_DAAN",
+    "name": "DIJKMAN DAAN",
+    "slug": "daan-dijkman"
+  },
+  {
+    "atleta_id": "SHTIN_VALERII",
+    "name": "SHTIN VALERII",
+    "slug": "valerii-shtin"
+  },
+  {
+    "atleta_id": "PARRAVANO_FRANCESCO",
+    "name": "PARRAVANO FRANCESCO",
+    "slug": "francesco-parravano"
+  },
+  {
+    "atleta_id": "ANNIBALLI_LORENZO",
+    "name": "ANNIBALLI LORENZO",
+    "slug": "lorenzo-anniballi"
+  },
+  {
+    "atleta_id": "MASCIARELLI_STEFANO",
+    "name": "MASCIARELLI STEFANO",
+    "slug": "stefano-masciarelli"
+  },
+  {
+    "atleta_id": "POPOV_MARK",
+    "name": "POPOV MARK",
+    "slug": "mark-popov"
+  },
+  {
+    "atleta_id": "PROSANDEEV_IAROSLAV",
+    "name": "PROSANDEEV IAROSLAV",
+    "slug": "iaroslav-prosandeev"
+  },
+  {
+    "atleta_id": "DI_FELICE_FRANCESCO",
+    "name": "DI FELICE FRANCESCO",
+    "slug": "francesco-di-felice"
+  },
+  {
+    "atleta_id": "MEROLA_MARCO",
+    "name": "MEROLA MARCO",
+    "slug": "marco-merola"
+  },
+  {
+    "atleta_id": "MAZZOLENI_LUCA",
+    "name": "MAZZOLENI LUCA",
+    "slug": "luca-mazzoleni"
+  },
+  {
+    "atleta_id": "SANTAMARIA_RICCARDO",
+    "name": "SANTAMARIA RICCARDO",
+    "slug": "riccardo-santamaria"
+  },
+  {
+    "atleta_id": "CANTONI_ANDREA",
+    "name": "CANTONI ANDREA",
+    "slug": "andrea-cantoni"
+  },
+  {
+    "atleta_id": "ROGERS_CAMERON",
+    "name": "ROGERS CAMERON",
+    "slug": "cameron-rogers"
+  },
+  {
+    "atleta_id": "MARETTA_GABRIELE",
+    "name": "MARETTA GABRIELE",
+    "slug": "gabriele-maretta"
+  },
+  {
+    "atleta_id": "CATTIVELLI_MATTEO",
+    "name": "CATTIVELLI MATTEO",
+    "slug": "matteo-cattivelli"
+  },
+  {
+    "atleta_id": "MARCHIONE_GIACOMO",
+    "name": "MARCHIONE GIACOMO",
+    "slug": "giacomo-marchione"
+  },
+  {
+    "atleta_id": "DREI_RICCARDO",
+    "name": "DREI RICCARDO",
+    "slug": "riccardo-drei"
+  },
+  {
+    "atleta_id": "SCOFET_MATTEO",
+    "name": "SCOFET MATTEO",
+    "slug": "matteo-scofet"
+  },
+  {
+    "atleta_id": "VILLA_GIACOMO",
+    "name": "VILLA GIACOMO",
+    "slug": "giacomo-villa"
+  },
+  {
+    "atleta_id": "CUBILLAS_SALVADOR_JAVIER",
+    "name": "CUBILLAS SALVADOR JAVIER",
+    "slug": "salvador-javier-cubillas"
+  },
+  {
+    "atleta_id": "SCHEMBARI_FLAVIO",
+    "name": "SCHEMBARI FLAVIO",
+    "slug": "flavio-schembari"
+  },
+  {
+    "atleta_id": "FALCHETTI_MATTEO",
+    "name": "FALCHETTI MATTEO",
+    "slug": "matteo-falchetti"
+  },
+  {
+    "atleta_id": "DI_SANTO_LEONARDO",
+    "name": "DI SANTO LEONARDO",
+    "slug": "santo-leonardo-di"
+  },
+  {
+    "atleta_id": "ANDERSEN_KASPER",
+    "name": "ANDERSEN KASPER",
+    "slug": "kasper-andersen"
+  },
+  {
+    "atleta_id": "BERTOLLI_SAMUEL",
+    "name": "BERTOLLI SAMUEL",
+    "slug": "samuel-bertolli"
+  },
+  {
+    "atleta_id": "TRAVELLA_NICHOLAS",
+    "name": "TRAVELLA NICHOLAS",
+    "slug": "nicholas-travella"
+  },
+  {
+    "atleta_id": "DE_LAURENTIIS_GIUSEPPE",
+    "name": "DE LAURENTIIS GIUSEPPE",
+    "slug": "laurentiis-giuseppe-de"
+  },
+  {
+    "atleta_id": "MORLINO_LUCA",
+    "name": "MORLINO LUCA",
+    "slug": "luca-morlino"
+  },
+  {
+    "atleta_id": "QUAGLIA_TOMMASO",
+    "name": "QUAGLIA TOMMASO",
+    "slug": "tommaso-quaglia"
+  },
+  {
+    "atleta_id": "MILESI_NICOLAS",
+    "name": "MILESI NICOLAS",
+    "slug": "nicolas-milesi"
+  },
+  {
+    "atleta_id": "NAKKEN_TOBIAS_RISAN",
+    "name": "NAKKEN TOBIAS RISAN",
+    "slug": "tobias-risan-nakken"
+  },
+  {
+    "atleta_id": "SAVEKIN_ILIA",
+    "name": "SAVEKIN ILIA",
+    "slug": "ilia-savekin"
+  },
+  {
+    "atleta_id": "FRANZONI_MANUEL",
+    "name": "FRANZONI MANUEL",
+    "slug": "manuel-franzoni"
+  },
+  {
+    "atleta_id": "SLESARENKO_ILYA",
+    "name": "SLESARENKO ILYA",
+    "slug": "ilya-slesarenko"
+  },
+  {
+    "atleta_id": "BERTONCELLI_KEVIN",
+    "name": "BERTONCELLI KEVIN",
+    "slug": "kevin-bertoncelli"
+  },
+  {
+    "atleta_id": "MILESI_ALESSANDRO",
+    "name": "MILESI ALESSANDRO",
+    "slug": "alessandro-milesi"
+  },
+  {
+    "atleta_id": "RUSSO_MARCO",
+    "name": "RUSSO MARCO",
+    "slug": "marco-russo"
+  },
+  {
+    "atleta_id": "ZUMSTEG_NICOLA",
+    "name": "ZUMSTEG NICOLA",
+    "slug": "nicola-zumsteg"
+  },
+  {
+    "atleta_id": "BASSANI_TOMMY",
+    "name": "BASSANI TOMMY",
+    "slug": "tommy-bassani"
+  },
+  {
+    "atleta_id": "TESSARI_FRANCESCO",
+    "name": "TESSARI FRANCESCO",
+    "slug": "francesco-tessari"
+  },
+  {
+    "atleta_id": "DE_MONTE_MATTEO",
+    "name": "DE MONTE MATTEO",
+    "slug": "monte-matteo-de"
+  },
+  {
+    "atleta_id": "PARETA_SALA_ROGER",
+    "name": "PARETA SALA ROGER",
+    "slug": "roger-pareta-sala"
+  },
+  {
+    "atleta_id": "VAN_DEN_WIJNGAERT_MATTEO",
+    "name": "VAN DEN WIJNGAERT MATTEO",
+    "slug": "matteo-van-den-wijngaert"
+  },
+  {
+    "atleta_id": "PRIETO_DE_LUNA_JOSE_JUAN",
+    "name": "PRIETO DE LUNA JOSE JUAN",
+    "slug": "jose-juan-prieto-de-luna"
+  },
+  {
+    "atleta_id": "CHESINI_CESARE",
+    "name": "CHESINI CESARE",
+    "slug": "cesare-chesini"
+  },
+  {
+    "atleta_id": "LANZAROTTO_KEVIN",
+    "name": "LANZAROTTO KEVIN",
+    "slug": "kevin-lanzarotto"
+  },
+  {
+    "atleta_id": "MERCATALI_VALENTINO",
+    "name": "MERCATALI VALENTINO",
+    "slug": "valentino-mercatali"
+  },
+  {
+    "atleta_id": "FRIGO_NICOLAS",
+    "name": "FRIGO NICOLAS",
+    "slug": "nicolas-frigo"
+  },
+  {
+    "atleta_id": "DI_PRIMA_CHRISTIAN",
+    "name": "DI PRIMA CHRISTIAN",
+    "slug": "prima-christian-di"
+  },
+  {
+    "atleta_id": "NOCERINO_CIRO",
+    "name": "NOCERINO CIRO",
+    "slug": "ciro-nocerino"
+  },
+  {
+    "atleta_id": "DAMIANO_MIRCO",
+    "name": "DAMIANO MIRCO",
+    "slug": "mirco-damiano"
+  },
+  {
+    "atleta_id": "BALDINI_MATTEO",
+    "name": "BALDINI MATTEO",
+    "slug": "matteo-baldini"
+  },
+  {
+    "atleta_id": "PIGNATTI_JACOPO",
+    "name": "PIGNATTI JACOPO",
+    "slug": "jacopo-pignatti"
+  },
+  {
+    "atleta_id": "DELLA_TORRE_CARLO",
+    "name": "DELLA TORRE CARLO",
+    "slug": "torre-carlo-della"
+  },
+  {
+    "atleta_id": "VIEZZI_STEFANO",
+    "name": "VIEZZI STEFANO",
+    "slug": "stefano-viezzi"
+  },
+  {
+    "atleta_id": "DE_TOTTO_ANDREA",
+    "name": "DE TOTTO ANDREA",
+    "slug": "totto-andrea-de"
+  },
+  {
+    "atleta_id": "WIGGINS_MICHEAL_BEN",
+    "name": "WIGGINS MICHEAL BEN",
+    "slug": "micheal-ben-wiggins"
+  },
+  {
+    "atleta_id": "DINA_MARTON",
+    "name": "DINA MARTON",
+    "slug": "marton-dina"
+  },
+  {
+    "atleta_id": "FAVERO_RENATO",
+    "name": "FAVERO RENATO",
+    "slug": "renato-favero"
+  },
+  {
+    "atleta_id": "DALLE_CRODE_LORENZO",
+    "name": "DALLE CRODE LORENZO",
+    "slug": "crode-lorenzo-dalle"
+  },
+  {
+    "atleta_id": "LAVELLI_DAMIANO",
+    "name": "LAVELLI DAMIANO",
+    "slug": "damiano-lavelli"
+  },
+  {
+    "atleta_id": "SCIARRA_GIUSEPPE",
+    "name": "SCIARRA GIUSEPPE",
+    "slug": "giuseppe-sciarra"
+  },
+  {
+    "atleta_id": "PAVI_DEGL_INNOCENTI_GIULIO",
+    "name": "PAVI DEGL'INNOCENTI GIULIO",
+    "slug": "degl-innocenti-giulio-pavi"
+  },
+  {
+    "atleta_id": "CRANAGE_JOSHUA_JAMES",
+    "name": "CRANAGE JOSHUA JAMES",
+    "slug": "joshua-james-cranage"
+  },
+  {
+    "atleta_id": "STACCHIOTTI_RICCARDO",
+    "name": "STACCHIOTTI RICCARDO",
+    "slug": "riccardo-stacchiotti"
+  },
+  {
+    "atleta_id": "CHYZHYKOV_HMORHII",
+    "name": "CHYZHYKOV HMORHII",
+    "slug": "hmorhii-chyzhykov"
+  },
+  {
+    "atleta_id": "ROJAS_NARANJO_VICENTE_RODRIGO_ANTONIO",
+    "name": "ROJAS NARANJO VICENTE RODRIGO ANTONIO",
+    "slug": "naranjo-vicente-rodrigo-antonio-rojas"
+  },
+  {
+    "atleta_id": "MAGLI_FILIPPO",
+    "name": "MAGLI FILIPPO",
+    "slug": "filippo-magli"
+  },
+  {
+    "atleta_id": "SGHERRI_GIACOMO",
+    "name": "SGHERRI GIACOMO",
+    "slug": "giacomo-sgherri"
+  },
+  {
+    "atleta_id": "HOLZKNECHT_JONAS",
+    "name": "HOLZKNECHT JONAS",
+    "slug": "jonas-holzknecht"
+  },
+  {
+    "atleta_id": "BONOMETTI_MICHELE",
+    "name": "BONOMETTI MICHELE",
+    "slug": "michele-bonometti"
+  },
+  {
+    "atleta_id": "SAINT_MARTIN_PIERRE",
+    "name": "SAINT MARTIN PIERRE",
+    "slug": "martin-pierre-saint"
+  },
+  {
+    "atleta_id": "VACCHER_LUCA",
+    "name": "VACCHER LUCA",
+    "slug": "luca-vaccher"
+  },
+  {
+    "atleta_id": "TACCONE_IVAN",
+    "name": "TACCONE IVAN",
+    "slug": "ivan-taccone"
+  },
+  {
+    "atleta_id": "VAL_O_ROMAN",
+    "name": "VAL'O ROMAN",
+    "slug": "roman-val-o"
+  },
+  {
+    "atleta_id": "TABOTTA_TOMMASO",
+    "name": "TABOTTA TOMMASO",
+    "slug": "tommaso-tabotta"
+  },
+  {
+    "atleta_id": "PARISI_EMANUELE",
+    "name": "PARISI EMANUELE",
+    "slug": "emanuele-parisi"
+  },
+  {
+    "atleta_id": "DE_VRIES_FEMKE",
+    "name": "DE VRIES FEMKE",
+    "slug": "vries-femke-de"
+  },
+  {
+    "atleta_id": "BAIMA_ANITA",
+    "name": "BAIMA ANITA",
+    "slug": "anita-baima"
+  },
+  {
+    "atleta_id": "DE_GRANDIS_MICHELA",
+    "name": "DE GRANDIS MICHELA",
+    "slug": "grandis-michela-de"
+  },
+  {
+    "atleta_id": "SIRI_IRMA",
+    "name": "SIRI IRMA",
+    "slug": "irma-siri"
+  },
+  {
+    "atleta_id": "TRINCA_COLONEL_MONICA",
+    "name": "TRINCA COLONEL MONICA",
+    "slug": "monica-trinca-colonel"
+  },
+  {
+    "atleta_id": "PIETERSE_PUCK",
+    "name": "PIETERSE PUCK",
+    "slug": "puck-pieterse"
+  },
+  {
+    "atleta_id": "COLES_LYSTER_MAGGIE",
+    "name": "COLES-LYSTER MAGGIE",
+    "slug": "maggie-coles-lyster"
+  },
+  {
+    "atleta_id": "CHABBEY_ELISE",
+    "name": "CHABBEY ELISE",
+    "slug": "elise-chabbey"
+  },
+  {
+    "atleta_id": "MWAMIKAZI_JAZILLA",
+    "name": "MWAMIKAZI JAZILLA",
+    "slug": "jazilla-mwamikazi"
+  },
+  {
+    "atleta_id": "ZAMBELLI_ALESSIA",
+    "name": "ZAMBELLI ALESSIA",
+    "slug": "alessia-zambelli"
+  },
+  {
+    "atleta_id": "NIEWIADOMA_KASIA",
+    "name": "NIEWIADOMA KASIA",
+    "slug": "kasia-niewiadoma"
+  },
+  {
+    "atleta_id": "TORMENA_GAIA",
+    "name": "TORMENA GAIA",
+    "slug": "gaia-tormena"
+  },
+  {
+    "atleta_id": "CHIATTO_MARIA_PIA",
+    "name": "CHIATTO MARIA PIA",
+    "slug": "maria-pia-chiatto"
+  },
+  {
+    "atleta_id": "KINGMA_MAYA_YVETTE",
+    "name": "KINGMA MAYA YVETTE",
+    "slug": "maya-yvette-kingma"
+  },
+  {
+    "atleta_id": "VALLIERES_MAGDELEINE",
+    "name": "VALLIERES MAGDELEINE",
+    "slug": "magdeleine-vallieres"
+  },
+  {
+    "atleta_id": "GERRITSE_FEMKE",
+    "name": "GERRITSE FEMKE",
+    "slug": "femke-gerritse"
+  },
+  {
+    "atleta_id": "KESSLER_NINA",
+    "name": "KESSLER NINA",
+    "slug": "nina-kessler"
+  },
+  {
+    "atleta_id": "ZAMUDIO_GARCIA_MAYTE",
+    "name": "ZAMUDIO GARCIA MAYTE",
+    "slug": "mayte-zamudio-garcia"
+  },
+  {
+    "atleta_id": "COUZENS_MILLIE",
+    "name": "COUZENS MILLIE",
+    "slug": "millie-couzens"
+  },
+  {
+    "atleta_id": "ZANETTI_EMANUELA",
+    "name": "ZANETTI EMANUELA",
+    "slug": "emanuela-zanetti"
+  },
+  {
+    "atleta_id": "ROSSETTI_SONIA",
+    "name": "ROSSETTI SONIA",
+    "slug": "sonia-rossetti"
+  },
+  {
+    "atleta_id": "KONONENKO_VALERIIA",
+    "name": "KONONENKO VALERIIA",
+    "slug": "valeriia-kononenko"
+  },
+  {
+    "atleta_id": "LAUDI_IRENE",
+    "name": "LAUDI IRENE",
+    "slug": "irene-laudi"
+  },
+  {
+    "atleta_id": "HINOJOSA_CRUZ_ROMINA",
+    "name": "HINOJOSA CRUZ ROMINA",
+    "slug": "cruz-romina-hinojosa"
+  },
+  {
+    "atleta_id": "NICHOLSON_KATELYN_MARIE_JANETTE",
+    "name": "NICHOLSON KATELYN MARIE JANETTE",
+    "slug": "katelyn-marie-janette-nicholson"
+  },
+  {
+    "atleta_id": "GIULIANI_GIULIA",
+    "name": "GIULIANI GIULIA",
+    "slug": "giulia-giuliani"
+  },
+  {
+    "atleta_id": "SEGATO_GAIA",
+    "name": "SEGATO GAIA",
+    "slug": "gaia-segato"
+  },
+  {
+    "atleta_id": "REGHINI_CHIARA",
+    "name": "REGHINI CHIARA",
+    "slug": "chiara-reghini"
+  },
+  {
+    "atleta_id": "ZIGART_URSKA",
+    "name": "ZIGART URSKA",
+    "slug": "urska-zigart"
+  },
+  {
+    "atleta_id": "LA_BELLA_ELEONORA",
+    "name": "LA BELLA ELEONORA",
+    "slug": "bella-eleonora-la"
+  },
+  {
+    "atleta_id": "HAUGSET_SIGRID_YTTERHUS",
+    "name": "HAUGSET SIGRID YTTERHUS",
+    "slug": "sigrid-ytterhus-haugset"
+  },
+  {
+    "atleta_id": "BOBNAR_NIKA",
+    "name": "BOBNAR NIKA",
+    "slug": "nika-bobnar"
+  },
+  {
+    "atleta_id": "WOLLASTON_ALLY",
+    "name": "WOLLASTON ALLY",
+    "slug": "ally-wollaston"
+  },
+  {
+    "atleta_id": "AFFOLATI_IRENE",
+    "name": "AFFOLATI IRENE",
+    "slug": "irene-affolati"
+  },
+  {
+    "atleta_id": "FERRI_ELISA",
+    "name": "FERRI ELISA",
+    "slug": "elisa-ferri"
+  },
+  {
+    "atleta_id": "QUAGLIOTTO_NADIA",
+    "name": "QUAGLIOTTO NADIA",
+    "slug": "nadia-quagliotto"
+  },
+  {
+    "atleta_id": "LUDWIG_UTTRUP_CECILIE",
+    "name": "LUDWIG UTTRUP CECILIE",
+    "slug": "uttrup-ludwig"
+  },
+  {
+    "atleta_id": "CASAGRANDA_ANDREA",
+    "name": "CASAGRANDA ANDREA",
+    "slug": "andrea-casagranda"
+  },
+  {
+    "atleta_id": "BLASI_CAIROL_PAULA",
+    "name": "BLASI CAIROL PAULA",
+    "slug": "cairol-paula-blasi"
+  },
+  {
+    "atleta_id": "VAN_ANROOIJ_SHIRIN",
+    "name": "VAN ANROOIJ SHIRIN",
+    "slug": "anrooij-van"
+  },
+  {
+    "atleta_id": "MILAKI_ARGYRO",
+    "name": "MILAKI ARGYRO",
+    "slug": "argyro-milaki"
+  },
+  {
+    "atleta_id": "GRASSI_VITTORIA",
+    "name": "GRASSI VITTORIA",
+    "slug": "vittoria-grassi"
+  },
+  {
+    "atleta_id": "GIANGRANDE_GIORGIA",
+    "name": "GIANGRANDE GIORGIA",
+    "slug": "giorgia-giangrande"
+  },
+  {
+    "atleta_id": "LUGLI_ELISA",
+    "name": "LUGLI ELISA",
+    "slug": "elisa-lugli"
+  },
+  {
+    "atleta_id": "MORIER_EMILIE",
+    "name": "MORIER EMILIE",
+    "slug": "emilie-morier"
+  },
+  {
+    "atleta_id": "MAGNALDI_ERICA",
+    "name": "MAGNALDI ERICA",
+    "slug": "erica-magnaldi"
+  },
+  {
+    "atleta_id": "LUCCON_SARA",
+    "name": "LUCCON SARA",
+    "slug": "sara-luccon"
+  },
+  {
+    "atleta_id": "ZANZI_VALENTINA",
+    "name": "ZANZI VALENTINA",
+    "slug": "valentina-zanzi"
+  },
+  {
+    "atleta_id": "MARIOTTO_THOMAS",
+    "name": "MARIOTTO THOMAS",
+    "slug": "thomas-mariotto"
+  },
+  {
+    "atleta_id": "BALLIANA_ENRICO",
+    "name": "BALLIANA ENRICO",
+    "slug": "enrico-balliana"
+  },
+  {
+    "atleta_id": "GUGNINO_LUCA",
+    "name": "GUGNINO LUCA",
+    "slug": "luca-gugnino"
+  },
+  {
+    "atleta_id": "CINGOLANI_TOMMASO",
+    "name": "CINGOLANI TOMMASO",
+    "slug": "tommaso-cingolani"
+  },
+  {
+    "atleta_id": "BATTISTONI_ALESSANDRO",
+    "name": "BATTISTONI ALESSANDRO",
+    "slug": "alessandro-battistoni"
+  },
+  {
+    "atleta_id": "RODRIGUEZ_DELGADO_JOSE_EMILIO",
+    "name": "RODRIGUEZ DELGADO JOSE EMILIO",
+    "slug": "delgado-jose-emilio-rodriguez"
+  },
+  {
+    "atleta_id": "PIEROTTO_MARCO_ANDREA",
+    "name": "PIEROTTO MARCO ANDREA",
+    "slug": "marco-andrea-pierotto"
+  },
+  {
+    "atleta_id": "RENZI_NICCOLO",
+    "name": "RENZI NICCOLO'",
+    "slug": "niccolo-renzi"
+  },
+  {
+    "atleta_id": "VENDRAMIN_JACOPO",
+    "name": "VENDRAMIN JACOPO",
+    "slug": "jacopo-vendramin"
+  },
+  {
+    "atleta_id": "CECCARELLO_LORENZO",
+    "name": "CECCARELLO LORENZO",
+    "slug": "lorenzo-ceccarello"
+  },
+  {
+    "atleta_id": "GAGGIOLI_LUCIANO_WILLIAM",
+    "name": "GAGGIOLI LUCIANO WILLIAM",
+    "slug": "luciano-william-gaggioli"
+  },
+  {
+    "atleta_id": "ARNOLDI_MATTIA",
+    "name": "ARNOLDI MATTIA",
+    "slug": "mattia-arnoldi"
+  },
+  {
+    "atleta_id": "LOVER_MEDEOT_TOMAZ",
+    "name": "LOVER MEDEOT TOMAZ",
+    "slug": "tomaz-lover-medeot"
+  },
+  {
+    "atleta_id": "WROLICH_SANTIAGO",
+    "name": "WROLICH SANTIAGO",
+    "slug": "santiago-wrolich"
+  },
+  {
+    "atleta_id": "MARANGON_PAOLO_GRAZIANO",
+    "name": "MARANGON PAOLO GRAZIANO",
+    "slug": "paolo-graziano-marangon"
+  },
+  {
+    "atleta_id": "MORENO_GARCIA_DANIEL_SANTIAGO",
+    "name": "MORENO GARCIA DANIEL SANTIAGO",
+    "slug": "garcia-daniel-santiago-moreno"
+  },
+  {
+    "atleta_id": "BIRKEDAL_JULIUS",
+    "name": "BIRKEDAL JULIUS",
+    "slug": "julius-birkedal"
+  },
+  {
+    "atleta_id": "MARTINELLI_ETTORE",
+    "name": "MARTINELLI ETTORE",
+    "slug": "ettore-martinelli"
+  },
+  {
+    "atleta_id": "BIANCU_LUCA",
+    "name": "BIANCU LUCA",
+    "slug": "luca-biancu"
+  },
+  {
+    "atleta_id": "DE_SMET_VIC",
+    "name": "DE SMET VIC",
+    "slug": "smet-vic-de"
+  },
+  {
+    "atleta_id": "BATTISTUTTA_LUCA",
+    "name": "BATTISTUTTA LUCA",
+    "slug": "luca-battistutta"
+  },
+  {
+    "atleta_id": "DALLA_BONA_THOMAS",
+    "name": "DALLA BONA THOMAS",
+    "slug": "bona-thomas-dalla"
+  },
+  {
+    "atleta_id": "ZAGO_GABRIELE",
+    "name": "ZAGO GABRIELE",
+    "slug": "gabriele-zago"
+  },
+  {
+    "atleta_id": "SCHNYDER_NOAH",
+    "name": "SCHNYDER NOAH",
+    "slug": "noah-schnyder"
+  },
+  {
+    "atleta_id": "MAZZARELLO_TOMMASO",
+    "name": "MAZZARELLO TOMMASO",
+    "slug": "tommaso-mazzarello"
+  },
+  {
+    "atleta_id": "FERRARI_RUBEN",
+    "name": "FERRARI RUBEN",
+    "slug": "ruben-ferrari"
+  },
+  {
+    "atleta_id": "CARUSO_SALVATORE",
+    "name": "CARUSO SALVATORE",
+    "slug": "salvatore-caruso"
+  },
+  {
+    "atleta_id": "BALLIANA_ANDREA_MATTIA",
+    "name": "BALLIANA ANDREA MATTIA",
+    "slug": "andrea-mattia-balliana"
+  },
+  {
+    "atleta_id": "WANDEL_ELIAS",
+    "name": "WANDEL ELIAS",
+    "slug": "elias-wandel"
+  },
+  {
+    "atleta_id": "SANTORU_ALESSANDRO",
+    "name": "SANTORU ALESSANDRO",
+    "slug": "alessandro-santoru"
+  },
+  {
+    "atleta_id": "DALLA_PRIA_GIACOMO",
+    "name": "DALLA PRIA GIACOMO",
+    "slug": "pria-giacomo-dalla"
+  },
+  {
+    "atleta_id": "CASCIONE_RAFFAELE",
+    "name": "CASCIONE RAFFAELE",
+    "slug": "raffaele-cascione"
+  },
+  {
+    "atleta_id": "CACCHIO_MICHELE_PIO",
+    "name": "CACCHIO MICHELE PIO",
+    "slug": "michele-pio-cacchio"
+  },
+  {
+    "atleta_id": "ORHOLM_LONSETH_SIND",
+    "name": "ORHOLM-LONSETH SIND",
+    "slug": "sind-orholm-lonseth"
+  },
+  {
+    "atleta_id": "SCOTT_BOURIS_AMOS",
+    "name": "SCOTT BOURIS AMOS",
+    "slug": "bouris-amos-scott"
+  },
+  {
+    "atleta_id": "FOLEGANI_MATTIA",
+    "name": "FOLEGANI MATTIA",
+    "slug": "mattia-folegani"
+  },
+  {
+    "atleta_id": "MURA_ANDREA",
+    "name": "MURA ANDREA",
+    "slug": "andrea-mura"
+  },
+  {
+    "atleta_id": "MELONI_ANDREA",
+    "name": "MELONI ANDREA",
+    "slug": "andrea-meloni"
+  },
+  {
+    "atleta_id": "BANDINI_FILIPPO",
+    "name": "BANDINI FILIPPO",
+    "slug": "filippo-bandini"
+  },
+  {
+    "atleta_id": "KUNTARIC_ZIBERT_VANJA",
+    "name": "KUNTARIC ZIBERT VANJA",
+    "slug": "zibert-vanja-kuntaric"
+  },
+  {
+    "atleta_id": "CECCATO_EDOARDO",
+    "name": "CECCATO EDOARDO",
+    "slug": "edoardo-ceccato"
+  },
+  {
+    "atleta_id": "HERZOG_KARL",
+    "name": "HERZOG KARL",
+    "slug": "karl-herzog"
+  },
+  {
+    "atleta_id": "IAKOVLEV_MATVEL",
+    "name": "IAKOVLEV MATVEL",
+    "slug": "matvel-iakovlev"
+  },
+  {
+    "atleta_id": "CAMPIDELLI_GIACOMO",
+    "name": "CAMPIDELLI GIACOMO",
+    "slug": "giacomo-campidelli"
+  },
+  {
+    "atleta_id": "MAKSIMOVIC_LUKA",
+    "name": "MAKSIMOVIC LUKA",
+    "slug": "luka-maksimovic"
+  },
+  {
+    "atleta_id": "MANNU_FRANCESCO",
+    "name": "MANNU FRANCESCO",
+    "slug": "francesco-mannu"
+  },
+  {
+    "atleta_id": "BENOZZATO_RICCARDO",
+    "name": "BENOZZATO RICCARDO",
+    "slug": "riccardo-benozzato"
+  },
+  {
+    "atleta_id": "ENDRIZZI_ANDREA",
+    "name": "ENDRIZZI ANDREA",
+    "slug": "andrea-endrizzi"
+  },
+  {
+    "atleta_id": "ZANINI_ANDREA_MATTEO",
+    "name": "ZANINI ANDREA MATTEO",
+    "slug": "andrea-matteo-zanini"
+  },
+  {
+    "atleta_id": "KUBENA_DANIEL",
+    "name": "KUBENA DANIEL",
+    "slug": "daniel-kubena"
+  },
+  {
+    "atleta_id": "ROSSO_RICCARDO",
+    "name": "ROSSO RICCARDO",
+    "slug": "riccardo-rosso"
+  },
+  {
+    "atleta_id": "FEDERICI_FILIPPO",
+    "name": "FEDERICI FILIPPO",
+    "slug": "filippo-federici"
+  },
+  {
+    "atleta_id": "DANDREA_CRISTIAN",
+    "name": "DANDREA CRISTIAN",
+    "slug": "cristian-dandrea"
+  },
+  {
+    "atleta_id": "I_ONS_TOM_BERNARD",
+    "name": "I'ONS TOM BERNARD",
+    "slug": "tom-bernard-i-ons"
+  },
+  {
+    "atleta_id": "CERAME_NICOLA",
+    "name": "CERAME NICOLA",
+    "slug": "nicola-cerame"
+  },
+  {
+    "atleta_id": "VESHNIAKOV_DANIIL",
+    "name": "VESHNIAKOV DANIIL",
+    "slug": "daniil-veshniakov"
+  },
+  {
+    "atleta_id": "GENTILE_ANGELO",
+    "name": "GENTILE ANGELO",
+    "slug": "angelo-gentile"
+  },
+  {
+    "atleta_id": "SANTIAGO_GARCIA_RICARDO",
+    "name": "SANTIAGO GARCIA RICARDO",
+    "slug": "ricardo-santiago-garcia"
+  },
+  {
+    "atleta_id": "LEGIEC_MIKOLAJ",
+    "name": "LEGIEC MIKOLAJ",
+    "slug": "mikolaj-legiec"
+  },
+  {
+    "atleta_id": "SECHI_MARCO",
+    "name": "SECHI MARCO",
+    "slug": "marco-sechi"
+  },
+  {
+    "atleta_id": "BOSIO_GIOVANNI",
+    "name": "BOSIO GIOVANNI",
+    "slug": "giovanni-bosio"
+  },
+  {
+    "atleta_id": "LE_PANN_SOEN",
+    "name": "LE PANN SOEN",
+    "slug": "pann-soen-le"
+  },
+  {
+    "atleta_id": "SOLAVAGGIONE_PIETRO",
+    "name": "SOLAVAGGIONE PIETRO",
+    "slug": "pietro-solavaggione"
+  },
+  {
+    "atleta_id": "RAPISARDA_SEBASTIANO",
+    "name": "RAPISARDA SEBASTIANO",
+    "slug": "sebastiano-rapisarda"
+  },
+  {
+    "atleta_id": "COLOMBO_IVAN",
+    "name": "COLOMBO IVAN",
+    "slug": "ivan-colombo"
+  },
+  {
+    "atleta_id": "CARNEVALI_FRANCESCO",
+    "name": "CARNEVALI FRANCESCO",
+    "slug": "francesco-carnevali"
+  },
+  {
+    "atleta_id": "RANIERI_MATTEO",
+    "name": "RANIERI MATTEO",
+    "slug": "matteo-ranieri"
+  },
+  {
+    "atleta_id": "DE_MERCANTI_LUCA",
+    "name": "DE MERCANTI LUCA",
+    "slug": "mercanti-luca-de"
+  },
+  {
+    "atleta_id": "SCAMPERLE_NICOLO",
+    "name": "SCAMPERLE NICOLO'",
+    "slug": "nicolo-scamperle"
+  },
+  {
+    "atleta_id": "BRUGALETTA_ANGELO",
+    "name": "BRUGALETTA ANGELO",
+    "slug": "angelo-brugaletta"
+  },
+  {
+    "atleta_id": "FURENES_MADS",
+    "name": "FURENES MADS",
+    "slug": "mads-furenes"
+  },
+  {
+    "atleta_id": "BASTIAANSSEN_FINN",
+    "name": "BASTIAANSSEN FINN",
+    "slug": "finn-bastiaanssen"
+  },
+  {
+    "atleta_id": "BELVEDERE_NICOLA",
+    "name": "BELVEDERE NICOLA",
+    "slug": "nicola-belvedere"
+  },
+  {
+    "atleta_id": "VAGLIO_WALTER",
+    "name": "VAGLIO WALTER",
+    "slug": "walter-vaglio"
+  },
+  {
+    "atleta_id": "MORO_NICOLO",
+    "name": "MORO NICOLO'",
+    "slug": "nicolo-moro"
+  },
+  {
+    "atleta_id": "STELLA_ANTONIO_TANCREDI",
+    "name": "STELLA ANTONIO TANCREDI",
+    "slug": "antonio-tancredi-stella"
+  },
+  {
+    "atleta_id": "PINOTTI_DAVIDE",
+    "name": "PINOTTI DAVIDE",
+    "slug": "davide-pinotti"
+  },
+  {
+    "atleta_id": "LUCI_LORENZO",
+    "name": "LUCI LORENZO",
+    "slug": "lorenzo-luci"
+  },
+  {
+    "atleta_id": "MAGNONI_MATTEO",
+    "name": "MAGNONI MATTEO",
+    "slug": "matteo-magnoni"
+  },
+  {
+    "atleta_id": "GRIGOLINI_FILIPPO",
+    "name": "GRIGOLINI FILIPPO",
+    "slug": "filippo-grigolini"
+  },
+  {
+    "atleta_id": "YANKOUSKI_ILYA",
+    "name": "YANKOUSKI ILYA",
+    "slug": "ilya-yankouski"
+  },
+  {
+    "atleta_id": "BAUMANN_ELIAS",
+    "name": "BAUMANN ELIAS",
+    "slug": "elias-baumann"
+  },
+  {
+    "atleta_id": "LOGINS_ARVIDS",
+    "name": "LOGINS ARVIDS",
+    "slug": "arvids-logins"
+  },
+  {
+    "atleta_id": "POLIUSHKO_OLEKSANDER",
+    "name": "POLIUSHKO OLEKSANDER",
+    "slug": "oleksander-poliushko"
+  },
+  {
+    "atleta_id": "SHANNON_HARRISON",
+    "name": "SHANNON HARRISON",
+    "slug": "harrison-shannon"
+  },
+  {
+    "atleta_id": "WILLEMS_SANDER",
+    "name": "WILLEMS SANDER",
+    "slug": "sander-willems"
+  },
+  {
+    "atleta_id": "PICARD_ALBAN",
+    "name": "PICARD ALBAN",
+    "slug": "alban-picard"
+  },
+  {
+    "atleta_id": "FIORINI_EDOARDO",
+    "name": "FIORINI EDOARDO",
+    "slug": "edoardo-fiorini"
+  },
+  {
+    "atleta_id": "GUSMEROLI_DANIELE",
+    "name": "GUSMEROLI DANIELE",
+    "slug": "daniele-gusmeroli"
+  },
+  {
+    "atleta_id": "SHISHKIN_IVAN",
+    "name": "SHISHKIN IVAN",
+    "slug": "ivan-shishkin"
+  },
+  {
+    "atleta_id": "GIACOMEL_RICCARDO",
+    "name": "GIACOMEL RICCARDO",
+    "slug": "riccardo-giacomel"
+  },
+  {
+    "atleta_id": "ALBREHT_BLAZ",
+    "name": "ALBREHT BLAZ",
+    "slug": "blaz-albreht"
+  },
+  {
+    "atleta_id": "ROSSI_MATTIA",
+    "name": "ROSSI MATTIA",
+    "slug": "mattia-rossi"
+  },
+  {
+    "atleta_id": "FURLANIS_ANDREA",
+    "name": "FURLANIS ANDREA",
+    "slug": "andrea-furlanis"
+  },
+  {
+    "atleta_id": "PREVEJSEK_MAI",
+    "name": "PREVEJSEK MAI",
+    "slug": "mai-prevejsek"
+  },
+  {
+    "atleta_id": "POSTPISCHL_FILIPPO",
+    "name": "POSTPISCHL FILIPPO",
+    "slug": "filippo-postpischl"
+  },
+  {
+    "atleta_id": "DELL_OLIO_FRANCESCO",
+    "name": "DELL'OLIO FRANCESCO",
+    "slug": "francesco-dell-olio"
+  },
+  {
+    "atleta_id": "MAZZOLENI_MATTIA",
+    "name": "MAZZOLENI MATTIA",
+    "slug": "mattia-mazzoleni"
+  },
+  {
+    "atleta_id": "SELLA_JACOPO",
+    "name": "SELLA JACOPO",
+    "slug": "jacopo-sella"
+  },
+  {
+    "atleta_id": "MURARO_NICCOLO",
+    "name": "MURARO NICCOLO'",
+    "slug": "niccolo-muraro"
+  },
+  {
+    "atleta_id": "AGOSTINO_GIACOMO",
+    "name": "AGOSTINO GIACOMO",
+    "slug": "giacomo-agostino"
+  },
+  {
+    "atleta_id": "NOVAL_SUAREZ_BENJAMIN",
+    "name": "NOVAL SUAREZ BENJAMIN",
+    "slug": "benjamin-noval-suarez"
+  },
+  {
+    "atleta_id": "PODO_MASSIMO",
+    "name": "PODO MASSIMO",
+    "slug": "massimo-podo"
+  },
+  {
+    "atleta_id": "CANCHON_GIL_JUAN_ESTEBAN",
+    "name": "CANCHON GIL JUAN ESTEBAN",
+    "slug": "gil-juan-esteban-canchon"
+  },
+  {
+    "atleta_id": "SCARPIELLO_ANDREA",
+    "name": "SCARPIELLO ANDREA",
+    "slug": "andrea-scarpiello"
+  },
+  {
+    "atleta_id": "CORNELLA_DANIEL",
+    "name": "CORNELLA DANIEL",
+    "slug": "daniel-cornella"
+  },
+  {
+    "atleta_id": "BERARDI_MICHELE",
+    "name": "BERARDI MICHELE",
+    "slug": "michele-berardi"
+  },
+  {
+    "atleta_id": "SOTO_CERVANTES_ALEJANDRO",
+    "name": "SOTO CERVANTES ALEJANDRO",
+    "slug": "cervantes-alejandro-soto"
+  },
+  {
+    "atleta_id": "VAN_DEN_BIGGELAAR",
+    "name": "VAN DEN BIGGELAAR",
+    "slug": "biggelaar-van-den"
+  },
+  {
+    "atleta_id": "MANCA_SAMUELE",
+    "name": "MANCA SAMUELE",
+    "slug": "samuele-manca"
+  },
+  {
+    "atleta_id": "LINGENHAG_LAURIN",
+    "name": "LINGENHAG LAURIN",
+    "slug": "laurin-lingenhag"
+  },
+  {
+    "atleta_id": "MOCCI_EDOARDO",
+    "name": "MOCCI EDOARDO",
+    "slug": "edoardo-mocci"
+  },
+  {
+    "atleta_id": "RESTREPO_LOAIZA_OSCAR_IVAN",
+    "name": "RESTREPO LOAIZA OSCAR IVAN",
+    "slug": "loaiza-restrepo"
+  },
+  {
+    "atleta_id": "CONGIU_FILIPPO",
+    "name": "CONGIU FILIPPO",
+    "slug": "filippo-congiu"
+  },
+  {
+    "atleta_id": "FARSETTI_BRANDO",
+    "name": "FARSETTI BRANDO",
+    "slug": "brando-farsetti"
+  },
+  {
+    "atleta_id": "SUPI_SEBASTIAN",
+    "name": "SUPI SEBASTIAN",
+    "slug": "sebastian-supi"
+  },
+  {
+    "atleta_id": "MATYASIK_MAKSYMILIAN",
+    "name": "MATYASIK MAKSYMILIAN",
+    "slug": "maksymilian-matyasik"
+  },
+  {
+    "atleta_id": "SOLLA_LEONARDO",
+    "name": "SOLLA LEONARDO",
+    "slug": "leonardo-solla"
+  },
+  {
+    "atleta_id": "DERGANC_ANTON",
+    "name": "DERGANC ANTON",
+    "slug": "anton-derganc"
+  },
+  {
+    "atleta_id": "COATES_BENJAMIN",
+    "name": "COATES BENJAMIN",
+    "slug": "benjamin-coates"
+  },
+  {
+    "atleta_id": "IETTA_EDOARDO",
+    "name": "IETTA EDOARDO",
+    "slug": "edoardo-ietta"
+  },
+  {
+    "atleta_id": "MILANI_LORENZO",
+    "name": "MILANI LORENZO",
+    "slug": "lorenzo-milani"
+  },
+  {
+    "atleta_id": "KLAU_JACKSON",
+    "name": "KLAU JACKSON",
+    "slug": "jackson-klau"
+  },
+  {
+    "atleta_id": "ARGENTINO_SALVATORE",
+    "name": "ARGENTINO SALVATORE",
+    "slug": "salvatore-argentino"
+  },
+  {
+    "atleta_id": "PINNA_ROBERTO",
+    "name": "PINNA ROBERTO",
+    "slug": "roberto-pinna"
+  },
+  {
+    "atleta_id": "ACTIS_SAMUELE",
+    "name": "ACTIS SAMUELE",
+    "slug": "samuele-actis"
+  },
+  {
+    "atleta_id": "AYALA_ARELLANO_EDUARD_EMANUEL",
+    "name": "AYALA ARELLANO EDUARD EMANUEL",
+    "slug": "eduard-emanuel-ayala-arellano"
+  },
+  {
+    "atleta_id": "BANNER_WIL",
+    "name": "BANNER WIL",
+    "slug": "wil-banner"
+  },
+  {
+    "atleta_id": "MOLLO_GIANMARIA",
+    "name": "MOLLO GIANMARIA",
+    "slug": "gianmaria-mollo"
+  },
+  {
+    "atleta_id": "ASTORRI_MARTINO",
+    "name": "ASTORRI MARTINO",
+    "slug": "martino-astorri"
+  },
+  {
+    "atleta_id": "VILLA_MATTEO",
+    "name": "VILLA MATTEO",
+    "slug": "matteo-villa"
+  },
+  {
+    "atleta_id": "PITTA_JACOPO",
+    "name": "PITTA JACOPO",
+    "slug": "jacopo-pitta"
+  },
+  {
+    "atleta_id": "GENOVESE_RICCARDO",
+    "name": "GENOVESE RICCARDO",
+    "slug": "riccardo-genovese"
+  },
+  {
+    "atleta_id": "GIOVANNINI_LEONARDO",
+    "name": "GIOVANNINI LEONARDO",
+    "slug": "leonardo-giovannini"
+  },
+  {
+    "atleta_id": "VERONI_RICCARDO",
+    "name": "VERONI RICCARDO",
+    "slug": "riccardo-veroni"
+  },
+  {
+    "atleta_id": "COMETTO_FILIPPO",
+    "name": "COMETTO FILIPPO",
+    "slug": "filippo-cometto"
+  },
+  {
+    "atleta_id": "FARAZ_KHATIEB",
+    "name": "FARAZ KHATIEB",
+    "slug": "khatieb-faraz"
+  },
+  {
+    "atleta_id": "RANDAZZO_VITO",
+    "name": "RANDAZZO VITO",
+    "slug": "vito-randazzo"
+  },
+  {
+    "atleta_id": "GALFRE_JACOPO",
+    "name": "GALFRE' JACOPO",
+    "slug": "jacopo-galfre"
+  },
+  {
+    "atleta_id": "RICCADONA_EDOARDO",
+    "name": "RICCADONA EDOARDO",
+    "slug": "edoardo-riccadona"
+  },
+  {
+    "atleta_id": "MANTOVANI_GIULIO",
+    "name": "MANTOVANI GIULIO",
+    "slug": "giulio-mantovani"
+  },
+  {
+    "atleta_id": "BOLZONI_SIMONE",
+    "name": "BOLZONI SIMONE",
+    "slug": "simone-bolzoni"
+  },
+  {
+    "atleta_id": "D_APOLLONIO_REBECCA",
+    "name": "D'APOLLONIO REBECCA",
+    "slug": "rebecca-d-apollonio"
+  },
+  {
+    "atleta_id": "KOSTINA_OLGA",
+    "name": "KOSTINA OLGA",
+    "slug": "olga-kostina"
+  },
+  {
+    "atleta_id": "PENEDA_SOTO_NATALIA",
+    "name": "PENEDA SOTO NATALIA",
+    "slug": "natalia-peneda-soto"
+  },
+  {
+    "atleta_id": "GARCIA_BARENO_DOMINGUEZ_NABYENKA",
+    "name": "GARCIA BARENO DOMINGUEZ NABYENKA",
+    "slug": "bareno-dominguez-nabyenka-garcia"
+  },
+  {
+    "atleta_id": "COSTA_STARICCO_GIULIA",
+    "name": "COSTA-STARICCO GIULIA",
+    "slug": "giulia-costa-staricco"
+  },
+  {
+    "atleta_id": "PINEDA_SOTO_NATALIA",
+    "name": "PINEDA SOTO NATALIA",
+    "slug": "natalia-pineda-soto"
+  },
+  {
+    "atleta_id": "HIYOSHI_AYAKA",
+    "name": "HIYOSHI AYAKA",
+    "slug": "ayaka-hiyoshi"
+  }
+]

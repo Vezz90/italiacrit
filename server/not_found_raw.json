@@ -1,0 +1,1794 @@
+[
+  {
+    "name": "MAGLI LORENZO",
+    "first_slug": "lorenzo-magli"
+  },
+  {
+    "name": "FIORIN MATTEO",
+    "first_slug": "matteo-fiorin"
+  },
+  {
+    "name": "BASSO DAVIDE",
+    "first_slug": "davide-basso"
+  },
+  {
+    "name": "MENGHINI ALESSIO",
+    "first_slug": "alessio-menghini"
+  },
+  {
+    "name": "FABBRO RICCARDO",
+    "first_slug": "riccardo-fabbro"
+  },
+  {
+    "name": "RAMIREZ TORRES MATEO PABLO",
+    "first_slug": "torres-mateo-pablo-ramirez"
+  },
+  {
+    "name": "PALOMBA MARCO",
+    "first_slug": "marco-palomba"
+  },
+  {
+    "name": "CRESCIOLI GIOSUE'",
+    "first_slug": "giosue-crescioli"
+  },
+  {
+    "name": "BOSCARO DAVIDE",
+    "first_slug": "davide-boscaro"
+  },
+  {
+    "name": "DONATI DAVIDE",
+    "first_slug": "davide-donati"
+  },
+  {
+    "name": "URSELLA LORENZO",
+    "first_slug": "lorenzo-ursella"
+  },
+  {
+    "name": "DE CASSAN DAVIDE",
+    "first_slug": "cassan-davide-de"
+  },
+  {
+    "name": "GIALLI MATTEO",
+    "first_slug": "matteo-gialli"
+  },
+  {
+    "name": "RIBEIRO BRAVO HENRIQUE",
+    "first_slug": "henrique-ribeiro-bravo"
+  },
+  {
+    "name": "DE LONGHI LORENZO",
+    "first_slug": "longhi-lorenzo-de"
+  },
+  {
+    "name": "BUDA SIMONE",
+    "first_slug": "simone-buda"
+  },
+  {
+    "name": "VESCO LEONARDO",
+    "first_slug": "leonardo-vesco"
+  },
+  {
+    "name": "ROWE ELLIOT",
+    "first_slug": "elliot-rowe"
+  },
+  {
+    "name": "NEGRENTE MATTIA",
+    "first_slug": "mattia-negrente"
+  },
+  {
+    "name": "BORTOLUZZI GIOVANNI",
+    "first_slug": "giovanni-bortoluzzi"
+  },
+  {
+    "name": "ROCCELLA MARCO",
+    "first_slug": "marco-roccella"
+  },
+  {
+    "name": "NEMBRINI DIEGO",
+    "first_slug": "diego-nembrini"
+  },
+  {
+    "name": "FRATICELLI LUCA",
+    "first_slug": "luca-fraticelli"
+  },
+  {
+    "name": "GUERRA ANDREA",
+    "first_slug": "andrea-guerra"
+  },
+  {
+    "name": "GERACI SALVATORE",
+    "first_slug": "salvatore-geraci"
+  },
+  {
+    "name": "GIOIA FRANCESCO",
+    "first_slug": "francesco-gioia"
+  },
+  {
+    "name": "STEFANELLI ANDREA",
+    "first_slug": "andrea-stefanelli"
+  },
+  {
+    "name": "D'AIUTO FILIPPO",
+    "first_slug": "filippo-d-aiuto"
+  },
+  {
+    "name": "COLNAGHI LUCA",
+    "first_slug": "luca-colnaghi"
+  },
+  {
+    "name": "MANENTI MARCO",
+    "first_slug": "marco-manenti"
+  },
+  {
+    "name": "ZOCCARATO SAMUELE",
+    "first_slug": "samuele-zoccarato"
+  },
+  {
+    "name": "PIRAS ANDREA",
+    "first_slug": "andrea-piras"
+  },
+  {
+    "name": "COVILI LUCA",
+    "first_slug": "luca-covili"
+  },
+  {
+    "name": "MICHIELSEN THOR",
+    "first_slug": "thor-michielsen"
+  },
+  {
+    "name": "MISHANKOV MAKSIM",
+    "first_slug": "maksim-mishankov"
+  },
+  {
+    "name": "DUNWOODY SETH",
+    "first_slug": "seth-dunwoody"
+  },
+  {
+    "name": "ZOZULIA ANDRII",
+    "first_slug": "andrii-zozulia"
+  },
+  {
+    "name": "GIULIANO DARIO",
+    "first_slug": "dario-giuliano"
+  },
+  {
+    "name": "TAILLIEU ALDO",
+    "first_slug": "aldo-taillieu"
+  },
+  {
+    "name": "UMBA LOPEZ ABNER SANTIAGO",
+    "first_slug": "lopez-abner-santiago-umba"
+  },
+  {
+    "name": "SMITH WILLIAM",
+    "first_slug": "william-smith"
+  },
+  {
+    "name": "CAPRA THOMAS",
+    "first_slug": "thomas-capra"
+  },
+  {
+    "name": "PICCINI MATTIA",
+    "first_slug": "mattia-piccini"
+  },
+  {
+    "name": "MOTTES LORENZO",
+    "first_slug": "lorenzo-mottes"
+  },
+  {
+    "name": "BUTI ANDREA",
+    "first_slug": "andrea-buti"
+  },
+  {
+    "name": "BOCK MAX",
+    "first_slug": "max-bock"
+  },
+  {
+    "name": "GRIS MARTIN",
+    "first_slug": "martin-gris"
+  },
+  {
+    "name": "BOZICEVICH MATTEO LAPO",
+    "first_slug": "matteo-lapo-bozicevich"
+  },
+  {
+    "name": "PEZZO ROSOLA KEVIN",
+    "first_slug": "rosola-kevin-pezzo"
+  },
+  {
+    "name": "MASCIARELLI LORENZO",
+    "first_slug": "lorenzo-masciarelli"
+  },
+  {
+    "name": "DE GENDT LEANDER",
+    "first_slug": "gendt-leander-de"
+  },
+  {
+    "name": "PENALVER ANIORTE MANUEL",
+    "first_slug": "aniorte-manuel-penalver"
+  },
+  {
+    "name": "GABELLONI MATTEO",
+    "first_slug": "matteo-gabelloni"
+  },
+  {
+    "name": "ATTOLINI LUCA",
+    "first_slug": "luca-attolini"
+  },
+  {
+    "name": "DOVESI MANUEL",
+    "first_slug": "manuel-dovesi"
+  },
+  {
+    "name": "ROSA LUCA",
+    "first_slug": "luca-rosa"
+  },
+  {
+    "name": "PERANI RICCARDO",
+    "first_slug": "riccardo-perani"
+  },
+  {
+    "name": "TERCERO LOPEZ FERNANDO",
+    "first_slug": "lopez-fernando-tercero"
+  },
+  {
+    "name": "FRIGGI VITTORIO",
+    "first_slug": "vittorio-friggi"
+  },
+  {
+    "name": "BORREMANS KASPER TOBIAS",
+    "first_slug": "kasper-tobias-borremans"
+  },
+  {
+    "name": "DIJKMAN DAAN",
+    "first_slug": "daan-dijkman"
+  },
+  {
+    "name": "SHTIN VALERII",
+    "first_slug": "valerii-shtin"
+  },
+  {
+    "name": "PARRAVANO FRANCESCO",
+    "first_slug": "francesco-parravano"
+  },
+  {
+    "name": "ANNIBALLI LORENZO",
+    "first_slug": "lorenzo-anniballi"
+  },
+  {
+    "name": "MASCIARELLI STEFANO",
+    "first_slug": "stefano-masciarelli"
+  },
+  {
+    "name": "POPOV MARK",
+    "first_slug": "mark-popov"
+  },
+  {
+    "name": "PROSANDEEV IAROSLAV",
+    "first_slug": "iaroslav-prosandeev"
+  },
+  {
+    "name": "DI FELICE FRANCESCO",
+    "first_slug": "francesco-di-felice"
+  },
+  {
+    "name": "MEROLA MARCO",
+    "first_slug": "marco-merola"
+  },
+  {
+    "name": "MAZZOLENI LUCA",
+    "first_slug": "luca-mazzoleni"
+  },
+  {
+    "name": "SANTAMARIA RICCARDO",
+    "first_slug": "riccardo-santamaria"
+  },
+  {
+    "name": "CANTONI ANDREA",
+    "first_slug": "andrea-cantoni"
+  },
+  {
+    "name": "ROGERS CAMERON",
+    "first_slug": "cameron-rogers"
+  },
+  {
+    "name": "MARETTA GABRIELE",
+    "first_slug": "gabriele-maretta"
+  },
+  {
+    "name": "CATTIVELLI MATTEO",
+    "first_slug": "matteo-cattivelli"
+  },
+  {
+    "name": "MARCHIONE GIACOMO",
+    "first_slug": "giacomo-marchione"
+  },
+  {
+    "name": "DREI RICCARDO",
+    "first_slug": "riccardo-drei"
+  },
+  {
+    "name": "SCOFET MATTEO",
+    "first_slug": "matteo-scofet"
+  },
+  {
+    "name": "VILLA GIACOMO",
+    "first_slug": "giacomo-villa"
+  },
+  {
+    "name": "CUBILLAS SALVADOR JAVIER",
+    "first_slug": "salvador-javier-cubillas"
+  },
+  {
+    "name": "SCHEMBARI FLAVIO",
+    "first_slug": "flavio-schembari"
+  },
+  {
+    "name": "FALCHETTI MATTEO",
+    "first_slug": "matteo-falchetti"
+  },
+  {
+    "name": "DI SANTO LEONARDO",
+    "first_slug": "santo-leonardo-di"
+  },
+  {
+    "name": "ANDERSEN KASPER",
+    "first_slug": "kasper-andersen"
+  },
+  {
+    "name": "BERTOLLI SAMUEL",
+    "first_slug": "samuel-bertolli"
+  },
+  {
+    "name": "TRAVELLA NICHOLAS",
+    "first_slug": "nicholas-travella"
+  },
+  {
+    "name": "DE LAURENTIIS GIUSEPPE",
+    "first_slug": "laurentiis-giuseppe-de"
+  },
+  {
+    "name": "MORLINO LUCA",
+    "first_slug": "luca-morlino"
+  },
+  {
+    "name": "QUAGLIA TOMMASO",
+    "first_slug": "tommaso-quaglia"
+  },
+  {
+    "name": "MILESI NICOLAS",
+    "first_slug": "nicolas-milesi"
+  },
+  {
+    "name": "NAKKEN TOBIAS RISAN",
+    "first_slug": "tobias-risan-nakken"
+  },
+  {
+    "name": "SAVEKIN ILIA",
+    "first_slug": "ilia-savekin"
+  },
+  {
+    "name": "FRANZONI MANUEL",
+    "first_slug": "manuel-franzoni"
+  },
+  {
+    "name": "SLESARENKO ILYA",
+    "first_slug": "ilya-slesarenko"
+  },
+  {
+    "name": "BERTONCELLI KEVIN",
+    "first_slug": "kevin-bertoncelli"
+  },
+  {
+    "name": "MILESI ALESSANDRO",
+    "first_slug": "alessandro-milesi"
+  },
+  {
+    "name": "RUSSO MARCO",
+    "first_slug": "marco-russo"
+  },
+  {
+    "name": "ZUMSTEG NICOLA",
+    "first_slug": "nicola-zumsteg"
+  },
+  {
+    "name": "BASSANI TOMMY",
+    "first_slug": "tommy-bassani"
+  },
+  {
+    "name": "TESSARI FRANCESCO",
+    "first_slug": "francesco-tessari"
+  },
+  {
+    "name": "DE MONTE MATTEO",
+    "first_slug": "monte-matteo-de"
+  },
+  {
+    "name": "PARETA SALA ROGER",
+    "first_slug": "roger-pareta-sala"
+  },
+  {
+    "name": "VAN DEN WIJNGAERT MATTEO",
+    "first_slug": "matteo-van-den-wijngaert"
+  },
+  {
+    "name": "PRIETO DE LUNA JOSE JUAN",
+    "first_slug": "jose-juan-prieto-de-luna"
+  },
+  {
+    "name": "CHESINI CESARE",
+    "first_slug": "cesare-chesini"
+  },
+  {
+    "name": "LANZAROTTO KEVIN",
+    "first_slug": "kevin-lanzarotto"
+  },
+  {
+    "name": "MERCATALI VALENTINO",
+    "first_slug": "valentino-mercatali"
+  },
+  {
+    "name": "FRIGO NICOLAS",
+    "first_slug": "nicolas-frigo"
+  },
+  {
+    "name": "DI PRIMA CHRISTIAN",
+    "first_slug": "prima-christian-di"
+  },
+  {
+    "name": "NOCERINO CIRO",
+    "first_slug": "ciro-nocerino"
+  },
+  {
+    "name": "DAMIANO MIRCO",
+    "first_slug": "mirco-damiano"
+  },
+  {
+    "name": "BALDINI MATTEO",
+    "first_slug": "matteo-baldini"
+  },
+  {
+    "name": "PIGNATTI JACOPO",
+    "first_slug": "jacopo-pignatti"
+  },
+  {
+    "name": "DELLA TORRE CARLO",
+    "first_slug": "torre-carlo-della"
+  },
+  {
+    "name": "VIEZZI STEFANO",
+    "first_slug": "stefano-viezzi"
+  },
+  {
+    "name": "DE TOTTO ANDREA",
+    "first_slug": "totto-andrea-de"
+  },
+  {
+    "name": "WIGGINS MICHEAL BEN",
+    "first_slug": "micheal-ben-wiggins"
+  },
+  {
+    "name": "DINA MARTON",
+    "first_slug": "marton-dina"
+  },
+  {
+    "name": "FAVERO RENATO",
+    "first_slug": "renato-favero"
+  },
+  {
+    "name": "DALLE CRODE LORENZO",
+    "first_slug": "crode-lorenzo-dalle"
+  },
+  {
+    "name": "LAVELLI DAMIANO",
+    "first_slug": "damiano-lavelli"
+  },
+  {
+    "name": "SCIARRA GIUSEPPE",
+    "first_slug": "giuseppe-sciarra"
+  },
+  {
+    "name": "PAVI DEGL'INNOCENTI GIULIO",
+    "first_slug": "degl-innocenti-giulio-pavi"
+  },
+  {
+    "name": "CRANAGE JOSHUA JAMES",
+    "first_slug": "joshua-james-cranage"
+  },
+  {
+    "name": "STACCHIOTTI RICCARDO",
+    "first_slug": "riccardo-stacchiotti"
+  },
+  {
+    "name": "CHYZHYKOV HMORHII",
+    "first_slug": "hmorhii-chyzhykov"
+  },
+  {
+    "name": "ROJAS NARANJO VICENTE RODRIGO ANTONIO",
+    "first_slug": "naranjo-vicente-rodrigo-antonio-rojas"
+  },
+  {
+    "name": "MAGLI FILIPPO",
+    "first_slug": "filippo-magli"
+  },
+  {
+    "name": "SGHERRI GIACOMO",
+    "first_slug": "giacomo-sgherri"
+  },
+  {
+    "name": "HOLZKNECHT JONAS",
+    "first_slug": "jonas-holzknecht"
+  },
+  {
+    "name": "BONOMETTI MICHELE",
+    "first_slug": "michele-bonometti"
+  },
+  {
+    "name": "SAINT MARTIN PIERRE",
+    "first_slug": "martin-pierre-saint"
+  },
+  {
+    "name": "VACCHER LUCA",
+    "first_slug": "luca-vaccher"
+  },
+  {
+    "name": "TACCONE IVAN",
+    "first_slug": "ivan-taccone"
+  },
+  {
+    "name": "VAL'O ROMAN",
+    "first_slug": "roman-val-o"
+  },
+  {
+    "name": "TABOTTA TOMMASO",
+    "first_slug": "tommaso-tabotta"
+  },
+  {
+    "name": "PARISI EMANUELE",
+    "first_slug": "emanuele-parisi"
+  },
+  {
+    "name": "DE VRIES FEMKE",
+    "first_slug": "vries-femke-de"
+  },
+  {
+    "name": "BAIMA ANITA",
+    "first_slug": "anita-baima"
+  },
+  {
+    "name": "DE GRANDIS MICHELA",
+    "first_slug": "grandis-michela-de"
+  },
+  {
+    "name": "SIRI IRMA",
+    "first_slug": "irma-siri"
+  },
+  {
+    "name": "TRINCA COLONEL MONICA",
+    "first_slug": "monica-trinca-colonel"
+  },
+  {
+    "name": "PIETERSE PUCK",
+    "first_slug": "puck-pieterse"
+  },
+  {
+    "name": "COLES-LYSTER MAGGIE",
+    "first_slug": "maggie-coles-lyster"
+  },
+  {
+    "name": "CHABBEY ELISE",
+    "first_slug": "elise-chabbey"
+  },
+  {
+    "name": "MWAMIKAZI JAZILLA",
+    "first_slug": "jazilla-mwamikazi"
+  },
+  {
+    "name": "ZAMBELLI ALESSIA",
+    "first_slug": "alessia-zambelli"
+  },
+  {
+    "name": "NIEWIADOMA KASIA",
+    "first_slug": "kasia-niewiadoma"
+  },
+  {
+    "name": "TORMENA GAIA",
+    "first_slug": "gaia-tormena"
+  },
+  {
+    "name": "CHIATTO MARIA PIA",
+    "first_slug": "maria-pia-chiatto"
+  },
+  {
+    "name": "KINGMA MAYA YVETTE",
+    "first_slug": "maya-yvette-kingma"
+  },
+  {
+    "name": "VALLIERES MAGDELEINE",
+    "first_slug": "magdeleine-vallieres"
+  },
+  {
+    "name": "GERRITSE FEMKE",
+    "first_slug": "femke-gerritse"
+  },
+  {
+    "name": "KESSLER NINA",
+    "first_slug": "nina-kessler"
+  },
+  {
+    "name": "ZAMUDIO GARCIA MAYTE",
+    "first_slug": "mayte-zamudio-garcia"
+  },
+  {
+    "name": "COUZENS MILLIE",
+    "first_slug": "millie-couzens"
+  },
+  {
+    "name": "ZANETTI EMANUELA",
+    "first_slug": "emanuela-zanetti"
+  },
+  {
+    "name": "ROSSETTI SONIA",
+    "first_slug": "sonia-rossetti"
+  },
+  {
+    "name": "KONONENKO VALERIIA",
+    "first_slug": "valeriia-kononenko"
+  },
+  {
+    "name": "LAUDI IRENE",
+    "first_slug": "irene-laudi"
+  },
+  {
+    "name": "HINOJOSA CRUZ ROMINA",
+    "first_slug": "cruz-romina-hinojosa"
+  },
+  {
+    "name": "NICHOLSON KATELYN MARIE JANETTE",
+    "first_slug": "katelyn-marie-janette-nicholson"
+  },
+  {
+    "name": "GIULIANI GIULIA",
+    "first_slug": "giulia-giuliani"
+  },
+  {
+    "name": "SEGATO GAIA",
+    "first_slug": "gaia-segato"
+  },
+  {
+    "name": "REGHINI CHIARA",
+    "first_slug": "chiara-reghini"
+  },
+  {
+    "name": "ZIGART URSKA",
+    "first_slug": "urska-zigart"
+  },
+  {
+    "name": "LA BELLA ELEONORA",
+    "first_slug": "bella-eleonora-la"
+  },
+  {
+    "name": "HAUGSET SIGRID YTTERHUS",
+    "first_slug": "sigrid-ytterhus-haugset"
+  },
+  {
+    "name": "BOBNAR NIKA",
+    "first_slug": "nika-bobnar"
+  },
+  {
+    "name": "WOLLASTON ALLY",
+    "first_slug": "ally-wollaston"
+  },
+  {
+    "name": "AFFOLATI IRENE",
+    "first_slug": "irene-affolati"
+  },
+  {
+    "name": "FERRI ELISA",
+    "first_slug": "elisa-ferri"
+  },
+  {
+    "name": "QUAGLIOTTO NADIA",
+    "first_slug": "nadia-quagliotto"
+  },
+  {
+    "name": "LUDWIG UTTRUP CECILIE",
+    "first_slug": "uttrup-ludwig"
+  },
+  {
+    "name": "CASAGRANDA ANDREA",
+    "first_slug": "andrea-casagranda"
+  },
+  {
+    "name": "BLASI CAIROL PAULA",
+    "first_slug": "cairol-paula-blasi"
+  },
+  {
+    "name": "VAN ANROOIJ SHIRIN",
+    "first_slug": "anrooij-van"
+  },
+  {
+    "name": "MILAKI ARGYRO",
+    "first_slug": "argyro-milaki"
+  },
+  {
+    "name": "GRASSI VITTORIA",
+    "first_slug": "vittoria-grassi"
+  },
+  {
+    "name": "GIANGRANDE GIORGIA",
+    "first_slug": "giorgia-giangrande"
+  },
+  {
+    "name": "LUGLI ELISA",
+    "first_slug": "elisa-lugli"
+  },
+  {
+    "name": "MORIER EMILIE",
+    "first_slug": "emilie-morier"
+  },
+  {
+    "name": "MAGNALDI ERICA",
+    "first_slug": "erica-magnaldi"
+  },
+  {
+    "name": "LUCCON SARA",
+    "first_slug": "sara-luccon"
+  },
+  {
+    "name": "ZANZI VALENTINA",
+    "first_slug": "valentina-zanzi"
+  },
+  {
+    "name": "MARIOTTO THOMAS",
+    "first_slug": "thomas-mariotto"
+  },
+  {
+    "name": "BALLIANA ENRICO",
+    "first_slug": "enrico-balliana"
+  },
+  {
+    "name": "GUGNINO LUCA",
+    "first_slug": "luca-gugnino"
+  },
+  {
+    "name": "CINGOLANI TOMMASO",
+    "first_slug": "tommaso-cingolani"
+  },
+  {
+    "name": "BATTISTONI ALESSANDRO",
+    "first_slug": "alessandro-battistoni"
+  },
+  {
+    "name": "RODRIGUEZ DELGADO JOSE EMILIO",
+    "first_slug": "delgado-jose-emilio-rodriguez"
+  },
+  {
+    "name": "PIEROTTO MARCO ANDREA",
+    "first_slug": "marco-andrea-pierotto"
+  },
+  {
+    "name": "RENZI NICCOLO'",
+    "first_slug": "niccolo-renzi"
+  },
+  {
+    "name": "VENDRAMIN JACOPO",
+    "first_slug": "jacopo-vendramin"
+  },
+  {
+    "name": "CECCARELLO LORENZO",
+    "first_slug": "lorenzo-ceccarello"
+  },
+  {
+    "name": "GAGGIOLI LUCIANO WILLIAM",
+    "first_slug": "luciano-william-gaggioli"
+  },
+  {
+    "name": "ARNOLDI MATTIA",
+    "first_slug": "mattia-arnoldi"
+  },
+  {
+    "name": "LOVER MEDEOT TOMAZ",
+    "first_slug": "tomaz-lover-medeot"
+  },
+  {
+    "name": "WROLICH SANTIAGO",
+    "first_slug": "santiago-wrolich"
+  },
+  {
+    "name": "MARANGON PAOLO GRAZIANO",
+    "first_slug": "paolo-graziano-marangon"
+  },
+  {
+    "name": "MORENO GARCIA DANIEL SANTIAGO",
+    "first_slug": "garcia-daniel-santiago-moreno"
+  },
+  {
+    "name": "BIRKEDAL JULIUS",
+    "first_slug": "julius-birkedal"
+  },
+  {
+    "name": "MARTINELLI ETTORE",
+    "first_slug": "ettore-martinelli"
+  },
+  {
+    "name": "BIANCU LUCA",
+    "first_slug": "luca-biancu"
+  },
+  {
+    "name": "DE SMET VIC",
+    "first_slug": "smet-vic-de"
+  },
+  {
+    "name": "BATTISTUTTA LUCA",
+    "first_slug": "luca-battistutta"
+  },
+  {
+    "name": "DALLA BONA THOMAS",
+    "first_slug": "bona-thomas-dalla"
+  },
+  {
+    "name": "ZAGO GABRIELE",
+    "first_slug": "gabriele-zago"
+  },
+  {
+    "name": "SCHNYDER NOAH",
+    "first_slug": "noah-schnyder"
+  },
+  {
+    "name": "MAZZARELLO TOMMASO",
+    "first_slug": "tommaso-mazzarello"
+  },
+  {
+    "name": "FERRARI RUBEN",
+    "first_slug": "ruben-ferrari"
+  },
+  {
+    "name": "CARUSO SALVATORE",
+    "first_slug": "salvatore-caruso"
+  },
+  {
+    "name": "BALLIANA ANDREA MATTIA",
+    "first_slug": "andrea-mattia-balliana"
+  },
+  {
+    "name": "WANDEL ELIAS",
+    "first_slug": "elias-wandel"
+  },
+  {
+    "name": "SANTORU ALESSANDRO",
+    "first_slug": "alessandro-santoru"
+  },
+  {
+    "name": "DALLA PRIA GIACOMO",
+    "first_slug": "pria-giacomo-dalla"
+  },
+  {
+    "name": "CASCIONE RAFFAELE",
+    "first_slug": "raffaele-cascione"
+  },
+  {
+    "name": "CACCHIO MICHELE PIO",
+    "first_slug": "michele-pio-cacchio"
+  },
+  {
+    "name": "ORHOLM-LONSETH SIND",
+    "first_slug": "sind-orholm-lonseth"
+  },
+  {
+    "name": "SCOTT BOURIS AMOS",
+    "first_slug": "bouris-amos-scott"
+  },
+  {
+    "name": "FOLEGANI MATTIA",
+    "first_slug": "mattia-folegani"
+  },
+  {
+    "name": "MURA ANDREA",
+    "first_slug": "andrea-mura"
+  },
+  {
+    "name": "MELONI ANDREA",
+    "first_slug": "andrea-meloni"
+  },
+  {
+    "name": "BANDINI FILIPPO",
+    "first_slug": "filippo-bandini"
+  },
+  {
+    "name": "KUNTARIC ZIBERT VANJA",
+    "first_slug": "zibert-vanja-kuntaric"
+  },
+  {
+    "name": "CECCATO EDOARDO",
+    "first_slug": "edoardo-ceccato"
+  },
+  {
+    "name": "HERZOG KARL",
+    "first_slug": "karl-herzog"
+  },
+  {
+    "name": "IAKOVLEV MATVEL",
+    "first_slug": "matvel-iakovlev"
+  },
+  {
+    "name": "CAMPIDELLI GIACOMO",
+    "first_slug": "giacomo-campidelli"
+  },
+  {
+    "name": "MAKSIMOVIC LUKA",
+    "first_slug": "luka-maksimovic"
+  },
+  {
+    "name": "MANNU FRANCESCO",
+    "first_slug": "francesco-mannu"
+  },
+  {
+    "name": "BENOZZATO RICCARDO",
+    "first_slug": "riccardo-benozzato"
+  },
+  {
+    "name": "ENDRIZZI ANDREA",
+    "first_slug": "andrea-endrizzi"
+  },
+  {
+    "name": "ZANINI ANDREA MATTEO",
+    "first_slug": "andrea-matteo-zanini"
+  },
+  {
+    "name": "KUBENA DANIEL",
+    "first_slug": "daniel-kubena"
+  },
+  {
+    "name": "ROSSO RICCARDO",
+    "first_slug": "riccardo-rosso"
+  },
+  {
+    "name": "FEDERICI FILIPPO",
+    "first_slug": "filippo-federici"
+  },
+  {
+    "name": "DANDREA CRISTIAN",
+    "first_slug": "cristian-dandrea"
+  },
+  {
+    "name": "I'ONS TOM BERNARD",
+    "first_slug": "tom-bernard-i-ons"
+  },
+  {
+    "name": "CERAME NICOLA",
+    "first_slug": "nicola-cerame"
+  },
+  {
+    "name": "VESHNIAKOV DANIIL",
+    "first_slug": "daniil-veshniakov"
+  },
+  {
+    "name": "GENTILE ANGELO",
+    "first_slug": "angelo-gentile"
+  },
+  {
+    "name": "SANTIAGO GARCIA RICARDO",
+    "first_slug": "ricardo-santiago-garcia"
+  },
+  {
+    "name": "LEGIEC MIKOLAJ",
+    "first_slug": "mikolaj-legiec"
+  },
+  {
+    "name": "SECHI MARCO",
+    "first_slug": "marco-sechi"
+  },
+  {
+    "name": "BOSIO GIOVANNI",
+    "first_slug": "giovanni-bosio"
+  },
+  {
+    "name": "LE PANN SOEN",
+    "first_slug": "pann-soen-le"
+  },
+  {
+    "name": "SOLAVAGGIONE PIETRO",
+    "first_slug": "pietro-solavaggione"
+  },
+  {
+    "name": "RAPISARDA SEBASTIANO",
+    "first_slug": "sebastiano-rapisarda"
+  },
+  {
+    "name": "COLOMBO IVAN",
+    "first_slug": "ivan-colombo"
+  },
+  {
+    "name": "CARNEVALI FRANCESCO",
+    "first_slug": "francesco-carnevali"
+  },
+  {
+    "name": "RANIERI MATTEO",
+    "first_slug": "matteo-ranieri"
+  },
+  {
+    "name": "DE MERCANTI LUCA",
+    "first_slug": "mercanti-luca-de"
+  },
+  {
+    "name": "SCAMPERLE NICOLO'",
+    "first_slug": "nicolo-scamperle"
+  },
+  {
+    "name": "BRUGALETTA ANGELO",
+    "first_slug": "angelo-brugaletta"
+  },
+  {
+    "name": "FURENES MADS",
+    "first_slug": "mads-furenes"
+  },
+  {
+    "name": "BASTIAANSSEN FINN",
+    "first_slug": "finn-bastiaanssen"
+  },
+  {
+    "name": "BELVEDERE NICOLA",
+    "first_slug": "nicola-belvedere"
+  },
+  {
+    "name": "VAGLIO WALTER",
+    "first_slug": "walter-vaglio"
+  },
+  {
+    "name": "MORO NICOLO'",
+    "first_slug": "nicolo-moro"
+  },
+  {
+    "name": "STELLA ANTONIO TANCREDI",
+    "first_slug": "antonio-tancredi-stella"
+  },
+  {
+    "name": "PINOTTI DAVIDE",
+    "first_slug": "davide-pinotti"
+  },
+  {
+    "name": "LUCI LORENZO",
+    "first_slug": "lorenzo-luci"
+  },
+  {
+    "name": "MAGNONI MATTEO",
+    "first_slug": "matteo-magnoni"
+  },
+  {
+    "name": "GRIGOLINI FILIPPO",
+    "first_slug": "filippo-grigolini"
+  },
+  {
+    "name": "YANKOUSKI ILYA",
+    "first_slug": "ilya-yankouski"
+  },
+  {
+    "name": "BAUMANN ELIAS",
+    "first_slug": "elias-baumann"
+  },
+  {
+    "name": "LOGINS ARVIDS",
+    "first_slug": "arvids-logins"
+  },
+  {
+    "name": "POLIUSHKO OLEKSANDER",
+    "first_slug": "oleksander-poliushko"
+  },
+  {
+    "name": "SHANNON HARRISON",
+    "first_slug": "harrison-shannon"
+  },
+  {
+    "name": "WILLEMS SANDER",
+    "first_slug": "sander-willems"
+  },
+  {
+    "name": "PICARD ALBAN",
+    "first_slug": "alban-picard"
+  },
+  {
+    "name": "FIORINI EDOARDO",
+    "first_slug": "edoardo-fiorini"
+  },
+  {
+    "name": "GUSMEROLI DANIELE",
+    "first_slug": "daniele-gusmeroli"
+  },
+  {
+    "name": "SHISHKIN IVAN",
+    "first_slug": "ivan-shishkin"
+  },
+  {
+    "name": "GIACOMEL RICCARDO",
+    "first_slug": "riccardo-giacomel"
+  },
+  {
+    "name": "ALBREHT BLAZ",
+    "first_slug": "blaz-albreht"
+  },
+  {
+    "name": "ROSSI MATTIA",
+    "first_slug": "mattia-rossi"
+  },
+  {
+    "name": "FURLANIS ANDREA",
+    "first_slug": "andrea-furlanis"
+  },
+  {
+    "name": "PREVEJSEK MAI",
+    "first_slug": "mai-prevejsek"
+  },
+  {
+    "name": "POSTPISCHL FILIPPO",
+    "first_slug": "filippo-postpischl"
+  },
+  {
+    "name": "DELL'OLIO FRANCESCO",
+    "first_slug": "francesco-dell-olio"
+  },
+  {
+    "name": "MAZZOLENI MATTIA",
+    "first_slug": "mattia-mazzoleni"
+  },
+  {
+    "name": "SELLA JACOPO",
+    "first_slug": "jacopo-sella"
+  },
+  {
+    "name": "MURARO NICCOLO'",
+    "first_slug": "niccolo-muraro"
+  },
+  {
+    "name": "AGOSTINO GIACOMO",
+    "first_slug": "giacomo-agostino"
+  },
+  {
+    "name": "NOVAL SUAREZ BENJAMIN",
+    "first_slug": "benjamin-noval-suarez"
+  },
+  {
+    "name": "PODO MASSIMO",
+    "first_slug": "massimo-podo"
+  },
+  {
+    "name": "CANCHON GIL JUAN ESTEBAN",
+    "first_slug": "gil-juan-esteban-canchon"
+  },
+  {
+    "name": "SCARPIELLO ANDREA",
+    "first_slug": "andrea-scarpiello"
+  },
+  {
+    "name": "CORNELLA DANIEL",
+    "first_slug": "daniel-cornella"
+  },
+  {
+    "name": "BERARDI MICHELE",
+    "first_slug": "michele-berardi"
+  },
+  {
+    "name": "SOTO CERVANTES ALEJANDRO",
+    "first_slug": "cervantes-alejandro-soto"
+  },
+  {
+    "name": "VAN DEN BIGGELAAR",
+    "first_slug": "biggelaar-van-den"
+  },
+  {
+    "name": "MANCA SAMUELE",
+    "first_slug": "samuele-manca"
+  },
+  {
+    "name": "LINGENHAG LAURIN",
+    "first_slug": "laurin-lingenhag"
+  },
+  {
+    "name": "MOCCI EDOARDO",
+    "first_slug": "edoardo-mocci"
+  },
+  {
+    "name": "RESTREPO LOAIZA OSCAR IVAN",
+    "first_slug": "loaiza-restrepo"
+  },
+  {
+    "name": "CONGIU FILIPPO",
+    "first_slug": "filippo-congiu"
+  },
+  {
+    "name": "FARSETTI BRANDO",
+    "first_slug": "brando-farsetti"
+  },
+  {
+    "name": "SUPI SEBASTIAN",
+    "first_slug": "sebastian-supi"
+  },
+  {
+    "name": "MATYASIK MAKSYMILIAN",
+    "first_slug": "maksymilian-matyasik"
+  },
+  {
+    "name": "SOLLA LEONARDO",
+    "first_slug": "leonardo-solla"
+  },
+  {
+    "name": "DERGANC ANTON",
+    "first_slug": "anton-derganc"
+  },
+  {
+    "name": "COATES BENJAMIN",
+    "first_slug": "benjamin-coates"
+  },
+  {
+    "name": "IETTA EDOARDO",
+    "first_slug": "edoardo-ietta"
+  },
+  {
+    "name": "MILANI LORENZO",
+    "first_slug": "lorenzo-milani"
+  },
+  {
+    "name": "KLAU JACKSON",
+    "first_slug": "jackson-klau"
+  },
+  {
+    "name": "ARGENTINO SALVATORE",
+    "first_slug": "salvatore-argentino"
+  },
+  {
+    "name": "PINNA ROBERTO",
+    "first_slug": "roberto-pinna"
+  },
+  {
+    "name": "ACTIS SAMUELE",
+    "first_slug": "samuele-actis"
+  },
+  {
+    "name": "AYALA ARELLANO EDUARD EMANUEL",
+    "first_slug": "eduard-emanuel-ayala-arellano"
+  },
+  {
+    "name": "BANNER WIL",
+    "first_slug": "wil-banner"
+  },
+  {
+    "name": "MOLLO GIANMARIA",
+    "first_slug": "gianmaria-mollo"
+  },
+  {
+    "name": "ASTORRI MARTINO",
+    "first_slug": "martino-astorri"
+  },
+  {
+    "name": "VILLA MATTEO",
+    "first_slug": "matteo-villa"
+  },
+  {
+    "name": "PITTA JACOPO",
+    "first_slug": "jacopo-pitta"
+  },
+  {
+    "name": "GENOVESE RICCARDO",
+    "first_slug": "riccardo-genovese"
+  },
+  {
+    "name": "GIOVANNINI LEONARDO",
+    "first_slug": "leonardo-giovannini"
+  },
+  {
+    "name": "VERONI RICCARDO",
+    "first_slug": "riccardo-veroni"
+  },
+  {
+    "name": "COMETTO FILIPPO",
+    "first_slug": "filippo-cometto"
+  },
+  {
+    "name": "FARAZ KHATIEB",
+    "first_slug": "khatieb-faraz"
+  },
+  {
+    "name": "RANDAZZO VITO",
+    "first_slug": "vito-randazzo"
+  },
+  {
+    "name": "GALFRE' JACOPO",
+    "first_slug": "jacopo-galfre"
+  },
+  {
+    "name": "RICCADONA EDOARDO",
+    "first_slug": "edoardo-riccadona"
+  },
+  {
+    "name": "MANTOVANI GIULIO",
+    "first_slug": "giulio-mantovani"
+  },
+  {
+    "name": "BOLZONI SIMONE",
+    "first_slug": "simone-bolzoni"
+  },
+  {
+    "name": "D'APOLLONIO REBECCA",
+    "first_slug": "rebecca-d-apollonio"
+  },
+  {
+    "name": "KOSTINA OLGA",
+    "first_slug": "olga-kostina"
+  },
+  {
+    "name": "PENEDA SOTO NATALIA",
+    "first_slug": "natalia-peneda-soto"
+  },
+  {
+    "name": "GARCIA BARENO DOMINGUEZ NABYENKA",
+    "first_slug": "bareno-dominguez-nabyenka-garcia"
+  },
+  {
+    "name": "COSTA-STARICCO GIULIA",
+    "first_slug": "giulia-costa-staricco"
+  },
+  {
+    "name": "PINEDA SOTO NATALIA",
+    "first_slug": "natalia-pineda-soto"
+  },
+  {
+    "name": "HIYOSHI AYAKA",
+    "first_slug": "ayaka-hiyoshi"
+  },
+  {
+    "name": "Orsi Riccardo",
+    "first_slug": "riccardo-orsi"
+  },
+  {
+    "name": "Ruffin Riccardo",
+    "first_slug": "riccardo-ruffin"
+  },
+  {
+    "name": "De Fabritiis Gabriele",
+    "first_slug": "fabritiis-gabriele-de"
+  },
+  {
+    "name": "Pérez Ciro",
+    "first_slug": "ciro-perez"
+  },
+  {
+    "name": "Włodarski Marcin",
+    "first_slug": "marcin-w-odarski"
+  },
+  {
+    "name": "Lauria Andrea",
+    "first_slug": "andrea-lauria"
+  },
+  {
+    "name": "Trisconi Elia",
+    "first_slug": "elia-trisconi"
+  },
+  {
+    "name": "Maranchón Enrique",
+    "first_slug": "enrique-maranchon"
+  },
+  {
+    "name": "Dalla Valle Andrea",
+    "first_slug": "valle-andrea-dalla"
+  },
+  {
+    "name": "Gualtieri Samuel",
+    "first_slug": "samuel-gualtieri"
+  },
+  {
+    "name": "Francescangeli Tommaso",
+    "first_slug": "tommaso-francescangeli"
+  },
+  {
+    "name": "Di Vita Federico",
+    "first_slug": "vita-federico-di"
+  },
+  {
+    "name": "Zandri Francesco",
+    "first_slug": "francesco-zandri"
+  },
+  {
+    "name": "Benassi Matteo",
+    "first_slug": "matteo-benassi"
+  },
+  {
+    "name": "Martini Nicola",
+    "first_slug": "nicola-martini"
+  },
+  {
+    "name": "Lapi Luca",
+    "first_slug": "luca-lapi"
+  },
+  {
+    "name": "Caselli Armin",
+    "first_slug": "armin-caselli"
+  },
+  {
+    "name": "Gaffney David",
+    "first_slug": "david-gaffney"
+  },
+  {
+    "name": "Østdal Linus",
+    "first_slug": "linus-stdal"
+  },
+  {
+    "name": "Piccin Alessandro",
+    "first_slug": "alessandro-piccin"
+  },
+  {
+    "name": "Limardo Damiano",
+    "first_slug": "damiano-limardo"
+  },
+  {
+    "name": "Capelli Luca",
+    "first_slug": "luca-capelli"
+  },
+  {
+    "name": "Catellani Marco",
+    "first_slug": "marco-catellani"
+  },
+  {
+    "name": "Frydkjær Patrick Boje",
+    "first_slug": "patrick-boje-frydkj-r"
+  },
+  {
+    "name": "Ramírez Mateo",
+    "first_slug": "mateo-ramirez"
+  },
+  {
+    "name": "Utengen Sandstad Halvor",
+    "first_slug": "sandstad-halvor-utengen"
+  },
+  {
+    "name": "Tercero Fernando",
+    "first_slug": "fernando-tercero"
+  },
+  {
+    "name": "Zamudio Gianluigi",
+    "first_slug": "gianluigi-zamudio"
+  },
+  {
+    "name": "Martínez Aitor",
+    "first_slug": "aitor-martinez"
+  },
+  {
+    "name": "Flückiger Dennis",
+    "first_slug": "dennis-fluckiger"
+  },
+  {
+    "name": "Kancers Helvijs",
+    "first_slug": "helvijs-kancers"
+  },
+  {
+    "name": "Johnson Joshua",
+    "first_slug": "joshua-johnson"
+  },
+  {
+    "name": "Brugier Robin",
+    "first_slug": "robin-brugier"
+  },
+  {
+    "name": "Garcia Rodrigo",
+    "first_slug": "rodrigo-garcia"
+  },
+  {
+    "name": "Rodriguez Diego",
+    "first_slug": "diego-rodriguez"
+  },
+  {
+    "name": "Orholm-Lønseth Sindre",
+    "first_slug": "sindre-orholm-l-nseth"
+  },
+  {
+    "name": "Rayfer Ilay",
+    "first_slug": "ilay-rayfer"
+  },
+  {
+    "name": "Magni Daniele",
+    "first_slug": "daniele-magni"
+  },
+  {
+    "name": "Bovo Bianto Kylian",
+    "first_slug": "bianto-kylian-bovo"
+  },
+  {
+    "name": "Wiesmayr Niklas",
+    "first_slug": "niklas-wiesmayr"
+  },
+  {
+    "name": "Jakobsons Marks",
+    "first_slug": "marks-jakobsons"
+  },
+  {
+    "name": "Devos Victor",
+    "first_slug": "victor-devos"
+  },
+  {
+    "name": "Iakolev Matvei",
+    "first_slug": "matvei-iakolev"
+  },
+  {
+    "name": "Cisneros Luis Isuhan",
+    "first_slug": "luis-isuhan-cisneros"
+  },
+  {
+    "name": "Elsäßer Luan",
+    "first_slug": "luan-elsa-er"
+  },
+  {
+    "name": "Paredes Manuel Sebastian",
+    "first_slug": "manuel-sebastian-paredes"
+  },
+  {
+    "name": "Lotti Zeno",
+    "first_slug": "zeno-lotti"
+  },
+  {
+    "name": "Dalle Carbonare Loris",
+    "first_slug": "carbonare-loris-dalle"
+  },
+  {
+    "name": "Genghini Giacomo",
+    "first_slug": "giacomo-genghini"
+  },
+  {
+    "name": "Lo Piccolo Domenico",
+    "first_slug": "piccolo-domenico-lo"
+  },
+  {
+    "name": "Cazzaniga Filippo",
+    "first_slug": "filippo-cazzaniga"
+  },
+  {
+    "name": "Orlandi Giacomo",
+    "first_slug": "giacomo-orlandi"
+  },
+  {
+    "name": "Dones Mattia",
+    "first_slug": "mattia-dones"
+  },
+  {
+    "name": "Caroppo Cristian",
+    "first_slug": "cristian-caroppo"
+  },
+  {
+    "name": "Limonta Daniele",
+    "first_slug": "daniele-limonta"
+  },
+  {
+    "name": "La Face Giuseppe",
+    "first_slug": "face-giuseppe-la"
+  },
+  {
+    "name": "Micali Matteo",
+    "first_slug": "matteo-micali"
+  },
+  {
+    "name": "Luzzi Gabriele",
+    "first_slug": "gabriele-luzzi"
+  },
+  {
+    "name": "Felipe Quotadamo",
+    "first_slug": "quotadamo-felipe"
+  },
+  {
+    "name": "Balestri Mattia",
+    "first_slug": "mattia-balestri"
+  },
+  {
+    "name": "Cuda Gabriele",
+    "first_slug": "gabriele-cuda"
+  },
+  {
+    "name": "Saguatti Fabian",
+    "first_slug": "fabian-saguatti"
+  },
+  {
+    "name": "Binda Rossetti",
+    "first_slug": "rossetti-binda"
+  },
+  {
+    "name": "Ricci Federico",
+    "first_slug": "federico-ricci"
+  },
+  {
+    "name": "Canino Giuseppe",
+    "first_slug": "giuseppe-canino"
+  },
+  {
+    "name": "Bettelli Davide",
+    "first_slug": "davide-bettelli"
+  },
+  {
+    "name": "Lega Niccolo'",
+    "first_slug": "niccolo-lega"
+  },
+  {
+    "name": "De Rensis Stefano",
+    "first_slug": "rensis-stefano-de"
+  },
+  {
+    "name": "Włodarczyk Dominika",
+    "first_slug": "dominika-w-odarczyk"
+  },
+  {
+    "name": "Le Court-Pienaar Kim",
+    "first_slug": "court-pienaar-kim-le"
+  },
+  {
+    "name": "Martín Sara",
+    "first_slug": "sara-martin"
+  },
+  {
+    "name": "von Berswordt Sophie",
+    "first_slug": "berswordt-sophie-von"
+  },
+  {
+    "name": "De Keersmaeker Audrey",
+    "first_slug": "keersmaeker-audrey-de"
+  },
+  {
+    "name": "Płosaj Nikol",
+    "first_slug": "nikol-p-osaj"
+  },
+  {
+    "name": "Puigdefábregas Laia",
+    "first_slug": "laia-puigdefabregas"
+  },
+  {
+    "name": "Kołkowicz Karolina",
+    "first_slug": "karolina-ko-kowicz"
+  },
+  {
+    "name": "Reichmuth Kyra",
+    "first_slug": "kyra-reichmuth"
+  },
+  {
+    "name": "Rodríguez Laura",
+    "first_slug": "laura-rodriguez"
+  },
+  {
+    "name": "Czeczinkarová Jana",
+    "first_slug": "jana-czeczinkarova"
+  },
+  {
+    "name": "de Jong Thalita",
+    "first_slug": "jong-thalita-de"
+  },
+  {
+    "name": "van Agt Eva",
+    "first_slug": "agt-eva-van"
+  },
+  {
+    "name": "Buijsman Nina",
+    "first_slug": "nina-buijsman"
+  },
+  {
+    "name": "De Vallier Elisa",
+    "first_slug": "vallier-elisa-de"
+  },
+  {
+    "name": "Londoño Juliana",
+    "first_slug": "juliana-londono"
+  },
+  {
+    "name": "de Zoete Mylène",
+    "first_slug": "zoete-mylene-de"
+  },
+  {
+    "name": "Anderson Solbjørk Minke",
+    "first_slug": "solbj-rk-minke-anderson"
+  },
+  {
+    "name": "Moolman-Pasio Ashleigh",
+    "first_slug": "ashleigh-moolman-pasio"
+  },
+  {
+    "name": "De Buysser Auke",
+    "first_slug": "buysser-auke-de"
+  },
+  {
+    "name": "Aubry Julia",
+    "first_slug": "julia-aubry"
+  },
+  {
+    "name": "de Marigny-Lagesse Lucie",
+    "first_slug": "marigny-lagesse-lucie-de"
+  },
+  {
+    "name": "van Rooijen Sofie",
+    "first_slug": "rooijen-sofie-van"
+  },
+  {
+    "name": "van der Duin Maike",
+    "first_slug": "der-duin-maike-van"
+  },
+  {
+    "name": "Van De Velde Julie",
+    "first_slug": "de-velde-julie-van"
+  },
+  {
+    "name": "Jørgensen Tiril",
+    "first_slug": "tiril-j-rgensen"
+  },
+  {
+    "name": "Amondarain Naia",
+    "first_slug": "naia-amondarain"
+  },
+  {
+    "name": "van 't Geloof Marjolein",
+    "first_slug": "t-geloof-marjolein-van"
+  },
+  {
+    "name": "Noyola Marcela",
+    "first_slug": "marcela-noyola"
+  },
+  {
+    "name": "de Jong Loïs",
+    "first_slug": "jong-lois-de"
+  },
+  {
+    "name": "Alhach Gaetanna",
+    "first_slug": "gaetanna-alhach"
+  },
+  {
+    "name": "Støvern Ida Østbye",
+    "first_slug": "ida-stbye-st-vern"
+  },
+  {
+    "name": "Słomka Kinga",
+    "first_slug": "kinga-s-omka"
+  },
+  {
+    "name": "Odriozola Naxara",
+    "first_slug": "naxara-odriozola"
+  },
+  {
+    "name": "van Rijswijk Hannah",
+    "first_slug": "rijswijk-hannah-van"
+  },
+  {
+    "name": "Benito Adrián",
+    "first_slug": "adrian-benito"
+  },
+  {
+    "name": "Tobul Yair",
+    "first_slug": "yair-tobul"
+  },
+  {
+    "name": "Costa-Starrico Giulia",
+    "first_slug": "giulia-costa-starrico"
+  },
+  {
+    "name": "De Lazzer Agnese",
+    "first_slug": "lazzer-agnese-de"
+  },
+  {
+    "name": "Bembi Mattia",
+    "first_slug": "mattia-bembi"
+  },
+  {
+    "name": "Muricci Leonardo",
+    "first_slug": "leonardo-muricci"
+  },
+  {
+    "name": "Dalla Cia Alberto",
+    "first_slug": "cia-alberto-dalla"
+  },
+  {
+    "name": "Moretti Samuel",
+    "first_slug": "samuel-moretti"
+  },
+  {
+    "name": "Marchina Leonardo",
+    "first_slug": "leonardo-marchina"
+  },
+  {
+    "name": "Azzini Tuan",
+    "first_slug": "tuan-azzini"
+  },
+  {
+    "name": "Quilico Gabriele",
+    "first_slug": "gabriele-quilico"
+  }
+]
