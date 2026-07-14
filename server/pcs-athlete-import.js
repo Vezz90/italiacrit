@@ -156,7 +156,9 @@ async function extractProfileAndResults(page, season) {
     }, imgSrc).catch(() => null);
     if (bytes && bytes.length >= 1000) {
       const buf = Buffer.from(bytes);
-      if (buf[0] === 0xFF && buf[1] === 0xD8) photo = buf;
+      const isJpeg = buf[0] === 0xFF && buf[1] === 0xD8;
+      const isPng  = buf[0] === 0x89 && buf[1] === 0x50;
+      if (isJpeg || isPng) photo = buf;
     }
   }
 
