@@ -112,10 +112,10 @@ async function gotoPcsPage(page, url, opts = {}) {
 // periodica — pattern di richieste troppo regolare (200-800ms fissi, come
 // negli script precedenti) è uno dei segnali più facili da riconoscere come bot.
 async function humanDelay(index = 0) {
-  const base = 5000 + Math.random() * 7000; // 5-12s
+  const base = 10000 + Math.random() * 15000; // 10-25s
   await sleep(base);
-  if (index > 0 && index % 20 === 0) {
-    await sleep(60000 + Math.random() * 60000); // ~60-120s ogni 20 atleti
+  if (index > 0 && index % 12 === 0) {
+    await sleep(90000 + Math.random() * 90000); // ~90-180s ogni 12 atleti
   }
 }
 

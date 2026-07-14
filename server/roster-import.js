@@ -67,25 +67,32 @@ async function extractSocialsFromPage(page) {
 }
 
 // Visita la pagina team PCS e restituisce la lista corridori
-async function extractTeamRiders(page, teamId, teamNome) {
-  const urls = [
+async function extractTeamRiders(page, teamId, teamNome, gotoPcsPage, knownSlug) {
+  const urls = [];
+  if (knownSlug) {
+    urls.push(`https://www.procyclingstats.com/team/${knownSlug}`);
+    urls.push(`https://www.procyclingstats.com/team/${knownSlug}-${YEAR}`);
+  }
+  urls.push(
     `https://www.procyclingstats.com/team/${normalizeStr(teamNome)}-${YEAR}`,
     `https://www.procyclingstats.com/team/${normalizeStr(teamNome)}/${YEAR}`,
     `https://www.procyclingstats.com/team/${normalizeStr(teamId)}-${YEAR}`,
-  ];
+  );
 
   for (const url of urls) {
-    try { await page.goto(url, { waitUntil: 'domcontentloaded', timeout: 15000 }); }
-    catch { continue; }
-    if (page.url().includes('pagenotfound') || page.url().includes('404')) continue;
-
-    await sleep(900);
+    const nav = await gotoPcsPage(page, url, { readySelector: 'a[href*="rider/"]' });
+    if (!nav.ok) continue;
 
     const riders = await page.evaluate(() => {
       const found = [];
-      for (const a of document.querySelectorAll('a[href]')) {
+      // Scoperto dal vivo: il footer di OGNI pagina PCS ha un widget "corridori
+      // preferiti" (link rider/ verso i top pro del momento) che finiva
+      // scambiato per il roster reale. Il roster vero sta solo dentro la
+      // tabella .teamlist.
+      const scope = document.querySelector('.teamlist') || document;
+      for (const a of scope.querySelectorAll('a[href]')) {
         const href = a.getAttribute('href') || '';
-        const m = href.match(/^\/rider\/([a-z0-9-]+)$/);
+        const m = href.match(/(?:^|\/)rider\/([a-z0-9-]+)\/?$/);
         if (!m) continue;
         const slug = m[1];
         const name = (a.textContent || '').trim();
@@ -102,17 +109,11 @@ async function extractTeamRiders(page, teamId, teamNome) {
 }
 
 // Visita il profilo PCS di un corridore
-async function fetchRiderProfile(page, slug) {
-  try {
-    await page.goto(`https://www.procyclingstats.com/rider/${slug}`,
-      { waitUntil: 'domcontentloaded', timeout: 15000 });
-  } catch { return { notFound: true }; }
-
-  if (page.url().includes('pagenotfound') || page.url().includes('404'))
-    return { notFound: true };
+async function fetchRiderProfile(page, slug, gotoPcsPage) {
+  const nav = await gotoPcsPage(page, `https://www.procyclingstats.com/rider/${slug}`);
+  if (!nav.ok) return { notFound: nav.notFound };
 
   await page.evaluate(() => window.scrollTo(0, 200)).catch(() => {});
-  await sleep(800);
 
   // Estrai nome, cognome, anno nascita, nazionalità dalla pagina
   const info = await page.evaluate(() => {
@@ -236,7 +237,7 @@ async function getExistingPhotoIds(sb) {
 (async () => {
   const { createClient } = require('@supabase/supabase-js');
   const ws = require('ws');
-  const { chromium } = require('playwright');
+  const { launchPcsBrowser, gotoPcsPage, humanDelay } = require('./pcs-browser');
 
   const sb = createClient(SUPABASE_URL, SUPABASE_SECRET, { realtime: { transport: ws } });
   console.log(`=== Roster Import da PCS [${YEAR}] ===\n`);
@@ -284,49 +285,21 @@ async function getExistingPhotoIds(sb) {
 
   console.log(`${teams.length} team da processare\n`);
 
-  // Browser
-  const bravePaths = [
-    'C:\\Program Files\\BraveSoftware\\Brave-Browser\\Application\\brave.exe',
-    'C:\\Users\\vezza\\AppData\\Local\\BraveSoftware\\Brave-Browser\\Application\\brave.exe',
-    (process.env.LOCALAPPDATA || '') + '\\BraveSoftware\\Brave-Browser\\Application\\brave.exe',
-  ];
-  const bravePath = bravePaths.find(p => fs.existsSync(p));
-  let browser;
-  if (bravePath) {
-    try { browser = await chromium.launch({ executablePath: bravePath, headless: false, args: ['--no-sandbox'] }); }
-    catch { /* fallback */ }
-  }
-  if (!browser) {
-    try { browser = await chromium.launch({ channel: 'chrome', headless: false }); }
-    catch { browser = await chromium.launch({ headless: false }); }
-  }
-
-  const context = await browser.newContext({
-    userAgent: 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/124.0.0.0 Safari/537.36',
-    locale: 'it-IT',
-    viewport: { width: 1280, height: 800 },
-  });
-  await context.addInitScript(() => {
-    Object.defineProperty(navigator, 'webdriver', { get: () => undefined });
-  });
-
-  const page = await context.newPage();
-  await page.goto('https://www.procyclingstats.com/', { waitUntil: 'networkidle', timeout: 30000 })
-    .catch(e => console.log(`Avviso PCS: ${e.message}`));
-  await sleep(2500);
+  // Browser (modulo condiviso: gestisce sfide anti-bot e pacing prudente)
+  const { browser, page } = await launchPcsBrowser();
   console.log('Pronto.\n');
 
   let totalNew = 0, totalPhotos = 0, totalErrors = 0;
+  let riderIndex = 0;
 
   for (let ti = 0; ti < teams.length; ti++) {
     const team = teams[ti];
     console.log(`\n[${ti+1}/${teams.length}] ${team.nome}`);
 
-    // Trova slug PCS per questo team
-    const pcsSlug = teamPcsSlugs.get(team.id)
-      || `${normalizeStr(team.nome)}-${YEAR}`;
+    // Trova slug PCS per questo team (se già noto da entity_overrides)
+    const pcsSlug = teamPcsSlugs.get(team.id) || null;
 
-    const { riders } = await extractTeamRiders(page, team.id, team.nome);
+    const { riders } = await extractTeamRiders(page, team.id, team.nome, gotoPcsPage, pcsSlug);
     if (!riders.length) {
       console.log('  → nessun corridore trovato su PCS');
       continue;
@@ -349,7 +322,7 @@ async function getExistingPhotoIds(sb) {
         // Già nel sistema: importa la foto se mancante (delegato a run-import.js di solito)
         if (!withPhoto.has(existingId)) {
           process.stdout.write(`  [esistente] ${rider.name} — foto mancante, importo… `);
-          const profile = await fetchRiderProfile(page, rider.slug);
+          const profile = await fetchRiderProfile(page, rider.slug, gotoPcsPage);
           if (profile.photo) {
             try {
               const photoUrl = await uploadPhoto(sb, rider.slug, profile.photo);
@@ -368,7 +341,7 @@ async function getExistingPhotoIds(sb) {
           } else {
             process.stdout.write('nessuna foto\n');
           }
-          await sleep(300);
+          await humanDelay(riderIndex++);
         }
         continue;
       }
@@ -385,7 +358,7 @@ async function getExistingPhotoIds(sb) {
       process.stdout.write(`  [NUOVO] ${rider.name} (${atletaId}) — `);
 
       // Scarica profilo PCS
-      const profile = await fetchRiderProfile(page, rider.slug);
+      const profile = await fetchRiderProfile(page, rider.slug, gotoPcsPage);
       if (profile.notFound) {
         process.stdout.write('profilo non trovato\n');
         continue;
@@ -442,7 +415,7 @@ async function getExistingPhotoIds(sb) {
         totalErrors++;
       }
 
-      await sleep(300);
+      await humanDelay(riderIndex++);
     }
 
     if (newInTeam) {
