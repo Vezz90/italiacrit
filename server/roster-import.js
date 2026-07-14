@@ -68,11 +68,12 @@ async function extractSocialsFromPage(page) {
 
 // Visita la pagina team PCS e restituisce la lista corridori
 async function extractTeamRiders(page, teamId, teamNome, gotoPcsPage, knownSlug) {
+  // NIENTE url "bare" senza anno: su PCS spesso risolve una pagina diversa
+  // (altra stagione, o un team completamente diverso con slug simile) prima
+  // di arrivare a quello corretto — verificato dal vivo che solo la forma
+  // con l'anno restituisce sempre il roster giusto sotto .teamlist.
   const urls = [];
-  if (knownSlug) {
-    urls.push(`https://www.procyclingstats.com/team/${knownSlug}`);
-    urls.push(`https://www.procyclingstats.com/team/${knownSlug}-${YEAR}`);
-  }
+  if (knownSlug) urls.push(`https://www.procyclingstats.com/team/${knownSlug}-${YEAR}`);
   urls.push(
     `https://www.procyclingstats.com/team/${normalizeStr(teamNome)}-${YEAR}`,
     `https://www.procyclingstats.com/team/${normalizeStr(teamNome)}/${YEAR}`,
@@ -102,7 +103,10 @@ async function extractTeamRiders(page, teamId, teamNome, gotoPcsPage, knownSlug)
       return found;
     }).catch(() => []);
 
-    if (riders.length) return { riders, url: page.url() };
+    if (riders.length) {
+      const socials = await extractSocialsFromPage(page);
+      return { riders, url: page.url(), socials };
+    }
   }
 
   return { riders: [] };
@@ -299,12 +303,29 @@ async function getExistingPhotoIds(sb) {
     // Trova slug PCS per questo team (se già noto da entity_overrides)
     const pcsSlug = teamPcsSlugs.get(team.id) || null;
 
-    const { riders } = await extractTeamRiders(page, team.id, team.nome, gotoPcsPage, pcsSlug);
+    const { riders, socials: teamSocials } = await extractTeamRiders(page, team.id, team.nome, gotoPcsPage, pcsSlug);
     if (!riders.length) {
       console.log('  → nessun corridore trovato su PCS');
       continue;
     }
     console.log(`  → ${riders.length} corridori trovati su PCS`);
+
+    // Social del team dalla stessa pagina roster
+    if (teamSocials && (teamSocials.instagram || teamSocials.twitter || teamSocials.facebook)) {
+      try {
+        const teamFields = {};
+        if (teamSocials.instagram) teamFields.instagram_url = teamSocials.instagram;
+        if (teamSocials.twitter)   teamFields.twitter_url   = teamSocials.twitter;
+        if (teamSocials.facebook)  teamFields.facebook_url  = teamSocials.facebook;
+        const rows = Object.entries(teamFields).map(([field, new_value]) => ({
+          entity_type: 'team', entity_id: team.id, field, new_value, edited_by: null,
+        }));
+        await sb.from('entity_overrides').upsert(rows, { onConflict: 'entity_type,entity_id,field' });
+        console.log(`  → social team: ${Object.keys(teamFields).join(' ') || '—'}`);
+      } catch (e) {
+        console.log(`  → ERRORE social team: ${e.message}`);
+      }
+    }
 
     // Prepara entry in extra_roster per questo team
     if (!extraRoster[team.id]) {

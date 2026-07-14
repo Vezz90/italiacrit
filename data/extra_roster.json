@@ -348,5 +348,34 @@
         "genere": "M"
       }
     ]
+  },
+  "TEAM_VANGI_TOMMASINI_IL_PIRATA": {
+    "nome": "TEAM VANGI TOMMASINI IL PIRATA",
+    "atleti": [
+      {
+        "atleta_id": "MARTINEZ_AITOR",
+        "nome": "Aitor",
+        "cognome": "MARTÍNEZ",
+        "categoria": "JUN_M",
+        "genere": "M",
+        "pcs_slug": "aitor-martinez-groset"
+      },
+      {
+        "atleta_id": "CAPODARCA_MATTEO",
+        "nome": "Matteo",
+        "cognome": "CAPODARCA",
+        "categoria": "JUN_M",
+        "genere": "M",
+        "pcs_slug": "matteo-capodarca"
+      },
+      {
+        "atleta_id": "GAGGIOLI_LUCIANO",
+        "nome": "Luciano",
+        "cognome": "GAGGIOLI",
+        "categoria": "JUN_M",
+        "genere": "M",
+        "pcs_slug": "luciano-gaggioli1"
+      }
+    ]
   }
 }
