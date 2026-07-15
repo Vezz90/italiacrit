@@ -6556,6 +6556,16 @@ app.get('/api/og-image/class/:id', async (req, res) => {
 // location.pathname e renderizza la pagina corretta lato client. Senza
 // questo, una navigazione diretta o un refresh su un URL pulito darebbe un
 // 404 reale (quel path non esiste come file sul server).
+// Bot di anteprima social (WhatsApp, Telegram, Facebook, Twitter/X, ecc.):
+// non eseguono JavaScript, quindi su un URL "pulito" come /gara/:id
+// vedrebbero solo la shell SPA vuota con i meta tag generici della home,
+// non il titolo/descrizione/immagine di quella gara specifica — che invece
+// esistono già, ma solo sotto /og/gara/:id. Per gli utenti umani non
+// cambia nulla: solo questi bot vengono rediretti alla versione con i
+// meta tag corretti, che loro seguono normalmente (non eseguono JS ma
+// seguono i redirect HTTP).
+const OG_PREVIEW_BOT_RE = /facebookexternalhit|Facebot|WhatsApp|TelegramBot|Twitterbot|Slackbot|LinkedInBot|Discordbot|SkypeUriPreview|Pinterest|vkShare|redditbot|W3C_Validator/i;
+
 app.get('*', (req, res, next) => {
   const p = req.path;
   if (p.startsWith('/api/') || p.startsWith('/og/') || p.startsWith('/data/') ||
@@ -6565,6 +6575,15 @@ app.get('*', (req, res, next) => {
   // di file reale: se express.static non l'ha già servito sopra, è
   // genuinamente mancante — meglio un 404 vero che un index.html silenzioso.
   if (/\.[a-zA-Z0-9]+$/.test(p)) return next();
+
+  const ua = req.headers['user-agent'] || '';
+  if (OG_PREVIEW_BOT_RE.test(ua)) {
+    let m = p.match(/^\/(gara|atleta|team)\/([^/]+)\/?$/);
+    if (m) return res.redirect(302, `/og/${m[1]}/${encodeURIComponent(m[2])}`);
+    m = p.match(/^\/classifica\/([^/]+)\/?$/);
+    if (m) return res.redirect(302, `/og/class/${encodeURIComponent(m[1])}`);
+  }
+
   res.sendFile(path.join(FRONTEND_DIR, 'index.html'));
 });
 
