@@ -86,11 +86,19 @@ async function extractTeamRiders(page, teamId, teamNome, gotoPcsPage, knownSlug)
 
     const riders = await page.evaluate(() => {
       const found = [];
-      // Scoperto dal vivo: il footer di OGNI pagina PCS ha un widget "corridori
-      // preferiti" (link rider/ verso i top pro del momento) che finiva
-      // scambiato per il roster reale. Il roster vero sta solo dentro la
-      // tabella .teamlist.
-      const scope = document.querySelector('.teamlist') || document;
+      // Scoperto dal vivo, in due passaggi:
+      // 1) il footer di OGNI pagina PCS ha un widget "corridori preferiti"
+      //    (link rider/ verso i top pro del momento) che finiva scambiato
+      //    per il roster reale.
+      // 2) la classe .teamlist da sola NON è esclusiva del roster attuale:
+      //    PCS la riusa anche per le tabelle entrate/uscite (transfers) e
+      //    altre viste statistiche della stessa pagina, che si sommavano ai
+      //    corridori veri. Il roster attuale, e SOLO quello, sta nella lista
+      //    ul.teamlist.list.lineh18 (colonna nomi della sidebar destra).
+      const scope = document.querySelector('ul.teamlist.list.lineh18')
+        || document.querySelector('.teamlist.list')
+        || document.querySelector('.teamlist')
+        || document;
       for (const a of scope.querySelectorAll('a[href]')) {
         const href = a.getAttribute('href') || '';
         const m = href.match(/(?:^|\/)rider\/([a-z0-9-]+)\/?$/);
