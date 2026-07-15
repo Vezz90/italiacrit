@@ -9493,7 +9493,7 @@ window.adminNav = async function(section) {
         const gid = r.gara_id || r.gara_slug || r.gara;
         if (!gid) return;
         if (!garaMap[gid]) garaMap[gid] = {
-          gara_id: gid, nome: r.gara||gid, data: r.data||'', cat: r.cat||r.categoria||'',
+          gara_id: gid, nome: r.nome_gara||gid, data: r.data||'', cat: r.cat||r.categoria||'',
           tipo: r.tipo||'', km: r.km||'', media: r.media||'', regione: r.regione||'', n_atleti: 0
         };
         garaMap[gid].n_atleti++;
