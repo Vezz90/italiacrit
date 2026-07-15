@@ -618,6 +618,102 @@
         "cognome": "Missaglia",
         "categoria": "ELI_M",
         "genere": "M"
+      },
+      {
+        "atleta_id": "BENASSATI_ENRICO",
+        "nome": "Enrico",
+        "cognome": "BENASSATI",
+        "categoria": "ELI_M",
+        "genere": "M",
+        "pcs_slug": "enrico-benassati"
+      },
+      {
+        "atleta_id": "DAPPORTO_PIETRO",
+        "nome": "Pietro",
+        "cognome": "DAPPORTO",
+        "categoria": "JUN_M",
+        "genere": "M",
+        "pcs_slug": "pietro-dapporto"
+      },
+      {
+        "atleta_id": "FACCANI_ALESSIO",
+        "nome": "Alessio",
+        "cognome": "FACCANI",
+        "categoria": "JUN_M",
+        "genere": "M",
+        "pcs_slug": "alessio-faccani"
+      },
+      {
+        "atleta_id": "GABRIELE_ANGELO",
+        "nome": "Angelo",
+        "cognome": "GABRIELE",
+        "categoria": "JUN_M",
+        "genere": "M",
+        "pcs_slug": "angelo-gabriele"
+      },
+      {
+        "atleta_id": "GUERCILENA_MARCO",
+        "nome": "Marco",
+        "cognome": "GUERCILENA",
+        "categoria": "JUN_M",
+        "genere": "M",
+        "pcs_slug": "marco-guercilena"
+      },
+      {
+        "atleta_id": "MAIOLI_MATTIA",
+        "nome": "Mattia",
+        "cognome": "MAIOLI",
+        "categoria": "JUN_M",
+        "genere": "M",
+        "pcs_slug": "mattia-maioli"
+      },
+      {
+        "atleta_id": "MUTOLO_MANUEL",
+        "nome": "Manuel",
+        "cognome": "MUTOLO",
+        "categoria": "JUN_M",
+        "genere": "M",
+        "pcs_slug": "manuel-mutolo"
+      },
+      {
+        "atleta_id": "RAIA_CARMINE",
+        "nome": "Carmine",
+        "cognome": "RAIA",
+        "categoria": "JUN_M",
+        "genere": "M",
+        "pcs_slug": "carmine-raia"
+      },
+      {
+        "atleta_id": "RASCHI_EDOARDO",
+        "nome": "Edoardo",
+        "cognome": "RASCHI",
+        "categoria": "JUN_M",
+        "genere": "M",
+        "pcs_slug": "edoardo-raschi"
+      },
+      {
+        "atleta_id": "TESTA_PULICI_NICOLA",
+        "nome": "Nicola",
+        "cognome": "TESTA PULICI",
+        "categoria": "JUN_M",
+        "genere": "M",
+        "pcs_slug": "nicola-testa-pulici"
+      },
+      {
+        "atleta_id": "TINTONI_PIETRO",
+        "nome": "Pietro",
+        "cognome": "TINTONI",
+        "categoria": "JUN_M",
+        "genere": "M",
+        "pcs_slug": "pietro-tintoni"
+      },
+      {
+        "atleta_id": "VISIOLI_MATTEO",
+        "nome": "Matteo",
+        "cognome": "VISIOLI",
+        "categoria": "JUN_M",
+        "genere": "M",
+        "pcs_slug": "matteo-visioli"
       }
     ]
   },
@@ -5516,6 +5612,537 @@
         "categoria": "JUN_M",
         "genere": "M",
         "pcs_slug": "milo-wills"
+      }
+    ]
+  },
+  "BUSTESE_OLONIA_A_S_D": {
+    "nome": "BUSTESE OLONIA A.S.D.",
+    "atleti": [
+      {
+        "atleta_id": "COSTA_ALESSANDRO",
+        "nome": "Alessandro",
+        "cognome": "COSTA",
+        "categoria": "JUN_M",
+        "genere": "M",
+        "pcs_slug": "alessandro-costa"
+      },
+      {
+        "atleta_id": "NATALE_DIEGO",
+        "nome": "Diego",
+        "cognome": "NATALE",
+        "categoria": "JUN_M",
+        "genere": "M",
+        "pcs_slug": "diego-natale"
+      },
+      {
+        "atleta_id": "RAGAZZONI_ALESSANDRO",
+        "nome": "Alessandro",
+        "cognome": "RAGAZZONI",
+        "categoria": "ELI_M",
+        "genere": "M",
+        "pcs_slug": "alessandro-ragazzoni"
+      }
+    ]
+  },
+  "S_C_ROMANESE_ASD": {
+    "nome": "S.C. ROMANESE ASD",
+    "atleti": [
+      {
+        "atleta_id": "FASOLI_RICCARDO",
+        "nome": "Riccardo",
+        "cognome": "FASOLI",
+        "categoria": "JUN_M",
+        "genere": "M",
+        "pcs_slug": "riccardo-fasoli"
+      },
+      {
+        "atleta_id": "FERRARI_LUCA",
+        "nome": "Luca",
+        "cognome": "FERRARI",
+        "categoria": "JUN_M",
+        "genere": "M",
+        "pcs_slug": "luca-ferrari"
+      },
+      {
+        "atleta_id": "MAGNI_DANIELE",
+        "nome": "Daniele",
+        "cognome": "MAGNI",
+        "categoria": "JUN_M",
+        "genere": "M",
+        "pcs_slug": "daniele-magni"
+      },
+      {
+        "atleta_id": "OSMETTI_MATTIA",
+        "nome": "Mattia",
+        "cognome": "OSMETTI",
+        "categoria": "JUN_M",
+        "genere": "M",
+        "pcs_slug": "mattia-osmetti"
+      }
+    ]
+  },
+  "TEAM_ECOTEK_ZERO24": {
+    "nome": "TEAM ECOTEK ZERO24",
+    "atleti": []
+  },
+  "G_S_GIOVANI_GIUSSANESI_A_S_D": {
+    "nome": "G.S.GIOVANI GIUSSANESI A.S.D.",
+    "atleti": [
+      {
+        "atleta_id": "BARZANTI_MATTEO",
+        "nome": "Matteo",
+        "cognome": "BARZANTI",
+        "categoria": "JUN_M",
+        "genere": "M",
+        "pcs_slug": "matteo-barzanti"
+      },
+      {
+        "atleta_id": "LA_SCALA_RICCARDO",
+        "nome": "Riccardo",
+        "cognome": "LA SCALA",
+        "categoria": "JUN_M",
+        "genere": "M",
+        "pcs_slug": "riccardo-la-scala"
+      }
+    ]
+  },
+  "U_S_MONTECORONA": {
+    "nome": "U.S. MONTECORONA",
+    "atleti": [
+      {
+        "atleta_id": "DOSSI_FRANCESCO",
+        "nome": "Francesco",
+        "cognome": "DOSSI",
+        "categoria": "JUN_M",
+        "genere": "M",
+        "pcs_slug": "francesco-dossi"
+      },
+      {
+        "atleta_id": "FUCA_GIOELE_SEBASTIAN",
+        "nome": "Gioele Sebastian",
+        "cognome": "FUCA'",
+        "categoria": "JUN_M",
+        "genere": "M",
+        "pcs_slug": "gioele-sebastian-fuca"
+      },
+      {
+        "atleta_id": "GIANOTTI_MATTEO",
+        "nome": "Matteo",
+        "cognome": "GIANOTTI",
+        "categoria": "JUN_M",
+        "genere": "M",
+        "pcs_slug": "matteo-gianotti"
+      },
+      {
+        "atleta_id": "PIFFER_PIETRO",
+        "nome": "Pietro",
+        "cognome": "PIFFER",
+        "categoria": "JUN_M",
+        "genere": "M",
+        "pcs_slug": "pietro-piffer"
+      },
+      {
+        "atleta_id": "SCHIPLER_THOMAS",
+        "nome": "Thomas",
+        "cognome": "SCHIPLER",
+        "categoria": "JUN_M",
+        "genere": "M",
+        "pcs_slug": "thomas-schipler"
+      },
+      {
+        "atleta_id": "SERAFIN_CRISTIANO",
+        "nome": "Cristiano",
+        "cognome": "SERAFIN",
+        "categoria": "JUN_M",
+        "genere": "M",
+        "pcs_slug": "cristiano-serafin"
+      },
+      {
+        "atleta_id": "TONIOLLI_GIACOMO",
+        "nome": "Giacomo",
+        "cognome": "TONIOLLI",
+        "categoria": "JUN_M",
+        "genere": "M",
+        "pcs_slug": "giacomo-toniolli"
+      }
+    ]
+  },
+  "V_C_MENDRISIO": {
+    "nome": "V.C.MENDRISIO",
+    "atleti": [
+      {
+        "atleta_id": "ANTONETTI_ARONNE",
+        "nome": "Aronne",
+        "cognome": "ANTONETTI",
+        "categoria": "JUN_M",
+        "genere": "M",
+        "pcs_slug": "aronne-antonetti"
+      },
+      {
+        "atleta_id": "BONALDA_ALESSANDRO",
+        "nome": "Alessandro",
+        "cognome": "BONALDA",
+        "categoria": "ELI_M",
+        "genere": "M",
+        "pcs_slug": "alessandro-bonalda"
+      },
+      {
+        "atleta_id": "BUHLMANN_LUCA",
+        "nome": "Luca",
+        "cognome": "BÜHLMANN",
+        "categoria": "JUN_M",
+        "genere": "M",
+        "pcs_slug": "luca-buhlmann"
+      },
+      {
+        "atleta_id": "CARUSO_FRANCESCO",
+        "nome": "Francesco",
+        "cognome": "CARUSO",
+        "categoria": "JUN_M",
+        "genere": "M",
+        "pcs_slug": "francesco-caruso1"
+      },
+      {
+        "atleta_id": "CASTELLI_SIMONE",
+        "nome": "Simone",
+        "cognome": "CASTELLI",
+        "categoria": "ELI_M",
+        "genere": "M",
+        "pcs_slug": "simone-castelli1"
+      },
+      {
+        "atleta_id": "FELSBERGER_ELIA",
+        "nome": "Elia",
+        "cognome": "FELSBERGER",
+        "categoria": "JUN_M",
+        "genere": "M",
+        "pcs_slug": "elia-felsberger"
+      },
+      {
+        "atleta_id": "KURMANN_ANDRE",
+        "nome": "André",
+        "cognome": "KURMANN",
+        "categoria": "JUN_M",
+        "genere": "M",
+        "pcs_slug": "andre-kurmann"
+      },
+      {
+        "atleta_id": "MARTINOLI_VALERIO",
+        "nome": "Valerio",
+        "cognome": "MARTINOLI",
+        "categoria": "JUN_M",
+        "genere": "M",
+        "pcs_slug": "valerio-martinoli"
+      },
+      {
+        "atleta_id": "PIVA_MATTEO",
+        "nome": "Matteo",
+        "cognome": "PIVA",
+        "categoria": "JUN_M",
+        "genere": "M",
+        "pcs_slug": "matteo-piva"
+      },
+      {
+        "atleta_id": "RESTIVO_AUGUSTO",
+        "nome": "Augusto",
+        "cognome": "RESTIVO",
+        "categoria": "JUN_M",
+        "genere": "M",
+        "pcs_slug": "augusto-restivo"
+      },
+      {
+        "atleta_id": "RINNER_JONATHAN",
+        "nome": "Jonathan",
+        "cognome": "RINNER",
+        "categoria": "JUN_M",
+        "genere": "M",
+        "pcs_slug": "jonathan-rinner"
+      },
+      {
+        "atleta_id": "RUGGIERO_MATTEO_PIO",
+        "nome": "Matteo Pio",
+        "cognome": "RUGGIERO",
+        "categoria": "JUN_M",
+        "genere": "M",
+        "pcs_slug": "matteo-pio-ruggiero"
+      }
+    ]
+  },
+  "ACCADEMIA_CICLISTICA": {
+    "nome": "ACCADEMIA CICLISTICA",
+    "atleti": [
+      {
+        "atleta_id": "MARTINI_MATTEO",
+        "nome": "Matteo",
+        "cognome": "MARTINI",
+        "categoria": "JUN_M",
+        "genere": "M",
+        "pcs_slug": "matteo-martini"
+      }
+    ]
+  },
+  "TEAM_TIEPOLO_U19_DEVO": {
+    "nome": "TEAM TIEPOLO U19 DEVO",
+    "atleti": [
+      {
+        "atleta_id": "DURRAND_THOMAS",
+        "nome": "Thomas",
+        "cognome": "DURRAND",
+        "categoria": "JUN_M",
+        "genere": "M",
+        "pcs_slug": "thomas-durrand"
+      },
+      {
+        "atleta_id": "FINN_NOAH",
+        "nome": "Noah",
+        "cognome": "FINN",
+        "categoria": "JUN_M",
+        "genere": "M",
+        "pcs_slug": "noah-finn"
+      },
+      {
+        "atleta_id": "MASCHIO_LORENZO",
+        "nome": "Lorenzo",
+        "cognome": "MASCHIO",
+        "categoria": "JUN_M",
+        "genere": "M",
+        "pcs_slug": "lorenzo-maschio"
+      },
+      {
+        "atleta_id": "MEDEOT_TOMAZ",
+        "nome": "Tomaz",
+        "cognome": "MEDEOT",
+        "categoria": "JUN_M",
+        "genere": "M",
+        "pcs_slug": "tomaz-medeot"
+      },
+      {
+        "atleta_id": "PETRIC_JAKOB",
+        "nome": "Jakob",
+        "cognome": "PETRIČ",
+        "categoria": "JUN_M",
+        "genere": "M",
+        "pcs_slug": "jakob-petric"
+      },
+      {
+        "atleta_id": "SIMMONS_MADDOX",
+        "nome": "Maddox",
+        "cognome": "SIMMONS",
+        "categoria": "JUN_M",
+        "genere": "M",
+        "pcs_slug": "maddox-simmons"
+      },
+      {
+        "atleta_id": "TARDIVO_MASSIMILIANO",
+        "nome": "Massimiliano",
+        "cognome": "TARDIVO",
+        "categoria": "JUN_M",
+        "genere": "M",
+        "pcs_slug": "massimiliano-tardivo"
+      },
+      {
+        "atleta_id": "TONIZZO_JOELE",
+        "nome": "Joele",
+        "cognome": "TONIZZO",
+        "categoria": "JUN_M",
+        "genere": "M",
+        "pcs_slug": "joele-tonizzo"
+      },
+      {
+        "atleta_id": "TRICA_THEODOR",
+        "nome": "Theodor",
+        "cognome": "TRICA",
+        "categoria": "JUN_M",
+        "genere": "M",
+        "pcs_slug": "theodor-trica"
+      }
+    ]
+  },
+  "CAMPANA_IMBALLAGGI_MORBIATO_TRENTINO": {
+    "nome": "CAMPANA IMBALLAGGI MORBIATO TRENTINO",
+    "atleti": [
+      {
+        "atleta_id": "BORTOLATO_SIRIO",
+        "nome": "Sirio",
+        "cognome": "BORTOLATO",
+        "categoria": "ELI_M",
+        "genere": "M",
+        "pcs_slug": "sirio-bortolato"
+      },
+      {
+        "atleta_id": "CRISTOFORETTI_JACOPO",
+        "nome": "Jacopo",
+        "cognome": "CRISTOFORETTI",
+        "categoria": "JUN_M",
+        "genere": "M",
+        "pcs_slug": "jacopo-cristoforetti"
+      },
+      {
+        "atleta_id": "DEMATTE_THOMAS",
+        "nome": "Thomas",
+        "cognome": "DEMATTE'",
+        "categoria": "ELI_M",
+        "genere": "M",
+        "pcs_slug": "thomas-dematte"
+      },
+      {
+        "atleta_id": "FRACCHETTI_DAVIDE",
+        "nome": "Davide",
+        "cognome": "FRACCHETTI",
+        "categoria": "JUN_M",
+        "genere": "M",
+        "pcs_slug": "davide-fracchetti"
+      },
+      {
+        "atleta_id": "GAMBATO_GIULIO",
+        "nome": "Giulio",
+        "cognome": "GAMBATO",
+        "categoria": "JUN_M",
+        "genere": "M",
+        "pcs_slug": "giulio-gambato"
+      },
+      {
+        "atleta_id": "GIUSTOLISI_GIUSEPPE",
+        "nome": "Giuseppe",
+        "cognome": "GIUSTOLISI",
+        "categoria": "JUN_M",
+        "genere": "M",
+        "pcs_slug": "giuseppe-giustolisi"
+      },
+      {
+        "atleta_id": "SPEROTTO_ALESSANDRO",
+        "nome": "Alessandro",
+        "cognome": "SPEROTTO",
+        "categoria": "JUN_M",
+        "genere": "M",
+        "pcs_slug": "alessandro-sperotto"
+      }
+    ]
+  },
+  "FAIZANE_CSZ_SANDRIGO_BIKE": {
+    "nome": "FAIZANE' CSZ SANDRIGO BIKE",
+    "atleti": [
+      {
+        "atleta_id": "ADZEM_BENJAMIN",
+        "nome": "Benjamin",
+        "cognome": "ADZEM",
+        "categoria": "JUN_M",
+        "genere": "M",
+        "pcs_slug": "benjamin-adzem"
+      },
+      {
+        "atleta_id": "BIZZOTTO_EDDY",
+        "nome": "Eddy",
+        "cognome": "BIZZOTTO",
+        "categoria": "JUN_M",
+        "genere": "M",
+        "pcs_slug": "eddy-bizzotto"
+      },
+      {
+        "atleta_id": "DALLE_CARBONARE_LORIS",
+        "nome": "Loris",
+        "cognome": "DALLE CARBONARE",
+        "categoria": "JUN_M",
+        "genere": "M",
+        "pcs_slug": "loris-dalle-carbonare"
+      },
+      {
+        "atleta_id": "FONTANA_LORENZO",
+        "nome": "Lorenzo",
+        "cognome": "FONTANA",
+        "categoria": "JUN_M",
+        "genere": "M",
+        "pcs_slug": "lorenzo-fontana"
+      },
+      {
+        "atleta_id": "PANOZZO_LUCA",
+        "nome": "Luca",
+        "cognome": "PANOZZO",
+        "categoria": "JUN_M",
+        "genere": "M",
+        "pcs_slug": "luca-panozzo"
+      },
+      {
+        "atleta_id": "TAPPA_SIMONE",
+        "nome": "Simone",
+        "cognome": "TAPPA",
+        "categoria": "JUN_M",
+        "genere": "M",
+        "pcs_slug": "simone-tappa"
+      },
+      {
+        "atleta_id": "ZANUSSI_GIUSEPPE",
+        "nome": "Giuseppe",
+        "cognome": "ZANUSSI",
+        "categoria": "JUN_M",
+        "genere": "M",
+        "pcs_slug": "giuseppe-zanussi"
+      },
+      {
+        "atleta_id": "ZULIAN_FILIPPO",
+        "nome": "Filippo",
+        "cognome": "ZULIAN",
+        "categoria": "ELI_M",
+        "genere": "M",
+        "pcs_slug": "filippo-zulian"
+      }
+    ]
+  },
+  "A_S_D_POSTUMIA_73_D_L_CICLISMO": {
+    "nome": "A.S.D. POSTUMIA 73 D.L. CICLISMO",
+    "atleti": [
+      {
+        "atleta_id": "CARLESSO_NICOLO",
+        "nome": "Nicolo'",
+        "cognome": "CARLESSO",
+        "categoria": "JUN_M",
+        "genere": "M",
+        "pcs_slug": "nicolo-carlesso"
+      }
+    ]
+  },
+  "A_S_D_CICLISTICA_MONSELICE": {
+    "nome": "A.S.D. CICLISTICA MONSELICE",
+    "atleti": [
+      {
+        "atleta_id": "BERTAGNOLI_GABRIELE",
+        "nome": "Gabriele",
+        "cognome": "BERTAGNOLI",
+        "categoria": "JUN_M",
+        "genere": "M",
+        "pcs_slug": "gabriele-bertagnoli"
+      },
+      {
+        "atleta_id": "BOTTARO_TOMMASO",
+        "nome": "Tommaso",
+        "cognome": "BOTTARO",
+        "categoria": "JUN_M",
+        "genere": "M",
+        "pcs_slug": "tommaso-bottaro"
+      },
+      {
+        "atleta_id": "PALUDETTI_MATHIAS",
+        "nome": "Mathias",
+        "cognome": "PALUDETTI",
+        "categoria": "ELI_M",
+        "genere": "M",
+        "pcs_slug": "mathias-paludetti"
+      },
+      {
+        "atleta_id": "RICCADONNA_EDOARDO",
+        "nome": "Edoardo",
+        "cognome": "RICCADONNA",
+        "categoria": "ELI_M",
+        "genere": "M",
+        "pcs_slug": "edoardo-riccadonna"
+      },
+      {
+        "atleta_id": "ROS_FEDERICO",
+        "nome": "Federico",
+        "cognome": "ROS",
+        "categoria": "ELI_M",
+        "genere": "M",
+        "pcs_slug": "federico-ros"
       }
     ]
   }
