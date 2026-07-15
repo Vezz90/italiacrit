@@ -19737,14 +19737,35 @@ async function renderRisultati() {
           return parts.length ? `<div class="ris-impact-strip">${parts.join('')}</div>` : '';
         })() : '';
 
+        // Payload di condivisione pronto qui, senza dover entrare nella pagina
+        // gara: stessa forma di _mkShare in renderGara, usando i dati che il
+        // riepilogo ha già in memoria (risultati, categoria, km/media).
+        if (catGaraId) {
+          const calEntryRis = (calendar || []).find(c => c.id === catGaraId);
+          window._risShareCache = window._risShareCache || {};
+          window._risShareCache[catGaraId] = {
+            _id: catGaraId, name: race.nome, date: fmtDate(race.data), cat: cLabel,
+            mult, tipo: race.tipo,
+            region: normalizeRegion(calEntryRis?.regione || firstRes?.regione || ''),
+            luogo: calEntryRis?.luogo || '', km: kmVal, media: mediaVal,
+            winnerTime: _calcWinnerTime(kmVal, mediaVal),
+            results: sortedCatRes.slice(0, 10).map(r => ({
+              cognome: r.cognome, nome: r.nome, team: r.team,
+              punti_effettivi: r.punti_effettivi,
+              tempo: r.posizione === 1 ? '' : (r.tempo || ''),
+            })),
+          };
+        }
+
         return `
           <div class="ris-cat-section">
             <div class="ris-cat-label">${cLabel}</div>
             ${techBit ? `<div class="ris-tech-bit">${techBit}</div>` : ''}
             ${podioRows}
             ${impactStrip}
-            <div class="ris-full-link">
-              <a href="#/gara/${esc(catGaraId)}" class="btn-action full" style="font-size:0.75rem;text-align:center;">CLASSIFICA COMPLETA &rarr;</a>
+            <div class="ris-full-link" style="display:flex;gap:8px;align-items:stretch">
+              <a href="#/gara/${esc(catGaraId)}" class="btn-action full" style="font-size:0.75rem;text-align:center;flex:1">CLASSIFICA COMPLETA &rarr;</a>
+              ${catGaraId ? `<button class="btn-action" title="Condividi risultati" aria-label="Condividi risultati" onclick="window.quickShareGara('${esc(catGaraId)}')" style="flex:0 0 auto;padding:0 12px"><svg viewBox="0 0 24 24" width="15" height="15" fill="none" stroke="currentColor" stroke-width="2"><circle cx="18" cy="5" r="3"/><circle cx="6" cy="12" r="3"/><circle cx="18" cy="19" r="3"/><line x1="8.59" y1="13.51" x2="15.42" y2="17.49"/><line x1="15.41" y1="6.51" x2="8.59" y2="10.49"/></svg></button>` : ''}
             </div>
           </div>`;
       }).join(categories.length > 1 ? '<div class="ris-cat-divider"></div>' : '');
@@ -21071,6 +21092,12 @@ window.triggerShareGara=function(){ if(window._shareGaraData) window.showShareMo
 window.triggerShareGara2=function(){ if(window._shareGaraData2) window.showShareModal('gara',window._shareGaraData2); };
 window.triggerShareAtleta=function(){ if(window._shareAtletaData) window.showShareModal('atleta',window._shareAtletaData); };
 window.triggerShareTeam=function(){ if(window._shareTeamData) window.showShareModal('team',window._shareTeamData); };
+// Condivisione rapida dal riepilogo gara nella pagina Risultati, senza dover
+// entrare nella pagina della singola gara solo per condividerla.
+window.quickShareGara=function(garaId){
+  const d = window._risShareCache && window._risShareCache[garaId];
+  if (d) window.showShareModal('gara', d);
+};
 
 window.shareClassifica=async function(){
   const isFiltered = rankRegion || rankMonth;

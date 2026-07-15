@@ -1850,7 +1850,7 @@ a.hcal-row:hover {
   .ranking-table th, .results-table th { padding: 8px 12px; }
 
   /* ── TABELLA RISULTATI ATLETA: layout 2 righe ── */
-  /* Colonne: 1=data 2=gara 3=cat 4=pos 5=molt 6=km 7=media 8=pts */
+  /* Colonne reali (vedi app.js ~12969): 1=data 2=pos 3=gara 4=molt 5=km 6=media 7=pts */
   .atleta-results,
   .atleta-results tbody { display: block; width: 100%; }
   .atleta-results thead { display: none; }
@@ -1866,16 +1866,15 @@ a.hcal-row:hover {
   }
   .atleta-results tr:hover { background: var(--bg-elevated) !important; }
   /* Riga 1: POS · GARA (span 2 col centrali) · PTS */
-  .atleta-results td:nth-child(4) { grid-column: 1; grid-row: 1; align-self: center; }
-  .atleta-results td:nth-child(2) { grid-column: 2 / 4; grid-row: 1; align-self: center; white-space: normal; word-break: break-word; }
-  .atleta-results td:nth-child(8) { grid-column: 4; grid-row: 1; align-self: center; text-align: right !important; }
-  /* Riga 2: DATA · KM · MEDIA · MOLT */
+  .atleta-results td:nth-child(2) { grid-column: 1; grid-row: 1; align-self: center; }
+  .atleta-results td:nth-child(3) { grid-column: 2 / 4; grid-row: 1; align-self: center; white-space: normal; word-break: break-word; }
+  .atleta-results td:nth-child(7) { grid-column: 4; grid-row: 1; align-self: center; text-align: right !important; }
+  /* Riga 2: DATA · MOLT · KM */
   .atleta-results td:nth-child(1) { grid-column: 1; grid-row: 2; font-size: 0.72rem; color: var(--text-muted); align-self: center; }
-  .atleta-results td:nth-child(6) { grid-column: 2; grid-row: 2; font-size: 0.72rem; color: var(--text-muted); align-self: center; }
-  .atleta-results td:nth-child(7) { grid-column: 3; grid-row: 2; font-size: 0.72rem; color: var(--text-muted); align-self: center; }
-  .atleta-results td:nth-child(5) { grid-column: 4; grid-row: 2; align-self: center; text-align: right !important; }
-  /* Nascosto: CAT (già visibile nell'header della pagina) */
-  .atleta-results td:nth-child(3) { display: none; }
+  .atleta-results td:nth-child(4) { grid-column: 2; grid-row: 2; font-size: 0.72rem; color: var(--text-muted); align-self: center; }
+  .atleta-results td:nth-child(5) { grid-column: 3; grid-row: 2; font-size: 0.72rem; color: var(--text-muted); align-self: center; }
+  /* Nascosto: MEDIA (meno prioritaria su mobile, come su team-results) */
+  .atleta-results td:nth-child(6) { display: none; }
 
   /* ── TABELLA RISULTATI TEAM: layout 2 righe ── */
   /* Colonne: 1=data 2=gara 3=atleta 4=pos 5=molt 6=km 7=media 8=rnk 9=pts */
