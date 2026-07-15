@@ -3066,6 +3066,20 @@ window.addEventListener('popstate', () => { route(); });
 
 function route() {
   const hash = _resolveVirtualHash();
+
+  // Normalizza un URL con #/ nella barra indirizzi nella forma pulita
+  // equivalente (es. #/gara/xxx → /gara/xxx). Un link con #/ aperto
+  // direttamente (bookmark vecchio, link condiviso prima del passaggio agli
+  // URL puliti) funziona lato app, ma un bot di anteprima social (WhatsApp,
+  // Telegram, Facebook) non riceve mai la parte dopo # — quindi vede sempre
+  // la home generica invece dei meta tag della pagina. Non risolvibile per
+  // il link già condiviso (limite del protocollo, non del codice), ma da
+  // qui in poi chi ricondivide dalla barra indirizzi ottiene il link giusto.
+  if (window.location.hash) {
+    const cleanPath = hash.slice(1) || '/';
+    if (window.location.pathname !== cleanPath) history.replaceState(null, '', cleanPath);
+  }
+
   updateNavActive(hash);
 
   // Hub — barre animate (sia generale #/hub che per categoria #/hub/CODE/)
