@@ -13346,9 +13346,10 @@ async function _loadTeamPcsExtra(teamId, season, viewCat) {
   for (const r of seasonExtra) {
     const pClass = posClass(r.posizione);
     const { cognome, nome } = getName(r.atleta_id);
-    const link = pcsResultLink(r);
-    const raceHtml = link
-      ? `<a href="${esc(link)}" target="_blank">${esc(r.gara_name)}</a>`
+    // Modale interna invece di un link esterno a PCS: il traffico resta sul
+    // sito, con tutti i nostri atleti scrapati per quella stessa gara.
+    const raceHtml = r.pcs_race_slug
+      ? `<a href="javascript:void(0)" onclick="showPcsRaceModal('${esc(r.pcs_race_slug)}',${season},'${esc((r.gara_name||'').replace(/'/g,"\\'"))}')">${esc(r.gara_name)}</a>`
       : esc(r.gara_name);
     const tr = document.createElement('tr');
     tr.dataset.pos = String(r.posizione || 9999);
@@ -13407,16 +13408,54 @@ function countryFlagImg(code) {
   return `<img src="https://flagcdn.com/16x12/${esc(cc)}.png" width="16" height="12" alt="${esc(cc.toUpperCase())}" style="vertical-align:middle;border-radius:2px" loading="lazy">`;
 }
 
-// Link diretto alla pagina PCS del risultato — usa il path reale scrapato
-// (pcs_url, es. "race/giro-ciclistico-d-italia/2026/stage-4") quando
-// disponibile: ricostruirlo dal solo pcs_race_slug portava a URL sbagliati
-// per le corse a tappe (lo slug salvato include un suffisso "-stage-4" per
-// evitare collisioni nel DB, che però non corrisponde al vero path PCS).
-// Fallback sul vecchio schema solo per righe importate prima di questo fix.
-function pcsResultLink(r) {
-  const path = r.pcs_url || (r.pcs_race_slug ? `race/${r.pcs_race_slug}` : null);
-  return path ? `https://www.procyclingstats.com/${path}` : null;
+// Modale "risultati gara estera" — mostra tutti i nostri atleti scrapati da
+// PCS per quella gara, senza mandare il traffico fuori dal sito. Sostituisce
+// il vecchio link diretto a procyclingstats.com su questi risultati.
+async function showPcsRaceModal(raceSlug, season, raceName) {
+  if (!raceSlug) return;
+  document.getElementById('pcs-race-modal')?.remove();
+  const modalHtml = `
+    <div id="pcs-race-modal" style="position:fixed;inset:0;background:rgba(0,0,0,.6);z-index:9999;display:flex;align-items:center;justify-content:center;padding:20px" onclick="if(event.target===this)this.remove()">
+      <div style="background:var(--bg-elevated);border:1px solid var(--border-subtle);border-radius:14px;padding:24px 28px;max-width:560px;width:100%;max-height:80vh;overflow-y:auto" onclick="event.stopPropagation()">
+        <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:16px;gap:12px">
+          <h3 style="font-family:var(--font-display);font-weight:800;font-size:1.02rem;margin:0">${esc(raceName || 'Risultati gara')}</h3>
+          <button onclick="document.getElementById('pcs-race-modal').remove()" style="background:none;border:none;font-size:1.2rem;cursor:pointer;color:var(--text-muted);flex-shrink:0">✕</button>
+        </div>
+        <div id="pcs-race-modal-body" style="font-size:.85rem;color:var(--text-muted)">Carico i risultati…</div>
+      </div>
+    </div>`;
+  document.body.insertAdjacentHTML('beforeend', modalHtml);
+
+  const body = document.getElementById('pcs-race-modal-body');
+  try {
+    const rows = await apiCall(`/pcs-results/gara-estera?race_slug=${encodeURIComponent(raceSlug)}&season=${season}`);
+    if (!Array.isArray(rows) || !rows.length) {
+      body.textContent = 'Nessun risultato trovato per questa gara.';
+      return;
+    }
+    rows.sort((a, b) => (a.posizione || 999) - (b.posizione || 999));
+    body.innerHTML = `
+      <table style="width:100%;border-collapse:collapse;font-size:.85rem">
+        <thead><tr style="text-align:left;color:var(--text-muted);font-size:.72rem;text-transform:uppercase">
+          <th style="padding:4px 6px">Pos</th><th style="padding:4px 6px">Atleta</th><th style="padding:4px 6px">Distacco</th>
+        </tr></thead>
+        <tbody>
+          ${rows.map(r => {
+            const a = globalData?.athletes?.[r.atleta_id];
+            const label = a ? `${esc(a.cognome)} ${esc(a.nome)}` : esc(r.atleta_id);
+            return `<tr style="border-top:1px solid var(--border-subtle)">
+              <td class="td-pos ${posClass(r.posizione)}" style="padding:6px">${r.posizione ? r.posizione + '°' : '—'}</td>
+              <td style="padding:6px"><a href="#/atleta/${esc(r.atleta_id)}" onclick="document.getElementById('pcs-race-modal')?.remove()" style="color:var(--text-primary);font-weight:600">${label}</a></td>
+              <td style="padding:6px;color:var(--text-muted)">${esc(r.distacco || '—')}</td>
+            </tr>`;
+          }).join('')}
+        </tbody>
+      </table>`;
+  } catch (e) {
+    body.textContent = 'Errore nel caricamento dei risultati.';
+  }
 }
+window.showPcsRaceModal = showPcsRaceModal;
 
 // ── PCS risultati extra atleta (circuito esteso + gare non in circuito) ───────
 async function _loadAtletaPcsExtra(atletaId, season, icsRisultati, athlete) {
@@ -13538,9 +13577,10 @@ async function _loadAtletaPcsExtra(atletaId, season, icsRisultati, athlete) {
 
   for (const r of esteroExtra) {
     const pClass = posClass(r.posizione);
-    const link = pcsResultLink(r);
-    const raceHtml = link
-      ? `<a href="${esc(link)}" target="_blank">${esc(r.gara_name)}</a>`
+    // Modale interna invece di un link esterno a PCS: il traffico resta sul
+    // sito, con tutti i nostri atleti scrapati per quella stessa gara.
+    const raceHtml = r.pcs_race_slug
+      ? `<a href="javascript:void(0)" onclick="showPcsRaceModal('${esc(r.pcs_race_slug)}',${season},'${esc((r.gara_name||'').replace(/'/g,"\\'"))}')">${esc(r.gara_name)}</a>`
       : esc(r.gara_name);
     insertChrono(r.data, `
       <td class="td-date">${fmtDateShort(r.data)}</td>

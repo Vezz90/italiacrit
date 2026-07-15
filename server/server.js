@@ -2447,6 +2447,26 @@ app.get('/api/pcs-results/atleta/:atletaId', async (req, res) => {
   } catch(e) { res.status(500).json({ error: e.message }); }
 });
 
+// Tutti i risultati (dei NOSTRI atleti) per UNA gara estera specifica —
+// usato per il modale "risultati gara" al posto del link esterno a PCS: la
+// gara resta consultabile sul sito invece di mandare il traffico via.
+app.get('/api/pcs-results/gara-estera', async (req, res) => {
+  const raceSlug = req.query.race_slug;
+  const season = parseInt(req.query.season) || new Date().getFullYear();
+  if (!raceSlug) return res.status(400).json({ error: 'race_slug mancante' });
+  try {
+    const { data, error } = await supabase
+      .from('pcs_results')
+      .select('atleta_id, gara_name, data, posizione, distacco, country, pcs_url')
+      .eq('pcs_race_slug', raceSlug)
+      .eq('season', season)
+      .order('posizione', { ascending: true, nullsFirst: false })
+      .limit(500);
+    if (error) throw error;
+    res.json(data || []);
+  } catch(e) { res.status(500).json({ error: e.message }); }
+});
+
 // Risultati da pcs_gara_results per un atleta (pos 11+ nelle gare circuito)
 app.get('/api/pcs-results/gare-atleta/:atletaId', async (req, res) => {
   const season = parseInt(req.query.season) || new Date().getFullYear();
