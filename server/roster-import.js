@@ -10,10 +10,11 @@
  *
  * Uso:
  *   $env:SUPABASE_SECRET = "..."
- *   node roster-import.js [--force] [--team-id=ID]
+ *   node roster-import.js [--force] [--team-id=ID] [--team-ids=ID1,ID2,...]
  *
  *   --force        reimporta anche chi ha già la foto
- *   --team-id=X   processa solo quel team
+ *   --team-id=X    processa solo quel team
+ *   --team-ids=... processa solo questi team (lista separata da virgole)
  */
 
 const fs   = require('fs');
@@ -35,6 +36,8 @@ if (!SUPABASE_SECRET) { console.error('Imposta $env:SUPABASE_SECRET o crea serve
 const args       = process.argv.slice(2);
 const FORCE      = args.includes('--force');
 const SINGLE_TID = (args.find(a => a.startsWith('--team-id=')) || '').split('=')[1] || null;
+const MULTI_TIDS = (args.find(a => a.startsWith('--team-ids=')) || '').split('=')[1];
+const MULTI_TID_SET = MULTI_TIDS ? new Set(MULTI_TIDS.split(',').map(s => s.trim()).filter(Boolean)) : null;
 const YEAR       = new Date().getFullYear();
 
 const DATA_DIR  = path.join(__dirname, '..', 'data');
@@ -355,9 +358,16 @@ async function getExistingPhotoIds(sb) {
   // Atleti già con foto in Supabase
   const withPhoto = FORCE ? new Set() : await getExistingPhotoIds(sb);
 
-  // Filtra team
-  let teams = allTeams.filter(t => t.id && t.nome);
+  // Filtra team: solo Elite/U23 + Juniores (M/F) — Allievi/Esordienti non sono
+  // tracciati su PCS, processarli spreca tempo e produce falsi "non risolti".
+  const TARGET_CATS = new Set(['ELI_M', 'ELI_F', 'JUN_M', 'JUN_F']);
+  const teamHasTargetCat = new Set();
+  for (const a of Object.values(athletesExisting)) {
+    if (a.team_id && TARGET_CATS.has(a.categoria)) teamHasTargetCat.add(a.team_id);
+  }
+  let teams = allTeams.filter(t => t.id && t.nome && teamHasTargetCat.has(t.id));
   if (SINGLE_TID) teams = teams.filter(t => t.id === SINGLE_TID);
+  if (MULTI_TID_SET) teams = allTeams.filter(t => t.id && t.nome && MULTI_TID_SET.has(t.id));
 
   console.log(`${teams.length} team da processare\n`);
 
