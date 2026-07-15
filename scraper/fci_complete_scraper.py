@@ -57,6 +57,23 @@ def slug(s):
     # Collassa spazi e trasforma in underscore
     return re.sub(r"\s+", "_", s).strip("_").upper() or "SCONOSCIUTO"
 
+# Alcuni club compaiono nei risultati FCI con nomi leggermente diversi da gara
+# a gara (abbreviazioni, sigle della sezione femminile, punteggiatura diversa).
+# Senza normalizzazione, ogni variante genera un team_id diverso e "spacca" il
+# roster reale in due o più team fantasma (es. una sola atleta risultava in un
+# team a parte solo perché una gara riportava "AR MONEX WMN PRO CYCLING TEAM"
+# invece di "A.R.MONEX PRO CYCLING TEAM"). Chiave = nome normalizzato (robust_norm),
+# valore = nome canonico da usare per team e team_id.
+TEAM_NAME_ALIASES = {
+    robust_norm("AR MONEX WMN PRO CYCLING TEAM"): "A.R.MONEX PRO CYCLING TEAM",
+}
+
+def canonical_team_name(team):
+    """Applica TEAM_NAME_ALIASES per unificare varianti dello stesso club."""
+    if not team:
+        return team
+    return TEAM_NAME_ALIASES.get(robust_norm(team), team)
+
 # Caricamento Overrides da JSON (per Admin Dashboard)
 def load_user_overrides():
     path = DATA_DIR / "user_overrides.json"
@@ -364,6 +381,7 @@ def parse_risultati_page(soup: BeautifulSoup, calendar_map: dict, existing_ids: 
                     cognome = pp[0]
             if not team and len(tds) >= 2:
                 team = HTMLMOD.unescape(tds[1].get_text(strip=True)).upper().strip()
+            team = canonical_team_name(team)
             if len(tds) >= 3:
                 tempo = HTMLMOD.unescape(tds[-1].get_text(strip=True))
 
@@ -635,6 +653,7 @@ async def run_cycle():
                 r["nome"]    = _exaeq.sub('', r.get("nome","")).strip()
                 # Forza ricalcolo ID con la nuova logica stabile
                 r["atleta_id"] = slug(r["cognome"] + " " + r["nome"])
+                r["team"] = canonical_team_name(r["team"])
                 r["team_id"] = slug(r["team"])
                 if r["genere"] == "F": r["team_id"] += "_F" # preserva distinzione genere se presente
                 
