@@ -1194,6 +1194,58 @@ function sanitizeExcludedGare(calendar, resultsRaw, athletes, excludedIds) {
   return { calendar: filteredCalendar, resultsRaw: filteredResultsRaw, athletes };
 }
 
+// Correzioni manuali a singoli campi di una gara (es. regione sbagliata nei
+// dati FCI sorgente: capita quando la federazione tiene un record separato
+// per ogni categoria della stessa manifestazione e la regione viene
+// inserita male solo su una sotto-gara — la stessa gara "vera" può quindi
+// avere regioni diverse a seconda della categoria). new_value viaggia
+// sempre come stringa (stessa tabella/route delle esclusioni); i campi
+// numerici (km) restano stringa qui e vengono interpretati dove servono.
+let _garaCorrectionsPromise = null;
+async function getGaraCorrections() {
+  if (!_garaCorrectionsPromise) {
+    _garaCorrectionsPromise = (async () => {
+      try {
+        const r = await fetch(`${API_BASE}/gara-overrides/corrections`);
+        if (!r.ok) throw new Error('HTTP ' + r.status);
+        const d = await r.json();
+        return d.corrections || {};
+      } catch (e) {
+        console.warn('getGaraCorrections:', e);
+        return {};
+      }
+    })();
+  }
+  return _garaCorrectionsPromise;
+}
+
+// Campi noti applicabili: 'nome' → nome_gara/gara, 'cat' → categoria,
+// gli altri hanno lo stesso nome sia lato correzione che lato dato grezzo.
+const _GARA_FIELD_ALIASES = { nome: ['nome_gara', 'gara'], cat: ['categoria', 'cat'] };
+function _applyGaraCorrection(row, fields) {
+  for (const [field, value] of Object.entries(fields)) {
+    const targets = _GARA_FIELD_ALIASES[field] || [field];
+    for (const t of targets) if (t in row) row[t] = value;
+  }
+}
+
+function applyGaraCorrections(calendar, resultsRaw, athletes, corrections) {
+  if (!corrections || !Object.keys(corrections).length) return;
+  if (Array.isArray(calendar)) {
+    for (const e of calendar) if (corrections[e.id]) _applyGaraCorrection(e, corrections[e.id]);
+  }
+  if (Array.isArray(resultsRaw)) {
+    for (const r of resultsRaw) if (r.gara_id && corrections[r.gara_id]) _applyGaraCorrection(r, corrections[r.gara_id]);
+  }
+  if (athletes) {
+    for (const id in athletes) {
+      const risultati = athletes[id]?.risultati;
+      if (!Array.isArray(risultati)) continue;
+      for (const r of risultati) if (r.gara_id && corrections[r.gara_id]) _applyGaraCorrection(r, corrections[r.gara_id]);
+    }
+  }
+}
+
 // Correzioni genere/categoria per atlete classificate erroneamente. Capita
 // soprattutto in gare Esordienti/Allievi "promiscue" (uomini e donne nella
 // stessa classifica FCI): tutta la gara viene scrapata con un unico
@@ -1327,7 +1379,7 @@ async function loadAll() {
         }
       })();
 
-  const [calendarRaw, resultsRawRaw, athletesRaw, teams, meta, raceDetails, videos, extraRoster, pcsExtraRoster, atletaTeamOv, manualResults, excludedGaraIds] = await Promise.all([
+  const [calendarRaw, resultsRawRaw, athletesRaw, teams, meta, raceDetails, videos, extraRoster, pcsExtraRoster, atletaTeamOv, manualResults, excludedGaraIds, garaCorrections] = await Promise.all([
     loadJson('data/calendar.json'),
     loadJson('data/results_raw.json'),
     loadJson('data/athletes.json'),
@@ -1340,8 +1392,10 @@ async function loadAll() {
     IS_LOCAL ? apiCall('/data/atleta-team-overrides').catch(() => ({})) : _apiCallWithTimeout('/data/atleta-team-overrides', 4000, {}),
     IS_LOCAL ? apiCall('/data/manual-results').catch(() => [])         : _apiCallWithTimeout('/data/manual-results', 4000, []),
     getExcludedGaraIds(),
+    getGaraCorrections(),
   ]);
   const { calendar, resultsRaw, athletes } = sanitizeExcludedGare(calendarRaw, resultsRawRaw, athletesRaw, excludedGaraIds);
+  applyGaraCorrections(calendar, resultsRaw, athletes, garaCorrections);
 
   // Unisci extra_roster statico con atleti PCS da Supabase
   const mergedExtraRoster = { ...(extraRoster || {}), ...(pcsExtraRoster || {}) };
@@ -2599,15 +2653,17 @@ window.setSeason = async (year) => {
   try {
     showToast('Carico la stagione ' + yNum + '…', 'info');
     const base = `data/seasons/${yNum}`;
-    const [calendarRaw, resultsRawRaw, athletesRaw, teams, smeta, excludedGaraIds] = await Promise.all([
+    const [calendarRaw, resultsRawRaw, athletesRaw, teams, smeta, excludedGaraIds, garaCorrections] = await Promise.all([
       loadJson(`${base}/calendar.json`),
       loadJson(`${base}/results_raw.json`),
       loadJson(`${base}/athletes.json`),
       loadJson(`${base}/teams.json`),
       loadJson(`${base}/meta.json`).catch(() => ({})),
       getExcludedGaraIds(),
+      getGaraCorrections(),
     ]);
     const { calendar, resultsRaw, athletes } = sanitizeExcludedGare(calendarRaw, resultsRawRaw, athletesRaw, excludedGaraIds);
+    applyGaraCorrections(calendar, resultsRaw, athletes, garaCorrections);
     if (!_liveGlobalData) _liveGlobalData = globalData; // backup live una sola volta
     const live = _liveGlobalData || globalData || {};
     // I media (foto/video) vivono nel DB per gara_id (che contiene l'anno):
@@ -9438,7 +9494,7 @@ window.adminNav = async function(section) {
         if (!gid) return;
         if (!garaMap[gid]) garaMap[gid] = {
           gara_id: gid, nome: r.gara||gid, data: r.data||'', cat: r.cat||r.categoria||'',
-          tipo: r.tipo||'', km: r.km||'', media: r.media||'', n_atleti: 0
+          tipo: r.tipo||'', km: r.km||'', media: r.media||'', regione: r.regione||'', n_atleti: 0
         };
         garaMap[gid].n_atleti++;
         if ((r.data||'') > garaMap[gid].data) garaMap[gid].data = r.data||'';
@@ -9514,6 +9570,9 @@ window.adminNav = async function(section) {
                 <label style="font-size:.82rem;color:var(--text-muted)">Tipo
                   <input id="ge-tipo" value="${esc(g.tipo||'')}" placeholder="es. Criterium, Circuito, Road Race…" style="display:block;width:100%;margin-top:4px;padding:8px 12px;border:1px solid var(--border);border-radius:6px;background:var(--bg-base);color:var(--text-primary);font-size:.9rem" />
                 </label>
+                <label style="font-size:.82rem;color:var(--text-muted)">Regione
+                  <input id="ge-regione" value="${esc(g.regione||'')}" placeholder="es. SICILIA" style="display:block;width:100%;margin-top:4px;padding:8px 12px;border:1px solid var(--border);border-radius:6px;background:var(--bg-base);color:var(--text-primary);font-size:.9rem" />
+                </label>
               </div>
               <div style="margin-top:18px;display:flex;gap:10px;justify-content:flex-end">
                 <button onclick="document.getElementById('admin-gara-modal').remove()" class="dash-btn dash-btn--outline dash-btn--sm">Annulla</button>
@@ -9525,12 +9584,13 @@ window.adminNav = async function(section) {
 
       window.adminSaveGara = async (gid) => {
         const payload = {
-          nome:  document.getElementById('ge-nome')?.value.trim(),
-          data:  document.getElementById('ge-data')?.value,
-          cat:   document.getElementById('ge-cat')?.value.trim(),
-          km:    document.getElementById('ge-km')?.value.trim(),
-          media: document.getElementById('ge-media')?.value.trim(),
-          tipo:  document.getElementById('ge-tipo')?.value.trim(),
+          nome:    document.getElementById('ge-nome')?.value.trim(),
+          data:    document.getElementById('ge-data')?.value,
+          cat:     document.getElementById('ge-cat')?.value.trim(),
+          km:      document.getElementById('ge-km')?.value.trim(),
+          media:   document.getElementById('ge-media')?.value.trim(),
+          tipo:    document.getElementById('ge-tipo')?.value.trim(),
+          regione: document.getElementById('ge-regione')?.value.trim(),
         };
         document.getElementById('admin-gara-modal')?.remove();
         try {

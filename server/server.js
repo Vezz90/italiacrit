@@ -860,6 +860,49 @@ app.post('/api/admin/gare/:gara_id/restore', requireAdmin, async (req, res) => {
   } catch (e) { res.status(500).json({ error: e.message }); }
 });
 
+// Correzioni manuali ai campi di una gara (es. regione sbagliata nei dati
+// FCI sorgente — capita quando la federazione tiene un record separato per
+// ogni categoria della stessa manifestazione e chi inserisce i dati sbaglia
+// la regione su una sola sotto-gara). Stessa tabella gara_overrides delle
+// gare escluse, un field diverso per ogni campo corretto. Pubblico in
+// lettura, come /excluded, per lo stesso motivo (il frontend lo applica
+// prima di renderizzare i dati statici GitHub Pages).
+const GARA_EDITABLE_FIELDS = ['nome', 'data', 'cat', 'km', 'media', 'tipo', 'regione'];
+let _garaCorrectionsCache = null, _garaCorrectionsCacheTs = 0;
+app.get('/api/gara-overrides/corrections', async (req, res) => {
+  try {
+    if (_garaCorrectionsCache && (Date.now() - _garaCorrectionsCacheTs) < 5 * 60 * 1000) {
+      return res.json({ corrections: _garaCorrectionsCache });
+    }
+    const { data, error } = await supabase.from('gara_overrides')
+      .select('gara_id, field, new_value').in('field', GARA_EDITABLE_FIELDS);
+    if (error) throw error;
+    const corrections = {};
+    for (const r of (data || [])) {
+      if (!corrections[r.gara_id]) corrections[r.gara_id] = {};
+      corrections[r.gara_id][r.field] = r.new_value;
+    }
+    _garaCorrectionsCache = corrections;
+    _garaCorrectionsCacheTs = Date.now();
+    res.json({ corrections });
+  } catch (e) { res.status(500).json({ error: e.message }); }
+});
+
+app.patch('/api/admin/gare/:gara_id', requireAdmin, async (req, res) => {
+  try {
+    const gara_id = req.params.gara_id;
+    const rows = GARA_EDITABLE_FIELDS
+      .filter(f => req.body[f] != null && String(req.body[f]).trim() !== '')
+      .map(f => ({ gara_id, field: f, new_value: String(req.body[f]).trim(), edited_by: req.user.id }));
+    if (!rows.length) return res.json({ ok: true });
+    const { error } = await supabase.from('gara_overrides')
+      .upsert(rows, { onConflict: 'gara_id,field' });
+    if (error) throw error;
+    _garaCorrectionsCache = null;
+    res.json({ ok: true });
+  } catch (e) { res.status(500).json({ error: e.message }); }
+});
+
 app.get('/api/admin/users', requireAdmin, async (req, res) => {
   try { res.json({ users: await queries.getAllUsers() }); }
   catch (e) { res.status(500).json({ error: e.message }); }
