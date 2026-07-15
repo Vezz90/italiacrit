@@ -243,6 +243,14 @@
         "cognome": "Quaglia",
         "categoria": "ELI_M",
         "genere": "M"
+      },
+      {
+        "atleta_id": "ALARI_SAMUELE",
+        "nome": "Samuele",
+        "cognome": "ALARI",
+        "categoria": "JUN_M",
+        "genere": "M",
+        "pcs_slug": "samuele-alari"
       }
     ]
   },
