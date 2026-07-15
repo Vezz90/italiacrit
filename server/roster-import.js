@@ -66,8 +66,32 @@ async function extractSocialsFromPage(page) {
   }).catch(() => ({}));
 }
 
+// Conferma che la pagina team trovata sia davvero quella giusta: richiede
+// che almeno 2 corridori del roster PCS coincidano per nome con atleti FCI
+// già noti per essere in QUESTO team_id (o tutti, se il team ne ha meno di
+// 2 già noti). I nomi FCI ("COGNOME Nome") e PCS sono nello stesso ordine,
+// quindi basta il confronto normalizzato diretto — niente da riordinare.
+// Necessario perché il nome sponsor su PCS spesso non somiglia per niente
+// al nome FCI (visto dal vivo: "Vangi Sama Ricambi Il Pirata" su PCS per
+// "TEAM VANGI TOMMASINI IL PIRATA" su FCI), quindi tentare di indovinare
+// l'URL può portare a un team PCS completamente diverso e sbagliato.
+function validateRosterMatch(riders, teamId, existingByNorm, athletesExisting) {
+  const knownForTeam = [];
+  for (const a of Object.values(athletesExisting)) {
+    if (a.team_id === teamId) knownForTeam.push(a);
+  }
+  if (!knownForTeam.length) return { ok: true, matches: 0, known: 0 }; // niente da confrontare, fidati
+  let matches = 0;
+  for (const r of riders) {
+    const aid = existingByNorm.get(normalizeStr(r.name));
+    if (aid && athletesExisting[aid]?.team_id === teamId) matches++;
+  }
+  const threshold = Math.min(2, knownForTeam.length);
+  return { ok: matches >= threshold, matches, known: knownForTeam.length };
+}
+
 // Visita la pagina team PCS e restituisce la lista corridori
-async function extractTeamRiders(page, teamId, teamNome, gotoPcsPage, knownSlug) {
+async function extractTeamRiders(page, teamId, teamNome, gotoPcsPage, knownSlug, validate) {
   // NIENTE url "bare" senza anno: su PCS spesso risolve una pagina diversa
   // (altra stagione, o un team completamente diverso con slug simile) prima
   // di arrivare a quello corretto — verificato dal vivo che solo la forma
@@ -112,12 +136,20 @@ async function extractTeamRiders(page, teamId, teamNome, gotoPcsPage, knownSlug)
     }).catch(() => []);
 
     if (riders.length) {
-      const socials = await extractSocialsFromPage(page);
-      return { riders, url: page.url(), socials };
+      // Slug già confermato a mano in precedenza: fidati senza ricontrollare.
+      // Slug indovinato: verifica l'incrocio prima di accettarlo, altrimenti
+      // prova l'url successivo (potrebbe aver preso un team PCS sbagliato).
+      const isKnownUrl = knownSlug && url.includes(knownSlug);
+      const check = (isKnownUrl || !validate) ? { ok: true, matches: 0, known: 0 } : validate(riders);
+      if (check.ok) {
+        const socials = await extractSocialsFromPage(page);
+        return { riders, url: page.url(), socials, validated: check };
+      }
+      // Continua a provare gli altri url invece di accettare un match debole
     }
   }
 
-  return { riders: [] };
+  return { riders: [], unresolved: true };
 }
 
 // Visita il profilo PCS di un corridore
@@ -267,6 +299,38 @@ async function getExistingPhotoIds(sb) {
     existingByNorm.set(norm, id);
   }
 
+  // Indice cognomi FCI (parole) → candidati, per il match fuzzy dei cognomi
+  // composti spezzati male (bug dati FCI noto: es. cognome="LONGO",
+  // nome="BORGHINI ANNA ABIGAIL" — il vero cognome è "Longo Borghini"). Senza
+  // questo, un nome PCS come "LONGO BORGHINI Anna" non trova mai match esatto
+  // e viene ricreato come fantasma duplicato ad ogni giro.
+  const normWords = s => normalizeStr(s).replace(/-/g, ' ').split(' ').filter(Boolean);
+  const fciByCognome = new Map();
+  let maxCognomeLen = 1;
+  for (const [id, ath] of Object.entries(athletesExisting)) {
+    const cogWords = normWords(ath.cognome);
+    if (!cogWords.length) continue;
+    maxCognomeLen = Math.max(maxCognomeLen, cogWords.length);
+    const key = cogWords.join(' ');
+    if (!fciByCognome.has(key)) fciByCognome.set(key, []);
+    fciByCognome.get(key).push({ id, nomeWords: normWords(ath.nome) });
+  }
+  // rider.name PCS è "COGNOME Nome" — prova a riconoscere un atleta FCI già
+  // noto anche quando il cognome PCS non combacia parola per parola.
+  function fuzzyFindExisting(pcsName) {
+    const words = normWords(pcsName);
+    if (words.length < 2) return null;
+    for (let clen = Math.min(maxCognomeLen, words.length - 1); clen >= 1; clen--) {
+      const candidates = fciByCognome.get(words.slice(0, clen).join(' '));
+      if (!candidates) continue;
+      const nomeWords = words.slice(clen);
+      const match = candidates.find(c => c.nomeWords[0] === nomeWords[0]);
+      if (match) return match.id;
+      break;
+    }
+    return null;
+  }
+
   // Carica extra_roster.json (atleti manuali/PCS già aggiunti)
   const rosterFile = path.join(DATA_DIR, 'extra_roster.json');
   const extraRoster = fs.existsSync(rosterFile)
@@ -303,6 +367,7 @@ async function getExistingPhotoIds(sb) {
 
   let totalNew = 0, totalPhotos = 0, totalErrors = 0;
   let riderIndex = 0;
+  const unresolvedTeams = []; // team dove nessun url indovinato ha superato la verifica incrociata
 
   for (let ti = 0; ti < teams.length; ti++) {
     const team = teams[ti];
@@ -311,12 +376,18 @@ async function getExistingPhotoIds(sb) {
     // Trova slug PCS per questo team (se già noto da entity_overrides)
     const pcsSlug = teamPcsSlugs.get(team.id) || null;
 
-    const { riders, socials: teamSocials } = await extractTeamRiders(page, team.id, team.nome, gotoPcsPage, pcsSlug);
+    const validate = (r) => validateRosterMatch(r, team.id, existingByNorm, athletesExisting);
+    const { riders, socials: teamSocials, unresolved, validated } = await extractTeamRiders(page, team.id, team.nome, gotoPcsPage, pcsSlug, validate);
     if (!riders.length) {
-      console.log('  → nessun corridore trovato su PCS');
+      if (unresolved) {
+        console.log('  → url indovinati non superano la verifica incrociata, salto (serve slug PCS a mano)');
+        unresolvedTeams.push({ team_id: team.id, nome: team.nome });
+      } else {
+        console.log('  → nessun corridore trovato su PCS');
+      }
       continue;
     }
-    console.log(`  → ${riders.length} corridori trovati su PCS`);
+    console.log(`  → ${riders.length} corridori trovati su PCS${validated?.known ? ` (verificato: ${validated.matches}/${validated.known} noti combaciano)` : ''}`);
 
     // Social del team dalla stessa pagina roster
     if (teamSocials && (teamSocials.instagram || teamSocials.twitter || teamSocials.facebook)) {
@@ -343,9 +414,10 @@ async function getExistingPhotoIds(sb) {
     let newInTeam = 0;
 
     for (const rider of riders) {
-      // Controlla se già esiste in athletes.json (per slug PCS o per nome)
+      // Controlla se già esiste in athletes.json (per nome esatto, poi fuzzy
+      // per i cognomi composti spezzati male — vedi fuzzyFindExisting sopra)
       const normName = normalizeStr(rider.name);
-      const existingId = existingByNorm.get(normName);
+      const existingId = existingByNorm.get(normName) || fuzzyFindExisting(rider.name);
 
       if (existingId) {
         // Già nel sistema: importa la foto se mancante (delegato a run-import.js di solito)
@@ -457,5 +529,12 @@ async function getExistingPhotoIds(sb) {
   // Salva extra_roster.json aggiornato
   fs.writeFileSync(rosterFile, JSON.stringify(extraRoster, null, 2), 'utf8');
   console.log(`\n✅ extra_roster.json aggiornato`);
+
+  if (unresolvedTeams.length) {
+    const outFile = path.join(__dirname, 'roster-team-unresolved.json');
+    fs.writeFileSync(outFile, JSON.stringify(unresolvedTeams, null, 2), 'utf8');
+    console.log(`\n⚠️  ${unresolvedTeams.length} team non confermati (nome PCS troppo diverso da FCI per indovinare l'url) — elenco in ${outFile}`);
+  }
+
   console.log(`=== Completato — ${totalNew} nuovi atleti, ${totalPhotos} foto, ${totalErrors} errori ===`);
 })();

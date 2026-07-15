@@ -385,5 +385,42 @@
         "pcs_slug": "luciano-gaggioli1"
       }
     ]
+  },
+  "BFT_BURZONI": {
+    "nome": "BFT BURZONI",
+    "atleti": [
+      {
+        "atleta_id": "CASUBOLO_GIULIA",
+        "nome": "Giulia",
+        "cognome": "CASUBOLO",
+        "categoria": "JUN_M",
+        "genere": "M",
+        "pcs_slug": "giulia-casubolo"
+      },
+      {
+        "atleta_id": "DELLE_FONTANE_SOFIA",
+        "nome": "Sofia",
+        "cognome": "DELLE FONTANE",
+        "categoria": "JUN_M",
+        "genere": "M",
+        "pcs_slug": "sofia-delle-fontane"
+      },
+      {
+        "atleta_id": "GALASSO_GIADA",
+        "nome": "Giada",
+        "cognome": "GALASSO",
+        "categoria": "JUN_M",
+        "genere": "M",
+        "pcs_slug": "giada-galasso"
+      },
+      {
+        "atleta_id": "SGARAVATO_ASIA",
+        "nome": "Asia",
+        "cognome": "SGARAVATO",
+        "categoria": "JUN_M",
+        "genere": "M",
+        "pcs_slug": "asia-sgaravato"
+      }
+    ]
   }
 }
