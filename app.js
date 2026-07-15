@@ -12361,7 +12361,7 @@ function buildProfileMedia(risultati, photosMap, videos, opts = {}) {
   const posColor = p => { p = Number(p); return p === 1 ? 'var(--gold)' : p === 2 ? 'var(--silver)' : p === 3 ? 'var(--bronze)' : 'var(--text-muted)'; };
 
   const photoCard = ({ r, photo }) => {
-    const _photoSrc = photo.url || (photo.filename ? `${PHOTOS_BASE}/photos/${photo.filename}` : '');
+    const _photoSrc = photo.url ? icProxy(photo.url) : (photo.filename ? `${PHOTOS_BASE}/photos/${photo.filename}` : '');
     const ath = showAthleteName && r.atleta_cognome
       ? `<div class="profile-media-athlete">${esc(r.atleta_cognome)} ${esc(r.atleta_nome || '')}</div>` : '';
     return `<div class="profile-media-card profile-media-photo" style="cursor:zoom-in" onclick="openPhotoLightbox('${esc(_photoSrc)}')">
