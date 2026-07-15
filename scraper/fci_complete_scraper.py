@@ -66,6 +66,7 @@ def slug(s):
 # valore = nome canonico da usare per team e team_id.
 TEAM_NAME_ALIASES = {
     robust_norm("AR MONEX WMN PRO CYCLING TEAM"): "A.R.MONEX PRO CYCLING TEAM",
+    robust_norm("CASANO"): "ASD PEDALE CASALESE ARMOFER",
 }
 
 def canonical_team_name(team):

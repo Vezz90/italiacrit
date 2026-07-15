@@ -1246,6 +1246,50 @@ function applyGaraCorrections(calendar, resultsRaw, athletes, corrections) {
   }
 }
 
+// Correzione manuale del nome team dal pannello admin ("Modifica team").
+// L'override finiva salvato in entity_overrides ma nessuna pagina lo
+// rileggeva mai: il team restava sempre col nome grezzo di teams.json
+// (rigenerato ogni 30 min dallo scraper FCI). Applicata subito dopo il
+// caricamento dati, su tutte le strutture dove il nome team compare come
+// stringa libera — non solo teams[id].nome — altrimenti classifiche e
+// risultati per riga mostrerebbero comunque il nome vecchio.
+let _teamNomeCorrectionsPromise = null;
+async function getTeamNomeCorrections() {
+  if (!_teamNomeCorrectionsPromise) {
+    _teamNomeCorrectionsPromise = (async () => {
+      try {
+        const r = await fetch(`${API_BASE}/team-overrides/corrections`);
+        if (!r.ok) throw new Error('HTTP ' + r.status);
+        const d = await r.json();
+        return d.corrections || {};
+      } catch (e) {
+        console.warn('getTeamNomeCorrections:', e);
+        return {};
+      }
+    })();
+  }
+  return _teamNomeCorrectionsPromise;
+}
+
+function applyTeamNomeCorrections(teams, resultsRaw, athletes, corrections) {
+  if (!corrections || !Object.keys(corrections).length) return;
+  if (teams) {
+    for (const tid in corrections) if (teams[tid]) teams[tid].nome = corrections[tid];
+  }
+  if (Array.isArray(resultsRaw)) {
+    for (const r of resultsRaw) if (r.team_id && corrections[r.team_id]) r.team = corrections[r.team_id];
+  }
+  if (athletes) {
+    for (const id in athletes) {
+      const a = athletes[id];
+      if (a?.team_id && corrections[a.team_id]) a.team_attuale = corrections[a.team_id];
+      if (Array.isArray(a?.risultati)) {
+        for (const r of a.risultati) if (r.team && a.team_id && corrections[a.team_id]) r.team = corrections[a.team_id];
+      }
+    }
+  }
+}
+
 // Correzioni genere/categoria per atlete classificate erroneamente. Capita
 // soprattutto in gare Esordienti/Allievi "promiscue" (uomini e donne nella
 // stessa classifica FCI): tutta la gara viene scrapata con un unico
@@ -1379,7 +1423,7 @@ async function loadAll() {
         }
       })();
 
-  const [calendarRaw, resultsRawRaw, athletesRaw, teams, meta, raceDetails, videos, extraRoster, pcsExtraRoster, atletaTeamOv, manualResults, excludedGaraIds, garaCorrections] = await Promise.all([
+  const [calendarRaw, resultsRawRaw, athletesRaw, teams, meta, raceDetails, videos, extraRoster, pcsExtraRoster, atletaTeamOv, manualResults, excludedGaraIds, garaCorrections, teamNomeCorrections] = await Promise.all([
     loadJson('data/calendar.json'),
     loadJson('data/results_raw.json'),
     loadJson('data/athletes.json'),
@@ -1393,9 +1437,11 @@ async function loadAll() {
     IS_LOCAL ? apiCall('/data/manual-results').catch(() => [])         : _apiCallWithTimeout('/data/manual-results', 4000, []),
     getExcludedGaraIds(),
     getGaraCorrections(),
+    getTeamNomeCorrections(),
   ]);
   const { calendar, resultsRaw, athletes } = sanitizeExcludedGare(calendarRaw, resultsRawRaw, athletesRaw, excludedGaraIds);
   applyGaraCorrections(calendar, resultsRaw, athletes, garaCorrections);
+  applyTeamNomeCorrections(teams, resultsRaw, athletes, teamNomeCorrections);
 
   // Unisci extra_roster statico con atleti PCS da Supabase
   const mergedExtraRoster = { ...(extraRoster || {}), ...(pcsExtraRoster || {}) };
@@ -2653,7 +2699,7 @@ window.setSeason = async (year) => {
   try {
     showToast('Carico la stagione ' + yNum + '…', 'info');
     const base = `data/seasons/${yNum}`;
-    const [calendarRaw, resultsRawRaw, athletesRaw, teams, smeta, excludedGaraIds, garaCorrections] = await Promise.all([
+    const [calendarRaw, resultsRawRaw, athletesRaw, teams, smeta, excludedGaraIds, garaCorrections, teamNomeCorrections] = await Promise.all([
       loadJson(`${base}/calendar.json`),
       loadJson(`${base}/results_raw.json`),
       loadJson(`${base}/athletes.json`),
@@ -2661,9 +2707,11 @@ window.setSeason = async (year) => {
       loadJson(`${base}/meta.json`).catch(() => ({})),
       getExcludedGaraIds(),
       getGaraCorrections(),
+      getTeamNomeCorrections(),
     ]);
     const { calendar, resultsRaw, athletes } = sanitizeExcludedGare(calendarRaw, resultsRawRaw, athletesRaw, excludedGaraIds);
     applyGaraCorrections(calendar, resultsRaw, athletes, garaCorrections);
+    applyTeamNomeCorrections(teams, resultsRaw, athletes, teamNomeCorrections);
     if (!_liveGlobalData) _liveGlobalData = globalData; // backup live una sola volta
     const live = _liveGlobalData || globalData || {};
     // I media (foto/video) vivono nel DB per gara_id (che contiene l'anno):

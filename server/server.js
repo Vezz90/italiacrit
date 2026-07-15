@@ -903,6 +903,31 @@ app.patch('/api/admin/gare/:gara_id', requireAdmin, async (req, res) => {
   } catch (e) { res.status(500).json({ error: e.message }); }
 });
 
+// Correzioni al nome di un team fatte dal pannello admin ("Modifica team").
+// L'override finiva in entity_overrides ma nessuna pagina lo rileggeva mai —
+// il modulo di modifica salvava un dato che non veniva più applicato da
+// nessuna parte. Stesso pattern di /api/gara-overrides/corrections: pubblico
+// in lettura, il frontend lo applica a globalData.teams subito dopo il
+// caricamento dei dati, prima di qualunque render.
+let _teamNomeCorrectionsCache = null, _teamNomeCorrectionsCacheTs = 0;
+app.get('/api/team-overrides/corrections', async (req, res) => {
+  try {
+    if (_teamNomeCorrectionsCache && (Date.now() - _teamNomeCorrectionsCacheTs) < 5 * 60 * 1000) {
+      return res.json({ corrections: _teamNomeCorrectionsCache });
+    }
+    const { data, error } = await supabase.from('entity_overrides')
+      .select('entity_id, new_value').eq('entity_type', 'team').eq('field', 'nome');
+    if (error) throw error;
+    const corrections = {};
+    for (const r of (data || [])) {
+      if (r.new_value) corrections[r.entity_id] = r.new_value;
+    }
+    _teamNomeCorrectionsCache = corrections;
+    _teamNomeCorrectionsCacheTs = Date.now();
+    res.json({ corrections });
+  } catch (e) { res.status(500).json({ error: e.message }); }
+});
+
 app.get('/api/admin/users', requireAdmin, async (req, res) => {
   try { res.json({ users: await queries.getAllUsers() }); }
   catch (e) { res.status(500).json({ error: e.message }); }
@@ -1033,6 +1058,7 @@ app.post('/api/admin/override/entity', requireAdmin, async (req, res) => {
     const { entity_type, entity_id, field, new_value } = req.body;
     if (!entity_type || !entity_id || !field) return res.status(400).json({ error: 'Campi mancanti' });
     await queries.setEntityOverride({ entity_type, entity_id, field, new_value, edited_by: req.user.id });
+    if (entity_type === 'team' && field === 'nome') _teamNomeCorrectionsCache = null;
 
     // Sincronizza extra_roster.json per nomi team e team_id atleti
     const rosterPath = path.join(__dirname, '..', 'data', 'extra_roster.json');
