@@ -1901,10 +1901,16 @@ function esc(s) {
 // ── Home navigation — va all'hub salvato o alla home ─────────────
 window.goHome = function(e) {
   if (e) e.preventDefault();
+  let target = '/';
   try {
     const saved = localStorage.getItem('itcContext');
-    window.location.hash = (saved && HUB_CONFIG[saved]) ? '#/hub/' + saved : '#/';
-  } catch { window.location.hash = '#/'; }
+    if (saved && HUB_CONFIG[saved]) target = '/hub/' + saved;
+  } catch {}
+  // navTo() invece di location.hash diretto: se l'URL corrente è già pulito
+  // (es. /risultati/JUN_M dopo un cambio categoria), assegnare solo l'hash
+  // lascerebbe il vecchio pathname intatto producendo un URL rotto tipo
+  // "/risultati/JUN_M#/" invece di navigare davvero alla home.
+  navTo(target);
 };
 
 // ── Athlete view tracking (Popular Today / Trending) ──────────────
@@ -2799,10 +2805,11 @@ window.addEventListener('load', async () => {
   checkLiveNowBanner();
   setInterval(checkLiveNowBanner, 120000); // ricontrolla ogni 2 minuti
 
-  // Logo click → cinematic entry
+  // Logo click → cinematic entry (navTo, non location.hash diretto: stesso
+  // motivo di goHome sopra, altrimenti da un URL pulito produce "/xxx#/")
   document.getElementById('nav-logo-link')?.addEventListener('click', function(e) {
     e.preventDefault();
-    window.location.hash = '#/';
+    navTo('/');
   });
 
   // --- Sistema di AUTO-POLLING ---
