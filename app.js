@@ -13437,15 +13437,21 @@ async function showPcsRaceModal(raceSlug, season, raceName) {
     body.innerHTML = `
       <table style="width:100%;border-collapse:collapse;font-size:.85rem">
         <thead><tr style="text-align:left;color:var(--text-muted);font-size:.72rem;text-transform:uppercase">
-          <th style="padding:4px 6px">Pos</th><th style="padding:4px 6px">Atleta</th><th style="padding:4px 6px">Distacco</th>
+          <th style="padding:4px 6px">Pos</th><th style="padding:4px 6px">Atleta</th><th style="padding:4px 6px">Team</th><th style="padding:4px 6px">Distacco</th>
         </tr></thead>
         <tbody>
           ${rows.map(r => {
             const a = globalData?.athletes?.[r.atleta_id];
             const label = a ? `${esc(a.cognome)} ${esc(a.nome)}` : esc(r.atleta_id);
+            const teamId = a?.team_id;
+            const teamNome = a?.team_attuale || '';
+            const teamHtml = teamId
+              ? `<a href="#/team/${esc(teamId)}" onclick="document.getElementById('pcs-race-modal')?.remove()" style="color:var(--text-muted)">${esc(teamNome)}</a>`
+              : `<span style="color:var(--text-muted)">${esc(teamNome || '—')}</span>`;
             return `<tr style="border-top:1px solid var(--border-subtle)">
               <td class="td-pos ${posClass(r.posizione)}" style="padding:6px">${r.posizione ? r.posizione + '°' : '—'}</td>
               <td style="padding:6px"><a href="#/atleta/${esc(r.atleta_id)}" onclick="document.getElementById('pcs-race-modal')?.remove()" style="color:var(--text-primary);font-weight:600">${label}</a></td>
+              <td style="padding:6px;font-size:.8rem">${teamHtml}</td>
               <td style="padding:6px;color:var(--text-muted)">${esc(r.distacco || '—')}</td>
             </tr>`;
           }).join('')}
