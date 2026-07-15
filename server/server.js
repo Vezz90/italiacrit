@@ -6349,10 +6349,18 @@ async function _fetchRawImageBuffer(filename) {
     const url = /^https?:\/\//.test(filename)
       ? filename
       : `${SUPABASE_PUB}/photos/${filename.replace(/^\/+/, '')}`;
-    const r = await fetch(url, { signal: AbortSignal.timeout(6000) });
-    if (!r.ok) return null;
+    // User-Agent "da browser": alcuni object storage esterni (es. xpix.it,
+    // ospitato su un bucket Hetzner) rifiutano o rallentano richieste con lo
+    // User-Agent generico di Node/undici usato di default da fetch() — le
+    // foto xpix nella card di condivisione fallivano silenziosamente e
+    // ricadevano sul logo statico, senza errore visibile nei log.
+    const r = await fetch(url, {
+      signal: AbortSignal.timeout(8000),
+      headers: { 'User-Agent': 'Mozilla/5.0 (compatible; ItaliaCyclingStatsBot/1.0; +https://italiacyclingstats.com)' },
+    });
+    if (!r.ok) { console.error(`[og-image] fetch fallito (${r.status}) per ${url}`); return null; }
     return Buffer.from(await r.arrayBuffer());
-  } catch { return null; }
+  } catch (e) { console.error(`[og-image] fetch eccezione per ${filename}:`, e.message); return null; }
 }
 
 // Carica una foto e la adatta a 1200x630 PNG (sfondo pieno, usato per le
@@ -6466,7 +6474,7 @@ app.get('/api/og-image/gara/:id', async (req, res) => {
           }
         }
       }
-    } catch {}
+    } catch (e) { console.error(`[og-image] lookup foto fallito per ${garaId}:`, e.message); }
 
     // 2) Altrimenti immagine con logo ICS + NOME della gara sotto
     const date = cal?.data ? new Date(cal.data).toLocaleDateString('it-IT', { day: 'numeric', month: 'long', year: 'numeric' }) : '';
