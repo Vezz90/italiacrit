@@ -3055,9 +3055,18 @@ window.navTo = navTo;
 document.addEventListener('click', (e) => {
   if (e.defaultPrevented || e.button !== 0 || e.metaKey || e.ctrlKey || e.shiftKey || e.altKey) return;
   const a = e.target.closest && e.target.closest('a[href^="#/"]');
-  if (!a) return;
-  e.preventDefault();
-  navTo(a.getAttribute('href').slice(1));
+  if (a) { e.preventDefault(); navTo(a.getAttribute('href').slice(1)); return; }
+  // Link interni già scritti con href pulito (es. <a href="/gara/xxx">): un
+  // utente che fa tasto destro → "copia indirizzo link" su un href con "#/"
+  // otterrebbe sempre un link rotto per le anteprime social, indipendente
+  // da qualunque normalizzazione fatta DOPO il click — quindi i link nuovi
+  // vanno scritti puliti fin da subito. Serve comunque intercettare il
+  // click per restare in modalità SPA (pushState) invece di un reload pieno.
+  const clean = e.target.closest && e.target.closest('a[href^="/"]');
+  if (clean && clean.origin === location.origin && !clean.hasAttribute('download') && clean.target !== '_blank') {
+    e.preventDefault();
+    navTo(clean.getAttribute('href'));
+  }
 });
 
 // Avanti/indietro del browser con URL puliti (pushState non genera
@@ -19778,7 +19787,7 @@ async function renderRisultati() {
             ${podioRows}
             ${impactStrip}
             <div class="ris-full-link" style="display:flex;gap:8px;align-items:stretch">
-              <a href="#/gara/${esc(catGaraId)}" class="btn-action full" style="font-size:0.75rem;text-align:center;flex:1">CLASSIFICA COMPLETA &rarr;</a>
+              <a href="/gara/${esc(catGaraId)}" class="btn-action full" style="font-size:0.75rem;text-align:center;flex:1">CLASSIFICA COMPLETA &rarr;</a>
               ${catGaraId ? `<button class="btn-action" title="Condividi risultati" aria-label="Condividi risultati" onclick="window.quickShareGara('${esc(catGaraId)}')" style="flex:0 0 auto;padding:0 12px"><svg viewBox="0 0 24 24" width="15" height="15" fill="none" stroke="currentColor" stroke-width="2"><circle cx="18" cy="5" r="3"/><circle cx="6" cy="12" r="3"/><circle cx="18" cy="19" r="3"/><line x1="8.59" y1="13.51" x2="15.42" y2="17.49"/><line x1="15.41" y1="6.51" x2="8.59" y2="10.49"/></svg></button>` : ''}
             </div>
           </div>`;
@@ -19794,7 +19803,7 @@ async function renderRisultati() {
         return '';
       })();
       const photoEl = _photoSrcRis
-        ? `<a href="#/gara/${esc(race.id)}" class="ris-card-photo${hasVideoTile ? ' ris-media-half' : ''}">
+        ? `<a href="/gara/${esc(race.id)}" class="ris-card-photo${hasVideoTile ? ' ris-media-half' : ''}">
              <img src="${esc(_photoSrcRis)}" alt="Foto gara" loading="lazy"/>
              ${_photoCreditRis ? `<div class="ris-photo-credit">${esc(_photoCreditRis)}</div>` : ''}
            </a>`
@@ -19835,7 +19844,7 @@ async function renderRisultati() {
           ${mediaPanel}
           <div class="ris-card-body">
             ${importanceBadge}
-            <div class="hero-race-name"><a href="#/gara/${esc(race.id)}">${esc(race.nome)}</a></div>
+            <div class="hero-race-name"><a href="/gara/${esc(race.id)}">${esc(race.nome)}</a></div>
             ${_raceNarr ? `<div class="ris-race-narrative">${_raceNarr}</div>` : ''}
             <div class="hero-race-meta" style="margin-bottom:14px;">
               <span>${fmtDate(race.data)}</span>
