@@ -13356,13 +13356,20 @@ async function _loadTeamPcsExtra(teamId, season, viewCat) {
 
   // Gare circuito (pos 11+): posizione comparabile alle altre righe del
   // circuito, restano inserite per posizione come il resto della tabella.
+  // data-pcskey rende l'inserimento idempotente: se questa funzione viene
+  // invocata più di una volta sullo stesso tbody (es. render doppio dovuto
+  // a un cambio rapido di categoria/anno) le righe già presenti non vengono
+  // riaggiunte — altrimenti ogni risultato PCS appariva duplicato in tabella.
   for (const r of garaExtra.slice(0, 200)) {
+    const pcsKey = `g:${r.atleta_id}:${r.gara_id}`;
+    if (tbody.querySelector(`tr[data-pcskey="${CSS.escape(pcsKey)}"]`)) continue;
     const pClass = posClass(r.posizione);
     const { cognome, nome } = getName(r.atleta_id);
     const raceLink = `<a href="#/gara/${esc(r.gara_id)}">${esc(r.gara_name)}</a>`;
     const tr = document.createElement('tr');
     tr.dataset.pos = String(r.posizione || 9999);
     tr.dataset.date = r.data || '';
+    tr.dataset.pcskey = pcsKey;
     tr.innerHTML = `
       <td class="td-date">${fmtDateShort(r.data)}</td>
       <td class="td-pos ${pClass}">${r.posizione}°</td>
@@ -13392,6 +13399,8 @@ async function _loadTeamPcsExtra(teamId, season, viewCat) {
   // a differenza della pagina atleta (dove l'inserimento è cronologico),
   // qui va mantenuta la logica originale della tabella.
   for (const r of seasonExtra) {
+    const pcsKey = `e:${r.atleta_id}:${r.pcs_race_slug || r.gara_name}:${r.data}`;
+    if (tbody.querySelector(`tr[data-pcskey="${CSS.escape(pcsKey)}"]`)) continue;
     const pClass = posClass(r.posizione);
     const { cognome, nome } = getName(r.atleta_id);
     // Modale interna invece di un link esterno a PCS: il traffico resta sul
@@ -13402,6 +13411,7 @@ async function _loadTeamPcsExtra(teamId, season, viewCat) {
     const tr = document.createElement('tr');
     tr.dataset.pos = String(r.posizione || 9999);
     tr.dataset.date = r.data || '';
+    tr.dataset.pcskey = pcsKey;
     tr.innerHTML = `
       <td class="td-date">${fmtDateShort(r.data)}</td>
       <td class="td-pos ${pClass}">${r.posizione}°</td>
@@ -13607,9 +13617,15 @@ async function _loadAtletaPcsExtra(atletaId, season, icsRisultati, athlete) {
   const emptyRow = tbody.querySelector('.empty-state');
   if (emptyRow) emptyRow.closest('tr').remove();
 
-  const insertChrono = (data, html) => {
+  // pcskey rende l'inserimento idempotente: se questa funzione viene invocata
+  // più di una volta sullo stesso tbody (es. render doppio) le righe già
+  // presenti non vengono riaggiunte — altrimenti ogni risultato PCS appariva
+  // duplicato in tabella.
+  const insertChrono = (data, pcskey, html) => {
+    if (tbody.querySelector(`tr[data-pcskey="${CSS.escape(pcskey)}"]`)) return;
     const tr = document.createElement('tr');
     tr.dataset.date = data;
+    tr.dataset.pcskey = pcskey;
     tr.innerHTML = html;
     const existingRows = [...tbody.querySelectorAll('tr[data-date]')];
     const after = existingRows.find(row => (row.dataset.date || '') < data);
@@ -13619,7 +13635,7 @@ async function _loadAtletaPcsExtra(atletaId, season, icsRisultati, athlete) {
 
   for (const r of garaExtra) {
     const pClass = posClass(r.posizione);
-    insertChrono(r.data, `
+    insertChrono(r.data, `g:${r.gara_id}`, `
       <td class="td-date">${fmtDateShort(r.data)}</td>
       <td class="td-pos ${pClass}">${r.posizione}°</td>
       <td class="td-race"><a href="#/gara/${esc(r.gara_id)}">${esc(r.nome_gara)}</a></td>
@@ -13636,7 +13652,7 @@ async function _loadAtletaPcsExtra(atletaId, season, icsRisultati, athlete) {
     const raceHtml = r.pcs_race_slug
       ? `<a href="javascript:void(0)" onclick="showPcsRaceModal('${esc(r.pcs_race_slug)}',${season},'${esc((r.gara_name||'').replace(/'/g,"\\'"))}')">${esc(r.gara_name)}</a>`
       : esc(r.gara_name);
-    insertChrono(r.data, `
+    insertChrono(r.data, `e:${r.pcs_race_slug || r.gara_name}:${r.data}`, `
       <td class="td-date">${fmtDateShort(r.data)}</td>
       <td class="td-pos ${pClass}">${r.posizione}°</td>
       <td class="td-race">${countryFlagImg(r.country)} ${raceHtml}</td>
