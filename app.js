@@ -1694,7 +1694,18 @@ function processLoadedData({ calendar, resultsRaw, athletes, teams, meta, raceDe
   if (resultsRaw) {
     const _byGara = {};
     for (const r of resultsRaw) { if (!r.gara_id) continue; (_byGara[r.gara_id] ||= []).push(r); }
-    const _effGenere = (r) => (r.genere === 'F' || _isLikelyFemaleGivenName(r.nome)) ? 'F' : 'M';
+    // Il cognome/nome grezzo scrapato può avere un cognome composto ancora da
+    // spezzare (es. "DI" / "LUCIA NICCOLO'" invece di "DI LUCIA" / "NICCOLO'")
+    // — la normalizzazione vera avviene più sotto, DOPO questo blocco. Senza
+    // ri-applicarla qui prima del controllo nome-femminile, un pezzo di
+    // cognome finito nel campo nome (es. "LUCIA", frammento di "DI LUCIA")
+    // veniva scambiato per un nome proprio femminile, spostando un atleta
+    // uomo in una classifica femminile sintetica con posizione 1 inventata.
+    const _effGenere = (r) => {
+      if (r.genere === 'F') return 'F';
+      const { nome: fixedNome } = fixCompoundSurname(r.cognome, r.nome);
+      return _isLikelyFemaleGivenName(fixedNome) ? 'F' : 'M';
+    };
     for (const [gid, rows] of Object.entries(_byGara)) {
       if (!/_M$/.test(gid)) continue; // solo gruppi col suffisso maschile condiviso
       if (!rows.some(r => _effGenere(r) === 'F') || !rows.some(r => _effGenere(r) === 'M')) continue; // non misto
