@@ -384,6 +384,18 @@ function _ogHtmlEsc(s) {
 // Etichette leggibili per i codici categoria — condivise tra /og/atleta e /og/team.
 const _OG_CAT_MAP = {ELI_M:'Elite',ELI_F:'Elite Donne',JUN_M:'Juniores',JUN_F:'Juniores Donne',AL_M:'Allievi',AL_F:'Allieve',ES1_M:'Esordienti 1°',ES2_M:'Esordienti 2°',ES1_F:'Esordienti 1° Donne',ES2_F:'Esordienti 2° Donne'};
 
+// Bot che devono vedere il contenuto grezzo di /og/... con i meta tag (non
+// eseguono JavaScript, quindi la SPA vera per loro sarebbe vuota): bot di
+// anteprima social + motori di ricerca. Un utente vero con un browser reale
+// NON deve mai vedere questa pagina "di servizio" — viene rediretto subito
+// alla SPA completa (vedi il controllo in cima a ciascuna route /og/...).
+// Googlebot va incluso qui (non solo i bot social): ESEGUE JavaScript, quindi
+// se non fosse in questa lista verrebbe rediretto come un utente vero e
+// finirebbe per indicizzare la shell SPA vuota invece di questo contenuto
+// reale — esattamente il problema che il redirect automatico rimosso in
+// passato causava (vedi commento in ogHtml).
+const OG_BOT_RE = /facebookexternalhit|Facebot|WhatsApp|TelegramBot|Twitterbot|Slackbot|LinkedInBot|Discordbot|SkypeUriPreview|Pinterest|vkShare|redditbot|W3C_Validator|Googlebot|bingbot|DuckDuckBot|YandexBot|Baiduspider|Applebot|ia_archiver|SemrushBot|AhrefsBot|MJ12bot|Sogou|Exabot/i;
+
 function ogHtml({ title, desc, img, redirect, canonical, bodyHtml }) {
   const safe = _ogHtmlEsc;
   // og:url NON deve puntare all'URL con hash (#/gara/...) della SPA: il
@@ -444,6 +456,12 @@ const API_BASE_URL = 'https://italiacyclingstats.com';
 
 app.get('/og/gara/:id', async (req, res) => {
   const id  = req.params.id;
+  // Un utente vero (non un bot) che apre questo URL — tipicamente cliccando
+  // l'anteprima di un link condiviso — deve arrivare subito alla pagina vera
+  // del sito, non a questa versione "di servizio" pensata solo per i bot.
+  if (!OG_BOT_RE.test(req.headers['user-agent'] || '')) {
+    return res.redirect(302, `${SITE_URL}/gara/${encodeURIComponent(id)}`);
+  }
   const [calRaw, resultsRaw] = await Promise.all([
     readDataJsonFromGH('calendar.json'),
     readDataJsonFromGH('results_raw.json'),
@@ -504,6 +522,9 @@ app.get('/og/gara/:id', async (req, res) => {
 
 app.get('/og/atleta/:id', async (req, res) => {
   const id       = req.params.id;
+  if (!OG_BOT_RE.test(req.headers['user-agent'] || '')) {
+    return res.redirect(302, `${SITE_URL}/atleta/${encodeURIComponent(id)}`);
+  }
   const [athletes, resultsRaw] = await Promise.all([
     readDataJsonFromGH('athletes.json'),
     readDataJsonFromGH('results_raw.json'),
@@ -539,6 +560,9 @@ app.get('/og/atleta/:id', async (req, res) => {
 
 app.get('/og/team/:id', async (req, res) => {
   const id    = req.params.id;
+  if (!OG_BOT_RE.test(req.headers['user-agent'] || '')) {
+    return res.redirect(302, `${SITE_URL}/team/${encodeURIComponent(id)}`);
+  }
   const [teams, athletes] = await Promise.all([
     readDataJsonFromGH('teams.json'),
     readDataJsonFromGH('athletes.json'),
@@ -609,6 +633,9 @@ async function _computeClassRanking(rawId) {
 }
 
 app.get('/og/class/:id', async (req, res) => {
+  if (!OG_BOT_RE.test(req.headers['user-agent'] || '')) {
+    return res.redirect(302, `${SITE_URL}/classifica/${encodeURIComponent(req.params.id)}`);
+  }
   const { catLabelText, scopeLabel, monthLabel, ranking } = await _computeClassRanking(req.params.id);
   const title = `Classifica ${catLabelText}`;
   const top3  = ranking.slice(0, 3).map(r => `${r.pos}° ${r.cognome} ${r.nome}`).join(' · ');
@@ -6572,8 +6599,6 @@ app.get('/api/og-image/class/:id', async (req, res) => {
 // cambia nulla: solo questi bot vengono rediretti alla versione con i
 // meta tag corretti, che loro seguono normalmente (non eseguono JS ma
 // seguono i redirect HTTP).
-const OG_PREVIEW_BOT_RE = /facebookexternalhit|Facebot|WhatsApp|TelegramBot|Twitterbot|Slackbot|LinkedInBot|Discordbot|SkypeUriPreview|Pinterest|vkShare|redditbot|W3C_Validator/i;
-
 app.get('*', (req, res, next) => {
   const p = req.path;
   if (p.startsWith('/api/') || p.startsWith('/og/') || p.startsWith('/data/') ||
@@ -6585,7 +6610,7 @@ app.get('*', (req, res, next) => {
   if (/\.[a-zA-Z0-9]+$/.test(p)) return next();
 
   const ua = req.headers['user-agent'] || '';
-  if (OG_PREVIEW_BOT_RE.test(ua)) {
+  if (OG_BOT_RE.test(ua)) {
     let m = p.match(/^\/(gara|atleta|team)\/([^/]+)\/?$/);
     if (m) return res.redirect(302, `/og/${m[1]}/${encodeURIComponent(m[2])}`);
     m = p.match(/^\/classifica\/([^/]+)\/?$/);
