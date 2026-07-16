@@ -1,4 +1,436 @@
 {
+  "RIBEIRO_BRAVO_HENRIQUE": {
+    "id": "RIBEIRO_BRAVO_HENRIQUE",
+    "nome": "HENRIQUE",
+    "cognome": "RIBEIRO BRAVO",
+    "team_attuale": "SOUDAL QUICK-STEP DEVO TEAM",
+    "team_id": "SOUDAL_QUICK_STEP_DEVO_TEAM",
+    "categoria": "ELI_M",
+    "genere": "M",
+    "punti_totali": 133,
+    "risultati": [
+      {
+        "gara_id": "62_GIRO_CICLISTICO_DELLA_VALLE_D_AOSTA_MONT_BLANC_PRIMA_TAPPA_CRONOMETRO_INDIVIDUALE_2026-07-16_ELI_M",
+        "nome_gara": "62 GIRO CICLISTICO DELLA VALLE D'AOSTA MONT BLANC PRIMA TAPPA CRONOMETRO INDIVIDUALE",
+        "data": "2026-07-16",
+        "posizione": 1,
+        "punti_effettivi": 45,
+        "team": "SOUDAL QUICK-STEP DEVO TEAM",
+        "moltiplicatore": 3,
+        "tipo": "internazionale",
+        "regione": "VAL D AOSTA",
+        "km": "10.500",
+        "media": ""
+      },
+      {
+        "gara_id": "GIRO_D_ITALIA_NEXT_GEN_CLASSIFICA_GENERALE_2026-06-21_ELI_M",
+        "nome_gara": "GIRO D'ITALIA NEXT GEN CLASSIFICA GENERALE",
+        "data": "2026-06-21",
+        "posizione": 3,
+        "punti_effettivi": 40,
+        "team": "SOUDAL QUICK-STEP DEVO TEAM",
+        "moltiplicatore": 4,
+        "tipo": "internazionale",
+        "regione": "UNDER",
+        "km": "1093.200",
+        "media": "42.216"
+      },
+      {
+        "gara_id": "GIRO_D_ITALIA_NEXT_GEN_SETTIMA_TAPPA_2026-06-20_ELI_M",
+        "nome_gara": "GIRO D'ITALIA NEXT GEN SETTIMA TAPPA",
+        "data": "2026-06-20",
+        "posizione": 5,
+        "punti_effettivi": 18,
+        "team": "SOUDAL QUICK-STEP DEVO TEAM",
+        "moltiplicatore": 3,
+        "tipo": "internazionale",
+        "regione": "UNDER",
+        "km": "135.000",
+        "media": "37.065"
+      },
+      {
+        "gara_id": "GIRO_D_ITALIA_NEXT_GEN_SESTA_TAPPA_2026-06-19_ELI_M",
+        "nome_gara": "GIRO D'ITALIA NEXT GEN SESTA TAPPA",
+        "data": "2026-06-19",
+        "posizione": 3,
+        "punti_effettivi": 30,
+        "team": "SOUDAL QUICK-STEP DEVO TEAM",
+        "moltiplicatore": 3,
+        "tipo": "internazionale",
+        "regione": "UNDER",
+        "km": "155.000",
+        "media": "38.621"
+      }
+    ]
+  },
+  "BOCK_MAX": {
+    "id": "BOCK_MAX",
+    "nome": "MAX",
+    "cognome": "BOCK",
+    "team_attuale": "RED BULL-BORA-HANSGROHE ROOKIES",
+    "team_id": "RED_BULL_BORA_HANSGROHE_ROOKIES",
+    "categoria": "ELI_M",
+    "genere": "M",
+    "punti_totali": 68,
+    "risultati": [
+      {
+        "gara_id": "62_GIRO_CICLISTICO_DELLA_VALLE_D_AOSTA_MONT_BLANC_PRIMA_TAPPA_CRONOMETRO_INDIVIDUALE_2026-07-16_ELI_M",
+        "nome_gara": "62 GIRO CICLISTICO DELLA VALLE D'AOSTA MONT BLANC PRIMA TAPPA CRONOMETRO INDIVIDUALE",
+        "data": "2026-07-16",
+        "posizione": 2,
+        "punti_effettivi": 36,
+        "team": "RED BULL-BORA-HANSGROHE ROOKIES",
+        "moltiplicatore": 3,
+        "tipo": "internazionale",
+        "regione": "VAL D AOSTA",
+        "km": "10.500",
+        "media": ""
+      },
+      {
+        "gara_id": "GIRO_D_ITALIA_NEXT_GEN_CLASSIFICA_GENERALE_2026-06-21_ELI_M",
+        "nome_gara": "GIRO D'ITALIA NEXT GEN CLASSIFICA GENERALE",
+        "data": "2026-06-21",
+        "posizione": 9,
+        "punti_effettivi": 8,
+        "team": "RED BULL-BORA-HANSGROHE ROOKIES",
+        "moltiplicatore": 4,
+        "tipo": "internazionale",
+        "regione": "UNDER",
+        "km": "1093.200",
+        "media": "42.216"
+      },
+      {
+        "gara_id": "GIRO_D_ITALIA_NEXT_GEN_SETTIMA_TAPPA_2026-06-20_ELI_M",
+        "nome_gara": "GIRO D'ITALIA NEXT GEN SETTIMA TAPPA",
+        "data": "2026-06-20",
+        "posizione": 8,
+        "punti_effettivi": 9,
+        "team": "RED BULL-BORA-HANSGROHE ROOKIES",
+        "moltiplicatore": 3,
+        "tipo": "internazionale",
+        "regione": "UNDER",
+        "km": "135.000",
+        "media": "37.065"
+      },
+      {
+        "gara_id": "63_GRAN_PREMIO_PALIO_DEL_RECIOTO_UNDER23_2026-04-07_ELI_M",
+        "nome_gara": "63 GRAN PREMIO PALIO DEL RECIOTO UNDER23",
+        "data": "2026-04-07",
+        "posizione": 6,
+        "punti_effettivi": 15,
+        "team": "RED BULL-BORA-HANSGROHE ROOKIES",
+        "moltiplicatore": 3,
+        "tipo": "internazionale",
+        "regione": "VENETO",
+        "km": "147.000",
+        "media": "36.598"
+      }
+    ]
+  },
+  "RAMIREZ_TORRES_MATEO_PABLO": {
+    "id": "RAMIREZ_TORRES_MATEO_PABLO",
+    "nome": "TORRES MATEO PABLO",
+    "cognome": "RAMIREZ",
+    "team_attuale": "UAE TEAM EMIRATES GEN-Z",
+    "team_id": "UAE_TEAM_EMIRATES_GEN_Z",
+    "categoria": "ELI_M",
+    "genere": "M",
+    "punti_totali": 156,
+    "risultati": [
+      {
+        "gara_id": "62_GIRO_CICLISTICO_DELLA_VALLE_D_AOSTA_MONT_BLANC_PRIMA_TAPPA_CRONOMETRO_INDIVIDUALE_2026-07-16_ELI_M",
+        "nome_gara": "62 GIRO CICLISTICO DELLA VALLE D'AOSTA MONT BLANC PRIMA TAPPA CRONOMETRO INDIVIDUALE",
+        "data": "2026-07-16",
+        "posizione": 3,
+        "punti_effettivi": 30,
+        "team": "UAE TEAM EMIRATES GEN-Z",
+        "moltiplicatore": 3,
+        "tipo": "internazionale",
+        "regione": "VAL D AOSTA",
+        "km": "10.500",
+        "media": ""
+      },
+      {
+        "gara_id": "GIRO_D_ITALIA_NEXT_GEN_OTTAVA_TAPPA_CRONOMETRO_2026-06-21_ELI_M",
+        "nome_gara": "GIRO D'ITALIA NEXT GEN OTTAVA TAPPA CRONOMETRO",
+        "data": "2026-06-21",
+        "posizione": 5,
+        "punti_effettivi": 18,
+        "team": "UAE TEAM EMIRATES GEN-Z",
+        "moltiplicatore": 3,
+        "tipo": "internazionale",
+        "regione": "UNDER",
+        "km": "22.200",
+        "media": "45.838"
+      },
+      {
+        "gara_id": "GIRO_D_ITALIA_NEXT_GEN_CLASSIFICA_GENERALE_2026-06-21_ELI_M",
+        "nome_gara": "GIRO D'ITALIA NEXT GEN CLASSIFICA GENERALE",
+        "data": "2026-06-21",
+        "posizione": 2,
+        "punti_effettivi": 48,
+        "team": "UAE TEAM EMIRATES GEN-Z",
+        "moltiplicatore": 4,
+        "tipo": "internazionale",
+        "regione": "UNDER",
+        "km": "1093.200",
+        "media": "42.216"
+      },
+      {
+        "gara_id": "GIRO_D_ITALIA_NEXT_GEN_SETTIMA_TAPPA_2026-06-20_ELI_M",
+        "nome_gara": "GIRO D'ITALIA NEXT GEN SETTIMA TAPPA",
+        "data": "2026-06-20",
+        "posizione": 4,
+        "punti_effettivi": 24,
+        "team": "UAE TEAM EMIRATES GEN-Z",
+        "moltiplicatore": 3,
+        "tipo": "internazionale",
+        "regione": "UNDER",
+        "km": "135.000",
+        "media": "37.065"
+      },
+      {
+        "gara_id": "GIRO_D_ITALIA_NEXT_GEN_SESTA_TAPPA_2026-06-19_ELI_M",
+        "nome_gara": "GIRO D'ITALIA NEXT GEN SESTA TAPPA",
+        "data": "2026-06-19",
+        "posizione": 2,
+        "punti_effettivi": 36,
+        "team": "UAE TEAM EMIRATES GEN-Z",
+        "moltiplicatore": 3,
+        "tipo": "internazionale",
+        "regione": "UNDER",
+        "km": "155.000",
+        "media": "38.621"
+      }
+    ]
+  },
+  "O_BRIEN_FINN": {
+    "id": "O_BRIEN_FINN",
+    "nome": "FINN",
+    "cognome": "O'BRIEN",
+    "team_attuale": "DEVELOPMENT TEAM PICNIC POSTNL",
+    "team_id": "DEVELOPMENT_TEAM_PICNIC_POSTNL",
+    "categoria": "ELI_M",
+    "genere": "M",
+    "punti_totali": 24,
+    "risultati": [
+      {
+        "gara_id": "62_GIRO_CICLISTICO_DELLA_VALLE_D_AOSTA_MONT_BLANC_PRIMA_TAPPA_CRONOMETRO_INDIVIDUALE_2026-07-16_ELI_M",
+        "nome_gara": "62 GIRO CICLISTICO DELLA VALLE D'AOSTA MONT BLANC PRIMA TAPPA CRONOMETRO INDIVIDUALE",
+        "data": "2026-07-16",
+        "posizione": 4,
+        "punti_effettivi": 24,
+        "team": "DEVELOPMENT TEAM PICNIC POSTNL",
+        "moltiplicatore": 3,
+        "tipo": "internazionale",
+        "regione": "VAL D AOSTA",
+        "km": "10.500",
+        "media": ""
+      }
+    ]
+  },
+  "FABRIES_UGO": {
+    "id": "FABRIES_UGO",
+    "nome": "UGO",
+    "cognome": "FABRIES",
+    "team_attuale": "UAE TEAM EMIRATES GEN-Z",
+    "team_id": "UAE_TEAM_EMIRATES_GEN_Z",
+    "categoria": "ELI_M",
+    "genere": "M",
+    "punti_totali": 18,
+    "risultati": [
+      {
+        "gara_id": "62_GIRO_CICLISTICO_DELLA_VALLE_D_AOSTA_MONT_BLANC_PRIMA_TAPPA_CRONOMETRO_INDIVIDUALE_2026-07-16_ELI_M",
+        "nome_gara": "62 GIRO CICLISTICO DELLA VALLE D'AOSTA MONT BLANC PRIMA TAPPA CRONOMETRO INDIVIDUALE",
+        "data": "2026-07-16",
+        "posizione": 5,
+        "punti_effettivi": 18,
+        "team": "UAE TEAM EMIRATES GEN-Z",
+        "moltiplicatore": 3,
+        "tipo": "internazionale",
+        "regione": "VAL D AOSTA",
+        "km": "10.500",
+        "media": ""
+      }
+    ]
+  },
+  "ESTUPINAN_VARGAS_KEVIN": {
+    "id": "ESTUPINAN_VARGAS_KEVIN",
+    "nome": "KEVIN",
+    "cognome": "ESTUPINAN VARGAS",
+    "team_attuale": "U.C.MONACO",
+    "team_id": "U_C_MONACO",
+    "categoria": "ELI_M",
+    "genere": "M",
+    "punti_totali": 15,
+    "risultati": [
+      {
+        "gara_id": "62_GIRO_CICLISTICO_DELLA_VALLE_D_AOSTA_MONT_BLANC_PRIMA_TAPPA_CRONOMETRO_INDIVIDUALE_2026-07-16_ELI_M",
+        "nome_gara": "62 GIRO CICLISTICO DELLA VALLE D'AOSTA MONT BLANC PRIMA TAPPA CRONOMETRO INDIVIDUALE",
+        "data": "2026-07-16",
+        "posizione": 6,
+        "punti_effettivi": 15,
+        "team": "U.C.MONACO",
+        "moltiplicatore": 3,
+        "tipo": "internazionale",
+        "regione": "VAL D AOSTA",
+        "km": "10.500",
+        "media": ""
+      }
+    ]
+  },
+  "DRIESEN_NIELS": {
+    "id": "DRIESEN_NIELS",
+    "nome": "NIELS",
+    "cognome": "DRIESEN",
+    "team_attuale": "LOTTO -GROUPE WANTY",
+    "team_id": "LOTTO_GROUPE_WANTY",
+    "categoria": "ELI_M",
+    "genere": "M",
+    "punti_totali": 12,
+    "risultati": [
+      {
+        "gara_id": "62_GIRO_CICLISTICO_DELLA_VALLE_D_AOSTA_MONT_BLANC_PRIMA_TAPPA_CRONOMETRO_INDIVIDUALE_2026-07-16_ELI_M",
+        "nome_gara": "62 GIRO CICLISTICO DELLA VALLE D'AOSTA MONT BLANC PRIMA TAPPA CRONOMETRO INDIVIDUALE",
+        "data": "2026-07-16",
+        "posizione": 7,
+        "punti_effettivi": 12,
+        "team": "LOTTO -GROUPE WANTY",
+        "moltiplicatore": 3,
+        "tipo": "internazionale",
+        "regione": "VAL D AOSTA",
+        "km": "10.500",
+        "media": ""
+      }
+    ]
+  },
+  "HOWELL_ADAM": {
+    "id": "HOWELL_ADAM",
+    "nome": "ADAM",
+    "cognome": "HOWELL",
+    "team_attuale": "BOURG EN BRESSE AIN CYCLISME",
+    "team_id": "BOURG_EN_BRESSE_AIN_CYCLISME",
+    "categoria": "ELI_M",
+    "genere": "M",
+    "punti_totali": 9,
+    "risultati": [
+      {
+        "gara_id": "62_GIRO_CICLISTICO_DELLA_VALLE_D_AOSTA_MONT_BLANC_PRIMA_TAPPA_CRONOMETRO_INDIVIDUALE_2026-07-16_ELI_M",
+        "nome_gara": "62 GIRO CICLISTICO DELLA VALLE D'AOSTA MONT BLANC PRIMA TAPPA CRONOMETRO INDIVIDUALE",
+        "data": "2026-07-16",
+        "posizione": 8,
+        "punti_effettivi": 9,
+        "team": "BOURG EN BRESSE AIN CYCLISME",
+        "moltiplicatore": 3,
+        "tipo": "internazionale",
+        "regione": "VAL D AOSTA",
+        "km": "10.500",
+        "media": ""
+      }
+    ]
+  },
+  "BIEHL_KEVIN": {
+    "id": "BIEHL_KEVIN",
+    "nome": "KEVIN",
+    "cognome": "BIEHL",
+    "team_attuale": "GENERAL STORE -ESSEGIBI-F.LLI CURIA",
+    "team_id": "GENERAL_STORE_ESSEGIBI_F_LLI_CURIA",
+    "categoria": "ELI_M",
+    "genere": "M",
+    "punti_totali": 63,
+    "risultati": [
+      {
+        "gara_id": "62_GIRO_CICLISTICO_DELLA_VALLE_D_AOSTA_MONT_BLANC_PRIMA_TAPPA_CRONOMETRO_INDIVIDUALE_2026-07-16_ELI_M",
+        "nome_gara": "62 GIRO CICLISTICO DELLA VALLE D'AOSTA MONT BLANC PRIMA TAPPA CRONOMETRO INDIVIDUALE",
+        "data": "2026-07-16",
+        "posizione": 9,
+        "punti_effettivi": 6,
+        "team": "GENERAL STORE -ESSEGIBI-F.LLI CURIA",
+        "moltiplicatore": 3,
+        "tipo": "internazionale",
+        "regione": "VAL D AOSTA",
+        "km": "10.500",
+        "media": ""
+      },
+      {
+        "gara_id": "43_TROFEO_M_P_FILTRI_2026-07-12_ELI_M",
+        "nome_gara": "43 TROFEO M P FILTRI",
+        "data": "2026-07-12",
+        "posizione": 1,
+        "punti_effettivi": 15,
+        "team": "GENERAL STORE -ESSEGIBI-F.LLI CURIA",
+        "moltiplicatore": 1,
+        "tipo": "regionale",
+        "regione": "UNDER",
+        "km": "145.000",
+        "media": "42.456"
+      },
+      {
+        "gara_id": "GIRO_D_ITALIA_NEXT_GEN_SETTIMA_TAPPA_2026-06-20_ELI_M",
+        "nome_gara": "GIRO D'ITALIA NEXT GEN SETTIMA TAPPA",
+        "data": "2026-06-20",
+        "posizione": 9,
+        "punti_effettivi": 6,
+        "team": "GENERAL STORE -ESSEGIBI-F.LLI CURIA",
+        "moltiplicatore": 3,
+        "tipo": "internazionale",
+        "regione": "UNDER",
+        "km": "135.000",
+        "media": "37.065"
+      },
+      {
+        "gara_id": "SECONDO_TROFEO_BIKE_SERVICE_CRONOMETRO_2026-06-06_ELI_M",
+        "nome_gara": "SECONDO TROFEO BIKE SERVICE CRONOMETRO",
+        "data": "2026-06-06",
+        "posizione": 5,
+        "punti_effettivi": 6,
+        "team": "GENERAL STORE -ESSEGIBI-F.LLI CURIA",
+        "moltiplicatore": 1,
+        "tipo": "regionale",
+        "regione": "EMILIA ROMAGNA",
+        "km": "17.300",
+        "media": ""
+      },
+      {
+        "gara_id": "63_GRAN_PREMIO_PALIO_DEL_RECIOTO_UNDER23_2026-04-07_ELI_M",
+        "nome_gara": "63 GRAN PREMIO PALIO DEL RECIOTO UNDER23",
+        "data": "2026-04-07",
+        "posizione": 3,
+        "punti_effettivi": 30,
+        "team": "GENERAL STORE -ESSEGIBI-F.LLI CURIA",
+        "moltiplicatore": 3,
+        "tipo": "internazionale",
+        "regione": "VENETO",
+        "km": "147.000",
+        "media": "36.598"
+      }
+    ]
+  },
+  "HERNANDEZ_REILHE_JAN": {
+    "id": "HERNANDEZ_REILHE_JAN",
+    "nome": "JAN",
+    "cognome": "HERNANDEZ REILHE",
+    "team_attuale": "CAJA RURAL ALEA",
+    "team_id": "CAJA_RURAL_ALEA",
+    "categoria": "ELI_M",
+    "genere": "M",
+    "punti_totali": 3,
+    "risultati": [
+      {
+        "gara_id": "62_GIRO_CICLISTICO_DELLA_VALLE_D_AOSTA_MONT_BLANC_PRIMA_TAPPA_CRONOMETRO_INDIVIDUALE_2026-07-16_ELI_M",
+        "nome_gara": "62 GIRO CICLISTICO DELLA VALLE D'AOSTA MONT BLANC PRIMA TAPPA CRONOMETRO INDIVIDUALE",
+        "data": "2026-07-16",
+        "posizione": 10,
+        "punti_effettivi": 3,
+        "team": "CAJA RURAL ALEA",
+        "moltiplicatore": 3,
+        "tipo": "internazionale",
+        "regione": "VAL D AOSTA",
+        "km": "10.500",
+        "media": ""
+      }
+    ]
+  },
   "ZANINI_ANDREA_MATTEO": {
     "id": "ZANINI_ANDREA_MATTEO",
     "nome": "ANDREA MATTEO",
@@ -675,70 +1107,6 @@
         "regione": "VENETO",
         "km": "80.850",
         "media": "48.349"
-      }
-    ]
-  },
-  "BIEHL_KEVIN": {
-    "id": "BIEHL_KEVIN",
-    "nome": "KEVIN",
-    "cognome": "BIEHL",
-    "team_attuale": "GENERAL STORE -ESSEGIBI-F.LLI CURIA",
-    "team_id": "GENERAL_STORE_ESSEGIBI_F_LLI_CURIA",
-    "categoria": "ELI_M",
-    "genere": "M",
-    "punti_totali": 57,
-    "risultati": [
-      {
-        "gara_id": "43_TROFEO_M_P_FILTRI_2026-07-12_ELI_M",
-        "nome_gara": "43 TROFEO M P FILTRI",
-        "data": "2026-07-12",
-        "posizione": 1,
-        "punti_effettivi": 15,
-        "team": "GENERAL STORE -ESSEGIBI-F.LLI CURIA",
-        "moltiplicatore": 1,
-        "tipo": "regionale",
-        "regione": "UNDER",
-        "km": "145.000",
-        "media": "42.456"
-      },
-      {
-        "gara_id": "GIRO_D_ITALIA_NEXT_GEN_SETTIMA_TAPPA_2026-06-20_ELI_M",
-        "nome_gara": "GIRO D'ITALIA NEXT GEN SETTIMA TAPPA",
-        "data": "2026-06-20",
-        "posizione": 9,
-        "punti_effettivi": 6,
-        "team": "GENERAL STORE -ESSEGIBI-F.LLI CURIA",
-        "moltiplicatore": 3,
-        "tipo": "internazionale",
-        "regione": "UNDER",
-        "km": "135.000",
-        "media": "37.065"
-      },
-      {
-        "gara_id": "SECONDO_TROFEO_BIKE_SERVICE_CRONOMETRO_2026-06-06_ELI_M",
-        "nome_gara": "SECONDO TROFEO BIKE SERVICE CRONOMETRO",
-        "data": "2026-06-06",
-        "posizione": 5,
-        "punti_effettivi": 6,
-        "team": "GENERAL STORE -ESSEGIBI-F.LLI CURIA",
-        "moltiplicatore": 1,
-        "tipo": "regionale",
-        "regione": "EMILIA ROMAGNA",
-        "km": "17.300",
-        "media": ""
-      },
-      {
-        "gara_id": "63_GRAN_PREMIO_PALIO_DEL_RECIOTO_UNDER23_2026-04-07_ELI_M",
-        "nome_gara": "63 GRAN PREMIO PALIO DEL RECIOTO UNDER23",
-        "data": "2026-04-07",
-        "posizione": 3,
-        "punti_effettivi": 30,
-        "team": "GENERAL STORE -ESSEGIBI-F.LLI CURIA",
-        "moltiplicatore": 3,
-        "tipo": "internazionale",
-        "regione": "VENETO",
-        "km": "147.000",
-        "media": "36.598"
       }
     ]
   },
@@ -88496,70 +88864,6 @@
       }
     ]
   },
-  "RAMIREZ_TORRES_MATEO_PABLO": {
-    "id": "RAMIREZ_TORRES_MATEO_PABLO",
-    "nome": "TORRES MATEO PABLO",
-    "cognome": "RAMIREZ",
-    "team_attuale": "UAE TEAM EMIRATES GEN-Z",
-    "team_id": "UAE_TEAM_EMIRATES_GEN_Z",
-    "categoria": "ELI_M",
-    "genere": "M",
-    "punti_totali": 126,
-    "risultati": [
-      {
-        "gara_id": "GIRO_D_ITALIA_NEXT_GEN_OTTAVA_TAPPA_CRONOMETRO_2026-06-21_ELI_M",
-        "nome_gara": "GIRO D'ITALIA NEXT GEN OTTAVA TAPPA CRONOMETRO",
-        "data": "2026-06-21",
-        "posizione": 5,
-        "punti_effettivi": 18,
-        "team": "UAE TEAM EMIRATES GEN-Z",
-        "moltiplicatore": 3,
-        "tipo": "internazionale",
-        "regione": "UNDER",
-        "km": "22.200",
-        "media": "45.838"
-      },
-      {
-        "gara_id": "GIRO_D_ITALIA_NEXT_GEN_CLASSIFICA_GENERALE_2026-06-21_ELI_M",
-        "nome_gara": "GIRO D'ITALIA NEXT GEN CLASSIFICA GENERALE",
-        "data": "2026-06-21",
-        "posizione": 2,
-        "punti_effettivi": 48,
-        "team": "UAE TEAM EMIRATES GEN-Z",
-        "moltiplicatore": 4,
-        "tipo": "internazionale",
-        "regione": "UNDER",
-        "km": "1093.200",
-        "media": "42.216"
-      },
-      {
-        "gara_id": "GIRO_D_ITALIA_NEXT_GEN_SETTIMA_TAPPA_2026-06-20_ELI_M",
-        "nome_gara": "GIRO D'ITALIA NEXT GEN SETTIMA TAPPA",
-        "data": "2026-06-20",
-        "posizione": 4,
-        "punti_effettivi": 24,
-        "team": "UAE TEAM EMIRATES GEN-Z",
-        "moltiplicatore": 3,
-        "tipo": "internazionale",
-        "regione": "UNDER",
-        "km": "135.000",
-        "media": "37.065"
-      },
-      {
-        "gara_id": "GIRO_D_ITALIA_NEXT_GEN_SESTA_TAPPA_2026-06-19_ELI_M",
-        "nome_gara": "GIRO D'ITALIA NEXT GEN SESTA TAPPA",
-        "data": "2026-06-19",
-        "posizione": 2,
-        "punti_effettivi": 36,
-        "team": "UAE TEAM EMIRATES GEN-Z",
-        "moltiplicatore": 3,
-        "tipo": "internazionale",
-        "regione": "UNDER",
-        "km": "155.000",
-        "media": "38.621"
-      }
-    ]
-  },
   "HAUGLAND_KASPER": {
     "id": "HAUGLAND_KASPER",
     "nome": "KASPER",
@@ -88729,57 +89033,6 @@
         "posizione": 8,
         "punti_effettivi": 9,
         "team": "MOVISTAR TEAM ACADEMY",
-        "moltiplicatore": 3,
-        "tipo": "internazionale",
-        "regione": "UNDER",
-        "km": "155.000",
-        "media": "38.621"
-      }
-    ]
-  },
-  "RIBEIRO_BRAVO_HENRIQUE": {
-    "id": "RIBEIRO_BRAVO_HENRIQUE",
-    "nome": "HENRIQUE",
-    "cognome": "RIBEIRO BRAVO",
-    "team_attuale": "SOUDAL QUICK-STEP DEVO TEAM",
-    "team_id": "SOUDAL_QUICK_STEP_DEVO_TEAM",
-    "categoria": "ELI_M",
-    "genere": "M",
-    "punti_totali": 88,
-    "risultati": [
-      {
-        "gara_id": "GIRO_D_ITALIA_NEXT_GEN_CLASSIFICA_GENERALE_2026-06-21_ELI_M",
-        "nome_gara": "GIRO D'ITALIA NEXT GEN CLASSIFICA GENERALE",
-        "data": "2026-06-21",
-        "posizione": 3,
-        "punti_effettivi": 40,
-        "team": "SOUDAL QUICK-STEP DEVO TEAM",
-        "moltiplicatore": 4,
-        "tipo": "internazionale",
-        "regione": "UNDER",
-        "km": "1093.200",
-        "media": "42.216"
-      },
-      {
-        "gara_id": "GIRO_D_ITALIA_NEXT_GEN_SETTIMA_TAPPA_2026-06-20_ELI_M",
-        "nome_gara": "GIRO D'ITALIA NEXT GEN SETTIMA TAPPA",
-        "data": "2026-06-20",
-        "posizione": 5,
-        "punti_effettivi": 18,
-        "team": "SOUDAL QUICK-STEP DEVO TEAM",
-        "moltiplicatore": 3,
-        "tipo": "internazionale",
-        "regione": "UNDER",
-        "km": "135.000",
-        "media": "37.065"
-      },
-      {
-        "gara_id": "GIRO_D_ITALIA_NEXT_GEN_SESTA_TAPPA_2026-06-19_ELI_M",
-        "nome_gara": "GIRO D'ITALIA NEXT GEN SESTA TAPPA",
-        "data": "2026-06-19",
-        "posizione": 3,
-        "punti_effettivi": 30,
-        "team": "SOUDAL QUICK-STEP DEVO TEAM",
         "moltiplicatore": 3,
         "tipo": "internazionale",
         "regione": "UNDER",
@@ -88977,57 +89230,6 @@
         "regione": "UNDER",
         "km": "166.000",
         "media": "39.716"
-      }
-    ]
-  },
-  "BOCK_MAX": {
-    "id": "BOCK_MAX",
-    "nome": "MAX",
-    "cognome": "BOCK",
-    "team_attuale": "RED BULL-BORA-HANSGROHE ROOKIES",
-    "team_id": "RED_BULL_BORA_HANSGROHE_ROOKIES",
-    "categoria": "ELI_M",
-    "genere": "M",
-    "punti_totali": 32,
-    "risultati": [
-      {
-        "gara_id": "GIRO_D_ITALIA_NEXT_GEN_CLASSIFICA_GENERALE_2026-06-21_ELI_M",
-        "nome_gara": "GIRO D'ITALIA NEXT GEN CLASSIFICA GENERALE",
-        "data": "2026-06-21",
-        "posizione": 9,
-        "punti_effettivi": 8,
-        "team": "RED BULL-BORA-HANSGROHE ROOKIES",
-        "moltiplicatore": 4,
-        "tipo": "internazionale",
-        "regione": "UNDER",
-        "km": "1093.200",
-        "media": "42.216"
-      },
-      {
-        "gara_id": "GIRO_D_ITALIA_NEXT_GEN_SETTIMA_TAPPA_2026-06-20_ELI_M",
-        "nome_gara": "GIRO D'ITALIA NEXT GEN SETTIMA TAPPA",
-        "data": "2026-06-20",
-        "posizione": 8,
-        "punti_effettivi": 9,
-        "team": "RED BULL-BORA-HANSGROHE ROOKIES",
-        "moltiplicatore": 3,
-        "tipo": "internazionale",
-        "regione": "UNDER",
-        "km": "135.000",
-        "media": "37.065"
-      },
-      {
-        "gara_id": "63_GRAN_PREMIO_PALIO_DEL_RECIOTO_UNDER23_2026-04-07_ELI_M",
-        "nome_gara": "63 GRAN PREMIO PALIO DEL RECIOTO UNDER23",
-        "data": "2026-04-07",
-        "posizione": 6,
-        "punti_effettivi": 15,
-        "team": "RED BULL-BORA-HANSGROHE ROOKIES",
-        "moltiplicatore": 3,
-        "tipo": "internazionale",
-        "regione": "VENETO",
-        "km": "147.000",
-        "media": "36.598"
       }
     ]
   },
