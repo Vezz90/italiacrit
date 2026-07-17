@@ -1584,7 +1584,13 @@ function _patchAthleteTeamForManualRow(gd, row) {
     if (!team.atleti.includes(row.atleta_id)) team.atleti.push(row.atleta_id);
     if (!Array.isArray(team.risultati)) team.risultati = [];
     team.risultati = team.risultati.filter(x => !(x.gara_id === row.gara_id && x.atleta_id === row.atleta_id));
-    team.risultati.push({ ...athEntry, atleta_id: row.atleta_id, cognome: row.cognome, nome: row.nome });
+    // I risultati team "veri" (da teams.json, scraper) usano atleta_cognome/
+    // atleta_nome (vedi renderTeam, che legge r.atleta_cognome/r.atleta_nome) —
+    // qui si usava cognome/nome, campi diversi: un risultato manuale mostrava
+    // quindi nome atleta vuoto nella tabella "RISULTATI TEAM", facendo
+    // sembrare la riga "senza proprietario" e facilmente attribuita per
+    // errore all'atleta sbagliato nella riga sopra/sotto.
+    team.risultati.push({ ...athEntry, atleta_id: row.atleta_id, atleta_cognome: row.cognome, atleta_nome: row.nome });
     team.punti_totali = (team.risultati || []).reduce((s, x) => s + (x.punti_effettivi || 0), 0);
   }
 }
