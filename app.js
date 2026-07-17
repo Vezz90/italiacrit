@@ -1814,6 +1814,20 @@ function processLoadedData({ calendar, resultsRaw, athletes, teams, meta, raceDe
   // Mappa gara_id (risultati) → calendar_id — necessaria perché i gara_id
   // dei risultati hanno suffissi extra rispetto agli id del calendario
   const garaToCalId = {};
+  // Conta quante voci di calendario condividono (data, numero di edizione) —
+  // usato per bloccare il fallback debole "solo edizione" sotto quando due
+  // gare COMPLETAMENTE diverse coincidono per puro caso (es. "53 Trofeo
+  // della Liberazione" e "53 Edizione Circuito San Giuseppe", entrambe il
+  // 19/4 con edizione "53"): senza questo controllo la seconda gara elaborata
+  // sovrascrive il match corretto della prima, rubandole regione e dettagli.
+  const _editionDateCount = {};
+  for (const cal of (calendar || [])) {
+    if (!cal.id || !cal.data) continue;
+    const ed = (cal.id.replace(/_\d{4}-\d{2}-\d{2}$/, '').match(/^(\d+)_/) || [])[1];
+    if (!ed) continue;
+    const k = cal.data + '|' + ed;
+    _editionDateCount[k] = (_editionDateCount[k] || 0) + 1;
+  }
   // Gare "a tappe" (giri multi-giorno): il calendario ha una sola voce con la
   // data della PRIMA tappa, ma ogni tappa successiva è scrapata con la sua
   // data reale e un suffisso diverso (es. "..._SECONDA_TAPPA_2026-07-17...").
@@ -1855,7 +1869,8 @@ function processLoadedData({ calendar, resultsRaw, athletes, teams, meta, raceDe
       // giri COMPLETAMENTE diversi (es. "62° Valle d'Aosta" vs "62° Giro
       // della Regione Friuli Venezia Giulia") — per queste va escluso.
       const garaEd = (r.gara_id.match(/^(\d+)_/)||[])[1];
-      if (!isStageRace && calEd2 && garaEd && calEd2 === garaEd) { garaToCalId[r.gara_id] = cal.id; continue; }
+      const _edUnique = calEd2 && (_editionDateCount[cal.data + '|' + calEd2] || 0) <= 1;
+      if (!isStageRace && _edUnique && garaEd && calEd2 === garaEd) { garaToCalId[r.gara_id] = cal.id; continue; }
       { let i=0; while(i<calNorm2.length&&i<garaNorm.length&&calNorm2[i]===garaNorm[i]) i++;
         if (i>=18 && calNorm2.slice(0,i).endsWith('_')) garaToCalId[r.gara_id] = cal.id; }
     }
@@ -1894,6 +1909,14 @@ function processLoadedData({ calendar, resultsRaw, athletes, teams, meta, raceDe
     const calById = {};
     for (const cal of (calendar || [])) if (cal.id) calById[cal.id] = cal;
     for (const r of resultsRaw) {
+      // Se lo scraper ha già una regione italiana valida (estratta dalla
+      // sigla provincia FCI, molto più affidabile del fuzzy-match sul nome
+      // gara — vedi scraper/_regions.py), NON sovrascriverla col calendario:
+      // un garaToCalId sbagliato (es. due gare diverse con stessa edizione e
+      // stessa data, puro caso) altrimenti ruberebbe la regione corretta.
+      // Il calendario resta il fallback solo quando lo scraper non è
+      // riuscito a determinare una regione reale (gara estera, ecc.).
+      if (r.regione && ITALIAN_REGIONS.includes(normalizeRegion(r.regione))) continue;
       const calEntry = calById[garaToCalId[r.gara_id]];
       // normalizeRegion() qui canonicalizza grafie alternative del calendario
       // (es. "VAL D AOSTA" -> "VALLE D AOSTA") così risultati corretti dalla
@@ -16958,6 +16981,19 @@ async function renderCalendario(highlightId) {
   // Mappa calendar.id → { byCategory, firstGaraId }
   // Match per data + prefisso id (il gara_id dei risultati ha suffissi extra rispetto al cal.id)
   const calendarResultsMap = {};
+  // Conta (data, edizione) — stesso motivo di garaToCalId in processLoadedData:
+  // due gare diverse possono condividere per puro caso data ed edizione
+  // (es. "53 Trofeo della Liberazione" e "53 Edizione Circuito San
+  // Giuseppe", entrambe il 19/4), quindi il fallback debole "solo edizione"
+  // qui sotto va usato solo quando è inequivocabile.
+  const _calEditionDateCount = {};
+  for (const g of calendar) {
+    if (!g.id || !g.data) continue;
+    const ed = (g.id.replace(/_\d{4}-\d{2}-\d{2}$/, '').match(/^(\d+)_/) || [])[1];
+    if (!ed) continue;
+    const k = g.data + '|' + ed;
+    _calEditionDateCount[k] = (_calEditionDateCount[k] || 0) + 1;
+  }
   for (const g of calendar) {
     if (!g.id || !g.data) continue;
     const calBase = g.id.replace(/_\d{4}-\d{2}-\d{2}$/, '');
@@ -16980,7 +17016,8 @@ async function renderCalendario(highlightId) {
       if (calNorm === garaNorm) return true;
       if (garaNorm.length >= 8 && calNorm.startsWith(garaNorm + '_')) return true;
       const garaEd = (r.gara_id.match(/^(\d+)_/)||[])[1];
-      if (calEd && garaEd && calEd === garaEd) return true;
+      const _edUnique = calEd && (_calEditionDateCount[g.data + '|' + calEd] || 0) <= 1;
+      if (_edUnique && garaEd && calEd === garaEd) return true;
       // Step 6: prefisso comune ≥18 chars che termina con _ (stessa gara, nomi parzialmente diversi)
       { let i=0; while(i<calNorm.length&&i<garaNorm.length&&calNorm[i]===garaNorm[i]) i++;
         if (i>=18 && calNorm.slice(0,i).endsWith('_')) return true; }
