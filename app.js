@@ -7821,6 +7821,11 @@ async function renderClassifica() {
       <button class="tab-btn ${rankView==='atleti'?'active-cat':''}" onclick="setRankView('atleti')">ATLETI</button>
       <button class="tab-btn ${rankView==='team'?'active-cat':''}" onclick="setRankView('team')">TEAM</button>
     </div>`;
+  const sortTabs = `
+    <div class="tab-group" role="tablist" aria-label="Ordina per">
+      <button class="tab-btn ${rankSort==='punti'?'active-cat':''}" onclick="setRankSort('punti')">PUNTI</button>
+      <button class="tab-btn ${rankSort==='vittorie'?'active-cat':''}" onclick="setRankSort('vittorie')">🏆 VITTORIE</button>
+    </div>`;
 
   const regions = [...new Set(globalData.resultsRaw.map(r => normalizeRegion(r.regione)).filter(Boolean))].sort();
   const regionOptions = regions.map(r => `<option value="${r}" ${rankRegion===r?'selected':''}>${esc(r)}</option>`).join('');
@@ -7887,6 +7892,7 @@ async function renderClassifica() {
 
       <div class="ranking-filter-bar" style="border-top:1px solid var(--border-subtle); padding-top:12px">
         <span class="ranking-count" id="rank-count-label">Caricamento...</span>
+        ${sortTabs}
         ${viewTabs}
       </div>
     </div>
@@ -8161,6 +8167,20 @@ async function updateRankTable() {
       displayList.sort((a,b) =>
         ((_metricCache[b.atleta_id]?.formDelta ?? -999) - (_metricCache[a.atleta_id]?.formDelta ?? -999))
       );
+    } else if (rankSort === 'vittorie') {
+      // Spareggio: a parità di vittorie vince chi ha ottenuto l'ultima più di
+      // recente — calcolata sulla data dell'ultima gara vinta in QUESTA
+      // categoria (non su tutte le categorie dell'atleta).
+      const lastWinByAthlete = {};
+      globalData.resultsRaw.forEach(r => {
+        if (r.posizione !== 1 || getRankingFileCode(r) !== rankCat || !r.atleta_id || !r.data) return;
+        if (!lastWinByAthlete[r.atleta_id] || r.data > lastWinByAthlete[r.atleta_id]) lastWinByAthlete[r.atleta_id] = r.data;
+      });
+      displayList.sort((a, b) => {
+        const wa = a.p1 || 0, wb = b.p1 || 0;
+        if (wb !== wa) return wb - wa;
+        return (lastWinByAthlete[b.atleta_id] || '').localeCompare(lastWinByAthlete[a.atleta_id] || '');
+      });
     }
 
     // ── Narrative headline banner ─────────────────────────────
@@ -8466,7 +8486,24 @@ async function updateRankTable() {
     }
 
     const leaderTeamPts = teamRanking[0]?.punti || 0;
-    const rows = filtered.map((t, i) => {
+
+    // ── Ordinamento "Vittorie" (stesso criterio della vista Atleti): a
+    // parità di vittorie vince chi ha ottenuto l'ultima più di recente. ──
+    let teamDisplayList = filtered;
+    if (rankSort === 'vittorie') {
+      const lastWinByTeam = {};
+      globalData.resultsRaw.forEach(r => {
+        if (r.posizione !== 1 || getRankingFileCode(r) !== rankCat || !r.team_id || !r.data) return;
+        if (!lastWinByTeam[r.team_id] || r.data > lastWinByTeam[r.team_id]) lastWinByTeam[r.team_id] = r.data;
+      });
+      teamDisplayList = [...filtered].sort((a, b) => {
+        const wa = a.p1 || 0, wb = b.p1 || 0;
+        if (wb !== wa) return wb - wa;
+        return (lastWinByTeam[b.team_id] || '').localeCompare(lastWinByTeam[a.team_id] || '');
+      });
+    }
+
+    const rows = teamDisplayList.map((t, i) => {
       const pClass = posClass(t.pos);
       const gap = t.pos === 1
         ? `<span class="rk-leader-tag">LEADER</span>`
@@ -8491,7 +8528,7 @@ async function updateRankTable() {
         <td class="r hide-mobile" style="font-family:var(--font-mono);font-size:.85rem;color:var(--text-muted)">${t.n_atleti||0}</td>
       </tr>`;
     }).join('');
-    _rankPhotosQueue = filtered; // per logo team
+    _rankPhotosQueue = teamDisplayList; // per logo team
 
     tableHtml = teamStoryHtml + `
       <table class="ranking-table rk-table-narrative">
