@@ -936,18 +936,6 @@
     "pos": 78
   },
   {
-    "team_id": "TEAM_SERIO",
-    "team_nome": "TEAM SERIO",
-    "punti": 22,
-    "vittorie": 0,
-    "p1": 0,
-    "p2": 0,
-    "p3": 1,
-    "pout": 1,
-    "n_atleti": 1,
-    "pos": 79
-  },
-  {
     "team_id": "PIEMONTE",
     "team_nome": "PIEMONTE",
     "punti": 22,
@@ -957,19 +945,19 @@
     "p3": 0,
     "pout": 3,
     "n_atleti": 1,
-    "pos": 80
+    "pos": 79
   },
   {
-    "team_id": "LAZIO",
-    "team_nome": "LAZIO",
-    "punti": 20,
+    "team_id": "TEAM_SERIO",
+    "team_nome": "TEAM SERIO",
+    "punti": 22,
     "vittorie": 0,
     "p1": 0,
     "p2": 0,
     "p3": 1,
-    "pout": 0,
+    "pout": 1,
     "n_atleti": 1,
-    "pos": 81
+    "pos": 80
   },
   {
     "team_id": "AUSTRIA",
@@ -981,11 +969,23 @@
     "p3": 1,
     "pout": 0,
     "n_atleti": 1,
-    "pos": 82
+    "pos": 81
   },
   {
     "team_id": "LETTONIA",
     "team_nome": "LETTONIA",
+    "punti": 20,
+    "vittorie": 0,
+    "p1": 0,
+    "p2": 0,
+    "p3": 1,
+    "pout": 0,
+    "n_atleti": 1,
+    "pos": 82
+  },
+  {
+    "team_id": "LAZIO",
+    "team_nome": "LAZIO",
     "punti": 20,
     "vittorie": 0,
     "p1": 0,
@@ -1032,18 +1032,6 @@
     "pos": 86
   },
   {
-    "team_id": "ARA_I_SKIP_CAPITAL",
-    "team_nome": "ARA I SKIP CAPITAL",
-    "punti": 18,
-    "vittorie": 0,
-    "p1": 0,
-    "p2": 0,
-    "p3": 0,
-    "pout": 1,
-    "n_atleti": 1,
-    "pos": 87
-  },
-  {
     "team_id": "GERMANIA",
     "team_nome": "GERMANIA",
     "punti": 18,
@@ -1053,6 +1041,18 @@
     "p3": 0,
     "pout": 3,
     "n_atleti": 2,
+    "pos": 87
+  },
+  {
+    "team_id": "ARA_I_SKIP_CAPITAL",
+    "team_nome": "ARA I SKIP CAPITAL",
+    "punti": 18,
+    "vittorie": 0,
+    "p1": 0,
+    "p2": 0,
+    "p3": 0,
+    "pout": 1,
+    "n_atleti": 1,
     "pos": 88
   },
   {
@@ -1068,6 +1068,18 @@
     "pos": 89
   },
   {
+    "team_id": "CRABBE_DSTNY",
+    "team_nome": "CRABBE DSTNY",
+    "punti": 15,
+    "vittorie": 0,
+    "p1": 0,
+    "p2": 0,
+    "p3": 0,
+    "pout": 1,
+    "n_atleti": 1,
+    "pos": 90
+  },
+  {
     "team_id": "MEBLO_JOGI_PRO_CONCRETE",
     "team_nome": "MEBLO JOGI PRO-CONCRETE",
     "punti": 15,
@@ -1077,7 +1089,7 @@
     "p3": 1,
     "pout": 2,
     "n_atleti": 3,
-    "pos": 90
+    "pos": 91
   },
   {
     "team_id": "ACADEMY_U19_REGION_SUD",
@@ -1089,19 +1101,19 @@
     "p3": 0,
     "pout": 2,
     "n_atleti": 2,
-    "pos": 91
+    "pos": 92
   },
   {
-    "team_id": "CRABBE_DSTNY",
-    "team_nome": "CRABBE DSTNY",
-    "punti": 15,
+    "team_id": "LUSSEMBURGO",
+    "team_nome": "LUSSEMBURGO",
+    "punti": 12,
     "vittorie": 0,
     "p1": 0,
     "p2": 0,
     "p3": 0,
     "pout": 1,
     "n_atleti": 1,
-    "pos": 92
+    "pos": 93
   },
   {
     "team_id": "V_C_ORSAGO_OROGILDO",
@@ -1113,23 +1125,11 @@
     "p3": 0,
     "pout": 4,
     "n_atleti": 2,
-    "pos": 93
+    "pos": 94
   },
   {
     "team_id": "MBH_BANK_CYCLING_TEAM_JUNIOR",
     "team_nome": "MBH BANK CYCLING TEAM JUNIOR",
-    "punti": 12,
-    "vittorie": 0,
-    "p1": 0,
-    "p2": 0,
-    "p3": 0,
-    "pout": 1,
-    "n_atleti": 1,
-    "pos": 94
-  },
-  {
-    "team_id": "LUSSEMBURGO",
-    "team_nome": "LUSSEMBURGO",
     "punti": 12,
     "vittorie": 0,
     "p1": 0,
@@ -1152,6 +1152,30 @@
     "pos": 96
   },
   {
+    "team_id": "ESTONIA",
+    "team_nome": "ESTONIA",
+    "punti": 10,
+    "vittorie": 0,
+    "p1": 0,
+    "p2": 0,
+    "p3": 0,
+    "pout": 2,
+    "n_atleti": 1,
+    "pos": 97
+  },
+  {
+    "team_id": "IRLANDA",
+    "team_nome": "IRLANDA",
+    "punti": 10,
+    "vittorie": 0,
+    "p1": 0,
+    "p2": 0,
+    "p3": 0,
+    "pout": 1,
+    "n_atleti": 1,
+    "pos": 98
+  },
+  {
     "team_id": "CLUB_DEPORTIVO_TRI_SPORT",
     "team_nome": "CLUB DEPORTIVO TRI SPORT",
     "punti": 10,
@@ -1161,7 +1185,7 @@
     "p3": 0,
     "pout": 2,
     "n_atleti": 1,
-    "pos": 97
+    "pos": 99
   },
   {
     "team_id": "NURRI_ORROLI_MTB_A_S_D",
@@ -1173,7 +1197,7 @@
     "p3": 0,
     "pout": 1,
     "n_atleti": 1,
-    "pos": 98
+    "pos": 100
   },
   {
     "team_id": "CICLISTICA_OMNIA_IMOLA",
@@ -1184,30 +1208,6 @@
     "p2": 0,
     "p3": 1,
     "pout": 0,
-    "n_atleti": 1,
-    "pos": 99
-  },
-  {
-    "team_id": "ESTONIA",
-    "team_nome": "ESTONIA",
-    "punti": 10,
-    "vittorie": 0,
-    "p1": 0,
-    "p2": 0,
-    "p3": 0,
-    "pout": 2,
-    "n_atleti": 1,
-    "pos": 100
-  },
-  {
-    "team_id": "IRLANDA",
-    "team_nome": "IRLANDA",
-    "punti": 10,
-    "vittorie": 0,
-    "p1": 0,
-    "p2": 0,
-    "p3": 0,
-    "pout": 1,
     "n_atleti": 1,
     "pos": 101
   },
