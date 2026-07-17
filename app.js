@@ -6493,6 +6493,19 @@ async function renderHubBars() {
   const hubRes    = resultsRaw.filter(r=>r.genere===hub.gender&&hub.catCodes.includes(getRankingFileCode(r)));
   const hubResES2 = isEsordienti?hubRes.filter(r=>getRankingFileCode(r)===mainCat):hubRes;
   const hubResES1 = isEsordienti?hubRes.filter(r=>getRankingFileCode(r)===es1Code):[];
+  // ── Top 3 per VITTORIE (non punti) — spareggio: vittoria più recente ──
+  const _lastWinDateAth = (atletaId, resSet, catCode) => resSet
+    .filter(r=>r.atleta_id===atletaId&&getRankingFileCode(r)===catCode&&r.posizione===1)
+    .reduce((mx,r)=>(r.data||'')>mx?r.data:mx,'');
+  const _sortByWinsAth = (list, resSet, catCode) => [...list]
+    .filter(x=>(x.vittorie||0)>0)
+    .sort((a,b)=>{
+      const wa=a.vittorie||0, wb=b.vittorie||0;
+      if (wb!==wa) return wb-wa;
+      return _lastWinDateAth(b.atleta_id, resSet, catCode).localeCompare(_lastWinDateAth(a.atleta_id, resSet, catCode));
+    }).slice(0,3);
+  const hubWinsRanking    = _sortByWinsAth(_hubRankFull, hubResES2, mainCat);
+  const hubWinsRankingES1 = es1Code ? _sortByWinsAth(_hubRankES1Full || [], hubResES1, es1Code) : null;
   const lastDate  = hubRes.reduce((mx,r)=>(r.data||'')>mx?r.data:mx,'');
   const todayStr  = new Date().toISOString().split('T')[0];
   const cut14     = (()=>{const d=new Date(lastDate||new Date());d.setDate(d.getDate()-14);return d.toISOString().split('T')[0];})();
@@ -6668,6 +6681,20 @@ async function renderHubBars() {
     }
   }
 
+  // ── Top 3 team per VITTORIE (non punti) — stesso spareggio degli atleti ──
+  const _lastWinDateTeam = (teamId, resSet, catCode) => resSet
+    .filter(r=>r.team_id===teamId&&getRankingFileCode(r)===catCode&&r.posizione===1)
+    .reduce((mx,r)=>(r.data||'')>mx?r.data:mx,'');
+  const _sortByWinsTeam = (list, resSet, catCode) => [...list]
+    .filter(t=>(t.wins||0)>0)
+    .sort((a,b)=>{
+      const wa=a.wins||0, wb=b.wins||0;
+      if (wb!==wa) return wb-wa;
+      return _lastWinDateTeam(b.team_id, resSet, catCode).localeCompare(_lastWinDateTeam(a.team_id, resSet, catCode));
+    }).slice(0,3);
+  const teamWinsRanking    = _sortByWinsTeam(_teamRankFull, hubResES2, mainCat);
+  const teamWinsRankingES1 = es1Code ? _sortByWinsTeam(_teamRankFullES1, hubResES1, es1Code) : null;
+
   // ── Championship bar ─────────────────────────────────────────────
   function champBar(ranking, label) {
     if(!ranking.length) return '';
@@ -6786,6 +6813,33 @@ async function renderHubBars() {
     }).join('');
     return `<div class="itc-card itc-rank-card">
       <div class="itc-card-hdr"><span class="itc-card-title">TOP CLASSIFICA${title?' · '+title:''}</span><a href="#/classifica/${catCode}/atleti" class="itc-card-more">Vedi tutto →</a></div>
+      ${rows}
+    </div>`;
+  }
+
+  // ── Top 3 Vittorie (atleti) — stesso stile della TOP CLASSIFICA, ma
+  // ordinata per numero di vittorie invece che punti (spareggio: vittoria
+  // più recente, già applicato in hubWinsRanking/hubWinsRankingES1).
+  function buildWinsCard(winsRanking, catCode, title) {
+    if (!winsRanking.length) return '';
+    const rows = winsRanking.map((a, i) => {
+      const _tlu = _hubTeamLookup[a.atleta_id] || {};
+      const teamName = a.team_nome || a.team_attuale || a.team || _tlu.team || '';
+      const teamId   = a.team_id || _tlu.team_id || '';
+      const teamHtml = teamName
+        ? (teamId ? `<a href="#/team/${encodeURIComponent(teamId)}" onclick="event.stopPropagation()">${esc(teamName)}</a>` : esc(teamName))
+        : '';
+      return `<div class="itc-rank-row${i===0?' itc-rank-row--leader':''}" onclick="location.hash='#/atleta/${encodeURIComponent(a.atleta_id)}'">
+        <span class="itc-rank-pos itc-rank-pos-${i<3?i+1:'x'}">${i+1}</span>
+        <div class="itc-rank-info">
+          <div class="itc-rank-name">${esc(a.cognome)} ${esc(a.nome)}</div>
+          ${teamHtml ? `<div class="itc-rank-sub">${teamHtml}</div>` : ''}
+        </div>
+        <span class="itc-rank-pts">${a.vittorie}<small>🏆</small></span>
+      </div>`;
+    }).join('');
+    return `<div class="itc-card itc-rank-card">
+      <div class="itc-card-hdr"><span class="itc-card-title">🏆 TOP VITTORIE${title?' · '+title:''}</span><a href="#/classifica/${catCode}/atleti" class="itc-card-more">Vedi tutto →</a></div>
       ${rows}
     </div>`;
   }
@@ -7194,6 +7248,24 @@ async function renderHubBars() {
     </div>`;
   }
 
+  // ── Top 3 team per VITTORIE (non punti) — stesso spareggio degli atleti.
+  function buildTeamWinsCard(winsRanking, title, catCode) {
+    if (!winsRanking.length) return '';
+    const rows = winsRanking.map((t, i) => `<div class="itc-rank-row${i===0?' itc-rank-row--leader':''}" onclick="location.hash='#/team/${encodeURIComponent(t.team_id)}'">
+        <span class="itc-rank-pos itc-rank-pos-${i<3?i+1:'x'}">${i+1}</span>
+        <div class="itc-rank-info">
+          <div class="itc-rank-name">${esc(t.team)}</div>
+          <div class="itc-rank-sub">${t.riders} atleti</div>
+        </div>
+        <span class="itc-rank-pts">${t.wins}<small>🏆</small></span>
+      </div>`).join('');
+    const resolvedCat = catCode || mainCat;
+    return `<div class="itc-card itc-rank-card">
+      <div class="itc-card-hdr"><span class="itc-card-title">🏆 TOP TEAM VITTORIE${title?' · '+esc(title):''}</span><a href="#/classifica/${resolvedCat}/team" class="itc-card-more">Vedi tutti →</a></div>
+      ${rows}
+    </div>`;
+  }
+
   // ── Team movers card ──────────────────────────────────────────────
   function buildTeamMoversCard(teamRank, snapNow, snapBefore, title) {
     const sNow = snapNow   || _teamSnapNow;
@@ -7401,6 +7473,9 @@ async function renderHubBars() {
   const _rRankHtml = isEsordienti
     ? `<div class="itc-dual">${buildRankCard(hubRankingES1||[],es1Code,'1° Anno',_snapNowE1,_snapBeforeLastE1)}${buildRankCard(hubRanking,mainCat,'2° Anno',_snapNow,_snapBeforeLast)}</div>`
     : buildRankCard(hubRanking,mainCat,'',_snapNow,_snapBeforeLast);
+  const _rWinsHtml = isEsordienti
+    ? `<div class="itc-dual">${buildWinsCard(hubWinsRankingES1||[],es1Code,'1° Anno')}${buildWinsCard(hubWinsRanking,mainCat,'2° Anno')}</div>`
+    : buildWinsCard(hubWinsRanking,mainCat,'');
   const _rMovHtml = isEsordienti
     ? `<div class="itc-dual">${buildMoversCard(moversES1,'1° Anno')}${buildMoversCard(movers,'2° Anno')}</div>`
     : buildMoversCard(movers,'');
@@ -7414,6 +7489,9 @@ async function renderHubBars() {
   const _tRankHtml = isEsordienti
     ? `<div class="itc-dual">${buildTeamRankCard(_teamRankNowES1,_teamSnapNowES1,_teamSnapBeforeLastES1,'1° Anno',es1Code)}${buildTeamRankCard(_teamRankNow,_teamSnapNow,_teamSnapBeforeLast,'2° Anno',mainCat)}</div>`
     : buildTeamRankCard(_teamRankNow, _teamSnapNow, _teamSnapBeforeLast, '', mainCat);
+  const _tWinsHtml = isEsordienti
+    ? `<div class="itc-dual">${buildTeamWinsCard(teamWinsRankingES1||[],'1° Anno',es1Code)}${buildTeamWinsCard(teamWinsRanking,'2° Anno',mainCat)}</div>`
+    : buildTeamWinsCard(teamWinsRanking,'',mainCat);
   const _tMovHtml = isEsordienti
     ? `<div class="itc-dual">${buildTeamMoversCard(_teamRankFullES1,_teamSnapNowES1,_teamSnapBeforeLastES1,'1° Anno')}${buildTeamMoversCard(_teamRankFull,_teamSnapNow,_teamSnapBeforeLast,'2° Anno')}</div>`
     : buildTeamMoversCard(_teamRankFull, _teamSnapNow, _teamSnapBeforeLast, '');
@@ -7500,6 +7578,8 @@ async function renderHubBars() {
     ${_tFireHtml}
     ${_rRankHtml}
     ${_tRankHtml}
+    ${_rWinsHtml}
+    ${_tWinsHtml}
     ${_rMovHtml}
     ${_tMovHtml}
     <div class="itc-dual">${_rVsHtml}${_tVsHtml}</div>
@@ -7510,6 +7590,7 @@ async function renderHubBars() {
     ${_nextRaceHtml}
     <div class="itc-dual">${_rFireHtml}${_tFireHtml}</div>
     <div class="itc-dual">${_rRankHtml}${_tRankHtml}</div>
+    <div class="itc-dual">${_rWinsHtml}${_tWinsHtml}</div>
     <div class="itc-dual">${_rMovHtml}${_tMovHtml}</div>
     <div class="itc-dual">${_rVsHtml}${_tVsHtml}</div>
     <div class="itc-dual">${_upsetHtml||''}${_watchHtml}</div>
@@ -12373,7 +12454,17 @@ window.setRankFilter = (v) => { rankFilter = v; updateRankTable(); };
 window.setRankView   = (v) => { rankView = v; rankFilter = ''; rankRegion = ''; rankMonth = ''; rankSort = 'punti'; _syncRankUrl(); renderClassifica(); };
 window.setRankRegion = (v) => { rankRegion = v; updateRankTable(); };
 window.setRankMonth  = (v) => { rankMonth = v; updateRankTable(); };
-window.setRankSort   = (s) => { rankSort = s; updateRankTable(); };
+window.setRankSort   = (s) => {
+  rankSort = s;
+  // updateRankTable() aggiorna solo #rank-table-container: i pulsanti di
+  // ordinamento sono fuori da quel container, quindi lo stato "attivo" va
+  // sincronizzato qui a mano invece di richiedere un renderClassifica()
+  // completo (che ricaricherebbe tutta la pagina per un semplice toggle).
+  document.querySelectorAll('[aria-label="Ordina per"] .tab-btn').forEach(btn => {
+    btn.classList.toggle('active-cat', btn.textContent.trim().includes(s === 'vittorie' ? 'VITTORIE' : 'PUNTI'));
+  });
+  updateRankTable();
+};
 
 // ── PARALLEL RANKINGS ────────────────────────────────────────
 async function renderParallelRankings() {
