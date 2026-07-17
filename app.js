@@ -14781,23 +14781,34 @@ async function renderTeam(team_id, opts = {}) {
     <div id="team-riders-chiave" class="team-performers-list" data-sub="${esc(catLabel(teamViewCat))}" style="margin-bottom:28px">${topPerfHtml}</div>
     <div id="team-riders-roster" class="team-roster-list" data-sub="${catLabel(teamViewCat)} · ${atletiListCat.length} atlet${atletiListCat.length === 1 ? 'a' : 'i'}" style="margin-bottom:28px;display:none">${atletiRows || '<div class="empty-state">Nessun atleta in questa categoria</div>'}</div>
 
-    ${buildProfileMedia(
-      seasonRaw.filter(r =>
-        r.team_id === team_id &&
-        r.posizione &&
-        r.data &&
-        (getRankingFileCode(r) || r.categoria) === teamViewCat
-      ),
-      teamPhotosMap,
-      globalData.videos,
-      {
-        showAthleteName: true,
-        year: selYear,
-        atletaIds: [...new Set(seasonRaw
-          .filter(r => r.team_id === team_id && r.atleta_id)
-          .map(r => r.atleta_id))],
-      }
-    )}
+    ${(() => {
+      // Un risultato ai campionati italiani/internazionali è registrato dalla
+      // FCI sotto la selezione regionale/nazionale (r.team_id = "LIGURIA" ecc.,
+      // vedi isSelectionTeamName), non sotto il club vero — filtrare solo su
+      // r.team_id qui perdeva quindi le foto/video di quei risultati (la
+      // stessa causa già corretta sopra per RISULTATI TEAM). Un risultato
+      // appartiene a questo team anche se il team ATTUALE dell'atleta
+      // (già corretto in processLoadedData) è questo, indipendentemente da
+      // quale nome squadra porta quella singola riga grezza.
+      const _belongsToTeam = r => r.team_id === team_id || (athletes[r.atleta_id] && athletes[r.atleta_id].team_id === team_id);
+      return buildProfileMedia(
+        seasonRaw.filter(r =>
+          _belongsToTeam(r) &&
+          r.posizione &&
+          r.data &&
+          (getRankingFileCode(r) || r.categoria) === teamViewCat
+        ),
+        teamPhotosMap,
+        globalData.videos,
+        {
+          showAthleteName: true,
+          year: selYear,
+          atletaIds: [...new Set(seasonRaw
+            .filter(r => _belongsToTeam(r) && r.atleta_id)
+            .map(r => r.atleta_id))],
+        }
+      );
+    })()}
     <div class="section-header" style="margin-top:28px">
       <span class="section-title">RISULTATI TEAM</span>
       <span class="section-line"></span>
