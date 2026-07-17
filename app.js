@@ -1808,8 +1808,19 @@ function processLoadedData({ calendar, resultsRaw, athletes, teams, meta, raceDe
   // Mappa gara_id (risultati) → calendar_id — necessaria perché i gara_id
   // dei risultati hanno suffissi extra rispetto agli id del calendario
   const garaToCalId = {};
+  // Gare "a tappe" (giri multi-giorno): il calendario ha una sola voce con la
+  // data della PRIMA tappa, ma ogni tappa successiva è scrapata con la sua
+  // data reale e un suffisso diverso (es. "..._SECONDA_TAPPA_2026-07-17...").
+  // Per queste, il confronto sul nome vale su QUALSIASI data (non solo quella
+  // di partenza) — altrimenti solo la prima tappa risultava mai collegata al
+  // calendario, e un video/diretta caricato in anticipo su una tappa
+  // successiva (prima che la FCI pubblichi i risultati) non aveva alcun modo
+  // di essere ritrovato. Per le gare normali (un solo giorno) il confronto
+  // resta rigorosamente sulla stessa data, per non rischiare falsi
+  // incroci fra gare diverse con nomi simili.
   for (const cal of (calendar || [])) {
     if (!cal.id || !cal.data) continue;
+    const isStageRace = /tappe/i.test(cal.categoria || '');
     const calBase = cal.id.replace(/_\d{4}-\d{2}-\d{2}$/, '');
     const calBaseNoEd = calBase.replace(/^\d+_/, '');
     const _nm2 = s => s
@@ -1822,7 +1833,8 @@ function processLoadedData({ calendar, resultsRaw, athletes, teams, meta, raceDe
     const calNorm2 = _nm2(calBaseNoEd);
     const calEd2   = calBase !== calBaseNoEd ? (calBase.match(/^(\d+)_/)||[])[1] : null;
     for (const r of (resultsRaw || [])) {
-      if (!r.gara_id || r.data !== cal.data) continue;
+      if (!r.gara_id) continue;
+      if (!isStageRace && r.data !== cal.data) continue;
       if (r.gara_id.startsWith(calBase)) { garaToCalId[r.gara_id] = cal.id; continue; }
       const garaBase = r.gara_id.replace(/^\d+_/,'').replace(/_\d{4}-\d{2}-\d{2}.*$/,'');
       if (garaBase === calBaseNoEd) { garaToCalId[r.gara_id] = cal.id; continue; }
@@ -1833,6 +1845,25 @@ function processLoadedData({ calendar, resultsRaw, athletes, teams, meta, raceDe
       if (calEd2 && garaEd && calEd2 === garaEd) { garaToCalId[r.gara_id] = cal.id; continue; }
       { let i=0; while(i<calNorm2.length&&i<garaNorm.length&&calNorm2[i]===garaNorm[i]) i++;
         if (i>=18 && calNorm2.slice(0,i).endsWith('_')) garaToCalId[r.gara_id] = cal.id; }
+    }
+  }
+
+  // Video/dirette caricati IN ANTICIPO su una tappa specifica (prima che la
+  // FCI pubblichi i risultati di quella tappa, quindi senza ancora un
+  // gara_id reale): salvati con chiave sintetica "{calendar_id}::{data
+  // tappa}" (vedi window._maddSubmitStageVideo). Appena la tappa viene
+  // scrapata, il suo gara_id reale finisce in garaToCalId con la data giusta
+  // — qui basta ricopiare il video sotto quel gara_id reale, così tutte le
+  // pagine che leggono globalData.videos[gara_id] lo trovano senza bisogno
+  // di nessuna modifica altrove.
+  if (videos) {
+    for (const [realGaraId, calId] of Object.entries(garaToCalId)) {
+      const r0 = (resultsRaw || []).find(x => x.gara_id === realGaraId);
+      if (!r0 || !r0.data) continue;
+      const stageKey = `${calId}::${r0.data}`;
+      const stageVideos = videos[stageKey];
+      if (!stageVideos || !stageVideos.length) continue;
+      videos[realGaraId] = [...(videos[realGaraId] || []), ...stageVideos];
     }
   }
 
@@ -19982,6 +20013,11 @@ window.openMediaAddForm = () => {
           <div id="madd-gara-dd" style="display:none;position:absolute;left:0;right:0;top:calc(100% - 4px);background:var(--bg-card);border:1px solid var(--border-subtle);border-radius:var(--r-sm);max-height:200px;overflow:auto;z-index:5;box-shadow:0 6px 20px rgba(0,0,0,.25)"></div>
         </div>
         <div id="madd-gara-picked" style="font-size:.78rem;color:var(--text-muted);margin:-4px 0 10px"></div>
+        <div id="madd-stage-wrap" style="display:none">
+          <label style="display:block;font-size:0.8rem;color:var(--text-secondary);margin-bottom:4px">Data della tappa</label>
+          <input type="date" id="madd-stage-date" style="${inpStyle}"/>
+          <div style="font-size:.72rem;color:var(--text-muted);margin:-4px 0 10px">Gara a tappe: nessun risultato pubblicato ancora per questa tappa — il link resta in attesa e si collega da solo appena la FCI pubblica i risultati di quel giorno.</div>
+        </div>
       </div>
       <input type="url" id="madd-url" placeholder="https://www.youtube.com/watch?v=..." style="${inpStyle}"/>
       <input type="text" id="madd-title" placeholder="Titolo" style="${inpStyle}"/>
@@ -19991,6 +20027,7 @@ window.openMediaAddForm = () => {
     </div>`;
   document.body.appendChild(overlay);
   window._maddGaraId = null;
+  window._maddIsStage = false;
   // Auto-compila titolo/canale dall'URL via oEmbed, come nel form video normale
   document.getElementById('madd-url').addEventListener('input', function() {
     const url = this.value.trim();
@@ -20023,20 +20060,24 @@ window._maddSearchGara = (q) => {
     .slice(0, 15);
   if (!matches.length) { dd.innerHTML = '<div style="padding:8px;font-size:.78rem;color:var(--text-muted)">Nessuna gara trovata</div>'; dd.style.display = 'block'; return; }
   dd.innerHTML = matches.map(r => {
-    const label = `${r.nome_gara} — ${r.categoria || ''} ${r.genere || ''} (${r.data || ''})`;
-    return `<div style="padding:7px 10px;cursor:pointer;font-size:.8rem;border-bottom:1px solid var(--border-subtle)" onmousedown="window._maddPickGara('${esc(r.gara_id)}','${esc(label.replace(/'/g,"\\'"))}')">${esc(label)}</div>`;
+    const isStage = /tappe/i.test(r.categoria || '');
+    const label = `${r.nome_gara}${isStage ? ' 🚵 A TAPPE' : ''} — ${r.categoria || ''} ${r.genere || ''} (${r.data || ''})`;
+    return `<div style="padding:7px 10px;cursor:pointer;font-size:.8rem;border-bottom:1px solid var(--border-subtle)" onmousedown="window._maddPickGara('${esc(r.gara_id)}','${esc(label.replace(/'/g,"\\'"))}',${isStage})">${esc(label)}</div>`;
   }).join('');
   dd.style.display = 'block';
 };
 
-window._maddPickGara = (garaId, label) => {
+window._maddPickGara = (garaId, label, isStage) => {
   window._maddGaraId = garaId;
+  window._maddIsStage = !!isStage;
   const picked = document.getElementById('madd-gara-picked');
   if (picked) picked.textContent = '✓ ' + label;
   const dd = document.getElementById('madd-gara-dd');
   if (dd) dd.style.display = 'none';
   const search = document.getElementById('madd-gara-search');
   if (search) search.value = '';
+  const stageWrap = document.getElementById('madd-stage-wrap');
+  if (stageWrap) stageWrap.style.display = isStage ? '' : 'none';
 };
 
 window._submitMediaAdd = async () => {
@@ -20052,7 +20093,16 @@ window._submitMediaAdd = async () => {
   try {
     if (tipo === 'gara' || tipo === 'diretta') {
       if (!window._maddGaraId) { err.textContent = 'Seleziona una gara'; err.style.display = 'block'; btn.disabled = false; btn.textContent = 'Invia'; return; }
-      await apiCall('/videos/submit', { method: 'POST', body: { gara_id: window._maddGaraId, url, title, channel, is_live: tipo === 'diretta' } });
+      let targetGaraId = window._maddGaraId;
+      if (window._maddIsStage) {
+        const stageDate = document.getElementById('madd-stage-date')?.value;
+        if (!stageDate) { err.textContent = 'Inserisci la data della tappa'; err.style.display = 'block'; btn.disabled = false; btn.textContent = 'Invia'; return; }
+        // Chiave sintetica "{calendar_id}::{data tappa}" — processLoadedData la
+        // ricollega da sola al gara_id reale appena la FCI pubblica i
+        // risultati di quella tappa (stessa gara, stessa data).
+        targetGaraId = `${window._maddGaraId}::${stageDate}`;
+      }
+      await apiCall('/videos/submit', { method: 'POST', body: { gara_id: targetGaraId, url, title, channel, is_live: tipo === 'diretta' } });
     } else {
       await apiCall('/admin/media/extra', { method: 'POST', body: { tipo, url, title, channel } });
     }
