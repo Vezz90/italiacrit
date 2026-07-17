@@ -20154,7 +20154,16 @@ async function renderMedia() {
     // ancora nel calendario, id salvato a mano che non collima, ecc.) il
     // video/diretta NON va perso: si mostra comunque con i pochi dati che ha
     // (titolo del video), invece di sparire silenziosamente dalla pagina Media.
-    const meta = evIndex[gid] || {};
+    let meta = evIndex[gid];
+    if (!meta) {
+      // Chiave sintetica "calId::data tappa" (tappa caricata in anticipo,
+      // non ancora scrapata): recuperiamo la data DALLA CHIAVE stessa, così
+      // l'ordinamento/filtro mese usa la data della tappa che l'admin ha
+      // scelto a mano, non quella (spesso fuorviante) di pubblicazione su
+      // YouTube — vedi criterio richiesto per i video inseriti manualmente.
+      const stageMatch = gid.match(/::(\d{4}-\d{2}-\d{2})$/);
+      meta = stageMatch ? { data: stageMatch[1] } : {};
+    }
     (arr || []).forEach((v, idx) => videoItems.push({ gara_id: gid, idx, meta, video: v }));
   }
   const presentazioniItems = (videos?.[EXTRA_BUCKETS.presentazioni] || []).map((v, idx) => ({ video: v, extraIdx: idx }));
@@ -20176,7 +20185,14 @@ async function renderMedia() {
 
   // Ordine cronologico di pubblicazione su YouTube, dal più recente al più
   // vecchio (fallback sulla data della gara per video legacy senza published_at).
-  const byPublishedDesc = (a, b) => (b.video.published_at || b.meta?.data || '').localeCompare(a.video.published_at || a.meta?.data || '');
+  // Eccezione: i video di una tappa caricati in anticipo (gara_id sintetico
+  // "calId::data tappa") vanno ordinati sulla data della tappa scelta a mano,
+  // non su published_at — stesso criterio delle Dirette, per coerenza.
+  const byPublishedDesc = (a, b) => {
+    const ka = a.gara_id.includes('::') ? (a.meta?.data || a.video.published_at || '') : (a.video.published_at || a.meta?.data || '');
+    const kb = b.gara_id.includes('::') ? (b.meta?.data || b.video.published_at || '') : (b.video.published_at || b.meta?.data || '');
+    return kb.localeCompare(ka);
+  };
   // Le DIRETTE vanno ordinate per data della GARA (calendario), non di
   // pubblicazione YouTube: il video/link diretta viene spesso preparato e
   // caricato giorni prima che la gara si disputi davvero, quindi published_at
