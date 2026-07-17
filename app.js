@@ -19960,7 +19960,11 @@ window._mediaBulkSetLive = async (isLive) => {
   if (!keys.length) return;
   try {
     for (const key of keys) {
-      const [garaId, idx] = key.split('::');
+      // Non usare split('::') semplice: per le tappe caricate in anticipo il
+      // gara_id stesso contiene "::" (chiave sintetica "calId::data"), quindi
+      // taglia solo sull'ULTIMO separatore, che precede sempre l'indice.
+      const cut = key.lastIndexOf('::');
+      const garaId = key.slice(0, cut), idx = key.slice(cut + 2);
       await apiCall(`/admin/videos/${encodeURIComponent(garaId)}/${idx}`, { method: 'PATCH', body: { is_live: isLive } });
     }
     window._mediaSel.clear();
@@ -20215,12 +20219,24 @@ async function renderMedia() {
     const durBadge = _durationBadge(x.video.duration_seconds);
     const selKey = `${x.gara_id}::${x.idx}`;
     const isSel = (window._mediaSel || new Set()).has(selKey);
-    return `<a href="#/gara/${esc(x.gara_id)}" class="yt-card${isSel ? ' yt-card-selected' : ''}">
+    // Video di una tappa caricato in anticipo (chiave sintetica "calId::data",
+    // vedi window._maddSubmitStageVideo): il gara_id NON è ancora una gara
+    // reale, quindi non deve linkare a una pagina /gara/ inesistente — si apre
+    // direttamente il player, come per Presentazioni/Programmi TV.
+    const isPending = x.gara_id.includes('::');
+    const pendingBadge = isPending ? `<span class="yt-badge-duration" style="left:6px;right:auto">⏳ IN ATTESA TAPPA</span>` : '';
+    const t = esc((x.video.title || '').replace(/'/g, "\\'"));
+    const vid = ytId(x.video.url);
+    const pendingOnclick = vid ? `window.openVideoModal('${vid}','${t}')` : `window.open('${esc(x.video.url)}','_blank')`;
+    const tag = isPending ? 'div' : 'a';
+    const hrefAttr = isPending ? `onclick="${pendingOnclick}" style="cursor:pointer"` : `href="#/gara/${esc(x.gara_id)}"`;
+    return `<${tag} ${hrefAttr} class="yt-card${isSel ? ' yt-card-selected' : ''}">
       <div class="yt-thumb">
         ${_isAdminMedia ? `<input type="checkbox" class="yt-card-check" ${isSel ? 'checked' : ''}
           onclick="event.preventDefault();event.stopPropagation();window._mediaToggleSel('${esc(selKey)}',this.checked)"
           aria-label="Seleziona per correggere destinazione"/>` : ''}
         ${thumb ? `<img src="${esc(thumb)}" loading="lazy" alt="${esc(x.video.title || '')}"/>` : `<div class="yt-thumb-fallback">▶</div>`}
+        ${pendingBadge}
         ${x.video.is_live ? `<span class="yt-badge-live">🔴 DIRETTA</span>` : (durBadge ? `<span class="yt-badge-duration">${esc(durBadge)}</span>` : '')}
         <span class="yt-play">▶</span>
       </div>
@@ -20232,7 +20248,7 @@ async function renderMedia() {
           <div class="yt-card-meta">${esc((x.meta.data || x.video.published_at) ? formatTimeAgo(x.meta.data || x.video.published_at) : '')}</div>
         </div>
       </div>
-    </a>`;
+    </${tag}>`;
   };
   // Presentazioni/Programmi TV: nessuna gara collegata, il click apre
   // direttamente il video (stesso player modale usato altrove) invece di
