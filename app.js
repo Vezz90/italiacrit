@@ -1841,8 +1841,15 @@ function processLoadedData({ calendar, resultsRaw, athletes, teams, meta, raceDe
       const garaNorm = _nm2(garaBase);
       if (calNorm2 === garaNorm) { garaToCalId[r.gara_id] = cal.id; continue; }
       if (garaNorm.length >= 8 && calNorm2.startsWith(garaNorm + '_')) { garaToCalId[r.gara_id] = cal.id; continue; }
+      // Fallback debole (solo numero di edizione, es. entrambe "62_..."): va
+      // bene per le gare normali, dove il filtro data qui sopra ha già
+      // escluso ogni altra gara con edizione coincidente per puro caso. Per
+      // le gare a tappe quel filtro NON c'è (date diverse per ogni tappa),
+      // quindi lo stesso numero di edizione da solo può far incrociare due
+      // giri COMPLETAMENTE diversi (es. "62° Valle d'Aosta" vs "62° Giro
+      // della Regione Friuli Venezia Giulia") — per queste va escluso.
       const garaEd = (r.gara_id.match(/^(\d+)_/)||[])[1];
-      if (calEd2 && garaEd && calEd2 === garaEd) { garaToCalId[r.gara_id] = cal.id; continue; }
+      if (!isStageRace && calEd2 && garaEd && calEd2 === garaEd) { garaToCalId[r.gara_id] = cal.id; continue; }
       { let i=0; while(i<calNorm2.length&&i<garaNorm.length&&calNorm2[i]===garaNorm[i]) i++;
         if (i>=18 && calNorm2.slice(0,i).endsWith('_')) garaToCalId[r.gara_id] = cal.id; }
     }
