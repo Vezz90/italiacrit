@@ -8,11 +8,19 @@ ITALIAN_REGIONS = [
     "VENETO", "BOLZANO", "TRENTO"
 ]
 
+# Il calendario (Excel curato a mano) usa a volte una grafia abbreviata
+# diversa da quella canonica sopra (es. "VAL D AOSTA" invece di "VALLE D
+# AOSTA") — senza normalizzarle, filtri/mappa le trattano come due regioni
+# diverse per lo stesso posto. Stessa lista usata lato frontend (app.js).
+REGION_ALIASES = {"VAL D AOSTA": "VALLE D AOSTA", "VAL DAOSTA": "VALLE D AOSTA"}
+
 def extract_region(text):
     """Estrae la regione italiana da una stringa tipo 'ABRUZZO TOSSICIA' -> 'ABRUZZO'"""
     if not text:
         return ""
-    t = text.upper().strip()
+    t = text.upper().strip().replace("'", "")
+    if t in REGION_ALIASES:
+        return REGION_ALIASES[t]
     # Ordina per lunghezza discendente per matchare prima le più lunghe (es EMILIA ROMAGNA prima di EMILIA)
     for reg in sorted(ITALIAN_REGIONS, key=len, reverse=True):
         if t.startswith(reg):
@@ -82,6 +90,22 @@ PROVINCIA_TO_REGIONE = {
 
 import re as _re
 _PROVINCIA_RE = _re.compile(r"\(([A-Z]{2})\)\s*$")
+# La FCI marca la località di una gara estera con il nome del paese per
+# esteso tra parentesi, SEGUITO IMMEDIATAMENTE da una seconda coppia di
+# parentesi VUOTE dove normalmente ci sarebbe la sigla provincia, es.
+# "HARELBEKE (BELGIO)  ()" o "TEREZIN (REPUBBLICA CECA)  ()". Il pattern è
+# ancorato a "parentesi con 3+ lettere" + "parentesi vuote in fondo alla
+# stringa" apposta: alcune gare italiane hanno una frazione/sub-località tra
+# parentesi PRIMA della sigla provincia vera (es. "SULMONA - PIAN DELLE MELE
+# (GUARDIAGRELE) (AQ)") — lì la parentesi finale NON è vuota (contiene la
+# sigla), quindi il pattern qui sotto correttamente non scatta.
+_FOREIGN_LOC_RE = _re.compile(r"\([A-Za-zÀ-ſ ]{3,}\)\s*\(\s*\)\s*$")
+
+def is_foreign_location(location_text):
+    """True se la riga di località FCI indica una gara disputata all'estero."""
+    if not location_text:
+        return False
+    return bool(_FOREIGN_LOC_RE.search(location_text.strip()))
 
 def extract_region_from_location(location_text):
     """Estrae la regione dalla riga di località FCI, es. 'HONE - BARD (AO)'.

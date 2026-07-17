@@ -1084,9 +1084,15 @@ const ITALIAN_REGIONS = [
   "MARCHE","MOLISE","PIEMONTE","PUGLIA","SARDEGNA","SICILIA","TOSCANA",
   "UMBRIA","VENETO","BOLZANO","TRENTO"
 ];
+// Il calendario (Excel curato a mano) usa a volte una grafia abbreviata
+// diversa da quella canonica sopra (es. "VAL D AOSTA" invece di "VALLE D
+// AOSTA") — senza normalizzarle, filtri/mappa le trattano come due regioni
+// diverse per lo stesso posto.
+const REGION_ALIASES = { "VAL D AOSTA": "VALLE D AOSTA", "VAL DAOSTA": "VALLE D AOSTA" };
 function normalizeRegion(s) {
   if (!s) return '';
-  const t = s.toUpperCase().trim();
+  const t = s.toUpperCase().trim().replace(/'/g, '');
+  if (REGION_ALIASES[t]) return REGION_ALIASES[t];
   // Ordina per lunghezza discendente: le più lunghe prima (EMILIA ROMAGNA prima di EMILIA)
   for (const reg of ITALIAN_REGIONS) {
     if (t.startsWith(reg)) return reg;
@@ -1889,7 +1895,11 @@ function processLoadedData({ calendar, resultsRaw, athletes, teams, meta, raceDe
     for (const cal of (calendar || [])) if (cal.id) calById[cal.id] = cal;
     for (const r of resultsRaw) {
       const calEntry = calById[garaToCalId[r.gara_id]];
-      if (calEntry && calEntry.regione) r.regione = calEntry.regione;
+      // normalizeRegion() qui canonicalizza grafie alternative del calendario
+      // (es. "VAL D AOSTA" -> "VALLE D AOSTA") così risultati corretti dalla
+      // provincia FCI e risultati corretti dal calendario finiscono sempre
+      // sotto lo stesso identico valore, senza sdoppiare i filtri.
+      if (calEntry && calEntry.regione) r.regione = normalizeRegion(calEntry.regione);
     }
   }
 

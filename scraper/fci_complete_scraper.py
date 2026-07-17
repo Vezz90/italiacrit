@@ -5,10 +5,10 @@ from datetime import datetime
 from difflib import SequenceMatcher
 try:
     from .calendar_scraper import scrape_calendar_fci
-    from ._regions import extract_region, extract_region_from_location
+    from ._regions import extract_region, extract_region_from_location, is_foreign_location
 except (ImportError, ValueError):
     from calendar_scraper import scrape_calendar_fci
-    from _regions import extract_region, extract_region_from_location
+    from _regions import extract_region, extract_region_from_location, is_foreign_location
 
 # La stagione coincide con l'anno solare (finisce il 31/12): il rollover è
 # automatico a Capodanno. Si può forzare un anno specifico con ITC_SEASON
@@ -286,6 +286,22 @@ def parse_risultati_page(soup: BeautifulSoup, calendar_map: dict, existing_ids: 
             loc_div = h4.parent.find("div", class_=re.compile(r"fs-5|text-muted", re.I))
         loc_lines = loc_div.get_text("\n", strip=True).split("\n") if loc_div else []
         location_text = loc_lines[-1] if loc_lines else ""
+
+        # ── Esclusione gare estere ───────────────────────────────────────
+        # La FCI a volte importa gare disputate fuori Italia (es. E3 Saxo
+        # Classic in Belgio, Corsa della Pace Juniores in Repubblica Ceca)
+        # tra i risultati italiani: non vanno in classifica/punti perché
+        # spesso vi corrono atleti nemmeno tesserati italiani. Le
+        # riconosciamo dal nome del paese per esteso tra parentesi nella
+        # località (vedi is_foreign_location). Eccezione: una tappa
+        # all'estero di un giro a tappe ITALIANO (es. Giro Valle d'Aosta con
+        # una tappa in Francia) resta valida — lo capiamo dal fatto che la
+        # gara ha comunque trovato corrispondenza nel calendario curato a
+        # mano (match_type exact/fuzzy), quindi la escludiamo solo se non è
+        # nemmeno una gara che conosciamo come italiana.
+        if is_foreign_location(location_text) and match_type not in ("exact_match", "fuzzy_match", "user_override"):
+            continue
+
         reg_from_provincia = extract_region_from_location(location_text)
 
         if reg_from_provincia:
