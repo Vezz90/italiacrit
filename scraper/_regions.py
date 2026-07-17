@@ -18,3 +18,80 @@ def extract_region(text):
         if t.startswith(reg):
             return reg
     return t  # fallback: restituisci tutto
+
+# ── Sigla provincia → regione ────────────────────────────────────────────
+# Fonte più affidabile della regione di una gara: la pagina FCI riporta la
+# località nel formato "COMUNE - COMUNE (XX)" dove XX è la sigla automobilistica
+# della provincia (es. "HONE - BARD (AO)" -> Valle d'Aosta). A differenza del
+# fuzzy-match sul nome gara contro il calendario Excel (facile da confondere
+# tra gare con nomi simili, o categorie/anni scambiati per regioni), la sigla
+# provincia è un dato strutturato e univoco pubblicato direttamente dalla FCI.
+PROVINCIA_TO_REGIONE = {
+    # Abruzzo
+    "AQ": "ABRUZZO", "CH": "ABRUZZO", "PE": "ABRUZZO", "TE": "ABRUZZO",
+    # Basilicata
+    "MT": "BASILICATA", "PZ": "BASILICATA",
+    # Calabria
+    "CZ": "CALABRIA", "CS": "CALABRIA", "KR": "CALABRIA", "RC": "CALABRIA", "VV": "CALABRIA",
+    # Campania
+    "AV": "CAMPANIA", "BN": "CAMPANIA", "CE": "CAMPANIA", "NA": "CAMPANIA", "SA": "CAMPANIA",
+    # Emilia Romagna
+    "BO": "EMILIA ROMAGNA", "FC": "EMILIA ROMAGNA", "FE": "EMILIA ROMAGNA", "MO": "EMILIA ROMAGNA",
+    "PR": "EMILIA ROMAGNA", "PC": "EMILIA ROMAGNA", "RA": "EMILIA ROMAGNA", "RE": "EMILIA ROMAGNA",
+    "RN": "EMILIA ROMAGNA",
+    # Friuli Venezia Giulia
+    "GO": "FRIULI VENEZIA GIULIA", "PN": "FRIULI VENEZIA GIULIA", "TS": "FRIULI VENEZIA GIULIA",
+    "UD": "FRIULI VENEZIA GIULIA",
+    # Lazio
+    "FR": "LAZIO", "LT": "LAZIO", "RI": "LAZIO", "RM": "LAZIO", "VT": "LAZIO",
+    # Liguria
+    "GE": "LIGURIA", "IM": "LIGURIA", "SP": "LIGURIA", "SV": "LIGURIA",
+    # Lombardia
+    "BG": "LOMBARDIA", "BS": "LOMBARDIA", "CO": "LOMBARDIA", "CR": "LOMBARDIA", "LC": "LOMBARDIA",
+    "LO": "LOMBARDIA", "MN": "LOMBARDIA", "MI": "LOMBARDIA", "MB": "LOMBARDIA", "PV": "LOMBARDIA",
+    "SO": "LOMBARDIA", "VA": "LOMBARDIA",
+    # Marche
+    "AN": "MARCHE", "AP": "MARCHE", "FM": "MARCHE", "MC": "MARCHE", "PU": "MARCHE",
+    # Molise
+    "CB": "MOLISE", "IS": "MOLISE",
+    # Piemonte
+    "AL": "PIEMONTE", "AT": "PIEMONTE", "BI": "PIEMONTE", "CN": "PIEMONTE", "NO": "PIEMONTE",
+    "TO": "PIEMONTE", "VB": "PIEMONTE", "VC": "PIEMONTE",
+    # Puglia
+    "BA": "PUGLIA", "BT": "PUGLIA", "BR": "PUGLIA", "FG": "PUGLIA", "LE": "PUGLIA", "TA": "PUGLIA",
+    # Sardegna
+    "CA": "SARDEGNA", "NU": "SARDEGNA", "OR": "SARDEGNA", "SS": "SARDEGNA", "SU": "SARDEGNA",
+    "OG": "SARDEGNA", "OT": "SARDEGNA", "VS": "SARDEGNA",  # sigle storiche pre-2016, ancora in uso in alcuni elenchi
+    # Sicilia
+    "AG": "SICILIA", "CL": "SICILIA", "CT": "SICILIA", "EN": "SICILIA", "ME": "SICILIA",
+    "PA": "SICILIA", "RG": "SICILIA", "SR": "SICILIA", "TP": "SICILIA",
+    # Toscana
+    "AR": "TOSCANA", "FI": "TOSCANA", "GR": "TOSCANA", "LI": "TOSCANA", "LU": "TOSCANA",
+    "MS": "TOSCANA", "PI": "TOSCANA", "PT": "TOSCANA", "PO": "TOSCANA", "SI": "TOSCANA",
+    # Trentino Alto Adige (le due province autonome restano distinte, come già
+    # usato altrove nell'app: es. filtri/mappa mostrano "BOLZANO"/"TRENTO")
+    "BZ": "BOLZANO", "TN": "TRENTO",
+    # Umbria
+    "PG": "UMBRIA", "TR": "UMBRIA",
+    # Valle d'Aosta
+    "AO": "VALLE D AOSTA",
+    # Veneto
+    "BL": "VENETO", "PD": "VENETO", "RO": "VENETO", "TV": "VENETO", "VE": "VENETO",
+    "VI": "VENETO", "VR": "VENETO",
+}
+
+import re as _re
+_PROVINCIA_RE = _re.compile(r"\(([A-Z]{2})\)\s*$")
+
+def extract_region_from_location(location_text):
+    """Estrae la regione dalla riga di località FCI, es. 'HONE - BARD (AO)'.
+    Cerca la sigla provincia tra parentesi in fondo alla stringa e la mappa a
+    una regione tramite PROVINCIA_TO_REGIONE. Ritorna '' se non trovata (gara
+    estera, formato inatteso, o mancante) — i chiamanti ricadono sul
+    fuzzy-match calendario esistente in quel caso."""
+    if not location_text:
+        return ""
+    m = _PROVINCIA_RE.search(location_text.strip())
+    if not m:
+        return ""
+    return PROVINCIA_TO_REGIONE.get(m.group(1), "")

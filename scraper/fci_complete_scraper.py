@@ -5,10 +5,10 @@ from datetime import datetime
 from difflib import SequenceMatcher
 try:
     from .calendar_scraper import scrape_calendar_fci
-    from ._regions import extract_region
+    from ._regions import extract_region, extract_region_from_location
 except (ImportError, ValueError):
     from calendar_scraper import scrape_calendar_fci
-    from _regions import extract_region
+    from _regions import extract_region, extract_region_from_location
 
 # La stagione coincide con l'anno solare (finisce il 31/12): il rollover è
 # automatico a Capodanno. Si può forzare un anno specifico con ITC_SEASON
@@ -272,15 +272,33 @@ def parse_risultati_page(soup: BeautifulSoup, calendar_map: dict, existing_ids: 
 
         # ── Determina moltiplicatore base (Robust Matching con Calendario) ──
         mult, tipo, is_cr, is_ci, reg, match_type = resolve_multiplier(race_name_raw, race_date, calendar_map)
-        
-        # Normalizza regione (es. 'ABRUZZO TOSSICIA' -> 'ABRUZZO')
-        reg = extract_region(reg)
-        
-        # Fallback regione dal testo di contesto
-        if not reg and context_text:
-            m_reg = re.search(r"-\s*([A-Za-z\s\']+)", context_text)
-            if m_reg: reg = extract_region(m_reg.group(1).strip())
-        reg = reg or "ITALIA"
+
+        # ── Regione: PRIMA fonte = sigla provincia pubblicata dalla FCI ──────
+        # La FCI riporta la località della gara come terza riga del blocco
+        # categoria/data/località (es. "ELITE-UNDER23 / 2026-07-17 - VALLE
+        # D'AOSTA / HONE - BARD (AO)"): la sigla provincia tra parentesi è un
+        # dato strutturato e univoco, molto più affidabile del fuzzy-match sul
+        # nome gara contro il calendario Excel (resolve_multiplier sopra), che
+        # può confondere gare con nomi simili o restituire per errore un nome
+        # di categoria ("UNDER", "JUNIORES"...) invece di una regione reale.
+        loc_div = h4.find_previous_sibling("div", class_=re.compile(r"fs-5|text-muted", re.I))
+        if not loc_div and h4.parent:
+            loc_div = h4.parent.find("div", class_=re.compile(r"fs-5|text-muted", re.I))
+        loc_lines = loc_div.get_text("\n", strip=True).split("\n") if loc_div else []
+        location_text = loc_lines[-1] if loc_lines else ""
+        reg_from_provincia = extract_region_from_location(location_text)
+
+        if reg_from_provincia:
+            reg = reg_from_provincia
+        else:
+            # Fallback: regione dal calendario (fuzzy-match), poi dal testo di
+            # contesto grezzo — solo se la provincia non è stata trovata
+            # (gara estera, formato pagina inatteso, ecc.)
+            reg = extract_region(reg)
+            if not reg and context_text:
+                m_reg = re.search(r"-\s*([A-Za-z\s\']+)", context_text)
+                if m_reg: reg = extract_region(m_reg.group(1).strip())
+            reg = reg or "ITALIA"
 
         race_gender = "F" if "DONNE" in (cat_tag.get_text().upper() if cat_tag else "") or any(k in race_name_raw.lower() for k in ["donne","femm"]) else "M"
 
