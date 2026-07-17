@@ -1659,6 +1659,9 @@ app.get('/api/live-now', async (req, res) => {
     if (!YOUTUBE_API_KEY) return res.json({ live: null });
     const videos = await readVideos();
     const todayMs = Date.now();
+    // Data odierna nel fuso delle gare (Italia), non UTC del server: vicino
+    // alla mezzanotte le due possono differire di un giorno.
+    const todayStr = new Date().toLocaleDateString('sv-SE', { timeZone: 'Europe/Rome' });
     const candidates = []; // { gid, v, videoId }
     for (const [gid, arr] of Object.entries(videos)) {
       for (const v of (arr || [])) {
@@ -1670,9 +1673,12 @@ app.get('/api/live-now', async (req, res) => {
         // sbagliato per ogni tappa successiva alla prima.
         const stageIdx = gid.lastIndexOf('::');
         const dateStr = stageIdx !== -1 ? gid.slice(stageIdx + 2) : (gid.match(/_(\d{4}-\d{2}-\d{2})/) || [])[1];
-        if (!dateStr) continue;
-        const dayDiff = Math.abs(todayMs - new Date(dateStr + 'T12:00:00Z').getTime()) / 86400000;
-        if (dayDiff > 1) continue;
+        // Confronto sulla data ESATTA di oggi, non più una tolleranza di ±1
+        // giorno: un organizzatore che apre lo streaming in "sala d'attesa"
+        // con un giorno di anticipo (isLiveNow risulta vero su YouTube anche
+        // prima che la gara inizi davvero) altrimenti veniva mostrato come
+        // "IN DIRETTA ORA" un giorno prima del reale inizio della tappa.
+        if (dateStr !== todayStr) continue;
         const videoId = _extractYouTubeId(v.url);
         if (!videoId) continue;
         candidates.push({ gid, v, videoId, dateStr });
@@ -1699,7 +1705,6 @@ app.get('/api/live-now', async (req, res) => {
     // futuro noto (scheduledStartTime, salvato al momento dell'inserimento
     // del link — vedi _fetchYouTubeVideoMeta), la segnaliamo come "upcoming"
     // per mostrare un countdown sul sito prima che inizi davvero.
-    const todayStr = new Date().toISOString().slice(0, 10);
     const upcomingCands = candidates
       .filter(c => c.dateStr === todayStr)
       .map(c => ({ ...c, scheduledStart: c.v.scheduled_start || infoById[c.videoId]?.scheduledStartTime || null }))
