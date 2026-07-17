@@ -8629,6 +8629,14 @@ async function updateRankTable() {
             ${gap}
           </div>
         </td>
+        <td class="hide-mobile">
+          <div class="td-p-wrap">
+            <span class="td-p p1" title="Vittorie">${t.p1||0}</span>
+            <span class="td-p p2" title="Secondi Posti">${t.p2||0}</span>
+            <span class="td-p p3" title="Terzi Posti">${t.p3||0}</span>
+            <span class="td-p pout" title="Piazzamenti 4-10">${t.pout||0}</span>
+          </div>
+        </td>
         <td class="r hide-mobile" style="font-family:var(--font-mono);font-size:.85rem;color:var(--text-muted)">${t.n_atleti||0}</td>
       </tr>`;
     }).join('');
@@ -8641,9 +8649,10 @@ async function updateRankTable() {
           <th style="width:40px" title="Variazione">↕</th>
           <th>TEAM</th>
           <th class="r">PUNTI</th>
+          <th class="hide-mobile">1° / 2° / 3° / TOP10</th>
           <th class="r hide-mobile">ATLETI</th>
         </tr></thead>
-        <tbody>${rows || '<tr><td colspan="5" class="empty-state">Nessun dato</td></tr>'}</tbody>
+        <tbody>${rows || '<tr><td colspan="6" class="empty-state">Nessun dato</td></tr>'}</tbody>
       </table>`;
   }
 
