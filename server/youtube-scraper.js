@@ -343,6 +343,10 @@ async function fetchVideosInfoBatch(videoIds, apiKey) {
           isLiveNow: !!(lsd && !lsd.actualEndTime),
           publishedAt: item.snippet?.publishedAt ? item.snippet.publishedAt.slice(0, 10) : null,
           channelId: item.snippet?.channelId || null,
+          // Orario di inizio programmato per una diretta non ancora iniziata
+          // (assente per i video normali e per le dirette già concluse) —
+          // usato per mostrare un countdown sul sito prima dell'inizio.
+          scheduledStartTime: lsd?.scheduledStartTime || null,
         };
       }
     } catch (e) {

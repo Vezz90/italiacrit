@@ -1262,6 +1262,12 @@ select.yt-chip-select {
 }
 @keyframes live-banner-in { from { opacity: 0; transform: translateX(-50%) translateY(10px); } to { opacity: 1; transform: translateX(-50%) translateY(0); } }
 @keyframes live-dot-pulse { 0%, 100% { opacity: 1; } 50% { opacity: .3; } }
+/* Diretta programmata oggi ma non ancora iniziata: countdown, colore ambra
+   per distinguerlo a colpo d'occhio dal rosso "in diretta ora". */
+.live-now-banner-upcoming {
+  background: linear-gradient(135deg, #d97706, #92400e);
+}
+.live-now-banner-upcoming .live-now-dot { animation: none; }
 @media (max-width: 640px) {
   .live-now-banner { bottom: 12px; padding: 9px 9px 9px 12px; }
   .live-now-text { max-width: 46vw; font-size: .76rem; }

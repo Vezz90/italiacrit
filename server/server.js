@@ -1663,29 +1663,60 @@ app.get('/api/live-now', async (req, res) => {
     for (const [gid, arr] of Object.entries(videos)) {
       for (const v of (arr || [])) {
         if (!v.is_live) continue;
-        const m = gid.match(/_(\d{4}-\d{2}-\d{2})/);
-        if (!m) continue;
-        const dayDiff = Math.abs(todayMs - new Date(m[1] + 'T12:00:00Z').getTime()) / 86400000;
+        // Una tappa caricata in anticipo (chiave sintetica "calId::data tappa",
+        // vedi window._maddSubmitStageVideo) ha la data della TAPPA dopo "::",
+        // non quella di inizio del giro embedded nel calId — usarla altrimenti
+        // il banner/countdown scatterebbe (o non scatterebbe mai) nel giorno
+        // sbagliato per ogni tappa successiva alla prima.
+        const stageIdx = gid.lastIndexOf('::');
+        const dateStr = stageIdx !== -1 ? gid.slice(stageIdx + 2) : (gid.match(/_(\d{4}-\d{2}-\d{2})/) || [])[1];
+        if (!dateStr) continue;
+        const dayDiff = Math.abs(todayMs - new Date(dateStr + 'T12:00:00Z').getTime()) / 86400000;
         if (dayDiff > 1) continue;
         const videoId = _extractYouTubeId(v.url);
         if (!videoId) continue;
-        candidates.push({ gid, v, videoId });
+        candidates.push({ gid, v, videoId, dateStr });
       }
     }
-    if (!candidates.length) return res.json({ live: null });
+    if (!candidates.length) return res.json({ live: null, upcoming: null });
 
     const infoById = await fetchVideosInfoBatch(candidates.map(c => c.videoId), YOUTUBE_API_KEY);
     const liveNow = candidates.find(c => infoById[c.videoId]?.isLiveNow);
-    if (!liveNow) return res.json({ live: null });
+    if (liveNow) {
+      return res.json({
+        live: {
+          gara_id: liveNow.gid,
+          title: liveNow.v.title || liveNow.gid,
+          channel: liveNow.v.channel || '',
+          url: liveNow.v.url,
+          video_id: liveNow.videoId,
+        },
+        upcoming: null,
+      });
+    }
+
+    // Nessuna diretta attiva ORA: se una di oggi ha un orario programmato
+    // futuro noto (scheduledStartTime, salvato al momento dell'inserimento
+    // del link — vedi _fetchYouTubeVideoMeta), la segnaliamo come "upcoming"
+    // per mostrare un countdown sul sito prima che inizi davvero.
+    const todayStr = new Date().toISOString().slice(0, 10);
+    const upcomingCands = candidates
+      .filter(c => c.dateStr === todayStr)
+      .map(c => ({ ...c, scheduledStart: c.v.scheduled_start || infoById[c.videoId]?.scheduledStartTime || null }))
+      .filter(c => c.scheduledStart && new Date(c.scheduledStart).getTime() > todayMs)
+      .sort((a, b) => new Date(a.scheduledStart) - new Date(b.scheduledStart));
+    const next = upcomingCands[0];
 
     res.json({
-      live: {
-        gara_id: liveNow.gid,
-        title: liveNow.v.title || liveNow.gid,
-        channel: liveNow.v.channel || '',
-        url: liveNow.v.url,
-        video_id: liveNow.videoId,
-      },
+      live: null,
+      upcoming: next ? {
+        gara_id: next.gid,
+        title: next.v.title || next.gid,
+        channel: next.v.channel || '',
+        url: next.v.url,
+        video_id: next.videoId,
+        scheduled_start: next.scheduledStart,
+      } : null,
     });
   } catch (e) { res.status(500).json({ error: e.message }); }
 });
@@ -1700,13 +1731,13 @@ app.get('/api/live-now', async (req, res) => {
 // i chiamanti ricadono sulla data odierna / iniziale come prima.
 async function _fetchYouTubeVideoMeta(url) {
   const videoId = _extractYouTubeId(url);
-  if (!videoId || !YOUTUBE_API_KEY) return { published_at: null, channel_avatar: null };
+  if (!videoId || !YOUTUBE_API_KEY) return { published_at: null, channel_avatar: null, scheduled_start: null };
   try {
     const info = (await fetchVideosInfoBatch([videoId], YOUTUBE_API_KEY))[videoId];
-    if (!info) return { published_at: null, channel_avatar: null };
+    if (!info) return { published_at: null, channel_avatar: null, scheduled_start: null };
     const channel_avatar = info.channelId ? await _getChannelAvatar(info.channelId) : null;
-    return { published_at: info.publishedAt || null, channel_avatar };
-  } catch { return { published_at: null, channel_avatar: null }; }
+    return { published_at: info.publishedAt || null, channel_avatar, scheduled_start: info.scheduledStartTime || null };
+  } catch { return { published_at: null, channel_avatar: null, scheduled_start: null }; }
 }
 
 // Submit URL YouTube (utenti autenticati)
@@ -1723,13 +1754,13 @@ app.post('/api/videos/submit', requireAuth, async (req, res) => {
       const videos = await readVideos();
       if (!videos[key]) videos[key] = [];
       if (videos[key].some(v => v.url === url)) return res.status(409).json({ error: 'Video già presente' });
-      videos[key].push({ url, title: title || url, description: description || '', channel: channel || req.user.display_name || 'Admin', published_at: ytMeta.published_at || new Date().toISOString().slice(0,10), channel_avatar: ytMeta.channel_avatar, atleta_ids: tags, is_live: !!is_live });
+      videos[key].push({ url, title: title || url, description: description || '', channel: channel || req.user.display_name || 'Admin', published_at: ytMeta.published_at || new Date().toISOString().slice(0,10), channel_avatar: ytMeta.channel_avatar, atleta_ids: tags, is_live: !!is_live, scheduled_start: ytMeta.scheduled_start });
       await writeVideos(videos);
       return res.json({ ok: true, status: 'approved' });
     }
     const pending = await readPendingVideos();
     const id = Date.now().toString(36) + Math.random().toString(36).slice(2,7);
-    pending.push({ id, gara_id, cal_id: key, type: 'youtube', url, title: title || url, description: description || '', channel: channel || '', atleta_ids: tags, is_live: !!is_live, published_at: ytMeta.published_at, channel_avatar: ytMeta.channel_avatar, submitted_by: req.user.display_name || req.user.email, submitted_at: new Date().toISOString() });
+    pending.push({ id, gara_id, cal_id: key, type: 'youtube', url, title: title || url, description: description || '', channel: channel || '', atleta_ids: tags, is_live: !!is_live, published_at: ytMeta.published_at, channel_avatar: ytMeta.channel_avatar, scheduled_start: ytMeta.scheduled_start, submitted_by: req.user.display_name || req.user.email, submitted_at: new Date().toISOString() });
     await writePendingVideos(pending);
     res.json({ ok: true, status: 'pending' });
   } catch(e) { res.status(500).json({ error: e.message }); }
@@ -1796,7 +1827,7 @@ app.post('/api/admin/videos/pending/:id/approve', requireAdmin, async (req, res)
     const videos = await readVideos();
     const key = v.cal_id || v.gara_id;
     if (!videos[key]) videos[key] = [];
-    videos[key].push({ url: v.url, title: v.title, description: v.description || '', channel: v.channel || v.submitted_by || '', published_at: v.published_at || (v.submitted_at || '').slice(0, 10), channel_avatar: v.channel_avatar || null, atleta_ids: v.atleta_ids || '', is_live: !!v.is_live });
+    videos[key].push({ url: v.url, title: v.title, description: v.description || '', channel: v.channel || v.submitted_by || '', published_at: v.published_at || (v.submitted_at || '').slice(0, 10), channel_avatar: v.channel_avatar || null, atleta_ids: v.atleta_ids || '', is_live: !!v.is_live, scheduled_start: v.scheduled_start || null });
     await writeVideos(videos);
     pending.splice(i, 1);
     await writePendingVideos(pending);
@@ -3834,6 +3865,7 @@ app.post('/api/admin/youtube/backfill-metadata', requireAdmin, async (req, res) 
       if (info.publishedAt && v.published_at !== info.publishedAt) { v.published_at = info.publishedAt; changed = true; }
       const avatar = info.channelId ? (avatarByChannelId[info.channelId] || null) : null;
       if (avatar && v.channel_avatar !== avatar) { v.channel_avatar = avatar; changed = true; }
+      if (v.is_live && info.scheduledStartTime && v.scheduled_start !== info.scheduledStartTime) { v.scheduled_start = info.scheduledStartTime; changed = true; }
       if (changed) updated++;
     }
     if (updated) await writeVideos(videos);

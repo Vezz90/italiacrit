@@ -2999,23 +2999,34 @@ async function checkLiveNowBanner() {
   try {
     const r = await fetch(`${API_BASE}/live-now`);
     if (!r.ok) return;
-    const { live } = await r.json();
-    if (!live) { hideLiveBanner(); return; }
-    let dismissed = false;
-    try { dismissed = sessionStorage.getItem('live-dismissed-' + live.video_id) === '1'; } catch {}
-    if (dismissed) { hideLiveBanner(); return; }
-    showLiveBanner(live);
+    const { live, upcoming } = await r.json();
+    if (live) {
+      let dismissed = false;
+      try { dismissed = sessionStorage.getItem('live-dismissed-' + live.video_id) === '1'; } catch {}
+      if (dismissed) { hideLiveBanner(); return; }
+      showLiveBanner(live);
+      return;
+    }
+    if (upcoming) {
+      let dismissed = false;
+      try { dismissed = sessionStorage.getItem('live-dismissed-' + upcoming.video_id) === '1'; } catch {}
+      if (dismissed) { hideLiveBanner(); return; }
+      showUpcomingBanner(upcoming);
+      return;
+    }
+    hideLiveBanner();
   } catch {}
 }
 
 function showLiveBanner(live) {
+  _stopLiveCountdown();
   let el = document.getElementById('live-now-banner');
   if (!el) {
     el = document.createElement('div');
     el.id = 'live-now-banner';
-    el.className = 'live-now-banner';
     document.body.appendChild(el);
   }
+  el.className = 'live-now-banner';
   el.dataset.videoId = live.video_id;
   el.dataset.garaId  = live.gara_id;
   el.innerHTML = `
@@ -3029,14 +3040,56 @@ function showLiveBanner(live) {
   el.style.display = 'flex';
 }
 
+// Diretta programmata per oggi ma non ancora iniziata: stesso banner, con
+// countdown live (aggiornato ogni secondo) fino all'orario di inizio, così
+// chi visita il sito sa esattamente quando tornare a guardare la gara.
+function showUpcomingBanner(upcoming) {
+  _stopLiveCountdown();
+  let el = document.getElementById('live-now-banner');
+  if (!el) {
+    el = document.createElement('div');
+    el.id = 'live-now-banner';
+    document.body.appendChild(el);
+  }
+  el.className = 'live-now-banner live-now-banner-upcoming';
+  el.dataset.videoId = upcoming.video_id;
+  el.dataset.garaId  = upcoming.gara_id;
+  const targetMs = new Date(upcoming.scheduled_start).getTime();
+  const render = () => {
+    const diff = targetMs - Date.now();
+    if (diff <= 0) { checkLiveNowBanner(); return; }
+    const h = Math.floor(diff / 3600000), m = Math.floor((diff % 3600000) / 60000), s = Math.floor((diff % 60000) / 1000);
+    const countdownStr = h > 0 ? `${h}h ${String(m).padStart(2,'0')}m` : `${m}m ${String(s).padStart(2,'0')}s`;
+    el.innerHTML = `
+      <div class="live-now-banner-inner" onclick="window._goToLiveBanner()">
+        <span class="live-now-dot"></span>
+        <span class="live-now-text"><strong>DIRETTA TRA ${countdownStr}</strong> — ${esc(upcoming.title)}${upcoming.channel ? ' · ' + esc(upcoming.channel) : ''}</span>
+        <span class="live-now-cta">Vai alla gara ▸</span>
+      </div>
+      <button class="live-now-close" onclick="window._dismissLiveBanner(event)" aria-label="Chiudi">✕</button>
+    `;
+  };
+  render();
+  window._liveCountdownInterval = setInterval(render, 1000);
+  el.style.display = 'flex';
+}
+
+function _stopLiveCountdown() {
+  if (window._liveCountdownInterval) { clearInterval(window._liveCountdownInterval); window._liveCountdownInterval = null; }
+}
+
 function hideLiveBanner() {
+  _stopLiveCountdown();
   const el = document.getElementById('live-now-banner');
   if (el) el.style.display = 'none';
 }
 
 window._goToLiveBanner = () => {
   const el = document.getElementById('live-now-banner');
-  const gid = el?.dataset.garaId;
+  let gid = el?.dataset.garaId;
+  // Chiave sintetica "calId::data tappa": la gara reale non esiste ancora,
+  // rimanda alla pagina del calendario (calId), l'unica esistente finora.
+  if (gid && gid.includes('::')) gid = gid.split('::')[0];
   if (gid) window.location.hash = '#/gara/' + gid;
 };
 
