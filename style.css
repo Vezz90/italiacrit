@@ -1472,7 +1472,11 @@ footer .footer-sep { color: var(--red-hot); margin: 0 8px; }
   font-size: 0.85rem;
   text-align: center;
 }
-.td-p { flex: 1; min-width:30px; }
+/* Ogni numero ha la propria etichetta (1°/2°/3°/TOP10) sopra, non solo un
+   tooltip al passaggio del mouse — così resta leggibile a colpo d'occhio
+   quale colonna guardare, senza dover indovinare dall'header della tabella. */
+.td-p { flex: 1; min-width:30px; display: flex; flex-direction: column; align-items: center; gap: 1px; }
+.td-p-label { font-size: 0.62rem; letter-spacing: 0.03em; opacity: 0.65; font-weight: 600; }
 .td-p.p1 { color: var(--gold); }
 .td-p.p2 { color: var(--silver); }
 .td-p.p3 { color: var(--bronze); }
