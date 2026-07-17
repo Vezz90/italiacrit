@@ -260,6 +260,20 @@ function nationFlagPrefix(teamName) {
   const iso = nationIso(teamName);
   return iso ? _isoToFlag(iso) + ' ' : '';
 }
+// "LOMBARDIA", "LIGURIA", "NAZIONALE ROMANIA", ecc. non sono club reali: sono
+// il nome sotto cui la FCI registra i risultati ai campionati italiani/
+// internazionali (selezioni regionali/nazionali). Non devono avere una
+// pagina /team/ propria né comparire come "squadra" in classifiche o elenchi
+// — i risultati vanno sempre ricondotti al vero club dell'atleta (o restano
+// visibili solo sulla sua pagina se un vero club non è determinabile).
+function isSelectionTeamName(t) {
+  if (!t) return false;
+  if (nationIso(t)) return true;
+  const u = t.toUpperCase().trim();
+  if (ITALIAN_REGIONS.some(r => u === r)) return true;
+  if (/^(SELEZIONE|NAZIONALE|CT ITALIA|UNDER|REGIONALE)/.test(u)) return true;
+  return false;
+}
 
 window.triggerPhotoUpload = function(entityType, entityId) {
   document.getElementById(`photo-file-${entityId}`)?.click();
@@ -1977,20 +1991,12 @@ function processLoadedData({ calendar, resultsRaw, athletes, teams, meta, raceDe
   // ── Team priority: il team con più risultati vince sulle nazionali/selezioni ──
   // Se team_attuale è una nazionale o selezione regionale, sostituiscilo col
   // team reale più frequente tra i risultati dell'atleta.
-  const _isSelectionTeam = (t) => {
-    if (!t) return false;
-    if (nationIso(t)) return true;
-    const u = t.toUpperCase().trim();
-    if (ITALIAN_REGIONS.some(r => u === r)) return true;
-    if (/^(SELEZIONE|NAZIONALE|CT ITALIA|UNDER|REGIONALE)/.test(u)) return true;
-    return false;
-  };
   for (const aid in athletesMerged) {
     const a = athletesMerged[aid];
-    if (!a.risultati?.length || !_isSelectionTeam(a.team_attuale)) continue;
+    if (!a.risultati?.length || !isSelectionTeamName(a.team_attuale)) continue;
     const teamCounts = {};
     for (const r of a.risultati) {
-      if (r.team && !_isSelectionTeam(r.team)) {
+      if (r.team && !isSelectionTeamName(r.team)) {
         teamCounts[r.team] = (teamCounts[r.team] || 0) + 1;
       }
     }
@@ -2011,7 +2017,7 @@ function processLoadedData({ calendar, resultsRaw, athletes, teams, meta, raceDe
       if (!Array.isArray(matchedT.atleti)) matchedT.atleti = [];
       if (!matchedT.atleti.includes(aid)) matchedT.atleti.push(aid);
       for (const r of a.risultati) {
-        if (!r.team || !_isSelectionTeam(r.team)) continue;
+        if (!r.team || !isSelectionTeamName(r.team)) continue;
         if (matchedT.risultati.some(x => x.gara_id === r.gara_id && x.atleta_id === aid)) continue;
         matchedT.risultati.push({
           gara_id: r.gara_id, nome_gara: r.nome_gara, data: r.data, posizione: r.posizione,
@@ -2022,6 +2028,17 @@ function processLoadedData({ calendar, resultsRaw, athletes, teams, meta, raceDe
       }
       matchedT.punti_totali = (matchedT.risultati || []).reduce((s, x) => s + (x.punti_effettivi || 0), 0);
     }
+  }
+
+  // ── Nessuna pagina team per selezioni/nazionali ────────────────
+  // "LOMBARDIA", "LIGURIA", "NAZIONALE ROMANIA", ecc. non sono club reali:
+  // sono il nome sotto cui la FCI registra i risultati ai campionati
+  // italiani/internazionali. I risultati dei singoli atleti sono già stati
+  // ricollegati sopra al loro vero club (o restano comunque visibili sulla
+  // pagina dell'atleta anche quando un vero club non è determinabile) — le
+  // squadre "selezione" non devono avere una propria pagina /team/.
+  for (const tid of Object.keys(teamsMerged)) {
+    if (isSelectionTeamName(teamsMerged[tid].nome)) delete teamsMerged[tid];
   }
 
   return {
@@ -5091,6 +5108,7 @@ function computeTeamRanking(resSet, catCode, beforeDate) {
   for(const r of resSet) {
     if(getRankingFileCode(r)!==catCode||!r.team_id||!r.data) continue;
     if(beforeDate&&r.data>=beforeDate) continue;
+    if(isSelectionTeamName(r.team)) continue; // niente selezioni regionali/nazionali nelle card team
     const k=r.team_id;
     pts[k]=(pts[k]||0)+(r.punti_effettivi||0);
     if(!meta[k]) meta[k]={team:r.team||k,wins:0,podi:0,riders:new Set()};
@@ -8524,7 +8542,11 @@ async function updateRankTable() {
     // ── TEAM RANKING ───────────────────────────────────────────
     let teamRanking = [];
     if (!isFiltered) {
-      teamRanking = await loadTeamRanking(rankCat);
+      // Le squadre "selezione" (LOMBARDIA, LIGURIA, NAZIONALE ROMANIA...)
+      // non sono club reali e non hanno una pagina /team/ — non devono
+      // comparire in classifica (link altrimenti morto).
+      teamRanking = (await loadTeamRanking(rankCat)).filter(t => !isSelectionTeamName(t.team_nome));
+      teamRanking.forEach((t, i) => { t.pos = i + 1; });
     } else {
       // Calcolo dinamico team
       const { resultsRaw } = globalData;
@@ -8534,8 +8556,9 @@ async function updateRankTable() {
 
       resultsRaw.forEach(r => {
         if (r.genere !== rankGender) return;
-        const rCat = getRankingFileCode(r); 
+        const rCat = getRankingFileCode(r);
         if (rCat !== rankCat) return;
+        if (isSelectionTeamName(r.team)) return; // niente selezioni in classifica team
 
         const calEntry = calMap[r.gara_id];
         const resolvedRegion = normalizeRegion(r.regione || (calEntry ? calEntry.regione : ''));
