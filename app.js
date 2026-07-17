@@ -15663,7 +15663,15 @@ async function renderGara(gara_id) {
     for (const r of resultsRaw) {
       if (!r.gara_id || r.data !== data) continue;
       if (_raceBaseName(r.nome_gara) !== _evBase) continue;
-      const code = getRankingFileCode(r);
+      // NB: qui va usata la categoria della GARA (dal suo gara_id), non
+      // quella dell'atleta — niente getRankingFileCode(): applicherebbe
+      // ATHLETE_GENDER_FIXES, pensato per correggere il genere/categoria di
+      // una singola atleta in gare "promiscue", ma che qui creerebbe una
+      // scheda-categoria fantasma se una di quelle atlete corre "fuori
+      // categoria" (es. un'Esordiente 2° anno che gareggia tra le Allieve:
+      // la scheda "Esordienti 2° Anno" punterebbe alla gara Allieve).
+      const m = r.gara_id.match(/_([A-Z0-9]+)_([MF])$/);
+      const code = m ? `${m[1].startsWith('AL') ? 'AL' : m[1]}_${m[2]}` : null;
       if (!code) continue;
       // Usa il gara_id REALE (gli esordienti 1°/2° anno possono avere nomi
       // diversi → niente link costruiti che potrebbero non esistere).
@@ -19565,8 +19573,28 @@ function _syncRisultatiUrl() {
   const path = risQueryCat ? '/risultati/' + encodeURIComponent(risQueryCat) : '/risultati';
   if (location.pathname !== path) history.replaceState(null, '', path);
 }
-window.risSetGenere = (v) => { risQueryGenere = v; renderRisultati(); };
-window.risSetCat    = (v) => { risQueryCat = v; _syncRisultatiUrl(); renderRisultati(); };
+// Un contesto "hub" (es. sezione Allievi Uomini) resta attivo tra una
+// pagina e l'altra (persistito in localStorage, riapplicato ad ogni
+// navigazione da _softRestoreContext) e filtra silenziosamente le gare per
+// genere/categoria — SENZA che sia visibile su questa pagina. Se l'utente
+// sceglie a mano un genere o una categoria che il contesto hub esclude (es.
+// arrivato da "Allievi Uomini" e ora seleziona "Donne"), quel filtro
+// invisibile azzerava i risultati senza spiegazione. La scelta esplicita
+// qui deve sempre vincere sul contesto ereditato.
+window.risSetGenere = (v) => {
+  // clearHubFilter() azzera anche risQueryGenere/risQueryCat (e richiama
+  // route()) — va chiamata PRIMA di impostare il valore scelto qui, non
+  // dopo, altrimenti lo sovrascriverebbe di nuovo a vuoto.
+  if (activeHub && v && activeHub.gender !== v) window.clearHubFilter();
+  risQueryGenere = v;
+  renderRisultati();
+};
+window.risSetCat = (v) => {
+  if (activeHub && v && activeHub.catCodes && !activeHub.catCodes.includes(v)) window.clearHubFilter();
+  risQueryCat = v;
+  _syncRisultatiUrl();
+  renderRisultati();
+};
 window.risSetMonth  = (v) => { risQueryMonth = v; renderRisultati(); };
 window.risSetRegion = (v) => { risQueryRegion = v; renderRisultati(); };
 window.risSetTipo   = (v) => { risQueryTipo = v; renderRisultati(); };
