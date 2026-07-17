@@ -20242,8 +20242,11 @@ async function renderMedia() {
   // "calId::data tappa") vanno ordinati sulla data della tappa scelta a mano,
   // non su published_at — stesso criterio delle Dirette, per coerenza.
   const byPublishedDesc = (a, b) => {
-    const ka = a.gara_id.includes('::') ? (a.meta?.data || a.video.published_at || '') : (a.video.published_at || a.meta?.data || '');
-    const kb = b.gara_id.includes('::') ? (b.meta?.data || b.video.published_at || '') : (b.video.published_at || b.meta?.data || '');
+    // Presentazioni/Programmi TV non hanno gara_id (non collegati a nessuna
+    // gara) — senza il controllo, .includes su undefined mandava in eccezione
+    // l'intero sort e quindi tutta renderMedia(), lasciando la pagina bianca.
+    const ka = (a.gara_id || '').includes('::') ? (a.meta?.data || a.video.published_at || '') : (a.video.published_at || a.meta?.data || '');
+    const kb = (b.gara_id || '').includes('::') ? (b.meta?.data || b.video.published_at || '') : (b.video.published_at || b.meta?.data || '');
     return kb.localeCompare(ka);
   };
   // Le DIRETTE vanno ordinate per data della GARA (calendario), non di
