@@ -1999,6 +1999,29 @@ function processLoadedData({ calendar, resultsRaw, athletes, teams, meta, raceDe
     a.team_attuale = best[0];
     const matchedT = Object.values(teamsMerged).find(t => t.nome === best[0]);
     if (matchedT) a.team_id = matchedT.id;
+    // I risultati ottenuti sotto la selezione (es. "LIGURIA" ai campionati
+    // italiani) restano scritti con quel nome squadra nei dati grezzi — il
+    // team.risultati del vero club (teams.json, calcolato dallo scraper)
+    // non li conterrà MAI, perché lì la gara è attribuita letteralmente a
+    // "LIGURIA". Risultato: la vittoria di un atleta compariva sulla SUA
+    // pagina (che legge ath.risultati, già corretto sopra) ma non su
+    // quella del suo team. Li aggiungiamo qui esplicitamente.
+    if (matchedT) {
+      if (!Array.isArray(matchedT.risultati)) matchedT.risultati = [];
+      if (!Array.isArray(matchedT.atleti)) matchedT.atleti = [];
+      if (!matchedT.atleti.includes(aid)) matchedT.atleti.push(aid);
+      for (const r of a.risultati) {
+        if (!r.team || !_isSelectionTeam(r.team)) continue;
+        if (matchedT.risultati.some(x => x.gara_id === r.gara_id && x.atleta_id === aid)) continue;
+        matchedT.risultati.push({
+          gara_id: r.gara_id, nome_gara: r.nome_gara, data: r.data, posizione: r.posizione,
+          punti_effettivi: r.punti_effettivi, team: a.team_attuale, moltiplicatore: r.moltiplicatore,
+          tipo: r.tipo, regione: r.regione, km: r.km, media: r.media,
+          atleta_id: aid, atleta_cognome: a.cognome, atleta_nome: a.nome,
+        });
+      }
+      matchedT.punti_totali = (matchedT.risultati || []).reduce((s, x) => s + (x.punti_effettivi || 0), 0);
+    }
   }
 
   return {
