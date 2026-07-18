@@ -1280,6 +1280,37 @@ select.yt-chip-select {
   background: linear-gradient(135deg, #d97706, #92400e);
 }
 .live-now-banner-upcoming .live-now-dot { animation: none; }
+
+/* Vista affiancata per due dirette in contemporanea */
+.multi-live-overlay {
+  position: fixed; inset: 0; z-index: 10500;
+  background: #000;
+  display: flex; flex-direction: column;
+}
+.multi-live-hdr {
+  display: flex; align-items: center; justify-content: space-between;
+  padding: 12px 18px; color: #fff; font-weight: 700; font-size: .9rem;
+  background: rgba(255,255,255,.06); flex-shrink: 0;
+}
+.multi-live-hdr button {
+  background: rgba(255,255,255,.12); border: none; color: #fff;
+  width: 30px; height: 30px; border-radius: 50%; cursor: pointer; font-size: .9rem;
+}
+.multi-live-grid {
+  flex: 1; display: flex; gap: 2px; min-height: 0;
+}
+.multi-live-pane {
+  flex: 1; display: flex; flex-direction: column; min-width: 0;
+}
+.multi-live-pane-title {
+  color: rgba(255,255,255,.8); font-size: .78rem; padding: 8px 12px;
+  white-space: nowrap; overflow: hidden; text-overflow: ellipsis; flex-shrink: 0;
+}
+.multi-live-pane-frame { flex: 1; min-height: 0; }
+.multi-live-pane-frame iframe { width: 100%; height: 100%; border: none; display: block; }
+@media (max-width: 768px) {
+  .multi-live-grid { flex-direction: column; }
+}
 @media (max-width: 640px) {
   .live-now-banner { bottom: 12px; padding: 9px 9px 9px 12px; }
   .live-now-text { max-width: 46vw; font-size: .76rem; }

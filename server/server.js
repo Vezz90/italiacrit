@@ -1781,16 +1781,22 @@ app.get('/api/live-now', async (req, res) => {
       const liveCandsForNotify = candidates.filter(c => infoById[c.videoId]?.isLiveNow);
       _notifyLiveCandidates(liveCandsForNotify, todayStr);
     }
-    const liveNow = candidates.find(c => infoById[c.videoId]?.isLiveNow);
+    const allLiveNow = candidates.filter(c => infoById[c.videoId]?.isLiveNow);
+    const liveNow = allLiveNow[0];
     if (liveNow) {
+      const toLive = c => ({
+        gara_id: c.gid,
+        title: c.v.title || c.gid,
+        channel: c.v.channel || '',
+        url: c.v.url,
+        video_id: c.videoId,
+      });
       return res.json({
-        live: {
-          gara_id: liveNow.gid,
-          title: liveNow.v.title || liveNow.gid,
-          channel: liveNow.v.channel || '',
-          url: liveNow.v.url,
-          video_id: liveNow.videoId,
-        },
+        live: toLive(liveNow),
+        // Fino a 2 dirette in contemporanea (multi-schermo): null se ce n'è
+        // solo una, altrimenti le prime 2 trovate — il client mostra un
+        // pulsante "guarda entrambe" solo quando questo campo è valorizzato.
+        liveSecond: allLiveNow.length > 1 ? toLive(allLiveNow[1]) : null,
         upcoming: null,
       });
     }

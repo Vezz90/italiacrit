@@ -3091,12 +3091,12 @@ async function checkLiveNowBanner() {
   try {
     const r = await fetch(`${API_BASE}/live-now`);
     if (!r.ok) return;
-    const { live, upcoming } = await r.json();
+    const { live, liveSecond, upcoming } = await r.json();
     if (live) {
       let dismissed = false;
       try { dismissed = sessionStorage.getItem('live-dismissed-' + live.video_id) === '1'; } catch {}
       if (dismissed) { hideLiveBanner(); return; }
-      showLiveBanner(live);
+      showLiveBanner(live, liveSecond);
       return;
     }
     if (upcoming) {
@@ -3110,7 +3110,7 @@ async function checkLiveNowBanner() {
   } catch {}
 }
 
-function showLiveBanner(live) {
+function showLiveBanner(live, liveSecond) {
   _stopLiveCountdown();
   let el = document.getElementById('live-now-banner');
   if (!el) {
@@ -3121,16 +3121,49 @@ function showLiveBanner(live) {
   el.className = 'live-now-banner';
   el.dataset.videoId = live.video_id;
   el.dataset.garaId  = live.gara_id;
+  // Due dirette in contemporanea: invece del solito "Guarda", un pulsante
+  // che apre entrambe affiancate (vedi window.openMultiLiveView) — la
+  // banner resta la stessa per non duplicare l'interfaccia.
+  window._liveSecond = liveSecond || null;
+  const ctaHtml = liveSecond
+    ? `<span class="live-now-cta" onclick="event.stopPropagation();window.openMultiLiveView(${JSON.stringify(live).replace(/"/g,'&quot;')},${JSON.stringify(liveSecond).replace(/"/g,'&quot;')})">🖥 Guarda entrambe ▸</span>`
+    : `<span class="live-now-cta">Guarda ▸</span>`;
   el.innerHTML = `
     <div class="live-now-banner-inner" onclick="window._goToLiveBanner()">
       <span class="live-now-dot"></span>
-      <span class="live-now-text"><strong>IN DIRETTA ORA</strong> — ${esc(live.title)}${live.channel ? ' · ' + esc(live.channel) : ''}</span>
-      <span class="live-now-cta">Guarda ▸</span>
+      <span class="live-now-text"><strong>${liveSecond ? '2 DIRETTE ORA' : 'IN DIRETTA ORA'}</strong> — ${esc(live.title)}${live.channel ? ' · ' + esc(live.channel) : ''}</span>
+      ${ctaHtml}
     </div>
     <button class="live-now-close" onclick="window._dismissLiveBanner(event)" aria-label="Chiudi">✕</button>
   `;
   el.style.display = 'flex';
 }
+
+// Vista affiancata per due dirette in contemporanea (fino a 2, non di più —
+// oltre diventa illeggibile specie su mobile). Semplice overlay con due
+// player YouTube incorporati uno accanto all'altro (uno sopra l'altro su
+// schermi stretti, via CSS).
+window.openMultiLiveView = function(live1, live2) {
+  document.getElementById('multi-live-view')?.remove();
+  const overlay = document.createElement('div');
+  overlay.id = 'multi-live-view';
+  overlay.className = 'multi-live-overlay';
+  const pane = (live) => `
+    <div class="multi-live-pane">
+      <div class="multi-live-pane-title">${esc(live.title)}${live.channel ? ' · ' + esc(live.channel) : ''}</div>
+      <div class="multi-live-pane-frame">
+        <iframe src="https://www.youtube.com/embed/${esc(live.video_id)}?autoplay=1" frameborder="0" allow="autoplay; encrypted-media; picture-in-picture" allowfullscreen></iframe>
+      </div>
+    </div>`;
+  overlay.innerHTML = `
+    <div class="multi-live-hdr">
+      <span>🖥 2 dirette in contemporanea</span>
+      <button onclick="document.getElementById('multi-live-view')?.remove()" aria-label="Chiudi">✕</button>
+    </div>
+    <div class="multi-live-grid">${pane(live1)}${pane(live2)}</div>
+  `;
+  document.body.appendChild(overlay);
+};
 
 // Diretta programmata per oggi ma non ancora iniziata: stesso banner, con
 // countdown live (aggiornato ogni secondo) fino all'orario di inizio, così
