@@ -1420,6 +1420,7 @@ app.get('/api/health', (req, res) => res.json({ ok: true, ts: new Date().toISOSt
 // Così le sync girano anche se l'setInterval interno si è fermato per uno sleep.
 let _lastCronSync = 0;
 let _lastScrapeTrigger = 0;
+let _lastLiveCheck = 0;
 // Triggera il workflow scrape su GitHub Actions (indipendente dal cron GitHub
 // che è inaffidabile). Richiede GH_DISPATCH_TOKEN (PAT con scope actions:write).
 function triggerScrapeWorkflow() {
@@ -1528,6 +1529,14 @@ app.get('/api/cron/tick', (req, res) => {
   if (month >= 3 && month <= 10 && now - _lastScrapeTrigger >= 30 * 60 * 1000) {
     _lastScrapeTrigger = now;
     triggerScrapeWorkflow();
+  }
+  // Controlla se una diretta programmata per oggi è appena iniziata e, se
+  // sì, notifica tutti gli iscritti — max una volta ogni 3 min (il pinger
+  // esterno colpisce /cron/tick ogni ~10 min, questo throttle protegge solo
+  // da eventuali ping più ravvicinati, es. più utenti sul sito insieme).
+  if (now - _lastLiveCheck >= 3 * 60 * 1000) {
+    _lastLiveCheck = now;
+    checkLiveTransitionsAndNotify();
   }
 });
 
@@ -1653,40 +1662,125 @@ app.get('/api/admin/videos', requireAdmin, async (req, res) => {
 // tempo, non ha senso ricontrollarle a ogni apertura) — poi verifica lo stato
 // reale su YouTube (liveStreamingDetails.actualStartTime senza actualEndTime)
 // tramite lo stesso helper già usato per la coda scraper.
+// Raccoglie i candidati "diretta di oggi" (video/tappe con is_live=true e
+// data == oggi) e il loro stato live/orario da YouTube — condiviso fra
+// /api/live-now (chiamato dal client) e checkLiveTransitionsAndNotify()
+// (chiamato dal cron server-side per le notifiche push, indipendente da
+// eventuali utenti collegati in quel momento).
+async function _getLiveNowState() {
+  if (!YOUTUBE_API_KEY) return { candidates: [], infoById: {}, todayStr: '' };
+  const videos = await readVideos();
+  // Data odierna nel fuso delle gare (Italia), non UTC del server: vicino
+  // alla mezzanotte le due possono differire di un giorno.
+  const todayStr = new Date().toLocaleDateString('sv-SE', { timeZone: 'Europe/Rome' });
+  const candidates = []; // { gid, v, videoId, dateStr }
+  for (const [gid, arr] of Object.entries(videos)) {
+    for (const v of (arr || [])) {
+      if (!v.is_live) continue;
+      // Una tappa caricata in anticipo (chiave sintetica "calId::data tappa",
+      // vedi window._maddSubmitStageVideo) ha la data della TAPPA dopo "::",
+      // non quella di inizio del giro embedded nel calId — usarla altrimenti
+      // il banner/countdown/notifica scatterebbe (o non scatterebbe mai) nel
+      // giorno sbagliato per ogni tappa successiva alla prima.
+      const stageIdx = gid.lastIndexOf('::');
+      const dateStr = stageIdx !== -1 ? gid.slice(stageIdx + 2) : (gid.match(/_(\d{4}-\d{2}-\d{2})/) || [])[1];
+      // Confronto sulla data ESATTA di oggi, non una tolleranza di ±1 giorno:
+      // un organizzatore che apre lo streaming in "sala d'attesa" con un
+      // giorno di anticipo (isLiveNow risulta vero su YouTube anche prima
+      // che la gara inizi davvero) altrimenti veniva mostrato/notificato un
+      // giorno prima del reale inizio della tappa.
+      if (dateStr !== todayStr) continue;
+      const videoId = _extractYouTubeId(v.url);
+      if (!videoId) continue;
+      candidates.push({ gid, v, videoId, dateStr });
+    }
+  }
+  if (!candidates.length) return { candidates, infoById: {}, todayStr };
+  const infoById = await fetchVideosInfoBatch(candidates.map(c => c.videoId), YOUTUBE_API_KEY);
+  return { candidates, infoById, todayStr };
+}
+
+// ── Notifiche push "diretta iniziata" ────────────────────────────────────
+// Persistenza dei video_id già notificati oggi (kv_store, sopravvive ai
+// riavvii del server free-tier) — evita di rinotificare la stessa diretta
+// ad ogni tick del cron finché resta "isLiveNow".
+async function readLiveNotified() {
+  if (supabase) {
+    const { data, error } = await supabase.from('kv_store').select('value').eq('key', 'live_notified').maybeSingle();
+    if (error) console.error('[live-notified] read error:', error.message);
+    return data?.value || {};
+  }
+  return {};
+}
+async function writeLiveNotified(obj) {
+  if (supabase) {
+    const { error } = await supabase.from('kv_store').upsert({ key: 'live_notified', value: obj, updated_at: new Date().toISOString() });
+    if (error) console.error('[live-notified] write error:', error.message);
+  }
+}
+
+// Manda la notifica push per ogni candidato isLiveNow non ancora notificato
+// oggi. Riusata sia dal cron server-side sia (con throttle condiviso) dalle
+// chiamate client a /api/live-now, così la notifica parte più rapidamente
+// quando c'è già qualcuno sul sito, senza dover aspettare il prossimo tick
+// del pinger esterno (~10 min) né fare una seconda chiamata a YouTube.
+async function _notifyLiveCandidates(liveCands, todayStr) {
+  if (!liveCands.length) return;
+  try {
+    const notified = await readLiveNotified();
+    let changed = false;
+    for (const c of liveCands) {
+      if (notified[c.videoId]) continue;
+      // Chiave sintetica "calId::data tappa": la gara reale non esiste
+      // ancora, rimanda alla pagina del calendario (l'unica esistente finora).
+      const cleanGid = c.gid.includes('::') ? c.gid.split('::')[0] : c.gid;
+      await sendPushToAll({
+        title: '🔴 Diretta iniziata!',
+        body: c.v.title || 'Una diretta è appena iniziata',
+        url: `/gara/${encodeURIComponent(cleanGid)}`,
+      });
+      notified[c.videoId] = todayStr;
+      changed = true;
+    }
+    // Pulizia: tieni solo le ultime 48h, altrimenti l'oggetto cresce all'infinito
+    for (const [vid, d] of Object.entries(notified)) {
+      if (d === todayStr) continue;
+      if ((Date.now() - new Date(d).getTime()) / 86400000 > 2) delete notified[vid];
+    }
+    if (changed) await writeLiveNotified(notified);
+  } catch (e) { console.warn('[live-notify]', e.message); }
+}
+
+// Chiamata dal cron server-side (vedi /api/cron/tick): rileva il momento
+// esatto in cui una diretta programmata passa da "non ancora iniziata" a
+// "isLiveNow" su YouTube, e manda una notifica push a tutti gli iscritti —
+// funziona anche per chi non ha il sito aperto in quel momento.
+async function checkLiveTransitionsAndNotify() {
+  try {
+    const { candidates, infoById, todayStr } = await _getLiveNowState();
+    const liveCands = candidates.filter(c => infoById[c.videoId]?.isLiveNow);
+    await _notifyLiveCandidates(liveCands, todayStr);
+  } catch (e) { console.warn('[live-notify]', e.message); }
+}
+
 app.get('/api/live-now', async (req, res) => {
   res.set('Cache-Control', 'no-cache');
   try {
-    if (!YOUTUBE_API_KEY) return res.json({ live: null });
-    const videos = await readVideos();
-    const todayMs = Date.now();
-    // Data odierna nel fuso delle gare (Italia), non UTC del server: vicino
-    // alla mezzanotte le due possono differire di un giorno.
-    const todayStr = new Date().toLocaleDateString('sv-SE', { timeZone: 'Europe/Rome' });
-    const candidates = []; // { gid, v, videoId }
-    for (const [gid, arr] of Object.entries(videos)) {
-      for (const v of (arr || [])) {
-        if (!v.is_live) continue;
-        // Una tappa caricata in anticipo (chiave sintetica "calId::data tappa",
-        // vedi window._maddSubmitStageVideo) ha la data della TAPPA dopo "::",
-        // non quella di inizio del giro embedded nel calId — usarla altrimenti
-        // il banner/countdown scatterebbe (o non scatterebbe mai) nel giorno
-        // sbagliato per ogni tappa successiva alla prima.
-        const stageIdx = gid.lastIndexOf('::');
-        const dateStr = stageIdx !== -1 ? gid.slice(stageIdx + 2) : (gid.match(/_(\d{4}-\d{2}-\d{2})/) || [])[1];
-        // Confronto sulla data ESATTA di oggi, non più una tolleranza di ±1
-        // giorno: un organizzatore che apre lo streaming in "sala d'attesa"
-        // con un giorno di anticipo (isLiveNow risulta vero su YouTube anche
-        // prima che la gara inizi davvero) altrimenti veniva mostrato come
-        // "IN DIRETTA ORA" un giorno prima del reale inizio della tappa.
-        if (dateStr !== todayStr) continue;
-        const videoId = _extractYouTubeId(v.url);
-        if (!videoId) continue;
-        candidates.push({ gid, v, videoId, dateStr });
-      }
-    }
+    const { candidates, infoById, todayStr } = await _getLiveNowState();
     if (!candidates.length) return res.json({ live: null, upcoming: null });
 
-    const infoById = await fetchVideosInfoBatch(candidates.map(c => c.videoId), YOUTUBE_API_KEY);
+    const todayMs = Date.now();
+    // Notifica push opportunistica: se c'è già traffico sul sito la diretta
+    // appena iniziata viene notificata subito invece di aspettare il
+    // prossimo tick del pinger esterno (~10 min) — throttle condiviso con
+    // /api/cron/tick tramite _lastLiveCheck, quindi anche con molti client
+    // collegati in parallelo la scansione non riparte più di una volta ogni
+    // 3 min, e non blocca la risposta a questa richiesta (fire-and-forget).
+    if (Date.now() - _lastLiveCheck >= 3 * 60 * 1000) {
+      _lastLiveCheck = Date.now();
+      const liveCandsForNotify = candidates.filter(c => infoById[c.videoId]?.isLiveNow);
+      _notifyLiveCandidates(liveCandsForNotify, todayStr);
+    }
     const liveNow = candidates.find(c => infoById[c.videoId]?.isLiveNow);
     if (liveNow) {
       return res.json({
@@ -1705,8 +1799,8 @@ app.get('/api/live-now', async (req, res) => {
     // futuro noto (scheduledStartTime, salvato al momento dell'inserimento
     // del link — vedi _fetchYouTubeVideoMeta), la segnaliamo come "upcoming"
     // per mostrare un countdown sul sito prima che inizi davvero.
+    // (candidates è già filtrato sulla data di oggi da _getLiveNowState)
     const upcomingCands = candidates
-      .filter(c => c.dateStr === todayStr)
       .map(c => ({ ...c, scheduledStart: c.v.scheduled_start || infoById[c.videoId]?.scheduledStartTime || null }))
       .filter(c => c.scheduledStart && new Date(c.scheduledStart).getTime() > todayMs)
       .sort((a, b) => new Date(a.scheduledStart) - new Date(b.scheduledStart));
