@@ -2396,7 +2396,17 @@ function _fciAthleteKeys() {
 // hanno già un team dai risultati ufficiali; il loro team si cambia solo con un
 // override esplicito, applicato a parte dal frontend (così non finiscono nel team
 // sbagliato per via di un team_name PCS incoerente, es. nazionali/guest).
+// Cache in-memory: questa funzione pagina 3 tabelle Supabase intere (pcs_gara_results
+// arriva a 10mila+ righe) a OGNI caricamento del sito da OGNI visitatore — misurato
+// a ~3.6s in produzione, il singolo endpoint più lento del caricamento iniziale.
+// I dati sottostanti cambiano solo per azioni admin (import/rematch/merge PCS),
+// quindi un TTL breve più invalidazione esplicita sui punti di scrittura elimina
+// quasi tutto il costo per il caso comune senza rischiare dati stantii a lungo.
+let _pcsRosterMapCache = null, _pcsRosterMapTs = 0;
+const _PCS_ROSTER_CACHE_TTL = 90000;
+function _invalidatePcsRosterCache() { _pcsRosterMapCache = null; }
 async function _buildPcsRosterMap() {
+  if (_pcsRosterMapCache && (Date.now() - _pcsRosterMapTs) < _PCS_ROSTER_CACHE_TTL) return _pcsRosterMapCache;
   const [riders, profRows, ovMap] = await Promise.all([
     _fetchAllPcsResultRiders(),
     _fetchAllPcsProfiles(),
@@ -2423,6 +2433,7 @@ async function _buildPcsRosterMap() {
       result[a.team_id].atleti.push({ atleta_id: aid, cognome: a.cognome, nome: a.nome, categoria: a.categoria, genere: a.genere });
     }
   }
+  _pcsRosterMapCache = result; _pcsRosterMapTs = Date.now();
   return result;
 }
 
@@ -3315,6 +3326,7 @@ app.post('/api/admin/pcs-rematch-athletes', requireAdmin, async (req, res) => {
     }
 
     console.log(`[rematch] ${updated}/${sbRows.length} righe aggiornate, ${newAtleti} nuovi profili, ${teamFixed} team corretti, ${manualFixed} risultati manuali sistemati`);
+    _invalidatePcsRosterCache();
     res.json({ ok: true, updated, total: sbRows.length, newAtleti, teamFixed, manualFixed });
   } catch (e) { res.status(500).json({ error: e.message }); }
 });
@@ -3406,6 +3418,7 @@ app.post('/api/admin/pcs-merge-team', requireAdmin, async (req, res) => {
           .eq('entity_type', 'atleta').eq('entity_id', row.entity_id).in('field', ['team', 'team_id']);
       }
     }
+    _invalidatePcsRosterCache();
     res.json({ ok: true, updated });
   } catch (e) { res.status(500).json({ error: e.message }); }
 });
@@ -3457,6 +3470,7 @@ app.post('/api/admin/pcs-set-athlete-team', requireAdmin, async (req, res) => {
     // così il team appena assegnato è quello mostrato e linkato.
     await supabase.from('entity_overrides').delete()
       .eq('entity_type', 'atleta').eq('entity_id', atleta_id).in('field', ['team', 'team_id']);
+    _invalidatePcsRosterCache();
     res.json({ ok: true });
   } catch (e) { res.status(500).json({ error: e.message }); }
 });
@@ -3547,6 +3561,7 @@ app.post('/api/admin/gara/:garaId/pcs-import', requireAdmin, async (req, res) =>
     if (insErr) throw insErr;
 
     console.log(`[pcs-import] ${garaId}: ${parsedRows.length} corridori salvati, ${newAtleti} nuovi profili creati`);
+    _invalidatePcsRosterCache();
     res.json({ ok: true, riders: parsedRows.length, newAtleti, slug: pcsSlug, url: usedUrl });
   } catch (e) { res.status(500).json({ error: e.message }); }
 });
@@ -3575,6 +3590,7 @@ app.post('/api/admin/gara/:garaId/pcs-import-html', requireAdmin, async (req, re
     if (insErr) throw insErr;
 
     console.log(`[pcs-import-html] ${garaId}: ${parsedRows.length} corridori salvati, ${newAtleti} nuovi profili creati`);
+    _invalidatePcsRosterCache();
     res.json({ ok: true, riders: parsedRows.length, newAtleti, slug: pcsSlug });
   } catch (e) { res.status(500).json({ error: e.message }); }
 });

@@ -3022,7 +3022,13 @@ function _trackPageView() {
 window.addEventListener('hashchange', _trackPageView);
 window.addEventListener('popstate', _trackPageView);
 
-window.addEventListener('load', async () => {
+// DOMContentLoaded invece di 'load': 'load' aspetta anche risorse esterne
+// non critiche per il primo render (Google Fonts, widget traduzione, GA,
+// logo) — misurato ~1.7s di attesa pura prima che parta anche solo il
+// fetch dei dati. Lo script ha già `defer`, quindi il DOM è comunque
+// pronto quando questo codice gira: aspettare DOMContentLoaded è corretto
+// e molto più veloce.
+document.addEventListener('DOMContentLoaded', async () => {
   globalData = await loadAll();
   updateMetaUI();
   await loadSeasonsIndex();
