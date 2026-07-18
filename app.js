@@ -1912,6 +1912,12 @@ function processLoadedData({ calendar, resultsRaw, athletes, teams, meta, raceDe
       const stageVideos = videos[stageKey];
       if (!stageVideos || !stageVideos.length) continue;
       videos[realGaraId] = [...(videos[realGaraId] || []), ...stageVideos];
+      // Senza questo delete, la chiave sintetica restava nell'oggetto videos
+      // anche dopo il merge: la pagina Media itera Object.entries(videos)
+      // e mostrava sia la voce "in attesa" (chiave sintetica) sia quella
+      // appena ricollegata alla gara reale — un doppione esatto della
+      // stessa diretta/video.
+      delete videos[stageKey];
     }
   }
 
@@ -20556,6 +20562,18 @@ async function renderMedia() {
   // comparire anche tra i video normali.
   const direteItems = videoItems.filter(x => x.video.is_live).sort(byRaceDateDesc);
   videoItems = videoItems.filter(x => !x.video.is_live);
+  // Data di oggi nel fuso delle gare (Italia), non UTC del browser — stesso
+  // criterio usato server-side per il banner "IN DIRETTA ORA".
+  const _todayStrMedia = new Date().toLocaleDateString('sv-SE', { timeZone: 'Europe/Rome' });
+  // Le dirette di OGGI e quelle future ("prossimamente") vanno isolate in
+  // cima, prima di tutte le altre — che restano nell'ordine cronologico
+  // già esistente (byRaceDateDesc) e in QUELLA posizione ci tornano da sole
+  // il giorno dopo, quando smettono di essere "di oggi".
+  const diretteOggi = direteItems.filter(x => x.meta?.data === _todayStrMedia);
+  const direttePros = direteItems
+    .filter(x => x.meta?.data && x.meta.data > _todayStrMedia)
+    .sort((a, b) => (a.meta.data || '').localeCompare(b.meta.data || '')); // più vicina prima
+  const diretteResto = direteItems.filter(x => !(x.meta?.data === _todayStrMedia || (x.meta?.data && x.meta.data > _todayStrMedia)));
   const presentazioniFiltered = applyFilters(presentazioniItems).sort(byPublishedDesc);
   const programmiTvFiltered   = applyFilters(programmiTvItems).sort(byPublishedDesc);
 
@@ -20693,9 +20711,24 @@ async function renderMedia() {
         <button onclick="window._mediaBulkSetLive(false)">🎬 Segna come Video normale</button>
         <button class="yt-bulk-clear" onclick="window._mediaClearSel()">Annulla selezione</button>
       </div>` : ''}
-      <div class="yt-grid">
-        ${items.length ? items.map(cardHtml).join('') : `<p style="color:var(--text-muted);padding:24px 4px">Nessun elemento trovato.</p>`}
-      </div>
+      ${mediaTab === 'dirette' ? `
+        ${diretteOggi.length ? `
+          <div class="yt-group-hdr"><span class="yt-group-dot"></span>IN DIRETTA <span class="yt-chip-count">${diretteOggi.length}</span></div>
+          <div class="yt-grid">${diretteOggi.map(cardHtml).join('')}</div>
+        ` : ''}
+        ${direttePros.length ? `
+          <div class="yt-group-hdr">📅 PROSSIMAMENTE <span class="yt-chip-count">${direttePros.length}</span></div>
+          <div class="yt-grid">${direttePros.map(cardHtml).join('')}</div>
+        ` : ''}
+        ${diretteOggi.length || direttePros.length ? `<div class="yt-group-hdr">TUTTE LE DIRETTE</div>` : ''}
+        <div class="yt-grid">
+          ${diretteResto.length ? diretteResto.map(cardHtml).join('') : (!diretteOggi.length && !direttePros.length ? `<p style="color:var(--text-muted);padding:24px 4px">Nessun elemento trovato.</p>` : '')}
+        </div>
+      ` : `
+        <div class="yt-grid">
+          ${items.length ? items.map(cardHtml).join('') : `<p style="color:var(--text-muted);padding:24px 4px">Nessun elemento trovato.</p>`}
+        </div>
+      `}
     </div>
   `);
 }

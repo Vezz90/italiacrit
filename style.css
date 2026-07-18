@@ -1094,6 +1094,18 @@ body:not(.light-mode) .theme-icon-moon { display: none; }
 .yt-chip:hover { background: var(--border-subtle); }
 .yt-chip-active { background: var(--text-primary); color: var(--bg-primary); }
 .yt-chip-count { opacity: .65; font-weight: 500; margin-left: 3px; }
+/* Sotto-sezioni della tab Dirette: In Diretta / Prossimamente / Tutte le dirette */
+.yt-group-hdr {
+  display: flex; align-items: center; gap: 8px;
+  font-size: .78rem; font-weight: 700; letter-spacing: .04em;
+  color: var(--text-secondary); text-transform: uppercase;
+  margin: 22px 4px 10px; padding-top: 14px; border-top: 1px solid var(--border-subtle);
+}
+.yt-group-hdr:first-child { margin-top: 0; padding-top: 0; border-top: none; }
+.yt-group-dot {
+  width: 8px; height: 8px; border-radius: 50%; background: var(--red-hot);
+  animation: live-dot-pulse 1.4s infinite;
+}
 .yt-chip-sep { flex: 0 0 1px; align-self: stretch; background: var(--border-subtle); margin: 0 2px; }
 select.yt-chip-select {
   padding-right: 26px;
