@@ -1,0 +1,25 @@
+name: Trigger Render Deploy
+
+# Il webhook automatico GitHub -> Render (impostato nella dashboard Render)
+# si è dimostrato inaffidabile: molti push restavano "non deployati" per ore
+# senza nessun evento visibile nella dashboard, richiedendo un "Manual Deploy"
+# a mano ogni volta. Questo workflow lo sostituisce con un trigger esplicito
+# e verificabile (log dello step con lo status HTTP di risposta) ad ogni push
+# su main, tramite il Deploy Hook di Render (Settings -> Deploy Hook del
+# servizio), salvato come secret RENDER_DEPLOY_HOOK.
+on:
+  push:
+    branches: [main]
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Trigger Render deploy hook
+        run: |
+          code=$(curl -s -o /dev/null -w "%{http_code}" -X POST "${{ secrets.RENDER_DEPLOY_HOOK }}")
+          echo "Render deploy hook risposta HTTP: $code"
+          if [ "$code" -ge 300 ]; then
+            echo "::error::Deploy hook fallito (HTTP $code)"
+            exit 1
+          fi
