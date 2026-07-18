@@ -230,11 +230,16 @@ ALL_CODES = ["ELI_M","JUN_M","AL_M","ES1_M","ES2_M","ELI_F","JUN_F","AL_F","ES1_
 # ═══════════════════════════════════════════════════════════════
 # 2. RISULTATI GARE via requests (pagine statiche)
 # ═══════════════════════════════════════════════════════════════
-def parse_risultati_page(soup: BeautifulSoup, calendar_map: dict, existing_ids: set) -> list[dict]:
-    """Parsa la pagina radice dei risultati FCI. 
+def parse_risultati_page(soup: BeautifulSoup, calendar_map: dict, existing_ids: set) -> tuple[list[dict], set[str]]:
+    """Parsa la pagina radice dei risultati FCI.
     Estrae dinamicamente la categoria dal tag <font color="#1a8ad8"> sopra ogni h4.
+    Ritorna (results, excluded_gara_ids): il secondo elenca i gara_id delle gare
+    estere trovate su questa pagina, cosi' il chiamante puo' anche PURGARE
+    eventuali righe residue di scrape precedenti (prima che l'esclusione
+    esistesse) invece di limitarsi a non aggiungerne di nuove.
     """
     results = []
+    excluded_gara_ids = set()
     new_races_count = 0
 
     h4_races = soup.find_all("h4")
@@ -287,21 +292,6 @@ def parse_risultati_page(soup: BeautifulSoup, calendar_map: dict, existing_ids: 
         loc_lines = loc_div.get_text("\n", strip=True).split("\n") if loc_div else []
         location_text = loc_lines[-1] if loc_lines else ""
 
-        # ── Esclusione gare estere ───────────────────────────────────────
-        # La FCI a volte importa gare disputate fuori Italia (es. E3 Saxo
-        # Classic in Belgio, Corsa della Pace Juniores in Repubblica Ceca)
-        # tra i risultati italiani: non vanno in classifica/punti perché
-        # spesso vi corrono atleti nemmeno tesserati italiani. Le
-        # riconosciamo dal nome del paese per esteso tra parentesi nella
-        # località (vedi is_foreign_location). Eccezione: una tappa
-        # all'estero di un giro a tappe ITALIANO (es. Giro Valle d'Aosta con
-        # una tappa in Francia) resta valida — lo capiamo dal fatto che la
-        # gara ha comunque trovato corrispondenza nel calendario curato a
-        # mano (match_type exact/fuzzy), quindi la escludiamo solo se non è
-        # nemmeno una gara che conosciamo come italiana.
-        if is_foreign_location(location_text) and match_type not in ("exact_match", "fuzzy_match", "user_override"):
-            continue
-
         reg_from_provincia = extract_region_from_location(location_text)
 
         if reg_from_provincia:
@@ -353,9 +343,28 @@ def parse_risultati_page(soup: BeautifulSoup, calendar_map: dict, existing_ids: 
             else: cat_code = "ELI_M" if race_gender=="M" else "ELI_F"
         gara_id = slug(race_name_raw) + "_" + race_date + "_" + cat_code
 
+        # ── Esclusione gare estere ───────────────────────────────────────
+        # La FCI a volte importa gare disputate fuori Italia (es. E3 Saxo
+        # Classic in Belgio, Corsa della Pace Juniores in Repubblica Ceca)
+        # tra i risultati italiani: non vanno in classifica/punti perché
+        # spesso vi corrono atleti nemmeno tesserati italiani. Le
+        # riconosciamo dal nome del paese per esteso tra parentesi nella
+        # località (vedi is_foreign_location). Eccezione: una tappa
+        # all'estero di un giro a tappe ITALIANO (es. Giro Valle d'Aosta con
+        # una tappa in Francia) resta valida — lo capiamo dal fatto che la
+        # gara ha comunque trovato corrispondenza nel calendario curato a
+        # mano (match_type exact/fuzzy), quindi la escludiamo solo se non è
+        # nemmeno una gara che conosciamo come italiana. Il gara_id va
+        # calcolato PRIMA di questo controllo (non dopo, come in origine) per
+        # poterlo aggiungere a excluded_gara_ids e permettere al chiamante di
+        # purgare anche eventuali righe residue di scrape precedenti.
+        if is_foreign_location(location_text) and match_type not in ("exact_match", "fuzzy_match", "user_override"):
+            excluded_gara_ids.add(gara_id)
+            continue
+
         if gara_id in existing_ids:
             continue
-            
+
         existing_ids.add(gara_id)
 
         new_races_count += 1
@@ -456,7 +465,7 @@ def parse_risultati_page(soup: BeautifulSoup, calendar_map: dict, existing_ids: 
                 "punti_effettivi": pts_eff,
             })
 
-    return results
+    return results, excluded_gara_ids
 
 
 
@@ -723,12 +732,25 @@ async def run_cycle():
         soup, _ = get_page(url, SESSION)
         if not soup: continue
 
-        new_results = parse_risultati_page(soup, cal_by_date, existing_ids)
-        
+        new_results, excluded_gara_ids = parse_risultati_page(soup, cal_by_date, existing_ids)
+
         # Rimuove i vecchi risultati per le gare appena scaricate (così da aggiornare chi è stato inserito in un secondo momento)
         new_gara_ids = {r["gara_id"] for r in new_results}
         all_results = [r for r in all_results if r["gara_id"] not in new_gara_ids]
-        
+
+        # Purga anche i residui di gare estere scrapate PRIMA che l'esclusione
+        # esistesse (es. "Corsa della Pace Juniores"): restavano bloccate in
+        # data/results_raw.json per sempre, perché l'esclusione impediva solo
+        # nuovi inserimenti, non rimuoveva quanto già presente. Qui invece,
+        # per ogni gara estera ancora presente sulla pagina FCI live, la
+        # rimuoviamo esplicitamente se già in archivio.
+        if excluded_gara_ids:
+            _before_purge = len(all_results)
+            all_results = [r for r in all_results if r["gara_id"] not in excluded_gara_ids]
+            _purged = _before_purge - len(all_results)
+            if _purged:
+                print(f"  [Purge estero] Rimossi {_purged} risultati residui di gare estere già in archivio.")
+
         all_results.extend(new_results)
         for res in new_results:
             gid = res["gara_id"]
