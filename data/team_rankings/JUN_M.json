@@ -2,12 +2,12 @@
   {
     "team_id": "TEAM_VANGI_TOMMASINI_IL_PIRATA",
     "team_nome": "TEAM VANGI TOMMASINI IL PIRATA",
-    "punti": 995,
+    "punti": 1001,
     "vittorie": 14,
     "p1": 14,
     "p2": 11,
     "p3": 12,
-    "pout": 40,
+    "pout": 41,
     "n_atleti": 13,
     "pos": 1
   },
@@ -50,10 +50,10 @@
   {
     "team_id": "BORGO_MOLINO_VIGNA_FIORITA",
     "team_nome": "BORGO MOLINO-VIGNA FIORITA",
-    "punti": 505,
+    "punti": 529,
     "vittorie": 8,
     "p1": 8,
-    "p2": 2,
+    "p2": 3,
     "p3": 7,
     "pout": 12,
     "n_atleti": 3,
@@ -72,6 +72,18 @@
     "pos": 6
   },
   {
+    "team_id": "TEAM_ECOTEK_ZERO24",
+    "team_nome": "TEAM ECOTEK ZERO24",
+    "punti": 428,
+    "vittorie": 8,
+    "p1": 8,
+    "p2": 9,
+    "p3": 4,
+    "pout": 22,
+    "n_atleti": 9,
+    "pos": 7
+  },
+  {
     "team_id": "NORDEST_PETRUCCI_ASSALI_STEFEN",
     "team_nome": "NORDEST PETRUCCI ASSALI STEFEN",
     "punti": 425,
@@ -81,7 +93,7 @@
     "p3": 3,
     "pout": 23,
     "n_atleti": 9,
-    "pos": 7
+    "pos": 8
   },
   {
     "team_id": "AUTOZAI_CONTRI",
@@ -93,7 +105,7 @@
     "p3": 2,
     "pout": 29,
     "n_atleti": 9,
-    "pos": 8
+    "pos": 9
   },
   {
     "team_id": "BUSTESE_OLONIA_A_S_D",
@@ -105,29 +117,17 @@
     "p3": 2,
     "pout": 30,
     "n_atleti": 9,
-    "pos": 9
-  },
-  {
-    "team_id": "TEAM_ECOTEK_ZERO24",
-    "team_nome": "TEAM ECOTEK ZERO24",
-    "punti": 408,
-    "vittorie": 8,
-    "p1": 8,
-    "p2": 9,
-    "p3": 3,
-    "pout": 22,
-    "n_atleti": 9,
     "pos": 10
   },
   {
     "team_id": "CPS_PROFESSIONAL_TEAM",
     "team_nome": "CPS PROFESSIONAL TEAM",
-    "punti": 405,
+    "punti": 409,
     "vittorie": 4,
     "p1": 4,
     "p2": 6,
     "p3": 7,
-    "pout": 29,
+    "pout": 30,
     "n_atleti": 11,
     "pos": 11
   },
@@ -146,12 +146,12 @@
   {
     "team_id": "TEAM_GENERAL_SYSTEM",
     "team_nome": "TEAM GENERAL SYSTEM",
-    "punti": 360,
+    "punti": 362,
     "vittorie": 4,
     "p1": 4,
     "p2": 5,
     "p3": 2,
-    "pout": 28,
+    "pout": 29,
     "n_atleti": 7,
     "pos": 13
   },
@@ -180,6 +180,18 @@
     "pos": 15
   },
   {
+    "team_id": "TEAM_CORATTI",
+    "team_nome": "TEAM CORATTI",
+    "punti": 330,
+    "vittorie": 3,
+    "p1": 3,
+    "p2": 4,
+    "p3": 2,
+    "pout": 16,
+    "n_atleti": 6,
+    "pos": 16
+  },
+  {
     "team_id": "ACCADEMIA_CICLISTICA",
     "team_nome": "ACCADEMIA CICLISTICA",
     "punti": 329,
@@ -189,30 +201,18 @@
     "p3": 2,
     "pout": 13,
     "n_atleti": 4,
-    "pos": 16
+    "pos": 17
   },
   {
     "team_id": "POLISPORTIVA_MONSUMMANESE",
     "team_nome": "POLISPORTIVA MONSUMMANESE",
-    "punti": 298,
+    "punti": 320,
     "vittorie": 6,
     "p1": 6,
     "p2": 3,
     "p3": 6,
-    "pout": 22,
+    "pout": 24,
     "n_atleti": 10,
-    "pos": 17
-  },
-  {
-    "team_id": "TEAM_CORATTI",
-    "team_nome": "TEAM CORATTI",
-    "punti": 292,
-    "vittorie": 2,
-    "p1": 2,
-    "p2": 4,
-    "p3": 2,
-    "pout": 15,
-    "n_atleti": 6,
     "pos": 18
   },
   {
@@ -528,6 +528,18 @@
     "pos": 44
   },
   {
+    "team_id": "ITALIA_NUOVA_BOLOGNA",
+    "team_nome": "ITALIA NUOVA BOLOGNA",
+    "punti": 65,
+    "vittorie": 0,
+    "p1": 0,
+    "p2": 0,
+    "p3": 0,
+    "pout": 14,
+    "n_atleti": 5,
+    "pos": 45
+  },
+  {
     "team_id": "LIBERTAS_CERESETTO",
     "team_nome": "LIBERTAS CERESETTO",
     "punti": 62,
@@ -537,7 +549,7 @@
     "p3": 1,
     "pout": 7,
     "n_atleti": 4,
-    "pos": 45
+    "pos": 46
   },
   {
     "team_id": "JEGG_SKIL_DJR",
@@ -549,7 +561,7 @@
     "p3": 0,
     "pout": 3,
     "n_atleti": 2,
-    "pos": 46
+    "pos": 47
   },
   {
     "team_id": "VIGNA_FIORITA_BORGO_MOLINO",
@@ -561,7 +573,7 @@
     "p3": 0,
     "pout": 8,
     "n_atleti": 2,
-    "pos": 47
+    "pos": 48
   },
   {
     "team_id": "SVIZZERA",
@@ -573,7 +585,7 @@
     "p3": 0,
     "pout": 3,
     "n_atleti": 2,
-    "pos": 48
+    "pos": 49
   },
   {
     "team_id": "ARKITANO_MTB_CLUB",
@@ -585,7 +597,7 @@
     "p3": 1,
     "pout": 2,
     "n_atleti": 1,
-    "pos": 49
+    "pos": 50
   },
   {
     "team_id": "POOL_BIKE_SERRAMANNA",
@@ -597,7 +609,7 @@
     "p3": 2,
     "pout": 5,
     "n_atleti": 1,
-    "pos": 50
+    "pos": 51
   },
   {
     "team_id": "KK_NOVO_MESTO",
@@ -609,7 +621,7 @@
     "p3": 0,
     "pout": 2,
     "n_atleti": 4,
-    "pos": 51
+    "pos": 52
   },
   {
     "team_id": "CAMPANA_IMBALLAGGI_MORBIATO_TRENTINO",
@@ -621,7 +633,7 @@
     "p3": 1,
     "pout": 3,
     "n_atleti": 1,
-    "pos": 52
+    "pos": 53
   },
   {
     "team_id": "MASTROMARCO_FC_NIBALI",
@@ -633,18 +645,6 @@
     "p3": 0,
     "pout": 5,
     "n_atleti": 2,
-    "pos": 53
-  },
-  {
-    "team_id": "ITALIA_NUOVA_BOLOGNA",
-    "team_nome": "ITALIA NUOVA BOLOGNA",
-    "punti": 49,
-    "vittorie": 0,
-    "p1": 0,
-    "p2": 0,
-    "p3": 0,
-    "pout": 13,
-    "n_atleti": 5,
     "pos": 54
   },
   {

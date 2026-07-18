@@ -2,11 +2,11 @@
   {
     "team_id": "TEAM_SENAGHESE_GUERRINI",
     "team_nome": "TEAM SENAGHESE GUERRINI",
-    "punti": 818,
+    "punti": 828,
     "vittorie": 24,
     "p1": 24,
     "p2": 14,
-    "p3": 9,
+    "p3": 10,
     "pout": 31,
     "n_atleti": 7,
     "pos": 1
@@ -14,12 +14,12 @@
   {
     "team_id": "CICLISTICA_TREVIGLIESE",
     "team_nome": "CICLISTICA TREVIGLIESE",
-    "punti": 495,
+    "punti": 509,
     "vittorie": 8,
     "p1": 8,
     "p2": 9,
     "p3": 10,
-    "pout": 41,
+    "pout": 44,
     "n_atleti": 6,
     "pos": 2
   },
@@ -468,6 +468,18 @@
     "pos": 39
   },
   {
+    "team_id": "S_C_CAVRIAGO",
+    "team_nome": "S.C. CAVRIAGO",
+    "punti": 111,
+    "vittorie": 1,
+    "p1": 1,
+    "p2": 3,
+    "p3": 1,
+    "pout": 13,
+    "n_atleti": 3,
+    "pos": 40
+  },
+  {
     "team_id": "ASD_VELOCE_CLUB_BORGO",
     "team_nome": "ASD VELOCE CLUB BORGO",
     "punti": 110,
@@ -477,7 +489,19 @@
     "p3": 4,
     "pout": 8,
     "n_atleti": 1,
-    "pos": 40
+    "pos": 41
+  },
+  {
+    "team_id": "ASD_G_C_FAUSTO_COPPI",
+    "team_nome": "ASD G. C. FAUSTO COPPI",
+    "punti": 110,
+    "vittorie": 0,
+    "p1": 0,
+    "p2": 2,
+    "p3": 1,
+    "pout": 17,
+    "n_atleti": 4,
+    "pos": 42
   },
   {
     "team_id": "U_C_S_OTTAVIO_ZULIANI_A_S_D",
@@ -489,19 +513,7 @@
     "p3": 5,
     "pout": 7,
     "n_atleti": 3,
-    "pos": 41
-  },
-  {
-    "team_id": "S_C_CAVRIAGO",
-    "team_nome": "S.C. CAVRIAGO",
-    "punti": 108,
-    "vittorie": 1,
-    "p1": 1,
-    "p2": 3,
-    "p3": 1,
-    "pout": 12,
-    "n_atleti": 3,
-    "pos": 42
+    "pos": 43
   },
   {
     "team_id": "S_C_PATTADA",
@@ -513,7 +525,7 @@
     "p3": 3,
     "pout": 11,
     "n_atleti": 3,
-    "pos": 43
+    "pos": 44
   },
   {
     "team_id": "MST_CYCLING_SANDRIGO_BIKE",
@@ -525,7 +537,7 @@
     "p3": 2,
     "pout": 11,
     "n_atleti": 2,
-    "pos": 44
+    "pos": 45
   },
   {
     "team_id": "G_S_ALZATE_BRIANZA_SYSTEM_CAR",
@@ -537,7 +549,7 @@
     "p3": 3,
     "pout": 9,
     "n_atleti": 1,
-    "pos": 45
+    "pos": 46
   },
   {
     "team_id": "A_S_D_PROBIKE_ERICE",
@@ -549,7 +561,7 @@
     "p3": 3,
     "pout": 11,
     "n_atleti": 2,
-    "pos": 46
+    "pos": 47
   },
   {
     "team_id": "LEO_CONSTRUCTIONS_SSD",
@@ -561,18 +573,6 @@
     "p3": 0,
     "pout": 2,
     "n_atleti": 2,
-    "pos": 47
-  },
-  {
-    "team_id": "ASD_G_C_FAUSTO_COPPI",
-    "team_nome": "ASD G. C. FAUSTO COPPI",
-    "punti": 98,
-    "vittorie": 0,
-    "p1": 0,
-    "p2": 1,
-    "p3": 1,
-    "pout": 17,
-    "n_atleti": 4,
     "pos": 48
   },
   {
@@ -660,6 +660,18 @@
     "pos": 55
   },
   {
+    "team_id": "A_S_D_GIOCA_IN_BICI_OGLIO_PO",
+    "team_nome": "A.S.D. GIOCA IN BICI OGLIO PO",
+    "punti": 81,
+    "vittorie": 1,
+    "p1": 1,
+    "p2": 1,
+    "p3": 2,
+    "pout": 9,
+    "n_atleti": 2,
+    "pos": 56
+  },
+  {
     "team_id": "STAR_CYCLING_LAB",
     "team_nome": "STAR CYCLING LAB",
     "punti": 81,
@@ -669,7 +681,7 @@
     "p3": 0,
     "pout": 16,
     "n_atleti": 3,
-    "pos": 56
+    "pos": 57
   },
   {
     "team_id": "BUSTESE_OLONIA_A_S_D",
@@ -681,7 +693,7 @@
     "p3": 0,
     "pout": 14,
     "n_atleti": 4,
-    "pos": 57
+    "pos": 58
   },
   {
     "team_id": "C_S_LIBERTAS_SCORZE",
@@ -693,7 +705,7 @@
     "p3": 0,
     "pout": 6,
     "n_atleti": 2,
-    "pos": 58
+    "pos": 59
   },
   {
     "team_id": "S_C_MINCIO_CHIESE_A_S_D",
@@ -705,7 +717,7 @@
     "p3": 0,
     "pout": 16,
     "n_atleti": 4,
-    "pos": 59
+    "pos": 60
   },
   {
     "team_id": "LIBERTAS_CERESETTO",
@@ -717,7 +729,7 @@
     "p3": 1,
     "pout": 14,
     "n_atleti": 3,
-    "pos": 60
+    "pos": 61
   },
   {
     "team_id": "UC_FOEN_MICTU",
@@ -729,7 +741,7 @@
     "p3": 1,
     "pout": 7,
     "n_atleti": 2,
-    "pos": 61
+    "pos": 62
   },
   {
     "team_id": "MULTICAR_GRUPPO_AMARU",
@@ -741,7 +753,7 @@
     "p3": 2,
     "pout": 2,
     "n_atleti": 3,
-    "pos": 62
+    "pos": 63
   },
   {
     "team_id": "ASD_CICLOTOUR",
@@ -753,7 +765,7 @@
     "p3": 0,
     "pout": 5,
     "n_atleti": 1,
-    "pos": 63
+    "pos": 64
   },
   {
     "team_id": "C_C_APPENNINICO_1907",
@@ -765,7 +777,7 @@
     "p3": 0,
     "pout": 7,
     "n_atleti": 1,
-    "pos": 64
+    "pos": 65
   },
   {
     "team_id": "ASD_FUSION_BIKE",
@@ -777,7 +789,7 @@
     "p3": 1,
     "pout": 12,
     "n_atleti": 2,
-    "pos": 65
+    "pos": 66
   },
   {
     "team_id": "I_CINGHIALI_EVO",
@@ -789,30 +801,18 @@
     "p3": 1,
     "pout": 10,
     "n_atleti": 2,
-    "pos": 66
+    "pos": 67
   },
   {
     "team_id": "VC_CREMONESE",
     "team_nome": "VC CREMONESE",
-    "punti": 66,
+    "punti": 67,
     "vittorie": 1,
     "p1": 1,
     "p2": 0,
     "p3": 0,
-    "pout": 10,
+    "pout": 11,
     "n_atleti": 1,
-    "pos": 67
-  },
-  {
-    "team_id": "A_S_D_GIOCA_IN_BICI_OGLIO_PO",
-    "team_nome": "A.S.D. GIOCA IN BICI OGLIO PO",
-    "punti": 66,
-    "vittorie": 0,
-    "p1": 0,
-    "p2": 1,
-    "p3": 2,
-    "pout": 9,
-    "n_atleti": 2,
     "pos": 68
   },
   {
@@ -960,6 +960,18 @@
     "pos": 80
   },
   {
+    "team_id": "A_S_D_CICLISTICA_2000",
+    "team_nome": "A.S.D. CICLISTICA 2000",
+    "punti": 44,
+    "vittorie": 0,
+    "p1": 0,
+    "p2": 1,
+    "p3": 0,
+    "pout": 5,
+    "n_atleti": 1,
+    "pos": 81
+  },
+  {
     "team_id": "CICLISTICA_BORDIGHERA",
     "team_nome": "CICLISTICA BORDIGHERA",
     "punti": 44,
@@ -969,7 +981,7 @@
     "p3": 0,
     "pout": 14,
     "n_atleti": 2,
-    "pos": 81
+    "pos": 82
   },
   {
     "team_id": "PEDALE_OSSOLANO",
@@ -981,7 +993,7 @@
     "p3": 1,
     "pout": 7,
     "n_atleti": 1,
-    "pos": 82
+    "pos": 83
   },
   {
     "team_id": "A_S_D_S_C_CERETOLESE_1969",
@@ -993,7 +1005,7 @@
     "p3": 2,
     "pout": 5,
     "n_atleti": 1,
-    "pos": 83
+    "pos": 84
   },
   {
     "team_id": "SAMABIKE",
@@ -1005,7 +1017,7 @@
     "p3": 0,
     "pout": 8,
     "n_atleti": 1,
-    "pos": 84
+    "pos": 85
   },
   {
     "team_id": "AC_F_BESSI_CALENZANO_DONORATICO",
@@ -1017,7 +1029,7 @@
     "p3": 0,
     "pout": 8,
     "n_atleti": 2,
-    "pos": 85
+    "pos": 86
   },
   {
     "team_id": "U_C_A_B_1925_BIELLA_SEMPERLUX",
@@ -1029,18 +1041,6 @@
     "p3": 0,
     "pout": 5,
     "n_atleti": 3,
-    "pos": 86
-  },
-  {
-    "team_id": "A_S_D_CICLISTICA_2000",
-    "team_nome": "A.S.D. CICLISTICA 2000",
-    "punti": 39,
-    "vittorie": 0,
-    "p1": 0,
-    "p2": 1,
-    "p3": 0,
-    "pout": 4,
-    "n_atleti": 1,
     "pos": 87
   },
   {
@@ -1056,6 +1056,18 @@
     "pos": 88
   },
   {
+    "team_id": "U_P_O_L_PEDALE_LUNGAVILLA_A_S_D",
+    "team_nome": "U.P.O.L. PEDALE LUNGAVILLA A.S.D.",
+    "punti": 38,
+    "vittorie": 0,
+    "p1": 0,
+    "p2": 0,
+    "p3": 1,
+    "pout": 5,
+    "n_atleti": 1,
+    "pos": 89
+  },
+  {
     "team_id": "S_C_COTIGNOLESE",
     "team_nome": "S.C.COTIGNOLESE",
     "punti": 38,
@@ -1065,7 +1077,7 @@
     "p3": 0,
     "pout": 8,
     "n_atleti": 2,
-    "pos": 89
+    "pos": 90
   },
   {
     "team_id": "UNIONE_CICLISTICA_MIRANO",
@@ -1077,7 +1089,7 @@
     "p3": 1,
     "pout": 9,
     "n_atleti": 2,
-    "pos": 90
+    "pos": 91
   },
   {
     "team_id": "CYCLING_TEAM_NIAL_NIZZOLI_ALMO",
@@ -1089,7 +1101,7 @@
     "p3": 1,
     "pout": 7,
     "n_atleti": 1,
-    "pos": 91
+    "pos": 92
   },
   {
     "team_id": "U_S_FORTI_E_LIBERI_ZANETTI_CICLI",
@@ -1101,7 +1113,7 @@
     "p3": 1,
     "pout": 4,
     "n_atleti": 1,
-    "pos": 92
+    "pos": 93
   },
   {
     "team_id": "LOMBARDIA",
@@ -1113,7 +1125,7 @@
     "p3": 0,
     "pout": 1,
     "n_atleti": 2,
-    "pos": 93
+    "pos": 94
   },
   {
     "team_id": "ABRUZZO_CYCLING_TEAM",
@@ -1124,18 +1136,6 @@
     "p2": 0,
     "p3": 0,
     "pout": 6,
-    "n_atleti": 1,
-    "pos": 94
-  },
-  {
-    "team_id": "U_P_O_L_PEDALE_LUNGAVILLA_A_S_D",
-    "team_nome": "U.P.O.L. PEDALE LUNGAVILLA A.S.D.",
-    "punti": 32,
-    "vittorie": 0,
-    "p1": 0,
-    "p2": 0,
-    "p3": 1,
-    "pout": 4,
     "n_atleti": 1,
     "pos": 95
   },
