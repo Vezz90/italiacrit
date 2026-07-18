@@ -19784,6 +19784,39 @@ window.openVideoModal = (videoId, title) => {
   document.body.appendChild(overlay);
 };
 
+// Mini-player persistente per le dirette: appeso a document.body (fuori da
+// #app), setPage() non lo tocca quando si cambia pagina — resta ancorato
+// in basso a destra mentre si continua a navigare nel sito. Nota: la
+// riproduzione in background a schermo spento dipende dal browser/OS del
+// telefono (comportamento standard per un embed YouTube in una pagina web,
+// non forzabile via codice) — qui ci limitiamo a non mettere in pausa il
+// player quando la pagina cambia visibilità.
+window.openMiniPlayer = (videoId, title, garaId) => {
+  const existing = document.getElementById('mini-player');
+  if (existing && existing.dataset.videoId === videoId) return; // già in riproduzione
+  existing?.remove();
+  if (!videoId) return;
+  const mp = document.createElement('div');
+  mp.id = 'mini-player';
+  mp.dataset.videoId = videoId;
+  mp.innerHTML = `
+    <div class="mini-player-hdr">
+      <span class="mini-player-title">${esc(title || 'Diretta')}</span>
+      <div class="mini-player-actions">
+        ${garaId && !String(garaId).includes('::') ? `<a href="#/gara/${esc(garaId)}" title="Vai alla gara" class="mini-player-expand">⤢</a>` : ''}
+        <button onclick="window.closeMiniPlayer()" title="Chiudi" class="mini-player-close">✕</button>
+      </div>
+    </div>
+    <div class="mini-player-frame">
+      <iframe src="https://www.youtube.com/embed/${videoId}?autoplay=1&rel=0"
+              frameborder="0" allowfullscreen
+              allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture">
+      </iframe>
+    </div>`;
+  document.body.appendChild(mp);
+};
+window.closeMiniPlayer = () => { document.getElementById('mini-player')?.remove(); };
+
 // ── NAV DROPDOWNS (click-based) ───────────────────────────────
 function initNavDropdowns() {
   // Chiudi tutti i gruppi aperti
@@ -20647,8 +20680,14 @@ async function renderMedia() {
     const t = esc((x.video.title || '').replace(/'/g, "\\'"));
     const vid = ytId(x.video.url);
     const pendingOnclick = vid ? `window.openVideoModal('${vid}','${t}')` : `window.open('${esc(x.video.url)}','_blank')`;
-    const tag = isPending ? 'div' : 'a';
-    const hrefAttr = isPending ? `onclick="${pendingOnclick}" style="cursor:pointer"` : `href="#/gara/${esc(x.gara_id)}"`;
+    // Diretta in corso con gara reale: apre il mini-player (persiste
+    // navigando altrove) invece di andare sulla pagina della gara.
+    const isLiveReal = !!x.video.is_live && !isPending;
+    const miniOnclick = vid ? `window.openMiniPlayer('${vid}','${t}','${esc(x.gara_id)}')` : pendingOnclick;
+    const tag = (isPending || isLiveReal) ? 'div' : 'a';
+    const hrefAttr = isPending ? `onclick="${pendingOnclick}" style="cursor:pointer"`
+      : isLiveReal ? `onclick="${miniOnclick}" style="cursor:pointer"`
+      : `href="#/gara/${esc(x.gara_id)}"`;
     return `<${tag} ${hrefAttr} class="yt-card${isSel ? ' yt-card-selected' : ''}">
       <div class="yt-thumb">
         ${_isAdminMedia ? `<input type="checkbox" class="yt-card-check" ${isSel ? 'checked' : ''}
