@@ -14876,12 +14876,14 @@ function openPhotoLightbox(src, opts = {}) {
   const user = authUser();
   const isAdmin = user?.role === 'admin';
 
-  // ── Crediti / didascalia SOVRAPPOSTI alla foto (non sotto, nell'area nera
-  // dell'overlay dove passava inosservato) — banda scura ben visibile
-  // ancorata al bordo inferiore della foto stessa. ──
+  // ── Crediti / didascalia SOVRAPPOSTI alla foto — gradiente invece di banda
+  // piena (occupa meno spazio percepito, sfuma nella foto invece di
+  // "mangiarla") e testo su una riga sola con ellissi se troppo lungo,
+  // così su schermi larghi (didascalie lunghe, foto più basse) non wrappa
+  // su più righe rubando altezza alla foto. ──
   const credit = [opts.caption, opts.credit ? '📷 ' + opts.credit : ''].filter(Boolean).join('  ·  ');
   const creditHtml = credit
-    ? `<div style="position:absolute;bottom:0;left:0;right:0;background:rgba(10,10,10,.88);color:#fff;padding:16px 20px;font-size:.95rem;font-weight:600;text-align:center;pointer-events:none;border-radius:0 0 var(--r-md) var(--r-md)">${esc(credit)}</div>`
+    ? `<div style="position:absolute;bottom:0;left:0;right:0;background:linear-gradient(to top,rgba(0,0,0,.75) 0%,rgba(0,0,0,.45) 60%,transparent 100%);color:#fff;padding:22px 16px 8px;font-size:.8rem;text-align:center;pointer-events:none;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;border-radius:0 0 var(--r-md) var(--r-md)">${esc(credit)}</div>`
     : '';
 
   // ── Tag corridori in alto (con istruzioni) ──
