@@ -2222,8 +2222,8 @@
         "moltiplicatore": 2,
         "tipo": "nazionale",
         "regione": "LAZIO",
-        "km": "69.700",
-        "media": ""
+        "km": "60.700",
+        "media": "38.540"
       },
       {
         "gara_id": "49_PICCOLA_TRE_VALLI_VARESINE_2026-07-12_JUN_M",
@@ -2300,7 +2300,7 @@
     "team_id": "BORGO_MOLINO_VIGNA_FIORITA",
     "categoria": "JUN_M",
     "genere": "M",
-    "punti_totali": 415,
+    "punti_totali": 425,
     "risultati": [
       {
         "gara_id": "CIOCIARIA_IN_GIRO_PRIMA_TAPPA_PRIMA_SEMITAPPA_2026-07-18_JUN_M",
@@ -2312,7 +2312,20 @@
         "moltiplicatore": 2,
         "tipo": "nazionale",
         "regione": "LAZIO",
-        "km": "69.700",
+        "km": "60.700",
+        "media": "38.540"
+      },
+      {
+        "gara_id": "CIOCIARIA_IN_GIRO_PRIMA_TAPPA_SECONDA_SEMITAPPA_CRONOSCALATA_2026-07-18_JUN_M",
+        "nome_gara": "CIOCIARIA IN GIRO PRIMA TAPPA SECONDA SEMITAPPA CRONOSCALATA",
+        "data": "2026-07-18",
+        "posizione": 6,
+        "punti_effettivi": 10,
+        "team": "BORGO MOLINO-VIGNA FIORITA",
+        "moltiplicatore": 2,
+        "tipo": "nazionale",
+        "regione": "LAZIO",
+        "km": "3.700",
         "media": ""
       },
       {
@@ -2559,7 +2572,7 @@
     "team_id": "TEAM_ECOTEK_ZERO24",
     "categoria": "JUN_M",
     "genere": "M",
-    "punti_totali": 214,
+    "punti_totali": 234,
     "risultati": [
       {
         "gara_id": "CIOCIARIA_IN_GIRO_PRIMA_TAPPA_PRIMA_SEMITAPPA_2026-07-18_JUN_M",
@@ -2571,7 +2584,20 @@
         "moltiplicatore": 2,
         "tipo": "nazionale",
         "regione": "LAZIO",
-        "km": "69.700",
+        "km": "60.700",
+        "media": "38.540"
+      },
+      {
+        "gara_id": "CIOCIARIA_IN_GIRO_PRIMA_TAPPA_SECONDA_SEMITAPPA_CRONOSCALATA_2026-07-18_JUN_M",
+        "nome_gara": "CIOCIARIA IN GIRO PRIMA TAPPA SECONDA SEMITAPPA CRONOSCALATA",
+        "data": "2026-07-18",
+        "posizione": 3,
+        "punti_effettivi": 20,
+        "team": "TEAM ECOTEK ZERO24",
+        "moltiplicatore": 2,
+        "tipo": "nazionale",
+        "regione": "LAZIO",
+        "km": "3.700",
         "media": ""
       },
       {
@@ -2804,8 +2830,8 @@
         "moltiplicatore": 2,
         "tipo": "nazionale",
         "regione": "LAZIO",
-        "km": "69.700",
-        "media": ""
+        "km": "60.700",
+        "media": "38.540"
       },
       {
         "gara_id": "3_TROFEO_OMNIA_2026-05-24_JUN_M",
@@ -2830,7 +2856,7 @@
     "team_id": "POLISPORTIVA_MONSUMMANESE",
     "categoria": "JUN_M",
     "genere": "M",
-    "punti_totali": 36,
+    "punti_totali": 38,
     "risultati": [
       {
         "gara_id": "CIOCIARIA_IN_GIRO_PRIMA_TAPPA_PRIMA_SEMITAPPA_2026-07-18_JUN_M",
@@ -2842,7 +2868,20 @@
         "moltiplicatore": 2,
         "tipo": "nazionale",
         "regione": "LAZIO",
-        "km": "69.700",
+        "km": "60.700",
+        "media": "38.540"
+      },
+      {
+        "gara_id": "CIOCIARIA_IN_GIRO_PRIMA_TAPPA_SECONDA_SEMITAPPA_CRONOSCALATA_2026-07-18_JUN_M",
+        "nome_gara": "CIOCIARIA IN GIRO PRIMA TAPPA SECONDA SEMITAPPA CRONOSCALATA",
+        "data": "2026-07-18",
+        "posizione": 10,
+        "punti_effettivi": 2,
+        "team": "POLISPORTIVA MONSUMMANESE",
+        "moltiplicatore": 2,
+        "tipo": "nazionale",
+        "regione": "LAZIO",
+        "km": "3.700",
         "media": ""
       },
       {
@@ -2919,8 +2958,8 @@
         "moltiplicatore": 2,
         "tipo": "nazionale",
         "regione": "LAZIO",
-        "km": "69.700",
-        "media": ""
+        "km": "60.700",
+        "media": "38.540"
       },
       {
         "gara_id": "6_MEMORIAL_MAURIZIO_BRESCI_PICCOLA_LIEGI_2026-06-13_JUN_M",
@@ -3035,8 +3074,8 @@
         "moltiplicatore": 2,
         "tipo": "nazionale",
         "regione": "LAZIO",
-        "km": "69.700",
-        "media": ""
+        "km": "60.700",
+        "media": "38.540"
       },
       {
         "gara_id": "24_GIRO_DEL_FRIULI_VENEZIA_GIULIA_PRIMA_TAPPA_2026-05-31_JUN_M",
@@ -3100,7 +3139,7 @@
     "team_id": "TEAM_VANGI_TOMMASINI_IL_PIRATA",
     "categoria": "JUN_M",
     "genere": "M",
-    "punti_totali": 21,
+    "punti_totali": 33,
     "risultati": [
       {
         "gara_id": "CIOCIARIA_IN_GIRO_PRIMA_TAPPA_PRIMA_SEMITAPPA_2026-07-18_JUN_M",
@@ -3112,7 +3151,20 @@
         "moltiplicatore": 2,
         "tipo": "nazionale",
         "regione": "LAZIO",
-        "km": "69.700",
+        "km": "60.700",
+        "media": "38.540"
+      },
+      {
+        "gara_id": "CIOCIARIA_IN_GIRO_PRIMA_TAPPA_SECONDA_SEMITAPPA_CRONOSCALATA_2026-07-18_JUN_M",
+        "nome_gara": "CIOCIARIA IN GIRO PRIMA TAPPA SECONDA SEMITAPPA CRONOSCALATA",
+        "data": "2026-07-18",
+        "posizione": 5,
+        "punti_effettivi": 12,
+        "team": "TEAM VANGI TOMMASINI IL PIRATA",
+        "moltiplicatore": 2,
+        "tipo": "nazionale",
+        "regione": "LAZIO",
+        "km": "3.700",
         "media": ""
       },
       {
@@ -3163,8 +3215,8 @@
         "moltiplicatore": 2,
         "tipo": "nazionale",
         "regione": "LAZIO",
-        "km": "69.700",
-        "media": ""
+        "km": "60.700",
+        "media": "38.540"
       },
       {
         "gara_id": "8_MEDAGLIA_DORO_ANTONIO_BUSICO_PROVA_VALIDA_CAMPIONATO_REGIONALE_2026-07-12_JUN_M",
@@ -3292,8 +3344,8 @@
         "moltiplicatore": 2,
         "tipo": "nazionale",
         "regione": "LAZIO",
-        "km": "69.700",
-        "media": ""
+        "km": "60.700",
+        "media": "38.540"
       },
       {
         "gara_id": "9_TROFEO_GIOVANI_PROMESSE_PROVA_VALIDA_CAMPIONATO_REGIONALE_2026-07-05_JUN_M",
@@ -3424,6 +3476,585 @@
         "regione": "TOSCANA",
         "km": "11.500",
         "media": "51.957"
+      }
+    ]
+  },
+  "VESCO_RICCARDO": {
+    "id": "VESCO_RICCARDO",
+    "nome": "RICCARDO",
+    "cognome": "VESCO",
+    "team_attuale": "TEAM GUERRINI SENAGHESE",
+    "team_id": "TEAM_GUERRINI_SENAGHESE",
+    "categoria": "JUN_M",
+    "genere": "M",
+    "punti_totali": 147,
+    "risultati": [
+      {
+        "gara_id": "CIOCIARIA_IN_GIRO_PRIMA_TAPPA_SECONDA_SEMITAPPA_CRONOSCALATA_2026-07-18_JUN_M",
+        "nome_gara": "CIOCIARIA IN GIRO PRIMA TAPPA SECONDA SEMITAPPA CRONOSCALATA",
+        "data": "2026-07-18",
+        "posizione": 1,
+        "punti_effettivi": 30,
+        "team": "TEAM GUERRINI SENAGHESE",
+        "moltiplicatore": 2,
+        "tipo": "nazionale",
+        "regione": "LAZIO",
+        "km": "3.700",
+        "media": ""
+      },
+      {
+        "gara_id": "2_TROFEO_KUBABA_VIAGGI_DALL_ERBALUCE_AL_PARADISO_2026-06-28_JUN_M",
+        "nome_gara": "2 TROFEO KUBABA VIAGGI DALL'ERBALUCE AL PARADISO",
+        "data": "2026-06-28",
+        "posizione": 2,
+        "punti_effettivi": 12,
+        "team": "TEAM GUERRINI SENAGHESE",
+        "moltiplicatore": 1,
+        "tipo": "regionale",
+        "regione": "PIEMONTE",
+        "km": "103.000",
+        "media": "36.151"
+      },
+      {
+        "gara_id": "23_GIRO_DELLA_BRIANZA_PROVA_UNICA_CAMPIONATO_REGIONALE_2026-06-14_JUN_M",
+        "nome_gara": "23 GIRO DELLA BRIANZA PROVA UNICA CAMPIONATO REGIONALE",
+        "data": "2026-06-14",
+        "posizione": 1,
+        "punti_effettivi": 30,
+        "team": "TEAM GUERRINI SENAGHESE",
+        "moltiplicatore": 2,
+        "tipo": "regionale",
+        "regione": "LOMBARDIA",
+        "km": "136.400",
+        "media": "41.958"
+      },
+      {
+        "gara_id": "13_MEMORIAL_PIETRO_ZIPPONI_2026-06-07_JUN_M",
+        "nome_gara": "13 MEMORIAL PIETRO ZIPPONI",
+        "data": "2026-06-07",
+        "posizione": 1,
+        "punti_effettivi": 15,
+        "team": "TEAM GUERRINI SENAGHESE",
+        "moltiplicatore": 1,
+        "tipo": "regionale",
+        "regione": "LOMBARDIA",
+        "km": "95.000",
+        "media": "40.802"
+      },
+      {
+        "gara_id": "GRAN_PREMIO_CONSORZIO_MARMISTI_CRONOSCALATA_2026-06-06_JUN_M",
+        "nome_gara": "GRAN PREMIO CONSORZIO MARMISTI CRONOSCALATA",
+        "data": "2026-06-06",
+        "posizione": 1,
+        "punti_effettivi": 15,
+        "team": "TEAM GUERRINI SENAGHESE",
+        "moltiplicatore": 1,
+        "tipo": "regionale",
+        "regione": "VENETO",
+        "km": "7.200",
+        "media": "25.460"
+      },
+      {
+        "gara_id": "45_TROFEO_PISTOLESI_2026-05-24_JUN_M",
+        "nome_gara": "45 TROFEO PISTOLESI",
+        "data": "2026-05-24",
+        "posizione": 4,
+        "punti_effettivi": 8,
+        "team": "TEAM GUERRINI SENAGHESE",
+        "moltiplicatore": 1,
+        "tipo": "regionale",
+        "regione": "LOMBARDIA",
+        "km": "105.000",
+        "media": "41.653"
+      },
+      {
+        "gara_id": "67_GRAN_PREMIO_U_C_A_T_2026-05-03_JUN_M",
+        "nome_gara": "67 GRAN PREMIO U C A T",
+        "data": "2026-05-03",
+        "posizione": 8,
+        "punti_effettivi": 3,
+        "team": "TEAM GUERRINI SENAGHESE",
+        "moltiplicatore": 1,
+        "tipo": "regionale",
+        "regione": "PIEMONTE",
+        "km": "101.000",
+        "media": "43.152"
+      },
+      {
+        "gara_id": "TROFEO_MICHELE_SCARPONI_DUE_GIORNI_2026-04-04_JUN_M",
+        "nome_gara": "TROFEO MICHELE SCARPONI DUE GIORNI",
+        "data": "2026-04-04",
+        "posizione": 2,
+        "punti_effettivi": 24,
+        "team": "TEAM GUERRINI SENAGHESE",
+        "moltiplicatore": 2,
+        "tipo": "nazionale",
+        "regione": "MARCHE",
+        "km": "107.100",
+        "media": "39.802"
+      },
+      {
+        "gara_id": "GRAN_PREMIO_MARCELLO_FALCONE_2026-03-29_JUN_M",
+        "nome_gara": "GRAN PREMIO MARCELLO FALCONE",
+        "data": "2026-03-29",
+        "posizione": 10,
+        "punti_effettivi": 2,
+        "team": "TEAM GUERRINI SENAGHESE",
+        "moltiplicatore": 2,
+        "tipo": "nazionale",
+        "regione": "LAZIO",
+        "km": "103.000",
+        "media": "44.138"
+      },
+      {
+        "gara_id": "CIRCUITO_DELLE_CONCHE_2026-03-08_JUN_M",
+        "nome_gara": "CIRCUITO DELLE CONCHE",
+        "data": "2026-03-08",
+        "posizione": 7,
+        "punti_effettivi": 8,
+        "team": "TEAM GUERRINI SENAGHESE",
+        "moltiplicatore": 2,
+        "tipo": "nazionale",
+        "regione": "VENETO",
+        "km": "103.300",
+        "media": "43.343"
+      }
+    ]
+  },
+  "CASCIONE_RAFFAELE": {
+    "id": "CASCIONE_RAFFAELE",
+    "nome": "RAFFAELE",
+    "cognome": "CASCIONE",
+    "team_attuale": "TEAM VANGI TOMMASINI IL PIRATA",
+    "team_id": "TEAM_VANGI_TOMMASINI_IL_PIRATA",
+    "categoria": "JUN_M",
+    "genere": "M",
+    "punti_totali": 77,
+    "risultati": [
+      {
+        "gara_id": "CIOCIARIA_IN_GIRO_PRIMA_TAPPA_SECONDA_SEMITAPPA_CRONOSCALATA_2026-07-18_JUN_M",
+        "nome_gara": "CIOCIARIA IN GIRO PRIMA TAPPA SECONDA SEMITAPPA CRONOSCALATA",
+        "data": "2026-07-18",
+        "posizione": 2,
+        "punti_effettivi": 24,
+        "team": "TEAM VANGI TOMMASINI IL PIRATA",
+        "moltiplicatore": 2,
+        "tipo": "nazionale",
+        "regione": "LAZIO",
+        "km": "3.700",
+        "media": ""
+      },
+      {
+        "gara_id": "CRONOSCALATA_BARBERINO_PASSO_DELLA_FUTA_MEMORIAL_GASTONE_NENCINI_2026-07-04_JUN_M",
+        "nome_gara": "CRONOSCALATA BARBERINO PASSO DELLA FUTA MEMORIAL GASTONE NENCINI",
+        "data": "2026-07-04",
+        "posizione": 3,
+        "punti_effettivi": 10,
+        "team": "TEAM VANGI TOMMASINI IL PIRATA",
+        "moltiplicatore": 1,
+        "tipo": "regionale",
+        "regione": "TOSCANA",
+        "km": "14.300",
+        "media": "28.348"
+      },
+      {
+        "gara_id": "VITTORIO_VENETO_SAN_BOLDO_2026-06-28_JUN_M",
+        "nome_gara": "VITTORIO VENETO SAN BOLDO",
+        "data": "2026-06-28",
+        "posizione": 1,
+        "punti_effettivi": 15,
+        "team": "TEAM VANGI TOMMASINI IL PIRATA",
+        "moltiplicatore": 1,
+        "tipo": "regionale",
+        "regione": "VENETO",
+        "km": "91.000",
+        "media": "39.613"
+      },
+      {
+        "gara_id": "72_COPPA_MARIA_SS_DELLA_STELLA_2026-04-12_JUN_M",
+        "nome_gara": "72 COPPA MARIA SS DELLA STELLA",
+        "data": "2026-04-12",
+        "posizione": 4,
+        "punti_effettivi": 8,
+        "team": "TEAM VANGI TOMMASINI IL PIRATA",
+        "moltiplicatore": 1,
+        "tipo": "regionale",
+        "regione": "PUGLIA",
+        "km": "107.000",
+        "media": "45.110"
+      },
+      {
+        "gara_id": "TROFEO_MICHELE_SCARPONI_DUE_GIORNI_2026-04-04_JUN_M",
+        "nome_gara": "TROFEO MICHELE SCARPONI DUE GIORNI",
+        "data": "2026-04-04",
+        "posizione": 4,
+        "punti_effettivi": 16,
+        "team": "TEAM VANGI TOMMASINI IL PIRATA",
+        "moltiplicatore": 2,
+        "tipo": "nazionale",
+        "regione": "MARCHE",
+        "km": "107.100",
+        "media": "39.802"
+      },
+      {
+        "gara_id": "GRAN_PREMIO_GIULIANO_BARONTI_2026-03-01_JUN_M",
+        "nome_gara": "GRAN PREMIO GIULIANO BARONTI",
+        "data": "2026-03-01",
+        "posizione": 9,
+        "punti_effettivi": 4,
+        "team": "TEAM VANGI TOMMASINI IL PIRATA",
+        "moltiplicatore": 2,
+        "tipo": "nazionale",
+        "regione": "TOSCANA",
+        "km": "123.000",
+        "media": "41.403"
+      }
+    ]
+  },
+  "CAMPAGNOLO_LORENZO": {
+    "id": "CAMPAGNOLO_LORENZO",
+    "nome": "LORENZO",
+    "cognome": "CAMPAGNOLO",
+    "team_attuale": "BORGO MOLINO-VIGNA FIORITA",
+    "team_id": "BORGO_MOLINO_VIGNA_FIORITA",
+    "categoria": "JUN_M",
+    "genere": "M",
+    "punti_totali": 126,
+    "risultati": [
+      {
+        "gara_id": "CIOCIARIA_IN_GIRO_PRIMA_TAPPA_SECONDA_SEMITAPPA_CRONOSCALATA_2026-07-18_JUN_M",
+        "nome_gara": "CIOCIARIA IN GIRO PRIMA TAPPA SECONDA SEMITAPPA CRONOSCALATA",
+        "data": "2026-07-18",
+        "posizione": 4,
+        "punti_effettivi": 16,
+        "team": "BORGO MOLINO-VIGNA FIORITA",
+        "moltiplicatore": 2,
+        "tipo": "nazionale",
+        "regione": "LAZIO",
+        "km": "3.700",
+        "media": ""
+      },
+      {
+        "gara_id": "65_VITTORIO_VENETO_CANSIGLIO_PROVA_VALIDA_CAMPIONATO_REGIONALE_2026-05-23_JUN_M",
+        "nome_gara": "65 VITTORIO VENETO CANSIGLIO PROVA VALIDA CAMPIONATO REGIONALE",
+        "data": "2026-05-23",
+        "posizione": 3,
+        "punti_effettivi": 20,
+        "team": "BORGO MOLINO-VIGNA FIORITA",
+        "moltiplicatore": 2,
+        "tipo": "regionale",
+        "regione": "VENETO",
+        "km": "102.520",
+        "media": "38.801"
+      },
+      {
+        "gara_id": "GRAN_PREMIO_SAN_MICHELE_2026-05-17_JUN_M",
+        "nome_gara": "GRAN PREMIO SAN MICHELE",
+        "data": "2026-05-17",
+        "posizione": 6,
+        "punti_effettivi": 5,
+        "team": "BORGO MOLINO-VIGNA FIORITA",
+        "moltiplicatore": 1,
+        "tipo": "regionale",
+        "regione": "VENETO",
+        "km": "116.900",
+        "media": "40.361"
+      },
+      {
+        "gara_id": "GIRO_D_ABRUZZO_JUNIORES_2026_TERZA_TAPPA_2026-05-03_JUN_M",
+        "nome_gara": "GIRO D'ABRUZZO JUNIORES 2026 TERZA TAPPA",
+        "data": "2026-05-03",
+        "posizione": 6,
+        "punti_effettivi": 10,
+        "team": "BORGO MOLINO-VIGNA FIORITA",
+        "moltiplicatore": 2,
+        "tipo": "nazionale",
+        "regione": "ABRUZZO",
+        "km": "106.500",
+        "media": "40.805"
+      },
+      {
+        "gara_id": "GIRO_D_ABRUZZO_JUNIORES_2026_CLASSIFICA_GENERALE_2026-05-03_JUN_M",
+        "nome_gara": "GIRO D'ABRUZZO JUNIORES 2026 CLASSIFICA GENERALE",
+        "data": "2026-05-03",
+        "posizione": 3,
+        "punti_effettivi": 30,
+        "team": "BORGO MOLINO-VIGNA FIORITA",
+        "moltiplicatore": 3,
+        "tipo": "nazionale",
+        "regione": "ABRUZZO",
+        "km": "201.500",
+        "media": "39.916"
+      },
+      {
+        "gara_id": "GIRO_D_ABRUZZO_JUNIORES_2026_SECONDA_TAPPA_2026-05-02_JUN_M",
+        "nome_gara": "GIRO D'ABRUZZO JUNIORES 2026 SECONDA TAPPA",
+        "data": "2026-05-02",
+        "posizione": 2,
+        "punti_effettivi": 24,
+        "team": "BORGO MOLINO-VIGNA FIORITA",
+        "moltiplicatore": 2,
+        "tipo": "nazionale",
+        "regione": "ABRUZZO",
+        "km": "2.000",
+        "media": "22.452"
+      },
+      {
+        "gara_id": "GIRO_D_ABRUZZO_JUNIORES_2026_PRIMA_TAPPA_2026-05-01_JUN_M",
+        "nome_gara": "GIRO D'ABRUZZO JUNIORES 2026 PRIMA TAPPA",
+        "data": "2026-05-01",
+        "posizione": 6,
+        "punti_effettivi": 10,
+        "team": "BORGO MOLINO-VIGNA FIORITA",
+        "moltiplicatore": 2,
+        "tipo": "nazionale",
+        "regione": "ABRUZZO",
+        "km": "93.000",
+        "media": "39.678"
+      },
+      {
+        "gara_id": "COPPA_SPORTIVI_COMUNE_DI_TRICESIMO_2026-04-19_JUN_M",
+        "nome_gara": "COPPA SPORTIVI COMUNE DI TRICESIMO",
+        "data": "2026-04-19",
+        "posizione": 7,
+        "punti_effettivi": 4,
+        "team": "BORGO MOLINO-VIGNA FIORITA",
+        "moltiplicatore": 1,
+        "tipo": "regionale",
+        "regione": "FRIULI VENEZIA GIULIA",
+        "km": "100.500",
+        "media": "44.404"
+      },
+      {
+        "gara_id": "22_TROFEO_RISTORANTE_ALLA_COLOMBERA_2026-03-22_JUN_M",
+        "nome_gara": "22 TROFEO RISTORANTE ALLA COLOMBERA",
+        "data": "2026-03-22",
+        "posizione": 10,
+        "punti_effettivi": 1,
+        "team": "BORGO MOLINO-VIGNA FIORITA",
+        "moltiplicatore": 1,
+        "tipo": "regionale",
+        "regione": "VENETO",
+        "km": "101.000",
+        "media": "42.676"
+      },
+      {
+        "gara_id": "4_CRONOVERSILIA_2026-03-09_JUN_M",
+        "nome_gara": "4 CRONOVERSILIA",
+        "data": "2026-03-09",
+        "posizione": 5,
+        "punti_effettivi": 6,
+        "team": "BORGO MOLINO-VIGNA FIORITA",
+        "moltiplicatore": 1,
+        "tipo": "regionale",
+        "regione": "TOSCANA",
+        "km": "11.500",
+        "media": "51.957"
+      }
+    ]
+  },
+  "SCIAN_LORENZO": {
+    "id": "SCIAN_LORENZO",
+    "nome": "LORENZO",
+    "cognome": "SCIAN",
+    "team_attuale": "LIBERTAS CERESETTO",
+    "team_id": "LIBERTAS_CERESETTO",
+    "categoria": "JUN_M",
+    "genere": "M",
+    "punti_totali": 8,
+    "risultati": [
+      {
+        "gara_id": "CIOCIARIA_IN_GIRO_PRIMA_TAPPA_SECONDA_SEMITAPPA_CRONOSCALATA_2026-07-18_JUN_M",
+        "nome_gara": "CIOCIARIA IN GIRO PRIMA TAPPA SECONDA SEMITAPPA CRONOSCALATA",
+        "data": "2026-07-18",
+        "posizione": 7,
+        "punti_effettivi": 8,
+        "team": "LIBERTAS CERESETTO",
+        "moltiplicatore": 2,
+        "tipo": "nazionale",
+        "regione": "LAZIO",
+        "km": "3.700",
+        "media": ""
+      }
+    ]
+  },
+  "ANTONELLI_FILIPPO": {
+    "id": "ANTONELLI_FILIPPO",
+    "nome": "FILIPPO",
+    "cognome": "ANTONELLI",
+    "team_attuale": "TEAM CORATTI",
+    "team_id": "TEAM_CORATTI",
+    "categoria": "JUN_M",
+    "genere": "M",
+    "punti_totali": 8,
+    "risultati": [
+      {
+        "gara_id": "CIOCIARIA_IN_GIRO_PRIMA_TAPPA_SECONDA_SEMITAPPA_CRONOSCALATA_2026-07-18_JUN_M",
+        "nome_gara": "CIOCIARIA IN GIRO PRIMA TAPPA SECONDA SEMITAPPA CRONOSCALATA",
+        "data": "2026-07-18",
+        "posizione": 8,
+        "punti_effettivi": 6,
+        "team": "TEAM CORATTI",
+        "moltiplicatore": 2,
+        "tipo": "nazionale",
+        "regione": "LAZIO",
+        "km": "3.700",
+        "media": ""
+      },
+      {
+        "gara_id": "8_MEDAGLIA_DORO_ANTONIO_BUSICO_PROVA_VALIDA_CAMPIONATO_REGIONALE_2026-07-12_JUN_M",
+        "nome_gara": "8 MEDAGLIA DORO ANTONIO BUSICO PROVA VALIDA CAMPIONATO REGIONALE",
+        "data": "2026-07-12",
+        "posizione": 10,
+        "punti_effettivi": 2,
+        "team": "TEAM CORATTI",
+        "moltiplicatore": 2,
+        "tipo": "regionale",
+        "regione": "CAMPANIA",
+        "km": "112.000",
+        "media": "42.532"
+      }
+    ]
+  },
+  "CIANTI_NICCOLO": {
+    "id": "CIANTI_NICCOLO",
+    "nome": "NICCOLO'",
+    "cognome": "CIANTI",
+    "team_attuale": "POLISPORTIVA MONSUMMANESE",
+    "team_id": "POLISPORTIVA_MONSUMMANESE",
+    "categoria": "JUN_M",
+    "genere": "M",
+    "punti_totali": 65,
+    "risultati": [
+      {
+        "gara_id": "CIOCIARIA_IN_GIRO_PRIMA_TAPPA_SECONDA_SEMITAPPA_CRONOSCALATA_2026-07-18_JUN_M",
+        "nome_gara": "CIOCIARIA IN GIRO PRIMA TAPPA SECONDA SEMITAPPA CRONOSCALATA",
+        "data": "2026-07-18",
+        "posizione": 9,
+        "punti_effettivi": 4,
+        "team": "POLISPORTIVA MONSUMMANESE",
+        "moltiplicatore": 2,
+        "tipo": "nazionale",
+        "regione": "LAZIO",
+        "km": "3.700",
+        "media": ""
+      },
+      {
+        "gara_id": "CAMPIONATO_ITALIANO_STRADA_JUNIORES_2026-06-21_JUN_M",
+        "nome_gara": "CAMPIONATO ITALIANO STRADA JUNIORES",
+        "data": "2026-06-21",
+        "posizione": 7,
+        "punti_effettivi": 8,
+        "team": "TOSCANA",
+        "moltiplicatore": 2,
+        "tipo": "nazionale",
+        "regione": "LAZIO",
+        "km": "128.600",
+        "media": ""
+      },
+      {
+        "gara_id": "6_MEMORIAL_MAURIZIO_BRESCI_PICCOLA_LIEGI_2026-06-13_JUN_M",
+        "nome_gara": "6 MEMORIAL MAURIZIO BRESCI PICCOLA LIEGI",
+        "data": "2026-06-13",
+        "posizione": 8,
+        "punti_effettivi": 3,
+        "team": "POLISPORTIVA MONSUMMANESE",
+        "moltiplicatore": 1,
+        "tipo": "regionale",
+        "regione": "TOSCANA",
+        "km": "130.000",
+        "media": "41.053"
+      },
+      {
+        "gara_id": "39_BRESCIA_MONTE_MAGNO_2026-06-02_JUN_M",
+        "nome_gara": "39 BRESCIA MONTE MAGNO",
+        "data": "2026-06-02",
+        "posizione": 1,
+        "punti_effettivi": 15,
+        "team": "POLISPORTIVA MONSUMMANESE",
+        "moltiplicatore": 1,
+        "tipo": "regionale",
+        "regione": "LOMBARDIA",
+        "km": "81.500",
+        "media": "38.514"
+      },
+      {
+        "gara_id": "COPPA_COMUNE_DI_LOIRI_PORTO_SAN_PAOLO_2026-05-17_JUN_M",
+        "nome_gara": "COPPA COMUNE DI LOIRI PORTO SAN PAOLO",
+        "data": "2026-05-17",
+        "posizione": 1,
+        "punti_effettivi": 15,
+        "team": "POLISPORTIVA MONSUMMANESE",
+        "moltiplicatore": 1,
+        "tipo": "regionale",
+        "regione": "SARDEGNA",
+        "km": "56.000",
+        "media": "35.368"
+      },
+      {
+        "gara_id": "4_GRAN_PREMIO_SAN_LEOLINO_2026-04-26_JUN_M",
+        "nome_gara": "4 GRAN PREMIO SAN LEOLINO",
+        "data": "2026-04-26",
+        "posizione": 4,
+        "punti_effettivi": 8,
+        "team": "POLISPORTIVA MONSUMMANESE",
+        "moltiplicatore": 1,
+        "tipo": "regionale",
+        "regione": "TOSCANA",
+        "km": "99.000",
+        "media": "37.512"
+      },
+      {
+        "gara_id": "50_GRAN_PREMIO_LIBERAZIONE_CITTA_DI_MASSA_2026-04-25_JUN_M",
+        "nome_gara": "50 GRAN PREMIO LIBERAZIONE CITTA' DI MASSA",
+        "data": "2026-04-25",
+        "posizione": 10,
+        "punti_effettivi": 2,
+        "team": "POLISPORTIVA MONSUMMANESE",
+        "moltiplicatore": 2,
+        "tipo": "nazionale",
+        "regione": "TOSCANA",
+        "km": "118.500",
+        "media": "42.524"
+      },
+      {
+        "gara_id": "TROFEO_MICHELE_SCARPONI_DUE_GIORNI_2026-04-04_JUN_M",
+        "nome_gara": "TROFEO MICHELE SCARPONI DUE GIORNI",
+        "data": "2026-04-04",
+        "posizione": 9,
+        "punti_effettivi": 4,
+        "team": "POLISPORTIVA MONSUMMANESE",
+        "moltiplicatore": 2,
+        "tipo": "nazionale",
+        "regione": "MARCHE",
+        "km": "107.100",
+        "media": "39.802"
+      },
+      {
+        "gara_id": "TROFEO_IREN_2026-03-29_JUN_M",
+        "nome_gara": "TROFEO IREN",
+        "data": "2026-03-29",
+        "posizione": 9,
+        "punti_effettivi": 2,
+        "team": "POLISPORTIVA MONSUMMANESE",
+        "moltiplicatore": 1,
+        "tipo": "regionale",
+        "regione": "LIGURIA",
+        "km": "105.000",
+        "media": "42.857"
+      },
+      {
+        "gara_id": "MEMORIAL_CLARA_E_FALIERO_VANGI_2026-03-08_JUN_M",
+        "nome_gara": "MEMORIAL CLARA E FALIERO VANGI",
+        "data": "2026-03-08",
+        "posizione": 7,
+        "punti_effettivi": 4,
+        "team": "POLISPORTIVA MONSUMMANESE",
+        "moltiplicatore": 1,
+        "tipo": "regionale",
+        "regione": "TOSCANA",
+        "km": "115.000",
+        "media": "40.588"
       }
     ]
   },
@@ -11005,31 +11636,6 @@
         "regione": "LAZIO",
         "km": "98.000",
         "media": "41.846"
-      }
-    ]
-  },
-  "ANTONELLI_FILIPPO": {
-    "id": "ANTONELLI_FILIPPO",
-    "nome": "FILIPPO",
-    "cognome": "ANTONELLI",
-    "team_attuale": "TEAM CORATTI",
-    "team_id": "TEAM_CORATTI",
-    "categoria": "JUN_M",
-    "genere": "M",
-    "punti_totali": 2,
-    "risultati": [
-      {
-        "gara_id": "8_MEDAGLIA_DORO_ANTONIO_BUSICO_PROVA_VALIDA_CAMPIONATO_REGIONALE_2026-07-12_JUN_M",
-        "nome_gara": "8 MEDAGLIA DORO ANTONIO BUSICO PROVA VALIDA CAMPIONATO REGIONALE",
-        "data": "2026-07-12",
-        "posizione": 10,
-        "punti_effettivi": 2,
-        "team": "TEAM CORATTI",
-        "moltiplicatore": 2,
-        "tipo": "regionale",
-        "regione": "CAMPANIA",
-        "km": "112.000",
-        "media": "42.532"
       }
     ]
   },
@@ -66335,83 +66941,6 @@
       }
     ]
   },
-  "CASCIONE_RAFFAELE": {
-    "id": "CASCIONE_RAFFAELE",
-    "nome": "RAFFAELE",
-    "cognome": "CASCIONE",
-    "team_attuale": "TEAM VANGI TOMMASINI IL PIRATA",
-    "team_id": "TEAM_VANGI_TOMMASINI_IL_PIRATA",
-    "categoria": "JUN_M",
-    "genere": "M",
-    "punti_totali": 53,
-    "risultati": [
-      {
-        "gara_id": "CRONOSCALATA_BARBERINO_PASSO_DELLA_FUTA_MEMORIAL_GASTONE_NENCINI_2026-07-04_JUN_M",
-        "nome_gara": "CRONOSCALATA BARBERINO PASSO DELLA FUTA MEMORIAL GASTONE NENCINI",
-        "data": "2026-07-04",
-        "posizione": 3,
-        "punti_effettivi": 10,
-        "team": "TEAM VANGI TOMMASINI IL PIRATA",
-        "moltiplicatore": 1,
-        "tipo": "regionale",
-        "regione": "TOSCANA",
-        "km": "14.300",
-        "media": "28.348"
-      },
-      {
-        "gara_id": "VITTORIO_VENETO_SAN_BOLDO_2026-06-28_JUN_M",
-        "nome_gara": "VITTORIO VENETO SAN BOLDO",
-        "data": "2026-06-28",
-        "posizione": 1,
-        "punti_effettivi": 15,
-        "team": "TEAM VANGI TOMMASINI IL PIRATA",
-        "moltiplicatore": 1,
-        "tipo": "regionale",
-        "regione": "VENETO",
-        "km": "91.000",
-        "media": "39.613"
-      },
-      {
-        "gara_id": "72_COPPA_MARIA_SS_DELLA_STELLA_2026-04-12_JUN_M",
-        "nome_gara": "72 COPPA MARIA SS DELLA STELLA",
-        "data": "2026-04-12",
-        "posizione": 4,
-        "punti_effettivi": 8,
-        "team": "TEAM VANGI TOMMASINI IL PIRATA",
-        "moltiplicatore": 1,
-        "tipo": "regionale",
-        "regione": "PUGLIA",
-        "km": "107.000",
-        "media": "45.110"
-      },
-      {
-        "gara_id": "TROFEO_MICHELE_SCARPONI_DUE_GIORNI_2026-04-04_JUN_M",
-        "nome_gara": "TROFEO MICHELE SCARPONI DUE GIORNI",
-        "data": "2026-04-04",
-        "posizione": 4,
-        "punti_effettivi": 16,
-        "team": "TEAM VANGI TOMMASINI IL PIRATA",
-        "moltiplicatore": 2,
-        "tipo": "nazionale",
-        "regione": "MARCHE",
-        "km": "107.100",
-        "media": "39.802"
-      },
-      {
-        "gara_id": "GRAN_PREMIO_GIULIANO_BARONTI_2026-03-01_JUN_M",
-        "nome_gara": "GRAN PREMIO GIULIANO BARONTI",
-        "data": "2026-03-01",
-        "posizione": 9,
-        "punti_effettivi": 4,
-        "team": "TEAM VANGI TOMMASINI IL PIRATA",
-        "moltiplicatore": 2,
-        "tipo": "nazionale",
-        "regione": "TOSCANA",
-        "km": "123.000",
-        "media": "41.403"
-      }
-    ]
-  },
   "PUCCI_LORENZO": {
     "id": "PUCCI_LORENZO",
     "nome": "LORENZO",
@@ -70148,135 +70677,6 @@
         "regione": "MARCHE",
         "km": "107.100",
         "media": "39.802"
-      }
-    ]
-  },
-  "VESCO_RICCARDO": {
-    "id": "VESCO_RICCARDO",
-    "nome": "RICCARDO",
-    "cognome": "VESCO",
-    "team_attuale": "TEAM GUERRINI SENAGHESE",
-    "team_id": "TEAM_GUERRINI_SENAGHESE",
-    "categoria": "JUN_M",
-    "genere": "M",
-    "punti_totali": 117,
-    "risultati": [
-      {
-        "gara_id": "2_TROFEO_KUBABA_VIAGGI_DALL_ERBALUCE_AL_PARADISO_2026-06-28_JUN_M",
-        "nome_gara": "2 TROFEO KUBABA VIAGGI DALL'ERBALUCE AL PARADISO",
-        "data": "2026-06-28",
-        "posizione": 2,
-        "punti_effettivi": 12,
-        "team": "TEAM GUERRINI SENAGHESE",
-        "moltiplicatore": 1,
-        "tipo": "regionale",
-        "regione": "PIEMONTE",
-        "km": "103.000",
-        "media": "36.151"
-      },
-      {
-        "gara_id": "23_GIRO_DELLA_BRIANZA_PROVA_UNICA_CAMPIONATO_REGIONALE_2026-06-14_JUN_M",
-        "nome_gara": "23 GIRO DELLA BRIANZA PROVA UNICA CAMPIONATO REGIONALE",
-        "data": "2026-06-14",
-        "posizione": 1,
-        "punti_effettivi": 30,
-        "team": "TEAM GUERRINI SENAGHESE",
-        "moltiplicatore": 2,
-        "tipo": "regionale",
-        "regione": "LOMBARDIA",
-        "km": "136.400",
-        "media": "41.958"
-      },
-      {
-        "gara_id": "13_MEMORIAL_PIETRO_ZIPPONI_2026-06-07_JUN_M",
-        "nome_gara": "13 MEMORIAL PIETRO ZIPPONI",
-        "data": "2026-06-07",
-        "posizione": 1,
-        "punti_effettivi": 15,
-        "team": "TEAM GUERRINI SENAGHESE",
-        "moltiplicatore": 1,
-        "tipo": "regionale",
-        "regione": "LOMBARDIA",
-        "km": "95.000",
-        "media": "40.802"
-      },
-      {
-        "gara_id": "GRAN_PREMIO_CONSORZIO_MARMISTI_CRONOSCALATA_2026-06-06_JUN_M",
-        "nome_gara": "GRAN PREMIO CONSORZIO MARMISTI CRONOSCALATA",
-        "data": "2026-06-06",
-        "posizione": 1,
-        "punti_effettivi": 15,
-        "team": "TEAM GUERRINI SENAGHESE",
-        "moltiplicatore": 1,
-        "tipo": "regionale",
-        "regione": "VENETO",
-        "km": "7.200",
-        "media": "25.460"
-      },
-      {
-        "gara_id": "45_TROFEO_PISTOLESI_2026-05-24_JUN_M",
-        "nome_gara": "45 TROFEO PISTOLESI",
-        "data": "2026-05-24",
-        "posizione": 4,
-        "punti_effettivi": 8,
-        "team": "TEAM GUERRINI SENAGHESE",
-        "moltiplicatore": 1,
-        "tipo": "regionale",
-        "regione": "LOMBARDIA",
-        "km": "105.000",
-        "media": "41.653"
-      },
-      {
-        "gara_id": "67_GRAN_PREMIO_U_C_A_T_2026-05-03_JUN_M",
-        "nome_gara": "67 GRAN PREMIO U C A T",
-        "data": "2026-05-03",
-        "posizione": 8,
-        "punti_effettivi": 3,
-        "team": "TEAM GUERRINI SENAGHESE",
-        "moltiplicatore": 1,
-        "tipo": "regionale",
-        "regione": "PIEMONTE",
-        "km": "101.000",
-        "media": "43.152"
-      },
-      {
-        "gara_id": "TROFEO_MICHELE_SCARPONI_DUE_GIORNI_2026-04-04_JUN_M",
-        "nome_gara": "TROFEO MICHELE SCARPONI DUE GIORNI",
-        "data": "2026-04-04",
-        "posizione": 2,
-        "punti_effettivi": 24,
-        "team": "TEAM GUERRINI SENAGHESE",
-        "moltiplicatore": 2,
-        "tipo": "nazionale",
-        "regione": "MARCHE",
-        "km": "107.100",
-        "media": "39.802"
-      },
-      {
-        "gara_id": "GRAN_PREMIO_MARCELLO_FALCONE_2026-03-29_JUN_M",
-        "nome_gara": "GRAN PREMIO MARCELLO FALCONE",
-        "data": "2026-03-29",
-        "posizione": 10,
-        "punti_effettivi": 2,
-        "team": "TEAM GUERRINI SENAGHESE",
-        "moltiplicatore": 2,
-        "tipo": "nazionale",
-        "regione": "LAZIO",
-        "km": "103.000",
-        "media": "44.138"
-      },
-      {
-        "gara_id": "CIRCUITO_DELLE_CONCHE_2026-03-08_JUN_M",
-        "nome_gara": "CIRCUITO DELLE CONCHE",
-        "data": "2026-03-08",
-        "posizione": 7,
-        "punti_effettivi": 8,
-        "team": "TEAM GUERRINI SENAGHESE",
-        "moltiplicatore": 2,
-        "tipo": "nazionale",
-        "regione": "VENETO",
-        "km": "103.300",
-        "media": "43.343"
       }
     ]
   },
@@ -91666,135 +92066,6 @@
         "regione": "LOMBARDIA",
         "km": "88.000",
         "media": "40.331"
-      }
-    ]
-  },
-  "CIANTI_NICCOLO": {
-    "id": "CIANTI_NICCOLO",
-    "nome": "NICCOLO'",
-    "cognome": "CIANTI",
-    "team_attuale": "TOSCANA",
-    "team_id": "TOSCANA",
-    "categoria": "JUN_M",
-    "genere": "M",
-    "punti_totali": 61,
-    "risultati": [
-      {
-        "gara_id": "CAMPIONATO_ITALIANO_STRADA_JUNIORES_2026-06-21_JUN_M",
-        "nome_gara": "CAMPIONATO ITALIANO STRADA JUNIORES",
-        "data": "2026-06-21",
-        "posizione": 7,
-        "punti_effettivi": 8,
-        "team": "TOSCANA",
-        "moltiplicatore": 2,
-        "tipo": "nazionale",
-        "regione": "LAZIO",
-        "km": "128.600",
-        "media": ""
-      },
-      {
-        "gara_id": "6_MEMORIAL_MAURIZIO_BRESCI_PICCOLA_LIEGI_2026-06-13_JUN_M",
-        "nome_gara": "6 MEMORIAL MAURIZIO BRESCI PICCOLA LIEGI",
-        "data": "2026-06-13",
-        "posizione": 8,
-        "punti_effettivi": 3,
-        "team": "POLISPORTIVA MONSUMMANESE",
-        "moltiplicatore": 1,
-        "tipo": "regionale",
-        "regione": "TOSCANA",
-        "km": "130.000",
-        "media": "41.053"
-      },
-      {
-        "gara_id": "39_BRESCIA_MONTE_MAGNO_2026-06-02_JUN_M",
-        "nome_gara": "39 BRESCIA MONTE MAGNO",
-        "data": "2026-06-02",
-        "posizione": 1,
-        "punti_effettivi": 15,
-        "team": "POLISPORTIVA MONSUMMANESE",
-        "moltiplicatore": 1,
-        "tipo": "regionale",
-        "regione": "LOMBARDIA",
-        "km": "81.500",
-        "media": "38.514"
-      },
-      {
-        "gara_id": "COPPA_COMUNE_DI_LOIRI_PORTO_SAN_PAOLO_2026-05-17_JUN_M",
-        "nome_gara": "COPPA COMUNE DI LOIRI PORTO SAN PAOLO",
-        "data": "2026-05-17",
-        "posizione": 1,
-        "punti_effettivi": 15,
-        "team": "POLISPORTIVA MONSUMMANESE",
-        "moltiplicatore": 1,
-        "tipo": "regionale",
-        "regione": "SARDEGNA",
-        "km": "56.000",
-        "media": "35.368"
-      },
-      {
-        "gara_id": "4_GRAN_PREMIO_SAN_LEOLINO_2026-04-26_JUN_M",
-        "nome_gara": "4 GRAN PREMIO SAN LEOLINO",
-        "data": "2026-04-26",
-        "posizione": 4,
-        "punti_effettivi": 8,
-        "team": "POLISPORTIVA MONSUMMANESE",
-        "moltiplicatore": 1,
-        "tipo": "regionale",
-        "regione": "TOSCANA",
-        "km": "99.000",
-        "media": "37.512"
-      },
-      {
-        "gara_id": "50_GRAN_PREMIO_LIBERAZIONE_CITTA_DI_MASSA_2026-04-25_JUN_M",
-        "nome_gara": "50 GRAN PREMIO LIBERAZIONE CITTA' DI MASSA",
-        "data": "2026-04-25",
-        "posizione": 10,
-        "punti_effettivi": 2,
-        "team": "POLISPORTIVA MONSUMMANESE",
-        "moltiplicatore": 2,
-        "tipo": "nazionale",
-        "regione": "TOSCANA",
-        "km": "118.500",
-        "media": "42.524"
-      },
-      {
-        "gara_id": "TROFEO_MICHELE_SCARPONI_DUE_GIORNI_2026-04-04_JUN_M",
-        "nome_gara": "TROFEO MICHELE SCARPONI DUE GIORNI",
-        "data": "2026-04-04",
-        "posizione": 9,
-        "punti_effettivi": 4,
-        "team": "POLISPORTIVA MONSUMMANESE",
-        "moltiplicatore": 2,
-        "tipo": "nazionale",
-        "regione": "MARCHE",
-        "km": "107.100",
-        "media": "39.802"
-      },
-      {
-        "gara_id": "TROFEO_IREN_2026-03-29_JUN_M",
-        "nome_gara": "TROFEO IREN",
-        "data": "2026-03-29",
-        "posizione": 9,
-        "punti_effettivi": 2,
-        "team": "POLISPORTIVA MONSUMMANESE",
-        "moltiplicatore": 1,
-        "tipo": "regionale",
-        "regione": "LIGURIA",
-        "km": "105.000",
-        "media": "42.857"
-      },
-      {
-        "gara_id": "MEMORIAL_CLARA_E_FALIERO_VANGI_2026-03-08_JUN_M",
-        "nome_gara": "MEMORIAL CLARA E FALIERO VANGI",
-        "data": "2026-03-08",
-        "posizione": 7,
-        "punti_effettivi": 4,
-        "team": "POLISPORTIVA MONSUMMANESE",
-        "moltiplicatore": 1,
-        "tipo": "regionale",
-        "regione": "TOSCANA",
-        "km": "115.000",
-        "media": "40.588"
       }
     ]
   },
@@ -131940,135 +132211,6 @@
         "regione": "EMILIA ROMAGNA",
         "km": "148.300",
         "media": "41.788"
-      }
-    ]
-  },
-  "CAMPAGNOLO_LORENZO": {
-    "id": "CAMPAGNOLO_LORENZO",
-    "nome": "LORENZO",
-    "cognome": "CAMPAGNOLO",
-    "team_attuale": "BORGO MOLINO-VIGNA FIORITA",
-    "team_id": "BORGO_MOLINO_VIGNA_FIORITA",
-    "categoria": "JUN_M",
-    "genere": "M",
-    "punti_totali": 110,
-    "risultati": [
-      {
-        "gara_id": "65_VITTORIO_VENETO_CANSIGLIO_PROVA_VALIDA_CAMPIONATO_REGIONALE_2026-05-23_JUN_M",
-        "nome_gara": "65 VITTORIO VENETO CANSIGLIO PROVA VALIDA CAMPIONATO REGIONALE",
-        "data": "2026-05-23",
-        "posizione": 3,
-        "punti_effettivi": 20,
-        "team": "BORGO MOLINO-VIGNA FIORITA",
-        "moltiplicatore": 2,
-        "tipo": "regionale",
-        "regione": "VENETO",
-        "km": "102.520",
-        "media": "38.801"
-      },
-      {
-        "gara_id": "GRAN_PREMIO_SAN_MICHELE_2026-05-17_JUN_M",
-        "nome_gara": "GRAN PREMIO SAN MICHELE",
-        "data": "2026-05-17",
-        "posizione": 6,
-        "punti_effettivi": 5,
-        "team": "BORGO MOLINO-VIGNA FIORITA",
-        "moltiplicatore": 1,
-        "tipo": "regionale",
-        "regione": "VENETO",
-        "km": "116.900",
-        "media": "40.361"
-      },
-      {
-        "gara_id": "GIRO_D_ABRUZZO_JUNIORES_2026_TERZA_TAPPA_2026-05-03_JUN_M",
-        "nome_gara": "GIRO D'ABRUZZO JUNIORES 2026 TERZA TAPPA",
-        "data": "2026-05-03",
-        "posizione": 6,
-        "punti_effettivi": 10,
-        "team": "BORGO MOLINO-VIGNA FIORITA",
-        "moltiplicatore": 2,
-        "tipo": "nazionale",
-        "regione": "ABRUZZO",
-        "km": "106.500",
-        "media": "40.805"
-      },
-      {
-        "gara_id": "GIRO_D_ABRUZZO_JUNIORES_2026_CLASSIFICA_GENERALE_2026-05-03_JUN_M",
-        "nome_gara": "GIRO D'ABRUZZO JUNIORES 2026 CLASSIFICA GENERALE",
-        "data": "2026-05-03",
-        "posizione": 3,
-        "punti_effettivi": 30,
-        "team": "BORGO MOLINO-VIGNA FIORITA",
-        "moltiplicatore": 3,
-        "tipo": "nazionale",
-        "regione": "ABRUZZO",
-        "km": "201.500",
-        "media": "39.916"
-      },
-      {
-        "gara_id": "GIRO_D_ABRUZZO_JUNIORES_2026_SECONDA_TAPPA_2026-05-02_JUN_M",
-        "nome_gara": "GIRO D'ABRUZZO JUNIORES 2026 SECONDA TAPPA",
-        "data": "2026-05-02",
-        "posizione": 2,
-        "punti_effettivi": 24,
-        "team": "BORGO MOLINO-VIGNA FIORITA",
-        "moltiplicatore": 2,
-        "tipo": "nazionale",
-        "regione": "ABRUZZO",
-        "km": "2.000",
-        "media": "22.452"
-      },
-      {
-        "gara_id": "GIRO_D_ABRUZZO_JUNIORES_2026_PRIMA_TAPPA_2026-05-01_JUN_M",
-        "nome_gara": "GIRO D'ABRUZZO JUNIORES 2026 PRIMA TAPPA",
-        "data": "2026-05-01",
-        "posizione": 6,
-        "punti_effettivi": 10,
-        "team": "BORGO MOLINO-VIGNA FIORITA",
-        "moltiplicatore": 2,
-        "tipo": "nazionale",
-        "regione": "ABRUZZO",
-        "km": "93.000",
-        "media": "39.678"
-      },
-      {
-        "gara_id": "COPPA_SPORTIVI_COMUNE_DI_TRICESIMO_2026-04-19_JUN_M",
-        "nome_gara": "COPPA SPORTIVI COMUNE DI TRICESIMO",
-        "data": "2026-04-19",
-        "posizione": 7,
-        "punti_effettivi": 4,
-        "team": "BORGO MOLINO-VIGNA FIORITA",
-        "moltiplicatore": 1,
-        "tipo": "regionale",
-        "regione": "FRIULI VENEZIA GIULIA",
-        "km": "100.500",
-        "media": "44.404"
-      },
-      {
-        "gara_id": "22_TROFEO_RISTORANTE_ALLA_COLOMBERA_2026-03-22_JUN_M",
-        "nome_gara": "22 TROFEO RISTORANTE ALLA COLOMBERA",
-        "data": "2026-03-22",
-        "posizione": 10,
-        "punti_effettivi": 1,
-        "team": "BORGO MOLINO-VIGNA FIORITA",
-        "moltiplicatore": 1,
-        "tipo": "regionale",
-        "regione": "VENETO",
-        "km": "101.000",
-        "media": "42.676"
-      },
-      {
-        "gara_id": "4_CRONOVERSILIA_2026-03-09_JUN_M",
-        "nome_gara": "4 CRONOVERSILIA",
-        "data": "2026-03-09",
-        "posizione": 5,
-        "punti_effettivi": 6,
-        "team": "BORGO MOLINO-VIGNA FIORITA",
-        "moltiplicatore": 1,
-        "tipo": "regionale",
-        "regione": "TOSCANA",
-        "km": "11.500",
-        "media": "51.957"
       }
     ]
   },

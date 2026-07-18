@@ -2,12 +2,12 @@
   {
     "team_id": "TEAM_VANGI_TOMMASINI_IL_PIRATA",
     "team_nome": "TEAM VANGI TOMMASINI IL PIRATA",
-    "punti": 1001,
+    "punti": 1037,
     "vittorie": 14,
     "p1": 14,
-    "p2": 11,
+    "p2": 12,
     "p3": 12,
-    "pout": 41,
+    "pout": 42,
     "n_atleti": 13,
     "pos": 1
   },
@@ -26,14 +26,26 @@
   {
     "team_id": "TEAM_GUERRINI_SENAGHESE",
     "team_nome": "TEAM GUERRINI SENAGHESE",
-    "punti": 557,
-    "vittorie": 8,
-    "p1": 8,
+    "punti": 587,
+    "vittorie": 9,
+    "p1": 9,
     "p2": 6,
     "p3": 6,
     "pout": 32,
     "n_atleti": 12,
     "pos": 3
+  },
+  {
+    "team_id": "BORGO_MOLINO_VIGNA_FIORITA",
+    "team_nome": "BORGO MOLINO-VIGNA FIORITA",
+    "punti": 555,
+    "vittorie": 8,
+    "p1": 8,
+    "p2": 3,
+    "p3": 7,
+    "pout": 14,
+    "n_atleti": 3,
+    "pos": 4
   },
   {
     "team_id": "POOL_CANTU_GB_TEAM_A_S_D",
@@ -45,18 +57,6 @@
     "p3": 4,
     "pout": 34,
     "n_atleti": 11,
-    "pos": 4
-  },
-  {
-    "team_id": "BORGO_MOLINO_VIGNA_FIORITA",
-    "team_nome": "BORGO MOLINO-VIGNA FIORITA",
-    "punti": 529,
-    "vittorie": 8,
-    "p1": 8,
-    "p2": 3,
-    "p3": 7,
-    "pout": 12,
-    "n_atleti": 3,
     "pos": 5
   },
   {
@@ -74,11 +74,11 @@
   {
     "team_id": "TEAM_ECOTEK_ZERO24",
     "team_nome": "TEAM ECOTEK ZERO24",
-    "punti": 428,
+    "punti": 448,
     "vittorie": 8,
     "p1": 8,
     "p2": 9,
-    "p3": 4,
+    "p3": 5,
     "pout": 22,
     "n_atleti": 9,
     "pos": 7
@@ -182,12 +182,12 @@
   {
     "team_id": "TEAM_CORATTI",
     "team_nome": "TEAM CORATTI",
-    "punti": 330,
+    "punti": 336,
     "vittorie": 3,
     "p1": 3,
     "p2": 4,
     "p3": 2,
-    "pout": 16,
+    "pout": 17,
     "n_atleti": 6,
     "pos": 16
   },
@@ -206,12 +206,12 @@
   {
     "team_id": "POLISPORTIVA_MONSUMMANESE",
     "team_nome": "POLISPORTIVA MONSUMMANESE",
-    "punti": 320,
+    "punti": 326,
     "vittorie": 6,
     "p1": 6,
     "p2": 3,
     "p3": 6,
-    "pout": 24,
+    "pout": 26,
     "n_atleti": 10,
     "pos": 18
   },
@@ -516,6 +516,18 @@
     "pos": 43
   },
   {
+    "team_id": "LIBERTAS_CERESETTO",
+    "team_nome": "LIBERTAS CERESETTO",
+    "punti": 70,
+    "vittorie": 0,
+    "p1": 0,
+    "p2": 0,
+    "p3": 1,
+    "pout": 8,
+    "n_atleti": 5,
+    "pos": 44
+  },
+  {
     "team_id": "TEAM_BELVEDERE",
     "team_nome": "TEAM BELVEDERE",
     "punti": 67,
@@ -525,7 +537,7 @@
     "p3": 2,
     "pout": 5,
     "n_atleti": 2,
-    "pos": 44
+    "pos": 45
   },
   {
     "team_id": "ITALIA_NUOVA_BOLOGNA",
@@ -537,18 +549,6 @@
     "p3": 0,
     "pout": 14,
     "n_atleti": 5,
-    "pos": 45
-  },
-  {
-    "team_id": "LIBERTAS_CERESETTO",
-    "team_nome": "LIBERTAS CERESETTO",
-    "punti": 62,
-    "vittorie": 0,
-    "p1": 0,
-    "p2": 0,
-    "p3": 1,
-    "pout": 7,
-    "n_atleti": 4,
     "pos": 46
   },
   {
