@@ -8690,10 +8690,10 @@ async function updateRankTable() {
         </td>
         <td class="hide-mobile">
           <div class="td-p-wrap">
-            <span class="td-p p1" title="Vittorie"><span class="td-p-label">1°</span>${t.p1||0}</span>
-            <span class="td-p p2" title="Secondi Posti"><span class="td-p-label">2°</span>${t.p2||0}</span>
-            <span class="td-p p3" title="Terzi Posti"><span class="td-p-label">3°</span>${t.p3||0}</span>
-            <span class="td-p pout" title="Piazzamenti 4-10"><span class="td-p-label">TOP10</span>${t.pout||0}</span>
+            <span class="td-p p1" title="Vittorie">${t.p1||0}</span>
+            <span class="td-p p2" title="Secondi Posti">${t.p2||0}</span>
+            <span class="td-p p3" title="Terzi Posti">${t.p3||0}</span>
+            <span class="td-p pout" title="Piazzamenti 4-10">${t.pout||0}</span>
           </div>
         </td>
         <td class="r hide-mobile" style="font-family:var(--font-mono);font-size:.85rem;color:var(--text-muted)">${t.n_atleti||0}</td>
