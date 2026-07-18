@@ -14876,11 +14876,12 @@ function openPhotoLightbox(src, opts = {}) {
   const user = authUser();
   const isAdmin = user?.role === 'admin';
 
-  // ── Crediti / didascalia in basso: banda a tutta larghezza, non più un
-  // "pill" centrale — deve essere ben visibile, non un dettaglio che si perde. ──
+  // ── Crediti / didascalia SOVRAPPOSTI alla foto (non sotto, nell'area nera
+  // dell'overlay dove passava inosservato) — banda scura ben visibile
+  // ancorata al bordo inferiore della foto stessa. ──
   const credit = [opts.caption, opts.credit ? '📷 ' + opts.credit : ''].filter(Boolean).join('  ·  ');
   const creditHtml = credit
-    ? `<div style="position:fixed;bottom:0;left:0;right:0;z-index:10000;background:rgba(20,20,20,.82);color:#fff;padding:12px 20px;font-size:.88rem;text-align:center;pointer-events:none">${esc(credit)}</div>`
+    ? `<div style="position:absolute;bottom:0;left:0;right:0;background:rgba(10,10,10,.88);color:#fff;padding:16px 20px;font-size:.95rem;font-weight:600;text-align:center;pointer-events:none;border-radius:0 0 var(--r-md) var(--r-md)">${esc(credit)}</div>`
     : '';
 
   // ── Tag corridori in alto (con istruzioni) ──
@@ -14914,7 +14915,11 @@ function openPhotoLightbox(src, opts = {}) {
       tagHtml = wrap(`<div style="${hintStyle};background:rgba(0,0,0,.5);padding:6px 12px;border-radius:14px"><a href="#/login" style="color:#fff;text-decoration:underline">Accedi</a> per taggare i corridori nella foto</div>`);
     }
   }
-  lb.innerHTML = `<img src="${src}" alt="Foto gara"/>${creditHtml}${tagHtml}`;
+  // Wrapper relative attorno alla sola immagine: il credit (position:absolute)
+  // si ancora così al bordo della FOTO stessa (che ha dimensioni variabili,
+  // centrata con max-height:90vh) invece che al bordo dello schermo, dove
+  // finiva nell'area nera dell'overlay sotto la foto anziché sovrapposto.
+  lb.innerHTML = `<div style="position:relative;display:inline-flex;max-width:100%;max-height:90vh"><img src="${src}" alt="Foto gara" style="display:block"/>${creditHtml}</div>${tagHtml}`;
   document.body.appendChild(lb);
 }
 window.openPhotoLightbox = openPhotoLightbox;
