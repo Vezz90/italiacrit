@@ -14876,10 +14876,11 @@ function openPhotoLightbox(src, opts = {}) {
   const user = authUser();
   const isAdmin = user?.role === 'admin';
 
-  // ── Crediti / didascalia in basso ──
+  // ── Crediti / didascalia in basso: banda a tutta larghezza, non più un
+  // "pill" centrale — deve essere ben visibile, non un dettaglio che si perde. ──
   const credit = [opts.caption, opts.credit ? '📷 ' + opts.credit : ''].filter(Boolean).join('  ·  ');
   const creditHtml = credit
-    ? `<div style="position:fixed;bottom:18px;left:50%;transform:translateX(-50%);max-width:92vw;z-index:10000;background:rgba(0,0,0,.62);color:#fff;padding:7px 16px;border-radius:16px;font-size:.84rem;text-align:center;pointer-events:none">${esc(credit)}</div>`
+    ? `<div style="position:fixed;bottom:0;left:0;right:0;z-index:10000;background:rgba(20,20,20,.82);color:#fff;padding:12px 20px;font-size:.88rem;text-align:center;pointer-events:none">${esc(credit)}</div>`
     : '';
 
   // ── Tag corridori in alto (con istruzioni) ──
@@ -14913,15 +14914,7 @@ function openPhotoLightbox(src, opts = {}) {
       tagHtml = wrap(`<div style="${hintStyle};background:rgba(0,0,0,.5);padding:6px 12px;border-radius:14px"><a href="#/login" style="color:#fff;text-decoration:underline">Accedi</a> per taggare i corridori nella foto</div>`);
     }
   }
-  // ── Acquista (album esterno → sito della fonte) ──
-  const buyHtml = (opts.ext && opts.ext.albumPage)
-    ? `<a href="${esc(opts.ext.albumPage)}" target="_blank" rel="noopener" onclick="event.stopPropagation()" style="position:fixed;bottom:18px;right:18px;z-index:10001;background:#f59e0b;color:#000;padding:9px 16px;border-radius:20px;font-size:.85rem;font-weight:700;cursor:pointer;box-shadow:0 4px 14px rgba(0,0,0,.4);text-decoration:none">🛒 Acquista su ${esc(opts.ext.srcLabel || 'sito')}</a>`
-    : '';
-  // ── Acquista (foto di fotografo registrato → richiesta via email/notifica) ──
-  const photographerBuyHtml = (opts.photoId && opts.credit && !opts.ext)
-    ? `<button onclick="event.stopPropagation();window.openPhotoPurchaseModal('${esc(src)}','${esc(opts.credit.replace(/'/g,"\\'"))}','${esc((opts.caption||'').replace(/'/g,"\\'"))}','${esc(String(opts.garaId||''))}')" style="position:fixed;bottom:18px;right:18px;z-index:10001;background:#f59e0b;color:#000;padding:9px 16px;border-radius:20px;font-size:.85rem;font-weight:700;cursor:pointer;box-shadow:0 4px 14px rgba(0,0,0,.4);border:none">🛒 Acquista foto</button>`
-    : '';
-  lb.innerHTML = `<img src="${src}" alt="Foto gara"/>${creditHtml}${tagHtml}${buyHtml}${photographerBuyHtml}`;
+  lb.innerHTML = `<img src="${src}" alt="Foto gara"/>${creditHtml}${tagHtml}`;
   document.body.appendChild(lb);
 }
 window.openPhotoLightbox = openPhotoLightbox;
