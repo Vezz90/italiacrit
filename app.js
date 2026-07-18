@@ -3294,6 +3294,13 @@ document.addEventListener('click', (e) => {
 window.addEventListener('popstate', () => { route(); });
 
 function route() {
+  // Se il player della diretta è aperto a schermo intero e l'utente sta
+  // davvero cambiando pagina (route(), non un semplice re-render della
+  // stessa pagina come i tab di Media che chiamano setPage senza passare
+  // da qui), lo si riduce al mini-player invece di lasciarlo coprire la
+  // nuova pagina o distruggerlo.
+  window.minimizeLivePlayer?.();
+
   const hash = _resolveVirtualHash();
 
   // Normalizza un URL con #/ nella barra indirizzi nella forma pulita
@@ -19784,38 +19791,51 @@ window.openVideoModal = (videoId, title) => {
   document.body.appendChild(overlay);
 };
 
-// Mini-player persistente per le dirette: appeso a document.body (fuori da
-// #app), setPage() non lo tocca quando si cambia pagina — resta ancorato
-// in basso a destra mentre si continua a navigare nel sito. Nota: la
-// riproduzione in background a schermo spento dipende dal browser/OS del
-// telefono (comportamento standard per un embed YouTube in una pagina web,
-// non forzabile via codice) — qui ci limitiamo a non mettere in pausa il
-// player quando la pagina cambia visibilità.
-window.openMiniPlayer = (videoId, title, garaId) => {
-  const existing = document.getElementById('mini-player');
-  if (existing && existing.dataset.videoId === videoId) return; // già in riproduzione
-  existing?.remove();
+// Player delle dirette, due stati sullo stesso elemento (appeso a
+// document.body, fuori da #app: setPage()/route() lo ridimensionano ma non
+// lo distruggono mai da soli):
+//  - schermo intero, centrato, con sfondo scurito — stato di apertura;
+//  - mini-player in basso a destra — quando l'utente naviga altrove
+//    (vedi route()) o clicca "riduci"; ricliccandolo torna a schermo intero.
+// Nota: la riproduzione in background a schermo spento del telefono dipende
+// dal browser/OS (comportamento standard per un embed YouTube in una pagina
+// web, non forzabile via codice) — qui ci limitiamo a non metterlo mai in
+// pausa noi quando cambia la visibilità della pagina.
+window.openLivePlayer = (videoId, title, garaId) => {
   if (!videoId) return;
-  const mp = document.createElement('div');
-  mp.id = 'mini-player';
-  mp.dataset.videoId = videoId;
-  mp.innerHTML = `
-    <div class="mini-player-hdr">
-      <span class="mini-player-title">${esc(title || 'Diretta')}</span>
-      <div class="mini-player-actions">
-        ${garaId && !String(garaId).includes('::') ? `<a href="#/gara/${esc(garaId)}" title="Vai alla gara" class="mini-player-expand">⤢</a>` : ''}
-        <button onclick="window.closeMiniPlayer()" title="Chiudi" class="mini-player-close">✕</button>
+  const existing = document.getElementById('live-player');
+  if (existing && existing.dataset.videoId === videoId) {
+    existing.classList.remove('live-player-mini');
+    return;
+  }
+  existing?.remove();
+  const lp = document.createElement('div');
+  lp.id = 'live-player';
+  lp.dataset.videoId = videoId;
+  lp.innerHTML = `
+    <div class="live-player-backdrop" onclick="window.minimizeLivePlayer()"></div>
+    <div class="live-player-box">
+      <div class="live-player-hdr">
+        <span class="live-player-title">${esc(title || 'Diretta')}</span>
+        <div class="live-player-actions">
+          ${garaId && !String(garaId).includes('::') ? `<a href="#/gara/${esc(garaId)}" title="Vai alla gara" class="live-player-expand">⤢</a>` : ''}
+          <button onclick="event.stopPropagation();window.minimizeLivePlayer()" title="Riduci" class="live-player-min">▁</button>
+          <button onclick="event.stopPropagation();window.closeLivePlayer()" title="Chiudi" class="live-player-close">✕</button>
+        </div>
       </div>
-    </div>
-    <div class="mini-player-frame">
-      <iframe src="https://www.youtube.com/embed/${videoId}?autoplay=1&rel=0"
-              frameborder="0" allowfullscreen
-              allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture">
-      </iframe>
+      <div class="live-player-frame">
+        <iframe src="https://www.youtube.com/embed/${videoId}?autoplay=1&rel=0"
+                frameborder="0" allowfullscreen
+                allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture">
+        </iframe>
+      </div>
     </div>`;
-  document.body.appendChild(mp);
+  lp.addEventListener('click', () => { if (lp.classList.contains('live-player-mini')) window.restoreLivePlayer(); });
+  document.body.appendChild(lp);
 };
-window.closeMiniPlayer = () => { document.getElementById('mini-player')?.remove(); };
+window.minimizeLivePlayer = () => { document.getElementById('live-player')?.classList.add('live-player-mini'); };
+window.restoreLivePlayer  = () => { document.getElementById('live-player')?.classList.remove('live-player-mini'); };
+window.closeLivePlayer    = () => { document.getElementById('live-player')?.remove(); };
 
 // ── NAV DROPDOWNS (click-based) ───────────────────────────────
 function initNavDropdowns() {
@@ -20683,10 +20703,10 @@ async function renderMedia() {
     // Diretta in corso con gara reale: apre il mini-player (persiste
     // navigando altrove) invece di andare sulla pagina della gara.
     const isLiveReal = !!x.video.is_live && !isPending;
-    const miniOnclick = vid ? `window.openMiniPlayer('${vid}','${t}','${esc(x.gara_id)}')` : pendingOnclick;
+    const liveOnclick = vid ? `window.openLivePlayer('${vid}','${t}','${esc(x.gara_id)}')` : pendingOnclick;
     const tag = (isPending || isLiveReal) ? 'div' : 'a';
     const hrefAttr = isPending ? `onclick="${pendingOnclick}" style="cursor:pointer"`
-      : isLiveReal ? `onclick="${miniOnclick}" style="cursor:pointer"`
+      : isLiveReal ? `onclick="${liveOnclick}" style="cursor:pointer"`
       : `href="#/gara/${esc(x.gara_id)}"`;
     return `<${tag} ${hrefAttr} class="yt-card${isSel ? ' yt-card-selected' : ''}">
       <div class="yt-thumb">

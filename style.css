@@ -1312,32 +1312,55 @@ select.yt-chip-select {
   .multi-live-grid { flex-direction: column; }
 }
 
-/* Mini-player persistente: appeso a document.body (fuori da #app), resta
-   ancorato in basso a destra anche navigando in altre pagine della SPA. */
-#mini-player {
-  position: fixed; right: 14px; bottom: 14px; z-index: 9500;
-  width: 280px; background: #000; border-radius: var(--r-md);
-  overflow: hidden; box-shadow: 0 8px 28px rgba(0,0,0,.45);
+/* Player delle dirette, due stati sullo stesso elemento #live-player
+   (appeso a document.body, fuori da #app — vedi window.openLivePlayer):
+   di default schermo intero centrato con sfondo scurito; con la classe
+   .live-player-mini diventa un riquadro piccolo in basso a destra. */
+#live-player {
+  position: fixed; inset: 0; z-index: 9500;
+  display: flex; align-items: center; justify-content: center;
 }
-.mini-player-hdr {
+.live-player-backdrop {
+  position: absolute; inset: 0; background: rgba(0,0,0,.82);
+}
+.live-player-box {
+  position: relative; width: min(900px, 92vw); background: #000;
+  border-radius: var(--r-md); overflow: hidden;
+  box-shadow: 0 12px 40px rgba(0,0,0,.55);
+}
+.live-player-hdr {
   display: flex; align-items: center; justify-content: space-between;
-  gap: 6px; padding: 6px 8px; background: #111; color: #fff;
+  gap: 6px; padding: 8px 10px; background: #111; color: #fff;
 }
-.mini-player-title {
-  font-size: .74rem; font-weight: 600; white-space: nowrap;
+.live-player-title {
+  font-size: .82rem; font-weight: 600; white-space: nowrap;
   overflow: hidden; text-overflow: ellipsis; flex: 1;
 }
-.mini-player-actions { display: flex; align-items: center; gap: 4px; flex-shrink: 0; }
-.mini-player-expand, .mini-player-close {
+.live-player-actions { display: flex; align-items: center; gap: 4px; flex-shrink: 0; }
+.live-player-expand, .live-player-min, .live-player-close {
   display: flex; align-items: center; justify-content: center;
-  width: 22px; height: 22px; border-radius: 50%; border: none;
+  width: 24px; height: 24px; border-radius: 50%; border: none;
   background: rgba(255,255,255,.14); color: #fff; cursor: pointer;
-  font-size: .78rem; text-decoration: none;
+  font-size: .8rem; text-decoration: none;
 }
-.mini-player-frame { position: relative; width: 100%; aspect-ratio: 16/9; }
-.mini-player-frame iframe { position: absolute; inset: 0; width: 100%; height: 100%; border: none; }
+.live-player-frame { position: relative; width: 100%; aspect-ratio: 16/9; }
+.live-player-frame iframe { position: absolute; inset: 0; width: 100%; height: 100%; border: none; }
+
+/* Stato ridotto: niente sfondo scurito, riquadro piccolo ancorato in basso
+   a destra, cliccabile ovunque per tornare a schermo intero. */
+#live-player.live-player-mini {
+  inset: auto; right: 14px; bottom: 14px; left: auto; top: auto;
+  display: block; cursor: pointer;
+}
+#live-player.live-player-mini .live-player-backdrop { display: none; }
+#live-player.live-player-mini .live-player-box { width: 280px; box-shadow: 0 8px 28px rgba(0,0,0,.45); }
+#live-player.live-player-mini .live-player-title { font-size: .74rem; }
+#live-player.live-player-mini .live-player-min { display: none; }
+#live-player.live-player-mini .live-player-expand,
+#live-player.live-player-mini .live-player-close { width: 22px; height: 22px; font-size: .74rem; }
 @media (max-width: 640px) {
-  #mini-player { width: 46vw; right: 8px; bottom: 8px; }
+  #live-player.live-player-mini .live-player-box { width: 46vw; }
+  #live-player.live-player-mini { right: 8px; bottom: 8px; }
 }
 @media (max-width: 640px) {
   .live-now-banner { bottom: 12px; padding: 9px 9px 9px 12px; }
