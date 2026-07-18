@@ -8515,10 +8515,10 @@ async function updateRankTable() {
         </td>
         <td class="hide-mobile">
           <div class="td-p-wrap">
-            <span class="td-p p1" title="Vittorie"><span class="td-p-label">1°</span>${r.p1||0}</span>
-            <span class="td-p p2" title="Secondi Posti"><span class="td-p-label">2°</span>${r.p2||0}</span>
-            <span class="td-p p3" title="Terzi Posti"><span class="td-p-label">3°</span>${r.p3||0}</span>
-            <span class="td-p pout" title="Piazzamenti 4-10"><span class="td-p-label">TOP10</span>${r.pout||0}</span>
+            <span class="td-p p1" title="Vittorie">${r.p1||0}</span>
+            <span class="td-p p2" title="Secondi Posti">${r.p2||0}</span>
+            <span class="td-p p3" title="Terzi Posti">${r.p3||0}</span>
+            <span class="td-p pout" title="Piazzamenti 4-10">${r.pout||0}</span>
           </div>
         </td>
       </tr>`;
@@ -8533,7 +8533,14 @@ async function updateRankTable() {
           <th>ATLETA</th>
           <th class="hide-mobile">TEAM</th>
           <th class="r">PUNTI</th>
-          <th class="hide-mobile">1° / 2° / 3° / TOP10</th>
+          <th class="hide-mobile">
+            <div class="td-p-wrap">
+              <span class="td-p p1">1°</span>
+              <span class="td-p p2">2°</span>
+              <span class="td-p p3">3°</span>
+              <span class="td-p pout">TOP10</span>
+            </div>
+          </th>
         </tr></thead>
         <tbody>${rows || '<tr><td colspan="6" class="empty-state">Nessun dato</td></tr>'}</tbody>
       </table>`;
@@ -8701,7 +8708,14 @@ async function updateRankTable() {
           <th style="width:40px" title="Variazione">↕</th>
           <th>TEAM</th>
           <th class="r">PUNTI</th>
-          <th class="hide-mobile">1° / 2° / 3° / TOP10</th>
+          <th class="hide-mobile">
+            <div class="td-p-wrap">
+              <span class="td-p p1">1°</span>
+              <span class="td-p p2">2°</span>
+              <span class="td-p p3">3°</span>
+              <span class="td-p pout">TOP10</span>
+            </div>
+          </th>
           <th class="r hide-mobile">ATLETI</th>
         </tr></thead>
         <tbody>${rows || '<tr><td colspan="6" class="empty-state">Nessun dato</td></tr>'}</tbody>
