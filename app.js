@@ -20772,13 +20772,16 @@ async function renderMedia() {
     const t = esc((x.video.title || '').replace(/'/g, "\\'"));
     const vid = ytId(x.video.url);
     const pendingOnclick = vid ? `window.openVideoModal('${vid}','${t}')` : `window.open('${esc(x.video.url)}','_blank')`;
-    // Diretta in corso con gara reale: apre il mini-player (persiste
-    // navigando altrove) invece di andare sulla pagina della gara.
-    const isLiveReal = !!x.video.is_live && !isPending;
+    // Diretta in corso: apre il player persistente (minimizzabile, resta
+    // in riproduzione navigando altrove) invece di andare sulla pagina
+    // della gara — vale sia per una gara già reale sia per una tappa ancora
+    // in attesa (chiave sintetica), a differenza di un video normale/VOD
+    // "in attesa tappa" per cui il vecchio player usa e getta va benissimo.
+    const isLive = !!x.video.is_live;
     const liveOnclick = vid ? `window.openLivePlayer('${vid}','${t}','${esc(x.gara_id)}')` : pendingOnclick;
-    const tag = (isPending || isLiveReal) ? 'div' : 'a';
-    const hrefAttr = isPending ? `onclick="${pendingOnclick}" style="cursor:pointer"`
-      : isLiveReal ? `onclick="${liveOnclick}" style="cursor:pointer"`
+    const tag = (isPending || isLive) ? 'div' : 'a';
+    const hrefAttr = isLive ? `onclick="${liveOnclick}" style="cursor:pointer"`
+      : isPending ? `onclick="${pendingOnclick}" style="cursor:pointer"`
       : `href="#/gara/${esc(x.gara_id)}"`;
     return `<${tag} ${hrefAttr} class="yt-card${isSel ? ' yt-card-selected' : ''}">
       <div class="yt-thumb">
