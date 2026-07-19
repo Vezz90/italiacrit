@@ -1,5 +1,17 @@
 [
   {
+    "team_id": "S_C_CESANO_MADERNO",
+    "team_nome": "S.C. CESANO MADERNO",
+    "punti": 338,
+    "vittorie": 9,
+    "p1": 9,
+    "p2": 4,
+    "p3": 6,
+    "pout": 16,
+    "n_atleti": 2,
+    "pos": 1
+  },
+  {
     "team_id": "HG_CYCLING_TEAM",
     "team_nome": "HG CYCLING TEAM",
     "punti": 319,
@@ -9,29 +21,17 @@
     "p3": 1,
     "pout": 20,
     "n_atleti": 5,
-    "pos": 1
-  },
-  {
-    "team_id": "S_C_CESANO_MADERNO",
-    "team_nome": "S.C. CESANO MADERNO",
-    "punti": 317,
-    "vittorie": 8,
-    "p1": 8,
-    "p2": 4,
-    "p3": 6,
-    "pout": 15,
-    "n_atleti": 2,
     "pos": 2
   },
   {
     "team_id": "SCUOLA_CICLISMO_VERSO_L_IRIDE",
     "team_nome": "SCUOLA CICLISMO VERSO L'IRIDE",
-    "punti": 312,
+    "punti": 317,
     "vittorie": 6,
     "p1": 6,
     "p2": 5,
     "p3": 6,
-    "pout": 22,
+    "pout": 23,
     "n_atleti": 4,
     "pos": 3
   },
@@ -50,26 +50,38 @@
   {
     "team_id": "ASD_VELOCE_CLUB_BORGO",
     "team_nome": "ASD VELOCE CLUB BORGO",
-    "punti": 161,
+    "punti": 172,
     "vittorie": 2,
     "p1": 2,
     "p2": 4,
     "p3": 3,
-    "pout": 11,
+    "pout": 13,
     "n_atleti": 3,
     "pos": 5
   },
   {
+    "team_id": "G_C_SOSSANO_1975",
+    "team_nome": "G.C. SOSSANO 1975",
+    "punti": 133,
+    "vittorie": 0,
+    "p1": 0,
+    "p2": 1,
+    "p3": 4,
+    "pout": 20,
+    "n_atleti": 6,
+    "pos": 6
+  },
+  {
     "team_id": "SPORT_CLUB_BRESCIA_FLANDRES_LOVE",
     "team_nome": "SPORT CLUB BRESCIA - FLANDRES LOVE",
-    "punti": 126,
+    "punti": 127,
     "vittorie": 0,
     "p1": 0,
     "p2": 3,
     "p3": 2,
-    "pout": 14,
+    "pout": 15,
     "n_atleti": 3,
-    "pos": 6
+    "pos": 7
   },
   {
     "team_id": "MARY_J_SWEET_ANGEL_ASD",
@@ -81,30 +93,18 @@
     "p3": 1,
     "pout": 13,
     "n_atleti": 3,
-    "pos": 7
+    "pos": 8
   },
   {
     "team_id": "U_C_GIORGIONE",
     "team_nome": "U.C. GIORGIONE",
-    "punti": 114,
+    "punti": 118,
     "vittorie": 0,
     "p1": 0,
     "p2": 2,
     "p3": 3,
-    "pout": 14,
+    "pout": 15,
     "n_atleti": 2,
-    "pos": 8
-  },
-  {
-    "team_id": "G_C_SOSSANO_1975",
-    "team_nome": "G.C. SOSSANO 1975",
-    "punti": 111,
-    "vittorie": 0,
-    "p1": 0,
-    "p2": 0,
-    "p3": 3,
-    "pout": 20,
-    "n_atleti": 6,
     "pos": 9
   },
   {
@@ -288,6 +288,18 @@
     "pos": 24
   },
   {
+    "team_id": "ASD_TEAM_PETRUCCI",
+    "team_nome": "ASD TEAM PETRUCCI",
+    "punti": 21,
+    "vittorie": 0,
+    "p1": 0,
+    "p2": 0,
+    "p3": 0,
+    "pout": 6,
+    "n_atleti": 2,
+    "pos": 25
+  },
+  {
     "team_id": "VALLE_D_AOSTA",
     "team_nome": "VALLE D'AOSTA",
     "punti": 20,
@@ -297,7 +309,7 @@
     "p3": 1,
     "pout": 0,
     "n_atleti": 1,
-    "pos": 25
+    "pos": 26
   },
   {
     "team_id": "TRENTO",
@@ -309,7 +321,7 @@
     "p3": 0,
     "pout": 2,
     "n_atleti": 2,
-    "pos": 26
+    "pos": 27
   },
   {
     "team_id": "ASS_NE_CICLISTICA_DILETT_VALVASONE",
@@ -320,18 +332,6 @@
     "p2": 0,
     "p3": 0,
     "pout": 4,
-    "n_atleti": 2,
-    "pos": 27
-  },
-  {
-    "team_id": "ASD_TEAM_PETRUCCI",
-    "team_nome": "ASD TEAM PETRUCCI",
-    "punti": 19,
-    "vittorie": 0,
-    "p1": 0,
-    "p2": 0,
-    "p3": 0,
-    "pout": 5,
     "n_atleti": 2,
     "pos": 28
   },
