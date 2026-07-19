@@ -1,5 +1,17 @@
 [
   {
+    "team_id": "HG_CYCLING_TEAM",
+    "team_nome": "HG CYCLING TEAM",
+    "punti": 319,
+    "vittorie": 8,
+    "p1": 8,
+    "p2": 6,
+    "p3": 1,
+    "pout": 20,
+    "n_atleti": 5,
+    "pos": 1
+  },
+  {
     "team_id": "S_C_CESANO_MADERNO",
     "team_nome": "S.C. CESANO MADERNO",
     "punti": 317,
@@ -9,7 +21,7 @@
     "p3": 6,
     "pout": 15,
     "n_atleti": 2,
-    "pos": 1
+    "pos": 2
   },
   {
     "team_id": "SCUOLA_CICLISMO_VERSO_L_IRIDE",
@@ -21,18 +33,6 @@
     "p3": 6,
     "pout": 22,
     "n_atleti": 4,
-    "pos": 2
-  },
-  {
-    "team_id": "HG_CYCLING_TEAM",
-    "team_nome": "HG CYCLING TEAM",
-    "punti": 304,
-    "vittorie": 7,
-    "p1": 7,
-    "p2": 6,
-    "p3": 1,
-    "pout": 20,
-    "n_atleti": 5,
     "pos": 3
   },
   {
@@ -228,6 +228,18 @@
     "pos": 19
   },
   {
+    "team_id": "ASD_TIRRENO_BIKE_CICLI_FATATO",
+    "team_nome": "ASD TIRRENO BIKE CICLI FATATO",
+    "punti": 43,
+    "vittorie": 1,
+    "p1": 1,
+    "p2": 2,
+    "p3": 0,
+    "pout": 1,
+    "n_atleti": 1,
+    "pos": 20
+  },
+  {
     "team_id": "LIBERTAS_CERESETTO",
     "team_nome": "LIBERTAS CERESETTO",
     "punti": 33,
@@ -237,18 +249,6 @@
     "p3": 0,
     "pout": 8,
     "n_atleti": 2,
-    "pos": 20
-  },
-  {
-    "team_id": "ASD_TIRRENO_BIKE_CICLI_FATATO",
-    "team_nome": "ASD TIRRENO BIKE CICLI FATATO",
-    "punti": 31,
-    "vittorie": 1,
-    "p1": 1,
-    "p2": 1,
-    "p3": 0,
-    "pout": 1,
-    "n_atleti": 1,
     "pos": 21
   },
   {
