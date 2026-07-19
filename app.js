@@ -3510,7 +3510,19 @@ function route() {
   };
 
   if (match('/')) return renderHome();
-  // Classifica con categoria+vista encode nell'URL: #/classifica/ES1_M/atleti
+  // Classifica con categoria+vista+ordinamento encoded nell'URL, es.
+  // #/classifica/ES1_M/team/vittorie — così un link condiviso mentre si
+  // guarda "Vittorie" (o la vista Team) riapre esattamente quella vista
+  // invece di tornare sempre a Punti/Atleti.
+  const _mClassCatViewSort = match('/classifica/:cat/:view/:sort');
+  if (_mClassCatViewSort) {
+    rankCat    = decodeURIComponent(_mClassCatViewSort[1]);
+    rankGender = rankCat.endsWith('_F') ? 'F' : 'M';
+    rankView   = _mClassCatViewSort[2] || 'atleti';
+    rankSort   = _mClassCatViewSort[3] === 'vittorie' ? 'vittorie' : 'punti';
+    rankFilter = ''; rankRegion = ''; rankMonth = '';
+    return renderClassifica();
+  }
   const _mClassCatView = match('/classifica/:cat/:view');
   if (_mClassCatView) {
     rankCat    = decodeURIComponent(_mClassCatView[1]);
@@ -8635,13 +8647,26 @@ async function updateRankTable() {
 
     const sortBar = '';
 
+    // Ordinando per vittorie, posizione e punteggio mostrati devono riflettere
+    // QUELLO — non la posizione/punti della classifica normale (r.pos/r.punti
+    // restano quelli, servono altrove per badge/trend): senza questo la riga
+    // sembra ancora ordinata per punti (stessa posizione stantia, stesso
+    // numero), esattamente il bug segnalato — su mobile la colonna 1°/2°/3°/TOP10
+    // con le vittorie è nascosta, quindi lì l'unico numero visibile restava
+    // sempre il punteggio.
+    const isWinsSort = rankSort === 'vittorie';
+    const leaderWins = displayList[0]?.p1 || 0;
+
     // ── Build rows ────────────────────────────────────────────
     const rows = displayList.map((r, i) => {
-      const pClass  = posClass(r.pos);
-      const tier    = r.pos === 1 ? 'rk-tier-1' : r.pos <= 3 ? 'rk-tier-top3' : r.pos <= 10 ? 'rk-tier-top10' : '';
-      const gap     = r.pos === 1
+      const dPos     = isWinsSort ? i + 1 : r.pos;
+      const scoreVal = isWinsSort ? (r.p1 || 0) : r.punti;
+      const leaderScore = isWinsSort ? leaderWins : leaderPts;
+      const pClass  = posClass(dPos);
+      const tier    = dPos === 1 ? 'rk-tier-1' : dPos <= 3 ? 'rk-tier-top3' : dPos <= 10 ? 'rk-tier-top10' : '';
+      const gap     = dPos === 1
         ? `<span class="rk-leader-tag">LEADER</span>`
-        : `<span class="rk-gap-label">−${leaderPts - r.punti}</span>`;
+        : `<span class="rk-gap-label">−${leaderScore - scoreVal}</span>`;
 
       const metrics = _metricCache[r.atleta_id];
 
@@ -8659,9 +8684,10 @@ async function updateRankTable() {
         ? `<span class="rk-badge-pill ${badge.cls}">${badge.emoji} ${badge.label}</span>`
         : '';
 
-      // Leader safety gauge (row 1 only)
+      // Leader safety gauge (row 1 only) — narrativa basata sui punti, non ha
+      // senso quando la vista è ordinata per vittorie.
       let extraHtml = '';
-      if (r.pos === 1 && filtered[1]) {
+      if (!isWinsSort && r.pos === 1 && filtered[1]) {
         const chall  = filtered[1];
         const c28s   = (() => { const d = new Date(_refDate); d.setDate(d.getDate()-28); return d.toISOString().split('T')[0]; })();
         const cRes4  = globalData.resultsRaw.filter(rr =>
@@ -8677,7 +8703,7 @@ async function updateRankTable() {
         </div>`;
       }
       // Catch-up hint for positions 2-3
-      if (r.pos >= 2 && r.pos <= 3 && leaderPts > 0) {
+      if (!isWinsSort && r.pos >= 2 && r.pos <= 3 && leaderPts > 0) {
         const myRes = globalData.resultsRaw.filter(rr =>
           rr.atleta_id === r.atleta_id && getRankingFileCode(rr) === rankCat && (rr.punti_effettivi||0) > 0
         );
@@ -8702,7 +8728,7 @@ async function updateRankTable() {
       }
 
       return `${zoneSep}<tr class="ranking-row ${tier}" style="animation-delay:${Math.min(i,20)*30}ms">
-        <td><span class="rank-num ${pClass}">${r.pos}</span></td>
+        <td><span class="rank-num ${pClass}">${dPos}</span></td>
         <td style="text-align:center;width:40px">${renderTrend(r)}</td>
         <td>
           <div class="rk-athlete-cell">
@@ -8718,7 +8744,7 @@ async function updateRankTable() {
         <td class="hide-mobile rk-team-cell"><span class="rk-tl-wrap" data-tid="${esc(r.team_id||'')}"></span><a href="#/team/${esc(r.team_id)}" style="color:var(--text-secondary);font-size:.85rem">${nationFlagPrefix(r.team_nome)}${esc(r.team_nome)}</a></td>
         <td class="r">
           <div class="rk-pts-cell">
-            <span class="rank-pts">${r.punti}</span>
+            <span class="rank-pts">${scoreVal}</span>
             ${gap}
           </div>
         </td>
@@ -8741,7 +8767,7 @@ async function updateRankTable() {
           <th style="width:40px" title="Variazione">↕</th>
           <th>ATLETA</th>
           <th class="hide-mobile">TEAM</th>
-          <th class="r">PUNTI</th>
+          <th class="r">${isWinsSort ? 'VITTORIE' : 'PUNTI'}</th>
           <th class="hide-mobile">
             <div class="td-p-wrap">
               <span class="td-p p1">1°</span>
@@ -8875,13 +8901,22 @@ async function updateRankTable() {
       });
     }
 
+    // Stesso ragionamento della vista Atleti: ordinando per vittorie,
+    // posizione e punteggio mostrati devono riflettere quell'ordine (t.pos/
+    // t.punti restano quelli della classifica punti, servono per il trend).
+    const isTeamWinsSort = rankSort === 'vittorie';
+    const leaderTeamWins = teamDisplayList[0]?.p1 || 0;
+
     const rows = teamDisplayList.map((t, i) => {
-      const pClass = posClass(t.pos);
-      const gap = t.pos === 1
+      const dPos     = isTeamWinsSort ? i + 1 : t.pos;
+      const scoreVal = isTeamWinsSort ? (t.p1 || 0) : t.punti;
+      const leaderScore = isTeamWinsSort ? leaderTeamWins : leaderTeamPts;
+      const pClass = posClass(dPos);
+      const gap = dPos === 1
         ? `<span class="rk-leader-tag">LEADER</span>`
-        : `<span class="rk-gap-label">−${leaderTeamPts - t.punti}</span>`;
+        : `<span class="rk-gap-label">−${leaderScore - scoreVal}</span>`;
       return `<tr class="ranking-row" style="animation-delay:${Math.min(i,20)*30}ms">
-        <td><span class="rank-num ${pClass}">${t.pos}</span></td>
+        <td><span class="rank-num ${pClass}">${dPos}</span></td>
         <td style="text-align:center;width:40px">${renderTrend(t, false)}</td>
         <td>
           <div class="rk-athlete-cell">
@@ -8893,7 +8928,7 @@ async function updateRankTable() {
         </td>
         <td class="r">
           <div class="rk-pts-cell">
-            <span class="rank-pts">${t.punti}</span>
+            <span class="rank-pts">${scoreVal}</span>
             ${gap}
           </div>
         </td>
@@ -8916,7 +8951,7 @@ async function updateRankTable() {
           <th style="width:50px">POS</th>
           <th style="width:40px" title="Variazione">↕</th>
           <th>TEAM</th>
-          <th class="r">PUNTI</th>
+          <th class="r">${isTeamWinsSort ? 'VITTORIE' : 'PUNTI'}</th>
           <th class="hide-mobile">
             <div class="td-p-wrap">
               <span class="td-p p1">1°</span>
@@ -12765,7 +12800,8 @@ window.navToRankCat  = (catCode, view) => {
 // stessa vista, non vogliamo intasare "indietro" con ogni singolo click su
 // un filtro — solo la navigazione vera e propria crea una voce di history.
 function _syncRankUrl() {
-  const path = '/classifica/' + encodeURIComponent(rankCat) + '/' + encodeURIComponent(rankView || 'atleti');
+  let path = '/classifica/' + encodeURIComponent(rankCat) + '/' + encodeURIComponent(rankView || 'atleti');
+  if (rankSort === 'vittorie') path += '/vittorie';
   if (location.pathname !== path) history.replaceState(null, '', path);
 }
 window.setRankGender = (g) => { rankGender = g; rankFilter = ''; rankRegion = ''; rankMonth = ''; rankSort = 'punti'; _syncRankUrl(); renderClassifica(); };
@@ -12783,6 +12819,9 @@ window.setRankSort   = (s) => {
   document.querySelectorAll('[aria-label="Ordina per"] .tab-btn').forEach(btn => {
     btn.classList.toggle('active-cat', btn.textContent.trim().includes(s === 'vittorie' ? 'VITTORIE' : 'PUNTI'));
   });
+  // Riflette l'ordinamento nell'URL: un link condiviso mentre si guarda
+  // "Vittorie" deve riaprire quella vista, non tornare sempre a Punti.
+  _syncRankUrl();
   updateRankTable();
 };
 

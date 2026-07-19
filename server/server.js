@@ -609,7 +609,13 @@ function _rankingCodeFromRow(r) {
 // nazionale/tutto l'anno). Nessun dato salvato lato server: si rilegge
 // results_raw.json e si aggrega al volo, stessa logica di shareClassifica lato
 // client quando ci sono filtri regione/mese attivi.
-async function _computeClassRanking(rawId) {
+// opts.view: 'atleti' (default) o 'team' — aggrega per team_id invece che per
+// atleta_id. opts.sort: 'punti' (default) o 'vittorie' — ordina/valorizza per
+// numero di primi posti invece che per punteggio (r.score riflette sempre
+// la metrica scelta, r.punti/r.wins restano entrambi disponibili).
+async function _computeClassRanking(rawId, opts = {}) {
+  const view = opts.view === 'team' ? 'team' : 'atleti';
+  const sort = opts.sort === 'vittorie' ? 'vittorie' : 'punti';
   const [catCode, regionSlug, month] = decodeURIComponent(rawId).split('__');
   const resultsRaw = (await readDataJsonFromGH('results_raw.json')) || [];
   const gender = catCode.endsWith('_F') ? 'F' : 'M';
@@ -620,16 +626,21 @@ async function _computeClassRanking(rawId) {
     if (_rankingCodeFromRow(r) !== catCode) continue;
     if (region && (r.regione || '').toUpperCase() !== region.toUpperCase()) continue;
     if (month && (r.data || '').split('-')[1] !== month) continue;
-    if (!r.atleta_id) continue;
-    if (!agg[r.atleta_id]) agg[r.atleta_id] = { cognome: r.cognome, nome: r.nome, team: r.team, punti: 0 };
-    agg[r.atleta_id].punti += (r.punti_effettivi || 0);
+    const key = view === 'team' ? (r.team_id || r.team) : r.atleta_id;
+    if (!key) continue;
+    if (!agg[key]) agg[key] = view === 'team'
+      ? { team: r.team, punti: 0, wins: 0 }
+      : { cognome: r.cognome, nome: r.nome, team: r.team, punti: 0, wins: 0 };
+    agg[key].punti += (r.punti_effettivi || 0);
+    if (r.posizione === 1) agg[key].wins++;
   }
-  const ranking = Object.values(agg).sort((a, b) => b.punti - a.punti).slice(0, 10)
-    .map((r, i) => ({ ...r, pos: i + 1 }));
+  const scoreKey = sort === 'vittorie' ? 'wins' : 'punti';
+  const ranking = Object.values(agg).sort((a, b) => b[scoreKey] - a[scoreKey]).slice(0, 10)
+    .map((r, i) => ({ ...r, pos: i + 1, score: r[scoreKey] }));
   const catLabelText = _CLASS_CAT_LABELS[catCode] || catCode.replace(/_/g, ' ');
   const scopeLabel = region ? `Classifica ${region}` : 'Classifica Nazionale';
   const monthLabel = month ? _CLASS_MONTHS[parseInt(month, 10)] : '';
-  return { catCode, region, month, catLabelText, scopeLabel, monthLabel, ranking };
+  return { catCode, region, month, view, sort, catLabelText, scopeLabel, monthLabel, ranking };
 }
 
 app.get('/og/class/:id', async (req, res) => {
@@ -655,6 +666,68 @@ app.get('/og/class/:id', async (req, res) => {
   </table>` : '';
   res.setHeader('Content-Type','text/html');
   res.send(ogHtml({ title, desc, img, redirect, canonical, bodyHtml }));
+});
+
+// Variante di /og/class/:id che rispecchia l'URL pulito reale della pagina
+// classifica (#/classifica/:cat/:view/:sort — vedi _syncRankUrl lato client):
+// nome della route allineato al prefisso "classifica" apposta, così la
+// regola Cloudflare che rimanda i bot dal link pulito può limitarsi a
+// anteporre "/og" al path invece di doverlo riscrivere. Copre sia la vista
+// Team sia l'ordinamento per Vittorie, che /og/class/:id da solo non
+// gestiva affatto (sempre e solo atleti/punti).
+app.get('/og/classifica/:id/:view?/:sort?', async (req, res) => {
+  const view = req.params.view === 'team' ? 'team' : 'atleti';
+  const sort = req.params.sort === 'vittorie' ? 'vittorie' : 'punti';
+  if (!OG_BOT_RE.test(req.headers['user-agent'] || '')) {
+    const tail = [view !== 'atleti' ? view : null, sort !== 'punti' ? sort : null].filter(Boolean);
+    return res.redirect(302, `${SITE_URL}/classifica/${encodeURIComponent(req.params.id)}${tail.length ? '/' + tail.join('/') : ''}`);
+  }
+  const { catLabelText, scopeLabel, monthLabel, ranking } = await _computeClassRanking(req.params.id, { view, sort });
+  const scoreLabel = sort === 'vittorie' ? 'Vittorie' : 'Punti';
+  const title = `Classifica ${view === 'team' ? 'Team ' : ''}${catLabelText}${sort === 'vittorie' ? ' — Vittorie' : ''}`;
+  const top3  = ranking.slice(0, 3).map(r => `${r.pos}° ${view === 'team' ? r.team : `${r.cognome} ${r.nome}`}`).join(' · ');
+  const desc  = [scopeLabel, monthLabel, top3].filter(Boolean).join(' — ');
+  const img   = `${API_BASE_URL}/api/og-image/classifica/${encodeURIComponent(req.params.id)}/${view}/${sort}`;
+  const redirect  = `${SITE_URL}/classifiche`;
+  const canonical = `${API_BASE_URL}/og/classifica/${encodeURIComponent(req.params.id)}/${view}/${sort}`;
+  const bodyHtml = ranking.length ? `<table>
+    <thead><tr><th>Pos</th><th>${view === 'team' ? 'Team' : 'Atleta'}</th>${view === 'team' ? '' : '<th>Team</th>'}<th>${_ogHtmlEsc(scoreLabel)}</th></tr></thead>
+    <tbody>${ranking.map(r => `<tr>
+      <td>${_ogHtmlEsc(r.pos)}°</td>
+      <td>${view === 'team' ? _ogHtmlEsc(r.team || '') : `${_ogHtmlEsc(r.cognome)} ${_ogHtmlEsc(r.nome)}`}</td>
+      ${view === 'team' ? '' : `<td>${_ogHtmlEsc(r.team || '')}</td>`}
+      <td>${_ogHtmlEsc(r.score ?? 0)}</td>
+    </tr>`).join('')}</tbody>
+  </table>` : '';
+  res.setHeader('Content-Type','text/html');
+  res.send(ogHtml({ title, desc, img, redirect, canonical, bodyHtml }));
+});
+
+app.get('/api/og-image/classifica/:id/:view/:sort', async (req, res) => {
+  try {
+    const view = req.params.view === 'team' ? 'team' : 'atleti';
+    const sort = req.params.sort === 'vittorie' ? 'vittorie' : 'punti';
+    const cacheKey = `classifica_${req.params.id}_${view}_${sort}`;
+    const cached = _ogCache.get(cacheKey);
+    if (cached && Date.now() - cached.ts < OG_TTL) {
+      res.setHeader('Content-Type', 'image/png');
+      res.setHeader('Cache-Control', 'public, max-age=1800');
+      return res.send(cached.buf);
+    }
+    const { catLabelText, region, monthLabel, ranking } = await _computeClassRanking(req.params.id, { view, sort });
+    if (!ranking.length) return res.redirect('/assets/og-default.png');
+    const svg = buildClassCardSvg({
+      catLabel: catLabelText, region, month: monthLabel, rows: ranking, view,
+      scoreLabel: sort === 'vittorie' ? 'VITTORIE' : 'PUNTI',
+      scoreSuffix: sort === 'vittorie' ? 'V' : 'pt',
+    });
+    const buf = await renderOgPng(svg);
+    if (!buf) return res.redirect('/assets/og-default.png');
+    _ogCache.set(cacheKey, { buf, ts: Date.now() });
+    res.setHeader('Content-Type', 'image/png');
+    res.setHeader('Cache-Control', 'public, max-age=1800');
+    res.send(buf);
+  } catch (e) { res.redirect('/assets/og-default.png'); }
 });
 
 // ── Auth routes ───────────────────────────────────────────────────────────────
@@ -6461,30 +6534,30 @@ function buildTeamCardSvg(data) {
 
 // Card classifica: intestazione "CLASSIFICA <categoria>" (+ regione/mese se
 // filtrata) a destra, righe numerate con colore oro/argento/bronzo pei primi 3.
-function buildClassCardSvg({ catLabel, region, month, rows = [] }) {
+function buildClassCardSvg({ catLabel, region, month, rows = [], view = 'atleti', scoreLabel = 'PUNTI', scoreSuffix = 'pt' }) {
   const pad = 60, top = 88, bottom = 578;
   const medal = ['#f5c400', '#dadada', '#cd7f32'];
   const headerRight = `
     <text x="1176" y="34" font-family="Arial,Helvetica,sans-serif" font-size="21" font-weight="700" fill="#f2f2f2" text-anchor="end">${_ogEsc((catLabel || '').toUpperCase())}</text>
-    <text x="${1176 - (catLabel || '').length * 12 - 14}" y="34" font-family="Arial,Helvetica,sans-serif" font-size="21" font-weight="500" fill="rgba(255,255,255,0.42)" text-anchor="end" letter-spacing="1">CLASSIFICA</text>
+    <text x="${1176 - (catLabel || '').length * 12 - 14}" y="34" font-family="Arial,Helvetica,sans-serif" font-size="21" font-weight="500" fill="rgba(255,255,255,0.42)" text-anchor="end" letter-spacing="1">CLASSIFICA${view === 'team' ? ' TEAM' : ''}</text>
     ${region ? `<text x="1176" y="50" font-family="Arial,Helvetica,sans-serif" font-size="15" font-weight="600" fill="#f5c400" text-anchor="end">${_ogEsc(region.toUpperCase())}</text>` : ''}
     ${month ? `<text x="${region ? 1176 - region.length*9 - 14 : 1176}" y="50" font-family="Arial,Helvetica,sans-serif" font-size="15" font-weight="600" fill="rgba(255,255,255,0.45)" text-anchor="end">${_ogEsc(month.toUpperCase())}</text>` : ''}`;
   const rH = Math.round((bottom - top - 30) / Math.max(rows.length, 1));
   const rowsHtml = rows.slice(0, 10).map((r, i) => {
     const ry = top + 30 + i * rH, mid = ry + rH / 2;
     const col = i < 3 ? medal[i] : 'rgba(255,255,255,0.45)';
-    const name = `${r.cognome || ''} ${r.nome || ''}`.trim();
+    const name = view === 'team' ? (r.team || '') : `${r.cognome || ''} ${r.nome || ''}`.trim();
     return `${i % 2 === 0 ? `<rect x="${pad}" y="${ry}" width="${1200-pad*2}" height="${rH}" fill="rgba(255,255,255,0.022)"/>` : ''}
     ${i < 3 ? `<rect x="${pad+8}" y="${mid - rH*0.3}" width="3" height="${rH*0.6}" fill="${col}"/>` : ''}
     <text x="${pad+30}" y="${mid+8}" font-family="Arial,Helvetica,sans-serif" font-size="22" font-weight="700" fill="${col}">${r.pos}°</text>
     <text x="${pad+80}" y="${mid+8}" font-family="Arial,Helvetica,sans-serif" font-size="22" font-weight="700" fill="#f0f0f0">${_ogEsc(name.slice(0, 26))}</text>
-    <text x="${pad+560}" y="${mid+8}" font-family="Arial,Helvetica,sans-serif" font-size="17" fill="rgba(255,255,255,0.42)">${_ogEsc((r.team || '').slice(0, 30))}</text>
-    <text x="${1200-pad-10}" y="${mid+8}" font-family="Arial,Helvetica,sans-serif" font-size="22" font-weight="700" fill="#f5c400" text-anchor="end">${_ogEsc(r.punti)} pt</text>`;
+    ${view === 'team' ? '' : `<text x="${pad+560}" y="${mid+8}" font-family="Arial,Helvetica,sans-serif" font-size="17" fill="rgba(255,255,255,0.42)">${_ogEsc((r.team || '').slice(0, 30))}</text>`}
+    <text x="${1200-pad-10}" y="${mid+8}" font-family="Arial,Helvetica,sans-serif" font-size="22" font-weight="700" fill="#f5c400" text-anchor="end">${_ogEsc(r.score)} ${scoreSuffix}</text>`;
   }).join('');
   const body = `
     <text x="${pad}" y="${top+8}" font-family="Arial,Helvetica,sans-serif" font-size="13" font-weight="600" fill="rgba(255,255,255,0.34)" letter-spacing="1.5">POS</text>
-    <text x="${pad+80}" y="${top+8}" font-family="Arial,Helvetica,sans-serif" font-size="13" font-weight="600" fill="rgba(255,255,255,0.34)" letter-spacing="1.5">ATLETA</text>
-    <text x="${1200-pad-10}" y="${top+8}" font-family="Arial,Helvetica,sans-serif" font-size="13" font-weight="600" fill="rgba(255,255,255,0.34)" text-anchor="end" letter-spacing="1.5">PUNTI</text>
+    <text x="${pad+80}" y="${top+8}" font-family="Arial,Helvetica,sans-serif" font-size="13" font-weight="600" fill="rgba(255,255,255,0.34)" letter-spacing="1.5">${view === 'team' ? 'TEAM' : 'ATLETA'}</text>
+    <text x="${1200-pad-10}" y="${top+8}" font-family="Arial,Helvetica,sans-serif" font-size="13" font-weight="600" fill="rgba(255,255,255,0.34)" text-anchor="end" letter-spacing="1.5">${_ogEsc(scoreLabel)}</text>
     <rect x="${pad}" y="${top+16}" width="1080" height="1" fill="rgba(255,255,255,0.06)"/>
     ${rowsHtml}`;
   return _ogWrap(body, { headerRight });
