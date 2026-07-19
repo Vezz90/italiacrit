@@ -1861,6 +1861,56 @@ async function _fetchYouTubeVideoMeta(url) {
   } catch { return { published_at: null, channel_avatar: null, scheduled_start: null }; }
 }
 
+// Metadati (titolo, nome pagina, copertina) di un link video Facebook,
+// via scraping dei meta tag Open Graph della pagina pubblica — NON la
+// Graph API (che richiederebbe un'app Meta con access token): Facebook
+// serve questi tag già pronti a chi si presenta con lo user-agent del
+// proprio crawler ufficiale (usato da WhatsApp/Messenger per le anteprime
+// dei link), quindi funziona per qualunque video pubblico senza
+// autenticazione. Segue anche i redirect dei link "condividi" (facebook.com/share/v/...).
+async function _fetchFacebookVideoMeta(url, _depth = 0) {
+  const empty = { title: null, channel: null, thumbnail: null };
+  if (_depth > 3) return empty;
+  const https = require('https');
+  try {
+    const result = await new Promise((resolve, reject) => {
+      const req = https.get(url, {
+        headers: { 'User-Agent': 'facebookexternalhit/1.1 (+http://www.facebook.com/externalhit_uatext.php)' },
+      }, (r) => {
+        if ([301, 302, 303, 307, 308].includes(r.statusCode) && r.headers.location) {
+          r.resume();
+          return resolve({ redirect: r.headers.location });
+        }
+        let data = '';
+        r.on('data', d => data += d);
+        r.on('end', () => resolve({ html: data }));
+      });
+      req.on('error', reject);
+      req.setTimeout(10000, () => req.destroy(new Error('timeout')));
+    });
+    if (result.redirect) return _fetchFacebookVideoMeta(result.redirect, _depth + 1);
+    const html = result.html || '';
+    const og = (prop) => {
+      const m = html.match(new RegExp(`<meta[^>]+property=["']og:${prop}["'][^>]+content=["']([^"']*)["']`, 'i'))
+        || html.match(new RegExp(`<meta[^>]+content=["']([^"']*)["'][^>]+property=["']og:${prop}["']`, 'i'));
+      return m ? m[1].replace(/&quot;/g, '"').replace(/&#0?39;/g, "'").replace(/&amp;/g, '&') : null;
+    };
+    return { title: og('title'), channel: og('site_name'), thumbnail: og('image') };
+  } catch { return empty; }
+}
+
+// Usato dal form "Aggiungi video" in admin per compilare da solo titolo e
+// nome pagina quando si incolla un link Facebook, come già succede per
+// YouTube via oEmbed (che invece non serve qui, girando lato client, perché
+// il fetch diretto a facebook.com dal browser è bloccato da CORS).
+app.get('/api/fb-video-meta', requireAuth, async (req, res) => {
+  const url = req.query.url;
+  if (!url || !/^https?:\/\/(www\.|m\.|web\.)?(facebook\.com|fb\.watch)\//i.test(url)) {
+    return res.status(400).json({ error: 'URL Facebook non valido' });
+  }
+  res.json(await _fetchFacebookVideoMeta(url));
+});
+
 // Submit URL YouTube (utenti autenticati)
 app.post('/api/videos/submit', requireAuth, async (req, res) => {
   try {
@@ -2119,7 +2169,7 @@ app.post('/api/admin/videos/:calId/:idx/set-year', requireAdmin, async (req, res
 app.patch('/api/admin/videos/:calId/:idx', requireAdmin, async (req, res) => {
   try {
     const { calId, idx } = req.params;
-    const { url, title, channel, is_live } = req.body;
+    const { url, title, channel, is_live, live_ended } = req.body;
     const videos = await readVideos();
     if (!videos[calId]?.[parseInt(idx)]) return res.status(404).json({ error: 'Video non trovato' });
     const v = videos[calId][parseInt(idx)];
@@ -2127,6 +2177,12 @@ app.patch('/api/admin/videos/:calId/:idx', requireAdmin, async (req, res) => {
     if (title !== undefined) v.title = title;
     if (channel !== undefined) v.channel = channel;
     if (is_live !== undefined) v.is_live = !!is_live;
+    // Distinto da is_live: per le dirette senza rilevamento automatico (es.
+    // Facebook, che non ha un equivalente della YouTube Data API) permette di
+    // segnare a mano "questa diretta è finita" mantenendo il badge 🔴 DIRETTA
+    // (storico) ma spostandola fuori da "In Diretta Ora" — stesso comportamento
+    // che per YouTube avviene da solo tramite /api/live-status-today.
+    if (live_ended !== undefined) v.live_ended = !!live_ended;
     await writeVideos(videos);
     res.json({ ok: true });
   } catch(e) { res.status(500).json({ error: e.message }); }

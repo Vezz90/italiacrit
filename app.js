@@ -9347,7 +9347,7 @@ window.adminNav = async function(section) {
               <div id="avf-race-results" style="display:none;background:var(--bg-card);border:1px solid var(--border-subtle);border-radius:6px;max-height:180px;overflow-y:auto;margin-top:4px"></div>
               <div id="avf-race-selected" style="font-size:.8rem;color:var(--accent);margin-top:4px;font-weight:600"></div>
             </div>
-            <input type="url" id="avf-url" placeholder="URL YouTube (https://www.youtube.com/watch?v=...)" oninput="window.adminUrlOembed(this.value)"
+            <input type="url" id="avf-url" placeholder="URL YouTube o Facebook" oninput="window.adminUrlOembed(this.value)"
               style="padding:8px;border:1px solid var(--border-subtle);border-radius:6px;background:var(--bg-input,var(--bg-card));color:var(--text-primary);font-size:.85rem" />
             <input type="text" id="avf-title" placeholder="Titolo — compilato automaticamente dall'URL"
               style="padding:8px;border:1px solid var(--border-subtle);border-radius:6px;background:var(--bg-input,var(--bg-card));color:var(--text-primary);font-size:.85rem" />
@@ -12365,15 +12365,22 @@ let _avfOembedTimer = null;
 window.adminUrlOembed = (url) => {
   clearTimeout(_avfOembedTimer);
   const vid = ytId(url);
-  if (!vid) return;
+  const isFb = isFacebookVideoUrl(url);
+  if (!vid && !isFb) return;
   _avfOembedTimer = setTimeout(async () => {
     try {
-      const d = await fetch(`https://www.youtube.com/oembed?url=${encodeURIComponent(url)}&format=json`).then(r => r.json());
       const titleEl   = document.getElementById('avf-title');
       const channelEl = document.getElementById('avf-channel');
-      if (titleEl   && !titleEl._manual)   titleEl.value   = d.title       || '';
-      if (channelEl && !channelEl._manual) channelEl.value = d.author_name || '';
-    } catch { /* oEmbed non disponibile */ }
+      if (vid) {
+        const d = await fetch(`https://www.youtube.com/oembed?url=${encodeURIComponent(url)}&format=json`).then(r => r.json());
+        if (titleEl   && !titleEl._manual)   titleEl.value   = d.title       || '';
+        if (channelEl && !channelEl._manual) channelEl.value = d.author_name || '';
+      } else {
+        const d = await apiCall(`/fb-video-meta?url=${encodeURIComponent(url)}`);
+        if (titleEl   && !titleEl._manual && d.title)   titleEl.value   = d.title;
+        if (channelEl && !channelEl._manual && d.channel) channelEl.value = d.channel;
+      }
+    } catch { /* metadati non disponibili */ }
   }, 600);
 };
 
@@ -17063,15 +17070,22 @@ async function renderGara(gara_id) {
       if (_vid) { thumb.src = `https://img.youtube.com/vi/${_vid}/hqdefault.jpg`; preview.style.display = 'block'; }
       else { preview.style.display = 'none'; }
 
-      // Fetch oEmbed con debounce 600ms
+      // Fetch metadati (oEmbed YouTube o meta tag Facebook) con debounce 600ms
       clearTimeout(_oembedTimer);
-      if (!url || !_vid) return;
+      if (!url || !(_vid || isFacebookVideoUrl(url))) return;
       _oembedTimer = setTimeout(async () => {
         try {
-          const d = await fetch(`https://www.youtube.com/oembed?url=${encodeURIComponent(url)}&format=json`).then(r => r.json());
-          if (d.title   && !titleEl._manual)   { titleEl.value   = d.title;       document.getElementById('vurl-title-hint').style.display   = 'none'; }
-          if (d.author_name && !channelEl._manual) { channelEl.value = d.author_name; document.getElementById('vurl-channel-hint').style.display = 'none'; }
-        } catch { /* oEmbed non disponibile, mantieni valori esistenti */ }
+          if (_vid) {
+            const d = await fetch(`https://www.youtube.com/oembed?url=${encodeURIComponent(url)}&format=json`).then(r => r.json());
+            if (d.title   && !titleEl._manual)   { titleEl.value   = d.title;       document.getElementById('vurl-title-hint').style.display   = 'none'; }
+            if (d.author_name && !channelEl._manual) { channelEl.value = d.author_name; document.getElementById('vurl-channel-hint').style.display = 'none'; }
+          } else {
+            const d = await apiCall(`/fb-video-meta?url=${encodeURIComponent(url)}`);
+            if (d.title   && !titleEl._manual)   { titleEl.value   = d.title;   document.getElementById('vurl-title-hint').style.display   = 'none'; }
+            if (d.channel && !channelEl._manual) { channelEl.value = d.channel; document.getElementById('vurl-channel-hint').style.display = 'none'; }
+            if (d.thumbnail) { thumb.src = d.thumbnail; preview.style.display = 'block'; }
+          }
+        } catch { /* metadati non disponibili, mantieni valori esistenti */ }
       }, 600);
     });
   };
@@ -20565,6 +20579,27 @@ window._mediaBulkSetLive = async (isLive) => {
   } catch (e) { showToast('Errore: ' + e.message, 'error'); }
 };
 
+// Segna una diretta come conclusa SENZA togliere il badge 🔴 DIRETTA (a
+// differenza di "Video normale", che la tratta come mai stata una diretta).
+// Serve per le piattaforme senza rilevamento automatico dello stato live
+// (Facebook — YouTube invece lo capisce da solo via /api/live-status-today):
+// sposta il video da "In Diretta Ora" ad "A seguire" mantenendo lo storico.
+window._mediaBulkSetEnded = async () => {
+  const keys = [...window._mediaSel];
+  if (!keys.length) return;
+  try {
+    for (const key of keys) {
+      const cut = key.lastIndexOf('::');
+      const garaId = key.slice(0, cut), idx = key.slice(cut + 2);
+      await apiCall(`/admin/videos/${encodeURIComponent(garaId)}/${idx}`, { method: 'PATCH', body: { live_ended: true } });
+    }
+    window._mediaSel.clear();
+    showToast(`✓ Segnate come terminate ${keys.length} dirette`);
+    await refreshVideos();
+    renderMedia();
+  } catch (e) { showToast('Errore: ' + e.message, 'error'); }
+};
+
 // Ricalcola data di pubblicazione YouTube reale + logo canale per tutti i
 // video già salvati (utile una tantum per quelli aggiunti a mano prima che
 // venissero catturati automaticamente in fase di inserimento).
@@ -20627,14 +20662,21 @@ window.openMediaAddForm = () => {
   document.getElementById('madd-url').addEventListener('input', function() {
     const url = this.value.trim();
     const vid = ytId(url);
-    if (!vid) return;
+    const isFb = isFacebookVideoUrl(url);
+    if (!vid && !isFb) return;
     clearTimeout(window._maddOembedTimer);
     window._maddOembedTimer = setTimeout(async () => {
       try {
-        const d = await fetch(`https://www.youtube.com/oembed?url=${encodeURIComponent(url)}&format=json`).then(r => r.json());
         const titleEl = document.getElementById('madd-title'), channelEl = document.getElementById('madd-channel');
-        if (d.title && titleEl && !titleEl.value) titleEl.value = d.title;
-        if (d.author_name && channelEl && !channelEl.value) channelEl.value = d.author_name;
+        if (vid) {
+          const d = await fetch(`https://www.youtube.com/oembed?url=${encodeURIComponent(url)}&format=json`).then(r => r.json());
+          if (d.title && titleEl && !titleEl.value) titleEl.value = d.title;
+          if (d.author_name && channelEl && !channelEl.value) channelEl.value = d.author_name;
+        } else {
+          const d = await apiCall(`/fb-video-meta?url=${encodeURIComponent(url)}`);
+          if (d.title && titleEl && !titleEl.value) titleEl.value = d.title;
+          if (d.channel && channelEl && !channelEl.value) channelEl.value = d.channel;
+        }
       } catch {}
     }, 600);
   });
@@ -20812,6 +20854,7 @@ async function renderMedia() {
   // sparisce da "In Diretta" e ricompare in "A seguire" senza aspettare il
   // giorno dopo.
   const _isEndedLive = (x) => {
+    if (x.video.live_ended) return true; // segnata a mano (es. Facebook, niente rilevamento automatico)
     const vid = ytId(x.video.url);
     return vid && window._liveStatusToday && window._liveStatusToday[vid] === false;
   };
@@ -20976,6 +21019,7 @@ async function renderMedia() {
       <div class="yt-bulk-bar">
         <span>${(window._mediaSel || new Set()).size} selezionati</span>
         <button onclick="window._mediaBulkSetLive(true)">🔴 Segna come Diretta</button>
+        <button onclick="window._mediaBulkSetEnded()">🏁 Diretta terminata</button>
         <button onclick="window._mediaBulkSetLive(false)">🎬 Segna come Video normale</button>
         <button class="yt-bulk-clear" onclick="window._mediaClearSel()">Annulla selezione</button>
       </div>` : ''}
