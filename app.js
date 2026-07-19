@@ -44,6 +44,11 @@ function icProxy(url) {
 //   https://youtube.com/embed/ID
 function ytId(url) {
   if (!url) return null;
+  // Il primo pattern (?v=/&v=) da solo non è specifico di YouTube — un link
+  // Facebook come facebook.com/watch/?v=ID contiene anch'esso "?v=" e veniva
+  // scambiato per un ID YouTube (miniatura sbagliata, click che apriva il
+  // player sbagliato). Deve esserci comunque youtube.com/youtu.be nell'URL.
+  if (!/(?:youtube\.com|youtu\.be)/i.test(url)) return null;
   const m = url.match(/[?&]v=([^&\s]+)/)
     || url.match(/youtu\.be\/([^?&\s]+)/)
     || url.match(/youtube\.com\/(?:shorts|embed|live)\/([^?&\s]+)/);
