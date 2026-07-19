@@ -38,13 +38,13 @@
   {
     "team_id": "BELTRAMI_TSA_TRE_COLLI",
     "team_nome": "BELTRAMI TSA TRE COLLI",
-    "punti": 569,
+    "punti": 582,
     "vittorie": 3,
     "p1": 3,
-    "p2": 8,
+    "p2": 9,
     "p3": 5,
-    "pout": 25,
-    "n_atleti": 9,
+    "pout": 26,
+    "n_atleti": 10,
     "pos": 4
   },
   {
@@ -62,12 +62,12 @@
   {
     "team_id": "TEAM_HOPPLA",
     "team_nome": "TEAM HOPPLA'",
-    "punti": 525,
-    "vittorie": 7,
-    "p1": 7,
+    "punti": 544,
+    "vittorie": 8,
+    "p1": 8,
     "p2": 4,
     "p3": 4,
-    "pout": 25,
+    "pout": 26,
     "n_atleti": 8,
     "pos": 6
   },
@@ -206,12 +206,12 @@
   {
     "team_id": "GALLINA_LUCCHINI_ECOTEK",
     "team_nome": "GALLINA LUCCHINI ECOTEK",
-    "punti": 212,
+    "punti": 218,
     "vittorie": 1,
     "p1": 1,
     "p2": 2,
     "p3": 2,
-    "pout": 17,
+    "pout": 18,
     "n_atleti": 7,
     "pos": 18
   },
@@ -266,12 +266,12 @@
   {
     "team_id": "VPM_MORETTI_SCS",
     "team_nome": "VPM MORETTI SCS",
-    "punti": 153,
+    "punti": 161,
     "vittorie": 2,
     "p1": 2,
     "p2": 0,
     "p3": 1,
-    "pout": 16,
+    "pout": 18,
     "n_atleti": 9,
     "pos": 23
   },
@@ -456,6 +456,18 @@
     "pos": 38
   },
   {
+    "team_id": "ASD_VELO_CLUB_AVEZZANO_BIKE_LINEAORO",
+    "team_nome": "ASD VELO CLUB AVEZZANO BIKE LINEAORO",
+    "punti": 54,
+    "vittorie": 0,
+    "p1": 0,
+    "p2": 0,
+    "p3": 0,
+    "pout": 5,
+    "n_atleti": 3,
+    "pos": 39
+  },
+  {
     "team_id": "ASD_CAMPOBELLO_RUNNING_BIKE",
     "team_nome": "ASD CAMPOBELLO RUNNING & BIKE",
     "punti": 50,
@@ -465,7 +477,7 @@
     "p3": 1,
     "pout": 1,
     "n_atleti": 1,
-    "pos": 39
+    "pos": 40
   },
   {
     "team_id": "GOODSHOP_YOYOGURT",
@@ -477,7 +489,7 @@
     "p3": 0,
     "pout": 7,
     "n_atleti": 4,
-    "pos": 40
+    "pos": 41
   },
   {
     "team_id": "BOURG_EN_BRESSE_AIN_CYCLISME",
@@ -489,7 +501,7 @@
     "p3": 0,
     "pout": 2,
     "n_atleti": 2,
-    "pos": 41
+    "pos": 42
   },
   {
     "team_id": "UCRAINA",
@@ -501,18 +513,6 @@
     "p3": 1,
     "pout": 5,
     "n_atleti": 4,
-    "pos": 42
-  },
-  {
-    "team_id": "ASD_VELO_CLUB_AVEZZANO_BIKE_LINEAORO",
-    "team_nome": "ASD VELO CLUB AVEZZANO BIKE LINEAORO",
-    "punti": 46,
-    "vittorie": 0,
-    "p1": 0,
-    "p2": 0,
-    "p3": 0,
-    "pout": 4,
-    "n_atleti": 3,
     "pos": 43
   },
   {
@@ -576,6 +576,18 @@
     "pos": 48
   },
   {
+    "team_id": "MENTECORPO_TEAM",
+    "team_nome": "MENTECORPO TEAM",
+    "punti": 35,
+    "vittorie": 1,
+    "p1": 1,
+    "p2": 0,
+    "p3": 1,
+    "pout": 2,
+    "n_atleti": 3,
+    "pos": 49
+  },
+  {
     "team_id": "MADONE_TEAM_BIKE_SICILIA",
     "team_nome": "MADONE-TEAM BIKE SICILIA",
     "punti": 35,
@@ -585,7 +597,7 @@
     "p3": 1,
     "pout": 4,
     "n_atleti": 2,
-    "pos": 49
+    "pos": 50
   },
   {
     "team_id": "MOVISTAR_TEAM_ACADEMY",
@@ -597,7 +609,7 @@
     "p3": 0,
     "pout": 5,
     "n_atleti": 2,
-    "pos": 50
+    "pos": 51
   },
   {
     "team_id": "METEC_SOLARWATT_P_B_MANTEL",
@@ -609,7 +621,7 @@
     "p3": 0,
     "pout": 0,
     "n_atleti": 1,
-    "pos": 51
+    "pos": 52
   },
   {
     "team_id": "INEOS_GRENADIERS_RACING_ACADEMY",
@@ -621,7 +633,7 @@
     "p3": 0,
     "pout": 2,
     "n_atleti": 2,
-    "pos": 52
+    "pos": 53
   },
   {
     "team_id": "PRO_GI_T_CYCLING_TEAM",
@@ -633,18 +645,6 @@
     "p3": 0,
     "pout": 4,
     "n_atleti": 4,
-    "pos": 53
-  },
-  {
-    "team_id": "MENTECORPO_TEAM",
-    "team_nome": "MENTECORPO TEAM",
-    "punti": 25,
-    "vittorie": 1,
-    "p1": 1,
-    "p2": 0,
-    "p3": 0,
-    "pout": 2,
-    "n_atleti": 3,
     "pos": 54
   },
   {
@@ -720,6 +720,18 @@
     "pos": 60
   },
   {
+    "team_id": "ARAN_CUCINE_VEJUS",
+    "team_nome": "ARAN CUCINE VEJUS",
+    "punti": 18,
+    "vittorie": 0,
+    "p1": 0,
+    "p2": 0,
+    "p3": 0,
+    "pout": 3,
+    "n_atleti": 2,
+    "pos": 61
+  },
+  {
     "team_id": "TEAM_UKYO",
     "team_nome": "TEAM UKYO",
     "punti": 18,
@@ -729,7 +741,7 @@
     "p3": 0,
     "pout": 1,
     "n_atleti": 1,
-    "pos": 61
+    "pos": 62
   },
   {
     "team_id": "GARLASCHESE_A_S_D",
@@ -741,24 +753,12 @@
     "p3": 0,
     "pout": 2,
     "n_atleti": 1,
-    "pos": 62
+    "pos": 63
   },
   {
     "team_id": "DEKA_RIDERS_TEAM_ASD",
     "team_nome": "DEKA RIDERS TEAM ASD",
     "punti": 17,
-    "vittorie": 0,
-    "p1": 0,
-    "p2": 0,
-    "p3": 0,
-    "pout": 2,
-    "n_atleti": 1,
-    "pos": 63
-  },
-  {
-    "team_id": "ARAN_CUCINE_VEJUS",
-    "team_nome": "ARAN CUCINE VEJUS",
-    "punti": 16,
     "vittorie": 0,
     "p1": 0,
     "p2": 0,
