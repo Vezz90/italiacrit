@@ -1890,7 +1890,7 @@ footer .footer-sep { color: var(--red-hot); margin: 0 8px; }
 
 .auth-card {
   background: var(--bg-card);
-  border: 1px solid var(--border);
+  border: 1px solid var(--border-subtle);
   border-radius: 12px;
   padding: 40px;
   width: 100%;
@@ -1931,7 +1931,7 @@ footer .footer-sep { color: var(--red-hot); margin: 0 8px; }
 
 .auth-input {
   background: var(--bg-elevated);
-  border: 1px solid var(--border);
+  border: 1px solid var(--border-subtle);
   border-radius: 6px;
   padding: 10px 14px;
   color: var(--text-primary);
@@ -1966,7 +1966,7 @@ footer .footer-sep { color: var(--red-hot); margin: 0 8px; }
 
 .auth-btn-outline {
   background: transparent;
-  border: 1px solid var(--border);
+  border: 1px solid var(--border-subtle);
   color: var(--text-secondary);
 }
 .auth-btn-outline:hover { border-color: var(--red-hot); color: var(--red-hot); background: transparent; }
@@ -1990,7 +1990,7 @@ footer .footer-sep { color: var(--red-hot); margin: 0 8px; }
 .auth-switch a { color: var(--red-hot); }
 
 .auth-section {
-  border-top: 1px solid var(--border);
+  border-top: 1px solid var(--border-subtle);
   padding-top: 20px;
   margin-top: 20px;
 }

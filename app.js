@@ -2376,7 +2376,7 @@ window.openAdminEdit = async function(entityType, entityId) {
         <div style="position:relative">
           <input type="text" id="aedit-${f.key}" class="auth-input" value="${val}" placeholder="${f.label}"
             autocomplete="off" oninput="window._openAdminEditTeamSearch(this.value)" style="box-sizing:border-box;width:100%" />
-          <div id="aedit-team-drop" style="display:none;position:absolute;top:100%;left:0;right:0;background:var(--bg-card);border:1px solid var(--border);border-top:none;border-radius:0 0 6px 6px;max-height:200px;overflow-y:auto;z-index:10000;font-size:.85rem"></div>
+          <div id="aedit-team-drop" style="display:none;position:absolute;top:100%;left:0;right:0;background:var(--bg-card);border:1px solid var(--border-subtle);border-top:none;border-radius:0 0 6px 6px;max-height:200px;overflow-y:auto;z-index:10000;font-size:.85rem"></div>
         </div>
       </label>`;
     }
@@ -2388,7 +2388,7 @@ window.openAdminEdit = async function(entityType, entityId) {
   overlay.id = 'admin-edit-overlay';
   overlay.style.cssText = 'position:fixed;inset:0;background:rgba(0,0,0,.7);z-index:9999;display:flex;align-items:center;justify-content:center;padding:16px';
   overlay.innerHTML = `
-    <div style="background:var(--bg-card);border:1px solid var(--border);border-radius:12px;padding:32px;width:100%;max-width:420px;max-height:90vh;overflow-y:auto">
+    <div style="background:var(--bg-card);border:1px solid var(--border-subtle);border-radius:12px;padding:32px;width:100%;max-width:420px;max-height:90vh;overflow-y:auto">
       <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:20px">
         <h2 style="font-family:var(--font-display);font-size:1.4rem;color:var(--red-hot);margin:0">MODIFICA ${esc(labelMap[entityType]||entityType).toUpperCase()}</h2>
         <button onclick="document.getElementById('admin-edit-overlay').remove()" style="background:none;border:none;color:var(--text-muted);font-size:1.4rem;cursor:pointer;padding:4px">✕</button>
@@ -2627,9 +2627,9 @@ window._renderPcsFix = async function() {
         <div style="border:1px solid var(--border-subtle);border-radius:var(--r-md);padding:12px 14px;margin-bottom:10px">
           <div style="font-weight:700;margin-bottom:8px">${esc(g.team_nome)} <span style="color:var(--text-muted);font-weight:400">— ${g.count} atlet${g.count===1?'a':'i'}</span></div>
           <div style="display:flex;flex-wrap:wrap;gap:6px;align-items:center">
-            ${g.candidates.map((c, j) => `<button onclick="window._mergePcsTeamIdx(${i},${j})" style="background:var(--bg-elevated);border:1px solid var(--border);border-radius:var(--r-sm);padding:5px 10px;font-size:.82rem;cursor:pointer">→ ${esc(c.nome)}</button>`).join('')}
+            ${g.candidates.map((c, j) => `<button onclick="window._mergePcsTeamIdx(${i},${j})" style="background:var(--bg-elevated);border:1px solid var(--border-subtle);border-radius:var(--r-sm);padding:5px 10px;font-size:.82rem;cursor:pointer">→ ${esc(c.nome)}</button>`).join('')}
             <span style="color:var(--text-muted);font-size:.8rem;margin:0 4px">oppure</span>
-            <input list="pcs-fix-teamlist" id="merge-input-${i}" placeholder="cerca o scrivi un nuovo team…" style="flex:1;min-width:160px;padding:5px 8px;border:1px solid var(--border);border-radius:var(--r-sm);font-size:.82rem">
+            <input list="pcs-fix-teamlist" id="merge-input-${i}" placeholder="cerca o scrivi un nuovo team…" style="flex:1;min-width:160px;padding:5px 8px;border:1px solid var(--border-subtle);border-radius:var(--r-sm);font-size:.82rem">
             <button onclick="window._mergePcsTeamManual(${i})" style="background:var(--accent);color:#fff;border:none;border-radius:var(--r-sm);padding:5px 12px;font-size:.82rem;font-weight:600;cursor:pointer">Unisci</button>
           </div>
         </div>`).join('')
@@ -2645,7 +2645,7 @@ window._renderPcsFix = async function() {
         ${orphans.map((a, i) => `
         <div id="orphan-row-${i}" style="display:flex;flex-wrap:wrap;gap:8px;align-items:center;border:1px solid var(--border-subtle);border-radius:var(--r-md);padding:8px 12px;margin-bottom:8px">
           <div style="flex:1;min-width:160px;font-weight:600;text-transform:uppercase">${esc(a.cognome)} ${esc(a.nome)}</div>
-          <input list="pcs-fix-teamlist" id="orphan-input-${i}" placeholder="scegli o scrivi un nuovo team…" style="flex:1;min-width:160px;padding:5px 8px;border:1px solid var(--border);border-radius:var(--r-sm);font-size:.82rem">
+          <input list="pcs-fix-teamlist" id="orphan-input-${i}" placeholder="scegli o scrivi un nuovo team…" style="flex:1;min-width:160px;padding:5px 8px;border:1px solid var(--border-subtle);border-radius:var(--r-sm);font-size:.82rem">
           <button onclick="window._setOrphanTeamIdx(${i})" style="background:var(--accent);color:#fff;border:none;border-radius:var(--r-sm);padding:5px 12px;font-size:.82rem;font-weight:600;cursor:pointer">Assegna</button>
         </div>`).join('')}`
         : `<p style="color:var(--text-muted);font-size:.85rem">Nessun atleta senza team. 🎉</p>`;
@@ -2726,7 +2726,7 @@ window._openPcsHtmlPasteModal = function(garaId) {
   ov.id = 'pcs-paste-overlay';
   ov.style.cssText = 'position:fixed;inset:0;background:rgba(0,0,0,.75);z-index:9999;display:flex;align-items:center;justify-content:center;padding:16px';
   ov.innerHTML = `
-    <div style="background:var(--bg-card);border:1px solid var(--border);border-radius:12px;padding:28px;width:100%;max-width:520px;max-height:90vh;overflow-y:auto">
+    <div style="background:var(--bg-card);border:1px solid var(--border-subtle);border-radius:12px;padding:28px;width:100%;max-width:520px;max-height:90vh;overflow-y:auto">
       <h2 style="font-family:var(--font-display);font-size:1.2rem;color:var(--red-hot);margin:0 0 12px">INCOLLA SORGENTE PCS</h2>
       <p style="font-size:.82rem;color:var(--text-muted);margin:0 0 6px">PCS blocca le richieste automatiche. Segui questi passi:</p>
       <ol style="font-size:.82rem;color:var(--text-secondary);margin:0 0 14px;padding-left:18px;line-height:1.7">
@@ -2735,13 +2735,13 @@ window._openPcsHtmlPasteModal = function(garaId) {
         <li>Seleziona tutto (<b>Ctrl+A</b>) e copia (<b>Ctrl+C</b>)</li>
         <li>Incolla qui sotto e clicca <b>Importa</b></li>
       </ol>
-      <div style="font-size:.78rem;color:var(--text-secondary);background:var(--bg-input,#1e293b);border:1px solid var(--border);border-radius:6px;padding:8px 10px;margin:0 0 14px;line-height:1.6">
+      <div style="font-size:.78rem;color:var(--text-secondary);background:var(--bg-input,#1e293b);border:1px solid var(--border-subtle);border-radius:6px;padding:8px 10px;margin:0 0 14px;line-height:1.6">
         ⚠️ <b>Classifica generale / tappe:</b> il <b>Ctrl+U</b> mostra la pagina <i>caricata all'inizio</i>, non la scheda che hai cliccato dopo.
         Per importare il GC apri l'<b>URL diretto del GC</b> (es. <code>.../race/.../2026/gc</code>) in una scheda nuova e <b>poi</b> fai Ctrl+U.
         In alternativa: <b>F12 → Elements → tasto destro su &lt;html&gt; → Copy → Copy outerHTML</b> e incolla qui (copia sempre ciò che vedi a schermo).
       </div>
       <textarea id="pcs-html-input" placeholder="Incolla qui il sorgente HTML…"
-        style="width:100%;height:160px;box-sizing:border-box;background:var(--bg-input,#1e293b);color:var(--text-primary);border:1px solid var(--border);border-radius:6px;padding:10px;font-size:.78rem;font-family:var(--font-mono);resize:vertical"></textarea>
+        style="width:100%;height:160px;box-sizing:border-box;background:var(--bg-input,#1e293b);color:var(--text-primary);border:1px solid var(--border-subtle);border-radius:6px;padding:10px;font-size:.78rem;font-family:var(--font-mono);resize:vertical"></textarea>
       <div id="pcs-paste-err" style="display:none;color:var(--red-hot);font-size:.82rem;margin-top:8px"></div>
       <div style="display:flex;gap:10px;margin-top:14px">
         <button class="auth-btn" id="pcs-paste-save-btn" onclick="window._submitPcsHtml('${esc(garaId)}')">Importa</button>
@@ -9197,7 +9197,7 @@ window.adminNav = async function(section) {
           <span id="xpix-sync-status" style="font-size:.8rem;color:var(--text-muted)"></span>
           <div style="margin-top:12px;display:flex;gap:8px;align-items:center;flex-wrap:wrap">
             <input id="xpix-manual-url" type="text" placeholder="Incolla URL album xpix o slug…"
-              style="flex:1;min-width:260px;padding:8px 12px;border-radius:6px;border:1px solid var(--border);background:var(--bg-elevated);color:var(--text-primary);font-size:.85rem"/>
+              style="flex:1;min-width:260px;padding:8px 12px;border-radius:6px;border:1px solid var(--border-subtle);background:var(--bg-elevated);color:var(--text-primary);font-size:.85rem"/>
             <button onclick="window.xpixAddByUrl()" id="xpix-add-btn"
               style="background:#10b981;color:#fff;border:none;padding:9px 18px;border-radius:6px;font-weight:700;cursor:pointer;font-size:.85rem;white-space:nowrap">
               ➕ Aggiungi da URL
@@ -9257,7 +9257,7 @@ window.adminNav = async function(section) {
             🔄 Sincronizza Canali
           </button>
           <button onclick="window.ytShowChannels()" id="yt-channels-btn"
-            style="background:var(--bg-card);border:1px solid var(--border);color:var(--text-primary);padding:10px 18px;border-radius:6px;cursor:pointer;font-size:.875rem">
+            style="background:var(--bg-card);border:1px solid var(--border-subtle);color:var(--text-primary);padding:10px 18px;border-radius:6px;cursor:pointer;font-size:.875rem">
             ⚙️ Gestisci Canali
           </button>
           <button onclick="window.ytDetectLive()" id="yt-detect-live-btn"
@@ -9266,7 +9266,7 @@ window.adminNav = async function(section) {
           </button>
           <span id="yt-sync-status" style="font-size:.8rem;color:var(--text-muted)"></span>
         </div>
-        <div id="yt-channels-panel" style="display:none;background:var(--bg-card);border:1px solid var(--border);border-radius:8px;padding:16px;margin-bottom:16px">
+        <div id="yt-channels-panel" style="display:none;background:var(--bg-card);border:1px solid var(--border-subtle);border-radius:8px;padding:16px;margin-bottom:16px">
           <div style="font-weight:700;font-size:.875rem;margin-bottom:10px">Canali YouTube configurati</div>
           <div id="yt-channels-list"></div>
           <div style="margin-top:12px;display:flex;gap:8px;flex-wrap:wrap">
@@ -9291,27 +9291,27 @@ window.adminNav = async function(section) {
         <div style="display:flex;gap:10px;flex-wrap:wrap;margin-bottom:16px;align-items:center">
           <button class="btn-action" onclick="window.adminShowAddVideo()" style="background:var(--accent);color:white;border:none;padding:9px 18px;border-radius:6px;font-size:.875rem">+ Aggiungi video</button>
           <input type="search" id="admin-video-search" placeholder="Filtra per nome gara…" oninput="window.adminFilterVideos(this.value)"
-            style="padding:9px 12px;border:1px solid var(--border);border-radius:6px;background:var(--bg-card);color:var(--text-primary);font-size:.875rem;flex:1;min-width:180px" />
+            style="padding:9px 12px;border:1px solid var(--border-subtle);border-radius:6px;background:var(--bg-card);color:var(--text-primary);font-size:.875rem;flex:1;min-width:180px" />
         </div>
-        <div id="admin-add-video-form" style="display:none;background:var(--bg-card);border:1px solid var(--border);border-radius:8px;padding:16px;margin-bottom:16px">
+        <div id="admin-add-video-form" style="display:none;background:var(--bg-card);border:1px solid var(--border-subtle);border-radius:8px;padding:16px;margin-bottom:16px">
           <div style="font-weight:700;margin-bottom:12px;font-size:.9rem">Aggiungi video manualmente</div>
           <div style="display:flex;flex-direction:column;gap:10px">
             <div>
               <label style="font-size:.8rem;color:var(--text-muted);display:block;margin-bottom:4px">Cerca gara (id calendario)</label>
               <input type="search" id="avf-race-search" placeholder="Digita nome gara…" oninput="window.adminSearchCalRace(this.value)"
-                style="width:100%;padding:8px;border:1px solid var(--border);border-radius:6px;background:var(--bg-input,var(--bg-card));color:var(--text-primary);font-size:.85rem;box-sizing:border-box" />
-              <div id="avf-race-results" style="display:none;background:var(--bg-card);border:1px solid var(--border);border-radius:6px;max-height:180px;overflow-y:auto;margin-top:4px"></div>
+                style="width:100%;padding:8px;border:1px solid var(--border-subtle);border-radius:6px;background:var(--bg-input,var(--bg-card));color:var(--text-primary);font-size:.85rem;box-sizing:border-box" />
+              <div id="avf-race-results" style="display:none;background:var(--bg-card);border:1px solid var(--border-subtle);border-radius:6px;max-height:180px;overflow-y:auto;margin-top:4px"></div>
               <div id="avf-race-selected" style="font-size:.8rem;color:var(--accent);margin-top:4px;font-weight:600"></div>
             </div>
             <input type="url" id="avf-url" placeholder="URL YouTube (https://www.youtube.com/watch?v=...)" oninput="window.adminUrlOembed(this.value)"
-              style="padding:8px;border:1px solid var(--border);border-radius:6px;background:var(--bg-input,var(--bg-card));color:var(--text-primary);font-size:.85rem" />
+              style="padding:8px;border:1px solid var(--border-subtle);border-radius:6px;background:var(--bg-input,var(--bg-card));color:var(--text-primary);font-size:.85rem" />
             <input type="text" id="avf-title" placeholder="Titolo — compilato automaticamente dall'URL"
-              style="padding:8px;border:1px solid var(--border);border-radius:6px;background:var(--bg-input,var(--bg-card));color:var(--text-primary);font-size:.85rem" />
+              style="padding:8px;border:1px solid var(--border-subtle);border-radius:6px;background:var(--bg-input,var(--bg-card));color:var(--text-primary);font-size:.85rem" />
             <input type="text" id="avf-channel" placeholder="Autore / Canale — compilato automaticamente dall'URL"
-              style="padding:8px;border:1px solid var(--border);border-radius:6px;background:var(--bg-input,var(--bg-card));color:var(--text-primary);font-size:.85rem" />
+              style="padding:8px;border:1px solid var(--border-subtle);border-radius:6px;background:var(--bg-input,var(--bg-card));color:var(--text-primary);font-size:.85rem" />
             <div style="display:flex;gap:8px">
               <button onclick="window.adminSubmitAddVideo()" style="background:var(--accent);color:white;border:none;padding:8px 20px;border-radius:6px;font-weight:600;cursor:pointer">Aggiungi</button>
-              <button onclick="window.adminShowAddVideo(false)" style="background:transparent;color:var(--text-muted);border:1px solid var(--border);padding:8px 16px;border-radius:6px;cursor:pointer">Annulla</button>
+              <button onclick="window.adminShowAddVideo(false)" style="background:transparent;color:var(--text-muted);border:1px solid var(--border-subtle);padding:8px 16px;border-radius:6px;cursor:pointer">Annulla</button>
             </div>
           </div>
         </div>
@@ -9328,7 +9328,7 @@ window.adminNav = async function(section) {
         </div>
         <div style="display:flex;gap:8px;flex-wrap:wrap;margin-bottom:20px;align-items:center">
           <button id="foto-tutti-tab-up"   onclick="adminFotoTuttiTab('uploaded')"   style="padding:7px 16px;border-radius:6px;border:1px solid var(--accent);background:var(--accent);color:#fff;font-weight:700;cursor:pointer;font-size:.82rem">📤 Caricate</button>
-          <button id="foto-tutti-tab-xpix" onclick="adminFotoTuttiTab('xpix')"      style="padding:7px 16px;border-radius:6px;border:1px solid var(--border);background:transparent;color:var(--text-secondary);cursor:pointer;font-size:.82rem">📸 xpix.it</button>
+          <button id="foto-tutti-tab-xpix" onclick="adminFotoTuttiTab('xpix')"      style="padding:7px 16px;border-radius:6px;border:1px solid var(--border-subtle);background:transparent;color:var(--text-secondary);cursor:pointer;font-size:.82rem">📸 xpix.it</button>
           <button onclick="window.adminFixCaptions()" style="margin-left:auto;padding:7px 14px;border-radius:6px;border:1px solid #f59e0b;background:transparent;color:#f59e0b;cursor:pointer;font-size:.8rem;font-weight:600" title="Ricalcola le didascalie col vincitore corretto di ogni gara/annata">🔧 Correggi didascalie</button>
         </div>
         <div id="foto-tutti-body"><div class="admin-loading">Caricamento…</div></div>`;
@@ -9338,7 +9338,7 @@ window.adminNav = async function(section) {
           const btn = document.getElementById('foto-tutti-tab-' + t);
           if (!btn) return;
           if (t === tab) { btn.style.background = 'var(--accent)'; btn.style.color = '#fff'; btn.style.borderColor = 'var(--accent)'; btn.style.fontWeight = '700'; }
-          else           { btn.style.background = 'transparent'; btn.style.color = 'var(--text-secondary)'; btn.style.borderColor = 'var(--border)'; btn.style.fontWeight = '400'; }
+          else           { btn.style.background = 'transparent'; btn.style.color = 'var(--text-secondary)'; btn.style.borderColor = 'var(--border-subtle)'; btn.style.fontWeight = '400'; }
         });
         const body = document.getElementById('foto-tutti-body');
         if (!body) return;
@@ -9416,9 +9416,9 @@ window.adminNav = async function(section) {
         </div>
         <div style="display:flex;gap:10px;margin-bottom:14px;align-items:center;flex-wrap:wrap">
           <input type="search" id="utenti-search" placeholder="Cerca per email o nome…" oninput="window.adminFilterUtenti(this.value)"
-            style="padding:9px 12px;border:1px solid var(--border);border-radius:6px;background:var(--bg-card);color:var(--text-primary);font-size:.875rem;flex:1;min-width:180px" />
+            style="padding:9px 12px;border:1px solid var(--border-subtle);border-radius:6px;background:var(--bg-card);color:var(--text-primary);font-size:.875rem;flex:1;min-width:180px" />
           <select id="utenti-role-filter" onchange="window.adminFilterUtenti(document.getElementById('utenti-search').value)"
-            style="padding:9px 12px;border:1px solid var(--border);border-radius:6px;background:var(--bg-card);color:var(--text-primary);font-size:.875rem">
+            style="padding:9px 12px;border:1px solid var(--border-subtle);border-radius:6px;background:var(--bg-card);color:var(--text-primary);font-size:.875rem">
             <option value="">Tutti i ruoli</option>
             ${ROLES_ALL.map(r=>`<option value="${r}">${r}</option>`).join('')}
           </select>
@@ -9502,7 +9502,7 @@ window.adminNav = async function(section) {
                     <div style="display:flex;gap:8px"><span style="color:var(--text-muted);min-width:110px">Email</span><strong>${esc(u.email||'—')}</strong></div>
                     <div style="display:flex;gap:8px"><span style="color:var(--text-muted);min-width:110px">Nome</span><span>${esc(u.display_name||'—')}</span></div>
                     <div style="display:flex;gap:8px"><span style="color:var(--text-muted);min-width:110px">Ruolo</span>
-                      <select onchange="window.adminChangeRole(${u.id},this.value)" style="padding:4px 8px;border:1px solid var(--border);border-radius:5px;background:var(--bg-base);color:var(--text-primary);font-size:.85rem">
+                      <select onchange="window.adminChangeRole(${u.id},this.value)" style="padding:4px 8px;border:1px solid var(--border-subtle);border-radius:5px;background:var(--bg-base);color:var(--text-primary);font-size:.85rem">
                         ${ROLES_ALL.map(r=>`<option value="${r}" ${r===u.role?'selected':''}>${r}</option>`).join('')}
                       </select>
                     </div>
@@ -9527,7 +9527,7 @@ window.adminNav = async function(section) {
               <div style="overflow-x:auto">
               <table style="width:100%;border-collapse:collapse;font-size:.83rem">
                 <thead>
-                  <tr style="border-bottom:2px solid var(--border)">
+                  <tr style="border-bottom:2px solid var(--border-subtle)">
                     <th style="text-align:left;padding:8px 10px;color:var(--text-muted);font-weight:600">Email</th>
                     <th style="text-align:left;padding:8px 10px;color:var(--text-muted);font-weight:600">Nome</th>
                     <th style="text-align:left;padding:8px 10px;color:var(--text-muted);font-weight:600">Ruolo</th>
@@ -9537,19 +9537,19 @@ window.adminNav = async function(section) {
                 </thead>
                 <tbody>
                   ${list.map(u => `
-                    <tr style="border-bottom:1px solid var(--border);transition:background .15s" onmouseover="this.style.background='var(--bg-elevated)'" onmouseout="this.style.background=''">
+                    <tr style="border-bottom:1px solid var(--border-subtle);transition:background .15s" onmouseover="this.style.background='var(--bg-elevated)'" onmouseout="this.style.background=''">
                       <td style="padding:9px 10px">${esc(u.email||'')}</td>
                       <td style="padding:9px 10px;font-weight:600">${esc(u.display_name||'—')}</td>
                       <td style="padding:9px 10px">
                         <select onchange="window.adminChangeRole(${u.id},this.value)"
-                          style="padding:3px 7px;border:1px solid var(--border);border-radius:5px;background:var(--bg-base);color:${roleColor(u.role)};font-size:.78rem;font-weight:700;cursor:pointer">
+                          style="padding:3px 7px;border:1px solid var(--border-subtle);border-radius:5px;background:var(--bg-base);color:${roleColor(u.role)};font-size:.78rem;font-weight:700;cursor:pointer">
                           ${ROLES_ALL.map(r=>`<option value="${r}" ${r===u.role?'selected':''}>${r}</option>`).join('')}
                         </select>
                       </td>
                       <td style="padding:9px 10px;color:var(--text-muted)">${(u.created_at||'').slice(0,10)}</td>
                       <td style="padding:9px 10px">
                         <div style="display:flex;gap:6px">
-                          <button onclick="window.adminViewUserProfile(${u.id})" title="Dettaglio" style="padding:5px 10px;border:1px solid var(--border);border-radius:5px;background:transparent;color:var(--text-muted);cursor:pointer;font-size:.78rem">👁 Dettaglio</button>
+                          <button onclick="window.adminViewUserProfile(${u.id})" title="Dettaglio" style="padding:5px 10px;border:1px solid var(--border-subtle);border-radius:5px;background:transparent;color:var(--text-muted);cursor:pointer;font-size:.78rem">👁 Dettaglio</button>
                           <button onclick="window.adminDeleteUser(${u.id},'${esc((u.email||'').replace(/'/g,''))}',)" title="Elimina" style="padding:5px 8px;border:1px solid rgba(239,68,68,.4);border-radius:5px;background:transparent;color:#ef4444;cursor:pointer;font-size:.78rem">🗑</button>
                         </div>
                       </td>
@@ -9593,7 +9593,7 @@ window.adminNav = async function(section) {
               <div style="font-size:.8rem;color:var(--text-muted);margin-bottom:14px">${pending.length} richiesta${pending.length !== 1 ? 'e' : ''} in attesa</div>
               <div style="display:flex;flex-direction:column;gap:12px">
               ${pending.map(p => `
-                <div id="pending-card-${p.type}-${p.id}" style="background:var(--bg-card);border:1px solid var(--border);border-radius:10px;padding:16px 20px;display:flex;align-items:center;gap:16px;flex-wrap:wrap">
+                <div id="pending-card-${p.type}-${p.id}" style="background:var(--bg-card);border:1px solid var(--border-subtle);border-radius:10px;padding:16px 20px;display:flex;align-items:center;gap:16px;flex-wrap:wrap">
                   <div style="flex:1;min-width:200px">
                     <div style="font-weight:700;font-size:.9rem;margin-bottom:4px">
                       <span style="padding:2px 8px;border-radius:10px;font-size:.72rem;font-weight:700;background:var(--bg-elevated);color:var(--text-muted);margin-right:8px">${typeLabel[p.type]||p.type}</span>
@@ -9656,7 +9656,7 @@ window.adminNav = async function(section) {
             <div style="font-size:.8rem;color:var(--text-muted);margin-bottom:12px">${profiles.length} profili approvati</div>
             <div style="display:flex;flex-direction:column;gap:10px">
             ${profiles.map(p => `
-              <div style="background:var(--bg-card);border:1px solid var(--border);border-radius:10px;padding:14px 18px;display:flex;align-items:center;gap:14px;flex-wrap:wrap">
+              <div style="background:var(--bg-card);border:1px solid var(--border-subtle);border-radius:10px;padding:14px 18px;display:flex;align-items:center;gap:14px;flex-wrap:wrap">
                 <div style="font-size:1.5rem">📷</div>
                 <div style="flex:1;min-width:160px">
                   <a href="#/media/${p.id}" style="font-weight:700;color:var(--accent)">${esc(p.display_name)}</a>
@@ -9840,7 +9840,7 @@ window.adminNav = async function(section) {
         </div>
         <div style="display:flex;gap:10px;margin-bottom:14px;flex-wrap:wrap">
           <input type="search" id="atleti-search" placeholder="Cerca per cognome, nome o team…" oninput="window.adminFilterAtleti(this.value)"
-            style="padding:9px 12px;border:1px solid var(--border);border-radius:6px;background:var(--bg-card);color:var(--text-primary);font-size:.875rem;flex:1;min-width:200px" />
+            style="padding:9px 12px;border:1px solid var(--border-subtle);border-radius:6px;background:var(--bg-card);color:var(--text-primary);font-size:.875rem;flex:1;min-width:200px" />
         </div>
         <div id="admin-atleti-msg" style="display:none;padding:8px 14px;border-radius:6px;margin-bottom:10px;font-size:.85rem"></div>
         <div id="admin-atleti-body"></div>`;
@@ -9880,17 +9880,17 @@ window.adminNav = async function(section) {
               <div style="font-size:.78rem;color:var(--text-muted);margin-bottom:14px">ID: <code>${esc(String(a.atleta_id))}</code> · ${a.gare} gare · ${a.vittorie} vittorie</div>
               <div style="display:flex;flex-direction:column;gap:10px">
                 <label style="font-size:.82rem;color:var(--text-muted)">Cognome
-                  <input id="ae-cognome" value="${esc(a.cognome)}" style="display:block;width:100%;margin-top:4px;padding:8px 12px;border:1px solid var(--border);border-radius:6px;background:var(--bg-base);color:var(--text-primary);font-size:.9rem" />
+                  <input id="ae-cognome" value="${esc(a.cognome)}" style="display:block;width:100%;margin-top:4px;padding:8px 12px;border:1px solid var(--border-subtle);border-radius:6px;background:var(--bg-base);color:var(--text-primary);font-size:.9rem" />
                 </label>
                 <label style="font-size:.82rem;color:var(--text-muted)">Nome
-                  <input id="ae-nome" value="${esc(a.nome)}" style="display:block;width:100%;margin-top:4px;padding:8px 12px;border:1px solid var(--border);border-radius:6px;background:var(--bg-base);color:var(--text-primary);font-size:.9rem" />
+                  <input id="ae-nome" value="${esc(a.nome)}" style="display:block;width:100%;margin-top:4px;padding:8px 12px;border:1px solid var(--border-subtle);border-radius:6px;background:var(--bg-base);color:var(--text-primary);font-size:.9rem" />
                 </label>
                 <div style="font-size:.82rem;color:var(--text-muted)">Team
                   <div style="position:relative;margin-top:4px">
                     <input id="ae-team" value="${esc(a.team_attuale||a.team||'')}" autocomplete="off"
                       oninput="window._aeTeamSearch(this.value)"
-                      style="display:block;width:100%;padding:8px 12px;border:1px solid var(--border);border-radius:6px;background:var(--bg-base);color:var(--text-primary);font-size:.9rem;box-sizing:border-box" />
-                    <div id="ae-team-drop" style="display:none;position:absolute;top:100%;left:0;right:0;background:var(--bg-card);border:1px solid var(--border);border-top:none;border-radius:0 0 6px 6px;max-height:200px;overflow-y:auto;z-index:10000;font-size:.85rem"></div>
+                      style="display:block;width:100%;padding:8px 12px;border:1px solid var(--border-subtle);border-radius:6px;background:var(--bg-base);color:var(--text-primary);font-size:.9rem;box-sizing:border-box" />
+                    <div id="ae-team-drop" style="display:none;position:absolute;top:100%;left:0;right:0;background:var(--bg-card);border:1px solid var(--border-subtle);border-top:none;border-radius:0 0 6px 6px;max-height:200px;overflow-y:auto;z-index:10000;font-size:.85rem"></div>
                   </div>
                   <div id="ae-team-id-store" data-tid="${esc(a.team_id||'')}"></div>
                 </div>
@@ -9988,7 +9988,7 @@ window.adminNav = async function(section) {
           <div style="overflow-x:auto">
           <table style="width:100%;border-collapse:collapse;font-size:.83rem">
             <thead>
-              <tr style="border-bottom:2px solid var(--border)">
+              <tr style="border-bottom:2px solid var(--border-subtle)">
                 <th style="text-align:left;padding:8px 10px;color:var(--text-muted);font-weight:600">Atleta</th>
                 <th style="text-align:left;padding:8px 10px;color:var(--text-muted);font-weight:600">Team</th>
                 <th style="text-align:right;padding:8px 10px;color:var(--text-muted);font-weight:600">Gare</th>
@@ -10000,7 +10000,7 @@ window.adminNav = async function(section) {
             </thead>
             <tbody>
               ${list.map(a => `
-                <tr style="border-bottom:1px solid var(--border);transition:background .15s" onmouseover="this.style.background='var(--bg-elevated)'" onmouseout="this.style.background=''">
+                <tr style="border-bottom:1px solid var(--border-subtle);transition:background .15s" onmouseover="this.style.background='var(--bg-elevated)'" onmouseout="this.style.background=''">
                   <td style="padding:9px 10px">
                     <a href="#/atleta/${esc(String(a.atleta_id))}" style="font-weight:700;color:var(--accent);text-decoration:none">${esc(a.cognome)} ${esc(a.nome)}</a>
                     <div style="font-size:.7rem;color:var(--text-muted)">${esc(String(a.atleta_id))}</div>
@@ -10012,8 +10012,8 @@ window.adminNav = async function(section) {
                   <td style="padding:9px 10px;color:var(--text-muted);font-size:.8rem">${(a.lastGara||'').slice(0,10)}</td>
                   <td style="padding:9px 10px">
                     <div style="display:flex;gap:6px">
-                      <a href="#/atleta/${esc(String(a.atleta_id))}" title="Vai al profilo" style="padding:5px 8px;border:1px solid var(--border);border-radius:5px;background:transparent;color:var(--text-muted);cursor:pointer;font-size:.78rem;text-decoration:none">👁</a>
-                      <button onclick="window.adminEditAtleta('${esc(String(a.atleta_id))}')" title="Modifica" style="padding:5px 8px;border:1px solid var(--border);border-radius:5px;background:transparent;color:var(--text-muted);cursor:pointer;font-size:.78rem">✏️</button>
+                      <a href="#/atleta/${esc(String(a.atleta_id))}" title="Vai al profilo" style="padding:5px 8px;border:1px solid var(--border-subtle);border-radius:5px;background:transparent;color:var(--text-muted);cursor:pointer;font-size:.78rem;text-decoration:none">👁</a>
+                      <button onclick="window.adminEditAtleta('${esc(String(a.atleta_id))}')" title="Modifica" style="padding:5px 8px;border:1px solid var(--border-subtle);border-radius:5px;background:transparent;color:var(--text-muted);cursor:pointer;font-size:.78rem">✏️</button>
                     </div>
                   </td>
                 </tr>`).join('')}
@@ -10048,9 +10048,9 @@ window.adminNav = async function(section) {
         </div>
         <div style="display:flex;gap:10px;margin-bottom:14px;flex-wrap:wrap">
           <input type="search" id="gare-search" placeholder="Cerca per nome gara, categoria…" oninput="window.adminFilterGare(this.value)"
-            style="padding:9px 12px;border:1px solid var(--border);border-radius:6px;background:var(--bg-card);color:var(--text-primary);font-size:.875rem;flex:1;min-width:200px" />
+            style="padding:9px 12px;border:1px solid var(--border-subtle);border-radius:6px;background:var(--bg-card);color:var(--text-primary);font-size:.875rem;flex:1;min-width:200px" />
           <select id="gare-year-filter" onchange="window.adminFilterGare(document.getElementById('gare-search').value)"
-            style="padding:9px 12px;border:1px solid var(--border);border-radius:6px;background:var(--bg-card);color:var(--text-primary);font-size:.875rem">
+            style="padding:9px 12px;border:1px solid var(--border-subtle);border-radius:6px;background:var(--bg-card);color:var(--text-primary);font-size:.875rem">
             <option value="">Tutti gli anni</option>
             ${[...new Set(gareList.map(g=>(g.data||'').slice(0,4)).filter(Boolean))].sort((a,b)=>b.localeCompare(a)).map(y=>`<option value="${y}">${y}</option>`).join('')}
           </select>
@@ -10091,27 +10091,27 @@ window.adminNav = async function(section) {
               <div style="font-size:.78rem;color:var(--text-muted);margin-bottom:14px">ID: <code>${esc(gid)}</code> · ${g.n_atleti} iscritti</div>
               <div style="display:flex;flex-direction:column;gap:10px">
                 <label style="font-size:.82rem;color:var(--text-muted)">Nome gara
-                  <input id="ge-nome" value="${esc(g.nome)}" style="display:block;width:100%;margin-top:4px;padding:8px 12px;border:1px solid var(--border);border-radius:6px;background:var(--bg-base);color:var(--text-primary);font-size:.9rem" />
+                  <input id="ge-nome" value="${esc(g.nome)}" style="display:block;width:100%;margin-top:4px;padding:8px 12px;border:1px solid var(--border-subtle);border-radius:6px;background:var(--bg-base);color:var(--text-primary);font-size:.9rem" />
                 </label>
                 <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px">
                   <label style="font-size:.82rem;color:var(--text-muted)">Data
-                    <input id="ge-data" type="date" value="${esc(g.data||'')}" style="display:block;width:100%;margin-top:4px;padding:8px 12px;border:1px solid var(--border);border-radius:6px;background:var(--bg-base);color:var(--text-primary);font-size:.9rem" />
+                    <input id="ge-data" type="date" value="${esc(g.data||'')}" style="display:block;width:100%;margin-top:4px;padding:8px 12px;border:1px solid var(--border-subtle);border-radius:6px;background:var(--bg-base);color:var(--text-primary);font-size:.9rem" />
                   </label>
                   <label style="font-size:.82rem;color:var(--text-muted)">Categoria
-                    <input id="ge-cat" value="${esc(g.cat||'')}" style="display:block;width:100%;margin-top:4px;padding:8px 12px;border:1px solid var(--border);border-radius:6px;background:var(--bg-base);color:var(--text-primary);font-size:.9rem" />
+                    <input id="ge-cat" value="${esc(g.cat||'')}" style="display:block;width:100%;margin-top:4px;padding:8px 12px;border:1px solid var(--border-subtle);border-radius:6px;background:var(--bg-base);color:var(--text-primary);font-size:.9rem" />
                   </label>
                   <label style="font-size:.82rem;color:var(--text-muted)">Km
-                    <input id="ge-km" value="${esc(String(g.km||''))}" style="display:block;width:100%;margin-top:4px;padding:8px 12px;border:1px solid var(--border);border-radius:6px;background:var(--bg-base);color:var(--text-primary);font-size:.9rem" />
+                    <input id="ge-km" value="${esc(String(g.km||''))}" style="display:block;width:100%;margin-top:4px;padding:8px 12px;border:1px solid var(--border-subtle);border-radius:6px;background:var(--bg-base);color:var(--text-primary);font-size:.9rem" />
                   </label>
                   <label style="font-size:.82rem;color:var(--text-muted)">Media km/h
-                    <input id="ge-media" value="${esc(String(g.media||''))}" style="display:block;width:100%;margin-top:4px;padding:8px 12px;border:1px solid var(--border);border-radius:6px;background:var(--bg-base);color:var(--text-primary);font-size:.9rem" />
+                    <input id="ge-media" value="${esc(String(g.media||''))}" style="display:block;width:100%;margin-top:4px;padding:8px 12px;border:1px solid var(--border-subtle);border-radius:6px;background:var(--bg-base);color:var(--text-primary);font-size:.9rem" />
                   </label>
                 </div>
                 <label style="font-size:.82rem;color:var(--text-muted)">Tipo
-                  <input id="ge-tipo" value="${esc(g.tipo||'')}" placeholder="es. Criterium, Circuito, Road Race…" style="display:block;width:100%;margin-top:4px;padding:8px 12px;border:1px solid var(--border);border-radius:6px;background:var(--bg-base);color:var(--text-primary);font-size:.9rem" />
+                  <input id="ge-tipo" value="${esc(g.tipo||'')}" placeholder="es. Criterium, Circuito, Road Race…" style="display:block;width:100%;margin-top:4px;padding:8px 12px;border:1px solid var(--border-subtle);border-radius:6px;background:var(--bg-base);color:var(--text-primary);font-size:.9rem" />
                 </label>
                 <label style="font-size:.82rem;color:var(--text-muted)">Regione
-                  <input id="ge-regione" value="${esc(g.regione||'')}" placeholder="es. SICILIA" style="display:block;width:100%;margin-top:4px;padding:8px 12px;border:1px solid var(--border);border-radius:6px;background:var(--bg-base);color:var(--text-primary);font-size:.9rem" />
+                  <input id="ge-regione" value="${esc(g.regione||'')}" placeholder="es. SICILIA" style="display:block;width:100%;margin-top:4px;padding:8px 12px;border:1px solid var(--border-subtle);border-radius:6px;background:var(--bg-base);color:var(--text-primary);font-size:.9rem" />
                 </label>
               </div>
               <div style="margin-top:18px;display:flex;gap:10px;justify-content:flex-end">
@@ -10179,7 +10179,7 @@ window.adminNav = async function(section) {
               </div>
               <div style="font-size:.78rem;color:var(--text-muted);margin-bottom:12px">${results.length} risultati</div>
               <table style="width:100%;border-collapse:collapse;font-size:.82rem">
-                <thead><tr style="border-bottom:2px solid var(--border)">
+                <thead><tr style="border-bottom:2px solid var(--border-subtle)">
                   <th style="text-align:left;padding:6px 8px;color:var(--text-muted);font-weight:600">Pos</th>
                   <th style="text-align:left;padding:6px 8px;color:var(--text-muted);font-weight:600">Atleta</th>
                   <th style="text-align:left;padding:6px 8px;color:var(--text-muted);font-weight:600">Team</th>
@@ -10187,7 +10187,7 @@ window.adminNav = async function(section) {
                 </tr></thead>
                 <tbody>
                   ${results.slice(0,30).map(r=>`
-                    <tr style="border-bottom:1px solid var(--border)">
+                    <tr style="border-bottom:1px solid var(--border-subtle)">
                       <td style="padding:6px 8px;font-weight:700;color:${(r.posizione||r.pos)<=3?'var(--accent)':'var(--text-primary)'}">${r.posizione||r.pos||'–'}</td>
                       <td style="padding:6px 8px"><a href="#/atleta/${esc(String(r.atleta_id||''))}" onclick="document.getElementById('admin-gara-res-modal').remove()" style="color:var(--accent);text-decoration:none;font-weight:600">${esc((r.cognome||'')+' '+(r.nome||''))}</a></td>
                       <td style="padding:6px 8px;color:var(--text-muted)">${esc(r.team||'—')}</td>
@@ -10213,7 +10213,7 @@ window.adminNav = async function(section) {
           <div style="overflow-x:auto">
           <table style="width:100%;border-collapse:collapse;font-size:.83rem">
             <thead>
-              <tr style="border-bottom:2px solid var(--border)">
+              <tr style="border-bottom:2px solid var(--border-subtle)">
                 <th style="text-align:left;padding:8px 10px;color:var(--text-muted);font-weight:600">Gara</th>
                 <th style="text-align:left;padding:8px 10px;color:var(--text-muted);font-weight:600">Data</th>
                 <th style="text-align:left;padding:8px 10px;color:var(--text-muted);font-weight:600">Cat.</th>
@@ -10224,7 +10224,7 @@ window.adminNav = async function(section) {
             </thead>
             <tbody>
               ${list.map(g => `
-                <tr style="border-bottom:1px solid var(--border);transition:background .15s" onmouseover="this.style.background='var(--bg-elevated)'" onmouseout="this.style.background=''">
+                <tr style="border-bottom:1px solid var(--border-subtle);transition:background .15s" onmouseover="this.style.background='var(--bg-elevated)'" onmouseout="this.style.background=''">
                   <td style="padding:9px 10px">
                     <div style="font-weight:600;color:var(--text-primary)">${esc((g.nome||'').slice(0,40))}</div>
                     <div style="font-size:.7rem;color:var(--text-muted)">${esc(g.gara_id||'')}</div>
@@ -10237,8 +10237,8 @@ window.adminNav = async function(section) {
                   <td style="padding:9px 10px;color:var(--text-muted);font-size:.8rem">${g.km ? `${g.km} km` : '—'}${g.media ? ` · ${g.media} km/h` : ''}</td>
                   <td style="padding:9px 10px">
                     <div style="display:flex;gap:6px">
-                      <button onclick="window.adminViewGaraRisultati('${esc(g.gara_id||'')}')" title="Vedi risultati" style="padding:5px 8px;border:1px solid var(--border);border-radius:5px;background:transparent;color:var(--text-muted);cursor:pointer;font-size:.78rem">📋</button>
-                      <button onclick="window.adminEditGara('${esc(g.gara_id||'')}')" title="Modifica" style="padding:5px 8px;border:1px solid var(--border);border-radius:5px;background:transparent;color:var(--text-muted);cursor:pointer;font-size:.78rem">✏️</button>
+                      <button onclick="window.adminViewGaraRisultati('${esc(g.gara_id||'')}')" title="Vedi risultati" style="padding:5px 8px;border:1px solid var(--border-subtle);border-radius:5px;background:transparent;color:var(--text-muted);cursor:pointer;font-size:.78rem">📋</button>
+                      <button onclick="window.adminEditGara('${esc(g.gara_id||'')}')" title="Modifica" style="padding:5px 8px;border:1px solid var(--border-subtle);border-radius:5px;background:transparent;color:var(--text-muted);cursor:pointer;font-size:.78rem">✏️</button>
                       <button onclick="window.adminDeleteGara('${esc(g.gara_id||'')}','${esc((g.nome||'').slice(0,30).replace(/'/g,''))}')" title="Elimina" style="padding:5px 8px;border:1px solid rgba(239,68,68,.4);border-radius:5px;background:transparent;color:#ef4444;cursor:pointer;font-size:.78rem">🗑</button>
                     </div>
                   </td>
@@ -11055,7 +11055,7 @@ function renderYTQueue() {
     }).join('');
 
     return `
-    <div id="ytq-${esc(item.id)}" style="background:var(--bg-card);border:1px solid var(--border);border-radius:8px;padding:12px;margin-bottom:10px;display:flex;gap:12px;align-items:flex-start">
+    <div id="ytq-${esc(item.id)}" style="background:var(--bg-card);border:1px solid var(--border-subtle);border-radius:8px;padding:12px;margin-bottom:10px;display:flex;gap:12px;align-items:flex-start">
       <!-- Thumbnail -->
       <img src="${esc(item.thumbnail||'')}" alt="" style="width:100px;height:60px;border-radius:5px;object-fit:cover;flex-shrink:0;cursor:pointer"
         onerror="this.style.display='none'" onclick="window.open('${esc(item.url)}','_blank')" />
@@ -11070,7 +11070,7 @@ function renderYTQueue() {
         <!-- Tipo contenuto: Video/Diretta gara richiedono una gara, Presentazione/Programma TV no -->
         <div style="margin-bottom:6px">
           <select id="ytq-tipo-${esc(item.id)}" onchange="window.ytSetTipo('${esc(item.id)}', this.value)"
-            style="width:100%;padding:5px 8px;border:1px solid var(--border);border-radius:5px;background:var(--bg-primary);color:var(--text-primary);font-size:.78rem">
+            style="width:100%;padding:5px 8px;border:1px solid var(--border-subtle);border-radius:5px;background:var(--bg-primary);color:var(--text-primary);font-size:.78rem">
             <option value="gara">🏁 Video di una gara</option>
             <option value="presentazione">🎤 Presentazione</option>
             <option value="programma_tv">📺 Programma TV</option>
@@ -11084,7 +11084,7 @@ function renderYTQueue() {
         <div id="ytq-gara-wrap-${esc(item.id)}">
         <div style="display:flex;gap:6px;flex-wrap:wrap;align-items:center;margin-bottom:6px">
           <select id="ytq-gara-sel-${esc(item.id)}" onchange="window.ytSetGara('${esc(item.id)}', this.value)"
-            style="flex:1;min-width:180px;padding:5px 8px;border:1px solid var(--border);border-radius:5px;background:var(--bg-primary);color:var(--text-primary);font-size:.78rem">
+            style="flex:1;min-width:180px;padding:5px 8px;border:1px solid var(--border-subtle);border-radius:5px;background:var(--bg-primary);color:var(--text-primary);font-size:.78rem">
             <option value="">— Seleziona gara —</option>
             ${optionsHtml}
             <option value="__search__">🔍 Cerca altra gara…</option>
@@ -11092,8 +11092,8 @@ function renderYTQueue() {
         </div>
         <div id="ytq-search-${esc(item.id)}" style="display:none;margin-bottom:6px">
           <input type="text" placeholder="Cerca gara per nome…" oninput="window.ytSearchGara('${esc(item.id)}',this.value)"
-            style="width:100%;box-sizing:border-box;padding:5px 8px;border:1px solid var(--border);border-radius:5px;background:var(--bg-primary);color:var(--text-primary);font-size:.78rem" />
-          <div id="ytq-sr-${esc(item.id)}" style="background:var(--bg-card);border:1px solid var(--border);border-radius:5px;max-height:160px;overflow-y:auto;margin-top:2px"></div>
+            style="width:100%;box-sizing:border-box;padding:5px 8px;border:1px solid var(--border-subtle);border-radius:5px;background:var(--bg-primary);color:var(--text-primary);font-size:.78rem" />
+          <div id="ytq-sr-${esc(item.id)}" style="background:var(--bg-card);border:1px solid var(--border-subtle);border-radius:5px;max-height:160px;overflow-y:auto;margin-top:2px"></div>
         </div>
         <!-- Opzione esordienti: vale per entrambi gli anni -->
         <label id="ytq-both-${esc(item.id)}" style="display:${/_ES[12]_[MF]$/.test(bestGaraId)?'flex':'none'};align-items:center;gap:6px;font-size:.76rem;color:var(--text-secondary);margin-bottom:6px;cursor:pointer">
@@ -11306,7 +11306,7 @@ window.ytShowChannels = async () => {
 function renderYTChannelsList() {
   const el = document.getElementById('yt-channels-list');
   if (!el) return;
-  const inpS = 'padding:5px 8px;border:1px solid var(--border);border-radius:4px;background:var(--bg-primary);color:var(--text-primary);font-size:.78rem';
+  const inpS = 'padding:5px 8px;border:1px solid var(--border-subtle);border-radius:4px;background:var(--bg-primary);color:var(--text-primary);font-size:.78rem';
   el.innerHTML = _ytChannels.map((ch, i) => `
     <div style="display:flex;gap:8px;align-items:center;margin-bottom:8px;flex-wrap:wrap" id="ytch-row-${i}">
       <input type="text" value="${esc(ch.name)}" oninput="window._ytChEdit(${i},'name',this.value)"
@@ -11507,7 +11507,7 @@ function renderXpixQueue() {
     }).join('');
 
     return `
-    <div id="xpixq-${esc(item.id)}" style="background:var(--bg-card);border:1px solid var(--border);border-radius:8px;padding:12px;margin-bottom:10px">
+    <div id="xpixq-${esc(item.id)}" style="background:var(--bg-card);border:1px solid var(--border-subtle);border-radius:8px;padding:12px;margin-bottom:10px">
       <!-- Header: nome album + meta -->
       <div style="font-weight:600;font-size:.85rem;margin-bottom:4px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap" title="${esc(item.album_name)}">${esc(item.album_name)}</div>
       <div style="font-size:.75rem;color:var(--text-muted);margin-bottom:8px">
@@ -11523,7 +11523,7 @@ function renderXpixQueue() {
       <!-- Selezione gara + azioni -->
       <div style="display:flex;gap:6px;flex-wrap:wrap;align-items:center;margin-bottom:6px">
         <select onchange="window.xpixSetGara('${esc(item.id)}', this.value)"
-          style="flex:1;min-width:180px;padding:5px 8px;border:1px solid var(--border);border-radius:5px;background:var(--bg-primary);color:var(--text-primary);font-size:.78rem">
+          style="flex:1;min-width:180px;padding:5px 8px;border:1px solid var(--border-subtle);border-radius:5px;background:var(--bg-primary);color:var(--text-primary);font-size:.78rem">
           <option value="">— Seleziona gara —</option>
           ${optionsHtml}
           <option value="__search__">🔍 Cerca altra gara…</option>
@@ -11531,8 +11531,8 @@ function renderXpixQueue() {
       </div>
       <div id="xpixq-search-${esc(item.id)}" style="display:none;margin-bottom:6px">
         <input type="text" placeholder="Cerca gara per nome…" oninput="window.xpixSearchGara('${esc(item.id)}',this.value)"
-          style="width:100%;box-sizing:border-box;padding:5px 8px;border:1px solid var(--border);border-radius:5px;background:var(--bg-primary);color:var(--text-primary);font-size:.78rem" />
-        <div id="xpixq-sr-${esc(item.id)}" style="background:var(--bg-card);border:1px solid var(--border);border-radius:5px;max-height:160px;overflow-y:auto;margin-top:2px"></div>
+          style="width:100%;box-sizing:border-box;padding:5px 8px;border:1px solid var(--border-subtle);border-radius:5px;background:var(--bg-primary);color:var(--text-primary);font-size:.78rem" />
+        <div id="xpixq-sr-${esc(item.id)}" style="background:var(--bg-card);border:1px solid var(--border-subtle);border-radius:5px;max-height:160px;overflow-y:auto;margin-top:2px"></div>
       </div>
       <label id="xpixq-both-${esc(item.id)}" style="display:${/_ES[12]_[MF]$/.test(bestGaraId)?'flex':'none'};align-items:center;gap:6px;font-size:.76rem;color:var(--text-secondary);margin-bottom:6px;cursor:pointer">
         <input type="checkbox" id="xpixq-both-cb-${esc(item.id)}" style="cursor:pointer" />
@@ -11543,8 +11543,8 @@ function renderXpixQueue() {
         <div style="position:relative">
           <input type="text" id="xpixr-input-${esc(item.id)}" placeholder="🏷 Corridore nella foto selezionata (opzionale)…"
             autocomplete="off" oninput="window.xpixSearchRider('${esc(item.id)}',this.value)"
-            style="width:100%;box-sizing:border-box;padding:5px 8px;border:1px solid var(--border);border-radius:5px;background:var(--bg-primary);color:var(--text-primary);font-size:.78rem" />
-          <div id="xpixr-sr-${esc(item.id)}" style="display:none;position:absolute;left:0;right:0;top:100%;background:var(--bg-card);border:1px solid var(--border);border-radius:5px;max-height:160px;overflow-y:auto;z-index:5;box-shadow:0 6px 20px rgba(0,0,0,.25)"></div>
+            style="width:100%;box-sizing:border-box;padding:5px 8px;border:1px solid var(--border-subtle);border-radius:5px;background:var(--bg-primary);color:var(--text-primary);font-size:.78rem" />
+          <div id="xpixr-sr-${esc(item.id)}" style="display:none;position:absolute;left:0;right:0;top:100%;background:var(--bg-card);border:1px solid var(--border-subtle);border-radius:5px;max-height:160px;overflow-y:auto;z-index:5;box-shadow:0 6px 20px rgba(0,0,0,.25)"></div>
         </div>
         <div id="xpixr-chips-${esc(item.id)}" style="display:flex;flex-wrap:wrap;gap:5px;margin-top:5px"></div>
       </div>
@@ -12001,7 +12001,7 @@ function renderICQueue() {
         onerror="this.style.display='none'" />`).join('');
 
     return `
-    <div id="icq-${esc(item.id)}" style="background:var(--bg-card);border:1px solid var(--border);border-radius:8px;padding:12px;margin-bottom:10px">
+    <div id="icq-${esc(item.id)}" style="background:var(--bg-card);border:1px solid var(--border-subtle);border-radius:8px;padding:12px;margin-bottom:10px">
       <div style="font-weight:600;font-size:.85rem;margin-bottom:4px">${esc(item.name)}</div>
       <div style="font-size:.75rem;color:var(--text-muted);margin-bottom:8px">
         📅 ${esc(item.date||'')} &nbsp;•&nbsp; 🏷 ${esc(item.categoria||'')}
@@ -12014,7 +12014,7 @@ function renderICQueue() {
       </div>
       <div style="display:flex;gap:6px;flex-wrap:wrap;align-items:center;margin-bottom:6px">
         <select onchange="window.icSetGara('${esc(item.id)}',this.value)"
-          style="flex:1;min-width:180px;padding:5px 8px;border:1px solid var(--border);border-radius:5px;background:var(--bg-primary);color:var(--text-primary);font-size:.78rem">
+          style="flex:1;min-width:180px;padding:5px 8px;border:1px solid var(--border-subtle);border-radius:5px;background:var(--bg-primary);color:var(--text-primary);font-size:.78rem">
           <option value="">— Seleziona gara —</option>
           ${optionsHtml}
           <option value="__search__">🔍 Cerca altra gara…</option>
@@ -12022,8 +12022,8 @@ function renderICQueue() {
       </div>
       <div id="icq-search-${esc(item.id)}" style="display:none;margin-bottom:6px">
         <input type="text" placeholder="Cerca gara per nome…" oninput="window.icSearchGara('${esc(item.id)}',this.value)"
-          style="width:100%;box-sizing:border-box;padding:5px 8px;border:1px solid var(--border);border-radius:5px;background:var(--bg-primary);color:var(--text-primary);font-size:.78rem" />
-        <div id="icq-sr-${esc(item.id)}" style="background:var(--bg-card);border:1px solid var(--border);border-radius:5px;max-height:160px;overflow-y:auto;margin-top:2px"></div>
+          style="width:100%;box-sizing:border-box;padding:5px 8px;border:1px solid var(--border-subtle);border-radius:5px;background:var(--bg-primary);color:var(--text-primary);font-size:.78rem" />
+        <div id="icq-sr-${esc(item.id)}" style="background:var(--bg-card);border:1px solid var(--border-subtle);border-radius:5px;max-height:160px;overflow-y:auto;margin-top:2px"></div>
       </div>
       <label id="icq-both-${esc(item.id)}" style="display:${/_ES[12]_[MF]$/.test(bestGaraId)?'flex':'none'};align-items:center;gap:6px;font-size:.76rem;color:var(--text-secondary);margin-bottom:6px;cursor:pointer">
         <input type="checkbox" id="icq-both-cb-${esc(item.id)}" style="cursor:pointer" />
@@ -12034,8 +12034,8 @@ function renderICQueue() {
         <div style="position:relative">
           <input type="text" id="icr-input-${esc(item.id)}" placeholder="🏷 Corridore nella foto selezionata (opzionale)…"
             autocomplete="off" oninput="window.icSearchRider('${esc(item.id)}',this.value)"
-            style="width:100%;box-sizing:border-box;padding:5px 8px;border:1px solid var(--border);border-radius:5px;background:var(--bg-primary);color:var(--text-primary);font-size:.78rem" />
-          <div id="icr-sr-${esc(item.id)}" style="display:none;position:absolute;left:0;right:0;top:100%;background:var(--bg-card);border:1px solid var(--border);border-radius:5px;max-height:160px;overflow-y:auto;z-index:5;box-shadow:0 6px 20px rgba(0,0,0,.25)"></div>
+            style="width:100%;box-sizing:border-box;padding:5px 8px;border:1px solid var(--border-subtle);border-radius:5px;background:var(--bg-primary);color:var(--text-primary);font-size:.78rem" />
+          <div id="icr-sr-${esc(item.id)}" style="display:none;position:absolute;left:0;right:0;top:100%;background:var(--bg-card);border:1px solid var(--border-subtle);border-radius:5px;max-height:160px;overflow-y:auto;z-index:5;box-shadow:0 6px 20px rgba(0,0,0,.25)"></div>
         </div>
         <div id="icr-chips-${esc(item.id)}" style="display:flex;flex-wrap:wrap;gap:5px;margin-top:5px"></div>
       </div>
@@ -12222,14 +12222,14 @@ function renderAdminVideosAll() {
           <div style="font-size:.75rem;color:var(--text-muted)">${esc(v.channel||'')} &nbsp;•&nbsp; ${esc(v.published_at||'')}</div>
         </div>
         <div style="display:flex;flex-direction:column;gap:4px;flex-shrink:0">
-          <button onclick="window.adminVideoEdit('${esc(calId)}',${idx})" style="background:var(--bg-card);border:1px solid var(--border);padding:4px 10px;border-radius:4px;cursor:pointer;font-size:.75rem;color:var(--text-primary)">✏️ Modifica</button>
+          <button onclick="window.adminVideoEdit('${esc(calId)}',${idx})" style="background:var(--bg-card);border:1px solid var(--border-subtle);padding:4px 10px;border-radius:4px;cursor:pointer;font-size:.75rem;color:var(--text-primary)">✏️ Modifica</button>
           <button onclick="window.adminVideoDelete('${esc(calId)}',${idx})" style="background:transparent;border:1px solid #ef4444;padding:4px 10px;border-radius:4px;cursor:pointer;font-size:.75rem;color:#ef4444">🗑️ Elimina</button>
         </div>
       </div>`;
     }).join('');
 
     return `
-    <div class="admin-video-race-block" style="background:var(--bg-card);border:1px solid var(--border);border-radius:8px;margin-bottom:12px;overflow:hidden">
+    <div class="admin-video-race-block" style="background:var(--bg-card);border:1px solid var(--border-subtle);border-radius:8px;margin-bottom:12px;overflow:hidden">
       <div style="padding:10px 14px;background:var(--bg-elevated,rgba(128,128,128,.08));display:flex;align-items:center;justify-content:space-between;gap:8px">
         <div style="display:flex;align-items:center;flex-wrap:wrap;gap:4px">
           <a href="#/gara/${encodeURIComponent(calId)}" style="color:var(--accent);font-weight:700;font-size:.9rem;text-decoration:none">${esc(raceName)}</a>
@@ -12265,7 +12265,7 @@ window.adminVideoDelete = async (calId, idx) => {
 window.adminVideoEdit = (calId, idx) => {
   const v = _adminVideosData[calId]?.[idx];
   if (!v) return;
-  const inpS = 'width:100%;box-sizing:border-box;padding:8px 10px;border:1px solid var(--border);border-radius:6px;font-size:.875rem;background:var(--bg-card);color:var(--text-primary);margin-bottom:10px';
+  const inpS = 'width:100%;box-sizing:border-box;padding:8px 10px;border:1px solid var(--border-subtle);border-radius:6px;font-size:.875rem;background:var(--bg-card);color:var(--text-primary);margin-bottom:10px';
   const overlay = document.createElement('div');
   overlay.id = 'admin-video-edit-overlay';
   overlay.style.cssText = 'position:fixed;inset:0;background:rgba(0,0,0,.6);z-index:9999;display:flex;align-items:center;justify-content:center;padding:16px';
@@ -12286,7 +12286,7 @@ window.adminVideoEdit = (calId, idx) => {
         <button onclick="window._adminVideoEditSave('${esc(calId)}',${idx})"
           style="flex:1;padding:9px;background:var(--accent);color:#fff;border:none;border-radius:6px;font-weight:600;cursor:pointer">Salva</button>
         <button onclick="document.getElementById('admin-video-edit-overlay').remove()"
-          style="padding:9px 16px;background:transparent;border:1px solid var(--border);border-radius:6px;cursor:pointer;color:var(--text-muted)">Annulla</button>
+          style="padding:9px 16px;background:transparent;border:1px solid var(--border-subtle);border-radius:6px;cursor:pointer;color:var(--text-muted)">Annulla</button>
       </div>
     </div>`;
   document.body.appendChild(overlay);
@@ -15858,7 +15858,7 @@ async function renderMediaProfile(profileId) {
           </div>
           <div class="media-profile-stats">
             <span>${albums.length} album</span>
-            <span style="margin:0 8px;color:var(--border)">·</span>
+            <span style="margin:0 8px;color:var(--border-subtle)">·</span>
             <span>${stats?.total || 0} foto</span>
           </div>
         </div>
@@ -15887,7 +15887,7 @@ window._renderMediaAlbum = async function(albumId, profileId) {
     area.innerHTML = `
       <div style="margin-bottom:16px;display:flex;align-items:center;gap:10px">
         <button onclick="renderMediaProfile(${profileId})" style="background:none;border:none;color:var(--accent);cursor:pointer;font-size:.85rem;padding:0">← Tutti gli album</button>
-        <span style="color:var(--border)">|</span>
+        <span style="color:var(--border-subtle)">|</span>
         <span style="font-weight:700">${esc(album?.title || 'Album')}</span>
         ${album?.gara_id ? `<a href="#/gara/${encodeURIComponent(album.gara_id)}" style="font-size:.78rem;color:var(--text-muted)">→ ${esc(album.gara_id)}</a>` : ''}
       </div>
@@ -23522,7 +23522,7 @@ window.openMediaAlbumUpload = function(albumId) {
       </div>
       <p style="font-size:.8rem;color:var(--text-muted);margin:0 0 12px">Puoi selezionare più file contemporaneamente (max 20, 25 MB ciascuno). Formati: JPEG, PNG, WebP.</p>
       <input type="file" id="mau-files" multiple accept="image/jpeg,image/png,image/webp"
-        style="width:100%;box-sizing:border-box;padding:8px;border:2px dashed var(--border);border-radius:8px;cursor:pointer;margin-bottom:12px"/>
+        style="width:100%;box-sizing:border-box;padding:8px;border:2px dashed var(--border-subtle);border-radius:8px;cursor:pointer;margin-bottom:12px"/>
       <div id="mau-progress" style="display:none;margin-bottom:8px">
         <div style="background:var(--bg-elevated);border-radius:4px;height:6px;overflow:hidden">
           <div id="mau-bar" style="height:100%;background:var(--accent);width:0%;transition:width .3s"></div>
