@@ -1868,8 +1868,17 @@ async function _fetchYouTubeVideoMeta(url) {
 // proprio crawler ufficiale (usato da WhatsApp/Messenger per le anteprime
 // dei link), quindi funziona per qualunque video pubblico senza
 // autenticazione. Segue anche i redirect dei link "condividi" (facebook.com/share/v/...).
+//
+// Restituisce anche canonical_url: il player pubblico incorporabile
+// (plugins/video.php) NON accetta un link "condividi" (facebook.com/share/v/...,
+// verificato dal vivo — mostra "Video non disponibile" anche seguendo il
+// redirect da solo) né un link di una diretta ancora sotto /watch/live/?v=...
+// (stesso errore) — vuole l'URL canonico finale, ed è lo stesso identico
+// video sotto /watch/?v=... (diretta) o /pagina/videos/ID/ (video normale).
+// Quindi l'URL salvato per un video Facebook deve sempre essere quello
+// risolto qui, non quello incollato dall'admin.
 async function _fetchFacebookVideoMeta(url, _depth = 0) {
-  const empty = { title: null, channel: null, thumbnail: null };
+  const empty = { title: null, channel: null, thumbnail: null, canonical_url: null };
   if (_depth > 3) return empty;
   const https = require('https');
   try {
@@ -1895,7 +1904,9 @@ async function _fetchFacebookVideoMeta(url, _depth = 0) {
         || html.match(new RegExp(`<meta[^>]+content=["']([^"']*)["'][^>]+property=["']og:${prop}["']`, 'i'));
       return m ? m[1].replace(/&quot;/g, '"').replace(/&#0?39;/g, "'").replace(/&amp;/g, '&') : null;
     };
-    return { title: og('title'), channel: og('site_name'), thumbnail: og('image') };
+    // /watch/live/?v=ID non è accettato dal player, /watch/?v=ID (stesso ID) sì.
+    const canonical = (og('url') || url).replace(/\/watch\/live\/(\?|$)/i, '/watch/$1');
+    return { title: og('title'), channel: og('site_name'), thumbnail: og('image'), canonical_url: canonical };
   } catch { return empty; }
 }
 

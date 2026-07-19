@@ -58,6 +58,16 @@ function isFacebookVideoUrl(url) {
   return !!url && /^https?:\/\/(www\.|m\.|web\.)?(facebook\.com|fb\.watch)\//i.test(url);
 }
 
+// Il player pubblico di Facebook (plugins/video.php) NON incorpora un link
+// di una diretta ancora sotto /watch/live/?v=ID — mostra "Video non
+// disponibile" (verificato dal vivo) — ma lo stesso identico video sotto
+// /watch/?v=ID sì. Normalizzazione difensiva lato client per i video già
+// salvati con l'URL "sbagliato" prima di questo fix (il server ora salva
+// già la forma corretta per i nuovi inserimenti, vedi canonical_url).
+function fbEmbedUrl(url) {
+  return (url || '').replace(/\/watch\/live\/(\?|$)/i, '/watch/$1');
+}
+
 // Tipo di video: 'yt' (YouTube embed), 'fb' (Facebook embed), 'file' (file
 // caricato → <video>), 'link' (altro → apri in nuova scheda).
 function videoKind(url) {
@@ -77,7 +87,7 @@ function isPlayableVideo(url) { const k = videoKind(url); return k === 'yt' || k
 // (gratis, senza API key), i click attraversano l'iframe e arrivano
 // comunque al contenitore della card (stesso onclick di apertura modale).
 function fbThumbHtml(url) {
-  const src = `https://www.facebook.com/plugins/video.php?href=${encodeURIComponent(url)}&show_text=false`;
+  const src = `https://www.facebook.com/plugins/video.php?href=${encodeURIComponent(fbEmbedUrl(url))}&show_text=false`;
   return `<iframe src="${esc(src)}" style="width:100%;height:100%;border:none;pointer-events:none" scrolling="no" frameborder="0" tabindex="-1"></iframe>`;
 }
 
@@ -107,11 +117,13 @@ window.openVideoFileModal = (url, title) => {
 window.openFacebookVideoModal = (url, title) => {
   const overlay = document.createElement('div');
   overlay.className = 'video-modal-overlay';
-  const src = `https://www.facebook.com/plugins/video.php?href=${encodeURIComponent(url)}&show_text=false&autoplay=true`;
+  const src = `https://www.facebook.com/plugins/video.php?href=${encodeURIComponent(fbEmbedUrl(url))}&show_text=false&autoplay=true`;
   overlay.innerHTML = `
     <div class="video-modal-box">
       <button class="video-modal-close" onclick="this.closest('.video-modal-overlay').remove()">✕</button>
-      <div class="video-modal-title">${esc(title || 'Video')}</div>
+      <div class="video-modal-title">${esc(title || 'Video')}
+        <a href="${esc(fbEmbedUrl(url))}" target="_blank" rel="noopener" style="float:right;color:#60a5fa;font-size:.78rem;font-weight:400">Apri su Facebook ↗</a>
+      </div>
       <div class="video-modal-player">
         <iframe src="${esc(src)}" frameborder="0" allowfullscreen
                 allow="autoplay; encrypted-media; picture-in-picture; web-share"
@@ -12379,6 +12391,11 @@ window.adminUrlOembed = (url) => {
         const d = await apiCall(`/fb-video-meta?url=${encodeURIComponent(url)}`);
         if (titleEl   && !titleEl._manual && d.title)   titleEl.value   = d.title;
         if (channelEl && !channelEl._manual && d.channel) channelEl.value = d.channel;
+        // I link "condividi" (/share/v/...) e quelli di una diretta ancora
+        // sotto /watch/live/?v=... non si incorporano nel player pubblico —
+        // sostituisci l'URL incollato con quello canonico risolto dal server,
+        // così il video salvato funziona davvero (verificato dal vivo).
+        if (d.canonical_url) { const urlEl = document.getElementById('avf-url'); if (urlEl) urlEl.value = d.canonical_url; }
       }
     } catch { /* metadati non disponibili */ }
   }, 600);
@@ -17084,6 +17101,10 @@ async function renderGara(gara_id) {
             if (d.title   && !titleEl._manual)   { titleEl.value   = d.title;   document.getElementById('vurl-title-hint').style.display   = 'none'; }
             if (d.channel && !channelEl._manual) { channelEl.value = d.channel; document.getElementById('vurl-channel-hint').style.display = 'none'; }
             if (d.thumbnail) { thumb.src = d.thumbnail; preview.style.display = 'block'; }
+            // Link "condividi" e dirette /watch/live/?v=... non si incorporano
+            // nel player pubblico: sostituisci con l'URL canonico risolto dal
+            // server, verificato dal vivo come l'unico che funziona davvero.
+            if (d.canonical_url) this.value = d.canonical_url;
           }
         } catch { /* metadati non disponibili, mantieni valori esistenti */ }
       }, 600);
@@ -20676,6 +20697,9 @@ window.openMediaAddForm = () => {
           const d = await apiCall(`/fb-video-meta?url=${encodeURIComponent(url)}`);
           if (d.title && titleEl && !titleEl.value) titleEl.value = d.title;
           if (d.channel && channelEl && !channelEl.value) channelEl.value = d.channel;
+          // Link "condividi"/dirette /watch/live/?v=... non si incorporano nel
+          // player pubblico: sostituisci con l'URL canonico risolto dal server.
+          if (d.canonical_url) this.value = d.canonical_url;
         }
       } catch {}
     }, 600);
