@@ -15141,12 +15141,14 @@ function openPhotoLightbox(src, opts = {}) {
   const user = authUser();
   const isAdmin = user?.role === 'admin';
 
-  // ── Crediti / didascalia SOVRAPPOSTI alla foto — gradiente invece di banda
-  // piena (occupa meno spazio percepito, sfuma nella foto invece di
-  // "mangiarla") e testo su una riga sola con ellissi se troppo lungo,
-  // così su schermi larghi (didascalie lunghe, foto più basse) non wrappa
-  // su più righe rubando altezza alla foto. ──
-  const credit = [opts.caption, opts.credit ? '📷 ' + opts.credit : ''].filter(Boolean).join('  ·  ');
+  // ── Solo il credit fotografo SOVRAPPOSTO alla foto — gradiente invece di
+  // banda piena (occupa meno spazio percepito, sfuma nella foto invece di
+  // "mangiarla") e testo su una riga sola con ellissi se troppo lungo. La
+  // didascalia (opts.caption) non si mostra più qui: era superflua a schermo
+  // e non contribuiva comunque alla SEO (quella passa dall'attributo alt
+  // dell'immagine, impostato al momento della creazione dell'<img>, non da
+  // qui).
+  const credit = opts.credit ? '📷 ' + opts.credit : '';
   const creditHtml = credit
     ? `<div style="position:absolute;bottom:0;left:0;right:0;background:linear-gradient(to top,rgba(0,0,0,.75) 0%,rgba(0,0,0,.45) 60%,transparent 100%);color:#fff;padding:22px 16px 8px;font-size:.8rem;text-align:center;pointer-events:none;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;border-radius:0 0 var(--r-md) var(--r-md)">${esc(credit)}</div>`
     : '';
@@ -16023,7 +16025,7 @@ window._renderMediaAlbum = async function(albumId, profileId) {
             const ttl = (p.caption || album?.title || 'Foto gara').replace(/'/g,'');
             const gid = (album?.gara_id || '').replace(/'/g,'');
             return `<div class="media-photo-item">
-              <img src="${esc(src)}" loading="lazy" alt="${esc(p.caption||'')}" onclick="window.openPhotoLightbox('${esc(src)}')" style="cursor:zoom-in"/>
+              <img src="${esc(src)}" loading="lazy" alt="${esc(ttl)}" onclick="window.openPhotoLightbox('${esc(src)}')" style="cursor:zoom-in"/>
               <button id="collect-btn-${uid}" class="collect-btn ${inColl?'collect-btn--active':''}" title="${inColl?'Nella tua raccolta':'Salva nella raccolta'}"
                 style="position:absolute;top:6px;right:6px;z-index:2"
                 onclick="event.stopPropagation();window.toggleMediaCollect('${uid}','foto','${esc(src)}','${esc(ttl)}','${esc(gid)}')">${inColl?'✓':'＋'}</button>
@@ -16145,6 +16147,19 @@ async function renderGara(gara_id) {
 
   const name = results[0]?.nome_gara || calEntry?.nome || gara_id;
   const data = results[0]?.data || calEntry?.data || '';
+
+  // Testo alt delle foto della gara: nome gara + podio, invece del generico
+  // "Foto gara" — le foto sono spesso la prima cosa indicizzata da Google
+  // Immagini per una ricerca con nome gara/atleta, un alt descrittivo aiuta
+  // la SEO molto più di un placeholder identico su migliaia di foto.
+  const _photoAltBase = (() => {
+    const podio = (results || [])
+      .filter(r => r.posizione >= 1 && r.posizione <= 3)
+      .sort((a, b) => a.posizione - b.posizione)
+      .map(r => `${r.posizione}° ${r.cognome} ${r.nome}`)
+      .join(', ');
+    return podio ? `${name} — ${podio}` : String(name);
+  })();
   const cat  = results[0]?.categoria || calEntry?.categoria || '';
   // Usa moltiplicatore già calcolato dal scraper se disponibile
   const mult = results[0]?.moltiplicatore ||
@@ -16432,7 +16447,7 @@ async function renderGara(gara_id) {
     const _heroTagNames = featuredPhoto ? String(featuredPhoto.atleta_ids||'').split(',').map(s=>s.trim()).filter(Boolean).map(id=>{const a=globalData?.athletes?.[id]; return a?`<a href="#/atleta/${esc(id)}" style="color:#fff;text-decoration:underline" onclick="event.stopPropagation()">${esc(a.cognome)} ${esc(a.nome)}</a>`:'';}).filter(Boolean).join(', ') : '';
     _heroPhotoEl = featuredPhoto
       ? `<div class="gara-media-half gara-media-photo" id="gal-photo-${featuredPhoto.id}" data-caption="${esc(featuredPhoto.caption||'')}" data-photographer="${esc(featuredPhoto.photographer||'')}" data-atleta-ids="${esc(featuredPhoto.atleta_ids||'')}" onclick="window.openPhotoLightbox('${PHOTOS_BASE}/photos/${esc(featuredPhoto.filename)}',{photoId:${featuredPhoto.id},garaId:'${esc(featuredPhoto._gkey||primaryGaraId)}',current:'${esc(featuredPhoto.atleta_ids||'')}',caption:'${esc((featuredPhoto.caption||'').replace(/'/g,''))}',credit:'${esc(((featuredPhoto.photographer||featuredPhoto.display_name)||'').replace(/'/g,''))}'})" style="cursor:zoom-in">
-           <img id="gara-hero-img" src="${PHOTOS_BASE}/photos/${esc(featuredPhoto.filename)}" alt="${esc(featuredPhoto.caption||'Foto gara')}" loading="lazy"/>
+           <img id="gara-hero-img" src="${PHOTOS_BASE}/photos/${esc(featuredPhoto.filename)}" alt="${esc(featuredPhoto.caption || _photoAltBase)}" loading="lazy"/>
            <div class="gara-photo-hint">🔍 Clicca per la foto intera</div>
            ${_heroCredit ? `<div style="position:absolute;bottom:0;left:0;right:0;background:linear-gradient(transparent,rgba(0,0,0,.75));color:#fff;font-size:0.7rem;padding:14px 10px 6px;line-height:1.3">${esc(_heroCredit)}${_heroTagNames ? `<div style="margin-top:3px">🏷 ${_heroTagNames}</div>` : ''}</div>` : (_heroTagNames ? `<div style="position:absolute;bottom:0;left:0;right:0;background:linear-gradient(transparent,rgba(0,0,0,.75));color:#fff;font-size:0.7rem;padding:14px 10px 6px">🏷 ${_heroTagNames}</div>` : '')}
            ${_user && !_isAdmin ? `<button onclick="event.stopPropagation();window.selfTagPhoto(${featuredPhoto.id})" title="Segnala che sei tu in questa foto" style="position:absolute;bottom:6px;right:6px;z-index:10;background:rgba(37,99,235,.92);color:#fff;border:none;padding:4px 9px;border-radius:4px;font-size:.7rem;cursor:pointer">🏷 Sono io</button>` : ''}
@@ -16449,7 +16464,7 @@ async function renderGara(gara_id) {
             data-caption="${esc(p.caption||'')}"
             data-photographer="${esc(p.photographer||'')}"
             data-atleta-ids="${esc(p.atleta_ids||'')}">
-            <img src="${PHOTOS_BASE}/photos/${esc(p.filename)}" alt="${esc(p.caption||'Foto gara')}" loading="lazy" onclick="window.openPhotoLightbox('${PHOTOS_BASE}/photos/${esc(p.filename)}',{photoId:${p.id},garaId:'${esc(p._gkey||primaryGaraId)}',current:'${esc(p.atleta_ids||'')}',caption:'${esc((p.caption||'').replace(/'/g,''))}',credit:'${esc(((p.photographer||p.display_name)||'').replace(/'/g,''))}'})" style="cursor:zoom-in"/>
+            <img src="${PHOTOS_BASE}/photos/${esc(p.filename)}" alt="${esc(p.caption || _photoAltBase)}" loading="lazy" onclick="window.openPhotoLightbox('${PHOTOS_BASE}/photos/${esc(p.filename)}',{photoId:${p.id},garaId:'${esc(p._gkey||primaryGaraId)}',current:'${esc(p.atleta_ids||'')}',caption:'${esc((p.caption||'').replace(/'/g,''))}',credit:'${esc(((p.photographer||p.display_name)||'').replace(/'/g,''))}'})" style="cursor:zoom-in"/>
             <div class="race-gallery-caption">${[p.caption, p.photographer ? '📷 '+p.photographer : '', p.display_name].filter(Boolean).join(' — ')}</div>
             ${(() => { const nm = String(p.atleta_ids||'').split(',').map(s=>s.trim()).filter(Boolean).map(id=>{const a=globalData?.athletes?.[id]; return a?`<a href="#/atleta/${esc(id)}" style="color:#fff;text-decoration:underline" onclick="event.stopPropagation()">${esc(a.cognome)} ${esc(a.nome)}</a>`:'';}).filter(Boolean).join(', '); return nm ? `<div style="position:absolute;bottom:4px;left:6px;right:6px;font-size:.62rem;color:#fff;background:rgba(0,0,0,.5);padding:2px 6px;border-radius:4px;z-index:8">🏷 ${nm}</div>` : ''; })()}
             ${_user && !_isAdmin ? `<button onclick="event.stopPropagation();window.selfTagPhoto(${p.id})" title="Segnala che sei tu in questa foto" style="position:absolute;bottom:4px;right:4px;z-index:10;background:rgba(37,99,235,.92);color:#fff;border:none;padding:3px 8px;border-radius:4px;font-size:.65rem;cursor:pointer;white-space:nowrap">🏷 Sono io</button>` : ''}
