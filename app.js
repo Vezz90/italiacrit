@@ -3047,7 +3047,7 @@ document.addEventListener('DOMContentLoaded', async () => {
   _loadFollows();
   _initAiWidget();
   checkLiveNowBanner();
-  setInterval(checkLiveNowBanner, 120000); // ricontrolla ogni 2 minuti
+  setInterval(checkLiveNowBanner, 60000); // ricontrolla ogni minuto (anche per aggiornare/chiudere la vista doppia appena una diretta finisce)
 
   // Logo click → cinematic entry (navTo, non location.hash diretto: stesso
   // motivo di goHome sopra, altrimenti da un URL pulito produce "/xxx#/")
@@ -3098,6 +3098,7 @@ async function checkLiveNowBanner() {
     const r = await fetch(`${API_BASE}/live-now`);
     if (!r.ok) return;
     const { live, liveSecond, upcoming } = await r.json();
+    _syncMultiLiveView(live, liveSecond);
     if (live) {
       let dismissed = false;
       try { dismissed = sessionStorage.getItem('live-dismissed-' + live.video_id) === '1'; } catch {}
@@ -3147,17 +3148,35 @@ function showLiveBanner(live, liveSecond) {
 }
 
 // Vista affiancata per due dirette in contemporanea (fino a 2, non di più —
-// oltre diventa illeggibile specie su mobile). Semplice overlay con due
-// player YouTube incorporati uno accanto all'altro (uno sopra l'altro su
-// schermi stretti, via CSS).
+// oltre diventa illeggibile specie su mobile). Overlay con due player
+// YouTube incorporati uno accanto all'altro (uno sopra l'altro su schermi
+// stretti, via CSS). Ogni riquadro ha un pulsante per metterlo in primo
+// piano (più grande) e uno per chiuderlo (tenendo solo l'altro).
+// window._multiLiveState tiene traccia di quali due video sono mostrati,
+// così checkLiveNowBanner() può capire, a ogni ricontrollo, se una delle
+// due dirette è nel frattempo finita (vedi _syncMultiLiveView).
 window.openMultiLiveView = function(live1, live2) {
+  document.getElementById('multi-live-view')?.remove();
+  window._multiLiveState = { live1, live2, focus: null };
+  _renderMultiLiveView();
+};
+
+function _renderMultiLiveView() {
+  const st = window._multiLiveState;
+  if (!st) return;
   document.getElementById('multi-live-view')?.remove();
   const overlay = document.createElement('div');
   overlay.id = 'multi-live-view';
-  overlay.className = 'multi-live-overlay';
-  const pane = (live) => `
+  overlay.className = 'multi-live-overlay' + (st.focus ? ` multi-live-focus-${st.focus}` : '');
+  const pane = (live, which) => `
     <div class="multi-live-pane">
-      <div class="multi-live-pane-title">${esc(live.title)}${live.channel ? ' · ' + esc(live.channel) : ''}</div>
+      <div class="multi-live-pane-title">
+        <span>${esc(live.title)}${live.channel ? ' · ' + esc(live.channel) : ''}</span>
+        <div class="multi-live-pane-actions">
+          <button onclick="window._focusMultiLivePane('${which}')" title="Metti in primo piano">${st.focus === which ? '▣' : '⤢'}</button>
+          <button onclick="window._dropMultiLivePane('${which}')" title="Chiudi questa">✕</button>
+        </div>
+      </div>
       <div class="multi-live-pane-frame">
         <iframe src="https://www.youtube.com/embed/${esc(live.video_id)}?autoplay=1" frameborder="0" allow="autoplay; encrypted-media; picture-in-picture" allowfullscreen></iframe>
       </div>
@@ -3165,12 +3184,53 @@ window.openMultiLiveView = function(live1, live2) {
   overlay.innerHTML = `
     <div class="multi-live-hdr">
       <span>🖥 2 dirette in contemporanea</span>
-      <button onclick="document.getElementById('multi-live-view')?.remove()" aria-label="Chiudi">✕</button>
+      <button onclick="window._closeMultiLiveView()" aria-label="Chiudi">✕</button>
     </div>
-    <div class="multi-live-grid">${pane(live1)}${pane(live2)}</div>
+    <div class="multi-live-grid">${pane(st.live1, '1')}${pane(st.live2, '2')}</div>
   `;
   document.body.appendChild(overlay);
+}
+
+window._focusMultiLivePane = (which) => {
+  const st = window._multiLiveState;
+  if (!st) return;
+  st.focus = st.focus === which ? null : which; // ricliccando si torna a metà/metà
+  _renderMultiLiveView();
 };
+
+// Chiude UN riquadro tenendo l'altro: non ha senso restare in "vista doppia"
+// con un solo video, quindi si passa al player unico a schermo intero.
+window._dropMultiLivePane = (which) => {
+  const st = window._multiLiveState;
+  if (!st) return;
+  const remaining = which === '1' ? st.live2 : st.live1;
+  document.getElementById('multi-live-view')?.remove();
+  window._multiLiveState = null;
+  if (remaining) window.openLivePlayer(remaining.video_id, remaining.title, remaining.gara_id);
+};
+
+window._closeMultiLiveView = () => {
+  document.getElementById('multi-live-view')?.remove();
+  window._multiLiveState = null;
+};
+
+// Chiamata a ogni ricontrollo di checkLiveNowBanner(): se la vista doppia è
+// aperta e nel frattempo una delle due dirette è finita su YouTube, la
+// vista doppia non ha più senso — si passa al player singolo (a schermo
+// intero) di quella ancora attiva, invece di lasciare per sempre "guarda
+// entrambe" con un riquadro ormai fermo/concluso.
+function _syncMultiLiveView(live, liveSecond) {
+  const st = window._multiLiveState;
+  if (!st || !document.getElementById('multi-live-view')) return;
+  const currentIds = new Set([live?.video_id, liveSecond?.video_id].filter(Boolean));
+  const stillLive1 = st.live1 && currentIds.has(st.live1.video_id);
+  const stillLive2 = st.live2 && currentIds.has(st.live2.video_id);
+  if (stillLive1 && stillLive2) return; // entrambe ancora attive, nessuna modifica
+  document.getElementById('multi-live-view')?.remove();
+  window._multiLiveState = null;
+  const remaining = stillLive1 ? st.live1 : (stillLive2 ? st.live2 : null);
+  if (remaining) window.openLivePlayer(remaining.video_id, remaining.title, remaining.gara_id);
+}
 
 // Diretta programmata per oggi ma non ancora iniziata: stesso banner, con
 // countdown live (aggiornato ogni secondo) fino all'orario di inizio, così

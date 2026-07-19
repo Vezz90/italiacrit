@@ -1303,14 +1303,30 @@ select.yt-chip-select {
   flex: 1; display: flex; flex-direction: column; min-width: 0;
 }
 .multi-live-pane-title {
+  display: flex; align-items: center; justify-content: space-between; gap: 8px;
   color: rgba(255,255,255,.8); font-size: .78rem; padding: 8px 12px;
-  white-space: nowrap; overflow: hidden; text-overflow: ellipsis; flex-shrink: 0;
+  flex-shrink: 0;
+}
+.multi-live-pane-title > span {
+  white-space: nowrap; overflow: hidden; text-overflow: ellipsis; min-width: 0;
+}
+.multi-live-pane-actions { display: flex; align-items: center; gap: 4px; flex-shrink: 0; }
+.multi-live-pane-actions button {
+  background: rgba(255,255,255,.14); border: none; color: #fff;
+  width: 24px; height: 24px; border-radius: 50%; cursor: pointer; font-size: .74rem;
 }
 .multi-live-pane-frame { flex: 1; min-height: 0; }
 .multi-live-pane-frame iframe { width: 100%; height: 100%; border: none; display: block; }
 @media (max-width: 768px) {
   .multi-live-grid { flex-direction: column; }
 }
+/* Un riquadro "in primo piano" (pulsante ⤢): occupa più spazio, l'altro
+   resta visibile ma più piccolo — invece di nasconderlo del tutto, così si
+   può sempre tenere d'occhio entrambe le dirette. */
+.multi-live-focus-1 .multi-live-pane:nth-child(1),
+.multi-live-focus-2 .multi-live-pane:nth-child(2) { flex: 4; }
+.multi-live-focus-1 .multi-live-pane:nth-child(2),
+.multi-live-focus-2 .multi-live-pane:nth-child(1) { flex: 1; }
 
 /* Player delle dirette, due stati sullo stesso elemento #live-player
    (appeso a document.body, fuori da #app — vedi window.openLivePlayer):
