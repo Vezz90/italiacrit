@@ -3127,6 +3127,7 @@ function showLiveBanner(live, liveSecond) {
   el.className = 'live-now-banner';
   el.dataset.videoId = live.video_id;
   el.dataset.garaId  = live.gara_id;
+  el.dataset.title   = live.title || '';
   // Due dirette in contemporanea: invece del solito "Guarda", un pulsante
   // che apre entrambe affiancate (vedi window.openMultiLiveView) — la
   // banner resta la stessa per non duplicare l'interfaccia.
@@ -3185,6 +3186,7 @@ function showUpcomingBanner(upcoming) {
   el.className = 'live-now-banner live-now-banner-upcoming';
   el.dataset.videoId = upcoming.video_id;
   el.dataset.garaId  = upcoming.gara_id;
+  el.dataset.title   = upcoming.title || '';
   const targetMs = new Date(upcoming.scheduled_start).getTime();
   const render = () => {
     const diff = targetMs - Date.now();
@@ -3195,7 +3197,7 @@ function showUpcomingBanner(upcoming) {
       <div class="live-now-banner-inner" onclick="window._goToLiveBanner()">
         <span class="live-now-dot"></span>
         <span class="live-now-text"><strong>DIRETTA TRA ${countdownStr}</strong> — ${esc(upcoming.title)}${upcoming.channel ? ' · ' + esc(upcoming.channel) : ''}</span>
-        <span class="live-now-cta">Vai alla gara ▸</span>
+        <span class="live-now-cta">Guarda ▸</span>
       </div>
       <button class="live-now-close" onclick="window._dismissLiveBanner(event)" aria-label="Chiudi">✕</button>
     `;
@@ -3215,13 +3217,17 @@ function hideLiveBanner() {
   if (el) el.style.display = 'none';
 }
 
+// Click sul banner: apre subito il player della diretta (anche se è ancora
+// nel conto alla rovescia — l'embed YouTube stesso mostra il countdown)
+// invece di portare alla pagina della gara.
 window._goToLiveBanner = () => {
   const el = document.getElementById('live-now-banner');
-  let gid = el?.dataset.garaId;
-  // Chiave sintetica "calId::data tappa": la gara reale non esiste ancora,
-  // rimanda alla pagina del calendario (calId), l'unica esistente finora.
+  if (!el) return;
+  const videoId = el.dataset.videoId;
+  const title = el.dataset.title;
+  let gid = el.dataset.garaId;
   if (gid && gid.includes('::')) gid = gid.split('::')[0];
-  if (gid) window.location.hash = '#/gara/' + gid;
+  window.openLivePlayer(videoId, title, gid);
 };
 
 window._dismissLiveBanner = (e) => {

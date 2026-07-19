@@ -340,7 +340,11 @@ async function fetchVideosInfoBatch(videoIds, apiKey) {
         out[item.id] = {
           duration: _parseIsoDuration(item.contentDetails?.duration),
           isLiveContent: !!lsd,
-          isLiveNow: !!(lsd && !lsd.actualEndTime),
+          // Richiede actualStartTime: una diretta programmata (premiere/countdown)
+          // ha liveStreamingDetails con SOLO scheduledStartTime finché non parte
+          // davvero — senza questo controllo isLiveNow risultava vero durante il
+          // conto alla rovescia, ben prima dell'inizio reale della trasmissione.
+          isLiveNow: !!(lsd && lsd.actualStartTime && !lsd.actualEndTime),
           publishedAt: item.snippet?.publishedAt ? item.snippet.publishedAt.slice(0, 10) : null,
           channelId: item.snippet?.channelId || null,
           // Orario di inizio programmato per una diretta non ancora iniziata
