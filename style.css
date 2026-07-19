@@ -1356,8 +1356,19 @@ select.yt-chip-select {
 #live-player.live-player-mini .live-player-box { width: 280px; box-shadow: 0 8px 28px rgba(0,0,0,.45); }
 #live-player.live-player-mini .live-player-title { font-size: .74rem; }
 #live-player.live-player-mini .live-player-min { display: none; }
-#live-player.live-player-mini .live-player-expand,
+/* Il link "vai alla gara" naviga via — in stato ridotto lo scopo del click
+   ovunque sul riquadro è tornare a schermo intero, non lasciare il player;
+   resta disponibile solo a schermo intero. */
+#live-player.live-player-mini .live-player-expand { display: none; }
 #live-player.live-player-mini .live-player-close { width: 22px; height: 22px; font-size: .74rem; }
+/* L'iframe di YouTube è cross-origin: i click al suo interno non risalgono
+   mai al listener sul contenitore #live-player, quindi cliccare sul video
+   (la maggior parte del riquadro ridotto) non riapriva mai il player a
+   schermo intero. Disattivando i pointer-events sull'iframe SOLO in stato
+   ridotto, il click attraversa l'iframe e arriva al contenitore sottostante,
+   che lo gestisce per il ripristino — in stato ridotto non serve comunque
+   poter interagire con i controlli nativi di YouTube. */
+#live-player.live-player-mini .live-player-frame iframe { pointer-events: none; }
 @media (max-width: 640px) {
   #live-player.live-player-mini .live-player-box { width: 46vw; }
   #live-player.live-player-mini { right: 8px; bottom: 8px; }
