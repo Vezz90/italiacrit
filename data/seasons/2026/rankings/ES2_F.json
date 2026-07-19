@@ -53,10 +53,10 @@
     "nome": "MYA",
     "team_id": "HG_CYCLING_TEAM",
     "team_nome": "HG CYCLING TEAM",
-    "punti": 160,
-    "vittorie": 5,
-    "gare": 14,
-    "p1": 5,
+    "punti": 175,
+    "vittorie": 6,
+    "gare": 15,
+    "p1": 6,
     "p2": 5,
     "p3": 0,
     "pout": 4,
@@ -144,6 +144,22 @@
     "trend": 0
   },
   {
+    "atleta_id": "CECCARELLI_ILARY",
+    "cognome": "CECCARELLI",
+    "nome": "ILARY",
+    "team_id": "C_C_APPENNINICO_1907",
+    "team_nome": "C.C. APPENNINICO 1907",
+    "punti": 84,
+    "vittorie": 1,
+    "gare": 5,
+    "p1": 1,
+    "p2": 2,
+    "p3": 1,
+    "pout": 1,
+    "pos": 10,
+    "trend": 1
+  },
+  {
     "atleta_id": "CLEMENTE_GINEVRA",
     "cognome": "CLEMENTE",
     "nome": "GINEVRA",
@@ -156,24 +172,8 @@
     "p2": 0,
     "p3": 2,
     "pout": 8,
-    "pos": 10,
-    "trend": 0
-  },
-  {
-    "atleta_id": "CECCARELLI_ILARY",
-    "cognome": "CECCARELLI",
-    "nome": "ILARY",
-    "team_id": "TOSCANA",
-    "team_nome": "TOSCANA",
-    "punti": 72,
-    "vittorie": 1,
-    "gare": 4,
-    "p1": 1,
-    "p2": 1,
-    "p3": 1,
-    "pout": 1,
     "pos": 11,
-    "trend": 0
+    "trend": -1
   },
   {
     "atleta_id": "PELLEGRINI_GIULIA",
@@ -237,7 +237,7 @@
     "p3": 2,
     "pout": 7,
     "pos": 15,
-    "trend": 6
+    "trend": 0
   },
   {
     "atleta_id": "ANDREOLI_ALICE",
@@ -253,7 +253,7 @@
     "p3": 1,
     "pout": 8,
     "pos": 16,
-    "trend": -1
+    "trend": 0
   },
   {
     "atleta_id": "RENZULLI_GIULIA",
@@ -269,7 +269,7 @@
     "p3": 2,
     "pout": 5,
     "pos": 17,
-    "trend": -1
+    "trend": 0
   },
   {
     "atleta_id": "CONSOLI_FRANCESCA",
@@ -285,7 +285,7 @@
     "p3": 2,
     "pout": 9,
     "pos": 18,
-    "trend": -1
+    "trend": 0
   },
   {
     "atleta_id": "CRESTANI_ELISA",
@@ -301,7 +301,7 @@
     "p3": 0,
     "pout": 6,
     "pos": 19,
-    "trend": -1
+    "trend": 0
   },
   {
     "atleta_id": "VETTORELLO_GAIA",
@@ -317,7 +317,7 @@
     "p3": 0,
     "pout": 9,
     "pos": 20,
-    "trend": -1
+    "trend": 0
   },
   {
     "atleta_id": "AFFINI_GIULIA",
@@ -333,7 +333,7 @@
     "p3": 1,
     "pout": 4,
     "pos": 21,
-    "trend": -1
+    "trend": 0
   },
   {
     "atleta_id": "FACCENDA_ELISA",
@@ -477,7 +477,7 @@
     "p3": 0,
     "pout": 6,
     "pos": 30,
-    "trend": 2
+    "trend": 0
   },
   {
     "atleta_id": "RAMPON_SOFIA",
@@ -493,7 +493,7 @@
     "p3": 2,
     "pout": 4,
     "pos": 31,
-    "trend": -1
+    "trend": 0
   },
   {
     "atleta_id": "PELLEGRINI_LETIZIA",
@@ -509,7 +509,7 @@
     "p3": 1,
     "pout": 3,
     "pos": 32,
-    "trend": -1
+    "trend": 0
   },
   {
     "atleta_id": "DONATI_MATILDE",
@@ -528,6 +528,22 @@
     "trend": 0
   },
   {
+    "atleta_id": "POCHI_GAIA",
+    "cognome": "POCHI",
+    "nome": "GAIA",
+    "team_id": "HG_CYCLING_TEAM",
+    "team_nome": "HG CYCLING TEAM",
+    "punti": 22,
+    "vittorie": 0,
+    "gare": 4,
+    "p1": 0,
+    "p2": 0,
+    "p3": 1,
+    "pout": 3,
+    "pos": 34,
+    "trend": 8
+  },
+  {
     "atleta_id": "BORGATO_NOEMI",
     "cognome": "BORGATO",
     "nome": "NOEMI",
@@ -540,8 +556,8 @@
     "p2": 1,
     "p3": 0,
     "pout": 2,
-    "pos": 34,
-    "trend": 13
+    "pos": 35,
+    "trend": -1
   },
   {
     "atleta_id": "PLAINO_MELISSA",
@@ -556,7 +572,7 @@
     "p2": 0,
     "p3": 0,
     "pout": 5,
-    "pos": 35,
+    "pos": 36,
     "trend": -1
   },
   {
@@ -572,8 +588,24 @@
     "p2": 0,
     "p3": 0,
     "pout": 4,
-    "pos": 36,
-    "trend": 0
+    "pos": 37,
+    "trend": -1
+  },
+  {
+    "atleta_id": "CARUCCI_YLENIA",
+    "cognome": "CARUCCI",
+    "nome": "YLENIA",
+    "team_id": "HG_CYCLING_TEAM",
+    "team_nome": "HG CYCLING TEAM",
+    "punti": 17,
+    "vittorie": 0,
+    "gare": 2,
+    "p1": 0,
+    "p2": 1,
+    "p3": 0,
+    "pout": 1,
+    "pos": 38,
+    "trend": 5
   },
   {
     "atleta_id": "PESSINA_ELENA",
@@ -588,8 +620,24 @@
     "p2": 0,
     "p3": 0,
     "pout": 4,
-    "pos": 37,
+    "pos": 39,
     "trend": -2
+  },
+  {
+    "atleta_id": "BULDORINI_ISABEL",
+    "cognome": "BULDORINI",
+    "nome": "ISABEL",
+    "team_id": "BICIFESTIVAL",
+    "team_nome": "BICIFESTIVAL",
+    "punti": 16,
+    "vittorie": 0,
+    "gare": 4,
+    "p1": 0,
+    "p2": 0,
+    "p3": 0,
+    "pout": 4,
+    "pos": 40,
+    "trend": 9
   },
   {
     "atleta_id": "D_APOLLONIO_ALESSIA",
@@ -604,8 +652,8 @@
     "p2": 0,
     "p3": 0,
     "pout": 5,
-    "pos": 38,
-    "trend": -1
+    "pos": 41,
+    "trend": -3
   },
   {
     "atleta_id": "BREDA_ILARIA",
@@ -620,8 +668,8 @@
     "p2": 0,
     "p3": 0,
     "pout": 3,
-    "pos": 39,
-    "trend": -1
+    "pos": 42,
+    "trend": -3
   },
   {
     "atleta_id": "CETTOLIN_GIOIA",
@@ -636,8 +684,8 @@
     "p2": 0,
     "p3": 0,
     "pout": 2,
-    "pos": 40,
-    "trend": -1
+    "pos": 43,
+    "trend": -3
   },
   {
     "atleta_id": "BROLLO_VALENTINA",
@@ -652,40 +700,8 @@
     "p2": 0,
     "p3": 0,
     "pout": 3,
-    "pos": 41,
-    "trend": -1
-  },
-  {
-    "atleta_id": "POCHI_GAIA",
-    "cognome": "POCHI",
-    "nome": "GAIA",
-    "team_id": "HG_CYCLING_TEAM",
-    "team_nome": "HG CYCLING TEAM",
-    "punti": 12,
-    "vittorie": 0,
-    "gare": 3,
-    "p1": 0,
-    "p2": 0,
-    "p3": 0,
-    "pout": 3,
-    "pos": 42,
-    "trend": -1
-  },
-  {
-    "atleta_id": "CARUCCI_YLENIA",
-    "cognome": "CARUCCI",
-    "nome": "YLENIA",
-    "team_id": "HG_CYCLING_TEAM",
-    "team_nome": "HG CYCLING TEAM",
-    "punti": 12,
-    "vittorie": 0,
-    "gare": 1,
-    "p1": 0,
-    "p2": 1,
-    "p3": 0,
-    "pout": 0,
-    "pos": 43,
-    "trend": -1
+    "pos": 44,
+    "trend": -3
   },
   {
     "atleta_id": "DALLA_VECCHIA_ANGELICA",
@@ -700,7 +716,7 @@
     "p2": 1,
     "p3": 0,
     "pout": 0,
-    "pos": 44,
+    "pos": 45,
     "trend": -1
   },
   {
@@ -716,7 +732,7 @@
     "p2": 0,
     "p3": 0,
     "pout": 5,
-    "pos": 45,
+    "pos": 46,
     "trend": -1
   },
   {
@@ -732,8 +748,24 @@
     "p2": 0,
     "p3": 0,
     "pout": 3,
-    "pos": 46,
+    "pos": 47,
     "trend": -1
+  },
+  {
+    "atleta_id": "PAGANELLI_ANITA",
+    "cognome": "PAGANELLI",
+    "nome": "ANITA",
+    "team_id": "BICIFESTIVAL",
+    "team_nome": "BICIFESTIVAL",
+    "punti": 10,
+    "vittorie": 0,
+    "gare": 2,
+    "p1": 0,
+    "p2": 0,
+    "p3": 0,
+    "pout": 2,
+    "pos": 48,
+    "trend": 10
   },
   {
     "atleta_id": "FRANCESCHINI_VIOLA",
@@ -748,8 +780,8 @@
     "p2": 0,
     "p3": 1,
     "pout": 0,
-    "pos": 47,
-    "trend": -1
+    "pos": 49,
+    "trend": -2
   },
   {
     "atleta_id": "SCARABELLO_SOFIA",
@@ -764,24 +796,8 @@
     "p2": 0,
     "p3": 0,
     "pout": 3,
-    "pos": 48,
-    "trend": 0
-  },
-  {
-    "atleta_id": "BULDORINI_ISABEL",
-    "cognome": "BULDORINI",
-    "nome": "ISABEL",
-    "team_id": "BICIFESTIVAL",
-    "team_nome": "BICIFESTIVAL",
-    "punti": 8,
-    "vittorie": 0,
-    "gare": 3,
-    "p1": 0,
-    "p2": 0,
-    "p3": 0,
-    "pout": 3,
-    "pos": 49,
-    "trend": 0
+    "pos": 50,
+    "trend": -2
   },
   {
     "atleta_id": "DAOUKHA_FATIMA_ZAHRAA",
@@ -796,8 +812,8 @@
     "p2": 0,
     "p3": 0,
     "pout": 2,
-    "pos": 50,
-    "trend": 0
+    "pos": 51,
+    "trend": -1
   },
   {
     "atleta_id": "CERONI_GIULIA",
@@ -812,8 +828,8 @@
     "p2": 0,
     "p3": 0,
     "pout": 3,
-    "pos": 51,
-    "trend": 0
+    "pos": 52,
+    "trend": -1
   },
   {
     "atleta_id": "LEONI_ODETTE",
@@ -828,8 +844,8 @@
     "p2": 0,
     "p3": 0,
     "pout": 2,
-    "pos": 52,
-    "trend": 0
+    "pos": 53,
+    "trend": -1
   },
   {
     "atleta_id": "BORSETTO_LINDA",
@@ -844,8 +860,8 @@
     "p2": 0,
     "p3": 0,
     "pout": 2,
-    "pos": 53,
-    "trend": 0
+    "pos": 54,
+    "trend": -1
   },
   {
     "atleta_id": "TAPINASSI_EMMA",
@@ -860,8 +876,8 @@
     "p2": 0,
     "p3": 0,
     "pout": 2,
-    "pos": 54,
-    "trend": 0
+    "pos": 55,
+    "trend": -1
   },
   {
     "atleta_id": "PARETTA_AURORA",
@@ -876,8 +892,8 @@
     "p2": 0,
     "p3": 0,
     "pout": 2,
-    "pos": 55,
-    "trend": 0
+    "pos": 56,
+    "trend": -1
   },
   {
     "atleta_id": "DAMUZZO_ELISA",
@@ -892,8 +908,8 @@
     "p2": 0,
     "p3": 0,
     "pout": 1,
-    "pos": 56,
-    "trend": 0
+    "pos": 57,
+    "trend": -1
   },
   {
     "atleta_id": "MARTIN_SOFIA",
@@ -908,24 +924,8 @@
     "p2": 0,
     "p3": 0,
     "pout": 1,
-    "pos": 57,
-    "trend": 0
-  },
-  {
-    "atleta_id": "PAGANELLI_ANITA",
-    "cognome": "PAGANELLI",
-    "nome": "ANITA",
-    "team_id": "BICIFESTIVAL",
-    "team_nome": "BICIFESTIVAL",
-    "punti": 4,
-    "vittorie": 0,
-    "gare": 1,
-    "p1": 0,
-    "p2": 0,
-    "p3": 0,
-    "pout": 1,
     "pos": 58,
-    "trend": 0
+    "trend": -1
   },
   {
     "atleta_id": "GRUENING_LISA",
