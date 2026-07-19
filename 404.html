@@ -1,0 +1,20 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+<meta charset="UTF-8" />
+<title>ICS — Italia Cycling Stats</title>
+<script>
+  // GitHub Pages serve QUESTO file (con status HTTP 404) per qualunque path
+  // che non corrisponda a un file reale — è il caso normale per un URL
+  // pulito della SPA (es. /admin, /gara/xxx) su un refresh o un accesso
+  // diretto, dato che GitHub Pages non fa rewrite lato server. Si salva il
+  // path richiesto e si rimanda a index.html, che lo ripristina con
+  // history.replaceState prima di avviare il router (vedi lo script in
+  // cima al <head> di index.html) — così l'app si carica sulla pagina
+  // giusta invece di mostrare questo 404.
+  sessionStorage.setItem('_spa_redirect', location.pathname + location.search + location.hash);
+  location.replace('/');
+</script>
+</head>
+<body></body>
+</html>

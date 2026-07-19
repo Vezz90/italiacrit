@@ -8,6 +8,23 @@
        diretta a /gara/xxx risolverebbe questi path relativi a /gara/app.js
        invece di /app.js, rompendo il caricamento dell'app. -->
   <base href="/" />
+  <!-- GitHub Pages è un host statico senza rewrite lato server: un refresh
+       o un accesso diretto a un URL pulito (es. /admin, /gara/xxx) genera
+       una richiesta reale per quel path, che GitHub Pages non trova e
+       risponde con il proprio 404 statico invece di servire questa pagina.
+       404.html (vedi quel file) salva il path richiesto e rimanda qui;
+       questo script lo ripristina con history.replaceState PRIMA che
+       app.js (deferred) legga location.pathname per decidere la pagina —
+       deve stare il più in alto possibile nel <head>, prima di app.js. -->
+  <script>
+    (function () {
+      var r = sessionStorage.getItem('_spa_redirect');
+      if (r) {
+        sessionStorage.removeItem('_spa_redirect');
+        if (r !== location.pathname + location.search + location.hash) history.replaceState(null, '', r);
+      }
+    })();
+  </script>
   <meta name="google-site-verification" content="8bzaM6fB1nV-c8HZ1qeO0L32Vll32XVKU1pXkDpa4Mc" />
   <!-- Google tag (gtag.js) -->
   <script async src="https://www.googletagmanager.com/gtag/js?id=G-1329Z3BXWE"></script>
