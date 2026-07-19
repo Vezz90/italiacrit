@@ -11278,11 +11278,33 @@ window.ytSetGara = (id, garaId) => {
   if (both) both.style.display = /_ES[12]_[MF]$/.test(garaId) ? 'flex' : 'none';
 };
 
-// Dato un gara_id ES1/ES2, restituisce [ES1, ES2] della stessa gara
+// Dato un gara_id ES1/ES2, restituisce [ES1, ES2] della stessa gara. NON si
+// può ricavare l'altro id facendo solo lo swap del numero nella stringa: per
+// alcune gare (es. "17 Trofeo Pavan... DONNE ESORDIENTI PRIMO ANNO" vs
+// "...SECONDO ANNO") il nome incorporato nel gara_id è DIVERSO tra le due
+// categorie, non solo il suffisso — lo swap produceva un id inventato che
+// non esiste da nessuna parte, quindi "pubblica per entrambi gli anni"
+// pubblicava silenziosamente su una gara fantasma invece che sulla vera
+// Esordienti 2° anno. Si cerca invece la vera gara gemella per stessa
+// data+genere e stesso nome "di base" (spogliato di ESORDIENTI/PRIMO/
+// SECONDO/ANNO ecc., vedi _raceBaseName) tra le gare realmente esistenti.
 function _esBothGaraIds(garaId) {
   const m = garaId.match(/^(.+)_ES([12])_([MF])$/);
   if (!m) return [garaId];
-  return [`${m[1]}_ES1_${m[3]}`, `${m[1]}_ES2_${m[3]}`];
+  const gender = m[3];
+  const src = (globalData?.resultsRaw || []).find(r => r.gara_id === garaId)
+    || (globalData?.calendar || []).find(g => g.id === garaId);
+  if (!src) return [`${m[1]}_ES1_${gender}`, `${m[1]}_ES2_${gender}`]; // fallback, nessun dato per confrontare
+  const baseName = _raceBaseName(src.nome_gara || src.nome);
+  const date = src.data;
+  const matches = _ytAllRaceCandidates().filter(r =>
+    /_ES[12]_[MF]$/.test(r.gara_id) &&
+    r.gara_id.endsWith('_' + gender) &&
+    (!date || r.data === date) &&
+    _raceBaseName(r.nome_gara || r.nome) === baseName
+  );
+  const ids = [...new Set(matches.map(r => r.gara_id))];
+  return ids.length ? ids : [garaId];
 }
 
 // ── Cerca gara per nome (ricerca live) ───────────────────────────────────────
