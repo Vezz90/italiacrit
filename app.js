@@ -69,6 +69,18 @@ function videoKind(url) {
 }
 function isPlayableVideo(url) { const k = videoKind(url); return k === 'yt' || k === 'file' || k === 'fb'; }
 
+// Miniatura per una card video Facebook: niente immagine statica salvabile
+// (l'URL di copertina di FB è su una CDN con token che scade — non
+// affidabile da conservare), quindi si incorpora lo stesso player pubblico
+// usato nel modale, ma SENZA autoplay e con pointer-events:none — il
+// player mostra da solo copertina reale + nome/logo della pagina FB
+// (gratis, senza API key), i click attraversano l'iframe e arrivano
+// comunque al contenitore della card (stesso onclick di apertura modale).
+function fbThumbHtml(url) {
+  const src = `https://www.facebook.com/plugins/video.php?href=${encodeURIComponent(url)}&show_text=false`;
+  return `<iframe src="${esc(src)}" style="width:100%;height:100%;border:none;pointer-events:none" scrolling="no" frameborder="0" tabindex="-1"></iframe>`;
+}
+
 // Modal per video file caricati (non YouTube): player HTML5 nativo.
 window.openVideoFileModal = (url, title) => {
   const overlay = document.createElement('div');
@@ -12974,9 +12986,11 @@ function buildProfileMedia(risultati, photosMap, videos, opts = {}) {
           : `window.open('${esc(video.url)}','_blank')`;
     const _thumbHtml = _kind === 'yt'
       ? `<img src="https://img.youtube.com/vi/${vid}/mqdefault.jpg" alt="${esc(video.title||'')}" loading="lazy" />`
-      : _kind === 'file'
-        ? `<video src="${esc(video.url)}#t=0.1" muted preload="metadata" playsinline style="width:100%;height:100%;object-fit:cover;background:#000"></video>`
-        : '<div style="width:100%;height:100%;display:flex;align-items:center;justify-content:center;font-size:2rem;color:var(--text-muted)">🎬</div>';
+      : _kind === 'fb'
+        ? fbThumbHtml(video.url)
+        : _kind === 'file'
+          ? `<video src="${esc(video.url)}#t=0.1" muted preload="metadata" playsinline style="width:100%;height:100%;object-fit:cover;background:#000"></video>`
+          : '<div style="width:100%;height:100%;display:flex;align-items:center;justify-content:center;font-size:2rem;color:var(--text-muted)">🎬</div>';
     return `<div class="profile-media-card profile-media-video" style="cursor:pointer" onclick="${_vclick.replace(/"/g,'&quot;')}">
       <div class="profile-media-thumb">
         ${_thumbHtml}
@@ -16257,6 +16271,7 @@ async function renderGara(gara_id) {
   const _vThumb = (v) => {
     const k = videoKind(v.url);
     if (k === 'yt') return `<img src="https://img.youtube.com/vi/${ytId(v.url)}/hqdefault.jpg" alt="${esc(v.title||'Video')}" loading="lazy"/>`;
+    if (k === 'fb') return fbThumbHtml(v.url);
     if (k === 'file') return `<video src="${esc(v.url)}#t=0.1" muted preload="metadata" playsinline style="width:100%;height:100%;object-fit:cover;background:#000"></video>`;
     return `<div style="width:100%;height:100%;display:flex;align-items:center;justify-content:center;background:#0f172a;font-size:2.4rem">🎬</div>`;
   };
@@ -20433,7 +20448,7 @@ async function renderRisultati() {
              ${_vKind === 'yt'
                ? `<img src="https://img.youtube.com/vi/${featuredVideoId}/hqdefault.jpg" alt="${esc(featuredVideo.title||'Video')}" loading="lazy"/>`
                : _vKind === 'fb'
-                 ? `<div style="width:100%;height:100%;display:flex;align-items:center;justify-content:center;background:#0f172a;font-size:2.4rem">🎬</div>`
+                 ? fbThumbHtml(featuredVideo.url)
                  : `<video src="${esc(featuredVideo.url)}#t=0.1" preload="metadata" muted playsinline style="width:100%;height:100%;object-fit:cover"></video>`}
              <div class="ris-video-play"><span>▶</span></div>
              ${featuredVideo.channel ? `<div class="ris-video-channel">${esc(featuredVideo.channel)}</div>` : ''}
@@ -20870,7 +20885,9 @@ async function renderMedia() {
         ${_isAdminMedia ? `<input type="checkbox" class="yt-card-check" ${isSel ? 'checked' : ''}
           onclick="event.preventDefault();event.stopPropagation();window._mediaToggleSel('${esc(selKey)}',this.checked)"
           aria-label="Seleziona per correggere destinazione"/>` : ''}
-        ${thumb ? `<img src="${esc(thumb)}" loading="lazy" alt="${esc(x.video.title || '')}"/>` : `<div class="yt-thumb-fallback">▶</div>`}
+        ${thumb ? `<img src="${esc(thumb)}" loading="lazy" alt="${esc(x.video.title || '')}"/>`
+          : isFacebookVideoUrl(x.video.url) ? fbThumbHtml(x.video.url)
+          : `<div class="yt-thumb-fallback">▶</div>`}
         ${pendingBadge}
         ${x.video.is_live ? `<span class="yt-badge-live">🔴 DIRETTA</span>` : (durBadge ? `<span class="yt-badge-duration">${esc(durBadge)}</span>` : '')}
         <span class="yt-play">▶</span>
@@ -20895,7 +20912,9 @@ async function renderMedia() {
     const onclick = vid ? `window.openVideoModal('${vid}','${t}')` : `window.open('${esc(x.video.url)}','_blank')`;
     return `<div class="yt-card" onclick="${onclick}" style="cursor:pointer">
       <div class="yt-thumb">
-        ${thumb ? `<img src="${esc(thumb)}" loading="lazy" alt="${esc(x.video.title || '')}"/>` : `<div class="yt-thumb-fallback">▶</div>`}
+        ${thumb ? `<img src="${esc(thumb)}" loading="lazy" alt="${esc(x.video.title || '')}"/>`
+          : isFacebookVideoUrl(x.video.url) ? fbThumbHtml(x.video.url)
+          : `<div class="yt-thumb-fallback">▶</div>`}
         <span class="yt-play">▶</span>
         ${_isAdminMedia ? `<button onclick="event.stopPropagation();window.mediaDeleteExtra('${bucketKey}',${x.extraIdx})" style="position:absolute;top:6px;right:6px;background:rgba(220,38,38,.92);color:#fff;border:none;padding:3px 8px;border-radius:4px;font-size:.68rem;cursor:pointer;z-index:3">🗑</button>` : ''}
       </div>
