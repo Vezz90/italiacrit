@@ -1826,6 +1826,22 @@ app.get('/api/live-now', async (req, res) => {
   } catch (e) { res.status(500).json({ error: e.message }); }
 });
 
+// Stato "è ancora davvero live" per OGNI diretta di oggi (non solo le prime
+// due mostrate dal banner) — usato dalla pagina Media per spostare una
+// diretta appena conclusa fuori dalla sezione "In Diretta Ora" verso "A
+// seguire", invece di lasciarla lì semplicemente perché la sua data è
+// ancora quella di oggi (is_live=true è un flag statico impostato
+// all'inserimento, non riflette da solo la fine reale della trasmissione).
+app.get('/api/live-status-today', async (req, res) => {
+  res.set('Cache-Control', 'no-cache');
+  try {
+    const { candidates, infoById } = await _getLiveNowState();
+    const status = {};
+    for (const c of candidates) status[c.videoId] = !!infoById[c.videoId]?.isLiveNow;
+    res.json(status);
+  } catch (e) { res.status(500).json({ error: e.message }); }
+});
+
 // Recupera i metadati REALI del video da YouTube — data di pubblicazione
 // (snippet.publishedAt) e logo del canale — per gli inserimenti manuali che
 // altrimenti avrebbero sempre la data odierna (rendendo inutile un

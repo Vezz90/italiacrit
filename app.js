@@ -3087,6 +3087,29 @@ document.addEventListener('DOMContentLoaded', async () => {
   }, 180000); // 3 minuti
 });
 
+// Stato "è ancora davvero live" per ogni diretta di oggi (video_id → bool),
+// usato dalla pagina Media (tab Dirette) per spostare una diretta appena
+// conclusa fuori da "In Diretta Ora" senza aspettare il giorno dopo — vedi
+// renderMedia(). Cache con TTL breve: la tab Dirette può ri-renderizzare
+// spesso (filtri, ricerca) e non serve rifare la chiamata ogni volta.
+window._liveStatusToday = {};
+let _liveStatusTodayTs = 0;
+async function _refreshLiveStatusToday() {
+  if (Date.now() - _liveStatusTodayTs < 20000) return; // già aggiornato di recente
+  _liveStatusTodayTs = Date.now();
+  try {
+    const r = await fetch(`${API_BASE}/live-status-today`);
+    if (!r.ok) return;
+    const fresh = await r.json();
+    const changed = JSON.stringify(fresh) !== JSON.stringify(window._liveStatusToday);
+    window._liveStatusToday = fresh;
+    // Ri-renderizza solo se il risultato è cambiato E siamo ancora sulla
+    // pagina Media — altrimenti sovrascriverebbe un'altra pagina nel
+    // frattempo aperta dall'utente.
+    if (changed && mediaTab === 'dirette' && document.querySelector('.yt-page')) renderMedia();
+  } catch {}
+}
+
 // ── ALERT "DIRETTA IN CORSO" ────────────────────────────────────────────────
 // All'apertura del sito (e periodicamente) controlla se una gara collegata è
 // attualmente in diretta su YouTube, e se sì mostra un banner cliccabile che
@@ -20723,15 +20746,27 @@ async function renderMedia() {
   // Data di oggi nel fuso delle gare (Italia), non UTC del browser — stesso
   // criterio usato server-side per il banner "IN DIRETTA ORA".
   const _todayStrMedia = new Date().toLocaleDateString('sv-SE', { timeZone: 'Europe/Rome' });
-  // Le dirette di OGGI e quelle future ("prossimamente") vanno isolate in
-  // cima, prima di tutte le altre — che restano nell'ordine cronologico
-  // già esistente (byRaceDateDesc) e in QUELLA posizione ci tornano da sole
-  // il giorno dopo, quando smettono di essere "di oggi".
-  const diretteOggi = direteItems.filter(x => x.meta?.data === _todayStrMedia);
+  // Le dirette di OGGI ancora effettivamente in corso e quelle future
+  // ("prossimamente") vanno isolate in cima, prima di tutte le altre — che
+  // restano nell'ordine cronologico già esistente (byRaceDateDesc) e in
+  // QUELLA posizione ci tornano da sole il giorno dopo, quando smettono di
+  // essere "di oggi". "is_live" è un flag statico impostato all'inserimento
+  // e da solo NON riflette la fine reale della trasmissione — window._liveStatusToday
+  // (aggiornato da _refreshLiveStatusToday, vedi sotto) dice per ogni video_id
+  // se YouTube lo segna ancora realmente live: appena una diretta finisce,
+  // sparisce da "In Diretta" e ricompare in "A seguire" senza aspettare il
+  // giorno dopo.
+  const _isEndedLive = (x) => {
+    const vid = ytId(x.video.url);
+    return vid && window._liveStatusToday && window._liveStatusToday[vid] === false;
+  };
+  const diretteOggi = direteItems.filter(x => x.meta?.data === _todayStrMedia && !_isEndedLive(x));
   const direttePros = direteItems
     .filter(x => x.meta?.data && x.meta.data > _todayStrMedia)
     .sort((a, b) => (a.meta.data || '').localeCompare(b.meta.data || '')); // più vicina prima
-  const diretteResto = direteItems.filter(x => !(x.meta?.data === _todayStrMedia || (x.meta?.data && x.meta.data > _todayStrMedia)));
+  const diretteResto = direteItems.filter(x =>
+    !(x.meta?.data === _todayStrMedia && !_isEndedLive(x)) && !(x.meta?.data && x.meta.data > _todayStrMedia));
+  if (mediaTab === 'dirette') _refreshLiveStatusToday();
   const presentazioniFiltered = applyFilters(presentazioniItems).sort(byPublishedDesc);
   const programmiTvFiltered   = applyFilters(programmiTvItems).sort(byPublishedDesc);
 
