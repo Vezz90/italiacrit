@@ -1923,7 +1923,14 @@ function processLoadedData({ calendar, resultsRaw, athletes, teams, meta, raceDe
     if (!cal.id || !cal.data) continue;
     const isStageRace = /tappe/i.test(cal.categoria || '');
     const calBase = cal.id.replace(/_\d{4}-\d{2}-\d{2}$/, '');
-    const calBaseNoEd = calBase.replace(/^\d+_/, '');
+    // "ED" (edizione) a volte resta incollato al numero nell'id calendario
+    // (es. "4ED_LA_PIERI_ALIGI_..." invece di "4_LA_PIERI_ALIGI_...", come
+    // genera lo scraper FCI per i risultati) — senza tollerarlo qui lo strip
+    // del prefisso numerico falliva, calNorm2 restava con "4ED_" davanti e
+    // non combaciava mai con nessun gara_id scrapato: un video/diretta
+    // caricato su quella gara prima dei risultati restava "orfano" per
+    // sempre, anche dopo che i risultati venivano pubblicati.
+    const calBaseNoEd = calBase.replace(/^\d+(?:ED)?_/i, '');
     const _nm2 = s => s
       .replace(/(?<![A-Z0-9])G_P(?![A-Z0-9])/g,'GRAN_PREMIO')
       .replace(/(?<![A-Z0-9])GP(?![A-Z0-9])/g,'GRAN_PREMIO')
@@ -1932,7 +1939,7 @@ function processLoadedData({ calendar, resultsRaw, athletes, teams, meta, raceDe
       .replace(/(?<![A-Z0-9])A_M(?![A-Z0-9])/g,'')
       .replace(/_+/g,'_').replace(/^_|_$/g,'');
     const calNorm2 = _nm2(calBaseNoEd);
-    const calEd2   = calBase !== calBaseNoEd ? (calBase.match(/^(\d+)_/)||[])[1] : null;
+    const calEd2   = calBase !== calBaseNoEd ? (calBase.match(/^(\d+)(?:ED)?_/i)||[])[1] : null;
     for (const r of (resultsRaw || [])) {
       if (!r.gara_id) continue;
       if (!isStageRace && r.data !== cal.data) continue;
