@@ -50,16 +50,24 @@ function ytId(url) {
   return m ? m[1] : null;
 }
 
-// Tipo di video: 'yt' (YouTube embed), 'file' (file caricato → <video>),
-// 'link' (es. Facebook → apri in nuova scheda). Serve perché i video non
-// YouTube non hanno un id embeddabile e venivano scartati dal rendering.
+// Riconosce un link a un video Facebook (pagina/watch/reel/fb.watch) —
+// non ha un id embeddabile come YouTube, ma FB offre un iframe pubblico
+// (Video Plugin) che funziona per qualunque video pubblico senza bisogno
+// di API key o app registrata.
+function isFacebookVideoUrl(url) {
+  return !!url && /^https?:\/\/(www\.|m\.|web\.)?(facebook\.com|fb\.watch)\//i.test(url);
+}
+
+// Tipo di video: 'yt' (YouTube embed), 'fb' (Facebook embed), 'file' (file
+// caricato → <video>), 'link' (altro → apri in nuova scheda).
 function videoKind(url) {
   if (!url) return 'link';
   if (ytId(url)) return 'yt';
+  if (isFacebookVideoUrl(url)) return 'fb';
   if (/(\.(mp4|mov|m4v|webm|ogg|qt))(\?|$)/i.test(url) || /\/storage\/v1\/object\/[^\s]*videos\//i.test(url)) return 'file';
   return 'link';
 }
-function isPlayableVideo(url) { const k = videoKind(url); return k === 'yt' || k === 'file'; }
+function isPlayableVideo(url) { const k = videoKind(url); return k === 'yt' || k === 'file' || k === 'fb'; }
 
 // Modal per video file caricati (non YouTube): player HTML5 nativo.
 window.openVideoFileModal = (url, title) => {
@@ -72,6 +80,30 @@ window.openVideoFileModal = (url, title) => {
       <div class="video-modal-player">
         <video src="${esc(url)}" controls autoplay playsinline style="width:100%;height:100%;background:#000;border-radius:8px"
                onerror="this.parentNode.innerHTML='<div style=\\'color:#fff;padding:24px;text-align:center\\'>Impossibile riprodurre il video qui. <a href=&quot;${esc(url)}&quot; target=_blank style=color:#60a5fa>Aprilo in una nuova scheda</a></div>'"></video>
+      </div>
+    </div>`;
+  overlay.addEventListener('click', e => { if (e.target === overlay) overlay.remove(); });
+  document.body.appendChild(overlay);
+};
+
+// Modal per video Facebook: usa il "Video Plugin" pubblico di Meta
+// (plugins/video.php), che incorpora qualunque video PUBBLICO senza bisogno
+// di API key/app registrata — funziona solo se chi ha pubblicato il video
+// non ne ha ristretto l'embed altrove (raro per le dirette di pagine
+// pubbliche, ma può succedere: in quel caso Facebook stesso mostra un
+// messaggio "video non disponibile" dentro l'iframe).
+window.openFacebookVideoModal = (url, title) => {
+  const overlay = document.createElement('div');
+  overlay.className = 'video-modal-overlay';
+  const src = `https://www.facebook.com/plugins/video.php?href=${encodeURIComponent(url)}&show_text=false&autoplay=true`;
+  overlay.innerHTML = `
+    <div class="video-modal-box">
+      <button class="video-modal-close" onclick="this.closest('.video-modal-overlay').remove()">✕</button>
+      <div class="video-modal-title">${esc(title || 'Video')}</div>
+      <div class="video-modal-player">
+        <iframe src="${esc(src)}" frameborder="0" allowfullscreen
+                allow="autoplay; encrypted-media; picture-in-picture; web-share"
+                style="width:100%;height:100%"></iframe>
       </div>
     </div>`;
   overlay.addEventListener('click', e => { if (e.target === overlay) overlay.remove(); });
@@ -12407,7 +12439,7 @@ window.adminSubmitAddVideo = async () => {
   const url     = document.getElementById('avf-url').value.trim();
   const title   = document.getElementById('avf-title').value.trim();
   const channel = document.getElementById('avf-channel').value.trim();
-  if (!url) { alert('Inserisci un URL YouTube.'); return; }
+  if (!url) { alert('Inserisci un URL YouTube o Facebook.'); return; }
   try {
     await apiCall(`/admin/videos/${encodeURIComponent(_avfSelectedCalId)}`, {
       method: 'POST',
@@ -12935,9 +12967,11 @@ function buildProfileMedia(risultati, photosMap, videos, opts = {}) {
     const _vtitle = esc((video.title || r.nome_gara || '').replace(/'/g, "\\'"));
     const _vclick = _kind === 'yt'
       ? `window.openVideoModal('${vid}','${_vtitle}')`
-      : _kind === 'file'
-        ? `window.openVideoFileModal('${esc(video.url)}','${_vtitle}')`
-        : `window.open('${esc(video.url)}','_blank')`;
+      : _kind === 'fb'
+        ? `window.openFacebookVideoModal('${esc(video.url)}','${_vtitle}')`
+        : _kind === 'file'
+          ? `window.openVideoFileModal('${esc(video.url)}','${_vtitle}')`
+          : `window.open('${esc(video.url)}','_blank')`;
     const _thumbHtml = _kind === 'yt'
       ? `<img src="https://img.youtube.com/vi/${vid}/mqdefault.jpg" alt="${esc(video.title||'')}" loading="lazy" />`
       : _kind === 'file'
@@ -16216,6 +16250,7 @@ async function renderGara(gara_id) {
     const t = esc((v.title || '').replace(/'/g, "\\'"));
     const k = videoKind(v.url);
     if (k === 'yt')   return `window.openVideoModal('${ytId(v.url)}','${t}')`;
+    if (k === 'fb')   return `window.openFacebookVideoModal('${esc(v.url)}','${t}')`;
     if (k === 'file') return `window.openVideoFileModal('${esc(v.url)}','${t}')`;
     return `window.open('${esc(v.url)}','_blank')`;
   };
@@ -16942,7 +16977,7 @@ async function renderGara(gara_id) {
         </div>
 
         <div id="vpanel-url">
-          <input type="url" id="vurl-input" placeholder="https://www.youtube.com/watch?v=..." style="${inpStyle}"/>
+          <input type="url" id="vurl-input" placeholder="https://www.youtube.com/watch?v=... oppure link Facebook" style="${inpStyle}"/>
           <div style="position:relative">
             <input type="text" id="vurl-title" placeholder="Titolo" style="${inpStyle}" value="${esc(_raceName)}"/>
             <span id="vurl-title-hint" style="position:absolute;right:8px;top:50%;transform:translateY(-70%);font-size:.7rem;color:var(--text-muted);pointer-events:none">auto</span>
@@ -17101,7 +17136,7 @@ async function renderGara(gara_id) {
       const url     = document.getElementById('vurl-input')?.value.trim();
       const title   = document.getElementById('vurl-title')?.value.trim();
       const channel = document.getElementById('vurl-channel')?.value.trim();
-      if (!url) { err.textContent = 'Inserisci un URL YouTube'; err.style.display = 'block'; return; }
+      if (!url) { err.textContent = 'Inserisci un URL YouTube o Facebook'; err.style.display = 'block'; return; }
       const isLive = document.getElementById('vp-islive')?.checked || false;
       btn.disabled = true; btn.textContent = 'Invio…';
       try {
@@ -20298,7 +20333,7 @@ async function renderRisultati() {
       const featuredVideo = raceVideos[0] || null;
       const _vKind = featuredVideo ? videoKind(featuredVideo.url) : null;
       const featuredVideoId = (_vKind === 'yt') ? ytId(featuredVideo.url) : null;
-      const hasVideoTile = _vKind === 'yt' || _vKind === 'file';
+      const hasVideoTile = _vKind === 'yt' || _vKind === 'file' || _vKind === 'fb';
 
       const catSections = categories.map(([catName, catData]) => {
         const sortedCatRes = (catData.results || []).sort((a,b) => a.posizione - b.posizione);
@@ -20392,10 +20427,14 @@ async function renderRisultati() {
         ? `<div class="ris-card-video-thumb${featuredPhoto ? ' ris-media-half' : ''}"
                onclick="${_vKind === 'yt'
                  ? `window.openVideoModal('${featuredVideoId}','${_vTitleRis}')`
-                 : `window.openVideoFileModal('${esc(featuredVideo.url)}','${_vTitleRis}')`}">
+                 : _vKind === 'fb'
+                   ? `window.openFacebookVideoModal('${esc(featuredVideo.url)}','${_vTitleRis}')`
+                   : `window.openVideoFileModal('${esc(featuredVideo.url)}','${_vTitleRis}')`}">
              ${_vKind === 'yt'
                ? `<img src="https://img.youtube.com/vi/${featuredVideoId}/hqdefault.jpg" alt="${esc(featuredVideo.title||'Video')}" loading="lazy"/>`
-               : `<video src="${esc(featuredVideo.url)}#t=0.1" preload="metadata" muted playsinline style="width:100%;height:100%;object-fit:cover"></video>`}
+               : _vKind === 'fb'
+                 ? `<div style="width:100%;height:100%;display:flex;align-items:center;justify-content:center;background:#0f172a;font-size:2.4rem">🎬</div>`
+                 : `<video src="${esc(featuredVideo.url)}#t=0.1" preload="metadata" muted playsinline style="width:100%;height:100%;object-fit:cover"></video>`}
              <div class="ris-video-play"><span>▶</span></div>
              ${featuredVideo.channel ? `<div class="ris-video-channel">${esc(featuredVideo.channel)}</div>` : ''}
            </div>`
@@ -20560,7 +20599,7 @@ window.openMediaAddForm = () => {
           <div style="font-size:.72rem;color:var(--text-muted);margin:-4px 0 10px">Gara a tappe: nessun risultato pubblicato ancora per questa tappa — il link resta in attesa e si collega da solo appena la FCI pubblica i risultati di quel giorno.</div>
         </div>
       </div>
-      <input type="url" id="madd-url" placeholder="https://www.youtube.com/watch?v=..." style="${inpStyle}"/>
+      <input type="url" id="madd-url" placeholder="https://www.youtube.com/watch?v=... oppure link Facebook" style="${inpStyle}"/>
       <input type="text" id="madd-title" placeholder="Titolo" style="${inpStyle}"/>
       <input type="text" id="madd-channel" placeholder="Canale" style="${inpStyle}"/>
       <div id="madd-err" style="color:#EF4444;font-size:0.8rem;margin-bottom:8px;display:none"></div>
@@ -20629,7 +20668,7 @@ window._submitMediaAdd = async () => {
   const url     = document.getElementById('madd-url')?.value.trim();
   const title   = document.getElementById('madd-title')?.value.trim();
   const channel = document.getElementById('madd-channel')?.value.trim();
-  if (!url) { err.textContent = 'Inserisci un URL YouTube'; err.style.display = 'block'; return; }
+  if (!url) { err.textContent = 'Inserisci un URL YouTube o Facebook'; err.style.display = 'block'; return; }
   btn.disabled = true; btn.textContent = 'Invio…';
   try {
     if (tipo === 'gara' || tipo === 'diretta') {
@@ -20807,12 +20846,19 @@ async function renderMedia() {
     const pendingBadge = isPending ? `<span class="yt-badge-duration" style="left:6px;right:auto">⏳ IN ATTESA TAPPA</span>` : '';
     const t = esc((x.video.title || '').replace(/'/g, "\\'"));
     const vid = ytId(x.video.url);
-    const pendingOnclick = vid ? `window.openVideoModal('${vid}','${t}')` : `window.open('${esc(x.video.url)}','_blank')`;
+    const pendingOnclick = vid
+      ? `window.openVideoModal('${vid}','${t}')`
+      : isFacebookVideoUrl(x.video.url)
+        ? `window.openFacebookVideoModal('${esc(x.video.url)}','${t}')`
+        : `window.open('${esc(x.video.url)}','_blank')`;
     // Diretta in corso: apre il player persistente (minimizzabile, resta
     // in riproduzione navigando altrove) invece di andare sulla pagina
     // della gara — vale sia per una gara già reale sia per una tappa ancora
     // in attesa (chiave sintetica), a differenza di un video normale/VOD
     // "in attesa tappa" per cui il vecchio player usa e getta va benissimo.
+    // Il player persistente (minimizzabile/mini-player) è costruito attorno
+    // all'API YouTube (rilevamento diretta, notifiche): una diretta Facebook
+    // non ha quell'infrastruttura, quindi si apre col modale semplice.
     const isLive = !!x.video.is_live;
     const liveOnclick = vid ? `window.openLivePlayer('${vid}','${t}','${esc(x.gara_id)}')` : pendingOnclick;
     const tag = (isPending || isLive) ? 'div' : 'a';
