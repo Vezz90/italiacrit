@@ -62,12 +62,12 @@
   {
     "team_id": "CICLISTICA_TREVIGLIESE",
     "team_nome": "CICLISTICA TREVIGLIESE",
-    "punti": 506,
+    "punti": 518,
     "vittorie": 3,
     "p1": 3,
     "p2": 4,
     "p3": 9,
-    "pout": 32,
+    "pout": 33,
     "n_atleti": 9,
     "pos": 6
   },
@@ -84,6 +84,18 @@
     "pos": 7
   },
   {
+    "team_id": "AUTOZAI_CONTRI",
+    "team_nome": "AUTOZAI-CONTRI",
+    "punti": 442,
+    "vittorie": 4,
+    "p1": 4,
+    "p2": 4,
+    "p3": 3,
+    "pout": 29,
+    "n_atleti": 9,
+    "pos": 8
+  },
+  {
     "team_id": "BUSTESE_OLONIA_A_S_D",
     "team_nome": "BUSTESE OLONIA A.S.D.",
     "punti": 440,
@@ -93,7 +105,7 @@
     "p3": 2,
     "pout": 31,
     "n_atleti": 9,
-    "pos": 8
+    "pos": 9
   },
   {
     "team_id": "NORDEST_PETRUCCI_ASSALI_STEFEN",
@@ -104,18 +116,6 @@
     "p2": 1,
     "p3": 3,
     "pout": 23,
-    "n_atleti": 9,
-    "pos": 9
-  },
-  {
-    "team_id": "AUTOZAI_CONTRI",
-    "team_nome": "AUTOZAI-CONTRI",
-    "punti": 422,
-    "vittorie": 4,
-    "p1": 4,
-    "p2": 4,
-    "p3": 2,
-    "pout": 29,
     "n_atleti": 9,
     "pos": 10
   },
@@ -144,6 +144,18 @@
     "pos": 12
   },
   {
+    "team_id": "A_R_MONEX_PRO_CYCLING_TEAM",
+    "team_nome": "A.R.MONEX PRO CYCLING TEAM",
+    "punti": 370,
+    "vittorie": 2,
+    "p1": 2,
+    "p2": 5,
+    "p3": 2,
+    "pout": 13,
+    "n_atleti": 5,
+    "pos": 13
+  },
+  {
     "team_id": "TEAM_GENERAL_SYSTEM",
     "team_nome": "TEAM GENERAL SYSTEM",
     "punti": 362,
@@ -153,7 +165,7 @@
     "p3": 2,
     "pout": 29,
     "n_atleti": 7,
-    "pos": 13
+    "pos": 14
   },
   {
     "team_id": "ETHICA_ZERO24_CYCLING_TEAM_ECOTEK",
@@ -165,18 +177,6 @@
     "p3": 3,
     "pout": 12,
     "n_atleti": 6,
-    "pos": 14
-  },
-  {
-    "team_id": "A_R_MONEX_PRO_CYCLING_TEAM",
-    "team_nome": "A.R.MONEX PRO CYCLING TEAM",
-    "punti": 338,
-    "vittorie": 2,
-    "p1": 2,
-    "p2": 4,
-    "p3": 2,
-    "pout": 11,
-    "n_atleti": 5,
     "pos": 15
   },
   {
@@ -218,21 +218,21 @@
   {
     "team_id": "TEAM_TIEPOLO_U19_DEVO",
     "team_nome": "TEAM TIEPOLO U19 DEVO",
-    "punti": 291,
+    "punti": 299,
     "vittorie": 0,
     "p1": 0,
     "p2": 5,
     "p3": 3,
-    "pout": 16,
+    "pout": 17,
     "n_atleti": 6,
     "pos": 19
   },
   {
     "team_id": "U_C_PIASCO",
     "team_nome": "U.C. PIASCO",
-    "punti": 227,
-    "vittorie": 4,
-    "p1": 4,
+    "punti": 257,
+    "vittorie": 5,
+    "p1": 5,
     "p2": 2,
     "p3": 2,
     "pout": 12,
@@ -252,6 +252,18 @@
     "pos": 21
   },
   {
+    "team_id": "FAIZANE_CSZ_SANDRIGO_BIKE",
+    "team_nome": "FAIZANE' CSZ SANDRIGO BIKE",
+    "punti": 153,
+    "vittorie": 0,
+    "p1": 0,
+    "p2": 1,
+    "p3": 0,
+    "pout": 24,
+    "n_atleti": 6,
+    "pos": 22
+  },
+  {
     "team_id": "VENETO",
     "team_nome": "VENETO",
     "punti": 153,
@@ -261,7 +273,7 @@
     "p3": 2,
     "pout": 5,
     "n_atleti": 5,
-    "pos": 22
+    "pos": 23
   },
   {
     "team_id": "GRENKE_AUTO_EDER",
@@ -273,19 +285,19 @@
     "p3": 1,
     "pout": 2,
     "n_atleti": 4,
-    "pos": 23
+    "pos": 24
   },
   {
-    "team_id": "FAIZANE_CSZ_SANDRIGO_BIKE",
-    "team_nome": "FAIZANE' CSZ SANDRIGO BIKE",
-    "punti": 149,
+    "team_id": "G_S_GIOVANI_GIUSSANESI_A_S_D",
+    "team_nome": "G.S.GIOVANI GIUSSANESI A.S.D.",
+    "punti": 140,
     "vittorie": 0,
     "p1": 0,
     "p2": 1,
-    "p3": 0,
-    "pout": 23,
-    "n_atleti": 6,
-    "pos": 24
+    "p3": 4,
+    "pout": 11,
+    "n_atleti": 7,
+    "pos": 25
   },
   {
     "team_id": "A_S_D_POSTUMIA_73_D_L_CICLISMO",
@@ -297,18 +309,6 @@
     "p3": 1,
     "pout": 17,
     "n_atleti": 10,
-    "pos": 25
-  },
-  {
-    "team_id": "G_S_GIOVANI_GIUSSANESI_A_S_D",
-    "team_nome": "G.S.GIOVANI GIUSSANESI A.S.D.",
-    "punti": 130,
-    "vittorie": 0,
-    "p1": 0,
-    "p2": 1,
-    "p3": 4,
-    "pout": 10,
-    "n_atleti": 7,
     "pos": 26
   },
   {
@@ -540,6 +540,18 @@
     "pos": 45
   },
   {
+    "team_id": "CAMPANA_IMBALLAGGI_MORBIATO_TRENTINO",
+    "team_nome": "CAMPANA IMBALLAGGI MORBIATO TRENTINO",
+    "punti": 66,
+    "vittorie": 0,
+    "p1": 0,
+    "p2": 2,
+    "p3": 1,
+    "pout": 4,
+    "n_atleti": 1,
+    "pos": 46
+  },
+  {
     "team_id": "ITALIA_NUOVA_BOLOGNA",
     "team_nome": "ITALIA NUOVA BOLOGNA",
     "punti": 65,
@@ -549,7 +561,7 @@
     "p3": 0,
     "pout": 14,
     "n_atleti": 5,
-    "pos": 46
+    "pos": 47
   },
   {
     "team_id": "JEGG_SKIL_DJR",
@@ -561,7 +573,7 @@
     "p3": 0,
     "pout": 3,
     "n_atleti": 2,
-    "pos": 47
+    "pos": 48
   },
   {
     "team_id": "VIGNA_FIORITA_BORGO_MOLINO",
@@ -573,7 +585,7 @@
     "p3": 0,
     "pout": 8,
     "n_atleti": 2,
-    "pos": 48
+    "pos": 49
   },
   {
     "team_id": "SVIZZERA",
@@ -585,7 +597,7 @@
     "p3": 0,
     "pout": 3,
     "n_atleti": 2,
-    "pos": 49
+    "pos": 50
   },
   {
     "team_id": "ARKITANO_MTB_CLUB",
@@ -597,7 +609,7 @@
     "p3": 1,
     "pout": 2,
     "n_atleti": 1,
-    "pos": 50
+    "pos": 51
   },
   {
     "team_id": "POOL_BIKE_SERRAMANNA",
@@ -609,7 +621,7 @@
     "p3": 2,
     "pout": 5,
     "n_atleti": 1,
-    "pos": 51
+    "pos": 52
   },
   {
     "team_id": "KK_NOVO_MESTO",
@@ -621,18 +633,6 @@
     "p3": 0,
     "pout": 2,
     "n_atleti": 4,
-    "pos": 52
-  },
-  {
-    "team_id": "CAMPANA_IMBALLAGGI_MORBIATO_TRENTINO",
-    "team_nome": "CAMPANA IMBALLAGGI MORBIATO TRENTINO",
-    "punti": 50,
-    "vittorie": 0,
-    "p1": 0,
-    "p2": 2,
-    "p3": 1,
-    "pout": 3,
-    "n_atleti": 1,
     "pos": 53
   },
   {
