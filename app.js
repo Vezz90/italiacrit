@@ -11313,11 +11313,12 @@ function renderYTChannelsList() {
         placeholder="Nome" style="${inpS};flex:1;min-width:100px" />
       <select onchange="window._ytChEdit(${i},'type',this.value)"
         style="${inpS}">
+        <option value="handle"${ch.type==='handle'?' selected':''}>Handle (@nomecanale)</option>
         <option value="channel_id"${ch.type==='channel_id'?' selected':''}>Channel ID (UC...)</option>
-        <option value="username"${ch.type==='username'?' selected':''}>Username</option>
+        <option value="username"${ch.type==='username'?' selected':''}>Username (legacy)</option>
       </select>
       <input type="text" value="${esc(ch.value)}" oninput="window._ytChEdit(${i},'value',this.value)"
-        placeholder="ID o username" style="${inpS};flex:2;min-width:140px" />
+        placeholder="@nomecanale, ID o username" style="${inpS};flex:2;min-width:140px" />
       <label style="display:flex;align-items:center;gap:4px;font-size:.78rem;cursor:pointer">
         <input type="checkbox" ${ch.enabled?'checked':''} onchange="window._ytChEdit(${i},'enabled',this.checked)" />
         Attivo
@@ -11334,7 +11335,7 @@ window._ytChRemove = (i) => {
   renderYTChannelsList();
 };
 window.ytAddChannel = () => {
-  _ytChannels.push({ id: 'ch_' + Date.now(), name: '', type: 'channel_id', value: '', enabled: true });
+  _ytChannels.push({ id: 'ch_' + Date.now(), name: '', type: 'handle', value: '', enabled: true });
   renderYTChannelsList();
 };
 window.ytSaveChannels = async () => {
