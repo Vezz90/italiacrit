@@ -47,22 +47,33 @@ function extractWaypoints(raceDetail) {
   const html = Array.isArray(raceDetail?.info) ? raceDetail.info.join(' ') : (raceDetail?.info || '');
   if (!html) return null;
   const grab = (label) => (html.match(new RegExp(`${label}:</b>\\s*([^<\\r\\n]+)`, 'i')) || [])[1]?.trim() || '';
-  const localita  = grab('Localit\\S');
   const provincia = grab('Provincia');
   const partenza  = grab('Luogo Partenza') || grab('Luogo Ritrovo');
   const arrivo    = grab('Luogo Arrivo');
   if (!partenza) return null;
   const isCircuit = !arrivo || arrivo.toUpperCase() === partenza.toUpperCase() || /CIRCUIT/i.test(partenza);
+  // Il testo FCI ha spesso la forma "COMUNE - luogo specifico" (es. "Bosa -
+  // Viale Alghero"): il comune è quasi sempre riconosciuto da solo da
+  // Nominatim anche quando "comune - indirizzo/monumento" per esteso non lo
+  // è — usato come ripiego SOLO per il punto a cui appartiene (mai un
+  // comune "in prestito" dall'altro punto, che genera un fallback sbagliato).
+  const townGuess = (label) => (label.split(/\s+-\s+/)[0] || label).trim();
+  const mkPoint = (label) => ({
+    label,
+    query: [label, provincia, 'Italia'].filter(Boolean).join(', '),
+    fallbackQuery: [townGuess(label), provincia, 'Italia'].filter(Boolean).join(', '),
+  });
   return {
-    localita, provincia,
-    start: { label: partenza, query: [partenza, localita, provincia, 'Italia'].filter(Boolean).join(', ') },
-    finish: isCircuit ? null : { label: arrivo, query: [arrivo, localita, provincia, 'Italia'].filter(Boolean).join(', ') },
+    provincia,
+    start: mkPoint(partenza),
+    finish: isCircuit ? null : mkPoint(arrivo),
     isCircuit,
   };
 }
 
-// ── Geocodifica con fallback a due livelli ──────────────────────────────────
-async function geocode(point, fallbackLocalita) {
+// ── Geocodifica con fallback a due livelli (indirizzo per esteso, poi solo
+// il comune ricavato dallo stesso punto — mai da un punto diverso) ─────────
+async function geocode(point) {
   if (!point) return null;
   const tryQuery = async (q) => {
     const url = `https://nominatim.openstreetmap.org/search?format=json&limit=1&countrycodes=it&q=${encodeURIComponent(q)}`;
@@ -70,9 +81,9 @@ async function geocode(point, fallbackLocalita) {
     return (r && r[0]) ? { lat: parseFloat(r[0].lat), lon: parseFloat(r[0].lon) } : null;
   };
   let hit = await tryQuery(point.query).catch(() => null);
-  if (!hit && fallbackLocalita) {
+  if (!hit && point.fallbackQuery && point.fallbackQuery !== point.query) {
     await new Promise(r => setTimeout(r, 1100)); // rispetta 1 req/sec di Nominatim
-    hit = await tryQuery(`${fallbackLocalita}, Italia`).catch(() => null);
+    hit = await tryQuery(point.fallbackQuery).catch(() => null);
   }
   return hit;
 }
@@ -97,7 +108,7 @@ async function buildRaceRoute(raceDetail) {
   const wp = extractWaypoints(raceDetail);
   if (!wp) return null;
 
-  const startPos = await geocode(wp.start, wp.localita);
+  const startPos = await geocode(wp.start);
   if (!startPos) return null;
   await new Promise(r => setTimeout(r, 1100));
 
@@ -110,7 +121,7 @@ async function buildRaceRoute(raceDetail) {
     };
   }
 
-  const finishPos = await geocode(wp.finish, wp.localita);
+  const finishPos = await geocode(wp.finish);
   if (!finishPos) {
     // Solo la partenza è stata riconosciuta: meglio un segnaposto che niente.
     return {
