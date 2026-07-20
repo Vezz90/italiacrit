@@ -285,23 +285,29 @@ table, .rank-num, .rank-pts, .cat-pts,
   font-weight: 600;
 }
 
-.nav-search-wrap { margin-left: 20px; }
+.nav-search-wrap { margin-left: 20px; position: relative; display: flex; align-items: center; }
+
+.nav-search-icon-svg {
+  position: absolute; left: 11px; color: rgba(255,255,255,0.45);
+  pointer-events: none;
+}
 
 #nav-search {
-  background: rgba(255,255,255,0.08);
-  border: 1px solid rgba(255,255,255,0.12);
+  background: rgba(255,255,255,0.09);
+  border: 1px solid rgba(255,255,255,0.14);
   color: #ffffff;
   font-family: 'Inter', system-ui, sans-serif;
   font-size: 0.8125rem;
-  padding: 6px 12px;
+  padding: 8px 12px 8px 32px;
   border-radius: var(--r-sm);
-  width: 180px;
-  transition: border-color 0.15s, width 0.2s;
+  width: 240px;
+  transition: border-color 0.15s, background-color 0.15s, width 0.2s;
   outline: none;
 }
 
-#nav-search::placeholder { color: rgba(255,255,255,0.4); }
-#nav-search:focus { border-color: var(--red-hot); width: 220px; }
+#nav-search:hover { background: rgba(255,255,255,0.12); }
+#nav-search::placeholder { color: rgba(255,255,255,0.45); }
+#nav-search:focus { border-color: var(--red-hot); background: rgba(255,255,255,0.12); width: 300px; }
 
 .nav-search-icon { color: rgba(255,255,255,0.4); }
 
