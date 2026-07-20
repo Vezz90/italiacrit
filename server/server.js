@@ -1699,6 +1699,100 @@ async function writeVideos(obj) {
   }
   fs.writeFileSync(VIDEOS_PATH, JSON.stringify(obj, null, 2));
 }
+
+// ══════════════════════════════════════════════════════════════════════════════
+// Percorsi gara ricostruiti automaticamente (vedi server/route-builder.js) —
+// oggetto in kv_store chiave "race_routes", indicizzato per calendar id
+// (condiviso fra tutte le categorie della stessa gara/evento).
+// ══════════════════════════════════════════════════════════════════════════════
+const { buildRaceRoute } = require('./route-builder');
+
+async function readRaceRoutes() {
+  if (supabase) {
+    const { data, error } = await supabase.from('kv_store').select('value').eq('key', 'race_routes').single();
+    if (error && error.code !== 'PGRST116') console.error('[race_routes] read error:', error.message);
+    return data?.value || {};
+  }
+  return {};
+}
+async function writeRaceRoutes(obj) {
+  if (supabase) {
+    const { error } = await supabase.from('kv_store')
+      .upsert({ key: 'race_routes', value: obj, updated_at: new Date().toISOString() });
+    if (error) throw new Error('Supabase write error: ' + error.message);
+  }
+}
+
+app.get('/api/race-route/:calId', async (req, res) => {
+  const routes = await readRaceRoutes();
+  const r = routes[req.params.calId];
+  if (!r) return res.status(404).json({ error: 'Percorso non disponibile' });
+  res.json(r);
+});
+
+// Job in background (come pcs-import/xpix): geocodifica + instradamento
+// hanno un ritmo imposto dalle policy dei servizi gratuiti usati (Nominatim
+// max ~1 richiesta/sec), quindi un giro completo su tutto il calendario
+// richiede diversi minuti — non può essere sincrono su una singola richiesta HTTP.
+let _routeBuilderJob = null; // { running, log[], done, total, skipped, failed, startedAt }
+
+app.post('/api/admin/route-builder/run', requireAdmin, async (req, res) => {
+  if (_routeBuilderJob?.running) return res.status(409).json({ error: 'Già in corso' });
+  const force = !!req.body?.force;
+  const limit = req.body?.limit ? parseInt(req.body.limit, 10) : null;
+
+  _routeBuilderJob = { running: true, log: [], done: 0, total: 0, skipped: 0, failed: 0, startedAt: new Date().toISOString() };
+  res.json({ ok: true, message: 'Generazione percorsi avviata in background' });
+
+  (async () => {
+    const job = _routeBuilderJob;
+    try {
+      const [calendar, raceDetails] = await Promise.all([
+        readDataJsonFromGH('calendar.json'),
+        readDataJsonFromGH('race_details.json'),
+      ]);
+      const routes = await readRaceRoutes();
+      // Una voce per calendar id — l'evento, non la singola categoria.
+      let todo = (calendar || []).filter(g => g.id && (force || !routes[g.id]));
+      if (limit) todo = todo.slice(0, limit);
+      job.total = todo.length;
+      job.log.push(`${todo.length} gare da elaborare (su ${(calendar||[]).length} nel calendario).`);
+
+      for (const g of todo) {
+        // race_details.json è indicizzato con la stessa convenzione degli id
+        // di calendar.json (stesso slug nome+data) — verificato sui dati reali.
+        const det = (raceDetails || {})[g.id];
+        if (!det) { job.skipped++; job.done++; continue; }
+        try {
+          const built = await buildRaceRoute(det);
+          if (built) {
+            routes[g.id] = built;
+            await writeRaceRoutes(routes);
+            job.log.push(`✓ ${g.nome} — ${built.isCircuit ? 'circuito (segnaposto)' : (built.geometry ? built.distanceKm + ' km' : 'solo partenza')}`);
+          } else {
+            job.skipped++;
+            job.log.push(`— ${g.nome}: testo insufficiente, saltata`);
+          }
+        } catch (e) {
+          job.failed++;
+          job.log.push(`✗ ${g.nome}: ${e.message}`);
+        }
+        job.done++;
+        if (job.log.length > 300) job.log = job.log.slice(-300);
+      }
+      job.log.push(`Completato: ${job.done} elaborate, ${job.skipped} saltate, ${job.failed} errori.`);
+    } catch (e) {
+      job.log.push('ERRORE FATALE: ' + e.message);
+    } finally {
+      job.running = false;
+    }
+  })();
+});
+
+app.get('/api/admin/route-builder/status', requireAdmin, (req, res) => {
+  if (!_routeBuilderJob) return res.json({ running: false, log: [], done: 0, total: 0 });
+  res.json(_routeBuilderJob);
+});
 async function readPendingVideos() {
   if (supabase) {
     const { data, error } = await supabase.from('kv_store').select('value').eq('key', 'pending_videos').single();

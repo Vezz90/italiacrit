@@ -9115,6 +9115,9 @@ async function renderAdmin() {
         <div class="admin-nav-item" data-section="gare-gestione" onclick="adminNav('gare-gestione')">
           <span class="admin-nav-icon">🏁</span> Gare / Risultati
         </div>
+        <div class="admin-nav-item" data-section="percorsi" onclick="adminNav('percorsi')">
+          <span class="admin-nav-icon">🗺️</span> Percorsi gara
+        </div>
 
         <div class="admin-nav-group">Social & Automazione</div>
         <div class="admin-nav-item" data-section="social-queue" onclick="adminNav('social-queue')">
@@ -9385,6 +9388,22 @@ window.adminNav = async function(section) {
     }
 
     // ── TUTTI I VIDEO ─────────────────────────────────────────
+    case 'percorsi': {
+      main.innerHTML = `
+        <div class="admin-page-header">
+          <h1 class="admin-page-title">🗺️ Percorsi gara</h1>
+          <p class="admin-page-sub">Ricostruzione automatica del tragitto (partenza→arrivo, ciclabile reale) dal testo del comunicato FCI — indicativa, non un GPX ufficiale. Servizi gratuiti (Nominatim/OSRM), niente API key. Il giro completo impiega qualche minuto per il ritmo imposto dai servizi gratuiti.</p>
+        </div>
+        <div style="display:flex;gap:10px;flex-wrap:wrap;margin-bottom:16px;align-items:center">
+          <button onclick="window.routeBuilderRun(false)" id="rb-run-btn" style="background:var(--accent);color:#fff;border:none;padding:9px 18px;border-radius:6px;font-weight:600;cursor:pointer;font-size:.875rem">▶ Genera percorsi mancanti</button>
+          <button onclick="window.routeBuilderRun(true)" id="rb-run-force-btn" style="background:var(--bg-card);border:1px solid var(--border-subtle);color:var(--text-primary);padding:9px 18px;border-radius:6px;cursor:pointer;font-size:.875rem">↻ Rigenera anche quelli già fatti</button>
+        </div>
+        <div id="rb-status" style="font-size:.85rem;color:var(--text-muted);margin-bottom:10px"></div>
+        <div id="rb-log" style="background:var(--bg-card);border:1px solid var(--border-subtle);border-radius:8px;padding:12px;font-family:var(--font-mono,monospace);font-size:.78rem;max-height:420px;overflow-y:auto;white-space:pre-wrap"></div>`;
+      window._rbPoll();
+      break;
+    }
+
     case 'video-tutti': {
       main.innerHTML = `
         <div class="admin-page-header">
@@ -11693,6 +11712,40 @@ function renderXpixQueue() {
 
   container.innerHTML = stats + approvedHtml + dismissedHtml + rows;
 }
+
+// ── Percorsi gara (ricostruzione automatica) ──────────────────────────────
+window.routeBuilderRun = async (force) => {
+  const runBtn = document.getElementById('rb-run-btn');
+  const forceBtn = document.getElementById('rb-run-force-btn');
+  try {
+    await apiCall('/admin/route-builder/run', { method: 'POST', body: { force: !!force } });
+    if (runBtn) runBtn.disabled = true;
+    if (forceBtn) forceBtn.disabled = true;
+    window._rbPoll();
+  } catch (e) {
+    showToast('Errore: ' + e.message, 'error');
+  }
+};
+
+window._rbPoll = async () => {
+  const statusEl = document.getElementById('rb-status');
+  const logEl = document.getElementById('rb-log');
+  if (!statusEl || !logEl) return; // pagina cambiata nel frattempo
+  clearTimeout(window._rbPollTimer);
+  try {
+    const s = await apiCall('/admin/route-builder/status', { method: 'GET' });
+    statusEl.textContent = s.running
+      ? `⏳ In corso… ${s.done}/${s.total} (${s.skipped} saltate, ${s.failed} errori)`
+      : (s.total ? `✓ Ultimo giro: ${s.done}/${s.total} completate, ${s.skipped} saltate, ${s.failed} errori` : 'Nessun giro ancora eseguito.');
+    logEl.textContent = (s.log || []).slice(-100).join('\n');
+    logEl.scrollTop = logEl.scrollHeight;
+    const runBtn = document.getElementById('rb-run-btn');
+    const forceBtn = document.getElementById('rb-run-force-btn');
+    if (runBtn) runBtn.disabled = !!s.running;
+    if (forceBtn) forceBtn.disabled = !!s.running;
+    if (s.running) window._rbPollTimer = setTimeout(window._rbPoll, 2500);
+  } catch (e) { statusEl.textContent = 'Errore lettura stato: ' + e.message; }
+};
 
 window.xpixSync = async () => {
   const btn    = document.getElementById('xpix-sync-btn');
@@ -16060,6 +16113,64 @@ window._renderMediaAlbum = async function(albumId, profileId) {
   }
 };
 
+// ── PERCORSO GARA (ricostruzione automatica, vedi server/route-builder.js) ──
+// Leaflet caricato via CDN solo al bisogno (una gara su tre-quattro ha un
+// percorso disponibile): niente da scaricare per chi non vede mai una mappa.
+let _leafletLoading = null;
+function _ensureLeaflet() {
+  if (window.L) return Promise.resolve();
+  if (_leafletLoading) return _leafletLoading;
+  _leafletLoading = new Promise((resolve, reject) => {
+    const link = document.createElement('link');
+    link.rel = 'stylesheet';
+    link.href = 'https://unpkg.com/leaflet@1.9.4/dist/leaflet.css';
+    document.head.appendChild(link);
+    const script = document.createElement('script');
+    script.src = 'https://unpkg.com/leaflet@1.9.4/dist/leaflet.js';
+    script.onload = resolve;
+    script.onerror = () => reject(new Error('Leaflet non disponibile'));
+    document.head.appendChild(script);
+  });
+  return _leafletLoading;
+}
+
+window._loadRaceRouteMap = async (calId) => {
+  const box = document.getElementById('race-route-box');
+  if (!box || !calId) return;
+  try {
+    const route = await fetch(`${API_BASE}/race-route/${encodeURIComponent(calId)}`).then(r => r.ok ? r.json() : null);
+    if (!route || !route.start) return; // niente percorso per questa gara, box resta vuoto
+    await _ensureLeaflet();
+    if (!document.getElementById('race-route-box')) return; // pagina cambiata nel frattempo
+    box.innerHTML = `
+      <h4 style="margin:20px 0 8px;font-size:0.95rem;color:var(--primary)">Percorso${route.distanceKm ? ` — ${route.distanceKm} km circa` : ''}</h4>
+      <div id="race-route-leaflet" style="height:320px;border-radius:8px;overflow:hidden"></div>
+      <div style="font-size:0.72rem;color:var(--text-muted);margin-top:6px">
+        Tragitto indicativo ricostruito automaticamente da partenza/arrivo dichiarati nel comunicato gara — non è il tracciato GPX ufficiale.
+      </div>`;
+    const L = window.L;
+    const map = L.map('race-route-leaflet', { scrollWheelZoom: false });
+    L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+      attribution: '&copy; OpenStreetMap contributors', maxZoom: 18,
+    }).addTo(map);
+    const startMarker = L.circleMarker([route.start.lat, route.start.lon], { radius: 7, color: '#16a34a', fillColor: '#16a34a', fillOpacity: 1 })
+      .addTo(map).bindTooltip(route.isCircuit ? 'Circuito: ' + (route.start.label || '') : 'Partenza: ' + (route.start.label || ''));
+    const bounds = [[route.start.lat, route.start.lon]];
+    if (route.finish) {
+      L.circleMarker([route.finish.lat, route.finish.lon], { radius: 7, color: '#dc2626', fillColor: '#dc2626', fillOpacity: 1 })
+        .addTo(map).bindTooltip('Arrivo: ' + (route.finish.label || ''));
+      bounds.push([route.finish.lat, route.finish.lon]);
+    }
+    if (route.geometry && route.geometry.length) {
+      const latlngs = route.geometry.map(([lon, lat]) => [lat, lon]);
+      L.polyline(latlngs, { color: '#e8001d', weight: 4, opacity: 0.85 }).addTo(map);
+      bounds.push(...latlngs);
+    }
+    map.fitBounds(bounds, { padding: [24, 24] });
+    if (bounds.length === 1) map.setView(bounds[0], 13);
+  } catch { /* percorso non disponibile, niente da mostrare */ }
+};
+
 // ── GARA ──────────────────────────────────────────────────────
 async function renderGara(gara_id) {
   if (!globalData) return;
@@ -16305,6 +16416,7 @@ async function renderGara(gara_id) {
       <div class="card" style="margin-top:24px; padding:24px;">
         <h3 style="margin-top:0; margin-bottom:16px; font-size:1.1rem; color:var(--primary);">Informazioni e Dettagli Tecnici</h3>
         ${infoBlocks}
+        <div id="race-route-box"></div>
         <div style="margin-top:16px;">
           <a href="${esc(_raceDetail.fci_url)}" target="_blank" class="btn-action" style="font-size:0.8rem; display:inline-block;">VAI ALLA SCHEDA FCI &rarr;</a>
         </div>
@@ -16691,6 +16803,7 @@ async function renderGara(gara_id) {
     ${detailsHtml}
     <div id="gara-comments-section" style="margin-top:28px"></div>
   `);
+  if (document.getElementById('race-route-box')) window._loadRaceRouteMap(_calId);
 
   // Foto atleti nella tabella risultati (batch async)
   // _rkPh globale — usato anche da _loadGaraPcsExt
