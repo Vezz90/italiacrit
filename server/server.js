@@ -6885,16 +6885,31 @@ async function _fetchRawImageBuffer(filename) {
   } catch (e) { console.error(`[og-image] fetch eccezione per ${filename}:`, e.message); return null; }
 }
 
-// Carica una foto e la adatta a 1200x630 PNG (sfondo pieno, usato per le
-// gare). position:'attention' (analisi entropia/salienza di sharp) invece
-// del crop-al-centro di default: su una foto verticale il centro geometrico
-// può cadere su un dettaglio a caso invece che sul soggetto principale.
+// Sceglie la strategia di posizionamento per un ritaglio "cover": per le
+// foto orizzontali/quadrate 'attention' (analisi entropia/salienza di sharp)
+// funziona bene, il ritaglio necessario è modesto. Per le foto VERTICALI
+// (tipiche degli scatti da smartphone all'arrivo) il ritaglio verso un
+// formato largo è invece drastico — su un caso reale verificato (foto
+// 1152x2048 ridotta a una fascia di soli 630px) 'attention' ha scelto lo
+// striscione/l'arco d'arrivo sopra la testa del corridore (alto contrasto
+// per le righe del tessuto e il fogliame degli alberi) invece del corridore
+// stesso, che pur essendo il soggetto ha meno "rumore" visivo grezzo di
+// quanto ne rilevi l'euristica. In verticale il fotografo inquadra quasi
+// sempre il soggetto vicino al centro: il centro geometrico ('centre',
+// default di sharp) si è dimostrato molto più affidabile in questo caso.
+function _ogCropPosition(meta) {
+  const sharp = require('sharp');
+  return (meta && meta.height > meta.width * 1.15) ? 'centre' : sharp.strategy.attention;
+}
+
+// Carica una foto e la adatta a 1200x630 PNG (sfondo pieno, usato per le gare).
 async function _photoToOgPng(filename) {
   const raw = await _fetchRawImageBuffer(filename);
   if (!raw) return null;
   try {
     const sharp = require('sharp');
-    return await sharp(raw).resize(1200, 630, { fit: 'cover', position: sharp.strategy.attention }).png().toBuffer();
+    const meta = await sharp(raw).metadata();
+    return await sharp(raw).resize(1200, 630, { fit: 'cover', position: _ogCropPosition(meta) }).png().toBuffer();
   } catch { return null; }
 }
 
@@ -6907,7 +6922,8 @@ async function _ogCircleAvatar(photoSource, diameter) {
   if (!raw) return null;
   try {
     const sharp = require('sharp');
-    const resized = await sharp(raw).resize(diameter, diameter, { fit: 'cover', position: sharp.strategy.attention }).toBuffer();
+    const meta = await sharp(raw).metadata();
+    const resized = await sharp(raw).resize(diameter, diameter, { fit: 'cover', position: _ogCropPosition(meta) }).toBuffer();
     const mask = Buffer.from(`<svg width="${diameter}" height="${diameter}"><circle cx="${diameter/2}" cy="${diameter/2}" r="${diameter/2}" fill="#fff"/></svg>`);
     const circle = await sharp(resized).composite([{ input: mask, blend: 'dest-in' }]).png().toBuffer();
     // Bordo sottile per staccare l'avatar dallo sfondo scuro
