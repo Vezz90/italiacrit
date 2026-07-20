@@ -1673,6 +1673,7 @@ app.post('/api/internal/notify-results', async (req, res) => {
     // Background: accoda post social + notifica follower
     queueSocialPostsForToday().catch(e => console.warn('[social] queue error:', e.message));
     notifyFollowers().catch(e => console.warn('[follow] notify error:', e.message));
+    notifyRankChanges().catch(e => console.warn('[rank] notify error:', e.message));
     res.json({ ok: true, ...r });
   } catch (e) { res.status(500).json({ error: e.message }); }
 });
@@ -5988,7 +5989,7 @@ async function notifyFollowers() {
     const recentAtleti = new Set();
     const atletaResults = {}; // atleta_id → best result today
     for (const r of results) {
-      const d = (r.data_gara || r.date || '').slice(0, 10);
+      const d = (r.data || '').slice(0, 10);
       if (d !== today && d !== yesterday) continue;
       if (!r.atleta_id) continue;
       recentAtleti.add(r.atleta_id);
@@ -6020,6 +6021,97 @@ async function notifyFollowers() {
     }
     console.log(`[follow] Notifiche follower inviate per ${recentAtleti.size} atleti`);
   } catch (e) { console.warn('[follow] notifyFollowers error:', e.message); }
+}
+
+// ── Notifica variazione posizione in classifica ──────────────────────────────
+// Chiamata da notify-results insieme a notifyFollowers(): per ogni atleta con
+// risultati recenti (oggi/ieri), ricalcola la sua posizione in classifica
+// (stessa categoria via _rankingCodeFromRow) confrontando il totale punti
+// PRIMA e DOPO l'inclusione dei risultati recenti — stessa logica di trend
+// già usata lato client in updateRankTable(), qui applicata per decidere se
+// notificare. Notifica sia l'atleta stesso (se ha un account collegato) sia
+// i suoi follower.
+async function notifyRankChanges() {
+  try {
+    const results = readDataJson('results_raw.json') || [];
+    const today     = new Date().toISOString().slice(0, 10);
+    const yesterday = new Date(Date.now() - 86400000).toISOString().slice(0, 10);
+
+    const recentAtleti = new Set();
+    for (const r of results) {
+      const d = (r.data || '').slice(0, 10);
+      if ((d === today || d === yesterday) && r.atleta_id) recentAtleti.add(r.atleta_id);
+    }
+    if (!recentAtleti.size) return;
+
+    // Raggruppa i risultati per categoria di classifica (un atleta appartiene
+    // sempre a una sola categoria) e somma i punti totali per atleta, sia
+    // includendo che escludendo i risultati recenti.
+    const byCat = {}; // catCode → rows[]
+    for (const r of results) {
+      if (!r.atleta_id) continue;
+      const cat = _rankingCodeFromRow(r);
+      if (!cat) continue;
+      (byCat[cat] = byCat[cat] || []).push(r);
+    }
+
+    const changes = {}; // atleta_id → { cat, curPos, prevPos, isNew }
+    const nomiById = {};
+    for (const [cat, rows] of Object.entries(byCat)) {
+      const curPts = {}, prevPts = {};
+      for (const r of rows) {
+        const pts = Number(r.punti_effettivi) || 0;
+        curPts[r.atleta_id] = (curPts[r.atleta_id] || 0) + pts;
+        const d = (r.data || '').slice(0, 10);
+        if (d !== today && d !== yesterday) prevPts[r.atleta_id] = (prevPts[r.atleta_id] || 0) + pts;
+        if (!nomiById[r.atleta_id]) nomiById[r.atleta_id] = `${r.cognome || ''} ${r.nome || ''}`.trim();
+      }
+      const rankOf = (ptsMap) => {
+        const rank = {};
+        Object.entries(ptsMap).sort(([, a], [, b]) => b - a).forEach(([id], i) => { rank[id] = i + 1; });
+        return rank;
+      };
+      const curRank = rankOf(curPts), prevRank = rankOf(prevPts);
+      for (const id of Object.keys(curPts)) {
+        if (!recentAtleti.has(id)) continue;
+        const cur = curRank[id];
+        const prev = prevRank[id];
+        if (prev == null) changes[id] = { cat, curPos: cur, isNew: true };
+        else if (cur !== prev) changes[id] = { cat, curPos: cur, prevPos: prev, isNew: false };
+      }
+    }
+    if (!Object.keys(changes).length) return;
+
+    const allFollows = await queries.getAllAtletaFollows();
+    const byAtleta = {};
+    for (const { user_id, atleta_id } of allFollows) {
+      if (!byAtleta[atleta_id]) byAtleta[atleta_id] = new Set();
+      byAtleta[atleta_id].add(user_id);
+    }
+
+    for (const [atletaId, ch] of Object.entries(changes)) {
+      const nome = nomiById[atletaId] || '';
+      const title = ch.isNew
+        ? `📊 ${nome} è entrato in classifica`
+        : ch.curPos < ch.prevPos
+          ? `📈 ${nome} sale al ${ch.curPos}° posto`
+          : `📉 ${nome} scende al ${ch.curPos}° posto`;
+      const body = ch.isNew
+        ? `${ch.curPos}° posto in classifica`
+        : `Classifica: ${ch.prevPos}° → ${ch.curPos}°`;
+      const url = `/#/classifica/${encodeURIComponent(ch.cat)}`;
+
+      const recipients = new Set(byAtleta[atletaId] || []);
+      try {
+        const u = await queries.getUserByAtletaId(atletaId);
+        if (u) recipients.add(u.id);
+      } catch {}
+      for (const userId of recipients) {
+        sendPushToUser(userId, { title, body, url }).catch(() => {});
+      }
+    }
+    console.log(`[rank] Notifiche variazione classifica inviate per ${Object.keys(changes).length} atleti`);
+  } catch (e) { console.warn('[rank] notifyRankChanges error:', e.message); }
 }
 
 // ══════════════════════════════════════════════════════════════════════════════
