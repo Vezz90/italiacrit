@@ -6788,6 +6788,69 @@ function buildGaraNameSvg(title, subtitle) {
 </svg>`;
 }
 
+// Tempo vincitore da km/media (stessa formula di _calcWinnerTime lato client).
+function _ogWinnerTime(km, media) {
+  const k = parseFloat(km), m = parseFloat(media);
+  if (!k || !m) return '';
+  const totalSec = Math.round(k / m * 3600);
+  const h = Math.floor(totalSec / 3600);
+  const min = Math.floor((totalSec % 3600) / 60);
+  const sec = totalSec % 60;
+  const mm = String(min).padStart(2, '0'), ss = String(sec).padStart(2, '0');
+  return h > 0 ? `${h}h ${mm}'${ss}"` : `${mm}'${ss}"`;
+}
+// Distacco FCI "a 14\"" → "+14\"" (stessa pulizia di _fmtGap lato client).
+function _ogFmtGap(tempo) {
+  if (!tempo || !String(tempo).trim()) return 'ST';
+  return String(tempo).trim().replace(/^a\s*/, '+');
+}
+
+// Card OG per una gara SENZA foto disponibile: stessa lista risultati (fino
+// a 10) mostrata nelle grafiche Instagram/Post generate lato client, invece
+// della card generica con solo il nome della gara — più informativa e
+// coerente su tutti i canali di condivisione, non solo su chi ha una foto
+// caricata. Righe compatte e centrate verticalmente quando i risultati sono
+// pochi (stesso fix applicato a _drawGaraColumn lato client), non stirate a
+// riempire tutto lo spazio disponibile.
+function buildGaraResultsCardSvg({ title, catLabel, region, date, mult, km, media, winnerTime, results = [] }) {
+  const pad = 60;
+  const medal = ['#f5c400', '#dadada', '#cd7f32'];
+  const headerRight = `
+    <text x="1176" y="34" font-family="Arial,Helvetica,sans-serif" font-size="21" font-weight="800" fill="#e8001d" text-anchor="end" letter-spacing="1">${_ogEsc((catLabel || '').toUpperCase())}</text>
+    ${region ? `<text x="1176" y="50" font-family="Arial,Helvetica,sans-serif" font-size="15" font-weight="600" fill="#f5c400" text-anchor="end">${_ogEsc(region.toUpperCase())}</text>` : ''}`;
+
+  const titleStr = (title || '').toUpperCase();
+  const fsT = titleStr.length > 34 ? Math.max(26, Math.round(42 * 34 / titleStr.length)) : 42;
+  const metaParts = [date, mult ? `×${mult}` : '', km ? `${km} km` : '', media ? `${media} km/h` : '', winnerTime ? `⏱ ${winnerTime}` : ''].filter(Boolean);
+
+  const listTop0 = 150, listBot = 578;
+  const n = results.length;
+  const availH = listBot - listTop0;
+  const rH = n ? Math.min(Math.round(availH / n), Math.round(availH / 6)) : 0;
+  const listTop = listTop0 + Math.round((availH - rH * n) / 2);
+
+  const rowsHtml = results.slice(0, 10).map((r, i) => {
+    const ry = listTop + i * rH, mid = ry + rH / 2;
+    const isFirst = i === 0;
+    const name = `${r.cognome || ''} ${r.nome || ''}`.trim();
+    return `${isFirst
+        ? `<rect x="${pad}" y="${ry + 2}" width="${1200 - pad * 2}" height="${rH - 4}" rx="8" fill="rgba(245,196,0,0.07)" stroke="rgba(245,196,0,0.35)"/>`
+        : (i % 2 === 0 ? `<rect x="${pad}" y="${ry}" width="${1200 - pad * 2}" height="${rH}" fill="rgba(255,255,255,0.022)"/>` : '')}
+    <rect x="${pad + 10}" y="${mid - 15}" width="42" height="30" rx="6" fill="${i < 3 ? medal[i] : 'rgba(255,255,255,0.08)'}"/>
+    <text x="${pad + 31}" y="${mid + 7}" font-family="Arial,Helvetica,sans-serif" font-size="17" font-weight="800" fill="${i < 3 ? '#1a1200' : 'rgba(255,255,255,0.5)'}" text-anchor="middle">${String(i + 1).padStart(2, '0')}</text>
+    <text x="${pad + 68}" y="${mid + 7}" font-family="Arial,Helvetica,sans-serif" font-size="23" font-weight="700" fill="${i < 3 ? '#f4f4f4' : 'rgba(255,255,255,0.88)'}">${_ogEsc(name.slice(0, 26))}</text>
+    <text x="${pad + 560}" y="${mid + 7}" font-family="Arial,Helvetica,sans-serif" font-size="16" fill="rgba(255,255,255,0.4)">${_ogEsc((r.team || '').slice(0, 26))}</text>
+    <text x="${1200 - pad - 10}" y="${mid + 7}" font-family="Arial,Helvetica,sans-serif" font-size="19" font-weight="700" fill="${isFirst ? 'rgba(245,196,0,0.85)' : 'rgba(255,255,255,0.4)'}" text-anchor="end">${_ogEsc(isFirst ? (winnerTime || '') : _ogFmtGap(r.tempo))}</text>`;
+  }).join('');
+
+  const body = `
+    <text x="${pad}" y="102" font-family="Arial,Helvetica,sans-serif" font-size="${fsT}" font-weight="800" fill="#f4f4f4">${_ogEsc(titleStr)}</text>
+    <text x="${pad}" y="128" font-family="Arial,Helvetica,sans-serif" font-size="18" fill="rgba(255,255,255,0.4)">${_ogEsc(metaParts.join('   ·   '))}</text>
+    <rect x="${pad}" y="138" width="${1200 - pad * 2}" height="1" fill="rgba(255,255,255,0.08)"/>
+    ${rowsHtml}`;
+  return _ogWrap(body, { headerRight });
+}
+
 async function renderOgPng(svgStr) {
   try {
     const sharp = require('sharp');
@@ -7014,7 +7077,34 @@ app.get('/api/og-image/gara/:id', async (req, res) => {
       }
     } catch (e) { console.error(`[og-image] lookup foto fallito per ${garaId}:`, e.message); }
 
-    // 2) Altrimenti immagine con logo ICS + NOME della gara sotto
+    // 2) Niente foto né video: se ci sono risultati, usa la stessa card
+    // "lista risultati" mostrata nelle grafiche Instagram/Post generate lato
+    // client (posizioni, nomi, team, tempi) invece della card generica con
+    // solo il nome — molto più informativa, e la maggioranza delle gare non
+    // ha ancora una foto caricata ma ha già i risultati dallo scraper FCI.
+    try {
+      const resultsRaw = (await readDataJsonFromGH('results_raw.json')) || [];
+      const results = resultsRaw.filter(r => r.gara_id === garaId).sort((a, b) => a.posizione - b.posizione);
+      if (results.length) {
+        const first = results[0];
+        const catCode = _rankingCodeFromRow(first);
+        const km = first.km || '', media = first.media || '';
+        const svg = buildGaraResultsCardSvg({
+          title,
+          catLabel: (catCode && _OG_CAT_MAP[catCode]) || first.categoria || '',
+          region: cal?.regione || first.regione || '',
+          date: cal?.data ? new Date(cal.data).toLocaleDateString('it-IT', { day: 'numeric', month: 'short', year: 'numeric' }) : '',
+          mult: first.moltiplicatore || 1,
+          km, media,
+          winnerTime: _ogWinnerTime(km, media),
+          results,
+        });
+        const buf = await renderOgPng(svg);
+        if (buf) return sendPng(buf);
+      }
+    } catch (e) { console.error(`[og-image] card risultati fallita per ${garaId}:`, e.message); }
+
+    // 3) Nessun risultato disponibile (gara futura): logo ICS + nome gara
     const date = cal?.data ? new Date(cal.data).toLocaleDateString('it-IT', { day: 'numeric', month: 'long', year: 'numeric' }) : '';
     const subtitle = [date, cal?.luogo || cal?.regione || ''].filter(Boolean).join(' · ');
     const svg = buildGaraNameSvg(title, subtitle);
