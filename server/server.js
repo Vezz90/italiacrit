@@ -454,6 +454,63 @@ ${bodyHtml || ''}
 // così il link condiviso e l'immagine sono sul dominio reale (non onrender).
 const API_BASE_URL = 'https://italiacyclingstats.com';
 
+// Hash deterministico stringa→intero: stesso seed = stessa scelta, seed
+// diverso = frase diversa. Usato per variare la narrazione del podio senza
+// renderla sempre identica (che la farebbe sembrare generata da un
+// template fisso), ma restando STABILE per lo stesso post — un crawler che
+// ripassa sulla stessa gara vede sempre la stessa frase, solo gare/atleti
+// diversi ne vedono varianti diverse.
+function _ogSeedPick(arr, seed) {
+  let h = 0;
+  const s = String(seed);
+  for (let i = 0; i < s.length; i++) h = (h * 31 + s.charCodeAt(i)) >>> 0;
+  return arr[h % arr.length];
+}
+
+// Vittorie e podi di un atleta nella propria categoria/genere fino a (e
+// inclusa) una certa data — usato per raccontare il traguardo raggiunto
+// (es. "5ª vittoria stagionale") invece del solo piazzamento della gara.
+function _ogSeasonTally(resultsRaw, atleta_id, genere, uptoDate) {
+  let wins = 0, podiums = 0;
+  for (const r of resultsRaw) {
+    if (r.atleta_id !== atleta_id || r.genere !== genere) continue;
+    if ((r.data || '') > uptoDate) continue;
+    const pos = Number(r.posizione);
+    if (pos === 1) wins++;
+    if (pos >= 1 && pos <= 3) podiums++;
+  }
+  return { wins, podiums };
+}
+
+const _OG_WIN_PHRASES_1 = [
+  '{n} centra la prima vittoria stagionale',
+  "Prima vittoria dell'anno per {n}",
+  '{n} apre il proprio bottino stagionale',
+  'Debutto vincente in stagione per {n}',
+];
+const _OG_WIN_PHRASES_N = [
+  '{k}ª vittoria stagionale per {n}',
+  "{n} centra il {k}° successo dell'anno",
+  '{n} allunga: {k}ª vittoria in stagione',
+  'Per {n} è già la {k}ª vittoria stagionale',
+];
+const _OG_POD_PHRASES_1 = [
+  'primo podio stagionale per {n}',
+  "{n} conquista il primo podio dell'anno",
+];
+const _OG_POD_PHRASES_N = [
+  '{k}° podio stagionale per {n}',
+  '{n} sale sul podio per la {k}ª volta in stagione',
+];
+function _ogWinnerLine(nome, wins, seed) {
+  const tpl = _ogSeedPick(wins <= 1 ? _OG_WIN_PHRASES_1 : _OG_WIN_PHRASES_N, seed);
+  return tpl.replace('{n}', nome).replace('{k}', String(wins));
+}
+function _ogPodiumLine(nome, podiums, seed) {
+  const tpl = _ogSeedPick(podiums <= 1 ? _OG_POD_PHRASES_1 : _OG_POD_PHRASES_N, seed);
+  return tpl.replace('{n}', nome).replace('{k}', String(podiums));
+}
+
 app.get('/og/gara/:id', async (req, res) => {
   const id  = req.params.id;
   // Un utente vero (non un bot) che apre questo URL — tipicamente cliccando
@@ -480,27 +537,54 @@ app.get('/og/gara/:id', async (req, res) => {
   // Podio con squadra per ognuno (nome (team) invece del solo nome).
   const top3     = results.slice(0,3).map((r,i)=>`${i+1}° ${r.cognome} ${r.nome}${r.team ? ` (${r.team})` : ''}`).join(' · ');
   const luogo    = cal?.luogo || cal?.regione || '';
-  // Piccolo commento sul vincitore basato sui dati stagionali fino a questa
-  // gara (vittorie ottenute finora, questa inclusa): conta le vittorie dello
-  // stesso atleta nella stessa categoria/genere con data <= quella della gara.
-  let winnerComment = '';
-  const winner = results[0];
+  // Narrazione dinamica su vincitore + 2°/3° classificato, basata sui dati
+  // stagionali reali (vittorie/podi ottenuti finora, questa gara inclusa) —
+  // non un commento statico ("Vince X") ma una frase diversa a seconda del
+  // traguardo raggiunto (prima vittoria, 5ª vittoria, primo podio, ecc.),
+  // con più varianti di formulazione scelte in modo deterministico per gara
+  // (_ogSeedPick): stessa gara → stessa frase se ricondivisa, gare diverse
+  // → frasi diverse, così non sembra un testo generato da un template fisso.
+  const winner = results[0], second = results[1], third = results[2];
+  const podiumLines = [];
+  let winnerTitleTail = '';
   if (winner?.atleta_id) {
-    const winsSoFar = (resultsRaw || []).filter(r =>
-      r.atleta_id === winner.atleta_id && Number(r.posizione) === 1 &&
-      r.genere === winner.genere && (r.data || '') <= raceDate
-    ).length;
-    if (winsSoFar === 1) winnerComment = `Prima vittoria stagionale per ${winner.cognome} ${winner.nome}.`;
-    else if (winsSoFar > 1) winnerComment = `${winsSoFar}ª vittoria stagionale per ${winner.cognome} ${winner.nome}.`;
+    const { wins } = _ogSeasonTally(resultsRaw || [], winner.atleta_id, winner.genere, raceDate);
+    const winnerName = `${winner.cognome} ${winner.nome}`;
+    podiumLines.push(_ogWinnerLine(winnerName, wins, id + '_1') + '.');
+    winnerTitleTail = _ogSeedPick(wins <= 1 ? [
+      `Vince ${winnerName}`,
+      `${winnerName} si impone`,
+      `Successo di ${winnerName}`,
+      `${winnerName} conquista la vittoria`,
+    ] : [
+      `Vince ${winnerName} (${wins}ª stagionale)`,
+      `${winnerName} centra il ${wins}° successo dell'anno`,
+      `${wins}ª vittoria stagionale per ${winnerName}`,
+      `${winnerName} allunga: ${wins}ª vittoria in stagione`,
+    ], id + '_t');
+  }
+  if (second?.atleta_id) {
+    const { podiums } = _ogSeasonTally(resultsRaw || [], second.atleta_id, second.genere, raceDate);
+    podiumLines.push(_ogPodiumLine(`${second.cognome} ${second.nome}`, podiums, id + '_2') + '.');
+  }
+  if (third?.atleta_id) {
+    const { podiums } = _ogSeasonTally(resultsRaw || [], third.atleta_id, third.genere, raceDate);
+    podiumLines.push(_ogPodiumLine(`${third.cognome} ${third.nome}`, podiums, id + '_3') + '.');
   }
   // Facebook (verificato con post reali pubblicati) non mostra MAI la
   // descrizione per questo tipo di condivisione — né in anteprima né nel post
   // finale — solo dominio + titolo. Per questo il vincitore va anche nel
   // TITOLO stesso, l'unico campo che Facebook mostra sempre in modo
   // affidabile, non solo nella descrizione (comunque generata per gli altri
-  // canali/anteprime che invece la mostrano, es. WhatsApp, Twitter).
-  const title = winner ? `${raceName} — Vince ${winner.cognome} ${winner.nome}` : raceName;
-  const desc  = [date, luogo, top3, winnerComment].filter(Boolean).join(' — ');
+  // canali/anteprime che invece la mostrano, es. WhatsApp, Twitter). Se la
+  // variante dinamica rende il titolo troppo lungo (nomi gara già lunghi di
+  // loro), si ricade sul semplice "Vince X" invece di tagliarlo a metà.
+  let title = raceName;
+  if (winner) {
+    const longTitle = `${raceName} — ${winnerTitleTail}`;
+    title = longTitle.length <= 100 ? longTitle : `${raceName} — Vince ${winner.cognome} ${winner.nome}`;
+  }
+  const desc = [date, luogo, top3, podiumLines.join(' ')].filter(Boolean).join(' — ');
   const img     = `${API_BASE_URL}/api/og-image/gara/${encodeURIComponent(id)}`;
   const redirect = `${SITE_URL}/gara/${encodeURIComponent(id)}`;
   const canonical = `${API_BASE_URL}/og/gara/${encodeURIComponent(id)}`;
