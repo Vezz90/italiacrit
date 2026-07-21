@@ -20748,7 +20748,6 @@ const SHARE_TAG = '#italiacrit #ciclismo';
 window._shareGaraData = null; window._shareAtletaData = null; window._shareTeamData = null;
 let _shareType, _sharePayload, _sharePlatKey = 'instagram';
 let _shareLogoImg = null;
-let _regionLogoCache = {};
 
 // ── MEDIA (foto/video/dirette per gara, stile YouTube) ───────────────────
 let mediaTab = 'video'; // 'video' | 'dirette' | 'presentazioni' | 'programmi_tv'
@@ -21280,20 +21279,6 @@ async function _getLogo() {
   });
 }
 
-// Mappa regione → file logo (per sostituire il testo nella card gara).
-// Vuota: tutte le regioni — Toscana compresa — vengono mostrate come testo.
-const REGION_LOGOS = {};
-async function _getRegionLogo(region) {
-  const src = REGION_LOGOS[(region||'').toUpperCase()];
-  if (!src) return null;
-  if (_regionLogoCache[src]) return _regionLogoCache[src];
-  return new Promise(res => {
-    const img = new Image(); img.crossOrigin = 'anonymous';
-    img.onload = () => { _regionLogoCache[src] = img; res(img); };
-    img.onerror = () => { _regionLogoCache[src] = null; res(null); };
-    img.src = src;
-  });
-}
 // ── Helper tempo gara ─────────────────────────────────────────────────────
 // Calcola il tempo del vincitore da km e media (km/h) → "4h 19'18\""
 function _calcWinnerTime(km, media) {
@@ -21600,42 +21585,24 @@ function _drawGaraColumn(ctx, x, colW, topY, bottomY, slice, startIdx, winnerTim
 }
 
 // ── GARA CARD v6 — UCI-inspired, no points, big names ────────
-function _drawGara(ctx, W, H, d, logo, regionLogo) {
-  const { name, date, cat, mult, tipo, km, media, results, region, luogo, winnerTime } = d;
+function _drawGara(ctx, W, H, d, logo) {
+  const { name, date, cat, mult, tipo, km, media, results, winnerTime } = d;
   const pad = Math.round(W * 0.048);
 
-  // ── Header compatto Velon: flat, logo a sinistra (grande) + regione accanto, URL a destra ──
+  // ── Header compatto Velon: flat, logo a sinistra (grande), categoria a destra ──
+  // Niente regione: il dato non è sempre affidabile nei risultati gara (a
+  // differenza della categoria, sempre corretta) — meglio ometterla che
+  // rischiare di mostrarne una sbagliata su un'immagine pubblica.
   const hH = Math.round(H * 0.095);
-  let logoRight = pad;
   if (logo) {
     const lH = Math.round(hH * 0.70);
     const lW = Math.round(lH * logo.naturalWidth / logo.naturalHeight);
     ctx.drawImage(logo, pad, Math.round((hH - lH) / 2), lW, lH);
-    logoRight = pad + lW;
   } else {
     const fsLg = Math.round(hH * 0.42);
     ctx.font = `900 ${fsLg}px 'Inter Tight','Inter Tight',sans-serif`;
     ctx.fillStyle = '#ffffff';
     ctx.fillText('ICS', pad, Math.round(hH * 0.64));
-    logoRight = pad + ctx.measureText('ICS').width;
-  }
-  // Regione (o luogo) accanto al logo — usa logo regionale se disponibile
-  const regTxt = (region || luogo || '').toUpperCase();
-  if (regionLogo) {
-    const rH = Math.round(hH * 0.62);
-    const rW = Math.round(rH * regionLogo.naturalWidth / regionLogo.naturalHeight);
-    const rX = logoRight + 20;
-    const rY = Math.round((hH - rH) / 2);
-    ctx.drawImage(regionLogo, rX, rY, rW, rH);
-  } else if (regTxt) {
-    ctx.fillStyle = 'rgba(255,255,255,0.16)';
-    ctx.fillRect(logoRight + 16, Math.round(hH * 0.28), 2, Math.round(hH * 0.44));
-    const rfs = Math.round(hH * 0.34);
-    ctx.font = `800 ${rfs}px 'Inter Tight',sans-serif`;
-    ctx.fillStyle = '#f5c400';
-    ctx.textAlign = 'left'; ctx.textBaseline = 'middle';
-    ctx.fillText(regTxt, logoRight + 30, Math.round(hH * 0.52));
-    ctx.textBaseline = 'alphabetic';
   }
   // Categoria in alto a destra (sostituisce l'URL italiacrit)
   const fsCatH = Math.round(hH * 0.36);
@@ -21973,8 +21940,7 @@ async function generateShareCanvas(type, payload, platKey) {
   try { if (document.fonts && document.fonts.ready) await document.fonts.ready; } catch(e){}
   _bg(ctx,p.w,p.h);
   if(type==='gara') {
-    const regionLogo = await _getRegionLogo(payload.region);
-    _drawGara(ctx,p.w,p.h,payload,logo,regionLogo);
+    _drawGara(ctx,p.w,p.h,payload,logo);
   } else {
     _header(ctx,logo,p.w,p.h, type==='class'?payload:null, (type==='atleta'||type==='team')?payload.cat:null); _footer(ctx,p.w,p.h);
     if(type==='atleta') {
