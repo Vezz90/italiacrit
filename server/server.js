@@ -6812,12 +6812,14 @@ function _ogFmtGap(tempo) {
 // caricata. Righe compatte e centrate verticalmente quando i risultati sono
 // pochi (stesso fix applicato a _drawGaraColumn lato client), non stirate a
 // riempire tutto lo spazio disponibile.
-function buildGaraResultsCardSvg({ title, catLabel, region, date, mult, km, media, winnerTime, results = [] }) {
+function buildGaraResultsCardSvg({ title, catLabel, date, mult, km, media, winnerTime, results = [] }) {
   const pad = 60;
   const medal = ['#f5c400', '#dadada', '#cd7f32'];
+  // Niente regione in card: il dato non è sempre affidabile nei risultati
+  // gara (a differenza della categoria, sempre corretta) — meglio ometterla
+  // che rischiare di mostrarne una sbagliata su un'immagine pubblica.
   const headerRight = `
-    <text x="1176" y="34" font-family="Arial,Helvetica,sans-serif" font-size="21" font-weight="800" fill="#e8001d" text-anchor="end" letter-spacing="1">${_ogEsc((catLabel || '').toUpperCase())}</text>
-    ${region ? `<text x="1176" y="50" font-family="Arial,Helvetica,sans-serif" font-size="15" font-weight="600" fill="#f5c400" text-anchor="end">${_ogEsc(region.toUpperCase())}</text>` : ''}`;
+    <text x="1176" y="38" font-family="Arial,Helvetica,sans-serif" font-size="21" font-weight="800" fill="#e8001d" text-anchor="end" letter-spacing="1">${_ogEsc((catLabel || '').toUpperCase())}</text>`;
 
   const titleStr = (title || '').toUpperCase();
   const fsT = titleStr.length > 34 ? Math.max(26, Math.round(42 * 34 / titleStr.length)) : 42;
@@ -7092,7 +7094,6 @@ app.get('/api/og-image/gara/:id', async (req, res) => {
         const svg = buildGaraResultsCardSvg({
           title,
           catLabel: (catCode && _OG_CAT_MAP[catCode]) || first.categoria || '',
-          region: cal?.regione || first.regione || '',
           date: cal?.data ? new Date(cal.data).toLocaleDateString('it-IT', { day: 'numeric', month: 'short', year: 'numeric' }) : '',
           mult: first.moltiplicatore || 1,
           km, media,
