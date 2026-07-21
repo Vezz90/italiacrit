@@ -21488,7 +21488,16 @@ function _drawGaraColumn(ctx, x, colW, topY, bottomY, slice, startIdx, winnerTim
   const right = x + colW;
   const n = slice.length;
   if (!n) return;
-  const rH = Math.round((bottomY - topY) / n);
+  // Altezza riga: mai oltre quella che avrebbero 6 righe piene, altrimenti
+  // con poche gare (comune nelle categorie giovanili, es. 3-4 arrivati) le
+  // righe si allungano a dismisura per riempire tutto lo spazio verticale,
+  // lasciando vuoti enormi tra una riga e l'altra che fanno sembrare la
+  // card vuota/rotta invece che una lista corta ma pulita.
+  const availH = bottomY - topY;
+  const rH = Math.min(Math.round(availH / n), Math.round(availH / 6));
+  // Il blocco (n righe) può essere più corto dello spazio disponibile:
+  // lo centriamo verticalmente invece di ancorarlo sempre in alto.
+  topY += Math.round((availH - rH * n) / 2);
 
   // Font unico per nome atleta (cognome + nome stessa dimensione)
   // e font leggermente più piccolo per il team sotto.
