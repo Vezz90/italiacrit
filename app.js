@@ -13357,6 +13357,38 @@ async function _ensurePcsAthletesLoaded() {
   }
 }
 
+// Righe della tabella risultati atleta — funzione condivisa tra il render
+// iniziale (ordine cronologico) e il toggle "Per posizione" (window.setAtletaResultsSort),
+// così l'ordinamento non richiede di ricostruire il markup della riga in due punti diversi.
+function _buildAtletaResultRows(rows) {
+  return rows.map(r => {
+    const mult = r.moltiplicatore || 1;
+    const pClass = posClass(r.posizione);
+    return `<tr data-date="${esc(r.data||'')}">
+      <td class="td-date">${fmtDateShort(r.data)}</td>
+      <td class="td-pos ${pClass} ${r.posizione===1?'win':''}">${r.posizione}°</td>
+      <td class="td-race"><a href="#/gara/${esc(r.gara_id)}">${esc(r.nome_gara)}</a></td>
+      <td>${badgeMult(mult, r.tipo)}</td>
+      <td style="text-align:right">${esc(r.km || '—')}</td>
+      <td style="text-align:right">${esc(r.media || '—')}</td>
+      <td class="td-pts">${r.punti_effettivi||0}</td>
+    </tr>`;
+  }).join('');
+}
+// Riordina la tabella risultati atleta senza ricaricare la pagina: 'data'
+// (cronologico, default) o 'pos' (per posizione, come la tabella risultati
+// del team — tutti i 1° insieme, poi i 2°, ecc., a parità di posizione
+// vince la gara più recente).
+window.setAtletaResultsSort = function(mode) {
+  const rows = window._atletaResultsData || [];
+  const sorted = mode === 'pos'
+    ? [...rows].sort((a, b) => (a.posizione - b.posizione) || (b.data||'').localeCompare(a.data||''))
+    : [...rows].sort((a, b) => (b.data||'').localeCompare(a.data||''));
+  const tbody = document.getElementById('atleta-results-tbody');
+  if (tbody) tbody.innerHTML = _buildAtletaResultRows(sorted) || '<tr><td colspan="7" class="empty-state">Nessun risultato</td></tr>';
+  document.querySelectorAll('.ath-sort-btn').forEach(b => b.classList.toggle('active-cat', b.dataset.sort === mode));
+};
+
 async function renderAtleta(atleta_id, opts = {}) {
   if (!globalData) return;
   const { athletes, calendar } = globalData;
@@ -13519,22 +13551,11 @@ async function renderAtleta(atleta_id, opts = {}) {
   const sparkHtml   = sparkPoints.length ? buildSparkline(sparkPoints, risultati.slice(0,20).reverse()) : '';
   const cumulHtml   = buildCumulChart(risultati);
 
-  const tableRows = risultati.map(r => {
-    const mult = r.moltiplicatore || 1;
-    const pClass = posClass(r.posizione);
-    // Recupero rank atleta dopo la gara (già calcolato dallo scraper con tie-break)
-    const rankVal = r.rank_dopo_gara;
-    
-    return `<tr data-date="${esc(r.data||'')}">
-      <td class="td-date">${fmtDateShort(r.data)}</td>
-      <td class="td-pos ${pClass} ${r.posizione===1?'win':''}">${r.posizione}°</td>
-      <td class="td-race"><a href="#/gara/${esc(r.gara_id)}">${esc(r.nome_gara)}</a></td>
-      <td>${badgeMult(mult, r.tipo)}</td>
-      <td style="text-align:right">${esc(r.km || '—')}</td>
-      <td style="text-align:right">${esc(r.media || '—')}</td>
-      <td class="td-pts">${r.punti_effettivi||0}</td>
-    </tr>`;
-  }).join('');
+  const tableRows = _buildAtletaResultRows(risultati);
+  // Copia dei risultati (ordine cronologico, invariato) tenuta in memoria per
+  // il toggle cronologico/per posizione — evita di dover ricaricare i dati
+  // dal server solo per cambiare l'ordinamento della stessa tabella.
+  window._atletaResultsData = risultati;
 
   window._shareAtletaData = {_id:atleta_id,cognome:displayCognome,nome:displayNome,cat:catLabel(a.categoria),team:displayTeam,punti:a.punti_totali,pos:globalPos,p1:p1,p2:p2,p3:p3,p4_10:pout,gare:top10,photo_url:atletaOv.photo_url?`${MEDIA_BASE}${atletaOv.photo_url}`:null};
 
@@ -13664,6 +13685,10 @@ async function renderAtleta(atleta_id, opts = {}) {
     <div class="section-header" style="margin-top:28px">
       <span class="section-title">RISULTATI ${esc(selYear)} · ${esc(catLabel(a.categoria))}</span>
       <span class="section-line"></span>
+      <div style="display:flex;gap:6px">
+        <button class="tab-btn ath-sort-btn active-cat" data-sort="data" onclick="window.setAtletaResultsSort('data')">CRONOLOGICO</button>
+        <button class="tab-btn ath-sort-btn" data-sort="pos" onclick="window.setAtletaResultsSort('pos')">PER POSIZIONE</button>
+      </div>
     </div>
       <table class="results-table atleta-results">
         <thead><tr>
