@@ -402,9 +402,22 @@ async function getSavedSlugs(sb) {
 }
 
 async function getAthletesWithResults(sb, season) {
-  const { data } = await sb.from('pcs_results')
-    .select('atleta_id').eq('season', season).limit(5000);
-  return new Set((data || []).map(r => r.atleta_id));
+  // Paginato come getPhantomAthletes: pcs_results ha già oltre 27000 righe
+  // (molti risultati per atleta), un limit(5000) fisso ne perdeva la
+  // maggior parte per ordine di ritorno arbitrario — --skip-complete non
+  // vedeva mai la maggioranza degli atleti come "già fatti" e li
+  // riprocessava inutilmente ad ogni rilancio.
+  const ids = new Set();
+  const PAGE = 1000;
+  for (let from = 0; ; from += PAGE) {
+    const { data, error } = await sb.from('pcs_results')
+      .select('atleta_id').eq('season', season).range(from, from + PAGE - 1);
+    if (error) throw error;
+    if (!data || !data.length) break;
+    for (const r of data) ids.add(r.atleta_id);
+    if (data.length < PAGE) break;
+  }
+  return ids;
 }
 
 // Atleti "fantasma": non registrati con la FCI (di solito stranieri o

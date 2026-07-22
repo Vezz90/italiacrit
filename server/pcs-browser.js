@@ -108,15 +108,13 @@ async function gotoPcsPage(page, url, opts = {}) {
   return { ok: true, notFound: false, timedOut: false };
 }
 
-// Pausa randomizzata "umana" tra un atleta e l'altro, con pausa più lunga
-// periodica — pattern di richieste troppo regolare (200-800ms fissi, come
-// negli script precedenti) è uno dei segnali più facili da riconoscere come bot.
+// Pausa randomizzata "umana" tra un atleta e l'altro — un intervallo fisso
+// (200-800ms fissi, come negli script precedenti) è uno dei segnali più
+// facili da riconoscere come bot, quindi resta un minimo di jitter anche
+// centrando la media sui 40s indicati.
 async function humanDelay(index = 0) {
-  const base = 10000 + Math.random() * 15000; // 10-25s
+  const base = 35000 + Math.random() * 10000; // 35-45s, media ~40s
   await sleep(base);
-  if (index > 0 && index % 12 === 0) {
-    await sleep(90000 + Math.random() * 90000); // ~90-180s ogni 12 atleti
-  }
 }
 
 function findBravePath() {
