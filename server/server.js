@@ -375,6 +375,22 @@ async function getEntityPhoto(type, id) {
   return null;
 }
 
+// Foto profilo per una lista di atleti (usato dalla card di condivisione
+// gara lato client: mette il volto accanto al nome nei risultati SOLO per
+// chi ce l'ha, nessun ritaglio "a buchi" per chi non ce l'ha — max 10 id
+// alla volta, quanti ne mostra al massimo una card). Risponde solo con gli
+// id che hanno davvero una foto, non con null espliciti.
+app.get('/api/athlete-photos', async (req, res) => {
+  try {
+    const ids = String(req.query.ids || '').split(',').map(s => s.trim()).filter(Boolean).slice(0, 10);
+    if (!ids.length) return res.json({});
+    const entries = await Promise.all(ids.map(async id => [id, await getEntityPhoto('atleta', id)]));
+    const out = {};
+    for (const [id, url] of entries) if (url) out[id] = url;
+    res.json(out);
+  } catch (e) { res.status(500).json({ error: e.message }); }
+});
+
 // Escape HTML condiviso — usato sia da ogHtml sia dai chiamanti che
 // costruiscono bodyHtml (tabelle risultati/roster) prima di passarlo qui.
 function _ogHtmlEsc(s) {

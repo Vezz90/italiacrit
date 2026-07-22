@@ -16737,7 +16737,7 @@ async function renderGara(gara_id) {
       luogo:calEntry?.luogo||'', km, media,
       winnerTime: _calcWinnerTime(km, media),
       results:resArr.slice(0,10).map(r=>({
-        cognome:r.cognome, nome:r.nome, team:r.team,
+        cognome:r.cognome, nome:r.nome, team:r.team, atleta_id:r.atleta_id,
         punti_effettivi:r.punti_effettivi,
         tempo: r.posizione === 1 ? '' : (r.tempo||''),
       })),
@@ -20638,7 +20638,7 @@ async function renderRisultati() {
             luogo: calEntryRis?.luogo || '', km: kmVal, media: mediaVal,
             winnerTime: _calcWinnerTime(kmVal, mediaVal),
             results: sortedCatRes.slice(0, 10).map(r => ({
-              cognome: r.cognome, nome: r.nome, team: r.team,
+              cognome: r.cognome, nome: r.nome, team: r.team, atleta_id: r.atleta_id,
               punti_effettivi: r.punti_effettivi,
               tempo: r.posizione === 1 ? '' : (r.tempo || ''),
             })),
@@ -21465,7 +21465,7 @@ function _wrap(ctx, txt, x, y, maxW, lH) {
 
 // ── Colonna risultati gara (riusabile: 1 o 2 colonne) ───────
 // Righe a altezza uniforme + font ancorati alla larghezza (no ballooning su Storie/landscape)
-function _drawGaraColumn(ctx, x, colW, topY, bottomY, slice, startIdx, winnerTime, _prevGapRef) {
+function _drawGaraColumn(ctx, x, colW, topY, bottomY, slice, startIdx, winnerTime, _prevGapRef, avatarMap) {
   // _prevGapRef = { gap: string } — oggetto condiviso per tracciare il gap precedente tra colonne
   if (!_prevGapRef) _prevGapRef = { gap: null };
   const medalBg = ['#f5c400','#c8c8c8','#cd7f32'];
@@ -21531,8 +21531,26 @@ function _drawGaraColumn(ctx, x, colW, topY, bottomY, slice, startIdx, winnerTim
     ctx.fillStyle = isTop3 ? medalFg[gIdx] : 'rgba(255,255,255,0.38)';
     ctx.fillText(String(gIdx+1).padStart(2,'0'), pillX + pillW/2, cy+1);
 
+    // ── Avatar (solo se questo atleta ha una foto profilo — mai un
+    // segnaposto vuoto per chi non ce l'ha) ──
+    const avatarImg = avatarMap && avatarMap.get(r.atleta_id);
+    const avatarD   = avatarImg ? Math.min(Math.round(rH * 0.72), Math.round(colW * 0.09)) : 0;
+    const avatarX   = pillX + pillW + Math.round(colW * 0.025);
+    if (avatarImg) {
+      const acx = avatarX + avatarD / 2, acy = cy;
+      ctx.save();
+      ctx.beginPath(); ctx.arc(acx, acy, avatarD / 2, 0, Math.PI * 2); ctx.clip();
+      // Ritaglia ancorando in alto (viso in cima), come l'avatar della card atleta
+      const scale = Math.max(avatarD / avatarImg.naturalWidth, avatarD / avatarImg.naturalHeight);
+      const sw = avatarImg.naturalWidth * scale, sh = avatarImg.naturalHeight * scale;
+      ctx.drawImage(avatarImg, acx - avatarD / 2 + (avatarD - sw) / 2, acy - avatarD / 2, sw, sh);
+      ctx.restore();
+      ctx.strokeStyle = 'rgba(255,255,255,0.18)'; ctx.lineWidth = 1.5;
+      ctx.beginPath(); ctx.arc(acx, acy, avatarD / 2, 0, Math.PI * 2); ctx.stroke();
+    }
+
     // ── Blocco testo: nome (riga 1) + team (riga 2) ──
-    const nameX   = pillX + pillW + Math.round(colW * 0.04);
+    const nameX   = avatarImg ? (avatarX + avatarD + Math.round(colW * 0.025)) : (pillX + pillW + Math.round(colW * 0.04));
     const maxW    = right - nameX - Math.round(colW * 0.02);
     const nameY   = cy - Math.round(blockH / 2) + fsName;       // baseline riga nome
     const teamY   = nameY + lineGap + fsTm;                      // baseline riga team
@@ -21585,7 +21603,7 @@ function _drawGaraColumn(ctx, x, colW, topY, bottomY, slice, startIdx, winnerTim
 }
 
 // ── GARA CARD v6 — UCI-inspired, no points, big names ────────
-function _drawGara(ctx, W, H, d, logo) {
+function _drawGara(ctx, W, H, d, logo, avatarMap) {
   const { name, date, cat, mult, tipo, km, media, results, winnerTime } = d;
   const pad = Math.round(W * 0.048);
 
@@ -21677,10 +21695,10 @@ function _drawGara(ctx, W, H, d, logo) {
   if (landscape && maxR > 5) {
     const gap = Math.round(W * 0.045);
     const colW = Math.round((W - pad * 2 - gap) / 2);
-    _drawGaraColumn(ctx, pad, colW, listTop, listBot, slice.slice(0, 5), 0, wt, _gapRef);
-    _drawGaraColumn(ctx, pad + colW + gap, colW, listTop, listBot, slice.slice(5), 5, wt, _gapRef);
+    _drawGaraColumn(ctx, pad, colW, listTop, listBot, slice.slice(0, 5), 0, wt, _gapRef, avatarMap);
+    _drawGaraColumn(ctx, pad + colW + gap, colW, listTop, listBot, slice.slice(5), 5, wt, _gapRef, avatarMap);
   } else {
-    _drawGaraColumn(ctx, pad, W - pad * 2, listTop, listBot, slice, 0, wt, _gapRef);
+    _drawGaraColumn(ctx, pad, W - pad * 2, listTop, listBot, slice, 0, wt, _gapRef, avatarMap);
   }
 }
 
@@ -21930,6 +21948,35 @@ function _drawClass(ctx, W, H, d) {
   }
 }
 
+// Foto profilo dei corridori in classifica (fino a 10), per la card gara:
+// mostra il volto SOLO a chi ce l'ha, nessun segnaposto per gli altri —
+// un'unica chiamata batch invece di una per atleta. Stesso pattern
+// fetch+blob usato sotto per l'avatar della card atleta (evita problemi
+// CORS da cache del browser sull'immagine remota).
+async function _fetchGaraAvatars(results) {
+  const map = new Map();
+  const ids = [...new Set((results || []).map(r => r.atleta_id).filter(Boolean))].slice(0, 10);
+  if (!ids.length) return map;
+  try {
+    const resp = await fetch(`${API_BASE}/athlete-photos?ids=${encodeURIComponent(ids.join(','))}`);
+    if (!resp.ok) return map;
+    const urls = await resp.json();
+    await Promise.all(Object.entries(urls).map(([id, url]) => new Promise(resolve => {
+      fetch(url, { mode: 'cors', cache: 'no-store' }).then(r => {
+        if (!r.ok) return resolve();
+        return r.blob().then(blob => {
+          const blobUrl = URL.createObjectURL(blob);
+          const img = new Image();
+          img.onload = () => { map.set(id, img); URL.revokeObjectURL(blobUrl); resolve(); };
+          img.onerror = () => { URL.revokeObjectURL(blobUrl); resolve(); };
+          img.src = blobUrl;
+        });
+      }).catch(() => resolve());
+    })));
+  } catch {}
+  return map;
+}
+
 // ── Generatore canvas ──────────────────────────────────────
 async function generateShareCanvas(type, payload, platKey) {
   const p=SHARE_PLATFORMS[platKey]||SHARE_PLATFORMS.instagram;
@@ -21940,7 +21987,8 @@ async function generateShareCanvas(type, payload, platKey) {
   try { if (document.fonts && document.fonts.ready) await document.fonts.ready; } catch(e){}
   _bg(ctx,p.w,p.h);
   if(type==='gara') {
-    _drawGara(ctx,p.w,p.h,payload,logo);
+    const avatarMap = await _fetchGaraAvatars(payload.results);
+    _drawGara(ctx,p.w,p.h,payload,logo,avatarMap);
   } else {
     _header(ctx,logo,p.w,p.h, type==='class'?payload:null, (type==='atleta'||type==='team')?payload.cat:null); _footer(ctx,p.w,p.h);
     if(type==='atleta') {
