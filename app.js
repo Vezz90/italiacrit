@@ -13383,12 +13383,13 @@ function _buildAtletaResultRows(rows) {
 // — un riordino basato solo sui risultati ICS iniziali le faceva sparire.
 function _syncAtletaResultsSnapshot() {
   const tbody = document.getElementById('atleta-results-tbody');
-  if (!tbody) return;
+  if (!tbody) { console.log('[DIAG sync] no tbody'); return; }
   window._atletaResultsData = [...tbody.querySelectorAll('tr[data-date]')].map(tr => ({
     data: tr.dataset.date || '',
     posizione: parseInt(tr.querySelector('.td-pos')?.textContent, 10) || 9999,
     html: tr.outerHTML,
   }));
+  console.log('[DIAG sync] set len=' + window._atletaResultsData.length, new Error().stack.split('\n')[2]);
 }
 // Riordina la tabella risultati atleta senza ricaricare la pagina: 'data'
 // (cronologico, default) o 'pos' (per posizione, come la tabella risultati
@@ -13405,6 +13406,7 @@ window.setAtletaResultsSort = function(mode) {
 };
 
 async function renderAtleta(atleta_id, opts = {}) {
+  console.log('[DIAG renderAtleta] chiamata per', atleta_id, JSON.stringify(opts));
   if (!globalData) return;
   const { athletes, calendar } = globalData;
 
@@ -14265,8 +14267,9 @@ window.showPcsRaceModal = showPcsRaceModal;
 
 // ── PCS risultati extra atleta (circuito esteso + gare non in circuito) ───────
 async function _loadAtletaPcsExtra(atletaId, season, icsRisultati, athlete) {
+  console.log('[DIAG extra] avviata per', atletaId);
   const tbody = document.getElementById('atleta-results-tbody');
-  if (!tbody) return;
+  if (!tbody) { console.log('[DIAG extra] no tbody, esco subito'); return; }
 
   // Solo risultati gare circuito (pos 11+) dal DB pcs_gara_results
   let pcsGareRaw;
