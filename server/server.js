@@ -7168,8 +7168,15 @@ async function _ogCircleAvatar(photoSource, diameter) {
   if (!raw) return null;
   try {
     const sharp = require('sharp');
-    const meta = await sharp(raw).metadata();
-    const resized = await sharp(raw).resize(diameter, diameter, { fit: 'cover', position: _ogCropPosition(meta) }).toBuffer();
+    // Ancorato in alto ('top'), non centro/attenzione come le foto gara: le
+    // foto profilo (headshot PCS) hanno quasi sempre il viso nella parte alta
+    // dell'inquadratura — stessa convenzione già usata lato client per
+    // l'avatar della card atleta (_drawAtleta: "ritaglia dall'alto, viso in
+    // cima") e per il crop dell'immagine profilo nella pagina atleta
+    // (object-position: 50% 0%). Un ritaglio centrato, corretto per le foto
+    // di gara (soggetto a figura intera), su un headshot stretto in un
+    // cerchio piccolo tagliava il viso in modo molto più evidente.
+    const resized = await sharp(raw).resize(diameter, diameter, { fit: 'cover', position: 'top' }).toBuffer();
     const mask = Buffer.from(`<svg width="${diameter}" height="${diameter}"><circle cx="${diameter/2}" cy="${diameter/2}" r="${diameter/2}" fill="#fff"/></svg>`);
     const circle = await sharp(resized).composite([{ input: mask, blend: 'dest-in' }]).png().toBuffer();
     // Bordo sottile per staccare l'avatar dallo sfondo scuro
