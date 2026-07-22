@@ -13375,6 +13375,21 @@ function _buildAtletaResultRows(rows) {
     </tr>`;
   }).join('');
 }
+// Istantanea generica delle righe attualmente nel tbody (data + posizione +
+// markup già pronto), usata dal toggle invece dei soli risultati ICS: la
+// tabella viene arricchita in un secondo momento e in modo asincrono da
+// _loadAtletaPcsExtra con le gare trovate solo su PCS e il palmares estero
+// (righe inserite direttamente nel DOM, mai passate a _buildAtletaResultRows)
+// — un riordino basato solo sui risultati ICS iniziali le faceva sparire.
+function _syncAtletaResultsSnapshot() {
+  const tbody = document.getElementById('atleta-results-tbody');
+  if (!tbody) return;
+  window._atletaResultsData = [...tbody.querySelectorAll('tr[data-date]')].map(tr => ({
+    data: tr.dataset.date || '',
+    posizione: parseInt(tr.querySelector('.td-pos')?.textContent, 10) || 9999,
+    html: tr.outerHTML,
+  }));
+}
 // Riordina la tabella risultati atleta senza ricaricare la pagina: 'data'
 // (cronologico, default) o 'pos' (per posizione, come la tabella risultati
 // del team — tutti i 1° insieme, poi i 2°, ecc., a parità di posizione
@@ -13385,7 +13400,7 @@ window.setAtletaResultsSort = function(mode) {
     ? [...rows].sort((a, b) => (a.posizione - b.posizione) || (b.data||'').localeCompare(a.data||''))
     : [...rows].sort((a, b) => (b.data||'').localeCompare(a.data||''));
   const tbody = document.getElementById('atleta-results-tbody');
-  if (tbody) tbody.innerHTML = _buildAtletaResultRows(sorted) || '<tr><td colspan="7" class="empty-state">Nessun risultato</td></tr>';
+  if (tbody) tbody.innerHTML = sorted.map(r => r.html).join('') || '<tr><td colspan="7" class="empty-state">Nessun risultato</td></tr>';
   document.querySelectorAll('.ath-sort-btn').forEach(b => b.classList.toggle('active-cat', b.dataset.sort === mode));
 };
 
@@ -13552,10 +13567,6 @@ async function renderAtleta(atleta_id, opts = {}) {
   const cumulHtml   = buildCumulChart(risultati);
 
   const tableRows = _buildAtletaResultRows(risultati);
-  // Copia dei risultati (ordine cronologico, invariato) tenuta in memoria per
-  // il toggle cronologico/per posizione — evita di dover ricaricare i dati
-  // dal server solo per cambiare l'ordinamento della stessa tabella.
-  window._atletaResultsData = risultati;
 
   window._shareAtletaData = {_id:atleta_id,cognome:displayCognome,nome:displayNome,cat:catLabel(a.categoria),team:displayTeam,punti:a.punti_totali,pos:globalPos,p1:p1,p2:p2,p3:p3,p4_10:pout,gare:top10,photo_url:atletaOv.photo_url?`${MEDIA_BASE}${atletaOv.photo_url}`:null};
 
@@ -13702,7 +13713,12 @@ async function renderAtleta(atleta_id, opts = {}) {
   // Inject bottone messaggio in modo async (lookup non blocca il render)
   _injectMsgBtn('atleta-msg-btn', atleta_id, null, null);
   _injectFollowBtn('atleta-follow-btn', 'atleta', atleta_id);
-  _loadAtletaPcsExtra(atleta_id, selYear, risultati, a);
+  // Istantanea subito (così il toggle funziona anche prima che arrivino i
+  // risultati extra da PCS) e di nuovo quando _loadAtletaPcsExtra finisce di
+  // inserirli nella stessa tabella — altrimenti il toggle "Per posizione"
+  // conoscerebbe solo i risultati ICS iniziali e farebbe sparire gli altri.
+  _syncAtletaResultsSnapshot();
+  _loadAtletaPcsExtra(atleta_id, selYear, risultati, a).then(_syncAtletaResultsSnapshot);
 
   // Confronto stagione precedente — iniettato quando la promise è pronta
   _prevAthPromise.then(prevA => {
