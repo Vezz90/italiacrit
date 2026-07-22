@@ -7062,6 +7062,64 @@ async function _photoToOgPng(filename) {
   } catch { return null; }
 }
 
+// Pannello podio (primi 3) per la metà destra della card foto+risultati:
+// colonna stretta (600px), nome e team su due righe invece che affiancati
+// (come nella card a piena larghezza) per restare leggibili nello spazio
+// ridotto.
+function buildGaraPodiumPanelSvg({ catLabel, title, date, results = [] }) {
+  const W = 600, H = 630, pad = 34;
+  const medal = ['#f5c400', '#dadada', '#cd7f32'];
+  const logo = _ogLogoDataUri();
+  const titleStr = (title || '').toUpperCase();
+  const fsT = titleStr.length > 22 ? Math.max(20, Math.round(30 * 22 / titleStr.length)) : 30;
+
+  const top = 150, bottom = H - 50;
+  const n = Math.min(results.length, 3);
+  const availH = bottom - top;
+  const rH = n ? Math.min(Math.round(availH / n), Math.round(availH / 3)) : 0;
+  const listTop = top + Math.round((availH - rH * n) / 2);
+
+  const rowsHtml = results.slice(0, 3).map((r, i) => {
+    const ry = listTop + i * rH, mid = ry + rH / 2;
+    const name = `${r.cognome || ''} ${r.nome || ''}`.trim();
+    const isFirst = i === 0;
+    return `${isFirst ? `<rect x="${pad}" y="${ry + 4}" width="${W - pad * 2}" height="${rH - 8}" rx="8" fill="rgba(245,196,0,0.08)" stroke="rgba(245,196,0,0.35)"/>` : ''}
+    <rect x="${pad + 8}" y="${mid - 16}" width="46" height="32" rx="6" fill="${medal[i]}"/>
+    <text x="${pad + 31}" y="${mid + 7}" font-family="Arial,Helvetica,sans-serif" font-size="18" font-weight="800" fill="#1a1200" text-anchor="middle">${i + 1}°</text>
+    <text x="${pad + 68}" y="${mid - 4}" font-family="Arial,Helvetica,sans-serif" font-size="21" font-weight="700" fill="#f4f4f4">${_ogEsc(name.slice(0, 22))}</text>
+    <text x="${pad + 68}" y="${mid + 20}" font-family="Arial,Helvetica,sans-serif" font-size="15" fill="rgba(255,255,255,0.45)">${_ogEsc((r.team || '').slice(0, 26))}</text>`;
+  }).join('');
+
+  return `<svg width="${W}" height="${H}" xmlns="http://www.w3.org/2000/svg">
+  <defs><linearGradient id="pBg" x1="0" y1="0" x2="0" y2="1"><stop offset="0%" stop-color="#0c0e12"/><stop offset="100%" stop-color="#070809"/></linearGradient></defs>
+  <rect width="${W}" height="${H}" fill="url(#pBg)"/>
+  ${logo ? `<image href="${logo}" x="${pad}" y="22" width="100" height="33" preserveAspectRatio="xMidYMid meet"/>` : ''}
+  <text x="${W - pad}" y="40" font-family="Arial,Helvetica,sans-serif" font-size="16" font-weight="800" fill="#e8001d" text-anchor="end" letter-spacing="1">${_ogEsc((catLabel || '').toUpperCase())}</text>
+  <rect x="${pad}" y="70" width="${W - pad * 2}" height="1" fill="rgba(255,255,255,0.08)"/>
+  <text x="${pad}" y="112" font-family="Arial,Helvetica,sans-serif" font-size="${fsT}" font-weight="800" fill="#f4f4f4">${_ogEsc(titleStr.slice(0, 40))}</text>
+  ${date ? `<text x="${pad}" y="136" font-family="Arial,Helvetica,sans-serif" font-size="15" fill="rgba(255,255,255,0.4)">${_ogEsc(date)}</text>` : ''}
+  ${rowsHtml}
+  <text x="${W - pad}" y="${H - 22}" font-family="Arial,Helvetica,sans-serif" font-size="13" fill="rgba(255,255,255,0.3)" text-anchor="end">italiacyclingstats.com</text>
+</svg>`;
+}
+
+// Compone la foto (ritagliata a metà larghezza, 600x630) con il pannello
+// podio nell'altra metà — stessa strategia di ritaglio (_ogCropPosition)
+// usata per la card a foto intera.
+async function _photoSplitOgPng(filename, panelSvg) {
+  const raw = await _fetchRawImageBuffer(filename);
+  if (!raw) return null;
+  try {
+    const sharp = require('sharp');
+    const meta = await sharp(raw).metadata();
+    const photoBuf = await sharp(raw).resize(600, 630, { fit: 'cover', position: _ogCropPosition(meta) }).png().toBuffer();
+    const panelBuf = await sharp(Buffer.from(panelSvg)).png().toBuffer();
+    return await sharp({ create: { width: 1200, height: 630, channels: 3, background: '#0a0c10' } })
+      .composite([{ input: photoBuf, left: 0, top: 0 }, { input: panelBuf, left: 600, top: 0 }])
+      .png().toBuffer();
+  } catch (e) { console.error('[og-image] split card fallita:', e.message); return null; }
+}
+
 // Ritaglia una foto in un cerchio (avatar), stesso trattamento della card
 // "Post Quadrato" generata lato client (generateShareCanvas/_drawAtleta):
 // avatar circolare in alto a destra, non una foto a piena pagina o a
@@ -7121,16 +7179,34 @@ app.get('/api/og-image/gara/:id', async (req, res) => {
       || calendar.find(g => g.id === garaId.replace(/_[A-Z0-9]+_[MF]$/, ''));
     const title = cal?.nome || garaId.replace(/_\d{4}-\d{2}-\d{2}.*$/, '').replace(/_/g, ' ');
 
-    // 1) Se la gara ha una foto, usala come immagine principale. Tre fonti
-    // possibili (stessa priorità e stesso matching "fuzzy" del gara_id usati
-    // lato frontend in loadRisPhotos/_extAlias): caricata a mano (race_photos)
-    // vince se presente, altrimenti xpix.it, altrimenti ciclismo.info — senza
-    // questo fallback l'immagine di condivisione FB ignorava le foto prese
-    // automaticamente dagli scraper, che sono la maggioranza dei casi.
+    // Risultati caricati una sola volta, riusati sia per il pannello podio
+    // accanto alla foto (quando c'è) sia per la card "lista risultati" a
+    // piena larghezza (quando non c'è) — prima venivano ricaricati solo nel
+    // fallback senza foto, la foto e i risultati non comparivano mai insieme.
+    const resultsRaw = (await readDataJsonFromGH('results_raw.json')) || [];
+    const results = resultsRaw.filter(r => r.gara_id === garaId).sort((a, b) => a.posizione - b.posizione);
+    const first = results[0];
+    const catCode = first ? _rankingCodeFromRow(first) : null;
+    const catLabel = first ? ((catCode && _OG_CAT_MAP[catCode]) || first.categoria || '') : '';
+    const dateShort = cal?.data ? new Date(cal.data).toLocaleDateString('it-IT', { day: 'numeric', month: 'short', year: 'numeric' }) : '';
+
+    // 1) Se la gara ha una foto, usala come metà sinistra della card, con un
+    // pannello podio (primi 3) nella metà destra quando ci sono risultati —
+    // così la card è sempre coerente (stessa identità visiva ovunque) invece
+    // di essere a volte solo la foto e a volte solo un pannello testuale.
+    // Tre fonti possibili per la foto (stessa priorità e stesso matching
+    // "fuzzy" del gara_id usati lato frontend in loadRisPhotos/_extAlias):
+    // caricata a mano (race_photos) vince se presente, altrimenti xpix.it,
+    // altrimenti ciclismo.info.
     try {
+      const photoPanelSvg = results.length ? buildGaraPodiumPanelSvg({ catLabel, title, date: dateShort, results }) : null;
+      const toImage = async (photoSource) => photoPanelSvg
+        ? (await _photoSplitOgPng(photoSource, photoPanelSvg)) || (await _photoToOgPng(photoSource))
+        : await _photoToOgPng(photoSource);
+
       const uploaded = await queries.getApprovedRacePhotos(garaId).catch(() => []);
       if (uploaded && uploaded.length) {
-        const buf = await _photoToOgPng(uploaded[0].filename || uploaded[0].photo_url);
+        const buf = await toImage(uploaded[0].filename || uploaded[0].photo_url);
         if (buf) return sendPng(buf);
       }
       const aliases = [garaId, garaId.replace(/^\d+_/, ''), garaId.replace(/_[A-Z0-9]+_[MF]$/, '')];
@@ -7139,17 +7215,19 @@ app.get('/api/og-image/gara/:id', async (req, res) => {
         for (const alias of aliases) {
           const entry = src[alias];
           if (entry && (entry.url || entry.filename)) {
-            const buf = await _photoToOgPng(entry.url || entry.filename);
+            const buf = await toImage(entry.url || entry.filename);
             if (buf) return sendPng(buf);
           }
         }
       }
 
       // 1b) Niente foto: se c'è un video collegato, usa la sua miniatura come
-      // copertina — meglio di una card generica se almeno un contenuto reale
-      // della gara esiste. Un video può essere stato collegato usando il
-      // gara_id del calendario (prima dello scraping) invece di quello reale
-      // suffissato: stessi alias usati sopra per le foto.
+      // copertina (a piena larghezza, senza pannello podio — la miniatura
+      // YouTube è già bassa risoluzione, dividerla a metà la renderebbe
+      // illeggibile) — meglio di una card generica se almeno un contenuto
+      // reale della gara esiste. Un video può essere stato collegato usando
+      // il gara_id del calendario (prima dello scraping) invece di quello
+      // reale suffissato: stessi alias usati sopra per le foto.
       const allVideos = await readVideos().catch(() => ({}));
       for (const alias of aliases) {
         const vids = allVideos[alias];
@@ -7163,25 +7241,16 @@ app.get('/api/og-image/gara/:id', async (req, res) => {
       }
     } catch (e) { console.error(`[og-image] lookup foto fallito per ${garaId}:`, e.message); }
 
-    // 2) Niente foto né video: se ci sono risultati, usa la stessa card
-    // "lista risultati" mostrata nelle grafiche Instagram/Post generate lato
-    // client (posizioni, nomi, team, tempi) invece della card generica con
-    // solo il nome — molto più informativa, e la maggioranza delle gare non
-    // ha ancora una foto caricata ma ha già i risultati dallo scraper FCI.
+    // 2) Niente foto né video: la stessa card "lista risultati" mostrata
+    // nelle grafiche Instagram/Post generate lato client (posizioni, nomi,
+    // team, tempi) invece della card generica con solo il nome.
     try {
-      const resultsRaw = (await readDataJsonFromGH('results_raw.json')) || [];
-      const results = resultsRaw.filter(r => r.gara_id === garaId).sort((a, b) => a.posizione - b.posizione);
       if (results.length) {
-        const first = results[0];
-        const catCode = _rankingCodeFromRow(first);
-        const km = first.km || '', media = first.media || '';
         const svg = buildGaraResultsCardSvg({
-          title,
-          catLabel: (catCode && _OG_CAT_MAP[catCode]) || first.categoria || '',
-          date: cal?.data ? new Date(cal.data).toLocaleDateString('it-IT', { day: 'numeric', month: 'short', year: 'numeric' }) : '',
+          title, catLabel, date: dateShort,
           mult: first.moltiplicatore || 1,
-          km, media,
-          winnerTime: _ogWinnerTime(km, media),
+          km: first.km || '', media: first.media || '',
+          winnerTime: _ogWinnerTime(first.km || '', first.media || ''),
           results,
         });
         const buf = await renderOgPng(svg);
