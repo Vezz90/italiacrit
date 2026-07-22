@@ -96,11 +96,21 @@ function pcsAthleteSlugCandidates(ath) {
   // del vero nome proprio (es. "PEZZO ROSOLA KEVIN" → cognome:"PEZZO",
   // nome:"ROSOLA KEVIN", nome vero "Kevin Pezzo Rosola"). Se `nome` ha più
   // parole, prova anche: ultima parola di `nome` come nome proprio + resto
-  // di `nome` unito a `cognome` come cognome completo.
+  // di `nome` unito a `cognome` come cognome completo. PCS però non è
+  // coerente sull'ORDINE con cui ricompone questo cognome: a volte lo tiene
+  // per intero con la parte staccata DOPO il cognome principale (es. "Huw
+  // Buck Jones" → rider/huw-buck-jones, cognome "Buck"+"Jones" nell'ordine
+  // FCI), a volte invece lo tronca scartando la parte staccata (es. "Mateo
+  // Pablo Ramirez Torres" → rider/mateo-pablo-ramirez, "Torres" sparisce
+  // del tutto) — proviamo entrambe le varianti invece di sceglierne una sola.
   if (nomeParts.length > 1) {
     const trueGivenName = nomeParts[nomeParts.length - 1];
     const surnameRest = nomeParts.slice(0, -1);
-    add(`${trueGivenName}-${surnameRest.join('-')}-${cognome}`);
+    add(`${trueGivenName}-${surnameRest.join('-')}-${cognome}`);       // nome-resto_cognome-cognome (ordine FCI)
+    add(`${trueGivenName}-${cognome}-${surnameRest.join('-')}`);       // nome-cognome-resto_cognome (cognome principale prima)
+    // Variante "PCS tronca": la prima parola di `nome` è in realtà la coda
+    // del cognome ma PCS la scarta del tutto — nome vero = parole restanti.
+    add(`${nomeParts.slice(1).join('-')}-${cognome}`);
   }
 
   // PCS a volte tronca i cognomi doppi con trattino alla prima parte sola
