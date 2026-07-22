@@ -527,39 +527,23 @@ function _ogPodiumLine(nome, podiums, seed) {
   return tpl.replace('{n}', nome).replace('{k}', String(podiums));
 }
 
-app.get('/og/gara/:id', async (req, res) => {
-  const id  = req.params.id;
-  // Un utente vero (non un bot) che apre questo URL — tipicamente cliccando
-  // l'anteprima di un link condiviso — deve arrivare subito alla pagina vera
-  // del sito, non a questa versione "di servizio" pensata solo per i bot.
-  if (!OG_BOT_RE.test(req.headers['user-agent'] || '')) {
-    return res.redirect(302, `${SITE_URL}/gara/${encodeURIComponent(id)}`);
-  }
-  const [calRaw, resultsRaw] = await Promise.all([
-    readDataJsonFromGH('calendar.json'),
-    readDataJsonFromGH('results_raw.json'),
-  ]);
-  // Il calendario usa l'id SENZA suffisso categoria/genere (es. "..._2026-07-05"),
-  // mentre il gara_id reale scrapato di solito ce l'ha ("..._2026-07-05_ELI_M");
-  // condividendo dalla pagina di una gara già scrapata l'id nell'URL è quello
-  // suffissato, che non troverebbe mai corrispondenza esatta nel calendario —
-  // titolo/data/luogo restavano vuoti e si vedeva l'id grezzo come titolo.
-  const cal = (calRaw || []).find(g => g.id === id)
-    || (calRaw || []).find(g => g.id === id.replace(/_[A-Z0-9]+_[MF]$/, ''));
+// Narrazione dinamica su vincitore + 2°/3° classificato, basata sui dati
+// stagionali reali (vittorie/podi ottenuti finora, questa gara inclusa) —
+// non un commento statico ("Vince X") ma una frase diversa a seconda del
+// traguardo raggiunto (prima vittoria, 5ª vittoria, primo podio, ecc.), con
+// più varianti di formulazione scelte in modo deterministico per gara
+// (_ogSeedPick): stessa gara → stessa frase se ricondivisa, gare diverse →
+// frasi diverse, così non sembra un testo generato da un template fisso.
+// Condivisa tra /og/gara/:id (meta tag per i crawler) e
+// /api/admin/gara-share-text/:id (testo copiabile per il post FB manuale).
+function _buildGaraNarrative(id, cal, resultsRaw) {
   const results  = (resultsRaw || []).filter(r => r.gara_id === id).sort((a,b) => a.posizione - b.posizione);
   const raceName = cal?.nome || id.replace(/_\d{4}-\d{2}-\d{2}.*$/, '').replace(/_/g,' ');
   const raceDate = results[0]?.data || cal?.data || '';
   const date     = cal?.data ? new Date(cal.data).toLocaleDateString('it-IT',{day:'numeric',month:'long',year:'numeric'}) : '';
-  // Podio con squadra per ognuno (nome (team) invece del solo nome).
   const top3     = results.slice(0,3).map((r,i)=>`${i+1}° ${r.cognome} ${r.nome}${r.team ? ` (${r.team})` : ''}`).join(' · ');
   const luogo    = cal?.luogo || cal?.regione || '';
-  // Narrazione dinamica su vincitore + 2°/3° classificato, basata sui dati
-  // stagionali reali (vittorie/podi ottenuti finora, questa gara inclusa) —
-  // non un commento statico ("Vince X") ma una frase diversa a seconda del
-  // traguardo raggiunto (prima vittoria, 5ª vittoria, primo podio, ecc.),
-  // con più varianti di formulazione scelte in modo deterministico per gara
-  // (_ogSeedPick): stessa gara → stessa frase se ricondivisa, gare diverse
-  // → frasi diverse, così non sembra un testo generato da un template fisso.
+
   const winner = results[0], second = results[1], third = results[2];
   const podiumLines = [];
   let winnerTitleTail = '';
@@ -587,6 +571,7 @@ app.get('/og/gara/:id', async (req, res) => {
     const { podiums } = _ogSeasonTally(resultsRaw || [], third.atleta_id, third.genere, raceDate);
     podiumLines.push(_ogPodiumLine(`${third.cognome} ${third.nome}`, podiums, id + '_3') + '.');
   }
+
   // Facebook (verificato con post reali pubblicati) non mostra MAI la
   // descrizione per questo tipo di condivisione — né in anteprima né nel post
   // finale — solo dominio + titolo. Per questo il vincitore va anche nel
@@ -601,6 +586,29 @@ app.get('/og/gara/:id', async (req, res) => {
     title = longTitle.length <= 100 ? longTitle : `${raceName} — Vince ${winner.cognome} ${winner.nome}`;
   }
   const desc = [date, luogo, top3, podiumLines.join(' ')].filter(Boolean).join(' — ');
+  return { results, raceName, raceDate, date, luogo, top3, podiumLines, title, desc };
+}
+
+app.get('/og/gara/:id', async (req, res) => {
+  const id  = req.params.id;
+  // Un utente vero (non un bot) che apre questo URL — tipicamente cliccando
+  // l'anteprima di un link condiviso — deve arrivare subito alla pagina vera
+  // del sito, non a questa versione "di servizio" pensata solo per i bot.
+  if (!OG_BOT_RE.test(req.headers['user-agent'] || '')) {
+    return res.redirect(302, `${SITE_URL}/gara/${encodeURIComponent(id)}`);
+  }
+  const [calRaw, resultsRaw] = await Promise.all([
+    readDataJsonFromGH('calendar.json'),
+    readDataJsonFromGH('results_raw.json'),
+  ]);
+  // Il calendario usa l'id SENZA suffisso categoria/genere (es. "..._2026-07-05"),
+  // mentre il gara_id reale scrapato di solito ce l'ha ("..._2026-07-05_ELI_M");
+  // condividendo dalla pagina di una gara già scrapata l'id nell'URL è quello
+  // suffissato, che non troverebbe mai corrispondenza esatta nel calendario —
+  // titolo/data/luogo restavano vuoti e si vedeva l'id grezzo come titolo.
+  const cal = (calRaw || []).find(g => g.id === id)
+    || (calRaw || []).find(g => g.id === id.replace(/_[A-Z0-9]+_[MF]$/, ''));
+  const { results, title, desc } = _buildGaraNarrative(id, cal, resultsRaw);
   const img     = `${API_BASE_URL}/api/og-image/gara/${encodeURIComponent(id)}`;
   const redirect = `${SITE_URL}/gara/${encodeURIComponent(id)}`;
   const canonical = `${API_BASE_URL}/og/gara/${encodeURIComponent(id)}`;
@@ -618,6 +626,33 @@ app.get('/og/gara/:id', async (req, res) => {
   </table>` : '';
   res.setHeader('Content-Type','text/html');
   res.send(ogHtml({ title, desc, img, redirect, canonical, bodyHtml }));
+});
+
+// Testo pronto da incollare a mano nel post Facebook: Facebook non permette
+// di precompilare il corpo del post via URL (solo il link, che genera lui
+// stesso l'anteprima), quindi qui prepariamo lo stesso tipo di narrazione
+// dinamica usata per i meta tag — l'admin lo copia e lo incolla nella
+// finestra "Crea post" sopra alla grafica già generata.
+app.get('/api/admin/gara-share-text/:id', requireAdmin, async (req, res) => {
+  try {
+    const id = req.params.id;
+    const [calRaw, resultsRaw] = await Promise.all([
+      readDataJsonFromGH('calendar.json'),
+      readDataJsonFromGH('results_raw.json'),
+    ]);
+    const cal = (calRaw || []).find(g => g.id === id)
+      || (calRaw || []).find(g => g.id === id.replace(/_[A-Z0-9]+_[MF]$/, ''));
+    const { raceName, date, luogo, top3, podiumLines } = _buildGaraNarrative(id, cal, resultsRaw);
+    const lines = [
+      raceName.toUpperCase(),
+      [date, luogo].filter(Boolean).join(' · '),
+      '',
+      top3,
+      '',
+      podiumLines.join(' '),
+    ].filter(l => l !== undefined && l !== null);
+    res.json({ text: lines.join('\n').replace(/\n{3,}/g, '\n\n').trim() });
+  } catch (e) { res.status(500).json({ error: e.message }); }
 });
 
 app.get('/og/atleta/:id', async (req, res) => {

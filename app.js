@@ -22084,6 +22084,11 @@ window.showShareModal = async function(type, payload) {
         <button class="share-modal-close" onclick="window.closeShareModal()">✕</button>
       </div>
       <div class="share-platforms">${platBtns}</div>
+      <div id="share-fb-text-box" style="display:none;margin-bottom:12px">
+        <div style="font-size:.72rem;color:var(--text-muted);margin-bottom:4px">Testo per il post — copialo e incollalo su Facebook insieme alla grafica</div>
+        <textarea id="share-fb-text" readonly rows="6" style="width:100%;resize:vertical;font:inherit;font-size:.85rem;padding:8px;border-radius:8px;border:1px solid var(--border-subtle);background:var(--bg-elevated,rgba(255,255,255,0.04));color:var(--text-primary)"></textarea>
+        <button class="share-action-btn" style="margin-top:6px" onclick="window.copyFbShareText()" id="share-fb-copy-btn">📋 Copia testo</button>
+      </div>
       <div class="share-size-label" id="share-size-lbl">Post Quadrato · 1080×1080 (1:1)</div>
       <div class="share-preview-wrap">
         <div class="share-generating" id="share-loading"><div class="share-spinner"></div> Generazione...</div>
@@ -22171,6 +22176,37 @@ window.shareOnFacebook = function() {
   const url = _ogUrl(_shareType, _sharePayload);
   if (!url) { showToast('Dati non disponibili per la condivisione Facebook'); return; }
   window.open(`https://www.facebook.com/sharer/sharer.php?u=${encodeURIComponent(url)}`, '_blank', 'width=600,height=400');
+  _showFbShareText();
+};
+
+// Testo pronto da incollare nel post Facebook — Facebook non permette di
+// precompilare il corpo del post via URL (solo il link, l'anteprima la
+// genera lui), quindi qui mostriamo lo stesso tipo di narrazione dinamica
+// usata per i meta tag e l'admin la copia a mano sopra alla grafica.
+// Solo per l'admin e solo per le gare (unico tipo con questa narrazione).
+async function _showFbShareText() {
+  const box = document.getElementById('share-fb-text-box');
+  if (!box) return;
+  if (authUser()?.role !== 'admin' || _shareType !== 'gara' || !_sharePayload?._id) { box.style.display = 'none'; return; }
+  box.style.display = 'block';
+  const ta = document.getElementById('share-fb-text');
+  ta.value = 'Generazione testo…';
+  try {
+    const { text } = await apiCall(`/admin/gara-share-text/${encodeURIComponent(_sharePayload._id)}`);
+    ta.value = text || '';
+  } catch (e) { ta.value = ''; }
+}
+window.copyFbShareText = async function() {
+  const ta = document.getElementById('share-fb-text');
+  const btn = document.getElementById('share-fb-copy-btn');
+  if (!ta?.value) return;
+  try {
+    await navigator.clipboard.writeText(ta.value);
+    if (btn) { btn.textContent = '✓ Copiato!'; setTimeout(() => { btn.textContent = '📋 Copia testo'; }, 2000); }
+  } catch {
+    ta.select();
+    document.execCommand('copy');
+  }
 };
 
 // ── Trigger functions ──────────────────────────────────────
