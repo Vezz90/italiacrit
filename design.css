@@ -285,7 +285,16 @@ table, .rank-num, .rank-pts, .cat-pts,
   font-weight: 600;
 }
 
-.nav-search-wrap { margin-left: 20px; position: relative; display: flex; align-items: center; }
+.nav-search-wrap { margin-left: 20px; position: relative; }
+/* display:flex solo da desktop in su: sotto i 640px style.css nasconde
+   .nav-search-wrap dentro la navbar (la ricerca si sposta sotto l'header
+   in #mobile-search-bar) - un display:flex incondizionato qui vinceva
+   sempre sul display:none di style.css (stessa specificità, design.css
+   caricato dopo), tenendo la ricerca dentro la navbar anche su mobile e
+   spingendo il pulsante hamburger fuori dallo schermo. */
+@media (min-width: 641px) {
+  .nav-search-wrap { display: flex; align-items: center; }
+}
 
 .nav-search-icon-svg {
   position: absolute; left: 11px; color: rgba(255,255,255,0.45);
