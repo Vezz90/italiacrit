@@ -7062,22 +7062,40 @@ async function _photoToOgPng(filename) {
   } catch { return null; }
 }
 
+// Categorie con copertura foto profilo sufficiente (verificato: Elite M
+// 69%, Elite F 75% degli atleti hanno una foto in entity_overrides) per
+// mostrare il volto nel podio senza che sia "a volte sì a volte no" sulla
+// maggioranza delle righe — Juniores (~17-18%) e giovanili (<1%) restano
+// solo testo, come per la card a piena larghezza.
+const _OG_FACE_CATS = new Set(['ELI_M', 'ELI_F']);
+const _OG_PODIUM_AVATAR_D = 54;
+
+// Geometria delle righe del podio (max 3), condivisa tra l'SVG del pannello
+// e il posizionamento degli avatar compositati sopra (devono coincidere).
+function _ogPodiumRows(n) {
+  const top = 150, bottom = 630 - 50;
+  const availH = bottom - top;
+  const rH = n ? Math.min(Math.round(availH / n), Math.round(availH / 3)) : 0;
+  const listTop = top + Math.round((availH - rH * n) / 2);
+  return { rH, listTop };
+}
+
 // Pannello podio (primi 3) per la metà destra della card foto+risultati:
 // colonna stretta (600px), nome e team su due righe invece che affiancati
 // (come nella card a piena larghezza) per restare leggibili nello spazio
-// ridotto.
-function buildGaraPodiumPanelSvg({ catLabel, title, date, results = [] }) {
+// ridotto. showFaces lascia lo spazio per l'avatar circolare (compositato
+// separatamente da _photoSplitOgPng, l'SVG non può incorporare foto remote).
+function buildGaraPodiumPanelSvg({ catLabel, title, date, results = [], showFaces = false }) {
   const W = 600, H = 630, pad = 34;
   const medal = ['#f5c400', '#dadada', '#cd7f32'];
   const logo = _ogLogoDataUri();
   const titleStr = (title || '').toUpperCase();
   const fsT = titleStr.length > 22 ? Math.max(20, Math.round(30 * 22 / titleStr.length)) : 30;
 
-  const top = 150, bottom = H - 50;
   const n = Math.min(results.length, 3);
-  const availH = bottom - top;
-  const rH = n ? Math.min(Math.round(availH / n), Math.round(availH / 3)) : 0;
-  const listTop = top + Math.round((availH - rH * n) / 2);
+  const { rH, listTop } = _ogPodiumRows(n);
+  const textX = pad + 68 + (showFaces ? _OG_PODIUM_AVATAR_D + 14 : 0);
+  const nameMax = showFaces ? 16 : 22, teamMax = showFaces ? 18 : 26;
 
   const rowsHtml = results.slice(0, 3).map((r, i) => {
     const ry = listTop + i * rH, mid = ry + rH / 2;
@@ -7086,8 +7104,8 @@ function buildGaraPodiumPanelSvg({ catLabel, title, date, results = [] }) {
     return `${isFirst ? `<rect x="${pad}" y="${ry + 4}" width="${W - pad * 2}" height="${rH - 8}" rx="8" fill="rgba(245,196,0,0.08)" stroke="rgba(245,196,0,0.35)"/>` : ''}
     <rect x="${pad + 8}" y="${mid - 16}" width="46" height="32" rx="6" fill="${medal[i]}"/>
     <text x="${pad + 31}" y="${mid + 7}" font-family="Arial,Helvetica,sans-serif" font-size="18" font-weight="800" fill="#1a1200" text-anchor="middle">${i + 1}°</text>
-    <text x="${pad + 68}" y="${mid - 4}" font-family="Arial,Helvetica,sans-serif" font-size="21" font-weight="700" fill="#f4f4f4">${_ogEsc(name.slice(0, 22))}</text>
-    <text x="${pad + 68}" y="${mid + 20}" font-family="Arial,Helvetica,sans-serif" font-size="15" fill="rgba(255,255,255,0.45)">${_ogEsc((r.team || '').slice(0, 26))}</text>`;
+    <text x="${textX}" y="${mid - 4}" font-family="Arial,Helvetica,sans-serif" font-size="21" font-weight="700" fill="#f4f4f4">${_ogEsc(name.slice(0, nameMax))}</text>
+    <text x="${textX}" y="${mid + 20}" font-family="Arial,Helvetica,sans-serif" font-size="15" fill="rgba(255,255,255,0.45)">${_ogEsc((r.team || '').slice(0, teamMax))}</text>`;
   }).join('');
 
   return `<svg width="${W}" height="${H}" xmlns="http://www.w3.org/2000/svg">
@@ -7103,10 +7121,31 @@ function buildGaraPodiumPanelSvg({ catLabel, title, date, results = [] }) {
 </svg>`;
 }
 
+// Prepara gli overlay avatar (compositable da sharp) per il podio: un
+// cerchio per riga (max 3), solo per le righe il cui atleta ha davvero una
+// foto profilo — le altre restano senza, il layout del testo è già stato
+// spostato per lasciare lo spazio in entrambi i casi.
+async function _ogPodiumAvatarOverlays(results, n) {
+  const { rH, listTop } = _ogPodiumRows(n);
+  const bufs = await Promise.all(results.slice(0, n).map(async (r) => {
+    if (!r.atleta_id) return null;
+    try {
+      const photo = await getEntityPhoto('atleta', r.atleta_id);
+      if (!photo) return null;
+      return await _ogCircleAvatar(photo, _OG_PODIUM_AVATAR_D);
+    } catch { return null; }
+  }));
+  return bufs.map((buf, i) => {
+    if (!buf) return null;
+    const mid = listTop + i * rH + rH / 2;
+    return { input: buf, left: 600 + 34 + 68, top: Math.round(mid - _OG_PODIUM_AVATAR_D / 2) };
+  }).filter(Boolean);
+}
+
 // Compone la foto (ritagliata a metà larghezza, 600x630) con il pannello
 // podio nell'altra metà — stessa strategia di ritaglio (_ogCropPosition)
-// usata per la card a foto intera.
-async function _photoSplitOgPng(filename, panelSvg) {
+// usata per la card a foto intera — più eventuali avatar dei primi 3.
+async function _photoSplitOgPng(filename, panelSvg, avatarOverlays = []) {
   const raw = await _fetchRawImageBuffer(filename);
   if (!raw) return null;
   try {
@@ -7115,7 +7154,7 @@ async function _photoSplitOgPng(filename, panelSvg) {
     const photoBuf = await sharp(raw).resize(600, 630, { fit: 'cover', position: _ogCropPosition(meta) }).png().toBuffer();
     const panelBuf = await sharp(Buffer.from(panelSvg)).png().toBuffer();
     return await sharp({ create: { width: 1200, height: 630, channels: 3, background: '#0a0c10' } })
-      .composite([{ input: photoBuf, left: 0, top: 0 }, { input: panelBuf, left: 600, top: 0 }])
+      .composite([{ input: photoBuf, left: 0, top: 0 }, { input: panelBuf, left: 600, top: 0 }, ...avatarOverlays])
       .png().toBuffer();
   } catch (e) { console.error('[og-image] split card fallita:', e.message); return null; }
 }
@@ -7199,9 +7238,15 @@ app.get('/api/og-image/gara/:id', async (req, res) => {
     // caricata a mano (race_photos) vince se presente, altrimenti xpix.it,
     // altrimenti ciclismo.info.
     try {
-      const photoPanelSvg = results.length ? buildGaraPodiumPanelSvg({ catLabel, title, date: dateShort, results }) : null;
+      // Volti nel podio solo per Elite (copertura foto profilo verificata:
+      // 69-75% degli atleti, contro <18% di Juniores e <1% delle giovanili)
+      // — con poca copertura il podio avrebbe "a volte il volto, a volte no"
+      // sulla maggioranza delle righe, un'incoerenza peggiore di non averli.
+      const showFaces = !!(catCode && _OG_FACE_CATS.has(catCode));
+      const avatarOverlays = (showFaces && results.length) ? await _ogPodiumAvatarOverlays(results, Math.min(results.length, 3)) : [];
+      const photoPanelSvg = results.length ? buildGaraPodiumPanelSvg({ catLabel, title, date: dateShort, results, showFaces }) : null;
       const toImage = async (photoSource) => photoPanelSvg
-        ? (await _photoSplitOgPng(photoSource, photoPanelSvg)) || (await _photoToOgPng(photoSource))
+        ? (await _photoSplitOgPng(photoSource, photoPanelSvg, avatarOverlays)) || (await _photoToOgPng(photoSource))
         : await _photoToOgPng(photoSource);
 
       const uploaded = await queries.getApprovedRacePhotos(garaId).catch(() => []);
