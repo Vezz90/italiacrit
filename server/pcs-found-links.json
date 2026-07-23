@@ -1,3 +1,344 @@
 [
-  { "atleta_id": "CRESCIOLI_GIOSUE", "name": "CRESCIOLI GIOSUE'", "slug": "giosue-pitti-crescioli", "url": "https://www.procyclingstats.com/rider/giosue-pitti-crescioli" }
+  {
+    "atleta_id": "BUDA_SIMONE",
+    "name": "BUDA SIMONE",
+    "slug": "simone-buda2",
+    "url": "https://www.procyclingstats.com/rider/simone-buda2"
+  },
+  {
+    "atleta_id": "FRATICELLI_LUCA",
+    "name": "FRATICELLI LUCA",
+    "slug": "luca-fraticell",
+    "url": "https://www.procyclingstats.com/rider/luca-fraticell"
+  },
+  {
+    "atleta_id": "MISHANKOV_MAKSIM",
+    "name": "MISHANKOV MAKSIM",
+    "slug": "maxim-mishankov",
+    "url": "https://www.procyclingstats.com/rider/maxim-mishankov"
+  },
+  {
+    "atleta_id": "ZOZULIA_ANDRII",
+    "name": "ZOZULIA ANDRII",
+    "slug": "andriy-zozulia",
+    "url": "https://www.procyclingstats.com/rider/andriy-zozulia//"
+  },
+  {
+    "atleta_id": "UMBA_LOPEZ_ABNER_SANTIAGO",
+    "name": "UMBA LOPEZ ABNER SANTIAGO",
+    "slug": "santiago-umba",
+    "url": "https://www.procyclingstats.com/rider/santiago-umba//"
+  },
+  {
+    "atleta_id": "ATTOLINI_LUCA",
+    "name": "ATTOLINI LUCA",
+    "slug": "valerio-attolini",
+    "url": "https://www.procyclingstats.com/rider/valerio-attolini//"
+  },
+  {
+    "atleta_id": "DOVESI_MANUEL",
+    "name": "DOVESI MANUEL",
+    "slug": "manu-dovesi",
+    "url": "https://www.procyclingstats.com/rider/manu-dovesi//"
+  },
+  {
+    "atleta_id": "SHTIN_VALERII",
+    "name": "SHTIN VALERII",
+    "slug": "valery-shtin",
+    "url": "https://www.procyclingstats.com/rider/valery-shtin//"
+  },
+  {
+    "atleta_id": "ANNIBALLI_LORENZO",
+    "name": "ANNIBALLI LORENZO",
+    "slug": "lorenzo-annibali",
+    "url": "https://www.procyclingstats.com/rider/lorenzo-annibali//"
+  },
+  {
+    "atleta_id": "PROSANDEEV_IAROSLAV",
+    "name": "PROSANDEEV IAROSLAV",
+    "slug": "yaroslav-prosandeev",
+    "url": "https://www.procyclingstats.com/rider/yaroslav-prosandeev//"
+  },
+  {
+    "atleta_id": "ESTUPINAN_VARGAS_KEVIN",
+    "name": "ESTUPINAN VARGAS KEVIN",
+    "slug": "kevin-andres-estupinan",
+    "url": "https://www.procyclingstats.com/rider/kevin-andres-estupinan"
+  },
+  {
+    "atleta_id": "PARETA_SALA_ROGER",
+    "name": "PARETA SALA ROGER",
+    "slug": "roger-pareta",
+    "url": "https://www.procyclingstats.com/rider/roger-pareta"
+  },
+  {
+    "atleta_id": "VAN_DEN_WIJNGAERT_MATTEO",
+    "name": "VAN DEN WIJNGAERT MATTEO",
+    "slug": "matteo-vanden-wijngaert",
+    "url": "https://www.procyclingstats.com/rider/matteo-vanden-wijngaert"
+  },
+  {
+    "atleta_id": "PRIETO_DE_LUNA_JOSE_JUAN",
+    "name": "PRIETO DE LUNA JOSE JUAN",
+    "slug": "jose-juan-prieto",
+    "url": "https://www.procyclingstats.com/rider/jose-juan-prieto"
+  },
+  {
+    "atleta_id": "PAVI_DEGL_INNOCENTI_GIULIO",
+    "name": "PAVI DEGL'INNOCENTI GIULIO",
+    "slug": "iulio-degl-innocenti-pavi",
+    "url": "https://www.procyclingstats.com/rider/iulio-degl-innocenti-pavi"
+  },
+  {
+    "atleta_id": "CHYZHYKOV_HMORHII",
+    "name": "CHYZHYKOV HMORHII",
+    "slug": "heorhii-chyzhykov",
+    "url": "https://www.procyclingstats.com/rider/heorhii-chyzhykov"
+  },
+  {
+    "atleta_id": "ROJAS_NARANJO_VICENTE_RODRIGO_ANTONIO",
+    "name": "ROJAS NARANJO VICENTE RODRIGO ANTONIO",
+    "slug": "vicente-rojas",
+    "url": "https://www.procyclingstats.com/rider/vicente-rojas"
+  },
+  {
+    "atleta_id": "MAGLI_FILIPPO",
+    "name": "MAGLI FILIPPO",
+    "slug": "filippo-magli2",
+    "url": "https://www.procyclingstats.com/rider/filippo-magli2"
+  },
+  {
+    "atleta_id": "COLES_LYSTER_MAGGIE",
+    "name": "COLES-LYSTER MAGGIE",
+    "slug": "maggie-coleslyster",
+    "url": "https://www.procyclingstats.com/rider/maggie-coleslyster//"
+  },
+  {
+    "atleta_id": "NIEWIADOMA_KASIA",
+    "name": "NIEWIADOMA KASIA",
+    "slug": "katarzyna-niewiadoma",
+    "url": "https://www.procyclingstats.com/rider/katarzyna-niewiadoma//"
+  },
+  {
+    "atleta_id": "ZAMUDIO_GARCIA_MAYTE",
+    "name": "ZAMUDIO GARCIA MAYTE",
+    "slug": "mayte-zamudio",
+    "url": "https://www.procyclingstats.com/rider/mayte-zamudio"
+  },
+  {
+    "atleta_id": "MILAKI_ARGYRO",
+    "name": "MILAKI ARGYRO",
+    "slug": "argiro-milaki",
+    "url": "https://www.procyclingstats.com/rider/argiro-milaki"
+  },
+  {
+    "atleta_id": "BALLIANA_ENRICO",
+    "name": "BALLIANA ENRICO",
+    "slug": "enrico-andrea-balliana",
+    "url": "https://www.procyclingstats.com/rider/enrico-andrea-balliana//"
+  },
+  {
+    "atleta_id": "RODRIGUEZ_DELGADO_JOSE_EMILIO",
+    "name": "RODRIGUEZ DELGADO JOSE EMILIO",
+    "slug": "jose-rodriguez-delgado",
+    "url": "https://www.procyclingstats.com/rider/jose-rodriguez-delgado"
+  },
+  {
+    "atleta_id": "MORENO_GARCIA_DANIEL_SANTIAGO",
+    "name": "MORENO GARCIA DANIEL SANTIAGO",
+    "slug": "daniel-moreno-garcia",
+    "url": "https://www.procyclingstats.com/rider/daniel-moreno-garcia"
+  },
+  {
+    "atleta_id": "LOVER_MEDEOT_TOMAZ",
+    "name": "LOVER MEDEOT TOMAZ",
+    "slug": "tomaz-medeot",
+    "url": "https://www.procyclingstats.com/rider/tomaz-medeot"
+  },
+  {
+    "atleta_id": "WROLICH_SANTIAGO",
+    "name": "WROLICH SANTIAGO",
+    "slug": "wrolich-santiago",
+    "url": "https://www.procyclingstats.com/rider/wrolich-santiago//"
+  },
+  {
+    "atleta_id": "BIRKEDAL_JULIUS",
+    "name": "BIRKEDAL JULIUS",
+    "slug": "julius-lovstrup-birkedal",
+    "url": "https://www.procyclingstats.com/rider/julius-lovstrup-birkedal"
+  },
+  {
+    "atleta_id": "IAKOVLEV_MATVEL",
+    "name": "IAKOVLEV MATVEL",
+    "slug": "matvei-yakovlev",
+    "url": "https://www.procyclingstats.com/rider/matvei-yakovlev"
+  },
+  {
+    "atleta_id": "SCHNYDER_NOAH",
+    "name": "SCHNYDER NOAH",
+    "slug": "schnyder-noah",
+    "url": "https://www.procyclingstats.com/rider/schnyder-noah"
+  },
+  {
+    "atleta_id": "SANTIAGO_GARCIA_RICARDO",
+    "name": "SANTIAGO GARCIA RICARDO",
+    "slug": "ricardo-santiago",
+    "url": "https://www.procyclingstats.com/rider/ricardo-santiago"
+  },
+  {
+    "atleta_id": "VESHNIAKOV_DANIIL",
+    "name": "VESHNIAKOV DANIIL",
+    "slug": "daniil-veshnyakov",
+    "url": "https://www.procyclingstats.com/rider/daniil-veshnyakov//"
+  },
+  {
+    "atleta_id": "POLIUSHKO_OLEKSANDER",
+    "name": "POLIUSHKO OLEKSANDER",
+    "slug": "oleksandr-poliushko",
+    "url": "https://www.procyclingstats.com/rider/oleksandr-poliushko"
+  },
+  {
+    "atleta_id": "SHANNON_HARRISON",
+    "name": "SHANNON HARRISON",
+    "slug": "harry-shannon",
+    "url": "https://www.procyclingstats.com/rider/harry-shannon//"
+  },
+  {
+    "atleta_id": "ORHOLM_LONSETH_SIND",
+    "name": "ORHOLM-LONSETH SIND",
+    "slug": "sindre-orholm-lonseth",
+    "url": "https://www.procyclingstats.com/rider/sindre-orholm-lonseth"
+  },
+  {
+    "atleta_id": "NOVAL_SUAREZ_BENJAMIN",
+    "name": "NOVAL SUAREZ BENJAMIN",
+    "slug": "benjamin-noval",
+    "url": "https://www.procyclingstats.com/rider/benjamin-noval"
+  },
+  {
+    "atleta_id": "FERNANDEZ_RUIZ_JORGE_LUIS",
+    "name": "FERNANDEZ RUIZ JORGE LUIS",
+    "slug": "jorge-fernandez-ruiz",
+    "url": "https://www.procyclingstats.com/rider/jorge-fernandez-ruiz"
+  },
+  {
+    "atleta_id": "LINGENHAG_LAURIN",
+    "name": "LINGENHAG LAURIN",
+    "slug": "lingenhag-laurin",
+    "url": "https://www.procyclingstats.com/rider/lingenhag-laurin"
+  },
+  {
+    "atleta_id": "OLIINYK_YURII",
+    "name": "OLIINYK YURII",
+    "slug": "yuri-oliinyk",
+    "url": "https://www.procyclingstats.com/rider/yuri-oliinyk"
+  },
+  {
+    "atleta_id": "RESTREPO_LOAIZA_OSCAR_IVAN",
+    "name": "RESTREPO LOAIZA OSCAR IVAN",
+    "slug": "oscar-restrepo",
+    "url": "https://www.procyclingstats.com/rider/oscar-restrepo"
+  },
+  {
+    "atleta_id": "FARSETTI_BRANDO",
+    "name": "FARSETTI BRANDO",
+    "slug": "brando-farsetti",
+    "url": "https://cx.procyclingstats.com/rider/brando-farsetti/start/overview3"
+  },
+  {
+    "atleta_id": "MAJNIC_MAKS",
+    "name": "MAJNIC MAKS",
+    "slug": "maks-majnik",
+    "url": "https://www.procyclingstats.com/rider/maks-majnik"
+  },
+  {
+    "atleta_id": "MATYASIK_MAKSYMILIAN",
+    "name": "MATYASIK MAKSYMILIAN",
+    "slug": "maks-matyasik",
+    "url": "https://www.procyclingstats.com/rider/maks-matyasik"
+  },
+  {
+    "atleta_id": "DERGANC_ANTON",
+    "name": "DERGANC ANTON",
+    "slug": "antion-derganc",
+    "url": "https://www.procyclingstats.com/rider/antion-derganc"
+  },
+  {
+    "atleta_id": "GABRIELE_MATTEO",
+    "name": "GABRIELE MATTEO",
+    "slug": "gabriele-matteo",
+    "url": "https://www.procyclingstats.com/rider/gabriele-matteo/start"
+  },
+  {
+    "atleta_id": "TAMASHIRO_CAPPELLETTI_KEN_GEO",
+    "name": "TAMASHIRO CAPPELLETTI KEN GEO",
+    "slug": "ken-tamashiro-cappelletti",
+    "url": "https://www.procyclingstats.com/rider/ken-tamashiro-cappelletti"
+  },
+  {
+    "atleta_id": "COATES_BENJAMIN",
+    "name": "COATES BENJAMIN",
+    "slug": "ben-coates",
+    "url": "https://www.procyclingstats.com/rider/ben-coates"
+  },
+  {
+    "atleta_id": "AYALA_ARELLANO_EDUARD_EMANUEL",
+    "name": "AYALA ARELLANO EDUARD EMANUEL",
+    "slug": "eduard-emanuel-ayala",
+    "url": "https://www.procyclingstats.com/rider/eduard-emanuel-ayala"
+  },
+  {
+    "atleta_id": "FARAZ_KHATIEB",
+    "name": "FARAZ KHATIEB",
+    "slug": "faraz-khatieb",
+    "url": "https://www.procyclingstats.com/rider/faraz-khatieb"
+  },
+  {
+    "atleta_id": "RICCADONA_EDOARDO",
+    "name": "RICCADONA EDOARDO",
+    "slug": "edoardo-riccadonna",
+    "url": "https://www.procyclingstats.com/rider/edoardo-riccadonna"
+  },
+  {
+    "atleta_id": "D_APOLLONIO_REBECCA",
+    "name": "D'APOLLONIO REBECCA",
+    "slug": "rebecca-dapollonio",
+    "url": "https://www.procyclingstats.com/rider/rebecca-dapollonio"
+  },
+  {
+    "atleta_id": "ALHACH_SJOGREN_GAETTANA",
+    "name": "ALHACH SJOGREN GAETTANA",
+    "slug": "gaetanna-alhach-sjogren",
+    "url": "https://www.procyclingstats.com/rider/gaetanna-alhach-sjogren"
+  },
+  {
+    "atleta_id": "NOVOLODSKAIA_ANGELINA",
+    "name": "NOVOLODSKAIA ANGELINA",
+    "slug": "angelina-novolodskaya",
+    "url": "https://www.procyclingstats.com/rider/angelina-novolodskaya//"
+  },
+  {
+    "atleta_id": "PASCUT_MADDALENA",
+    "name": "PASCUT MADDALENA",
+    "slug": "maddalena-pascut",
+    "url": "https://www.procyclingstats.com/rider/maddalena-pascut//"
+  },
+  {
+    "atleta_id": "PINEDA_SOTO_NATALIA",
+    "name": "PINEDA SOTO NATALIA",
+    "slug": "natalia-pineda",
+    "url": "https://www.procyclingstats.com/rider/natalia-pineda"
+  },
+  {
+    "atleta_id": "DOMINGUEZ_NEIRA_ALEJANDRA",
+    "name": "DOMINGUEZ NEIRA ALEJANDRA",
+    "slug": "alejandra-neira",
+    "url": "https://www.procyclingstats.com/rider/alejandra-neira"
+  },
+  {
+    "atleta_id": "BANI_DESIREE",
+    "name": "BANI DESIREE",
+    "slug": "desire-bani",
+    "url": "https://www.procyclingstats.com/rider/desire-bani"
+  }
 ]
