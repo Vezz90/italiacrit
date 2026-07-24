@@ -1,0 +1,626 @@
+[
+  {
+    "a": {
+      "atleta_id": "PAREDES_SANCHEZ_ANDREA",
+      "cognome": "PAREDES SANCHEZ",
+      "nome": "ANDREA",
+      "team": "A.R.MONEX PRO CYCLING TEAM",
+      "team_id": "A_R_MONEX_PRO_CYCLING_TEAM",
+      "categoria": "Allievi",
+      "genere": "F",
+      "gare": [
+        {
+          "gara_id": "1_BREGANZE_MONTE_CORNO_2026-07-12_AL_F",
+          "nome_gara": "1 BREGANZE MONTE CORNO",
+          "data": "2026-07-12",
+          "posizione": 4
+        },
+        {
+          "gara_id": "1_TROFEO_RUOTE_ROSA_CASCIANA_TERME_LARI_2026-06-28_AL_F",
+          "nome_gara": "1 TROFEO RUOTE ROSA CASCIANA TERME LARI",
+          "data": "2026-06-28",
+          "posizione": 1
+        },
+        {
+          "gara_id": "24_GRAN_PREMIO_ROSA_CITTA_DI_BOVOLONE_2026-05-03_AL_F",
+          "nome_gara": "24 GRAN PREMIO ROSA CITTA' DI BOVOLONE",
+          "data": "2026-05-03",
+          "posizione": 5
+        },
+        {
+          "gara_id": "GRAN_PREMIO_PRIMAVERA_A_MASER_2026-04-26_AL_F",
+          "nome_gara": "GRAN PREMIO PRIMAVERA A MASER",
+          "data": "2026-04-26",
+          "posizione": 7
+        },
+        {
+          "gara_id": "PIANEZZE_GIRLS_ROAD_CLASSIC_2026-04-19_AL_F",
+          "nome_gara": "PIANEZZE GIRLS' ROAD CLASSIC",
+          "data": "2026-04-19",
+          "posizione": 6
+        },
+        {
+          "gara_id": "1_TROFEO_BED_E_BIKE_MASTROMARCO_MEMORIAL_MARIOTTI_RENATO_2026-04-12_AL_F",
+          "nome_gara": "1 TROFEO BED E BIKE MASTROMARCO MEMORIAL MARIOTTI RENATO",
+          "data": "2026-04-12",
+          "posizione": 3
+        }
+      ]
+    },
+    "b": {
+      "atleta_id": "PARADES_SANCHEZ_ANDREA",
+      "cognome": "PARADES",
+      "nome": "SANCHEZ ANDREA",
+      "team": "A.R.MONEX PRO CYCLING TEAM",
+      "team_id": "A_R_MONEX_PRO_CYCLING_TEAM",
+      "categoria": "Allievi",
+      "genere": "F",
+      "gare": [
+        {
+          "gara_id": "64_TROFEO_FIORENZO_MAGNI_SCHIVARDI_RIGONI_2026-06-07_AL_F",
+          "nome_gara": "64 TROFEO FIORENZO MAGNI SCHIVARDI RIGONI",
+          "data": "2026-06-07",
+          "posizione": 5
+        }
+      ]
+    },
+    "dist": 1,
+    "sim": 0.955,
+    "sameTeam": true
+  },
+  {
+    "a": {
+      "atleta_id": "RIGAMONTI_CHRISTIAN",
+      "cognome": "RIGAMONTI",
+      "nome": "CHRISTIAN",
+      "team": "V CYCLING - ARICI CLAUDIA - PITON",
+      "team_id": "V_CYCLING_ARICI_CLAUDIA_PITON",
+      "categoria": "Esordienti 2° Anno",
+      "genere": "M",
+      "gare": [
+        {
+          "gara_id": "GRAN_PREMIO_CITTA_DI_POZZOLENGO_GARA_UNICA_2026-07-19_ES2_M",
+          "nome_gara": "GRAN PREMIO CITTA' DI POZZOLENGO GARA UNICA",
+          "data": "2026-07-19",
+          "posizione": 10
+        },
+        {
+          "gara_id": "10_TROFEO_COMUNE_DI_BOVEZZO_2026-07-12_ES2_M",
+          "nome_gara": "10 TROFEO COMUNE DI BOVEZZO",
+          "data": "2026-07-12",
+          "posizione": 7
+        },
+        {
+          "gara_id": "LA_DUE_GIORNATE_DI_BORNATO_MEMORIAL_MALNATI_2026-06-28_ES2_M",
+          "nome_gara": "LA DUE GIORNATE DI BORNATO MEMORIAL MALNATI",
+          "data": "2026-06-28",
+          "posizione": 10
+        },
+        {
+          "gara_id": "9_MEMORIAL_GUGLIELMO_BOTTARELLI_2026-06-21_ES2_M",
+          "nome_gara": "9 MEMORIAL GUGLIELMO BOTTARELLI",
+          "data": "2026-06-21",
+          "posizione": 10
+        },
+        {
+          "gara_id": "5_TROFEO_7_TORRI_2026-06-07_ES2_M",
+          "nome_gara": "5 TROFEO 7 TORRI",
+          "data": "2026-06-07",
+          "posizione": 7
+        },
+        {
+          "gara_id": "20_MEMORIAL_BATTISTA_BONIOTTI_GARA_UNICA_2026-06-02_ES2_M",
+          "nome_gara": "20 MEMORIAL BATTISTA BONIOTTI GARA UNICA",
+          "data": "2026-06-02",
+          "posizione": 10
+        },
+        {
+          "gara_id": "TROFEO_TERME_DI_CALDIERO_2026-05-17_ES2_M",
+          "nome_gara": "TROFEO TERME DI CALDIERO",
+          "data": "2026-05-17",
+          "posizione": 4
+        },
+        {
+          "gara_id": "10_GRAN_PREMIO_AMICI_DEL_CICLISMO_GARA_UNICA_2026-05-10_ES2_M",
+          "nome_gara": "10 GRAN PREMIO AMICI DEL CICLISMO GARA UNICA",
+          "data": "2026-05-10",
+          "posizione": 10
+        },
+        {
+          "gara_id": "14_TROFEO_MAURIGI_2026-05-03_ES2_M",
+          "nome_gara": "14 TROFEO MAURIGI",
+          "data": "2026-05-03",
+          "posizione": 5
+        },
+        {
+          "gara_id": "22_TROFEO_ARMANNI_CARRELLI_ELEVATORI_2026-05-01_ES2_M",
+          "nome_gara": "22 TROFEO ARMANNI CARRELLI ELEVATORI",
+          "data": "2026-05-01",
+          "posizione": 5
+        },
+        {
+          "gara_id": "18_CRITERIUM_RIVA_LOGISTICA_2026-04-26_ES2_M",
+          "nome_gara": "18 CRITERIUM RIVA LOGISTICA",
+          "data": "2026-04-26",
+          "posizione": 10
+        },
+        {
+          "gara_id": "7_GRAN_PREMIO_DI_CRENNA_2026-04-25_ES2_M",
+          "nome_gara": "7 GRAN PREMIO DI CRENNA",
+          "data": "2026-04-25",
+          "posizione": 4
+        },
+        {
+          "gara_id": "29_MEMORIAL_LUIGI_BUSSACCHINI_2026-04-12_ES2_M",
+          "nome_gara": "29 MEMORIAL LUIGI BUSSACCHINI",
+          "data": "2026-04-12",
+          "posizione": 6
+        },
+        {
+          "gara_id": "7_TROFEO_QUADRE_CITTA_DI_CHIARI_2026-03-29_ES2_M",
+          "nome_gara": "7 TROFEO QUADRE CITTA' DI CHIARI",
+          "data": "2026-03-29",
+          "posizione": 5
+        }
+      ]
+    },
+    "b": {
+      "atleta_id": "RIGAMONTI_CRISTIAN",
+      "cognome": "RIGAMONTI",
+      "nome": "CRISTIAN",
+      "team": "UC COSTAMASNAGA ASD",
+      "team_id": "UC_COSTAMASNAGA_ASD",
+      "categoria": "Esordienti 2° Anno",
+      "genere": "M",
+      "gare": [
+        {
+          "gara_id": "3_EDIZIONE_PRESEZZISOLA_2026-06-28_ES2_M",
+          "nome_gara": "3 EDIZIONE PRESEZZISOLA",
+          "data": "2026-06-28",
+          "posizione": 9
+        },
+        {
+          "gara_id": "8_TROFEO_EFFEBI_2026-06-21_ES2_M",
+          "nome_gara": "8 TROFEO EFFEBI",
+          "data": "2026-06-21",
+          "posizione": 9
+        }
+      ]
+    },
+    "dist": 1,
+    "sim": 0.947,
+    "sameTeam": false
+  },
+  {
+    "a": {
+      "atleta_id": "ANELLI_FILIPPO",
+      "cognome": "ANELLI",
+      "nome": "FILIPPO",
+      "team": "PEDALE RIMINESE FRECCE ROSSE",
+      "team_id": "PEDALE_RIMINESE_FRECCE_ROSSE",
+      "categoria": "Esordienti 1° Anno",
+      "genere": "M",
+      "gare": [
+        {
+          "gara_id": "4_LA_PIERI_ALIGI_2026-07-19_ES1_M",
+          "nome_gara": "4 LA PIERI ALIGI",
+          "data": "2026-07-19",
+          "posizione": 4
+        },
+        {
+          "gara_id": "MEMORIAL_VANNI_CARONI_2026-06-28_ES1_M",
+          "nome_gara": "MEMORIAL VANNI CARONI",
+          "data": "2026-06-28",
+          "posizione": 10
+        },
+        {
+          "gara_id": "TERZO_TROFEO_CITTA_DI_VIGOLZONE_2026-06-21_ES1_M",
+          "nome_gara": "TERZO TROFEO CITTA' DI VIGOLZONE",
+          "data": "2026-06-21",
+          "posizione": 7
+        },
+        {
+          "gara_id": "2_MEMORIAL_CESARE_MANNORI_2026-06-14_ES1_M",
+          "nome_gara": "2 MEMORIAL CESARE MANNORI",
+          "data": "2026-06-14",
+          "posizione": 1
+        },
+        {
+          "gara_id": "INTERNAZIONALE_PORTO_SAN_GIORGIO_MEMORIAL_M_DE_ANGELIS_CRONOMETRO_2026-06-12_ES1_M",
+          "nome_gara": "INTERNAZIONALE PORTO SAN GIORGIO MEMORIAL M DE ANGELIS CRONOMETRO",
+          "data": "2026-06-12",
+          "posizione": 1
+        },
+        {
+          "gara_id": "41_TROFEO_CIRCOLO_ACLI_CHIARINO_2026-06-02_ES1_M",
+          "nome_gara": "41 TROFEO CIRCOLO ACLI CHIARINO",
+          "data": "2026-06-02",
+          "posizione": 8
+        },
+        {
+          "gara_id": "21_MEMORIAL_GALAVOTTI_2026-05-17_ES1_M",
+          "nome_gara": "21 MEMORIAL GALAVOTTI",
+          "data": "2026-05-17",
+          "posizione": 5
+        },
+        {
+          "gara_id": "LA_STORICA_COPPA_DE_LE_POGGIOLA_2026-05-03_ES1_M",
+          "nome_gara": "LA STORICA COPPA DE LE POGGIOLA",
+          "data": "2026-05-03",
+          "posizione": 2
+        },
+        {
+          "gara_id": "81_GRAN_PREMIO_CADUTI_LIBERAZIONE_GARA_UNICA_2026-05-01_ES1_M",
+          "nome_gara": "81 GRAN PREMIO CADUTI LIBERAZIONE GARA UNICA",
+          "data": "2026-05-01",
+          "posizione": 2
+        },
+        {
+          "gara_id": "49_GRAN_PREMIO_LIBERAZIONE_2026-04-25_ES1_M",
+          "nome_gara": "49 GRAN PREMIO LIBERAZIONE",
+          "data": "2026-04-25",
+          "posizione": 5
+        },
+        {
+          "gara_id": "2_MEMORIAL_GRAZIANO_ROSSI_2026-04-19_ES1_M",
+          "nome_gara": "2 MEMORIAL GRAZIANO ROSSI",
+          "data": "2026-04-19",
+          "posizione": 1
+        },
+        {
+          "gara_id": "6_TROFEO_CITTA_BELLARIA_IGEA_MARINA_2026-04-04_ES1_M",
+          "nome_gara": "6 TROFEO CITTA' BELLARIA IGEA MARINA",
+          "data": "2026-04-04",
+          "posizione": 6
+        },
+        {
+          "gara_id": "GRAN_PREMIO_FIORITURA_2026-03-29_ES1_M",
+          "nome_gara": "GRAN PREMIO FIORITURA",
+          "data": "2026-03-29",
+          "posizione": 3
+        },
+        {
+          "gara_id": "2_GRAN_PREMIO_CADELBOSCO_DI_SOPRA_2026-03-22_ES1_M",
+          "nome_gara": "2 GRAN PREMIO CADELBOSCO DI SOPRA",
+          "data": "2026-03-22",
+          "posizione": 4
+        }
+      ]
+    },
+    "b": {
+      "atleta_id": "VANELLI_FILIPPO",
+      "cognome": "VANELLI",
+      "nome": "FILIPPO",
+      "team": "BUSTO GAROLFO",
+      "team_id": "BUSTO_GAROLFO",
+      "categoria": "Esordienti 1° Anno",
+      "genere": "M",
+      "gare": [
+        {
+          "gara_id": "LOMBARDIA_GIOVANI_GARA_UNICA_2026-07-12_ES1_M",
+          "nome_gara": "LOMBARDIA GIOVANI GARA UNICA",
+          "data": "2026-07-12",
+          "posizione": 6
+        },
+        {
+          "gara_id": "LA_DUE_GIORNATE_DI_BORNATO_MEMORIAL_MALNATI_2026-06-28_ES1_M",
+          "nome_gara": "LA DUE GIORNATE DI BORNATO MEMORIAL MALNATI",
+          "data": "2026-06-28",
+          "posizione": 5
+        },
+        {
+          "gara_id": "1_MEMORIAL_TIZIANO_PIRAZZI_2026-06-21_ES1_M",
+          "nome_gara": "1 MEMORIAL TIZIANO PIRAZZI",
+          "data": "2026-06-21",
+          "posizione": 2
+        },
+        {
+          "gara_id": "5_TROFEO_NOVA_SIDER_FORGITAL_CAMPIONATO_REGIONALE_2026-06-14_ES1_M",
+          "nome_gara": "5 TROFEO NOVA SIDER FORGITAL CAMPIONATO REGIONALE",
+          "data": "2026-06-14",
+          "posizione": 5
+        },
+        {
+          "gara_id": "GRAN_PREMIO_RESCALDESE_2026-06-07_ES1_M",
+          "nome_gara": "GRAN PREMIO RESCALDESE",
+          "data": "2026-06-07",
+          "posizione": 5
+        },
+        {
+          "gara_id": "48_TROFEO_CADUTI_BESNATESI_GARA_UNICA_2026-05-31_ES1_M",
+          "nome_gara": "48 TROFEO CADUTI BESNATESI GARA UNICA",
+          "data": "2026-05-31",
+          "posizione": 2
+        },
+        {
+          "gara_id": "15_TROFEO_COMUNE_DI_PESSANO_2026-05-17_ES1_M",
+          "nome_gara": "15 TROFEO COMUNE DI PESSANO",
+          "data": "2026-05-17",
+          "posizione": 4
+        },
+        {
+          "gara_id": "TROFEO_CITTA_DI_SANGIULIANO_MILANESE_2026-05-10_ES1_M",
+          "nome_gara": "TROFEO CITTA' DI SANGIULIANO MILANESE",
+          "data": "2026-05-10",
+          "posizione": 9
+        },
+        {
+          "gara_id": "2_TROFEO_TORRETTA_PAOLO_A_M_GARA_UNICA_2026-05-01_ES1_M",
+          "nome_gara": "2 TROFEO TORRETTA PAOLO A M GARA UNICA",
+          "data": "2026-05-01",
+          "posizione": 5
+        },
+        {
+          "gara_id": "9_TROFEO_BCC_BRIANZA_E_LAGHI_2026-04-25_ES1_M",
+          "nome_gara": "9 TROFEO BCC BRIANZA E LAGHI",
+          "data": "2026-04-25",
+          "posizione": 5
+        },
+        {
+          "gara_id": "GRAN_PREMIO_GAETANO_E_MARIO_ARRIGONI_2026-04-19_ES1_M",
+          "nome_gara": "GRAN PREMIO GAETANO E MARIO ARRIGONI",
+          "data": "2026-04-19",
+          "posizione": 8
+        },
+        {
+          "gara_id": "29_MEMORIAL_LUIGI_BUSSACCHINI_2026-04-12_ES1_M",
+          "nome_gara": "29 MEMORIAL LUIGI BUSSACCHINI",
+          "data": "2026-04-12",
+          "posizione": 2
+        },
+        {
+          "gara_id": "7_TROFEO_DINO_PIETRELLA_CRONOMETRO_2026-04-11_ES1_M",
+          "nome_gara": "7 TROFEO DINO PIETRELLA CRONOMETRO",
+          "data": "2026-04-11",
+          "posizione": 8
+        }
+      ]
+    },
+    "dist": 1,
+    "sim": 0.933,
+    "sameTeam": false
+  },
+  {
+    "a": {
+      "atleta_id": "FIORETTI_MATTIA",
+      "cognome": "FIORETTI",
+      "nome": "MATTIA",
+      "team": "S. C. MINCIO-CHIESE A.S.D",
+      "team_id": "S_C_MINCIO_CHIESE_A_S_D",
+      "categoria": "Allievi",
+      "genere": "M",
+      "gare": [
+        {
+          "gara_id": "8_TROFEO_CITTA_DI_ASOLA_MEMORIAL_ALBERTO_COFFANI_2026-07-11_AL_M",
+          "nome_gara": "8 TROFEO CITTA' DI ASOLA MEMORIAL ALBERTO COFFANI",
+          "data": "2026-07-11",
+          "posizione": 9
+        },
+        {
+          "gara_id": "8_TROFEO_EFFEBI_2026-06-21_AL_M",
+          "nome_gara": "8 TROFEO EFFEBI",
+          "data": "2026-06-21",
+          "posizione": 4
+        },
+        {
+          "gara_id": "13_MEMORIAL_GUIDO_CARTA_50_ANNI_DI_CICLISMO_A_SAN_PIETRO_IN_GU_2026-06-14_AL_M",
+          "nome_gara": "13 MEMORIAL GUIDO CARTA 50 ANNI DI CICLISMO A SAN PIETRO IN GU",
+          "data": "2026-06-14",
+          "posizione": 8
+        },
+        {
+          "gara_id": "TROFEO_ECOSOLUZIONI_2026-05-17_AL_M",
+          "nome_gara": "TROFEO ECOSOLUZIONI",
+          "data": "2026-05-17",
+          "posizione": 5
+        },
+        {
+          "gara_id": "GRAN_PREMIO_CAMPI_ENERGIE_2026_MEMORIAL_FORTUNA_2026_2026-05-03_AL_M",
+          "nome_gara": "GRAN PREMIO CAMPI ENERGIE 2026 MEMORIAL FORTUNA 2026",
+          "data": "2026-05-03",
+          "posizione": 9
+        },
+        {
+          "gara_id": "26_MEMORIAL_MARCELLO_PERICO_1_TROFEO_CITTA_DI_SERIATE_2026-05-01_AL_M",
+          "nome_gara": "26 MEMORIAL MARCELLO PERICO 1 TROFEO CITTA' DI SERIATE",
+          "data": "2026-05-01",
+          "posizione": 3
+        },
+        {
+          "gara_id": "4_TROFEO_PECSO_CAVI_2026-04-26_AL_M",
+          "nome_gara": "4 TROFEO PECSO CAVI",
+          "data": "2026-04-26",
+          "posizione": 8
+        }
+      ]
+    },
+    "b": {
+      "atleta_id": "CROVETTI_MATTIA",
+      "cognome": "CROVETTI",
+      "nome": "MATTIA",
+      "team": "S. C. MINCIO-CHIESE A.S.D",
+      "team_id": "S_C_MINCIO_CHIESE_A_S_D",
+      "categoria": "Allievi",
+      "genere": "M",
+      "gare": [
+        {
+          "gara_id": "CRITERIUM_LIBERAZIONE_2026-04-25_AL_M",
+          "nome_gara": "CRITERIUM LIBERAZIONE",
+          "data": "2026-04-25",
+          "posizione": 2
+        }
+      ]
+    },
+    "dist": 3,
+    "sim": 0.8,
+    "sameTeam": true
+  },
+  {
+    "a": {
+      "atleta_id": "TURCO_NICOLAS",
+      "cognome": "TURCO",
+      "nome": "NICOLAS",
+      "team": "LIBERTAS CERESETTO",
+      "team_id": "LIBERTAS_CERESETTO",
+      "categoria": "Juniores",
+      "genere": "M",
+      "gare": [
+        {
+          "gara_id": "2_GRAN_PREMIO_CITTA_DEL_MANDORLATO_DI_COLOGNA_VENETA_2026-06-07_JUN_M",
+          "nome_gara": "2 GRAN PREMIO CITTA' DEL MANDORLATO DI COLOGNA VENETA",
+          "data": "2026-06-07",
+          "posizione": 10
+        },
+        {
+          "gara_id": "65_VITTORIO_VENETO_CANSIGLIO_PROVA_VALIDA_CAMPIONATO_REGIONALE_2026-05-23_JUN_M",
+          "nome_gara": "65 VITTORIO VENETO CANSIGLIO PROVA VALIDA CAMPIONATO REGIONALE",
+          "data": "2026-05-23",
+          "posizione": 7
+        },
+        {
+          "gara_id": "GRAN_PREMIO_SAN_MICHELE_2026-05-17_JUN_M",
+          "nome_gara": "GRAN PREMIO SAN MICHELE",
+          "data": "2026-05-17",
+          "posizione": 8
+        }
+      ]
+    },
+    "b": {
+      "atleta_id": "MURRO_NICHOLAS",
+      "cognome": "MURRO",
+      "nome": "NICHOLAS",
+      "team": "LIBERTAS CERESETTO",
+      "team_id": "LIBERTAS_CERESETTO",
+      "categoria": "Juniores",
+      "genere": "M",
+      "gare": [
+        {
+          "gara_id": "CIRCUITO_DELLE_CONCHE_2026-03-08_JUN_M",
+          "nome_gara": "CIRCUITO DELLE CONCHE",
+          "data": "2026-03-08",
+          "posizione": 3
+        }
+      ]
+    },
+    "dist": 3,
+    "sim": 0.786,
+    "sameTeam": true
+  },
+  {
+    "a": {
+      "atleta_id": "ROMITO_JACOPO",
+      "cognome": "ROMITO",
+      "nome": "JACOPO",
+      "team": "PEDALE RIMINESE FRECCE ROSSE",
+      "team_id": "PEDALE_RIMINESE_FRECCE_ROSSE",
+      "categoria": "Esordienti 1° Anno",
+      "genere": "M",
+      "gare": [
+        {
+          "gara_id": "MEMORIAL_VANNI_CARONI_2026-06-28_ES1_M",
+          "nome_gara": "MEMORIAL VANNI CARONI",
+          "data": "2026-06-28",
+          "posizione": 6
+        },
+        {
+          "gara_id": "TERZO_TROFEO_CITTA_DI_VIGOLZONE_2026-06-21_ES1_M",
+          "nome_gara": "TERZO TROFEO CITTA' DI VIGOLZONE",
+          "data": "2026-06-21",
+          "posizione": 8
+        },
+        {
+          "gara_id": "2_MEMORIAL_CESARE_MANNORI_2026-06-14_ES1_M",
+          "nome_gara": "2 MEMORIAL CESARE MANNORI",
+          "data": "2026-06-14",
+          "posizione": 6
+        },
+        {
+          "gara_id": "INTERNAZIONALE_PORTO_SAN_GIORGIO_MEMORIAL_M_DE_ANGELIS_CRONOMETRO_2026-06-12_ES1_M",
+          "nome_gara": "INTERNAZIONALE PORTO SAN GIORGIO MEMORIAL M DE ANGELIS CRONOMETRO",
+          "data": "2026-06-12",
+          "posizione": 2
+        },
+        {
+          "gara_id": "9_TROFEO_BARDIANI_CSF_CAMPIONATO_REGIONALE_2026-06-07_ES1_M",
+          "nome_gara": "9 TROFEO BARDIANI CSF CAMPIONATO REGIONALE",
+          "data": "2026-06-07",
+          "posizione": 2
+        },
+        {
+          "gara_id": "41_TROFEO_CIRCOLO_ACLI_CHIARINO_2026-06-02_ES1_M",
+          "nome_gara": "41 TROFEO CIRCOLO ACLI CHIARINO",
+          "data": "2026-06-02",
+          "posizione": 4
+        },
+        {
+          "gara_id": "25_MEMORIAL_DIRIGENTI_DEL_PEDALE_RIMINESE_2026-05-10_ES1_M",
+          "nome_gara": "25 MEMORIAL DIRIGENTI DEL PEDALE RIMINESE",
+          "data": "2026-05-10",
+          "posizione": 8
+        },
+        {
+          "gara_id": "LA_STORICA_COPPA_DE_LE_POGGIOLA_2026-05-03_ES1_M",
+          "nome_gara": "LA STORICA COPPA DE LE POGGIOLA",
+          "data": "2026-05-03",
+          "posizione": 8
+        },
+        {
+          "gara_id": "81_GRAN_PREMIO_CADUTI_LIBERAZIONE_GARA_UNICA_2026-05-01_ES1_M",
+          "nome_gara": "81 GRAN PREMIO CADUTI LIBERAZIONE GARA UNICA",
+          "data": "2026-05-01",
+          "posizione": 3
+        },
+        {
+          "gara_id": "49_GRAN_PREMIO_LIBERAZIONE_2026-04-25_ES1_M",
+          "nome_gara": "49 GRAN PREMIO LIBERAZIONE",
+          "data": "2026-04-25",
+          "posizione": 3
+        },
+        {
+          "gara_id": "2_MEMORIAL_GRAZIANO_ROSSI_2026-04-19_ES1_M",
+          "nome_gara": "2 MEMORIAL GRAZIANO ROSSI",
+          "data": "2026-04-19",
+          "posizione": 2
+        },
+        {
+          "gara_id": "GRAN_PREMIO_FIORITURA_2026-03-29_ES1_M",
+          "nome_gara": "GRAN PREMIO FIORITURA",
+          "data": "2026-03-29",
+          "posizione": 8
+        }
+      ]
+    },
+    "b": {
+      "atleta_id": "ROMITO_NICOLO",
+      "cognome": "ROMITO",
+      "nome": "NICOLO'",
+      "team": "PEDALE RIMINESE FRECCE ROSSE",
+      "team_id": "PEDALE_RIMINESE_FRECCE_ROSSE",
+      "categoria": "Esordienti 1° Anno",
+      "genere": "M",
+      "gare": [
+        {
+          "gara_id": "2_MEMORIAL_CESARE_MANNORI_2026-06-14_ES1_M",
+          "nome_gara": "2 MEMORIAL CESARE MANNORI",
+          "data": "2026-06-14",
+          "posizione": 5
+        },
+        {
+          "gara_id": "INTERNAZIONALE_PORTO_SAN_GIORGIO_MEMORIAL_M_DE_ANGELIS_CRONOMETRO_2026-06-12_ES1_M",
+          "nome_gara": "INTERNAZIONALE PORTO SAN GIORGIO MEMORIAL M DE ANGELIS CRONOMETRO",
+          "data": "2026-06-12",
+          "posizione": 8
+        },
+        {
+          "gara_id": "2_MEMORIAL_GRAZIANO_ROSSI_2026-04-19_ES1_M",
+          "nome_gara": "2 MEMORIAL GRAZIANO ROSSI",
+          "data": "2026-04-19",
+          "posizione": 8
+        }
+      ]
+    },
+    "dist": 3,
+    "sim": 0.769,
+    "sameTeam": true
+  }
+]
