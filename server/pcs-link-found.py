@@ -41,7 +41,7 @@ def main():
     ambiguous = []
 
     for row in ws.iter_rows(min_row=2, values_only=False):
-        name_cell, link_cell = row[1], row[5]  # colonne B (Nome) ed F (Link profilo trovato) — dalla v6 c'è una colonna Team in C, che sposta il link da E a F
+        name_cell, link_cell = row[1], row[4]  # colonne B (Nome) ed E (Link profilo trovato) — layout v7: #, Nome, Team, Cerca su PCS, Link, Note (niente colonna "Slug provati")
         name = (name_cell.value or "").strip()
         url  = (link_cell.value or "").strip() if link_cell.value else ""
         if not name or not url:
