@@ -1,4 +1,527 @@
 {
+  "MARTIGNAGO_LUCA": {
+    "id": "MARTIGNAGO_LUCA",
+    "nome": "LUCA",
+    "cognome": "MARTIGNAGO",
+    "team_attuale": "MG.K VIS-PROMOTECH-FMB",
+    "team_id": "MG_K_VIS_PROMOTECH_FMB",
+    "categoria": "ELI_M",
+    "genere": "M",
+    "punti_totali": 15,
+    "risultati": [
+      {
+        "gara_id": "9_NOTTURNA_COCHI_BONI_2026-07-23_ELI_M",
+        "nome_gara": "9 NOTTURNA COCHI BONI",
+        "data": "2026-07-23",
+        "posizione": 1,
+        "punti_effettivi": 15,
+        "team": "MG.K VIS-PROMOTECH-FMB",
+        "moltiplicatore": 1,
+        "tipo": "regionale",
+        "regione": "VENETO",
+        "km": "100.000",
+        "media": "48.355"
+      }
+    ]
+  },
+  "BONOMETTI_MICHELE": {
+    "id": "BONOMETTI_MICHELE",
+    "nome": "MICHELE",
+    "cognome": "BONOMETTI",
+    "team_attuale": "GALLINA LUCCHINI ECOTEK",
+    "team_id": "GALLINA_LUCCHINI_ECOTEK",
+    "categoria": "ELI_M",
+    "genere": "M",
+    "punti_totali": 21,
+    "risultati": [
+      {
+        "gara_id": "9_NOTTURNA_COCHI_BONI_2026-07-23_ELI_M",
+        "nome_gara": "9 NOTTURNA COCHI BONI",
+        "data": "2026-07-23",
+        "posizione": 2,
+        "punti_effettivi": 12,
+        "team": "GALLINA LUCCHINI ECOTEK",
+        "moltiplicatore": 1,
+        "tipo": "regionale",
+        "regione": "VENETO",
+        "km": "100.000",
+        "media": "48.355"
+      },
+      {
+        "gara_id": "41_GRAN_PREMIO_CITTA_DI_MONTEGRANARO_2026-07-19_ELI_M",
+        "nome_gara": "41 GRAN PREMIO CITTA' DI MONTEGRANARO",
+        "data": "2026-07-19",
+        "posizione": 5,
+        "punti_effettivi": 6,
+        "team": "GALLINA LUCCHINI ECOTEK",
+        "moltiplicatore": 1,
+        "tipo": "regionale",
+        "regione": "MARCHE",
+        "km": "115.000",
+        "media": "41.317"
+      },
+      {
+        "gara_id": "2_MEMORIAL_GIORDANO_MIGNOLLI_2026-05-09_ELI_M",
+        "nome_gara": "2 MEMORIAL GIORDANO MIGNOLLI",
+        "data": "2026-05-09",
+        "posizione": 8,
+        "punti_effettivi": 3,
+        "team": "GALLINA LUCCHINI ECOTEK",
+        "moltiplicatore": 1,
+        "tipo": "regionale",
+        "regione": "VENETO",
+        "km": "137.900",
+        "media": "43.448"
+      }
+    ]
+  },
+  "GRIS_MARTIN": {
+    "id": "GRIS_MARTIN",
+    "nome": "MARTIN",
+    "cognome": "GRIS",
+    "team_attuale": "U.C TREVIGIANI ENERGIAPURA MARCHIOL",
+    "team_id": "U_C_TREVIGIANI_ENERGIAPURA_MARCHIOL",
+    "categoria": "ELI_M",
+    "genere": "M",
+    "punti_totali": 41,
+    "risultati": [
+      {
+        "gara_id": "9_NOTTURNA_COCHI_BONI_2026-07-23_ELI_M",
+        "nome_gara": "9 NOTTURNA COCHI BONI",
+        "data": "2026-07-23",
+        "posizione": 3,
+        "punti_effettivi": 10,
+        "team": "U.C TREVIGIANI ENERGIAPURA MARCHIOL",
+        "moltiplicatore": 1,
+        "tipo": "regionale",
+        "regione": "VENETO",
+        "km": "100.000",
+        "media": "48.355"
+      },
+      {
+        "gara_id": "50_TROFEO_PAPA_CERVI_2026-05-01_ELI_M",
+        "nome_gara": "50 TROFEO PAPA' CERVI",
+        "data": "2026-05-01",
+        "posizione": 3,
+        "punti_effettivi": 20,
+        "team": "U.C TREVIGIANI ENERGIAPURA MARCHIOL",
+        "moltiplicatore": 2,
+        "tipo": "nazionale",
+        "regione": "EMILIA ROMAGNA",
+        "km": "153.000",
+        "media": "45.300"
+      },
+      {
+        "gara_id": "82_VICENZA_BIONDE_UNDER23_2026-04-26_ELI_M",
+        "nome_gara": "82 VICENZA BIONDE UNDER23",
+        "data": "2026-04-26",
+        "posizione": 8,
+        "punti_effettivi": 6,
+        "team": "U.C TREVIGIANI ENERGIAPURA MARCHIOL",
+        "moltiplicatore": 2,
+        "tipo": "nazionale",
+        "regione": "VENETO",
+        "km": "164.200",
+        "media": "47.354"
+      },
+      {
+        "gara_id": "79_TROFEO_VISENTINI_2026-04-06_ELI_M",
+        "nome_gara": "79 TROFEO VISENTINI",
+        "data": "2026-04-06",
+        "posizione": 7,
+        "punti_effettivi": 4,
+        "team": "U.C TREVIGIANI ENERGIAPURA MARCHIOL",
+        "moltiplicatore": 1,
+        "tipo": "regionale",
+        "regione": "VENETO",
+        "km": "83.000",
+        "media": "46.005"
+      },
+      {
+        "gara_id": "37_MEMORIAL_VINCENZO_MANTOVANI_2026-04-04_ELI_M",
+        "nome_gara": "37 MEMORIAL VINCENZO MANTOVANI",
+        "data": "2026-04-04",
+        "posizione": 10,
+        "punti_effettivi": 1,
+        "team": "U.C TREVIGIANI ENERGIAPURA MARCHIOL",
+        "moltiplicatore": 1,
+        "tipo": "regionale",
+        "regione": "LOMBARDIA",
+        "km": "144.000",
+        "media": "45.291"
+      }
+    ]
+  },
+  "DE_LONGHI_LORENZO": {
+    "id": "DE_LONGHI_LORENZO",
+    "nome": "LONGHI LORENZO",
+    "cognome": "DE",
+    "team_attuale": "CAMPANA IMBALLAGGI MORBIATO TRENTINO",
+    "team_id": "CAMPANA_IMBALLAGGI_MORBIATO_TRENTINO",
+    "categoria": "ELI_M",
+    "genere": "M",
+    "punti_totali": 94,
+    "risultati": [
+      {
+        "gara_id": "9_NOTTURNA_COCHI_BONI_2026-07-23_ELI_M",
+        "nome_gara": "9 NOTTURNA COCHI BONI",
+        "data": "2026-07-23",
+        "posizione": 4,
+        "punti_effettivi": 8,
+        "team": "CAMPANA IMBALLAGGI MORBIATO TRENTINO",
+        "moltiplicatore": 1,
+        "tipo": "regionale",
+        "regione": "VENETO",
+        "km": "100.000",
+        "media": "48.355"
+      },
+      {
+        "gara_id": "63_TROFEO_CITTA_DI_BRESCIA_2026-06-30_ELI_M",
+        "nome_gara": "63 TROFEO CITTA' DI BRESCIA",
+        "data": "2026-06-30",
+        "posizione": 5,
+        "punti_effettivi": 18,
+        "team": "CAMPANA IMBALLAGGI MORBIATO TRENTINO",
+        "moltiplicatore": 3,
+        "tipo": "internazionale",
+        "regione": "LOMBARDIA",
+        "km": "121.800",
+        "media": "43.315"
+      },
+      {
+        "gara_id": "9_TROFEO_MEMORIAL_CLETO_MAULE_2026-06-14_ELI_M",
+        "nome_gara": "9 TROFEO MEMORIAL CLETO MAULE",
+        "data": "2026-06-14",
+        "posizione": 3,
+        "punti_effettivi": 10,
+        "team": "CAMPANA IMBALLAGGI MORBIATO TRENTINO",
+        "moltiplicatore": 1,
+        "tipo": "regionale",
+        "regione": "VENETO",
+        "km": "140.000",
+        "media": "45.981"
+      },
+      {
+        "gara_id": "68_GRAN_PREMIO_RONCOLEVA_2026-06-06_ELI_M",
+        "nome_gara": "68 GRAN PREMIO RONCOLEVA'",
+        "data": "2026-06-06",
+        "posizione": 8,
+        "punti_effettivi": 3,
+        "team": "CAMPANA IMBALLAGGI MORBIATO TRENTINO",
+        "moltiplicatore": 1,
+        "tipo": "regionale",
+        "regione": "VENETO",
+        "km": "134.000",
+        "media": "51.048"
+      },
+      {
+        "gara_id": "72_COPPA_MARIA_SS_DELLA_STELLA_2026-04-12_ELI_M",
+        "nome_gara": "72 COPPA MARIA SS DELLA STELLA",
+        "data": "2026-04-12",
+        "posizione": 7,
+        "punti_effettivi": 4,
+        "team": "CAMPANA IMBALLAGGI MORBIATO TRENTINO",
+        "moltiplicatore": 1,
+        "tipo": "regionale",
+        "regione": "PUGLIA",
+        "km": "107.000",
+        "media": "45.441"
+      },
+      {
+        "gara_id": "79_TROFEO_VISENTINI_2026-04-06_ELI_M",
+        "nome_gara": "79 TROFEO VISENTINI",
+        "data": "2026-04-06",
+        "posizione": 3,
+        "punti_effettivi": 10,
+        "team": "CAMPANA IMBALLAGGI MORBIATO TRENTINO",
+        "moltiplicatore": 1,
+        "tipo": "regionale",
+        "regione": "VENETO",
+        "km": "83.000",
+        "media": "46.005"
+      },
+      {
+        "gara_id": "37_MEMORIAL_VINCENZO_MANTOVANI_2026-04-04_ELI_M",
+        "nome_gara": "37 MEMORIAL VINCENZO MANTOVANI",
+        "data": "2026-04-04",
+        "posizione": 6,
+        "punti_effettivi": 5,
+        "team": "CAMPANA IMBALLAGGI MORBIATO TRENTINO",
+        "moltiplicatore": 1,
+        "tipo": "regionale",
+        "regione": "LOMBARDIA",
+        "km": "144.000",
+        "media": "45.291"
+      },
+      {
+        "gara_id": "14_GRAN_PREMIO_DELL_INDUSTRIA_DI_CIVITANOVA_MARCHE_2026-03-08_ELI_M",
+        "nome_gara": "14 GRAN PREMIO DELL'INDUSTRIA DI CIVITANOVA MARCHE",
+        "data": "2026-03-08",
+        "posizione": 8,
+        "punti_effettivi": 6,
+        "team": "CAMPANA IMBALLAGGI MORBIATO TRENTINO",
+        "moltiplicatore": 2,
+        "tipo": "nazionale",
+        "regione": "MARCHE",
+        "km": "105.000",
+        "media": "45.630"
+      },
+      {
+        "gara_id": "5_MISANO_100_OPEN_GAMES_2026-02-22_ELI_M",
+        "nome_gara": "5 MISANO 100 OPEN GAMES",
+        "data": "2026-02-22",
+        "posizione": 3,
+        "punti_effettivi": 20,
+        "team": "CAMPANA IMBALLAGGI MORBIATO TRENTINO",
+        "moltiplicatore": 2,
+        "tipo": "nazionale",
+        "regione": "EMILIA ROMAGNA",
+        "km": "117.600",
+        "media": "45.435"
+      },
+      {
+        "gara_id": "TROFEO_MUGELLO_BIKE_EXPO_2026-02-15_ELI_M",
+        "nome_gara": "TROFEO MUGELLO BIKE EXPO",
+        "data": "2026-02-15",
+        "posizione": 6,
+        "punti_effettivi": 10,
+        "team": "CAMPANA IMBALLAGGI MORBIATO TRENTINO",
+        "moltiplicatore": 2,
+        "tipo": "nazionale",
+        "regione": "TOSCANA",
+        "km": "120.635",
+        "media": "44.911"
+      }
+    ]
+  },
+  "BERTONCELLI_KEVIN": {
+    "id": "BERTONCELLI_KEVIN",
+    "nome": "KEVIN",
+    "cognome": "BERTONCELLI",
+    "team_attuale": "A.S.D. S.C. PADOVANI",
+    "team_id": "A_S_D_S_C_PADOVANI",
+    "categoria": "ELI_M",
+    "genere": "M",
+    "punti_totali": 18,
+    "risultati": [
+      {
+        "gara_id": "9_NOTTURNA_COCHI_BONI_2026-07-23_ELI_M",
+        "nome_gara": "9 NOTTURNA COCHI BONI",
+        "data": "2026-07-23",
+        "posizione": 5,
+        "punti_effettivi": 6,
+        "team": "A.S.D. S.C. PADOVANI",
+        "moltiplicatore": 1,
+        "tipo": "regionale",
+        "regione": "VENETO",
+        "km": "100.000",
+        "media": "48.355"
+      },
+      {
+        "gara_id": "24_GRAN_PREMIO_DE_NARDI_2026-03-01_ELI_M",
+        "nome_gara": "24 GRAN PREMIO DE NARDI",
+        "data": "2026-03-01",
+        "posizione": 2,
+        "punti_effettivi": 12,
+        "team": "A.S.D. S.C. PADOVANI",
+        "moltiplicatore": 1,
+        "tipo": "regionale",
+        "regione": "VENETO",
+        "km": "101.200",
+        "media": "46.708"
+      }
+    ]
+  },
+  "MERCATALI_VALENTINO": {
+    "id": "MERCATALI_VALENTINO",
+    "nome": "VALENTINO",
+    "cognome": "MERCATALI",
+    "team_attuale": "GALLINA LUCCHINI ECOTEK",
+    "team_id": "GALLINA_LUCCHINI_ECOTEK",
+    "categoria": "ELI_M",
+    "genere": "M",
+    "punti_totali": 13,
+    "risultati": [
+      {
+        "gara_id": "9_NOTTURNA_COCHI_BONI_2026-07-23_ELI_M",
+        "nome_gara": "9 NOTTURNA COCHI BONI",
+        "data": "2026-07-23",
+        "posizione": 6,
+        "punti_effettivi": 5,
+        "team": "GALLINA LUCCHINI ECOTEK",
+        "moltiplicatore": 1,
+        "tipo": "regionale",
+        "regione": "VENETO",
+        "km": "100.000",
+        "media": "48.355"
+      },
+      {
+        "gara_id": "42_TROFEO_ANTONIETTO_RANCILIO_2026-07-09_ELI_M",
+        "nome_gara": "42 TROFEO ANTONIETTO RANCILIO",
+        "data": "2026-07-09",
+        "posizione": 8,
+        "punti_effettivi": 6,
+        "team": "GALLINA LUCCHINI ECOTEK",
+        "moltiplicatore": 2,
+        "tipo": "nazionale",
+        "regione": "LOMBARDIA",
+        "km": "116.000",
+        "media": "46.607"
+      },
+      {
+        "gara_id": "24_GRAN_PREMIO_DE_NARDI_2026-03-01_ELI_M",
+        "nome_gara": "24 GRAN PREMIO DE NARDI",
+        "data": "2026-03-01",
+        "posizione": 9,
+        "punti_effettivi": 2,
+        "team": "GALLINA LUCCHINI ECOTEK",
+        "moltiplicatore": 1,
+        "tipo": "regionale",
+        "regione": "VENETO",
+        "km": "101.200",
+        "media": "46.708"
+      }
+    ]
+  },
+  "MILITELLO_JACOPO": {
+    "id": "MILITELLO_JACOPO",
+    "nome": "JACOPO",
+    "cognome": "MILITELLO",
+    "team_attuale": "GALLINA LUCCHINI ECOTEK",
+    "team_id": "GALLINA_LUCCHINI_ECOTEK",
+    "categoria": "ELI_M",
+    "genere": "M",
+    "punti_totali": 6,
+    "risultati": [
+      {
+        "gara_id": "9_NOTTURNA_COCHI_BONI_2026-07-23_ELI_M",
+        "nome_gara": "9 NOTTURNA COCHI BONI",
+        "data": "2026-07-23",
+        "posizione": 7,
+        "punti_effettivi": 4,
+        "team": "GALLINA LUCCHINI ECOTEK",
+        "moltiplicatore": 1,
+        "tipo": "regionale",
+        "regione": "VENETO",
+        "km": "100.000",
+        "media": "48.355"
+      },
+      {
+        "gara_id": "6_TROFEO_COMUNE_DI_LASTRA_A_SIGNA_PROVA_VALIDA_CAMPIONATO_REGIONALE_2026-06-06_ELI_M",
+        "nome_gara": "6 TROFEO COMUNE DI LASTRA A SIGNA PROVA VALIDA CAMPIONATO REGIONALE",
+        "data": "2026-06-06",
+        "posizione": 10,
+        "punti_effettivi": 2,
+        "team": "GALLINA LUCCHINI ECOTEK",
+        "moltiplicatore": 2,
+        "tipo": "regionale",
+        "regione": "TOSCANA",
+        "km": "138.800",
+        "media": "44.270"
+      }
+    ]
+  },
+  "BORTOLAMI_JULIAN": {
+    "id": "BORTOLAMI_JULIAN",
+    "nome": "JULIAN",
+    "cognome": "BORTOLAMI",
+    "team_attuale": "SOLME - OLMO - ARVEDI",
+    "team_id": "SOLME_OLMO_ARVEDI",
+    "categoria": "ELI_M",
+    "genere": "M",
+    "punti_totali": 5,
+    "risultati": [
+      {
+        "gara_id": "9_NOTTURNA_COCHI_BONI_2026-07-23_ELI_M",
+        "nome_gara": "9 NOTTURNA COCHI BONI",
+        "data": "2026-07-23",
+        "posizione": 8,
+        "punti_effettivi": 3,
+        "team": "SOLME - OLMO - ARVEDI",
+        "moltiplicatore": 1,
+        "tipo": "regionale",
+        "regione": "VENETO",
+        "km": "100.000",
+        "media": "48.355"
+      },
+      {
+        "gara_id": "17_CRONOROMANENGO_PROVA_VALIDA_CAMPIONATO_REGIONALE_2026-05-23_ELI_M",
+        "nome_gara": "17 CRONOROMANENGO PROVA VALIDA CAMPIONATO REGIONALE",
+        "data": "2026-05-23",
+        "posizione": 10,
+        "punti_effettivi": 2,
+        "team": "SOLME - OLMO - ARVEDI",
+        "moltiplicatore": 2,
+        "tipo": "regionale",
+        "regione": "LOMBARDIA",
+        "km": "23.600",
+        "media": "48.480"
+      }
+    ]
+  },
+  "TABOTTA_TOMMASO": {
+    "id": "TABOTTA_TOMMASO",
+    "nome": "TOMMASO",
+    "cognome": "TABOTTA",
+    "team_attuale": "B-TEAM CYCLING PROJECT",
+    "team_id": "B_TEAM_CYCLING_PROJECT",
+    "categoria": "ELI_M",
+    "genere": "M",
+    "punti_totali": 3,
+    "risultati": [
+      {
+        "gara_id": "9_NOTTURNA_COCHI_BONI_2026-07-23_ELI_M",
+        "nome_gara": "9 NOTTURNA COCHI BONI",
+        "data": "2026-07-23",
+        "posizione": 9,
+        "punti_effettivi": 2,
+        "team": "B-TEAM CYCLING PROJECT",
+        "moltiplicatore": 1,
+        "tipo": "regionale",
+        "regione": "VENETO",
+        "km": "100.000",
+        "media": "48.355"
+      },
+      {
+        "gara_id": "68_GRAN_PREMIO_RONCOLEVA_2026-06-06_ELI_M",
+        "nome_gara": "68 GRAN PREMIO RONCOLEVA'",
+        "data": "2026-06-06",
+        "posizione": 10,
+        "punti_effettivi": 1,
+        "team": "B-TEAM CYCLING PROJECT",
+        "moltiplicatore": 1,
+        "tipo": "regionale",
+        "regione": "VENETO",
+        "km": "134.000",
+        "media": "51.048"
+      }
+    ]
+  },
+  "TOBUL_YAIR": {
+    "id": "TOBUL_YAIR",
+    "nome": "YAIR",
+    "cognome": "TOBUL",
+    "team_attuale": "DU ACADEMY",
+    "team_id": "DU_ACADEMY",
+    "categoria": "ELI_M",
+    "genere": "M",
+    "punti_totali": 1,
+    "risultati": [
+      {
+        "gara_id": "9_NOTTURNA_COCHI_BONI_2026-07-23_ELI_M",
+        "nome_gara": "9 NOTTURNA COCHI BONI",
+        "data": "2026-07-23",
+        "posizione": 10,
+        "punti_effettivi": 1,
+        "team": "DU ACADEMY",
+        "moltiplicatore": 1,
+        "tipo": "regionale",
+        "regione": "VENETO",
+        "km": "100.000",
+        "media": "48.355"
+      }
+    ]
+  },
   "GAL_RYAN": {
     "id": "GAL_RYAN",
     "nome": "RYAN",
@@ -8081,44 +8604,6 @@
         "regione": "TOSCANA",
         "km": "153.200",
         "media": "41.738"
-      }
-    ]
-  },
-  "BONOMETTI_MICHELE": {
-    "id": "BONOMETTI_MICHELE",
-    "nome": "MICHELE",
-    "cognome": "BONOMETTI",
-    "team_attuale": "GALLINA LUCCHINI ECOTEK",
-    "team_id": "GALLINA_LUCCHINI_ECOTEK",
-    "categoria": "ELI_M",
-    "genere": "M",
-    "punti_totali": 9,
-    "risultati": [
-      {
-        "gara_id": "41_GRAN_PREMIO_CITTA_DI_MONTEGRANARO_2026-07-19_ELI_M",
-        "nome_gara": "41 GRAN PREMIO CITTA' DI MONTEGRANARO",
-        "data": "2026-07-19",
-        "posizione": 5,
-        "punti_effettivi": 6,
-        "team": "GALLINA LUCCHINI ECOTEK",
-        "moltiplicatore": 1,
-        "tipo": "regionale",
-        "regione": "MARCHE",
-        "km": "115.000",
-        "media": "41.317"
-      },
-      {
-        "gara_id": "2_MEMORIAL_GIORDANO_MIGNOLLI_2026-05-09_ELI_M",
-        "nome_gara": "2 MEMORIAL GIORDANO MIGNOLLI",
-        "data": "2026-05-09",
-        "posizione": 8,
-        "punti_effettivi": 3,
-        "team": "GALLINA LUCCHINI ECOTEK",
-        "moltiplicatore": 1,
-        "tipo": "regionale",
-        "regione": "VENETO",
-        "km": "137.900",
-        "media": "43.448"
       }
     ]
   },
@@ -76725,44 +77210,6 @@
       }
     ]
   },
-  "MERCATALI_VALENTINO": {
-    "id": "MERCATALI_VALENTINO",
-    "nome": "VALENTINO",
-    "cognome": "MERCATALI",
-    "team_attuale": "GALLINA LUCCHINI ECOTEK",
-    "team_id": "GALLINA_LUCCHINI_ECOTEK",
-    "categoria": "ELI_M",
-    "genere": "M",
-    "punti_totali": 8,
-    "risultati": [
-      {
-        "gara_id": "42_TROFEO_ANTONIETTO_RANCILIO_2026-07-09_ELI_M",
-        "nome_gara": "42 TROFEO ANTONIETTO RANCILIO",
-        "data": "2026-07-09",
-        "posizione": 8,
-        "punti_effettivi": 6,
-        "team": "GALLINA LUCCHINI ECOTEK",
-        "moltiplicatore": 2,
-        "tipo": "nazionale",
-        "regione": "LOMBARDIA",
-        "km": "116.000",
-        "media": "46.607"
-      },
-      {
-        "gara_id": "24_GRAN_PREMIO_DE_NARDI_2026-03-01_ELI_M",
-        "nome_gara": "24 GRAN PREMIO DE NARDI",
-        "data": "2026-03-01",
-        "posizione": 9,
-        "punti_effettivi": 2,
-        "team": "GALLINA LUCCHINI ECOTEK",
-        "moltiplicatore": 1,
-        "tipo": "regionale",
-        "regione": "VENETO",
-        "km": "101.200",
-        "media": "46.708"
-      }
-    ]
-  },
   "TURRI_THOMAS": {
     "id": "TURRI_THOMAS",
     "nome": "THOMAS",
@@ -87130,135 +87577,6 @@
         "regione": "LOMBARDIA",
         "km": "164.600",
         "media": "40.051"
-      }
-    ]
-  },
-  "DE_LONGHI_LORENZO": {
-    "id": "DE_LONGHI_LORENZO",
-    "nome": "LONGHI LORENZO",
-    "cognome": "DE",
-    "team_attuale": "CAMPANA IMBALLAGGI MORBIATO TRENTINO",
-    "team_id": "CAMPANA_IMBALLAGGI_MORBIATO_TRENTINO",
-    "categoria": "ELI_M",
-    "genere": "M",
-    "punti_totali": 86,
-    "risultati": [
-      {
-        "gara_id": "63_TROFEO_CITTA_DI_BRESCIA_2026-06-30_ELI_M",
-        "nome_gara": "63 TROFEO CITTA' DI BRESCIA",
-        "data": "2026-06-30",
-        "posizione": 5,
-        "punti_effettivi": 18,
-        "team": "CAMPANA IMBALLAGGI MORBIATO TRENTINO",
-        "moltiplicatore": 3,
-        "tipo": "internazionale",
-        "regione": "LOMBARDIA",
-        "km": "121.800",
-        "media": "43.315"
-      },
-      {
-        "gara_id": "9_TROFEO_MEMORIAL_CLETO_MAULE_2026-06-14_ELI_M",
-        "nome_gara": "9 TROFEO MEMORIAL CLETO MAULE",
-        "data": "2026-06-14",
-        "posizione": 3,
-        "punti_effettivi": 10,
-        "team": "CAMPANA IMBALLAGGI MORBIATO TRENTINO",
-        "moltiplicatore": 1,
-        "tipo": "regionale",
-        "regione": "VENETO",
-        "km": "140.000",
-        "media": "45.981"
-      },
-      {
-        "gara_id": "68_GRAN_PREMIO_RONCOLEVA_2026-06-06_ELI_M",
-        "nome_gara": "68 GRAN PREMIO RONCOLEVA'",
-        "data": "2026-06-06",
-        "posizione": 8,
-        "punti_effettivi": 3,
-        "team": "CAMPANA IMBALLAGGI MORBIATO TRENTINO",
-        "moltiplicatore": 1,
-        "tipo": "regionale",
-        "regione": "VENETO",
-        "km": "134.000",
-        "media": "51.048"
-      },
-      {
-        "gara_id": "72_COPPA_MARIA_SS_DELLA_STELLA_2026-04-12_ELI_M",
-        "nome_gara": "72 COPPA MARIA SS DELLA STELLA",
-        "data": "2026-04-12",
-        "posizione": 7,
-        "punti_effettivi": 4,
-        "team": "CAMPANA IMBALLAGGI MORBIATO TRENTINO",
-        "moltiplicatore": 1,
-        "tipo": "regionale",
-        "regione": "PUGLIA",
-        "km": "107.000",
-        "media": "45.441"
-      },
-      {
-        "gara_id": "79_TROFEO_VISENTINI_2026-04-06_ELI_M",
-        "nome_gara": "79 TROFEO VISENTINI",
-        "data": "2026-04-06",
-        "posizione": 3,
-        "punti_effettivi": 10,
-        "team": "CAMPANA IMBALLAGGI MORBIATO TRENTINO",
-        "moltiplicatore": 1,
-        "tipo": "regionale",
-        "regione": "VENETO",
-        "km": "83.000",
-        "media": "46.005"
-      },
-      {
-        "gara_id": "37_MEMORIAL_VINCENZO_MANTOVANI_2026-04-04_ELI_M",
-        "nome_gara": "37 MEMORIAL VINCENZO MANTOVANI",
-        "data": "2026-04-04",
-        "posizione": 6,
-        "punti_effettivi": 5,
-        "team": "CAMPANA IMBALLAGGI MORBIATO TRENTINO",
-        "moltiplicatore": 1,
-        "tipo": "regionale",
-        "regione": "LOMBARDIA",
-        "km": "144.000",
-        "media": "45.291"
-      },
-      {
-        "gara_id": "14_GRAN_PREMIO_DELL_INDUSTRIA_DI_CIVITANOVA_MARCHE_2026-03-08_ELI_M",
-        "nome_gara": "14 GRAN PREMIO DELL'INDUSTRIA DI CIVITANOVA MARCHE",
-        "data": "2026-03-08",
-        "posizione": 8,
-        "punti_effettivi": 6,
-        "team": "CAMPANA IMBALLAGGI MORBIATO TRENTINO",
-        "moltiplicatore": 2,
-        "tipo": "nazionale",
-        "regione": "MARCHE",
-        "km": "105.000",
-        "media": "45.630"
-      },
-      {
-        "gara_id": "5_MISANO_100_OPEN_GAMES_2026-02-22_ELI_M",
-        "nome_gara": "5 MISANO 100 OPEN GAMES",
-        "data": "2026-02-22",
-        "posizione": 3,
-        "punti_effettivi": 20,
-        "team": "CAMPANA IMBALLAGGI MORBIATO TRENTINO",
-        "moltiplicatore": 2,
-        "tipo": "nazionale",
-        "regione": "EMILIA ROMAGNA",
-        "km": "117.600",
-        "media": "45.435"
-      },
-      {
-        "gara_id": "TROFEO_MUGELLO_BIKE_EXPO_2026-02-15_ELI_M",
-        "nome_gara": "TROFEO MUGELLO BIKE EXPO",
-        "data": "2026-02-15",
-        "posizione": 6,
-        "punti_effettivi": 10,
-        "team": "CAMPANA IMBALLAGGI MORBIATO TRENTINO",
-        "moltiplicatore": 2,
-        "tipo": "nazionale",
-        "regione": "TOSCANA",
-        "km": "120.635",
-        "media": "44.911"
       }
     ]
   },
@@ -120896,7 +121214,7 @@
     "team_id": "A_R_MONEX_PRO_CYCLING_TEAM",
     "categoria": "JUN_F",
     "genere": "F",
-    "punti_totali": 8,
+    "punti_totali": 42,
     "risultati": [
       {
         "gara_id": "INTERNAZIONALE_PORTO_SAN_GIORGIO_MEMORIAL_M_DE_ANGELIS_2026-06-13_JUN_F",
@@ -120910,6 +121228,32 @@
         "regione": "MARCHE",
         "km": "105.000",
         "media": "37.990"
+      },
+      {
+        "gara_id": "2_TROFEO_ROSA_MONTALTO_PROVA_VALIDA_CAMPIONATO_REGIONALE_2026-05-02_JUN_F",
+        "nome_gara": "2 TROFEO ROSA MONTALTO PROVA VALIDA CAMPIONATO REGIONALE",
+        "data": "2026-05-02",
+        "posizione": 1,
+        "punti_effettivi": 30,
+        "team": "A.R.MONEX PRO CYCLING TEAM",
+        "moltiplicatore": 2,
+        "tipo": "regionale",
+        "regione": "TOSCANA",
+        "km": "87.700",
+        "media": "35.861"
+      },
+      {
+        "gara_id": "PASQUALANDO_2026-04-05_JUN_F",
+        "nome_gara": "PASQUALANDO",
+        "data": "2026-04-05",
+        "posizione": 7,
+        "punti_effettivi": 4,
+        "team": "A.R.MONEX PRO CYCLING TEAM",
+        "moltiplicatore": 1,
+        "tipo": "regionale",
+        "regione": "TOSCANA",
+        "km": "63.800",
+        "media": "41.102"
       }
     ]
   },
@@ -127134,31 +127478,6 @@
       }
     ]
   },
-  "TABOTTA_TOMMASO": {
-    "id": "TABOTTA_TOMMASO",
-    "nome": "TOMMASO",
-    "cognome": "TABOTTA",
-    "team_attuale": "B-TEAM CYCLING PROJECT",
-    "team_id": "B_TEAM_CYCLING_PROJECT",
-    "categoria": "ELI_M",
-    "genere": "M",
-    "punti_totali": 1,
-    "risultati": [
-      {
-        "gara_id": "68_GRAN_PREMIO_RONCOLEVA_2026-06-06_ELI_M",
-        "nome_gara": "68 GRAN PREMIO RONCOLEVA'",
-        "data": "2026-06-06",
-        "posizione": 10,
-        "punti_effettivi": 1,
-        "team": "B-TEAM CYCLING PROJECT",
-        "moltiplicatore": 1,
-        "tipo": "regionale",
-        "regione": "VENETO",
-        "km": "134.000",
-        "media": "51.048"
-      }
-    ]
-  },
   "BOZICEVICH_MATTEO_LAPO": {
     "id": "BOZICEVICH_MATTEO_LAPO",
     "nome": "MATTEO LAPO",
@@ -127347,31 +127666,6 @@
         "regione": "TOSCANA",
         "km": "174.000",
         "media": "40.296"
-      }
-    ]
-  },
-  "MILITELLO_JACOPO": {
-    "id": "MILITELLO_JACOPO",
-    "nome": "JACOPO",
-    "cognome": "MILITELLO",
-    "team_attuale": "GALLINA LUCCHINI ECOTEK",
-    "team_id": "GALLINA_LUCCHINI_ECOTEK",
-    "categoria": "ELI_M",
-    "genere": "M",
-    "punti_totali": 2,
-    "risultati": [
-      {
-        "gara_id": "6_TROFEO_COMUNE_DI_LASTRA_A_SIGNA_PROVA_VALIDA_CAMPIONATO_REGIONALE_2026-06-06_ELI_M",
-        "nome_gara": "6 TROFEO COMUNE DI LASTRA A SIGNA PROVA VALIDA CAMPIONATO REGIONALE",
-        "data": "2026-06-06",
-        "posizione": 10,
-        "punti_effettivi": 2,
-        "team": "GALLINA LUCCHINI ECOTEK",
-        "moltiplicatore": 2,
-        "tipo": "regionale",
-        "regione": "TOSCANA",
-        "km": "138.800",
-        "media": "44.270"
       }
     ]
   },
@@ -138574,31 +138868,6 @@
       }
     ]
   },
-  "BORTOLAMI_JULIAN": {
-    "id": "BORTOLAMI_JULIAN",
-    "nome": "JULIAN",
-    "cognome": "BORTOLAMI",
-    "team_attuale": "SOLME - OLMO - ARVEDI",
-    "team_id": "SOLME_OLMO_ARVEDI",
-    "categoria": "ELI_M",
-    "genere": "M",
-    "punti_totali": 2,
-    "risultati": [
-      {
-        "gara_id": "17_CRONOROMANENGO_PROVA_VALIDA_CAMPIONATO_REGIONALE_2026-05-23_ELI_M",
-        "nome_gara": "17 CRONOROMANENGO PROVA VALIDA CAMPIONATO REGIONALE",
-        "data": "2026-05-23",
-        "posizione": 10,
-        "punti_effettivi": 2,
-        "team": "SOLME - OLMO - ARVEDI",
-        "moltiplicatore": 2,
-        "tipo": "regionale",
-        "regione": "LOMBARDIA",
-        "km": "23.600",
-        "media": "48.480"
-      }
-    ]
-  },
   "DANSHINA_POLINA": {
     "id": "DANSHINA_POLINA",
     "nome": "POLINA",
@@ -144646,44 +144915,6 @@
       }
     ]
   },
-  "PENEDA_SOTO_NATALIA": {
-    "id": "PENEDA_SOTO_NATALIA",
-    "nome": "NATALIA",
-    "cognome": "PENEDA SOTO",
-    "team_attuale": "A.R.MONEX PRO CYCLING TEAM",
-    "team_id": "A_R_MONEX_PRO_CYCLING_TEAM",
-    "categoria": "JUN_F",
-    "genere": "F",
-    "punti_totali": 34,
-    "risultati": [
-      {
-        "gara_id": "2_TROFEO_ROSA_MONTALTO_PROVA_VALIDA_CAMPIONATO_REGIONALE_2026-05-02_JUN_F",
-        "nome_gara": "2 TROFEO ROSA MONTALTO PROVA VALIDA CAMPIONATO REGIONALE",
-        "data": "2026-05-02",
-        "posizione": 1,
-        "punti_effettivi": 30,
-        "team": "A.R.MONEX PRO CYCLING TEAM",
-        "moltiplicatore": 2,
-        "tipo": "regionale",
-        "regione": "TOSCANA",
-        "km": "87.700",
-        "media": "35.861"
-      },
-      {
-        "gara_id": "PASQUALANDO_2026-04-05_JUN_F",
-        "nome_gara": "PASQUALANDO",
-        "data": "2026-04-05",
-        "posizione": 7,
-        "punti_effettivi": 4,
-        "team": "A.R.MONEX PRO CYCLING TEAM",
-        "moltiplicatore": 1,
-        "tipo": "regionale",
-        "regione": "TOSCANA",
-        "km": "63.800",
-        "media": "41.102"
-      }
-    ]
-  },
   "STACCHINI_CAMILLA": {
     "id": "STACCHINI_CAMILLA",
     "nome": "CAMILLA",
@@ -144908,70 +145139,6 @@
         "regione": "VENETO",
         "km": "160.900",
         "media": "42.296"
-      }
-    ]
-  },
-  "GRIS_MARTIN": {
-    "id": "GRIS_MARTIN",
-    "nome": "MARTIN",
-    "cognome": "GRIS",
-    "team_attuale": "U.C TREVIGIANI ENERGIAPURA MARCHIOL",
-    "team_id": "U_C_TREVIGIANI_ENERGIAPURA_MARCHIOL",
-    "categoria": "ELI_M",
-    "genere": "M",
-    "punti_totali": 31,
-    "risultati": [
-      {
-        "gara_id": "50_TROFEO_PAPA_CERVI_2026-05-01_ELI_M",
-        "nome_gara": "50 TROFEO PAPA' CERVI",
-        "data": "2026-05-01",
-        "posizione": 3,
-        "punti_effettivi": 20,
-        "team": "U.C TREVIGIANI ENERGIAPURA MARCHIOL",
-        "moltiplicatore": 2,
-        "tipo": "nazionale",
-        "regione": "EMILIA ROMAGNA",
-        "km": "153.000",
-        "media": "45.300"
-      },
-      {
-        "gara_id": "82_VICENZA_BIONDE_UNDER23_2026-04-26_ELI_M",
-        "nome_gara": "82 VICENZA BIONDE UNDER23",
-        "data": "2026-04-26",
-        "posizione": 8,
-        "punti_effettivi": 6,
-        "team": "U.C TREVIGIANI ENERGIAPURA MARCHIOL",
-        "moltiplicatore": 2,
-        "tipo": "nazionale",
-        "regione": "VENETO",
-        "km": "164.200",
-        "media": "47.354"
-      },
-      {
-        "gara_id": "79_TROFEO_VISENTINI_2026-04-06_ELI_M",
-        "nome_gara": "79 TROFEO VISENTINI",
-        "data": "2026-04-06",
-        "posizione": 7,
-        "punti_effettivi": 4,
-        "team": "U.C TREVIGIANI ENERGIAPURA MARCHIOL",
-        "moltiplicatore": 1,
-        "tipo": "regionale",
-        "regione": "VENETO",
-        "km": "83.000",
-        "media": "46.005"
-      },
-      {
-        "gara_id": "37_MEMORIAL_VINCENZO_MANTOVANI_2026-04-04_ELI_M",
-        "nome_gara": "37 MEMORIAL VINCENZO MANTOVANI",
-        "data": "2026-04-04",
-        "posizione": 10,
-        "punti_effettivi": 1,
-        "team": "U.C TREVIGIANI ENERGIAPURA MARCHIOL",
-        "moltiplicatore": 1,
-        "tipo": "regionale",
-        "regione": "LOMBARDIA",
-        "km": "144.000",
-        "media": "45.291"
       }
     ]
   },
@@ -154676,31 +154843,6 @@
         "regione": "LOMBARDIA",
         "km": "133.500",
         "media": "41.154"
-      }
-    ]
-  },
-  "BERTONCELLI_KEVIN": {
-    "id": "BERTONCELLI_KEVIN",
-    "nome": "KEVIN",
-    "cognome": "BERTONCELLI",
-    "team_attuale": "A.S.D. S.C. PADOVANI",
-    "team_id": "A_S_D_S_C_PADOVANI",
-    "categoria": "ELI_M",
-    "genere": "M",
-    "punti_totali": 12,
-    "risultati": [
-      {
-        "gara_id": "24_GRAN_PREMIO_DE_NARDI_2026-03-01_ELI_M",
-        "nome_gara": "24 GRAN PREMIO DE NARDI",
-        "data": "2026-03-01",
-        "posizione": 2,
-        "punti_effettivi": 12,
-        "team": "A.S.D. S.C. PADOVANI",
-        "moltiplicatore": 1,
-        "tipo": "regionale",
-        "regione": "VENETO",
-        "km": "101.200",
-        "media": "46.708"
       }
     ]
   },
