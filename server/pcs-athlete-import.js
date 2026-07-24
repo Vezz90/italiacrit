@@ -122,6 +122,24 @@ function pcsAthleteSlugCandidates(ath) {
     if (nomeParts.length > 1) add(`${nomeParts[0]}-${firstSegment}`);
   }
 
+  // Due omonimi: PCS disambigua aggiungendo "2" alla fine dello slug del
+  // secondo (es. "Simone Buda" → rider/simone-buda2, "Filippo Magli" →
+  // rider/filippo-magli2) — verificato su due casi reali dello stesso giro
+  // di ricerca manuale, mai provato finora. Applicato ai primi due candidati
+  // (nome completo e solo primo nome), i più comuni.
+  const base = candidates.slice(0, 2);
+  for (const b of base) add(`${b}2`);
+
+  // Traslitterazioni comuni per nomi slavi/ucraini/russi, quando lo stesso
+  // suono viene reso diversamente da FCI e PCS (es. "Maksim" FCI → "Maxim"
+  // PCS, "Andrii" FCI → "Andriy" PCS) — verificato su due casi reali dello
+  // stesso giro. Applicate solo se il pattern è effettivamente presente,
+  // per non moltiplicare candidati inutili sui nomi italiani.
+  for (const b of base) {
+    if (b.includes('ks')) add(b.replace(/ks/g, 'x'));
+    if (/ii(-|$)/.test(b)) add(b.replace(/ii(-|$)/g, 'iy$1'));
+  }
+
   return candidates;
 }
 
