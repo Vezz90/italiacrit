@@ -75,6 +75,25 @@ def canonical_team_name(team):
         return team
     return TEAM_NAME_ALIASES.get(robust_norm(team), team)
 
+# La fonte FCI riporta a volte lo stesso atleta con cognomi diversi tra una gara
+# e l'altra (refusi di inserimento lato federazione: es. "Peneda" invece di
+# "Pineda"). Senza normalizzazione questo spacca i risultati della stessa
+# persona su due atleta_id diversi, e un fix fatto a mano su results_raw.json
+# verrebbe cancellato al giro di scraping successivo (i dati vengono rigenerati
+# dalla fonte). Chiave = "COGNOME NOME" normalizzato (robust_norm) come appare
+# nella fonte FCI, valore = (cognome_corretto, nome_corretto).
+ATHLETE_NAME_ALIASES = {
+    robust_norm("PENEDA SOTO NATALIA"): ("PINEDA SOTO", "NATALIA"),
+}
+
+def canonical_athlete_name(cognome, nome):
+    """Applica ATHLETE_NAME_ALIASES per unificare varianti/refusi dello stesso atleta."""
+    key = robust_norm(f"{cognome} {nome}")
+    alias = ATHLETE_NAME_ALIASES.get(key)
+    if alias:
+        return alias
+    return cognome, nome
+
 # Caricamento Overrides da JSON (per Admin Dashboard)
 def load_user_overrides():
     path = DATA_DIR / "user_overrides.json"
@@ -435,6 +454,7 @@ def parse_risultati_page(soup: BeautifulSoup, calendar_map: dict, existing_ids: 
             _exaeq_re = re.compile(r'\(\s*\d+\s*°?\s*[-–]?\s*EX[\s\-]?AEQUO\s*\)', re.IGNORECASE)
             cognome = _exaeq_re.sub('', cognome).strip()
             nome    = _exaeq_re.sub('', nome).strip()
+            cognome, nome = canonical_athlete_name(cognome, nome)
 
             atleta_id = slug(f"{cognome}_{nome}")
             team_id   = slug(team) if team else "SCONOSCIUTO"
@@ -695,6 +715,7 @@ async def run_cycle():
                 _exaeq = re.compile(r'\(\s*\d+\s*°?\s*[-–]?\s*EX[\s\-]?AEQUO\s*\)', re.IGNORECASE)
                 r["cognome"] = _exaeq.sub('', r.get("cognome","")).strip()
                 r["nome"]    = _exaeq.sub('', r.get("nome","")).strip()
+                r["cognome"], r["nome"] = canonical_athlete_name(r["cognome"], r["nome"])
                 # Forza ricalcolo ID con la nuova logica stabile
                 r["atleta_id"] = slug(r["cognome"] + " " + r["nome"])
                 r["team"] = canonical_team_name(r["team"])

@@ -120896,7 +120896,7 @@
     "team_id": "A_R_MONEX_PRO_CYCLING_TEAM",
     "categoria": "JUN_F",
     "genere": "F",
-    "punti_totali": 8,
+    "punti_totali": 42,
     "risultati": [
       {
         "gara_id": "INTERNAZIONALE_PORTO_SAN_GIORGIO_MEMORIAL_M_DE_ANGELIS_2026-06-13_JUN_F",
@@ -120910,6 +120910,32 @@
         "regione": "MARCHE",
         "km": "105.000",
         "media": "37.990"
+      },
+      {
+        "gara_id": "2_TROFEO_ROSA_MONTALTO_PROVA_VALIDA_CAMPIONATO_REGIONALE_2026-05-02_JUN_F",
+        "nome_gara": "2 TROFEO ROSA MONTALTO PROVA VALIDA CAMPIONATO REGIONALE",
+        "data": "2026-05-02",
+        "posizione": 1,
+        "punti_effettivi": 30,
+        "team": "A.R.MONEX PRO CYCLING TEAM",
+        "moltiplicatore": 2,
+        "tipo": "regionale",
+        "regione": "TOSCANA",
+        "km": "87.700",
+        "media": "35.861"
+      },
+      {
+        "gara_id": "PASQUALANDO_2026-04-05_JUN_F",
+        "nome_gara": "PASQUALANDO",
+        "data": "2026-04-05",
+        "posizione": 7,
+        "punti_effettivi": 4,
+        "team": "A.R.MONEX PRO CYCLING TEAM",
+        "moltiplicatore": 1,
+        "tipo": "regionale",
+        "regione": "TOSCANA",
+        "km": "63.800",
+        "media": "41.102"
       }
     ]
   },
@@ -144643,44 +144669,6 @@
         "regione": "TOSCANA",
         "km": "87.700",
         "media": "35.861"
-      }
-    ]
-  },
-  "PENEDA_SOTO_NATALIA": {
-    "id": "PENEDA_SOTO_NATALIA",
-    "nome": "NATALIA",
-    "cognome": "PENEDA SOTO",
-    "team_attuale": "A.R.MONEX PRO CYCLING TEAM",
-    "team_id": "A_R_MONEX_PRO_CYCLING_TEAM",
-    "categoria": "JUN_F",
-    "genere": "F",
-    "punti_totali": 34,
-    "risultati": [
-      {
-        "gara_id": "2_TROFEO_ROSA_MONTALTO_PROVA_VALIDA_CAMPIONATO_REGIONALE_2026-05-02_JUN_F",
-        "nome_gara": "2 TROFEO ROSA MONTALTO PROVA VALIDA CAMPIONATO REGIONALE",
-        "data": "2026-05-02",
-        "posizione": 1,
-        "punti_effettivi": 30,
-        "team": "A.R.MONEX PRO CYCLING TEAM",
-        "moltiplicatore": 2,
-        "tipo": "regionale",
-        "regione": "TOSCANA",
-        "km": "87.700",
-        "media": "35.861"
-      },
-      {
-        "gara_id": "PASQUALANDO_2026-04-05_JUN_F",
-        "nome_gara": "PASQUALANDO",
-        "data": "2026-04-05",
-        "posizione": 7,
-        "punti_effettivi": 4,
-        "team": "A.R.MONEX PRO CYCLING TEAM",
-        "moltiplicatore": 1,
-        "tipo": "regionale",
-        "regione": "TOSCANA",
-        "km": "63.800",
-        "media": "41.102"
       }
     ]
   },
