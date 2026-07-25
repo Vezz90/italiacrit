@@ -7113,12 +7113,6 @@ async function _photoToOgPng(filename) {
   } catch { return null; }
 }
 
-// Categorie con copertura foto profilo sufficiente (verificato: Elite M
-// 69%, Elite F 75% degli atleti hanno una foto in entity_overrides) per
-// mostrare il volto nel podio senza che sia "a volte sì a volte no" sulla
-// maggioranza delle righe — Juniores (~17-18%) e giovanili (<1%) restano
-// solo testo, come per la card a piena larghezza.
-const _OG_FACE_CATS = new Set(['ELI_M', 'ELI_F']);
 const _OG_PODIUM_AVATAR_D = 54;
 
 // Geometria delle righe del podio (max 3), condivisa tra l'SVG del pannello
@@ -7296,12 +7290,13 @@ app.get('/api/og-image/gara/:id', async (req, res) => {
     // caricata a mano (race_photos) vince se presente, altrimenti xpix.it,
     // altrimenti ciclismo.info.
     try {
-      // Volti nel podio solo per Elite (copertura foto profilo verificata:
-      // 69-75% degli atleti, contro <18% di Juniores e <1% delle giovanili)
-      // — con poca copertura il podio avrebbe "a volte il volto, a volte no"
-      // sulla maggioranza delle righe, un'incoerenza peggiore di non averli.
-      const showFaces = !!(catCode && _OG_FACE_CATS.has(catCode));
-      const avatarOverlays = (showFaces && results.length) ? await _ogPodiumAvatarOverlays(results, Math.min(results.length, 3)) : [];
+      // Volti nel podio per qualsiasi categoria, condizionati per singolo
+      // atleta: _ogPodiumAvatarOverlays include solo le righe che hanno
+      // davvero una foto (nessun placeholder per chi non ce l'ha), così
+      // funziona anche per atleti con foto assegnata a mano in categorie
+      // a bassa copertura (Juniores, giovanili).
+      const avatarOverlays = results.length ? await _ogPodiumAvatarOverlays(results, Math.min(results.length, 3)) : [];
+      const showFaces = avatarOverlays.length > 0;
       const photoPanelSvg = results.length ? buildGaraPodiumPanelSvg({ catLabel, title, date: dateShort, results, showFaces }) : null;
       const toImage = async (photoSource) => photoPanelSvg
         ? (await _photoSplitOgPng(photoSource, photoPanelSvg, avatarOverlays)) || (await _photoToOgPng(photoSource))
