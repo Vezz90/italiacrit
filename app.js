@@ -22064,6 +22064,15 @@ const _SVGS = {
 // ── Modale principale ──────────────────────────────────────
 window.showShareModal = async function(type, payload) {
   _shareType=type; _sharePayload=payload; _sharePlatKey='post';
+  // "Riscalda" subito la generazione della grafica OG lato server (appena si
+  // apre la modale, prima ancora che l'utente scelga Facebook): la prima
+  // generazione può richiedere alcuni secondi (foto + composizione avatar),
+  // e se Facebook la richiede lui stesso a freddo durante "Pubblicazione in
+  // corso" il popup resta bloccato in attesa. Fire-and-forget, nessun await:
+  // basta che la richiesta parta ora, il risultato resta in cache 30 min.
+  if (payload?._id && ['gara','atleta','team','class'].includes(type)) {
+    fetch(`${API_BASE}/og-image/${type}/${encodeURIComponent(payload._id)}`).catch(()=>{});
+  }
   const titles={gara:'Risultati Gara',atleta:'Profilo Atleta',team:'Profilo Team',class:'Classifica'};
   const platBtns = [
     {k:'post',      label:'Post\nQuadrato', sz:'1080×1080',  fb:false},
