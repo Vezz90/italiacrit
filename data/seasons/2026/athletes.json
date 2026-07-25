@@ -8578,6 +8578,159 @@
       }
     ]
   },
+  "GIARRAFFA_SIMONE": {
+    "id": "GIARRAFFA_SIMONE",
+    "nome": "SIMONE",
+    "cognome": "GIARRAFFA",
+    "team_attuale": "ROLLING BIKE RACING TEAM",
+    "team_id": "ROLLING_BIKE_RACING_TEAM",
+    "categoria": "ELI_M",
+    "genere": "M",
+    "punti_totali": 15,
+    "risultati": [
+      {
+        "gara_id": "FESTIVAL_DEL_CICLISMO_CRONOMETRO_2026-07-25_ELI_M",
+        "nome_gara": "FESTIVAL DEL CICLISMO CRONOMETRO",
+        "data": "2026-07-25",
+        "posizione": 1,
+        "punti_effettivi": 15,
+        "team": "ROLLING BIKE RACING TEAM",
+        "moltiplicatore": 1,
+        "tipo": "regionale",
+        "regione": "SICILIA",
+        "km": "16.100",
+        "media": "44.758"
+      }
+    ]
+  },
+  "GIOIA_FRANCESCO": {
+    "id": "GIOIA_FRANCESCO",
+    "nome": "FRANCESCO",
+    "cognome": "GIOIA",
+    "team_attuale": "ASD CAMPOBELLO RUNNING & BIKE",
+    "team_id": "ASD_CAMPOBELLO_RUNNING_BIKE",
+    "categoria": "ELI_M",
+    "genere": "M",
+    "punti_totali": 62,
+    "risultati": [
+      {
+        "gara_id": "FESTIVAL_DEL_CICLISMO_CRONOMETRO_2026-07-25_ELI_M",
+        "nome_gara": "FESTIVAL DEL CICLISMO CRONOMETRO",
+        "data": "2026-07-25",
+        "posizione": 2,
+        "punti_effettivi": 12,
+        "team": "ASD CAMPOBELLO RUNNING & BIKE",
+        "moltiplicatore": 1,
+        "tipo": "regionale",
+        "regione": "SICILIA",
+        "km": "16.100",
+        "media": "44.758"
+      },
+      {
+        "gara_id": "6_GRANFONDO_GIRO_DELL_ETNA_PROVA_VALIDA_CAMPIONATO_REGIONALE_2026-05-31_ELI_M",
+        "nome_gara": "6 GRANFONDO GIRO DELL'ETNA PROVA VALIDA CAMPIONATO REGIONALE",
+        "data": "2026-05-31",
+        "posizione": 3,
+        "punti_effettivi": 20,
+        "team": "ASD CAMPOBELLO RUNNING & BIKE",
+        "moltiplicatore": 2,
+        "tipo": "regionale",
+        "regione": "SICILIA",
+        "km": "120.000",
+        "media": "31.732"
+      },
+      {
+        "gara_id": "MEMORIAL_GIOVANNI_CANNARELLA_2026-05-17_ELI_M",
+        "nome_gara": "MEMORIAL GIOVANNI CANNARELLA",
+        "data": "2026-05-17",
+        "posizione": 5,
+        "punti_effettivi": 6,
+        "team": "ASD CAMPOBELLO RUNNING & BIKE",
+        "moltiplicatore": 1,
+        "tipo": "regionale",
+        "regione": "SICILIA",
+        "km": "113.000",
+        "media": ""
+      },
+      {
+        "gara_id": "103_COPPA_ASCENSIONE_2026-05-10_ELI_M",
+        "nome_gara": "103 COPPA ASCENSIONE",
+        "data": "2026-05-10",
+        "posizione": 2,
+        "punti_effettivi": 12,
+        "team": "ASD CAMPOBELLO RUNNING & BIKE",
+        "moltiplicatore": 1,
+        "tipo": "regionale",
+        "regione": "SICILIA",
+        "km": "100.000",
+        "media": "40.377"
+      },
+      {
+        "gara_id": "5_MEMORIAL_GIUSEPPA_PATELLARO_2026-03-29_ELI_M",
+        "nome_gara": "5 MEMORIAL GIUSEPPA PATELLARO",
+        "data": "2026-03-29",
+        "posizione": 2,
+        "punti_effettivi": 12,
+        "team": "ASD CAMPOBELLO RUNNING & BIKE",
+        "moltiplicatore": 1,
+        "tipo": "regionale",
+        "regione": "SICILIA",
+        "km": "77.000",
+        "media": ""
+      }
+    ]
+  },
+  "MARCHIONE_GIACOMO": {
+    "id": "MARCHIONE_GIACOMO",
+    "nome": "GIACOMO",
+    "cognome": "MARCHIONE",
+    "team_attuale": "MADONE-TEAM BIKE SICILIA",
+    "team_id": "MADONE_TEAM_BIKE_SICILIA",
+    "categoria": "ELI_M",
+    "genere": "M",
+    "punti_totali": 27,
+    "risultati": [
+      {
+        "gara_id": "FESTIVAL_DEL_CICLISMO_CRONOMETRO_2026-07-25_ELI_M",
+        "nome_gara": "FESTIVAL DEL CICLISMO CRONOMETRO",
+        "data": "2026-07-25",
+        "posizione": 3,
+        "punti_effettivi": 10,
+        "team": "MADONE-TEAM BIKE SICILIA",
+        "moltiplicatore": 1,
+        "tipo": "regionale",
+        "regione": "SICILIA",
+        "km": "16.100",
+        "media": "44.758"
+      },
+      {
+        "gara_id": "6_GRANFONDO_GIRO_DELL_ETNA_PROVA_VALIDA_CAMPIONATO_REGIONALE_2026-05-31_ELI_M",
+        "nome_gara": "6 GRANFONDO GIRO DELL'ETNA PROVA VALIDA CAMPIONATO REGIONALE",
+        "data": "2026-05-31",
+        "posizione": 4,
+        "punti_effettivi": 16,
+        "team": "MADONE-TEAM BIKE SICILIA",
+        "moltiplicatore": 2,
+        "tipo": "regionale",
+        "regione": "SICILIA",
+        "km": "120.000",
+        "media": "31.732"
+      },
+      {
+        "gara_id": "MEMORIAL_GIOVANNI_CANNARELLA_2026-05-17_ELI_M",
+        "nome_gara": "MEMORIAL GIOVANNI CANNARELLA",
+        "data": "2026-05-17",
+        "posizione": 10,
+        "punti_effettivi": 1,
+        "team": "MADONE-TEAM BIKE SICILIA",
+        "moltiplicatore": 1,
+        "tipo": "regionale",
+        "regione": "SICILIA",
+        "km": "113.000",
+        "media": ""
+      }
+    ]
+  },
   "MARTIGNAGO_LUCA": {
     "id": "MARTIGNAGO_LUCA",
     "nome": "LUCA",
@@ -134438,108 +134591,6 @@
         "tipo": "regionale",
         "regione": "SICILIA",
         "km": "77.000",
-        "media": ""
-      }
-    ]
-  },
-  "GIOIA_FRANCESCO": {
-    "id": "GIOIA_FRANCESCO",
-    "nome": "FRANCESCO",
-    "cognome": "GIOIA",
-    "team_attuale": "ASD CAMPOBELLO RUNNING & BIKE",
-    "team_id": "ASD_CAMPOBELLO_RUNNING_BIKE",
-    "categoria": "ELI_M",
-    "genere": "M",
-    "punti_totali": 50,
-    "risultati": [
-      {
-        "gara_id": "6_GRANFONDO_GIRO_DELL_ETNA_PROVA_VALIDA_CAMPIONATO_REGIONALE_2026-05-31_ELI_M",
-        "nome_gara": "6 GRANFONDO GIRO DELL'ETNA PROVA VALIDA CAMPIONATO REGIONALE",
-        "data": "2026-05-31",
-        "posizione": 3,
-        "punti_effettivi": 20,
-        "team": "ASD CAMPOBELLO RUNNING & BIKE",
-        "moltiplicatore": 2,
-        "tipo": "regionale",
-        "regione": "SICILIA",
-        "km": "120.000",
-        "media": "31.732"
-      },
-      {
-        "gara_id": "MEMORIAL_GIOVANNI_CANNARELLA_2026-05-17_ELI_M",
-        "nome_gara": "MEMORIAL GIOVANNI CANNARELLA",
-        "data": "2026-05-17",
-        "posizione": 5,
-        "punti_effettivi": 6,
-        "team": "ASD CAMPOBELLO RUNNING & BIKE",
-        "moltiplicatore": 1,
-        "tipo": "regionale",
-        "regione": "SICILIA",
-        "km": "113.000",
-        "media": ""
-      },
-      {
-        "gara_id": "103_COPPA_ASCENSIONE_2026-05-10_ELI_M",
-        "nome_gara": "103 COPPA ASCENSIONE",
-        "data": "2026-05-10",
-        "posizione": 2,
-        "punti_effettivi": 12,
-        "team": "ASD CAMPOBELLO RUNNING & BIKE",
-        "moltiplicatore": 1,
-        "tipo": "regionale",
-        "regione": "SICILIA",
-        "km": "100.000",
-        "media": "40.377"
-      },
-      {
-        "gara_id": "5_MEMORIAL_GIUSEPPA_PATELLARO_2026-03-29_ELI_M",
-        "nome_gara": "5 MEMORIAL GIUSEPPA PATELLARO",
-        "data": "2026-03-29",
-        "posizione": 2,
-        "punti_effettivi": 12,
-        "team": "ASD CAMPOBELLO RUNNING & BIKE",
-        "moltiplicatore": 1,
-        "tipo": "regionale",
-        "regione": "SICILIA",
-        "km": "77.000",
-        "media": ""
-      }
-    ]
-  },
-  "MARCHIONE_GIACOMO": {
-    "id": "MARCHIONE_GIACOMO",
-    "nome": "GIACOMO",
-    "cognome": "MARCHIONE",
-    "team_attuale": "MADONE-TEAM BIKE SICILIA",
-    "team_id": "MADONE_TEAM_BIKE_SICILIA",
-    "categoria": "ELI_M",
-    "genere": "M",
-    "punti_totali": 17,
-    "risultati": [
-      {
-        "gara_id": "6_GRANFONDO_GIRO_DELL_ETNA_PROVA_VALIDA_CAMPIONATO_REGIONALE_2026-05-31_ELI_M",
-        "nome_gara": "6 GRANFONDO GIRO DELL'ETNA PROVA VALIDA CAMPIONATO REGIONALE",
-        "data": "2026-05-31",
-        "posizione": 4,
-        "punti_effettivi": 16,
-        "team": "MADONE-TEAM BIKE SICILIA",
-        "moltiplicatore": 2,
-        "tipo": "regionale",
-        "regione": "SICILIA",
-        "km": "120.000",
-        "media": "31.732"
-      },
-      {
-        "gara_id": "MEMORIAL_GIOVANNI_CANNARELLA_2026-05-17_ELI_M",
-        "nome_gara": "MEMORIAL GIOVANNI CANNARELLA",
-        "data": "2026-05-17",
-        "posizione": 10,
-        "punti_effettivi": 1,
-        "team": "MADONE-TEAM BIKE SICILIA",
-        "moltiplicatore": 1,
-        "tipo": "regionale",
-        "regione": "SICILIA",
-        "km": "113.000",
         "media": ""
       }
     ]
