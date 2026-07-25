@@ -14,10 +14,10 @@
   {
     "team_id": "TEAM_GUERRINI_SENAGHESE",
     "team_nome": "TEAM GUERRINI SENAGHESE",
-    "punti": 601,
-    "vittorie": 9,
-    "p1": 9,
-    "p2": 7,
+    "punti": 628,
+    "vittorie": 10,
+    "p1": 10,
+    "p2": 8,
     "p3": 6,
     "pout": 33,
     "n_atleti": 12,
@@ -84,6 +84,18 @@
     "pos": 7
   },
   {
+    "team_id": "BUSTESE_OLONIA_A_S_D",
+    "team_nome": "BUSTESE OLONIA A.S.D.",
+    "punti": 446,
+    "vittorie": 6,
+    "p1": 6,
+    "p2": 3,
+    "p3": 2,
+    "pout": 32,
+    "n_atleti": 10,
+    "pos": 8
+  },
+  {
     "team_id": "AUTOZAI_CONTRI",
     "team_nome": "AUTOZAI-CONTRI",
     "punti": 442,
@@ -92,18 +104,6 @@
     "p2": 4,
     "p3": 3,
     "pout": 29,
-    "n_atleti": 9,
-    "pos": 8
-  },
-  {
-    "team_id": "BUSTESE_OLONIA_A_S_D",
-    "team_nome": "BUSTESE OLONIA A.S.D.",
-    "punti": 440,
-    "vittorie": 6,
-    "p1": 6,
-    "p2": 3,
-    "p3": 2,
-    "pout": 31,
     "n_atleti": 9,
     "pos": 9
   },
@@ -168,6 +168,18 @@
     "pos": 14
   },
   {
+    "team_id": "TEAM_GENERAL_SYSTEM",
+    "team_nome": "TEAM GENERAL SYSTEM",
+    "punti": 364,
+    "vittorie": 4,
+    "p1": 4,
+    "p2": 5,
+    "p3": 2,
+    "pout": 30,
+    "n_atleti": 7,
+    "pos": 15
+  },
+  {
     "team_id": "POLISPORTIVA_MONSUMMANESE",
     "team_nome": "POLISPORTIVA MONSUMMANESE",
     "punti": 363,
@@ -177,18 +189,6 @@
     "p3": 6,
     "pout": 28,
     "n_atleti": 10,
-    "pos": 15
-  },
-  {
-    "team_id": "TEAM_GENERAL_SYSTEM",
-    "team_nome": "TEAM GENERAL SYSTEM",
-    "punti": 362,
-    "vittorie": 4,
-    "p1": 4,
-    "p2": 5,
-    "p3": 2,
-    "pout": 29,
-    "n_atleti": 7,
     "pos": 16
   },
   {
@@ -230,12 +230,12 @@
   {
     "team_id": "U_C_PIASCO",
     "team_nome": "U.C. PIASCO",
-    "punti": 257,
+    "punti": 265,
     "vittorie": 5,
     "p1": 5,
     "p2": 2,
     "p3": 2,
-    "pout": 12,
+    "pout": 13,
     "n_atleti": 6,
     "pos": 20
   },
@@ -290,12 +290,12 @@
   {
     "team_id": "G_S_GIOVANI_GIUSSANESI_A_S_D",
     "team_nome": "G.S.GIOVANI GIUSSANESI A.S.D.",
-    "punti": 140,
+    "punti": 145,
     "vittorie": 0,
     "p1": 0,
     "p2": 1,
     "p3": 4,
-    "pout": 11,
+    "pout": 12,
     "n_atleti": 7,
     "pos": 25
   },
@@ -432,6 +432,18 @@
     "pos": 36
   },
   {
+    "team_id": "G_S_MASSI_SUPERMERCATI_PONTIDA",
+    "team_nome": "G.S. MASSI' SUPERMERCATI PONTIDA",
+    "punti": 92,
+    "vittorie": 2,
+    "p1": 2,
+    "p2": 0,
+    "p3": 1,
+    "pout": 7,
+    "n_atleti": 3,
+    "pos": 37
+  },
+  {
     "team_id": "ASD_PEDALE_CASALESE_ARMOFER",
     "team_nome": "ASD PEDALE CASALESE ARMOFER",
     "punti": 91,
@@ -441,7 +453,7 @@
     "p3": 0,
     "pout": 15,
     "n_atleti": 10,
-    "pos": 37
+    "pos": 38
   },
   {
     "team_id": "SOUDAL_QUICK_STEP_JUNIOR_TEAM",
@@ -453,18 +465,6 @@
     "p3": 0,
     "pout": 1,
     "n_atleti": 2,
-    "pos": 38
-  },
-  {
-    "team_id": "G_S_MASSI_SUPERMERCATI_PONTIDA",
-    "team_nome": "G.S. MASSI' SUPERMERCATI PONTIDA",
-    "punti": 89,
-    "vittorie": 2,
-    "p1": 2,
-    "p2": 0,
-    "p3": 1,
-    "pout": 6,
-    "n_atleti": 3,
     "pos": 39
   },
   {
@@ -756,6 +756,18 @@
     "pos": 63
   },
   {
+    "team_id": "SALUS_CICLISTICA_SEREGNO_DE_ROSA",
+    "team_nome": "SALUS CICLISTICA SEREGNO DE ROSA",
+    "punti": 29,
+    "vittorie": 0,
+    "p1": 0,
+    "p2": 0,
+    "p3": 1,
+    "pout": 6,
+    "n_atleti": 4,
+    "pos": 64
+  },
+  {
     "team_id": "STAR_CYCLING_LAB",
     "team_nome": "STAR CYCLING LAB",
     "punti": 29,
@@ -765,7 +777,7 @@
     "p3": 0,
     "pout": 7,
     "n_atleti": 3,
-    "pos": 64
+    "pos": 65
   },
   {
     "team_id": "MULTICAR_GRUPPO_AMARU",
@@ -777,7 +789,7 @@
     "p3": 1,
     "pout": 1,
     "n_atleti": 2,
-    "pos": 65
+    "pos": 66
   },
   {
     "team_id": "WWV_HAGENS_BERMAN_JAYCO",
@@ -789,7 +801,7 @@
     "p3": 0,
     "pout": 3,
     "n_atleti": 2,
-    "pos": 66
+    "pos": 67
   },
   {
     "team_id": "TOSCANA",
@@ -801,7 +813,7 @@
     "p3": 0,
     "pout": 3,
     "n_atleti": 3,
-    "pos": 67
+    "pos": 68
   },
   {
     "team_id": "SPAGNA",
@@ -813,7 +825,19 @@
     "p3": 0,
     "pout": 3,
     "n_atleti": 2,
-    "pos": 68
+    "pos": 69
+  },
+  {
+    "team_id": "CANTURINO_1902_A_S_D",
+    "team_nome": "CANTURINO 1902 A.S.D.",
+    "punti": 25,
+    "vittorie": 0,
+    "p1": 0,
+    "p2": 0,
+    "p3": 0,
+    "pout": 6,
+    "n_atleti": 4,
+    "pos": 70
   },
   {
     "team_id": "AXION_FUTURE_TEAM",
@@ -825,7 +849,7 @@
     "p3": 0,
     "pout": 2,
     "n_atleti": 2,
-    "pos": 69
+    "pos": 71
   },
   {
     "team_id": "ROTOGAL_GUADENSE",
@@ -837,7 +861,7 @@
     "p3": 1,
     "pout": 3,
     "n_atleti": 2,
-    "pos": 70
+    "pos": 72
   },
   {
     "team_id": "MADONE_TEAM_BIKE_SICILIA",
@@ -849,7 +873,7 @@
     "p3": 0,
     "pout": 5,
     "n_atleti": 3,
-    "pos": 71
+    "pos": 73
   },
   {
     "team_id": "TEAM_SERIO",
@@ -861,19 +885,7 @@
     "p3": 1,
     "pout": 1,
     "n_atleti": 1,
-    "pos": 72
-  },
-  {
-    "team_id": "CANTURINO_1902_A_S_D",
-    "team_nome": "CANTURINO 1902 A.S.D.",
-    "punti": 21,
-    "vittorie": 0,
-    "p1": 0,
-    "p2": 0,
-    "p3": 0,
-    "pout": 5,
-    "n_atleti": 3,
-    "pos": 73
+    "pos": 74
   },
   {
     "team_id": "LAZIO",
@@ -885,7 +897,7 @@
     "p3": 1,
     "pout": 0,
     "n_atleti": 1,
-    "pos": 74
+    "pos": 75
   },
   {
     "team_id": "CICLISTICA_ROSTESE",
@@ -896,18 +908,6 @@
     "p2": 0,
     "p3": 0,
     "pout": 3,
-    "n_atleti": 3,
-    "pos": 75
-  },
-  {
-    "team_id": "SALUS_CICLISTICA_SEREGNO_DE_ROSA",
-    "team_nome": "SALUS CICLISTICA SEREGNO DE ROSA",
-    "punti": 19,
-    "vittorie": 0,
-    "p1": 0,
-    "p2": 0,
-    "p3": 0,
-    "pout": 6,
     "n_atleti": 3,
     "pos": 76
   },
@@ -1272,6 +1272,18 @@
     "pos": 106
   },
   {
+    "team_id": "S_C_FAGNANO_NUOVA",
+    "team_nome": "S.C. FAGNANO NUOVA",
+    "punti": 1,
+    "vittorie": 0,
+    "p1": 0,
+    "p2": 0,
+    "p3": 0,
+    "pout": 1,
+    "n_atleti": 1,
+    "pos": 107
+  },
+  {
     "team_id": "E_VALTELLINA_PEDALE_MORBEGNESE",
     "team_nome": "E' VALTELLINA PEDALE MORBEGNESE",
     "punti": 1,
@@ -1281,6 +1293,6 @@
     "p3": 0,
     "pout": 1,
     "n_atleti": 1,
-    "pos": 107
+    "pos": 108
   }
 ]
