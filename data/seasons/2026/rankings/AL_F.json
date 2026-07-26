@@ -35,12 +35,12 @@
     "atleta_id": "CARRETTA_MATILDE",
     "cognome": "CARRETTA",
     "nome": "MATILDE",
-    "team_id": "VENETO",
-    "team_nome": "VENETO",
-    "punti": 218,
-    "vittorie": 4,
-    "gare": 18,
-    "p1": 4,
+    "team_id": "U_C_CONSCIO_PEDALE_DEL_SILE",
+    "team_nome": "U.C.CONSCIO PEDALE DEL SILE",
+    "punti": 233,
+    "vittorie": 5,
+    "gare": 19,
+    "p1": 5,
     "p2": 6,
     "p3": 3,
     "pout": 5,
@@ -133,13 +133,13 @@
     "nome": "GINEVRA",
     "team_id": "POL_FIUMICINESE_FA_I_T_ADRIATICA",
     "team_nome": "POL. FIUMICINESE FA.I.T. ADRIATICA",
-    "punti": 120,
+    "punti": 126,
     "vittorie": 0,
-    "gare": 13,
+    "gare": 14,
     "p1": 0,
     "p2": 1,
     "p3": 3,
-    "pout": 9,
+    "pout": 10,
     "pos": 9,
     "trend": 0
   },
@@ -176,36 +176,36 @@
     "trend": 0
   },
   {
+    "atleta_id": "MASINI_GRETA",
+    "cognome": "MASINI",
+    "nome": "GRETA",
+    "team_id": "POL_FIUMICINESE_FA_I_T_ADRIATICA",
+    "team_nome": "POL. FIUMICINESE FA.I.T. ADRIATICA",
+    "punti": 89,
+    "vittorie": 1,
+    "gare": 10,
+    "p1": 1,
+    "p2": 0,
+    "p3": 1,
+    "pout": 8,
+    "pos": 12,
+    "trend": 1
+  },
+  {
     "atleta_id": "ZAVATTIERO_REBECCA",
     "cognome": "ZAVATTIERO",
     "nome": "REBECCA",
     "team_id": "U_S_SCUOLA_CICLISMO_VO",
     "team_nome": "U.S.SCUOLA CICLISMO VO'",
-    "punti": 84,
+    "punti": 85,
     "vittorie": 0,
-    "gare": 10,
+    "gare": 11,
     "p1": 0,
     "p2": 1,
     "p3": 2,
-    "pout": 7,
-    "pos": 12,
-    "trend": 0
-  },
-  {
-    "atleta_id": "MASINI_GRETA",
-    "cognome": "MASINI",
-    "nome": "GRETA",
-    "team_id": "EMILIA_ROMAGNA",
-    "team_nome": "EMILIA ROMAGNA",
-    "punti": 81,
-    "vittorie": 1,
-    "gare": 9,
-    "p1": 1,
-    "p2": 0,
-    "p3": 1,
-    "pout": 7,
+    "pout": 8,
     "pos": 13,
-    "trend": 0
+    "trend": -1
   },
   {
     "atleta_id": "PASET_RACHELE",
@@ -224,6 +224,22 @@
     "trend": 0
   },
   {
+    "atleta_id": "RANGEL_MATA_SOFIA",
+    "cognome": "RANGEL MATA",
+    "nome": "SOFIA",
+    "team_id": "A_R_MONEX_PRO_CYCLING_TEAM",
+    "team_nome": "A.R.MONEX PRO CYCLING TEAM",
+    "punti": 54,
+    "vittorie": 1,
+    "gare": 6,
+    "p1": 1,
+    "p2": 0,
+    "p3": 3,
+    "pout": 2,
+    "pos": 15,
+    "trend": 6
+  },
+  {
     "atleta_id": "ESPOSTO_GIOVANELLI_LETIZIA",
     "cognome": "ESPOSTO",
     "nome": "GIOVANELLI LETIZIA",
@@ -236,8 +252,8 @@
     "p2": 0,
     "p3": 1,
     "pout": 6,
-    "pos": 15,
-    "trend": 0
+    "pos": 16,
+    "trend": -1
   },
   {
     "atleta_id": "PAREDES_SANCHEZ_ANDREA",
@@ -245,15 +261,31 @@
     "nome": "ANDREA",
     "team_id": "A_R_MONEX_PRO_CYCLING_TEAM",
     "team_nome": "A.R.MONEX PRO CYCLING TEAM",
-    "punti": 48,
+    "punti": 51,
     "vittorie": 1,
-    "gare": 6,
+    "gare": 7,
     "p1": 1,
     "p2": 0,
     "p3": 1,
-    "pout": 4,
-    "pos": 16,
-    "trend": 0
+    "pout": 5,
+    "pos": 17,
+    "trend": -1
+  },
+  {
+    "atleta_id": "BERTOLUCCI_SVEVA",
+    "cognome": "BERTOLUCCI",
+    "nome": "SVEVA",
+    "team_id": "BLU_TEAM",
+    "team_nome": "BLU TEAM",
+    "punti": 49,
+    "vittorie": 1,
+    "gare": 5,
+    "p1": 1,
+    "p2": 1,
+    "p3": 0,
+    "pout": 3,
+    "pos": 18,
+    "trend": 7
   },
   {
     "atleta_id": "BATTAGLIN_SARA",
@@ -268,8 +300,8 @@
     "p2": 0,
     "p3": 0,
     "pout": 8,
-    "pos": 17,
-    "trend": 0
+    "pos": 19,
+    "trend": -2
   },
   {
     "atleta_id": "CESARO_ROBERTA",
@@ -284,8 +316,8 @@
     "p2": 0,
     "p3": 1,
     "pout": 1,
-    "pos": 18,
-    "trend": 0
+    "pos": 20,
+    "trend": -2
   },
   {
     "atleta_id": "LANARO_EMMA",
@@ -300,8 +332,8 @@
     "p2": 0,
     "p3": 1,
     "pout": 4,
-    "pos": 19,
-    "trend": 0
+    "pos": 21,
+    "trend": -2
   },
   {
     "atleta_id": "MIGLIORANZA_ELENA",
@@ -316,24 +348,8 @@
     "p2": 2,
     "p3": 1,
     "pout": 3,
-    "pos": 20,
-    "trend": 0
-  },
-  {
-    "atleta_id": "RANGEL_MATA_SOFIA",
-    "cognome": "RANGEL MATA",
-    "nome": "SOFIA",
-    "team_id": "A_R_MONEX_PRO_CYCLING_TEAM",
-    "team_nome": "A.R.MONEX PRO CYCLING TEAM",
-    "punti": 44,
-    "vittorie": 1,
-    "gare": 5,
-    "p1": 1,
-    "p2": 0,
-    "p3": 2,
-    "pout": 2,
-    "pos": 21,
-    "trend": 0
+    "pos": 22,
+    "trend": -2
   },
   {
     "atleta_id": "MOMBELLO_ANNA",
@@ -348,8 +364,8 @@
     "p2": 0,
     "p3": 0,
     "pout": 8,
-    "pos": 22,
-    "trend": 0
+    "pos": 23,
+    "trend": -1
   },
   {
     "atleta_id": "DE_GREGORIO_ELISA",
@@ -364,7 +380,39 @@
     "p2": 3,
     "p3": 0,
     "pout": 2,
-    "pos": 23,
+    "pos": 24,
+    "trend": -1
+  },
+  {
+    "atleta_id": "DEOTTO_EMMA",
+    "cognome": "DEOTTO",
+    "nome": "EMMA",
+    "team_id": "ASS_NE_CICLISTICA_DILETT_VALVASONE",
+    "team_nome": "ASS.NE CICLISTICA DILETT. VALVASONE",
+    "punti": 41,
+    "vittorie": 0,
+    "gare": 8,
+    "p1": 0,
+    "p2": 1,
+    "p3": 0,
+    "pout": 7,
+    "pos": 25,
+    "trend": 3
+  },
+  {
+    "atleta_id": "LISORINI_NINA",
+    "cognome": "LISORINI",
+    "nome": "NINA",
+    "team_id": "A_S_D_G_C_EMIC",
+    "team_nome": "A.S.D. - G.C. EMIC",
+    "punti": 41,
+    "vittorie": 0,
+    "gare": 8,
+    "p1": 0,
+    "p2": 0,
+    "p3": 1,
+    "pout": 7,
+    "pos": 26,
     "trend": 0
   },
   {
@@ -380,40 +428,8 @@
     "p2": 0,
     "p3": 1,
     "pout": 5,
-    "pos": 24,
-    "trend": 0
-  },
-  {
-    "atleta_id": "BERTOLUCCI_SVEVA",
-    "cognome": "BERTOLUCCI",
-    "nome": "SVEVA",
-    "team_id": "BLU_TEAM",
-    "team_nome": "BLU TEAM",
-    "punti": 37,
-    "vittorie": 1,
-    "gare": 4,
-    "p1": 1,
-    "p2": 0,
-    "p3": 0,
-    "pout": 3,
-    "pos": 25,
-    "trend": 0
-  },
-  {
-    "atleta_id": "LISORINI_NINA",
-    "cognome": "LISORINI",
-    "nome": "NINA",
-    "team_id": "A_S_D_G_C_EMIC",
-    "team_nome": "A.S.D. - G.C. EMIC",
-    "punti": 37,
-    "vittorie": 0,
-    "gare": 7,
-    "p1": 0,
-    "p2": 0,
-    "p3": 1,
-    "pout": 6,
-    "pos": 26,
-    "trend": 0
+    "pos": 27,
+    "trend": -3
   },
   {
     "atleta_id": "PANCHERI_IRENE",
@@ -428,24 +444,8 @@
     "p2": 1,
     "p3": 0,
     "pout": 5,
-    "pos": 27,
-    "trend": 0
-  },
-  {
-    "atleta_id": "DEOTTO_EMMA",
-    "cognome": "DEOTTO",
-    "nome": "EMMA",
-    "team_id": "ASS_NE_CICLISTICA_DILETT_VALVASONE",
-    "team_nome": "ASS.NE CICLISTICA DILETT. VALVASONE",
-    "punti": 36,
-    "vittorie": 0,
-    "gare": 7,
-    "p1": 0,
-    "p2": 1,
-    "p3": 0,
-    "pout": 6,
     "pos": 28,
-    "trend": 0
+    "trend": -1
   },
   {
     "atleta_id": "TRALDI_ELISA",
@@ -576,6 +576,22 @@
     "trend": 0
   },
   {
+    "atleta_id": "ROSSI_VITTORIA_TEONILLA",
+    "cognome": "ROSSI",
+    "nome": "VITTORIA TEONILLA",
+    "team_id": "SPORT_CLUB_BRESCIA_FLANDRES_LOVE",
+    "team_nome": "SPORT CLUB BRESCIA - FLANDRES LOVE",
+    "punti": 26,
+    "vittorie": 0,
+    "gare": 4,
+    "p1": 0,
+    "p2": 0,
+    "p3": 0,
+    "pout": 4,
+    "pos": 37,
+    "trend": 4
+  },
+  {
     "atleta_id": "PERSOIU_TARATU_MARA",
     "cognome": "PERSOIU-TARATU",
     "nome": "MARA",
@@ -588,8 +604,8 @@
     "p2": 0,
     "p3": 1,
     "pout": 1,
-    "pos": 37,
-    "trend": 0
+    "pos": 38,
+    "trend": -1
   },
   {
     "atleta_id": "COLOMBO_AURORA",
@@ -604,8 +620,8 @@
     "p2": 1,
     "p3": 0,
     "pout": 3,
-    "pos": 38,
-    "trend": 0
+    "pos": 39,
+    "trend": -1
   },
   {
     "atleta_id": "FERRETTI_SOFIA",
@@ -620,8 +636,8 @@
     "p2": 0,
     "p3": 1,
     "pout": 5,
-    "pos": 39,
-    "trend": 0
+    "pos": 40,
+    "trend": -1
   },
   {
     "atleta_id": "TRABUCCHI_BEATRICE",
@@ -636,24 +652,8 @@
     "p2": 0,
     "p3": 0,
     "pout": 5,
-    "pos": 40,
-    "trend": 0
-  },
-  {
-    "atleta_id": "ROSSI_VITTORIA_TEONILLA",
-    "cognome": "ROSSI",
-    "nome": "VITTORIA TEONILLA",
-    "team_id": "SPORT_CLUB_BRESCIA_FLANDRES_LOVE",
-    "team_nome": "SPORT CLUB BRESCIA - FLANDRES LOVE",
-    "punti": 24,
-    "vittorie": 0,
-    "gare": 3,
-    "p1": 0,
-    "p2": 0,
-    "p3": 0,
-    "pout": 3,
     "pos": 41,
-    "trend": 0
+    "trend": -1
   },
   {
     "atleta_id": "MANGERI_ANITA",

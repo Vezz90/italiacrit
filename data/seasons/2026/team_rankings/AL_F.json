@@ -14,12 +14,12 @@
   {
     "team_id": "SPORT_CLUB_BRESCIA_FLANDRES_LOVE",
     "team_nome": "SPORT CLUB BRESCIA - FLANDRES LOVE",
-    "punti": 331,
+    "punti": 333,
     "vittorie": 7,
     "p1": 7,
     "p2": 4,
     "p3": 5,
-    "pout": 18,
+    "pout": 19,
     "n_atleti": 5,
     "pos": 2
   },
@@ -62,9 +62,9 @@
   {
     "team_id": "U_C_CONSCIO_PEDALE_DEL_SILE",
     "team_nome": "U.C.CONSCIO PEDALE DEL SILE",
-    "punti": 227,
-    "vittorie": 4,
-    "p1": 4,
+    "punti": 242,
+    "vittorie": 5,
+    "p1": 5,
     "p2": 7,
     "p3": 3,
     "pout": 8,
@@ -74,12 +74,12 @@
   {
     "team_id": "POL_FIUMICINESE_FA_I_T_ADRIATICA",
     "team_nome": "POL. FIUMICINESE FA.I.T. ADRIATICA",
-    "punti": 180,
+    "punti": 194,
     "vittorie": 0,
     "p1": 0,
     "p2": 1,
     "p3": 4,
-    "pout": 17,
+    "pout": 19,
     "n_atleti": 5,
     "pos": 7
   },
@@ -98,12 +98,12 @@
   {
     "team_id": "A_R_MONEX_PRO_CYCLING_TEAM",
     "team_nome": "A.R.MONEX PRO CYCLING TEAM",
-    "punti": 112,
+    "punti": 125,
     "vittorie": 2,
     "p1": 2,
     "p2": 0,
-    "p3": 3,
-    "pout": 9,
+    "p3": 4,
+    "pout": 10,
     "n_atleti": 5,
     "pos": 9
   },
@@ -170,12 +170,12 @@
   {
     "team_id": "U_S_SCUOLA_CICLISMO_VO",
     "team_nome": "U.S.SCUOLA CICLISMO VO'",
-    "punti": 84,
+    "punti": 85,
     "vittorie": 0,
     "p1": 0,
     "p2": 1,
     "p3": 2,
-    "pout": 7,
+    "pout": 8,
     "n_atleti": 1,
     "pos": 15
   },
@@ -194,12 +194,12 @@
   {
     "team_id": "ASS_NE_CICLISTICA_DILETT_VALVASONE",
     "team_nome": "ASS.NE CICLISTICA DILETT. VALVASONE",
-    "punti": 57,
+    "punti": 62,
     "vittorie": 0,
     "p1": 0,
     "p2": 2,
     "p3": 0,
-    "pout": 10,
+    "pout": 11,
     "n_atleti": 3,
     "pos": 17
   },
@@ -228,6 +228,18 @@
     "pos": 19
   },
   {
+    "team_id": "BLU_TEAM",
+    "team_nome": "BLU TEAM",
+    "punti": 49,
+    "vittorie": 1,
+    "p1": 1,
+    "p2": 1,
+    "p3": 0,
+    "pout": 3,
+    "n_atleti": 1,
+    "pos": 20
+  },
+  {
     "team_id": "TEAM_CESARO_NERI_LUCCHINI",
     "team_nome": "TEAM CESARO-NERI-LUCCHINI",
     "punti": 46,
@@ -237,7 +249,7 @@
     "p3": 1,
     "pout": 1,
     "n_atleti": 1,
-    "pos": 20
+    "pos": 21
   },
   {
     "team_id": "TOSCANA",
@@ -249,7 +261,19 @@
     "p3": 1,
     "pout": 0,
     "n_atleti": 2,
-    "pos": 21
+    "pos": 22
+  },
+  {
+    "team_id": "A_S_D_G_C_EMIC",
+    "team_nome": "A.S.D. - G.C. EMIC",
+    "punti": 41,
+    "vittorie": 0,
+    "p1": 0,
+    "p2": 0,
+    "p3": 1,
+    "pout": 7,
+    "n_atleti": 1,
+    "pos": 23
   },
   {
     "team_id": "FREE_BIKE_LT_LOGISTICA_AMBIENTALE",
@@ -261,7 +285,7 @@
     "p3": 0,
     "pout": 1,
     "n_atleti": 1,
-    "pos": 22
+    "pos": 24
   },
   {
     "team_id": "ASD_GS_SORGENTE_PRADIPOZZO",
@@ -272,30 +296,6 @@
     "p2": 2,
     "p3": 1,
     "pout": 2,
-    "n_atleti": 1,
-    "pos": 23
-  },
-  {
-    "team_id": "BLU_TEAM",
-    "team_nome": "BLU TEAM",
-    "punti": 37,
-    "vittorie": 1,
-    "p1": 1,
-    "p2": 0,
-    "p3": 0,
-    "pout": 3,
-    "n_atleti": 1,
-    "pos": 24
-  },
-  {
-    "team_id": "A_S_D_G_C_EMIC",
-    "team_nome": "A.S.D. - G.C. EMIC",
-    "punti": 37,
-    "vittorie": 0,
-    "p1": 0,
-    "p2": 0,
-    "p3": 1,
-    "pout": 6,
     "n_atleti": 1,
     "pos": 25
   },
