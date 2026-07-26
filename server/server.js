@@ -6789,6 +6789,31 @@ ${contextParts.join('\n\n')}
 
 const _ogCache = new Map(); // key → { buf, ts }
 const OG_TTL   = 30 * 60 * 1000; // 30 minuti
+// Deduplica generazioni concorrenti per la stessa chiave: senza questa mappa,
+// due richieste quasi simultanee sulla stessa immagine ancora non in cache
+// (tipicamente: il pre-riscaldamento nostro + Facebook che scrapa nello
+// stesso istante) rifanno ENTRAMBE da zero il lavoro pesante (foto + sharp),
+// invece che la seconda aspetti il risultato della prima già in corso — con
+// due generazioni da 5-6s in corsa, la richiesta di Facebook può comunque
+// arrivare tardi e trovare l'anteprima vuota.
+const _ogInFlight = new Map(); // key → Promise<Buffer|null>
+async function _ogGenerateDeduped(cacheKey, generator) {
+  const cached = _ogCache.get(cacheKey);
+  if (cached && Date.now() - cached.ts < OG_TTL) return cached.buf;
+  const pending = _ogInFlight.get(cacheKey);
+  if (pending) return pending;
+  const promise = (async () => {
+    try {
+      const buf = await generator();
+      if (buf) _ogCache.set(cacheKey, { buf, ts: Date.now() });
+      return buf;
+    } finally {
+      _ogInFlight.delete(cacheKey);
+    }
+  })();
+  _ogInFlight.set(cacheKey, promise);
+  return promise;
+}
 
 // s ?? '' (non s || ''): un valore statistico 0 (es. "3° posti: 0") è
 // legittimo e deve mostrare la cifra "0", non sparire come stringa vuota —
@@ -7302,125 +7327,118 @@ async function _ogCardWithAvatar(cardSvg, photoSource, { diameter = 150, cx = 12
   } catch { return buf; }
 }
 
+async function _generateGaraOgBuffer(garaId) {
+  // Nome gara: dal calendario (GitHub, affidabile su Render) o dall'id.
+  // Il calendario usa l'id senza suffisso categoria/genere: stesso fallback
+  // di /og/gara/:id, altrimenti titolo/data/luogo restano vuoti quando si
+  // condivide dalla pagina di una gara già scrapata (id suffissato).
+  const calendar = (await readDataJsonFromGH('calendar.json')) || [];
+  const cal = calendar.find(g => g.id === garaId)
+    || calendar.find(g => g.id === garaId.replace(/_[A-Z0-9]+_[MF]$/, ''));
+  const title = cal?.nome || garaId.replace(/_\d{4}-\d{2}-\d{2}.*$/, '').replace(/_/g, ' ');
+
+  // Risultati caricati una sola volta, riusati sia per il pannello podio
+  // accanto alla foto (quando c'è) sia per la card "lista risultati" a
+  // piena larghezza (quando non c'è) — prima venivano ricaricati solo nel
+  // fallback senza foto, la foto e i risultati non comparivano mai insieme.
+  const resultsRaw = (await readDataJsonFromGH('results_raw.json')) || [];
+  const results = resultsRaw.filter(r => r.gara_id === garaId).sort((a, b) => a.posizione - b.posizione);
+  const first = results[0];
+  const catCode = first ? _rankingCodeFromRow(first) : null;
+  const catLabel = first ? ((catCode && _OG_CAT_MAP[catCode]) || first.categoria || '') : '';
+  const dateShort = cal?.data ? new Date(cal.data).toLocaleDateString('it-IT', { day: 'numeric', month: 'short', year: 'numeric' }) : '';
+
+  // 1) Se la gara ha una foto, usala come metà sinistra della card, con un
+  // pannello podio (primi 3) nella metà destra quando ci sono risultati —
+  // così la card è sempre coerente (stessa identità visiva ovunque) invece
+  // di essere a volte solo la foto e a volte solo un pannello testuale.
+  // Tre fonti possibili per la foto (stessa priorità e stesso matching
+  // "fuzzy" del gara_id usati lato frontend in loadRisPhotos/_extAlias):
+  // caricata a mano (race_photos) vince se presente, altrimenti xpix.it,
+  // altrimenti ciclismo.info.
+  try {
+    // Volti nel podio per qualsiasi categoria, condizionati per singolo
+    // atleta: _ogPodiumAvatarOverlays include solo le righe che hanno
+    // davvero una foto (nessun placeholder per chi non ce l'ha), così
+    // funziona anche per atleti con foto assegnata a mano in categorie
+    // a bassa copertura (Juniores, giovanili).
+    const avatarOverlays = results.length ? await _ogPodiumAvatarOverlays(results, Math.min(results.length, 3)) : [];
+    const showFaces = avatarOverlays.length > 0;
+    const photoPanelSvg = results.length ? buildGaraPodiumPanelSvg({ catLabel, title, date: dateShort, results, showFaces }) : null;
+    const toImage = async (photoSource) => photoPanelSvg
+      ? (await _photoSplitOgPng(photoSource, photoPanelSvg, avatarOverlays)) || (await _photoToOgPng(photoSource))
+      : await _photoToOgPng(photoSource);
+
+    const uploaded = await queries.getApprovedRacePhotos(garaId).catch(() => []);
+    if (uploaded && uploaded.length) {
+      const buf = await toImage(uploaded[0].filename || uploaded[0].photo_url);
+      if (buf) return buf;
+    }
+    const aliases = [garaId, garaId.replace(/^\d+_/, ''), garaId.replace(/_[A-Z0-9]+_[MF]$/, '')];
+    const [xpix, ic] = await Promise.all([readXpixPhotos(), readICPhotos()]);
+    for (const [src] of [[xpix], [ic]]) {
+      for (const alias of aliases) {
+        const entry = src[alias];
+        if (entry && (entry.url || entry.filename)) {
+          const buf = await toImage(entry.url || entry.filename);
+          if (buf) return buf;
+        }
+      }
+    }
+
+    // 1b) Niente foto: se c'è un video collegato, usa la sua miniatura come
+    // copertina (a piena larghezza, senza pannello podio — la miniatura
+    // YouTube è già bassa risoluzione, dividerla a metà la renderebbe
+    // illeggibile) — meglio di una card generica se almeno un contenuto
+    // reale della gara esiste. Un video può essere stato collegato usando
+    // il gara_id del calendario (prima dello scraping) invece di quello
+    // reale suffissato: stessi alias usati sopra per le foto.
+    const allVideos = await readVideos().catch(() => ({}));
+    for (const alias of aliases) {
+      const vids = allVideos[alias];
+      if (vids && vids.length) {
+        const vidId = _extractYouTubeId(vids[0].url);
+        if (vidId) {
+          const buf = await _photoToOgPng(`https://img.youtube.com/vi/${vidId}/hqdefault.jpg`);
+          if (buf) return buf;
+        }
+      }
+    }
+  } catch (e) { console.error(`[og-image] lookup foto fallito per ${garaId}:`, e.message); }
+
+  // 2) Niente foto né video: la stessa card "lista risultati" mostrata
+  // nelle grafiche Instagram/Post generate lato client (posizioni, nomi,
+  // team, tempi) invece della card generica con solo il nome.
+  try {
+    if (results.length) {
+      const svg = buildGaraResultsCardSvg({
+        title, catLabel, date: dateShort,
+        mult: first.moltiplicatore || 1,
+        km: first.km || '', media: first.media || '',
+        winnerTime: _ogWinnerTime(first.km || '', first.media || ''),
+        results,
+      });
+      const buf = await renderOgPng(svg);
+      if (buf) return buf;
+    }
+  } catch (e) { console.error(`[og-image] card risultati fallita per ${garaId}:`, e.message); }
+
+  // 3) Nessun risultato disponibile (gara futura): logo ICS + nome gara
+  const date = cal?.data ? new Date(cal.data).toLocaleDateString('it-IT', { day: 'numeric', month: 'long', year: 'numeric' }) : '';
+  const subtitle = [date, cal?.luogo || cal?.regione || ''].filter(Boolean).join(' · ');
+  const svg = buildGaraNameSvg(title, subtitle);
+  return await renderOgPng(svg);
+}
+
 app.get('/api/og-image/gara/:id', async (req, res) => {
   const garaId = decodeURIComponent(req.params.id);
   const cacheKey = `gara_${garaId}`;
-  const sendPng = (buf) => {
-    _ogCache.set(cacheKey, { buf, ts: Date.now() });
+  try {
+    const buf = await _ogGenerateDeduped(cacheKey, () => _generateGaraOgBuffer(garaId));
+    if (!buf) return res.redirect('/assets/og-default.png');
     res.setHeader('Content-Type', 'image/png');
     res.setHeader('Cache-Control', 'public, max-age=1800');
     res.send(buf);
-  };
-  try {
-    const cached = _ogCache.get(cacheKey);
-    if (cached && Date.now() - cached.ts < OG_TTL) {
-      res.setHeader('Content-Type', 'image/png');
-      res.setHeader('Cache-Control', 'public, max-age=1800');
-      return res.send(cached.buf);
-    }
-
-    // Nome gara: dal calendario (GitHub, affidabile su Render) o dall'id.
-    // Il calendario usa l'id senza suffisso categoria/genere: stesso fallback
-    // di /og/gara/:id, altrimenti titolo/data/luogo restano vuoti quando si
-    // condivide dalla pagina di una gara già scrapata (id suffissato).
-    const calendar = (await readDataJsonFromGH('calendar.json')) || [];
-    const cal = calendar.find(g => g.id === garaId)
-      || calendar.find(g => g.id === garaId.replace(/_[A-Z0-9]+_[MF]$/, ''));
-    const title = cal?.nome || garaId.replace(/_\d{4}-\d{2}-\d{2}.*$/, '').replace(/_/g, ' ');
-
-    // Risultati caricati una sola volta, riusati sia per il pannello podio
-    // accanto alla foto (quando c'è) sia per la card "lista risultati" a
-    // piena larghezza (quando non c'è) — prima venivano ricaricati solo nel
-    // fallback senza foto, la foto e i risultati non comparivano mai insieme.
-    const resultsRaw = (await readDataJsonFromGH('results_raw.json')) || [];
-    const results = resultsRaw.filter(r => r.gara_id === garaId).sort((a, b) => a.posizione - b.posizione);
-    const first = results[0];
-    const catCode = first ? _rankingCodeFromRow(first) : null;
-    const catLabel = first ? ((catCode && _OG_CAT_MAP[catCode]) || first.categoria || '') : '';
-    const dateShort = cal?.data ? new Date(cal.data).toLocaleDateString('it-IT', { day: 'numeric', month: 'short', year: 'numeric' }) : '';
-
-    // 1) Se la gara ha una foto, usala come metà sinistra della card, con un
-    // pannello podio (primi 3) nella metà destra quando ci sono risultati —
-    // così la card è sempre coerente (stessa identità visiva ovunque) invece
-    // di essere a volte solo la foto e a volte solo un pannello testuale.
-    // Tre fonti possibili per la foto (stessa priorità e stesso matching
-    // "fuzzy" del gara_id usati lato frontend in loadRisPhotos/_extAlias):
-    // caricata a mano (race_photos) vince se presente, altrimenti xpix.it,
-    // altrimenti ciclismo.info.
-    try {
-      // Volti nel podio per qualsiasi categoria, condizionati per singolo
-      // atleta: _ogPodiumAvatarOverlays include solo le righe che hanno
-      // davvero una foto (nessun placeholder per chi non ce l'ha), così
-      // funziona anche per atleti con foto assegnata a mano in categorie
-      // a bassa copertura (Juniores, giovanili).
-      const avatarOverlays = results.length ? await _ogPodiumAvatarOverlays(results, Math.min(results.length, 3)) : [];
-      const showFaces = avatarOverlays.length > 0;
-      const photoPanelSvg = results.length ? buildGaraPodiumPanelSvg({ catLabel, title, date: dateShort, results, showFaces }) : null;
-      const toImage = async (photoSource) => photoPanelSvg
-        ? (await _photoSplitOgPng(photoSource, photoPanelSvg, avatarOverlays)) || (await _photoToOgPng(photoSource))
-        : await _photoToOgPng(photoSource);
-
-      const uploaded = await queries.getApprovedRacePhotos(garaId).catch(() => []);
-      if (uploaded && uploaded.length) {
-        const buf = await toImage(uploaded[0].filename || uploaded[0].photo_url);
-        if (buf) return sendPng(buf);
-      }
-      const aliases = [garaId, garaId.replace(/^\d+_/, ''), garaId.replace(/_[A-Z0-9]+_[MF]$/, '')];
-      const [xpix, ic] = await Promise.all([readXpixPhotos(), readICPhotos()]);
-      for (const [src] of [[xpix], [ic]]) {
-        for (const alias of aliases) {
-          const entry = src[alias];
-          if (entry && (entry.url || entry.filename)) {
-            const buf = await toImage(entry.url || entry.filename);
-            if (buf) return sendPng(buf);
-          }
-        }
-      }
-
-      // 1b) Niente foto: se c'è un video collegato, usa la sua miniatura come
-      // copertina (a piena larghezza, senza pannello podio — la miniatura
-      // YouTube è già bassa risoluzione, dividerla a metà la renderebbe
-      // illeggibile) — meglio di una card generica se almeno un contenuto
-      // reale della gara esiste. Un video può essere stato collegato usando
-      // il gara_id del calendario (prima dello scraping) invece di quello
-      // reale suffissato: stessi alias usati sopra per le foto.
-      const allVideos = await readVideos().catch(() => ({}));
-      for (const alias of aliases) {
-        const vids = allVideos[alias];
-        if (vids && vids.length) {
-          const vidId = _extractYouTubeId(vids[0].url);
-          if (vidId) {
-            const buf = await _photoToOgPng(`https://img.youtube.com/vi/${vidId}/hqdefault.jpg`);
-            if (buf) return sendPng(buf);
-          }
-        }
-      }
-    } catch (e) { console.error(`[og-image] lookup foto fallito per ${garaId}:`, e.message); }
-
-    // 2) Niente foto né video: la stessa card "lista risultati" mostrata
-    // nelle grafiche Instagram/Post generate lato client (posizioni, nomi,
-    // team, tempi) invece della card generica con solo il nome.
-    try {
-      if (results.length) {
-        const svg = buildGaraResultsCardSvg({
-          title, catLabel, date: dateShort,
-          mult: first.moltiplicatore || 1,
-          km: first.km || '', media: first.media || '',
-          winnerTime: _ogWinnerTime(first.km || '', first.media || ''),
-          results,
-        });
-        const buf = await renderOgPng(svg);
-        if (buf) return sendPng(buf);
-      }
-    } catch (e) { console.error(`[og-image] card risultati fallita per ${garaId}:`, e.message); }
-
-    // 3) Nessun risultato disponibile (gara futura): logo ICS + nome gara
-    const date = cal?.data ? new Date(cal.data).toLocaleDateString('it-IT', { day: 'numeric', month: 'long', year: 'numeric' }) : '';
-    const subtitle = [date, cal?.luogo || cal?.regione || ''].filter(Boolean).join(' · ');
-    const svg = buildGaraNameSvg(title, subtitle);
-    const buf = await renderOgPng(svg);
-    if (buf) return sendPng(buf);
-    return res.redirect('/assets/og-default.png');
   } catch (e) { res.redirect('/assets/og-default.png'); }
 });
 
