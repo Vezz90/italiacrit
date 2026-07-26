@@ -351,6 +351,7 @@ function readDataJson(file) {
 
 // Cache per i file letti da GitHub Pages (fonte di verità uguale al frontend).
 // Aggiornamento automatico ogni 30 minuti; fallback al file locale in caso di errore.
+// (redeploy forzato per svuotare subito la cache dopo il fix genere gare miste)
 const _ghCache = {};
 const GH_CACHE_TTL = 30 * 60 * 1000;
 async function readDataJsonFromGH(file) {
