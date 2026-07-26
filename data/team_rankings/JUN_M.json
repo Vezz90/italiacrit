@@ -14,12 +14,12 @@
   {
     "team_id": "TEAM_GUERRINI_SENAGHESE",
     "team_nome": "TEAM GUERRINI SENAGHESE",
-    "punti": 628,
+    "punti": 633,
     "vittorie": 10,
     "p1": 10,
     "p2": 8,
     "p3": 6,
-    "pout": 33,
+    "pout": 35,
     "n_atleti": 12,
     "pos": 2
   },
@@ -62,24 +62,24 @@
   {
     "team_id": "CICLISTICA_TREVIGLIESE",
     "team_nome": "CICLISTICA TREVIGLIESE",
-    "punti": 518,
+    "punti": 536,
     "vittorie": 3,
     "p1": 3,
-    "p2": 4,
+    "p2": 5,
     "p3": 9,
-    "pout": 33,
+    "pout": 34,
     "n_atleti": 9,
     "pos": 6
   },
   {
     "team_id": "TEAM_ECOTEK_ZERO24",
     "team_nome": "TEAM ECOTEK ZERO24",
-    "punti": 486,
+    "punti": 505,
     "vittorie": 8,
     "p1": 8,
     "p2": 10,
-    "p3": 6,
-    "pout": 23,
+    "p3": 7,
+    "pout": 25,
     "n_atleti": 9,
     "pos": 7
   },
@@ -168,6 +168,18 @@
     "pos": 14
   },
   {
+    "team_id": "ETHICA_ZERO24_CYCLING_TEAM_ECOTEK",
+    "team_nome": "ETHICA ZERO24 CYCLING TEAM ECOTEK",
+    "punti": 369,
+    "vittorie": 7,
+    "p1": 7,
+    "p2": 7,
+    "p3": 3,
+    "pout": 13,
+    "n_atleti": 6,
+    "pos": 15
+  },
+  {
     "team_id": "TEAM_GENERAL_SYSTEM",
     "team_nome": "TEAM GENERAL SYSTEM",
     "punti": 364,
@@ -177,7 +189,7 @@
     "p3": 2,
     "pout": 30,
     "n_atleti": 7,
-    "pos": 15
+    "pos": 16
   },
   {
     "team_id": "POLISPORTIVA_MONSUMMANESE",
@@ -189,18 +201,6 @@
     "p3": 6,
     "pout": 28,
     "n_atleti": 10,
-    "pos": 16
-  },
-  {
-    "team_id": "ETHICA_ZERO24_CYCLING_TEAM_ECOTEK",
-    "team_nome": "ETHICA ZERO24 CYCLING TEAM ECOTEK",
-    "punti": 354,
-    "vittorie": 6,
-    "p1": 6,
-    "p2": 7,
-    "p3": 3,
-    "pout": 13,
-    "n_atleti": 6,
     "pos": 17
   },
   {
@@ -684,6 +684,18 @@
     "pos": 57
   },
   {
+    "team_id": "ENERGY_TEAM_A_S_D",
+    "team_nome": "ENERGY TEAM A.S.D.",
+    "punti": 45,
+    "vittorie": 0,
+    "p1": 0,
+    "p2": 0,
+    "p3": 0,
+    "pout": 8,
+    "n_atleti": 2,
+    "pos": 58
+  },
+  {
     "team_id": "BIESSE_CARRERA_PREMAC",
     "team_nome": "BIESSE - CARRERA - PREMAC",
     "punti": 44,
@@ -693,18 +705,6 @@
     "p3": 0,
     "pout": 8,
     "n_atleti": 3,
-    "pos": 58
-  },
-  {
-    "team_id": "ENERGY_TEAM_A_S_D",
-    "team_nome": "ENERGY TEAM A.S.D.",
-    "punti": 41,
-    "vittorie": 0,
-    "p1": 0,
-    "p2": 0,
-    "p3": 0,
-    "pout": 7,
-    "n_atleti": 2,
     "pos": 59
   },
   {
@@ -804,6 +804,18 @@
     "pos": 67
   },
   {
+    "team_id": "TEAM_SERIO",
+    "team_nome": "TEAM SERIO",
+    "punti": 27,
+    "vittorie": 0,
+    "p1": 0,
+    "p2": 0,
+    "p3": 1,
+    "pout": 2,
+    "n_atleti": 1,
+    "pos": 68
+  },
+  {
     "team_id": "WWV_HAGENS_BERMAN_JAYCO",
     "team_nome": "WWV HAGENS BERMAN - JAYCO",
     "punti": 27,
@@ -813,7 +825,7 @@
     "p3": 0,
     "pout": 3,
     "n_atleti": 2,
-    "pos": 68
+    "pos": 69
   },
   {
     "team_id": "TOSCANA",
@@ -825,7 +837,7 @@
     "p3": 0,
     "pout": 3,
     "n_atleti": 3,
-    "pos": 69
+    "pos": 70
   },
   {
     "team_id": "SPAGNA",
@@ -837,7 +849,7 @@
     "p3": 0,
     "pout": 3,
     "n_atleti": 2,
-    "pos": 70
+    "pos": 71
   },
   {
     "team_id": "CANTURINO_1902_A_S_D",
@@ -849,7 +861,7 @@
     "p3": 0,
     "pout": 6,
     "n_atleti": 4,
-    "pos": 71
+    "pos": 72
   },
   {
     "team_id": "AXION_FUTURE_TEAM",
@@ -861,7 +873,7 @@
     "p3": 0,
     "pout": 2,
     "n_atleti": 2,
-    "pos": 72
+    "pos": 73
   },
   {
     "team_id": "ROTOGAL_GUADENSE",
@@ -873,18 +885,6 @@
     "p3": 1,
     "pout": 3,
     "n_atleti": 2,
-    "pos": 73
-  },
-  {
-    "team_id": "TEAM_SERIO",
-    "team_nome": "TEAM SERIO",
-    "punti": 22,
-    "vittorie": 0,
-    "p1": 0,
-    "p2": 0,
-    "p3": 1,
-    "pout": 1,
-    "n_atleti": 1,
     "pos": 74
   },
   {
