@@ -75,6 +75,46 @@ def canonical_team_name(team):
         return team
     return TEAM_NAME_ALIASES.get(robust_norm(team), team)
 
+# Nelle gare "GARA UNICA" (tipico delle categorie giovanili: Esordienti,
+# Allievi) la FCI NON separa uomini e donne in due sezioni/tabelle — gareggiano
+# nello stesso ordine di arrivo, senza alcun campo che indichi il genere per
+# singola riga (verificato sul sorgente live: es. "FESTIVAL DEL CICLISMO
+# COPPA SICILIA ESORDIENTI GARA UNICA", posizione 8 = MARRONE MATILDE tra due
+# uomini). L'unico segnale utilizzabile per queste righe è il nome di
+# battesimo. Usato SOLO come correzione quando la sezione non ha già un
+# segnale esplicito di genere (tag "DONNE" o "femm" nel nome gara, che restano
+# affidabili e non passano da qui) — elenco non esaustivo di nomi italiani
+# (più alcuni stranieri comuni nel ciclismo giovanile) inequivocabilmente
+# femminili, quindi mai un downgrade rispetto al comportamento precedente.
+FEMALE_FIRST_NAMES = {
+    "MATILDE","FEDERICA","ELENA","SARAH","ANGELINA","MADDALENA","MAGGIE","KATARZYNA",
+    "GAIA","GIULIA","SOFIA","AURORA","ALICE","EMMA","GRETA","NOEMI",
+    "ANNA","MARTINA","CHIARA","SARA","BEATRICE","VIOLA","NICOLE","MEGAN","REBECCA",
+    "ALESSIA","VALENTINA","FRANCESCA","GINEVRA","VITTORIA","AURELIA","ARIANNA","EMILY",
+    "CATERINA","LUCIA","LAURA","SILVIA","ELISA","ILARIA","IRENE",
+    "MARIA","MARIA GRAZIA","ROSA","GRAZIA","PAOLA","BARBARA","CRISTINA","MONICA","SIMONA",
+    "STEFANIA","DANIELA","ROBERTA","ELEONORA","LETIZIA","SERENA","VERONICA","CAMILLA",
+    "GIORGIA","GLORIA","MELISSA","JASMINE","DESIREE","ANNALISA",
+    "MICOL","ASIA","BIANCA","LUNA","LIVIA","AGNESE","CECILIA","COSTANZA","DIANA",
+    "NATALIA","NATALIE","ANDREINA","ANGELA","ANTONELLA","ASSUNTA","CONCETTA","CARMELA",
+    "SALVATRICE","GIUSEPPINA","VINCENZA","FILOMENA","IMMACOLATA","PATRIZIA","LOREDANA",
+    "MICHELA","MANUELA","SAMANTHA","JESSICA","VANESSA","DENISE","ERIKA","MELANIA",
+    "GIADA","REGINA","VALERIA","VIRGINIA","CINZIA","TATIANA","KATIA","ILENIA",
+    "SABRINA","TIZIANA","WILMA","ZAIRA","YLENIA","NADIA","MIRIAM","ELISABETTA","FIORELLA",
+}
+
+def is_female_name(nome: str) -> bool:
+    """True se il nome di battesimo (primo termine, gestisce anche nomi
+    composti tipo 'ALESSIO FORTUNATO' o 'MARIA GRAZIA') è inequivocabilmente
+    femminile secondo FEMALE_FIRST_NAMES. Falso se sconosciuto — nessun
+    cambiamento rispetto al comportamento precedente per i nomi non elencati."""
+    n = (nome or "").strip().upper()
+    if not n:
+        return False
+    if n in FEMALE_FIRST_NAMES:
+        return True
+    return n.split(" ", 1)[0] in FEMALE_FIRST_NAMES
+
 # La fonte FCI riporta a volte lo stesso atleta con cognomi diversi tra una gara
 # e l'altra (refusi di inserimento lato federazione: es. "Peneda" invece di
 # "Pineda"). Senza normalizzazione questo spacca i risultati della stessa
@@ -352,14 +392,16 @@ def parse_risultati_page(soup: BeautifulSoup, calendar_map: dict, existing_ids: 
                 mult, tipo = 1, "regionale"
 
         n_cat_key = norm_cat(extracted_cat)
-        cat_code = CAT_CODES.get((n_cat_key, race_gender))
-        if not cat_code:
+        def _cat_code_for(gender):
+            cc = CAT_CODES.get((n_cat_key, gender))
+            if cc: return cc
             # Fallback secco per non perdere dati
-            if "ELITE" in n_cat_key or "UNDER" in n_cat_key: cat_code = "ELI_M" if race_gender=="M" else "ELI_F"
-            elif "JUN" in n_cat_key: cat_code = "JUN_M" if race_gender=="M" else "JUN_F"
-            elif "ALL" in n_cat_key: cat_code = "AL_M" if race_gender=="M" else "AL_F"
-            elif "ESO" in n_cat_key: cat_code = "ES1_M" if race_gender=="M" else "ES1_F"
-            else: cat_code = "ELI_M" if race_gender=="M" else "ELI_F"
+            if "ELITE" in n_cat_key or "UNDER" in n_cat_key: return "ELI_M" if gender=="M" else "ELI_F"
+            if "JUN" in n_cat_key: return "JUN_M" if gender=="M" else "JUN_F"
+            if "ALL" in n_cat_key: return "AL_M" if gender=="M" else "AL_F"
+            if "ESO" in n_cat_key: return "ES1_M" if gender=="M" else "ES1_F"
+            return "ELI_M" if gender=="M" else "ELI_F"
+        cat_code = _cat_code_for(race_gender)
         gara_id = slug(race_name_raw) + "_" + race_date + "_" + cat_code
 
         # ── Esclusione gare estere ───────────────────────────────────────
@@ -407,7 +449,13 @@ def parse_risultati_page(soup: BeautifulSoup, calendar_map: dict, existing_ids: 
         table = h4.find_next("table") or (h4.parent.find("table") if h4.parent else None)
         if not table: continue
 
-        # Parsa classifica
+        # Parsa classifica — bufferizza in section_rows (ordine di arrivo
+        # originale) invece di scrivere direttamente in results: quando la
+        # sezione è "GARA UNICA" (genere non esplicito, vedi race_gender
+        # sopra) serve prima capire quante/quali righe sono donne per poterle
+        # dividere in una categoria propria con posizioni ricalcolate — non
+        # si può saperlo prima di aver letto tutte le righe.
+        section_rows = []
         seen_pos_1 = False  # ex-aequo pos 1: solo il primo corridore è il vincitore ufficiale
         for row in table.find_all("tr"):
             th = row.find("th")
@@ -458,32 +506,63 @@ def parse_risultati_page(soup: BeautifulSoup, calendar_map: dict, existing_ids: 
 
             atleta_id = slug(f"{cognome}_{nome}")
             team_id   = slug(team) if team else "SCONOSCIUTO"
-            pts_base  = BASE_PTS.get(pos, 0)
-            pts_eff   = pts_base * mult
 
-            results.append({
-                "gara_id":   gara_id,
-                "nome_gara": race_name_raw,
-                "data":      race_date,
-                "categoria": extracted_cat,
-                "genere":    race_gender,
-                "tipo":      tipo,
-                "moltiplicatore":      mult,
-                "campionato_regionale": is_cr,
-                "campionato_italiano":  is_ci,
-                "regione": reg,
-                "posizione": pos,
-                "cognome":   cognome,
-                "nome":      nome,
-                "atleta_id": atleta_id,
-                "team":      team,
-                "team_id":   team_id,
-                "tempo":     tempo,
-                "km":        km,
-                "media":     media,
-                "punti_base":      pts_base,
-                "punti_effettivi": pts_eff,
+            section_rows.append({
+                "cognome": cognome, "nome": nome, "atleta_id": atleta_id,
+                "team": team, "team_id": team_id, "tempo": tempo,
             })
+
+        # ── Divisione per genere + ricalcolo posizioni ──────────────────
+        # race_gender=="F" è già un segnale esplicito (tag "DONNE"/"femm"):
+        # nessuna divisione necessaria, tutta la sezione è femminile com'era.
+        # race_gender=="M" è il default per sezioni ambigue: qui isoliamo le
+        # righe riconosciute come femminili (nome di battesimo) e le
+        # spostiamo in una categoria propria, rinumerando le posizioni DI
+        # ENTRAMBI i gruppi in base al solo ordine di arrivo del proprio
+        # genere — altrimenti Matilde resterebbe "8ª" (posizione nel campo
+        # misto) invece che nella sua reale posizione tra le sole donne, e i
+        # suoi punti sarebbero calcolati sulla posizione sbagliata.
+        if race_gender == "M":
+            male_rows   = [r for r in section_rows if not is_female_name(r["nome"])]
+            female_rows = [r for r in section_rows if is_female_name(r["nome"])]
+        else:
+            male_rows, female_rows = [], section_rows
+
+        if race_gender == "M" and female_rows:
+            print(f"  [genere] {race_name_raw[:60]} ({extracted_cat}): {len(female_rows)} atleta/e femminile/i isolata/e dal campo misto")
+
+        for gender, rows, gid, cc in (
+            ("M", male_rows, gara_id, cat_code),
+            ("F", female_rows, (slug(race_name_raw) + "_" + race_date + "_" + _cat_code_for("F")) if female_rows else None, _cat_code_for("F")),
+        ):
+            for i, r in enumerate(rows, start=1):
+                pts_base = BASE_PTS.get(i, 0)
+                pts_eff  = pts_base * mult
+                results.append({
+                    "gara_id":   gid,
+                    "nome_gara": race_name_raw,
+                    "data":      race_date,
+                    "categoria": extracted_cat,
+                    "genere":    gender,
+                    "tipo":      tipo,
+                    "moltiplicatore":      mult,
+                    "campionato_regionale": is_cr,
+                    "campionato_italiano":  is_ci,
+                    "regione": reg,
+                    "posizione": i,
+                    "cognome":   r["cognome"],
+                    "nome":      r["nome"],
+                    "atleta_id": r["atleta_id"],
+                    "team":      r["team"],
+                    "team_id":   r["team_id"],
+                    "tempo":     r["tempo"],
+                    "km":        km,
+                    "media":     media,
+                    "punti_base":      pts_base,
+                    "punti_effettivi": pts_eff,
+                })
+            if rows and gid not in existing_ids:
+                existing_ids.add(gid)
 
     return results, excluded_gara_ids
 
