@@ -72,6 +72,18 @@
     "pos": 6
   },
   {
+    "team_id": "TOP_GIRLS_FASSA_BORTOLO",
+    "team_nome": "TOP GIRLS - FASSA BORTOLO",
+    "punti": 155,
+    "vittorie": 1,
+    "p1": 1,
+    "p2": 3,
+    "p3": 0,
+    "pout": 14,
+    "n_atleti": 8,
+    "pos": 7
+  },
+  {
     "team_id": "WCC_UCI_WORLD_CYCLING_CENTRE",
     "team_nome": "WCC - UCI WORLD CYCLING CENTRE",
     "punti": 145,
@@ -81,18 +93,6 @@
     "p3": 0,
     "pout": 3,
     "n_atleti": 4,
-    "pos": 7
-  },
-  {
-    "team_id": "TOP_GIRLS_FASSA_BORTOLO",
-    "team_nome": "TOP GIRLS - FASSA BORTOLO",
-    "punti": 143,
-    "vittorie": 1,
-    "p1": 1,
-    "p2": 2,
-    "p3": 0,
-    "pout": 14,
-    "n_atleti": 8,
     "pos": 8
   },
   {
@@ -144,6 +144,18 @@
     "pos": 12
   },
   {
+    "team_id": "BORN_TO_WIN_BTC_CITY_LJUBLJANA",
+    "team_nome": "BORN TO WIN BTC CITY LJUBLJANA",
+    "punti": 109,
+    "vittorie": 3,
+    "p1": 3,
+    "p2": 0,
+    "p3": 0,
+    "pout": 13,
+    "n_atleti": 4,
+    "pos": 13
+  },
+  {
     "team_id": "BIESSE_CARRERA_PREMAC",
     "team_nome": "BIESSE - CARRERA - PREMAC",
     "punti": 105,
@@ -153,7 +165,7 @@
     "p3": 1,
     "pout": 10,
     "n_atleti": 5,
-    "pos": 13
+    "pos": 14
   },
   {
     "team_id": "TOYOTA_VALENCIA_SAV",
@@ -165,18 +177,6 @@
     "p3": 1,
     "pout": 1,
     "n_atleti": 1,
-    "pos": 14
-  },
-  {
-    "team_id": "BORN_TO_WIN_BTC_CITY_LJUBLJANA",
-    "team_nome": "BORN TO WIN BTC CITY LJUBLJANA",
-    "punti": 103,
-    "vittorie": 3,
-    "p1": 3,
-    "p2": 0,
-    "p3": 0,
-    "pout": 12,
-    "n_atleti": 4,
     "pos": 15
   },
   {
@@ -192,6 +192,18 @@
     "pos": 16
   },
   {
+    "team_id": "VINI_FANTINI_BEPINK",
+    "team_nome": "VINI FANTINI - BEPINK",
+    "punti": 96,
+    "vittorie": 1,
+    "p1": 1,
+    "p2": 0,
+    "p3": 2,
+    "pout": 12,
+    "n_atleti": 8,
+    "pos": 17
+  },
+  {
     "team_id": "NEXETIS_TEAM",
     "team_nome": "NEXETIS TEAM",
     "punti": 87,
@@ -201,7 +213,7 @@
     "p3": 1,
     "pout": 1,
     "n_atleti": 3,
-    "pos": 17
+    "pos": 18
   },
   {
     "team_id": "EF_EDUCATION_OATLY",
@@ -213,7 +225,7 @@
     "p3": 0,
     "pout": 5,
     "n_atleti": 3,
-    "pos": 18
+    "pos": 19
   },
   {
     "team_id": "MOVISTAR_TEAM_ACADEMY",
@@ -225,30 +237,18 @@
     "p3": 0,
     "pout": 4,
     "n_atleti": 2,
-    "pos": 19
+    "pos": 20
   },
   {
     "team_id": "AROMITALIA_VAIANO",
     "team_nome": "AROMITALIA VAIANO",
-    "punti": 75,
+    "punti": 76,
     "vittorie": 1,
     "p1": 1,
     "p2": 0,
     "p3": 1,
-    "pout": 4,
-    "n_atleti": 5,
-    "pos": 20
-  },
-  {
-    "team_id": "VINI_FANTINI_BEPINK",
-    "team_nome": "VINI FANTINI - BEPINK",
-    "punti": 56,
-    "vittorie": 0,
-    "p1": 0,
-    "p2": 0,
-    "p3": 1,
-    "pout": 9,
-    "n_atleti": 7,
+    "pout": 5,
+    "n_atleti": 6,
     "pos": 21
   },
   {
@@ -300,6 +300,18 @@
     "pos": 25
   },
   {
+    "team_id": "TIROL_WOMEN_CYCLING",
+    "team_nome": "TIROL WOMEN CYCLING",
+    "punti": 40,
+    "vittorie": 0,
+    "p1": 0,
+    "p2": 0,
+    "p3": 1,
+    "pout": 6,
+    "n_atleti": 5,
+    "pos": 26
+  },
+  {
     "team_id": "TEAM_MENDELSPECK_E_WORK",
     "team_nome": "TEAM MENDELSPECK E-WORK",
     "punti": 39,
@@ -309,7 +321,7 @@
     "p3": 1,
     "pout": 4,
     "n_atleti": 3,
-    "pos": 26
+    "pos": 27
   },
   {
     "team_id": "UNO_X_MOBILITY",
@@ -321,7 +333,7 @@
     "p3": 0,
     "pout": 4,
     "n_atleti": 3,
-    "pos": 27
+    "pos": 28
   },
   {
     "team_id": "ZHIRAF",
@@ -333,7 +345,7 @@
     "p3": 2,
     "pout": 4,
     "n_atleti": 3,
-    "pos": 28
+    "pos": 29
   },
   {
     "team_id": "UAE_DEVELOPMENT_TEAM",
@@ -345,18 +357,6 @@
     "p3": 0,
     "pout": 1,
     "n_atleti": 2,
-    "pos": 29
-  },
-  {
-    "team_id": "TIROL_WOMEN_CYCLING",
-    "team_nome": "TIROL WOMEN CYCLING",
-    "punti": 33,
-    "vittorie": 0,
-    "p1": 0,
-    "p2": 0,
-    "p3": 1,
-    "pout": 4,
-    "n_atleti": 3,
     "pos": 30
   },
   {
