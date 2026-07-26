@@ -2,24 +2,24 @@
   {
     "team_id": "TEAM_CESARO_NERI_LUCCHINI",
     "team_nome": "TEAM CESARO-NERI-LUCCHINI",
-    "punti": 768,
+    "punti": 782,
     "vittorie": 17,
     "p1": 17,
     "p2": 12,
     "p3": 6,
-    "pout": 49,
+    "pout": 51,
     "n_atleti": 6,
     "pos": 1
   },
   {
     "team_id": "UC_COLTANO_GRUBE_COSTRUZIONI",
     "team_nome": "UC COLTANO GRUBE COSTRUZIONI",
-    "punti": 528,
-    "vittorie": 16,
-    "p1": 16,
+    "punti": 558,
+    "vittorie": 17,
+    "p1": 17,
     "p2": 9,
-    "p3": 6,
-    "pout": 21,
+    "p3": 7,
+    "pout": 22,
     "n_atleti": 4,
     "pos": 2
   },
@@ -146,12 +146,12 @@
   {
     "team_id": "UC_EMPOLESE",
     "team_nome": "UC EMPOLESE",
-    "punti": 279,
+    "punti": 283,
     "vittorie": 3,
     "p1": 3,
     "p2": 2,
     "p3": 6,
-    "pout": 38,
+    "pout": 39,
     "n_atleti": 4,
     "pos": 13
   },
@@ -192,6 +192,18 @@
     "pos": 16
   },
   {
+    "team_id": "VC_CREMONESE",
+    "team_nome": "VC CREMONESE",
+    "punti": 220,
+    "vittorie": 5,
+    "p1": 5,
+    "p2": 6,
+    "p3": 4,
+    "pout": 7,
+    "n_atleti": 2,
+    "pos": 17
+  },
+  {
     "team_id": "IND_FORNITURE_MORO_C_G_CAPITAL",
     "team_nome": "IND. FORNITURE MORO-C&G CAPITAL",
     "punti": 212,
@@ -201,7 +213,7 @@
     "p3": 1,
     "pout": 15,
     "n_atleti": 4,
-    "pos": 17
+    "pos": 18
   },
   {
     "team_id": "U_S_SCUOLA_CICLISMO_VO",
@@ -213,18 +225,6 @@
     "p3": 3,
     "pout": 15,
     "n_atleti": 4,
-    "pos": 18
-  },
-  {
-    "team_id": "VC_CREMONESE",
-    "team_nome": "VC CREMONESE",
-    "punti": 207,
-    "vittorie": 5,
-    "p1": 5,
-    "p2": 5,
-    "p3": 4,
-    "pout": 6,
-    "n_atleti": 2,
     "pos": 19
   },
   {
@@ -708,6 +708,18 @@
     "pos": 59
   },
   {
+    "team_id": "PEDALE_SARZANESE",
+    "team_nome": "PEDALE SARZANESE",
+    "punti": 70,
+    "vittorie": 0,
+    "p1": 0,
+    "p2": 1,
+    "p3": 1,
+    "pout": 15,
+    "n_atleti": 2,
+    "pos": 60
+  },
+  {
     "team_id": "PEDALE_OSSOLANO",
     "team_nome": "PEDALE OSSOLANO",
     "punti": 68,
@@ -717,29 +729,17 @@
     "p3": 2,
     "pout": 3,
     "n_atleti": 1,
-    "pos": 60
-  },
-  {
-    "team_id": "PEDALE_SARZANESE",
-    "team_nome": "PEDALE SARZANESE",
-    "punti": 68,
-    "vittorie": 0,
-    "p1": 0,
-    "p2": 1,
-    "p3": 1,
-    "pout": 14,
-    "n_atleti": 2,
     "pos": 61
   },
   {
     "team_id": "UC_DONORATICO",
     "team_nome": "UC DONORATICO",
-    "punti": 65,
+    "punti": 68,
     "vittorie": 0,
     "p1": 0,
     "p2": 0,
     "p3": 2,
-    "pout": 9,
+    "pout": 10,
     "n_atleti": 3,
     "pos": 62
   },

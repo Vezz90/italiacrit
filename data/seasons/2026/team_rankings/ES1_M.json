@@ -50,9 +50,9 @@
   {
     "team_id": "UC_DONORATICO",
     "team_nome": "UC DONORATICO",
-    "punti": 297,
-    "vittorie": 7,
-    "p1": 7,
+    "punti": 312,
+    "vittorie": 8,
+    "p1": 8,
     "p2": 5,
     "p3": 4,
     "pout": 14,
@@ -62,12 +62,12 @@
   {
     "team_id": "UC_EMPOLESE",
     "team_nome": "UC EMPOLESE",
-    "punti": 297,
+    "punti": 304,
     "vittorie": 4,
     "p1": 4,
     "p2": 5,
     "p3": 8,
-    "pout": 19,
+    "pout": 21,
     "n_atleti": 5,
     "pos": 6
   },
@@ -108,6 +108,18 @@
     "pos": 9
   },
   {
+    "team_id": "TEAM_PIU_SPORT",
+    "team_nome": "TEAM PIU'SPORT",
+    "punti": 238,
+    "vittorie": 8,
+    "p1": 8,
+    "p2": 4,
+    "p3": 2,
+    "pout": 9,
+    "n_atleti": 2,
+    "pos": 10
+  },
+  {
     "team_id": "FOLIGNO_CYCLING_TEAM_ASD",
     "team_nome": "FOLIGNO CYCLING TEAM ASD",
     "punti": 220,
@@ -117,18 +129,6 @@
     "p3": 6,
     "pout": 24,
     "n_atleti": 4,
-    "pos": 10
-  },
-  {
-    "team_id": "TEAM_PIU_SPORT",
-    "team_nome": "TEAM PIU'SPORT",
-    "punti": 218,
-    "vittorie": 8,
-    "p1": 8,
-    "p2": 3,
-    "p3": 2,
-    "pout": 8,
-    "n_atleti": 2,
     "pos": 11
   },
   {
@@ -504,6 +504,18 @@
     "pos": 42
   },
   {
+    "team_id": "GS_BERTI_MOBILI_BENASSI",
+    "team_nome": "GS BERTI MOBILI BENASSI",
+    "punti": 113,
+    "vittorie": 1,
+    "p1": 1,
+    "p2": 3,
+    "p3": 2,
+    "pout": 11,
+    "n_atleti": 3,
+    "pos": 43
+  },
+  {
     "team_id": "A_S_D_PEDALE_CASTELLANO",
     "team_nome": "A.S.D. PEDALE CASTELLANO",
     "punti": 113,
@@ -513,7 +525,7 @@
     "p3": 3,
     "pout": 13,
     "n_atleti": 2,
-    "pos": 43
+    "pos": 44
   },
   {
     "team_id": "MST_CYCLING_SANDRIGO_BIKE",
@@ -525,7 +537,7 @@
     "p3": 2,
     "pout": 12,
     "n_atleti": 2,
-    "pos": 44
+    "pos": 45
   },
   {
     "team_id": "S_C_CAVRIAGO",
@@ -537,7 +549,7 @@
     "p3": 1,
     "pout": 13,
     "n_atleti": 3,
-    "pos": 45
+    "pos": 46
   },
   {
     "team_id": "ASD_VELOCE_CLUB_BORGO",
@@ -549,7 +561,7 @@
     "p3": 4,
     "pout": 8,
     "n_atleti": 1,
-    "pos": 46
+    "pos": 47
   },
   {
     "team_id": "ASD_G_C_FAUSTO_COPPI",
@@ -561,7 +573,7 @@
     "p3": 1,
     "pout": 17,
     "n_atleti": 4,
-    "pos": 47
+    "pos": 48
   },
   {
     "team_id": "U_C_S_OTTAVIO_ZULIANI_A_S_D",
@@ -573,7 +585,7 @@
     "p3": 5,
     "pout": 7,
     "n_atleti": 3,
-    "pos": 48
+    "pos": 49
   },
   {
     "team_id": "A_S_D_CICLISTICA_MONSELICE",
@@ -585,7 +597,7 @@
     "p3": 2,
     "pout": 15,
     "n_atleti": 2,
-    "pos": 49
+    "pos": 50
   },
   {
     "team_id": "LEO_CONSTRUCTIONS_SSD",
@@ -597,7 +609,7 @@
     "p3": 0,
     "pout": 2,
     "n_atleti": 2,
-    "pos": 50
+    "pos": 51
   },
   {
     "team_id": "ASD_GUBBIO_CICLISMO_MOCAIANA",
@@ -609,18 +621,6 @@
     "p3": 1,
     "pout": 9,
     "n_atleti": 2,
-    "pos": 51
-  },
-  {
-    "team_id": "GS_BERTI_MOBILI_BENASSI",
-    "team_nome": "GS BERTI MOBILI BENASSI",
-    "punti": 97,
-    "vittorie": 1,
-    "p1": 1,
-    "p2": 3,
-    "p3": 1,
-    "pout": 10,
-    "n_atleti": 3,
     "pos": 52
   },
   {
@@ -792,6 +792,18 @@
     "pos": 66
   },
   {
+    "team_id": "VC_CREMONESE",
+    "team_nome": "VC CREMONESE",
+    "punti": 68,
+    "vittorie": 1,
+    "p1": 1,
+    "p2": 0,
+    "p3": 0,
+    "pout": 12,
+    "n_atleti": 1,
+    "pos": 67
+  },
+  {
     "team_id": "ASD_FUSION_BIKE",
     "team_nome": "ASD FUSION BIKE",
     "punti": 68,
@@ -801,18 +813,6 @@
     "p3": 1,
     "pout": 12,
     "n_atleti": 2,
-    "pos": 67
-  },
-  {
-    "team_id": "VC_CREMONESE",
-    "team_nome": "VC CREMONESE",
-    "punti": 67,
-    "vittorie": 1,
-    "p1": 1,
-    "p2": 0,
-    "p3": 0,
-    "pout": 11,
-    "n_atleti": 1,
     "pos": 68
   },
   {
@@ -972,6 +972,18 @@
     "pos": 81
   },
   {
+    "team_id": "AC_F_BESSI_CALENZANO_DONORATICO",
+    "team_nome": "AC F. BESSI CALENZANO DONORATICO",
+    "punti": 47,
+    "vittorie": 0,
+    "p1": 0,
+    "p2": 0,
+    "p3": 0,
+    "pout": 10,
+    "n_atleti": 2,
+    "pos": 82
+  },
+  {
     "team_id": "SAMABIKE",
     "team_nome": "SAMABIKE",
     "punti": 45,
@@ -981,7 +993,7 @@
     "p3": 0,
     "pout": 9,
     "n_atleti": 1,
-    "pos": 82
+    "pos": 83
   },
   {
     "team_id": "A_S_D_CICLISTICA_2000",
@@ -993,7 +1005,7 @@
     "p3": 0,
     "pout": 5,
     "n_atleti": 1,
-    "pos": 83
+    "pos": 84
   },
   {
     "team_id": "CICLISTICA_BORDIGHERA",
@@ -1005,7 +1017,7 @@
     "p3": 0,
     "pout": 14,
     "n_atleti": 2,
-    "pos": 84
+    "pos": 85
   },
   {
     "team_id": "A_S_D_S_C_CERETOLESE_1969",
@@ -1017,7 +1029,7 @@
     "p3": 2,
     "pout": 5,
     "n_atleti": 1,
-    "pos": 85
+    "pos": 86
   },
   {
     "team_id": "ARAN_CUCINE_VEJUS",
@@ -1029,7 +1041,7 @@
     "p3": 1,
     "pout": 0,
     "n_atleti": 1,
-    "pos": 86
+    "pos": 87
   },
   {
     "team_id": "POL_MOLINELLO",
@@ -1038,18 +1050,6 @@
     "vittorie": 0,
     "p1": 0,
     "p2": 1,
-    "p3": 0,
-    "pout": 8,
-    "n_atleti": 2,
-    "pos": 87
-  },
-  {
-    "team_id": "AC_F_BESSI_CALENZANO_DONORATICO",
-    "team_nome": "AC F. BESSI CALENZANO DONORATICO",
-    "punti": 40,
-    "vittorie": 0,
-    "p1": 0,
-    "p2": 0,
     "p3": 0,
     "pout": 8,
     "n_atleti": 2,
