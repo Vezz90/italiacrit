@@ -338,6 +338,11 @@ const DATA_DIR       = path.join(__dirname, '..', 'data');
 const SITE_URL       = 'https://italiacyclingstats.com';
 const SUPABASE_PUB   = 'https://aqqsstsbgpapzoxllosh.supabase.co/storage/v1/object/public';
 const DEFAULT_OG_IMG = `${SITE_URL}/assets/og-default.png`;
+// Bump ad ogni modifica alla generazione della grafica OG (buildGaraPodiumPanelSvg,
+// _ogCropPosition, ecc.): Facebook cache i byte dell'immagine per URL separatamente
+// dai meta tag, e "Scrape Again" sul debugger a volte aggiorna solo i secondi —
+// un parametro di versione nell'URL costringe Facebook a trattarla come nuova.
+const OG_IMG_VERSION = 2;
 
 function readDataJson(file) {
   try { return JSON.parse(fs.readFileSync(path.join(DATA_DIR, file), 'utf8')); }
@@ -609,7 +614,7 @@ app.get('/og/gara/:id', async (req, res) => {
   const cal = (calRaw || []).find(g => g.id === id)
     || (calRaw || []).find(g => g.id === id.replace(/_[A-Z0-9]+_[MF]$/, ''));
   const { results, title, desc } = _buildGaraNarrative(id, cal, resultsRaw);
-  const img     = `${API_BASE_URL}/api/og-image/gara/${encodeURIComponent(id)}`;
+  const img     = `${API_BASE_URL}/api/og-image/gara/${encodeURIComponent(id)}?v=${OG_IMG_VERSION}`;
   const redirect = `${SITE_URL}/gara/${encodeURIComponent(id)}`;
   const canonical = `${API_BASE_URL}/og/gara/${encodeURIComponent(id)}`;
   // Tabella con TUTTA la classifica (non solo il podio) — contenuto reale e
@@ -671,7 +676,7 @@ app.get('/og/atleta/:id', async (req, res) => {
   if (ath.punti_totali) parts.push(`${ath.punti_totali} pt`);
   if (ath.vittorie)     parts.push(`${ath.vittorie} vitt.`);
   const desc     = parts.join(' · ') || 'Ciclista — Italia Cycling Stats';
-  const img      = `${API_BASE_URL}/api/og-image/atleta/${encodeURIComponent(id)}`;
+  const img      = `${API_BASE_URL}/api/og-image/atleta/${encodeURIComponent(id)}?v=${OG_IMG_VERSION}`;
   const redirect = `${SITE_URL}/atleta/${encodeURIComponent(id)}`;
   const canonical = `${API_BASE_URL}/og/atleta/${encodeURIComponent(id)}`;
   // Ultimi risultati dell'atleta — contenuto reale per l'indicizzazione,
@@ -707,7 +712,7 @@ app.get('/og/team/:id', async (req, res) => {
   const roster = Object.values(athletes || {}).filter(a => a.team_id === id)
     .sort((a, b) => (b.punti_totali || 0) - (a.punti_totali || 0));
   const desc  = roster.length ? `${roster.length} corridori — Italia Cycling Stats` : 'Team — Italia Cycling Stats';
-  const img   = `${API_BASE_URL}/api/og-image/team/${encodeURIComponent(id)}`;
+  const img   = `${API_BASE_URL}/api/og-image/team/${encodeURIComponent(id)}?v=${OG_IMG_VERSION}`;
   const redirect = `${SITE_URL}/team/${encodeURIComponent(id)}`;
   const canonical = `${API_BASE_URL}/og/team/${encodeURIComponent(id)}`;
   // Elenco nominale del roster — contenuto reale al posto del solo conteggio.
@@ -786,7 +791,7 @@ app.get('/og/class/:id', async (req, res) => {
   const title = `Classifica ${catLabelText}`;
   const top3  = ranking.slice(0, 3).map(r => `${r.pos}° ${r.cognome} ${r.nome}`).join(' · ');
   const desc  = [scopeLabel, monthLabel, top3].filter(Boolean).join(' — ');
-  const img   = `${API_BASE_URL}/api/og-image/class/${encodeURIComponent(req.params.id)}`;
+  const img   = `${API_BASE_URL}/api/og-image/class/${encodeURIComponent(req.params.id)}?v=${OG_IMG_VERSION}`;
   const redirect  = `${SITE_URL}/classifiche`;
   const canonical = `${API_BASE_URL}/og/class/${encodeURIComponent(req.params.id)}`;
   // Top 10 completa (ranking già la calcola per intero) invece dei soli primi 3.
@@ -822,7 +827,7 @@ app.get('/og/classifica/:id/:view?/:sort?', async (req, res) => {
   const title = `Classifica ${view === 'team' ? 'Team ' : ''}${catLabelText}${sort === 'vittorie' ? ' — Vittorie' : ''}`;
   const top3  = ranking.slice(0, 3).map(r => `${r.pos}° ${view === 'team' ? r.team : `${r.cognome} ${r.nome}`}`).join(' · ');
   const desc  = [scopeLabel, monthLabel, top3].filter(Boolean).join(' — ');
-  const img   = `${API_BASE_URL}/api/og-image/classifica/${encodeURIComponent(req.params.id)}/${view}/${sort}`;
+  const img   = `${API_BASE_URL}/api/og-image/classifica/${encodeURIComponent(req.params.id)}/${view}/${sort}?v=${OG_IMG_VERSION}`;
   const redirect  = `${SITE_URL}/classifiche`;
   const canonical = `${API_BASE_URL}/og/classifica/${encodeURIComponent(req.params.id)}/${view}/${sort}`;
   const bodyHtml = ranking.length ? `<table>
