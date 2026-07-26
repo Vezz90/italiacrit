@@ -1830,6 +1830,7 @@ app.post('/api/internal/notify-results', async (req, res) => {
     queueSocialPostsForToday().catch(e => console.warn('[social] queue error:', e.message));
     notifyFollowers().catch(e => console.warn('[follow] notify error:', e.message));
     notifyRankChanges().catch(e => console.warn('[rank] notify error:', e.message));
+    _warmRecentOgImages().catch(e => console.warn('[og-warm] notify error:', e.message));
     res.json({ ok: true, ...r });
   } catch (e) { res.status(500).json({ error: e.message }); }
 });
@@ -6177,6 +6178,31 @@ async function notifyFollowers() {
     }
     console.log(`[follow] Notifiche follower inviate per ${recentAtleti.size} atleti`);
   } catch (e) { console.warn('[follow] notifyFollowers error:', e.message); }
+}
+
+// Precarica la grafica OG (foto/podio) delle gare con risultati appena
+// importati, chiamando in autonomia il proprio endpoint subito dopo lo
+// scraping — così la cache in-memory (_ogCache, 30 min) è già calda quando
+// qualcuno condivide il link, invece di lasciare che il PRIMO a farlo sia
+// il crawler di Facebook stesso: la primissima generazione può richiedere
+// diversi secondi (foto + composizione avatar) e Facebook può arrendersi
+// prima che finisca, mostrando poi l'anteprima senza immagine.
+async function _warmRecentOgImages() {
+  try {
+    const results   = readDataJson('results_raw.json') || [];
+    const today     = new Date().toISOString().slice(0, 10);
+    const yesterday = new Date(Date.now() - 86400000).toISOString().slice(0, 10);
+    const recentGaraIds = new Set();
+    for (const r of results) {
+      const d = (r.data || '').slice(0, 10);
+      if ((d === today || d === yesterday) && r.gara_id) recentGaraIds.add(r.gara_id);
+    }
+    if (!recentGaraIds.size) return;
+    for (const garaId of recentGaraIds) {
+      fetch(`http://localhost:${PORT}/api/og-image/gara/${encodeURIComponent(garaId)}`).catch(() => {});
+    }
+    console.log(`[og-warm] Precaricate ${recentGaraIds.size} grafiche OG per gare recenti`);
+  } catch (e) { console.warn('[og-warm] error:', e.message); }
 }
 
 // ── Notifica variazione posizione in classifica ──────────────────────────────
