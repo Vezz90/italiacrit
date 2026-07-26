@@ -7140,17 +7140,27 @@ function buildGaraPodiumPanelSvg({ catLabel, title, date, results = [], showFace
   const n = Math.min(results.length, 3);
   const { rH, listTop } = _ogPodiumRows(n);
   const textX = pad + 68 + (showFaces ? _OG_PODIUM_AVATAR_D + 14 : 0);
-  const nameMax = showFaces ? 16 : 22, teamMax = showFaces ? 18 : 26;
+  const availW = W - pad - textX;
+  // Il nome intero non va mai tagliato a metà: se non ci sta nello spazio
+  // disponibile (che si restringe quando c'è l'avatar) si rimpicciolisce il
+  // font, come già si fa per il titolo — stessa idea, applicata per riga.
+  function _fitSize(text, base, avail) {
+    const est = (text || '').length * base * 0.56;
+    return est > avail ? Math.max(12, Math.floor(base * avail / est)) : base;
+  }
 
   const rowsHtml = results.slice(0, 3).map((r, i) => {
     const ry = listTop + i * rH, mid = ry + rH / 2;
     const name = `${r.cognome || ''} ${r.nome || ''}`.trim();
+    const team = r.team || '';
+    const nameSize = _fitSize(name, 21, availW);
+    const teamSize = _fitSize(team, 15, availW);
     const isFirst = i === 0;
     return `${isFirst ? `<rect x="${pad}" y="${ry + 4}" width="${W - pad * 2}" height="${rH - 8}" rx="8" fill="rgba(245,196,0,0.08)" stroke="rgba(245,196,0,0.35)"/>` : ''}
     <rect x="${pad + 8}" y="${mid - 16}" width="46" height="32" rx="6" fill="${medal[i]}"/>
     <text x="${pad + 31}" y="${mid + 7}" font-family="Arial,Helvetica,sans-serif" font-size="18" font-weight="800" fill="#1a1200" text-anchor="middle">${i + 1}°</text>
-    <text x="${textX}" y="${mid - 4}" font-family="Arial,Helvetica,sans-serif" font-size="21" font-weight="700" fill="#f4f4f4">${_ogEsc(name.slice(0, nameMax))}</text>
-    <text x="${textX}" y="${mid + 20}" font-family="Arial,Helvetica,sans-serif" font-size="15" fill="rgba(255,255,255,0.45)">${_ogEsc((r.team || '').slice(0, teamMax))}</text>`;
+    <text x="${textX}" y="${mid - 4}" font-family="Arial,Helvetica,sans-serif" font-size="${nameSize}" font-weight="700" fill="#f4f4f4">${_ogEsc(name)}</text>
+    <text x="${textX}" y="${mid + 20}" font-family="Arial,Helvetica,sans-serif" font-size="${teamSize}" fill="rgba(255,255,255,0.45)">${_ogEsc(team)}</text>`;
   }).join('');
 
   return `<svg width="${W}" height="${H}" xmlns="http://www.w3.org/2000/svg">
