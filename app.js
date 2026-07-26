@@ -16822,6 +16822,7 @@ async function renderGara(gara_id) {
     ${extraVideosHtml}
     ${siRaceIntelHtml}
     <div id="gara-media-gallery"></div>
+    <div id="gara-narrative-box"></div>
     <div class="results-table-wrap">
       <table class="results-table">
         <thead><tr>
@@ -16836,6 +16837,23 @@ async function renderGara(gara_id) {
     <div id="gara-comments-section" style="margin-top:28px"></div>
   `);
   if (document.getElementById('race-route-box')) window._loadRaceRouteMap(_calId);
+
+  // Racconto podio (stessa narrazione dinamica usata per il post FB) sopra
+  // la classifica, visibile a tutti — non solo nel testo copiabile admin.
+  if (results.length) {
+    (async () => {
+      try {
+        const nb = document.getElementById('gara-narrative-box');
+        if (!nb) return;
+        const r = await apiCall(`/gara-narrative/${encodeURIComponent(primaryGaraId)}`);
+        if (!r?.podiumText) return;
+        nb.innerHTML = `<div class="card" style="margin-top:12px;padding:16px 20px;border-left:3px solid var(--red-hot)">
+          <div style="font-weight:700;margin-bottom:6px">${esc(r.top3 || '')}</div>
+          <div style="color:var(--text-secondary);font-size:.92rem;line-height:1.6">${esc(r.podiumText)}</div>
+        </div>`;
+      } catch {}
+    })();
+  }
 
   // Foto atleti nella tabella risultati (batch async)
   // _rkPh globale — usato anche da _loadGaraPcsExt

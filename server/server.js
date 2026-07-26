@@ -660,6 +660,23 @@ app.get('/api/admin/gara-share-text/:id', requireAdmin, async (req, res) => {
   } catch (e) { res.status(500).json({ error: e.message }); }
 });
 
+// Stessa narrazione dinamica di sopra, ma pubblica e strutturata (non testo
+// unico da incollare): mostrata sulla pagina della gara stessa, sopra la
+// classifica, visibile a tutti — non solo all'admin che copia il testo per FB.
+app.get('/api/gara-narrative/:id', async (req, res) => {
+  try {
+    const id = req.params.id;
+    const [calRaw, resultsRaw] = await Promise.all([
+      readDataJsonFromGH('calendar.json'),
+      readDataJsonFromGH('results_raw.json'),
+    ]);
+    const cal = (calRaw || []).find(g => g.id === id)
+      || (calRaw || []).find(g => g.id === id.replace(/_[A-Z0-9]+_[MF]$/, ''));
+    const { top3, podiumLines } = _buildGaraNarrative(id, cal, resultsRaw);
+    res.json({ top3, podiumText: podiumLines.join(' ') });
+  } catch (e) { res.status(500).json({ error: e.message }); }
+});
+
 app.get('/og/atleta/:id', async (req, res) => {
   const id       = req.params.id;
   if (!OG_BOT_RE.test(req.headers['user-agent'] || '')) {
