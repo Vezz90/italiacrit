@@ -16848,6 +16848,7 @@ async function renderGara(gara_id) {
         const r = await apiCall(`/gara-narrative/${encodeURIComponent(primaryGaraId)}`);
         if (!r?.podiumText) return;
         nb.innerHTML = `<div class="card" style="margin-top:12px;padding:16px 20px;border-left:3px solid var(--red-hot)">
+          <div style="font-size:.7rem;font-weight:700;letter-spacing:.06em;color:var(--text-muted);text-transform:uppercase;margin-bottom:4px">${esc(name)} · ${esc(catLabel(cat) || '')}</div>
           <div style="font-weight:700;margin-bottom:6px">${esc(r.top3 || '')}</div>
           <div style="color:var(--text-secondary);font-size:.92rem;line-height:1.6">${esc(r.podiumText)}</div>
         </div>`;
