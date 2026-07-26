@@ -342,7 +342,7 @@ const DEFAULT_OG_IMG = `${SITE_URL}/assets/og-default.png`;
 // _ogCropPosition, ecc.): Facebook cache i byte dell'immagine per URL separatamente
 // dai meta tag, e "Scrape Again" sul debugger a volte aggiorna solo i secondi —
 // un parametro di versione nell'URL costringe Facebook a trattarla come nuova.
-const OG_IMG_VERSION = 2;
+const OG_IMG_VERSION = 3;
 
 function readDataJson(file) {
   try { return JSON.parse(fs.readFileSync(path.join(DATA_DIR, file), 'utf8')); }
