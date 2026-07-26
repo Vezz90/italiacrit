@@ -2,24 +2,24 @@
   {
     "team_id": "TEAM_SENAGHESE_GUERRINI",
     "team_nome": "TEAM SENAGHESE GUERRINI",
-    "punti": 858,
-    "vittorie": 25,
-    "p1": 25,
-    "p2": 14,
+    "punti": 893,
+    "vittorie": 26,
+    "p1": 26,
+    "p2": 15,
     "p3": 11,
-    "pout": 32,
+    "pout": 33,
     "n_atleti": 7,
     "pos": 1
   },
   {
     "team_id": "CICLISTICA_TREVIGLIESE",
     "team_nome": "CICLISTICA TREVIGLIESE",
-    "punti": 509,
+    "punti": 524,
     "vittorie": 8,
     "p1": 8,
     "p2": 9,
     "p3": 10,
-    "pout": 44,
+    "pout": 47,
     "n_atleti": 6,
     "pos": 2
   },
@@ -182,12 +182,12 @@
   {
     "team_id": "MAZZANO_A_S_D",
     "team_nome": "MAZZANO A.S.D.",
-    "punti": 193,
+    "punti": 195,
     "vittorie": 5,
     "p1": 5,
     "p2": 5,
     "p3": 1,
-    "pout": 7,
+    "pout": 8,
     "n_atleti": 4,
     "pos": 16
   },
@@ -396,6 +396,18 @@
     "pos": 33
   },
   {
+    "team_id": "G_S_ALZATE_BRIANZA_SYSTEM_CAR",
+    "team_nome": "G.S. ALZATE BRIANZA - SYSTEM CAR",
+    "punti": 130,
+    "vittorie": 3,
+    "p1": 3,
+    "p2": 0,
+    "p3": 4,
+    "pout": 9,
+    "n_atleti": 1,
+    "pos": 34
+  },
+  {
     "team_id": "A_S_D_POSTUMIA_73_D_L_CICLISMO",
     "team_nome": "A.S.D. POSTUMIA 73 D.L. CICLISMO",
     "punti": 129,
@@ -405,7 +417,7 @@
     "p3": 0,
     "pout": 23,
     "n_atleti": 4,
-    "pos": 34
+    "pos": 35
   },
   {
     "team_id": "SEI_SPORT",
@@ -417,7 +429,7 @@
     "p3": 2,
     "pout": 8,
     "n_atleti": 2,
-    "pos": 35
+    "pos": 36
   },
   {
     "team_id": "GOTTARDO_GIOCHI_CANEVA",
@@ -429,7 +441,7 @@
     "p3": 4,
     "pout": 13,
     "n_atleti": 3,
-    "pos": 36
+    "pos": 37
   },
   {
     "team_id": "MULTICAR_GRUPPO_AMARU",
@@ -441,7 +453,7 @@
     "p3": 4,
     "pout": 2,
     "n_atleti": 3,
-    "pos": 37
+    "pos": 38
   },
   {
     "team_id": "A_S_A_C_I_EVONACICLI",
@@ -453,30 +465,18 @@
     "p3": 1,
     "pout": 22,
     "n_atleti": 6,
-    "pos": 38
+    "pos": 39
   },
   {
     "team_id": "G_S_RONCO_MAURIGI_DELIO_GALLINA",
     "team_nome": "G.S. RONCO MAURIGI DELIO GALLINA",
-    "punti": 121,
+    "punti": 124,
     "vittorie": 0,
     "p1": 0,
     "p2": 1,
     "p3": 1,
-    "pout": 25,
+    "pout": 26,
     "n_atleti": 3,
-    "pos": 39
-  },
-  {
-    "team_id": "G_S_ALZATE_BRIANZA_SYSTEM_CAR",
-    "team_nome": "G.S. ALZATE BRIANZA - SYSTEM CAR",
-    "punti": 120,
-    "vittorie": 3,
-    "p1": 3,
-    "p2": 0,
-    "p3": 3,
-    "pout": 9,
-    "n_atleti": 1,
     "pos": 40
   },
   {
@@ -708,6 +708,18 @@
     "pos": 59
   },
   {
+    "team_id": "A_S_D_GIOCA_IN_BICI_OGLIO_PO",
+    "team_nome": "A.S.D. GIOCA IN BICI OGLIO PO",
+    "punti": 82,
+    "vittorie": 1,
+    "p1": 1,
+    "p2": 1,
+    "p3": 2,
+    "pout": 10,
+    "n_atleti": 2,
+    "pos": 60
+  },
+  {
     "team_id": "C_S_LIBERTAS_SCORZE",
     "team_nome": "C.S. LIBERTAS SCORZE'",
     "punti": 81,
@@ -716,18 +728,6 @@
     "p2": 1,
     "p3": 0,
     "pout": 7,
-    "n_atleti": 2,
-    "pos": 60
-  },
-  {
-    "team_id": "A_S_D_GIOCA_IN_BICI_OGLIO_PO",
-    "team_nome": "A.S.D. GIOCA IN BICI OGLIO PO",
-    "punti": 81,
-    "vittorie": 1,
-    "p1": 1,
-    "p2": 1,
-    "p3": 2,
-    "pout": 9,
     "n_atleti": 2,
     "pos": 61
   },
