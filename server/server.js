@@ -507,7 +507,6 @@ const _OG_WIN_PHRASES_1 = [
   '{n} centra la prima vittoria stagionale',
   "Prima vittoria dell'anno per {n}",
   '{n} apre il proprio bottino stagionale',
-  'Debutto vincente in stagione per {n}',
 ];
 const _OG_WIN_PHRASES_N = [
   '{k}ª vittoria stagionale per {n}',
