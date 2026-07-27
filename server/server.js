@@ -7449,6 +7449,17 @@ async function _generateGaraOgBuffer(garaId) {
   return await renderOgPng(svg);
 }
 
+// Svuota la cache in-memory della grafica OG per una gara, cosi' la prossima
+// richiesta rigenera da zero — utile quando il timeout di 3.5s (vedi
+// _generateGaraOgBuffer) e' scattato su un caso limite e la card di solo
+// testo e' rimasta in cache per i restanti 30 minuti anche se un secondo
+// tentativo con piu' margine avrebbe trovato la foto in tempo.
+app.post('/api/admin/og-cache-bust/gara/:id', requireAdmin, (req, res) => {
+  const garaId = decodeURIComponent(req.params.id);
+  const had = _ogCache.delete(`gara_${garaId}`);
+  res.json({ ok: true, hadCache: had });
+});
+
 app.get('/api/og-image/gara/:id', async (req, res) => {
   const garaId = decodeURIComponent(req.params.id);
   const cacheKey = `gara_${garaId}`;
