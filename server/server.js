@@ -255,23 +255,26 @@ app.get('/sitemap.xml', async (req, res) => {
       readDataJsonFromGH('results_raw.json'),
       readDataJsonFromGH('teams.json'),
     ]);
+    // URL puliti (niente #, invisibile a Google/mai indicizzabile come pagina
+    // distinta) e pagine vere del sito (non le /og/... bot-only, che hanno il
+    // proprio canonical puntato qui e non vanno duplicate nel sitemap).
     const urls = [
       { loc: `${CANONICAL}/`,              priority: '1.0', changefreq: 'daily' },
-      { loc: `${CANONICAL}/#/risultati`,   priority: '0.9', changefreq: 'daily' },
-      { loc: `${CANONICAL}/#/classifica`,  priority: '0.8', changefreq: 'weekly' },
-      { loc: `${CANONICAL}/#/calendario`,  priority: '0.7', changefreq: 'weekly' },
-      { loc: `${CANONICAL}/#/atleti`,      priority: '0.7', changefreq: 'weekly' },
-      { loc: `${CANONICAL}/#/albo`,        priority: '0.6', changefreq: 'monthly' },
+      { loc: `${CANONICAL}/risultati`,     priority: '0.9', changefreq: 'daily' },
+      { loc: `${CANONICAL}/classifica`,    priority: '0.8', changefreq: 'weekly' },
+      { loc: `${CANONICAL}/calendario`,    priority: '0.7', changefreq: 'weekly' },
+      { loc: `${CANONICAL}/atleti`,        priority: '0.7', changefreq: 'weekly' },
+      { loc: `${CANONICAL}/albo`,          priority: '0.6', changefreq: 'monthly' },
     ];
     for (const id of Object.keys(athletes || {})) {
-      if (id) urls.push({ loc: `${CANONICAL}/og/atleta/${encodeURIComponent(id)}`, priority: '0.7', changefreq: 'weekly' });
+      if (id) urls.push({ loc: `${CANONICAL}/atleta/${encodeURIComponent(id)}`, priority: '0.7', changefreq: 'weekly' });
     }
     const garaIds = [...new Set((resultsRaw || []).map(r => r.gara_id).filter(Boolean))];
     for (const gid of garaIds) {
-      urls.push({ loc: `${CANONICAL}/og/gara/${encodeURIComponent(gid)}`, priority: '0.6', changefreq: 'monthly' });
+      urls.push({ loc: `${CANONICAL}/gara/${encodeURIComponent(gid)}`, priority: '0.6', changefreq: 'monthly' });
     }
     for (const id of Object.keys(teams || {})) {
-      if (id) urls.push({ loc: `${CANONICAL}/og/team/${encodeURIComponent(id)}`, priority: '0.6', changefreq: 'weekly' });
+      if (id) urls.push({ loc: `${CANONICAL}/team/${encodeURIComponent(id)}`, priority: '0.6', changefreq: 'weekly' });
     }
     const xml = `<?xml version="1.0" encoding="UTF-8"?>\n<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">\n${
       urls.map(u => `  <url><loc>${u.loc}</loc><changefreq>${u.changefreq}</changefreq><priority>${u.priority}</priority></url>`).join('\n')
@@ -616,7 +619,11 @@ app.get('/og/gara/:id', async (req, res) => {
   const { results, title, desc } = _buildGaraNarrative(id, cal, resultsRaw);
   const img     = `${API_BASE_URL}/api/og-image/gara/${encodeURIComponent(id)}?v=${OG_IMG_VERSION}`;
   const redirect = `${SITE_URL}/gara/${encodeURIComponent(id)}`;
-  const canonical = `${API_BASE_URL}/og/gara/${encodeURIComponent(id)}`;
+  // Canonical sulla pagina pulita reale (indicizzabile da quando esiste il
+  // router URL puliti, vedi commento in ogHtml) invece che su questa stessa
+  // pagina bot-only: senza, Google indicizzava/mostrava in ricerca l'URL
+  // spoglio /og/gara/... al posto della vera app.
+  const canonical = redirect;
   // Tabella con TUTTA la classifica (non solo il podio) — contenuto reale e
   // indicizzabile, non solo meta tag: è la parte che rende questa pagina
   // utile a Google oltre che ai crawler social.
@@ -695,7 +702,7 @@ app.get('/og/atleta/:id', async (req, res) => {
   const desc     = parts.join(' · ') || 'Ciclista — Italia Cycling Stats';
   const img      = `${API_BASE_URL}/api/og-image/atleta/${encodeURIComponent(id)}?v=${OG_IMG_VERSION}`;
   const redirect = `${SITE_URL}/atleta/${encodeURIComponent(id)}`;
-  const canonical = `${API_BASE_URL}/og/atleta/${encodeURIComponent(id)}`;
+  const canonical = redirect;
   // Ultimi risultati dell'atleta — contenuto reale per l'indicizzazione,
   // stesso pattern di filtro per atleta_id già usato altrove nel file.
   const recent = (resultsRaw || [])
@@ -731,7 +738,7 @@ app.get('/og/team/:id', async (req, res) => {
   const desc  = roster.length ? `${roster.length} corridori — Italia Cycling Stats` : 'Team — Italia Cycling Stats';
   const img   = `${API_BASE_URL}/api/og-image/team/${encodeURIComponent(id)}?v=${OG_IMG_VERSION}`;
   const redirect = `${SITE_URL}/team/${encodeURIComponent(id)}`;
-  const canonical = `${API_BASE_URL}/og/team/${encodeURIComponent(id)}`;
+  const canonical = redirect;
   // Elenco nominale del roster — contenuto reale al posto del solo conteggio.
   const bodyHtml = roster.length ? `<table>
     <thead><tr><th>Atleta</th><th>Categoria</th><th>Punti</th></tr></thead>
@@ -809,8 +816,8 @@ app.get('/og/class/:id', async (req, res) => {
   const top3  = ranking.slice(0, 3).map(r => `${r.pos}° ${r.cognome} ${r.nome}`).join(' · ');
   const desc  = [scopeLabel, monthLabel, top3].filter(Boolean).join(' — ');
   const img   = `${API_BASE_URL}/api/og-image/class/${encodeURIComponent(req.params.id)}?v=${OG_IMG_VERSION}`;
-  const redirect  = `${SITE_URL}/classifiche`;
-  const canonical = `${API_BASE_URL}/og/class/${encodeURIComponent(req.params.id)}`;
+  const redirect  = `${SITE_URL}/classifica/${encodeURIComponent(req.params.id)}`;
+  const canonical = redirect;
   // Top 10 completa (ranking già la calcola per intero) invece dei soli primi 3.
   const bodyHtml = ranking.length ? `<table>
     <thead><tr><th>Pos</th><th>Atleta</th><th>Team</th><th>Punti</th></tr></thead>
@@ -845,8 +852,9 @@ app.get('/og/classifica/:id/:view?/:sort?', async (req, res) => {
   const top3  = ranking.slice(0, 3).map(r => `${r.pos}° ${view === 'team' ? r.team : `${r.cognome} ${r.nome}`}`).join(' · ');
   const desc  = [scopeLabel, monthLabel, top3].filter(Boolean).join(' — ');
   const img   = `${API_BASE_URL}/api/og-image/classifica/${encodeURIComponent(req.params.id)}/${view}/${sort}?v=${OG_IMG_VERSION}`;
-  const redirect  = `${SITE_URL}/classifiche`;
-  const canonical = `${API_BASE_URL}/og/classifica/${encodeURIComponent(req.params.id)}/${view}/${sort}`;
+  const tail = [view !== 'atleti' ? view : null, sort !== 'punti' ? sort : null].filter(Boolean);
+  const redirect  = `${SITE_URL}/classifica/${encodeURIComponent(req.params.id)}${tail.length ? '/' + tail.join('/') : ''}`;
+  const canonical = redirect;
   const bodyHtml = ranking.length ? `<table>
     <thead><tr><th>Pos</th><th>${view === 'team' ? 'Team' : 'Atleta'}</th>${view === 'team' ? '' : '<th>Team</th>'}<th>${_ogHtmlEsc(scoreLabel)}</th></tr></thead>
     <tbody>${ranking.map(r => `<tr>
