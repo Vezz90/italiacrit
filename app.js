@@ -2316,13 +2316,6 @@ function getRankingFileCode(obj) {
     if (obj.startsWith('AL')) return 'AL_' + (obj.endsWith('_F') ? 'F' : 'M');
     return obj;
   }
-  // Alcune gare Esordienti/Allievi sono "promiscue" (uomini e donne nella stessa
-  // classifica FCI, un'unica categoria/genere scrapati per l'intera gara): le
-  // singole atlete finiscono con un gara_id a suffisso _M anche se sono donne.
-  // ATHLETE_GENDER_FIXES vince sempre sul suffisso del gara_id per queste atlete
-  // note — indispensabile per team.risultati, che non ha un campo genere proprio
-  // e altrimenti erediterebbe il genere sbagliato della gara condivisa.
-  if (obj.atleta_id && ATHLETE_GENDER_FIXES[obj.atleta_id]) return ATHLETE_GENDER_FIXES[obj.atleta_id].categoria;
   // r.genere è autorevole — già corretto da ATHLETE_GENDER_FIXES in loadAll()
   // Se genere non è disponibile (es. team results), lo ricaviamo dal suffisso gara_id
   if (obj.gara_id) {
@@ -2331,9 +2324,23 @@ function getRankingFileCode(obj) {
       let base = m[1];
       if (base.startsWith('AL')) base = 'AL';
       const gender = obj.genere === 'F' ? 'F' : obj.genere === 'M' ? 'M' : m[2];
+      // Se questa RIGA è già correttamente femminile ci si fida di lei: la
+      // sorgente ora divide per genere le gare "miste" alla radice, per
+      // singola gara — un'atleta può correttamente avere categorie diverse
+      // in gare diverse (es. passa da 1° a 2° anno a stagione in corso), e
+      // sovrascriverla con una categoria fissa uguale per tutte le sue righe
+      // (sotto) romperebbe quelle già corrette. Bug reale osservato:
+      // RENZULLI_GIULIA forzata a ES1_F anche sulla riga "TROFEO ROSA...
+      // SECONDO ANNO", dove il suo gara_id (ES2_F) era già giusto.
+      if (gender === 'F') return `${base}_${gender}`;
+      // gender è 'M': possibile gara mista non ancora ri-scrapata dopo il
+      // fix — ATHLETE_GENDER_FIXES sotto fa da rete di sicurezza SOLO in
+      // questo caso (gara_id ancora maschile per una nota atleta donna).
+      if (obj.atleta_id && ATHLETE_GENDER_FIXES[obj.atleta_id]) return ATHLETE_GENDER_FIXES[obj.atleta_id].categoria;
       return `${base}_${gender}`;
     }
   }
+  if (obj.atleta_id && ATHLETE_GENDER_FIXES[obj.atleta_id]) return ATHLETE_GENDER_FIXES[obj.atleta_id].categoria;
   const gender = obj.genere === 'F' ? 'F' : 'M';
   // Fallback: usa categoria (già corretta al caricamento)
   if (obj.categoria && /^[A-Z0-9]+_[MF]$/.test(obj.categoria)) return obj.categoria;
@@ -20803,7 +20810,10 @@ async function renderRisultati() {
 
     if (totalRaces > visibleRaces.length) {
       cardsEl.insertAdjacentHTML('beforeend',
-        `<button class="btn-action full" style="margin:20px auto;display:block;max-width:280px" onclick="window.risLoadMore()">VEDI DI PIÙ (${totalRaces - visibleRaces.length})</button>`);
+        `<button onclick="window.risLoadMore()" style="margin:28px auto;display:flex;align-items:center;justify-content:center;gap:8px;width:100%;max-width:360px;padding:16px 24px;background:var(--red-hot);color:#fff;border:none;border-radius:var(--r-md,10px);font-weight:800;font-size:1rem;letter-spacing:.02em;cursor:pointer;box-shadow:0 4px 14px rgba(255,107,0,0.35)">
+          VEDI DI PIÙ <span style="opacity:.85;font-weight:600">(${totalRaces - visibleRaces.length})</span>
+          <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="6 9 12 15 18 9"/></svg>
+        </button>`);
     }
   }
   // La pagina Risultati usa una shell persistente (no setPage sui re-render):
