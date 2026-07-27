@@ -20341,6 +20341,15 @@ let risQueryRegion = '';
 let risQueryTipo = '';
 let risSearchQuery = '';
 let _risSearchTimer = null;
+// Paginazione "carica altro": il primo batch è piccolo per un caricamento
+// veloce della pagina (poche card pesanti da costruire/dipingere), i batch
+// successivi sono più larghi visto che l'utente ha già scelto di andare
+// avanti. Si resetta ogni volta che cambia un filtro (vedi filterSig sotto),
+// non quando si preme "Vedi di più".
+const RIS_PAGE_INITIAL = 20;
+const RIS_PAGE_STEP = 30;
+let risVisibleCount = RIS_PAGE_INITIAL;
+let _risLastFilterSig = null;
 
 // Sincronizza la barra indirizzi con la categoria filtrata (URL riconosciuto
 // dal router: #/risultati/:cat) — replaceState per non intasare "indietro"
@@ -20374,10 +20383,11 @@ window.risSetCat = (v) => {
 window.risSetMonth  = (v) => { risQueryMonth = v; renderRisultati(); };
 window.risSetRegion = (v) => { risQueryRegion = v; renderRisultati(); };
 window.risSetTipo   = (v) => { risQueryTipo = v; renderRisultati(); };
-window.risSetSearch = (v) => { 
-  clearTimeout(_risSearchTimer); 
+window.risSetSearch = (v) => {
+  clearTimeout(_risSearchTimer);
   _risSearchTimer = setTimeout(() => { risSearchQuery = v; renderRisultati(); }, 300);
 };
+window.risLoadMore = () => { risVisibleCount += RIS_PAGE_STEP; renderRisultati(); };
 
 let _risPhotosMap = null;
 let _risPhotosByAtleta = null; // atleta_id → [photoObj,...] (foto taggate)
@@ -20533,6 +20543,18 @@ async function renderRisultati() {
   const allCats = [...allCatsSet].sort();
   if (risQueryCat) races = races.filter(r => r.byCategory && r.byCategory[risQueryCat]);
 
+  // Un cambio filtro deve ripartire dal primo batch (altrimenti si vedrebbe
+  // "0 di 20" o card residue del filtro precedente); il click su "Vedi di
+  // più" invece NON deve passare da qui — richiama renderRisultati() dopo
+  // aver già incrementato risVisibleCount, quindi la firma resta identica.
+  const filterSig = JSON.stringify([risSearchQuery, risQueryGenere, risQueryMonth, risQueryRegion, risQueryTipo, risQueryCat, activeHub && activeHub.catCodes]);
+  if (filterSig !== _risLastFilterSig) {
+    risVisibleCount = RIS_PAGE_INITIAL;
+    _risLastFilterSig = filterSig;
+  }
+  const totalRaces = races.length;
+  const visibleRaces = races.slice(0, risVisibleCount);
+
   // Meta/canonical dinamici a ogni render (non solo al primo) — necessario
   // perché il cambio categoria non ricrea il DOM shell (isFirstRender resta
   // false), ma deve comunque aggiornare titolo/URL indicizzabile.
@@ -20615,11 +20637,13 @@ async function renderRisultati() {
     selCat.innerHTML = `<option value="">Tutte le categorie</option>` +
       allCats.map(c => `<option value="${c}"${c === risQueryCat ? ' selected' : ''}>${catLabel(c)}</option>`).join('');
   }
-  if (countEl) countEl.textContent = `${races.length} gare trovate`;
+  if (countEl) countEl.textContent = totalRaces > visibleRaces.length
+    ? `${visibleRaces.length} di ${totalRaces} gare`
+    : `${totalRaces} gare trovate`;
 
   // Always: rebuild only the cards area
   if (cardsEl) {
-    cardsEl.innerHTML = races.map(race => {
+    cardsEl.innerHTML = visibleRaces.map(race => {
       const mult = race.mult || 1;
       const categories = Object.entries(race.byCategory || {});
 
@@ -20776,6 +20800,11 @@ async function renderRisultati() {
           </div>
         </div>`;
     }).join('') || '<div class="empty-state">Nessuna gara trovata</div>';
+
+    if (totalRaces > visibleRaces.length) {
+      cardsEl.insertAdjacentHTML('beforeend',
+        `<button class="btn-action full" style="margin:20px auto;display:block;max-width:280px" onclick="window.risLoadMore()">VEDI DI PIÙ (${totalRaces - visibleRaces.length})</button>`);
+    }
   }
   // La pagina Risultati usa una shell persistente (no setPage sui re-render):
   // assicura che la barra stagione sotto l'header sia presente/aggiornata.
