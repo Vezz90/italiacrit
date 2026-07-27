@@ -22043,16 +22043,25 @@ function _drawClass(ctx, W, H, d) {
 // un'unica chiamata batch invece di una per atleta. Stesso pattern
 // fetch+blob usato sotto per l'avatar della card atleta (evita problemi
 // CORS da cache del browser sull'immagine remota).
+// fetch con timeout: senza, una singola foto lenta/irraggiungibile blocca
+// per sempre la generazione dell'intera card (Promise.all non si sblocca mai
+// se anche una sola promise al suo interno non si risolve né rigetta) —
+// bug reale osservato: modale di condivisione bloccata su "Generazione..."
+function _fetchTimeout(url, opts = {}, ms = 6000) {
+  const ctrl = new AbortController();
+  const t = setTimeout(() => ctrl.abort(), ms);
+  return fetch(url, { ...opts, signal: ctrl.signal }).finally(() => clearTimeout(t));
+}
 async function _fetchGaraAvatars(results) {
   const map = new Map();
   const ids = [...new Set((results || []).map(r => r.atleta_id).filter(Boolean))].slice(0, 10);
   if (!ids.length) return map;
   try {
-    const resp = await fetch(`${API_BASE}/athlete-photos?ids=${encodeURIComponent(ids.join(','))}`);
+    const resp = await _fetchTimeout(`${API_BASE}/athlete-photos?ids=${encodeURIComponent(ids.join(','))}`);
     if (!resp.ok) return map;
     const urls = await resp.json();
     await Promise.all(Object.entries(urls).map(([id, url]) => new Promise(resolve => {
-      fetch(url, { mode: 'cors', cache: 'no-store' }).then(r => {
+      _fetchTimeout(url, { mode: 'cors', cache: 'no-store' }).then(r => {
         if (!r.ok) return resolve();
         return r.blob().then(blob => {
           const blobUrl = URL.createObjectURL(blob);
@@ -22087,7 +22096,7 @@ async function generateShareCanvas(type, payload, platKey) {
         // Usa fetch+blob per evitare problemi CORS da cache browser
         athImg = await (async () => {
           try {
-            const resp = await fetch(payload.photo_url, { mode: 'cors', cache: 'no-store' });
+            const resp = await _fetchTimeout(payload.photo_url, { mode: 'cors', cache: 'no-store' });
             if (!resp.ok) return null;
             const blob = await resp.blob();
             const blobUrl = URL.createObjectURL(blob);
