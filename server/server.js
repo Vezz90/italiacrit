@@ -7327,35 +7327,10 @@ async function _ogCardWithAvatar(cardSvg, photoSource, { diameter = 150, cx = 12
   } catch { return buf; }
 }
 
-async function _generateGaraOgBuffer(garaId) {
-  // Nome gara: dal calendario (GitHub, affidabile su Render) o dall'id.
-  // Il calendario usa l'id senza suffisso categoria/genere: stesso fallback
-  // di /og/gara/:id, altrimenti titolo/data/luogo restano vuoti quando si
-  // condivide dalla pagina di una gara già scrapata (id suffissato).
-  const calendar = (await readDataJsonFromGH('calendar.json')) || [];
-  const cal = calendar.find(g => g.id === garaId)
-    || calendar.find(g => g.id === garaId.replace(/_[A-Z0-9]+_[MF]$/, ''));
-  const title = cal?.nome || garaId.replace(/_\d{4}-\d{2}-\d{2}.*$/, '').replace(/_/g, ' ');
-
-  // Risultati caricati una sola volta, riusati sia per il pannello podio
-  // accanto alla foto (quando c'è) sia per la card "lista risultati" a
-  // piena larghezza (quando non c'è) — prima venivano ricaricati solo nel
-  // fallback senza foto, la foto e i risultati non comparivano mai insieme.
-  const resultsRaw = (await readDataJsonFromGH('results_raw.json')) || [];
-  const results = resultsRaw.filter(r => r.gara_id === garaId).sort((a, b) => a.posizione - b.posizione);
-  const first = results[0];
-  const catCode = first ? _rankingCodeFromRow(first) : null;
-  const catLabel = first ? ((catCode && _OG_CAT_MAP[catCode]) || first.categoria || '') : '';
-  const dateShort = cal?.data ? new Date(cal.data).toLocaleDateString('it-IT', { day: 'numeric', month: 'short', year: 'numeric' }) : '';
-
-  // 1) Se la gara ha una foto, usala come metà sinistra della card, con un
-  // pannello podio (primi 3) nella metà destra quando ci sono risultati —
-  // così la card è sempre coerente (stessa identità visiva ovunque) invece
-  // di essere a volte solo la foto e a volte solo un pannello testuale.
-  // Tre fonti possibili per la foto (stessa priorità e stesso matching
-  // "fuzzy" del gara_id usati lato frontend in loadRisPhotos/_extAlias):
-  // caricata a mano (race_photos) vince se presente, altrimenti xpix.it,
-  // altrimenti ciclismo.info.
+// Percorso "con foto" (foto gara + pannello podio con avatar), estratto in
+// una funzione a parte per poterlo mettere in gara contro un timeout in
+// _generateGaraOgBuffer — vedi commento lì. Ritorna il buffer PNG o null.
+async function _generateGaraPhotoBuffer(garaId, results, catLabel, title, dateShort) {
   try {
     // Volti nel podio per qualsiasi categoria, condizionati per singolo
     // atleta: _ogPodiumAvatarOverlays include solo le righe che hanno
@@ -7386,7 +7361,7 @@ async function _generateGaraOgBuffer(garaId) {
       }
     }
 
-    // 1b) Niente foto: se c'è un video collegato, usa la sua miniatura come
+    // Niente foto: se c'è un video collegato, usa la sua miniatura come
     // copertina (a piena larghezza, senza pannello podio — la miniatura
     // YouTube è già bassa risoluzione, dividerla a metà la renderebbe
     // illeggibile) — meglio di una card generica se almeno un contenuto
@@ -7405,8 +7380,52 @@ async function _generateGaraOgBuffer(garaId) {
       }
     }
   } catch (e) { console.error(`[og-image] lookup foto fallito per ${garaId}:`, e.message); }
+  return null;
+}
 
-  // 2) Niente foto né video: la stessa card "lista risultati" mostrata
+async function _generateGaraOgBuffer(garaId) {
+  // Nome gara: dal calendario (GitHub, affidabile su Render) o dall'id.
+  // Il calendario usa l'id senza suffisso categoria/genere: stesso fallback
+  // di /og/gara/:id, altrimenti titolo/data/luogo restano vuoti quando si
+  // condivide dalla pagina di una gara già scrapata (id suffissato).
+  const calendar = (await readDataJsonFromGH('calendar.json')) || [];
+  const cal = calendar.find(g => g.id === garaId)
+    || calendar.find(g => g.id === garaId.replace(/_[A-Z0-9]+_[MF]$/, ''));
+  const title = cal?.nome || garaId.replace(/_\d{4}-\d{2}-\d{2}.*$/, '').replace(/_/g, ' ');
+
+  // Risultati caricati una sola volta, riusati sia per il pannello podio
+  // accanto alla foto (quando c'è) sia per la card "lista risultati" a
+  // piena larghezza (quando non c'è) — prima venivano ricaricati solo nel
+  // fallback senza foto, la foto e i risultati non comparivano mai insieme.
+  const resultsRaw = (await readDataJsonFromGH('results_raw.json')) || [];
+  const results = resultsRaw.filter(r => r.gara_id === garaId).sort((a, b) => a.posizione - b.posizione);
+  const first = results[0];
+  const catCode = first ? _rankingCodeFromRow(first) : null;
+  const catLabel = first ? ((catCode && _OG_CAT_MAP[catCode]) || first.categoria || '') : '';
+  const dateShort = cal?.data ? new Date(cal.data).toLocaleDateString('it-IT', { day: 'numeric', month: 'short', year: 'numeric' }) : '';
+
+  // 1) Se la gara ha una foto, usala come metà sinistra della card, con un
+  // pannello podio (primi 3) nella metà destra quando ci sono risultati —
+  // così la card è sempre coerente (stessa identità visiva ovunque) invece
+  // di essere a volte solo la foto e a volte solo un pannello testuale.
+  // Tre fonti possibili per la foto (stessa priorità e stesso matching
+  // "fuzzy" del gara_id usati lato frontend in loadRisPhotos/_extAlias):
+  // caricata a mano (race_photos) vince se presente, altrimenti xpix.it,
+  // altrimenti ciclismo.info.
+  // Percorso con foto messo in gara contro un timeout: comporta più fetch
+  // remoti (foto gara + avatar podio) e su una gara mai richiesta prima può
+  // richiedere diversi secondi — troppo per la pazienza dello scraper di
+  // Facebook al primo tentativo (segnalato piu' volte dall'utente). Se scade
+  // il timeout si passa subito alla card di solo testo (molto più veloce,
+  // niente fetch di immagini remote) invece di lasciare la richiesta appesa.
+  const photoBuf = await Promise.race([
+    _generateGaraPhotoBuffer(garaId, results, catLabel, title, dateShort),
+    new Promise(resolve => setTimeout(() => resolve(null), 3500)),
+  ]);
+  if (photoBuf) return photoBuf;
+
+  // 2) Niente foto né video (o il percorso foto ha impiegato troppo): la
+  // stessa card "lista risultati" mostrata
   // nelle grafiche Instagram/Post generate lato client (posizioni, nomi,
   // team, tempi) invece della card generica con solo il nome.
   try {
