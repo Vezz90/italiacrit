@@ -50,12 +50,12 @@
   {
     "team_id": "TEAM_HOPPLA",
     "team_nome": "TEAM HOPPLA'",
-    "punti": 560,
+    "punti": 577,
     "vittorie": 8,
     "p1": 8,
-    "p2": 4,
+    "p2": 5,
     "p3": 4,
-    "pout": 30,
+    "pout": 32,
     "n_atleti": 9,
     "pos": 5
   },
@@ -158,12 +158,12 @@
   {
     "team_id": "GALLINA_LUCCHINI_ECOTEK",
     "team_nome": "GALLINA LUCCHINI ECOTEK",
-    "punti": 257,
+    "punti": 271,
     "vittorie": 1,
     "p1": 1,
     "p2": 3,
     "p3": 3,
-    "pout": 22,
+    "pout": 24,
     "n_atleti": 7,
     "pos": 14
   },
@@ -252,6 +252,18 @@
     "pos": 21
   },
   {
+    "team_id": "VPM_MORETTI_SCS",
+    "team_nome": "VPM MORETTI SCS",
+    "punti": 176,
+    "vittorie": 3,
+    "p1": 3,
+    "p2": 0,
+    "p3": 1,
+    "pout": 18,
+    "n_atleti": 9,
+    "pos": 22
+  },
+  {
     "team_id": "SOLUTION_TECH_NIPPO_RALI",
     "team_nome": "SOLUTION TECH NIPPO RALI",
     "punti": 174,
@@ -261,18 +273,6 @@
     "p3": 0,
     "pout": 4,
     "n_atleti": 6,
-    "pos": 22
-  },
-  {
-    "team_id": "VPM_MORETTI_SCS",
-    "team_nome": "VPM MORETTI SCS",
-    "punti": 161,
-    "vittorie": 2,
-    "p1": 2,
-    "p2": 0,
-    "p3": 1,
-    "pout": 18,
-    "n_atleti": 9,
     "pos": 23
   },
   {
@@ -324,6 +324,18 @@
     "pos": 27
   },
   {
+    "team_id": "POLISPORTIVA_TRIPETETOLO_SEANESE",
+    "team_nome": "POLISPORTIVA TRIPETETOLO SEANESE",
+    "punti": 98,
+    "vittorie": 1,
+    "p1": 1,
+    "p2": 0,
+    "p3": 1,
+    "pout": 8,
+    "n_atleti": 5,
+    "pos": 28
+  },
+  {
     "team_id": "PC_BAIX_EBRE_TORTOSA",
     "team_nome": "PC BAIX EBRE TORTOSA",
     "punti": 98,
@@ -333,18 +345,6 @@
     "p3": 1,
     "pout": 5,
     "n_atleti": 3,
-    "pos": 28
-  },
-  {
-    "team_id": "POLISPORTIVA_TRIPETETOLO_SEANESE",
-    "team_nome": "POLISPORTIVA TRIPETETOLO SEANESE",
-    "punti": 93,
-    "vittorie": 1,
-    "p1": 1,
-    "p2": 0,
-    "p3": 1,
-    "pout": 7,
-    "n_atleti": 5,
     "pos": 29
   },
   {
@@ -396,6 +396,18 @@
     "pos": 33
   },
   {
+    "team_id": "GRAGNANO_SPORTING_CLUB",
+    "team_nome": "GRAGNANO SPORTING CLUB",
+    "punti": 84,
+    "vittorie": 0,
+    "p1": 0,
+    "p2": 0,
+    "p3": 1,
+    "pout": 8,
+    "n_atleti": 6,
+    "pos": 34
+  },
+  {
     "team_id": "DEVELOPMENT_TEAM_PICNIC_POSTNL",
     "team_nome": "DEVELOPMENT TEAM PICNIC POSTNL",
     "punti": 84,
@@ -405,18 +417,6 @@
     "p3": 1,
     "pout": 4,
     "n_atleti": 2,
-    "pos": 34
-  },
-  {
-    "team_id": "GRAGNANO_SPORTING_CLUB",
-    "team_nome": "GRAGNANO SPORTING CLUB",
-    "punti": 82,
-    "vittorie": 0,
-    "p1": 0,
-    "p2": 0,
-    "p3": 1,
-    "pout": 7,
-    "n_atleti": 5,
     "pos": 35
   },
   {
@@ -696,6 +696,18 @@
     "pos": 58
   },
   {
+    "team_id": "ARAN_CUCINE_VEJUS",
+    "team_nome": "ARAN CUCINE VEJUS",
+    "punti": 21,
+    "vittorie": 0,
+    "p1": 0,
+    "p2": 0,
+    "p3": 0,
+    "pout": 4,
+    "n_atleti": 3,
+    "pos": 59
+  },
+  {
     "team_id": "TIROL_KTM_CYCLING_TEAM",
     "team_nome": "TIROL KTM CYCLING TEAM",
     "punti": 21,
@@ -705,24 +717,12 @@
     "p3": 0,
     "pout": 2,
     "n_atleti": 2,
-    "pos": 59
+    "pos": 60
   },
   {
     "team_id": "ZAPPI_RACING_TEAM",
     "team_nome": "ZAPPI RACING TEAM",
     "punti": 20,
-    "vittorie": 0,
-    "p1": 0,
-    "p2": 0,
-    "p3": 0,
-    "pout": 3,
-    "n_atleti": 2,
-    "pos": 60
-  },
-  {
-    "team_id": "ARAN_CUCINE_VEJUS",
-    "team_nome": "ARAN CUCINE VEJUS",
-    "punti": 18,
     "vittorie": 0,
     "p1": 0,
     "p2": 0,
@@ -828,6 +828,18 @@
     "pos": 69
   },
   {
+    "team_id": "A_S_D_CATTOLI_ANDREA",
+    "team_nome": "A.S.D. CATTOLI ANDREA",
+    "punti": 10,
+    "vittorie": 0,
+    "p1": 0,
+    "p2": 0,
+    "p3": 1,
+    "pout": 0,
+    "n_atleti": 1,
+    "pos": 70
+  },
+  {
     "team_id": "TEAM_WSA_KTM_GRAZ",
     "team_nome": "TEAM WSA KTM GRAZ",
     "punti": 9,
@@ -837,7 +849,7 @@
     "p3": 0,
     "pout": 1,
     "n_atleti": 1,
-    "pos": 70
+    "pos": 71
   },
   {
     "team_id": "U_C_PREGNANA",
@@ -849,7 +861,7 @@
     "p3": 0,
     "pout": 3,
     "n_atleti": 3,
-    "pos": 71
+    "pos": 72
   },
   {
     "team_id": "TEAM_PROMOTECH_MG_K_VIS",
@@ -861,7 +873,7 @@
     "p3": 0,
     "pout": 2,
     "n_atleti": 1,
-    "pos": 72
+    "pos": 73
   },
   {
     "team_id": "AVC_AIX_EN_PROVENCE_DOLE",
@@ -873,7 +885,7 @@
     "p3": 0,
     "pout": 2,
     "n_atleti": 2,
-    "pos": 73
+    "pos": 74
   },
   {
     "team_id": "ITALIA",
@@ -885,7 +897,7 @@
     "p3": 0,
     "pout": 1,
     "n_atleti": 1,
-    "pos": 74
+    "pos": 75
   },
   {
     "team_id": "TUDOR_PRO_CYCLING_U23",
@@ -897,7 +909,7 @@
     "p3": 0,
     "pout": 1,
     "n_atleti": 1,
-    "pos": 75
+    "pos": 76
   },
   {
     "team_id": "SLOVENIA_NATIONAL_TEAM",
@@ -909,7 +921,7 @@
     "p3": 0,
     "pout": 2,
     "n_atleti": 1,
-    "pos": 76
+    "pos": 77
   },
   {
     "team_id": "VELOCE_CLUB_ISOLANO",
@@ -921,7 +933,7 @@
     "p3": 0,
     "pout": 1,
     "n_atleti": 1,
-    "pos": 77
+    "pos": 78
   },
   {
     "team_id": "B_TEAM_CYCLING_PROJECT",
@@ -933,7 +945,7 @@
     "p3": 0,
     "pout": 2,
     "n_atleti": 1,
-    "pos": 78
+    "pos": 79
   },
   {
     "team_id": "CAJA_RURAL_ALEA",
@@ -945,7 +957,7 @@
     "p3": 0,
     "pout": 1,
     "n_atleti": 1,
-    "pos": 79
+    "pos": 80
   },
   {
     "team_id": "TEAM_MAZZOLA_P_G_C_U23",
@@ -957,7 +969,7 @@
     "p3": 0,
     "pout": 1,
     "n_atleti": 1,
-    "pos": 80
+    "pos": 81
   },
   {
     "team_id": "TEAM_GAIAPLAST_BIBANESE",
@@ -969,7 +981,7 @@
     "p3": 0,
     "pout": 1,
     "n_atleti": 1,
-    "pos": 81
+    "pos": 82
   },
   {
     "team_id": "DU_ACADEMY",
@@ -981,7 +993,7 @@
     "p3": 0,
     "pout": 1,
     "n_atleti": 1,
-    "pos": 82
+    "pos": 83
   },
   {
     "team_id": "VPT_WHY_SPORT",
@@ -993,6 +1005,6 @@
     "p3": 0,
     "pout": 1,
     "n_atleti": 1,
-    "pos": 83
+    "pos": 84
   }
 ]
