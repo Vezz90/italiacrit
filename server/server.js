@@ -7426,9 +7426,12 @@ async function _generateGaraOgBuffer(garaId) {
   // Facebook al primo tentativo (segnalato piu' volte dall'utente). Se scade
   // il timeout si passa subito alla card di solo testo (molto più veloce,
   // niente fetch di immagini remote) invece di lasciare la richiesta appesa.
+  // 5s invece di 3.5s: 3.5s scattava troppo spesso su cold-start reali
+  // (es. subito dopo un resume del servizio Render da sospensione/sleep),
+  // buttando via la card con foto anche quando sarebbe arrivata poco dopo.
   const photoBuf = await Promise.race([
     _generateGaraPhotoBuffer(garaId, results, catLabel, title, dateShort),
-    new Promise(resolve => setTimeout(() => resolve(null), 3500)),
+    new Promise(resolve => setTimeout(() => resolve(null), 5000)),
   ]);
   if (photoBuf) return photoBuf;
 
