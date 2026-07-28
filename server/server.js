@@ -7426,12 +7426,15 @@ async function _generateGaraOgBuffer(garaId) {
   // Facebook al primo tentativo (segnalato piu' volte dall'utente). Se scade
   // il timeout si passa subito alla card di solo testo (molto più veloce,
   // niente fetch di immagini remote) invece di lasciare la richiesta appesa.
-  // 5s invece di 3.5s: 3.5s scattava troppo spesso su cold-start reali
-  // (es. subito dopo un resume del servizio Render da sospensione/sleep),
-  // buttando via la card con foto anche quando sarebbe arrivata poco dopo.
+  // 8s: nei test reali anche generazioni riuscite (foto + 3 avatar podio)
+  // hanno impiegato fino a ~6.3s in condizioni normali (non cold-start) —
+  // un timeout più stretto (provati 3.5s e 5s) buttava via la card con
+  // foto anche in casi legittimi, segnalato piu' volte dall'utente
+  // (Bassano Monte Grappa: foto xpix.it verificata veloce da sola, quindi
+  // il rallentamento viene dal fetch delle foto profilo dei 3 del podio).
   const photoBuf = await Promise.race([
     _generateGaraPhotoBuffer(garaId, results, catLabel, title, dateShort),
-    new Promise(resolve => setTimeout(() => resolve(null), 5000)),
+    new Promise(resolve => setTimeout(() => resolve(null), 8000)),
   ]);
   if (photoBuf) return photoBuf;
 
