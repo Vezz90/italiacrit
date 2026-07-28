@@ -875,7 +875,7 @@ app.get('/api/og-image/classifica/:id/:view/:sort', async (req, res) => {
     const cacheKey = `classifica_${req.params.id}_${view}_${sort}`;
     const cached = _ogCache.get(cacheKey);
     if (cached && Date.now() - cached.ts < OG_TTL) {
-      res.setHeader('Content-Type', 'image/png');
+      res.setHeader('Content-Type', 'image/jpeg');
       res.setHeader('Cache-Control', 'public, max-age=1800');
       return res.send(cached.buf);
     }
@@ -889,7 +889,7 @@ app.get('/api/og-image/classifica/:id/:view/:sort', async (req, res) => {
     const buf = await renderOgPng(svg);
     if (!buf) return res.redirect('/assets/og-default.png');
     _ogCache.set(cacheKey, { buf, ts: Date.now() });
-    res.setHeader('Content-Type', 'image/png');
+    res.setHeader('Content-Type', 'image/jpeg');
     res.setHeader('Cache-Control', 'public, max-age=1800');
     res.send(buf);
   } catch (e) { res.redirect('/assets/og-default.png'); }
@@ -6207,10 +6207,27 @@ async function _warmRecentOgImages() {
       if ((d === today || d === yesterday) && r.gara_id) recentGaraIds.add(r.gara_id);
     }
     if (!recentGaraIds.size) return;
-    for (const garaId of recentGaraIds) {
-      fetch(`http://localhost:${PORT}/api/og-image/gara/${encodeURIComponent(garaId)}`).catch(() => {});
+    // Concorrenza limitata (3 alla volta) invece di sparare tutte le
+    // richieste in parallelo: con molte gare della stessa giornata (es. un
+    // weekend pieno), generarle tutte insieme si rallentavano a vicenda per
+    // CPU/rete condivisa — probabile causa reale di parte dei timeout sul
+    // percorso foto inseguiti in questa sessione, non solo cold-start.
+    // Attesa (non piu' fire-and-forget) cosi' la funzione ritorna solo
+    // quando la cache e' davvero calda per tutte, utile anche per il log.
+    const ids = [...recentGaraIds];
+    let done = 0, failed = 0;
+    const CONCURRENCY = 3;
+    async function worker() {
+      while (ids.length) {
+        const garaId = ids.shift();
+        try {
+          const r = await fetch(`http://localhost:${PORT}/api/og-image/gara/${encodeURIComponent(garaId)}`);
+          if (r.ok) done++; else failed++;
+        } catch { failed++; }
+      }
     }
-    console.log(`[og-warm] Precaricate ${recentGaraIds.size} grafiche OG per gare recenti`);
+    await Promise.all(Array.from({ length: Math.min(CONCURRENCY, recentGaraIds.size) }, worker));
+    console.log(`[og-warm] Precaricate ${done}/${recentGaraIds.size} grafiche OG per gare recenti${failed ? ` (${failed} fallite)` : ''}`);
   } catch (e) { console.warn('[og-warm] error:', e.message); }
 }
 
@@ -7072,7 +7089,12 @@ function buildGaraResultsCardSvg({ title, catLabel, date, mult, km, media, winne
 async function renderOgPng(svgStr) {
   try {
     const sharp = require('sharp');
-    return await sharp(Buffer.from(svgStr)).png().toBuffer();
+    // JPEG invece di PNG per l'output finale: le card sono foto/pannelli
+    // scuri con testo, non grafica piatta — PNG lossless le rendeva 3-5
+    // volte piu' pesanti del necessario per un'immagine di anteprima social,
+    // un costo diretto in banda (rilevante dopo l'aggiornamento al piano
+    // Render Pro per aver esaurito i GB inclusi).
+    return await sharp(Buffer.from(svgStr)).flatten({ background: '#0a0c10' }).jpeg({ quality: 85, mozjpeg: true }).toBuffer();
   } catch (e) {
     // Se sharp non supporta SVG, restituisci null (fallback al logo statico)
     console.warn('[og-image] sharp SVG error:', e.message);
@@ -7086,7 +7108,7 @@ app.get('/api/og-image/atleta/:id', async (req, res) => {
     const cacheKey = `atleta_${atletaId}`;
     const cached = _ogCache.get(cacheKey);
     if (cached && Date.now() - cached.ts < OG_TTL) {
-      res.setHeader('Content-Type', 'image/png');
+      res.setHeader('Content-Type', 'image/jpeg');
       res.setHeader('Cache-Control', 'public, max-age=1800');
       return res.send(cached.buf);
     }
@@ -7128,7 +7150,7 @@ app.get('/api/og-image/atleta/:id', async (req, res) => {
     if (!buf) buf = await renderOgPng(svg);
     if (!buf) return res.redirect('/assets/og-default.png');
     _ogCache.set(cacheKey, { buf, ts: Date.now() });
-    res.setHeader('Content-Type', 'image/png');
+    res.setHeader('Content-Type', 'image/jpeg');
     res.setHeader('Cache-Control', 'public, max-age=1800');
     res.send(buf);
   } catch (e) { res.redirect('/assets/og-default.png'); }
@@ -7190,7 +7212,7 @@ async function _photoToOgPng(filename) {
   try {
     const sharp = require('sharp');
     const meta = await sharp(raw).metadata();
-    return await sharp(raw).resize(1200, 630, { fit: 'cover', position: _ogCropPosition(meta) }).png().toBuffer();
+    return await sharp(raw).resize(1200, 630, { fit: 'cover', position: _ogCropPosition(meta) }).jpeg({ quality: 85, mozjpeg: true }).toBuffer();
   } catch { return null; }
 }
 
@@ -7291,7 +7313,7 @@ async function _photoSplitOgPng(filename, panelSvg, avatarOverlays = []) {
     const panelBuf = await sharp(Buffer.from(panelSvg)).png().toBuffer();
     return await sharp({ create: { width: 1200, height: 630, channels: 3, background: '#0a0c10' } })
       .composite([{ input: photoBuf, left: 0, top: 0 }, { input: panelBuf, left: 600, top: 0 }, ...avatarOverlays])
-      .png().toBuffer();
+      .jpeg({ quality: 85, mozjpeg: true }).toBuffer();
   } catch (e) { console.error('[og-image] split card fallita:', e.message); return null; }
 }
 
@@ -7331,7 +7353,7 @@ async function _ogCardWithAvatar(cardSvg, photoSource, { diameter = 150, cx = 12
   if (!avatar) return buf;
   try {
     const sharp = require('sharp');
-    return await sharp(buf).composite([{ input: avatar, left: Math.round(cx), top: Math.round(cy) }]).png().toBuffer();
+    return await sharp(buf).composite([{ input: avatar, left: Math.round(cx), top: Math.round(cy) }]).jpeg({ quality: 85, mozjpeg: true }).toBuffer();
   } catch { return buf; }
 }
 
@@ -7480,7 +7502,7 @@ app.get('/api/og-image/gara/:id', async (req, res) => {
   try {
     const buf = await _ogGenerateDeduped(cacheKey, () => _generateGaraOgBuffer(garaId));
     if (!buf) return res.redirect('/assets/og-default.png');
-    res.setHeader('Content-Type', 'image/png');
+    res.setHeader('Content-Type', 'image/jpeg');
     res.setHeader('Cache-Control', 'public, max-age=1800');
     res.send(buf);
   } catch (e) { res.redirect('/assets/og-default.png'); }
@@ -7492,7 +7514,7 @@ app.get('/api/og-image/team/:id', async (req, res) => {
     const cacheKey = `team_${teamId}`;
     const cached = _ogCache.get(cacheKey);
     if (cached && Date.now() - cached.ts < OG_TTL) {
-      res.setHeader('Content-Type', 'image/png');
+      res.setHeader('Content-Type', 'image/jpeg');
       res.setHeader('Cache-Control', 'public, max-age=1800');
       return res.send(cached.buf);
     }
@@ -7528,7 +7550,7 @@ app.get('/api/og-image/team/:id', async (req, res) => {
     if (!buf) buf = await renderOgPng(svg);
     if (!buf) return res.redirect('/assets/og-default.png');
     _ogCache.set(cacheKey, { buf, ts: Date.now() });
-    res.setHeader('Content-Type', 'image/png');
+    res.setHeader('Content-Type', 'image/jpeg');
     res.setHeader('Cache-Control', 'public, max-age=1800');
     res.send(buf);
   } catch (e) { res.redirect('/assets/og-default.png'); }
@@ -7539,7 +7561,7 @@ app.get('/api/og-image/class/:id', async (req, res) => {
     const cacheKey = `class_${req.params.id}`;
     const cached = _ogCache.get(cacheKey);
     if (cached && Date.now() - cached.ts < OG_TTL) {
-      res.setHeader('Content-Type', 'image/png');
+      res.setHeader('Content-Type', 'image/jpeg');
       res.setHeader('Cache-Control', 'public, max-age=1800');
       return res.send(cached.buf);
     }
@@ -7549,7 +7571,7 @@ app.get('/api/og-image/class/:id', async (req, res) => {
     const buf = await renderOgPng(svg);
     if (!buf) return res.redirect('/assets/og-default.png');
     _ogCache.set(cacheKey, { buf, ts: Date.now() });
-    res.setHeader('Content-Type', 'image/png');
+    res.setHeader('Content-Type', 'image/jpeg');
     res.setHeader('Cache-Control', 'public, max-age=1800');
     res.send(buf);
   } catch (e) { res.redirect('/assets/og-default.png'); }
