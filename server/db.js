@@ -38,7 +38,8 @@ async function createSchema() {
     CREATE TABLE IF NOT EXISTS users (
       id           SERIAL PRIMARY KEY,
       email        TEXT NOT NULL UNIQUE,
-      password     TEXT NOT NULL,
+      password     TEXT,
+      google_id    TEXT UNIQUE,
       role         TEXT NOT NULL DEFAULT 'appassionato',
       display_name TEXT,
       created_at   TIMESTAMPTZ NOT NULL DEFAULT NOW(),
@@ -205,6 +206,13 @@ async function migrate() {
   // Aggiunte colonne successive — idempotenti grazie a IF NOT EXISTS
   const migrations = [
     `ALTER TABLE media_profiles ADD COLUMN IF NOT EXISTS facebook TEXT DEFAULT ''`,
+    `ALTER TABLE users ADD COLUMN IF NOT EXISTS google_id TEXT`,
+    `ALTER TABLE users ALTER COLUMN password DROP NOT NULL`,
+    `DO $$ BEGIN
+       IF NOT EXISTS (SELECT 1 FROM pg_constraint WHERE conname = 'users_google_id_key') THEN
+         ALTER TABLE users ADD CONSTRAINT users_google_id_key UNIQUE (google_id);
+       END IF;
+     END $$`,
     `CREATE TABLE IF NOT EXISTS media_purchase_requests (
       id               SERIAL PRIMARY KEY,
       media_photo_id   INTEGER NOT NULL REFERENCES media_photos(id) ON DELETE CASCADE,
@@ -321,15 +329,21 @@ const queries = {
   getUserByEmail:  (email) =>
     one(`SELECT * FROM users WHERE LOWER(email) = LOWER($1)`, [email]),
 
+  getUserByGoogleId: (googleId) =>
+    one(`SELECT * FROM users WHERE google_id = $1`, [googleId]),
+
   getUserById: (id) =>
     one(`SELECT id, email, role, display_name, created_at, last_login FROM users WHERE id = $1`, [id]),
 
-  createUser: ({ email, password, role, display_name }) =>
+  createUser: ({ email, password, role, display_name, google_id }) =>
     one(
-      `INSERT INTO users (email, password, role, display_name)
-       VALUES ($1, $2, $3, $4) RETURNING id, email, role, display_name, created_at`,
-      [email, password, role, display_name]
+      `INSERT INTO users (email, password, role, display_name, google_id)
+       VALUES ($1, $2, $3, $4, $5) RETURNING id, email, role, display_name, created_at`,
+      [email, password || null, role, display_name, google_id || null]
     ),
+
+  linkGoogleId: (id, googleId) =>
+    run(`UPDATE users SET google_id = $2 WHERE id = $1`, [id, googleId]),
 
   updateLastLogin: (id) =>
     run(`UPDATE users SET last_login = NOW() WHERE id = $1`, [id]),

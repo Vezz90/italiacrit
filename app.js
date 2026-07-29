@@ -22379,6 +22379,40 @@ window.shareClassifica=async function(){
 };
 
 // ── LOGIN ─────────────────────────────────────────────────────
+// ── GOOGLE SIGN-IN ────────────────────────────────────────────
+// Client ID pubblico (non è un segreto: compare sempre nel sorgente di ogni
+// pagina che usa "Accedi con Google" — la sicurezza sta nella verifica
+// server-side del token, non nel nasconderlo).
+const GOOGLE_CLIENT_ID = '';
+
+function _renderGoogleButton(containerId, callbackName) {
+  if (!GOOGLE_CLIENT_ID || typeof google === 'undefined' || !google.accounts) return;
+  try {
+    google.accounts.id.initialize({ client_id: GOOGLE_CLIENT_ID, callback: window[callbackName] });
+    google.accounts.id.renderButton(document.getElementById(containerId), {
+      type: 'standard', theme: 'outline', size: 'large', width: 360, text: 'continue_with', locale: 'it',
+    });
+  } catch (e) { console.warn('[google-signin] init fallita:', e.message); }
+}
+
+window.handleGoogleLogin = async function(response) {
+  const errEl = document.getElementById('auth-error');
+  try {
+    const r = await apiCall('/auth/google', { method: 'POST', body: { credential: response.credential } });
+    if (r.needsRegistration) {
+      sessionStorage.setItem('google_pending', JSON.stringify({ credential: response.credential, email: r.email, name: r.name }));
+      window.location.hash = '/register';
+      return;
+    }
+    authSave(r.token, r.user);
+    updateNavLoginState();
+    _loadFollows();
+    window.location.hash = r.user.role === 'admin' ? '/admin' : '/profilo';
+  } catch (e) {
+    if (errEl) { errEl.textContent = e.message; errEl.style.display = 'block'; }
+  }
+};
+
 function renderLogin() {
   if (authUser()) { window.location.hash = '/profilo'; return; }
   setPage(`
@@ -22417,6 +22451,8 @@ function renderLogin() {
               <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
             </button>
           </form>
+          <div class="auth-divider"><span>oppure</span></div>
+          <div id="google-signin-login" style="display:flex;justify-content:center"></div>
           <div id="forgot-pwd-box" style="display:none;margin-top:16px;padding-top:16px;border-top:1px solid var(--border-subtle)">
             <p style="font-size:.85rem;color:var(--text-secondary);margin:0 0 10px">Inserisci l'email del tuo account: ti mandiamo un link per reimpostare la password.</p>
             <div class="auth-field">
@@ -22431,6 +22467,7 @@ function renderLogin() {
       </div>
     </div>
   `);
+  _renderGoogleButton('google-signin-login', 'handleGoogleLogin');
 }
 
 window.showForgotPassword = function() {
@@ -22694,6 +22731,8 @@ function _regRoleFieldsHtml(role) {
 
 function renderRegister() {
   if (authUser()) { window.location.hash = '/profilo'; return; }
+  let googlePending = null;
+  try { googlePending = JSON.parse(sessionStorage.getItem('google_pending') || 'null'); } catch {}
   setPage(`
     <div class="auth-wrap">
       <div style="width:100%;max-width:420px">
@@ -22704,29 +22743,32 @@ function renderRegister() {
         <div class="auth-card">
           <div class="auth-card-header">
             <h1 class="auth-title">Crea account</h1>
-            <p class="auth-sub">Unisciti alla community del ciclismo agonistico italiano</p>
+            <p class="auth-sub">${googlePending ? `Accesso Google collegato (${esc(googlePending.email)}) — scegli il tuo ruolo per finire` : 'Unisciti alla community del ciclismo agonistico italiano'}</p>
           </div>
           <div id="auth-error" class="auth-error" style="display:none"></div>
+          ${!googlePending ? `
+          <div id="google-signin-register" style="display:flex;justify-content:center;margin-bottom:14px"></div>
+          <div class="auth-divider"><span>oppure con email</span></div>` : ''}
           <form id="reg-form" class="auth-form" onsubmit="submitRegister(event)" style="display:flex;flex-direction:column;gap:0">
             <div class="auth-field" id="reg-name-field">
               <label class="auth-label" for="reg-name">Nome visualizzato <span style="color:var(--red-hot)">*</span></label>
               <div class="auth-input-wrap">
                 <svg class="auth-input-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="8" r="4"/><path d="M4 20c0-4 3.6-7 8-7s8 3 8 7"/></svg>
-                <input type="text" id="reg-name" class="auth-input" placeholder="Es. Mario Rossi" required />
+                <input type="text" id="reg-name" class="auth-input" placeholder="Es. Mario Rossi" value="${esc(googlePending?.name || '')}" required />
               </div>
             </div>
             <div class="auth-field">
               <label class="auth-label" for="reg-email">Email <span style="color:var(--red-hot)">*</span></label>
               <div class="auth-input-wrap">
                 <svg class="auth-input-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="2" y="4" width="20" height="16" rx="2"/><path d="m2 7 10 7 10-7"/></svg>
-                <input type="email" id="reg-email" class="auth-input" placeholder="tua@email.it" required autocomplete="email" />
+                <input type="email" id="reg-email" class="auth-input" placeholder="tua@email.it" value="${esc(googlePending?.email || '')}" ${googlePending ? 'readonly' : ''} required autocomplete="email" />
               </div>
             </div>
-            <div class="auth-field">
+            <div class="auth-field" id="reg-pwd-field" style="${googlePending ? 'display:none' : ''}">
               <label class="auth-label" for="reg-pwd">Password <span style="color:var(--red-hot)">*</span></label>
               <div class="auth-input-wrap">
                 <svg class="auth-input-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="11" width="18" height="11" rx="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg>
-                <input type="password" id="reg-pwd" class="auth-input" placeholder="Minimo 6 caratteri" required autocomplete="new-password" minlength="6" />
+                <input type="password" id="reg-pwd" class="auth-input" placeholder="Minimo 6 caratteri" ${googlePending ? '' : 'required'} autocomplete="new-password" minlength="6" />
               </div>
             </div>
             <div class="auth-field">
@@ -22756,7 +22798,30 @@ function renderRegister() {
       </div>
     </div>
   `);
+  if (!googlePending) _renderGoogleButton('google-signin-register', 'handleGoogleRegisterStart');
 }
+
+// Chiamato quando l'utente clicca "Continua con Google" DALLA pagina di
+// registrazione (invece che dal login): stessa logica di handleGoogleLogin,
+// ma se l'account esiste già lo logga direttamente invece di forzare il
+// passaggio dal form ruolo.
+window.handleGoogleRegisterStart = async function(response) {
+  const errEl = document.getElementById('auth-error');
+  try {
+    const r = await apiCall('/auth/google', { method: 'POST', body: { credential: response.credential } });
+    if (r.needsRegistration) {
+      sessionStorage.setItem('google_pending', JSON.stringify({ credential: response.credential, email: r.email, name: r.name }));
+      renderRegister();
+      return;
+    }
+    authSave(r.token, r.user);
+    updateNavLoginState();
+    _loadFollows();
+    window.location.hash = r.user.role === 'admin' ? '/admin' : '/profilo';
+  } catch (e) {
+    if (errEl) { errEl.textContent = e.message; errEl.style.display = 'block'; }
+  }
+};
 
 window._onRegRoleChange = function(role) {
   const wrap = document.getElementById('reg-role-extra-wrap');
@@ -22909,8 +22974,14 @@ window.submitRegister = async function(e) {
     ? (v('reg-atleta-search') || ((v('reg-lname') + ' ' + v('reg-fname')).trim()) || display_name || email.split('@')[0])
     : display_name;
 
+  let googlePending = null;
+  try { googlePending = JSON.parse(sessionStorage.getItem('google_pending') || 'null'); } catch {}
+
   try {
-    const { token, user } = await apiCall('/auth/register', { method: 'POST', body: { email, password, role, display_name: finalDisplayName } });
+    const { token, user } = googlePending
+      ? await apiCall('/auth/google/register', { method: 'POST', body: { credential: googlePending.credential, role, display_name: finalDisplayName } })
+      : await apiCall('/auth/register', { method: 'POST', body: { email, password, role, display_name: finalDisplayName } });
+    sessionStorage.removeItem('google_pending');
     authSave(token, user);
     updateNavLoginState();
     _loadFollows();

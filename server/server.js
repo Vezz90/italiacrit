@@ -21,6 +21,7 @@ const cors           = require('cors');
 const bcrypt         = require('bcryptjs');
 const jwt            = require('jsonwebtoken');
 const multer         = require('multer');
+const { OAuth2Client } = require('google-auth-library');
 const { queries, init, rawQuery } = require('./db');
 
 const app  = express();
@@ -142,6 +143,16 @@ async function sendNotification({ user_id, type = 'info', title, body = '', data
 const PORT = 8002;
 const JWT_SECRET  = process.env.JWT_SECRET || 'italiacrit-dev-secret-2026';
 const JWT_EXPIRES = '30d';
+
+// ── Google Sign-In ───────────────────────────────────────────────────────────
+const GOOGLE_CLIENT_ID = process.env.GOOGLE_CLIENT_ID || '';
+const googleClient = GOOGLE_CLIENT_ID ? new OAuth2Client(GOOGLE_CLIENT_ID) : null;
+async function verifyGoogleCredential(credential) {
+  if (!googleClient) throw new Error('Login con Google non configurato sul server');
+  const ticket = await googleClient.verifyIdToken({ idToken: credential, audience: GOOGLE_CLIENT_ID });
+  const payload = ticket.getPayload();
+  return { googleId: payload.sub, email: payload.email, name: payload.name || '' };
+}
 
 // ── Web Push (notifiche PWA) ────────────────────────────────────────────────
 let webpush = null;
@@ -975,6 +986,7 @@ app.post('/api/auth/login', async (req, res) => {
 
     const user = await queries.getUserByEmail(email.trim());
     if (!user) return res.status(401).json({ error: 'Credenziali non valide' });
+    if (!user.password) return res.status(401).json({ error: 'Questo account usa l\'accesso con Google. Usa il pulsante "Accedi con Google".' });
 
     const ok = bcrypt.compareSync(password, user.password);
     if (!ok) return res.status(401).json({ error: 'Credenziali non valide' });
@@ -985,6 +997,66 @@ app.post('/api/auth/login', async (req, res) => {
     res.json({ token: makeToken(safe), user: safe });
   } catch (e) {
     res.status(500).json({ error: 'Errore durante il login' });
+  }
+});
+
+// Accesso/collegamento con Google. Se l'email risulta già registrata (account
+// creato con password) colleghiamo il google_id automaticamente: l'email è
+// già stata verificata da Google, quindi è un collegamento sicuro. Se invece
+// non esiste alcun account, rispondiamo needsRegistration così il frontend
+// porta l'utente sul form di registrazione (serve comunque scegliere un ruolo
+// e compilare i campi specifici, es. squadra/atleta collegato).
+app.post('/api/auth/google', async (req, res) => {
+  try {
+    const { credential } = req.body || {};
+    if (!credential) return res.status(400).json({ error: 'Credenziale Google mancante' });
+    const { googleId, email, name } = await verifyGoogleCredential(credential);
+
+    let user = await queries.getUserByGoogleId(googleId);
+    if (!user) {
+      const byEmail = await queries.getUserByEmail(email);
+      if (byEmail) {
+        await queries.linkGoogleId(byEmail.id, googleId);
+        user = byEmail;
+      }
+    }
+    if (!user) {
+      return res.json({ needsRegistration: true, email, name });
+    }
+
+    await queries.updateLastLogin(user.id);
+    const safe = await queries.getUserById(user.id);
+    try { const _p = await queries.getAthleteProfile(user.id); if (_p?.atleta_id) safe.atleta_id = _p.atleta_id; } catch {}
+    res.json({ token: makeToken(safe), user: safe });
+  } catch (e) {
+    res.status(401).json({ error: 'Accesso con Google non riuscito: ' + e.message });
+  }
+});
+
+app.post('/api/auth/google/register', async (req, res) => {
+  try {
+    const { credential, role, display_name } = req.body || {};
+    const ALLOWED_ROLES = ['atleta', 'team', 'genitore', 'parente', 'appassionato', 'media'];
+    if (!credential) return res.status(400).json({ error: 'Credenziale Google mancante' });
+    if (!ALLOWED_ROLES.includes(role)) return res.status(400).json({ error: 'Tipo utente non valido' });
+
+    const { googleId, email, name } = await verifyGoogleCredential(credential);
+
+    const existingByGoogle = await queries.getUserByGoogleId(googleId);
+    if (existingByGoogle) return res.status(409).json({ error: 'Account Google già registrato' });
+    const existingByEmail = await queries.getUserByEmail(email);
+    if (existingByEmail) return res.status(409).json({ error: 'Email già registrata' });
+
+    const user = await queries.createUser({
+      email:        email.trim().toLowerCase(),
+      password:     null,
+      google_id:    googleId,
+      role,
+      display_name: display_name?.trim() || name || email.split('@')[0],
+    });
+    res.status(201).json({ token: makeToken(user), user });
+  } catch (e) {
+    res.status(401).json({ error: 'Registrazione con Google non riuscita: ' + e.message });
   }
 });
 
