@@ -941,6 +941,57 @@ app.post('/api/auth/login', async (req, res) => {
   }
 });
 
+// ── Recupero password ──────────────────────────────────────────────────────
+// Le password sono hashate (bcrypt, one-way) — nessuno, admin compreso, può
+// "vederle": l'unica soluzione corretta a "utente ha dimenticato la
+// password" è reimpostarla, non recuperare quella vecchia. Token monouso a
+// scadenza salvato in kv_store (stesso pattern già usato per videos/
+// monthly-recap), niente tabella dedicata.
+app.post('/api/auth/forgot-password', async (req, res) => {
+  try {
+    const { email } = req.body || {};
+    if (!email) return res.status(400).json({ error: 'Email obbligatoria' });
+    // Risposta identica sia che l'email esista sia che non esista: non deve
+    // rivelare quali email sono registrate (evita enumerazione account).
+    const generic = { ok: true, message: 'Se l\'indirizzo è registrato, riceverai a breve un\'email con le istruzioni.' };
+    const user = await queries.getUserByEmail(email.trim());
+    if (!user || !supabase) return res.json(generic);
+    const token = require('crypto').randomBytes(32).toString('hex');
+    const key = `pwreset_${token}`;
+    const expiresAt = Date.now() + 60 * 60 * 1000; // 1 ora
+    const { error } = await supabase.from('kv_store')
+      .upsert({ key, value: { user_id: user.id, expiresAt }, updated_at: new Date().toISOString() });
+    if (error) throw error;
+    const resetUrl = `${SITE_URL}/reset-password?token=${token}`;
+    await sendEmail({
+      to: user.email,
+      subject: 'Reimposta la tua password — Italia Cycling Stats',
+      html: `<p>Hai richiesto di reimpostare la password del tuo account ItaliacritResultati.</p>
+<p><a href="${resetUrl}" style="display:inline-block;padding:12px 22px;background:#e65c00;color:#fff;text-decoration:none;border-radius:8px;font-weight:600">Reimposta password</a></p>
+<p>Il link scade tra 1 ora. Se non hai richiesto tu il reset, ignora questa email — la tua password resta invariata.</p>`,
+      text: `Reimposta la password: ${resetUrl} (scade tra 1 ora, ignora se non richiesto)`,
+    });
+    res.json(generic);
+  } catch (e) { res.status(500).json({ error: e.message }); }
+});
+
+app.post('/api/auth/reset-password', async (req, res) => {
+  try {
+    const { token, password } = req.body || {};
+    if (!token || !password) return res.status(400).json({ error: 'Dati mancanti' });
+    if (password.length < 6) return res.status(400).json({ error: 'Password minimo 6 caratteri' });
+    if (!supabase) return res.status(500).json({ error: 'Servizio non disponibile' });
+    const key = `pwreset_${token}`;
+    const { data } = await supabase.from('kv_store').select('value').eq('key', key).single();
+    if (!data?.value || Date.now() > data.value.expiresAt)
+      return res.status(400).json({ error: 'Link non valido o scaduto — richiedine uno nuovo' });
+    const hash = bcrypt.hashSync(password, 10);
+    await queries.updatePassword(data.value.user_id, hash);
+    await supabase.from('kv_store').delete().eq('key', key); // monouso
+    res.json({ ok: true });
+  } catch (e) { res.status(500).json({ error: e.message }); }
+});
+
 app.get('/api/auth/me', requireAuth, async (req, res) => {
   try {
     const user = await queries.getUserById(req.user.id);

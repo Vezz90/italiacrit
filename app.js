@@ -3599,6 +3599,7 @@ function route() {
   if (match('/comparatore')) return renderComparatore();
   if (match('/regolamento')) return renderRegolamento();
   if (match('/login')) return renderLogin();
+  if (match('/reset-password')) return renderResetPassword();
   if (match('/register')) return renderRegister();
   if (match('/profilo')) return renderMyProfile();
   if (match('/admin')) return renderAdmin();
@@ -22408,11 +22409,22 @@ function renderLogin() {
                 <input type="password" id="login-pwd" class="auth-input" placeholder="••••••••" required autocomplete="current-password" />
               </div>
             </div>
+            <div style="text-align:right;margin:-8px 0 14px">
+              <a href="javascript:void(0)" onclick="window.showForgotPassword()" style="font-size:.8rem;color:var(--text-muted)">Password dimenticata?</a>
+            </div>
             <button type="submit" class="auth-btn" id="login-submit">
               Accedi
               <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
             </button>
           </form>
+          <div id="forgot-pwd-box" style="display:none;margin-top:16px;padding-top:16px;border-top:1px solid var(--border-subtle)">
+            <p style="font-size:.85rem;color:var(--text-secondary);margin:0 0 10px">Inserisci l'email del tuo account: ti mandiamo un link per reimpostare la password.</p>
+            <div class="auth-field">
+              <input type="email" id="forgot-email" class="auth-input" placeholder="tua@email.it" autocomplete="email" />
+            </div>
+            <div id="forgot-msg" style="font-size:.82rem;margin:8px 0;display:none"></div>
+            <button class="auth-btn" id="forgot-submit" onclick="window.submitForgotPassword()">Invia link di reset</button>
+          </div>
           <div class="auth-divider"><span>Non hai un account?</span></div>
           <a href="#/register" class="auth-btn auth-btn-secondary">Crea il tuo account</a>
         </div>
@@ -22420,6 +22432,85 @@ function renderLogin() {
     </div>
   `);
 }
+
+window.showForgotPassword = function() {
+  const box = document.getElementById('forgot-pwd-box');
+  if (box) box.style.display = box.style.display === 'none' ? 'block' : 'none';
+};
+
+window.submitForgotPassword = async function() {
+  const email = document.getElementById('forgot-email')?.value.trim();
+  const msgEl = document.getElementById('forgot-msg');
+  const btn   = document.getElementById('forgot-submit');
+  if (!email) return;
+  btn.disabled = true; btn.textContent = 'Invio…';
+  try {
+    const r = await apiCall('/auth/forgot-password', { method: 'POST', body: { email } });
+    msgEl.style.display = 'block';
+    msgEl.style.color = 'var(--success,#2e9e5b)';
+    msgEl.textContent = r.message || 'Controlla la tua email.';
+  } catch (e) {
+    msgEl.style.display = 'block';
+    msgEl.style.color = 'var(--danger,#d64545)';
+    msgEl.textContent = e.message;
+  } finally {
+    btn.disabled = false; btn.textContent = 'Invia link di reset';
+  }
+};
+
+function renderResetPassword() {
+  const params = new URLSearchParams(window.location.search || window.location.hash.split('?')[1] || '');
+  const token = params.get('token');
+  setPage(`
+    <div class="auth-wrap">
+      <div style="width:100%;max-width:420px">
+        <div class="auth-brand">
+          <div class="auth-brand-name">ICS</div>
+          <div class="auth-brand-sub">Risultati Ciclismo Italiano</div>
+        </div>
+        <div class="auth-card">
+          <div class="auth-card-header">
+            <h1 class="auth-title">Reimposta password</h1>
+            <p class="auth-sub">Scegli una nuova password per il tuo account</p>
+          </div>
+          ${!token ? `<div class="auth-error" style="display:block">Link non valido: manca il codice di reset. Richiedine uno nuovo dalla pagina di accesso.</div>` : `
+          <div id="reset-error" class="auth-error" style="display:none"></div>
+          <div id="reset-success" class="auth-error" style="display:none;background:var(--bg-success,rgba(46,158,91,.12));color:var(--success,#2e9e5b);border-color:var(--success,#2e9e5b)"></div>
+          <form id="reset-form" class="auth-form" onsubmit="window.submitResetPassword(event,'${esc(token)}')" style="display:flex;flex-direction:column;gap:0">
+            <div class="auth-field">
+              <label class="auth-label" for="reset-pwd">Nuova password</label>
+              <div class="auth-input-wrap">
+                <svg class="auth-input-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="11" width="18" height="11" rx="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg>
+                <input type="password" id="reset-pwd" class="auth-input" placeholder="Minimo 6 caratteri" required minlength="6" autocomplete="new-password" />
+              </div>
+            </div>
+            <button type="submit" class="auth-btn" id="reset-submit">Reimposta password</button>
+          </form>`}
+        </div>
+      </div>
+    </div>
+  `);
+}
+
+window.submitResetPassword = async function(e, token) {
+  e.preventDefault();
+  const pwd     = document.getElementById('reset-pwd').value;
+  const errEl   = document.getElementById('reset-error');
+  const okEl    = document.getElementById('reset-success');
+  const btn     = document.getElementById('reset-submit');
+  errEl.style.display = 'none'; okEl.style.display = 'none';
+  btn.disabled = true; btn.textContent = 'Salvataggio…';
+  try {
+    await apiCall('/auth/reset-password', { method: 'POST', body: { token, password: pwd } });
+    okEl.textContent = 'Password aggiornata! Ora puoi accedere.';
+    okEl.style.display = 'block';
+    document.getElementById('reset-form').style.display = 'none';
+    setTimeout(() => { window.location.hash = '/login'; }, 2000);
+  } catch (err) {
+    errEl.textContent = err.message; errEl.style.display = 'block';
+    btn.disabled = false; btn.textContent = 'Reimposta password';
+  }
+};
 
 window.submitLogin = async function(e) {
   e.preventDefault();

@@ -334,6 +334,9 @@ const queries = {
   updateLastLogin: (id) =>
     run(`UPDATE users SET last_login = NOW() WHERE id = $1`, [id]),
 
+  updatePassword: (id, passwordHash) =>
+    run(`UPDATE users SET password = $2 WHERE id = $1`, [id, passwordHash]),
+
   updateUserRole: (id, role) =>
     one(
       `UPDATE users SET role = $2 WHERE id = $1
