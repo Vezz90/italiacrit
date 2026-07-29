@@ -66,14 +66,53 @@ function getAnthropic() {
   return _anthropic;
 }
 
+// Render (come molti host cloud) blocca in uscita le connessioni SMTP dirette
+// (porte 25/465/587) per anti-abuso — nodemailer va sempre in ETIMEDOUT anche
+// con credenziali corrette. Brevo (via API HTTPS, porta 443, mai bloccata) è
+// il percorso primario; nodemailer/SMTP resta come fallback se configurato.
+async function _sendViaBrevo({ to, subject, html, text }) {
+  const apiKey = process.env.BREVO_API_KEY;
+  if (!apiKey) return { ok: false, skipped: true };
+  const senderEmail = process.env.BREVO_SENDER_EMAIL || process.env.SMTP_USER || 'italiacyclingstats@gmail.com';
+  const senderName  = process.env.BREVO_SENDER_NAME || 'ItaliacritResultati';
+  const r = await fetch('https://api.brevo.com/v3/smtp/email', {
+    method: 'POST',
+    headers: { 'api-key': apiKey, 'Content-Type': 'application/json', 'Accept': 'application/json' },
+    body: JSON.stringify({
+      sender: { email: senderEmail, name: senderName },
+      to: [{ email: to }],
+      subject,
+      htmlContent: html,
+      textContent: text,
+    }),
+  });
+  const body = await r.json().catch(() => ({}));
+  if (!r.ok) {
+    const err = new Error(body.message || `Brevo HTTP ${r.status}`);
+    err.code = body.code || r.status;
+    throw err;
+  }
+  return { ok: true, messageId: body.messageId };
+}
+
 async function sendEmail({ to, subject, html, text }) {
+  if (process.env.BREVO_API_KEY) {
+    try {
+      await _sendViaBrevo({ to, subject, html, text });
+      console.log('[email] ✓ (Brevo)', subject, '→', to);
+      return;
+    } catch (e) {
+      console.error('[email] ✗ (Brevo)', e.message);
+      return;
+    }
+  }
   if (!_transporter) return;
   const from = process.env.SMTP_FROM || `"ItaliacritResultati" <${process.env.SMTP_USER}>`;
   try {
     await _transporter.sendMail({ from, to, subject, html, text });
-    console.log('[email] ✓', subject, '→', to);
+    console.log('[email] ✓ (SMTP)', subject, '→', to);
   } catch (e) {
-    console.error('[email] ✗', e.message);
+    console.error('[email] ✗ (SMTP)', e.message);
   }
 }
 
@@ -7690,27 +7729,37 @@ app.post('/api/admin/og-cache-bust/gara/:id', requireAdmin, (req, res) => {
   res.json({ ok: true, hadCache: had });
 });
 
-// Diagnostica SMTP: sendEmail() cattura l'errore internamente e non lo
+// Diagnostica invio email: sendEmail() cattura l'errore internamente e non lo
 // espone mai al chiamante (per non rivelare dettagli su endpoint pubblici
-// come forgot-password) — qui invece, solo per l'admin, chiamiamo nodemailer
-// direttamente e restituiamo l'errore reale così si vede cosa blocca
-// davvero l'invio (credenziali sbagliate, porta filtrata, host irraggiungibile...).
+// come forgot-password) — qui invece, solo per l'admin, chiamiamo il
+// provider direttamente e restituiamo l'errore reale così si vede cosa
+// blocca davvero l'invio. Prova prima Brevo (se configurato), altrimenti SMTP.
 app.post('/api/admin/test-email', requireAdmin, async (req, res) => {
   const to = (req.body && req.body.to) || req.user.email;
+  const subject = 'Test invio email — Italia Cycling Stats';
+  const text = 'Email di test per verificare la configurazione email del sito. Se la leggi, funziona!';
+  const html = '<p>Email di test per verificare la configurazione email del sito. Se la leggi, funziona!</p>';
+
+  if (process.env.BREVO_API_KEY) {
+    try {
+      const info = await _sendViaBrevo({ to, subject, html, text });
+      return res.json({ ok: true, provider: 'brevo', message: `Inviata a ${to} via Brevo. Controlla la casella (anche spam).`, messageId: info.messageId });
+    } catch (e) {
+      return res.json({ ok: false, provider: 'brevo', error: e.message, code: e.code, sender: process.env.BREVO_SENDER_EMAIL || process.env.SMTP_USER });
+    }
+  }
+
   if (!_transporter) {
-    return res.json({ ok: false, error: 'SMTP non configurato: mancano SMTP_HOST/SMTP_USER/SMTP_PASS su Render.' });
+    return res.json({ ok: false, error: 'Nessun provider email configurato: manca BREVO_API_KEY oppure SMTP_HOST/SMTP_USER/SMTP_PASS su Render.' });
   }
   try {
     const info = await _transporter.sendMail({
       from: process.env.SMTP_FROM || `"ItaliacritResultati" <${process.env.SMTP_USER}>`,
-      to,
-      subject: 'Test invio email — Italia Cycling Stats',
-      text: 'Email di test per verificare la configurazione SMTP del sito. Se la leggi, funziona!',
-      html: '<p>Email di test per verificare la configurazione SMTP del sito. Se la leggi, funziona!</p>',
+      to, subject, text, html,
     });
-    res.json({ ok: true, message: `Inviata a ${to}. Controlla la casella (anche spam).`, messageId: info.messageId, response: info.response });
+    res.json({ ok: true, provider: 'smtp', message: `Inviata a ${to}. Controlla la casella (anche spam).`, messageId: info.messageId, response: info.response });
   } catch (e) {
-    res.json({ ok: false, error: e.message, code: e.code, host: process.env.SMTP_HOST, port: process.env.SMTP_PORT || '587', user: process.env.SMTP_USER });
+    res.json({ ok: false, provider: 'smtp', error: e.message, code: e.code, host: process.env.SMTP_HOST, port: process.env.SMTP_PORT || '587', user: process.env.SMTP_USER });
   }
 });
 
