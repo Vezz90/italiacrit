@@ -213,6 +213,22 @@ async function migrate() {
          ALTER TABLE users ADD CONSTRAINT users_google_id_key UNIQUE (google_id);
        END IF;
      END $$`,
+    // Cancellare un utente non deve fallire solo perché in passato ha
+    // modificato un campo tracciato in una di queste tabelle "_overrides"
+    // (o un risultato manuale): manteniamo la modifica storica, perdiamo
+    // solo l'attribuzione "chi l'ha fatta".
+    `ALTER TABLE entity_overrides DROP CONSTRAINT IF EXISTS entity_overrides_edited_by_fkey`,
+    `ALTER TABLE entity_overrides ADD CONSTRAINT entity_overrides_edited_by_fkey
+       FOREIGN KEY (edited_by) REFERENCES users(id) ON DELETE SET NULL`,
+    `ALTER TABLE gara_overrides DROP CONSTRAINT IF EXISTS gara_overrides_edited_by_fkey`,
+    `ALTER TABLE gara_overrides ADD CONSTRAINT gara_overrides_edited_by_fkey
+       FOREIGN KEY (edited_by) REFERENCES users(id) ON DELETE SET NULL`,
+    `ALTER TABLE risultato_overrides DROP CONSTRAINT IF EXISTS risultato_overrides_edited_by_fkey`,
+    `ALTER TABLE risultato_overrides ADD CONSTRAINT risultato_overrides_edited_by_fkey
+       FOREIGN KEY (edited_by) REFERENCES users(id) ON DELETE SET NULL`,
+    `ALTER TABLE manual_results DROP CONSTRAINT IF EXISTS manual_results_edited_by_fkey`,
+    `ALTER TABLE manual_results ADD CONSTRAINT manual_results_edited_by_fkey
+       FOREIGN KEY (edited_by) REFERENCES users(id) ON DELETE SET NULL`,
     `CREATE TABLE IF NOT EXISTS media_purchase_requests (
       id               SERIAL PRIMARY KEY,
       media_photo_id   INTEGER NOT NULL REFERENCES media_photos(id) ON DELETE CASCADE,
