@@ -1435,6 +1435,17 @@ app.post('/api/upload/photo', requireAuth, upload.single('photo'), async (req, r
         const profile = await queries.getTeamProfile(user.id);
         if (!profile || profile.team_id !== entity_id || profile.status !== 'active')
           return res.status(403).json({ error: 'Profilo team non collegato o non verificato' });
+      } else if (entity_type === 'atleta' && user.role === 'team') {
+        // Un team verificato può modificare la foto profilo degli atleti del
+        // proprio roster (staff/DS spesso hanno le foto più prontamente
+        // dell'atleta stesso) — mancava del tutto, un team riceveva sempre
+        // 403 su qualsiasi atleta, segnalato dall'utente.
+        const profile = await queries.getTeamProfile(user.id);
+        if (!profile || profile.status !== 'active')
+          return res.status(403).json({ error: 'Profilo team non collegato o non verificato' });
+        const athletes = (await readDataJsonFromGH('athletes.json')) || {};
+        if (athletes[entity_id]?.team_id !== profile.team_id)
+          return res.status(403).json({ error: 'Atleta non nel roster del tuo team' });
       } else {
         return res.status(403).json({ error: 'Non autorizzato' });
       }

@@ -213,6 +213,13 @@ function canUploadPhoto(entityType) {
   if (user.role === 'admin') return true;
   if (entityType === 'atleta' && user.role === 'atleta') return true;
   if (entityType === 'team'   && user.role === 'team')   return true;
+  // Un team verificato può modificare la foto profilo degli atleti del
+  // proprio roster (mancava del tutto — pulsante nemmeno visibile per un
+  // team su qualsiasi atleta, segnalato dall'utente). Mostrato in modo
+  // ottimistico come già per l'atleta sopra (che non verifica qui se è
+  // davvero il PROPRIO atleta_id): il server verifica il roster reale e
+  // rifiuta con 403 se l'atleta non appartiene al team di chi carica.
+  if (entityType === 'atleta' && user.role === 'team') return true;
   return false;
 }
 
