@@ -1659,6 +1659,7 @@ app.get('/api/health', (req, res) => res.json({ ok: true, ts: new Date().toISOSt
 let _lastCronSync = 0;
 let _lastScrapeTrigger = 0;
 let _lastLiveCheck = 0;
+let _lastMonthlyRecapCheck = 0;
 // Triggera il workflow scrape su GitHub Actions (indipendente dal cron GitHub
 // che è inaffidabile). Richiede GH_DISPATCH_TOKEN (PAT con scope actions:write).
 function triggerScrapeWorkflow() {
@@ -1776,6 +1777,14 @@ app.get('/api/cron/tick', (req, res) => {
     _lastLiveCheck = now;
     checkLiveTransitionsAndNotify();
   }
+  // Riepilogo mensile: la funzione stessa esce subito se non è il giorno 1
+  // (controllo economico), il throttle qui evita solo query Supabase
+  // ripetute inutilmente da più tick ravvicinati proprio il giorno 1 — la
+  // vera protezione da invii doppi è il flag persistito in kv_store.
+  if (now - _lastMonthlyRecapCheck >= 10 * 60 * 1000) {
+    _lastMonthlyRecapCheck = now;
+    _checkMonthlyRecap();
+  }
 });
 
 // ── Push notifications ──────────────────────────────────────────────────────
@@ -1865,6 +1874,118 @@ async function writeVideos(obj) {
     return;
   }
   fs.writeFileSync(VIDEOS_PATH, JSON.stringify(obj, null, 2));
+}
+
+// ══════════════════════════════════════════════════════════════════════════════
+// Riepilogo mensile (per animare la pagina social oltre ai soli risultati
+// gara): top atleti/team del mese per punti, generato automaticamente il
+// giorno 1 (notifica push all'admin) e comunque generabile a mano per
+// qualsiasi mese dalla dashboard admin. Testo pronto da copiare, stesso
+// principio del testo FB per la singola gara (_buildGaraNarrative).
+// ══════════════════════════════════════════════════════════════════════════════
+const _MONTH_NAMES_IT = ['Gennaio','Febbraio','Marzo','Aprile','Maggio','Giugno','Luglio','Agosto','Settembre','Ottobre','Novembre','Dicembre'];
+
+function _computeMonthlyRecap(resultsRaw, year, month) {
+  const prefix = `${year}-${String(month).padStart(2, '0')}`;
+  const rows = (resultsRaw || []).filter(r => (r.data || '').startsWith(prefix));
+  const byAthlete = new Map(), byTeam = new Map(), garaSet = new Set();
+  for (const r of rows) {
+    if (r.gara_id) garaSet.add(r.gara_id);
+    const pts = r.punti_effettivi || 0;
+    const pos = Number(r.posizione);
+    if (r.atleta_id) {
+      if (!byAthlete.has(r.atleta_id)) byAthlete.set(r.atleta_id, { atleta_id: r.atleta_id, cognome: r.cognome, nome: r.nome, team: r.team, punti: 0, wins: 0, podi: 0 });
+      const a = byAthlete.get(r.atleta_id);
+      a.punti += pts;
+      if (pos === 1) a.wins++;
+      if (pos >= 1 && pos <= 3) a.podi++;
+    }
+    if (r.team_id) {
+      if (!byTeam.has(r.team_id)) byTeam.set(r.team_id, { team_id: r.team_id, nome: r.team, punti: 0, wins: 0 });
+      const t = byTeam.get(r.team_id);
+      t.punti += pts;
+      if (pos === 1) t.wins++;
+    }
+  }
+  return {
+    year, month,
+    totalGare: garaSet.size,
+    totalRisultati: rows.length,
+    topAthletes: [...byAthlete.values()].sort((a, b) => b.punti - a.punti).slice(0, 5),
+    topTeams: [...byTeam.values()].sort((a, b) => b.punti - a.punti).slice(0, 5),
+  };
+}
+
+function _monthlyRecapText(recap) {
+  const lines = [];
+  lines.push(`RIEPILOGO ${_MONTH_NAMES_IT[recap.month - 1].toUpperCase()} ${recap.year}`);
+  lines.push(`${recap.totalGare} gare disputate`);
+  lines.push('');
+  if (recap.topAthletes.length) {
+    lines.push('🏆 TOP ATLETI DEL MESE');
+    recap.topAthletes.forEach((a, i) => lines.push(`${i + 1}. ${a.cognome} ${a.nome} (${a.team || 'N/D'}) — ${a.punti} pt, ${a.wins} vittorie`));
+    lines.push('');
+  }
+  if (recap.topTeams.length) {
+    lines.push('🚴 TOP TEAM DEL MESE');
+    recap.topTeams.forEach((t, i) => lines.push(`${i + 1}. ${t.nome || t.team_id} — ${t.punti} pt, ${t.wins} vittorie`));
+  }
+  return lines.join('\n');
+}
+
+app.get('/api/admin/monthly-recap/latest', requireAdmin, async (req, res) => {
+  try {
+    if (!supabase) return res.json({ recap: null });
+    const { data, error } = await supabase.from('kv_store').select('key, value')
+      .like('key', 'monthly_recap_%').order('key', { ascending: false }).limit(1);
+    if (error) throw error;
+    res.json({ recap: data?.[0]?.value || null });
+  } catch (e) { res.status(500).json({ error: e.message }); }
+});
+
+app.get('/api/admin/monthly-recap/:year/:month', requireAdmin, async (req, res) => {
+  try {
+    const year = parseInt(req.params.year, 10), month = parseInt(req.params.month, 10);
+    if (!year || !month || month < 1 || month > 12) return res.status(400).json({ error: 'anno/mese non validi' });
+    const resultsRaw = readDataJson('results_raw.json') || [];
+    const recap = _computeMonthlyRecap(resultsRaw, year, month);
+    res.json({ recap, text: _monthlyRecapText(recap) });
+  } catch (e) { res.status(500).json({ error: e.message }); }
+});
+
+// Controllo automatico, chiamato da /api/cron/tick: se oggi è il giorno 1
+// del mese e il riepilogo del mese appena concluso non è ancora stato
+// generato (flag persistito in kv_store, sopravvive ai redeploy — a
+// differenza di una variabile in memoria), lo genera e notifica l'admin via
+// push. Il flag stesso è la protezione da invii doppi, niente throttle
+// separato necessario.
+async function _checkMonthlyRecap() {
+  if (!supabase) return;
+  const now = new Date();
+  if (now.getDate() !== 1) return;
+  let month = now.getMonth(); // 0-based: mese-1 = mese scorso (1-based)
+  let year = now.getFullYear();
+  if (month === 0) { month = 12; year -= 1; }
+  const key = `monthly_recap_${year}-${String(month).padStart(2, '0')}`;
+  try {
+    const { data } = await supabase.from('kv_store').select('key').eq('key', key).single();
+    if (data) return; // già generato/inviato per questo mese
+    const resultsRaw = readDataJson('results_raw.json') || [];
+    const recap = _computeMonthlyRecap(resultsRaw, year, month);
+    const text = _monthlyRecapText(recap);
+    const { error } = await supabase.from('kv_store')
+      .upsert({ key, value: { ...recap, text }, updated_at: now.toISOString() });
+    if (error) throw error;
+    const admins = await rawQuery(`SELECT id FROM users WHERE role='admin'`).then(r => r.rows).catch(() => []);
+    for (const a of admins) {
+      sendPushToUser(a.id, {
+        title: '📊 Riepilogo mensile pronto',
+        body: `${_MONTH_NAMES_IT[month - 1]} ${year}: ${recap.topAthletes[0] ? recap.topAthletes[0].cognome + ' ' + recap.topAthletes[0].nome + ' in testa' : 'testo pronto in dashboard'}.`,
+        url: '/#/dashboard',
+      }).catch(() => {});
+    }
+    console.log(`[monthly-recap] Generato e notificato per ${year}-${month}`);
+  } catch (e) { console.warn('[monthly-recap] error:', e.message); }
 }
 
 // ══════════════════════════════════════════════════════════════════════════════

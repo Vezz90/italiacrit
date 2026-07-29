@@ -23858,6 +23858,16 @@ async function _dashAdmin(el, user) {
   const gareY = res.filter(r=>(r.data||'').startsWith(thisY));
   const prossime = cal.filter(g=>(g.data||g.date||'')>=today).length;
 
+  // Riepilogo mensile: precompila con l'ultimo generato in automatico il
+  // giorno 1 (se c'è), altrimenti il mese scorso resta selezionato pronto
+  // per "Genera" — non blocca il render se la chiamata fallisce/è lenta.
+  const now = new Date();
+  let defYear = now.getFullYear(), defMonth = now.getMonth(); // mese scorso (getMonth() è 0-based = mese-1)
+  if (defMonth === 0) { defMonth = 12; defYear -= 1; }
+  let latestRecap = null;
+  try { latestRecap = (await apiCall('/admin/monthly-recap/latest'))?.recap || null; } catch {}
+  const monthNamesIt = ['Gennaio','Febbraio','Marzo','Aprile','Maggio','Giugno','Luglio','Agosto','Settembre','Ottobre','Novembre','Dicembre'];
+
   el.innerHTML = `
     <div class="dash-grid">
 
@@ -23869,6 +23879,23 @@ async function _dashAdmin(el, user) {
           <div class="dash-stat"><div class="dash-stat-val">${atleti}</div><div class="dash-stat-lbl">Atleti</div></div>
           <div class="dash-stat"><div class="dash-stat-val">${prossime}</div><div class="dash-stat-lbl">In calendario</div></div>
         </div>
+      </div>
+
+      <div class="dash-card">
+        <div class="dash-card-title"><span>📅</span>Riepilogo mensile</div>
+        <div style="font-size:.75rem;color:var(--text-muted);margin-bottom:10px">
+          ${latestRecap ? `Ultimo generato in automatico: ${monthNamesIt[latestRecap.month-1]} ${latestRecap.year} (il giorno 1 del mese, notifica push già inviata).` : `Nessun riepilogo automatico ancora inviato — parte da solo il giorno 1 di ogni mese, oppure generane uno subito qui sotto.`}
+        </div>
+        <div style="display:flex;gap:8px;align-items:center;margin-bottom:10px;flex-wrap:wrap">
+          <select id="mrec-month" class="cal-filter-select">
+            ${monthNamesIt.map((m,i)=>`<option value="${i+1}"${i+1===defMonth?' selected':''}>${m}</option>`).join('')}
+          </select>
+          <input type="number" id="mrec-year" class="cal-filter-select" style="width:90px" value="${defYear}">
+          <button class="dash-btn dash-btn--outline" onclick="window.generateMonthlyRecap()">Genera</button>
+        </div>
+        <textarea id="mrec-text" readonly rows="9" style="width:100%;resize:vertical;font:inherit;font-size:.85rem;padding:8px;border-radius:8px;border:1px solid var(--border-subtle);background:var(--bg-elevated,rgba(255,255,255,0.04));color:var(--text-primary)">${latestRecap?.text ? esc(latestRecap.text) : ''}</textarea>
+        <button class="dash-btn dash-btn--outline" style="margin-top:8px" onclick="window.copyMonthlyRecapText()">📋 Copia testo</button>
+        <div id="mrec-status" style="font-size:.75rem;color:var(--text-muted);margin-top:6px"></div>
       </div>
 
       <div class="dash-card">
@@ -23885,6 +23912,31 @@ async function _dashAdmin(el, user) {
 
     </div>`;
 }
+
+window.generateMonthlyRecap = async function() {
+  const month = document.getElementById('mrec-month')?.value;
+  const year  = document.getElementById('mrec-year')?.value;
+  const statusEl = document.getElementById('mrec-status');
+  const textEl   = document.getElementById('mrec-text');
+  if (!month || !year || !statusEl || !textEl) return;
+  statusEl.textContent = 'Generazione…';
+  try {
+    const r = await apiCall(`/admin/monthly-recap/${encodeURIComponent(year)}/${encodeURIComponent(month)}`);
+    textEl.value = r.text || '';
+    statusEl.textContent = r.recap ? `${r.recap.totalGare} gare · ${r.recap.topAthletes.length} atleti in classifica · ${r.recap.topTeams.length} team in classifica.` : '';
+  } catch (e) { statusEl.textContent = 'Errore: ' + e.message; }
+};
+window.copyMonthlyRecapText = async function() {
+  const ta = document.getElementById('mrec-text');
+  if (!ta || !ta.value) return;
+  try {
+    await navigator.clipboard.writeText(ta.value);
+    showToast('Testo copiato!');
+  } catch {
+    ta.select();
+    try { document.execCommand('copy'); showToast('Testo copiato!'); } catch {}
+  }
+};
 
 // ── MEDIA PROFILE HANDLERS ────────────────────────────────────────────────────
 
