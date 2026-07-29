@@ -22383,7 +22383,7 @@ window.shareClassifica=async function(){
 // Client ID pubblico (non è un segreto: compare sempre nel sorgente di ogni
 // pagina che usa "Accedi con Google" — la sicurezza sta nella verifica
 // server-side del token, non nel nasconderlo).
-const GOOGLE_CLIENT_ID = '';
+const GOOGLE_CLIENT_ID = '952992177319-0i3q2tnacb6agc262i7datp07cc36tr8.apps.googleusercontent.com';
 
 function _renderGoogleButton(containerId, callbackName) {
   if (!GOOGLE_CLIENT_ID || typeof google === 'undefined' || !google.accounts) return;
