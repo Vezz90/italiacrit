@@ -39,6 +39,14 @@ let _transporter = null;
       port:   parseInt(process.env.SMTP_PORT || '587'),
       secure: process.env.SMTP_PORT === '465',
       auth:   { user: process.env.SMTP_USER, pass: process.env.SMTP_PASS },
+      // Senza questi, una connessione SMTP bloccata (porta filtrata dal
+      // provider di hosting, host irraggiungibile) può restare appesa per
+      // minuti prima di fallire — con l'invio email ora in background (vedi
+      // forgot-password) non blocca più le risposte HTTP, ma vogliamo comunque
+      // un fallimento rapido e chiaro nei log invece che silenzioso e lento.
+      connectionTimeout: 10000,
+      greetingTimeout: 10000,
+      socketTimeout: 10000,
     });
     console.log('[email] Nodemailer pronto:', process.env.SMTP_HOST);
   } catch (e) {
@@ -963,14 +971,17 @@ app.post('/api/auth/forgot-password', async (req, res) => {
       .upsert({ key, value: { user_id: user.id, expiresAt }, updated_at: new Date().toISOString() });
     if (error) throw error;
     const resetUrl = `${SITE_URL}/reset-password?token=${token}`;
-    await sendEmail({
+    // Non awaited: una connessione SMTP lenta o bloccata (comune su hosting
+    // cloud per prevenire spam) non deve tenere appesa la risposta — l'utente
+    // vede comunque subito il messaggio generico, l'email parte in background.
+    sendEmail({
       to: user.email,
       subject: 'Reimposta la tua password — Italia Cycling Stats',
       html: `<p>Hai richiesto di reimpostare la password del tuo account ItaliacritResultati.</p>
 <p><a href="${resetUrl}" style="display:inline-block;padding:12px 22px;background:#e65c00;color:#fff;text-decoration:none;border-radius:8px;font-weight:600">Reimposta password</a></p>
 <p>Il link scade tra 1 ora. Se non hai richiesto tu il reset, ignora questa email — la tua password resta invariata.</p>`,
       text: `Reimposta la password: ${resetUrl} (scade tra 1 ora, ignora se non richiesto)`,
-    });
+    }).catch(e => console.warn('[password-reset] invio email fallito:', e.message));
     res.json(generic);
   } catch (e) { res.status(500).json({ error: e.message }); }
 });
