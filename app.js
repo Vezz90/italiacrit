@@ -22419,7 +22419,7 @@ function renderLogin() {
     <div class="auth-wrap">
       <div style="width:100%;max-width:420px">
         <div class="auth-brand">
-          <div class="auth-brand-name">ICS</div>
+          <img src="assets/logo.png?v=3" class="auth-brand-logo" alt="ICS - Italia Cycling Stats" />
           <div class="auth-brand-sub">Risultati Ciclismo Italiano</div>
         </div>
         <div class="auth-card">
@@ -22502,7 +22502,7 @@ function renderResetPassword() {
     <div class="auth-wrap">
       <div style="width:100%;max-width:420px">
         <div class="auth-brand">
-          <div class="auth-brand-name">ICS</div>
+          <img src="assets/logo.png?v=3" class="auth-brand-logo" alt="ICS - Italia Cycling Stats" />
           <div class="auth-brand-sub">Risultati Ciclismo Italiano</div>
         </div>
         <div class="auth-card">
@@ -22737,7 +22737,7 @@ function renderRegister() {
     <div class="auth-wrap">
       <div style="width:100%;max-width:420px">
         <div class="auth-brand">
-          <div class="auth-brand-name">ICS</div>
+          <img src="assets/logo.png?v=3" class="auth-brand-logo" alt="ICS - Italia Cycling Stats" />
           <div class="auth-brand-sub">Risultati Ciclismo Italiano</div>
         </div>
         <div class="auth-card">
