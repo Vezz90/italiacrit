@@ -12565,23 +12565,44 @@ window.adminSearchCalRace = (q) => {
   const res = document.getElementById('avf-race-results');
   if (!res) return;
   if (!q || q.length < 2) { res.style.display = 'none'; return; }
+  const qq = q.toLowerCase();
   const seen = new Set();
-  const matches = (globalData?.resultsRaw || [])
+  const fromResults = (globalData?.resultsRaw || [])
     .filter(r => {
       if (seen.has(r.gara_id)) return false;
-      seen.add(r.gara_id);
       const name = (r.nome_gara || r.gara_id || '').toLowerCase();
       const cat  = (r.categoria || '').toLowerCase();
-      return name.includes(q.toLowerCase()) || cat.includes(q.toLowerCase()) || r.gara_id.toLowerCase().includes(q.toLowerCase());
+      const ok = name.includes(qq) || cat.includes(qq) || r.gara_id.toLowerCase().includes(qq);
+      if (ok) seen.add(r.gara_id);
+      return ok;
     })
+    .map(r => ({ id: r.gara_id, nome: r.nome_gara || r.gara_id, categoria: r.categoria || '', genere: r.genere || '', data: r.data || '' }));
+  // resultsRaw contiene solo gare già svolte E già scaricate — una diretta
+  // annunciata in anticipo per una gara futura (o già svolta ma non ancora
+  // pubblicata dalla FCI) non ci compare mai, qualunque cosa si digiti.
+  // Il calendario invece ha TUTTE le gare dell'anno comprese quelle future:
+  // lo cerchiamo in aggiunta, per nome E per luogo (il nome gara spesso non
+  // contiene la località, che però è quello che si ricorda più facilmente
+  // guardando un video/diretta — bug reale segnalato dall'utente).
+  const fromCalendar = (globalData?.calendar || [])
+    .filter(g => {
+      if (seen.has(g.id)) return false;
+      const name  = (g.nome  || g.id || '').toLowerCase();
+      const luogo = (g.luogo || '').toLowerCase();
+      const ok = name.includes(qq) || luogo.includes(qq) || (g.id || '').toLowerCase().includes(qq);
+      if (ok) seen.add(g.id);
+      return ok;
+    })
+    .map(g => ({ id: g.id, nome: g.nome || g.id, categoria: g.categoria || '', genere: '', data: g.data || '' }));
+  const matches = [...fromResults, ...fromCalendar]
     .sort((a,b) => (b.data||'').localeCompare(a.data||''))
     .slice(0, 15);
   if (!matches.length) { res.style.display = 'none'; return; }
   res.style.display = 'block';
   res.innerHTML = matches.map(r => {
-    const label = `${esc(r.nome_gara||r.gara_id)}`;
+    const label = `${esc(r.nome||r.id)}`;
     const badge = r.categoria ? `<span style="background:var(--accent);color:#fff;border-radius:3px;padding:1px 5px;font-size:.7rem;margin-left:6px">${esc(r.categoria)} ${r.genere||''}</span>` : '';
-    return `<div onclick="window.adminSelectCalRace('${esc(r.gara_id)}','${esc(r.nome_gara||r.gara_id)} — ${esc(r.categoria||'')} ${r.genere||''}')"
+    return `<div onclick="window.adminSelectCalRace('${esc(r.id)}','${esc(r.nome||r.id)} — ${esc(r.categoria||'')} ${r.genere||''}')"
       style="padding:8px 12px;cursor:pointer;font-size:.82rem;border-bottom:1px solid var(--border-subtle);display:flex;align-items:center;gap:4px">
       <strong>${label}</strong>${badge}
       <span style="color:var(--text-muted);font-size:.75rem;margin-left:auto">${r.data||''}</span>
