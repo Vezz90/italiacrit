@@ -9056,7 +9056,7 @@
     "campionato_regionale": false,
     "campionato_italiano": false,
     "regione": "VENETO",
-    "categoria": "Donne Allieve",
+    "categoria": "Donne Esordienti",
     "luogo": "NOVENTA DI PIAVE"
   },
   {
@@ -11446,5 +11446,29 @@
     "regione": "LAZIO",
     "categoria": "Esordienti 1°/2° anno",
     "luogo": "OLIVELLA FRAZIONE DI S.ELIA FIUMERAPIDO"
+  },
+  {
+    "id": "GIORNATA_ROSA_11_GIORNATA_ROSA_ALLIEVE_2026-08-23",
+    "nome": "GIORNATA ROSA-11^ GIORNATA ROSA",
+    "data": "2026-08-23",
+    "tipo": "regionale",
+    "moltiplicatore": 1,
+    "campionato_regionale": false,
+    "campionato_italiano": false,
+    "regione": "VENETO",
+    "categoria": "Donne Allieve",
+    "luogo": "NOVENTA DI PIAVE"
+  },
+  {
+    "id": "2_G_P_NOVENTANA_PADOVA_DIESEL_ALLIEVE_2026-06-14",
+    "nome": "2° G.P. \"NOVENTANA-PADOVA DIESEL\"",
+    "data": "2026-06-14",
+    "tipo": "regionale",
+    "moltiplicatore": 1,
+    "campionato_regionale": false,
+    "campionato_italiano": false,
+    "regione": "VENETO",
+    "categoria": "Donne Allieve",
+    "luogo": "NOVENTANA"
   }
 ]
