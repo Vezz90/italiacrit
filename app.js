@@ -24018,6 +24018,13 @@ async function _dashAdmin(el, user) {
       </div>
 
       <div class="dash-card">
+        <div class="dash-card-title"><span>✉️</span>Test invio email (diagnostica SMTP)</div>
+        <p style="font-size:.8rem;color:var(--text-secondary);margin:0 0 10px">Manda un'email di prova alla tua casella e mostra l'errore esatto se qualcosa non va — usalo per capire perché non arrivano le email di recupero password.</p>
+        <button class="dash-btn dash-btn--outline" id="test-email-btn" onclick="window.sendTestEmail()">Invia email di test a me stesso</button>
+        <pre id="test-email-result" style="display:none;margin-top:10px;padding:10px;border-radius:8px;background:var(--bg-elevated,rgba(255,255,255,0.04));border:1px solid var(--border-subtle);font-size:.78rem;white-space:pre-wrap;word-break:break-word"></pre>
+      </div>
+
+      <div class="dash-card">
         <div class="dash-card-title"><span>⚡</span>Accesso rapido</div>
         <div class="dash-actions-grid">
           <a href="#/admin"                   class="dash-quick-btn"><span class="dqb-icon">⚙️</span>Gestionale</a>
@@ -24054,6 +24061,24 @@ window.copyMonthlyRecapText = async function() {
   } catch {
     ta.select();
     try { document.execCommand('copy'); showToast('Testo copiato!'); } catch {}
+  }
+};
+
+window.sendTestEmail = async function() {
+  const btn = document.getElementById('test-email-btn');
+  const out = document.getElementById('test-email-result');
+  btn.disabled = true; btn.textContent = 'Invio…';
+  out.style.display = 'block';
+  out.textContent = 'Invio in corso…';
+  try {
+    const r = await apiCall('/admin/test-email', { method: 'POST', body: {} });
+    out.textContent = JSON.stringify(r, null, 2);
+    out.style.borderColor = r.ok ? 'var(--success,#2e9e5b)' : 'var(--danger,#d64545)';
+  } catch (e) {
+    out.textContent = 'Errore chiamata: ' + e.message;
+    out.style.borderColor = 'var(--danger,#d64545)';
+  } finally {
+    btn.disabled = false; btn.textContent = 'Invia email di test a me stesso';
   }
 };
 

@@ -7690,6 +7690,30 @@ app.post('/api/admin/og-cache-bust/gara/:id', requireAdmin, (req, res) => {
   res.json({ ok: true, hadCache: had });
 });
 
+// Diagnostica SMTP: sendEmail() cattura l'errore internamente e non lo
+// espone mai al chiamante (per non rivelare dettagli su endpoint pubblici
+// come forgot-password) — qui invece, solo per l'admin, chiamiamo nodemailer
+// direttamente e restituiamo l'errore reale così si vede cosa blocca
+// davvero l'invio (credenziali sbagliate, porta filtrata, host irraggiungibile...).
+app.post('/api/admin/test-email', requireAdmin, async (req, res) => {
+  const to = (req.body && req.body.to) || req.user.email;
+  if (!_transporter) {
+    return res.json({ ok: false, error: 'SMTP non configurato: mancano SMTP_HOST/SMTP_USER/SMTP_PASS su Render.' });
+  }
+  try {
+    const info = await _transporter.sendMail({
+      from: process.env.SMTP_FROM || `"ItaliacritResultati" <${process.env.SMTP_USER}>`,
+      to,
+      subject: 'Test invio email — Italia Cycling Stats',
+      text: 'Email di test per verificare la configurazione SMTP del sito. Se la leggi, funziona!',
+      html: '<p>Email di test per verificare la configurazione SMTP del sito. Se la leggi, funziona!</p>',
+    });
+    res.json({ ok: true, message: `Inviata a ${to}. Controlla la casella (anche spam).`, messageId: info.messageId, response: info.response });
+  } catch (e) {
+    res.json({ ok: false, error: e.message, code: e.code, host: process.env.SMTP_HOST, port: process.env.SMTP_PORT || '587', user: process.env.SMTP_USER });
+  }
+});
+
 app.get('/api/og-image/gara/:id', async (req, res) => {
   const garaId = decodeURIComponent(req.params.id);
   const cacheKey = `gara_${garaId}`;
