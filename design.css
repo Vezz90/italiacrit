@@ -11710,7 +11710,7 @@ main.page:has(.itc-dash) {
   text-decoration: none;
 }
 .dash-btn:active { transform: scale(.97); }
-.dash-btn--primary  { background: var(--accent); color: #fff; }
+.dash-btn--primary  { background: var(--accent, var(--red-hot)); color: #fff; }
 .dash-btn--outline  { background: transparent; border: 1px solid var(--border-subtle); color: var(--text-primary); }
 .dash-btn--accent   { background: linear-gradient(135deg,#f5c400,#e8a000); color: #000; }
 .dash-btn--sm       { font-size: .75rem; padding: 6px 12px; }
