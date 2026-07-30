@@ -18930,11 +18930,17 @@ function _renderStatisticheCat(catKey, resultsRaw, athletes, calendar, catTabsHt
     }
   }
 
-  // ── PIÙ IN FORMA: miglior media punti nelle ultime 3 gare vs 3 precedenti ──
+  // ── PIÙ IN FORMA: media punti nelle settimane di gara recenti vs quelle
+  // subito precedenti — non un conteggio fisso di "ultime 3 gare", che
+  // può coprire periodi di lunghezza molto diversa a seconda di quanto
+  // spesso un atleta corre (3 gare in 3 settimane per uno, in 3 mesi per
+  // un altro non sono comparabili). Finestra di 28 giorni (~4 settimane),
+  // richiede almeno 2 gare in ciascuna finestra per essere un dato solido.
   // Vale solo per chi ha corso di recente: senza questo filtro un atleta
-  // fermo da settimane poteva risultare "in forma" solo perché le sue ultime
-  // 3 gare disputate (magari a inizio stagione) erano andate bene.
+  // fermo da settimane poteva risultare "in forma" solo perché le sue
+  // ultime gare disputate (magari mesi fa) erano andate bene.
   const _RECENCY_DAYS = 21;
+  const _FORM_WINDOW_DAYS = 28;
   const _daysBetween = (d1, d2) => Math.round((new Date(d2) - new Date(d1)) / 86400000);
   let inForma = null;
   {
@@ -18945,10 +18951,12 @@ function _renderStatisticheCat(catKey, resultsRaw, athletes, calendar, catTabsHt
       if (hist.length < 4) continue;
       const lastRaceDate = hist[hist.length-1].data;
       if (!lastRaceDate || _daysBetween(lastRaceDate, _lastDate) > _RECENCY_DAYS) continue;
-      const last3 = hist.slice(-3), prev3 = hist.slice(-6,-3);
+      const recentWin = hist.filter(r => r.data && _daysBetween(r.data, lastRaceDate) <= _FORM_WINDOW_DAYS);
+      const priorWin  = hist.filter(r => r.data && _daysBetween(r.data, lastRaceDate) > _FORM_WINDOW_DAYS && _daysBetween(r.data, lastRaceDate) <= _FORM_WINDOW_DAYS*2);
+      if (recentWin.length < 2 || priorWin.length < 2) continue;
       const avg = arr => arr.reduce((s,r)=>s+(r.punti_effettivi||0),0)/(arr.length||1);
-      const delta = avg(last3) - avg(prev3);
-      if (delta > best && delta > 0) { best = delta; inForma = { id, delta: delta.toFixed(1), recent: avg(last3).toFixed(1) }; }
+      const delta = avg(recentWin) - avg(priorWin);
+      if (delta > best && delta > 0) { best = delta; inForma = { id, delta: delta.toFixed(1), recent: avg(recentWin).toFixed(1) }; }
     }
   }
 
