@@ -8480,20 +8480,26 @@ function _titleRaceHtml(catCode, gender, ranking, isTeam) {
     return { entry, gare, avgPts, partRate, personalRemaining };
   });
 
-  const evaluated = withPace.map(({ entry, personalRemaining, avgPts }) => {
-    const gap = leader.punti - entry.punti;
+  // Gare rimaste: stesso numero condiviso da tutti (il totale calendario
+  // per la categoria) — non personalizzato per atleta. Il conto "quante
+  // vittorie in più servono" resta invariato al variare di questo numero
+  // (dipende solo dal distacco in punti), ma è il numero usato per dire se
+  // un distacco è ancora colmabile prima che finisca la stagione.
+  const evaluated = ranking.map((entry, i) => {
     const isLeader = entry === leader;
-    // Ipotesi concreta e RELATIVA al leader (non assoluta): quante vittorie
-    // in più del leader servono all'inseguitore per superarlo. Formulata
-    // così risponde anche a "cosa non deve fare il leader" — se il leader
-    // vince più gare di quelle implicite nel calcolo, il vantaggio richiesto
-    // sale di conseguenza.
-    const winsNeeded = isLeader ? 0 : Math.max(1, Math.ceil((gap + 1) / maxPerRace));
-    const alive = isLeader || winsNeeded <= personalRemaining;
-    return { entry, gap, isLeader, winsNeeded, alive, personalRemaining, avgPts };
+    const gapToLeader = leader.punti - entry.punti;
+    const winsNeededTitle = isLeader ? 0 : Math.max(1, Math.ceil((gapToLeader + 1) / maxPerRace));
+    // Rivale immediatamente sopra in classifica (non il leader assoluto):
+    // per salire di UNA posizione basta superare lui, non tutti quanti —
+    // è il conto "con gli altri pretendenti", non solo con chi comanda.
+    const above = i > 0 ? ranking[i - 1] : null;
+    const gapToAbove = above ? above.punti - entry.punti : 0;
+    const winsNeededAbove = above ? Math.max(1, Math.ceil((gapToAbove + 1) / maxPerRace)) : 0;
+    const alive = isLeader || winsNeededTitle <= remaining;
+    return { entry, isLeader, gapToLeader, winsNeededTitle, above, gapToAbove, winsNeededAbove, alive };
   });
 
-  const leaderGapToChaser = evaluated[1] ? evaluated[1].gap : 0;
+  const leaderGapToChaser = evaluated[1] ? evaluated[1].gapToLeader : 0;
   const leaderRow = `<div style="padding:10px 0;border-bottom:1px solid var(--border-subtle)">
     <span style="font-size:.85rem">👑 <a href="${hrefOf(leader)}" style="font-weight:700">${nameOf(leader)}</a> comanda con ${leader.punti} pt</span>
     ${leaderGapToChaser ? `<div style="font-size:.76rem;color:var(--text-muted);margin-top:2px">Margine di ${leaderGapToChaser} pt sul primo inseguitore</div>` : ''}
@@ -8502,14 +8508,20 @@ function _titleRaceHtml(catCode, gender, ranking, isTeam) {
   const aliveChasers = evaluated.filter(e => !e.isLeader && e.alive).slice(0, 5);
   const outCount = evaluated.filter(e => !e.isLeader && !e.alive).length;
 
-  const chaserRows = aliveChasers.map(({entry, gap, winsNeeded, personalRemaining}) => {
-    const allIn = winsNeeded >= personalRemaining;
-    const ipotesi = allIn
-      ? `Anche vincendo tutte le sue prossime gare (circa ${personalRemaining}, al suo ritmo di partecipazione) resta indietro se ${nameOf(leader)} continua a vincere`
-      : `Deve conquistare almeno <strong>${winsNeeded}</strong> vittorie più di <strong>${nameOf(leader)}</strong> nelle circa ${personalRemaining} gare a cui parteciperà, per superarlo`;
+  const chaserRows = aliveChasers.map(({entry, gapToLeader, winsNeededTitle, above, gapToAbove, winsNeededAbove}) => {
+    const allIn = winsNeededTitle >= remaining;
+    const titleLine = allIn
+      ? `Anche vincendo tutte le ${remaining} gare rimaste resta indietro se ${nameOf(leader)} continua a vincere`
+      : `Per il <strong>titolo</strong>: almeno <strong>${winsNeededTitle}</strong> vittorie più di <strong>${nameOf(leader)}</strong> nelle ${remaining} gare rimaste`;
+    // Riga aggiuntiva sul rivale immediato, solo se diverso dal leader
+    // (altrimenti ripeterebbe la stessa informazione).
+    const aboveLine = (above && above !== leader)
+      ? `<div style="font-size:.76rem;color:var(--text-secondary);margin-top:2px">Per salire al <strong>${entry.pos - 1}° posto</strong>: almeno <strong>${winsNeededAbove}</strong> vittoria${winsNeededAbove===1?'':'e'} più di <strong>${nameOf(above)}</strong> (−${gapToAbove} pt)</div>`
+      : '';
     return `<div style="padding:9px 0;border-bottom:1px solid var(--border-subtle)">
-      <span style="font-size:.85rem"><span style="color:var(--text-muted)">${entry.pos}°</span> <a href="${hrefOf(entry)}" style="font-weight:600">${nameOf(entry)}</a> <span style="color:var(--text-muted);font-size:.8rem">— ${entry.punti} pt (−${gap})</span></span>
-      <div style="font-size:.76rem;color:var(--text-secondary);margin-top:2px">${ipotesi}</div>
+      <span style="font-size:.85rem"><span style="color:var(--text-muted)">${entry.pos}°</span> <a href="${hrefOf(entry)}" style="font-weight:600">${nameOf(entry)}</a> <span style="color:var(--text-muted);font-size:.8rem">— ${entry.punti} pt (−${gapToLeader})</span></span>
+      <div style="font-size:.76rem;color:var(--text-secondary);margin-top:2px">${titleLine}</div>
+      ${aboveLine}
     </div>`;
   }).join('');
 
