@@ -18985,6 +18985,11 @@ function _renderStatisticheCat(catKey, resultsRaw, athletes, calendar, catTabsHt
   // Striscia di vittorie più lunga. Deduplica per gara_id: uno stesso
   // risultato può comparire più volte (import FCI + import PCS per la
   // stessa gara), il che gonfiava artificialmente le strisce di vittorie.
+  // Inoltre due vittorie separate da troppo tempo (>25 giorni, più del
+  // normale ritmo settimanale di gare) NON contano come "di fila": quasi
+  // certamente in mezzo ci sono state altre gare senza podio, semplicemente
+  // non tracciate nei dati con lo stesso dettaglio delle gare vinte.
+  const _STREAK_GAP_DAYS = 25;
   let recordStreak = null;
   {
     const byAth = {};
@@ -18996,8 +19001,14 @@ function _renderStatisticheCat(catKey, resultsRaw, athletes, calendar, catTabsHt
         seenGara.add(r.gara_id);
         return true;
       });
-      let cur = 0, max = 0;
-      for (const r of hist) { if (r.posizione === 1) { cur++; max = Math.max(max,cur); } else cur = 0; }
+      let cur = 0, max = 0, prevDate = null;
+      for (const r of hist) {
+        if (r.posizione === 1) {
+          if (prevDate && r.data && Math.round((new Date(r.data) - new Date(prevDate)) / 86400000) > _STREAK_GAP_DAYS) cur = 0;
+          cur++; max = Math.max(max,cur);
+        } else cur = 0;
+        prevDate = r.data || prevDate;
+      }
       if (max >= 2 && (!recordStreak || max > recordStreak.streak)) recordStreak = { id, streak: max };
     }
   }
