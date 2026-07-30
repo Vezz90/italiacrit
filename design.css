@@ -5072,6 +5072,18 @@ div[style*="grid-template-columns: repeat(auto-fit"] {
   color: rgba(255,255,255,0.75) !important;
 }
 
+/* Chip usato nell'header della scheda "gara futura" (data/luogo/regione/categorie) */
+.race-meta-chip {
+  display: inline-block;
+  background: rgba(255,255,255,0.08);
+  border: 1px solid rgba(255,255,255,0.15);
+  color: rgba(255,255,255,0.85);
+  font-size: 0.78rem;
+  font-weight: 700;
+  padding: 5px 12px;
+  border-radius: 20px;
+}
+
 /* ── E) Ranking table editorial style ───────────────────────── */
 .ranking-table thead tr {
   background: var(--bg-elevated) !important;

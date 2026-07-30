@@ -16312,11 +16312,11 @@ async function renderGara(gara_id) {
       <div class="race-header">
         <div style="font-size:.7rem;font-weight:700;letter-spacing:.14em;color:var(--red-hot);margin-bottom:8px;text-transform:uppercase">🏁 Gara in programma · ${esc(dLabel.toUpperCase())}</div>
         <div class="race-name-display">${esc(_displayName)}</div>
-        <div class="race-meta-row" style="display:flex;gap:10px;flex-wrap:wrap;align-items:center">
-          <span class="badge">${fmtDate}</span>
-          ${calEntry.luogo ? `<span class="race-meta-sep">|</span><span class="badge">📍 ${esc(calEntry.luogo)}</span>` : ''}
-          ${calEntry.regione ? `<span class="race-meta-sep">|</span><span class="badge">${esc(calEntry.regione)}</span>` : ''}
-          ${cats.map(c => `<span class="badge">${esc(catLabel(c)||c)}</span>`).join('')}
+        <div class="race-meta-row" style="display:flex;gap:8px;flex-wrap:wrap;align-items:center;margin-top:14px">
+          <span class="race-meta-chip">${fmtDate}</span>
+          ${calEntry.luogo ? `<span class="race-meta-chip">📍 ${esc(calEntry.luogo)}</span>` : ''}
+          ${calEntry.regione ? `<span class="race-meta-chip">${esc(calEntry.regione)}</span>` : ''}
+          ${cats.map(c => `<span class="race-meta-chip">${esc(catLabel(c)||c)}</span>`).join('')}
         </div>
       </div>
       <button onclick="history.back()" style="background:none;border:none;color:var(--text-muted);cursor:pointer;font-size:.85rem;margin-bottom:18px;padding:0">← Torna indietro</button>
