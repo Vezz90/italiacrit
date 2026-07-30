@@ -931,22 +931,17 @@ app.get('/api/og-image/classifica/:id/:view/:sort', async (req, res) => {
     const view = req.params.view === 'team' ? 'team' : 'atleti';
     const sort = req.params.sort === 'vittorie' ? 'vittorie' : 'punti';
     const cacheKey = `classifica_${req.params.id}_${view}_${sort}`;
-    const cached = _ogCache.get(cacheKey);
-    if (cached && Date.now() - cached.ts < OG_TTL) {
-      res.setHeader('Content-Type', 'image/jpeg');
-      res.setHeader('Cache-Control', 'public, max-age=1800');
-      return res.send(cached.buf);
-    }
-    const { catLabelText, region, monthLabel, ranking } = await _computeClassRanking(req.params.id, { view, sort });
-    if (!ranking.length) return res.redirect('/assets/og-default.png');
-    const svg = buildClassCardSvg({
-      catLabel: catLabelText, region, month: monthLabel, rows: ranking, view,
-      scoreLabel: sort === 'vittorie' ? 'VITTORIE' : 'PUNTI',
-      scoreSuffix: sort === 'vittorie' ? 'V' : 'pt',
+    const buf = await _ogGenerateDeduped(cacheKey, async () => {
+      const { catLabelText, region, monthLabel, ranking } = await _computeClassRanking(req.params.id, { view, sort });
+      if (!ranking.length) return null;
+      const svg = buildClassCardSvg({
+        catLabel: catLabelText, region, month: monthLabel, rows: ranking, view,
+        scoreLabel: sort === 'vittorie' ? 'VITTORIE' : 'PUNTI',
+        scoreSuffix: sort === 'vittorie' ? 'V' : 'pt',
+      });
+      return await renderOgPng(svg);
     });
-    const buf = await renderOgPng(svg);
     if (!buf) return res.redirect('/assets/og-default.png');
-    _ogCache.set(cacheKey, { buf, ts: Date.now() });
     res.setHeader('Content-Type', 'image/jpeg');
     res.setHeader('Cache-Control', 'public, max-age=1800');
     res.send(buf);
@@ -7135,8 +7130,21 @@ async function _ogGenerateDeduped(cacheKey, generator) {
   const promise = (async () => {
     try {
       const buf = await generator();
-      if (buf) _ogCache.set(cacheKey, { buf, ts: Date.now() });
-      return buf;
+      if (buf) { _ogCache.set(cacheKey, { buf, ts: Date.now() }); return buf; }
+      // Generazione fallita (timeout, foto irraggiungibile, ecc.): se esiste
+      // già una versione buona precedente (anche scaduta), la riserviamo
+      // invece di cadere sul logo generico. Senza questo, basta che Facebook
+      // ri-scrapi il link in un momento sfortunato per perdere la foto da un
+      // post già pubblicato — anche se il sito torna a generarla bene un
+      // minuto dopo, il danno sulla condivisione è già fatto e resta a lungo
+      // (Facebook non ri-scrapa da solo). Aggiorniamo il timestamp così non
+      // si ritenta la generazione ad ogni richiesta finché non ne va a buon fine una vera.
+      if (cached) { cached.ts = Date.now(); return cached.buf; }
+      return null;
+    } catch (e) {
+      console.warn('[og] generazione fallita per', cacheKey, ':', e.message);
+      if (cached) { cached.ts = Date.now(); return cached.buf; }
+      return null;
     } finally {
       _ogInFlight.delete(cacheKey);
     }
@@ -7411,50 +7419,49 @@ app.get('/api/og-image/atleta/:id', async (req, res) => {
   try {
     const atletaId = req.params.id;
     const cacheKey = `atleta_${atletaId}`;
-    const cached = _ogCache.get(cacheKey);
-    if (cached && Date.now() - cached.ts < OG_TTL) {
-      res.setHeader('Content-Type', 'image/jpeg');
-      res.setHeader('Cache-Control', 'public, max-age=1800');
-      return res.send(cached.buf);
-    }
-    // Statistiche atleta (servono sia per la card foto+testo sia per quella
-    // di solo testo): athletes.json da GitHub, affidabile su Render.
-    const athletes = (await readDataJsonFromGH('athletes.json')) || {};
-    const a = athletes[atletaId] || {};
-    const cognome = a.cognome || '', nomeP = a.nome || '';
-    const ris = a.risultati || [];
-    const p1 = ris.filter(r => Number(r.posizione) === 1).length;
-    const p2 = ris.filter(r => Number(r.posizione) === 2).length;
-    const p3 = ris.filter(r => Number(r.posizione) === 3).length;
-    const p4_10 = ris.filter(r => Number(r.posizione) >= 4 && Number(r.posizione) <= 10).length;
-    const badge = (a.categoria || '').replace(/_/g, ' ');
-    // Posizione in classifica di categoria: stessi criteri della pagina
-    // Classifiche (punti_totali stagionali), confrontata con gli atleti della
-    // stessa categoria/genere.
-    let pos = null;
-    if (a.categoria && a.genere) {
-      const peers = Object.values(athletes)
-        .filter(x => x.categoria === a.categoria && x.genere === a.genere && (x.punti_totali || 0) > 0)
-        .sort((x, y) => (y.punti_totali || 0) - (x.punti_totali || 0));
-      const idx = peers.findIndex(x => x.id === atletaId);
-      if (idx >= 0) pos = idx + 1;
-    }
-    const cardData = { cognome, nome: nomeP, team: a.team_attuale || '', badge, punti: a.punti_totali || 0, pos, p1, p2, p3, p4_10 };
+    // _ogGenerateDeduped: se la generazione fallisce ma esiste già una
+    // versione buona precedente (anche scaduta), la riserve invece del logo
+    // generico — vedi commento sulla funzione per il perché.
+    const buf = await _ogGenerateDeduped(cacheKey, async () => {
+      // Statistiche atleta (servono sia per la card foto+testo sia per quella
+      // di solo testo): athletes.json da GitHub, affidabile su Render.
+      const athletes = (await readDataJsonFromGH('athletes.json')) || {};
+      const a = athletes[atletaId] || {};
+      const cognome = a.cognome || '', nomeP = a.nome || '';
+      const ris = a.risultati || [];
+      const p1 = ris.filter(r => Number(r.posizione) === 1).length;
+      const p2 = ris.filter(r => Number(r.posizione) === 2).length;
+      const p3 = ris.filter(r => Number(r.posizione) === 3).length;
+      const p4_10 = ris.filter(r => Number(r.posizione) >= 4 && Number(r.posizione) <= 10).length;
+      const badge = (a.categoria || '').replace(/_/g, ' ');
+      // Posizione in classifica di categoria: stessi criteri della pagina
+      // Classifiche (punti_totali stagionali), confrontata con gli atleti della
+      // stessa categoria/genere.
+      let pos = null;
+      if (a.categoria && a.genere) {
+        const peers = Object.values(athletes)
+          .filter(x => x.categoria === a.categoria && x.genere === a.genere && (x.punti_totali || 0) > 0)
+          .sort((x, y) => (y.punti_totali || 0) - (x.punti_totali || 0));
+        const idx = peers.findIndex(x => x.id === atletaId);
+        if (idx >= 0) pos = idx + 1;
+      }
+      const cardData = { cognome, nome: nomeP, team: a.team_attuale || '', badge, punti: a.punti_totali || 0, pos, p1, p2, p3, p4_10 };
 
-    // Card di testo piena larghezza (nome, badge, hero punti+posizione,
-    // griglia statistiche) sempre come base; se l'atleta ha una foto profilo,
-    // sovrapponiamo un avatar circolare in alto a destra — stesso layout
-    // della card "Post Quadrato" generata lato client (generateShareCanvas),
-    // indicato dall'utente come riferimento esatto da seguire.
-    const svg = buildAtletaCardSvg(cardData);
-    let buf;
-    try {
-      const photo = await getEntityPhoto('atleta', atletaId);  // URL pubblico o null
-      buf = photo ? await _ogCardWithAvatar(svg, photo) : null;
-    } catch { buf = null; }
-    if (!buf) buf = await renderOgPng(svg);
+      // Card di testo piena larghezza (nome, badge, hero punti+posizione,
+      // griglia statistiche) sempre come base; se l'atleta ha una foto profilo,
+      // sovrapponiamo un avatar circolare in alto a destra — stesso layout
+      // della card "Post Quadrato" generata lato client (generateShareCanvas),
+      // indicato dall'utente come riferimento esatto da seguire.
+      const svg = buildAtletaCardSvg(cardData);
+      let b;
+      try {
+        const photo = await getEntityPhoto('atleta', atletaId);  // URL pubblico o null
+        b = photo ? await _ogCardWithAvatar(svg, photo) : null;
+      } catch { b = null; }
+      if (!b) b = await renderOgPng(svg);
+      return b;
+    });
     if (!buf) return res.redirect('/assets/og-default.png');
-    _ogCache.set(cacheKey, { buf, ts: Date.now() });
     res.setHeader('Content-Type', 'image/jpeg');
     res.setHeader('Cache-Control', 'public, max-age=1800');
     res.send(buf);
@@ -7851,44 +7858,40 @@ app.get('/api/og-image/team/:id', async (req, res) => {
   try {
     const teamId = decodeURIComponent(req.params.id);
     const cacheKey = `team_${teamId}`;
-    const cached = _ogCache.get(cacheKey);
-    if (cached && Date.now() - cached.ts < OG_TTL) {
-      res.setHeader('Content-Type', 'image/jpeg');
-      res.setHeader('Cache-Control', 'public, max-age=1800');
-      return res.send(cached.buf);
-    }
-    // Bug corretto: confrontava r.team (il NOME visualizzato, es. "Team
-    // Hoppla'") con teamId (lo slug id, es. "TEAM_HOPPLA") — non
-    // corrispondevano mai, quindi l'immagine falliva sempre e finiva sul logo
-    // generico di default. Va confrontato team_id. Anche readDataJsonFromGH
-    // invece di readDataJson (locale, non affidabile su Render), come il
-    // resto delle route OG.
-    const [results, teams] = await Promise.all([
-      readDataJsonFromGH('results_raw.json'),
-      readDataJsonFromGH('teams.json'),
-    ]);
-    const teamRows = (results || []).filter(r => (r.team_id || '') === teamId);
-    if (!teamRows.length) return res.redirect('/assets/og-default.png');
-    const teamName = (teams || {})[teamId]?.nome || teamId.replace(/_/g, ' ');
-    const punti = (teams || {})[teamId]?.punti_totali || 0;
-    const wins  = teamRows.filter(r => Number(r.posizione) === 1).length;
-    const top3  = teamRows.filter(r => Number(r.posizione) <= 3).length;
-    const races = new Set(teamRows.map(r => r.gara_id)).size;
-    const riders = new Set(teamRows.map(r => r.atleta_id)).size;
-    const teamCardData = { nome: teamName, punti, wins, top3, races, riders };
+    const buf = await _ogGenerateDeduped(cacheKey, async () => {
+      // Bug corretto: confrontava r.team (il NOME visualizzato, es. "Team
+      // Hoppla'") con teamId (lo slug id, es. "TEAM_HOPPLA") — non
+      // corrispondevano mai, quindi l'immagine falliva sempre e finiva sul logo
+      // generico di default. Va confrontato team_id. Anche readDataJsonFromGH
+      // invece di readDataJson (locale, non affidabile su Render), come il
+      // resto delle route OG.
+      const [results, teams] = await Promise.all([
+        readDataJsonFromGH('results_raw.json'),
+        readDataJsonFromGH('teams.json'),
+      ]);
+      const teamRows = (results || []).filter(r => (r.team_id || '') === teamId);
+      if (!teamRows.length) return null;
+      const teamName = (teams || {})[teamId]?.nome || teamId.replace(/_/g, ' ');
+      const punti = (teams || {})[teamId]?.punti_totali || 0;
+      const wins  = teamRows.filter(r => Number(r.posizione) === 1).length;
+      const top3  = teamRows.filter(r => Number(r.posizione) <= 3).length;
+      const races = new Set(teamRows.map(r => r.gara_id)).size;
+      const riders = new Set(teamRows.map(r => r.atleta_id)).size;
+      const teamCardData = { nome: teamName, punti, wins, top3, races, riders };
 
-    // Card di testo piena larghezza come base, con avatar circolare in alto
-    // a destra sovrapposto se il team ha un logo/foto profilo (override
-    // admin) — stessa impostazione dell'atleta.
-    const svg = buildTeamCardSvg({ ...teamCardData, badge: 'TEAM' });
-    let buf;
-    try {
-      const photo = await getEntityPhoto('team', teamId);
-      buf = photo ? await _ogCardWithAvatar(svg, photo) : null;
-    } catch { buf = null; }
-    if (!buf) buf = await renderOgPng(svg);
+      // Card di testo piena larghezza come base, con avatar circolare in alto
+      // a destra sovrapposto se il team ha un logo/foto profilo (override
+      // admin) — stessa impostazione dell'atleta.
+      const svg = buildTeamCardSvg({ ...teamCardData, badge: 'TEAM' });
+      let b;
+      try {
+        const photo = await getEntityPhoto('team', teamId);
+        b = photo ? await _ogCardWithAvatar(svg, photo) : null;
+      } catch { b = null; }
+      if (!b) b = await renderOgPng(svg);
+      return b;
+    });
     if (!buf) return res.redirect('/assets/og-default.png');
-    _ogCache.set(cacheKey, { buf, ts: Date.now() });
     res.setHeader('Content-Type', 'image/jpeg');
     res.setHeader('Cache-Control', 'public, max-age=1800');
     res.send(buf);
@@ -7898,18 +7901,13 @@ app.get('/api/og-image/team/:id', async (req, res) => {
 app.get('/api/og-image/class/:id', async (req, res) => {
   try {
     const cacheKey = `class_${req.params.id}`;
-    const cached = _ogCache.get(cacheKey);
-    if (cached && Date.now() - cached.ts < OG_TTL) {
-      res.setHeader('Content-Type', 'image/jpeg');
-      res.setHeader('Cache-Control', 'public, max-age=1800');
-      return res.send(cached.buf);
-    }
-    const { catLabelText, region, monthLabel, ranking } = await _computeClassRanking(req.params.id);
-    if (!ranking.length) return res.redirect('/assets/og-default.png');
-    const svg = buildClassCardSvg({ catLabel: catLabelText, region, month: monthLabel, rows: ranking });
-    const buf = await renderOgPng(svg);
+    const buf = await _ogGenerateDeduped(cacheKey, async () => {
+      const { catLabelText, region, monthLabel, ranking } = await _computeClassRanking(req.params.id);
+      if (!ranking.length) return null;
+      const svg = buildClassCardSvg({ catLabel: catLabelText, region, month: monthLabel, rows: ranking });
+      return await renderOgPng(svg);
+    });
     if (!buf) return res.redirect('/assets/og-default.png');
-    _ogCache.set(cacheKey, { buf, ts: Date.now() });
     res.setHeader('Content-Type', 'image/jpeg');
     res.setHeader('Cache-Control', 'public, max-age=1800');
     res.send(buf);
