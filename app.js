@@ -8414,6 +8414,78 @@ async function renderAlboDoro() {
   if (hostEl) hostEl.innerHTML = _alboDoroCardHtml(alboCat, alboView === 'team', valid, { eyebrow: false, showEmpty: true });
 }
 
+// ── CORSA AL TITOLO ─────────────────────────────────────────────
+// Chi è ancora matematicamente in corsa per il primo posto in classifica,
+// date le gare rimaste in calendario per questa categoria. Calcolo
+// puramente aritmetico (nessuna "probabilità" stimata): un corridore/team
+// è ancora in corsa se, vincendo il massimo di punti possibile in TUTTE le
+// gare rimanenti, potrebbe comunque superare il punteggio attuale del
+// leader. Il "massimo punti per gara" è il valore più alto realmente
+// ottenuto quest'anno in questa categoria (tiene conto dei moltiplicatori
+// per gare regionali/nazionali/campionati).
+function _titleRaceHtml(catCode, gender, ranking, isTeam) {
+  if (!ranking || !ranking.length || !globalData.calendar) return '';
+  const CAT_FILTER = { ELI_M:'Elite', ELI_F:'Elite', JUN_M:'Junior', JUN_F:'Junior',
+    AL_M:'Alliev', AL_F:'Alliev', ES1_M:'Esordient', ES2_M:'Esordient', ES1_F:'Esordient', ES2_F:'Esordient' };
+  const catFilter = CAT_FILTER[catCode] || '';
+  const todayStr = new Date().toISOString().split('T')[0];
+  const calMatches = g => {
+    if (catFilter && !(g.categoria||'').toLowerCase().includes(catFilter.toLowerCase())) return false;
+    if (g.genere) { if (g.genere !== gender) return false; }
+    else {
+      const combined = ((g.categoria||'') + ' ' + (g.nome||'')).toLowerCase();
+      const isFem = /donne|femmin|allieve/.test(combined);
+      const isMas = /uomini|maschil/.test(combined);
+      if (isFem && gender !== 'F') return false;
+      if (isMas && gender !== 'M') return false;
+    }
+    return true;
+  };
+  const remaining = globalData.calendar.filter(g => (g.data||'') >= todayStr && calMatches(g)).length;
+  if (remaining === 0) return '';
+
+  const catResults = globalData.resultsRaw.filter(r => getRankingFileCode(r) === catCode);
+  let maxPerRace = 0;
+  if (isTeam) {
+    const byTeamGara = {};
+    catResults.forEach(r => {
+      if (!r.team_id || !r.gara_id) return;
+      const k = r.team_id + '::' + r.gara_id;
+      byTeamGara[k] = (byTeamGara[k]||0) + (r.punti_effettivi||0);
+    });
+    maxPerRace = Object.values(byTeamGara).reduce((mx,v)=>Math.max(mx,v), 0);
+  } else {
+    maxPerRace = catResults.reduce((mx,r) => Math.max(mx, r.punti_effettivi||0), 0);
+  }
+  if (maxPerRace <= 0) return '';
+
+  const leader = ranking[0];
+  const rows = ranking.slice(0, 10).map(entry => {
+    const maxPossible = entry.punti + remaining * maxPerRace;
+    const gap = leader.punti - entry.punti;
+    const isLeader = entry === leader;
+    const alive = isLeader || maxPossible > leader.punti;
+    const name = isTeam ? esc(entry.team_nome||'') : `${esc(entry.cognome||'')} ${esc(entry.nome||'')}`;
+    const href = isTeam ? `#/team/${encodeURIComponent(entry.team_id)}` : `#/atleta/${encodeURIComponent(entry.atleta_id)}`;
+    return `<div style="display:grid;grid-template-columns:32px 1fr auto auto 100px;gap:10px;align-items:center;padding:8px 4px;border-bottom:1px solid var(--border-subtle);opacity:${alive?'1':'.45'}">
+      <span style="color:var(--text-muted);font-size:.8rem">${entry.pos}°</span>
+      <a href="${href}" style="font-weight:600;font-size:.88rem">${name}</a>
+      <span style="font-size:.82rem;color:var(--text-secondary);white-space:nowrap">${entry.punti} pt${gap?` <span style="color:var(--text-muted)">(−${gap})</span>`:''}</span>
+      <span style="font-size:.78rem;color:var(--text-muted);white-space:nowrap">max ${maxPossible} pt</span>
+      <span style="font-size:.75rem;font-weight:700;text-align:right;white-space:nowrap;color:${isLeader?'var(--yellow-race)':alive?'#10b981':'var(--text-muted)'}">${isLeader?'👑 Leader':alive?'✅ In corsa':'❌ Fuori'}</span>
+    </div>`;
+  }).join('');
+
+  return `<section style="background:var(--bg-card);border:1px solid var(--border-subtle);border-radius:var(--r-lg);margin-bottom:16px;padding:16px 18px">
+    <div style="display:flex;align-items:baseline;gap:8px;margin-bottom:4px">
+      <span style="font-size:1.1rem">🏆</span>
+      <span style="font-family:var(--font-heading);font-weight:800;font-size:.92rem;text-transform:uppercase;letter-spacing:.04em">Corsa al titolo</span>
+    </div>
+    <div style="font-size:.78rem;color:var(--text-muted);margin-bottom:10px">${remaining} gar${remaining===1?'a':'e'} rimast${remaining===1?'a':'e'} in stagione per questa categoria · fino a ${maxPerRace} pt in palio a gara · calcolo matematico, non una previsione</div>
+    <div>${rows}</div>
+  </section>`;
+}
+
 async function updateRankTable() {
   const container = document.getElementById('rank-table-container');
   const countSpan = document.getElementById('rank-count-label');
@@ -8775,7 +8847,8 @@ async function updateRankTable() {
     }).join('');
 
     _rankPhotosQueue = displayList;
-    tableHtml = storyHtml + sortBar + `
+    const titleRaceHtml = (!isFiltered && rankSort === 'punti') ? _titleRaceHtml(rankCat, rankGender, ranking, false) : '';
+    tableHtml = storyHtml + titleRaceHtml + sortBar + `
       <table class="ranking-table rk-table-narrative">
         <thead><tr>
           <th style="width:50px">POS</th>
@@ -8960,7 +9033,8 @@ async function updateRankTable() {
     }).join('');
     _rankPhotosQueue = teamDisplayList; // per logo team
 
-    tableHtml = teamStoryHtml + `
+    const titleRaceHtmlTeam = (!isFiltered && rankSort === 'punti') ? _titleRaceHtml(rankCat, rankGender, teamRanking, true) : '';
+    tableHtml = teamStoryHtml + titleRaceHtmlTeam + `
       <table class="ranking-table rk-table-narrative">
         <thead><tr>
           <th style="width:50px">POS</th>
