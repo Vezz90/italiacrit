@@ -8498,15 +8498,52 @@ function _titleRaceHtml(catCode, gender, ranking, isTeam) {
     ? `<div style="padding-top:9px;font-size:.76rem;color:var(--text-muted)">+${outCount} altr${outCount===1?'o':'i'} ${isTeam?'team':'atlet'+(outCount===1?'a':'i')} ormai matematicamente fuori dai giochi</div>`
     : '';
 
+  // ── PROIEZIONE: cosa succede se anche gli altri continuano a fare
+  // risultati, non solo l'inseguitore di turno. Ognuno viene proiettato a
+  // fine stagione al proprio ritmo attuale (punti/gara) e alla propria
+  // frequenza di partecipazione osservata finora (un atleta che ha
+  // corso 6 gare su 40 disputate probabilmente non le farà tutte e 40
+  // nemmeno tra quelle rimaste, quindi non gli si proiettano tutte le
+  // gare rimanenti ma solo la sua quota tipica).
+  const idKey = isTeam ? 'team_id' : 'atleta_id';
+  const totalRacesHeldCat = new Set(catResults.map(r => r.gara_id)).size;
+  const projected = ranking.slice(0, 8).map(entry => {
+    const mine = catResults.filter(r => r[idKey] === entry[idKey]);
+    const gare = new Set(mine.map(r => r.gara_id)).size;
+    const avgPts = gare > 0 ? entry.punti / gare : 0;
+    const partRate = totalRacesHeldCat > 0 ? Math.min(1, gare / totalRacesHeldCat) : 0;
+    const projPts = Math.round(entry.punti + remaining * partRate * avgPts);
+    return { entry, projPts };
+  }).sort((a, b) => b.projPts - a.projPts);
+  projected.forEach((p, i) => { p.projPos = i + 1; });
+
+  const projRows = projected.map(({ entry, projPts, projPos }) => {
+    const moved = entry.pos - projPos; // positivo = sale in proiezione
+    const arrow = moved > 0
+      ? `<span style="color:#10b981">▲${moved}</span>`
+      : moved < 0 ? `<span style="color:#ef4444">▼${-moved}</span>` : `<span style="color:var(--text-muted)">=</span>`;
+    return `<div style="display:flex;justify-content:space-between;align-items:center;padding:7px 0;border-bottom:1px solid var(--border-subtle);font-size:.82rem">
+      <span>${projPos}° ${arrow} <a href="${hrefOf(entry)}" style="font-weight:600">${nameOf(entry)}</a></span>
+      <span style="color:var(--text-muted);white-space:nowrap">${entry.punti} → <strong style="color:var(--text-primary)">${projPts} pt</strong></span>
+    </div>`;
+  }).join('');
+
+  const projectionHtml = `<div style="margin-top:14px;padding-top:14px;border-top:1px solid var(--border-subtle)">
+    <div style="font-size:.78rem;font-weight:700;color:var(--text-secondary);margin-bottom:6px">📊 Proiezione a fine stagione, se ognuno mantiene il proprio ritmo</div>
+    ${projRows}
+    <div style="font-size:.7rem;color:var(--text-muted);margin-top:8px">Stima su punti/gara e frequenza di partecipazione osservati finora — non tiene conto di infortuni, cambi di squadra o exploit improvvisi.</div>
+  </div>`;
+
   return `<section style="background:var(--bg-card);border:1px solid var(--border-subtle);border-radius:var(--r-lg);margin-bottom:16px;padding:16px 18px">
     <div style="display:flex;align-items:baseline;gap:8px;margin-bottom:2px">
       <span style="font-size:1.1rem">🏆</span>
       <span style="font-family:var(--font-heading);font-weight:800;font-size:.92rem;text-transform:uppercase;letter-spacing:.04em">Corsa al titolo</span>
     </div>
-    <div style="font-size:.76rem;color:var(--text-muted);margin-bottom:10px">${remaining} gar${remaining===1?'a':'e'} rimast${remaining===1?'a':'e'} in stagione per questa categoria — ipotesi basate sulla gara di maggior valore disputata quest'anno, non una previsione</div>
+    <div style="font-size:.76rem;color:var(--text-muted);margin-bottom:10px">${remaining} gar${remaining===1?'a':'e'} rimast${remaining===1?'a':'e'} in stagione per questa categoria</div>
     ${leaderRow}
     ${chaserRows}
     ${outLine}
+    ${projectionHtml}
   </section>`;
 }
 
