@@ -8460,29 +8460,53 @@ function _titleRaceHtml(catCode, gender, ranking, isTeam) {
   if (maxPerRace <= 0) return '';
 
   const leader = ranking[0];
-  const rows = ranking.slice(0, 10).map(entry => {
-    const maxPossible = entry.punti + remaining * maxPerRace;
+  const nameOf = entry => isTeam ? esc(entry.team_nome||'') : `${esc(entry.cognome||'')} ${esc(entry.nome||'')}`;
+  const hrefOf = entry => isTeam ? `#/team/${encodeURIComponent(entry.team_id)}` : `#/atleta/${encodeURIComponent(entry.atleta_id)}`;
+
+  const evaluated = ranking.map(entry => {
     const gap = leader.punti - entry.punti;
     const isLeader = entry === leader;
-    const alive = isLeader || maxPossible > leader.punti;
-    const name = isTeam ? esc(entry.team_nome||'') : `${esc(entry.cognome||'')} ${esc(entry.nome||'')}`;
-    const href = isTeam ? `#/team/${encodeURIComponent(entry.team_id)}` : `#/atleta/${encodeURIComponent(entry.atleta_id)}`;
-    return `<div style="display:grid;grid-template-columns:32px 1fr auto auto 100px;gap:10px;align-items:center;padding:8px 4px;border-bottom:1px solid var(--border-subtle);opacity:${alive?'1':'.45'}">
-      <span style="color:var(--text-muted);font-size:.8rem">${entry.pos}°</span>
-      <a href="${href}" style="font-weight:600;font-size:.88rem">${name}</a>
-      <span style="font-size:.82rem;color:var(--text-secondary);white-space:nowrap">${entry.punti} pt${gap?` <span style="color:var(--text-muted)">(−${gap})</span>`:''}</span>
-      <span style="font-size:.78rem;color:var(--text-muted);white-space:nowrap">max ${maxPossible} pt</span>
-      <span style="font-size:.75rem;font-weight:700;text-align:right;white-space:nowrap;color:${isLeader?'var(--yellow-race)':alive?'#10b981':'var(--text-muted)'}">${isLeader?'👑 Leader':alive?'✅ In corsa':'❌ Fuori'}</span>
+    // Ipotesi concreta invece del numero astratto "punti massimi": quante
+    // vittorie (al valore pieno) servono all'inseguitore per superare il
+    // punteggio attuale del leader, date le gare rimaste.
+    const winsNeeded = isLeader ? 0 : Math.max(1, Math.ceil((gap + 1) / maxPerRace));
+    const alive = isLeader || winsNeeded <= remaining;
+    return { entry, gap, isLeader, winsNeeded, alive };
+  });
+
+  const leaderGapToChaser = evaluated[1] ? evaluated[1].gap : 0;
+  const leaderRow = `<div style="padding:10px 0;border-bottom:1px solid var(--border-subtle)">
+    <span style="font-size:.85rem">👑 <a href="${hrefOf(leader)}" style="font-weight:700">${nameOf(leader)}</a> comanda con ${leader.punti} pt</span>
+    ${leaderGapToChaser ? `<div style="font-size:.76rem;color:var(--text-muted);margin-top:2px">Margine di ${leaderGapToChaser} pt sul primo inseguitore</div>` : ''}
+  </div>`;
+
+  const aliveChasers = evaluated.filter(e => !e.isLeader && e.alive).slice(0, 5);
+  const outCount = evaluated.filter(e => !e.isLeader && !e.alive).length;
+
+  const chaserRows = aliveChasers.map(({entry, gap, winsNeeded}) => {
+    const allIn = winsNeeded >= remaining;
+    const ipotesi = allIn
+      ? `Deve vincere <strong>tutte</strong> le ${remaining} gare rimaste per avere ancora una chance`
+      : `Deve vincere almeno <strong>${winsNeeded}</strong> delle ${remaining} gare rimaste per superarlo`;
+    return `<div style="padding:9px 0;border-bottom:1px solid var(--border-subtle)">
+      <span style="font-size:.85rem"><span style="color:var(--text-muted)">${entry.pos}°</span> <a href="${hrefOf(entry)}" style="font-weight:600">${nameOf(entry)}</a> <span style="color:var(--text-muted);font-size:.8rem">— ${entry.punti} pt (−${gap})</span></span>
+      <div style="font-size:.76rem;color:var(--text-secondary);margin-top:2px">${ipotesi}</div>
     </div>`;
   }).join('');
 
+  const outLine = outCount > 0
+    ? `<div style="padding-top:9px;font-size:.76rem;color:var(--text-muted)">+${outCount} altr${outCount===1?'o':'i'} ${isTeam?'team':'atlet'+(outCount===1?'a':'i')} ormai matematicamente fuori dai giochi</div>`
+    : '';
+
   return `<section style="background:var(--bg-card);border:1px solid var(--border-subtle);border-radius:var(--r-lg);margin-bottom:16px;padding:16px 18px">
-    <div style="display:flex;align-items:baseline;gap:8px;margin-bottom:4px">
+    <div style="display:flex;align-items:baseline;gap:8px;margin-bottom:2px">
       <span style="font-size:1.1rem">🏆</span>
       <span style="font-family:var(--font-heading);font-weight:800;font-size:.92rem;text-transform:uppercase;letter-spacing:.04em">Corsa al titolo</span>
     </div>
-    <div style="font-size:.78rem;color:var(--text-muted);margin-bottom:10px">${remaining} gar${remaining===1?'a':'e'} rimast${remaining===1?'a':'e'} in stagione per questa categoria · fino a ${maxPerRace} pt in palio a gara · calcolo matematico, non una previsione</div>
-    <div>${rows}</div>
+    <div style="font-size:.76rem;color:var(--text-muted);margin-bottom:10px">${remaining} gar${remaining===1?'a':'e'} rimast${remaining===1?'a':'e'} in stagione per questa categoria — ipotesi basate sulla gara di maggior valore disputata quest'anno, non una previsione</div>
+    ${leaderRow}
+    ${chaserRows}
+    ${outLine}
   </section>`;
 }
 
