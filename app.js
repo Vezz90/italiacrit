@@ -16309,38 +16309,23 @@ async function renderGara(gara_id) {
         </div>`;
     }
     setPage(`
-      <div style="max-width:640px;margin:40px auto;padding:0 16px">
-        <button onclick="history.back()" style="background:none;border:none;color:var(--text-muted);cursor:pointer;font-size:.85rem;margin-bottom:18px;padding:0">← Torna indietro</button>
-        <div style="background:var(--bg-card);border:1px solid var(--border-subtle);border-radius:var(--r-lg);overflow:hidden">
-          <div style="background:var(--red-hot);padding:18px 20px">
-            <div style="font-size:.7rem;font-weight:700;letter-spacing:.1em;color:rgba(255,255,255,.7);margin-bottom:6px">GARA IN PROGRAMMA · ${esc(dLabel.toUpperCase())}</div>
-            <div style="font-size:1.3rem;font-weight:900;color:#fff;line-height:1.2">${esc(_displayName)}</div>
-          </div>
-          <div style="padding:18px 20px;display:flex;flex-direction:column;gap:10px">
-            <div style="display:flex;gap:10px;flex-wrap:wrap">
-              <div style="background:var(--bg-elevated);border-radius:var(--r-sm);padding:8px 14px;flex:1;min-width:120px">
-                <div style="font-size:.65rem;color:var(--text-muted);font-weight:700;letter-spacing:.06em;margin-bottom:3px">DATA</div>
-                <div style="font-weight:700">${fmtDate}</div>
-              </div>
-              ${calEntry.luogo ? `<div style="background:var(--bg-elevated);border-radius:var(--r-sm);padding:8px 14px;flex:1;min-width:120px">
-                <div style="font-size:.65rem;color:var(--text-muted);font-weight:700;letter-spacing:.06em;margin-bottom:3px">LUOGO</div>
-                <div style="font-weight:700">${esc(calEntry.luogo)}</div>
-              </div>` : ''}
-              ${calEntry.regione ? `<div style="background:var(--bg-elevated);border-radius:var(--r-sm);padding:8px 14px;flex:1;min-width:120px">
-                <div style="font-size:.65rem;color:var(--text-muted);font-weight:700;letter-spacing:.06em;margin-bottom:3px">REGIONE</div>
-                <div style="font-weight:700">${esc(calEntry.regione)}</div>
-              </div>` : ''}
-            </div>
-            ${cats.length ? `<div style="background:var(--bg-elevated);border-radius:var(--r-sm);padding:8px 14px">
-              <div style="font-size:.65rem;color:var(--text-muted);font-weight:700;letter-spacing:.06em;margin-bottom:6px">CATEGORIE</div>
-              <div style="display:flex;gap:6px;flex-wrap:wrap">${cats.map(c => `<span style="background:var(--red-hot);color:#fff;font-size:.72rem;font-weight:700;padding:3px 8px;border-radius:10px">${esc(catLabel(c)||c)}</span>`).join('')}</div>
-            </div>` : ''}
-            <div style="color:var(--text-muted);font-size:.82rem;padding:4px 0">I risultati saranno disponibili dopo lo svolgimento della gara.</div>
-            ${authUser()?.role === 'admin' ? `<button class="admin-edit-btn" style="background:#0891b2;align-self:flex-start" onclick="window.openManualResultBulkForm('${esc(primaryGaraId)}')">➕ Aggiungi risultati</button>` : ''}
-          </div>
+      <div class="race-header">
+        <div style="font-size:.7rem;font-weight:700;letter-spacing:.14em;color:var(--red-hot);margin-bottom:8px;text-transform:uppercase">🏁 Gara in programma · ${esc(dLabel.toUpperCase())}</div>
+        <div class="race-name-display">${esc(_displayName)}</div>
+        <div class="race-meta-row" style="display:flex;gap:10px;flex-wrap:wrap;align-items:center">
+          <span class="badge">${fmtDate}</span>
+          ${calEntry.luogo ? `<span class="race-meta-sep">|</span><span class="badge">📍 ${esc(calEntry.luogo)}</span>` : ''}
+          ${calEntry.regione ? `<span class="race-meta-sep">|</span><span class="badge">${esc(calEntry.regione)}</span>` : ''}
+          ${cats.map(c => `<span class="badge">${esc(catLabel(c)||c)}</span>`).join('')}
         </div>
-        ${_preRaceDetailsHtml}
-      </div>`);
+      </div>
+      <button onclick="history.back()" style="background:none;border:none;color:var(--text-muted);cursor:pointer;font-size:.85rem;margin-bottom:18px;padding:0">← Torna indietro</button>
+      <div class="card" style="padding:20px 24px;display:flex;align-items:center;justify-content:space-between;gap:16px;flex-wrap:wrap">
+        <div style="color:var(--text-muted);font-size:.88rem">I risultati saranno disponibili dopo lo svolgimento della gara.</div>
+        ${authUser()?.role === 'admin' ? `<button class="admin-edit-btn" style="background:#0891b2" onclick="window.openManualResultBulkForm('${esc(primaryGaraId)}')">➕ Aggiungi risultati</button>` : ''}
+      </div>
+      ${_preRaceDetailsHtml}
+      `);
     window._currentGaraId = primaryGaraId;
     return;
     } // fine else (gara futura)
