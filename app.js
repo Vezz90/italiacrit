@@ -8463,15 +8463,34 @@ function _titleRaceHtml(catCode, gender, ranking, isTeam) {
   const nameOf = entry => isTeam ? esc(entry.team_nome||'') : `${esc(entry.cognome||'')} ${esc(entry.nome||'')}`;
   const hrefOf = entry => isTeam ? `#/team/${encodeURIComponent(entry.team_id)}` : `#/atleta/${encodeURIComponent(entry.atleta_id)}`;
 
-  const evaluated = ranking.map(entry => {
+  // "remaining" conta TUTTE le gare in calendario per la categoria in
+  // tutte le regioni — nessun singolo atleta le corre tutte (si parla in
+  // media di ~1 gara a settimana). Per dare un numero realistico a
+  // ciascuno, stimiamo quante ne disputerà probabilmente in base alla sua
+  // frequenza di partecipazione osservata finora (gare corse / gare totali
+  // già disputate in categoria) — stessa logica riusata per la proiezione.
+  const idKey = isTeam ? 'team_id' : 'atleta_id';
+  const totalRacesHeldCat = new Set(catResults.map(r => r.gara_id)).size;
+  const withPace = ranking.map(entry => {
+    const mine = catResults.filter(r => r[idKey] === entry[idKey]);
+    const gare = new Set(mine.map(r => r.gara_id)).size;
+    const avgPts = gare > 0 ? entry.punti / gare : 0;
+    const partRate = totalRacesHeldCat > 0 ? Math.min(1, gare / totalRacesHeldCat) : 0;
+    const personalRemaining = Math.max(1, Math.round(remaining * partRate));
+    return { entry, gare, avgPts, partRate, personalRemaining };
+  });
+
+  const evaluated = withPace.map(({ entry, personalRemaining, avgPts }) => {
     const gap = leader.punti - entry.punti;
     const isLeader = entry === leader;
-    // Ipotesi concreta invece del numero astratto "punti massimi": quante
-    // vittorie (al valore pieno) servono all'inseguitore per superare il
-    // punteggio attuale del leader, date le gare rimaste.
+    // Ipotesi concreta e RELATIVA al leader (non assoluta): quante vittorie
+    // in più del leader servono all'inseguitore per superarlo. Formulata
+    // così risponde anche a "cosa non deve fare il leader" — se il leader
+    // vince più gare di quelle implicite nel calcolo, il vantaggio richiesto
+    // sale di conseguenza.
     const winsNeeded = isLeader ? 0 : Math.max(1, Math.ceil((gap + 1) / maxPerRace));
-    const alive = isLeader || winsNeeded <= remaining;
-    return { entry, gap, isLeader, winsNeeded, alive };
+    const alive = isLeader || winsNeeded <= personalRemaining;
+    return { entry, gap, isLeader, winsNeeded, alive, personalRemaining, avgPts };
   });
 
   const leaderGapToChaser = evaluated[1] ? evaluated[1].gap : 0;
@@ -8483,11 +8502,11 @@ function _titleRaceHtml(catCode, gender, ranking, isTeam) {
   const aliveChasers = evaluated.filter(e => !e.isLeader && e.alive).slice(0, 5);
   const outCount = evaluated.filter(e => !e.isLeader && !e.alive).length;
 
-  const chaserRows = aliveChasers.map(({entry, gap, winsNeeded}) => {
-    const allIn = winsNeeded >= remaining;
+  const chaserRows = aliveChasers.map(({entry, gap, winsNeeded, personalRemaining}) => {
+    const allIn = winsNeeded >= personalRemaining;
     const ipotesi = allIn
-      ? `Deve vincere <strong>tutte</strong> le ${remaining} gare rimaste per avere ancora una chance`
-      : `Deve vincere almeno <strong>${winsNeeded}</strong> delle ${remaining} gare rimaste per superarlo`;
+      ? `Anche vincendo tutte le sue prossime gare (circa ${personalRemaining}, al suo ritmo di partecipazione) resta indietro se ${nameOf(leader)} continua a vincere`
+      : `Deve conquistare almeno <strong>${winsNeeded}</strong> vittorie più di <strong>${nameOf(leader)}</strong> nelle circa ${personalRemaining} gare a cui parteciperà, per superarlo`;
     return `<div style="padding:9px 0;border-bottom:1px solid var(--border-subtle)">
       <span style="font-size:.85rem"><span style="color:var(--text-muted)">${entry.pos}°</span> <a href="${hrefOf(entry)}" style="font-weight:600">${nameOf(entry)}</a> <span style="color:var(--text-muted);font-size:.8rem">— ${entry.punti} pt (−${gap})</span></span>
       <div style="font-size:.76rem;color:var(--text-secondary);margin-top:2px">${ipotesi}</div>
@@ -8501,18 +8520,10 @@ function _titleRaceHtml(catCode, gender, ranking, isTeam) {
   // ── PROIEZIONE: cosa succede se anche gli altri continuano a fare
   // risultati, non solo l'inseguitore di turno. Ognuno viene proiettato a
   // fine stagione al proprio ritmo attuale (punti/gara) e alla propria
-  // frequenza di partecipazione osservata finora (un atleta che ha
-  // corso 6 gare su 40 disputate probabilmente non le farà tutte e 40
-  // nemmeno tra quelle rimaste, quindi non gli si proiettano tutte le
-  // gare rimanenti ma solo la sua quota tipica).
-  const idKey = isTeam ? 'team_id' : 'atleta_id';
-  const totalRacesHeldCat = new Set(catResults.map(r => r.gara_id)).size;
-  const projected = ranking.slice(0, 8).map(entry => {
-    const mine = catResults.filter(r => r[idKey] === entry[idKey]);
-    const gare = new Set(mine.map(r => r.gara_id)).size;
-    const avgPts = gare > 0 ? entry.punti / gare : 0;
-    const partRate = totalRacesHeldCat > 0 ? Math.min(1, gare / totalRacesHeldCat) : 0;
-    const projPts = Math.round(entry.punti + remaining * partRate * avgPts);
+  // frequenza di partecipazione osservata finora — riusa lo stesso calcolo
+  // di "personalRemaining" già fatto sopra per il ritmo settimanale.
+  const projected = withPace.slice(0, 8).map(({ entry, avgPts, personalRemaining }) => {
+    const projPts = Math.round(entry.punti + personalRemaining * avgPts);
     return { entry, projPts };
   }).sort((a, b) => b.projPts - a.projPts);
   projected.forEach((p, i) => { p.projPos = i + 1; });
@@ -8539,7 +8550,7 @@ function _titleRaceHtml(catCode, gender, ranking, isTeam) {
       <span style="font-size:1.1rem">🏆</span>
       <span style="font-family:var(--font-heading);font-weight:800;font-size:.92rem;text-transform:uppercase;letter-spacing:.04em">Corsa al titolo</span>
     </div>
-    <div style="font-size:.76rem;color:var(--text-muted);margin-bottom:10px">${remaining} gar${remaining===1?'a':'e'} rimast${remaining===1?'a':'e'} in stagione per questa categoria</div>
+    <div style="font-size:.76rem;color:var(--text-muted);margin-bottom:10px">${remaining} gar${remaining===1?'a':'e'} rimast${remaining===1?'a':'e'} in calendario per questa categoria in tutta Italia — nessun atleta le corre tutte, sotto trovi una stima realistica per ciascuno</div>
     ${leaderRow}
     ${chaserRows}
     ${outLine}
