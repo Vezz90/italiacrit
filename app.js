@@ -8562,7 +8562,7 @@ function _titleRaceHtml(catCode, gender, ranking, isTeam) {
       <span style="font-size:1.1rem">🏆</span>
       <span style="font-family:var(--font-heading);font-weight:800;font-size:.92rem;text-transform:uppercase;letter-spacing:.04em">Corsa al titolo</span>
     </div>
-    <div style="font-size:.76rem;color:var(--text-muted);margin-bottom:10px">${remaining} gar${remaining===1?'a':'e'} rimast${remaining===1?'a':'e'} in calendario per questa categoria in tutta Italia — nessun atleta le corre tutte, sotto trovi una stima realistica per ciascuno</div>
+    <div style="font-size:.76rem;color:var(--text-muted);margin-bottom:10px">${remaining} gar${remaining===1?'a':'e'} rimast${remaining===1?'a':'e'} in calendario per questa categoria — calcolo matematico, non una previsione</div>
     ${leaderRow}
     ${chaserRows}
     ${outLine}
