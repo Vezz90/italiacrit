@@ -18908,7 +18908,11 @@ function _renderStatisticheCat(catKey, resultsRaw, athletes, calendar, catTabsHt
   const _sortedByDate = [...resultsRaw].filter(r => r.data).sort((a,b)=>(a.data||'').localeCompare(b.data||''));
   const _lastDate = _sortedByDate.length ? _sortedByDate[_sortedByDate.length-1].data : '';
 
-  // ── RIVELAZIONE: chi ha scalato più posizioni in classifica (rank_dopo_gara) ──
+  // ── RIVELAZIONE: chi ha scalato più posizioni durante l'intera stagione ──
+  // Confronto contro il PEGGIOR piazzamento in classifica raggiunto in
+  // qualsiasi momento dell'anno (non solo la prima gara disputata): cattura
+  // davvero la risalita massima "durante tutto l'anno e fra tutte le corse",
+  // anche per chi è partito forte, è calato a metà stagione e poi risalito.
   let rivelazione = null;
   {
     const byAth = {};
@@ -18919,14 +18923,19 @@ function _renderStatisticheCat(catKey, resultsRaw, athletes, calendar, catTabsHt
     let best = -1;
     for (const [id, hist] of Object.entries(byAth)) {
       if (hist.length < 2) continue;
-      const startRank = hist[0].rank_dopo_gara;
-      const nowRank   = hist[hist.length-1].rank_dopo_gara;
-      const gain = startRank - nowRank; // positivo = salito
+      const worstRank = Math.max(...hist.map(h => h.rank_dopo_gara));
+      const nowRank    = hist[hist.length-1].rank_dopo_gara;
+      const gain = worstRank - nowRank; // positivo = salito
       if (gain > best && gain >= 2) { best = gain; rivelazione = { id, gain, nowRank }; }
     }
   }
 
   // ── PIÙ IN FORMA: miglior media punti nelle ultime 3 gare vs 3 precedenti ──
+  // Vale solo per chi ha corso di recente: senza questo filtro un atleta
+  // fermo da settimane poteva risultare "in forma" solo perché le sue ultime
+  // 3 gare disputate (magari a inizio stagione) erano andate bene.
+  const _RECENCY_DAYS = 21;
+  const _daysBetween = (d1, d2) => Math.round((new Date(d2) - new Date(d1)) / 86400000);
   let inForma = null;
   {
     const byAth = {};
@@ -18934,6 +18943,8 @@ function _renderStatisticheCat(catKey, resultsRaw, athletes, calendar, catTabsHt
     let best = -1;
     for (const [id, hist] of Object.entries(byAth)) {
       if (hist.length < 4) continue;
+      const lastRaceDate = hist[hist.length-1].data;
+      if (!lastRaceDate || _daysBetween(lastRaceDate, _lastDate) > _RECENCY_DAYS) continue;
       const last3 = hist.slice(-3), prev3 = hist.slice(-6,-3);
       const avg = arr => arr.reduce((s,r)=>s+(r.punti_effettivi||0),0)/(arr.length||1);
       const delta = avg(last3) - avg(prev3);
@@ -18952,8 +18963,11 @@ function _renderStatisticheCat(catKey, resultsRaw, athletes, calendar, catTabsHt
   }
 
   // ── RECORD & PRIMATI ──
-  // Vittoria con più distacco (2° classificato con gap maggiore)
-  let recordDistacco = null, recordMedia = null, recordPartecipanti = null;
+  // Vittoria con più distacco (2° classificato con gap maggiore). Tolte
+  // "gara più veloce" (falsata dalle cronometro, non comparabile con le
+  // gare in linea) e "gara più affollata" (i risultati spesso si fermano
+  // alla top 10, quindi il conteggio non riflette i partecipanti reali).
+  let recordDistacco = null;
   {
     const byGara = {};
     resultsRaw.forEach(r => { (byGara[r.gara_id] ||= []).push(r); });
@@ -18966,21 +18980,22 @@ function _renderStatisticheCat(catKey, resultsRaw, athletes, calendar, catTabsHt
           recordDistacco = { winner: sorted[0], gapSec, gname: sorted[0]?.nome_gara, gid };
         }
       }
-      const media = parseFloat(sorted[0]?.media);
-      if (media && (!recordMedia || media > recordMedia.media)) {
-        recordMedia = { media, winner: sorted[0], gname: sorted[0]?.nome_gara, gid };
-      }
-      if (!recordPartecipanti || arr.length > recordPartecipanti.n) {
-        recordPartecipanti = { n: arr.length, gname: sorted[0]?.nome_gara, gid };
-      }
     }
   }
-  // Striscia di vittorie più lunga
+  // Striscia di vittorie più lunga. Deduplica per gara_id: uno stesso
+  // risultato può comparire più volte (import FCI + import PCS per la
+  // stessa gara), il che gonfiava artificialmente le strisce di vittorie.
   let recordStreak = null;
   {
     const byAth = {};
     for (const r of _sortedByDate) (byAth[r.atleta_id] ||= []).push(r);
-    for (const [id, hist] of Object.entries(byAth)) {
+    for (const [id, histRaw] of Object.entries(byAth)) {
+      const seenGara = new Set();
+      const hist = histRaw.filter(r => {
+        if (seenGara.has(r.gara_id)) return false;
+        seenGara.add(r.gara_id);
+        return true;
+      });
       let cur = 0, max = 0;
       for (const r of hist) { if (r.posizione === 1) { cur++; max = Math.max(max,cur); } else cur = 0; }
       if (max >= 2 && (!recordStreak || max > recordStreak.streak)) recordStreak = { id, streak: max };
@@ -19018,7 +19033,7 @@ function _renderStatisticheCat(catKey, resultsRaw, athletes, calendar, catTabsHt
     </div>
 
     <!-- STORIE DELLA STAGIONE — le card più "narrative", subito dopo i protagonisti -->
-    ${(rivelazione || inForma || rivalita || recordStreak || recordDistacco || recordMedia || recordPartecipanti) ? `
+    ${(rivelazione || inForma || rivalita || recordStreak || recordDistacco) ? `
     <div class="section-header" style="margin-top:4px">
       <span class="section-title">STORIE DELLA STAGIONE</span>
       <span class="section-line"></span>
@@ -19048,9 +19063,7 @@ function _renderStatisticheCat(catKey, resultsRaw, athletes, calendar, catTabsHt
       <div style="padding:12px 16px;background:var(--bg-secondary);border-bottom:1px solid var(--border-subtle);font-family:var(--font-heading);font-weight:700;font-size:.85rem;text-transform:uppercase;letter-spacing:.06em">🏅 Record & Primati</div>
       <div style="padding:8px 16px">
         ${recordStreak ? `<div style="display:flex;justify-content:space-between;align-items:center;padding:8px 0;border-bottom:1px solid var(--border-subtle)"><span style="font-size:.78rem;color:var(--text-muted)">🔥 Striscia vittorie</span><span style="font-size:.85rem;font-weight:600"><a href="#/atleta/${esc(recordStreak.id)}">${esc(getName(recordStreak.id))}</a> · ${recordStreak.streak} di fila</span></div>` : ''}
-        ${recordDistacco ? `<div style="display:flex;justify-content:space-between;align-items:center;padding:8px 0;border-bottom:1px solid var(--border-subtle)"><span style="font-size:.78rem;color:var(--text-muted)">💨 Vittoria più netta</span><span style="font-size:.82rem;font-weight:600;text-align:right"><a href="#/atleta/${esc(recordDistacco.winner.atleta_id)}">${esc(recordDistacco.winner.cognome)}</a> · +${_fmtSec(recordDistacco.gapSec)}</span></div>` : ''}
-        ${recordMedia ? `<div style="display:flex;justify-content:space-between;align-items:center;padding:8px 0;border-bottom:1px solid var(--border-subtle)"><span style="font-size:.78rem;color:var(--text-muted)">⚡ Gara più veloce</span><span style="font-size:.82rem;font-weight:600;text-align:right">${recordMedia.media.toFixed(1)} km/h<br><span style="font-size:.68rem;color:var(--text-muted)">${esc((recordMedia.gname||'').slice(0,28))}</span></span></div>` : ''}
-        ${recordPartecipanti ? `<div style="display:flex;justify-content:space-between;align-items:center;padding:8px 0"><span style="font-size:.78rem;color:var(--text-muted)">👥 Gara più affollata</span><span style="font-size:.82rem;font-weight:600;text-align:right">${recordPartecipanti.n} atleti<br><span style="font-size:.68rem;color:var(--text-muted)">${esc((recordPartecipanti.gname||'').slice(0,28))}</span></span></div>` : ''}
+        ${recordDistacco ? `<div style="display:flex;justify-content:space-between;align-items:center;padding:8px 0"><span style="font-size:.78rem;color:var(--text-muted)">💨 Vittoria più netta</span><span style="font-size:.82rem;font-weight:600;text-align:right"><a href="#/atleta/${esc(recordDistacco.winner.atleta_id)}">${esc(recordDistacco.winner.cognome)}</a> · +${_fmtSec(recordDistacco.gapSec)}</span></div>` : ''}
       </div>
     </div>` : ''}
 
@@ -19240,7 +19253,8 @@ async function renderComparatore() {
     }
     return { pts, wins, podi, top5, top10, piazzamenti, gare, km, mediaKm,
              avgPos, recent8, recent5, recent5pts, ptsPerResult, vittorie,
-             convRate, podioRate, consistRate, bestPos, maxKm, trend };
+             convRate, podioRate, consistRate, bestPos, maxKm, trend,
+             lastRaceDate: sorted[0]?.data || null };
   };
 
   // ── FORM PILLS (last N results as colored dots) ───────────────
@@ -19416,7 +19430,15 @@ async function renderComparatore() {
     const bA=[], bB=[];
     if(sA.pts       > sB.pts)       bA.push('⚡ Top scorer');      else if(sB.pts       > sA.pts)       bB.push('⚡ Top scorer');
     if(sA.wins      > sB.wins)      bA.push('🏆 Più vittorie');    else if(sB.wins      > sA.wins)      bB.push('🏆 Più vittorie');
-    if(sA.recent5pts> sB.recent5pts)bA.push('🔥 Forma migliore'); else if(sB.recent5pts> sA.recent5pts)bB.push('🔥 Forma migliore');
+    // "Forma migliore" solo a chi ha corso di recente rispetto all'altro:
+    // altrimenti un atleta fermo da settimane poteva vincere il badge solo
+    // perché le sue ultime 5 gare (magari di mesi fa) erano andate meglio.
+    {
+      const _mostRecent = [sA.lastRaceDate, sB.lastRaceDate].filter(Boolean).sort().pop();
+      const _isFresh = d => d && _mostRecent && Math.round((new Date(_mostRecent) - new Date(d)) / 86400000) <= 21;
+      if (sA.recent5pts > sB.recent5pts && _isFresh(sA.lastRaceDate)) bA.push('🔥 Forma migliore');
+      else if (sB.recent5pts > sA.recent5pts && _isFresh(sB.lastRaceDate)) bB.push('🔥 Forma migliore');
+    }
     if(sA.consistRate>sB.consistRate)bA.push('🎯 Più regolare');  else if(sB.consistRate>sA.consistRate)bB.push('🎯 Più regolare');
     if(sA.convRate  > sB.convRate)  bA.push('⚔️ Miglior conv.');  else if(sB.convRate  > sA.convRate)  bB.push('⚔️ Miglior conv.');
     if(!bA.length && !bB.length) return '';
@@ -19683,7 +19705,8 @@ async function renderComparatore() {
         trend=delta>2?{label:'↑',color:'#10B981'}:delta<-2?{label:'↓',color:'#EF4444'}:{label:'→',color:'#F59E0B'};
       }
       return {pts,wins,podi,top5,top10,gare,piazzamenti,km,atleti,ptsPerResult,avgPos,
-              recent5pts,convRate,podioRate,consistRate,trend};
+              recent5pts,convRate,podioRate,consistRate,trend,
+              lastRaceDate: sorted[0]?.data || null};
     };
     const sA=stT(aRes), sB=stT(bRes);
     const iA=nA.split(/\s+/).map(w=>w[0]||'').join('').toUpperCase().slice(0,3);
