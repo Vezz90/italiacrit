@@ -18904,28 +18904,6 @@ function _renderStatisticheCat(catKey, resultsRaw, athletes, calendar, catTabsHt
       </div>
     </div>`).join('');
 
-  // Attività per mese
-  const monthMap = {};
-  resultsRaw.forEach(r => {
-    if (!r.data) return;
-    const m = r.data.slice(0,7);
-    if (!monthMap[m]) monthMap[m] = 0;
-    monthMap[m]++;
-  });
-  const months = Object.entries(monthMap).sort((a,b)=>a[0]<b[0]?-1:1);
-  const maxM = Math.max(...months.map(([,v])=>v), 1);
-  const SI_MESI = ['','GEN','FEB','MAR','APR','MAG','GIU','LUG','AGO','SET','OTT','NOV','DIC'];
-  const monthBarsHtml = months.map(([ym,n]) => {
-    const [,mm] = ym.split('-');
-    return `<div style="display:flex;align-items:center;gap:8px;margin-bottom:6px">
-      <div style="width:30px;font-size:.7rem;color:var(--text-muted);text-align:right">${SI_MESI[parseInt(mm)]||mm}</div>
-      <div style="flex:1;height:12px;background:var(--bg-elevated);border-radius:6px;overflow:hidden">
-        <div style="height:100%;width:${Math.round(n/maxM*100)}%;background:var(--accent);border-radius:6px"></div>
-      </div>
-      <div style="width:24px;font-size:.75rem;font-weight:600;color:var(--text-main)">${n}</div>
-    </div>`;
-  }).join('');
-
   // ══ NUOVE STATISTICHE ══════════════════════════════════════════════
   const _sortedByDate = [...resultsRaw].filter(r => r.data).sort((a,b)=>(a.data||'').localeCompare(b.data||''));
   const _lastDate = _sortedByDate.length ? _sortedByDate[_sortedByDate.length-1].data : '';
@@ -18963,17 +18941,6 @@ function _renderStatisticheCat(catKey, resultsRaw, athletes, calendar, catTabsHt
     }
   }
 
-  // ── DOMINIO TERRITORIALE: regione con più vittorie nella categoria ──
-  const regWins = {};
-  resultsRaw.forEach(r => {
-    if (r.posizione !== 1) return;
-    const reg = normalizeRegion(r.regione || '');
-    if (!isRealRegion(reg)) return;
-    regWins[reg] = (regWins[reg]||0) + 1;
-  });
-  const topRegioni = Object.entries(regWins).sort((a,b)=>b[1]-a[1]).slice(0,6);
-  const maxRegW = topRegioni[0]?.[1] || 1;
-
   // ── RIVALITÀ: coppia più ravvicinata in punti tra i top 8 ──
   const _ptsRank = Object.entries(ptsMap).sort((a,b)=>b[1]-a[1]).slice(0,8);
   let rivalita = null;
@@ -18983,10 +18950,6 @@ function _renderStatisticheCat(catKey, resultsRaw, athletes, calendar, catTabsHt
       rivalita = { a: _ptsRank[i], b: _ptsRank[i+1], gap, pos: i+1 };
     }
   }
-  // Equilibrio categoria: gap percentuale tra 1° e 10°
-  const _top10pts = Object.values(ptsMap).sort((a,b)=>b-a).slice(0,10);
-  const equilibrio = _top10pts.length >= 2
-    ? Math.round((_top10pts[_top10pts.length-1] / _top10pts[0]) * 100) : null;
 
   // ── RECORD & PRIMATI ──
   // Vittoria con più distacco (2° classificato con gap maggiore)
@@ -19054,32 +19017,12 @@ function _renderStatisticheCat(catKey, resultsRaw, athletes, calendar, catTabsHt
       ${topTeam ? `<div style="${cardBase}"><div style="font-size:1.3rem">🏅</div><div style="font-size:.65rem;font-family:var(--font-heading);color:var(--text-muted);text-transform:uppercase;letter-spacing:.08em;margin:4px 0">Team dominante</div><div style="font-weight:700;font-size:.85rem"><a href="#/team/${esc(topTeam.team)}">${esc(topTeam.team)}</a></div><div style="font-size:.75rem;color:var(--text-muted);margin-top:2px">${topTeam.wins} vittorie</div></div>` : ''}
     </div>
 
-    <!-- Classifiche top 10 -->
-    <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(320px,1fr));gap:24px;margin-bottom:28px">
-      <div style="${tableBase}">
-        <div style="padding:12px 16px;background:var(--bg-secondary);border-bottom:1px solid var(--border-subtle);font-family:var(--font-heading);font-weight:700;font-size:.85rem;text-transform:uppercase;letter-spacing:.06em">🥇 Più vittorie</div>
-        <table style="width:100%;border-collapse:collapse"><tbody>${top10Wins}</tbody></table>
-      </div>
-      <div style="${tableBase}">
-        <div style="padding:12px 16px;background:var(--bg-secondary);border-bottom:1px solid var(--border-subtle);font-family:var(--font-heading);font-weight:700;font-size:.85rem;text-transform:uppercase;letter-spacing:.06em">📊 Più punti</div>
-        <table style="width:100%;border-collapse:collapse"><tbody>${top10Pts}</tbody></table>
-      </div>
+    <!-- STORIE DELLA STAGIONE — le card più "narrative", subito dopo i protagonisti -->
+    ${(rivelazione || inForma || rivalita || recordStreak || recordDistacco || recordMedia || recordPartecipanti) ? `
+    <div class="section-header" style="margin-top:4px">
+      <span class="section-title">STORIE DELLA STAGIONE</span>
+      <span class="section-line"></span>
     </div>
-
-    <!-- Distribuzione team + attività per mese -->
-    <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(300px,1fr));gap:24px;margin-bottom:28px">
-      ${teamBarsHtml ? `<div style="${tableBase}">
-        <div style="padding:12px 16px;background:var(--bg-secondary);border-bottom:1px solid var(--border-subtle);font-family:var(--font-heading);font-weight:700;font-size:.85rem;text-transform:uppercase;letter-spacing:.06em">🏆 Vittorie per Team</div>
-        <div style="padding:16px">${teamBarsHtml}</div>
-      </div>` : ''}
-      <div style="${tableBase}">
-        <div style="padding:12px 16px;background:var(--bg-secondary);border-bottom:1px solid var(--border-subtle);font-family:var(--font-heading);font-weight:700;font-size:.85rem;text-transform:uppercase;letter-spacing:.06em">📅 Gare per Mese</div>
-        <div style="padding:16px">${monthBarsHtml || '<p style="color:var(--text-muted)">Dati insufficienti</p>'}</div>
-      </div>
-    </div>
-
-    <!-- RIVELAZIONE & FORMA -->
-    ${(rivelazione || inForma) ? `
     <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(240px,1fr));gap:12px;margin-bottom:28px">
       ${rivelazione ? `<div style="${cardBase};text-align:left">
         <div style="font-size:.65rem;font-family:var(--font-heading);color:var(--text-muted);text-transform:uppercase;letter-spacing:.08em">🚀 Rivelazione</div>
@@ -19100,40 +19043,37 @@ function _renderStatisticheCat(catKey, resultsRaw, athletes, calendar, catTabsHt
         <div style="font-weight:700;font-size:.88rem"><a href="#/atleta/${esc(rivalita.b[0])}">${esc(getName(rivalita.b[0]))}</a></div>
         <div style="font-size:.75rem;color:var(--accent);margin-top:4px">${rivalita.pos}°–${rivalita.pos+1}° · solo ${rivalita.gap} pt di scarto</div>
       </div>` : ''}
-      ${equilibrio !== null ? `<div style="${cardBase}">
-        <div style="font-size:1.3rem">⚖️</div>
-        <div style="font-size:.65rem;font-family:var(--font-heading);color:var(--text-muted);text-transform:uppercase;letter-spacing:.08em;margin:4px 0">Equilibrio</div>
-        <div style="font-family:var(--font-display);font-size:1.8rem;color:${equilibrio>=60?'#10b981':equilibrio>=35?'#f59e0b':'#ef4444'}">${equilibrio}%</div>
-        <div style="font-size:.72rem;color:var(--text-muted);margin-top:2px">${equilibrio>=60?'Categoria equilibrata':equilibrio>=35?'Margine medio':'Dominio netto del leader'}</div>
-      </div>` : ''}
+    </div>
+    <div style="${tableBase}">
+      <div style="padding:12px 16px;background:var(--bg-secondary);border-bottom:1px solid var(--border-subtle);font-family:var(--font-heading);font-weight:700;font-size:.85rem;text-transform:uppercase;letter-spacing:.06em">🏅 Record & Primati</div>
+      <div style="padding:8px 16px">
+        ${recordStreak ? `<div style="display:flex;justify-content:space-between;align-items:center;padding:8px 0;border-bottom:1px solid var(--border-subtle)"><span style="font-size:.78rem;color:var(--text-muted)">🔥 Striscia vittorie</span><span style="font-size:.85rem;font-weight:600"><a href="#/atleta/${esc(recordStreak.id)}">${esc(getName(recordStreak.id))}</a> · ${recordStreak.streak} di fila</span></div>` : ''}
+        ${recordDistacco ? `<div style="display:flex;justify-content:space-between;align-items:center;padding:8px 0;border-bottom:1px solid var(--border-subtle)"><span style="font-size:.78rem;color:var(--text-muted)">💨 Vittoria più netta</span><span style="font-size:.82rem;font-weight:600;text-align:right"><a href="#/atleta/${esc(recordDistacco.winner.atleta_id)}">${esc(recordDistacco.winner.cognome)}</a> · +${_fmtSec(recordDistacco.gapSec)}</span></div>` : ''}
+        ${recordMedia ? `<div style="display:flex;justify-content:space-between;align-items:center;padding:8px 0;border-bottom:1px solid var(--border-subtle)"><span style="font-size:.78rem;color:var(--text-muted)">⚡ Gara più veloce</span><span style="font-size:.82rem;font-weight:600;text-align:right">${recordMedia.media.toFixed(1)} km/h<br><span style="font-size:.68rem;color:var(--text-muted)">${esc((recordMedia.gname||'').slice(0,28))}</span></span></div>` : ''}
+        ${recordPartecipanti ? `<div style="display:flex;justify-content:space-between;align-items:center;padding:8px 0"><span style="font-size:.78rem;color:var(--text-muted)">👥 Gara più affollata</span><span style="font-size:.82rem;font-weight:600;text-align:right">${recordPartecipanti.n} atleti<br><span style="font-size:.68rem;color:var(--text-muted)">${esc((recordPartecipanti.gname||'').slice(0,28))}</span></span></div>` : ''}
+      </div>
     </div>` : ''}
 
-    <!-- DOMINIO TERRITORIALE + RECORD -->
-    <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(300px,1fr));gap:24px;margin-bottom:28px">
-      ${topRegioni.length ? `<div style="${tableBase}">
-        <div style="padding:12px 16px;background:var(--bg-secondary);border-bottom:1px solid var(--border-subtle);font-family:var(--font-heading);font-weight:700;font-size:.85rem;text-transform:uppercase;letter-spacing:.06em">🗺️ Dominio territoriale (vittorie)</div>
-        <div style="padding:16px">
-          ${topRegioni.map(([reg,w])=>`
-            <div style="margin-bottom:8px">
-              <div style="display:flex;justify-content:space-between;font-size:.78rem;margin-bottom:3px">
-                <span style="font-weight:600">${esc(reg)}</span><span style="color:var(--text-muted)">${w} vitt.</span>
-              </div>
-              <div style="height:8px;background:var(--bg-elevated);border-radius:4px;overflow:hidden">
-                <div style="height:100%;width:${Math.round(w/maxRegW*100)}%;background:linear-gradient(90deg,#6366f1,#22d3ee);border-radius:4px"></div>
-              </div>
-            </div>`).join('')}
-        </div>
-      </div>` : ''}
+    <!-- CLASSIFICHE -->
+    <div class="section-header" style="margin-top:28px">
+      <span class="section-title">CLASSIFICHE</span>
+      <span class="section-line"></span>
+    </div>
+    <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(320px,1fr));gap:24px;margin-bottom:24px">
       <div style="${tableBase}">
-        <div style="padding:12px 16px;background:var(--bg-secondary);border-bottom:1px solid var(--border-subtle);font-family:var(--font-heading);font-weight:700;font-size:.85rem;text-transform:uppercase;letter-spacing:.06em">🏅 Record & Primati</div>
-        <div style="padding:8px 16px">
-          ${recordStreak ? `<div style="display:flex;justify-content:space-between;align-items:center;padding:8px 0;border-bottom:1px solid var(--border-subtle)"><span style="font-size:.78rem;color:var(--text-muted)">🔥 Striscia vittorie</span><span style="font-size:.85rem;font-weight:600"><a href="#/atleta/${esc(recordStreak.id)}">${esc(getName(recordStreak.id))}</a> · ${recordStreak.streak} di fila</span></div>` : ''}
-          ${recordDistacco ? `<div style="display:flex;justify-content:space-between;align-items:center;padding:8px 0;border-bottom:1px solid var(--border-subtle)"><span style="font-size:.78rem;color:var(--text-muted)">💨 Vittoria più netta</span><span style="font-size:.82rem;font-weight:600;text-align:right"><a href="#/atleta/${esc(recordDistacco.winner.atleta_id)}">${esc(recordDistacco.winner.cognome)}</a> · +${_fmtSec(recordDistacco.gapSec)}</span></div>` : ''}
-          ${recordMedia ? `<div style="display:flex;justify-content:space-between;align-items:center;padding:8px 0;border-bottom:1px solid var(--border-subtle)"><span style="font-size:.78rem;color:var(--text-muted)">⚡ Gara più veloce</span><span style="font-size:.82rem;font-weight:600;text-align:right">${recordMedia.media.toFixed(1)} km/h<br><span style="font-size:.68rem;color:var(--text-muted)">${esc((recordMedia.gname||'').slice(0,28))}</span></span></div>` : ''}
-          ${recordPartecipanti ? `<div style="display:flex;justify-content:space-between;align-items:center;padding:8px 0"><span style="font-size:.78rem;color:var(--text-muted)">👥 Gara più affollata</span><span style="font-size:.82rem;font-weight:600;text-align:right">${recordPartecipanti.n} atleti<br><span style="font-size:.68rem;color:var(--text-muted)">${esc((recordPartecipanti.gname||'').slice(0,28))}</span></span></div>` : ''}
-        </div>
+        <div style="padding:12px 16px;background:var(--bg-secondary);border-bottom:1px solid var(--border-subtle);font-family:var(--font-heading);font-weight:700;font-size:.85rem;text-transform:uppercase;letter-spacing:.06em">🥇 Più vittorie</div>
+        <table style="width:100%;border-collapse:collapse"><tbody>${top10Wins}</tbody></table>
+      </div>
+      <div style="${tableBase}">
+        <div style="padding:12px 16px;background:var(--bg-secondary);border-bottom:1px solid var(--border-subtle);font-family:var(--font-heading);font-weight:700;font-size:.85rem;text-transform:uppercase;letter-spacing:.06em">📊 Più punti</div>
+        <table style="width:100%;border-collapse:collapse"><tbody>${top10Pts}</tbody></table>
       </div>
     </div>
+
+    ${teamBarsHtml ? `<div style="${tableBase}">
+      <div style="padding:12px 16px;background:var(--bg-secondary);border-bottom:1px solid var(--border-subtle);font-family:var(--font-heading);font-weight:700;font-size:.85rem;text-transform:uppercase;letter-spacing:.06em">🏆 Vittorie per Team</div>
+      <div style="padding:16px">${teamBarsHtml}</div>
+    </div>` : ''}
   `);
 }
 
