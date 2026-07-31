@@ -8431,14 +8431,13 @@ function _titleRaceHtml(catCode, gender, ranking, isTeam) {
   const todayStr = new Date().toISOString().split('T')[0];
   const calMatches = g => {
     if (catFilter && !(g.categoria||'').toLowerCase().includes(catFilter.toLowerCase())) return false;
-    if (g.genere) { if (g.genere !== gender) return false; }
-    else {
-      const combined = ((g.categoria||'') + ' ' + (g.nome||'')).toLowerCase();
-      const isFem = /donne|femmin|allieve/.test(combined);
-      const isMas = /uomini|maschil/.test(combined);
-      if (isFem && gender !== 'F') return false;
-      if (isMas && gender !== 'M') return false;
-    }
+    // Il campo genere non è mai valorizzato nel calendario: usa la stessa
+    // deduzione della pagina Calendario (default maschile se ambiguo),
+    // altrimenti gare senza qualificatore di genere venivano contate due
+    // volte (sia per la classifica maschile sia per quella femminile),
+    // gonfiando "gare rimaste" ben oltre il reale.
+    const g2 = _calDeriveGender(g);
+    if (g2 && g2 !== gender) return false;
     return true;
   };
   const remaining = globalData.calendar.filter(g => (g.data||'') >= todayStr && calMatches(g)).length;
