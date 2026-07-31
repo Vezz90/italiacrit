@@ -17565,14 +17565,29 @@ async function renderGara(gara_id) {
     err.style.display = 'none';
     const isFileTab = document.getElementById('vpanel-file').style.display !== 'none';
 
-    // Annata esordienti (obbligatoria) → calcola le chiavi gara di destinazione
+    // Annata esordienti (obbligatoria) → calcola le chiavi gara di destinazione.
+    // Il gara_id include nel nome "PRIMO_ANNO"/"SECONDO_ANNO": scambiare solo il
+    // suffisso _ES1_/_ES2_ (come faceva prima) produceva un gara_id inventato
+    // che non corrispondeva a nessuna pagina reale (es. "...PRIMO_ANNO..._ES2_F"),
+    // quindi il video "per entrambi gli anni" spariva per l'altra categoria.
+    // Va invece cercato il vero gara_id dell'altra annata tra i risultati che
+    // condividono lo stesso evento di calendario (stesso calId).
     let targets = [garaId];
     const esSel = document.getElementById('vp-esyear');
     if (/_ES[12]_[MF]$/.test(garaId)) {
       if (!esSel || !esSel.value) { err.textContent = 'Seleziona la categoria esordienti (1°, 2° o entrambi)'; err.style.display = 'block'; return; }
-      const m = garaId.match(/^(.+)_ES[12]_([MF])$/);
-      const es1 = `${m[1]}_ES1_${m[2]}`, es2 = `${m[1]}_ES2_${m[2]}`;
-      targets = esSel.value === 'both' ? [es1, es2] : esSel.value === 'ES2' ? [es2] : [es1];
+      const myGender = garaId.match(/_ES[12]_([MF])$/)[1];
+      const findYear = (year) => {
+        const suffix = `_ES${year}_${myGender}`;
+        if (garaId.endsWith(suffix)) return garaId;
+        const hit = (globalData?.resultsRaw || []).find(r =>
+          r.gara_id.endsWith(suffix) && (globalData?.garaToCalId || {})[r.gara_id] === calId);
+        return hit ? hit.gara_id : null;
+      };
+      const es1 = findYear(1), es2 = findYear(2);
+      targets = esSel.value === 'both' ? [es1, es2].filter(Boolean)
+        : esSel.value === 'ES2' ? [es2].filter(Boolean) : [es1].filter(Boolean);
+      if (!targets.length) { err.textContent = 'Impossibile trovare l\'altra categoria esordienti per questa gara'; err.style.display = 'block'; return; }
     }
     const tagIds = (window._rpTags || []).map(t => t.id).join(',');
     const user = authUser();
