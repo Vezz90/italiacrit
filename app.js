@@ -8550,22 +8550,30 @@ function _titleRaceHtml(catCode, gender, ranking, isTeam) {
     </div>`;
   }).join('');
 
-  const projectionHtml = `<div style="margin-top:14px;padding-top:14px;border-top:1px solid var(--border-subtle)">
+  const projectionHtml = `<div>
     <div style="font-size:.78rem;font-weight:700;color:var(--text-secondary);margin-bottom:6px">📊 Proiezione a fine stagione, se ognuno mantiene il proprio ritmo</div>
     ${projRows}
     <div style="font-size:.7rem;color:var(--text-muted);margin-top:8px">Stima su punti/gara e frequenza di partecipazione osservati finora — non tiene conto di infortuni, cambi di squadra o exploit improvvisi.</div>
   </div>`;
 
+  // Due colonne affiancate quando c'è spazio (auto-fit si impila da solo
+  // sotto i ~560px di larghezza disponibile, senza bisogno di media query).
   return `<section style="background:var(--bg-card);border:1px solid var(--border-subtle);border-radius:var(--r-lg);margin-bottom:16px;padding:16px 18px">
     <div style="display:flex;align-items:baseline;gap:8px;margin-bottom:2px">
       <span style="font-size:1.1rem">🏆</span>
       <span style="font-family:var(--font-heading);font-weight:800;font-size:.92rem;text-transform:uppercase;letter-spacing:.04em">Corsa al titolo</span>
     </div>
     <div style="font-size:.76rem;color:var(--text-muted);margin-bottom:10px">${remaining} gar${remaining===1?'a':'e'} rimast${remaining===1?'a':'e'} in calendario per questa categoria — calcolo matematico, non una previsione</div>
-    ${leaderRow}
-    ${chaserRows}
-    ${outLine}
-    ${projectionHtml}
+    <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(260px,1fr));gap:20px;align-items:start">
+      <div>
+        ${leaderRow}
+        ${chaserRows}
+        ${outLine}
+      </div>
+      <div style="border-top:1px solid var(--border-subtle);padding-top:12px">
+        ${projectionHtml}
+      </div>
+    </div>
   </section>`;
 }
 
