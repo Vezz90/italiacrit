@@ -9791,7 +9791,25 @@ window.adminNav = async function(section) {
             if (!u) return;
             const panel = document.getElementById('admin-user-detail');
             if (panel) panel.remove();
-            const linked = u.linked_atleta_id || u.atleta_id || u.team_id || '';
+            const athLink = (u.athlete_links || [])[0];
+            const linked = athLink ? athLink.atleta_id : '';
+            // Team collegato (ruolo "team") — nome già salvato al momento del collegamento
+            const teamLink = (u.team_links || [])[0];
+            const teamHtml = teamLink
+              ? `<div style="display:flex;gap:8px"><span style="color:var(--text-muted);min-width:110px">Team collegato</span>
+                  <span>${teamLink.team_id ? `<a href="#/team/${esc(String(teamLink.team_id))}" onclick="document.getElementById('admin-user-detail').remove()" style="color:var(--accent)">${esc(teamLink.team_name||teamLink.team_id)}</a>` : esc(teamLink.team_name||'—')}
+                  ${teamLink.status !== 'active' ? `<span style="color:var(--text-muted)"> (${esc(teamLink.status)})</span>` : ''}</span></div>`
+              : '';
+            // Atleta seguito (ruolo "genitore"/"parente") — solo l'ID è salvato, il nome
+            // va risolto dai dati atleti già caricati in globalData.
+            const famLink = (u.family_links || [])[0];
+            const famAth = famLink ? (globalData?.athletes || {})[famLink.linked_atleta_id] : null;
+            const famName = famAth ? `${esc(famAth.cognome||'')} ${esc(famAth.nome||'')}`.trim() : (famLink ? esc(String(famLink.linked_atleta_id)) : '');
+            const famHtml = famLink
+              ? `<div style="display:flex;gap:8px"><span style="color:var(--text-muted);min-width:110px">Atleta seguito</span>
+                  <a href="#/atleta/${esc(String(famLink.linked_atleta_id))}" onclick="document.getElementById('admin-user-detail').remove()" style="color:var(--accent)">${famName||'—'}</a>
+                  ${famLink.status !== 'active' ? `<span style="color:var(--text-muted)"> (${esc(famLink.status)})</span>` : ''}</div>`
+              : '';
             document.body.insertAdjacentHTML('beforeend', `
               <div id="admin-user-detail" style="position:fixed;inset:0;background:rgba(0,0,0,.6);z-index:9999;display:flex;align-items:center;justify-content:center;padding:20px" onclick="if(event.target===this)this.remove()">
                 <div style="background:var(--bg-elevated);border:1px solid var(--border-subtle);border-radius:14px;padding:28px 32px;max-width:480px;width:100%;max-height:85vh;overflow-y:auto" onclick="event.stopPropagation()">
@@ -9810,7 +9828,9 @@ window.adminNav = async function(section) {
                     </div>
                     <div style="display:flex;gap:8px"><span style="color:var(--text-muted);min-width:110px">Registrato</span><span>${(u.created_at||'—').toString().slice(0,10)}</span></div>
                     <div style="display:flex;gap:8px"><span style="color:var(--text-muted);min-width:110px">Ultimo accesso</span><span>${(u.last_login||'—').toString().slice(0,10)}</span></div>
-                    ${linked ? `<div style="display:flex;gap:8px"><span style="color:var(--text-muted);min-width:110px">Profilo collegato</span><a href="#/atleta/${esc(String(linked))}" onclick="document.getElementById('admin-user-detail').remove()" style="color:var(--accent)">${esc(String(linked))}</a></div>` : ''}
+                    ${linked ? `<div style="display:flex;gap:8px"><span style="color:var(--text-muted);min-width:110px">Profilo atleta</span><a href="#/atleta/${esc(String(linked))}" onclick="document.getElementById('admin-user-detail').remove()" style="color:var(--accent)">${esc(`${athLink.first_name||''} ${athLink.last_name||''}`.trim() || String(linked))}</a>${athLink.status !== 'active' ? `<span style="color:var(--text-muted)"> (${esc(athLink.status)})</span>` : ''}</div>` : ''}
+                    ${teamHtml}
+                    ${famHtml}
                   </div>
                   <div style="margin-top:20px;display:flex;gap:10px">
                     ${u.role==='atleta'&&linked ? `<a href="#/atleta/${esc(String(linked))}" onclick="document.getElementById('admin-user-detail').remove()" class="dash-btn dash-btn--outline dash-btn--sm">🚴 Vai al profilo atleta</a>` : ''}
