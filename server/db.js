@@ -465,8 +465,26 @@ const queries = {
     run(`UPDATE family_links SET status = 'rejected' WHERE id = $1`, [id]),
 
   // Admin
-  getAllUsers: () =>
-    all(`SELECT id, email, role, display_name, created_at, last_login FROM users ORDER BY created_at DESC`),
+  getAllUsers: async () => {
+    const users = await all(`SELECT id, email, role, display_name, created_at, last_login FROM users ORDER BY created_at DESC`);
+    if (!users.length) return users;
+    // Recupera separatamente team_profiles/athlete_profiles/family_links (invece
+    // di un JOIN unico) per evitare la moltiplicazione delle righe quando uno
+    // stesso utente ha più record collegati in tabelle diverse.
+    const [teamRows, athleteRows, familyRows] = await Promise.all([
+      all(`SELECT user_id, team_id, team_name, status FROM team_profiles`),
+      all(`SELECT user_id, atleta_id, first_name, last_name, status FROM athlete_profiles`),
+      all(`SELECT user_id, linked_atleta_id, relation, status FROM family_links`),
+    ]);
+    const byUser = (rows) => { const m = {}; for (const r of rows) (m[r.user_id] = m[r.user_id] || []).push(r); return m; };
+    const teamsByUser = byUser(teamRows), athletesByUser = byUser(athleteRows), familyByUser = byUser(familyRows);
+    return users.map(u => ({
+      ...u,
+      team_links: teamsByUser[u.id] || [],
+      athlete_links: athletesByUser[u.id] || [],
+      family_links: familyByUser[u.id] || [],
+    }));
+  },
 
   getPendingProfiles: () =>
     all(`
