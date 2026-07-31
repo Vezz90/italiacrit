@@ -2,12 +2,12 @@
   {
     "team_id": "TEAM_VANGI_TOMMASINI_IL_PIRATA",
     "team_nome": "TEAM VANGI TOMMASINI IL PIRATA",
-    "punti": 1141,
+    "punti": 1145,
     "vittorie": 15,
     "p1": 15,
     "p2": 14,
     "p3": 12,
-    "pout": 47,
+    "pout": 48,
     "n_atleti": 13,
     "pos": 1
   },
@@ -74,12 +74,12 @@
   {
     "team_id": "TEAM_ECOTEK_ZERO24",
     "team_nome": "TEAM ECOTEK ZERO24",
-    "punti": 520,
+    "punti": 530,
     "vittorie": 9,
     "p1": 9,
     "p2": 10,
     "p3": 7,
-    "pout": 25,
+    "pout": 27,
     "n_atleti": 9,
     "pos": 7
   },
@@ -146,38 +146,50 @@
   {
     "team_id": "A_R_MONEX_PRO_CYCLING_TEAM",
     "team_nome": "A.R.MONEX PRO CYCLING TEAM",
-    "punti": 394,
+    "punti": 404,
     "vittorie": 2,
     "p1": 2,
     "p2": 5,
-    "p3": 2,
+    "p3": 3,
     "pout": 14,
-    "n_atleti": 5,
+    "n_atleti": 6,
     "pos": 13
   },
   {
     "team_id": "TEAM_CORATTI",
     "team_nome": "TEAM CORATTI",
-    "punti": 384,
+    "punti": 390,
     "vittorie": 4,
     "p1": 4,
     "p2": 4,
     "p3": 2,
-    "pout": 19,
-    "n_atleti": 6,
+    "pout": 20,
+    "n_atleti": 7,
     "pos": 14
+  },
+  {
+    "team_id": "TEAM_GENERAL_SYSTEM",
+    "team_nome": "TEAM GENERAL SYSTEM",
+    "punti": 384,
+    "vittorie": 4,
+    "p1": 4,
+    "p2": 6,
+    "p3": 2,
+    "pout": 33,
+    "n_atleti": 8,
+    "pos": 15
   },
   {
     "team_id": "ETHICA_ZERO24_CYCLING_TEAM_ECOTEK",
     "team_nome": "ETHICA ZERO24 CYCLING TEAM ECOTEK",
-    "punti": 378,
+    "punti": 383,
     "vittorie": 7,
     "p1": 7,
     "p2": 7,
     "p3": 3,
-    "pout": 15,
+    "pout": 16,
     "n_atleti": 6,
-    "pos": 15
+    "pos": 16
   },
   {
     "team_id": "ACCADEMIA_CICLISTICA",
@@ -189,7 +201,7 @@
     "p3": 2,
     "pout": 13,
     "n_atleti": 4,
-    "pos": 16
+    "pos": 17
   },
   {
     "team_id": "POLISPORTIVA_MONSUMMANESE",
@@ -201,18 +213,6 @@
     "p3": 6,
     "pout": 30,
     "n_atleti": 10,
-    "pos": 17
-  },
-  {
-    "team_id": "TEAM_GENERAL_SYSTEM",
-    "team_nome": "TEAM GENERAL SYSTEM",
-    "punti": 368,
-    "vittorie": 4,
-    "p1": 4,
-    "p2": 5,
-    "p3": 2,
-    "pout": 31,
-    "n_atleti": 8,
     "pos": 18
   },
   {
@@ -408,6 +408,18 @@
     "pos": 34
   },
   {
+    "team_id": "SS_AQUILA",
+    "team_nome": "SS AQUILA",
+    "punti": 103,
+    "vittorie": 1,
+    "p1": 1,
+    "p2": 0,
+    "p3": 2,
+    "pout": 10,
+    "n_atleti": 3,
+    "pos": 35
+  },
+  {
     "team_id": "GOTTARDO_GIOCHI_CANEVA",
     "team_nome": "GOTTARDO GIOCHI CANEVA",
     "punti": 96,
@@ -417,7 +429,7 @@
     "p3": 1,
     "pout": 8,
     "n_atleti": 2,
-    "pos": 35
+    "pos": 36
   },
   {
     "team_id": "VELEKA_TEAM",
@@ -429,7 +441,7 @@
     "p3": 1,
     "pout": 6,
     "n_atleti": 6,
-    "pos": 36
+    "pos": 37
   },
   {
     "team_id": "OLANDA",
@@ -441,7 +453,7 @@
     "p3": 0,
     "pout": 7,
     "n_atleti": 4,
-    "pos": 37
+    "pos": 38
   },
   {
     "team_id": "S_C_MONTEPONI_A_S_D",
@@ -453,7 +465,7 @@
     "p3": 1,
     "pout": 2,
     "n_atleti": 2,
-    "pos": 38
+    "pos": 39
   },
   {
     "team_id": "ASD_PEDALE_CASALESE_ARMOFER",
@@ -465,7 +477,7 @@
     "p3": 0,
     "pout": 15,
     "n_atleti": 10,
-    "pos": 39
+    "pos": 40
   },
   {
     "team_id": "SOUDAL_QUICK_STEP_JUNIOR_TEAM",
@@ -477,18 +489,6 @@
     "p3": 0,
     "pout": 1,
     "n_atleti": 2,
-    "pos": 40
-  },
-  {
-    "team_id": "SS_AQUILA",
-    "team_nome": "SS AQUILA",
-    "punti": 88,
-    "vittorie": 0,
-    "p1": 0,
-    "p2": 0,
-    "p3": 2,
-    "pout": 10,
-    "n_atleti": 3,
     "pos": 41
   },
   {
