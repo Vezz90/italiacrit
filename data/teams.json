@@ -2,7 +2,7 @@
   "ITA": {
     "id": "ITA",
     "nome": "ITA",
-    "punti_totali": 393,
+    "punti_totali": 582,
     "atleti": [
       "VANGI_LADIES_CYCLING_TEAM",
       "POL_FIUMICINESE_FA_I_T_ADRIATICA",
@@ -22,7 +22,14 @@
       "U_S_MONTECORONA_TEAM_A",
       "A_S_D_SACILESE",
       "IND_FORNITURE_MORO_C_G_CAPITAL",
-      "ETHICA_ZERO24_CYCLING_TEAM_ECOTEK_TEAM_B"
+      "ETHICA_ZERO24_CYCLING_TEAM_ECOTEK_TEAM_B",
+      "BFT_BURZONI",
+      "BIESSE_CARRERA_PREMAC",
+      "LIBERTAS_CERESETTO",
+      "PETRUCCI_GAUSS_CYCLING_TEAM",
+      "TEAM_WILIER_BREGANZE",
+      "BRESCIA_F_MAGNI_FLANDRES_LOVE",
+      "TEAM_MENDELSPECK_E_WORK"
     ],
     "risultati": [
       {
@@ -309,11 +316,132 @@
         "regione": "FRIULI VENEZIA GIULIA",
         "km": "14.500",
         "media": ""
+      },
+      {
+        "gara_id": "CAMPIONATO_ITALIANO_CRONOMETRO_A_SQUADRE_DONNE_JUNIORES_2026-08-01_JUN_F",
+        "nome_gara": "CAMPIONATO ITALIANO CRONOMETRO A SQUADRE DONNE JUNIORES",
+        "data": "2026-08-01",
+        "atleta_id": "BFT_BURZONI",
+        "atleta_cognome": "BFT",
+        "atleta_nome": "BURZONI",
+        "posizione": 1,
+        "punti_effettivi": 45,
+        "moltiplicatore": 3,
+        "tipo": "nazionale",
+        "regione": "FRIULI VENEZIA GIULIA",
+        "km": "14.500",
+        "media": ""
+      },
+      {
+        "gara_id": "CAMPIONATO_ITALIANO_CRONOMETRO_A_SQUADRE_DONNE_JUNIORES_2026-08-01_JUN_F",
+        "nome_gara": "CAMPIONATO ITALIANO CRONOMETRO A SQUADRE DONNE JUNIORES",
+        "data": "2026-08-01",
+        "atleta_id": "BIESSE_CARRERA_PREMAC",
+        "atleta_cognome": "BIESSE - CARRERA",
+        "atleta_nome": "PREMAC",
+        "posizione": 2,
+        "punti_effettivi": 36,
+        "moltiplicatore": 3,
+        "tipo": "nazionale",
+        "regione": "FRIULI VENEZIA GIULIA",
+        "km": "14.500",
+        "media": ""
+      },
+      {
+        "gara_id": "CAMPIONATO_ITALIANO_CRONOMETRO_A_SQUADRE_DONNE_JUNIORES_2026-08-01_JUN_F",
+        "nome_gara": "CAMPIONATO ITALIANO CRONOMETRO A SQUADRE DONNE JUNIORES",
+        "data": "2026-08-01",
+        "atleta_id": "LIBERTAS_CERESETTO",
+        "atleta_cognome": "LIBERTAS",
+        "atleta_nome": "CERESETTO",
+        "posizione": 3,
+        "punti_effettivi": 30,
+        "moltiplicatore": 3,
+        "tipo": "nazionale",
+        "regione": "FRIULI VENEZIA GIULIA",
+        "km": "14.500",
+        "media": ""
+      },
+      {
+        "gara_id": "CAMPIONATO_ITALIANO_CRONOMETRO_A_SQUADRE_DONNE_JUNIORES_2026-08-01_JUN_F",
+        "nome_gara": "CAMPIONATO ITALIANO CRONOMETRO A SQUADRE DONNE JUNIORES",
+        "data": "2026-08-01",
+        "atleta_id": "PETRUCCI_GAUSS_CYCLING_TEAM",
+        "atleta_cognome": "PETRUCCI GAUSS",
+        "atleta_nome": "CYCLING TEAM",
+        "posizione": 4,
+        "punti_effettivi": 24,
+        "moltiplicatore": 3,
+        "tipo": "nazionale",
+        "regione": "FRIULI VENEZIA GIULIA",
+        "km": "14.500",
+        "media": ""
+      },
+      {
+        "gara_id": "CAMPIONATO_ITALIANO_CRONOMETRO_A_SQUADRE_DONNE_JUNIORES_2026-08-01_JUN_F",
+        "nome_gara": "CAMPIONATO ITALIANO CRONOMETRO A SQUADRE DONNE JUNIORES",
+        "data": "2026-08-01",
+        "atleta_id": "TEAM_WILIER_BREGANZE",
+        "atleta_cognome": "TEAM",
+        "atleta_nome": "WILIER BREGANZE",
+        "posizione": 5,
+        "punti_effettivi": 18,
+        "moltiplicatore": 3,
+        "tipo": "nazionale",
+        "regione": "FRIULI VENEZIA GIULIA",
+        "km": "14.500",
+        "media": ""
+      },
+      {
+        "gara_id": "CAMPIONATO_ITALIANO_CRONOMETRO_A_SQUADRE_DONNE_JUNIORES_2026-08-01_JUN_F",
+        "nome_gara": "CAMPIONATO ITALIANO CRONOMETRO A SQUADRE DONNE JUNIORES",
+        "data": "2026-08-01",
+        "atleta_id": "U_C_CONSCIO_PEDALE_DEL_SILE",
+        "atleta_cognome": "U.C.CONSCIO",
+        "atleta_nome": "PEDALE DEL SILE",
+        "posizione": 6,
+        "punti_effettivi": 15,
+        "moltiplicatore": 3,
+        "tipo": "nazionale",
+        "regione": "FRIULI VENEZIA GIULIA",
+        "km": "14.500",
+        "media": ""
+      },
+      {
+        "gara_id": "CAMPIONATO_ITALIANO_CRONOMETRO_A_SQUADRE_DONNE_JUNIORES_2026-08-01_JUN_F",
+        "nome_gara": "CAMPIONATO ITALIANO CRONOMETRO A SQUADRE DONNE JUNIORES",
+        "data": "2026-08-01",
+        "atleta_id": "BRESCIA_F_MAGNI_FLANDRES_LOVE",
+        "atleta_cognome": "BRESCIA",
+        "atleta_nome": "- F. MAGNI FLANDRES LOVE",
+        "posizione": 7,
+        "punti_effettivi": 12,
+        "moltiplicatore": 3,
+        "tipo": "nazionale",
+        "regione": "FRIULI VENEZIA GIULIA",
+        "km": "14.500",
+        "media": ""
+      },
+      {
+        "gara_id": "CAMPIONATO_ITALIANO_CRONOMETRO_A_SQUADRE_DONNE_JUNIORES_2026-08-01_JUN_F",
+        "nome_gara": "CAMPIONATO ITALIANO CRONOMETRO A SQUADRE DONNE JUNIORES",
+        "data": "2026-08-01",
+        "atleta_id": "TEAM_MENDELSPECK_E_WORK",
+        "atleta_cognome": "TEAM",
+        "atleta_nome": "MENDELSPECK E-WORK",
+        "posizione": 8,
+        "punti_effettivi": 9,
+        "moltiplicatore": 3,
+        "tipo": "nazionale",
+        "regione": "FRIULI VENEZIA GIULIA",
+        "km": "14.500",
+        "media": ""
       }
     ],
     "punti_per_cat": {
       "AL_F": 195,
-      "AL_M": 198
+      "AL_M": 198,
+      "JUN_F": 189
     }
   },
   "SS_AQUILA": {
