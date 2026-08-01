@@ -224,6 +224,256 @@
       }
     ]
   },
+  "ALBA_OROBIA_BIASSONO": {
+    "id": "ALBA_OROBIA_BIASSONO",
+    "nome": "BIASSONO",
+    "cognome": "ALBA OROBIA -",
+    "team_attuale": "ITA",
+    "team_id": "ITA",
+    "categoria": "AL_M",
+    "genere": "M",
+    "punti_totali": 45,
+    "risultati": [
+      {
+        "gara_id": "CAMPIONATO_ITALIANO_CRONOMETRO_A_SQUADRE_ALLIEVI_2026-08-01_AL_M",
+        "nome_gara": "CAMPIONATO ITALIANO CRONOMETRO A SQUADRE ALLIEVI",
+        "data": "2026-08-01",
+        "posizione": 1,
+        "punti_effettivi": 45,
+        "team": "ITA",
+        "moltiplicatore": 3,
+        "tipo": "nazionale",
+        "regione": "FRIULI VENEZIA GIULIA",
+        "km": "14.500",
+        "media": ""
+      }
+    ]
+  },
+  "A_S_D_CICLISTICA_MONSELICE": {
+    "id": "A_S_D_CICLISTICA_MONSELICE",
+    "nome": "CICLISTICA MONSELICE",
+    "cognome": "A.S.D.",
+    "team_attuale": "ITA",
+    "team_id": "ITA",
+    "categoria": "AL_M",
+    "genere": "M",
+    "punti_totali": 36,
+    "risultati": [
+      {
+        "gara_id": "CAMPIONATO_ITALIANO_CRONOMETRO_A_SQUADRE_ALLIEVI_2026-08-01_AL_M",
+        "nome_gara": "CAMPIONATO ITALIANO CRONOMETRO A SQUADRE ALLIEVI",
+        "data": "2026-08-01",
+        "posizione": 2,
+        "punti_effettivi": 36,
+        "team": "ITA",
+        "moltiplicatore": 3,
+        "tipo": "nazionale",
+        "regione": "FRIULI VENEZIA GIULIA",
+        "km": "14.500",
+        "media": ""
+      }
+    ]
+  },
+  "ETHICA_ZERO24_CYCLING_TEAM_ECOTEK_TEAM_A": {
+    "id": "ETHICA_ZERO24_CYCLING_TEAM_ECOTEK_TEAM_A",
+    "nome": "ZERO24 CYCLING TEAM ECOTEK TEAM A",
+    "cognome": "ETHICA",
+    "team_attuale": "ITA",
+    "team_id": "ITA",
+    "categoria": "AL_M",
+    "genere": "M",
+    "punti_totali": 30,
+    "risultati": [
+      {
+        "gara_id": "CAMPIONATO_ITALIANO_CRONOMETRO_A_SQUADRE_ALLIEVI_2026-08-01_AL_M",
+        "nome_gara": "CAMPIONATO ITALIANO CRONOMETRO A SQUADRE ALLIEVI",
+        "data": "2026-08-01",
+        "posizione": 3,
+        "punti_effettivi": 30,
+        "team": "ITA",
+        "moltiplicatore": 3,
+        "tipo": "nazionale",
+        "regione": "FRIULI VENEZIA GIULIA",
+        "km": "14.500",
+        "media": ""
+      }
+    ]
+  },
+  "ACCADEMIA_CICLISTICA": {
+    "id": "ACCADEMIA_CICLISTICA",
+    "nome": "CICLISTICA",
+    "cognome": "ACCADEMIA",
+    "team_attuale": "ITA",
+    "team_id": "ITA",
+    "categoria": "AL_M",
+    "genere": "M",
+    "punti_totali": 24,
+    "risultati": [
+      {
+        "gara_id": "CAMPIONATO_ITALIANO_CRONOMETRO_A_SQUADRE_ALLIEVI_2026-08-01_AL_M",
+        "nome_gara": "CAMPIONATO ITALIANO CRONOMETRO A SQUADRE ALLIEVI",
+        "data": "2026-08-01",
+        "posizione": 4,
+        "punti_effettivi": 24,
+        "team": "ITA",
+        "moltiplicatore": 3,
+        "tipo": "nazionale",
+        "regione": "FRIULI VENEZIA GIULIA",
+        "km": "14.500",
+        "media": ""
+      }
+    ]
+  },
+  "POOL_CANTU_SOVICO_GB_TEAM": {
+    "id": "POOL_CANTU_SOVICO_GB_TEAM",
+    "nome": "CANTU' - SOVICO - GB TEAM",
+    "cognome": "POOL",
+    "team_attuale": "ITA",
+    "team_id": "ITA",
+    "categoria": "AL_M",
+    "genere": "M",
+    "punti_totali": 18,
+    "risultati": [
+      {
+        "gara_id": "CAMPIONATO_ITALIANO_CRONOMETRO_A_SQUADRE_ALLIEVI_2026-08-01_AL_M",
+        "nome_gara": "CAMPIONATO ITALIANO CRONOMETRO A SQUADRE ALLIEVI",
+        "data": "2026-08-01",
+        "posizione": 5,
+        "punti_effettivi": 18,
+        "team": "ITA",
+        "moltiplicatore": 3,
+        "tipo": "nazionale",
+        "regione": "FRIULI VENEZIA GIULIA",
+        "km": "14.500",
+        "media": ""
+      }
+    ]
+  },
+  "FERALPI_MONTECLARENSE_ASD_TEAM_A": {
+    "id": "FERALPI_MONTECLARENSE_ASD_TEAM_A",
+    "nome": "MONTECLARENSE ASD TEAM A",
+    "cognome": "FERALPI",
+    "team_attuale": "ITA",
+    "team_id": "ITA",
+    "categoria": "AL_M",
+    "genere": "M",
+    "punti_totali": 15,
+    "risultati": [
+      {
+        "gara_id": "CAMPIONATO_ITALIANO_CRONOMETRO_A_SQUADRE_ALLIEVI_2026-08-01_AL_M",
+        "nome_gara": "CAMPIONATO ITALIANO CRONOMETRO A SQUADRE ALLIEVI",
+        "data": "2026-08-01",
+        "posizione": 6,
+        "punti_effettivi": 15,
+        "team": "ITA",
+        "moltiplicatore": 3,
+        "tipo": "nazionale",
+        "regione": "FRIULI VENEZIA GIULIA",
+        "km": "14.500",
+        "media": ""
+      }
+    ]
+  },
+  "U_S_MONTECORONA_TEAM_A": {
+    "id": "U_S_MONTECORONA_TEAM_A",
+    "nome": "MONTECORONA TEAM A",
+    "cognome": "U.S.",
+    "team_attuale": "ITA",
+    "team_id": "ITA",
+    "categoria": "AL_M",
+    "genere": "M",
+    "punti_totali": 12,
+    "risultati": [
+      {
+        "gara_id": "CAMPIONATO_ITALIANO_CRONOMETRO_A_SQUADRE_ALLIEVI_2026-08-01_AL_M",
+        "nome_gara": "CAMPIONATO ITALIANO CRONOMETRO A SQUADRE ALLIEVI",
+        "data": "2026-08-01",
+        "posizione": 7,
+        "punti_effettivi": 12,
+        "team": "ITA",
+        "moltiplicatore": 3,
+        "tipo": "nazionale",
+        "regione": "FRIULI VENEZIA GIULIA",
+        "km": "14.500",
+        "media": ""
+      }
+    ]
+  },
+  "A_S_D_SACILESE": {
+    "id": "A_S_D_SACILESE",
+    "nome": "SACILESE",
+    "cognome": "A.S.D.",
+    "team_attuale": "ITA",
+    "team_id": "ITA",
+    "categoria": "AL_M",
+    "genere": "M",
+    "punti_totali": 9,
+    "risultati": [
+      {
+        "gara_id": "CAMPIONATO_ITALIANO_CRONOMETRO_A_SQUADRE_ALLIEVI_2026-08-01_AL_M",
+        "nome_gara": "CAMPIONATO ITALIANO CRONOMETRO A SQUADRE ALLIEVI",
+        "data": "2026-08-01",
+        "posizione": 8,
+        "punti_effettivi": 9,
+        "team": "ITA",
+        "moltiplicatore": 3,
+        "tipo": "nazionale",
+        "regione": "FRIULI VENEZIA GIULIA",
+        "km": "14.500",
+        "media": ""
+      }
+    ]
+  },
+  "IND_FORNITURE_MORO_C_G_CAPITAL": {
+    "id": "IND_FORNITURE_MORO_C_G_CAPITAL",
+    "nome": "FORNITURE MORO- C&G CAPITAL",
+    "cognome": "IND.",
+    "team_attuale": "ITA",
+    "team_id": "ITA",
+    "categoria": "AL_M",
+    "genere": "M",
+    "punti_totali": 6,
+    "risultati": [
+      {
+        "gara_id": "CAMPIONATO_ITALIANO_CRONOMETRO_A_SQUADRE_ALLIEVI_2026-08-01_AL_M",
+        "nome_gara": "CAMPIONATO ITALIANO CRONOMETRO A SQUADRE ALLIEVI",
+        "data": "2026-08-01",
+        "posizione": 9,
+        "punti_effettivi": 6,
+        "team": "ITA",
+        "moltiplicatore": 3,
+        "tipo": "nazionale",
+        "regione": "FRIULI VENEZIA GIULIA",
+        "km": "14.500",
+        "media": ""
+      }
+    ]
+  },
+  "ETHICA_ZERO24_CYCLING_TEAM_ECOTEK_TEAM_B": {
+    "id": "ETHICA_ZERO24_CYCLING_TEAM_ECOTEK_TEAM_B",
+    "nome": "ZERO24 CYCLING TEAM ECOTEK TEAM B",
+    "cognome": "ETHICA",
+    "team_attuale": "ITA",
+    "team_id": "ITA",
+    "categoria": "AL_M",
+    "genere": "M",
+    "punti_totali": 3,
+    "risultati": [
+      {
+        "gara_id": "CAMPIONATO_ITALIANO_CRONOMETRO_A_SQUADRE_ALLIEVI_2026-08-01_AL_M",
+        "nome_gara": "CAMPIONATO ITALIANO CRONOMETRO A SQUADRE ALLIEVI",
+        "data": "2026-08-01",
+        "posizione": 10,
+        "punti_effettivi": 3,
+        "team": "ITA",
+        "moltiplicatore": 3,
+        "tipo": "nazionale",
+        "regione": "FRIULI VENEZIA GIULIA",
+        "km": "14.500",
+        "media": ""
+      }
+    ]
+  },
   "KOLARSKI_ALEKSANDER": {
     "id": "KOLARSKI_ALEKSANDER",
     "nome": "ALEKSANDER",
