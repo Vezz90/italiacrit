@@ -21988,8 +21988,13 @@ function _drawGara(ctx, W, H, d, logo, avatarMap) {
 // ── ATLETA CARD ────────────────────────────────────────────
 // ── Helper: rettangolo arrotondato (fallback se roundRect non c'è) ──
 function _rr(ctx, x, y, w, h, r) {
-  if (ctx.roundRect) { ctx.beginPath(); ctx.roundRect(x, y, w, h, r); }
-  else { ctx.beginPath(); ctx.rect(x, y, w, h); }
+  // Clamp difensivo: su formati molto larghi/bassi (Facebook 1.91:1, Twitter
+  // 16:9) un'altezza calcolata può arrivare a 0 o leggermente negativa per
+  // arrotondamenti a cascata — roundRect() lancia un'eccezione hard (non un
+  // warning) con un raggio negativo, che altrimenti blocca l'intera card.
+  const rr = Math.max(0, Math.min(r, Math.abs(w) / 2, Math.abs(h) / 2));
+  if (ctx.roundRect) { ctx.beginPath(); ctx.roundRect(x, y, w, Math.max(0, h), rr); }
+  else { ctx.beginPath(); ctx.rect(x, y, w, Math.max(0, h)); }
 }
 // ── Helper: box "hero" con numero grande + etichetta ──
 function _statHero(ctx, x, y, w, h, val, label, style) {
@@ -22153,7 +22158,7 @@ function _drawTeam(ctx, W, H, d) {
 // statistiche del solo mese selezionato invece che dell'intera stagione
 // (niente "posizione in classifica" perché non calcolata a livello mensile).
 function _drawAtletaMese(ctx, W, H, d, athImg) {
-  const { cognome, nome, team, catLabel, punti, wins, p2, p3, gare } = d;
+  const { cognome, nome, team, catLabel, punti, p1: wins, p2, p3, gare } = d;
   const hB = Math.round(H * 0.092), fB = Math.round(H * 0.06), pad = Math.round(W * 0.055);
   const cTop = hB + Math.round(H * 0.025);
   const cBot = H - fB - Math.round(H * 0.02);
@@ -22175,22 +22180,26 @@ function _drawAtletaMese(ctx, W, H, d, athImg) {
     ctx.beginPath(); ctx.arc(phX + phD / 2, phY + phD / 2, phD / 2, 0, Math.PI * 2); ctx.stroke();
   }
 
+  // Font con TETTO sull'altezza (non solo sulla larghezza): sui formati
+  // molto larghi/bassi (Facebook 1.91:1, Twitter 16:9) H è ridotto ma W resta
+  // grande — senza il tetto H-relativo il blocco nome+categoria da solo
+  // sfora l'altezza disponibile e spinge le celle sotto in negativo.
   const nameMaxW = athImg ? (phX - pad - Math.round(W * 0.03)) : (W - pad * 2);
   let y = cTop;
-  const fsCat = Math.round(W * 0.026);
+  const fsCat = Math.min(Math.round(W * 0.026), Math.round(H * 0.045));
   ctx.font = `700 ${fsCat}px 'Inter Tight',sans-serif`; ctx.fillStyle = '#e8001d';
   ctx.letterSpacing = '1px'; ctx.textAlign = 'left'; ctx.textBaseline = 'alphabetic';
   ctx.fillText('ATLETA DEL MESE · ' + (catLabel || '').toUpperCase(), pad, y + fsCat);
   ctx.letterSpacing = '0px';
   y += fsCat + Math.round(H * 0.014);
-  const fsC = Math.round(W * (cognome.length > 12 ? 0.072 : 0.092));
+  const fsC = Math.min(Math.round(W * (cognome.length > 12 ? 0.072 : 0.092)), Math.round(H * 0.16));
   ctx.font = `900 ${fsC}px 'Inter Tight',sans-serif`; ctx.fillStyle = '#f4f4f4';
   y = _wrap(ctx, cognome.toUpperCase(), pad, y + fsC, nameMaxW, fsC * 1.05);
   const fsN = Math.round(fsC * 0.46);
   ctx.font = `700 ${fsN}px 'Inter Tight',sans-serif`; ctx.fillStyle = '#e8001d';
   ctx.fillText((nome || '').toUpperCase(), pad, y); y += Math.round(fsN * 1.55);
   if (team) {
-    const fsTm = Math.round(W * 0.032);
+    const fsTm = Math.min(Math.round(W * 0.032), Math.round(H * 0.055));
     ctx.font = `600 ${fsTm}px 'Inter Tight',sans-serif`; ctx.fillStyle = 'rgba(255,255,255,0.55)';
     ctx.fillText(String(team).substring(0, 40), pad, y);
   }
@@ -22210,17 +22219,17 @@ function _drawAtletaMese(ctx, W, H, d, athImg) {
   cells.forEach((c, i) => _statCell(ctx, pad + i * (cw + cgap), gridTop, cw, gridH, c[1], c[0], c[2]));
 }
 function _drawTeamMese(ctx, W, H, d) {
-  const { nome, catLabel, punti, wins, p2, p3 } = d;
+  const { nome, catLabel, punti, p1: wins, p2, p3 } = d;
   const hB = Math.round(H * 0.092), fB = Math.round(H * 0.06), pad = Math.round(W * 0.055);
   const cTop = hB + Math.round(H * 0.025), cBot = H - fB - Math.round(H * 0.02), cH = cBot - cTop;
   let y = cTop;
-  const fsCat = Math.round(W * 0.026);
+  const fsCat = Math.min(Math.round(W * 0.026), Math.round(H * 0.045));
   ctx.font = `700 ${fsCat}px 'Inter Tight',sans-serif`; ctx.fillStyle = '#e8001d';
   ctx.letterSpacing = '1px'; ctx.textAlign = 'left'; ctx.textBaseline = 'alphabetic';
   ctx.fillText('TEAM DEL MESE · ' + (catLabel || '').toUpperCase(), pad, y + fsCat);
   ctx.letterSpacing = '0px';
   y += fsCat + Math.round(H * 0.016);
-  const fsN = Math.round(W * (nome.length > 20 ? 0.052 : 0.07));
+  const fsN = Math.min(Math.round(W * (nome.length > 20 ? 0.052 : 0.07)), Math.round(H * 0.13));
   ctx.font = `900 ${fsN}px 'Inter Tight',sans-serif`; ctx.fillStyle = '#f4f4f4';
   y = _wrap(ctx, nome.toUpperCase(), pad, y + fsN, W - pad * 2, fsN * 1.08);
 
