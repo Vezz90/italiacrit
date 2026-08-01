@@ -2451,6 +2451,9 @@ const ADMIN_EDIT_FIELDS = {
   atleta: [
     { key: 'nome',         label: 'Nome',    type: 'text' },
     { key: 'cognome',      label: 'Cognome', type: 'text' },
+    { key: 'categoria',    label: 'Categoria', type: 'select', options: [
+      'ES1_M','ES2_M','AL_M','JUN_M','ELI_M','ES1_F','ES2_F','AL_F','JUN_F','ELI_F',
+    ] },
     { key: 'team',         label: 'Team',    type: 'team-autocomplete' },
     { key: 'team_id',      label: 'Team ID', type: 'hidden' },
     { key: 'anno_nascita', label: 'Anno di nascita (es. 2009)', type: 'text' },
@@ -2494,8 +2497,9 @@ window.openAdminEdit = async function(entityType, entityId) {
       return `<input type="hidden" id="aedit-${f.key}" value="${val}" />`;
     }
     if (f.type === 'select') {
-      const opts = f.options.map(o => `<option value="${o}" ${current[f.key] === o ? 'selected' : ''}>${o}</option>`).join('');
-      return `<label class="auth-label">${f.label}<select id="aedit-${f.key}" class="auth-input">${opts}</select></label>`;
+      const opts = f.options.map(o => `<option value="${o}" ${current[f.key] === o ? 'selected' : ''}>${f.key === 'categoria' ? esc(catLabel(o)) : o}</option>`).join('');
+      const emptyOpt = f.key === 'categoria' ? `<option value="" ${!current[f.key] ? 'selected' : ''}>— non correggere (usa quella rilevata) —</option>` : '';
+      return `<label class="auth-label">${f.label}<select id="aedit-${f.key}" class="auth-input">${emptyOpt}${opts}</select></label>`;
     }
     if (f.type === 'team-autocomplete') {
       return `<label class="auth-label">${f.label}
@@ -2601,6 +2605,7 @@ window.saveAdminEdit = async function(entityType, entityId) {
       if (ath) {
         if (saved.cognome !== undefined) ath.cognome = saved.cognome;
         if (saved.nome    !== undefined) ath.nome    = saved.nome;
+        if (saved.categoria) ath.categoria = saved.categoria;
         // Cambio team: aggiorna atleta, roster e risultati dei team
         if (saved.team !== undefined || saved.team_id !== undefined) {
           _importNeeded = { atleta_id: entityId, nome: ath.nome || '', cognome: ath.cognome || '' };
@@ -2648,6 +2653,11 @@ window.saveAdminEdit = async function(entityType, entityId) {
     toast.textContent = 'Modifiche salvate ✓';
     document.body.appendChild(toast);
     setTimeout(() => toast.remove(), 2500);
+
+    // Rirenderizza subito la pagina se siamo già su questo profilo, così le
+    // modifiche (es. categoria corretta) si vedono senza dover ricaricare.
+    if (entityType === 'atleta' && location.hash.includes(`/atleta/${entityId}`)) renderAtleta(entityId);
+    if (entityType === 'team' && location.hash.includes(`/team/${entityId}`)) renderTeam(entityId);
 
     if (_importNeeded) {
       try {
@@ -13728,8 +13738,15 @@ async function renderAtleta(atleta_id, opts = {}) {
   const sparkPoints = risultati.slice(0,20).reverse().map(r => r.punti_effettivi || 0);
 
   // Recupero ranking asincrono per evitare crash
-  const rCode = getRankingFileCode(a.categoria);
   const atletaOv = await getEntityOverrides('atleta', atleta_id);
+  // Categoria mostrata: se un admin l'ha corretta a mano (campo "categoria"
+  // nel form Modifica), quella vince sempre — anche per atleti con risultati
+  // FCI reali, la cui a.categoria arriva "congelata" dallo scraper (calcolata
+  // dalla categoria della gara in cui compare, che può differire dalla vera
+  // categoria dell'atleta in casi di gare promiscue o iscrizioni fuori
+  // categoria). Prima solo gli atleti PCS-only potevano essere corretti.
+  const displayCategoria = atletaOv.categoria || a.categoria;
+  const rCode = getRankingFileCode(displayCategoria);
   const displayCognome = atletaOv.cognome || a.cognome || '';
   const displayNome    = atletaOv.nome    || a.nome    || '';
   const displayTeam    = atletaOv.team    || a.team_attuale || '';
@@ -13757,7 +13774,7 @@ async function renderAtleta(atleta_id, opts = {}) {
   const headerHtml = `
     <div class="athlete-header">
       <div class="athlete-header-top">
-        ${badgeCat(a.categoria)}
+        ${badgeCat(displayCategoria)}
         ${atletaOv.anno_nascita ? `<span class="badge-cat">Classe ${esc(atletaOv.anno_nascita)}</span>` : ''}
         ${a.genere === 'F' ? '<span class="badge-cat badge-genere-f">♀</span>' : ''}
         ${displayTeamId ? `<a href="#/team/${esc(displayTeamId)}" style="font-family:var(--font-heading);font-size:.8rem;color:var(--text-secondary);border:1px solid var(--border-subtle);padding:2px 10px;border-radius:2px">${esc(displayTeam)} →</a>` : ''}
@@ -13829,7 +13846,7 @@ async function renderAtleta(atleta_id, opts = {}) {
 
   const tableRows = _buildAtletaResultRows(risultati);
 
-  window._shareAtletaData = {_id:atleta_id,cognome:displayCognome,nome:displayNome,cat:catLabel(a.categoria),team:displayTeam,punti:a.punti_totali,pos:globalPos,p1:p1,p2:p2,p3:p3,p4_10:pout,gare:top10,photo_url:atletaOv.photo_url?`${MEDIA_BASE}${atletaOv.photo_url}`:null};
+  window._shareAtletaData = {_id:atleta_id,cognome:displayCognome,nome:displayNome,cat:catLabel(displayCategoria),team:displayTeam,punti:a.punti_totali,pos:globalPos,p1:p1,p2:p2,p3:p3,p4_10:pout,gare:top10,photo_url:atletaOv.photo_url?`${MEDIA_BASE}${atletaOv.photo_url}`:null};
 
   // Confronto stagione precedente — caricato in background (non blocca render)
   const _prevSeasonYear = String(parseInt(selYear) - 1);
@@ -13930,7 +13947,7 @@ async function renderAtleta(atleta_id, opts = {}) {
 
   setPageMeta(
     `${displayCognome} ${displayNome}`,
-    [catLabel(a.categoria), displayTeam, a.punti_totali ? `${a.punti_totali} pt` : '', p1 ? `${p1} vitt.` : ''].filter(Boolean).join(' · ')
+    [catLabel(displayCategoria), displayTeam, a.punti_totali ? `${a.punti_totali} pt` : '', p1 ? `${p1} vitt.` : ''].filter(Boolean).join(' · ')
   );
   setSchemaOrg({
     '@context':'https://schema.org','@type':'Person',
@@ -13938,7 +13955,7 @@ async function renderAtleta(atleta_id, opts = {}) {
     identifier: atleta_id,
     url: window.location.href,
     ...(displayTeam ? { memberOf:{ '@type':'SportsTeam', name: displayTeam } } : {}),
-    description: `${catLabel(a.categoria)} — ciclismo italiano`,
+    description: `${catLabel(displayCategoria)} — ciclismo italiano`,
   });
 
   setPage(`
@@ -13955,7 +13972,7 @@ async function renderAtleta(atleta_id, opts = {}) {
     </div>
     ${buildProfileMedia(risultati, photosMap, globalData.videos, { atletaIds: [atleta_id], year: selYear })}
     <div class="section-header" style="margin-top:28px">
-      <span class="section-title">RISULTATI ${esc(selYear)} · ${esc(catLabel(a.categoria))}</span>
+      <span class="section-title">RISULTATI ${esc(selYear)} · ${esc(catLabel(displayCategoria))}</span>
       <span class="section-line"></span>
       <div style="display:flex;gap:6px">
         <button class="tab-btn ath-sort-btn active-cat" data-sort="data" onclick="window.setAtletaResultsSort('data')">CRONOLOGICO</button>
