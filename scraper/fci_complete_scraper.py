@@ -645,6 +645,7 @@ def aggregate(results: list[dict]) -> tuple[dict, dict, dict, dict]:
     athlete_teams_freq = {}
     for r in results:
         aid = r["atleta_id"]
+        if not aid: continue  # riga "a squadre" senza corridore, vedi is_squadre sopra
         t = r["team"]
         tid = r["team_id"]
         if aid not in athlete_teams_freq:
@@ -665,6 +666,7 @@ def aggregate(results: list[dict]) -> tuple[dict, dict, dict, dict]:
     # 2. Sostituisci il team con il team principale se l'attuale è una nazionale
     for r in results:
         aid = r["atleta_id"]
+        if not aid: continue  # riga "a squadre" senza corridore
         if is_national(r["team"]):
             p_tid = athlete_teams_freq[aid].get("primary_tid")
             p_name = athlete_teams_freq[aid].get("primary_name")
