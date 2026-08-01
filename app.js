@@ -1665,15 +1665,38 @@ function _patchAthleteTeamForManualRow(gd, row) {
     if (!Array.isArray(team.atleti)) team.atleti = [];
     if (!team.atleti.includes(row.atleta_id)) team.atleti.push(row.atleta_id);
     if (!Array.isArray(team.risultati)) team.risultati = [];
-    team.risultati = team.risultati.filter(x => !(x.gara_id === row.gara_id && x.atleta_id === row.atleta_id));
+    // Rimuove: (a) l'eventuale riga precedente di QUESTO stesso corridore per
+    // questa gara (la stiamo aggiornando), e (b) la riga fittizia originale
+    // dello scraper per gare "a squadre" — stessa gara+posizione ma un
+    // atleta_id diverso e NON manuale (il "finto atleta" col nome squadra
+    // spezzato) — altrimenti resta lì a inquinare sia l'elenco risultati sia
+    // il totale punti del team insieme ai corridori veri aggiunti dopo.
+    team.risultati = team.risultati.filter(x => {
+      if (x.gara_id !== row.gara_id) return true;
+      if (x.atleta_id === row.atleta_id) return false;
+      if (x.posizione === row.posizione) return !!x._manual;
+      return true;
+    });
     // I risultati team "veri" (da teams.json, scraper) usano atleta_cognome/
     // atleta_nome (vedi renderTeam, che legge r.atleta_cognome/r.atleta_nome) —
     // qui si usava cognome/nome, campi diversi: un risultato manuale mostrava
     // quindi nome atleta vuoto nella tabella "RISULTATI TEAM", facendo
     // sembrare la riga "senza proprietario" e facilmente attribuita per
     // errore all'atleta sbagliato nella riga sopra/sotto.
-    team.risultati.push({ ...athEntry, atleta_id: row.atleta_id, atleta_cognome: row.cognome, atleta_nome: row.nome });
-    team.punti_totali = (team.risultati || []).reduce((s, x) => s + (x.punti_effettivi || 0), 0);
+    team.risultati.push({ ...athEntry, atleta_id: row.atleta_id, atleta_cognome: row.cognome, atleta_nome: row.nome, _manual: true });
+    // Il PUNTEGGIO SQUADRA non è la somma dei punti di ogni corridore: nelle
+    // gare a squadre (più righe/corridori possono condividere la stessa
+    // gara+posizione) il team prende i punti di quella posizione UNA SOLA
+    // volta, non una volta per ogni corridore che ha condiviso il risultato
+    // — ogni singolo atleta continua comunque a ricevere per intero il
+    // proprio punteggio personale (ath.punti_totali sopra, non toccato qui).
+    const _seenGaraPos = new Set();
+    team.punti_totali = (team.risultati || []).reduce((s, x) => {
+      const key = `${x.gara_id}|${x.posizione}`;
+      if (_seenGaraPos.has(key)) return s;
+      _seenGaraPos.add(key);
+      return s + (x.punti_effettivi || 0);
+    }, 0);
   }
 }
 
@@ -16583,6 +16606,58 @@ async function renderGara(gara_id) {
       ${_catList.map(c => `<button class="tab-btn ${c.code === _curCode ? 'active-cat' : ''}" onclick="location.hash='#/gara/${esc(c.gid)}'">${esc(c.label)}</button>`).join('')}
     </div>` : '';
 
+  // ── Gare "a squadre" (es. cronometro a squadre): la FCI pubblica UNA sola
+  // riga di arrivo per team (nessun corridore elencato). Lo scraper la
+  // registra come un finto atleta (nome squadra spezzato in cognome/nome) —
+  // qui la tabella normale per-atleta viene sostituita da una vista
+  // raggruppata per team: nome squadra sempre in cima, i corridori reali
+  // (aggiunti a mano dall'admin) elencati sotto, leggermente rientrati,
+  // invece di comparire come righe atleta indipendenti che "rubano" il posto
+  // al nome del team.
+  const isSquadre = /A SQUADRE/i.test(name);
+  const _buildSquadreRows = (arr, garaId) => {
+    const _rowIsAdmin = authUser()?.role === 'admin';
+    const byPos = new Map();
+    arr.forEach(r => { if (!byPos.has(r.posizione)) byPos.set(r.posizione, []); byPos.get(r.posizione).push(r); });
+    const positions = [...byPos.keys()].sort((a, b) => a - b);
+    return positions.map(pos => {
+      const rows = byPos.get(pos);
+      const manualRows = rows.filter(r => r._manual);
+      // Nome team: se un corridore è già stato aggiunto a mano, usa il campo
+      // "team" che ha compilato; altrimenti ricostruisce il nome squadra dal
+      // finto atleta scrapato (cognome+nome = il nome team spezzato in due).
+      const teamName = (manualRows[0] && manualRows[0].team) || `${rows[0].cognome} ${rows[0].nome}`.trim();
+      const teamId = (manualRows[0] && manualRows[0].team_id) || rows[0].team_id;
+      const pts = rows[0].punti_effettivi || (BASEPTS[pos] || 0) * mult;
+      const tempoDisplay = pos === 1
+        ? (_calcWinnerTime(rows[0].km, rows[0].media) || '—')
+        : (rows[0].tempo && rows[0].tempo.trim() ? _fmtGap(rows[0].tempo) : 'S.T.');
+      const riderRows = manualRows.map(r => `
+        <div style="display:flex;align-items:center;justify-content:space-between;gap:8px;padding:5px 4px 5px 38px;font-size:.84rem;border-bottom:1px solid var(--border-subtle)">
+          <a href="#/atleta/${esc(r.atleta_id)}" style="color:var(--text-secondary)">${esc(r.cognome)} ${esc(r.nome)}</a>
+          ${_rowIsAdmin ? `<button onclick="event.stopPropagation();window.openManualResultForm('${esc(garaId)}',${pos})" title="Modifica corridore" style="background:none;border:none;cursor:pointer;font-size:.7rem;opacity:.6">✏️</button>` : ''}
+        </div>`).join('');
+      const addBtn = _rowIsAdmin ? `
+        <div style="padding:6px 4px 8px 38px">
+          <button onclick="window.openManualResultForm('${esc(garaId)}',${pos}${manualRows.length ? ',true' : ''})" style="padding:5px 10px;background:none;border:1px dashed var(--border-subtle);border-radius:6px;font-size:.74rem;color:var(--text-muted);cursor:pointer">➕ ${manualRows.length ? 'Aggiungi un altro corridore' : 'Aggiungi i corridori di questo team'}</button>
+        </div>` : '';
+      return `<tr><td colspan="7" style="padding:0;border:none">
+        <div style="display:flex;align-items:center;justify-content:space-between;gap:10px;padding:10px 4px;${pos === 1 ? 'background:rgba(245,196,0,.06);' : ''}border-bottom:1px solid var(--border-subtle)">
+          <div style="display:flex;align-items:center;gap:10px;min-width:0">
+            <span class="td-pos ${posClass(pos)}" style="font-weight:800;flex-shrink:0">${pos}°</span>
+            <a href="#/team/${esc(teamId)}" style="font-weight:700;font-family:var(--font-heading);white-space:nowrap;overflow:hidden;text-overflow:ellipsis">${esc(teamName)}</a>
+          </div>
+          <div style="display:flex;align-items:center;gap:16px;font-size:.85rem;color:var(--text-secondary);flex-shrink:0">
+            <span>${esc(tempoDisplay)}</span>
+            <strong style="color:var(--primary)">${pts > 0 ? pts : '—'} pt</strong>
+          </div>
+        </div>
+        ${riderRows}
+        ${addBtn}
+      </td></tr>`;
+    }).join('');
+  };
+
   const _buildRows = (arr) => {
     const _rowIsAdmin = authUser()?.role === 'admin';
     let _prevTempo = null;
@@ -16640,7 +16715,7 @@ async function renderGara(gara_id) {
       </tr>`;
     }).join('');
   };
-  const tableRows = _buildRows(results);
+  const tableRows = isSquadre ? _buildSquadreRows(results, gara_id) : _buildRows(results);
 
   const _calId = (globalData.garaToCalId || {})[primaryGaraId] || (globalData.garaToCalId || {})[gara_id] || primaryGaraId;
 
