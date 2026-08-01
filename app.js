@@ -15834,13 +15834,17 @@ function _mrPatchLocal(row) {
   _patchAthleteTeamForManualRow(globalData, newRow);
 }
 
-window.openManualResultForm = (garaId, posizione) => {
+// forceAdd: apre in modalità "aggiungi" anche se la posizione è già occupata
+// — serve per le gare a squadre (es. cronometro a squadre), dove la FCI
+// pubblica una sola riga per team e più corridori reali devono condividere
+// la stessa posizione/risultato del team.
+window.openManualResultForm = (garaId, posizione, forceAdd) => {
   const user = authUser();
   if (!user || user.role !== 'admin') return;
-  const existing = (posizione !== undefined && posizione !== null)
+  const existing = (!forceAdd && posizione !== undefined && posizione !== null)
     ? (globalData?.resultsRaw || []).find(r => r.gara_id === garaId && r.posizione === posizione)
     : null;
-  const sample = existing || (globalData?.resultsRaw || []).find(r => r.gara_id === garaId);
+  const sample = existing || (globalData?.resultsRaw || []).find(r => r.gara_id === garaId && r.posizione === posizione) || (globalData?.resultsRaw || []).find(r => r.gara_id === garaId);
   window._mrMeta = _mrDeriveMeta(garaId, sample);
   window._mrEditing = existing || null;
 
@@ -15854,9 +15858,9 @@ window.openManualResultForm = (garaId, posizione) => {
         <strong style="font-size:1rem">${existing ? 'Modifica risultato' : 'Aggiungi risultato'}</strong>
         <button onclick="this.closest('[style*=fixed]').remove()" style="background:none;border:none;font-size:1.3rem;cursor:pointer;color:var(--text-muted)">✕</button>
       </div>
-      <p style="font-size:0.78rem;color:var(--text-muted);margin:0 0 14px">${existing ? 'Correggi i dati di questa posizione.' : 'Utile se hai i risultati prima dello scraper, o per aggiungere un corridore mancante.'}</p>
+      <p style="font-size:0.78rem;color:var(--text-muted);margin:0 0 14px">${existing ? 'Correggi i dati di questa posizione.' : (forceAdd ? 'Aggiungi un altro corridore alla stessa posizione — utile per le gare a squadre (es. cronometro a squadre), dove più atleti condividono lo stesso risultato del team.' : 'Utile se hai i risultati prima dello scraper, o per aggiungere un corridore mancante.')}</p>
       <label style="display:block;font-size:0.8rem;color:var(--text-secondary);margin-bottom:4px">Posizione <span style="color:var(--red-hot)">*</span></label>
-      <input type="number" id="mr-pos" min="1" value="${existing ? existing.posizione : ''}" ${existing ? 'disabled' : ''} style="${inpStyle}${existing?';opacity:.6':''}"/>
+      <input type="number" id="mr-pos" min="1" value="${existing ? existing.posizione : (posizione || '')}" ${existing ? 'disabled' : ''} style="${inpStyle}${existing?';opacity:.6':''}"/>
       <label style="display:block;font-size:0.8rem;color:var(--text-secondary);margin-bottom:4px">Cerca corridore <span style="color:var(--text-muted);font-weight:400">(se già nel sistema, compila da solo)</span></label>
       <div style="position:relative">
         <input type="text" id="mr-rider-search" placeholder="Cerca per cognome o nome…" autocomplete="off" style="${inpStyle}"/>
@@ -15867,14 +15871,15 @@ window.openManualResultForm = (garaId, posizione) => {
       <label style="display:block;font-size:0.8rem;color:var(--text-secondary);margin-bottom:4px">Nome</label>
       <input type="text" id="mr-nome" value="${esc(existing?.nome || '')}" style="${inpStyle}"/>
       <label style="display:block;font-size:0.8rem;color:var(--text-secondary);margin-bottom:4px">Team</label>
-      <input type="text" id="mr-team" value="${esc(existing?.team || '')}" style="${inpStyle}"/>
+      <input type="text" id="mr-team" value="${esc(existing?.team || (forceAdd && sample ? sample.team||'' : ''))}" style="${inpStyle}"/>
       <label style="display:block;font-size:0.8rem;color:var(--text-secondary);margin-bottom:4px">Distacco dal vincitore <span style="color:var(--text-muted);font-weight:400">(es. 1'23" o 45" — vuoto = S.T.; il vincitore lascialo vuoto)</span></label>
-      <input type="text" id="mr-tempo" placeholder="es. 1'23&quot;" value="${esc(existing?.tempo || '')}" style="${inpStyle}"/>
+      <input type="text" id="mr-tempo" placeholder="es. 1'23&quot;" value="${esc(existing?.tempo || (forceAdd && sample ? sample.tempo||'' : ''))}" style="${inpStyle}"/>
       <div id="mr-err" style="color:#EF4444;font-size:0.8rem;margin-bottom:8px;display:none"></div>
       <div style="display:flex;gap:8px">
         <button id="mr-submit" onclick="window.submitManualResult('${esc(garaId)}')" style="flex:1;padding:9px;background:var(--red-hot);color:#fff;border:none;border-radius:var(--r-sm);font-weight:600;cursor:pointer">${existing ? 'Salva' : 'Aggiungi'}</button>
         ${existing?._manual ? `<button onclick="window.deleteManualResult(${existing._manualId},'${esc(garaId)}')" style="padding:9px 14px;background:#dc2626;color:#fff;border:none;border-radius:var(--r-sm);font-weight:600;cursor:pointer">🗑</button>` : ''}
       </div>
+      ${existing ? `<button onclick="this.closest('[style*=fixed]').remove();window.openManualResultForm('${esc(garaId)}',${existing.posizione},true)" style="width:100%;margin-top:10px;padding:8px;background:none;border:1px dashed var(--border-subtle);border-radius:var(--r-sm);color:var(--text-secondary);font-size:0.8rem;cursor:pointer">➕ Aggiungi un altro corridore a questa posizione (gara a squadre)</button>` : ''}
     </div>`;
   document.body.appendChild(overlay);
   window._mrBindRiderSearch();

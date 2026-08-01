@@ -321,6 +321,15 @@ async function migrate() {
     // per tutti), ma un admin può forzarli (es. prima gara mai inserita per quella corsa)
     `ALTER TABLE manual_results ADD COLUMN IF NOT EXISTS km TEXT DEFAULT ''`,
     `ALTER TABLE manual_results ADD COLUMN IF NOT EXISTS media TEXT DEFAULT ''`,
+    // Gare a squadre (es. cronometro a squadre): la FCI pubblica UNA sola riga
+    // per team, che lo scraper interpreta come un finto "atleta" (il nome
+    // squadra spezzato in cognome/nome). Prima questo vincolo permetteva un
+    // solo risultato manuale per posizione, quindi non si potevano accreditare
+    // più corridori reali (i componenti del team) sulla stessa posizione.
+    // Include l'atleta_id nel vincolo: più righe possono condividere la
+    // posizione purché siano corridori diversi.
+    `ALTER TABLE manual_results DROP CONSTRAINT IF EXISTS manual_results_gara_id_posizione_key`,
+    `ALTER TABLE manual_results ADD CONSTRAINT manual_results_gara_pos_atleta_key UNIQUE (gara_id, posizione, atleta_id)`,
   ];
   for (const sql of migrations) {
     try { await run(sql); } catch (e) { console.warn('[migrate]', e.message); }
@@ -559,9 +568,11 @@ const queries = {
     all(`SELECT * FROM risultato_overrides ORDER BY created_at DESC`),
 
   // Manual results — aggiunti/corretti a mano da un admin (prima dello scraper
-  // o per correggere una riga scrapata). UNIQUE(gara_id, posizione): un secondo
-  // upsert sulla stessa posizione la sovrascrive (così "aggiungi" e "correggi"
-  // usano la stessa via).
+  // o per correggere una riga scrapata). UNIQUE(gara_id, posizione, atleta_id):
+  // un secondo upsert sullo STESSO corridore alla stessa posizione lo
+  // aggiorna (così "aggiungi" e "correggi" usano la stessa via), ma corridori
+  // diversi possono condividere la posizione — serve per le gare a squadre,
+  // dove più atleti dello stesso team hanno la stessa posizione/risultato.
   upsertManualResult: ({ gara_id, posizione, cognome, nome, atleta_id, team, team_id, tempo,
                           nome_gara, data, categoria, genere, tipo, moltiplicatore,
                           campionato_regionale, campionato_italiano, regione, km, media,
@@ -573,7 +584,7 @@ const queries = {
           campionato_regionale, campionato_italiano, regione, km, media,
           punti_base, punti_effettivi, edited_by, updated_at)
        VALUES ($1,$2,$3,$4,$5,$6,$7,$8,$9,$10,$11,$12,$13,$14,$15,$16,$17,$18,$19,$20,$21,$22,NOW())
-       ON CONFLICT (gara_id, posizione) DO UPDATE SET
+       ON CONFLICT (gara_id, posizione, atleta_id) DO UPDATE SET
          cognome = $3, nome = $4, atleta_id = $5, team = $6, team_id = $7, tempo = $8,
          nome_gara = $9, data = $10, categoria = $11, genere = $12, tipo = $13,
          moltiplicatore = $14, campionato_regionale = $15, campionato_italiano = $16,
