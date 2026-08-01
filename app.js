@@ -15859,7 +15859,12 @@ function _mrPatchLocal(row) {
 // forceAdd: apre in modalità "aggiungi" anche se la posizione è già occupata
 // — serve per le gare a squadre (es. cronometro a squadre), dove la FCI
 // pubblica una sola riga per team e più corridori reali devono condividere
-// la stessa posizione/risultato del team.
+// la stessa posizione/risultato del team. In questa modalità la finestra
+// RESTA APERTA dopo ogni "Aggiungi" (invece di chiudersi e ricaricare tutta
+// la pagina) e mostra la lista dei corridori già inseriti in questa sessione
+// — così si possono aggiungere in fila tutti i componenti di un team senza
+// perdere il conto di chi è già stato inserito. La pagina si ricarica una
+// sola volta, quando si chiude la finestra.
 window.openManualResultForm = (garaId, posizione, forceAdd) => {
   const user = authUser();
   if (!user || user.role !== 'admin') return;
@@ -15869,18 +15874,36 @@ window.openManualResultForm = (garaId, posizione, forceAdd) => {
   const sample = existing || (globalData?.resultsRaw || []).find(r => r.gara_id === garaId && r.posizione === posizione) || (globalData?.resultsRaw || []).find(r => r.gara_id === garaId);
   window._mrMeta = _mrDeriveMeta(garaId, sample);
   window._mrEditing = existing || null;
+  window._mrForceAdd = !!forceAdd;
+  window._mrGaraId = garaId;
+  // Lista "già inseriti in questa sessione": si azzera solo quando si apre il
+  // flusso multi-corridore per una posizione NUOVA, non ad ogni submit —
+  // così resta visibile mentre si aggiungono i compagni di squadra uno a uno.
+  if (forceAdd && window._mrAddedListPos === posizione) {
+    // riusa window._mrAddedList esistente
+  } else if (forceAdd) {
+    window._mrAddedList = [];
+    window._mrAddedListPos = posizione;
+  }
+  window._mrDirty = false; // true se almeno un salvataggio è andato a buon fine → serve un refresh alla chiusura
 
   const overlay = document.createElement('div');
   overlay.id = 'modal-overlay';
   overlay.style.cssText = 'position:fixed;inset:0;background:rgba(0,0,0,.6);z-index:9999;display:flex;align-items:center;justify-content:center;padding:16px';
   const inpStyle = 'width:100%;box-sizing:border-box;padding:8px 10px;border:1px solid var(--border-subtle);border-radius:var(--r-sm);font-size:0.875rem;background:var(--bg-primary);color:var(--text-primary);margin-bottom:10px';
+  const addedList = forceAdd && window._mrAddedList && window._mrAddedList.length ? `
+    <div style="margin-bottom:14px;padding:8px 10px;background:rgba(34,197,94,.08);border:1px solid rgba(34,197,94,.25);border-radius:var(--r-sm)">
+      <div style="font-size:.74rem;font-weight:700;color:#22c55e;margin-bottom:4px">✓ Già aggiunti in questa posizione (${window._mrAddedList.length})</div>
+      ${window._mrAddedList.map(n => `<div style="font-size:.8rem;color:var(--text-secondary)">${esc(n)}</div>`).join('')}
+    </div>` : '';
   overlay.innerHTML = `
     <div style="background:var(--bg-card);border-radius:var(--r-lg);padding:24px;width:100%;max-width:420px;box-shadow:0 8px 32px rgba(0,0,0,.2)">
       <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:16px">
         <strong style="font-size:1rem">${existing ? 'Modifica risultato' : 'Aggiungi risultato'}</strong>
-        <button onclick="this.closest('[style*=fixed]').remove()" style="background:none;border:none;font-size:1.3rem;cursor:pointer;color:var(--text-muted)">✕</button>
+        <button onclick="window._mrCloseModal()" style="background:none;border:none;font-size:1.3rem;cursor:pointer;color:var(--text-muted)">✕</button>
       </div>
       <p style="font-size:0.78rem;color:var(--text-muted);margin:0 0 14px">${existing ? 'Correggi i dati di questa posizione.' : (forceAdd ? 'Aggiungi un altro corridore alla stessa posizione — utile per le gare a squadre (es. cronometro a squadre), dove più atleti condividono lo stesso risultato del team.' : 'Utile se hai i risultati prima dello scraper, o per aggiungere un corridore mancante.')}</p>
+      ${addedList}
       <label style="display:block;font-size:0.8rem;color:var(--text-secondary);margin-bottom:4px">Posizione <span style="color:var(--red-hot)">*</span></label>
       <input type="number" id="mr-pos" min="1" value="${existing ? existing.posizione : (posizione || '')}" ${existing ? 'disabled' : ''} style="${inpStyle}${existing?';opacity:.6':''}"/>
       <label style="display:block;font-size:0.8rem;color:var(--text-secondary);margin-bottom:4px">Cerca corridore <span style="color:var(--text-muted);font-weight:400">(se già nel sistema, compila da solo)</span></label>
@@ -15902,9 +15925,24 @@ window.openManualResultForm = (garaId, posizione, forceAdd) => {
         ${existing?._manual ? `<button onclick="window.deleteManualResult(${existing._manualId},'${esc(garaId)}')" style="padding:9px 14px;background:#dc2626;color:#fff;border:none;border-radius:var(--r-sm);font-weight:600;cursor:pointer">🗑</button>` : ''}
       </div>
       ${existing ? `<button onclick="this.closest('[style*=fixed]').remove();window.openManualResultForm('${esc(garaId)}',${existing.posizione},true)" style="width:100%;margin-top:10px;padding:8px;background:none;border:1px dashed var(--border-subtle);border-radius:var(--r-sm);color:var(--text-secondary);font-size:0.8rem;cursor:pointer">➕ Aggiungi un altro corridore a questa posizione (gara a squadre)</button>` : ''}
+      ${forceAdd ? `<button onclick="window._mrCloseModal()" style="width:100%;margin-top:10px;padding:8px;background:none;border:none;color:var(--text-muted);font-size:0.8rem;cursor:pointer;text-decoration:underline">Ho finito, chiudi e aggiorna la pagina</button>` : ''}
     </div>`;
   document.body.appendChild(overlay);
   window._mrBindRiderSearch();
+};
+
+// Chiude la finestra e, solo se c'è stato almeno un salvataggio, ricarica la
+// pagina UNA VOLTA sola — invece di farlo ad ogni singolo "Aggiungi" come
+// prima (per le gare a squadre, con 4-5 corridori da inserire uno alla
+// volta, ricaricare ogni volta perdeva lo storico di chi era già stato
+// inserito ed era lento/fastidioso).
+window._mrCloseModal = () => {
+  document.getElementById('modal-overlay')?.remove();
+  const shouldRefresh = window._mrDirty;
+  window._mrDirty = false;
+  window._mrForceAdd = false;
+  window._mrAddedListPos = null;
+  if (shouldRefresh && window._currentGaraId) renderGara(window._currentGaraId);
 };
 
 // Autocompletamento corridore: cerca fra gli atleti già nel sistema e, alla
