@@ -22148,6 +22148,97 @@ function _drawTeam(ctx, W, H, d) {
   cells.forEach((c,i)=>_statCell(ctx,pad+i*(cw+cgap),gridTop,cw,gridH,c[1],c[0],c[2]));
 }
 
+// ── ATLETA/TEAM DEL MESE (card individuale per categoria) ──
+// Stessa impaginazione della card atleta/team "di stagione", ma con le
+// statistiche del solo mese selezionato invece che dell'intera stagione
+// (niente "posizione in classifica" perché non calcolata a livello mensile).
+function _drawAtletaMese(ctx, W, H, d, athImg) {
+  const { cognome, nome, team, catLabel, punti, wins, p2, p3, gare } = d;
+  const hB = Math.round(H * 0.092), fB = Math.round(H * 0.06), pad = Math.round(W * 0.055);
+  const cTop = hB + Math.round(H * 0.025);
+  const cBot = H - fB - Math.round(H * 0.02);
+  const cH = cBot - cTop;
+
+  const phD = athImg ? Math.round(W * 0.22) : 0;
+  const phX = athImg ? W - pad - phD : 0;
+  const phY = athImg ? cTop + Math.round(H * 0.01) : 0;
+  if (athImg) {
+    ctx.save();
+    ctx.beginPath();
+    ctx.arc(phX + phD / 2, phY + phD / 2, phD / 2, 0, Math.PI * 2);
+    ctx.clip();
+    const scale = Math.max(phD / athImg.naturalWidth, phD / athImg.naturalHeight);
+    const sw = athImg.naturalWidth * scale, sh = athImg.naturalHeight * scale;
+    ctx.drawImage(athImg, phX + (phD - sw) / 2, phY, sw, sh);
+    ctx.restore();
+    ctx.strokeStyle = 'rgba(255,255,255,0.18)'; ctx.lineWidth = Math.round(W * 0.004);
+    ctx.beginPath(); ctx.arc(phX + phD / 2, phY + phD / 2, phD / 2, 0, Math.PI * 2); ctx.stroke();
+  }
+
+  const nameMaxW = athImg ? (phX - pad - Math.round(W * 0.03)) : (W - pad * 2);
+  let y = cTop;
+  const fsCat = Math.round(W * 0.026);
+  ctx.font = `700 ${fsCat}px 'Inter Tight',sans-serif`; ctx.fillStyle = '#e8001d';
+  ctx.letterSpacing = '1px'; ctx.textAlign = 'left'; ctx.textBaseline = 'alphabetic';
+  ctx.fillText('ATLETA DEL MESE · ' + (catLabel || '').toUpperCase(), pad, y + fsCat);
+  ctx.letterSpacing = '0px';
+  y += fsCat + Math.round(H * 0.014);
+  const fsC = Math.round(W * (cognome.length > 12 ? 0.072 : 0.092));
+  ctx.font = `900 ${fsC}px 'Inter Tight',sans-serif`; ctx.fillStyle = '#f4f4f4';
+  y = _wrap(ctx, cognome.toUpperCase(), pad, y + fsC, nameMaxW, fsC * 1.05);
+  const fsN = Math.round(fsC * 0.46);
+  ctx.font = `700 ${fsN}px 'Inter Tight',sans-serif`; ctx.fillStyle = '#e8001d';
+  ctx.fillText((nome || '').toUpperCase(), pad, y); y += Math.round(fsN * 1.55);
+  if (team) {
+    const fsTm = Math.round(W * 0.032);
+    ctx.font = `600 ${fsTm}px 'Inter Tight',sans-serif`; ctx.fillStyle = 'rgba(255,255,255,0.55)';
+    ctx.fillText(String(team).substring(0, 40), pad, y);
+  }
+
+  const heroTop = y + Math.round(H * 0.04);
+  const heroH = Math.round(cH * 0.30);
+  const gap = Math.round(W * 0.03);
+  const boxW = (W - pad * 2 - gap) / 2;
+  _statHero(ctx, pad, heroTop, boxW, heroH, punti, 'PUNTI DEL MESE', 'grad');
+  _statHero(ctx, pad + boxW + gap, heroTop, boxW, heroH, wins, 'VITTORIE', 'gold');
+
+  const gridTop = heroTop + heroH + Math.round(H * 0.035);
+  const gridH = cBot - gridTop;
+  const cells = [['1° POSTI', wins, '#f5c400'], ['2° POSTI', (p2 || 0), '#cfcfcf'], ['3° POSTI', (p3 || 0), '#cd7f32'], ['GARE', (gare || 0), '#f0f0f0']];
+  const cgap = Math.round(W * 0.025);
+  const cw = (W - pad * 2 - cgap * 3) / 4;
+  cells.forEach((c, i) => _statCell(ctx, pad + i * (cw + cgap), gridTop, cw, gridH, c[1], c[0], c[2]));
+}
+function _drawTeamMese(ctx, W, H, d) {
+  const { nome, catLabel, punti, wins, p2, p3 } = d;
+  const hB = Math.round(H * 0.092), fB = Math.round(H * 0.06), pad = Math.round(W * 0.055);
+  const cTop = hB + Math.round(H * 0.025), cBot = H - fB - Math.round(H * 0.02), cH = cBot - cTop;
+  let y = cTop;
+  const fsCat = Math.round(W * 0.026);
+  ctx.font = `700 ${fsCat}px 'Inter Tight',sans-serif`; ctx.fillStyle = '#e8001d';
+  ctx.letterSpacing = '1px'; ctx.textAlign = 'left'; ctx.textBaseline = 'alphabetic';
+  ctx.fillText('TEAM DEL MESE · ' + (catLabel || '').toUpperCase(), pad, y + fsCat);
+  ctx.letterSpacing = '0px';
+  y += fsCat + Math.round(H * 0.016);
+  const fsN = Math.round(W * (nome.length > 20 ? 0.052 : 0.07));
+  ctx.font = `900 ${fsN}px 'Inter Tight',sans-serif`; ctx.fillStyle = '#f4f4f4';
+  y = _wrap(ctx, nome.toUpperCase(), pad, y + fsN, W - pad * 2, fsN * 1.08);
+
+  const heroTop = y + Math.round(H * 0.035);
+  const heroH = Math.round(cH * 0.30);
+  const gap = Math.round(W * 0.03);
+  const boxW = (W - pad * 2 - gap) / 2;
+  _statHero(ctx, pad, heroTop, boxW, heroH, punti, 'PUNTI DEL MESE', 'grad');
+  _statHero(ctx, pad + boxW + gap, heroTop, boxW, heroH, wins, 'VITTORIE', 'gold');
+
+  const gridTop = heroTop + heroH + Math.round(H * 0.04);
+  const gridH = cBot - gridTop;
+  const cells = [['1° POSTI', wins, '#f5c400'], ['2° POSTI', (p2 || 0), '#cfcfcf'], ['3° POSTI', (p3 || 0), '#cd7f32']];
+  const cgap = Math.round(W * 0.03);
+  const cw = (W - pad * 2 - cgap * 2) / 3;
+  cells.forEach((c, i) => _statCell(ctx, pad + i * (cw + cgap), gridTop, cw, gridH, c[1], c[0], c[2]));
+}
+
 // ── Disegna una colonna di classifica (header colonne + accento + righe) ──
 // medalCol: oro/argento/bronzo per le posizioni 1-3 (in base a r.pos)
 function _drawRankColumn(ctx, x, colW, topY, bottomY, slice, hdFs) {
@@ -22368,6 +22459,24 @@ async function _fetchGaraAvatars(results) {
   return map;
 }
 
+// Fetch+blob di un'immagine remota per disegnarla su canvas evitando
+// problemi CORS da cache del browser (stesso pattern usato per l'avatar
+// atleta e per le foto profilo in classifica gara).
+async function _fetchImgBlob(url) {
+  try {
+    const resp = await _fetchTimeout(url, { mode: 'cors', cache: 'no-store' });
+    if (!resp.ok) return null;
+    const blob = await resp.blob();
+    const blobUrl = URL.createObjectURL(blob);
+    return await new Promise(resolve => {
+      const i = new Image();
+      i.onload = () => { URL.revokeObjectURL(blobUrl); resolve(i); };
+      i.onerror = () => { URL.revokeObjectURL(blobUrl); resolve(null); };
+      i.src = blobUrl;
+    });
+  } catch { return null; }
+}
+
 // ── Generatore canvas ──────────────────────────────────────
 async function generateShareCanvas(type, payload, platKey) {
   const p=SHARE_PLATFORMS[platKey]||SHARE_PLATFORMS.instagram;
@@ -22383,30 +22492,19 @@ async function generateShareCanvas(type, payload, platKey) {
   } else {
     const _headerClassData = type==='class' ? payload
       : type==='recap' ? { catLabel:'RIEPILOGO MENSILE', month:(payload.monthLabel||'').toUpperCase() }
+      : (type==='atleta-mese'||type==='team-mese') ? { catLabel:(type==='atleta-mese'?'ATLETA DEL MESE':'TEAM DEL MESE'), month:(payload.monthLabel||'').toUpperCase() }
       : null;
     _header(ctx,logo,p.w,p.h, _headerClassData, (type==='atleta'||type==='team')?payload.cat:null); _footer(ctx,p.w,p.h);
     if(type==='atleta') {
-      let athImg = null;
-      if (payload.photo_url) {
-        // Usa fetch+blob per evitare problemi CORS da cache browser
-        athImg = await (async () => {
-          try {
-            const resp = await _fetchTimeout(payload.photo_url, { mode: 'cors', cache: 'no-store' });
-            if (!resp.ok) return null;
-            const blob = await resp.blob();
-            const blobUrl = URL.createObjectURL(blob);
-            return await new Promise(resolve => {
-              const i = new Image();
-              i.onload = () => { URL.revokeObjectURL(blobUrl); resolve(i); };
-              i.onerror = () => { URL.revokeObjectURL(blobUrl); resolve(null); };
-              i.src = blobUrl;
-            });
-          } catch { return null; }
-        })();
-      }
+      const athImg = payload.photo_url ? await _fetchImgBlob(payload.photo_url) : null;
       _drawAtleta(ctx,p.w,p.h,payload,athImg);
     }
+    else if(type==='atleta-mese') {
+      const athImg = payload.photo_url ? await _fetchImgBlob(payload.photo_url) : null;
+      _drawAtletaMese(ctx,p.w,p.h,payload,athImg);
+    }
     else if(type==='team')  _drawTeam(ctx,p.w,p.h,payload);
+    else if(type==='team-mese') _drawTeamMese(ctx,p.w,p.h,payload);
     else if(type==='class') _drawClass(ctx,p.w,p.h,payload);
     else if(type==='recap') _drawRecap(ctx,p.w,p.h,payload);
   }

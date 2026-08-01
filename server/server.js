@@ -2063,27 +2063,66 @@ async function writeVideos(obj) {
 // principio del testo FB per la singola gara (_buildGaraNarrative).
 // ══════════════════════════════════════════════════════════════════════════════
 const _MONTH_NAMES_IT = ['Gennaio','Febbraio','Marzo','Aprile','Maggio','Giugno','Luglio','Agosto','Settembre','Ottobre','Novembre','Dicembre'];
+const _RECAP_CAT_ORDER = ['ES1_M','ES1_F','ES2_M','ES2_F','AL_M','AL_F','JUN_M','JUN_F','ELI_M','ELI_F'];
+const _RECAP_CAT_LABELS = {
+  ES1_M:'Esordienti 1° anno M', ES1_F:'Esordienti 1° anno F',
+  ES2_M:'Esordienti 2° anno M', ES2_F:'Esordienti 2° anno F',
+  AL_M:'Allievi', AL_F:'Allieve', JUN_M:'Juniores M', JUN_F:'Juniores F',
+  ELI_M:'Elite/U23 M', ELI_F:'Elite/U23 F',
+};
 
 function _computeMonthlyRecap(resultsRaw, year, month) {
   const prefix = `${year}-${String(month).padStart(2, '0')}`;
   const rows = (resultsRaw || []).filter(r => (r.data || '').startsWith(prefix));
   const byAthlete = new Map(), byTeam = new Map(), garaSet = new Set();
+  // Aggregazione anche per categoria+sesso — serve per le card individuali
+  // "atleta/team del mese" per ogni categoria, richieste in aggiunta al
+  // riepilogo generale (che resta top-5 assoluto, senza distinzione).
+  const byCatAthlete = new Map(), byCatTeam = new Map();
   for (const r of rows) {
     if (r.gara_id) garaSet.add(r.gara_id);
     const pts = r.punti_effettivi || 0;
     const pos = Number(r.posizione);
+    const catCode = _rankingCodeFromRow(r);
     if (r.atleta_id) {
       if (!byAthlete.has(r.atleta_id)) byAthlete.set(r.atleta_id, { atleta_id: r.atleta_id, cognome: r.cognome, nome: r.nome, team: r.team, punti: 0, wins: 0, podi: 0 });
       const a = byAthlete.get(r.atleta_id);
       a.punti += pts;
       if (pos === 1) a.wins++;
       if (pos >= 1 && pos <= 3) a.podi++;
+      if (catCode) {
+        if (!byCatAthlete.has(catCode)) byCatAthlete.set(catCode, new Map());
+        const m = byCatAthlete.get(catCode);
+        if (!m.has(r.atleta_id)) m.set(r.atleta_id, { atleta_id: r.atleta_id, cognome: r.cognome, nome: r.nome, team: r.team, punti: 0, p1: 0, p2: 0, p3: 0, gareSet: new Set() });
+        const ca = m.get(r.atleta_id);
+        ca.punti += pts;
+        if (pos === 1) ca.p1++; else if (pos === 2) ca.p2++; else if (pos === 3) ca.p3++;
+        if (r.gara_id) ca.gareSet.add(r.gara_id);
+      }
     }
     if (r.team_id) {
       if (!byTeam.has(r.team_id)) byTeam.set(r.team_id, { team_id: r.team_id, nome: r.team, punti: 0, wins: 0 });
       const t = byTeam.get(r.team_id);
       t.punti += pts;
       if (pos === 1) t.wins++;
+      if (catCode) {
+        if (!byCatTeam.has(catCode)) byCatTeam.set(catCode, new Map());
+        const m = byCatTeam.get(catCode);
+        if (!m.has(r.team_id)) m.set(r.team_id, { team_id: r.team_id, nome: r.team, punti: 0, p1: 0, p2: 0, p3: 0 });
+        const ct = m.get(r.team_id);
+        ct.punti += pts;
+        if (pos === 1) ct.p1++; else if (pos === 2) ct.p2++; else if (pos === 3) ct.p3++;
+      }
+    }
+  }
+  const byCategory = {};
+  for (const cat of _RECAP_CAT_ORDER) {
+    const athletes = [...(byCatAthlete.get(cat) || new Map()).values()]
+      .map(a => ({ ...a, gare: a.gareSet.size, gareSet: undefined }))
+      .sort((a, b) => b.punti - a.punti);
+    const teams = [...(byCatTeam.get(cat) || new Map()).values()].sort((a, b) => b.punti - a.punti);
+    if (athletes.length || teams.length) {
+      byCategory[cat] = { label: _RECAP_CAT_LABELS[cat], topAthlete: athletes[0] || null, topTeam: teams[0] || null };
     }
   }
   return {
@@ -2092,6 +2131,7 @@ function _computeMonthlyRecap(resultsRaw, year, month) {
     totalRisultati: rows.length,
     topAthletes: [...byAthlete.values()].sort((a, b) => b.punti - a.punti).slice(0, 5),
     topTeams: [...byTeam.values()].sort((a, b) => b.punti - a.punti).slice(0, 5),
+    byCategory,
   };
 }
 
