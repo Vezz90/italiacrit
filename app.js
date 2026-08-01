@@ -22180,6 +22180,15 @@ function _drawAtletaMese(ctx, W, H, d, athImg) {
     ctx.beginPath(); ctx.arc(phX + phD / 2, phY + phD / 2, phD / 2, 0, Math.PI * 2); ctx.stroke();
   }
 
+  // Hero + griglia ancorati dal BASSO (cBot) verso l'alto — calcolati PRIMA
+  // del blocco nome così quest'ultimo sa dove fermarsi (vedi commento più
+  // sotto sul perché dell'ancoraggio dal basso).
+  const landscape = W > H * 1.25;
+  const gridH = Math.round(cH * (landscape ? 0.20 : 0.155));
+  const heroH = Math.round(cH * (landscape ? 0.26 : 0.30));
+  const gridTop = cBot - gridH;
+  const heroTop = gridTop - Math.round(H * (landscape ? 0.022 : 0.035)) - heroH;
+
   // Font con TETTO sull'altezza (non solo sulla larghezza): sui formati
   // molto larghi/bassi (Facebook 1.91:1, Twitter 16:9) H è ridotto ma W resta
   // grande — senza il tetto H-relativo il blocco nome+categoria da solo
@@ -22198,24 +22207,18 @@ function _drawAtletaMese(ctx, W, H, d, athImg) {
   const fsN = Math.round(fsC * 0.46);
   ctx.font = `700 ${fsN}px 'Inter Tight',sans-serif`; ctx.fillStyle = '#e8001d';
   ctx.fillText((nome || '').toUpperCase(), pad, y); y += Math.round(fsN * 1.55);
-  if (team) {
+  // Riga team: disegnata solo se c'è davvero spazio prima dell'hero (bottom-
+  // anchored) — sui formati landscape con nomi team lunghi, ometterla è
+  // molto meno grave che farla sovrapporre al box "PUNTI DEL MESE".
+  if (team && y + Math.round(H * 0.03) < heroTop) {
     const fsTm = Math.min(Math.round(W * 0.032), Math.round(H * 0.055));
     ctx.font = `600 ${fsTm}px 'Inter Tight',sans-serif`; ctx.fillStyle = 'rgba(255,255,255,0.55)';
-    ctx.fillText(String(team).substring(0, 40), pad, y);
+    let tm = String(team).substring(0, 40);
+    const teamMaxW = nameMaxW;
+    while (tm.length > 3 && ctx.measureText(tm).width > teamMaxW) tm = tm.slice(0, -1);
+    ctx.fillText(tm, pad, y);
   }
 
-  // Hero + griglia ancorati dal BASSO (cBot) verso l'alto, non impilati sotto
-  // il blocco nome: su Facebook/Twitter (larghi e bassi) il blocco nome da
-  // solo può occupare quasi tutta cH, e impilando sotto la griglia finiva
-  // schiacciata contro/oltre il footer. Ancorandola dal fondo è SEMPRE dentro
-  // i bordi della card, a costo — nei rari casi di nome lunghissimo — di
-  // sovrapporsi leggermente all'hero piuttosto che al footer (molto meno
-  // visibile ed è comunque un caso limite).
-  const landscape = W > H * 1.25;
-  const gridH = Math.round(cH * (landscape ? 0.20 : 0.155));
-  const heroH = Math.round(cH * (landscape ? 0.26 : 0.30));
-  const gridTop = cBot - gridH;
-  const heroTop = gridTop - Math.round(H * (landscape ? 0.022 : 0.035)) - heroH;
   const gap = Math.round(W * 0.03);
   const boxW = (W - pad * 2 - gap) / 2;
   _statHero(ctx, pad, heroTop, boxW, heroH, punti, 'PUNTI DEL MESE', 'grad');
