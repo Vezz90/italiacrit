@@ -1530,17 +1530,31 @@ async function loadAll() {
   applyGaraCorrections(calendar, resultsRaw, athletes, garaCorrections);
   applyTeamNomeCorrections(teams, resultsRaw, athletes, teamNomeCorrections);
 
-  // Unisci extra_roster statico con atleti PCS da Supabase
-  const mergedExtraRoster = { ...(extraRoster || {}), ...(pcsExtraRoster || {}) };
-  // Se un team è in entrambi, unisci gli atleti
+  // Unisci extra_roster statico con atleti PCS da Supabase. Il roster LIVE
+  // (Supabase, via /data/pcs-extra-roster) è sempre più aggiornato del file
+  // statico extra_roster.json — quest'ultimo si scrive solo alla PRIMA
+  // creazione del profilo e poi resta congelato, anche dopo una correzione
+  // (categoria/genere sbagliati sistemati a mano, cambio squadra…). La
+  // versione precedente di questo merge dava sempre la precedenza al file
+  // statico quando un atleta compariva in entrambi sotto lo stesso team,
+  // scartando silenziosamente ogni correzione fatta lato Supabase — e se
+  // l'atleta nel frattempo era stato spostato in un ALTRO team, restava
+  // pure duplicato sotto due squadre diverse. Qui si esclude dal roster
+  // statico ogni atleta già noto al roster live (ovunque si trovi), poi si
+  // sovrappone il roster live: la versione corretta vince sempre.
+  const liveAthleteIds = new Set();
+  for (const bucket of Object.values(pcsExtraRoster || {})) {
+    for (const a of (bucket.atleti || [])) if (a.atleta_id) liveAthleteIds.add(a.atleta_id);
+  }
+  const mergedExtraRoster = {};
+  for (const [tid, bucket] of Object.entries(extraRoster || {})) {
+    const filteredAtleti = (bucket.atleti || []).filter(a => !liveAthleteIds.has(a.atleta_id));
+    mergedExtraRoster[tid] = { ...bucket, atleti: filteredAtleti };
+  }
   for (const [tid, bucket] of Object.entries(pcsExtraRoster || {})) {
-    if (extraRoster?.[tid]) {
-      const existing = new Set((extraRoster[tid].atleti || []).map(a => a.atleta_id));
-      mergedExtraRoster[tid] = {
-        ...extraRoster[tid],
-        atleti: [...(extraRoster[tid].atleti || []), ...(bucket.atleti || []).filter(a => !existing.has(a.atleta_id))],
-      };
-    }
+    mergedExtraRoster[tid] = mergedExtraRoster[tid]
+      ? { ...mergedExtraRoster[tid], ...bucket, atleti: [...mergedExtraRoster[tid].atleti, ...(bucket.atleti || [])] }
+      : bucket;
   }
 
   // Scarta le righe manuali "superate": l'admin le inserisce PRIMA che lo
