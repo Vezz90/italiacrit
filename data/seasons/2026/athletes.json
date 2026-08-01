@@ -645,7 +645,7 @@
     "team_id": "ITA",
     "categoria": "JUN_F",
     "genere": "F",
-    "punti_totali": 9,
+    "punti_totali": 39,
     "risultati": [
       {
         "gara_id": "CAMPIONATO_ITALIANO_CRONOMETRO_A_SQUADRE_DONNE_JUNIORES_2026-08-01_JUN_F",
@@ -658,6 +658,119 @@
         "tipo": "nazionale",
         "regione": "FRIULI VENEZIA GIULIA",
         "km": "14.500",
+        "media": ""
+      },
+      {
+        "gara_id": "CAMPIONATO_ITALIANO_CRONOMETRO_A_SQUADRE_DONNE_ELITE_UNDER23_2026-08-01_ELI_F",
+        "nome_gara": "CAMPIONATO ITALIANO CRONOMETRO A SQUADRE DONNE ELITE UNDER23",
+        "data": "2026-08-01",
+        "posizione": 3,
+        "punti_effettivi": 30,
+        "team": "ITA",
+        "moltiplicatore": 3,
+        "tipo": "nazionale",
+        "regione": "FRIULI VENEZIA GIULIA",
+        "km": "29.000",
+        "media": ""
+      }
+    ]
+  },
+  "VINI_FANTINI_BEPINK": {
+    "id": "VINI_FANTINI_BEPINK",
+    "nome": "FANTINI BEPINK",
+    "cognome": "VINI",
+    "team_attuale": "ITA",
+    "team_id": "ITA",
+    "categoria": "ELI_F",
+    "genere": "F",
+    "punti_totali": 45,
+    "risultati": [
+      {
+        "gara_id": "CAMPIONATO_ITALIANO_CRONOMETRO_A_SQUADRE_DONNE_ELITE_UNDER23_2026-08-01_ELI_F",
+        "nome_gara": "CAMPIONATO ITALIANO CRONOMETRO A SQUADRE DONNE ELITE UNDER23",
+        "data": "2026-08-01",
+        "posizione": 1,
+        "punti_effettivi": 45,
+        "team": "ITA",
+        "moltiplicatore": 3,
+        "tipo": "nazionale",
+        "regione": "FRIULI VENEZIA GIULIA",
+        "km": "29.000",
+        "media": ""
+      }
+    ]
+  },
+  "TOP_GIRLS_FASSA_BORTOLO": {
+    "id": "TOP_GIRLS_FASSA_BORTOLO",
+    "nome": "GIRLS - FASSA BORTOLO",
+    "cognome": "TOP",
+    "team_attuale": "ITA",
+    "team_id": "ITA",
+    "categoria": "ELI_F",
+    "genere": "F",
+    "punti_totali": 36,
+    "risultati": [
+      {
+        "gara_id": "CAMPIONATO_ITALIANO_CRONOMETRO_A_SQUADRE_DONNE_ELITE_UNDER23_2026-08-01_ELI_F",
+        "nome_gara": "CAMPIONATO ITALIANO CRONOMETRO A SQUADRE DONNE ELITE UNDER23",
+        "data": "2026-08-01",
+        "posizione": 2,
+        "punti_effettivi": 36,
+        "team": "ITA",
+        "moltiplicatore": 3,
+        "tipo": "nazionale",
+        "regione": "FRIULI VENEZIA GIULIA",
+        "km": "29.000",
+        "media": ""
+      }
+    ]
+  },
+  "ISOLMANT_PREMAC_VITTORIA": {
+    "id": "ISOLMANT_PREMAC_VITTORIA",
+    "nome": "- PREMAC - VITTORIA",
+    "cognome": "ISOLMANT",
+    "team_attuale": "ITA",
+    "team_id": "ITA",
+    "categoria": "ELI_F",
+    "genere": "F",
+    "punti_totali": 24,
+    "risultati": [
+      {
+        "gara_id": "CAMPIONATO_ITALIANO_CRONOMETRO_A_SQUADRE_DONNE_ELITE_UNDER23_2026-08-01_ELI_F",
+        "nome_gara": "CAMPIONATO ITALIANO CRONOMETRO A SQUADRE DONNE ELITE UNDER23",
+        "data": "2026-08-01",
+        "posizione": 4,
+        "punti_effettivi": 24,
+        "team": "ITA",
+        "moltiplicatore": 3,
+        "tipo": "nazionale",
+        "regione": "FRIULI VENEZIA GIULIA",
+        "km": "29.000",
+        "media": ""
+      }
+    ]
+  },
+  "HORIZONS_CYCLING_CLUB": {
+    "id": "HORIZONS_CYCLING_CLUB",
+    "nome": "CYCLING CLUB",
+    "cognome": "HORIZONS",
+    "team_attuale": "ITA",
+    "team_id": "ITA",
+    "categoria": "ELI_F",
+    "genere": "F",
+    "punti_totali": 18,
+    "risultati": [
+      {
+        "gara_id": "CAMPIONATO_ITALIANO_CRONOMETRO_A_SQUADRE_DONNE_ELITE_UNDER23_2026-08-01_ELI_F",
+        "nome_gara": "CAMPIONATO ITALIANO CRONOMETRO A SQUADRE DONNE ELITE UNDER23",
+        "data": "2026-08-01",
+        "posizione": 5,
+        "punti_effettivi": 18,
+        "team": "ITA",
+        "moltiplicatore": 3,
+        "tipo": "nazionale",
+        "regione": "FRIULI VENEZIA GIULIA",
+        "km": "29.000",
         "media": ""
       }
     ]

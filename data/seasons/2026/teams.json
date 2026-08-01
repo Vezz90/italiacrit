@@ -2,7 +2,7 @@
   "ITA": {
     "id": "ITA",
     "nome": "ITA",
-    "punti_totali": 582,
+    "punti_totali": 735,
     "atleti": [
       "VANGI_LADIES_CYCLING_TEAM",
       "POL_FIUMICINESE_FA_I_T_ADRIATICA",
@@ -29,7 +29,11 @@
       "PETRUCCI_GAUSS_CYCLING_TEAM",
       "TEAM_WILIER_BREGANZE",
       "BRESCIA_F_MAGNI_FLANDRES_LOVE",
-      "TEAM_MENDELSPECK_E_WORK"
+      "TEAM_MENDELSPECK_E_WORK",
+      "VINI_FANTINI_BEPINK",
+      "TOP_GIRLS_FASSA_BORTOLO",
+      "ISOLMANT_PREMAC_VITTORIA",
+      "HORIZONS_CYCLING_CLUB"
     ],
     "risultati": [
       {
@@ -436,12 +440,88 @@
         "regione": "FRIULI VENEZIA GIULIA",
         "km": "14.500",
         "media": ""
+      },
+      {
+        "gara_id": "CAMPIONATO_ITALIANO_CRONOMETRO_A_SQUADRE_DONNE_ELITE_UNDER23_2026-08-01_ELI_F",
+        "nome_gara": "CAMPIONATO ITALIANO CRONOMETRO A SQUADRE DONNE ELITE UNDER23",
+        "data": "2026-08-01",
+        "atleta_id": "VINI_FANTINI_BEPINK",
+        "atleta_cognome": "VINI",
+        "atleta_nome": "FANTINI BEPINK",
+        "posizione": 1,
+        "punti_effettivi": 45,
+        "moltiplicatore": 3,
+        "tipo": "nazionale",
+        "regione": "FRIULI VENEZIA GIULIA",
+        "km": "29.000",
+        "media": ""
+      },
+      {
+        "gara_id": "CAMPIONATO_ITALIANO_CRONOMETRO_A_SQUADRE_DONNE_ELITE_UNDER23_2026-08-01_ELI_F",
+        "nome_gara": "CAMPIONATO ITALIANO CRONOMETRO A SQUADRE DONNE ELITE UNDER23",
+        "data": "2026-08-01",
+        "atleta_id": "TOP_GIRLS_FASSA_BORTOLO",
+        "atleta_cognome": "TOP",
+        "atleta_nome": "GIRLS - FASSA BORTOLO",
+        "posizione": 2,
+        "punti_effettivi": 36,
+        "moltiplicatore": 3,
+        "tipo": "nazionale",
+        "regione": "FRIULI VENEZIA GIULIA",
+        "km": "29.000",
+        "media": ""
+      },
+      {
+        "gara_id": "CAMPIONATO_ITALIANO_CRONOMETRO_A_SQUADRE_DONNE_ELITE_UNDER23_2026-08-01_ELI_F",
+        "nome_gara": "CAMPIONATO ITALIANO CRONOMETRO A SQUADRE DONNE ELITE UNDER23",
+        "data": "2026-08-01",
+        "atleta_id": "TEAM_MENDELSPECK_E_WORK",
+        "atleta_cognome": "TEAM",
+        "atleta_nome": "MENDELSPECK E-WORK",
+        "posizione": 3,
+        "punti_effettivi": 30,
+        "moltiplicatore": 3,
+        "tipo": "nazionale",
+        "regione": "FRIULI VENEZIA GIULIA",
+        "km": "29.000",
+        "media": ""
+      },
+      {
+        "gara_id": "CAMPIONATO_ITALIANO_CRONOMETRO_A_SQUADRE_DONNE_ELITE_UNDER23_2026-08-01_ELI_F",
+        "nome_gara": "CAMPIONATO ITALIANO CRONOMETRO A SQUADRE DONNE ELITE UNDER23",
+        "data": "2026-08-01",
+        "atleta_id": "ISOLMANT_PREMAC_VITTORIA",
+        "atleta_cognome": "ISOLMANT",
+        "atleta_nome": "- PREMAC - VITTORIA",
+        "posizione": 4,
+        "punti_effettivi": 24,
+        "moltiplicatore": 3,
+        "tipo": "nazionale",
+        "regione": "FRIULI VENEZIA GIULIA",
+        "km": "29.000",
+        "media": ""
+      },
+      {
+        "gara_id": "CAMPIONATO_ITALIANO_CRONOMETRO_A_SQUADRE_DONNE_ELITE_UNDER23_2026-08-01_ELI_F",
+        "nome_gara": "CAMPIONATO ITALIANO CRONOMETRO A SQUADRE DONNE ELITE UNDER23",
+        "data": "2026-08-01",
+        "atleta_id": "HORIZONS_CYCLING_CLUB",
+        "atleta_cognome": "HORIZONS",
+        "atleta_nome": "CYCLING CLUB",
+        "posizione": 5,
+        "punti_effettivi": 18,
+        "moltiplicatore": 3,
+        "tipo": "nazionale",
+        "regione": "FRIULI VENEZIA GIULIA",
+        "km": "29.000",
+        "media": ""
       }
     ],
     "punti_per_cat": {
       "AL_F": 195,
       "AL_M": 198,
-      "JUN_F": 189
+      "JUN_F": 189,
+      "ELI_F": 153
     }
   },
   "SS_AQUILA": {
