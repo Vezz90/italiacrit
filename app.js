@@ -22208,6 +22208,105 @@ function _drawRankColumn(ctx, x, colW, topY, bottomY, slice, hdFs) {
     ctx.textAlign = 'left'; ctx.textBaseline = 'alphabetic';
   });
 }
+// ── RIEPILOGO MENSILE CARD ───────────────────────────────────
+// Breve testo descrittivo per ogni corridore/team in classifica del mese
+// (vittorie/podi), al posto del solo nome squadra — è quello che rende la
+// card "raccontata" e non una tabella nuda, pensata per essere salvata e
+// condivisa così com'è sui social.
+function _recapBlurb(entry) {
+  const parts = [];
+  if (entry.wins) parts.push(`${entry.wins} vittoria${entry.wins === 1 ? '' : 'e'}`);
+  if (entry.podi) parts.push(`${entry.podi} podio${entry.podi === 1 ? '' : 'i'}`);
+  return parts.join(' · ');
+}
+function _drawRecapColumn(ctx, x, colW, topY, bottomY, slice, hdFs, title, isTeam) {
+  const posX = x + Math.round(colW * 0.04);
+  const nameX = posX + Math.round(colW * 0.13);
+  const right = x + colW;
+  const posCol = ['#f5c400', '#dadada', '#cd7f32'];
+  let y = topY;
+  ctx.font = `700 ${Math.round(hdFs * 1.15)}px 'Inter Tight',sans-serif`;
+  ctx.fillStyle = '#f4f4f4'; ctx.textAlign = 'left'; ctx.textBaseline = 'alphabetic';
+  ctx.fillText(title, x, y + hdFs);
+  y += hdFs + Math.round(hdFs * 0.5);
+  const accW = Math.round(colW * 0.22);
+  ctx.fillStyle = 'rgba(232,0,29,0.85)'; ctx.fillRect(x, y, accW, 2);
+  ctx.fillStyle = 'rgba(255,255,255,0.06)'; ctx.fillRect(x + accW, y, colW - accW, 1);
+  y += 12;
+  if (!slice.length) {
+    ctx.font = `500 ${Math.round(hdFs * 0.9)}px 'Inter Tight',sans-serif`;
+    ctx.fillStyle = 'rgba(255,255,255,0.35)';
+    ctx.fillText('Nessun dato questo mese', x, y + hdFs);
+    return;
+  }
+  const rH = Math.round((bottomY - y - 4) / slice.length);
+  const ptsResW = Math.round(colW * 0.20);
+  const nameMaxW = right - nameX - ptsResW;
+  const fsPos = Math.min(Math.round(rH * 0.40), Math.round(colW * 0.050));
+  const fsN   = Math.min(Math.round(rH * 0.30), Math.round(colW * 0.036));
+  const fsB   = Math.round(fsN * 0.62);
+  const fsPts = Math.min(Math.round(rH * 0.36), Math.round(colW * 0.044));
+  slice.forEach((r, i) => {
+    const ry = y + i * rH, mid = ry + rH / 2;
+    const medal = i < 3 ? posCol[i] : null;
+    if (i % 2 === 0) { ctx.fillStyle = 'rgba(255,255,255,0.022)'; ctx.fillRect(x, ry, colW, rH); }
+    if (medal) { ctx.fillStyle = medal; ctx.fillRect(x + Math.round(colW * 0.012), mid - Math.round(rH * 0.30), 3, Math.round(rH * 0.60)); }
+    ctx.font = `700 ${fsPos}px 'Inter Tight',sans-serif`; ctx.fillStyle = medal || 'rgba(255,255,255,0.45)';
+    ctx.textAlign = 'left'; ctx.textBaseline = 'middle';
+    ctx.fillText(String(i + 1), posX, mid);
+    const blurb = _recapBlurb(r);
+    ctx.textBaseline = 'alphabetic';
+    const nameBy = (blurb || (!isTeam && r.team)) ? mid - Math.round(fsB * 0.15) : mid + Math.round(fsN * 0.35);
+    ctx.font = `600 ${fsN}px 'Inter Tight',sans-serif`; ctx.fillStyle = '#f0f0f0';
+    let nm = (isTeam ? (r.nome || r.team_id || '') : `${r.cognome || ''} ${r.nome || ''}`).toUpperCase().trim();
+    while (nm.length > 3 && ctx.measureText(nm).width > nameMaxW) nm = nm.slice(0, -1);
+    ctx.fillText(nm, nameX, nameBy);
+    // Sotto il nome: testo descrittivo (vittorie/podi) se presente, altrimenti il team
+    if (blurb) {
+      ctx.font = `500 ${fsB}px 'Inter Tight',sans-serif`; ctx.fillStyle = 'rgba(245,196,0,0.78)';
+      let bl = blurb;
+      while (bl.length > 3 && ctx.measureText(bl).width > nameMaxW) bl = bl.slice(0, -1);
+      ctx.fillText(bl, nameX, nameBy + Math.round(fsB * 1.5));
+    } else if (!isTeam && r.team) {
+      ctx.font = `400 ${fsB}px 'Inter Tight',sans-serif`; ctx.fillStyle = 'rgba(255,255,255,0.38)';
+      let tm = String(r.team);
+      while (tm.length > 2 && ctx.measureText(tm).width > nameMaxW) tm = tm.slice(0, -1);
+      ctx.fillText(tm, nameX, nameBy + Math.round(fsB * 1.5));
+    }
+    ctx.font = `700 ${fsPts}px 'Inter Tight',sans-serif`; ctx.fillStyle = '#f5c400';
+    ctx.textAlign = 'right'; ctx.textBaseline = 'middle';
+    ctx.fillText(`${r.punti}pt`, right, mid);
+    ctx.textAlign = 'left'; ctx.textBaseline = 'alphabetic';
+  });
+}
+function _drawRecap(ctx, W, H, d) {
+  const { totalGare, topAthletes = [], topTeams = [] } = d;
+  const hB = Math.round(H * 0.092), fB = Math.round(H * 0.06), pad = Math.round(W * 0.048);
+  let y = hB + Math.round(H * 0.03);
+  const fsSub = Math.round(H * 0.026);
+  ctx.font = `600 ${fsSub}px 'Inter Tight',sans-serif`;
+  ctx.fillStyle = 'rgba(255,255,255,0.55)'; ctx.textAlign = 'left'; ctx.textBaseline = 'alphabetic';
+  ctx.fillText(`${totalGare} gar${totalGare === 1 ? 'a' : 'e'} disputat${totalGare === 1 ? 'a' : 'e'} questo mese`, pad, y + fsSub);
+  y += fsSub + Math.round(H * 0.022);
+  const bottomY = H - fB - 4;
+  const landscape = W > H * 1.15;
+  const hdFs = Math.round(H * 0.024);
+  const athletes = topAthletes.slice(0, 5), teams = topTeams.slice(0, 5);
+  if (landscape) {
+    const gap = Math.round(W * 0.045);
+    const colW = Math.round((W - pad * 2 - gap) / 2);
+    _drawRecapColumn(ctx, pad, colW, y, bottomY, athletes, hdFs, 'TOP ATLETI', false);
+    _drawRecapColumn(ctx, pad + colW + gap, colW, y, bottomY, teams, hdFs, 'TOP TEAM', true);
+  } else {
+    const totalH = bottomY - y;
+    const athH = Math.round(totalH * 0.56);
+    const gapV = Math.round(totalH * 0.045);
+    const teamTop = y + athH + gapV;
+    _drawRecapColumn(ctx, pad, W - pad * 2, y, y + athH, athletes, hdFs, '🏆 TOP ATLETI', false);
+    _drawRecapColumn(ctx, pad, W - pad * 2, teamTop, bottomY, teams, hdFs, '🚴 TOP TEAM', true);
+  }
+}
+
 // ── CLASSIFICA CARD ────────────────────────────────────────
 function _drawClass(ctx, W, H, d) {
   const {rows} = d;
@@ -22282,7 +22381,10 @@ async function generateShareCanvas(type, payload, platKey) {
     const avatarMap = await _fetchGaraAvatars(payload.results);
     _drawGara(ctx,p.w,p.h,payload,logo,avatarMap);
   } else {
-    _header(ctx,logo,p.w,p.h, type==='class'?payload:null, (type==='atleta'||type==='team')?payload.cat:null); _footer(ctx,p.w,p.h);
+    const _headerClassData = type==='class' ? payload
+      : type==='recap' ? { catLabel:'RIEPILOGO MENSILE', month:(payload.monthLabel||'').toUpperCase() }
+      : null;
+    _header(ctx,logo,p.w,p.h, _headerClassData, (type==='atleta'||type==='team')?payload.cat:null); _footer(ctx,p.w,p.h);
     if(type==='atleta') {
       let athImg = null;
       if (payload.photo_url) {
@@ -22306,6 +22408,7 @@ async function generateShareCanvas(type, payload, platKey) {
     }
     else if(type==='team')  _drawTeam(ctx,p.w,p.h,payload);
     else if(type==='class') _drawClass(ctx,p.w,p.h,payload);
+    else if(type==='recap') _drawRecap(ctx,p.w,p.h,payload);
   }
   return canvas;
 }
@@ -22333,12 +22436,16 @@ window.showShareModal = async function(type, payload) {
   if (payload?._id && ['gara','atleta','team','class'].includes(type)) {
     fetch(`${API_BASE}/og-image/${type}/${encodeURIComponent(payload._id)}`).catch(()=>{});
   }
-  const titles={gara:'Risultati Gara',atleta:'Profilo Atleta',team:'Profilo Team',class:'Classifica'};
+  const titles={gara:'Risultati Gara',atleta:'Profilo Atleta',team:'Profilo Team',class:'Classifica',recap:'Riepilogo Mensile'};
+  // Il riepilogo mensile non ha una pagina/URL persistente da far leggere al
+  // Facebook Sharer (niente route /og/recap/:id) — per quel tipo il bottone
+  // "Facebook" si comporta come gli altri (genera+scarica l'immagine 1200×630)
+  // invece di aprire il popup "condividi link" di Facebook.
   const platBtns = [
     {k:'post',      label:'Post\nQuadrato', sz:'1080×1080',  fb:false},
     {k:'instagram', label:'Instagram\nFeed',sz:'1080×1350',  fb:false},
     {k:'story',     label:'Story /\nReels', sz:'1080×1920',  fb:false},
-    {k:'facebook',  label:'Facebook',       sz:'Link + foto', fb:true},
+    {k:'facebook',  label:'Facebook',       sz:'Link + foto', fb: type!=='recap'},
     {k:'twitter',   label:'Twitter/X',      sz:'1200×675',   fb:false},
     {k:'whatsapp',  label:'WhatsApp',       sz:'1080×1080',  fb:false},
   ].map(({k,label,sz,fb})=>{
@@ -24220,6 +24327,7 @@ async function _dashAdmin(el, user) {
   if (defMonth === 0) { defMonth = 12; defYear -= 1; }
   let latestRecap = null;
   try { latestRecap = (await apiCall('/admin/monthly-recap/latest'))?.recap || null; } catch {}
+  window._lastRecapObj = latestRecap;
   const monthNamesIt = ['Gennaio','Febbraio','Marzo','Aprile','Maggio','Giugno','Luglio','Agosto','Settembre','Ottobre','Novembre','Dicembre'];
 
   el.innerHTML = `
@@ -24248,7 +24356,10 @@ async function _dashAdmin(el, user) {
           <button class="dash-btn dash-btn--outline" onclick="window.generateMonthlyRecap()">Genera</button>
         </div>
         <textarea id="mrec-text" readonly rows="9" style="width:100%;resize:vertical;font:inherit;font-size:.85rem;padding:8px;border-radius:8px;border:1px solid var(--border-subtle);background:var(--bg-elevated,rgba(255,255,255,0.04));color:var(--text-primary)">${latestRecap?.text ? esc(latestRecap.text) : ''}</textarea>
-        <button class="dash-btn dash-btn--outline" style="margin-top:8px" onclick="window.copyMonthlyRecapText()">📋 Copia testo</button>
+        <div style="display:flex;gap:8px;margin-top:8px;flex-wrap:wrap">
+          <button class="dash-btn dash-btn--outline" onclick="window.copyMonthlyRecapText()">📋 Copia testo</button>
+          <button class="dash-btn dash-btn--accent" onclick="window.shareMonthlyRecapCard()">📤 Crea grafica da condividere</button>
+        </div>
         <div id="mrec-status" style="font-size:.75rem;color:var(--text-muted);margin-top:6px"></div>
       </div>
 
@@ -24284,8 +24395,15 @@ window.generateMonthlyRecap = async function() {
   try {
     const r = await apiCall(`/admin/monthly-recap/${encodeURIComponent(year)}/${encodeURIComponent(month)}`);
     textEl.value = r.text || '';
+    window._lastRecapObj = r.recap ? { ...r.recap, text: r.text } : null;
     statusEl.textContent = r.recap ? `${r.recap.totalGare} gare · ${r.recap.topAthletes.length} atleti in classifica · ${r.recap.topTeams.length} team in classifica.` : '';
   } catch (e) { statusEl.textContent = 'Errore: ' + e.message; }
+};
+window.shareMonthlyRecapCard = function() {
+  const r = window._lastRecapObj;
+  if (!r) { showToast('Genera prima il riepilogo del mese', 'error'); return; }
+  const monthNamesIt = ['Gennaio','Febbraio','Marzo','Aprile','Maggio','Giugno','Luglio','Agosto','Settembre','Ottobre','Novembre','Dicembre'];
+  window.showShareModal('recap', { ...r, monthLabel: `${monthNamesIt[r.month - 1]} ${r.year}` });
 };
 window.copyMonthlyRecapText = async function() {
   const ta = document.getElementById('mrec-text');
