@@ -1385,7 +1385,6 @@ function applyTeamNomeCorrections(teams, resultsRaw, athletes, corrections) {
 // riga anche se altrove (altre gare) risultano correttamente donne.
 const ATHLETE_GENDER_FIXES = {
   'ANDREOLI_ALICE':       { genere:'F', categoria:'ES1_F' },
-  'MASINI_GRETA':         { genere:'F', categoria:'ES2_F' },
   'DELOGU_GIULIA':        { genere:'F', categoria:'ES2_F' },
   'RENZULLI_GIULIA':      { genere:'F', categoria:'ES1_F' },
   'ABRIONI_ALESSIA':      { genere:'F', categoria:'ES1_F' },
