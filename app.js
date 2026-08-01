@@ -15159,10 +15159,21 @@ async function renderTeam(team_id, opts = {}) {
   const catRisultati = [];
   for (const r of catRisultatiRaw) {
     const key = `${r.gara_id}|${r.posizione}`;
+    const nm = `${r.atleta_cognome||''} ${r.atleta_nome||''}`.trim();
     if (_seenTeamGaraPos.has(key)) {
       const kept = _seenTeamGaraPos.get(key);
-      const nm = `${r.atleta_cognome||''} ${r.atleta_nome||''}`.trim();
-      if (nm && nm !== `${kept.atleta_cognome||''} ${kept.atleta_nome||''}`.trim()) {
+      const keptNm = `${kept.atleta_cognome||''} ${kept.atleta_nome||''}`.trim();
+      // Se la riga tenuta finora è un placeholder "solo squadra" (nessun
+      // nome — vedi _patchAthleteTeamForManualRow) e questa invece ha un
+      // corridore vero, promuovila a riga principale invece di lasciare la
+      // colonna ATLETA vuota.
+      if (!keptNm && nm) {
+        r._extraNames = kept._extraNames;
+        _seenTeamGaraPos.set(key, r);
+        catRisultati[catRisultati.indexOf(kept)] = r;
+        continue;
+      }
+      if (nm && nm !== keptNm) {
         kept._extraNames = kept._extraNames || [];
         kept._extraNames.push(nm);
       }
@@ -15312,9 +15323,14 @@ async function renderTeam(team_id, opts = {}) {
   }
   const maxCatWins = Math.max(...Object.values(winsByCat), 1);
 
-  // Top performers — per categoria selezionata
+  // Top performers — per categoria selezionata. Salta le righe "solo
+  // squadra" senza atleta_id (gare a squadre corrette a livello di
+  // team/posizione prima — o senza — indicare i singoli corridori, vedi
+  // _patchAthleteTeamForManualRow): altrimenti comparivano come una riga
+  // "corridore" fantasma senza nome, con i punti della squadra.
   const catPerfMap = {};
   for (const r of catRisultati) {
+    if (!r.atleta_id) continue;
     if (!catPerfMap[r.atleta_id]) {
       const ath = athletes[r.atleta_id] || {};
       catPerfMap[r.atleta_id] = {
