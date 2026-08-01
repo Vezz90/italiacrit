@@ -22534,16 +22534,18 @@ window.showShareModal = async function(type, payload) {
   if (payload?._id && ['gara','atleta','team','class'].includes(type)) {
     fetch(`${API_BASE}/og-image/${type}/${encodeURIComponent(payload._id)}`).catch(()=>{});
   }
-  const titles={gara:'Risultati Gara',atleta:'Profilo Atleta',team:'Profilo Team',class:'Classifica',recap:'Riepilogo Mensile'};
-  // Il riepilogo mensile non ha una pagina/URL persistente da far leggere al
-  // Facebook Sharer (niente route /og/recap/:id) — per quel tipo il bottone
-  // "Facebook" si comporta come gli altri (genera+scarica l'immagine 1200×630)
-  // invece di aprire il popup "condividi link" di Facebook.
+  const titles={gara:'Risultati Gara',atleta:'Profilo Atleta',team:'Profilo Team',class:'Classifica',recap:'Riepilogo Mensile','atleta-mese':'Atleta del Mese','team-mese':'Team del Mese'};
+  // Riepilogo mensile e atleta/team-del-mese non hanno una pagina/URL
+  // persistente da far leggere al Facebook Sharer (niente route /og/:id
+  // dedicata) — per questi tipi il bottone "Facebook" si comporta come gli
+  // altri (genera+scarica l'immagine 1200×630) invece di aprire il popup
+  // "condividi link" di Facebook.
+  const _noFbSharerTypes = ['recap','atleta-mese','team-mese'];
   const platBtns = [
     {k:'post',      label:'Post\nQuadrato', sz:'1080×1080',  fb:false},
     {k:'instagram', label:'Instagram\nFeed',sz:'1080×1350',  fb:false},
     {k:'story',     label:'Story /\nReels', sz:'1080×1920',  fb:false},
-    {k:'facebook',  label:'Facebook',       sz:'Link + foto', fb: type!=='recap'},
+    {k:'facebook',  label:'Facebook',       sz:'Link + foto', fb: !_noFbSharerTypes.includes(type)},
     {k:'twitter',   label:'Twitter/X',      sz:'1200×675',   fb:false},
     {k:'whatsapp',  label:'WhatsApp',       sz:'1080×1080',  fb:false},
   ].map(({k,label,sz,fb})=>{
@@ -24459,6 +24461,7 @@ async function _dashAdmin(el, user) {
           <button class="dash-btn dash-btn--accent" onclick="window.shareMonthlyRecapCard()">📤 Crea grafica da condividere</button>
         </div>
         <div id="mrec-status" style="font-size:.75rem;color:var(--text-muted);margin-top:6px"></div>
+        <div id="mrec-cards" style="margin-top:14px"></div>
       </div>
 
       <div class="dash-card">
@@ -24481,7 +24484,63 @@ async function _dashAdmin(el, user) {
       </div>
 
     </div>`;
+  _renderMrecCards(latestRecap);
 }
+
+// Righe "Atleta del mese" / "Team del mese" per ogni categoria+sesso con dati
+// quel mese, ciascuna con un bottone di condivisione indipendente — invece di
+// un'unica card riassuntiva, così ogni categoria ha la sua card grafica
+// singola da salvare/postare (richiesto esplicitamente al posto del riepilogo
+// unico con solo testo).
+function _renderMrecCards(recap) {
+  const host = document.getElementById('mrec-cards');
+  if (!host) return;
+  const byCat = recap?.byCategory || {};
+  const cats = Object.keys(byCat);
+  if (!cats.length) { host.innerHTML = ''; return; }
+  const monthNamesIt = ['Gennaio','Febbraio','Marzo','Aprile','Maggio','Giugno','Luglio','Agosto','Settembre','Ottobre','Novembre','Dicembre'];
+  const monthLabel = `${monthNamesIt[recap.month - 1]} ${recap.year}`;
+  host.innerHTML = `
+    <div style="font-size:.78rem;font-weight:700;color:var(--text-secondary);margin-bottom:8px">Card individuali per categoria — atleta e team del mese</div>
+    <div style="display:flex;flex-direction:column;gap:6px">
+      ${cats.map(cat => {
+        const c = byCat[cat];
+        const a = c.topAthlete, t = c.topTeam;
+        const aRow = a ? `
+          <div style="display:flex;align-items:center;gap:8px;padding:6px 0;border-bottom:1px solid var(--border-subtle)">
+            <span style="flex:1;min-width:0;font-size:.8rem"><strong>🚴 ${esc(`${a.cognome} ${a.nome}`)}</strong> <span style="color:var(--text-muted)">— ${a.punti}pt, ${a.p1||0} vitt.</span></span>
+            <button class="dash-btn dash-btn--outline dash-btn--sm" onclick='window.shareCategoryMeseCard("atleta",${JSON.stringify(cat)},${JSON.stringify(monthLabel)})'>📤 Condividi</button>
+          </div>` : '';
+        const tRow = t ? `
+          <div style="display:flex;align-items:center;gap:8px;padding:6px 0;border-bottom:1px solid var(--border-subtle)">
+            <span style="flex:1;min-width:0;font-size:.8rem"><strong>🏁 ${esc(t.nome||t.team_id)}</strong> <span style="color:var(--text-muted)">— ${t.punti}pt, ${t.p1||0} vitt.</span></span>
+            <button class="dash-btn dash-btn--outline dash-btn--sm" onclick='window.shareCategoryMeseCard("team",${JSON.stringify(cat)},${JSON.stringify(monthLabel)})'>📤 Condividi</button>
+          </div>` : '';
+        return `<div>
+          <div style="font-size:.72rem;color:var(--text-muted);text-transform:uppercase;letter-spacing:.03em;margin-top:6px">${esc(c.label)}</div>
+          ${aRow}${tRow}
+        </div>`;
+      }).join('')}
+    </div>`;
+}
+
+// Apre la modale di condivisione per la card "atleta/team del mese" di una
+// singola categoria — kind: 'atleta' | 'team'. La foto dell'atleta viene
+// risolta al volo dagli entity_overrides (stesso meccanismo del profilo).
+window.shareCategoryMeseCard = async function(kind, catCode, monthLabel) {
+  const recap = window._lastRecapObj;
+  const c = recap?.byCategory?.[catCode];
+  if (!c) return;
+  if (kind === 'atleta' && c.topAthlete) {
+    const a = c.topAthlete;
+    let photo_url = null;
+    try { photo_url = (await getEntityOverrides('atleta', a.atleta_id))?.photo_url || null; } catch {}
+    if (photo_url && typeof mediaUrl === 'function') photo_url = mediaUrl(photo_url);
+    window.showShareModal('atleta-mese', { ...a, catLabel: c.label, monthLabel, photo_url });
+  } else if (kind === 'team' && c.topTeam) {
+    window.showShareModal('team-mese', { ...c.topTeam, catLabel: c.label, monthLabel });
+  }
+};
 
 window.generateMonthlyRecap = async function() {
   const month = document.getElementById('mrec-month')?.value;
@@ -24495,6 +24554,7 @@ window.generateMonthlyRecap = async function() {
     textEl.value = r.text || '';
     window._lastRecapObj = r.recap ? { ...r.recap, text: r.text } : null;
     statusEl.textContent = r.recap ? `${r.recap.totalGare} gare · ${r.recap.topAthletes.length} atleti in classifica · ${r.recap.topTeams.length} team in classifica.` : '';
+    _renderMrecCards(window._lastRecapObj);
   } catch (e) { statusEl.textContent = 'Errore: ' + e.message; }
 };
 window.shareMonthlyRecapCard = function() {
