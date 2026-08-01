@@ -834,954 +834,968 @@
       }
     ]
   },
-  "VANGI_LADIES_CYCLING_TEAM": {
-    "id": "VANGI_LADIES_CYCLING_TEAM",
-    "nome": "CYCLING TEAM",
-    "cognome": "VANGI LADIES",
-    "team_attuale": "ITA",
-    "team_id": "ITA",
-    "categoria": "AL_F",
-    "genere": "F",
-    "punti_totali": 45,
+  "FERRARO_LORENZO": {
+    "id": "FERRARO_LORENZO",
+    "nome": "LORENZO",
+    "cognome": "FERRARO",
+    "team_attuale": "TEAM CORATTI",
+    "team_id": "TEAM_CORATTI",
+    "categoria": "JUN_M",
+    "genere": "M",
+    "punti_totali": 156,
     "risultati": [
       {
-        "gara_id": "CAMPIONATO_ITALIANO_CRONOMETRO_A_SQUADRE_DONNE_ALLIEVE_2026-08-01_AL_F",
-        "nome_gara": "CAMPIONATO ITALIANO CRONOMETRO A SQUADRE DONNE ALLIEVE",
+        "gara_id": "GIRO_DELL_AGLIANICO_DEL_VULTURE_PROVA_VALIDA_CAMPIONATO_REGIONALE_2026-08-01_JUN_M",
+        "nome_gara": "GIRO DELL' AGLIANICO DEL VULTURE PROVA VALIDA CAMPIONATO REGIONALE",
         "data": "2026-08-01",
         "posizione": 1,
-        "punti_effettivi": 45,
-        "team": "ITA",
-        "moltiplicatore": 3,
-        "tipo": "nazionale",
-        "regione": "FRIULI VENEZIA GIULIA",
-        "km": "14.500",
-        "media": ""
-      }
-    ]
-  },
-  "POL_FIUMICINESE_FA_I_T_ADRIATICA": {
-    "id": "POL_FIUMICINESE_FA_I_T_ADRIATICA",
-    "nome": "FIUMICINESE FA.I.T. ADRIATICA",
-    "cognome": "POL.",
-    "team_attuale": "ITA",
-    "team_id": "ITA",
-    "categoria": "AL_F",
-    "genere": "F",
-    "punti_totali": 36,
-    "risultati": [
-      {
-        "gara_id": "CAMPIONATO_ITALIANO_CRONOMETRO_A_SQUADRE_DONNE_ALLIEVE_2026-08-01_AL_F",
-        "nome_gara": "CAMPIONATO ITALIANO CRONOMETRO A SQUADRE DONNE ALLIEVE",
-        "data": "2026-08-01",
-        "posizione": 2,
-        "punti_effettivi": 36,
-        "team": "ITA",
-        "moltiplicatore": 3,
-        "tipo": "nazionale",
-        "regione": "FRIULI VENEZIA GIULIA",
-        "km": "14.500",
-        "media": ""
-      }
-    ]
-  },
-  "U_C_GIORGIONE": {
-    "id": "U_C_GIORGIONE",
-    "nome": "GIORGIONE",
-    "cognome": "U.C.",
-    "team_attuale": "ITA",
-    "team_id": "ITA",
-    "categoria": "AL_F",
-    "genere": "F",
-    "punti_totali": 30,
-    "risultati": [
-      {
-        "gara_id": "CAMPIONATO_ITALIANO_CRONOMETRO_A_SQUADRE_DONNE_ALLIEVE_2026-08-01_AL_F",
-        "nome_gara": "CAMPIONATO ITALIANO CRONOMETRO A SQUADRE DONNE ALLIEVE",
-        "data": "2026-08-01",
-        "posizione": 3,
         "punti_effettivi": 30,
-        "team": "ITA",
-        "moltiplicatore": 3,
-        "tipo": "nazionale",
-        "regione": "FRIULI VENEZIA GIULIA",
-        "km": "14.500",
-        "media": ""
-      }
-    ]
-  },
-  "A_S_D_GIOCA_IN_BICI_OGLIO_PO_TEAM_A": {
-    "id": "A_S_D_GIOCA_IN_BICI_OGLIO_PO_TEAM_A",
-    "nome": "GIOCA IN BICI OGLIO PO TEAM A",
-    "cognome": "A.S.D.",
-    "team_attuale": "ITA",
-    "team_id": "ITA",
-    "categoria": "AL_F",
-    "genere": "F",
-    "punti_totali": 24,
-    "risultati": [
-      {
-        "gara_id": "CAMPIONATO_ITALIANO_CRONOMETRO_A_SQUADRE_DONNE_ALLIEVE_2026-08-01_AL_F",
-        "nome_gara": "CAMPIONATO ITALIANO CRONOMETRO A SQUADRE DONNE ALLIEVE",
-        "data": "2026-08-01",
-        "posizione": 4,
-        "punti_effettivi": 24,
-        "team": "ITA",
-        "moltiplicatore": 3,
-        "tipo": "nazionale",
-        "regione": "FRIULI VENEZIA GIULIA",
-        "km": "14.500",
-        "media": ""
-      }
-    ]
-  },
-  "COMAL_TRENTINO_CYCLING_ACADEMY": {
-    "id": "COMAL_TRENTINO_CYCLING_ACADEMY",
-    "nome": "TRENTINO CYCLING ACADEMY",
-    "cognome": "COMAL",
-    "team_attuale": "ITA",
-    "team_id": "ITA",
-    "categoria": "AL_F",
-    "genere": "F",
-    "punti_totali": 18,
-    "risultati": [
-      {
-        "gara_id": "CAMPIONATO_ITALIANO_CRONOMETRO_A_SQUADRE_DONNE_ALLIEVE_2026-08-01_AL_F",
-        "nome_gara": "CAMPIONATO ITALIANO CRONOMETRO A SQUADRE DONNE ALLIEVE",
-        "data": "2026-08-01",
-        "posizione": 5,
-        "punti_effettivi": 18,
-        "team": "ITA",
-        "moltiplicatore": 3,
-        "tipo": "nazionale",
-        "regione": "FRIULI VENEZIA GIULIA",
-        "km": "14.500",
-        "media": ""
-      }
-    ]
-  },
-  "GS_CICLI_FIORIN_ASD": {
-    "id": "GS_CICLI_FIORIN_ASD",
-    "nome": "FIORIN ASD",
-    "cognome": "GS CICLI",
-    "team_attuale": "ITA",
-    "team_id": "ITA",
-    "categoria": "AL_F",
-    "genere": "F",
-    "punti_totali": 15,
-    "risultati": [
-      {
-        "gara_id": "CAMPIONATO_ITALIANO_CRONOMETRO_A_SQUADRE_DONNE_ALLIEVE_2026-08-01_AL_F",
-        "nome_gara": "CAMPIONATO ITALIANO CRONOMETRO A SQUADRE DONNE ALLIEVE",
-        "data": "2026-08-01",
-        "posizione": 6,
-        "punti_effettivi": 15,
-        "team": "ITA",
-        "moltiplicatore": 3,
-        "tipo": "nazionale",
-        "regione": "FRIULI VENEZIA GIULIA",
-        "km": "14.500",
-        "media": ""
-      }
-    ]
-  },
-  "U_C_CONSCIO_PEDALE_DEL_SILE": {
-    "id": "U_C_CONSCIO_PEDALE_DEL_SILE",
-    "nome": "PEDALE DEL SILE",
-    "cognome": "U.C.CONSCIO",
-    "team_attuale": "ITA",
-    "team_id": "ITA",
-    "categoria": "AL_F",
-    "genere": "F",
-    "punti_totali": 27,
-    "risultati": [
-      {
-        "gara_id": "CAMPIONATO_ITALIANO_CRONOMETRO_A_SQUADRE_DONNE_ALLIEVE_2026-08-01_AL_F",
-        "nome_gara": "CAMPIONATO ITALIANO CRONOMETRO A SQUADRE DONNE ALLIEVE",
-        "data": "2026-08-01",
-        "posizione": 7,
-        "punti_effettivi": 12,
-        "team": "ITA",
-        "moltiplicatore": 3,
-        "tipo": "nazionale",
-        "regione": "FRIULI VENEZIA GIULIA",
-        "km": "14.500",
+        "team": "TEAM CORATTI",
+        "moltiplicatore": 2,
+        "tipo": "regionale",
+        "regione": "BASILICATA",
+        "km": "97.900",
         "media": ""
       },
       {
-        "gara_id": "CAMPIONATO_ITALIANO_CRONOMETRO_A_SQUADRE_DONNE_JUNIORES_2026-08-01_JUN_F",
-        "nome_gara": "CAMPIONATO ITALIANO CRONOMETRO A SQUADRE DONNE JUNIORES",
-        "data": "2026-08-01",
-        "posizione": 6,
-        "punti_effettivi": 15,
-        "team": "ITA",
-        "moltiplicatore": 3,
-        "tipo": "nazionale",
-        "regione": "FRIULI VENEZIA GIULIA",
-        "km": "14.500",
-        "media": ""
-      }
-    ]
-  },
-  "A_S_D_GIOCA_IN_BICI_OGLIO_PO_TEAM_B": {
-    "id": "A_S_D_GIOCA_IN_BICI_OGLIO_PO_TEAM_B",
-    "nome": "OGLIO PO TEAM B",
-    "cognome": "A.S.D. GIOCA IN BICI",
-    "team_attuale": "ITA",
-    "team_id": "ITA",
-    "categoria": "AL_F",
-    "genere": "F",
-    "punti_totali": 9,
-    "risultati": [
-      {
-        "gara_id": "CAMPIONATO_ITALIANO_CRONOMETRO_A_SQUADRE_DONNE_ALLIEVE_2026-08-01_AL_F",
-        "nome_gara": "CAMPIONATO ITALIANO CRONOMETRO A SQUADRE DONNE ALLIEVE",
-        "data": "2026-08-01",
-        "posizione": 8,
-        "punti_effettivi": 9,
-        "team": "ITA",
-        "moltiplicatore": 3,
-        "tipo": "nazionale",
-        "regione": "FRIULI VENEZIA GIULIA",
-        "km": "14.500",
-        "media": ""
-      }
-    ]
-  },
-  "ASS_NE_CICLISTICA_DILETT_VALVASONE": {
-    "id": "ASS_NE_CICLISTICA_DILETT_VALVASONE",
-    "nome": "DILETT. VALVASONE",
-    "cognome": "ASS.NE CICLISTICA",
-    "team_attuale": "ITA",
-    "team_id": "ITA",
-    "categoria": "AL_F",
-    "genere": "F",
-    "punti_totali": 6,
-    "risultati": [
-      {
-        "gara_id": "CAMPIONATO_ITALIANO_CRONOMETRO_A_SQUADRE_DONNE_ALLIEVE_2026-08-01_AL_F",
-        "nome_gara": "CAMPIONATO ITALIANO CRONOMETRO A SQUADRE DONNE ALLIEVE",
-        "data": "2026-08-01",
-        "posizione": 9,
-        "punti_effettivi": 6,
-        "team": "ITA",
-        "moltiplicatore": 3,
-        "tipo": "nazionale",
-        "regione": "FRIULI VENEZIA GIULIA",
-        "km": "14.500",
-        "media": ""
-      }
-    ]
-  },
-  "ALBA_OROBIA_BIASSONO": {
-    "id": "ALBA_OROBIA_BIASSONO",
-    "nome": "BIASSONO",
-    "cognome": "ALBA OROBIA -",
-    "team_attuale": "ITA",
-    "team_id": "ITA",
-    "categoria": "AL_M",
-    "genere": "M",
-    "punti_totali": 45,
-    "risultati": [
-      {
-        "gara_id": "CAMPIONATO_ITALIANO_CRONOMETRO_A_SQUADRE_ALLIEVI_2026-08-01_AL_M",
-        "nome_gara": "CAMPIONATO ITALIANO CRONOMETRO A SQUADRE ALLIEVI",
-        "data": "2026-08-01",
-        "posizione": 1,
-        "punti_effettivi": 45,
-        "team": "ITA",
-        "moltiplicatore": 3,
-        "tipo": "nazionale",
-        "regione": "FRIULI VENEZIA GIULIA",
-        "km": "14.500",
-        "media": ""
-      }
-    ]
-  },
-  "A_S_D_CICLISTICA_MONSELICE": {
-    "id": "A_S_D_CICLISTICA_MONSELICE",
-    "nome": "CICLISTICA MONSELICE",
-    "cognome": "A.S.D.",
-    "team_attuale": "ITA",
-    "team_id": "ITA",
-    "categoria": "AL_M",
-    "genere": "M",
-    "punti_totali": 36,
-    "risultati": [
-      {
-        "gara_id": "CAMPIONATO_ITALIANO_CRONOMETRO_A_SQUADRE_ALLIEVI_2026-08-01_AL_M",
-        "nome_gara": "CAMPIONATO ITALIANO CRONOMETRO A SQUADRE ALLIEVI",
-        "data": "2026-08-01",
-        "posizione": 2,
-        "punti_effettivi": 36,
-        "team": "ITA",
-        "moltiplicatore": 3,
-        "tipo": "nazionale",
-        "regione": "FRIULI VENEZIA GIULIA",
-        "km": "14.500",
-        "media": ""
-      }
-    ]
-  },
-  "ETHICA_ZERO24_CYCLING_TEAM_ECOTEK_TEAM_A": {
-    "id": "ETHICA_ZERO24_CYCLING_TEAM_ECOTEK_TEAM_A",
-    "nome": "ZERO24 CYCLING TEAM ECOTEK TEAM A",
-    "cognome": "ETHICA",
-    "team_attuale": "ITA",
-    "team_id": "ITA",
-    "categoria": "AL_M",
-    "genere": "M",
-    "punti_totali": 30,
-    "risultati": [
-      {
-        "gara_id": "CAMPIONATO_ITALIANO_CRONOMETRO_A_SQUADRE_ALLIEVI_2026-08-01_AL_M",
-        "nome_gara": "CAMPIONATO ITALIANO CRONOMETRO A SQUADRE ALLIEVI",
-        "data": "2026-08-01",
-        "posizione": 3,
-        "punti_effettivi": 30,
-        "team": "ITA",
-        "moltiplicatore": 3,
-        "tipo": "nazionale",
-        "regione": "FRIULI VENEZIA GIULIA",
-        "km": "14.500",
-        "media": ""
-      }
-    ]
-  },
-  "ACCADEMIA_CICLISTICA": {
-    "id": "ACCADEMIA_CICLISTICA",
-    "nome": "CICLISTICA",
-    "cognome": "ACCADEMIA",
-    "team_attuale": "ITA",
-    "team_id": "ITA",
-    "categoria": "AL_M",
-    "genere": "M",
-    "punti_totali": 24,
-    "risultati": [
-      {
-        "gara_id": "CAMPIONATO_ITALIANO_CRONOMETRO_A_SQUADRE_ALLIEVI_2026-08-01_AL_M",
-        "nome_gara": "CAMPIONATO ITALIANO CRONOMETRO A SQUADRE ALLIEVI",
-        "data": "2026-08-01",
+        "gara_id": "GIRO_DELLA_VALDERA_TERZA_TAPPA_2026-06-28_JUN_M",
+        "nome_gara": "GIRO DELLA VALDERA TERZA TAPPA",
+        "data": "2026-06-28",
         "posizione": 4,
+        "punti_effettivi": 16,
+        "team": "TEAM CORATTI",
+        "moltiplicatore": 2,
+        "tipo": "nazionale",
+        "regione": "TOSCANA",
+        "km": "77.000",
+        "media": "43.428"
+      },
+      {
+        "gara_id": "24_GIRO_DEL_FRIULI_VENEZIA_GIULIA_TERZA_TAPPA_2026-06-02_JUN_M",
+        "nome_gara": "24 GIRO DEL FRIULI VENEZIA GIULIA TERZA TAPPA",
+        "data": "2026-06-02",
+        "posizione": 2,
         "punti_effettivi": 24,
-        "team": "ITA",
-        "moltiplicatore": 3,
+        "team": "TEAM CORATTI",
+        "moltiplicatore": 2,
         "tipo": "nazionale",
         "regione": "FRIULI VENEZIA GIULIA",
-        "km": "14.500",
+        "km": "102.200",
         "media": ""
-      }
-    ]
-  },
-  "POOL_CANTU_SOVICO_GB_TEAM": {
-    "id": "POOL_CANTU_SOVICO_GB_TEAM",
-    "nome": "CANTU' - SOVICO - GB TEAM",
-    "cognome": "POOL",
-    "team_attuale": "ITA",
-    "team_id": "ITA",
-    "categoria": "AL_M",
-    "genere": "M",
-    "punti_totali": 18,
-    "risultati": [
+      },
       {
-        "gara_id": "CAMPIONATO_ITALIANO_CRONOMETRO_A_SQUADRE_ALLIEVI_2026-08-01_AL_M",
-        "nome_gara": "CAMPIONATO ITALIANO CRONOMETRO A SQUADRE ALLIEVI",
-        "data": "2026-08-01",
+        "gara_id": "TUSCANY_CYCLING_ACADEMY_JUNIORES_2026-05-23_JUN_M",
+        "nome_gara": "TUSCANY CYCLING ACADEMY JUNIORES",
+        "data": "2026-05-23",
         "posizione": 5,
         "punti_effettivi": 18,
-        "team": "ITA",
+        "team": "TEAM CORATTI",
         "moltiplicatore": 3,
+        "tipo": "internazionale",
+        "regione": "TOSCANA",
+        "km": "112.300",
+        "media": "38.713"
+      },
+      {
+        "gara_id": "GIRO_D_ABRUZZO_JUNIORES_2026_PRIMA_TAPPA_2026-05-01_JUN_M",
+        "nome_gara": "GIRO D'ABRUZZO JUNIORES 2026 PRIMA TAPPA",
+        "data": "2026-05-01",
+        "posizione": 7,
+        "punti_effettivi": 8,
+        "team": "TEAM CORATTI",
+        "moltiplicatore": 2,
         "tipo": "nazionale",
-        "regione": "FRIULI VENEZIA GIULIA",
-        "km": "14.500",
-        "media": ""
+        "regione": "ABRUZZO",
+        "km": "93.000",
+        "media": "39.678"
+      },
+      {
+        "gara_id": "50_GRAN_PREMIO_LIBERAZIONE_CITTA_DI_MASSA_2026-04-25_JUN_M",
+        "nome_gara": "50 GRAN PREMIO LIBERAZIONE CITTA' DI MASSA",
+        "data": "2026-04-25",
+        "posizione": 3,
+        "punti_effettivi": 20,
+        "team": "TEAM CORATTI",
+        "moltiplicatore": 2,
+        "tipo": "nazionale",
+        "regione": "TOSCANA",
+        "km": "118.500",
+        "media": "42.524"
+      },
+      {
+        "gara_id": "COPPA_PALAZZOLO_2026_PROVA_VALIDA_CAMPIONATO_REGIONALE_2026-04-06_JUN_M",
+        "nome_gara": "COPPA PALAZZOLO 2026 PROVA VALIDA CAMPIONATO REGIONALE",
+        "data": "2026-04-06",
+        "posizione": 9,
+        "punti_effettivi": 4,
+        "team": "TEAM CORATTI",
+        "moltiplicatore": 2,
+        "tipo": "regionale",
+        "regione": "LAZIO",
+        "km": "106.000",
+        "media": "39.102"
+      },
+      {
+        "gara_id": "TROFEO_MICHELE_SCARPONI_DUE_GIORNI_2026-04-03_JUN_M",
+        "nome_gara": "TROFEO MICHELE SCARPONI DUE GIORNI",
+        "data": "2026-04-03",
+        "posizione": 2,
+        "punti_effettivi": 24,
+        "team": "TEAM CORATTI",
+        "moltiplicatore": 2,
+        "tipo": "nazionale",
+        "regione": "MARCHE",
+        "km": "119.200",
+        "media": "42.311"
+      },
+      {
+        "gara_id": "LA_GARIBALDINA_2026-03-15_JUN_M",
+        "nome_gara": "LA GARIBALDINA",
+        "data": "2026-03-15",
+        "posizione": 2,
+        "punti_effettivi": 12,
+        "team": "TEAM CORATTI",
+        "moltiplicatore": 1,
+        "tipo": "regionale",
+        "regione": "LAZIO",
+        "km": "98.000",
+        "media": "41.846"
       }
     ]
   },
-  "FERALPI_MONTECLARENSE_ASD_TEAM_A": {
-    "id": "FERALPI_MONTECLARENSE_ASD_TEAM_A",
-    "nome": "MONTECLARENSE ASD TEAM A",
-    "cognome": "FERALPI",
-    "team_attuale": "ITA",
-    "team_id": "ITA",
-    "categoria": "AL_M",
+  "RENZI_NICCOLO": {
+    "id": "RENZI_NICCOLO",
+    "nome": "NICCOLO'",
+    "cognome": "RENZI",
+    "team_attuale": "TEAM GENERAL SYSTEM",
+    "team_id": "TEAM_GENERAL_SYSTEM",
+    "categoria": "JUN_M",
     "genere": "M",
-    "punti_totali": 15,
+    "punti_totali": 183,
     "risultati": [
       {
-        "gara_id": "CAMPIONATO_ITALIANO_CRONOMETRO_A_SQUADRE_ALLIEVI_2026-08-01_AL_M",
-        "nome_gara": "CAMPIONATO ITALIANO CRONOMETRO A SQUADRE ALLIEVI",
+        "gara_id": "GIRO_DELL_AGLIANICO_DEL_VULTURE_PROVA_VALIDA_CAMPIONATO_REGIONALE_2026-08-01_JUN_M",
+        "nome_gara": "GIRO DELL' AGLIANICO DEL VULTURE PROVA VALIDA CAMPIONATO REGIONALE",
         "data": "2026-08-01",
-        "posizione": 6,
-        "punti_effettivi": 15,
-        "team": "ITA",
+        "posizione": 2,
+        "punti_effettivi": 24,
+        "team": "TEAM GENERAL SYSTEM",
+        "moltiplicatore": 2,
+        "tipo": "regionale",
+        "regione": "BASILICATA",
+        "km": "97.900",
+        "media": ""
+      },
+      {
+        "gara_id": "GIRO_DELL_AGLIANICO_DEL_VULTURE_CRONOMETRO_INDIVIDUALE_2026-07-31_JUN_M",
+        "nome_gara": "GIRO DELL' AGLIANICO DEL VULTURE CRONOMETRO INDIVIDUALE",
+        "data": "2026-07-31",
+        "posizione": 8,
+        "punti_effettivi": 3,
+        "team": "TEAM GENERAL SYSTEM",
+        "moltiplicatore": 1,
+        "tipo": "regionale",
+        "regione": "BASILICATA",
+        "km": "4.200",
+        "media": ""
+      },
+      {
+        "gara_id": "58_CIRIE_PIAN_DELLA_MUSSA_2026-07-25_JUN_M",
+        "nome_gara": "58 CIRIE' PIAN DELLA MUSSA",
+        "data": "2026-07-25",
+        "posizione": 9,
+        "punti_effettivi": 2,
+        "team": "TEAM GENERAL SYSTEM",
+        "moltiplicatore": 1,
+        "tipo": "regionale",
+        "regione": "PIEMONTE",
+        "km": "90.000",
+        "media": "35.217"
+      },
+      {
+        "gara_id": "9_TROFEO_GIOVANI_PROMESSE_PROVA_VALIDA_CAMPIONATO_REGIONALE_2026-07-05_JUN_M",
+        "nome_gara": "9 TROFEO GIOVANI PROMESSE PROVA VALIDA CAMPIONATO REGIONALE",
+        "data": "2026-07-05",
+        "posizione": 5,
+        "punti_effettivi": 12,
+        "team": "TEAM GENERAL SYSTEM",
+        "moltiplicatore": 2,
+        "tipo": "regionale",
+        "regione": "MARCHE",
+        "km": "128.000",
+        "media": "41.701"
+      },
+      {
+        "gara_id": "CRONOSCALATA_BARBERINO_PASSO_DELLA_FUTA_MEMORIAL_GASTONE_NENCINI_2026-07-04_JUN_M",
+        "nome_gara": "CRONOSCALATA BARBERINO PASSO DELLA FUTA MEMORIAL GASTONE NENCINI",
+        "data": "2026-07-04",
+        "posizione": 4,
+        "punti_effettivi": 8,
+        "team": "TEAM GENERAL SYSTEM",
+        "moltiplicatore": 1,
+        "tipo": "regionale",
+        "regione": "TOSCANA",
+        "km": "14.300",
+        "media": "28.348"
+      },
+      {
+        "gara_id": "GIRO_DELLA_VALDERA_CLASSIFICA_GENERALE_2026-06-28_JUN_M",
+        "nome_gara": "GIRO DELLA VALDERA CLASSIFICA GENERALE",
+        "data": "2026-06-28",
+        "posizione": 7,
+        "punti_effettivi": 8,
+        "team": "TEAM GENERAL SYSTEM",
+        "moltiplicatore": 2,
+        "tipo": "regionale",
+        "regione": "TOSCANA",
+        "km": "300.000",
+        "media": "39.926"
+      },
+      {
+        "gara_id": "GIRO_DELLA_VALDERA_SECONDA_TAPPA_2026-06-27_JUN_M",
+        "nome_gara": "GIRO DELLA VALDERA SECONDA TAPPA",
+        "data": "2026-06-27",
+        "posizione": 7,
+        "punti_effettivi": 8,
+        "team": "TEAM GENERAL SYSTEM",
+        "moltiplicatore": 2,
+        "tipo": "nazionale",
+        "regione": "TOSCANA",
+        "km": "107.000",
+        "media": "36.295"
+      },
+      {
+        "gara_id": "2_GRAN_PREMIO_CITTA_DEL_MANDORLATO_DI_COLOGNA_VENETA_2026-06-07_JUN_M",
+        "nome_gara": "2 GRAN PREMIO CITTA' DEL MANDORLATO DI COLOGNA VENETA",
+        "data": "2026-06-07",
+        "posizione": 2,
+        "punti_effettivi": 12,
+        "team": "TEAM GENERAL SYSTEM",
+        "moltiplicatore": 1,
+        "tipo": "regionale",
+        "regione": "VENETO",
+        "km": "114.300",
+        "media": "41.115"
+      },
+      {
+        "gara_id": "GRAN_PREMIO_CONSORZIO_MARMISTI_CRONOSCALATA_2026-06-06_JUN_M",
+        "nome_gara": "GRAN PREMIO CONSORZIO MARMISTI CRONOSCALATA",
+        "data": "2026-06-06",
+        "posizione": 2,
+        "punti_effettivi": 12,
+        "team": "TEAM GENERAL SYSTEM",
+        "moltiplicatore": 1,
+        "tipo": "regionale",
+        "regione": "VENETO",
+        "km": "7.200",
+        "media": "25.460"
+      },
+      {
+        "gara_id": "3_TROFEO_OMNIA_2026-05-24_JUN_M",
+        "nome_gara": "3 TROFEO OMNIA",
+        "data": "2026-05-24",
+        "posizione": 2,
+        "punti_effettivi": 12,
+        "team": "TEAM GENERAL SYSTEM",
+        "moltiplicatore": 1,
+        "tipo": "regionale",
+        "regione": "EMILIA ROMAGNA",
+        "km": "100.200",
+        "media": "45.736"
+      },
+      {
+        "gara_id": "65_VITTORIO_VENETO_CANSIGLIO_PROVA_VALIDA_CAMPIONATO_REGIONALE_2026-05-23_JUN_M",
+        "nome_gara": "65 VITTORIO VENETO CANSIGLIO PROVA VALIDA CAMPIONATO REGIONALE",
+        "data": "2026-05-23",
+        "posizione": 5,
+        "punti_effettivi": 12,
+        "team": "TEAM GENERAL SYSTEM",
+        "moltiplicatore": 2,
+        "tipo": "regionale",
+        "regione": "VENETO",
+        "km": "102.520",
+        "media": "38.801"
+      },
+      {
+        "gara_id": "40_MEMORIAL_SAURO_DREI_2026-05-10_JUN_M",
+        "nome_gara": "40 MEMORIAL SAURO DREI",
+        "data": "2026-05-10",
+        "posizione": 2,
+        "punti_effettivi": 12,
+        "team": "TEAM GENERAL SYSTEM",
+        "moltiplicatore": 1,
+        "tipo": "regionale",
+        "regione": "EMILIA ROMAGNA",
+        "km": "100.200",
+        "media": "40.241"
+      },
+      {
+        "gara_id": "GIRO_D_ABRUZZO_JUNIORES_2026_TERZA_TAPPA_2026-05-03_JUN_M",
+        "nome_gara": "GIRO D'ABRUZZO JUNIORES 2026 TERZA TAPPA",
+        "data": "2026-05-03",
+        "posizione": 9,
+        "punti_effettivi": 4,
+        "team": "TEAM GENERAL SYSTEM",
+        "moltiplicatore": 2,
+        "tipo": "nazionale",
+        "regione": "ABRUZZO",
+        "km": "106.500",
+        "media": "40.805"
+      },
+      {
+        "gara_id": "GIRO_D_ABRUZZO_JUNIORES_2026_CLASSIFICA_GENERALE_2026-05-03_JUN_M",
+        "nome_gara": "GIRO D'ABRUZZO JUNIORES 2026 CLASSIFICA GENERALE",
+        "data": "2026-05-03",
+        "posizione": 5,
+        "punti_effettivi": 18,
+        "team": "TEAM GENERAL SYSTEM",
         "moltiplicatore": 3,
         "tipo": "nazionale",
-        "regione": "FRIULI VENEZIA GIULIA",
-        "km": "14.500",
-        "media": ""
+        "regione": "ABRUZZO",
+        "km": "201.500",
+        "media": "39.916"
+      },
+      {
+        "gara_id": "GIRO_D_ABRUZZO_JUNIORES_2026_SECONDA_TAPPA_2026-05-02_JUN_M",
+        "nome_gara": "GIRO D'ABRUZZO JUNIORES 2026 SECONDA TAPPA",
+        "data": "2026-05-02",
+        "posizione": 6,
+        "punti_effettivi": 10,
+        "team": "TEAM GENERAL SYSTEM",
+        "moltiplicatore": 2,
+        "tipo": "nazionale",
+        "regione": "ABRUZZO",
+        "km": "2.000",
+        "media": "22.452"
+      },
+      {
+        "gara_id": "50_GRAN_PREMIO_LIBERAZIONE_CITTA_DI_MASSA_2026-04-25_JUN_M",
+        "nome_gara": "50 GRAN PREMIO LIBERAZIONE CITTA' DI MASSA",
+        "data": "2026-04-25",
+        "posizione": 7,
+        "punti_effettivi": 8,
+        "team": "TEAM GENERAL SYSTEM",
+        "moltiplicatore": 2,
+        "tipo": "nazionale",
+        "regione": "TOSCANA",
+        "km": "118.500",
+        "media": "42.524"
+      },
+      {
+        "gara_id": "GRAN_PREMIO_MARCELLO_FALCONE_2026-03-29_JUN_M",
+        "nome_gara": "GRAN PREMIO MARCELLO FALCONE",
+        "data": "2026-03-29",
+        "posizione": 6,
+        "punti_effettivi": 10,
+        "team": "TEAM GENERAL SYSTEM",
+        "moltiplicatore": 2,
+        "tipo": "nazionale",
+        "regione": "LAZIO",
+        "km": "103.000",
+        "media": "44.138"
+      },
+      {
+        "gara_id": "MEMORIAL_CLARA_E_FALIERO_VANGI_2026-03-08_JUN_M",
+        "nome_gara": "MEMORIAL CLARA E FALIERO VANGI",
+        "data": "2026-03-08",
+        "posizione": 4,
+        "punti_effettivi": 8,
+        "team": "TEAM GENERAL SYSTEM",
+        "moltiplicatore": 1,
+        "tipo": "regionale",
+        "regione": "TOSCANA",
+        "km": "115.000",
+        "media": "40.588"
       }
     ]
   },
-  "U_S_MONTECORONA_TEAM_A": {
-    "id": "U_S_MONTECORONA_TEAM_A",
-    "nome": "MONTECORONA TEAM A",
-    "cognome": "U.S.",
-    "team_attuale": "ITA",
-    "team_id": "ITA",
-    "categoria": "AL_M",
+  "IACONETA_LORENZO": {
+    "id": "IACONETA_LORENZO",
+    "nome": "LORENZO",
+    "cognome": "IACONETA",
+    "team_attuale": "ETHICA ZERO24 CYCLING TEAM ECOTEK",
+    "team_id": "ETHICA_ZERO24_CYCLING_TEAM_ECOTEK",
+    "categoria": "JUN_M",
+    "genere": "M",
+    "punti_totali": 105,
+    "risultati": [
+      {
+        "gara_id": "GIRO_DELL_AGLIANICO_DEL_VULTURE_PROVA_VALIDA_CAMPIONATO_REGIONALE_2026-08-01_JUN_M",
+        "nome_gara": "GIRO DELL' AGLIANICO DEL VULTURE PROVA VALIDA CAMPIONATO REGIONALE",
+        "data": "2026-08-01",
+        "posizione": 3,
+        "punti_effettivi": 20,
+        "team": "ETHICA ZERO24 CYCLING TEAM ECOTEK",
+        "moltiplicatore": 2,
+        "tipo": "regionale",
+        "regione": "BASILICATA",
+        "km": "97.900",
+        "media": ""
+      },
+      {
+        "gara_id": "GIRO_DELL_AGLIANICO_DEL_VULTURE_CRONOMETRO_INDIVIDUALE_2026-07-31_JUN_M",
+        "nome_gara": "GIRO DELL' AGLIANICO DEL VULTURE CRONOMETRO INDIVIDUALE",
+        "data": "2026-07-31",
+        "posizione": 6,
+        "punti_effettivi": 5,
+        "team": "ETHICA ZERO24 CYCLING TEAM ECOTEK",
+        "moltiplicatore": 1,
+        "tipo": "regionale",
+        "regione": "BASILICATA",
+        "km": "4.200",
+        "media": ""
+      },
+      {
+        "gara_id": "2_STRADE_E_MURI_DEL_VESCOVADO_TROFEO_CARRARA_SPA_2026-07-26_JUN_M",
+        "nome_gara": "2 STRADE E MURI DEL VESCOVADO TROFEO CARRARA SPA",
+        "data": "2026-07-26",
+        "posizione": 1,
+        "punti_effettivi": 15,
+        "team": "ETHICA ZERO24 CYCLING TEAM ECOTEK",
+        "moltiplicatore": 1,
+        "tipo": "regionale",
+        "regione": "LOMBARDIA",
+        "km": "106.100",
+        "media": "42.426"
+      },
+      {
+        "gara_id": "2_STRADE_E_MURI_DEL_VESCOVADO_TROFEO_LVF_CRONOMETRO_INDIVIDUALE_2026-07-26_JUN_M",
+        "nome_gara": "2 STRADE E MURI DEL VESCOVADO TROFEO LVF CRONOMETRO INDIVIDUALE",
+        "data": "2026-07-26",
+        "posizione": 6,
+        "punti_effettivi": 5,
+        "team": "ETHICA ZERO24 CYCLING TEAM ECOTEK",
+        "moltiplicatore": 1,
+        "tipo": "regionale",
+        "regione": "LOMBARDIA",
+        "km": "18.300",
+        "media": "42.586"
+      },
+      {
+        "gara_id": "CIOCIARIA_IN_GIRO_TERZA_TAPPA_2026-07-19_JUN_M",
+        "nome_gara": "CIOCIARIA IN GIRO TERZA TAPPA",
+        "data": "2026-07-19",
+        "posizione": 10,
+        "punti_effettivi": 2,
+        "team": "ETHICA ZERO24 CYCLING TEAM ECOTEK",
+        "moltiplicatore": 2,
+        "tipo": "nazionale",
+        "regione": "LAZIO",
+        "km": "114.400",
+        "media": "42.440"
+      },
+      {
+        "gara_id": "9_TROFEO_GIOVANI_PROMESSE_PROVA_VALIDA_CAMPIONATO_REGIONALE_2026-07-05_JUN_M",
+        "nome_gara": "9 TROFEO GIOVANI PROMESSE PROVA VALIDA CAMPIONATO REGIONALE",
+        "data": "2026-07-05",
+        "posizione": 7,
+        "punti_effettivi": 8,
+        "team": "ETHICA ZERO24 CYCLING TEAM ECOTEK",
+        "moltiplicatore": 2,
+        "tipo": "regionale",
+        "regione": "MARCHE",
+        "km": "128.000",
+        "media": "41.701"
+      },
+      {
+        "gara_id": "25_GRAN_PREMIO_ADALBERTO_GABRIELLONI_2026-06-28_JUN_M",
+        "nome_gara": "25 GRAN PREMIO ADALBERTO GABRIELLONI",
+        "data": "2026-06-28",
+        "posizione": 1,
+        "punti_effettivi": 15,
+        "team": "ETHICA ZERO24 CYCLING TEAM ECOTEK",
+        "moltiplicatore": 1,
+        "tipo": "regionale",
+        "regione": "MARCHE",
+        "km": "117.050",
+        "media": "40.794"
+      },
+      {
+        "gara_id": "33_MEMORIAL_DIEGO_SCHIAROLI_2026-06-14_JUN_M",
+        "nome_gara": "33 MEMORIAL DIEGO SCHIAROLI",
+        "data": "2026-06-14",
+        "posizione": 1,
+        "punti_effettivi": 15,
+        "team": "ETHICA ZERO24 CYCLING TEAM ECOTEK",
+        "moltiplicatore": 1,
+        "tipo": "regionale",
+        "regione": "MARCHE",
+        "km": "119.450",
+        "media": "30.113"
+      },
+      {
+        "gara_id": "TROFEO_ROBERTI_2026-06-13_JUN_M",
+        "nome_gara": "TROFEO ROBERTI",
+        "data": "2026-06-13",
+        "posizione": 2,
+        "punti_effettivi": 12,
+        "team": "ETHICA ZERO24 CYCLING TEAM ECOTEK",
+        "moltiplicatore": 1,
+        "tipo": "regionale",
+        "regione": "LOMBARDIA",
+        "km": "113.600",
+        "media": "40.872"
+      },
+      {
+        "gara_id": "13_MEMORIAL_PIETRO_ZIPPONI_2026-06-07_JUN_M",
+        "nome_gara": "13 MEMORIAL PIETRO ZIPPONI",
+        "data": "2026-06-07",
+        "posizione": 4,
+        "punti_effettivi": 8,
+        "team": "ETHICA ZERO24 CYCLING TEAM ECOTEK",
+        "moltiplicatore": 1,
+        "tipo": "regionale",
+        "regione": "LOMBARDIA",
+        "km": "95.000",
+        "media": "40.802"
+      }
+    ]
+  },
+  "BRUSTIA_SAMUELE": {
+    "id": "BRUSTIA_SAMUELE",
+    "nome": "SAMUELE",
+    "cognome": "BRUSTIA",
+    "team_attuale": "G.S.GIOVANI GIUSSANESI A.S.D.",
+    "team_id": "G_S_GIOVANI_GIUSSANESI_A_S_D",
+    "categoria": "JUN_M",
+    "genere": "M",
+    "punti_totali": 70,
+    "risultati": [
+      {
+        "gara_id": "GIRO_DELL_AGLIANICO_DEL_VULTURE_PROVA_VALIDA_CAMPIONATO_REGIONALE_2026-08-01_JUN_M",
+        "nome_gara": "GIRO DELL' AGLIANICO DEL VULTURE PROVA VALIDA CAMPIONATO REGIONALE",
+        "data": "2026-08-01",
+        "posizione": 4,
+        "punti_effettivi": 16,
+        "team": "G.S.GIOVANI GIUSSANESI A.S.D.",
+        "moltiplicatore": 2,
+        "tipo": "regionale",
+        "regione": "BASILICATA",
+        "km": "97.900",
+        "media": ""
+      },
+      {
+        "gara_id": "48_SANDRIGO_MONTE_CORNO_2026-07-19_JUN_M",
+        "nome_gara": "48 SANDRIGO MONTE CORNO",
+        "data": "2026-07-19",
+        "posizione": 6,
+        "punti_effettivi": 10,
+        "team": "G.S.GIOVANI GIUSSANESI A.S.D.",
+        "moltiplicatore": 2,
+        "tipo": "nazionale",
+        "regione": "VENETO",
+        "km": "108.700",
+        "media": "39.672"
+      },
+      {
+        "gara_id": "MEMORIAL_ALBERTO_GIACCARDI_PROVA_VALIDA_CAMPIONATO_REGIONALE_2026-06-02_JUN_M",
+        "nome_gara": "MEMORIAL ALBERTO GIACCARDI PROVA VALIDA CAMPIONATO REGIONALE",
+        "data": "2026-06-02",
+        "posizione": 9,
+        "punti_effettivi": 4,
+        "team": "G.S.GIOVANI GIUSSANESI A.S.D.",
+        "moltiplicatore": 2,
+        "tipo": "regionale",
+        "regione": "PIEMONTE",
+        "km": "125.000",
+        "media": "41.837"
+      },
+      {
+        "gara_id": "4_MEMORIAL_GERMANO_VITTONI_2026-04-12_JUN_M",
+        "nome_gara": "4 MEMORIAL GERMANO VITTONI",
+        "data": "2026-04-12",
+        "posizione": 3,
+        "punti_effettivi": 10,
+        "team": "G.S.GIOVANI GIUSSANESI A.S.D.",
+        "moltiplicatore": 1,
+        "tipo": "regionale",
+        "regione": "PIEMONTE",
+        "km": "93.700",
+        "media": "42.516"
+      },
+      {
+        "gara_id": "62_GIRO_DELLA_CASTELLANIA_2026-04-11_JUN_M",
+        "nome_gara": "62 GIRO DELLA CASTELLANIA",
+        "data": "2026-04-11",
+        "posizione": 6,
+        "punti_effettivi": 10,
+        "team": "G.S.GIOVANI GIUSSANESI A.S.D.",
+        "moltiplicatore": 2,
+        "tipo": "nazionale",
+        "regione": "PIEMONTE",
+        "km": "114.800",
+        "media": "43.829"
+      },
+      {
+        "gara_id": "TROFEO_MICHELE_SCARPONI_DUE_GIORNI_2026-04-04_JUN_M",
+        "nome_gara": "TROFEO MICHELE SCARPONI DUE GIORNI",
+        "data": "2026-04-04",
+        "posizione": 3,
+        "punti_effettivi": 20,
+        "team": "G.S.GIOVANI GIUSSANESI A.S.D.",
+        "moltiplicatore": 2,
+        "tipo": "nazionale",
+        "regione": "MARCHE",
+        "km": "107.100",
+        "media": "39.802"
+      }
+    ]
+  },
+  "GARGIULO_FEDERICO": {
+    "id": "GARGIULO_FEDERICO",
+    "nome": "FEDERICO",
+    "cognome": "GARGIULO",
+    "team_attuale": "CPS PROFESSIONAL TEAM",
+    "team_id": "CPS_PROFESSIONAL_TEAM",
+    "categoria": "JUN_M",
+    "genere": "M",
+    "punti_totali": 37,
+    "risultati": [
+      {
+        "gara_id": "GIRO_DELL_AGLIANICO_DEL_VULTURE_PROVA_VALIDA_CAMPIONATO_REGIONALE_2026-08-01_JUN_M",
+        "nome_gara": "GIRO DELL' AGLIANICO DEL VULTURE PROVA VALIDA CAMPIONATO REGIONALE",
+        "data": "2026-08-01",
+        "posizione": 5,
+        "punti_effettivi": 12,
+        "team": "CPS PROFESSIONAL TEAM",
+        "moltiplicatore": 2,
+        "tipo": "regionale",
+        "regione": "BASILICATA",
+        "km": "97.900",
+        "media": ""
+      },
+      {
+        "gara_id": "8_MEDAGLIA_DORO_ANTONIO_BUSICO_PROVA_VALIDA_CAMPIONATO_REGIONALE_2026-07-12_JUN_M",
+        "nome_gara": "8 MEDAGLIA DORO ANTONIO BUSICO PROVA VALIDA CAMPIONATO REGIONALE",
+        "data": "2026-07-12",
+        "posizione": 7,
+        "punti_effettivi": 8,
+        "team": "CPS PROFESSIONAL TEAM",
+        "moltiplicatore": 2,
+        "tipo": "regionale",
+        "regione": "CAMPANIA",
+        "km": "112.000",
+        "media": "42.532"
+      },
+      {
+        "gara_id": "TUSCANY_CYCLING_ACADEMY_JUNIORES_2026-05-23_JUN_M",
+        "nome_gara": "TUSCANY CYCLING ACADEMY JUNIORES",
+        "data": "2026-05-23",
+        "posizione": 9,
+        "punti_effettivi": 6,
+        "team": "CPS PROFESSIONAL TEAM",
+        "moltiplicatore": 3,
+        "tipo": "internazionale",
+        "regione": "TOSCANA",
+        "km": "112.300",
+        "media": "38.713"
+      },
+      {
+        "gara_id": "MEMORIAL_GIOVANNI_CANNARELLA_2026-05-17_JUN_M",
+        "nome_gara": "MEMORIAL GIOVANNI CANNARELLA",
+        "data": "2026-05-17",
+        "posizione": 6,
+        "punti_effettivi": 5,
+        "team": "CPS PROFESSIONAL TEAM",
+        "moltiplicatore": 1,
+        "tipo": "regionale",
+        "regione": "SICILIA",
+        "km": "113.000",
+        "media": ""
+      },
+      {
+        "gara_id": "MEMORIAL_CLARA_E_FALIERO_VANGI_2026-03-08_JUN_M",
+        "nome_gara": "MEMORIAL CLARA E FALIERO VANGI",
+        "data": "2026-03-08",
+        "posizione": 5,
+        "punti_effettivi": 6,
+        "team": "CPS PROFESSIONAL TEAM",
+        "moltiplicatore": 1,
+        "tipo": "regionale",
+        "regione": "TOSCANA",
+        "km": "115.000",
+        "media": "40.588"
+      }
+    ]
+  },
+  "LANCIONI_TEO": {
+    "id": "LANCIONI_TEO",
+    "nome": "TEO",
+    "cognome": "LANCIONI",
+    "team_attuale": "ETHICA ZERO24 CYCLING TEAM ECOTEK",
+    "team_id": "ETHICA_ZERO24_CYCLING_TEAM_ECOTEK",
+    "categoria": "JUN_M",
     "genere": "M",
     "punti_totali": 12,
     "risultati": [
       {
-        "gara_id": "CAMPIONATO_ITALIANO_CRONOMETRO_A_SQUADRE_ALLIEVI_2026-08-01_AL_M",
-        "nome_gara": "CAMPIONATO ITALIANO CRONOMETRO A SQUADRE ALLIEVI",
+        "gara_id": "GIRO_DELL_AGLIANICO_DEL_VULTURE_PROVA_VALIDA_CAMPIONATO_REGIONALE_2026-08-01_JUN_M",
+        "nome_gara": "GIRO DELL' AGLIANICO DEL VULTURE PROVA VALIDA CAMPIONATO REGIONALE",
+        "data": "2026-08-01",
+        "posizione": 6,
+        "punti_effettivi": 10,
+        "team": "ETHICA ZERO24 CYCLING TEAM ECOTEK",
+        "moltiplicatore": 2,
+        "tipo": "regionale",
+        "regione": "BASILICATA",
+        "km": "97.900",
+        "media": ""
+      },
+      {
+        "gara_id": "33_MEMORIAL_DIEGO_SCHIAROLI_2026-06-14_JUN_M",
+        "nome_gara": "33 MEMORIAL DIEGO SCHIAROLI",
+        "data": "2026-06-14",
+        "posizione": 9,
+        "punti_effettivi": 2,
+        "team": "ETHICA ZERO24 CYCLING TEAM ECOTEK",
+        "moltiplicatore": 1,
+        "tipo": "regionale",
+        "regione": "MARCHE",
+        "km": "119.450",
+        "media": "30.113"
+      }
+    ]
+  },
+  "ANDRADE_FERNANDEZ_OMAR": {
+    "id": "ANDRADE_FERNANDEZ_OMAR",
+    "nome": "OMAR",
+    "cognome": "ANDRADE FERNANDEZ",
+    "team_attuale": "A.R.MONEX PRO CYCLING TEAM",
+    "team_id": "A_R_MONEX_PRO_CYCLING_TEAM",
+    "categoria": "JUN_M",
+    "genere": "M",
+    "punti_totali": 18,
+    "risultati": [
+      {
+        "gara_id": "GIRO_DELL_AGLIANICO_DEL_VULTURE_PROVA_VALIDA_CAMPIONATO_REGIONALE_2026-08-01_JUN_M",
+        "nome_gara": "GIRO DELL' AGLIANICO DEL VULTURE PROVA VALIDA CAMPIONATO REGIONALE",
         "data": "2026-08-01",
         "posizione": 7,
-        "punti_effettivi": 12,
-        "team": "ITA",
-        "moltiplicatore": 3,
-        "tipo": "nazionale",
-        "regione": "FRIULI VENEZIA GIULIA",
-        "km": "14.500",
+        "punti_effettivi": 8,
+        "team": "A.R.MONEX PRO CYCLING TEAM",
+        "moltiplicatore": 2,
+        "tipo": "regionale",
+        "regione": "BASILICATA",
+        "km": "97.900",
+        "media": ""
+      },
+      {
+        "gara_id": "GIRO_DELL_AGLIANICO_DEL_VULTURE_CRONOMETRO_INDIVIDUALE_2026-07-31_JUN_M",
+        "nome_gara": "GIRO DELL' AGLIANICO DEL VULTURE CRONOMETRO INDIVIDUALE",
+        "data": "2026-07-31",
+        "posizione": 3,
+        "punti_effettivi": 10,
+        "team": "A.R.MONEX PRO CYCLING TEAM",
+        "moltiplicatore": 1,
+        "tipo": "regionale",
+        "regione": "BASILICATA",
+        "km": "4.200",
         "media": ""
       }
     ]
   },
-  "A_S_D_SACILESE": {
-    "id": "A_S_D_SACILESE",
-    "nome": "SACILESE",
-    "cognome": "A.S.D.",
-    "team_attuale": "ITA",
-    "team_id": "ITA",
-    "categoria": "AL_M",
+  "MURARO_NICCOLO": {
+    "id": "MURARO_NICCOLO",
+    "nome": "NICCOLO'",
+    "cognome": "MURARO",
+    "team_attuale": "G.S.GIOVANI GIUSSANESI A.S.D.",
+    "team_id": "G_S_GIOVANI_GIUSSANESI_A_S_D",
+    "categoria": "JUN_M",
     "genere": "M",
-    "punti_totali": 9,
+    "punti_totali": 20,
     "risultati": [
       {
-        "gara_id": "CAMPIONATO_ITALIANO_CRONOMETRO_A_SQUADRE_ALLIEVI_2026-08-01_AL_M",
-        "nome_gara": "CAMPIONATO ITALIANO CRONOMETRO A SQUADRE ALLIEVI",
+        "gara_id": "GIRO_DELL_AGLIANICO_DEL_VULTURE_PROVA_VALIDA_CAMPIONATO_REGIONALE_2026-08-01_JUN_M",
+        "nome_gara": "GIRO DELL' AGLIANICO DEL VULTURE PROVA VALIDA CAMPIONATO REGIONALE",
         "data": "2026-08-01",
         "posizione": 8,
-        "punti_effettivi": 9,
-        "team": "ITA",
-        "moltiplicatore": 3,
-        "tipo": "nazionale",
-        "regione": "FRIULI VENEZIA GIULIA",
-        "km": "14.500",
+        "punti_effettivi": 6,
+        "team": "G.S.GIOVANI GIUSSANESI A.S.D.",
+        "moltiplicatore": 2,
+        "tipo": "regionale",
+        "regione": "BASILICATA",
+        "km": "97.900",
         "media": ""
+      },
+      {
+        "gara_id": "49_PICCOLA_TRE_VALLI_VARESINE_2026-07-12_JUN_M",
+        "nome_gara": "49 PICCOLA TRE VALLI VARESINE",
+        "data": "2026-07-12",
+        "posizione": 9,
+        "punti_effettivi": 4,
+        "team": "G.S.GIOVANI GIUSSANESI A.S.D.",
+        "moltiplicatore": 2,
+        "tipo": "nazionale",
+        "regione": "LOMBARDIA",
+        "km": "124.000",
+        "media": "37.012"
+      },
+      {
+        "gara_id": "2_TROFEO_KUBABA_VIAGGI_DALL_ERBALUCE_AL_PARADISO_2026-06-28_JUN_M",
+        "nome_gara": "2 TROFEO KUBABA VIAGGI DALL'ERBALUCE AL PARADISO",
+        "data": "2026-06-28",
+        "posizione": 3,
+        "punti_effettivi": 10,
+        "team": "G.S.GIOVANI GIUSSANESI A.S.D.",
+        "moltiplicatore": 1,
+        "tipo": "regionale",
+        "regione": "PIEMONTE",
+        "km": "103.000",
+        "media": "36.151"
       }
     ]
   },
-  "IND_FORNITURE_MORO_C_G_CAPITAL": {
-    "id": "IND_FORNITURE_MORO_C_G_CAPITAL",
-    "nome": "FORNITURE MORO- C&G CAPITAL",
-    "cognome": "IND.",
-    "team_attuale": "ITA",
-    "team_id": "ITA",
-    "categoria": "AL_M",
+  "CARUSO_SALVATORE": {
+    "id": "CARUSO_SALVATORE",
+    "nome": "SALVATORE",
+    "cognome": "CARUSO",
+    "team_attuale": "CPS PROFESSIONAL TEAM",
+    "team_id": "CPS_PROFESSIONAL_TEAM",
+    "categoria": "JUN_M",
     "genere": "M",
-    "punti_totali": 6,
+    "punti_totali": 76,
     "risultati": [
       {
-        "gara_id": "CAMPIONATO_ITALIANO_CRONOMETRO_A_SQUADRE_ALLIEVI_2026-08-01_AL_M",
-        "nome_gara": "CAMPIONATO ITALIANO CRONOMETRO A SQUADRE ALLIEVI",
+        "gara_id": "GIRO_DELL_AGLIANICO_DEL_VULTURE_PROVA_VALIDA_CAMPIONATO_REGIONALE_2026-08-01_JUN_M",
+        "nome_gara": "GIRO DELL' AGLIANICO DEL VULTURE PROVA VALIDA CAMPIONATO REGIONALE",
         "data": "2026-08-01",
         "posizione": 9,
-        "punti_effettivi": 6,
-        "team": "ITA",
-        "moltiplicatore": 3,
-        "tipo": "nazionale",
-        "regione": "FRIULI VENEZIA GIULIA",
-        "km": "14.500",
+        "punti_effettivi": 4,
+        "team": "CPS PROFESSIONAL TEAM",
+        "moltiplicatore": 2,
+        "tipo": "regionale",
+        "regione": "BASILICATA",
+        "km": "97.900",
         "media": ""
+      },
+      {
+        "gara_id": "8_MEDAGLIA_DORO_ANTONIO_BUSICO_PROVA_VALIDA_CAMPIONATO_REGIONALE_2026-07-12_JUN_M",
+        "nome_gara": "8 MEDAGLIA DORO ANTONIO BUSICO PROVA VALIDA CAMPIONATO REGIONALE",
+        "data": "2026-07-12",
+        "posizione": 4,
+        "punti_effettivi": 16,
+        "team": "CPS PROFESSIONAL TEAM",
+        "moltiplicatore": 2,
+        "tipo": "regionale",
+        "regione": "CAMPANIA",
+        "km": "112.000",
+        "media": "42.532"
+      },
+      {
+        "gara_id": "MEMORIAL_GIOVANNI_CANNARELLA_2026-05-17_JUN_M",
+        "nome_gara": "MEMORIAL GIOVANNI CANNARELLA",
+        "data": "2026-05-17",
+        "posizione": 1,
+        "punti_effettivi": 15,
+        "team": "CPS PROFESSIONAL TEAM",
+        "moltiplicatore": 1,
+        "tipo": "regionale",
+        "regione": "SICILIA",
+        "km": "113.000",
+        "media": ""
+      },
+      {
+        "gara_id": "103_COPPA_ASCENSIONE_2026-05-10_JUN_M",
+        "nome_gara": "103 COPPA ASCENSIONE",
+        "data": "2026-05-10",
+        "posizione": 3,
+        "punti_effettivi": 10,
+        "team": "CPS PROFESSIONAL TEAM",
+        "moltiplicatore": 1,
+        "tipo": "regionale",
+        "regione": "SICILIA",
+        "km": "100.000",
+        "media": "40.377"
+      },
+      {
+        "gara_id": "4_GRAN_PREMIO_SAN_LEOLINO_2026-04-26_JUN_M",
+        "nome_gara": "4 GRAN PREMIO SAN LEOLINO",
+        "data": "2026-04-26",
+        "posizione": 3,
+        "punti_effettivi": 10,
+        "team": "CPS PROFESSIONAL TEAM",
+        "moltiplicatore": 1,
+        "tipo": "regionale",
+        "regione": "TOSCANA",
+        "km": "99.000",
+        "media": "37.512"
+      },
+      {
+        "gara_id": "23_GIRO_DELLA_VALDIGREVE_2026-04-19_JUN_M",
+        "nome_gara": "23 GIRO DELLA VALDIGREVE",
+        "data": "2026-04-19",
+        "posizione": 6,
+        "punti_effettivi": 5,
+        "team": "CPS PROFESSIONAL TEAM",
+        "moltiplicatore": 1,
+        "tipo": "regionale",
+        "regione": "TOSCANA",
+        "km": "78.000",
+        "media": "41.246"
+      },
+      {
+        "gara_id": "5_MEMORIAL_GIUSEPPA_PATELLARO_2026-03-29_JUN_M",
+        "nome_gara": "5 MEMORIAL GIUSEPPA PATELLARO",
+        "data": "2026-03-29",
+        "posizione": 1,
+        "punti_effettivi": 15,
+        "team": "CPS PROFESSIONAL TEAM",
+        "moltiplicatore": 1,
+        "tipo": "regionale",
+        "regione": "SICILIA",
+        "km": "77.000",
+        "media": ""
+      },
+      {
+        "gara_id": "LA_GARIBALDINA_2026-03-15_JUN_M",
+        "nome_gara": "LA GARIBALDINA",
+        "data": "2026-03-15",
+        "posizione": 10,
+        "punti_effettivi": 1,
+        "team": "CPS PROFESSIONAL TEAM",
+        "moltiplicatore": 1,
+        "tipo": "regionale",
+        "regione": "LAZIO",
+        "km": "98.000",
+        "media": "41.846"
       }
     ]
   },
-  "ETHICA_ZERO24_CYCLING_TEAM_ECOTEK_TEAM_B": {
-    "id": "ETHICA_ZERO24_CYCLING_TEAM_ECOTEK_TEAM_B",
-    "nome": "ZERO24 CYCLING TEAM ECOTEK TEAM B",
-    "cognome": "ETHICA",
-    "team_attuale": "ITA",
-    "team_id": "ITA",
-    "categoria": "AL_M",
+  "FERNANDEZ_RUIZ_JORGE_LUIS": {
+    "id": "FERNANDEZ_RUIZ_JORGE_LUIS",
+    "nome": "RUIZ JORGE LUIS",
+    "cognome": "FERNANDEZ",
+    "team_attuale": "A.R.MONEX PRO CYCLING TEAM",
+    "team_id": "A_R_MONEX_PRO_CYCLING_TEAM",
+    "categoria": "JUN_M",
     "genere": "M",
-    "punti_totali": 3,
+    "punti_totali": 14,
     "risultati": [
       {
-        "gara_id": "CAMPIONATO_ITALIANO_CRONOMETRO_A_SQUADRE_ALLIEVI_2026-08-01_AL_M",
-        "nome_gara": "CAMPIONATO ITALIANO CRONOMETRO A SQUADRE ALLIEVI",
+        "gara_id": "GIRO_DELL_AGLIANICO_DEL_VULTURE_PROVA_VALIDA_CAMPIONATO_REGIONALE_2026-08-01_JUN_M",
+        "nome_gara": "GIRO DELL' AGLIANICO DEL VULTURE PROVA VALIDA CAMPIONATO REGIONALE",
         "data": "2026-08-01",
         "posizione": 10,
-        "punti_effettivi": 3,
-        "team": "ITA",
-        "moltiplicatore": 3,
-        "tipo": "nazionale",
-        "regione": "FRIULI VENEZIA GIULIA",
-        "km": "14.500",
-        "media": ""
-      }
-    ]
-  },
-  "BFT_BURZONI": {
-    "id": "BFT_BURZONI",
-    "nome": "BURZONI",
-    "cognome": "BFT",
-    "team_attuale": "ITA",
-    "team_id": "ITA",
-    "categoria": "JUN_F",
-    "genere": "F",
-    "punti_totali": 45,
-    "risultati": [
-      {
-        "gara_id": "CAMPIONATO_ITALIANO_CRONOMETRO_A_SQUADRE_DONNE_JUNIORES_2026-08-01_JUN_F",
-        "nome_gara": "CAMPIONATO ITALIANO CRONOMETRO A SQUADRE DONNE JUNIORES",
-        "data": "2026-08-01",
-        "posizione": 1,
-        "punti_effettivi": 45,
-        "team": "ITA",
-        "moltiplicatore": 3,
-        "tipo": "nazionale",
-        "regione": "FRIULI VENEZIA GIULIA",
-        "km": "14.500",
-        "media": ""
-      }
-    ]
-  },
-  "BIESSE_CARRERA_PREMAC": {
-    "id": "BIESSE_CARRERA_PREMAC",
-    "nome": "PREMAC",
-    "cognome": "BIESSE - CARRERA",
-    "team_attuale": "ITA",
-    "team_id": "ITA",
-    "categoria": "JUN_F",
-    "genere": "F",
-    "punti_totali": 36,
-    "risultati": [
-      {
-        "gara_id": "CAMPIONATO_ITALIANO_CRONOMETRO_A_SQUADRE_DONNE_JUNIORES_2026-08-01_JUN_F",
-        "nome_gara": "CAMPIONATO ITALIANO CRONOMETRO A SQUADRE DONNE JUNIORES",
-        "data": "2026-08-01",
-        "posizione": 2,
-        "punti_effettivi": 36,
-        "team": "ITA",
-        "moltiplicatore": 3,
-        "tipo": "nazionale",
-        "regione": "FRIULI VENEZIA GIULIA",
-        "km": "14.500",
-        "media": ""
-      }
-    ]
-  },
-  "LIBERTAS_CERESETTO": {
-    "id": "LIBERTAS_CERESETTO",
-    "nome": "CERESETTO",
-    "cognome": "LIBERTAS",
-    "team_attuale": "ITA",
-    "team_id": "ITA",
-    "categoria": "JUN_F",
-    "genere": "F",
-    "punti_totali": 30,
-    "risultati": [
-      {
-        "gara_id": "CAMPIONATO_ITALIANO_CRONOMETRO_A_SQUADRE_DONNE_JUNIORES_2026-08-01_JUN_F",
-        "nome_gara": "CAMPIONATO ITALIANO CRONOMETRO A SQUADRE DONNE JUNIORES",
-        "data": "2026-08-01",
-        "posizione": 3,
-        "punti_effettivi": 30,
-        "team": "ITA",
-        "moltiplicatore": 3,
-        "tipo": "nazionale",
-        "regione": "FRIULI VENEZIA GIULIA",
-        "km": "14.500",
-        "media": ""
-      }
-    ]
-  },
-  "PETRUCCI_GAUSS_CYCLING_TEAM": {
-    "id": "PETRUCCI_GAUSS_CYCLING_TEAM",
-    "nome": "CYCLING TEAM",
-    "cognome": "PETRUCCI GAUSS",
-    "team_attuale": "ITA",
-    "team_id": "ITA",
-    "categoria": "JUN_F",
-    "genere": "F",
-    "punti_totali": 24,
-    "risultati": [
-      {
-        "gara_id": "CAMPIONATO_ITALIANO_CRONOMETRO_A_SQUADRE_DONNE_JUNIORES_2026-08-01_JUN_F",
-        "nome_gara": "CAMPIONATO ITALIANO CRONOMETRO A SQUADRE DONNE JUNIORES",
-        "data": "2026-08-01",
-        "posizione": 4,
-        "punti_effettivi": 24,
-        "team": "ITA",
-        "moltiplicatore": 3,
-        "tipo": "nazionale",
-        "regione": "FRIULI VENEZIA GIULIA",
-        "km": "14.500",
-        "media": ""
-      }
-    ]
-  },
-  "TEAM_WILIER_BREGANZE": {
-    "id": "TEAM_WILIER_BREGANZE",
-    "nome": "WILIER BREGANZE",
-    "cognome": "TEAM",
-    "team_attuale": "ITA",
-    "team_id": "ITA",
-    "categoria": "JUN_F",
-    "genere": "F",
-    "punti_totali": 18,
-    "risultati": [
-      {
-        "gara_id": "CAMPIONATO_ITALIANO_CRONOMETRO_A_SQUADRE_DONNE_JUNIORES_2026-08-01_JUN_F",
-        "nome_gara": "CAMPIONATO ITALIANO CRONOMETRO A SQUADRE DONNE JUNIORES",
-        "data": "2026-08-01",
-        "posizione": 5,
-        "punti_effettivi": 18,
-        "team": "ITA",
-        "moltiplicatore": 3,
-        "tipo": "nazionale",
-        "regione": "FRIULI VENEZIA GIULIA",
-        "km": "14.500",
-        "media": ""
-      }
-    ]
-  },
-  "BRESCIA_F_MAGNI_FLANDRES_LOVE": {
-    "id": "BRESCIA_F_MAGNI_FLANDRES_LOVE",
-    "nome": "- F. MAGNI FLANDRES LOVE",
-    "cognome": "BRESCIA",
-    "team_attuale": "ITA",
-    "team_id": "ITA",
-    "categoria": "JUN_F",
-    "genere": "F",
-    "punti_totali": 12,
-    "risultati": [
-      {
-        "gara_id": "CAMPIONATO_ITALIANO_CRONOMETRO_A_SQUADRE_DONNE_JUNIORES_2026-08-01_JUN_F",
-        "nome_gara": "CAMPIONATO ITALIANO CRONOMETRO A SQUADRE DONNE JUNIORES",
-        "data": "2026-08-01",
-        "posizione": 7,
-        "punti_effettivi": 12,
-        "team": "ITA",
-        "moltiplicatore": 3,
-        "tipo": "nazionale",
-        "regione": "FRIULI VENEZIA GIULIA",
-        "km": "14.500",
-        "media": ""
-      }
-    ]
-  },
-  "TEAM_MENDELSPECK_E_WORK": {
-    "id": "TEAM_MENDELSPECK_E_WORK",
-    "nome": "MENDELSPECK E-WORK",
-    "cognome": "TEAM",
-    "team_attuale": "ITA",
-    "team_id": "ITA",
-    "categoria": "JUN_F",
-    "genere": "F",
-    "punti_totali": 39,
-    "risultati": [
-      {
-        "gara_id": "CAMPIONATO_ITALIANO_CRONOMETRO_A_SQUADRE_DONNE_JUNIORES_2026-08-01_JUN_F",
-        "nome_gara": "CAMPIONATO ITALIANO CRONOMETRO A SQUADRE DONNE JUNIORES",
-        "data": "2026-08-01",
-        "posizione": 8,
-        "punti_effettivi": 9,
-        "team": "ITA",
-        "moltiplicatore": 3,
-        "tipo": "nazionale",
-        "regione": "FRIULI VENEZIA GIULIA",
-        "km": "14.500",
+        "punti_effettivi": 2,
+        "team": "A.R.MONEX PRO CYCLING TEAM",
+        "moltiplicatore": 2,
+        "tipo": "regionale",
+        "regione": "BASILICATA",
+        "km": "97.900",
         "media": ""
       },
       {
-        "gara_id": "CAMPIONATO_ITALIANO_CRONOMETRO_A_SQUADRE_DONNE_ELITE_UNDER23_2026-08-01_ELI_F",
-        "nome_gara": "CAMPIONATO ITALIANO CRONOMETRO A SQUADRE DONNE ELITE UNDER23",
-        "data": "2026-08-01",
-        "posizione": 3,
-        "punti_effettivi": 30,
-        "team": "ITA",
-        "moltiplicatore": 3,
-        "tipo": "nazionale",
-        "regione": "FRIULI VENEZIA GIULIA",
-        "km": "29.000",
-        "media": ""
-      }
-    ]
-  },
-  "TEAM_VANGI_TOMMASINI_IL_PIRATA": {
-    "id": "TEAM_VANGI_TOMMASINI_IL_PIRATA",
-    "nome": "TOMMASINI IL PIRATA",
-    "cognome": "TEAM VANGI",
-    "team_attuale": "ITA",
-    "team_id": "ITA",
-    "categoria": "JUN_M",
-    "genere": "M",
-    "punti_totali": 45,
-    "risultati": [
-      {
-        "gara_id": "CAMPIONATO_ITALIANO_CRONOMETRO_A_SQUADRE_JUNIORES_2026-08-01_JUN_M",
-        "nome_gara": "CAMPIONATO ITALIANO CRONOMETRO A SQUADRE JUNIORES",
-        "data": "2026-08-01",
-        "posizione": 1,
-        "punti_effettivi": 45,
-        "team": "ITA",
-        "moltiplicatore": 3,
-        "tipo": "nazionale",
-        "regione": "FRIULI VENEZIA GIULIA",
-        "km": "29.000",
-        "media": ""
-      }
-    ]
-  },
-  "BUSTESE_OLONIA_A_S_D": {
-    "id": "BUSTESE_OLONIA_A_S_D",
-    "nome": "OLONIA A.S.D.",
-    "cognome": "BUSTESE",
-    "team_attuale": "ITA",
-    "team_id": "ITA",
-    "categoria": "JUN_M",
-    "genere": "M",
-    "punti_totali": 36,
-    "risultati": [
-      {
-        "gara_id": "CAMPIONATO_ITALIANO_CRONOMETRO_A_SQUADRE_JUNIORES_2026-08-01_JUN_M",
-        "nome_gara": "CAMPIONATO ITALIANO CRONOMETRO A SQUADRE JUNIORES",
-        "data": "2026-08-01",
-        "posizione": 2,
-        "punti_effettivi": 36,
-        "team": "ITA",
-        "moltiplicatore": 3,
-        "tipo": "nazionale",
-        "regione": "FRIULI VENEZIA GIULIA",
-        "km": "29.000",
-        "media": ""
-      }
-    ]
-  },
-  "NORDEST_PETRUCCI_ASSALI_STEFEN": {
-    "id": "NORDEST_PETRUCCI_ASSALI_STEFEN",
-    "nome": "PETRUCCI ASSALI STEFEN",
-    "cognome": "NORDEST",
-    "team_attuale": "ITA",
-    "team_id": "ITA",
-    "categoria": "JUN_M",
-    "genere": "M",
-    "punti_totali": 30,
-    "risultati": [
-      {
-        "gara_id": "CAMPIONATO_ITALIANO_CRONOMETRO_A_SQUADRE_JUNIORES_2026-08-01_JUN_M",
-        "nome_gara": "CAMPIONATO ITALIANO CRONOMETRO A SQUADRE JUNIORES",
-        "data": "2026-08-01",
-        "posizione": 3,
-        "punti_effettivi": 30,
-        "team": "ITA",
-        "moltiplicatore": 3,
-        "tipo": "nazionale",
-        "regione": "FRIULI VENEZIA GIULIA",
-        "km": "29.000",
-        "media": ""
-      }
-    ]
-  },
-  "POOL_CANTU_GB_TEAM_A_S_D": {
-    "id": "POOL_CANTU_GB_TEAM_A_S_D",
-    "nome": "CANTU' GB TEAM A.S.D.",
-    "cognome": "POOL",
-    "team_attuale": "ITA",
-    "team_id": "ITA",
-    "categoria": "JUN_M",
-    "genere": "M",
-    "punti_totali": 24,
-    "risultati": [
-      {
-        "gara_id": "CAMPIONATO_ITALIANO_CRONOMETRO_A_SQUADRE_JUNIORES_2026-08-01_JUN_M",
-        "nome_gara": "CAMPIONATO ITALIANO CRONOMETRO A SQUADRE JUNIORES",
-        "data": "2026-08-01",
-        "posizione": 4,
-        "punti_effettivi": 24,
-        "team": "ITA",
-        "moltiplicatore": 3,
-        "tipo": "nazionale",
-        "regione": "FRIULI VENEZIA GIULIA",
-        "km": "29.000",
-        "media": ""
-      }
-    ]
-  },
-  "TEAM_GUERRINI_SENAGHESE": {
-    "id": "TEAM_GUERRINI_SENAGHESE",
-    "nome": "GUERRINI SENAGHESE",
-    "cognome": "TEAM",
-    "team_attuale": "ITA",
-    "team_id": "ITA",
-    "categoria": "JUN_M",
-    "genere": "M",
-    "punti_totali": 18,
-    "risultati": [
-      {
-        "gara_id": "CAMPIONATO_ITALIANO_CRONOMETRO_A_SQUADRE_JUNIORES_2026-08-01_JUN_M",
-        "nome_gara": "CAMPIONATO ITALIANO CRONOMETRO A SQUADRE JUNIORES",
-        "data": "2026-08-01",
+        "gara_id": "29_GRAN_PREMIO_DELL_ARNO_2026-07-05_JUN_M",
+        "nome_gara": "29 GRAN PREMIO DELL'ARNO",
+        "data": "2026-07-05",
         "posizione": 5,
-        "punti_effettivi": 18,
-        "team": "ITA",
-        "moltiplicatore": 3,
-        "tipo": "nazionale",
-        "regione": "FRIULI VENEZIA GIULIA",
-        "km": "29.000",
-        "media": ""
-      }
-    ]
-  },
-  "CICLISTICA_TREVIGLIESE": {
-    "id": "CICLISTICA_TREVIGLIESE",
-    "nome": "TREVIGLIESE",
-    "cognome": "CICLISTICA",
-    "team_attuale": "ITA",
-    "team_id": "ITA",
-    "categoria": "JUN_M",
-    "genere": "M",
-    "punti_totali": 15,
-    "risultati": [
-      {
-        "gara_id": "CAMPIONATO_ITALIANO_CRONOMETRO_A_SQUADRE_JUNIORES_2026-08-01_JUN_M",
-        "nome_gara": "CAMPIONATO ITALIANO CRONOMETRO A SQUADRE JUNIORES",
-        "data": "2026-08-01",
-        "posizione": 6,
-        "punti_effettivi": 15,
-        "team": "ITA",
-        "moltiplicatore": 3,
-        "tipo": "nazionale",
-        "regione": "FRIULI VENEZIA GIULIA",
-        "km": "29.000",
-        "media": ""
-      }
-    ]
-  },
-  "TEAM_TIEPOLO_U19_DEVO": {
-    "id": "TEAM_TIEPOLO_U19_DEVO",
-    "nome": "TIEPOLO U19 DEVO",
-    "cognome": "TEAM",
-    "team_attuale": "AUT",
-    "team_id": "AUT",
-    "categoria": "JUN_M",
-    "genere": "M",
-    "punti_totali": 12,
-    "risultati": [
-      {
-        "gara_id": "CAMPIONATO_ITALIANO_CRONOMETRO_A_SQUADRE_JUNIORES_2026-08-01_JUN_M",
-        "nome_gara": "CAMPIONATO ITALIANO CRONOMETRO A SQUADRE JUNIORES",
-        "data": "2026-08-01",
-        "posizione": 7,
         "punti_effettivi": 12,
-        "team": "AUT",
-        "moltiplicatore": 3,
+        "team": "A.R.MONEX PRO CYCLING TEAM",
+        "moltiplicatore": 2,
         "tipo": "nazionale",
-        "regione": "FRIULI VENEZIA GIULIA",
-        "km": "29.000",
-        "media": ""
-      }
-    ]
-  },
-  "VINI_FANTINI_BEPINK": {
-    "id": "VINI_FANTINI_BEPINK",
-    "nome": "FANTINI BEPINK",
-    "cognome": "VINI",
-    "team_attuale": "ITA",
-    "team_id": "ITA",
-    "categoria": "ELI_F",
-    "genere": "F",
-    "punti_totali": 45,
-    "risultati": [
-      {
-        "gara_id": "CAMPIONATO_ITALIANO_CRONOMETRO_A_SQUADRE_DONNE_ELITE_UNDER23_2026-08-01_ELI_F",
-        "nome_gara": "CAMPIONATO ITALIANO CRONOMETRO A SQUADRE DONNE ELITE UNDER23",
-        "data": "2026-08-01",
-        "posizione": 1,
-        "punti_effettivi": 45,
-        "team": "ITA",
-        "moltiplicatore": 3,
-        "tipo": "nazionale",
-        "regione": "FRIULI VENEZIA GIULIA",
-        "km": "29.000",
-        "media": ""
-      }
-    ]
-  },
-  "TOP_GIRLS_FASSA_BORTOLO": {
-    "id": "TOP_GIRLS_FASSA_BORTOLO",
-    "nome": "GIRLS - FASSA BORTOLO",
-    "cognome": "TOP",
-    "team_attuale": "ITA",
-    "team_id": "ITA",
-    "categoria": "ELI_F",
-    "genere": "F",
-    "punti_totali": 36,
-    "risultati": [
-      {
-        "gara_id": "CAMPIONATO_ITALIANO_CRONOMETRO_A_SQUADRE_DONNE_ELITE_UNDER23_2026-08-01_ELI_F",
-        "nome_gara": "CAMPIONATO ITALIANO CRONOMETRO A SQUADRE DONNE ELITE UNDER23",
-        "data": "2026-08-01",
-        "posizione": 2,
-        "punti_effettivi": 36,
-        "team": "ITA",
-        "moltiplicatore": 3,
-        "tipo": "nazionale",
-        "regione": "FRIULI VENEZIA GIULIA",
-        "km": "29.000",
-        "media": ""
-      }
-    ]
-  },
-  "ISOLMANT_PREMAC_VITTORIA": {
-    "id": "ISOLMANT_PREMAC_VITTORIA",
-    "nome": "- PREMAC - VITTORIA",
-    "cognome": "ISOLMANT",
-    "team_attuale": "ITA",
-    "team_id": "ITA",
-    "categoria": "ELI_F",
-    "genere": "F",
-    "punti_totali": 24,
-    "risultati": [
-      {
-        "gara_id": "CAMPIONATO_ITALIANO_CRONOMETRO_A_SQUADRE_DONNE_ELITE_UNDER23_2026-08-01_ELI_F",
-        "nome_gara": "CAMPIONATO ITALIANO CRONOMETRO A SQUADRE DONNE ELITE UNDER23",
-        "data": "2026-08-01",
-        "posizione": 4,
-        "punti_effettivi": 24,
-        "team": "ITA",
-        "moltiplicatore": 3,
-        "tipo": "nazionale",
-        "regione": "FRIULI VENEZIA GIULIA",
-        "km": "29.000",
-        "media": ""
-      }
-    ]
-  },
-  "HORIZONS_CYCLING_CLUB": {
-    "id": "HORIZONS_CYCLING_CLUB",
-    "nome": "CYCLING CLUB",
-    "cognome": "HORIZONS",
-    "team_attuale": "ITA",
-    "team_id": "ITA",
-    "categoria": "ELI_F",
-    "genere": "F",
-    "punti_totali": 18,
-    "risultati": [
-      {
-        "gara_id": "CAMPIONATO_ITALIANO_CRONOMETRO_A_SQUADRE_DONNE_ELITE_UNDER23_2026-08-01_ELI_F",
-        "nome_gara": "CAMPIONATO ITALIANO CRONOMETRO A SQUADRE DONNE ELITE UNDER23",
-        "data": "2026-08-01",
-        "posizione": 5,
-        "punti_effettivi": 18,
-        "team": "ITA",
-        "moltiplicatore": 3,
-        "tipo": "nazionale",
-        "regione": "FRIULI VENEZIA GIULIA",
-        "km": "29.000",
-        "media": ""
+        "regione": "LOMBARDIA",
+        "km": "129.800",
+        "media": "40.979"
       }
     ]
   },
@@ -2069,31 +2083,6 @@
       }
     ]
   },
-  "ANDRADE_FERNANDEZ_OMAR": {
-    "id": "ANDRADE_FERNANDEZ_OMAR",
-    "nome": "OMAR",
-    "cognome": "ANDRADE FERNANDEZ",
-    "team_attuale": "A.R.MONEX PRO CYCLING TEAM",
-    "team_id": "A_R_MONEX_PRO_CYCLING_TEAM",
-    "categoria": "JUN_M",
-    "genere": "M",
-    "punti_totali": 10,
-    "risultati": [
-      {
-        "gara_id": "GIRO_DELL_AGLIANICO_DEL_VULTURE_CRONOMETRO_INDIVIDUALE_2026-07-31_JUN_M",
-        "nome_gara": "GIRO DELL' AGLIANICO DEL VULTURE CRONOMETRO INDIVIDUALE",
-        "data": "2026-07-31",
-        "posizione": 3,
-        "punti_effettivi": 10,
-        "team": "A.R.MONEX PRO CYCLING TEAM",
-        "moltiplicatore": 1,
-        "tipo": "regionale",
-        "regione": "BASILICATA",
-        "km": "4.200",
-        "media": ""
-      }
-    ]
-  },
   "BALLIANA_ANDREA_MATTIA": {
     "id": "BALLIANA_ANDREA_MATTIA",
     "nome": "ANDREA MATTIA",
@@ -2209,135 +2198,6 @@
       }
     ]
   },
-  "IACONETA_LORENZO": {
-    "id": "IACONETA_LORENZO",
-    "nome": "LORENZO",
-    "cognome": "IACONETA",
-    "team_attuale": "ETHICA ZERO24 CYCLING TEAM ECOTEK",
-    "team_id": "ETHICA_ZERO24_CYCLING_TEAM_ECOTEK",
-    "categoria": "JUN_M",
-    "genere": "M",
-    "punti_totali": 85,
-    "risultati": [
-      {
-        "gara_id": "GIRO_DELL_AGLIANICO_DEL_VULTURE_CRONOMETRO_INDIVIDUALE_2026-07-31_JUN_M",
-        "nome_gara": "GIRO DELL' AGLIANICO DEL VULTURE CRONOMETRO INDIVIDUALE",
-        "data": "2026-07-31",
-        "posizione": 6,
-        "punti_effettivi": 5,
-        "team": "ETHICA ZERO24 CYCLING TEAM ECOTEK",
-        "moltiplicatore": 1,
-        "tipo": "regionale",
-        "regione": "BASILICATA",
-        "km": "4.200",
-        "media": ""
-      },
-      {
-        "gara_id": "2_STRADE_E_MURI_DEL_VESCOVADO_TROFEO_CARRARA_SPA_2026-07-26_JUN_M",
-        "nome_gara": "2 STRADE E MURI DEL VESCOVADO TROFEO CARRARA SPA",
-        "data": "2026-07-26",
-        "posizione": 1,
-        "punti_effettivi": 15,
-        "team": "ETHICA ZERO24 CYCLING TEAM ECOTEK",
-        "moltiplicatore": 1,
-        "tipo": "regionale",
-        "regione": "LOMBARDIA",
-        "km": "106.100",
-        "media": "42.426"
-      },
-      {
-        "gara_id": "2_STRADE_E_MURI_DEL_VESCOVADO_TROFEO_LVF_CRONOMETRO_INDIVIDUALE_2026-07-26_JUN_M",
-        "nome_gara": "2 STRADE E MURI DEL VESCOVADO TROFEO LVF CRONOMETRO INDIVIDUALE",
-        "data": "2026-07-26",
-        "posizione": 6,
-        "punti_effettivi": 5,
-        "team": "ETHICA ZERO24 CYCLING TEAM ECOTEK",
-        "moltiplicatore": 1,
-        "tipo": "regionale",
-        "regione": "LOMBARDIA",
-        "km": "18.300",
-        "media": "42.586"
-      },
-      {
-        "gara_id": "CIOCIARIA_IN_GIRO_TERZA_TAPPA_2026-07-19_JUN_M",
-        "nome_gara": "CIOCIARIA IN GIRO TERZA TAPPA",
-        "data": "2026-07-19",
-        "posizione": 10,
-        "punti_effettivi": 2,
-        "team": "ETHICA ZERO24 CYCLING TEAM ECOTEK",
-        "moltiplicatore": 2,
-        "tipo": "nazionale",
-        "regione": "LAZIO",
-        "km": "114.400",
-        "media": "42.440"
-      },
-      {
-        "gara_id": "9_TROFEO_GIOVANI_PROMESSE_PROVA_VALIDA_CAMPIONATO_REGIONALE_2026-07-05_JUN_M",
-        "nome_gara": "9 TROFEO GIOVANI PROMESSE PROVA VALIDA CAMPIONATO REGIONALE",
-        "data": "2026-07-05",
-        "posizione": 7,
-        "punti_effettivi": 8,
-        "team": "ETHICA ZERO24 CYCLING TEAM ECOTEK",
-        "moltiplicatore": 2,
-        "tipo": "regionale",
-        "regione": "MARCHE",
-        "km": "128.000",
-        "media": "41.701"
-      },
-      {
-        "gara_id": "25_GRAN_PREMIO_ADALBERTO_GABRIELLONI_2026-06-28_JUN_M",
-        "nome_gara": "25 GRAN PREMIO ADALBERTO GABRIELLONI",
-        "data": "2026-06-28",
-        "posizione": 1,
-        "punti_effettivi": 15,
-        "team": "ETHICA ZERO24 CYCLING TEAM ECOTEK",
-        "moltiplicatore": 1,
-        "tipo": "regionale",
-        "regione": "MARCHE",
-        "km": "117.050",
-        "media": "40.794"
-      },
-      {
-        "gara_id": "33_MEMORIAL_DIEGO_SCHIAROLI_2026-06-14_JUN_M",
-        "nome_gara": "33 MEMORIAL DIEGO SCHIAROLI",
-        "data": "2026-06-14",
-        "posizione": 1,
-        "punti_effettivi": 15,
-        "team": "ETHICA ZERO24 CYCLING TEAM ECOTEK",
-        "moltiplicatore": 1,
-        "tipo": "regionale",
-        "regione": "MARCHE",
-        "km": "119.450",
-        "media": "30.113"
-      },
-      {
-        "gara_id": "TROFEO_ROBERTI_2026-06-13_JUN_M",
-        "nome_gara": "TROFEO ROBERTI",
-        "data": "2026-06-13",
-        "posizione": 2,
-        "punti_effettivi": 12,
-        "team": "ETHICA ZERO24 CYCLING TEAM ECOTEK",
-        "moltiplicatore": 1,
-        "tipo": "regionale",
-        "regione": "LOMBARDIA",
-        "km": "113.600",
-        "media": "40.872"
-      },
-      {
-        "gara_id": "13_MEMORIAL_PIETRO_ZIPPONI_2026-06-07_JUN_M",
-        "nome_gara": "13 MEMORIAL PIETRO ZIPPONI",
-        "data": "2026-06-07",
-        "posizione": 4,
-        "punti_effettivi": 8,
-        "team": "ETHICA ZERO24 CYCLING TEAM ECOTEK",
-        "moltiplicatore": 1,
-        "tipo": "regionale",
-        "regione": "LOMBARDIA",
-        "km": "95.000",
-        "media": "40.802"
-      }
-    ]
-  },
   "MELONI_ANDREA": {
     "id": "MELONI_ANDREA",
     "nome": "ANDREA",
@@ -2425,239 +2285,6 @@
         "regione": "EMILIA ROMAGNA",
         "km": "91.800",
         "media": "44.629"
-      }
-    ]
-  },
-  "RENZI_NICCOLO": {
-    "id": "RENZI_NICCOLO",
-    "nome": "NICCOLO'",
-    "cognome": "RENZI",
-    "team_attuale": "TEAM GENERAL SYSTEM",
-    "team_id": "TEAM_GENERAL_SYSTEM",
-    "categoria": "JUN_M",
-    "genere": "M",
-    "punti_totali": 159,
-    "risultati": [
-      {
-        "gara_id": "GIRO_DELL_AGLIANICO_DEL_VULTURE_CRONOMETRO_INDIVIDUALE_2026-07-31_JUN_M",
-        "nome_gara": "GIRO DELL' AGLIANICO DEL VULTURE CRONOMETRO INDIVIDUALE",
-        "data": "2026-07-31",
-        "posizione": 8,
-        "punti_effettivi": 3,
-        "team": "TEAM GENERAL SYSTEM",
-        "moltiplicatore": 1,
-        "tipo": "regionale",
-        "regione": "BASILICATA",
-        "km": "4.200",
-        "media": ""
-      },
-      {
-        "gara_id": "58_CIRIE_PIAN_DELLA_MUSSA_2026-07-25_JUN_M",
-        "nome_gara": "58 CIRIE' PIAN DELLA MUSSA",
-        "data": "2026-07-25",
-        "posizione": 9,
-        "punti_effettivi": 2,
-        "team": "TEAM GENERAL SYSTEM",
-        "moltiplicatore": 1,
-        "tipo": "regionale",
-        "regione": "PIEMONTE",
-        "km": "90.000",
-        "media": "35.217"
-      },
-      {
-        "gara_id": "9_TROFEO_GIOVANI_PROMESSE_PROVA_VALIDA_CAMPIONATO_REGIONALE_2026-07-05_JUN_M",
-        "nome_gara": "9 TROFEO GIOVANI PROMESSE PROVA VALIDA CAMPIONATO REGIONALE",
-        "data": "2026-07-05",
-        "posizione": 5,
-        "punti_effettivi": 12,
-        "team": "TEAM GENERAL SYSTEM",
-        "moltiplicatore": 2,
-        "tipo": "regionale",
-        "regione": "MARCHE",
-        "km": "128.000",
-        "media": "41.701"
-      },
-      {
-        "gara_id": "CRONOSCALATA_BARBERINO_PASSO_DELLA_FUTA_MEMORIAL_GASTONE_NENCINI_2026-07-04_JUN_M",
-        "nome_gara": "CRONOSCALATA BARBERINO PASSO DELLA FUTA MEMORIAL GASTONE NENCINI",
-        "data": "2026-07-04",
-        "posizione": 4,
-        "punti_effettivi": 8,
-        "team": "TEAM GENERAL SYSTEM",
-        "moltiplicatore": 1,
-        "tipo": "regionale",
-        "regione": "TOSCANA",
-        "km": "14.300",
-        "media": "28.348"
-      },
-      {
-        "gara_id": "GIRO_DELLA_VALDERA_CLASSIFICA_GENERALE_2026-06-28_JUN_M",
-        "nome_gara": "GIRO DELLA VALDERA CLASSIFICA GENERALE",
-        "data": "2026-06-28",
-        "posizione": 7,
-        "punti_effettivi": 8,
-        "team": "TEAM GENERAL SYSTEM",
-        "moltiplicatore": 2,
-        "tipo": "regionale",
-        "regione": "TOSCANA",
-        "km": "300.000",
-        "media": "39.926"
-      },
-      {
-        "gara_id": "GIRO_DELLA_VALDERA_SECONDA_TAPPA_2026-06-27_JUN_M",
-        "nome_gara": "GIRO DELLA VALDERA SECONDA TAPPA",
-        "data": "2026-06-27",
-        "posizione": 7,
-        "punti_effettivi": 8,
-        "team": "TEAM GENERAL SYSTEM",
-        "moltiplicatore": 2,
-        "tipo": "nazionale",
-        "regione": "TOSCANA",
-        "km": "107.000",
-        "media": "36.295"
-      },
-      {
-        "gara_id": "2_GRAN_PREMIO_CITTA_DEL_MANDORLATO_DI_COLOGNA_VENETA_2026-06-07_JUN_M",
-        "nome_gara": "2 GRAN PREMIO CITTA' DEL MANDORLATO DI COLOGNA VENETA",
-        "data": "2026-06-07",
-        "posizione": 2,
-        "punti_effettivi": 12,
-        "team": "TEAM GENERAL SYSTEM",
-        "moltiplicatore": 1,
-        "tipo": "regionale",
-        "regione": "VENETO",
-        "km": "114.300",
-        "media": "41.115"
-      },
-      {
-        "gara_id": "GRAN_PREMIO_CONSORZIO_MARMISTI_CRONOSCALATA_2026-06-06_JUN_M",
-        "nome_gara": "GRAN PREMIO CONSORZIO MARMISTI CRONOSCALATA",
-        "data": "2026-06-06",
-        "posizione": 2,
-        "punti_effettivi": 12,
-        "team": "TEAM GENERAL SYSTEM",
-        "moltiplicatore": 1,
-        "tipo": "regionale",
-        "regione": "VENETO",
-        "km": "7.200",
-        "media": "25.460"
-      },
-      {
-        "gara_id": "3_TROFEO_OMNIA_2026-05-24_JUN_M",
-        "nome_gara": "3 TROFEO OMNIA",
-        "data": "2026-05-24",
-        "posizione": 2,
-        "punti_effettivi": 12,
-        "team": "TEAM GENERAL SYSTEM",
-        "moltiplicatore": 1,
-        "tipo": "regionale",
-        "regione": "EMILIA ROMAGNA",
-        "km": "100.200",
-        "media": "45.736"
-      },
-      {
-        "gara_id": "65_VITTORIO_VENETO_CANSIGLIO_PROVA_VALIDA_CAMPIONATO_REGIONALE_2026-05-23_JUN_M",
-        "nome_gara": "65 VITTORIO VENETO CANSIGLIO PROVA VALIDA CAMPIONATO REGIONALE",
-        "data": "2026-05-23",
-        "posizione": 5,
-        "punti_effettivi": 12,
-        "team": "TEAM GENERAL SYSTEM",
-        "moltiplicatore": 2,
-        "tipo": "regionale",
-        "regione": "VENETO",
-        "km": "102.520",
-        "media": "38.801"
-      },
-      {
-        "gara_id": "40_MEMORIAL_SAURO_DREI_2026-05-10_JUN_M",
-        "nome_gara": "40 MEMORIAL SAURO DREI",
-        "data": "2026-05-10",
-        "posizione": 2,
-        "punti_effettivi": 12,
-        "team": "TEAM GENERAL SYSTEM",
-        "moltiplicatore": 1,
-        "tipo": "regionale",
-        "regione": "EMILIA ROMAGNA",
-        "km": "100.200",
-        "media": "40.241"
-      },
-      {
-        "gara_id": "GIRO_D_ABRUZZO_JUNIORES_2026_TERZA_TAPPA_2026-05-03_JUN_M",
-        "nome_gara": "GIRO D'ABRUZZO JUNIORES 2026 TERZA TAPPA",
-        "data": "2026-05-03",
-        "posizione": 9,
-        "punti_effettivi": 4,
-        "team": "TEAM GENERAL SYSTEM",
-        "moltiplicatore": 2,
-        "tipo": "nazionale",
-        "regione": "ABRUZZO",
-        "km": "106.500",
-        "media": "40.805"
-      },
-      {
-        "gara_id": "GIRO_D_ABRUZZO_JUNIORES_2026_CLASSIFICA_GENERALE_2026-05-03_JUN_M",
-        "nome_gara": "GIRO D'ABRUZZO JUNIORES 2026 CLASSIFICA GENERALE",
-        "data": "2026-05-03",
-        "posizione": 5,
-        "punti_effettivi": 18,
-        "team": "TEAM GENERAL SYSTEM",
-        "moltiplicatore": 3,
-        "tipo": "nazionale",
-        "regione": "ABRUZZO",
-        "km": "201.500",
-        "media": "39.916"
-      },
-      {
-        "gara_id": "GIRO_D_ABRUZZO_JUNIORES_2026_SECONDA_TAPPA_2026-05-02_JUN_M",
-        "nome_gara": "GIRO D'ABRUZZO JUNIORES 2026 SECONDA TAPPA",
-        "data": "2026-05-02",
-        "posizione": 6,
-        "punti_effettivi": 10,
-        "team": "TEAM GENERAL SYSTEM",
-        "moltiplicatore": 2,
-        "tipo": "nazionale",
-        "regione": "ABRUZZO",
-        "km": "2.000",
-        "media": "22.452"
-      },
-      {
-        "gara_id": "50_GRAN_PREMIO_LIBERAZIONE_CITTA_DI_MASSA_2026-04-25_JUN_M",
-        "nome_gara": "50 GRAN PREMIO LIBERAZIONE CITTA' DI MASSA",
-        "data": "2026-04-25",
-        "posizione": 7,
-        "punti_effettivi": 8,
-        "team": "TEAM GENERAL SYSTEM",
-        "moltiplicatore": 2,
-        "tipo": "nazionale",
-        "regione": "TOSCANA",
-        "km": "118.500",
-        "media": "42.524"
-      },
-      {
-        "gara_id": "GRAN_PREMIO_MARCELLO_FALCONE_2026-03-29_JUN_M",
-        "nome_gara": "GRAN PREMIO MARCELLO FALCONE",
-        "data": "2026-03-29",
-        "posizione": 6,
-        "punti_effettivi": 10,
-        "team": "TEAM GENERAL SYSTEM",
-        "moltiplicatore": 2,
-        "tipo": "nazionale",
-        "regione": "LAZIO",
-        "km": "103.000",
-        "media": "44.138"
-      },
-      {
-        "gara_id": "MEMORIAL_CLARA_E_FALIERO_VANGI_2026-03-08_JUN_M",
-        "nome_gara": "MEMORIAL CLARA E FALIERO VANGI",
-        "data": "2026-03-08",
-        "posizione": 4,
-        "punti_effettivi": 8,
-        "team": "TEAM GENERAL SYSTEM",
-        "moltiplicatore": 1,
-        "tipo": "regionale",
-        "regione": "TOSCANA",
-        "km": "115.000",
-        "media": "40.588"
       }
     ]
   },
@@ -57567,83 +57194,6 @@
       }
     ]
   },
-  "BRUSTIA_SAMUELE": {
-    "id": "BRUSTIA_SAMUELE",
-    "nome": "SAMUELE",
-    "cognome": "BRUSTIA",
-    "team_attuale": "G.S.GIOVANI GIUSSANESI A.S.D.",
-    "team_id": "G_S_GIOVANI_GIUSSANESI_A_S_D",
-    "categoria": "JUN_M",
-    "genere": "M",
-    "punti_totali": 54,
-    "risultati": [
-      {
-        "gara_id": "48_SANDRIGO_MONTE_CORNO_2026-07-19_JUN_M",
-        "nome_gara": "48 SANDRIGO MONTE CORNO",
-        "data": "2026-07-19",
-        "posizione": 6,
-        "punti_effettivi": 10,
-        "team": "G.S.GIOVANI GIUSSANESI A.S.D.",
-        "moltiplicatore": 2,
-        "tipo": "nazionale",
-        "regione": "VENETO",
-        "km": "108.700",
-        "media": "39.672"
-      },
-      {
-        "gara_id": "MEMORIAL_ALBERTO_GIACCARDI_PROVA_VALIDA_CAMPIONATO_REGIONALE_2026-06-02_JUN_M",
-        "nome_gara": "MEMORIAL ALBERTO GIACCARDI PROVA VALIDA CAMPIONATO REGIONALE",
-        "data": "2026-06-02",
-        "posizione": 9,
-        "punti_effettivi": 4,
-        "team": "G.S.GIOVANI GIUSSANESI A.S.D.",
-        "moltiplicatore": 2,
-        "tipo": "regionale",
-        "regione": "PIEMONTE",
-        "km": "125.000",
-        "media": "41.837"
-      },
-      {
-        "gara_id": "4_MEMORIAL_GERMANO_VITTONI_2026-04-12_JUN_M",
-        "nome_gara": "4 MEMORIAL GERMANO VITTONI",
-        "data": "2026-04-12",
-        "posizione": 3,
-        "punti_effettivi": 10,
-        "team": "G.S.GIOVANI GIUSSANESI A.S.D.",
-        "moltiplicatore": 1,
-        "tipo": "regionale",
-        "regione": "PIEMONTE",
-        "km": "93.700",
-        "media": "42.516"
-      },
-      {
-        "gara_id": "62_GIRO_DELLA_CASTELLANIA_2026-04-11_JUN_M",
-        "nome_gara": "62 GIRO DELLA CASTELLANIA",
-        "data": "2026-04-11",
-        "posizione": 6,
-        "punti_effettivi": 10,
-        "team": "G.S.GIOVANI GIUSSANESI A.S.D.",
-        "moltiplicatore": 2,
-        "tipo": "nazionale",
-        "regione": "PIEMONTE",
-        "km": "114.800",
-        "media": "43.829"
-      },
-      {
-        "gara_id": "TROFEO_MICHELE_SCARPONI_DUE_GIORNI_2026-04-04_JUN_M",
-        "nome_gara": "TROFEO MICHELE SCARPONI DUE GIORNI",
-        "data": "2026-04-04",
-        "posizione": 3,
-        "punti_effettivi": 20,
-        "team": "G.S.GIOVANI GIUSSANESI A.S.D.",
-        "moltiplicatore": 2,
-        "tipo": "nazionale",
-        "regione": "MARCHE",
-        "km": "107.100",
-        "media": "39.802"
-      }
-    ]
-  },
   "DALLA_PRIA_GIACOMO": {
     "id": "DALLA_PRIA_GIACOMO",
     "nome": "PRIA GIACOMO",
@@ -82210,44 +81760,6 @@
       }
     ]
   },
-  "MURARO_NICCOLO": {
-    "id": "MURARO_NICCOLO",
-    "nome": "NICCOLO'",
-    "cognome": "MURARO",
-    "team_attuale": "G.S.GIOVANI GIUSSANESI A.S.D.",
-    "team_id": "G_S_GIOVANI_GIUSSANESI_A_S_D",
-    "categoria": "JUN_M",
-    "genere": "M",
-    "punti_totali": 14,
-    "risultati": [
-      {
-        "gara_id": "49_PICCOLA_TRE_VALLI_VARESINE_2026-07-12_JUN_M",
-        "nome_gara": "49 PICCOLA TRE VALLI VARESINE",
-        "data": "2026-07-12",
-        "posizione": 9,
-        "punti_effettivi": 4,
-        "team": "G.S.GIOVANI GIUSSANESI A.S.D.",
-        "moltiplicatore": 2,
-        "tipo": "nazionale",
-        "regione": "LOMBARDIA",
-        "km": "124.000",
-        "media": "37.012"
-      },
-      {
-        "gara_id": "2_TROFEO_KUBABA_VIAGGI_DALL_ERBALUCE_AL_PARADISO_2026-06-28_JUN_M",
-        "nome_gara": "2 TROFEO KUBABA VIAGGI DALL'ERBALUCE AL PARADISO",
-        "data": "2026-06-28",
-        "posizione": 3,
-        "punti_effettivi": 10,
-        "team": "G.S.GIOVANI GIUSSANESI A.S.D.",
-        "moltiplicatore": 1,
-        "tipo": "regionale",
-        "regione": "PIEMONTE",
-        "km": "103.000",
-        "media": "36.151"
-      }
-    ]
-  },
   "SANTAMARIA_RICCARDO": {
     "id": "SANTAMARIA_RICCARDO",
     "nome": "RICCARDO",
@@ -82786,109 +82298,6 @@
       }
     ]
   },
-  "CARUSO_SALVATORE": {
-    "id": "CARUSO_SALVATORE",
-    "nome": "SALVATORE",
-    "cognome": "CARUSO",
-    "team_attuale": "CPS PROFESSIONAL TEAM",
-    "team_id": "CPS_PROFESSIONAL_TEAM",
-    "categoria": "JUN_M",
-    "genere": "M",
-    "punti_totali": 72,
-    "risultati": [
-      {
-        "gara_id": "8_MEDAGLIA_DORO_ANTONIO_BUSICO_PROVA_VALIDA_CAMPIONATO_REGIONALE_2026-07-12_JUN_M",
-        "nome_gara": "8 MEDAGLIA DORO ANTONIO BUSICO PROVA VALIDA CAMPIONATO REGIONALE",
-        "data": "2026-07-12",
-        "posizione": 4,
-        "punti_effettivi": 16,
-        "team": "CPS PROFESSIONAL TEAM",
-        "moltiplicatore": 2,
-        "tipo": "regionale",
-        "regione": "CAMPANIA",
-        "km": "112.000",
-        "media": "42.532"
-      },
-      {
-        "gara_id": "MEMORIAL_GIOVANNI_CANNARELLA_2026-05-17_JUN_M",
-        "nome_gara": "MEMORIAL GIOVANNI CANNARELLA",
-        "data": "2026-05-17",
-        "posizione": 1,
-        "punti_effettivi": 15,
-        "team": "CPS PROFESSIONAL TEAM",
-        "moltiplicatore": 1,
-        "tipo": "regionale",
-        "regione": "SICILIA",
-        "km": "113.000",
-        "media": ""
-      },
-      {
-        "gara_id": "103_COPPA_ASCENSIONE_2026-05-10_JUN_M",
-        "nome_gara": "103 COPPA ASCENSIONE",
-        "data": "2026-05-10",
-        "posizione": 3,
-        "punti_effettivi": 10,
-        "team": "CPS PROFESSIONAL TEAM",
-        "moltiplicatore": 1,
-        "tipo": "regionale",
-        "regione": "SICILIA",
-        "km": "100.000",
-        "media": "40.377"
-      },
-      {
-        "gara_id": "4_GRAN_PREMIO_SAN_LEOLINO_2026-04-26_JUN_M",
-        "nome_gara": "4 GRAN PREMIO SAN LEOLINO",
-        "data": "2026-04-26",
-        "posizione": 3,
-        "punti_effettivi": 10,
-        "team": "CPS PROFESSIONAL TEAM",
-        "moltiplicatore": 1,
-        "tipo": "regionale",
-        "regione": "TOSCANA",
-        "km": "99.000",
-        "media": "37.512"
-      },
-      {
-        "gara_id": "23_GIRO_DELLA_VALDIGREVE_2026-04-19_JUN_M",
-        "nome_gara": "23 GIRO DELLA VALDIGREVE",
-        "data": "2026-04-19",
-        "posizione": 6,
-        "punti_effettivi": 5,
-        "team": "CPS PROFESSIONAL TEAM",
-        "moltiplicatore": 1,
-        "tipo": "regionale",
-        "regione": "TOSCANA",
-        "km": "78.000",
-        "media": "41.246"
-      },
-      {
-        "gara_id": "5_MEMORIAL_GIUSEPPA_PATELLARO_2026-03-29_JUN_M",
-        "nome_gara": "5 MEMORIAL GIUSEPPA PATELLARO",
-        "data": "2026-03-29",
-        "posizione": 1,
-        "punti_effettivi": 15,
-        "team": "CPS PROFESSIONAL TEAM",
-        "moltiplicatore": 1,
-        "tipo": "regionale",
-        "regione": "SICILIA",
-        "km": "77.000",
-        "media": ""
-      },
-      {
-        "gara_id": "LA_GARIBALDINA_2026-03-15_JUN_M",
-        "nome_gara": "LA GARIBALDINA",
-        "data": "2026-03-15",
-        "posizione": 10,
-        "punti_effettivi": 1,
-        "team": "CPS PROFESSIONAL TEAM",
-        "moltiplicatore": 1,
-        "tipo": "regionale",
-        "regione": "LAZIO",
-        "km": "98.000",
-        "media": "41.846"
-      }
-    ]
-  },
   "SZCZYPKOWSKI_PATRYK": {
     "id": "SZCZYPKOWSKI_PATRYK",
     "nome": "PATRYK",
@@ -82924,70 +82333,6 @@
         "regione": "EMILIA ROMAGNA",
         "km": "120.000",
         "media": "39.834"
-      }
-    ]
-  },
-  "GARGIULO_FEDERICO": {
-    "id": "GARGIULO_FEDERICO",
-    "nome": "FEDERICO",
-    "cognome": "GARGIULO",
-    "team_attuale": "CPS PROFESSIONAL TEAM",
-    "team_id": "CPS_PROFESSIONAL_TEAM",
-    "categoria": "JUN_M",
-    "genere": "M",
-    "punti_totali": 25,
-    "risultati": [
-      {
-        "gara_id": "8_MEDAGLIA_DORO_ANTONIO_BUSICO_PROVA_VALIDA_CAMPIONATO_REGIONALE_2026-07-12_JUN_M",
-        "nome_gara": "8 MEDAGLIA DORO ANTONIO BUSICO PROVA VALIDA CAMPIONATO REGIONALE",
-        "data": "2026-07-12",
-        "posizione": 7,
-        "punti_effettivi": 8,
-        "team": "CPS PROFESSIONAL TEAM",
-        "moltiplicatore": 2,
-        "tipo": "regionale",
-        "regione": "CAMPANIA",
-        "km": "112.000",
-        "media": "42.532"
-      },
-      {
-        "gara_id": "TUSCANY_CYCLING_ACADEMY_JUNIORES_2026-05-23_JUN_M",
-        "nome_gara": "TUSCANY CYCLING ACADEMY JUNIORES",
-        "data": "2026-05-23",
-        "posizione": 9,
-        "punti_effettivi": 6,
-        "team": "CPS PROFESSIONAL TEAM",
-        "moltiplicatore": 3,
-        "tipo": "internazionale",
-        "regione": "TOSCANA",
-        "km": "112.300",
-        "media": "38.713"
-      },
-      {
-        "gara_id": "MEMORIAL_GIOVANNI_CANNARELLA_2026-05-17_JUN_M",
-        "nome_gara": "MEMORIAL GIOVANNI CANNARELLA",
-        "data": "2026-05-17",
-        "posizione": 6,
-        "punti_effettivi": 5,
-        "team": "CPS PROFESSIONAL TEAM",
-        "moltiplicatore": 1,
-        "tipo": "regionale",
-        "regione": "SICILIA",
-        "km": "113.000",
-        "media": ""
-      },
-      {
-        "gara_id": "MEMORIAL_CLARA_E_FALIERO_VANGI_2026-03-08_JUN_M",
-        "nome_gara": "MEMORIAL CLARA E FALIERO VANGI",
-        "data": "2026-03-08",
-        "posizione": 5,
-        "punti_effettivi": 6,
-        "team": "CPS PROFESSIONAL TEAM",
-        "moltiplicatore": 1,
-        "tipo": "regionale",
-        "regione": "TOSCANA",
-        "km": "115.000",
-        "media": "40.588"
       }
     ]
   },
@@ -99762,31 +99107,6 @@
       }
     ]
   },
-  "FERNANDEZ_RUIZ_JORGE_LUIS": {
-    "id": "FERNANDEZ_RUIZ_JORGE_LUIS",
-    "nome": "RUIZ JORGE LUIS",
-    "cognome": "FERNANDEZ",
-    "team_attuale": "A.R.MONEX PRO CYCLING TEAM",
-    "team_id": "A_R_MONEX_PRO_CYCLING_TEAM",
-    "categoria": "JUN_M",
-    "genere": "M",
-    "punti_totali": 12,
-    "risultati": [
-      {
-        "gara_id": "29_GRAN_PREMIO_DELL_ARNO_2026-07-05_JUN_M",
-        "nome_gara": "29 GRAN PREMIO DELL'ARNO",
-        "data": "2026-07-05",
-        "posizione": 5,
-        "punti_effettivi": 12,
-        "team": "A.R.MONEX PRO CYCLING TEAM",
-        "moltiplicatore": 2,
-        "tipo": "nazionale",
-        "regione": "LOMBARDIA",
-        "km": "129.800",
-        "media": "40.979"
-      }
-    ]
-  },
   "CECCATO_EDOARDO": {
     "id": "CECCATO_EDOARDO",
     "nome": "EDOARDO",
@@ -106297,122 +105617,6 @@
         "regione": "TOSCANA",
         "km": "123.000",
         "media": "41.403"
-      }
-    ]
-  },
-  "FERRARO_LORENZO": {
-    "id": "FERRARO_LORENZO",
-    "nome": "LORENZO",
-    "cognome": "FERRARO",
-    "team_attuale": "TEAM CORATTI",
-    "team_id": "TEAM_CORATTI",
-    "categoria": "JUN_M",
-    "genere": "M",
-    "punti_totali": 126,
-    "risultati": [
-      {
-        "gara_id": "GIRO_DELLA_VALDERA_TERZA_TAPPA_2026-06-28_JUN_M",
-        "nome_gara": "GIRO DELLA VALDERA TERZA TAPPA",
-        "data": "2026-06-28",
-        "posizione": 4,
-        "punti_effettivi": 16,
-        "team": "TEAM CORATTI",
-        "moltiplicatore": 2,
-        "tipo": "nazionale",
-        "regione": "TOSCANA",
-        "km": "77.000",
-        "media": "43.428"
-      },
-      {
-        "gara_id": "24_GIRO_DEL_FRIULI_VENEZIA_GIULIA_TERZA_TAPPA_2026-06-02_JUN_M",
-        "nome_gara": "24 GIRO DEL FRIULI VENEZIA GIULIA TERZA TAPPA",
-        "data": "2026-06-02",
-        "posizione": 2,
-        "punti_effettivi": 24,
-        "team": "TEAM CORATTI",
-        "moltiplicatore": 2,
-        "tipo": "nazionale",
-        "regione": "FRIULI VENEZIA GIULIA",
-        "km": "102.200",
-        "media": ""
-      },
-      {
-        "gara_id": "TUSCANY_CYCLING_ACADEMY_JUNIORES_2026-05-23_JUN_M",
-        "nome_gara": "TUSCANY CYCLING ACADEMY JUNIORES",
-        "data": "2026-05-23",
-        "posizione": 5,
-        "punti_effettivi": 18,
-        "team": "TEAM CORATTI",
-        "moltiplicatore": 3,
-        "tipo": "internazionale",
-        "regione": "TOSCANA",
-        "km": "112.300",
-        "media": "38.713"
-      },
-      {
-        "gara_id": "GIRO_D_ABRUZZO_JUNIORES_2026_PRIMA_TAPPA_2026-05-01_JUN_M",
-        "nome_gara": "GIRO D'ABRUZZO JUNIORES 2026 PRIMA TAPPA",
-        "data": "2026-05-01",
-        "posizione": 7,
-        "punti_effettivi": 8,
-        "team": "TEAM CORATTI",
-        "moltiplicatore": 2,
-        "tipo": "nazionale",
-        "regione": "ABRUZZO",
-        "km": "93.000",
-        "media": "39.678"
-      },
-      {
-        "gara_id": "50_GRAN_PREMIO_LIBERAZIONE_CITTA_DI_MASSA_2026-04-25_JUN_M",
-        "nome_gara": "50 GRAN PREMIO LIBERAZIONE CITTA' DI MASSA",
-        "data": "2026-04-25",
-        "posizione": 3,
-        "punti_effettivi": 20,
-        "team": "TEAM CORATTI",
-        "moltiplicatore": 2,
-        "tipo": "nazionale",
-        "regione": "TOSCANA",
-        "km": "118.500",
-        "media": "42.524"
-      },
-      {
-        "gara_id": "COPPA_PALAZZOLO_2026_PROVA_VALIDA_CAMPIONATO_REGIONALE_2026-04-06_JUN_M",
-        "nome_gara": "COPPA PALAZZOLO 2026 PROVA VALIDA CAMPIONATO REGIONALE",
-        "data": "2026-04-06",
-        "posizione": 9,
-        "punti_effettivi": 4,
-        "team": "TEAM CORATTI",
-        "moltiplicatore": 2,
-        "tipo": "regionale",
-        "regione": "LAZIO",
-        "km": "106.000",
-        "media": "39.102"
-      },
-      {
-        "gara_id": "TROFEO_MICHELE_SCARPONI_DUE_GIORNI_2026-04-03_JUN_M",
-        "nome_gara": "TROFEO MICHELE SCARPONI DUE GIORNI",
-        "data": "2026-04-03",
-        "posizione": 2,
-        "punti_effettivi": 24,
-        "team": "TEAM CORATTI",
-        "moltiplicatore": 2,
-        "tipo": "nazionale",
-        "regione": "MARCHE",
-        "km": "119.200",
-        "media": "42.311"
-      },
-      {
-        "gara_id": "LA_GARIBALDINA_2026-03-15_JUN_M",
-        "nome_gara": "LA GARIBALDINA",
-        "data": "2026-03-15",
-        "posizione": 2,
-        "punti_effettivi": 12,
-        "team": "TEAM CORATTI",
-        "moltiplicatore": 1,
-        "tipo": "regionale",
-        "regione": "LAZIO",
-        "km": "98.000",
-        "media": "41.846"
       }
     ]
   },
@@ -126359,31 +125563,6 @@
         "regione": "TOSCANA",
         "km": "123.000",
         "media": "41.403"
-      }
-    ]
-  },
-  "LANCIONI_TEO": {
-    "id": "LANCIONI_TEO",
-    "nome": "TEO",
-    "cognome": "LANCIONI",
-    "team_attuale": "ETHICA ZERO24 CYCLING TEAM ECOTEK",
-    "team_id": "ETHICA_ZERO24_CYCLING_TEAM_ECOTEK",
-    "categoria": "JUN_M",
-    "genere": "M",
-    "punti_totali": 2,
-    "risultati": [
-      {
-        "gara_id": "33_MEMORIAL_DIEGO_SCHIAROLI_2026-06-14_JUN_M",
-        "nome_gara": "33 MEMORIAL DIEGO SCHIAROLI",
-        "data": "2026-06-14",
-        "posizione": 9,
-        "punti_effettivi": 2,
-        "team": "ETHICA ZERO24 CYCLING TEAM ECOTEK",
-        "moltiplicatore": 1,
-        "tipo": "regionale",
-        "regione": "MARCHE",
-        "km": "119.450",
-        "media": "30.113"
       }
     ]
   },

@@ -62,37 +62,37 @@
   {
     "team_id": "ISOLMANT_PREMAC_VITTORIA",
     "team_nome": "ISOLMANT - PREMAC - VITTORIA",
-    "punti": 233,
+    "punti": 257,
     "vittorie": 3,
     "p1": 3,
     "p2": 4,
     "p3": 3,
-    "pout": 11,
+    "pout": 12,
     "n_atleti": 8,
     "pos": 6
   },
   {
     "team_id": "TOP_GIRLS_FASSA_BORTOLO",
     "team_nome": "TOP GIRLS - FASSA BORTOLO",
-    "punti": 155,
+    "punti": 191,
     "vittorie": 1,
     "p1": 1,
-    "p2": 3,
+    "p2": 4,
     "p3": 0,
     "pout": 14,
     "n_atleti": 8,
     "pos": 7
   },
   {
-    "team_id": "ITA",
-    "team_nome": "ITA",
-    "punti": 153,
-    "vittorie": 1,
-    "p1": 1,
+    "team_id": "HORIZONS_CYCLING_CLUB",
+    "team_nome": "HORIZONS CYCLING CLUB",
+    "punti": 149,
+    "vittorie": 0,
+    "p1": 0,
     "p2": 1,
     "p3": 1,
-    "pout": 2,
-    "n_atleti": 5,
+    "pout": 14,
+    "n_atleti": 4,
     "pos": 8
   },
   {
@@ -108,6 +108,18 @@
     "pos": 9
   },
   {
+    "team_id": "VINI_FANTINI_BEPINK",
+    "team_nome": "VINI FANTINI BEPINK",
+    "punti": 141,
+    "vittorie": 2,
+    "p1": 2,
+    "p2": 0,
+    "p3": 2,
+    "pout": 12,
+    "n_atleti": 8,
+    "pos": 10
+  },
+  {
     "team_id": "TEAM_VISMA_LEASE_A_BIKE",
     "team_nome": "TEAM VISMA LEASE A BIKE",
     "punti": 139,
@@ -117,18 +129,6 @@
     "p3": 1,
     "pout": 9,
     "n_atleti": 5,
-    "pos": 10
-  },
-  {
-    "team_id": "HORIZONS_CYCLING_CLUB",
-    "team_nome": "HORIZONS CYCLING CLUB",
-    "punti": 131,
-    "vittorie": 0,
-    "p1": 0,
-    "p2": 1,
-    "p3": 1,
-    "pout": 13,
-    "n_atleti": 4,
     "pos": 11
   },
   {
@@ -204,18 +204,6 @@
     "pos": 17
   },
   {
-    "team_id": "VINI_FANTINI_BEPINK",
-    "team_nome": "VINI FANTINI - BEPINK",
-    "punti": 96,
-    "vittorie": 1,
-    "p1": 1,
-    "p2": 0,
-    "p3": 2,
-    "pout": 12,
-    "n_atleti": 8,
-    "pos": 18
-  },
-  {
     "team_id": "NEXETIS_TEAM",
     "team_nome": "NEXETIS TEAM",
     "punti": 87,
@@ -225,7 +213,7 @@
     "p3": 1,
     "pout": 1,
     "n_atleti": 3,
-    "pos": 19
+    "pos": 18
   },
   {
     "team_id": "EF_EDUCATION_OATLY",
@@ -237,7 +225,7 @@
     "p3": 0,
     "pout": 5,
     "n_atleti": 3,
-    "pos": 20
+    "pos": 19
   },
   {
     "team_id": "MOVISTAR_TEAM_ACADEMY",
@@ -249,7 +237,7 @@
     "p3": 0,
     "pout": 4,
     "n_atleti": 2,
-    "pos": 21
+    "pos": 20
   },
   {
     "team_id": "AROMITALIA_VAIANO",
@@ -261,6 +249,18 @@
     "p3": 1,
     "pout": 5,
     "n_atleti": 6,
+    "pos": 21
+  },
+  {
+    "team_id": "TEAM_MENDELSPECK_E_WORK",
+    "team_nome": "TEAM MENDELSPECK E-WORK",
+    "punti": 69,
+    "vittorie": 0,
+    "p1": 0,
+    "p2": 1,
+    "p3": 2,
+    "pout": 4,
+    "n_atleti": 3,
     "pos": 22
   },
   {
@@ -324,18 +324,6 @@
     "pos": 27
   },
   {
-    "team_id": "TEAM_MENDELSPECK_E_WORK",
-    "team_nome": "TEAM MENDELSPECK E-WORK",
-    "punti": 39,
-    "vittorie": 0,
-    "p1": 0,
-    "p2": 1,
-    "p3": 1,
-    "pout": 4,
-    "n_atleti": 3,
-    "pos": 28
-  },
-  {
     "team_id": "UNO_X_MOBILITY",
     "team_nome": "UNO-X MOBILITY",
     "punti": 39,
@@ -345,7 +333,7 @@
     "p3": 0,
     "pout": 4,
     "n_atleti": 3,
-    "pos": 29
+    "pos": 28
   },
   {
     "team_id": "ZHIRAF",
@@ -357,7 +345,7 @@
     "p3": 2,
     "pout": 4,
     "n_atleti": 3,
-    "pos": 30
+    "pos": 29
   },
   {
     "team_id": "UAE_DEVELOPMENT_TEAM",
@@ -369,7 +357,7 @@
     "p3": 0,
     "pout": 1,
     "n_atleti": 2,
-    "pos": 31
+    "pos": 30
   },
   {
     "team_id": "TORELLI_CYCLING_TEAM",
@@ -381,7 +369,7 @@
     "p3": 0,
     "pout": 2,
     "n_atleti": 1,
-    "pos": 32
+    "pos": 31
   },
   {
     "team_id": "ST_MICHEL_PREFERENCE_HOME_AUBER93",
@@ -393,7 +381,7 @@
     "p3": 0,
     "pout": 2,
     "n_atleti": 2,
-    "pos": 33
+    "pos": 32
   },
   {
     "team_id": "LOTTO_INTERNARCHE_LADIES",
@@ -405,7 +393,7 @@
     "p3": 0,
     "pout": 1,
     "n_atleti": 1,
-    "pos": 34
+    "pos": 33
   },
   {
     "team_id": "TEAM_PICNIC_POSTNL",
@@ -417,7 +405,7 @@
     "p3": 0,
     "pout": 2,
     "n_atleti": 2,
-    "pos": 35
+    "pos": 34
   },
   {
     "team_id": "FIAMME_ORO",
@@ -429,7 +417,7 @@
     "p3": 0,
     "pout": 1,
     "n_atleti": 1,
-    "pos": 36
+    "pos": 35
   },
   {
     "team_id": "BMX_CLUB_SARRIANS",
@@ -441,7 +429,7 @@
     "p3": 0,
     "pout": 1,
     "n_atleti": 1,
-    "pos": 37
+    "pos": 36
   },
   {
     "team_id": "TEAM_WILIER_BREGANZE",
@@ -453,7 +441,7 @@
     "p3": 0,
     "pout": 3,
     "n_atleti": 1,
-    "pos": 38
+    "pos": 37
   },
   {
     "team_id": "GS_FIAMME_AZZURRE",
@@ -465,7 +453,7 @@
     "p3": 0,
     "pout": 1,
     "n_atleti": 1,
-    "pos": 39
+    "pos": 38
   },
   {
     "team_id": "TEAM_ESSERE",
@@ -477,7 +465,7 @@
     "p3": 0,
     "pout": 1,
     "n_atleti": 1,
-    "pos": 40
+    "pos": 39
   },
   {
     "team_id": "BRESCIA_F_MAGNI_FLANDRES_LOVE",
@@ -489,7 +477,7 @@
     "p3": 1,
     "pout": 0,
     "n_atleti": 1,
-    "pos": 41
+    "pos": 40
   },
   {
     "team_id": "LABORAL_KUTXA_FUNDACION_EUSKADI",
@@ -501,7 +489,7 @@
     "p3": 0,
     "pout": 1,
     "n_atleti": 1,
-    "pos": 42
+    "pos": 41
   },
   {
     "team_id": "COFIDIS_WOMEN_TEAM",
@@ -513,7 +501,7 @@
     "p3": 0,
     "pout": 1,
     "n_atleti": 1,
-    "pos": 43
+    "pos": 42
   },
   {
     "team_id": "NAZIONALE_UCRAINA",
@@ -525,7 +513,7 @@
     "p3": 0,
     "pout": 2,
     "n_atleti": 1,
-    "pos": 44
+    "pos": 43
   },
   {
     "team_id": "TEAM_CINGOLANI_SPECIALIZED",
@@ -537,7 +525,7 @@
     "p3": 0,
     "pout": 1,
     "n_atleti": 1,
-    "pos": 45
+    "pos": 44
   },
   {
     "team_id": "A_S_D_CLUB_CORRIDONIA_S_C",
@@ -549,7 +537,7 @@
     "p3": 0,
     "pout": 2,
     "n_atleti": 2,
-    "pos": 46
+    "pos": 45
   },
   {
     "team_id": "MOVISTAR_TEAM",
@@ -561,6 +549,6 @@
     "p3": 0,
     "pout": 1,
     "n_atleti": 1,
-    "pos": 47
+    "pos": 46
   }
 ]
