@@ -3288,14 +3288,19 @@ app.post('/api/admin/gara/:garaId/manual-result', requireAdmin, async (req, res)
     const { posizione, cognome, nome, team, tempo, km, media,
             nome_gara, data, categoria, genere, tipo, moltiplicatore,
             campionato_regionale, campionato_italiano, regione } = req.body || {};
-    if (!posizione || !cognome) return res.status(400).json({ error: 'posizione e cognome obbligatori' });
-    const cognomeU = String(cognome).trim().toUpperCase();
+    const cognomeU = String(cognome || '').trim().toUpperCase();
     const nomeU    = String(nome || '').trim().toUpperCase();
     const teamU    = String(team || '').trim().toUpperCase();
+    // Cognome è opzionale SOLO se c'è un team: serve per le gare a squadre
+    // (crono a squadre), dove si vuole correggere posizione/distacco/nome
+    // squadra di una riga SENZA per forza indicare già un corridore — niente
+    // atleta_id in quel caso, la riga conta solo per la classifica squadre
+    // (nessun finto "atleta" creato, vedi sotto).
+    if (!posizione || (!cognomeU && !teamU)) return res.status(400).json({ error: 'posizione e (cognome o team) obbligatori' });
     const pos      = parseInt(posizione, 10);
     const mult     = parseInt(moltiplicatore, 10) || 1;
     const puntiBase = _MANUAL_BASE_PTS[pos] || 0;
-    const atletaId = _makeAtletaId(cognomeU, nomeU);
+    const atletaId = cognomeU ? _makeAtletaId(cognomeU, nomeU) : '';
 
     // Team: fuzzy-match su teams.json (rispettando il genere) così finisce nel
     // team reale invece di crearne uno doppione con una stringa leggermente diversa
