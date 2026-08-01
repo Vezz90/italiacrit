@@ -16728,11 +16728,15 @@ async function renderGara(gara_id) {
       const manualRows = rows.filter(r => r._manual);
       const realRiders = manualRows.filter(r => r.cognome);
       // Nome team: se c'è già una riga manuale (corridore o solo-team) con un
-      // campo "team" compilato usa quello; altrimenti ricostruisce il nome
-      // squadra dal finto atleta scrapato (cognome+nome = il nome team
-      // spezzato in due).
+      // campo "team" compilato usa quello. Altrimenti, per le righe scrapate:
+      // le gare rifatte DOPO il fix dello scraper hanno cognome/nome vuoti e
+      // il team vero già in rows[0].team — usa quello. Le gare scrapate PRIMA
+      // del fix hanno ancora il nome squadra spezzato in cognome/nome (team
+      // vale "ITA", inservibile) — in quel caso ricostruisce da lì.
       const teamRow = manualRows.find(r => r.team) || manualRows[0];
-      const teamName = (teamRow && teamRow.team) || `${rows[0].cognome} ${rows[0].nome}`.trim();
+      const teamName = (teamRow && teamRow.team)
+        || (rows[0].cognome || rows[0].nome ? `${rows[0].cognome} ${rows[0].nome}`.trim() : rows[0].team)
+        || rows[0].team_id;
       const teamId = (teamRow && teamRow.team_id) || rows[0].team_id;
       const pts = rows[0].punti_effettivi || (BASEPTS[pos] || 0) * mult;
       const tempoDisplay = pos === 1
