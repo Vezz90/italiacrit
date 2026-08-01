@@ -15250,7 +15250,7 @@ async function renderTeam(team_id, opts = {}) {
 
   const risultatiRows = [...catRisultati]
     .sort((a,b) => a.posizione - b.posizione || (b.data||'').localeCompare(a.data||''))
-    .slice(0, 30)
+    .slice(0, 100)
     .map(r => {
       // Per la scheda Team mostriamo il rank della squadra (con tie-break)
       const rankVal = r.team_rank_dopo_gara;
