@@ -1,26 +1,26 @@
 [
   {
-    "team_id": "S_C_CESANO_MADERNO",
-    "team_nome": "S.C. CESANO MADERNO",
-    "punti": 360,
-    "vittorie": 9,
-    "p1": 9,
-    "p2": 5,
-    "p3": 7,
-    "pout": 16,
-    "n_atleti": 2,
-    "pos": 1
-  },
-  {
     "team_id": "HG_CYCLING_TEAM",
     "team_nome": "HG CYCLING TEAM",
-    "punti": 349,
+    "punti": 361,
     "vittorie": 9,
     "p1": 9,
     "p2": 6,
     "p3": 2,
-    "pout": 21,
+    "pout": 23,
     "n_atleti": 5,
+    "pos": 1
+  },
+  {
+    "team_id": "S_C_CESANO_MADERNO",
+    "team_nome": "S.C. CESANO MADERNO",
+    "punti": 361,
+    "vittorie": 9,
+    "p1": 9,
+    "p2": 5,
+    "p3": 7,
+    "pout": 17,
+    "n_atleti": 2,
     "pos": 2
   },
   {
@@ -50,10 +50,10 @@
   {
     "team_id": "ASD_VELOCE_CLUB_BORGO",
     "team_nome": "ASD VELOCE CLUB BORGO",
-    "punti": 203,
+    "punti": 215,
     "vittorie": 3,
     "p1": 3,
-    "p2": 5,
+    "p2": 6,
     "p3": 3,
     "pout": 14,
     "n_atleti": 3,
@@ -96,6 +96,18 @@
     "pos": 8
   },
   {
+    "team_id": "U_C_CONSCIO_PEDALE_DEL_SILE",
+    "team_nome": "U.C.CONSCIO PEDALE DEL SILE",
+    "punti": 125,
+    "vittorie": 1,
+    "p1": 1,
+    "p2": 1,
+    "p3": 1,
+    "pout": 21,
+    "n_atleti": 4,
+    "pos": 9
+  },
+  {
     "team_id": "MARY_J_SWEET_ANGEL_ASD",
     "team_nome": "MARY J SWEET ANGEL ASD",
     "punti": 124,
@@ -105,7 +117,7 @@
     "p3": 1,
     "pout": 14,
     "n_atleti": 3,
-    "pos": 9
+    "pos": 10
   },
   {
     "team_id": "U_C_GIORGIONE",
@@ -117,18 +129,6 @@
     "p3": 3,
     "pout": 16,
     "n_atleti": 2,
-    "pos": 10
-  },
-  {
-    "team_id": "U_C_CONSCIO_PEDALE_DEL_SILE",
-    "team_nome": "U.C.CONSCIO PEDALE DEL SILE",
-    "punti": 97,
-    "vittorie": 0,
-    "p1": 0,
-    "p2": 1,
-    "p3": 0,
-    "pout": 20,
-    "n_atleti": 4,
     "pos": 11
   },
   {
@@ -144,27 +144,27 @@
     "pos": 12
   },
   {
-    "team_id": "BREGANZE_MILLENIUM",
-    "team_nome": "BREGANZE MILLENIUM",
-    "punti": 89,
-    "vittorie": 0,
-    "p1": 0,
-    "p2": 2,
-    "p3": 2,
-    "pout": 14,
-    "n_atleti": 4,
-    "pos": 13
-  },
-  {
     "team_id": "G_C_NOVENTANA",
     "team_nome": "G.C. NOVENTANA",
-    "punti": 88,
+    "punti": 93,
     "vittorie": 1,
     "p1": 1,
     "p2": 0,
     "p3": 2,
-    "pout": 11,
+    "pout": 12,
     "n_atleti": 2,
+    "pos": 13
+  },
+  {
+    "team_id": "BREGANZE_MILLENIUM",
+    "team_nome": "BREGANZE MILLENIUM",
+    "punti": 91,
+    "vittorie": 0,
+    "p1": 0,
+    "p2": 2,
+    "p3": 2,
+    "pout": 15,
+    "n_atleti": 4,
     "pos": 14
   },
   {
@@ -324,6 +324,18 @@
     "pos": 27
   },
   {
+    "team_id": "ASD_TEAM_PETRUCCI",
+    "team_nome": "ASD TEAM PETRUCCI",
+    "punti": 27,
+    "vittorie": 0,
+    "p1": 0,
+    "p2": 0,
+    "p3": 0,
+    "pout": 7,
+    "n_atleti": 2,
+    "pos": 28
+  },
+  {
     "team_id": "BICIFESTIVAL",
     "team_nome": "BICIFESTIVAL",
     "punti": 27,
@@ -333,7 +345,7 @@
     "p3": 0,
     "pout": 7,
     "n_atleti": 3,
-    "pos": 28
+    "pos": 29
   },
   {
     "team_id": "TOSCANA",
@@ -345,7 +357,7 @@
     "p3": 0,
     "pout": 0,
     "n_atleti": 1,
-    "pos": 29
+    "pos": 30
   },
   {
     "team_id": "A_S_D_MONGIBELLO_MTB_TEAM",
@@ -357,18 +369,6 @@
     "p3": 0,
     "pout": 0,
     "n_atleti": 1,
-    "pos": 30
-  },
-  {
-    "team_id": "ASD_TEAM_PETRUCCI",
-    "team_nome": "ASD TEAM PETRUCCI",
-    "punti": 21,
-    "vittorie": 0,
-    "p1": 0,
-    "p2": 0,
-    "p3": 0,
-    "pout": 6,
-    "n_atleti": 2,
     "pos": 31
   },
   {
