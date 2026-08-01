@@ -22204,15 +22204,23 @@ function _drawAtletaMese(ctx, W, H, d, athImg) {
     ctx.fillText(String(team).substring(0, 40), pad, y);
   }
 
-  const heroTop = y + Math.round(H * 0.04);
-  const heroH = Math.round(cH * 0.30);
+  // Hero + griglia ancorati dal BASSO (cBot) verso l'alto, non impilati sotto
+  // il blocco nome: su Facebook/Twitter (larghi e bassi) il blocco nome da
+  // solo può occupare quasi tutta cH, e impilando sotto la griglia finiva
+  // schiacciata contro/oltre il footer. Ancorandola dal fondo è SEMPRE dentro
+  // i bordi della card, a costo — nei rari casi di nome lunghissimo — di
+  // sovrapporsi leggermente all'hero piuttosto che al footer (molto meno
+  // visibile ed è comunque un caso limite).
+  const landscape = W > H * 1.25;
+  const gridH = Math.round(cH * (landscape ? 0.20 : 0.155));
+  const heroH = Math.round(cH * (landscape ? 0.26 : 0.30));
+  const gridTop = cBot - gridH;
+  const heroTop = gridTop - Math.round(H * (landscape ? 0.022 : 0.035)) - heroH;
   const gap = Math.round(W * 0.03);
   const boxW = (W - pad * 2 - gap) / 2;
   _statHero(ctx, pad, heroTop, boxW, heroH, punti, 'PUNTI DEL MESE', 'grad');
   _statHero(ctx, pad + boxW + gap, heroTop, boxW, heroH, wins, 'VITTORIE', 'gold');
 
-  const gridTop = heroTop + heroH + Math.round(H * 0.035);
-  const gridH = cBot - gridTop;
   const cells = [['1° POSTI', wins, '#f5c400'], ['2° POSTI', (p2 || 0), '#cfcfcf'], ['3° POSTI', (p3 || 0), '#cd7f32'], ['GARE', (gare || 0), '#f0f0f0']];
   const cgap = Math.round(W * 0.025);
   const cw = (W - pad * 2 - cgap * 3) / 4;
@@ -22233,15 +22241,17 @@ function _drawTeamMese(ctx, W, H, d) {
   ctx.font = `900 ${fsN}px 'Inter Tight',sans-serif`; ctx.fillStyle = '#f4f4f4';
   y = _wrap(ctx, nome.toUpperCase(), pad, y + fsN, W - pad * 2, fsN * 1.08);
 
-  const heroTop = y + Math.round(H * 0.035);
-  const heroH = Math.round(cH * 0.30);
+  // Ancorate dal basso — stesso motivo della card atleta (vedi commento lì).
+  const landscape = W > H * 1.25;
+  const gridH = Math.round(cH * (landscape ? 0.22 : 0.17));
+  const heroH = Math.round(cH * (landscape ? 0.26 : 0.30));
+  const gridTop = cBot - gridH;
+  const heroTop = gridTop - Math.round(H * (landscape ? 0.025 : 0.04)) - heroH;
   const gap = Math.round(W * 0.03);
   const boxW = (W - pad * 2 - gap) / 2;
   _statHero(ctx, pad, heroTop, boxW, heroH, punti, 'PUNTI DEL MESE', 'grad');
   _statHero(ctx, pad + boxW + gap, heroTop, boxW, heroH, wins, 'VITTORIE', 'gold');
 
-  const gridTop = heroTop + heroH + Math.round(H * 0.04);
-  const gridH = cBot - gridTop;
   const cells = [['1° POSTI', wins, '#f5c400'], ['2° POSTI', (p2 || 0), '#cfcfcf'], ['3° POSTI', (p3 || 0), '#cd7f32']];
   const cgap = Math.round(W * 0.03);
   const cw = (W - pad * 2 - cgap * 2) / 3;
