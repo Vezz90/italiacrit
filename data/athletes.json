@@ -1,4 +1,229 @@
 {
+  "VANGI_LADIES_CYCLING_TEAM": {
+    "id": "VANGI_LADIES_CYCLING_TEAM",
+    "nome": "CYCLING TEAM",
+    "cognome": "VANGI LADIES",
+    "team_attuale": "ITA",
+    "team_id": "ITA",
+    "categoria": "AL_F",
+    "genere": "F",
+    "punti_totali": 45,
+    "risultati": [
+      {
+        "gara_id": "CAMPIONATO_ITALIANO_CRONOMETRO_A_SQUADRE_DONNE_ALLIEVE_2026-08-01_AL_F",
+        "nome_gara": "CAMPIONATO ITALIANO CRONOMETRO A SQUADRE DONNE ALLIEVE",
+        "data": "2026-08-01",
+        "posizione": 1,
+        "punti_effettivi": 45,
+        "team": "ITA",
+        "moltiplicatore": 3,
+        "tipo": "nazionale",
+        "regione": "FRIULI VENEZIA GIULIA",
+        "km": "14.500",
+        "media": ""
+      }
+    ]
+  },
+  "POL_FIUMICINESE_FA_I_T_ADRIATICA": {
+    "id": "POL_FIUMICINESE_FA_I_T_ADRIATICA",
+    "nome": "FIUMICINESE FA.I.T. ADRIATICA",
+    "cognome": "POL.",
+    "team_attuale": "ITA",
+    "team_id": "ITA",
+    "categoria": "AL_F",
+    "genere": "F",
+    "punti_totali": 36,
+    "risultati": [
+      {
+        "gara_id": "CAMPIONATO_ITALIANO_CRONOMETRO_A_SQUADRE_DONNE_ALLIEVE_2026-08-01_AL_F",
+        "nome_gara": "CAMPIONATO ITALIANO CRONOMETRO A SQUADRE DONNE ALLIEVE",
+        "data": "2026-08-01",
+        "posizione": 2,
+        "punti_effettivi": 36,
+        "team": "ITA",
+        "moltiplicatore": 3,
+        "tipo": "nazionale",
+        "regione": "FRIULI VENEZIA GIULIA",
+        "km": "14.500",
+        "media": ""
+      }
+    ]
+  },
+  "U_C_GIORGIONE": {
+    "id": "U_C_GIORGIONE",
+    "nome": "GIORGIONE",
+    "cognome": "U.C.",
+    "team_attuale": "ITA",
+    "team_id": "ITA",
+    "categoria": "AL_F",
+    "genere": "F",
+    "punti_totali": 30,
+    "risultati": [
+      {
+        "gara_id": "CAMPIONATO_ITALIANO_CRONOMETRO_A_SQUADRE_DONNE_ALLIEVE_2026-08-01_AL_F",
+        "nome_gara": "CAMPIONATO ITALIANO CRONOMETRO A SQUADRE DONNE ALLIEVE",
+        "data": "2026-08-01",
+        "posizione": 3,
+        "punti_effettivi": 30,
+        "team": "ITA",
+        "moltiplicatore": 3,
+        "tipo": "nazionale",
+        "regione": "FRIULI VENEZIA GIULIA",
+        "km": "14.500",
+        "media": ""
+      }
+    ]
+  },
+  "A_S_D_GIOCA_IN_BICI_OGLIO_PO_TEAM_A": {
+    "id": "A_S_D_GIOCA_IN_BICI_OGLIO_PO_TEAM_A",
+    "nome": "GIOCA IN BICI OGLIO PO TEAM A",
+    "cognome": "A.S.D.",
+    "team_attuale": "ITA",
+    "team_id": "ITA",
+    "categoria": "AL_F",
+    "genere": "F",
+    "punti_totali": 24,
+    "risultati": [
+      {
+        "gara_id": "CAMPIONATO_ITALIANO_CRONOMETRO_A_SQUADRE_DONNE_ALLIEVE_2026-08-01_AL_F",
+        "nome_gara": "CAMPIONATO ITALIANO CRONOMETRO A SQUADRE DONNE ALLIEVE",
+        "data": "2026-08-01",
+        "posizione": 4,
+        "punti_effettivi": 24,
+        "team": "ITA",
+        "moltiplicatore": 3,
+        "tipo": "nazionale",
+        "regione": "FRIULI VENEZIA GIULIA",
+        "km": "14.500",
+        "media": ""
+      }
+    ]
+  },
+  "COMAL_TRENTINO_CYCLING_ACADEMY": {
+    "id": "COMAL_TRENTINO_CYCLING_ACADEMY",
+    "nome": "TRENTINO CYCLING ACADEMY",
+    "cognome": "COMAL",
+    "team_attuale": "ITA",
+    "team_id": "ITA",
+    "categoria": "AL_F",
+    "genere": "F",
+    "punti_totali": 18,
+    "risultati": [
+      {
+        "gara_id": "CAMPIONATO_ITALIANO_CRONOMETRO_A_SQUADRE_DONNE_ALLIEVE_2026-08-01_AL_F",
+        "nome_gara": "CAMPIONATO ITALIANO CRONOMETRO A SQUADRE DONNE ALLIEVE",
+        "data": "2026-08-01",
+        "posizione": 5,
+        "punti_effettivi": 18,
+        "team": "ITA",
+        "moltiplicatore": 3,
+        "tipo": "nazionale",
+        "regione": "FRIULI VENEZIA GIULIA",
+        "km": "14.500",
+        "media": ""
+      }
+    ]
+  },
+  "GS_CICLI_FIORIN_ASD": {
+    "id": "GS_CICLI_FIORIN_ASD",
+    "nome": "FIORIN ASD",
+    "cognome": "GS CICLI",
+    "team_attuale": "ITA",
+    "team_id": "ITA",
+    "categoria": "AL_F",
+    "genere": "F",
+    "punti_totali": 15,
+    "risultati": [
+      {
+        "gara_id": "CAMPIONATO_ITALIANO_CRONOMETRO_A_SQUADRE_DONNE_ALLIEVE_2026-08-01_AL_F",
+        "nome_gara": "CAMPIONATO ITALIANO CRONOMETRO A SQUADRE DONNE ALLIEVE",
+        "data": "2026-08-01",
+        "posizione": 6,
+        "punti_effettivi": 15,
+        "team": "ITA",
+        "moltiplicatore": 3,
+        "tipo": "nazionale",
+        "regione": "FRIULI VENEZIA GIULIA",
+        "km": "14.500",
+        "media": ""
+      }
+    ]
+  },
+  "U_C_CONSCIO_PEDALE_DEL_SILE": {
+    "id": "U_C_CONSCIO_PEDALE_DEL_SILE",
+    "nome": "PEDALE DEL SILE",
+    "cognome": "U.C.CONSCIO",
+    "team_attuale": "ITA",
+    "team_id": "ITA",
+    "categoria": "AL_F",
+    "genere": "F",
+    "punti_totali": 12,
+    "risultati": [
+      {
+        "gara_id": "CAMPIONATO_ITALIANO_CRONOMETRO_A_SQUADRE_DONNE_ALLIEVE_2026-08-01_AL_F",
+        "nome_gara": "CAMPIONATO ITALIANO CRONOMETRO A SQUADRE DONNE ALLIEVE",
+        "data": "2026-08-01",
+        "posizione": 7,
+        "punti_effettivi": 12,
+        "team": "ITA",
+        "moltiplicatore": 3,
+        "tipo": "nazionale",
+        "regione": "FRIULI VENEZIA GIULIA",
+        "km": "14.500",
+        "media": ""
+      }
+    ]
+  },
+  "A_S_D_GIOCA_IN_BICI_OGLIO_PO_TEAM_B": {
+    "id": "A_S_D_GIOCA_IN_BICI_OGLIO_PO_TEAM_B",
+    "nome": "OGLIO PO TEAM B",
+    "cognome": "A.S.D. GIOCA IN BICI",
+    "team_attuale": "ITA",
+    "team_id": "ITA",
+    "categoria": "AL_F",
+    "genere": "F",
+    "punti_totali": 9,
+    "risultati": [
+      {
+        "gara_id": "CAMPIONATO_ITALIANO_CRONOMETRO_A_SQUADRE_DONNE_ALLIEVE_2026-08-01_AL_F",
+        "nome_gara": "CAMPIONATO ITALIANO CRONOMETRO A SQUADRE DONNE ALLIEVE",
+        "data": "2026-08-01",
+        "posizione": 8,
+        "punti_effettivi": 9,
+        "team": "ITA",
+        "moltiplicatore": 3,
+        "tipo": "nazionale",
+        "regione": "FRIULI VENEZIA GIULIA",
+        "km": "14.500",
+        "media": ""
+      }
+    ]
+  },
+  "ASS_NE_CICLISTICA_DILETT_VALVASONE": {
+    "id": "ASS_NE_CICLISTICA_DILETT_VALVASONE",
+    "nome": "DILETT. VALVASONE",
+    "cognome": "ASS.NE CICLISTICA",
+    "team_attuale": "ITA",
+    "team_id": "ITA",
+    "categoria": "AL_F",
+    "genere": "F",
+    "punti_totali": 6,
+    "risultati": [
+      {
+        "gara_id": "CAMPIONATO_ITALIANO_CRONOMETRO_A_SQUADRE_DONNE_ALLIEVE_2026-08-01_AL_F",
+        "nome_gara": "CAMPIONATO ITALIANO CRONOMETRO A SQUADRE DONNE ALLIEVE",
+        "data": "2026-08-01",
+        "posizione": 9,
+        "punti_effettivi": 6,
+        "team": "ITA",
+        "moltiplicatore": 3,
+        "tipo": "nazionale",
+        "regione": "FRIULI VENEZIA GIULIA",
+        "km": "14.500",
+        "media": ""
+      }
+    ]
+  },
   "KOLARSKI_ALEKSANDER": {
     "id": "KOLARSKI_ALEKSANDER",
     "nome": "ALEKSANDER",
