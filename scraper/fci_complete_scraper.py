@@ -455,6 +455,16 @@ def parse_risultati_page(soup: BeautifulSoup, calendar_map: dict, existing_ids: 
         # sopra) serve prima capire quante/quali righe sono donne per poterle
         # dividere in una categoria propria con posizioni ricalcolate — non
         # si può saperlo prima di aver letto tutte le righe.
+        # Gare "a squadre" (es. cronometro a squadre): la FCI pubblica UNA sola
+        # riga di arrivo per team, senza elencare i corridori. Il parsing
+        # normale sotto (pensato per righe individuali) interpreterebbe il
+        # nome della squadra come un finto "atleta" (nome spezzato in
+        # cognome/nome), che poi inquina classifiche/ricerca atleti come un
+        # corridore vero. Per queste gare NON generiamo un atleta_id: la riga
+        # conta solo per la classifica squadre (vedi aggregate() sotto). I
+        # corridori reali vengono aggiunti a mano dall'admin sul sito.
+        is_squadre = bool(re.search(r"A\s+SQUADRE", race_name_raw, re.I))
+
         section_rows = []
         seen_pos_1 = False  # ex-aequo pos 1: solo il primo corridore è il vincitore ufficiale
         for row in table.find_all("tr"):
@@ -472,6 +482,22 @@ def parse_risultati_page(soup: BeautifulSoup, calendar_map: dict, existing_ids: 
 
             tds = row.find_all("td")
             if len(tds) < 2: continue
+
+            if is_squadre:
+                # L'intera riga è il nome della squadra (tds[0]); un'eventuale
+                # colonna extra (es. sigla nazione "ITA") NON è il team reale
+                # e va ignorata — a differenza delle righe individuali, qui
+                # tds[1] non è affidabile come nome team.
+                team_raw = HTMLMOD.unescape(tds[0].get_text(strip=True)).upper().strip()
+                team = canonical_team_name(team_raw)
+                team_id = slug(team) if team else "SCONOSCIUTO"
+                tempo = HTMLMOD.unescape(tds[-1].get_text(strip=True)) if len(tds) >= 3 else ""
+                if not team: continue
+                section_rows.append({
+                    "cognome": "", "nome": "", "atleta_id": "",
+                    "team": team, "team_id": team_id, "tempo": tempo,
+                })
+                continue
 
             cognome, nome, team, tempo = "", "", "", ""
 
@@ -592,9 +618,13 @@ def aggregate(results: list[dict]) -> tuple[dict, dict, dict, dict]:
         else:
             cc_key = CAT_CODES.get((norm_cat(cat_val), r["genere"]), "ELI_M" if r["genere"]=="M" else "ELI_F")
             
-        # Normalizziamo l'atleta_id per la chiave (gestione apostrofi/doppi underscore)
-        aid_key = r["atleta_id"].replace("__", "_").strip("_")
-            
+        # Normalizziamo l'atleta_id per la chiave (gestione apostrofi/doppi underscore).
+        # Righe "a squadre" (vedi is_squadre sopra) non hanno atleta_id: usiamo il
+        # team_id come disambiguante, altrimenti TUTTE le posizioni di una stessa
+        # gara a squadre avrebbero la stessa chiave vuota e si deduplicherebbero
+        # a vicenda, facendo sparire tutte le posizioni tranne una.
+        aid_key = r["atleta_id"].replace("__", "_").strip("_") or r.get("team_id", "")
+
         key = (r["data"], nome_key, cc_key, aid_key)
         
         if key in seen_results:
@@ -653,24 +683,28 @@ def aggregate(results: list[dict]) -> tuple[dict, dict, dict, dict]:
         else:
             cc = CAT_CODES.get((norm_cat(cat_val), r["genere"]), "ELI_M" if r["genere"]=="M" else "ELI_F")
 
-        # ── Atleta
-        if aid not in athletes:
-            athletes[aid] = {
-                "id": aid, "nome": r["nome"], "cognome": r["cognome"],
-                "team_attuale": r["team"], "team_id": tid,
-                "categoria": cc, "genere": r["genere"],
-                "punti_totali": 0, "risultati": [],
-            }
-        athletes[aid]["punti_totali"] += pts
-        athletes[aid]["risultati"].append({
-            "gara_id": r["gara_id"], "nome_gara": r["nome_gara"],
-            "data": r["data"], "posizione": pos,
-            "punti_effettivi": pts, "team": r["team"],
-            "moltiplicatore": r.get("moltiplicatore", 1),
-            "tipo": r.get("tipo", "regionale"),
-            "regione": r.get("regione", "ITALIA"),
-            "km": r.get("km", ""), "media": r.get("media", "")
-        })
+        # ── Atleta — SOLO se la riga ha un vero atleta_id. Le righe "a
+        # squadre" (gara a cronometro a squadre ecc., vedi is_squadre più
+        # sopra) non elencano corridori: contano solo per la squadra qui
+        # sotto, così non generano un "atleta" finto in classifica/ricerca.
+        if aid:
+            if aid not in athletes:
+                athletes[aid] = {
+                    "id": aid, "nome": r["nome"], "cognome": r["cognome"],
+                    "team_attuale": r["team"], "team_id": tid,
+                    "categoria": cc, "genere": r["genere"],
+                    "punti_totali": 0, "risultati": [],
+                }
+            athletes[aid]["punti_totali"] += pts
+            athletes[aid]["risultati"].append({
+                "gara_id": r["gara_id"], "nome_gara": r["nome_gara"],
+                "data": r["data"], "posizione": pos,
+                "punti_effettivi": pts, "team": r["team"],
+                "moltiplicatore": r.get("moltiplicatore", 1),
+                "tipo": r.get("tipo", "regionale"),
+                "regione": r.get("regione", "ITALIA"),
+                "km": r.get("km", ""), "media": r.get("media", "")
+            })
 
         # ── Team globale
         if tid not in teams:
@@ -680,7 +714,7 @@ def aggregate(results: list[dict]) -> tuple[dict, dict, dict, dict]:
                 "risultati": [], "punti_per_cat": {},
             }
         teams[tid]["punti_totali"] += pts
-        if aid not in teams[tid]["atleti"]:
+        if aid and aid not in teams[tid]["atleti"]:
             teams[tid]["atleti"].append(aid)
         teams[tid]["risultati"].append({
             "gara_id": r["gara_id"], "nome_gara": r["nome_gara"], "data": r["data"], "atleta_id": aid,
@@ -705,7 +739,7 @@ def aggregate(results: list[dict]) -> tuple[dict, dict, dict, dict]:
             elif pos == 2: team_by_cat[cc][tid]["p2"] += 1
             elif pos == 3: team_by_cat[cc][tid]["p3"] += 1
             elif 4 <= pos <= 10: team_by_cat[cc][tid]["pout"] += 1
-            team_by_cat[cc][tid]["atleti"].add(aid)
+            if aid: team_by_cat[cc][tid]["atleti"].add(aid)
 
     # ── Classifiche
     athlete_rankings: dict[str, list] = {c: [] for c in ALL_CODES}

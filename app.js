@@ -15868,6 +15868,7 @@ function _mrPatchLocal(row) {
 window.openManualResultForm = (garaId, posizione, forceAdd) => {
   const user = authUser();
   if (!user || user.role !== 'admin') return;
+  document.getElementById('modal-overlay')?.remove(); // idempotente: rimuove un'eventuale finestra già aperta prima di ridisegnarla
   const existing = (!forceAdd && posizione !== undefined && posizione !== null)
     ? (globalData?.resultsRaw || []).find(r => r.gara_id === garaId && r.posizione === posizione)
     : null;
@@ -16003,9 +16004,20 @@ window.submitManualResult = async (garaId) => {
       body: { posizione, cognome, nome, team, tempo, ...meta },
     });
     _mrPatchLocal(row);
-    document.getElementById('modal-overlay')?.remove();
-    showToast(window._mrEditing ? '✓ Risultato aggiornato' : '✓ Risultato aggiunto');
-    if (window._currentGaraId) renderGara(window._currentGaraId);
+    window._mrDirty = true;
+    if (window._mrForceAdd && !window._mrEditing) {
+      // Modalità multi-corridore (gara a squadre): NON chiude la finestra e
+      // NON ricarica la pagina — resta aperta pronta per il prossimo
+      // corridore, con la lista di chi è già stato inserito aggiornata.
+      (window._mrAddedList = window._mrAddedList || []).push(`${cognome} ${nome}`.trim());
+      showToast('✓ Aggiunto — pronto per il prossimo corridore');
+      window.openManualResultForm(garaId, posizione, true);
+    } else {
+      document.getElementById('modal-overlay')?.remove();
+      showToast(window._mrEditing ? '✓ Risultato aggiornato' : '✓ Risultato aggiunto');
+      window._mrDirty = false;
+      if (window._currentGaraId) renderGara(window._currentGaraId);
+    }
   } catch (e) {
     errEl.textContent = e.message; errEl.style.display = 'block';
     btn.disabled = false; btn.textContent = window._mrEditing ? 'Salva' : 'Aggiungi';
