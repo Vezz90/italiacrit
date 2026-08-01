@@ -22206,16 +22206,26 @@ function _drawAtletaMese(ctx, W, H, d, athImg) {
   y = _wrap(ctx, cognome.toUpperCase(), pad, y + fsC, nameMaxW, fsC * 1.05);
   const fsN = Math.round(fsC * 0.46);
   ctx.font = `700 ${fsN}px 'Inter Tight',sans-serif`; ctx.fillStyle = '#e8001d';
-  ctx.fillText((nome || '').toUpperCase(), pad, y); y += Math.round(fsN * 1.55);
-  // Riga team: disegnata solo se c'è davvero spazio prima dell'hero (bottom-
-  // anchored) — sui formati landscape con nomi team lunghi, ometterla è
-  // molto meno grave che farla sovrapporre al box "PUNTI DEL MESE".
-  if (team && y + Math.round(H * 0.03) < heroTop) {
+  ctx.fillText((nome || '').toUpperCase(), pad, y);
+  // Sui formati landscape (poco spazio verticale) il team va sulla STESSA
+  // riga del nome, subito dopo, invece che su una riga propria sotto — così
+  // c'è sempre spazio garantito per mostrarlo, senza doverlo mai omettere né
+  // rischiare che si sovrapponga al box "PUNTI DEL MESE" ancorato dal basso.
+  if (team && landscape) {
+    const nomeW = ctx.measureText((nome || '').toUpperCase()).width;
+    const fsTm = Math.min(Math.round(W * 0.024), Math.round(H * 0.045));
+    ctx.font = `500 ${fsTm}px 'Inter Tight',sans-serif`; ctx.fillStyle = 'rgba(255,255,255,0.48)';
+    let tm = ' · ' + String(team);
+    const teamMaxW = nameMaxW - nomeW - 6;
+    while (tm.length > 5 && ctx.measureText(tm).width > teamMaxW) tm = tm.slice(0, -1) === ' ' ? tm.slice(0, -2) : tm.slice(0, -1);
+    if (teamMaxW > 20) ctx.fillText(tm, pad + nomeW + 6, y);
+  }
+  y += Math.round(fsN * 1.55);
+  if (team && !landscape) {
     const fsTm = Math.min(Math.round(W * 0.032), Math.round(H * 0.055));
     ctx.font = `600 ${fsTm}px 'Inter Tight',sans-serif`; ctx.fillStyle = 'rgba(255,255,255,0.55)';
     let tm = String(team).substring(0, 40);
-    const teamMaxW = nameMaxW;
-    while (tm.length > 3 && ctx.measureText(tm).width > teamMaxW) tm = tm.slice(0, -1);
+    while (tm.length > 3 && ctx.measureText(tm).width > nameMaxW) tm = tm.slice(0, -1);
     ctx.fillText(tm, pad, y);
   }
 
