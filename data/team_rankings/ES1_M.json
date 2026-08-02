@@ -26,12 +26,12 @@
   {
     "team_id": "PEDALE_RIMINESE_FRECCE_ROSSE",
     "team_nome": "PEDALE RIMINESE FRECCE ROSSE",
-    "punti": 419,
+    "punti": 435,
     "vittorie": 6,
     "p1": 6,
     "p2": 8,
-    "p3": 7,
-    "pout": 29,
+    "p3": 8,
+    "pout": 30,
     "n_atleti": 5,
     "pos": 3
   },
@@ -122,12 +122,12 @@
   {
     "team_id": "FOLIGNO_CYCLING_TEAM_ASD",
     "team_nome": "FOLIGNO CYCLING TEAM ASD",
-    "punti": 225,
+    "punti": 238,
     "vittorie": 0,
     "p1": 0,
     "p2": 3,
     "p3": 6,
-    "pout": 24,
+    "pout": 26,
     "n_atleti": 4,
     "pos": 11
   },
@@ -264,6 +264,18 @@
     "pos": 22
   },
   {
+    "team_id": "ASD_TEAM_PETRUCCI",
+    "team_nome": "ASD TEAM PETRUCCI",
+    "punti": 172,
+    "vittorie": 2,
+    "p1": 2,
+    "p2": 0,
+    "p3": 1,
+    "pout": 36,
+    "n_atleti": 5,
+    "pos": 23
+  },
+  {
     "team_id": "TEAM_SERIO",
     "team_nome": "TEAM SERIO",
     "punti": 171,
@@ -273,18 +285,6 @@
     "p3": 4,
     "pout": 5,
     "n_atleti": 1,
-    "pos": 23
-  },
-  {
-    "team_id": "ASD_TEAM_PETRUCCI",
-    "team_nome": "ASD TEAM PETRUCCI",
-    "punti": 167,
-    "vittorie": 2,
-    "p1": 2,
-    "p2": 0,
-    "p3": 1,
-    "pout": 35,
-    "n_atleti": 5,
     "pos": 24
   },
   {
@@ -396,6 +396,18 @@
     "pos": 33
   },
   {
+    "team_id": "ASD_G_C_FAUSTO_COPPI",
+    "team_nome": "ASD G. C. FAUSTO COPPI",
+    "punti": 136,
+    "vittorie": 1,
+    "p1": 1,
+    "p2": 2,
+    "p3": 2,
+    "pout": 19,
+    "n_atleti": 4,
+    "pos": 34
+  },
+  {
     "team_id": "A_S_D_PROBIKE_ERICE",
     "team_nome": "A.S.D. PROBIKE ERICE",
     "punti": 136,
@@ -405,7 +417,7 @@
     "p3": 2,
     "pout": 13,
     "n_atleti": 2,
-    "pos": 34
+    "pos": 35
   },
   {
     "team_id": "MULTICAR_GRUPPO_AMARU",
@@ -417,7 +429,7 @@
     "p3": 3,
     "pout": 2,
     "n_atleti": 3,
-    "pos": 35
+    "pos": 36
   },
   {
     "team_id": "G_S_ALZATE_BRIANZA_SYSTEM_CAR",
@@ -429,7 +441,7 @@
     "p3": 4,
     "pout": 9,
     "n_atleti": 1,
-    "pos": 36
+    "pos": 37
   },
   {
     "team_id": "A_S_D_POSTUMIA_73_D_L_CICLISMO",
@@ -441,7 +453,7 @@
     "p3": 0,
     "pout": 23,
     "n_atleti": 4,
-    "pos": 37
+    "pos": 38
   },
   {
     "team_id": "GOTTARDO_GIOCHI_CANEVA",
@@ -453,7 +465,7 @@
     "p3": 4,
     "pout": 14,
     "n_atleti": 3,
-    "pos": 38
+    "pos": 39
   },
   {
     "team_id": "SEI_SPORT",
@@ -465,7 +477,19 @@
     "p3": 2,
     "pout": 8,
     "n_atleti": 2,
-    "pos": 39
+    "pos": 40
+  },
+  {
+    "team_id": "ASD_VELOCE_CLUB_BORGO",
+    "team_nome": "ASD VELOCE CLUB BORGO",
+    "punti": 125,
+    "vittorie": 2,
+    "p1": 2,
+    "p2": 2,
+    "p3": 4,
+    "pout": 8,
+    "n_atleti": 1,
+    "pos": 41
   },
   {
     "team_id": "G_S_RONCO_MAURIGI_DELIO_GALLINA",
@@ -477,7 +501,7 @@
     "p3": 1,
     "pout": 27,
     "n_atleti": 3,
-    "pos": 40
+    "pos": 42
   },
   {
     "team_id": "U_C_S_OTTAVIO_ZULIANI_A_S_D",
@@ -489,7 +513,19 @@
     "p3": 6,
     "pout": 8,
     "n_atleti": 3,
-    "pos": 41
+    "pos": 43
+  },
+  {
+    "team_id": "S_C_CAVRIAGO",
+    "team_nome": "S.C. CAVRIAGO",
+    "punti": 121,
+    "vittorie": 1,
+    "p1": 1,
+    "p2": 3,
+    "p3": 1,
+    "pout": 16,
+    "n_atleti": 3,
+    "pos": 44
   },
   {
     "team_id": "A_S_D_CICLISTICA_MONSELICE",
@@ -501,7 +537,7 @@
     "p3": 2,
     "pout": 15,
     "n_atleti": 2,
-    "pos": 42
+    "pos": 45
   },
   {
     "team_id": "STAR_CYCLING_LAB",
@@ -513,19 +549,19 @@
     "p3": 1,
     "pout": 18,
     "n_atleti": 3,
-    "pos": 43
+    "pos": 46
   },
   {
-    "team_id": "ASD_G_C_FAUSTO_COPPI",
-    "team_nome": "ASD G. C. FAUSTO COPPI",
+    "team_id": "ASD_GUBBIO_CICLISMO_MOCAIANA",
+    "team_nome": "ASD GUBBIO CICLISMO MOCAIANA",
     "punti": 119,
-    "vittorie": 0,
-    "p1": 0,
-    "p2": 2,
-    "p3": 2,
-    "pout": 18,
-    "n_atleti": 4,
-    "pos": 44
+    "vittorie": 1,
+    "p1": 1,
+    "p2": 3,
+    "p3": 1,
+    "pout": 10,
+    "n_atleti": 2,
+    "pos": 47
   },
   {
     "team_id": "GS_BERTI_MOBILI_BENASSI",
@@ -537,19 +573,7 @@
     "p3": 2,
     "pout": 12,
     "n_atleti": 3,
-    "pos": 45
-  },
-  {
-    "team_id": "S_C_CAVRIAGO",
-    "team_nome": "S.C. CAVRIAGO",
-    "punti": 117,
-    "vittorie": 1,
-    "p1": 1,
-    "p2": 3,
-    "p3": 1,
-    "pout": 14,
-    "n_atleti": 3,
-    "pos": 46
+    "pos": 48
   },
   {
     "team_id": "A_S_A_C_I_EVONACICLI",
@@ -561,7 +585,7 @@
     "p3": 1,
     "pout": 19,
     "n_atleti": 3,
-    "pos": 47
+    "pos": 49
   },
   {
     "team_id": "A_S_D_PEDALE_CASTELLANO",
@@ -573,7 +597,7 @@
     "p3": 3,
     "pout": 13,
     "n_atleti": 2,
-    "pos": 48
+    "pos": 50
   },
   {
     "team_id": "MST_CYCLING_SANDRIGO_BIKE",
@@ -584,30 +608,6 @@
     "p2": 0,
     "p3": 2,
     "pout": 12,
-    "n_atleti": 2,
-    "pos": 49
-  },
-  {
-    "team_id": "ASD_VELOCE_CLUB_BORGO",
-    "team_nome": "ASD VELOCE CLUB BORGO",
-    "punti": 110,
-    "vittorie": 1,
-    "p1": 1,
-    "p2": 2,
-    "p3": 4,
-    "pout": 8,
-    "n_atleti": 1,
-    "pos": 50
-  },
-  {
-    "team_id": "ASD_GUBBIO_CICLISMO_MOCAIANA",
-    "team_nome": "ASD GUBBIO CICLISMO MOCAIANA",
-    "punti": 107,
-    "vittorie": 1,
-    "p1": 1,
-    "p2": 2,
-    "p3": 1,
-    "pout": 10,
     "n_atleti": 2,
     "pos": 51
   },
@@ -660,6 +660,18 @@
     "pos": 55
   },
   {
+    "team_id": "GS_PIANELLO",
+    "team_nome": "GS PIANELLO",
+    "punti": 98,
+    "vittorie": 0,
+    "p1": 0,
+    "p2": 0,
+    "p3": 2,
+    "pout": 17,
+    "n_atleti": 4,
+    "pos": 56
+  },
+  {
     "team_id": "TEAM_CORATTI",
     "team_nome": "TEAM CORATTI",
     "punti": 95,
@@ -669,19 +681,31 @@
     "p3": 2,
     "pout": 15,
     "n_atleti": 4,
-    "pos": 56
+    "pos": 57
   },
   {
-    "team_id": "GS_PIANELLO",
-    "team_nome": "GS PIANELLO",
-    "punti": 94,
+    "team_id": "U_S_MONTECORONA",
+    "team_nome": "U.S. MONTECORONA",
+    "punti": 88,
+    "vittorie": 1,
+    "p1": 1,
+    "p2": 1,
+    "p3": 1,
+    "pout": 12,
+    "n_atleti": 2,
+    "pos": 58
+  },
+  {
+    "team_id": "S_C_MINCIO_CHIESE_A_S_D",
+    "team_nome": "S. C. MINCIO-CHIESE A.S.D",
+    "punti": 87,
     "vittorie": 0,
     "p1": 0,
-    "p2": 0,
-    "p3": 2,
-    "pout": 15,
+    "p2": 2,
+    "p3": 0,
+    "pout": 19,
     "n_atleti": 4,
-    "pos": 57
+    "pos": 59
   },
   {
     "team_id": "G_S_MOSOLE",
@@ -693,7 +717,7 @@
     "p3": 1,
     "pout": 12,
     "n_atleti": 1,
-    "pos": 58
+    "pos": 60
   },
   {
     "team_id": "C_S_LIBERTAS_SCORZE",
@@ -705,7 +729,7 @@
     "p3": 0,
     "pout": 8,
     "n_atleti": 2,
-    "pos": 59
+    "pos": 61
   },
   {
     "team_id": "I_CINGHIALI_EVO",
@@ -717,7 +741,7 @@
     "p3": 1,
     "pout": 10,
     "n_atleti": 2,
-    "pos": 60
+    "pos": 62
   },
   {
     "team_id": "A_S_D_GIOCA_IN_BICI_OGLIO_PO",
@@ -729,19 +753,19 @@
     "p3": 2,
     "pout": 10,
     "n_atleti": 2,
-    "pos": 61
+    "pos": 63
   },
   {
-    "team_id": "S_C_MINCIO_CHIESE_A_S_D",
-    "team_nome": "S. C. MINCIO-CHIESE A.S.D",
-    "punti": 81,
+    "team_id": "S_C_D_ALMA_JUVENTUS_FANO",
+    "team_nome": "S.C.D.ALMA JUVENTUS FANO",
+    "punti": 78,
     "vittorie": 0,
     "p1": 0,
     "p2": 2,
-    "p3": 0,
-    "pout": 17,
-    "n_atleti": 4,
-    "pos": 62
+    "p3": 1,
+    "pout": 10,
+    "n_atleti": 2,
+    "pos": 64
   },
   {
     "team_id": "BUSTESE_OLONIA_A_S_D",
@@ -753,7 +777,7 @@
     "p3": 0,
     "pout": 14,
     "n_atleti": 4,
-    "pos": 63
+    "pos": 65
   },
   {
     "team_id": "C_C_APPENNINICO_1907",
@@ -765,19 +789,7 @@
     "p3": 0,
     "pout": 7,
     "n_atleti": 1,
-    "pos": 64
-  },
-  {
-    "team_id": "S_C_D_ALMA_JUVENTUS_FANO",
-    "team_nome": "S.C.D.ALMA JUVENTUS FANO",
-    "punti": 74,
-    "vittorie": 0,
-    "p1": 0,
-    "p2": 2,
-    "p3": 1,
-    "pout": 9,
-    "n_atleti": 2,
-    "pos": 65
+    "pos": 66
   },
   {
     "team_id": "UC_COLTANO_GRUBE_COSTRUZIONI",
@@ -789,7 +801,7 @@
     "p3": 2,
     "pout": 11,
     "n_atleti": 3,
-    "pos": 66
+    "pos": 67
   },
   {
     "team_id": "UC_FOEN_MICTU",
@@ -801,7 +813,7 @@
     "p3": 1,
     "pout": 8,
     "n_atleti": 2,
-    "pos": 67
+    "pos": 68
   },
   {
     "team_id": "SS_AQUILA",
@@ -813,7 +825,7 @@
     "p3": 0,
     "pout": 6,
     "n_atleti": 1,
-    "pos": 68
+    "pos": 69
   },
   {
     "team_id": "ASD_FUSION_BIKE",
@@ -825,7 +837,7 @@
     "p3": 1,
     "pout": 12,
     "n_atleti": 2,
-    "pos": 69
+    "pos": 70
   },
   {
     "team_id": "VC_CREMONESE",
@@ -837,19 +849,19 @@
     "p3": 0,
     "pout": 12,
     "n_atleti": 1,
-    "pos": 70
+    "pos": 71
   },
   {
-    "team_id": "U_S_MONTECORONA",
-    "team_nome": "U.S. MONTECORONA",
-    "punti": 66,
+    "team_id": "G_C_SOSSANO_1975",
+    "team_nome": "G.C. SOSSANO 1975",
+    "punti": 67,
     "vittorie": 1,
     "p1": 1,
-    "p2": 0,
+    "p2": 1,
     "p3": 0,
-    "pout": 12,
-    "n_atleti": 2,
-    "pos": 71
+    "pout": 8,
+    "n_atleti": 1,
+    "pos": 72
   },
   {
     "team_id": "VELO_CLUB_S_C_EMPOLI",
@@ -861,7 +873,7 @@
     "p3": 1,
     "pout": 6,
     "n_atleti": 1,
-    "pos": 72
+    "pos": 73
   },
   {
     "team_id": "G_S_ALTO_ADIGE_SUDTIROLPOST",
@@ -873,7 +885,7 @@
     "p3": 2,
     "pout": 11,
     "n_atleti": 4,
-    "pos": 73
+    "pos": 74
   },
   {
     "team_id": "AC_F_BESSI_CALENZANO_DONORATICO",
@@ -885,7 +897,7 @@
     "p3": 1,
     "pout": 10,
     "n_atleti": 2,
-    "pos": 74
+    "pos": 75
   },
   {
     "team_id": "PEDALE_SARZANESE",
@@ -897,18 +909,6 @@
     "p3": 2,
     "pout": 8,
     "n_atleti": 3,
-    "pos": 75
-  },
-  {
-    "team_id": "G_C_SOSSANO_1975",
-    "team_nome": "G.C. SOSSANO 1975",
-    "punti": 59,
-    "vittorie": 1,
-    "p1": 1,
-    "p2": 1,
-    "p3": 0,
-    "pout": 7,
-    "n_atleti": 1,
     "pos": 76
   },
   {
@@ -960,6 +960,18 @@
     "pos": 80
   },
   {
+    "team_id": "S_C_COTIGNOLESE",
+    "team_nome": "S.C.COTIGNOLESE",
+    "punti": 49,
+    "vittorie": 0,
+    "p1": 0,
+    "p2": 0,
+    "p3": 0,
+    "pout": 10,
+    "n_atleti": 2,
+    "pos": 81
+  },
+  {
     "team_id": "A_S_D_CICLISTICA_2000",
     "team_nome": "A.S.D. CICLISTICA 2000",
     "punti": 49,
@@ -969,7 +981,7 @@
     "p3": 0,
     "pout": 6,
     "n_atleti": 1,
-    "pos": 81
+    "pos": 82
   },
   {
     "team_id": "U_C_PESSANO_A_S_D",
@@ -981,7 +993,7 @@
     "p3": 2,
     "pout": 6,
     "n_atleti": 1,
-    "pos": 82
+    "pos": 83
   },
   {
     "team_id": "SALUS_CICLISTICA_SEREGNO_DE_ROSA",
@@ -993,7 +1005,7 @@
     "p3": 0,
     "pout": 10,
     "n_atleti": 2,
-    "pos": 83
+    "pos": 84
   },
   {
     "team_id": "CYCLING_TEAM_NIAL_NIZZOLI_ALMO",
@@ -1005,18 +1017,6 @@
     "p3": 1,
     "pout": 8,
     "n_atleti": 1,
-    "pos": 84
-  },
-  {
-    "team_id": "S_C_COTIGNOLESE",
-    "team_nome": "S.C.COTIGNOLESE",
-    "punti": 43,
-    "vittorie": 0,
-    "p1": 0,
-    "p2": 0,
-    "p3": 0,
-    "pout": 9,
-    "n_atleti": 2,
     "pos": 85
   },
   {
