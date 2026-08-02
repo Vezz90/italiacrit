@@ -17241,12 +17241,26 @@ async function renderGara(gara_id) {
   setPageMeta(name, [fmtDate(data), calEntry?.luogo||calEntry?.regione||'', _top3Str].filter(Boolean).join(' — '));
   setSchemaOrg({
     '@context':'https://schema.org','@type':'SportsEvent',
-    name, startDate: data,
+    name, startDate: data, endDate: data,
+    // Una gara con una classifica pubblicata si è già svolta — sempre vero
+    // per le pagine che indicizziamo (i risultati compaiono solo a gara
+    // conclusa), quindi EventCompleted è corretto senza bisogno di calcolare
+    // la data odierna.
+    eventStatus: 'https://schema.org/EventCompleted',
+    eventAttendanceMode: 'https://schema.org/OfflineEventAttendanceMode',
     description: `${catLabel(cat)} — ciclismo italiano su strada`,
     url: window.location.href,
-    location: { '@type':'Place', name: calEntry?.luogo||calEntry?.regione||'Italia' },
+    image: `${API_BASE}/og-image/gara/${encodeURIComponent(primaryGaraId)}`,
+    location: {
+      '@type':'Place', name: calEntry?.luogo||calEntry?.regione||'Italia',
+      address: { '@type':'PostalAddress', addressCountry: 'IT', ...(calEntry?.regione ? { addressRegion: calEntry.regione } : {}) },
+    },
     organizer: { '@type':'Organization', name:'Federazione Ciclistica Italiana', url:'https://www.federciclismo.it' },
     ...(_winner ? { winner: { '@type':'Person', name:`${_winner.cognome} ${_winner.nome}`, identifier: _winner.atleta_id } } : {}),
+    // "performer" (a differenza di "winner", singolare) elenca chi ha
+    // partecipato — i primi classificati sono un campione rappresentativo
+    // sensato senza dover elencare centinaia di partenti.
+    ...(results.length ? { performer: results.slice(0, 10).map(r => ({ '@type':'Person', name:`${r.cognome} ${r.nome}`, identifier: r.atleta_id })) } : {}),
   });
   setPage(`
     <div class="race-header">
