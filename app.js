@@ -15147,6 +15147,19 @@ async function renderTeam(team_id, opts = {}) {
     const c = getRankingFileCode(r) || r.categoria;
     if(c) catPoints[c] = (catPoints[c]||0) + (r.punti_effettivi||0);
   });
+  // Un team i cui atleti hanno SOLO risultati esteri (PCS, fuori dal circuito
+  // ICS/FCI) non ha nessuna riga in t.risultati (quello copre solo le gare
+  // italiane scrapate) — senza questo fallback teamCats restava vuoto:
+  // niente tab categoria, teamViewCat restava '', "Corridori chiave"/roster
+  // si svuotavano (il filtro cats.has('') non trova mai nulla) e la tabella
+  // risultati esteri (_loadTeamPcsExtra, viewCat vuoto = niente filtro)
+  // mostrava tutte le categorie/generi mescolati insieme senza divisione.
+  for (const aid of (t.atleti || [])) {
+    const ath = athletes[aid];
+    if (!ath) continue;
+    const ac = getRankingFileCode({ categoria: ath.categoria, genere: ath.genere }) || ath.categoria;
+    if (ac && !(ac in catPoints)) catPoints[ac] = 0;
+  }
   const SORT_ORDER = ['ES1_M','ES1_F','ES2_M','ES2_F','AL_M','AL_F','JUN_M','JUN_F','ELI_M','ELI_F'];
   const teamCats = Object.keys(catPoints).sort((a,b) => {
     let ia = SORT_ORDER.indexOf(a);
