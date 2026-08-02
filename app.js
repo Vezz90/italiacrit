@@ -2118,18 +2118,33 @@ function processLoadedData({ calendar, resultsRaw, athletes, teams, meta, raceDe
   // team reale più frequente tra i risultati dell'atleta.
   for (const aid in athletesMerged) {
     const a = athletesMerged[aid];
-    if (!a.risultati?.length || !isSelectionTeamName(a.team_attuale)) continue;
-    const teamCounts = {};
-    for (const r of a.risultati) {
-      if (r.team && !isSelectionTeamName(r.team)) {
-        teamCounts[r.team] = (teamCounts[r.team] || 0) + 1;
+    if (!a.risultati?.length) continue;
+    let matchedT;
+    if (isSelectionTeamName(a.team_attuale)) {
+      const teamCounts = {};
+      for (const r of a.risultati) {
+        if (r.team && !isSelectionTeamName(r.team)) {
+          teamCounts[r.team] = (teamCounts[r.team] || 0) + 1;
+        }
       }
+      const best = Object.entries(teamCounts).sort((x, y) => y[1] - x[1])[0];
+      if (!best) continue;
+      a.team_attuale = best[0];
+      matchedT = Object.values(teamsMerged).find(t => t.nome === best[0]);
+      if (matchedT) a.team_id = matchedT.id;
+    } else {
+      // team_attuale è GIÀ un club reale (assegnato a mano dall'admin,
+      // fusione team, roster PCS, ecc.) — ma i risultati grezzi scrapati
+      // possono comunque riportare ancora il nome della selezione con cui
+      // l'atleta ha gareggiato in quella gara specifica (es. un corridore
+      // straniero il cui club reale è stato assegnato dopo, mentre la FCI
+      // lo aveva registrato sotto "UCRAINA"/nazionale). Senza questo ramo,
+      // quei risultati restavano orfani per sempre: non finivano né nel
+      // team selezione (niente pagina) né in quello reale (non c'era più
+      // nessun controllo, perché team_attuale non era più una selezione).
+      matchedT = teamsMerged[a.team_id];
     }
-    const best = Object.entries(teamCounts).sort((x, y) => y[1] - x[1])[0];
-    if (!best) continue;
-    a.team_attuale = best[0];
-    const matchedT = Object.values(teamsMerged).find(t => t.nome === best[0]);
-    if (matchedT) a.team_id = matchedT.id;
+    if (!matchedT) continue;
     // I risultati ottenuti sotto la selezione (es. "LIGURIA" ai campionati
     // italiani) restano scritti con quel nome squadra nei dati grezzi — il
     // team.risultati del vero club (teams.json, calcolato dallo scraper)
@@ -2137,22 +2152,20 @@ function processLoadedData({ calendar, resultsRaw, athletes, teams, meta, raceDe
     // "LIGURIA". Risultato: la vittoria di un atleta compariva sulla SUA
     // pagina (che legge ath.risultati, già corretto sopra) ma non su
     // quella del suo team. Li aggiungiamo qui esplicitamente.
-    if (matchedT) {
-      if (!Array.isArray(matchedT.risultati)) matchedT.risultati = [];
-      if (!Array.isArray(matchedT.atleti)) matchedT.atleti = [];
-      if (!matchedT.atleti.includes(aid)) matchedT.atleti.push(aid);
-      for (const r of a.risultati) {
-        if (!r.team || !isSelectionTeamName(r.team)) continue;
-        if (matchedT.risultati.some(x => x.gara_id === r.gara_id && x.atleta_id === aid)) continue;
-        matchedT.risultati.push({
-          gara_id: r.gara_id, nome_gara: r.nome_gara, data: r.data, posizione: r.posizione,
-          punti_effettivi: r.punti_effettivi, team: a.team_attuale, moltiplicatore: r.moltiplicatore,
-          tipo: r.tipo, regione: r.regione, km: r.km, media: r.media,
-          atleta_id: aid, atleta_cognome: a.cognome, atleta_nome: a.nome,
-        });
-      }
-      matchedT.punti_totali = (matchedT.risultati || []).reduce((s, x) => s + (x.punti_effettivi || 0), 0);
+    if (!Array.isArray(matchedT.risultati)) matchedT.risultati = [];
+    if (!Array.isArray(matchedT.atleti)) matchedT.atleti = [];
+    if (!matchedT.atleti.includes(aid)) matchedT.atleti.push(aid);
+    for (const r of a.risultati) {
+      if (!r.team || !isSelectionTeamName(r.team)) continue;
+      if (matchedT.risultati.some(x => x.gara_id === r.gara_id && x.atleta_id === aid)) continue;
+      matchedT.risultati.push({
+        gara_id: r.gara_id, nome_gara: r.nome_gara, data: r.data, posizione: r.posizione,
+        punti_effettivi: r.punti_effettivi, team: a.team_attuale, moltiplicatore: r.moltiplicatore,
+        tipo: r.tipo, regione: r.regione, km: r.km, media: r.media,
+        atleta_id: aid, atleta_cognome: a.cognome, atleta_nome: a.nome,
+      });
     }
+    matchedT.punti_totali = (matchedT.risultati || []).reduce((s, x) => s + (x.punti_effettivi || 0), 0);
   }
 
   // ── Nessuna pagina team per selezioni/nazionali ────────────────
