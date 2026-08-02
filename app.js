@@ -22930,6 +22930,12 @@ window.showShareModal = async function(type, payload) {
       </div>
     </div>
   </div>`);
+  // Il testo pronto (narrazione podio) va mostrato subito all'apertura,
+  // qualunque piattaforma l'admin scelga dopo — prima compariva solo dopo
+  // aver cliccato "Facebook", quindi restava nascosto per chi condivideva
+  // altrove (WhatsApp, Instagram, Twitter, Post) pur essendo lo stesso
+  // identico testo utile per qualsiasi condivisione manuale.
+  _showFbShareText();
   await _refreshPreview();
 };
 
