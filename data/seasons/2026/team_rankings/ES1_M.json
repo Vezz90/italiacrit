@@ -14,12 +14,12 @@
   {
     "team_id": "CICLISTICA_TREVIGLIESE",
     "team_nome": "CICLISTICA TREVIGLIESE",
-    "punti": 526,
+    "punti": 530,
     "vittorie": 8,
     "p1": 8,
     "p2": 9,
     "p3": 10,
-    "pout": 47,
+    "pout": 48,
     "n_atleti": 6,
     "pos": 2
   },
@@ -50,10 +50,10 @@
   {
     "team_id": "UC_DONORATICO",
     "team_nome": "UC DONORATICO",
-    "punti": 313,
+    "punti": 325,
     "vittorie": 8,
     "p1": 8,
-    "p2": 5,
+    "p2": 6,
     "p3": 4,
     "pout": 14,
     "n_atleti": 3,
@@ -132,6 +132,18 @@
     "pos": 11
   },
   {
+    "team_id": "UC_EMPOLESE",
+    "team_nome": "UC EMPOLESE",
+    "punti": 210,
+    "vittorie": 3,
+    "p1": 3,
+    "p2": 3,
+    "p3": 2,
+    "pout": 21,
+    "n_atleti": 4,
+    "pos": 12
+  },
+  {
     "team_id": "FERALPI_MONTECLARENSE_ASD",
     "team_nome": "FERALPI MONTECLARENSE ASD",
     "punti": 203,
@@ -141,18 +153,6 @@
     "p3": 2,
     "pout": 16,
     "n_atleti": 2,
-    "pos": 12
-  },
-  {
-    "team_id": "UC_EMPOLESE",
-    "team_nome": "UC EMPOLESE",
-    "punti": 203,
-    "vittorie": 3,
-    "p1": 3,
-    "p2": 3,
-    "p3": 2,
-    "pout": 19,
-    "n_atleti": 4,
     "pos": 13
   },
   {
@@ -300,6 +300,18 @@
     "pos": 25
   },
   {
+    "team_id": "G_S_AVIS_BIKE_AMELIA",
+    "team_nome": "G.S. AVIS BIKE AMELIA",
+    "punti": 160,
+    "vittorie": 8,
+    "p1": 8,
+    "p2": 1,
+    "p3": 0,
+    "pout": 3,
+    "n_atleti": 1,
+    "pos": 26
+  },
+  {
     "team_id": "FDB_SPORT_CLUB",
     "team_nome": "FDB SPORT CLUB",
     "punti": 160,
@@ -309,7 +321,7 @@
     "p3": 1,
     "pout": 7,
     "n_atleti": 1,
-    "pos": 26
+    "pos": 27
   },
   {
     "team_id": "ARDENS_CYCLING_TEAM",
@@ -321,7 +333,7 @@
     "p3": 3,
     "pout": 15,
     "n_atleti": 3,
-    "pos": 27
+    "pos": 28
   },
   {
     "team_id": "UC_GODIGESE_ABRA_IRIDE",
@@ -333,7 +345,7 @@
     "p3": 5,
     "pout": 13,
     "n_atleti": 3,
-    "pos": 28
+    "pos": 29
   },
   {
     "team_id": "BUSTO_GAROLFO",
@@ -345,18 +357,6 @@
     "p3": 1,
     "pout": 23,
     "n_atleti": 5,
-    "pos": 29
-  },
-  {
-    "team_id": "G_S_AVIS_BIKE_AMELIA",
-    "team_nome": "G.S. AVIS BIKE AMELIA",
-    "punti": 145,
-    "vittorie": 7,
-    "p1": 7,
-    "p2": 1,
-    "p3": 0,
-    "pout": 3,
-    "n_atleti": 1,
     "pos": 30
   },
   {
@@ -528,6 +528,18 @@
     "pos": 44
   },
   {
+    "team_id": "GS_BERTI_MOBILI_BENASSI",
+    "team_nome": "GS BERTI MOBILI BENASSI",
+    "punti": 117,
+    "vittorie": 1,
+    "p1": 1,
+    "p2": 3,
+    "p3": 2,
+    "pout": 12,
+    "n_atleti": 3,
+    "pos": 45
+  },
+  {
     "team_id": "S_C_CAVRIAGO",
     "team_nome": "S.C. CAVRIAGO",
     "punti": 117,
@@ -536,18 +548,6 @@
     "p2": 3,
     "p3": 1,
     "pout": 14,
-    "n_atleti": 3,
-    "pos": 45
-  },
-  {
-    "team_id": "GS_BERTI_MOBILI_BENASSI",
-    "team_nome": "GS BERTI MOBILI BENASSI",
-    "punti": 116,
-    "vittorie": 1,
-    "p1": 1,
-    "p2": 3,
-    "p3": 2,
-    "pout": 11,
     "n_atleti": 3,
     "pos": 46
   },
@@ -804,6 +804,18 @@
     "pos": 67
   },
   {
+    "team_id": "SS_AQUILA",
+    "team_nome": "SS AQUILA",
+    "punti": 69,
+    "vittorie": 0,
+    "p1": 0,
+    "p2": 2,
+    "p3": 0,
+    "pout": 6,
+    "n_atleti": 1,
+    "pos": 68
+  },
+  {
     "team_id": "ASD_FUSION_BIKE",
     "team_nome": "ASD FUSION BIKE",
     "punti": 69,
@@ -813,7 +825,7 @@
     "p3": 1,
     "pout": 12,
     "n_atleti": 2,
-    "pos": 68
+    "pos": 69
   },
   {
     "team_id": "VC_CREMONESE",
@@ -825,7 +837,7 @@
     "p3": 0,
     "pout": 12,
     "n_atleti": 1,
-    "pos": 69
+    "pos": 70
   },
   {
     "team_id": "U_S_MONTECORONA",
@@ -837,7 +849,7 @@
     "p3": 0,
     "pout": 12,
     "n_atleti": 2,
-    "pos": 70
+    "pos": 71
   },
   {
     "team_id": "VELO_CLUB_S_C_EMPOLI",
@@ -849,7 +861,7 @@
     "p3": 1,
     "pout": 6,
     "n_atleti": 1,
-    "pos": 71
+    "pos": 72
   },
   {
     "team_id": "G_S_ALTO_ADIGE_SUDTIROLPOST",
@@ -861,7 +873,19 @@
     "p3": 2,
     "pout": 11,
     "n_atleti": 4,
-    "pos": 72
+    "pos": 73
+  },
+  {
+    "team_id": "AC_F_BESSI_CALENZANO_DONORATICO",
+    "team_nome": "AC F. BESSI CALENZANO DONORATICO",
+    "punti": 62,
+    "vittorie": 0,
+    "p1": 0,
+    "p2": 0,
+    "p3": 1,
+    "pout": 10,
+    "n_atleti": 2,
+    "pos": 74
   },
   {
     "team_id": "PEDALE_SARZANESE",
@@ -873,19 +897,7 @@
     "p3": 2,
     "pout": 8,
     "n_atleti": 3,
-    "pos": 73
-  },
-  {
-    "team_id": "SS_AQUILA",
-    "team_nome": "SS AQUILA",
-    "punti": 61,
-    "vittorie": 0,
-    "p1": 0,
-    "p2": 2,
-    "p3": 0,
-    "pout": 5,
-    "n_atleti": 1,
-    "pos": 74
+    "pos": 75
   },
   {
     "team_id": "G_C_SOSSANO_1975",
@@ -897,7 +909,7 @@
     "p3": 0,
     "pout": 7,
     "n_atleti": 1,
-    "pos": 75
+    "pos": 76
   },
   {
     "team_id": "PEDALE_OSSOLANO",
@@ -909,7 +921,19 @@
     "p3": 1,
     "pout": 7,
     "n_atleti": 1,
-    "pos": 76
+    "pos": 77
+  },
+  {
+    "team_id": "CICLISTICA_BORDIGHERA",
+    "team_nome": "CICLISTICA BORDIGHERA",
+    "punti": 55,
+    "vittorie": 0,
+    "p1": 0,
+    "p2": 0,
+    "p3": 0,
+    "pout": 15,
+    "n_atleti": 2,
+    "pos": 78
   },
   {
     "team_id": "A_S_D_S_C_CERETOLESE_1969",
@@ -921,30 +945,6 @@
     "p3": 3,
     "pout": 5,
     "n_atleti": 1,
-    "pos": 77
-  },
-  {
-    "team_id": "AC_F_BESSI_CALENZANO_DONORATICO",
-    "team_nome": "AC F. BESSI CALENZANO DONORATICO",
-    "punti": 52,
-    "vittorie": 0,
-    "p1": 0,
-    "p2": 0,
-    "p3": 0,
-    "pout": 10,
-    "n_atleti": 2,
-    "pos": 78
-  },
-  {
-    "team_id": "CICLISTICA_BORDIGHERA",
-    "team_nome": "CICLISTICA BORDIGHERA",
-    "punti": 52,
-    "vittorie": 0,
-    "p1": 0,
-    "p2": 0,
-    "p3": 0,
-    "pout": 14,
-    "n_atleti": 2,
     "pos": 79
   },
   {
@@ -1284,6 +1284,18 @@
     "pos": 107
   },
   {
+    "team_id": "A_S_D_CASTIGLIONESE",
+    "team_nome": "A.S.D. CASTIGLIONESE",
+    "punti": 21,
+    "vittorie": 0,
+    "p1": 0,
+    "p2": 0,
+    "p3": 0,
+    "pout": 5,
+    "n_atleti": 1,
+    "pos": 108
+  },
+  {
     "team_id": "VAIANO_BIKE",
     "team_nome": "VAIANO BIKE",
     "punti": 21,
@@ -1293,7 +1305,7 @@
     "p3": 0,
     "pout": 4,
     "n_atleti": 1,
-    "pos": 108
+    "pos": 109
   },
   {
     "team_id": "ETHICA_ZERO24_CYCLING_TEAM_ECOTEK",
@@ -1305,7 +1317,7 @@
     "p3": 0,
     "pout": 4,
     "n_atleti": 1,
-    "pos": 109
+    "pos": 110
   },
   {
     "team_id": "MARY_J_SWEET_ANGEL_ASD",
@@ -1317,7 +1329,7 @@
     "p3": 0,
     "pout": 2,
     "n_atleti": 1,
-    "pos": 110
+    "pos": 111
   },
   {
     "team_id": "BOLZANO",
@@ -1329,7 +1341,7 @@
     "p3": 1,
     "pout": 0,
     "n_atleti": 1,
-    "pos": 111
+    "pos": 112
   },
   {
     "team_id": "VENETO",
@@ -1341,7 +1353,7 @@
     "p3": 0,
     "pout": 2,
     "n_atleti": 2,
-    "pos": 112
+    "pos": 113
   },
   {
     "team_id": "POGI_TEAM_UAE_GENERALI",
@@ -1353,7 +1365,7 @@
     "p3": 1,
     "pout": 2,
     "n_atleti": 1,
-    "pos": 113
+    "pos": 114
   },
   {
     "team_id": "U_C_CITTA_DI_CASTELLO_A_S_D",
@@ -1365,7 +1377,7 @@
     "p3": 0,
     "pout": 5,
     "n_atleti": 2,
-    "pos": 114
+    "pos": 115
   },
   {
     "team_id": "VELO_CLUB_SARROCH",
@@ -1377,7 +1389,7 @@
     "p3": 0,
     "pout": 3,
     "n_atleti": 1,
-    "pos": 115
+    "pos": 116
   },
   {
     "team_id": "TEAM_GIUNIGOR_B_BIKE",
@@ -1389,7 +1401,7 @@
     "p3": 1,
     "pout": 2,
     "n_atleti": 1,
-    "pos": 116
+    "pos": 117
   },
   {
     "team_id": "ALBA_BRA_LANGHE_ROERO",
@@ -1401,7 +1413,7 @@
     "p3": 0,
     "pout": 4,
     "n_atleti": 2,
-    "pos": 117
+    "pos": 118
   },
   {
     "team_id": "TRENTO",
@@ -1413,7 +1425,7 @@
     "p3": 0,
     "pout": 1,
     "n_atleti": 1,
-    "pos": 118
+    "pos": 119
   },
   {
     "team_id": "S_S_STELLA_ALPINA_RENAZZO",
@@ -1424,18 +1436,6 @@
     "p2": 0,
     "p3": 0,
     "pout": 3,
-    "n_atleti": 1,
-    "pos": 119
-  },
-  {
-    "team_id": "A_S_D_CASTIGLIONESE",
-    "team_nome": "A.S.D. CASTIGLIONESE",
-    "punti": 15,
-    "vittorie": 0,
-    "p1": 0,
-    "p2": 0,
-    "p3": 0,
-    "pout": 4,
     "n_atleti": 1,
     "pos": 120
   },
