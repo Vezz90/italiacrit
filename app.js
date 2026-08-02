@@ -21697,7 +21697,12 @@ async function renderMedia(openOpts) {
     const url = esc(_mediaShareUrl(x, bucketKey));
     const t = esc((x.video.title || '').replace(/'/g, "\\'"));
     return `<button class="yt-share-btn" title="Condividi"
-      onclick="event.preventDefault();event.stopPropagation();window.shareBattle('${url}','${t}')">🔗</button>`;
+      onclick="event.preventDefault();event.stopPropagation();window.shareBattle('${url}','${t}')">
+      <svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="#fff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+        <circle cx="18" cy="5" r="3"/><circle cx="6" cy="12" r="3"/><circle cx="18" cy="19" r="3"/>
+        <line x1="8.6" y1="10.5" x2="15.4" y2="6.5"/><line x1="8.6" y1="13.5" x2="15.4" y2="17.5"/>
+      </svg>
+    </button>`;
   };
   const videoCardHtml = (x) => {
     const thumb = ytThumb(x.video.url);
