@@ -21683,9 +21683,16 @@ async function renderMedia(openOpts) {
 
   // URL diretto e condivisibile per una card (vedi route(), match /media/live|video|fb|fbextra):
   // apre sempre il player DENTRO al nostro sito, mai su youtube.com/facebook.com.
+  // Per i video YouTube si passa dal proxy /og/media-live|video/:id (vedi
+  // server.js) invece del link pulito diretto: incollato su Facebook/WhatsApp
+  // il link pulito verrebbe letto dal crawler come una pagina SPA vuota
+  // (GitHub Pages è statico, niente JS eseguito) e mostrerebbe nessuna
+  // copertina — il proxy risponde con i meta tag/copertina YouTube reali ai
+  // bot e rimanda un utente vero dritto alla pagina Media pulita (stesso
+  // pattern già usato per gara/atleta/team, vedi /og/gara/:id).
   const _mediaShareUrl = (x, bucketKey) => {
     const vid = ytId(x.video.url);
-    if (vid) return `${location.origin}/media/${x.video.is_live ? 'live' : 'video'}/${encodeURIComponent(vid)}`;
+    if (vid) return `https://italiacyclingstats.com/og/media-${x.video.is_live ? 'live' : 'video'}/${encodeURIComponent(vid)}`;
     if (isFacebookVideoUrl(x.video.url)) {
       return bucketKey
         ? `${location.origin}/media/fbextra/${bucketKey}/${x.extraIdx}`

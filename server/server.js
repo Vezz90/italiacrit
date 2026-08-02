@@ -742,6 +742,49 @@ app.get('/api/gara-narrative/:id', async (req, res) => {
   } catch (e) { res.status(500).json({ error: e.message }); }
 });
 
+// Anteprima Facebook/social per un video o una diretta condivisi dalla pagina
+// Media (vedi window._mediaShareUrl in app.js) — stesso pattern di
+// /og/gara/:id: un bot (Facebook/WhatsApp/ecc., niente JS) legge i meta tag
+// con la copertina YouTube reale; un utente vero viene rediretto subito alla
+// pagina Media pulita, che apre automaticamente il player giusto (vedi
+// route() in app.js) — mai su youtube.com.
+async function _findVideoByYtId(ytIdWanted) {
+  const videos = await readDataJsonFromGH('videos.json') || {};
+  for (const [garaId, arr] of Object.entries(videos)) {
+    for (const v of (arr || [])) {
+      const m = (v.url || '').match(/(?:v=|youtu\.be\/|embed\/)([a-zA-Z0-9_-]{11})/);
+      if (m && m[1] === ytIdWanted) return { garaId, video: v };
+    }
+  }
+  return null;
+}
+app.get('/og/media-live/:vid', async (req, res) => {
+  const vid = req.params.vid;
+  const redirect = `${SITE_URL}/media/live/${encodeURIComponent(vid)}`;
+  if (!OG_BOT_RE.test(req.headers['user-agent'] || '')) return res.redirect(302, redirect);
+  const hit = await _findVideoByYtId(vid);
+  const title = hit?.video?.title || 'Diretta';
+  const img   = `https://img.youtube.com/vi/${encodeURIComponent(vid)}/hqdefault.jpg`;
+  res.send(ogHtml({
+    title: `🔴 ${title}`,
+    desc: 'Guarda la diretta su Italia Cycling Stats',
+    img, redirect, canonical: redirect,
+  }));
+});
+app.get('/og/media-video/:vid', async (req, res) => {
+  const vid = req.params.vid;
+  const redirect = `${SITE_URL}/media/video/${encodeURIComponent(vid)}`;
+  if (!OG_BOT_RE.test(req.headers['user-agent'] || '')) return res.redirect(302, redirect);
+  const hit = await _findVideoByYtId(vid);
+  const title = hit?.video?.title || 'Video';
+  const img   = `https://img.youtube.com/vi/${encodeURIComponent(vid)}/hqdefault.jpg`;
+  res.send(ogHtml({
+    title,
+    desc: 'Guarda il video su Italia Cycling Stats',
+    img, redirect, canonical: redirect,
+  }));
+});
+
 app.get('/og/atleta/:id', async (req, res) => {
   const id       = req.params.id;
   if (!OG_BOT_RE.test(req.headers['user-agent'] || '')) {
