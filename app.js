@@ -9342,9 +9342,6 @@ async function renderAdmin() {
           <span class="admin-nav-icon" style="color:#f59e0b">📷</span> ciclismo.info Auto-Sync
           <span class="admin-nav-badge" id="badge-ic"></span>
         </div>
-        <div class="admin-nav-item" data-section="pcs-import" onclick="adminNav('pcs-import')">
-          <span class="admin-nav-icon" style="color:#a78bfa">📸</span> Import Foto &amp; Social
-        </div>
         <div class="admin-nav-item" data-section="pcs-fix" onclick="adminNav('pcs-fix')">
           <span class="admin-nav-icon" style="color:#059669">🔧</span> Team &amp; Atleti PCS
         </div>
@@ -9391,10 +9388,6 @@ async function renderAdmin() {
         <div class="admin-nav-item" data-section="gare-gestione" onclick="adminNav('gare-gestione')">
           <span class="admin-nav-icon">🏁</span> Gare / Risultati
         </div>
-        <div class="admin-nav-item" data-section="percorsi" onclick="adminNav('percorsi')">
-          <span class="admin-nav-icon">🗺️</span> Percorsi gara
-        </div>
-
         <div class="admin-nav-group">Social & Automazione</div>
         <div class="admin-nav-item" data-section="social-queue" onclick="adminNav('social-queue')">
           <span class="admin-nav-icon">📣</span> Coda Social
@@ -9402,14 +9395,6 @@ async function renderAdmin() {
         </div>
         <div class="admin-nav-item" data-section="scraper" onclick="adminNav('scraper')">
           <span class="admin-nav-icon">🤖</span> Scraper & Config
-        </div>
-
-        <div class="admin-nav-group">Struttura sito</div>
-        <div class="admin-nav-item" data-section="pannelli-ruolo" onclick="adminNav('pannelli-ruolo')">
-          <span class="admin-nav-icon">👤</span> Pannelli per ruolo
-        </div>
-        <div class="admin-nav-item" data-section="page-gallery" onclick="adminNav('page-gallery')">
-          <span class="admin-nav-icon">🗂️</span> Conformazione pagine
         </div>
       </aside>
 
@@ -9517,15 +9502,6 @@ window.adminNav = async function(section) {
         setBadge('badge-profili-pending', profPend);
         setBadge('badge-social', socialPend);
       } catch(e) { /* ignora */ }
-
-      // Sezione account di prova
-      main.innerHTML += `
-        <div style="margin-top:28px;padding:18px 20px;border:1px solid var(--border-subtle);border-radius:10px;background:var(--bg-elevated)">
-          <div style="font-family:var(--font-display);font-weight:800;font-size:1rem;margin-bottom:6px">🧪 Account di prova</div>
-          <p style="font-size:.82rem;color:var(--text-muted);margin:0 0 12px;line-height:1.5">Crea 7 account di prova (atleta, team, media-foto, media-video, genitore, parente, appassionato) con profili già collegati e approvati. Se esistono già, non vengono ricreati.</p>
-          <button class="dash-btn dash-btn--outline" id="seed-test-btn" onclick="window.seedTestAccounts()">Crea account di prova</button>
-          <div id="seed-test-result" style="margin-top:12px;font-size:.82rem"></div>
-        </div>`;
       break;
     }
 
@@ -9664,22 +9640,6 @@ window.adminNav = async function(section) {
     }
 
     // ── TUTTI I VIDEO ─────────────────────────────────────────
-    case 'percorsi': {
-      main.innerHTML = `
-        <div class="admin-page-header">
-          <h1 class="admin-page-title">🗺️ Percorsi gara</h1>
-          <p class="admin-page-sub">Ricostruzione automatica del tragitto (partenza→arrivo, ciclabile reale) dal testo del comunicato FCI — indicativa, non un GPX ufficiale. Servizi gratuiti (Nominatim/OSRM), niente API key. Il giro completo impiega qualche minuto per il ritmo imposto dai servizi gratuiti.</p>
-        </div>
-        <div style="display:flex;gap:10px;flex-wrap:wrap;margin-bottom:16px;align-items:center">
-          <button onclick="window.routeBuilderRun(false)" id="rb-run-btn" style="background:var(--accent);color:#fff;border:none;padding:9px 18px;border-radius:6px;font-weight:600;cursor:pointer;font-size:.875rem">▶ Genera percorsi mancanti</button>
-          <button onclick="window.routeBuilderRun(true)" id="rb-run-force-btn" style="background:var(--bg-card);border:1px solid var(--border-subtle);color:var(--text-primary);padding:9px 18px;border-radius:6px;cursor:pointer;font-size:.875rem">↻ Rigenera anche quelli già fatti</button>
-        </div>
-        <div id="rb-status" style="font-size:.85rem;color:var(--text-muted);margin-bottom:10px"></div>
-        <div id="rb-log" style="background:var(--bg-card);border:1px solid var(--border-subtle);border-radius:8px;padding:12px;font-family:var(--font-mono,monospace);font-size:.78rem;max-height:420px;overflow-y:auto;white-space:pre-wrap"></div>`;
-      window._rbPoll();
-      break;
-    }
-
     case 'video-tutti': {
       main.innerHTML = `
         <div class="admin-page-header">
@@ -10138,103 +10098,6 @@ window.adminNav = async function(section) {
       break;
     }
 
-    case 'pannelli-ruolo': {
-      // Visual map of what each role sees in their dashboard
-      const ROLE_PANELS = [
-        { role:'atleta', icon:'🚴', label:'Atleta', color:'#3b82f6', sections:[
-          { name:'Hero (nome, email, badge ruolo)', type:'always' },
-          { name:'Stato profilo + link profilo pubblico', type:'always' },
-          { name:'Statistiche: gare, vittorie, podi', type:'active' },
-          { name:'Posizioni in classifica (per categoria)', type:'active' },
-          { name:'Ultimi 6 risultati personali', type:'active' },
-          { name:'Prossime gare in calendario', type:'active' },
-          { name:'Azioni rapide (classifiche, risultati, stats…)', type:'always' },
-          { name:'Form collega profilo FCI', type:'noprofile' },
-        ]},
-        { role:'team', icon:'👥', label:'Team Manager', color:'#8b5cf6', sections:[
-          { name:'Hero (nome, email, badge ruolo)', type:'always' },
-          { name:'Stato profilo team + link pubblico', type:'always' },
-          { name:'Statistiche: atleti, risultati, vittorie', type:'active' },
-          { name:'Posizioni classifica team (per categoria)', type:'active' },
-          { name:'Ultimi 6 risultati della squadra', type:'active' },
-          { name:'Azioni rapide (class. team, atleti…)', type:'always' },
-          { name:'Form collega team', type:'noprofile' },
-        ]},
-        { role:'genitore', icon:'👨‍👧', label:'Genitore', color:'#22c55e', sections:[
-          { name:'Hero (nome, email, badge ruolo)', type:'always' },
-          { name:'Schede atleti collegati (card per ognuno)', type:'active' },
-          { name:'Per ogni atleta: pos. classifica + ultimi 3 risultati', type:'active' },
-          { name:'Richieste collegamento in attesa', type:'pending' },
-          { name:'Form aggiungi atleta (cerca per cognome)', type:'always' },
-          { name:'Esplora rapido', type:'always' },
-        ]},
-        { role:'parente', icon:'❤️', label:'Parente / Tifoso', color:'#f59e0b', sections:[
-          { name:'Come Genitore — stessa struttura', type:'always' },
-          { name:'Card atleti seguiti con stats + risultati', type:'active' },
-          { name:'Form aggiungi atleta', type:'always' },
-        ]},
-        { role:'appassionato', icon:'🏆', label:'Appassionato', color:'#64748b', sections:[
-          { name:'Hero (nome, email, badge ruolo)', type:'always' },
-          { name:'Watchlist (atleti aggiunti con ★)', type:'active' },
-          { name:'Per ogni atleta in watchlist: pos. + ultima gara', type:'active' },
-          { name:'Top risultati ultimi 30 giorni (podi)', type:'always' },
-          { name:'Griglia esplora (7 sezioni del sito)', type:'always' },
-          { name:'Messaggio "watchlist vuota" + link atleti', type:'empty' },
-        ]},
-        { role:'media', icon:'📷', label:'Media / Fotografo', color:'#0ea5e9', sections:[
-          { name:'Hero (nome, email, badge ruolo)', type:'always' },
-          { name:'Stato profilo + link profilo pubblico', type:'always' },
-          { name:'Nome, bio, link social', type:'active' },
-          { name:'Lista album con anteprime + contatori foto', type:'active' },
-          { name:'Pulsante nuovo album', type:'active' },
-          { name:'Azioni rapide (nuovo album, calendario…)', type:'active' },
-          { name:'Form creazione profilo (nome, bio, social)', type:'noprofile' },
-        ]},
-        { role:'admin', icon:'⚙️', label:'Amministratore', color:'#e8001d', sections:[
-          { name:'Hero (nome, email, badge ruolo)', type:'always' },
-          { name:'Statistiche DB: risultati, gare, atleti, cal.', type:'always' },
-          { name:'6 shortcut rapidi al pannello admin', type:'always' },
-          { name:'Link diretto → Gestionale completo', type:'always' },
-        ]},
-      ];
-      const typeTag = t => {
-        const map = { always:'sempre visibile', active:'solo se profilo attivo', noprofile:'solo senza profilo', pending:'solo se ci sono richieste', empty:'solo se lista vuota' };
-        const col = { always:'#22c55e', active:'#3b82f6', noprofile:'#f59e0b', pending:'#f59e0b', empty:'#64748b' };
-        return `<span style="font-size:.65rem;padding:1px 6px;border-radius:10px;background:${col[t]||'#64748b'}22;color:${col[t]||'#64748b'};border:1px solid ${col[t]||'#64748b'}44;margin-left:6px;white-space:nowrap">${map[t]||t}</span>`;
-      };
-      main.innerHTML = `
-        <div class="admin-page-header">
-          <h1 class="admin-page-title">👤 Pannelli per ruolo</h1>
-          <p class="admin-page-sub">Struttura del dashboard personale per ogni tipologia di utente registrato.</p>
-        </div>
-        <div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(300px,1fr));gap:18px">
-          ${ROLE_PANELS.map(p => `
-            <div style="background:var(--bg-elevated);border:1px solid var(--border-subtle);border-radius:12px;overflow:hidden">
-              <div style="padding:14px 18px;border-bottom:1px solid var(--border-subtle);display:flex;align-items:center;gap:10px;background:${p.color}14">
-                <span style="font-size:1.3rem">${p.icon}</span>
-                <span style="font-family:var(--font-display);font-weight:800;font-size:.95rem;color:${p.color}">${p.label}</span>
-                <code style="margin-left:auto;font-size:.7rem;color:var(--text-muted);background:var(--bg-base);padding:2px 6px;border-radius:4px">${p.role}</code>
-              </div>
-              <div style="padding:14px 18px;display:flex;flex-direction:column;gap:5px">
-                ${p.sections.map(s => `
-                  <div style="display:flex;align-items:center;font-size:.8rem;color:var(--text-secondary);padding:3px 0;border-bottom:1px solid var(--border-subtle)">
-                    <span style="width:6px;height:6px;border-radius:50%;background:${p.color};flex-shrink:0;margin-right:8px"></span>
-                    <span style="flex:1">${s.name}</span>
-                    ${typeTag(s.type)}
-                  </div>`).join('')}
-              </div>
-            </div>`).join('')}
-        </div>
-        <div style="margin-top:24px;padding:14px 18px;background:var(--bg-elevated);border:1px solid var(--border-subtle);border-radius:10px;font-size:.8rem;color:var(--text-muted);line-height:1.8">
-          <strong style="color:var(--text-primary)">Legenda stati:</strong>
-          &nbsp;<span style="color:#22c55e">● sempre visibile</span> — mostrato a tutti gli utenti con quel ruolo
-          &nbsp;<span style="color:#3b82f6">● solo se profilo attivo</span> — richiede profilo approvato collegato
-          &nbsp;<span style="color:#f59e0b">● condizionale</span> — appare solo in certi scenari
-          &nbsp;<span style="color:#64748b">● fallback</span> — mostrato quando la lista principale è vuota
-        </div>`;
-      break;
-    }
-
     case 'atleti-gestione': {
       const res = globalData?.resultsRaw || [];
       // Aggregate unique athletes
@@ -10669,125 +10532,6 @@ window.adminNav = async function(section) {
       break;
     }
 
-    case 'page-gallery': {
-      const PAGES = [
-        { icon:'🏠', title:'Home',          route:'#/',             sections:[
-          {label:'Hero banner',        color:''},
-          {label:'Countdown prossima gara', color:'gold'},
-          {label:'Ultime gare (card)', color:''},
-          {label:'Narrative classifica', color:'blue'},
-          {label:'Classifica rapida (top 5)', color:''},
-          {label:'Foto in evidenza',   color:'green'},
-          {label:'Calendario prossime', color:'gold'},
-        ]},
-        { icon:'📋', title:'Risultati',     route:'#/risultati',    sections:[
-          {label:'Filtri categoria / anno', color:''},
-          {label:'Lista gare (data, nome, cat)', color:''},
-          {label:'Risultati gara (modale / inline)', color:'blue'},
-          {label:'Pulsante condivisione grafica', color:'green'},
-          {label:'Link foto / video gara', color:'gold'},
-        ]},
-        { icon:'🏆', title:'Classifica',    route:'#/classifica',   sections:[
-          {label:'Selettore categoria + anno', color:''},
-          {label:'Narrative banner (headline + storia)', color:'blue'},
-          {label:'Tabella classifica atleti', color:''},
-          {label:'Sparkline trend punteggi', color:'green'},
-          {label:'Pulsante condivisione', color:'gold'},
-        ]},
-        { icon:'👤', title:'Atleti',        route:'#/atleti',       sections:[
-          {label:'Ricerca per nome / team', color:''},
-          {label:'Griglia atleti (card)', color:''},
-          {label:'Paginazione',            color:'gray'},
-        ]},
-        { icon:'🚴', title:'Scheda atleta', route:'#/atleta/:id',   sections:[
-          {label:'Header (nome, team, stato forma)', color:''},
-          {label:'Statistiche (gare, vittorie, podi, punti)', color:'blue'},
-          {label:'Grafico trend punti (sparkline)', color:'green'},
-          {label:'Tabella risultati stagione', color:''},
-          {label:'Storico stagioni precedenti', color:'gray'},
-          {label:'Foto / album collegati', color:'gold'},
-          {label:'Comparatore rapido', color:''},
-          {label:'Watchlist toggle ★', color:'gold'},
-        ]},
-        { icon:'👥', title:'Team',          route:'#/team',         sections:[
-          {label:'Narrative banner team', color:'blue'},
-          {label:'Tabella classifica team', color:''},
-          {label:'Pulsante condivisione', color:'gold'},
-        ]},
-        { icon:'🏢', title:'Scheda team',   route:'#/team/:id',     sections:[
-          {label:'Header (nome, categoria)', color:''},
-          {label:'Statistiche team', color:'blue'},
-          {label:'Roster atleti attivi', color:''},
-          {label:'Ultimi risultati squadra', color:''},
-          {label:'Trend stagionale', color:'green'},
-        ]},
-        { icon:'📅', title:'Calendario',    route:'#/calendario',   sections:[
-          {label:'Filtro categoria / mese', color:''},
-          {label:'Lista gare future', color:''},
-          {label:'Gare già disputate (link risultato)', color:'gray'},
-        ]},
-        { icon:'📊', title:'Statistiche',   route:'#/statistiche',  sections:[
-          {label:'Selettore categoria + metrica', color:''},
-          {label:'Grafici vittorie per team', color:'blue'},
-          {label:'Grafici distribuzione punteggi', color:'green'},
-          {label:'Top atleti / top team', color:''},
-          {label:'Heatmap attività gare', color:'gold'},
-        ]},
-        { icon:'⚖️', title:'Comparatore',   route:'#/comparatore',  sections:[
-          {label:'Selezione 2 atleti (autocomplete)', color:''},
-          {label:'Statistiche a confronto', color:'blue'},
-          {label:'Grafico radar o bar comparato', color:'green'},
-          {label:'Risultati comuni (stessa gara)', color:''},
-        ]},
-        { icon:'📷', title:'Media',         route:'#/media/:id',    sections:[
-          {label:'Header fotografo (nome, bio, social)', color:''},
-          {label:'Griglia album', color:''},
-          {label:'Lightbox foto', color:'green'},
-          {label:'Collegamento gara', color:'gold'},
-        ]},
-        { icon:'🔐', title:'Login / Profilo',route:'#/login',       sections:[
-          {label:'Form login / registrazione', color:''},
-          {label:'Dashboard ruolo (post-login)', color:'blue'},
-          {label:'Collega profilo atleta/team', color:'gold'},
-        ]},
-        { icon:'⚙️', title:'Admin',         route:'#/admin',        sections:[
-          {label:'Sidebar navigazione sezioni', color:''},
-          {label:'Dashboard overview + stats', color:'blue'},
-          {label:'Gestione foto (pending / xpix / IC)', color:''},
-          {label:'Gestione video (pending / YouTube)', color:''},
-          {label:'Gestione media / fotografi', color:'green'},
-          {label:'Lista utenti + profili in attesa', color:'gold'},
-          {label:'Sync dati FCI', color:''},
-          {label:'Conformazione pagine (questa)', color:'gray'},
-        ]},
-      ];
-      const dotClass = c => c ? `pg-comp-dot pg-comp-dot--${c}` : 'pg-comp-dot';
-      main.innerHTML = `
-        <div class="admin-page-header">
-          <h1 class="admin-page-title">🗂️ Conformazione Pagine</h1>
-          <p class="admin-page-sub">Struttura e componenti di ogni pagina del sito.</p>
-        </div>
-        <div class="pg-gallery">
-          ${PAGES.map(p => `
-            <div class="pg-card">
-              <div class="pg-card-header">
-                <span class="pg-card-icon">${p.icon}</span>
-                <span class="pg-card-title">${p.title}</span>
-                <span class="pg-card-route">${p.route}</span>
-              </div>
-              <div class="pg-card-body">
-                <div class="pg-section-label">Sezioni / Componenti</div>
-                ${p.sections.map(s => `
-                  <div class="pg-comp-row">
-                    <div class="${dotClass(s.color)}"></div>
-                    <span>${s.label}</span>
-                  </div>`).join('')}
-              </div>
-            </div>`).join('')}
-        </div>`;
-      break;
-    }
-
     // ── SOCIAL QUEUE ──────────────────────────────────────────────
     case 'social-queue': {
       main.innerHTML = '<div class="admin-loading">Caricamento coda social…</div>';
@@ -10901,194 +10645,6 @@ window.adminNav = async function(section) {
     }
 
     // ── SCRAPER & CONFIG ──────────────────────────────────────────
-    case 'pcs-import': {
-      // ── helpers ──
-      const _logBox = () => document.getElementById('import-log-area');
-      const _badge  = () => document.getElementById('import-status-badge');
-
-      const _renderImportStatus = async () => {
-        try {
-          const s = await apiCall('/admin/full-import/status');
-          const running = s.running;
-          if (_badge()) _badge().outerHTML = running
-            ? `<span id="import-status-badge" style="background:#f59e0b;color:#000;padding:3px 12px;border-radius:10px;font-size:.78rem;font-weight:700">⏳ IN CORSO…</span>`
-            : `<span id="import-status-badge" style="background:#22c55e;color:#fff;padding:3px 12px;border-radius:10px;font-size:.78rem;font-weight:700">Inattivo</span>`;
-          if (_logBox()) {
-            const lines = s.log || [];
-            _logBox().innerHTML = lines.length
-              ? `<pre style="background:var(--bg-input);border:1px solid var(--border-subtle);border-radius:6px;padding:12px;font-size:.78rem;max-height:400px;overflow:auto;white-space:pre-wrap;word-break:break-all">${esc(lines.join('\n'))}</pre>`
-              : `<p style="color:var(--text-muted);font-size:.85rem">Nessun log.</p>`;
-            // auto-scroll al fondo
-            const pre = _logBox().querySelector('pre');
-            if (pre) pre.scrollTop = pre.scrollHeight;
-          }
-          if (running) setTimeout(_renderImportStatus, 3000);
-        } catch(e) {
-          if (_logBox()) _logBox().innerHTML = `<p style="color:#ef4444">Errore: ${esc(e.message)}</p>`;
-        }
-      };
-
-      const _startImport = async (mode, label) => {
-        const btn = document.getElementById(`import-btn-${mode}`);
-        if (btn) { btn.disabled = true; btn.textContent = '⏳ Avvio…'; }
-        try {
-          await apiCall('/admin/full-import', { method: 'POST', body: { mode } });
-          showToast(`${label} avviato — si aprirà Chrome automaticamente.`);
-          setTimeout(_renderImportStatus, 1500);
-        } catch(e) {
-          showToast(e.message, 'error');
-          if (btn) { btn.disabled = false; btn.textContent = label; }
-        }
-      };
-
-      const _resetImport = async () => {
-        await apiCall('/admin/full-import', { method: 'DELETE' }).catch(() => {});
-        showToast('Log resettato.');
-        await _renderImportStatus();
-      };
-
-      const _isLocal = location.hostname === 'localhost' || location.hostname === '127.0.0.1';
-
-      main.innerHTML = `
-        <div class="admin-page-header">
-          <h1 class="admin-page-title">📸 Import Foto &amp; Social</h1>
-          <p class="admin-page-sub">
-            Importa automaticamente foto profilo e link social per atleti e team
-            da ProCyclingStats e First Cycling.<br>
-            Apre Brave/Chrome sul tuo PC per navigare i siti — funziona <strong>solo in locale</strong>.
-          </p>
-        </div>
-
-        ${!_isLocal ? `
-        <div style="background:#fef2f2;border:2px solid #ef4444;border-radius:var(--r-lg);padding:16px 20px;margin-bottom:16px;display:flex;gap:12px;align-items:flex-start">
-          <span style="font-size:1.4rem;line-height:1">⚠️</span>
-          <div>
-            <div style="font-weight:700;color:#dc2626;margin-bottom:4px">Stai usando il server di produzione (Render)</div>
-            <div style="font-size:.85rem;color:#7f1d1d">
-              Questo import apre un browser sul tuo PC — non può girare su Render.<br>
-              Per usarlo: fai doppio click su <strong>Avvia.bat</strong> nella cartella del progetto,
-              poi accedi a <strong>localhost:8002/#/admin</strong>.
-            </div>
-          </div>
-        </div>` : ''}
-
-        <div style="background:var(--bg-card);border:1px solid var(--border-subtle);border-radius:var(--r-lg);padding:20px;margin-bottom:16px">
-          <div style="display:flex;align-items:center;gap:12px;margin-bottom:18px">
-            <strong>Stato</strong>
-            <span id="import-status-badge" style="background:${_isLocal ? '#22c55e' : '#6b7280'};color:#fff;padding:3px 12px;border-radius:10px;font-size:.78rem;font-weight:700">${_isLocal ? 'Inattivo' : 'Non disponibile in produzione'}</span>
-          </div>
-
-          <!-- ProCyclingStats -->
-          <div style="margin-bottom:6px;font-size:.78rem;font-weight:700;color:var(--text-muted);letter-spacing:.05em;text-transform:uppercase">ProCyclingStats</div>
-          <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:12px;margin-bottom:18px">
-            <div style="background:var(--bg-elevated);border-radius:var(--r-md);padding:16px">
-              <div style="font-weight:700;margin-bottom:6px;font-size:.9rem">👤 Solo Atleti</div>
-              <p style="font-size:.8rem;color:var(--text-muted);margin-bottom:12px">Foto + social per tutti gli atleti senza dati (PCS primario).</p>
-              <button id="import-btn-athletes" onclick="window._startImport('athletes','Import Atleti PCS')"
-                style="width:100%;background:var(--accent);color:#fff;border:none;padding:8px 14px;border-radius:var(--r-sm);font-weight:600;cursor:pointer;font-size:.85rem">
-                🚀 Avvia
-              </button>
-            </div>
-            <div style="background:var(--bg-elevated);border-radius:var(--r-md);padding:16px">
-              <div style="font-weight:700;margin-bottom:6px;font-size:.9rem">🏆 Solo Team</div>
-              <p style="font-size:.8rem;color:var(--text-muted);margin-bottom:12px">Logo + social per tutti i team senza dati (PCS primario).</p>
-              <button id="import-btn-teams" onclick="window._startImport('teams','Import Team PCS')"
-                style="width:100%;background:var(--accent);color:#fff;border:none;padding:8px 14px;border-radius:var(--r-sm);font-weight:600;cursor:pointer;font-size:.85rem">
-                🚀 Avvia
-              </button>
-            </div>
-            <div style="background:var(--bg-elevated);border-radius:var(--r-md);padding:16px;border:2px solid var(--accent)">
-              <div style="font-weight:700;margin-bottom:6px;font-size:.9rem">⚡ PCS Completo</div>
-              <p style="font-size:.8rem;color:var(--text-muted);margin-bottom:12px">Atleti + Team in una sola passata. 30–60 min.</p>
-              <button id="import-btn-all" onclick="window._startImport('all','Import Completo PCS')"
-                style="width:100%;background:var(--accent);color:#fff;border:none;padding:8px 14px;border-radius:var(--r-sm);font-weight:600;cursor:pointer;font-size:.85rem">
-                🚀 Avvia
-              </button>
-            </div>
-          </div>
-
-          <!-- PCS Risultati -->
-          <div style="margin-bottom:6px;font-size:.78rem;font-weight:700;color:var(--text-muted);letter-spacing:.05em;text-transform:uppercase">PCS Risultati</div>
-          <p style="font-size:.8rem;color:var(--text-muted);margin-bottom:10px">
-            Scarica i risultati della stagione corrente da ProCyclingStats per ogni atleta.
-            Popola la sezione <em>Risultati oltre il 10°</em> nelle gare e <em>Altri risultati (PCS)</em> negli atleti.
-            Deriva lo slug PCS dal nome dell'atleta automaticamente; lo salva per i prossimi giri.
-          </p>
-          <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:12px;margin-bottom:18px">
-            <div style="background:var(--bg-elevated);border-radius:var(--r-md);padding:16px;border:2px solid var(--accent)">
-              <div style="font-weight:700;margin-bottom:6px;font-size:.9rem">📊 Risultati atleti (profilo PCS)</div>
-              <p style="font-size:.8rem;color:var(--text-muted);margin-bottom:12px">Per ogni atleta del sistema, scarica tutti i suoi risultati stagionali da PCS. Deriva lo slug dal nome automaticamente.</p>
-              <button onclick="window._startPcsResults(false)"
-                style="width:100%;background:var(--accent);color:#fff;border:none;padding:8px 14px;border-radius:var(--r-sm);font-weight:600;cursor:pointer;font-size:.85rem;margin-bottom:6px">
-                📊 Avvia
-              </button>
-              <button onclick="window._startPcsResults(true)"
-                style="width:100%;background:var(--bg-input);border:1px solid var(--border-subtle);color:var(--text-primary);padding:7px 14px;border-radius:var(--r-sm);font-weight:600;cursor:pointer;font-size:.8rem">
-                🔄 Forza rielaborazione
-              </button>
-            </div>
-            <div style="background:var(--bg-elevated);border-radius:var(--r-md);padding:16px;border:2px solid #f59e0b">
-              <div style="font-weight:700;margin-bottom:6px;font-size:.9rem">🏁 Risultati completi gara (pagina PCS)</div>
-              <p style="font-size:.8rem;color:var(--text-muted);margin-bottom:12px">Scarica <strong>tutti</strong> i finisher dalle pagine gara PCS. Richiede che ogni gara abbia uno "Slug PCS" configurato (✏ Modifica sulla pagina gara).</p>
-              <button onclick="window._startPcsRaceImport(false)"
-                style="width:100%;background:#f59e0b;color:#000;border:none;padding:8px 14px;border-radius:var(--r-sm);font-weight:600;cursor:pointer;font-size:.85rem;margin-bottom:6px">
-                🏁 Avvia
-              </button>
-              <button onclick="window._startPcsRaceImport(true)"
-                style="width:100%;background:var(--bg-input);border:1px solid var(--border-subtle);color:var(--text-primary);padding:7px 14px;border-radius:var(--r-sm);font-weight:600;cursor:pointer;font-size:.8rem">
-                🔄 Forza rielaborazione
-              </button>
-            </div>
-          </div>
-
-          <div style="display:flex;gap:10px">
-            <button onclick="window._renderImportStatus()"
-              style="background:var(--bg-input);border:1px solid var(--border-subtle);padding:7px 14px;border-radius:var(--r-sm);cursor:pointer;color:var(--text-primary);font-size:.85rem">
-              🔄 Aggiorna log
-            </button>
-            <button onclick="window._resetImport()"
-              style="background:var(--bg-input);border:1px solid var(--border-subtle);padding:7px 14px;border-radius:var(--r-sm);cursor:pointer;color:var(--text-muted);font-size:.85rem">
-              🗑 Reset log
-            </button>
-          </div>
-        </div>
-
-        <div style="background:var(--bg-card);border:1px solid var(--border-subtle);border-radius:var(--r-lg);padding:16px">
-          <div style="font-weight:700;margin-bottom:10px;font-size:.9rem">📋 Log in tempo reale</div>
-          <div id="import-log-area"><p style="color:var(--text-muted);font-size:.85rem">Nessun log.</p></div>
-        </div>
-      `;
-
-      const _startPcsResults = async (force) => {
-        try {
-          await apiCall('/admin/pcs-import', { method: 'POST', body: { force: !!force } });
-          showToast('Scraping PCS risultati avviato…', 'info');
-          setTimeout(_renderImportStatus, 2000);
-        } catch(e) {
-          showToast('Errore avvio scraping PCS: ' + e.message, 'error');
-        }
-      };
-
-      const _startPcsRaceImport = async (force) => {
-        try {
-          await apiCall('/admin/pcs-race-import', { method: 'POST', body: { force: !!force } });
-          showToast('Scraping gare PCS avviato…', 'info');
-          setTimeout(_renderImportStatus, 2000);
-        } catch(e) {
-          showToast('Errore: ' + e.message, 'error');
-        }
-      };
-
-      window._startImport        = _startImport;
-      window._renderImportStatus = _renderImportStatus;
-      window._resetImport        = _resetImport;
-      window._startPcsResults    = _startPcsResults;
-      window._startPcsRaceImport = _startPcsRaceImport;
-
-      await _renderImportStatus();
-      break;
-    }
-
     case 'scraper': {
       main.innerHTML = '<div class="admin-loading">Caricamento stato scraper…</div>';
       try {
@@ -12008,40 +11564,6 @@ function renderXpixQueue() {
 
   container.innerHTML = stats + approvedHtml + dismissedHtml + rows;
 }
-
-// ── Percorsi gara (ricostruzione automatica) ──────────────────────────────
-window.routeBuilderRun = async (force) => {
-  const runBtn = document.getElementById('rb-run-btn');
-  const forceBtn = document.getElementById('rb-run-force-btn');
-  try {
-    await apiCall('/admin/route-builder/run', { method: 'POST', body: { force: !!force } });
-    if (runBtn) runBtn.disabled = true;
-    if (forceBtn) forceBtn.disabled = true;
-    window._rbPoll();
-  } catch (e) {
-    showToast('Errore: ' + e.message, 'error');
-  }
-};
-
-window._rbPoll = async () => {
-  const statusEl = document.getElementById('rb-status');
-  const logEl = document.getElementById('rb-log');
-  if (!statusEl || !logEl) return; // pagina cambiata nel frattempo
-  clearTimeout(window._rbPollTimer);
-  try {
-    const s = await apiCall('/admin/route-builder/status', { method: 'GET' });
-    statusEl.textContent = s.running
-      ? `⏳ In corso… ${s.done}/${s.total} (${s.skipped} saltate, ${s.failed} errori)`
-      : (s.total ? `✓ Ultimo giro: ${s.done}/${s.total} completate, ${s.skipped} saltate, ${s.failed} errori` : 'Nessun giro ancora eseguito.');
-    logEl.textContent = (s.log || []).slice(-100).join('\n');
-    logEl.scrollTop = logEl.scrollHeight;
-    const runBtn = document.getElementById('rb-run-btn');
-    const forceBtn = document.getElementById('rb-run-force-btn');
-    if (runBtn) runBtn.disabled = !!s.running;
-    if (forceBtn) forceBtn.disabled = !!s.running;
-    if (s.running) window._rbPollTimer = setTimeout(window._rbPoll, 2500);
-  } catch (e) { statusEl.textContent = 'Errore lettura stato: ' + e.message; }
-};
 
 window.xpixSync = async () => {
   const btn    = document.getElementById('xpix-sync-btn');
@@ -23889,30 +23411,6 @@ window.doLogout = function() {
   authClear();
   updateNavLoginState();
   window.location.hash = '/';
-};
-
-// Admin: crea account di prova per ogni ruolo
-window.seedTestAccounts = async function() {
-  const btn = document.getElementById('seed-test-btn');
-  const out = document.getElementById('seed-test-result');
-  const pwd = prompt('Password per gli account di prova (min 6 caratteri):', 'Prova2026!');
-  if (!pwd) return;
-  if (btn) { btn.disabled = true; btn.textContent = 'Creazione…'; }
-  try {
-    const r = await apiCall('/admin/seed-test-accounts', { method: 'POST', body: { password: pwd } });
-    const rows = (r.accounts || []).map(a =>
-      `<div style="padding:4px 0;border-bottom:1px solid var(--border-subtle)">
-        <code>${esc(a.email)}</code> — <strong>${esc(a.role)}</strong>
-        ${a.created ? '<span style="color:var(--green-pos,#16a34a)">creato ✓</span>' : '<span style="color:var(--text-muted)">già esistente</span>'}
-      </div>`).join('');
-    if (out) out.innerHTML = `
-      <div style="margin-bottom:8px">Password per tutti: <code>${esc(r.password)}</code></div>
-      ${rows}`;
-  } catch (e) {
-    if (out) out.innerHTML = `<span style="color:var(--red-hot)">Errore: ${esc(e.message)}</span>`;
-  } finally {
-    if (btn) { btn.disabled = false; btn.textContent = 'Crea account di prova'; }
-  }
 };
 
 // ── CARD "IL MIO PROFILO" (campi personali, tutti i ruoli) ────────────────────
