@@ -3663,6 +3663,18 @@ function route() {
   if (m_team) return renderTeam(m_team[1]);
   const m_gara = match('/gara/:id');
   if (m_gara) return renderGara(m_gara[1]);
+  // Link diretti condivisibili dalla pagina Media: aprono subito il player
+  // giusto sopra la pagina Media (mai su youtube.com/facebook.com), invece di
+  // dover passare dalla pagina gara. Vanno controllati PRIMA di /media/:id
+  // (stesso numero di segmenti diversi, ma qui ce ne sono di più).
+  const m_mediaLive = match('/media/live/:vid');
+  if (m_mediaLive) return renderMedia({ openLive: decodeURIComponent(m_mediaLive[1]) });
+  const m_mediaVideo = match('/media/video/:vid');
+  if (m_mediaVideo) return renderMedia({ openVideo: decodeURIComponent(m_mediaVideo[1]) });
+  const m_mediaFb = match('/media/fb/:garaId/:idx');
+  if (m_mediaFb) return renderMedia({ openFb: { garaId: decodeURIComponent(m_mediaFb[1]), idx: parseInt(m_mediaFb[2], 10) } });
+  const m_mediaFbExtra = match('/media/fbextra/:bucket/:idx');
+  if (m_mediaFbExtra) return renderMedia({ openFbExtra: { bucket: decodeURIComponent(m_mediaFbExtra[1]), idx: parseInt(m_mediaFbExtra[2], 10) } });
   const m_media = match('/media/:id');
   if (m_media) return renderMediaProfile(m_media[1]);
   if (match('/media')) return renderMedia();
@@ -21494,7 +21506,7 @@ window._submitMediaAdd = async () => {
   } catch (e) { err.textContent = e.message; err.style.display = 'block'; btn.disabled = false; btn.textContent = 'Invia'; }
 };
 
-async function renderMedia() {
+async function renderMedia(openOpts) {
   if (!globalData) return;
   const { calendar, resultsRaw, videos } = globalData;
 
@@ -21545,6 +21557,40 @@ async function renderMedia() {
   }
   const presentazioniItems = (videos?.[EXTRA_BUCKETS.presentazioni] || []).map((v, idx) => ({ video: v, extraIdx: idx }));
   const programmiTvItems   = (videos?.[EXTRA_BUCKETS.programmi_tv]   || []).map((v, idx) => ({ video: v, extraIdx: idx }));
+
+  // Link diretto condiviso (vedi route()): trova la voce giusta fra TUTTI i
+  // bucket (gare + presentazioni + programmi TV) e apre subito il player
+  // sopra la pagina Media, mai su youtube.com/facebook.com — così un link
+  // condiviso resta sempre sul nostro sito. mediaTab viene forzato di
+  // conseguenza (Dirette per una diretta, altrimenti Video) prima di
+  // costruire le liste sotto, così la scheda aperta corrisponde a quella
+  // evidenziata nei chip in alto.
+  if (openOpts) {
+    const allBuckets = [
+      ...videoItems.map(x => ({ ...x, _bucket: 'video' })),
+      ...presentazioniItems.map(x => ({ ...x, _bucket: 'presentazione' })),
+      ...programmiTvItems.map(x => ({ ...x, _bucket: 'programma_tv' })),
+    ];
+    if (openOpts.openLive) {
+      const hit = videoItems.find(x => x.video.is_live && ytId(x.video.url) === openOpts.openLive);
+      if (hit) { mediaTab = 'dirette'; setTimeout(() => window.openLivePlayer(openOpts.openLive, hit.video.title, hit.gara_id), 0); }
+    } else if (openOpts.openVideo) {
+      const hit = allBuckets.find(x => !x.video.is_live && ytId(x.video.url) === openOpts.openVideo);
+      if (hit) {
+        mediaTab = hit._bucket === 'presentazione' ? 'presentazioni'
+          : hit._bucket === 'programma_tv' ? 'programmi_tv' : 'video';
+        setTimeout(() => window.openVideoModal(openOpts.openVideo, hit.video.title || ''), 0);
+      }
+    } else if (openOpts.openFb) {
+      const hit = videoItems.find(x => x.gara_id === openOpts.openFb.garaId && x.idx === openOpts.openFb.idx);
+      if (hit) { mediaTab = hit.video.is_live ? 'dirette' : 'video'; setTimeout(() => window.openFacebookVideoModal(hit.video.url, hit.video.title || ''), 0); }
+    } else if (openOpts.openFbExtra) {
+      const hit = openOpts.openFbExtra.bucket === 'presentazione'
+        ? presentazioniItems.find(x => x.extraIdx === openOpts.openFbExtra.idx)
+        : programmiTvItems.find(x => x.extraIdx === openOpts.openFbExtra.idx);
+      if (hit) { mediaTab = openOpts.openFbExtra.bucket === 'presentazione' ? 'presentazioni' : 'programmi_tv'; setTimeout(() => window.openFacebookVideoModal(hit.video.url, hit.video.title || ''), 0); }
+    }
+  }
 
   const applyFilters = (arr) => arr.filter(x => {
     if (mediaQueryGenere && x.meta?.genere && x.meta.genere !== mediaQueryGenere) return false;
@@ -21635,6 +21681,24 @@ async function renderMedia() {
   };
   const _isAdminMedia = authUser()?.role === 'admin';
 
+  // URL diretto e condivisibile per una card (vedi route(), match /media/live|video|fb|fbextra):
+  // apre sempre il player DENTRO al nostro sito, mai su youtube.com/facebook.com.
+  const _mediaShareUrl = (x, bucketKey) => {
+    const vid = ytId(x.video.url);
+    if (vid) return `${location.origin}/media/${x.video.is_live ? 'live' : 'video'}/${encodeURIComponent(vid)}`;
+    if (isFacebookVideoUrl(x.video.url)) {
+      return bucketKey
+        ? `${location.origin}/media/fbextra/${bucketKey}/${x.extraIdx}`
+        : `${location.origin}/media/fb/${encodeURIComponent(x.gara_id)}/${x.idx}`;
+    }
+    return x.video.url; // nessun player integrato possibile: condivide il link esterno originale
+  };
+  const shareBtnHtml = (x, bucketKey) => {
+    const url = esc(_mediaShareUrl(x, bucketKey));
+    const t = esc((x.video.title || '').replace(/'/g, "\\'"));
+    return `<button class="yt-share-btn" title="Condividi"
+      onclick="event.preventDefault();event.stopPropagation();window.shareBattle('${url}','${t}')">🔗</button>`;
+  };
   const videoCardHtml = (x) => {
     const thumb = ytThumb(x.video.url);
     const durBadge = _durationBadge(x.video.duration_seconds);
@@ -21677,6 +21741,7 @@ async function renderMedia() {
           : `<div class="yt-thumb-fallback">▶</div>`}
         ${pendingBadge}
         ${x.video.is_live ? `<span class="yt-badge-live">🔴 DIRETTA</span>` : (durBadge ? `<span class="yt-badge-duration">${esc(durBadge)}</span>` : '')}
+        ${shareBtnHtml(x)}
         <span class="yt-play">▶</span>
       </div>
       <div class="yt-card-body">
@@ -21703,6 +21768,7 @@ async function renderMedia() {
           : isFacebookVideoUrl(x.video.url) ? fbThumbHtml(x.video.url)
           : `<div class="yt-thumb-fallback">▶</div>`}
         <span class="yt-play">▶</span>
+        ${shareBtnHtml(x, bucketKey)}
         ${_isAdminMedia ? `<button onclick="event.stopPropagation();window.mediaDeleteExtra('${bucketKey}',${x.extraIdx})" style="position:absolute;top:6px;right:6px;background:rgba(220,38,38,.92);color:#fff;border:none;padding:3px 8px;border-radius:4px;font-size:.68rem;cursor:pointer;z-index:3">🗑</button>` : ''}
       </div>
       <div class="yt-card-body">
