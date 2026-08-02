@@ -108,6 +108,18 @@
     "pos": 9
   },
   {
+    "team_id": "ASD_EFFETTO_CICLISMO_NOI_SPORT",
+    "team_nome": "ASD EFFETTO CICLISMO - NOI SPORT",
+    "punti": 120,
+    "vittorie": 8,
+    "p1": 8,
+    "p2": 0,
+    "p3": 0,
+    "pout": 0,
+    "n_atleti": 1,
+    "pos": 10
+  },
+  {
     "team_id": "TEAM_WILIER_BREGANZE",
     "team_nome": "TEAM WILIER BREGANZE",
     "punti": 110,
@@ -117,7 +129,7 @@
     "p3": 1,
     "pout": 13,
     "n_atleti": 2,
-    "pos": 10
+    "pos": 11
   },
   {
     "team_id": "JU_GREEN_A_S_D_GORLA_MINORE",
@@ -129,18 +141,6 @@
     "p3": 1,
     "pout": 15,
     "n_atleti": 2,
-    "pos": 11
-  },
-  {
-    "team_id": "ASD_EFFETTO_CICLISMO_NOI_SPORT",
-    "team_nome": "ASD EFFETTO CICLISMO - NOI SPORT",
-    "punti": 105,
-    "vittorie": 7,
-    "p1": 7,
-    "p2": 0,
-    "p3": 0,
-    "pout": 0,
-    "n_atleti": 1,
     "pos": 12
   },
   {

@@ -48,6 +48,18 @@
     "pos": 4
   },
   {
+    "team_id": "ISOLMANT_PREMAC_VITTORIA",
+    "team_nome": "ISOLMANT - PREMAC - VITTORIA",
+    "punti": 284,
+    "vittorie": 4,
+    "p1": 4,
+    "p2": 5,
+    "p3": 3,
+    "pout": 12,
+    "n_atleti": 8,
+    "pos": 5
+  },
+  {
     "team_id": "TEAM_SD_WORX_PROTIME",
     "team_nome": "TEAM SD WORX-PROTIME",
     "punti": 264,
@@ -57,28 +69,16 @@
     "p3": 2,
     "pout": 6,
     "n_atleti": 6,
-    "pos": 5
-  },
-  {
-    "team_id": "ISOLMANT_PREMAC_VITTORIA",
-    "team_nome": "ISOLMANT - PREMAC - VITTORIA",
-    "punti": 257,
-    "vittorie": 3,
-    "p1": 3,
-    "p2": 4,
-    "p3": 3,
-    "pout": 12,
-    "n_atleti": 8,
     "pos": 6
   },
   {
     "team_id": "TOP_GIRLS_FASSA_BORTOLO",
     "team_nome": "TOP GIRLS - FASSA BORTOLO",
-    "punti": 191,
+    "punti": 201,
     "vittorie": 1,
     "p1": 1,
     "p2": 4,
-    "p3": 0,
+    "p3": 1,
     "pout": 14,
     "n_atleti": 8,
     "pos": 7
@@ -86,12 +86,12 @@
   {
     "team_id": "HORIZONS_CYCLING_CLUB",
     "team_nome": "HORIZONS CYCLING CLUB",
-    "punti": 149,
+    "punti": 163,
     "vittorie": 0,
     "p1": 0,
     "p2": 1,
     "p3": 1,
-    "pout": 14,
+    "pout": 16,
     "n_atleti": 4,
     "pos": 8
   },
@@ -144,6 +144,18 @@
     "pos": 12
   },
   {
+    "team_id": "BORN_TO_WIN_BTC_CITY_LJUBLJANA",
+    "team_nome": "BORN TO WIN BTC CITY LJUBLJANA",
+    "punti": 111,
+    "vittorie": 3,
+    "p1": 3,
+    "p2": 0,
+    "p3": 0,
+    "pout": 14,
+    "n_atleti": 4,
+    "pos": 13
+  },
+  {
     "team_id": "LIV_ALULA_JAYCO",
     "team_nome": "LIV-ALULA JAYCO",
     "punti": 111,
@@ -153,30 +165,18 @@
     "p3": 1,
     "pout": 4,
     "n_atleti": 2,
-    "pos": 13
-  },
-  {
-    "team_id": "BORN_TO_WIN_BTC_CITY_LJUBLJANA",
-    "team_nome": "BORN TO WIN BTC CITY LJUBLJANA",
-    "punti": 109,
-    "vittorie": 3,
-    "p1": 3,
-    "p2": 0,
-    "p3": 0,
-    "pout": 13,
-    "n_atleti": 4,
     "pos": 14
   },
   {
     "team_id": "BIESSE_CARRERA_PREMAC",
     "team_nome": "BIESSE - CARRERA - PREMAC",
-    "punti": 105,
+    "punti": 110,
     "vittorie": 1,
     "p1": 1,
     "p2": 1,
     "p3": 1,
-    "pout": 10,
-    "n_atleti": 5,
+    "pout": 12,
+    "n_atleti": 6,
     "pos": 15
   },
   {
@@ -300,6 +300,18 @@
     "pos": 25
   },
   {
+    "team_id": "ZHIRAF",
+    "team_nome": "ZHIRAF",
+    "punti": 42,
+    "vittorie": 0,
+    "p1": 0,
+    "p2": 0,
+    "p3": 2,
+    "pout": 5,
+    "n_atleti": 3,
+    "pos": 26
+  },
+  {
     "team_id": "A_R_MONEX_PRO_CYCLING_TEAM",
     "team_nome": "A.R.MONEX PRO CYCLING TEAM",
     "punti": 41,
@@ -309,7 +321,7 @@
     "p3": 1,
     "pout": 4,
     "n_atleti": 2,
-    "pos": 26
+    "pos": 27
   },
   {
     "team_id": "TIROL_WOMEN_CYCLING",
@@ -321,7 +333,7 @@
     "p3": 1,
     "pout": 6,
     "n_atleti": 5,
-    "pos": 27
+    "pos": 28
   },
   {
     "team_id": "UNO_X_MOBILITY",
@@ -331,18 +343,6 @@
     "p1": 0,
     "p2": 0,
     "p3": 0,
-    "pout": 4,
-    "n_atleti": 3,
-    "pos": 28
-  },
-  {
-    "team_id": "ZHIRAF",
-    "team_nome": "ZHIRAF",
-    "punti": 39,
-    "vittorie": 0,
-    "p1": 0,
-    "p2": 0,
-    "p3": 2,
     "pout": 4,
     "n_atleti": 3,
     "pos": 29
@@ -362,12 +362,12 @@
   {
     "team_id": "TORELLI_CYCLING_TEAM",
     "team_nome": "TORELLI CYCLING TEAM",
-    "punti": 32,
+    "punti": 37,
     "vittorie": 0,
     "p1": 0,
     "p2": 1,
     "p3": 0,
-    "pout": 2,
+    "pout": 3,
     "n_atleti": 1,
     "pos": 31
   },

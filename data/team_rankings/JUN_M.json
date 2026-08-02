@@ -14,26 +14,38 @@
   {
     "team_id": "TEAM_GUERRINI_SENAGHESE",
     "team_nome": "TEAM GUERRINI SENAGHESE",
-    "punti": 659,
-    "vittorie": 10,
-    "p1": 10,
+    "punti": 678,
+    "vittorie": 11,
+    "p1": 11,
     "p2": 8,
     "p3": 6,
-    "pout": 38,
+    "pout": 39,
     "n_atleti": 12,
     "pos": 2
   },
   {
     "team_id": "TEAM_NERI_SOTTOLI_LUCCHINI_ENERGY",
     "team_nome": "TEAM NERI SOTTOLI LUCCHINI ENERGY",
-    "punti": 616,
+    "punti": 617,
     "vittorie": 4,
     "p1": 4,
     "p2": 8,
     "p3": 6,
-    "pout": 39,
+    "pout": 40,
     "n_atleti": 9,
     "pos": 3
+  },
+  {
+    "team_id": "POOL_CANTU_GB_TEAM_A_S_D",
+    "team_nome": "POOL CANTU' GB TEAM A.S.D.",
+    "punti": 611,
+    "vittorie": 8,
+    "p1": 8,
+    "p2": 3,
+    "p3": 5,
+    "pout": 38,
+    "n_atleti": 11,
+    "pos": 4
   },
   {
     "team_id": "BORGO_MOLINO_VIGNA_FIORITA",
@@ -45,18 +57,6 @@
     "p3": 9,
     "pout": 15,
     "n_atleti": 3,
-    "pos": 4
-  },
-  {
-    "team_id": "POOL_CANTU_GB_TEAM_A_S_D",
-    "team_nome": "POOL CANTU' GB TEAM A.S.D.",
-    "punti": 601,
-    "vittorie": 8,
-    "p1": 8,
-    "p2": 3,
-    "p3": 4,
-    "pout": 38,
-    "n_atleti": 11,
     "pos": 5
   },
   {
@@ -86,12 +86,12 @@
   {
     "team_id": "BUSTESE_OLONIA_A_S_D",
     "team_nome": "BUSTESE OLONIA A.S.D.",
-    "punti": 485,
+    "punti": 493,
     "vittorie": 6,
     "p1": 6,
     "p2": 4,
     "p3": 2,
-    "pout": 33,
+    "pout": 35,
     "n_atleti": 10,
     "pos": 8
   },
@@ -254,10 +254,10 @@
   {
     "team_id": "G_S_GIOVANI_GIUSSANESI_A_S_D",
     "team_nome": "G.S.GIOVANI GIUSSANESI A.S.D.",
-    "punti": 167,
+    "punti": 179,
     "vittorie": 0,
     "p1": 0,
-    "p2": 1,
+    "p2": 2,
     "p3": 4,
     "pout": 14,
     "n_atleti": 7,
@@ -782,13 +782,13 @@
   {
     "team_id": "SALUS_CICLISTICA_SEREGNO_DE_ROSA",
     "team_nome": "SALUS CICLISTICA SEREGNO DE ROSA",
-    "punti": 29,
+    "punti": 31,
     "vittorie": 0,
     "p1": 0,
     "p2": 0,
     "p3": 1,
-    "pout": 6,
-    "n_atleti": 4,
+    "pout": 7,
+    "n_atleti": 5,
     "pos": 66
   },
   {
@@ -912,6 +912,18 @@
     "pos": 76
   },
   {
+    "team_id": "CLUB_DEPORTIVO_TRI_SPORT",
+    "team_nome": "CLUB DEPORTIVO TRI SPORT",
+    "punti": 19,
+    "vittorie": 0,
+    "p1": 0,
+    "p2": 0,
+    "p3": 0,
+    "pout": 4,
+    "n_atleti": 1,
+    "pos": 77
+  },
+  {
     "team_id": "CICLISTICA_ROSTESE",
     "team_nome": "CICLISTICA ROSTESE",
     "punti": 19,
@@ -921,7 +933,7 @@
     "p3": 0,
     "pout": 3,
     "n_atleti": 3,
-    "pos": 77
+    "pos": 78
   },
   {
     "team_id": "ARA_I_SKIP_CAPITAL",
@@ -933,7 +945,7 @@
     "p3": 0,
     "pout": 1,
     "n_atleti": 1,
-    "pos": 78
+    "pos": 79
   },
   {
     "team_id": "S_C_TERRANOVA_FANCELLO_CICLI",
@@ -945,7 +957,7 @@
     "p3": 0,
     "pout": 1,
     "n_atleti": 1,
-    "pos": 79
+    "pos": 80
   },
   {
     "team_id": "MEBLO_JOGI_PRO_CONCRETE",
@@ -957,7 +969,7 @@
     "p3": 1,
     "pout": 2,
     "n_atleti": 3,
-    "pos": 80
+    "pos": 81
   },
   {
     "team_id": "SLOVENIA_NATIONAL_TEAM",
@@ -969,7 +981,7 @@
     "p3": 0,
     "pout": 1,
     "n_atleti": 1,
-    "pos": 81
+    "pos": 82
   },
   {
     "team_id": "ACADEMY_U19_REGION_SUD",
@@ -981,7 +993,7 @@
     "p3": 0,
     "pout": 2,
     "n_atleti": 2,
-    "pos": 82
+    "pos": 83
   },
   {
     "team_id": "A_S_D_PROBIKE_ERICE",
@@ -993,7 +1005,7 @@
     "p3": 0,
     "pout": 2,
     "n_atleti": 1,
-    "pos": 83
+    "pos": 84
   },
   {
     "team_id": "V_C_ORSAGO_OROGILDO",
@@ -1005,7 +1017,7 @@
     "p3": 0,
     "pout": 4,
     "n_atleti": 2,
-    "pos": 84
+    "pos": 85
   },
   {
     "team_id": "MBH_BANK_CYCLING_TEAM_JUNIOR",
@@ -1017,7 +1029,7 @@
     "p3": 0,
     "pout": 1,
     "n_atleti": 1,
-    "pos": 85
+    "pos": 86
   },
   {
     "team_id": "SESTU_BIKE_A_S_D",
@@ -1029,19 +1041,19 @@
     "p3": 0,
     "pout": 0,
     "n_atleti": 1,
-    "pos": 86
+    "pos": 87
   },
   {
-    "team_id": "CLUB_DEPORTIVO_TRI_SPORT",
-    "team_nome": "CLUB DEPORTIVO TRI SPORT",
+    "team_id": "FERALPI_MONTECLARENSE_ASD",
+    "team_nome": "FERALPI MONTECLARENSE ASD",
     "punti": 11,
     "vittorie": 0,
     "p1": 0,
     "p2": 0,
     "p3": 0,
     "pout": 3,
-    "n_atleti": 1,
-    "pos": 87
+    "n_atleti": 2,
+    "pos": 88
   },
   {
     "team_id": "NURRI_ORROLI_MTB_A_S_D",
@@ -1053,7 +1065,7 @@
     "p3": 0,
     "pout": 1,
     "n_atleti": 1,
-    "pos": 88
+    "pos": 89
   },
   {
     "team_id": "CICLISTICA_OMNIA_IMOLA",
@@ -1065,7 +1077,7 @@
     "p3": 1,
     "pout": 0,
     "n_atleti": 1,
-    "pos": 89
+    "pos": 90
   },
   {
     "team_id": "NAZIONALE_UCRAINA",
@@ -1077,7 +1089,7 @@
     "p3": 1,
     "pout": 0,
     "n_atleti": 1,
-    "pos": 90
+    "pos": 91
   },
   {
     "team_id": "S_C_FAGNANO_NUOVA",
@@ -1089,7 +1101,7 @@
     "p3": 0,
     "pout": 2,
     "n_atleti": 1,
-    "pos": 91
+    "pos": 92
   },
   {
     "team_id": "G_S_BAREGGESE_A_S_D",
@@ -1101,7 +1113,7 @@
     "p3": 0,
     "pout": 3,
     "n_atleti": 3,
-    "pos": 92
+    "pos": 93
   },
   {
     "team_id": "GS_FIUMICELLO_1971",
@@ -1113,7 +1125,7 @@
     "p3": 0,
     "pout": 2,
     "n_atleti": 2,
-    "pos": 93
+    "pos": 94
   },
   {
     "team_id": "ST_KILDA_CYCLING_CLUB",
@@ -1125,7 +1137,7 @@
     "p3": 0,
     "pout": 2,
     "n_atleti": 2,
-    "pos": 94
+    "pos": 95
   },
   {
     "team_id": "TEAM_BIKE_SIRACUSA",
@@ -1137,7 +1149,7 @@
     "p3": 0,
     "pout": 2,
     "n_atleti": 2,
-    "pos": 95
+    "pos": 96
   },
   {
     "team_id": "PIEMONTE",
@@ -1149,7 +1161,7 @@
     "p3": 0,
     "pout": 1,
     "n_atleti": 1,
-    "pos": 96
+    "pos": 97
   },
   {
     "team_id": "FACTOR_RACING",
@@ -1161,7 +1173,7 @@
     "p3": 0,
     "pout": 1,
     "n_atleti": 1,
-    "pos": 97
+    "pos": 98
   },
   {
     "team_id": "DECATHLON_CMA_CGM_U19_TEAM",
@@ -1173,7 +1185,7 @@
     "p3": 0,
     "pout": 1,
     "n_atleti": 1,
-    "pos": 98
+    "pos": 99
   },
   {
     "team_id": "TEAM_NEO_SOLUTIONS",
@@ -1185,7 +1197,7 @@
     "p3": 0,
     "pout": 1,
     "n_atleti": 1,
-    "pos": 99
+    "pos": 100
   },
   {
     "team_id": "U_C_A_B_1925_BIELLA_SEMPERLUX",
@@ -1197,7 +1209,7 @@
     "p3": 0,
     "pout": 2,
     "n_atleti": 2,
-    "pos": 100
+    "pos": 101
   },
   {
     "team_id": "C_C_FORTI_E_VELOCI",
@@ -1209,18 +1221,6 @@
     "p3": 0,
     "pout": 1,
     "n_atleti": 1,
-    "pos": 101
-  },
-  {
-    "team_id": "FERALPI_MONTECLARENSE_ASD",
-    "team_nome": "FERALPI MONTECLARENSE ASD",
-    "punti": 5,
-    "vittorie": 0,
-    "p1": 0,
-    "p2": 0,
-    "p3": 0,
-    "pout": 2,
-    "n_atleti": 2,
     "pos": 102
   },
   {
