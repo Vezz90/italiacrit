@@ -1742,18 +1742,35 @@ function _applyAtletaTeamOverrides(gd, overrides) {
     const newNome = newT.nome || newTeamNome || newTeamId;
     // sposta dal vecchio team
     const oldT = gd.teams[oldTeamId];
+    if (!Array.isArray(newT.risultati)) newT.risultati = [];
     if (oldT) {
       if (Array.isArray(oldT.atleti)) oldT.atleti = oldT.atleti.filter(id => id !== aid);
       if (Array.isArray(oldT.risultati)) {
         const moved = oldT.risultati.filter(r => r.atleta_id === aid);
         oldT.risultati = oldT.risultati.filter(r => r.atleta_id !== aid);
         moved.forEach(r => { r.team_id = newTeamId; r.team = newNome; });
-        if (!Array.isArray(newT.risultati)) newT.risultati = [];
         newT.risultati.push(...moved);
         oldT.punti_totali = (oldT.punti_totali || 0) - moved.reduce((s, r) => s + (r.punti_effettivi || 0), 0);
-        newT.punti_totali = (newT.punti_totali || 0) + moved.reduce((s, r) => s + (r.punti_effettivi || 0), 0);
+      }
+    } else if (Array.isArray(ath.risultati) && ath.risultati.length) {
+      // Il "vecchio team" non ha mai avuto una propria scheda (es. il nome di
+      // una nazionale/selezione come "UCRAINA": la FCI registra così i
+      // risultati di un atleta straniero, ma quel nome non diventa mai un
+      // team_id/oggetto team reale) — non c'è nulla da cui "spostare" i
+      // risultati, ma esistono già sulla scheda dell'atleta stesso. Li
+      // copiamo da lì, invece di lasciarli per sempre assenti dai punti
+      // stagionali e dalla tabella risultati del vero club assegnato a mano.
+      for (const r of ath.risultati) {
+        if (newT.risultati.some(x => x.gara_id === r.gara_id && x.atleta_id === aid)) continue;
+        newT.risultati.push({
+          gara_id: r.gara_id, nome_gara: r.nome_gara, data: r.data, posizione: r.posizione,
+          punti_effettivi: r.punti_effettivi, team: newNome, team_id: newTeamId, moltiplicatore: r.moltiplicatore,
+          tipo: r.tipo, regione: r.regione, km: r.km, media: r.media,
+          atleta_id: aid, atleta_cognome: ath.cognome, atleta_nome: ath.nome,
+        });
       }
     }
+    newT.punti_totali = newT.risultati.reduce((s, r) => s + (r.punti_effettivi || 0), 0);
     if (!Array.isArray(newT.atleti)) newT.atleti = [];
     if (!newT.atleti.includes(aid)) newT.atleti.push(aid);
     // riassegna anche le righe in resultsRaw (usate da varie viste, incl. media)
