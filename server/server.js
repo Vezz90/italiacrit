@@ -643,13 +643,24 @@ function _buildGaraNarrative(id, cal, resultsRaw) {
   // finale — solo dominio + titolo. Per questo il vincitore va anche nel
   // TITOLO stesso, l'unico campo che Facebook mostra sempre in modo
   // affidabile, non solo nella descrizione (comunque generata per gli altri
-  // canali/anteprime che invece la mostrano, es. WhatsApp, Twitter). Se la
-  // variante dinamica rende il titolo troppo lungo (nomi gara già lunghi di
-  // loro), si ricade sul semplice "Vince X" invece di tagliarlo a metà.
+  // canali/anteprime che invece la mostrano, es. WhatsApp, Twitter).
+  //
+  // Il nome gara va SEMPRE per primo (è il termine che le persone cercano
+  // davvero, non la frase sul vincitore) e il titolo intero deve restare
+  // sotto ~60 caratteri: oltre quella soglia Google riscrive spesso il
+  // <title> per conto suo nei risultati di ricerca, e l'abbiamo visto scegliere
+  // di tenere SOLO la seconda metà (la narrazione), buttando via il nome
+  // gara — il contrario di quello che vogliamo per l'indicizzazione. Prova
+  // in cascata: narrazione intera → "Vince X" breve → solo nome gara,
+  // fermandosi alla prima che rientra nel limite.
+  const TITLE_MAX = 60;
   let title = raceName;
   if (winner) {
-    const longTitle = `${raceName} — ${winnerTitleTail}`;
-    title = longTitle.length <= 100 ? longTitle : `${raceName} — Vince ${winner.cognome} ${winner.nome}`;
+    const longTitle  = `${raceName} - ${winnerTitleTail}`;
+    const shortTitle = `${raceName} - Vince ${winner.cognome} ${winner.nome}`;
+    if (longTitle.length <= TITLE_MAX) title = longTitle;
+    else if (shortTitle.length <= TITLE_MAX) title = shortTitle;
+    else title = raceName;
   }
   const desc = [date, luogo, top3, podiumLines.join(' ')].filter(Boolean).join(' — ');
   return { results, raceName, raceDate, date, luogo, top3, podiumLines, title, desc };
