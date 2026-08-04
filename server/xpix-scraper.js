@@ -130,22 +130,38 @@ function isRecent(name) {
 // 1. GET /wp/v2/product?pixy_album=[id]  → lista featured_media IDs
 // 2. GET /wp/v2/media?include=[id,id,…]  → tutti i source_url in un colpo solo
 async function fetchPhotosForAlbum(album, maxPhotos = 500) {
-  try {
-    // Passo 1: ottieni TUTTI i prodotti dell'album, scorrendo tutte le pagine
-    const products = [];
-    let page = 1;
-    while (products.length < maxPhotos) {
-      const batch = await fetchURL(
+  // Quante pagine esistono davvero, note in anticipo da album.count (già
+  // disponibile su ogni album via fetchAlbumBySlug/fetchAllAlbums) — se il
+  // conteggio non è disponibile, cade sul limite di sicurezza a 20 pagine.
+  const knownPages = album.count ? Math.ceil(album.count / 100) : Infinity;
+  const maxPage = Math.min(knownPages, 20, Math.ceil(maxPhotos / 100));
+  // Passo 1: ottieni TUTTI i prodotti dell'album, scorrendo tutte le pagine.
+  // Ogni pagina è provata singolarmente: se un album ha ESATTAMENTE un
+  // multiplo di 100 foto (es. 100, 200…), l'API REST di WordPress risponde
+  // all'ultima pagina "in più" richiesta con un errore HTTP 400
+  // (rest_post_invalid_page_number) invece di un array vuoto — prima questo
+  // errore veniva catturato dal try/catch ESTERNO, che buttava via anche
+  // tutte le foto delle pagine PRECEDENTI già scaricate con successo,
+  // facendo sembrare l'album senza nessuna foto disponibile.
+  const products = [];
+  for (let page = 1; page <= maxPage; page++) {
+    let batch;
+    try {
+      batch = await fetchURL(
         `${XPIX_API}/product?pixy_album=${album.id}&per_page=100&page=${page}&_fields=id,featured_media&orderby=id&order=asc`,
         15000, true
       );
-      if (!Array.isArray(batch) || !batch.length) break;
-      products.push(...batch);
-      if (batch.length < 100) break;  // ultima pagina
-      page++;
-      if (page > 20) break;           // safety: max 2000 foto
+    } catch (e) {
+      console.warn(`[xpix] fetchPhotosForAlbum ${album.slug} pagina ${page}: ${e.message}`);
+      break; // pagina inesistente/errore — quelle già raccolte restano valide
     }
-    if (!products.length) return [];
+    if (!Array.isArray(batch) || !batch.length) break;
+    products.push(...batch);
+    if (batch.length < 100) break; // ultima pagina reale
+  }
+  if (!products.length) return [];
+
+  try {
 
     // Passo 2: raccogli i featured_media IDs (salta 0/null)
     const mediaIds = products
