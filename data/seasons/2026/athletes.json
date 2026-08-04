@@ -1,4 +1,644 @@
 {
+  "CASELLI_ARMIN": {
+    "id": "CASELLI_ARMIN",
+    "nome": "ARMIN",
+    "cognome": "CASELLI",
+    "team_attuale": "SOLME - OLMO - ARVEDI",
+    "team_id": "SOLME_OLMO_ARVEDI",
+    "categoria": "ELI_M",
+    "genere": "M",
+    "punti_totali": 17,
+    "risultati": [
+      {
+        "gara_id": "31_GRAN_PREMIO_SAN_LUIGI_2026-08-04_ELI_M",
+        "nome_gara": "31 GRAN PREMIO SAN LUIGI",
+        "data": "2026-08-04",
+        "posizione": 1,
+        "punti_effettivi": 15,
+        "team": "SOLME - OLMO - ARVEDI",
+        "moltiplicatore": 1,
+        "tipo": "regionale",
+        "regione": "VENETO",
+        "km": "124.440",
+        "media": "45.876"
+      },
+      {
+        "gara_id": "ALTA_PADOVANA_TOUR_2026-07-25_ELI_M",
+        "nome_gara": "ALTA PADOVANA TOUR",
+        "data": "2026-07-25",
+        "posizione": 9,
+        "punti_effettivi": 2,
+        "team": "SOLME - OLMO - ARVEDI",
+        "moltiplicatore": 1,
+        "tipo": "regionale",
+        "regione": "VENETO",
+        "km": "139.340",
+        "media": "47.341"
+      }
+    ]
+  },
+  "SCARSO_ANDREA": {
+    "id": "SCARSO_ANDREA",
+    "nome": "ANDREA",
+    "cognome": "SCARSO",
+    "team_attuale": "A.S.D. S.C. PADOVANI",
+    "team_id": "A_S_D_S_C_PADOVANI",
+    "categoria": "ELI_M",
+    "genere": "M",
+    "punti_totali": 51,
+    "risultati": [
+      {
+        "gara_id": "31_GRAN_PREMIO_SAN_LUIGI_2026-08-04_ELI_M",
+        "nome_gara": "31 GRAN PREMIO SAN LUIGI",
+        "data": "2026-08-04",
+        "posizione": 2,
+        "punti_effettivi": 12,
+        "team": "A.S.D. S.C. PADOVANI",
+        "moltiplicatore": 1,
+        "tipo": "regionale",
+        "regione": "VENETO",
+        "km": "124.440",
+        "media": "45.876"
+      },
+      {
+        "gara_id": "68_GRAN_PREMIO_RONCOLEVA_2026-06-06_ELI_M",
+        "nome_gara": "68 GRAN PREMIO RONCOLEVA'",
+        "data": "2026-06-06",
+        "posizione": 5,
+        "punti_effettivi": 6,
+        "team": "A.S.D. S.C. PADOVANI",
+        "moltiplicatore": 1,
+        "tipo": "regionale",
+        "regione": "VENETO",
+        "km": "134.000",
+        "media": "51.048"
+      },
+      {
+        "gara_id": "59_CIRCUITO_DEL_PORTO_TROFEO_ARVEDI_2026-05-17_ELI_M",
+        "nome_gara": "59 CIRCUITO DEL PORTO TROFEO ARVEDI",
+        "data": "2026-05-17",
+        "posizione": 10,
+        "punti_effettivi": 3,
+        "team": "A.S.D. S.C. PADOVANI",
+        "moltiplicatore": 3,
+        "tipo": "internazionale",
+        "regione": "LOMBARDIA",
+        "km": "173.600",
+        "media": "46.396"
+      },
+      {
+        "gara_id": "37_MEMORIAL_VINCENZO_MANTOVANI_2026-04-04_ELI_M",
+        "nome_gara": "37 MEMORIAL VINCENZO MANTOVANI",
+        "data": "2026-04-04",
+        "posizione": 5,
+        "punti_effettivi": 6,
+        "team": "A.S.D. S.C. PADOVANI",
+        "moltiplicatore": 1,
+        "tipo": "regionale",
+        "regione": "LOMBARDIA",
+        "km": "144.000",
+        "media": "45.291"
+      },
+      {
+        "gara_id": "109_POPOLARISSIMA_2026-03-15_ELI_M",
+        "nome_gara": "109 POPOLARISSIMA",
+        "data": "2026-03-15",
+        "posizione": 7,
+        "punti_effettivi": 12,
+        "team": "A.S.D. S.C. PADOVANI",
+        "moltiplicatore": 3,
+        "tipo": "internazionale",
+        "regione": "VENETO",
+        "km": "174.700",
+        "media": "47.430"
+      },
+      {
+        "gara_id": "14_GRAN_PREMIO_DELL_INDUSTRIA_DI_CIVITANOVA_MARCHE_2026-03-08_ELI_M",
+        "nome_gara": "14 GRAN PREMIO DELL'INDUSTRIA DI CIVITANOVA MARCHE",
+        "data": "2026-03-08",
+        "posizione": 5,
+        "punti_effettivi": 12,
+        "team": "A.S.D. S.C. PADOVANI",
+        "moltiplicatore": 2,
+        "tipo": "nazionale",
+        "regione": "MARCHE",
+        "km": "105.000",
+        "media": "45.630"
+      }
+    ]
+  },
+  "ZOZULIA_ANDRII": {
+    "id": "ZOZULIA_ANDRII",
+    "nome": "ANDRII",
+    "cognome": "ZOZULIA",
+    "team_attuale": "UCRAINA",
+    "team_id": "UCRAINA",
+    "categoria": "ELI_M",
+    "genere": "M",
+    "punti_totali": 57,
+    "risultati": [
+      {
+        "gara_id": "31_GRAN_PREMIO_SAN_LUIGI_2026-08-04_ELI_M",
+        "nome_gara": "31 GRAN PREMIO SAN LUIGI",
+        "data": "2026-08-04",
+        "posizione": 3,
+        "punti_effettivi": 10,
+        "team": "UCRAINA",
+        "moltiplicatore": 1,
+        "tipo": "regionale",
+        "regione": "VENETO",
+        "km": "124.440",
+        "media": "45.876"
+      },
+      {
+        "gara_id": "ALTA_PADOVANA_TOUR_2026-07-25_ELI_M",
+        "nome_gara": "ALTA PADOVANA TOUR",
+        "data": "2026-07-25",
+        "posizione": 6,
+        "punti_effettivi": 5,
+        "team": "UCRAINA",
+        "moltiplicatore": 1,
+        "tipo": "regionale",
+        "regione": "VENETO",
+        "km": "139.340",
+        "media": "47.341"
+      },
+      {
+        "gara_id": "5_GRAN_PREMIO_DELLA_BATTAGLIA_2026-03-29_ELI_M",
+        "nome_gara": "5 GRAN PREMIO DELLA BATTAGLIA",
+        "data": "2026-03-29",
+        "posizione": 8,
+        "punti_effettivi": 6,
+        "team": "UCRAINA",
+        "moltiplicatore": 2,
+        "tipo": "nazionale",
+        "regione": "LOMBARDIA",
+        "km": "149.500",
+        "media": "48.204"
+      },
+      {
+        "gara_id": "75_GRAN_PREMIO_FIERA_DELLA_POSSENTA_2026-03-28_ELI_M",
+        "nome_gara": "75 GRAN PREMIO FIERA DELLA POSSENTA",
+        "data": "2026-03-28",
+        "posizione": 3,
+        "punti_effettivi": 20,
+        "team": "UCRAINA",
+        "moltiplicatore": 2,
+        "tipo": "nazionale",
+        "regione": "LOMBARDIA",
+        "km": "138.000",
+        "media": "47.032"
+      },
+      {
+        "gara_id": "TROFEO_MUGELLO_BIKE_EXPO_2026-02-15_ELI_M",
+        "nome_gara": "TROFEO MUGELLO BIKE EXPO",
+        "data": "2026-02-15",
+        "posizione": 4,
+        "punti_effettivi": 16,
+        "team": "UCRAINA",
+        "moltiplicatore": 2,
+        "tipo": "nazionale",
+        "regione": "TOSCANA",
+        "km": "120.635",
+        "media": "44.911"
+      }
+    ]
+  },
+  "BIANCALANI_ANDREA": {
+    "id": "BIANCALANI_ANDREA",
+    "nome": "ANDREA",
+    "cognome": "BIANCALANI",
+    "team_attuale": "BELTRAMI TSA TRE COLLI",
+    "team_id": "BELTRAMI_TSA_TRE_COLLI",
+    "categoria": "ELI_M",
+    "genere": "M",
+    "punti_totali": 70,
+    "risultati": [
+      {
+        "gara_id": "31_GRAN_PREMIO_SAN_LUIGI_2026-08-04_ELI_M",
+        "nome_gara": "31 GRAN PREMIO SAN LUIGI",
+        "data": "2026-08-04",
+        "posizione": 4,
+        "punti_effettivi": 8,
+        "team": "BELTRAMI TSA TRE COLLI",
+        "moltiplicatore": 1,
+        "tipo": "regionale",
+        "regione": "VENETO",
+        "km": "124.440",
+        "media": "45.876"
+      },
+      {
+        "gara_id": "28_FIORANO_FIORANO_2026-06-02_ELI_M",
+        "nome_gara": "28 FIORANO FIORANO",
+        "data": "2026-06-02",
+        "posizione": 2,
+        "punti_effettivi": 24,
+        "team": "BELTRAMI TSA TRE COLLI",
+        "moltiplicatore": 2,
+        "tipo": "nazionale",
+        "regione": "EMILIA ROMAGNA",
+        "km": "176.000",
+        "media": "43.487"
+      },
+      {
+        "gara_id": "59_CIRCUITO_DEL_PORTO_TROFEO_ARVEDI_2026-05-17_ELI_M",
+        "nome_gara": "59 CIRCUITO DEL PORTO TROFEO ARVEDI",
+        "data": "2026-05-17",
+        "posizione": 3,
+        "punti_effettivi": 30,
+        "team": "BELTRAMI TSA TRE COLLI",
+        "moltiplicatore": 3,
+        "tipo": "internazionale",
+        "regione": "LOMBARDIA",
+        "km": "173.600",
+        "media": "46.396"
+      },
+      {
+        "gara_id": "79_TROFEO_VISENTINI_2026-04-06_ELI_M",
+        "nome_gara": "79 TROFEO VISENTINI",
+        "data": "2026-04-06",
+        "posizione": 4,
+        "punti_effettivi": 8,
+        "team": "BELTRAMI TSA TRE COLLI",
+        "moltiplicatore": 1,
+        "tipo": "regionale",
+        "regione": "VENETO",
+        "km": "83.000",
+        "media": "46.005"
+      }
+    ]
+  },
+  "CRESCIOLI_GIOSUE": {
+    "id": "CRESCIOLI_GIOSUE",
+    "nome": "GIOSUE'",
+    "cognome": "CRESCIOLI",
+    "team_attuale": "GALLINA LUCCHINI ECOTEK",
+    "team_id": "GALLINA_LUCCHINI_ECOTEK",
+    "categoria": "ELI_M",
+    "genere": "M",
+    "punti_totali": 148,
+    "risultati": [
+      {
+        "gara_id": "31_GRAN_PREMIO_SAN_LUIGI_2026-08-04_ELI_M",
+        "nome_gara": "31 GRAN PREMIO SAN LUIGI",
+        "data": "2026-08-04",
+        "posizione": 5,
+        "punti_effettivi": 6,
+        "team": "GALLINA LUCCHINI ECOTEK",
+        "moltiplicatore": 1,
+        "tipo": "regionale",
+        "regione": "VENETO",
+        "km": "124.440",
+        "media": "45.876"
+      },
+      {
+        "gara_id": "10_MEMORIAL_FORNASIERO_ALFREDO_A_M_2026-08-02_ELI_M",
+        "nome_gara": "10 MEMORIAL FORNASIERO ALFREDO A M",
+        "data": "2026-08-02",
+        "posizione": 5,
+        "punti_effettivi": 12,
+        "team": "GALLINA LUCCHINI ECOTEK",
+        "moltiplicatore": 2,
+        "tipo": "nazionale",
+        "regione": "VENETO",
+        "km": "169.000",
+        "media": "45.073"
+      },
+      {
+        "gara_id": "4_MEMORIAL_MANNUCCI_ALESSIO_EZIO_2026-07-28_ELI_M",
+        "nome_gara": "4 MEMORIAL MANNUCCI ALESSIO EZIO",
+        "data": "2026-07-28",
+        "posizione": 5,
+        "punti_effettivi": 6,
+        "team": "GALLINA LUCCHINI ECOTEK",
+        "moltiplicatore": 1,
+        "tipo": "regionale",
+        "regione": "TOSCANA",
+        "km": "82.100",
+        "media": "41.136"
+      },
+      {
+        "gara_id": "55_COPPA_GRAND_UFFICIALE_FRANCESCO_BOLOGNA_2026-07-26_ELI_M",
+        "nome_gara": "55 COPPA GRAND' UFFICIALE FRANCESCO BOLOGNA",
+        "data": "2026-07-26",
+        "posizione": 9,
+        "punti_effettivi": 2,
+        "team": "GALLINA LUCCHINI ECOTEK",
+        "moltiplicatore": 1,
+        "tipo": "regionale",
+        "regione": "TOSCANA",
+        "km": "174.000",
+        "media": "40.896"
+      },
+      {
+        "gara_id": "85_GIRO_DELLE_DUE_PROVINCE_2026-07-11_ELI_M",
+        "nome_gara": "85 GIRO DELLE DUE PROVINCE",
+        "data": "2026-07-11",
+        "posizione": 10,
+        "punti_effettivi": 2,
+        "team": "GALLINA LUCCHINI ECOTEK",
+        "moltiplicatore": 2,
+        "tipo": "nazionale",
+        "regione": "TOSCANA",
+        "km": "159.400",
+        "media": "46.166"
+      },
+      {
+        "gara_id": "64_GIRO_DELLE_VALLI_ARETINE_2026-07-05_ELI_M",
+        "nome_gara": "64 GIRO DELLE VALLI ARETINE",
+        "data": "2026-07-05",
+        "posizione": 2,
+        "punti_effettivi": 24,
+        "team": "GALLINA LUCCHINI ECOTEK",
+        "moltiplicatore": 2,
+        "tipo": "nazionale",
+        "regione": "TOSCANA",
+        "km": "161.600",
+        "media": "43.419"
+      },
+      {
+        "gara_id": "6_TROFEO_COMUNE_DI_LASTRA_A_SIGNA_PROVA_VALIDA_CAMPIONATO_REGIONALE_2026-06-06_ELI_M",
+        "nome_gara": "6 TROFEO COMUNE DI LASTRA A SIGNA PROVA VALIDA CAMPIONATO REGIONALE",
+        "data": "2026-06-06",
+        "posizione": 2,
+        "punti_effettivi": 24,
+        "team": "GALLINA LUCCHINI ECOTEK",
+        "moltiplicatore": 2,
+        "tipo": "regionale",
+        "regione": "TOSCANA",
+        "km": "138.800",
+        "media": "44.270"
+      },
+      {
+        "gara_id": "28_FIORANO_FIORANO_2026-06-02_ELI_M",
+        "nome_gara": "28 FIORANO FIORANO",
+        "data": "2026-06-02",
+        "posizione": 7,
+        "punti_effettivi": 8,
+        "team": "GALLINA LUCCHINI ECOTEK",
+        "moltiplicatore": 2,
+        "tipo": "nazionale",
+        "regione": "EMILIA ROMAGNA",
+        "km": "176.000",
+        "media": "43.487"
+      },
+      {
+        "gara_id": "9_TROFEO_CITTA_DI_SAN_GIOVANNI_VALDARNO_2026-05-31_ELI_M",
+        "nome_gara": "9 TROFEO CITTA' DI SAN GIOVANNI VALDARNO",
+        "data": "2026-05-31",
+        "posizione": 5,
+        "punti_effettivi": 12,
+        "team": "GALLINA LUCCHINI ECOTEK",
+        "moltiplicatore": 2,
+        "tipo": "nazionale",
+        "regione": "TOSCANA",
+        "km": "174.000",
+        "media": "40.296"
+      },
+      {
+        "gara_id": "44_DUE_GIORNI_MARCHIGIANA_GRAN_PREMIO_SANTA_RITA_2026-05-23_ELI_M",
+        "nome_gara": "44 DUE GIORNI MARCHIGIANA GRAN PREMIO SANTA RITA",
+        "data": "2026-05-23",
+        "posizione": 8,
+        "punti_effettivi": 9,
+        "team": "GALLINA LUCCHINI ECOTEK",
+        "moltiplicatore": 3,
+        "tipo": "internazionale",
+        "regione": "MARCHE",
+        "km": "170.300",
+        "media": ""
+      },
+      {
+        "gara_id": "72_TROFEO_MATTEOTTI_2026-05-17_ELI_M",
+        "nome_gara": "72 TROFEO MATTEOTTI",
+        "data": "2026-05-17",
+        "posizione": 1,
+        "punti_effettivi": 30,
+        "team": "GALLINA LUCCHINI ECOTEK",
+        "moltiplicatore": 2,
+        "tipo": "nazionale",
+        "regione": "TOSCANA",
+        "km": "153.200",
+        "media": "41.738"
+      },
+      {
+        "gara_id": "2_MEMORIAL_GIORDANO_MIGNOLLI_2026-05-09_ELI_M",
+        "nome_gara": "2 MEMORIAL GIORDANO MIGNOLLI",
+        "data": "2026-05-09",
+        "posizione": 5,
+        "punti_effettivi": 6,
+        "team": "GALLINA LUCCHINI ECOTEK",
+        "moltiplicatore": 1,
+        "tipo": "regionale",
+        "regione": "VENETO",
+        "km": "137.900",
+        "media": "43.448"
+      },
+      {
+        "gara_id": "79_TROFEO_VISENTINI_2026-04-06_ELI_M",
+        "nome_gara": "79 TROFEO VISENTINI",
+        "data": "2026-04-06",
+        "posizione": 5,
+        "punti_effettivi": 6,
+        "team": "GALLINA LUCCHINI ECOTEK",
+        "moltiplicatore": 1,
+        "tipo": "regionale",
+        "regione": "VENETO",
+        "km": "83.000",
+        "media": "46.005"
+      },
+      {
+        "gara_id": "PASQUALANDO_2026-04-04_ELI_M",
+        "nome_gara": "PASQUALANDO",
+        "data": "2026-04-04",
+        "posizione": 10,
+        "punti_effettivi": 1,
+        "team": "GALLINA LUCCHINI ECOTEK",
+        "moltiplicatore": 1,
+        "tipo": "regionale",
+        "regione": "TOSCANA",
+        "km": "101.200",
+        "media": ""
+      }
+    ]
+  },
+  "BASSANI_TOMMY": {
+    "id": "BASSANI_TOMMY",
+    "nome": "TOMMY",
+    "cognome": "BASSANI",
+    "team_attuale": "CAMPANA IMBALLAGGI MORBIATO TRENTINO",
+    "team_id": "CAMPANA_IMBALLAGGI_MORBIATO_TRENTINO",
+    "categoria": "ELI_M",
+    "genere": "M",
+    "punti_totali": 15,
+    "risultati": [
+      {
+        "gara_id": "31_GRAN_PREMIO_SAN_LUIGI_2026-08-04_ELI_M",
+        "nome_gara": "31 GRAN PREMIO SAN LUIGI",
+        "data": "2026-08-04",
+        "posizione": 6,
+        "punti_effettivi": 5,
+        "team": "CAMPANA IMBALLAGGI MORBIATO TRENTINO",
+        "moltiplicatore": 1,
+        "tipo": "regionale",
+        "regione": "VENETO",
+        "km": "124.440",
+        "media": "45.876"
+      },
+      {
+        "gara_id": "72_COPPA_MARIA_SS_DELLA_STELLA_2026-04-12_ELI_M",
+        "nome_gara": "72 COPPA MARIA SS DELLA STELLA",
+        "data": "2026-04-12",
+        "posizione": 3,
+        "punti_effettivi": 10,
+        "team": "CAMPANA IMBALLAGGI MORBIATO TRENTINO",
+        "moltiplicatore": 1,
+        "tipo": "regionale",
+        "regione": "PUGLIA",
+        "km": "107.000",
+        "media": "45.441"
+      }
+    ]
+  },
+  "BIONDANI_RICCARDO": {
+    "id": "BIONDANI_RICCARDO",
+    "nome": "RICCARDO",
+    "cognome": "BIONDANI",
+    "team_attuale": "GRAGNANO SPORTING CLUB",
+    "team_id": "GRAGNANO_SPORTING_CLUB",
+    "categoria": "ELI_M",
+    "genere": "M",
+    "punti_totali": 22,
+    "risultati": [
+      {
+        "gara_id": "31_GRAN_PREMIO_SAN_LUIGI_2026-08-04_ELI_M",
+        "nome_gara": "31 GRAN PREMIO SAN LUIGI",
+        "data": "2026-08-04",
+        "posizione": 7,
+        "punti_effettivi": 4,
+        "team": "GRAGNANO SPORTING CLUB",
+        "moltiplicatore": 1,
+        "tipo": "regionale",
+        "regione": "VENETO",
+        "km": "124.440",
+        "media": "45.876"
+      },
+      {
+        "gara_id": "85_GIRO_DELLE_DUE_PROVINCE_2026-07-11_ELI_M",
+        "nome_gara": "85 GIRO DELLE DUE PROVINCE",
+        "data": "2026-07-11",
+        "posizione": 4,
+        "punti_effettivi": 16,
+        "team": "GRAGNANO SPORTING CLUB",
+        "moltiplicatore": 2,
+        "tipo": "nazionale",
+        "regione": "TOSCANA",
+        "km": "159.400",
+        "media": "46.166"
+      },
+      {
+        "gara_id": "68_GRAN_PREMIO_RONCOLEVA_2026-06-06_ELI_M",
+        "nome_gara": "68 GRAN PREMIO RONCOLEVA'",
+        "data": "2026-06-06",
+        "posizione": 9,
+        "punti_effettivi": 2,
+        "team": "GRAGNANO SPORTING CLUB",
+        "moltiplicatore": 1,
+        "tipo": "regionale",
+        "regione": "VENETO",
+        "km": "134.000",
+        "media": "51.048"
+      }
+    ]
+  },
+  "CORNALI_CRISTIAN": {
+    "id": "CORNALI_CRISTIAN",
+    "nome": "CRISTIAN",
+    "cognome": "CORNALI",
+    "team_attuale": "GALLINA LUCCHINI ECOTEK",
+    "team_id": "GALLINA_LUCCHINI_ECOTEK",
+    "categoria": "ELI_M",
+    "genere": "M",
+    "punti_totali": 3,
+    "risultati": [
+      {
+        "gara_id": "31_GRAN_PREMIO_SAN_LUIGI_2026-08-04_ELI_M",
+        "nome_gara": "31 GRAN PREMIO SAN LUIGI",
+        "data": "2026-08-04",
+        "posizione": 8,
+        "punti_effettivi": 3,
+        "team": "GALLINA LUCCHINI ECOTEK",
+        "moltiplicatore": 1,
+        "tipo": "regionale",
+        "regione": "VENETO",
+        "km": "124.440",
+        "media": "45.876"
+      }
+    ]
+  },
+  "ZANIN_ALESSANDRO": {
+    "id": "ZANIN_ALESSANDRO",
+    "nome": "ALESSANDRO",
+    "cognome": "ZANIN",
+    "team_attuale": "CAMPANA IMBALLAGGI MORBIATO TRENTINO",
+    "team_id": "CAMPANA_IMBALLAGGI_MORBIATO_TRENTINO",
+    "categoria": "ELI_M",
+    "genere": "M",
+    "punti_totali": 2,
+    "risultati": [
+      {
+        "gara_id": "31_GRAN_PREMIO_SAN_LUIGI_2026-08-04_ELI_M",
+        "nome_gara": "31 GRAN PREMIO SAN LUIGI",
+        "data": "2026-08-04",
+        "posizione": 9,
+        "punti_effettivi": 2,
+        "team": "CAMPANA IMBALLAGGI MORBIATO TRENTINO",
+        "moltiplicatore": 1,
+        "tipo": "regionale",
+        "regione": "VENETO",
+        "km": "124.440",
+        "media": "45.876"
+      }
+    ]
+  },
+  "MAIOLI_MATTIA": {
+    "id": "MAIOLI_MATTIA",
+    "nome": "MATTIA",
+    "cognome": "MAIOLI",
+    "team_attuale": "BELTRAMI TSA-LA RISORSA UMANA-VC RE",
+    "team_id": "BELTRAMI_TSA_LA_RISORSA_UMANA_VC_RE",
+    "categoria": "ELI_M",
+    "genere": "M",
+    "punti_totali": 7,
+    "risultati": [
+      {
+        "gara_id": "31_GRAN_PREMIO_SAN_LUIGI_2026-08-04_ELI_M",
+        "nome_gara": "31 GRAN PREMIO SAN LUIGI",
+        "data": "2026-08-04",
+        "posizione": 10,
+        "punti_effettivi": 1,
+        "team": "BELTRAMI TSA-LA RISORSA UMANA-VC RE",
+        "moltiplicatore": 1,
+        "tipo": "regionale",
+        "regione": "VENETO",
+        "km": "124.440",
+        "media": "45.876"
+      },
+      {
+        "gara_id": "ALTA_PADOVANA_TOUR_2026-07-25_ELI_M",
+        "nome_gara": "ALTA PADOVANA TOUR",
+        "data": "2026-07-25",
+        "posizione": 5,
+        "punti_effettivi": 6,
+        "team": "BELTRAMI TSA-LA RISORSA UMANA-VC RE",
+        "moltiplicatore": 1,
+        "tipo": "regionale",
+        "regione": "VENETO",
+        "km": "139.340",
+        "media": "47.341"
+      }
+    ]
+  },
   "GONCHAROV_VLADIMIR": {
     "id": "GONCHAROV_VLADIMIR",
     "nome": "VLADIMIR",
@@ -213,187 +853,6 @@
         "regione": "LOMBARDIA",
         "km": "164.600",
         "media": "40.051"
-      }
-    ]
-  },
-  "CRESCIOLI_GIOSUE": {
-    "id": "CRESCIOLI_GIOSUE",
-    "nome": "GIOSUE'",
-    "cognome": "CRESCIOLI",
-    "team_attuale": "GALLINA LUCCHINI ECOTEK",
-    "team_id": "GALLINA_LUCCHINI_ECOTEK",
-    "categoria": "ELI_M",
-    "genere": "M",
-    "punti_totali": 142,
-    "risultati": [
-      {
-        "gara_id": "10_MEMORIAL_FORNASIERO_ALFREDO_A_M_2026-08-02_ELI_M",
-        "nome_gara": "10 MEMORIAL FORNASIERO ALFREDO A M",
-        "data": "2026-08-02",
-        "posizione": 5,
-        "punti_effettivi": 12,
-        "team": "GALLINA LUCCHINI ECOTEK",
-        "moltiplicatore": 2,
-        "tipo": "nazionale",
-        "regione": "VENETO",
-        "km": "169.000",
-        "media": "45.073"
-      },
-      {
-        "gara_id": "4_MEMORIAL_MANNUCCI_ALESSIO_EZIO_2026-07-28_ELI_M",
-        "nome_gara": "4 MEMORIAL MANNUCCI ALESSIO EZIO",
-        "data": "2026-07-28",
-        "posizione": 5,
-        "punti_effettivi": 6,
-        "team": "GALLINA LUCCHINI ECOTEK",
-        "moltiplicatore": 1,
-        "tipo": "regionale",
-        "regione": "TOSCANA",
-        "km": "82.100",
-        "media": "41.136"
-      },
-      {
-        "gara_id": "55_COPPA_GRAND_UFFICIALE_FRANCESCO_BOLOGNA_2026-07-26_ELI_M",
-        "nome_gara": "55 COPPA GRAND' UFFICIALE FRANCESCO BOLOGNA",
-        "data": "2026-07-26",
-        "posizione": 9,
-        "punti_effettivi": 2,
-        "team": "GALLINA LUCCHINI ECOTEK",
-        "moltiplicatore": 1,
-        "tipo": "regionale",
-        "regione": "TOSCANA",
-        "km": "174.000",
-        "media": "40.896"
-      },
-      {
-        "gara_id": "85_GIRO_DELLE_DUE_PROVINCE_2026-07-11_ELI_M",
-        "nome_gara": "85 GIRO DELLE DUE PROVINCE",
-        "data": "2026-07-11",
-        "posizione": 10,
-        "punti_effettivi": 2,
-        "team": "GALLINA LUCCHINI ECOTEK",
-        "moltiplicatore": 2,
-        "tipo": "nazionale",
-        "regione": "TOSCANA",
-        "km": "159.400",
-        "media": "46.166"
-      },
-      {
-        "gara_id": "64_GIRO_DELLE_VALLI_ARETINE_2026-07-05_ELI_M",
-        "nome_gara": "64 GIRO DELLE VALLI ARETINE",
-        "data": "2026-07-05",
-        "posizione": 2,
-        "punti_effettivi": 24,
-        "team": "GALLINA LUCCHINI ECOTEK",
-        "moltiplicatore": 2,
-        "tipo": "nazionale",
-        "regione": "TOSCANA",
-        "km": "161.600",
-        "media": "43.419"
-      },
-      {
-        "gara_id": "6_TROFEO_COMUNE_DI_LASTRA_A_SIGNA_PROVA_VALIDA_CAMPIONATO_REGIONALE_2026-06-06_ELI_M",
-        "nome_gara": "6 TROFEO COMUNE DI LASTRA A SIGNA PROVA VALIDA CAMPIONATO REGIONALE",
-        "data": "2026-06-06",
-        "posizione": 2,
-        "punti_effettivi": 24,
-        "team": "GALLINA LUCCHINI ECOTEK",
-        "moltiplicatore": 2,
-        "tipo": "regionale",
-        "regione": "TOSCANA",
-        "km": "138.800",
-        "media": "44.270"
-      },
-      {
-        "gara_id": "28_FIORANO_FIORANO_2026-06-02_ELI_M",
-        "nome_gara": "28 FIORANO FIORANO",
-        "data": "2026-06-02",
-        "posizione": 7,
-        "punti_effettivi": 8,
-        "team": "GALLINA LUCCHINI ECOTEK",
-        "moltiplicatore": 2,
-        "tipo": "nazionale",
-        "regione": "EMILIA ROMAGNA",
-        "km": "176.000",
-        "media": "43.487"
-      },
-      {
-        "gara_id": "9_TROFEO_CITTA_DI_SAN_GIOVANNI_VALDARNO_2026-05-31_ELI_M",
-        "nome_gara": "9 TROFEO CITTA' DI SAN GIOVANNI VALDARNO",
-        "data": "2026-05-31",
-        "posizione": 5,
-        "punti_effettivi": 12,
-        "team": "GALLINA LUCCHINI ECOTEK",
-        "moltiplicatore": 2,
-        "tipo": "nazionale",
-        "regione": "TOSCANA",
-        "km": "174.000",
-        "media": "40.296"
-      },
-      {
-        "gara_id": "44_DUE_GIORNI_MARCHIGIANA_GRAN_PREMIO_SANTA_RITA_2026-05-23_ELI_M",
-        "nome_gara": "44 DUE GIORNI MARCHIGIANA GRAN PREMIO SANTA RITA",
-        "data": "2026-05-23",
-        "posizione": 8,
-        "punti_effettivi": 9,
-        "team": "GALLINA LUCCHINI ECOTEK",
-        "moltiplicatore": 3,
-        "tipo": "internazionale",
-        "regione": "MARCHE",
-        "km": "170.300",
-        "media": ""
-      },
-      {
-        "gara_id": "72_TROFEO_MATTEOTTI_2026-05-17_ELI_M",
-        "nome_gara": "72 TROFEO MATTEOTTI",
-        "data": "2026-05-17",
-        "posizione": 1,
-        "punti_effettivi": 30,
-        "team": "GALLINA LUCCHINI ECOTEK",
-        "moltiplicatore": 2,
-        "tipo": "nazionale",
-        "regione": "TOSCANA",
-        "km": "153.200",
-        "media": "41.738"
-      },
-      {
-        "gara_id": "2_MEMORIAL_GIORDANO_MIGNOLLI_2026-05-09_ELI_M",
-        "nome_gara": "2 MEMORIAL GIORDANO MIGNOLLI",
-        "data": "2026-05-09",
-        "posizione": 5,
-        "punti_effettivi": 6,
-        "team": "GALLINA LUCCHINI ECOTEK",
-        "moltiplicatore": 1,
-        "tipo": "regionale",
-        "regione": "VENETO",
-        "km": "137.900",
-        "media": "43.448"
-      },
-      {
-        "gara_id": "79_TROFEO_VISENTINI_2026-04-06_ELI_M",
-        "nome_gara": "79 TROFEO VISENTINI",
-        "data": "2026-04-06",
-        "posizione": 5,
-        "punti_effettivi": 6,
-        "team": "GALLINA LUCCHINI ECOTEK",
-        "moltiplicatore": 1,
-        "tipo": "regionale",
-        "regione": "VENETO",
-        "km": "83.000",
-        "media": "46.005"
-      },
-      {
-        "gara_id": "PASQUALANDO_2026-04-04_ELI_M",
-        "nome_gara": "PASQUALANDO",
-        "data": "2026-04-04",
-        "posizione": 10,
-        "punti_effettivi": 1,
-        "team": "GALLINA LUCCHINI ECOTEK",
-        "moltiplicatore": 1,
-        "tipo": "regionale",
-        "regione": "TOSCANA",
-        "km": "101.200",
-        "media": ""
       }
     ]
   },
@@ -73319,95 +73778,6 @@
       }
     ]
   },
-  "MAIOLI_MATTIA": {
-    "id": "MAIOLI_MATTIA",
-    "nome": "MATTIA",
-    "cognome": "MAIOLI",
-    "team_attuale": "BELTRAMI TSA-LA RISORSA UMANA-VC RE",
-    "team_id": "BELTRAMI_TSA_LA_RISORSA_UMANA_VC_RE",
-    "categoria": "ELI_M",
-    "genere": "M",
-    "punti_totali": 6,
-    "risultati": [
-      {
-        "gara_id": "ALTA_PADOVANA_TOUR_2026-07-25_ELI_M",
-        "nome_gara": "ALTA PADOVANA TOUR",
-        "data": "2026-07-25",
-        "posizione": 5,
-        "punti_effettivi": 6,
-        "team": "BELTRAMI TSA-LA RISORSA UMANA-VC RE",
-        "moltiplicatore": 1,
-        "tipo": "regionale",
-        "regione": "VENETO",
-        "km": "139.340",
-        "media": "47.341"
-      }
-    ]
-  },
-  "ZOZULIA_ANDRII": {
-    "id": "ZOZULIA_ANDRII",
-    "nome": "ANDRII",
-    "cognome": "ZOZULIA",
-    "team_attuale": "UCRAINA",
-    "team_id": "UCRAINA",
-    "categoria": "ELI_M",
-    "genere": "M",
-    "punti_totali": 47,
-    "risultati": [
-      {
-        "gara_id": "ALTA_PADOVANA_TOUR_2026-07-25_ELI_M",
-        "nome_gara": "ALTA PADOVANA TOUR",
-        "data": "2026-07-25",
-        "posizione": 6,
-        "punti_effettivi": 5,
-        "team": "UCRAINA",
-        "moltiplicatore": 1,
-        "tipo": "regionale",
-        "regione": "VENETO",
-        "km": "139.340",
-        "media": "47.341"
-      },
-      {
-        "gara_id": "5_GRAN_PREMIO_DELLA_BATTAGLIA_2026-03-29_ELI_M",
-        "nome_gara": "5 GRAN PREMIO DELLA BATTAGLIA",
-        "data": "2026-03-29",
-        "posizione": 8,
-        "punti_effettivi": 6,
-        "team": "UCRAINA",
-        "moltiplicatore": 2,
-        "tipo": "nazionale",
-        "regione": "LOMBARDIA",
-        "km": "149.500",
-        "media": "48.204"
-      },
-      {
-        "gara_id": "75_GRAN_PREMIO_FIERA_DELLA_POSSENTA_2026-03-28_ELI_M",
-        "nome_gara": "75 GRAN PREMIO FIERA DELLA POSSENTA",
-        "data": "2026-03-28",
-        "posizione": 3,
-        "punti_effettivi": 20,
-        "team": "UCRAINA",
-        "moltiplicatore": 2,
-        "tipo": "nazionale",
-        "regione": "LOMBARDIA",
-        "km": "138.000",
-        "media": "47.032"
-      },
-      {
-        "gara_id": "TROFEO_MUGELLO_BIKE_EXPO_2026-02-15_ELI_M",
-        "nome_gara": "TROFEO MUGELLO BIKE EXPO",
-        "data": "2026-02-15",
-        "posizione": 4,
-        "punti_effettivi": 16,
-        "team": "UCRAINA",
-        "moltiplicatore": 2,
-        "tipo": "nazionale",
-        "regione": "TOSCANA",
-        "km": "120.635",
-        "media": "44.911"
-      }
-    ]
-  },
   "MARKOVIC_GAVRILO": {
     "id": "MARKOVIC_GAVRILO",
     "nome": "GAVRILO",
@@ -73450,31 +73820,6 @@
         "posizione": 8,
         "punti_effettivi": 3,
         "team": "RIME DRALI",
-        "moltiplicatore": 1,
-        "tipo": "regionale",
-        "regione": "VENETO",
-        "km": "139.340",
-        "media": "47.341"
-      }
-    ]
-  },
-  "CASELLI_ARMIN": {
-    "id": "CASELLI_ARMIN",
-    "nome": "ARMIN",
-    "cognome": "CASELLI",
-    "team_attuale": "SOLME - OLMO - ARVEDI",
-    "team_id": "SOLME_OLMO_ARVEDI",
-    "categoria": "ELI_M",
-    "genere": "M",
-    "punti_totali": 2,
-    "risultati": [
-      {
-        "gara_id": "ALTA_PADOVANA_TOUR_2026-07-25_ELI_M",
-        "nome_gara": "ALTA PADOVANA TOUR",
-        "data": "2026-07-25",
-        "posizione": 9,
-        "punti_effettivi": 2,
-        "team": "SOLME - OLMO - ARVEDI",
         "moltiplicatore": 1,
         "tipo": "regionale",
         "regione": "VENETO",
@@ -107194,44 +107539,6 @@
         "regione": "MARCHE",
         "km": "153.000",
         "media": "40.281"
-      }
-    ]
-  },
-  "BIONDANI_RICCARDO": {
-    "id": "BIONDANI_RICCARDO",
-    "nome": "RICCARDO",
-    "cognome": "BIONDANI",
-    "team_attuale": "GRAGNANO SPORTING CLUB",
-    "team_id": "GRAGNANO_SPORTING_CLUB",
-    "categoria": "ELI_M",
-    "genere": "M",
-    "punti_totali": 18,
-    "risultati": [
-      {
-        "gara_id": "85_GIRO_DELLE_DUE_PROVINCE_2026-07-11_ELI_M",
-        "nome_gara": "85 GIRO DELLE DUE PROVINCE",
-        "data": "2026-07-11",
-        "posizione": 4,
-        "punti_effettivi": 16,
-        "team": "GRAGNANO SPORTING CLUB",
-        "moltiplicatore": 2,
-        "tipo": "nazionale",
-        "regione": "TOSCANA",
-        "km": "159.400",
-        "media": "46.166"
-      },
-      {
-        "gara_id": "68_GRAN_PREMIO_RONCOLEVA_2026-06-06_ELI_M",
-        "nome_gara": "68 GRAN PREMIO RONCOLEVA'",
-        "data": "2026-06-06",
-        "posizione": 9,
-        "punti_effettivi": 2,
-        "team": "GRAGNANO SPORTING CLUB",
-        "moltiplicatore": 1,
-        "tipo": "regionale",
-        "regione": "VENETO",
-        "km": "134.000",
-        "media": "51.048"
       }
     ]
   },
@@ -141828,83 +142135,6 @@
       }
     ]
   },
-  "SCARSO_ANDREA": {
-    "id": "SCARSO_ANDREA",
-    "nome": "ANDREA",
-    "cognome": "SCARSO",
-    "team_attuale": "A.S.D. S.C. PADOVANI",
-    "team_id": "A_S_D_S_C_PADOVANI",
-    "categoria": "ELI_M",
-    "genere": "M",
-    "punti_totali": 39,
-    "risultati": [
-      {
-        "gara_id": "68_GRAN_PREMIO_RONCOLEVA_2026-06-06_ELI_M",
-        "nome_gara": "68 GRAN PREMIO RONCOLEVA'",
-        "data": "2026-06-06",
-        "posizione": 5,
-        "punti_effettivi": 6,
-        "team": "A.S.D. S.C. PADOVANI",
-        "moltiplicatore": 1,
-        "tipo": "regionale",
-        "regione": "VENETO",
-        "km": "134.000",
-        "media": "51.048"
-      },
-      {
-        "gara_id": "59_CIRCUITO_DEL_PORTO_TROFEO_ARVEDI_2026-05-17_ELI_M",
-        "nome_gara": "59 CIRCUITO DEL PORTO TROFEO ARVEDI",
-        "data": "2026-05-17",
-        "posizione": 10,
-        "punti_effettivi": 3,
-        "team": "A.S.D. S.C. PADOVANI",
-        "moltiplicatore": 3,
-        "tipo": "internazionale",
-        "regione": "LOMBARDIA",
-        "km": "173.600",
-        "media": "46.396"
-      },
-      {
-        "gara_id": "37_MEMORIAL_VINCENZO_MANTOVANI_2026-04-04_ELI_M",
-        "nome_gara": "37 MEMORIAL VINCENZO MANTOVANI",
-        "data": "2026-04-04",
-        "posizione": 5,
-        "punti_effettivi": 6,
-        "team": "A.S.D. S.C. PADOVANI",
-        "moltiplicatore": 1,
-        "tipo": "regionale",
-        "regione": "LOMBARDIA",
-        "km": "144.000",
-        "media": "45.291"
-      },
-      {
-        "gara_id": "109_POPOLARISSIMA_2026-03-15_ELI_M",
-        "nome_gara": "109 POPOLARISSIMA",
-        "data": "2026-03-15",
-        "posizione": 7,
-        "punti_effettivi": 12,
-        "team": "A.S.D. S.C. PADOVANI",
-        "moltiplicatore": 3,
-        "tipo": "internazionale",
-        "regione": "VENETO",
-        "km": "174.700",
-        "media": "47.430"
-      },
-      {
-        "gara_id": "14_GRAN_PREMIO_DELL_INDUSTRIA_DI_CIVITANOVA_MARCHE_2026-03-08_ELI_M",
-        "nome_gara": "14 GRAN PREMIO DELL'INDUSTRIA DI CIVITANOVA MARCHE",
-        "data": "2026-03-08",
-        "posizione": 5,
-        "punti_effettivi": 12,
-        "team": "A.S.D. S.C. PADOVANI",
-        "moltiplicatore": 2,
-        "tipo": "nazionale",
-        "regione": "MARCHE",
-        "km": "105.000",
-        "media": "45.630"
-      }
-    ]
-  },
   "SACCANI_FEDERICO": {
     "id": "SACCANI_FEDERICO",
     "nome": "FEDERICO",
@@ -144166,57 +144396,6 @@
         "regione": "EMILIA ROMAGNA",
         "km": "176.000",
         "media": "43.487"
-      }
-    ]
-  },
-  "BIANCALANI_ANDREA": {
-    "id": "BIANCALANI_ANDREA",
-    "nome": "ANDREA",
-    "cognome": "BIANCALANI",
-    "team_attuale": "BELTRAMI TSA TRE COLLI",
-    "team_id": "BELTRAMI_TSA_TRE_COLLI",
-    "categoria": "ELI_M",
-    "genere": "M",
-    "punti_totali": 62,
-    "risultati": [
-      {
-        "gara_id": "28_FIORANO_FIORANO_2026-06-02_ELI_M",
-        "nome_gara": "28 FIORANO FIORANO",
-        "data": "2026-06-02",
-        "posizione": 2,
-        "punti_effettivi": 24,
-        "team": "BELTRAMI TSA TRE COLLI",
-        "moltiplicatore": 2,
-        "tipo": "nazionale",
-        "regione": "EMILIA ROMAGNA",
-        "km": "176.000",
-        "media": "43.487"
-      },
-      {
-        "gara_id": "59_CIRCUITO_DEL_PORTO_TROFEO_ARVEDI_2026-05-17_ELI_M",
-        "nome_gara": "59 CIRCUITO DEL PORTO TROFEO ARVEDI",
-        "data": "2026-05-17",
-        "posizione": 3,
-        "punti_effettivi": 30,
-        "team": "BELTRAMI TSA TRE COLLI",
-        "moltiplicatore": 3,
-        "tipo": "internazionale",
-        "regione": "LOMBARDIA",
-        "km": "173.600",
-        "media": "46.396"
-      },
-      {
-        "gara_id": "79_TROFEO_VISENTINI_2026-04-06_ELI_M",
-        "nome_gara": "79 TROFEO VISENTINI",
-        "data": "2026-04-06",
-        "posizione": 4,
-        "punti_effettivi": 8,
-        "team": "BELTRAMI TSA TRE COLLI",
-        "moltiplicatore": 1,
-        "tipo": "regionale",
-        "regione": "VENETO",
-        "km": "83.000",
-        "media": "46.005"
       }
     ]
   },
@@ -161786,31 +161965,6 @@
         "regione": "VENETO",
         "km": "171.600",
         "media": "44.730"
-      }
-    ]
-  },
-  "BASSANI_TOMMY": {
-    "id": "BASSANI_TOMMY",
-    "nome": "TOMMY",
-    "cognome": "BASSANI",
-    "team_attuale": "CAMPANA IMBALLAGGI MORBIATO TRENTINO",
-    "team_id": "CAMPANA_IMBALLAGGI_MORBIATO_TRENTINO",
-    "categoria": "ELI_M",
-    "genere": "M",
-    "punti_totali": 10,
-    "risultati": [
-      {
-        "gara_id": "72_COPPA_MARIA_SS_DELLA_STELLA_2026-04-12_ELI_M",
-        "nome_gara": "72 COPPA MARIA SS DELLA STELLA",
-        "data": "2026-04-12",
-        "posizione": 3,
-        "punti_effettivi": 10,
-        "team": "CAMPANA IMBALLAGGI MORBIATO TRENTINO",
-        "moltiplicatore": 1,
-        "tipo": "regionale",
-        "regione": "PUGLIA",
-        "km": "107.000",
-        "media": "45.441"
       }
     ]
   },
