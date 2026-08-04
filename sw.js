@@ -1,4 +1,4 @@
-const CACHE_NAME = 'italiacrit-cache-v357';
+const CACHE_NAME = 'italiacrit-cache-v358';
 
 // File statici: messi in cache e serviti velocemente
 const STATIC_ASSETS = [
@@ -55,9 +55,14 @@ self.addEventListener('fetch', event => {
 
   // ── STRATEGIA NETWORK-FIRST per i file JSON (dati dinamici) ──
   // Garantisce che gli aggiornamenti dal server siano sempre visibili.
+  // cache:'reload' è essenziale: senza, Cloudflare/GitHub Pages mandano
+  // Cache-Control su questi JSON e la fetch "network-first" può comunque
+  // essere soddisfatta dalla cache HTTP del browser invece di andare
+  // davvero in rete, facendo apparire i dati invariati anche dopo un
+  // deploy con dati corretti (stesso bug già risolto per app.js sotto).
   if (url.includes('/data/') && url.endsWith('.json')) {
     event.respondWith(
-      fetch(event.request)
+      fetch(event.request, { cache: 'reload' })
         .then(networkResponse => {
           // Aggiorna la cache con la versione fresca
           const clone = networkResponse.clone();
@@ -75,7 +80,7 @@ self.addEventListener('fetch', event => {
   // ── STRATEGIA NETWORK-FIRST per i file di ranking (JSON nelle sottocartelle) ──
   if (url.includes('/rankings/') || url.includes('/team_rankings/')) {
     event.respondWith(
-      fetch(event.request)
+      fetch(event.request, { cache: 'reload' })
         .then(networkResponse => {
           const clone = networkResponse.clone();
           caches.open(CACHE_NAME).then(cache => cache.put(event.request, clone));
