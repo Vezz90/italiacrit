@@ -124,6 +124,13 @@ def is_female_name(nome: str) -> bool:
 # nella fonte FCI, valore = (cognome_corretto, nome_corretto).
 ATHLETE_NAME_ALIASES = {
     robust_norm("PENEDA SOTO NATALIA"): ("PINEDA SOTO", "NATALIA"),
+    # "DI ROSA" (particella cognome) veniva spezzato in cognome="DI",
+    # nome="ROSA CHRISTIAN": is_female_name() leggeva "ROSA" come primo
+    # termine del nome e lo classificava erroneamente come atleta donna in
+    # ogni gara mista Allievi a cui partecipava (8 gare). Qui il cognome
+    # composto viene ricostruito PRIMA del controllo genere, cosi' non
+    # scatta piu' ne' la divisione ne' la riga fantasma nella classifica F.
+    robust_norm("DI ROSA CHRISTIAN"): ("DI ROSA", "CHRISTIAN"),
 }
 
 def canonical_athlete_name(cognome, nome):
