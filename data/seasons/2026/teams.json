@@ -18806,7 +18806,7 @@
   "FERALPI_MONTECLARENSE_ASD": {
     "id": "FERALPI_MONTECLARENSE_ASD",
     "nome": "FERALPI MONTECLARENSE ASD",
-    "punti_totali": 594,
+    "punti_totali": 592,
     "atleti": [
       "CHITO_ALESSANDRO",
       "SOSA_COLON_GIOEL",
@@ -19715,8 +19715,8 @@
         "atleta_id": "COCCA_LEONARDO",
         "atleta_cognome": "COCCA",
         "atleta_nome": "LEONARDO",
-        "posizione": 3,
-        "punti_effettivi": 10,
+        "posizione": 4,
+        "punti_effettivi": 8,
         "moltiplicatore": 1,
         "tipo": "regionale",
         "regione": "TOSCANA",
@@ -20026,7 +20026,7 @@
     ],
     "punti_per_cat": {
       "JUN_M": 11,
-      "AL_M": 376,
+      "AL_M": 374,
       "ES1_M": 206,
       "ES2_M": 1
     }
@@ -26220,7 +26220,7 @@
   "TEAM_CORATTI": {
     "id": "TEAM_CORATTI",
     "nome": "TEAM CORATTI",
-    "punti_totali": 954,
+    "punti_totali": 952,
     "atleti": [
       "FERRARO_LORENZO",
       "MONTANARO_NICOLO",
@@ -26278,8 +26278,8 @@
         "atleta_id": "FIACCO_ANDREA",
         "atleta_cognome": "FIACCO",
         "atleta_nome": "ANDREA",
-        "posizione": 9,
-        "punti_effettivi": 2,
+        "posizione": 10,
+        "punti_effettivi": 1,
         "moltiplicatore": 1,
         "tipo": "regionale",
         "regione": "LAZIO",
@@ -27373,8 +27373,8 @@
         "atleta_id": "GALLO_GIUSEPPE",
         "atleta_cognome": "GALLO",
         "atleta_nome": "GIUSEPPE",
-        "posizione": 5,
-        "punti_effettivi": 6,
+        "posizione": 6,
+        "punti_effettivi": 5,
         "moltiplicatore": 1,
         "tipo": "regionale",
         "regione": "TOSCANA",
@@ -27744,7 +27744,7 @@
     ],
     "punti_per_cat": {
       "JUN_M": 430,
-      "AL_M": 414,
+      "AL_M": 412,
       "ES1_M": 95,
       "AL_F": 15
     }
@@ -38340,7 +38340,7 @@
   "IL_PIRATA_VANGI_OTC": {
     "id": "IL_PIRATA_VANGI_OTC",
     "nome": "IL PIRATA VANGI OTC",
-    "punti_totali": 361,
+    "punti_totali": 358,
     "atleti": [
       "D_ANDREA_RICCARDO",
       "ALTAMURA_LUIGI",
@@ -38553,8 +38553,8 @@
         "atleta_id": "VENANZONI_NICOLO",
         "atleta_cognome": "VENANZONI",
         "atleta_nome": "NICOLO'",
-        "posizione": 4,
-        "punti_effettivi": 8,
+        "posizione": 5,
+        "punti_effettivi": 6,
         "moltiplicatore": 1,
         "tipo": "regionale",
         "regione": "LAZIO",
@@ -38568,8 +38568,8 @@
         "atleta_id": "DEL_GAONE_LUCA",
         "atleta_cognome": "DEL",
         "atleta_nome": "GAONE LUCA",
-        "posizione": 9,
-        "punti_effettivi": 2,
+        "posizione": 10,
+        "punti_effettivi": 1,
         "moltiplicatore": 1,
         "tipo": "regionale",
         "regione": "LAZIO",
@@ -39073,7 +39073,7 @@
       }
     ],
     "punti_per_cat": {
-      "AL_M": 361
+      "AL_M": 358
     }
   },
   "ASD_MORENO_DI_BIASE": {
@@ -40689,7 +40689,7 @@
   "GIUSFREDI": {
     "id": "GIUSFREDI",
     "nome": "GIUSFREDI",
-    "punti_totali": 156,
+    "punti_totali": 155,
     "atleti": [
       "MUSCIA_VINCENZO",
       "GIRALDI_DAVIDE",
@@ -41004,8 +41004,8 @@
         "atleta_id": "GIRALDI_DAVIDE",
         "atleta_cognome": "GIRALDI",
         "atleta_nome": "DAVIDE",
-        "posizione": 8,
-        "punti_effettivi": 3,
+        "posizione": 9,
+        "punti_effettivi": 2,
         "moltiplicatore": 1,
         "tipo": "regionale",
         "regione": "TOSCANA",
@@ -41059,7 +41059,7 @@
       }
     ],
     "punti_per_cat": {
-      "AL_M": 156
+      "AL_M": 155
     }
   },
   "ASD_CICLOTOUR": {
@@ -58197,7 +58197,7 @@
   "CICLISTICA_TREVIGLIESE": {
     "id": "CICLISTICA_TREVIGLIESE",
     "nome": "CICLISTICA TREVIGLIESE",
-    "punti_totali": 1131,
+    "punti_totali": 1129,
     "atleti": [
       "BUZZI_FRANCESCO",
       "PLEBANI_PAOLO",
@@ -59994,8 +59994,8 @@
         "atleta_id": "GERVASONI_MATTIA",
         "atleta_cognome": "GERVASONI",
         "atleta_nome": "MATTIA",
-        "posizione": 6,
-        "punti_effettivi": 5,
+        "posizione": 7,
+        "punti_effettivi": 4,
         "moltiplicatore": 1,
         "tipo": "regionale",
         "regione": "TOSCANA",
@@ -60009,8 +60009,8 @@
         "atleta_id": "PLEBANI_PAOLO",
         "atleta_cognome": "PLEBANI",
         "atleta_nome": "PAOLO",
-        "posizione": 8,
-        "punti_effettivi": 3,
+        "posizione": 9,
+        "punti_effettivi": 2,
         "moltiplicatore": 1,
         "tipo": "regionale",
         "regione": "TOSCANA",
@@ -60260,7 +60260,7 @@
     ],
     "punti_per_cat": {
       "AL_M": 17,
-      "ES1_M": 541,
+      "ES1_M": 539,
       "JUN_M": 573
     }
   },
@@ -60464,7 +60464,7 @@
   "TEAM_VALDINIEVOLE_A_S_D": {
     "id": "TEAM_VALDINIEVOLE_A_S_D",
     "nome": "TEAM VALDINIEVOLE A.S.D.",
-    "punti_totali": 176,
+    "punti_totali": 174,
     "atleti": [
       "CERONE_ANTONIO",
       "LODOVISI_LORENZO",
@@ -60764,8 +60764,8 @@
         "atleta_id": "MENICI_DUCCIO",
         "atleta_cognome": "MENICI",
         "atleta_nome": "DUCCIO",
-        "posizione": 7,
-        "punti_effettivi": 4,
+        "posizione": 8,
+        "punti_effettivi": 3,
         "moltiplicatore": 1,
         "tipo": "regionale",
         "regione": "TOSCANA",
@@ -60779,8 +60779,8 @@
         "atleta_id": "CERONE_ANTONIO",
         "atleta_cognome": "CERONE",
         "atleta_nome": "ANTONIO",
-        "posizione": 6,
-        "punti_effettivi": 5,
+        "posizione": 7,
+        "punti_effettivi": 4,
         "moltiplicatore": 1,
         "tipo": "regionale",
         "regione": "TOSCANA",
@@ -60864,7 +60864,7 @@
       }
     ],
     "punti_per_cat": {
-      "AL_M": 176
+      "AL_M": 174
     }
   },
   "SAN_MINIATO_CICLISMO_A_S_D": {
@@ -60960,7 +60960,7 @@
   "AC_F_BESSI_CALENZANO_DONORATICO": {
     "id": "AC_F_BESSI_CALENZANO_DONORATICO",
     "nome": "AC F. BESSI CALENZANO DONORATICO",
-    "punti_totali": 452,
+    "punti_totali": 447,
     "atleti": [
       "GABBRIELLESCHI_GIOELE",
       "GENTILI_DAVID",
@@ -61356,8 +61356,8 @@
         "atleta_id": "GENTILI_DAVID",
         "atleta_cognome": "GENTILI",
         "atleta_nome": "DAVID",
-        "posizione": 9,
-        "punti_effettivi": 2,
+        "posizione": 10,
+        "punti_effettivi": 1,
         "moltiplicatore": 1,
         "tipo": "regionale",
         "regione": "TOSCANA",
@@ -61611,8 +61611,8 @@
         "atleta_id": "GENTILI_DAVID",
         "atleta_cognome": "GENTILI",
         "atleta_nome": "DAVID",
-        "posizione": 8,
-        "punti_effettivi": 3,
+        "posizione": 9,
+        "punti_effettivi": 2,
         "moltiplicatore": 1,
         "tipo": "regionale",
         "regione": "TOSCANA",
@@ -61791,8 +61791,8 @@
         "atleta_id": "GENTILI_DAVID",
         "atleta_cognome": "GENTILI",
         "atleta_nome": "DAVID",
-        "posizione": 4,
-        "punti_effettivi": 8,
+        "posizione": 5,
+        "punti_effettivi": 6,
         "moltiplicatore": 1,
         "tipo": "regionale",
         "regione": "TOSCANA",
@@ -61806,8 +61806,8 @@
         "atleta_id": "RISTORI_GABRIELE",
         "atleta_cognome": "RISTORI",
         "atleta_nome": "GABRIELE",
-        "posizione": 8,
-        "punti_effettivi": 3,
+        "posizione": 9,
+        "punti_effettivi": 2,
         "moltiplicatore": 1,
         "tipo": "regionale",
         "regione": "TOSCANA",
@@ -61832,14 +61832,14 @@
     ],
     "punti_per_cat": {
       "AL_M": 380,
-      "ES1_M": 62,
+      "ES1_M": 57,
       "ES2_M": 10
     }
   },
   "UC_EMPOLESE": {
     "id": "UC_EMPOLESE",
     "nome": "UC EMPOLESE",
-    "punti_totali": 804,
+    "punti_totali": 740,
     "atleti": [
       "LEONETTI_LEONARDO",
       "DI_STEFANO_GIACOMO",
@@ -62429,12 +62429,12 @@
         "media": "34.621"
       },
       {
-        "gara_id": "MEMORIAL_GUGLIELMO_BONATI_2026-06-02_ES1_F",
+        "gara_id": "MEMORIAL_GUGLIELMO_BONATI_2026-06-02_ES1_M",
         "nome_gara": "MEMORIAL GUGLIELMO BONATI",
         "data": "2026-06-02",
         "atleta_id": "DI_LUCIA_NICCOLO",
-        "atleta_cognome": "DI",
-        "atleta_nome": "LUCIA NICCOLO'",
+        "atleta_cognome": "DI LUCIA",
+        "atleta_nome": "NICCOLO'",
         "posizione": 1,
         "punti_effettivi": 15,
         "moltiplicatore": 1,
@@ -62489,14 +62489,14 @@
         "media": "41.684"
       },
       {
-        "gara_id": "11_TROFEO_AGRISPORT_ASD_2026-05-31_ES1_F",
+        "gara_id": "11_TROFEO_AGRISPORT_ASD_2026-05-31_ES1_M",
         "nome_gara": "11 TROFEO AGRISPORT ASD",
         "data": "2026-05-31",
         "atleta_id": "DI_LUCIA_NICCOLO",
-        "atleta_cognome": "DI",
-        "atleta_nome": "LUCIA NICCOLO'",
-        "posizione": 1,
-        "punti_effettivi": 15,
+        "atleta_cognome": "DI LUCIA",
+        "atleta_nome": "NICCOLO'",
+        "posizione": 2,
+        "punti_effettivi": 12,
         "moltiplicatore": 1,
         "tipo": "regionale",
         "regione": "TOSCANA",
@@ -62564,14 +62564,14 @@
         "media": "39.273"
       },
       {
-        "gara_id": "TROFEO_OFFICINE_CELIA_GARA_UNICA_2026-05-24_ES1_F",
+        "gara_id": "TROFEO_OFFICINE_CELIA_GARA_UNICA_2026-05-24_ES1_M",
         "nome_gara": "TROFEO OFFICINE CELIA GARA UNICA",
         "data": "2026-05-24",
         "atleta_id": "DI_LUCIA_NICCOLO",
-        "atleta_cognome": "DI",
-        "atleta_nome": "LUCIA NICCOLO'",
-        "posizione": 1,
-        "punti_effettivi": 15,
+        "atleta_cognome": "DI LUCIA",
+        "atleta_nome": "NICCOLO'",
+        "posizione": 6,
+        "punti_effettivi": 5,
         "moltiplicatore": 1,
         "tipo": "regionale",
         "regione": "EMILIA ROMAGNA",
@@ -62714,14 +62714,14 @@
         "media": "37.822"
       },
       {
-        "gara_id": "4_MEMORIAL_CIOFFI_SALVATORE_GARA_UNICA_2026-05-17_ES1_F",
+        "gara_id": "4_MEMORIAL_CIOFFI_SALVATORE_GARA_UNICA_2026-05-17_ES1_M",
         "nome_gara": "4 MEMORIAL CIOFFI SALVATORE GARA UNICA",
         "data": "2026-05-17",
         "atleta_id": "DI_LUCIA_NICCOLO",
-        "atleta_cognome": "DI",
-        "atleta_nome": "LUCIA NICCOLO'",
-        "posizione": 1,
-        "punti_effettivi": 15,
+        "atleta_cognome": "DI LUCIA",
+        "atleta_nome": "NICCOLO'",
+        "posizione": 8,
+        "punti_effettivi": 3,
         "moltiplicatore": 1,
         "tipo": "regionale",
         "regione": "TOSCANA",
@@ -62912,11 +62912,11 @@
         "gara_id": "LA_STORICA_COPPA_DE_LE_POGGIOLA_2026-05-03_ES1_M",
         "nome_gara": "LA STORICA COPPA DE LE POGGIOLA",
         "data": "2026-05-03",
-        "atleta_id": "ANTONGIOVANNI_DIEGO",
-        "atleta_cognome": "ANTONGIOVANNI",
-        "atleta_nome": "DIEGO",
-        "posizione": 5,
-        "punti_effettivi": 6,
+        "atleta_id": "DI_LUCIA_NICCOLO",
+        "atleta_cognome": "DI LUCIA",
+        "atleta_nome": "NICCOLO'",
+        "posizione": 3,
+        "punti_effettivi": 10,
         "moltiplicatore": 1,
         "tipo": "regionale",
         "regione": "TOSCANA",
@@ -62924,14 +62924,14 @@
         "media": "34.817"
       },
       {
-        "gara_id": "LA_STORICA_COPPA_DE_LE_POGGIOLA_2026-05-03_ES1_F",
+        "gara_id": "LA_STORICA_COPPA_DE_LE_POGGIOLA_2026-05-03_ES1_M",
         "nome_gara": "LA STORICA COPPA DE LE POGGIOLA",
         "data": "2026-05-03",
-        "atleta_id": "DI_LUCIA_NICCOLO",
-        "atleta_cognome": "DI",
-        "atleta_nome": "LUCIA NICCOLO'",
-        "posizione": 1,
-        "punti_effettivi": 15,
+        "atleta_id": "ANTONGIOVANNI_DIEGO",
+        "atleta_cognome": "ANTONGIOVANNI",
+        "atleta_nome": "DIEGO",
+        "posizione": 6,
+        "punti_effettivi": 5,
         "moltiplicatore": 1,
         "tipo": "regionale",
         "regione": "TOSCANA",
@@ -62999,14 +62999,14 @@
         "media": "38.641"
       },
       {
-        "gara_id": "42_COPPA_DEI_LAVORATORI_2026-05-01_ES1_F",
+        "gara_id": "42_COPPA_DEI_LAVORATORI_2026-05-01_ES1_M",
         "nome_gara": "42 COPPA DEI LAVORATORI",
         "data": "2026-05-01",
         "atleta_id": "DI_LUCIA_NICCOLO",
-        "atleta_cognome": "DI",
-        "atleta_nome": "LUCIA NICCOLO'",
-        "posizione": 1,
-        "punti_effettivi": 15,
+        "atleta_cognome": "DI LUCIA",
+        "atleta_nome": "NICCOLO'",
+        "posizione": 3,
+        "punti_effettivi": 10,
         "moltiplicatore": 1,
         "tipo": "regionale",
         "regione": "TOSCANA",
@@ -63137,11 +63137,11 @@
         "gara_id": "3_TROFEO_BACCI_FABIO_ALLA_MEMORIA_2026-04-26_ES1_M",
         "nome_gara": "3 TROFEO BACCI FABIO ALLA MEMORIA",
         "data": "2026-04-26",
-        "atleta_id": "MAESTRELLI_DIEGO",
-        "atleta_cognome": "MAESTRELLI",
-        "atleta_nome": "DIEGO",
-        "posizione": 5,
-        "punti_effettivi": 6,
+        "atleta_id": "DI_LUCIA_NICCOLO",
+        "atleta_cognome": "DI LUCIA",
+        "atleta_nome": "NICCOLO'",
+        "posizione": 3,
+        "punti_effettivi": 10,
         "moltiplicatore": 1,
         "tipo": "regionale",
         "regione": "TOSCANA",
@@ -63149,14 +63149,14 @@
         "media": "35.286"
       },
       {
-        "gara_id": "3_TROFEO_BACCI_FABIO_ALLA_MEMORIA_2026-04-26_ES1_F",
+        "gara_id": "3_TROFEO_BACCI_FABIO_ALLA_MEMORIA_2026-04-26_ES1_M",
         "nome_gara": "3 TROFEO BACCI FABIO ALLA MEMORIA",
         "data": "2026-04-26",
-        "atleta_id": "DI_LUCIA_NICCOLO",
-        "atleta_cognome": "DI",
-        "atleta_nome": "LUCIA NICCOLO'",
-        "posizione": 1,
-        "punti_effettivi": 15,
+        "atleta_id": "MAESTRELLI_DIEGO",
+        "atleta_cognome": "MAESTRELLI",
+        "atleta_nome": "DIEGO",
+        "posizione": 6,
+        "punti_effettivi": 5,
         "moltiplicatore": 1,
         "tipo": "regionale",
         "regione": "TOSCANA",
@@ -63332,11 +63332,26 @@
         "gara_id": "17_MEMORIAL_ANTONJ_ORSANI_GARA_UNICA_2026-04-19_ES1_M",
         "nome_gara": "17 MEMORIAL ANTONJ ORSANI GARA UNICA",
         "data": "2026-04-19",
+        "atleta_id": "DI_LUCIA_NICCOLO",
+        "atleta_cognome": "DI LUCIA",
+        "atleta_nome": "NICCOLO'",
+        "posizione": 1,
+        "punti_effettivi": 15,
+        "moltiplicatore": 1,
+        "tipo": "regionale",
+        "regione": "TOSCANA",
+        "km": "23.400",
+        "media": "38.678"
+      },
+      {
+        "gara_id": "17_MEMORIAL_ANTONJ_ORSANI_GARA_UNICA_2026-04-19_ES1_M",
+        "nome_gara": "17 MEMORIAL ANTONJ ORSANI GARA UNICA",
+        "data": "2026-04-19",
         "atleta_id": "ANTONGIOVANNI_DIEGO",
         "atleta_cognome": "ANTONGIOVANNI",
         "atleta_nome": "DIEGO",
-        "posizione": 1,
-        "punti_effettivi": 15,
+        "posizione": 2,
+        "punti_effettivi": 12,
         "moltiplicatore": 1,
         "tipo": "regionale",
         "regione": "TOSCANA",
@@ -63350,8 +63365,8 @@
         "atleta_id": "SPINI_MICHAEL",
         "atleta_cognome": "SPINI",
         "atleta_nome": "MICHAEL",
-        "posizione": 5,
-        "punti_effettivi": 6,
+        "posizione": 6,
+        "punti_effettivi": 5,
         "moltiplicatore": 1,
         "tipo": "regionale",
         "regione": "TOSCANA",
@@ -63365,8 +63380,8 @@
         "atleta_id": "MAESTRELLI_DIEGO",
         "atleta_cognome": "MAESTRELLI",
         "atleta_nome": "DIEGO",
-        "posizione": 6,
-        "punti_effettivi": 5,
+        "posizione": 7,
+        "punti_effettivi": 4,
         "moltiplicatore": 1,
         "tipo": "regionale",
         "regione": "TOSCANA",
@@ -63380,23 +63395,8 @@
         "atleta_id": "ORLANDINI_MATTIA",
         "atleta_cognome": "ORLANDINI",
         "atleta_nome": "MATTIA",
-        "posizione": 7,
-        "punti_effettivi": 4,
-        "moltiplicatore": 1,
-        "tipo": "regionale",
-        "regione": "TOSCANA",
-        "km": "23.400",
-        "media": "38.678"
-      },
-      {
-        "gara_id": "17_MEMORIAL_ANTONJ_ORSANI_GARA_UNICA_2026-04-19_ES1_F",
-        "nome_gara": "17 MEMORIAL ANTONJ ORSANI GARA UNICA",
-        "data": "2026-04-19",
-        "atleta_id": "DI_LUCIA_NICCOLO",
-        "atleta_cognome": "DI",
-        "atleta_nome": "LUCIA NICCOLO'",
-        "posizione": 1,
-        "punti_effettivi": 15,
+        "posizione": 8,
+        "punti_effettivi": 3,
         "moltiplicatore": 1,
         "tipo": "regionale",
         "regione": "TOSCANA",
@@ -63524,14 +63524,14 @@
         "media": "39.911"
       },
       {
-        "gara_id": "PASQUALANDO_GARA_UNICA_2026-04-05_ES1_F",
+        "gara_id": "PASQUALANDO_GARA_UNICA_2026-04-05_ES1_M",
         "nome_gara": "PASQUALANDO GARA UNICA",
         "data": "2026-04-05",
         "atleta_id": "DI_LUCIA_NICCOLO",
-        "atleta_cognome": "DI",
-        "atleta_nome": "LUCIA NICCOLO'",
-        "posizione": 1,
-        "punti_effettivi": 15,
+        "atleta_cognome": "DI LUCIA",
+        "atleta_nome": "NICCOLO'",
+        "posizione": 3,
+        "punti_effettivi": 10,
         "moltiplicatore": 1,
         "tipo": "regionale",
         "regione": "TOSCANA",
@@ -63554,14 +63554,14 @@
         "media": "40.352"
       },
       {
-        "gara_id": "15_MEMORIAL_TOMMASO_CAVORSO_2026-03-29_ES1_F",
+        "gara_id": "15_MEMORIAL_TOMMASO_CAVORSO_2026-03-29_ES1_M",
         "nome_gara": "15 MEMORIAL TOMMASO CAVORSO",
         "data": "2026-03-29",
         "atleta_id": "DI_LUCIA_NICCOLO",
-        "atleta_cognome": "DI",
-        "atleta_nome": "LUCIA NICCOLO'",
-        "posizione": 1,
-        "punti_effettivi": 15,
+        "atleta_cognome": "DI LUCIA",
+        "atleta_nome": "NICCOLO'",
+        "posizione": 3,
+        "punti_effettivi": 10,
         "moltiplicatore": 1,
         "tipo": "regionale",
         "regione": "TOSCANA",
@@ -63587,11 +63587,11 @@
         "gara_id": "MEMORIAL_ENNIO_BONGIORNI_2026-03-22_ES1_M",
         "nome_gara": "MEMORIAL ENNIO BONGIORNI",
         "data": "2026-03-22",
-        "atleta_id": "ORLANDINI_MATTIA",
-        "atleta_cognome": "ORLANDINI",
-        "atleta_nome": "MATTIA",
-        "posizione": 6,
-        "punti_effettivi": 5,
+        "atleta_id": "DI_LUCIA_NICCOLO",
+        "atleta_cognome": "DI LUCIA",
+        "atleta_nome": "NICCOLO'",
+        "posizione": 3,
+        "punti_effettivi": 10,
         "moltiplicatore": 1,
         "tipo": "regionale",
         "regione": "TOSCANA",
@@ -63599,14 +63599,14 @@
         "media": "35.280"
       },
       {
-        "gara_id": "MEMORIAL_ENNIO_BONGIORNI_2026-03-22_ES1_F",
+        "gara_id": "MEMORIAL_ENNIO_BONGIORNI_2026-03-22_ES1_M",
         "nome_gara": "MEMORIAL ENNIO BONGIORNI",
         "data": "2026-03-22",
-        "atleta_id": "DI_LUCIA_NICCOLO",
-        "atleta_cognome": "DI",
-        "atleta_nome": "LUCIA NICCOLO'",
-        "posizione": 1,
-        "punti_effettivi": 15,
+        "atleta_id": "ORLANDINI_MATTIA",
+        "atleta_cognome": "ORLANDINI",
+        "atleta_nome": "MATTIA",
+        "posizione": 7,
+        "punti_effettivi": 4,
         "moltiplicatore": 1,
         "tipo": "regionale",
         "regione": "TOSCANA",
@@ -63631,15 +63631,14 @@
     ],
     "punti_per_cat": {
       "AL_M": 127,
-      "ES1_M": 210,
-      "ES2_M": 302,
-      "ES1_F": 165
+      "ES1_M": 311,
+      "ES2_M": 302
     }
   },
   "SS_AQUILA": {
     "id": "SS_AQUILA",
     "nome": "SS AQUILA",
-    "punti_totali": 242,
+    "punti_totali": 239,
     "atleti": [
       "CEROFOLINI_LEONARDO",
       "BARTOLI_ALESSIO",
@@ -63941,8 +63940,8 @@
         "atleta_id": "BARTOLI_ALESSIO",
         "atleta_cognome": "BARTOLI",
         "atleta_nome": "ALESSIO",
-        "posizione": 6,
-        "punti_effettivi": 5,
+        "posizione": 7,
+        "punti_effettivi": 4,
         "moltiplicatore": 1,
         "tipo": "regionale",
         "regione": "TOSCANA",
@@ -63986,8 +63985,8 @@
         "atleta_id": "BARTOLI_ALESSIO",
         "atleta_cognome": "BARTOLI",
         "atleta_nome": "ALESSIO",
-        "posizione": 7,
-        "punti_effettivi": 4,
+        "posizione": 8,
+        "punti_effettivi": 3,
         "moltiplicatore": 1,
         "tipo": "regionale",
         "regione": "TOSCANA",
@@ -64016,8 +64015,8 @@
         "atleta_id": "CEROFOLINI_LEONARDO",
         "atleta_cognome": "CEROFOLINI",
         "atleta_nome": "LEONARDO",
-        "posizione": 7,
-        "punti_effettivi": 4,
+        "posizione": 8,
+        "punti_effettivi": 3,
         "moltiplicatore": 1,
         "tipo": "regionale",
         "regione": "TOSCANA",
@@ -64146,15 +64145,15 @@
       }
     ],
     "punti_per_cat": {
-      "AL_M": 70,
-      "ES1_M": 69,
+      "AL_M": 69,
+      "ES1_M": 67,
       "JUN_M": 103
     }
   },
   "UC_COLTANO_GRUBE_COSTRUZIONI": {
     "id": "UC_COLTANO_GRUBE_COSTRUZIONI",
     "nome": "UC COLTANO GRUBE COSTRUZIONI",
-    "punti_totali": 730,
+    "punti_totali": 719,
     "atleti": [
       "MAFFEI_LIBEROMARIO",
       "STEFANINI_EDOARDO",
@@ -64641,8 +64640,8 @@
         "atleta_id": "BOLOGNESI_MATTIA",
         "atleta_cognome": "BOLOGNESI",
         "atleta_nome": "MATTIA",
-        "posizione": 2,
-        "punti_effettivi": 12,
+        "posizione": 3,
+        "punti_effettivi": 10,
         "moltiplicatore": 1,
         "tipo": "regionale",
         "regione": "LIGURIA",
@@ -64701,8 +64700,8 @@
         "atleta_id": "BOLOGNESI_MATTIA",
         "atleta_cognome": "BOLOGNESI",
         "atleta_nome": "MATTIA",
-        "posizione": 8,
-        "punti_effettivi": 3,
+        "posizione": 9,
+        "punti_effettivi": 2,
         "moltiplicatore": 1,
         "tipo": "regionale",
         "regione": "TOSCANA",
@@ -64941,8 +64940,8 @@
         "atleta_id": "BELLONI_FILIPPO",
         "atleta_cognome": "BELLONI",
         "atleta_nome": "FILIPPO",
-        "posizione": 8,
-        "punti_effettivi": 3,
+        "posizione": 9,
+        "punti_effettivi": 2,
         "moltiplicatore": 1,
         "tipo": "regionale",
         "regione": "TOSCANA",
@@ -65076,8 +65075,8 @@
         "atleta_id": "BOLOGNESI_MATTIA",
         "atleta_cognome": "BOLOGNESI",
         "atleta_nome": "MATTIA",
-        "posizione": 6,
-        "punti_effettivi": 5,
+        "posizione": 7,
+        "punti_effettivi": 4,
         "moltiplicatore": 1,
         "tipo": "regionale",
         "regione": "TOSCANA",
@@ -65091,8 +65090,8 @@
         "atleta_id": "CIUCCI_MATTEO",
         "atleta_cognome": "CIUCCI",
         "atleta_nome": "MATTEO",
-        "posizione": 7,
-        "punti_effettivi": 4,
+        "posizione": 8,
+        "punti_effettivi": 3,
         "moltiplicatore": 1,
         "tipo": "regionale",
         "regione": "TOSCANA",
@@ -65346,8 +65345,8 @@
         "atleta_id": "BOLOGNESI_MATTIA",
         "atleta_cognome": "BOLOGNESI",
         "atleta_nome": "MATTIA",
-        "posizione": 3,
-        "punti_effettivi": 10,
+        "posizione": 4,
+        "punti_effettivi": 8,
         "moltiplicatore": 1,
         "tipo": "regionale",
         "regione": "TOSCANA",
@@ -65391,8 +65390,8 @@
         "atleta_id": "BOLOGNESI_MATTIA",
         "atleta_cognome": "BOLOGNESI",
         "atleta_nome": "MATTIA",
-        "posizione": 4,
-        "punti_effettivi": 8,
+        "posizione": 5,
+        "punti_effettivi": 6,
         "moltiplicatore": 1,
         "tipo": "regionale",
         "regione": "TOSCANA",
@@ -65406,8 +65405,8 @@
         "atleta_id": "CIUCCI_MATTEO",
         "atleta_cognome": "CIUCCI",
         "atleta_nome": "MATTEO",
-        "posizione": 5,
-        "punti_effettivi": 6,
+        "posizione": 6,
+        "punti_effettivi": 5,
         "moltiplicatore": 1,
         "tipo": "regionale",
         "regione": "TOSCANA",
@@ -65431,15 +65430,15 @@
       }
     ],
     "punti_per_cat": {
-      "AL_M": 66,
+      "AL_M": 65,
       "ES2_M": 590,
-      "ES1_M": 74
+      "ES1_M": 64
     }
   },
   "TEAM_CESARO_NERI_LUCCHINI": {
     "id": "TEAM_CESARO_NERI_LUCCHINI",
     "nome": "TEAM CESARO-NERI-LUCCHINI",
-    "punti_totali": 1371,
+    "punti_totali": 1361,
     "atleti": [
       "GLIOTTONE_GIOVANNI",
       "RIZZUTI_TOMMASO_LUIGI",
@@ -65481,8 +65480,8 @@
         "atleta_id": "RIZZUTI_TOMMASO_LUIGI",
         "atleta_cognome": "RIZZUTI",
         "atleta_nome": "TOMMASO LUIGI",
-        "posizione": 8,
-        "punti_effettivi": 3,
+        "posizione": 9,
+        "punti_effettivi": 2,
         "moltiplicatore": 1,
         "tipo": "regionale",
         "regione": "LAZIO",
@@ -66141,8 +66140,8 @@
         "atleta_id": "GLIOTTONE_GIOVANNI",
         "atleta_cognome": "GLIOTTONE",
         "atleta_nome": "GIOVANNI",
-        "posizione": 8,
-        "punti_effettivi": 3,
+        "posizione": 9,
+        "punti_effettivi": 2,
         "moltiplicatore": 1,
         "tipo": "regionale",
         "regione": "LAZIO",
@@ -67236,8 +67235,8 @@
         "atleta_id": "GLIOTTONE_GIOVANNI",
         "atleta_cognome": "GLIOTTONE",
         "atleta_nome": "GIOVANNI",
-        "posizione": 4,
-        "punti_effettivi": 8,
+        "posizione": 5,
+        "punti_effettivi": 6,
         "moltiplicatore": 1,
         "tipo": "regionale",
         "regione": "TOSCANA",
@@ -67611,8 +67610,8 @@
         "atleta_id": "GLIOTTONE_GIOVANNI",
         "atleta_cognome": "GLIOTTONE",
         "atleta_nome": "GIOVANNI",
-        "posizione": 9,
-        "punti_effettivi": 2,
+        "posizione": 10,
+        "punti_effettivi": 1,
         "moltiplicatore": 1,
         "tipo": "regionale",
         "regione": "TOSCANA",
@@ -67686,8 +67685,8 @@
         "atleta_id": "FIORILLO_MICHAEL",
         "atleta_cognome": "FIORILLO",
         "atleta_nome": "MICHAEL",
-        "posizione": 9,
-        "punti_effettivi": 2,
+        "posizione": 10,
+        "punti_effettivi": 1,
         "moltiplicatore": 1,
         "tipo": "regionale",
         "regione": "TOSCANA",
@@ -67746,8 +67745,8 @@
         "atleta_id": "PITEO_FRANCESCO_PIO",
         "atleta_cognome": "PITEO",
         "atleta_nome": "FRANCESCO PIO",
-        "posizione": 6,
-        "punti_effettivi": 5,
+        "posizione": 7,
+        "punti_effettivi": 4,
         "moltiplicatore": 1,
         "tipo": "regionale",
         "regione": "TOSCANA",
@@ -67791,8 +67790,8 @@
         "atleta_id": "PITEO_FRANCESCO_PIO",
         "atleta_cognome": "PITEO",
         "atleta_nome": "FRANCESCO PIO",
-        "posizione": 3,
-        "punti_effettivi": 10,
+        "posizione": 4,
+        "punti_effettivi": 8,
         "moltiplicatore": 1,
         "tipo": "regionale",
         "regione": "TOSCANA",
@@ -67806,8 +67805,8 @@
         "atleta_id": "FIORILLO_MICHAEL",
         "atleta_cognome": "FIORILLO",
         "atleta_nome": "MICHAEL",
-        "posizione": 7,
-        "punti_effettivi": 4,
+        "posizione": 8,
+        "punti_effettivi": 3,
         "moltiplicatore": 1,
         "tipo": "regionale",
         "regione": "TOSCANA",
@@ -67861,8 +67860,8 @@
       }
     ],
     "punti_per_cat": {
-      "AL_M": 277,
-      "ES1_M": 249,
+      "AL_M": 272,
+      "ES1_M": 244,
       "ES2_M": 799,
       "AL_F": 46
     }
@@ -67870,7 +67869,7 @@
   "CAMB_KE": {
     "id": "CAMB_KE",
     "nome": "CAMB!KE",
-    "punti_totali": 446,
+    "punti_totali": 444,
     "atleti": [
       "APRILE_MICHELE",
       "LEO_GABRIELE",
@@ -68311,8 +68310,8 @@
         "atleta_id": "PICCOLO_MATTEO",
         "atleta_cognome": "PICCOLO",
         "atleta_nome": "MATTEO",
-        "posizione": 7,
-        "punti_effettivi": 4,
+        "posizione": 8,
+        "punti_effettivi": 3,
         "moltiplicatore": 1,
         "tipo": "regionale",
         "regione": "LAZIO",
@@ -68881,8 +68880,8 @@
         "atleta_id": "DESIDERIO_VINCENZO",
         "atleta_cognome": "DESIDERIO",
         "atleta_nome": "VINCENZO",
-        "posizione": 5,
-        "punti_effettivi": 6,
+        "posizione": 6,
+        "punti_effettivi": 5,
         "moltiplicatore": 1,
         "tipo": "regionale",
         "regione": "TOSCANA",
@@ -68891,8 +68890,8 @@
       }
     ],
     "punti_per_cat": {
-      "AL_M": 233,
-      "ES1_M": 154,
+      "AL_M": 232,
+      "ES1_M": 153,
       "ES2_M": 59
     }
   },
@@ -68927,7 +68926,7 @@
   "ASD_EFFETTO_CICLISMO_NOI_SPORT": {
     "id": "ASD_EFFETTO_CICLISMO_NOI_SPORT",
     "nome": "ASD EFFETTO CICLISMO - NOI SPORT",
-    "punti_totali": 228,
+    "punti_totali": 141,
     "atleti": [
       "FERRANTE_DAMIANO",
       "DI_ROSA_CHRISTIAN",
@@ -68952,14 +68951,14 @@
         "media": "41.538"
       },
       {
-        "gara_id": "TROFEO_SAN_GIOVANNI_2026-08-02_AL_F",
+        "gara_id": "TROFEO_SAN_GIOVANNI_2026-08-02_AL_M",
         "nome_gara": "TROFEO SAN GIOVANNI",
         "data": "2026-08-02",
         "atleta_id": "DI_ROSA_CHRISTIAN",
-        "atleta_cognome": "DI",
-        "atleta_nome": "ROSA CHRISTIAN",
-        "posizione": 1,
-        "punti_effettivi": 15,
+        "atleta_cognome": "DI ROSA",
+        "atleta_nome": "CHRISTIAN",
+        "posizione": 8,
+        "punti_effettivi": 3,
         "moltiplicatore": 1,
         "tipo": "regionale",
         "regione": "LAZIO",
@@ -69012,14 +69011,14 @@
         "media": "39.310"
       },
       {
-        "gara_id": "63_CIRCUITO_DELLA_VALLE_DEL_LIRI_2026-07-19_AL_F",
+        "gara_id": "63_CIRCUITO_DELLA_VALLE_DEL_LIRI_2026-07-19_AL_M",
         "nome_gara": "63 CIRCUITO DELLA VALLE DEL LIRI",
         "data": "2026-07-19",
         "atleta_id": "DI_ROSA_CHRISTIAN",
-        "atleta_cognome": "DI",
-        "atleta_nome": "ROSA CHRISTIAN",
-        "posizione": 1,
-        "punti_effettivi": 15,
+        "atleta_cognome": "DI ROSA",
+        "atleta_nome": "CHRISTIAN",
+        "posizione": 10,
+        "punti_effettivi": 1,
         "moltiplicatore": 1,
         "tipo": "regionale",
         "regione": "LAZIO",
@@ -69075,11 +69074,11 @@
         "gara_id": "19_MEMORIAL_ANTONIO_DE_FELICE_2026-06-14_AL_M",
         "nome_gara": "19 MEMORIAL ANTONIO DE FELICE",
         "data": "2026-06-14",
-        "atleta_id": "FERRANTE_DAMIANO",
-        "atleta_cognome": "FERRANTE",
-        "atleta_nome": "DAMIANO",
-        "posizione": 5,
-        "punti_effettivi": 6,
+        "atleta_id": "DI_ROSA_CHRISTIAN",
+        "atleta_cognome": "DI ROSA",
+        "atleta_nome": "CHRISTIAN",
+        "posizione": 4,
+        "punti_effettivi": 8,
         "moltiplicatore": 1,
         "tipo": "regionale",
         "regione": "LAZIO",
@@ -69087,14 +69086,14 @@
         "media": "41.018"
       },
       {
-        "gara_id": "19_MEMORIAL_ANTONIO_DE_FELICE_2026-06-14_AL_F",
+        "gara_id": "19_MEMORIAL_ANTONIO_DE_FELICE_2026-06-14_AL_M",
         "nome_gara": "19 MEMORIAL ANTONIO DE FELICE",
         "data": "2026-06-14",
-        "atleta_id": "DI_ROSA_CHRISTIAN",
-        "atleta_cognome": "DI",
-        "atleta_nome": "ROSA CHRISTIAN",
-        "posizione": 1,
-        "punti_effettivi": 15,
+        "atleta_id": "FERRANTE_DAMIANO",
+        "atleta_cognome": "FERRANTE",
+        "atleta_nome": "DAMIANO",
+        "posizione": 6,
+        "punti_effettivi": 5,
         "moltiplicatore": 1,
         "tipo": "regionale",
         "regione": "LAZIO",
@@ -69162,14 +69161,14 @@
         "media": "39.386"
       },
       {
-        "gara_id": "74_COPPA_SPORTIVI_MONTEMARCIANESI_2026-05-10_AL_F",
+        "gara_id": "74_COPPA_SPORTIVI_MONTEMARCIANESI_2026-05-10_AL_M",
         "nome_gara": "74 COPPA SPORTIVI MONTEMARCIANESI",
         "data": "2026-05-10",
         "atleta_id": "DI_ROSA_CHRISTIAN",
-        "atleta_cognome": "DI",
-        "atleta_nome": "ROSA CHRISTIAN",
-        "posizione": 1,
-        "punti_effettivi": 15,
+        "atleta_cognome": "DI ROSA",
+        "atleta_nome": "CHRISTIAN",
+        "posizione": 5,
+        "punti_effettivi": 6,
         "moltiplicatore": 1,
         "tipo": "regionale",
         "regione": "TOSCANA",
@@ -69192,14 +69191,14 @@
         "media": "39.892"
       },
       {
-        "gara_id": "LA_STORICA_COPPA_DE_LE_POGGIOLA_2026-05-03_AL_F",
+        "gara_id": "LA_STORICA_COPPA_DE_LE_POGGIOLA_2026-05-03_AL_M",
         "nome_gara": "LA STORICA COPPA DE LE POGGIOLA",
         "data": "2026-05-03",
         "atleta_id": "DI_ROSA_CHRISTIAN",
-        "atleta_cognome": "DI",
-        "atleta_nome": "ROSA CHRISTIAN",
-        "posizione": 1,
-        "punti_effettivi": 15,
+        "atleta_cognome": "DI ROSA",
+        "atleta_nome": "CHRISTIAN",
+        "posizione": 9,
+        "punti_effettivi": 2,
         "moltiplicatore": 1,
         "tipo": "regionale",
         "regione": "TOSCANA",
@@ -69237,14 +69236,14 @@
         "media": "38.641"
       },
       {
-        "gara_id": "57_COPPA_CIRCOLO_ARCI_RENZINO_2026-05-01_AL_F",
+        "gara_id": "57_COPPA_CIRCOLO_ARCI_RENZINO_2026-05-01_AL_M",
         "nome_gara": "57 COPPA CIRCOLO ARCI RENZINO",
         "data": "2026-05-01",
         "atleta_id": "DI_ROSA_CHRISTIAN",
-        "atleta_cognome": "DI",
-        "atleta_nome": "ROSA CHRISTIAN",
-        "posizione": 1,
-        "punti_effettivi": 15,
+        "atleta_cognome": "DI ROSA",
+        "atleta_nome": "CHRISTIAN",
+        "posizione": 10,
+        "punti_effettivi": 1,
         "moltiplicatore": 1,
         "tipo": "regionale",
         "regione": "TOSCANA",
@@ -69252,14 +69251,14 @@
         "media": "38.641"
       },
       {
-        "gara_id": "22_GRAN_PREMIO_DELLA_LIBERAZIONE_STRADE_BIANCHE_2026-04-25_AL_F",
+        "gara_id": "22_GRAN_PREMIO_DELLA_LIBERAZIONE_STRADE_BIANCHE_2026-04-25_AL_M",
         "nome_gara": "22 GRAN PREMIO DELLA LIBERAZIONE STRADE BIANCHE",
         "data": "2026-04-25",
         "atleta_id": "DI_ROSA_CHRISTIAN",
-        "atleta_cognome": "DI",
-        "atleta_nome": "ROSA CHRISTIAN",
-        "posizione": 1,
-        "punti_effettivi": 15,
+        "atleta_cognome": "DI ROSA",
+        "atleta_nome": "CHRISTIAN",
+        "posizione": 3,
+        "punti_effettivi": 10,
         "moltiplicatore": 1,
         "tipo": "regionale",
         "regione": "TOSCANA",
@@ -69282,14 +69281,14 @@
         "media": "37.054"
       },
       {
-        "gara_id": "5_TROFEO_CITTA_DI_MONTEVARCHI_2026-04-06_AL_F",
+        "gara_id": "5_TROFEO_CITTA_DI_MONTEVARCHI_2026-04-06_AL_M",
         "nome_gara": "5 TROFEO CITTA' DI MONTEVARCHI",
         "data": "2026-04-06",
         "atleta_id": "DI_ROSA_CHRISTIAN",
-        "atleta_cognome": "DI",
-        "atleta_nome": "ROSA CHRISTIAN",
-        "posizione": 1,
-        "punti_effettivi": 15,
+        "atleta_cognome": "DI ROSA",
+        "atleta_nome": "CHRISTIAN",
+        "posizione": 8,
+        "punti_effettivi": 3,
         "moltiplicatore": 1,
         "tipo": "regionale",
         "regione": "TOSCANA",
@@ -69298,8 +69297,7 @@
       }
     ],
     "punti_per_cat": {
-      "AL_M": 67,
-      "AL_F": 120,
+      "AL_M": 100,
       "ES2_M": 1,
       "ES1_F": 40
     }
@@ -69561,7 +69559,7 @@
   "U_C_CITTA_DI_CASTELLO_A_S_D": {
     "id": "U_C_CITTA_DI_CASTELLO_A_S_D",
     "nome": "U.C. CITTA' DI CASTELLO A.S.D.",
-    "punti_totali": 164,
+    "punti_totali": 163,
     "atleti": [
       "GUERRA_ROBERTO",
       "BUCCI_TOMMASO",
@@ -69879,8 +69877,8 @@
         "atleta_id": "LONGARI_VITTORIO",
         "atleta_cognome": "LONGARI",
         "atleta_nome": "VITTORIO",
-        "posizione": 9,
-        "punti_effettivi": 2,
+        "posizione": 10,
+        "punti_effettivi": 1,
         "moltiplicatore": 1,
         "tipo": "regionale",
         "regione": "TOSCANA",
@@ -69979,7 +69977,7 @@
       }
     ],
     "punti_per_cat": {
-      "AL_M": 140,
+      "AL_M": 139,
       "AL_F": 6,
       "ES1_M": 18
     }
@@ -70413,7 +70411,7 @@
   "ASD_GUBBIO_CICLISMO_MOCAIANA": {
     "id": "ASD_GUBBIO_CICLISMO_MOCAIANA",
     "nome": "ASD GUBBIO CICLISMO MOCAIANA",
-    "punti_totali": 449,
+    "punti_totali": 447,
     "atleti": [
       "CESARINI_SAMUELE",
       "CARRARA_TARARA_RAFFAELE",
@@ -71016,8 +71014,8 @@
         "atleta_id": "CESARINI_LORENZO",
         "atleta_cognome": "CESARINI",
         "atleta_nome": "LORENZO",
-        "posizione": 4,
-        "punti_effettivi": 8,
+        "posizione": 5,
+        "punti_effettivi": 6,
         "moltiplicatore": 1,
         "tipo": "regionale",
         "regione": "TOSCANA",
@@ -71222,14 +71220,14 @@
     ],
     "punti_per_cat": {
       "AL_M": 14,
-      "ES1_M": 119,
+      "ES1_M": 117,
       "ES2_M": 316
     }
   },
   "TEAM_FACT_ACADEMY": {
     "id": "TEAM_FACT_ACADEMY",
     "nome": "TEAM FACT ACADEMY",
-    "punti_totali": 42,
+    "punti_totali": 39,
     "atleti": [
       "BROCCHI_DANIELE",
       "CAMICIOTTOLI_FILIPPO"
@@ -71317,8 +71315,8 @@
         "atleta_id": "BROCCHI_DANIELE",
         "atleta_cognome": "BROCCHI",
         "atleta_nome": "DANIELE",
-        "posizione": 9,
-        "punti_effettivi": 2,
+        "posizione": 10,
+        "punti_effettivi": 1,
         "moltiplicatore": 1,
         "tipo": "regionale",
         "regione": "TOSCANA",
@@ -71332,8 +71330,8 @@
         "atleta_id": "CAMICIOTTOLI_FILIPPO",
         "atleta_cognome": "CAMICIOTTOLI",
         "atleta_nome": "FILIPPO",
-        "posizione": 9,
-        "punti_effettivi": 2,
+        "posizione": 10,
+        "punti_effettivi": 1,
         "moltiplicatore": 1,
         "tipo": "regionale",
         "regione": "TOSCANA",
@@ -71347,8 +71345,8 @@
         "atleta_id": "CAMICIOTTOLI_FILIPPO",
         "atleta_cognome": "CAMICIOTTOLI",
         "atleta_nome": "FILIPPO",
-        "posizione": 8,
-        "punti_effettivi": 3,
+        "posizione": 9,
+        "punti_effettivi": 2,
         "moltiplicatore": 1,
         "tipo": "regionale",
         "regione": "TOSCANA",
@@ -71372,7 +71370,7 @@
       }
     ],
     "punti_per_cat": {
-      "AL_M": 42
+      "AL_M": 39
     }
   },
   "A_S_D_GDS_TEAM_COMPETITION": {
@@ -73732,7 +73730,7 @@
   "TEAM_SENAGHESE_GUERRINI": {
     "id": "TEAM_SENAGHESE_GUERRINI",
     "nome": "TEAM SENAGHESE GUERRINI",
-    "punti_totali": 1212,
+    "punti_totali": 1209,
     "atleti": [
       "PEDROTTI_IAGO",
       "FRAGUGLIA_NICOLO",
@@ -75571,8 +75569,8 @@
         "atleta_id": "PEDROTTI_IAGO",
         "atleta_cognome": "PEDROTTI",
         "atleta_nome": "IAGO",
-        "posizione": 3,
-        "punti_effettivi": 10,
+        "posizione": 4,
+        "punti_effettivi": 8,
         "moltiplicatore": 1,
         "tipo": "regionale",
         "regione": "TOSCANA",
@@ -75586,8 +75584,8 @@
         "atleta_id": "BRAGA_LORENZO",
         "atleta_cognome": "BRAGA",
         "atleta_nome": "LORENZO",
-        "posizione": 7,
-        "punti_effettivi": 4,
+        "posizione": 8,
+        "punti_effettivi": 3,
         "moltiplicatore": 1,
         "tipo": "regionale",
         "regione": "TOSCANA",
@@ -75731,7 +75729,7 @@
       }
     ],
     "punti_per_cat": {
-      "ES1_M": 921,
+      "ES1_M": 918,
       "AL_M": 291
     }
   },
@@ -80456,7 +80454,7 @@
   "V_CYCLING_ARICI_CLAUDIA_PITON": {
     "id": "V_CYCLING_ARICI_CLAUDIA_PITON",
     "nome": "V CYCLING - ARICI CLAUDIA - PITON",
-    "punti_totali": 307,
+    "punti_totali": 306,
     "atleti": [
       "GAVAZZI_PIETRO",
       "SEVRIUGIN_EVGENII",
@@ -81165,8 +81163,8 @@
         "atleta_id": "SEVRIUGIN_EVGENII",
         "atleta_cognome": "SEVRIUGIN",
         "atleta_nome": "EVGENII",
-        "posizione": 5,
-        "punti_effettivi": 6,
+        "posizione": 6,
+        "punti_effettivi": 5,
         "moltiplicatore": 1,
         "tipo": "regionale",
         "regione": "TOSCANA",
@@ -81251,7 +81249,7 @@
     ],
     "punti_per_cat": {
       "ES2_M": 132,
-      "ES1_M": 143,
+      "ES1_M": 142,
       "AL_M": 32
     }
   },
@@ -83443,7 +83441,7 @@
   "S_C_MINCIO_CHIESE_A_S_D": {
     "id": "S_C_MINCIO_CHIESE_A_S_D",
     "nome": "S. C. MINCIO-CHIESE A.S.D",
-    "punti_totali": 403,
+    "punti_totali": 400,
     "atleti": [
       "MAI_LEONARDO",
       "AZZOLINI_ALESSIO",
@@ -83975,8 +83973,8 @@
         "atleta_id": "AZZOLINI_ALESSIO",
         "atleta_cognome": "AZZOLINI",
         "atleta_nome": "ALESSIO",
-        "posizione": 6,
-        "punti_effettivi": 5,
+        "posizione": 7,
+        "punti_effettivi": 4,
         "moltiplicatore": 1,
         "tipo": "regionale",
         "regione": "EMILIA ROMAGNA",
@@ -83990,8 +83988,8 @@
         "atleta_id": "MAI_LEONARDO",
         "atleta_cognome": "MAI",
         "atleta_nome": "LEONARDO",
-        "posizione": 7,
-        "punti_effettivi": 4,
+        "posizione": 8,
+        "punti_effettivi": 3,
         "moltiplicatore": 1,
         "tipo": "regionale",
         "regione": "EMILIA ROMAGNA",
@@ -84005,8 +84003,8 @@
         "atleta_id": "BERTUCCI_DIEGO",
         "atleta_cognome": "BERTUCCI",
         "atleta_nome": "DIEGO",
-        "posizione": 9,
-        "punti_effettivi": 2,
+        "posizione": 10,
+        "punti_effettivi": 1,
         "moltiplicatore": 1,
         "tipo": "regionale",
         "regione": "EMILIA ROMAGNA",
@@ -84420,7 +84418,7 @@
       }
     ],
     "punti_per_cat": {
-      "ES1_M": 87,
+      "ES1_M": 84,
       "ES2_M": 268,
       "AL_M": 48
     }
@@ -84428,7 +84426,7 @@
   "S_C_CAVRIAGO": {
     "id": "S_C_CAVRIAGO",
     "nome": "S.C. CAVRIAGO",
-    "punti_totali": 179,
+    "punti_totali": 177,
     "atleti": [
       "CANESCHI_FRANCESCO",
       "CONCA_FILIPPO",
@@ -84699,8 +84697,8 @@
         "atleta_id": "BALDERI_MARTINO",
         "atleta_cognome": "BALDERI",
         "atleta_nome": "MARTINO",
-        "posizione": 8,
-        "punti_effettivi": 3,
+        "posizione": 9,
+        "punti_effettivi": 2,
         "moltiplicatore": 1,
         "tipo": "regionale",
         "regione": "TOSCANA",
@@ -84759,8 +84757,8 @@
         "atleta_id": "CANESCHI_FRANCESCO",
         "atleta_cognome": "CANESCHI",
         "atleta_nome": "FRANCESCO",
-        "posizione": 9,
-        "punti_effettivi": 2,
+        "posizione": 10,
+        "punti_effettivi": 1,
         "moltiplicatore": 1,
         "tipo": "regionale",
         "regione": "TOSCANA",
@@ -84904,7 +84902,7 @@
       }
     ],
     "punti_per_cat": {
-      "ES1_M": 121,
+      "ES1_M": 119,
       "ES2_M": 24,
       "AL_M": 34
     }
@@ -90438,7 +90436,7 @@
   "ASD_G_C_FAUSTO_COPPI": {
     "id": "ASD_G_C_FAUSTO_COPPI",
     "nome": "ASD G. C. FAUSTO COPPI",
-    "punti_totali": 242,
+    "punti_totali": 240,
     "atleti": [
       "SANGIORGI_ALESSANDRO_MATTIA",
       "BUDA_GABRIEL",
@@ -90892,8 +90890,8 @@
         "atleta_id": "SANGIORGI_ALESSANDRO_MATTIA",
         "atleta_cognome": "SANGIORGI",
         "atleta_nome": "ALESSANDRO MATTIA",
-        "posizione": 3,
-        "punti_effettivi": 10,
+        "posizione": 4,
+        "punti_effettivi": 8,
         "moltiplicatore": 1,
         "tipo": "regionale",
         "regione": "TOSCANA",
@@ -91172,14 +91170,14 @@
       }
     ],
     "punti_per_cat": {
-      "ES1_M": 136,
+      "ES1_M": 134,
       "ES2_M": 106
     }
   },
   "PEDALE_RIMINESE_FRECCE_ROSSE": {
     "id": "PEDALE_RIMINESE_FRECCE_ROSSE",
     "nome": "PEDALE RIMINESE FRECCE ROSSE",
-    "punti_totali": 487,
+    "punti_totali": 486,
     "atleti": [
       "ROMITO_JACOPO",
       "ANELLI_FILIPPO",
@@ -91827,8 +91825,8 @@
         "atleta_id": "ROMITO_JACOPO",
         "atleta_cognome": "ROMITO",
         "atleta_nome": "JACOPO",
-        "posizione": 7,
-        "punti_effettivi": 4,
+        "posizione": 8,
+        "punti_effettivi": 3,
         "moltiplicatore": 1,
         "tipo": "regionale",
         "regione": "TOSCANA",
@@ -92137,14 +92135,14 @@
       }
     ],
     "punti_per_cat": {
-      "ES1_M": 435,
+      "ES1_M": 434,
       "ES2_M": 52
     }
   },
   "FOLIGNO_CYCLING_TEAM_ASD": {
     "id": "FOLIGNO_CYCLING_TEAM_ASD",
     "nome": "FOLIGNO CYCLING TEAM ASD",
-    "punti_totali": 254,
+    "punti_totali": 249,
     "atleti": [
       "TUDISCO_LUDOVICO",
       "SCACCIATELLI_LEONARDO",
@@ -92551,8 +92549,8 @@
         "atleta_id": "SCACCIATELLI_LEONARDO",
         "atleta_cognome": "SCACCIATELLI",
         "atleta_nome": "LEONARDO",
-        "posizione": 4,
-        "punti_effettivi": 8,
+        "posizione": 5,
+        "punti_effettivi": 6,
         "moltiplicatore": 1,
         "tipo": "regionale",
         "regione": "TOSCANA",
@@ -92566,8 +92564,8 @@
         "atleta_id": "TUDISCO_LUDOVICO",
         "atleta_cognome": "TUDISCO",
         "atleta_nome": "LUDOVICO",
-        "posizione": 9,
-        "punti_effettivi": 2,
+        "posizione": 10,
+        "punti_effettivi": 1,
         "moltiplicatore": 1,
         "tipo": "regionale",
         "regione": "TOSCANA",
@@ -92581,8 +92579,8 @@
         "atleta_id": "TUDISCO_LUDOVICO",
         "atleta_cognome": "TUDISCO",
         "atleta_nome": "LUDOVICO",
-        "posizione": 5,
-        "punti_effettivi": 6,
+        "posizione": 6,
+        "punti_effettivi": 5,
         "moltiplicatore": 1,
         "tipo": "regionale",
         "regione": "TOSCANA",
@@ -92596,8 +92594,8 @@
         "atleta_id": "SCACCIATELLI_LEONARDO",
         "atleta_cognome": "SCACCIATELLI",
         "atleta_nome": "LEONARDO",
-        "posizione": 6,
-        "punti_effettivi": 5,
+        "posizione": 7,
+        "punti_effettivi": 4,
         "moltiplicatore": 1,
         "tipo": "regionale",
         "regione": "TOSCANA",
@@ -92741,7 +92739,7 @@
       }
     ],
     "punti_per_cat": {
-      "ES1_M": 238,
+      "ES1_M": 233,
       "AL_F": 3,
       "ES2_M": 13
     }
@@ -98493,7 +98491,7 @@
   "UC_DONORATICO": {
     "id": "UC_DONORATICO",
     "nome": "UC DONORATICO",
-    "punti_totali": 659,
+    "punti_totali": 658,
     "atleti": [
       "MORICONI_EDOARDO",
       "AITA_MICHELE",
@@ -99070,8 +99068,8 @@
         "atleta_id": "MORICONI_EDOARDO",
         "atleta_cognome": "MORICONI",
         "atleta_nome": "EDOARDO",
-        "posizione": 5,
-        "punti_effettivi": 6,
+        "posizione": 6,
+        "punti_effettivi": 5,
         "moltiplicatore": 1,
         "tipo": "regionale",
         "regione": "TOSCANA",
@@ -99770,7 +99768,7 @@
       }
     ],
     "punti_per_cat": {
-      "ES1_M": 325,
+      "ES1_M": 324,
       "ES2_M": 72,
       "ES1_F": 185,
       "ES2_F": 77
@@ -99867,7 +99865,7 @@
   "CICLISTICA_BORDIGHERA": {
     "id": "CICLISTICA_BORDIGHERA",
     "nome": "CICLISTICA BORDIGHERA",
-    "punti_totali": 72,
+    "punti_totali": 68,
     "atleti": [
       "GROSSO_MATTEO",
       "TALIA_LISANDRO_LORENZO",
@@ -99927,8 +99925,8 @@
         "atleta_id": "DAMI_GABRIELE",
         "atleta_cognome": "DAMI",
         "atleta_nome": "GABRIELE",
-        "posizione": 6,
-        "punti_effettivi": 5,
+        "posizione": 7,
+        "punti_effettivi": 4,
         "moltiplicatore": 1,
         "tipo": "regionale",
         "regione": "LIGURIA",
@@ -99942,8 +99940,8 @@
         "atleta_id": "GROSSO_MATTEO",
         "atleta_cognome": "GROSSO",
         "atleta_nome": "MATTEO",
-        "posizione": 7,
-        "punti_effettivi": 4,
+        "posizione": 8,
+        "punti_effettivi": 3,
         "moltiplicatore": 1,
         "tipo": "regionale",
         "regione": "LIGURIA",
@@ -99957,8 +99955,8 @@
         "atleta_id": "DAMI_GABRIELE",
         "atleta_cognome": "DAMI",
         "atleta_nome": "GABRIELE",
-        "posizione": 9,
-        "punti_effettivi": 2,
+        "posizione": 10,
+        "punti_effettivi": 1,
         "moltiplicatore": 1,
         "tipo": "regionale",
         "regione": "TOSCANA",
@@ -100062,8 +100060,8 @@
         "atleta_id": "DAMI_GABRIELE",
         "atleta_cognome": "DAMI",
         "atleta_nome": "GABRIELE",
-        "posizione": 9,
-        "punti_effettivi": 2,
+        "posizione": 10,
+        "punti_effettivi": 1,
         "moltiplicatore": 1,
         "tipo": "regionale",
         "regione": "TOSCANA",
@@ -100147,14 +100145,14 @@
       }
     ],
     "punti_per_cat": {
-      "ES1_M": 55,
+      "ES1_M": 51,
       "AL_M": 17
     }
   },
   "GS_BERTI_MOBILI_BENASSI": {
     "id": "GS_BERTI_MOBILI_BENASSI",
     "nome": "GS BERTI MOBILI BENASSI",
-    "punti_totali": 227,
+    "punti_totali": 224,
     "atleti": [
       "MICHELUCCI_EDOARDO",
       "PUCCI_LEONARDO",
@@ -100470,8 +100468,8 @@
         "atleta_id": "BERTI_GIANMARIA",
         "atleta_cognome": "BERTI",
         "atleta_nome": "GIANMARIA",
-        "posizione": 8,
-        "punti_effettivi": 3,
+        "posizione": 9,
+        "punti_effettivi": 2,
         "moltiplicatore": 1,
         "tipo": "regionale",
         "regione": "TOSCANA",
@@ -100485,8 +100483,8 @@
         "atleta_id": "BERTI_GIANMARIA",
         "atleta_cognome": "BERTI",
         "atleta_nome": "GIANMARIA",
-        "posizione": 8,
-        "punti_effettivi": 3,
+        "posizione": 9,
+        "punti_effettivi": 2,
         "moltiplicatore": 1,
         "tipo": "regionale",
         "regione": "TOSCANA",
@@ -100650,8 +100648,8 @@
         "atleta_id": "BERTI_GIANMARIA",
         "atleta_cognome": "BERTI",
         "atleta_nome": "GIANMARIA",
-        "posizione": 8,
-        "punti_effettivi": 3,
+        "posizione": 9,
+        "punti_effettivi": 2,
         "moltiplicatore": 1,
         "tipo": "regionale",
         "regione": "TOSCANA",
@@ -100690,14 +100688,14 @@
       }
     ],
     "punti_per_cat": {
-      "ES1_M": 117,
+      "ES1_M": 114,
       "ES2_M": 110
     }
   },
   "PEDALE_SARZANESE": {
     "id": "PEDALE_SARZANESE",
     "nome": "PEDALE SARZANESE",
-    "punti_totali": 136,
+    "punti_totali": 131,
     "atleti": [
       "NICOLINI_LUCIANO",
       "BOTTIGLIERI_MATTEO",
@@ -100803,8 +100801,8 @@
         "atleta_id": "PENNA_CRISTIANO",
         "atleta_cognome": "PENNA",
         "atleta_nome": "CRISTIANO",
-        "posizione": 3,
-        "punti_effettivi": 10,
+        "posizione": 4,
+        "punti_effettivi": 8,
         "moltiplicatore": 1,
         "tipo": "regionale",
         "regione": "LIGURIA",
@@ -100833,8 +100831,8 @@
         "atleta_id": "PENNA_CRISTIANO",
         "atleta_cognome": "PENNA",
         "atleta_nome": "CRISTIANO",
-        "posizione": 7,
-        "punti_effettivi": 4,
+        "posizione": 8,
+        "punti_effettivi": 3,
         "moltiplicatore": 1,
         "tipo": "regionale",
         "regione": "TOSCANA",
@@ -101043,8 +101041,8 @@
         "atleta_id": "PENNA_CRISTIANO",
         "atleta_cognome": "PENNA",
         "atleta_nome": "CRISTIANO",
-        "posizione": 3,
-        "punti_effettivi": 10,
+        "posizione": 4,
+        "punti_effettivi": 8,
         "moltiplicatore": 1,
         "tipo": "regionale",
         "regione": "TOSCANA",
@@ -101144,7 +101142,7 @@
     ],
     "punti_per_cat": {
       "ES2_M": 75,
-      "ES1_M": 61
+      "ES1_M": 56
     }
   },
   "POL_MILLELUCI_CICLISMO": {
@@ -122834,7 +122832,7 @@
   "GS_CAPANNORI": {
     "id": "GS_CAPANNORI",
     "nome": "GS CAPANNORI",
-    "punti_totali": 364,
+    "punti_totali": 366,
     "atleti": [
       "MANNELLI_MATILDE",
       "VOLLERO_SUSANNA",
@@ -123034,8 +123032,8 @@
         "atleta_id": "VOLLERO_SUSANNA",
         "atleta_cognome": "VOLLERO",
         "atleta_nome": "SUSANNA",
-        "posizione": 5,
-        "punti_effettivi": 6,
+        "posizione": 6,
+        "punti_effettivi": 5,
         "moltiplicatore": 1,
         "tipo": "regionale",
         "regione": "LIGURIA",
@@ -123049,8 +123047,8 @@
         "atleta_id": "MANNELLI_MATILDE",
         "atleta_cognome": "MANNELLI",
         "atleta_nome": "MATILDE",
-        "posizione": 2,
-        "punti_effettivi": 12,
+        "posizione": 1,
+        "punti_effettivi": 15,
         "moltiplicatore": 1,
         "tipo": "regionale",
         "regione": "LIGURIA",
@@ -123554,9 +123552,9 @@
       }
     ],
     "punti_per_cat": {
-      "ES1_F": 336,
+      "ES1_F": 339,
       "ES2_F": 8,
-      "ES1_M": 6,
+      "ES1_M": 5,
       "AL_F": 14
     }
   },
@@ -129156,7 +129154,7 @@
   "U_S_CALCARA": {
     "id": "U_S_CALCARA",
     "nome": "U.S. CALCARA",
-    "punti_totali": 48,
+    "punti_totali": 47,
     "atleti": [
       "GIAGNOTTI_TOMMASO",
       "TADDEI_FILIPPO",
@@ -129260,8 +129258,8 @@
         "atleta_id": "GIAGNOTTI_TOMMASO",
         "atleta_cognome": "GIAGNOTTI",
         "atleta_nome": "TOMMASO",
-        "posizione": 8,
-        "punti_effettivi": 3,
+        "posizione": 9,
+        "punti_effettivi": 2,
         "moltiplicatore": 1,
         "tipo": "regionale",
         "regione": "EMILIA ROMAGNA",
@@ -129300,7 +129298,7 @@
       }
     ],
     "punti_per_cat": {
-      "ES1_M": 36,
+      "ES1_M": 35,
       "AL_M": 12
     }
   },
@@ -132864,7 +132862,7 @@
   "CONTRABAND_CYCLING_TEAM_ASD": {
     "id": "CONTRABAND_CYCLING_TEAM_ASD",
     "nome": "CONTRABAND CYCLING TEAM ASD",
-    "punti_totali": 99,
+    "punti_totali": 95,
     "atleti": [
       "BARBERO_ALESSANDRO"
     ],
@@ -132936,8 +132934,8 @@
         "atleta_id": "BARBERO_ALESSANDRO",
         "atleta_cognome": "BARBERO",
         "atleta_nome": "ALESSANDRO",
-        "posizione": 8,
-        "punti_effettivi": 3,
+        "posizione": 9,
+        "punti_effettivi": 2,
         "moltiplicatore": 1,
         "tipo": "regionale",
         "regione": "LIGURIA",
@@ -132951,8 +132949,8 @@
         "atleta_id": "BARBERO_ALESSANDRO",
         "atleta_cognome": "BARBERO",
         "atleta_nome": "ALESSANDRO",
-        "posizione": 6,
-        "punti_effettivi": 5,
+        "posizione": 7,
+        "punti_effettivi": 4,
         "moltiplicatore": 1,
         "tipo": "regionale",
         "regione": "TOSCANA",
@@ -133086,8 +133084,8 @@
         "atleta_id": "BARBERO_ALESSANDRO",
         "atleta_cognome": "BARBERO",
         "atleta_nome": "ALESSANDRO",
-        "posizione": 4,
-        "punti_effettivi": 8,
+        "posizione": 5,
+        "punti_effettivi": 6,
         "moltiplicatore": 1,
         "tipo": "regionale",
         "regione": "TOSCANA",
@@ -133126,7 +133124,7 @@
       }
     ],
     "punti_per_cat": {
-      "ES1_M": 99
+      "ES1_M": 95
     }
   },
   "V_C_EPOREDIESE_CICLI_TESSIORE": {
@@ -135569,7 +135567,7 @@
   "TEAM_PIU_SPORT": {
     "id": "TEAM_PIU_SPORT",
     "nome": "TEAM PIU'SPORT",
-    "punti_totali": 309,
+    "punti_totali": 302,
     "atleti": [
       "GARSI_NICOLA",
       "FOSSATI_SAMUELE",
@@ -135750,8 +135748,8 @@
         "atleta_id": "GARSI_NICOLA",
         "atleta_cognome": "GARSI",
         "atleta_nome": "NICOLA",
-        "posizione": 1,
-        "punti_effettivi": 15,
+        "posizione": 2,
+        "punti_effettivi": 12,
         "moltiplicatore": 1,
         "tipo": "regionale",
         "regione": "LIGURIA",
@@ -135765,8 +135763,8 @@
         "atleta_id": "FOSSATI_SAMUELE",
         "atleta_cognome": "FOSSATI",
         "atleta_nome": "SAMUELE",
-        "posizione": 4,
-        "punti_effettivi": 8,
+        "posizione": 5,
+        "punti_effettivi": 6,
         "moltiplicatore": 1,
         "tipo": "regionale",
         "regione": "LIGURIA",
@@ -135780,8 +135778,8 @@
         "atleta_id": "GARSI_NICOLA",
         "atleta_cognome": "GARSI",
         "atleta_nome": "NICOLA",
-        "posizione": 2,
-        "punti_effettivi": 12,
+        "posizione": 3,
+        "punti_effettivi": 10,
         "moltiplicatore": 1,
         "tipo": "regionale",
         "regione": "TOSCANA",
@@ -136075,7 +136073,7 @@
       }
     ],
     "punti_per_cat": {
-      "ES1_M": 248,
+      "ES1_M": 241,
       "AL_M": 61
     }
   },
@@ -142358,7 +142356,7 @@
   "POOL_BIKE_SERRAMANNA": {
     "id": "POOL_BIKE_SERRAMANNA",
     "nome": "POOL BIKE SERRAMANNA",
-    "punti_totali": 263,
+    "punti_totali": 261,
     "atleti": [
       "RUGGERI_CORRADO",
       "CORDA_FRANCESCO",
@@ -142764,8 +142762,8 @@
         "atleta_id": "CORDA_FRANCESCO",
         "atleta_cognome": "CORDA",
         "atleta_nome": "FRANCESCO",
-        "posizione": 3,
-        "punti_effettivi": 10,
+        "posizione": 4,
+        "punti_effettivi": 8,
         "moltiplicatore": 1,
         "tipo": "regionale",
         "regione": "TOSCANA",
@@ -142850,7 +142848,7 @@
     ],
     "punti_per_cat": {
       "AL_M": 37,
-      "ES1_M": 172,
+      "ES1_M": 170,
       "JUN_M": 51,
       "ES2_M": 3
     }
@@ -144443,7 +144441,7 @@
   "C_C_APPENNINICO_1907": {
     "id": "C_C_APPENNINICO_1907",
     "nome": "C.C. APPENNINICO 1907",
-    "punti_totali": 135,
+    "punti_totali": 130,
     "atleti": [
       "CECCARELLI_ILARY",
       "VELAJ_CHRISTIAN"
@@ -144516,8 +144514,8 @@
         "atleta_id": "VELAJ_CHRISTIAN",
         "atleta_cognome": "VELAJ",
         "atleta_nome": "CHRISTIAN",
-        "posizione": 4,
-        "punti_effettivi": 8,
+        "posizione": 5,
+        "punti_effettivi": 6,
         "moltiplicatore": 1,
         "tipo": "regionale",
         "regione": "TOSCANA",
@@ -144546,8 +144544,8 @@
         "atleta_id": "VELAJ_CHRISTIAN",
         "atleta_cognome": "VELAJ",
         "atleta_nome": "CHRISTIAN",
-        "posizione": 8,
-        "punti_effettivi": 3,
+        "posizione": 9,
+        "punti_effettivi": 2,
         "moltiplicatore": 1,
         "tipo": "regionale",
         "regione": "TOSCANA",
@@ -144636,8 +144634,8 @@
         "atleta_id": "VELAJ_CHRISTIAN",
         "atleta_cognome": "VELAJ",
         "atleta_nome": "CHRISTIAN",
-        "posizione": 7,
-        "punti_effettivi": 4,
+        "posizione": 8,
+        "punti_effettivi": 3,
         "moltiplicatore": 1,
         "tipo": "regionale",
         "regione": "TOSCANA",
@@ -144651,8 +144649,8 @@
         "atleta_id": "VELAJ_CHRISTIAN",
         "atleta_cognome": "VELAJ",
         "atleta_nome": "CHRISTIAN",
-        "posizione": 9,
-        "punti_effettivi": 2,
+        "posizione": 10,
+        "punti_effettivi": 1,
         "moltiplicatore": 1,
         "tipo": "regionale",
         "regione": "TOSCANA",
@@ -144662,13 +144660,13 @@
     ],
     "punti_per_cat": {
       "ES2_F": 60,
-      "ES1_M": 75
+      "ES1_M": 70
     }
   },
   "ASD_1D_UN_DENTE_IN_PIU": {
     "id": "ASD_1D_UN_DENTE_IN_PIU",
     "nome": "ASD 1D+ UN DENTE IN PIU'",
-    "punti_totali": 115,
+    "punti_totali": 114,
     "atleti": [
       "LIPPOLIS_ANTONIO",
       "SCAMARCIO_SAVERIO",
@@ -144700,8 +144698,8 @@
         "atleta_id": "LIPPOLIS_ANTONIO",
         "atleta_cognome": "LIPPOLIS",
         "atleta_nome": "ANTONIO",
-        "posizione": 6,
-        "punti_effettivi": 5,
+        "posizione": 7,
+        "punti_effettivi": 4,
         "moltiplicatore": 1,
         "tipo": "regionale",
         "regione": "LAZIO",
@@ -144860,14 +144858,14 @@
       }
     ],
     "punti_per_cat": {
-      "AL_M": 83,
+      "AL_M": 82,
       "ES1_M": 32
     }
   },
   "G_S_IPERFINISH_STABBIA": {
     "id": "G_S_IPERFINISH_STABBIA",
     "nome": "G.S. IPERFINISH STABBIA",
-    "punti_totali": 448,
+    "punti_totali": 446,
     "atleti": [
       "IACOPI_MATTIA",
       "SCAPPINI_LAERTE",
@@ -145305,8 +145303,8 @@
         "atleta_id": "IACOPI_NICCOLO",
         "atleta_cognome": "IACOPI",
         "atleta_nome": "NICCOLO'",
-        "posizione": 5,
-        "punti_effettivi": 6,
+        "posizione": 6,
+        "punti_effettivi": 5,
         "moltiplicatore": 1,
         "tipo": "regionale",
         "regione": "TOSCANA",
@@ -145320,8 +145318,8 @@
         "atleta_id": "SCAPPINI_LAERTE",
         "atleta_cognome": "SCAPPINI",
         "atleta_nome": "LAERTE",
-        "posizione": 6,
-        "punti_effettivi": 5,
+        "posizione": 7,
+        "punti_effettivi": 4,
         "moltiplicatore": 1,
         "tipo": "regionale",
         "regione": "TOSCANA",
@@ -145630,7 +145628,7 @@
       }
     ],
     "punti_per_cat": {
-      "AL_M": 448
+      "AL_M": 446
     }
   },
   "EQUIPE_CORBETTESE": {
@@ -149183,7 +149181,7 @@
   "U_S_FORTI_E_LIBERI_ZANETTI_CICLI": {
     "id": "U_S_FORTI_E_LIBERI_ZANETTI_CICLI",
     "nome": "U.S. FORTI E LIBERI - ZANETTI CICLI",
-    "punti_totali": 46,
+    "punti_totali": 44,
     "atleti": [
       "GASPERONI_MATTIA",
       "CASADIO_RICCARDO"
@@ -149271,8 +149269,8 @@
         "atleta_id": "GASPERONI_MATTIA",
         "atleta_cognome": "GASPERONI",
         "atleta_nome": "MATTIA",
-        "posizione": 3,
-        "punti_effettivi": 10,
+        "posizione": 4,
+        "punti_effettivi": 8,
         "moltiplicatore": 1,
         "tipo": "regionale",
         "regione": "TOSCANA",
@@ -149326,7 +149324,7 @@
       }
     ],
     "punti_per_cat": {
-      "ES1_M": 41,
+      "ES1_M": 39,
       "ES2_M": 5
     }
   },
@@ -151796,7 +151794,7 @@
   "VELO_CLUB_S_C_EMPOLI": {
     "id": "VELO_CLUB_S_C_EMPOLI",
     "nome": "VELO CLUB S.C. EMPOLI",
-    "punti_totali": 65,
+    "punti_totali": 58,
     "atleti": [
       "CANTINI_LORENZO"
     ],
@@ -151853,8 +151851,8 @@
         "atleta_id": "CANTINI_LORENZO",
         "atleta_cognome": "CANTINI",
         "atleta_nome": "LORENZO",
-        "posizione": 3,
-        "punti_effettivi": 10,
+        "posizione": 4,
+        "punti_effettivi": 8,
         "moltiplicatore": 1,
         "tipo": "regionale",
         "regione": "TOSCANA",
@@ -151883,8 +151881,8 @@
         "atleta_id": "CANTINI_LORENZO",
         "atleta_cognome": "CANTINI",
         "atleta_nome": "LORENZO",
-        "posizione": 4,
-        "punti_effettivi": 8,
+        "posizione": 5,
+        "punti_effettivi": 6,
         "moltiplicatore": 1,
         "tipo": "regionale",
         "regione": "TOSCANA",
@@ -151913,8 +151911,8 @@
         "atleta_id": "CANTINI_LORENZO",
         "atleta_cognome": "CANTINI",
         "atleta_nome": "LORENZO",
-        "posizione": 2,
-        "punti_effettivi": 12,
+        "posizione": 3,
+        "punti_effettivi": 10,
         "moltiplicatore": 1,
         "tipo": "regionale",
         "regione": "TOSCANA",
@@ -151928,8 +151926,8 @@
         "atleta_id": "CANTINI_LORENZO",
         "atleta_cognome": "CANTINI",
         "atleta_nome": "LORENZO",
-        "posizione": 9,
-        "punti_effettivi": 2,
+        "posizione": 10,
+        "punti_effettivi": 1,
         "moltiplicatore": 1,
         "tipo": "regionale",
         "regione": "TOSCANA",
@@ -151938,7 +151936,7 @@
       }
     ],
     "punti_per_cat": {
-      "ES1_M": 65
+      "ES1_M": 58
     }
   },
   "UC_PIANO_DI_MOMMIO_SPEEDY_BIKE": {
@@ -157232,7 +157230,7 @@
   "VAIANO_BIKE": {
     "id": "VAIANO_BIKE",
     "nome": "VAIANO BIKE",
-    "punti_totali": 21,
+    "punti_totali": 19,
     "atleti": [
       "VANNUCCI_GIULIO"
     ],
@@ -157289,8 +157287,8 @@
         "atleta_id": "VANNUCCI_GIULIO",
         "atleta_cognome": "VANNUCCI",
         "atleta_nome": "GIULIO",
-        "posizione": 4,
-        "punti_effettivi": 8,
+        "posizione": 5,
+        "punti_effettivi": 6,
         "moltiplicatore": 1,
         "tipo": "regionale",
         "regione": "TOSCANA",
@@ -157299,7 +157297,7 @@
       }
     ],
     "punti_per_cat": {
-      "ES1_M": 21
+      "ES1_M": 19
     }
   },
   "S_S_STELLA_ALPINA_RENAZZO": {
@@ -157363,7 +157361,7 @@
   "S_C_GASTONE_NENCINI": {
     "id": "S_C_GASTONE_NENCINI",
     "nome": "S.C. GASTONE NENCINI",
-    "punti_totali": 9,
+    "punti_totali": 8,
     "atleti": [
       "SENECI_ERACLE",
       "MORDINI_MATTIA"
@@ -157421,8 +157419,8 @@
         "atleta_id": "MORDINI_MATTIA",
         "atleta_cognome": "MORDINI",
         "atleta_nome": "MATTIA",
-        "posizione": 9,
-        "punti_effettivi": 2,
+        "posizione": 10,
+        "punti_effettivi": 1,
         "moltiplicatore": 1,
         "tipo": "regionale",
         "regione": "TOSCANA",
@@ -157431,7 +157429,7 @@
       }
     ],
     "punti_per_cat": {
-      "ES1_M": 9
+      "ES1_M": 8
     }
   },
   "PIEMONTE": {
