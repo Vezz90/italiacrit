@@ -131,6 +131,10 @@ ATHLETE_NAME_ALIASES = {
     # composto viene ricostruito PRIMA del controllo genere, cosi' non
     # scatta piu' ne' la divisione ne' la riga fantasma nella classifica F.
     robust_norm("DI ROSA CHRISTIAN"): ("DI ROSA", "CHRISTIAN"),
+    # Stesso bug, stesso meccanismo: cognome="DI", nome="LUCIA NICCOLO'" ->
+    # "LUCIA" (primo termine del nome) e' un nome femminile, isolava
+    # l'atleta (maschio, cognome reale "DI LUCIA") in 11 gare Esordienti.
+    robust_norm("DI LUCIA NICCOLO'"): ("DI LUCIA", "NICCOLO'"),
 }
 
 def canonical_athlete_name(cognome, nome):
