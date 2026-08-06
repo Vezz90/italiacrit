@@ -2,9 +2,9 @@
   {
     "team_id": "A_S_D_S_C_PADOVANI",
     "team_nome": "A.S.D. S.C. PADOVANI",
-    "punti": 1025,
-    "vittorie": 9,
-    "p1": 9,
+    "punti": 1040,
+    "vittorie": 10,
+    "p1": 10,
     "p2": 13,
     "p3": 6,
     "pout": 34,
@@ -38,10 +38,10 @@
   {
     "team_id": "BELTRAMI_TSA_TRE_COLLI",
     "team_nome": "BELTRAMI TSA TRE COLLI",
-    "punti": 622,
+    "punti": 634,
     "vittorie": 3,
     "p1": 3,
-    "p2": 10,
+    "p2": 11,
     "p3": 5,
     "pout": 28,
     "n_atleti": 11,
@@ -84,6 +84,18 @@
     "pos": 7
   },
   {
+    "team_id": "BIESSE_CARRERA_PREMAC",
+    "team_nome": "BIESSE - CARRERA - PREMAC",
+    "punti": 436,
+    "vittorie": 1,
+    "p1": 1,
+    "p2": 2,
+    "p3": 3,
+    "pout": 28,
+    "n_atleti": 13,
+    "pos": 8
+  },
+  {
     "team_id": "XDS_ASTANA_DEVELOPMENT_TEAM",
     "team_nome": "XDS ASTANA DEVELOPMENT TEAM",
     "punti": 430,
@@ -93,18 +105,6 @@
     "p3": 0,
     "pout": 20,
     "n_atleti": 8,
-    "pos": 8
-  },
-  {
-    "team_id": "BIESSE_CARRERA_PREMAC",
-    "team_nome": "BIESSE - CARRERA - PREMAC",
-    "punti": 420,
-    "vittorie": 1,
-    "p1": 1,
-    "p2": 2,
-    "p3": 2,
-    "pout": 27,
-    "n_atleti": 12,
     "pos": 9
   },
   {
@@ -158,12 +158,12 @@
   {
     "team_id": "GALLINA_LUCCHINI_ECOTEK",
     "team_nome": "GALLINA LUCCHINI ECOTEK",
-    "punti": 296,
+    "punti": 300,
     "vittorie": 1,
     "p1": 1,
     "p2": 3,
     "p3": 3,
-    "pout": 28,
+    "pout": 29,
     "n_atleti": 9,
     "pos": 14
   },
@@ -288,6 +288,18 @@
     "pos": 24
   },
   {
+    "team_id": "V_C_MENDRISIO",
+    "team_nome": "V.C.MENDRISIO",
+    "punti": 142,
+    "vittorie": 1,
+    "p1": 1,
+    "p2": 1,
+    "p3": 2,
+    "pout": 9,
+    "n_atleti": 5,
+    "pos": 25
+  },
+  {
     "team_id": "MULTICAR_GRUPPO_AMARU",
     "team_nome": "MULTICAR GRUPPO AMARU'",
     "punti": 135,
@@ -297,18 +309,6 @@
     "p3": 2,
     "pout": 2,
     "n_atleti": 3,
-    "pos": 25
-  },
-  {
-    "team_id": "V_C_MENDRISIO",
-    "team_nome": "V.C.MENDRISIO",
-    "punti": 134,
-    "vittorie": 1,
-    "p1": 1,
-    "p2": 1,
-    "p3": 2,
-    "pout": 8,
-    "n_atleti": 5,
     "pos": 26
   },
   {
@@ -360,6 +360,18 @@
     "pos": 30
   },
   {
+    "team_id": "ASD_G_C_SISSIO_TEAM",
+    "team_nome": "ASD G.C. SISSIO TEAM",
+    "punti": 90,
+    "vittorie": 0,
+    "p1": 0,
+    "p2": 1,
+    "p3": 1,
+    "pout": 11,
+    "n_atleti": 7,
+    "pos": 31
+  },
+  {
     "team_id": "TEAM_POLTI_VISITMALTA",
     "team_nome": "TEAM POLTI VISITMALTA",
     "punti": 90,
@@ -369,7 +381,7 @@
     "p3": 1,
     "pout": 1,
     "n_atleti": 3,
-    "pos": 31
+    "pos": 32
   },
   {
     "team_id": "LOTTO_GROUPE_WANTY",
@@ -381,7 +393,7 @@
     "p3": 1,
     "pout": 4,
     "n_atleti": 2,
-    "pos": 32
+    "pos": 33
   },
   {
     "team_id": "GRAGNANO_SPORTING_CLUB",
@@ -393,18 +405,6 @@
     "p3": 1,
     "pout": 9,
     "n_atleti": 6,
-    "pos": 33
-  },
-  {
-    "team_id": "ASD_G_C_SISSIO_TEAM",
-    "team_nome": "ASD G.C. SISSIO TEAM",
-    "punti": 85,
-    "vittorie": 0,
-    "p1": 0,
-    "p2": 1,
-    "p3": 1,
-    "pout": 10,
-    "n_atleti": 7,
     "pos": 34
   },
   {
@@ -468,6 +468,18 @@
     "pos": 39
   },
   {
+    "team_id": "RIME_DRALI",
+    "team_nome": "RIME DRALI",
+    "punti": 63,
+    "vittorie": 0,
+    "p1": 0,
+    "p2": 0,
+    "p3": 1,
+    "pout": 12,
+    "n_atleti": 5,
+    "pos": 40
+  },
+  {
     "team_id": "ASD_CAMPOBELLO_RUNNING_BIKE",
     "team_nome": "ASD CAMPOBELLO RUNNING & BIKE",
     "punti": 62,
@@ -477,7 +489,7 @@
     "p3": 1,
     "pout": 1,
     "n_atleti": 1,
-    "pos": 40
+    "pos": 41
   },
   {
     "team_id": "ASD_VELO_CLUB_AVEZZANO_BIKE_LINEAORO",
@@ -489,18 +501,6 @@
     "p3": 0,
     "pout": 6,
     "n_atleti": 3,
-    "pos": 41
-  },
-  {
-    "team_id": "RIME_DRALI",
-    "team_nome": "RIME DRALI",
-    "punti": 58,
-    "vittorie": 0,
-    "p1": 0,
-    "p2": 0,
-    "p3": 1,
-    "pout": 10,
-    "n_atleti": 5,
     "pos": 42
   },
   {
@@ -996,6 +996,18 @@
     "pos": 83
   },
   {
+    "team_id": "ST_KILDA_CYCLING_CLUB",
+    "team_nome": "ST KILDA CYCLING CLUB",
+    "punti": 1,
+    "vittorie": 0,
+    "p1": 0,
+    "p2": 0,
+    "p3": 0,
+    "pout": 1,
+    "n_atleti": 1,
+    "pos": 84
+  },
+  {
     "team_id": "DU_ACADEMY",
     "team_nome": "DU ACADEMY",
     "punti": 1,
@@ -1005,7 +1017,7 @@
     "p3": 0,
     "pout": 1,
     "n_atleti": 1,
-    "pos": 84
+    "pos": 85
   },
   {
     "team_id": "VPT_WHY_SPORT",
@@ -1017,6 +1029,6 @@
     "p3": 0,
     "pout": 1,
     "n_atleti": 1,
-    "pos": 85
+    "pos": 86
   }
 ]
