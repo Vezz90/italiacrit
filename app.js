@@ -3637,7 +3637,14 @@ function route() {
     rankFilter = ''; rankRegion = ''; rankMonth = ''; rankSort = 'punti';
     return renderClassifica();
   }
-  if (match('/classifica')) return renderClassifica();
+  if (match('/classifica')) {
+    // Come /risultati e /calendario: riapplica la categoria dell'hub attivo
+    // invece di lasciare rankCat sul valore residuo della navigazione
+    // precedente (altrimenti "Classifica" dal menu riportava sempre a
+    // Esordienti invece di restare sulla categoria che si stava guardando).
+    if (activeHub) applyHubFilters(activeHub);
+    return renderClassifica();
+  }
   if (match('/albo')) return renderAlboDoro();
   if (match('/atleti')) return renderAtletiList();
   if (match('/team')) return renderTeamList();
@@ -8510,169 +8517,6 @@ async function renderAlboDoro() {
   if (hostEl) hostEl.innerHTML = _alboDoroCardHtml(alboCat, alboView === 'team', valid, { eyebrow: false, showEmpty: true });
 }
 
-// ── CORSA AL TITOLO ─────────────────────────────────────────────
-// Chi è ancora matematicamente in corsa per il primo posto in classifica,
-// date le gare rimaste in calendario per questa categoria. Calcolo
-// puramente aritmetico (nessuna "probabilità" stimata): un corridore/team
-// è ancora in corsa se, vincendo il massimo di punti possibile in TUTTE le
-// gare rimanenti, potrebbe comunque superare il punteggio attuale del
-// leader. Il "massimo punti per gara" è il valore più alto realmente
-// ottenuto quest'anno in questa categoria (tiene conto dei moltiplicatori
-// per gare regionali/nazionali/campionati).
-function _titleRaceHtml(catCode, gender, ranking, isTeam) {
-  if (!ranking || !ranking.length || !globalData.calendar) return '';
-  const CAT_FILTER = { ELI_M:'Elite', ELI_F:'Elite', JUN_M:'Junior', JUN_F:'Junior',
-    AL_M:'Alliev', AL_F:'Alliev', ES1_M:'Esordient', ES2_M:'Esordient', ES1_F:'Esordient', ES2_F:'Esordient' };
-  const catFilter = CAT_FILTER[catCode] || '';
-  const todayStr = new Date().toISOString().split('T')[0];
-  const calMatches = g => {
-    if (catFilter && !(g.categoria||'').toLowerCase().includes(catFilter.toLowerCase())) return false;
-    // Il campo genere non è mai valorizzato nel calendario: usa la stessa
-    // deduzione della pagina Calendario (default maschile se ambiguo),
-    // altrimenti gare senza qualificatore di genere venivano contate due
-    // volte (sia per la classifica maschile sia per quella femminile),
-    // gonfiando "gare rimaste" ben oltre il reale.
-    const g2 = _calDeriveGender(g);
-    if (g2 && g2 !== gender) return false;
-    return true;
-  };
-  const remaining = globalData.calendar.filter(g => (g.data||'') >= todayStr && calMatches(g)).length;
-  if (remaining === 0) return '';
-
-  const catResults = globalData.resultsRaw.filter(r => getRankingFileCode(r) === catCode);
-  let maxPerRace = 0;
-  if (isTeam) {
-    const byTeamGara = {};
-    catResults.forEach(r => {
-      if (!r.team_id || !r.gara_id) return;
-      const k = r.team_id + '::' + r.gara_id;
-      byTeamGara[k] = (byTeamGara[k]||0) + (r.punti_effettivi||0);
-    });
-    maxPerRace = Object.values(byTeamGara).reduce((mx,v)=>Math.max(mx,v), 0);
-  } else {
-    maxPerRace = catResults.reduce((mx,r) => Math.max(mx, r.punti_effettivi||0), 0);
-  }
-  if (maxPerRace <= 0) return '';
-
-  const leader = ranking[0];
-  const nameOf = entry => isTeam ? esc(entry.team_nome||'') : `${esc(entry.cognome||'')} ${esc(entry.nome||'')}`;
-  const hrefOf = entry => isTeam ? `#/team/${encodeURIComponent(entry.team_id)}` : `#/atleta/${encodeURIComponent(entry.atleta_id)}`;
-
-  // "remaining" conta TUTTE le gare in calendario per la categoria in
-  // tutte le regioni — nessun singolo atleta le corre tutte (si parla in
-  // media di ~1 gara a settimana). Per dare un numero realistico a
-  // ciascuno, stimiamo quante ne disputerà probabilmente in base alla sua
-  // frequenza di partecipazione osservata finora (gare corse / gare totali
-  // già disputate in categoria) — stessa logica riusata per la proiezione.
-  const idKey = isTeam ? 'team_id' : 'atleta_id';
-  const totalRacesHeldCat = new Set(catResults.map(r => r.gara_id)).size;
-  const withPace = ranking.map(entry => {
-    const mine = catResults.filter(r => r[idKey] === entry[idKey]);
-    const gare = new Set(mine.map(r => r.gara_id)).size;
-    const avgPts = gare > 0 ? entry.punti / gare : 0;
-    const partRate = totalRacesHeldCat > 0 ? Math.min(1, gare / totalRacesHeldCat) : 0;
-    const personalRemaining = Math.max(1, Math.round(remaining * partRate));
-    return { entry, gare, avgPts, partRate, personalRemaining };
-  });
-
-  // Gare rimaste: stesso numero condiviso da tutti (il totale calendario
-  // per la categoria) — non personalizzato per atleta. Il conto "quante
-  // vittorie in più servono" resta invariato al variare di questo numero
-  // (dipende solo dal distacco in punti), ma è il numero usato per dire se
-  // un distacco è ancora colmabile prima che finisca la stagione.
-  const evaluated = ranking.map((entry, i) => {
-    const isLeader = entry === leader;
-    const gapToLeader = leader.punti - entry.punti;
-    const winsNeededTitle = isLeader ? 0 : Math.max(1, Math.ceil((gapToLeader + 1) / maxPerRace));
-    // Rivale immediatamente sopra in classifica (non il leader assoluto):
-    // per salire di UNA posizione basta superare lui, non tutti quanti —
-    // è il conto "con gli altri pretendenti", non solo con chi comanda.
-    const above = i > 0 ? ranking[i - 1] : null;
-    const gapToAbove = above ? above.punti - entry.punti : 0;
-    const winsNeededAbove = above ? Math.max(1, Math.ceil((gapToAbove + 1) / maxPerRace)) : 0;
-    const alive = isLeader || winsNeededTitle <= remaining;
-    return { entry, isLeader, gapToLeader, winsNeededTitle, above, gapToAbove, winsNeededAbove, alive };
-  });
-
-  const leaderGapToChaser = evaluated[1] ? evaluated[1].gapToLeader : 0;
-  const leaderRow = `<div style="padding:10px 0;border-bottom:1px solid var(--border-subtle)">
-    <span style="font-size:.85rem">👑 <a href="${hrefOf(leader)}" style="font-weight:700">${nameOf(leader)}</a> comanda con ${leader.punti} pt</span>
-    ${leaderGapToChaser ? `<div style="font-size:.76rem;color:var(--text-muted);margin-top:2px">Margine di ${leaderGapToChaser} pt sul primo inseguitore</div>` : ''}
-  </div>`;
-
-  const aliveChasers = evaluated.filter(e => !e.isLeader && e.alive).slice(0, 5);
-  const outCount = evaluated.filter(e => !e.isLeader && !e.alive).length;
-
-  const chaserRows = aliveChasers.map(({entry, gapToLeader, winsNeededTitle, above, gapToAbove, winsNeededAbove}) => {
-    const allIn = winsNeededTitle >= remaining;
-    const titleLine = allIn
-      ? `Anche vincendo tutte le ${remaining} gare rimaste resta indietro se ${nameOf(leader)} continua a vincere`
-      : `Per il <strong>titolo</strong>: almeno <strong>${winsNeededTitle}</strong> vittorie più di <strong>${nameOf(leader)}</strong> nelle ${remaining} gare rimaste`;
-    // Riga aggiuntiva sul rivale immediato, solo se diverso dal leader
-    // (altrimenti ripeterebbe la stessa informazione).
-    const aboveLine = (above && above !== leader)
-      ? `<div style="font-size:.76rem;color:var(--text-secondary);margin-top:2px">Per salire al <strong>${entry.pos - 1}° posto</strong>: almeno <strong>${winsNeededAbove}</strong> vittoria${winsNeededAbove===1?'':'e'} più di <strong>${nameOf(above)}</strong> (−${gapToAbove} pt)</div>`
-      : '';
-    return `<div style="padding:9px 0;border-bottom:1px solid var(--border-subtle)">
-      <span style="font-size:.85rem"><span style="color:var(--text-muted)">${entry.pos}°</span> <a href="${hrefOf(entry)}" style="font-weight:600">${nameOf(entry)}</a> <span style="color:var(--text-muted);font-size:.8rem">— ${entry.punti} pt (−${gapToLeader})</span></span>
-      <div style="font-size:.76rem;color:var(--text-secondary);margin-top:2px">${titleLine}</div>
-      ${aboveLine}
-    </div>`;
-  }).join('');
-
-  const outLine = outCount > 0
-    ? `<div style="padding-top:9px;font-size:.76rem;color:var(--text-muted)">+${outCount} altr${outCount===1?'o':'i'} ${isTeam?'team':'atlet'+(outCount===1?'a':'i')} ormai matematicamente fuori dai giochi</div>`
-    : '';
-
-  // ── PROIEZIONE: cosa succede se anche gli altri continuano a fare
-  // risultati, non solo l'inseguitore di turno. Ognuno viene proiettato a
-  // fine stagione al proprio ritmo attuale (punti/gara) e alla propria
-  // frequenza di partecipazione osservata finora — riusa lo stesso calcolo
-  // di "personalRemaining" già fatto sopra per il ritmo settimanale.
-  const projected = withPace.slice(0, 8).map(({ entry, avgPts, personalRemaining }) => {
-    const projPts = Math.round(entry.punti + personalRemaining * avgPts);
-    return { entry, projPts };
-  }).sort((a, b) => b.projPts - a.projPts);
-  projected.forEach((p, i) => { p.projPos = i + 1; });
-
-  const projRows = projected.map(({ entry, projPts, projPos }) => {
-    const moved = entry.pos - projPos; // positivo = sale in proiezione
-    const arrow = moved > 0
-      ? `<span style="color:#10b981">▲${moved}</span>`
-      : moved < 0 ? `<span style="color:#ef4444">▼${-moved}</span>` : `<span style="color:var(--text-muted)">=</span>`;
-    return `<div style="display:flex;justify-content:space-between;align-items:center;padding:7px 0;border-bottom:1px solid var(--border-subtle);font-size:.82rem">
-      <span>${projPos}° ${arrow} <a href="${hrefOf(entry)}" style="font-weight:600">${nameOf(entry)}</a></span>
-      <span style="color:var(--text-muted);white-space:nowrap">${entry.punti} → <strong style="color:var(--text-primary)">${projPts} pt</strong></span>
-    </div>`;
-  }).join('');
-
-  const projectionHtml = `<div>
-    <div style="font-size:.78rem;font-weight:700;color:var(--text-secondary);margin-bottom:6px">📊 Proiezione a fine stagione, se ognuno mantiene il proprio ritmo</div>
-    ${projRows}
-    <div style="font-size:.7rem;color:var(--text-muted);margin-top:8px">Stima su punti/gara e frequenza di partecipazione osservati finora — non tiene conto di infortuni, cambi di squadra o exploit improvvisi.</div>
-  </div>`;
-
-  // Due colonne affiancate quando c'è spazio (auto-fit si impila da solo
-  // sotto i ~560px di larghezza disponibile, senza bisogno di media query).
-  return `<section style="background:var(--bg-card);border:1px solid var(--border-subtle);border-radius:var(--r-lg);margin-bottom:16px;padding:16px 18px">
-    <div style="display:flex;align-items:baseline;gap:8px;margin-bottom:2px">
-      <span style="font-size:1.1rem">🏆</span>
-      <span style="font-family:var(--font-heading);font-weight:800;font-size:.92rem;text-transform:uppercase;letter-spacing:.04em">Corsa al titolo</span>
-    </div>
-    <div style="font-size:.76rem;color:var(--text-muted);margin-bottom:10px">${remaining} gar${remaining===1?'a':'e'} rimast${remaining===1?'a':'e'} in calendario per questa categoria — calcolo matematico, non una previsione</div>
-    <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(260px,1fr));gap:20px;align-items:start">
-      <div>
-        ${leaderRow}
-        ${chaserRows}
-        ${outLine}
-      </div>
-      <div style="border-top:1px solid var(--border-subtle);padding-top:12px">
-        ${projectionHtml}
-      </div>
-    </div>
-  </section>`;
-}
-
 async function updateRankTable() {
   const container = document.getElementById('rank-table-container');
   const countSpan = document.getElementById('rank-count-label');
@@ -9034,8 +8878,7 @@ async function updateRankTable() {
     }).join('');
 
     _rankPhotosQueue = displayList;
-    const titleRaceHtml = (!isFiltered && rankSort === 'punti') ? _titleRaceHtml(rankCat, rankGender, ranking, false) : '';
-    tableHtml = storyHtml + titleRaceHtml + sortBar + `
+    tableHtml = storyHtml + sortBar + `
       <table class="ranking-table rk-table-narrative">
         <thead><tr>
           <th style="width:50px">POS</th>
@@ -9220,8 +9063,7 @@ async function updateRankTable() {
     }).join('');
     _rankPhotosQueue = teamDisplayList; // per logo team
 
-    const titleRaceHtmlTeam = (!isFiltered && rankSort === 'punti') ? _titleRaceHtml(rankCat, rankGender, teamRanking, true) : '';
-    tableHtml = teamStoryHtml + titleRaceHtmlTeam + `
+    tableHtml = teamStoryHtml + `
       <table class="ranking-table rk-table-narrative">
         <thead><tr>
           <th style="width:50px">POS</th>
