@@ -2,24 +2,24 @@
   {
     "team_id": "TEAM_VANGI_TOMMASINI_IL_PIRATA",
     "team_nome": "TEAM VANGI TOMMASINI IL PIRATA",
-    "punti": 1207,
-    "vittorie": 17,
-    "p1": 17,
+    "punti": 1253,
+    "vittorie": 18,
+    "p1": 18,
     "p2": 14,
     "p3": 12,
-    "pout": 49,
+    "pout": 50,
     "n_atleti": 13,
     "pos": 1
   },
   {
     "team_id": "TEAM_GUERRINI_SENAGHESE",
     "team_nome": "TEAM GUERRINI SENAGHESE",
-    "punti": 688,
+    "punti": 694,
     "vittorie": 11,
     "p1": 11,
     "p2": 8,
     "p3": 6,
-    "pout": 40,
+    "pout": 41,
     "n_atleti": 12,
     "pos": 2
   },
@@ -86,12 +86,12 @@
   {
     "team_id": "CPS_PROFESSIONAL_TEAM",
     "team_nome": "CPS PROFESSIONAL TEAM",
-    "punti": 500,
+    "punti": 528,
     "vittorie": 5,
     "p1": 5,
     "p2": 7,
-    "p3": 7,
-    "pout": 36,
+    "p3": 8,
+    "pout": 37,
     "n_atleti": 11,
     "pos": 8
   },
@@ -194,12 +194,12 @@
   {
     "team_id": "POLISPORTIVA_MONSUMMANESE",
     "team_nome": "POLISPORTIVA MONSUMMANESE",
-    "punti": 389,
+    "punti": 401,
     "vittorie": 7,
     "p1": 7,
     "p2": 3,
     "p3": 6,
-    "pout": 31,
+    "pout": 32,
     "n_atleti": 10,
     "pos": 17
   },
@@ -242,12 +242,12 @@
   {
     "team_id": "A_S_D_CICLISTICA_MONSELICE",
     "team_nome": "A.S.D. CICLISTICA MONSELICE",
-    "punti": 227,
+    "punti": 231,
     "vittorie": 1,
     "p1": 1,
     "p2": 5,
     "p3": 5,
-    "pout": 13,
+    "pout": 14,
     "n_atleti": 4,
     "pos": 21
   },
@@ -566,14 +566,26 @@
   {
     "team_id": "MASTROMARCO_FC_NIBALI",
     "team_nome": "MASTROMARCO FC NIBALI",
-    "punti": 61,
+    "punti": 71,
     "vittorie": 1,
     "p1": 1,
     "p2": 1,
     "p3": 0,
-    "pout": 7,
+    "pout": 8,
     "n_atleti": 2,
     "pos": 48
+  },
+  {
+    "team_id": "ENERGY_TEAM_A_S_D",
+    "team_nome": "ENERGY TEAM A.S.D.",
+    "punti": 71,
+    "vittorie": 0,
+    "p1": 0,
+    "p2": 1,
+    "p3": 0,
+    "pout": 9,
+    "n_atleti": 2,
+    "pos": 49
   },
   {
     "team_id": "ARKITANO_MTB_CLUB",
@@ -585,7 +597,7 @@
     "p3": 1,
     "pout": 3,
     "n_atleti": 1,
-    "pos": 49
+    "pos": 50
   },
   {
     "team_id": "JEGG_SKIL_DJR",
@@ -597,7 +609,7 @@
     "p3": 0,
     "pout": 3,
     "n_atleti": 2,
-    "pos": 50
+    "pos": 51
   },
   {
     "team_id": "VINI_FANTINI_TRALFO",
@@ -609,7 +621,7 @@
     "p3": 0,
     "pout": 6,
     "n_atleti": 3,
-    "pos": 51
+    "pos": 52
   },
   {
     "team_id": "VIGNA_FIORITA_BORGO_MOLINO",
@@ -621,7 +633,7 @@
     "p3": 0,
     "pout": 9,
     "n_atleti": 2,
-    "pos": 52
+    "pos": 53
   },
   {
     "team_id": "SVIZZERA",
@@ -633,7 +645,7 @@
     "p3": 0,
     "pout": 3,
     "n_atleti": 2,
-    "pos": 53
+    "pos": 54
   },
   {
     "team_id": "POOL_BIKE_SERRAMANNA",
@@ -645,7 +657,7 @@
     "p3": 2,
     "pout": 5,
     "n_atleti": 1,
-    "pos": 54
+    "pos": 55
   },
   {
     "team_id": "KK_NOVO_MESTO",
@@ -657,7 +669,7 @@
     "p3": 0,
     "pout": 2,
     "n_atleti": 4,
-    "pos": 55
+    "pos": 56
   },
   {
     "team_id": "NORVEGIA",
@@ -669,7 +681,7 @@
     "p3": 1,
     "pout": 2,
     "n_atleti": 2,
-    "pos": 56
+    "pos": 57
   },
   {
     "team_id": "BELGIO",
@@ -681,18 +693,6 @@
     "p3": 0,
     "pout": 0,
     "n_atleti": 1,
-    "pos": 57
-  },
-  {
-    "team_id": "ENERGY_TEAM_A_S_D",
-    "team_nome": "ENERGY TEAM A.S.D.",
-    "punti": 45,
-    "vittorie": 0,
-    "p1": 0,
-    "p2": 0,
-    "p3": 0,
-    "pout": 8,
-    "n_atleti": 2,
     "pos": 58
   },
   {
