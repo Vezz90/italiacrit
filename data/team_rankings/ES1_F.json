@@ -14,35 +14,35 @@
   {
     "team_id": "POL_FIUMICINESE_FA_I_T_ADRIATICA",
     "team_nome": "POL. FIUMICINESE FA.I.T. ADRIATICA",
-    "punti": 362,
+    "punti": 370,
     "vittorie": 11,
     "p1": 11,
     "p2": 6,
     "p3": 4,
-    "pout": 11,
+    "pout": 12,
     "n_atleti": 4,
     "pos": 2
   },
   {
     "team_id": "GS_CAPANNORI",
     "team_nome": "GS CAPANNORI",
-    "punti": 339,
+    "punti": 348,
     "vittorie": 7,
     "p1": 7,
     "p2": 8,
     "p3": 4,
-    "pout": 21,
+    "pout": 23,
     "n_atleti": 5,
     "pos": 3
   },
   {
     "team_id": "S_C_CESANO_MADERNO",
     "team_nome": "S.C. CESANO MADERNO",
-    "punti": 274,
+    "punti": 284,
     "vittorie": 3,
     "p1": 3,
     "p2": 2,
-    "p3": 6,
+    "p3": 7,
     "pout": 34,
     "n_atleti": 5,
     "pos": 4
@@ -50,9 +50,9 @@
   {
     "team_id": "SCUOLA_CICLISMO_VERSO_L_IRIDE",
     "team_nome": "SCUOLA CICLISMO VERSO L'IRIDE",
-    "punti": 240,
-    "vittorie": 8,
-    "p1": 8,
+    "punti": 255,
+    "vittorie": 9,
+    "p1": 9,
     "p2": 2,
     "p3": 2,
     "pout": 15,
@@ -122,14 +122,26 @@
   {
     "team_id": "SPORT_CLUB_BRESCIA_FLANDRES_LOVE",
     "team_nome": "SPORT CLUB BRESCIA - FLANDRES LOVE",
-    "punti": 124,
+    "punti": 126,
     "vittorie": 1,
     "p1": 1,
     "p2": 2,
     "p3": 2,
-    "pout": 8,
+    "pout": 9,
     "n_atleti": 1,
     "pos": 11
+  },
+  {
+    "team_id": "BUSTO_GAROLFO",
+    "team_nome": "BUSTO GAROLFO",
+    "punti": 106,
+    "vittorie": 1,
+    "p1": 1,
+    "p2": 2,
+    "p3": 0,
+    "pout": 12,
+    "n_atleti": 1,
+    "pos": 12
   },
   {
     "team_id": "GS_CICLI_FIORIN_ASD",
@@ -141,7 +153,7 @@
     "p3": 2,
     "pout": 18,
     "n_atleti": 3,
-    "pos": 12
+    "pos": 13
   },
   {
     "team_id": "S_C_PATTADA",
@@ -153,29 +165,17 @@
     "p3": 2,
     "pout": 0,
     "n_atleti": 2,
-    "pos": 13
-  },
-  {
-    "team_id": "BUSTO_GAROLFO",
-    "team_nome": "BUSTO GAROLFO",
-    "punti": 94,
-    "vittorie": 1,
-    "p1": 1,
-    "p2": 1,
-    "p3": 0,
-    "pout": 12,
-    "n_atleti": 1,
     "pos": 14
   },
   {
     "team_id": "BICIFESTIVAL",
     "team_nome": "BICIFESTIVAL",
-    "punti": 91,
+    "punti": 97,
     "vittorie": 1,
     "p1": 1,
     "p2": 1,
     "p3": 1,
-    "pout": 8,
+    "pout": 9,
     "n_atleti": 1,
     "pos": 15
   },
@@ -252,6 +252,18 @@
     "pos": 21
   },
   {
+    "team_id": "TEAM_FABIANA_LUPERINI_ASD",
+    "team_nome": "TEAM FABIANA LUPERINI ASD",
+    "punti": 48,
+    "vittorie": 0,
+    "p1": 0,
+    "p2": 1,
+    "p3": 1,
+    "pout": 8,
+    "n_atleti": 2,
+    "pos": 22
+  },
+  {
     "team_id": "TOSCANA",
     "team_nome": "TOSCANA",
     "punti": 46,
@@ -261,19 +273,19 @@
     "p3": 0,
     "pout": 2,
     "n_atleti": 3,
-    "pos": 22
+    "pos": 23
   },
   {
-    "team_id": "TEAM_FABIANA_LUPERINI_ASD",
-    "team_nome": "TEAM FABIANA LUPERINI ASD",
-    "punti": 45,
+    "team_id": "SALUS_CICLISTICA_SEREGNO_DE_ROSA",
+    "team_nome": "SALUS CICLISTICA SEREGNO DE ROSA",
+    "punti": 44,
     "vittorie": 0,
     "p1": 0,
     "p2": 1,
-    "p3": 1,
-    "pout": 7,
-    "n_atleti": 2,
-    "pos": 23
+    "p3": 0,
+    "pout": 12,
+    "n_atleti": 4,
+    "pos": 24
   },
   {
     "team_id": "LOMBARDIA",
@@ -285,18 +297,6 @@
     "p3": 1,
     "pout": 4,
     "n_atleti": 5,
-    "pos": 24
-  },
-  {
-    "team_id": "SALUS_CICLISTICA_SEREGNO_DE_ROSA",
-    "team_nome": "SALUS CICLISTICA SEREGNO DE ROSA",
-    "punti": 43,
-    "vittorie": 0,
-    "p1": 0,
-    "p2": 1,
-    "p3": 0,
-    "pout": 11,
-    "n_atleti": 4,
     "pos": 25
   },
   {
