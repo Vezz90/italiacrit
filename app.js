@@ -10890,6 +10890,7 @@ function renderYTQueue() {
             <option value="gara">🏁 Video di una gara</option>
             <option value="presentazione">🎤 Presentazione</option>
             <option value="programma_tv">📺 Programma TV</option>
+            <option value="altro">🎬 Altro (nessuna gara collegata)</option>
           </select>
         </div>
         <label style="display:flex;align-items:center;gap:6px;font-size:.78rem;color:var(--text-secondary);margin-bottom:6px;cursor:pointer">
@@ -20703,7 +20704,7 @@ let _shareType, _sharePayload, _sharePlatKey = 'instagram';
 let _shareLogoImg = null;
 
 // ── MEDIA (foto/video/dirette per gara, stile YouTube) ───────────────────
-let mediaTab = 'video'; // 'video' | 'dirette' | 'presentazioni' | 'programmi_tv'
+let mediaTab = 'video'; // 'video' | 'dirette' | 'presentazioni' | 'programmi_tv' | 'altro'
 let mediaQueryGenere = '';
 let mediaQueryCat = '';
 let mediaQueryMonth = '';
@@ -20809,6 +20810,7 @@ window.openMediaAddForm = () => {
         <option value="diretta">🔴 Diretta di una gara</option>
         <option value="presentazione">🎤 Presentazione</option>
         <option value="programma_tv">📺 Programma TV</option>
+        <option value="altro">🎬 Altro (nessuna gara collegata)</option>
       </select>
       <div id="madd-gara-wrap">
         <label style="display:block;font-size:0.8rem;color:var(--text-secondary);margin-bottom:4px">Gara</label>
@@ -20954,12 +20956,12 @@ async function renderMedia(openOpts) {
     if (evIndex[realGaraId] && !evIndex[calId]) evIndex[calId] = evIndex[realGaraId];
   }
 
-  // Bucket "virtuali" (non legati a nessuna gara): Presentazioni/Programmi TV.
-  const EXTRA_BUCKETS = { presentazioni: '__PRESENTAZIONI__', programmi_tv: '__PROGRAMMI_TV__' };
+  // Bucket "virtuali" (non legati a nessuna gara): Presentazioni/Programmi TV/Altro.
+  const EXTRA_BUCKETS = { presentazioni: '__PRESENTAZIONI__', programmi_tv: '__PROGRAMMI_TV__', altro: '__ALTRO__' };
 
   let videoItems = [];
   for (const [gid, arr] of Object.entries(videos || {})) {
-    if (gid === EXTRA_BUCKETS.presentazioni || gid === EXTRA_BUCKETS.programmi_tv) continue;
+    if (gid === EXTRA_BUCKETS.presentazioni || gid === EXTRA_BUCKETS.programmi_tv || gid === EXTRA_BUCKETS.altro) continue;
     // Se il gara_id non trova corrispondenza in evIndex (gara futura non
     // ancora nel calendario, id salvato a mano che non collima, ecc.) il
     // video/diretta NON va perso: si mostra comunque con i pochi dati che ha
@@ -20978,6 +20980,7 @@ async function renderMedia(openOpts) {
   }
   const presentazioniItems = (videos?.[EXTRA_BUCKETS.presentazioni] || []).map((v, idx) => ({ video: v, extraIdx: idx }));
   const programmiTvItems   = (videos?.[EXTRA_BUCKETS.programmi_tv]   || []).map((v, idx) => ({ video: v, extraIdx: idx }));
+  const altroItems         = (videos?.[EXTRA_BUCKETS.altro]         || []).map((v, idx) => ({ video: v, extraIdx: idx }));
 
   // Link diretto condiviso (vedi route()): trova la voce giusta fra TUTTI i
   // bucket (gare + presentazioni + programmi TV) e apre subito il player
@@ -20991,6 +20994,7 @@ async function renderMedia(openOpts) {
       ...videoItems.map(x => ({ ...x, _bucket: 'video' })),
       ...presentazioniItems.map(x => ({ ...x, _bucket: 'presentazione' })),
       ...programmiTvItems.map(x => ({ ...x, _bucket: 'programma_tv' })),
+      ...altroItems.map(x => ({ ...x, _bucket: 'altro' })),
     ];
     if (openOpts.openLive) {
       const hit = videoItems.find(x => x.video.is_live && ytId(x.video.url) === openOpts.openLive);
@@ -20999,7 +21003,8 @@ async function renderMedia(openOpts) {
       const hit = allBuckets.find(x => !x.video.is_live && ytId(x.video.url) === openOpts.openVideo);
       if (hit) {
         mediaTab = hit._bucket === 'presentazione' ? 'presentazioni'
-          : hit._bucket === 'programma_tv' ? 'programmi_tv' : 'video';
+          : hit._bucket === 'programma_tv' ? 'programmi_tv'
+          : hit._bucket === 'altro' ? 'altro' : 'video';
         setTimeout(() => window.openVideoModal(openOpts.openVideo, hit.video.title || ''), 0);
       }
     } else if (openOpts.openFb) {
@@ -21008,8 +21013,14 @@ async function renderMedia(openOpts) {
     } else if (openOpts.openFbExtra) {
       const hit = openOpts.openFbExtra.bucket === 'presentazione'
         ? presentazioniItems.find(x => x.extraIdx === openOpts.openFbExtra.idx)
-        : programmiTvItems.find(x => x.extraIdx === openOpts.openFbExtra.idx);
-      if (hit) { mediaTab = openOpts.openFbExtra.bucket === 'presentazione' ? 'presentazioni' : 'programmi_tv'; setTimeout(() => window.openFacebookVideoModal(hit.video.url, hit.video.title || ''), 0); }
+        : openOpts.openFbExtra.bucket === 'programma_tv'
+        ? programmiTvItems.find(x => x.extraIdx === openOpts.openFbExtra.idx)
+        : altroItems.find(x => x.extraIdx === openOpts.openFbExtra.idx);
+      if (hit) {
+        mediaTab = openOpts.openFbExtra.bucket === 'presentazione' ? 'presentazioni'
+          : openOpts.openFbExtra.bucket === 'programma_tv' ? 'programmi_tv' : 'altro';
+        setTimeout(() => window.openFacebookVideoModal(hit.video.url, hit.video.title || ''), 0);
+      }
     }
   }
 
@@ -21078,10 +21089,12 @@ async function renderMedia(openOpts) {
   if (mediaTab === 'dirette') _refreshLiveStatusToday();
   const presentazioniFiltered = applyFilters(presentazioniItems).sort(byPublishedDesc);
   const programmiTvFiltered   = applyFilters(programmiTvItems).sort(byPublishedDesc);
+  const altroFiltered         = applyFilters(altroItems).sort(byPublishedDesc);
 
   const items = mediaTab === 'dirette' ? direteItems
     : mediaTab === 'presentazioni' ? presentazioniFiltered
     : mediaTab === 'programmi_tv' ? programmiTvFiltered
+    : mediaTab === 'altro' ? altroFiltered
     : videoItems;
 
   const allCatsSet = new Set();
@@ -21216,6 +21229,7 @@ async function renderMedia(openOpts) {
   };
   const cardHtml = mediaTab === 'presentazioni' ? extraVideoCardHtml('presentazione')
     : mediaTab === 'programmi_tv' ? extraVideoCardHtml('programma_tv')
+    : mediaTab === 'altro' ? extraVideoCardHtml('altro')
     : videoCardHtml;
 
   const _showRaceFilters = mediaTab === 'video' || mediaTab === 'dirette';
@@ -21234,6 +21248,7 @@ async function renderMedia(openOpts) {
         <button class="yt-chip ${mediaTab === 'dirette' ? 'yt-chip-active' : ''}" onclick="window.mediaSetTab('dirette')">🔴 Dirette <span class="yt-chip-count">${direteItems.length}</span></button>
         <button class="yt-chip ${mediaTab === 'presentazioni' ? 'yt-chip-active' : ''}" onclick="window.mediaSetTab('presentazioni')">🎤 Presentazioni <span class="yt-chip-count">${presentazioniFiltered.length}</span></button>
         <button class="yt-chip ${mediaTab === 'programmi_tv' ? 'yt-chip-active' : ''}" onclick="window.mediaSetTab('programmi_tv')">📺 Programmi TV <span class="yt-chip-count">${programmiTvFiltered.length}</span></button>
+        <button class="yt-chip ${mediaTab === 'altro' ? 'yt-chip-active' : ''}" onclick="window.mediaSetTab('altro')">🎬 Altro <span class="yt-chip-count">${altroFiltered.length}</span></button>
         <span class="yt-chip-sep"></span>
         ${_showRaceFilters ? `
         <select class="yt-chip yt-chip-select" onchange="window.mediaSetGenere(this.value)">

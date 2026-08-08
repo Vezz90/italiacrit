@@ -4621,7 +4621,11 @@ app.get('/api/admin/youtube/queue', requireAdmin, async (req, res) => {
 // per contenuti NON legati a nessuna gara specifica: presentazioni squadra,
 // programmi TV. Riusano tutta l'infrastruttura esistente (readVideos/
 // writeVideos, la stessa pagina Media) invece di uno storage separato.
-const MEDIA_EXTRA_BUCKETS = { presentazione: '__PRESENTAZIONI__', programma_tv: '__PROGRAMMI_TV__' };
+// "altro": video reali (spesso di gara) che lo scraper trova ma non riesce a
+// collegare a nessuna gara del calendario (titolo troppo diverso, gara
+// straniera, gara non ancora censita) — prima restavano bloccati in coda
+// senza un modo pulito per pubblicarli comunque.
+const MEDIA_EXTRA_BUCKETS = { presentazione: '__PRESENTAZIONI__', programma_tv: '__PROGRAMMI_TV__', altro: '__ALTRO__' };
 
 app.post('/api/admin/youtube/queue/:id/approve', requireAdmin, async (req, res) => {
   try {
@@ -4672,7 +4676,7 @@ app.post('/api/admin/media/extra', requireAdmin, async (req, res) => {
   try {
     const { tipo, url, title, channel } = req.body;
     const bucket = MEDIA_EXTRA_BUCKETS[tipo];
-    if (!bucket) return res.status(400).json({ error: 'tipo non valido (presentazione | programma_tv)' });
+    if (!bucket) return res.status(400).json({ error: 'tipo non valido (presentazione | programma_tv | altro)' });
     if (!url) return res.status(400).json({ error: 'url obbligatorio' });
     const videos = await readVideos();
     if (!videos[bucket]) videos[bucket] = [];
