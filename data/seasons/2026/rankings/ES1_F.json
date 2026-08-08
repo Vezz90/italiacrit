@@ -109,7 +109,7 @@
     "p3": 3,
     "pout": 9,
     "pos": 7,
-    "trend": 1
+    "trend": 0
   },
   {
     "atleta_id": "MOCELLIN_GRETA",
@@ -125,7 +125,7 @@
     "p3": 1,
     "pout": 5,
     "pos": 8,
-    "trend": -1
+    "trend": 0
   },
   {
     "atleta_id": "CINQUEGRANI_FEDERICA",
@@ -157,7 +157,7 @@
     "p3": 3,
     "pout": 12,
     "pos": 10,
-    "trend": 1
+    "trend": 0
   },
   {
     "atleta_id": "NARDELLI_GIORGIA",
@@ -173,7 +173,7 @@
     "p3": 0,
     "pout": 13,
     "pos": 11,
-    "trend": 1
+    "trend": 0
   },
   {
     "atleta_id": "MARIANI_MARGHERITA",
@@ -189,7 +189,7 @@
     "p3": 2,
     "pout": 12,
     "pos": 12,
-    "trend": -2
+    "trend": 0
   },
   {
     "atleta_id": "SFORZINI_SELENE",
@@ -205,7 +205,7 @@
     "p3": 4,
     "pout": 9,
     "pos": 13,
-    "trend": 1
+    "trend": 0
   },
   {
     "atleta_id": "MOINO_ALESSIA",
@@ -221,7 +221,7 @@
     "p3": 1,
     "pout": 15,
     "pos": 14,
-    "trend": -1
+    "trend": 0
   },
   {
     "atleta_id": "NERI_SARA",
@@ -237,7 +237,7 @@
     "p3": 1,
     "pout": 9,
     "pos": 15,
-    "trend": 1
+    "trend": 0
   },
   {
     "atleta_id": "CAMPOLI_AURORA",
@@ -253,7 +253,7 @@
     "p3": 2,
     "pout": 7,
     "pos": 16,
-    "trend": -1
+    "trend": 0
   },
   {
     "atleta_id": "GUIDOLIN_GIOIA",
@@ -317,7 +317,7 @@
     "p3": 2,
     "pout": 4,
     "pos": 20,
-    "trend": 1
+    "trend": 0
   },
   {
     "atleta_id": "BUTTARAZZI_SOFIA",
@@ -333,7 +333,7 @@
     "p3": 2,
     "pout": 0,
     "pos": 21,
-    "trend": -1
+    "trend": 0
   },
   {
     "atleta_id": "STELLA_AURORA",
@@ -1053,7 +1053,7 @@
     "p3": 0,
     "pout": 3,
     "pos": 66,
-    "trend": 5
+    "trend": 0
   },
   {
     "atleta_id": "STEFANONI_GIADA",
@@ -1069,7 +1069,7 @@
     "p3": 0,
     "pout": 4,
     "pos": 67,
-    "trend": 1
+    "trend": 0
   },
   {
     "atleta_id": "DANELUZZI_ALICE",
@@ -1085,7 +1085,7 @@
     "p3": 0,
     "pout": 2,
     "pos": 68,
-    "trend": -2
+    "trend": 0
   },
   {
     "atleta_id": "BISOGNIN_ILARIA",
@@ -1101,7 +1101,7 @@
     "p3": 0,
     "pout": 3,
     "pos": 69,
-    "trend": -2
+    "trend": 0
   },
   {
     "atleta_id": "VERGANI_CAMILLA",
@@ -1117,7 +1117,7 @@
     "p3": 0,
     "pout": 1,
     "pos": 70,
-    "trend": -1
+    "trend": 0
   },
   {
     "atleta_id": "ANNOSCIA_ANNA",
@@ -1133,7 +1133,7 @@
     "p3": 0,
     "pout": 1,
     "pos": 71,
-    "trend": -1
+    "trend": 0
   },
   {
     "atleta_id": "GEROMETTA_GIORGIA",
