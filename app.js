@@ -13049,7 +13049,7 @@ function _buildAtletaResultRows(rows) {
     return `<tr data-date="${esc(r.data||'')}">
       <td class="td-date">${fmtDateShort(r.data)}</td>
       <td class="td-pos ${pClass} ${r.posizione===1?'win':''}">${r.posizione}°</td>
-      <td class="td-race"><a href="#/gara/${esc(r.gara_id)}">${esc(r.nome_gara)}</a></td>
+      <td class="td-race">${countryFlagImg('it')} <a href="#/gara/${esc(r.gara_id)}">${esc(r.nome_gara)}</a></td>
       <td>${badgeMult(mult, r.tipo)}</td>
       <td style="text-align:right">${esc(r.km || '—')}</td>
       <td style="text-align:right">${esc(r.media || '—')}</td>
@@ -13242,7 +13242,7 @@ async function renderAtleta(atleta_id, opts = {}) {
           </div>
         </div>
         <div class="athlete-stats-group" id="atleta-stats-estero" style="display:none">
-          <div style="font-size:.68rem;letter-spacing:.06em;color:var(--text-muted);margin-bottom:4px">ESTERO</div>
+          <div style="font-size:.68rem;letter-spacing:.06em;color:var(--text-muted);margin-bottom:4px">EXTRA PCS</div>
           <div class="athlete-stats-bar"></div>
         </div>
       </div>
@@ -13641,14 +13641,16 @@ async function _loadTeamPcsExtra(teamId, season, viewCat) {
       .catch(() => []),
   ]);
 
-  // Stagione PCS: solo risultati esteri (country valorizzato e diverso da
-  // "it") — stessa regola della pagina atleta. Inseriti nella tabella
-  // principale in ordine cronologico (per data, non per posizione: non
-  // hanno un punteggio comparabile alle gare del circuito).
+  // Stagione PCS: risultati senza gara_id abbinato al circuito — estero
+  // oppure gare professionistiche italiane non riportate dallo scraper FCI
+  // (Giro di Sardegna, Laigueglia, ecc.) — stessa regola della pagina
+  // atleta. Inseriti nella tabella principale in ordine cronologico (per
+  // data, non per posizione: non hanno un punteggio comparabile alle gare
+  // del circuito).
   const seasonExtra = pcsSeasonAll
     .filter(r => {
       if (r.gara_id) return false;
-      if (!r.country || r.country === 'it') return false;
+      if (!r.country) return false;
       if (viewCat) {
         const ath = globalData?.athletes?.[r.atleta_id];
         const athCode = ath ? getRankingFileCode(ath) : '';
@@ -13726,7 +13728,7 @@ async function _loadTeamPcsExtra(teamId, season, viewCat) {
     teamEsteroEl.innerHTML = `
       <div class="team-stats-row">
         <div class="team-stat">
-          <span class="team-stat-val" style="font-size:.68rem;letter-spacing:.06em;color:var(--text-muted)">ESTERO</span>
+          <span class="team-stat-val" style="font-size:.68rem;letter-spacing:.06em;color:var(--text-muted)">EXTRA PCS</span>
           <span class="team-stat-label"></span>
         </div>
         <div class="team-stat">
@@ -13795,7 +13797,7 @@ async function _loadTeamPcsExtra(teamId, season, viewCat) {
     tr.innerHTML = `
       <td class="td-date">${fmtDateShort(r.data)}</td>
       <td class="td-pos ${pClass}">${r.posizione}°</td>
-      <td class="td-race">${raceLink}
+      <td class="td-race">${countryFlagImg('it')} ${raceLink}
         <div class="td-team-mobile"><a href="#/atleta/${esc(r.atleta_id)}" style="color:var(--text-secondary)">${esc(cognome)} ${esc(nome)}</a></div>
       </td>
       <td class="td-hide-mobile" style="font-family:var(--font-heading);font-weight:700">
@@ -13992,16 +13994,19 @@ async function _loadAtletaPcsExtra(atletaId, season, icsRisultati, athlete) {
         })
     : [];
 
-  // Risultati esteri (da pcs_results, country valorizzato e diverso da "it")
-  // — vanno inseriti nella STESSA tabella cronologica, non in una sezione
-  // separata: sono comunque risultati dell'atleta nell'anno in corso, solo
-  // senza punteggio perché fuori dal circuito ICS.
+  // Risultati extra da pcs_results (senza gara_id, cioè non abbinati a
+  // nessuna gara del circuito ICS) — include sia le gare estere sia le gare
+  // professionistiche italiane (Giro di Sardegna, Laigueglia, Coppi e
+  // Bartali, ecc.) dove corrono anche team Continental italiani ma che lo
+  // scraper FCI non riporta. Vanno inserite nella STESSA tabella cronologica,
+  // non in una sezione separata: sono comunque risultati dell'atleta
+  // nell'anno in corso, solo senza punteggio perché fuori dal circuito ICS.
   let seasonRaw = [];
   try {
     seasonRaw = await apiCall(`/pcs-results/atleta/${encodeURIComponent(atletaId)}?season=${season}`);
   } catch { /* ignora, procedi solo con garaExtra */ }
   const esteroExtra = Array.isArray(seasonRaw)
-    ? seasonRaw.filter(r => !r.gara_id && r.country && r.country !== 'it')
+    ? seasonRaw.filter(r => !r.gara_id && r.country)
     : [];
 
   // Riepilogo podi "ESTERO" nell'header, accanto a quello "ITALIA" già
@@ -14060,7 +14065,7 @@ async function _loadAtletaPcsExtra(atletaId, season, icsRisultati, athlete) {
     insertChrono(r.data, `g:${r.gara_id}`, `
       <td class="td-date">${fmtDateShort(r.data)}</td>
       <td class="td-pos ${pClass}">${r.posizione}°</td>
-      <td class="td-race"><a href="#/gara/${esc(r.gara_id)}">${esc(r.nome_gara)}</a></td>
+      <td class="td-race">${countryFlagImg('it')} <a href="#/gara/${esc(r.gara_id)}">${esc(r.nome_gara)}</a></td>
       <td>${badgeMult(r.moltiplicatore || 1, r.tipo)}</td>
       <td style="text-align:right">${esc(r.km || '—')}</td>
       <td style="text-align:right">${esc(r.media || '—')}</td>
@@ -14683,7 +14688,7 @@ async function renderTeam(team_id, opts = {}) {
         <td class="td-date">${fmtDateShort(r.data)}</td>
         <td class="td-pos ${posClass(r.posizione)}">${r.posizione}°</td>
         <td class="td-race">
-          <a href="#/gara/${esc(r.gara_id)}">${esc(r.nome_gara)}</a>
+          ${countryFlagImg('it')} <a href="#/gara/${esc(r.gara_id)}">${esc(r.nome_gara)}</a>
           <div class="td-team-mobile"><a href="#/atleta/${esc(r.atleta_id)}" style="color:var(--text-secondary)">${atletaLabel}</a></div>
         </td>
         <td class="td-hide-mobile" style="font-family:var(--font-heading);font-weight:700">
