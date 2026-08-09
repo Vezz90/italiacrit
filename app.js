@@ -16463,7 +16463,12 @@ async function renderGara(gara_id) {
     : `<span style="font-size:0.8rem;color:var(--text-muted)">Accedi per caricare una foto</span>`;
   // Foto "hero" della gara (caricata a mano o primo album esterno), riusata
   // come sfondo nelle grafiche di condivisione (showShareModal → _bgPhoto).
+  // _shareHeroCredit/_shareHeroSource viaggiano insieme: il credit da
+  // mostrare sulla grafica (fotografo o fonte esterna) e se mostrare anche
+  // il richiamo xpix.it accanto al logo ICS.
   let _shareHeroPhotoUrl = '';
+  let _shareHeroCredit = '';
+  let _shareHeroSource = '';
   try {
     const _photoKeys = [primaryGaraId];
     const _photoArrs = await Promise.all(_photoKeys.map(k =>
@@ -16474,7 +16479,11 @@ async function renderGara(gara_id) {
       (d.photos || []).map(p => ({ ...p, _gkey: _photoKeys[ki] }))
     ).filter(p => { if (_seenPh.has(p.id)) return false; _seenPh.add(p.id); return true; });
     const featuredPhoto = photos[0] || null;
-    if (featuredPhoto) _shareHeroPhotoUrl = `${PHOTOS_BASE}/photos/${featuredPhoto.filename}`;
+    if (featuredPhoto) {
+      _shareHeroPhotoUrl = `${PHOTOS_BASE}/photos/${featuredPhoto.filename}`;
+      _shareHeroCredit = featuredPhoto.photographer || '';
+      _shareHeroSource = 'photographer';
+    }
     const _heroCredit = [featuredPhoto?.caption, featuredPhoto?.photographer ? '📷 ' + featuredPhoto.photographer : '', featuredPhoto?.display_name]
       .filter(Boolean).join(' — ');
     const _heroTagNames = featuredPhoto ? String(featuredPhoto.atleta_ids||'').split(',').map(s=>s.trim()).filter(Boolean).map(id=>{const a=globalData?.athletes?.[id]; return a?`<a href="#/atleta/${esc(id)}" style="color:#fff;text-decoration:underline" onclick="event.stopPropagation()">${esc(a.cognome)} ${esc(a.nome)}</a>`:'';}).filter(Boolean).join(', ') : '';
@@ -16555,7 +16564,11 @@ async function renderGara(gara_id) {
 
         if (!featuredPhoto && _extIdx === 0) {
           // Nessuna foto caricata → il primo album diventa hero + gallery
-          if (!_shareHeroPhotoUrl) _shareHeroPhotoUrl = icProxy(_extPhoto.url);
+          if (!_shareHeroPhotoUrl) {
+            _shareHeroPhotoUrl = icProxy(_extPhoto.url);
+            _shareHeroCredit = _srcLabel;
+            _shareHeroSource = _photoSource; // 'xpix' | 'ic'
+          }
           const _removeBtn = _isAdminPhoto
             ? `<div style="position:absolute;top:6px;right:6px;display:flex;flex-direction:column;gap:3px;z-index:3" onclick="event.stopPropagation()">
                  ${_isEs ? `<button onclick="window.adminPhotoExtendBoth('${esc(_photoSource)}','${esc(_xpixKey)}')" style="background:rgba(22,163,74,.9);color:#fff;border:none;padding:3px 8px;border-radius:4px;font-size:.7rem;cursor:pointer;white-space:nowrap">🏅 Anche altro anno</button>` : ''}
@@ -16635,6 +16648,7 @@ async function renderGara(gara_id) {
       _id: gid, name, date:fmtDate(data), cat:catLabelStr, mult, tipo,
       region:normalizeRegion(calEntry?.regione||resArr[0]?.regione||''),
       luogo:calEntry?.luogo||'', km, media, photo_url:_shareHeroPhotoUrl,
+      photo_credit:_shareHeroCredit, photo_source:_shareHeroSource,
       winnerTime: _calcWinnerTime(km, media),
       results:resArr.slice(0,10).map(r=>({
         cognome:r.cognome, nome:r.nome, team:r.team, atleta_id:r.atleta_id,
@@ -21765,7 +21779,25 @@ function _drawGaraWinner(ctx, W, H, d, logo) {
     const lH = Math.round(H * 0.065), lW = Math.round(lH * logo.naturalWidth / logo.naturalHeight);
     ctx.drawImage(logo, W / 2 - lW / 2, H - Math.round(H * 0.045) - lH, lW, lH);
   }
+  _drawPhotoCredit(ctx, W, H, d);
   ctx.textAlign = 'left'; ctx.textBaseline = 'alphabetic';
+}
+
+// Credit foto (fotografo o fonte esterna) + richiamo xpix.it accanto al
+// nostro logo quando la foto viene da lì — evita di ripubblicare foto di
+// terzi (specie xpix.it) senza attribuzione. Condiviso tra la card
+// "Vincitore" (sotto il logo, centrato) e la card "Risultati" (nel footer,
+// accanto all'handle @italiacrit).
+function _drawPhotoCredit(ctx, W, H, d, { x, y, align = 'center' } = {}) {
+  if (!d.photo_credit) return;
+  const fs = Math.round(W * 0.022);
+  ctx.font = `600 ${fs}px 'Inter Tight',sans-serif`;
+  ctx.fillStyle = 'rgba(255,255,255,0.5)';
+  ctx.textAlign = align;
+  const label = d.photo_source === 'xpix' ? `📷 xpix.it`
+    : d.photo_source === 'ic' ? `📷 ciclismo.info`
+    : `📷 Foto: ${d.photo_credit}`;
+  ctx.fillText(label, x != null ? x : W / 2, y != null ? y : H - Math.round(H * 0.015));
 }
 
 // ── GARA CARD v6 — UCI-inspired, no points, big names ────────
@@ -21848,6 +21880,9 @@ function _drawGara(ctx, W, H, d, logo, avatarMap) {
   ctx.font = `500 ${Math.round(fB * 0.3)}px 'Inter Tight',sans-serif`;
   ctx.fillStyle = 'rgba(255,255,255,0.3)'; ctx.textAlign = 'right';
   ctx.fillText('@italiacrit', W - pad, footerY + Math.round(fB * 0.66)); ctx.textAlign = 'left';
+  // Credit foto (fotografo o xpix.it/ciclismo.info), sinistra — stessa riga
+  // dell'handle, così non serve spazio verticale extra.
+  _drawPhotoCredit(ctx, W, H, d, { x: ax + accW * 3 + Math.round(W * 0.014), y: footerY + Math.round(fB * 0.66), align: 'left' });
 
   // ── Results list (1 colonna; 2 colonne su formati landscape con >5 atleti) ──
   const listTop = y;

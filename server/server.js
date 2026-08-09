@@ -403,7 +403,7 @@ const DEFAULT_OG_IMG = `${SITE_URL}/assets/og-default.png`;
 // _ogCropPosition, ecc.): Facebook cache i byte dell'immagine per URL separatamente
 // dai meta tag, e "Scrape Again" sul debugger a volte aggiorna solo i secondi —
 // un parametro di versione nell'URL costringe Facebook a trattarla come nuova.
-const OG_IMG_VERSION = 7;
+const OG_IMG_VERSION = 8;
 
 function readDataJson(file) {
   try { return JSON.parse(fs.readFileSync(path.join(DATA_DIR, file), 'utf8')); }
@@ -7677,7 +7677,10 @@ async function _photoToOgPng(filename) {
   try {
     const sharp = require('sharp');
     const meta = await sharp(raw).metadata();
-    return await sharp(raw).resize(1200, 630, { fit: 'cover', position: _ogCropPosition(meta) }).jpeg({ quality: 85, mozjpeg: true }).toBuffer();
+    // Qualità alta (95): a 85 le foto condivise su FB apparivano visibilmente
+    // compresse/sgranate — questa è l'immagine finale mostrata nell'anteprima
+    // social, vale la pena di qualche KB in più.
+    return await sharp(raw).resize(1200, 630, { fit: 'cover', position: _ogCropPosition(meta) }).jpeg({ quality: 95, mozjpeg: true }).toBuffer();
   } catch { return null; }
 }
 
@@ -7688,7 +7691,7 @@ async function _photoToOgPng(filename) {
 // basso su un degradé scuro — la foto resta protagonista, il testo è
 // leggibile solo dove serve. Fino a 5 posizioni (non solo il podio):
 // più contenuto reale nella stessa card, come nel riferimento.
-function buildGaraResultOverlaySvg({ catLabel, title, subtitle, results = [] }) {
+function buildGaraResultOverlaySvg({ catLabel, title, subtitle, results = [], credit = null }) {
   const W = 1200, H = 630, pad = 56;
   const medal = ['#f5c400', '#dadada', '#cd7f32'];
   const titleStr = (title || '').toUpperCase();
@@ -7753,6 +7756,7 @@ function buildGaraResultOverlaySvg({ catLabel, title, subtitle, results = [] }) 
   <line x1="${pad}" y1="${rowsBottom}" x2="${W - pad}" y2="${rowsBottom}" stroke="rgba(255,255,255,0.15)"/>
   ${logo ? `<image href="${logo}" x="${pad}" y="${H - 46}" width="72" height="24" preserveAspectRatio="xMidYMid meet"/>` : ''}
   <text x="${pad + (logo ? 84 : 0)}" y="${H - 28}" font-family="Arial,Helvetica,sans-serif" font-size="14" font-weight="700" fill="rgba(255,255,255,0.55)">italiacyclingstats.com</text>
+  ${credit ? `<text x="${W - pad}" y="${H - 28}" font-family="Arial,Helvetica,sans-serif" font-size="14" font-weight="700" fill="rgba(255,255,255,0.6)" text-anchor="end">📷 ${_ogEsc(credit)}</text>` : ''}
 </svg>`;
 }
 
@@ -7765,9 +7769,14 @@ async function _photoOverlayOgPng(filename, overlaySvg) {
   try {
     const sharp = require('sharp');
     const meta = await sharp(raw).metadata();
-    const photoBuf = await sharp(raw).resize(1200, 630, { fit: 'cover', position: _ogCropPosition(meta) }).toBuffer();
+    // photoBuf resta PNG (senza perdita) qui: un .toBuffer() "nudo" dopo
+    // resize() riesporta nel formato sorgente (spesso JPEG) alla qualità di
+    // default di sharp (80) — un primo giro di compressione invisibile PRIMA
+    // ancora di comporre l'overlay e ri-comprimere in JPEG finale, che
+    // sommato rendeva le foto condivise su FB visibilmente più sgranate.
+    const photoBuf = await sharp(raw).resize(1200, 630, { fit: 'cover', position: _ogCropPosition(meta) }).png({ compressionLevel: 6 }).toBuffer();
     const overlayBuf = await sharp(Buffer.from(overlaySvg)).png().toBuffer();
-    return await sharp(photoBuf).composite([{ input: overlayBuf, left: 0, top: 0 }]).jpeg({ quality: 88, mozjpeg: true }).toBuffer();
+    return await sharp(photoBuf).composite([{ input: overlayBuf, left: 0, top: 0 }]).jpeg({ quality: 95, mozjpeg: true }).toBuffer();
   } catch (e) { console.error('[og-image] overlay card fallita:', e.message); return null; }
 }
 
@@ -7817,23 +7826,29 @@ async function _ogCardWithAvatar(cardSvg, photoSource, { diameter = 150, cx = 12
 // JPEG o null.
 async function _generateGaraPhotoBuffer(garaId, results, catLabel, title, subtitle) {
   try {
-    const overlaySvg = results.length ? buildGaraResultOverlaySvg({ catLabel, title, subtitle, results }) : null;
-    const toImage = async (photoSource) => overlaySvg
-      ? (await _photoOverlayOgPng(photoSource, overlaySvg)) || (await _photoToOgPng(photoSource))
-      : await _photoToOgPng(photoSource);
+    // Il credit (nome fotografo o fonte esterna) dipende da QUALE foto viene
+    // trovata — l'overlay va quindi ricostruito per ogni fonte tentata
+    // (foto caricata a mano → xpix.it → ciclismo.info), non una volta sola
+    // prima di sapere quale foto si userà davvero.
+    const toImage = async (photoSource, credit) => {
+      const overlaySvg = results.length ? buildGaraResultOverlaySvg({ catLabel, title, subtitle, results, credit }) : null;
+      return overlaySvg
+        ? (await _photoOverlayOgPng(photoSource, overlaySvg)) || (await _photoToOgPng(photoSource))
+        : await _photoToOgPng(photoSource);
+    };
 
     const uploaded = await queries.getApprovedRacePhotos(garaId).catch(() => []);
     if (uploaded && uploaded.length) {
-      const buf = await toImage(uploaded[0].filename || uploaded[0].photo_url);
+      const buf = await toImage(uploaded[0].filename || uploaded[0].photo_url, uploaded[0].photographer || null);
       if (buf) return buf;
     }
     const aliases = [garaId, garaId.replace(/^\d+_/, ''), garaId.replace(/_[A-Z0-9]+_[MF]$/, '')];
     const [xpix, ic] = await Promise.all([readXpixPhotos(), readICPhotos()]);
-    for (const [src] of [[xpix], [ic]]) {
+    for (const [src, srcCredit] of [[xpix, 'xpix.it'], [ic, 'ciclismo.info']]) {
       for (const alias of aliases) {
         const entry = src[alias];
         if (entry && (entry.url || entry.filename)) {
-          const buf = await toImage(entry.url || entry.filename);
+          const buf = await toImage(entry.url || entry.filename, srcCredit);
           if (buf) return buf;
         }
       }
