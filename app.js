@@ -21406,7 +21406,13 @@ function _photoCoverRect(img, W, H, adjust) {
   let baseSw, baseSh;
   if (ir > cr) { baseSh = img.naturalHeight; baseSw = baseSh * cr; }
   else { baseSw = img.naturalWidth; baseSh = baseSw / cr; }
-  const s = Math.max(1, scale);
+  // Un ritaglio "cover" puro (scale=1) spesso non lascia NESSUN margine per
+  // spostare l'inquadratura sull'asse già al limite (es. foto larga appena
+  // quanto basta) — lo zoom minimo di sicurezza (1.12) garantisce sempre un
+  // po' di margine da trascinare, anche a zoom "100%" sullo slider, senza un
+  // salto visibile (il margine è piccolo, quasi impercettibile finché non
+  // si trascina davvero).
+  const s = Math.max(1.12, scale);
   let sw = baseSw / s, sh = baseSh / s;
   let sx = (img.naturalWidth - baseSw) / 2 + (baseSw - sw) / 2 - offsetX * (baseSw / W);
   let sy = (img.naturalHeight - baseSh) / 2 + (baseSh - sh) / 2 - offsetY * (baseSh / H);
@@ -21753,10 +21759,11 @@ function _drawGaraWinner(ctx, W, H, d, logo) {
   ctx.fillText((d.cat || '').toUpperCase(), W / 2, y);
   ctx.letterSpacing = '0px';
 
-  // Logo ICS centrato in fondo
+  // Logo ICS centrato in fondo — più grande di prima (era quasi invisibile
+  // rispetto al riferimento indicato dall'utente).
   if (logo) {
-    const lH = Math.round(H * 0.04), lW = Math.round(lH * logo.naturalWidth / logo.naturalHeight);
-    ctx.drawImage(logo, W / 2 - lW / 2, H - Math.round(H * 0.055) - lH, lW, lH);
+    const lH = Math.round(H * 0.065), lW = Math.round(lH * logo.naturalWidth / logo.naturalHeight);
+    ctx.drawImage(logo, W / 2 - lW / 2, H - Math.round(H * 0.045) - lH, lW, lH);
   }
   ctx.textAlign = 'left'; ctx.textBaseline = 'alphabetic';
 }
