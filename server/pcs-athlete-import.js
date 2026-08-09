@@ -150,6 +150,13 @@ function buildCalendarMap() {
     if (!fs.existsSync(f)) continue;
     for (const e of JSON.parse(fs.readFileSync(f, 'utf8'))) {
       if (!e.data || !e.id) continue;
+      // Le voci di calendario "internazionale" (Giro di Sardegna, Coppi e
+      // Bartali, ecc.) sono segnaposto senza risultati FCI veri — nessuno
+      // scraper le popola mai. Abbinarci una riga PCS extra la farebbe solo
+      // sparire dalla vista (nessuna pagina gara le mostra comunque), quindi
+      // vanno escluse a priori dal matching: meglio lasciare gara_id null
+      // (risultato extra visibile) che agganciarle a un segnaposto vuoto.
+      if (e.tipo === 'internazionale') continue;
       if (!map.has(e.data)) map.set(e.data, []);
       map.get(e.data).push({ id: e.id, nome: e.nome || '', categoria: e.categoria || '' });
     }
@@ -160,9 +167,23 @@ function buildCalendarMap() {
 function matchGaraId(calMap, dateStr, pcsCat, pcsName) {
   const entries = calMap.get(dateStr);
   if (!entries?.length) return null;
-  if (entries.length === 1) return entries[0].id;
-  const catStr = (pcsCat || '').toLowerCase();
   const nameStr = normalizeStr(pcsName || '');
+  if (entries.length === 1) {
+    // Anche con un solo candidato in quella data, richiedi un minimo di
+    // corrispondenza nel nome quando il nome PCS è abbastanza lungo da
+    // essere significativo — altrimenti è solo una coincidenza di data
+    // (frequente per le gare professionistiche italiane fuori calendario
+    // FCI, che spesso cadono lo stesso giorno di una gara del circuito) e
+    // l'abbinamento va lasciato vuoto (risultato extra, senza punti)
+    // invece che agganciato per sbaglio alla gara del circuito.
+    if (nameStr.length > 4) {
+      const words = nameStr.split(' ').filter(w => w.length > 4);
+      const byName = entries.find(e => words.some(w => normalizeStr(e.nome).includes(w)));
+      if (!byName) return null;
+    }
+    return entries[0].id;
+  }
+  const catStr = (pcsCat || '').toLowerCase();
   let priority = null;
   if (/jun|u19/.test(catStr))                          priority = 'JUN';
   else if (/ali|u17|cadets/.test(catStr))              priority = 'AL';
@@ -173,6 +194,13 @@ function matchGaraId(calMap, dateStr, pcsCat, pcsName) {
     const byName = entries.find(e => words.some(w => normalizeStr(e.nome).includes(w)));
     if (byName) return byName.id;
   }
+  // Né la categoria né il nome hanno trovato un candidato plausibile fra i
+  // più eventi dello stesso giorno: NON indovinare il primo della lista —
+  // è più sicuro lasciare il risultato "extra" (gara_id null, senza punti)
+  // che agganciarlo per sbaglio a una gara del circuito non correlata
+  // (bug osservato: gare professionistiche PCS attribuite per coincidenza
+  // di data a una gara del circuito completamente diversa).
+  if (priority || nameStr.length > 4) return null;
   return entries[0].id;
 }
 
@@ -264,6 +292,15 @@ async function extractProfileAndResults(page, season) {
 
       let lastCountry = null;   // vedi commento sotto sulla propagazione bandiera
       let lastTourName = null;  // vedi commento sotto sulla propagazione nome giro
+      // La riga "classifica generale" di un giro appare PRIMA delle sue
+      // tappe nella tabella (ordine: titolo tour → Points classification →
+      // General classification → Tappa N (ultima) → … → Tappa 1 (prima) →
+      // titolo tour successivo — verificato dal vivo sul DOM), quindi non ha
+      // ancora una data nota nel momento in cui viene incontrata. Va tenuta
+      // in sospeso e risolta con la data della primissima tappa reale
+      // incontrata subito dopo (che, in quest'ordine, è proprio l'ultima
+      // tappa del giro — esattamente la data giusta per il risultato finale).
+      let pendingGC = null;
       for (const tr of table.querySelectorAll('tbody tr')) {
         const cells = [...tr.querySelectorAll('td')];
         if (cells.length < 3) continue;
@@ -292,19 +329,33 @@ async function extractProfileAndResults(page, season) {
 
         const dm = dateRaw.match(/^(\d{1,2})\.(\d{2})$/);
         if (!dm) {
-          // Righe senza data singola sono di due tipi, entrambe da saltare
-          // come risultato ma da distinguere per il nome del giro:
+          // Righe senza data singola sono di tre tipi:
           //  - la riga "titolo tour" vera e propria (es. "Ronde de l'Isard
           //    (2.2U)"), che nel DOM usa uno <span> semplice — è questa che
           //    vogliamo come prefisso per le tappe successive;
-          //  - le righe di riepilogo "Points classification"/"General
-          //    classification" (posizione finale nella generale/punti, non
-          //    un vero risultato di tappa), che nel DOM usano la stessa
-          //    coppia di span imob/idesk delle tappe — vanno ignorate anche
-          //    per il nome del giro, altrimenti sovrascrivono il titolo vero
-          //    con "General classificationGeneral classification".
+          //  - la riga di riepilogo "General classification" (posizione
+          //    finale) — mettiamo da parte posizione/categoria/paese in
+          //    pendingGC, risolta più sotto sulla prima tappa incontrata;
+          //  - le altre righe di riepilogo ("Points classification", "KOM
+          //    classification", "Youth classification", ecc.), ignorate:
+          //    non sono classifiche che seguiamo sul circuito.
+          // Tutte queste righe usano nel DOM la stessa coppia di span
+          // imob/idesk delle tappe, quindi vanno escluse anche dal nome del
+          // giro, altrimenti sovrascrivono il titolo vero con
+          // "General classificationGeneral classification".
           const isClassificationRow = !!raceCell?.querySelector('.imob, .idesk');
-          if (rawRaceText && !isClassificationRow) lastTourName = rawRaceText;
+          if (isClassificationRow) {
+            if (/general classification/i.test(rawRaceText) && lastTourName) {
+              const posStr = resultRaw.replace(/[^0-9]/g, '');
+              const posizione = posStr ? parseInt(posStr) : null;
+              if (posizione && posizione >= 1 && posizione <= 999) {
+                pendingGC = { tourName: lastTourName, posizione, catRaw, country };
+              }
+            }
+          } else if (rawRaceText) {
+            lastTourName = rawRaceText;
+            pendingGC = null; // nuovo giro iniziato: eventuale GC non risolta va scartata
+          }
           continue;
         }
         const data = `${season}-${dm[2].padStart(2,'0')}-${dm[1].padStart(2,'0')}`;
@@ -313,6 +364,7 @@ async function extractProfileAndResults(page, season) {
         let pcs_race_slug = null;
         let pcs_url = null;
         let isStage = false;
+        let tourSlug = null;
         if (raceLink) {
           const href = raceLink.getAttribute('href') || '';
           pcs_url = href.replace(/^\/+/, '');
@@ -327,9 +379,28 @@ async function extractProfileAndResults(page, season) {
             const stagePart = m[2] && m[2] !== 'result' ? '-' + m[2].replace(/\//g, '-') : '';
             pcs_race_slug = m[1] + stagePart;
             isStage = !!stagePart;
+            tourSlug = m[1];
           }
         }
         if (!rawRaceText || !pcs_race_slug) continue;
+
+        // Risolvi la classifica generale in sospeso: la prima tappa reale
+        // incontrata dopo la riga "General classification" dello stesso
+        // giro è la sua ultima tappa (la tabella lista dal risultato più
+        // recente al più vecchio) — la data giusta per il piazzamento finale.
+        if (pendingGC && isStage && pendingGC.tourName === lastTourName && tourSlug) {
+          rows.push({
+            data,
+            gara_name: `${pendingGC.tourName} — Classifica Generale`,
+            pcs_race_slug: tourSlug + '-gc',
+            pcs_url: `race/${tourSlug}/${season}/gc`,
+            posizione: pendingGC.posizione,
+            distacco: null,
+            cat: pendingGC.catRaw,
+            country: pendingGC.country,
+          });
+        }
+        pendingGC = null;
 
         // Il DOM ha DUE etichette sovrapposte per le tappe (una breve per
         // mobile "S4", una estesa per desktop "Stage 4" — entrambe presenti

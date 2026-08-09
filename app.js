@@ -13049,7 +13049,7 @@ function _buildAtletaResultRows(rows) {
     return `<tr data-date="${esc(r.data||'')}">
       <td class="td-date">${fmtDateShort(r.data)}</td>
       <td class="td-pos ${pClass} ${r.posizione===1?'win':''}">${r.posizione}°</td>
-      <td class="td-race">${countryFlagImg('it')} <a href="#/gara/${esc(r.gara_id)}">${esc(r.nome_gara)}</a></td>
+      <td class="td-race"><span style="display:inline-flex;align-items:center;gap:5px">${countryFlagImg('it')}<a href="#/gara/${esc(r.gara_id)}">${esc(r.nome_gara)}</a></span></td>
       <td>${badgeMult(mult, r.tipo)}</td>
       <td style="text-align:right">${esc(r.km || '—')}</td>
       <td style="text-align:right">${esc(r.media || '—')}</td>
@@ -13797,7 +13797,7 @@ async function _loadTeamPcsExtra(teamId, season, viewCat) {
     tr.innerHTML = `
       <td class="td-date">${fmtDateShort(r.data)}</td>
       <td class="td-pos ${pClass}">${r.posizione}°</td>
-      <td class="td-race">${countryFlagImg('it')} ${raceLink}
+      <td class="td-race"><span style="display:inline-flex;align-items:center;gap:5px">${countryFlagImg('it')}${raceLink}</span>
         <div class="td-team-mobile"><a href="#/atleta/${esc(r.atleta_id)}" style="color:var(--text-secondary)">${esc(cognome)} ${esc(nome)}</a></div>
       </td>
       <td class="td-hide-mobile" style="font-family:var(--font-heading);font-weight:700">
@@ -13839,7 +13839,7 @@ async function _loadTeamPcsExtra(teamId, season, viewCat) {
     tr.innerHTML = `
       <td class="td-date">${fmtDateShort(r.data)}</td>
       <td class="td-pos ${pClass}">${r.posizione}°</td>
-      <td class="td-race">${countryFlagImg(r.country)} ${raceHtml}
+      <td class="td-race"><span style="display:inline-flex;align-items:center;gap:5px">${countryFlagImg(r.country)}${raceHtml}</span>
         <div class="td-team-mobile"><a href="#/atleta/${esc(r.atleta_id)}" style="color:var(--text-secondary)">${esc(cognome)} ${esc(nome)}</a></div>
       </td>
       <td class="td-hide-mobile" style="font-family:var(--font-heading);font-weight:700">
@@ -14065,7 +14065,7 @@ async function _loadAtletaPcsExtra(atletaId, season, icsRisultati, athlete) {
     insertChrono(r.data, `g:${r.gara_id}`, `
       <td class="td-date">${fmtDateShort(r.data)}</td>
       <td class="td-pos ${pClass}">${r.posizione}°</td>
-      <td class="td-race">${countryFlagImg('it')} <a href="#/gara/${esc(r.gara_id)}">${esc(r.nome_gara)}</a></td>
+      <td class="td-race"><span style="display:inline-flex;align-items:center;gap:5px">${countryFlagImg('it')}<a href="#/gara/${esc(r.gara_id)}">${esc(r.nome_gara)}</a></span></td>
       <td>${badgeMult(r.moltiplicatore || 1, r.tipo)}</td>
       <td style="text-align:right">${esc(r.km || '—')}</td>
       <td style="text-align:right">${esc(r.media || '—')}</td>
@@ -14082,7 +14082,7 @@ async function _loadAtletaPcsExtra(atletaId, season, icsRisultati, athlete) {
     insertChrono(r.data, `e:${r.pcs_race_slug || r.gara_name}:${r.data}`, `
       <td class="td-date">${fmtDateShort(r.data)}</td>
       <td class="td-pos ${pClass}">${r.posizione}°</td>
-      <td class="td-race">${countryFlagImg(r.country)} ${raceHtml}</td>
+      <td class="td-race"><span style="display:inline-flex;align-items:center;gap:5px">${countryFlagImg(r.country)}${raceHtml}</span></td>
       <td>—</td>
       <td style="text-align:right">—</td>
       <td style="text-align:right">—</td>
@@ -14688,7 +14688,7 @@ async function renderTeam(team_id, opts = {}) {
         <td class="td-date">${fmtDateShort(r.data)}</td>
         <td class="td-pos ${posClass(r.posizione)}">${r.posizione}°</td>
         <td class="td-race">
-          ${countryFlagImg('it')} <a href="#/gara/${esc(r.gara_id)}">${esc(r.nome_gara)}</a>
+          <span style="display:inline-flex;align-items:center;gap:5px">${countryFlagImg('it')}<a href="#/gara/${esc(r.gara_id)}">${esc(r.nome_gara)}</a></span>
           <div class="td-team-mobile"><a href="#/atleta/${esc(r.atleta_id)}" style="color:var(--text-secondary)">${atletaLabel}</a></div>
         </td>
         <td class="td-hide-mobile" style="font-family:var(--font-heading);font-weight:700">
