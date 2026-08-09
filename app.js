@@ -22704,8 +22704,16 @@ function _ogUrl(type, payload) {
   return `${OG_BASE}/${type}/${encodeURIComponent(id)}`;
 }
 window.shareOnFacebook = function() {
-  const url = _ogUrl(_shareType, _sharePayload);
+  let url = _ogUrl(_shareType, _sharePayload);
   if (!url) { showToast('Dati non disponibili per la condivisione Facebook'); return; }
+  // Inoltra la stessa regolazione zoom/posizione usata per l'anteprima
+  // Post/Instagram/Story (_shareImgAdjust): senza, la card Facebook usava
+  // sempre il ritaglio automatico del server, ignorando quanto centrato a
+  // mano nella modale — unico formato dove non si poteva correggere.
+  if (_shareType === 'gara' && (_shareImgAdjust.scale > 1.001 || Math.abs(_shareImgAdjust.offsetX) > 0.5 || Math.abs(_shareImgAdjust.offsetY) > 0.5)) {
+    const qs = `s=${_shareImgAdjust.scale.toFixed(3)}&ox=${Math.round(_shareImgAdjust.offsetX)}&oy=${Math.round(_shareImgAdjust.offsetY)}`;
+    url += (url.includes('?') ? '&' : '?') + qs;
+  }
   window.open(`https://www.facebook.com/sharer/sharer.php?u=${encodeURIComponent(url)}`, '_blank', 'width=600,height=400');
   _showFbShareText();
 };

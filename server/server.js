@@ -718,7 +718,13 @@ app.get('/og/gara/:id', async (req, res) => {
   const cal = (calRaw || []).find(g => g.id === id)
     || (calRaw || []).find(g => g.id === id.replace(/_[A-Z0-9]+_[MF]$/, ''));
   const { results, title, desc } = _buildGaraNarrative(id, cal, resultsRaw);
-  const img     = `${API_BASE_URL}/api/og-image/gara/${encodeURIComponent(id)}?v=${OG_IMG_VERSION}`;
+  // Inoltra la regolazione manuale foto (se presente in questo stesso URL,
+  // vedi window.shareOnFacebook in app.js) all'URL dell'immagine — è questo
+  // il campo che Facebook legge davvero per l'anteprima.
+  const adjustQS = ['s', 'ox', 'oy']
+    .filter(k => req.query[k] != null)
+    .map(k => `&${k}=${encodeURIComponent(req.query[k])}`).join('');
+  const img     = `${API_BASE_URL}/api/og-image/gara/${encodeURIComponent(id)}?v=${OG_IMG_VERSION}${adjustQS}`;
   const redirect = `${SITE_URL}/gara/${encodeURIComponent(id)}`;
   // Canonical sulla pagina pulita reale (indicizzabile da quando esiste il
   // router URL puliti, vedi commento in ogHtml) invece che su questa stessa
@@ -7671,16 +7677,46 @@ function _ogCropPosition(meta) {
 }
 
 // Carica una foto e la adatta a 1200x630 PNG (sfondo pieno, usato per le gare).
-async function _photoToOgPng(filename) {
+// Rettangolo di ritaglio manuale — stessa formula di _photoCoverRect lato
+// client (app.js), qui su meta.width/height di sharp invece che su un
+// elemento Image del DOM. Usato SOLO quando l'admin ha regolato a mano
+// zoom/posizione nella modale di condivisione (altrimenti si continua a
+// usare il ritaglio automatico 'attention'/'centre' già esistente, che
+// resta il default per tutte le gare mai regolate a mano).
+function _photoCoverRectServer(meta, W, H, adjust) {
+  const { scale = 1, offsetX = 0, offsetY = 0 } = adjust || {};
+  const ir = meta.width / meta.height, cr = W / H;
+  let baseSw, baseSh;
+  if (ir > cr) { baseSh = meta.height; baseSw = baseSh * cr; }
+  else { baseSw = meta.width; baseSh = baseSw / cr; }
+  const s = Math.max(1.12, scale);
+  let sw = baseSw / s, sh = baseSh / s;
+  let sx = (meta.width - baseSw) / 2 + (baseSw - sw) / 2 - offsetX * (baseSw / W);
+  let sy = (meta.height - baseSh) / 2 + (baseSh - sh) / 2 - offsetY * (baseSh / H);
+  sx = Math.max(0, Math.min(sx, meta.width - sw));
+  sy = Math.max(0, Math.min(sy, meta.height - sh));
+  return { left: Math.round(sx), top: Math.round(sy), width: Math.max(1, Math.round(sw)), height: Math.max(1, Math.round(sh)) };
+}
+// Un adjust è "attivo" solo se scale/offset si discostano davvero dal default
+// — evita di deviare sul ritaglio manuale (e invalidare la cache) per un
+// oggetto {scale:1,offsetX:0,offsetY:0} passato ma non voluto dall'utente.
+function _hasImgAdjust(adjust) {
+  return !!adjust && (adjust.scale > 1.001 || Math.abs(adjust.offsetX || 0) > 0.5 || Math.abs(adjust.offsetY || 0) > 0.5);
+}
+
+async function _photoToOgPng(filename, adjust) {
   const raw = await _fetchRawImageBuffer(filename);
   if (!raw) return null;
   try {
     const sharp = require('sharp');
     const meta = await sharp(raw).metadata();
+    const pipeline = _hasImgAdjust(adjust)
+      ? sharp(raw).extract(_photoCoverRectServer(meta, 1200, 630, adjust)).resize(1200, 630, { fit: 'fill' })
+      : sharp(raw).resize(1200, 630, { fit: 'cover', position: _ogCropPosition(meta) });
     // Qualità alta (95): a 85 le foto condivise su FB apparivano visibilmente
     // compresse/sgranate — questa è l'immagine finale mostrata nell'anteprima
     // social, vale la pena di qualche KB in più.
-    return await sharp(raw).resize(1200, 630, { fit: 'cover', position: _ogCropPosition(meta) }).jpeg({ quality: 95, mozjpeg: true }).toBuffer();
+    return await pipeline.jpeg({ quality: 95, mozjpeg: true }).toBuffer();
   } catch { return null; }
 }
 
@@ -7763,7 +7799,7 @@ function buildGaraResultOverlaySvg({ catLabel, title, subtitle, results = [], cr
 // Compone la foto a piena pagina (1200x630, ritaglio "cover") con l'overlay
 // testo sopra — stessa strategia di ritaglio (_ogCropPosition) del resto
 // delle card gara, ma senza dividere la foto a metà: rimane protagonista.
-async function _photoOverlayOgPng(filename, overlaySvg) {
+async function _photoOverlayOgPng(filename, overlaySvg, adjust) {
   const raw = await _fetchRawImageBuffer(filename);
   if (!raw) return null;
   try {
@@ -7774,7 +7810,10 @@ async function _photoOverlayOgPng(filename, overlaySvg) {
     // default di sharp (80) — un primo giro di compressione invisibile PRIMA
     // ancora di comporre l'overlay e ri-comprimere in JPEG finale, che
     // sommato rendeva le foto condivise su FB visibilmente più sgranate.
-    const photoBuf = await sharp(raw).resize(1200, 630, { fit: 'cover', position: _ogCropPosition(meta) }).png({ compressionLevel: 6 }).toBuffer();
+    const photoPipeline = _hasImgAdjust(adjust)
+      ? sharp(raw).extract(_photoCoverRectServer(meta, 1200, 630, adjust)).resize(1200, 630, { fit: 'fill' })
+      : sharp(raw).resize(1200, 630, { fit: 'cover', position: _ogCropPosition(meta) });
+    const photoBuf = await photoPipeline.png({ compressionLevel: 6 }).toBuffer();
     const overlayBuf = await sharp(Buffer.from(overlaySvg)).png().toBuffer();
     return await sharp(photoBuf).composite([{ input: overlayBuf, left: 0, top: 0 }]).jpeg({ quality: 95, mozjpeg: true }).toBuffer();
   } catch (e) { console.error('[og-image] overlay card fallita:', e.message); return null; }
@@ -7824,7 +7863,7 @@ async function _ogCardWithAvatar(cardSvg, photoSource, { diameter = 150, cx = 12
 // estratto in una funzione a parte per poterlo mettere in gara contro un
 // timeout in _generateGaraOgBuffer — vedi commento lì. Ritorna il buffer
 // JPEG o null.
-async function _generateGaraPhotoBuffer(garaId, results, catLabel, title, subtitle) {
+async function _generateGaraPhotoBuffer(garaId, results, catLabel, title, subtitle, adjust) {
   try {
     // Il credit (nome fotografo o fonte esterna) dipende da QUALE foto viene
     // trovata — l'overlay va quindi ricostruito per ogni fonte tentata
@@ -7833,8 +7872,8 @@ async function _generateGaraPhotoBuffer(garaId, results, catLabel, title, subtit
     const toImage = async (photoSource, credit) => {
       const overlaySvg = results.length ? buildGaraResultOverlaySvg({ catLabel, title, subtitle, results, credit }) : null;
       return overlaySvg
-        ? (await _photoOverlayOgPng(photoSource, overlaySvg)) || (await _photoToOgPng(photoSource))
-        : await _photoToOgPng(photoSource);
+        ? (await _photoOverlayOgPng(photoSource, overlaySvg, adjust)) || (await _photoToOgPng(photoSource, adjust))
+        : await _photoToOgPng(photoSource, adjust);
     };
 
     const uploaded = await queries.getApprovedRacePhotos(garaId).catch(() => []);
@@ -7876,7 +7915,7 @@ async function _generateGaraPhotoBuffer(garaId, results, catLabel, title, subtit
   return null;
 }
 
-async function _generateGaraOgBuffer(garaId) {
+async function _generateGaraOgBuffer(garaId, adjust) {
   // Nome gara: dal calendario (GitHub, affidabile su Render) o dall'id.
   // Il calendario usa l'id senza suffisso categoria/genere: stesso fallback
   // di /og/gara/:id, altrimenti titolo/data/luogo restano vuoti quando si
@@ -7919,7 +7958,7 @@ async function _generateGaraOgBuffer(garaId) {
   // il rallentamento viene dal fetch delle foto profilo dei 3 del podio).
   const photoSubtitle = [dateShort, cal?.luogo || cal?.regione || ''].filter(Boolean).join(' · ');
   const photoBuf = await Promise.race([
-    _generateGaraPhotoBuffer(garaId, results, catLabel, title, photoSubtitle),
+    _generateGaraPhotoBuffer(garaId, results, catLabel, title, photoSubtitle, adjust),
     new Promise(resolve => setTimeout(() => resolve(null), 8000)),
   ]);
   if (photoBuf) return photoBuf;
@@ -7994,11 +8033,29 @@ app.post('/api/admin/test-email', requireAdmin, async (req, res) => {
   }
 });
 
+// Regolazione manuale zoom/posizione della foto (?s=scala&ox=..&oy=..),
+// impostata nella modale di condivisione — vedi _shareImgAdjust in app.js.
+// null se assente/di default, così il ritaglio automatico esistente resta
+// invariato per tutte le gare mai regolate a mano.
+function _parseImgAdjust(q) {
+  const s = parseFloat(q.s), ox = parseFloat(q.ox), oy = parseFloat(q.oy);
+  const adjust = {
+    scale: Number.isFinite(s) && s > 0 ? s : 1,
+    offsetX: Number.isFinite(ox) ? ox : 0,
+    offsetY: Number.isFinite(oy) ? oy : 0,
+  };
+  return _hasImgAdjust(adjust) ? adjust : null;
+}
+
 app.get('/api/og-image/gara/:id', async (req, res) => {
   const garaId = decodeURIComponent(req.params.id);
-  const cacheKey = `gara_${garaId}`;
+  const adjust = _parseImgAdjust(req.query);
+  // Una regolazione manuale rende la cache condivisa "gara_<id>" inadatta
+  // (sovrascriverebbe/servirebbe l'inquadratura di un altro utente) — la
+  // chiave include quindi i parametri quando presenti.
+  const cacheKey = `gara_${garaId}` + (adjust ? `_${adjust.scale.toFixed(2)}_${Math.round(adjust.offsetX)}_${Math.round(adjust.offsetY)}` : '');
   try {
-    const buf = await _ogGenerateDeduped(cacheKey, () => _generateGaraOgBuffer(garaId));
+    const buf = await _ogGenerateDeduped(cacheKey, () => _generateGaraOgBuffer(garaId, adjust));
     if (!buf) return res.redirect('/assets/og-default.png');
     res.setHeader('Content-Type', 'image/jpeg');
     res.setHeader('Cache-Control', 'public, max-age=1800');
