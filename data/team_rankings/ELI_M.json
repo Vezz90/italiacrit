@@ -26,12 +26,12 @@
   {
     "team_id": "TEAM_TECHNIPES_INEMILIAROMAGNA",
     "team_nome": "TEAM TECHNIPES #INEMILIAROMAGNA",
-    "punti": 859,
+    "punti": 877,
     "vittorie": 6,
     "p1": 6,
-    "p2": 8,
+    "p2": 9,
     "p3": 7,
-    "pout": 31,
+    "pout": 32,
     "n_atleti": 13,
     "pos": 3
   },
@@ -86,24 +86,24 @@
   {
     "team_id": "BIESSE_CARRERA_PREMAC",
     "team_nome": "BIESSE - CARRERA - PREMAC",
-    "punti": 444,
+    "punti": 456,
     "vittorie": 1,
     "p1": 1,
     "p2": 2,
-    "p3": 3,
-    "pout": 29,
+    "p3": 4,
+    "pout": 30,
     "n_atleti": 13,
     "pos": 8
   },
   {
     "team_id": "XDS_ASTANA_DEVELOPMENT_TEAM",
     "team_nome": "XDS ASTANA DEVELOPMENT TEAM",
-    "punti": 430,
+    "punti": 438,
     "vittorie": 2,
     "p1": 2,
     "p2": 2,
     "p3": 0,
-    "pout": 20,
+    "pout": 21,
     "n_atleti": 8,
     "pos": 9
   },
@@ -206,12 +206,12 @@
   {
     "team_id": "BAHRAIN_VICTORIOUS_DEVELOPMENT_TEAM",
     "team_nome": "BAHRAIN VICTORIOUS DEVELOPMENT TEAM",
-    "punti": 220,
+    "punti": 225,
     "vittorie": 1,
     "p1": 1,
     "p2": 1,
     "p3": 1,
-    "pout": 10,
+    "pout": 11,
     "n_atleti": 7,
     "pos": 18
   },
@@ -350,12 +350,12 @@
   {
     "team_id": "WWV_HAGENS_BERMAN_JAYCO",
     "team_nome": "WWV HAGENS BERMAN - JAYCO",
-    "punti": 93,
+    "punti": 94,
     "vittorie": 0,
     "p1": 0,
     "p2": 1,
     "p3": 0,
-    "pout": 7,
+    "pout": 8,
     "n_atleti": 4,
     "pos": 30
   },
@@ -528,6 +528,18 @@
     "pos": 44
   },
   {
+    "team_id": "INEOS_GRENADIERS_RACING_ACADEMY",
+    "team_nome": "INEOS GRENADIERS RACING ACADEMY",
+    "punti": 45,
+    "vittorie": 1,
+    "p1": 1,
+    "p2": 0,
+    "p3": 0,
+    "pout": 2,
+    "n_atleti": 2,
+    "pos": 45
+  },
+  {
     "team_id": "MADONE_TEAM_BIKE_SICILIA",
     "team_nome": "MADONE-TEAM BIKE SICILIA",
     "punti": 45,
@@ -537,7 +549,7 @@
     "p3": 2,
     "pout": 4,
     "n_atleti": 2,
-    "pos": 45
+    "pos": 46
   },
   {
     "team_id": "NEUTRAL_TEAM",
@@ -549,7 +561,7 @@
     "p3": 0,
     "pout": 1,
     "n_atleti": 2,
-    "pos": 46
+    "pos": 47
   },
   {
     "team_id": "PETROLIKE",
@@ -561,7 +573,7 @@
     "p3": 0,
     "pout": 4,
     "n_atleti": 2,
-    "pos": 47
+    "pos": 48
   },
   {
     "team_id": "EQUIPE_CORBETTESE",
@@ -573,7 +585,7 @@
     "p3": 0,
     "pout": 2,
     "n_atleti": 1,
-    "pos": 48
+    "pos": 49
   },
   {
     "team_id": "NIPPO_NUOVACOMAUTO_OBOR",
@@ -585,7 +597,7 @@
     "p3": 0,
     "pout": 7,
     "n_atleti": 4,
-    "pos": 49
+    "pos": 50
   },
   {
     "team_id": "MENTECORPO_TEAM",
@@ -597,7 +609,7 @@
     "p3": 1,
     "pout": 2,
     "n_atleti": 3,
-    "pos": 50
+    "pos": 51
   },
   {
     "team_id": "U_C_MONACO",
@@ -609,7 +621,7 @@
     "p3": 0,
     "pout": 3,
     "n_atleti": 3,
-    "pos": 51
+    "pos": 52
   },
   {
     "team_id": "GS_MALTINTI_LAMPADARI_BANCA_CAMBIANO",
@@ -621,7 +633,7 @@
     "p3": 0,
     "pout": 6,
     "n_atleti": 3,
-    "pos": 52
+    "pos": 53
   },
   {
     "team_id": "MOVISTAR_TEAM_ACADEMY",
@@ -633,7 +645,7 @@
     "p3": 0,
     "pout": 5,
     "n_atleti": 2,
-    "pos": 53
+    "pos": 54
   },
   {
     "team_id": "LOKOMOTIV_MANAS",
@@ -645,7 +657,7 @@
     "p3": 0,
     "pout": 0,
     "n_atleti": 1,
-    "pos": 54
+    "pos": 55
   },
   {
     "team_id": "METEC_SOLARWATT_P_B_MANTEL",
@@ -657,18 +669,6 @@
     "p3": 0,
     "pout": 0,
     "n_atleti": 1,
-    "pos": 55
-  },
-  {
-    "team_id": "INEOS_GRENADIERS_RACING_ACADEMY",
-    "team_nome": "INEOS GRENADIERS RACING ACADEMY",
-    "punti": 30,
-    "vittorie": 0,
-    "p1": 0,
-    "p2": 0,
-    "p3": 0,
-    "pout": 2,
-    "n_atleti": 2,
     "pos": 56
   },
   {
@@ -684,6 +684,18 @@
     "pos": 57
   },
   {
+    "team_id": "TIROL_KTM_CYCLING_TEAM",
+    "team_nome": "TIROL KTM CYCLING TEAM",
+    "punti": 24,
+    "vittorie": 0,
+    "p1": 0,
+    "p2": 0,
+    "p3": 0,
+    "pout": 3,
+    "n_atleti": 2,
+    "pos": 58
+  },
+  {
     "team_id": "NAZIONALE_PARALIMPICA",
     "team_nome": "NAZIONALE PARALIMPICA",
     "punti": 24,
@@ -693,7 +705,7 @@
     "p3": 1,
     "pout": 1,
     "n_atleti": 2,
-    "pos": 58
+    "pos": 59
   },
   {
     "team_id": "A_S_D_U_C_PISTOIESE_TEAM",
@@ -705,7 +717,7 @@
     "p3": 0,
     "pout": 1,
     "n_atleti": 1,
-    "pos": 59
+    "pos": 60
   },
   {
     "team_id": "ARAN_CUCINE_VEJUS",
@@ -717,18 +729,6 @@
     "p3": 0,
     "pout": 4,
     "n_atleti": 3,
-    "pos": 60
-  },
-  {
-    "team_id": "TIROL_KTM_CYCLING_TEAM",
-    "team_nome": "TIROL KTM CYCLING TEAM",
-    "punti": 21,
-    "vittorie": 0,
-    "p1": 0,
-    "p2": 0,
-    "p3": 0,
-    "pout": 2,
-    "n_atleti": 2,
     "pos": 61
   },
   {
@@ -840,6 +840,18 @@
     "pos": 70
   },
   {
+    "team_id": "TUDOR_PRO_CYCLING_U23",
+    "team_nome": "TUDOR PRO CYCLING U23",
+    "punti": 10,
+    "vittorie": 0,
+    "p1": 0,
+    "p2": 0,
+    "p3": 0,
+    "pout": 2,
+    "n_atleti": 2,
+    "pos": 71
+  },
+  {
     "team_id": "A_S_D_CATTOLI_ANDREA",
     "team_nome": "A.S.D. CATTOLI ANDREA",
     "punti": 10,
@@ -849,7 +861,7 @@
     "p3": 1,
     "pout": 0,
     "n_atleti": 1,
-    "pos": 71
+    "pos": 72
   },
   {
     "team_id": "TEAM_WSA_KTM_GRAZ",
@@ -861,7 +873,7 @@
     "p3": 0,
     "pout": 1,
     "n_atleti": 1,
-    "pos": 72
+    "pos": 73
   },
   {
     "team_id": "U_C_PREGNANA",
@@ -873,7 +885,7 @@
     "p3": 0,
     "pout": 3,
     "n_atleti": 3,
-    "pos": 73
+    "pos": 74
   },
   {
     "team_id": "TEAM_PROMOTECH_MG_K_VIS",
@@ -885,7 +897,7 @@
     "p3": 0,
     "pout": 2,
     "n_atleti": 1,
-    "pos": 74
+    "pos": 75
   },
   {
     "team_id": "AVC_AIX_EN_PROVENCE_DOLE",
@@ -897,23 +909,11 @@
     "p3": 0,
     "pout": 2,
     "n_atleti": 2,
-    "pos": 75
+    "pos": 76
   },
   {
     "team_id": "ITALIA",
     "team_nome": "ITALIA",
-    "punti": 6,
-    "vittorie": 0,
-    "p1": 0,
-    "p2": 0,
-    "p3": 0,
-    "pout": 1,
-    "n_atleti": 1,
-    "pos": 76
-  },
-  {
-    "team_id": "TUDOR_PRO_CYCLING_U23",
-    "team_nome": "TUDOR PRO CYCLING U23",
     "punti": 6,
     "vittorie": 0,
     "p1": 0,
