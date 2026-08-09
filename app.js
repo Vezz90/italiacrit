@@ -22519,7 +22519,7 @@ window.showShareModal = async function(type, payload) {
       <div class="share-size-label" id="share-size-lbl">Post Quadrato · 1080×1080 (1:1)</div>
       <div class="share-preview-wrap">
         <div class="share-generating" id="share-loading"><div class="share-spinner"></div> Generazione...</div>
-        <img id="share-canvas-preview" style="display:none;${type==='gara'?'cursor:grab;touch-action:none':''}" alt="Anteprima"/>
+        <img id="share-canvas-preview" draggable="false" style="display:none;${type==='gara'?'cursor:grab;touch-action:none;-webkit-user-drag:none;user-select:none':''}" alt="Anteprima"/>
       </div>
       <div class="share-actions">
         <button class="share-action-btn share-action-download" id="share-dl-btn" onclick="window.downloadShareCard()">⬇ Scarica</button>
@@ -22599,8 +22599,13 @@ function _initShareDragHandlers(){
     _shareZoomTimer=setTimeout(()=>{ _refreshPreview(); }, 60);
   };
   const end=()=>{ if(_shareDrag){ _shareDrag=null; img.style.cursor='grab'; } };
-  img.addEventListener('pointerdown', e=>{ start(e.clientX,e.clientY); img.setPointerCapture(e.pointerId); });
-  img.addEventListener('pointermove', e=>{ if(_shareDrag) move(e.clientX,e.clientY); });
+  // preventDefault ovunque: un <img> è trascinabile dal browser di default
+  // (drag-out nativo, "fantasma" dell'immagine) — senza bloccarlo, il primo
+  // movimento del mouse avviava quel drag nativo invece di alimentare
+  // pointermove, e il trascinamento personalizzato non spostava mai nulla.
+  img.addEventListener('dragstart', e=>e.preventDefault());
+  img.addEventListener('pointerdown', e=>{ e.preventDefault(); start(e.clientX,e.clientY); img.setPointerCapture(e.pointerId); });
+  img.addEventListener('pointermove', e=>{ if(_shareDrag){ e.preventDefault(); move(e.clientX,e.clientY); } });
   img.addEventListener('pointerup', end);
   img.addEventListener('pointercancel', end);
 }
