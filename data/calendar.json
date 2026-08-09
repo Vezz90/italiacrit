@@ -11484,18 +11484,6 @@
     "luogo": ""
   },
   {
-    "id": "GRAN_PREMIO_GIULIANO_BARONTI_2026-03-01",
-    "nome": "GRAN PREMIO GIULIANO BARONTI",
-    "data": "2026-03-01",
-    "tipo": "nazionale",
-    "moltiplicatore": 2,
-    "campionato_regionale": false,
-    "campionato_italiano": false,
-    "regione": "TOSCANA",
-    "categoria": "Juniores",
-    "luogo": ""
-  },
-  {
     "id": "MEDAGLIA_ORO_SPORTIVI_LA_RIZZA_2026-03-01",
     "nome": "MEDAGLIA ORO SPORTIVI LA RIZZA",
     "data": "2026-03-01",
@@ -11508,18 +11496,6 @@
     "luogo": ""
   },
   {
-    "id": "24_GRAN_PREMIO_DE_NARDI_2026-03-01",
-    "nome": "24 GRAN PREMIO DE NARDI",
-    "data": "2026-03-01",
-    "tipo": "regionale",
-    "moltiplicatore": 1,
-    "campionato_regionale": false,
-    "campionato_italiano": false,
-    "regione": "VENETO",
-    "categoria": "Elite-Under23",
-    "luogo": ""
-  },
-  {
     "id": "14_GRAN_PREMIO_DELL_INDUSTRIA_DI_CIVITANOVA_MARCHE_2026-03-08",
     "nome": "14 GRAN PREMIO DELL'INDUSTRIA DI CIVITANOVA MARCHE",
     "data": "2026-03-08",
@@ -11529,18 +11505,6 @@
     "campionato_italiano": false,
     "regione": "MARCHE",
     "categoria": "Elite-Under23",
-    "luogo": ""
-  },
-  {
-    "id": "GRAN_PREMIO_CITTA_DI_NONANTOLA_2026-03-08",
-    "nome": "GRAN PREMIO CITTA' DI NONANTOLA",
-    "data": "2026-03-08",
-    "tipo": "regionale",
-    "moltiplicatore": 1,
-    "campionato_regionale": false,
-    "campionato_italiano": false,
-    "regione": "EMILIA ROMAGNA",
-    "categoria": "Juniores",
     "luogo": ""
   },
   {
@@ -11580,18 +11544,6 @@
     "luogo": ""
   },
   {
-    "id": "2_GRAN_PREMIO_CADELBOSCO_DI_SOPRA_2026-03-22",
-    "nome": "2 GRAN PREMIO CADELBOSCO DI SOPRA",
-    "data": "2026-03-22",
-    "tipo": "regionale",
-    "moltiplicatore": 1,
-    "campionato_regionale": false,
-    "campionato_italiano": false,
-    "regione": "EMILIA ROMAGNA",
-    "categoria": "Allievi / Esordienti 1° Anno / Esordienti 2° Anno",
-    "luogo": ""
-  },
-  {
     "id": "15_TROFEO_VINI_TERRE_GAIE_DONNE_ESORDIENTI_PRIMO_ANNO_2026-03-22",
     "nome": "15 TROFEO VINI TERRE GAIE DONNE ESORDIENTI PRIMO ANNO",
     "data": "2026-03-22",
@@ -11625,18 +11577,6 @@
     "campionato_italiano": false,
     "regione": "VENETO",
     "categoria": "Juniores / Allievi",
-    "luogo": ""
-  },
-  {
-    "id": "GRAN_PREMIO_FIORITURA_2026-03-29",
-    "nome": "GRAN PREMIO FIORITURA",
-    "data": "2026-03-29",
-    "tipo": "regionale",
-    "moltiplicatore": 1,
-    "campionato_regionale": false,
-    "campionato_italiano": false,
-    "regione": "EMILIA ROMAGNA",
-    "categoria": "Juniores / Allievi / Esordienti 1° Anno / Esordienti 2° Anno",
     "luogo": ""
   },
   {
@@ -11696,18 +11636,6 @@
     "campionato_regionale": false,
     "campionato_italiano": false,
     "regione": "LOMBARDIA",
-    "categoria": "Allievi",
-    "luogo": ""
-  },
-  {
-    "id": "GRAN_PREMIO_RESISTENZA_E_CADUTI_CASTELLETTESI_2026-03-29",
-    "nome": "GRAN PREMIO RESISTENZA E CADUTI CASTELLETTESI",
-    "data": "2026-03-29",
-    "tipo": "regionale",
-    "moltiplicatore": 1,
-    "campionato_regionale": false,
-    "campionato_italiano": false,
-    "regione": "PIEMONTE",
     "categoria": "Allievi",
     "luogo": ""
   },
@@ -11832,18 +11760,6 @@
     "luogo": ""
   },
   {
-    "id": "46_GRAN_PREMIO_MOSOLE_2026-04-06",
-    "nome": "46 GRAN PREMIO MOSOLE",
-    "data": "2026-04-06",
-    "tipo": "regionale",
-    "moltiplicatore": 1,
-    "campionato_regionale": false,
-    "campionato_italiano": false,
-    "regione": "VENETO",
-    "categoria": "Esordienti 1° Anno / Esordienti 2° Anno",
-    "luogo": ""
-  },
-  {
     "id": "63_GRAN_PREMIO_PALIO_DEL_RECIOTO_UNDER23_2026-04-07",
     "nome": "63 GRAN PREMIO PALIO DEL RECIOTO UNDER23",
     "data": "2026-04-07",
@@ -11912,18 +11828,6 @@
     "campionato_regionale": false,
     "campionato_italiano": false,
     "regione": "EMILIA ROMAGNA",
-    "categoria": "Allievi",
-    "luogo": ""
-  },
-  {
-    "id": "42_GRAN_PREMIO_COMUNE_DI_LONATE_CEPPINO_2026-04-12",
-    "nome": "42 GRAN PREMIO COMUNE DI LONATE CEPPINO",
-    "data": "2026-04-12",
-    "tipo": "regionale",
-    "moltiplicatore": 1,
-    "campionato_regionale": false,
-    "campionato_italiano": false,
-    "regione": "LOMBARDIA",
     "categoria": "Allievi",
     "luogo": ""
   },
@@ -12048,18 +11952,6 @@
     "luogo": ""
   },
   {
-    "id": "3_TROFEO_PROTECH_MEMORIAL_RODOLFO_BARDELLONI_2026-04-19",
-    "nome": "3 TROFEO PROTECH MEMORIAL RODOLFO BARDELLONI",
-    "data": "2026-04-19",
-    "tipo": "nazionale",
-    "moltiplicatore": 2,
-    "campionato_regionale": false,
-    "campionato_italiano": false,
-    "regione": "LOMBARDIA",
-    "categoria": "Juniores",
-    "luogo": ""
-  },
-  {
     "id": "5_TROFEO_CITTA_DI_GOSSOLENGO_2026-04-19",
     "nome": "5 TROFEO CITTA' DI GOSSOLENGO",
     "data": "2026-04-19",
@@ -12093,18 +11985,6 @@
     "campionato_italiano": false,
     "regione": "LOMBARDIA",
     "categoria": "Esordienti 2° Anno",
-    "luogo": ""
-  },
-  {
-    "id": "62_GRAN_PREMIO_CALZIFICI_E_CALZATURIFICI_STABBIESI_2026-04-19",
-    "nome": "62 GRAN PREMIO CALZIFICI E CALZATURIFICI STABBIESI",
-    "data": "2026-04-19",
-    "tipo": "regionale",
-    "moltiplicatore": 1,
-    "campionato_regionale": false,
-    "campionato_italiano": false,
-    "regione": "TOSCANA",
-    "categoria": "Allievi",
     "luogo": ""
   },
   {
@@ -12188,18 +12068,6 @@
     "campionato_regionale": true,
     "campionato_italiano": false,
     "regione": "SICILIA",
-    "categoria": "Allievi",
-    "luogo": ""
-  },
-  {
-    "id": "22_GRAN_PREMIO_DELLA_LIBERAZIONE_STRADE_BIANCHE_2026-04-25",
-    "nome": "22 GRAN PREMIO DELLA LIBERAZIONE STRADE BIANCHE",
-    "data": "2026-04-25",
-    "tipo": "regionale",
-    "moltiplicatore": 1,
-    "campionato_regionale": false,
-    "campionato_italiano": false,
-    "regione": "TOSCANA",
     "categoria": "Allievi",
     "luogo": ""
   },
@@ -12324,18 +12192,6 @@
     "luogo": ""
   },
   {
-    "id": "69_GRAN_PREMIO_DI_SAN_PROSPERO_2026-05-01",
-    "nome": "69 GRAN PREMIO DI SAN PROSPERO",
-    "data": "2026-05-01",
-    "tipo": "regionale",
-    "moltiplicatore": 1,
-    "campionato_regionale": false,
-    "campionato_italiano": false,
-    "regione": "EMILIA ROMAGNA",
-    "categoria": "Juniores",
-    "luogo": ""
-  },
-  {
     "id": "3_TROFEO_P_E_K_NEW_ELECTRIC_2026-05-01",
     "nome": "3 TROFEO P E K NEW ELECTRIC",
     "data": "2026-05-01",
@@ -12393,18 +12249,6 @@
     "campionato_italiano": false,
     "regione": "LOMBARDIA",
     "categoria": "Esordienti 2° Anno",
-    "luogo": ""
-  },
-  {
-    "id": "81_GRAN_PREMIO_CADUTI_LIBERAZIONE_2026-05-01",
-    "nome": "81 GRAN PREMIO CADUTI LIBERAZIONE",
-    "data": "2026-05-01",
-    "tipo": "regionale",
-    "moltiplicatore": 1,
-    "campionato_regionale": false,
-    "campionato_italiano": false,
-    "regione": "EMILIA ROMAGNA",
-    "categoria": "Allievi",
     "luogo": ""
   },
   {
@@ -12540,18 +12384,6 @@
     "luogo": ""
   },
   {
-    "id": "67_GRAN_PREMIO_U_C_A_T_2026-05-03",
-    "nome": "67 GRAN PREMIO U C A T",
-    "data": "2026-05-03",
-    "tipo": "regionale",
-    "moltiplicatore": 1,
-    "campionato_regionale": false,
-    "campionato_italiano": false,
-    "regione": "PIEMONTE",
-    "categoria": "Juniores",
-    "luogo": ""
-  },
-  {
     "id": "24_GRAN_PREMIO_ROSA_CITTA_DI_BOVOLONE_2026-05-03",
     "nome": "24 GRAN PREMIO ROSA CITTA' DI BOVOLONE",
     "data": "2026-05-03",
@@ -12596,42 +12428,6 @@
     "campionato_regionale": false,
     "campionato_italiano": false,
     "regione": "ABRUZZO",
-    "categoria": "Allievi",
-    "luogo": ""
-  },
-  {
-    "id": "38_GRAN_PREMIO_CITTA_DI_ZOLA_DIECI_COLLI_GIOVANI_2026-05-03",
-    "nome": "38 GRAN PREMIO CITTA' DI ZOLA DIECI COLLI GIOVANI",
-    "data": "2026-05-03",
-    "tipo": "regionale",
-    "moltiplicatore": 1,
-    "campionato_regionale": false,
-    "campionato_italiano": false,
-    "regione": "EMILIA ROMAGNA",
-    "categoria": "Allievi",
-    "luogo": ""
-  },
-  {
-    "id": "6_GRAN_PREMIO_IMPRESA_SERGIO_ZANETTE_2026-05-03",
-    "nome": "6 GRAN PREMIO IMPRESA SERGIO ZANETTE",
-    "data": "2026-05-03",
-    "tipo": "regionale",
-    "moltiplicatore": 1,
-    "campionato_regionale": false,
-    "campionato_italiano": false,
-    "regione": "VENETO",
-    "categoria": "Allievi",
-    "luogo": ""
-  },
-  {
-    "id": "GRAN_PREMIO_CAMPI_ENERGIE_2026_MEMORIAL_FORTUNA_2026_2026-05-03",
-    "nome": "GRAN PREMIO CAMPI ENERGIE 2026 MEMORIAL FORTUNA 2026",
-    "data": "2026-05-03",
-    "tipo": "regionale",
-    "moltiplicatore": 1,
-    "campionato_regionale": false,
-    "campionato_italiano": false,
-    "regione": "VENETO",
     "categoria": "Allievi",
     "luogo": ""
   },
@@ -12684,18 +12480,6 @@
     "luogo": ""
   },
   {
-    "id": "51_GRAN_PREMIO_LEIBALLI_CUZZUOL_2026-05-03",
-    "nome": "51 GRAN PREMIO LEIBALLI CUZZUOL",
-    "data": "2026-05-03",
-    "tipo": "regionale",
-    "moltiplicatore": 1,
-    "campionato_regionale": false,
-    "campionato_italiano": false,
-    "regione": "VENETO",
-    "categoria": "Esordienti 1° Anno / Esordienti 2° Anno",
-    "luogo": ""
-  },
-  {
     "id": "MEMORIAL_FARRIS_QUIRINO_2026-05-10",
     "nome": "MEMORIAL FARRIS QUIRINO",
     "data": "2026-05-10",
@@ -12704,18 +12488,6 @@
     "campionato_regionale": false,
     "campionato_italiano": false,
     "regione": "SARDEGNA",
-    "categoria": "Juniores / Allievi",
-    "luogo": ""
-  },
-  {
-    "id": "10_GRAN_PREMIO_AMICI_DEL_CICLISMO_2026-05-10",
-    "nome": "10 GRAN PREMIO AMICI DEL CICLISMO",
-    "data": "2026-05-10",
-    "tipo": "regionale",
-    "moltiplicatore": 1,
-    "campionato_regionale": false,
-    "campionato_italiano": false,
-    "regione": "VENETO",
     "categoria": "Juniores / Allievi",
     "luogo": ""
   },
@@ -12792,18 +12564,6 @@
     "luogo": ""
   },
   {
-    "id": "5_GRAN_PREMIO_EUROTERMOIDRAULICA_2026-05-10",
-    "nome": "5 GRAN PREMIO EUROTERMOIDRAULICA",
-    "data": "2026-05-10",
-    "tipo": "regionale",
-    "moltiplicatore": 1,
-    "campionato_regionale": false,
-    "campionato_italiano": false,
-    "regione": "VENETO",
-    "categoria": "Allievi",
-    "luogo": ""
-  },
-  {
     "id": "108_COPPA_ASCENSIONE_2026-05-10",
     "nome": "108 COPPA ASCENSIONE",
     "data": "2026-05-10",
@@ -12873,18 +12633,6 @@
     "campionato_italiano": false,
     "regione": "FRIULI VENEZIA GIULIA",
     "categoria": "Esordienti 1° Anno / Esordienti 2° Anno",
-    "luogo": ""
-  },
-  {
-    "id": "10_GRAN_PREMIO_CITTA_DI_PONTEDERA_2026-05-16",
-    "nome": "10 GRAN PREMIO CITTA' DI PONTEDERA",
-    "data": "2026-05-16",
-    "tipo": "nazionale",
-    "moltiplicatore": 2,
-    "campionato_regionale": false,
-    "campionato_italiano": false,
-    "regione": "TOSCANA",
-    "categoria": "Elite-Under23",
     "luogo": ""
   },
   {
@@ -13008,18 +12756,6 @@
     "luogo": ""
   },
   {
-    "id": "44_DUE_GIORNI_MARCHIGIANA_GRAN_PREMIO_SANTA_RITA_2026-05-23",
-    "nome": "44 DUE GIORNI MARCHIGIANA GRAN PREMIO SANTA RITA",
-    "data": "2026-05-23",
-    "tipo": "internazionale",
-    "moltiplicatore": 3,
-    "campionato_regionale": false,
-    "campionato_italiano": false,
-    "regione": "MARCHE",
-    "categoria": "Elite-Under23",
-    "luogo": ""
-  },
-  {
     "id": "CRONOSCALATA_CITTA_DI_FUMONE_DONNE_ESORDIENTI_PRIMO_ANNO_2026-05-23",
     "nome": "CRONOSCALATA CITTA' DI FUMONE DONNE ESORDIENTI PRIMO ANNO",
     "data": "2026-05-23",
@@ -13092,18 +12828,6 @@
     "luogo": ""
   },
   {
-    "id": "9_GRAN_PREMIO_RISTORANTE_DA_SILVANO_2026-05-24",
-    "nome": "9 GRAN PREMIO RISTORANTE DA SILVANO",
-    "data": "2026-05-24",
-    "tipo": "regionale",
-    "moltiplicatore": 1,
-    "campionato_regionale": false,
-    "campionato_italiano": false,
-    "regione": "VENETO",
-    "categoria": "Allievi",
-    "luogo": ""
-  },
-  {
     "id": "2_GRAN_PREMIO_NOMENTUM_TROFEO_NOI_SPORT_2026-05-24",
     "nome": "2 GRAN PREMIO NOMENTUM TROFEO NOI SPORT",
     "data": "2026-05-24",
@@ -13148,18 +12872,6 @@
     "campionato_regionale": false,
     "campionato_italiano": false,
     "regione": "TOSCANA",
-    "categoria": "Esordienti 1° Anno / Esordienti 2° Anno",
-    "luogo": ""
-  },
-  {
-    "id": "74_GRAN_PREMIO_DELLA_GIOVENTU_2026-05-24",
-    "nome": "74 GRAN PREMIO DELLA GIOVENTU'",
-    "data": "2026-05-24",
-    "tipo": "regionale",
-    "moltiplicatore": 1,
-    "campionato_regionale": false,
-    "campionato_italiano": false,
-    "regione": "VENETO",
     "categoria": "Esordienti 1° Anno / Esordienti 2° Anno",
     "luogo": ""
   },
@@ -13232,18 +12944,6 @@
     "campionato_regionale": false,
     "campionato_italiano": false,
     "regione": "TOSCANA",
-    "categoria": "Allievi",
-    "luogo": ""
-  },
-  {
-    "id": "3_GRAN_PREMIO_CIRCUITO_DE_CASELON_2026-05-31",
-    "nome": "3 GRAN PREMIO CIRCUITO DE CASELON",
-    "data": "2026-05-31",
-    "tipo": "regionale",
-    "moltiplicatore": 1,
-    "campionato_regionale": false,
-    "campionato_italiano": false,
-    "regione": "VENETO",
     "categoria": "Allievi",
     "luogo": ""
   },
@@ -13716,30 +13416,6 @@
     "luogo": ""
   },
   {
-    "id": "2_GRAN_PREMIO_CITTA_DEL_MANDORLATO_DI_COLOGNA_VENETA_2026-06-07",
-    "nome": "2 GRAN PREMIO CITTA' DEL MANDORLATO DI COLOGNA VENETA",
-    "data": "2026-06-07",
-    "tipo": "regionale",
-    "moltiplicatore": 1,
-    "campionato_regionale": false,
-    "campionato_italiano": false,
-    "regione": "VENETO",
-    "categoria": "Juniores",
-    "luogo": ""
-  },
-  {
-    "id": "42_GRAN_PREMIO_CICLISTI_DI_ARCADE_2026-06-07",
-    "nome": "42 GRAN PREMIO CICLISTI DI ARCADE",
-    "data": "2026-06-07",
-    "tipo": "regionale",
-    "moltiplicatore": 1,
-    "campionato_regionale": false,
-    "campionato_italiano": false,
-    "regione": "VENETO",
-    "categoria": "Elite-Under23 / Juniores",
-    "luogo": ""
-  },
-  {
     "id": "64_TROFEO_FIORENZO_MAGNI_SCHIVARDI_RIGONI_DONNE_ESORDIENTI_PRIMO_ANNO_2026-06-07",
     "nome": "64 TROFEO FIORENZO MAGNI SCHIVARDI RIGONI DONNE ESORDIENTI PRIMO ANNO",
     "data": "2026-06-07",
@@ -13761,18 +13437,6 @@
     "campionato_italiano": false,
     "regione": "LOMBARDIA",
     "categoria": "Esordienti 2° Anno",
-    "luogo": ""
-  },
-  {
-    "id": "46_GRAN_PREMIO_MAGLIERIE_FDB_2026-06-07",
-    "nome": "46 GRAN PREMIO MAGLIERIE FDB",
-    "data": "2026-06-07",
-    "tipo": "regionale",
-    "moltiplicatore": 1,
-    "campionato_regionale": false,
-    "campionato_italiano": false,
-    "regione": "VENETO",
-    "categoria": "Allievi",
     "luogo": ""
   },
   {
@@ -13932,18 +13596,6 @@
     "luogo": ""
   },
   {
-    "id": "48_GRAN_PREMIO_CITTA_DI_EMPOLI_2026-06-13",
-    "nome": "48 GRAN PREMIO CITTA' DI EMPOLI",
-    "data": "2026-06-13",
-    "tipo": "nazionale",
-    "moltiplicatore": 2,
-    "campionato_regionale": false,
-    "campionato_italiano": false,
-    "regione": "TOSCANA",
-    "categoria": "Elite-Under23",
-    "luogo": ""
-  },
-  {
     "id": "INTERNAZIONALE_PORTO_SAN_GIORGIO_MEMORIAL_M_DE_ANGELIS_2026-06-13",
     "nome": "INTERNAZIONALE PORTO SAN GIORGIO MEMORIAL M DE ANGELIS",
     "data": "2026-06-13",
@@ -13992,30 +13644,6 @@
     "luogo": ""
   },
   {
-    "id": "2_GRAN_PREMIO_NOVENTANA_PADOVA_DIESEL_2026-06-14",
-    "nome": "2 GRAN PREMIO NOVENTANA PADOVA DIESEL",
-    "data": "2026-06-14",
-    "tipo": "regionale",
-    "moltiplicatore": 1,
-    "campionato_regionale": false,
-    "campionato_italiano": false,
-    "regione": "VENETO",
-    "categoria": "Allievi",
-    "luogo": ""
-  },
-  {
-    "id": "1_GRAN_PREMIO_CITTA_DI_SPELLO_2026-06-14",
-    "nome": "1 GRAN PREMIO CITTA' DI SPELLO",
-    "data": "2026-06-14",
-    "tipo": "regionale",
-    "moltiplicatore": 1,
-    "campionato_regionale": false,
-    "campionato_italiano": false,
-    "regione": "UMBRIA",
-    "categoria": "Allievi",
-    "luogo": ""
-  },
-  {
     "id": "2_GRAN_PREMIO_NOVENTANA_PADOVA_DIESEL_DONNE_ESORDIENTI_PRIMO_ANNO_2026-06-14",
     "nome": "2 GRAN PREMIO NOVENTANA PADOVA DIESEL DONNE ESORDIENTI PRIMO ANNO",
     "data": "2026-06-14",
@@ -14061,30 +13689,6 @@
     "campionato_italiano": false,
     "regione": "UMBRIA",
     "categoria": "Esordienti 2° Anno",
-    "luogo": ""
-  },
-  {
-    "id": "14_GRAN_PREMIO_VALSAMOGGIA_5_COMUNI_UNITI_2026-06-14",
-    "nome": "14 GRAN PREMIO VALSAMOGGIA 5 COMUNI UNITI",
-    "data": "2026-06-14",
-    "tipo": "regionale",
-    "moltiplicatore": 1,
-    "campionato_regionale": false,
-    "campionato_italiano": false,
-    "regione": "EMILIA ROMAGNA",
-    "categoria": "Allievi",
-    "luogo": ""
-  },
-  {
-    "id": "5_TROFEO_SCALVINI_ENZO_A_M_2026-06-14",
-    "nome": "5 TROFEO SCALVINI ENZO A M",
-    "data": "2026-06-14",
-    "tipo": "regionale",
-    "moltiplicatore": 1,
-    "campionato_regionale": false,
-    "campionato_italiano": false,
-    "regione": "LOMBARDIA",
-    "categoria": "Allievi",
     "luogo": ""
   },
   {
@@ -14277,18 +13881,6 @@
     "campionato_italiano": false,
     "regione": "ABRUZZO",
     "categoria": "Elite-Under23",
-    "luogo": ""
-  },
-  {
-    "id": "GRAN_PREMIO_SPORTIVI_DI_NERVESA_2026-06-21",
-    "nome": "GRAN PREMIO SPORTIVI DI NERVESA",
-    "data": "2026-06-21",
-    "tipo": "regionale",
-    "moltiplicatore": 1,
-    "campionato_regionale": false,
-    "campionato_italiano": false,
-    "regione": "VENETO",
-    "categoria": "Allievi",
     "luogo": ""
   },
   {
@@ -14508,18 +14100,6 @@
     "luogo": ""
   },
   {
-    "id": "4_GRAN_PREMIO_CITTA_DI_MORBEGNO_2026-06-28",
-    "nome": "4 GRAN PREMIO CITTA' DI MORBEGNO",
-    "data": "2026-06-28",
-    "tipo": "regionale",
-    "moltiplicatore": 1,
-    "campionato_regionale": false,
-    "campionato_italiano": false,
-    "regione": "LOMBARDIA",
-    "categoria": "Juniores",
-    "luogo": ""
-  },
-  {
     "id": "5_COPPA_GIUDICARIE_CENTRALI_DONNE_ESORDIENTI_PRIMO_ANNO_2026-06-28",
     "nome": "5 COPPA GIUDICARIE CENTRALI DONNE ESORDIENTI PRIMO ANNO",
     "data": "2026-06-28",
@@ -14660,18 +14240,6 @@
     "campionato_regionale": false,
     "campionato_italiano": false,
     "regione": "VENETO",
-    "categoria": "Allievi",
-    "luogo": ""
-  },
-  {
-    "id": "3_GRAN_PREMIO_FRANCESCO_ZUCCHETTI_CAMPIONE_OLIMPICO_2026-07-05",
-    "nome": "3 GRAN PREMIO FRANCESCO ZUCCHETTI CAMPIONE OLIMPICO",
-    "data": "2026-07-05",
-    "tipo": "regionale",
-    "moltiplicatore": 1,
-    "campionato_regionale": false,
-    "campionato_italiano": false,
-    "regione": "LOMBARDIA",
     "categoria": "Allievi",
     "luogo": ""
   },
@@ -14876,18 +14444,6 @@
     "campionato_regionale": false,
     "campionato_italiano": false,
     "regione": "EMILIA ROMAGNA",
-    "categoria": "Esordienti 1° Anno / Esordienti 2° Anno",
-    "luogo": ""
-  },
-  {
-    "id": "14_TROFEO_HOTEL_MONTEGRAPPA_2026-07-12",
-    "nome": "14 TROFEO HOTEL MONTEGRAPPA",
-    "data": "2026-07-12",
-    "tipo": "regionale",
-    "moltiplicatore": 1,
-    "campionato_regionale": false,
-    "campionato_italiano": false,
-    "regione": "VENETO",
     "categoria": "Esordienti 1° Anno / Esordienti 2° Anno",
     "luogo": ""
   },
@@ -15249,18 +14805,6 @@
     "campionato_italiano": false,
     "regione": "TOSCANA",
     "categoria": "Juniores",
-    "luogo": ""
-  },
-  {
-    "id": "12_TROFEO_PREALPI_IN_ROSA_2026-07-26",
-    "nome": "12 TROFEO PREALPI IN ROSA",
-    "data": "2026-07-26",
-    "tipo": "regionale",
-    "moltiplicatore": 1,
-    "campionato_regionale": false,
-    "campionato_italiano": false,
-    "regione": "VENETO",
-    "categoria": "Elite-Under23 / Juniores / Allievi",
     "luogo": ""
   },
   {
@@ -15729,18 +15273,6 @@
     "campionato_italiano": false,
     "regione": "MARCHE",
     "categoria": "Juniores",
-    "luogo": ""
-  },
-  {
-    "id": "GRAN_PREMIO_12_MARTIRI_BORGOTICINO_2026-08-09",
-    "nome": "GRAN PREMIO 12 MARTIRI BORGOTICINO",
-    "data": "2026-08-09",
-    "tipo": "regionale",
-    "moltiplicatore": 1,
-    "campionato_regionale": false,
-    "campionato_italiano": false,
-    "regione": "PIEMONTE",
-    "categoria": "Allievi",
     "luogo": ""
   },
   {
