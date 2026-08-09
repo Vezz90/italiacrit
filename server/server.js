@@ -7714,7 +7714,7 @@ function buildGaraResultOverlaySvg({ catLabel, title, subtitle, results = [] }) 
     const team = isTeamResult ? '' : (r.team || '');
     const nameSize = fitRow(name, 24, teamX - nameX - 20);
     const teamSize = fitRow(team, 17, timeX - 130 - teamX - 20);
-    const time = r.posizione === 1 ? (r.tempo || '') : (r.tempo ? `+${r.tempo.replace(/^\+/, '')}` : '');
+    const time = r.posizione === 1 ? (r.tempo || '') : _ogFmtGap(r.tempo);
     return `
     <line x1="${pad}" y1="${ry}" x2="${W - pad}" y2="${ry}" stroke="rgba(255,255,255,0.15)"/>
     <rect x="${pad}" y="${mid - 17}" width="44" height="34" rx="6" fill="${i < 3 ? medal[i] : 'rgba(255,255,255,0.12)'}"/>
