@@ -11470,5 +11470,17 @@
     "regione": "VENETO",
     "categoria": "Donne Allieve",
     "luogo": "NOVENTANA"
+  },
+  {
+    "id": "33_TROFEO_MAIONCHI_NEVIO_ALLA_MEMORIA_2026-08-09",
+    "nome": "33 TROFEO MAIONCHI NEVIO ALLA MEMORIA",
+    "data": "2026-08-09",
+    "tipo": "regionale",
+    "moltiplicatore": 1,
+    "campionato_regionale": false,
+    "campionato_italiano": false,
+    "regione": "TOSCANA",
+    "categoria": "Juniores",
+    "luogo": ""
   }
 ]
