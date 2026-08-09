@@ -801,18 +801,52 @@ async def run_cycle():
 
     print(f"\n--- SCRAPER COMPLETATO ---")
     setup_unmatched_log()
-    # Caricamento calendario (con cache per evitare richieste continue alla FCI)
+    # Caricamento calendario. PRIMA veniva scaricato dalla FCI una volta sola
+    # (se calendar.json esisteva già, la cache locale restava per SEMPRE la
+    # fonte, mai più aggiornata dalla FCI) — una gara aggiunta al calendario
+    # FCI dopo quel primo scraping (last-minute, o semplicemente pubblicata
+    # in ritardo) non compariva mai in Calendario sul sito, anche se poi i
+    # suoi risultati venivano scrapati e importati normalmente (i due
+    # scraping — calendario e risultati — sono indipendenti). Ora il
+    # calendario viene ri-scaricato periodicamente (non ad ogni ciclo, che
+    # gira ogni ~1.5h — troppo spesso per un giro completo di 12 mesi × 3
+    # categorie geografiche) e le gare nuove trovate vengono AGGIUNTE senza
+    # mai toccare/sovrascrivere quelle già presenti (comprese eventuali
+    # correzioni fatte a mano ai dati, es. regione).
     calendar_file = DATA_DIR / "calendar.json"
+    calendar_meta_file = DATA_DIR / "calendar_last_scrape.json"
+    calendar = []
     if calendar_file.exists():
-        print("Caricamento calendario da cache locale (calendar.json)...")
         with open(calendar_file, "r", encoding="utf-8") as f:
             calendar = json.load(f)
-    else:
-        print("Scaricamento calendario automatico dalla FCI...")
-        calendar = scrape_calendar_fci(CURRENT_YEAR)
+
+    should_rescrape = True
+    if calendar and calendar_meta_file.exists():
+        try:
+            with open(calendar_meta_file, "r", encoding="utf-8") as f:
+                last_scrape = datetime.fromisoformat(json.load(f)["last_scrape"])
+            should_rescrape = (datetime.utcnow() - last_scrape).total_seconds() > 20 * 3600
+        except Exception:
+            should_rescrape = True
+
+    if should_rescrape:
+        print("Calendario da FCI: caricamento gare nuove..." if calendar else "Scaricamento calendario automatico dalla FCI...")
+        fresh_calendar = scrape_calendar_fci(CURRENT_YEAR)
+        existing_ids = {g["id"] for g in calendar}
+        added = 0
+        for g in fresh_calendar:
+            if g["id"] not in existing_ids:
+                calendar.append(g)
+                existing_ids.add(g["id"])
+                added += 1
+        print(f"Calendario: {added} nuove gare aggiunte ({len(calendar)} totali).")
         with open(calendar_file, "w", encoding="utf-8") as f:
             json.dump(calendar, f, indent=4, ensure_ascii=False)
-    
+        with open(calendar_meta_file, "w", encoding="utf-8") as f:
+            json.dump({"last_scrape": datetime.utcnow().isoformat()}, f)
+    else:
+        print("Caricamento calendario da cache locale (aggiornato di recente)...")
+
     cal_by_date = {}
     for g in calendar: cal_by_date.setdefault(g["data"], []).append(g)
 
