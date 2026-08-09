@@ -403,7 +403,7 @@ const DEFAULT_OG_IMG = `${SITE_URL}/assets/og-default.png`;
 // _ogCropPosition, ecc.): Facebook cache i byte dell'immagine per URL separatamente
 // dai meta tag, e "Scrape Again" sul debugger a volte aggiorna solo i secondi —
 // un parametro di versione nell'URL costringe Facebook a trattarla come nuova.
-const OG_IMG_VERSION = 6;
+const OG_IMG_VERSION = 7;
 
 function readDataJson(file) {
   try { return JSON.parse(fs.readFileSync(path.join(DATA_DIR, file), 'utf8')); }
@@ -7701,7 +7701,7 @@ function buildGaraResultOverlaySvg({ catLabel, title, subtitle, results = [] }) 
   // Solo podio (3): con meno righe c'è più spazio verticale per riga,
   // sfruttato per nomi/team più grandi invece di stiparne fino a 5.
   const n = Math.min(results.length, 3);
-  const rowsTop = 372, rowsBottom = H - 66;
+  const rowsTop = 344, rowsBottom = H - 66;
   const rH = Math.round((rowsBottom - rowsTop) / n);
   const nameX = pad + 62, teamX = 760, timeX = W - pad;
   const fitRow = (text, base, avail) => {

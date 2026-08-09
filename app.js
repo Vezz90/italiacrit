@@ -20707,6 +20707,15 @@ const SHARE_TAG = '#italiacrit #ciclismo';
 window._shareGaraData = null; window._shareAtletaData = null; window._shareTeamData = null;
 let _shareType, _sharePayload, _sharePlatKey = 'instagram';
 let _shareLogoImg = null;
+// Stile grafica gara: 'results' (podio+risultati in overlay, esistente) o
+// 'winner' (solo vincitore in grande, stile "annuncio") — scelta libera per
+// qualunque formato (Post/Instagram/Story), non un formato a sé.
+let _shareGaraStyle = 'results';
+// Regolazione manuale della foto di sfondo (zoom + spostamento), per
+// centrare a mano il soggetto quando il ritaglio automatico non va bene —
+// resettata ad ogni apertura della modale. offsetX/offsetY sono in pixel
+// "canvas" (spazio dell'immagine finale, non dello schermo).
+let _shareImgAdjust = { scale: 1, offsetX: 0, offsetY: 0 };
 
 // ── MEDIA (foto/video/dirette per gara, stile YouTube) ───────────────────
 let mediaTab = 'video'; // 'video' | 'dirette' | 'presentazioni' | 'programmi_tv' | 'altro'
@@ -21386,11 +21395,35 @@ function _bg(ctx, W, H) {
 // questo degradé, nessuna riscrittura del resto del disegno). Sostituisce
 // _bg quando una foto è disponibile, per qualunque formato (quadrato,
 // story, ecc.), non solo per Facebook.
-function _bgPhoto(ctx, W, H, img) {
+// Rettangolo sorgente per un ritaglio "cover" di img in un riquadro W×H,
+// con zoom/spostamento manuali opzionali (adjust, vedi _shareImgAdjust):
+// scale>1 = zoom in (inquadra meno immagine), offsetX/Y in pixel canvas
+// spostano il punto inquadrato. Clippato per non uscire mai dai bordi
+// dell'immagine sorgente.
+function _photoCoverRect(img, W, H, adjust) {
+  const { scale = 1, offsetX = 0, offsetY = 0 } = adjust || {};
   const ir = img.naturalWidth / img.naturalHeight, cr = W / H;
-  let sx = 0, sy = 0, sw = img.naturalWidth, sh = img.naturalHeight;
-  if (ir > cr) { sw = sh * cr; sx = (img.naturalWidth - sw) / 2; }
-  else { sh = sw / cr; sy = (img.naturalHeight - sh) / 2; }
+  let baseSw, baseSh;
+  if (ir > cr) { baseSh = img.naturalHeight; baseSw = baseSh * cr; }
+  else { baseSw = img.naturalWidth; baseSh = baseSw / cr; }
+  const s = Math.max(1, scale);
+  let sw = baseSw / s, sh = baseSh / s;
+  let sx = (img.naturalWidth - baseSw) / 2 + (baseSw - sw) / 2 - offsetX * (baseSw / W);
+  let sy = (img.naturalHeight - baseSh) / 2 + (baseSh - sh) / 2 - offsetY * (baseSh / H);
+  sx = Math.max(0, Math.min(sx, img.naturalWidth - sw));
+  sy = Math.max(0, Math.min(sy, img.naturalHeight - sh));
+  return { sx, sy, sw, sh };
+}
+
+// Stesso trattamento della card gara "foto intera" lato server
+// (buildGaraResultOverlaySvg): la foto riempie tutto il riquadro, un
+// degradé scuro la rende leggibile sotto il testo esistente (già bianco/
+// chiaro, pensato per lo sfondo quasi-nero di _bg — funziona identico sopra
+// questo degradé, nessuna riscrittura del resto del disegno). Sostituisce
+// _bg quando una foto è disponibile, per qualunque formato (quadrato,
+// story, ecc.), non solo per Facebook.
+function _bgPhoto(ctx, W, H, img, adjust) {
+  const { sx, sy, sw, sh } = _photoCoverRect(img, W, H, adjust);
   ctx.drawImage(img, sx, sy, sw, sh, 0, 0, W, H);
   const g = ctx.createLinearGradient(0, 0, 0, H);
   g.addColorStop(0, 'rgba(0,0,0,0.55)');
@@ -21399,6 +21432,20 @@ function _bgPhoto(ctx, W, H, img) {
   g.addColorStop(1, 'rgba(0,0,0,0.93)');
   ctx.fillStyle = g; ctx.fillRect(0, 0, W, H);
   ctx.fillStyle = '#e8001d'; ctx.fillRect(0, 0, Math.max(3, Math.round(W * 0.005)), H);
+}
+
+// Variante per la card "Vincitore": il testo occupa solo la parte bassa
+// (nome vincitore + nome gara + logo), quindi la foto resta chiara e ben
+// visibile su gran parte del riquadro, scurita solo dove serve.
+function _bgPhotoBottom(ctx, W, H, img, adjust) {
+  const { sx, sy, sw, sh } = _photoCoverRect(img, W, H, adjust);
+  ctx.drawImage(img, sx, sy, sw, sh, 0, 0, W, H);
+  const g = ctx.createLinearGradient(0, 0, 0, H);
+  g.addColorStop(0, 'rgba(0,0,0,0)');
+  g.addColorStop(0.55, 'rgba(0,0,0,0)');
+  g.addColorStop(0.72, 'rgba(0,0,0,0.55)');
+  g.addColorStop(1, 'rgba(0,0,0,0.90)');
+  ctx.fillStyle = g; ctx.fillRect(0, 0, W, H);
 }
 function _header(ctx, logo, W, H, classData, topRightCat) {
   // ── Stile Velon: header flat, niente barra scura, logo che siede sul fondo dark ──
@@ -21661,6 +21708,57 @@ function _drawGaraColumn(ctx, x, colW, topY, bottomY, slice, startIdx, winnerTim
       ctx.textAlign = 'left'; ctx.textBaseline = 'alphabetic';
     }
   });
+}
+
+// ── GARA CARD "VINCITORE" — solo il primo classificato, stile annuncio ───
+// Foto quasi a pieno schermo (scurita solo in basso, vedi _bgPhotoBottom),
+// categoria/nome vincitore/nome gara centrati sopra il degradé, logo ICS in
+// fondo — riferimento visivo indicato dall'utente (grafica di terzi).
+function _drawGaraWinner(ctx, W, H, d, logo) {
+  const winner = (d.results || [])[0];
+  if (!winner) return;
+  const winnerName = `${winner.cognome || ''} ${winner.nome || ''}`.trim().toUpperCase();
+  const raceName = (d.name || '').toUpperCase();
+  const pad = Math.round(W * 0.08);
+  const maxW = W - pad * 2;
+  ctx.textAlign = 'center'; ctx.textBaseline = 'alphabetic';
+
+  let y = H - Math.round(H * 0.14);
+
+  // Nome gara (riga più bassa, più piccola)
+  let fsRace = Math.round(W * 0.042);
+  ctx.font = `700 ${fsRace}px 'Inter Tight',sans-serif`;
+  while (ctx.measureText(raceName).width > maxW && fsRace > Math.round(W * 0.02)) {
+    fsRace -= 1; ctx.font = `700 ${fsRace}px 'Inter Tight',sans-serif`;
+  }
+  ctx.fillStyle = 'rgba(255,255,255,0.88)';
+  ctx.fillText(raceName, W / 2, y);
+
+  // Nome vincitore (grande, sopra il nome gara)
+  y -= Math.round(fsRace * 1.55);
+  let fsName = Math.round(W * 0.078);
+  ctx.font = `800 ${fsName}px 'Inter Tight',sans-serif`;
+  while (ctx.measureText(winnerName).width > maxW && fsName > Math.round(W * 0.032)) {
+    fsName -= 1; ctx.font = `800 ${fsName}px 'Inter Tight',sans-serif`;
+  }
+  ctx.fillStyle = '#fff';
+  ctx.fillText(winnerName, W / 2, y);
+
+  // Categoria (eyebrow, sopra il nome vincitore)
+  y -= Math.round(fsName * 1.25);
+  const fsCat = Math.round(W * 0.026);
+  ctx.font = `600 ${fsCat}px 'Inter Tight',sans-serif`;
+  ctx.fillStyle = 'rgba(255,255,255,0.7)';
+  ctx.letterSpacing = Math.round(fsCat * 0.5) + 'px';
+  ctx.fillText((d.cat || '').toUpperCase(), W / 2, y);
+  ctx.letterSpacing = '0px';
+
+  // Logo ICS centrato in fondo
+  if (logo) {
+    const lH = Math.round(H * 0.04), lW = Math.round(lH * logo.naturalWidth / logo.naturalHeight);
+    ctx.drawImage(logo, W / 2 - lW / 2, H - Math.round(H * 0.055) - lH, lW, lH);
+  }
+  ctx.textAlign = 'left'; ctx.textBaseline = 'alphabetic';
 }
 
 // ── GARA CARD v6 — UCI-inspired, no points, big names ────────
@@ -22300,12 +22398,19 @@ async function generateShareCanvas(type, payload, platKey) {
     // condivisione Facebook (server, buildGaraResultOverlaySvg), non solo
     // lì: quando la gara ha una foto, la usiamo come sfondo per TUTTI i
     // formati (Post Quadrato, Instagram, Story, ecc.), non solo per FB.
+    // _shareGaraStyle sceglie tra "risultati" (podio+classifica) e
+    // "vincitore" (solo il primo, stile annuncio) — libero per ogni formato.
+    const isWinner = _shareGaraStyle === 'winner';
     const [avatarMap, photoImg] = await Promise.all([
-      _fetchGaraAvatars(payload.results),
+      isWinner ? Promise.resolve(new Map()) : _fetchGaraAvatars(payload.results),
       payload.photo_url ? _fetchImgBlob(payload.photo_url) : Promise.resolve(null),
     ]);
-    if (photoImg) _bgPhoto(ctx,p.w,p.h,photoImg); else _bg(ctx,p.w,p.h);
-    _drawGara(ctx,p.w,p.h,payload,logo,avatarMap);
+    window._shareHasPhoto = !!photoImg;
+    if (photoImg) {
+      (isWinner ? _bgPhotoBottom : _bgPhoto)(ctx,p.w,p.h,photoImg,_shareImgAdjust);
+    } else _bg(ctx,p.w,p.h);
+    if (isWinner) _drawGaraWinner(ctx,p.w,p.h,payload,logo);
+    else _drawGara(ctx,p.w,p.h,payload,logo,avatarMap);
   } else {
     _bg(ctx,p.w,p.h);
     const _headerClassData = type==='class' ? payload
@@ -22343,6 +22448,7 @@ const _SVGS = {
 // ── Modale principale ──────────────────────────────────────
 window.showShareModal = async function(type, payload) {
   _shareType=type; _sharePayload=payload; _sharePlatKey='post';
+  _shareGaraStyle='results'; _shareImgAdjust={scale:1,offsetX:0,offsetY:0};
   // "Riscalda" subito la generazione della grafica OG lato server (appena si
   // apre la modale, prima ancora che l'utente scelga Facebook): la prima
   // generazione può richiedere alcuni secondi (foto + composizione avatar),
@@ -22385,6 +22491,19 @@ window.showShareModal = async function(type, payload) {
         <button class="share-modal-close" onclick="window.closeShareModal()">✕</button>
       </div>
       <div class="share-platforms">${platBtns}</div>
+      ${type==='gara' ? `
+      <div class="share-style-toggle" style="display:flex;gap:8px;margin-bottom:10px">
+        <button class="share-plat-btn active" id="sgs-results" onclick="window.setGaraStyle('results')" style="flex:1;padding:8px 6px">🏁 Risultati</button>
+        <button class="share-plat-btn" id="sgs-winner" onclick="window.setGaraStyle('winner')" style="flex:1;padding:8px 6px">🏆 Vincitore</button>
+      </div>
+      <div id="share-photo-adjust" style="display:none;margin-bottom:10px">
+        <div style="font-size:.72rem;color:var(--text-muted);margin-bottom:4px">🖼 Trascina l'anteprima per spostare la foto · usa lo zoom per ingrandirla</div>
+        <div style="display:flex;align-items:center;gap:8px">
+          <span style="font-size:.72rem;color:var(--text-muted)">Zoom</span>
+          <input type="range" id="share-zoom-slider" min="100" max="250" value="100" style="flex:1" oninput="window._onShareZoom(this.value)"/>
+          <button class="share-action-btn" style="padding:4px 10px;font-size:.72rem" onclick="window.resetShareImgAdjust()">↺ Reimposta</button>
+        </div>
+      </div>` : ''}
       <div id="share-fb-text-box" style="display:none;margin-bottom:12px">
         <div style="font-size:.72rem;color:var(--text-muted);margin-bottom:4px">Testo per il post — copialo e incollalo su Facebook insieme alla grafica</div>
         <textarea id="share-fb-text" readonly rows="6" style="width:100%;resize:vertical;font:inherit;font-size:.85rem;padding:8px;border-radius:8px;border:1px solid var(--border-subtle);background:var(--bg-elevated,rgba(255,255,255,0.04));color:var(--text-primary)"></textarea>
@@ -22393,7 +22512,7 @@ window.showShareModal = async function(type, payload) {
       <div class="share-size-label" id="share-size-lbl">Post Quadrato · 1080×1080 (1:1)</div>
       <div class="share-preview-wrap">
         <div class="share-generating" id="share-loading"><div class="share-spinner"></div> Generazione...</div>
-        <img id="share-canvas-preview" style="display:none" alt="Anteprima"/>
+        <img id="share-canvas-preview" style="display:none;${type==='gara'?'cursor:grab;touch-action:none':''}" alt="Anteprima"/>
       </div>
       <div class="share-actions">
         <button class="share-action-btn share-action-download" id="share-dl-btn" onclick="window.downloadShareCard()">⬇ Scarica</button>
@@ -22414,7 +22533,7 @@ window.closeShareModal=function(){const e=document.getElementById('share-overlay
 
 window.setSharePlat=async function(k){
   _sharePlatKey=k;
-  document.querySelectorAll('.share-plat-btn').forEach(b=>b.classList.remove('active'));
+  document.querySelectorAll('.share-platforms .share-plat-btn').forEach(b=>b.classList.remove('active'));
   const btn=document.getElementById('sp-'+k); if(btn)btn.classList.add('active');
   const p=SHARE_PLATFORMS[k];
   const sizes={post:'1080×1080 (1:1)',instagram:'1080×1350 (4:5)',story:'1080×1920 (9:16)',facebook:'1200×630 (1.91:1)',twitter:'1200×675 (16:9)',whatsapp:'1080×1080 (1:1)'};
@@ -22423,6 +22542,61 @@ window.setSharePlat=async function(k){
   if(lbl) lbl.textContent=`${names[k]} · ${sizes[k]}`;
   await _refreshPreview();
 };
+
+// Stile grafica gara: "risultati" (podio+classifica) o "vincitore" (solo il
+// primo, stile annuncio) — libero per ogni formato (Post/Instagram/Story/…).
+window.setGaraStyle=async function(style){
+  _shareGaraStyle=style;
+  document.querySelectorAll('.share-style-toggle .share-plat-btn').forEach(b=>b.classList.remove('active'));
+  const btn=document.getElementById(style==='winner'?'sgs-winner':'sgs-results'); if(btn)btn.classList.add('active');
+  await _refreshPreview();
+};
+
+// ── Regolazione manuale foto (zoom + trascinamento) ────────────────────────
+let _shareZoomTimer=null;
+window._onShareZoom=function(pct){
+  _shareImgAdjust.scale = Math.max(1, parseFloat(pct)/100);
+  clearTimeout(_shareZoomTimer);
+  _shareZoomTimer=setTimeout(()=>{ _refreshPreview(); }, 180);
+};
+window.resetShareImgAdjust=async function(){
+  _shareImgAdjust={scale:1,offsetX:0,offsetY:0};
+  const s=document.getElementById('share-zoom-slider'); if(s)s.value=100;
+  await _refreshPreview();
+};
+// Trascinamento sull'anteprima: sposta il ritaglio della foto (drag = pan).
+// I delta sono in pixel-schermo dell'<img> visualizzata, convertiti in
+// pixel-canvas (risoluzione reale della grafica, quasi sempre più grande)
+// nel rapporto tra le due — altrimenti un trascinamento di 50px sull'anteprima
+// (magari mostrata a metà della risoluzione reale) sposterebbe la foto la
+// metà di quanto ci si aspetta.
+let _shareDrag=null;
+function _initShareDragHandlers(){
+  const img=document.getElementById('share-canvas-preview');
+  if(!img || img._dragBound) return;
+  img._dragBound=true;
+  const start=(x,y)=>{
+    if(_shareType!=='gara') return;
+    _shareDrag={x,y,ox:_shareImgAdjust.offsetX,oy:_shareImgAdjust.offsetY};
+    img.style.cursor='grabbing';
+  };
+  const move=(x,y)=>{
+    if(!_shareDrag) return;
+    const p=SHARE_PLATFORMS[_sharePlatKey];
+    const rect=img.getBoundingClientRect();
+    const scaleRatio = rect.width ? (p.w/rect.width) : 1;
+    const dx=(x-_shareDrag.x)*scaleRatio, dy=(y-_shareDrag.y)*scaleRatio;
+    _shareImgAdjust.offsetX=_shareDrag.ox+dx;
+    _shareImgAdjust.offsetY=_shareDrag.oy+dy;
+    clearTimeout(_shareZoomTimer);
+    _shareZoomTimer=setTimeout(()=>{ _refreshPreview(); }, 60);
+  };
+  const end=()=>{ if(_shareDrag){ _shareDrag=null; img.style.cursor='grab'; } };
+  img.addEventListener('pointerdown', e=>{ start(e.clientX,e.clientY); img.setPointerCapture(e.pointerId); });
+  img.addEventListener('pointermove', e=>{ if(_shareDrag) move(e.clientX,e.clientY); });
+  img.addEventListener('pointerup', end);
+  img.addEventListener('pointercancel', end);
+}
 
 async function _refreshPreview(){
   const loading=document.getElementById('share-loading');
@@ -22433,6 +22607,9 @@ async function _refreshPreview(){
     const canvas=await generateShareCanvas(_shareType,_sharePayload,_sharePlatKey);
     preview.src=canvas.toDataURL('image/png');
     loading.style.display='none'; preview.style.display='block';
+    _initShareDragHandlers();
+    const adjustBox=document.getElementById('share-photo-adjust');
+    if(adjustBox) adjustBox.style.display = window._shareHasPhoto ? 'block' : 'none';
   }catch(e){loading.innerHTML='❌ Errore: '+e.message; console.error(e);}
 }
 
