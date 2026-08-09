@@ -403,7 +403,7 @@ const DEFAULT_OG_IMG = `${SITE_URL}/assets/og-default.png`;
 // _ogCropPosition, ecc.): Facebook cache i byte dell'immagine per URL separatamente
 // dai meta tag, e "Scrape Again" sul debugger a volte aggiorna solo i secondi —
 // un parametro di versione nell'URL costringe Facebook a trattarla come nuova.
-const OG_IMG_VERSION = 5;
+const OG_IMG_VERSION = 6;
 
 function readDataJson(file) {
   try { return JSON.parse(fs.readFileSync(path.join(DATA_DIR, file), 'utf8')); }
@@ -7698,7 +7698,9 @@ function buildGaraResultOverlaySvg({ catLabel, title, subtitle, results = [] }) 
   };
   const fsT = fitTitle(titleStr, 56, W - pad * 2);
 
-  const n = Math.min(results.length, 5);
+  // Solo podio (3): con meno righe c'è più spazio verticale per riga,
+  // sfruttato per nomi/team più grandi invece di stiparne fino a 5.
+  const n = Math.min(results.length, 3);
   const rowsTop = 372, rowsBottom = H - 66;
   const rH = Math.round((rowsBottom - rowsTop) / n);
   const nameX = pad + 62, teamX = 760, timeX = W - pad;
@@ -7707,20 +7709,28 @@ function buildGaraResultOverlaySvg({ catLabel, title, subtitle, results = [] }) 
     return est > avail ? Math.max(13, Math.floor(base * avail / est)) : base;
   };
 
-  const rowsHtml = results.slice(0, n).map((r, i) => {
-    const ry = rowsTop + i * rH, mid = ry + rH / 2;
+  const rows3 = results.slice(0, n).map((r) => {
     const isTeamResult = !r.atleta_id && (r.team || r.team_id);
     const name = isTeamResult ? (r.team || r.team_id) : `${r.cognome || ''} ${r.nome || ''}`.trim();
     const team = isTeamResult ? '' : (r.team || '');
-    const nameSize = fitRow(name, 24, teamX - nameX - 20);
-    const teamSize = fitRow(team, 17, timeX - 130 - teamX - 20);
+    return { r, name, team };
+  });
+  // Un'unica dimensione team per tutte le righe (non una a riga, che le
+  // rendeva disomogenee) — calcolata sul nome team più lungo dei tre, così
+  // restano leggibili e della stessa grandezza tra loro.
+  const teamAvail = timeX - 130 - teamX - 20;
+  const teamSizeShared = rows3.reduce((min, { team }) => Math.min(min, fitRow(team, 21, teamAvail)), 21);
+
+  const rowsHtml = rows3.map(({ r, name, team }, i) => {
+    const ry = rowsTop + i * rH, mid = ry + rH / 2;
+    const nameSize = fitRow(name, 26, teamX - nameX - 20);
     const time = r.posizione === 1 ? (r.tempo || '') : _ogFmtGap(r.tempo);
     return `
     <line x1="${pad}" y1="${ry}" x2="${W - pad}" y2="${ry}" stroke="rgba(255,255,255,0.15)"/>
-    <rect x="${pad}" y="${mid - 17}" width="44" height="34" rx="6" fill="${i < 3 ? medal[i] : 'rgba(255,255,255,0.12)'}"/>
-    <text x="${pad + 22}" y="${mid + 7}" font-family="Arial,Helvetica,sans-serif" font-size="17" font-weight="800" fill="${i < 3 ? '#1a1200' : '#fff'}" text-anchor="middle">${String(r.posizione ?? i + 1).padStart(2, '0')}</text>
+    <rect x="${pad}" y="${mid - 17}" width="44" height="34" rx="6" fill="${medal[i]}"/>
+    <text x="${pad + 22}" y="${mid + 7}" font-family="Arial,Helvetica,sans-serif" font-size="17" font-weight="800" fill="#1a1200" text-anchor="middle">${String(r.posizione ?? i + 1).padStart(2, '0')}</text>
     <text x="${nameX}" y="${mid + 8}" font-family="Arial,Helvetica,sans-serif" font-size="${nameSize}" font-weight="800" fill="#fff">${_ogEsc(name)}</text>
-    ${team ? `<text x="${teamX}" y="${mid + 7}" font-family="Arial,Helvetica,sans-serif" font-size="${teamSize}" font-weight="700" fill="rgba(255,255,255,0.65)">${_ogEsc(team)}</text>` : ''}
+    ${team ? `<text x="${teamX}" y="${mid + 7}" font-family="Arial,Helvetica,sans-serif" font-size="${teamSizeShared}" font-weight="700" fill="rgba(255,255,255,0.65)">${_ogEsc(team)}</text>` : ''}
     ${time ? `<text x="${timeX}" y="${mid + 7}" font-family="Arial,Helvetica,sans-serif" font-size="19" fill="rgba(255,255,255,0.85)" text-anchor="end">${_ogEsc(time)}</text>` : ''}`;
   }).join('');
 

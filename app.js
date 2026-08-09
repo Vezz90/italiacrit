@@ -16461,6 +16461,9 @@ async function renderGara(gara_id) {
          Carica foto
        </button>`
     : `<span style="font-size:0.8rem;color:var(--text-muted)">Accedi per caricare una foto</span>`;
+  // Foto "hero" della gara (caricata a mano o primo album esterno), riusata
+  // come sfondo nelle grafiche di condivisione (showShareModal → _bgPhoto).
+  let _shareHeroPhotoUrl = '';
   try {
     const _photoKeys = [primaryGaraId];
     const _photoArrs = await Promise.all(_photoKeys.map(k =>
@@ -16471,6 +16474,7 @@ async function renderGara(gara_id) {
       (d.photos || []).map(p => ({ ...p, _gkey: _photoKeys[ki] }))
     ).filter(p => { if (_seenPh.has(p.id)) return false; _seenPh.add(p.id); return true; });
     const featuredPhoto = photos[0] || null;
+    if (featuredPhoto) _shareHeroPhotoUrl = `${PHOTOS_BASE}/photos/${featuredPhoto.filename}`;
     const _heroCredit = [featuredPhoto?.caption, featuredPhoto?.photographer ? '📷 ' + featuredPhoto.photographer : '', featuredPhoto?.display_name]
       .filter(Boolean).join(' — ');
     const _heroTagNames = featuredPhoto ? String(featuredPhoto.atleta_ids||'').split(',').map(s=>s.trim()).filter(Boolean).map(id=>{const a=globalData?.athletes?.[id]; return a?`<a href="#/atleta/${esc(id)}" style="color:#fff;text-decoration:underline" onclick="event.stopPropagation()">${esc(a.cognome)} ${esc(a.nome)}</a>`:'';}).filter(Boolean).join(', ') : '';
@@ -16551,6 +16555,7 @@ async function renderGara(gara_id) {
 
         if (!featuredPhoto && _extIdx === 0) {
           // Nessuna foto caricata → il primo album diventa hero + gallery
+          if (!_shareHeroPhotoUrl) _shareHeroPhotoUrl = icProxy(_extPhoto.url);
           const _removeBtn = _isAdminPhoto
             ? `<div style="position:absolute;top:6px;right:6px;display:flex;flex-direction:column;gap:3px;z-index:3" onclick="event.stopPropagation()">
                  ${_isEs ? `<button onclick="window.adminPhotoExtendBoth('${esc(_photoSource)}','${esc(_xpixKey)}')" style="background:rgba(22,163,74,.9);color:#fff;border:none;padding:3px 8px;border-radius:4px;font-size:.7rem;cursor:pointer;white-space:nowrap">🏅 Anche altro anno</button>` : ''}
@@ -16629,7 +16634,7 @@ async function renderGara(gara_id) {
     return {
       _id: gid, name, date:fmtDate(data), cat:catLabelStr, mult, tipo,
       region:normalizeRegion(calEntry?.regione||resArr[0]?.regione||''),
-      luogo:calEntry?.luogo||'', km, media,
+      luogo:calEntry?.luogo||'', km, media, photo_url:_shareHeroPhotoUrl,
       winnerTime: _calcWinnerTime(km, media),
       results:resArr.slice(0,10).map(r=>({
         cognome:r.cognome, nome:r.nome, team:r.team, atleta_id:r.atleta_id,
@@ -21373,6 +21378,28 @@ function _bg(ctx, W, H) {
   // Sottile filo accento sul bordo sinistro (brand, discreto)
   ctx.fillStyle = '#e8001d'; ctx.fillRect(0, 0, Math.max(3, Math.round(W * 0.005)), H);
 }
+
+// Stesso trattamento della card gara "foto intera" lato server
+// (buildGaraResultOverlaySvg): la foto riempie tutto il riquadro, un
+// degradé scuro la rende leggibile sotto il testo esistente (già bianco/
+// chiaro, pensato per lo sfondo quasi-nero di _bg — funziona identico sopra
+// questo degradé, nessuna riscrittura del resto del disegno). Sostituisce
+// _bg quando una foto è disponibile, per qualunque formato (quadrato,
+// story, ecc.), non solo per Facebook.
+function _bgPhoto(ctx, W, H, img) {
+  const ir = img.naturalWidth / img.naturalHeight, cr = W / H;
+  let sx = 0, sy = 0, sw = img.naturalWidth, sh = img.naturalHeight;
+  if (ir > cr) { sw = sh * cr; sx = (img.naturalWidth - sw) / 2; }
+  else { sh = sw / cr; sy = (img.naturalHeight - sh) / 2; }
+  ctx.drawImage(img, sx, sy, sw, sh, 0, 0, W, H);
+  const g = ctx.createLinearGradient(0, 0, 0, H);
+  g.addColorStop(0, 'rgba(0,0,0,0.55)');
+  g.addColorStop(0.35, 'rgba(0,0,0,0.55)');
+  g.addColorStop(0.6, 'rgba(0,0,0,0.78)');
+  g.addColorStop(1, 'rgba(0,0,0,0.93)');
+  ctx.fillStyle = g; ctx.fillRect(0, 0, W, H);
+  ctx.fillStyle = '#e8001d'; ctx.fillRect(0, 0, Math.max(3, Math.round(W * 0.005)), H);
+}
 function _header(ctx, logo, W, H, classData, topRightCat) {
   // ── Stile Velon: header flat, niente barra scura, logo che siede sul fondo dark ──
   const bH = Math.round(H * 0.092);
@@ -22268,11 +22295,19 @@ async function generateShareCanvas(type, payload, platKey) {
   const logo=await _getLogo();
   // Assicura che i webfont (Inter Tight) siano pronti prima di disegnare sul canvas
   try { if (document.fonts && document.fonts.ready) await document.fonts.ready; } catch(e){}
-  _bg(ctx,p.w,p.h);
   if(type==='gara') {
-    const avatarMap = await _fetchGaraAvatars(payload.results);
+    // Stessa grafica "foto intera + risultati in overlay" usata per la
+    // condivisione Facebook (server, buildGaraResultOverlaySvg), non solo
+    // lì: quando la gara ha una foto, la usiamo come sfondo per TUTTI i
+    // formati (Post Quadrato, Instagram, Story, ecc.), non solo per FB.
+    const [avatarMap, photoImg] = await Promise.all([
+      _fetchGaraAvatars(payload.results),
+      payload.photo_url ? _fetchImgBlob(payload.photo_url) : Promise.resolve(null),
+    ]);
+    if (photoImg) _bgPhoto(ctx,p.w,p.h,photoImg); else _bg(ctx,p.w,p.h);
     _drawGara(ctx,p.w,p.h,payload,logo,avatarMap);
   } else {
+    _bg(ctx,p.w,p.h);
     const _headerClassData = type==='class' ? payload
       : type==='recap' ? { catLabel:'RIEPILOGO MENSILE', month:(payload.monthLabel||'').toUpperCase() }
       : (type==='atleta-mese'||type==='team-mese') ? { catLabel:(type==='atleta-mese'?'ATLETA DEL MESE':'TEAM DEL MESE'), month:(payload.monthLabel||'').toUpperCase() }
