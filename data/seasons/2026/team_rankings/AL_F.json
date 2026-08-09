@@ -2,7 +2,7 @@
   {
     "team_id": "VANGI_LADIES_CYCLING_TEAM",
     "team_nome": "VANGI LADIES  CYCLING TEAM",
-    "punti": 407,
+    "punti": 445,
     "vittorie": 8,
     "p1": 8,
     "p2": 8,
@@ -48,6 +48,18 @@
     "pos": 4
   },
   {
+    "team_id": "POL_FIUMICINESE_FA_I_T_ADRIATICA",
+    "team_nome": "POL. FIUMICINESE FA.I.T. ADRIATICA",
+    "punti": 269,
+    "vittorie": 0,
+    "p1": 0,
+    "p2": 2,
+    "p3": 4,
+    "pout": 21,
+    "n_atleti": 5,
+    "pos": 5
+  },
+  {
     "team_id": "U_C_CONSCIO_PEDALE_DEL_SILE",
     "team_nome": "U.C.CONSCIO PEDALE DEL SILE",
     "punti": 254,
@@ -57,7 +69,7 @@
     "p3": 3,
     "pout": 9,
     "n_atleti": 3,
-    "pos": 5
+    "pos": 6
   },
   {
     "team_id": "BIESSE_CARRERA_PREMAC",
@@ -69,18 +81,6 @@
     "p3": 1,
     "pout": 9,
     "n_atleti": 3,
-    "pos": 6
-  },
-  {
-    "team_id": "POL_FIUMICINESE_FA_I_T_ADRIATICA",
-    "team_nome": "POL. FIUMICINESE FA.I.T. ADRIATICA",
-    "punti": 241,
-    "vittorie": 0,
-    "p1": 0,
-    "p2": 2,
-    "p3": 4,
-    "pout": 21,
-    "n_atleti": 5,
     "pos": 7
   },
   {
@@ -96,6 +96,18 @@
     "pos": 8
   },
   {
+    "team_id": "HG_CYCLING_TEAM",
+    "team_nome": "HG CYCLING TEAM",
+    "punti": 140,
+    "vittorie": 1,
+    "p1": 1,
+    "p2": 1,
+    "p3": 3,
+    "pout": 10,
+    "n_atleti": 4,
+    "pos": 9
+  },
+  {
     "team_id": "A_R_MONEX_PRO_CYCLING_TEAM",
     "team_nome": "A.R.MONEX PRO CYCLING TEAM",
     "punti": 133,
@@ -105,7 +117,7 @@
     "p3": 4,
     "pout": 11,
     "n_atleti": 5,
-    "pos": 9
+    "pos": 10
   },
   {
     "team_id": "JU_GREEN_A_S_D_GORLA_MINORE",
@@ -117,7 +129,7 @@
     "p3": 1,
     "pout": 15,
     "n_atleti": 2,
-    "pos": 10
+    "pos": 11
   },
   {
     "team_id": "TEAM_WILIER_BREGANZE",
@@ -129,18 +141,6 @@
     "p3": 1,
     "pout": 13,
     "n_atleti": 2,
-    "pos": 11
-  },
-  {
-    "team_id": "HG_CYCLING_TEAM",
-    "team_nome": "HG CYCLING TEAM",
-    "punti": 102,
-    "vittorie": 1,
-    "p1": 1,
-    "p2": 1,
-    "p3": 3,
-    "pout": 10,
-    "n_atleti": 4,
     "pos": 12
   },
   {
@@ -168,6 +168,18 @@
     "pos": 14
   },
   {
+    "team_id": "BICIFESTIVAL",
+    "team_nome": "BICIFESTIVAL",
+    "punti": 79,
+    "vittorie": 0,
+    "p1": 0,
+    "p2": 1,
+    "p3": 1,
+    "pout": 7,
+    "n_atleti": 4,
+    "pos": 15
+  },
+  {
     "team_id": "A_S_D_GIOCA_IN_BICI_OGLIO_PO",
     "team_nome": "A.S.D. GIOCA IN BICI OGLIO PO",
     "punti": 76,
@@ -177,7 +189,7 @@
     "p3": 2,
     "pout": 9,
     "n_atleti": 4,
-    "pos": 15
+    "pos": 16
   },
   {
     "team_id": "ASS_NE_CICLISTICA_DILETT_VALVASONE",
@@ -189,7 +201,7 @@
     "p3": 0,
     "pout": 12,
     "n_atleti": 3,
-    "pos": 16
+    "pos": 17
   },
   {
     "team_id": "BLU_TEAM",
@@ -201,18 +213,6 @@
     "p3": 0,
     "pout": 4,
     "n_atleti": 1,
-    "pos": 17
-  },
-  {
-    "team_id": "BICIFESTIVAL",
-    "team_nome": "BICIFESTIVAL",
-    "punti": 51,
-    "vittorie": 0,
-    "p1": 0,
-    "p2": 1,
-    "p3": 1,
-    "pout": 7,
-    "n_atleti": 4,
     "pos": 18
   },
   {

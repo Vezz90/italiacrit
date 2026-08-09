@@ -2,7 +2,7 @@
   {
     "team_id": "UAE_TEAM_ADQ",
     "team_nome": "UAE TEAM ADQ",
-    "punti": 578,
+    "punti": 586,
     "vittorie": 4,
     "p1": 4,
     "p2": 3,
@@ -14,7 +14,7 @@
   {
     "team_id": "LIDL_TREK",
     "team_nome": "LIDL - TREK",
-    "punti": 473,
+    "punti": 483,
     "vittorie": 4,
     "p1": 4,
     "p2": 4,
@@ -26,7 +26,7 @@
   {
     "team_id": "FDJ_UNITED_SUEZ",
     "team_nome": "FDJ UNITED - SUEZ",
-    "punti": 426,
+    "punti": 441,
     "vittorie": 5,
     "p1": 5,
     "p2": 0,
@@ -38,7 +38,7 @@
   {
     "team_id": "CANYON_SRAM_ZONDACRYPTO",
     "team_nome": "CANYON SRAM ZONDACRYPTO",
-    "punti": 290,
+    "punti": 302,
     "vittorie": 0,
     "p1": 0,
     "p2": 2,
@@ -62,7 +62,7 @@
   {
     "team_id": "TEAM_SD_WORX_PROTIME",
     "team_nome": "TEAM SD WORX-PROTIME",
-    "punti": 264,
+    "punti": 276,
     "vittorie": 2,
     "p1": 2,
     "p2": 1,
@@ -108,6 +108,18 @@
     "pos": 9
   },
   {
+    "team_id": "TEAM_VISMA_LEASE_A_BIKE",
+    "team_nome": "TEAM VISMA LEASE A BIKE",
+    "punti": 144,
+    "vittorie": 0,
+    "p1": 0,
+    "p2": 0,
+    "p3": 1,
+    "pout": 9,
+    "n_atleti": 5,
+    "pos": 10
+  },
+  {
     "team_id": "VINI_FANTINI_BEPINK",
     "team_nome": "VINI FANTINI BEPINK",
     "punti": 141,
@@ -117,18 +129,6 @@
     "p3": 2,
     "pout": 12,
     "n_atleti": 8,
-    "pos": 10
-  },
-  {
-    "team_id": "TEAM_VISMA_LEASE_A_BIKE",
-    "team_nome": "TEAM VISMA LEASE A BIKE",
-    "punti": 139,
-    "vittorie": 0,
-    "p1": 0,
-    "p2": 0,
-    "p3": 1,
-    "pout": 9,
-    "n_atleti": 5,
     "pos": 11
   },
   {
@@ -266,7 +266,7 @@
   {
     "team_id": "AG_INSURANCE_SOUDAL",
     "team_nome": "AG INSURANCE SOUDAL",
-    "punti": 50,
+    "punti": 54,
     "vittorie": 0,
     "p1": 0,
     "p2": 0,

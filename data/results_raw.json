@@ -26318,7 +26318,7 @@
     "categoria": "Elite-Under23",
     "genere": "M",
     "tipo": "regionale",
-    "moltiplicatore": 2,
+    "moltiplicatore": 3,
     "campionato_regionale": false,
     "campionato_italiano": false,
     "regione": "VALLE D AOSTA",
@@ -26332,7 +26332,7 @@
     "km": "397.000",
     "media": "35.078",
     "punti_base": 15,
-    "punti_effettivi": 30
+    "punti_effettivi": 45
   },
   {
     "gara_id": "62_GIRO_CICLISTICO_DELLA_VALLE_D_AOSTA_MONT_BLANC_CLASSIFICA_GENERALE_2026-07-19_ELI_M",
@@ -26341,7 +26341,7 @@
     "categoria": "Elite-Under23",
     "genere": "M",
     "tipo": "regionale",
-    "moltiplicatore": 2,
+    "moltiplicatore": 3,
     "campionato_regionale": false,
     "campionato_italiano": false,
     "regione": "VALLE D AOSTA",
@@ -26355,7 +26355,7 @@
     "km": "397.000",
     "media": "35.078",
     "punti_base": 12,
-    "punti_effettivi": 24
+    "punti_effettivi": 36
   },
   {
     "gara_id": "62_GIRO_CICLISTICO_DELLA_VALLE_D_AOSTA_MONT_BLANC_CLASSIFICA_GENERALE_2026-07-19_ELI_M",
@@ -26364,7 +26364,7 @@
     "categoria": "Elite-Under23",
     "genere": "M",
     "tipo": "regionale",
-    "moltiplicatore": 2,
+    "moltiplicatore": 3,
     "campionato_regionale": false,
     "campionato_italiano": false,
     "regione": "VALLE D AOSTA",
@@ -26378,7 +26378,7 @@
     "km": "397.000",
     "media": "35.078",
     "punti_base": 10,
-    "punti_effettivi": 20
+    "punti_effettivi": 30
   },
   {
     "gara_id": "62_GIRO_CICLISTICO_DELLA_VALLE_D_AOSTA_MONT_BLANC_CLASSIFICA_GENERALE_2026-07-19_ELI_M",
@@ -26387,7 +26387,7 @@
     "categoria": "Elite-Under23",
     "genere": "M",
     "tipo": "regionale",
-    "moltiplicatore": 2,
+    "moltiplicatore": 3,
     "campionato_regionale": false,
     "campionato_italiano": false,
     "regione": "VALLE D AOSTA",
@@ -26401,7 +26401,7 @@
     "km": "397.000",
     "media": "35.078",
     "punti_base": 8,
-    "punti_effettivi": 16
+    "punti_effettivi": 24
   },
   {
     "gara_id": "62_GIRO_CICLISTICO_DELLA_VALLE_D_AOSTA_MONT_BLANC_CLASSIFICA_GENERALE_2026-07-19_ELI_M",
@@ -26410,7 +26410,7 @@
     "categoria": "Elite-Under23",
     "genere": "M",
     "tipo": "regionale",
-    "moltiplicatore": 2,
+    "moltiplicatore": 3,
     "campionato_regionale": false,
     "campionato_italiano": false,
     "regione": "VALLE D AOSTA",
@@ -26424,7 +26424,7 @@
     "km": "397.000",
     "media": "35.078",
     "punti_base": 6,
-    "punti_effettivi": 12
+    "punti_effettivi": 18
   },
   {
     "gara_id": "62_GIRO_CICLISTICO_DELLA_VALLE_D_AOSTA_MONT_BLANC_CLASSIFICA_GENERALE_2026-07-19_ELI_M",
@@ -26433,7 +26433,7 @@
     "categoria": "Elite-Under23",
     "genere": "M",
     "tipo": "regionale",
-    "moltiplicatore": 2,
+    "moltiplicatore": 3,
     "campionato_regionale": false,
     "campionato_italiano": false,
     "regione": "VALLE D AOSTA",
@@ -26447,7 +26447,7 @@
     "km": "397.000",
     "media": "35.078",
     "punti_base": 5,
-    "punti_effettivi": 10
+    "punti_effettivi": 15
   },
   {
     "gara_id": "62_GIRO_CICLISTICO_DELLA_VALLE_D_AOSTA_MONT_BLANC_CLASSIFICA_GENERALE_2026-07-19_ELI_M",
@@ -26456,7 +26456,7 @@
     "categoria": "Elite-Under23",
     "genere": "M",
     "tipo": "regionale",
-    "moltiplicatore": 2,
+    "moltiplicatore": 3,
     "campionato_regionale": false,
     "campionato_italiano": false,
     "regione": "VALLE D AOSTA",
@@ -26470,7 +26470,7 @@
     "km": "397.000",
     "media": "35.078",
     "punti_base": 4,
-    "punti_effettivi": 8
+    "punti_effettivi": 12
   },
   {
     "gara_id": "62_GIRO_CICLISTICO_DELLA_VALLE_D_AOSTA_MONT_BLANC_CLASSIFICA_GENERALE_2026-07-19_ELI_M",
@@ -26479,7 +26479,7 @@
     "categoria": "Elite-Under23",
     "genere": "M",
     "tipo": "regionale",
-    "moltiplicatore": 2,
+    "moltiplicatore": 3,
     "campionato_regionale": false,
     "campionato_italiano": false,
     "regione": "VALLE D AOSTA",
@@ -26493,7 +26493,7 @@
     "km": "397.000",
     "media": "35.078",
     "punti_base": 3,
-    "punti_effettivi": 6
+    "punti_effettivi": 9
   },
   {
     "gara_id": "62_GIRO_CICLISTICO_DELLA_VALLE_D_AOSTA_MONT_BLANC_CLASSIFICA_GENERALE_2026-07-19_ELI_M",
@@ -26502,7 +26502,7 @@
     "categoria": "Elite-Under23",
     "genere": "M",
     "tipo": "regionale",
-    "moltiplicatore": 2,
+    "moltiplicatore": 3,
     "campionato_regionale": false,
     "campionato_italiano": false,
     "regione": "VALLE D AOSTA",
@@ -26516,7 +26516,7 @@
     "km": "397.000",
     "media": "35.078",
     "punti_base": 2,
-    "punti_effettivi": 4
+    "punti_effettivi": 6
   },
   {
     "gara_id": "62_GIRO_CICLISTICO_DELLA_VALLE_D_AOSTA_MONT_BLANC_CLASSIFICA_GENERALE_2026-07-19_ELI_M",
@@ -26525,7 +26525,7 @@
     "categoria": "Elite-Under23",
     "genere": "M",
     "tipo": "regionale",
-    "moltiplicatore": 2,
+    "moltiplicatore": 3,
     "campionato_regionale": false,
     "campionato_italiano": false,
     "regione": "VALLE D AOSTA",
@@ -26539,7 +26539,7 @@
     "km": "397.000",
     "media": "35.078",
     "punti_base": 1,
-    "punti_effettivi": 2
+    "punti_effettivi": 3
   },
   {
     "gara_id": "LE_FIUMANE_QUARTA_TAPPA_2026-07-19_AL_M",
@@ -26547,8 +26547,8 @@
     "data": "2026-07-19",
     "categoria": "Allievi",
     "genere": "M",
-    "tipo": "regionale",
-    "moltiplicatore": 1,
+    "tipo": "nazionale",
+    "moltiplicatore": 2,
     "campionato_regionale": false,
     "campionato_italiano": false,
     "regione": "FRIULI VENEZIA GIULIA",
@@ -26562,7 +26562,7 @@
     "km": "73.000",
     "media": "43.103",
     "punti_base": 15,
-    "punti_effettivi": 15
+    "punti_effettivi": 30
   },
   {
     "gara_id": "LE_FIUMANE_QUARTA_TAPPA_2026-07-19_AL_M",
@@ -26570,8 +26570,8 @@
     "data": "2026-07-19",
     "categoria": "Allievi",
     "genere": "M",
-    "tipo": "regionale",
-    "moltiplicatore": 1,
+    "tipo": "nazionale",
+    "moltiplicatore": 2,
     "campionato_regionale": false,
     "campionato_italiano": false,
     "regione": "FRIULI VENEZIA GIULIA",
@@ -26585,7 +26585,7 @@
     "km": "73.000",
     "media": "43.103",
     "punti_base": 12,
-    "punti_effettivi": 12
+    "punti_effettivi": 24
   },
   {
     "gara_id": "LE_FIUMANE_QUARTA_TAPPA_2026-07-19_AL_M",
@@ -26593,8 +26593,8 @@
     "data": "2026-07-19",
     "categoria": "Allievi",
     "genere": "M",
-    "tipo": "regionale",
-    "moltiplicatore": 1,
+    "tipo": "nazionale",
+    "moltiplicatore": 2,
     "campionato_regionale": false,
     "campionato_italiano": false,
     "regione": "FRIULI VENEZIA GIULIA",
@@ -26608,7 +26608,7 @@
     "km": "73.000",
     "media": "43.103",
     "punti_base": 10,
-    "punti_effettivi": 10
+    "punti_effettivi": 20
   },
   {
     "gara_id": "LE_FIUMANE_QUARTA_TAPPA_2026-07-19_AL_M",
@@ -26616,8 +26616,8 @@
     "data": "2026-07-19",
     "categoria": "Allievi",
     "genere": "M",
-    "tipo": "regionale",
-    "moltiplicatore": 1,
+    "tipo": "nazionale",
+    "moltiplicatore": 2,
     "campionato_regionale": false,
     "campionato_italiano": false,
     "regione": "FRIULI VENEZIA GIULIA",
@@ -26631,7 +26631,7 @@
     "km": "73.000",
     "media": "43.103",
     "punti_base": 8,
-    "punti_effettivi": 8
+    "punti_effettivi": 16
   },
   {
     "gara_id": "LE_FIUMANE_QUARTA_TAPPA_2026-07-19_AL_M",
@@ -26639,8 +26639,8 @@
     "data": "2026-07-19",
     "categoria": "Allievi",
     "genere": "M",
-    "tipo": "regionale",
-    "moltiplicatore": 1,
+    "tipo": "nazionale",
+    "moltiplicatore": 2,
     "campionato_regionale": false,
     "campionato_italiano": false,
     "regione": "FRIULI VENEZIA GIULIA",
@@ -26654,7 +26654,7 @@
     "km": "73.000",
     "media": "43.103",
     "punti_base": 6,
-    "punti_effettivi": 6
+    "punti_effettivi": 12
   },
   {
     "gara_id": "LE_FIUMANE_QUARTA_TAPPA_2026-07-19_AL_M",
@@ -26662,8 +26662,8 @@
     "data": "2026-07-19",
     "categoria": "Allievi",
     "genere": "M",
-    "tipo": "regionale",
-    "moltiplicatore": 1,
+    "tipo": "nazionale",
+    "moltiplicatore": 2,
     "campionato_regionale": false,
     "campionato_italiano": false,
     "regione": "FRIULI VENEZIA GIULIA",
@@ -26677,7 +26677,7 @@
     "km": "73.000",
     "media": "43.103",
     "punti_base": 5,
-    "punti_effettivi": 5
+    "punti_effettivi": 10
   },
   {
     "gara_id": "LE_FIUMANE_QUARTA_TAPPA_2026-07-19_AL_M",
@@ -26685,8 +26685,8 @@
     "data": "2026-07-19",
     "categoria": "Allievi",
     "genere": "M",
-    "tipo": "regionale",
-    "moltiplicatore": 1,
+    "tipo": "nazionale",
+    "moltiplicatore": 2,
     "campionato_regionale": false,
     "campionato_italiano": false,
     "regione": "FRIULI VENEZIA GIULIA",
@@ -26700,7 +26700,7 @@
     "km": "73.000",
     "media": "43.103",
     "punti_base": 4,
-    "punti_effettivi": 4
+    "punti_effettivi": 8
   },
   {
     "gara_id": "LE_FIUMANE_QUARTA_TAPPA_2026-07-19_AL_M",
@@ -26708,8 +26708,8 @@
     "data": "2026-07-19",
     "categoria": "Allievi",
     "genere": "M",
-    "tipo": "regionale",
-    "moltiplicatore": 1,
+    "tipo": "nazionale",
+    "moltiplicatore": 2,
     "campionato_regionale": false,
     "campionato_italiano": false,
     "regione": "FRIULI VENEZIA GIULIA",
@@ -26723,7 +26723,7 @@
     "km": "73.000",
     "media": "43.103",
     "punti_base": 3,
-    "punti_effettivi": 3
+    "punti_effettivi": 6
   },
   {
     "gara_id": "LE_FIUMANE_QUARTA_TAPPA_2026-07-19_AL_M",
@@ -26731,8 +26731,8 @@
     "data": "2026-07-19",
     "categoria": "Allievi",
     "genere": "M",
-    "tipo": "regionale",
-    "moltiplicatore": 1,
+    "tipo": "nazionale",
+    "moltiplicatore": 2,
     "campionato_regionale": false,
     "campionato_italiano": false,
     "regione": "FRIULI VENEZIA GIULIA",
@@ -26746,7 +26746,7 @@
     "km": "73.000",
     "media": "43.103",
     "punti_base": 2,
-    "punti_effettivi": 2
+    "punti_effettivi": 4
   },
   {
     "gara_id": "LE_FIUMANE_QUARTA_TAPPA_2026-07-19_AL_M",
@@ -26754,8 +26754,8 @@
     "data": "2026-07-19",
     "categoria": "Allievi",
     "genere": "M",
-    "tipo": "regionale",
-    "moltiplicatore": 1,
+    "tipo": "nazionale",
+    "moltiplicatore": 2,
     "campionato_regionale": false,
     "campionato_italiano": false,
     "regione": "FRIULI VENEZIA GIULIA",
@@ -26769,7 +26769,7 @@
     "km": "73.000",
     "media": "43.103",
     "punti_base": 1,
-    "punti_effettivi": 1
+    "punti_effettivi": 2
   },
   {
     "gara_id": "LE_FIUMANE_CLASSIFICA_GENERALE_2026-07-19_AL_M",
@@ -26778,7 +26778,7 @@
     "categoria": "Allievi",
     "genere": "M",
     "tipo": "regionale",
-    "moltiplicatore": 1,
+    "moltiplicatore": 2,
     "campionato_regionale": false,
     "campionato_italiano": false,
     "regione": "FRIULI VENEZIA GIULIA",
@@ -26792,7 +26792,7 @@
     "km": "198.200",
     "media": "39.808",
     "punti_base": 15,
-    "punti_effettivi": 15
+    "punti_effettivi": 30
   },
   {
     "gara_id": "LE_FIUMANE_CLASSIFICA_GENERALE_2026-07-19_AL_M",
@@ -26801,7 +26801,7 @@
     "categoria": "Allievi",
     "genere": "M",
     "tipo": "regionale",
-    "moltiplicatore": 1,
+    "moltiplicatore": 2,
     "campionato_regionale": false,
     "campionato_italiano": false,
     "regione": "FRIULI VENEZIA GIULIA",
@@ -26815,7 +26815,7 @@
     "km": "198.200",
     "media": "39.808",
     "punti_base": 12,
-    "punti_effettivi": 12
+    "punti_effettivi": 24
   },
   {
     "gara_id": "LE_FIUMANE_CLASSIFICA_GENERALE_2026-07-19_AL_M",
@@ -26824,7 +26824,7 @@
     "categoria": "Allievi",
     "genere": "M",
     "tipo": "regionale",
-    "moltiplicatore": 1,
+    "moltiplicatore": 2,
     "campionato_regionale": false,
     "campionato_italiano": false,
     "regione": "FRIULI VENEZIA GIULIA",
@@ -26838,7 +26838,7 @@
     "km": "198.200",
     "media": "39.808",
     "punti_base": 10,
-    "punti_effettivi": 10
+    "punti_effettivi": 20
   },
   {
     "gara_id": "LE_FIUMANE_CLASSIFICA_GENERALE_2026-07-19_AL_M",
@@ -26847,7 +26847,7 @@
     "categoria": "Allievi",
     "genere": "M",
     "tipo": "regionale",
-    "moltiplicatore": 1,
+    "moltiplicatore": 2,
     "campionato_regionale": false,
     "campionato_italiano": false,
     "regione": "FRIULI VENEZIA GIULIA",
@@ -26861,7 +26861,7 @@
     "km": "198.200",
     "media": "39.808",
     "punti_base": 8,
-    "punti_effettivi": 8
+    "punti_effettivi": 16
   },
   {
     "gara_id": "LE_FIUMANE_CLASSIFICA_GENERALE_2026-07-19_AL_M",
@@ -26870,7 +26870,7 @@
     "categoria": "Allievi",
     "genere": "M",
     "tipo": "regionale",
-    "moltiplicatore": 1,
+    "moltiplicatore": 2,
     "campionato_regionale": false,
     "campionato_italiano": false,
     "regione": "FRIULI VENEZIA GIULIA",
@@ -26884,7 +26884,7 @@
     "km": "198.200",
     "media": "39.808",
     "punti_base": 6,
-    "punti_effettivi": 6
+    "punti_effettivi": 12
   },
   {
     "gara_id": "LE_FIUMANE_CLASSIFICA_GENERALE_2026-07-19_AL_M",
@@ -26893,7 +26893,7 @@
     "categoria": "Allievi",
     "genere": "M",
     "tipo": "regionale",
-    "moltiplicatore": 1,
+    "moltiplicatore": 2,
     "campionato_regionale": false,
     "campionato_italiano": false,
     "regione": "FRIULI VENEZIA GIULIA",
@@ -26907,7 +26907,7 @@
     "km": "198.200",
     "media": "39.808",
     "punti_base": 5,
-    "punti_effettivi": 5
+    "punti_effettivi": 10
   },
   {
     "gara_id": "LE_FIUMANE_CLASSIFICA_GENERALE_2026-07-19_AL_M",
@@ -26916,7 +26916,7 @@
     "categoria": "Allievi",
     "genere": "M",
     "tipo": "regionale",
-    "moltiplicatore": 1,
+    "moltiplicatore": 2,
     "campionato_regionale": false,
     "campionato_italiano": false,
     "regione": "FRIULI VENEZIA GIULIA",
@@ -26930,7 +26930,7 @@
     "km": "198.200",
     "media": "39.808",
     "punti_base": 4,
-    "punti_effettivi": 4
+    "punti_effettivi": 8
   },
   {
     "gara_id": "LE_FIUMANE_CLASSIFICA_GENERALE_2026-07-19_AL_M",
@@ -26939,7 +26939,7 @@
     "categoria": "Allievi",
     "genere": "M",
     "tipo": "regionale",
-    "moltiplicatore": 1,
+    "moltiplicatore": 2,
     "campionato_regionale": false,
     "campionato_italiano": false,
     "regione": "FRIULI VENEZIA GIULIA",
@@ -26953,7 +26953,7 @@
     "km": "198.200",
     "media": "39.808",
     "punti_base": 3,
-    "punti_effettivi": 3
+    "punti_effettivi": 6
   },
   {
     "gara_id": "LE_FIUMANE_CLASSIFICA_GENERALE_2026-07-19_AL_M",
@@ -26962,7 +26962,7 @@
     "categoria": "Allievi",
     "genere": "M",
     "tipo": "regionale",
-    "moltiplicatore": 1,
+    "moltiplicatore": 2,
     "campionato_regionale": false,
     "campionato_italiano": false,
     "regione": "FRIULI VENEZIA GIULIA",
@@ -26976,7 +26976,7 @@
     "km": "198.200",
     "media": "39.808",
     "punti_base": 2,
-    "punti_effettivi": 2
+    "punti_effettivi": 4
   },
   {
     "gara_id": "LE_FIUMANE_CLASSIFICA_GENERALE_2026-07-19_AL_M",
@@ -26985,7 +26985,7 @@
     "categoria": "Allievi",
     "genere": "M",
     "tipo": "regionale",
-    "moltiplicatore": 1,
+    "moltiplicatore": 2,
     "campionato_regionale": false,
     "campionato_italiano": false,
     "regione": "FRIULI VENEZIA GIULIA",
@@ -26999,7 +26999,7 @@
     "km": "198.200",
     "media": "39.808",
     "punti_base": 1,
-    "punti_effettivi": 1
+    "punti_effettivi": 2
   },
   {
     "gara_id": "CIOCIARIA_IN_GIRO_TERZA_TAPPA_2026-07-19_JUN_M",
@@ -27238,7 +27238,7 @@
     "categoria": "Juniores",
     "genere": "M",
     "tipo": "regionale",
-    "moltiplicatore": 2,
+    "moltiplicatore": 3,
     "campionato_regionale": false,
     "campionato_italiano": false,
     "regione": "LAZIO",
@@ -27252,7 +27252,7 @@
     "km": "178.800",
     "media": "40.318",
     "punti_base": 15,
-    "punti_effettivi": 30
+    "punti_effettivi": 45
   },
   {
     "gara_id": "CIOCIARIA_IN_GIRO_CLASSIFICA_GENERALE_2026-07-19_JUN_M",
@@ -27261,7 +27261,7 @@
     "categoria": "Juniores",
     "genere": "M",
     "tipo": "regionale",
-    "moltiplicatore": 2,
+    "moltiplicatore": 3,
     "campionato_regionale": false,
     "campionato_italiano": false,
     "regione": "LAZIO",
@@ -27275,7 +27275,7 @@
     "km": "178.800",
     "media": "40.318",
     "punti_base": 12,
-    "punti_effettivi": 24
+    "punti_effettivi": 36
   },
   {
     "gara_id": "CIOCIARIA_IN_GIRO_CLASSIFICA_GENERALE_2026-07-19_JUN_M",
@@ -27284,7 +27284,7 @@
     "categoria": "Juniores",
     "genere": "M",
     "tipo": "regionale",
-    "moltiplicatore": 2,
+    "moltiplicatore": 3,
     "campionato_regionale": false,
     "campionato_italiano": false,
     "regione": "LAZIO",
@@ -27298,7 +27298,7 @@
     "km": "178.800",
     "media": "40.318",
     "punti_base": 10,
-    "punti_effettivi": 20
+    "punti_effettivi": 30
   },
   {
     "gara_id": "CIOCIARIA_IN_GIRO_CLASSIFICA_GENERALE_2026-07-19_JUN_M",
@@ -27307,7 +27307,7 @@
     "categoria": "Juniores",
     "genere": "M",
     "tipo": "regionale",
-    "moltiplicatore": 2,
+    "moltiplicatore": 3,
     "campionato_regionale": false,
     "campionato_italiano": false,
     "regione": "LAZIO",
@@ -27321,7 +27321,7 @@
     "km": "178.800",
     "media": "40.318",
     "punti_base": 8,
-    "punti_effettivi": 16
+    "punti_effettivi": 24
   },
   {
     "gara_id": "CIOCIARIA_IN_GIRO_CLASSIFICA_GENERALE_2026-07-19_JUN_M",
@@ -27330,7 +27330,7 @@
     "categoria": "Juniores",
     "genere": "M",
     "tipo": "regionale",
-    "moltiplicatore": 2,
+    "moltiplicatore": 3,
     "campionato_regionale": false,
     "campionato_italiano": false,
     "regione": "LAZIO",
@@ -27344,7 +27344,7 @@
     "km": "178.800",
     "media": "40.318",
     "punti_base": 6,
-    "punti_effettivi": 12
+    "punti_effettivi": 18
   },
   {
     "gara_id": "CIOCIARIA_IN_GIRO_CLASSIFICA_GENERALE_2026-07-19_JUN_M",
@@ -27353,7 +27353,7 @@
     "categoria": "Juniores",
     "genere": "M",
     "tipo": "regionale",
-    "moltiplicatore": 2,
+    "moltiplicatore": 3,
     "campionato_regionale": false,
     "campionato_italiano": false,
     "regione": "LAZIO",
@@ -27367,7 +27367,7 @@
     "km": "178.800",
     "media": "40.318",
     "punti_base": 5,
-    "punti_effettivi": 10
+    "punti_effettivi": 15
   },
   {
     "gara_id": "CIOCIARIA_IN_GIRO_CLASSIFICA_GENERALE_2026-07-19_JUN_M",
@@ -27376,7 +27376,7 @@
     "categoria": "Juniores",
     "genere": "M",
     "tipo": "regionale",
-    "moltiplicatore": 2,
+    "moltiplicatore": 3,
     "campionato_regionale": false,
     "campionato_italiano": false,
     "regione": "LAZIO",
@@ -27390,7 +27390,7 @@
     "km": "178.800",
     "media": "40.318",
     "punti_base": 4,
-    "punti_effettivi": 8
+    "punti_effettivi": 12
   },
   {
     "gara_id": "CIOCIARIA_IN_GIRO_CLASSIFICA_GENERALE_2026-07-19_JUN_M",
@@ -27399,7 +27399,7 @@
     "categoria": "Juniores",
     "genere": "M",
     "tipo": "regionale",
-    "moltiplicatore": 2,
+    "moltiplicatore": 3,
     "campionato_regionale": false,
     "campionato_italiano": false,
     "regione": "LAZIO",
@@ -27413,7 +27413,7 @@
     "km": "178.800",
     "media": "40.318",
     "punti_base": 3,
-    "punti_effettivi": 6
+    "punti_effettivi": 9
   },
   {
     "gara_id": "CIOCIARIA_IN_GIRO_CLASSIFICA_GENERALE_2026-07-19_JUN_M",
@@ -27422,7 +27422,7 @@
     "categoria": "Juniores",
     "genere": "M",
     "tipo": "regionale",
-    "moltiplicatore": 2,
+    "moltiplicatore": 3,
     "campionato_regionale": false,
     "campionato_italiano": false,
     "regione": "LAZIO",
@@ -27436,7 +27436,7 @@
     "km": "178.800",
     "media": "40.318",
     "punti_base": 2,
-    "punti_effettivi": 4
+    "punti_effettivi": 6
   },
   {
     "gara_id": "CIOCIARIA_IN_GIRO_CLASSIFICA_GENERALE_2026-07-19_JUN_M",
@@ -27445,7 +27445,7 @@
     "categoria": "Juniores",
     "genere": "M",
     "tipo": "regionale",
-    "moltiplicatore": 2,
+    "moltiplicatore": 3,
     "campionato_regionale": false,
     "campionato_italiano": false,
     "regione": "LAZIO",
@@ -27459,7 +27459,7 @@
     "km": "178.800",
     "media": "40.318",
     "punti_base": 1,
-    "punti_effettivi": 2
+    "punti_effettivi": 3
   },
   {
     "gara_id": "48_SANDRIGO_MONTE_CORNO_2026-07-19_JUN_M",
@@ -34896,8 +34896,8 @@
     "data": "2026-07-18",
     "categoria": "Allievi",
     "genere": "M",
-    "tipo": "regionale",
-    "moltiplicatore": 1,
+    "tipo": "nazionale",
+    "moltiplicatore": 2,
     "campionato_regionale": false,
     "campionato_italiano": false,
     "regione": "FRIULI VENEZIA GIULIA",
@@ -34911,7 +34911,7 @@
     "km": "67.300",
     "media": "35.541",
     "punti_base": 15,
-    "punti_effettivi": 15
+    "punti_effettivi": 30
   },
   {
     "gara_id": "LE_FIUMANE_TERZA_TAPPA_2026-07-18_AL_M",
@@ -34919,8 +34919,8 @@
     "data": "2026-07-18",
     "categoria": "Allievi",
     "genere": "M",
-    "tipo": "regionale",
-    "moltiplicatore": 1,
+    "tipo": "nazionale",
+    "moltiplicatore": 2,
     "campionato_regionale": false,
     "campionato_italiano": false,
     "regione": "FRIULI VENEZIA GIULIA",
@@ -34934,7 +34934,7 @@
     "km": "67.300",
     "media": "35.541",
     "punti_base": 12,
-    "punti_effettivi": 12
+    "punti_effettivi": 24
   },
   {
     "gara_id": "LE_FIUMANE_TERZA_TAPPA_2026-07-18_AL_M",
@@ -34942,8 +34942,8 @@
     "data": "2026-07-18",
     "categoria": "Allievi",
     "genere": "M",
-    "tipo": "regionale",
-    "moltiplicatore": 1,
+    "tipo": "nazionale",
+    "moltiplicatore": 2,
     "campionato_regionale": false,
     "campionato_italiano": false,
     "regione": "FRIULI VENEZIA GIULIA",
@@ -34957,7 +34957,7 @@
     "km": "67.300",
     "media": "35.541",
     "punti_base": 10,
-    "punti_effettivi": 10
+    "punti_effettivi": 20
   },
   {
     "gara_id": "LE_FIUMANE_TERZA_TAPPA_2026-07-18_AL_M",
@@ -34965,8 +34965,8 @@
     "data": "2026-07-18",
     "categoria": "Allievi",
     "genere": "M",
-    "tipo": "regionale",
-    "moltiplicatore": 1,
+    "tipo": "nazionale",
+    "moltiplicatore": 2,
     "campionato_regionale": false,
     "campionato_italiano": false,
     "regione": "FRIULI VENEZIA GIULIA",
@@ -34980,7 +34980,7 @@
     "km": "67.300",
     "media": "35.541",
     "punti_base": 8,
-    "punti_effettivi": 8
+    "punti_effettivi": 16
   },
   {
     "gara_id": "LE_FIUMANE_TERZA_TAPPA_2026-07-18_AL_M",
@@ -34988,8 +34988,8 @@
     "data": "2026-07-18",
     "categoria": "Allievi",
     "genere": "M",
-    "tipo": "regionale",
-    "moltiplicatore": 1,
+    "tipo": "nazionale",
+    "moltiplicatore": 2,
     "campionato_regionale": false,
     "campionato_italiano": false,
     "regione": "FRIULI VENEZIA GIULIA",
@@ -35003,7 +35003,7 @@
     "km": "67.300",
     "media": "35.541",
     "punti_base": 6,
-    "punti_effettivi": 6
+    "punti_effettivi": 12
   },
   {
     "gara_id": "LE_FIUMANE_TERZA_TAPPA_2026-07-18_AL_M",
@@ -35011,8 +35011,8 @@
     "data": "2026-07-18",
     "categoria": "Allievi",
     "genere": "M",
-    "tipo": "regionale",
-    "moltiplicatore": 1,
+    "tipo": "nazionale",
+    "moltiplicatore": 2,
     "campionato_regionale": false,
     "campionato_italiano": false,
     "regione": "FRIULI VENEZIA GIULIA",
@@ -35026,7 +35026,7 @@
     "km": "67.300",
     "media": "35.541",
     "punti_base": 5,
-    "punti_effettivi": 5
+    "punti_effettivi": 10
   },
   {
     "gara_id": "LE_FIUMANE_TERZA_TAPPA_2026-07-18_AL_M",
@@ -35034,8 +35034,8 @@
     "data": "2026-07-18",
     "categoria": "Allievi",
     "genere": "M",
-    "tipo": "regionale",
-    "moltiplicatore": 1,
+    "tipo": "nazionale",
+    "moltiplicatore": 2,
     "campionato_regionale": false,
     "campionato_italiano": false,
     "regione": "FRIULI VENEZIA GIULIA",
@@ -35049,7 +35049,7 @@
     "km": "67.300",
     "media": "35.541",
     "punti_base": 4,
-    "punti_effettivi": 4
+    "punti_effettivi": 8
   },
   {
     "gara_id": "LE_FIUMANE_TERZA_TAPPA_2026-07-18_AL_M",
@@ -35057,8 +35057,8 @@
     "data": "2026-07-18",
     "categoria": "Allievi",
     "genere": "M",
-    "tipo": "regionale",
-    "moltiplicatore": 1,
+    "tipo": "nazionale",
+    "moltiplicatore": 2,
     "campionato_regionale": false,
     "campionato_italiano": false,
     "regione": "FRIULI VENEZIA GIULIA",
@@ -35072,7 +35072,7 @@
     "km": "67.300",
     "media": "35.541",
     "punti_base": 3,
-    "punti_effettivi": 3
+    "punti_effettivi": 6
   },
   {
     "gara_id": "LE_FIUMANE_TERZA_TAPPA_2026-07-18_AL_M",
@@ -35080,8 +35080,8 @@
     "data": "2026-07-18",
     "categoria": "Allievi",
     "genere": "M",
-    "tipo": "regionale",
-    "moltiplicatore": 1,
+    "tipo": "nazionale",
+    "moltiplicatore": 2,
     "campionato_regionale": false,
     "campionato_italiano": false,
     "regione": "FRIULI VENEZIA GIULIA",
@@ -35095,7 +35095,7 @@
     "km": "67.300",
     "media": "35.541",
     "punti_base": 2,
-    "punti_effettivi": 2
+    "punti_effettivi": 4
   },
   {
     "gara_id": "LE_FIUMANE_TERZA_TAPPA_2026-07-18_AL_M",
@@ -35103,8 +35103,8 @@
     "data": "2026-07-18",
     "categoria": "Allievi",
     "genere": "M",
-    "tipo": "regionale",
-    "moltiplicatore": 1,
+    "tipo": "nazionale",
+    "moltiplicatore": 2,
     "campionato_regionale": false,
     "campionato_italiano": false,
     "regione": "FRIULI VENEZIA GIULIA",
@@ -35118,7 +35118,7 @@
     "km": "67.300",
     "media": "35.541",
     "punti_base": 1,
-    "punti_effettivi": 1
+    "punti_effettivi": 2
   },
   {
     "gara_id": "CIOCIARIA_IN_GIRO_PRIMA_TAPPA_PRIMA_SEMITAPPA_2026-07-18_JUN_M",
@@ -36506,8 +36506,8 @@
     "data": "2026-07-17",
     "categoria": "Allievi",
     "genere": "M",
-    "tipo": "regionale",
-    "moltiplicatore": 1,
+    "tipo": "nazionale",
+    "moltiplicatore": 2,
     "campionato_regionale": false,
     "campionato_italiano": false,
     "regione": "FRIULI VENEZIA GIULIA",
@@ -36521,7 +36521,7 @@
     "km": "48.800",
     "media": "41.124",
     "punti_base": 15,
-    "punti_effettivi": 15
+    "punti_effettivi": 30
   },
   {
     "gara_id": "LE_FIUMANE_SECONDA_TAPPA_2026-07-17_AL_M",
@@ -36529,8 +36529,8 @@
     "data": "2026-07-17",
     "categoria": "Allievi",
     "genere": "M",
-    "tipo": "regionale",
-    "moltiplicatore": 1,
+    "tipo": "nazionale",
+    "moltiplicatore": 2,
     "campionato_regionale": false,
     "campionato_italiano": false,
     "regione": "FRIULI VENEZIA GIULIA",
@@ -36544,7 +36544,7 @@
     "km": "48.800",
     "media": "41.124",
     "punti_base": 12,
-    "punti_effettivi": 12
+    "punti_effettivi": 24
   },
   {
     "gara_id": "LE_FIUMANE_SECONDA_TAPPA_2026-07-17_AL_M",
@@ -36552,8 +36552,8 @@
     "data": "2026-07-17",
     "categoria": "Allievi",
     "genere": "M",
-    "tipo": "regionale",
-    "moltiplicatore": 1,
+    "tipo": "nazionale",
+    "moltiplicatore": 2,
     "campionato_regionale": false,
     "campionato_italiano": false,
     "regione": "FRIULI VENEZIA GIULIA",
@@ -36567,7 +36567,7 @@
     "km": "48.800",
     "media": "41.124",
     "punti_base": 10,
-    "punti_effettivi": 10
+    "punti_effettivi": 20
   },
   {
     "gara_id": "LE_FIUMANE_SECONDA_TAPPA_2026-07-17_AL_M",
@@ -36575,8 +36575,8 @@
     "data": "2026-07-17",
     "categoria": "Allievi",
     "genere": "M",
-    "tipo": "regionale",
-    "moltiplicatore": 1,
+    "tipo": "nazionale",
+    "moltiplicatore": 2,
     "campionato_regionale": false,
     "campionato_italiano": false,
     "regione": "FRIULI VENEZIA GIULIA",
@@ -36590,7 +36590,7 @@
     "km": "48.800",
     "media": "41.124",
     "punti_base": 8,
-    "punti_effettivi": 8
+    "punti_effettivi": 16
   },
   {
     "gara_id": "LE_FIUMANE_SECONDA_TAPPA_2026-07-17_AL_M",
@@ -36598,8 +36598,8 @@
     "data": "2026-07-17",
     "categoria": "Allievi",
     "genere": "M",
-    "tipo": "regionale",
-    "moltiplicatore": 1,
+    "tipo": "nazionale",
+    "moltiplicatore": 2,
     "campionato_regionale": false,
     "campionato_italiano": false,
     "regione": "FRIULI VENEZIA GIULIA",
@@ -36613,7 +36613,7 @@
     "km": "48.800",
     "media": "41.124",
     "punti_base": 6,
-    "punti_effettivi": 6
+    "punti_effettivi": 12
   },
   {
     "gara_id": "LE_FIUMANE_SECONDA_TAPPA_2026-07-17_AL_M",
@@ -36621,8 +36621,8 @@
     "data": "2026-07-17",
     "categoria": "Allievi",
     "genere": "M",
-    "tipo": "regionale",
-    "moltiplicatore": 1,
+    "tipo": "nazionale",
+    "moltiplicatore": 2,
     "campionato_regionale": false,
     "campionato_italiano": false,
     "regione": "FRIULI VENEZIA GIULIA",
@@ -36636,7 +36636,7 @@
     "km": "48.800",
     "media": "41.124",
     "punti_base": 5,
-    "punti_effettivi": 5
+    "punti_effettivi": 10
   },
   {
     "gara_id": "LE_FIUMANE_SECONDA_TAPPA_2026-07-17_AL_M",
@@ -36644,8 +36644,8 @@
     "data": "2026-07-17",
     "categoria": "Allievi",
     "genere": "M",
-    "tipo": "regionale",
-    "moltiplicatore": 1,
+    "tipo": "nazionale",
+    "moltiplicatore": 2,
     "campionato_regionale": false,
     "campionato_italiano": false,
     "regione": "FRIULI VENEZIA GIULIA",
@@ -36659,7 +36659,7 @@
     "km": "48.800",
     "media": "41.124",
     "punti_base": 4,
-    "punti_effettivi": 4
+    "punti_effettivi": 8
   },
   {
     "gara_id": "LE_FIUMANE_SECONDA_TAPPA_2026-07-17_AL_M",
@@ -36667,8 +36667,8 @@
     "data": "2026-07-17",
     "categoria": "Allievi",
     "genere": "M",
-    "tipo": "regionale",
-    "moltiplicatore": 1,
+    "tipo": "nazionale",
+    "moltiplicatore": 2,
     "campionato_regionale": false,
     "campionato_italiano": false,
     "regione": "FRIULI VENEZIA GIULIA",
@@ -36682,7 +36682,7 @@
     "km": "48.800",
     "media": "41.124",
     "punti_base": 3,
-    "punti_effettivi": 3
+    "punti_effettivi": 6
   },
   {
     "gara_id": "LE_FIUMANE_SECONDA_TAPPA_2026-07-17_AL_M",
@@ -36690,8 +36690,8 @@
     "data": "2026-07-17",
     "categoria": "Allievi",
     "genere": "M",
-    "tipo": "regionale",
-    "moltiplicatore": 1,
+    "tipo": "nazionale",
+    "moltiplicatore": 2,
     "campionato_regionale": false,
     "campionato_italiano": false,
     "regione": "FRIULI VENEZIA GIULIA",
@@ -36705,7 +36705,7 @@
     "km": "48.800",
     "media": "41.124",
     "punti_base": 2,
-    "punti_effettivi": 2
+    "punti_effettivi": 4
   },
   {
     "gara_id": "LE_FIUMANE_SECONDA_TAPPA_2026-07-17_AL_M",
@@ -36713,8 +36713,8 @@
     "data": "2026-07-17",
     "categoria": "Allievi",
     "genere": "M",
-    "tipo": "regionale",
-    "moltiplicatore": 1,
+    "tipo": "nazionale",
+    "moltiplicatore": 2,
     "campionato_regionale": false,
     "campionato_italiano": false,
     "regione": "FRIULI VENEZIA GIULIA",
@@ -36728,7 +36728,7 @@
     "km": "48.800",
     "media": "41.124",
     "punti_base": 1,
-    "punti_effettivi": 1
+    "punti_effettivi": 2
   },
   {
     "gara_id": "62_GIRO_CICLISTICO_DELLA_VALLE_D_AOSTA_MONT_BLANC_PRIMA_TAPPA_CRONOMETRO_INDIVIDUALE_2026-07-16_ELI_M",
@@ -53987,7 +53987,7 @@
     "categoria": "Juniores",
     "genere": "M",
     "tipo": "regionale",
-    "moltiplicatore": 2,
+    "moltiplicatore": 3,
     "campionato_regionale": false,
     "campionato_italiano": false,
     "regione": "TOSCANA",
@@ -54001,7 +54001,7 @@
     "km": "300.000",
     "media": "39.926",
     "punti_base": 15,
-    "punti_effettivi": 30
+    "punti_effettivi": 45
   },
   {
     "gara_id": "GIRO_DELLA_VALDERA_CLASSIFICA_GENERALE_2026-06-28_JUN_M",
@@ -54010,7 +54010,7 @@
     "categoria": "Juniores",
     "genere": "M",
     "tipo": "regionale",
-    "moltiplicatore": 2,
+    "moltiplicatore": 3,
     "campionato_regionale": false,
     "campionato_italiano": false,
     "regione": "TOSCANA",
@@ -54024,7 +54024,7 @@
     "km": "300.000",
     "media": "39.926",
     "punti_base": 12,
-    "punti_effettivi": 24
+    "punti_effettivi": 36
   },
   {
     "gara_id": "GIRO_DELLA_VALDERA_CLASSIFICA_GENERALE_2026-06-28_JUN_M",
@@ -54033,7 +54033,7 @@
     "categoria": "Juniores",
     "genere": "M",
     "tipo": "regionale",
-    "moltiplicatore": 2,
+    "moltiplicatore": 3,
     "campionato_regionale": false,
     "campionato_italiano": false,
     "regione": "TOSCANA",
@@ -54047,7 +54047,7 @@
     "km": "300.000",
     "media": "39.926",
     "punti_base": 10,
-    "punti_effettivi": 20
+    "punti_effettivi": 30
   },
   {
     "gara_id": "GIRO_DELLA_VALDERA_CLASSIFICA_GENERALE_2026-06-28_JUN_M",
@@ -54056,7 +54056,7 @@
     "categoria": "Juniores",
     "genere": "M",
     "tipo": "regionale",
-    "moltiplicatore": 2,
+    "moltiplicatore": 3,
     "campionato_regionale": false,
     "campionato_italiano": false,
     "regione": "TOSCANA",
@@ -54070,7 +54070,7 @@
     "km": "300.000",
     "media": "39.926",
     "punti_base": 8,
-    "punti_effettivi": 16
+    "punti_effettivi": 24
   },
   {
     "gara_id": "GIRO_DELLA_VALDERA_CLASSIFICA_GENERALE_2026-06-28_JUN_M",
@@ -54079,7 +54079,7 @@
     "categoria": "Juniores",
     "genere": "M",
     "tipo": "regionale",
-    "moltiplicatore": 2,
+    "moltiplicatore": 3,
     "campionato_regionale": false,
     "campionato_italiano": false,
     "regione": "TOSCANA",
@@ -54093,7 +54093,7 @@
     "km": "300.000",
     "media": "39.926",
     "punti_base": 6,
-    "punti_effettivi": 12
+    "punti_effettivi": 18
   },
   {
     "gara_id": "GIRO_DELLA_VALDERA_CLASSIFICA_GENERALE_2026-06-28_JUN_M",
@@ -54102,7 +54102,7 @@
     "categoria": "Juniores",
     "genere": "M",
     "tipo": "regionale",
-    "moltiplicatore": 2,
+    "moltiplicatore": 3,
     "campionato_regionale": false,
     "campionato_italiano": false,
     "regione": "TOSCANA",
@@ -54116,7 +54116,7 @@
     "km": "300.000",
     "media": "39.926",
     "punti_base": 5,
-    "punti_effettivi": 10
+    "punti_effettivi": 15
   },
   {
     "gara_id": "GIRO_DELLA_VALDERA_CLASSIFICA_GENERALE_2026-06-28_JUN_M",
@@ -54125,7 +54125,7 @@
     "categoria": "Juniores",
     "genere": "M",
     "tipo": "regionale",
-    "moltiplicatore": 2,
+    "moltiplicatore": 3,
     "campionato_regionale": false,
     "campionato_italiano": false,
     "regione": "TOSCANA",
@@ -54139,7 +54139,7 @@
     "km": "300.000",
     "media": "39.926",
     "punti_base": 4,
-    "punti_effettivi": 8
+    "punti_effettivi": 12
   },
   {
     "gara_id": "GIRO_DELLA_VALDERA_CLASSIFICA_GENERALE_2026-06-28_JUN_M",
@@ -54148,7 +54148,7 @@
     "categoria": "Juniores",
     "genere": "M",
     "tipo": "regionale",
-    "moltiplicatore": 2,
+    "moltiplicatore": 3,
     "campionato_regionale": false,
     "campionato_italiano": false,
     "regione": "TOSCANA",
@@ -54162,7 +54162,7 @@
     "km": "300.000",
     "media": "39.926",
     "punti_base": 3,
-    "punti_effettivi": 6
+    "punti_effettivi": 9
   },
   {
     "gara_id": "GIRO_DELLA_VALDERA_CLASSIFICA_GENERALE_2026-06-28_JUN_M",
@@ -54171,7 +54171,7 @@
     "categoria": "Juniores",
     "genere": "M",
     "tipo": "regionale",
-    "moltiplicatore": 2,
+    "moltiplicatore": 3,
     "campionato_regionale": false,
     "campionato_italiano": false,
     "regione": "TOSCANA",
@@ -54185,7 +54185,7 @@
     "km": "300.000",
     "media": "39.926",
     "punti_base": 2,
-    "punti_effettivi": 4
+    "punti_effettivi": 6
   },
   {
     "gara_id": "GIRO_DELLA_VALDERA_CLASSIFICA_GENERALE_2026-06-28_JUN_M",
@@ -54194,7 +54194,7 @@
     "categoria": "Juniores",
     "genere": "M",
     "tipo": "regionale",
-    "moltiplicatore": 2,
+    "moltiplicatore": 3,
     "campionato_regionale": false,
     "campionato_italiano": false,
     "regione": "TOSCANA",
@@ -54208,7 +54208,7 @@
     "km": "300.000",
     "media": "39.926",
     "punti_base": 1,
-    "punti_effettivi": 2
+    "punti_effettivi": 3
   },
   {
     "gara_id": "CAMPIONATO_ITALIANO_STRADA_UNDER_23_2026-06-28_ELI_M",
@@ -66430,7 +66430,7 @@
     "categoria": "Elite-Under23",
     "genere": "M",
     "tipo": "internazionale",
-    "moltiplicatore": 4,
+    "moltiplicatore": 5,
     "campionato_regionale": false,
     "campionato_italiano": false,
     "regione": "ABRUZZO",
@@ -66444,7 +66444,7 @@
     "km": "1093.200",
     "media": "42.216",
     "punti_base": 15,
-    "punti_effettivi": 60
+    "punti_effettivi": 75
   },
   {
     "gara_id": "GIRO_D_ITALIA_NEXT_GEN_CLASSIFICA_GENERALE_2026-06-21_ELI_M",
@@ -66453,7 +66453,7 @@
     "categoria": "Elite-Under23",
     "genere": "M",
     "tipo": "internazionale",
-    "moltiplicatore": 4,
+    "moltiplicatore": 5,
     "campionato_regionale": false,
     "campionato_italiano": false,
     "regione": "ABRUZZO",
@@ -66467,7 +66467,7 @@
     "km": "1093.200",
     "media": "42.216",
     "punti_base": 12,
-    "punti_effettivi": 48
+    "punti_effettivi": 60
   },
   {
     "gara_id": "GIRO_D_ITALIA_NEXT_GEN_CLASSIFICA_GENERALE_2026-06-21_ELI_M",
@@ -66476,7 +66476,7 @@
     "categoria": "Elite-Under23",
     "genere": "M",
     "tipo": "internazionale",
-    "moltiplicatore": 4,
+    "moltiplicatore": 5,
     "campionato_regionale": false,
     "campionato_italiano": false,
     "regione": "ABRUZZO",
@@ -66490,7 +66490,7 @@
     "km": "1093.200",
     "media": "42.216",
     "punti_base": 10,
-    "punti_effettivi": 40
+    "punti_effettivi": 50
   },
   {
     "gara_id": "GIRO_D_ITALIA_NEXT_GEN_CLASSIFICA_GENERALE_2026-06-21_ELI_M",
@@ -66499,7 +66499,7 @@
     "categoria": "Elite-Under23",
     "genere": "M",
     "tipo": "internazionale",
-    "moltiplicatore": 4,
+    "moltiplicatore": 5,
     "campionato_regionale": false,
     "campionato_italiano": false,
     "regione": "ABRUZZO",
@@ -66513,7 +66513,7 @@
     "km": "1093.200",
     "media": "42.216",
     "punti_base": 8,
-    "punti_effettivi": 32
+    "punti_effettivi": 40
   },
   {
     "gara_id": "GIRO_D_ITALIA_NEXT_GEN_CLASSIFICA_GENERALE_2026-06-21_ELI_M",
@@ -66522,7 +66522,7 @@
     "categoria": "Elite-Under23",
     "genere": "M",
     "tipo": "internazionale",
-    "moltiplicatore": 4,
+    "moltiplicatore": 5,
     "campionato_regionale": false,
     "campionato_italiano": false,
     "regione": "ABRUZZO",
@@ -66536,7 +66536,7 @@
     "km": "1093.200",
     "media": "42.216",
     "punti_base": 6,
-    "punti_effettivi": 24
+    "punti_effettivi": 30
   },
   {
     "gara_id": "GIRO_D_ITALIA_NEXT_GEN_CLASSIFICA_GENERALE_2026-06-21_ELI_M",
@@ -66545,7 +66545,7 @@
     "categoria": "Elite-Under23",
     "genere": "M",
     "tipo": "internazionale",
-    "moltiplicatore": 4,
+    "moltiplicatore": 5,
     "campionato_regionale": false,
     "campionato_italiano": false,
     "regione": "ABRUZZO",
@@ -66559,7 +66559,7 @@
     "km": "1093.200",
     "media": "42.216",
     "punti_base": 5,
-    "punti_effettivi": 20
+    "punti_effettivi": 25
   },
   {
     "gara_id": "GIRO_D_ITALIA_NEXT_GEN_CLASSIFICA_GENERALE_2026-06-21_ELI_M",
@@ -66568,7 +66568,7 @@
     "categoria": "Elite-Under23",
     "genere": "M",
     "tipo": "internazionale",
-    "moltiplicatore": 4,
+    "moltiplicatore": 5,
     "campionato_regionale": false,
     "campionato_italiano": false,
     "regione": "ABRUZZO",
@@ -66582,7 +66582,7 @@
     "km": "1093.200",
     "media": "42.216",
     "punti_base": 4,
-    "punti_effettivi": 16
+    "punti_effettivi": 20
   },
   {
     "gara_id": "GIRO_D_ITALIA_NEXT_GEN_CLASSIFICA_GENERALE_2026-06-21_ELI_M",
@@ -66591,7 +66591,7 @@
     "categoria": "Elite-Under23",
     "genere": "M",
     "tipo": "internazionale",
-    "moltiplicatore": 4,
+    "moltiplicatore": 5,
     "campionato_regionale": false,
     "campionato_italiano": false,
     "regione": "ABRUZZO",
@@ -66605,7 +66605,7 @@
     "km": "1093.200",
     "media": "42.216",
     "punti_base": 3,
-    "punti_effettivi": 12
+    "punti_effettivi": 15
   },
   {
     "gara_id": "GIRO_D_ITALIA_NEXT_GEN_CLASSIFICA_GENERALE_2026-06-21_ELI_M",
@@ -66614,7 +66614,7 @@
     "categoria": "Elite-Under23",
     "genere": "M",
     "tipo": "internazionale",
-    "moltiplicatore": 4,
+    "moltiplicatore": 5,
     "campionato_regionale": false,
     "campionato_italiano": false,
     "regione": "ABRUZZO",
@@ -66628,7 +66628,7 @@
     "km": "1093.200",
     "media": "42.216",
     "punti_base": 2,
-    "punti_effettivi": 8
+    "punti_effettivi": 10
   },
   {
     "gara_id": "GIRO_D_ITALIA_NEXT_GEN_CLASSIFICA_GENERALE_2026-06-21_ELI_M",
@@ -66637,7 +66637,7 @@
     "categoria": "Elite-Under23",
     "genere": "M",
     "tipo": "internazionale",
-    "moltiplicatore": 4,
+    "moltiplicatore": 5,
     "campionato_regionale": false,
     "campionato_italiano": false,
     "regione": "ABRUZZO",
@@ -66651,7 +66651,7 @@
     "km": "1093.200",
     "media": "42.216",
     "punti_base": 1,
-    "punti_effettivi": 4
+    "punti_effettivi": 5
   },
   {
     "gara_id": "CAMPIONATO_ITALIANO_STRADA_JUNIORES_2026-06-21_JUN_M",
@@ -91338,8 +91338,8 @@
     "data": "2026-06-12",
     "categoria": "Allievi",
     "genere": "M",
-    "tipo": "regionale",
-    "moltiplicatore": 1,
+    "tipo": "internazionale",
+    "moltiplicatore": 3,
     "campionato_regionale": false,
     "campionato_italiano": false,
     "regione": "MARCHE",
@@ -91353,7 +91353,7 @@
     "km": "6.600",
     "media": "43.000",
     "punti_base": 15,
-    "punti_effettivi": 15
+    "punti_effettivi": 45
   },
   {
     "gara_id": "INTERNAZIONALE_PORTO_SAN_GIORGIO_MEMORIAL_M_DE_ANGELIS_CRONOMETRO_2026-06-12_AL_M",
@@ -91361,8 +91361,8 @@
     "data": "2026-06-12",
     "categoria": "Allievi",
     "genere": "M",
-    "tipo": "regionale",
-    "moltiplicatore": 1,
+    "tipo": "internazionale",
+    "moltiplicatore": 3,
     "campionato_regionale": false,
     "campionato_italiano": false,
     "regione": "MARCHE",
@@ -91376,7 +91376,7 @@
     "km": "6.600",
     "media": "43.000",
     "punti_base": 12,
-    "punti_effettivi": 12
+    "punti_effettivi": 36
   },
   {
     "gara_id": "INTERNAZIONALE_PORTO_SAN_GIORGIO_MEMORIAL_M_DE_ANGELIS_CRONOMETRO_2026-06-12_AL_M",
@@ -91384,8 +91384,8 @@
     "data": "2026-06-12",
     "categoria": "Allievi",
     "genere": "M",
-    "tipo": "regionale",
-    "moltiplicatore": 1,
+    "tipo": "internazionale",
+    "moltiplicatore": 3,
     "campionato_regionale": false,
     "campionato_italiano": false,
     "regione": "MARCHE",
@@ -91399,7 +91399,7 @@
     "km": "6.600",
     "media": "43.000",
     "punti_base": 10,
-    "punti_effettivi": 10
+    "punti_effettivi": 30
   },
   {
     "gara_id": "INTERNAZIONALE_PORTO_SAN_GIORGIO_MEMORIAL_M_DE_ANGELIS_CRONOMETRO_2026-06-12_AL_M",
@@ -91407,8 +91407,8 @@
     "data": "2026-06-12",
     "categoria": "Allievi",
     "genere": "M",
-    "tipo": "regionale",
-    "moltiplicatore": 1,
+    "tipo": "internazionale",
+    "moltiplicatore": 3,
     "campionato_regionale": false,
     "campionato_italiano": false,
     "regione": "MARCHE",
@@ -91422,7 +91422,7 @@
     "km": "6.600",
     "media": "43.000",
     "punti_base": 8,
-    "punti_effettivi": 8
+    "punti_effettivi": 24
   },
   {
     "gara_id": "INTERNAZIONALE_PORTO_SAN_GIORGIO_MEMORIAL_M_DE_ANGELIS_CRONOMETRO_2026-06-12_AL_M",
@@ -91430,8 +91430,8 @@
     "data": "2026-06-12",
     "categoria": "Allievi",
     "genere": "M",
-    "tipo": "regionale",
-    "moltiplicatore": 1,
+    "tipo": "internazionale",
+    "moltiplicatore": 3,
     "campionato_regionale": false,
     "campionato_italiano": false,
     "regione": "MARCHE",
@@ -91445,7 +91445,7 @@
     "km": "6.600",
     "media": "43.000",
     "punti_base": 6,
-    "punti_effettivi": 6
+    "punti_effettivi": 18
   },
   {
     "gara_id": "INTERNAZIONALE_PORTO_SAN_GIORGIO_MEMORIAL_M_DE_ANGELIS_CRONOMETRO_2026-06-12_AL_M",
@@ -91453,8 +91453,8 @@
     "data": "2026-06-12",
     "categoria": "Allievi",
     "genere": "M",
-    "tipo": "regionale",
-    "moltiplicatore": 1,
+    "tipo": "internazionale",
+    "moltiplicatore": 3,
     "campionato_regionale": false,
     "campionato_italiano": false,
     "regione": "MARCHE",
@@ -91468,7 +91468,7 @@
     "km": "6.600",
     "media": "43.000",
     "punti_base": 5,
-    "punti_effettivi": 5
+    "punti_effettivi": 15
   },
   {
     "gara_id": "INTERNAZIONALE_PORTO_SAN_GIORGIO_MEMORIAL_M_DE_ANGELIS_CRONOMETRO_2026-06-12_AL_M",
@@ -91476,8 +91476,8 @@
     "data": "2026-06-12",
     "categoria": "Allievi",
     "genere": "M",
-    "tipo": "regionale",
-    "moltiplicatore": 1,
+    "tipo": "internazionale",
+    "moltiplicatore": 3,
     "campionato_regionale": false,
     "campionato_italiano": false,
     "regione": "MARCHE",
@@ -91491,7 +91491,7 @@
     "km": "6.600",
     "media": "43.000",
     "punti_base": 4,
-    "punti_effettivi": 4
+    "punti_effettivi": 12
   },
   {
     "gara_id": "INTERNAZIONALE_PORTO_SAN_GIORGIO_MEMORIAL_M_DE_ANGELIS_CRONOMETRO_2026-06-12_AL_M",
@@ -91499,8 +91499,8 @@
     "data": "2026-06-12",
     "categoria": "Allievi",
     "genere": "M",
-    "tipo": "regionale",
-    "moltiplicatore": 1,
+    "tipo": "internazionale",
+    "moltiplicatore": 3,
     "campionato_regionale": false,
     "campionato_italiano": false,
     "regione": "MARCHE",
@@ -91514,7 +91514,7 @@
     "km": "6.600",
     "media": "43.000",
     "punti_base": 3,
-    "punti_effettivi": 3
+    "punti_effettivi": 9
   },
   {
     "gara_id": "INTERNAZIONALE_PORTO_SAN_GIORGIO_MEMORIAL_M_DE_ANGELIS_CRONOMETRO_2026-06-12_AL_M",
@@ -91522,8 +91522,8 @@
     "data": "2026-06-12",
     "categoria": "Allievi",
     "genere": "M",
-    "tipo": "regionale",
-    "moltiplicatore": 1,
+    "tipo": "internazionale",
+    "moltiplicatore": 3,
     "campionato_regionale": false,
     "campionato_italiano": false,
     "regione": "MARCHE",
@@ -91537,7 +91537,7 @@
     "km": "6.600",
     "media": "43.000",
     "punti_base": 2,
-    "punti_effettivi": 2
+    "punti_effettivi": 6
   },
   {
     "gara_id": "INTERNAZIONALE_PORTO_SAN_GIORGIO_MEMORIAL_M_DE_ANGELIS_CRONOMETRO_2026-06-12_AL_M",
@@ -91545,8 +91545,8 @@
     "data": "2026-06-12",
     "categoria": "Allievi",
     "genere": "M",
-    "tipo": "regionale",
-    "moltiplicatore": 1,
+    "tipo": "internazionale",
+    "moltiplicatore": 3,
     "campionato_regionale": false,
     "campionato_italiano": false,
     "regione": "MARCHE",
@@ -91560,7 +91560,7 @@
     "km": "6.600",
     "media": "43.000",
     "punti_base": 1,
-    "punti_effettivi": 1
+    "punti_effettivi": 3
   },
   {
     "gara_id": "INTERNAZIONALE_PORTO_SAN_GIORGIO_MEMORIAL_M_DE_ANGELIS_CRONOMETRO_2026-06-12_AL_F",
@@ -91568,8 +91568,8 @@
     "data": "2026-06-12",
     "categoria": "Allievi",
     "genere": "F",
-    "tipo": "regionale",
-    "moltiplicatore": 1,
+    "tipo": "internazionale",
+    "moltiplicatore": 3,
     "campionato_regionale": false,
     "campionato_italiano": false,
     "regione": "MARCHE",
@@ -91583,7 +91583,7 @@
     "km": "6.600",
     "media": "",
     "punti_base": 15,
-    "punti_effettivi": 15
+    "punti_effettivi": 45
   },
   {
     "gara_id": "INTERNAZIONALE_PORTO_SAN_GIORGIO_MEMORIAL_M_DE_ANGELIS_CRONOMETRO_2026-06-12_AL_F",
@@ -91591,8 +91591,8 @@
     "data": "2026-06-12",
     "categoria": "Allievi",
     "genere": "F",
-    "tipo": "regionale",
-    "moltiplicatore": 1,
+    "tipo": "internazionale",
+    "moltiplicatore": 3,
     "campionato_regionale": false,
     "campionato_italiano": false,
     "regione": "MARCHE",
@@ -91606,7 +91606,7 @@
     "km": "6.600",
     "media": "",
     "punti_base": 12,
-    "punti_effettivi": 12
+    "punti_effettivi": 36
   },
   {
     "gara_id": "INTERNAZIONALE_PORTO_SAN_GIORGIO_MEMORIAL_M_DE_ANGELIS_CRONOMETRO_2026-06-12_AL_F",
@@ -91614,8 +91614,8 @@
     "data": "2026-06-12",
     "categoria": "Allievi",
     "genere": "F",
-    "tipo": "regionale",
-    "moltiplicatore": 1,
+    "tipo": "internazionale",
+    "moltiplicatore": 3,
     "campionato_regionale": false,
     "campionato_italiano": false,
     "regione": "MARCHE",
@@ -91629,7 +91629,7 @@
     "km": "6.600",
     "media": "",
     "punti_base": 10,
-    "punti_effettivi": 10
+    "punti_effettivi": 30
   },
   {
     "gara_id": "INTERNAZIONALE_PORTO_SAN_GIORGIO_MEMORIAL_M_DE_ANGELIS_CRONOMETRO_2026-06-12_AL_F",
@@ -91637,8 +91637,8 @@
     "data": "2026-06-12",
     "categoria": "Allievi",
     "genere": "F",
-    "tipo": "regionale",
-    "moltiplicatore": 1,
+    "tipo": "internazionale",
+    "moltiplicatore": 3,
     "campionato_regionale": false,
     "campionato_italiano": false,
     "regione": "MARCHE",
@@ -91652,7 +91652,7 @@
     "km": "6.600",
     "media": "",
     "punti_base": 8,
-    "punti_effettivi": 8
+    "punti_effettivi": 24
   },
   {
     "gara_id": "INTERNAZIONALE_PORTO_SAN_GIORGIO_MEMORIAL_M_DE_ANGELIS_CRONOMETRO_2026-06-12_AL_F",
@@ -91660,8 +91660,8 @@
     "data": "2026-06-12",
     "categoria": "Allievi",
     "genere": "F",
-    "tipo": "regionale",
-    "moltiplicatore": 1,
+    "tipo": "internazionale",
+    "moltiplicatore": 3,
     "campionato_regionale": false,
     "campionato_italiano": false,
     "regione": "MARCHE",
@@ -91675,7 +91675,7 @@
     "km": "6.600",
     "media": "",
     "punti_base": 6,
-    "punti_effettivi": 6
+    "punti_effettivi": 18
   },
   {
     "gara_id": "INTERNAZIONALE_PORTO_SAN_GIORGIO_MEMORIAL_M_DE_ANGELIS_CRONOMETRO_2026-06-12_AL_F",
@@ -91683,8 +91683,8 @@
     "data": "2026-06-12",
     "categoria": "Allievi",
     "genere": "F",
-    "tipo": "regionale",
-    "moltiplicatore": 1,
+    "tipo": "internazionale",
+    "moltiplicatore": 3,
     "campionato_regionale": false,
     "campionato_italiano": false,
     "regione": "MARCHE",
@@ -91698,7 +91698,7 @@
     "km": "6.600",
     "media": "",
     "punti_base": 5,
-    "punti_effettivi": 5
+    "punti_effettivi": 15
   },
   {
     "gara_id": "INTERNAZIONALE_PORTO_SAN_GIORGIO_MEMORIAL_M_DE_ANGELIS_CRONOMETRO_2026-06-12_AL_F",
@@ -91706,8 +91706,8 @@
     "data": "2026-06-12",
     "categoria": "Allievi",
     "genere": "F",
-    "tipo": "regionale",
-    "moltiplicatore": 1,
+    "tipo": "internazionale",
+    "moltiplicatore": 3,
     "campionato_regionale": false,
     "campionato_italiano": false,
     "regione": "MARCHE",
@@ -91721,7 +91721,7 @@
     "km": "6.600",
     "media": "",
     "punti_base": 4,
-    "punti_effettivi": 4
+    "punti_effettivi": 12
   },
   {
     "gara_id": "INTERNAZIONALE_PORTO_SAN_GIORGIO_MEMORIAL_M_DE_ANGELIS_CRONOMETRO_2026-06-12_AL_F",
@@ -91729,8 +91729,8 @@
     "data": "2026-06-12",
     "categoria": "Allievi",
     "genere": "F",
-    "tipo": "regionale",
-    "moltiplicatore": 1,
+    "tipo": "internazionale",
+    "moltiplicatore": 3,
     "campionato_regionale": false,
     "campionato_italiano": false,
     "regione": "MARCHE",
@@ -91744,7 +91744,7 @@
     "km": "6.600",
     "media": "",
     "punti_base": 3,
-    "punti_effettivi": 3
+    "punti_effettivi": 9
   },
   {
     "gara_id": "INTERNAZIONALE_PORTO_SAN_GIORGIO_MEMORIAL_M_DE_ANGELIS_CRONOMETRO_2026-06-12_AL_F",
@@ -91752,8 +91752,8 @@
     "data": "2026-06-12",
     "categoria": "Allievi",
     "genere": "F",
-    "tipo": "regionale",
-    "moltiplicatore": 1,
+    "tipo": "internazionale",
+    "moltiplicatore": 3,
     "campionato_regionale": false,
     "campionato_italiano": false,
     "regione": "MARCHE",
@@ -91767,7 +91767,7 @@
     "km": "6.600",
     "media": "",
     "punti_base": 2,
-    "punti_effettivi": 2
+    "punti_effettivi": 6
   },
   {
     "gara_id": "INTERNAZIONALE_PORTO_SAN_GIORGIO_MEMORIAL_M_DE_ANGELIS_CRONOMETRO_2026-06-12_AL_F",
@@ -91775,8 +91775,8 @@
     "data": "2026-06-12",
     "categoria": "Allievi",
     "genere": "F",
-    "tipo": "regionale",
-    "moltiplicatore": 1,
+    "tipo": "internazionale",
+    "moltiplicatore": 3,
     "campionato_regionale": false,
     "campionato_italiano": false,
     "regione": "MARCHE",
@@ -91790,7 +91790,7 @@
     "km": "6.600",
     "media": "",
     "punti_base": 1,
-    "punti_effettivi": 1
+    "punti_effettivi": 3
   },
   {
     "gara_id": "INTERNAZIONALE_PORTO_SAN_GIORGIO_MEMORIAL_M_DE_ANGELIS_CRONOMETRO_DONNE_ESORDIENTI_PRIMO_ANNO_2026-06-12_ES1_F",
@@ -91913,8 +91913,8 @@
     "data": "2026-06-12",
     "categoria": "Esordienti 1° Anno",
     "genere": "M",
-    "tipo": "regionale",
-    "moltiplicatore": 1,
+    "tipo": "internazionale",
+    "moltiplicatore": 3,
     "campionato_regionale": false,
     "campionato_italiano": false,
     "regione": "MARCHE",
@@ -91928,7 +91928,7 @@
     "km": "6.600",
     "media": "39.000",
     "punti_base": 15,
-    "punti_effettivi": 15
+    "punti_effettivi": 45
   },
   {
     "gara_id": "INTERNAZIONALE_PORTO_SAN_GIORGIO_MEMORIAL_M_DE_ANGELIS_CRONOMETRO_2026-06-12_ES1_M",
@@ -91936,8 +91936,8 @@
     "data": "2026-06-12",
     "categoria": "Esordienti 1° Anno",
     "genere": "M",
-    "tipo": "regionale",
-    "moltiplicatore": 1,
+    "tipo": "internazionale",
+    "moltiplicatore": 3,
     "campionato_regionale": false,
     "campionato_italiano": false,
     "regione": "MARCHE",
@@ -91951,7 +91951,7 @@
     "km": "6.600",
     "media": "39.000",
     "punti_base": 12,
-    "punti_effettivi": 12
+    "punti_effettivi": 36
   },
   {
     "gara_id": "INTERNAZIONALE_PORTO_SAN_GIORGIO_MEMORIAL_M_DE_ANGELIS_CRONOMETRO_2026-06-12_ES1_M",
@@ -91959,8 +91959,8 @@
     "data": "2026-06-12",
     "categoria": "Esordienti 1° Anno",
     "genere": "M",
-    "tipo": "regionale",
-    "moltiplicatore": 1,
+    "tipo": "internazionale",
+    "moltiplicatore": 3,
     "campionato_regionale": false,
     "campionato_italiano": false,
     "regione": "MARCHE",
@@ -91974,7 +91974,7 @@
     "km": "6.600",
     "media": "39.000",
     "punti_base": 10,
-    "punti_effettivi": 10
+    "punti_effettivi": 30
   },
   {
     "gara_id": "INTERNAZIONALE_PORTO_SAN_GIORGIO_MEMORIAL_M_DE_ANGELIS_CRONOMETRO_2026-06-12_ES1_M",
@@ -91982,8 +91982,8 @@
     "data": "2026-06-12",
     "categoria": "Esordienti 1° Anno",
     "genere": "M",
-    "tipo": "regionale",
-    "moltiplicatore": 1,
+    "tipo": "internazionale",
+    "moltiplicatore": 3,
     "campionato_regionale": false,
     "campionato_italiano": false,
     "regione": "MARCHE",
@@ -91997,7 +91997,7 @@
     "km": "6.600",
     "media": "39.000",
     "punti_base": 8,
-    "punti_effettivi": 8
+    "punti_effettivi": 24
   },
   {
     "gara_id": "INTERNAZIONALE_PORTO_SAN_GIORGIO_MEMORIAL_M_DE_ANGELIS_CRONOMETRO_2026-06-12_ES1_M",
@@ -92005,8 +92005,8 @@
     "data": "2026-06-12",
     "categoria": "Esordienti 1° Anno",
     "genere": "M",
-    "tipo": "regionale",
-    "moltiplicatore": 1,
+    "tipo": "internazionale",
+    "moltiplicatore": 3,
     "campionato_regionale": false,
     "campionato_italiano": false,
     "regione": "MARCHE",
@@ -92020,7 +92020,7 @@
     "km": "6.600",
     "media": "39.000",
     "punti_base": 6,
-    "punti_effettivi": 6
+    "punti_effettivi": 18
   },
   {
     "gara_id": "INTERNAZIONALE_PORTO_SAN_GIORGIO_MEMORIAL_M_DE_ANGELIS_CRONOMETRO_2026-06-12_ES1_M",
@@ -92028,8 +92028,8 @@
     "data": "2026-06-12",
     "categoria": "Esordienti 1° Anno",
     "genere": "M",
-    "tipo": "regionale",
-    "moltiplicatore": 1,
+    "tipo": "internazionale",
+    "moltiplicatore": 3,
     "campionato_regionale": false,
     "campionato_italiano": false,
     "regione": "MARCHE",
@@ -92043,7 +92043,7 @@
     "km": "6.600",
     "media": "39.000",
     "punti_base": 5,
-    "punti_effettivi": 5
+    "punti_effettivi": 15
   },
   {
     "gara_id": "INTERNAZIONALE_PORTO_SAN_GIORGIO_MEMORIAL_M_DE_ANGELIS_CRONOMETRO_2026-06-12_ES1_M",
@@ -92051,8 +92051,8 @@
     "data": "2026-06-12",
     "categoria": "Esordienti 1° Anno",
     "genere": "M",
-    "tipo": "regionale",
-    "moltiplicatore": 1,
+    "tipo": "internazionale",
+    "moltiplicatore": 3,
     "campionato_regionale": false,
     "campionato_italiano": false,
     "regione": "MARCHE",
@@ -92066,7 +92066,7 @@
     "km": "6.600",
     "media": "39.000",
     "punti_base": 4,
-    "punti_effettivi": 4
+    "punti_effettivi": 12
   },
   {
     "gara_id": "INTERNAZIONALE_PORTO_SAN_GIORGIO_MEMORIAL_M_DE_ANGELIS_CRONOMETRO_2026-06-12_ES1_M",
@@ -92074,8 +92074,8 @@
     "data": "2026-06-12",
     "categoria": "Esordienti 1° Anno",
     "genere": "M",
-    "tipo": "regionale",
-    "moltiplicatore": 1,
+    "tipo": "internazionale",
+    "moltiplicatore": 3,
     "campionato_regionale": false,
     "campionato_italiano": false,
     "regione": "MARCHE",
@@ -92089,7 +92089,7 @@
     "km": "6.600",
     "media": "39.000",
     "punti_base": 3,
-    "punti_effettivi": 3
+    "punti_effettivi": 9
   },
   {
     "gara_id": "INTERNAZIONALE_PORTO_SAN_GIORGIO_MEMORIAL_M_DE_ANGELIS_CRONOMETRO_2026-06-12_ES1_M",
@@ -92097,8 +92097,8 @@
     "data": "2026-06-12",
     "categoria": "Esordienti 1° Anno",
     "genere": "M",
-    "tipo": "regionale",
-    "moltiplicatore": 1,
+    "tipo": "internazionale",
+    "moltiplicatore": 3,
     "campionato_regionale": false,
     "campionato_italiano": false,
     "regione": "MARCHE",
@@ -92112,7 +92112,7 @@
     "km": "6.600",
     "media": "39.000",
     "punti_base": 2,
-    "punti_effettivi": 2
+    "punti_effettivi": 6
   },
   {
     "gara_id": "INTERNAZIONALE_PORTO_SAN_GIORGIO_MEMORIAL_M_DE_ANGELIS_CRONOMETRO_2026-06-12_ES1_M",
@@ -92120,8 +92120,8 @@
     "data": "2026-06-12",
     "categoria": "Esordienti 1° Anno",
     "genere": "M",
-    "tipo": "regionale",
-    "moltiplicatore": 1,
+    "tipo": "internazionale",
+    "moltiplicatore": 3,
     "campionato_regionale": false,
     "campionato_italiano": false,
     "regione": "MARCHE",
@@ -92135,7 +92135,7 @@
     "km": "6.600",
     "media": "39.000",
     "punti_base": 1,
-    "punti_effettivi": 1
+    "punti_effettivi": 3
   },
   {
     "gara_id": "INTERNAZIONALE_PORTO_SAN_GIORGIO_MEMORIAL_M_DE_ANGELIS_CRONOMETRO_2026-06-12_ES2_M",
@@ -92143,8 +92143,8 @@
     "data": "2026-06-12",
     "categoria": "Esordienti 2° Anno",
     "genere": "M",
-    "tipo": "regionale",
-    "moltiplicatore": 1,
+    "tipo": "internazionale",
+    "moltiplicatore": 3,
     "campionato_regionale": false,
     "campionato_italiano": false,
     "regione": "MARCHE",
@@ -92158,7 +92158,7 @@
     "km": "6.600",
     "media": "41.000",
     "punti_base": 15,
-    "punti_effettivi": 15
+    "punti_effettivi": 45
   },
   {
     "gara_id": "INTERNAZIONALE_PORTO_SAN_GIORGIO_MEMORIAL_M_DE_ANGELIS_CRONOMETRO_2026-06-12_ES2_M",
@@ -92166,8 +92166,8 @@
     "data": "2026-06-12",
     "categoria": "Esordienti 2° Anno",
     "genere": "M",
-    "tipo": "regionale",
-    "moltiplicatore": 1,
+    "tipo": "internazionale",
+    "moltiplicatore": 3,
     "campionato_regionale": false,
     "campionato_italiano": false,
     "regione": "MARCHE",
@@ -92181,7 +92181,7 @@
     "km": "6.600",
     "media": "41.000",
     "punti_base": 12,
-    "punti_effettivi": 12
+    "punti_effettivi": 36
   },
   {
     "gara_id": "INTERNAZIONALE_PORTO_SAN_GIORGIO_MEMORIAL_M_DE_ANGELIS_CRONOMETRO_2026-06-12_ES2_M",
@@ -92189,8 +92189,8 @@
     "data": "2026-06-12",
     "categoria": "Esordienti 2° Anno",
     "genere": "M",
-    "tipo": "regionale",
-    "moltiplicatore": 1,
+    "tipo": "internazionale",
+    "moltiplicatore": 3,
     "campionato_regionale": false,
     "campionato_italiano": false,
     "regione": "MARCHE",
@@ -92204,7 +92204,7 @@
     "km": "6.600",
     "media": "41.000",
     "punti_base": 10,
-    "punti_effettivi": 10
+    "punti_effettivi": 30
   },
   {
     "gara_id": "INTERNAZIONALE_PORTO_SAN_GIORGIO_MEMORIAL_M_DE_ANGELIS_CRONOMETRO_2026-06-12_ES2_M",
@@ -92212,8 +92212,8 @@
     "data": "2026-06-12",
     "categoria": "Esordienti 2° Anno",
     "genere": "M",
-    "tipo": "regionale",
-    "moltiplicatore": 1,
+    "tipo": "internazionale",
+    "moltiplicatore": 3,
     "campionato_regionale": false,
     "campionato_italiano": false,
     "regione": "MARCHE",
@@ -92227,7 +92227,7 @@
     "km": "6.600",
     "media": "41.000",
     "punti_base": 8,
-    "punti_effettivi": 8
+    "punti_effettivi": 24
   },
   {
     "gara_id": "INTERNAZIONALE_PORTO_SAN_GIORGIO_MEMORIAL_M_DE_ANGELIS_CRONOMETRO_2026-06-12_ES2_M",
@@ -92235,8 +92235,8 @@
     "data": "2026-06-12",
     "categoria": "Esordienti 2° Anno",
     "genere": "M",
-    "tipo": "regionale",
-    "moltiplicatore": 1,
+    "tipo": "internazionale",
+    "moltiplicatore": 3,
     "campionato_regionale": false,
     "campionato_italiano": false,
     "regione": "MARCHE",
@@ -92250,7 +92250,7 @@
     "km": "6.600",
     "media": "41.000",
     "punti_base": 6,
-    "punti_effettivi": 6
+    "punti_effettivi": 18
   },
   {
     "gara_id": "INTERNAZIONALE_PORTO_SAN_GIORGIO_MEMORIAL_M_DE_ANGELIS_CRONOMETRO_2026-06-12_ES2_M",
@@ -92258,8 +92258,8 @@
     "data": "2026-06-12",
     "categoria": "Esordienti 2° Anno",
     "genere": "M",
-    "tipo": "regionale",
-    "moltiplicatore": 1,
+    "tipo": "internazionale",
+    "moltiplicatore": 3,
     "campionato_regionale": false,
     "campionato_italiano": false,
     "regione": "MARCHE",
@@ -92273,7 +92273,7 @@
     "km": "6.600",
     "media": "41.000",
     "punti_base": 5,
-    "punti_effettivi": 5
+    "punti_effettivi": 15
   },
   {
     "gara_id": "INTERNAZIONALE_PORTO_SAN_GIORGIO_MEMORIAL_M_DE_ANGELIS_CRONOMETRO_2026-06-12_ES2_M",
@@ -92281,8 +92281,8 @@
     "data": "2026-06-12",
     "categoria": "Esordienti 2° Anno",
     "genere": "M",
-    "tipo": "regionale",
-    "moltiplicatore": 1,
+    "tipo": "internazionale",
+    "moltiplicatore": 3,
     "campionato_regionale": false,
     "campionato_italiano": false,
     "regione": "MARCHE",
@@ -92296,7 +92296,7 @@
     "km": "6.600",
     "media": "41.000",
     "punti_base": 4,
-    "punti_effettivi": 4
+    "punti_effettivi": 12
   },
   {
     "gara_id": "INTERNAZIONALE_PORTO_SAN_GIORGIO_MEMORIAL_M_DE_ANGELIS_CRONOMETRO_2026-06-12_ES2_M",
@@ -92304,8 +92304,8 @@
     "data": "2026-06-12",
     "categoria": "Esordienti 2° Anno",
     "genere": "M",
-    "tipo": "regionale",
-    "moltiplicatore": 1,
+    "tipo": "internazionale",
+    "moltiplicatore": 3,
     "campionato_regionale": false,
     "campionato_italiano": false,
     "regione": "MARCHE",
@@ -92319,7 +92319,7 @@
     "km": "6.600",
     "media": "41.000",
     "punti_base": 3,
-    "punti_effettivi": 3
+    "punti_effettivi": 9
   },
   {
     "gara_id": "INTERNAZIONALE_PORTO_SAN_GIORGIO_MEMORIAL_M_DE_ANGELIS_CRONOMETRO_2026-06-12_ES2_M",
@@ -92327,8 +92327,8 @@
     "data": "2026-06-12",
     "categoria": "Esordienti 2° Anno",
     "genere": "M",
-    "tipo": "regionale",
-    "moltiplicatore": 1,
+    "tipo": "internazionale",
+    "moltiplicatore": 3,
     "campionato_regionale": false,
     "campionato_italiano": false,
     "regione": "MARCHE",
@@ -92342,7 +92342,7 @@
     "km": "6.600",
     "media": "41.000",
     "punti_base": 2,
-    "punti_effettivi": 2
+    "punti_effettivi": 6
   },
   {
     "gara_id": "INTERNAZIONALE_PORTO_SAN_GIORGIO_MEMORIAL_M_DE_ANGELIS_CRONOMETRO_2026-06-12_ES2_M",
@@ -92350,8 +92350,8 @@
     "data": "2026-06-12",
     "categoria": "Esordienti 2° Anno",
     "genere": "M",
-    "tipo": "regionale",
-    "moltiplicatore": 1,
+    "tipo": "internazionale",
+    "moltiplicatore": 3,
     "campionato_regionale": false,
     "campionato_italiano": false,
     "regione": "MARCHE",
@@ -92365,7 +92365,7 @@
     "km": "6.600",
     "media": "41.000",
     "punti_base": 1,
-    "punti_effettivi": 1
+    "punti_effettivi": 3
   },
   {
     "gara_id": "INTERNAZIONALE_PORTO_SAN_GIORGIO_MEMORIAL_M_DE_ANGELIS_CRONOMETRO_2026-06-12_ELI_F",
@@ -92834,7 +92834,7 @@
     "categoria": "Elite-Under23",
     "genere": "F",
     "tipo": "internazionale",
-    "moltiplicatore": 4,
+    "moltiplicatore": 5,
     "campionato_regionale": false,
     "campionato_italiano": false,
     "regione": "UNDER",
@@ -92848,7 +92848,7 @@
     "km": "",
     "media": "",
     "punti_base": 15,
-    "punti_effettivi": 60
+    "punti_effettivi": 75
   },
   {
     "gara_id": "GIRO_D_ITALIA_WOMEN_CLASSIFICA_GENERALE_2026-06-07_ELI_F",
@@ -92857,7 +92857,7 @@
     "categoria": "Elite-Under23",
     "genere": "F",
     "tipo": "internazionale",
-    "moltiplicatore": 4,
+    "moltiplicatore": 5,
     "campionato_regionale": false,
     "campionato_italiano": false,
     "regione": "UNDER",
@@ -92871,7 +92871,7 @@
     "km": "",
     "media": "",
     "punti_base": 12,
-    "punti_effettivi": 48
+    "punti_effettivi": 60
   },
   {
     "gara_id": "GIRO_D_ITALIA_WOMEN_CLASSIFICA_GENERALE_2026-06-07_ELI_F",
@@ -92880,7 +92880,7 @@
     "categoria": "Elite-Under23",
     "genere": "F",
     "tipo": "internazionale",
-    "moltiplicatore": 4,
+    "moltiplicatore": 5,
     "campionato_regionale": false,
     "campionato_italiano": false,
     "regione": "UNDER",
@@ -92894,7 +92894,7 @@
     "km": "",
     "media": "",
     "punti_base": 10,
-    "punti_effettivi": 40
+    "punti_effettivi": 50
   },
   {
     "gara_id": "GIRO_D_ITALIA_WOMEN_CLASSIFICA_GENERALE_2026-06-07_ELI_F",
@@ -92903,7 +92903,7 @@
     "categoria": "Elite-Under23",
     "genere": "F",
     "tipo": "internazionale",
-    "moltiplicatore": 4,
+    "moltiplicatore": 5,
     "campionato_regionale": false,
     "campionato_italiano": false,
     "regione": "UNDER",
@@ -92917,7 +92917,7 @@
     "km": "",
     "media": "",
     "punti_base": 8,
-    "punti_effettivi": 32
+    "punti_effettivi": 40
   },
   {
     "gara_id": "GIRO_D_ITALIA_WOMEN_CLASSIFICA_GENERALE_2026-06-07_ELI_F",
@@ -92926,7 +92926,7 @@
     "categoria": "Elite-Under23",
     "genere": "F",
     "tipo": "internazionale",
-    "moltiplicatore": 4,
+    "moltiplicatore": 5,
     "campionato_regionale": false,
     "campionato_italiano": false,
     "regione": "UNDER",
@@ -92940,7 +92940,7 @@
     "km": "",
     "media": "",
     "punti_base": 6,
-    "punti_effettivi": 24
+    "punti_effettivi": 30
   },
   {
     "gara_id": "GIRO_D_ITALIA_WOMEN_CLASSIFICA_GENERALE_2026-06-07_ELI_F",
@@ -92949,7 +92949,7 @@
     "categoria": "Elite-Under23",
     "genere": "F",
     "tipo": "internazionale",
-    "moltiplicatore": 4,
+    "moltiplicatore": 5,
     "campionato_regionale": false,
     "campionato_italiano": false,
     "regione": "UNDER",
@@ -92963,7 +92963,7 @@
     "km": "",
     "media": "",
     "punti_base": 5,
-    "punti_effettivi": 20
+    "punti_effettivi": 25
   },
   {
     "gara_id": "GIRO_D_ITALIA_WOMEN_CLASSIFICA_GENERALE_2026-06-07_ELI_F",
@@ -92972,7 +92972,7 @@
     "categoria": "Elite-Under23",
     "genere": "F",
     "tipo": "internazionale",
-    "moltiplicatore": 4,
+    "moltiplicatore": 5,
     "campionato_regionale": false,
     "campionato_italiano": false,
     "regione": "UNDER",
@@ -92986,7 +92986,7 @@
     "km": "",
     "media": "",
     "punti_base": 4,
-    "punti_effettivi": 16
+    "punti_effettivi": 20
   },
   {
     "gara_id": "GIRO_D_ITALIA_WOMEN_CLASSIFICA_GENERALE_2026-06-07_ELI_F",
@@ -92995,7 +92995,7 @@
     "categoria": "Elite-Under23",
     "genere": "F",
     "tipo": "internazionale",
-    "moltiplicatore": 4,
+    "moltiplicatore": 5,
     "campionato_regionale": false,
     "campionato_italiano": false,
     "regione": "UNDER",
@@ -93009,7 +93009,7 @@
     "km": "",
     "media": "",
     "punti_base": 3,
-    "punti_effettivi": 12
+    "punti_effettivi": 15
   },
   {
     "gara_id": "GIRO_D_ITALIA_WOMEN_CLASSIFICA_GENERALE_2026-06-07_ELI_F",
@@ -93018,7 +93018,7 @@
     "categoria": "Elite-Under23",
     "genere": "F",
     "tipo": "internazionale",
-    "moltiplicatore": 4,
+    "moltiplicatore": 5,
     "campionato_regionale": false,
     "campionato_italiano": false,
     "regione": "UNDER",
@@ -93032,7 +93032,7 @@
     "km": "",
     "media": "",
     "punti_base": 2,
-    "punti_effettivi": 8
+    "punti_effettivi": 10
   },
   {
     "gara_id": "GIRO_D_ITALIA_WOMEN_CLASSIFICA_GENERALE_2026-06-07_ELI_F",
@@ -93041,7 +93041,7 @@
     "categoria": "Elite-Under23",
     "genere": "F",
     "tipo": "internazionale",
-    "moltiplicatore": 4,
+    "moltiplicatore": 5,
     "campionato_regionale": false,
     "campionato_italiano": false,
     "regione": "UNDER",
@@ -93055,7 +93055,7 @@
     "km": "",
     "media": "",
     "punti_base": 1,
-    "punti_effettivi": 4
+    "punti_effettivi": 5
   },
   {
     "gara_id": "14_GRAN_PREMIO_F_W_R_BARON_SECONDA_TAPPA_PRIMA_SEMITAPPA_CRONOMETRO_2026-06-07_JUN_M",
@@ -93524,7 +93524,7 @@
     "categoria": "Juniores",
     "genere": "M",
     "tipo": "regionale",
-    "moltiplicatore": 2,
+    "moltiplicatore": 3,
     "campionato_regionale": false,
     "campionato_italiano": false,
     "regione": "VENETO",
@@ -93538,7 +93538,7 @@
     "km": "",
     "media": "",
     "punti_base": 15,
-    "punti_effettivi": 30
+    "punti_effettivi": 45
   },
   {
     "gara_id": "14_GRAN_PREMIO_F_W_R_BARON_CLASSIFICA_GENERALE_2026-06-07_JUN_M",
@@ -93547,7 +93547,7 @@
     "categoria": "Juniores",
     "genere": "M",
     "tipo": "regionale",
-    "moltiplicatore": 2,
+    "moltiplicatore": 3,
     "campionato_regionale": false,
     "campionato_italiano": false,
     "regione": "VENETO",
@@ -93561,7 +93561,7 @@
     "km": "",
     "media": "",
     "punti_base": 12,
-    "punti_effettivi": 24
+    "punti_effettivi": 36
   },
   {
     "gara_id": "14_GRAN_PREMIO_F_W_R_BARON_CLASSIFICA_GENERALE_2026-06-07_JUN_M",
@@ -93570,7 +93570,7 @@
     "categoria": "Juniores",
     "genere": "M",
     "tipo": "regionale",
-    "moltiplicatore": 2,
+    "moltiplicatore": 3,
     "campionato_regionale": false,
     "campionato_italiano": false,
     "regione": "VENETO",
@@ -93584,7 +93584,7 @@
     "km": "",
     "media": "",
     "punti_base": 10,
-    "punti_effettivi": 20
+    "punti_effettivi": 30
   },
   {
     "gara_id": "14_GRAN_PREMIO_F_W_R_BARON_CLASSIFICA_GENERALE_2026-06-07_JUN_M",
@@ -93593,7 +93593,7 @@
     "categoria": "Juniores",
     "genere": "M",
     "tipo": "regionale",
-    "moltiplicatore": 2,
+    "moltiplicatore": 3,
     "campionato_regionale": false,
     "campionato_italiano": false,
     "regione": "VENETO",
@@ -93607,7 +93607,7 @@
     "km": "",
     "media": "",
     "punti_base": 8,
-    "punti_effettivi": 16
+    "punti_effettivi": 24
   },
   {
     "gara_id": "14_GRAN_PREMIO_F_W_R_BARON_CLASSIFICA_GENERALE_2026-06-07_JUN_M",
@@ -93616,7 +93616,7 @@
     "categoria": "Juniores",
     "genere": "M",
     "tipo": "regionale",
-    "moltiplicatore": 2,
+    "moltiplicatore": 3,
     "campionato_regionale": false,
     "campionato_italiano": false,
     "regione": "VENETO",
@@ -93630,7 +93630,7 @@
     "km": "",
     "media": "",
     "punti_base": 6,
-    "punti_effettivi": 12
+    "punti_effettivi": 18
   },
   {
     "gara_id": "14_GRAN_PREMIO_F_W_R_BARON_CLASSIFICA_GENERALE_2026-06-07_JUN_M",
@@ -93639,7 +93639,7 @@
     "categoria": "Juniores",
     "genere": "M",
     "tipo": "regionale",
-    "moltiplicatore": 2,
+    "moltiplicatore": 3,
     "campionato_regionale": false,
     "campionato_italiano": false,
     "regione": "VENETO",
@@ -93653,7 +93653,7 @@
     "km": "",
     "media": "",
     "punti_base": 5,
-    "punti_effettivi": 10
+    "punti_effettivi": 15
   },
   {
     "gara_id": "14_GRAN_PREMIO_F_W_R_BARON_CLASSIFICA_GENERALE_2026-06-07_JUN_M",
@@ -93662,7 +93662,7 @@
     "categoria": "Juniores",
     "genere": "M",
     "tipo": "regionale",
-    "moltiplicatore": 2,
+    "moltiplicatore": 3,
     "campionato_regionale": false,
     "campionato_italiano": false,
     "regione": "VENETO",
@@ -93676,7 +93676,7 @@
     "km": "",
     "media": "",
     "punti_base": 4,
-    "punti_effettivi": 8
+    "punti_effettivi": 12
   },
   {
     "gara_id": "14_GRAN_PREMIO_F_W_R_BARON_CLASSIFICA_GENERALE_2026-06-07_JUN_M",
@@ -93685,7 +93685,7 @@
     "categoria": "Juniores",
     "genere": "M",
     "tipo": "regionale",
-    "moltiplicatore": 2,
+    "moltiplicatore": 3,
     "campionato_regionale": false,
     "campionato_italiano": false,
     "regione": "VENETO",
@@ -93699,7 +93699,7 @@
     "km": "",
     "media": "",
     "punti_base": 3,
-    "punti_effettivi": 6
+    "punti_effettivi": 9
   },
   {
     "gara_id": "14_GRAN_PREMIO_F_W_R_BARON_CLASSIFICA_GENERALE_2026-06-07_JUN_M",
@@ -93708,7 +93708,7 @@
     "categoria": "Juniores",
     "genere": "M",
     "tipo": "regionale",
-    "moltiplicatore": 2,
+    "moltiplicatore": 3,
     "campionato_regionale": false,
     "campionato_italiano": false,
     "regione": "VENETO",
@@ -93722,7 +93722,7 @@
     "km": "",
     "media": "",
     "punti_base": 2,
-    "punti_effettivi": 4
+    "punti_effettivi": 6
   },
   {
     "gara_id": "14_GRAN_PREMIO_F_W_R_BARON_CLASSIFICA_GENERALE_2026-06-07_JUN_M",
@@ -93731,7 +93731,7 @@
     "categoria": "Juniores",
     "genere": "M",
     "tipo": "regionale",
-    "moltiplicatore": 2,
+    "moltiplicatore": 3,
     "campionato_regionale": false,
     "campionato_italiano": false,
     "regione": "VENETO",
@@ -93745,7 +93745,7 @@
     "km": "",
     "media": "",
     "punti_base": 1,
-    "punti_effettivi": 2
+    "punti_effettivi": 3
   },
   {
     "gara_id": "54_COPPA_DELLA_PACE_51_TROFEO_FRATELLI_ANELLI_UNDER23_2026-06-07_ELI_M",
@@ -107071,7 +107071,7 @@
     "categoria": "Juniores",
     "genere": "M",
     "tipo": "regionale",
-    "moltiplicatore": 2,
+    "moltiplicatore": 3,
     "campionato_regionale": false,
     "campionato_italiano": false,
     "regione": "FRIULI VENEZIA GIULIA",
@@ -107085,7 +107085,7 @@
     "km": "293.200",
     "media": "41.719",
     "punti_base": 15,
-    "punti_effettivi": 30
+    "punti_effettivi": 45
   },
   {
     "gara_id": "24_GIRO_DEL_FRIULI_VENEZIA_GIULIA_CLASSIFICA_GENERALE_2026-06-02_JUN_M",
@@ -107094,7 +107094,7 @@
     "categoria": "Juniores",
     "genere": "M",
     "tipo": "regionale",
-    "moltiplicatore": 2,
+    "moltiplicatore": 3,
     "campionato_regionale": false,
     "campionato_italiano": false,
     "regione": "FRIULI VENEZIA GIULIA",
@@ -107108,7 +107108,7 @@
     "km": "293.200",
     "media": "41.719",
     "punti_base": 12,
-    "punti_effettivi": 24
+    "punti_effettivi": 36
   },
   {
     "gara_id": "24_GIRO_DEL_FRIULI_VENEZIA_GIULIA_CLASSIFICA_GENERALE_2026-06-02_JUN_M",
@@ -107117,7 +107117,7 @@
     "categoria": "Juniores",
     "genere": "M",
     "tipo": "regionale",
-    "moltiplicatore": 2,
+    "moltiplicatore": 3,
     "campionato_regionale": false,
     "campionato_italiano": false,
     "regione": "FRIULI VENEZIA GIULIA",
@@ -107131,7 +107131,7 @@
     "km": "293.200",
     "media": "41.719",
     "punti_base": 10,
-    "punti_effettivi": 20
+    "punti_effettivi": 30
   },
   {
     "gara_id": "24_GIRO_DEL_FRIULI_VENEZIA_GIULIA_CLASSIFICA_GENERALE_2026-06-02_JUN_M",
@@ -107140,7 +107140,7 @@
     "categoria": "Juniores",
     "genere": "M",
     "tipo": "regionale",
-    "moltiplicatore": 2,
+    "moltiplicatore": 3,
     "campionato_regionale": false,
     "campionato_italiano": false,
     "regione": "FRIULI VENEZIA GIULIA",
@@ -107154,7 +107154,7 @@
     "km": "293.200",
     "media": "41.719",
     "punti_base": 8,
-    "punti_effettivi": 16
+    "punti_effettivi": 24
   },
   {
     "gara_id": "24_GIRO_DEL_FRIULI_VENEZIA_GIULIA_CLASSIFICA_GENERALE_2026-06-02_JUN_M",
@@ -107163,7 +107163,7 @@
     "categoria": "Juniores",
     "genere": "M",
     "tipo": "regionale",
-    "moltiplicatore": 2,
+    "moltiplicatore": 3,
     "campionato_regionale": false,
     "campionato_italiano": false,
     "regione": "FRIULI VENEZIA GIULIA",
@@ -107177,7 +107177,7 @@
     "km": "293.200",
     "media": "41.719",
     "punti_base": 6,
-    "punti_effettivi": 12
+    "punti_effettivi": 18
   },
   {
     "gara_id": "24_GIRO_DEL_FRIULI_VENEZIA_GIULIA_CLASSIFICA_GENERALE_2026-06-02_JUN_M",
@@ -107186,7 +107186,7 @@
     "categoria": "Juniores",
     "genere": "M",
     "tipo": "regionale",
-    "moltiplicatore": 2,
+    "moltiplicatore": 3,
     "campionato_regionale": false,
     "campionato_italiano": false,
     "regione": "FRIULI VENEZIA GIULIA",
@@ -107200,7 +107200,7 @@
     "km": "293.200",
     "media": "41.719",
     "punti_base": 5,
-    "punti_effettivi": 10
+    "punti_effettivi": 15
   },
   {
     "gara_id": "24_GIRO_DEL_FRIULI_VENEZIA_GIULIA_CLASSIFICA_GENERALE_2026-06-02_JUN_M",
@@ -107209,7 +107209,7 @@
     "categoria": "Juniores",
     "genere": "M",
     "tipo": "regionale",
-    "moltiplicatore": 2,
+    "moltiplicatore": 3,
     "campionato_regionale": false,
     "campionato_italiano": false,
     "regione": "FRIULI VENEZIA GIULIA",
@@ -107223,7 +107223,7 @@
     "km": "293.200",
     "media": "41.719",
     "punti_base": 4,
-    "punti_effettivi": 8
+    "punti_effettivi": 12
   },
   {
     "gara_id": "24_GIRO_DEL_FRIULI_VENEZIA_GIULIA_CLASSIFICA_GENERALE_2026-06-02_JUN_M",
@@ -107232,7 +107232,7 @@
     "categoria": "Juniores",
     "genere": "M",
     "tipo": "regionale",
-    "moltiplicatore": 2,
+    "moltiplicatore": 3,
     "campionato_regionale": false,
     "campionato_italiano": false,
     "regione": "FRIULI VENEZIA GIULIA",
@@ -107246,7 +107246,7 @@
     "km": "293.200",
     "media": "41.719",
     "punti_base": 3,
-    "punti_effettivi": 6
+    "punti_effettivi": 9
   },
   {
     "gara_id": "24_GIRO_DEL_FRIULI_VENEZIA_GIULIA_CLASSIFICA_GENERALE_2026-06-02_JUN_M",
@@ -107255,7 +107255,7 @@
     "categoria": "Juniores",
     "genere": "M",
     "tipo": "regionale",
-    "moltiplicatore": 2,
+    "moltiplicatore": 3,
     "campionato_regionale": false,
     "campionato_italiano": false,
     "regione": "FRIULI VENEZIA GIULIA",
@@ -107269,7 +107269,7 @@
     "km": "293.200",
     "media": "41.719",
     "punti_base": 2,
-    "punti_effettivi": 4
+    "punti_effettivi": 6
   },
   {
     "gara_id": "24_GIRO_DEL_FRIULI_VENEZIA_GIULIA_CLASSIFICA_GENERALE_2026-06-02_JUN_M",
@@ -107278,7 +107278,7 @@
     "categoria": "Juniores",
     "genere": "M",
     "tipo": "regionale",
-    "moltiplicatore": 2,
+    "moltiplicatore": 3,
     "campionato_regionale": false,
     "campionato_italiano": false,
     "regione": "FRIULI VENEZIA GIULIA",
@@ -107292,7 +107292,7 @@
     "km": "293.200",
     "media": "41.719",
     "punti_base": 1,
-    "punti_effettivi": 2
+    "punti_effettivi": 3
   },
   {
     "gara_id": "GIRO_DEI_TRE_COMUNI_TERZA_TAPPA_2026-06-02_AL_M",
@@ -107531,7 +107531,7 @@
     "categoria": "Allievi",
     "genere": "M",
     "tipo": "regionale",
-    "moltiplicatore": 2,
+    "moltiplicatore": 3,
     "campionato_regionale": false,
     "campionato_italiano": false,
     "regione": "TOSCANA",
@@ -107545,7 +107545,7 @@
     "km": "141.000",
     "media": "42.981",
     "punti_base": 15,
-    "punti_effettivi": 30
+    "punti_effettivi": 45
   },
   {
     "gara_id": "GIRO_DEI_TRE_COMUNI_CLASSIFICA_GENERALE_2026-06-02_AL_M",
@@ -107554,7 +107554,7 @@
     "categoria": "Allievi",
     "genere": "M",
     "tipo": "regionale",
-    "moltiplicatore": 2,
+    "moltiplicatore": 3,
     "campionato_regionale": false,
     "campionato_italiano": false,
     "regione": "TOSCANA",
@@ -107568,7 +107568,7 @@
     "km": "141.000",
     "media": "42.981",
     "punti_base": 12,
-    "punti_effettivi": 24
+    "punti_effettivi": 36
   },
   {
     "gara_id": "GIRO_DEI_TRE_COMUNI_CLASSIFICA_GENERALE_2026-06-02_AL_M",
@@ -107577,7 +107577,7 @@
     "categoria": "Allievi",
     "genere": "M",
     "tipo": "regionale",
-    "moltiplicatore": 2,
+    "moltiplicatore": 3,
     "campionato_regionale": false,
     "campionato_italiano": false,
     "regione": "TOSCANA",
@@ -107591,7 +107591,7 @@
     "km": "141.000",
     "media": "42.981",
     "punti_base": 10,
-    "punti_effettivi": 20
+    "punti_effettivi": 30
   },
   {
     "gara_id": "GIRO_DEI_TRE_COMUNI_CLASSIFICA_GENERALE_2026-06-02_AL_M",
@@ -107600,7 +107600,7 @@
     "categoria": "Allievi",
     "genere": "M",
     "tipo": "regionale",
-    "moltiplicatore": 2,
+    "moltiplicatore": 3,
     "campionato_regionale": false,
     "campionato_italiano": false,
     "regione": "TOSCANA",
@@ -107614,7 +107614,7 @@
     "km": "141.000",
     "media": "42.981",
     "punti_base": 8,
-    "punti_effettivi": 16
+    "punti_effettivi": 24
   },
   {
     "gara_id": "GIRO_DEI_TRE_COMUNI_CLASSIFICA_GENERALE_2026-06-02_AL_M",
@@ -107623,7 +107623,7 @@
     "categoria": "Allievi",
     "genere": "M",
     "tipo": "regionale",
-    "moltiplicatore": 2,
+    "moltiplicatore": 3,
     "campionato_regionale": false,
     "campionato_italiano": false,
     "regione": "TOSCANA",
@@ -107637,7 +107637,7 @@
     "km": "141.000",
     "media": "42.981",
     "punti_base": 6,
-    "punti_effettivi": 12
+    "punti_effettivi": 18
   },
   {
     "gara_id": "GIRO_DEI_TRE_COMUNI_CLASSIFICA_GENERALE_2026-06-02_AL_M",
@@ -107646,7 +107646,7 @@
     "categoria": "Allievi",
     "genere": "M",
     "tipo": "regionale",
-    "moltiplicatore": 2,
+    "moltiplicatore": 3,
     "campionato_regionale": false,
     "campionato_italiano": false,
     "regione": "TOSCANA",
@@ -107660,7 +107660,7 @@
     "km": "141.000",
     "media": "42.981",
     "punti_base": 5,
-    "punti_effettivi": 10
+    "punti_effettivi": 15
   },
   {
     "gara_id": "GIRO_DEI_TRE_COMUNI_CLASSIFICA_GENERALE_2026-06-02_AL_M",
@@ -107669,7 +107669,7 @@
     "categoria": "Allievi",
     "genere": "M",
     "tipo": "regionale",
-    "moltiplicatore": 2,
+    "moltiplicatore": 3,
     "campionato_regionale": false,
     "campionato_italiano": false,
     "regione": "TOSCANA",
@@ -107683,7 +107683,7 @@
     "km": "141.000",
     "media": "42.981",
     "punti_base": 4,
-    "punti_effettivi": 8
+    "punti_effettivi": 12
   },
   {
     "gara_id": "GIRO_DEI_TRE_COMUNI_CLASSIFICA_GENERALE_2026-06-02_AL_M",
@@ -107692,7 +107692,7 @@
     "categoria": "Allievi",
     "genere": "M",
     "tipo": "regionale",
-    "moltiplicatore": 2,
+    "moltiplicatore": 3,
     "campionato_regionale": false,
     "campionato_italiano": false,
     "regione": "TOSCANA",
@@ -107706,7 +107706,7 @@
     "km": "141.000",
     "media": "42.981",
     "punti_base": 3,
-    "punti_effettivi": 6
+    "punti_effettivi": 9
   },
   {
     "gara_id": "GIRO_DEI_TRE_COMUNI_CLASSIFICA_GENERALE_2026-06-02_AL_M",
@@ -107715,7 +107715,7 @@
     "categoria": "Allievi",
     "genere": "M",
     "tipo": "regionale",
-    "moltiplicatore": 2,
+    "moltiplicatore": 3,
     "campionato_regionale": false,
     "campionato_italiano": false,
     "regione": "TOSCANA",
@@ -107729,7 +107729,7 @@
     "km": "141.000",
     "media": "42.981",
     "punti_base": 2,
-    "punti_effettivi": 4
+    "punti_effettivi": 6
   },
   {
     "gara_id": "GIRO_DEI_TRE_COMUNI_CLASSIFICA_GENERALE_2026-06-02_AL_M",
@@ -107738,7 +107738,7 @@
     "categoria": "Allievi",
     "genere": "M",
     "tipo": "regionale",
-    "moltiplicatore": 2,
+    "moltiplicatore": 3,
     "campionato_regionale": false,
     "campionato_italiano": false,
     "regione": "TOSCANA",
@@ -107752,7 +107752,7 @@
     "km": "141.000",
     "media": "42.981",
     "punti_base": 1,
-    "punti_effettivi": 2
+    "punti_effettivi": 3
   },
   {
     "gara_id": "70_TROFEO_ALCIDE_DE_GASPERI_2026-06-02_ELI_M",
@@ -115465,8 +115465,8 @@
     "data": "2026-06-01",
     "categoria": "Allievi",
     "genere": "M",
-    "tipo": "regionale",
-    "moltiplicatore": 1,
+    "tipo": "nazionale",
+    "moltiplicatore": 2,
     "campionato_regionale": false,
     "campionato_italiano": false,
     "regione": "TOSCANA",
@@ -115480,7 +115480,7 @@
     "km": "68.000",
     "media": "43.816",
     "punti_base": 15,
-    "punti_effettivi": 15
+    "punti_effettivi": 30
   },
   {
     "gara_id": "GIRO_DEI_TRE_COMUNI_SECONDA_TAPPA_2026-06-01_AL_M",
@@ -115488,8 +115488,8 @@
     "data": "2026-06-01",
     "categoria": "Allievi",
     "genere": "M",
-    "tipo": "regionale",
-    "moltiplicatore": 1,
+    "tipo": "nazionale",
+    "moltiplicatore": 2,
     "campionato_regionale": false,
     "campionato_italiano": false,
     "regione": "TOSCANA",
@@ -115503,7 +115503,7 @@
     "km": "68.000",
     "media": "43.816",
     "punti_base": 12,
-    "punti_effettivi": 12
+    "punti_effettivi": 24
   },
   {
     "gara_id": "GIRO_DEI_TRE_COMUNI_SECONDA_TAPPA_2026-06-01_AL_M",
@@ -115511,8 +115511,8 @@
     "data": "2026-06-01",
     "categoria": "Allievi",
     "genere": "M",
-    "tipo": "regionale",
-    "moltiplicatore": 1,
+    "tipo": "nazionale",
+    "moltiplicatore": 2,
     "campionato_regionale": false,
     "campionato_italiano": false,
     "regione": "TOSCANA",
@@ -115526,7 +115526,7 @@
     "km": "68.000",
     "media": "43.816",
     "punti_base": 10,
-    "punti_effettivi": 10
+    "punti_effettivi": 20
   },
   {
     "gara_id": "GIRO_DEI_TRE_COMUNI_SECONDA_TAPPA_2026-06-01_AL_M",
@@ -115534,8 +115534,8 @@
     "data": "2026-06-01",
     "categoria": "Allievi",
     "genere": "M",
-    "tipo": "regionale",
-    "moltiplicatore": 1,
+    "tipo": "nazionale",
+    "moltiplicatore": 2,
     "campionato_regionale": false,
     "campionato_italiano": false,
     "regione": "TOSCANA",
@@ -115549,7 +115549,7 @@
     "km": "68.000",
     "media": "43.816",
     "punti_base": 8,
-    "punti_effettivi": 8
+    "punti_effettivi": 16
   },
   {
     "gara_id": "GIRO_DEI_TRE_COMUNI_SECONDA_TAPPA_2026-06-01_AL_M",
@@ -115557,8 +115557,8 @@
     "data": "2026-06-01",
     "categoria": "Allievi",
     "genere": "M",
-    "tipo": "regionale",
-    "moltiplicatore": 1,
+    "tipo": "nazionale",
+    "moltiplicatore": 2,
     "campionato_regionale": false,
     "campionato_italiano": false,
     "regione": "TOSCANA",
@@ -115572,7 +115572,7 @@
     "km": "68.000",
     "media": "43.816",
     "punti_base": 6,
-    "punti_effettivi": 6
+    "punti_effettivi": 12
   },
   {
     "gara_id": "GIRO_DEI_TRE_COMUNI_SECONDA_TAPPA_2026-06-01_AL_M",
@@ -115580,8 +115580,8 @@
     "data": "2026-06-01",
     "categoria": "Allievi",
     "genere": "M",
-    "tipo": "regionale",
-    "moltiplicatore": 1,
+    "tipo": "nazionale",
+    "moltiplicatore": 2,
     "campionato_regionale": false,
     "campionato_italiano": false,
     "regione": "TOSCANA",
@@ -115595,7 +115595,7 @@
     "km": "68.000",
     "media": "43.816",
     "punti_base": 5,
-    "punti_effettivi": 5
+    "punti_effettivi": 10
   },
   {
     "gara_id": "GIRO_DEI_TRE_COMUNI_SECONDA_TAPPA_2026-06-01_AL_M",
@@ -115603,8 +115603,8 @@
     "data": "2026-06-01",
     "categoria": "Allievi",
     "genere": "M",
-    "tipo": "regionale",
-    "moltiplicatore": 1,
+    "tipo": "nazionale",
+    "moltiplicatore": 2,
     "campionato_regionale": false,
     "campionato_italiano": false,
     "regione": "TOSCANA",
@@ -115618,7 +115618,7 @@
     "km": "68.000",
     "media": "43.816",
     "punti_base": 4,
-    "punti_effettivi": 4
+    "punti_effettivi": 8
   },
   {
     "gara_id": "GIRO_DEI_TRE_COMUNI_SECONDA_TAPPA_2026-06-01_AL_M",
@@ -115626,8 +115626,8 @@
     "data": "2026-06-01",
     "categoria": "Allievi",
     "genere": "M",
-    "tipo": "regionale",
-    "moltiplicatore": 1,
+    "tipo": "nazionale",
+    "moltiplicatore": 2,
     "campionato_regionale": false,
     "campionato_italiano": false,
     "regione": "TOSCANA",
@@ -115641,7 +115641,7 @@
     "km": "68.000",
     "media": "43.816",
     "punti_base": 3,
-    "punti_effettivi": 3
+    "punti_effettivi": 6
   },
   {
     "gara_id": "GIRO_DEI_TRE_COMUNI_SECONDA_TAPPA_2026-06-01_AL_M",
@@ -115649,8 +115649,8 @@
     "data": "2026-06-01",
     "categoria": "Allievi",
     "genere": "M",
-    "tipo": "regionale",
-    "moltiplicatore": 1,
+    "tipo": "nazionale",
+    "moltiplicatore": 2,
     "campionato_regionale": false,
     "campionato_italiano": false,
     "regione": "TOSCANA",
@@ -115664,7 +115664,7 @@
     "km": "68.000",
     "media": "43.816",
     "punti_base": 2,
-    "punti_effettivi": 2
+    "punti_effettivi": 4
   },
   {
     "gara_id": "GIRO_DEI_TRE_COMUNI_SECONDA_TAPPA_2026-06-01_AL_M",
@@ -115672,8 +115672,8 @@
     "data": "2026-06-01",
     "categoria": "Allievi",
     "genere": "M",
-    "tipo": "regionale",
-    "moltiplicatore": 1,
+    "tipo": "nazionale",
+    "moltiplicatore": 2,
     "campionato_regionale": false,
     "campionato_italiano": false,
     "regione": "TOSCANA",
@@ -115687,7 +115687,7 @@
     "km": "68.000",
     "media": "43.816",
     "punti_base": 1,
-    "punti_effettivi": 1
+    "punti_effettivi": 2
   },
   {
     "gara_id": "GIRO_D_ITALIA_WOMEN_TERZA_TAPPA_2026-06-01_ELI_F",
@@ -119145,8 +119145,8 @@
     "data": "2026-05-31",
     "categoria": "Allievi",
     "genere": "M",
-    "tipo": "regionale",
-    "moltiplicatore": 1,
+    "tipo": "nazionale",
+    "moltiplicatore": 2,
     "campionato_regionale": false,
     "campionato_italiano": false,
     "regione": "TOSCANA",
@@ -119160,7 +119160,7 @@
     "km": "7.000",
     "media": "41.684",
     "punti_base": 15,
-    "punti_effettivi": 15
+    "punti_effettivi": 30
   },
   {
     "gara_id": "GIRO_DEI_TRE_COMUNI_PRIMA_TAPPA_CRONOMETRO_2026-05-31_AL_M",
@@ -119168,8 +119168,8 @@
     "data": "2026-05-31",
     "categoria": "Allievi",
     "genere": "M",
-    "tipo": "regionale",
-    "moltiplicatore": 1,
+    "tipo": "nazionale",
+    "moltiplicatore": 2,
     "campionato_regionale": false,
     "campionato_italiano": false,
     "regione": "TOSCANA",
@@ -119183,7 +119183,7 @@
     "km": "7.000",
     "media": "41.684",
     "punti_base": 12,
-    "punti_effettivi": 12
+    "punti_effettivi": 24
   },
   {
     "gara_id": "GIRO_DEI_TRE_COMUNI_PRIMA_TAPPA_CRONOMETRO_2026-05-31_AL_M",
@@ -119191,8 +119191,8 @@
     "data": "2026-05-31",
     "categoria": "Allievi",
     "genere": "M",
-    "tipo": "regionale",
-    "moltiplicatore": 1,
+    "tipo": "nazionale",
+    "moltiplicatore": 2,
     "campionato_regionale": false,
     "campionato_italiano": false,
     "regione": "TOSCANA",
@@ -119206,7 +119206,7 @@
     "km": "7.000",
     "media": "41.684",
     "punti_base": 10,
-    "punti_effettivi": 10
+    "punti_effettivi": 20
   },
   {
     "gara_id": "GIRO_DEI_TRE_COMUNI_PRIMA_TAPPA_CRONOMETRO_2026-05-31_AL_M",
@@ -119214,8 +119214,8 @@
     "data": "2026-05-31",
     "categoria": "Allievi",
     "genere": "M",
-    "tipo": "regionale",
-    "moltiplicatore": 1,
+    "tipo": "nazionale",
+    "moltiplicatore": 2,
     "campionato_regionale": false,
     "campionato_italiano": false,
     "regione": "TOSCANA",
@@ -119229,7 +119229,7 @@
     "km": "7.000",
     "media": "41.684",
     "punti_base": 8,
-    "punti_effettivi": 8
+    "punti_effettivi": 16
   },
   {
     "gara_id": "GIRO_DEI_TRE_COMUNI_PRIMA_TAPPA_CRONOMETRO_2026-05-31_AL_M",
@@ -119237,8 +119237,8 @@
     "data": "2026-05-31",
     "categoria": "Allievi",
     "genere": "M",
-    "tipo": "regionale",
-    "moltiplicatore": 1,
+    "tipo": "nazionale",
+    "moltiplicatore": 2,
     "campionato_regionale": false,
     "campionato_italiano": false,
     "regione": "TOSCANA",
@@ -119252,7 +119252,7 @@
     "km": "7.000",
     "media": "41.684",
     "punti_base": 6,
-    "punti_effettivi": 6
+    "punti_effettivi": 12
   },
   {
     "gara_id": "GIRO_DEI_TRE_COMUNI_PRIMA_TAPPA_CRONOMETRO_2026-05-31_AL_M",
@@ -119260,8 +119260,8 @@
     "data": "2026-05-31",
     "categoria": "Allievi",
     "genere": "M",
-    "tipo": "regionale",
-    "moltiplicatore": 1,
+    "tipo": "nazionale",
+    "moltiplicatore": 2,
     "campionato_regionale": false,
     "campionato_italiano": false,
     "regione": "TOSCANA",
@@ -119275,7 +119275,7 @@
     "km": "7.000",
     "media": "41.684",
     "punti_base": 5,
-    "punti_effettivi": 5
+    "punti_effettivi": 10
   },
   {
     "gara_id": "GIRO_DEI_TRE_COMUNI_PRIMA_TAPPA_CRONOMETRO_2026-05-31_AL_M",
@@ -119283,8 +119283,8 @@
     "data": "2026-05-31",
     "categoria": "Allievi",
     "genere": "M",
-    "tipo": "regionale",
-    "moltiplicatore": 1,
+    "tipo": "nazionale",
+    "moltiplicatore": 2,
     "campionato_regionale": false,
     "campionato_italiano": false,
     "regione": "TOSCANA",
@@ -119298,7 +119298,7 @@
     "km": "7.000",
     "media": "41.684",
     "punti_base": 4,
-    "punti_effettivi": 4
+    "punti_effettivi": 8
   },
   {
     "gara_id": "GIRO_DEI_TRE_COMUNI_PRIMA_TAPPA_CRONOMETRO_2026-05-31_AL_M",
@@ -119306,8 +119306,8 @@
     "data": "2026-05-31",
     "categoria": "Allievi",
     "genere": "M",
-    "tipo": "regionale",
-    "moltiplicatore": 1,
+    "tipo": "nazionale",
+    "moltiplicatore": 2,
     "campionato_regionale": false,
     "campionato_italiano": false,
     "regione": "TOSCANA",
@@ -119321,7 +119321,7 @@
     "km": "7.000",
     "media": "41.684",
     "punti_base": 3,
-    "punti_effettivi": 3
+    "punti_effettivi": 6
   },
   {
     "gara_id": "GIRO_DEI_TRE_COMUNI_PRIMA_TAPPA_CRONOMETRO_2026-05-31_AL_M",
@@ -119329,8 +119329,8 @@
     "data": "2026-05-31",
     "categoria": "Allievi",
     "genere": "M",
-    "tipo": "regionale",
-    "moltiplicatore": 1,
+    "tipo": "nazionale",
+    "moltiplicatore": 2,
     "campionato_regionale": false,
     "campionato_italiano": false,
     "regione": "TOSCANA",
@@ -119344,7 +119344,7 @@
     "km": "7.000",
     "media": "41.684",
     "punti_base": 2,
-    "punti_effettivi": 2
+    "punti_effettivi": 4
   },
   {
     "gara_id": "GIRO_DEI_TRE_COMUNI_PRIMA_TAPPA_CRONOMETRO_2026-05-31_AL_M",
@@ -119352,8 +119352,8 @@
     "data": "2026-05-31",
     "categoria": "Allievi",
     "genere": "M",
-    "tipo": "regionale",
-    "moltiplicatore": 1,
+    "tipo": "nazionale",
+    "moltiplicatore": 2,
     "campionato_regionale": false,
     "campionato_italiano": false,
     "regione": "TOSCANA",
@@ -119367,7 +119367,7 @@
     "km": "7.000",
     "media": "41.684",
     "punti_base": 1,
-    "punti_effettivi": 1
+    "punti_effettivi": 2
   },
   {
     "gara_id": "49_TROFEO_SAN_GIRIO_2026-05-31_AL_M",
@@ -161719,7 +161719,7 @@
     "categoria": "Juniores",
     "genere": "M",
     "tipo": "nazionale",
-    "moltiplicatore": 3,
+    "moltiplicatore": 4,
     "campionato_regionale": false,
     "campionato_italiano": false,
     "regione": "ABRUZZO",
@@ -161733,7 +161733,7 @@
     "km": "201.500",
     "media": "39.916",
     "punti_base": 15,
-    "punti_effettivi": 45
+    "punti_effettivi": 60
   },
   {
     "gara_id": "GIRO_D_ABRUZZO_JUNIORES_2026_CLASSIFICA_GENERALE_2026-05-03_JUN_M",
@@ -161742,7 +161742,7 @@
     "categoria": "Juniores",
     "genere": "M",
     "tipo": "nazionale",
-    "moltiplicatore": 3,
+    "moltiplicatore": 4,
     "campionato_regionale": false,
     "campionato_italiano": false,
     "regione": "ABRUZZO",
@@ -161756,7 +161756,7 @@
     "km": "201.500",
     "media": "39.916",
     "punti_base": 12,
-    "punti_effettivi": 36
+    "punti_effettivi": 48
   },
   {
     "gara_id": "GIRO_D_ABRUZZO_JUNIORES_2026_CLASSIFICA_GENERALE_2026-05-03_JUN_M",
@@ -161765,7 +161765,7 @@
     "categoria": "Juniores",
     "genere": "M",
     "tipo": "nazionale",
-    "moltiplicatore": 3,
+    "moltiplicatore": 4,
     "campionato_regionale": false,
     "campionato_italiano": false,
     "regione": "ABRUZZO",
@@ -161779,7 +161779,7 @@
     "km": "201.500",
     "media": "39.916",
     "punti_base": 10,
-    "punti_effettivi": 30
+    "punti_effettivi": 40
   },
   {
     "gara_id": "GIRO_D_ABRUZZO_JUNIORES_2026_CLASSIFICA_GENERALE_2026-05-03_JUN_M",
@@ -161788,7 +161788,7 @@
     "categoria": "Juniores",
     "genere": "M",
     "tipo": "nazionale",
-    "moltiplicatore": 3,
+    "moltiplicatore": 4,
     "campionato_regionale": false,
     "campionato_italiano": false,
     "regione": "ABRUZZO",
@@ -161802,7 +161802,7 @@
     "km": "201.500",
     "media": "39.916",
     "punti_base": 8,
-    "punti_effettivi": 24
+    "punti_effettivi": 32
   },
   {
     "gara_id": "GIRO_D_ABRUZZO_JUNIORES_2026_CLASSIFICA_GENERALE_2026-05-03_JUN_M",
@@ -161811,7 +161811,7 @@
     "categoria": "Juniores",
     "genere": "M",
     "tipo": "nazionale",
-    "moltiplicatore": 3,
+    "moltiplicatore": 4,
     "campionato_regionale": false,
     "campionato_italiano": false,
     "regione": "ABRUZZO",
@@ -161825,7 +161825,7 @@
     "km": "201.500",
     "media": "39.916",
     "punti_base": 6,
-    "punti_effettivi": 18
+    "punti_effettivi": 24
   },
   {
     "gara_id": "GIRO_D_ABRUZZO_JUNIORES_2026_CLASSIFICA_GENERALE_2026-05-03_JUN_M",
@@ -161834,7 +161834,7 @@
     "categoria": "Juniores",
     "genere": "M",
     "tipo": "nazionale",
-    "moltiplicatore": 3,
+    "moltiplicatore": 4,
     "campionato_regionale": false,
     "campionato_italiano": false,
     "regione": "ABRUZZO",
@@ -161848,7 +161848,7 @@
     "km": "201.500",
     "media": "39.916",
     "punti_base": 5,
-    "punti_effettivi": 15
+    "punti_effettivi": 20
   },
   {
     "gara_id": "GIRO_D_ABRUZZO_JUNIORES_2026_CLASSIFICA_GENERALE_2026-05-03_JUN_M",
@@ -161857,7 +161857,7 @@
     "categoria": "Juniores",
     "genere": "M",
     "tipo": "nazionale",
-    "moltiplicatore": 3,
+    "moltiplicatore": 4,
     "campionato_regionale": false,
     "campionato_italiano": false,
     "regione": "ABRUZZO",
@@ -161871,7 +161871,7 @@
     "km": "201.500",
     "media": "39.916",
     "punti_base": 4,
-    "punti_effettivi": 12
+    "punti_effettivi": 16
   },
   {
     "gara_id": "GIRO_D_ABRUZZO_JUNIORES_2026_CLASSIFICA_GENERALE_2026-05-03_JUN_M",
@@ -161880,7 +161880,7 @@
     "categoria": "Juniores",
     "genere": "M",
     "tipo": "nazionale",
-    "moltiplicatore": 3,
+    "moltiplicatore": 4,
     "campionato_regionale": false,
     "campionato_italiano": false,
     "regione": "ABRUZZO",
@@ -161894,7 +161894,7 @@
     "km": "201.500",
     "media": "39.916",
     "punti_base": 3,
-    "punti_effettivi": 9
+    "punti_effettivi": 12
   },
   {
     "gara_id": "GIRO_D_ABRUZZO_JUNIORES_2026_CLASSIFICA_GENERALE_2026-05-03_JUN_M",
@@ -161903,7 +161903,7 @@
     "categoria": "Juniores",
     "genere": "M",
     "tipo": "nazionale",
-    "moltiplicatore": 3,
+    "moltiplicatore": 4,
     "campionato_regionale": false,
     "campionato_italiano": false,
     "regione": "ABRUZZO",
@@ -161917,7 +161917,7 @@
     "km": "201.500",
     "media": "39.916",
     "punti_base": 2,
-    "punti_effettivi": 6
+    "punti_effettivi": 8
   },
   {
     "gara_id": "GIRO_D_ABRUZZO_JUNIORES_2026_CLASSIFICA_GENERALE_2026-05-03_JUN_M",
@@ -161926,7 +161926,7 @@
     "categoria": "Juniores",
     "genere": "M",
     "tipo": "nazionale",
-    "moltiplicatore": 3,
+    "moltiplicatore": 4,
     "campionato_regionale": false,
     "campionato_italiano": false,
     "regione": "ABRUZZO",
@@ -161940,7 +161940,7 @@
     "km": "201.500",
     "media": "39.916",
     "punti_base": 1,
-    "punti_effettivi": 3
+    "punti_effettivi": 4
   },
   {
     "gara_id": "12_MEMORIAL_DANIELE_TORTOLI_2026-05-03_ELI_M",
