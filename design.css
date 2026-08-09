@@ -3545,7 +3545,11 @@ div[style*="grid-template-columns: repeat(auto-fit"] {
 /* Sempre flex: funziona sia con solo foto, solo video, o entrambi */
 .gara-hero-media { display:flex; gap:2px; width:100%; overflow:hidden; border-radius:var(--r-lg); height:260px; margin-bottom:4px; }
 .gara-media-half { flex:1; overflow:hidden; position:relative; min-width:0; }
-.gara-media-photo img { width:100%; height:100%; object-fit:cover; object-position:center; display:block; transition:transform .3s; }
+/* object-position spostato verso l'alto (non 50/50): il riquadro è largo e
+   basso (260px) mentre la maggior parte delle foto di gara è verticale, con
+   il soggetto (volto/casco) nel terzo superiore — un ritaglio centrato
+   tagliava via la testa e mostrava solo bacino/gambe. */
+.gara-media-photo img { width:100%; height:100%; object-fit:cover; object-position:center 22%; display:block; transition:transform .3s; }
 .gara-media-photo:hover img { transform:scale(1.03); }
 .gara-photo-hint { position:absolute; bottom:0; left:0; right:0; padding:5px 8px; background:linear-gradient(transparent,rgba(0,0,0,.65)); font-size:0.65rem; color:rgba(255,255,255,.9); text-align:center; pointer-events:none; }
 .gara-media-video { cursor:pointer; background:var(--bg-elevated); }
