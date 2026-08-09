@@ -399,11 +399,11 @@ const DATA_DIR       = path.join(__dirname, '..', 'data');
 const SITE_URL       = 'https://italiacyclingstats.com';
 const SUPABASE_PUB   = 'https://aqqsstsbgpapzoxllosh.supabase.co/storage/v1/object/public';
 const DEFAULT_OG_IMG = `${SITE_URL}/assets/og-default.png`;
-// Bump ad ogni modifica alla generazione della grafica OG (buildGaraPodiumPanelSvg,
+// Bump ad ogni modifica alla generazione della grafica OG (buildGaraResultOverlaySvg,
 // _ogCropPosition, ecc.): Facebook cache i byte dell'immagine per URL separatamente
 // dai meta tag, e "Scrape Again" sul debugger a volte aggiorna solo i secondi —
 // un parametro di versione nell'URL costringe Facebook a trattarla come nuova.
-const OG_IMG_VERSION = 4;
+const OG_IMG_VERSION = 5;
 
 function readDataJson(file) {
   try { return JSON.parse(fs.readFileSync(path.join(DATA_DIR, file), 'utf8')); }
@@ -7681,105 +7681,84 @@ async function _photoToOgPng(filename) {
   } catch { return null; }
 }
 
-const _OG_PODIUM_AVATAR_D = 54;
-
-// Geometria delle righe del podio (max 3), condivisa tra l'SVG del pannello
-// e il posizionamento degli avatar compositati sopra (devono coincidere).
-function _ogPodiumRows(n) {
-  const top = 150, bottom = 630 - 50;
-  const availH = bottom - top;
-  const rH = n ? Math.min(Math.round(availH / n), Math.round(availH / 3)) : 0;
-  const listTop = top + Math.round((availH - rH * n) / 2);
-  return { rH, listTop };
-}
-
-// Pannello podio (primi 3) per la metà destra della card foto+risultati:
-// colonna stretta (600px), nome e team su due righe invece che affiancati
-// (come nella card a piena larghezza) per restare leggibili nello spazio
-// ridotto. showFaces lascia lo spazio per l'avatar circolare (compositato
-// separatamente da _photoSplitOgPng, l'SVG non può incorporare foto remote).
-function buildGaraPodiumPanelSvg({ catLabel, title, date, results = [], showFaces = false }) {
-  const W = 600, H = 630, pad = 34;
+// Card "risultati su foto intera" (stile indicato dall'utente, riferimento
+// una grafica del sito "domestique"): a differenza del vecchio pannello a
+// metà larghezza (buildGaraPodiumPanelSvg, sostituito da questa), la foto
+// riempie TUTTO il riquadro 1200x630 e i risultati sono sovrapposti in
+// basso su un degradé scuro — la foto resta protagonista, il testo è
+// leggibile solo dove serve. Fino a 5 posizioni (non solo il podio):
+// più contenuto reale nella stessa card, come nel riferimento.
+function buildGaraResultOverlaySvg({ catLabel, title, subtitle, results = [] }) {
+  const W = 1200, H = 630, pad = 56;
   const medal = ['#f5c400', '#dadada', '#cd7f32'];
-  const logo = _ogLogoDataUri();
   const titleStr = (title || '').toUpperCase();
-  const fsT = titleStr.length > 22 ? Math.max(20, Math.round(30 * 22 / titleStr.length)) : 30;
+  const fitTitle = (text, base, maxW) => {
+    const est = (text || '').length * base * 0.6;
+    return est > maxW ? Math.max(30, Math.floor(base * maxW / est)) : base;
+  };
+  const fsT = fitTitle(titleStr, 56, W - pad * 2);
 
-  const n = Math.min(results.length, 3);
-  const { rH, listTop } = _ogPodiumRows(n);
-  const textX = pad + 68 + (showFaces ? _OG_PODIUM_AVATAR_D + 14 : 0);
-  const availW = W - pad - textX;
-  // Il nome intero non va mai tagliato a metà: se non ci sta nello spazio
-  // disponibile (che si restringe quando c'è l'avatar) si rimpicciolisce il
-  // font, come già si fa per il titolo — stessa idea, applicata per riga.
-  function _fitSize(text, base, avail) {
-    const est = (text || '').length * base * 0.56;
-    return est > avail ? Math.max(12, Math.floor(base * avail / est)) : base;
-  }
+  const n = Math.min(results.length, 5);
+  const rowsTop = 372, rowsBottom = H - 66;
+  const rH = Math.round((rowsBottom - rowsTop) / n);
+  const nameX = pad + 62, teamX = 760, timeX = W - pad;
+  const fitRow = (text, base, avail) => {
+    const est = (text || '').length * base * 0.58;
+    return est > avail ? Math.max(13, Math.floor(base * avail / est)) : base;
+  };
 
-  const rowsHtml = results.slice(0, 3).map((r, i) => {
-    const ry = listTop + i * rH, mid = ry + rH / 2;
-    const name = `${r.cognome || ''} ${r.nome || ''}`.trim();
-    const team = r.team || '';
-    const nameSize = _fitSize(name, 21, availW);
-    const teamSize = _fitSize(team, 15, availW);
-    const isFirst = i === 0;
-    return `${isFirst ? `<rect x="${pad}" y="${ry + 4}" width="${W - pad * 2}" height="${rH - 8}" rx="8" fill="rgba(245,196,0,0.08)" stroke="rgba(245,196,0,0.35)"/>` : ''}
-    <rect x="${pad + 8}" y="${mid - 16}" width="46" height="32" rx="6" fill="${medal[i]}"/>
-    <text x="${pad + 31}" y="${mid + 7}" font-family="Arial,Helvetica,sans-serif" font-size="18" font-weight="800" fill="#1a1200" text-anchor="middle">${i + 1}°</text>
-    <text x="${textX}" y="${mid - 4}" font-family="Arial,Helvetica,sans-serif" font-size="${nameSize}" font-weight="700" fill="#f4f4f4">${_ogEsc(name)}</text>
-    <text x="${textX}" y="${mid + 20}" font-family="Arial,Helvetica,sans-serif" font-size="${teamSize}" fill="rgba(255,255,255,0.45)">${_ogEsc(team)}</text>`;
+  const rowsHtml = results.slice(0, n).map((r, i) => {
+    const ry = rowsTop + i * rH, mid = ry + rH / 2;
+    const isTeamResult = !r.atleta_id && (r.team || r.team_id);
+    const name = isTeamResult ? (r.team || r.team_id) : `${r.cognome || ''} ${r.nome || ''}`.trim();
+    const team = isTeamResult ? '' : (r.team || '');
+    const nameSize = fitRow(name, 24, teamX - nameX - 20);
+    const teamSize = fitRow(team, 17, timeX - 130 - teamX - 20);
+    const time = r.posizione === 1 ? (r.tempo || '') : (r.tempo ? `+${r.tempo.replace(/^\+/, '')}` : '');
+    return `
+    <line x1="${pad}" y1="${ry}" x2="${W - pad}" y2="${ry}" stroke="rgba(255,255,255,0.15)"/>
+    <rect x="${pad}" y="${mid - 17}" width="44" height="34" rx="6" fill="${i < 3 ? medal[i] : 'rgba(255,255,255,0.12)'}"/>
+    <text x="${pad + 22}" y="${mid + 7}" font-family="Arial,Helvetica,sans-serif" font-size="17" font-weight="800" fill="${i < 3 ? '#1a1200' : '#fff'}" text-anchor="middle">${String(r.posizione ?? i + 1).padStart(2, '0')}</text>
+    <text x="${nameX}" y="${mid + 8}" font-family="Arial,Helvetica,sans-serif" font-size="${nameSize}" font-weight="800" fill="#fff">${_ogEsc(name)}</text>
+    ${team ? `<text x="${teamX}" y="${mid + 7}" font-family="Arial,Helvetica,sans-serif" font-size="${teamSize}" font-weight="700" fill="rgba(255,255,255,0.65)">${_ogEsc(team)}</text>` : ''}
+    ${time ? `<text x="${timeX}" y="${mid + 7}" font-family="Arial,Helvetica,sans-serif" font-size="19" fill="rgba(255,255,255,0.85)" text-anchor="end">${_ogEsc(time)}</text>` : ''}`;
   }).join('');
 
+  const logo = _ogLogoDataUri();
+
   return `<svg width="${W}" height="${H}" xmlns="http://www.w3.org/2000/svg">
-  <defs><linearGradient id="pBg" x1="0" y1="0" x2="0" y2="1"><stop offset="0%" stop-color="#0c0e12"/><stop offset="100%" stop-color="#070809"/></linearGradient></defs>
-  <rect width="${W}" height="${H}" fill="url(#pBg)"/>
-  ${logo ? `<image href="${logo}" x="${pad}" y="22" width="100" height="33" preserveAspectRatio="xMidYMid meet"/>` : ''}
-  <text x="${W - pad}" y="40" font-family="Arial,Helvetica,sans-serif" font-size="16" font-weight="800" fill="#e8001d" text-anchor="end" letter-spacing="1">${_ogEsc((catLabel || '').toUpperCase())}</text>
-  <rect x="${pad}" y="70" width="${W - pad * 2}" height="1" fill="rgba(255,255,255,0.08)"/>
-  <text x="${pad}" y="112" font-family="Arial,Helvetica,sans-serif" font-size="${fsT}" font-weight="800" fill="#f4f4f4">${_ogEsc(titleStr.slice(0, 40))}</text>
-  ${date ? `<text x="${pad}" y="136" font-family="Arial,Helvetica,sans-serif" font-size="15" fill="rgba(255,255,255,0.4)">${_ogEsc(date)}</text>` : ''}
+  <defs>
+    <linearGradient id="ovg" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0%" stop-color="#000" stop-opacity="0"/>
+      <stop offset="38%" stop-color="#000" stop-opacity="0"/>
+      <stop offset="60%" stop-color="#000" stop-opacity="0.72"/>
+      <stop offset="100%" stop-color="#000" stop-opacity="0.94"/>
+    </linearGradient>
+  </defs>
+  <rect width="${W}" height="${H}" fill="url(#ovg)"/>
+  <text x="${pad}" y="248" font-family="Arial,Helvetica,sans-serif" font-size="16" font-weight="800" letter-spacing="2" fill="#e8001d">RISULTATI${catLabel ? ' · ' + _ogEsc((catLabel||'').toUpperCase()) : ''}</text>
+  <text x="${pad}" y="304" font-family="Arial,Helvetica,sans-serif" font-size="${fsT}" font-weight="800" fill="#fff">${_ogEsc(titleStr.slice(0, 48))}</text>
+  ${subtitle ? `<text x="${pad}" y="336" font-family="Arial,Helvetica,sans-serif" font-size="19" fill="rgba(255,255,255,0.55)">${_ogEsc(subtitle)}</text>` : ''}
   ${rowsHtml}
-  <text x="${W - pad}" y="${H - 22}" font-family="Arial,Helvetica,sans-serif" font-size="13" fill="rgba(255,255,255,0.3)" text-anchor="end">italiacyclingstats.com</text>
+  <line x1="${pad}" y1="${rowsBottom}" x2="${W - pad}" y2="${rowsBottom}" stroke="rgba(255,255,255,0.15)"/>
+  ${logo ? `<image href="${logo}" x="${pad}" y="${H - 46}" width="72" height="24" preserveAspectRatio="xMidYMid meet"/>` : ''}
+  <text x="${pad + (logo ? 84 : 0)}" y="${H - 28}" font-family="Arial,Helvetica,sans-serif" font-size="14" font-weight="700" fill="rgba(255,255,255,0.55)">italiacyclingstats.com</text>
 </svg>`;
 }
 
-// Prepara gli overlay avatar (compositable da sharp) per il podio: un
-// cerchio per riga (max 3), solo per le righe il cui atleta ha davvero una
-// foto profilo — le altre restano senza, il layout del testo è già stato
-// spostato per lasciare lo spazio in entrambi i casi.
-async function _ogPodiumAvatarOverlays(results, n) {
-  const { rH, listTop } = _ogPodiumRows(n);
-  const bufs = await Promise.all(results.slice(0, n).map(async (r) => {
-    if (!r.atleta_id) return null;
-    try {
-      const photo = await getEntityPhoto('atleta', r.atleta_id);
-      if (!photo) return null;
-      return await _ogCircleAvatar(photo, _OG_PODIUM_AVATAR_D);
-    } catch { return null; }
-  }));
-  return bufs.map((buf, i) => {
-    if (!buf) return null;
-    const mid = listTop + i * rH + rH / 2;
-    return { input: buf, left: 600 + 34 + 68, top: Math.round(mid - _OG_PODIUM_AVATAR_D / 2) };
-  }).filter(Boolean);
-}
-
-// Compone la foto (ritagliata a metà larghezza, 600x630) con il pannello
-// podio nell'altra metà — stessa strategia di ritaglio (_ogCropPosition)
-// usata per la card a foto intera — più eventuali avatar dei primi 3.
-async function _photoSplitOgPng(filename, panelSvg, avatarOverlays = []) {
+// Compone la foto a piena pagina (1200x630, ritaglio "cover") con l'overlay
+// testo sopra — stessa strategia di ritaglio (_ogCropPosition) del resto
+// delle card gara, ma senza dividere la foto a metà: rimane protagonista.
+async function _photoOverlayOgPng(filename, overlaySvg) {
   const raw = await _fetchRawImageBuffer(filename);
   if (!raw) return null;
   try {
     const sharp = require('sharp');
     const meta = await sharp(raw).metadata();
-    const photoBuf = await sharp(raw).resize(600, 630, { fit: 'cover', position: _ogCropPosition(meta) }).png().toBuffer();
-    const panelBuf = await sharp(Buffer.from(panelSvg)).png().toBuffer();
-    return await sharp({ create: { width: 1200, height: 630, channels: 3, background: '#0a0c10' } })
-      .composite([{ input: photoBuf, left: 0, top: 0 }, { input: panelBuf, left: 600, top: 0 }, ...avatarOverlays])
-      .jpeg({ quality: 85, mozjpeg: true }).toBuffer();
-  } catch (e) { console.error('[og-image] split card fallita:', e.message); return null; }
+    const photoBuf = await sharp(raw).resize(1200, 630, { fit: 'cover', position: _ogCropPosition(meta) }).toBuffer();
+    const overlayBuf = await sharp(Buffer.from(overlaySvg)).png().toBuffer();
+    return await sharp(photoBuf).composite([{ input: overlayBuf, left: 0, top: 0 }]).jpeg({ quality: 88, mozjpeg: true }).toBuffer();
+  } catch (e) { console.error('[og-image] overlay card fallita:', e.message); return null; }
 }
 
 // Ritaglia una foto in un cerchio (avatar), stesso trattamento della card
@@ -7822,21 +7801,15 @@ async function _ogCardWithAvatar(cardSvg, photoSource, { diameter = 150, cx = 12
   } catch { return buf; }
 }
 
-// Percorso "con foto" (foto gara + pannello podio con avatar), estratto in
-// una funzione a parte per poterlo mettere in gara contro un timeout in
-// _generateGaraOgBuffer — vedi commento lì. Ritorna il buffer PNG o null.
-async function _generateGaraPhotoBuffer(garaId, results, catLabel, title, dateShort) {
+// Percorso "con foto" (foto gara a piena pagina + risultati in overlay),
+// estratto in una funzione a parte per poterlo mettere in gara contro un
+// timeout in _generateGaraOgBuffer — vedi commento lì. Ritorna il buffer
+// JPEG o null.
+async function _generateGaraPhotoBuffer(garaId, results, catLabel, title, subtitle) {
   try {
-    // Volti nel podio per qualsiasi categoria, condizionati per singolo
-    // atleta: _ogPodiumAvatarOverlays include solo le righe che hanno
-    // davvero una foto (nessun placeholder per chi non ce l'ha), così
-    // funziona anche per atleti con foto assegnata a mano in categorie
-    // a bassa copertura (Juniores, giovanili).
-    const avatarOverlays = results.length ? await _ogPodiumAvatarOverlays(results, Math.min(results.length, 3)) : [];
-    const showFaces = avatarOverlays.length > 0;
-    const photoPanelSvg = results.length ? buildGaraPodiumPanelSvg({ catLabel, title, date: dateShort, results, showFaces }) : null;
-    const toImage = async (photoSource) => photoPanelSvg
-      ? (await _photoSplitOgPng(photoSource, photoPanelSvg, avatarOverlays)) || (await _photoToOgPng(photoSource))
+    const overlaySvg = results.length ? buildGaraResultOverlaySvg({ catLabel, title, subtitle, results }) : null;
+    const toImage = async (photoSource) => overlaySvg
+      ? (await _photoOverlayOgPng(photoSource, overlaySvg)) || (await _photoToOgPng(photoSource))
       : await _photoToOgPng(photoSource);
 
     const uploaded = await queries.getApprovedRacePhotos(garaId).catch(() => []);
@@ -7919,8 +7892,9 @@ async function _generateGaraOgBuffer(garaId) {
   // foto anche in casi legittimi, segnalato piu' volte dall'utente
   // (Bassano Monte Grappa: foto xpix.it verificata veloce da sola, quindi
   // il rallentamento viene dal fetch delle foto profilo dei 3 del podio).
+  const photoSubtitle = [dateShort, cal?.luogo || cal?.regione || ''].filter(Boolean).join(' · ');
   const photoBuf = await Promise.race([
-    _generateGaraPhotoBuffer(garaId, results, catLabel, title, dateShort),
+    _generateGaraPhotoBuffer(garaId, results, catLabel, title, photoSubtitle),
     new Promise(resolve => setTimeout(() => resolve(null), 8000)),
   ]);
   if (photoBuf) return photoBuf;
