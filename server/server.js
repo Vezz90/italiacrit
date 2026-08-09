@@ -1791,7 +1791,20 @@ app.post('/api/admin/race-photos/:id/reject', requireAdmin, async (req, res) => 
 app.patch('/api/admin/race-photos/:id', requireAdmin, async (req, res) => {
   try {
     const { caption, photographer, gara_id, atleta_ids } = req.body;
-    await queries.updateRacePhoto({ id: req.params.id, caption: caption || '', photographer: photographer || '' });
+    // Il pannello "tagga corridori" rapido invia solo atleta_ids (nessun
+    // campo caption/photographer nel body): aggiornare comunque quelle due
+    // colonne con "|| ''" le azzerava ad ogni tag, cancellando la
+    // didascalia esistente. Aggiorna caption/photographer solo se il body
+    // li include davvero, e in tal caso mantieni l'altro campo invariato
+    // se non è stato inviato.
+    if (caption !== undefined || photographer !== undefined) {
+      const photo = await queries.getRacePhotoById(req.params.id);
+      await queries.updateRacePhoto({
+        id: req.params.id,
+        caption:      caption      !== undefined ? caption      : (photo?.caption      || ''),
+        photographer: photographer !== undefined ? photographer : (photo?.photographer || ''),
+      });
+    }
     // Cambio annata/gara: aggiorna il gara_id della foto
     if (gara_id) await queries.updateRacePhotoGara(req.params.id, gara_id);
     // Tag corridori (l'admin può impostare la lista completa)
