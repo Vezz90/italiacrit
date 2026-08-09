@@ -205,7 +205,7 @@
     "p3": 1,
     "pout": 10,
     "pos": 13,
-    "trend": 3
+    "trend": 0
   },
   {
     "atleta_id": "SCOTTONI_ETTORE",
@@ -221,7 +221,23 @@
     "p3": 6,
     "pout": 4,
     "pos": 14,
-    "trend": -1
+    "trend": 0
+  },
+  {
+    "atleta_id": "SOLDARINI_LORENZO",
+    "cognome": "SOLDARINI",
+    "nome": "LORENZO",
+    "team_id": "POOL_CANTU_SOVICO_GB_TEAM",
+    "team_nome": "POOL CANTU' - SOVICO - GB TEAM",
+    "punti": 151,
+    "vittorie": 2,
+    "gare": 15,
+    "p1": 2,
+    "p2": 2,
+    "p3": 4,
+    "pout": 7,
+    "pos": 15,
+    "trend": 3
   },
   {
     "atleta_id": "MENEGHELLO_RICCARDO",
@@ -236,8 +252,24 @@
     "p2": 4,
     "p3": 2,
     "pout": 9,
-    "pos": 15,
+    "pos": 16,
     "trend": -1
+  },
+  {
+    "atleta_id": "SOLENNE_MANUEL",
+    "cognome": "SOLENNE",
+    "nome": "MANUEL",
+    "team_id": "MADONNA_DI_CAMPAGNA",
+    "team_nome": "MADONNA DI CAMPAGNA",
+    "punti": 147,
+    "vittorie": 6,
+    "gare": 15,
+    "p1": 6,
+    "p2": 1,
+    "p3": 1,
+    "pout": 7,
+    "pos": 17,
+    "trend": 3
   },
   {
     "atleta_id": "MANISCALCO_ELIA",
@@ -252,8 +284,8 @@
     "p2": 4,
     "p3": 3,
     "pout": 5,
-    "pos": 16,
-    "trend": -1
+    "pos": 18,
+    "trend": -2
   },
   {
     "atleta_id": "SDRUCCIOLI_DAVIDE",
@@ -268,24 +300,8 @@
     "p2": 4,
     "p3": 4,
     "pout": 6,
-    "pos": 17,
-    "trend": 0
-  },
-  {
-    "atleta_id": "SOLDARINI_LORENZO",
-    "cognome": "SOLDARINI",
-    "nome": "LORENZO",
-    "team_id": "POOL_CANTU_SOVICO_GB_TEAM",
-    "team_nome": "POOL CANTU' - SOVICO - GB TEAM",
-    "punti": 145,
-    "vittorie": 2,
-    "gare": 14,
-    "p1": 2,
-    "p2": 2,
-    "p3": 4,
-    "pout": 6,
-    "pos": 18,
-    "trend": 0
+    "pos": 19,
+    "trend": -2
   },
   {
     "atleta_id": "GABBRIELLESCHI_GIOELE",
@@ -300,24 +316,24 @@
     "p2": 1,
     "p3": 0,
     "pout": 11,
-    "pos": 19,
-    "trend": 0
+    "pos": 20,
+    "trend": -1
   },
   {
-    "atleta_id": "SOLENNE_MANUEL",
-    "cognome": "SOLENNE",
-    "nome": "MANUEL",
-    "team_id": "MADONNA_DI_CAMPAGNA",
-    "team_nome": "MADONNA DI CAMPAGNA",
+    "atleta_id": "RESCA_PIETRO",
+    "cognome": "RESCA",
+    "nome": "PIETRO",
+    "team_id": "S_C_ROMANESE_ASD",
+    "team_nome": "S.C. ROMANESE ASD",
     "punti": 137,
-    "vittorie": 6,
-    "gare": 14,
-    "p1": 6,
-    "p2": 1,
-    "p3": 0,
-    "pout": 7,
-    "pos": 20,
-    "trend": 0
+    "vittorie": 2,
+    "gare": 15,
+    "p1": 2,
+    "p2": 2,
+    "p3": 5,
+    "pout": 6,
+    "pos": 21,
+    "trend": 5
   },
   {
     "atleta_id": "PIERANGELINI_RICCARDO",
@@ -332,8 +348,8 @@
     "p2": 2,
     "p3": 2,
     "pout": 7,
-    "pos": 21,
-    "trend": 0
+    "pos": 22,
+    "trend": -1
   },
   {
     "atleta_id": "MARTI_GIUSEPPE",
@@ -348,8 +364,8 @@
     "p2": 2,
     "p3": 2,
     "pout": 11,
-    "pos": 22,
-    "trend": 0
+    "pos": 23,
+    "trend": -1
   },
   {
     "atleta_id": "FERRO_LUCA",
@@ -364,8 +380,8 @@
     "p2": 3,
     "p3": 4,
     "pout": 9,
-    "pos": 23,
-    "trend": 0
+    "pos": 24,
+    "trend": -1
   },
   {
     "atleta_id": "MARCONI_SIMONE",
@@ -380,8 +396,24 @@
     "p2": 4,
     "p3": 1,
     "pout": 7,
-    "pos": 24,
-    "trend": 0
+    "pos": 25,
+    "trend": -1
+  },
+  {
+    "atleta_id": "TETOLDINI_ANDREA",
+    "cognome": "TETOLDINI",
+    "nome": "ANDREA",
+    "team_id": "ALBA_OROBIA_BIASSONO",
+    "team_nome": "ALBA OROBIA - BIASSONO",
+    "punti": 126,
+    "vittorie": 2,
+    "gare": 13,
+    "p1": 2,
+    "p2": 2,
+    "p3": 2,
+    "pout": 7,
+    "pos": 26,
+    "trend": 8
   },
   {
     "atleta_id": "MORI_ANDREA",
@@ -396,24 +428,8 @@
     "p2": 2,
     "p3": 2,
     "pout": 9,
-    "pos": 25,
-    "trend": 0
-  },
-  {
-    "atleta_id": "RESCA_PIETRO",
-    "cognome": "RESCA",
-    "nome": "PIETRO",
-    "team_id": "S_C_ROMANESE_ASD",
-    "team_nome": "S.C. ROMANESE ASD",
-    "punti": 125,
-    "vittorie": 2,
-    "gare": 14,
-    "p1": 2,
-    "p2": 1,
-    "p3": 5,
-    "pout": 6,
-    "pos": 26,
-    "trend": 0
+    "pos": 27,
+    "trend": -2
   },
   {
     "atleta_id": "ASTARA_NICCOLO",
@@ -428,8 +444,8 @@
     "p2": 3,
     "p3": 2,
     "pout": 7,
-    "pos": 27,
-    "trend": 0
+    "pos": 28,
+    "trend": -1
   },
   {
     "atleta_id": "GUALTIERI_MATTEO_JACOPO",
@@ -444,8 +460,8 @@
     "p2": 3,
     "p3": 0,
     "pout": 4,
-    "pos": 28,
-    "trend": 0
+    "pos": 29,
+    "trend": -1
   },
   {
     "atleta_id": "MANFREDI_LEONARDO",
@@ -460,8 +476,8 @@
     "p2": 1,
     "p3": 1,
     "pout": 5,
-    "pos": 29,
-    "trend": 0
+    "pos": 30,
+    "trend": -1
   },
   {
     "atleta_id": "MUNTEANU_DAVID_ALEXANDRU",
@@ -476,8 +492,24 @@
     "p2": 2,
     "p3": 2,
     "pout": 2,
-    "pos": 30,
-    "trend": 0
+    "pos": 31,
+    "trend": -1
+  },
+  {
+    "atleta_id": "IAZZI_LORENZO",
+    "cognome": "IAZZI",
+    "nome": "LORENZO",
+    "team_id": "MADIGNANESE_CICLISMO_A_S_D",
+    "team_nome": "MADIGNANESE CICLISMO A.S.D",
+    "punti": 120,
+    "vittorie": 1,
+    "gare": 18,
+    "p1": 1,
+    "p2": 0,
+    "p3": 4,
+    "pout": 13,
+    "pos": 32,
+    "trend": 3
   },
   {
     "atleta_id": "LEO_GABRIELE",
@@ -492,8 +524,8 @@
     "p2": 3,
     "p3": 1,
     "pout": 6,
-    "pos": 31,
-    "trend": 0
+    "pos": 33,
+    "trend": -2
   },
   {
     "atleta_id": "ROMAN_RICCARDO",
@@ -508,8 +540,8 @@
     "p2": 1,
     "p3": 4,
     "pout": 6,
-    "pos": 32,
-    "trend": 0
+    "pos": 34,
+    "trend": -2
   },
   {
     "atleta_id": "SCAPPINI_LAERTE",
@@ -524,40 +556,8 @@
     "p2": 3,
     "p3": 1,
     "pout": 8,
-    "pos": 33,
-    "trend": 0
-  },
-  {
-    "atleta_id": "TETOLDINI_ANDREA",
-    "cognome": "TETOLDINI",
-    "nome": "ANDREA",
-    "team_id": "ALBA_OROBIA_BIASSONO",
-    "team_nome": "ALBA OROBIA - BIASSONO",
-    "punti": 118,
-    "vittorie": 2,
-    "gare": 12,
-    "p1": 2,
-    "p2": 2,
-    "p3": 2,
-    "pout": 6,
-    "pos": 34,
-    "trend": 0
-  },
-  {
-    "atleta_id": "IAZZI_LORENZO",
-    "cognome": "IAZZI",
-    "nome": "LORENZO",
-    "team_id": "MADIGNANESE_CICLISMO_A_S_D",
-    "team_nome": "MADIGNANESE CICLISMO A.S.D",
-    "punti": 118,
-    "vittorie": 1,
-    "gare": 17,
-    "p1": 1,
-    "p2": 0,
-    "p3": 4,
-    "pout": 12,
     "pos": 35,
-    "trend": 0
+    "trend": -2
   },
   {
     "atleta_id": "OSADCHYI_OLEKSANDR",
@@ -653,7 +653,7 @@
     "p3": 2,
     "pout": 2,
     "pos": 41,
-    "trend": 8
+    "trend": 0
   },
   {
     "atleta_id": "CASSIBBA_LORENZO",
@@ -669,7 +669,23 @@
     "p3": 2,
     "pout": 6,
     "pos": 42,
-    "trend": -1
+    "trend": 0
+  },
+  {
+    "atleta_id": "VALENTI_PIETRO",
+    "cognome": "VALENTI",
+    "nome": "PIETRO",
+    "team_id": "CICLISTICA_DRO",
+    "team_nome": "CICLISTICA DRO",
+    "punti": 104,
+    "vittorie": 3,
+    "gare": 14,
+    "p1": 3,
+    "p2": 2,
+    "p3": 1,
+    "pout": 8,
+    "pos": 43,
+    "trend": 13
   },
   {
     "atleta_id": "GIRALDI_DAVIDE",
@@ -684,7 +700,7 @@
     "p2": 2,
     "p3": 1,
     "pout": 12,
-    "pos": 43,
+    "pos": 44,
     "trend": -1
   },
   {
@@ -700,8 +716,8 @@
     "p2": 2,
     "p3": 1,
     "pout": 12,
-    "pos": 44,
-    "trend": 7
+    "pos": 45,
+    "trend": -1
   },
   {
     "atleta_id": "CASALICCHIO_NICOLO",
@@ -716,8 +732,8 @@
     "p2": 2,
     "p3": 0,
     "pout": 12,
-    "pos": 45,
-    "trend": -2
+    "pos": 46,
+    "trend": -1
   },
   {
     "atleta_id": "MONTESIN_GABRIELE",
@@ -732,8 +748,8 @@
     "p2": 3,
     "p3": 1,
     "pout": 8,
-    "pos": 46,
-    "trend": -2
+    "pos": 47,
+    "trend": -1
   },
   {
     "atleta_id": "MAGGIONI_NICOLO",
@@ -748,8 +764,8 @@
     "p2": 1,
     "p3": 1,
     "pout": 12,
-    "pos": 47,
-    "trend": -2
+    "pos": 48,
+    "trend": -1
   },
   {
     "atleta_id": "OCCHIPINTI_FEDERICO",
@@ -764,8 +780,8 @@
     "p2": 4,
     "p3": 0,
     "pout": 2,
-    "pos": 48,
-    "trend": -2
+    "pos": 49,
+    "trend": -1
   },
   {
     "atleta_id": "D_ANDREA_RICCARDO",
@@ -780,8 +796,8 @@
     "p2": 2,
     "p3": 3,
     "pout": 6,
-    "pos": 49,
-    "trend": -2
+    "pos": 50,
+    "trend": -1
   },
   {
     "atleta_id": "OSTINELLI_MATTIA",
@@ -796,8 +812,8 @@
     "p2": 1,
     "p3": 2,
     "pout": 10,
-    "pos": 50,
-    "trend": -2
+    "pos": 51,
+    "trend": -1
   },
   {
     "atleta_id": "GREGORI_SIMONE",
@@ -812,7 +828,7 @@
     "p2": 4,
     "p3": 1,
     "pout": 4,
-    "pos": 51,
+    "pos": 52,
     "trend": -1
   },
   {
@@ -828,8 +844,8 @@
     "p2": 1,
     "p3": 2,
     "pout": 11,
-    "pos": 52,
-    "trend": 0
+    "pos": 53,
+    "trend": -1
   },
   {
     "atleta_id": "SEGURA_MEDINA_IVAN",
@@ -844,8 +860,8 @@
     "p2": 2,
     "p3": 1,
     "pout": 7,
-    "pos": 53,
-    "trend": 0
+    "pos": 54,
+    "trend": -1
   },
   {
     "atleta_id": "SPADA_MATTEO",
@@ -860,8 +876,8 @@
     "p2": 2,
     "p3": 2,
     "pout": 10,
-    "pos": 54,
-    "trend": 0
+    "pos": 55,
+    "trend": -1
   },
   {
     "atleta_id": "ATZEI_ANTONIO",
@@ -876,24 +892,8 @@
     "p2": 2,
     "p3": 2,
     "pout": 1,
-    "pos": 55,
-    "trend": 0
-  },
-  {
-    "atleta_id": "VALENTI_PIETRO",
-    "cognome": "VALENTI",
-    "nome": "PIETRO",
-    "team_id": "CICLISTICA_DRO",
-    "team_nome": "CICLISTICA DRO",
-    "punti": 89,
-    "vittorie": 2,
-    "gare": 13,
-    "p1": 2,
-    "p2": 2,
-    "p3": 1,
-    "pout": 8,
     "pos": 56,
-    "trend": 0
+    "trend": -1
   },
   {
     "atleta_id": "BACCINI_LUCIO",
@@ -960,6 +960,22 @@
     "trend": 0
   },
   {
+    "atleta_id": "MAGLIETTI_NICOLO",
+    "cognome": "MAGLIETTI",
+    "nome": "NICOLO'",
+    "team_id": "I_CINGHIALI_EVO",
+    "team_nome": "I CINGHIALI EVO",
+    "punti": 85,
+    "vittorie": 1,
+    "gare": 10,
+    "p1": 1,
+    "p2": 1,
+    "p3": 2,
+    "pout": 6,
+    "pos": 61,
+    "trend": 2
+  },
+  {
     "atleta_id": "RONDA_DANIELE",
     "cognome": "RONDA",
     "nome": "DANIELE",
@@ -972,8 +988,8 @@
     "p2": 1,
     "p3": 1,
     "pout": 6,
-    "pos": 61,
-    "trend": 0
+    "pos": 62,
+    "trend": -1
   },
   {
     "atleta_id": "CARLIN_GIACOMO",
@@ -988,24 +1004,8 @@
     "p2": 1,
     "p3": 1,
     "pout": 9,
-    "pos": 62,
-    "trend": 0
-  },
-  {
-    "atleta_id": "MAGLIETTI_NICOLO",
-    "cognome": "MAGLIETTI",
-    "nome": "NICOLO'",
-    "team_id": "I_CINGHIALI_EVO",
-    "team_nome": "I CINGHIALI EVO",
-    "punti": 82,
-    "vittorie": 1,
-    "gare": 9,
-    "p1": 1,
-    "p2": 1,
-    "p3": 2,
-    "pout": 5,
     "pos": 63,
-    "trend": 0
+    "trend": -1
   },
   {
     "atleta_id": "VALDOVINOS_BORBON_CARLOS_OMAR",
@@ -1037,7 +1037,7 @@
     "p3": 0,
     "pout": 7,
     "pos": 65,
-    "trend": 3
+    "trend": 0
   },
   {
     "atleta_id": "ALVAREZ_GONZALEZ_BRAULIO_ELEAZAR",
@@ -1053,7 +1053,7 @@
     "p3": 1,
     "pout": 8,
     "pos": 66,
-    "trend": -1
+    "trend": 0
   },
   {
     "atleta_id": "PISTIS_GIACOMO_ISIDORO",
@@ -1069,7 +1069,7 @@
     "p3": 2,
     "pout": 6,
     "pos": 67,
-    "trend": -1
+    "trend": 0
   },
   {
     "atleta_id": "DONEDDU_LORENZO",
@@ -1085,7 +1085,7 @@
     "p3": 2,
     "pout": 7,
     "pos": 68,
-    "trend": -1
+    "trend": 0
   },
   {
     "atleta_id": "TAVINO_LORENZO",
@@ -1213,7 +1213,7 @@
     "p3": 2,
     "pout": 10,
     "pos": 76,
-    "trend": 2
+    "trend": 0
   },
   {
     "atleta_id": "CARRER_OSCAR",
@@ -1229,7 +1229,7 @@
     "p3": 1,
     "pout": 3,
     "pos": 77,
-    "trend": -1
+    "trend": 0
   },
   {
     "atleta_id": "LIPPOLIS_ANTONIO",
@@ -1245,7 +1245,7 @@
     "p3": 1,
     "pout": 3,
     "pos": 78,
-    "trend": -1
+    "trend": 0
   },
   {
     "atleta_id": "IACOPI_NICCOLO",
@@ -1517,7 +1517,7 @@
     "p3": 0,
     "pout": 7,
     "pos": 95,
-    "trend": 3
+    "trend": 0
   },
   {
     "atleta_id": "CAPPEDDU_DIEGO",
@@ -1533,7 +1533,7 @@
     "p3": 0,
     "pout": 8,
     "pos": 96,
-    "trend": -1
+    "trend": 0
   },
   {
     "atleta_id": "DOSSI_LEONARDO",
@@ -1549,7 +1549,7 @@
     "p3": 2,
     "pout": 7,
     "pos": 97,
-    "trend": -1
+    "trend": 0
   },
   {
     "atleta_id": "PIRAS_EMANUELE",
@@ -1565,7 +1565,7 @@
     "p3": 2,
     "pout": 4,
     "pos": 98,
-    "trend": -1
+    "trend": 0
   },
   {
     "atleta_id": "DI_LEO_FABIO",
@@ -1789,7 +1789,7 @@
     "p3": 1,
     "pout": 7,
     "pos": 112,
-    "trend": 3
+    "trend": 0
   },
   {
     "atleta_id": "PROBERT_GONZALES_PAUL",
@@ -1805,7 +1805,7 @@
     "p3": 0,
     "pout": 6,
     "pos": 113,
-    "trend": -1
+    "trend": 0
   },
   {
     "atleta_id": "PATRUNO_EMANUELE_MATTEO",
@@ -1821,7 +1821,7 @@
     "p3": 1,
     "pout": 4,
     "pos": 114,
-    "trend": -1
+    "trend": 0
   },
   {
     "atleta_id": "GIONFRIDDO_GABRIELE",
@@ -1837,7 +1837,7 @@
     "p3": 1,
     "pout": 7,
     "pos": 115,
-    "trend": -1
+    "trend": 0
   },
   {
     "atleta_id": "PICCOLO_MATTEO",
@@ -1917,7 +1917,7 @@
     "p3": 0,
     "pout": 6,
     "pos": 120,
-    "trend": 23
+    "trend": 0
   },
   {
     "atleta_id": "MUNAFO_FELICE",
@@ -1933,7 +1933,7 @@
     "p3": 0,
     "pout": 6,
     "pos": 121,
-    "trend": -1
+    "trend": 0
   },
   {
     "atleta_id": "CASULA_MICHELE",
@@ -1949,7 +1949,7 @@
     "p3": 1,
     "pout": 4,
     "pos": 122,
-    "trend": -1
+    "trend": 0
   },
   {
     "atleta_id": "PREVISDOMINI_MARCO",
@@ -1965,7 +1965,7 @@
     "p3": 0,
     "pout": 5,
     "pos": 123,
-    "trend": -1
+    "trend": 0
   },
   {
     "atleta_id": "MARINI_TOMMASO",
@@ -1981,7 +1981,7 @@
     "p3": 1,
     "pout": 5,
     "pos": 124,
-    "trend": -1
+    "trend": 0
   },
   {
     "atleta_id": "DAL_MOLIN_SAMUEL",
@@ -1997,7 +1997,7 @@
     "p3": 1,
     "pout": 3,
     "pos": 125,
-    "trend": -1
+    "trend": 0
   },
   {
     "atleta_id": "TANCHEV_VIKTOR",
@@ -2013,7 +2013,7 @@
     "p3": 0,
     "pout": 3,
     "pos": 126,
-    "trend": -1
+    "trend": 0
   },
   {
     "atleta_id": "APRILE_MICHELE",
@@ -2029,7 +2029,7 @@
     "p3": 2,
     "pout": 6,
     "pos": 127,
-    "trend": -1
+    "trend": 0
   },
   {
     "atleta_id": "GHIOTTO_MARCO",
@@ -2045,7 +2045,7 @@
     "p3": 2,
     "pout": 6,
     "pos": 128,
-    "trend": -1
+    "trend": 0
   },
   {
     "atleta_id": "SPADA_EDOARDO_SEBASTIEN",
@@ -2061,7 +2061,7 @@
     "p3": 0,
     "pout": 5,
     "pos": 129,
-    "trend": -1
+    "trend": 0
   },
   {
     "atleta_id": "COVI_FRANCESCO",
@@ -2077,7 +2077,7 @@
     "p3": 1,
     "pout": 4,
     "pos": 130,
-    "trend": -1
+    "trend": 0
   },
   {
     "atleta_id": "DONANZAN_GIOVANNI",
@@ -2093,7 +2093,7 @@
     "p3": 1,
     "pout": 5,
     "pos": 131,
-    "trend": 37
+    "trend": 0
   },
   {
     "atleta_id": "CARELLI_ANDREA",
@@ -2109,7 +2109,7 @@
     "p3": 0,
     "pout": 9,
     "pos": 132,
-    "trend": -2
+    "trend": 0
   },
   {
     "atleta_id": "LEONETTI_LEONARDO",
@@ -2125,7 +2125,7 @@
     "p3": 0,
     "pout": 8,
     "pos": 133,
-    "trend": -2
+    "trend": 0
   },
   {
     "atleta_id": "IASCI_RICCARDO",
@@ -2141,7 +2141,7 @@
     "p3": 0,
     "pout": 9,
     "pos": 134,
-    "trend": -2
+    "trend": 0
   },
   {
     "atleta_id": "DANIELE_MATTIA",
@@ -2157,7 +2157,7 @@
     "p3": 0,
     "pout": 4,
     "pos": 135,
-    "trend": -2
+    "trend": 0
   },
   {
     "atleta_id": "ZORCO_MATTIA",
@@ -2173,7 +2173,7 @@
     "p3": 0,
     "pout": 5,
     "pos": 136,
-    "trend": -2
+    "trend": 0
   },
   {
     "atleta_id": "TASSINARI_TOMMASO",
@@ -2189,7 +2189,7 @@
     "p3": 0,
     "pout": 7,
     "pos": 137,
-    "trend": -2
+    "trend": 0
   },
   {
     "atleta_id": "MANNA_MATTEO",
@@ -2205,7 +2205,7 @@
     "p3": 1,
     "pout": 4,
     "pos": 138,
-    "trend": -2
+    "trend": 0
   },
   {
     "atleta_id": "CARUSO_NICOLO",
@@ -2221,7 +2221,7 @@
     "p3": 0,
     "pout": 4,
     "pos": 139,
-    "trend": -2
+    "trend": 0
   },
   {
     "atleta_id": "ALTAMURA_LUIGI",
@@ -2237,7 +2237,7 @@
     "p3": 1,
     "pout": 4,
     "pos": 140,
-    "trend": -2
+    "trend": 0
   },
   {
     "atleta_id": "VENANZONI_NICOLO",
@@ -2253,7 +2253,7 @@
     "p3": 0,
     "pout": 8,
     "pos": 141,
-    "trend": -2
+    "trend": 0
   },
   {
     "atleta_id": "RUGGERI_CORRADO",
@@ -2269,7 +2269,7 @@
     "p3": 1,
     "pout": 7,
     "pos": 142,
-    "trend": -2
+    "trend": 0
   },
   {
     "atleta_id": "GANZAROLI_FEDERICO",
@@ -2285,7 +2285,7 @@
     "p3": 1,
     "pout": 5,
     "pos": 143,
-    "trend": -2
+    "trend": 0
   },
   {
     "atleta_id": "FACCIO_DANIELE",
@@ -2301,7 +2301,7 @@
     "p3": 0,
     "pout": 1,
     "pos": 144,
-    "trend": -2
+    "trend": 0
   },
   {
     "atleta_id": "CARCANGIU_DIEGO",
@@ -2317,7 +2317,7 @@
     "p3": 1,
     "pout": 4,
     "pos": 145,
-    "trend": -1
+    "trend": 0
   },
   {
     "atleta_id": "BRAMATI_ALEX_REY",
@@ -2333,7 +2333,7 @@
     "p3": 0,
     "pout": 5,
     "pos": 146,
-    "trend": -1
+    "trend": 0
   },
   {
     "atleta_id": "FLORIAN_GIOVANNI",
@@ -2349,7 +2349,7 @@
     "p3": 0,
     "pout": 4,
     "pos": 147,
-    "trend": -1
+    "trend": 0
   },
   {
     "atleta_id": "FESTUCCIA_MATTIA",
@@ -2365,7 +2365,7 @@
     "p3": 0,
     "pout": 5,
     "pos": 148,
-    "trend": -1
+    "trend": 0
   },
   {
     "atleta_id": "GIORGI_EMANUELE",
@@ -2381,7 +2381,7 @@
     "p3": 0,
     "pout": 7,
     "pos": 149,
-    "trend": -1
+    "trend": 0
   },
   {
     "atleta_id": "GUASTINI_SIMONE",
@@ -2397,7 +2397,7 @@
     "p3": 1,
     "pout": 3,
     "pos": 150,
-    "trend": -1
+    "trend": 0
   },
   {
     "atleta_id": "ALBA_GIOVANNI_MARCO",
@@ -2413,7 +2413,7 @@
     "p3": 1,
     "pout": 7,
     "pos": 151,
-    "trend": -1
+    "trend": 0
   },
   {
     "atleta_id": "TOGNI_CRISTIANO",
@@ -2429,7 +2429,7 @@
     "p3": 0,
     "pout": 9,
     "pos": 152,
-    "trend": -1
+    "trend": 0
   },
   {
     "atleta_id": "DI_ROSA_CHRISTIAN",
@@ -2445,7 +2445,7 @@
     "p3": 1,
     "pout": 7,
     "pos": 153,
-    "trend": -1
+    "trend": 0
   },
   {
     "atleta_id": "CIANCETTA_ALBERTO",
@@ -2461,7 +2461,7 @@
     "p3": 1,
     "pout": 6,
     "pos": 154,
-    "trend": -1
+    "trend": 0
   },
   {
     "atleta_id": "CAPPELLI_TOMMASO",
@@ -2477,7 +2477,7 @@
     "p3": 1,
     "pout": 5,
     "pos": 155,
-    "trend": -1
+    "trend": 0
   },
   {
     "atleta_id": "FIORETTI_MATTIA",
@@ -2493,7 +2493,7 @@
     "p3": 1,
     "pout": 6,
     "pos": 156,
-    "trend": -1
+    "trend": 0
   },
   {
     "atleta_id": "CAMICIOTTOLI_FILIPPO",
@@ -2509,7 +2509,7 @@
     "p3": 0,
     "pout": 6,
     "pos": 157,
-    "trend": -1
+    "trend": 0
   },
   {
     "atleta_id": "GENTILI_ALBERTO",
@@ -2525,7 +2525,7 @@
     "p3": 0,
     "pout": 5,
     "pos": 158,
-    "trend": -1
+    "trend": 0
   },
   {
     "atleta_id": "CARLET_ALBERTO",
@@ -2541,7 +2541,7 @@
     "p3": 0,
     "pout": 7,
     "pos": 159,
-    "trend": -1
+    "trend": 0
   },
   {
     "atleta_id": "WARTLSTEINER_GEORG",
@@ -2557,7 +2557,7 @@
     "p3": 2,
     "pout": 0,
     "pos": 160,
-    "trend": -1
+    "trend": 0
   },
   {
     "atleta_id": "SPANO_EDOARDO",
@@ -2573,7 +2573,7 @@
     "p3": 0,
     "pout": 4,
     "pos": 161,
-    "trend": -1
+    "trend": 0
   },
   {
     "atleta_id": "PARTENGO_CARLO",
@@ -2589,7 +2589,7 @@
     "p3": 0,
     "pout": 8,
     "pos": 162,
-    "trend": -1
+    "trend": 0
   },
   {
     "atleta_id": "RAVASI_LORENZO",
@@ -2605,7 +2605,7 @@
     "p3": 0,
     "pout": 1,
     "pos": 163,
-    "trend": -1
+    "trend": 0
   },
   {
     "atleta_id": "MONTAGNER_LUCA",
@@ -2621,7 +2621,7 @@
     "p3": 1,
     "pout": 5,
     "pos": 164,
-    "trend": -1
+    "trend": 0
   },
   {
     "atleta_id": "PONTI_GABRIELE",
@@ -2637,7 +2637,7 @@
     "p3": 1,
     "pout": 6,
     "pos": 165,
-    "trend": -1
+    "trend": 0
   },
   {
     "atleta_id": "CHIARELLO_NICOLO",
@@ -2653,7 +2653,7 @@
     "p3": 1,
     "pout": 3,
     "pos": 166,
-    "trend": -1
+    "trend": 0
   },
   {
     "atleta_id": "LANTERMINO_TOMAS",
@@ -2669,7 +2669,7 @@
     "p3": 0,
     "pout": 5,
     "pos": 167,
-    "trend": -1
+    "trend": 0
   },
   {
     "atleta_id": "HIERSCHLAGER_MARC",
@@ -2685,7 +2685,7 @@
     "p3": 0,
     "pout": 3,
     "pos": 168,
-    "trend": -1
+    "trend": 0
   },
   {
     "atleta_id": "SENESI_ALESSANDRO",
@@ -3104,6 +3104,22 @@
     "trend": 0
   },
   {
+    "atleta_id": "TREMBLAN_RAPHAEL",
+    "cognome": "TREMBLAN",
+    "nome": "RAPHAEL",
+    "team_id": "G_S_LUPI_VALLE_D_AOSTA",
+    "team_nome": "G.S. LUPI VALLE D'AOSTA",
+    "punti": 24,
+    "vittorie": 0,
+    "gare": 6,
+    "p1": 0,
+    "p2": 0,
+    "p3": 1,
+    "pout": 5,
+    "pos": 195,
+    "trend": 9
+  },
+  {
     "atleta_id": "BELLUCCI_GIULIO",
     "cognome": "BELLUCCI",
     "nome": "GIULIO",
@@ -3116,8 +3132,8 @@
     "p2": 0,
     "p3": 1,
     "pout": 2,
-    "pos": 195,
-    "trend": 0
+    "pos": 196,
+    "trend": -1
   },
   {
     "atleta_id": "POSSAMAI_CAMARA_FERNANDE_RAFAEL_ALEXANDRE",
@@ -3132,8 +3148,8 @@
     "p2": 0,
     "p3": 2,
     "pout": 2,
-    "pos": 196,
-    "trend": 0
+    "pos": 197,
+    "trend": -1
   },
   {
     "atleta_id": "NADIN_RICCARDO",
@@ -3148,8 +3164,8 @@
     "p2": 0,
     "p3": 2,
     "pout": 2,
-    "pos": 197,
-    "trend": 0
+    "pos": 198,
+    "trend": -1
   },
   {
     "atleta_id": "URBINATI_THOMAS",
@@ -3164,8 +3180,8 @@
     "p2": 0,
     "p3": 0,
     "pout": 6,
-    "pos": 198,
-    "trend": 0
+    "pos": 199,
+    "trend": -1
   },
   {
     "atleta_id": "PELLEGRINO_SERGIO",
@@ -3180,8 +3196,8 @@
     "p2": 0,
     "p3": 0,
     "pout": 4,
-    "pos": 199,
-    "trend": 0
+    "pos": 200,
+    "trend": -1
   },
   {
     "atleta_id": "ALBA_SAMUELE",
@@ -3196,8 +3212,8 @@
     "p2": 1,
     "p3": 0,
     "pout": 1,
-    "pos": 200,
-    "trend": 0
+    "pos": 201,
+    "trend": -1
   },
   {
     "atleta_id": "ALESSIANI_STEFANO_MARIA",
@@ -3212,8 +3228,8 @@
     "p2": 0,
     "p3": 0,
     "pout": 4,
-    "pos": 201,
-    "trend": 0
+    "pos": 202,
+    "trend": -1
   },
   {
     "atleta_id": "RIZZUTI_TOMMASO_LUIGI",
@@ -3228,8 +3244,8 @@
     "p2": 1,
     "p3": 0,
     "pout": 5,
-    "pos": 202,
-    "trend": 0
+    "pos": 203,
+    "trend": -1
   },
   {
     "atleta_id": "RADICE_MATTIA",
@@ -3244,24 +3260,8 @@
     "p2": 0,
     "p3": 1,
     "pout": 4,
-    "pos": 203,
-    "trend": 0
-  },
-  {
-    "atleta_id": "TREMBLAN_RAPHAEL",
-    "cognome": "TREMBLAN",
-    "nome": "RAPHAEL",
-    "team_id": "G_S_LUPI_VALLE_D_AOSTA",
-    "team_nome": "G.S. LUPI VALLE D'AOSTA",
-    "punti": 23,
-    "vittorie": 0,
-    "gare": 5,
-    "p1": 0,
-    "p2": 0,
-    "p3": 1,
-    "pout": 4,
     "pos": 204,
-    "trend": 0
+    "trend": -1
   },
   {
     "atleta_id": "NOSELLA_TOMMASO",
@@ -3405,7 +3405,7 @@
     "p3": 0,
     "pout": 1,
     "pos": 213,
-    "trend": 126
+    "trend": 0
   },
   {
     "atleta_id": "FERRANTE_DAMIANO",
@@ -3421,7 +3421,7 @@
     "p3": 0,
     "pout": 5,
     "pos": 214,
-    "trend": -1
+    "trend": 0
   },
   {
     "atleta_id": "NEDELJKOVIC_ZAK",
@@ -3437,7 +3437,7 @@
     "p3": 0,
     "pout": 2,
     "pos": 215,
-    "trend": -1
+    "trend": 0
   },
   {
     "atleta_id": "BERNARDINELLO_MATTEO",
@@ -3453,7 +3453,7 @@
     "p3": 1,
     "pout": 4,
     "pos": 216,
-    "trend": -1
+    "trend": 0
   },
   {
     "atleta_id": "BRANCHI_NOAH",
@@ -3469,7 +3469,7 @@
     "p3": 0,
     "pout": 1,
     "pos": 217,
-    "trend": -1
+    "trend": 0
   },
   {
     "atleta_id": "PIGA_MARCO",
@@ -3485,7 +3485,7 @@
     "p3": 0,
     "pout": 4,
     "pos": 218,
-    "trend": -1
+    "trend": 0
   },
   {
     "atleta_id": "TODARO_ALBERTO",
@@ -3501,7 +3501,7 @@
     "p3": 0,
     "pout": 1,
     "pos": 219,
-    "trend": -1
+    "trend": 0
   },
   {
     "atleta_id": "REGHENZI_RICCARDO",
@@ -3517,7 +3517,7 @@
     "p3": 0,
     "pout": 5,
     "pos": 220,
-    "trend": -1
+    "trend": 0
   },
   {
     "atleta_id": "CECCHIN_GIACOMO",
@@ -3533,7 +3533,7 @@
     "p3": 1,
     "pout": 4,
     "pos": 221,
-    "trend": -1
+    "trend": 0
   },
   {
     "atleta_id": "MORBIATO_JAKE",
@@ -3549,7 +3549,7 @@
     "p3": 0,
     "pout": 4,
     "pos": 222,
-    "trend": -1
+    "trend": 0
   },
   {
     "atleta_id": "SCHINTU_EDOARDO_ANTONIO",
@@ -3565,7 +3565,7 @@
     "p3": 0,
     "pout": 4,
     "pos": 223,
-    "trend": -1
+    "trend": 0
   },
   {
     "atleta_id": "DE_STEFANO_DIEGO",
@@ -3581,7 +3581,7 @@
     "p3": 0,
     "pout": 5,
     "pos": 224,
-    "trend": -1
+    "trend": 0
   },
   {
     "atleta_id": "DOTTA_LEONARDO",
@@ -3597,7 +3597,7 @@
     "p3": 0,
     "pout": 4,
     "pos": 225,
-    "trend": -1
+    "trend": 0
   },
   {
     "atleta_id": "CINERARI_PETER",
@@ -3613,7 +3613,7 @@
     "p3": 0,
     "pout": 3,
     "pos": 226,
-    "trend": -1
+    "trend": 0
   },
   {
     "atleta_id": "LACORCIA_ALESSANDRO",
@@ -3629,7 +3629,7 @@
     "p3": 1,
     "pout": 2,
     "pos": 227,
-    "trend": -1
+    "trend": 0
   },
   {
     "atleta_id": "BUZZI_FRANCESCO",
@@ -3645,7 +3645,7 @@
     "p3": 0,
     "pout": 5,
     "pos": 228,
-    "trend": -1
+    "trend": 0
   },
   {
     "atleta_id": "AMADORI_MARCO",
@@ -3661,7 +3661,7 @@
     "p3": 0,
     "pout": 4,
     "pos": 229,
-    "trend": -1
+    "trend": 0
   },
   {
     "atleta_id": "FERRETTI_ANDREA",
@@ -3677,7 +3677,7 @@
     "p3": 0,
     "pout": 4,
     "pos": 230,
-    "trend": -1
+    "trend": 0
   },
   {
     "atleta_id": "SAVARESE_EMANUELE",
@@ -3693,7 +3693,7 @@
     "p3": 0,
     "pout": 4,
     "pos": 231,
-    "trend": -1
+    "trend": 0
   },
   {
     "atleta_id": "SCARPA_DOMENICO",
@@ -3709,7 +3709,7 @@
     "p3": 0,
     "pout": 4,
     "pos": 232,
-    "trend": -1
+    "trend": 0
   },
   {
     "atleta_id": "KLUN_GAL",
@@ -3725,7 +3725,7 @@
     "p3": 0,
     "pout": 1,
     "pos": 233,
-    "trend": -1
+    "trend": 0
   },
   {
     "atleta_id": "FONTANA_LUCA",
@@ -3741,7 +3741,7 @@
     "p3": 0,
     "pout": 5,
     "pos": 234,
-    "trend": -1
+    "trend": 0
   },
   {
     "atleta_id": "GIANORDOLI_JACOPO",
@@ -3757,7 +3757,7 @@
     "p3": 0,
     "pout": 3,
     "pos": 235,
-    "trend": -1
+    "trend": 0
   },
   {
     "atleta_id": "RAIMONDI_NICOLO",
@@ -3773,7 +3773,7 @@
     "p3": 0,
     "pout": 2,
     "pos": 236,
-    "trend": -1
+    "trend": 0
   },
   {
     "atleta_id": "FONTANA_ALBERTO",
@@ -3789,7 +3789,7 @@
     "p3": 1,
     "pout": 1,
     "pos": 237,
-    "trend": -1
+    "trend": 0
   },
   {
     "atleta_id": "FOSSATI_TOMMASO",
@@ -3805,7 +3805,7 @@
     "p3": 0,
     "pout": 4,
     "pos": 238,
-    "trend": -1
+    "trend": 0
   },
   {
     "atleta_id": "CZAIKA_MATHIEU",
@@ -3821,7 +3821,7 @@
     "p3": 0,
     "pout": 0,
     "pos": 239,
-    "trend": -1
+    "trend": 0
   },
   {
     "atleta_id": "PISTORE_FABIO",
@@ -3837,7 +3837,7 @@
     "p3": 0,
     "pout": 0,
     "pos": 240,
-    "trend": -1
+    "trend": 0
   },
   {
     "atleta_id": "RAMPONI_LORENZO",
@@ -3853,7 +3853,7 @@
     "p3": 0,
     "pout": 0,
     "pos": 241,
-    "trend": -1
+    "trend": 0
   },
   {
     "atleta_id": "QUATTRONE_DAVIDE",
@@ -3869,7 +3869,7 @@
     "p3": 0,
     "pout": 0,
     "pos": 242,
-    "trend": -1
+    "trend": 0
   },
   {
     "atleta_id": "MATTEI_LEONARDO",
@@ -3885,7 +3885,7 @@
     "p3": 0,
     "pout": 0,
     "pos": 243,
-    "trend": -1
+    "trend": 0
   },
   {
     "atleta_id": "BENDICI_PIETRO",
@@ -3901,7 +3901,7 @@
     "p3": 0,
     "pout": 3,
     "pos": 244,
-    "trend": -1
+    "trend": 0
   },
   {
     "atleta_id": "BUCCI_TOMMASO",
@@ -3917,7 +3917,7 @@
     "p3": 0,
     "pout": 3,
     "pos": 245,
-    "trend": -1
+    "trend": 0
   },
   {
     "atleta_id": "BORETTI_WILLIAM_ANTONIO",
@@ -3933,7 +3933,7 @@
     "p3": 0,
     "pout": 1,
     "pos": 246,
-    "trend": -1
+    "trend": 0
   },
   {
     "atleta_id": "LEBAR_DENIS",
@@ -3949,7 +3949,7 @@
     "p3": 1,
     "pout": 1,
     "pos": 247,
-    "trend": -1
+    "trend": 0
   },
   {
     "atleta_id": "LOSACCO_DANIELE",
@@ -3965,7 +3965,7 @@
     "p3": 0,
     "pout": 2,
     "pos": 248,
-    "trend": -1
+    "trend": 0
   },
   {
     "atleta_id": "DE_FAVERI_GABRIELE",
@@ -3981,7 +3981,7 @@
     "p3": 0,
     "pout": 3,
     "pos": 249,
-    "trend": -1
+    "trend": 0
   },
   {
     "atleta_id": "TINAZZI_DANIELE",
@@ -3997,7 +3997,7 @@
     "p3": 0,
     "pout": 5,
     "pos": 250,
-    "trend": -1
+    "trend": 0
   },
   {
     "atleta_id": "PACELLA_LORENZO",
@@ -4013,7 +4013,7 @@
     "p3": 0,
     "pout": 3,
     "pos": 251,
-    "trend": -1
+    "trend": 0
   },
   {
     "atleta_id": "BONAVIA_MATTIA",
@@ -4029,7 +4029,7 @@
     "p3": 0,
     "pout": 2,
     "pos": 252,
-    "trend": -1
+    "trend": 0
   },
   {
     "atleta_id": "CLEMENTE_GIULIO",
@@ -4045,7 +4045,7 @@
     "p3": 0,
     "pout": 3,
     "pos": 253,
-    "trend": -1
+    "trend": 0
   },
   {
     "atleta_id": "GASHI_ARBI",
@@ -4061,7 +4061,7 @@
     "p3": 0,
     "pout": 5,
     "pos": 254,
-    "trend": -1
+    "trend": 0
   },
   {
     "atleta_id": "RICHETTI_EMANUELE",
@@ -4077,7 +4077,7 @@
     "p3": 0,
     "pout": 3,
     "pos": 255,
-    "trend": -1
+    "trend": 0
   },
   {
     "atleta_id": "LOTTI_MATTIA",
@@ -4093,7 +4093,7 @@
     "p3": 0,
     "pout": 4,
     "pos": 256,
-    "trend": -1
+    "trend": 0
   },
   {
     "atleta_id": "VERONESE_ENRICO",
@@ -4109,7 +4109,7 @@
     "p3": 0,
     "pout": 5,
     "pos": 257,
-    "trend": -1
+    "trend": 0
   },
   {
     "atleta_id": "BARILLA_LORENZO",
@@ -4125,7 +4125,7 @@
     "p3": 1,
     "pout": 1,
     "pos": 258,
-    "trend": -1
+    "trend": 0
   },
   {
     "atleta_id": "SANGINETO_FRANCESCO",
@@ -4141,7 +4141,7 @@
     "p3": 1,
     "pout": 1,
     "pos": 259,
-    "trend": -1
+    "trend": 0
   },
   {
     "atleta_id": "MINICHINO_STEFANO",
@@ -4157,7 +4157,7 @@
     "p3": 0,
     "pout": 2,
     "pos": 260,
-    "trend": -1
+    "trend": 0
   },
   {
     "atleta_id": "FELISATTI_LUCA",
@@ -4173,7 +4173,7 @@
     "p3": 0,
     "pout": 4,
     "pos": 261,
-    "trend": -1
+    "trend": 0
   },
   {
     "atleta_id": "POLLUTRI_LEONARDO",
@@ -4189,7 +4189,7 @@
     "p3": 0,
     "pout": 3,
     "pos": 262,
-    "trend": -1
+    "trend": 0
   },
   {
     "atleta_id": "FORADORI_STEFANO",
@@ -4205,7 +4205,7 @@
     "p3": 0,
     "pout": 5,
     "pos": 263,
-    "trend": -1
+    "trend": 0
   },
   {
     "atleta_id": "BAZZANI_ALESSIO",
@@ -4221,7 +4221,7 @@
     "p3": 1,
     "pout": 1,
     "pos": 264,
-    "trend": -1
+    "trend": 0
   },
   {
     "atleta_id": "TAINA_MAURIZIO",
@@ -4237,7 +4237,7 @@
     "p3": 0,
     "pout": 3,
     "pos": 265,
-    "trend": -1
+    "trend": 0
   },
   {
     "atleta_id": "PALAMIN_MARK",
@@ -4253,7 +4253,7 @@
     "p3": 0,
     "pout": 3,
     "pos": 266,
-    "trend": -1
+    "trend": 0
   },
   {
     "atleta_id": "PICCIOLI_KEVIN",
@@ -4269,7 +4269,7 @@
     "p3": 0,
     "pout": 0,
     "pos": 267,
-    "trend": -1
+    "trend": 0
   },
   {
     "atleta_id": "COLAUTTI_MATTIA",
@@ -4285,7 +4285,7 @@
     "p3": 0,
     "pout": 4,
     "pos": 268,
-    "trend": -1
+    "trend": 0
   },
   {
     "atleta_id": "BOTTEGAL_FEDERICO",
@@ -4301,7 +4301,7 @@
     "p3": 1,
     "pout": 1,
     "pos": 269,
-    "trend": -1
+    "trend": 0
   },
   {
     "atleta_id": "FAMEA_ALBERTO",
@@ -4317,7 +4317,7 @@
     "p3": 0,
     "pout": 4,
     "pos": 270,
-    "trend": -1
+    "trend": 0
   },
   {
     "atleta_id": "IACOPI_MATTIA",
@@ -4333,7 +4333,7 @@
     "p3": 0,
     "pout": 0,
     "pos": 271,
-    "trend": -1
+    "trend": 0
   },
   {
     "atleta_id": "ZANI_DAVIDE",
@@ -4349,7 +4349,7 @@
     "p3": 0,
     "pout": 0,
     "pos": 272,
-    "trend": -1
+    "trend": 0
   },
   {
     "atleta_id": "NESTI_CUPELLI_FEDERICO",
@@ -4365,7 +4365,7 @@
     "p3": 0,
     "pout": 0,
     "pos": 273,
-    "trend": -1
+    "trend": 0
   },
   {
     "atleta_id": "BEN_ISMAIL_YASIN",
@@ -4381,7 +4381,7 @@
     "p3": 0,
     "pout": 5,
     "pos": 274,
-    "trend": -1
+    "trend": 0
   },
   {
     "atleta_id": "BOZZOLI_TOMMASO",
@@ -4397,7 +4397,7 @@
     "p3": 1,
     "pout": 1,
     "pos": 275,
-    "trend": -1
+    "trend": 0
   },
   {
     "atleta_id": "CROVETTI_MATTIA",
@@ -4413,7 +4413,7 @@
     "p3": 0,
     "pout": 0,
     "pos": 276,
-    "trend": -1
+    "trend": 0
   },
   {
     "atleta_id": "MORETTO_GIULIO_GILBERTO",
@@ -4429,7 +4429,7 @@
     "p3": 0,
     "pout": 4,
     "pos": 277,
-    "trend": -1
+    "trend": 0
   },
   {
     "atleta_id": "MAMALIGA_JUSTIN",
@@ -4445,7 +4445,7 @@
     "p3": 0,
     "pout": 2,
     "pos": 278,
-    "trend": -1
+    "trend": 0
   },
   {
     "atleta_id": "IACONO_GABRIELE",
@@ -4461,7 +4461,7 @@
     "p3": 0,
     "pout": 4,
     "pos": 279,
-    "trend": -1
+    "trend": 0
   },
   {
     "atleta_id": "LA_CAPRIA_MATTEO",
@@ -4477,7 +4477,7 @@
     "p3": 0,
     "pout": 3,
     "pos": 280,
-    "trend": -1
+    "trend": 0
   },
   {
     "atleta_id": "VENDRAMELLI_NOAH",
@@ -4493,7 +4493,7 @@
     "p3": 0,
     "pout": 2,
     "pos": 281,
-    "trend": -1
+    "trend": 0
   },
   {
     "atleta_id": "GRIGI_DAVIDE",
@@ -4509,7 +4509,7 @@
     "p3": 0,
     "pout": 2,
     "pos": 282,
-    "trend": -1
+    "trend": 0
   },
   {
     "atleta_id": "DIANA_SAMUELE",
@@ -4525,7 +4525,7 @@
     "p3": 0,
     "pout": 2,
     "pos": 283,
-    "trend": -1
+    "trend": 0
   },
   {
     "atleta_id": "RAGGIOTTO_FILIPPO",
@@ -4541,7 +4541,7 @@
     "p3": 1,
     "pout": 0,
     "pos": 284,
-    "trend": -1
+    "trend": 0
   },
   {
     "atleta_id": "ZULIANI_LEONARDO",
@@ -4557,7 +4557,7 @@
     "p3": 1,
     "pout": 0,
     "pos": 285,
-    "trend": -1
+    "trend": 0
   },
   {
     "atleta_id": "MICALE_NICOLO",
@@ -4573,7 +4573,7 @@
     "p3": 0,
     "pout": 1,
     "pos": 286,
-    "trend": -1
+    "trend": 0
   },
   {
     "atleta_id": "BOZZA_ALESSIO",
@@ -4589,7 +4589,7 @@
     "p3": 1,
     "pout": 0,
     "pos": 287,
-    "trend": -1
+    "trend": 0
   },
   {
     "atleta_id": "SZIGHYARTO_ROLAND",
@@ -4605,7 +4605,7 @@
     "p3": 1,
     "pout": 0,
     "pos": 288,
-    "trend": -1
+    "trend": 0
   },
   {
     "atleta_id": "BALDUZZI_GIACOMO",
@@ -4621,7 +4621,7 @@
     "p3": 0,
     "pout": 3,
     "pos": 289,
-    "trend": -1
+    "trend": 0
   },
   {
     "atleta_id": "PASQUINI_PIETRO",
@@ -4637,7 +4637,7 @@
     "p3": 1,
     "pout": 0,
     "pos": 290,
-    "trend": -1
+    "trend": 0
   },
   {
     "atleta_id": "RODRIGUES_DOS_SANTOS_VICENTE_JUNIOR",
@@ -4653,7 +4653,7 @@
     "p3": 0,
     "pout": 3,
     "pos": 291,
-    "trend": -1
+    "trend": 0
   },
   {
     "atleta_id": "SELLATI_DAVIDE",
@@ -4669,7 +4669,7 @@
     "p3": 0,
     "pout": 2,
     "pos": 292,
-    "trend": -1
+    "trend": 0
   },
   {
     "atleta_id": "MULAS_LORENZO",
@@ -4685,7 +4685,7 @@
     "p3": 0,
     "pout": 1,
     "pos": 293,
-    "trend": -1
+    "trend": 0
   },
   {
     "atleta_id": "ZULBERTI_NICOLA",
@@ -4701,7 +4701,7 @@
     "p3": 0,
     "pout": 2,
     "pos": 294,
-    "trend": -1
+    "trend": 0
   },
   {
     "atleta_id": "CARONELLI_MATTIA",
@@ -4717,7 +4717,7 @@
     "p3": 1,
     "pout": 0,
     "pos": 295,
-    "trend": -1
+    "trend": 0
   },
   {
     "atleta_id": "PASCUT_RICCARDO",
@@ -4733,7 +4733,7 @@
     "p3": 0,
     "pout": 1,
     "pos": 296,
-    "trend": -1
+    "trend": 0
   },
   {
     "atleta_id": "RUVOLETTO_ALBERTO",
@@ -4749,7 +4749,7 @@
     "p3": 0,
     "pout": 2,
     "pos": 297,
-    "trend": -1
+    "trend": 0
   },
   {
     "atleta_id": "LAVO_STEFANO",
@@ -4765,7 +4765,7 @@
     "p3": 0,
     "pout": 2,
     "pos": 298,
-    "trend": -1
+    "trend": 0
   },
   {
     "atleta_id": "DAVILA_JIMENEZ_SALVADOR",
@@ -4781,7 +4781,7 @@
     "p3": 1,
     "pout": 0,
     "pos": 299,
-    "trend": -1
+    "trend": 0
   },
   {
     "atleta_id": "RODIGARI_FRANCESCO",
@@ -4797,7 +4797,7 @@
     "p3": 1,
     "pout": 0,
     "pos": 300,
-    "trend": -1
+    "trend": 0
   },
   {
     "atleta_id": "ALBERTI_MATTIA",
@@ -4813,7 +4813,7 @@
     "p3": 0,
     "pout": 2,
     "pos": 301,
-    "trend": -1
+    "trend": 0
   },
   {
     "atleta_id": "FAGIOLI_FEDERICO",
@@ -4829,7 +4829,7 @@
     "p3": 0,
     "pout": 3,
     "pos": 302,
-    "trend": -1
+    "trend": 0
   },
   {
     "atleta_id": "GROTTO_RICCARDO",
@@ -4845,7 +4845,7 @@
     "p3": 0,
     "pout": 2,
     "pos": 303,
-    "trend": -1
+    "trend": 0
   },
   {
     "atleta_id": "SORVILLO_SAMUELE",
@@ -4861,7 +4861,7 @@
     "p3": 0,
     "pout": 2,
     "pos": 304,
-    "trend": -1
+    "trend": 0
   },
   {
     "atleta_id": "VITULLI_GIOVANNI",
@@ -4877,7 +4877,7 @@
     "p3": 1,
     "pout": 0,
     "pos": 305,
-    "trend": -1
+    "trend": 0
   },
   {
     "atleta_id": "DI_STEFANO_GIACOMO",
@@ -4893,7 +4893,7 @@
     "p3": 0,
     "pout": 2,
     "pos": 306,
-    "trend": -1
+    "trend": 0
   },
   {
     "atleta_id": "RINGHINI_SIMONE",
@@ -4909,7 +4909,7 @@
     "p3": 0,
     "pout": 2,
     "pos": 307,
-    "trend": -1
+    "trend": 0
   },
   {
     "atleta_id": "SEBASTIANI_FRANCESCO",
@@ -4925,7 +4925,7 @@
     "p3": 0,
     "pout": 2,
     "pos": 308,
-    "trend": -1
+    "trend": 0
   },
   {
     "atleta_id": "TADDEI_FILIPPO",
@@ -4941,7 +4941,7 @@
     "p3": 0,
     "pout": 2,
     "pos": 309,
-    "trend": -1
+    "trend": 0
   },
   {
     "atleta_id": "RENOFFIO_ELIA",
@@ -4957,7 +4957,7 @@
     "p3": 0,
     "pout": 4,
     "pos": 310,
-    "trend": -1
+    "trend": 0
   },
   {
     "atleta_id": "CAMPANA_PASQUALE",
@@ -4973,7 +4973,7 @@
     "p3": 0,
     "pout": 2,
     "pos": 311,
-    "trend": -1
+    "trend": 0
   },
   {
     "atleta_id": "FUNEDDA_MAURO",
@@ -4989,7 +4989,7 @@
     "p3": 0,
     "pout": 2,
     "pos": 312,
-    "trend": -1
+    "trend": 0
   },
   {
     "atleta_id": "EXENBERGER_SANDRO",
@@ -5005,7 +5005,23 @@
     "p3": 0,
     "pout": 2,
     "pos": 313,
-    "trend": -1
+    "trend": 0
+  },
+  {
+    "atleta_id": "CAMMARATA_MARCO",
+    "cognome": "CAMMARATA",
+    "nome": "MARCO",
+    "team_id": "BUSTESE_OLONIA_A_S_D",
+    "team_nome": "BUSTESE OLONIA A.S.D.",
+    "punti": 8,
+    "vittorie": 0,
+    "gare": 3,
+    "p1": 0,
+    "p2": 0,
+    "p3": 0,
+    "pout": 3,
+    "pos": 314,
+    "trend": 114
   },
   {
     "atleta_id": "DESTRO_MANUEL",
@@ -5020,7 +5036,7 @@
     "p2": 0,
     "p3": 0,
     "pout": 3,
-    "pos": 314,
+    "pos": 315,
     "trend": -1
   },
   {
@@ -5036,7 +5052,7 @@
     "p2": 0,
     "p3": 0,
     "pout": 1,
-    "pos": 315,
+    "pos": 316,
     "trend": -1
   },
   {
@@ -5052,7 +5068,7 @@
     "p2": 0,
     "p3": 0,
     "pout": 2,
-    "pos": 316,
+    "pos": 317,
     "trend": -1
   },
   {
@@ -5068,7 +5084,7 @@
     "p2": 0,
     "p3": 0,
     "pout": 2,
-    "pos": 317,
+    "pos": 318,
     "trend": -1
   },
   {
@@ -5084,7 +5100,7 @@
     "p2": 0,
     "p3": 0,
     "pout": 1,
-    "pos": 318,
+    "pos": 319,
     "trend": -1
   },
   {
@@ -5100,7 +5116,7 @@
     "p2": 0,
     "p3": 0,
     "pout": 1,
-    "pos": 319,
+    "pos": 320,
     "trend": -1
   },
   {
@@ -5116,7 +5132,7 @@
     "p2": 0,
     "p3": 0,
     "pout": 3,
-    "pos": 320,
+    "pos": 321,
     "trend": -1
   },
   {
@@ -5132,7 +5148,7 @@
     "p2": 0,
     "p3": 0,
     "pout": 3,
-    "pos": 321,
+    "pos": 322,
     "trend": -1
   },
   {
@@ -5148,7 +5164,7 @@
     "p2": 0,
     "p3": 0,
     "pout": 1,
-    "pos": 322,
+    "pos": 323,
     "trend": -1
   },
   {
@@ -5164,7 +5180,7 @@
     "p2": 0,
     "p3": 0,
     "pout": 1,
-    "pos": 323,
+    "pos": 324,
     "trend": -1
   },
   {
@@ -5180,7 +5196,7 @@
     "p2": 0,
     "p3": 0,
     "pout": 1,
-    "pos": 324,
+    "pos": 325,
     "trend": -1
   },
   {
@@ -5196,7 +5212,7 @@
     "p2": 0,
     "p3": 0,
     "pout": 2,
-    "pos": 325,
+    "pos": 326,
     "trend": -1
   },
   {
@@ -5212,7 +5228,7 @@
     "p2": 0,
     "p3": 0,
     "pout": 2,
-    "pos": 326,
+    "pos": 327,
     "trend": -1
   },
   {
@@ -5228,7 +5244,7 @@
     "p2": 0,
     "p3": 0,
     "pout": 1,
-    "pos": 327,
+    "pos": 328,
     "trend": -1
   },
   {
@@ -5244,7 +5260,7 @@
     "p2": 0,
     "p3": 0,
     "pout": 1,
-    "pos": 328,
+    "pos": 329,
     "trend": -1
   },
   {
@@ -5260,7 +5276,7 @@
     "p2": 0,
     "p3": 0,
     "pout": 3,
-    "pos": 329,
+    "pos": 330,
     "trend": -1
   },
   {
@@ -5276,7 +5292,7 @@
     "p2": 0,
     "p3": 0,
     "pout": 3,
-    "pos": 330,
+    "pos": 331,
     "trend": -1
   },
   {
@@ -5292,7 +5308,7 @@
     "p2": 0,
     "p3": 0,
     "pout": 2,
-    "pos": 331,
+    "pos": 332,
     "trend": -1
   },
   {
@@ -5308,7 +5324,7 @@
     "p2": 0,
     "p3": 0,
     "pout": 2,
-    "pos": 332,
+    "pos": 333,
     "trend": -1
   },
   {
@@ -5324,7 +5340,7 @@
     "p2": 0,
     "p3": 0,
     "pout": 2,
-    "pos": 333,
+    "pos": 334,
     "trend": -1
   },
   {
@@ -5340,7 +5356,7 @@
     "p2": 0,
     "p3": 0,
     "pout": 3,
-    "pos": 334,
+    "pos": 335,
     "trend": -1
   },
   {
@@ -5356,7 +5372,7 @@
     "p2": 0,
     "p3": 0,
     "pout": 2,
-    "pos": 335,
+    "pos": 336,
     "trend": -1
   },
   {
@@ -5372,7 +5388,7 @@
     "p2": 0,
     "p3": 0,
     "pout": 2,
-    "pos": 336,
+    "pos": 337,
     "trend": -1
   },
   {
@@ -5388,8 +5404,24 @@
     "p2": 0,
     "p3": 0,
     "pout": 2,
-    "pos": 337,
+    "pos": 338,
     "trend": -1
+  },
+  {
+    "atleta_id": "BONACINA_TOMMASO",
+    "cognome": "BONACINA",
+    "nome": "TOMMASO",
+    "team_id": "PEDALE_BREMBILLESE",
+    "team_nome": "PEDALE BREMBILLESE",
+    "punti": 6,
+    "vittorie": 0,
+    "gare": 2,
+    "p1": 0,
+    "p2": 0,
+    "p3": 0,
+    "pout": 2,
+    "pos": 339,
+    "trend": 122
   },
   {
     "atleta_id": "CIACCI_OLIVER",
@@ -5404,8 +5436,8 @@
     "p2": 0,
     "p3": 0,
     "pout": 1,
-    "pos": 338,
-    "trend": -1
+    "pos": 340,
+    "trend": -2
   },
   {
     "atleta_id": "ALBONETTI_ANTONIO_PAOLO",
@@ -5420,8 +5452,8 @@
     "p2": 0,
     "p3": 0,
     "pout": 2,
-    "pos": 339,
-    "trend": -1
+    "pos": 341,
+    "trend": -2
   },
   {
     "atleta_id": "CESARINI_SAMUELE",
@@ -5436,8 +5468,8 @@
     "p2": 0,
     "p3": 0,
     "pout": 1,
-    "pos": 340,
-    "trend": 0
+    "pos": 342,
+    "trend": -2
   },
   {
     "atleta_id": "KANDA_DIWIDI_ALVISE",
@@ -5452,8 +5484,8 @@
     "p2": 0,
     "p3": 0,
     "pout": 1,
-    "pos": 341,
-    "trend": 0
+    "pos": 343,
+    "trend": -2
   },
   {
     "atleta_id": "TARDINI_GIUSEPPE",
@@ -5468,8 +5500,8 @@
     "p2": 0,
     "p3": 0,
     "pout": 1,
-    "pos": 342,
-    "trend": 0
+    "pos": 344,
+    "trend": -2
   },
   {
     "atleta_id": "BRUNETTO_GIACOMO",
@@ -5484,8 +5516,8 @@
     "p2": 0,
     "p3": 0,
     "pout": 2,
-    "pos": 343,
-    "trend": 0
+    "pos": 345,
+    "trend": -2
   },
   {
     "atleta_id": "PIAGGESI_JACOPO",
@@ -5500,8 +5532,8 @@
     "p2": 0,
     "p3": 0,
     "pout": 1,
-    "pos": 344,
-    "trend": 0
+    "pos": 346,
+    "trend": -2
   },
   {
     "atleta_id": "DI_PAOLO_PASQUALE",
@@ -5516,8 +5548,8 @@
     "p2": 0,
     "p3": 0,
     "pout": 1,
-    "pos": 345,
-    "trend": 0
+    "pos": 347,
+    "trend": -2
   },
   {
     "atleta_id": "DOVADOLA_GIACOMO",
@@ -5532,8 +5564,8 @@
     "p2": 0,
     "p3": 0,
     "pout": 1,
-    "pos": 346,
-    "trend": 0
+    "pos": 348,
+    "trend": -2
   },
   {
     "atleta_id": "GALAMINI_MATTEO",
@@ -5548,8 +5580,8 @@
     "p2": 0,
     "p3": 0,
     "pout": 2,
-    "pos": 347,
-    "trend": 0
+    "pos": 349,
+    "trend": -2
   },
   {
     "atleta_id": "PIEROBON_ANDREA",
@@ -5564,8 +5596,8 @@
     "p2": 0,
     "p3": 0,
     "pout": 2,
-    "pos": 348,
-    "trend": 0
+    "pos": 350,
+    "trend": -2
   },
   {
     "atleta_id": "DACCO_ALESSANDRO",
@@ -5580,8 +5612,8 @@
     "p2": 0,
     "p3": 0,
     "pout": 2,
-    "pos": 349,
-    "trend": 0
+    "pos": 351,
+    "trend": -2
   },
   {
     "atleta_id": "STACCIOLI_MATTEO",
@@ -5596,8 +5628,8 @@
     "p2": 0,
     "p3": 0,
     "pout": 1,
-    "pos": 350,
-    "trend": 0
+    "pos": 352,
+    "trend": -2
   },
   {
     "atleta_id": "LONGHI_NATHAN_ALEX",
@@ -5612,8 +5644,8 @@
     "p2": 0,
     "p3": 0,
     "pout": 1,
-    "pos": 351,
-    "trend": 0
+    "pos": 353,
+    "trend": -2
   },
   {
     "atleta_id": "BIAGINI_MATTIA",
@@ -5628,8 +5660,8 @@
     "p2": 0,
     "p3": 0,
     "pout": 1,
-    "pos": 352,
-    "trend": 0
+    "pos": 354,
+    "trend": -2
   },
   {
     "atleta_id": "MELELEO_LUDOVICO",
@@ -5644,8 +5676,8 @@
     "p2": 0,
     "p3": 0,
     "pout": 1,
-    "pos": 353,
-    "trend": 0
+    "pos": 355,
+    "trend": -2
   },
   {
     "atleta_id": "PIVETTI_ELIA",
@@ -5660,8 +5692,8 @@
     "p2": 0,
     "p3": 0,
     "pout": 2,
-    "pos": 354,
-    "trend": 0
+    "pos": 356,
+    "trend": -2
   },
   {
     "atleta_id": "KOSTETSKYI_ARTEM",
@@ -5676,8 +5708,8 @@
     "p2": 0,
     "p3": 0,
     "pout": 2,
-    "pos": 355,
-    "trend": 0
+    "pos": 357,
+    "trend": -2
   },
   {
     "atleta_id": "PARO_DAVIDE",
@@ -5692,8 +5724,8 @@
     "p2": 0,
     "p3": 0,
     "pout": 1,
-    "pos": 356,
-    "trend": 0
+    "pos": 358,
+    "trend": -2
   },
   {
     "atleta_id": "MAZZONI_MIRCO",
@@ -5708,8 +5740,8 @@
     "p2": 0,
     "p3": 0,
     "pout": 1,
-    "pos": 357,
-    "trend": 0
+    "pos": 359,
+    "trend": -2
   },
   {
     "atleta_id": "TULLI_NICOLO",
@@ -5724,8 +5756,8 @@
     "p2": 0,
     "p3": 0,
     "pout": 1,
-    "pos": 358,
-    "trend": 0
+    "pos": 360,
+    "trend": -2
   },
   {
     "atleta_id": "LINKE_MAKS",
@@ -5740,8 +5772,8 @@
     "p2": 0,
     "p3": 0,
     "pout": 1,
-    "pos": 359,
-    "trend": 0
+    "pos": 361,
+    "trend": -2
   },
   {
     "atleta_id": "CARGNELUTTI_ERIK",
@@ -5756,8 +5788,8 @@
     "p2": 0,
     "p3": 0,
     "pout": 1,
-    "pos": 360,
-    "trend": 0
+    "pos": 362,
+    "trend": -2
   },
   {
     "atleta_id": "PEPE_DANIELE",
@@ -5772,8 +5804,8 @@
     "p2": 0,
     "p3": 0,
     "pout": 1,
-    "pos": 361,
-    "trend": 0
+    "pos": 363,
+    "trend": -2
   },
   {
     "atleta_id": "DELL_AGOSTINO_MARCO",
@@ -5788,8 +5820,8 @@
     "p2": 0,
     "p3": 0,
     "pout": 1,
-    "pos": 362,
-    "trend": 0
+    "pos": 364,
+    "trend": -2
   },
   {
     "atleta_id": "SKILJA_KLEVIS",
@@ -5804,8 +5836,8 @@
     "p2": 0,
     "p3": 0,
     "pout": 1,
-    "pos": 363,
-    "trend": 0
+    "pos": 365,
+    "trend": -2
   },
   {
     "atleta_id": "SILVA_LIMA_ROSETTI_MATHIAS",
@@ -5820,8 +5852,8 @@
     "p2": 0,
     "p3": 0,
     "pout": 4,
-    "pos": 364,
-    "trend": 0
+    "pos": 366,
+    "trend": -2
   },
   {
     "atleta_id": "BROCCHI_DANIELE",
@@ -5836,8 +5868,8 @@
     "p2": 0,
     "p3": 0,
     "pout": 2,
-    "pos": 365,
-    "trend": 0
+    "pos": 367,
+    "trend": -2
   },
   {
     "atleta_id": "BURCHERI_MATTEO_ALDO",
@@ -5852,8 +5884,8 @@
     "p2": 0,
     "p3": 0,
     "pout": 1,
-    "pos": 366,
-    "trend": 0
+    "pos": 368,
+    "trend": -2
   },
   {
     "atleta_id": "FONTANA_MARCO",
@@ -5868,8 +5900,8 @@
     "p2": 0,
     "p3": 0,
     "pout": 1,
-    "pos": 367,
-    "trend": 0
+    "pos": 369,
+    "trend": -2
   },
   {
     "atleta_id": "BARTHA_MILAN",
@@ -5884,8 +5916,8 @@
     "p2": 0,
     "p3": 0,
     "pout": 1,
-    "pos": 368,
-    "trend": 0
+    "pos": 370,
+    "trend": -2
   },
   {
     "atleta_id": "MIRABILE_FILIPPO",
@@ -5900,8 +5932,8 @@
     "p2": 0,
     "p3": 0,
     "pout": 2,
-    "pos": 369,
-    "trend": 0
+    "pos": 371,
+    "trend": -2
   },
   {
     "atleta_id": "RONDELLI_EMANUELE",
@@ -5916,8 +5948,8 @@
     "p2": 0,
     "p3": 0,
     "pout": 2,
-    "pos": 370,
-    "trend": 0
+    "pos": 372,
+    "trend": -2
   },
   {
     "atleta_id": "DELBONO_LORENZO",
@@ -5932,8 +5964,8 @@
     "p2": 0,
     "p3": 0,
     "pout": 2,
-    "pos": 371,
-    "trend": 0
+    "pos": 373,
+    "trend": -2
   },
   {
     "atleta_id": "LUCHERINI_CHRISTIAN",
@@ -5948,8 +5980,8 @@
     "p2": 0,
     "p3": 0,
     "pout": 1,
-    "pos": 372,
-    "trend": 0
+    "pos": 374,
+    "trend": -2
   },
   {
     "atleta_id": "ARENA_ANTONIO",
@@ -5964,8 +5996,8 @@
     "p2": 0,
     "p3": 0,
     "pout": 1,
-    "pos": 373,
-    "trend": 0
+    "pos": 375,
+    "trend": -2
   },
   {
     "atleta_id": "VANZINI_THOMAS",
@@ -5980,8 +6012,8 @@
     "p2": 0,
     "p3": 0,
     "pout": 2,
-    "pos": 374,
-    "trend": 0
+    "pos": 376,
+    "trend": -2
   },
   {
     "atleta_id": "ZANARDI_MATTEO",
@@ -5996,8 +6028,8 @@
     "p2": 0,
     "p3": 0,
     "pout": 1,
-    "pos": 375,
-    "trend": 0
+    "pos": 377,
+    "trend": -2
   },
   {
     "atleta_id": "SCAMPERLE_FEDERICO",
@@ -6012,8 +6044,8 @@
     "p2": 0,
     "p3": 0,
     "pout": 2,
-    "pos": 376,
-    "trend": 0
+    "pos": 378,
+    "trend": -2
   },
   {
     "atleta_id": "CHEULA_ALESSANDRO",
@@ -6028,8 +6060,8 @@
     "p2": 0,
     "p3": 0,
     "pout": 1,
-    "pos": 377,
-    "trend": 0
+    "pos": 379,
+    "trend": -2
   },
   {
     "atleta_id": "CABRAS_NICOLAS",
@@ -6044,8 +6076,8 @@
     "p2": 0,
     "p3": 0,
     "pout": 2,
-    "pos": 378,
-    "trend": 0
+    "pos": 380,
+    "trend": -2
   },
   {
     "atleta_id": "CANCELLIERI_FEDERICO",
@@ -6060,8 +6092,8 @@
     "p2": 0,
     "p3": 0,
     "pout": 1,
-    "pos": 379,
-    "trend": 0
+    "pos": 381,
+    "trend": -2
   },
   {
     "atleta_id": "DOLFINI_MATTIA",
@@ -6076,8 +6108,8 @@
     "p2": 0,
     "p3": 0,
     "pout": 1,
-    "pos": 380,
-    "trend": 0
+    "pos": 382,
+    "trend": -2
   },
   {
     "atleta_id": "CASELLI_ELIA",
@@ -6092,8 +6124,8 @@
     "p2": 0,
     "p3": 0,
     "pout": 1,
-    "pos": 381,
-    "trend": 0
+    "pos": 383,
+    "trend": -2
   },
   {
     "atleta_id": "ROCCA_ANDREA",
@@ -6108,8 +6140,8 @@
     "p2": 0,
     "p3": 0,
     "pout": 1,
-    "pos": 382,
-    "trend": 0
+    "pos": 384,
+    "trend": -2
   },
   {
     "atleta_id": "ENGELE_FRANZ",
@@ -6124,8 +6156,8 @@
     "p2": 0,
     "p3": 0,
     "pout": 1,
-    "pos": 383,
-    "trend": 0
+    "pos": 385,
+    "trend": -2
   },
   {
     "atleta_id": "SARTO_ALESSANDRO",
@@ -6140,8 +6172,8 @@
     "p2": 0,
     "p3": 0,
     "pout": 1,
-    "pos": 384,
-    "trend": 0
+    "pos": 386,
+    "trend": -2
   },
   {
     "atleta_id": "MORA_ALESSIO",
@@ -6156,8 +6188,8 @@
     "p2": 0,
     "p3": 0,
     "pout": 1,
-    "pos": 385,
-    "trend": 0
+    "pos": 387,
+    "trend": -2
   },
   {
     "atleta_id": "BASSO_TOMMASO",
@@ -6172,8 +6204,8 @@
     "p2": 0,
     "p3": 0,
     "pout": 1,
-    "pos": 386,
-    "trend": 0
+    "pos": 388,
+    "trend": -2
   },
   {
     "atleta_id": "BARTOLINI_MATTEO",
@@ -6188,8 +6220,8 @@
     "p2": 0,
     "p3": 0,
     "pout": 1,
-    "pos": 387,
-    "trend": 0
+    "pos": 389,
+    "trend": -2
   },
   {
     "atleta_id": "MENGA_SEBASTIANO",
@@ -6204,8 +6236,8 @@
     "p2": 0,
     "p3": 0,
     "pout": 2,
-    "pos": 388,
-    "trend": 0
+    "pos": 390,
+    "trend": -2
   },
   {
     "atleta_id": "ZOCCOLAN_ALBERTO",
@@ -6220,8 +6252,8 @@
     "p2": 0,
     "p3": 0,
     "pout": 1,
-    "pos": 389,
-    "trend": 0
+    "pos": 391,
+    "trend": -2
   },
   {
     "atleta_id": "MAZZELLA_LORENZO_PIO",
@@ -6236,8 +6268,8 @@
     "p2": 0,
     "p3": 0,
     "pout": 1,
-    "pos": 390,
-    "trend": 0
+    "pos": 392,
+    "trend": -2
   },
   {
     "atleta_id": "HVASTIJA_URBAN",
@@ -6252,8 +6284,8 @@
     "p2": 0,
     "p3": 0,
     "pout": 2,
-    "pos": 391,
-    "trend": 0
+    "pos": 393,
+    "trend": -2
   },
   {
     "atleta_id": "MARZOCCHI_LORENZO",
@@ -6268,8 +6300,8 @@
     "p2": 0,
     "p3": 0,
     "pout": 1,
-    "pos": 392,
-    "trend": 0
+    "pos": 394,
+    "trend": -2
   },
   {
     "atleta_id": "MAZZUCCO_RICCARDO",
@@ -6284,8 +6316,8 @@
     "p2": 0,
     "p3": 0,
     "pout": 1,
-    "pos": 393,
-    "trend": 0
+    "pos": 395,
+    "trend": -2
   },
   {
     "atleta_id": "BARON_ANDREA",
@@ -6300,8 +6332,8 @@
     "p2": 0,
     "p3": 0,
     "pout": 1,
-    "pos": 394,
-    "trend": 0
+    "pos": 396,
+    "trend": -2
   },
   {
     "atleta_id": "SALVI_LORENZO",
@@ -6316,8 +6348,8 @@
     "p2": 0,
     "p3": 0,
     "pout": 1,
-    "pos": 395,
-    "trend": 0
+    "pos": 397,
+    "trend": -2
   },
   {
     "atleta_id": "ORLANDI_SIMONE",
@@ -6332,8 +6364,8 @@
     "p2": 0,
     "p3": 0,
     "pout": 2,
-    "pos": 396,
-    "trend": 0
+    "pos": 398,
+    "trend": -2
   },
   {
     "atleta_id": "FACCHETTI_SAMUELE",
@@ -6348,8 +6380,8 @@
     "p2": 0,
     "p3": 0,
     "pout": 1,
-    "pos": 397,
-    "trend": 0
+    "pos": 399,
+    "trend": -2
   },
   {
     "atleta_id": "VALERIANI_DIEGO",
@@ -6364,8 +6396,8 @@
     "p2": 0,
     "p3": 0,
     "pout": 1,
-    "pos": 398,
-    "trend": 0
+    "pos": 400,
+    "trend": -2
   },
   {
     "atleta_id": "FRASCONI_FRANCESCO",
@@ -6380,8 +6412,8 @@
     "p2": 0,
     "p3": 0,
     "pout": 1,
-    "pos": 399,
-    "trend": 0
+    "pos": 401,
+    "trend": -2
   },
   {
     "atleta_id": "RAMERA_LORENZO",
@@ -6396,8 +6428,8 @@
     "p2": 0,
     "p3": 0,
     "pout": 1,
-    "pos": 400,
-    "trend": 0
+    "pos": 402,
+    "trend": -2
   },
   {
     "atleta_id": "FACCIN_NICCOLO",
@@ -6412,8 +6444,8 @@
     "p2": 0,
     "p3": 0,
     "pout": 2,
-    "pos": 401,
-    "trend": 0
+    "pos": 403,
+    "trend": -2
   },
   {
     "atleta_id": "SEBASTIANI_PIETRO",
@@ -6428,8 +6460,8 @@
     "p2": 0,
     "p3": 0,
     "pout": 1,
-    "pos": 402,
-    "trend": 0
+    "pos": 404,
+    "trend": -2
   },
   {
     "atleta_id": "CHIUSI_ENRICO",
@@ -6444,8 +6476,8 @@
     "p2": 0,
     "p3": 0,
     "pout": 1,
-    "pos": 403,
-    "trend": 0
+    "pos": 405,
+    "trend": -2
   },
   {
     "atleta_id": "PLANTONE_DIEGO",
@@ -6460,8 +6492,8 @@
     "p2": 0,
     "p3": 0,
     "pout": 1,
-    "pos": 404,
-    "trend": 0
+    "pos": 406,
+    "trend": -2
   },
   {
     "atleta_id": "POLI_FRANCESCO",
@@ -6476,8 +6508,8 @@
     "p2": 0,
     "p3": 0,
     "pout": 1,
-    "pos": 405,
-    "trend": 0
+    "pos": 407,
+    "trend": -2
   },
   {
     "atleta_id": "PETTITI_NICOLA",
@@ -6492,8 +6524,8 @@
     "p2": 0,
     "p3": 0,
     "pout": 1,
-    "pos": 406,
-    "trend": 0
+    "pos": 408,
+    "trend": -2
   },
   {
     "atleta_id": "MINO_STEFANO",
@@ -6508,8 +6540,8 @@
     "p2": 0,
     "p3": 0,
     "pout": 2,
-    "pos": 407,
-    "trend": 0
+    "pos": 409,
+    "trend": -2
   },
   {
     "atleta_id": "MARTINO_JACOPO",
@@ -6524,8 +6556,8 @@
     "p2": 0,
     "p3": 0,
     "pout": 1,
-    "pos": 408,
-    "trend": 0
+    "pos": 410,
+    "trend": -2
   },
   {
     "atleta_id": "BUSA_ANDREA",
@@ -6540,8 +6572,8 @@
     "p2": 0,
     "p3": 0,
     "pout": 1,
-    "pos": 409,
-    "trend": 0
+    "pos": 411,
+    "trend": -2
   },
   {
     "atleta_id": "MARIC_LAN",
@@ -6556,8 +6588,8 @@
     "p2": 0,
     "p3": 0,
     "pout": 1,
-    "pos": 410,
-    "trend": 0
+    "pos": 412,
+    "trend": -2
   },
   {
     "atleta_id": "FIORINDO_DIEGO",
@@ -6572,8 +6604,8 @@
     "p2": 0,
     "p3": 0,
     "pout": 1,
-    "pos": 411,
-    "trend": 0
+    "pos": 413,
+    "trend": -2
   },
   {
     "atleta_id": "MAZZOCCATO_ENRICO",
@@ -6588,8 +6620,8 @@
     "p2": 0,
     "p3": 0,
     "pout": 2,
-    "pos": 412,
-    "trend": 0
+    "pos": 414,
+    "trend": -2
   },
   {
     "atleta_id": "URSELLA_FEDERICO",
@@ -6604,8 +6636,8 @@
     "p2": 0,
     "p3": 0,
     "pout": 1,
-    "pos": 413,
-    "trend": 0
+    "pos": 415,
+    "trend": -2
   },
   {
     "atleta_id": "GRIMALDI_LEONARDO",
@@ -6620,8 +6652,8 @@
     "p2": 0,
     "p3": 0,
     "pout": 2,
-    "pos": 414,
-    "trend": 0
+    "pos": 416,
+    "trend": -2
   },
   {
     "atleta_id": "CARERI_MICHEL",
@@ -6636,8 +6668,8 @@
     "p2": 0,
     "p3": 0,
     "pout": 1,
-    "pos": 415,
-    "trend": 0
+    "pos": 417,
+    "trend": -2
   },
   {
     "atleta_id": "BALZAN_LEONARDO",
@@ -6652,8 +6684,8 @@
     "p2": 0,
     "p3": 0,
     "pout": 1,
-    "pos": 416,
-    "trend": 0
+    "pos": 418,
+    "trend": -2
   },
   {
     "atleta_id": "BIANCHI_RICCARDO",
@@ -6668,8 +6700,8 @@
     "p2": 0,
     "p3": 0,
     "pout": 1,
-    "pos": 417,
-    "trend": 0
+    "pos": 419,
+    "trend": -2
   },
   {
     "atleta_id": "PHILIPPOT_JOEL",
@@ -6684,8 +6716,8 @@
     "p2": 0,
     "p3": 0,
     "pout": 3,
-    "pos": 418,
-    "trend": 0
+    "pos": 420,
+    "trend": -2
   },
   {
     "atleta_id": "BONAMIGO_SAMUELE",
@@ -6700,8 +6732,8 @@
     "p2": 0,
     "p3": 0,
     "pout": 1,
-    "pos": 419,
-    "trend": 0
+    "pos": 421,
+    "trend": -2
   },
   {
     "atleta_id": "MARCHESI_MATTEO",
@@ -6716,8 +6748,8 @@
     "p2": 0,
     "p3": 0,
     "pout": 1,
-    "pos": 420,
-    "trend": 0
+    "pos": 422,
+    "trend": -2
   },
   {
     "atleta_id": "ACANFORA_MATTIA",
@@ -6732,8 +6764,8 @@
     "p2": 0,
     "p3": 0,
     "pout": 1,
-    "pos": 421,
-    "trend": 0
+    "pos": 423,
+    "trend": -2
   },
   {
     "atleta_id": "ASTRELLI_OLIVER",
@@ -6748,8 +6780,8 @@
     "p2": 0,
     "p3": 0,
     "pout": 1,
-    "pos": 422,
-    "trend": 0
+    "pos": 424,
+    "trend": -2
   },
   {
     "atleta_id": "PALOMBI_LEONARDO",
@@ -6764,8 +6796,8 @@
     "p2": 0,
     "p3": 0,
     "pout": 1,
-    "pos": 423,
-    "trend": 0
+    "pos": 425,
+    "trend": -2
   },
   {
     "atleta_id": "SORRENTINO_ALESSIO",
@@ -6780,8 +6812,8 @@
     "p2": 0,
     "p3": 0,
     "pout": 1,
-    "pos": 424,
-    "trend": 0
+    "pos": 426,
+    "trend": -2
   },
   {
     "atleta_id": "ZANARDINI_LUCA",
@@ -6796,8 +6828,8 @@
     "p2": 0,
     "p3": 0,
     "pout": 1,
-    "pos": 425,
-    "trend": 0
+    "pos": 427,
+    "trend": -2
   },
   {
     "atleta_id": "MARZARI_FEDERICO",
@@ -6812,8 +6844,8 @@
     "p2": 0,
     "p3": 0,
     "pout": 2,
-    "pos": 426,
-    "trend": 0
+    "pos": 428,
+    "trend": -2
   },
   {
     "atleta_id": "GAMBA_TOMMASO",
@@ -6828,24 +6860,8 @@
     "p2": 0,
     "p3": 0,
     "pout": 1,
-    "pos": 427,
-    "trend": 0
-  },
-  {
-    "atleta_id": "CAMMARATA_MARCO",
-    "cognome": "CAMMARATA",
-    "nome": "MARCO",
-    "team_id": "BUSTESE_OLONIA_A_S_D",
-    "team_nome": "BUSTESE OLONIA A.S.D.",
-    "punti": 3,
-    "vittorie": 0,
-    "gare": 2,
-    "p1": 0,
-    "p2": 0,
-    "p3": 0,
-    "pout": 2,
-    "pos": 428,
-    "trend": 0
+    "pos": 429,
+    "trend": -2
   },
   {
     "atleta_id": "HOIDRAG_ALEX_NICOLAE",
@@ -6860,8 +6876,8 @@
     "p2": 0,
     "p3": 0,
     "pout": 1,
-    "pos": 429,
-    "trend": 0
+    "pos": 430,
+    "trend": -1
   },
   {
     "atleta_id": "PETROSINO_LUCA",
@@ -6876,8 +6892,8 @@
     "p2": 0,
     "p3": 0,
     "pout": 1,
-    "pos": 430,
-    "trend": 0
+    "pos": 431,
+    "trend": -1
   },
   {
     "atleta_id": "TROIANI_NICOLANGELO",
@@ -6892,8 +6908,8 @@
     "p2": 0,
     "p3": 0,
     "pout": 2,
-    "pos": 431,
-    "trend": 0
+    "pos": 432,
+    "trend": -1
   },
   {
     "atleta_id": "STRIANESE_ANTONIO",
@@ -6908,8 +6924,8 @@
     "p2": 0,
     "p3": 0,
     "pout": 1,
-    "pos": 432,
-    "trend": 0
+    "pos": 433,
+    "trend": -1
   },
   {
     "atleta_id": "FAVARO_ALESSANDRO",
@@ -6924,8 +6940,8 @@
     "p2": 0,
     "p3": 0,
     "pout": 1,
-    "pos": 433,
-    "trend": 0
+    "pos": 434,
+    "trend": -1
   },
   {
     "atleta_id": "PELLEGRINO_LORENZO",
@@ -6940,8 +6956,8 @@
     "p2": 0,
     "p3": 0,
     "pout": 1,
-    "pos": 434,
-    "trend": 0
+    "pos": 435,
+    "trend": -1
   },
   {
     "atleta_id": "CANALE_GAGLIANO_SEAN_PIO",
@@ -6956,8 +6972,8 @@
     "p2": 0,
     "p3": 0,
     "pout": 1,
-    "pos": 435,
-    "trend": 0
+    "pos": 436,
+    "trend": -1
   },
   {
     "atleta_id": "LA_FATA_VITTORIO",
@@ -6972,8 +6988,8 @@
     "p2": 0,
     "p3": 0,
     "pout": 1,
-    "pos": 436,
-    "trend": 0
+    "pos": 437,
+    "trend": -1
   },
   {
     "atleta_id": "PELANDA_SIMONE",
@@ -6988,8 +7004,8 @@
     "p2": 0,
     "p3": 0,
     "pout": 1,
-    "pos": 437,
-    "trend": 0
+    "pos": 438,
+    "trend": -1
   },
   {
     "atleta_id": "NADAL_RICCARDO_PAOLO",
@@ -7004,8 +7020,8 @@
     "p2": 0,
     "p3": 0,
     "pout": 1,
-    "pos": 438,
-    "trend": 0
+    "pos": 439,
+    "trend": -1
   },
   {
     "atleta_id": "ALIBRIO_LEONARDO",
@@ -7020,8 +7036,8 @@
     "p2": 0,
     "p3": 0,
     "pout": 1,
-    "pos": 439,
-    "trend": 0
+    "pos": 440,
+    "trend": -1
   },
   {
     "atleta_id": "GALASSO_DENIS",
@@ -7036,8 +7052,8 @@
     "p2": 0,
     "p3": 0,
     "pout": 1,
-    "pos": 440,
-    "trend": 0
+    "pos": 441,
+    "trend": -1
   },
   {
     "atleta_id": "BUTTITTA_ANTONIO",
@@ -7052,8 +7068,8 @@
     "p2": 0,
     "p3": 0,
     "pout": 1,
-    "pos": 441,
-    "trend": 0
+    "pos": 442,
+    "trend": -1
   },
   {
     "atleta_id": "MASONI_GIACOMO",
@@ -7068,8 +7084,8 @@
     "p2": 0,
     "p3": 0,
     "pout": 1,
-    "pos": 442,
-    "trend": 0
+    "pos": 443,
+    "trend": -1
   },
   {
     "atleta_id": "PILLITTERI_GABRIELE",
@@ -7084,8 +7100,8 @@
     "p2": 0,
     "p3": 0,
     "pout": 1,
-    "pos": 443,
-    "trend": 0
+    "pos": 444,
+    "trend": -1
   },
   {
     "atleta_id": "LA_PORTA_GIOVANNI",
@@ -7100,8 +7116,8 @@
     "p2": 0,
     "p3": 0,
     "pout": 2,
-    "pos": 444,
-    "trend": 0
+    "pos": 445,
+    "trend": -1
   },
   {
     "atleta_id": "BENEDETTI_PIETRO",
@@ -7116,8 +7132,8 @@
     "p2": 0,
     "p3": 0,
     "pout": 2,
-    "pos": 445,
-    "trend": 0
+    "pos": 446,
+    "trend": -1
   },
   {
     "atleta_id": "MAFFEI_LIBEROMARIO",
@@ -7132,8 +7148,8 @@
     "p2": 0,
     "p3": 0,
     "pout": 1,
-    "pos": 446,
-    "trend": 0
+    "pos": 447,
+    "trend": -1
   },
   {
     "atleta_id": "FONDACCI_NICOLO",
@@ -7148,8 +7164,8 @@
     "p2": 0,
     "p3": 0,
     "pout": 1,
-    "pos": 447,
-    "trend": 0
+    "pos": 448,
+    "trend": -1
   },
   {
     "atleta_id": "BORSATO_GABRIELE",
@@ -7164,8 +7180,8 @@
     "p2": 0,
     "p3": 0,
     "pout": 1,
-    "pos": 448,
-    "trend": 0
+    "pos": 449,
+    "trend": -1
   },
   {
     "atleta_id": "RIVA_MANUEL",
@@ -7180,8 +7196,8 @@
     "p2": 0,
     "p3": 0,
     "pout": 1,
-    "pos": 449,
-    "trend": 0
+    "pos": 450,
+    "trend": -1
   },
   {
     "atleta_id": "FERRUA_GREGORIO",
@@ -7196,8 +7212,8 @@
     "p2": 0,
     "p3": 0,
     "pout": 1,
-    "pos": 450,
-    "trend": 0
+    "pos": 451,
+    "trend": -1
   },
   {
     "atleta_id": "BONCINA_ALEXANDRU",
@@ -7212,8 +7228,8 @@
     "p2": 0,
     "p3": 0,
     "pout": 1,
-    "pos": 451,
-    "trend": 0
+    "pos": 452,
+    "trend": -1
   },
   {
     "atleta_id": "LOGGIA_GIOELE",
@@ -7228,8 +7244,8 @@
     "p2": 0,
     "p3": 0,
     "pout": 1,
-    "pos": 452,
-    "trend": 0
+    "pos": 453,
+    "trend": -1
   },
   {
     "atleta_id": "ATTI_LORENZO",
@@ -7244,8 +7260,8 @@
     "p2": 0,
     "p3": 0,
     "pout": 2,
-    "pos": 453,
-    "trend": 0
+    "pos": 454,
+    "trend": -1
   },
   {
     "atleta_id": "SEQUANI_LEONARDO",
@@ -7260,8 +7276,8 @@
     "p2": 0,
     "p3": 0,
     "pout": 1,
-    "pos": 454,
-    "trend": 0
+    "pos": 455,
+    "trend": -1
   },
   {
     "atleta_id": "PRESTIGIACOMO_MIRCO",
@@ -7276,8 +7292,8 @@
     "p2": 0,
     "p3": 0,
     "pout": 1,
-    "pos": 455,
-    "trend": 0
+    "pos": 456,
+    "trend": -1
   },
   {
     "atleta_id": "MARINO_FRANCESCO",
@@ -7292,8 +7308,8 @@
     "p2": 0,
     "p3": 0,
     "pout": 1,
-    "pos": 456,
-    "trend": 0
+    "pos": 457,
+    "trend": -1
   },
   {
     "atleta_id": "BRAGHINI_BRUNO",
@@ -7308,8 +7324,8 @@
     "p2": 0,
     "p3": 0,
     "pout": 1,
-    "pos": 457,
-    "trend": 0
+    "pos": 458,
+    "trend": -1
   },
   {
     "atleta_id": "ESPOSTI_MATTEO",
@@ -7324,8 +7340,8 @@
     "p2": 0,
     "p3": 0,
     "pout": 2,
-    "pos": 458,
-    "trend": 0
+    "pos": 459,
+    "trend": -1
   },
   {
     "atleta_id": "MAZZA_GABRIELE",
@@ -7340,8 +7356,8 @@
     "p2": 0,
     "p3": 0,
     "pout": 1,
-    "pos": 459,
-    "trend": 0
+    "pos": 460,
+    "trend": -1
   },
   {
     "atleta_id": "CHITO_FEDERICO",
@@ -7356,24 +7372,8 @@
     "p2": 0,
     "p3": 0,
     "pout": 1,
-    "pos": 460,
-    "trend": 0
-  },
-  {
-    "atleta_id": "BONACINA_TOMMASO",
-    "cognome": "BONACINA",
-    "nome": "TOMMASO",
-    "team_id": "PEDALE_BREMBILLESE",
-    "team_nome": "PEDALE BREMBILLESE",
-    "punti": 2,
-    "vittorie": 0,
-    "gare": 1,
-    "p1": 0,
-    "p2": 0,
-    "p3": 0,
-    "pout": 1,
     "pos": 461,
-    "trend": 0
+    "trend": -1
   },
   {
     "atleta_id": "OLENIK_TIM",

@@ -2,12 +2,12 @@
   {
     "team_id": "ALBA_OROBIA_BIASSONO",
     "team_nome": "ALBA OROBIA - BIASSONO",
-    "punti": 713,
+    "punti": 721,
     "vittorie": 19,
     "p1": 19,
     "p2": 12,
     "p3": 3,
-    "pout": 37,
+    "pout": 38,
     "n_atleti": 9,
     "pos": 1
   },
@@ -74,12 +74,12 @@
   {
     "team_id": "POOL_CANTU_SOVICO_GB_TEAM",
     "team_nome": "POOL CANTU' - SOVICO - GB TEAM",
-    "punti": 422,
+    "punti": 428,
     "vittorie": 6,
     "p1": 6,
     "p2": 9,
     "p3": 7,
-    "pout": 26,
+    "pout": 27,
     "n_atleti": 7,
     "pos": 7
   },
@@ -122,12 +122,12 @@
   {
     "team_id": "BUSTESE_OLONIA_A_S_D",
     "team_nome": "BUSTESE OLONIA A.S.D.",
-    "punti": 368,
+    "punti": 373,
     "vittorie": 4,
     "p1": 4,
     "p2": 6,
     "p3": 6,
-    "pout": 36,
+    "pout": 37,
     "n_atleti": 7,
     "pos": 11
   },
@@ -278,10 +278,10 @@
   {
     "team_id": "S_C_ROMANESE_ASD",
     "team_nome": "S.C. ROMANESE ASD",
-    "punti": 246,
+    "punti": 258,
     "vittorie": 3,
     "p1": 3,
-    "p2": 2,
+    "p2": 3,
     "p3": 7,
     "pout": 22,
     "n_atleti": 7,
@@ -290,11 +290,11 @@
   {
     "team_id": "MADONNA_DI_CAMPAGNA",
     "team_nome": "MADONNA DI CAMPAGNA",
-    "punti": 245,
+    "punti": 255,
     "vittorie": 7,
     "p1": 7,
     "p2": 3,
-    "p3": 0,
+    "p3": 1,
     "pout": 20,
     "n_atleti": 3,
     "pos": 25
@@ -468,6 +468,18 @@
     "pos": 39
   },
   {
+    "team_id": "MADIGNANESE_CICLISMO_A_S_D",
+    "team_nome": "MADIGNANESE CICLISMO A.S.D",
+    "punti": 147,
+    "vittorie": 1,
+    "p1": 1,
+    "p2": 1,
+    "p3": 4,
+    "pout": 17,
+    "n_atleti": 3,
+    "pos": 40
+  },
+  {
     "team_id": "ASD_VELOCE_CLUB_BORGO",
     "team_nome": "ASD VELOCE CLUB BORGO",
     "punti": 147,
@@ -477,7 +489,7 @@
     "p3": 1,
     "pout": 16,
     "n_atleti": 3,
-    "pos": 40
+    "pos": 41
   },
   {
     "team_id": "S_C_PATTADA",
@@ -489,18 +501,6 @@
     "p3": 1,
     "pout": 5,
     "n_atleti": 2,
-    "pos": 41
-  },
-  {
-    "team_id": "MADIGNANESE_CICLISMO_A_S_D",
-    "team_nome": "MADIGNANESE CICLISMO A.S.D",
-    "punti": 145,
-    "vittorie": 1,
-    "p1": 1,
-    "p2": 1,
-    "p3": 4,
-    "pout": 16,
-    "n_atleti": 3,
     "pos": 42
   },
   {
@@ -540,6 +540,18 @@
     "pos": 45
   },
   {
+    "team_id": "CICLISTICA_DRO",
+    "team_nome": "CICLISTICA DRO",
+    "punti": 130,
+    "vittorie": 3,
+    "p1": 3,
+    "p2": 2,
+    "p3": 1,
+    "pout": 13,
+    "n_atleti": 3,
+    "pos": 46
+  },
+  {
     "team_id": "UC_EMPOLESE",
     "team_nome": "UC EMPOLESE",
     "punti": 127,
@@ -549,7 +561,7 @@
     "p3": 0,
     "pout": 23,
     "n_atleti": 6,
-    "pos": 46
+    "pos": 47
   },
   {
     "team_id": "A_S_D_CICLISTICA_2000",
@@ -561,19 +573,19 @@
     "p3": 0,
     "pout": 12,
     "n_atleti": 2,
-    "pos": 47
+    "pos": 48
   },
   {
-    "team_id": "CICLISTICA_DRO",
-    "team_nome": "CICLISTICA DRO",
-    "punti": 115,
-    "vittorie": 2,
-    "p1": 2,
-    "p2": 2,
-    "p3": 1,
-    "pout": 13,
+    "team_id": "I_CINGHIALI_EVO",
+    "team_nome": "I CINGHIALI EVO",
+    "punti": 102,
+    "vittorie": 1,
+    "p1": 1,
+    "p2": 1,
+    "p3": 2,
+    "pout": 11,
     "n_atleti": 3,
-    "pos": 48
+    "pos": 49
   },
   {
     "team_id": "ASD_EFFETTO_CICLISMO_NOI_SPORT",
@@ -585,7 +597,7 @@
     "p3": 3,
     "pout": 15,
     "n_atleti": 3,
-    "pos": 49
+    "pos": 50
   },
   {
     "team_id": "G_S_ALZATE_BRIANZA_SYSTEM_CAR",
@@ -597,18 +609,6 @@
     "p3": 2,
     "pout": 10,
     "n_atleti": 1,
-    "pos": 50
-  },
-  {
-    "team_id": "I_CINGHIALI_EVO",
-    "team_nome": "I CINGHIALI EVO",
-    "punti": 99,
-    "vittorie": 1,
-    "p1": 1,
-    "p2": 1,
-    "p3": 2,
-    "pout": 10,
-    "n_atleti": 3,
     "pos": 51
   },
   {
@@ -708,6 +708,18 @@
     "pos": 59
   },
   {
+    "team_id": "PEDALE_BREMBILLESE",
+    "team_nome": "PEDALE BREMBILLESE",
+    "punti": 68,
+    "vittorie": 0,
+    "p1": 0,
+    "p2": 0,
+    "p3": 0,
+    "pout": 17,
+    "n_atleti": 3,
+    "pos": 60
+  },
+  {
     "team_id": "QUILIANO_BIKE_SPEED_WHEEL",
     "team_nome": "QUILIANO BIKE SPEED WHEEL",
     "punti": 67,
@@ -717,7 +729,7 @@
     "p3": 3,
     "pout": 2,
     "n_atleti": 2,
-    "pos": 60
+    "pos": 61
   },
   {
     "team_id": "GS_CARTURA_NALIN",
@@ -729,7 +741,7 @@
     "p3": 0,
     "pout": 17,
     "n_atleti": 5,
-    "pos": 61
+    "pos": 62
   },
   {
     "team_id": "UC_COLTANO_GRUBE_COSTRUZIONI",
@@ -741,7 +753,7 @@
     "p3": 1,
     "pout": 9,
     "n_atleti": 4,
-    "pos": 62
+    "pos": 63
   },
   {
     "team_id": "TEAM_PIU_SPORT",
@@ -753,7 +765,7 @@
     "p3": 0,
     "pout": 9,
     "n_atleti": 3,
-    "pos": 63
+    "pos": 64
   },
   {
     "team_id": "LIBERTAS_CERESETTO",
@@ -764,18 +776,6 @@
     "p2": 0,
     "p3": 1,
     "pout": 14,
-    "n_atleti": 3,
-    "pos": 64
-  },
-  {
-    "team_id": "PEDALE_BREMBILLESE",
-    "team_nome": "PEDALE BREMBILLESE",
-    "punti": 64,
-    "vittorie": 0,
-    "p1": 0,
-    "p2": 0,
-    "p3": 0,
-    "pout": 16,
     "n_atleti": 3,
     "pos": 65
   },
@@ -1200,6 +1200,18 @@
     "pos": 100
   },
   {
+    "team_id": "G_S_LUPI_VALLE_D_AOSTA",
+    "team_nome": "G.S. LUPI VALLE D'AOSTA",
+    "punti": 27,
+    "vittorie": 0,
+    "p1": 0,
+    "p2": 0,
+    "p3": 1,
+    "pout": 8,
+    "n_atleti": 2,
+    "pos": 101
+  },
+  {
     "team_id": "CICLISTICA_PIERIS",
     "team_nome": "CICLISTICA PIERIS",
     "punti": 26,
@@ -1209,18 +1221,6 @@
     "p3": 0,
     "pout": 8,
     "n_atleti": 3,
-    "pos": 101
-  },
-  {
-    "team_id": "G_S_LUPI_VALLE_D_AOSTA",
-    "team_nome": "G.S. LUPI VALLE D'AOSTA",
-    "punti": 26,
-    "vittorie": 0,
-    "p1": 0,
-    "p2": 0,
-    "p3": 1,
-    "pout": 7,
-    "n_atleti": 2,
     "pos": 102
   },
   {
