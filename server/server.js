@@ -565,6 +565,25 @@ function _ogSeasonTally(resultsRaw, atleta_id, genere, uptoDate) {
   return { wins, podiums };
 }
 
+// Stessa cosa ma per risultati "a squadre" (es. Campionati Italiani a
+// Squadre Cronometro): lo scraper salva queste righe SENZA atleta_id/
+// cognome/nome (il risultato è del team, non del singolo corridore), quindi
+// _ogSeasonTally sopra (che filtra per atleta_id) non le troverebbe mai —
+// le vittorie a squadre restavano invisibili nel testo di condivisione.
+// Filtra solo righe altrettanto "a squadre" (atleta_id vuoto) per non
+// mischiare le vittorie del club stesso ottenute dai singoli corridori.
+function _ogSeasonTallyTeam(resultsRaw, team_id, genere, uptoDate) {
+  let wins = 0, podiums = 0;
+  for (const r of resultsRaw) {
+    if (r.atleta_id || r.team_id !== team_id || r.genere !== genere) continue;
+    if ((r.data || '') > uptoDate) continue;
+    const pos = Number(r.posizione);
+    if (pos === 1) wins++;
+    if (pos >= 1 && pos <= 3) podiums++;
+  }
+  return { wins, podiums };
+}
+
 const _OG_WIN_PHRASES_1 = [
   '{n} centra la prima vittoria stagionale',
   "Prima vittoria dell'anno per {n}",
@@ -607,15 +626,22 @@ function _buildGaraNarrative(id, cal, resultsRaw) {
   const raceName = cal?.nome || id.replace(/_\d{4}-\d{2}-\d{2}.*$/, '').replace(/_/g,' ');
   const raceDate = results[0]?.data || cal?.data || '';
   const date     = cal?.data ? new Date(cal.data).toLocaleDateString('it-IT',{day:'numeric',month:'long',year:'numeric'}) : '';
-  const top3     = results.slice(0,3).map((r,i)=>`${i+1}° ${r.cognome} ${r.nome}${r.team ? ` (${r.team})` : ''}`).join(' · ');
+  // Risultato "a squadre" (es. Campionati Italiani a Squadre Cronometro):
+  // niente cognome/nome, solo team — evita "1°  (NOME TEAM)" con lo spazio
+  // vuoto del nome atleta mancante.
+  const _resultLabel = (r) => (r.cognome || r.nome) ? `${r.cognome} ${r.nome}`.trim() : (r.team || '');
+  const top3     = results.slice(0,3).map((r,i)=>`${i+1}° ${_resultLabel(r)}${r.team && (r.cognome||r.nome) ? ` (${r.team})` : ''}`).join(' · ');
   const luogo    = cal?.luogo || cal?.regione || '';
 
   const winner = results[0], second = results[1], third = results[2];
   const podiumLines = [];
   let winnerTitleTail = '';
-  if (winner?.atleta_id) {
-    const { wins } = _ogSeasonTally(resultsRaw || [], winner.atleta_id, winner.genere, raceDate);
-    const winnerName = `${winner.cognome} ${winner.nome}`;
+  if (winner?.atleta_id || (winner && (winner.team_id || winner.team))) {
+    const isTeamResult = !winner.atleta_id;
+    const { wins } = isTeamResult
+      ? _ogSeasonTallyTeam(resultsRaw || [], winner.team_id, winner.genere, raceDate)
+      : _ogSeasonTally(resultsRaw || [], winner.atleta_id, winner.genere, raceDate);
+    const winnerName = isTeamResult ? (winner.team || winner.team_id) : `${winner.cognome} ${winner.nome}`;
     podiumLines.push(_ogWinnerLine(winnerName, wins, id + '_1') + '.');
     winnerTitleTail = _ogSeedPick(wins <= 1 ? [
       `Vince ${winnerName}`,
@@ -629,13 +655,19 @@ function _buildGaraNarrative(id, cal, resultsRaw) {
       `${winnerName} allunga: ${wins}ª vittoria in stagione`,
     ], id + '_t');
   }
-  if (second?.atleta_id) {
-    const { podiums } = _ogSeasonTally(resultsRaw || [], second.atleta_id, second.genere, raceDate);
-    podiumLines.push(_ogPodiumLine(`${second.cognome} ${second.nome}`, podiums, id + '_2') + '.');
+  if (second?.atleta_id || (second && (second.team_id || second.team))) {
+    const isTeamResult = !second.atleta_id;
+    const { podiums } = isTeamResult
+      ? _ogSeasonTallyTeam(resultsRaw || [], second.team_id, second.genere, raceDate)
+      : _ogSeasonTally(resultsRaw || [], second.atleta_id, second.genere, raceDate);
+    podiumLines.push(_ogPodiumLine(isTeamResult ? (second.team || second.team_id) : `${second.cognome} ${second.nome}`, podiums, id + '_2') + '.');
   }
-  if (third?.atleta_id) {
-    const { podiums } = _ogSeasonTally(resultsRaw || [], third.atleta_id, third.genere, raceDate);
-    podiumLines.push(_ogPodiumLine(`${third.cognome} ${third.nome}`, podiums, id + '_3') + '.');
+  if (third?.atleta_id || (third && (third.team_id || third.team))) {
+    const isTeamResult = !third.atleta_id;
+    const { podiums } = isTeamResult
+      ? _ogSeasonTallyTeam(resultsRaw || [], third.team_id, third.genere, raceDate)
+      : _ogSeasonTally(resultsRaw || [], third.atleta_id, third.genere, raceDate);
+    podiumLines.push(_ogPodiumLine(isTeamResult ? (third.team || third.team_id) : `${third.cognome} ${third.nome}`, podiums, id + '_3') + '.');
   }
 
   // Facebook (verificato con post reali pubblicati) non mostra MAI la
@@ -714,6 +746,21 @@ app.get('/og/gara/:id', async (req, res) => {
 // stesso l'anteprima), quindi qui prepariamo lo stesso tipo di narrazione
 // dinamica usata per i meta tag — l'admin lo copia e lo incolla nella
 // finestra "Crea post" sopra alla grafica già generata.
+// Credit del fotografo della foto che accompagna la condivisione — stessa
+// priorità/alias usati da /api/og-image/gara/:id per scegliere la copertina,
+// così il credit corrisponde SEMPRE alla foto che si vede nell'anteprima.
+// Condividere una foto (specie di terzi, es. xpix.it) senza credit espone a
+// contestazioni: qui viene sempre incluso quando disponibile.
+async function _photoCreditFor(garaId) {
+  const uploaded = await queries.getApprovedRacePhotos(garaId).catch(() => []);
+  if (uploaded && uploaded.length && uploaded[0].photographer) return uploaded[0].photographer;
+  const aliases = [garaId, garaId.replace(/^\d+_/, ''), garaId.replace(/_[A-Z0-9]+_[MF]$/, '')];
+  const [xpix, ic] = await Promise.all([readXpixPhotos(), readICPhotos()]);
+  for (const alias of aliases) if (xpix[alias]) return 'xpix.it';
+  for (const alias of aliases) if (ic[alias]) return 'ciclismo.info';
+  return null;
+}
+
 app.get('/api/admin/gara-share-text/:id', requireAdmin, async (req, res) => {
   try {
     const id = req.params.id;
@@ -724,6 +771,7 @@ app.get('/api/admin/gara-share-text/:id', requireAdmin, async (req, res) => {
     const cal = (calRaw || []).find(g => g.id === id)
       || (calRaw || []).find(g => g.id === id.replace(/_[A-Z0-9]+_[MF]$/, ''));
     const { raceName, date, luogo, top3, podiumLines } = _buildGaraNarrative(id, cal, resultsRaw);
+    const credit = await _photoCreditFor(id).catch(() => null);
     const lines = [
       raceName.toUpperCase(),
       [date, luogo].filter(Boolean).join(' · '),
@@ -731,6 +779,8 @@ app.get('/api/admin/gara-share-text/:id', requireAdmin, async (req, res) => {
       top3,
       '',
       podiumLines.join(' '),
+      credit ? '' : undefined,
+      credit ? `📷 Foto: ${credit}` : undefined,
     ].filter(l => l !== undefined && l !== null);
     res.json({ text: lines.join('\n').replace(/\n{3,}/g, '\n\n').trim() });
   } catch (e) { res.status(500).json({ error: e.message }); }
