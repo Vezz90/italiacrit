@@ -2205,6 +2205,46 @@ function _findRealGaraIdForPendingVideo(gid) {
   return null;
 }
 
+function _normVideoName(s) {
+  return String(s || '').toUpperCase().normalize('NFD').replace(/[̀-ͯ]/g, '')
+    .replace(/[^A-Z0-9]+/g, ' ').trim();
+}
+
+// Caso diverso dal precedente: la voce calendario a cui è agganciato il
+// video ESISTE (non è una chiave sintetica) ma non ha mai ricevuto
+// risultati — tipicamente un doppione creato con un nome leggermente
+// diverso da quello poi usato per i risultati reali (es. "50 GRAN PREMIO
+// SPORTIVI DI POGGIANA - 50 TROFEO BONIN COSTRUZIONI - ..." per il video,
+// "50 GRAN PREMIO SPORTIVI DI POGGIANA UNDER23" per i risultati — stesso
+// giorno, stesso evento, nomi diversi). Cerca un'altra voce calendario
+// nello stesso giorno CON risultati reali e un buon numero di parole in
+// comune con quella orfana.
+function _findRealGaraIdForOrphanCalendarVideo(gid) {
+  if (gid.includes('::')) return null;
+  const calendar = readDataJson('calendar.json') || [];
+  const own = calendar.find(c => c.id === gid);
+  if (!own) return null;
+  const resultsRaw = readDataJson('results_raw.json') || [];
+  const resultedIds = new Set(resultsRaw.map(r => r.gara_id));
+  if ([...resultedIds].some(rid => rid === gid || rid.startsWith(gid + '_'))) return null; // ha già risultati, non è orfana
+  const ownWords = new Set(_normVideoName(own.nome).split(' ').filter(w => w.length > 4));
+  if (!ownWords.size) return null;
+  let best = null, bestScore = 0;
+  for (const c of calendar) {
+    if (c.id === gid || c.data !== own.data) continue;
+    const withCat = [...resultedIds].find(rid => rid.startsWith(c.id + '_'));
+    if (!withCat) continue;
+    const cWords = new Set(_normVideoName(c.nome).split(' ').filter(w => w.length > 4));
+    let score = 0;
+    for (const w of ownWords) if (cWords.has(w)) score++;
+    if (score > bestScore) { bestScore = score; best = withCat; }
+  }
+  // Richiedi almeno 2 parole significative in comune (es. "GRAN PREMIO
+  // SPORTIVI POGGIANA") per evitare falsi positivi tra gare diverse dello
+  // stesso giorno con un solo termine generico condiviso.
+  return bestScore >= 2 ? best : null;
+}
+
 // Sposta le "dirette caricate in anticipo" (chiave sintetica) sul gara_id
 // reale non appena i risultati di quella tappa vengono pubblicati —
 // altrimenti restano per sempre invisibili sulla pagina della gara (si
@@ -2216,8 +2256,9 @@ async function _reconcilePendingStageVideos() {
   const videos = await readVideos();
   let changed = false;
   for (const gid of Object.keys(videos)) {
-    if (!gid.includes('::')) continue;
-    const realId = _findRealGaraIdForPendingVideo(gid);
+    const realId = gid.includes('::')
+      ? _findRealGaraIdForPendingVideo(gid)
+      : _findRealGaraIdForOrphanCalendarVideo(gid);
     if (!realId) continue;
     const arr = videos[gid] || [];
     if (!videos[realId]) videos[realId] = [];
