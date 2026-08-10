@@ -4733,6 +4733,30 @@ async function writeYTMediaChannels(arr) {
   fs.writeFileSync(path.join(__dirname, '../data/yt_media_channels.json'), JSON.stringify(arr, null, 2));
 }
 
+// Rileva se un video YouTube è uno Short — la durata NON è un segnale
+// affidabile (dal 2024 YouTube accetta Shorts fino a 3 minuti, e ci sono
+// video normali per i social altrettanto brevi): l'unico modo corretto è
+// quello che usa YouTube stesso, cioè se l'URL youtube.com/shorts/{id}
+// resta tale o viene rimandato automaticamente a /watch?v= (un video NON
+// Short non ha una pagina /shorts/ propria, quindi redirige).
+async function isYouTubeShort(videoId) {
+  try {
+    const r = await fetch(`https://www.youtube.com/shorts/${videoId}`, { redirect: 'follow' });
+    return r.url.includes('/shorts/');
+  } catch { return false; } // errore di rete: non escludiamo per un dubbio
+}
+async function filterOutShorts(videoIds, includeShorts) {
+  if (includeShorts) return new Set();
+  const shorts = new Set();
+  const CONCURRENCY = 8;
+  for (let i = 0; i < videoIds.length; i += CONCURRENCY) {
+    const batch = videoIds.slice(i, i + CONCURRENCY);
+    const results = await Promise.all(batch.map(async id => [id, await isYouTubeShort(id)]));
+    for (const [id, isShort] of results) if (isShort) shorts.add(id);
+  }
+  return shorts;
+}
+
 // Controlla i canali registrati per novità (solo la prima pagina della
 // playlist upload, cioè i più recenti) e importa in automatico i video nuovi
 // nel palinsesto scelto al momento della registrazione del canale.
@@ -4748,11 +4772,11 @@ async function syncMediaChannels() {
       const existing = await queries.getMediaVideosByProfile(ch.profileId);
       const existingUrls = new Set(existing.map(v => v.url));
       const candidateIds = (plResp.items || []).map(it => it.snippet?.resourceId?.videoId).filter(Boolean);
-      const durations = ch.includeShorts ? {} : await fetchVideosInfoBatch(candidateIds, YOUTUBE_API_KEY);
+      const shorts = await filterOutShorts(candidateIds, ch.includeShorts);
       for (const item of (plResp.items || [])) {
         const vid = item.snippet?.resourceId?.videoId;
         if (!vid) continue;
-        if (!ch.includeShorts && (durations[vid]?.duration ?? 999) <= 60) continue; // Short
+        if (shorts.has(vid)) continue;
         const url = `https://www.youtube.com/watch?v=${vid}`;
         if (existingUrls.has(url)) continue;
         await queries.createMediaVideo({
@@ -6308,9 +6332,9 @@ app.post('/api/admin/media/import-channel', requireAdmin, async (req, res) => {
 
     // Pagina la playlist "uploads" finché non si raggiunge il limite richiesto.
     // La playlist "uploads" contiene Shorts e video normali mescolati (l'API
-    // non li distingue a livello di playlistItems): per ogni pagina, batch di
-    // durate reali via videos.list e scartiamo quelli <=60s (definizione
-    // ufficiale di Short) a meno che l'utente non li voglia esplicitamente.
+    // non li distingue a livello di playlistItems): per ogni pagina, controllo
+    // isYouTubeShort() reale (redirect di youtube.com/shorts/{id}) e scarto
+    // quelli — la durata NON basta, ci sono Shorts fino a 3 minuti.
     // Limite di 10 pagine (500 candidati grezzi) per non sprecare quota se un
     // canale ha moltissimi Shorts e pochissimi video "veri".
     const videos = [];
@@ -6329,9 +6353,9 @@ app.post('/api/admin/media/import-channel', requireAdmin, async (req, res) => {
         published_at: item.snippet?.publishedAt || null,
       })).filter(x => x.vid);
 
-      const durations = includeShorts ? {} : await fetchVideosInfoBatch(pageItems.map(x => x.vid), YOUTUBE_API_KEY);
+      const shorts = await filterOutShorts(pageItems.map(x => x.vid), includeShorts);
       for (const x of pageItems) {
-        if (!includeShorts && (durations[x.vid]?.duration ?? 999) <= 60) continue; // Short
+        if (shorts.has(x.vid)) continue;
         videos.push({ url: `https://www.youtube.com/watch?v=${x.vid}`, title: x.title, description: x.description, thumbnail_url: x.thumbnail_url, published_at: x.published_at });
         if (videos.length >= maxVideos) break;
       }
