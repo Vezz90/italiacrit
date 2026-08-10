@@ -693,14 +693,17 @@ const queries = {
     all(`SELECT id, display_name, bio, website, instagram, facebook, cover_url, media_type, created_at
          FROM media_profiles WHERE status = 'active' ORDER BY display_name`),
 
-  // Solo i creator VERI (profilo registrato da un utente, non un profilo
-  // fotografo importato dallo scraper xpix/ciclismo.info) che pubblicano
-  // video — usato per la striscia avatar nella tab "Creator" della sezione Media.
+  // Ogni profilo con almeno un video pubblicato compare come "creator" —
+  // sia i creator registrati da un utente, sia i canali importati in blocco
+  // (senza utente, come i profili fotografo scrapati, ma questi ultimi non
+  // hanno mai video quindi restano fuori naturalmente) — usato per la
+  // striscia avatar nella tab "Creator" della sezione Media.
   getVideoCreatorProfiles: () =>
-    all(`SELECT id, display_name, cover_url, media_type
-         FROM media_profiles
-         WHERE status = 'active' AND user_id IS NOT NULL AND media_type IN ('video', 'entrambi')
-         ORDER BY display_name`),
+    all(`SELECT DISTINCT p.id, p.display_name, p.cover_url, p.media_type
+         FROM media_profiles p
+         JOIN media_videos v ON v.media_profile_id = p.id
+         WHERE p.status = 'active'
+         ORDER BY p.display_name`),
 
   // Profili media scrapati e non ancora rivendicati da un utente
   getUnclaimedMediaProfiles: () =>
