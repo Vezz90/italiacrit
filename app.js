@@ -9622,17 +9622,11 @@ window.adminNav = async function(section) {
         <div style="background:var(--bg-card);border:1px solid var(--border-subtle);border-radius:8px;padding:16px;margin-bottom:16px">
           <div style="font-weight:700;font-size:.875rem;margin-bottom:4px">📥 Importa in blocco un canale come Media Video</div>
           <p style="font-size:.8rem;color:var(--text-muted);margin:0 0 12px">
-            Incolla l'URL/@handle di un canale YouTube: importa tutti i suoi video (fino al limite scelto) nel
-            palinsesto indicato — niente approvazione manuale uno per uno.
+            Incolla l'URL/@handle di un canale YouTube: importa tutti i suoi video (fino al limite scelto) —
+            niente approvazione manuale uno per uno.
           </p>
           <div style="display:flex;gap:8px;flex-wrap:wrap;align-items:center">
             <input type="text" id="ytimp-channel" placeholder="youtube.com/@nomecanale, @nomecanale oppure link a una playlist" style="flex:1;min-width:240px;padding:8px 10px;border:1px solid var(--border-subtle);border-radius:5px;background:var(--bg-base);color:var(--text-primary);font-size:.85rem"/>
-            <select id="ytimp-pal" style="padding:8px 10px;border:1px solid var(--border-subtle);border-radius:5px;background:var(--bg-base);color:var(--text-primary);font-size:.85rem">
-              <option value="podcast">Podcast</option>
-              <option value="vlog">Vlog</option>
-              <option value="highlights">Highlights gara</option>
-              <option value="interviste">Interviste</option>
-            </select>
             <input type="number" id="ytimp-limit" value="50" min="1" max="300" style="width:80px;padding:8px 10px;border:1px solid var(--border-subtle);border-radius:5px;background:var(--bg-base);color:var(--text-primary);font-size:.85rem" title="Numero massimo di video da importare"/>
             <button id="ytimp-btn" onclick="window.adminImportYtChannel()" style="background:var(--accent);color:#fff;border:none;padding:8px 16px;border-radius:5px;font-weight:600;cursor:pointer;font-size:.85rem">Importa</button>
           </div>
@@ -9650,13 +9644,7 @@ window.adminNav = async function(section) {
             i podcast ce l'hanno, distribuito anche fuori da Spotify).
           </p>
           <div style="display:flex;gap:8px;flex-wrap:wrap;align-items:center">
-            <input type="text" id="podimp-input" placeholder="Link show Spotify oppure URL feed RSS" style="flex:1;min-width:240px;padding:8px 10px;border:1px solid var(--border-subtle);border-radius:5px;background:var(--bg-base);color:var(--text-primary);font-size:.85rem"/>
-            <select id="podimp-pal" style="padding:8px 10px;border:1px solid var(--border-subtle);border-radius:5px;background:var(--bg-base);color:var(--text-primary);font-size:.85rem">
-              <option value="podcast">Podcast</option>
-              <option value="vlog">Vlog</option>
-              <option value="highlights">Highlights gara</option>
-              <option value="interviste">Interviste</option>
-            </select>
+            <input type="text" id="podimp-input" placeholder="Link show Spotify, link a un episodio, oppure URL feed RSS" style="flex:1;min-width:240px;padding:8px 10px;border:1px solid var(--border-subtle);border-radius:5px;background:var(--bg-base);color:var(--text-primary);font-size:.85rem"/>
             <input type="number" id="podimp-limit" value="100" min="1" max="500" style="width:80px;padding:8px 10px;border:1px solid var(--border-subtle);border-radius:5px;background:var(--bg-base);color:var(--text-primary);font-size:.85rem" title="Numero massimo di puntate da importare"/>
             <button id="podimp-btn" onclick="window.adminImportPodcast()" style="background:var(--accent);color:#fff;border:none;padding:8px 16px;border-radius:5px;font-weight:600;cursor:pointer;font-size:.85rem">Importa</button>
           </div>
@@ -11386,7 +11374,7 @@ window.ytSaveChannels = async () => {
 // per il canale e ci carica i video trovati, saltando quelli già importati.
 window.adminImportYtChannel = async () => {
   const channel = document.getElementById('ytimp-channel')?.value.trim();
-  const palinsesto = document.getElementById('ytimp-pal')?.value;
+  const palinsesto = 'vlog'; // divisione per tipo rimossa: tutti i contenuti insieme, in ordine di pubblicazione
   const limit = document.getElementById('ytimp-limit')?.value;
   const includeShorts = document.getElementById('ytimp-shorts')?.checked || false;
   const status = document.getElementById('ytimp-status');
@@ -11410,7 +11398,7 @@ window.adminImportYtChannel = async () => {
 
 window.adminImportPodcast = async () => {
   const input = document.getElementById('podimp-input')?.value.trim();
-  const palinsesto = document.getElementById('podimp-pal')?.value;
+  const palinsesto = 'podcast'; // divisione per tipo rimossa: sempre "podcast" per questo importer
   const limit = document.getElementById('podimp-limit')?.value;
   const status = document.getElementById('podimp-status');
   const btn = document.getElementById('podimp-btn');
@@ -16209,14 +16197,25 @@ window._mvOpenPodcastClick = (el) => {
   window.openPodcastModal(el.dataset.url, el.dataset.title, el.dataset.cover);
 };
 
-async function renderMediaProfile(profileId) {
+let _mediaProfilePage = 1; // paginazione a blocchi di 50, reset a ogni apertura profilo
+window.mediaProfileLoadMore = (profileId) => { _mediaProfilePage++; renderMediaProfile(profileId, true); };
+async function renderMediaProfile(profileId, _keepPage) {
+  if (!_keepPage) _mediaProfilePage = 1;
   setPage(`<div class="loading-bar"></div>`);
   try {
     const d = await fetch(`${API_BASE}/media/profile/${profileId}`).then(r => r.json());
     if (d.error) { renderNotFound(); return; }
     const { profile, albums, videos = [], stats } = d;
-    const videosHtml = videos.length
-      ? `<div class="media-album-grid">${videos.map(_mediaVideoCardHtml).join('')}</div>`
+    // Paginazione a blocchi di 50 (video già ordinati per data di pubblicazione
+    // dal backend): un creator con centinaia di video non appesantisce tutto
+    // in un colpo solo.
+    const shownVideos = videos.slice(0, _mediaProfilePage * MEDIA_CREATOR_PAGE_SIZE);
+    const videosHtml = shownVideos.length
+      ? `<div class="media-album-grid">${shownVideos.map(_mediaVideoCardHtml).join('')}</div>${
+          videos.length > shownVideos.length
+            ? `<div style="text-align:center;margin-top:16px"><button class="yt-chip" onclick="window.mediaProfileLoadMore(${profile.id})">Carica altri 50 (${videos.length - shownVideos.length} rimanenti)</button></div>`
+            : ''
+        }`
       : `<p style="color:var(--text-muted);padding:24px 0">Nessun video ancora.</p>`;
 
     const albumsHtml = albums.length
@@ -16321,15 +16320,17 @@ window._renderMediaAlbum = async function(albumId, profileId) {
 // registrati, non i profili fotografo importati dallo scraper) + feed video,
 // filtrabile per palinsesto e per creator — resta nella STESSA pagina Media
 // (nessuna navigazione), popolata async dentro #media-creator-area.
-let _mediaCreatorPal = '';
 let _mediaCreatorProfileId = null;
 let _mediaCreatorSeries = '';
-window.mediaCreatorSetPal = (p) => { _mediaCreatorPal = p; window._loadMediaCreatorArea(); };
-window.mediaCreatorSetSeries = (s) => { _mediaCreatorSeries = s; window._loadMediaCreatorArea(); };
+const MEDIA_CREATOR_PAGE_SIZE = 50;
+let _mediaCreatorPage = 1; // quante "pagine" da 50 mostrare, cresce col tasto "Carica altro"
+window.mediaCreatorSetSeries = (s) => { _mediaCreatorSeries = s; _mediaCreatorPage = 1; window._loadMediaCreatorArea(); };
+window.mediaCreatorLoadMore = () => { _mediaCreatorPage++; window._loadMediaCreatorArea(); };
 window.mediaCreatorSetProfile = (id) => {
   const deselecting = _mediaCreatorProfileId === id;
   _mediaCreatorProfileId = deselecting ? null : id;
   _mediaCreatorSeries = ''; // reset: la playlist scelta era relativa al creator precedente
+  _mediaCreatorPage = 1;
   // URL condivisibile (es. /media/creator/12): chi apre il link arriva
   // direttamente su quel creator, senza dover ricliccare il suo cerchietto.
   navTo(deselecting ? '/media/creator' : '/media/creator/' + id);
@@ -16380,13 +16381,22 @@ window._loadMediaCreatorArea = async function() {
     // filtro per serie compare solo se ce n'è più di una, altrimenti sarebbe
     // un chip inutile su un solo valore.
     const seriesList = [...new Set(allProfileVideos.map(v => v.series).filter(Boolean))];
-    const videos = allProfileVideos
-      .filter(v => !_mediaCreatorPal || v.palinsesto === _mediaCreatorPal)
-      .filter(v => !_mediaCreatorSeries || v.series === _mediaCreatorSeries);
+    // Niente più filtro per palinsesto (Highlights/Interviste/Vlog/Podcast):
+    // tutti i contenuti del creator insieme, in ordine di pubblicazione — le
+    // divisioni per tipo non aggiungevano valore, solo un click in più.
+    const allFiltered = allProfileVideos.filter(v => !_mediaCreatorSeries || v.series === _mediaCreatorSeries);
+    // Paginazione client-side a blocchi di 50 (i video sono già ordinati per
+    // data/ora di pubblicazione dal backend): un creator con centinaia di
+    // video non appesantisce la pagina tutto in un colpo solo.
+    const shown = allFiltered.slice(0, _mediaCreatorPage * MEDIA_CREATOR_PAGE_SIZE);
+    const hasMore = allFiltered.length > shown.length;
 
-    const videosHtml = videos.length
-      ? `<div class="media-album-grid">${videos.map(v => _mediaVideoCardHtml(v)).join('')}</div>`
-      : `<p style="color:var(--text-muted);padding:12px 0">Nessun video ancora${_mediaCreatorPal || _mediaCreatorSeries ? ' con questo filtro' : ''}.</p>`;
+    const videosHtml = shown.length
+      ? `<div class="media-album-grid">${shown.map(v => _mediaVideoCardHtml(v)).join('')}</div>`
+      : `<p style="color:var(--text-muted);padding:12px 0">Nessun video ancora${_mediaCreatorSeries ? ' con questo filtro' : ''}.</p>`;
+    const loadMoreHtml = hasMore
+      ? `<div style="text-align:center;margin-top:16px"><button class="yt-chip" onclick="window.mediaCreatorLoadMore()">Carica altri 50 (${allFiltered.length - shown.length} rimanenti)</button></div>`
+      : '';
 
     const seriesChipsHtml = seriesList.length > 1 ? `
       <div class="yt-chips" style="margin:0 0 10px">
@@ -16401,11 +16411,8 @@ window._loadMediaCreatorArea = async function() {
         <button class="yt-chip" onclick="window.mediaCreatorSetProfile(${_mediaCreatorProfileId})">✕ Chiudi</button>
       </div>
       ${seriesChipsHtml}
-      <div class="yt-chips" style="margin:0 0 16px">
-        <button class="yt-chip ${!_mediaCreatorPal ? 'yt-chip-active' : ''}" onclick="window.mediaCreatorSetPal('')">Tutti</button>
-        ${Object.entries(MEDIA_PALINSESTO_LABEL).map(([k,l]) => `<button class="yt-chip ${_mediaCreatorPal===k ? 'yt-chip-active' : ''}" onclick="window.mediaCreatorSetPal('${k}')">${esc(l)}</button>`).join('')}
-      </div>
       ${videosHtml}
+      ${loadMoreHtml}
     `;
   } catch(e) {
     area.innerHTML = `<div style="color:var(--red-hot)">Errore: ${esc(e.message)}</div>`;
