@@ -6156,6 +6156,30 @@ const uploadMedia = multer({
   },
 });
 
+// Foto profilo/logo del profilo Media — in fase di creazione o in un secondo
+// momento (usato sia dal form "Crea profilo" sia dal pulsante "Cambia foto"
+// in dashboard/modifica profilo).
+app.post('/api/profile/media/cover', requireMediaOrAdmin, uploadMedia.single('cover'), async (req, res) => {
+  try {
+    const profile = req.user.role === 'admin' && req.body.media_profile_id
+      ? await queries.getMediaProfileById(req.body.media_profile_id)
+      : await queries.getMediaProfileByUser(req.user.id);
+    if (!profile) return res.status(404).json({ error: 'Profilo media non trovato' });
+    if (!req.file) return res.status(400).json({ error: 'Nessuna immagine ricevuta' });
+    const ext = path.extname(req.file.originalname).toLowerCase() || '.jpg';
+    const filename = `media_cover_${profile.id}_${Date.now()}${ext}`;
+    if (supabase) {
+      const { error } = await supabase.storage.from('photos').upload(filename, req.file.buffer, { contentType: req.file.mimetype, upsert: true });
+      if (error) throw new Error(error.message);
+    } else {
+      fs.writeFileSync(path.join(UPLOADS_DIR, filename), req.file.buffer || fs.readFileSync(req.file.path));
+    }
+    const cover_url = `/photos/${filename}`;
+    await queries.updateMediaProfileCover(profile.id, cover_url);
+    res.json({ ok: true, cover_url });
+  } catch (e) { res.status(500).json({ error: e.message }); }
+});
+
 app.post('/api/media/album/:id/photos', requireMediaOrAdmin, uploadMedia.array('photos', 20), async (req, res) => {
   try {
     const album = await queries.getMediaAlbum(req.params.id);

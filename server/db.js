@@ -712,6 +712,9 @@ const queries = {
     one(`UPDATE media_profiles SET user_id = $2, status = 'pending'
          WHERE id = $1 AND user_id IS NULL RETURNING *`, [id, user_id]),
 
+  updateMediaProfileCover: (id, cover_url) =>
+    run(`UPDATE media_profiles SET cover_url = $2 WHERE id = $1`, [id, cover_url]),
+
   approveMediaProfile: (id) =>
     run(`UPDATE media_profiles SET status = 'active' WHERE id = $1`, [id]),
 

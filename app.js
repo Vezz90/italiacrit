@@ -24496,6 +24496,8 @@ async function _dashMedia(el, user, profile) {
             <input type="url"  id="mp-web"  placeholder="Sito web" />
             <input type="text" id="mp-ig"   placeholder="Instagram (senza @)" />
             <input type="text" id="mp-fb"   placeholder="Facebook" />
+            <label style="font-size:.8rem;color:var(--text-muted);display:block;margin:2px 0 4px">Foto profilo / logo (opzionale — puoi aggiungerla anche dopo)</label>
+            <input type="file" id="mp-cover" accept="image/jpeg,image/png,image/webp" style="margin-bottom:10px"/>
             <button type="submit" class="dash-btn dash-btn--primary">CREA PROFILO</button>
           </form>
         </div>
@@ -24536,6 +24538,13 @@ async function _dashMedia(el, user, profile) {
 
       <div class="dash-card">
         <div class="dash-card-title"><span>📷</span>Il tuo profilo media</div>
+        <div style="display:flex;align-items:center;gap:10px;margin-bottom:4px">
+          <div id="mp-cover-preview" style="width:48px;height:48px;border-radius:50%;overflow:hidden;background:var(--bg-base);flex-shrink:0;display:flex;align-items:center;justify-content:center;font-size:1.2rem">
+            ${profile.cover_url ? `<img src="${esc(mediaUrl(profile.cover_url))}" style="width:100%;height:100%;object-fit:cover"/>` : '📷'}
+          </div>
+          <button onclick="document.getElementById('mp-cover-change').click()" class="dash-btn dash-btn--outline dash-btn--sm">🖼 Cambia foto</button>
+          <input type="file" id="mp-cover-change" accept="image/jpeg,image/png,image/webp" style="display:none" onchange="window._submitMediaCoverChange(this)"/>
+        </div>
         <div style="display:flex;align-items:center;gap:10px;flex-wrap:wrap">
           <span class="dash-status ${profile.status==='active'?'dash-status--ok':profile.status==='pending'?'dash-status--warn':'dash-status--err'}">${statusMap[profile.status]||profile.status}</span>
           ${profile.status==='active' ? `<a href="#/media/${profile.id}" class="dash-btn dash-btn--outline dash-btn--sm">👁 Profilo pubblico</a>` : ''}
@@ -24834,9 +24843,26 @@ window.sendTestEmail = async function() {
 
 // ── MEDIA PROFILE HANDLERS ────────────────────────────────────────────────────
 
+// Carica/sostituisce la foto profilo — usato sia in fase di creazione
+// (dal file scelto nel form) sia in un secondo momento (pulsante "Cambia
+// foto" in dashboard e nella modale "Modifica profilo").
+window._uploadMediaCover = async function(file) {
+  const fd = new FormData();
+  fd.append('cover', file);
+  const res = await fetch(`${API_BASE}/profile/media/cover`, {
+    method: 'POST',
+    headers: { Authorization: `Bearer ${authToken()}` },
+    body: fd,
+  });
+  const d = await res.json().catch(() => ({}));
+  if (!res.ok) throw new Error(d.error || `HTTP ${res.status}`);
+  return d;
+};
+
 window.submitMediaProfile = async function(e) {
   e.preventDefault();
   const btn = e.target.querySelector('button[type=submit]');
+  const coverFile = document.getElementById('mp-cover')?.files?.[0] || null;
   btn.disabled = true; btn.textContent = 'Invio…';
   try {
     await apiCall('/profile/media', { method: 'POST', body: {
@@ -24847,6 +24873,7 @@ window.submitMediaProfile = async function(e) {
       instagram:    document.getElementById('mp-ig')?.value.trim(),
       facebook:     document.getElementById('mp-fb')?.value.trim(),
     }});
+    if (coverFile) { try { await window._uploadMediaCover(coverFile); } catch { /* il profilo è comunque creato, la foto si può aggiungere dopo */ } }
     showToast('✓ Profilo inviato — in attesa di approvazione');
     renderMyProfile();
   } catch(err) {
