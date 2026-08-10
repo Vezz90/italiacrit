@@ -191,6 +191,26 @@ function buildCalendarMap() {
   return map;
 }
 
+// Confronto per PAROLA INTERA, non sottostringa: normalizeStr(e.nome)
+// .includes(w) faceva scattare falsi positivi quando w era contenuta
+// dentro una parola diversa (es. "italia" è sottostringa di "italiano" —
+// una gara PCS con "Italia" nel nome si agganciava per sbaglio a un
+// "Campionato Italiano" capitato lo stesso giorno, bug osservato dal vivo).
+// Sceglie il candidato con PIÙ parole in comune, non il primo che ne trova
+// anche solo una: con più corse a tappe/classifiche generali nello stesso
+// giorno (es. più tappe/classifiche del Giro d'Italia Next Gen lo stesso
+// giorno), condividono tutte parole generiche come "italia" — serve il
+// punteggio più alto per distinguere "Ottava Tappa" da "Classifica Generale".
+function bestWordMatch(words, entries) {
+  let best = null, bestScore = 0;
+  for (const e of entries) {
+    const nomeWords = new Set(normalizeStr(e.nome).split(' '));
+    const score = words.reduce((s, w) => s + (nomeWords.has(w) ? 1 : 0), 0);
+    if (score > bestScore) { bestScore = score; best = e; }
+  }
+  return best;
+}
+
 function matchGaraId(calMap, dateStr, pcsCat, pcsName) {
   const entries = calMap.get(dateStr);
   if (!entries?.length) return null;
@@ -205,8 +225,7 @@ function matchGaraId(calMap, dateStr, pcsCat, pcsName) {
     // invece che agganciato per sbaglio alla gara del circuito.
     if (nameStr.length > 4) {
       const words = nameStr.split(' ').filter(w => w.length > 4);
-      const byName = entries.find(e => words.some(w => normalizeStr(e.nome).includes(w)));
-      if (!byName) return null;
+      if (!bestWordMatch(words, entries)) return null;
     }
     return entries[0].id;
   }
@@ -218,7 +237,7 @@ function matchGaraId(calMap, dateStr, pcsCat, pcsName) {
   if (priority) { const m = entries.find(e => e.id.includes(priority)); if (m) return m.id; }
   if (nameStr.length > 4) {
     const words = nameStr.split(' ').filter(w => w.length > 4);
-    const byName = entries.find(e => words.some(w => normalizeStr(e.nome).includes(w)));
+    const byName = bestWordMatch(words, entries);
     if (byName) return byName.id;
   }
   // Né la categoria né il nome hanno trovato un candidato plausibile fra i
