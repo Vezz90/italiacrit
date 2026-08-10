@@ -3785,6 +3785,16 @@ function route() {
   // catch-all /media/:id (altrimenti "creator" verrebbe interpretato come
   // un ID profilo e mostrerebbe "non trovato").
   const MEDIA_TAB_URL_TO_KEY = { video: 'video', dirette: 'dirette', presentazioni: 'presentazioni', 'programmi-tv': 'programmi_tv', altro: 'altro', creator: 'creator' };
+  // Link condivisibile a un creator specifico dentro la scheda Creator
+  // (es. /media/creator/12 → apre direttamente il profilo di quel creator,
+  // senza dover cliccare a mano il suo cerchietto).
+  const m_mediaCreatorProfile = match('/media/creator/:pid');
+  if (m_mediaCreatorProfile) return renderMedia({ tab: 'creator', creatorProfileId: parseInt(m_mediaCreatorProfile[1], 10) });
+  // Link condivisibile a un canale/creator filtrato dentro Video/Dirette/ecc.
+  // (es. /media/video/canale/BICITV → apre la scheda Video già filtrata su
+  // quel canale, così un link condiviso porta esattamente a quella vista).
+  const m_mediaChannel = match('/media/:tab/canale/:name');
+  if (m_mediaChannel && MEDIA_TAB_URL_TO_KEY[m_mediaChannel[1]]) return renderMedia({ tab: MEDIA_TAB_URL_TO_KEY[m_mediaChannel[1]], channel: decodeURIComponent(m_mediaChannel[2]) });
   const m_mediaTab = match('/media/:tab');
   if (m_mediaTab && MEDIA_TAB_URL_TO_KEY[m_mediaTab[1]]) return renderMedia({ tab: MEDIA_TAB_URL_TO_KEY[m_mediaTab[1]] });
   const m_media = match('/media/:id');
@@ -16193,9 +16203,12 @@ let _mediaCreatorSeries = '';
 window.mediaCreatorSetPal = (p) => { _mediaCreatorPal = p; window._loadMediaCreatorArea(); };
 window.mediaCreatorSetSeries = (s) => { _mediaCreatorSeries = s; window._loadMediaCreatorArea(); };
 window.mediaCreatorSetProfile = (id) => {
-  _mediaCreatorProfileId = _mediaCreatorProfileId === id ? null : id;
+  const deselecting = _mediaCreatorProfileId === id;
+  _mediaCreatorProfileId = deselecting ? null : id;
   _mediaCreatorSeries = ''; // reset: la playlist scelta era relativa al creator precedente
-  window._loadMediaCreatorArea();
+  // URL condivisibile (es. /media/creator/12): chi apre il link arriva
+  // direttamente su quel creator, senza dover ricliccare il suo cerchietto.
+  navTo(deselecting ? '/media/creator' : '/media/creator/' + id);
 };
 
 window._loadMediaCreatorArea = async function() {
@@ -21051,6 +21064,12 @@ let mediaQueryGenere = '';
 let mediaQueryCat = '';
 let mediaQueryMonth = '';
 let mediaSearchQuery = '';
+// Filtro per canale/creator nelle schede Video/Dirette/Presentazioni/ecc.
+// (striscia di cerchietti, stesso concetto della tab Creator ma basata sui
+// campi channel/channel_avatar già presenti su ogni video legacy, non sui
+// media_profiles — i due sistemi non sono collegati).
+let mediaChannelFilter = '';
+window.mediaSetChannelFilter = (ch) => { mediaChannelFilter = mediaChannelFilter === ch ? '' : ch; renderMedia(); };
 
 // Contatore visualizzazioni NOSTRO per i video del sistema esistente (gara/
 // dirette/presentazioni/programmi TV/altro) — non hanno un ID DB stabile,
@@ -21070,7 +21089,7 @@ window._legacyIncrView = function(key) {
 };
 
 const MEDIA_TAB_KEY_TO_URL = { video: 'video', dirette: 'dirette', presentazioni: 'presentazioni', programmi_tv: 'programmi-tv', altro: 'altro', creator: 'creator' };
-window.mediaSetTab    = (t) => { mediaTab = t; navTo('/media/' + (MEDIA_TAB_KEY_TO_URL[t] || t)); };
+window.mediaSetTab    = (t) => { mediaTab = t; mediaChannelFilter = ''; navTo('/media/' + (MEDIA_TAB_KEY_TO_URL[t] || t)); };
 window.mediaSetGenere = (v) => { mediaQueryGenere = v; renderMedia(); };
 window.mediaSetCat    = (v) => { mediaQueryCat = v; renderMedia(); };
 window.mediaSetMonth  = (v) => { mediaQueryMonth = v; renderMedia(); };
@@ -21297,6 +21316,8 @@ async function renderMedia(openOpts) {
   // scheda diversa se il contenuto condiviso vive altrove (es. un link a un
   // video di una presentazione forza "presentazioni" anche se tab=video).
   if (openOpts?.tab) mediaTab = openOpts.tab;
+  if (openOpts?.tab !== 'creator') mediaChannelFilter = openOpts?.channel || '';
+  if (openOpts?.creatorProfileId) _mediaCreatorProfileId = openOpts.creatorProfileId;
   const { calendar, resultsRaw, videos } = globalData;
 
   // Indice gara_id → metadati evento (nome/data/categoria/genere), da resultsRaw
@@ -21440,8 +21461,11 @@ async function renderMedia(openOpts) {
   videoItems = applyFilters(videoItems).sort(byPublishedDesc);
   // Tab "Video" e "Dirette" sono mutuamente esclusivi: una diretta non deve
   // comparire anche tra i video normali.
-  const direteItems = videoItems.filter(x => x.video.is_live).sort(byRaceDateDesc);
-  videoItems = videoItems.filter(x => !x.video.is_live);
+  const direteItemsAll = videoItems.filter(x => x.video.is_live).sort(byRaceDateDesc);
+  const videoItemsAll  = videoItems.filter(x => !x.video.is_live);
+  const _chFilter = (arr) => mediaChannelFilter ? arr.filter(x => x.video?.channel === mediaChannelFilter) : arr;
+  videoItems  = _chFilter(videoItemsAll);
+  let direteItems = _chFilter(direteItemsAll);
   // Data di oggi nel fuso delle gare (Italia), non UTC del browser — stesso
   // criterio usato server-side per il banner "IN DIRETTA ORA".
   const _todayStrMedia = new Date().toLocaleDateString('sv-SE', { timeZone: 'Europe/Rome' });
@@ -21467,15 +21491,60 @@ async function renderMedia(openOpts) {
   const diretteResto = direteItems.filter(x =>
     !(x.meta?.data === _todayStrMedia && !_isEndedLive(x)) && !(x.meta?.data && x.meta.data > _todayStrMedia));
   if (mediaTab === 'dirette') _refreshLiveStatusToday();
-  const presentazioniFiltered = applyFilters(presentazioniItems).sort(byPublishedDesc);
-  const programmiTvFiltered   = applyFilters(programmiTvItems).sort(byPublishedDesc);
-  const altroFiltered         = applyFilters(altroItems).sort(byPublishedDesc);
+  const presentazioniAll = applyFilters(presentazioniItems).sort(byPublishedDesc);
+  const programmiTvAll   = applyFilters(programmiTvItems).sort(byPublishedDesc);
+  const altroAll         = applyFilters(altroItems).sort(byPublishedDesc);
+  const presentazioniFiltered = _chFilter(presentazioniAll);
+  const programmiTvFiltered   = _chFilter(programmiTvAll);
+  const altroFiltered         = _chFilter(altroAll);
 
   const items = mediaTab === 'dirette' ? direteItems
     : mediaTab === 'presentazioni' ? presentazioniFiltered
     : mediaTab === 'programmi_tv' ? programmiTvFiltered
     : mediaTab === 'altro' ? altroFiltered
     : videoItems;
+
+  // Striscia cerchietti canale/creator (solo per le schede con contenuti
+  // video legacy — non per "creator", che ha già la sua): costruita dai
+  // canali presenti nella scheda PRIMA del filtro canale (altrimenti,
+  // selezionandone uno, la striscia collasserebbe a un solo cerchietto e non
+  // si potrebbe più tornare indietro o sceglierne un altro).
+  let mediaChannelsHtml = '';
+  if (mediaTab !== 'creator') {
+    const itemsAll = mediaTab === 'dirette' ? direteItemsAll
+      : mediaTab === 'presentazioni' ? presentazioniAll
+      : mediaTab === 'programmi_tv' ? programmiTvAll
+      : mediaTab === 'altro' ? altroAll
+      : videoItemsAll;
+    const channelMap = new Map(); // nome canale -> avatar (primo trovato non vuoto)
+    for (const x of itemsAll) {
+      const ch = x.video?.channel;
+      if (!ch) continue;
+      if (!channelMap.has(ch) || (!channelMap.get(ch) && x.video.channel_avatar)) channelMap.set(ch, x.video.channel_avatar || channelMap.get(ch) || '');
+    }
+    const channelsList = [...channelMap.entries()].sort((a, b) => a[0].localeCompare(b[0]));
+    if (channelsList.length > 1) {
+      // href reale (non un onclick a parte): il gestore globale dei click
+      // interni intercetta questi <a> e naviga con navTo(), aggiornando
+      // davvero la barra indirizzi — così il link è copiabile/condivisibile.
+      // Ricliccare il cerchietto già attivo torna all'URL "base" della
+      // scheda (deseleziona il filtro).
+      const _tabUrl = MEDIA_TAB_KEY_TO_URL[mediaTab] || mediaTab;
+      mediaChannelsHtml = `
+        <div style="display:flex;gap:14px;overflow-x:auto;padding:4px 2px 12px">
+          ${channelsList.map(([ch, avatar]) => {
+            const active = mediaChannelFilter === ch;
+            const href = active ? `#/media/${_tabUrl}` : `#/media/${_tabUrl}/canale/${encodeURIComponent(ch)}`;
+            return `<a href="${href}" style="text-decoration:none;display:flex;flex-direction:column;align-items:center;gap:6px;flex:0 0 auto;width:64px">
+              <div style="width:48px;height:48px;border-radius:50%;overflow:hidden;background:var(--bg-base);border:2px solid ${active ? 'var(--accent)' : 'var(--border-subtle)'};display:flex;align-items:center;justify-content:center;font-size:1.1rem">
+                ${avatar ? `<img src="${esc(avatar)}" style="width:100%;height:100%;object-fit:cover"/>` : '🎬'}
+              </div>
+              <span style="font-size:.66rem;color:var(--text-secondary);text-align:center;line-height:1.2;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;max-width:64px">${esc(ch)}</span>
+            </a>`;
+          }).join('')}
+        </div>`;
+    }
+  }
 
   const allCatsSet = new Set();
   [...videoItems, ...direteItems].forEach(x => { const c = getRankingFileCode(x.meta) || x.meta.categoria; if (c) allCatsSet.add(c); });
@@ -21667,6 +21736,7 @@ async function renderMedia(openOpts) {
         ${_isAdminMedia ? `<button class="yt-chip" style="background:var(--red-hot);color:#fff;border-color:var(--red-hot)" onclick="window.openMediaAddForm()">➕ Aggiungi</button>` : ''}
         ${_isAdminMedia ? `<button class="yt-chip" onclick="window.mediaBackfillMetadata(this)">🔄 Ricalcola date/loghi</button>` : ''}` : ''}
       </div>
+      ${mediaChannelsHtml}
       ${_isAdminMedia && _showRaceFilters && (window._mediaSel || new Set()).size ? `
       <div class="yt-bulk-bar">
         <span>${(window._mediaSel || new Set()).size} selezionati</span>

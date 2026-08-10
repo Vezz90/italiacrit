@@ -852,6 +852,23 @@ app.get('/og/media-video/:vid', async (req, res) => {
   }));
 });
 
+// Condivisione di un profilo Media (creator o fotografo) — l'immagine è la
+// cover del profilo, che per i canali YouTube importati in blocco È
+// l'immagine profilo/logo del canale (salvata al momento dell'import).
+app.get('/og/media/:id', async (req, res) => {
+  const id = req.params.id;
+  const redirect = `${SITE_URL}/media/${encodeURIComponent(id)}`;
+  if (!OG_BOT_RE.test(req.headers['user-agent'] || '')) return res.redirect(302, redirect);
+  const profile = await queries.getMediaProfileById(id).catch(() => null);
+  if (!profile) return res.send(ogHtml({ title: 'Media', desc: 'Italia Cycling Stats', redirect, canonical: redirect }));
+  const img = profile.cover_url ? (/^https?:\/\//.test(profile.cover_url) ? profile.cover_url : `${SITE_URL}${profile.cover_url}`) : null;
+  res.send(ogHtml({
+    title: profile.display_name || 'Media',
+    desc: `Foto e video di ${profile.display_name || 'questo creator'} su Italia Cycling Stats`,
+    img, redirect, canonical: redirect,
+  }));
+});
+
 app.get('/og/atleta/:id', async (req, res) => {
   const id       = req.params.id;
   if (!OG_BOT_RE.test(req.headers['user-agent'] || '')) {
@@ -8773,6 +8790,11 @@ app.get('*', (req, res, next) => {
     if (m) return res.redirect(302, `/og/${m[1]}/${encodeURIComponent(m[2])}`);
     m = p.match(/^\/classifica\/([^/]+)\/?$/);
     if (m) return res.redirect(302, `/og/class/${encodeURIComponent(m[1])}`);
+    // Profilo Media (creator o fotografo) — il link "vero" è /media/:id;
+    // /media/creator/:id (Creator tab) porta allo stesso profilo, quindi usa
+    // la stessa immagine/testo di condivisione.
+    m = p.match(/^\/media\/(\d+)\/?$/) || p.match(/^\/media\/creator\/(\d+)\/?$/);
+    if (m) return res.redirect(302, `/og/media/${encodeURIComponent(m[1])}`);
   }
 
   res.sendFile(path.join(FRONTEND_DIR, 'index.html'));
