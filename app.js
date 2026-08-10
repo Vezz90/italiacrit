@@ -9559,7 +9559,7 @@ window.adminNav = async function(section) {
             palinsesto indicato — niente approvazione manuale uno per uno.
           </p>
           <div style="display:flex;gap:8px;flex-wrap:wrap;align-items:center">
-            <input type="text" id="ytimp-channel" placeholder="youtube.com/@nomecanale oppure @nomecanale" style="flex:1;min-width:240px;padding:8px 10px;border:1px solid var(--border-subtle);border-radius:5px;background:var(--bg-base);color:var(--text-primary);font-size:.85rem"/>
+            <input type="text" id="ytimp-channel" placeholder="youtube.com/@nomecanale, @nomecanale oppure link a una playlist" style="flex:1;min-width:240px;padding:8px 10px;border:1px solid var(--border-subtle);border-radius:5px;background:var(--bg-base);color:var(--text-primary);font-size:.85rem"/>
             <select id="ytimp-pal" style="padding:8px 10px;border:1px solid var(--border-subtle);border-radius:5px;background:var(--bg-base);color:var(--text-primary);font-size:.85rem">
               <option value="podcast">Podcast</option>
               <option value="vlog">Vlog</option>
@@ -16046,18 +16046,27 @@ function _mediaVideoCardHtml(v) {
   // YouTube), ma l'utente resta su italiacyclingstats.com. Le altre
   // piattaforme (Instagram/TikTok) non hanno un embed altrettanto semplice
   // quindi restano un link esterno.
+  // Titolo/id passati via data-* (non incollati dentro l'onclick come stringa
+  // JS): un titolo con un apostrofo — comunissimo in italiano — rompeva la
+  // sintassi, perché l'entità HTML veniva ri-decodificata dal browser PRIMA
+  // che il JS la leggesse, richiudendo la stringa a metà e mandando in
+  // errore silenzioso l'intero handler (il video restava semplicemente muto al click).
   const vid = ytId(v.url || '');
-  const clickAction = vid
-    ? `window._mvIncrView(${v.id});window.openVideoModal('${vid}','${esc(v.title).replace(/'/g, "\\'")}')`
-    : `window._mvIncrView(${v.id})`;
   const tag = vid ? 'div' : 'a';
-  const linkAttrs = vid ? '' : `href="${esc(v.url)}" target="_blank" rel="noopener"`;
-  return `<${tag} ${linkAttrs} class="media-video-card" style="display:block;text-decoration:none;color:inherit;cursor:pointer" onclick="${clickAction}">
+  const linkAttrs = vid
+    ? `data-vid="${v.id}" data-yt-id="${esc(vid)}" data-title="${esc(v.title)}" onclick="window._mvOpenVideoClick(this)"`
+    : `href="${esc(v.url)}" target="_blank" rel="noopener" onclick="window._mvIncrView(${v.id})"`;
+  return `<${tag} ${linkAttrs} class="media-video-card" style="display:block;text-decoration:none;color:inherit;cursor:pointer">
     <div style="position:relative;width:100%;aspect-ratio:16/9;background:var(--bg-base);border-radius:10px;overflow:hidden;display:flex;align-items:center;justify-content:center;font-size:2.2rem">${coverHtml}${profileLogo}</div>
     <div class="media-video-title">${esc(v.title)}</div>
     <div class="media-video-meta"><span>${pname} · ${palLabel}</span>${garaLink ? ' · ' + garaLink : ''}<span style="margin-left:auto">${viewsHtml}</span></div>
   </${tag}>`;
 }
+
+window._mvOpenVideoClick = (el) => {
+  window._mvIncrView(el.dataset.vid);
+  window.openVideoModal(el.dataset.ytId, el.dataset.title);
+};
 
 async function renderMediaProfile(profileId) {
   setPage(`<div class="loading-bar"></div>`);

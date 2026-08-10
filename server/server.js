@@ -6250,32 +6250,52 @@ app.post('/api/admin/media/import-channel', requireAdmin, async (req, res) => {
     if (!MEDIA_PALINSESTI.includes(palinsesto)) return res.status(400).json({ error: 'Palinsesto non valido' });
     const maxVideos = Math.min(Math.max(parseInt(limit, 10) || 50, 1), 300);
 
-    // Risolvi l'input (URL/@handle/ID) in un channel_id (UCxxxxxxxx...).
-    let channelId = null;
     const raw = channel.trim();
-    const idMatch = raw.match(/(UC[\w-]{22})/);
-    if (idMatch) {
-      channelId = idMatch[1];
-    } else {
-      // Estrae l'handle: cerca "@nome" ovunque nella stringa (non ancorato alla
-      // fine) perché URL come .../@canale/videos altrimenti facevano catturare
-      // "videos" invece del vero handle.
-      const atMatch = raw.match(/@([\w.-]+)/);
-      const pathMatch = !atMatch && raw.match(/youtube\.com\/(?:c\/|user\/)([\w.-]+)/);
-      const handle = atMatch ? atMatch[1] : (pathMatch ? pathMatch[1] : raw.replace(/\/+$/, '').split('/').pop());
-      channelId = await resolveHandle(handle);
-    }
-    if (!channelId) return res.status(404).json({ error: 'Canale non trovato — prova a incollare l\'URL completo del canale' });
+    let uploadsPlaylist, channelTitle, channelThumb;
 
-    // Titolo/logo del canale + playlist "uploads" (tutti i video pubblicati) in una chiamata.
-    const chUrl = `https://www.googleapis.com/youtube/v3/channels?part=snippet,contentDetails&id=${channelId}&key=${YOUTUBE_API_KEY}`;
-    const chResp = await fetch(chUrl).then(r => r.json());
-    const chItem = chResp.items?.[0];
-    if (!chItem) return res.status(404).json({ error: 'Canale non trovato su YouTube' });
-    const channelTitle = chItem.snippet?.title || raw;
-    const channelThumb = chItem.snippet?.thumbnails?.medium?.url || chItem.snippet?.thumbnails?.default?.url || '';
-    const uploadsPlaylist = chItem.contentDetails?.relatedPlaylists?.uploads;
-    if (!uploadsPlaylist) return res.status(404).json({ error: 'Nessun video pubblico trovato per questo canale' });
+    // Link playlist (es. .../playlist?list=PLxxxx): importa direttamente quella
+    // playlist invece delle uploads del canale — utile per prendere solo una
+    // serie/rassegna specifica invece di tutto quello che un canale pubblica.
+    // Il profilo creato/riusato resta comunque quello del CANALE proprietario
+    // (non uno per playlist), così più playlist dello stesso canale confluiscono
+    // nello stesso creator.
+    const listMatch = raw.match(/[?&]list=([\w-]+)/);
+    if (listMatch) {
+      uploadsPlaylist = listMatch[1];
+      const plMetaResp = await fetch(`https://www.googleapis.com/youtube/v3/playlists?part=snippet&id=${uploadsPlaylist}&key=${YOUTUBE_API_KEY}`).then(r => r.json());
+      const plItem = plMetaResp.items?.[0];
+      if (!plItem) return res.status(404).json({ error: 'Playlist non trovata — controlla che sia pubblica' });
+      channelTitle = plItem.snippet?.channelTitle || plItem.snippet?.title || raw;
+      const chUrl = `https://www.googleapis.com/youtube/v3/channels?part=snippet&id=${plItem.snippet?.channelId}&key=${YOUTUBE_API_KEY}`;
+      const chResp = plItem.snippet?.channelId ? await fetch(chUrl).then(r => r.json()) : {};
+      channelThumb = chResp.items?.[0]?.snippet?.thumbnails?.medium?.url || plItem.snippet?.thumbnails?.medium?.url || plItem.snippet?.thumbnails?.default?.url || '';
+    } else {
+      // Risolvi l'input (URL/@handle/ID) in un channel_id (UCxxxxxxxx...).
+      let channelId = null;
+      const idMatch = raw.match(/(UC[\w-]{22})/);
+      if (idMatch) {
+        channelId = idMatch[1];
+      } else {
+        // Estrae l'handle: cerca "@nome" ovunque nella stringa (non ancorato alla
+        // fine) perché URL come .../@canale/videos altrimenti facevano catturare
+        // "videos" invece del vero handle.
+        const atMatch = raw.match(/@([\w.-]+)/);
+        const pathMatch = !atMatch && raw.match(/youtube\.com\/(?:c\/|user\/)([\w.-]+)/);
+        const handle = atMatch ? atMatch[1] : (pathMatch ? pathMatch[1] : raw.replace(/\/+$/, '').split('/').pop());
+        channelId = await resolveHandle(handle);
+      }
+      if (!channelId) return res.status(404).json({ error: 'Canale non trovato — prova a incollare l\'URL completo del canale' });
+
+      // Titolo/logo del canale + playlist "uploads" (tutti i video pubblicati) in una chiamata.
+      const chUrl = `https://www.googleapis.com/youtube/v3/channels?part=snippet,contentDetails&id=${channelId}&key=${YOUTUBE_API_KEY}`;
+      const chResp = await fetch(chUrl).then(r => r.json());
+      const chItem = chResp.items?.[0];
+      if (!chItem) return res.status(404).json({ error: 'Canale non trovato su YouTube' });
+      channelTitle = chItem.snippet?.title || raw;
+      channelThumb = chItem.snippet?.thumbnails?.medium?.url || chItem.snippet?.thumbnails?.default?.url || '';
+      uploadsPlaylist = chItem.contentDetails?.relatedPlaylists?.uploads;
+      if (!uploadsPlaylist) return res.status(404).json({ error: 'Nessun video pubblico trovato per questo canale' });
+    }
 
     // Trova o crea il profilo media "senza utente" per questo canale (stesso
     // pattern dei fotografi scrapati) — riusato ai giri successivi cercandolo per nome.
@@ -6336,8 +6356,8 @@ app.post('/api/admin/media/import-channel', requireAdmin, async (req, res) => {
     // canale pubblica in futuro vengono importati da soli, senza rifare
     // l'import manuale.
     const mediaChannels = await readYTMediaChannels();
-    const idx = mediaChannels.findIndex(c => c.channelId === channelId);
-    const entry = { channelId, uploadsPlaylist, palinsesto, profileId: profile.id, displayName: channelTitle, includeShorts: !!includeShorts };
+    const idx = mediaChannels.findIndex(c => c.uploadsPlaylist === uploadsPlaylist);
+    const entry = { uploadsPlaylist, palinsesto, profileId: profile.id, displayName: channelTitle, includeShorts: !!includeShorts };
     if (idx >= 0) mediaChannels[idx] = entry; else mediaChannels.push(entry);
     await writeYTMediaChannels(mediaChannels);
 
