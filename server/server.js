@@ -4747,9 +4747,12 @@ async function syncMediaChannels() {
       if (plResp.error) { console.warn('[media-yt-sync] errore canale', ch.displayName, plResp.error.message); continue; }
       const existing = await queries.getMediaVideosByProfile(ch.profileId);
       const existingUrls = new Set(existing.map(v => v.url));
+      const candidateIds = (plResp.items || []).map(it => it.snippet?.resourceId?.videoId).filter(Boolean);
+      const durations = ch.includeShorts ? {} : await fetchVideosInfoBatch(candidateIds, YOUTUBE_API_KEY);
       for (const item of (plResp.items || [])) {
         const vid = item.snippet?.resourceId?.videoId;
         if (!vid) continue;
+        if (!ch.includeShorts && (durations[vid]?.duration ?? 999) <= 60) continue; // Short
         const url = `https://www.youtube.com/watch?v=${vid}`;
         if (existingUrls.has(url)) continue;
         await queries.createMediaVideo({
@@ -6242,7 +6245,7 @@ app.get('/api/videos/views', async (req, res) => {
 app.post('/api/admin/media/import-channel', requireAdmin, async (req, res) => {
   try {
     if (!YOUTUBE_API_KEY) return res.status(400).json({ error: 'YOUTUBE_API_KEY non configurata' });
-    const { channel, palinsesto, limit } = req.body;
+    const { channel, palinsesto, limit, includeShorts } = req.body;
     if (!channel?.trim()) return res.status(400).json({ error: 'Canale mancante (URL, @handle o channel ID)' });
     if (!MEDIA_PALINSESTI.includes(palinsesto)) return res.status(400).json({ error: 'Palinsesto non valido' });
     const maxVideos = Math.min(Math.max(parseInt(limit, 10) || 50, 1), 300);
@@ -6284,22 +6287,32 @@ app.post('/api/admin/media/import-channel', requireAdmin, async (req, res) => {
     }
 
     // Pagina la playlist "uploads" finché non si raggiunge il limite richiesto.
+    // La playlist "uploads" contiene Shorts e video normali mescolati (l'API
+    // non li distingue a livello di playlistItems): per ogni pagina, batch di
+    // durate reali via videos.list e scartiamo quelli <=60s (definizione
+    // ufficiale di Short) a meno che l'utente non li voglia esplicitamente.
+    // Limite di 10 pagine (500 candidati grezzi) per non sprecare quota se un
+    // canale ha moltissimi Shorts e pochissimi video "veri".
     const videos = [];
     let pageToken = '';
-    while (videos.length < maxVideos) {
+    let pagesFetched = 0;
+    while (videos.length < maxVideos && pagesFetched < 10) {
       const plUrl = `https://www.googleapis.com/youtube/v3/playlistItems?part=snippet&playlistId=${uploadsPlaylist}&maxResults=50&pageToken=${pageToken}&key=${YOUTUBE_API_KEY}`;
       const plResp = await fetch(plUrl).then(r => r.json());
       if (plResp.error) throw new Error(plResp.error.message || 'Errore API YouTube (playlistItems)');
-      for (const item of (plResp.items || [])) {
-        const vid = item.snippet?.resourceId?.videoId;
-        if (!vid) continue;
-        videos.push({
-          url: `https://www.youtube.com/watch?v=${vid}`,
-          title: item.snippet?.title || 'Video',
-          description: (item.snippet?.description || '').slice(0, 500),
-          thumbnail_url: item.snippet?.thumbnails?.medium?.url || item.snippet?.thumbnails?.default?.url || '',
-          published_at: item.snippet?.publishedAt || null,
-        });
+      pagesFetched++;
+      const pageItems = (plResp.items || []).map(item => ({
+        vid: item.snippet?.resourceId?.videoId,
+        title: item.snippet?.title || 'Video',
+        description: (item.snippet?.description || '').slice(0, 500),
+        thumbnail_url: item.snippet?.thumbnails?.medium?.url || item.snippet?.thumbnails?.default?.url || '',
+        published_at: item.snippet?.publishedAt || null,
+      })).filter(x => x.vid);
+
+      const durations = includeShorts ? {} : await fetchVideosInfoBatch(pageItems.map(x => x.vid), YOUTUBE_API_KEY);
+      for (const x of pageItems) {
+        if (!includeShorts && (durations[x.vid]?.duration ?? 999) <= 60) continue; // Short
+        videos.push({ url: `https://www.youtube.com/watch?v=${x.vid}`, title: x.title, description: x.description, thumbnail_url: x.thumbnail_url, published_at: x.published_at });
         if (videos.length >= maxVideos) break;
       }
       pageToken = plResp.nextPageToken;
@@ -6324,7 +6337,7 @@ app.post('/api/admin/media/import-channel', requireAdmin, async (req, res) => {
     // l'import manuale.
     const mediaChannels = await readYTMediaChannels();
     const idx = mediaChannels.findIndex(c => c.channelId === channelId);
-    const entry = { channelId, uploadsPlaylist, palinsesto, profileId: profile.id, displayName: channelTitle };
+    const entry = { channelId, uploadsPlaylist, palinsesto, profileId: profile.id, displayName: channelTitle, includeShorts: !!includeShorts };
     if (idx >= 0) mediaChannels[idx] = entry; else mediaChannels.push(entry);
     await writeYTMediaChannels(mediaChannels);
 

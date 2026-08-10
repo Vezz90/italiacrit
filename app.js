@@ -9569,6 +9569,9 @@ window.adminNav = async function(section) {
             <input type="number" id="ytimp-limit" value="50" min="1" max="300" style="width:80px;padding:8px 10px;border:1px solid var(--border-subtle);border-radius:5px;background:var(--bg-base);color:var(--text-primary);font-size:.85rem" title="Numero massimo di video da importare"/>
             <button id="ytimp-btn" onclick="window.adminImportYtChannel()" style="background:var(--accent);color:#fff;border:none;padding:8px 16px;border-radius:5px;font-weight:600;cursor:pointer;font-size:.85rem">Importa</button>
           </div>
+          <label style="display:flex;align-items:center;gap:6px;margin-top:8px;font-size:.78rem;color:var(--text-muted);cursor:pointer">
+            <input type="checkbox" id="ytimp-shorts"/> Includi anche gli Shorts (per default vengono esclusi: la playlist del canale li mescola ai video normali)
+          </label>
           <div id="ytimp-status" style="font-size:.8rem;color:var(--text-muted);margin-top:8px"></div>
         </div>
         <div id="yt-queue-container">
@@ -11297,6 +11300,7 @@ window.adminImportYtChannel = async () => {
   const channel = document.getElementById('ytimp-channel')?.value.trim();
   const palinsesto = document.getElementById('ytimp-pal')?.value;
   const limit = document.getElementById('ytimp-limit')?.value;
+  const includeShorts = document.getElementById('ytimp-shorts')?.checked || false;
   const status = document.getElementById('ytimp-status');
   const btn = document.getElementById('ytimp-btn');
   if (!channel) { status.textContent = 'Inserisci un canale.'; status.style.color = '#ef4444'; return; }
@@ -11304,7 +11308,7 @@ window.adminImportYtChannel = async () => {
   status.style.color = 'var(--text-muted)';
   status.textContent = 'Recupero video dal canale… può richiedere qualche secondo per canali con molti video.';
   try {
-    const r = await apiCall('/admin/media/import-channel', { method: 'POST', body: { channel, palinsesto, limit } });
+    const r = await apiCall('/admin/media/import-channel', { method: 'POST', body: { channel, palinsesto, limit, includeShorts } });
     status.style.color = '#16a34a';
     status.textContent = `✓ "${r.profile.display_name}": ${r.imported} video importati${r.skipped ? ` (${r.skipped} già presenti, saltati)` : ''}.`;
     document.getElementById('ytimp-channel').value = '';
