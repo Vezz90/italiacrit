@@ -143,20 +143,47 @@ function pcsAthleteSlugCandidates(ath) {
   return candidates;
 }
 
+const RESULTS_FILES = [
+  path.join(DATA_DIR, 'results_raw.json'),
+  path.join(DATA_DIR, 'seasons', String(SEASON), 'results_raw.json'),
+];
+
+// Gara_id "base" (senza suffisso categoria tipo _ELI_M/_JUN_F) di ogni gara
+// che ha ALMENO un risultato FCI vero scrapato — distingue le voci di
+// calendario "internazionale" realmente coperte dallo scraper FCI (es. Giro
+// d'Italia Next Gen: la FCI riporta le tappe italiane) dai puri segnaposto
+// mai popolati (Giro di Sardegna, Coppi e Bartali, gare estere, ecc.).
+function buildResultedGaraIds() {
+  const ids = new Set();
+  for (const f of RESULTS_FILES) {
+    if (!fs.existsSync(f)) continue;
+    for (const r of JSON.parse(fs.readFileSync(f, 'utf8'))) {
+      if (!r.gara_id) continue;
+      ids.add(String(r.gara_id).replace(/_[A-Z0-9]+_[MF]$/, ''));
+    }
+  }
+  return ids;
+}
+
 // ─── Calendario: mappa data → gara_id (identico a pcs-results.js) ─────────
 function buildCalendarMap() {
   const map = new Map();
+  const resultedIds = buildResultedGaraIds();
   for (const f of CAL_FILES) {
     if (!fs.existsSync(f)) continue;
     for (const e of JSON.parse(fs.readFileSync(f, 'utf8'))) {
       if (!e.data || !e.id) continue;
-      // Le voci di calendario "internazionale" (Giro di Sardegna, Coppi e
-      // Bartali, ecc.) sono segnaposto senza risultati FCI veri — nessuno
-      // scraper le popola mai. Abbinarci una riga PCS extra la farebbe solo
-      // sparire dalla vista (nessuna pagina gara le mostra comunque), quindi
-      // vanno escluse a priori dal matching: meglio lasciare gara_id null
-      // (risultato extra visibile) che agganciarle a un segnaposto vuoto.
-      if (e.tipo === 'internazionale') continue;
+      // Le voci di calendario "internazionale" senza ALCUN risultato FCI
+      // vero (Giro di Sardegna, Coppi e Bartali, ecc.) sono segnaposto:
+      // nessuno scraper le popola mai. Abbinarci una riga PCS extra la
+      // farebbe solo sparire dalla vista (nessuna pagina gara le mostra
+      // comunque), quindi vanno escluse a priori dal matching: meglio
+      // lasciare gara_id null (risultato extra visibile) che agganciarle a
+      // un segnaposto vuoto. Le "internazionale" che la FCI riporta davvero
+      // (es. Giro d'Italia Next Gen) restano candidate normali, altrimenti
+      // lo stesso risultato appare due volte: una con punti (FCI) e una
+      // extra senza punti (PCS) — bug osservato dal vivo.
+      if (e.tipo === 'internazionale' && !resultedIds.has(e.id)) continue;
       if (!map.has(e.data)) map.set(e.data, []);
       map.get(e.data).push({ id: e.id, nome: e.nome || '', categoria: e.categoria || '' });
     }
