@@ -3271,6 +3271,59 @@ function _fciAthleteKeys() {
   return keys;
 }
 
+function _levenshtein(a, b) {
+  const m = a.length, n = b.length;
+  if (!m) return n; if (!n) return m;
+  const d = Array.from({ length: m + 1 }, (_, i) => [i, ...Array(n).fill(0)]);
+  for (let j = 0; j <= n; j++) d[0][j] = j;
+  for (let i = 1; i <= m; i++) {
+    for (let j = 1; j <= n; j++) {
+      d[i][j] = a[i - 1] === b[j - 1] ? d[i - 1][j - 1]
+        : 1 + Math.min(d[i - 1][j], d[i][j - 1], d[i - 1][j - 1]);
+    }
+  }
+  return d[m][n];
+}
+
+// Indice cognome|team_id → [nome,...] degli atleti FCI, TENENDO CONTO degli
+// eventuali override di squadra (stesso ovMap che risolve i candidati PCS,
+// vedi _resolvePcsAthlete) — altrimenti il confronto usa due team_id diversi
+// per la stessa persona (es. SAVEKIN_ILIA ha team_id "NEUTRAL_TEAM" nei dati
+// FCI grezzi ma è stato riassegnato a "LOKOMOTIV_MANAS" via override, quindi
+// senza applicare l'override qui il match cognome+squadra non scatterebbe
+// mai). Serve a scartare i "fantasmi" PCS-only che sono in realtà lo STESSO
+// atleta FCI con una trascrizione diversa del nome (es. nomi cirillici:
+// "ILIA" negli esiti FCI vs "ILYA" nel roster PCS). Ricostruito ad ogni
+// chiamata di _buildPcsRosterMap (già cache 90s a quel livello).
+function _buildFciFuzzyIndex(ovMap) {
+  const byCognomeTeam = new Map();
+  try {
+    const p = path.join(__dirname, '..', 'data', 'athletes.json');
+    const all = JSON.parse(fs.readFileSync(p, 'utf8'));
+    for (const a of Object.values(all)) {
+      if (!a.cognome) continue;
+      const teamId = ovMap[a.id]?.team_id || a.team_id;
+      if (!teamId) continue;
+      const key = `${a.cognome.toUpperCase()}|${teamId}`;
+      if (!byCognomeTeam.has(key)) byCognomeTeam.set(key, []);
+      byCognomeTeam.get(key).push((a.nome || '').toUpperCase());
+    }
+  } catch {}
+  return byCognomeTeam;
+}
+
+// Un candidato PCS-only è un probabile "fantasma" duplicato se esiste già
+// un atleta FCI con stesso cognome, stessa squadra, e nome a distanza di
+// edit <= 2 (soglia bassa apposta: sorelle/fratelli con stesso cognome e
+// stessa squadra sono rari ma possibili, non vogliamo scartarli).
+function _isLikelyFciDuplicate(fuzzyIndex, cognome, nome, teamId) {
+  if (!cognome || !nome || !teamId) return false;
+  const names = fuzzyIndex.get(`${cognome.toUpperCase()}|${teamId}`);
+  if (!names) return false;
+  const n = nome.toUpperCase();
+  return names.some(fciNome => fciNome === n || _levenshtein(fciNome, n) <= 2);
+}
+
 // Costruisce la mappa team_id → { nome, atleti[] } degli atleti PCS.
 // IMPORTANTE: include SOLO atleti PCS-only (non in athletes.json). Gli atleti FCI
 // hanno già un team dai risultati ufficiali; il loro team si cambia solo con un
@@ -3304,10 +3357,16 @@ async function _buildPcsRosterMap() {
   // togli gli atleti FCI: li gestisce il frontend coi dati ufficiali + override
   for (const aid of Object.keys(seen)) { if (fciKeys.has(aid)) delete seen[aid]; }
 
+  const fuzzyIndex = _buildFciFuzzyIndex(ovMap);
   const result = {};
   for (const aid of Object.keys(seen)) {
     const a = _resolvePcsAthlete(aid, seen[aid], profMap, ovMap, teamIndex);
     if (!a.cognome && !a.nome) continue;
+    // Stesso cognome + stessa squadra + nome quasi identico a un atleta FCI
+    // già esistente (vedi _isLikelyFciDuplicate): quasi certamente lo stesso
+    // corridore con una trascrizione diversa del nome, non un fantasma
+    // nuovo — saltalo invece di creare un secondo profilo duplicato.
+    if (_isLikelyFciDuplicate(fuzzyIndex, a.cognome, a.nome, a.team_id)) continue;
     if (!result[a.team_id]) result[a.team_id] = { nome: a.team_nome, atleti: [] };
     if (!result[a.team_id].atleti.find(x => x.atleta_id === aid)) {
       result[a.team_id].atleti.push({ atleta_id: aid, cognome: a.cognome, nome: a.nome, categoria: a.categoria, genere: a.genere });
