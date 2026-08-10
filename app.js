@@ -24299,6 +24299,10 @@ async function _dashFamiglia(el, user, profile, role) {
   const statusMap = { active:'✅', pending:'⏳', rejected:'❌' };
   const links = Array.isArray(profile) ? profile : [];
   const res   = globalData?.resultsRaw || [];
+  // Nessun collegamento (nemmeno in attesa di approvazione): blocco "soft" —
+  // non impedisco l'uso del resto del sito, ma l'avviso e il form di
+  // collegamento restano in cima, ben visibili, finché non lo completano.
+  const hasNoLinks = !links.length;
 
   // Build athlete cards for linked athletes
   const atletaCards = links.filter(l => l.status === 'active' && l.linked_atleta_id).map(l => {
@@ -24311,6 +24315,20 @@ async function _dashFamiglia(el, user, profile, role) {
   });
 
   el.innerHTML = `
+    ${hasNoLinks ? `
+    <div class="dash-card dash-card--accent" style="border:2px solid var(--red-hot);margin-bottom:16px">
+      <div class="dash-card-title"><span>⚠️</span>Collega il/la figlio/a per continuare</div>
+      <p style="font-size:.85rem;color:var(--text-secondary);line-height:1.5;margin:0">
+        Il tuo account ${role === 'genitore' ? 'genitore' : 'parente'} non è ancora collegato a nessun profilo atleta.
+        Cerca il/la figlio/a qui sotto per vedere i suoi risultati, la classifica e ricevere notifiche sulle sue gare.
+      </p>
+      <div class="dash-link-form" style="margin-top:12px">
+        <input type="text" id="link-search" placeholder="Cerca per cognome…" oninput="searchAtletaForLink(this.value)" autocomplete="off" />
+        <div id="link-results"></div>
+        <input type="hidden" id="link-atleta-id" />
+        <button class="dash-btn dash-btn--primary" onclick="submitLinkFamily(event)">AGGIUNGI</button>
+      </div>
+    </div>` : ''}
     <div class="dash-grid">
 
       ${atletaCards.length ? atletaCards.map(({l, aid, myRes, vittorie, bestRank}) => `
@@ -24354,7 +24372,9 @@ async function _dashFamiglia(el, user, profile, role) {
           </div>`).join('')}
       </div>` : ''}
 
-      <!-- Aggiungi atleta -->
+      <!-- Aggiungi atleta (già mostrato nel banner qui sopra se non c'è ancora
+           nessun collegamento, per non duplicare gli id del form) -->
+      ${!hasNoLinks ? `
       <div class="dash-card">
         <div class="dash-card-title"><span>➕</span>Aggiungi atleta</div>
         <div class="dash-link-form">
@@ -24363,7 +24383,7 @@ async function _dashFamiglia(el, user, profile, role) {
           <input type="hidden" id="link-atleta-id" />
           <button class="dash-btn dash-btn--primary" onclick="submitLinkFamily(event)">AGGIUNGI</button>
         </div>
-      </div>
+      </div>` : ''}
 
       <!-- Quick links -->
       <div class="dash-card">
@@ -24484,7 +24504,8 @@ async function _dashMedia(el, user, profile) {
             Crea il tuo profilo per pubblicare album fotografici delle gare e farti trovare dagli appassionati.
           </p>
           <form onsubmit="window.submitMediaProfile(event)" class="dash-link-form">
-            <input type="text" id="mp-name" placeholder="Nome pubblico *" required />
+            <label style="font-size:.8rem;color:var(--text-muted);display:block;margin-bottom:4px">Nome del canale/account (YouTube, Instagram, TikTok...) *</label>
+            <input type="text" id="mp-name" placeholder="Es. BICITV, ToscanaSprint…" required />
             <label style="font-size:.8rem;color:var(--text-muted);display:block;margin:2px 0 4px">Che tipo di contenuti pubblichi? *</label>
             <select id="mp-type" required style="width:100%;box-sizing:border-box;padding:8px 10px;border:1px solid var(--border-subtle);border-radius:var(--r-sm);font-size:0.875rem;background:var(--bg-primary);color:var(--text-primary);margin-bottom:10px">
               <option value="">— Seleziona —</option>
@@ -24874,14 +24895,66 @@ window._submitMediaCoverChange = async function(input) {
   }
 };
 
+// Cerca un profilo già salvato (scrapato, non ancora rivendicato) con nome
+// simile a quello inserito — evita di creare un doppione quando il canale/
+// account esiste già nel sistema (es. "BICITV", "ToscanaSprint"). Match per
+// parola intera, non sottostringa (stesso criterio già usato altrove per
+// evitare falsi positivi tipo "italia"/"italiano").
+function _normPlatformName(s) {
+  return String(s || '').toUpperCase().normalize('NFD').replace(/[̀-ͯ]/g, '')
+    .replace(/[^A-Z0-9]+/g, ' ').trim();
+}
+async function _findSimilarMediaProfile(name) {
+  const words = new Set(_normPlatformName(name).split(' ').filter(w => w.length > 3));
+  if (!words.size) return null;
+  let unclaimed = [];
+  try { unclaimed = (await apiCall('/media/profiles/unclaimed')).profiles || []; } catch { return null; }
+  let best = null, bestScore = 0;
+  for (const p of unclaimed) {
+    const pWords = new Set(_normPlatformName(p.display_name).split(' ').filter(w => w.length > 3));
+    let score = 0;
+    for (const w of words) if (pWords.has(w)) score++;
+    if (score > bestScore) { bestScore = score; best = p; }
+  }
+  return bestScore >= 1 ? best : null;
+}
+
 window.submitMediaProfile = async function(e) {
   e.preventDefault();
   const btn = e.target.querySelector('button[type=submit]');
   const coverFile = document.getElementById('mp-cover')?.files?.[0] || null;
+  const name = document.getElementById('mp-name')?.value.trim();
+  if (!name) return;
+
+  // Nome canale/piattaforma obbligatorio: prima di creare un profilo nuovo,
+  // controlla se esiste già un profilo scrapato (non ancora rivendicato) con
+  // un nome simile — se sì, propone di agganciare quello invece di duplicare.
+  btn.disabled = true; btn.textContent = 'Controllo…';
+  const similar = await _findSimilarMediaProfile(name);
+  if (similar) {
+    btn.disabled = false; btn.textContent = 'CREA PROFILO';
+    const wantsClaim = confirm(
+      `Esiste già un profilo simile: "${similar.display_name}".\n\n` +
+      `Se è il tuo canale/account, premi OK per agganciarlo (va comunque approvato dall'admin).\n` +
+      `Premi Annulla per crearne comunque uno nuovo.`
+    );
+    if (wantsClaim) {
+      try {
+        await apiCall(`/media/profile/${similar.id}/claim`, { method: 'POST' });
+        showToast('✓ Richiesta inviata — in attesa di approvazione');
+        renderMyProfile();
+      } catch (err) {
+        showToast('Errore: ' + err.message, 'error');
+      }
+      return;
+    }
+    // "Annulla" → prosegue con la creazione di un profilo nuovo, sotto.
+  }
+
   btn.disabled = true; btn.textContent = 'Invio…';
   try {
     await apiCall('/profile/media', { method: 'POST', body: {
-      display_name: document.getElementById('mp-name')?.value.trim(),
+      display_name: name,
       media_type:   document.getElementById('mp-type')?.value,
       bio:          document.getElementById('mp-bio')?.value.trim(),
       website:      document.getElementById('mp-web')?.value.trim(),
