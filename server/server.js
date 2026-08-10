@@ -1431,6 +1431,34 @@ app.get('/api/gara-overrides/corrections', async (req, res) => {
   } catch (e) { res.status(500).json({ error: e.message }); }
 });
 
+// Correzioni a singole righe risultato (es. genere/categoria sbagliati alla
+// fonte SOLO per un atleta in una gara che mischia categorie/generi nella
+// stessa pagina FCI — a differenza di gara_overrides, qui non si può
+// correggere per gara_id perché cambierebbe anche gli altri atleti
+// correttamente scrapati in quella stessa gara). risultato_key è sempre
+// "atleta_id|data": non l'esatto gara_id, che ha un suffisso categoria/genere
+// spesso diverso da quello con cui è stata fatta la correzione a mano.
+const RISULTATO_EDITABLE_FIELDS = ['cat', 'genere', 'posizione'];
+let _risultatoCorrectionsCache = null, _risultatoCorrectionsCacheTs = 0;
+app.get('/api/risultato-overrides/corrections', async (req, res) => {
+  try {
+    if (_risultatoCorrectionsCache && (Date.now() - _risultatoCorrectionsCacheTs) < 5 * 60 * 1000) {
+      return res.json({ corrections: _risultatoCorrectionsCache });
+    }
+    const { data, error } = await supabase.from('risultato_overrides')
+      .select('risultato_key, field, new_value').in('field', RISULTATO_EDITABLE_FIELDS);
+    if (error) throw error;
+    const corrections = {};
+    for (const r of (data || [])) {
+      if (!corrections[r.risultato_key]) corrections[r.risultato_key] = {};
+      corrections[r.risultato_key][r.field] = r.new_value;
+    }
+    _risultatoCorrectionsCache = corrections;
+    _risultatoCorrectionsCacheTs = Date.now();
+    res.json({ corrections });
+  } catch (e) { res.status(500).json({ error: e.message }); }
+});
+
 app.patch('/api/admin/gare/:gara_id', requireAdmin, async (req, res) => {
   try {
     const gara_id = req.params.gara_id;
@@ -1587,6 +1615,7 @@ app.post('/api/admin/override/risultato', requireAdmin, async (req, res) => {
     const { risultato_key, field, old_value, new_value } = req.body;
     if (!risultato_key || !field) return res.status(400).json({ error: 'Campi mancanti' });
     await queries.setRisultatoOverride({ risultato_key, field, old_value: old_value ?? null, new_value, edited_by: req.user.id });
+    _risultatoCorrectionsCache = null;
     res.json({ ok: true });
   } catch (e) { res.status(500).json({ error: e.message }); }
 });
