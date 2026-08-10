@@ -4672,7 +4672,7 @@ app.post('/api/admin/gara/:garaId/pcs-import-html', requireAdmin, async (req, re
 // ══════════════════════════════════════════════════════════════════════════════
 // YouTube Auto-Scraper
 // ══════════════════════════════════════════════════════════════════════════════
-const { DEFAULT_CHANNELS, fetchAllChannels, fetchVideoDuration, fetchVideoLiveInfo, fetchVideosInfoBatch, fetchChannelAvatars } = require('./youtube-scraper');
+const { DEFAULT_CHANNELS, fetchAllChannels, fetchVideoDuration, fetchVideoLiveInfo, fetchVideosInfoBatch, fetchChannelAvatars, resolveHandle } = require('./youtube-scraper');
 // YouTube Data API v3 (opzionale): se impostata, usata al posto dello scraping
 // della pagina watch per durata/stato-diretta, perché lo scraping viene ormai
 // bloccato da YouTube (risposta 429 + redirect a un consent/CAPTCHA wall) sugli
@@ -6165,6 +6165,89 @@ app.get('/api/videos/views', async (req, res) => {
     const map = {};
     for (const r of rows) map[r.video_key] = r.views;
     res.json({ views: map });
+  } catch (e) { res.status(500).json({ error: e.message }); }
+});
+
+// Import in blocco di TUTTI (fino a un limite) i video di un canale YouTube
+// come Media Video — evita di doverli aggiungere uno per uno a mano. Crea
+// (o riusa) un profilo media "senza utente" per il canale, stesso schema
+// già usato per i fotografi scrapati (xpix.it, ecc.), e ci appende i video
+// trovati con il palinsesto scelto.
+app.post('/api/admin/media/import-channel', requireAdmin, async (req, res) => {
+  try {
+    if (!YOUTUBE_API_KEY) return res.status(400).json({ error: 'YOUTUBE_API_KEY non configurata' });
+    const { channel, palinsesto, limit } = req.body;
+    if (!channel?.trim()) return res.status(400).json({ error: 'Canale mancante (URL, @handle o channel ID)' });
+    if (!MEDIA_PALINSESTI.includes(palinsesto)) return res.status(400).json({ error: 'Palinsesto non valido' });
+    const maxVideos = Math.min(Math.max(parseInt(limit, 10) || 50, 1), 300);
+
+    // Risolvi l'input (URL/@handle/ID) in un channel_id (UCxxxxxxxx...).
+    let channelId = null;
+    const raw = channel.trim();
+    const idMatch = raw.match(/(UC[\w-]{22})/);
+    if (idMatch) {
+      channelId = idMatch[1];
+    } else {
+      const handleMatch = raw.match(/(?:youtube\.com\/(?:@|c\/|user\/))?@?([\w.-]+)\/?$/);
+      const handle = handleMatch ? handleMatch[1] : raw;
+      channelId = await resolveHandle(handle);
+    }
+    if (!channelId) return res.status(404).json({ error: 'Canale non trovato — prova a incollare l\'URL completo del canale' });
+
+    // Titolo/logo del canale + playlist "uploads" (tutti i video pubblicati) in una chiamata.
+    const chUrl = `https://www.googleapis.com/youtube/v3/channels?part=snippet,contentDetails&id=${channelId}&key=${YOUTUBE_API_KEY}`;
+    const chResp = await fetch(chUrl).then(r => r.json());
+    const chItem = chResp.items?.[0];
+    if (!chItem) return res.status(404).json({ error: 'Canale non trovato su YouTube' });
+    const channelTitle = chItem.snippet?.title || raw;
+    const channelThumb = chItem.snippet?.thumbnails?.medium?.url || chItem.snippet?.thumbnails?.default?.url || '';
+    const uploadsPlaylist = chItem.contentDetails?.relatedPlaylists?.uploads;
+    if (!uploadsPlaylist) return res.status(404).json({ error: 'Nessun video pubblico trovato per questo canale' });
+
+    // Trova o crea il profilo media "senza utente" per questo canale (stesso
+    // pattern dei fotografi scrapati) — riusato ai giri successivi cercandolo per nome.
+    let profile = (await queries.getUnclaimedMediaProfiles()).find(p => p.display_name === channelTitle);
+    if (!profile) {
+      profile = await queries.createMediaProfile({ user_id: null, display_name: channelTitle, media_type: 'video' });
+      await queries.approveMediaProfile(profile.id);
+      if (channelThumb) await queries.updateMediaProfileCover(profile.id, channelThumb);
+    }
+
+    // Pagina la playlist "uploads" finché non si raggiunge il limite richiesto.
+    const videos = [];
+    let pageToken = '';
+    while (videos.length < maxVideos) {
+      const plUrl = `https://www.googleapis.com/youtube/v3/playlistItems?part=snippet&playlistId=${uploadsPlaylist}&maxResults=50&pageToken=${pageToken}&key=${YOUTUBE_API_KEY}`;
+      const plResp = await fetch(plUrl).then(r => r.json());
+      if (plResp.error) throw new Error(plResp.error.message || 'Errore API YouTube (playlistItems)');
+      for (const item of (plResp.items || [])) {
+        const vid = item.snippet?.resourceId?.videoId;
+        if (!vid) continue;
+        videos.push({
+          url: `https://www.youtube.com/watch?v=${vid}`,
+          title: item.snippet?.title || 'Video',
+          description: (item.snippet?.description || '').slice(0, 500),
+          thumbnail_url: item.snippet?.thumbnails?.medium?.url || item.snippet?.thumbnails?.default?.url || '',
+        });
+        if (videos.length >= maxVideos) break;
+      }
+      pageToken = plResp.nextPageToken;
+      if (!pageToken) break;
+    }
+
+    // Salta i video già importati in precedenza per questo profilo (stesso URL).
+    const existing = await queries.getMediaVideosByProfile(profile.id);
+    const existingUrls = new Set(existing.map(v => v.url));
+    let imported = 0;
+    for (const v of videos) {
+      if (existingUrls.has(v.url)) continue;
+      await queries.createMediaVideo({
+        media_profile_id: profile.id, palinsesto, title: v.title, description: v.description,
+        source_type: 'link', url: v.url, thumbnail_url: v.thumbnail_url,
+      });
+      imported++;
+    }
+    res.json({ ok: true, imported, skipped: videos.length - imported, profile: { id: profile.id, display_name: channelTitle } });
   } catch (e) { res.status(500).json({ error: e.message }); }
 });
 

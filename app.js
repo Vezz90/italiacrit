@@ -9552,6 +9552,25 @@ window.adminNav = async function(section) {
             <button onclick="window.ytSaveChannels()" style="background:#16a34a;color:#fff;border:none;padding:6px 14px;border-radius:5px;cursor:pointer;font-size:.8rem">💾 Salva</button>
           </div>
         </div>
+        <div style="background:var(--bg-card);border:1px solid var(--border-subtle);border-radius:8px;padding:16px;margin-bottom:16px">
+          <div style="font-weight:700;font-size:.875rem;margin-bottom:4px">📥 Importa in blocco un canale come Media Video</div>
+          <p style="font-size:.8rem;color:var(--text-muted);margin:0 0 12px">
+            Incolla l'URL/@handle di un canale YouTube: importa tutti i suoi video (fino al limite scelto) nel
+            palinsesto indicato — niente approvazione manuale uno per uno.
+          </p>
+          <div style="display:flex;gap:8px;flex-wrap:wrap;align-items:center">
+            <input type="text" id="ytimp-channel" placeholder="youtube.com/@nomecanale oppure @nomecanale" style="flex:1;min-width:240px;padding:8px 10px;border:1px solid var(--border-subtle);border-radius:5px;background:var(--bg-base);color:var(--text-primary);font-size:.85rem"/>
+            <select id="ytimp-pal" style="padding:8px 10px;border:1px solid var(--border-subtle);border-radius:5px;background:var(--bg-base);color:var(--text-primary);font-size:.85rem">
+              <option value="podcast">Podcast</option>
+              <option value="vlog">Vlog</option>
+              <option value="highlights">Highlights gara</option>
+              <option value="interviste">Interviste</option>
+            </select>
+            <input type="number" id="ytimp-limit" value="50" min="1" max="300" style="width:80px;padding:8px 10px;border:1px solid var(--border-subtle);border-radius:5px;background:var(--bg-base);color:var(--text-primary);font-size:.85rem" title="Numero massimo di video da importare"/>
+            <button id="ytimp-btn" onclick="window.adminImportYtChannel()" style="background:var(--accent);color:#fff;border:none;padding:8px 16px;border-radius:5px;font-weight:600;cursor:pointer;font-size:.85rem">Importa</button>
+          </div>
+          <div id="ytimp-status" style="font-size:.8rem;color:var(--text-muted);margin-top:8px"></div>
+        </div>
         <div id="yt-queue-container">
           <div class="admin-loading">Caricamento coda…</div>
         </div>`;
@@ -11269,6 +11288,32 @@ window.ytSaveChannels = async () => {
     await apiCall('/admin/youtube/channels', { method: 'PUT', body: { channels: _ytChannels } });
     showToast('✓ Canali salvati!');
   } catch (e) { showToast('Errore: ' + e.message, 'error'); }
+};
+
+// Import in blocco di un intero canale YouTube nel Media Video (vedi
+// POST /admin/media/import-channel) — crea/riusa un profilo "senza utente"
+// per il canale e ci carica i video trovati, saltando quelli già importati.
+window.adminImportYtChannel = async () => {
+  const channel = document.getElementById('ytimp-channel')?.value.trim();
+  const palinsesto = document.getElementById('ytimp-pal')?.value;
+  const limit = document.getElementById('ytimp-limit')?.value;
+  const status = document.getElementById('ytimp-status');
+  const btn = document.getElementById('ytimp-btn');
+  if (!channel) { status.textContent = 'Inserisci un canale.'; status.style.color = '#ef4444'; return; }
+  btn.disabled = true; btn.textContent = 'Importazione…';
+  status.style.color = 'var(--text-muted)';
+  status.textContent = 'Recupero video dal canale… può richiedere qualche secondo per canali con molti video.';
+  try {
+    const r = await apiCall('/admin/media/import-channel', { method: 'POST', body: { channel, palinsesto, limit } });
+    status.style.color = '#16a34a';
+    status.textContent = `✓ "${r.profile.display_name}": ${r.imported} video importati${r.skipped ? ` (${r.skipped} già presenti, saltati)` : ''}.`;
+    document.getElementById('ytimp-channel').value = '';
+  } catch (e) {
+    status.style.color = '#ef4444';
+    status.textContent = 'Errore: ' + e.message;
+  } finally {
+    btn.disabled = false; btn.textContent = 'Importa';
+  }
 };
 
 // ══════════════════════════════════════════════════════════════════════════════
