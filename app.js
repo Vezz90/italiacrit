@@ -16200,8 +16200,13 @@ window._loadMediaCreatorArea = async function() {
       return;
     }
 
-    const videosData = await fetch(`${API_BASE}/media/videos${_mediaCreatorPal ? '?palinsesto=' + encodeURIComponent(_mediaCreatorPal) : ''}`).then(r => r.json());
-    const videos = (videosData.videos || []).filter(v => v.media_profile_id === _mediaCreatorProfileId);
+    // Video del SOLO profilo scelto (non l'elenco globale, che ha un limite
+    // di 200 righe più recenti in tutto il sito: con un canale appena
+    // importato pieno di video, quel limite bastava a far sparire dalla
+    // lista i video più vecchi di un altro creator, pur restando nel DB).
+    const profileData = await fetch(`${API_BASE}/media/profile/${_mediaCreatorProfileId}`).then(r => r.json());
+    const allProfileVideos = profileData.videos || [];
+    const videos = _mediaCreatorPal ? allProfileVideos.filter(v => v.palinsesto === _mediaCreatorPal) : allProfileVideos;
 
     const videosHtml = videos.length
       ? `<div class="media-album-grid">${videos.map(v => _mediaVideoCardHtml(v)).join('')}</div>`
