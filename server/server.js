@@ -6188,8 +6188,12 @@ app.post('/api/admin/media/import-channel', requireAdmin, async (req, res) => {
     if (idMatch) {
       channelId = idMatch[1];
     } else {
-      const handleMatch = raw.match(/(?:youtube\.com\/(?:@|c\/|user\/))?@?([\w.-]+)\/?$/);
-      const handle = handleMatch ? handleMatch[1] : raw;
+      // Estrae l'handle: cerca "@nome" ovunque nella stringa (non ancorato alla
+      // fine) perché URL come .../@canale/videos altrimenti facevano catturare
+      // "videos" invece del vero handle.
+      const atMatch = raw.match(/@([\w.-]+)/);
+      const pathMatch = !atMatch && raw.match(/youtube\.com\/(?:c\/|user\/)([\w.-]+)/);
+      const handle = atMatch ? atMatch[1] : (pathMatch ? pathMatch[1] : raw.replace(/\/+$/, '').split('/').pop());
       channelId = await resolveHandle(handle);
     }
     if (!channelId) return res.status(404).json({ error: 'Canale non trovato — prova a incollare l\'URL completo del canale' });
