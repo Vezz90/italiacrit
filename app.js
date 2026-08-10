@@ -1721,6 +1721,23 @@ function _patchAthleteTeamForManualRow(gd, row) {
   }
 }
 
+// Ricalcola punti_per_cat (punti squadra per categoria, usato dalla classifica
+// squadre) dai risultati ATTUALI del team — necessario dopo aver spostato
+// risultati tra team via override, altrimenti la classifica squadre resta
+// agganciata al vecchio team_id (bug osservato: un team con override che
+// unisce due squadre in una aveva risultati/punti_totali corretti ma
+// spariva dalla classifica squadre, mentre il vecchio team_id ormai vuoto
+// vi restava con punti fantasma).
+function _recomputePuntiPerCat(team) {
+  const byCat = {};
+  for (const r of (team.risultati || [])) {
+    const cat = (r.gara_id || '').match(/_([A-Z0-9]+_[MF])$/)?.[1];
+    if (!cat) continue;
+    byCat[cat] = (byCat[cat] || 0) + (r.punti_effettivi || 0);
+  }
+  team.punti_per_cat = byCat;
+}
+
 // Sposta un atleta (e i suoi risultati) dal vecchio team al nuovo, secondo gli override.
 // Aggiorna globalData: atleta.team_id/team_attuale, risultati (team_id/team), roster e
 // risultati dei team. Così la pagina team mostra i risultati e i punti sotto il team giusto.
@@ -1771,6 +1788,8 @@ function _applyAtletaTeamOverrides(gd, overrides) {
       }
     }
     newT.punti_totali = newT.risultati.reduce((s, r) => s + (r.punti_effettivi || 0), 0);
+    _recomputePuntiPerCat(newT);
+    if (oldT) _recomputePuntiPerCat(oldT);
     if (!Array.isArray(newT.atleti)) newT.atleti = [];
     if (!newT.atleti.includes(aid)) newT.atleti.push(aid);
     // riassegna anche le righe in resultsRaw (usate da varie viste, incl. media)
