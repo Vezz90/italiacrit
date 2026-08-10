@@ -741,17 +741,17 @@ const queries = {
     all(`SELECT * FROM media_videos WHERE media_profile_id = $1 ORDER BY created_at DESC`, [media_profile_id]),
 
   getMediaVideosByGara: (gara_id) =>
-    all(`SELECT v.*, p.display_name, p.instagram
+    all(`SELECT v.*, p.display_name, p.instagram, p.cover_url AS profile_cover_url
          FROM media_videos v JOIN media_profiles p ON p.id = v.media_profile_id
          WHERE v.gara_id = $1 AND p.status = 'active' ORDER BY v.created_at DESC`, [gara_id]),
 
   // Elenco pubblico (sezione Media → Creator), filtrabile per palinsesto
   getAllMediaVideos: (palinsesto) =>
     palinsesto
-      ? all(`SELECT v.*, p.display_name, p.instagram
+      ? all(`SELECT v.*, p.display_name, p.instagram, p.cover_url AS profile_cover_url
              FROM media_videos v JOIN media_profiles p ON p.id = v.media_profile_id
              WHERE p.status = 'active' AND v.palinsesto = $1 ORDER BY v.created_at DESC LIMIT 200`, [palinsesto])
-      : all(`SELECT v.*, p.display_name, p.instagram
+      : all(`SELECT v.*, p.display_name, p.instagram, p.cover_url AS profile_cover_url
              FROM media_videos v JOIN media_profiles p ON p.id = v.media_profile_id
              WHERE p.status = 'active' ORDER BY v.created_at DESC LIMIT 200`),
 

@@ -16025,8 +16025,19 @@ function _mediaVideoCardHtml(v) {
   if (/youtu\.?be/i.test(v.url||''))       { platform = '▶️'; pname = 'YouTube'; }
   else if (/instagram\.com/i.test(v.url||'')) { platform = '📸'; pname = 'Instagram'; }
   else if (/tiktok\.com/i.test(v.url||''))    { platform = '🎵'; pname = 'TikTok'; }
+  // Copertina del video: quella caricata su YouTube/piattaforma (thumbnail_url,
+  // salvata dallo scraper/import) se disponibile, altrimenti l'emoji-placeholder.
+  const coverHtml = v.thumbnail_url
+    ? `<img src="${esc(v.thumbnail_url)}" loading="lazy" alt="" style="width:100%;height:100%;object-fit:cover"/>`
+    : `<span>${platform}</span>`;
+  // Logo del canale/profilo (cover_url del media_profile), come badge tondo
+  // in basso a sinistra sopra la copertina — stesso trattamento per i video
+  // importati in blocco e per quelli caricati singolarmente.
+  const profileLogo = v.profile_cover_url
+    ? `<img src="${esc(mediaUrl(v.profile_cover_url))}" alt="" style="position:absolute;bottom:8px;left:8px;width:28px;height:28px;border-radius:50%;object-fit:cover;border:2px solid var(--bg-elevated);background:var(--bg-elevated)"/>`
+    : '';
   return `<a href="${esc(v.url)}" target="_blank" rel="noopener" class="media-video-card" style="display:block;text-decoration:none;color:inherit" onclick="window._mvIncrView(${v.id})">
-    <div style="width:100%;aspect-ratio:16/9;background:var(--bg-base);border-radius:10px;display:flex;align-items:center;justify-content:center;font-size:2.2rem">${platform}</div>
+    <div style="position:relative;width:100%;aspect-ratio:16/9;background:var(--bg-base);border-radius:10px;overflow:hidden;display:flex;align-items:center;justify-content:center;font-size:2.2rem">${coverHtml}${profileLogo}</div>
     <div class="media-video-title">${esc(v.title)}</div>
     <div class="media-video-meta"><span>${pname} · ${palLabel}</span>${garaLink ? ' · ' + garaLink : ''}<span style="margin-left:auto">${viewsHtml}</span></div>
   </a>`;
