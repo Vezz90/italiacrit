@@ -4713,6 +4713,64 @@ async function writeYTChannels(arr) {
   fs.writeFileSync(YT_CHANNELS_PATH, JSON.stringify(arr, null, 2));
 }
 
+// Canali YouTube registrati per l'import automatico continuo in Media Video
+// (popolato da POST /api/admin/media/import-channel al primo import massiccio).
+async function readYTMediaChannels() {
+  if (supabase) {
+    const { data, error } = await supabase.from('kv_store').select('value').eq('key', 'yt_media_channels').single();
+    if (error && error.code !== 'PGRST116') console.error('[yt_media_channels] read error:', error.message);
+    return data?.value || [];
+  }
+  try { return JSON.parse(fs.readFileSync(path.join(__dirname, '../data/yt_media_channels.json'), 'utf8')); } catch { return []; }
+}
+async function writeYTMediaChannels(arr) {
+  if (supabase) {
+    const { error } = await supabase.from('kv_store')
+      .upsert({ key: 'yt_media_channels', value: arr, updated_at: new Date().toISOString() });
+    if (error) throw new Error('Supabase write: ' + error.message);
+    return;
+  }
+  fs.writeFileSync(path.join(__dirname, '../data/yt_media_channels.json'), JSON.stringify(arr, null, 2));
+}
+
+// Controlla i canali registrati per novità (solo la prima pagina della
+// playlist upload, cioè i più recenti) e importa in automatico i video nuovi
+// nel palinsesto scelto al momento della registrazione del canale.
+async function syncMediaChannels() {
+  if (!YOUTUBE_API_KEY) return { added: 0 };
+  const channels = await readYTMediaChannels();
+  let added = 0;
+  for (const ch of channels) {
+    try {
+      const plUrl = `https://www.googleapis.com/youtube/v3/playlistItems?part=snippet&playlistId=${ch.uploadsPlaylist}&maxResults=25&key=${YOUTUBE_API_KEY}`;
+      const plResp = await fetch(plUrl).then(r => r.json());
+      if (plResp.error) { console.warn('[media-yt-sync] errore canale', ch.displayName, plResp.error.message); continue; }
+      const existing = await queries.getMediaVideosByProfile(ch.profileId);
+      const existingUrls = new Set(existing.map(v => v.url));
+      for (const item of (plResp.items || [])) {
+        const vid = item.snippet?.resourceId?.videoId;
+        if (!vid) continue;
+        const url = `https://www.youtube.com/watch?v=${vid}`;
+        if (existingUrls.has(url)) continue;
+        await queries.createMediaVideo({
+          media_profile_id: ch.profileId, palinsesto: ch.palinsesto,
+          title: item.snippet?.title || 'Video',
+          description: (item.snippet?.description || '').slice(0, 500),
+          source_type: 'link', url,
+          thumbnail_url: item.snippet?.thumbnails?.medium?.url || item.snippet?.thumbnails?.default?.url || '',
+        });
+        added++;
+      }
+    } catch (e) { console.warn('[media-yt-sync] errore canale', ch.displayName, e.message); }
+  }
+  return { added };
+}
+
+app.post('/api/admin/media/sync-channels', requireAdmin, async (req, res) => {
+  try { res.json({ ok: true, ...(await syncMediaChannels()) }); }
+  catch (e) { res.status(500).json({ error: e.message }); }
+});
+
 async function readYTQueue() {
   if (supabase) {
     const { data, error } = await supabase.from('kv_store').select('value').eq('key', 'yt_queue').single();
@@ -4866,6 +4924,13 @@ async function autoYoutubeSync() {
       });
     }
   } catch (e) { console.warn('[yt-auto] Errore:', e.message); }
+}
+
+async function autoMediaChannelsSync() {
+  try {
+    const r = await syncMediaChannels();
+    if (r.added) console.log(`[media-yt-auto] ${r.added} nuovi video importati automaticamente in Media Video`);
+  } catch (e) { console.warn('[media-yt-auto] Errore:', e.message); }
 }
 
 // GET queue
@@ -6251,6 +6316,16 @@ app.post('/api/admin/media/import-channel', requireAdmin, async (req, res) => {
       });
       imported++;
     }
+    // Registra il canale per la sincronizzazione automatica dei prossimi video
+    // (vedi syncMediaChannels/autoMediaChannelsSync) così i video nuovi che il
+    // canale pubblica in futuro vengono importati da soli, senza rifare
+    // l'import manuale.
+    const mediaChannels = await readYTMediaChannels();
+    const idx = mediaChannels.findIndex(c => c.channelId === channelId);
+    const entry = { channelId, uploadsPlaylist, palinsesto, profileId: profile.id, displayName: channelTitle };
+    if (idx >= 0) mediaChannels[idx] = entry; else mediaChannels.push(entry);
+    await writeYTMediaChannels(mediaChannels);
+
     res.json({ ok: true, imported, skipped: videos.length - imported, profile: { id: profile.id, display_name: channelTitle } });
   } catch (e) { res.status(500).json({ error: e.message }); }
 });
@@ -8640,9 +8715,11 @@ init()
       autoXpixSync();
       autoYoutubeSync();
       autoICSync();
+      autoMediaChannelsSync();
       setInterval(autoXpixSync, SYNC_INTERVAL);
       setInterval(autoYoutubeSync, SYNC_INTERVAL);
       setInterval(autoICSync, SYNC_INTERVAL);
+      setInterval(autoMediaChannelsSync, SYNC_INTERVAL);
     }, 2 * 60 * 1000);
     app.listen(PORT, () => {
       console.log(`[server] ItaliacritAuth in ascolto su http://localhost:${PORT}`);
