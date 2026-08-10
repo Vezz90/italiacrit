@@ -223,6 +223,10 @@ async function migrate() {
       created_at       TIMESTAMPTZ NOT NULL DEFAULT NOW()
     )`,
     `ALTER TABLE media_videos ADD COLUMN IF NOT EXISTS views INTEGER NOT NULL DEFAULT 0`,
+    // Data di pubblicazione reale su YouTube/piattaforma (diversa da created_at,
+    // che è quando NOI l'abbiamo importato) — permette di ordinare i video di
+    // un canale dal più recente al più vecchio come li ha pubblicati l'autore.
+    `ALTER TABLE media_videos ADD COLUMN IF NOT EXISTS published_at TIMESTAMPTZ`,
     // Contatore visualizzazioni per i video del sistema esistente
     // (videos.json: gara, dirette, presentazioni, programmi TV, altro) —
     // non hanno un ID numerico stabile, si tracciano per "chiave" testuale
@@ -730,33 +734,33 @@ const queries = {
 
   // ── Media videos (Media Video: link esterno o file caricato) ───────────────────
 
-  createMediaVideo: ({ media_profile_id, gara_id, palinsesto, title, description, source_type, url, filename, thumbnail_url }) =>
+  createMediaVideo: ({ media_profile_id, gara_id, palinsesto, title, description, source_type, url, filename, thumbnail_url, published_at }) =>
     one(
-      `INSERT INTO media_videos (media_profile_id, gara_id, palinsesto, title, description, source_type, url, filename, thumbnail_url)
-       VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9) RETURNING *`,
-      [media_profile_id, gara_id || null, palinsesto || 'vlog', title, description || '', source_type || 'link', url || null, filename || null, thumbnail_url || '']
+      `INSERT INTO media_videos (media_profile_id, gara_id, palinsesto, title, description, source_type, url, filename, thumbnail_url, published_at)
+       VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10) RETURNING *`,
+      [media_profile_id, gara_id || null, palinsesto || 'vlog', title, description || '', source_type || 'link', url || null, filename || null, thumbnail_url || '', published_at || null]
     ),
 
   getMediaVideo: (id) =>
     one(`SELECT * FROM media_videos WHERE id = $1`, [id]),
 
   getMediaVideosByProfile: (media_profile_id) =>
-    all(`SELECT * FROM media_videos WHERE media_profile_id = $1 ORDER BY created_at DESC`, [media_profile_id]),
+    all(`SELECT * FROM media_videos WHERE media_profile_id = $1 ORDER BY COALESCE(published_at, created_at) DESC`, [media_profile_id]),
 
   getMediaVideosByGara: (gara_id) =>
     all(`SELECT v.*, p.display_name, p.instagram, p.cover_url AS profile_cover_url
          FROM media_videos v JOIN media_profiles p ON p.id = v.media_profile_id
-         WHERE v.gara_id = $1 AND p.status = 'active' ORDER BY v.created_at DESC`, [gara_id]),
+         WHERE v.gara_id = $1 AND p.status = 'active' ORDER BY COALESCE(v.published_at, v.created_at) DESC`, [gara_id]),
 
   // Elenco pubblico (sezione Media → Creator), filtrabile per palinsesto
   getAllMediaVideos: (palinsesto) =>
     palinsesto
       ? all(`SELECT v.*, p.display_name, p.instagram, p.cover_url AS profile_cover_url
              FROM media_videos v JOIN media_profiles p ON p.id = v.media_profile_id
-             WHERE p.status = 'active' AND v.palinsesto = $1 ORDER BY v.created_at DESC LIMIT 200`, [palinsesto])
+             WHERE p.status = 'active' AND v.palinsesto = $1 ORDER BY COALESCE(v.published_at, v.created_at) DESC LIMIT 200`, [palinsesto])
       : all(`SELECT v.*, p.display_name, p.instagram, p.cover_url AS profile_cover_url
              FROM media_videos v JOIN media_profiles p ON p.id = v.media_profile_id
-             WHERE p.status = 'active' ORDER BY v.created_at DESC LIMIT 200`),
+             WHERE p.status = 'active' ORDER BY COALESCE(v.published_at, v.created_at) DESC LIMIT 200`),
 
   updateMediaVideo: ({ id, gara_id, palinsesto, title, description }) =>
     run(`UPDATE media_videos SET gara_id=$2, palinsesto=$3, title=$4, description=$5 WHERE id=$1`,

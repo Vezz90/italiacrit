@@ -4758,6 +4758,7 @@ async function syncMediaChannels() {
           description: (item.snippet?.description || '').slice(0, 500),
           source_type: 'link', url,
           thumbnail_url: item.snippet?.thumbnails?.medium?.url || item.snippet?.thumbnails?.default?.url || '',
+          published_at: item.snippet?.publishedAt || null,
         });
         added++;
       }
@@ -6297,6 +6298,7 @@ app.post('/api/admin/media/import-channel', requireAdmin, async (req, res) => {
           title: item.snippet?.title || 'Video',
           description: (item.snippet?.description || '').slice(0, 500),
           thumbnail_url: item.snippet?.thumbnails?.medium?.url || item.snippet?.thumbnails?.default?.url || '',
+          published_at: item.snippet?.publishedAt || null,
         });
         if (videos.length >= maxVideos) break;
       }
@@ -6312,7 +6314,7 @@ app.post('/api/admin/media/import-channel', requireAdmin, async (req, res) => {
       if (existingUrls.has(v.url)) continue;
       await queries.createMediaVideo({
         media_profile_id: profile.id, palinsesto, title: v.title, description: v.description,
-        source_type: 'link', url: v.url, thumbnail_url: v.thumbnail_url,
+        source_type: 'link', url: v.url, thumbnail_url: v.thumbnail_url, published_at: v.published_at,
       });
       imported++;
     }
