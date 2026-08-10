@@ -232,6 +232,14 @@ async function migrate() {
     // Eurosport) — senza questo, due playlist diverse dello stesso canale
     // finivano mescolate senza modo di distinguerle nel profilo del creator.
     `ALTER TABLE media_videos ADD COLUMN IF NOT EXISTS series TEXT`,
+    // Sistema dirette per i creator, stesso concetto già usato per le gare:
+    // is_live = questo video È (o È STATO) trasmesso in diretta; live_ended
+    // si aggiorna quando YouTube segna la trasmissione conclusa (controllato
+    // periodicamente, vedi syncMediaChannels); scheduled_start = orario di
+    // una diretta programmata ma non ancora iniziata (countdown).
+    `ALTER TABLE media_videos ADD COLUMN IF NOT EXISTS is_live BOOLEAN NOT NULL DEFAULT false`,
+    `ALTER TABLE media_videos ADD COLUMN IF NOT EXISTS live_ended BOOLEAN NOT NULL DEFAULT false`,
+    `ALTER TABLE media_videos ADD COLUMN IF NOT EXISTS scheduled_start TIMESTAMPTZ`,
     // Contatore visualizzazioni per i video del sistema esistente
     // (videos.json: gara, dirette, presentazioni, programmi TV, altro) —
     // non hanno un ID numerico stabile, si tracciano per "chiave" testuale
@@ -739,15 +747,26 @@ const queries = {
 
   // ── Media videos (Media Video: link esterno o file caricato) ───────────────────
 
-  createMediaVideo: ({ media_profile_id, gara_id, palinsesto, title, description, source_type, url, filename, thumbnail_url, published_at, series }) =>
+  createMediaVideo: ({ media_profile_id, gara_id, palinsesto, title, description, source_type, url, filename, thumbnail_url, published_at, series, is_live, scheduled_start }) =>
     one(
-      `INSERT INTO media_videos (media_profile_id, gara_id, palinsesto, title, description, source_type, url, filename, thumbnail_url, published_at, series)
-       VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11) RETURNING *`,
-      [media_profile_id, gara_id || null, palinsesto || 'vlog', title, description || '', source_type || 'link', url || null, filename || null, thumbnail_url || '', published_at || null, series || null]
+      `INSERT INTO media_videos (media_profile_id, gara_id, palinsesto, title, description, source_type, url, filename, thumbnail_url, published_at, series, is_live, scheduled_start)
+       VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12, $13) RETURNING *`,
+      [media_profile_id, gara_id || null, palinsesto || 'vlog', title, description || '', source_type || 'link', url || null, filename || null, thumbnail_url || '', published_at || null, series || null, !!is_live, scheduled_start || null]
     ),
 
   getMediaVideo: (id) =>
     one(`SELECT * FROM media_videos WHERE id = $1`, [id]),
+
+  // Dirette dei creator attualmente in corso (non ancora segnate concluse) —
+  // usato per il badge "🔴 diretta" sui cerchietti Creator e sul profilo.
+  getLiveMediaVideosNow: () =>
+    all(`SELECT v.id, v.url, v.title, v.media_profile_id, v.scheduled_start, p.display_name, p.cover_url
+         FROM media_videos v JOIN media_profiles p ON p.id = v.media_profile_id
+         WHERE v.is_live = true AND v.live_ended = false AND p.status = 'active'
+         ORDER BY v.published_at DESC NULLS LAST`),
+
+  markMediaVideoLiveEnded: (id) =>
+    run(`UPDATE media_videos SET live_ended = true WHERE id = $1`, [id]),
 
   getMediaVideosByProfile: (media_profile_id) =>
     all(`SELECT * FROM media_videos WHERE media_profile_id = $1 ORDER BY COALESCE(published_at, created_at) DESC`, [media_profile_id]),

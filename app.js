@@ -63,6 +63,38 @@ function isFacebookVideoUrl(url) {
   return !!url && /^https?:\/\/(www\.|m\.|web\.)?(facebook\.com|fb\.watch)\//i.test(url);
 }
 
+// Normalizzazione nome canale/piattaforma per confronto per parole intere
+// (NON substring: "ciclismo" non deve combaciare dentro "extraciclismo") —
+// stesso criterio già usato per il dedup dei profili media (_normPlatformName
+// altrove nel file, duplicato qui perché serve PRIMA nel file).
+function _normChannelName(s) {
+  return String(s || '').toUpperCase().normalize('NFD').replace(/[̀-ͯ]/g, '')
+    .replace(/[^A-Z0-9]+/g, ' ').trim();
+}
+// Cache di tutti i profili media attivi (foto+video), usata per raggruppare
+// i canali/testate dei video legacy (es. "ToscanaSprint", "Toscana Sprint",
+// "ciclismoweb / ExtraCiclismo") sotto UNA sola pagina profilo già esistente,
+// invece di un cerchietto separato per ogni variante di scrittura del nome.
+let _allMediaProfilesCache = null;
+async function _ensureAllMediaProfiles() {
+  if (_allMediaProfilesCache) return _allMediaProfilesCache;
+  try { _allMediaProfilesCache = (await fetch(`${API_BASE}/media/profiles`).then(r => r.json())).profiles || []; }
+  catch { _allMediaProfilesCache = []; }
+  return _allMediaProfilesCache;
+}
+function _matchChannelToProfile(channelName, profiles) {
+  const words = new Set(_normChannelName(channelName).split(' ').filter(w => w.length > 3));
+  if (!words.size) return null;
+  let best = null, bestScore = 0;
+  for (const p of profiles) {
+    const pWords = new Set(_normChannelName(p.display_name).split(' ').filter(w => w.length > 3));
+    let score = 0;
+    for (const w of words) if (pWords.has(w)) score++;
+    if (score > bestScore) { bestScore = score; best = p; }
+  }
+  return bestScore >= 1 ? best : null;
+}
+
 // Il player pubblico di Facebook (plugins/video.php) NON incorpora un link
 // di una diretta ancora sotto /watch/live/?v=ID — mostra "Video non
 // disponibile" (verificato dal vivo) — ma lo stesso identico video sotto

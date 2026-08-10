@@ -4790,6 +4790,7 @@ async function syncMediaChannels() {
       const existingUrls = new Set(existing.map(v => v.url));
       const candidateIds = (plResp.items || []).map(it => it.snippet?.resourceId?.videoId).filter(Boolean);
       const shorts = await filterOutShorts(candidateIds, ch.includeShorts);
+      const liveInfoById = await fetchVideosInfoBatch(candidateIds, YOUTUBE_API_KEY);
       for (const item of (plResp.items || [])) {
         const vid = item.snippet?.resourceId?.videoId;
         if (!vid) continue;
@@ -4804,8 +4805,26 @@ async function syncMediaChannels() {
           thumbnail_url: item.snippet?.thumbnails?.medium?.url || item.snippet?.thumbnails?.default?.url || '',
           published_at: item.snippet?.publishedAt || null,
           series: ch.series || null,
+          is_live: !!liveInfoById[vid]?.isLiveContent,
+          scheduled_start: liveInfoById[vid]?.scheduledStartTime || null,
         });
         added++;
+      }
+      // Ricontrolla le dirette di QUESTO creator già segnate is_live ma non
+      // ancora concluse: appena YouTube smette di segnarle come "in corso",
+      // le spostiamo fuori dal badge "🔴 diretta ora".
+      const stillLive = existing.filter(v => v.is_live && !v.live_ended);
+      if (stillLive.length) {
+        const liveCheck = await fetchVideosInfoBatch(stillLive.map(v => { const m = (v.url||'').match(/[?&]v=([\w-]+)/); return m ? m[1] : null; }).filter(Boolean), YOUTUBE_API_KEY);
+        for (const v of stillLive) {
+          const m = (v.url || '').match(/[?&]v=([\w-]+)/);
+          const vid2 = m ? m[1] : null;
+          const info = vid2 ? liveCheck[vid2] : null;
+          // isLiveNow è true SOLO mentre la trasmissione è realmente in corso
+          // (actualStartTime presente, actualEndTime assente) — appena YouTube
+          // registra la fine, questo passa a false e segniamo la diretta conclusa.
+          if (info && !info.isLiveNow) await queries.markMediaVideoLiveEnded(v.id);
+        }
       }
     } catch (e) { console.warn('[media-yt-sync] errore canale', ch.displayName, e.message); }
   }
@@ -6251,6 +6270,14 @@ app.get('/api/media/video-creators', async (req, res) => {
   catch (e) { res.status(500).json({ error: e.message }); }
 });
 
+// Dirette dei creator attualmente in corso — badge "🔴 diretta ora" sui
+// cerchietti Creator/canale e sul profilo (vedi syncMediaChannels per come
+// vengono rilevate/aggiornate).
+app.get('/api/media/live-now', async (req, res) => {
+  try { res.json({ live: await queries.getLiveMediaVideosNow() }); }
+  catch (e) { res.status(500).json({ error: e.message }); }
+});
+
 // Contatore visualizzazioni — un video Media Video caricato/collegato da un creator
 app.post('/api/media/video/:id/view', async (req, res) => {
   try { await queries.incrementMediaVideoView(req.params.id); res.json({ ok: true }); }
@@ -6385,11 +6412,22 @@ app.post('/api/admin/media/import-channel', requireAdmin, async (req, res) => {
       const shorts = await filterOutShorts(pageItems.map(x => x.vid), includeShorts);
       for (const x of pageItems) {
         if (shorts.has(x.vid)) continue;
-        videos.push({ url: `https://www.youtube.com/watch?v=${x.vid}`, title: x.title, description: x.description, thumbnail_url: x.thumbnail_url, published_at: x.published_at });
+        videos.push({ vid: x.vid, url: `https://www.youtube.com/watch?v=${x.vid}`, title: x.title, description: x.description, thumbnail_url: x.thumbnail_url, published_at: x.published_at });
         if (videos.length >= maxVideos) break;
       }
       pageToken = plResp.nextPageToken;
       if (!pageToken) break;
+    }
+
+    // Sistema dirette (stesso di quello per le gare, vedi fetchVideosInfoBatch):
+    // scopre quali video importati sono/sono stati trasmessi in diretta, così
+    // le dirette dei creator si vedono col player già usato per le gare, senza
+    // che l'admin debba segnalarle a mano.
+    const liveInfoById = await fetchVideosInfoBatch(videos.map(v => v.vid), YOUTUBE_API_KEY);
+    for (const v of videos) {
+      const info = liveInfoById[v.vid];
+      v.is_live = !!info?.isLiveContent;
+      v.scheduled_start = info?.scheduledStartTime || null;
     }
 
     // Salta i video già importati in precedenza per questo profilo (stesso URL).
@@ -6401,7 +6439,7 @@ app.post('/api/admin/media/import-channel', requireAdmin, async (req, res) => {
       await queries.createMediaVideo({
         media_profile_id: profile.id, palinsesto, title: v.title, description: v.description,
         source_type: 'link', url: v.url, thumbnail_url: v.thumbnail_url, published_at: v.published_at,
-        series: seriesName,
+        series: seriesName, is_live: v.is_live, scheduled_start: v.scheduled_start,
       });
       imported++;
     }
