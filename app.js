@@ -83,16 +83,34 @@ async function _ensureAllMediaProfiles() {
   return _allMediaProfilesCache;
 }
 function _matchChannelToProfile(channelName, profiles) {
-  const words = new Set(_normChannelName(channelName).split(' ').filter(w => w.length > 3));
-  if (!words.size) return null;
-  let best = null, bestScore = 0;
+  const norm = _normChannelName(channelName);
+  const chCompact = norm.replace(/ /g, '');
+  const chWords = new Set(norm.split(' ').filter(w => w.length > 3));
+  if (!chCompact) return null;
   for (const p of profiles) {
-    const pWords = new Set(_normChannelName(p.display_name).split(' ').filter(w => w.length > 3));
-    let score = 0;
-    for (const w of words) if (pWords.has(w)) score++;
-    if (score > bestScore) { bestScore = score; best = p; }
+    const pNorm = _normChannelName(p.display_name);
+    const pCompact = pNorm.replace(/ /g, '');
+    const pWords = new Set(pNorm.split(' ').filter(w => w.length > 3));
+    // Nomi compattati (senza spazi) uguali o uno contenuto nell'altro —
+    // stesso brand scritto con/senza spazio ("BetaCycling"/"Beta Cycling")
+    // o con un suffisso ("ciclismoweb" dentro "ciclismoweb / ExtraCiclismo").
+    // Richiede almeno 6 caratteri per evitare corrispondenze accidentali su
+    // nomi molto corti.
+    if (chCompact.length >= 6 && pCompact.length >= 6 && (chCompact === pCompact || chCompact.includes(pCompact) || pCompact.includes(chCompact))) return p;
+    // TUTTE le parole significative del nome più corto devono comparire
+    // nell'altro — una sola parola in comune NON basta: "Giro d'Italia"
+    // finiva abbinato a "Eurosport Italia"/"GCN Italia" solo per la parola
+    // "Italia" (falso positivo confermato in produzione). Richiede anche
+    // ALMENO 2 parole significative su entrambi i lati: un profilo che si
+    // riduce a una sola parola lunga (es. "GCN Italia" → solo "ITALIA", "GCN"
+    // troppo corto) farebbe altrimenti match con QUALSIASI canale contenente
+    // quella singola parola.
+    if (chWords.size >= 2 && pWords.size >= 2) {
+      const [small, big] = chWords.size <= pWords.size ? [chWords, pWords] : [pWords, chWords];
+      if ([...small].every(w => big.has(w))) return p;
+    }
   }
-  return bestScore >= 1 ? best : null;
+  return null;
 }
 
 // Il player pubblico di Facebook (plugins/video.php) NON incorpora un link
