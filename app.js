@@ -9623,6 +9623,27 @@ window.adminNav = async function(section) {
           </label>
           <div id="ytimp-status" style="font-size:.8rem;color:var(--text-muted);margin-top:8px"></div>
         </div>
+        <div style="background:var(--bg-card);border:1px solid var(--border-subtle);border-radius:8px;padding:16px;margin-bottom:16px">
+          <div style="font-weight:700;font-size:.875rem;margin-bottom:4px">🎙️ Importa in blocco un podcast (Spotify o RSS)</div>
+          <p style="font-size:.8rem;color:var(--text-muted);margin:0 0 12px">
+            Incolla un link a uno show Spotify (es. open.spotify.com/show/...) oppure direttamente l'URL di un feed
+            RSS: importa tutte le puntate dalla prima all'ultima. Spotify richiederebbe un account Premium per
+            leggere le puntate via API — si aggira cercando il feed RSS pubblico dello stesso podcast (quasi tutti
+            i podcast ce l'hanno, distribuito anche fuori da Spotify).
+          </p>
+          <div style="display:flex;gap:8px;flex-wrap:wrap;align-items:center">
+            <input type="text" id="podimp-input" placeholder="Link show Spotify oppure URL feed RSS" style="flex:1;min-width:240px;padding:8px 10px;border:1px solid var(--border-subtle);border-radius:5px;background:var(--bg-base);color:var(--text-primary);font-size:.85rem"/>
+            <select id="podimp-pal" style="padding:8px 10px;border:1px solid var(--border-subtle);border-radius:5px;background:var(--bg-base);color:var(--text-primary);font-size:.85rem">
+              <option value="podcast">Podcast</option>
+              <option value="vlog">Vlog</option>
+              <option value="highlights">Highlights gara</option>
+              <option value="interviste">Interviste</option>
+            </select>
+            <input type="number" id="podimp-limit" value="100" min="1" max="500" style="width:80px;padding:8px 10px;border:1px solid var(--border-subtle);border-radius:5px;background:var(--bg-base);color:var(--text-primary);font-size:.85rem" title="Numero massimo di puntate da importare"/>
+            <button id="podimp-btn" onclick="window.adminImportPodcast()" style="background:var(--accent);color:#fff;border:none;padding:8px 16px;border-radius:5px;font-weight:600;cursor:pointer;font-size:.85rem">Importa</button>
+          </div>
+          <div id="podimp-status" style="font-size:.8rem;color:var(--text-muted);margin-top:8px"></div>
+        </div>
         <div id="yt-queue-container">
           <div class="admin-loading">Caricamento coda…</div>
         </div>`;
@@ -11361,6 +11382,29 @@ window.adminImportYtChannel = async () => {
     status.style.color = '#16a34a';
     status.textContent = `✓ "${r.profile.display_name}": ${r.imported} video importati${r.skipped ? ` (${r.skipped} già presenti, saltati)` : ''}.`;
     document.getElementById('ytimp-channel').value = '';
+  } catch (e) {
+    status.style.color = '#ef4444';
+    status.textContent = 'Errore: ' + e.message;
+  } finally {
+    btn.disabled = false; btn.textContent = 'Importa';
+  }
+};
+
+window.adminImportPodcast = async () => {
+  const input = document.getElementById('podimp-input')?.value.trim();
+  const palinsesto = document.getElementById('podimp-pal')?.value;
+  const limit = document.getElementById('podimp-limit')?.value;
+  const status = document.getElementById('podimp-status');
+  const btn = document.getElementById('podimp-btn');
+  if (!input) { status.textContent = 'Inserisci un link Spotify o un URL feed RSS.'; status.style.color = '#ef4444'; return; }
+  btn.disabled = true; btn.textContent = 'Importazione…';
+  status.style.color = 'var(--text-muted)';
+  status.textContent = 'Recupero puntate… può richiedere qualche secondo per podcast con molte puntate.';
+  try {
+    const r = await apiCall('/admin/media/import-podcast', { method: 'POST', body: { input, palinsesto, limit } });
+    status.style.color = '#16a34a';
+    status.textContent = `✓ "${r.profile.display_name}": ${r.imported} puntate importate${r.skipped ? ` (${r.skipped} già presenti, saltate)` : ''}.`;
+    document.getElementById('podimp-input').value = '';
   } catch (e) {
     status.style.color = '#ef4444';
     status.textContent = 'Errore: ' + e.message;
@@ -16072,6 +16116,23 @@ function _mediaVideoCardHtml(v) {
       <video controls preload="metadata" style="width:100%;aspect-ratio:16/9;background:#000;border-radius:10px" src="${esc(v.url)}" onplay="if(!this.dataset.counted){this.dataset.counted='1';window._mvIncrView(${v.id})}"></video>
       <div class="media-video-title">${esc(v.title)}</div>
       <div class="media-video-meta"><span>${palLabel}</span>${garaLink ? ' · ' + garaLink : ''}<span style="margin-left:auto">${viewsHtml}</span></div>
+    </div>`;
+  }
+  // Podcast (RSS/Spotify importati): l'URL è direttamente il file audio
+  // dell'episodio (enclosure del feed) — nessun embed possibile/necessario,
+  // basta un player <audio> nativo del browser dentro la card stessa.
+  if (v.palinsesto === 'podcast' && /\.(mp3|m4a|wav|ogg)(\?|$)/i.test(v.url || '')) {
+    const podCover = v.thumbnail_url
+      ? `<img src="${esc(v.thumbnail_url)}" loading="lazy" alt="" style="width:100%;height:100%;object-fit:cover"/>`
+      : `<span>🎙️</span>`;
+    const podProfileLogo = v.profile_cover_url
+      ? `<img src="${esc(mediaUrl(v.profile_cover_url))}" alt="" style="position:absolute;bottom:8px;left:8px;width:28px;height:28px;border-radius:50%;object-fit:cover;border:2px solid var(--bg-elevated);background:var(--bg-elevated)"/>`
+      : '';
+    return `<div class="media-video-card">
+      <div style="position:relative;width:100%;aspect-ratio:16/9;background:var(--bg-base);border-radius:10px;overflow:hidden;display:flex;align-items:center;justify-content:center;font-size:2.2rem">${podCover}${podProfileLogo}</div>
+      <div class="media-video-title">${esc(v.title)}</div>
+      <audio controls preload="none" style="width:100%;margin-top:6px" src="${esc(v.url)}" onplay="if(!this.dataset.counted){this.dataset.counted='1';window._mvIncrView(${v.id})}"></audio>
+      <div class="media-video-meta"><span>🎙️ Podcast</span>${garaLink ? ' · ' + garaLink : ''}<span style="margin-left:auto">${viewsHtml}</span></div>
     </div>`;
   }
   let platform = '🔗', pname = 'Link';

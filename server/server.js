@@ -4750,6 +4750,26 @@ async function writeYTMediaChannels(arr) {
   fs.writeFileSync(path.join(__dirname, '../data/yt_media_channels.json'), JSON.stringify(arr, null, 2));
 }
 
+// Feed podcast registrati per il sync automatico delle nuove puntate (stesso
+// concetto di yt_media_channels, per i podcast importati via RSS/Spotify).
+async function readPodcastFeeds() {
+  if (supabase) {
+    const { data, error } = await supabase.from('kv_store').select('value').eq('key', 'podcast_feeds').single();
+    if (error && error.code !== 'PGRST116') console.error('[podcast_feeds] read error:', error.message);
+    return data?.value || [];
+  }
+  try { return JSON.parse(fs.readFileSync(path.join(__dirname, '../data/podcast_feeds.json'), 'utf8')); } catch { return []; }
+}
+async function writePodcastFeeds(arr) {
+  if (supabase) {
+    const { error } = await supabase.from('kv_store')
+      .upsert({ key: 'podcast_feeds', value: arr, updated_at: new Date().toISOString() });
+    if (error) throw new Error('Supabase write: ' + error.message);
+    return;
+  }
+  fs.writeFileSync(path.join(__dirname, '../data/podcast_feeds.json'), JSON.stringify(arr, null, 2));
+}
+
 // Rileva se un video YouTube è uno Short — la durata NON è un segnale
 // affidabile (dal 2024 YouTube accetta Shorts fino a 3 minuti, e ci sono
 // video normali per i social altrettanto brevi): l'unico modo corretto è
@@ -4996,6 +5016,36 @@ async function autoMediaChannelsSync() {
     const r = await syncMediaChannels();
     if (r.added) console.log(`[media-yt-auto] ${r.added} nuovi video importati automaticamente in Media Video`);
   } catch (e) { console.warn('[media-yt-auto] Errore:', e.message); }
+}
+
+// Ricontrolla i feed podcast registrati: nuove puntate pubblicate dall'ultimo
+// giro vengono importate da sole, stesso principio del sync canali YouTube.
+async function syncPodcastFeeds() {
+  const feeds = await readPodcastFeeds();
+  let added = 0;
+  for (const feed of feeds) {
+    try {
+      const xml = await fetch(feed.feedUrl, { headers: { 'User-Agent': 'Mozilla/5.0' } }).then(r => { if (!r.ok) throw new Error(`HTTP ${r.status}`); return r.text(); });
+      const { items } = _parsePodcastRss(xml);
+      const existing = await queries.getMediaVideosByProfile(feed.profileId);
+      const existingUrls = new Set(existing.map(v => v.url));
+      for (const ep of items) {
+        if (existingUrls.has(ep.url)) continue;
+        await queries.createMediaVideo({
+          media_profile_id: feed.profileId, palinsesto: feed.palinsesto, title: ep.title, description: ep.description,
+          source_type: 'link', url: ep.url, thumbnail_url: ep.thumbnail_url, published_at: ep.published_at,
+        });
+        added++;
+      }
+    } catch (e) { console.warn('[podcast-sync] errore feed', feed.displayName, e.message); }
+  }
+  return { added };
+}
+async function autoPodcastFeedsSync() {
+  try {
+    const r = await syncPodcastFeeds();
+    if (r.added) console.log(`[podcast-auto] ${r.added} nuove puntate importate automaticamente`);
+  } catch (e) { console.warn('[podcast-auto] Errore:', e.message); }
 }
 
 // GET queue
@@ -6454,6 +6504,104 @@ app.post('/api/admin/media/import-channel', requireAdmin, async (req, res) => {
     await writeYTMediaChannels(mediaChannels);
 
     res.json({ ok: true, imported, skipped: videos.length - imported, profile: { id: profile.id, display_name: channelTitle } });
+  } catch (e) { res.status(500).json({ error: e.message }); }
+});
+
+// ── Import podcast (Spotify/RSS) in blocco, stesso concetto dei canali YouTube ──
+// Spotify richiede un account Premium per l'app per leggere show/puntate via
+// API ufficiale (restrizione imposta da Spotify, non aggirabile) — ma la
+// maggior parte dei podcast ha comunque un feed RSS pubblico, ospitato altrove
+// (Podomatic, Anchor/Spotify for Podcasters, Buzzsprout, ecc.), che Spotify
+// stesso importa per distribuirlo. Se l'utente incolla un link Spotify,
+// risolviamo il feed passando dal nome dello show (oEmbed, pubblico, nessuna
+// restrizione) cercato su iTunes (API pubblica, restituisce feedUrl per la
+// maggior parte dei podcast). Se incolla direttamente un URL di feed, lo
+// usiamo così com'è.
+async function _resolvePodcastFeedUrl(input) {
+  const raw = input.trim();
+  const showMatch = raw.match(/open\.spotify\.com\/show\/([a-zA-Z0-9]+)/);
+  if (!showMatch) return raw; // non è un link Spotify: trattalo già come feed RSS
+  const oembed = await fetch(`https://open.spotify.com/oembed?url=${encodeURIComponent(`https://open.spotify.com/show/${showMatch[1]}`)}`).then(r => r.json()).catch(() => null);
+  // Il campo "title" dell'oEmbed di uno show è l'ultima puntata, non il nome
+  // dello show — il nome vero va preso dal <title> della pagina pubblica.
+  const html = await fetch(`https://open.spotify.com/show/${showMatch[1]}`, { headers: { 'User-Agent': 'Mozilla/5.0' } }).then(r => r.text()).catch(() => '');
+  const nameMatch = html.match(/"name"\s*:\s*"([^"]{2,80})"/) || html.match(/<title>([^<|]+)/);
+  const showName = (nameMatch?.[1] || oembed?.title || '').trim();
+  if (!showName) throw new Error('Non riesco a leggere il nome dello show da Spotify');
+  const itunesResp = await fetch(`https://itunes.apple.com/search?term=${encodeURIComponent(showName)}&entity=podcast&country=IT`).then(r => r.json());
+  const hit = itunesResp.results?.find(r => r.feedUrl);
+  if (!hit) throw new Error(`Nessun feed RSS pubblico trovato per "${showName}" — prova a incollare direttamente l'URL del feed RSS, se lo conosci`);
+  return hit.feedUrl;
+}
+
+// Parsing RSS minimale (stesso approccio già usato per l'RSS di YouTube in
+// youtube-scraper.js) — sufficiente per titolo/audio/data/copertina di ogni
+// puntata, senza dipendenze XML esterne.
+function _parsePodcastRss(xml) {
+  const decodeEntities = (s) => (s || '')
+    .replace(/&#(\d+);/g, (_, n) => String.fromCodePoint(parseInt(n, 10)))
+    .replace(/&#x([0-9a-f]+);/gi, (_, n) => String.fromCodePoint(parseInt(n, 16)))
+    .replace(/&amp;/g, '&').replace(/&lt;/g, '<').replace(/&gt;/g, '>').replace(/&quot;/g, '"').replace(/&apos;/g, "'");
+  const stripCdata = (s) => decodeEntities((s || '').replace(/<!\[CDATA\[([\s\S]*?)\]\]>/, '$1').replace(/<[^>]+>/g, '')).trim();
+  const channelEnd = xml.indexOf('<item');
+  const channelBlock = channelEnd > 0 ? xml.slice(0, channelEnd) : xml;
+  const channelTitle = stripCdata(channelBlock.match(/<title>([\s\S]*?)<\/title>/)?.[1] || '');
+  const channelImage = channelBlock.match(/<itunes:image[^>]*href="([^"]+)"/)?.[1]
+    || channelBlock.match(/<image>[\s\S]*?<url>([^<]+)<\/url>/)?.[1] || '';
+  const items = [];
+  const itemRe = /<item[\s\S]*?<\/item>/g;
+  const blocks = xml.match(itemRe) || [];
+  for (const block of blocks) {
+    const title = stripCdata(block.match(/<title>([\s\S]*?)<\/title>/)?.[1] || '') || 'Episodio';
+    const description = stripCdata(block.match(/<description>([\s\S]*?)<\/description>/)?.[1] || '').slice(0, 500);
+    const enclosureUrl = block.match(/<enclosure[^>]*url="([^"]+)"/)?.[1] || '';
+    const pubDateRaw = block.match(/<pubDate>([\s\S]*?)<\/pubDate>/)?.[1]?.trim() || '';
+    const published_at = pubDateRaw ? new Date(pubDateRaw).toISOString() : null;
+    const thumbnail_url = block.match(/<itunes:image[^>]*href="([^"]+)"/)?.[1] || channelImage;
+    if (enclosureUrl) items.push({ title, description, url: enclosureUrl, thumbnail_url, published_at: published_at && !isNaN(Date.parse(published_at)) ? published_at : null });
+  }
+  return { channelTitle, channelImage, items };
+}
+
+app.post('/api/admin/media/import-podcast', requireAdmin, async (req, res) => {
+  try {
+    const { input, palinsesto, limit } = req.body;
+    if (!input?.trim()) return res.status(400).json({ error: 'Link Spotify o URL feed RSS mancante' });
+    if (!MEDIA_PALINSESTI.includes(palinsesto)) return res.status(400).json({ error: 'Palinsesto non valido' });
+    const maxEpisodes = Math.min(Math.max(parseInt(limit, 10) || 100, 1), 500);
+
+    const feedUrl = await _resolvePodcastFeedUrl(input);
+    const xml = await fetch(feedUrl, { headers: { 'User-Agent': 'Mozilla/5.0' } }).then(r => { if (!r.ok) throw new Error(`Feed non raggiungibile (HTTP ${r.status})`); return r.text(); });
+    const { channelTitle, channelImage, items } = _parsePodcastRss(xml);
+    if (!channelTitle) return res.status(404).json({ error: 'Feed RSS non valido o vuoto' });
+
+    let profile = (await queries.getUnclaimedMediaProfiles()).find(p => p.display_name === channelTitle);
+    if (!profile) {
+      profile = await queries.createMediaProfile({ user_id: null, display_name: channelTitle, media_type: 'video' });
+      await queries.approveMediaProfile(profile.id);
+      if (channelImage) await queries.updateMediaProfileCover(profile.id, channelImage);
+    }
+
+    const existing = await queries.getMediaVideosByProfile(profile.id);
+    const existingUrls = new Set(existing.map(v => v.url));
+    let imported = 0;
+    for (const ep of items.slice(0, maxEpisodes)) {
+      if (existingUrls.has(ep.url)) continue;
+      await queries.createMediaVideo({
+        media_profile_id: profile.id, palinsesto, title: ep.title, description: ep.description,
+        source_type: 'link', url: ep.url, thumbnail_url: ep.thumbnail_url, published_at: ep.published_at,
+      });
+      imported++;
+    }
+    // Registra il feed per il sync automatico delle prossime puntate (vedi
+    // syncPodcastFeeds/autoPodcastFeedsSync).
+    const feeds = await readPodcastFeeds();
+    const idx = feeds.findIndex(f => f.feedUrl === feedUrl);
+    const entry = { feedUrl, palinsesto, profileId: profile.id, displayName: channelTitle };
+    if (idx >= 0) feeds[idx] = entry; else feeds.push(entry);
+    await writePodcastFeeds(feeds);
+
+    res.json({ ok: true, imported, skipped: items.length - imported, profile: { id: profile.id, display_name: channelTitle } });
   } catch (e) { res.status(500).json({ error: e.message }); }
 });
 
@@ -8848,10 +8996,12 @@ init()
       autoYoutubeSync();
       autoICSync();
       autoMediaChannelsSync();
+      autoPodcastFeedsSync();
       setInterval(autoXpixSync, SYNC_INTERVAL);
       setInterval(autoYoutubeSync, SYNC_INTERVAL);
       setInterval(autoICSync, SYNC_INTERVAL);
       setInterval(autoMediaChannelsSync, SYNC_INTERVAL);
+      setInterval(autoPodcastFeedsSync, SYNC_INTERVAL);
     }, 2 * 60 * 1000);
     app.listen(PORT, () => {
       console.log(`[server] ItaliacritAuth in ascolto su http://localhost:${PORT}`);
