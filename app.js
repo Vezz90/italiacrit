@@ -3780,6 +3780,13 @@ function route() {
   if (m_mediaFb) return renderMedia({ openFb: { garaId: decodeURIComponent(m_mediaFb[1]), idx: parseInt(m_mediaFb[2], 10) } });
   const m_mediaFbExtra = match('/media/fbextra/:bucket/:idx');
   if (m_mediaFbExtra) return renderMedia({ openFbExtra: { bucket: decodeURIComponent(m_mediaFbExtra[1]), idx: parseInt(m_mediaFbExtra[2], 10) } });
+  // Link diretti e condivisibili per ogni scheda della sezione Media (Video,
+  // Dirette, Presentazioni, Programmi TV, Altro, Creator) — prima del
+  // catch-all /media/:id (altrimenti "creator" verrebbe interpretato come
+  // un ID profilo e mostrerebbe "non trovato").
+  const MEDIA_TAB_URL_TO_KEY = { video: 'video', dirette: 'dirette', presentazioni: 'presentazioni', 'programmi-tv': 'programmi_tv', altro: 'altro', creator: 'creator' };
+  const m_mediaTab = match('/media/:tab');
+  if (m_mediaTab && MEDIA_TAB_URL_TO_KEY[m_mediaTab[1]]) return renderMedia({ tab: MEDIA_TAB_URL_TO_KEY[m_mediaTab[1]] });
   const m_media = match('/media/:id');
   if (m_media) return renderMediaProfile(m_media[1]);
   if (match('/media')) return renderMedia();
@@ -21062,7 +21069,8 @@ window._legacyIncrView = function(key) {
   fetch(`${API_BASE}/videos/view`, { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ key }) }).catch(() => {});
 };
 
-window.mediaSetTab    = (t) => { mediaTab = t; renderMedia(); };
+const MEDIA_TAB_KEY_TO_URL = { video: 'video', dirette: 'dirette', presentazioni: 'presentazioni', programmi_tv: 'programmi-tv', altro: 'altro', creator: 'creator' };
+window.mediaSetTab    = (t) => { mediaTab = t; navTo('/media/' + (MEDIA_TAB_KEY_TO_URL[t] || t)); };
 window.mediaSetGenere = (v) => { mediaQueryGenere = v; renderMedia(); };
 window.mediaSetCat    = (v) => { mediaQueryCat = v; renderMedia(); };
 window.mediaSetMonth  = (v) => { mediaQueryMonth = v; renderMedia(); };
@@ -21284,6 +21292,11 @@ window._submitMediaAdd = async () => {
 async function renderMedia(openOpts) {
   if (!globalData) return;
   await _loadLegacyViews();
+  // Navigazione diretta a una scheda specifica (link condivisibile, vedi
+  // route()) — gli openOpts.openXxx sotto possono comunque forzare una
+  // scheda diversa se il contenuto condiviso vive altrove (es. un link a un
+  // video di una presentazione forza "presentazioni" anche se tab=video).
+  if (openOpts?.tab) mediaTab = openOpts.tab;
   const { calendar, resultsRaw, videos } = globalData;
 
   // Indice gara_id → metadati evento (nome/data/categoria/genere), da resultsRaw
@@ -21410,6 +21423,20 @@ async function renderMedia(openOpts) {
   // non riflette affatto quando si è svolta la gara.
   const byRaceDateDesc = (a, b) => (b.meta?.data || b.video.published_at || '').localeCompare(a.meta?.data || a.video.published_at || '');
 
+  // Lo stesso video (stesso URL) può essere collegato a più gare — ancora
+  // deve apparire su ciascuna delle rispettive pagine gara, ma nell'elenco
+  // aggregato Video/Dirette deve comparire UNA volta sola, non una per gara
+  // a cui è stato agganciato. Si tiene la prima occorrenza incontrata.
+  {
+    const seenUrls = new Set();
+    videoItems = videoItems.filter(x => {
+      const key = x.video?.url;
+      if (!key) return true; // niente URL: non possiamo dedupare, teniamo tutto
+      if (seenUrls.has(key)) return false;
+      seenUrls.add(key);
+      return true;
+    });
+  }
   videoItems = applyFilters(videoItems).sort(byPublishedDesc);
   // Tab "Video" e "Dirette" sono mutuamente esclusivi: una diretta non deve
   // comparire anche tra i video normali.
@@ -21590,7 +21617,16 @@ async function renderMedia(openOpts) {
 
   const _showRaceFilters = mediaTab === 'video' || mediaTab === 'dirette';
 
-  setPageMeta('Media', 'Video, dirette, presentazioni e programmi TV delle gare di ciclismo agonistico italiano.');
+  const MEDIA_TAB_META = {
+    video: ['Media — Video', 'Video delle gare di ciclismo agonistico italiano.'],
+    dirette: ['Media — Dirette', 'Dirette streaming delle gare di ciclismo agonistico italiano.'],
+    presentazioni: ['Media — Presentazioni', 'Presentazioni delle gare di ciclismo agonistico italiano.'],
+    programmi_tv: ['Media — Programmi TV', 'Programmi TV sul ciclismo agonistico italiano.'],
+    altro: ['Media — Altro', 'Altri contenuti video sul ciclismo agonistico italiano.'],
+    creator: ['Media — Creator', 'I creator che pubblicano video sul ciclismo agonistico italiano.'],
+  };
+  const [_mediaMetaTitle, _mediaMetaDesc] = MEDIA_TAB_META[mediaTab] || ['Media', 'Video, dirette, presentazioni e programmi TV delle gare di ciclismo agonistico italiano.'];
+  setPageMeta(_mediaMetaTitle, _mediaMetaDesc);
   setPage(`
     <div class="content-wrapper">
       <div class="section-header">

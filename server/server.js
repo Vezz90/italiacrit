@@ -6312,7 +6312,13 @@ app.post('/api/admin/media/import-channel', requireAdmin, async (req, res) => {
         const atMatch = raw.match(/@([\w.-]+)/);
         const pathMatch = !atMatch && raw.match(/youtube\.com\/(?:c\/|user\/)([\w.-]+)/);
         const handle = atMatch ? atMatch[1] : (pathMatch ? pathMatch[1] : raw.replace(/\/+$/, '').split('/').pop());
-        channelId = await resolveHandle(handle);
+        // Endpoint ufficiale forHandle (richiede solo la API key, già
+        // disponibile qui) invece dello scraping HTML di resolveHandle() —
+        // quest'ultimo è pensato per il fallback SENZA API key e può fallire
+        // silenziosamente quando YouTube cambia la struttura della pagina.
+        const byHandleUrl = `https://www.googleapis.com/youtube/v3/channels?part=id&forHandle=${encodeURIComponent(handle)}&key=${YOUTUBE_API_KEY}`;
+        const byHandleResp = await fetch(byHandleUrl).then(r => r.json());
+        channelId = byHandleResp.items?.[0]?.id || await resolveHandle(handle);
       }
       if (!channelId) return res.status(404).json({ error: 'Canale non trovato — prova a incollare l\'URL completo del canale' });
 
