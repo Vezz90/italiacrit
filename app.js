@@ -10146,7 +10146,14 @@ window.adminNav = async function(section) {
         const cognome = document.getElementById('ae-cognome')?.value.trim();
         const nome    = document.getElementById('ae-nome')?.value.trim();
         const team    = document.getElementById('ae-team')?.value.trim();
-        const team_id = document.getElementById('ae-team-id-store')?.dataset.tid || '';
+        let team_id   = document.getElementById('ae-team-id-store')?.dataset.tid || '';
+        // Team nuovo digitato a mano (non scelto dal menu a tendina): senza
+        // un team_id l'override viene salvato ma resta inerte per sempre —
+        // _applyAtletaTeamOverrides lo ignora silenziosamente se team_id è
+        // vuoto (bug osservato dal vivo: squadra sparita da badge/risultati/
+        // pagina team perché non esisteva ancora, quindi nessun match nel
+        // menu a tendina da cui prendere l'id). Generane uno dal nome.
+        if (team && !team_id) team_id = slug(team).toUpperCase();
         document.getElementById('admin-atleta-modal')?.remove();
         try {
           const body = { cognome, nome, team };
