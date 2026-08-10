@@ -6520,14 +6520,27 @@ app.post('/api/admin/media/import-channel', requireAdmin, async (req, res) => {
 async function _resolvePodcastFeedUrl(input) {
   const raw = input.trim();
   const showMatch = raw.match(/open\.spotify\.com\/show\/([a-zA-Z0-9]+)/);
-  if (!showMatch) return raw; // non è un link Spotify: trattalo già come feed RSS
-  const oembed = await fetch(`https://open.spotify.com/oembed?url=${encodeURIComponent(`https://open.spotify.com/show/${showMatch[1]}`)}`).then(r => r.json()).catch(() => null);
-  // Il campo "title" dell'oEmbed di uno show è l'ultima puntata, non il nome
-  // dello show — il nome vero va preso dal <title> della pagina pubblica.
-  const html = await fetch(`https://open.spotify.com/show/${showMatch[1]}`, { headers: { 'User-Agent': 'Mozilla/5.0' } }).then(r => r.text()).catch(() => '');
-  const nameMatch = html.match(/"name"\s*:\s*"([^"]{2,80})"/) || html.match(/<title>([^<|]+)/);
-  const showName = (nameMatch?.[1] || oembed?.title || '').trim();
-  if (!showName) throw new Error('Non riesco a leggere il nome dello show da Spotify');
+  const episodeMatch = !showMatch && raw.match(/open\.spotify\.com\/episode\/([a-zA-Z0-9]+)/);
+  if (!showMatch && !episodeMatch) return raw; // non è un link Spotify: trattalo già come feed RSS
+
+  let showName = '';
+  if (showMatch) {
+    const oembed = await fetch(`https://open.spotify.com/oembed?url=${encodeURIComponent(`https://open.spotify.com/show/${showMatch[1]}`)}`).then(r => r.json()).catch(() => null);
+    // Il campo "title" dell'oEmbed di uno show è l'ultima puntata, non il nome
+    // dello show — il nome vero va preso dal <title>/JSON della pagina pubblica.
+    const html = await fetch(`https://open.spotify.com/show/${showMatch[1]}`, { headers: { 'User-Agent': 'Mozilla/5.0' } }).then(r => r.text()).catch(() => '');
+    const nameMatch = html.match(/"name"\s*:\s*"([^"]{2,80})"/) || html.match(/<title>([^<|]+)/);
+    showName = (nameMatch?.[1] || oembed?.title || '').trim();
+  } else {
+    // Da un link a un SINGOLO episodio non c'è modo diretto di risalire allo
+    // show ID, ma la <meta name="description"> di Spotify segue sempre il
+    // formato "Listen to this episode from {NomeShow} on Spotify. ..." —
+    // pattern stabile e pubblico, nessuna API richiesta.
+    const html = await fetch(`https://open.spotify.com/episode/${episodeMatch[1]}`, { headers: { 'User-Agent': 'Mozilla/5.0' } }).then(r => r.text()).catch(() => '');
+    const descMatch = html.match(/Listen to this episode from (.+?) on Spotify\./);
+    showName = (descMatch?.[1] || '').trim();
+  }
+  if (!showName) throw new Error('Non riesco a risalire al nome dello show da questo link Spotify');
   const itunesResp = await fetch(`https://itunes.apple.com/search?term=${encodeURIComponent(showName)}&entity=podcast&country=IT`).then(r => r.json());
   const hit = itunesResp.results?.find(r => r.feedUrl);
   if (!hit) throw new Error(`Nessun feed RSS pubblico trovato per "${showName}" — prova a incollare direttamente l'URL del feed RSS, se lo conosci`);

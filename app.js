@@ -16146,10 +16146,9 @@ function _mediaVideoCardHtml(v) {
     const podProfileLogo = v.profile_cover_url
       ? `<img src="${esc(mediaUrl(v.profile_cover_url))}" alt="" style="position:absolute;bottom:8px;left:8px;width:28px;height:28px;border-radius:50%;object-fit:cover;border:2px solid var(--bg-elevated);background:var(--bg-elevated)"/>`
       : '';
-    return `<div class="media-video-card">
+    return `<div class="media-video-card" style="cursor:pointer" data-url="${esc(v.url)}" data-vid="${v.id}" data-title="${esc(v.title)}" data-cover="${esc(v.thumbnail_url || '')}" onclick="window._mvOpenPodcastClick(this)">
       <div style="position:relative;width:100%;aspect-ratio:16/9;background:var(--bg-base);border-radius:10px;overflow:hidden;display:flex;align-items:center;justify-content:center;font-size:2.2rem">${podCover}${podProfileLogo}</div>
       <div class="media-video-title">${esc(v.title)}</div>
-      <audio controls preload="none" style="width:100%;margin-top:6px" src="${esc(v.url)}" onplay="if(!this.dataset.counted){this.dataset.counted='1';window._mvIncrView(${v.id})}"></audio>
       <div class="media-video-meta"><span>🎙️ Podcast</span>${garaLink ? ' · ' + garaLink : ''}<span style="margin-left:auto">${viewsHtml}</span></div>
     </div>`;
   }
@@ -16203,6 +16202,11 @@ window._mvOpenVideoClick = (el) => {
   window._mvIncrView(el.dataset.vid);
   if (el.dataset.live) window.openLivePlayer(el.dataset.ytId, el.dataset.title, null);
   else window.openVideoModal(el.dataset.ytId, el.dataset.title);
+};
+
+window._mvOpenPodcastClick = (el) => {
+  window._mvIncrView(el.dataset.vid);
+  window.openPodcastModal(el.dataset.url, el.dataset.title, el.dataset.cover);
 };
 
 async function renderMediaProfile(profileId) {
@@ -20561,6 +20565,25 @@ window.openVideoModal = (videoId, title) => {
                 frameborder="0" allowfullscreen
                 allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture">
         </iframe>
+      </div>
+    </div>`;
+  overlay.addEventListener('click', e => { if (e.target === overlay) overlay.remove(); });
+  document.body.appendChild(overlay);
+};
+
+// Stessa finestra modale dei video, ma con un player <audio> nativo del
+// browser invece dell'iframe YouTube — usata per le puntate podcast
+// importate (il file audio non ha un embed ufficiale come YouTube).
+window.openPodcastModal = (url, title, cover) => {
+  const overlay = document.createElement('div');
+  overlay.className = 'video-modal-overlay';
+  overlay.innerHTML = `
+    <div class="video-modal-box">
+      <button class="video-modal-close" onclick="this.closest('.video-modal-overlay').remove()">✕</button>
+      <div class="video-modal-title">${esc(title)}</div>
+      <div class="video-modal-player" style="display:flex;flex-direction:column;align-items:center;justify-content:center;gap:16px;background:var(--bg-elevated);padding:24px">
+        ${cover ? `<img src="${esc(cover)}" alt="" style="width:160px;height:160px;object-fit:cover;border-radius:12px;box-shadow:0 4px 20px rgba(0,0,0,.3)"/>` : ''}
+        <audio controls autoplay style="width:100%;max-width:420px" src="${esc(url)}"></audio>
       </div>
     </div>`;
   overlay.addEventListener('click', e => { if (e.target === overlay) overlay.remove(); });
