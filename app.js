@@ -3731,6 +3731,7 @@ function route() {
   if (m_mediaFb) return renderMedia({ openFb: { garaId: decodeURIComponent(m_mediaFb[1]), idx: parseInt(m_mediaFb[2], 10) } });
   const m_mediaFbExtra = match('/media/fbextra/:bucket/:idx');
   if (m_mediaFbExtra) return renderMedia({ openFbExtra: { bucket: decodeURIComponent(m_mediaFbExtra[1]), idx: parseInt(m_mediaFbExtra[2], 10) } });
+  if (match('/media/creator')) return renderMediaCreator();
   const m_media = match('/media/:id');
   if (m_media) return renderMediaProfile(m_media[1]);
   if (match('/media')) return renderMedia();
@@ -15899,12 +15900,39 @@ window.adminEditVideo = async function(calId, idx, currentIsLive) {
 };
 
 // ── MEDIA PROFILE PAGE ────────────────────────────────────────
+// Card per un video creator: embed nativo se caricato su ICS, link esterno
+// (con icona piattaforma riconosciuta dall'URL) se YouTube/Instagram/TikTok.
+const MEDIA_PALINSESTO_LABEL = { highlights: 'Highlights gara', interviste: 'Interviste', vlog: 'Vlog', podcast: 'Podcast' };
+function _mediaVideoCardHtml(v) {
+  const palLabel = esc(MEDIA_PALINSESTO_LABEL[v.palinsesto] || v.palinsesto || '');
+  const garaLink = v.gara_id ? `<a href="#/gara/${encodeURIComponent(v.gara_id)}" onclick="event.stopPropagation()" style="color:var(--accent);font-size:.72rem">→ Vedi gara</a>` : '';
+  if (v.source_type === 'upload') {
+    return `<div class="media-video-card">
+      <video controls preload="metadata" style="width:100%;aspect-ratio:16/9;background:#000;border-radius:10px" src="${esc(v.url)}"></video>
+      <div class="media-video-title">${esc(v.title)}</div>
+      <div class="media-video-meta"><span>${palLabel}</span>${garaLink ? ' · ' + garaLink : ''}</div>
+    </div>`;
+  }
+  let platform = '🔗', pname = 'Link';
+  if (/youtu\.?be/i.test(v.url||''))       { platform = '▶️'; pname = 'YouTube'; }
+  else if (/instagram\.com/i.test(v.url||'')) { platform = '📸'; pname = 'Instagram'; }
+  else if (/tiktok\.com/i.test(v.url||''))    { platform = '🎵'; pname = 'TikTok'; }
+  return `<a href="${esc(v.url)}" target="_blank" rel="noopener" class="media-video-card" style="display:block;text-decoration:none;color:inherit">
+    <div style="width:100%;aspect-ratio:16/9;background:var(--bg-base);border-radius:10px;display:flex;align-items:center;justify-content:center;font-size:2.2rem">${platform}</div>
+    <div class="media-video-title">${esc(v.title)}</div>
+    <div class="media-video-meta"><span>${pname} · ${palLabel}</span>${garaLink ? ' · ' + garaLink : ''}</div>
+  </a>`;
+}
+
 async function renderMediaProfile(profileId) {
   setPage(`<div class="loading-bar"></div>`);
   try {
     const d = await fetch(`${API_BASE}/media/profile/${profileId}`).then(r => r.json());
     if (d.error) { renderNotFound(); return; }
-    const { profile, albums, stats } = d;
+    const { profile, albums, videos = [], stats } = d;
+    const videosHtml = videos.length
+      ? `<div class="media-album-grid">${videos.map(_mediaVideoCardHtml).join('')}</div>`
+      : `<p style="color:var(--text-muted);padding:24px 0">Nessun video ancora.</p>`;
 
     const albumsHtml = albums.length
       ? `<div class="media-album-grid">${albums.map(a => {
@@ -15942,16 +15970,22 @@ async function renderMediaProfile(profileId) {
             ${msgBtn}
           </div>
           <div class="media-profile-stats">
-            <span>${albums.length} album</span>
-            <span style="margin:0 8px;color:var(--border-subtle)">·</span>
-            <span>${stats?.total || 0} foto</span>
+            ${profile.media_type !== 'video' ? `<span>${albums.length} album</span><span style="margin:0 8px;color:var(--border-subtle)">·</span><span>${stats?.total || 0} foto</span>` : ''}
+            ${profile.media_type === 'entrambi' ? `<span style="margin:0 8px;color:var(--border-subtle)">·</span>` : ''}
+            ${profile.media_type !== 'foto' ? `<span>${videos.length} video</span>` : ''}
           </div>
         </div>
       </div>
+      ${profile.media_type !== 'video' ? `
       <div id="media-album-area">
         <div class="comp-section-title" style="margin-bottom:16px">Album</div>
         ${albumsHtml}
-      </div>
+      </div>` : ''}
+      ${profile.media_type !== 'foto' ? `
+      <div id="media-video-area">
+        <div class="comp-section-title" style="margin:24px 0 16px">Video</div>
+        ${videosHtml}
+      </div>` : ''}
     `);
   } catch(e) {
     setPage(`<div style="padding:48px;color:var(--text-muted);text-align:center">Errore nel caricamento del profilo: ${esc(e.message)}</div>`);
@@ -15997,6 +16031,59 @@ window._renderMediaAlbum = async function(albumId, profileId) {
     area.innerHTML = `<div style="color:var(--red-hot)">Errore: ${esc(e.message)}</div>`;
   }
 };
+
+// ── Sezione Media → Creator: directory profili media + feed video per palinsesto ──
+let _mediaCreatorPal = '';
+window.mediaCreatorSetPal = (p) => { _mediaCreatorPal = p; renderMediaCreator(); };
+
+async function renderMediaCreator() {
+  setPage(`<div class="loading-bar"></div>`);
+  try {
+    const [profilesData, videosData] = await Promise.all([
+      fetch(`${API_BASE}/media/profiles`).then(r => r.json()),
+      fetch(`${API_BASE}/media/videos${_mediaCreatorPal ? '?palinsesto=' + encodeURIComponent(_mediaCreatorPal) : ''}`).then(r => r.json()),
+    ]);
+    const profiles = profilesData.profiles || [];
+    const videos   = videosData.videos || [];
+
+    const profilesHtml = profiles.length ? `
+      <div class="media-album-grid">
+        ${profiles.map(p => `
+          <a href="#/media/${p.id}" class="media-video-card" style="display:block;text-decoration:none;color:inherit">
+            <div style="width:100%;aspect-ratio:1/1;background:var(--bg-base);border-radius:10px;display:flex;align-items:center;justify-content:center;font-size:2.2rem">
+              ${p.media_type === 'video' ? '🎬' : p.media_type === 'entrambi' ? '📷🎬' : '📷'}
+            </div>
+            <div class="media-video-title">${esc(p.display_name)}</div>
+            <div class="media-video-meta">${p.instagram ? '📸 ' + esc(p.instagram) : ''}</div>
+          </a>`).join('')}
+      </div>` : `<p style="color:var(--text-muted);padding:12px 0">Nessun profilo creator ancora.</p>`;
+
+    const videosHtml = videos.length
+      ? `<div class="media-album-grid">${videos.map(v => `
+          <div>
+            ${_mediaVideoCardHtml(v)}
+            <a href="#/media/${v.media_profile_id}" style="font-size:.72rem;color:var(--text-muted)">di ${esc(v.display_name)}</a>
+          </div>`).join('')}</div>`
+      : `<p style="color:var(--text-muted);padding:12px 0">Nessun video ancora per questo palinsesto.</p>`;
+
+    setPage(`
+      <div class="comp-page-header">
+        <h1 class="comp-title">Creator</h1>
+        <p style="color:var(--text-muted);font-size:.9rem">Fotografi e videomaker registrati: album, highlights, interviste, vlog e podcast dal mondo del ciclismo amatoriale.</p>
+      </div>
+      <div class="comp-section-title" style="margin-bottom:16px">Profili</div>
+      ${profilesHtml}
+      <div class="comp-section-title" style="margin:28px 0 16px">Video</div>
+      <div class="yt-chips" style="margin-bottom:16px">
+        <button class="yt-chip ${!_mediaCreatorPal ? 'yt-chip-active' : ''}" onclick="window.mediaCreatorSetPal('')">Tutti</button>
+        ${Object.entries(MEDIA_PALINSESTO_LABEL).map(([k,l]) => `<button class="yt-chip ${_mediaCreatorPal===k ? 'yt-chip-active' : ''}" onclick="window.mediaCreatorSetPal('${k}')">${esc(l)}</button>`).join('')}
+      </div>
+      ${videosHtml}
+    `);
+  } catch(e) {
+    setPage(`<div style="padding:48px;color:var(--text-muted);text-align:center">Errore nel caricamento: ${esc(e.message)}</div>`);
+  }
+}
 
 // ── PERCORSO GARA (ricostruzione automatica, vedi server/route-builder.js) ──
 // Leaflet caricato via CDN solo al bisogno (una gara su tre-quattro ha un
@@ -16844,7 +16931,16 @@ async function renderGara(gara_id) {
           const n = (a.photographer_name || a.title || '').toLowerCase();
           return !n.includes('xpix') && !n.includes('ciclismo.info') && !n.includes('italiaciclismo');
         });
-        if (!albums.length) return;
+        const gVideos = d.videos || [];
+        if (!albums.length && !gVideos.length) return;
+
+        const videosHtml = gVideos.length ? `
+          <div class="comp-section media-gallery-section">
+            <div class="comp-section-title" style="margin:0 0 10px;border:none;padding:0">🎬 Video creator</div>
+            <div class="media-album-grid">${gVideos.map(v => _mediaVideoCardHtml(v)).join('')}</div>
+          </div>` : '';
+
+        if (!albums.length) { galEl.innerHTML = videosHtml; return; }
 
         // Carica TUTTE le foto di tutti gli album in parallelo (lazy: solo quando la sezione è visibile)
         const albumPhotos = await Promise.all(
@@ -16905,7 +17001,7 @@ async function renderGara(gara_id) {
                   </div>
                 </div>`;
             }).join('')}
-          </div>`;
+          </div>` + videosHtml;
       } catch(e) { /* non blocca la pagina */ }
     };
 
@@ -21311,6 +21407,7 @@ async function renderMedia(openOpts) {
         <button class="yt-chip ${mediaTab === 'presentazioni' ? 'yt-chip-active' : ''}" onclick="window.mediaSetTab('presentazioni')">🎤 Presentazioni <span class="yt-chip-count">${presentazioniFiltered.length}</span></button>
         <button class="yt-chip ${mediaTab === 'programmi_tv' ? 'yt-chip-active' : ''}" onclick="window.mediaSetTab('programmi_tv')">📺 Programmi TV <span class="yt-chip-count">${programmiTvFiltered.length}</span></button>
         <button class="yt-chip ${mediaTab === 'altro' ? 'yt-chip-active' : ''}" onclick="window.mediaSetTab('altro')">🎬 Altro <span class="yt-chip-count">${altroFiltered.length}</span></button>
+        <a class="yt-chip" href="#/media/creator">🧑‍🎨 Creator</a>
         <span class="yt-chip-sep"></span>
         ${_showRaceFilters ? `
         <select class="yt-chip yt-chip-select" onchange="window.mediaSetGenere(this.value)">
@@ -24903,6 +25000,135 @@ window.deleteMediaAlbum = async function(albumId) {
   try {
     await apiCall(`/media/album/${albumId}`, { method: 'DELETE' });
     showToast('Album eliminato');
+    renderMyProfile();
+  } catch(err) { showToast('Errore: ' + err.message, 'error'); }
+};
+
+// ── Media video: link esterno (YouTube/Instagram/TikTok) o file caricato ──────
+window.openMediaVideoCreate = function(profileId) {
+  const inpStyle = 'width:100%;box-sizing:border-box;padding:8px 10px;border:1px solid var(--border-subtle);border-radius:var(--r-sm);font-size:0.875rem;background:var(--bg-primary);color:var(--text-primary);margin-bottom:10px';
+  const overlay = document.createElement('div');
+  overlay.id = 'modal-overlay';
+  overlay.style.cssText = 'position:fixed;inset:0;background:rgba(0,0,0,.6);z-index:9999;display:flex;align-items:center;justify-content:center;padding:16px';
+  overlay.innerHTML = `
+    <div style="background:var(--bg-card);border-radius:var(--r-lg);padding:24px;width:100%;max-width:440px;box-shadow:0 8px 32px rgba(0,0,0,.25);max-height:90vh;overflow-y:auto">
+      <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:16px">
+        <strong>Nuovo video</strong>
+        <button onclick="this.closest('[style*=fixed]').remove()" style="background:none;border:none;font-size:1.3rem;cursor:pointer;color:var(--text-muted)">✕</button>
+      </div>
+      <div style="display:flex;gap:8px;margin-bottom:12px">
+        <button type="button" id="mvc-tab-link" onclick="window._mvcSetMode('link')" class="dash-btn dash-btn--accent dash-btn--sm" style="flex:1">🔗 Link esterno</button>
+        <button type="button" id="mvc-tab-upload" onclick="window._mvcSetMode('upload')" class="dash-btn dash-btn--outline dash-btn--sm" style="flex:1">⬆️ Carica file</button>
+      </div>
+      <input id="mvc-title" type="text" placeholder="Titolo *" style="${inpStyle}" required/>
+      <label style="font-size:.8rem;color:var(--text-muted);display:block;margin-bottom:4px">Palinsesto *</label>
+      <select id="mvc-pal" style="${inpStyle}" required>
+        <option value="highlights">Highlights gara</option>
+        <option value="interviste">Interviste</option>
+        <option value="vlog">Vlog</option>
+        <option value="podcast">Podcast</option>
+      </select>
+      <div id="mvc-link-wrap">
+        <input id="mvc-url" type="url" placeholder="Link YouTube / Instagram / TikTok *" style="${inpStyle}"/>
+      </div>
+      <div id="mvc-upload-wrap" style="display:none">
+        <p style="font-size:.78rem;color:var(--text-muted);margin:0 0 8px">File video, max 500 MB (MP4, MOV, AVI, WebM, MKV).</p>
+        <input type="file" id="mvc-file" accept="video/mp4,video/quicktime,video/x-msvideo,video/webm,video/x-matroska"
+          style="width:100%;box-sizing:border-box;padding:8px;border:2px dashed var(--border-subtle);border-radius:8px;cursor:pointer;margin-bottom:10px"/>
+      </div>
+      <label style="font-size:.8rem;color:var(--text-muted);display:block;margin-bottom:4px">Collega a una gara specifica (opzionale)</label>
+      <input id="mvc-gara" type="text" placeholder="ID gara (es. 27_TROFEO_…_JUN_M)" style="${inpStyle}"/>
+      <textarea id="mvc-desc" placeholder="Descrizione (opzionale)" rows="2" style="${inpStyle};resize:vertical"></textarea>
+      <div id="mvc-progress" style="display:none;margin-bottom:8px">
+        <div style="background:var(--bg-elevated);border-radius:4px;height:6px;overflow:hidden">
+          <div id="mvc-bar" style="height:100%;background:var(--accent);width:0%;transition:width .3s"></div>
+        </div>
+        <div id="mvc-status" style="font-size:.75rem;color:var(--text-muted);margin-top:4px"></div>
+      </div>
+      <div id="mvc-err" style="color:#EF4444;font-size:0.8rem;margin-bottom:8px;display:none"></div>
+      <button id="mvc-submit" onclick="window._submitMediaVideoCreate(${profileId})" style="width:100%;padding:9px;background:var(--accent);color:#fff;border:none;border-radius:var(--r-sm);font-weight:600;cursor:pointer">Pubblica video</button>
+    </div>`;
+  document.body.appendChild(overlay);
+  window._mvcMode = 'link';
+};
+
+window._mvcSetMode = function(mode) {
+  window._mvcMode = mode;
+  document.getElementById('mvc-link-wrap').style.display   = mode === 'link'   ? '' : 'none';
+  document.getElementById('mvc-upload-wrap').style.display = mode === 'upload' ? '' : 'none';
+  document.getElementById('mvc-tab-link').className   = `dash-btn dash-btn--sm ${mode==='link'   ? 'dash-btn--accent' : 'dash-btn--outline'}`;
+  document.getElementById('mvc-tab-upload').className = `dash-btn dash-btn--sm ${mode==='upload' ? 'dash-btn--accent' : 'dash-btn--outline'}`;
+};
+
+window._submitMediaVideoCreate = async function(profileId) {
+  const title = document.getElementById('mvc-title')?.value.trim();
+  const palinsesto = document.getElementById('mvc-pal')?.value;
+  const gara  = document.getElementById('mvc-gara')?.value.trim() || null;
+  const desc  = document.getElementById('mvc-desc')?.value.trim() || '';
+  const errEl = document.getElementById('mvc-err');
+  const btn   = document.getElementById('mvc-submit');
+  const showErr = (msg) => { errEl.textContent = msg; errEl.style.display = 'block'; };
+  if (!title) return showErr('Il titolo è obbligatorio');
+
+  if (window._mvcMode === 'link') {
+    const url = document.getElementById('mvc-url')?.value.trim();
+    if (!url) return showErr('Inserisci il link del video');
+    btn.disabled = true; btn.textContent = 'Pubblicazione…';
+    try {
+      await apiCall('/media/video', { method: 'POST', body: { title, palinsesto, url, gara_id: gara, description: desc } });
+      document.getElementById('modal-overlay')?.remove();
+      showToast('✓ Video pubblicato!');
+      renderMyProfile();
+    } catch(err) {
+      showErr(err.message);
+      btn.disabled = false; btn.textContent = 'Pubblica video';
+    }
+  } else {
+    const file = document.getElementById('mvc-file')?.files?.[0];
+    if (!file) return showErr('Seleziona un file video');
+    btn.disabled = true; btn.textContent = 'Caricamento…';
+    document.getElementById('mvc-progress').style.display = 'block';
+    const fd = new FormData();
+    fd.append('video', file);
+    fd.append('title', title);
+    fd.append('palinsesto', palinsesto);
+    if (gara) fd.append('gara_id', gara);
+    fd.append('description', desc);
+    try {
+      const xhr = new XMLHttpRequest();
+      xhr.upload.onprogress = ev => {
+        if (ev.lengthComputable) {
+          const pct = Math.round(ev.loaded / ev.total * 100);
+          document.getElementById('mvc-bar').style.width = pct + '%';
+          document.getElementById('mvc-status').textContent = `${pct}% caricato…`;
+        }
+      };
+      await new Promise((resolve, reject) => {
+        xhr.onload = () => {
+          const d = JSON.parse(xhr.responseText);
+          if (xhr.status >= 400) reject(new Error(d.error || `HTTP ${xhr.status}`));
+          else resolve(d);
+        };
+        xhr.onerror = () => reject(new Error('Errore di rete'));
+        xhr.open('POST', `${API_BASE}/media/video/upload`);
+        xhr.setRequestHeader('Authorization', `Bearer ${authToken()}`);
+        xhr.send(fd);
+      });
+      document.getElementById('modal-overlay')?.remove();
+      showToast('✓ Video caricato!');
+      renderMyProfile();
+    } catch(err) {
+      showErr(err.message);
+      btn.disabled = false; btn.textContent = 'Pubblica video';
+    }
+  }
+};
+
+window.deleteMediaVideo = async function(videoId) {
+  if (!confirm('Eliminare questo video?')) return;
+  try {
+    await apiCall(`/media/video/${videoId}`, { method: 'DELETE' });
+    showToast('Video eliminato');
     renderMyProfile();
   } catch(err) { showToast('Errore: ' + err.message, 'error'); }
 };
