@@ -9105,7 +9105,7 @@ async function updateRankTable() {
 
   container.innerHTML = tableHtml;
   countSpan.textContent = countLabel;
-  if (_rankPhotosQueue) _injectRankPhotos(_rankPhotosQueue.slice(0, 60));
+  if (_rankPhotosQueue) _injectRankPhotos(_rankPhotosQueue);
 }
 
 async function _injectRankPhotos(items) {
@@ -9146,18 +9146,28 @@ async function _injectRankPhotos(items) {
     img.parentNode.innerHTML = '<span class="rk-tl-placeholder"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M12 2L3 6v6c0 5.5 3.8 10.7 9 12 5.2-1.3 9-6.5 9-12V6L12 2z"/></svg></span>';
   };
   const _shieldHtml = '<span class="rk-tl-placeholder"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M12 2L3 6v6c0 5.5 3.8 10.7 9 12 5.2-1.3 9-6.5 9-12V6L12 2z"/></svg></span>';
-  const teamIds = [...new Set(items.map(a => a.team_id || a.team_id).filter(Boolean))];
-  await Promise.all(teamIds.map(async tid => {
-    const ov = await getEntityOverrides('team', tid).catch(() => ({}));
-    tableEl.querySelectorAll(`.rk-tl-wrap[data-tid="${CSS.escape(tid)}"]`).forEach(span => {
-      if (!document.contains(span)) return;
-      if (ov.photo_url) {
-        span.innerHTML = `<img src="${esc(mediaUrl(ov.photo_url))}" alt="" class="rk-tl-img" onerror="window._rktlErr(this)">`;
-      } else {
-        span.innerHTML = _shieldHtml;
-      }
-    });
-  }));
+  const teamIds = [...new Set(items.map(a => a.team_id).filter(Boolean))];
+  // A batch di 8 come le foto atleti sopra, non tutte in parallelo: con
+  // classifiche da 80+ team un unico Promise.all lanciava altrettante
+  // richieste in un colpo solo. Combinato col taglio "primi 60" che questa
+  // funzione riceveva dai chiamanti (rimosso), i team oltre il 60° non
+  // ricevevano NÉ la foto NÉ lo stemma segnaposto — restavano con lo spazio
+  // completamente vuoto (bug osservato dal vivo in più classifiche/elenchi).
+  const teamBatchSize = 8;
+  for (let i = 0; i < teamIds.length; i += teamBatchSize) {
+    if (!document.contains(tableEl)) return;
+    await Promise.all(teamIds.slice(i, i + teamBatchSize).map(async tid => {
+      const ov = await getEntityOverrides('team', tid).catch(() => ({}));
+      tableEl.querySelectorAll(`.rk-tl-wrap[data-tid="${CSS.escape(tid)}"]`).forEach(span => {
+        if (!document.contains(span)) return;
+        if (ov.photo_url) {
+          span.innerHTML = `<img src="${esc(mediaUrl(ov.photo_url))}" alt="" class="rk-tl-img" onerror="window._rktlErr(this)">`;
+        } else {
+          span.innerHTML = _shieldHtml;
+        }
+      });
+    }));
+  }
 }
 
 // ── ADMIN DASHBOARD ──────────────────────────────────────────
@@ -18185,7 +18195,7 @@ async function renderAtletiList() {
         </table>
       </div>
     `;
-    _injectRankPhotos(filtered.slice(0, 60).map(a => ({ atleta_id: a.atleta_id, team_id: a.team_id })));
+    _injectRankPhotos(filtered.map(a => ({ atleta_id: a.atleta_id, team_id: a.team_id })));
   };
   window.filterAtletiList(atlSearch);
 }
@@ -18322,7 +18332,7 @@ async function renderTeamList() {
         </table>
       </div>
     `;
-    _injectRankPhotos(filtered.slice(0, 60).map(t => ({ team_id: t.id })));
+    _injectRankPhotos(filtered.map(t => ({ team_id: t.id })));
   };
   window.filterTeamList(teamSearch);
 }
