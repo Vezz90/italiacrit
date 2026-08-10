@@ -2151,6 +2151,7 @@ app.post('/api/internal/notify-results', async (req, res) => {
     notifyFollowers().catch(e => console.warn('[follow] notify error:', e.message));
     notifyRankChanges().catch(e => console.warn('[rank] notify error:', e.message));
     _warmRecentOgImages().catch(e => console.warn('[og-warm] notify error:', e.message));
+    _reconcilePendingStageVideos().catch(e => console.warn('[videos] reconcile error:', e.message));
     res.json({ ok: true, ...r });
   } catch (e) { res.status(500).json({ error: e.message }); }
 });
@@ -2176,6 +2177,58 @@ async function writeVideos(obj) {
     return;
   }
   fs.writeFileSync(VIDEOS_PATH, JSON.stringify(obj, null, 2));
+}
+
+// Trova il gara_id REALE (con suffisso categoria, es. _ELI_M) per una chiave
+// video sintetica "calId::dataTappa" (vedi window._maddSubmitStageVideo),
+// una volta che la FCI ha pubblicato i risultati di quella tappa. calId è
+// l'id calendario del PRIMO giorno del giro (es. "..._MONT_BLANC_2026-07-16");
+// le tappe successive seguono sempre il pattern
+// "{stessoPrefisso}_{ordinale}_TAPPA_{dataTappa}" nel calendario — cerchiamo
+// quindi per data + prefisso id, non per nome (più affidabile, stesso
+// pattern già verificato per Giro d'Italia Next Gen/Women).
+function _findRealGaraIdForPendingVideo(gid) {
+  const idx = gid.lastIndexOf('::');
+  if (idx === -1) return null;
+  const calId = gid.slice(0, idx);
+  const stageDate = gid.slice(idx + 2);
+  const tourPrefix = calId.replace(/_\d{4}-\d{2}-\d{2}$/, '');
+  const calendar = readDataJson('calendar.json') || [];
+  const candidates = calendar.filter(c => c.data === stageDate && c.id.startsWith(tourPrefix));
+  if (!candidates.length) return null;
+  const resultsRaw = readDataJson('results_raw.json') || [];
+  const resultedIds = new Set(resultsRaw.map(r => r.gara_id));
+  for (const c of candidates) {
+    const withCat = [...resultedIds].find(rid => rid.startsWith(c.id + '_'));
+    if (withCat) return withCat;
+  }
+  return null;
+}
+
+// Sposta le "dirette caricate in anticipo" (chiave sintetica) sul gara_id
+// reale non appena i risultati di quella tappa vengono pubblicati —
+// altrimenti restano per sempre invisibili sulla pagina della gara (si
+// vedono solo nella sezione Media/Dirette, che le recupera con un fallback
+// SOLO per la visualizzazione, mai persistito). Va richiamata dopo ogni
+// scrape (vedi /api/internal/notify-results) e resta comunque disponibile
+// come azione admin per un giro manuale.
+async function _reconcilePendingStageVideos() {
+  const videos = await readVideos();
+  let changed = false;
+  for (const gid of Object.keys(videos)) {
+    if (!gid.includes('::')) continue;
+    const realId = _findRealGaraIdForPendingVideo(gid);
+    if (!realId) continue;
+    const arr = videos[gid] || [];
+    if (!videos[realId]) videos[realId] = [];
+    const existingUrls = new Set(videos[realId].map(v => v.url));
+    for (const v of arr) { if (!existingUrls.has(v.url)) videos[realId].push(v); }
+    delete videos[gid];
+    changed = true;
+    console.log(`[videos] riconciliata diretta in anticipo: ${gid} → ${realId}`);
+  }
+  if (changed) await writeVideos(videos);
+  return changed;
 }
 
 // ══════════════════════════════════════════════════════════════════════════════
@@ -2792,6 +2845,13 @@ app.post('/api/videos/upload-file', requireAuth, videoUpload.single('video'), as
 });
 
 // Admin: lista video in attesa di approvazione
+// Sposta a mano le "dirette caricate in anticipo" sul gara_id reale, senza
+// aspettare il prossimo scrape (vedi _reconcilePendingStageVideos).
+app.post('/api/admin/videos/reconcile-pending', requireAdmin, async (req, res) => {
+  try { res.json({ ok: true, changed: await _reconcilePendingStageVideos() }); }
+  catch (e) { res.status(500).json({ error: e.message }); }
+});
+
 app.get('/api/admin/videos/pending', requireAdmin, async (req, res) => {
   res.json({ videos: await readPendingVideos() });
 });
