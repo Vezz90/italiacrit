@@ -222,6 +222,16 @@ async function migrate() {
       thumbnail_url    TEXT DEFAULT '',
       created_at       TIMESTAMPTZ NOT NULL DEFAULT NOW()
     )`,
+    `ALTER TABLE media_videos ADD COLUMN IF NOT EXISTS views INTEGER NOT NULL DEFAULT 0`,
+    // Contatore visualizzazioni per i video del sistema esistente
+    // (videos.json: gara, dirette, presentazioni, programmi TV, altro) —
+    // non hanno un ID numerico stabile, si tracciano per "chiave" testuale
+    // (gara_id/bucket + url del video, costruita lato frontend).
+    `CREATE TABLE IF NOT EXISTS video_views (
+      video_key  TEXT PRIMARY KEY,
+      views      INTEGER NOT NULL DEFAULT 0,
+      updated_at TIMESTAMPTZ NOT NULL DEFAULT NOW()
+    )`,
     `ALTER TABLE users ADD COLUMN IF NOT EXISTS google_id TEXT`,
     `ALTER TABLE users ALTER COLUMN password DROP NOT NULL`,
     `DO $$ BEGIN
@@ -683,6 +693,15 @@ const queries = {
     all(`SELECT id, display_name, bio, website, instagram, facebook, cover_url, media_type, created_at
          FROM media_profiles WHERE status = 'active' ORDER BY display_name`),
 
+  // Solo i creator VERI (profilo registrato da un utente, non un profilo
+  // fotografo importato dallo scraper xpix/ciclismo.info) che pubblicano
+  // video — usato per la striscia avatar nella tab "Creator" della sezione Media.
+  getVideoCreatorProfiles: () =>
+    all(`SELECT id, display_name, cover_url, media_type
+         FROM media_profiles
+         WHERE status = 'active' AND user_id IS NOT NULL AND media_type IN ('video', 'entrambi')
+         ORDER BY display_name`),
+
   // Profili media scrapati e non ancora rivendicati da un utente
   getUnclaimedMediaProfiles: () =>
     all(`SELECT id, display_name, bio, website, instagram, facebook, cover_url, media_type, status
@@ -739,6 +758,19 @@ const queries = {
 
   deleteMediaVideo: (id) =>
     run(`DELETE FROM media_videos WHERE id = $1`, [id]),
+
+  incrementMediaVideoView: (id) =>
+    run(`UPDATE media_videos SET views = views + 1 WHERE id = $1`, [id]),
+
+  // Contatore visto per i video del sistema esistente (non hanno un ID DB,
+  // si tracciano per chiave testuale — vedi migrazione video_views).
+  incrementLegacyVideoView: (videoKey) =>
+    run(`INSERT INTO video_views (video_key, views, updated_at) VALUES ($1, 1, NOW())
+         ON CONFLICT (video_key) DO UPDATE SET views = video_views.views + 1, updated_at = NOW()`,
+        [videoKey]),
+
+  getAllLegacyVideoViews: () =>
+    all(`SELECT video_key, views FROM video_views`),
 
   // ── Media albums ──────────────────────────────────────────────────────────────
 

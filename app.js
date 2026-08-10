@@ -3731,7 +3731,6 @@ function route() {
   if (m_mediaFb) return renderMedia({ openFb: { garaId: decodeURIComponent(m_mediaFb[1]), idx: parseInt(m_mediaFb[2], 10) } });
   const m_mediaFbExtra = match('/media/fbextra/:bucket/:idx');
   if (m_mediaFbExtra) return renderMedia({ openFbExtra: { bucket: decodeURIComponent(m_mediaFbExtra[1]), idx: parseInt(m_mediaFbExtra[2], 10) } });
-  if (match('/media/creator')) return renderMediaCreator();
   const m_media = match('/media/:id');
   if (m_media) return renderMediaProfile(m_media[1]);
   if (match('/media')) return renderMedia();
@@ -15903,24 +15902,32 @@ window.adminEditVideo = async function(calId, idx, currentIsLive) {
 // Card per un video creator: embed nativo se caricato su ICS, link esterno
 // (con icona piattaforma riconosciuta dall'URL) se YouTube/Instagram/TikTok.
 const MEDIA_PALINSESTO_LABEL = { highlights: 'Highlights gara', interviste: 'Interviste', vlog: 'Vlog', podcast: 'Podcast' };
+
+// Contatore visualizzazioni NOSTRO (quante volte aperto/riprodotto su ICS),
+// non quello della piattaforma esterna — fire-and-forget, non blocca l'apertura.
+window._mvIncrView = function(id) {
+  fetch(`${API_BASE}/media/video/${id}/view`, { method: 'POST' }).catch(() => {});
+};
+
 function _mediaVideoCardHtml(v) {
   const palLabel = esc(MEDIA_PALINSESTO_LABEL[v.palinsesto] || v.palinsesto || '');
   const garaLink = v.gara_id ? `<a href="#/gara/${encodeURIComponent(v.gara_id)}" onclick="event.stopPropagation()" style="color:var(--accent);font-size:.72rem">→ Vedi gara</a>` : '';
+  const viewsHtml = `<span>👁 ${v.views || 0}</span>`;
   if (v.source_type === 'upload') {
     return `<div class="media-video-card">
-      <video controls preload="metadata" style="width:100%;aspect-ratio:16/9;background:#000;border-radius:10px" src="${esc(v.url)}"></video>
+      <video controls preload="metadata" style="width:100%;aspect-ratio:16/9;background:#000;border-radius:10px" src="${esc(v.url)}" onplay="if(!this.dataset.counted){this.dataset.counted='1';window._mvIncrView(${v.id})}"></video>
       <div class="media-video-title">${esc(v.title)}</div>
-      <div class="media-video-meta"><span>${palLabel}</span>${garaLink ? ' · ' + garaLink : ''}</div>
+      <div class="media-video-meta"><span>${palLabel}</span>${garaLink ? ' · ' + garaLink : ''}<span style="margin-left:auto">${viewsHtml}</span></div>
     </div>`;
   }
   let platform = '🔗', pname = 'Link';
   if (/youtu\.?be/i.test(v.url||''))       { platform = '▶️'; pname = 'YouTube'; }
   else if (/instagram\.com/i.test(v.url||'')) { platform = '📸'; pname = 'Instagram'; }
   else if (/tiktok\.com/i.test(v.url||''))    { platform = '🎵'; pname = 'TikTok'; }
-  return `<a href="${esc(v.url)}" target="_blank" rel="noopener" class="media-video-card" style="display:block;text-decoration:none;color:inherit">
+  return `<a href="${esc(v.url)}" target="_blank" rel="noopener" class="media-video-card" style="display:block;text-decoration:none;color:inherit" onclick="window._mvIncrView(${v.id})">
     <div style="width:100%;aspect-ratio:16/9;background:var(--bg-base);border-radius:10px;display:flex;align-items:center;justify-content:center;font-size:2.2rem">${platform}</div>
     <div class="media-video-title">${esc(v.title)}</div>
-    <div class="media-video-meta"><span>${pname} · ${palLabel}</span>${garaLink ? ' · ' + garaLink : ''}</div>
+    <div class="media-video-meta"><span>${pname} · ${palLabel}</span>${garaLink ? ' · ' + garaLink : ''}<span style="margin-left:auto">${viewsHtml}</span></div>
   </a>`;
 }
 
@@ -16032,58 +16039,60 @@ window._renderMediaAlbum = async function(albumId, profileId) {
   }
 };
 
-// ── Sezione Media → Creator: directory profili media + feed video per palinsesto ──
+// ── Sezione Media, tab "Creator": striscia avatar tondi (solo creator
+// registrati, non i profili fotografo importati dallo scraper) + feed video,
+// filtrabile per palinsesto e per creator — resta nella STESSA pagina Media
+// (nessuna navigazione), popolata async dentro #media-creator-area.
 let _mediaCreatorPal = '';
-window.mediaCreatorSetPal = (p) => { _mediaCreatorPal = p; renderMediaCreator(); };
+let _mediaCreatorProfileId = null;
+window.mediaCreatorSetPal = (p) => { _mediaCreatorPal = p; window._loadMediaCreatorArea(); };
+window.mediaCreatorSetProfile = (id) => { _mediaCreatorProfileId = _mediaCreatorProfileId === id ? null : id; window._loadMediaCreatorArea(); };
 
-async function renderMediaCreator() {
-  setPage(`<div class="loading-bar"></div>`);
+window._loadMediaCreatorArea = async function() {
+  const area = document.getElementById('media-creator-area');
+  if (!area) return;
+  area.innerHTML = `<div class="admin-loading">Caricamento…</div>`;
   try {
     const [profilesData, videosData] = await Promise.all([
-      fetch(`${API_BASE}/media/profiles`).then(r => r.json()),
+      fetch(`${API_BASE}/media/video-creators`).then(r => r.json()),
       fetch(`${API_BASE}/media/videos${_mediaCreatorPal ? '?palinsesto=' + encodeURIComponent(_mediaCreatorPal) : ''}`).then(r => r.json()),
     ]);
     const profiles = profilesData.profiles || [];
-    const videos   = videosData.videos || [];
+    const allVideos = videosData.videos || [];
+    const videos = _mediaCreatorProfileId ? allVideos.filter(v => v.media_profile_id === _mediaCreatorProfileId) : allVideos;
 
     const profilesHtml = profiles.length ? `
-      <div class="media-album-grid">
+      <div style="display:flex;gap:14px;overflow-x:auto;padding:4px 2px 12px">
         ${profiles.map(p => `
-          <a href="#/media/${p.id}" class="media-video-card" style="display:block;text-decoration:none;color:inherit">
-            <div style="width:100%;aspect-ratio:1/1;background:var(--bg-base);border-radius:10px;display:flex;align-items:center;justify-content:center;font-size:2.2rem">
-              ${p.media_type === 'video' ? '🎬' : p.media_type === 'entrambi' ? '📷🎬' : '📷'}
+          <button onclick="window.mediaCreatorSetProfile(${p.id})" style="background:none;border:none;cursor:pointer;display:flex;flex-direction:column;align-items:center;gap:6px;flex:0 0 auto;width:64px">
+            <div style="width:56px;height:56px;border-radius:50%;overflow:hidden;background:var(--bg-base);border:2px solid ${_mediaCreatorProfileId===p.id ? 'var(--accent)' : 'var(--border-subtle)'};display:flex;align-items:center;justify-content:center;font-size:1.3rem">
+              ${p.cover_url ? `<img src="${esc(mediaUrl(p.cover_url))}" style="width:100%;height:100%;object-fit:cover"/>` : '🎬'}
             </div>
-            <div class="media-video-title">${esc(p.display_name)}</div>
-            <div class="media-video-meta">${p.instagram ? '📸 ' + esc(p.instagram) : ''}</div>
-          </a>`).join('')}
-      </div>` : `<p style="color:var(--text-muted);padding:12px 0">Nessun profilo creator ancora.</p>`;
+            <span style="font-size:.68rem;color:var(--text-secondary);text-align:center;line-height:1.2;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;max-width:64px">${esc(p.display_name)}</span>
+          </button>`).join('')}
+      </div>` : `<p style="color:var(--text-muted);padding:8px 0">Nessun creator video registrato ancora.</p>`;
 
     const videosHtml = videos.length
       ? `<div class="media-album-grid">${videos.map(v => `
           <div>
             ${_mediaVideoCardHtml(v)}
-            <a href="#/media/${v.media_profile_id}" style="font-size:.72rem;color:var(--text-muted)">di ${esc(v.display_name)}</a>
+            <a href="javascript:void(0)" onclick="window.mediaCreatorSetProfile(${v.media_profile_id})" style="font-size:.72rem;color:var(--text-muted)">di ${esc(v.display_name)}</a>
           </div>`).join('')}</div>`
-      : `<p style="color:var(--text-muted);padding:12px 0">Nessun video ancora per questo palinsesto.</p>`;
+      : `<p style="color:var(--text-muted);padding:12px 0">Nessun video ancora${_mediaCreatorPal || _mediaCreatorProfileId ? ' con questo filtro' : ''}.</p>`;
 
-    setPage(`
-      <div class="comp-page-header">
-        <h1 class="comp-title">Creator</h1>
-        <p style="color:var(--text-muted);font-size:.9rem">Fotografi e videomaker registrati: album, highlights, interviste, vlog e podcast dal mondo del ciclismo amatoriale.</p>
-      </div>
-      <div class="comp-section-title" style="margin-bottom:16px">Profili</div>
+    area.innerHTML = `
       ${profilesHtml}
-      <div class="comp-section-title" style="margin:28px 0 16px">Video</div>
-      <div class="yt-chips" style="margin-bottom:16px">
+      <div class="yt-chips" style="margin:4px 0 16px">
         <button class="yt-chip ${!_mediaCreatorPal ? 'yt-chip-active' : ''}" onclick="window.mediaCreatorSetPal('')">Tutti</button>
         ${Object.entries(MEDIA_PALINSESTO_LABEL).map(([k,l]) => `<button class="yt-chip ${_mediaCreatorPal===k ? 'yt-chip-active' : ''}" onclick="window.mediaCreatorSetPal('${k}')">${esc(l)}</button>`).join('')}
+        ${_mediaCreatorProfileId ? `<button class="yt-chip" onclick="window.mediaCreatorSetProfile(${_mediaCreatorProfileId})">✕ Rimuovi filtro creator</button>` : ''}
       </div>
       ${videosHtml}
-    `);
+    `;
   } catch(e) {
-    setPage(`<div style="padding:48px;color:var(--text-muted);text-align:center">Errore nel caricamento: ${esc(e.message)}</div>`);
+    area.innerHTML = `<div style="color:var(--red-hot)">Errore: ${esc(e.message)}</div>`;
   }
-}
+};
 
 // ── PERCORSO GARA (ricostruzione automatica, vedi server/route-builder.js) ──
 // Leaflet caricato via CDN solo al bisogno (una gara su tre-quattro ha un
@@ -20862,11 +20871,28 @@ let _shareGaraStyle = 'results';
 let _shareImgAdjust = { scale: 1, offsetX: 0, offsetY: 0 };
 
 // ── MEDIA (foto/video/dirette per gara, stile YouTube) ───────────────────
-let mediaTab = 'video'; // 'video' | 'dirette' | 'presentazioni' | 'programmi_tv' | 'altro'
+let mediaTab = 'video'; // 'video' | 'dirette' | 'presentazioni' | 'programmi_tv' | 'altro' | 'creator'
 let mediaQueryGenere = '';
 let mediaQueryCat = '';
 let mediaQueryMonth = '';
 let mediaSearchQuery = '';
+
+// Contatore visualizzazioni NOSTRO per i video del sistema esistente (gara/
+// dirette/presentazioni/programmi TV/altro) — non hanno un ID DB stabile,
+// tracciati per url. Mappa caricata una volta a pagina (non blocca il
+// render se fallisce), incrementata in modo ottimistico al click.
+let _legacyViews = {};
+let _legacyViewsLoaded = false;
+async function _loadLegacyViews() {
+  if (_legacyViewsLoaded) return;
+  _legacyViewsLoaded = true;
+  try { _legacyViews = (await fetch(`${API_BASE}/videos/views`).then(r => r.json())).views || {}; } catch {}
+}
+window._legacyIncrView = function(key) {
+  if (!key) return;
+  _legacyViews[key] = (_legacyViews[key] || 0) + 1;
+  fetch(`${API_BASE}/videos/view`, { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ key }) }).catch(() => {});
+};
 
 window.mediaSetTab    = (t) => { mediaTab = t; renderMedia(); };
 window.mediaSetGenere = (v) => { mediaQueryGenere = v; renderMedia(); };
@@ -21089,6 +21115,7 @@ window._submitMediaAdd = async () => {
 
 async function renderMedia(openOpts) {
   if (!globalData) return;
+  await _loadLegacyViews();
   const { calendar, resultsRaw, videos } = globalData;
 
   // Indice gara_id → metadati evento (nome/data/categoria/genere), da resultsRaw
@@ -21332,9 +21359,11 @@ async function renderMedia(openOpts) {
     const isLive = !!x.video.is_live;
     const liveOnclick = vid ? `window.openLivePlayer('${vid}','${t}','${esc(x.gara_id)}')` : pendingOnclick;
     const tag = (isPending || isLive) ? 'div' : 'a';
-    const hrefAttr = isLive ? `onclick="${liveOnclick}" style="cursor:pointer"`
-      : isPending ? `onclick="${pendingOnclick}" style="cursor:pointer"`
-      : `href="#/gara/${esc(x.gara_id)}"`;
+    const viewKey = esc(x.video.url || '');
+    const incrCall = `window._legacyIncrView('${viewKey}');`;
+    const hrefAttr = isLive ? `onclick="${incrCall}${liveOnclick}" style="cursor:pointer"`
+      : isPending ? `onclick="${incrCall}${pendingOnclick}" style="cursor:pointer"`
+      : `href="#/gara/${esc(x.gara_id)}" onclick="${incrCall}"`;
     return `<${tag} ${hrefAttr} class="yt-card${isSel ? ' yt-card-selected' : ''}">
       <div class="yt-thumb">
         ${_isAdminMedia ? `<input type="checkbox" class="yt-card-check" ${isSel ? 'checked' : ''}
@@ -21353,7 +21382,7 @@ async function renderMedia(openOpts) {
         <div class="yt-card-text">
           <div class="yt-card-title">${esc(x.video.title || x.meta.nome || 'Video')}</div>
           <div class="yt-card-meta">${esc(x.video.channel || '')}</div>
-          <div class="yt-card-meta">${esc((x.meta.data || x.video.published_at) ? formatTimeAgo(x.meta.data || x.video.published_at) : '')}</div>
+          <div class="yt-card-meta">${esc((x.meta.data || x.video.published_at) ? formatTimeAgo(x.meta.data || x.video.published_at) : '')} <span style="margin-left:6px">👁 ${_legacyViews[x.video.url] || 0}</span></div>
         </div>
       </div>
     </${tag}>`;
@@ -21365,7 +21394,8 @@ async function renderMedia(openOpts) {
     const thumb = ytThumb(x.video.url);
     const t = esc((x.video.title || '').replace(/'/g, "\\'"));
     const vid = ytId(x.video.url);
-    const onclick = vid ? `window.openVideoModal('${vid}','${t}')` : `window.open('${esc(x.video.url)}','_blank')`;
+    const viewKey = esc(x.video.url || '');
+    const onclick = `window._legacyIncrView('${viewKey}');` + (vid ? `window.openVideoModal('${vid}','${t}')` : `window.open('${esc(x.video.url)}','_blank')`);
     return `<div class="yt-card" onclick="${onclick}" style="cursor:pointer">
       <div class="yt-thumb">
         ${thumb ? `<img src="${esc(thumb)}" loading="lazy" alt="${esc(x.video.title || '')}"/>`
@@ -21380,7 +21410,7 @@ async function renderMedia(openOpts) {
         <div class="yt-card-text">
           <div class="yt-card-title">${esc(x.video.title || '')}</div>
           <div class="yt-card-meta">${esc(x.video.channel || '')}</div>
-          <div class="yt-card-meta">${esc(formatTimeAgo(x.video.published_at))}</div>
+          <div class="yt-card-meta">${esc(formatTimeAgo(x.video.published_at))} <span style="margin-left:6px">👁 ${_legacyViews[x.video.url] || 0}</span></div>
         </div>
       </div>
     </div>`;
@@ -21407,7 +21437,7 @@ async function renderMedia(openOpts) {
         <button class="yt-chip ${mediaTab === 'presentazioni' ? 'yt-chip-active' : ''}" onclick="window.mediaSetTab('presentazioni')">🎤 Presentazioni <span class="yt-chip-count">${presentazioniFiltered.length}</span></button>
         <button class="yt-chip ${mediaTab === 'programmi_tv' ? 'yt-chip-active' : ''}" onclick="window.mediaSetTab('programmi_tv')">📺 Programmi TV <span class="yt-chip-count">${programmiTvFiltered.length}</span></button>
         <button class="yt-chip ${mediaTab === 'altro' ? 'yt-chip-active' : ''}" onclick="window.mediaSetTab('altro')">🎬 Altro <span class="yt-chip-count">${altroFiltered.length}</span></button>
-        <a class="yt-chip" href="#/media/creator">🧑‍🎨 Creator</a>
+        <button class="yt-chip ${mediaTab === 'creator' ? 'yt-chip-active' : ''}" onclick="window.mediaSetTab('creator')">🧑‍🎨 Creator</button>
         <span class="yt-chip-sep"></span>
         ${_showRaceFilters ? `
         <select class="yt-chip yt-chip-select" onchange="window.mediaSetGenere(this.value)">
@@ -21425,12 +21455,13 @@ async function renderMedia(openOpts) {
             `<option value="${m}" ${m === mediaQueryMonth ? 'selected' : ''}>${['Gennaio','Febbraio','Marzo','Aprile','Maggio','Giugno','Luglio','Agosto','Settembre','Ottobre','Novembre','Dicembre'][i]}</option>`
           ).join('')}
         </select>` : ''}
+        ${mediaTab !== 'creator' ? `
         <div class="yt-search-wrap">
           <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
           <input type="text" placeholder="Cerca…" oninput="window.mediaSetSearch(this.value)" value="${esc(mediaSearchQuery)}">
         </div>
         ${_isAdminMedia ? `<button class="yt-chip" style="background:var(--red-hot);color:#fff;border-color:var(--red-hot)" onclick="window.openMediaAddForm()">➕ Aggiungi</button>` : ''}
-        ${_isAdminMedia ? `<button class="yt-chip" onclick="window.mediaBackfillMetadata(this)">🔄 Ricalcola date/loghi</button>` : ''}
+        ${_isAdminMedia ? `<button class="yt-chip" onclick="window.mediaBackfillMetadata(this)">🔄 Ricalcola date/loghi</button>` : ''}` : ''}
       </div>
       ${_isAdminMedia && _showRaceFilters && (window._mediaSel || new Set()).size ? `
       <div class="yt-bulk-bar">
@@ -21440,7 +21471,9 @@ async function renderMedia(openOpts) {
         <button onclick="window._mediaBulkSetLive(false)">🎬 Segna come Video normale</button>
         <button class="yt-bulk-clear" onclick="window._mediaClearSel()">Annulla selezione</button>
       </div>` : ''}
-      ${mediaTab === 'dirette' ? `
+      ${mediaTab === 'creator' ? `
+        <div id="media-creator-area"><div class="admin-loading">Caricamento…</div></div>
+      ` : mediaTab === 'dirette' ? `
         ${diretteOggi.length ? `
           <div class="yt-group-hdr"><span class="yt-group-dot"></span>IN DIRETTA <span class="yt-chip-count">${diretteOggi.length}</span></div>
           <div class="yt-grid">${diretteOggi.map(cardHtml).join('')}</div>
@@ -21460,6 +21493,7 @@ async function renderMedia(openOpts) {
       `}
     </div>
   `);
+  if (mediaTab === 'creator') window._loadMediaCreatorArea();
 }
 
 async function _getLogo() {

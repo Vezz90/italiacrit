@@ -5996,11 +5996,45 @@ app.delete('/api/media/album/:id', requireMediaOrAdmin, async (req, res) => {
 
 const MEDIA_PALINSESTI = ['highlights', 'interviste', 'vlog', 'podcast'];
 
-// Elenco pubblico (sezione Media → Creator), filtrabile per palinsesto
+// Elenco pubblico (sezione Media → tab Creator), filtrabile per palinsesto
 app.get('/api/media/videos', async (req, res) => {
   try {
     const { palinsesto } = req.query;
     res.json({ videos: await queries.getAllMediaVideos(palinsesto || null) });
+  } catch (e) { res.status(500).json({ error: e.message }); }
+});
+
+// Profili che pubblicano video (registrati da un utente, non scrapati) — striscia avatar
+app.get('/api/media/video-creators', async (req, res) => {
+  try { res.json({ profiles: await queries.getVideoCreatorProfiles() }); }
+  catch (e) { res.status(500).json({ error: e.message }); }
+});
+
+// Contatore visualizzazioni — un video Media Video caricato/collegato da un creator
+app.post('/api/media/video/:id/view', async (req, res) => {
+  try { await queries.incrementMediaVideoView(req.params.id); res.json({ ok: true }); }
+  catch (e) { res.status(500).json({ error: e.message }); }
+});
+
+// Contatore visualizzazioni — video del sistema esistente (gara/dirette/presentazioni/
+// programmi TV/altro), tracciati per chiave testuale visto che non hanno un ID DB.
+app.post('/api/videos/view', async (req, res) => {
+  try {
+    const key = (req.body?.key || '').toString().trim();
+    if (!key) return res.status(400).json({ error: 'key mancante' });
+    await queries.incrementLegacyVideoView(key);
+    res.json({ ok: true });
+  } catch (e) { res.status(500).json({ error: e.message }); }
+});
+
+// Mappa video_key → visualizzazioni per i video del sistema esistente (letta in blocco
+// all'apertura della sezione Media, invece di una richiesta per ogni card).
+app.get('/api/videos/views', async (req, res) => {
+  try {
+    const rows = await queries.getAllLegacyVideoViews();
+    const map = {};
+    for (const r of rows) map[r.video_key] = r.views;
+    res.json({ views: map });
   } catch (e) { res.status(500).json({ error: e.message }); }
 });
 
