@@ -206,6 +206,22 @@ async function migrate() {
   // Aggiunte colonne successive — idempotenti grazie a IF NOT EXISTS
   const migrations = [
     `ALTER TABLE media_profiles ADD COLUMN IF NOT EXISTS facebook TEXT DEFAULT ''`,
+    // 'foto' | 'video' | 'entrambi' — scelto in fase di registrazione/profilo,
+    // determina se il pannello mostra la gestione album foto, video, o entrambi.
+    `ALTER TABLE media_profiles ADD COLUMN IF NOT EXISTS media_type TEXT DEFAULT 'foto'`,
+    `CREATE TABLE IF NOT EXISTS media_videos (
+      id               SERIAL PRIMARY KEY,
+      media_profile_id INTEGER NOT NULL REFERENCES media_profiles(id) ON DELETE CASCADE,
+      gara_id          TEXT,
+      palinsesto       TEXT NOT NULL DEFAULT 'vlog',
+      title            TEXT NOT NULL,
+      description      TEXT DEFAULT '',
+      source_type      TEXT NOT NULL DEFAULT 'link',
+      url              TEXT,
+      filename         TEXT,
+      thumbnail_url    TEXT DEFAULT '',
+      created_at       TIMESTAMPTZ NOT NULL DEFAULT NOW()
+    )`,
     `ALTER TABLE users ADD COLUMN IF NOT EXISTS google_id TEXT`,
     `ALTER TABLE users ALTER COLUMN password DROP NOT NULL`,
     `DO $$ BEGIN
@@ -650,11 +666,11 @@ const queries = {
 
   // ── Media profiles ────────────────────────────────────────────────────────────
 
-  createMediaProfile: ({ user_id, display_name, bio, website, instagram, facebook }) =>
+  createMediaProfile: ({ user_id, display_name, bio, website, instagram, facebook, media_type }) =>
     one(
-      `INSERT INTO media_profiles (user_id, display_name, bio, website, instagram, facebook)
-       VALUES ($1, $2, $3, $4, $5, $6) RETURNING *`,
-      [user_id, display_name, bio || '', website || '', instagram || '', facebook || '']
+      `INSERT INTO media_profiles (user_id, display_name, bio, website, instagram, facebook, media_type)
+       VALUES ($1, $2, $3, $4, $5, $6, $7) RETURNING *`,
+      [user_id, display_name, bio || '', website || '', instagram || '', facebook || '', media_type || 'foto']
     ),
 
   getMediaProfileByUser: (user_id) =>
@@ -664,12 +680,12 @@ const queries = {
     one(`SELECT * FROM media_profiles WHERE id = $1`, [id]),
 
   getApprovedMediaProfiles: () =>
-    all(`SELECT id, display_name, bio, website, instagram, facebook, cover_url, created_at
+    all(`SELECT id, display_name, bio, website, instagram, facebook, cover_url, media_type, created_at
          FROM media_profiles WHERE status = 'active' ORDER BY display_name`),
 
   // Profili media scrapati e non ancora rivendicati da un utente
   getUnclaimedMediaProfiles: () =>
-    all(`SELECT id, display_name, bio, website, instagram, facebook, cover_url, status
+    all(`SELECT id, display_name, bio, website, instagram, facebook, cover_url, media_type, status
          FROM media_profiles WHERE user_id IS NULL ORDER BY display_name`),
 
   // Rivendica un profilo libero collegandolo a un utente (va approvato dall'admin)
@@ -683,9 +699,46 @@ const queries = {
   rejectMediaProfile: (id) =>
     run(`UPDATE media_profiles SET status = 'rejected' WHERE id = $1`, [id]),
 
-  updateMediaProfile: ({ id, display_name, bio, website, instagram, facebook }) =>
-    run(`UPDATE media_profiles SET display_name=$2, bio=$3, website=$4, instagram=$5, facebook=$6 WHERE id=$1`,
-        [id, display_name, bio || '', website || '', instagram || '', facebook || '']),
+  updateMediaProfile: ({ id, display_name, bio, website, instagram, facebook, media_type }) =>
+    run(`UPDATE media_profiles SET display_name=$2, bio=$3, website=$4, instagram=$5, facebook=$6, media_type=$7 WHERE id=$1`,
+        [id, display_name, bio || '', website || '', instagram || '', facebook || '', media_type || 'foto']),
+
+  // ── Media videos (Media Video: link esterno o file caricato) ───────────────────
+
+  createMediaVideo: ({ media_profile_id, gara_id, palinsesto, title, description, source_type, url, filename, thumbnail_url }) =>
+    one(
+      `INSERT INTO media_videos (media_profile_id, gara_id, palinsesto, title, description, source_type, url, filename, thumbnail_url)
+       VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9) RETURNING *`,
+      [media_profile_id, gara_id || null, palinsesto || 'vlog', title, description || '', source_type || 'link', url || null, filename || null, thumbnail_url || '']
+    ),
+
+  getMediaVideo: (id) =>
+    one(`SELECT * FROM media_videos WHERE id = $1`, [id]),
+
+  getMediaVideosByProfile: (media_profile_id) =>
+    all(`SELECT * FROM media_videos WHERE media_profile_id = $1 ORDER BY created_at DESC`, [media_profile_id]),
+
+  getMediaVideosByGara: (gara_id) =>
+    all(`SELECT v.*, p.display_name, p.instagram
+         FROM media_videos v JOIN media_profiles p ON p.id = v.media_profile_id
+         WHERE v.gara_id = $1 AND p.status = 'active' ORDER BY v.created_at DESC`, [gara_id]),
+
+  // Elenco pubblico (sezione Media → Creator), filtrabile per palinsesto
+  getAllMediaVideos: (palinsesto) =>
+    palinsesto
+      ? all(`SELECT v.*, p.display_name, p.instagram
+             FROM media_videos v JOIN media_profiles p ON p.id = v.media_profile_id
+             WHERE p.status = 'active' AND v.palinsesto = $1 ORDER BY v.created_at DESC LIMIT 200`, [palinsesto])
+      : all(`SELECT v.*, p.display_name, p.instagram
+             FROM media_videos v JOIN media_profiles p ON p.id = v.media_profile_id
+             WHERE p.status = 'active' ORDER BY v.created_at DESC LIMIT 200`),
+
+  updateMediaVideo: ({ id, gara_id, palinsesto, title, description }) =>
+    run(`UPDATE media_videos SET gara_id=$2, palinsesto=$3, title=$4, description=$5 WHERE id=$1`,
+        [id, gara_id || null, palinsesto || 'vlog', title, description || '']),
+
+  deleteMediaVideo: (id) =>
+    run(`DELETE FROM media_videos WHERE id = $1`, [id]),
 
   // ── Media albums ──────────────────────────────────────────────────────────────
 

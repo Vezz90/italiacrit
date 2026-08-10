@@ -5830,8 +5830,9 @@ app.post('/api/profile/media', requireAuth, async (req, res) => {
     if (req.user.role !== 'media') return res.status(403).json({ error: 'Solo per account Media/Fotografo' });
     const existing = await queries.getMediaProfileByUser(req.user.id);
     if (existing) return res.status(409).json({ error: 'Profilo già presente' });
-    const { display_name, bio, website, instagram, facebook } = req.body;
+    const { display_name, bio, website, instagram, facebook, media_type } = req.body;
     if (!display_name?.trim()) return res.status(400).json({ error: 'Il nome è obbligatorio' });
+    if (!['foto', 'video', 'entrambi'].includes(media_type)) return res.status(400).json({ error: 'Specifica se Media Foto, Media Video o entrambi' });
     const profile = await queries.createMediaProfile({
       user_id: req.user.id,
       display_name: display_name.trim(),
@@ -5839,6 +5840,7 @@ app.post('/api/profile/media', requireAuth, async (req, res) => {
       website: website?.trim() || '',
       instagram: instagram?.trim() || '',
       facebook: facebook?.trim() || '',
+      media_type,
     });
     res.status(201).json({ ok: true, profile });
   } catch (e) { res.status(500).json({ error: e.message }); }
@@ -5849,7 +5851,7 @@ app.patch('/api/profile/media', requireAuth, async (req, res) => {
   try {
     const profile = await queries.getMediaProfileByUser(req.user.id);
     if (!profile && req.user.role !== 'admin') return res.status(404).json({ error: 'Profilo non trovato' });
-    const { display_name, bio, website, instagram, facebook } = req.body;
+    const { display_name, bio, website, instagram, facebook, media_type } = req.body;
     await queries.updateMediaProfile({
       id: profile.id,
       display_name: display_name?.trim() || profile.display_name,
@@ -5857,6 +5859,7 @@ app.patch('/api/profile/media', requireAuth, async (req, res) => {
       website: website?.trim() ?? profile.website,
       instagram: instagram?.trim() ?? profile.instagram,
       facebook: facebook?.trim() ?? (profile.facebook || ''),
+      media_type: ['foto', 'video', 'entrambi'].includes(media_type) ? media_type : (profile.media_type || 'foto'),
     });
     res.json({ ok: true });
   } catch (e) { res.status(500).json({ error: e.message }); }
@@ -5888,21 +5891,27 @@ app.post('/api/media/profile/:id/claim', requireAuth, async (req, res) => {
   } catch (e) { res.status(500).json({ error: e.message }); }
 });
 
-// Profilo media singolo (pubblico) con album
+// Profilo media singolo (pubblico) con album e video
 app.get('/api/media/profile/:id', async (req, res) => {
   try {
     const profile = await queries.getMediaProfileById(req.params.id);
     if (!profile) return res.status(404).json({ error: 'Profilo non trovato' });
     const albums  = await queries.getMediaAlbumsByProfile(profile.id);
+    const videos  = await queries.getMediaVideosByProfile(profile.id);
     const stats   = await queries.countMediaPhotosByProfile(profile.id);
-    res.json({ profile, albums, stats });
+    res.json({ profile, albums, videos, stats });
   } catch (e) { res.status(500).json({ error: e.message }); }
 });
 
-// Album di una gara (pubblico)
+// Album e video di una gara (pubblico)
 app.get('/api/media/gara/:gara_id', async (req, res) => {
-  try { res.json({ albums: await queries.getMediaAlbumsByGara(req.params.gara_id) }); }
-  catch (e) { res.status(500).json({ error: e.message }); }
+  try {
+    const [albums, videos] = await Promise.all([
+      queries.getMediaAlbumsByGara(req.params.gara_id),
+      queries.getMediaVideosByGara(req.params.gara_id),
+    ]);
+    res.json({ albums, videos });
+  } catch (e) { res.status(500).json({ error: e.message }); }
 });
 
 // ── Middleware media/admin ─────────────────────────────────────────────────────
@@ -5979,6 +5988,120 @@ app.delete('/api/media/album/:id', requireMediaOrAdmin, async (req, res) => {
       }
     }
 
+    res.json({ ok: true });
+  } catch (e) { res.status(500).json({ error: e.message }); }
+});
+
+// ── Media videos (Media Video: link esterno YouTube/Instagram/TikTok o file caricato) ──
+
+const MEDIA_PALINSESTI = ['highlights', 'interviste', 'vlog', 'podcast'];
+
+// Elenco pubblico (sezione Media → Creator), filtrabile per palinsesto
+app.get('/api/media/videos', async (req, res) => {
+  try {
+    const { palinsesto } = req.query;
+    res.json({ videos: await queries.getAllMediaVideos(palinsesto || null) });
+  } catch (e) { res.status(500).json({ error: e.message }); }
+});
+
+// Crea video — link esterno (YouTube/Instagram/TikTok, nessun upload)
+app.post('/api/media/video', requireMediaOrAdmin, async (req, res) => {
+  try {
+    const profile = req.user.role === 'admin'
+      ? await queries.getMediaProfileById(req.body.media_profile_id)
+      : await queries.getMediaProfileByUser(req.user.id);
+    if (!profile) return res.status(404).json({ error: 'Profilo media non trovato' });
+    const { gara_id, palinsesto, title, description, url } = req.body;
+    if (!title?.trim()) return res.status(400).json({ error: 'Titolo obbligatorio' });
+    if (!url?.trim()) return res.status(400).json({ error: 'Link obbligatorio' });
+    if (!MEDIA_PALINSESTI.includes(palinsesto)) return res.status(400).json({ error: 'Palinsesto non valido' });
+    const video = await queries.createMediaVideo({
+      media_profile_id: profile.id,
+      gara_id: gara_id || null,
+      palinsesto,
+      title: title.trim(),
+      description: description?.trim() || '',
+      source_type: 'link',
+      url: url.trim(),
+    });
+    res.status(201).json({ ok: true, video });
+  } catch (e) { res.status(500).json({ error: e.message }); }
+});
+
+// Crea video — file caricato (stesso multer/bucket "videos" già usato altrove)
+app.post('/api/media/video/upload', requireMediaOrAdmin, videoUpload.single('video'), async (req, res) => {
+  try {
+    const profile = req.user.role === 'admin'
+      ? await queries.getMediaProfileById(req.body.media_profile_id)
+      : await queries.getMediaProfileByUser(req.user.id);
+    if (!profile) return res.status(404).json({ error: 'Profilo media non trovato' });
+    const { gara_id, palinsesto, title, description } = req.body;
+    if (!title?.trim()) return res.status(400).json({ error: 'Titolo obbligatorio' });
+    if (!req.file) return res.status(400).json({ error: 'Nessun file ricevuto' });
+    if (!MEDIA_PALINSESTI.includes(palinsesto)) return res.status(400).json({ error: 'Palinsesto non valido' });
+    const ext = path.extname(req.file.originalname).toLowerCase() || '.mp4';
+    const filename = `vid_${Date.now()}${ext}`;
+    let videoUrl;
+    if (supabase) {
+      const { error } = await supabase.storage.from('videos').upload(filename, req.file.buffer, { contentType: req.file.mimetype, upsert: true });
+      if (error) throw new Error(error.message);
+      videoUrl = supabase.storage.from('videos').getPublicUrl(filename).data.publicUrl;
+    } else {
+      fs.writeFileSync(path.join(UPLOADS_DIR, filename), req.file.buffer || fs.readFileSync(req.file.path));
+      videoUrl = `/uploads/${filename}`;
+    }
+    const video = await queries.createMediaVideo({
+      media_profile_id: profile.id,
+      gara_id: gara_id || null,
+      palinsesto,
+      title: title.trim(),
+      description: description?.trim() || '',
+      source_type: 'upload',
+      url: videoUrl,
+      filename,
+    });
+    res.status(201).json({ ok: true, video });
+  } catch (e) { res.status(500).json({ error: e.message }); }
+});
+
+// Modifica video (titolo/descrizione/palinsesto/gara collegata)
+app.patch('/api/media/video/:id', requireMediaOrAdmin, async (req, res) => {
+  try {
+    const video = await queries.getMediaVideo(req.params.id);
+    if (!video) return res.status(404).json({ error: 'Video non trovato' });
+    if (req.user.role !== 'admin') {
+      const profile = await queries.getMediaProfileByUser(req.user.id);
+      if (!profile || video.media_profile_id !== profile.id)
+        return res.status(403).json({ error: 'Non autorizzato' });
+    }
+    const { title, gara_id, palinsesto, description } = req.body;
+    if (palinsesto !== undefined && !MEDIA_PALINSESTI.includes(palinsesto)) return res.status(400).json({ error: 'Palinsesto non valido' });
+    await queries.updateMediaVideo({
+      id: video.id,
+      title: title?.trim() || video.title,
+      gara_id: gara_id !== undefined ? (gara_id || null) : video.gara_id,
+      palinsesto: palinsesto || video.palinsesto,
+      description: description?.trim() ?? video.description,
+    });
+    res.json({ ok: true });
+  } catch (e) { res.status(500).json({ error: e.message }); }
+});
+
+// Elimina video
+app.delete('/api/media/video/:id', requireMediaOrAdmin, async (req, res) => {
+  try {
+    const video = await queries.getMediaVideo(req.params.id);
+    if (!video) return res.status(404).json({ error: 'Video non trovato' });
+    if (req.user.role !== 'admin') {
+      const profile = await queries.getMediaProfileByUser(req.user.id);
+      if (!profile || video.media_profile_id !== profile.id)
+        return res.status(403).json({ error: 'Non autorizzato' });
+    }
+    if (video.source_type === 'upload' && video.filename) {
+      if (supabase) await supabase.storage.from('videos').remove([video.filename]).catch(() => {});
+      else fs.unlinkSync(path.join(UPLOADS_DIR, video.filename));
+    }
+    await queries.deleteMediaVideo(video.id);
     res.json({ ok: true });
   } catch (e) { res.status(500).json({ error: e.message }); }
 });

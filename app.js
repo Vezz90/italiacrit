@@ -24354,6 +24354,13 @@ async function _dashMedia(el, user, profile) {
           </p>
           <form onsubmit="window.submitMediaProfile(event)" class="dash-link-form">
             <input type="text" id="mp-name" placeholder="Nome pubblico *" required />
+            <label style="font-size:.8rem;color:var(--text-muted);display:block;margin:2px 0 4px">Che tipo di contenuti pubblichi? *</label>
+            <select id="mp-type" required style="width:100%;box-sizing:border-box;padding:8px 10px;border:1px solid var(--border-subtle);border-radius:var(--r-sm);font-size:0.875rem;background:var(--bg-primary);color:var(--text-primary);margin-bottom:10px">
+              <option value="">— Seleziona —</option>
+              <option value="foto">📷 Media Foto</option>
+              <option value="video">🎬 Media Video</option>
+              <option value="entrambi">📷🎬 Entrambi</option>
+            </select>
             <input type="text" id="mp-bio"  placeholder="Bio (breve presentazione)" />
             <input type="url"  id="mp-web"  placeholder="Sito web" />
             <input type="text" id="mp-ig"   placeholder="Instagram (senza @)" />
@@ -24412,16 +24419,24 @@ async function _dashMedia(el, user, profile) {
         </div>
       </div>
 
-      ${profile.status === 'active' ? `
+      ${profile.status === 'active' && profile.media_type !== 'video' ? `
       <div class="dash-card dash-card--accent">
         <div class="dash-card-title"><span>📁</span>I miei album</div>
         <div id="dash-albums-inner"><div class="admin-loading">Caricamento…</div></div>
-      </div>
+      </div>` : ''}
 
+      ${profile.status === 'active' && profile.media_type !== 'foto' ? `
+      <div class="dash-card dash-card--accent">
+        <div class="dash-card-title"><span>🎬</span>I miei video</div>
+        <div id="dash-videos-inner"><div class="admin-loading">Caricamento…</div></div>
+      </div>` : ''}
+
+      ${profile.status === 'active' ? `
       <div class="dash-card">
         <div class="dash-card-title"><span>⚡</span>Azioni rapide</div>
         <div class="dash-actions-grid">
-          <button onclick="window.openMediaAlbumCreate(${profile.id})" class="dash-quick-btn"><span class="dqb-icon">➕</span>Nuovo album</button>
+          ${profile.media_type !== 'video' ? `<button onclick="window.openMediaAlbumCreate(${profile.id})" class="dash-quick-btn"><span class="dqb-icon">➕</span>Nuovo album</button>` : ''}
+          ${profile.media_type !== 'foto' ? `<button onclick="window.openMediaVideoCreate(${profile.id})" class="dash-quick-btn"><span class="dqb-icon">🎬</span>Nuovo video</button>` : ''}
           <a href="#/media/${profile.id}" class="dash-quick-btn"><span class="dqb-icon">👁</span>Vedi profilo</a>
           <a href="#/risultati" class="dash-quick-btn"><span class="dqb-icon">📋</span>Risultati</a>
           <a href="#/calendario" class="dash-quick-btn"><span class="dqb-icon">📅</span>Calendario</a>
@@ -24441,12 +24456,41 @@ async function _dashMedia(el, user, profile) {
 
   window._refreshCollectionCard = () => { const i=document.getElementById('dash-collection-inner'); if(i) i.innerHTML=_collectionInner(getMediaCollection()); };
 
-  // Load albums async
+  // Load albums + video async (una sola chiamata, usata da entrambe le card)
   if (profile.status === 'active') {
     const albumEl = document.getElementById('dash-albums-inner');
-    if (albumEl) {
+    const videoEl = document.getElementById('dash-videos-inner');
+    if (albumEl || videoEl) {
+      let d;
       try {
-        const d = await fetch(`${API_BASE}/media/profile/${profile.id}`).then(r=>r.json());
+        d = await fetch(`${API_BASE}/media/profile/${profile.id}`).then(r=>r.json());
+      } catch(e) {
+        if (albumEl) albumEl.innerHTML = `<span style="color:var(--red-hot);font-size:.8rem">Errore: ${esc(e.message)}</span>`;
+        if (videoEl) videoEl.innerHTML = `<span style="color:var(--red-hot);font-size:.8rem">Errore: ${esc(e.message)}</span>`;
+        d = null;
+      }
+      if (d && videoEl) {
+        const videos = d.videos || [];
+        const palLabel = { highlights: 'Highlights gara', interviste: 'Interviste', vlog: 'Vlog', podcast: 'Podcast' };
+        videoEl.innerHTML = videos.length ? `
+          <div style="font-size:.8rem;color:var(--text-muted);margin-bottom:10px">${videos.length} video</div>
+          <div style="display:flex;flex-direction:column;gap:8px">
+            ${videos.slice(0,5).map(v=>`
+              <div style="display:flex;align-items:center;gap:10px;padding:6px 0;border-bottom:1px solid var(--border-subtle)">
+                <div style="width:48px;height:36px;border-radius:4px;overflow:hidden;background:var(--bg-base);flex-shrink:0;display:flex;align-items:center;justify-content:center;color:var(--text-muted)">🎬</div>
+                <div style="flex:1;min-width:0">
+                  <div style="font-size:.82rem;font-weight:600;white-space:nowrap;overflow:hidden;text-overflow:ellipsis">${esc(v.title)}</div>
+                  <div style="font-size:.7rem;color:var(--text-muted)">${esc(palLabel[v.palinsesto]||v.palinsesto)}${v.gara_id ? ' · collegato a gara' : ''}</div>
+                </div>
+                <button onclick="window.deleteMediaVideo(${v.id})" class="dash-btn dash-btn--outline dash-btn--sm">🗑</button>
+              </div>`).join('')}
+          </div>
+          ${videos.length > 5 ? `<div style="font-size:.78rem;color:var(--text-muted);margin-top:8px">+${videos.length-5} altri video</div>` : ''}
+          <button onclick="window.openMediaVideoCreate(${profile.id})" class="dash-btn dash-btn--accent dash-btn--sm" style="margin-top:10px">+ Nuovo video</button>
+        ` : `<p style="font-size:.85rem;color:var(--text-muted)">Nessun video ancora.</p>
+             <button onclick="window.openMediaVideoCreate(${profile.id})" class="dash-btn dash-btn--primary">+ Carica il primo video</button>`;
+      }
+      if (d && albumEl) {
         const albums = d.albums || [];
         albumEl.innerHTML = albums.length ? `
           <div style="font-size:.8rem;color:var(--text-muted);margin-bottom:10px">${albums.length} album · ${d.stats?.total||0} foto totali</div>
@@ -24467,8 +24511,6 @@ async function _dashMedia(el, user, profile) {
           <button onclick="window.openMediaAlbumCreate(${profile.id})" class="dash-btn dash-btn--accent dash-btn--sm" style="margin-top:10px">+ Nuovo album</button>
         ` : `<p style="font-size:.85rem;color:var(--text-muted)">Nessun album ancora.</p>
              <button onclick="window.openMediaAlbumCreate(${profile.id})" class="dash-btn dash-btn--primary">+ Crea il primo album</button>`;
-      } catch(e) {
-        albumEl.innerHTML = `<span style="color:var(--red-hot);font-size:.8rem">Errore: ${esc(e.message)}</span>`;
       }
     }
   }
@@ -24668,6 +24710,7 @@ window.submitMediaProfile = async function(e) {
   try {
     await apiCall('/profile/media', { method: 'POST', body: {
       display_name: document.getElementById('mp-name')?.value.trim(),
+      media_type:   document.getElementById('mp-type')?.value,
       bio:          document.getElementById('mp-bio')?.value.trim(),
       website:      document.getElementById('mp-web')?.value.trim(),
       instagram:    document.getElementById('mp-ig')?.value.trim(),
@@ -24708,6 +24751,12 @@ window.openMediaProfileEdit = function(profile) {
       </div>
       <label style="font-size:.8rem;color:var(--text-muted);display:block;margin-bottom:4px">Nome pubblico *</label>
       <input id="mpe-name" type="text" value="${esc(profile.display_name||'')}" style="${inpStyle}" required/>
+      <label style="font-size:.8rem;color:var(--text-muted);display:block;margin-bottom:4px">Tipo di contenuti</label>
+      <select id="mpe-type" style="${inpStyle}">
+        <option value="foto"${(profile.media_type||'foto')==='foto'?' selected':''}>📷 Media Foto</option>
+        <option value="video"${profile.media_type==='video'?' selected':''}>🎬 Media Video</option>
+        <option value="entrambi"${profile.media_type==='entrambi'?' selected':''}>📷🎬 Entrambi</option>
+      </select>
       <label style="font-size:.8rem;color:var(--text-muted);display:block;margin-bottom:4px">Bio</label>
       <input id="mpe-bio"  type="text" value="${esc(profile.bio||'')}" placeholder="Breve descrizione" style="${inpStyle}"/>
       <label style="font-size:.8rem;color:var(--text-muted);display:block;margin-bottom:4px">Sito web</label>
@@ -24729,6 +24778,7 @@ window._submitMediaProfileEdit = async function() {
   try {
     await apiCall('/profile/media', { method: 'PATCH', body: {
       display_name: document.getElementById('mpe-name')?.value.trim(),
+      media_type:   document.getElementById('mpe-type')?.value,
       bio:          document.getElementById('mpe-bio')?.value.trim(),
       website:      document.getElementById('mpe-web')?.value.trim(),
       instagram:    document.getElementById('mpe-ig')?.value.trim(),
