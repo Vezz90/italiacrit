@@ -24859,6 +24859,21 @@ window._uploadMediaCover = async function(file) {
   return d;
 };
 
+window._submitMediaCoverChange = async function(input) {
+  const file = input.files?.[0];
+  if (!file) return;
+  const preview = document.getElementById('mp-cover-preview');
+  try {
+    const d = await window._uploadMediaCover(file);
+    if (preview) preview.innerHTML = `<img src="${esc(mediaUrl(d.cover_url))}" style="width:100%;height:100%;object-fit:cover"/>`;
+    showToast('✓ Foto aggiornata');
+  } catch(err) {
+    showToast('Errore: ' + err.message, 'error');
+  } finally {
+    input.value = '';
+  }
+};
+
 window.submitMediaProfile = async function(e) {
   e.preventDefault();
   const btn = e.target.querySelector('button[type=submit]');
