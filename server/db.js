@@ -227,6 +227,11 @@ async function migrate() {
     // che è quando NOI l'abbiamo importato) — permette di ordinare i video di
     // un canale dal più recente al più vecchio come li ha pubblicati l'autore.
     `ALTER TABLE media_videos ADD COLUMN IF NOT EXISTS published_at TIMESTAMPTZ`,
+    // Nome della playlist/rubrica di provenienza (solo per import da playlist
+    // specifica, es. "Ciclismo 360" vs "A Ruota Libera" dello stesso canale
+    // Eurosport) — senza questo, due playlist diverse dello stesso canale
+    // finivano mescolate senza modo di distinguerle nel profilo del creator.
+    `ALTER TABLE media_videos ADD COLUMN IF NOT EXISTS series TEXT`,
     // Contatore visualizzazioni per i video del sistema esistente
     // (videos.json: gara, dirette, presentazioni, programmi TV, altro) —
     // non hanno un ID numerico stabile, si tracciano per "chiave" testuale
@@ -734,11 +739,11 @@ const queries = {
 
   // ── Media videos (Media Video: link esterno o file caricato) ───────────────────
 
-  createMediaVideo: ({ media_profile_id, gara_id, palinsesto, title, description, source_type, url, filename, thumbnail_url, published_at }) =>
+  createMediaVideo: ({ media_profile_id, gara_id, palinsesto, title, description, source_type, url, filename, thumbnail_url, published_at, series }) =>
     one(
-      `INSERT INTO media_videos (media_profile_id, gara_id, palinsesto, title, description, source_type, url, filename, thumbnail_url, published_at)
-       VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10) RETURNING *`,
-      [media_profile_id, gara_id || null, palinsesto || 'vlog', title, description || '', source_type || 'link', url || null, filename || null, thumbnail_url || '', published_at || null]
+      `INSERT INTO media_videos (media_profile_id, gara_id, palinsesto, title, description, source_type, url, filename, thumbnail_url, published_at, series)
+       VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11) RETURNING *`,
+      [media_profile_id, gara_id || null, palinsesto || 'vlog', title, description || '', source_type || 'link', url || null, filename || null, thumbnail_url || '', published_at || null, series || null]
     ),
 
   getMediaVideo: (id) =>

@@ -16182,8 +16182,14 @@ window._renderMediaAlbum = async function(albumId, profileId) {
 // (nessuna navigazione), popolata async dentro #media-creator-area.
 let _mediaCreatorPal = '';
 let _mediaCreatorProfileId = null;
+let _mediaCreatorSeries = '';
 window.mediaCreatorSetPal = (p) => { _mediaCreatorPal = p; window._loadMediaCreatorArea(); };
-window.mediaCreatorSetProfile = (id) => { _mediaCreatorProfileId = _mediaCreatorProfileId === id ? null : id; window._loadMediaCreatorArea(); };
+window.mediaCreatorSetSeries = (s) => { _mediaCreatorSeries = s; window._loadMediaCreatorArea(); };
+window.mediaCreatorSetProfile = (id) => {
+  _mediaCreatorProfileId = _mediaCreatorProfileId === id ? null : id;
+  _mediaCreatorSeries = ''; // reset: la playlist scelta era relativa al creator precedente
+  window._loadMediaCreatorArea();
+};
 
 window._loadMediaCreatorArea = async function() {
   const area = document.getElementById('media-creator-area');
@@ -16219,11 +16225,24 @@ window._loadMediaCreatorArea = async function() {
     // lista i video più vecchi di un altro creator, pur restando nel DB).
     const profileData = await fetch(`${API_BASE}/media/profile/${_mediaCreatorProfileId}`).then(r => r.json());
     const allProfileVideos = profileData.videos || [];
-    const videos = _mediaCreatorPal ? allProfileVideos.filter(v => v.palinsesto === _mediaCreatorPal) : allProfileVideos;
+    // Un creator può avere piu' playlist/rubriche diverse mischiate nello
+    // stesso profilo (es. Eurosport: "Ciclismo 360" e "A Ruota Libera") — il
+    // filtro per serie compare solo se ce n'è più di una, altrimenti sarebbe
+    // un chip inutile su un solo valore.
+    const seriesList = [...new Set(allProfileVideos.map(v => v.series).filter(Boolean))];
+    const videos = allProfileVideos
+      .filter(v => !_mediaCreatorPal || v.palinsesto === _mediaCreatorPal)
+      .filter(v => !_mediaCreatorSeries || v.series === _mediaCreatorSeries);
 
     const videosHtml = videos.length
       ? `<div class="media-album-grid">${videos.map(v => _mediaVideoCardHtml(v)).join('')}</div>`
-      : `<p style="color:var(--text-muted);padding:12px 0">Nessun video ancora${_mediaCreatorPal ? ' con questo filtro' : ''}.</p>`;
+      : `<p style="color:var(--text-muted);padding:12px 0">Nessun video ancora${_mediaCreatorPal || _mediaCreatorSeries ? ' con questo filtro' : ''}.</p>`;
+
+    const seriesChipsHtml = seriesList.length > 1 ? `
+      <div class="yt-chips" style="margin:0 0 10px">
+        <button class="yt-chip ${!_mediaCreatorSeries ? 'yt-chip-active' : ''}" onclick="window.mediaCreatorSetSeries('')">Tutte le rubriche</button>
+        ${seriesList.map(s => `<button class="yt-chip ${_mediaCreatorSeries===s ? 'yt-chip-active' : ''}" onclick="window.mediaCreatorSetSeries('${esc(s).replace(/'/g,"&#39;")}')">${esc(s)}</button>`).join('')}
+      </div>` : '';
 
     area.innerHTML = `
       ${profilesHtml}
@@ -16231,6 +16250,7 @@ window._loadMediaCreatorArea = async function() {
         <strong style="font-size:.95rem">${esc(activeProfile.display_name)}</strong>
         <button class="yt-chip" onclick="window.mediaCreatorSetProfile(${_mediaCreatorProfileId})">✕ Chiudi</button>
       </div>
+      ${seriesChipsHtml}
       <div class="yt-chips" style="margin:0 0 16px">
         <button class="yt-chip ${!_mediaCreatorPal ? 'yt-chip-active' : ''}" onclick="window.mediaCreatorSetPal('')">Tutti</button>
         ${Object.entries(MEDIA_PALINSESTO_LABEL).map(([k,l]) => `<button class="yt-chip ${_mediaCreatorPal===k ? 'yt-chip-active' : ''}" onclick="window.mediaCreatorSetPal('${k}')">${esc(l)}</button>`).join('')}

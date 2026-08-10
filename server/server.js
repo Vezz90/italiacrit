@@ -4786,6 +4786,7 @@ async function syncMediaChannels() {
           source_type: 'link', url,
           thumbnail_url: item.snippet?.thumbnails?.medium?.url || item.snippet?.thumbnails?.default?.url || '',
           published_at: item.snippet?.publishedAt || null,
+          series: ch.series || null,
         });
         added++;
       }
@@ -6276,13 +6277,17 @@ app.post('/api/admin/media/import-channel', requireAdmin, async (req, res) => {
 
     const raw = channel.trim();
     let uploadsPlaylist, channelTitle, channelThumb;
+    let seriesName = null; // nome della playlist, solo se si importa una playlist specifica
 
     // Link playlist (es. .../playlist?list=PLxxxx): importa direttamente quella
     // playlist invece delle uploads del canale — utile per prendere solo una
     // serie/rassegna specifica invece di tutto quello che un canale pubblica.
     // Il profilo creato/riusato resta comunque quello del CANALE proprietario
     // (non uno per playlist), così più playlist dello stesso canale confluiscono
-    // nello stesso creator.
+    // nello stesso creator — ma il nome della playlist viene salvato su ogni
+    // video (colonna series) per poterle distinguere nel profilo (due playlist
+    // diverse dello stesso canale, es. "Ciclismo 360" e "A Ruota Libera" di
+    // Eurosport, altrimenti finiscono mescolate senza modo di separarle).
     const listMatch = raw.match(/[?&]list=([\w-]+)/);
     if (listMatch) {
       uploadsPlaylist = listMatch[1];
@@ -6290,6 +6295,7 @@ app.post('/api/admin/media/import-channel', requireAdmin, async (req, res) => {
       const plItem = plMetaResp.items?.[0];
       if (!plItem) return res.status(404).json({ error: 'Playlist non trovata — controlla che sia pubblica' });
       channelTitle = plItem.snippet?.channelTitle || plItem.snippet?.title || raw;
+      seriesName = plItem.snippet?.title || null;
       const chUrl = `https://www.googleapis.com/youtube/v3/channels?part=snippet&id=${plItem.snippet?.channelId}&key=${YOUTUBE_API_KEY}`;
       const chResp = plItem.snippet?.channelId ? await fetch(chUrl).then(r => r.json()) : {};
       channelThumb = chResp.items?.[0]?.snippet?.thumbnails?.medium?.url || plItem.snippet?.thumbnails?.medium?.url || plItem.snippet?.thumbnails?.default?.url || '';
@@ -6372,6 +6378,7 @@ app.post('/api/admin/media/import-channel', requireAdmin, async (req, res) => {
       await queries.createMediaVideo({
         media_profile_id: profile.id, palinsesto, title: v.title, description: v.description,
         source_type: 'link', url: v.url, thumbnail_url: v.thumbnail_url, published_at: v.published_at,
+        series: seriesName,
       });
       imported++;
     }
@@ -6381,7 +6388,7 @@ app.post('/api/admin/media/import-channel', requireAdmin, async (req, res) => {
     // l'import manuale.
     const mediaChannels = await readYTMediaChannels();
     const idx = mediaChannels.findIndex(c => c.uploadsPlaylist === uploadsPlaylist);
-    const entry = { uploadsPlaylist, palinsesto, profileId: profile.id, displayName: channelTitle, includeShorts: !!includeShorts };
+    const entry = { uploadsPlaylist, palinsesto, profileId: profile.id, displayName: channelTitle, includeShorts: !!includeShorts, series: seriesName };
     if (idx >= 0) mediaChannels[idx] = entry; else mediaChannels.push(entry);
     await writeYTMediaChannels(mediaChannels);
 
