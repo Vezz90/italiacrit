@@ -16036,11 +16036,23 @@ function _mediaVideoCardHtml(v) {
   const profileLogo = v.profile_cover_url
     ? `<img src="${esc(mediaUrl(v.profile_cover_url))}" alt="" style="position:absolute;bottom:8px;left:8px;width:28px;height:28px;border-radius:50%;object-fit:cover;border:2px solid var(--bg-elevated);background:var(--bg-elevated)"/>`
     : '';
-  return `<a href="${esc(v.url)}" target="_blank" rel="noopener" class="media-video-card" style="display:block;text-decoration:none;color:inherit" onclick="window._mvIncrView(${v.id})">
+  // I video YouTube si aprono in un player embed sul nostro sito (stesso
+  // window.openVideoModal usato altrove) invece di rimandare a youtube.com:
+  // la visualizzazione conta comunque per il creator (embed ufficiale
+  // YouTube), ma l'utente resta su italiacyclingstats.com. Le altre
+  // piattaforme (Instagram/TikTok) non hanno un embed altrettanto semplice
+  // quindi restano un link esterno.
+  const vid = ytId(v.url || '');
+  const clickAction = vid
+    ? `window._mvIncrView(${v.id});window.openVideoModal('${vid}','${esc(v.title).replace(/'/g, "\\'")}')`
+    : `window._mvIncrView(${v.id})`;
+  const tag = vid ? 'div' : 'a';
+  const linkAttrs = vid ? '' : `href="${esc(v.url)}" target="_blank" rel="noopener"`;
+  return `<${tag} ${linkAttrs} class="media-video-card" style="display:block;text-decoration:none;color:inherit;cursor:pointer" onclick="${clickAction}">
     <div style="position:relative;width:100%;aspect-ratio:16/9;background:var(--bg-base);border-radius:10px;overflow:hidden;display:flex;align-items:center;justify-content:center;font-size:2.2rem">${coverHtml}${profileLogo}</div>
     <div class="media-video-title">${esc(v.title)}</div>
     <div class="media-video-meta"><span>${pname} · ${palLabel}</span>${garaLink ? ' · ' + garaLink : ''}<span style="margin-left:auto">${viewsHtml}</span></div>
-  </a>`;
+  </${tag}>`;
 }
 
 async function renderMediaProfile(profileId) {
@@ -16165,14 +16177,13 @@ window._loadMediaCreatorArea = async function() {
   if (!area) return;
   area.innerHTML = `<div class="admin-loading">Caricamento…</div>`;
   try {
-    const [profilesData, videosData] = await Promise.all([
-      fetch(`${API_BASE}/media/video-creators`).then(r => r.json()),
-      fetch(`${API_BASE}/media/videos${_mediaCreatorPal ? '?palinsesto=' + encodeURIComponent(_mediaCreatorPal) : ''}`).then(r => r.json()),
-    ]);
+    const profilesData = await fetch(`${API_BASE}/media/video-creators`).then(r => r.json());
     const profiles = profilesData.profiles || [];
-    const allVideos = videosData.videos || [];
-    const videos = _mediaCreatorProfileId ? allVideos.filter(v => v.media_profile_id === _mediaCreatorProfileId) : allVideos;
+    const activeProfile = _mediaCreatorProfileId ? profiles.find(p => p.id === _mediaCreatorProfileId) : null;
 
+    // Solo i cerchi (logo + nome): i contenuti compaiono solo dopo aver
+    // scelto un creator, così questa vista resta una vetrina di profili e
+    // non un feed misto di tutti i video insieme.
     const profilesHtml = profiles.length ? `
       <div style="display:flex;gap:14px;overflow-x:auto;padding:4px 2px 12px">
         ${profiles.map(p => `
@@ -16184,20 +16195,27 @@ window._loadMediaCreatorArea = async function() {
           </button>`).join('')}
       </div>` : `<p style="color:var(--text-muted);padding:8px 0">Nessun creator video registrato ancora.</p>`;
 
+    if (!activeProfile) {
+      area.innerHTML = `${profilesHtml}<p style="color:var(--text-muted);padding:12px 0 0">Scegli un creator per vedere i suoi contenuti.</p>`;
+      return;
+    }
+
+    const videosData = await fetch(`${API_BASE}/media/videos${_mediaCreatorPal ? '?palinsesto=' + encodeURIComponent(_mediaCreatorPal) : ''}`).then(r => r.json());
+    const videos = (videosData.videos || []).filter(v => v.media_profile_id === _mediaCreatorProfileId);
+
     const videosHtml = videos.length
-      ? `<div class="media-album-grid">${videos.map(v => `
-          <div>
-            ${_mediaVideoCardHtml(v)}
-            <a href="javascript:void(0)" onclick="window.mediaCreatorSetProfile(${v.media_profile_id})" style="font-size:.72rem;color:var(--text-muted)">di ${esc(v.display_name)}</a>
-          </div>`).join('')}</div>`
-      : `<p style="color:var(--text-muted);padding:12px 0">Nessun video ancora${_mediaCreatorPal || _mediaCreatorProfileId ? ' con questo filtro' : ''}.</p>`;
+      ? `<div class="media-album-grid">${videos.map(v => _mediaVideoCardHtml(v)).join('')}</div>`
+      : `<p style="color:var(--text-muted);padding:12px 0">Nessun video ancora${_mediaCreatorPal ? ' con questo filtro' : ''}.</p>`;
 
     area.innerHTML = `
       ${profilesHtml}
-      <div class="yt-chips" style="margin:4px 0 16px">
+      <div style="display:flex;align-items:center;gap:8px;margin:4px 0 12px">
+        <strong style="font-size:.95rem">${esc(activeProfile.display_name)}</strong>
+        <button class="yt-chip" onclick="window.mediaCreatorSetProfile(${_mediaCreatorProfileId})">✕ Chiudi</button>
+      </div>
+      <div class="yt-chips" style="margin:0 0 16px">
         <button class="yt-chip ${!_mediaCreatorPal ? 'yt-chip-active' : ''}" onclick="window.mediaCreatorSetPal('')">Tutti</button>
         ${Object.entries(MEDIA_PALINSESTO_LABEL).map(([k,l]) => `<button class="yt-chip ${_mediaCreatorPal===k ? 'yt-chip-active' : ''}" onclick="window.mediaCreatorSetPal('${k}')">${esc(l)}</button>`).join('')}
-        ${_mediaCreatorProfileId ? `<button class="yt-chip" onclick="window.mediaCreatorSetProfile(${_mediaCreatorProfileId})">✕ Rimuovi filtro creator</button>` : ''}
       </div>
       ${videosHtml}
     `;
