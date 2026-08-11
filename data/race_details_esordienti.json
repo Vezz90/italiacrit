@@ -3274,5 +3274,33 @@
     "location_str": "VIA VINCIGUERRA 20, Italia",
     "lat": 37.49661,
     "lng": 15.08124
+  },
+  "3_MEMORIAL_GIUGLIO_AFFINI_2026-10-04": {
+    "raceid": "181810",
+    "fci_url": "https://www.federciclismo.it/ricerca-gare/dettaglio-gara/?raceid=181810&site=strada_it",
+    "info": [
+      "3° MEMORIAL GIUGLIO AFFINI Strada 3° MEMORIAL GIUGLIO AFFINI ID Gara: 181810 | <br><b>Data:</b> 04/10/2026 INFORMAZIONI GENERALI Localita: BUSCOLDO DI CURTATONE <br><b>Provincia:</b> MN <br><b>Categoria:</b> (1.28) Donne Esordienti <br><b>Categorie Ammesse:</b> DONNE ESORDIENTI <br><b>Categoria Geografica:</b> Regionale <br><b>Specifica Gara:</b> TROFEO ROSA <br><b>Tipo di Gara:</b> Criterium <br><b>Tipo di Programma:</b> STRADA REGIONALE <br><b>Approvazione:</b> In fase di approvazione ORGANIZZATORE <br><b>Nome:</b> U.C. CERESARESE A.S. DILETTANTISTICA <br><b>Indirizzo:</b> VIA TRIFOGLIO 2 <br><b>CAP:</b> 46040 Citta: CERESARA <br><b>Provincia:</b> MN <br><b>Telefono:</b> 3397165989 <br><b>Email:</b> SIMONEPEZZINI@TISCALI.IT ISCRIZIONI <br><b>Indirizzo:</b> , , <br><b>Telefono:</b> 3397165989 <br><b>Email:</b> simonepezzini@tiscali.it AGGIUNGI QUESTA GARA AL CALENDARIO"
+    ],
+    "luogo_ritrovo": null,
+    "indirizzo_ritrovo": "VIA TRIFOGLIO 2",
+    "orario_partenza": null,
+    "km": null,
+    "location_str": "VIA TRIFOGLIO 2, Italia",
+    "lat": null,
+    "lng": null
+  },
+  "9_TROFEO_CAPILUPPI_LORENZO_SNC_2026-10-04": {
+    "raceid": "182865",
+    "fci_url": "https://www.federciclismo.it/ricerca-gare/dettaglio-gara/?raceid=182865&site=strada_it",
+    "info": [
+      "9° TROFEO CAPILUPPI LORENZO SNC Strada 9° TROFEO CAPILUPPI LORENZO SNC ID Gara: 182865 | <br><b>Data:</b> 04/10/2026 INFORMAZIONI GENERALI Localita: BUSCOLDO DI CURTATONE <br><b>Provincia:</b> MN <br><b>Categoria:</b> (1.30) Esordienti 1°/2° anno <br><b>Categorie Ammesse:</b> ESO GARA UNICA <br><b>Categoria Geografica:</b> Regionale <br><b>Tipo di Gara:</b> Criterium <br><b>Tipo di Programma:</b> STRADA REGIONALE <br><b>Approvazione:</b> In fase di approvazione ORGANIZZATORE <br><b>Nome:</b> U.C. CERESARESE A.S. DILETTANTISTICA <br><b>Indirizzo:</b> VIA TRIFOGLIO 2 <br><b>CAP:</b> 46040 Citta: CERESARA <br><b>Provincia:</b> MN <br><b>Telefono:</b> 3397165989 <br><b>Email:</b> SIMONEPEZZINI@TISCALI.IT ISCRIZIONI <br><b>Indirizzo:</b> , , <br><b>Telefono:</b> 3397165989 <br><b>Email:</b> simonepezzini@tiscali.it AGGIUNGI QUESTA GARA AL CALENDARIO"
+    ],
+    "luogo_ritrovo": null,
+    "indirizzo_ritrovo": "VIA TRIFOGLIO 2",
+    "orario_partenza": null,
+    "km": null,
+    "location_str": "VIA TRIFOGLIO 2, Italia",
+    "lat": null,
+    "lng": null
   }
 }

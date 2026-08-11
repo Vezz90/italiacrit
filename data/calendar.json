@@ -17086,5 +17086,65 @@
         "regione": "CAMPANIA",
         "categoria": "Esordienti 1°/2° anno",
         "luogo": "FOIANO VALFORTORE"
+    },
+    {
+        "id": "54_CIRCUITO_DI_MANZOLINO_2026-09-27",
+        "nome": "54° CIRCUITO DI MANZOLINO",
+        "data": "2026-09-27",
+        "tipo": "regionale",
+        "moltiplicatore": 1,
+        "campionato_regionale": false,
+        "campionato_italiano": false,
+        "regione": "EMILIA ROMAGNA",
+        "categoria": "Allievi",
+        "luogo": "MANZOLINO"
+    },
+    {
+        "id": "3_MEMORIAL_GIUGLIO_AFFINI_2026-10-04",
+        "nome": "3° MEMORIAL GIUGLIO AFFINI",
+        "data": "2026-10-04",
+        "tipo": "regionale",
+        "moltiplicatore": 1,
+        "campionato_regionale": false,
+        "campionato_italiano": false,
+        "regione": "LOMBARDIA",
+        "categoria": "Donne Esordienti",
+        "luogo": "BUSCOLDO DI CURTATONE"
+    },
+    {
+        "id": "4_TROFEO_ALEX_SRL_2026-10-04",
+        "nome": "4° TROFEO ALEX SRL",
+        "data": "2026-10-04",
+        "tipo": "regionale",
+        "moltiplicatore": 1,
+        "campionato_regionale": false,
+        "campionato_italiano": false,
+        "regione": "LOMBARDIA",
+        "categoria": "Donne Allieve",
+        "luogo": "BUSCOLDO DI CURTATONE"
+    },
+    {
+        "id": "9_MEMORIAL_FABRIZIO_AFFINI_2026-10-04",
+        "nome": "9° MEMORIAL FABRIZIO AFFINI",
+        "data": "2026-10-04",
+        "tipo": "regionale",
+        "moltiplicatore": 1,
+        "campionato_regionale": false,
+        "campionato_italiano": false,
+        "regione": "LOMBARDIA",
+        "categoria": "Juniores",
+        "luogo": "BUSCOLDO DI CURTATONE"
+    },
+    {
+        "id": "9_TROFEO_CAPILUPPI_LORENZO_SNC_2026-10-04",
+        "nome": "9° TROFEO CAPILUPPI LORENZO SNC",
+        "data": "2026-10-04",
+        "tipo": "regionale",
+        "moltiplicatore": 1,
+        "campionato_regionale": false,
+        "campionato_italiano": false,
+        "regione": "LOMBARDIA",
+        "categoria": "Esordienti 1°/2° anno",
+        "luogo": "BUSCOLDO DI CURTATONE"
     }
 ]
