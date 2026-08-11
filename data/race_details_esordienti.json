@@ -3286,8 +3286,8 @@
     "orario_partenza": null,
     "km": null,
     "location_str": "VIA TRIFOGLIO 2, Italia",
-    "lat": null,
-    "lng": null
+    "lat": 44.75978,
+    "lng": 10.8595
   },
   "9_TROFEO_CAPILUPPI_LORENZO_SNC_2026-10-04": {
     "raceid": "182865",
@@ -3300,7 +3300,7 @@
     "orario_partenza": null,
     "km": null,
     "location_str": "VIA TRIFOGLIO 2, Italia",
-    "lat": null,
-    "lng": null
+    "lat": 44.75978,
+    "lng": 10.8595
   }
 }

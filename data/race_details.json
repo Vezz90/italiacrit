@@ -9979,8 +9979,8 @@
     "orario_partenza": "14:00",
     "km": "82,200 Servizi: Percorso pianeggiante Dirittura di Arrivo 3 km AGGIUNGI QUESTA GARA AL CALENDARIO Home / Ricerca Gare / Dettaglio Gara / Dettaglio Gara 54° CIRCUITO DI MANZOLINO Strada 54° CIRCUITO DI MANZOLINO ID Gara: 179451 | Data: 27/09/2026 INFORMAZIONI GENERALI Localita: Manzolino",
     "location_str": "Via G.D'annunzio (festa), Manzolino, Italia",
-    "lat": null,
-    "lng": null
+    "lat": 44.59446,
+    "lng": 11.10045
   },
   "3_MEMORIAL_GIUGLIO_AFFINI_2026-10-04": {
     "raceid": "181810",
@@ -9993,8 +9993,8 @@
     "orario_partenza": null,
     "km": null,
     "location_str": "VIA TRIFOGLIO 2, Italia",
-    "lat": null,
-    "lng": null
+    "lat": 44.75978,
+    "lng": 10.8595
   },
   "4_TROFEO_ALEX_SRL_2026-10-04": {
     "raceid": "181811",
@@ -10007,8 +10007,8 @@
     "orario_partenza": null,
     "km": null,
     "location_str": "VIA TRIFOGLIO 2, Italia",
-    "lat": null,
-    "lng": null
+    "lat": 44.75978,
+    "lng": 10.8595
   },
   "9_MEMORIAL_FABRIZIO_AFFINI_2026-10-04": {
     "raceid": "181812",
@@ -10021,8 +10021,8 @@
     "orario_partenza": null,
     "km": null,
     "location_str": "VIA TRIFOGLIO 2, Italia",
-    "lat": null,
-    "lng": null
+    "lat": 44.75978,
+    "lng": 10.8595
   },
   "9_TROFEO_CAPILUPPI_LORENZO_SNC_2026-10-04": {
     "raceid": "182865",
@@ -10035,7 +10035,7 @@
     "orario_partenza": null,
     "km": null,
     "location_str": "VIA TRIFOGLIO 2, Italia",
-    "lat": null,
-    "lng": null
+    "lat": 44.75978,
+    "lng": 10.8595
   }
 }
