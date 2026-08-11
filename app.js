@@ -16115,12 +16115,30 @@ window._mvIncrView = function(id) {
   fetch(`${API_BASE}/media/video/${id}/view`, { method: 'POST' }).catch(() => {});
 };
 
+// Tasto "elimina" (solo admin) sovrapposto in alto a destra su ogni card —
+// stopPropagation perché la card intera è cliccabile per aprire il player.
+function _mvAdminDeleteBtn(id) {
+  if (authUser()?.role !== 'admin') return '';
+  return `<button onclick="event.preventDefault();event.stopPropagation();window._mvAdminDeleteVideo(${id})" title="Elimina (admin)"
+    style="position:absolute;top:8px;right:8px;z-index:2;background:rgba(0,0,0,.6);color:#fff;border:none;border-radius:6px;width:26px;height:26px;cursor:pointer;font-size:.85rem;line-height:1">🗑️</button>`;
+}
+window._mvAdminDeleteVideo = async (id) => {
+  if (!confirm('Eliminare questo video/puntata?')) return;
+  try {
+    await apiCall(`/media/video/${id}`, { method: 'DELETE' });
+    showToast('Eliminato');
+    route(); // ri-renderizza la pagina corrente (Creator tab, profilo, gara, ecc.)
+  } catch (e) { showToast('Errore: ' + e.message, 'error'); }
+};
+
 function _mediaVideoCardHtml(v) {
   const palLabel = esc(MEDIA_PALINSESTO_LABEL[v.palinsesto] || v.palinsesto || '');
   const garaLink = v.gara_id ? `<a href="#/gara/${encodeURIComponent(v.gara_id)}" onclick="event.stopPropagation()" style="color:var(--accent);font-size:.72rem">→ Vedi gara</a>` : '';
   const viewsHtml = `<span>👁 ${v.views || 0}</span>`;
+  const adminDelBtn = _mvAdminDeleteBtn(v.id);
   if (v.source_type === 'upload') {
-    return `<div class="media-video-card">
+    return `<div class="media-video-card" style="position:relative">
+      ${adminDelBtn}
       <video controls preload="metadata" style="width:100%;aspect-ratio:16/9;background:#000;border-radius:10px" src="${esc(v.url)}" onplay="if(!this.dataset.counted){this.dataset.counted='1';window._mvIncrView(${v.id})}"></video>
       <div class="media-video-title">${esc(v.title)}</div>
       <div class="media-video-meta"><span>${palLabel}</span>${garaLink ? ' · ' + garaLink : ''}<span style="margin-left:auto">${viewsHtml}</span></div>
@@ -16137,7 +16155,7 @@ function _mediaVideoCardHtml(v) {
       ? `<img src="${esc(mediaUrl(v.profile_cover_url))}" alt="" style="position:absolute;bottom:8px;left:8px;width:28px;height:28px;border-radius:50%;object-fit:cover;border:2px solid var(--bg-elevated);background:var(--bg-elevated)"/>`
       : '';
     return `<div class="media-video-card" style="cursor:pointer" data-url="${esc(v.url)}" data-vid="${v.id}" data-title="${esc(v.title)}" data-cover="${esc(v.thumbnail_url || '')}" onclick="window._mvOpenPodcastClick(this)">
-      <div style="position:relative;width:100%;aspect-ratio:16/9;background:var(--bg-base);border-radius:10px;overflow:hidden;display:flex;align-items:center;justify-content:center;font-size:2.2rem">${podCover}${podProfileLogo}</div>
+      <div style="position:relative;width:100%;aspect-ratio:16/9;background:var(--bg-base);border-radius:10px;overflow:hidden;display:flex;align-items:center;justify-content:center;font-size:2.2rem">${podCover}${podProfileLogo}${adminDelBtn}</div>
       <div class="media-video-title">${esc(v.title)}</div>
       <div class="media-video-meta"><span>🎙️ Podcast</span>${garaLink ? ' · ' + garaLink : ''}<span style="margin-left:auto">${viewsHtml}</span></div>
     </div>`;
@@ -16182,7 +16200,7 @@ function _mediaVideoCardHtml(v) {
     ? `data-vid="${v.id}" data-yt-id="${esc(vid)}" data-title="${esc(v.title)}" data-live="${isLiveNow ? '1' : ''}" onclick="window._mvOpenVideoClick(this)"`
     : `href="${esc(v.url)}" target="_blank" rel="noopener" onclick="window._mvIncrView(${v.id})"`;
   return `<${tag} ${linkAttrs} class="media-video-card" style="display:block;text-decoration:none;color:inherit;cursor:pointer">
-    <div style="position:relative;width:100%;aspect-ratio:16/9;background:var(--bg-base);border-radius:10px;overflow:hidden;display:flex;align-items:center;justify-content:center;font-size:2.2rem">${coverHtml}${profileLogo}${liveBadge}</div>
+    <div style="position:relative;width:100%;aspect-ratio:16/9;background:var(--bg-base);border-radius:10px;overflow:hidden;display:flex;align-items:center;justify-content:center;font-size:2.2rem">${coverHtml}${profileLogo}${liveBadge}${adminDelBtn}</div>
     <div class="media-video-title">${esc(v.title)}</div>
     <div class="media-video-meta"><span>${pname} · ${palLabel}</span>${garaLink ? ' · ' + garaLink : ''}<span style="margin-left:auto">${viewsHtml}</span></div>
   </${tag}>`;
@@ -21724,14 +21742,44 @@ async function renderMedia(openOpts) {
   // comparire anche tra i video normali.
   const direteItemsAll = videoItems.filter(x => x.video.is_live).sort(byRaceDateDesc);
   const videoItemsAll  = videoItems.filter(x => !x.video.is_live);
-  // Serve già qui (non solo per la striscia cerchietti sotto) perché il
-  // filtro "Altri" deve escludere sia Facebook sia tutto ciò che combacia
-  // con un profilo già esistente — stessa logica di raggruppamento.
-  const _allProfilesForFilter = mediaTab !== 'creator' && mediaTab !== 'dirette' ? await _ensureAllMediaProfiles() : [];
+  // Identità "reale" di un video legacy per il raggruppamento dei cerchietti:
+  // - Facebook: sempre un unico bucket, indipendentemente dal testo salvato
+  //   nel campo "channel" (spesso assente/generico per questi video).
+  // - Se il nome del canale combacia (per parole intere o nome compattato)
+  //   con un profilo Media già esistente, usa QUEL profilo come identità
+  //   (nome+logo canonici) — stessa testata scritta in modi diversi
+  //   (es. "BetaCycling"/"Beta Cycling") finisce così nello stesso cerchietto.
+  //   Il logo usa il logo del profilo se presente, altrimenti quello salvato
+  //   sul singolo video (molti profili "fotografo" scrapati non hanno mai
+  //   avuto un logo proprio impostato).
+  // - Altrimenti resta un'identità "per canale grezzo".
+  // Il click filtra SEMPRE dentro la scheda (mai un link a una pagina
+  // profilo: i video legacy non vivono lì, ci si troverebbe una pagina vuota).
+  const _mvChannelIdentity = (video, allProfiles) => {
+    if (isFacebookVideoUrl(video?.url)) return { key: '__FB__', label: 'Facebook', avatar: '', isFb: true };
+    const ch = video?.channel;
+    const matched = ch ? _matchChannelToProfile(ch, allProfiles) : null;
+    if (matched) return { key: 'profile:' + matched.id, label: matched.display_name, avatar: (matched.cover_url ? mediaUrl(matched.cover_url) : '') || video.channel_avatar || '' };
+    if (ch) return { key: 'channel:' + ch, label: ch, avatar: video.channel_avatar || '' };
+    return { key: '__OTHER__', label: 'Altri', avatar: '', isOther: true };
+  };
+  // Video/Presentazioni/Programmi TV/Altro collassano anche tutto ciò che
+  // NON combacia con un profilo (e non è Facebook) in un unico bucket
+  // "Altri" — troppi cerchietti isolati era la fonte di confusione. Le
+  // Dirette invece restano un cerchietto per ogni fonte distinta (sapere
+  // esattamente chi trasmette conta di più lì), MA le varianti dello stesso
+  // canale/profilo vengono comunque unite fra loro.
+  const _mvGroupIdentity = (video, allProfiles, collapseOther) => {
+    const id = _mvChannelIdentity(video, allProfiles);
+    if (collapseOther && !id.isFb && !id.key.startsWith('profile:')) {
+      return { key: '__OTHER__', label: 'Altri', avatar: '', isOther: true };
+    }
+    return id;
+  };
+  const _collapseOther = mediaTab !== 'dirette';
+  const _allProfilesForFilter = mediaTab !== 'creator' ? await _ensureAllMediaProfiles() : [];
   const _chFilter = (arr) => !mediaChannelFilter ? arr
-    : mediaChannelFilter === '__FB__' ? arr.filter(x => isFacebookVideoUrl(x.video?.url))
-    : mediaChannelFilter === '__OTHER__' ? arr.filter(x => !isFacebookVideoUrl(x.video?.url) && !(x.video?.channel && _matchChannelToProfile(x.video.channel, _allProfilesForFilter)))
-    : arr.filter(x => x.video?.channel === mediaChannelFilter);
+    : arr.filter(x => _mvGroupIdentity(x.video, _allProfilesForFilter, _collapseOther).key === mediaChannelFilter);
   videoItems  = _chFilter(videoItemsAll);
   let direteItems = _chFilter(direteItemsAll);
   // Data di oggi nel fuso delle gare (Italia), non UTC del browser — stesso
@@ -21772,24 +21820,13 @@ async function renderMedia(openOpts) {
     : mediaTab === 'altro' ? altroFiltered
     : videoItems;
 
-  // Striscia cerchietti canale/creator (solo per le schede con contenuti
-  // video legacy — non per "creator", che ha già la sua): costruita dai
-  // canali presenti nella scheda PRIMA del filtro canale (altrimenti,
-  // selezionandone uno, la striscia collasserebbe a un solo cerchietto e non
-  // si potrebbe più tornare indietro o sceglierne un altro).
-  //
-  // Raggruppamento per identità reale, non per stringa esatta del campo
-  // "channel" — la stessa testata (es. Toscana Sprint) finiva sparpagliata
-  // su più cerchietti diversi solo perché il nome era scritto in modo
-  // leggermente diverso a seconda di chi/quando aveva aggiunto il video:
-  //  - Facebook: TUTTI i video con URL facebook.com/fb.watch finiscono sotto
-  //    un unico cerchietto col logo FB, indipendentemente dal testo salvato
-  //    nel campo "channel" (spesso assente/generico per questi video).
-  //  - Se il nome del canale combacia (per parole intere) con un profilo
-  //    Media già esistente, il cerchietto porta DIRETTAMENTE alla pagina di
-  //    quel profilo (es. #/media/3 per ToscanaSprint) — non resta un filtro
-  //    interno alla scheda: "chi ha già una pagina, ci si va e basta".
-  //  - Altrimenti resta il comportamento precedente (filtro per canale).
+  // Striscia cerchietti canale (solo per le schede con contenuti video
+  // legacy — non per "creator", che ha già la sua): costruita dai canali
+  // presenti nella scheda PRIMA del filtro (altrimenti, selezionandone uno,
+  // la striscia collasserebbe a un solo cerchietto e non si potrebbe più
+  // tornare indietro o sceglierne un altro). Il click filtra SEMPRE questa
+  // scheda (mai un link a una pagina profilo, vedi _mvChannelIdentity sopra).
+  // Un cerchietto "Tutti" sempre presente in cima toglie qualunque filtro.
   let mediaChannelsHtml = '';
   if (mediaTab !== 'creator') {
     // Ogni scheda mostra SOLO i canali che hanno davvero contenuti in QUELLA
@@ -21802,54 +21839,11 @@ async function renderMedia(openOpts) {
       : mediaTab === 'altro' ? altroAll
       : videoItemsAll;
     const _tabUrl = MEDIA_TAB_KEY_TO_URL[mediaTab] || mediaTab;
-    const groups = new Map(); // groupKey -> { label, avatar, href, active, isFb }
-
-    if (mediaTab === 'dirette') {
-      // Le dirette restano un cerchietto per ogni canale/fonte così com'è
-      // (nessun raggruppamento sui profili né un bucket "Altri"): per una
-      // diretta conta sapere ESATTAMENTE chi sta trasmettendo in quel momento.
-      for (const x of itemsAll) {
-        const v = x.video;
-        if (isFacebookVideoUrl(v?.url)) {
-          if (!groups.has('__FB__')) {
-            const active = mediaChannelFilter === '__FB__';
-            groups.set('__FB__', { label: 'Facebook', avatar: '', isFb: true, active,
-              href: active ? `#/media/${_tabUrl}` : `#/media/${_tabUrl}/canale/__FB__` });
-          }
-          continue;
-        }
-        const ch = v?.channel;
-        if (!ch || groups.has('channel:' + ch)) continue;
-        const active = mediaChannelFilter === ch;
-        groups.set('channel:' + ch, { label: ch, avatar: v.channel_avatar || '', isFb: false, active, href: active ? `#/media/${_tabUrl}` : `#/media/${_tabUrl}/canale/${encodeURIComponent(ch)}` });
-      }
-    } else {
-      // Video/Presentazioni/Programmi TV/Altro: solo i profili già esistenti
-      // (link diretto alla loro pagina) + un unico cerchietto Facebook + un
-      // unico cerchietto "Altri" per tutto il resto — niente più un
-      // cerchietto per ogni singola testata non riconosciuta, che era la
-      // vera fonte di confusione.
-      const allProfiles = _allProfilesForFilter.length ? _allProfilesForFilter : await _ensureAllMediaProfiles();
-      let hasFb = false, hasOther = false;
-      for (const x of itemsAll) {
-        const v = x.video;
-        if (isFacebookVideoUrl(v?.url)) { hasFb = true; continue; }
-        const ch = v?.channel;
-        if (!ch) { hasOther = true; continue; }
-        const matched = _matchChannelToProfile(ch, allProfiles);
-        if (!matched) { hasOther = true; continue; }
-        const groupKey = 'profile:' + matched.id;
-        if (groups.has(groupKey)) continue;
-        groups.set(groupKey, { label: matched.display_name, avatar: matched.cover_url ? mediaUrl(matched.cover_url) : '', isFb: false, active: false, href: `#/media/${matched.slug || matched.id}` });
-      }
-      if (hasFb) {
-        const active = mediaChannelFilter === '__FB__';
-        groups.set('__FB__', { label: 'Facebook', avatar: '', isFb: true, active, href: active ? `#/media/${_tabUrl}` : `#/media/${_tabUrl}/canale/__FB__` });
-      }
-      if (hasOther) {
-        const active = mediaChannelFilter === '__OTHER__';
-        groups.set('__OTHER__', { label: 'Altri', avatar: '', isFb: false, isOther: true, active, href: active ? `#/media/${_tabUrl}` : `#/media/${_tabUrl}/canale/__OTHER__` });
-      }
+    const allProfiles = _allProfilesForFilter.length ? _allProfilesForFilter : await _ensureAllMediaProfiles();
+    const groups = new Map(); // groupKey -> { label, avatar, isFb, isOther }
+    for (const x of itemsAll) {
+      const id = _mvGroupIdentity(x.video, allProfiles, _collapseOther);
+      if (!groups.has(id.key)) groups.set(id.key, id);
     }
 
     const groupsList = [...groups.values()].sort((a, b) => a.label.localeCompare(b.label));
@@ -21858,14 +21852,20 @@ async function renderMedia(openOpts) {
       // interni intercetta questi <a> e naviga con navTo(), aggiornando
       // davvero la barra indirizzi — così il link è copiabile/condivisibile.
       // I cerchietti hanno la stessa dimensione di quelli della tab Creator (56px).
+      // "Tutti" in cima toglie qualunque filtro attivo nella scheda.
+      const allEntry = { key: '', label: 'Tutti', avatar: '', isAll: true };
       mediaChannelsHtml = `
         <div style="display:flex;gap:14px;overflow-x:auto;padding:4px 2px 12px">
-          ${groupsList.map(g => `<a href="${g.href}" style="text-decoration:none;display:flex;flex-direction:column;align-items:center;gap:6px;flex:0 0 auto;width:64px">
-              <div style="width:56px;height:56px;border-radius:50%;overflow:hidden;background:var(--bg-base);border:2px solid ${g.active ? 'var(--accent)' : 'var(--border-subtle)'};display:flex;align-items:center;justify-content:center;font-size:1.3rem">
-                ${g.isFb ? '📘' : g.isOther ? '🎬' : (g.avatar ? `<img src="${esc(g.avatar)}" style="width:100%;height:100%;object-fit:cover"/>` : '🎬')}
+          ${[allEntry, ...groupsList].map(g => {
+            const active = mediaChannelFilter === g.key;
+            const href = active || g.isAll ? `#/media/${_tabUrl}` : `#/media/${_tabUrl}/canale/${encodeURIComponent(g.key)}`;
+            return `<a href="${href}" style="text-decoration:none;display:flex;flex-direction:column;align-items:center;gap:6px;flex:0 0 auto;width:64px">
+              <div style="width:56px;height:56px;border-radius:50%;overflow:hidden;background:var(--bg-base);border:2px solid ${active ? 'var(--accent)' : 'var(--border-subtle)'};display:flex;align-items:center;justify-content:center;font-size:1.3rem">
+                ${g.isAll ? '🗂️' : g.isFb ? '📘' : g.isOther ? '🎬' : (g.avatar ? `<img src="${esc(g.avatar)}" style="width:100%;height:100%;object-fit:cover"/>` : '🎬')}
               </div>
               <span style="font-size:.68rem;color:var(--text-secondary);text-align:center;line-height:1.2;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;max-width:64px">${esc(g.label)}</span>
-            </a>`).join('')}
+            </a>`;
+          }).join('')}
         </div>`;
     }
   }
