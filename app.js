@@ -3839,7 +3839,9 @@ function route() {
   // (es. /media/creator/12 → apre direttamente il profilo di quel creator,
   // senza dover cliccare a mano il suo cerchietto).
   const m_mediaCreatorProfile = match('/media/creator/:pid');
-  if (m_mediaCreatorProfile) return renderMedia({ tab: 'creator', creatorProfileId: parseInt(m_mediaCreatorProfile[1], 10) });
+  // :pid può essere l'ID numerico (retrocompatibile) o lo slug leggibile
+  // (es. "dnf-podcast") — risolto contro l'elenco profili dentro _loadMediaCreatorArea.
+  if (m_mediaCreatorProfile) return renderMedia({ tab: 'creator', creatorProfileId: decodeURIComponent(m_mediaCreatorProfile[1]) });
   // Link condivisibile a un canale/creator filtrato dentro Video/Dirette/ecc.
   // (es. /media/video/canale/BICITV → apre la scheda Video già filtrata su
   // quel canale, così un link condiviso porta esattamente a quella vista).
@@ -16187,14 +16189,15 @@ function _mediaVideoCardHtml(v) {
 }
 
 window._mvOpenVideoClick = (el) => {
-  window._mvIncrView(el.dataset.vid);
-  if (el.dataset.live) window.openLivePlayer(el.dataset.ytId, el.dataset.title, null);
-  else window.openVideoModal(el.dataset.ytId, el.dataset.title);
+  if (el.dataset.live) { window._mvIncrView(el.dataset.vid); window.openLivePlayer(el.dataset.ytId, el.dataset.title, null); return; }
+  // Apre in coda (avanzamento automatico dal più vecchio al più recente fra
+  // tutti i video/puntate attualmente mostrati, vedi window._mvCurrentQueueSource)
+  // — window._mvIncrView viene chiamato dentro openMediaQueueFromSource, non qui.
+  window.openMediaQueueFromSource(el.dataset.vid);
 };
 
 window._mvOpenPodcastClick = (el) => {
-  window._mvIncrView(el.dataset.vid);
-  window.openPodcastModal(el.dataset.url, el.dataset.title, el.dataset.cover);
+  window.openMediaQueueFromSource(el.dataset.vid);
 };
 
 let _mediaProfilePage = 1; // paginazione a blocchi di 50, reset a ogni apertura profilo
@@ -16210,6 +16213,10 @@ async function renderMediaProfile(profileId, _keepPage) {
     // dal backend): un creator con centinaia di video non appesantisce tutto
     // in un colpo solo.
     const shownVideos = videos.slice(0, _mediaProfilePage * MEDIA_CREATOR_PAGE_SIZE);
+    // Coda per l'avanzamento automatico: TUTTI i video del profilo (non solo
+    // quelli caricati finora sullo schermo), così ascoltare/guardare in
+    // sequenza non si interrompe al 50esimo.
+    window._mvCurrentQueueSource = videos;
     const videosHtml = shownVideos.length
       ? `<div class="media-album-grid">${shownVideos.map(_mediaVideoCardHtml).join('')}</div>${
           videos.length > shownVideos.length
@@ -16326,14 +16333,15 @@ const MEDIA_CREATOR_PAGE_SIZE = 50;
 let _mediaCreatorPage = 1; // quante "pagine" da 50 mostrare, cresce col tasto "Carica altro"
 window.mediaCreatorSetSeries = (s) => { _mediaCreatorSeries = s; _mediaCreatorPage = 1; window._loadMediaCreatorArea(); };
 window.mediaCreatorLoadMore = () => { _mediaCreatorPage++; window._loadMediaCreatorArea(); };
-window.mediaCreatorSetProfile = (id) => {
+window.mediaCreatorSetProfile = (id, slug) => {
   const deselecting = _mediaCreatorProfileId === id;
   _mediaCreatorProfileId = deselecting ? null : id;
   _mediaCreatorSeries = ''; // reset: la playlist scelta era relativa al creator precedente
   _mediaCreatorPage = 1;
-  // URL condivisibile (es. /media/creator/12): chi apre il link arriva
-  // direttamente su quel creator, senza dover ricliccare il suo cerchietto.
-  navTo(deselecting ? '/media/creator' : '/media/creator/' + id);
+  // URL condivisibile con il NOME del creator (es. /media/creator/dnf-podcast)
+  // invece del solo ID numerico: chi apre il link arriva direttamente su quel
+  // creator, senza dover ricliccare il suo cerchietto.
+  navTo(deselecting ? '/media/creator' : '/media/creator/' + (slug || id));
 };
 
 window._loadMediaCreatorArea = async function() {
@@ -16347,7 +16355,13 @@ window._loadMediaCreatorArea = async function() {
     ]);
     const profiles = profilesData.profiles || [];
     const liveProfileIds = new Set((liveData.live || []).map(v => v.media_profile_id));
-    const activeProfile = _mediaCreatorProfileId ? profiles.find(p => p.id === _mediaCreatorProfileId) : null;
+    // _mediaCreatorProfileId può arrivare dall'URL come slug (stringa) o come
+    // ID numerico (retrocompatibile) — risolto qui una volta sola e
+    // normalizzato all'ID numerico per i confronti sotto.
+    const activeProfile = _mediaCreatorProfileId
+      ? profiles.find(p => p.slug === _mediaCreatorProfileId || p.id === Number(_mediaCreatorProfileId))
+      : null;
+    if (activeProfile) _mediaCreatorProfileId = activeProfile.id;
 
     // Solo i cerchi (logo + nome): i contenuti compaiono solo dopo aver
     // scelto un creator, così questa vista resta una vetrina di profili e
@@ -16356,7 +16370,7 @@ window._loadMediaCreatorArea = async function() {
     const profilesHtml = profiles.length ? `
       <div style="display:flex;gap:14px;overflow-x:auto;padding:4px 2px 12px">
         ${profiles.map(p => `
-          <button onclick="window.mediaCreatorSetProfile(${p.id})" style="background:none;border:none;cursor:pointer;display:flex;flex-direction:column;align-items:center;gap:6px;flex:0 0 auto;width:64px">
+          <button onclick="window.mediaCreatorSetProfile(${p.id},'${esc(p.slug||'').replace(/'/g,"&#39;")}')" style="background:none;border:none;cursor:pointer;display:flex;flex-direction:column;align-items:center;gap:6px;flex:0 0 auto;width:64px">
             <div style="position:relative;width:56px;height:56px;border-radius:50%;overflow:hidden;background:var(--bg-base);border:2px solid ${liveProfileIds.has(p.id) ? 'var(--red-hot)' : (_mediaCreatorProfileId===p.id ? 'var(--accent)' : 'var(--border-subtle)')};display:flex;align-items:center;justify-content:center;font-size:1.3rem">
               ${p.cover_url ? `<img src="${esc(mediaUrl(p.cover_url))}" style="width:100%;height:100%;object-fit:cover"/>` : '🎬'}
               ${liveProfileIds.has(p.id) ? `<span style="position:absolute;bottom:-1px;right:-1px;background:var(--red-hot);color:#fff;font-size:.55rem;font-weight:700;padding:1px 4px;border-radius:4px;line-height:1.3">LIVE</span>` : ''}
@@ -16390,6 +16404,9 @@ window._loadMediaCreatorArea = async function() {
     // video non appesantisce la pagina tutto in un colpo solo.
     const shown = allFiltered.slice(0, _mediaCreatorPage * MEDIA_CREATOR_PAGE_SIZE);
     const hasMore = allFiltered.length > shown.length;
+    // Coda per l'avanzamento automatico: tutti i video filtrati (non solo
+    // quelli caricati finora sullo schermo).
+    window._mvCurrentQueueSource = allFiltered;
 
     const videosHtml = shown.length
       ? `<div class="media-album-grid">${shown.map(v => _mediaVideoCardHtml(v)).join('')}</div>`
@@ -20559,42 +20576,130 @@ function toCalId(garaId) {
   return (garaId || '').replace(/_[A-Z0-9]+_[MF]$/, '');
 }
 
-// Modal player YouTube
-window.openVideoModal = (videoId, title) => {
-  const overlay = document.createElement('div');
-  overlay.className = 'video-modal-overlay';
+// ── Modal player unificato (YouTube + podcast), con coda per l'avanzamento
+// automatico dal più vecchio al più recente ────────────────────────────────
+// window._mvCurrentQueueSource: impostato da _loadMediaCreatorArea/
+// renderMediaProfile all'elenco video attualmente mostrato (ordine più
+// recente→più vecchio, come si vede in pagina) PRIMA di costruire le card,
+// così un click su una card sa recuperare tutti i "fratelli" per l'avanzamento
+// automatico — costruito qui in ordine INVERTITO (più vecchio→più recente),
+// come richiesto per l'ascolto in sequenza.
+window._mvCurrentQueueSource = [];
+window._mvQueue = [];
+window._mvQueueIndex = 0;
+let _mvYtMessageListener = null;
+
+function _mvBuildQueueFromSource(clickedId) {
+  const src = window._mvCurrentQueueSource || [];
+  const oldestFirst = [...src].reverse(); // la lista sorgente è più recente→più vecchio
+  const queue = oldestFirst.map(v => {
+    const yt = ytId(v.url || '');
+    const isPodcast = v.palinsesto === 'podcast' && /\.(mp3|m4a|wav|ogg)(\?|$)/i.test(v.url || '');
+    return yt
+      ? { id: v.id, kind: 'yt', ytId: yt, title: v.title }
+      : isPodcast
+        ? { id: v.id, kind: 'podcast', url: v.url, title: v.title, cover: v.thumbnail_url || '' }
+        : null;
+  }).filter(Boolean);
+  const index = queue.findIndex(q => String(q.id) === String(clickedId));
+  return { queue, index: index >= 0 ? index : 0 };
+}
+
+function _mvModalInnerHtml(item) {
+  if (item.kind === 'yt') {
+    return `<iframe id="mv-modal-frame" src="https://www.youtube.com/embed/${item.ytId}?autoplay=1&rel=0&enablejsapi=1&origin=${encodeURIComponent(window.location.origin)}"
+              frameborder="0" allowfullscreen
+              allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture">
+            </iframe>`;
+  }
+  return `<div style="position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:16px;background:var(--bg-elevated);padding:24px;box-sizing:border-box">
+    ${item.cover ? `<img src="${esc(item.cover)}" alt="" style="width:180px;height:180px;object-fit:cover;border-radius:14px;box-shadow:0 4px 24px rgba(0,0,0,.35)"/>` : ''}
+    <audio id="mv-modal-audio" controls autoplay style="width:100%;max-width:460px" src="${esc(item.url)}"></audio>
+  </div>`;
+}
+
+function _mvCloseModal() {
+  if (_mvYtMessageListener) { window.removeEventListener('message', _mvYtMessageListener); _mvYtMessageListener = null; }
+  document.querySelector('.video-modal-overlay')?.remove();
+}
+
+function _mvRenderModal() {
+  let overlay = document.querySelector('.video-modal-overlay');
+  if (!overlay) {
+    overlay = document.createElement('div');
+    overlay.className = 'video-modal-overlay';
+    overlay.addEventListener('click', e => { if (e.target === overlay) _mvCloseModal(); });
+    document.body.appendChild(overlay);
+  }
+  if (_mvYtMessageListener) { window.removeEventListener('message', _mvYtMessageListener); _mvYtMessageListener = null; }
+  const queue = window._mvQueue, idx = window._mvQueueIndex;
+  const item = queue[idx];
+  if (!item) { _mvCloseModal(); return; }
+  const hasPrev = idx > 0, hasNext = idx < queue.length - 1;
   overlay.innerHTML = `
     <div class="video-modal-box">
-      <button class="video-modal-close" onclick="this.closest('.video-modal-overlay').remove()">✕</button>
-      <div class="video-modal-title">${esc(title)}</div>
-      <div class="video-modal-player">
-        <iframe src="https://www.youtube.com/embed/${videoId}?autoplay=1&rel=0"
-                frameborder="0" allowfullscreen
-                allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture">
-        </iframe>
-      </div>
+      <button class="video-modal-close" onclick="window._mvCloseModal()">✕</button>
+      <div class="video-modal-title">${esc(item.title)}</div>
+      ${queue.length > 1 ? `<div style="text-align:center;font-size:.75rem;color:var(--text-muted);margin:-6px 0 6px">Puntata ${idx + 1} di ${queue.length}</div>` : ''}
+      <div class="video-modal-player">${_mvModalInnerHtml(item)}</div>
+      ${queue.length > 1 ? `
+      <div style="display:flex;justify-content:space-between;gap:8px;margin-top:10px">
+        <button class="yt-chip" ${hasPrev ? '' : 'disabled style="opacity:.35;cursor:default"'} onclick="window._mvQueueStep(-1)">← Precedente</button>
+        <button class="yt-chip" ${hasNext ? '' : 'disabled style="opacity:.35;cursor:default"'} onclick="window._mvQueueStep(1)">Successiva →</button>
+      </div>` : ''}
     </div>`;
-  overlay.addEventListener('click', e => { if (e.target === overlay) overlay.remove(); });
-  document.body.appendChild(overlay);
+  if (item.kind === 'podcast') {
+    document.getElementById('mv-modal-audio')?.addEventListener('ended', () => window._mvQueueStep(1, true));
+  } else {
+    // L'iframe YouTube con enablejsapi=1 manda messaggi postMessage anche
+    // senza caricare l'API JS ufficiale — playerState 0 = video concluso.
+    _mvYtMessageListener = (e) => {
+      if (e.origin !== 'https://www.youtube.com') return;
+      let data;
+      try { data = typeof e.data === 'string' ? JSON.parse(e.data) : e.data; } catch { return; }
+      if (data?.event === 'infoDelivery' && data?.info?.playerState === 0) window._mvQueueStep(1, true);
+    };
+    window.addEventListener('message', _mvYtMessageListener);
+  }
+}
+
+window._mvQueueStep = (delta, isAutoAdvance) => {
+  const next = window._mvQueueIndex + delta;
+  if (next < 0 || next >= window._mvQueue.length) {
+    if (isAutoAdvance) _mvCloseModal(); // fine coda: chiudi invece di restare bloccati
+    return;
+  }
+  const item = window._mvQueue[next];
+  if (item) window._mvIncrView(item.id);
+  window._mvQueueIndex = next;
+  _mvRenderModal();
+};
+window._mvCloseModal = _mvCloseModal;
+
+// Apre un video/podcast in coda (avanzamento automatico dal più vecchio al
+// più recente, vedi window._mvCurrentQueueSource) — usata dai click sulle
+// card dentro un profilo creator. clickedId = v.id del video cliccato.
+window.openMediaQueueFromSource = (clickedId) => {
+  const { queue, index } = _mvBuildQueueFromSource(clickedId);
+  window._mvQueue = queue.length ? queue : [];
+  window._mvQueueIndex = index;
+  if (!window._mvQueue.length) return;
+  window._mvIncrView(window._mvQueue[index].id);
+  _mvRenderModal();
 };
 
-// Stessa finestra modale dei video, ma con un player <audio> nativo del
-// browser invece dell'iframe YouTube — usata per le puntate podcast
-// importate (il file audio non ha un embed ufficiale come YouTube).
+// Apertura "singola" (nessuna coda) — usata da tutti gli altri punti del
+// sito che aprono un video isolato (pagina gara, dirette, presentazioni…),
+// invariati rispetto a prima.
+window.openVideoModal = (videoId, title) => {
+  window._mvQueue = [{ id: null, kind: 'yt', ytId: videoId, title }];
+  window._mvQueueIndex = 0;
+  _mvRenderModal();
+};
 window.openPodcastModal = (url, title, cover) => {
-  const overlay = document.createElement('div');
-  overlay.className = 'video-modal-overlay';
-  overlay.innerHTML = `
-    <div class="video-modal-box">
-      <button class="video-modal-close" onclick="this.closest('.video-modal-overlay').remove()">✕</button>
-      <div class="video-modal-title">${esc(title)}</div>
-      <div class="video-modal-player" style="display:flex;flex-direction:column;align-items:center;justify-content:center;gap:16px;background:var(--bg-elevated);padding:24px">
-        ${cover ? `<img src="${esc(cover)}" alt="" style="width:160px;height:160px;object-fit:cover;border-radius:12px;box-shadow:0 4px 20px rgba(0,0,0,.3)"/>` : ''}
-        <audio controls autoplay style="width:100%;max-width:420px" src="${esc(url)}"></audio>
-      </div>
-    </div>`;
-  overlay.addEventListener('click', e => { if (e.target === overlay) overlay.remove(); });
-  document.body.appendChild(overlay);
+  window._mvQueue = [{ id: null, kind: 'podcast', url, title, cover }];
+  window._mvQueueIndex = 0;
+  _mvRenderModal();
 };
 
 // Player delle dirette, due stati sullo stesso elemento (appeso a
@@ -21619,8 +21724,13 @@ async function renderMedia(openOpts) {
   // comparire anche tra i video normali.
   const direteItemsAll = videoItems.filter(x => x.video.is_live).sort(byRaceDateDesc);
   const videoItemsAll  = videoItems.filter(x => !x.video.is_live);
+  // Serve già qui (non solo per la striscia cerchietti sotto) perché il
+  // filtro "Altri" deve escludere sia Facebook sia tutto ciò che combacia
+  // con un profilo già esistente — stessa logica di raggruppamento.
+  const _allProfilesForFilter = mediaTab !== 'creator' && mediaTab !== 'dirette' ? await _ensureAllMediaProfiles() : [];
   const _chFilter = (arr) => !mediaChannelFilter ? arr
     : mediaChannelFilter === '__FB__' ? arr.filter(x => isFacebookVideoUrl(x.video?.url))
+    : mediaChannelFilter === '__OTHER__' ? arr.filter(x => !isFacebookVideoUrl(x.video?.url) && !(x.video?.channel && _matchChannelToProfile(x.video.channel, _allProfilesForFilter)))
     : arr.filter(x => x.video?.channel === mediaChannelFilter);
   videoItems  = _chFilter(videoItemsAll);
   let direteItems = _chFilter(direteItemsAll);
@@ -21682,51 +21792,79 @@ async function renderMedia(openOpts) {
   //  - Altrimenti resta il comportamento precedente (filtro per canale).
   let mediaChannelsHtml = '';
   if (mediaTab !== 'creator') {
+    // Ogni scheda mostra SOLO i canali che hanno davvero contenuti in QUELLA
+    // scheda — itemsAll è scelto in base a mediaTab e non viene mai
+    // "ricordato" da una scheda all'altra: cambiando scheda si ricalcola da
+    // zero (nessuno stato condiviso fra Video/Dirette/Presentazioni/ecc.).
     const itemsAll = mediaTab === 'dirette' ? direteItemsAll
       : mediaTab === 'presentazioni' ? presentazioniAll
       : mediaTab === 'programmi_tv' ? programmiTvAll
       : mediaTab === 'altro' ? altroAll
       : videoItemsAll;
-    const allProfiles = await _ensureAllMediaProfiles();
     const _tabUrl = MEDIA_TAB_KEY_TO_URL[mediaTab] || mediaTab;
     const groups = new Map(); // groupKey -> { label, avatar, href, active, isFb }
-    for (const x of itemsAll) {
-      const v = x.video;
-      if (isFacebookVideoUrl(v?.url)) {
-        if (!groups.has('__FB__')) {
-          const active = mediaChannelFilter === '__FB__';
-          groups.set('__FB__', { label: 'Facebook', avatar: '', isFb: true, active,
-            href: active ? `#/media/${_tabUrl}` : `#/media/${_tabUrl}/canale/__FB__` });
+
+    if (mediaTab === 'dirette') {
+      // Le dirette restano un cerchietto per ogni canale/fonte così com'è
+      // (nessun raggruppamento sui profili né un bucket "Altri"): per una
+      // diretta conta sapere ESATTAMENTE chi sta trasmettendo in quel momento.
+      for (const x of itemsAll) {
+        const v = x.video;
+        if (isFacebookVideoUrl(v?.url)) {
+          if (!groups.has('__FB__')) {
+            const active = mediaChannelFilter === '__FB__';
+            groups.set('__FB__', { label: 'Facebook', avatar: '', isFb: true, active,
+              href: active ? `#/media/${_tabUrl}` : `#/media/${_tabUrl}/canale/__FB__` });
+          }
+          continue;
         }
-        continue;
-      }
-      const ch = v?.channel;
-      if (!ch) continue;
-      const matched = _matchChannelToProfile(ch, allProfiles);
-      const groupKey = matched ? 'profile:' + matched.id : 'channel:' + ch;
-      if (groups.has(groupKey)) continue;
-      if (matched) {
-        // Link diretto alla pagina profilo già esistente: niente filtro
-        // interno, "chi ha già una pagina ci si va e basta" (nessun evidenziato
-        // possibile qui, non è uno stato di filtro di questa scheda).
-        groups.set(groupKey, { label: matched.display_name, avatar: matched.cover_url ? mediaUrl(matched.cover_url) : '', isFb: false, active: false, href: `#/media/${matched.id}` });
-      } else {
+        const ch = v?.channel;
+        if (!ch || groups.has('channel:' + ch)) continue;
         const active = mediaChannelFilter === ch;
-        groups.set(groupKey, { label: ch, avatar: v.channel_avatar || '', isFb: false, active, href: active ? `#/media/${_tabUrl}` : `#/media/${_tabUrl}/canale/${encodeURIComponent(ch)}` });
+        groups.set('channel:' + ch, { label: ch, avatar: v.channel_avatar || '', isFb: false, active, href: active ? `#/media/${_tabUrl}` : `#/media/${_tabUrl}/canale/${encodeURIComponent(ch)}` });
+      }
+    } else {
+      // Video/Presentazioni/Programmi TV/Altro: solo i profili già esistenti
+      // (link diretto alla loro pagina) + un unico cerchietto Facebook + un
+      // unico cerchietto "Altri" per tutto il resto — niente più un
+      // cerchietto per ogni singola testata non riconosciuta, che era la
+      // vera fonte di confusione.
+      const allProfiles = _allProfilesForFilter.length ? _allProfilesForFilter : await _ensureAllMediaProfiles();
+      let hasFb = false, hasOther = false;
+      for (const x of itemsAll) {
+        const v = x.video;
+        if (isFacebookVideoUrl(v?.url)) { hasFb = true; continue; }
+        const ch = v?.channel;
+        if (!ch) { hasOther = true; continue; }
+        const matched = _matchChannelToProfile(ch, allProfiles);
+        if (!matched) { hasOther = true; continue; }
+        const groupKey = 'profile:' + matched.id;
+        if (groups.has(groupKey)) continue;
+        groups.set(groupKey, { label: matched.display_name, avatar: matched.cover_url ? mediaUrl(matched.cover_url) : '', isFb: false, active: false, href: `#/media/${matched.slug || matched.id}` });
+      }
+      if (hasFb) {
+        const active = mediaChannelFilter === '__FB__';
+        groups.set('__FB__', { label: 'Facebook', avatar: '', isFb: true, active, href: active ? `#/media/${_tabUrl}` : `#/media/${_tabUrl}/canale/__FB__` });
+      }
+      if (hasOther) {
+        const active = mediaChannelFilter === '__OTHER__';
+        groups.set('__OTHER__', { label: 'Altri', avatar: '', isFb: false, isOther: true, active, href: active ? `#/media/${_tabUrl}` : `#/media/${_tabUrl}/canale/__OTHER__` });
       }
     }
+
     const groupsList = [...groups.values()].sort((a, b) => a.label.localeCompare(b.label));
     if (groupsList.length > 1) {
       // href reale (non un onclick a parte): il gestore globale dei click
       // interni intercetta questi <a> e naviga con navTo(), aggiornando
       // davvero la barra indirizzi — così il link è copiabile/condivisibile.
+      // I cerchietti hanno la stessa dimensione di quelli della tab Creator (56px).
       mediaChannelsHtml = `
         <div style="display:flex;gap:14px;overflow-x:auto;padding:4px 2px 12px">
           ${groupsList.map(g => `<a href="${g.href}" style="text-decoration:none;display:flex;flex-direction:column;align-items:center;gap:6px;flex:0 0 auto;width:64px">
-              <div style="width:48px;height:48px;border-radius:50%;overflow:hidden;background:var(--bg-base);border:2px solid ${g.active ? 'var(--accent)' : 'var(--border-subtle)'};display:flex;align-items:center;justify-content:center;font-size:1.1rem">
-                ${g.isFb ? '📘' : (g.avatar ? `<img src="${esc(g.avatar)}" style="width:100%;height:100%;object-fit:cover"/>` : '🎬')}
+              <div style="width:56px;height:56px;border-radius:50%;overflow:hidden;background:var(--bg-base);border:2px solid ${g.active ? 'var(--accent)' : 'var(--border-subtle)'};display:flex;align-items:center;justify-content:center;font-size:1.3rem">
+                ${g.isFb ? '📘' : g.isOther ? '🎬' : (g.avatar ? `<img src="${esc(g.avatar)}" style="width:100%;height:100%;object-fit:cover"/>` : '🎬')}
               </div>
-              <span style="font-size:.66rem;color:var(--text-secondary);text-align:center;line-height:1.2;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;max-width:64px">${esc(g.label)}</span>
+              <span style="font-size:.68rem;color:var(--text-secondary);text-align:center;line-height:1.2;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;max-width:64px">${esc(g.label)}</span>
             </a>`).join('')}
         </div>`;
     }

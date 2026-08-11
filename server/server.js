@@ -8989,10 +8989,14 @@ app.get('*', (req, res, next) => {
     if (m) return res.redirect(302, `/og/${m[1]}/${encodeURIComponent(m[2])}`);
     m = p.match(/^\/classifica\/([^/]+)\/?$/);
     if (m) return res.redirect(302, `/og/class/${encodeURIComponent(m[1])}`);
-    // Profilo Media (creator o fotografo) — il link "vero" è /media/:id;
-    // /media/creator/:id (Creator tab) porta allo stesso profilo, quindi usa
-    // la stessa immagine/testo di condivisione.
-    m = p.match(/^\/media\/(\d+)\/?$/) || p.match(/^\/media\/creator\/(\d+)\/?$/);
+    // Profilo Media (creator o fotografo) — il link "vero" è /media/:id (ID
+    // numerico o slug leggibile, es. /media/dnf-podcast); /media/creator/:id
+    // (Creator tab) porta allo stesso profilo, stessa immagine/testo di
+    // condivisione. Esclude le schede fisse (video/dirette/ecc.), che non
+    // sono un profilo e hanno già il loro instradamento sopra.
+    const MEDIA_FIXED_TABS = 'video|dirette|presentazioni|programmi-tv|altro|creator';
+    m = p.match(new RegExp(`^/media/(?!(?:${MEDIA_FIXED_TABS})$)([\\w-]+)/?$`))
+      || p.match(/^\/media\/creator\/([\w-]+)\/?$/);
     if (m) return res.redirect(302, `/og/media/${encodeURIComponent(m[1])}`);
   }
 

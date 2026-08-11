@@ -232,6 +232,14 @@ async function migrate() {
     // Eurosport) — senza questo, due playlist diverse dello stesso canale
     // finivano mescolate senza modo di distinguerle nel profilo del creator.
     `ALTER TABLE media_videos ADD COLUMN IF NOT EXISTS series TEXT`,
+    // Slug leggibile per condividere un profilo (es. /media/dnf-podcast)
+    // invece del solo ID numerico — generato da display_name, univoco.
+    `ALTER TABLE media_profiles ADD COLUMN IF NOT EXISTS slug TEXT`,
+    `DO $$ BEGIN
+       IF NOT EXISTS (SELECT 1 FROM pg_constraint WHERE conname = 'media_profiles_slug_key') THEN
+         ALTER TABLE media_profiles ADD CONSTRAINT media_profiles_slug_key UNIQUE (slug);
+       END IF;
+     END $$;`,
     // Sistema dirette per i creator, stesso concetto già usato per le gare:
     // is_live = questo video È (o È STATO) trasmesso in diretta; live_ended
     // si aggiorna quando YouTube segna la trasmissione conclusa (controllato
@@ -391,6 +399,27 @@ async function init() {
 }
 
 // ── Query helpers ─────────────────────────────────────────────────────────────
+
+function _slugify(s) {
+  return String(s || '')
+    .toLowerCase().normalize('NFD').replace(/[̀-ͯ]/g, '')
+    .replace(/[^a-z0-9]+/g, '-').replace(/^-+|-+$/g, '')
+    .slice(0, 60) || 'creator';
+}
+// Genera uno slug univoco (aggiunge -2, -3, ... in caso di collisione) —
+// usato alla creazione/aggiornamento del display_name di un profilo media.
+async function _uniqueSlug(displayName, excludeId) {
+  const base = _slugify(displayName);
+  let slug = base, n = 1;
+  while (true) {
+    const clash = excludeId
+      ? await one(`SELECT id FROM media_profiles WHERE slug = $1 AND id != $2`, [slug, excludeId])
+      : await one(`SELECT id FROM media_profiles WHERE slug = $1`, [slug]);
+    if (!clash) return slug;
+    n++;
+    slug = `${base}-${n}`;
+  }
+}
 
 const queries = {
   // Auth
@@ -693,21 +722,28 @@ const queries = {
 
   // ── Media profiles ────────────────────────────────────────────────────────────
 
-  createMediaProfile: ({ user_id, display_name, bio, website, instagram, facebook, media_type }) =>
-    one(
-      `INSERT INTO media_profiles (user_id, display_name, bio, website, instagram, facebook, media_type)
-       VALUES ($1, $2, $3, $4, $5, $6, $7) RETURNING *`,
-      [user_id, display_name, bio || '', website || '', instagram || '', facebook || '', media_type || 'foto']
-    ),
+  createMediaProfile: async ({ user_id, display_name, bio, website, instagram, facebook, media_type }) => {
+    const slug = await _uniqueSlug(display_name);
+    return one(
+      `INSERT INTO media_profiles (user_id, display_name, bio, website, instagram, facebook, media_type, slug)
+       VALUES ($1, $2, $3, $4, $5, $6, $7, $8) RETURNING *`,
+      [user_id, display_name, bio || '', website || '', instagram || '', facebook || '', media_type || 'foto', slug]
+    );
+  },
 
   getMediaProfileByUser: (user_id) =>
     one(`SELECT * FROM media_profiles WHERE user_id = $1`, [user_id]),
 
+  // Accetta sia l'ID numerico (retrocompatibile con i vecchi link) sia lo
+  // slug leggibile (es. "dnf-podcast") — un link condiviso funziona in
+  // entrambe le forme.
   getMediaProfileById: (id) =>
-    one(`SELECT * FROM media_profiles WHERE id = $1`, [id]),
+    /^\d+$/.test(String(id))
+      ? one(`SELECT * FROM media_profiles WHERE id = $1`, [id])
+      : one(`SELECT * FROM media_profiles WHERE slug = $1`, [id]),
 
   getApprovedMediaProfiles: () =>
-    all(`SELECT id, display_name, bio, website, instagram, facebook, cover_url, media_type, created_at
+    all(`SELECT id, slug, display_name, bio, website, instagram, facebook, cover_url, media_type, created_at
          FROM media_profiles WHERE status = 'active' ORDER BY display_name`),
 
   // Ogni profilo con almeno un video pubblicato compare come "creator" —
@@ -716,7 +752,7 @@ const queries = {
   // hanno mai video quindi restano fuori naturalmente) — usato per la
   // striscia avatar nella tab "Creator" della sezione Media.
   getVideoCreatorProfiles: () =>
-    all(`SELECT DISTINCT p.id, p.display_name, p.cover_url, p.media_type
+    all(`SELECT DISTINCT p.id, p.slug, p.display_name, p.cover_url, p.media_type
          FROM media_profiles p
          JOIN media_videos v ON v.media_profile_id = p.id
          WHERE p.status = 'active'
@@ -724,7 +760,7 @@ const queries = {
 
   // Profili media scrapati e non ancora rivendicati da un utente
   getUnclaimedMediaProfiles: () =>
-    all(`SELECT id, display_name, bio, website, instagram, facebook, cover_url, media_type, status
+    all(`SELECT id, slug, display_name, bio, website, instagram, facebook, cover_url, media_type, status
          FROM media_profiles WHERE user_id IS NULL ORDER BY display_name`),
 
   // Rivendica un profilo libero collegandolo a un utente (va approvato dall'admin)
