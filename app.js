@@ -16398,7 +16398,21 @@ window._loadMediaCreatorArea = async function() {
       </div>` : `<p style="color:var(--text-muted);padding:8px 0">Nessun creator video registrato ancora.</p>`;
 
     if (!activeProfile) {
-      area.innerHTML = `${profilesHtml}<p style="color:var(--text-muted);padding:12px 0 0">Scegli un creator per vedere i suoi contenuti.</p>`;
+      // Nessun creator scelto: elenco aggregato di TUTTI i video di TUTTI i
+      // creator, dal più recente al più vecchio, 50 alla volta — non solo i
+      // cerchietti da scegliere a mano.
+      const allVideosData = await fetch(`${API_BASE}/media/videos`).then(r => r.json());
+      const allVideos = allVideosData.videos || [];
+      window._mvCurrentQueueSource = allVideos;
+      const shownAll = allVideos.slice(0, _mediaCreatorPage * MEDIA_CREATOR_PAGE_SIZE);
+      const allVideosHtml = shownAll.length
+        ? `<div class="media-album-grid">${shownAll.map(v => _mediaVideoCardHtml(v)).join('')}</div>${
+            allVideos.length > shownAll.length
+              ? `<div style="text-align:center;margin-top:16px"><button class="yt-chip" onclick="window.mediaCreatorLoadMore()">Carica altri 50 (${allVideos.length - shownAll.length} rimanenti)</button></div>`
+              : ''
+          }`
+        : `<p style="color:var(--text-muted);padding:12px 0">Nessun video ancora.</p>`;
+      area.innerHTML = `${profilesHtml}<div class="comp-section-title" style="margin:16px 0">Tutti i video</div>${allVideosHtml}`;
       return;
     }
 
