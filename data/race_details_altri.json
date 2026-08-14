@@ -796,5 +796,19 @@
     "location_str": "Fiera di Bolzano- Piazza Fiera 1, Bolzano, Italia",
     "lat": 46.47276,
     "lng": 11.32552
+  },
+  "RINVIATA_10_TROFEO_DONINI_LOGISTICA_2026-08-15": {
+    "raceid": "180139",
+    "fci_url": "https://www.federciclismo.it/ricerca-gare/dettaglio-gara/?raceid=180139&site=strada_it",
+    "info": [
+      "--------RINVIATA-----------10° TROFEO DONINI LOGISTICA Strada --------RINVIATA-----------10° TROFEO DONINI LOGISTICA ID Gara: 180139 | <br><b>Data:</b> 15/08/2026 INFORMAZIONI GENERALI Localita: PIEVE VERGONTE VB <br><b>Provincia:</b> VB <br><b>Categoria:</b> Promiscua De - Da <br><b>Categorie Ammesse:</b> PROMISCUA DONNE ESORDIENTI-DONNE ALLIEVE <br><b>Categoria Geografica:</b> Regionale <br><b>Specifica Gara:</b> PROVA VALIDA CAMP. REG VALLE D'AOSTA <br><b>Tipo di Gara:</b> In linea \\ strada <br><b>Tipo di Programma:</b> STRADA REGIONALE <br><b>Direttore di Corsa:</b> ROCCA MARCO Vice <br><b>Direttore di Corsa:</b> LIETTA PAOLA <br><b>Approvazione:</b> Approvata ORGANIZZATORE <br><b>Nome:</b> A.S.D. PEDALE OSSOLANO <br><b>Indirizzo:</b> PIAZZA STAZIONE <br><b>CAP:</b> 28886 Citta: PIEVE VERGONTE <br><b>Provincia:</b> VB <br><b>Telefono:</b> 3351434830 <br><b>Email:</b> INFO@CICLOMANIA.COM ISCRIZIONI <br><b>Luogo:</b> A.S.D. PEDALE OSSOLANO IDROWELD <br><b>Indirizzo:</b> PIAZZA STAZIONE, 28886 PIEVE VERGONT, VB <br><b>Telefono:</b> 3351434830 <br><b>Email:</b> INFO@CICLOMANIA.COM Sito: INFO@CICLOMANIA.COM <br><b>Iscrizioni Dal - Al:</b> - 13/08/2026 RITROVO PROVE 1 - 10° TROFEO DONINI LOGISTICA <br><b>Prova:</b> 1 <br><b>Data:</b> 15/08/2026 <br><b>Descrizione:</b> CIRCUITO DI 4,8 KM DA RIPETERE 7 VOLTE: Via XIII Martiri, Via Dottor Cicoletti, Via Monterosa, Via Piedimulera, Inizio Giro: Via Matteotti, Via 1° Maggio, Via alla centralina, Via Carlo Marx, Via Massari, Via XIII Martiri, Via Dottor Cicoletti, Via Monterosa, Via Piedimulera, (7 giri). Al termine del 7° giro da Via Piedimulera, direzione Bivio Anza, Via S. Rocco, Fomarco (Arrivo) <br><b>Note:</b> Possibilità di pranzo a prezzi convenzionati e grigliata. per prenotazioni 3473571367 entro il 12/08/2026 <br><b>Luogo Ritrovo:</b> FOMARCO (PIEVE VERGONTE) <br><b>Indirizzo Ritrovo:</b> CAMPO SPORTIVO VIA DE GASPERI <br><b>Orario Ritrovo:</b> 11:00 <br><b>Luogo Partenza:</b> VIA XIII MARTIRI PIEVE VERGONTE <br><b>Orario Partenza:</b> 13:00 <br><b>Luogo Arrivo:</b> FOMARCO (PIEVE VERGONTE) <br><b>Orario Arrivo:</b> 14:00 <br><b>Luogo Verifica:</b> 11:00-12:00 <br><b>Punto Incontro DS:</b> 12:00 <br><b>Lunghezza KM:</b> 35,9 Servizi: PRONTO SOCCORSO PIU' VICINO: DOMODOSSOLA <br><b>Indirizzo:</b> Via largo Caduti Lager nazisti 1 <br><b>Telefono:</b>0324/4911 AGGIUNGI QUESTA GARA AL CALENDARIO"
+    ],
+    "luogo_ritrovo": "FOMARCO (PIEVE VERGONTE)",
+    "indirizzo_ritrovo": "CAMPO SPORTIVO VIA DE GASPERI",
+    "orario_partenza": "13:00",
+    "km": "35,9 Servizi: PRONTO SOCCORSO PIU' VICINO: DOMODOSSOLA",
+    "location_str": "CAMPO SPORTIVO VIA DE GASPERI, FOMARCO (PIEVE VERGONTE), Italia",
+    "lat": null,
+    "lng": null
   }
 }

@@ -17146,5 +17146,53 @@
         "regione": "LOMBARDIA",
         "categoria": "Esordienti 1°/2° anno",
         "luogo": "BUSCOLDO DI CURTATONE"
+    },
+    {
+        "id": "RINVIATA_21_TROFEO_COMUNE_PIEVE_VERGONTE_2026-08-15",
+        "nome": "-----RINVIATA---------21° TROFEO COMUNE PIEVE VERGONTE",
+        "data": "2026-08-15",
+        "tipo": "regionale",
+        "moltiplicatore": 1,
+        "campionato_regionale": false,
+        "campionato_italiano": false,
+        "regione": "PIEMONTE",
+        "categoria": "Esordienti 1°/2° anno",
+        "luogo": "PIEVE VERGONTE VB"
+    },
+    {
+        "id": "RINVIATA_17_MEMORIAL_MAURIZIO_BERTOLINI_2026-08-15",
+        "nome": "-----------RINVIATA----------17° MEMORIAL MAURIZIO BERTOLINI",
+        "data": "2026-08-15",
+        "tipo": "regionale",
+        "moltiplicatore": 1,
+        "campionato_regionale": false,
+        "campionato_italiano": false,
+        "regione": "PIEMONTE",
+        "categoria": "Allievi",
+        "luogo": "PIEVE VERGONTE VB"
+    },
+    {
+        "id": "RINVIATA_10_TROFEO_DONINI_LOGISTICA_2026-08-15",
+        "nome": "--------RINVIATA-----------10° TROFEO DONINI LOGISTICA",
+        "data": "2026-08-15",
+        "tipo": "regionale",
+        "moltiplicatore": 1,
+        "campionato_regionale": false,
+        "campionato_italiano": false,
+        "regione": "PIEMONTE",
+        "categoria": "Promiscua De - Da",
+        "luogo": "PIEVE VERGONTE VB"
+    },
+    {
+        "id": "16_COPPA_MEMORIAL_FELICE_E_ROSSELLA_MARIANI_2026-09-27",
+        "nome": "16° COPPA MEMORIAL FELICE E ROSSELLA MARIANI",
+        "data": "2026-09-27",
+        "tipo": "regionale",
+        "moltiplicatore": 1,
+        "campionato_regionale": false,
+        "campionato_italiano": false,
+        "regione": "LOMBARDIA",
+        "categoria": "Esordienti 2° anno",
+        "luogo": "OSIO SOTTO"
     }
 ]
