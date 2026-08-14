@@ -10049,8 +10049,8 @@
     "orario_partenza": "15:00",
     "km": "35,9 Servizi: PRONTO SOCCORSO PIU' VICINO: DOMODOSSOLA",
     "location_str": "CAMPO SPORTIVO via de gasperi, PIEVE VERGONTE, Italia",
-    "lat": null,
-    "lng": null
+    "lat": 45.98712,
+    "lng": 8.28298
   },
   "RINVIATA_17_MEMORIAL_MAURIZIO_BERTOLINI_2026-08-15": {
     "raceid": "180138",
@@ -10063,8 +10063,8 @@
     "orario_partenza": "09:30",
     "km": "76,6 Servizi: PRONTO SOCCORSO PIU' VICINO: DOMODOSSOLA",
     "location_str": "CAMPO SPORTIVO VIA DE GASPERI, PIEVE VERGONTE, Italia",
-    "lat": null,
-    "lng": null
+    "lat": 45.98712,
+    "lng": 8.28298
   },
   "RINVIATA_10_TROFEO_DONINI_LOGISTICA_2026-08-15": {
     "raceid": "180139",
@@ -10077,8 +10077,8 @@
     "orario_partenza": "13:00",
     "km": "35,9 Servizi: PRONTO SOCCORSO PIU' VICINO: DOMODOSSOLA",
     "location_str": "CAMPO SPORTIVO VIA DE GASPERI, FOMARCO (PIEVE VERGONTE), Italia",
-    "lat": null,
-    "lng": null
+    "lat": 46.01486,
+    "lng": 8.25553
   },
   "16_COPPA_MEMORIAL_FELICE_E_ROSSELLA_MARIANI_2026-09-27": {
     "raceid": "181721",
@@ -10091,7 +10091,7 @@
     "orario_partenza": "09:40",
     "km": "44,80 AGGIUNGI QUESTA GARA AL CALENDARIO Home / Ricerca Gare / Dettaglio Gara / Dettaglio Gara 16° COPPA MEMORIAL FELICE E ROSSELLA MARIANI Strada 16° COPPA MEMORIAL FELICE E ROSSELLA MARIANI ID Gara: 181721 | Data: 27/09/2026 INFORMAZIONI GENERALI Localita: OSIO SOTTO",
     "location_str": "CORSO VITTORIO VENETO N.57, OSIO SOTTO, Italia",
-    "lat": null,
-    "lng": null
+    "lat": 45.61668,
+    "lng": 9.59159
   }
 }
