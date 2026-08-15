@@ -14,12 +14,12 @@
   {
     "team_id": "CICLISTICA_TREVIGLIESE",
     "team_nome": "CICLISTICA TREVIGLIESE",
-    "punti": 539,
-    "vittorie": 8,
-    "p1": 8,
-    "p2": 9,
+    "punti": 567,
+    "vittorie": 9,
+    "p1": 9,
+    "p2": 10,
     "p3": 10,
-    "pout": 50,
+    "pout": 51,
     "n_atleti": 6,
     "pos": 2
   },
@@ -86,12 +86,12 @@
   {
     "team_id": "IL_PIRATA_SAMA_RICAMBI_OTC",
     "team_nome": "IL PIRATA SAMA RICAMBI OTC",
-    "punti": 291,
+    "punti": 299,
     "vittorie": 8,
     "p1": 8,
     "p2": 2,
     "p3": 3,
-    "pout": 15,
+    "pout": 16,
     "n_atleti": 2,
     "pos": 8
   },
@@ -326,12 +326,12 @@
   {
     "team_id": "G_S_AVIS_BIKE_AMELIA",
     "team_nome": "G.S. AVIS BIKE AMELIA",
-    "punti": 160,
+    "punti": 163,
     "vittorie": 8,
     "p1": 8,
     "p2": 1,
     "p3": 0,
-    "pout": 3,
+    "pout": 4,
     "n_atleti": 1,
     "pos": 28
   },
@@ -372,6 +372,18 @@
     "pos": 31
   },
   {
+    "team_id": "GS_PIANELLO",
+    "team_nome": "GS PIANELLO",
+    "punti": 150,
+    "vittorie": 0,
+    "p1": 0,
+    "p2": 1,
+    "p3": 3,
+    "pout": 17,
+    "n_atleti": 4,
+    "pos": 32
+  },
+  {
     "team_id": "BUSTO_GAROLFO",
     "team_nome": "BUSTO GAROLFO",
     "punti": 148,
@@ -381,7 +393,7 @@
     "p3": 1,
     "pout": 24,
     "n_atleti": 5,
-    "pos": 32
+    "pos": 33
   },
   {
     "team_id": "V_CYCLING_ARICI_CLAUDIA_PITON",
@@ -393,7 +405,7 @@
     "p3": 2,
     "pout": 9,
     "n_atleti": 1,
-    "pos": 33
+    "pos": 34
   },
   {
     "team_id": "A_S_D_PROBIKE_ERICE",
@@ -405,7 +417,7 @@
     "p3": 2,
     "pout": 15,
     "n_atleti": 2,
-    "pos": 34
+    "pos": 35
   },
   {
     "team_id": "GOTTARDO_GIOCHI_CANEVA",
@@ -417,7 +429,7 @@
     "p3": 4,
     "pout": 14,
     "n_atleti": 3,
-    "pos": 35
+    "pos": 36
   },
   {
     "team_id": "SEI_SPORT",
@@ -429,7 +441,7 @@
     "p3": 2,
     "pout": 8,
     "n_atleti": 2,
-    "pos": 36
+    "pos": 37
   },
   {
     "team_id": "S_C_TERRANOVA_FANCELLO_CICLI",
@@ -441,19 +453,19 @@
     "p3": 3,
     "pout": 4,
     "n_atleti": 1,
-    "pos": 37
+    "pos": 38
   },
   {
-    "team_id": "GS_PIANELLO",
-    "team_nome": "GS PIANELLO",
-    "punti": 140,
-    "vittorie": 0,
-    "p1": 0,
-    "p2": 1,
-    "p3": 2,
-    "pout": 17,
-    "n_atleti": 4,
-    "pos": 38
+    "team_id": "ASD_GUBBIO_CICLISMO_MOCAIANA",
+    "team_nome": "ASD GUBBIO CICLISMO MOCAIANA",
+    "punti": 137,
+    "vittorie": 1,
+    "p1": 1,
+    "p2": 3,
+    "p3": 1,
+    "pout": 11,
+    "n_atleti": 2,
+    "pos": 39
   },
   {
     "team_id": "ASD_VELOCE_CLUB_BORGO",
@@ -465,7 +477,7 @@
     "p3": 5,
     "pout": 8,
     "n_atleti": 1,
-    "pos": 39
+    "pos": 40
   },
   {
     "team_id": "ASD_G_C_FAUSTO_COPPI",
@@ -477,7 +489,7 @@
     "p3": 1,
     "pout": 20,
     "n_atleti": 4,
-    "pos": 40
+    "pos": 41
   },
   {
     "team_id": "A_S_D_POSTUMIA_73_D_L_CICLISMO",
@@ -489,18 +501,6 @@
     "p3": 0,
     "pout": 24,
     "n_atleti": 4,
-    "pos": 41
-  },
-  {
-    "team_id": "ASD_GUBBIO_CICLISMO_MOCAIANA",
-    "team_nome": "ASD GUBBIO CICLISMO MOCAIANA",
-    "punti": 133,
-    "vittorie": 1,
-    "p1": 1,
-    "p2": 3,
-    "p3": 1,
-    "pout": 10,
-    "n_atleti": 2,
     "pos": 42
   },
   {
@@ -660,6 +660,18 @@
     "pos": 55
   },
   {
+    "team_id": "TEAM_CORATTI",
+    "team_nome": "TEAM CORATTI",
+    "punti": 100,
+    "vittorie": 0,
+    "p1": 0,
+    "p2": 0,
+    "p3": 2,
+    "pout": 16,
+    "n_atleti": 4,
+    "pos": 56
+  },
+  {
     "team_id": "CONTRABAND_CYCLING_TEAM_ASD",
     "team_nome": "CONTRABAND CYCLING TEAM ASD",
     "punti": 97,
@@ -669,18 +681,6 @@
     "p3": 1,
     "pout": 14,
     "n_atleti": 1,
-    "pos": 56
-  },
-  {
-    "team_id": "TEAM_CORATTI",
-    "team_nome": "TEAM CORATTI",
-    "punti": 95,
-    "vittorie": 0,
-    "p1": 0,
-    "p2": 0,
-    "p3": 2,
-    "pout": 15,
-    "n_atleti": 4,
     "pos": 57
   },
   {
@@ -1032,6 +1032,18 @@
     "pos": 86
   },
   {
+    "team_id": "U_S_FORTI_E_LIBERI_ZANETTI_CICLI",
+    "team_nome": "U.S. FORTI E LIBERI - ZANETTI CICLI",
+    "punti": 45,
+    "vittorie": 0,
+    "p1": 0,
+    "p2": 0,
+    "p3": 1,
+    "pout": 6,
+    "n_atleti": 1,
+    "pos": 87
+  },
+  {
     "team_id": "CYCLING_TEAM_NIAL_NIZZOLI_ALMO",
     "team_nome": "CYCLING TEAM NIAL NIZZOLI ALMO",
     "punti": 45,
@@ -1041,7 +1053,7 @@
     "p3": 1,
     "pout": 8,
     "n_atleti": 1,
-    "pos": 87
+    "pos": 88
   },
   {
     "team_id": "S_C_OZIERESE",
@@ -1053,7 +1065,7 @@
     "p3": 0,
     "pout": 9,
     "n_atleti": 1,
-    "pos": 88
+    "pos": 89
   },
   {
     "team_id": "POL_MOLINELLO",
@@ -1065,7 +1077,7 @@
     "p3": 0,
     "pout": 8,
     "n_atleti": 2,
-    "pos": 89
+    "pos": 90
   },
   {
     "team_id": "U_C_A_B_1925_BIELLA_SEMPERLUX",
@@ -1077,18 +1089,6 @@
     "p3": 0,
     "pout": 5,
     "n_atleti": 3,
-    "pos": 90
-  },
-  {
-    "team_id": "U_S_FORTI_E_LIBERI_ZANETTI_CICLI",
-    "team_nome": "U.S. FORTI E LIBERI - ZANETTI CICLI",
-    "punti": 39,
-    "vittorie": 0,
-    "p1": 0,
-    "p2": 0,
-    "p3": 1,
-    "pout": 5,
-    "n_atleti": 1,
     "pos": 91
   },
   {
@@ -1308,6 +1308,18 @@
     "pos": 109
   },
   {
+    "team_id": "U_C_CITTA_DI_CASTELLO_A_S_D",
+    "team_nome": "U.C. CITTA' DI CASTELLO A.S.D.",
+    "punti": 20,
+    "vittorie": 0,
+    "p1": 0,
+    "p2": 0,
+    "p3": 0,
+    "pout": 6,
+    "n_atleti": 2,
+    "pos": 110
+  },
+  {
     "team_id": "ETHICA_ZERO24_CYCLING_TEAM_ECOTEK",
     "team_nome": "ETHICA ZERO24 CYCLING TEAM ECOTEK",
     "punti": 20,
@@ -1317,7 +1329,7 @@
     "p3": 0,
     "pout": 4,
     "n_atleti": 1,
-    "pos": 110
+    "pos": 111
   },
   {
     "team_id": "BOLZANO",
@@ -1329,7 +1341,7 @@
     "p3": 1,
     "pout": 0,
     "n_atleti": 1,
-    "pos": 111
+    "pos": 112
   },
   {
     "team_id": "VAIANO_BIKE",
@@ -1341,7 +1353,7 @@
     "p3": 0,
     "pout": 4,
     "n_atleti": 1,
-    "pos": 112
+    "pos": 113
   },
   {
     "team_id": "VENETO",
@@ -1353,7 +1365,7 @@
     "p3": 0,
     "pout": 2,
     "n_atleti": 2,
-    "pos": 113
+    "pos": 114
   },
   {
     "team_id": "POGI_TEAM_UAE_GENERALI",
@@ -1365,18 +1377,6 @@
     "p3": 1,
     "pout": 2,
     "n_atleti": 1,
-    "pos": 114
-  },
-  {
-    "team_id": "U_C_CITTA_DI_CASTELLO_A_S_D",
-    "team_nome": "U.C. CITTA' DI CASTELLO A.S.D.",
-    "punti": 18,
-    "vittorie": 0,
-    "p1": 0,
-    "p2": 0,
-    "p3": 0,
-    "pout": 5,
-    "n_atleti": 2,
     "pos": 115
   },
   {
