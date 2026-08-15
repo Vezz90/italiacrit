@@ -2,12 +2,12 @@
   {
     "team_id": "ALBA_OROBIA_BIASSONO",
     "team_nome": "ALBA OROBIA - BIASSONO",
-    "punti": 737,
+    "punti": 738,
     "vittorie": 19,
     "p1": 19,
     "p2": 12,
     "p3": 3,
-    "pout": 38,
+    "pout": 39,
     "n_atleti": 9,
     "pos": 1
   },
@@ -98,12 +98,12 @@
   {
     "team_id": "AC_F_BESSI_CALENZANO_DONORATICO",
     "team_nome": "AC F. BESSI CALENZANO DONORATICO",
-    "punti": 433,
+    "punti": 440,
     "vittorie": 7,
     "p1": 7,
     "p2": 6,
     "p3": 5,
-    "pout": 25,
+    "pout": 27,
     "n_atleti": 6,
     "pos": 9
   },
@@ -192,6 +192,18 @@
     "pos": 16
   },
   {
+    "team_id": "A_S_D_SACILESE",
+    "team_nome": "A.S.D. SACILESE",
+    "punti": 320,
+    "vittorie": 1,
+    "p1": 1,
+    "p2": 9,
+    "p3": 1,
+    "pout": 33,
+    "n_atleti": 5,
+    "pos": 17
+  },
+  {
     "team_id": "C_C_FORTI_E_VELOCI",
     "team_nome": "C.C. FORTI E VELOCI",
     "punti": 313,
@@ -201,18 +213,6 @@
     "p3": 7,
     "pout": 26,
     "n_atleti": 6,
-    "pos": 17
-  },
-  {
-    "team_id": "A_S_D_SACILESE",
-    "team_nome": "A.S.D. SACILESE",
-    "punti": 309,
-    "vittorie": 1,
-    "p1": 1,
-    "p2": 9,
-    "p3": 1,
-    "pout": 31,
-    "n_atleti": 5,
     "pos": 18
   },
   {
@@ -326,12 +326,12 @@
   {
     "team_id": "TEAM_VALDINIEVOLE_A_S_D",
     "team_nome": "TEAM VALDINIEVOLE A.S.D.",
-    "punti": 214,
+    "punti": 216,
     "vittorie": 3,
     "p1": 3,
     "p2": 2,
     "p3": 2,
-    "pout": 21,
+    "pout": 22,
     "n_atleti": 4,
     "pos": 28
   },
@@ -372,6 +372,18 @@
     "pos": 31
   },
   {
+    "team_id": "LIBERTAS_RAIFFEISEN_LAIVES_ASD",
+    "team_nome": "LIBERTAS RAIFFEISEN LAIVES ASD",
+    "punti": 189,
+    "vittorie": 2,
+    "p1": 2,
+    "p2": 5,
+    "p3": 4,
+    "pout": 14,
+    "n_atleti": 3,
+    "pos": 32
+  },
+  {
     "team_id": "ASD_CICLOTOUR",
     "team_nome": "ASD CICLOTOUR",
     "punti": 184,
@@ -381,18 +393,6 @@
     "p3": 4,
     "pout": 14,
     "n_atleti": 4,
-    "pos": 32
-  },
-  {
-    "team_id": "LIBERTAS_RAIFFEISEN_LAIVES_ASD",
-    "team_nome": "LIBERTAS RAIFFEISEN LAIVES ASD",
-    "punti": 181,
-    "vittorie": 2,
-    "p1": 2,
-    "p2": 5,
-    "p3": 4,
-    "pout": 13,
-    "n_atleti": 3,
     "pos": 33
   },
   {
@@ -408,6 +408,30 @@
     "pos": 34
   },
   {
+    "team_id": "MADIGNANESE_CICLISMO_A_S_D",
+    "team_nome": "MADIGNANESE CICLISMO A.S.D",
+    "punti": 172,
+    "vittorie": 2,
+    "p1": 2,
+    "p2": 1,
+    "p3": 4,
+    "pout": 17,
+    "n_atleti": 3,
+    "pos": 35
+  },
+  {
+    "team_id": "ASD_VELOCE_CLUB_BORGO",
+    "team_nome": "ASD VELOCE CLUB BORGO",
+    "punti": 169,
+    "vittorie": 1,
+    "p1": 1,
+    "p2": 5,
+    "p3": 2,
+    "pout": 16,
+    "n_atleti": 3,
+    "pos": 36
+  },
+  {
     "team_id": "FABIO_ARU_ACADEMY_S_R_L_A_R_L",
     "team_nome": "FABIO ARU ACADEMY S.R.L. A.R.L.",
     "punti": 165,
@@ -417,7 +441,7 @@
     "p3": 4,
     "pout": 9,
     "n_atleti": 3,
-    "pos": 35
+    "pos": 37
   },
   {
     "team_id": "PIESSE_CYCLING_TEAM",
@@ -429,7 +453,7 @@
     "p3": 6,
     "pout": 6,
     "n_atleti": 2,
-    "pos": 36
+    "pos": 38
   },
   {
     "team_id": "ASD_TEAM_PETRUCCI",
@@ -441,7 +465,7 @@
     "p3": 6,
     "pout": 9,
     "n_atleti": 5,
-    "pos": 37
+    "pos": 39
   },
   {
     "team_id": "U_C_GUSPINI_A_S_D",
@@ -453,19 +477,7 @@
     "p3": 1,
     "pout": 0,
     "n_atleti": 1,
-    "pos": 38
-  },
-  {
-    "team_id": "MADIGNANESE_CICLISMO_A_S_D",
-    "team_nome": "MADIGNANESE CICLISMO A.S.D",
-    "punti": 157,
-    "vittorie": 1,
-    "p1": 1,
-    "p2": 1,
-    "p3": 4,
-    "pout": 17,
-    "n_atleti": 3,
-    "pos": 39
+    "pos": 40
   },
   {
     "team_id": "U_C_CITTA_DI_CASTELLO_A_S_D",
@@ -477,7 +489,7 @@
     "p3": 2,
     "pout": 16,
     "n_atleti": 4,
-    "pos": 40
+    "pos": 41
   },
   {
     "team_id": "MULTICAR_GRUPPO_AMARU",
@@ -489,18 +501,6 @@
     "p3": 0,
     "pout": 13,
     "n_atleti": 2,
-    "pos": 41
-  },
-  {
-    "team_id": "ASD_VELOCE_CLUB_BORGO",
-    "team_nome": "ASD VELOCE CLUB BORGO",
-    "punti": 147,
-    "vittorie": 1,
-    "p1": 1,
-    "p2": 4,
-    "p3": 1,
-    "pout": 16,
-    "n_atleti": 3,
     "pos": 42
   },
   {

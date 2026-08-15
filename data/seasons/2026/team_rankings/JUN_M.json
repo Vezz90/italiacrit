@@ -14,12 +14,12 @@
   {
     "team_id": "TEAM_GUERRINI_SENAGHESE",
     "team_nome": "TEAM GUERRINI SENAGHESE",
-    "punti": 711,
+    "punti": 713,
     "vittorie": 12,
     "p1": 12,
     "p2": 8,
     "p3": 6,
-    "pout": 41,
+    "pout": 42,
     "n_atleti": 12,
     "pos": 2
   },
@@ -48,6 +48,18 @@
     "pos": 4
   },
   {
+    "team_id": "CICLISTICA_TREVIGLIESE",
+    "team_nome": "CICLISTICA TREVIGLIESE",
+    "punti": 635,
+    "vittorie": 4,
+    "p1": 4,
+    "p2": 6,
+    "p3": 11,
+    "pout": 39,
+    "n_atleti": 9,
+    "pos": 5
+  },
+  {
     "team_id": "TEAM_NERI_SOTTOLI_LUCCHINI_ENERGY",
     "team_nome": "TEAM NERI SOTTOLI LUCCHINI ENERGY",
     "punti": 629,
@@ -56,18 +68,6 @@
     "p2": 8,
     "p3": 6,
     "pout": 40,
-    "n_atleti": 9,
-    "pos": 5
-  },
-  {
-    "team_id": "CICLISTICA_TREVIGLIESE",
-    "team_nome": "CICLISTICA TREVIGLIESE",
-    "punti": 604,
-    "vittorie": 3,
-    "p1": 3,
-    "p2": 6,
-    "p3": 10,
-    "pout": 38,
     "n_atleti": 9,
     "pos": 6
   },
@@ -110,14 +110,26 @@
   {
     "team_id": "BUSTESE_OLONIA_A_S_D",
     "team_nome": "BUSTESE OLONIA A.S.D.",
-    "punti": 499,
+    "punti": 502,
     "vittorie": 6,
     "p1": 6,
     "p2": 4,
     "p3": 2,
-    "pout": 37,
+    "pout": 38,
     "n_atleti": 10,
     "pos": 10
+  },
+  {
+    "team_id": "AUTOZAI_CONTRI",
+    "team_nome": "AUTOZAI-CONTRI",
+    "punti": 462,
+    "vittorie": 4,
+    "p1": 4,
+    "p2": 5,
+    "p3": 3,
+    "pout": 30,
+    "n_atleti": 9,
+    "pos": 11
   },
   {
     "team_id": "TEAM_CORATTI",
@@ -129,18 +141,6 @@
     "p3": 4,
     "pout": 21,
     "n_atleti": 7,
-    "pos": 11
-  },
-  {
-    "team_id": "AUTOZAI_CONTRI",
-    "team_nome": "AUTOZAI-CONTRI",
-    "punti": 450,
-    "vittorie": 4,
-    "p1": 4,
-    "p2": 4,
-    "p3": 3,
-    "pout": 30,
-    "n_atleti": 9,
     "pos": 12
   },
   {
@@ -288,6 +288,18 @@
     "pos": 24
   },
   {
+    "team_id": "A_S_D_POSTUMIA_73_D_L_CICLISMO",
+    "team_nome": "A.S.D. POSTUMIA 73 D.L. CICLISMO",
+    "punti": 158,
+    "vittorie": 0,
+    "p1": 0,
+    "p2": 3,
+    "p3": 2,
+    "pout": 21,
+    "n_atleti": 10,
+    "pos": 25
+  },
+  {
     "team_id": "VENETO",
     "team_nome": "VENETO",
     "punti": 155,
@@ -297,18 +309,6 @@
     "p3": 2,
     "pout": 5,
     "n_atleti": 5,
-    "pos": 25
-  },
-  {
-    "team_id": "A_S_D_POSTUMIA_73_D_L_CICLISMO",
-    "team_nome": "A.S.D. POSTUMIA 73 D.L. CICLISMO",
-    "punti": 154,
-    "vittorie": 0,
-    "p1": 0,
-    "p2": 3,
-    "p3": 2,
-    "pout": 20,
-    "n_atleti": 10,
     "pos": 26
   },
   {
@@ -482,12 +482,12 @@
   {
     "team_id": "CAMPANA_IMBALLAGGI_MORBIATO_TRENTINO",
     "team_nome": "CAMPANA IMBALLAGGI MORBIATO TRENTINO",
-    "punti": 92,
+    "punti": 93,
     "vittorie": 1,
     "p1": 1,
     "p2": 2,
     "p3": 2,
-    "pout": 5,
+    "pout": 6,
     "n_atleti": 2,
     "pos": 41
   },
@@ -684,6 +684,18 @@
     "pos": 57
   },
   {
+    "team_id": "S_C_CENE_A_S_D",
+    "team_nome": "S. C. CENE A. S. D.",
+    "punti": 50,
+    "vittorie": 0,
+    "p1": 0,
+    "p2": 1,
+    "p3": 1,
+    "pout": 6,
+    "n_atleti": 3,
+    "pos": 58
+  },
+  {
     "team_id": "BELGIO",
     "team_nome": "BELGIO",
     "punti": 45,
@@ -693,7 +705,7 @@
     "p3": 0,
     "pout": 0,
     "n_atleti": 1,
-    "pos": 58
+    "pos": 59
   },
   {
     "team_id": "BIESSE_CARRERA_PREMAC",
@@ -705,7 +717,7 @@
     "p3": 0,
     "pout": 8,
     "n_atleti": 3,
-    "pos": 59
+    "pos": 60
   },
   {
     "team_id": "SALUS_CICLISTICA_SEREGNO_DE_ROSA",
@@ -717,19 +729,19 @@
     "p3": 1,
     "pout": 9,
     "n_atleti": 6,
-    "pos": 60
+    "pos": 61
   },
   {
-    "team_id": "S_C_CENE_A_S_D",
-    "team_nome": "S. C. CENE A. S. D.",
-    "punti": 42,
+    "team_id": "AXION_FUTURE_TEAM",
+    "team_nome": "AXION FUTURE TEAM",
+    "punti": 41,
     "vittorie": 0,
     "p1": 0,
     "p2": 1,
-    "p3": 1,
-    "pout": 5,
+    "p3": 0,
+    "pout": 6,
     "n_atleti": 3,
-    "pos": 61
+    "pos": 62
   },
   {
     "team_id": "SARDEGNA",
@@ -741,7 +753,7 @@
     "p3": 0,
     "pout": 1,
     "n_atleti": 1,
-    "pos": 62
+    "pos": 63
   },
   {
     "team_id": "TRIS_STAMPI_FIOR_DI_GRANO",
@@ -753,7 +765,7 @@
     "p3": 1,
     "pout": 8,
     "n_atleti": 4,
-    "pos": 63
+    "pos": 64
   },
   {
     "team_id": "MADONE_TEAM_BIKE_SICILIA",
@@ -765,7 +777,7 @@
     "p3": 0,
     "pout": 6,
     "n_atleti": 3,
-    "pos": 64
+    "pos": 65
   },
   {
     "team_id": "STAR_CYCLING_LAB",
@@ -776,18 +788,6 @@
     "p2": 0,
     "p3": 0,
     "pout": 8,
-    "n_atleti": 3,
-    "pos": 65
-  },
-  {
-    "team_id": "AXION_FUTURE_TEAM",
-    "team_nome": "AXION FUTURE TEAM",
-    "punti": 36,
-    "vittorie": 0,
-    "p1": 0,
-    "p2": 1,
-    "p3": 0,
-    "pout": 5,
     "n_atleti": 3,
     "pos": 66
   },
