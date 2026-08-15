@@ -2,36 +2,36 @@
   {
     "team_id": "A_S_D_S_C_PADOVANI",
     "team_nome": "A.S.D. S.C. PADOVANI",
-    "punti": 1064,
+    "punti": 1072,
     "vittorie": 10,
     "p1": 10,
     "p2": 14,
     "p3": 6,
-    "pout": 34,
+    "pout": 35,
     "n_atleti": 13,
     "pos": 1
   },
   {
-    "team_id": "GENERAL_STORE_ESSEGIBI_F_LLI_CURIA",
-    "team_nome": "GENERAL STORE -ESSEGIBI-F.LLI CURIA",
-    "punti": 885,
-    "vittorie": 10,
-    "p1": 10,
-    "p2": 4,
-    "p3": 4,
-    "pout": 43,
-    "n_atleti": 13,
-    "pos": 2
-  },
-  {
     "team_id": "TEAM_TECHNIPES_INEMILIAROMAGNA",
     "team_nome": "TEAM TECHNIPES #INEMILIAROMAGNA",
-    "punti": 880,
+    "punti": 896,
     "vittorie": 6,
     "p1": 6,
     "p2": 9,
     "p3": 7,
-    "pout": 32,
+    "pout": 33,
+    "n_atleti": 13,
+    "pos": 2
+  },
+  {
+    "team_id": "GENERAL_STORE_ESSEGIBI_F_LLI_CURIA",
+    "team_nome": "GENERAL STORE -ESSEGIBI-F.LLI CURIA",
+    "punti": 889,
+    "vittorie": 10,
+    "p1": 10,
+    "p2": 4,
+    "p3": 4,
+    "pout": 44,
     "n_atleti": 13,
     "pos": 3
   },
@@ -50,12 +50,12 @@
   {
     "team_id": "TEAM_HOPPLA",
     "team_nome": "TEAM HOPPLA'",
-    "punti": 607,
+    "punti": 619,
     "vittorie": 8,
     "p1": 8,
     "p2": 5,
     "p3": 4,
-    "pout": 35,
+    "pout": 37,
     "n_atleti": 9,
     "pos": 5
   },
@@ -72,6 +72,18 @@
     "pos": 6
   },
   {
+    "team_id": "BIESSE_CARRERA_PREMAC",
+    "team_nome": "BIESSE - CARRERA - PREMAC",
+    "punti": 480,
+    "vittorie": 1,
+    "p1": 1,
+    "p2": 3,
+    "p3": 4,
+    "pout": 30,
+    "n_atleti": 13,
+    "pos": 7
+  },
+  {
     "team_id": "SOLME_OLMO_ARVEDI",
     "team_nome": "SOLME - OLMO - ARVEDI",
     "punti": 457,
@@ -81,18 +93,6 @@
     "p3": 3,
     "pout": 21,
     "n_atleti": 9,
-    "pos": 7
-  },
-  {
-    "team_id": "BIESSE_CARRERA_PREMAC",
-    "team_nome": "BIESSE - CARRERA - PREMAC",
-    "punti": 456,
-    "vittorie": 1,
-    "p1": 1,
-    "p2": 2,
-    "p3": 4,
-    "pout": 30,
-    "n_atleti": 13,
     "pos": 8
   },
   {
@@ -276,6 +276,18 @@
     "pos": 23
   },
   {
+    "team_id": "ASD_SWATT_CLUB",
+    "team_nome": "ASD SWATT CLUB",
+    "punti": 173,
+    "vittorie": 2,
+    "p1": 2,
+    "p2": 0,
+    "p3": 2,
+    "pout": 5,
+    "n_atleti": 6,
+    "pos": 24
+  },
+  {
     "team_id": "CAMPANA_IMBALLAGGI_MORBIATO_TRENTINO",
     "team_nome": "CAMPANA IMBALLAGGI MORBIATO TRENTINO",
     "punti": 150,
@@ -285,7 +297,7 @@
     "p3": 4,
     "pout": 16,
     "n_atleti": 6,
-    "pos": 24
+    "pos": 25
   },
   {
     "team_id": "V_C_MENDRISIO",
@@ -297,7 +309,7 @@
     "p3": 2,
     "pout": 10,
     "n_atleti": 6,
-    "pos": 25
+    "pos": 26
   },
   {
     "team_id": "MULTICAR_GRUPPO_AMARU",
@@ -309,18 +321,6 @@
     "p3": 2,
     "pout": 2,
     "n_atleti": 3,
-    "pos": 26
-  },
-  {
-    "team_id": "ASD_SWATT_CLUB",
-    "team_nome": "ASD SWATT CLUB",
-    "punti": 117,
-    "vittorie": 1,
-    "p1": 1,
-    "p2": 0,
-    "p3": 1,
-    "pout": 4,
-    "n_atleti": 4,
     "pos": 27
   },
   {
@@ -516,6 +516,18 @@
     "pos": 43
   },
   {
+    "team_id": "NIPPO_NUOVACOMAUTO_OBOR",
+    "team_nome": "NIPPO NUOVACOMAUTO OBOR",
+    "punti": 49,
+    "vittorie": 0,
+    "p1": 0,
+    "p2": 0,
+    "p3": 0,
+    "pout": 8,
+    "n_atleti": 4,
+    "pos": 44
+  },
+  {
     "team_id": "BOURG_EN_BRESSE_AIN_CYCLISME",
     "team_nome": "BOURG EN BRESSE AIN CYCLISME",
     "punti": 49,
@@ -525,7 +537,7 @@
     "p3": 0,
     "pout": 2,
     "n_atleti": 2,
-    "pos": 44
+    "pos": 45
   },
   {
     "team_id": "INEOS_GRENADIERS_RACING_ACADEMY",
@@ -537,7 +549,7 @@
     "p3": 0,
     "pout": 2,
     "n_atleti": 2,
-    "pos": 45
+    "pos": 46
   },
   {
     "team_id": "MADONE_TEAM_BIKE_SICILIA",
@@ -549,7 +561,7 @@
     "p3": 2,
     "pout": 4,
     "n_atleti": 2,
-    "pos": 46
+    "pos": 47
   },
   {
     "team_id": "NEUTRAL_TEAM",
@@ -561,7 +573,7 @@
     "p3": 0,
     "pout": 1,
     "n_atleti": 2,
-    "pos": 47
+    "pos": 48
   },
   {
     "team_id": "PETROLIKE",
@@ -573,7 +585,7 @@
     "p3": 0,
     "pout": 4,
     "n_atleti": 2,
-    "pos": 48
+    "pos": 49
   },
   {
     "team_id": "EQUIPE_CORBETTESE",
@@ -585,18 +597,6 @@
     "p3": 0,
     "pout": 2,
     "n_atleti": 1,
-    "pos": 49
-  },
-  {
-    "team_id": "NIPPO_NUOVACOMAUTO_OBOR",
-    "team_nome": "NIPPO NUOVACOMAUTO OBOR",
-    "punti": 37,
-    "vittorie": 0,
-    "p1": 0,
-    "p2": 0,
-    "p3": 0,
-    "pout": 7,
-    "n_atleti": 4,
     "pos": 50
   },
   {
