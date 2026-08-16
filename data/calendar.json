@@ -17194,5 +17194,17 @@
         "regione": "LOMBARDIA",
         "categoria": "Esordienti 2° anno",
         "luogo": "OSIO SOTTO"
+    },
+    {
+        "id": "1_TROFEO_CAPRIMA_10_COPPA_CITTA_DI_SILIQUA_2026-09-20",
+        "nome": "1° TROFEO CAPRIMA- 10^ COPPA CITTÀ DI SILIQUA",
+        "data": "2026-09-20",
+        "tipo": "regionale",
+        "moltiplicatore": 1,
+        "campionato_regionale": false,
+        "campionato_italiano": false,
+        "regione": "SARDEGNA",
+        "categoria": "Promiscua  All - Jun",
+        "luogo": "IGLESIAS"
     }
 ]
