@@ -2,12 +2,12 @@
   {
     "team_id": "ALBA_OROBIA_BIASSONO",
     "team_nome": "ALBA OROBIA - BIASSONO",
-    "punti": 738,
-    "vittorie": 19,
-    "p1": 19,
+    "punti": 756,
+    "vittorie": 20,
+    "p1": 20,
     "p2": 12,
     "p3": 3,
-    "pout": 39,
+    "pout": 40,
     "n_atleti": 9,
     "pos": 1
   },
@@ -38,12 +38,12 @@
   {
     "team_id": "G_S_IPERFINISH_STABBIA",
     "team_nome": "G.S. IPERFINISH STABBIA",
-    "punti": 463,
+    "punti": 465,
     "vittorie": 6,
     "p1": 6,
     "p2": 6,
     "p3": 6,
-    "pout": 32,
+    "pout": 33,
     "n_atleti": 7,
     "pos": 4
   },
@@ -194,11 +194,11 @@
   {
     "team_id": "A_S_D_SACILESE",
     "team_nome": "A.S.D. SACILESE",
-    "punti": 320,
+    "punti": 330,
     "vittorie": 1,
     "p1": 1,
     "p2": 9,
-    "p3": 1,
+    "p3": 2,
     "pout": 33,
     "n_atleti": 5,
     "pos": 17
@@ -326,12 +326,12 @@
   {
     "team_id": "TEAM_VALDINIEVOLE_A_S_D",
     "team_nome": "TEAM VALDINIEVOLE A.S.D.",
-    "punti": 216,
+    "punti": 222,
     "vittorie": 3,
     "p1": 3,
     "p2": 2,
     "p3": 2,
-    "pout": 22,
+    "pout": 23,
     "n_atleti": 4,
     "pos": 28
   },
@@ -372,6 +372,18 @@
     "pos": 31
   },
   {
+    "team_id": "ASD_VELOCE_CLUB_BORGO",
+    "team_nome": "ASD VELOCE CLUB BORGO",
+    "punti": 190,
+    "vittorie": 1,
+    "p1": 1,
+    "p2": 6,
+    "p3": 2,
+    "pout": 18,
+    "n_atleti": 3,
+    "pos": 32
+  },
+  {
     "team_id": "LIBERTAS_RAIFFEISEN_LAIVES_ASD",
     "team_nome": "LIBERTAS RAIFFEISEN LAIVES ASD",
     "punti": 189,
@@ -381,7 +393,7 @@
     "p3": 4,
     "pout": 14,
     "n_atleti": 3,
-    "pos": 32
+    "pos": 33
   },
   {
     "team_id": "ASD_CICLOTOUR",
@@ -393,7 +405,7 @@
     "p3": 4,
     "pout": 14,
     "n_atleti": 4,
-    "pos": 33
+    "pos": 34
   },
   {
     "team_id": "GIUSFREDI",
@@ -405,7 +417,7 @@
     "p3": 2,
     "pout": 18,
     "n_atleti": 4,
-    "pos": 34
+    "pos": 35
   },
   {
     "team_id": "MADIGNANESE_CICLISMO_A_S_D",
@@ -416,18 +428,6 @@
     "p2": 1,
     "p3": 4,
     "pout": 17,
-    "n_atleti": 3,
-    "pos": 35
-  },
-  {
-    "team_id": "ASD_VELOCE_CLUB_BORGO",
-    "team_nome": "ASD VELOCE CLUB BORGO",
-    "punti": 169,
-    "vittorie": 1,
-    "p1": 1,
-    "p2": 5,
-    "p3": 2,
-    "pout": 16,
     "n_atleti": 3,
     "pos": 36
   },
@@ -684,6 +684,18 @@
     "pos": 57
   },
   {
+    "team_id": "TEAM_PIU_SPORT",
+    "team_nome": "TEAM PIU'SPORT",
+    "punti": 75,
+    "vittorie": 1,
+    "p1": 1,
+    "p2": 1,
+    "p3": 0,
+    "pout": 10,
+    "n_atleti": 3,
+    "pos": 58
+  },
+  {
     "team_id": "SS_AQUILA",
     "team_nome": "SS AQUILA",
     "punti": 75,
@@ -693,7 +705,7 @@
     "p3": 1,
     "pout": 10,
     "n_atleti": 2,
-    "pos": 58
+    "pos": 59
   },
   {
     "team_id": "POMORIE",
@@ -705,7 +717,7 @@
     "p3": 0,
     "pout": 3,
     "n_atleti": 1,
-    "pos": 59
+    "pos": 60
   },
   {
     "team_id": "ASD_ROBUR_BARCELLONA",
@@ -717,7 +729,7 @@
     "p3": 1,
     "pout": 14,
     "n_atleti": 3,
-    "pos": 60
+    "pos": 61
   },
   {
     "team_id": "ASD_FUSION_BIKE",
@@ -729,7 +741,7 @@
     "p3": 1,
     "pout": 4,
     "n_atleti": 2,
-    "pos": 61
+    "pos": 62
   },
   {
     "team_id": "PEDALE_BREMBILLESE",
@@ -741,7 +753,7 @@
     "p3": 0,
     "pout": 17,
     "n_atleti": 3,
-    "pos": 62
+    "pos": 63
   },
   {
     "team_id": "QUILIANO_BIKE_SPEED_WHEEL",
@@ -753,18 +765,6 @@
     "p3": 3,
     "pout": 2,
     "n_atleti": 2,
-    "pos": 63
-  },
-  {
-    "team_id": "TEAM_PIU_SPORT",
-    "team_nome": "TEAM PIU'SPORT",
-    "punti": 67,
-    "vittorie": 1,
-    "p1": 1,
-    "p2": 1,
-    "p3": 0,
-    "pout": 9,
-    "n_atleti": 3,
     "pos": 64
   },
   {
@@ -1272,6 +1272,18 @@
     "pos": 106
   },
   {
+    "team_id": "GS_BUTESE",
+    "team_nome": "GS BUTESE",
+    "punti": 22,
+    "vittorie": 0,
+    "p1": 0,
+    "p2": 0,
+    "p3": 0,
+    "pout": 7,
+    "n_atleti": 2,
+    "pos": 107
+  },
+  {
     "team_id": "S_C_D_ALMA_JUVENTUS_FANO",
     "team_nome": "S.C.D.ALMA JUVENTUS FANO",
     "punti": 22,
@@ -1281,7 +1293,7 @@
     "p3": 0,
     "pout": 3,
     "n_atleti": 3,
-    "pos": 107
+    "pos": 108
   },
   {
     "team_id": "ASD_DP66_PINARELLO",
@@ -1293,7 +1305,7 @@
     "p3": 0,
     "pout": 3,
     "n_atleti": 1,
-    "pos": 108
+    "pos": 109
   },
   {
     "team_id": "ROTOGAL_GUADENSE",
@@ -1305,7 +1317,7 @@
     "p3": 0,
     "pout": 6,
     "n_atleti": 3,
-    "pos": 109
+    "pos": 110
   },
   {
     "team_id": "U_C_DIPPACH",
@@ -1317,18 +1329,6 @@
     "p3": 0,
     "pout": 1,
     "n_atleti": 1,
-    "pos": 110
-  },
-  {
-    "team_id": "GS_BUTESE",
-    "team_nome": "GS BUTESE",
-    "punti": 21,
-    "vittorie": 0,
-    "p1": 0,
-    "p2": 0,
-    "p3": 0,
-    "pout": 6,
-    "n_atleti": 2,
     "pos": 111
   },
   {
