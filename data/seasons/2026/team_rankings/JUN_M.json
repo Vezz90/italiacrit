@@ -2,12 +2,12 @@
   {
     "team_id": "TEAM_VANGI_TOMMASINI_IL_PIRATA",
     "team_nome": "TEAM VANGI TOMMASINI IL PIRATA",
-    "punti": 1318,
+    "punti": 1358,
     "vittorie": 19,
     "p1": 19,
-    "p2": 14,
+    "p2": 15,
     "p3": 12,
-    "pout": 52,
+    "pout": 53,
     "n_atleti": 13,
     "pos": 1
   },
@@ -24,27 +24,27 @@
     "pos": 2
   },
   {
+    "team_id": "POOL_CANTU_GB_TEAM_A_S_D",
+    "team_nome": "POOL CANTU' GB TEAM A.S.D.",
+    "punti": 705,
+    "vittorie": 9,
+    "p1": 9,
+    "p2": 4,
+    "p3": 6,
+    "pout": 38,
+    "n_atleti": 11,
+    "pos": 3
+  },
+  {
     "team_id": "TEAM_NERI_SOTTOLI_LUCCHINI_ENERGY",
     "team_nome": "TEAM NERI SOTTOLI LUCCHINI ENERGY",
-    "punti": 693,
+    "punti": 703,
     "vittorie": 5,
     "p1": 5,
     "p2": 9,
     "p3": 6,
-    "pout": 42,
+    "pout": 43,
     "n_atleti": 9,
-    "pos": 3
-  },
-  {
-    "team_id": "POOL_CANTU_GB_TEAM_A_S_D",
-    "team_nome": "POOL CANTU' GB TEAM A.S.D.",
-    "punti": 685,
-    "vittorie": 9,
-    "p1": 9,
-    "p2": 4,
-    "p3": 5,
-    "pout": 38,
-    "n_atleti": 11,
     "pos": 4
   },
   {
@@ -74,12 +74,12 @@
   {
     "team_id": "TEAM_ECOTEK_ZERO24",
     "team_nome": "TEAM ECOTEK ZERO24",
-    "punti": 560,
+    "punti": 562,
     "vittorie": 9,
     "p1": 9,
     "p2": 10,
     "p3": 7,
-    "pout": 31,
+    "pout": 32,
     "n_atleti": 9,
     "pos": 7
   },
@@ -98,14 +98,26 @@
   {
     "team_id": "NORDEST_PETRUCCI_ASSALI_STEFEN",
     "team_nome": "NORDEST PETRUCCI ASSALI STEFEN",
-    "punti": 505,
+    "punti": 523,
     "vittorie": 9,
     "p1": 9,
     "p2": 2,
     "p3": 4,
-    "pout": 27,
+    "pout": 29,
     "n_atleti": 9,
     "pos": 9
+  },
+  {
+    "team_id": "AUTOZAI_CONTRI",
+    "team_nome": "AUTOZAI-CONTRI",
+    "punti": 523,
+    "vittorie": 5,
+    "p1": 5,
+    "p2": 5,
+    "p3": 4,
+    "pout": 32,
+    "n_atleti": 9,
+    "pos": 10
   },
   {
     "team_id": "BUSTESE_OLONIA_A_S_D",
@@ -117,29 +129,17 @@
     "p3": 2,
     "pout": 38,
     "n_atleti": 10,
-    "pos": 10
-  },
-  {
-    "team_id": "AUTOZAI_CONTRI",
-    "team_nome": "AUTOZAI-CONTRI",
-    "punti": 493,
-    "vittorie": 4,
-    "p1": 4,
-    "p2": 5,
-    "p3": 4,
-    "pout": 32,
-    "n_atleti": 9,
     "pos": 11
   },
   {
     "team_id": "TEAM_CORATTI",
     "team_nome": "TEAM CORATTI",
-    "punti": 465,
+    "punti": 473,
     "vittorie": 5,
     "p1": 5,
     "p2": 4,
     "p3": 5,
-    "pout": 23,
+    "pout": 24,
     "n_atleti": 7,
     "pos": 12
   },
@@ -242,12 +242,12 @@
   {
     "team_id": "A_S_D_CICLISTICA_MONSELICE",
     "team_nome": "A.S.D. CICLISTICA MONSELICE",
-    "punti": 231,
+    "punti": 235,
     "vittorie": 1,
     "p1": 1,
     "p2": 5,
     "p3": 5,
-    "pout": 14,
+    "pout": 15,
     "n_atleti": 4,
     "pos": 21
   },
