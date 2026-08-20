@@ -824,5 +824,19 @@
     "location_str": "Palestra l' Esagono, Siliqua, Italia",
     "lat": 39.30024,
     "lng": 8.80874
+  },
+  "5_EDIZIONE_COPPA_SAN_DANIELE_ROSA_2026-10-04": {
+    "raceid": "180470",
+    "fci_url": "https://www.federciclismo.it/ricerca-gare/dettaglio-gara/?raceid=180470&site=strada_it",
+    "info": [
+      "5^ EDIZIONE COPPA SAN DANIELE ROSA Strada 5^ EDIZIONE COPPA SAN DANIELE ROSA ID Gara: 180470 | <br><b>Data:</b> 04/10/2026 INFORMAZIONI GENERALI Localita: SAN DANIELE DEL FRIULI <br><b>Provincia:</b> UD <br><b>Categoria:</b> Donne Open <br><b>Categoria Geografica:</b> Regionale <br><b>Specifica Gara:</b> ASSEGNAZIONE MAGLIA CAMPIONE PROVINCIALE UD <br><b>Tipo di Gara:</b> In linea \\ strada <br><b>Tipo di Programma:</b> STRADA REGIONALE <br><b>Direttore di Corsa:</b> DE MONTE DAVIDE Vice <br><b>Direttore di Corsa:</b> DE MONTE MAURO <br><b>Approvazione:</b> In fase di approvazione ORGANIZZATORE <br><b>Nome:</b> A.S.D. U.C. SANDANIELESI <br><b>Indirizzo:</b> PIAZZA IV NOVEMBRE, 14 <br><b>CAP:</b> 33038 Citta: SAN DANIELE DEL FRIULI <br><b>Provincia:</b> UD <br><b>Telefono:</b> 0432957385 <br><b>Email:</b> UC.SANDANIELESI@YAHOO.IT ISCRIZIONI <br><b>Luogo:</b> A.S.D. UNIONE CICLISTI SANDANIELESI <br><b>Indirizzo:</b> PIAZZA IV NOVEMBRE, 14, 33038 SAN DANIELE DEL FRIULI, UD <br><b>Telefono:</b> 3493313506 (Ornella Michele) <br><b>Email:</b> uc.sandanielesi@yahoo.it <br><b>Iscrizioni Dal - Al:</b> 17/09/2026 - 02/10/2026 AGGIUNGI QUESTA GARA AL CALENDARIO"
+    ],
+    "luogo_ritrovo": "A.S.D. UNIONE CICLISTI SANDANIELESI",
+    "indirizzo_ritrovo": "PIAZZA IV NOVEMBRE, 14",
+    "orario_partenza": null,
+    "km": null,
+    "location_str": "PIAZZA IV NOVEMBRE, 14, A.S.D. UNIONE CICLISTI SANDANIELESI, Italia",
+    "lat": null,
+    "lng": null
   }
 }

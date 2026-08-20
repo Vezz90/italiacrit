@@ -17206,5 +17206,53 @@
     "regione": "SARDEGNA",
     "categoria": "Promiscua  All - Jun",
     "luogo": "IGLESIAS"
+  },
+  {
+    "id": "3_TROFEO_LUCIANO_TOMIO_CAMP_PROV_ESORDIENTI_1_2_ANNO_2026-09-20",
+    "nome": "3° TROFEO LUCIANO TOMIO - CAMP. PROV. ESORDIENTI 1°/2° ANNO",
+    "data": "2026-09-20",
+    "tipo": "regionale",
+    "moltiplicatore": 1,
+    "campionato_regionale": false,
+    "campionato_italiano": false,
+    "regione": "PIEMONTE",
+    "categoria": "Esordienti 1°/2° anno",
+    "luogo": "CASELETTE TO"
+  },
+  {
+    "id": "6_MEMORIAL_GUIDO_MESSINA_CAMP_PROV_ALLIEVI_2026-09-20",
+    "nome": "6° MEMORIAL GUIDO MESSINA - CAMP. PROV. ALLIEVI",
+    "data": "2026-09-20",
+    "tipo": "regionale",
+    "moltiplicatore": 1,
+    "campionato_regionale": false,
+    "campionato_italiano": false,
+    "regione": "PIEMONTE",
+    "categoria": "Allievi",
+    "luogo": "CASELETTE TO"
+  },
+  {
+    "id": "6_TROFEO_BND_BIKE_ASSEGNAZIONE_MAGLIA_CAMPIONE_REGIONALE_2026-09-20",
+    "nome": "6° TROFEO BND-BIKE ASSEGNAZIONE MAGLIA CAMPIONE REGIONALE",
+    "data": "2026-09-20",
+    "tipo": "regionale",
+    "moltiplicatore": 2,
+    "campionato_regionale": true,
+    "campionato_italiano": false,
+    "regione": "FRIULI VENEZIA GIULIA",
+    "categoria": "Donne Esordienti",
+    "luogo": "SAN MARTINO AL TAGLIAMENTO"
+  },
+  {
+    "id": "5_EDIZIONE_COPPA_SAN_DANIELE_ROSA_2026-10-04",
+    "nome": "5^ EDIZIONE COPPA SAN DANIELE ROSA",
+    "data": "2026-10-04",
+    "tipo": "regionale",
+    "moltiplicatore": 1,
+    "campionato_regionale": false,
+    "campionato_italiano": false,
+    "regione": "FRIULI VENEZIA GIULIA",
+    "categoria": "Donne Open",
+    "luogo": "SAN DANIELE DEL FRIULI"
   }
 ]
