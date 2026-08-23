@@ -146,14 +146,26 @@
   {
     "team_id": "A_S_D_SPORTEVEN_CYCLING_GROUP",
     "team_nome": "A.S.D. SPORTEVEN CYCLING GROUP",
-    "punti": 216,
+    "punti": 228,
     "vittorie": 8,
     "p1": 8,
-    "p2": 2,
+    "p2": 3,
     "p3": 4,
     "pout": 3,
     "n_atleti": 3,
     "pos": 13
+  },
+  {
+    "team_id": "MAZZANO_A_S_D",
+    "team_nome": "MAZZANO A.S.D.",
+    "punti": 222,
+    "vittorie": 5,
+    "p1": 5,
+    "p2": 6,
+    "p3": 1,
+    "pout": 10,
+    "n_atleti": 4,
+    "pos": 14
   },
   {
     "team_id": "IND_FORNITURE_MORO_C_G_CAPITAL",
@@ -165,7 +177,7 @@
     "p3": 1,
     "pout": 25,
     "n_atleti": 3,
-    "pos": 14
+    "pos": 15
   },
   {
     "team_id": "FERALPI_MONTECLARENSE_ASD",
@@ -177,18 +189,6 @@
     "p3": 2,
     "pout": 19,
     "n_atleti": 2,
-    "pos": 15
-  },
-  {
-    "team_id": "MAZZANO_A_S_D",
-    "team_nome": "MAZZANO A.S.D.",
-    "punti": 209,
-    "vittorie": 5,
-    "p1": 5,
-    "p2": 6,
-    "p3": 1,
-    "pout": 8,
-    "n_atleti": 4,
     "pos": 16
   },
   {
@@ -312,6 +312,18 @@
     "pos": 26
   },
   {
+    "team_id": "FDB_SPORT_CLUB",
+    "team_nome": "FDB SPORT CLUB",
+    "punti": 170,
+    "vittorie": 6,
+    "p1": 6,
+    "p2": 1,
+    "p3": 2,
+    "pout": 7,
+    "n_atleti": 1,
+    "pos": 27
+  },
+  {
     "team_id": "POOL_BIKE_SERRAMANNA",
     "team_nome": "POOL BIKE SERRAMANNA",
     "punti": 170,
@@ -321,7 +333,7 @@
     "p3": 3,
     "pout": 9,
     "n_atleti": 2,
-    "pos": 27
+    "pos": 28
   },
   {
     "team_id": "G_S_AVIS_BIKE_AMELIA",
@@ -332,18 +344,6 @@
     "p2": 1,
     "p3": 0,
     "pout": 4,
-    "n_atleti": 1,
-    "pos": 28
-  },
-  {
-    "team_id": "FDB_SPORT_CLUB",
-    "team_nome": "FDB SPORT CLUB",
-    "punti": 160,
-    "vittorie": 6,
-    "p1": 6,
-    "p2": 1,
-    "p3": 1,
-    "pout": 7,
     "n_atleti": 1,
     "pos": 29
   },
@@ -636,6 +636,18 @@
     "pos": 53
   },
   {
+    "team_id": "S_C_MINCIO_CHIESE_A_S_D",
+    "team_nome": "S. C. MINCIO-CHIESE A.S.D",
+    "punti": 105,
+    "vittorie": 1,
+    "p1": 1,
+    "p2": 2,
+    "p3": 0,
+    "pout": 20,
+    "n_atleti": 4,
+    "pos": 54
+  },
+  {
     "team_id": "S_C_PATTADA",
     "team_nome": "S.C. PATTADA",
     "punti": 103,
@@ -645,7 +657,7 @@
     "p3": 3,
     "pout": 7,
     "n_atleti": 1,
-    "pos": 54
+    "pos": 55
   },
   {
     "team_id": "LEO_CONSTRUCTIONS_SSD",
@@ -657,7 +669,7 @@
     "p3": 0,
     "pout": 2,
     "n_atleti": 2,
-    "pos": 55
+    "pos": 56
   },
   {
     "team_id": "TEAM_CORATTI",
@@ -669,7 +681,7 @@
     "p3": 2,
     "pout": 16,
     "n_atleti": 4,
-    "pos": 56
+    "pos": 57
   },
   {
     "team_id": "CONTRABAND_CYCLING_TEAM_ASD",
@@ -681,7 +693,7 @@
     "p3": 1,
     "pout": 14,
     "n_atleti": 1,
-    "pos": 57
+    "pos": 58
   },
   {
     "team_id": "U_S_MONTECORONA",
@@ -693,7 +705,19 @@
     "p3": 1,
     "pout": 13,
     "n_atleti": 2,
-    "pos": 58
+    "pos": 59
+  },
+  {
+    "team_id": "A_S_D_GIOCA_IN_BICI_OGLIO_PO",
+    "team_nome": "A.S.D. GIOCA IN BICI OGLIO PO",
+    "punti": 92,
+    "vittorie": 1,
+    "p1": 1,
+    "p2": 1,
+    "p3": 2,
+    "pout": 12,
+    "n_atleti": 2,
+    "pos": 60
   },
   {
     "team_id": "C_S_LIBERTAS_SCORZE",
@@ -705,19 +729,7 @@
     "p3": 0,
     "pout": 9,
     "n_atleti": 2,
-    "pos": 59
-  },
-  {
-    "team_id": "S_C_MINCIO_CHIESE_A_S_D",
-    "team_nome": "S. C. MINCIO-CHIESE A.S.D",
-    "punti": 90,
-    "vittorie": 0,
-    "p1": 0,
-    "p2": 2,
-    "p3": 0,
-    "pout": 20,
-    "n_atleti": 4,
-    "pos": 60
+    "pos": 61
   },
   {
     "team_id": "G_S_MOSOLE",
@@ -729,7 +741,7 @@
     "p3": 1,
     "pout": 12,
     "n_atleti": 1,
-    "pos": 61
+    "pos": 62
   },
   {
     "team_id": "I_CINGHIALI_EVO",
@@ -739,18 +751,6 @@
     "p1": 1,
     "p2": 1,
     "p3": 1,
-    "pout": 10,
-    "n_atleti": 2,
-    "pos": 62
-  },
-  {
-    "team_id": "A_S_D_GIOCA_IN_BICI_OGLIO_PO",
-    "team_nome": "A.S.D. GIOCA IN BICI OGLIO PO",
-    "punti": 82,
-    "vittorie": 1,
-    "p1": 1,
-    "p2": 1,
-    "p3": 2,
     "pout": 10,
     "n_atleti": 2,
     "pos": 63
@@ -768,6 +768,18 @@
     "pos": 64
   },
   {
+    "team_id": "BUSTESE_OLONIA_A_S_D",
+    "team_nome": "BUSTESE OLONIA A.S.D.",
+    "punti": 78,
+    "vittorie": 1,
+    "p1": 1,
+    "p2": 0,
+    "p3": 0,
+    "pout": 15,
+    "n_atleti": 4,
+    "pos": 65
+  },
+  {
     "team_id": "S_C_D_ALMA_JUVENTUS_FANO",
     "team_nome": "S.C.D.ALMA JUVENTUS FANO",
     "punti": 78,
@@ -777,18 +789,6 @@
     "p3": 1,
     "pout": 10,
     "n_atleti": 2,
-    "pos": 65
-  },
-  {
-    "team_id": "BUSTESE_OLONIA_A_S_D",
-    "team_nome": "BUSTESE OLONIA A.S.D.",
-    "punti": 76,
-    "vittorie": 1,
-    "p1": 1,
-    "p2": 0,
-    "p3": 0,
-    "pout": 14,
-    "n_atleti": 4,
     "pos": 66
   },
   {
@@ -1176,6 +1176,18 @@
     "pos": 98
   },
   {
+    "team_id": "S_C_TORRILE_PR",
+    "team_nome": "S.C. TORRILE PR",
+    "punti": 31,
+    "vittorie": 0,
+    "p1": 0,
+    "p2": 1,
+    "p3": 0,
+    "pout": 7,
+    "n_atleti": 1,
+    "pos": 99
+  },
+  {
     "team_id": "A_S_D_MONTICELLI_BIKE",
     "team_nome": "A.S.D. MONTICELLI BIKE",
     "punti": 29,
@@ -1184,18 +1196,6 @@
     "p2": 2,
     "p3": 0,
     "pout": 1,
-    "n_atleti": 1,
-    "pos": 99
-  },
-  {
-    "team_id": "S_C_TORRILE_PR",
-    "team_nome": "S.C. TORRILE PR",
-    "punti": 28,
-    "vittorie": 0,
-    "p1": 0,
-    "p2": 1,
-    "p3": 0,
-    "pout": 6,
     "n_atleti": 1,
     "pos": 100
   },

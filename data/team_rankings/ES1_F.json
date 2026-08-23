@@ -144,6 +144,18 @@
     "pos": 12
   },
   {
+    "team_id": "MADIGNANESE_CICLISMO_A_S_D",
+    "team_nome": "MADIGNANESE CICLISMO A.S.D",
+    "punti": 104,
+    "vittorie": 2,
+    "p1": 2,
+    "p2": 1,
+    "p3": 2,
+    "pout": 6,
+    "n_atleti": 1,
+    "pos": 13
+  },
+  {
     "team_id": "GS_CICLI_FIORIN_ASD",
     "team_nome": "GS CICLI FIORIN ASD",
     "punti": 99,
@@ -153,7 +165,7 @@
     "p3": 2,
     "pout": 18,
     "n_atleti": 3,
-    "pos": 13
+    "pos": 14
   },
   {
     "team_id": "S_C_PATTADA",
@@ -165,7 +177,7 @@
     "p3": 2,
     "pout": 0,
     "n_atleti": 2,
-    "pos": 14
+    "pos": 15
   },
   {
     "team_id": "BICIFESTIVAL",
@@ -176,18 +188,6 @@
     "p2": 1,
     "p3": 1,
     "pout": 9,
-    "n_atleti": 1,
-    "pos": 15
-  },
-  {
-    "team_id": "MADIGNANESE_CICLISMO_A_S_D",
-    "team_nome": "MADIGNANESE CICLISMO A.S.D",
-    "punti": 89,
-    "vittorie": 1,
-    "p1": 1,
-    "p2": 1,
-    "p3": 2,
-    "pout": 6,
     "n_atleti": 1,
     "pos": 16
   },

@@ -208,6 +208,22 @@
     "trend": 0
   },
   {
+    "atleta_id": "CAMPOLI_AURORA",
+    "cognome": "CAMPOLI",
+    "nome": "AURORA",
+    "team_id": "MADIGNANESE_CICLISMO_A_S_D",
+    "team_nome": "MADIGNANESE CICLISMO A.S.D",
+    "punti": 108,
+    "vittorie": 2,
+    "gare": 12,
+    "p1": 2,
+    "p2": 1,
+    "p3": 2,
+    "pout": 7,
+    "pos": 14,
+    "trend": 2
+  },
+  {
     "atleta_id": "MOINO_ALESSIA",
     "cognome": "MOINO",
     "nome": "ALESSIA",
@@ -220,8 +236,8 @@
     "p2": 1,
     "p3": 1,
     "pout": 15,
-    "pos": 14,
-    "trend": 0
+    "pos": 15,
+    "trend": -1
   },
   {
     "atleta_id": "NERI_SARA",
@@ -236,24 +252,8 @@
     "p2": 1,
     "p3": 1,
     "pout": 9,
-    "pos": 15,
-    "trend": 0
-  },
-  {
-    "atleta_id": "CAMPOLI_AURORA",
-    "cognome": "CAMPOLI",
-    "nome": "AURORA",
-    "team_id": "MADIGNANESE_CICLISMO_A_S_D",
-    "team_nome": "MADIGNANESE CICLISMO A.S.D",
-    "punti": 93,
-    "vittorie": 1,
-    "gare": 11,
-    "p1": 1,
-    "p2": 1,
-    "p3": 2,
-    "pout": 7,
     "pos": 16,
-    "trend": 0
+    "trend": -1
   },
   {
     "atleta_id": "GUIDOLIN_GIOIA",
