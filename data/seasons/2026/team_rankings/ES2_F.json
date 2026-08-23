@@ -26,12 +26,12 @@
   {
     "team_id": "SCUOLA_CICLISMO_VERSO_L_IRIDE",
     "team_nome": "SCUOLA CICLISMO VERSO L'IRIDE",
-    "punti": 339,
+    "punti": 347,
     "vittorie": 7,
     "p1": 7,
     "p2": 5,
     "p3": 6,
-    "pout": 25,
+    "pout": 26,
     "n_atleti": 4,
     "pos": 3
   },
@@ -50,14 +50,38 @@
   {
     "team_id": "ASD_VELOCE_CLUB_BORGO",
     "team_nome": "ASD VELOCE CLUB BORGO",
-    "punti": 227,
-    "vittorie": 3,
-    "p1": 3,
+    "punti": 242,
+    "vittorie": 4,
+    "p1": 4,
     "p2": 6,
     "p3": 3,
     "pout": 17,
     "n_atleti": 3,
     "pos": 5
+  },
+  {
+    "team_id": "G_C_SOSSANO_1975",
+    "team_nome": "G.C. SOSSANO 1975",
+    "punti": 144,
+    "vittorie": 0,
+    "p1": 0,
+    "p2": 1,
+    "p3": 5,
+    "pout": 21,
+    "n_atleti": 6,
+    "pos": 6
+  },
+  {
+    "team_id": "U_C_CONSCIO_PEDALE_DEL_SILE",
+    "team_nome": "U.C.CONSCIO PEDALE DEL SILE",
+    "punti": 137,
+    "vittorie": 1,
+    "p1": 1,
+    "p2": 2,
+    "p3": 1,
+    "pout": 21,
+    "n_atleti": 4,
+    "pos": 7
   },
   {
     "team_id": "A_S_D_PROBIKE_ERICE",
@@ -69,19 +93,19 @@
     "p3": 0,
     "pout": 0,
     "n_atleti": 1,
-    "pos": 6
+    "pos": 8
   },
   {
-    "team_id": "G_C_SOSSANO_1975",
-    "team_nome": "G.C. SOSSANO 1975",
-    "punti": 133,
+    "team_id": "U_C_GIORGIONE",
+    "team_nome": "U.C. GIORGIONE",
+    "punti": 134,
     "vittorie": 0,
     "p1": 0,
-    "p2": 1,
-    "p3": 4,
-    "pout": 20,
-    "n_atleti": 6,
-    "pos": 7
+    "p2": 2,
+    "p3": 3,
+    "pout": 18,
+    "n_atleti": 2,
+    "pos": 9
   },
   {
     "team_id": "SPORT_CLUB_BRESCIA_FLANDRES_LOVE",
@@ -93,7 +117,7 @@
     "p3": 2,
     "pout": 15,
     "n_atleti": 3,
-    "pos": 8
+    "pos": 10
   },
   {
     "team_id": "MARY_J_SWEET_ANGEL_ASD",
@@ -105,31 +129,19 @@
     "p3": 1,
     "pout": 15,
     "n_atleti": 3,
-    "pos": 9
+    "pos": 11
   },
   {
-    "team_id": "U_C_CONSCIO_PEDALE_DEL_SILE",
-    "team_nome": "U.C.CONSCIO PEDALE DEL SILE",
-    "punti": 125,
+    "team_id": "G_C_NOVENTANA",
+    "team_nome": "G.C. NOVENTANA",
+    "punti": 98,
     "vittorie": 1,
     "p1": 1,
-    "p2": 1,
-    "p3": 1,
-    "pout": 21,
-    "n_atleti": 4,
-    "pos": 10
-  },
-  {
-    "team_id": "U_C_GIORGIONE",
-    "team_nome": "U.C. GIORGIONE",
-    "punti": 124,
-    "vittorie": 0,
-    "p1": 0,
-    "p2": 2,
-    "p3": 3,
-    "pout": 16,
+    "p2": 0,
+    "p3": 2,
+    "pout": 13,
     "n_atleti": 2,
-    "pos": 11
+    "pos": 12
   },
   {
     "team_id": "A_S_A_C_I_EVONACICLI",
@@ -140,18 +152,6 @@
     "p2": 3,
     "p3": 2,
     "pout": 1,
-    "n_atleti": 2,
-    "pos": 12
-  },
-  {
-    "team_id": "G_C_NOVENTANA",
-    "team_nome": "G.C. NOVENTANA",
-    "punti": 93,
-    "vittorie": 1,
-    "p1": 1,
-    "p2": 0,
-    "p3": 2,
-    "pout": 12,
     "n_atleti": 2,
     "pos": 13
   },
@@ -278,13 +278,13 @@
   {
     "team_id": "LIBERTAS_CERESETTO",
     "team_nome": "LIBERTAS CERESETTO",
-    "punti": 33,
+    "punti": 36,
     "vittorie": 0,
     "p1": 0,
     "p2": 0,
     "p3": 0,
-    "pout": 8,
-    "n_atleti": 2,
+    "pout": 9,
+    "n_atleti": 3,
     "pos": 24
   },
   {
@@ -492,6 +492,18 @@
     "pos": 41
   },
   {
+    "team_id": "U_S_SCUOLA_CICLISMO_VO",
+    "team_nome": "U.S.SCUOLA CICLISMO VO'",
+    "punti": 9,
+    "vittorie": 0,
+    "p1": 0,
+    "p2": 0,
+    "p3": 0,
+    "pout": 3,
+    "n_atleti": 1,
+    "pos": 42
+  },
+  {
     "team_id": "A_S_D_ORANGE_BIKE_TEAM",
     "team_nome": "A.S.D. ORANGE BIKE TEAM",
     "punti": 8,
@@ -501,7 +513,7 @@
     "p3": 0,
     "pout": 1,
     "n_atleti": 1,
-    "pos": 42
+    "pos": 43
   },
   {
     "team_id": "UNIONE_CICLISTICA_OSSANESGA",
@@ -513,7 +525,7 @@
     "p3": 0,
     "pout": 4,
     "n_atleti": 1,
-    "pos": 43
+    "pos": 44
   },
   {
     "team_id": "GS_CAPANNORI",
@@ -525,18 +537,6 @@
     "p3": 0,
     "pout": 4,
     "n_atleti": 2,
-    "pos": 44
-  },
-  {
-    "team_id": "U_S_SCUOLA_CICLISMO_VO",
-    "team_nome": "U.S.SCUOLA CICLISMO VO'",
-    "punti": 7,
-    "vittorie": 0,
-    "p1": 0,
-    "p2": 0,
-    "p3": 0,
-    "pout": 2,
-    "n_atleti": 1,
     "pos": 45
   },
   {
