@@ -182,22 +182,22 @@
   {
     "team_id": "FERALPI_MONTECLARENSE_ASD",
     "team_nome": "FERALPI MONTECLARENSE ASD",
-    "punti": 211,
+    "punti": 221,
     "vittorie": 4,
     "p1": 4,
     "p2": 1,
     "p3": 2,
-    "pout": 19,
+    "pout": 21,
     "n_atleti": 2,
     "pos": 16
   },
   {
     "team_id": "U_S_SCUOLA_CICLISMO_VO",
     "team_nome": "U.S.SCUOLA CICLISMO VO'",
-    "punti": 207,
+    "punti": 219,
     "vittorie": 5,
     "p1": 5,
-    "p2": 4,
+    "p2": 5,
     "p3": 2,
     "pout": 10,
     "n_atleti": 2,
@@ -254,12 +254,12 @@
   {
     "team_id": "ASD_TEAM_PETRUCCI",
     "team_nome": "ASD TEAM PETRUCCI",
-    "punti": 182,
+    "punti": 184,
     "vittorie": 2,
     "p1": 2,
     "p2": 0,
     "p3": 1,
-    "pout": 38,
+    "pout": 39,
     "n_atleti": 5,
     "pos": 22
   },
@@ -348,6 +348,18 @@
     "pos": 29
   },
   {
+    "team_id": "V_CYCLING_ARICI_CLAUDIA_PITON",
+    "team_nome": "V CYCLING - ARICI CLAUDIA - PITON",
+    "punti": 167,
+    "vittorie": 2,
+    "p1": 2,
+    "p2": 5,
+    "p3": 2,
+    "pout": 10,
+    "n_atleti": 1,
+    "pos": 30
+  },
+  {
     "team_id": "G_S_AVIS_BIKE_AMELIA",
     "team_nome": "G.S. AVIS BIKE AMELIA",
     "punti": 163,
@@ -357,7 +369,7 @@
     "p3": 0,
     "pout": 4,
     "n_atleti": 1,
-    "pos": 30
+    "pos": 31
   },
   {
     "team_id": "ARDENS_CYCLING_TEAM",
@@ -369,7 +381,7 @@
     "p3": 3,
     "pout": 15,
     "n_atleti": 3,
-    "pos": 31
+    "pos": 32
   },
   {
     "team_id": "CAMB_KE",
@@ -381,18 +393,6 @@
     "p3": 1,
     "pout": 13,
     "n_atleti": 2,
-    "pos": 32
-  },
-  {
-    "team_id": "V_CYCLING_ARICI_CLAUDIA_PITON",
-    "team_nome": "V CYCLING - ARICI CLAUDIA - PITON",
-    "punti": 152,
-    "vittorie": 1,
-    "p1": 1,
-    "p2": 5,
-    "p3": 2,
-    "pout": 10,
-    "n_atleti": 1,
     "pos": 33
   },
   {
@@ -540,6 +540,18 @@
     "pos": 45
   },
   {
+    "team_id": "G_S_RONCO_MAURIGI_DELIO_GALLINA",
+    "team_nome": "G.S. RONCO MAURIGI DELIO GALLINA",
+    "punti": 133,
+    "vittorie": 0,
+    "p1": 0,
+    "p2": 1,
+    "p3": 1,
+    "pout": 28,
+    "n_atleti": 3,
+    "pos": 46
+  },
+  {
     "team_id": "STAR_CYCLING_LAB",
     "team_nome": "STAR CYCLING LAB",
     "punti": 133,
@@ -549,7 +561,7 @@
     "p3": 1,
     "pout": 21,
     "n_atleti": 3,
-    "pos": 46
+    "pos": 47
   },
   {
     "team_id": "G_S_ALZATE_BRIANZA_SYSTEM_CAR",
@@ -561,7 +573,7 @@
     "p3": 4,
     "pout": 9,
     "n_atleti": 1,
-    "pos": 47
+    "pos": 48
   },
   {
     "team_id": "U_C_S_OTTAVIO_ZULIANI_A_S_D",
@@ -573,7 +585,7 @@
     "p3": 6,
     "pout": 9,
     "n_atleti": 3,
-    "pos": 48
+    "pos": 49
   },
   {
     "team_id": "LIBERTAS_CERESETTO",
@@ -584,18 +596,6 @@
     "p2": 1,
     "p3": 2,
     "pout": 22,
-    "n_atleti": 3,
-    "pos": 49
-  },
-  {
-    "team_id": "G_S_RONCO_MAURIGI_DELIO_GALLINA",
-    "team_nome": "G.S. RONCO MAURIGI DELIO GALLINA",
-    "punti": 125,
-    "vittorie": 0,
-    "p1": 0,
-    "p2": 1,
-    "p3": 1,
-    "pout": 27,
     "n_atleti": 3,
     "pos": 50
   },
@@ -636,6 +636,18 @@
     "pos": 53
   },
   {
+    "team_id": "U_S_MONTECORONA",
+    "team_nome": "U.S. MONTECORONA",
+    "punti": 111,
+    "vittorie": 1,
+    "p1": 1,
+    "p2": 1,
+    "p3": 2,
+    "pout": 14,
+    "n_atleti": 2,
+    "pos": 54
+  },
+  {
     "team_id": "S_C_MINCIO_CHIESE_A_S_D",
     "team_nome": "S. C. MINCIO-CHIESE A.S.D",
     "punti": 105,
@@ -645,7 +657,7 @@
     "p3": 0,
     "pout": 20,
     "n_atleti": 4,
-    "pos": 54
+    "pos": 55
   },
   {
     "team_id": "S_C_PATTADA",
@@ -657,7 +669,7 @@
     "p3": 3,
     "pout": 7,
     "n_atleti": 1,
-    "pos": 55
+    "pos": 56
   },
   {
     "team_id": "LEO_CONSTRUCTIONS_SSD",
@@ -669,7 +681,7 @@
     "p3": 0,
     "pout": 2,
     "n_atleti": 2,
-    "pos": 56
+    "pos": 57
   },
   {
     "team_id": "TEAM_CORATTI",
@@ -681,7 +693,7 @@
     "p3": 2,
     "pout": 16,
     "n_atleti": 4,
-    "pos": 57
+    "pos": 58
   },
   {
     "team_id": "CONTRABAND_CYCLING_TEAM_ASD",
@@ -693,18 +705,6 @@
     "p3": 1,
     "pout": 14,
     "n_atleti": 1,
-    "pos": 58
-  },
-  {
-    "team_id": "U_S_MONTECORONA",
-    "team_nome": "U.S. MONTECORONA",
-    "punti": 96,
-    "vittorie": 1,
-    "p1": 1,
-    "p2": 1,
-    "p3": 1,
-    "pout": 13,
-    "n_atleti": 2,
     "pos": 59
   },
   {
@@ -792,6 +792,18 @@
     "pos": 66
   },
   {
+    "team_id": "G_C_SOSSANO_1975",
+    "team_nome": "G.C. SOSSANO 1975",
+    "punti": 75,
+    "vittorie": 1,
+    "p1": 1,
+    "p2": 1,
+    "p3": 0,
+    "pout": 10,
+    "n_atleti": 1,
+    "pos": 67
+  },
+  {
     "team_id": "G_S_ALTO_ADIGE_SUDTIROLPOST",
     "team_nome": "G.S. ALTO ADIGE - SUDTIROLPOST",
     "punti": 75,
@@ -801,7 +813,7 @@
     "p3": 3,
     "pout": 11,
     "n_atleti": 4,
-    "pos": 67
+    "pos": 68
   },
   {
     "team_id": "VC_CREMONESE",
@@ -813,7 +825,7 @@
     "p3": 0,
     "pout": 13,
     "n_atleti": 1,
-    "pos": 68
+    "pos": 69
   },
   {
     "team_id": "UC_FOEN_MICTU",
@@ -825,18 +837,6 @@
     "p3": 1,
     "pout": 8,
     "n_atleti": 2,
-    "pos": 69
-  },
-  {
-    "team_id": "G_C_SOSSANO_1975",
-    "team_nome": "G.C. SOSSANO 1975",
-    "punti": 72,
-    "vittorie": 1,
-    "p1": 1,
-    "p2": 1,
-    "p3": 0,
-    "pout": 9,
-    "n_atleti": 1,
     "pos": 70
   },
   {
@@ -2098,5 +2098,17 @@
     "pout": 1,
     "n_atleti": 1,
     "pos": 175
+  },
+  {
+    "team_id": "GAZZANIGHESE_ASD",
+    "team_nome": "GAZZANIGHESE ASD",
+    "punti": 1,
+    "vittorie": 0,
+    "p1": 0,
+    "p2": 0,
+    "p3": 0,
+    "pout": 1,
+    "n_atleti": 1,
+    "pos": 176
   }
 ]

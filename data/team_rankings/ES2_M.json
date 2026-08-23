@@ -60,6 +60,18 @@
     "pos": 5
   },
   {
+    "team_id": "S_C_COTIGNOLESE",
+    "team_nome": "S.C.COTIGNOLESE",
+    "punti": 377,
+    "vittorie": 12,
+    "p1": 12,
+    "p2": 5,
+    "p3": 3,
+    "pout": 14,
+    "n_atleti": 2,
+    "pos": 6
+  },
+  {
     "team_id": "MAZZANO_A_S_D",
     "team_nome": "MAZZANO A.S.D.",
     "punti": 373,
@@ -69,7 +81,7 @@
     "p3": 6,
     "pout": 23,
     "n_atleti": 4,
-    "pos": 6
+    "pos": 7
   },
   {
     "team_id": "ASD_GUBBIO_CICLISMO_MOCAIANA",
@@ -81,7 +93,7 @@
     "p3": 5,
     "pout": 19,
     "n_atleti": 3,
-    "pos": 7
+    "pos": 8
   },
   {
     "team_id": "A_S_D_CICLISTICA_2000",
@@ -93,18 +105,6 @@
     "p3": 2,
     "pout": 19,
     "n_atleti": 5,
-    "pos": 8
-  },
-  {
-    "team_id": "S_C_COTIGNOLESE",
-    "team_nome": "S.C.COTIGNOLESE",
-    "punti": 362,
-    "vittorie": 11,
-    "p1": 11,
-    "p2": 5,
-    "p3": 3,
-    "pout": 14,
-    "n_atleti": 2,
     "pos": 9
   },
   {
@@ -132,6 +132,18 @@
     "pos": 11
   },
   {
+    "team_id": "OFF_ALBERTI_U_C_VAL_D_ILLASI",
+    "team_nome": "OFF.ALBERTI U.C. VAL D'ILLASI",
+    "punti": 305,
+    "vittorie": 4,
+    "p1": 4,
+    "p2": 5,
+    "p3": 7,
+    "pout": 21,
+    "n_atleti": 5,
+    "pos": 12
+  },
+  {
     "team_id": "SAMABIKE",
     "team_nome": "SAMABIKE",
     "punti": 298,
@@ -141,18 +153,6 @@
     "p3": 3,
     "pout": 6,
     "n_atleti": 2,
-    "pos": 12
-  },
-  {
-    "team_id": "OFF_ALBERTI_U_C_VAL_D_ILLASI",
-    "team_nome": "OFF.ALBERTI U.C. VAL D'ILLASI",
-    "punti": 295,
-    "vittorie": 4,
-    "p1": 4,
-    "p2": 5,
-    "p3": 6,
-    "pout": 21,
-    "n_atleti": 5,
     "pos": 13
   },
   {
@@ -168,6 +168,18 @@
     "pos": 14
   },
   {
+    "team_id": "U_S_SCUOLA_CICLISMO_VO",
+    "team_nome": "U.S.SCUOLA CICLISMO VO'",
+    "punti": 269,
+    "vittorie": 6,
+    "p1": 6,
+    "p2": 3,
+    "p3": 4,
+    "pout": 20,
+    "n_atleti": 5,
+    "pos": 15
+  },
+  {
     "team_id": "ASD_VELOCE_CLUB_BORGO",
     "team_nome": "ASD VELOCE CLUB BORGO",
     "punti": 269,
@@ -177,7 +189,7 @@
     "p3": 7,
     "pout": 23,
     "n_atleti": 3,
-    "pos": 15
+    "pos": 16
   },
   {
     "team_id": "G_S_PREALPINO_A_S_D",
@@ -189,18 +201,6 @@
     "p3": 4,
     "pout": 24,
     "n_atleti": 4,
-    "pos": 16
-  },
-  {
-    "team_id": "U_S_SCUOLA_CICLISMO_VO",
-    "team_nome": "U.S.SCUOLA CICLISMO VO'",
-    "punti": 257,
-    "vittorie": 6,
-    "p1": 6,
-    "p2": 3,
-    "p3": 4,
-    "pout": 18,
-    "n_atleti": 5,
     "pos": 17
   },
   {
@@ -374,26 +374,38 @@
   {
     "team_id": "V_CYCLING_ARICI_CLAUDIA_PITON",
     "team_nome": "V CYCLING - ARICI CLAUDIA - PITON",
-    "punti": 135,
+    "punti": 141,
     "vittorie": 1,
     "p1": 1,
     "p2": 0,
     "p3": 0,
-    "pout": 30,
+    "pout": 31,
     "n_atleti": 4,
     "pos": 32
   },
   {
     "team_id": "ASD_TEAM_PETRUCCI",
     "team_nome": "ASD TEAM PETRUCCI",
-    "punti": 133,
+    "punti": 140,
     "vittorie": 3,
     "p1": 3,
     "p2": 0,
     "p3": 3,
-    "pout": 13,
+    "pout": 15,
     "n_atleti": 2,
     "pos": 33
+  },
+  {
+    "team_id": "G_S_RONCO_MAURIGI_DELIO_GALLINA",
+    "team_nome": "G.S. RONCO MAURIGI DELIO GALLINA",
+    "punti": 138,
+    "vittorie": 1,
+    "p1": 1,
+    "p2": 2,
+    "p3": 3,
+    "pout": 13,
+    "n_atleti": 3,
+    "pos": 34
   },
   {
     "team_id": "STAR_CYCLING_LAB",
@@ -405,18 +417,6 @@
     "p3": 2,
     "pout": 22,
     "n_atleti": 4,
-    "pos": 34
-  },
-  {
-    "team_id": "G_S_RONCO_MAURIGI_DELIO_GALLINA",
-    "team_nome": "G.S. RONCO MAURIGI DELIO GALLINA",
-    "punti": 126,
-    "vittorie": 1,
-    "p1": 1,
-    "p2": 1,
-    "p3": 3,
-    "pout": 13,
-    "n_atleti": 3,
     "pos": 35
   },
   {
@@ -624,6 +624,18 @@
     "pos": 52
   },
   {
+    "team_id": "G_C_SOSSANO_1975",
+    "team_nome": "G.C. SOSSANO 1975",
+    "punti": 85,
+    "vittorie": 1,
+    "p1": 1,
+    "p2": 0,
+    "p3": 1,
+    "pout": 15,
+    "n_atleti": 3,
+    "pos": 53
+  },
+  {
     "team_id": "PEDALE_RIMINESE_FRECCE_ROSSE",
     "team_nome": "PEDALE RIMINESE FRECCE ROSSE",
     "punti": 85,
@@ -633,7 +645,7 @@
     "p3": 0,
     "pout": 14,
     "n_atleti": 2,
-    "pos": 53
+    "pos": 54
   },
   {
     "team_id": "A_S_D_PROBIKE_ERICE",
@@ -645,7 +657,7 @@
     "p3": 1,
     "pout": 8,
     "n_atleti": 1,
-    "pos": 54
+    "pos": 55
   },
   {
     "team_id": "POL_ALBERGO_OLIVETO",
@@ -657,18 +669,6 @@
     "p3": 2,
     "pout": 2,
     "n_atleti": 1,
-    "pos": 55
-  },
-  {
-    "team_id": "G_C_SOSSANO_1975",
-    "team_nome": "G.C. SOSSANO 1975",
-    "punti": 82,
-    "vittorie": 1,
-    "p1": 1,
-    "p2": 0,
-    "p3": 1,
-    "pout": 14,
-    "n_atleti": 3,
     "pos": 56
   },
   {
@@ -1416,6 +1416,18 @@
     "pos": 118
   },
   {
+    "team_id": "LIBERTAS_RAIFFEISEN_LAIVES_ASD",
+    "team_nome": "LIBERTAS RAIFFEISEN LAIVES ASD",
+    "punti": 13,
+    "vittorie": 0,
+    "p1": 0,
+    "p2": 0,
+    "p3": 0,
+    "pout": 5,
+    "n_atleti": 1,
+    "pos": 119
+  },
+  {
     "team_id": "FOLIGNO_CYCLING_TEAM_ASD",
     "team_nome": "FOLIGNO CYCLING TEAM ASD",
     "punti": 13,
@@ -1425,7 +1437,7 @@
     "p3": 0,
     "pout": 3,
     "n_atleti": 1,
-    "pos": 119
+    "pos": 120
   },
   {
     "team_id": "SEI_SPORT",
@@ -1437,7 +1449,7 @@
     "p3": 0,
     "pout": 2,
     "n_atleti": 1,
-    "pos": 120
+    "pos": 121
   },
   {
     "team_id": "G_S_ALTO_ADIGE_SUDTIROLPOST",
@@ -1448,18 +1460,6 @@
     "p2": 0,
     "p3": 1,
     "pout": 1,
-    "n_atleti": 1,
-    "pos": 121
-  },
-  {
-    "team_id": "LIBERTAS_RAIFFEISEN_LAIVES_ASD",
-    "team_nome": "LIBERTAS RAIFFEISEN LAIVES ASD",
-    "punti": 12,
-    "vittorie": 0,
-    "p1": 0,
-    "p2": 0,
-    "p3": 0,
-    "pout": 4,
     "n_atleti": 1,
     "pos": 122
   },

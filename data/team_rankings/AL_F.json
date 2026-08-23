@@ -1,13 +1,13 @@
 [
   {
     "team_id": "VANGI_LADIES_CYCLING_TEAM",
-    "team_nome": "VANGI LADIES  CYCLING TEAM",
-    "punti": 445,
+    "team_nome": "VANGI LADIES CYCLING TEAM",
+    "punti": 454,
     "vittorie": 8,
     "p1": 8,
     "p2": 8,
     "p3": 2,
-    "pout": 26,
+    "pout": 29,
     "n_atleti": 8,
     "pos": 1
   },
@@ -26,12 +26,12 @@
   {
     "team_id": "S_C_CESANO_MADERNO",
     "team_nome": "S.C. CESANO MADERNO",
-    "punti": 298,
+    "punti": 306,
     "vittorie": 4,
     "p1": 4,
     "p2": 4,
     "p3": 4,
-    "pout": 31,
+    "pout": 32,
     "n_atleti": 6,
     "pos": 3
   },
@@ -50,13 +50,13 @@
   {
     "team_id": "POL_FIUMICINESE_FA_I_T_ADRIATICA",
     "team_nome": "POL. FIUMICINESE FA.I.T. ADRIATICA",
-    "punti": 269,
+    "punti": 271,
     "vittorie": 0,
     "p1": 0,
     "p2": 2,
     "p3": 4,
-    "pout": 21,
-    "n_atleti": 5,
+    "pout": 22,
+    "n_atleti": 6,
     "pos": 5
   },
   {
@@ -96,6 +96,30 @@
     "pos": 8
   },
   {
+    "team_id": "HG_CYCLING_TEAM",
+    "team_nome": "HG CYCLING TEAM",
+    "punti": 152,
+    "vittorie": 1,
+    "p1": 1,
+    "p2": 2,
+    "p3": 3,
+    "pout": 10,
+    "n_atleti": 4,
+    "pos": 9
+  },
+  {
+    "team_id": "JU_GREEN_A_S_D_GORLA_MINORE",
+    "team_nome": "JU GREEN A.S.D. GORLA MINORE",
+    "punti": 142,
+    "vittorie": 2,
+    "p1": 2,
+    "p2": 2,
+    "p3": 1,
+    "pout": 16,
+    "n_atleti": 2,
+    "pos": 10
+  },
+  {
     "team_id": "A_R_MONEX_PRO_CYCLING_TEAM",
     "team_nome": "A.R.MONEX PRO CYCLING TEAM",
     "punti": 142,
@@ -105,30 +129,6 @@
     "p3": 4,
     "pout": 13,
     "n_atleti": 5,
-    "pos": 9
-  },
-  {
-    "team_id": "HG_CYCLING_TEAM",
-    "team_nome": "HG CYCLING TEAM",
-    "punti": 140,
-    "vittorie": 1,
-    "p1": 1,
-    "p2": 1,
-    "p3": 3,
-    "pout": 10,
-    "n_atleti": 4,
-    "pos": 10
-  },
-  {
-    "team_id": "JU_GREEN_A_S_D_GORLA_MINORE",
-    "team_nome": "JU GREEN A.S.D. GORLA MINORE",
-    "punti": 121,
-    "vittorie": 1,
-    "p1": 1,
-    "p2": 2,
-    "p3": 1,
-    "pout": 15,
-    "n_atleti": 2,
     "pos": 11
   },
   {
@@ -216,6 +216,18 @@
     "pos": 18
   },
   {
+    "team_id": "A_S_D_AVIS_BIKE_RUVO",
+    "team_nome": "A.S.D. AVIS BIKE RUVO",
+    "punti": 53,
+    "vittorie": 2,
+    "p1": 2,
+    "p2": 0,
+    "p3": 1,
+    "pout": 3,
+    "n_atleti": 3,
+    "pos": 19
+  },
+  {
     "team_id": "BLU_TEAM",
     "team_nome": "BLU TEAM",
     "punti": 53,
@@ -225,7 +237,7 @@
     "p3": 0,
     "pout": 4,
     "n_atleti": 1,
-    "pos": 19
+    "pos": 20
   },
   {
     "team_id": "LIBERTAS_CERESETTO",
@@ -237,18 +249,6 @@
     "p3": 1,
     "pout": 8,
     "n_atleti": 2,
-    "pos": 20
-  },
-  {
-    "team_id": "A_S_D_AVIS_BIKE_RUVO",
-    "team_nome": "A.S.D. AVIS BIKE RUVO",
-    "punti": 49,
-    "vittorie": 2,
-    "p1": 2,
-    "p2": 0,
-    "p3": 1,
-    "pout": 2,
-    "n_atleti": 3,
     "pos": 21
   },
   {
@@ -552,6 +552,18 @@
     "pos": 46
   },
   {
+    "team_id": "FOLIGNO_CYCLING_TEAM_ASD",
+    "team_nome": "FOLIGNO CYCLING TEAM ASD",
+    "punti": 13,
+    "vittorie": 0,
+    "p1": 0,
+    "p2": 0,
+    "p3": 1,
+    "pout": 1,
+    "n_atleti": 1,
+    "pos": 47
+  },
+  {
     "team_id": "ASD_TIRRENO_BIKE_CICLI_FATATO",
     "team_nome": "ASD TIRRENO BIKE CICLI FATATO",
     "punti": 13,
@@ -561,7 +573,7 @@
     "p3": 0,
     "pout": 1,
     "n_atleti": 1,
-    "pos": 47
+    "pos": 48
   },
   {
     "team_id": "TEAM_GO_FAST_PUGLIA_ARADEO",
@@ -573,7 +585,7 @@
     "p3": 0,
     "pout": 0,
     "n_atleti": 1,
-    "pos": 48
+    "pos": 49
   },
   {
     "team_id": "PIEMONTE",
@@ -585,7 +597,7 @@
     "p3": 0,
     "pout": 1,
     "n_atleti": 1,
-    "pos": 49
+    "pos": 50
   },
   {
     "team_id": "A_S_D_GIOCA_IN_BICI_OGLIO_PO_TEAM_B",
@@ -597,7 +609,7 @@
     "p3": 0,
     "pout": 1,
     "n_atleti": 0,
-    "pos": 50
+    "pos": 51
   },
   {
     "team_id": "A_S_D_G_S_LUC_BOVOLONE",
@@ -609,7 +621,7 @@
     "p3": 0,
     "pout": 4,
     "n_atleti": 1,
-    "pos": 51
+    "pos": 52
   },
   {
     "team_id": "RECANATI_BIKE_TEAM_ASD",
@@ -621,7 +633,7 @@
     "p3": 0,
     "pout": 1,
     "n_atleti": 1,
-    "pos": 52
+    "pos": 53
   },
   {
     "team_id": "CALDERARA_STM_RIDUTTORI",
@@ -633,7 +645,7 @@
     "p3": 0,
     "pout": 2,
     "n_atleti": 1,
-    "pos": 53
+    "pos": 54
   },
   {
     "team_id": "U_C_CITTA_DI_CASTELLO_A_S_D",
@@ -645,7 +657,7 @@
     "p3": 0,
     "pout": 1,
     "n_atleti": 1,
-    "pos": 54
+    "pos": 55
   },
   {
     "team_id": "G_S_TAVO_BONIN_BIKE",
@@ -656,18 +668,6 @@
     "p2": 0,
     "p3": 0,
     "pout": 2,
-    "n_atleti": 1,
-    "pos": 55
-  },
-  {
-    "team_id": "FOLIGNO_CYCLING_TEAM_ASD",
-    "team_nome": "FOLIGNO CYCLING TEAM ASD",
-    "punti": 3,
-    "vittorie": 0,
-    "p1": 0,
-    "p2": 0,
-    "p3": 0,
-    "pout": 1,
     "n_atleti": 1,
     "pos": 56
   },
