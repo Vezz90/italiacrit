@@ -14,22 +14,22 @@
   {
     "team_id": "POL_FIUMICINESE_FA_I_T_ADRIATICA",
     "team_nome": "POL. FIUMICINESE FA.I.T. ADRIATICA",
-    "punti": 370,
+    "punti": 375,
     "vittorie": 11,
     "p1": 11,
     "p2": 6,
     "p3": 4,
-    "pout": 12,
+    "pout": 13,
     "n_atleti": 4,
     "pos": 2
   },
   {
     "team_id": "GS_CAPANNORI",
     "team_nome": "GS CAPANNORI",
-    "punti": 348,
+    "punti": 360,
     "vittorie": 7,
     "p1": 7,
-    "p2": 8,
+    "p2": 9,
     "p3": 4,
     "pout": 23,
     "n_atleti": 5,
@@ -38,9 +38,9 @@
   {
     "team_id": "S_C_CESANO_MADERNO",
     "team_nome": "S.C. CESANO MADERNO",
-    "punti": 284,
-    "vittorie": 3,
-    "p1": 3,
+    "punti": 299,
+    "vittorie": 4,
+    "p1": 4,
     "p2": 2,
     "p3": 7,
     "pout": 34,
@@ -62,12 +62,12 @@
   {
     "team_id": "A_S_A_C_I_EVONACICLI",
     "team_nome": "A.S.A.C.I. - EVONACICLI",
-    "punti": 234,
+    "punti": 236,
     "vittorie": 5,
     "p1": 5,
     "p2": 7,
     "p3": 4,
-    "pout": 6,
+    "pout": 7,
     "n_atleti": 6,
     "pos": 6
   },
@@ -86,12 +86,12 @@
   {
     "team_id": "UC_DONORATICO",
     "team_nome": "UC DONORATICO",
-    "punti": 185,
+    "punti": 191,
     "vittorie": 1,
     "p1": 1,
     "p2": 3,
     "p3": 5,
-    "pout": 15,
+    "pout": 16,
     "n_atleti": 2,
     "pos": 8
   },
@@ -144,6 +144,18 @@
     "pos": 12
   },
   {
+    "team_id": "BICIFESTIVAL",
+    "team_nome": "BICIFESTIVAL",
+    "punti": 105,
+    "vittorie": 1,
+    "p1": 1,
+    "p2": 1,
+    "p3": 1,
+    "pout": 10,
+    "n_atleti": 1,
+    "pos": 13
+  },
+  {
     "team_id": "MADIGNANESE_CICLISMO_A_S_D",
     "team_nome": "MADIGNANESE CICLISMO A.S.D",
     "punti": 104,
@@ -153,7 +165,7 @@
     "p3": 2,
     "pout": 6,
     "n_atleti": 1,
-    "pos": 13
+    "pos": 14
   },
   {
     "team_id": "GS_CICLI_FIORIN_ASD",
@@ -165,7 +177,7 @@
     "p3": 2,
     "pout": 18,
     "n_atleti": 3,
-    "pos": 14
+    "pos": 15
   },
   {
     "team_id": "S_C_PATTADA",
@@ -177,18 +189,6 @@
     "p3": 2,
     "pout": 0,
     "n_atleti": 2,
-    "pos": 15
-  },
-  {
-    "team_id": "BICIFESTIVAL",
-    "team_nome": "BICIFESTIVAL",
-    "punti": 97,
-    "vittorie": 1,
-    "p1": 1,
-    "p2": 1,
-    "p3": 1,
-    "pout": 9,
-    "n_atleti": 1,
     "pos": 16
   },
   {
@@ -240,6 +240,18 @@
     "pos": 20
   },
   {
+    "team_id": "HG_CYCLING_TEAM",
+    "team_nome": "HG CYCLING TEAM",
+    "punti": 54,
+    "vittorie": 1,
+    "p1": 1,
+    "p2": 1,
+    "p3": 2,
+    "pout": 2,
+    "n_atleti": 2,
+    "pos": 21
+  },
+  {
     "team_id": "BREGANZE_MILLENIUM",
     "team_nome": "BREGANZE MILLENIUM",
     "punti": 54,
@@ -249,7 +261,19 @@
     "p3": 1,
     "pout": 12,
     "n_atleti": 3,
-    "pos": 21
+    "pos": 22
+  },
+  {
+    "team_id": "TEAM_FABIANA_LUPERINI_ASD",
+    "team_nome": "TEAM FABIANA LUPERINI ASD",
+    "punti": 51,
+    "vittorie": 0,
+    "p1": 0,
+    "p2": 1,
+    "p3": 1,
+    "pout": 9,
+    "n_atleti": 2,
+    "pos": 23
   },
   {
     "team_id": "KTM_ACADEMY_LE_MARMOTTE",
@@ -261,19 +285,7 @@
     "p3": 1,
     "pout": 2,
     "n_atleti": 1,
-    "pos": 22
-  },
-  {
-    "team_id": "TEAM_FABIANA_LUPERINI_ASD",
-    "team_nome": "TEAM FABIANA LUPERINI ASD",
-    "punti": 48,
-    "vittorie": 0,
-    "p1": 0,
-    "p2": 1,
-    "p3": 1,
-    "pout": 8,
-    "n_atleti": 2,
-    "pos": 23
+    "pos": 24
   },
   {
     "team_id": "TOSCANA",
@@ -285,7 +297,7 @@
     "p3": 0,
     "pout": 2,
     "n_atleti": 3,
-    "pos": 24
+    "pos": 25
   },
   {
     "team_id": "LOMBARDIA",
@@ -297,7 +309,7 @@
     "p3": 1,
     "pout": 4,
     "n_atleti": 5,
-    "pos": 25
+    "pos": 26
   },
   {
     "team_id": "ASD_EFFETTO_CICLISMO_NOI_SPORT",
@@ -309,18 +321,6 @@
     "p3": 0,
     "pout": 4,
     "n_atleti": 1,
-    "pos": 26
-  },
-  {
-    "team_id": "HG_CYCLING_TEAM",
-    "team_nome": "HG CYCLING TEAM",
-    "punti": 40,
-    "vittorie": 1,
-    "p1": 1,
-    "p2": 1,
-    "p3": 1,
-    "pout": 1,
-    "n_atleti": 2,
     "pos": 27
   },
   {

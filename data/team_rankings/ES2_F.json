@@ -2,35 +2,35 @@
   {
     "team_id": "HG_CYCLING_TEAM",
     "team_nome": "HG CYCLING TEAM",
-    "punti": 376,
+    "punti": 402,
     "vittorie": 10,
     "p1": 10,
-    "p2": 6,
+    "p2": 7,
     "p3": 2,
-    "pout": 23,
+    "pout": 27,
     "n_atleti": 5,
     "pos": 1
   },
   {
     "team_id": "S_C_CESANO_MADERNO",
     "team_nome": "S.C. CESANO MADERNO",
-    "punti": 375,
-    "vittorie": 9,
-    "p1": 9,
+    "punti": 395,
+    "vittorie": 10,
+    "p1": 10,
     "p2": 6,
     "p3": 7,
-    "pout": 18,
+    "pout": 19,
     "n_atleti": 2,
     "pos": 2
   },
   {
     "team_id": "SCUOLA_CICLISMO_VERSO_L_IRIDE",
     "team_nome": "SCUOLA CICLISMO VERSO L'IRIDE",
-    "punti": 347,
+    "punti": 357,
     "vittorie": 7,
     "p1": 7,
     "p2": 5,
-    "p3": 6,
+    "p3": 7,
     "pout": 26,
     "n_atleti": 4,
     "pos": 3
@@ -204,6 +204,18 @@
     "pos": 17
   },
   {
+    "team_id": "POL_FIUMICINESE_FA_I_T_ADRIATICA",
+    "team_nome": "POL. FIUMICINESE FA.I.T. ADRIATICA",
+    "punti": 70,
+    "vittorie": 1,
+    "p1": 1,
+    "p2": 1,
+    "p3": 1,
+    "pout": 8,
+    "n_atleti": 2,
+    "pos": 18
+  },
+  {
     "team_id": "BUSTO_GAROLFO",
     "team_nome": "BUSTO GAROLFO",
     "punti": 68,
@@ -212,18 +224,6 @@
     "p2": 0,
     "p3": 1,
     "pout": 13,
-    "n_atleti": 2,
-    "pos": 18
-  },
-  {
-    "team_id": "POL_FIUMICINESE_FA_I_T_ADRIATICA",
-    "team_nome": "POL. FIUMICINESE FA.I.T. ADRIATICA",
-    "punti": 66,
-    "vittorie": 1,
-    "p1": 1,
-    "p2": 1,
-    "p3": 1,
-    "pout": 7,
     "n_atleti": 2,
     "pos": 19
   },
@@ -288,6 +288,18 @@
     "pos": 24
   },
   {
+    "team_id": "BICIFESTIVAL",
+    "team_nome": "BICIFESTIVAL",
+    "punti": 33,
+    "vittorie": 0,
+    "p1": 0,
+    "p2": 0,
+    "p3": 0,
+    "pout": 8,
+    "n_atleti": 3,
+    "pos": 25
+  },
+  {
     "team_id": "G_S_LUPI_VALLE_D_AOSTA",
     "team_nome": "G.S. LUPI VALLE D'AOSTA",
     "punti": 32,
@@ -297,7 +309,7 @@
     "p3": 0,
     "pout": 6,
     "n_atleti": 1,
-    "pos": 25
+    "pos": 26
   },
   {
     "team_id": "VENETO",
@@ -309,7 +321,7 @@
     "p3": 0,
     "pout": 0,
     "n_atleti": 1,
-    "pos": 26
+    "pos": 27
   },
   {
     "team_id": "TEAM_GO_FAST_PUGLIA_ARADEO",
@@ -321,7 +333,7 @@
     "p3": 0,
     "pout": 0,
     "n_atleti": 1,
-    "pos": 27
+    "pos": 28
   },
   {
     "team_id": "ASD_TEAM_PETRUCCI",
@@ -333,18 +345,6 @@
     "p3": 0,
     "pout": 7,
     "n_atleti": 2,
-    "pos": 28
-  },
-  {
-    "team_id": "BICIFESTIVAL",
-    "team_nome": "BICIFESTIVAL",
-    "punti": 27,
-    "vittorie": 0,
-    "p1": 0,
-    "p2": 0,
-    "p3": 0,
-    "pout": 7,
-    "n_atleti": 3,
     "pos": 29
   },
   {

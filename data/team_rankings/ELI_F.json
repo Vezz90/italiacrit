@@ -36,6 +36,18 @@
     "pos": 3
   },
   {
+    "team_id": "ISOLMANT_PREMAC_VITTORIA",
+    "team_nome": "ISOLMANT - PREMAC - VITTORIA",
+    "punti": 312,
+    "vittorie": 5,
+    "p1": 5,
+    "p2": 5,
+    "p3": 4,
+    "pout": 13,
+    "n_atleti": 8,
+    "pos": 4
+  },
+  {
     "team_id": "CANYON_SRAM_ZONDACRYPTO",
     "team_nome": "CANYON SRAM ZONDACRYPTO",
     "punti": 302,
@@ -45,18 +57,6 @@
     "p3": 5,
     "pout": 6,
     "n_atleti": 5,
-    "pos": 4
-  },
-  {
-    "team_id": "ISOLMANT_PREMAC_VITTORIA",
-    "team_nome": "ISOLMANT - PREMAC - VITTORIA",
-    "punti": 284,
-    "vittorie": 4,
-    "p1": 4,
-    "p2": 5,
-    "p3": 3,
-    "pout": 12,
-    "n_atleti": 8,
     "pos": 5
   },
   {
@@ -74,10 +74,10 @@
   {
     "team_id": "TOP_GIRLS_FASSA_BORTOLO",
     "team_nome": "TOP GIRLS - FASSA BORTOLO",
-    "punti": 201,
+    "punti": 213,
     "vittorie": 1,
     "p1": 1,
-    "p2": 4,
+    "p2": 5,
     "p3": 1,
     "pout": 14,
     "n_atleti": 8,
@@ -96,6 +96,18 @@
     "pos": 8
   },
   {
+    "team_id": "VINI_FANTINI_BEPINK",
+    "team_nome": "VINI FANTINI - BEPINK",
+    "punti": 149,
+    "vittorie": 2,
+    "p1": 2,
+    "p2": 0,
+    "p3": 2,
+    "pout": 13,
+    "n_atleti": 8,
+    "pos": 9
+  },
+  {
     "team_id": "WCC_UCI_WORLD_CYCLING_CENTRE",
     "team_nome": "WCC - UCI WORLD CYCLING CENTRE",
     "punti": 145,
@@ -105,7 +117,7 @@
     "p3": 0,
     "pout": 3,
     "n_atleti": 4,
-    "pos": 9
+    "pos": 10
   },
   {
     "team_id": "TEAM_VISMA_LEASE_A_BIKE",
@@ -117,18 +129,6 @@
     "p3": 1,
     "pout": 9,
     "n_atleti": 5,
-    "pos": 10
-  },
-  {
-    "team_id": "VINI_FANTINI_BEPINK",
-    "team_nome": "VINI FANTINI BEPINK",
-    "punti": 141,
-    "vittorie": 2,
-    "p1": 2,
-    "p2": 0,
-    "p3": 2,
-    "pout": 12,
-    "n_atleti": 8,
     "pos": 11
   },
   {
@@ -144,6 +144,18 @@
     "pos": 12
   },
   {
+    "team_id": "BIESSE_CARRERA_PREMAC",
+    "team_nome": "BIESSE - CARRERA - PREMAC",
+    "punti": 116,
+    "vittorie": 1,
+    "p1": 1,
+    "p2": 1,
+    "p3": 1,
+    "pout": 13,
+    "n_atleti": 6,
+    "pos": 13
+  },
+  {
     "team_id": "BORN_TO_WIN_BTC_CITY_LJUBLJANA",
     "team_nome": "BORN TO WIN BTC CITY LJUBLJANA",
     "punti": 111,
@@ -153,7 +165,7 @@
     "p3": 0,
     "pout": 14,
     "n_atleti": 4,
-    "pos": 13
+    "pos": 14
   },
   {
     "team_id": "LIV_ALULA_JAYCO",
@@ -165,18 +177,6 @@
     "p3": 1,
     "pout": 4,
     "n_atleti": 2,
-    "pos": 14
-  },
-  {
-    "team_id": "BIESSE_CARRERA_PREMAC",
-    "team_nome": "BIESSE - CARRERA - PREMAC",
-    "punti": 110,
-    "vittorie": 1,
-    "p1": 1,
-    "p2": 1,
-    "p3": 1,
-    "pout": 12,
-    "n_atleti": 6,
     "pos": 15
   },
   {
@@ -254,13 +254,13 @@
   {
     "team_id": "TEAM_MENDELSPECK_E_WORK",
     "team_nome": "TEAM MENDELSPECK E-WORK",
-    "punti": 69,
+    "punti": 73,
     "vittorie": 0,
     "p1": 0,
     "p2": 1,
     "p3": 2,
-    "pout": 4,
-    "n_atleti": 3,
+    "pout": 5,
+    "n_atleti": 4,
     "pos": 22
   },
   {
@@ -288,6 +288,18 @@
     "pos": 24
   },
   {
+    "team_id": "A_R_MONEX_PRO_CYCLING_TEAM",
+    "team_nome": "A.R.MONEX PRO CYCLING TEAM",
+    "punti": 46,
+    "vittorie": 0,
+    "p1": 0,
+    "p2": 1,
+    "p3": 1,
+    "pout": 5,
+    "n_atleti": 2,
+    "pos": 25
+  },
+  {
     "team_id": "FANINI_PRO_CYCLING",
     "team_nome": "FANINI PRO CYCLING",
     "punti": 45,
@@ -297,7 +309,7 @@
     "p3": 1,
     "pout": 4,
     "n_atleti": 3,
-    "pos": 25
+    "pos": 26
   },
   {
     "team_id": "ZHIRAF",
@@ -309,18 +321,6 @@
     "p3": 2,
     "pout": 5,
     "n_atleti": 3,
-    "pos": 26
-  },
-  {
-    "team_id": "A_R_MONEX_PRO_CYCLING_TEAM",
-    "team_nome": "A.R.MONEX PRO CYCLING TEAM",
-    "punti": 41,
-    "vittorie": 0,
-    "p1": 0,
-    "p2": 1,
-    "p3": 1,
-    "pout": 4,
-    "n_atleti": 2,
     "pos": 27
   },
   {
@@ -540,6 +540,18 @@
     "pos": 45
   },
   {
+    "team_id": "ST_KILDA_CYCLING_CLUB",
+    "team_nome": "ST KILDA CYCLING CLUB",
+    "punti": 3,
+    "vittorie": 0,
+    "p1": 0,
+    "p2": 0,
+    "p3": 0,
+    "pout": 2,
+    "n_atleti": 2,
+    "pos": 46
+  },
+  {
     "team_id": "MOVISTAR_TEAM",
     "team_nome": "MOVISTAR TEAM",
     "punti": 2,
@@ -549,6 +561,6 @@
     "p3": 0,
     "pout": 1,
     "n_atleti": 1,
-    "pos": 46
+    "pos": 47
   }
 ]
