@@ -12,6 +12,18 @@
     "pos": 1
   },
   {
+    "team_id": "GENERAL_STORE_ESSEGIBI_F_LLI_CURIA",
+    "team_nome": "GENERAL STORE -ESSEGIBI-F.LLI CURIA",
+    "punti": 940,
+    "vittorie": 11,
+    "p1": 11,
+    "p2": 4,
+    "p3": 4,
+    "pout": 45,
+    "n_atleti": 14,
+    "pos": 2
+  },
+  {
     "team_id": "TEAM_TECHNIPES_INEMILIAROMAGNA",
     "team_nome": "TEAM TECHNIPES #INEMILIAROMAGNA",
     "punti": 915,
@@ -20,18 +32,6 @@
     "p2": 9,
     "p3": 7,
     "pout": 35,
-    "n_atleti": 13,
-    "pos": 2
-  },
-  {
-    "team_id": "GENERAL_STORE_ESSEGIBI_F_LLI_CURIA",
-    "team_nome": "GENERAL STORE -ESSEGIBI-F.LLI CURIA",
-    "punti": 889,
-    "vittorie": 10,
-    "p1": 10,
-    "p2": 4,
-    "p3": 4,
-    "pout": 44,
     "n_atleti": 13,
     "pos": 3
   },
@@ -228,6 +228,18 @@
     "pos": 19
   },
   {
+    "team_id": "SOLUTION_TECH_NIPPO_RALI",
+    "team_nome": "SOLUTION TECH NIPPO RALI",
+    "punti": 228,
+    "vittorie": 1,
+    "p1": 1,
+    "p2": 2,
+    "p3": 1,
+    "pout": 5,
+    "n_atleti": 7,
+    "pos": 20
+  },
+  {
     "team_id": "CICLISTICA_ROSTESE",
     "team_nome": "CICLISTICA ROSTESE",
     "punti": 213,
@@ -237,19 +249,31 @@
     "p3": 3,
     "pout": 16,
     "n_atleti": 5,
-    "pos": 20
+    "pos": 21
   },
   {
-    "team_id": "BARDIANI_CSF_7_SABER",
-    "team_nome": "BARDIANI-CSF 7 SABER",
-    "punti": 186,
+    "team_id": "ASD_SWATT_CLUB",
+    "team_nome": "ASD SWATT CLUB",
+    "punti": 206,
     "vittorie": 2,
     "p1": 2,
     "p2": 0,
     "p3": 2,
-    "pout": 4,
+    "pout": 7,
+    "n_atleti": 6,
+    "pos": 22
+  },
+  {
+    "team_id": "BARDIANI_CSF_7_SABER",
+    "team_nome": "BARDIANI-CSF 7 SABER",
+    "punti": 198,
+    "vittorie": 2,
+    "p1": 2,
+    "p2": 0,
+    "p3": 2,
+    "pout": 5,
     "n_atleti": 7,
-    "pos": 21
+    "pos": 23
   },
   {
     "team_id": "VPM_MORETTI_SCS",
@@ -261,30 +285,6 @@
     "p3": 1,
     "pout": 18,
     "n_atleti": 9,
-    "pos": 22
-  },
-  {
-    "team_id": "SOLUTION_TECH_NIPPO_RALI",
-    "team_nome": "SOLUTION TECH NIPPO RALI",
-    "punti": 174,
-    "vittorie": 1,
-    "p1": 1,
-    "p2": 2,
-    "p3": 0,
-    "pout": 4,
-    "n_atleti": 6,
-    "pos": 23
-  },
-  {
-    "team_id": "ASD_SWATT_CLUB",
-    "team_nome": "ASD SWATT CLUB",
-    "punti": 173,
-    "vittorie": 2,
-    "p1": 2,
-    "p2": 0,
-    "p3": 2,
-    "pout": 5,
-    "n_atleti": 6,
     "pos": 24
   },
   {
@@ -504,6 +504,18 @@
     "pos": 42
   },
   {
+    "team_id": "TEAM_UKYO",
+    "team_nome": "TEAM UKYO",
+    "punti": 57,
+    "vittorie": 0,
+    "p1": 0,
+    "p2": 1,
+    "p3": 0,
+    "pout": 2,
+    "n_atleti": 2,
+    "pos": 43
+  },
+  {
     "team_id": "GOODSHOP_YOYOGURT",
     "team_nome": "GOODSHOP YOYOGURT",
     "punti": 49,
@@ -513,7 +525,7 @@
     "p3": 0,
     "pout": 7,
     "n_atleti": 4,
-    "pos": 43
+    "pos": 44
   },
   {
     "team_id": "NIPPO_NUOVACOMAUTO_OBOR",
@@ -525,7 +537,7 @@
     "p3": 0,
     "pout": 8,
     "n_atleti": 4,
-    "pos": 44
+    "pos": 45
   },
   {
     "team_id": "BOURG_EN_BRESSE_AIN_CYCLISME",
@@ -537,7 +549,7 @@
     "p3": 0,
     "pout": 2,
     "n_atleti": 2,
-    "pos": 45
+    "pos": 46
   },
   {
     "team_id": "INEOS_GRENADIERS_RACING_ACADEMY",
@@ -549,7 +561,7 @@
     "p3": 0,
     "pout": 2,
     "n_atleti": 2,
-    "pos": 46
+    "pos": 47
   },
   {
     "team_id": "MADONE_TEAM_BIKE_SICILIA",
@@ -561,7 +573,7 @@
     "p3": 2,
     "pout": 4,
     "n_atleti": 2,
-    "pos": 47
+    "pos": 48
   },
   {
     "team_id": "NEUTRAL_TEAM",
@@ -573,7 +585,7 @@
     "p3": 0,
     "pout": 1,
     "n_atleti": 2,
-    "pos": 48
+    "pos": 49
   },
   {
     "team_id": "PETROLIKE",
@@ -585,7 +597,7 @@
     "p3": 0,
     "pout": 4,
     "n_atleti": 2,
-    "pos": 49
+    "pos": 50
   },
   {
     "team_id": "EQUIPE_CORBETTESE",
@@ -597,7 +609,7 @@
     "p3": 0,
     "pout": 2,
     "n_atleti": 1,
-    "pos": 50
+    "pos": 51
   },
   {
     "team_id": "TIROL_KTM_CYCLING_TEAM",
@@ -609,7 +621,7 @@
     "p3": 0,
     "pout": 4,
     "n_atleti": 3,
-    "pos": 51
+    "pos": 52
   },
   {
     "team_id": "MENTECORPO_TEAM",
@@ -621,7 +633,7 @@
     "p3": 1,
     "pout": 2,
     "n_atleti": 3,
-    "pos": 52
+    "pos": 53
   },
   {
     "team_id": "U_C_MONACO",
@@ -633,7 +645,7 @@
     "p3": 0,
     "pout": 3,
     "n_atleti": 3,
-    "pos": 53
+    "pos": 54
   },
   {
     "team_id": "GS_MALTINTI_LAMPADARI_BANCA_CAMBIANO",
@@ -645,7 +657,7 @@
     "p3": 0,
     "pout": 6,
     "n_atleti": 3,
-    "pos": 54
+    "pos": 55
   },
   {
     "team_id": "MOVISTAR_TEAM_ACADEMY",
@@ -657,7 +669,7 @@
     "p3": 0,
     "pout": 5,
     "n_atleti": 2,
-    "pos": 55
+    "pos": 56
   },
   {
     "team_id": "LOKOMOTIV_MANAS",
@@ -669,7 +681,7 @@
     "p3": 0,
     "pout": 0,
     "n_atleti": 1,
-    "pos": 56
+    "pos": 57
   },
   {
     "team_id": "METEC_SOLARWATT_P_B_MANTEL",
@@ -681,7 +693,7 @@
     "p3": 0,
     "pout": 0,
     "n_atleti": 1,
-    "pos": 57
+    "pos": 58
   },
   {
     "team_id": "PRO_GI_T_CYCLING_TEAM",
@@ -693,7 +705,7 @@
     "p3": 0,
     "pout": 4,
     "n_atleti": 4,
-    "pos": 58
+    "pos": 59
   },
   {
     "team_id": "NAZIONALE_PARALIMPICA",
@@ -705,7 +717,7 @@
     "p3": 1,
     "pout": 1,
     "n_atleti": 2,
-    "pos": 59
+    "pos": 60
   },
   {
     "team_id": "A_S_D_U_C_PISTOIESE_TEAM",
@@ -717,7 +729,7 @@
     "p3": 0,
     "pout": 1,
     "n_atleti": 1,
-    "pos": 60
+    "pos": 61
   },
   {
     "team_id": "ARAN_CUCINE_VEJUS",
@@ -729,7 +741,7 @@
     "p3": 0,
     "pout": 4,
     "n_atleti": 3,
-    "pos": 61
+    "pos": 62
   },
   {
     "team_id": "ZAPPI_RACING_TEAM",
@@ -741,18 +753,6 @@
     "p3": 0,
     "pout": 3,
     "n_atleti": 2,
-    "pos": 62
-  },
-  {
-    "team_id": "TEAM_UKYO",
-    "team_nome": "TEAM UKYO",
-    "punti": 18,
-    "vittorie": 0,
-    "p1": 0,
-    "p2": 0,
-    "p3": 0,
-    "pout": 1,
-    "n_atleti": 1,
     "pos": 63
   },
   {
@@ -780,6 +780,18 @@
     "pos": 65
   },
   {
+    "team_id": "AVC_AIX_EN_PROVENCE_DOLE",
+    "team_nome": "AVC AIX EN PROVENCE DOLE",
+    "punti": 16,
+    "vittorie": 0,
+    "p1": 0,
+    "p2": 0,
+    "p3": 0,
+    "pout": 3,
+    "n_atleti": 3,
+    "pos": 66
+  },
+  {
     "team_id": "ROLLING_BIKE_RACING_TEAM",
     "team_nome": "ROLLING BIKE RACING TEAM",
     "punti": 15,
@@ -789,7 +801,7 @@
     "p3": 0,
     "pout": 0,
     "n_atleti": 1,
-    "pos": 66
+    "pos": 67
   },
   {
     "team_id": "MG_K_VIS_PROMOTECH_FMB",
@@ -801,7 +813,7 @@
     "p3": 0,
     "pout": 0,
     "n_atleti": 1,
-    "pos": 67
+    "pos": 68
   },
   {
     "team_id": "TEAM_DRALI_REPSOL",
@@ -813,7 +825,7 @@
     "p3": 0,
     "pout": 1,
     "n_atleti": 1,
-    "pos": 68
+    "pos": 69
   },
   {
     "team_id": "S_C_VALLE_SERIANA_CENE_A_S_D",
@@ -825,7 +837,7 @@
     "p3": 0,
     "pout": 2,
     "n_atleti": 1,
-    "pos": 69
+    "pos": 70
   },
   {
     "team_id": "ASD_TEAM_MOOVEO",
@@ -837,7 +849,7 @@
     "p3": 0,
     "pout": 0,
     "n_atleti": 1,
-    "pos": 70
+    "pos": 71
   },
   {
     "team_id": "TUDOR_PRO_CYCLING_U23",
@@ -849,7 +861,7 @@
     "p3": 0,
     "pout": 2,
     "n_atleti": 2,
-    "pos": 71
+    "pos": 72
   },
   {
     "team_id": "A_S_D_CATTOLI_ANDREA",
@@ -861,7 +873,7 @@
     "p3": 1,
     "pout": 0,
     "n_atleti": 1,
-    "pos": 72
+    "pos": 73
   },
   {
     "team_id": "TEAM_WSA_KTM_GRAZ",
@@ -873,7 +885,7 @@
     "p3": 0,
     "pout": 1,
     "n_atleti": 1,
-    "pos": 73
+    "pos": 74
   },
   {
     "team_id": "U_C_PREGNANA",
@@ -885,7 +897,7 @@
     "p3": 0,
     "pout": 3,
     "n_atleti": 3,
-    "pos": 74
+    "pos": 75
   },
   {
     "team_id": "TEAM_PROMOTECH_MG_K_VIS",
@@ -897,18 +909,6 @@
     "p3": 0,
     "pout": 2,
     "n_atleti": 1,
-    "pos": 75
-  },
-  {
-    "team_id": "AVC_AIX_EN_PROVENCE_DOLE",
-    "team_nome": "AVC AIX EN PROVENCE DOLE",
-    "punti": 7,
-    "vittorie": 0,
-    "p1": 0,
-    "p2": 0,
-    "p3": 0,
-    "pout": 2,
-    "n_atleti": 2,
     "pos": 76
   },
   {

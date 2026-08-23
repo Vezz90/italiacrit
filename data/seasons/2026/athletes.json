@@ -2868,6 +2868,438 @@
       }
     ]
   },
+  "PONOMAR_ANDRII": {
+    "id": "PONOMAR_ANDRII",
+    "nome": "ANDRII",
+    "cognome": "PONOMAR",
+    "team_attuale": "GENERAL STORE -ESSEGIBI-F.LLI CURIA",
+    "team_id": "GENERAL_STORE_ESSEGIBI_F_LLI_CURIA",
+    "categoria": "ELI_M",
+    "genere": "M",
+    "punti_totali": 45,
+    "risultati": [
+      {
+        "gara_id": "73_GRAN_PREMIO_COLLI_ROVESCALESI_2026-08-23_ELI_M",
+        "nome_gara": "73 GRAN PREMIO COLLI ROVESCALESI",
+        "data": "2026-08-23",
+        "posizione": 1,
+        "punti_effettivi": 45,
+        "team": "GENERAL STORE -ESSEGIBI-F.LLI CURIA",
+        "moltiplicatore": 3,
+        "tipo": "internazionale",
+        "regione": "LOMBARDIA",
+        "km": "164.680",
+        "media": ""
+      }
+    ]
+  },
+  "GARIBBO_NICOLO": {
+    "id": "GARIBBO_NICOLO",
+    "nome": "NICOLO'",
+    "cognome": "GARIBBO",
+    "team_attuale": "TEAM UKYO",
+    "team_id": "TEAM_UKYO",
+    "categoria": "ELI_M",
+    "genere": "M",
+    "punti_totali": 54,
+    "risultati": [
+      {
+        "gara_id": "73_GRAN_PREMIO_COLLI_ROVESCALESI_2026-08-23_ELI_M",
+        "nome_gara": "73 GRAN PREMIO COLLI ROVESCALESI",
+        "data": "2026-08-23",
+        "posizione": 2,
+        "punti_effettivi": 36,
+        "team": "TEAM UKYO",
+        "moltiplicatore": 3,
+        "tipo": "internazionale",
+        "regione": "LOMBARDIA",
+        "km": "164.680",
+        "media": ""
+      },
+      {
+        "gara_id": "40_GIRO_DEL_MEDIO_BRENTA_2026-07-05_ELI_M",
+        "nome_gara": "40 GIRO DEL MEDIO BRENTA",
+        "data": "2026-07-05",
+        "posizione": 5,
+        "punti_effettivi": 18,
+        "team": "TEAM UKYO",
+        "moltiplicatore": 3,
+        "tipo": "internazionale",
+        "regione": "VENETO",
+        "km": "175.000",
+        "media": "40.928"
+      }
+    ]
+  },
+  "BALMER_ALEXANDRE": {
+    "id": "BALMER_ALEXANDRE",
+    "nome": "ALEXANDRE",
+    "cognome": "BALMER",
+    "team_attuale": "SOLUTION TECH NIPPO RALI",
+    "team_id": "SOLUTION_TECH_NIPPO_RALI",
+    "categoria": "ELI_M",
+    "genere": "M",
+    "punti_totali": 66,
+    "risultati": [
+      {
+        "gara_id": "73_GRAN_PREMIO_COLLI_ROVESCALESI_2026-08-23_ELI_M",
+        "nome_gara": "73 GRAN PREMIO COLLI ROVESCALESI",
+        "data": "2026-08-23",
+        "posizione": 3,
+        "punti_effettivi": 30,
+        "team": "SOLUTION TECH NIPPO RALI",
+        "moltiplicatore": 3,
+        "tipo": "internazionale",
+        "regione": "LOMBARDIA",
+        "km": "164.680",
+        "media": ""
+      },
+      {
+        "gara_id": "30_GIRO_DELLA_PROVINCIA_DI_BIELLA_84_TORINO_BIELLA_2026-04-19_ELI_M",
+        "nome_gara": "30 GIRO DELLA PROVINCIA DI BIELLA 84 TORINO BIELLA",
+        "data": "2026-04-19",
+        "posizione": 2,
+        "punti_effettivi": 36,
+        "team": "SOLUTION TECH NIPPO RALI",
+        "moltiplicatore": 3,
+        "tipo": "internazionale",
+        "regione": "PIEMONTE",
+        "km": "143.000",
+        "media": "42.336"
+      }
+    ]
+  },
+  "TSARENKO_KYRYLO": {
+    "id": "TSARENKO_KYRYLO",
+    "nome": "KYRYLO",
+    "cognome": "TSARENKO",
+    "team_attuale": "SOLUTION TECH NIPPO RALI",
+    "team_id": "SOLUTION_TECH_NIPPO_RALI",
+    "categoria": "ELI_M",
+    "genere": "M",
+    "punti_totali": 24,
+    "risultati": [
+      {
+        "gara_id": "73_GRAN_PREMIO_COLLI_ROVESCALESI_2026-08-23_ELI_M",
+        "nome_gara": "73 GRAN PREMIO COLLI ROVESCALESI",
+        "data": "2026-08-23",
+        "posizione": 4,
+        "punti_effettivi": 24,
+        "team": "SOLUTION TECH NIPPO RALI",
+        "moltiplicatore": 3,
+        "tipo": "internazionale",
+        "regione": "LOMBARDIA",
+        "km": "164.680",
+        "media": ""
+      }
+    ]
+  },
+  "OIOLI_MANUEL": {
+    "id": "OIOLI_MANUEL",
+    "nome": "MANUEL",
+    "cognome": "OIOLI",
+    "team_attuale": "ASD SWATT CLUB",
+    "team_id": "ASD_SWATT_CLUB",
+    "categoria": "ELI_M",
+    "genere": "M",
+    "punti_totali": 108,
+    "risultati": [
+      {
+        "gara_id": "73_GRAN_PREMIO_COLLI_ROVESCALESI_2026-08-23_ELI_M",
+        "nome_gara": "73 GRAN PREMIO COLLI ROVESCALESI",
+        "data": "2026-08-23",
+        "posizione": 5,
+        "punti_effettivi": 18,
+        "team": "ASD SWATT CLUB",
+        "moltiplicatore": 3,
+        "tipo": "internazionale",
+        "regione": "LOMBARDIA",
+        "km": "164.680",
+        "media": ""
+      },
+      {
+        "gara_id": "79_FIRENZE_VIAREGGIO_2026-08-15_ELI_M",
+        "nome_gara": "79 FIRENZE VIAREGGIO",
+        "data": "2026-08-15",
+        "posizione": 1,
+        "punti_effettivi": 30,
+        "team": "ASD SWATT CLUB",
+        "moltiplicatore": 2,
+        "tipo": "nazionale",
+        "regione": "TOSCANA",
+        "km": "180.000",
+        "media": "44.040"
+      },
+      {
+        "gara_id": "43_TROFEO_SPORTIVI_DI_BRIGA_2026-08-06_ELI_M",
+        "nome_gara": "43 TROFEO SPORTIVI DI BRIGA",
+        "data": "2026-08-06",
+        "posizione": 8,
+        "punti_effettivi": 6,
+        "team": "ASD SWATT CLUB",
+        "moltiplicatore": 2,
+        "tipo": "nazionale",
+        "regione": "PIEMONTE",
+        "km": "177.000",
+        "media": "43.668"
+      },
+      {
+        "gara_id": "63_TROFEO_CITTA_DI_BRESCIA_2026-06-30_ELI_M",
+        "nome_gara": "63 TROFEO CITTA' DI BRESCIA",
+        "data": "2026-06-30",
+        "posizione": 3,
+        "punti_effettivi": 30,
+        "team": "ASD SWATT CLUB",
+        "moltiplicatore": 3,
+        "tipo": "internazionale",
+        "regione": "LOMBARDIA",
+        "km": "121.800",
+        "media": "43.315"
+      },
+      {
+        "gara_id": "30_GIRO_DELLA_PROVINCIA_DI_BIELLA_84_TORINO_BIELLA_2026-04-19_ELI_M",
+        "nome_gara": "30 GIRO DELLA PROVINCIA DI BIELLA 84 TORINO BIELLA",
+        "data": "2026-04-19",
+        "posizione": 4,
+        "punti_effettivi": 24,
+        "team": "ASD SWATT CLUB",
+        "moltiplicatore": 3,
+        "tipo": "internazionale",
+        "regione": "PIEMONTE",
+        "km": "143.000",
+        "media": "42.336"
+      }
+    ]
+  },
+  "PETTITI_NICOLO": {
+    "id": "PETTITI_NICOLO",
+    "nome": "NICOLO'",
+    "cognome": "PETTITI",
+    "team_attuale": "ASD SWATT CLUB",
+    "team_id": "ASD_SWATT_CLUB",
+    "categoria": "ELI_M",
+    "genere": "M",
+    "punti_totali": 21,
+    "risultati": [
+      {
+        "gara_id": "73_GRAN_PREMIO_COLLI_ROVESCALESI_2026-08-23_ELI_M",
+        "nome_gara": "73 GRAN PREMIO COLLI ROVESCALESI",
+        "data": "2026-08-23",
+        "posizione": 6,
+        "punti_effettivi": 15,
+        "team": "ASD SWATT CLUB",
+        "moltiplicatore": 3,
+        "tipo": "internazionale",
+        "regione": "LOMBARDIA",
+        "km": "164.680",
+        "media": ""
+      },
+      {
+        "gara_id": "79_FIRENZE_VIAREGGIO_2026-08-15_ELI_M",
+        "nome_gara": "79 FIRENZE VIAREGGIO",
+        "data": "2026-08-15",
+        "posizione": 8,
+        "punti_effettivi": 6,
+        "team": "ASD SWATT CLUB",
+        "moltiplicatore": 2,
+        "tipo": "nazionale",
+        "regione": "TOSCANA",
+        "km": "180.000",
+        "media": "44.040"
+      }
+    ]
+  },
+  "ROJAS_NARANJO_VICENTE_RODRIGO_ANTONIO": {
+    "id": "ROJAS_NARANJO_VICENTE_RODRIGO_ANTONIO",
+    "nome": "NARANJO VICENTE RODRIGO ANTONIO",
+    "cognome": "ROJAS",
+    "team_attuale": "BARDIANI-CSF 7 SABER",
+    "team_id": "BARDIANI_CSF_7_SABER",
+    "categoria": "ELI_M",
+    "genere": "M",
+    "punti_totali": 15,
+    "risultati": [
+      {
+        "gara_id": "73_GRAN_PREMIO_COLLI_ROVESCALESI_2026-08-23_ELI_M",
+        "nome_gara": "73 GRAN PREMIO COLLI ROVESCALESI",
+        "data": "2026-08-23",
+        "posizione": 7,
+        "punti_effettivi": 12,
+        "team": "BARDIANI-CSF 7 SABER",
+        "moltiplicatore": 3,
+        "tipo": "internazionale",
+        "regione": "LOMBARDIA",
+        "km": "164.680",
+        "media": ""
+      },
+      {
+        "gara_id": "40_GIRO_DEL_MEDIO_BRENTA_2026-07-05_ELI_M",
+        "nome_gara": "40 GIRO DEL MEDIO BRENTA",
+        "data": "2026-07-05",
+        "posizione": 10,
+        "punti_effettivi": 3,
+        "team": "BARDIANI-CSF 7 SABER",
+        "moltiplicatore": 3,
+        "tipo": "internazionale",
+        "regione": "VENETO",
+        "km": "175.000",
+        "media": "40.928"
+      }
+    ]
+  },
+  "GRIECO_LUCAS": {
+    "id": "GRIECO_LUCAS",
+    "nome": "LUCAS",
+    "cognome": "GRIECO",
+    "team_attuale": "AVC AIX EN PROVENCE DOLE",
+    "team_id": "AVC_AIX_EN_PROVENCE_DOLE",
+    "categoria": "ELI_M",
+    "genere": "M",
+    "punti_totali": 9,
+    "risultati": [
+      {
+        "gara_id": "73_GRAN_PREMIO_COLLI_ROVESCALESI_2026-08-23_ELI_M",
+        "nome_gara": "73 GRAN PREMIO COLLI ROVESCALESI",
+        "data": "2026-08-23",
+        "posizione": 8,
+        "punti_effettivi": 9,
+        "team": "AVC AIX EN PROVENCE DOLE",
+        "moltiplicatore": 3,
+        "tipo": "internazionale",
+        "regione": "LOMBARDIA",
+        "km": "164.680",
+        "media": ""
+      }
+    ]
+  },
+  "DE_CASSAN_DAVIDE": {
+    "id": "DE_CASSAN_DAVIDE",
+    "nome": "CASSAN DAVIDE",
+    "cognome": "DE",
+    "team_attuale": "GENERAL STORE -ESSEGIBI-F.LLI CURIA",
+    "team_id": "GENERAL_STORE_ESSEGIBI_F_LLI_CURIA",
+    "categoria": "ELI_M",
+    "genere": "M",
+    "punti_totali": 146,
+    "risultati": [
+      {
+        "gara_id": "73_GRAN_PREMIO_COLLI_ROVESCALESI_2026-08-23_ELI_M",
+        "nome_gara": "73 GRAN PREMIO COLLI ROVESCALESI",
+        "data": "2026-08-23",
+        "posizione": 9,
+        "punti_effettivi": 6,
+        "team": "GENERAL STORE -ESSEGIBI-F.LLI CURIA",
+        "moltiplicatore": 3,
+        "tipo": "internazionale",
+        "regione": "LOMBARDIA",
+        "km": "164.680",
+        "media": ""
+      },
+      {
+        "gara_id": "44_ZANE_MONTE_CENGIO_2026-08-01_ELI_M",
+        "nome_gara": "44 ZANE' MONTE CENGIO",
+        "data": "2026-08-01",
+        "posizione": 1,
+        "punti_effettivi": 30,
+        "team": "GENERAL STORE -ESSEGIBI-F.LLI CURIA",
+        "moltiplicatore": 2,
+        "tipo": "nazionale",
+        "regione": "VENETO",
+        "km": "121.000",
+        "media": "39.854"
+      },
+      {
+        "gara_id": "83_BASSANO_MONTE_GRAPPA_2026-07-26_ELI_M",
+        "nome_gara": "83 BASSANO MONTE GRAPPA",
+        "data": "2026-07-26",
+        "posizione": 7,
+        "punti_effettivi": 8,
+        "team": "GENERAL STORE -ESSEGIBI-F.LLI CURIA",
+        "moltiplicatore": 2,
+        "tipo": "nazionale",
+        "regione": "VENETO",
+        "km": "107.900",
+        "media": "37.735"
+      },
+      {
+        "gara_id": "43_TROFEO_M_P_FILTRI_2026-07-12_ELI_M",
+        "nome_gara": "43 TROFEO M P FILTRI",
+        "data": "2026-07-12",
+        "posizione": 2,
+        "punti_effettivi": 12,
+        "team": "GENERAL STORE -ESSEGIBI-F.LLI CURIA",
+        "moltiplicatore": 1,
+        "tipo": "regionale",
+        "regione": "LOMBARDIA",
+        "km": "145.000",
+        "media": "42.456"
+      },
+      {
+        "gara_id": "40_GIRO_DEL_MEDIO_BRENTA_2026-07-05_ELI_M",
+        "nome_gara": "40 GIRO DEL MEDIO BRENTA",
+        "data": "2026-07-05",
+        "posizione": 1,
+        "punti_effettivi": 45,
+        "team": "GENERAL STORE -ESSEGIBI-F.LLI CURIA",
+        "moltiplicatore": 3,
+        "tipo": "internazionale",
+        "regione": "VENETO",
+        "km": "175.000",
+        "media": "40.928"
+      },
+      {
+        "gara_id": "48_GRAN_PREMIO_CITTA_DI_EMPOLI_2026-06-13_ELI_M",
+        "nome_gara": "48 GRAN PREMIO CITTA' DI EMPOLI",
+        "data": "2026-06-13",
+        "posizione": 1,
+        "punti_effettivi": 30,
+        "team": "GENERAL STORE -ESSEGIBI-F.LLI CURIA",
+        "moltiplicatore": 2,
+        "tipo": "nazionale",
+        "regione": "TOSCANA",
+        "km": "146.000",
+        "media": "41.751"
+      },
+      {
+        "gara_id": "70_TROFEO_ALCIDE_DE_GASPERI_2026-06-02_ELI_M",
+        "nome_gara": "70 TROFEO ALCIDE DE GASPERI",
+        "data": "2026-06-02",
+        "posizione": 6,
+        "punti_effettivi": 15,
+        "team": "GENERAL STORE -ESSEGIBI-F.LLI CURIA",
+        "moltiplicatore": 3,
+        "tipo": "internazionale",
+        "regione": "TRENTO",
+        "km": "156.900",
+        "media": "39.946"
+      }
+    ]
+  },
+  "RACCANI_SIMONE": {
+    "id": "RACCANI_SIMONE",
+    "nome": "SIMONE",
+    "cognome": "RACCANI",
+    "team_attuale": "TEAM UKYO",
+    "team_id": "TEAM_UKYO",
+    "categoria": "ELI_M",
+    "genere": "M",
+    "punti_totali": 3,
+    "risultati": [
+      {
+        "gara_id": "73_GRAN_PREMIO_COLLI_ROVESCALESI_2026-08-23_ELI_M",
+        "nome_gara": "73 GRAN PREMIO COLLI ROVESCALESI",
+        "data": "2026-08-23",
+        "posizione": 10,
+        "punti_effettivi": 3,
+        "team": "TEAM UKYO",
+        "moltiplicatore": 3,
+        "tipo": "internazionale",
+        "regione": "LOMBARDIA",
+        "km": "164.680",
+        "media": ""
+      }
+    ]
+  },
   "MASCIARELLI_STEFANO": {
     "id": "MASCIARELLI_STEFANO",
     "nome": "STEFANO",
@@ -53783,70 +54215,6 @@
       }
     ]
   },
-  "OIOLI_MANUEL": {
-    "id": "OIOLI_MANUEL",
-    "nome": "MANUEL",
-    "cognome": "OIOLI",
-    "team_attuale": "ASD SWATT CLUB",
-    "team_id": "ASD_SWATT_CLUB",
-    "categoria": "ELI_M",
-    "genere": "M",
-    "punti_totali": 90,
-    "risultati": [
-      {
-        "gara_id": "79_FIRENZE_VIAREGGIO_2026-08-15_ELI_M",
-        "nome_gara": "79 FIRENZE VIAREGGIO",
-        "data": "2026-08-15",
-        "posizione": 1,
-        "punti_effettivi": 30,
-        "team": "ASD SWATT CLUB",
-        "moltiplicatore": 2,
-        "tipo": "nazionale",
-        "regione": "TOSCANA",
-        "km": "180.000",
-        "media": "44.040"
-      },
-      {
-        "gara_id": "43_TROFEO_SPORTIVI_DI_BRIGA_2026-08-06_ELI_M",
-        "nome_gara": "43 TROFEO SPORTIVI DI BRIGA",
-        "data": "2026-08-06",
-        "posizione": 8,
-        "punti_effettivi": 6,
-        "team": "ASD SWATT CLUB",
-        "moltiplicatore": 2,
-        "tipo": "nazionale",
-        "regione": "PIEMONTE",
-        "km": "177.000",
-        "media": "43.668"
-      },
-      {
-        "gara_id": "63_TROFEO_CITTA_DI_BRESCIA_2026-06-30_ELI_M",
-        "nome_gara": "63 TROFEO CITTA' DI BRESCIA",
-        "data": "2026-06-30",
-        "posizione": 3,
-        "punti_effettivi": 30,
-        "team": "ASD SWATT CLUB",
-        "moltiplicatore": 3,
-        "tipo": "internazionale",
-        "regione": "LOMBARDIA",
-        "km": "121.800",
-        "media": "43.315"
-      },
-      {
-        "gara_id": "30_GIRO_DELLA_PROVINCIA_DI_BIELLA_84_TORINO_BIELLA_2026-04-19_ELI_M",
-        "nome_gara": "30 GIRO DELLA PROVINCIA DI BIELLA 84 TORINO BIELLA",
-        "data": "2026-04-19",
-        "posizione": 4,
-        "punti_effettivi": 24,
-        "team": "ASD SWATT CLUB",
-        "moltiplicatore": 3,
-        "tipo": "internazionale",
-        "regione": "PIEMONTE",
-        "km": "143.000",
-        "media": "42.336"
-      }
-    ]
-  },
   "SLESARENKO_ILYA": {
     "id": "SLESARENKO_ILYA",
     "nome": "ILYA",
@@ -54397,31 +54765,6 @@
         "regione": "TOSCANA",
         "km": "149.000",
         "media": "42.393"
-      }
-    ]
-  },
-  "PETTITI_NICOLO": {
-    "id": "PETTITI_NICOLO",
-    "nome": "NICOLO'",
-    "cognome": "PETTITI",
-    "team_attuale": "ASD SWATT CLUB",
-    "team_id": "ASD_SWATT_CLUB",
-    "categoria": "ELI_M",
-    "genere": "M",
-    "punti_totali": 6,
-    "risultati": [
-      {
-        "gara_id": "79_FIRENZE_VIAREGGIO_2026-08-15_ELI_M",
-        "nome_gara": "79 FIRENZE VIAREGGIO",
-        "data": "2026-08-15",
-        "posizione": 8,
-        "punti_effettivi": 6,
-        "team": "ASD SWATT CLUB",
-        "moltiplicatore": 2,
-        "tipo": "nazionale",
-        "regione": "TOSCANA",
-        "km": "180.000",
-        "media": "44.040"
       }
     ]
   },
@@ -91518,96 +91861,6 @@
         "regione": "TOSCANA",
         "km": "34.500",
         "media": "35.085"
-      }
-    ]
-  },
-  "DE_CASSAN_DAVIDE": {
-    "id": "DE_CASSAN_DAVIDE",
-    "nome": "CASSAN DAVIDE",
-    "cognome": "DE",
-    "team_attuale": "GENERAL STORE -ESSEGIBI-F.LLI CURIA",
-    "team_id": "GENERAL_STORE_ESSEGIBI_F_LLI_CURIA",
-    "categoria": "ELI_M",
-    "genere": "M",
-    "punti_totali": 140,
-    "risultati": [
-      {
-        "gara_id": "44_ZANE_MONTE_CENGIO_2026-08-01_ELI_M",
-        "nome_gara": "44 ZANE' MONTE CENGIO",
-        "data": "2026-08-01",
-        "posizione": 1,
-        "punti_effettivi": 30,
-        "team": "GENERAL STORE -ESSEGIBI-F.LLI CURIA",
-        "moltiplicatore": 2,
-        "tipo": "nazionale",
-        "regione": "VENETO",
-        "km": "121.000",
-        "media": "39.854"
-      },
-      {
-        "gara_id": "83_BASSANO_MONTE_GRAPPA_2026-07-26_ELI_M",
-        "nome_gara": "83 BASSANO MONTE GRAPPA",
-        "data": "2026-07-26",
-        "posizione": 7,
-        "punti_effettivi": 8,
-        "team": "GENERAL STORE -ESSEGIBI-F.LLI CURIA",
-        "moltiplicatore": 2,
-        "tipo": "nazionale",
-        "regione": "VENETO",
-        "km": "107.900",
-        "media": "37.735"
-      },
-      {
-        "gara_id": "43_TROFEO_M_P_FILTRI_2026-07-12_ELI_M",
-        "nome_gara": "43 TROFEO M P FILTRI",
-        "data": "2026-07-12",
-        "posizione": 2,
-        "punti_effettivi": 12,
-        "team": "GENERAL STORE -ESSEGIBI-F.LLI CURIA",
-        "moltiplicatore": 1,
-        "tipo": "regionale",
-        "regione": "LOMBARDIA",
-        "km": "145.000",
-        "media": "42.456"
-      },
-      {
-        "gara_id": "40_GIRO_DEL_MEDIO_BRENTA_2026-07-05_ELI_M",
-        "nome_gara": "40 GIRO DEL MEDIO BRENTA",
-        "data": "2026-07-05",
-        "posizione": 1,
-        "punti_effettivi": 45,
-        "team": "GENERAL STORE -ESSEGIBI-F.LLI CURIA",
-        "moltiplicatore": 3,
-        "tipo": "internazionale",
-        "regione": "VENETO",
-        "km": "175.000",
-        "media": "40.928"
-      },
-      {
-        "gara_id": "48_GRAN_PREMIO_CITTA_DI_EMPOLI_2026-06-13_ELI_M",
-        "nome_gara": "48 GRAN PREMIO CITTA' DI EMPOLI",
-        "data": "2026-06-13",
-        "posizione": 1,
-        "punti_effettivi": 30,
-        "team": "GENERAL STORE -ESSEGIBI-F.LLI CURIA",
-        "moltiplicatore": 2,
-        "tipo": "nazionale",
-        "regione": "TOSCANA",
-        "km": "146.000",
-        "media": "41.751"
-      },
-      {
-        "gara_id": "70_TROFEO_ALCIDE_DE_GASPERI_2026-06-02_ELI_M",
-        "nome_gara": "70 TROFEO ALCIDE DE GASPERI",
-        "data": "2026-06-02",
-        "posizione": 6,
-        "punti_effettivi": 15,
-        "team": "GENERAL STORE -ESSEGIBI-F.LLI CURIA",
-        "moltiplicatore": 3,
-        "tipo": "internazionale",
-        "regione": "TRENTO",
-        "km": "156.900",
-        "media": "39.946"
       }
     ]
   },
@@ -130872,31 +131125,6 @@
       }
     ]
   },
-  "GARIBBO_NICOLO": {
-    "id": "GARIBBO_NICOLO",
-    "nome": "NICOLO'",
-    "cognome": "GARIBBO",
-    "team_attuale": "TEAM UKYO",
-    "team_id": "TEAM_UKYO",
-    "categoria": "ELI_M",
-    "genere": "M",
-    "punti_totali": 18,
-    "risultati": [
-      {
-        "gara_id": "40_GIRO_DEL_MEDIO_BRENTA_2026-07-05_ELI_M",
-        "nome_gara": "40 GIRO DEL MEDIO BRENTA",
-        "data": "2026-07-05",
-        "posizione": 5,
-        "punti_effettivi": 18,
-        "team": "TEAM UKYO",
-        "moltiplicatore": 3,
-        "tipo": "internazionale",
-        "regione": "VENETO",
-        "km": "175.000",
-        "media": "40.928"
-      }
-    ]
-  },
   "VERRE_ALESSANDRO": {
     "id": "VERRE_ALESSANDRO",
     "nome": "ALESSANDRO",
@@ -130939,31 +131167,6 @@
         "posizione": 8,
         "punti_effettivi": 9,
         "team": "SOLUTION TECH NIPPO RALI",
-        "moltiplicatore": 3,
-        "tipo": "internazionale",
-        "regione": "VENETO",
-        "km": "175.000",
-        "media": "40.928"
-      }
-    ]
-  },
-  "ROJAS_NARANJO_VICENTE_RODRIGO_ANTONIO": {
-    "id": "ROJAS_NARANJO_VICENTE_RODRIGO_ANTONIO",
-    "nome": "NARANJO VICENTE RODRIGO ANTONIO",
-    "cognome": "ROJAS",
-    "team_attuale": "BARDIANI-CSF 7 SABER",
-    "team_id": "BARDIANI_CSF_7_SABER",
-    "categoria": "ELI_M",
-    "genere": "M",
-    "punti_totali": 3,
-    "risultati": [
-      {
-        "gara_id": "40_GIRO_DEL_MEDIO_BRENTA_2026-07-05_ELI_M",
-        "nome_gara": "40 GIRO DEL MEDIO BRENTA",
-        "data": "2026-07-05",
-        "posizione": 10,
-        "punti_effettivi": 3,
-        "team": "BARDIANI-CSF 7 SABER",
         "moltiplicatore": 3,
         "tipo": "internazionale",
         "regione": "VENETO",
@@ -172038,31 +172241,6 @@
         "data": "2026-04-19",
         "posizione": 1,
         "punti_effettivi": 45,
-        "team": "SOLUTION TECH NIPPO RALI",
-        "moltiplicatore": 3,
-        "tipo": "internazionale",
-        "regione": "PIEMONTE",
-        "km": "143.000",
-        "media": "42.336"
-      }
-    ]
-  },
-  "BALMER_ALEXANDRE": {
-    "id": "BALMER_ALEXANDRE",
-    "nome": "ALEXANDRE",
-    "cognome": "BALMER",
-    "team_attuale": "SOLUTION TECH NIPPO RALI",
-    "team_id": "SOLUTION_TECH_NIPPO_RALI",
-    "categoria": "ELI_M",
-    "genere": "M",
-    "punti_totali": 36,
-    "risultati": [
-      {
-        "gara_id": "30_GIRO_DELLA_PROVINCIA_DI_BIELLA_84_TORINO_BIELLA_2026-04-19_ELI_M",
-        "nome_gara": "30 GIRO DELLA PROVINCIA DI BIELLA 84 TORINO BIELLA",
-        "data": "2026-04-19",
-        "posizione": 2,
-        "punti_effettivi": 36,
         "team": "SOLUTION TECH NIPPO RALI",
         "moltiplicatore": 3,
         "tipo": "internazionale",
