@@ -2,24 +2,24 @@
   {
     "team_id": "ALBA_OROBIA_BIASSONO",
     "team_nome": "ALBA OROBIA - BIASSONO",
-    "punti": 776,
+    "punti": 780,
     "vittorie": 20,
     "p1": 20,
     "p2": 12,
     "p3": 3,
-    "pout": 42,
+    "pout": 43,
     "n_atleti": 9,
     "pos": 1
   },
   {
     "team_id": "A_S_D_CICLISTICA_MONSELICE",
     "team_nome": "A.S.D. CICLISTICA MONSELICE",
-    "punti": 762,
+    "punti": 770,
     "vittorie": 17,
     "p1": 17,
     "p2": 13,
     "p3": 8,
-    "pout": 37,
+    "pout": 38,
     "n_atleti": 7,
     "pos": 2
   },
@@ -50,9 +50,9 @@
   {
     "team_id": "ETHICA_ZERO24_CYCLING_TEAM_ECOTEK",
     "team_nome": "ETHICA ZERO24 CYCLING TEAM ECOTEK",
-    "punti": 468,
-    "vittorie": 6,
-    "p1": 6,
+    "punti": 483,
+    "vittorie": 7,
+    "p1": 7,
     "p2": 8,
     "p3": 6,
     "pout": 35,
@@ -84,6 +84,18 @@
     "pos": 7
   },
   {
+    "team_id": "S_C_COTIGNOLESE",
+    "team_nome": "S.C.COTIGNOLESE",
+    "punti": 450,
+    "vittorie": 7,
+    "p1": 7,
+    "p2": 6,
+    "p3": 6,
+    "pout": 26,
+    "n_atleti": 7,
+    "pos": 8
+  },
+  {
     "team_id": "TEAM_CORATTI",
     "team_nome": "TEAM CORATTI",
     "punti": 448,
@@ -93,7 +105,7 @@
     "p3": 2,
     "pout": 31,
     "n_atleti": 5,
-    "pos": 8
+    "pos": 9
   },
   {
     "team_id": "IND_FORNITURE_MORO_C_G_CAPITAL",
@@ -105,18 +117,6 @@
     "p3": 7,
     "pout": 35,
     "n_atleti": 9,
-    "pos": 9
-  },
-  {
-    "team_id": "S_C_COTIGNOLESE",
-    "team_nome": "S.C.COTIGNOLESE",
-    "punti": 444,
-    "vittorie": 7,
-    "p1": 7,
-    "p2": 6,
-    "p3": 6,
-    "pout": 25,
-    "n_atleti": 7,
     "pos": 10
   },
   {
@@ -228,6 +228,18 @@
     "pos": 19
   },
   {
+    "team_id": "POL_FIUMICINESE_FA_I_T_ADRIATICA",
+    "team_nome": "POL. FIUMICINESE FA.I.T. ADRIATICA",
+    "punti": 321,
+    "vittorie": 4,
+    "p1": 4,
+    "p2": 2,
+    "p3": 6,
+    "pout": 44,
+    "n_atleti": 10,
+    "pos": 20
+  },
+  {
     "team_id": "TEAM_SENAGHESE_GUERRINI",
     "team_nome": "TEAM SENAGHESE GUERRINI",
     "punti": 313,
@@ -237,18 +249,6 @@
     "p3": 3,
     "pout": 37,
     "n_atleti": 7,
-    "pos": 20
-  },
-  {
-    "team_id": "POL_FIUMICINESE_FA_I_T_ADRIATICA",
-    "team_nome": "POL. FIUMICINESE FA.I.T. ADRIATICA",
-    "punti": 311,
-    "vittorie": 4,
-    "p1": 4,
-    "p2": 2,
-    "p3": 5,
-    "pout": 44,
-    "n_atleti": 10,
     "pos": 21
   },
   {
@@ -302,10 +302,10 @@
   {
     "team_id": "ASD_PEDALE_CASALESE_ARMOFER",
     "team_nome": "ASD PEDALE CASALESE ARMOFER",
-    "punti": 245,
+    "punti": 257,
     "vittorie": 2,
     "p1": 2,
-    "p2": 2,
+    "p2": 3,
     "p3": 5,
     "pout": 25,
     "n_atleti": 5,
@@ -360,6 +360,18 @@
     "pos": 30
   },
   {
+    "team_id": "SALUS_CICLISTICA_SEREGNO_DE_ROSA",
+    "team_nome": "SALUS CICLISTICA SEREGNO DE ROSA",
+    "punti": 203,
+    "vittorie": 2,
+    "p1": 2,
+    "p2": 5,
+    "p3": 2,
+    "pout": 21,
+    "n_atleti": 7,
+    "pos": 31
+  },
+  {
     "team_id": "VELO_CLUB_CATTOLICA",
     "team_nome": "VELO CLUB CATTOLICA",
     "punti": 199,
@@ -369,18 +381,6 @@
     "p3": 1,
     "pout": 34,
     "n_atleti": 11,
-    "pos": 31
-  },
-  {
-    "team_id": "SALUS_CICLISTICA_SEREGNO_DE_ROSA",
-    "team_nome": "SALUS CICLISTICA SEREGNO DE ROSA",
-    "punti": 198,
-    "vittorie": 2,
-    "p1": 2,
-    "p2": 5,
-    "p3": 2,
-    "pout": 20,
-    "n_atleti": 7,
     "pos": 32
   },
   {
@@ -566,12 +566,12 @@
   {
     "team_id": "A_S_D_CICLISTICA_2000",
     "team_nome": "A.S.D. CICLISTICA 2000",
-    "punti": 118,
+    "punti": 121,
     "vittorie": 2,
     "p1": 2,
     "p2": 1,
     "p3": 0,
-    "pout": 12,
+    "pout": 13,
     "n_atleti": 2,
     "pos": 48
   },
@@ -626,12 +626,12 @@
   {
     "team_id": "ASD_MORENO_DI_BIASE",
     "team_nome": "ASD MORENO DI BIASE",
-    "punti": 100,
+    "punti": 102,
     "vittorie": 0,
     "p1": 0,
     "p2": 0,
     "p3": 3,
-    "pout": 14,
+    "pout": 15,
     "n_atleti": 5,
     "pos": 53
   },
@@ -708,6 +708,18 @@
     "pos": 59
   },
   {
+    "team_id": "QUILIANO_BIKE_SPEED_WHEEL",
+    "team_nome": "QUILIANO BIKE SPEED WHEEL",
+    "punti": 72,
+    "vittorie": 2,
+    "p1": 2,
+    "p2": 0,
+    "p3": 3,
+    "pout": 4,
+    "n_atleti": 2,
+    "pos": 60
+  },
+  {
     "team_id": "POMORIE",
     "team_nome": "POMORIE",
     "punti": 72,
@@ -717,7 +729,7 @@
     "p3": 0,
     "pout": 3,
     "n_atleti": 1,
-    "pos": 60
+    "pos": 61
   },
   {
     "team_id": "ASD_ROBUR_BARCELLONA",
@@ -729,18 +741,6 @@
     "p3": 1,
     "pout": 14,
     "n_atleti": 3,
-    "pos": 61
-  },
-  {
-    "team_id": "QUILIANO_BIKE_SPEED_WHEEL",
-    "team_nome": "QUILIANO BIKE SPEED WHEEL",
-    "punti": 71,
-    "vittorie": 2,
-    "p1": 2,
-    "p2": 0,
-    "p3": 3,
-    "pout": 3,
-    "n_atleti": 2,
     "pos": 62
   },
   {
