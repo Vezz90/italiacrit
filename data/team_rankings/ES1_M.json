@@ -14,12 +14,12 @@
   {
     "team_id": "CICLISTICA_TREVIGLIESE",
     "team_nome": "CICLISTICA TREVIGLIESE",
-    "punti": 567,
+    "punti": 581,
     "vittorie": 9,
     "p1": 9,
-    "p2": 10,
+    "p2": 11,
     "p3": 10,
-    "pout": 51,
+    "pout": 52,
     "n_atleti": 6,
     "pos": 2
   },
@@ -72,27 +72,27 @@
     "pos": 6
   },
   {
+    "team_id": "IL_PIRATA_SAMA_RICAMBI_OTC",
+    "team_nome": "IL PIRATA SAMA RICAMBI OTC",
+    "punti": 319,
+    "vittorie": 9,
+    "p1": 9,
+    "p2": 2,
+    "p3": 3,
+    "pout": 17,
+    "n_atleti": 2,
+    "pos": 7
+  },
+  {
     "team_id": "UC_EMPOLESE",
     "team_nome": "UC EMPOLESE",
-    "punti": 311,
+    "punti": 314,
     "vittorie": 4,
     "p1": 4,
     "p2": 5,
     "p3": 8,
-    "pout": 23,
+    "pout": 24,
     "n_atleti": 5,
-    "pos": 7
-  },
-  {
-    "team_id": "IL_PIRATA_SAMA_RICAMBI_OTC",
-    "team_nome": "IL PIRATA SAMA RICAMBI OTC",
-    "punti": 299,
-    "vittorie": 8,
-    "p1": 8,
-    "p2": 2,
-    "p3": 3,
-    "pout": 16,
-    "n_atleti": 2,
     "pos": 8
   },
   {
@@ -108,6 +108,18 @@
     "pos": 9
   },
   {
+    "team_id": "TEAM_CESARO_NERI_LUCCHINI",
+    "team_nome": "TEAM CESARO-NERI-LUCCHINI",
+    "punti": 250,
+    "vittorie": 1,
+    "p1": 1,
+    "p2": 6,
+    "p3": 5,
+    "pout": 21,
+    "n_atleti": 2,
+    "pos": 10
+  },
+  {
     "team_id": "G_S_TAVO_BONIN_BIKE",
     "team_nome": "G.S. TAVO BONIN BIKE",
     "punti": 245,
@@ -116,18 +128,6 @@
     "p2": 8,
     "p3": 3,
     "pout": 9,
-    "n_atleti": 2,
-    "pos": 10
-  },
-  {
-    "team_id": "TEAM_CESARO_NERI_LUCCHINI",
-    "team_nome": "TEAM CESARO-NERI-LUCCHINI",
-    "punti": 244,
-    "vittorie": 1,
-    "p1": 1,
-    "p2": 6,
-    "p3": 5,
-    "pout": 20,
     "n_atleti": 2,
     "pos": 11
   },
@@ -756,6 +756,18 @@
     "pos": 63
   },
   {
+    "team_id": "C_C_APPENNINICO_1907",
+    "team_nome": "C.C. APPENNINICO 1907",
+    "punti": 78,
+    "vittorie": 1,
+    "p1": 1,
+    "p2": 2,
+    "p3": 0,
+    "pout": 8,
+    "n_atleti": 1,
+    "pos": 64
+  },
+  {
     "team_id": "S_C_D_ALMA_JUVENTUS_FANO",
     "team_nome": "S.C.D.ALMA JUVENTUS FANO",
     "punti": 78,
@@ -765,7 +777,7 @@
     "p3": 1,
     "pout": 10,
     "n_atleti": 2,
-    "pos": 64
+    "pos": 65
   },
   {
     "team_id": "BUSTESE_OLONIA_A_S_D",
@@ -777,7 +789,7 @@
     "p3": 0,
     "pout": 14,
     "n_atleti": 4,
-    "pos": 65
+    "pos": 66
   },
   {
     "team_id": "G_S_ALTO_ADIGE_SUDTIROLPOST",
@@ -789,7 +801,7 @@
     "p3": 3,
     "pout": 11,
     "n_atleti": 4,
-    "pos": 66
+    "pos": 67
   },
   {
     "team_id": "VC_CREMONESE",
@@ -801,7 +813,7 @@
     "p3": 0,
     "pout": 13,
     "n_atleti": 1,
-    "pos": 67
+    "pos": 68
   },
   {
     "team_id": "UC_FOEN_MICTU",
@@ -813,7 +825,7 @@
     "p3": 1,
     "pout": 8,
     "n_atleti": 2,
-    "pos": 68
+    "pos": 69
   },
   {
     "team_id": "G_C_SOSSANO_1975",
@@ -824,18 +836,6 @@
     "p2": 1,
     "p3": 0,
     "pout": 9,
-    "n_atleti": 1,
-    "pos": 69
-  },
-  {
-    "team_id": "C_C_APPENNINICO_1907",
-    "team_nome": "C.C. APPENNINICO 1907",
-    "punti": 70,
-    "vittorie": 1,
-    "p1": 1,
-    "p2": 2,
-    "p3": 0,
-    "pout": 7,
     "n_atleti": 1,
     "pos": 70
   },
@@ -852,6 +852,30 @@
     "pos": 71
   },
   {
+    "team_id": "VELO_CLUB_S_C_EMPOLI",
+    "team_nome": "VELO CLUB S.C. EMPOLI",
+    "punti": 68,
+    "vittorie": 0,
+    "p1": 0,
+    "p2": 1,
+    "p3": 2,
+    "pout": 7,
+    "n_atleti": 1,
+    "pos": 72
+  },
+  {
+    "team_id": "PEDALE_SARZANESE",
+    "team_nome": "PEDALE SARZANESE",
+    "punti": 67,
+    "vittorie": 0,
+    "p1": 0,
+    "p2": 1,
+    "p3": 0,
+    "pout": 13,
+    "n_atleti": 5,
+    "pos": 73
+  },
+  {
     "team_id": "SS_AQUILA",
     "team_nome": "SS AQUILA",
     "punti": 67,
@@ -861,42 +885,18 @@
     "p3": 0,
     "pout": 6,
     "n_atleti": 1,
-    "pos": 72
+    "pos": 74
   },
   {
     "team_id": "UC_COLTANO_GRUBE_COSTRUZIONI",
     "team_nome": "UC COLTANO GRUBE COSTRUZIONI",
-    "punti": 64,
+    "punti": 65,
     "vittorie": 0,
     "p1": 0,
     "p2": 0,
     "p3": 2,
-    "pout": 12,
+    "pout": 13,
     "n_atleti": 3,
-    "pos": 73
-  },
-  {
-    "team_id": "PEDALE_SARZANESE",
-    "team_nome": "PEDALE SARZANESE",
-    "punti": 63,
-    "vittorie": 0,
-    "p1": 0,
-    "p2": 1,
-    "p3": 0,
-    "pout": 12,
-    "n_atleti": 4,
-    "pos": 74
-  },
-  {
-    "team_id": "VELO_CLUB_S_C_EMPOLI",
-    "team_nome": "VELO CLUB S.C. EMPOLI",
-    "punti": 58,
-    "vittorie": 0,
-    "p1": 0,
-    "p2": 1,
-    "p3": 1,
-    "pout": 7,
-    "n_atleti": 1,
     "pos": 75
   },
   {

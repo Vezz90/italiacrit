@@ -2,36 +2,36 @@
   {
     "team_id": "TEAM_CESARO_NERI_LUCCHINI",
     "team_nome": "TEAM CESARO-NERI-LUCCHINI",
-    "punti": 821,
+    "punti": 842,
     "vittorie": 17,
     "p1": 17,
-    "p2": 14,
+    "p2": 15,
     "p3": 7,
-    "pout": 52,
+    "pout": 55,
     "n_atleti": 6,
     "pos": 1
   },
   {
     "team_id": "UC_COLTANO_GRUBE_COSTRUZIONI",
     "team_nome": "UC COLTANO GRUBE COSTRUZIONI",
-    "punti": 650,
-    "vittorie": 20,
-    "p1": 20,
+    "punti": 670,
+    "vittorie": 21,
+    "p1": 21,
     "p2": 12,
     "p3": 7,
-    "pout": 24,
+    "pout": 25,
     "n_atleti": 4,
     "pos": 2
   },
   {
     "team_id": "IL_PIRATA_SAMA_RICAMBI_OTC",
     "team_nome": "IL PIRATA SAMA RICAMBI OTC",
-    "punti": 564,
+    "punti": 577,
     "vittorie": 9,
     "p1": 9,
     "p2": 8,
-    "p3": 9,
-    "pout": 36,
+    "p3": 10,
+    "pout": 37,
     "n_atleti": 4,
     "pos": 3
   },
@@ -122,12 +122,12 @@
   {
     "team_id": "UC_EMPOLESE",
     "team_nome": "UC EMPOLESE",
-    "punti": 302,
+    "punti": 306,
     "vittorie": 3,
     "p1": 3,
     "p2": 2,
     "p3": 7,
-    "pout": 40,
+    "pout": 41,
     "n_atleti": 4,
     "pos": 11
   },
@@ -444,6 +444,18 @@
     "pos": 37
   },
   {
+    "team_id": "PEDALE_TOSCANO_PONTICINO",
+    "team_nome": "PEDALE TOSCANO PONTICINO",
+    "punti": 117,
+    "vittorie": 0,
+    "p1": 0,
+    "p2": 1,
+    "p3": 1,
+    "pout": 16,
+    "n_atleti": 3,
+    "pos": 38
+  },
+  {
     "team_id": "GS_BERTI_MOBILI_BENASSI",
     "team_nome": "GS BERTI MOBILI BENASSI",
     "punti": 115,
@@ -453,7 +465,7 @@
     "p3": 0,
     "pout": 15,
     "n_atleti": 2,
-    "pos": 38
+    "pos": 39
   },
   {
     "team_id": "SAN_GEO_A_S_D",
@@ -465,7 +477,7 @@
     "p3": 1,
     "pout": 20,
     "n_atleti": 2,
-    "pos": 39
+    "pos": 40
   },
   {
     "team_id": "UC_GODIGESE_ABRA_IRIDE",
@@ -477,7 +489,7 @@
     "p3": 4,
     "pout": 15,
     "n_atleti": 2,
-    "pos": 40
+    "pos": 41
   },
   {
     "team_id": "DUEPPI_CYCLING_PROJECT",
@@ -489,7 +501,7 @@
     "p3": 5,
     "pout": 6,
     "n_atleti": 1,
-    "pos": 41
+    "pos": 42
   },
   {
     "team_id": "ASD_TEAM_MMBIKE_ANDRIA_RESTO_AL_SUD",
@@ -501,18 +513,6 @@
     "p3": 2,
     "pout": 12,
     "n_atleti": 1,
-    "pos": 42
-  },
-  {
-    "team_id": "PEDALE_TOSCANO_PONTICINO",
-    "team_nome": "PEDALE TOSCANO PONTICINO",
-    "punti": 109,
-    "vittorie": 0,
-    "p1": 0,
-    "p2": 1,
-    "p3": 1,
-    "pout": 15,
-    "n_atleti": 3,
     "pos": 43
   },
   {
