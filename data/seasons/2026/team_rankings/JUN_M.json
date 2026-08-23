@@ -50,12 +50,12 @@
   {
     "team_id": "BORGO_MOLINO_VIGNA_FIORITA",
     "team_nome": "BORGO MOLINO-VIGNA FIORITA",
-    "punti": 683,
+    "punti": 688,
     "vittorie": 9,
     "p1": 9,
     "p2": 3,
     "p3": 9,
-    "pout": 17,
+    "pout": 18,
     "n_atleti": 3,
     "pos": 5
   },
@@ -158,9 +158,9 @@
   {
     "team_id": "IND_FORNITURE_MORO_C_G_CAPITAL",
     "team_nome": "IND. FORNITURE MORO-C&G CAPITAL",
-    "punti": 443,
-    "vittorie": 6,
-    "p1": 6,
+    "punti": 458,
+    "vittorie": 7,
+    "p1": 7,
     "p2": 5,
     "p3": 7,
     "pout": 32,
@@ -206,11 +206,11 @@
   {
     "team_id": "ACCADEMIA_CICLISTICA",
     "team_nome": "ACCADEMIA CICLISTICA",
-    "punti": 387,
+    "punti": 397,
     "vittorie": 7,
     "p1": 7,
     "p2": 3,
-    "p3": 2,
+    "p3": 3,
     "pout": 13,
     "n_atleti": 4,
     "pos": 18
@@ -264,6 +264,18 @@
     "pos": 22
   },
   {
+    "team_id": "FAIZANE_CSZ_SANDRIGO_BIKE",
+    "team_nome": "FAIZANE' CSZ SANDRIGO BIKE",
+    "punti": 178,
+    "vittorie": 0,
+    "p1": 0,
+    "p2": 2,
+    "p3": 0,
+    "pout": 26,
+    "n_atleti": 6,
+    "pos": 23
+  },
+  {
     "team_id": "S_C_ROMANESE_ASD",
     "team_nome": "S.C. ROMANESE ASD",
     "punti": 161,
@@ -273,29 +285,17 @@
     "p3": 1,
     "pout": 15,
     "n_atleti": 3,
-    "pos": 23
-  },
-  {
-    "team_id": "FAIZANE_CSZ_SANDRIGO_BIKE",
-    "team_nome": "FAIZANE' CSZ SANDRIGO BIKE",
-    "punti": 160,
-    "vittorie": 0,
-    "p1": 0,
-    "p2": 1,
-    "p3": 0,
-    "pout": 25,
-    "n_atleti": 6,
     "pos": 24
   },
   {
     "team_id": "A_S_D_POSTUMIA_73_D_L_CICLISMO",
     "team_nome": "A.S.D. POSTUMIA 73 D.L. CICLISMO",
-    "punti": 158,
+    "punti": 159,
     "vittorie": 0,
     "p1": 0,
     "p2": 3,
     "p3": 2,
-    "pout": 21,
+    "pout": 22,
     "n_atleti": 10,
     "pos": 25
   },
@@ -552,6 +552,18 @@
     "pos": 46
   },
   {
+    "team_id": "LIBERTAS_CERESETTO",
+    "team_nome": "LIBERTAS CERESETTO",
+    "punti": 84,
+    "vittorie": 0,
+    "p1": 0,
+    "p2": 0,
+    "p3": 1,
+    "pout": 12,
+    "n_atleti": 5,
+    "pos": 47
+  },
+  {
     "team_id": "CANNEDU_ITTIRI_A_MANCA_ASD",
     "team_nome": "CANNEDU ITTIRI \"A. MANCA\" ASD",
     "punti": 83,
@@ -561,18 +573,6 @@
     "p3": 1,
     "pout": 7,
     "n_atleti": 2,
-    "pos": 47
-  },
-  {
-    "team_id": "LIBERTAS_CERESETTO",
-    "team_nome": "LIBERTAS CERESETTO",
-    "punti": 77,
-    "vittorie": 0,
-    "p1": 0,
-    "p2": 0,
-    "p3": 1,
-    "pout": 10,
-    "n_atleti": 5,
     "pos": 48
   },
   {
@@ -626,12 +626,12 @@
   {
     "team_id": "VIGNA_FIORITA_BORGO_MOLINO",
     "team_nome": "VIGNA FIORITA-BORGO MOLINO",
-    "punti": 56,
+    "punti": 58,
     "vittorie": 0,
     "p1": 0,
     "p2": 1,
     "p3": 0,
-    "pout": 10,
+    "pout": 11,
     "n_atleti": 2,
     "pos": 53
   },
@@ -804,6 +804,18 @@
     "pos": 67
   },
   {
+    "team_id": "ROTOGAL_GUADENSE",
+    "team_nome": "ROTOGAL GUADENSE",
+    "punti": 31,
+    "vittorie": 0,
+    "p1": 0,
+    "p2": 0,
+    "p3": 1,
+    "pout": 4,
+    "n_atleti": 3,
+    "pos": 68
+  },
+  {
     "team_id": "SPAGNA",
     "team_nome": "SPAGNA",
     "punti": 29,
@@ -813,7 +825,7 @@
     "p3": 0,
     "pout": 3,
     "n_atleti": 2,
-    "pos": 68
+    "pos": 69
   },
   {
     "team_id": "TEAM_SERIO",
@@ -825,7 +837,7 @@
     "p3": 1,
     "pout": 3,
     "n_atleti": 1,
-    "pos": 69
+    "pos": 70
   },
   {
     "team_id": "MULTICAR_GRUPPO_AMARU",
@@ -837,7 +849,7 @@
     "p3": 1,
     "pout": 1,
     "n_atleti": 2,
-    "pos": 70
+    "pos": 71
   },
   {
     "team_id": "WWV_HAGENS_BERMAN_JAYCO",
@@ -849,7 +861,7 @@
     "p3": 0,
     "pout": 3,
     "n_atleti": 2,
-    "pos": 71
+    "pos": 72
   },
   {
     "team_id": "TOSCANA",
@@ -861,7 +873,7 @@
     "p3": 0,
     "pout": 3,
     "n_atleti": 3,
-    "pos": 72
+    "pos": 73
   },
   {
     "team_id": "U_S_MONTECORONA",
@@ -873,7 +885,7 @@
     "p3": 0,
     "pout": 5,
     "n_atleti": 2,
-    "pos": 73
+    "pos": 74
   },
   {
     "team_id": "CANTURINO_1902_A_S_D",
@@ -885,18 +897,6 @@
     "p3": 0,
     "pout": 6,
     "n_atleti": 4,
-    "pos": 74
-  },
-  {
-    "team_id": "ROTOGAL_GUADENSE",
-    "team_nome": "ROTOGAL GUADENSE",
-    "punti": 23,
-    "vittorie": 0,
-    "p1": 0,
-    "p2": 0,
-    "p3": 1,
-    "pout": 3,
-    "n_atleti": 2,
     "pos": 75
   },
   {
