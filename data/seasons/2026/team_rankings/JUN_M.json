@@ -2,12 +2,12 @@
   {
     "team_id": "TEAM_VANGI_TOMMASINI_IL_PIRATA",
     "team_nome": "TEAM VANGI TOMMASINI IL PIRATA",
-    "punti": 1360,
+    "punti": 1388,
     "vittorie": 19,
     "p1": 19,
     "p2": 15,
-    "p3": 12,
-    "pout": 54,
+    "p3": 13,
+    "pout": 58,
     "n_atleti": 13,
     "pos": 1
   },
@@ -24,6 +24,18 @@
     "pos": 2
   },
   {
+    "team_id": "TEAM_NERI_SOTTOLI_LUCCHINI_ENERGY",
+    "team_nome": "TEAM NERI SOTTOLI LUCCHINI ENERGY",
+    "punti": 715,
+    "vittorie": 5,
+    "p1": 5,
+    "p2": 10,
+    "p3": 6,
+    "pout": 43,
+    "n_atleti": 9,
+    "pos": 3
+  },
+  {
     "team_id": "POOL_CANTU_GB_TEAM_A_S_D",
     "team_nome": "POOL CANTU' GB TEAM A.S.D.",
     "punti": 705,
@@ -33,18 +45,6 @@
     "p3": 6,
     "pout": 38,
     "n_atleti": 11,
-    "pos": 3
-  },
-  {
-    "team_id": "TEAM_NERI_SOTTOLI_LUCCHINI_ENERGY",
-    "team_nome": "TEAM NERI SOTTOLI LUCCHINI ENERGY",
-    "punti": 703,
-    "vittorie": 5,
-    "p1": 5,
-    "p2": 9,
-    "p3": 6,
-    "pout": 43,
-    "n_atleti": 9,
     "pos": 4
   },
   {
@@ -132,6 +132,18 @@
     "pos": 11
   },
   {
+    "team_id": "TEAM_GENERAL_SYSTEM",
+    "team_nome": "TEAM GENERAL SYSTEM",
+    "punti": 477,
+    "vittorie": 5,
+    "p1": 5,
+    "p2": 8,
+    "p3": 2,
+    "pout": 36,
+    "n_atleti": 8,
+    "pos": 12
+  },
+  {
     "team_id": "TEAM_CORATTI",
     "team_nome": "TEAM CORATTI",
     "punti": 473,
@@ -141,18 +153,6 @@
     "p3": 5,
     "pout": 24,
     "n_atleti": 7,
-    "pos": 12
-  },
-  {
-    "team_id": "TEAM_GENERAL_SYSTEM",
-    "team_nome": "TEAM GENERAL SYSTEM",
-    "punti": 460,
-    "vittorie": 4,
-    "p1": 4,
-    "p2": 8,
-    "p3": 2,
-    "pout": 35,
-    "n_atleti": 8,
     "pos": 13
   },
   {
@@ -170,12 +170,12 @@
   {
     "team_id": "ETHICA_ZERO24_CYCLING_TEAM_ECOTEK",
     "team_nome": "ETHICA ZERO24 CYCLING TEAM ECOTEK",
-    "punti": 436,
+    "punti": 445,
     "vittorie": 8,
     "p1": 8,
     "p2": 7,
     "p3": 4,
-    "pout": 18,
+    "pout": 20,
     "n_atleti": 6,
     "pos": 15
   },
