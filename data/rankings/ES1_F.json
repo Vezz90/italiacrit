@@ -221,7 +221,7 @@
     "p3": 2,
     "pout": 7,
     "pos": 14,
-    "trend": 2
+    "trend": 0
   },
   {
     "atleta_id": "MOINO_ALESSIA",
@@ -237,7 +237,7 @@
     "p3": 1,
     "pout": 15,
     "pos": 15,
-    "trend": -1
+    "trend": 0
   },
   {
     "atleta_id": "NERI_SARA",
@@ -253,7 +253,7 @@
     "p3": 1,
     "pout": 9,
     "pos": 16,
-    "trend": -1
+    "trend": 0
   },
   {
     "atleta_id": "GUIDOLIN_GIOIA",
