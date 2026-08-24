@@ -248,6 +248,25 @@ async function migrate() {
     `ALTER TABLE media_videos ADD COLUMN IF NOT EXISTS is_live BOOLEAN NOT NULL DEFAULT false`,
     `ALTER TABLE media_videos ADD COLUMN IF NOT EXISTS live_ended BOOLEAN NOT NULL DEFAULT false`,
     `ALTER TABLE media_videos ADD COLUMN IF NOT EXISTS scheduled_start TIMESTAMPTZ`,
+    // Atleti aggiunti manualmente (da un team per un corridore mai scrapato
+    // dalla FCI, o da un atleta che si auto-registra senza trovare il proprio
+    // atleta_id) — niente risultati/punti finché non compaiono davvero nei
+    // dati FCI scrapati, ma comunque visibili nel roster del team e con una
+    // pagina propria (stesso trattamento di data/extra_roster.json, solo
+    // scrivibile via API invece che a mano). Visibili subito, nessuna
+    // approvazione admin richiesta.
+    `CREATE TABLE IF NOT EXISTS manual_athletes (
+      atleta_id   TEXT PRIMARY KEY,
+      cognome     TEXT NOT NULL,
+      nome        TEXT NOT NULL,
+      team_id     TEXT,
+      team        TEXT,
+      categoria   TEXT,
+      genere      TEXT DEFAULT 'M',
+      created_by  INTEGER,
+      source      TEXT NOT NULL DEFAULT 'team',
+      created_at  TIMESTAMPTZ NOT NULL DEFAULT NOW()
+    )`,
     // Contatore visualizzazioni per i video del sistema esistente
     // (videos.json: gara, dirette, presentazioni, programmi TV, altro) —
     // non hanno un ID numerico stabile, si tracciano per "chiave" testuale
@@ -528,6 +547,21 @@ const queries = {
 
   rejectTeamProfile: (id) =>
     run(`UPDATE team_profiles SET status = 'rejected' WHERE id = $1`, [id]),
+
+  // Atleti aggiunti manualmente (roster team o auto-registrazione) — vedi
+  // migrazione manual_athletes sopra.
+  getManualAthlete: (atleta_id) =>
+    one(`SELECT * FROM manual_athletes WHERE atleta_id = $1`, [atleta_id]),
+
+  getAllManualAthletes: () =>
+    all(`SELECT * FROM manual_athletes ORDER BY created_at DESC`),
+
+  createManualAthlete: ({ atleta_id, cognome, nome, team_id, team, categoria, genere, created_by, source }) =>
+    one(
+      `INSERT INTO manual_athletes (atleta_id, cognome, nome, team_id, team, categoria, genere, created_by, source)
+       VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9) RETURNING *`,
+      [atleta_id, cognome, nome, team_id || null, team || null, categoria || null, genere || 'M', created_by || null, source || 'team']
+    ),
 
   // Family links
   createFamilyLink: ({ user_id, linked_atleta_id, relation, status }) =>

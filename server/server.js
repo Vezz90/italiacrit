@@ -1337,13 +1337,44 @@ app.delete('/api/participations/:gara_id', requireAuth, async (req, res) => {
   catch (e) { res.status(500).json({ error: e.message }); }
 });
 
+// ID atleta generato a mano: stessa convenzione COGNOME_NOME già usata dal
+// merge extra_roster lato frontend (app.js, slug(cognome+'_'+nome)) — così
+// un atleta creato qui e uno creato manualmente nel vecchio file statico
+// finiscono con lo stesso ID se sono la stessa persona, invece di duplicarsi.
+function _athleteSlugBase(cognome, nome) {
+  const s = `${cognome || ''}_${nome || ''}`.toLowerCase()
+    .normalize('NFD').replace(/[̀-ͯ]/g, '')
+    .replace(/[^a-z0-9]+/g, '_').replace(/^_+|_+$/g, '');
+  return s.toUpperCase();
+}
+async function _uniqueManualAthleteId(cognome, nome) {
+  const base = _athleteSlugBase(cognome, nome) || 'ATLETA';
+  let id = base, n = 1;
+  while (await queries.getManualAthlete(id)) { n++; id = `${base}_${n}`; }
+  return id;
+}
+
 app.post('/api/profile/link-athlete', requireAuth, async (req, res) => {
   try {
     if (req.user.role !== 'atleta') return res.status(403).json({ error: 'Solo per atleti' });
-    const { atleta_id, fci_code, first_name, last_name, team, birth_year } = req.body;
+    let { atleta_id, fci_code, first_name, last_name, team, birth_year } = req.body;
 
     const existing = await queries.getAthleteProfile(req.user.id);
     if (existing) return res.status(409).json({ error: 'Profilo già presente' });
+
+    // Non risulta fra gli atleti scrapati dalla FCI: gli si crea comunque un
+    // atleta_id vero e proprio (roster manuale, 0 punti finché non compaiono
+    // risultati reali) invece di lasciarlo in sospeso in attesa che lo
+    // scraper lo trovi da solo — visibile subito, nessuna approvazione admin.
+    let generatedId = false;
+    if (!atleta_id && (first_name || last_name)) {
+      atleta_id = await _uniqueManualAthleteId(last_name, first_name);
+      await queries.createManualAthlete({
+        atleta_id, cognome: (last_name || '').toUpperCase(), nome: (first_name || '').toUpperCase(),
+        team: team || null, created_by: req.user.id, source: 'self',
+      });
+      generatedId = true;
+    }
 
     await queries.createAthleteProfile({
       user_id: req.user.id,
@@ -1353,12 +1384,52 @@ app.post('/api/profile/link-athlete', requireAuth, async (req, res) => {
       last_name: last_name || null,
       team: team || null,
       birth_year: birth_year || null,
-      status: atleta_id ? 'active' : 'pending',
+      status: 'active',
     });
-    res.status(201).json({ ok: true, status: atleta_id ? 'active' : 'pending' });
+    res.status(201).json({ ok: true, status: 'active', atleta_id: atleta_id || null, generated: generatedId });
   } catch (e) {
     res.status(500).json({ error: 'Errore durante il collegamento' });
   }
+});
+
+// Un account team aggiunge al proprio roster un corridore che non risulta
+// (ancora) fra gli atleti scrapati dalla FCI — crea subito un profilo visibile
+// (0 punti/risultati finché non gareggia davvero), nessuna approvazione admin.
+app.post('/api/team/add-athlete', requireAuth, async (req, res) => {
+  try {
+    if (req.user.role !== 'team') return res.status(403).json({ error: 'Solo per account team' });
+    const profile = await queries.getTeamProfile(req.user.id);
+    if (!profile || profile.status !== 'active' || !profile.team_id)
+      return res.status(403).json({ error: 'Il tuo profilo team deve essere collegato a una squadra esistente prima di poter aggiungere corridori' });
+    const { cognome, nome, categoria, genere } = req.body;
+    if (!cognome?.trim() || !nome?.trim()) return res.status(400).json({ error: 'Nome e cognome obbligatori' });
+
+    const atleta_id = await _uniqueManualAthleteId(cognome, nome);
+    const row = await queries.createManualAthlete({
+      atleta_id, cognome: cognome.trim().toUpperCase(), nome: nome.trim().toUpperCase(),
+      team_id: profile.team_id, team: profile.team_name || profile.team_id,
+      categoria: categoria || null, genere: genere === 'F' ? 'F' : 'M',
+      created_by: req.user.id, source: 'team',
+    });
+    res.status(201).json({ ok: true, athlete: row });
+  } catch (e) {
+    res.status(500).json({ error: 'Errore durante l\'aggiunta del corridore' });
+  }
+});
+
+// Roster manuale (team + auto-registrazioni), stessa forma di /api/data/pcs-extra-roster
+// così il frontend può unirli con la stessa identica logica di merge già esistente.
+app.get('/api/data/manual-athletes', async (req, res) => {
+  try {
+    const rows = await queries.getAllManualAthletes();
+    const result = {};
+    for (const r of rows) {
+      const tid = r.team_id || '_SENZA_TEAM_';
+      if (!result[tid]) result[tid] = { nome: r.team || tid, atleti: [] };
+      result[tid].atleti.push({ atleta_id: r.atleta_id, cognome: r.cognome, nome: r.nome, categoria: r.categoria || '', genere: r.genere || 'M' });
+    }
+    res.json(result);
+  } catch (e) { res.status(500).json({ error: e.message }); }
 });
 
 app.post('/api/profile/link-team', requireAuth, async (req, res) => {
@@ -1388,13 +1459,16 @@ app.post('/api/profile/link-family', requireAuth, async (req, res) => {
     const { linked_atleta_id } = req.body;
     if (!linked_atleta_id) return res.status(400).json({ error: 'atleta_id obbligatorio' });
 
+    // Prima restava sempre "in attesa" di approvazione admin anche quando
+    // l'atleta_id collegato era già valido — inutile: attivo subito, come
+    // già succede per atleta/team quando trovano una corrispondenza.
     await queries.createFamilyLink({
       user_id: req.user.id,
       linked_atleta_id,
       relation: req.user.role,
-      status: 'pending',
+      status: 'active',
     });
-    res.status(201).json({ ok: true, status: 'pending' });
+    res.status(201).json({ ok: true, status: 'active' });
   } catch (e) {
     res.status(500).json({ error: 'Errore durante il collegamento' });
   }

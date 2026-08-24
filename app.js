@@ -1610,7 +1610,7 @@ async function loadAll() {
         }
       })();
 
-  const [calendarRaw, resultsRawRaw, athletesRaw, teams, meta, raceDetails, videos, extraRoster, pcsExtraRoster, atletaTeamOv, manualResults, excludedGaraIds, garaCorrections, teamNomeCorrections, risultatoCorrections] = await Promise.all([
+  const [calendarRaw, resultsRawRaw, athletesRaw, teams, meta, raceDetails, videos, extraRoster, pcsExtraRoster, manualAthletesRoster, atletaTeamOv, manualResults, excludedGaraIds, garaCorrections, teamNomeCorrections, risultatoCorrections] = await Promise.all([
     loadJson('data/calendar.json'),
     loadJson('data/results_raw.json'),
     loadJson('data/athletes.json'),
@@ -1620,6 +1620,10 @@ async function loadAll() {
     videosPromise,
     loadJson('data/extra_roster.json').catch(() => ({})),
     IS_LOCAL ? apiCall('/data/pcs-extra-roster').catch(() => ({}))     : _apiCallWithTimeout('/data/pcs-extra-roster', 4000, {}),
+    // Corridori aggiunti da un team o auto-registrati senza corrispondenza FCI
+    // (vedi POST /api/team/add-athlete e /api/profile/link-athlete) — stessa
+    // forma di pcs-extra-roster, unito allo stesso modo sotto.
+    IS_LOCAL ? apiCall('/data/manual-athletes').catch(() => ({}))      : _apiCallWithTimeout('/data/manual-athletes', 4000, {}),
     IS_LOCAL ? apiCall('/data/atleta-team-overrides').catch(() => ({})) : _apiCallWithTimeout('/data/atleta-team-overrides', 4000, {}),
     IS_LOCAL ? apiCall('/data/manual-results').catch(() => [])         : _apiCallWithTimeout('/data/manual-results', 4000, []),
     getExcludedGaraIds(),
@@ -1648,15 +1652,24 @@ async function loadAll() {
   for (const bucket of Object.values(pcsExtraRoster || {})) {
     for (const a of (bucket.atleti || [])) if (a.atleta_id) liveAthleteIds.add(a.atleta_id);
   }
+  for (const bucket of Object.values(manualAthletesRoster || {})) {
+    for (const a of (bucket.atleti || [])) if (a.atleta_id) liveAthleteIds.add(a.atleta_id);
+  }
   const mergedExtraRoster = {};
   for (const [tid, bucket] of Object.entries(extraRoster || {})) {
     const filteredAtleti = (bucket.atleti || []).filter(a => !liveAthleteIds.has(a.atleta_id));
     mergedExtraRoster[tid] = { ...bucket, atleti: filteredAtleti };
   }
-  for (const [tid, bucket] of Object.entries(pcsExtraRoster || {})) {
+  // Corridori aggiunti da un team/auto-registrati (manualAthletesRoster) si
+  // uniscono come il roster PCS live — stessa forma, stessa logica.
+  for (const [tid, bucket] of Object.entries({ ...pcsExtraRoster, ...manualAthletesRoster })) {
+    const combinedAtleti = [
+      ...((pcsExtraRoster?.[tid]?.atleti) || []),
+      ...((manualAthletesRoster?.[tid]?.atleti) || []),
+    ];
     mergedExtraRoster[tid] = mergedExtraRoster[tid]
-      ? { ...mergedExtraRoster[tid], ...bucket, atleti: [...mergedExtraRoster[tid].atleti, ...(bucket.atleti || [])] }
-      : bucket;
+      ? { ...mergedExtraRoster[tid], nome: bucket.nome || mergedExtraRoster[tid].nome, atleti: [...mergedExtraRoster[tid].atleti, ...combinedAtleti] }
+      : { ...bucket, atleti: combinedAtleti };
   }
 
   // Scarta le righe manuali "superate": l'admin le inserisce PRIMA che lo
@@ -24945,6 +24958,29 @@ async function _dashTeam(el, user, profile) {
         ${teamId?`<a href="#/team/${esc(teamId)}" class="dash-btn dash-btn--outline dash-btn--sm">Tutti gli atleti →</a>`:''}
       </div>` : ''}
 
+      <!-- AGGIUNGI CORRIDORE (non ancora nei dati FCI) -->
+      <div class="dash-card dash-card--accent">
+        <div class="dash-card-title"><span>➕</span>Aggiungi un corridore</div>
+        <p style="font-size:.82rem;color:var(--text-muted);line-height:1.5;margin:0 0 10px">
+          Per un corridore che non risulta ancora fra gli atleti scrapati dalla FCI — compare subito nel roster
+          e ha una pagina propria, senza punti finché non gareggia davvero.
+        </p>
+        <div class="dash-link-form" style="display:flex;flex-direction:column;gap:8px">
+          <div style="display:flex;gap:8px">
+            <input type="text" id="team-add-cognome" placeholder="Cognome" style="flex:1"/>
+            <input type="text" id="team-add-nome" placeholder="Nome" style="flex:1"/>
+          </div>
+          <div style="display:flex;gap:8px">
+            <select id="team-add-genere" style="flex:1">
+              <option value="M">Uomini</option>
+              <option value="F">Donne</option>
+            </select>
+            <input type="text" id="team-add-categoria" placeholder="Categoria (es. ES1_M)" style="flex:1"/>
+          </div>
+          <button class="dash-btn dash-btn--primary" onclick="window.submitTeamAddAthlete()">Aggiungi al roster</button>
+        </div>
+      </div>
+
       <div class="dash-card">
         <div class="dash-card-title"><span>⚡</span>Azioni rapide</div>
         <div class="dash-actions-grid">
@@ -26004,8 +26040,10 @@ window.submitLinkAthlete = async function(e) {
   const first_name = document.getElementById('link-fname')?.value.trim() || null;
   const last_name  = document.getElementById('link-lname')?.value.trim() || null;
   try {
-    await apiCall('/profile/link-athlete', { method: 'POST', body: { atleta_id, fci_code, first_name, last_name } });
-    alert('Profilo collegato! ' + (atleta_id ? 'Attivo immediatamente.' : 'In attesa di verifica admin.'));
+    const r = await apiCall('/profile/link-athlete', { method: 'POST', body: { atleta_id, fci_code, first_name, last_name } });
+    alert(r.generated
+      ? `Profilo creato e attivo subito! Il tuo atleta_id è ${r.atleta_id} — non avendo ancora risultati FCI, il profilo parte da 0 punti.`
+      : 'Profilo collegato! Attivo immediatamente.');
     renderMyProfile();
   } catch (err) { alert('Errore: ' + err.message); }
 };
@@ -26030,8 +26068,26 @@ window.submitLinkFamily = async function(e) {
   if (!linked_atleta_id) { alert('Seleziona prima un atleta dalla lista.'); return; }
   try {
     await apiCall('/profile/link-family', { method: 'POST', body: { linked_atleta_id } });
-    alert('Atleta aggiunto! In attesa di verifica admin.');
+    alert('Atleta collegato! Attivo immediatamente.');
     renderMyProfile();
   } catch (err) { alert('Errore: ' + err.message); }
+};
+
+window.submitTeamAddAthlete = async function() {
+  const cognome = document.getElementById('team-add-cognome')?.value.trim();
+  const nome = document.getElementById('team-add-nome')?.value.trim();
+  const genere = document.getElementById('team-add-genere')?.value;
+  const categoria = document.getElementById('team-add-categoria')?.value.trim();
+  if (!cognome || !nome) { alert('Nome e cognome obbligatori.'); return; }
+  try {
+    const r = await apiCall('/team/add-athlete', { method: 'POST', body: { cognome, nome, genere, categoria } });
+    showToast(`✓ ${cognome} ${nome} aggiunto al roster`);
+    document.getElementById('team-add-cognome').value = '';
+    document.getElementById('team-add-nome').value = '';
+    document.getElementById('team-add-categoria').value = '';
+    // Ricarica i dati (nuovo atleta manuale incluso) e ridisegna la dashboard.
+    globalData = await loadAll();
+    renderMyProfile();
+  } catch (err) { showToast('Errore: ' + err.message, 'error'); }
 };
 
