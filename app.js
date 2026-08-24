@@ -18217,8 +18217,9 @@ async function renderCalendario(highlightId) {
       }
     }
 
-    // Se la mappa è attiva, aggiornala con i dati filtrati
-    if (calView === 'mappa') renderCalMap(filtered, calendarResultsMap);
+    // Se la mappa è attiva, aggiornala solo con le gare ancora da disputare
+    // (non quelle concluse) — la lista sotto mostra comunque entrambe.
+    if (calView === 'mappa') renderCalMap(future, calendarResultsMap);
   };
 
   const _calCatLabel = (CAL_CAT_GROUPS.find(g => g.value === calQCat) || {}).label;
