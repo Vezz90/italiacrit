@@ -1340,7 +1340,6 @@ table, .rank-num, .rank-pts, .cat-pts,
 
 .share-plat-btn:hover { transform: none; box-shadow: var(--shadow-sm); }
 .share-plat-btn.active { border-color: var(--accent); box-shadow: 0 0 0 2px rgba(99,102,241,.25); }
-.plat-post.active { border-color: #6366f1; }
 
 .share-plat-icon {
   width: 36px;

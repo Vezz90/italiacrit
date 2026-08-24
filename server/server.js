@@ -851,11 +851,47 @@ function _applyResultCorrections(resultsRaw, corr) {
   return out;
 }
 
+// Risultati inseriti a mano da un admin (tabella Postgres manual_results —
+// es. Campionati Italiani a Squadre Cronometro o gare non coperte dallo
+// scraper FCI) NON sono nel JSON statico results_raw.json e vivevano finora
+// solo nel merge lato frontend (_mergeManualIntoRaw in app.js): un atleta
+// con una vittoria inserita così risultava sistematicamente sottostimato
+// di quella vittoria nel testo AI. Stessa identica logica di merge/dedupe
+// (per gara_id+posizione) replicata qui lato server.
+async function _mergeManualResultsIntoRaw(resultsRaw) {
+  try {
+    const manualRows = await queries.getAllManualResults();
+    if (!manualRows || !manualRows.length) return resultsRaw;
+    const realKeys = new Set((resultsRaw || []).filter(r => r.atleta_id && r.data).map(r => `${r.atleta_id}|${r.data}`));
+    const active = manualRows.filter(r => !(r.atleta_id && r.data && realKeys.has(`${r.atleta_id}|${r.data}`)));
+    if (!active.length) return resultsRaw;
+    const byKey = new Set(active.map(r => `${r.gara_id}|${r.posizione}`));
+    const merged = (resultsRaw || []).filter(r => !byKey.has(`${r.gara_id}|${r.posizione}`));
+    for (const r of active) {
+      merged.push({
+        gara_id: r.gara_id, nome_gara: r.nome_gara || '', data: r.data || '',
+        categoria: r.categoria || '', genere: r.genere || '', tipo: r.tipo || 'regionale',
+        moltiplicatore: r.moltiplicatore || 1,
+        campionato_regionale: !!r.campionato_regionale, campionato_italiano: !!r.campionato_italiano,
+        regione: r.regione || '', posizione: r.posizione, cognome: r.cognome, nome: r.nome || '',
+        atleta_id: r.atleta_id, team: r.team || '', team_id: r.team_id || '',
+        tempo: r.tempo || '', km: r.km || '', media: r.media || '',
+        punti_base: r.punti_base || 0, punti_effettivi: r.punti_effettivi || 0,
+      });
+    }
+    return merged;
+  } catch (e) {
+    console.warn('[gara-share-text] manual results merge error:', e.message);
+    return resultsRaw;
+  }
+}
+
 async function _buildGaraAiCaption(id, cal, resultsRawIn) {
   const ai = getAnthropic();
   if (!ai) return null;
   const corr = await _getResultCorrections().catch(() => ({ garaCorrections: {}, risultatoCorrections: {}, excludedIds: new Set() }));
-  const resultsRaw = _applyResultCorrections(resultsRawIn, corr);
+  let resultsRaw = _applyResultCorrections(resultsRawIn, corr);
+  resultsRaw = await _mergeManualResultsIntoRaw(resultsRaw);
   const results = (resultsRaw || []).filter(r => r.gara_id === id).sort((a, b) => a.posizione - b.posizione);
   if (!results.length) return null;
   const winner = results[0];

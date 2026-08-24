@@ -21360,7 +21360,6 @@ window._shareGaraData=null; window._shareAtletaData=null; window._shareTeamData=
 
 // SHARE ENGINE v3
 const SHARE_PLATFORMS = {
-  post:      { w:1080, h:1080, label:'Post\nQuadrato', color:'#6366f1', cls:'plat-post' },
   instagram: { w:1080, h:1350, label:'Instagram\nFeed', color:'#E1306C', cls:'plat-instagram' },
   story:     { w:1080, h:1920, label:'Story /\nReels', color:'#833AB4', cls:'plat-story' },
   facebook:  { w:1200, h:630,  label:'Facebook', color:'#1877F2', cls:'plat-facebook' },
@@ -23363,7 +23362,7 @@ const _SVGS = {
 
 // ── Modale principale ──────────────────────────────────────
 window.showShareModal = async function(type, payload) {
-  _shareType=type; _sharePayload=payload; _sharePlatKey='post';
+  _shareType=type; _sharePayload=payload; _sharePlatKey='instagram';
   _shareGaraStyle='winner'; _shareImgAdjust={scale:1,offsetX:0,offsetY:0};
   // "Riscalda" subito la generazione della grafica OG lato server (appena si
   // apre la modale, prima ancora che l'utente scelga Facebook): la prima
@@ -23382,7 +23381,6 @@ window.showShareModal = async function(type, payload) {
   // "condividi link" di Facebook.
   const _noFbSharerTypes = ['recap','atleta-mese','team-mese'];
   const platBtns = [
-    {k:'post',      label:'Post\nQuadrato', sz:'1080×1080',  fb:false},
     {k:'instagram', label:'Instagram\nFeed',sz:'1080×1350',  fb:false},
     {k:'story',     label:'Story /\nReels', sz:'1080×1920',  fb:false},
     {k:'facebook',  label:'Facebook',       sz:'Link + foto', fb: !_noFbSharerTypes.includes(type)},
@@ -23393,7 +23391,7 @@ window.showShareModal = async function(type, payload) {
     const onclick = fb
       ? `window.shareOnFacebook()`
       : `window.setSharePlat('${k}')`;
-    return `<button class="share-plat-btn ${p.cls} ${k==='post'?'active':''}" id="sp-${k}" onclick="${onclick}" title="${sz}">
+    return `<button class="share-plat-btn ${p.cls} ${k==='instagram'?'active':''}" id="sp-${k}" onclick="${onclick}" title="${sz}">
       <div class="share-plat-icon">${_SVGS[k]||''}</div>
       <span class="share-plat-label">${label.replace('\n','\n')}</span>
     </button>`;
@@ -23428,14 +23426,18 @@ window.showShareModal = async function(type, payload) {
           <button class="share-action-btn" onclick="window._showFbShareText(true)" id="share-fb-regen-btn">🔄 Rigenera</button>
         </div>
       </div>
-      <div class="share-size-label" id="share-size-lbl">Post Quadrato · 1080×1080 (1:1)</div>
+      <div class="share-size-label" id="share-size-lbl">Instagram Feed · 1080×1350 (4:5)</div>
       <div class="share-preview-wrap">
         <div class="share-generating" id="share-loading"><div class="share-spinner"></div> Generazione...</div>
         <img id="share-canvas-preview" draggable="false" style="display:none;${type==='gara'?'cursor:grab;touch-action:none;-webkit-user-drag:none;user-select:none':''}" alt="Anteprima"/>
       </div>
-      <div class="share-actions">
+      <div class="share-actions" id="share-actions-default">
         <button class="share-action-btn share-action-download" id="share-dl-btn" onclick="window.downloadShareCard()">⬇ Scarica</button>
         <button class="share-action-btn share-action-native" id="share-native-btn" onclick="window.nativeShare()">↗ Condividi</button>
+      </div>
+      <div class="share-actions" id="share-actions-whatsapp" style="display:none">
+        <button class="share-action-btn" onclick="window.shareWhatsappLink()">🔗 Condividi il link</button>
+        <button class="share-action-btn share-action-native" id="share-native-btn-wa" onclick="window.nativeShare()">🖼 Condividi la foto</button>
       </div>
     </div>
   </div>`);
@@ -23455,10 +23457,17 @@ window.setSharePlat=async function(k){
   document.querySelectorAll('.share-platforms .share-plat-btn').forEach(b=>b.classList.remove('active'));
   const btn=document.getElementById('sp-'+k); if(btn)btn.classList.add('active');
   const p=SHARE_PLATFORMS[k];
-  const sizes={post:'1080×1080 (1:1)',instagram:'1080×1350 (4:5)',story:'1080×1920 (9:16)',facebook:'1200×630 (1.91:1)',twitter:'1200×675 (16:9)',whatsapp:'1080×1080 (1:1)'};
-  const names={post:'Post Quadrato',instagram:'Instagram Feed',story:'Story / Reels',facebook:'Facebook',twitter:'Twitter/X',whatsapp:'WhatsApp'};
+  const sizes={instagram:'1080×1350 (4:5)',story:'1080×1920 (9:16)',facebook:'1200×630 (1.91:1)',twitter:'1200×675 (16:9)',whatsapp:'1080×1080 (1:1)'};
+  const names={instagram:'Instagram Feed',story:'Story / Reels',facebook:'Facebook',twitter:'Twitter/X',whatsapp:'WhatsApp'};
   const lbl=document.getElementById('share-size-lbl');
   if(lbl) lbl.textContent=`${names[k]} · ${sizes[k]}`;
+  // Per WhatsApp: niente "Scarica"/"Condividi" generico, ma link (apre l'app,
+  // si sceglie la chat) o foto (share sheet nativo, stesso risultato per
+  // l'immagine). Per tutte le altre piattaforme resta invariato.
+  const defRow=document.getElementById('share-actions-default');
+  const waRow=document.getElementById('share-actions-whatsapp');
+  if(defRow) defRow.style.display = k==='whatsapp' ? 'none' : '';
+  if(waRow) waRow.style.display = k==='whatsapp' ? '' : 'none';
   await _refreshPreview();
 };
 
@@ -23566,7 +23575,11 @@ window.downloadShareCard=async function(){
 };
 
 window.nativeShare=async function(){
-  const btn=document.getElementById('share-native-btn');
+  // Due bottoni "Condividi" possono esistere nel DOM (riga azioni normale +
+  // riga dedicata WhatsApp), ma solo uno è visibile alla volta: prendiamo
+  // quello effettivamente mostrato per aggiornarne testo/stato di caricamento.
+  const btn=[...document.querySelectorAll('.share-action-native')].find(b=>b.offsetParent!==null);
+  const label = btn===document.getElementById('share-native-btn-wa') ? '🖼 Condividi la foto' : '↗ Condividi';
   if(btn){btn.disabled=true;btn.textContent='⏳…';}
   try{
     const canvas=await generateShareCanvas(_shareType,_sharePayload,_sharePlatKey);
@@ -23577,7 +23590,7 @@ window.nativeShare=async function(){
       const f=new File([blob],filename,{type:'image/png'});
       if(navigator.canShare({files:[f]})){
         await navigator.share({title:'Italia Cycling Stats',files:[f]});
-        if(btn){btn.disabled=false;btn.textContent='↗ Condividi';}
+        if(btn){btn.disabled=false;btn.textContent=label;}
         return;
       }
     }
@@ -23585,12 +23598,24 @@ window.nativeShare=async function(){
     const blob=await new Promise(r=>canvas.toBlob(r,'image/png'));
     await navigator.clipboard.write([new ClipboardItem({'image/png':blob})]);
     if(btn){btn.disabled=false;btn.textContent='✓ Copiata!';}
-    setTimeout(()=>{if(btn)btn.textContent='↗ Condividi';},2500);
+    setTimeout(()=>{if(btn)btn.textContent=label;},2500);
   }catch(e){
     // Ultimo fallback: download diretto
     window.downloadShareCard();
-    if(btn){btn.disabled=false;btn.textContent='↗ Condividi';}
+    if(btn){btn.disabled=false;btn.textContent=label;}
   }
+};
+
+// Condivisione via link (non foto): apre WhatsApp con testo pronto
+// (narrazione + link alla pagina) e lascia scegliere la chat dentro l'app,
+// invece del solito download/condividi immagine.
+window.shareWhatsappLink=function(){
+  const id = _sharePayload?._id;
+  const url = id ? `https://italiacyclingstats.com/${_shareType}/${encodeURIComponent(id)}` : 'https://italiacyclingstats.com';
+  const ta = document.getElementById('share-fb-text');
+  const text = (ta && ta.value && !ta.value.includes('Generazione') && !ta.value.includes('Rigenerazione')) ? ta.value : '';
+  const full = text ? `${text}\n\n${url}` : url;
+  window.open(`https://wa.me/?text=${encodeURIComponent(full)}`, '_blank');
 };
 
 // ── Open Graph URL per Facebook ────────────────────────────
