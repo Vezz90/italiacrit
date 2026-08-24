@@ -165,7 +165,7 @@ async function uploadPhoto(sb, slug, buf) {
 
 // ─── PCS scraping ──────────────────────────────────────────────────────────────
 
-async function scrapeRaceResults(page, pcsSlug) {
+async function scrapeRaceResults(page, pcsSlug, gotoPcsPage) {
   // Se lo slug include già il prefisso tipo (race/, national-race/ …) usalo direttamente
   const PCS = 'https://www.procyclingstats.com';
   const hasPrefixType = /^(race|national-race|stage-race|one-day-race)\//.test(pcsSlug);
@@ -189,24 +189,23 @@ async function scrapeRaceResults(page, pcsSlug) {
   }
   for (const url of urls) {
     console.log(`  → visito: ${url}`);
-    // Usa 'load' + catch per non abortire su codici HTTP non-200 (PCS restituisce 4xx su alcune pagine)
-    try { await page.goto(url, { waitUntil: 'load', timeout: 25000 }); }
-    catch(e) {
-      console.log(`    (navigazione: ${e.message.split('\n')[0]})`);
-      // Resetta il browser dopo errore di navigazione
-      await page.goto('about:blank').catch(() => {});
+    // gotoPcsPage (vedi pcs-browser.js) rileva ed aspetta la sfida "verifica
+    // che non sei un robot" invece di scambiarla per "pagina senza risultati"
+    // — root cause di molte gare/atleti saltati a vuoto negli script precedenti.
+    const nav = await gotoPcsPage(page, url, { readySelector: 'table', onLog: console.log });
+    if (!nav.ok) {
+      if (nav.notFound) { console.log('  → 404/non trovato'); continue; }
+      if (nav.timedOut) { console.log('  → sfida anti-bot non superata, salto per ora'); continue; }
+      console.log(`    (navigazione: ${(nav.error || '').split('\n')[0]})`);
       continue;
     }
     const finalUrl = page.url();
     console.log(`  → URL finale: ${finalUrl}`);
-    if (finalUrl === 'about:blank' || finalUrl.startsWith('chrome-error://')) continue;
     // PCS reindirizza alla homepage se la gara non esiste
     if (finalUrl === 'https://www.procyclingstats.com/' || finalUrl === 'https://www.procyclingstats.com') {
       console.log('  → slug non trovato su PCS (reindirizzato alla homepage)');
       break; // inutile provare altri URL se PCS non riconosce lo slug base
     }
-    if (finalUrl.includes('pagenotfound') || finalUrl.includes('404')) { console.log('  → 404'); continue; }
-    await sleep(1200);
 
     const debugInfo = await page.evaluate(() => ({
       tableCount: document.querySelectorAll('table').length,
@@ -277,10 +276,9 @@ async function scrapeRaceResults(page, pcsSlug) {
   return { results: [], notFound: true };
 }
 
-async function scrapeRiderProfile(page, slug) {
-  try { await page.goto(`https://www.procyclingstats.com/rider/${slug}`, { waitUntil: 'domcontentloaded', timeout: 15000 }); }
-  catch { return { notFound: true }; }
-  if (page.url().includes('pagenotfound') || page.url().includes('404')) return { notFound: true };
+async function scrapeRiderProfile(page, slug, gotoPcsPage) {
+  const nav = await gotoPcsPage(page, `https://www.procyclingstats.com/rider/${slug}`, { readySelector: 'h1', onLog: console.log });
+  if (!nav.ok) return { notFound: true };
   await page.evaluate(() => window.scrollTo(0, 200)).catch(() => {});
   await sleep(800);
 
@@ -315,11 +313,10 @@ async function scrapeRiderProfile(page, slug) {
   return { ...info, photo, notFound: false };
 }
 
-async function scrapeRiderSeasonResults(page, slug) {
+async function scrapeRiderSeasonResults(page, slug, gotoPcsPage) {
   const url = `https://www.procyclingstats.com/rider/${slug}/${SEASON}`;
-  try { await page.goto(url, { waitUntil: 'domcontentloaded', timeout: 20000 }); }
-  catch(e) { return []; }
-  if (page.url().includes('pagenotfound') || page.url().includes('404')) return [];
+  const nav = await gotoPcsPage(page, url, { readySelector: 'table', onLog: console.log });
+  if (!nav.ok) return [];
   await sleep(800);
 
   return page.evaluate((season) => {
@@ -424,7 +421,6 @@ function makeTeamId(teamName) {
 (async () => {
   const { createClient } = require('@supabase/supabase-js');
   const ws = require('ws');
-  const { chromium } = require('playwright');
 
   const sb = createClient(SUPABASE_URL, SUPABASE_SECRET, { realtime: { transport: ws } });
   console.log(`=== PCS Race Scraper [stagione ${SEASON}] ===\n`);
@@ -483,33 +479,10 @@ function makeTeamId(teamName) {
   if (SINGLE_ID) garaIds = garaIds.filter(id => id === SINGLE_ID);
   console.log(`${garaIds.length} gare con slug PCS — ${calMap.size} date in calendario\n`);
 
-  // Browser
-  const bravePaths = [
-    'C:\\Program Files\\BraveSoftware\\Brave-Browser\\Application\\brave.exe',
-    'C:\\Users\\vezza\\AppData\\Local\\BraveSoftware\\Brave-Browser\\Application\\brave.exe',
-    (process.env.LOCALAPPDATA || '') + '\\BraveSoftware\\Brave-Browser\\Application\\brave.exe',
-  ];
-  const bravePath = bravePaths.find(p => fs.existsSync(p));
-  let browser;
-  if (bravePath) {
-    try { browser = await chromium.launch({ executablePath: bravePath, headless: false, args: ['--no-sandbox'] }); }
-    catch { /* fallback */ }
-  }
-  if (!browser) {
-    try { browser = await chromium.launch({ channel: 'chrome', headless: false }); }
-    catch { browser = await chromium.launch({ headless: false }); }
-  }
-  const context = await browser.newContext({
-    userAgent: 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/124.0.0.0 Safari/537.36',
-    locale: 'it-IT', viewport: { width: 1280, height: 800 },
-  });
-  await context.addInitScript(() => {
-    Object.defineProperty(navigator, 'webdriver', { get: () => undefined });
-  });
-  const page = await context.newPage();
-  await page.goto('https://www.procyclingstats.com/', { waitUntil: 'networkidle', timeout: 30000 })
-    .catch(e => console.log(`Avviso: ${e.message}`));
-  await sleep(2500);
+  // Browser + rilevamento sfida anti-bot (vedi pcs-browser.js) — stesso
+  // modulo già usato e verificato da pcs-athlete-import.js.
+  const { launchPcsBrowser, gotoPcsPage, humanDelay } = require('./pcs-browser');
+  const { browser, page } = await launchPcsBrowser();
   console.log('Pronto.\n');
 
   let doneGare = 0, errGare = 0, newAtleti = 0, newPhotos = 0;
@@ -526,10 +499,11 @@ function makeTeamId(teamName) {
       continue;
     }
 
-    const { results, notFound } = await scrapeRaceResults(page, pcsSlug);
+    const { results, notFound } = await scrapeRaceResults(page, pcsSlug, gotoPcsPage);
     if (notFound || !results.length) {
       console.log('  → nessun risultato trovato su PCS');
       errGare++;
+      await humanDelay(gi);
       continue;
     }
     console.log(`  → ${results.length} finisher estratti`);
@@ -548,7 +522,8 @@ function makeTeamId(teamName) {
         process.stdout.write(`  [${r.posizione}] ${r.rider_name} → NUOVO … `);
 
         // Visita profilo PCS
-        const profile = await scrapeRiderProfile(page, r.pcs_rider_slug);
+        await humanDelay(r.posizione);
+        const profile = await scrapeRiderProfile(page, r.pcs_rider_slug, gotoPcsPage);
 
         if (profile.notFound) {
           process.stdout.write('profilo non trovato\n');
@@ -590,7 +565,8 @@ function makeTeamId(teamName) {
           // Scraper risultati stagionali (solo se non già fatto in questa run)
           if (!alreadyScrapedAtleti.has(atletaId)) {
             alreadyScrapedAtleti.add(atletaId);
-            const seasonResults = await scrapeRiderSeasonResults(page, r.pcs_rider_slug);
+            await humanDelay(r.posizione);
+            const seasonResults = await scrapeRiderSeasonResults(page, r.pcs_rider_slug, gotoPcsPage);
             if (seasonResults.length) {
               const sRows = seasonResults.map(sr => ({
                 atleta_id: atletaId, pcs_slug: r.pcs_rider_slug, season: SEASON,
