@@ -8,7 +8,7 @@
       "cat": "ES1_M",
       "genere": "M",
       "row": {
-        "posizione": 1,
+        "posizioneOriginale": 1,
         "cognome": "BARBERO",
         "nome": "ALESSANDRO",
         "codeSuffix": "ES",
@@ -16,7 +16,8 @@
         "categoria": "ES1_M",
         "ambiguousNameSplit": false,
         "uncertainYear": false,
-        "existingAtletaId": "BARBERO_ALESSANDRO"
+        "existingAtletaId": "BARBERO_ALESSANDRO",
+        "posizione": 1
       },
       "campionato_regionale": false,
       "campionato_italiano": false
@@ -29,7 +30,7 @@
       "cat": "ES1_M",
       "genere": "M",
       "row": {
-        "posizione": 2,
+        "posizioneOriginale": 2,
         "cognome": "ARCUDI",
         "nome": "FEDERICO",
         "codeSuffix": "ES",
@@ -37,7 +38,8 @@
         "categoria": "ES1_M",
         "ambiguousNameSplit": false,
         "uncertainYear": false,
-        "existingAtletaId": "ARCUDI_FEDERICO"
+        "existingAtletaId": "ARCUDI_FEDERICO",
+        "posizione": 2
       },
       "campionato_regionale": false,
       "campionato_italiano": false
@@ -50,7 +52,7 @@
       "cat": "ES1_M",
       "genere": "M",
       "row": {
-        "posizione": 3,
+        "posizioneOriginale": 3,
         "cognome": "GABBA",
         "nome": "LUCA",
         "codeSuffix": "ES",
@@ -58,7 +60,8 @@
         "categoria": "ES1_M",
         "ambiguousNameSplit": false,
         "uncertainYear": false,
-        "existingAtletaId": "GABBA_LUCA"
+        "existingAtletaId": "GABBA_LUCA",
+        "posizione": 3
       },
       "campionato_regionale": false,
       "campionato_italiano": false
@@ -71,7 +74,7 @@
       "cat": "ES1_M",
       "genere": "M",
       "row": {
-        "posizione": 5,
+        "posizioneOriginale": 5,
         "cognome": "BIOLATTO",
         "nome": "SAMUELE",
         "codeSuffix": "ES",
@@ -79,7 +82,30 @@
         "categoria": "ES1_M",
         "ambiguousNameSplit": false,
         "uncertainYear": false,
-        "existingAtletaId": "BIOLATTO_SAMUELE"
+        "existingAtletaId": "BIOLATTO_SAMUELE",
+        "posizione": 4
+      },
+      "campionato_regionale": false,
+      "campionato_italiano": false
+    },
+    {
+      "garaId": "MEMORIAL_PINUCCIO_CHIAVASSA_2026-05-14_ES1_M",
+      "race": "MEMORIAL PINUCCIO CHIAVASSA",
+      "regione": "PIEMONTE",
+      "dataISO": "2026-05-14",
+      "cat": "ES1_M",
+      "genere": "M",
+      "row": {
+        "posizioneOriginale": 6,
+        "cognome": "DONETTO",
+        "nome": "FILIPPO",
+        "codeSuffix": "ES",
+        "team": "ARDENS CYCLING TEAM",
+        "categoria": "ES1_M",
+        "ambiguousNameSplit": false,
+        "uncertainYear": false,
+        "existingAtletaId": "DONETTO_FILIPPO",
+        "posizione": 5
       },
       "campionato_regionale": false,
       "campionato_italiano": false
@@ -92,7 +118,7 @@
       "cat": "ES1_F",
       "genere": "F",
       "row": {
-        "posizione": 4,
+        "posizioneOriginale": 4,
         "cognome": "RENZULLI",
         "nome": "GIULIA",
         "codeSuffix": "ED",
@@ -100,7 +126,8 @@
         "categoria": "ES1_F",
         "ambiguousNameSplit": false,
         "uncertainYear": false,
-        "existingAtletaId": "RENZULLI_GIULIA"
+        "existingAtletaId": "RENZULLI_GIULIA",
+        "posizione": 1
       },
       "campionato_regionale": false,
       "campionato_italiano": false
@@ -113,7 +140,7 @@
       "cat": "ES2_M",
       "genere": "M",
       "row": {
-        "posizione": 1,
+        "posizioneOriginale": 1,
         "cognome": "ALTARE",
         "nome": "JACOPO",
         "codeSuffix": "ES",
@@ -121,7 +148,8 @@
         "categoria": "ES2_M",
         "ambiguousNameSplit": false,
         "uncertainYear": false,
-        "existingAtletaId": "ALTARE_JACOPO"
+        "existingAtletaId": "ALTARE_JACOPO",
+        "posizione": 1
       },
       "campionato_regionale": false,
       "campionato_italiano": false
@@ -134,7 +162,7 @@
       "cat": "ES2_M",
       "genere": "M",
       "row": {
-        "posizione": 2,
+        "posizioneOriginale": 2,
         "cognome": "RACCA",
         "nome": "ANDREA",
         "codeSuffix": "ES",
@@ -142,7 +170,8 @@
         "categoria": "ES2_M",
         "ambiguousNameSplit": false,
         "uncertainYear": false,
-        "existingAtletaId": "RACCA_ANDREA"
+        "existingAtletaId": "RACCA_ANDREA",
+        "posizione": 2
       },
       "campionato_regionale": false,
       "campionato_italiano": false
@@ -155,7 +184,7 @@
       "cat": "ES2_M",
       "genere": "M",
       "row": {
-        "posizione": 3,
+        "posizioneOriginale": 3,
         "cognome": "CASTELLANI",
         "nome": "LORENZO",
         "codeSuffix": "ES",
@@ -163,7 +192,8 @@
         "categoria": "ES2_M",
         "ambiguousNameSplit": false,
         "uncertainYear": false,
-        "existingAtletaId": "CASTELLANI_LORENZO"
+        "existingAtletaId": "CASTELLANI_LORENZO",
+        "posizione": 3
       },
       "campionato_regionale": false,
       "campionato_italiano": false
@@ -176,7 +206,7 @@
       "cat": "ES2_M",
       "genere": "M",
       "row": {
-        "posizione": 5,
+        "posizioneOriginale": 5,
         "cognome": "AVIDANO",
         "nome": "DAVIDE",
         "codeSuffix": "ES",
@@ -184,7 +214,8 @@
         "categoria": "ES2_M",
         "ambiguousNameSplit": false,
         "uncertainYear": false,
-        "existingAtletaId": "AVIDANO_DAVIDE"
+        "existingAtletaId": "AVIDANO_DAVIDE",
+        "posizione": 5
       },
       "campionato_regionale": false,
       "campionato_italiano": false
@@ -197,7 +228,7 @@
       "cat": "ES1_M",
       "genere": "M",
       "row": {
-        "posizione": 1,
+        "posizioneOriginale": 1,
         "cognome": "FORTUNA",
         "nome": "SIMONE",
         "codeSuffix": "ES",
@@ -205,7 +236,8 @@
         "categoria": "ES1_M",
         "ambiguousNameSplit": false,
         "uncertainYear": true,
-        "existingAtletaId": "FORTUNA_SIMONE"
+        "existingAtletaId": "FORTUNA_SIMONE",
+        "posizione": 1
       },
       "campionato_regionale": false,
       "campionato_italiano": false
@@ -218,7 +250,7 @@
       "cat": "ES1_M",
       "genere": "M",
       "row": {
-        "posizione": 2,
+        "posizioneOriginale": 2,
         "cognome": "MUSSOLIN",
         "nome": "ETTORE",
         "codeSuffix": "ES",
@@ -226,7 +258,8 @@
         "categoria": "ES1_M",
         "ambiguousNameSplit": false,
         "uncertainYear": true,
-        "existingAtletaId": "MUSSOLIN_ETTORE"
+        "existingAtletaId": "MUSSOLIN_ETTORE",
+        "posizione": 2
       },
       "campionato_regionale": false,
       "campionato_italiano": false
@@ -239,7 +272,7 @@
       "cat": "ES1_M",
       "genere": "M",
       "row": {
-        "posizione": 4,
+        "posizioneOriginale": 4,
         "cognome": "TESTOLIN",
         "nome": "MATTEO",
         "codeSuffix": "ES",
@@ -247,7 +280,8 @@
         "categoria": "ES1_M",
         "ambiguousNameSplit": false,
         "uncertainYear": true,
-        "existingAtletaId": "TESTOLIN_MATTEO"
+        "existingAtletaId": "TESTOLIN_MATTEO",
+        "posizione": 4
       },
       "campionato_regionale": false,
       "campionato_italiano": false
@@ -260,7 +294,7 @@
       "cat": "ES1_M",
       "genere": "M",
       "row": {
-        "posizione": 5,
+        "posizioneOriginale": 5,
         "cognome": "CARACAUSI",
         "nome": "GIOELE",
         "codeSuffix": "ES",
@@ -268,1217 +302,21 @@
         "categoria": "ES1_M",
         "ambiguousNameSplit": false,
         "uncertainYear": true,
-        "existingAtletaId": "CARACAUSI_GIOELE"
+        "existingAtletaId": "CARACAUSI_GIOELE",
+        "posizione": 5
       },
       "campionato_regionale": false,
       "campionato_italiano": false
     },
     {
-      "garaId": "15_TROFEO_GRAFICA_78_2026-06-12_ES1_M",
-      "race": "15° TROFEO GRAFICA 78",
+      "garaId": "2_GRAN_PREMIO_MSTC_LA_PALLADIANA_2026-05-29_ES1_M",
+      "race": "2* GRAN PREMIO MSTC - LA PALLADIANA",
       "regione": "VENETO",
-      "dataISO": "2026-06-12",
+      "dataISO": "2026-05-29",
       "cat": "ES1_M",
       "genere": "M",
       "row": {
-        "posizione": 1,
-        "cognome": "SPESSOTTO",
-        "nome": "GIACOMO",
-        "codeSuffix": "ES",
-        "team": "VC SAN VENDEMIANO",
-        "categoria": "ES1_M",
-        "ambiguousNameSplit": false,
-        "uncertainYear": false,
-        "existingAtletaId": "SPESSOTTO_GIACOMO"
-      },
-      "campionato_regionale": false,
-      "campionato_italiano": false
-    },
-    {
-      "garaId": "15_TROFEO_GRAFICA_78_2026-06-12_ES1_M",
-      "race": "15° TROFEO GRAFICA 78",
-      "regione": "VENETO",
-      "dataISO": "2026-06-12",
-      "cat": "ES1_M",
-      "genere": "M",
-      "row": {
-        "posizione": 2,
-        "cognome": "FRESCHI",
-        "nome": "ANDREA",
-        "codeSuffix": "ES",
-        "team": "A.S.D. SACILESE",
-        "categoria": "ES1_M",
-        "ambiguousNameSplit": false,
-        "uncertainYear": false,
-        "existingAtletaId": "FRESCHI_ANDREA"
-      },
-      "campionato_regionale": false,
-      "campionato_italiano": false
-    },
-    {
-      "garaId": "15_TROFEO_GRAFICA_78_2026-06-12_ES1_M",
-      "race": "15° TROFEO GRAFICA 78",
-      "regione": "VENETO",
-      "dataISO": "2026-06-12",
-      "cat": "ES1_M",
-      "genere": "M",
-      "row": {
-        "posizione": 3,
-        "cognome": "TOFFOLI",
-        "nome": "STEFANO",
-        "codeSuffix": "ES",
-        "team": "SOC. SPORT.SANFIORESE",
-        "categoria": "ES1_M",
-        "ambiguousNameSplit": false,
-        "uncertainYear": false,
-        "existingAtletaId": "TOFFOLI_STEFANO"
-      },
-      "campionato_regionale": false,
-      "campionato_italiano": false
-    },
-    {
-      "garaId": "15_TROFEO_GRAFICA_78_2026-06-12_ES2_M",
-      "race": "15° TROFEO GRAFICA 78",
-      "regione": "VENETO",
-      "dataISO": "2026-06-12",
-      "cat": "ES2_M",
-      "genere": "M",
-      "row": {
-        "posizione": 1,
-        "cognome": "DAL BO'",
-        "nome": "MATIAS",
-        "codeSuffix": "ES",
-        "team": "PEDALE MARENESE GINO BARTALI",
-        "categoria": "ES2_M",
-        "ambiguousNameSplit": false,
-        "uncertainYear": false,
-        "existingAtletaId": "DAL_BO_MATIAS"
-      },
-      "campionato_regionale": false,
-      "campionato_italiano": false
-    },
-    {
-      "garaId": "15_TROFEO_GRAFICA_78_2026-06-12_ES2_M",
-      "race": "15° TROFEO GRAFICA 78",
-      "regione": "VENETO",
-      "dataISO": "2026-06-12",
-      "cat": "ES2_M",
-      "genere": "M",
-      "row": {
-        "posizione": 2,
-        "cognome": "DE ROS",
-        "nome": "LUIGI",
-        "codeSuffix": "ES",
-        "team": "G.C.POSTIOMA",
-        "categoria": "ES2_M",
-        "ambiguousNameSplit": false,
-        "uncertainYear": false,
-        "existingAtletaId": "DE_ROS_LUIGI"
-      },
-      "campionato_regionale": false,
-      "campionato_italiano": false
-    },
-    {
-      "garaId": "15_TROFEO_GRAFICA_78_2026-06-12_ES2_M",
-      "race": "15° TROFEO GRAFICA 78",
-      "regione": "VENETO",
-      "dataISO": "2026-06-12",
-      "cat": "ES2_M",
-      "genere": "M",
-      "row": {
-        "posizione": 3,
-        "cognome": "BEMBO",
-        "nome": "SANTIAGO",
-        "codeSuffix": "ES",
-        "team": "A.S.D. POSTUMIA 73 D.L. CICLISMO",
-        "categoria": "ES2_M",
-        "ambiguousNameSplit": false,
-        "uncertainYear": false,
-        "existingAtletaId": "BEMBO_SANTIAGO"
-      },
-      "campionato_regionale": false,
-      "campionato_italiano": false
-    },
-    {
-      "garaId": "33_TROFEO_PRO_LOCO_2026-07-16_ES1_M",
-      "race": "33° TROFEO PRO LOCO",
-      "regione": "LOMBARDIA",
-      "dataISO": "2026-07-16",
-      "cat": "ES1_M",
-      "genere": "M",
-      "row": {
-        "posizione": 1,
-        "cognome": "SANSONI",
-        "nome": "ALESSIO",
-        "codeSuffix": "ES",
-        "team": "MAZZANO A.S.D.",
-        "categoria": "ES1_M",
-        "ambiguousNameSplit": false,
-        "uncertainYear": false,
-        "existingAtletaId": "SANSONI_ALESSIO"
-      },
-      "campionato_regionale": false,
-      "campionato_italiano": false
-    },
-    {
-      "garaId": "33_TROFEO_PRO_LOCO_2026-07-16_ES1_M",
-      "race": "33° TROFEO PRO LOCO",
-      "regione": "LOMBARDIA",
-      "dataISO": "2026-07-16",
-      "cat": "ES1_M",
-      "genere": "M",
-      "row": {
-        "posizione": 2,
-        "cognome": "ZANARDINI",
-        "nome": "LEONARDO",
-        "codeSuffix": "ES",
-        "team": "MAZZANO A.S.D.",
-        "categoria": "ES1_M",
-        "ambiguousNameSplit": false,
-        "uncertainYear": false,
-        "existingAtletaId": "ZANARDINI_LEONARDO"
-      },
-      "campionato_regionale": false,
-      "campionato_italiano": false
-    },
-    {
-      "garaId": "33_TROFEO_PRO_LOCO_2026-07-16_ES1_M",
-      "race": "33° TROFEO PRO LOCO",
-      "regione": "LOMBARDIA",
-      "dataISO": "2026-07-16",
-      "cat": "ES1_M",
-      "genere": "M",
-      "row": {
-        "posizione": 3,
-        "cognome": "MAI",
-        "nome": "LEONARDO",
-        "codeSuffix": "ES",
-        "team": "S. C. MINCIO-CHIESE A.S.D",
-        "categoria": "ES1_M",
-        "ambiguousNameSplit": false,
-        "uncertainYear": false,
-        "existingAtletaId": "MAI_LEONARDO"
-      },
-      "campionato_regionale": false,
-      "campionato_italiano": false
-    },
-    {
-      "garaId": "33_TROFEO_PRO_LOCO_2026-07-16_ES1_M",
-      "race": "33° TROFEO PRO LOCO",
-      "regione": "LOMBARDIA",
-      "dataISO": "2026-07-16",
-      "cat": "ES1_M",
-      "genere": "M",
-      "row": {
-        "posizione": 4,
-        "cognome": "MERLETTI",
-        "nome": "DANIEL",
-        "codeSuffix": "ES",
-        "team": "MAZZANO A.S.D.",
-        "categoria": "ES1_M",
-        "ambiguousNameSplit": false,
-        "uncertainYear": false,
-        "existingAtletaId": "MERLETTI_DANIEL"
-      },
-      "campionato_regionale": false,
-      "campionato_italiano": false
-    },
-    {
-      "garaId": "33_TROFEO_PRO_LOCO_2026-07-16_ES1_M",
-      "race": "33° TROFEO PRO LOCO",
-      "regione": "LOMBARDIA",
-      "dataISO": "2026-07-16",
-      "cat": "ES1_M",
-      "genere": "M",
-      "row": {
-        "posizione": 5,
-        "cognome": "RICCI",
-        "nome": "NICOLA",
-        "codeSuffix": "ES",
-        "team": "SAN GEO A.S.D.",
-        "categoria": "ES1_M",
-        "ambiguousNameSplit": false,
-        "uncertainYear": false,
-        "existingAtletaId": "RICCI_NICOLA"
-      },
-      "campionato_regionale": false,
-      "campionato_italiano": false
-    },
-    {
-      "garaId": "33_TROFEO_PRO_LOCO_2026-07-16_ES2_M",
-      "race": "33° TROFEO PRO LOCO",
-      "regione": "LOMBARDIA",
-      "dataISO": "2026-07-16",
-      "cat": "ES2_M",
-      "genere": "M",
-      "row": {
-        "posizione": 1,
-        "cognome": "ZUNICA",
-        "nome": "GIULIO",
-        "codeSuffix": "ES",
-        "team": "S. C. MINCIO-CHIESE A.S.D",
-        "categoria": "ES2_M",
-        "ambiguousNameSplit": false,
-        "uncertainYear": false,
-        "existingAtletaId": "ZUNICA_GIULIO"
-      },
-      "campionato_regionale": false,
-      "campionato_italiano": false
-    },
-    {
-      "garaId": "33_TROFEO_PRO_LOCO_2026-07-16_ES2_M",
-      "race": "33° TROFEO PRO LOCO",
-      "regione": "LOMBARDIA",
-      "dataISO": "2026-07-16",
-      "cat": "ES2_M",
-      "genere": "M",
-      "row": {
-        "posizione": 2,
-        "cognome": "COLOMBO",
-        "nome": "MARCO",
-        "codeSuffix": "ES",
-        "team": "SAN GEO A.S.D.",
-        "categoria": "ES2_M",
-        "ambiguousNameSplit": false,
-        "uncertainYear": false,
-        "existingAtletaId": "COLOMBO_MARCO"
-      },
-      "campionato_regionale": false,
-      "campionato_italiano": false
-    },
-    {
-      "garaId": "33_TROFEO_PRO_LOCO_2026-07-16_ES2_M",
-      "race": "33° TROFEO PRO LOCO",
-      "regione": "LOMBARDIA",
-      "dataISO": "2026-07-16",
-      "cat": "ES2_M",
-      "genere": "M",
-      "row": {
-        "posizione": 3,
-        "cognome": "DECO'",
-        "nome": "GABRIELE",
-        "codeSuffix": "ES",
-        "team": "S. C. MINCIO-CHIESE A.S.D",
-        "categoria": "ES2_M",
-        "ambiguousNameSplit": false,
-        "uncertainYear": false,
-        "existingAtletaId": "DECO_GABRIELE"
-      },
-      "campionato_regionale": false,
-      "campionato_italiano": false
-    },
-    {
-      "garaId": "33_TROFEO_PRO_LOCO_2026-07-16_ES2_M",
-      "race": "33° TROFEO PRO LOCO",
-      "regione": "LOMBARDIA",
-      "dataISO": "2026-07-16",
-      "cat": "ES2_M",
-      "genere": "M",
-      "row": {
-        "posizione": 4,
-        "cognome": "GANARIN",
-        "nome": "LUCA",
-        "codeSuffix": "ES",
-        "team": "S. C. MINCIO-CHIESE A.S.D",
-        "categoria": "ES2_M",
-        "ambiguousNameSplit": false,
-        "uncertainYear": false,
-        "existingAtletaId": "GANARIN_LUCA"
-      },
-      "campionato_regionale": false,
-      "campionato_italiano": false
-    },
-    {
-      "garaId": "33_TROFEO_PRO_LOCO_2026-07-16_ES2_M",
-      "race": "33° TROFEO PRO LOCO",
-      "regione": "LOMBARDIA",
-      "dataISO": "2026-07-16",
-      "cat": "ES2_M",
-      "genere": "M",
-      "row": {
-        "posizione": 5,
-        "cognome": "BALCONI",
-        "nome": "FEDERICO",
-        "codeSuffix": "ES",
-        "team": "MAZZANO A.S.D.",
-        "categoria": "ES2_M",
-        "ambiguousNameSplit": false,
-        "uncertainYear": false,
-        "existingAtletaId": "BALCONI_FEDERICO"
-      },
-      "campionato_regionale": false,
-      "campionato_italiano": false
-    },
-    {
-      "garaId": "TROFEO_DENTIS_2026-07-16_ES1_M",
-      "race": "TROFEO DENTIS",
-      "regione": "PIEMONTE",
-      "dataISO": "2026-07-16",
-      "cat": "ES1_M",
-      "genere": "M",
-      "row": {
-        "posizione": 2,
-        "cognome": "DONETTO",
-        "nome": "FILIPPO",
-        "codeSuffix": "ES",
-        "team": "ARDENS CYCLING TEAM",
-        "categoria": "ES1_M",
-        "ambiguousNameSplit": false,
-        "uncertainYear": false,
-        "existingAtletaId": "DONETTO_FILIPPO"
-      },
-      "campionato_regionale": false,
-      "campionato_italiano": false
-    },
-    {
-      "garaId": "TROFEO_DENTIS_2026-07-16_ES1_M",
-      "race": "TROFEO DENTIS",
-      "regione": "PIEMONTE",
-      "dataISO": "2026-07-16",
-      "cat": "ES1_M",
-      "genere": "M",
-      "row": {
-        "posizione": 3,
-        "cognome": "ARCUDI",
-        "nome": "FEDERICO",
-        "codeSuffix": "ES",
-        "team": "ARDENS CYCLING TEAM",
-        "categoria": "ES1_M",
-        "ambiguousNameSplit": false,
-        "uncertainYear": false,
-        "existingAtletaId": "ARCUDI_FEDERICO"
-      },
-      "campionato_regionale": false,
-      "campionato_italiano": false
-    },
-    {
-      "garaId": "TROFEO_DENTIS_2026-07-16_ES1_M",
-      "race": "TROFEO DENTIS",
-      "regione": "PIEMONTE",
-      "dataISO": "2026-07-16",
-      "cat": "ES1_M",
-      "genere": "M",
-      "row": {
-        "posizione": 4,
-        "cognome": "RAMONDETTI",
-        "nome": "GIOELE",
-        "codeSuffix": "ES",
-        "team": "ALBA BRA LANGHE ROERO",
-        "categoria": "ES1_M",
-        "ambiguousNameSplit": false,
-        "uncertainYear": false,
-        "existingAtletaId": "RAMONDETTI_GIOELE"
-      },
-      "campionato_regionale": false,
-      "campionato_italiano": false
-    },
-    {
-      "garaId": "TROFEO_DENTIS_2026-07-16_ES2_M",
-      "race": "TROFEO DENTIS",
-      "regione": "PIEMONTE",
-      "dataISO": "2026-07-16",
-      "cat": "ES2_M",
-      "genere": "M",
-      "row": {
-        "posizione": 1,
-        "cognome": "DI DOMENICO",
-        "nome": "MATTIA",
-        "codeSuffix": "ES",
-        "team": "QUILIANO BIKE SPEED WHEEL",
-        "categoria": "ES2_M",
-        "ambiguousNameSplit": false,
-        "uncertainYear": false,
-        "existingAtletaId": "DI_DOMENICO_MATTIA"
-      },
-      "campionato_regionale": false,
-      "campionato_italiano": false
-    },
-    {
-      "garaId": "TROFEO_DENTIS_2026-07-16_ES2_M",
-      "race": "TROFEO DENTIS",
-      "regione": "PIEMONTE",
-      "dataISO": "2026-07-16",
-      "cat": "ES2_M",
-      "genere": "M",
-      "row": {
-        "posizione": 2,
-        "cognome": "ALTARE",
-        "nome": "JACOPO",
-        "codeSuffix": "ES",
-        "team": "VIGOR - CYCLING TEAM",
-        "categoria": "ES2_M",
-        "ambiguousNameSplit": false,
-        "uncertainYear": false,
-        "existingAtletaId": "ALTARE_JACOPO"
-      },
-      "campionato_regionale": false,
-      "campionato_italiano": false
-    },
-    {
-      "garaId": "TROFEO_DENTIS_2026-07-16_ES2_M",
-      "race": "TROFEO DENTIS",
-      "regione": "PIEMONTE",
-      "dataISO": "2026-07-16",
-      "cat": "ES2_M",
-      "genere": "M",
-      "row": {
-        "posizione": 3,
-        "cognome": "REJNAUD",
-        "nome": "MATTEO",
-        "codeSuffix": "ES",
-        "team": "ARDENS CYCLING TEAM",
-        "categoria": "ES2_M",
-        "ambiguousNameSplit": false,
-        "uncertainYear": false,
-        "existingAtletaId": "REJNAUD_MATTEO"
-      },
-      "campionato_regionale": false,
-      "campionato_italiano": false
-    },
-    {
-      "garaId": "TROFEO_DENTIS_2026-07-16_ES2_M",
-      "race": "TROFEO DENTIS",
-      "regione": "PIEMONTE",
-      "dataISO": "2026-07-16",
-      "cat": "ES2_M",
-      "genere": "M",
-      "row": {
-        "posizione": 4,
-        "cognome": "AVIDANO",
-        "nome": "DAVIDE",
-        "codeSuffix": "ES",
-        "team": "VIGOR - CYCLING TEAM",
-        "categoria": "ES2_M",
-        "ambiguousNameSplit": false,
-        "uncertainYear": false,
-        "existingAtletaId": "AVIDANO_DAVIDE"
-      },
-      "campionato_regionale": false,
-      "campionato_italiano": false
-    },
-    {
-      "garaId": "TROFEO_DENTIS_2026-07-16_ES2_M",
-      "race": "TROFEO DENTIS",
-      "regione": "PIEMONTE",
-      "dataISO": "2026-07-16",
-      "cat": "ES2_M",
-      "genere": "M",
-      "row": {
-        "posizione": 5,
-        "cognome": "CANU",
-        "nome": "EDOARDO",
-        "codeSuffix": "ES",
-        "team": "QUILIANO BIKE SPEED WHEEL",
-        "categoria": "ES2_M",
-        "ambiguousNameSplit": false,
-        "uncertainYear": false,
-        "existingAtletaId": "CANU_EDOARDO"
-      },
-      "campionato_regionale": false,
-      "campionato_italiano": false
-    },
-    {
-      "garaId": "3_TROFEO_ALF_GROUP_2026-07-24_ES1_M",
-      "race": "3° TROFEO ALF GROUP",
-      "regione": "VENETO",
-      "dataISO": "2026-07-24",
-      "cat": "ES1_M",
-      "genere": "M",
-      "row": {
-        "posizione": 1,
-        "cognome": "BRAIT",
-        "nome": "EDOARDO",
-        "codeSuffix": "ES",
-        "team": "A.S.D. SACILESE",
-        "categoria": "ES1_M",
-        "ambiguousNameSplit": false,
-        "uncertainYear": false,
-        "existingAtletaId": "BRAIT_EDOARDO"
-      },
-      "campionato_regionale": false,
-      "campionato_italiano": false
-    },
-    {
-      "garaId": "3_TROFEO_ALF_GROUP_2026-07-24_ES1_M",
-      "race": "3° TROFEO ALF GROUP",
-      "regione": "VENETO",
-      "dataISO": "2026-07-24",
-      "cat": "ES1_M",
-      "genere": "M",
-      "row": {
-        "posizione": 2,
-        "cognome": "BOTTEON",
-        "nome": "ALESSANDRO",
-        "codeSuffix": "ES",
-        "team": "VC SAN VENDEMIANO",
-        "categoria": "ES1_M",
-        "ambiguousNameSplit": false,
-        "uncertainYear": false,
-        "existingAtletaId": "BOTTEON_ALESSANDRO"
-      },
-      "campionato_regionale": false,
-      "campionato_italiano": false
-    },
-    {
-      "garaId": "3_TROFEO_ALF_GROUP_2026-07-24_ES1_M",
-      "race": "3° TROFEO ALF GROUP",
-      "regione": "VENETO",
-      "dataISO": "2026-07-24",
-      "cat": "ES1_M",
-      "genere": "M",
-      "row": {
-        "posizione": 3,
-        "cognome": "PIGAT",
-        "nome": "DAVIDE",
-        "codeSuffix": "ES",
-        "team": "GOTTARDO GIOCHI CANEVA",
-        "categoria": "ES1_M",
-        "ambiguousNameSplit": false,
-        "uncertainYear": false,
-        "existingAtletaId": "PIGAT_DAVIDE"
-      },
-      "campionato_regionale": false,
-      "campionato_italiano": false
-    },
-    {
-      "garaId": "3_TROFEO_ALF_GROUP_2026-07-24_ES1_M",
-      "race": "3° TROFEO ALF GROUP",
-      "regione": "VENETO",
-      "dataISO": "2026-07-24",
-      "cat": "ES1_M",
-      "genere": "M",
-      "row": {
-        "posizione": 4,
-        "cognome": "BERTON",
-        "nome": "MATTIA",
-        "codeSuffix": "ES",
-        "team": "S. C. FONTANAFREDDA",
-        "categoria": "ES1_M",
-        "ambiguousNameSplit": false,
-        "uncertainYear": false,
-        "existingAtletaId": "BERTON_MATTIA"
-      },
-      "campionato_regionale": false,
-      "campionato_italiano": false
-    },
-    {
-      "garaId": "3_TROFEO_ALF_GROUP_2026-07-24_ES1_M",
-      "race": "3° TROFEO ALF GROUP",
-      "regione": "VENETO",
-      "dataISO": "2026-07-24",
-      "cat": "ES1_M",
-      "genere": "M",
-      "row": {
-        "posizione": 5,
-        "cognome": "BERTOLIN",
-        "nome": "EROS",
-        "codeSuffix": "ES",
-        "team": "A.S.D. SACILESE",
-        "categoria": "ES1_M",
-        "ambiguousNameSplit": false,
-        "uncertainYear": false,
-        "existingAtletaId": "BERTOLIN_EROS"
-      },
-      "campionato_regionale": false,
-      "campionato_italiano": false
-    },
-    {
-      "garaId": "3_TROFEO_ALF_GROUP_2026-07-24_ES2_M",
-      "race": "3° TROFEO ALF GROUP",
-      "regione": "VENETO",
-      "dataISO": "2026-07-24",
-      "cat": "ES2_M",
-      "genere": "M",
-      "row": {
-        "posizione": 1,
-        "cognome": "ZANCHETTIN",
-        "nome": "ALEJANDRO",
-        "codeSuffix": "ES",
-        "team": "A.S.D. SACILESE",
-        "categoria": "ES2_M",
-        "ambiguousNameSplit": false,
-        "uncertainYear": false,
-        "existingAtletaId": "ZANCHETTIN_ALEJANDRO"
-      },
-      "campionato_regionale": false,
-      "campionato_italiano": false
-    },
-    {
-      "garaId": "3_TROFEO_ALF_GROUP_2026-07-24_ES2_M",
-      "race": "3° TROFEO ALF GROUP",
-      "regione": "VENETO",
-      "dataISO": "2026-07-24",
-      "cat": "ES2_M",
-      "genere": "M",
-      "row": {
-        "posizione": 2,
-        "cognome": "QUAIA",
-        "nome": "FILIPPO",
-        "codeSuffix": "ES",
-        "team": "GOTTARDO GIOCHI CANEVA",
-        "categoria": "ES2_M",
-        "ambiguousNameSplit": false,
-        "uncertainYear": false,
-        "existingAtletaId": "QUAIA_FILIPPO"
-      },
-      "campionato_regionale": false,
-      "campionato_italiano": false
-    },
-    {
-      "garaId": "3_TROFEO_ALF_GROUP_2026-07-24_ES2_M",
-      "race": "3° TROFEO ALF GROUP",
-      "regione": "VENETO",
-      "dataISO": "2026-07-24",
-      "cat": "ES2_M",
-      "genere": "M",
-      "row": {
-        "posizione": 3,
-        "cognome": "GUERRA",
-        "nome": "NICOLO'",
-        "codeSuffix": "ES",
-        "team": "BANNIA ASS.SPORT.DILETT.",
-        "categoria": "ES2_M",
-        "ambiguousNameSplit": false,
-        "uncertainYear": false,
-        "existingAtletaId": "GUERRA_NICOLO"
-      },
-      "campionato_regionale": false,
-      "campionato_italiano": false
-    },
-    {
-      "garaId": "3_TROFEO_ALF_GROUP_2026-07-24_ES2_M",
-      "race": "3° TROFEO ALF GROUP",
-      "regione": "VENETO",
-      "dataISO": "2026-07-24",
-      "cat": "ES2_M",
-      "genere": "M",
-      "row": {
-        "posizione": 4,
-        "cognome": "BARAZZUOL",
-        "nome": "FRANCESCO",
-        "codeSuffix": "ES",
-        "team": "SOC. SPORT.SANFIORESE",
-        "categoria": "ES2_M",
-        "ambiguousNameSplit": false,
-        "uncertainYear": false,
-        "existingAtletaId": "BARAZZUOL_FRANCESCO"
-      },
-      "campionato_regionale": false,
-      "campionato_italiano": false
-    },
-    {
-      "garaId": "3_TROFEO_ALF_GROUP_2026-07-24_ES2_M",
-      "race": "3° TROFEO ALF GROUP",
-      "regione": "VENETO",
-      "dataISO": "2026-07-24",
-      "cat": "ES2_M",
-      "genere": "M",
-      "row": {
-        "posizione": 5,
-        "cognome": "CARLET",
-        "nome": "SEBASTIANO",
-        "codeSuffix": "ES",
-        "team": "GOTTARDO GIOCHI CANEVA",
-        "categoria": "ES2_M",
-        "ambiguousNameSplit": false,
-        "uncertainYear": false,
-        "existingAtletaId": "CARLET_SEBASTIANO"
-      },
-      "campionato_regionale": false,
-      "campionato_italiano": false
-    },
-    {
-      "garaId": "46_COPPA_LA_ROCCA_TROFEO_F_LLI_BAGAGLI_2026-07-28_ES1_M",
-      "race": "46^ COPPA LA ROCCA - TROFEO F.LLI BAGAGLI",
-      "regione": "TOSCANA",
-      "dataISO": "2026-07-28",
-      "cat": "ES1_M",
-      "genere": "M",
-      "row": {
-        "posizione": 1,
-        "cognome": "MORICONI",
-        "nome": "EDOARDO",
-        "codeSuffix": "ES",
-        "team": "UC DONORATICO",
-        "categoria": "ES1_M",
-        "ambiguousNameSplit": false,
-        "uncertainYear": false,
-        "existingAtletaId": "MORICONI_EDOARDO"
-      },
-      "campionato_regionale": false,
-      "campionato_italiano": false
-    },
-    {
-      "garaId": "46_COPPA_LA_ROCCA_TROFEO_F_LLI_BAGAGLI_2026-07-28_ES1_M",
-      "race": "46^ COPPA LA ROCCA - TROFEO F.LLI BAGAGLI",
-      "regione": "TOSCANA",
-      "dataISO": "2026-07-28",
-      "cat": "ES1_M",
-      "genere": "M",
-      "row": {
-        "posizione": 2,
-        "cognome": "GALEOTTI",
-        "nome": "ALESSIO",
-        "codeSuffix": "ES",
-        "team": "UC DONORATICO",
-        "categoria": "ES1_M",
-        "ambiguousNameSplit": false,
-        "uncertainYear": false,
-        "existingAtletaId": "GALEOTTI_ALESSIO"
-      },
-      "campionato_regionale": false,
-      "campionato_italiano": false
-    },
-    {
-      "garaId": "46_COPPA_LA_ROCCA_TROFEO_F_LLI_BAGAGLI_2026-07-28_ES1_M",
-      "race": "46^ COPPA LA ROCCA - TROFEO F.LLI BAGAGLI",
-      "regione": "TOSCANA",
-      "dataISO": "2026-07-28",
-      "cat": "ES1_M",
-      "genere": "M",
-      "row": {
-        "posizione": 3,
-        "cognome": "ANTONGIOVANNI",
-        "nome": "DIEGO",
-        "codeSuffix": "ES",
-        "team": "UC EMPOLESE",
-        "categoria": "ES1_M",
-        "ambiguousNameSplit": false,
-        "uncertainYear": false,
-        "existingAtletaId": "ANTONGIOVANNI_DIEGO"
-      },
-      "campionato_regionale": false,
-      "campionato_italiano": false
-    },
-    {
-      "garaId": "46_COPPA_LA_ROCCA_TROFEO_F_LLI_BAGAGLI_2026-07-28_ES1_M",
-      "race": "46^ COPPA LA ROCCA - TROFEO F.LLI BAGAGLI",
-      "regione": "TOSCANA",
-      "dataISO": "2026-07-28",
-      "cat": "ES1_M",
-      "genere": "M",
-      "row": {
-        "posizione": 4,
-        "cognome": "BIANCHI",
-        "nome": "MATTIA",
-        "codeSuffix": "ES",
-        "team": "UC DONORATICO",
-        "categoria": "ES1_M",
-        "ambiguousNameSplit": false,
-        "uncertainYear": false,
-        "existingAtletaId": "BIANCHI_MATTIA"
-      },
-      "campionato_regionale": false,
-      "campionato_italiano": false
-    },
-    {
-      "garaId": "46_COPPA_LA_ROCCA_TROFEO_F_LLI_BAGAGLI_2026-07-28_ES1_M",
-      "race": "46^ COPPA LA ROCCA - TROFEO F.LLI BAGAGLI",
-      "regione": "TOSCANA",
-      "dataISO": "2026-07-28",
-      "cat": "ES1_M",
-      "genere": "M",
-      "row": {
-        "posizione": 5,
-        "cognome": "BERTI",
-        "nome": "GIANMARIA",
-        "codeSuffix": "ES",
-        "team": "GS BERTI MOBILI BENASSI",
-        "categoria": "ES1_M",
-        "ambiguousNameSplit": false,
-        "uncertainYear": false,
-        "existingAtletaId": "BERTI_GIANMARIA"
-      },
-      "campionato_regionale": false,
-      "campionato_italiano": false
-    },
-    {
-      "garaId": "46_COPPA_LA_ROCCA_TROFEO_F_LLI_BAGAGLI_2026-07-28_ES2_M",
-      "race": "46^ COPPA LA ROCCA - TROFEO F.LLI BAGAGLI",
-      "regione": "TOSCANA",
-      "dataISO": "2026-07-28",
-      "cat": "ES2_M",
-      "genere": "M",
-      "row": {
-        "posizione": 1,
-        "cognome": "SANTINI",
-        "nome": "SAMUELE",
-        "codeSuffix": "ES",
-        "team": "UC COLTANO GRUBE COSTRUZIONI",
-        "categoria": "ES2_M",
-        "ambiguousNameSplit": false,
-        "uncertainYear": false,
-        "existingAtletaId": "SANTINI_SAMUELE"
-      },
-      "campionato_regionale": false,
-      "campionato_italiano": false
-    },
-    {
-      "garaId": "46_COPPA_LA_ROCCA_TROFEO_F_LLI_BAGAGLI_2026-07-28_ES2_M",
-      "race": "46^ COPPA LA ROCCA - TROFEO F.LLI BAGAGLI",
-      "regione": "TOSCANA",
-      "dataISO": "2026-07-28",
-      "cat": "ES2_M",
-      "genere": "M",
-      "row": {
-        "posizione": 2,
-        "cognome": "DELLA POLLA",
-        "nome": "DIEGO",
-        "codeSuffix": "ES",
-        "team": "UC COLTANO GRUBE COSTRUZIONI",
-        "categoria": "ES2_M",
-        "ambiguousNameSplit": false,
-        "uncertainYear": false,
-        "existingAtletaId": "DELLA_POLLA_DIEGO"
-      },
-      "campionato_regionale": false,
-      "campionato_italiano": false
-    },
-    {
-      "garaId": "46_COPPA_LA_ROCCA_TROFEO_F_LLI_BAGAGLI_2026-07-28_ES2_M",
-      "race": "46^ COPPA LA ROCCA - TROFEO F.LLI BAGAGLI",
-      "regione": "TOSCANA",
-      "dataISO": "2026-07-28",
-      "cat": "ES2_M",
-      "genere": "M",
-      "row": {
-        "posizione": 3,
-        "cognome": "STEFANINI",
-        "nome": "EDOARDO",
-        "codeSuffix": "ES",
-        "team": "UC COLTANO GRUBE COSTRUZIONI",
-        "categoria": "ES2_M",
-        "ambiguousNameSplit": false,
-        "uncertainYear": false,
-        "existingAtletaId": "STEFANINI_EDOARDO"
-      },
-      "campionato_regionale": false,
-      "campionato_italiano": false
-    },
-    {
-      "garaId": "46_COPPA_LA_ROCCA_TROFEO_F_LLI_BAGAGLI_2026-07-28_ES2_M",
-      "race": "46^ COPPA LA ROCCA - TROFEO F.LLI BAGAGLI",
-      "regione": "TOSCANA",
-      "dataISO": "2026-07-28",
-      "cat": "ES2_M",
-      "genere": "M",
-      "row": {
-        "posizione": 4,
-        "cognome": "PUCCI",
-        "nome": "LEONARDO",
-        "codeSuffix": "ES",
-        "team": "GS BERTI MOBILI BENASSI",
-        "categoria": "ES2_M",
-        "ambiguousNameSplit": false,
-        "uncertainYear": false,
-        "existingAtletaId": "PUCCI_LEONARDO"
-      },
-      "campionato_regionale": false,
-      "campionato_italiano": false
-    },
-    {
-      "garaId": "46_COPPA_LA_ROCCA_TROFEO_F_LLI_BAGAGLI_2026-07-28_ES2_M",
-      "race": "46^ COPPA LA ROCCA - TROFEO F.LLI BAGAGLI",
-      "regione": "TOSCANA",
-      "dataISO": "2026-07-28",
-      "cat": "ES2_M",
-      "genere": "M",
-      "row": {
-        "posizione": 5,
-        "cognome": "TOGNETTI",
-        "nome": "PIERCARLO",
-        "codeSuffix": "ES",
-        "team": "UC EMPOLESE",
-        "categoria": "ES2_M",
-        "ambiguousNameSplit": false,
-        "uncertainYear": false,
-        "existingAtletaId": "TOGNETTI_PIERCARLO"
-      },
-      "campionato_regionale": false,
-      "campionato_italiano": false
-    },
-    {
-      "garaId": "NOTTURNA_DELL_ASSUNTA_2026-08-07_ES1_M",
-      "race": "NOTTURNA DELL'ASSUNTA",
-      "regione": "FRIULI V.G.",
-      "dataISO": "2026-08-07",
-      "cat": "ES1_M",
-      "genere": "M",
-      "row": {
-        "posizione": 1,
-        "cognome": "BERTOLIN",
-        "nome": "EROS",
-        "codeSuffix": "ES",
-        "team": "A.S.D. SACILESE",
-        "categoria": "ES1_M",
-        "ambiguousNameSplit": false,
-        "uncertainYear": false,
-        "existingAtletaId": "BERTOLIN_EROS"
-      },
-      "campionato_regionale": false,
-      "campionato_italiano": false
-    },
-    {
-      "garaId": "NOTTURNA_DELL_ASSUNTA_2026-08-07_ES1_M",
-      "race": "NOTTURNA DELL'ASSUNTA",
-      "regione": "FRIULI V.G.",
-      "dataISO": "2026-08-07",
-      "cat": "ES1_M",
-      "genere": "M",
-      "row": {
-        "posizione": 2,
-        "cognome": "FRESCHI",
-        "nome": "ANDREA",
-        "codeSuffix": "ES",
-        "team": "A.S.D. SACILESE",
-        "categoria": "ES1_M",
-        "ambiguousNameSplit": false,
-        "uncertainYear": false,
-        "existingAtletaId": "FRESCHI_ANDREA"
-      },
-      "campionato_regionale": false,
-      "campionato_italiano": false
-    },
-    {
-      "garaId": "NOTTURNA_DELL_ASSUNTA_2026-08-07_ES1_M",
-      "race": "NOTTURNA DELL'ASSUNTA",
-      "regione": "FRIULI V.G.",
-      "dataISO": "2026-08-07",
-      "cat": "ES1_M",
-      "genere": "M",
-      "row": {
-        "posizione": 3,
-        "cognome": "MARCHIOL",
-        "nome": "ERIC",
-        "codeSuffix": "ES",
-        "team": "LIBERTAS CERESETTO",
-        "categoria": "ES1_M",
-        "ambiguousNameSplit": false,
-        "uncertainYear": false,
-        "existingAtletaId": "MARCHIOL_ERIC"
-      },
-      "campionato_regionale": false,
-      "campionato_italiano": false
-    },
-    {
-      "garaId": "NOTTURNA_DELL_ASSUNTA_2026-08-07_ES1_M",
-      "race": "NOTTURNA DELL'ASSUNTA",
-      "regione": "FRIULI V.G.",
-      "dataISO": "2026-08-07",
-      "cat": "ES1_M",
-      "genere": "M",
-      "row": {
-        "posizione": 4,
-        "cognome": "BOTTEON",
-        "nome": "ALESSANDRO",
-        "codeSuffix": "ES",
-        "team": "VC SAN VENDEMIANO",
-        "categoria": "ES1_M",
-        "ambiguousNameSplit": false,
-        "uncertainYear": false,
-        "existingAtletaId": "BOTTEON_ALESSANDRO"
-      },
-      "campionato_regionale": false,
-      "campionato_italiano": false
-    },
-    {
-      "garaId": "NOTTURNA_DELL_ASSUNTA_2026-08-07_ES1_M",
-      "race": "NOTTURNA DELL'ASSUNTA",
-      "regione": "FRIULI V.G.",
-      "dataISO": "2026-08-07",
-      "cat": "ES1_M",
-      "genere": "M",
-      "row": {
-        "posizione": 5,
-        "cognome": "PIGAT",
-        "nome": "DAVIDE",
-        "codeSuffix": "ES",
-        "team": "GOTTARDO GIOCHI CANEVA",
-        "categoria": "ES1_M",
-        "ambiguousNameSplit": false,
-        "uncertainYear": false,
-        "existingAtletaId": "PIGAT_DAVIDE"
-      },
-      "campionato_regionale": false,
-      "campionato_italiano": false
-    },
-    {
-      "garaId": "NOTTURNA_DELL_ASSUNTA_2026-08-07_ES2_M",
-      "race": "NOTTURNA DELL'ASSUNTA",
-      "regione": "FRIULI V.G.",
-      "dataISO": "2026-08-07",
-      "cat": "ES2_M",
-      "genere": "M",
-      "row": {
-        "posizione": 1,
-        "cognome": "CARLET",
-        "nome": "SEBASTIANO",
-        "codeSuffix": "ES",
-        "team": "GOTTARDO GIOCHI CANEVA",
-        "categoria": "ES2_M",
-        "ambiguousNameSplit": false,
-        "uncertainYear": false,
-        "existingAtletaId": "CARLET_SEBASTIANO"
-      },
-      "campionato_regionale": false,
-      "campionato_italiano": false
-    },
-    {
-      "garaId": "NOTTURNA_DELL_ASSUNTA_2026-08-07_ES2_M",
-      "race": "NOTTURNA DELL'ASSUNTA",
-      "regione": "FRIULI V.G.",
-      "dataISO": "2026-08-07",
-      "cat": "ES2_M",
-      "genere": "M",
-      "row": {
-        "posizione": 3,
-        "cognome": "PESSOTTO",
-        "nome": "ANDREA",
-        "codeSuffix": "ES",
-        "team": "TEAM BOSCO DI ORSAGO",
-        "categoria": "ES2_M",
-        "ambiguousNameSplit": false,
-        "uncertainYear": false,
-        "existingAtletaId": "PESSOTTO_ANDREA"
-      },
-      "campionato_regionale": false,
-      "campionato_italiano": false
-    },
-    {
-      "garaId": "NOTTURNA_DELL_ASSUNTA_2026-08-07_ES2_M",
-      "race": "NOTTURNA DELL'ASSUNTA",
-      "regione": "FRIULI V.G.",
-      "dataISO": "2026-08-07",
-      "cat": "ES2_M",
-      "genere": "M",
-      "row": {
-        "posizione": 4,
-        "cognome": "QUAIA",
-        "nome": "FILIPPO",
-        "codeSuffix": "ES",
-        "team": "GOTTARDO GIOCHI CANEVA",
-        "categoria": "ES2_M",
-        "ambiguousNameSplit": false,
-        "uncertainYear": false,
-        "existingAtletaId": "QUAIA_FILIPPO"
-      },
-      "campionato_regionale": false,
-      "campionato_italiano": false
-    },
-    {
-      "garaId": "NOTTURNA_DELL_ASSUNTA_2026-08-07_ES2_M",
-      "race": "NOTTURNA DELL'ASSUNTA",
-      "regione": "FRIULI V.G.",
-      "dataISO": "2026-08-07",
-      "cat": "ES2_M",
-      "genere": "M",
-      "row": {
-        "posizione": 5,
-        "cognome": "BEMBO",
-        "nome": "SANTIAGO",
-        "codeSuffix": "ES",
-        "team": "A.S.D. POSTUMIA 73 D.L. CICLISMO",
-        "categoria": "ES2_M",
-        "ambiguousNameSplit": false,
-        "uncertainYear": false,
-        "existingAtletaId": "BEMBO_SANTIAGO"
-      },
-      "campionato_regionale": false,
-      "campionato_italiano": false
-    },
-    {
-      "garaId": "G_P_43_FESTA_DELLO_SPORT_3_MEM_G_BERTOLDO_9_TROFEO_SMANIA_6_MEM_FRANCO_E_DAVIDE_FAVARETTO_2026-08-14_ES1_M",
-      "race": "G.P. 43° FESTA DELLO SPORt 3° MEM. G. BERTOLDO- 9° Trofeo Smania - 6°MEM. Franco e Davide Favaretto",
-      "regione": "VENETO",
-      "dataISO": "2026-08-14",
-      "cat": "ES1_M",
-      "genere": "M",
-      "row": {
-        "posizione": 1,
-        "cognome": "MOSNA",
-        "nome": "RICCARDO",
-        "codeSuffix": "ES",
-        "team": "ASD VELOCE CLUB BORGO",
-        "categoria": "ES1_M",
-        "ambiguousNameSplit": false,
-        "uncertainYear": true,
-        "existingAtletaId": "MOSNA_RICCARDO"
-      },
-      "campionato_regionale": false,
-      "campionato_italiano": false
-    },
-    {
-      "garaId": "G_P_43_FESTA_DELLO_SPORT_3_MEM_G_BERTOLDO_9_TROFEO_SMANIA_6_MEM_FRANCO_E_DAVIDE_FAVARETTO_2026-08-14_ES1_M",
-      "race": "G.P. 43° FESTA DELLO SPORt 3° MEM. G. BERTOLDO- 9° Trofeo Smania - 6°MEM. Franco e Davide Favaretto",
-      "regione": "VENETO",
-      "dataISO": "2026-08-14",
-      "cat": "ES1_M",
-      "genere": "M",
-      "row": {
-        "posizione": 2,
-        "cognome": "BEMBO",
-        "nome": "SANTIAGO",
-        "codeSuffix": "ES",
-        "team": "A.S.D. POSTUMIA 73 D.L. CICLISMO",
-        "categoria": "ES1_M",
-        "ambiguousNameSplit": false,
-        "uncertainYear": true,
-        "existingAtletaId": "BEMBO_SANTIAGO"
-      },
-      "campionato_regionale": false,
-      "campionato_italiano": false
-    },
-    {
-      "garaId": "G_P_43_FESTA_DELLO_SPORT_3_MEM_G_BERTOLDO_9_TROFEO_SMANIA_6_MEM_FRANCO_E_DAVIDE_FAVARETTO_2026-08-14_ES1_M",
-      "race": "G.P. 43° FESTA DELLO SPORt 3° MEM. G. BERTOLDO- 9° Trofeo Smania - 6°MEM. Franco e Davide Favaretto",
-      "regione": "VENETO",
-      "dataISO": "2026-08-14",
-      "cat": "ES1_M",
-      "genere": "M",
-      "row": {
-        "posizione": 3,
-        "cognome": "SALVATI GABRIELE",
-        "nome": "GERARDO",
-        "codeSuffix": "ES",
-        "team": "ASD VELOCE CLUB BORGO",
-        "categoria": "ES1_M",
-        "ambiguousNameSplit": false,
-        "uncertainYear": true,
-        "existingAtletaId": "SALVATI_GABRIELE_GERARDO"
-      },
-      "campionato_regionale": false,
-      "campionato_italiano": false
-    },
-    {
-      "garaId": "G_P_43_FESTA_DELLO_SPORT_3_MEM_G_BERTOLDO_9_TROFEO_SMANIA_6_MEM_FRANCO_E_DAVIDE_FAVARETTO_2026-08-14_ES1_M",
-      "race": "G.P. 43° FESTA DELLO SPORt 3° MEM. G. BERTOLDO- 9° Trofeo Smania - 6°MEM. Franco e Davide Favaretto",
-      "regione": "VENETO",
-      "dataISO": "2026-08-14",
-      "cat": "ES1_M",
-      "genere": "M",
-      "row": {
-        "posizione": 4,
-        "cognome": "DE ROSSI",
-        "nome": "GIACOMO",
-        "codeSuffix": "ES",
-        "team": "UNIONE CICLISTICA MIRANO",
-        "categoria": "ES1_M",
-        "ambiguousNameSplit": false,
-        "uncertainYear": true,
-        "existingAtletaId": "DE_ROSSI_GIACOMO"
-      },
-      "campionato_regionale": false,
-      "campionato_italiano": false
-    },
-    {
-      "garaId": "G_P_43_FESTA_DELLO_SPORT_3_MEM_G_BERTOLDO_9_TROFEO_SMANIA_6_MEM_FRANCO_E_DAVIDE_FAVARETTO_2026-08-14_ES1_M",
-      "race": "G.P. 43° FESTA DELLO SPORt 3° MEM. G. BERTOLDO- 9° Trofeo Smania - 6°MEM. Franco e Davide Favaretto",
-      "regione": "VENETO",
-      "dataISO": "2026-08-14",
-      "cat": "ES1_M",
-      "genere": "M",
-      "row": {
-        "posizione": 5,
+        "posizioneOriginale": 9,
         "cognome": "BASSO",
         "nome": "FILIPPO",
         "codeSuffix": "ES",
@@ -1486,62 +324,175 @@
         "categoria": "ES1_M",
         "ambiguousNameSplit": false,
         "uncertainYear": true,
-        "existingAtletaId": "BASSO_FILIPPO"
+        "existingAtletaId": "BASSO_FILIPPO",
+        "posizione": 9
       },
       "campionato_regionale": false,
       "campionato_italiano": false
     },
     {
-      "garaId": "MEMORIAL_GIOVANNI_FINO_E_PAOLO_MATTIO_2026-08-20_ES1_M",
-      "race": "MEMORIAL GIOVANNI FINO E PAOLO MATTIO",
-      "regione": "PIEMONTE",
-      "dataISO": "2026-08-20",
+      "garaId": "15_TROFEO_GRAFICA_78_2026-06-12_ES1_M",
+      "race": "15° TROFEO GRAFICA 78",
+      "regione": "VENETO",
+      "dataISO": "2026-06-12",
       "cat": "ES1_M",
       "genere": "M",
       "row": {
-        "posizione": 1,
-        "cognome": "ZAVATTERO",
-        "nome": "EDOARDO",
+        "posizioneOriginale": 1,
+        "cognome": "SPESSOTTO",
+        "nome": "GIACOMO",
         "codeSuffix": "ES",
-        "team": "UÀ CYCLING TEAM",
+        "team": "VC SAN VENDEMIANO",
         "categoria": "ES1_M",
         "ambiguousNameSplit": false,
         "uncertainYear": false,
-        "existingAtletaId": "ZAVATTERO_EDOARDO"
+        "existingAtletaId": "SPESSOTTO_GIACOMO",
+        "posizione": 1
       },
       "campionato_regionale": false,
       "campionato_italiano": false
     },
     {
-      "garaId": "MEMORIAL_GIOVANNI_FINO_E_PAOLO_MATTIO_2026-08-20_ES1_M",
-      "race": "MEMORIAL GIOVANNI FINO E PAOLO MATTIO",
-      "regione": "PIEMONTE",
-      "dataISO": "2026-08-20",
+      "garaId": "15_TROFEO_GRAFICA_78_2026-06-12_ES1_M",
+      "race": "15° TROFEO GRAFICA 78",
+      "regione": "VENETO",
+      "dataISO": "2026-06-12",
       "cat": "ES1_M",
       "genere": "M",
       "row": {
-        "posizione": 2,
-        "cognome": "BIANCHI",
-        "nome": "MASSIMO",
+        "posizioneOriginale": 2,
+        "cognome": "FRESCHI",
+        "nome": "ANDREA",
         "codeSuffix": "ES",
-        "team": "I CINGHIALI EVO",
+        "team": "A.S.D. SACILESE",
         "categoria": "ES1_M",
         "ambiguousNameSplit": false,
         "uncertainYear": false,
-        "existingAtletaId": "BIANCHI_MASSIMO"
+        "existingAtletaId": "FRESCHI_ANDREA",
+        "posizione": 2
       },
       "campionato_regionale": false,
       "campionato_italiano": false
     },
     {
-      "garaId": "MEMORIAL_GIOVANNI_FINO_E_PAOLO_MATTIO_2026-08-20_ES1_M",
-      "race": "MEMORIAL GIOVANNI FINO E PAOLO MATTIO",
-      "regione": "PIEMONTE",
-      "dataISO": "2026-08-20",
+      "garaId": "15_TROFEO_GRAFICA_78_2026-06-12_ES1_M",
+      "race": "15° TROFEO GRAFICA 78",
+      "regione": "VENETO",
+      "dataISO": "2026-06-12",
       "cat": "ES1_M",
       "genere": "M",
       "row": {
-        "posizione": 3,
+        "posizioneOriginale": 3,
+        "cognome": "TOFFOLI",
+        "nome": "STEFANO",
+        "codeSuffix": "ES",
+        "team": "SOC. SPORT.SANFIORESE",
+        "categoria": "ES1_M",
+        "ambiguousNameSplit": false,
+        "uncertainYear": false,
+        "existingAtletaId": "TOFFOLI_STEFANO",
+        "posizione": 3
+      },
+      "campionato_regionale": false,
+      "campionato_italiano": false
+    },
+    {
+      "garaId": "15_TROFEO_GRAFICA_78_2026-06-12_ES2_M",
+      "race": "15° TROFEO GRAFICA 78",
+      "regione": "VENETO",
+      "dataISO": "2026-06-12",
+      "cat": "ES2_M",
+      "genere": "M",
+      "row": {
+        "posizioneOriginale": 1,
+        "cognome": "DAL BO'",
+        "nome": "MATIAS",
+        "codeSuffix": "ES",
+        "team": "PEDALE MARENESE GINO BARTALI",
+        "categoria": "ES2_M",
+        "ambiguousNameSplit": false,
+        "uncertainYear": false,
+        "existingAtletaId": "DAL_BO_MATIAS",
+        "posizione": 1
+      },
+      "campionato_regionale": false,
+      "campionato_italiano": false
+    },
+    {
+      "garaId": "15_TROFEO_GRAFICA_78_2026-06-12_ES2_M",
+      "race": "15° TROFEO GRAFICA 78",
+      "regione": "VENETO",
+      "dataISO": "2026-06-12",
+      "cat": "ES2_M",
+      "genere": "M",
+      "row": {
+        "posizioneOriginale": 2,
+        "cognome": "DE ROS",
+        "nome": "LUIGI",
+        "codeSuffix": "ES",
+        "team": "G.C.POSTIOMA",
+        "categoria": "ES2_M",
+        "ambiguousNameSplit": false,
+        "uncertainYear": false,
+        "existingAtletaId": "DE_ROS_LUIGI",
+        "posizione": 2
+      },
+      "campionato_regionale": false,
+      "campionato_italiano": false
+    },
+    {
+      "garaId": "15_TROFEO_GRAFICA_78_2026-06-12_ES2_M",
+      "race": "15° TROFEO GRAFICA 78",
+      "regione": "VENETO",
+      "dataISO": "2026-06-12",
+      "cat": "ES2_M",
+      "genere": "M",
+      "row": {
+        "posizioneOriginale": 3,
+        "cognome": "BEMBO",
+        "nome": "SANTIAGO",
+        "codeSuffix": "ES",
+        "team": "A.S.D. POSTUMIA 73 D.L. CICLISMO",
+        "categoria": "ES2_M",
+        "ambiguousNameSplit": false,
+        "uncertainYear": false,
+        "existingAtletaId": "BEMBO_SANTIAGO",
+        "posizione": 3
+      },
+      "campionato_regionale": false,
+      "campionato_italiano": false
+    },
+    {
+      "garaId": "TROFEO_DENTIS_2026-07-16_ES1_M",
+      "race": "TROFEO DENTIS",
+      "regione": "PIEMONTE",
+      "dataISO": "2026-07-16",
+      "cat": "ES1_M",
+      "genere": "M",
+      "row": {
+        "posizioneOriginale": 2,
+        "cognome": "DONETTO",
+        "nome": "FILIPPO",
+        "codeSuffix": "ES",
+        "team": "ARDENS CYCLING TEAM",
+        "categoria": "ES1_M",
+        "ambiguousNameSplit": false,
+        "uncertainYear": false,
+        "existingAtletaId": "DONETTO_FILIPPO",
+        "posizione": 2
+      },
+      "campionato_regionale": false,
+      "campionato_italiano": false
+    },
+    {
+      "garaId": "TROFEO_DENTIS_2026-07-16_ES1_M",
+      "race": "TROFEO DENTIS",
+      "regione": "PIEMONTE",
+      "dataISO": "2026-07-16",
+      "cat": "ES1_M",
+      "genere": "M",
+      "row": {
+        "posizioneOriginale": 3,
         "cognome": "ARCUDI",
         "nome": "FEDERICO",
         "codeSuffix": "ES",
@@ -1549,7 +500,1548 @@
         "categoria": "ES1_M",
         "ambiguousNameSplit": false,
         "uncertainYear": false,
-        "existingAtletaId": "ARCUDI_FEDERICO"
+        "existingAtletaId": "ARCUDI_FEDERICO",
+        "posizione": 3
+      },
+      "campionato_regionale": false,
+      "campionato_italiano": false
+    },
+    {
+      "garaId": "TROFEO_DENTIS_2026-07-16_ES1_M",
+      "race": "TROFEO DENTIS",
+      "regione": "PIEMONTE",
+      "dataISO": "2026-07-16",
+      "cat": "ES1_M",
+      "genere": "M",
+      "row": {
+        "posizioneOriginale": 4,
+        "cognome": "RAMONDETTI",
+        "nome": "GIOELE",
+        "codeSuffix": "ES",
+        "team": "ALBA BRA LANGHE ROERO",
+        "categoria": "ES1_M",
+        "ambiguousNameSplit": false,
+        "uncertainYear": false,
+        "existingAtletaId": "RAMONDETTI_GIOELE",
+        "posizione": 4
+      },
+      "campionato_regionale": false,
+      "campionato_italiano": false
+    },
+    {
+      "garaId": "TROFEO_DENTIS_2026-07-16_ES1_M",
+      "race": "TROFEO DENTIS",
+      "regione": "PIEMONTE",
+      "dataISO": "2026-07-16",
+      "cat": "ES1_M",
+      "genere": "M",
+      "row": {
+        "posizioneOriginale": 6,
+        "cognome": "GABBA",
+        "nome": "LUCA",
+        "codeSuffix": "ES",
+        "team": "CICLISTICA ROSTESE",
+        "categoria": "ES1_M",
+        "ambiguousNameSplit": false,
+        "uncertainYear": false,
+        "existingAtletaId": "GABBA_LUCA",
+        "posizione": 6
+      },
+      "campionato_regionale": false,
+      "campionato_italiano": false
+    },
+    {
+      "garaId": "TROFEO_DENTIS_2026-07-16_ES1_M",
+      "race": "TROFEO DENTIS",
+      "regione": "PIEMONTE",
+      "dataISO": "2026-07-16",
+      "cat": "ES1_M",
+      "genere": "M",
+      "row": {
+        "posizioneOriginale": 7,
+        "cognome": "BISTERZO",
+        "nome": "MANUEL",
+        "codeSuffix": "ES",
+        "team": "CICLISTICA ROSTESE",
+        "categoria": "ES1_M",
+        "ambiguousNameSplit": false,
+        "uncertainYear": false,
+        "existingAtletaId": "BISTERZO_MANUEL",
+        "posizione": 7
+      },
+      "campionato_regionale": false,
+      "campionato_italiano": false
+    },
+    {
+      "garaId": "TROFEO_DENTIS_2026-07-16_ES1_M",
+      "race": "TROFEO DENTIS",
+      "regione": "PIEMONTE",
+      "dataISO": "2026-07-16",
+      "cat": "ES1_M",
+      "genere": "M",
+      "row": {
+        "posizioneOriginale": 8,
+        "cognome": "BIOLATTO",
+        "nome": "SAMUELE",
+        "codeSuffix": "ES",
+        "team": "ARDENS CYCLING TEAM",
+        "categoria": "ES1_M",
+        "ambiguousNameSplit": false,
+        "uncertainYear": false,
+        "existingAtletaId": "BIOLATTO_SAMUELE",
+        "posizione": 8
+      },
+      "campionato_regionale": false,
+      "campionato_italiano": false
+    },
+    {
+      "garaId": "TROFEO_DENTIS_2026-07-16_ES1_M",
+      "race": "TROFEO DENTIS",
+      "regione": "PIEMONTE",
+      "dataISO": "2026-07-16",
+      "cat": "ES1_M",
+      "genere": "M",
+      "row": {
+        "posizioneOriginale": 9,
+        "cognome": "CORRENDO",
+        "nome": "FILIPPO",
+        "codeSuffix": "ES",
+        "team": "ESPERIA PIASCO",
+        "categoria": "ES1_M",
+        "ambiguousNameSplit": false,
+        "uncertainYear": false,
+        "existingAtletaId": "CORRENDO_FILIPPO",
+        "posizione": 9
+      },
+      "campionato_regionale": false,
+      "campionato_italiano": false
+    },
+    {
+      "garaId": "TROFEO_DENTIS_2026-07-16_ES2_M",
+      "race": "TROFEO DENTIS",
+      "regione": "PIEMONTE",
+      "dataISO": "2026-07-16",
+      "cat": "ES2_M",
+      "genere": "M",
+      "row": {
+        "posizioneOriginale": 1,
+        "cognome": "DI DOMENICO",
+        "nome": "MATTIA",
+        "codeSuffix": "ES",
+        "team": "QUILIANO BIKE SPEED WHEEL",
+        "categoria": "ES2_M",
+        "ambiguousNameSplit": false,
+        "uncertainYear": false,
+        "existingAtletaId": "DI_DOMENICO_MATTIA",
+        "posizione": 1
+      },
+      "campionato_regionale": false,
+      "campionato_italiano": false
+    },
+    {
+      "garaId": "TROFEO_DENTIS_2026-07-16_ES2_M",
+      "race": "TROFEO DENTIS",
+      "regione": "PIEMONTE",
+      "dataISO": "2026-07-16",
+      "cat": "ES2_M",
+      "genere": "M",
+      "row": {
+        "posizioneOriginale": 2,
+        "cognome": "ALTARE",
+        "nome": "JACOPO",
+        "codeSuffix": "ES",
+        "team": "VIGOR - CYCLING TEAM",
+        "categoria": "ES2_M",
+        "ambiguousNameSplit": false,
+        "uncertainYear": false,
+        "existingAtletaId": "ALTARE_JACOPO",
+        "posizione": 2
+      },
+      "campionato_regionale": false,
+      "campionato_italiano": false
+    },
+    {
+      "garaId": "TROFEO_DENTIS_2026-07-16_ES2_M",
+      "race": "TROFEO DENTIS",
+      "regione": "PIEMONTE",
+      "dataISO": "2026-07-16",
+      "cat": "ES2_M",
+      "genere": "M",
+      "row": {
+        "posizioneOriginale": 3,
+        "cognome": "REJNAUD",
+        "nome": "MATTEO",
+        "codeSuffix": "ES",
+        "team": "ARDENS CYCLING TEAM",
+        "categoria": "ES2_M",
+        "ambiguousNameSplit": false,
+        "uncertainYear": false,
+        "existingAtletaId": "REJNAUD_MATTEO",
+        "posizione": 3
+      },
+      "campionato_regionale": false,
+      "campionato_italiano": false
+    },
+    {
+      "garaId": "TROFEO_DENTIS_2026-07-16_ES2_M",
+      "race": "TROFEO DENTIS",
+      "regione": "PIEMONTE",
+      "dataISO": "2026-07-16",
+      "cat": "ES2_M",
+      "genere": "M",
+      "row": {
+        "posizioneOriginale": 4,
+        "cognome": "AVIDANO",
+        "nome": "DAVIDE",
+        "codeSuffix": "ES",
+        "team": "VIGOR - CYCLING TEAM",
+        "categoria": "ES2_M",
+        "ambiguousNameSplit": false,
+        "uncertainYear": false,
+        "existingAtletaId": "AVIDANO_DAVIDE",
+        "posizione": 4
+      },
+      "campionato_regionale": false,
+      "campionato_italiano": false
+    },
+    {
+      "garaId": "TROFEO_DENTIS_2026-07-16_ES2_M",
+      "race": "TROFEO DENTIS",
+      "regione": "PIEMONTE",
+      "dataISO": "2026-07-16",
+      "cat": "ES2_M",
+      "genere": "M",
+      "row": {
+        "posizioneOriginale": 5,
+        "cognome": "CANU",
+        "nome": "EDOARDO",
+        "codeSuffix": "ES",
+        "team": "QUILIANO BIKE SPEED WHEEL",
+        "categoria": "ES2_M",
+        "ambiguousNameSplit": false,
+        "uncertainYear": false,
+        "existingAtletaId": "CANU_EDOARDO",
+        "posizione": 5
+      },
+      "campionato_regionale": false,
+      "campionato_italiano": false
+    },
+    {
+      "garaId": "TROFEO_DENTIS_2026-07-16_ES2_M",
+      "race": "TROFEO DENTIS",
+      "regione": "PIEMONTE",
+      "dataISO": "2026-07-16",
+      "cat": "ES2_M",
+      "genere": "M",
+      "row": {
+        "posizioneOriginale": 6,
+        "cognome": "SORASIO",
+        "nome": "STEFANO",
+        "codeSuffix": "ES",
+        "team": "ARDENS CYCLING TEAM",
+        "categoria": "ES2_M",
+        "ambiguousNameSplit": false,
+        "uncertainYear": false,
+        "existingAtletaId": "SORASIO_STEFANO",
+        "posizione": 6
+      },
+      "campionato_regionale": false,
+      "campionato_italiano": false
+    },
+    {
+      "garaId": "TROFEO_DENTIS_2026-07-16_ES2_M",
+      "race": "TROFEO DENTIS",
+      "regione": "PIEMONTE",
+      "dataISO": "2026-07-16",
+      "cat": "ES2_M",
+      "genere": "M",
+      "row": {
+        "posizioneOriginale": 8,
+        "cognome": "GROPPO",
+        "nome": "LEONARDO",
+        "codeSuffix": "ES",
+        "team": "ESPERIA PIASCO",
+        "categoria": "ES2_M",
+        "ambiguousNameSplit": false,
+        "uncertainYear": false,
+        "existingAtletaId": "GROPPO_LEONARDO",
+        "posizione": 8
+      },
+      "campionato_regionale": false,
+      "campionato_italiano": false
+    },
+    {
+      "garaId": "TROFEO_DENTIS_2026-07-16_ES2_M",
+      "race": "TROFEO DENTIS",
+      "regione": "PIEMONTE",
+      "dataISO": "2026-07-16",
+      "cat": "ES2_M",
+      "genere": "M",
+      "row": {
+        "posizioneOriginale": 9,
+        "cognome": "GUARNIERI",
+        "nome": "EMIL",
+        "codeSuffix": "ES",
+        "team": "CICLISTICA ROSTESE",
+        "categoria": "ES2_M",
+        "ambiguousNameSplit": false,
+        "uncertainYear": false,
+        "existingAtletaId": "GUARNIERI_EMIL",
+        "posizione": 9
+      },
+      "campionato_regionale": false,
+      "campionato_italiano": false
+    },
+    {
+      "garaId": "TROFEO_DENTIS_2026-07-16_ES2_M",
+      "race": "TROFEO DENTIS",
+      "regione": "PIEMONTE",
+      "dataISO": "2026-07-16",
+      "cat": "ES2_M",
+      "genere": "M",
+      "row": {
+        "posizioneOriginale": 10,
+        "cognome": "ADAMI",
+        "nome": "SEBASTIANO",
+        "codeSuffix": "ES",
+        "team": "ESPERIA PIASCO",
+        "categoria": "ES2_M",
+        "ambiguousNameSplit": false,
+        "uncertainYear": false,
+        "existingAtletaId": "ADAMI_SEBASTIANO",
+        "posizione": 10
+      },
+      "campionato_regionale": false,
+      "campionato_italiano": false
+    },
+    {
+      "garaId": "33_TROFEO_PRO_LOCO_2026-07-16_ES1_M",
+      "race": "33° TROFEO PRO LOCO",
+      "regione": "LOMBARDIA",
+      "dataISO": "2026-07-16",
+      "cat": "ES1_M",
+      "genere": "M",
+      "row": {
+        "posizioneOriginale": 1,
+        "cognome": "SANSONI",
+        "nome": "ALESSIO",
+        "codeSuffix": "ES",
+        "team": "MAZZANO A.S.D.",
+        "categoria": "ES1_M",
+        "ambiguousNameSplit": false,
+        "uncertainYear": false,
+        "existingAtletaId": "SANSONI_ALESSIO",
+        "posizione": 1
+      },
+      "campionato_regionale": false,
+      "campionato_italiano": false
+    },
+    {
+      "garaId": "33_TROFEO_PRO_LOCO_2026-07-16_ES1_M",
+      "race": "33° TROFEO PRO LOCO",
+      "regione": "LOMBARDIA",
+      "dataISO": "2026-07-16",
+      "cat": "ES1_M",
+      "genere": "M",
+      "row": {
+        "posizioneOriginale": 2,
+        "cognome": "ZANARDINI",
+        "nome": "LEONARDO",
+        "codeSuffix": "ES",
+        "team": "MAZZANO A.S.D.",
+        "categoria": "ES1_M",
+        "ambiguousNameSplit": false,
+        "uncertainYear": false,
+        "existingAtletaId": "ZANARDINI_LEONARDO",
+        "posizione": 2
+      },
+      "campionato_regionale": false,
+      "campionato_italiano": false
+    },
+    {
+      "garaId": "33_TROFEO_PRO_LOCO_2026-07-16_ES1_M",
+      "race": "33° TROFEO PRO LOCO",
+      "regione": "LOMBARDIA",
+      "dataISO": "2026-07-16",
+      "cat": "ES1_M",
+      "genere": "M",
+      "row": {
+        "posizioneOriginale": 3,
+        "cognome": "MAI",
+        "nome": "LEONARDO",
+        "codeSuffix": "ES",
+        "team": "S. C. MINCIO-CHIESE A.S.D",
+        "categoria": "ES1_M",
+        "ambiguousNameSplit": false,
+        "uncertainYear": false,
+        "existingAtletaId": "MAI_LEONARDO",
+        "posizione": 3
+      },
+      "campionato_regionale": false,
+      "campionato_italiano": false
+    },
+    {
+      "garaId": "33_TROFEO_PRO_LOCO_2026-07-16_ES1_M",
+      "race": "33° TROFEO PRO LOCO",
+      "regione": "LOMBARDIA",
+      "dataISO": "2026-07-16",
+      "cat": "ES1_M",
+      "genere": "M",
+      "row": {
+        "posizioneOriginale": 4,
+        "cognome": "MERLETTI",
+        "nome": "DANIEL",
+        "codeSuffix": "ES",
+        "team": "MAZZANO A.S.D.",
+        "categoria": "ES1_M",
+        "ambiguousNameSplit": false,
+        "uncertainYear": false,
+        "existingAtletaId": "MERLETTI_DANIEL",
+        "posizione": 4
+      },
+      "campionato_regionale": false,
+      "campionato_italiano": false
+    },
+    {
+      "garaId": "33_TROFEO_PRO_LOCO_2026-07-16_ES1_M",
+      "race": "33° TROFEO PRO LOCO",
+      "regione": "LOMBARDIA",
+      "dataISO": "2026-07-16",
+      "cat": "ES1_M",
+      "genere": "M",
+      "row": {
+        "posizioneOriginale": 5,
+        "cognome": "RICCI",
+        "nome": "NICOLA",
+        "codeSuffix": "ES",
+        "team": "SAN GEO A.S.D.",
+        "categoria": "ES1_M",
+        "ambiguousNameSplit": false,
+        "uncertainYear": false,
+        "existingAtletaId": "RICCI_NICOLA",
+        "posizione": 5
+      },
+      "campionato_regionale": false,
+      "campionato_italiano": false
+    },
+    {
+      "garaId": "33_TROFEO_PRO_LOCO_2026-07-16_ES2_M",
+      "race": "33° TROFEO PRO LOCO",
+      "regione": "LOMBARDIA",
+      "dataISO": "2026-07-16",
+      "cat": "ES2_M",
+      "genere": "M",
+      "row": {
+        "posizioneOriginale": 1,
+        "cognome": "ZUNICA",
+        "nome": "GIULIO",
+        "codeSuffix": "ES",
+        "team": "S. C. MINCIO-CHIESE A.S.D",
+        "categoria": "ES2_M",
+        "ambiguousNameSplit": false,
+        "uncertainYear": false,
+        "existingAtletaId": "ZUNICA_GIULIO",
+        "posizione": 1
+      },
+      "campionato_regionale": false,
+      "campionato_italiano": false
+    },
+    {
+      "garaId": "33_TROFEO_PRO_LOCO_2026-07-16_ES2_M",
+      "race": "33° TROFEO PRO LOCO",
+      "regione": "LOMBARDIA",
+      "dataISO": "2026-07-16",
+      "cat": "ES2_M",
+      "genere": "M",
+      "row": {
+        "posizioneOriginale": 2,
+        "cognome": "COLOMBO",
+        "nome": "MARCO",
+        "codeSuffix": "ES",
+        "team": "SAN GEO A.S.D.",
+        "categoria": "ES2_M",
+        "ambiguousNameSplit": false,
+        "uncertainYear": false,
+        "existingAtletaId": "COLOMBO_MARCO",
+        "posizione": 2
+      },
+      "campionato_regionale": false,
+      "campionato_italiano": false
+    },
+    {
+      "garaId": "33_TROFEO_PRO_LOCO_2026-07-16_ES2_M",
+      "race": "33° TROFEO PRO LOCO",
+      "regione": "LOMBARDIA",
+      "dataISO": "2026-07-16",
+      "cat": "ES2_M",
+      "genere": "M",
+      "row": {
+        "posizioneOriginale": 3,
+        "cognome": "DECO'",
+        "nome": "GABRIELE",
+        "codeSuffix": "ES",
+        "team": "S. C. MINCIO-CHIESE A.S.D",
+        "categoria": "ES2_M",
+        "ambiguousNameSplit": false,
+        "uncertainYear": false,
+        "existingAtletaId": "DECO_GABRIELE",
+        "posizione": 3
+      },
+      "campionato_regionale": false,
+      "campionato_italiano": false
+    },
+    {
+      "garaId": "33_TROFEO_PRO_LOCO_2026-07-16_ES2_M",
+      "race": "33° TROFEO PRO LOCO",
+      "regione": "LOMBARDIA",
+      "dataISO": "2026-07-16",
+      "cat": "ES2_M",
+      "genere": "M",
+      "row": {
+        "posizioneOriginale": 4,
+        "cognome": "GANARIN",
+        "nome": "LUCA",
+        "codeSuffix": "ES",
+        "team": "S. C. MINCIO-CHIESE A.S.D",
+        "categoria": "ES2_M",
+        "ambiguousNameSplit": false,
+        "uncertainYear": false,
+        "existingAtletaId": "GANARIN_LUCA",
+        "posizione": 4
+      },
+      "campionato_regionale": false,
+      "campionato_italiano": false
+    },
+    {
+      "garaId": "33_TROFEO_PRO_LOCO_2026-07-16_ES2_M",
+      "race": "33° TROFEO PRO LOCO",
+      "regione": "LOMBARDIA",
+      "dataISO": "2026-07-16",
+      "cat": "ES2_M",
+      "genere": "M",
+      "row": {
+        "posizioneOriginale": 5,
+        "cognome": "BALCONI",
+        "nome": "FEDERICO",
+        "codeSuffix": "ES",
+        "team": "MAZZANO A.S.D.",
+        "categoria": "ES2_M",
+        "ambiguousNameSplit": false,
+        "uncertainYear": false,
+        "existingAtletaId": "BALCONI_FEDERICO",
+        "posizione": 5
+      },
+      "campionato_regionale": false,
+      "campionato_italiano": false
+    },
+    {
+      "garaId": "33_TROFEO_PRO_LOCO_2026-07-16_ES2_M",
+      "race": "33° TROFEO PRO LOCO",
+      "regione": "LOMBARDIA",
+      "dataISO": "2026-07-16",
+      "cat": "ES2_M",
+      "genere": "M",
+      "row": {
+        "posizioneOriginale": 6,
+        "cognome": "GALLI",
+        "nome": "FEDERICO",
+        "codeSuffix": "ES",
+        "team": "SAN GEO A.S.D.",
+        "categoria": "ES2_M",
+        "ambiguousNameSplit": false,
+        "uncertainYear": false,
+        "existingAtletaId": "GALLI_FEDERICO",
+        "posizione": 6
+      },
+      "campionato_regionale": false,
+      "campionato_italiano": false
+    },
+    {
+      "garaId": "3_TROFEO_ALF_GROUP_2026-07-24_ES1_M",
+      "race": "3° TROFEO ALF GROUP",
+      "regione": "VENETO",
+      "dataISO": "2026-07-24",
+      "cat": "ES1_M",
+      "genere": "M",
+      "row": {
+        "posizioneOriginale": 1,
+        "cognome": "BRAIT",
+        "nome": "EDOARDO",
+        "codeSuffix": "ES",
+        "team": "A.S.D. SACILESE",
+        "categoria": "ES1_M",
+        "ambiguousNameSplit": false,
+        "uncertainYear": false,
+        "existingAtletaId": "BRAIT_EDOARDO",
+        "posizione": 1
+      },
+      "campionato_regionale": false,
+      "campionato_italiano": false
+    },
+    {
+      "garaId": "3_TROFEO_ALF_GROUP_2026-07-24_ES1_M",
+      "race": "3° TROFEO ALF GROUP",
+      "regione": "VENETO",
+      "dataISO": "2026-07-24",
+      "cat": "ES1_M",
+      "genere": "M",
+      "row": {
+        "posizioneOriginale": 2,
+        "cognome": "BOTTEON",
+        "nome": "ALESSANDRO",
+        "codeSuffix": "ES",
+        "team": "VC SAN VENDEMIANO",
+        "categoria": "ES1_M",
+        "ambiguousNameSplit": false,
+        "uncertainYear": false,
+        "existingAtletaId": "BOTTEON_ALESSANDRO",
+        "posizione": 2
+      },
+      "campionato_regionale": false,
+      "campionato_italiano": false
+    },
+    {
+      "garaId": "3_TROFEO_ALF_GROUP_2026-07-24_ES1_M",
+      "race": "3° TROFEO ALF GROUP",
+      "regione": "VENETO",
+      "dataISO": "2026-07-24",
+      "cat": "ES1_M",
+      "genere": "M",
+      "row": {
+        "posizioneOriginale": 3,
+        "cognome": "PIGAT",
+        "nome": "DAVIDE",
+        "codeSuffix": "ES",
+        "team": "GOTTARDO GIOCHI CANEVA",
+        "categoria": "ES1_M",
+        "ambiguousNameSplit": false,
+        "uncertainYear": false,
+        "existingAtletaId": "PIGAT_DAVIDE",
+        "posizione": 3
+      },
+      "campionato_regionale": false,
+      "campionato_italiano": false
+    },
+    {
+      "garaId": "3_TROFEO_ALF_GROUP_2026-07-24_ES1_M",
+      "race": "3° TROFEO ALF GROUP",
+      "regione": "VENETO",
+      "dataISO": "2026-07-24",
+      "cat": "ES1_M",
+      "genere": "M",
+      "row": {
+        "posizioneOriginale": 4,
+        "cognome": "BERTON",
+        "nome": "MATTIA",
+        "codeSuffix": "ES",
+        "team": "S. C. FONTANAFREDDA",
+        "categoria": "ES1_M",
+        "ambiguousNameSplit": false,
+        "uncertainYear": false,
+        "existingAtletaId": "BERTON_MATTIA",
+        "posizione": 4
+      },
+      "campionato_regionale": false,
+      "campionato_italiano": false
+    },
+    {
+      "garaId": "3_TROFEO_ALF_GROUP_2026-07-24_ES1_M",
+      "race": "3° TROFEO ALF GROUP",
+      "regione": "VENETO",
+      "dataISO": "2026-07-24",
+      "cat": "ES1_M",
+      "genere": "M",
+      "row": {
+        "posizioneOriginale": 5,
+        "cognome": "BERTOLIN",
+        "nome": "EROS",
+        "codeSuffix": "ES",
+        "team": "A.S.D. SACILESE",
+        "categoria": "ES1_M",
+        "ambiguousNameSplit": false,
+        "uncertainYear": false,
+        "existingAtletaId": "BERTOLIN_EROS",
+        "posizione": 5
+      },
+      "campionato_regionale": false,
+      "campionato_italiano": false
+    },
+    {
+      "garaId": "3_TROFEO_ALF_GROUP_2026-07-24_ES1_M",
+      "race": "3° TROFEO ALF GROUP",
+      "regione": "VENETO",
+      "dataISO": "2026-07-24",
+      "cat": "ES1_M",
+      "genere": "M",
+      "row": {
+        "posizioneOriginale": 6,
+        "cognome": "COSTALONGA",
+        "nome": "DIEGO",
+        "codeSuffix": "ES",
+        "team": "S. C. FONTANAFREDDA",
+        "categoria": "ES1_M",
+        "ambiguousNameSplit": false,
+        "uncertainYear": false,
+        "existingAtletaId": "COSTALONGA_DIEGO",
+        "posizione": 6
+      },
+      "campionato_regionale": false,
+      "campionato_italiano": false
+    },
+    {
+      "garaId": "3_TROFEO_ALF_GROUP_2026-07-24_ES2_M",
+      "race": "3° TROFEO ALF GROUP",
+      "regione": "VENETO",
+      "dataISO": "2026-07-24",
+      "cat": "ES2_M",
+      "genere": "M",
+      "row": {
+        "posizioneOriginale": 1,
+        "cognome": "ZANCHETTIN",
+        "nome": "ALEJANDRO",
+        "codeSuffix": "ES",
+        "team": "A.S.D. SACILESE",
+        "categoria": "ES2_M",
+        "ambiguousNameSplit": false,
+        "uncertainYear": false,
+        "existingAtletaId": "ZANCHETTIN_ALEJANDRO",
+        "posizione": 1
+      },
+      "campionato_regionale": false,
+      "campionato_italiano": false
+    },
+    {
+      "garaId": "3_TROFEO_ALF_GROUP_2026-07-24_ES2_M",
+      "race": "3° TROFEO ALF GROUP",
+      "regione": "VENETO",
+      "dataISO": "2026-07-24",
+      "cat": "ES2_M",
+      "genere": "M",
+      "row": {
+        "posizioneOriginale": 2,
+        "cognome": "QUAIA",
+        "nome": "FILIPPO",
+        "codeSuffix": "ES",
+        "team": "GOTTARDO GIOCHI CANEVA",
+        "categoria": "ES2_M",
+        "ambiguousNameSplit": false,
+        "uncertainYear": false,
+        "existingAtletaId": "QUAIA_FILIPPO",
+        "posizione": 2
+      },
+      "campionato_regionale": false,
+      "campionato_italiano": false
+    },
+    {
+      "garaId": "3_TROFEO_ALF_GROUP_2026-07-24_ES2_M",
+      "race": "3° TROFEO ALF GROUP",
+      "regione": "VENETO",
+      "dataISO": "2026-07-24",
+      "cat": "ES2_M",
+      "genere": "M",
+      "row": {
+        "posizioneOriginale": 3,
+        "cognome": "GUERRA",
+        "nome": "NICOLO'",
+        "codeSuffix": "ES",
+        "team": "BANNIA ASS.SPORT.DILETT.",
+        "categoria": "ES2_M",
+        "ambiguousNameSplit": false,
+        "uncertainYear": false,
+        "existingAtletaId": "GUERRA_NICOLO",
+        "posizione": 3
+      },
+      "campionato_regionale": false,
+      "campionato_italiano": false
+    },
+    {
+      "garaId": "3_TROFEO_ALF_GROUP_2026-07-24_ES2_M",
+      "race": "3° TROFEO ALF GROUP",
+      "regione": "VENETO",
+      "dataISO": "2026-07-24",
+      "cat": "ES2_M",
+      "genere": "M",
+      "row": {
+        "posizioneOriginale": 4,
+        "cognome": "BARAZZUOL",
+        "nome": "FRANCESCO",
+        "codeSuffix": "ES",
+        "team": "SOC. SPORT.SANFIORESE",
+        "categoria": "ES2_M",
+        "ambiguousNameSplit": false,
+        "uncertainYear": false,
+        "existingAtletaId": "BARAZZUOL_FRANCESCO",
+        "posizione": 4
+      },
+      "campionato_regionale": false,
+      "campionato_italiano": false
+    },
+    {
+      "garaId": "3_TROFEO_ALF_GROUP_2026-07-24_ES2_M",
+      "race": "3° TROFEO ALF GROUP",
+      "regione": "VENETO",
+      "dataISO": "2026-07-24",
+      "cat": "ES2_M",
+      "genere": "M",
+      "row": {
+        "posizioneOriginale": 5,
+        "cognome": "CARLET",
+        "nome": "SEBASTIANO",
+        "codeSuffix": "ES",
+        "team": "GOTTARDO GIOCHI CANEVA",
+        "categoria": "ES2_M",
+        "ambiguousNameSplit": false,
+        "uncertainYear": false,
+        "existingAtletaId": "CARLET_SEBASTIANO",
+        "posizione": 5
+      },
+      "campionato_regionale": false,
+      "campionato_italiano": false
+    },
+    {
+      "garaId": "46_COPPA_LA_ROCCA_TROFEO_F_LLI_BAGAGLI_2026-07-28_ES1_M",
+      "race": "46^ COPPA LA ROCCA - TROFEO F.LLI BAGAGLI",
+      "regione": "TOSCANA",
+      "dataISO": "2026-07-28",
+      "cat": "ES1_M",
+      "genere": "M",
+      "row": {
+        "posizioneOriginale": 1,
+        "cognome": "MORICONI",
+        "nome": "EDOARDO",
+        "codeSuffix": "ES",
+        "team": "UC DONORATICO",
+        "categoria": "ES1_M",
+        "ambiguousNameSplit": false,
+        "uncertainYear": false,
+        "existingAtletaId": "MORICONI_EDOARDO",
+        "posizione": 1
+      },
+      "campionato_regionale": false,
+      "campionato_italiano": false
+    },
+    {
+      "garaId": "46_COPPA_LA_ROCCA_TROFEO_F_LLI_BAGAGLI_2026-07-28_ES1_M",
+      "race": "46^ COPPA LA ROCCA - TROFEO F.LLI BAGAGLI",
+      "regione": "TOSCANA",
+      "dataISO": "2026-07-28",
+      "cat": "ES1_M",
+      "genere": "M",
+      "row": {
+        "posizioneOriginale": 2,
+        "cognome": "GALEOTTI",
+        "nome": "ALESSIO",
+        "codeSuffix": "ES",
+        "team": "UC DONORATICO",
+        "categoria": "ES1_M",
+        "ambiguousNameSplit": false,
+        "uncertainYear": false,
+        "existingAtletaId": "GALEOTTI_ALESSIO",
+        "posizione": 2
+      },
+      "campionato_regionale": false,
+      "campionato_italiano": false
+    },
+    {
+      "garaId": "46_COPPA_LA_ROCCA_TROFEO_F_LLI_BAGAGLI_2026-07-28_ES1_M",
+      "race": "46^ COPPA LA ROCCA - TROFEO F.LLI BAGAGLI",
+      "regione": "TOSCANA",
+      "dataISO": "2026-07-28",
+      "cat": "ES1_M",
+      "genere": "M",
+      "row": {
+        "posizioneOriginale": 3,
+        "cognome": "ANTONGIOVANNI",
+        "nome": "DIEGO",
+        "codeSuffix": "ES",
+        "team": "UC EMPOLESE",
+        "categoria": "ES1_M",
+        "ambiguousNameSplit": false,
+        "uncertainYear": false,
+        "existingAtletaId": "ANTONGIOVANNI_DIEGO",
+        "posizione": 3
+      },
+      "campionato_regionale": false,
+      "campionato_italiano": false
+    },
+    {
+      "garaId": "46_COPPA_LA_ROCCA_TROFEO_F_LLI_BAGAGLI_2026-07-28_ES1_M",
+      "race": "46^ COPPA LA ROCCA - TROFEO F.LLI BAGAGLI",
+      "regione": "TOSCANA",
+      "dataISO": "2026-07-28",
+      "cat": "ES1_M",
+      "genere": "M",
+      "row": {
+        "posizioneOriginale": 4,
+        "cognome": "BIANCHI",
+        "nome": "MATTIA",
+        "codeSuffix": "ES",
+        "team": "UC DONORATICO",
+        "categoria": "ES1_M",
+        "ambiguousNameSplit": false,
+        "uncertainYear": false,
+        "existingAtletaId": "BIANCHI_MATTIA",
+        "posizione": 4
+      },
+      "campionato_regionale": false,
+      "campionato_italiano": false
+    },
+    {
+      "garaId": "46_COPPA_LA_ROCCA_TROFEO_F_LLI_BAGAGLI_2026-07-28_ES1_M",
+      "race": "46^ COPPA LA ROCCA - TROFEO F.LLI BAGAGLI",
+      "regione": "TOSCANA",
+      "dataISO": "2026-07-28",
+      "cat": "ES1_M",
+      "genere": "M",
+      "row": {
+        "posizioneOriginale": 5,
+        "cognome": "BERTI",
+        "nome": "GIANMARIA",
+        "codeSuffix": "ES",
+        "team": "GS BERTI MOBILI BENASSI",
+        "categoria": "ES1_M",
+        "ambiguousNameSplit": false,
+        "uncertainYear": false,
+        "existingAtletaId": "BERTI_GIANMARIA",
+        "posizione": 5
+      },
+      "campionato_regionale": false,
+      "campionato_italiano": false
+    },
+    {
+      "garaId": "46_COPPA_LA_ROCCA_TROFEO_F_LLI_BAGAGLI_2026-07-28_ES1_M",
+      "race": "46^ COPPA LA ROCCA - TROFEO F.LLI BAGAGLI",
+      "regione": "TOSCANA",
+      "dataISO": "2026-07-28",
+      "cat": "ES1_M",
+      "genere": "M",
+      "row": {
+        "posizioneOriginale": 6,
+        "cognome": "GASSANI MATTEO",
+        "nome": "GINO",
+        "codeSuffix": "ES",
+        "team": "GS BERTI MOBILI BENASSI",
+        "categoria": "ES1_M",
+        "ambiguousNameSplit": false,
+        "uncertainYear": false,
+        "existingAtletaId": "GASSANI_MATTEO_GINO",
+        "posizione": 6
+      },
+      "campionato_regionale": false,
+      "campionato_italiano": false
+    },
+    {
+      "garaId": "46_COPPA_LA_ROCCA_TROFEO_F_LLI_BAGAGLI_2026-07-28_ES2_M",
+      "race": "46^ COPPA LA ROCCA - TROFEO F.LLI BAGAGLI",
+      "regione": "TOSCANA",
+      "dataISO": "2026-07-28",
+      "cat": "ES2_M",
+      "genere": "M",
+      "row": {
+        "posizioneOriginale": 1,
+        "cognome": "SANTINI",
+        "nome": "SAMUELE",
+        "codeSuffix": "ES",
+        "team": "UC COLTANO GRUBE COSTRUZIONI",
+        "categoria": "ES2_M",
+        "ambiguousNameSplit": false,
+        "uncertainYear": false,
+        "existingAtletaId": "SANTINI_SAMUELE",
+        "posizione": 1
+      },
+      "campionato_regionale": false,
+      "campionato_italiano": false
+    },
+    {
+      "garaId": "46_COPPA_LA_ROCCA_TROFEO_F_LLI_BAGAGLI_2026-07-28_ES2_M",
+      "race": "46^ COPPA LA ROCCA - TROFEO F.LLI BAGAGLI",
+      "regione": "TOSCANA",
+      "dataISO": "2026-07-28",
+      "cat": "ES2_M",
+      "genere": "M",
+      "row": {
+        "posizioneOriginale": 2,
+        "cognome": "DELLA POLLA",
+        "nome": "DIEGO",
+        "codeSuffix": "ES",
+        "team": "UC COLTANO GRUBE COSTRUZIONI",
+        "categoria": "ES2_M",
+        "ambiguousNameSplit": false,
+        "uncertainYear": false,
+        "existingAtletaId": "DELLA_POLLA_DIEGO",
+        "posizione": 2
+      },
+      "campionato_regionale": false,
+      "campionato_italiano": false
+    },
+    {
+      "garaId": "46_COPPA_LA_ROCCA_TROFEO_F_LLI_BAGAGLI_2026-07-28_ES2_M",
+      "race": "46^ COPPA LA ROCCA - TROFEO F.LLI BAGAGLI",
+      "regione": "TOSCANA",
+      "dataISO": "2026-07-28",
+      "cat": "ES2_M",
+      "genere": "M",
+      "row": {
+        "posizioneOriginale": 3,
+        "cognome": "STEFANINI",
+        "nome": "EDOARDO",
+        "codeSuffix": "ES",
+        "team": "UC COLTANO GRUBE COSTRUZIONI",
+        "categoria": "ES2_M",
+        "ambiguousNameSplit": false,
+        "uncertainYear": false,
+        "existingAtletaId": "STEFANINI_EDOARDO",
+        "posizione": 3
+      },
+      "campionato_regionale": false,
+      "campionato_italiano": false
+    },
+    {
+      "garaId": "46_COPPA_LA_ROCCA_TROFEO_F_LLI_BAGAGLI_2026-07-28_ES2_M",
+      "race": "46^ COPPA LA ROCCA - TROFEO F.LLI BAGAGLI",
+      "regione": "TOSCANA",
+      "dataISO": "2026-07-28",
+      "cat": "ES2_M",
+      "genere": "M",
+      "row": {
+        "posizioneOriginale": 4,
+        "cognome": "PUCCI",
+        "nome": "LEONARDO",
+        "codeSuffix": "ES",
+        "team": "GS BERTI MOBILI BENASSI",
+        "categoria": "ES2_M",
+        "ambiguousNameSplit": false,
+        "uncertainYear": false,
+        "existingAtletaId": "PUCCI_LEONARDO",
+        "posizione": 4
+      },
+      "campionato_regionale": false,
+      "campionato_italiano": false
+    },
+    {
+      "garaId": "46_COPPA_LA_ROCCA_TROFEO_F_LLI_BAGAGLI_2026-07-28_ES2_M",
+      "race": "46^ COPPA LA ROCCA - TROFEO F.LLI BAGAGLI",
+      "regione": "TOSCANA",
+      "dataISO": "2026-07-28",
+      "cat": "ES2_M",
+      "genere": "M",
+      "row": {
+        "posizioneOriginale": 5,
+        "cognome": "TOGNETTI",
+        "nome": "PIERCARLO",
+        "codeSuffix": "ES",
+        "team": "UC EMPOLESE",
+        "categoria": "ES2_M",
+        "ambiguousNameSplit": false,
+        "uncertainYear": false,
+        "existingAtletaId": "TOGNETTI_PIERCARLO",
+        "posizione": 5
+      },
+      "campionato_regionale": false,
+      "campionato_italiano": false
+    },
+    {
+      "garaId": "NOTTURNA_DELL_ASSUNTA_2026-08-07_ES1_M",
+      "race": "NOTTURNA DELL'ASSUNTA",
+      "regione": "FRIULI V.G.",
+      "dataISO": "2026-08-07",
+      "cat": "ES1_M",
+      "genere": "M",
+      "row": {
+        "posizioneOriginale": 1,
+        "cognome": "BERTOLIN",
+        "nome": "EROS",
+        "codeSuffix": "ES",
+        "team": "A.S.D. SACILESE",
+        "categoria": "ES1_M",
+        "ambiguousNameSplit": false,
+        "uncertainYear": false,
+        "existingAtletaId": "BERTOLIN_EROS",
+        "posizione": 1
+      },
+      "campionato_regionale": false,
+      "campionato_italiano": false
+    },
+    {
+      "garaId": "NOTTURNA_DELL_ASSUNTA_2026-08-07_ES1_M",
+      "race": "NOTTURNA DELL'ASSUNTA",
+      "regione": "FRIULI V.G.",
+      "dataISO": "2026-08-07",
+      "cat": "ES1_M",
+      "genere": "M",
+      "row": {
+        "posizioneOriginale": 2,
+        "cognome": "FRESCHI",
+        "nome": "ANDREA",
+        "codeSuffix": "ES",
+        "team": "A.S.D. SACILESE",
+        "categoria": "ES1_M",
+        "ambiguousNameSplit": false,
+        "uncertainYear": false,
+        "existingAtletaId": "FRESCHI_ANDREA",
+        "posizione": 2
+      },
+      "campionato_regionale": false,
+      "campionato_italiano": false
+    },
+    {
+      "garaId": "NOTTURNA_DELL_ASSUNTA_2026-08-07_ES1_M",
+      "race": "NOTTURNA DELL'ASSUNTA",
+      "regione": "FRIULI V.G.",
+      "dataISO": "2026-08-07",
+      "cat": "ES1_M",
+      "genere": "M",
+      "row": {
+        "posizioneOriginale": 3,
+        "cognome": "MARCHIOL",
+        "nome": "ERIC",
+        "codeSuffix": "ES",
+        "team": "LIBERTAS CERESETTO",
+        "categoria": "ES1_M",
+        "ambiguousNameSplit": false,
+        "uncertainYear": false,
+        "existingAtletaId": "MARCHIOL_ERIC",
+        "posizione": 3
+      },
+      "campionato_regionale": false,
+      "campionato_italiano": false
+    },
+    {
+      "garaId": "NOTTURNA_DELL_ASSUNTA_2026-08-07_ES1_M",
+      "race": "NOTTURNA DELL'ASSUNTA",
+      "regione": "FRIULI V.G.",
+      "dataISO": "2026-08-07",
+      "cat": "ES1_M",
+      "genere": "M",
+      "row": {
+        "posizioneOriginale": 4,
+        "cognome": "BOTTEON",
+        "nome": "ALESSANDRO",
+        "codeSuffix": "ES",
+        "team": "VC SAN VENDEMIANO",
+        "categoria": "ES1_M",
+        "ambiguousNameSplit": false,
+        "uncertainYear": false,
+        "existingAtletaId": "BOTTEON_ALESSANDRO",
+        "posizione": 4
+      },
+      "campionato_regionale": false,
+      "campionato_italiano": false
+    },
+    {
+      "garaId": "NOTTURNA_DELL_ASSUNTA_2026-08-07_ES1_M",
+      "race": "NOTTURNA DELL'ASSUNTA",
+      "regione": "FRIULI V.G.",
+      "dataISO": "2026-08-07",
+      "cat": "ES1_M",
+      "genere": "M",
+      "row": {
+        "posizioneOriginale": 5,
+        "cognome": "PIGAT",
+        "nome": "DAVIDE",
+        "codeSuffix": "ES",
+        "team": "GOTTARDO GIOCHI CANEVA",
+        "categoria": "ES1_M",
+        "ambiguousNameSplit": false,
+        "uncertainYear": false,
+        "existingAtletaId": "PIGAT_DAVIDE",
+        "posizione": 5
+      },
+      "campionato_regionale": false,
+      "campionato_italiano": false
+    },
+    {
+      "garaId": "NOTTURNA_DELL_ASSUNTA_2026-08-07_ES1_M",
+      "race": "NOTTURNA DELL'ASSUNTA",
+      "regione": "FRIULI V.G.",
+      "dataISO": "2026-08-07",
+      "cat": "ES1_M",
+      "genere": "M",
+      "row": {
+        "posizioneOriginale": 6,
+        "cognome": "ARITON MATIAS",
+        "nome": "ANDREI",
+        "codeSuffix": "ES",
+        "team": "A.S.D. POSTUMIA 73 D.L. CICLISMO",
+        "categoria": "ES1_M",
+        "ambiguousNameSplit": false,
+        "uncertainYear": false,
+        "existingAtletaId": "ARITON_MATIAS_ANDREI",
+        "posizione": 6
+      },
+      "campionato_regionale": false,
+      "campionato_italiano": false
+    },
+    {
+      "garaId": "NOTTURNA_DELL_ASSUNTA_2026-08-07_ES1_M",
+      "race": "NOTTURNA DELL'ASSUNTA",
+      "regione": "FRIULI V.G.",
+      "dataISO": "2026-08-07",
+      "cat": "ES1_M",
+      "genere": "M",
+      "row": {
+        "posizioneOriginale": 7,
+        "cognome": "ANTONINI",
+        "nome": "MATTEO",
+        "codeSuffix": "ES",
+        "team": "A.S.D. POSTUMIA 73 D.L. CICLISMO",
+        "categoria": "ES1_M",
+        "ambiguousNameSplit": false,
+        "uncertainYear": false,
+        "existingAtletaId": "ANTONINI_MATTEO",
+        "posizione": 7
+      },
+      "campionato_regionale": false,
+      "campionato_italiano": false
+    },
+    {
+      "garaId": "NOTTURNA_DELL_ASSUNTA_2026-08-07_ES1_M",
+      "race": "NOTTURNA DELL'ASSUNTA",
+      "regione": "FRIULI V.G.",
+      "dataISO": "2026-08-07",
+      "cat": "ES1_M",
+      "genere": "M",
+      "row": {
+        "posizioneOriginale": 8,
+        "cognome": "BERTON",
+        "nome": "MATTIA",
+        "codeSuffix": "ES",
+        "team": "S. C. FONTANAFREDDA",
+        "categoria": "ES1_M",
+        "ambiguousNameSplit": false,
+        "uncertainYear": false,
+        "existingAtletaId": "BERTON_MATTIA",
+        "posizione": 8
+      },
+      "campionato_regionale": false,
+      "campionato_italiano": false
+    },
+    {
+      "garaId": "NOTTURNA_DELL_ASSUNTA_2026-08-07_ES1_M",
+      "race": "NOTTURNA DELL'ASSUNTA",
+      "regione": "FRIULI V.G.",
+      "dataISO": "2026-08-07",
+      "cat": "ES1_M",
+      "genere": "M",
+      "row": {
+        "posizioneOriginale": 9,
+        "cognome": "CIGOLOTTO",
+        "nome": "GIOELE",
+        "codeSuffix": "ES",
+        "team": "LIBERTAS CERESETTO",
+        "categoria": "ES1_M",
+        "ambiguousNameSplit": false,
+        "uncertainYear": false,
+        "existingAtletaId": "CIGOLOTTO_GIOELE",
+        "posizione": 9
+      },
+      "campionato_regionale": false,
+      "campionato_italiano": false
+    },
+    {
+      "garaId": "NOTTURNA_DELL_ASSUNTA_2026-08-07_ES1_M",
+      "race": "NOTTURNA DELL'ASSUNTA",
+      "regione": "FRIULI V.G.",
+      "dataISO": "2026-08-07",
+      "cat": "ES1_M",
+      "genere": "M",
+      "row": {
+        "posizioneOriginale": 10,
+        "cognome": "CASETTA",
+        "nome": "PIETRO",
+        "codeSuffix": "ES",
+        "team": "A.S.D. SACILESE",
+        "categoria": "ES1_M",
+        "ambiguousNameSplit": false,
+        "uncertainYear": false,
+        "existingAtletaId": "CASETTA_PIETRO",
+        "posizione": 10
+      },
+      "campionato_regionale": false,
+      "campionato_italiano": false
+    },
+    {
+      "garaId": "NOTTURNA_DELL_ASSUNTA_2026-08-07_ES2_M",
+      "race": "NOTTURNA DELL'ASSUNTA",
+      "regione": "FRIULI V.G.",
+      "dataISO": "2026-08-07",
+      "cat": "ES2_M",
+      "genere": "M",
+      "row": {
+        "posizioneOriginale": 1,
+        "cognome": "CARLET",
+        "nome": "SEBASTIANO",
+        "codeSuffix": "ES",
+        "team": "GOTTARDO GIOCHI CANEVA",
+        "categoria": "ES2_M",
+        "ambiguousNameSplit": false,
+        "uncertainYear": false,
+        "existingAtletaId": "CARLET_SEBASTIANO",
+        "posizione": 1
+      },
+      "campionato_regionale": false,
+      "campionato_italiano": false
+    },
+    {
+      "garaId": "NOTTURNA_DELL_ASSUNTA_2026-08-07_ES2_M",
+      "race": "NOTTURNA DELL'ASSUNTA",
+      "regione": "FRIULI V.G.",
+      "dataISO": "2026-08-07",
+      "cat": "ES2_M",
+      "genere": "M",
+      "row": {
+        "posizioneOriginale": 3,
+        "cognome": "PESSOTTO",
+        "nome": "ANDREA",
+        "codeSuffix": "ES",
+        "team": "TEAM BOSCO DI ORSAGO",
+        "categoria": "ES2_M",
+        "ambiguousNameSplit": false,
+        "uncertainYear": false,
+        "existingAtletaId": "PESSOTTO_ANDREA",
+        "posizione": 3
+      },
+      "campionato_regionale": false,
+      "campionato_italiano": false
+    },
+    {
+      "garaId": "NOTTURNA_DELL_ASSUNTA_2026-08-07_ES2_M",
+      "race": "NOTTURNA DELL'ASSUNTA",
+      "regione": "FRIULI V.G.",
+      "dataISO": "2026-08-07",
+      "cat": "ES2_M",
+      "genere": "M",
+      "row": {
+        "posizioneOriginale": 4,
+        "cognome": "QUAIA",
+        "nome": "FILIPPO",
+        "codeSuffix": "ES",
+        "team": "GOTTARDO GIOCHI CANEVA",
+        "categoria": "ES2_M",
+        "ambiguousNameSplit": false,
+        "uncertainYear": false,
+        "existingAtletaId": "QUAIA_FILIPPO",
+        "posizione": 4
+      },
+      "campionato_regionale": false,
+      "campionato_italiano": false
+    },
+    {
+      "garaId": "NOTTURNA_DELL_ASSUNTA_2026-08-07_ES2_M",
+      "race": "NOTTURNA DELL'ASSUNTA",
+      "regione": "FRIULI V.G.",
+      "dataISO": "2026-08-07",
+      "cat": "ES2_M",
+      "genere": "M",
+      "row": {
+        "posizioneOriginale": 5,
+        "cognome": "BEMBO",
+        "nome": "SANTIAGO",
+        "codeSuffix": "ES",
+        "team": "A.S.D. POSTUMIA 73 D.L. CICLISMO",
+        "categoria": "ES2_M",
+        "ambiguousNameSplit": false,
+        "uncertainYear": false,
+        "existingAtletaId": "BEMBO_SANTIAGO",
+        "posizione": 5
+      },
+      "campionato_regionale": false,
+      "campionato_italiano": false
+    },
+    {
+      "garaId": "NOTTURNA_DELL_ASSUNTA_2026-08-07_ES2_M",
+      "race": "NOTTURNA DELL'ASSUNTA",
+      "regione": "FRIULI V.G.",
+      "dataISO": "2026-08-07",
+      "cat": "ES2_M",
+      "genere": "M",
+      "row": {
+        "posizioneOriginale": 6,
+        "cognome": "CITRON",
+        "nome": "SAMUELE",
+        "codeSuffix": "ES",
+        "team": "TEAM BOSCO DI ORSAGO",
+        "categoria": "ES2_M",
+        "ambiguousNameSplit": false,
+        "uncertainYear": false,
+        "existingAtletaId": "CITRON_SAMUELE",
+        "posizione": 6
+      },
+      "campionato_regionale": false,
+      "campionato_italiano": false
+    },
+    {
+      "garaId": "NOTTURNA_DELL_ASSUNTA_2026-08-07_ES2_M",
+      "race": "NOTTURNA DELL'ASSUNTA",
+      "regione": "FRIULI V.G.",
+      "dataISO": "2026-08-07",
+      "cat": "ES2_M",
+      "genere": "M",
+      "row": {
+        "posizioneOriginale": 7,
+        "cognome": "CARLET",
+        "nome": "MATTIA",
+        "codeSuffix": "ES",
+        "team": "SOC. SPORT.SANFIORESE",
+        "categoria": "ES2_M",
+        "ambiguousNameSplit": false,
+        "uncertainYear": false,
+        "existingAtletaId": "CARLET_MATTIA",
+        "posizione": 7
+      },
+      "campionato_regionale": false,
+      "campionato_italiano": false
+    },
+    {
+      "garaId": "NOTTURNA_DELL_ASSUNTA_2026-08-07_ES2_M",
+      "race": "NOTTURNA DELL'ASSUNTA",
+      "regione": "FRIULI V.G.",
+      "dataISO": "2026-08-07",
+      "cat": "ES2_M",
+      "genere": "M",
+      "row": {
+        "posizioneOriginale": 10,
+        "cognome": "MIZZAU",
+        "nome": "LUCIO",
+        "codeSuffix": "ES",
+        "team": "LIBERTAS CERESETTO",
+        "categoria": "ES2_M",
+        "ambiguousNameSplit": false,
+        "uncertainYear": false,
+        "existingAtletaId": "MIZZAU_LUCIO",
+        "posizione": 10
+      },
+      "campionato_regionale": false,
+      "campionato_italiano": false
+    },
+    {
+      "garaId": "G_P_43_FESTA_DELLO_SPORT_3_MEM_G_BERTOLDO_9_TROFEO_SMANIA_6_MEM_FRANCO_E_DAVIDE_FAVARETTO_2026-08-14_ES1_M",
+      "race": "G.P. 43° FESTA DELLO SPORt 3° MEM. G. BERTOLDO- 9° Trofeo Smania - 6°MEM. Franco e Davide Favaretto",
+      "regione": "VENETO",
+      "dataISO": "2026-08-14",
+      "cat": "ES1_M",
+      "genere": "M",
+      "row": {
+        "posizioneOriginale": 1,
+        "cognome": "MOSNA",
+        "nome": "RICCARDO",
+        "codeSuffix": "ES",
+        "team": "ASD VELOCE CLUB BORGO",
+        "categoria": "ES1_M",
+        "ambiguousNameSplit": false,
+        "uncertainYear": true,
+        "existingAtletaId": "MOSNA_RICCARDO",
+        "posizione": 1
+      },
+      "campionato_regionale": false,
+      "campionato_italiano": false
+    },
+    {
+      "garaId": "G_P_43_FESTA_DELLO_SPORT_3_MEM_G_BERTOLDO_9_TROFEO_SMANIA_6_MEM_FRANCO_E_DAVIDE_FAVARETTO_2026-08-14_ES1_M",
+      "race": "G.P. 43° FESTA DELLO SPORt 3° MEM. G. BERTOLDO- 9° Trofeo Smania - 6°MEM. Franco e Davide Favaretto",
+      "regione": "VENETO",
+      "dataISO": "2026-08-14",
+      "cat": "ES1_M",
+      "genere": "M",
+      "row": {
+        "posizioneOriginale": 2,
+        "cognome": "BEMBO",
+        "nome": "SANTIAGO",
+        "codeSuffix": "ES",
+        "team": "A.S.D. POSTUMIA 73 D.L. CICLISMO",
+        "categoria": "ES1_M",
+        "ambiguousNameSplit": false,
+        "uncertainYear": true,
+        "existingAtletaId": "BEMBO_SANTIAGO",
+        "posizione": 2
+      },
+      "campionato_regionale": false,
+      "campionato_italiano": false
+    },
+    {
+      "garaId": "G_P_43_FESTA_DELLO_SPORT_3_MEM_G_BERTOLDO_9_TROFEO_SMANIA_6_MEM_FRANCO_E_DAVIDE_FAVARETTO_2026-08-14_ES1_M",
+      "race": "G.P. 43° FESTA DELLO SPORt 3° MEM. G. BERTOLDO- 9° Trofeo Smania - 6°MEM. Franco e Davide Favaretto",
+      "regione": "VENETO",
+      "dataISO": "2026-08-14",
+      "cat": "ES1_M",
+      "genere": "M",
+      "row": {
+        "posizioneOriginale": 3,
+        "cognome": "SALVATI GABRIELE",
+        "nome": "GERARDO",
+        "codeSuffix": "ES",
+        "team": "ASD VELOCE CLUB BORGO",
+        "categoria": "ES1_M",
+        "ambiguousNameSplit": false,
+        "uncertainYear": true,
+        "existingAtletaId": "SALVATI_GABRIELE_GERARDO",
+        "posizione": 3
+      },
+      "campionato_regionale": false,
+      "campionato_italiano": false
+    },
+    {
+      "garaId": "G_P_43_FESTA_DELLO_SPORT_3_MEM_G_BERTOLDO_9_TROFEO_SMANIA_6_MEM_FRANCO_E_DAVIDE_FAVARETTO_2026-08-14_ES1_M",
+      "race": "G.P. 43° FESTA DELLO SPORt 3° MEM. G. BERTOLDO- 9° Trofeo Smania - 6°MEM. Franco e Davide Favaretto",
+      "regione": "VENETO",
+      "dataISO": "2026-08-14",
+      "cat": "ES1_M",
+      "genere": "M",
+      "row": {
+        "posizioneOriginale": 4,
+        "cognome": "DE ROSSI",
+        "nome": "GIACOMO",
+        "codeSuffix": "ES",
+        "team": "UNIONE CICLISTICA MIRANO",
+        "categoria": "ES1_M",
+        "ambiguousNameSplit": false,
+        "uncertainYear": true,
+        "existingAtletaId": "DE_ROSSI_GIACOMO",
+        "posizione": 4
+      },
+      "campionato_regionale": false,
+      "campionato_italiano": false
+    },
+    {
+      "garaId": "G_P_43_FESTA_DELLO_SPORT_3_MEM_G_BERTOLDO_9_TROFEO_SMANIA_6_MEM_FRANCO_E_DAVIDE_FAVARETTO_2026-08-14_ES1_M",
+      "race": "G.P. 43° FESTA DELLO SPORt 3° MEM. G. BERTOLDO- 9° Trofeo Smania - 6°MEM. Franco e Davide Favaretto",
+      "regione": "VENETO",
+      "dataISO": "2026-08-14",
+      "cat": "ES1_M",
+      "genere": "M",
+      "row": {
+        "posizioneOriginale": 5,
+        "cognome": "BASSO",
+        "nome": "FILIPPO",
+        "codeSuffix": "ES",
+        "team": "MST CYCLING - SANDRIGO BIKE",
+        "categoria": "ES1_M",
+        "ambiguousNameSplit": false,
+        "uncertainYear": true,
+        "existingAtletaId": "BASSO_FILIPPO",
+        "posizione": 5
+      },
+      "campionato_regionale": false,
+      "campionato_italiano": false
+    },
+    {
+      "garaId": "G_P_43_FESTA_DELLO_SPORT_3_MEM_G_BERTOLDO_9_TROFEO_SMANIA_6_MEM_FRANCO_E_DAVIDE_FAVARETTO_2026-08-14_ES1_M",
+      "race": "G.P. 43° FESTA DELLO SPORt 3° MEM. G. BERTOLDO- 9° Trofeo Smania - 6°MEM. Franco e Davide Favaretto",
+      "regione": "VENETO",
+      "dataISO": "2026-08-14",
+      "cat": "ES1_M",
+      "genere": "M",
+      "row": {
+        "posizioneOriginale": 6,
+        "cognome": "BENFATTO",
+        "nome": "FEDERICO",
+        "codeSuffix": "ES",
+        "team": "GS FIUMICELLO 1971",
+        "categoria": "ES1_M",
+        "ambiguousNameSplit": false,
+        "uncertainYear": true,
+        "existingAtletaId": "BENFATTO_FEDERICO",
+        "posizione": 6
       },
       "campionato_regionale": false,
       "campionato_italiano": false
@@ -1562,7 +2054,73 @@
       "cat": "ES1_M",
       "genere": "M",
       "row": {
-        "posizione": 4,
+        "posizioneOriginale": 1,
+        "cognome": "ZAVATTERO",
+        "nome": "EDOARDO",
+        "codeSuffix": "ES",
+        "team": "UÀ CYCLING TEAM",
+        "categoria": "ES1_M",
+        "ambiguousNameSplit": false,
+        "uncertainYear": false,
+        "existingAtletaId": "ZAVATTERO_EDOARDO",
+        "posizione": 1
+      },
+      "campionato_regionale": false,
+      "campionato_italiano": false
+    },
+    {
+      "garaId": "MEMORIAL_GIOVANNI_FINO_E_PAOLO_MATTIO_2026-08-20_ES1_M",
+      "race": "MEMORIAL GIOVANNI FINO E PAOLO MATTIO",
+      "regione": "PIEMONTE",
+      "dataISO": "2026-08-20",
+      "cat": "ES1_M",
+      "genere": "M",
+      "row": {
+        "posizioneOriginale": 2,
+        "cognome": "BIANCHI",
+        "nome": "MASSIMO",
+        "codeSuffix": "ES",
+        "team": "I CINGHIALI EVO",
+        "categoria": "ES1_M",
+        "ambiguousNameSplit": false,
+        "uncertainYear": false,
+        "existingAtletaId": "BIANCHI_MASSIMO",
+        "posizione": 2
+      },
+      "campionato_regionale": false,
+      "campionato_italiano": false
+    },
+    {
+      "garaId": "MEMORIAL_GIOVANNI_FINO_E_PAOLO_MATTIO_2026-08-20_ES1_M",
+      "race": "MEMORIAL GIOVANNI FINO E PAOLO MATTIO",
+      "regione": "PIEMONTE",
+      "dataISO": "2026-08-20",
+      "cat": "ES1_M",
+      "genere": "M",
+      "row": {
+        "posizioneOriginale": 3,
+        "cognome": "ARCUDI",
+        "nome": "FEDERICO",
+        "codeSuffix": "ES",
+        "team": "ARDENS CYCLING TEAM",
+        "categoria": "ES1_M",
+        "ambiguousNameSplit": false,
+        "uncertainYear": false,
+        "existingAtletaId": "ARCUDI_FEDERICO",
+        "posizione": 3
+      },
+      "campionato_regionale": false,
+      "campionato_italiano": false
+    },
+    {
+      "garaId": "MEMORIAL_GIOVANNI_FINO_E_PAOLO_MATTIO_2026-08-20_ES1_M",
+      "race": "MEMORIAL GIOVANNI FINO E PAOLO MATTIO",
+      "regione": "PIEMONTE",
+      "dataISO": "2026-08-20",
+      "cat": "ES1_M",
+      "genere": "M",
+      "row": {
+        "posizioneOriginale": 4,
         "cognome": "BARBERO",
         "nome": "ALESSANDRO",
         "codeSuffix": "ES",
@@ -1570,7 +2128,30 @@
         "categoria": "ES1_M",
         "ambiguousNameSplit": false,
         "uncertainYear": false,
-        "existingAtletaId": "BARBERO_ALESSANDRO"
+        "existingAtletaId": "BARBERO_ALESSANDRO",
+        "posizione": 4
+      },
+      "campionato_regionale": false,
+      "campionato_italiano": false
+    },
+    {
+      "garaId": "MEMORIAL_GIOVANNI_FINO_E_PAOLO_MATTIO_2026-08-20_ES1_M",
+      "race": "MEMORIAL GIOVANNI FINO E PAOLO MATTIO",
+      "regione": "PIEMONTE",
+      "dataISO": "2026-08-20",
+      "cat": "ES1_M",
+      "genere": "M",
+      "row": {
+        "posizioneOriginale": 6,
+        "cognome": "GROSSO",
+        "nome": "MATTEO",
+        "codeSuffix": "ES",
+        "team": "CICLISTICA BORDIGHERA",
+        "categoria": "ES1_M",
+        "ambiguousNameSplit": false,
+        "uncertainYear": false,
+        "existingAtletaId": "GROSSO_MATTEO",
+        "posizione": 6
       },
       "campionato_regionale": false,
       "campionato_italiano": false
@@ -1583,7 +2164,7 @@
       "cat": "ES2_M",
       "genere": "M",
       "row": {
-        "posizione": 1,
+        "posizioneOriginale": 1,
         "cognome": "AVIDANO",
         "nome": "DAVIDE",
         "codeSuffix": "ES",
@@ -1591,7 +2172,8 @@
         "categoria": "ES2_M",
         "ambiguousNameSplit": false,
         "uncertainYear": false,
-        "existingAtletaId": "AVIDANO_DAVIDE"
+        "existingAtletaId": "AVIDANO_DAVIDE",
+        "posizione": 1
       },
       "campionato_regionale": false,
       "campionato_italiano": false
@@ -1604,7 +2186,7 @@
       "cat": "ES2_M",
       "genere": "M",
       "row": {
-        "posizione": 2,
+        "posizioneOriginale": 2,
         "cognome": "REJNAUD",
         "nome": "MATTEO",
         "codeSuffix": "ES",
@@ -1612,7 +2194,8 @@
         "categoria": "ES2_M",
         "ambiguousNameSplit": false,
         "uncertainYear": false,
-        "existingAtletaId": "REJNAUD_MATTEO"
+        "existingAtletaId": "REJNAUD_MATTEO",
+        "posizione": 2
       },
       "campionato_regionale": false,
       "campionato_italiano": false
@@ -1625,7 +2208,7 @@
       "cat": "ES2_M",
       "genere": "M",
       "row": {
-        "posizione": 3,
+        "posizioneOriginale": 3,
         "cognome": "GROPPO",
         "nome": "LEONARDO",
         "codeSuffix": "ES",
@@ -1633,7 +2216,8 @@
         "categoria": "ES2_M",
         "ambiguousNameSplit": false,
         "uncertainYear": false,
-        "existingAtletaId": "GROPPO_LEONARDO"
+        "existingAtletaId": "GROPPO_LEONARDO",
+        "posizione": 3
       },
       "campionato_regionale": false,
       "campionato_italiano": false
@@ -1646,7 +2230,7 @@
       "cat": "ES2_M",
       "genere": "M",
       "row": {
-        "posizione": 4,
+        "posizioneOriginale": 4,
         "cognome": "BALBI",
         "nome": "ALESSANDRO",
         "codeSuffix": "ES",
@@ -1654,7 +2238,30 @@
         "categoria": "ES2_M",
         "ambiguousNameSplit": false,
         "uncertainYear": false,
-        "existingAtletaId": "BALBI_ALESSANDRO"
+        "existingAtletaId": "BALBI_ALESSANDRO",
+        "posizione": 4
+      },
+      "campionato_regionale": false,
+      "campionato_italiano": false
+    },
+    {
+      "garaId": "MEMORIAL_GIOVANNI_FINO_E_PAOLO_MATTIO_2026-08-20_ES2_M",
+      "race": "MEMORIAL GIOVANNI FINO E PAOLO MATTIO",
+      "regione": "PIEMONTE",
+      "dataISO": "2026-08-20",
+      "cat": "ES2_M",
+      "genere": "M",
+      "row": {
+        "posizioneOriginale": 6,
+        "cognome": "SORASIO",
+        "nome": "STEFANO",
+        "codeSuffix": "ES",
+        "team": "ARDENS CYCLING TEAM",
+        "categoria": "ES2_M",
+        "ambiguousNameSplit": false,
+        "uncertainYear": false,
+        "existingAtletaId": "SORASIO_STEFANO",
+        "posizione": 6
       },
       "campionato_regionale": false,
       "campionato_italiano": false
@@ -1670,7 +2277,7 @@
       "cat": "ES2_M",
       "genere": "M",
       "row": {
-        "posizione": 4,
+        "posizioneOriginale": 4,
         "cognome": "CAZZADORE",
         "nome": "PAOLO",
         "codeSuffix": "ES",
@@ -1678,7 +2285,30 @@
         "categoria": "ES2_M",
         "ambiguousNameSplit": false,
         "uncertainYear": false,
-        "existingAtletaId": null
+        "existingAtletaId": null,
+        "posizione": 4
+      },
+      "campionato_regionale": false,
+      "campionato_italiano": false
+    },
+    {
+      "garaId": "MEMORIAL_PINUCCIO_CHIAVASSA_2026-05-14_ES2_M",
+      "race": "MEMORIAL PINUCCIO CHIAVASSA",
+      "regione": "PIEMONTE",
+      "dataISO": "2026-05-14",
+      "cat": "ES2_M",
+      "genere": "M",
+      "row": {
+        "posizioneOriginale": 6,
+        "cognome": "MARCHISIO",
+        "nome": "MATTIA",
+        "codeSuffix": "ES",
+        "team": "ALBA BRA LANGHE ROERO",
+        "categoria": "ES2_M",
+        "ambiguousNameSplit": false,
+        "uncertainYear": false,
+        "existingAtletaId": null,
+        "posizione": 6
       },
       "campionato_regionale": false,
       "campionato_italiano": false
@@ -1691,7 +2321,7 @@
       "cat": "ES1_M",
       "genere": "M",
       "row": {
-        "posizione": 3,
+        "posizioneOriginale": 3,
         "cognome": "VIRLAN",
         "nome": "MATTEO",
         "codeSuffix": "ES",
@@ -1699,7 +2329,140 @@
         "categoria": "ES1_M",
         "ambiguousNameSplit": false,
         "uncertainYear": true,
-        "existingAtletaId": null
+        "existingAtletaId": null,
+        "posizione": 3
+      },
+      "campionato_regionale": false,
+      "campionato_italiano": false
+    },
+    {
+      "garaId": "2_GRAN_PREMIO_MSTC_LA_PALLADIANA_2026-05-29_ES1_M",
+      "race": "2* GRAN PREMIO MSTC - LA PALLADIANA",
+      "regione": "VENETO",
+      "dataISO": "2026-05-29",
+      "cat": "ES1_M",
+      "genere": "M",
+      "row": {
+        "posizioneOriginale": 6,
+        "cognome": "BISCONTIN",
+        "nome": "LEONARDO",
+        "codeSuffix": "ES",
+        "team": "G.S. TAVO BONIN BIKE",
+        "categoria": "ES1_M",
+        "ambiguousNameSplit": false,
+        "uncertainYear": true,
+        "existingAtletaId": null,
+        "posizione": 6
+      },
+      "campionato_regionale": false,
+      "campionato_italiano": false
+    },
+    {
+      "garaId": "2_GRAN_PREMIO_MSTC_LA_PALLADIANA_2026-05-29_ES1_M",
+      "race": "2* GRAN PREMIO MSTC - LA PALLADIANA",
+      "regione": "VENETO",
+      "dataISO": "2026-05-29",
+      "cat": "ES1_M",
+      "genere": "M",
+      "row": {
+        "posizioneOriginale": 7,
+        "cognome": "MENEGHEL",
+        "nome": "ANDREAS",
+        "codeSuffix": "ES",
+        "team": "A.S.D. G.S. FONZASO",
+        "categoria": "ES1_M",
+        "ambiguousNameSplit": false,
+        "uncertainYear": true,
+        "existingAtletaId": null,
+        "posizione": 7
+      },
+      "campionato_regionale": false,
+      "campionato_italiano": false
+    },
+    {
+      "garaId": "2_GRAN_PREMIO_MSTC_LA_PALLADIANA_2026-05-29_ES1_M",
+      "race": "2* GRAN PREMIO MSTC - LA PALLADIANA",
+      "regione": "VENETO",
+      "dataISO": "2026-05-29",
+      "cat": "ES1_M",
+      "genere": "M",
+      "row": {
+        "posizioneOriginale": 8,
+        "cognome": "ZIROLDI",
+        "nome": "ROCCO",
+        "codeSuffix": "ES",
+        "team": "MST CYCLING - SANDRIGO BIKE",
+        "categoria": "ES1_M",
+        "ambiguousNameSplit": false,
+        "uncertainYear": true,
+        "existingAtletaId": null,
+        "posizione": 8
+      },
+      "campionato_regionale": false,
+      "campionato_italiano": false
+    },
+    {
+      "garaId": "2_GRAN_PREMIO_MSTC_LA_PALLADIANA_2026-05-29_ES1_M",
+      "race": "2* GRAN PREMIO MSTC - LA PALLADIANA",
+      "regione": "VENETO",
+      "dataISO": "2026-05-29",
+      "cat": "ES1_M",
+      "genere": "M",
+      "row": {
+        "posizioneOriginale": 10,
+        "cognome": "ANGONESE",
+        "nome": "ALESSANDRO",
+        "codeSuffix": "ES",
+        "team": "MST CYCLING - SANDRIGO BIKE",
+        "categoria": "ES1_M",
+        "ambiguousNameSplit": false,
+        "uncertainYear": true,
+        "existingAtletaId": null,
+        "posizione": 10
+      },
+      "campionato_regionale": false,
+      "campionato_italiano": false
+    },
+    {
+      "garaId": "2_GRAN_PREMIO_MSTC_LA_PALLADIANA_2026-05-29_ES1_M",
+      "race": "2* GRAN PREMIO MSTC - LA PALLADIANA",
+      "regione": "VENETO",
+      "dataISO": "2026-05-29",
+      "cat": "ES1_M",
+      "genere": "M",
+      "row": {
+        "posizioneOriginale": 11,
+        "cognome": "CUMAN MATTEO",
+        "nome": "ISAIA",
+        "codeSuffix": "ES",
+        "team": "MST CYCLING - SANDRIGO BIKE",
+        "categoria": "ES1_M",
+        "ambiguousNameSplit": false,
+        "uncertainYear": true,
+        "existingAtletaId": null,
+        "posizione": 11
+      },
+      "campionato_regionale": false,
+      "campionato_italiano": false
+    },
+    {
+      "garaId": "2_GRAN_PREMIO_MSTC_LA_PALLADIANA_2026-05-29_ES1_M",
+      "race": "2* GRAN PREMIO MSTC - LA PALLADIANA",
+      "regione": "VENETO",
+      "dataISO": "2026-05-29",
+      "cat": "ES1_M",
+      "genere": "M",
+      "row": {
+        "posizioneOriginale": 12,
+        "cognome": "TOSATO",
+        "nome": "MARCO",
+        "codeSuffix": "ES",
+        "team": "G.S. TAVO BONIN BIKE",
+        "categoria": "ES1_M",
+        "ambiguousNameSplit": false,
+        "uncertainYear": true,
+        "existingAtletaId": null,
+        "posizione": 12
       },
       "campionato_regionale": false,
       "campionato_italiano": false
@@ -1712,7 +2475,7 @@
       "cat": "ES1_M",
       "genere": "M",
       "row": {
-        "posizione": 1,
+        "posizioneOriginale": 1,
         "cognome": "CHERCHI",
         "nome": "GABRIELE",
         "codeSuffix": "ES",
@@ -1720,7 +2483,8 @@
         "categoria": "ES1_M",
         "ambiguousNameSplit": false,
         "uncertainYear": false,
-        "existingAtletaId": null
+        "existingAtletaId": null,
+        "posizione": 1
       },
       "campionato_regionale": false,
       "campionato_italiano": false
@@ -1733,7 +2497,7 @@
       "cat": "ES1_M",
       "genere": "M",
       "row": {
-        "posizione": 5,
+        "posizioneOriginale": 5,
         "cognome": "VALLONE",
         "nome": "NICOLO'",
         "codeSuffix": "ES",
@@ -1741,7 +2505,184 @@
         "categoria": "ES1_M",
         "ambiguousNameSplit": false,
         "uncertainYear": false,
-        "existingAtletaId": null
+        "existingAtletaId": null,
+        "posizione": 5
+      },
+      "campionato_regionale": false,
+      "campionato_italiano": false
+    },
+    {
+      "garaId": "TROFEO_DENTIS_2026-07-16_ES1_M",
+      "race": "TROFEO DENTIS",
+      "regione": "PIEMONTE",
+      "dataISO": "2026-07-16",
+      "cat": "ES1_M",
+      "genere": "M",
+      "row": {
+        "posizioneOriginale": 10,
+        "cognome": "CASTELLINI",
+        "nome": "SIMONE",
+        "codeSuffix": "ES",
+        "team": "QUILIANO BIKE SPEED WHEEL",
+        "categoria": "ES1_M",
+        "ambiguousNameSplit": false,
+        "uncertainYear": false,
+        "existingAtletaId": null,
+        "posizione": 10
+      },
+      "campionato_regionale": false,
+      "campionato_italiano": false
+    },
+    {
+      "garaId": "TROFEO_DENTIS_2026-07-16_ES1_M",
+      "race": "TROFEO DENTIS",
+      "regione": "PIEMONTE",
+      "dataISO": "2026-07-16",
+      "cat": "ES1_M",
+      "genere": "M",
+      "row": {
+        "posizioneOriginale": 12,
+        "cognome": "GERBALDO",
+        "nome": "ALESSANDRO",
+        "codeSuffix": "ES",
+        "team": "ARDENS CYCLING TEAM",
+        "categoria": "ES1_M",
+        "ambiguousNameSplit": false,
+        "uncertainYear": false,
+        "existingAtletaId": null,
+        "posizione": 11
+      },
+      "campionato_regionale": false,
+      "campionato_italiano": false
+    },
+    {
+      "garaId": "TROFEO_DENTIS_2026-07-16_ES1_F",
+      "race": "TROFEO DENTIS",
+      "regione": "PIEMONTE",
+      "dataISO": "2026-07-16",
+      "cat": "ES1_F",
+      "genere": "F",
+      "row": {
+        "posizioneOriginale": 11,
+        "cognome": "COLOMBINO",
+        "nome": "ESTER",
+        "codeSuffix": "ED",
+        "team": "QUILIANO BIKE SPEED WHEEL",
+        "categoria": "ES1_F",
+        "ambiguousNameSplit": false,
+        "uncertainYear": false,
+        "existingAtletaId": null,
+        "posizione": 1
+      },
+      "campionato_regionale": false,
+      "campionato_italiano": false
+    },
+    {
+      "garaId": "TROFEO_DENTIS_2026-07-16_ES2_M",
+      "race": "TROFEO DENTIS",
+      "regione": "PIEMONTE",
+      "dataISO": "2026-07-16",
+      "cat": "ES2_M",
+      "genere": "M",
+      "row": {
+        "posizioneOriginale": 7,
+        "cognome": "LICATA",
+        "nome": "LORENZO",
+        "codeSuffix": "ES",
+        "team": "ARDENS CYCLING TEAM",
+        "categoria": "ES2_M",
+        "ambiguousNameSplit": false,
+        "uncertainYear": false,
+        "existingAtletaId": null,
+        "posizione": 7
+      },
+      "campionato_regionale": false,
+      "campionato_italiano": false
+    },
+    {
+      "garaId": "TROFEO_DENTIS_2026-07-16_ES2_M",
+      "race": "TROFEO DENTIS",
+      "regione": "PIEMONTE",
+      "dataISO": "2026-07-16",
+      "cat": "ES2_M",
+      "genere": "M",
+      "row": {
+        "posizioneOriginale": 11,
+        "cognome": "MARCHISIO",
+        "nome": "MATTIA",
+        "codeSuffix": "ES",
+        "team": "ALBA BRA LANGHE ROERO",
+        "categoria": "ES2_M",
+        "ambiguousNameSplit": false,
+        "uncertainYear": false,
+        "existingAtletaId": null,
+        "posizione": 11
+      },
+      "campionato_regionale": false,
+      "campionato_italiano": false
+    },
+    {
+      "garaId": "TROFEO_DENTIS_2026-07-16_ES2_M",
+      "race": "TROFEO DENTIS",
+      "regione": "PIEMONTE",
+      "dataISO": "2026-07-16",
+      "cat": "ES2_M",
+      "genere": "M",
+      "row": {
+        "posizioneOriginale": 12,
+        "cognome": "SALICE",
+        "nome": "NICOLO'",
+        "codeSuffix": "ES",
+        "team": "G.S. LUPI VALLE D'AOSTA",
+        "categoria": "ES2_M",
+        "ambiguousNameSplit": false,
+        "uncertainYear": false,
+        "existingAtletaId": null,
+        "posizione": 12
+      },
+      "campionato_regionale": false,
+      "campionato_italiano": false
+    },
+    {
+      "garaId": "33_TROFEO_PRO_LOCO_2026-07-16_ES1_M",
+      "race": "33° TROFEO PRO LOCO",
+      "regione": "LOMBARDIA",
+      "dataISO": "2026-07-16",
+      "cat": "ES1_M",
+      "genere": "M",
+      "row": {
+        "posizioneOriginale": 6,
+        "cognome": "REDAELLI",
+        "nome": "FRANCESCO",
+        "codeSuffix": "ES",
+        "team": "SC PEDALE AGRATESE",
+        "categoria": "ES1_M",
+        "ambiguousNameSplit": false,
+        "uncertainYear": false,
+        "existingAtletaId": null,
+        "posizione": 6
+      },
+      "campionato_regionale": false,
+      "campionato_italiano": false
+    },
+    {
+      "garaId": "3_TROFEO_ALF_GROUP_2026-07-24_ES2_M",
+      "race": "3° TROFEO ALF GROUP",
+      "regione": "VENETO",
+      "dataISO": "2026-07-24",
+      "cat": "ES2_M",
+      "genere": "M",
+      "row": {
+        "posizioneOriginale": 6,
+        "cognome": "SANTAROSSA",
+        "nome": "NOAH",
+        "codeSuffix": "ES",
+        "team": "CICLO TEAM GORGAZZO",
+        "categoria": "ES2_M",
+        "ambiguousNameSplit": false,
+        "uncertainYear": false,
+        "existingAtletaId": null,
+        "posizione": 6
       },
       "campionato_regionale": false,
       "campionato_italiano": false
@@ -1754,7 +2695,7 @@
       "cat": "ES2_M",
       "genere": "M",
       "row": {
-        "posizione": 2,
+        "posizioneOriginale": 2,
         "cognome": "BIT",
         "nome": "DANIELE",
         "codeSuffix": "ES",
@@ -1762,7 +2703,52 @@
         "categoria": "ES2_M",
         "ambiguousNameSplit": false,
         "uncertainYear": false,
-        "existingAtletaId": null
+        "existingAtletaId": null,
+        "posizione": 2
+      },
+      "campionato_regionale": false,
+      "campionato_italiano": false
+    },
+    {
+      "garaId": "NOTTURNA_DELL_ASSUNTA_2026-08-07_ES2_M",
+      "race": "NOTTURNA DELL'ASSUNTA",
+      "regione": "FRIULI V.G.",
+      "dataISO": "2026-08-07",
+      "cat": "ES2_M",
+      "genere": "M",
+      "row": {
+        "posizioneOriginale": 8,
+        "cognome": "SANTAROSSA",
+        "nome": "NOAH",
+        "codeSuffix": "ES",
+        "team": "CICLO TEAM GORGAZZO",
+        "categoria": "ES2_M",
+        "ambiguousNameSplit": false,
+        "uncertainYear": false,
+        "existingAtletaId": null,
+        "posizione": 8
+      },
+      "campionato_regionale": false,
+      "campionato_italiano": false
+    },
+    {
+      "garaId": "NOTTURNA_DELL_ASSUNTA_2026-08-07_ES2_M",
+      "race": "NOTTURNA DELL'ASSUNTA",
+      "regione": "FRIULI V.G.",
+      "dataISO": "2026-08-07",
+      "cat": "ES2_M",
+      "genere": "M",
+      "row": {
+        "posizioneOriginale": 9,
+        "cognome": "NADAL",
+        "nome": "GABRIELE",
+        "codeSuffix": "ES",
+        "team": "A.S.D. SACILESE",
+        "categoria": "ES2_M",
+        "ambiguousNameSplit": false,
+        "uncertainYear": false,
+        "existingAtletaId": null,
+        "posizione": 9
       },
       "campionato_regionale": false,
       "campionato_italiano": false
@@ -1775,7 +2761,7 @@
       "cat": "ES1_M",
       "genere": "M",
       "row": {
-        "posizione": 5,
+        "posizioneOriginale": 5,
         "cognome": "GIACOBBE",
         "nome": "EDOARDO",
         "codeSuffix": "ES",
@@ -1783,7 +2769,8 @@
         "categoria": "ES1_M",
         "ambiguousNameSplit": false,
         "uncertainYear": false,
-        "existingAtletaId": null
+        "existingAtletaId": null,
+        "posizione": 5
       },
       "campionato_regionale": false,
       "campionato_italiano": false
@@ -1796,7 +2783,7 @@
       "cat": "ES2_M",
       "genere": "M",
       "row": {
-        "posizione": 5,
+        "posizioneOriginale": 5,
         "cognome": "MARCHISIO",
         "nome": "MATTIA",
         "codeSuffix": "ES",
@@ -1804,7 +2791,8 @@
         "categoria": "ES2_M",
         "ambiguousNameSplit": false,
         "uncertainYear": false,
-        "existingAtletaId": null
+        "existingAtletaId": null,
+        "posizione": 5
       },
       "campionato_regionale": false,
       "campionato_italiano": false

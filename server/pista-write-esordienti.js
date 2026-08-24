@@ -129,7 +129,8 @@ const sleep = ms => new Promise(r => setTimeout(r, ms));
       for (const row of tab.rows) {
         if (!row.categoria.startsWith('ES')) continue; // solo Esordienti in questo script
         if (row.categoria.endsWith('_F') && row.uncertainYear) continue; // donne esordienti anno incerto: fuori
-        if (row.posizione > 5) continue;
+        // Tutti i classificati vengono registrati, non solo i primi 5: lo 0
+        // oltre il 5° è garantito dalla regola server-side su tipo='tipo_pista'.
         if (!byCat.has(row.categoria)) byCat.set(row.categoria, []);
         byCat.get(row.categoria).push(row);
       }
@@ -182,7 +183,7 @@ const sleep = ms => new Promise(r => setTimeout(r, ms));
       posizione: row.posizione, cognome: row.cognome, nome: row.nome, team: row.team,
       nome_gara: item.race, data: item.dataISO, categoria: CAT_LABELS[cat] || cat, genere,
       tipo: 'tipo_pista', campionato_regionale, campionato_italiano, regione: regione || '',
-      punti_override: TOP5_POINTS[row.posizione],
+      punti_override: TOP5_POINTS[row.posizione] || 0,
     };
     try {
       const res = await fetch(`${BASE}/api/admin/gara/${encodeURIComponent(garaId)}/manual-result`, {

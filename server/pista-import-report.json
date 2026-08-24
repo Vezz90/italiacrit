@@ -12,7 +12,7 @@
         "tabLabel": "Esordienti primo anno",
         "rows": [
           {
-            "posizione": 1,
+            "posizioneOriginale": 1,
             "cognome": "BARBERO",
             "nome": "ALESSANDRO",
             "codeSuffix": "ES",
@@ -20,10 +20,11 @@
             "categoria": "ES1_M",
             "ambiguousNameSplit": false,
             "uncertainYear": false,
-            "existingAtletaId": "BARBERO_ALESSANDRO"
+            "existingAtletaId": "BARBERO_ALESSANDRO",
+            "posizione": 1
           },
           {
-            "posizione": 2,
+            "posizioneOriginale": 2,
             "cognome": "ARCUDI",
             "nome": "FEDERICO",
             "codeSuffix": "ES",
@@ -31,10 +32,11 @@
             "categoria": "ES1_M",
             "ambiguousNameSplit": false,
             "uncertainYear": false,
-            "existingAtletaId": "ARCUDI_FEDERICO"
+            "existingAtletaId": "ARCUDI_FEDERICO",
+            "posizione": 2
           },
           {
-            "posizione": 3,
+            "posizioneOriginale": 3,
             "cognome": "GABBA",
             "nome": "LUCA",
             "codeSuffix": "ES",
@@ -42,10 +44,11 @@
             "categoria": "ES1_M",
             "ambiguousNameSplit": false,
             "uncertainYear": false,
-            "existingAtletaId": "GABBA_LUCA"
+            "existingAtletaId": "GABBA_LUCA",
+            "posizione": 3
           },
           {
-            "posizione": 4,
+            "posizioneOriginale": 4,
             "cognome": "RENZULLI",
             "nome": "GIULIA",
             "codeSuffix": "ED",
@@ -53,10 +56,11 @@
             "categoria": "ES1_F",
             "ambiguousNameSplit": false,
             "uncertainYear": false,
-            "existingAtletaId": "RENZULLI_GIULIA"
+            "existingAtletaId": "RENZULLI_GIULIA",
+            "posizione": 1
           },
           {
-            "posizione": 5,
+            "posizioneOriginale": 5,
             "cognome": "BIOLATTO",
             "nome": "SAMUELE",
             "codeSuffix": "ES",
@@ -64,10 +68,11 @@
             "categoria": "ES1_M",
             "ambiguousNameSplit": false,
             "uncertainYear": false,
-            "existingAtletaId": "BIOLATTO_SAMUELE"
+            "existingAtletaId": "BIOLATTO_SAMUELE",
+            "posizione": 4
           },
           {
-            "posizione": 6,
+            "posizioneOriginale": 6,
             "cognome": "DONETTO",
             "nome": "FILIPPO",
             "codeSuffix": "ES",
@@ -75,7 +80,8 @@
             "categoria": "ES1_M",
             "ambiguousNameSplit": false,
             "uncertainYear": false,
-            "existingAtletaId": "DONETTO_FILIPPO"
+            "existingAtletaId": "DONETTO_FILIPPO",
+            "posizione": 5
           }
         ]
       },
@@ -83,7 +89,7 @@
         "tabLabel": "Esordienti secondo anno",
         "rows": [
           {
-            "posizione": 1,
+            "posizioneOriginale": 1,
             "cognome": "ALTARE",
             "nome": "JACOPO",
             "codeSuffix": "ES",
@@ -91,10 +97,11 @@
             "categoria": "ES2_M",
             "ambiguousNameSplit": false,
             "uncertainYear": false,
-            "existingAtletaId": "ALTARE_JACOPO"
+            "existingAtletaId": "ALTARE_JACOPO",
+            "posizione": 1
           },
           {
-            "posizione": 2,
+            "posizioneOriginale": 2,
             "cognome": "RACCA",
             "nome": "ANDREA",
             "codeSuffix": "ES",
@@ -102,10 +109,11 @@
             "categoria": "ES2_M",
             "ambiguousNameSplit": false,
             "uncertainYear": false,
-            "existingAtletaId": "RACCA_ANDREA"
+            "existingAtletaId": "RACCA_ANDREA",
+            "posizione": 2
           },
           {
-            "posizione": 3,
+            "posizioneOriginale": 3,
             "cognome": "CASTELLANI",
             "nome": "LORENZO",
             "codeSuffix": "ES",
@@ -113,10 +121,11 @@
             "categoria": "ES2_M",
             "ambiguousNameSplit": false,
             "uncertainYear": false,
-            "existingAtletaId": "CASTELLANI_LORENZO"
+            "existingAtletaId": "CASTELLANI_LORENZO",
+            "posizione": 3
           },
           {
-            "posizione": 4,
+            "posizioneOriginale": 4,
             "cognome": "CAZZADORE",
             "nome": "PAOLO",
             "codeSuffix": "ES",
@@ -124,10 +133,11 @@
             "categoria": "ES2_M",
             "ambiguousNameSplit": false,
             "uncertainYear": false,
-            "existingAtletaId": null
+            "existingAtletaId": null,
+            "posizione": 4
           },
           {
-            "posizione": 5,
+            "posizioneOriginale": 5,
             "cognome": "AVIDANO",
             "nome": "DAVIDE",
             "codeSuffix": "ES",
@@ -135,10 +145,11 @@
             "categoria": "ES2_M",
             "ambiguousNameSplit": false,
             "uncertainYear": false,
-            "existingAtletaId": "AVIDANO_DAVIDE"
+            "existingAtletaId": "AVIDANO_DAVIDE",
+            "posizione": 5
           },
           {
-            "posizione": 6,
+            "posizioneOriginale": 6,
             "cognome": "MARCHISIO",
             "nome": "MATTIA",
             "codeSuffix": "ES",
@@ -146,7 +157,8 @@
             "categoria": "ES2_M",
             "ambiguousNameSplit": false,
             "uncertainYear": false,
-            "existingAtletaId": null
+            "existingAtletaId": null,
+            "posizione": 6
           }
         ]
       },
@@ -154,7 +166,7 @@
         "tabLabel": "Allievi",
         "rows": [
           {
-            "posizione": 1,
+            "posizioneOriginale": 1,
             "cognome": "PARTENGO",
             "nome": "CARLO",
             "codeSuffix": "AL",
@@ -162,10 +174,11 @@
             "categoria": "AL_M",
             "ambiguousNameSplit": false,
             "uncertainYear": false,
-            "existingAtletaId": "PARTENGO_CARLO"
+            "existingAtletaId": "PARTENGO_CARLO",
+            "posizione": 1
           },
           {
-            "posizione": 2,
+            "posizioneOriginale": 2,
             "cognome": "PHILIPPOT",
             "nome": "JOEL",
             "codeSuffix": "AL",
@@ -173,10 +186,11 @@
             "categoria": "AL_M",
             "ambiguousNameSplit": false,
             "uncertainYear": false,
-            "existingAtletaId": "PHILIPPOT_JOEL"
+            "existingAtletaId": "PHILIPPOT_JOEL",
+            "posizione": 2
           },
           {
-            "posizione": 3,
+            "posizioneOriginale": 3,
             "cognome": "TALIA LISANDRO",
             "nome": "LORENZO",
             "codeSuffix": "AL",
@@ -184,10 +198,11 @@
             "categoria": "AL_M",
             "ambiguousNameSplit": false,
             "uncertainYear": false,
-            "existingAtletaId": "TALIA_LISANDRO_LORENZO"
+            "existingAtletaId": "TALIA_LISANDRO_LORENZO",
+            "posizione": 3
           },
           {
-            "posizione": 4,
+            "posizioneOriginale": 4,
             "cognome": "MAZZONI",
             "nome": "MIRCO",
             "codeSuffix": "AL",
@@ -195,10 +210,11 @@
             "categoria": "AL_M",
             "ambiguousNameSplit": false,
             "uncertainYear": false,
-            "existingAtletaId": "MAZZONI_MIRCO"
+            "existingAtletaId": "MAZZONI_MIRCO",
+            "posizione": 4
           },
           {
-            "posizione": 5,
+            "posizioneOriginale": 5,
             "cognome": "PELLEGRINO",
             "nome": "LORENZO",
             "codeSuffix": "AL",
@@ -206,10 +222,11 @@
             "categoria": "AL_M",
             "ambiguousNameSplit": false,
             "uncertainYear": false,
-            "existingAtletaId": "PELLEGRINO_LORENZO"
+            "existingAtletaId": "PELLEGRINO_LORENZO",
+            "posizione": 5
           },
           {
-            "posizione": 6,
+            "posizioneOriginale": 6,
             "cognome": "GIVO",
             "nome": "SIMONE",
             "codeSuffix": "AL",
@@ -217,7 +234,8 @@
             "categoria": "AL_M",
             "ambiguousNameSplit": false,
             "uncertainYear": false,
-            "existingAtletaId": "GIVO_SIMONE"
+            "existingAtletaId": "GIVO_SIMONE",
+            "posizione": 6
           }
         ]
       },
@@ -225,7 +243,7 @@
         "tabLabel": "Juniores",
         "rows": [
           {
-            "posizione": 1,
+            "posizioneOriginale": 1,
             "cognome": "BELMONDO",
             "nome": "FRANCESCO",
             "codeSuffix": "JU",
@@ -233,10 +251,11 @@
             "categoria": "JUN_M",
             "ambiguousNameSplit": false,
             "uncertainYear": false,
-            "existingAtletaId": "BELMONDO_FRANCESCO"
+            "existingAtletaId": "BELMONDO_FRANCESCO",
+            "posizione": 1
           },
           {
-            "posizione": 2,
+            "posizioneOriginale": 2,
             "cognome": "COMETTO",
             "nome": "FILIPPO",
             "codeSuffix": "JU",
@@ -244,10 +263,11 @@
             "categoria": "JUN_M",
             "ambiguousNameSplit": false,
             "uncertainYear": false,
-            "existingAtletaId": "COMETTO_FILIPPO"
+            "existingAtletaId": "COMETTO_FILIPPO",
+            "posizione": 2
           },
           {
-            "posizione": 3,
+            "posizioneOriginale": 3,
             "cognome": "GUGNINO",
             "nome": "LUCA",
             "codeSuffix": "JU",
@@ -255,10 +275,11 @@
             "categoria": "JUN_M",
             "ambiguousNameSplit": false,
             "uncertainYear": false,
-            "existingAtletaId": "GUGNINO_LUCA"
+            "existingAtletaId": "GUGNINO_LUCA",
+            "posizione": 3
           },
           {
-            "posizione": 4,
+            "posizioneOriginale": 4,
             "cognome": "ROCCIA",
             "nome": "MANUEL",
             "codeSuffix": "JU",
@@ -266,10 +287,11 @@
             "categoria": "JUN_M",
             "ambiguousNameSplit": false,
             "uncertainYear": false,
-            "existingAtletaId": "ROCCIA_MANUEL"
+            "existingAtletaId": "ROCCIA_MANUEL",
+            "posizione": 4
           },
           {
-            "posizione": 5,
+            "posizioneOriginale": 5,
             "cognome": "GALLO",
             "nome": "FILIPPO",
             "codeSuffix": "JU",
@@ -277,10 +299,11 @@
             "categoria": "JUN_M",
             "ambiguousNameSplit": false,
             "uncertainYear": false,
-            "existingAtletaId": "GALLO_FILIPPO"
+            "existingAtletaId": "GALLO_FILIPPO",
+            "posizione": 5
           },
           {
-            "posizione": 6,
+            "posizioneOriginale": 6,
             "cognome": "GALFRE'",
             "nome": "JACOPO",
             "codeSuffix": "JU",
@@ -288,7 +311,8 @@
             "categoria": "JUN_M",
             "ambiguousNameSplit": false,
             "uncertainYear": false,
-            "existingAtletaId": "GALFRE_JACOPO"
+            "existingAtletaId": "GALFRE_JACOPO",
+            "posizione": 6
           }
         ]
       }
@@ -307,7 +331,7 @@
         "tabLabel": "ESORDIENTI",
         "rows": [
           {
-            "posizione": 1,
+            "posizioneOriginale": 1,
             "cognome": "FORTUNA",
             "nome": "SIMONE",
             "codeSuffix": "ES",
@@ -315,10 +339,11 @@
             "categoria": "ES1_M",
             "ambiguousNameSplit": false,
             "uncertainYear": true,
-            "existingAtletaId": "FORTUNA_SIMONE"
+            "existingAtletaId": "FORTUNA_SIMONE",
+            "posizione": 1
           },
           {
-            "posizione": 2,
+            "posizioneOriginale": 2,
             "cognome": "MUSSOLIN",
             "nome": "ETTORE",
             "codeSuffix": "ES",
@@ -326,10 +351,11 @@
             "categoria": "ES1_M",
             "ambiguousNameSplit": false,
             "uncertainYear": true,
-            "existingAtletaId": "MUSSOLIN_ETTORE"
+            "existingAtletaId": "MUSSOLIN_ETTORE",
+            "posizione": 2
           },
           {
-            "posizione": 3,
+            "posizioneOriginale": 3,
             "cognome": "VIRLAN",
             "nome": "MATTEO",
             "codeSuffix": "ES",
@@ -337,10 +363,11 @@
             "categoria": "ES1_M",
             "ambiguousNameSplit": false,
             "uncertainYear": true,
-            "existingAtletaId": null
+            "existingAtletaId": null,
+            "posizione": 3
           },
           {
-            "posizione": 4,
+            "posizioneOriginale": 4,
             "cognome": "TESTOLIN",
             "nome": "MATTEO",
             "codeSuffix": "ES",
@@ -348,10 +375,11 @@
             "categoria": "ES1_M",
             "ambiguousNameSplit": false,
             "uncertainYear": true,
-            "existingAtletaId": "TESTOLIN_MATTEO"
+            "existingAtletaId": "TESTOLIN_MATTEO",
+            "posizione": 4
           },
           {
-            "posizione": 5,
+            "posizioneOriginale": 5,
             "cognome": "CARACAUSI",
             "nome": "GIOELE",
             "codeSuffix": "ES",
@@ -359,10 +387,11 @@
             "categoria": "ES1_M",
             "ambiguousNameSplit": false,
             "uncertainYear": true,
-            "existingAtletaId": "CARACAUSI_GIOELE"
+            "existingAtletaId": "CARACAUSI_GIOELE",
+            "posizione": 5
           },
           {
-            "posizione": 6,
+            "posizioneOriginale": 6,
             "cognome": "BISCONTIN",
             "nome": "LEONARDO",
             "codeSuffix": "ES",
@@ -370,10 +399,11 @@
             "categoria": "ES1_M",
             "ambiguousNameSplit": false,
             "uncertainYear": true,
-            "existingAtletaId": null
+            "existingAtletaId": null,
+            "posizione": 6
           },
           {
-            "posizione": 7,
+            "posizioneOriginale": 7,
             "cognome": "MENEGHEL",
             "nome": "ANDREAS",
             "codeSuffix": "ES",
@@ -381,10 +411,11 @@
             "categoria": "ES1_M",
             "ambiguousNameSplit": false,
             "uncertainYear": true,
-            "existingAtletaId": null
+            "existingAtletaId": null,
+            "posizione": 7
           },
           {
-            "posizione": 8,
+            "posizioneOriginale": 8,
             "cognome": "ZIROLDI",
             "nome": "ROCCO",
             "codeSuffix": "ES",
@@ -392,10 +423,11 @@
             "categoria": "ES1_M",
             "ambiguousNameSplit": false,
             "uncertainYear": true,
-            "existingAtletaId": null
+            "existingAtletaId": null,
+            "posizione": 8
           },
           {
-            "posizione": 9,
+            "posizioneOriginale": 9,
             "cognome": "BASSO",
             "nome": "FILIPPO",
             "codeSuffix": "ES",
@@ -403,10 +435,11 @@
             "categoria": "ES1_M",
             "ambiguousNameSplit": false,
             "uncertainYear": true,
-            "existingAtletaId": "BASSO_FILIPPO"
+            "existingAtletaId": "BASSO_FILIPPO",
+            "posizione": 9
           },
           {
-            "posizione": 10,
+            "posizioneOriginale": 10,
             "cognome": "ANGONESE",
             "nome": "ALESSANDRO",
             "codeSuffix": "ES",
@@ -414,10 +447,11 @@
             "categoria": "ES1_M",
             "ambiguousNameSplit": false,
             "uncertainYear": true,
-            "existingAtletaId": null
+            "existingAtletaId": null,
+            "posizione": 10
           },
           {
-            "posizione": 11,
+            "posizioneOriginale": 11,
             "cognome": "CUMAN MATTEO",
             "nome": "ISAIA",
             "codeSuffix": "ES",
@@ -425,10 +459,11 @@
             "categoria": "ES1_M",
             "ambiguousNameSplit": false,
             "uncertainYear": true,
-            "existingAtletaId": null
+            "existingAtletaId": null,
+            "posizione": 11
           },
           {
-            "posizione": 12,
+            "posizioneOriginale": 12,
             "cognome": "TOSATO",
             "nome": "MARCO",
             "codeSuffix": "ES",
@@ -436,7 +471,8 @@
             "categoria": "ES1_M",
             "ambiguousNameSplit": false,
             "uncertainYear": true,
-            "existingAtletaId": null
+            "existingAtletaId": null,
+            "posizione": 12
           }
         ]
       },
@@ -444,7 +480,7 @@
         "tabLabel": "ALLIEVI",
         "rows": [
           {
-            "posizione": 1,
+            "posizioneOriginale": 1,
             "cognome": "STORTI",
             "nome": "MICHELE",
             "codeSuffix": "AL",
@@ -452,10 +488,11 @@
             "categoria": "AL_M",
             "ambiguousNameSplit": false,
             "uncertainYear": false,
-            "existingAtletaId": "STORTI_MICHELE"
+            "existingAtletaId": "STORTI_MICHELE",
+            "posizione": 1
           },
           {
-            "posizione": 2,
+            "posizioneOriginale": 2,
             "cognome": "BISOGNIN",
             "nome": "GIOSUE'",
             "codeSuffix": "AL",
@@ -463,10 +500,11 @@
             "categoria": "AL_M",
             "ambiguousNameSplit": false,
             "uncertainYear": false,
-            "existingAtletaId": "BISOGNIN_GIOSUE"
+            "existingAtletaId": "BISOGNIN_GIOSUE",
+            "posizione": 2
           },
           {
-            "posizione": 3,
+            "posizioneOriginale": 3,
             "cognome": "STOCCHIERO",
             "nome": "LUCA",
             "codeSuffix": "AL",
@@ -474,10 +512,11 @@
             "categoria": "AL_M",
             "ambiguousNameSplit": false,
             "uncertainYear": false,
-            "existingAtletaId": "STOCCHIERO_LUCA"
+            "existingAtletaId": "STOCCHIERO_LUCA",
+            "posizione": 3
           },
           {
-            "posizione": 4,
+            "posizioneOriginale": 4,
             "cognome": "VIELMO",
             "nome": "FEDERICO",
             "codeSuffix": "AL",
@@ -485,10 +524,11 @@
             "categoria": "AL_M",
             "ambiguousNameSplit": false,
             "uncertainYear": false,
-            "existingAtletaId": "VIELMO_FEDERICO"
+            "existingAtletaId": "VIELMO_FEDERICO",
+            "posizione": 4
           },
           {
-            "posizione": 5,
+            "posizioneOriginale": 5,
             "cognome": "MARCANTE",
             "nome": "LORENZO",
             "codeSuffix": "AL",
@@ -496,10 +536,11 @@
             "categoria": "AL_M",
             "ambiguousNameSplit": false,
             "uncertainYear": false,
-            "existingAtletaId": "MARCANTE_LORENZO"
+            "existingAtletaId": "MARCANTE_LORENZO",
+            "posizione": 5
           },
           {
-            "posizione": 6,
+            "posizioneOriginale": 6,
             "cognome": "BIASIA",
             "nome": "EDOARDO",
             "codeSuffix": "AL",
@@ -507,10 +548,11 @@
             "categoria": "AL_M",
             "ambiguousNameSplit": false,
             "uncertainYear": false,
-            "existingAtletaId": "BIASIA_EDOARDO"
+            "existingAtletaId": "BIASIA_EDOARDO",
+            "posizione": 6
           },
           {
-            "posizione": 7,
+            "posizioneOriginale": 7,
             "cognome": "ROMAN",
             "nome": "ALESSANDRO",
             "codeSuffix": "AL",
@@ -518,10 +560,11 @@
             "categoria": "AL_M",
             "ambiguousNameSplit": false,
             "uncertainYear": false,
-            "existingAtletaId": "ROMAN_ALESSANDRO"
+            "existingAtletaId": "ROMAN_ALESSANDRO",
+            "posizione": 7
           },
           {
-            "posizione": 8,
+            "posizioneOriginale": 8,
             "cognome": "GUIDOLIN",
             "nome": "RICCARDO",
             "codeSuffix": "AL",
@@ -529,10 +572,11 @@
             "categoria": "AL_M",
             "ambiguousNameSplit": false,
             "uncertainYear": false,
-            "existingAtletaId": "GUIDOLIN_RICCARDO"
+            "existingAtletaId": "GUIDOLIN_RICCARDO",
+            "posizione": 8
           },
           {
-            "posizione": 9,
+            "posizioneOriginale": 9,
             "cognome": "FERRARI",
             "nome": "NICCOLO'",
             "codeSuffix": "AL",
@@ -540,7 +584,8 @@
             "categoria": "AL_M",
             "ambiguousNameSplit": false,
             "uncertainYear": false,
-            "existingAtletaId": "FERRARI_NICCOLO"
+            "existingAtletaId": "FERRARI_NICCOLO",
+            "posizione": 9
           }
         ]
       }
@@ -559,7 +604,7 @@
         "tabLabel": "DONNE ESORDIENTI",
         "rows": [
           {
-            "posizione": 1,
+            "posizioneOriginale": 1,
             "cognome": "VETTORELLO",
             "nome": "GAIA",
             "codeSuffix": "ED",
@@ -567,10 +612,11 @@
             "categoria": "ES1_F",
             "ambiguousNameSplit": false,
             "uncertainYear": true,
-            "existingAtletaId": "VETTORELLO_GAIA"
+            "existingAtletaId": "VETTORELLO_GAIA",
+            "posizione": 1
           },
           {
-            "posizione": 2,
+            "posizioneOriginale": 2,
             "cognome": "CETTOLIN",
             "nome": "GIOIA",
             "codeSuffix": "ED",
@@ -578,10 +624,11 @@
             "categoria": "ES1_F",
             "ambiguousNameSplit": false,
             "uncertainYear": true,
-            "existingAtletaId": "CETTOLIN_GIOIA"
+            "existingAtletaId": "CETTOLIN_GIOIA",
+            "posizione": 2
           },
           {
-            "posizione": 3,
+            "posizioneOriginale": 3,
             "cognome": "PIN",
             "nome": "MATILDE",
             "codeSuffix": "ED",
@@ -589,7 +636,8 @@
             "categoria": "ES1_F",
             "ambiguousNameSplit": false,
             "uncertainYear": true,
-            "existingAtletaId": "PIN_MATILDE"
+            "existingAtletaId": "PIN_MATILDE",
+            "posizione": 3
           }
         ]
       },
@@ -597,7 +645,7 @@
         "tabLabel": "DONNE ALLIEVE",
         "rows": [
           {
-            "posizione": 1,
+            "posizioneOriginale": 1,
             "cognome": "MIGLIORANZA",
             "nome": "ELENA",
             "codeSuffix": "DA",
@@ -605,10 +653,11 @@
             "categoria": "AL_F",
             "ambiguousNameSplit": false,
             "uncertainYear": false,
-            "existingAtletaId": "MIGLIORANZA_ELENA"
+            "existingAtletaId": "MIGLIORANZA_ELENA",
+            "posizione": 1
           },
           {
-            "posizione": 2,
+            "posizioneOriginale": 2,
             "cognome": "DE FRANCESCHI",
             "nome": "MARTINA",
             "codeSuffix": "DA",
@@ -616,10 +665,11 @@
             "categoria": "AL_F",
             "ambiguousNameSplit": false,
             "uncertainYear": false,
-            "existingAtletaId": "DE_FRANCESCHI_MARTINA"
+            "existingAtletaId": "DE_FRANCESCHI_MARTINA",
+            "posizione": 2
           },
           {
-            "posizione": 3,
+            "posizioneOriginale": 3,
             "cognome": "FANTIN",
             "nome": "NICOLE",
             "codeSuffix": "DA",
@@ -627,7 +677,8 @@
             "categoria": "AL_F",
             "ambiguousNameSplit": false,
             "uncertainYear": false,
-            "existingAtletaId": "FANTIN_NICOLE"
+            "existingAtletaId": "FANTIN_NICOLE",
+            "posizione": 3
           }
         ]
       },
@@ -635,7 +686,7 @@
         "tabLabel": "ESORDIENTI 1 ANNO",
         "rows": [
           {
-            "posizione": 1,
+            "posizioneOriginale": 1,
             "cognome": "SPESSOTTO",
             "nome": "GIACOMO",
             "codeSuffix": "ES",
@@ -643,10 +694,11 @@
             "categoria": "ES1_M",
             "ambiguousNameSplit": false,
             "uncertainYear": false,
-            "existingAtletaId": "SPESSOTTO_GIACOMO"
+            "existingAtletaId": "SPESSOTTO_GIACOMO",
+            "posizione": 1
           },
           {
-            "posizione": 2,
+            "posizioneOriginale": 2,
             "cognome": "FRESCHI",
             "nome": "ANDREA",
             "codeSuffix": "ES",
@@ -654,10 +706,11 @@
             "categoria": "ES1_M",
             "ambiguousNameSplit": false,
             "uncertainYear": false,
-            "existingAtletaId": "FRESCHI_ANDREA"
+            "existingAtletaId": "FRESCHI_ANDREA",
+            "posizione": 2
           },
           {
-            "posizione": 3,
+            "posizioneOriginale": 3,
             "cognome": "TOFFOLI",
             "nome": "STEFANO",
             "codeSuffix": "ES",
@@ -665,7 +718,8 @@
             "categoria": "ES1_M",
             "ambiguousNameSplit": false,
             "uncertainYear": false,
-            "existingAtletaId": "TOFFOLI_STEFANO"
+            "existingAtletaId": "TOFFOLI_STEFANO",
+            "posizione": 3
           }
         ]
       },
@@ -673,7 +727,7 @@
         "tabLabel": "ESORDIENTI 2 ANNO",
         "rows": [
           {
-            "posizione": 1,
+            "posizioneOriginale": 1,
             "cognome": "DAL BO'",
             "nome": "MATIAS",
             "codeSuffix": "ES",
@@ -681,10 +735,11 @@
             "categoria": "ES2_M",
             "ambiguousNameSplit": false,
             "uncertainYear": false,
-            "existingAtletaId": "DAL_BO_MATIAS"
+            "existingAtletaId": "DAL_BO_MATIAS",
+            "posizione": 1
           },
           {
-            "posizione": 2,
+            "posizioneOriginale": 2,
             "cognome": "DE ROS",
             "nome": "LUIGI",
             "codeSuffix": "ES",
@@ -692,10 +747,11 @@
             "categoria": "ES2_M",
             "ambiguousNameSplit": false,
             "uncertainYear": false,
-            "existingAtletaId": "DE_ROS_LUIGI"
+            "existingAtletaId": "DE_ROS_LUIGI",
+            "posizione": 2
           },
           {
-            "posizione": 3,
+            "posizioneOriginale": 3,
             "cognome": "BEMBO",
             "nome": "SANTIAGO",
             "codeSuffix": "ES",
@@ -703,7 +759,8 @@
             "categoria": "ES2_M",
             "ambiguousNameSplit": false,
             "uncertainYear": false,
-            "existingAtletaId": "BEMBO_SANTIAGO"
+            "existingAtletaId": "BEMBO_SANTIAGO",
+            "posizione": 3
           }
         ]
       },
@@ -711,7 +768,7 @@
         "tabLabel": "ALLIEVI",
         "rows": [
           {
-            "posizione": 1,
+            "posizioneOriginale": 1,
             "cognome": "RODRIGUES DOS SANTOS VICENTE",
             "nome": "JUNIOR",
             "codeSuffix": "AL",
@@ -719,10 +776,11 @@
             "categoria": "AL_M",
             "ambiguousNameSplit": true,
             "uncertainYear": false,
-            "existingAtletaId": "RODRIGUES_DOS_SANTOS_VICENTE_JUNIOR"
+            "existingAtletaId": "RODRIGUES_DOS_SANTOS_VICENTE_JUNIOR",
+            "posizione": 1
           },
           {
-            "posizione": 2,
+            "posizioneOriginale": 2,
             "cognome": "NOSELLA",
             "nome": "TOMMASO",
             "codeSuffix": "AL",
@@ -730,10 +788,11 @@
             "categoria": "AL_M",
             "ambiguousNameSplit": false,
             "uncertainYear": false,
-            "existingAtletaId": "NOSELLA_TOMMASO"
+            "existingAtletaId": "NOSELLA_TOMMASO",
+            "posizione": 2
           },
           {
-            "posizione": 3,
+            "posizioneOriginale": 3,
             "cognome": "CARLET",
             "nome": "ALBERTO",
             "codeSuffix": "AL",
@@ -741,7 +800,8 @@
             "categoria": "AL_M",
             "ambiguousNameSplit": false,
             "uncertainYear": false,
-            "existingAtletaId": "CARLET_ALBERTO"
+            "existingAtletaId": "CARLET_ALBERTO",
+            "posizione": 3
           }
         ]
       }
@@ -760,7 +820,7 @@
         "tabLabel": "Allievi",
         "rows": [
           {
-            "posizione": 1,
+            "posizioneOriginale": 1,
             "cognome": "GRISI",
             "nome": "LEONARDO",
             "codeSuffix": "AL",
@@ -768,10 +828,11 @@
             "categoria": "AL_M",
             "ambiguousNameSplit": false,
             "uncertainYear": false,
-            "existingAtletaId": "GRISI_LEONARDO"
+            "existingAtletaId": "GRISI_LEONARDO",
+            "posizione": 1
           },
           {
-            "posizione": 2,
+            "posizioneOriginale": 2,
             "cognome": "DOLFINI",
             "nome": "MATTIA",
             "codeSuffix": "AL",
@@ -779,10 +840,11 @@
             "categoria": "AL_M",
             "ambiguousNameSplit": false,
             "uncertainYear": false,
-            "existingAtletaId": "DOLFINI_MATTIA"
+            "existingAtletaId": "DOLFINI_MATTIA",
+            "posizione": 2
           },
           {
-            "posizione": 3,
+            "posizioneOriginale": 3,
             "cognome": "IAZZI",
             "nome": "LORENZO",
             "codeSuffix": "AL",
@@ -790,10 +852,11 @@
             "categoria": "AL_M",
             "ambiguousNameSplit": false,
             "uncertainYear": false,
-            "existingAtletaId": "IAZZI_LORENZO"
+            "existingAtletaId": "IAZZI_LORENZO",
+            "posizione": 3
           },
           {
-            "posizione": 4,
+            "posizioneOriginale": 4,
             "cognome": "COLOMBO",
             "nome": "MANUEL",
             "codeSuffix": "AL",
@@ -801,10 +864,11 @@
             "categoria": "AL_M",
             "ambiguousNameSplit": false,
             "uncertainYear": false,
-            "existingAtletaId": "COLOMBO_MANUEL"
+            "existingAtletaId": "COLOMBO_MANUEL",
+            "posizione": 4
           },
           {
-            "posizione": 5,
+            "posizioneOriginale": 5,
             "cognome": "FIORETTI",
             "nome": "MATTIA",
             "codeSuffix": "AL",
@@ -812,10 +876,11 @@
             "categoria": "AL_M",
             "ambiguousNameSplit": false,
             "uncertainYear": false,
-            "existingAtletaId": "FIORETTI_MATTIA"
+            "existingAtletaId": "FIORETTI_MATTIA",
+            "posizione": 5
           },
           {
-            "posizione": 6,
+            "posizioneOriginale": 6,
             "cognome": "SEQUANI",
             "nome": "LEONARDO",
             "codeSuffix": "AL",
@@ -823,231 +888,8 @@
             "categoria": "AL_M",
             "ambiguousNameSplit": false,
             "uncertainYear": false,
-            "existingAtletaId": "SEQUANI_LEONARDO"
-          }
-        ]
-      }
-    ]
-  },
-  {
-    "garaFciId": "181395",
-    "data": "16 Luglio 2026",
-    "nome": "33° TROFEO PRO LOCO",
-    "regione": "LOMBARDIA",
-    "luogo": "GUIDIZZOLO (MN) (MN)",
-    "categorieAmmesse": "TIPO PISTA (PIU' CATEGORIE)  G4 - G5 - G6 - ESORDIENTI 1 - 2 ANNO - ALLIEVI",
-    "km": "1,00",
-    "tabs": [
-      {
-        "tabLabel": "esordienti 1° anno",
-        "rows": [
-          {
-            "posizione": 1,
-            "cognome": "SANSONI",
-            "nome": "ALESSIO",
-            "codeSuffix": "ES",
-            "team": "MAZZANO A.S.D.",
-            "categoria": "ES1_M",
-            "ambiguousNameSplit": false,
-            "uncertainYear": false,
-            "existingAtletaId": "SANSONI_ALESSIO"
-          },
-          {
-            "posizione": 2,
-            "cognome": "ZANARDINI",
-            "nome": "LEONARDO",
-            "codeSuffix": "ES",
-            "team": "MAZZANO A.S.D.",
-            "categoria": "ES1_M",
-            "ambiguousNameSplit": false,
-            "uncertainYear": false,
-            "existingAtletaId": "ZANARDINI_LEONARDO"
-          },
-          {
-            "posizione": 3,
-            "cognome": "MAI",
-            "nome": "LEONARDO",
-            "codeSuffix": "ES",
-            "team": "S. C. MINCIO-CHIESE A.S.D",
-            "categoria": "ES1_M",
-            "ambiguousNameSplit": false,
-            "uncertainYear": false,
-            "existingAtletaId": "MAI_LEONARDO"
-          },
-          {
-            "posizione": 4,
-            "cognome": "MERLETTI",
-            "nome": "DANIEL",
-            "codeSuffix": "ES",
-            "team": "MAZZANO A.S.D.",
-            "categoria": "ES1_M",
-            "ambiguousNameSplit": false,
-            "uncertainYear": false,
-            "existingAtletaId": "MERLETTI_DANIEL"
-          },
-          {
-            "posizione": 5,
-            "cognome": "RICCI",
-            "nome": "NICOLA",
-            "codeSuffix": "ES",
-            "team": "SAN GEO A.S.D.",
-            "categoria": "ES1_M",
-            "ambiguousNameSplit": false,
-            "uncertainYear": false,
-            "existingAtletaId": "RICCI_NICOLA"
-          },
-          {
-            "posizione": 6,
-            "cognome": "REDAELLI",
-            "nome": "FRANCESCO",
-            "codeSuffix": "ES",
-            "team": "SC PEDALE AGRATESE",
-            "categoria": "ES1_M",
-            "ambiguousNameSplit": false,
-            "uncertainYear": false,
-            "existingAtletaId": null
-          }
-        ]
-      },
-      {
-        "tabLabel": "esordienti 2° anno",
-        "rows": [
-          {
-            "posizione": 1,
-            "cognome": "ZUNICA",
-            "nome": "GIULIO",
-            "codeSuffix": "ES",
-            "team": "S. C. MINCIO-CHIESE A.S.D",
-            "categoria": "ES2_M",
-            "ambiguousNameSplit": false,
-            "uncertainYear": false,
-            "existingAtletaId": "ZUNICA_GIULIO"
-          },
-          {
-            "posizione": 2,
-            "cognome": "COLOMBO",
-            "nome": "MARCO",
-            "codeSuffix": "ES",
-            "team": "SAN GEO A.S.D.",
-            "categoria": "ES2_M",
-            "ambiguousNameSplit": false,
-            "uncertainYear": false,
-            "existingAtletaId": "COLOMBO_MARCO"
-          },
-          {
-            "posizione": 3,
-            "cognome": "DECO'",
-            "nome": "GABRIELE",
-            "codeSuffix": "ES",
-            "team": "S. C. MINCIO-CHIESE A.S.D",
-            "categoria": "ES2_M",
-            "ambiguousNameSplit": false,
-            "uncertainYear": false,
-            "existingAtletaId": "DECO_GABRIELE"
-          },
-          {
-            "posizione": 4,
-            "cognome": "GANARIN",
-            "nome": "LUCA",
-            "codeSuffix": "ES",
-            "team": "S. C. MINCIO-CHIESE A.S.D",
-            "categoria": "ES2_M",
-            "ambiguousNameSplit": false,
-            "uncertainYear": false,
-            "existingAtletaId": "GANARIN_LUCA"
-          },
-          {
-            "posizione": 5,
-            "cognome": "BALCONI",
-            "nome": "FEDERICO",
-            "codeSuffix": "ES",
-            "team": "MAZZANO A.S.D.",
-            "categoria": "ES2_M",
-            "ambiguousNameSplit": false,
-            "uncertainYear": false,
-            "existingAtletaId": "BALCONI_FEDERICO"
-          },
-          {
-            "posizione": 6,
-            "cognome": "GALLI",
-            "nome": "FEDERICO",
-            "codeSuffix": "ES",
-            "team": "SAN GEO A.S.D.",
-            "categoria": "ES2_M",
-            "ambiguousNameSplit": false,
-            "uncertainYear": false,
-            "existingAtletaId": "GALLI_FEDERICO"
-          }
-        ]
-      },
-      {
-        "tabLabel": "allievi",
-        "rows": [
-          {
-            "posizione": 1,
-            "cognome": "SOSA COLON",
-            "nome": "GIOEL",
-            "codeSuffix": "AL",
-            "team": "FERALPI MONTECLARENSE ASD",
-            "categoria": "AL_M",
-            "ambiguousNameSplit": false,
-            "uncertainYear": false,
-            "existingAtletaId": "SOSA_COLON_GIOEL"
-          },
-          {
-            "posizione": 2,
-            "cognome": "RONDA",
-            "nome": "DANIELE",
-            "codeSuffix": "AL",
-            "team": "FERALPI MONTECLARENSE ASD",
-            "categoria": "AL_M",
-            "ambiguousNameSplit": false,
-            "uncertainYear": false,
-            "existingAtletaId": "RONDA_DANIELE"
-          },
-          {
-            "posizione": 3,
-            "cognome": "MONTESIN",
-            "nome": "GABRIELE",
-            "codeSuffix": "AL",
-            "team": "FERALPI MONTECLARENSE ASD",
-            "categoria": "AL_M",
-            "ambiguousNameSplit": false,
-            "uncertainYear": false,
-            "existingAtletaId": "MONTESIN_GABRIELE"
-          },
-          {
-            "posizione": 4,
-            "cognome": "DOLFINI",
-            "nome": "MATTIA",
-            "codeSuffix": "AL",
-            "team": "PROGETTO CICLISMO - RODENGO S. ASD",
-            "categoria": "AL_M",
-            "ambiguousNameSplit": false,
-            "uncertainYear": false,
-            "existingAtletaId": "DOLFINI_MATTIA"
-          },
-          {
-            "posizione": 5,
-            "cognome": "BUSCA",
-            "nome": "GIOVANNI",
-            "codeSuffix": "AL",
-            "team": "MAZZANO A.S.D.",
-            "categoria": "AL_M",
-            "ambiguousNameSplit": false,
-            "uncertainYear": false,
-            "existingAtletaId": "BUSCA_GIOVANNI"
-          },
-          {
-            "posizione": 6,
-            "cognome": "FIORETTI",
-            "nome": "MATTIA",
-            "codeSuffix": "AL",
-            "team": "S. C. MINCIO-CHIESE A.S.D",
-            "categoria": "AL_M",
-            "ambiguousNameSplit": false,
-            "uncertainYear": false,
-            "existingAtletaId": "FIORETTI_MATTIA"
+            "existingAtletaId": "SEQUANI_LEONARDO",
+            "posizione": 6
           }
         ]
       }
@@ -1066,7 +908,7 @@
         "tabLabel": "Esordienti primo anno",
         "rows": [
           {
-            "posizione": 1,
+            "posizioneOriginale": 1,
             "cognome": "CHERCHI",
             "nome": "GABRIELE",
             "codeSuffix": "ES",
@@ -1074,10 +916,11 @@
             "categoria": "ES1_M",
             "ambiguousNameSplit": false,
             "uncertainYear": false,
-            "existingAtletaId": null
+            "existingAtletaId": null,
+            "posizione": 1
           },
           {
-            "posizione": 2,
+            "posizioneOriginale": 2,
             "cognome": "DONETTO",
             "nome": "FILIPPO",
             "codeSuffix": "ES",
@@ -1085,10 +928,11 @@
             "categoria": "ES1_M",
             "ambiguousNameSplit": false,
             "uncertainYear": false,
-            "existingAtletaId": "DONETTO_FILIPPO"
+            "existingAtletaId": "DONETTO_FILIPPO",
+            "posizione": 2
           },
           {
-            "posizione": 3,
+            "posizioneOriginale": 3,
             "cognome": "ARCUDI",
             "nome": "FEDERICO",
             "codeSuffix": "ES",
@@ -1096,10 +940,11 @@
             "categoria": "ES1_M",
             "ambiguousNameSplit": false,
             "uncertainYear": false,
-            "existingAtletaId": "ARCUDI_FEDERICO"
+            "existingAtletaId": "ARCUDI_FEDERICO",
+            "posizione": 3
           },
           {
-            "posizione": 4,
+            "posizioneOriginale": 4,
             "cognome": "RAMONDETTI",
             "nome": "GIOELE",
             "codeSuffix": "ES",
@@ -1107,10 +952,11 @@
             "categoria": "ES1_M",
             "ambiguousNameSplit": false,
             "uncertainYear": false,
-            "existingAtletaId": "RAMONDETTI_GIOELE"
+            "existingAtletaId": "RAMONDETTI_GIOELE",
+            "posizione": 4
           },
           {
-            "posizione": 5,
+            "posizioneOriginale": 5,
             "cognome": "VALLONE",
             "nome": "NICOLO'",
             "codeSuffix": "ES",
@@ -1118,10 +964,11 @@
             "categoria": "ES1_M",
             "ambiguousNameSplit": false,
             "uncertainYear": false,
-            "existingAtletaId": null
+            "existingAtletaId": null,
+            "posizione": 5
           },
           {
-            "posizione": 6,
+            "posizioneOriginale": 6,
             "cognome": "GABBA",
             "nome": "LUCA",
             "codeSuffix": "ES",
@@ -1129,10 +976,11 @@
             "categoria": "ES1_M",
             "ambiguousNameSplit": false,
             "uncertainYear": false,
-            "existingAtletaId": "GABBA_LUCA"
+            "existingAtletaId": "GABBA_LUCA",
+            "posizione": 6
           },
           {
-            "posizione": 7,
+            "posizioneOriginale": 7,
             "cognome": "BISTERZO",
             "nome": "MANUEL",
             "codeSuffix": "ES",
@@ -1140,10 +988,11 @@
             "categoria": "ES1_M",
             "ambiguousNameSplit": false,
             "uncertainYear": false,
-            "existingAtletaId": "BISTERZO_MANUEL"
+            "existingAtletaId": "BISTERZO_MANUEL",
+            "posizione": 7
           },
           {
-            "posizione": 8,
+            "posizioneOriginale": 8,
             "cognome": "BIOLATTO",
             "nome": "SAMUELE",
             "codeSuffix": "ES",
@@ -1151,10 +1000,11 @@
             "categoria": "ES1_M",
             "ambiguousNameSplit": false,
             "uncertainYear": false,
-            "existingAtletaId": "BIOLATTO_SAMUELE"
+            "existingAtletaId": "BIOLATTO_SAMUELE",
+            "posizione": 8
           },
           {
-            "posizione": 9,
+            "posizioneOriginale": 9,
             "cognome": "CORRENDO",
             "nome": "FILIPPO",
             "codeSuffix": "ES",
@@ -1162,10 +1012,11 @@
             "categoria": "ES1_M",
             "ambiguousNameSplit": false,
             "uncertainYear": false,
-            "existingAtletaId": "CORRENDO_FILIPPO"
+            "existingAtletaId": "CORRENDO_FILIPPO",
+            "posizione": 9
           },
           {
-            "posizione": 10,
+            "posizioneOriginale": 10,
             "cognome": "CASTELLINI",
             "nome": "SIMONE",
             "codeSuffix": "ES",
@@ -1173,10 +1024,11 @@
             "categoria": "ES1_M",
             "ambiguousNameSplit": false,
             "uncertainYear": false,
-            "existingAtletaId": null
+            "existingAtletaId": null,
+            "posizione": 10
           },
           {
-            "posizione": 11,
+            "posizioneOriginale": 11,
             "cognome": "COLOMBINO",
             "nome": "ESTER",
             "codeSuffix": "ED",
@@ -1184,10 +1036,11 @@
             "categoria": "ES1_F",
             "ambiguousNameSplit": false,
             "uncertainYear": false,
-            "existingAtletaId": null
+            "existingAtletaId": null,
+            "posizione": 1
           },
           {
-            "posizione": 12,
+            "posizioneOriginale": 12,
             "cognome": "GERBALDO",
             "nome": "ALESSANDRO",
             "codeSuffix": "ES",
@@ -1195,7 +1048,8 @@
             "categoria": "ES1_M",
             "ambiguousNameSplit": false,
             "uncertainYear": false,
-            "existingAtletaId": null
+            "existingAtletaId": null,
+            "posizione": 11
           }
         ]
       },
@@ -1203,7 +1057,7 @@
         "tabLabel": "Esordienti secondo anno",
         "rows": [
           {
-            "posizione": 1,
+            "posizioneOriginale": 1,
             "cognome": "DI DOMENICO",
             "nome": "MATTIA",
             "codeSuffix": "ES",
@@ -1211,10 +1065,11 @@
             "categoria": "ES2_M",
             "ambiguousNameSplit": false,
             "uncertainYear": false,
-            "existingAtletaId": "DI_DOMENICO_MATTIA"
+            "existingAtletaId": "DI_DOMENICO_MATTIA",
+            "posizione": 1
           },
           {
-            "posizione": 2,
+            "posizioneOriginale": 2,
             "cognome": "ALTARE",
             "nome": "JACOPO",
             "codeSuffix": "ES",
@@ -1222,10 +1077,11 @@
             "categoria": "ES2_M",
             "ambiguousNameSplit": false,
             "uncertainYear": false,
-            "existingAtletaId": "ALTARE_JACOPO"
+            "existingAtletaId": "ALTARE_JACOPO",
+            "posizione": 2
           },
           {
-            "posizione": 3,
+            "posizioneOriginale": 3,
             "cognome": "REJNAUD",
             "nome": "MATTEO",
             "codeSuffix": "ES",
@@ -1233,10 +1089,11 @@
             "categoria": "ES2_M",
             "ambiguousNameSplit": false,
             "uncertainYear": false,
-            "existingAtletaId": "REJNAUD_MATTEO"
+            "existingAtletaId": "REJNAUD_MATTEO",
+            "posizione": 3
           },
           {
-            "posizione": 4,
+            "posizioneOriginale": 4,
             "cognome": "AVIDANO",
             "nome": "DAVIDE",
             "codeSuffix": "ES",
@@ -1244,10 +1101,11 @@
             "categoria": "ES2_M",
             "ambiguousNameSplit": false,
             "uncertainYear": false,
-            "existingAtletaId": "AVIDANO_DAVIDE"
+            "existingAtletaId": "AVIDANO_DAVIDE",
+            "posizione": 4
           },
           {
-            "posizione": 5,
+            "posizioneOriginale": 5,
             "cognome": "CANU",
             "nome": "EDOARDO",
             "codeSuffix": "ES",
@@ -1255,10 +1113,11 @@
             "categoria": "ES2_M",
             "ambiguousNameSplit": false,
             "uncertainYear": false,
-            "existingAtletaId": "CANU_EDOARDO"
+            "existingAtletaId": "CANU_EDOARDO",
+            "posizione": 5
           },
           {
-            "posizione": 6,
+            "posizioneOriginale": 6,
             "cognome": "SORASIO",
             "nome": "STEFANO",
             "codeSuffix": "ES",
@@ -1266,10 +1125,11 @@
             "categoria": "ES2_M",
             "ambiguousNameSplit": false,
             "uncertainYear": false,
-            "existingAtletaId": "SORASIO_STEFANO"
+            "existingAtletaId": "SORASIO_STEFANO",
+            "posizione": 6
           },
           {
-            "posizione": 7,
+            "posizioneOriginale": 7,
             "cognome": "LICATA",
             "nome": "LORENZO",
             "codeSuffix": "ES",
@@ -1277,10 +1137,11 @@
             "categoria": "ES2_M",
             "ambiguousNameSplit": false,
             "uncertainYear": false,
-            "existingAtletaId": null
+            "existingAtletaId": null,
+            "posizione": 7
           },
           {
-            "posizione": 8,
+            "posizioneOriginale": 8,
             "cognome": "GROPPO",
             "nome": "LEONARDO",
             "codeSuffix": "ES",
@@ -1288,10 +1149,11 @@
             "categoria": "ES2_M",
             "ambiguousNameSplit": false,
             "uncertainYear": false,
-            "existingAtletaId": "GROPPO_LEONARDO"
+            "existingAtletaId": "GROPPO_LEONARDO",
+            "posizione": 8
           },
           {
-            "posizione": 9,
+            "posizioneOriginale": 9,
             "cognome": "GUARNIERI",
             "nome": "EMIL",
             "codeSuffix": "ES",
@@ -1299,10 +1161,11 @@
             "categoria": "ES2_M",
             "ambiguousNameSplit": false,
             "uncertainYear": false,
-            "existingAtletaId": "GUARNIERI_EMIL"
+            "existingAtletaId": "GUARNIERI_EMIL",
+            "posizione": 9
           },
           {
-            "posizione": 10,
+            "posizioneOriginale": 10,
             "cognome": "ADAMI",
             "nome": "SEBASTIANO",
             "codeSuffix": "ES",
@@ -1310,10 +1173,11 @@
             "categoria": "ES2_M",
             "ambiguousNameSplit": false,
             "uncertainYear": false,
-            "existingAtletaId": "ADAMI_SEBASTIANO"
+            "existingAtletaId": "ADAMI_SEBASTIANO",
+            "posizione": 10
           },
           {
-            "posizione": 11,
+            "posizioneOriginale": 11,
             "cognome": "MARCHISIO",
             "nome": "MATTIA",
             "codeSuffix": "ES",
@@ -1321,10 +1185,11 @@
             "categoria": "ES2_M",
             "ambiguousNameSplit": false,
             "uncertainYear": false,
-            "existingAtletaId": null
+            "existingAtletaId": null,
+            "posizione": 11
           },
           {
-            "posizione": 12,
+            "posizioneOriginale": 12,
             "cognome": "SALICE",
             "nome": "NICOLO'",
             "codeSuffix": "ES",
@@ -1332,7 +1197,8 @@
             "categoria": "ES2_M",
             "ambiguousNameSplit": false,
             "uncertainYear": false,
-            "existingAtletaId": null
+            "existingAtletaId": null,
+            "posizione": 12
           }
         ]
       },
@@ -1340,7 +1206,7 @@
         "tabLabel": "Allievi",
         "rows": [
           {
-            "posizione": 1,
+            "posizioneOriginale": 1,
             "cognome": "PHILIPPOT",
             "nome": "JOEL",
             "codeSuffix": "AL",
@@ -1348,10 +1214,11 @@
             "categoria": "AL_M",
             "ambiguousNameSplit": false,
             "uncertainYear": false,
-            "existingAtletaId": "PHILIPPOT_JOEL"
+            "existingAtletaId": "PHILIPPOT_JOEL",
+            "posizione": 1
           },
           {
-            "posizione": 2,
+            "posizioneOriginale": 2,
             "cognome": "DOTTA",
             "nome": "LEONARDO",
             "codeSuffix": "AL",
@@ -1359,10 +1226,11 @@
             "categoria": "AL_M",
             "ambiguousNameSplit": false,
             "uncertainYear": false,
-            "existingAtletaId": "DOTTA_LEONARDO"
+            "existingAtletaId": "DOTTA_LEONARDO",
+            "posizione": 2
           },
           {
-            "posizione": 3,
+            "posizioneOriginale": 3,
             "cognome": "MAZZONI",
             "nome": "MIRCO",
             "codeSuffix": "AL",
@@ -1370,10 +1238,11 @@
             "categoria": "AL_M",
             "ambiguousNameSplit": false,
             "uncertainYear": false,
-            "existingAtletaId": "MAZZONI_MIRCO"
+            "existingAtletaId": "MAZZONI_MIRCO",
+            "posizione": 3
           },
           {
-            "posizione": 4,
+            "posizioneOriginale": 4,
             "cognome": "MOLLO LUDOVICO",
             "nome": "MARIA",
             "codeSuffix": "AL",
@@ -1381,10 +1250,11 @@
             "categoria": "AL_M",
             "ambiguousNameSplit": false,
             "uncertainYear": false,
-            "existingAtletaId": "MOLLO_LUDOVICO_MARIA"
+            "existingAtletaId": "MOLLO_LUDOVICO_MARIA",
+            "posizione": 4
           },
           {
-            "posizione": 5,
+            "posizioneOriginale": 5,
             "cognome": "PETTITI",
             "nome": "NICOLA",
             "codeSuffix": "AL",
@@ -1392,10 +1262,11 @@
             "categoria": "AL_M",
             "ambiguousNameSplit": false,
             "uncertainYear": false,
-            "existingAtletaId": "PETTITI_NICOLA"
+            "existingAtletaId": "PETTITI_NICOLA",
+            "posizione": 5
           },
           {
-            "posizione": 6,
+            "posizioneOriginale": 6,
             "cognome": "MURATORE ALESSIO",
             "nome": "GABRIELE",
             "codeSuffix": "AL",
@@ -1403,10 +1274,11 @@
             "categoria": "AL_M",
             "ambiguousNameSplit": false,
             "uncertainYear": false,
-            "existingAtletaId": "MURATORE_ALESSIO_GABRIELE"
+            "existingAtletaId": "MURATORE_ALESSIO_GABRIELE",
+            "posizione": 6
           },
           {
-            "posizione": 7,
+            "posizioneOriginale": 7,
             "cognome": "FERRARI",
             "nome": "LEONARDO",
             "codeSuffix": "AL",
@@ -1414,10 +1286,11 @@
             "categoria": "AL_M",
             "ambiguousNameSplit": false,
             "uncertainYear": false,
-            "existingAtletaId": "FERRARI_LEONARDO"
+            "existingAtletaId": "FERRARI_LEONARDO",
+            "posizione": 7
           },
           {
-            "posizione": 8,
+            "posizioneOriginale": 8,
             "cognome": "MELLANO",
             "nome": "FRANCESCO",
             "codeSuffix": "AL",
@@ -1425,10 +1298,11 @@
             "categoria": "AL_M",
             "ambiguousNameSplit": false,
             "uncertainYear": false,
-            "existingAtletaId": "MELLANO_FRANCESCO"
+            "existingAtletaId": "MELLANO_FRANCESCO",
+            "posizione": 8
           },
           {
-            "posizione": 9,
+            "posizioneOriginale": 9,
             "cognome": "BERTAGNI",
             "nome": "BRYAN",
             "codeSuffix": "AL",
@@ -1436,10 +1310,11 @@
             "categoria": "AL_M",
             "ambiguousNameSplit": false,
             "uncertainYear": false,
-            "existingAtletaId": "BERTAGNI_BRYAN"
+            "existingAtletaId": "BERTAGNI_BRYAN",
+            "posizione": 9
           },
           {
-            "posizione": 10,
+            "posizioneOriginale": 10,
             "cognome": "BIOLATTO",
             "nome": "MATTIA",
             "codeSuffix": "AL",
@@ -1447,10 +1322,11 @@
             "categoria": "AL_M",
             "ambiguousNameSplit": false,
             "uncertainYear": false,
-            "existingAtletaId": "BIOLATTO_MATTIA"
+            "existingAtletaId": "BIOLATTO_MATTIA",
+            "posizione": 10
           },
           {
-            "posizione": 11,
+            "posizioneOriginale": 11,
             "cognome": "GIANGREGORIO",
             "nome": "DAVIDE",
             "codeSuffix": "AL",
@@ -1458,7 +1334,8 @@
             "categoria": "AL_M",
             "ambiguousNameSplit": false,
             "uncertainYear": false,
-            "existingAtletaId": "GIANGREGORIO_DAVIDE"
+            "existingAtletaId": "GIANGREGORIO_DAVIDE",
+            "posizione": 11
           }
         ]
       },
@@ -1466,7 +1343,7 @@
         "tabLabel": "Juniores",
         "rows": [
           {
-            "posizione": 1,
+            "posizioneOriginale": 1,
             "cognome": "MOLLO",
             "nome": "GIANMARIA",
             "codeSuffix": "JU",
@@ -1474,10 +1351,11 @@
             "categoria": "JUN_M",
             "ambiguousNameSplit": false,
             "uncertainYear": false,
-            "existingAtletaId": "MOLLO_GIANMARIA"
+            "existingAtletaId": "MOLLO_GIANMARIA",
+            "posizione": 1
           },
           {
-            "posizione": 2,
+            "posizioneOriginale": 2,
             "cognome": "COMETTO",
             "nome": "FILIPPO",
             "codeSuffix": "JU",
@@ -1485,10 +1363,11 @@
             "categoria": "JUN_M",
             "ambiguousNameSplit": false,
             "uncertainYear": false,
-            "existingAtletaId": "COMETTO_FILIPPO"
+            "existingAtletaId": "COMETTO_FILIPPO",
+            "posizione": 2
           },
           {
-            "posizione": 3,
+            "posizioneOriginale": 3,
             "cognome": "BELMONDO",
             "nome": "FRANCESCO",
             "codeSuffix": "JU",
@@ -1496,10 +1375,11 @@
             "categoria": "JUN_M",
             "ambiguousNameSplit": false,
             "uncertainYear": false,
-            "existingAtletaId": "BELMONDO_FRANCESCO"
+            "existingAtletaId": "BELMONDO_FRANCESCO",
+            "posizione": 3
           },
           {
-            "posizione": 4,
+            "posizioneOriginale": 4,
             "cognome": "GALLO",
             "nome": "FILIPPO",
             "codeSuffix": "JU",
@@ -1507,10 +1387,11 @@
             "categoria": "JUN_M",
             "ambiguousNameSplit": false,
             "uncertainYear": false,
-            "existingAtletaId": "GALLO_FILIPPO"
+            "existingAtletaId": "GALLO_FILIPPO",
+            "posizione": 4
           },
           {
-            "posizione": 5,
+            "posizioneOriginale": 5,
             "cognome": "FAVERO",
             "nome": "LORENZO",
             "codeSuffix": "JU",
@@ -1518,10 +1399,11 @@
             "categoria": "JUN_M",
             "ambiguousNameSplit": false,
             "uncertainYear": false,
-            "existingAtletaId": "FAVERO_LORENZO"
+            "existingAtletaId": "FAVERO_LORENZO",
+            "posizione": 5
           },
           {
-            "posizione": 6,
+            "posizioneOriginale": 6,
             "cognome": "GALFRE'",
             "nome": "JACOPO",
             "codeSuffix": "JU",
@@ -1529,10 +1411,11 @@
             "categoria": "JUN_M",
             "ambiguousNameSplit": false,
             "uncertainYear": false,
-            "existingAtletaId": "GALFRE_JACOPO"
+            "existingAtletaId": "GALFRE_JACOPO",
+            "posizione": 6
           },
           {
-            "posizione": 7,
+            "posizioneOriginale": 7,
             "cognome": "BONINO",
             "nome": "ALESSANDRO",
             "codeSuffix": "JU",
@@ -1540,10 +1423,11 @@
             "categoria": "JUN_M",
             "ambiguousNameSplit": false,
             "uncertainYear": false,
-            "existingAtletaId": "BONINO_ALESSANDRO"
+            "existingAtletaId": "BONINO_ALESSANDRO",
+            "posizione": 7
           },
           {
-            "posizione": 8,
+            "posizioneOriginale": 8,
             "cognome": "BARATTERO",
             "nome": "FILIPPO",
             "codeSuffix": "JU",
@@ -1551,10 +1435,11 @@
             "categoria": "JUN_M",
             "ambiguousNameSplit": false,
             "uncertainYear": false,
-            "existingAtletaId": "BARATTERO_FILIPPO"
+            "existingAtletaId": "BARATTERO_FILIPPO",
+            "posizione": 8
           },
           {
-            "posizione": 9,
+            "posizioneOriginale": 9,
             "cognome": "TAMIETTI",
             "nome": "GABRIELE",
             "codeSuffix": "JU",
@@ -1562,7 +1447,250 @@
             "categoria": "JUN_M",
             "ambiguousNameSplit": false,
             "uncertainYear": false,
-            "existingAtletaId": "TAMIETTI_GABRIELE"
+            "existingAtletaId": "TAMIETTI_GABRIELE",
+            "posizione": 9
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "garaFciId": "181395",
+    "data": "16 Luglio 2026",
+    "nome": "33° TROFEO PRO LOCO",
+    "regione": "LOMBARDIA",
+    "luogo": "GUIDIZZOLO (MN) (MN)",
+    "categorieAmmesse": "TIPO PISTA (PIU' CATEGORIE)  G4 - G5 - G6 - ESORDIENTI 1 - 2 ANNO - ALLIEVI",
+    "km": "1,00",
+    "tabs": [
+      {
+        "tabLabel": "esordienti 1° anno",
+        "rows": [
+          {
+            "posizioneOriginale": 1,
+            "cognome": "SANSONI",
+            "nome": "ALESSIO",
+            "codeSuffix": "ES",
+            "team": "MAZZANO A.S.D.",
+            "categoria": "ES1_M",
+            "ambiguousNameSplit": false,
+            "uncertainYear": false,
+            "existingAtletaId": "SANSONI_ALESSIO",
+            "posizione": 1
+          },
+          {
+            "posizioneOriginale": 2,
+            "cognome": "ZANARDINI",
+            "nome": "LEONARDO",
+            "codeSuffix": "ES",
+            "team": "MAZZANO A.S.D.",
+            "categoria": "ES1_M",
+            "ambiguousNameSplit": false,
+            "uncertainYear": false,
+            "existingAtletaId": "ZANARDINI_LEONARDO",
+            "posizione": 2
+          },
+          {
+            "posizioneOriginale": 3,
+            "cognome": "MAI",
+            "nome": "LEONARDO",
+            "codeSuffix": "ES",
+            "team": "S. C. MINCIO-CHIESE A.S.D",
+            "categoria": "ES1_M",
+            "ambiguousNameSplit": false,
+            "uncertainYear": false,
+            "existingAtletaId": "MAI_LEONARDO",
+            "posizione": 3
+          },
+          {
+            "posizioneOriginale": 4,
+            "cognome": "MERLETTI",
+            "nome": "DANIEL",
+            "codeSuffix": "ES",
+            "team": "MAZZANO A.S.D.",
+            "categoria": "ES1_M",
+            "ambiguousNameSplit": false,
+            "uncertainYear": false,
+            "existingAtletaId": "MERLETTI_DANIEL",
+            "posizione": 4
+          },
+          {
+            "posizioneOriginale": 5,
+            "cognome": "RICCI",
+            "nome": "NICOLA",
+            "codeSuffix": "ES",
+            "team": "SAN GEO A.S.D.",
+            "categoria": "ES1_M",
+            "ambiguousNameSplit": false,
+            "uncertainYear": false,
+            "existingAtletaId": "RICCI_NICOLA",
+            "posizione": 5
+          },
+          {
+            "posizioneOriginale": 6,
+            "cognome": "REDAELLI",
+            "nome": "FRANCESCO",
+            "codeSuffix": "ES",
+            "team": "SC PEDALE AGRATESE",
+            "categoria": "ES1_M",
+            "ambiguousNameSplit": false,
+            "uncertainYear": false,
+            "existingAtletaId": null,
+            "posizione": 6
+          }
+        ]
+      },
+      {
+        "tabLabel": "esordienti 2° anno",
+        "rows": [
+          {
+            "posizioneOriginale": 1,
+            "cognome": "ZUNICA",
+            "nome": "GIULIO",
+            "codeSuffix": "ES",
+            "team": "S. C. MINCIO-CHIESE A.S.D",
+            "categoria": "ES2_M",
+            "ambiguousNameSplit": false,
+            "uncertainYear": false,
+            "existingAtletaId": "ZUNICA_GIULIO",
+            "posizione": 1
+          },
+          {
+            "posizioneOriginale": 2,
+            "cognome": "COLOMBO",
+            "nome": "MARCO",
+            "codeSuffix": "ES",
+            "team": "SAN GEO A.S.D.",
+            "categoria": "ES2_M",
+            "ambiguousNameSplit": false,
+            "uncertainYear": false,
+            "existingAtletaId": "COLOMBO_MARCO",
+            "posizione": 2
+          },
+          {
+            "posizioneOriginale": 3,
+            "cognome": "DECO'",
+            "nome": "GABRIELE",
+            "codeSuffix": "ES",
+            "team": "S. C. MINCIO-CHIESE A.S.D",
+            "categoria": "ES2_M",
+            "ambiguousNameSplit": false,
+            "uncertainYear": false,
+            "existingAtletaId": "DECO_GABRIELE",
+            "posizione": 3
+          },
+          {
+            "posizioneOriginale": 4,
+            "cognome": "GANARIN",
+            "nome": "LUCA",
+            "codeSuffix": "ES",
+            "team": "S. C. MINCIO-CHIESE A.S.D",
+            "categoria": "ES2_M",
+            "ambiguousNameSplit": false,
+            "uncertainYear": false,
+            "existingAtletaId": "GANARIN_LUCA",
+            "posizione": 4
+          },
+          {
+            "posizioneOriginale": 5,
+            "cognome": "BALCONI",
+            "nome": "FEDERICO",
+            "codeSuffix": "ES",
+            "team": "MAZZANO A.S.D.",
+            "categoria": "ES2_M",
+            "ambiguousNameSplit": false,
+            "uncertainYear": false,
+            "existingAtletaId": "BALCONI_FEDERICO",
+            "posizione": 5
+          },
+          {
+            "posizioneOriginale": 6,
+            "cognome": "GALLI",
+            "nome": "FEDERICO",
+            "codeSuffix": "ES",
+            "team": "SAN GEO A.S.D.",
+            "categoria": "ES2_M",
+            "ambiguousNameSplit": false,
+            "uncertainYear": false,
+            "existingAtletaId": "GALLI_FEDERICO",
+            "posizione": 6
+          }
+        ]
+      },
+      {
+        "tabLabel": "allievi",
+        "rows": [
+          {
+            "posizioneOriginale": 1,
+            "cognome": "SOSA COLON",
+            "nome": "GIOEL",
+            "codeSuffix": "AL",
+            "team": "FERALPI MONTECLARENSE ASD",
+            "categoria": "AL_M",
+            "ambiguousNameSplit": false,
+            "uncertainYear": false,
+            "existingAtletaId": "SOSA_COLON_GIOEL",
+            "posizione": 1
+          },
+          {
+            "posizioneOriginale": 2,
+            "cognome": "RONDA",
+            "nome": "DANIELE",
+            "codeSuffix": "AL",
+            "team": "FERALPI MONTECLARENSE ASD",
+            "categoria": "AL_M",
+            "ambiguousNameSplit": false,
+            "uncertainYear": false,
+            "existingAtletaId": "RONDA_DANIELE",
+            "posizione": 2
+          },
+          {
+            "posizioneOriginale": 3,
+            "cognome": "MONTESIN",
+            "nome": "GABRIELE",
+            "codeSuffix": "AL",
+            "team": "FERALPI MONTECLARENSE ASD",
+            "categoria": "AL_M",
+            "ambiguousNameSplit": false,
+            "uncertainYear": false,
+            "existingAtletaId": "MONTESIN_GABRIELE",
+            "posizione": 3
+          },
+          {
+            "posizioneOriginale": 4,
+            "cognome": "DOLFINI",
+            "nome": "MATTIA",
+            "codeSuffix": "AL",
+            "team": "PROGETTO CICLISMO - RODENGO S. ASD",
+            "categoria": "AL_M",
+            "ambiguousNameSplit": false,
+            "uncertainYear": false,
+            "existingAtletaId": "DOLFINI_MATTIA",
+            "posizione": 4
+          },
+          {
+            "posizioneOriginale": 5,
+            "cognome": "BUSCA",
+            "nome": "GIOVANNI",
+            "codeSuffix": "AL",
+            "team": "MAZZANO A.S.D.",
+            "categoria": "AL_M",
+            "ambiguousNameSplit": false,
+            "uncertainYear": false,
+            "existingAtletaId": "BUSCA_GIOVANNI",
+            "posizione": 5
+          },
+          {
+            "posizioneOriginale": 6,
+            "cognome": "FIORETTI",
+            "nome": "MATTIA",
+            "codeSuffix": "AL",
+            "team": "S. C. MINCIO-CHIESE A.S.D",
+            "categoria": "AL_M",
+            "ambiguousNameSplit": false,
+            "uncertainYear": false,
+            "existingAtletaId": "FIORETTI_MATTIA",
+            "posizione": 6
           }
         ]
       }
@@ -1581,7 +1709,7 @@
         "tabLabel": "DONNE ESORDIENTI",
         "rows": [
           {
-            "posizione": 1,
+            "posizioneOriginale": 1,
             "cognome": "SPINONI",
             "nome": "MICHELLE",
             "codeSuffix": "ED",
@@ -1589,10 +1717,11 @@
             "categoria": "ES1_F",
             "ambiguousNameSplit": false,
             "uncertainYear": true,
-            "existingAtletaId": "SPINONI_MICHELLE"
+            "existingAtletaId": "SPINONI_MICHELLE",
+            "posizione": 1
           },
           {
-            "posizione": 2,
+            "posizioneOriginale": 2,
             "cognome": "TESTA",
             "nome": "CAROLINA",
             "codeSuffix": "ED",
@@ -1600,10 +1729,11 @@
             "categoria": "ES1_F",
             "ambiguousNameSplit": false,
             "uncertainYear": true,
-            "existingAtletaId": "TESTA_CAROLINA"
+            "existingAtletaId": "TESTA_CAROLINA",
+            "posizione": 2
           },
           {
-            "posizione": 3,
+            "posizioneOriginale": 3,
             "cognome": "SANNA",
             "nome": "ELISA",
             "codeSuffix": "ED",
@@ -1611,10 +1741,11 @@
             "categoria": "ES1_F",
             "ambiguousNameSplit": false,
             "uncertainYear": true,
-            "existingAtletaId": "SANNA_ELISA"
+            "existingAtletaId": "SANNA_ELISA",
+            "posizione": 3
           },
           {
-            "posizione": 4,
+            "posizioneOriginale": 4,
             "cognome": "CERONI",
             "nome": "GIULIA",
             "codeSuffix": "ED",
@@ -1622,10 +1753,11 @@
             "categoria": "ES1_F",
             "ambiguousNameSplit": false,
             "uncertainYear": true,
-            "existingAtletaId": "CERONI_GIULIA"
+            "existingAtletaId": "CERONI_GIULIA",
+            "posizione": 4
           },
           {
-            "posizione": 5,
+            "posizioneOriginale": 5,
             "cognome": "STEFANONI",
             "nome": "GIADA",
             "codeSuffix": "ED",
@@ -1633,10 +1765,11 @@
             "categoria": "ES1_F",
             "ambiguousNameSplit": false,
             "uncertainYear": true,
-            "existingAtletaId": "STEFANONI_GIADA"
+            "existingAtletaId": "STEFANONI_GIADA",
+            "posizione": 5
           },
           {
-            "posizione": 6,
+            "posizioneOriginale": 6,
             "cognome": "LANFRANCHI",
             "nome": "VITTORIA",
             "codeSuffix": "ED",
@@ -1644,10 +1777,11 @@
             "categoria": "ES1_F",
             "ambiguousNameSplit": false,
             "uncertainYear": true,
-            "existingAtletaId": null
+            "existingAtletaId": null,
+            "posizione": 6
           },
           {
-            "posizione": 7,
+            "posizioneOriginale": 7,
             "cognome": "PIETRELLA",
             "nome": "ARIANNA",
             "codeSuffix": "ED",
@@ -1655,10 +1789,11 @@
             "categoria": "ES1_F",
             "ambiguousNameSplit": false,
             "uncertainYear": true,
-            "existingAtletaId": null
+            "existingAtletaId": null,
+            "posizione": 7
           },
           {
-            "posizione": 8,
+            "posizioneOriginale": 8,
             "cognome": "BREVIARIO",
             "nome": "ILARIA",
             "codeSuffix": "ED",
@@ -1666,10 +1801,11 @@
             "categoria": "ES1_F",
             "ambiguousNameSplit": false,
             "uncertainYear": true,
-            "existingAtletaId": null
+            "existingAtletaId": null,
+            "posizione": 8
           },
           {
-            "posizione": 9,
+            "posizioneOriginale": 9,
             "cognome": "ANGHEL BEATRICE",
             "nome": "IOANA",
             "codeSuffix": "ED",
@@ -1677,10 +1813,11 @@
             "categoria": "ES1_F",
             "ambiguousNameSplit": false,
             "uncertainYear": true,
-            "existingAtletaId": null
+            "existingAtletaId": null,
+            "posizione": 9
           },
           {
-            "posizione": 10,
+            "posizioneOriginale": 10,
             "cognome": "MOLTENI",
             "nome": "ELISA",
             "codeSuffix": "ED",
@@ -1688,7 +1825,8 @@
             "categoria": "ES1_F",
             "ambiguousNameSplit": false,
             "uncertainYear": true,
-            "existingAtletaId": null
+            "existingAtletaId": null,
+            "posizione": 10
           }
         ]
       },
@@ -1696,7 +1834,7 @@
         "tabLabel": "DONNE ALLIEVE",
         "rows": [
           {
-            "posizione": 1,
+            "posizioneOriginale": 1,
             "cognome": "NAVAZIO",
             "nome": "NICOLE",
             "codeSuffix": "DA",
@@ -1704,10 +1842,11 @@
             "categoria": "AL_F",
             "ambiguousNameSplit": false,
             "uncertainYear": false,
-            "existingAtletaId": "NAVAZIO_NICOLE"
+            "existingAtletaId": "NAVAZIO_NICOLE",
+            "posizione": 1
           },
           {
-            "posizione": 2,
+            "posizioneOriginale": 2,
             "cognome": "VENDITTO",
             "nome": "ANNA",
             "codeSuffix": "DA",
@@ -1715,10 +1854,11 @@
             "categoria": "AL_F",
             "ambiguousNameSplit": false,
             "uncertainYear": false,
-            "existingAtletaId": "VENDITTO_ANNA"
+            "existingAtletaId": "VENDITTO_ANNA",
+            "posizione": 2
           },
           {
-            "posizione": 3,
+            "posizioneOriginale": 3,
             "cognome": "CORNO",
             "nome": "INGRID",
             "codeSuffix": "DA",
@@ -1726,10 +1866,11 @@
             "categoria": "AL_F",
             "ambiguousNameSplit": false,
             "uncertainYear": false,
-            "existingAtletaId": "CORNO_INGRID"
+            "existingAtletaId": "CORNO_INGRID",
+            "posizione": 3
           },
           {
-            "posizione": 4,
+            "posizioneOriginale": 4,
             "cognome": "ROCCHETTI",
             "nome": "LUCIA",
             "codeSuffix": "DA",
@@ -1737,10 +1878,11 @@
             "categoria": "AL_F",
             "ambiguousNameSplit": false,
             "uncertainYear": false,
-            "existingAtletaId": "ROCCHETTI_LUCIA"
+            "existingAtletaId": "ROCCHETTI_LUCIA",
+            "posizione": 4
           },
           {
-            "posizione": 5,
+            "posizioneOriginale": 5,
             "cognome": "BRADU",
             "nome": "TEODORA",
             "codeSuffix": "DA",
@@ -1748,7 +1890,8 @@
             "categoria": "AL_F",
             "ambiguousNameSplit": false,
             "uncertainYear": false,
-            "existingAtletaId": "BRADU_TEODORA"
+            "existingAtletaId": "BRADU_TEODORA",
+            "posizione": 5
           }
         ]
       },
@@ -1756,7 +1899,7 @@
         "tabLabel": "DONNE JUNIORES",
         "rows": [
           {
-            "posizione": 1,
+            "posizioneOriginale": 1,
             "cognome": "PERUTA",
             "nome": "SARA",
             "codeSuffix": "DJ",
@@ -1764,10 +1907,11 @@
             "categoria": "JUN_F",
             "ambiguousNameSplit": false,
             "uncertainYear": false,
-            "existingAtletaId": "PERUTA_SARA"
+            "existingAtletaId": "PERUTA_SARA",
+            "posizione": 1
           },
           {
-            "posizione": 2,
+            "posizioneOriginale": 2,
             "cognome": "LOCATELLI",
             "nome": "ALESSIA",
             "codeSuffix": "DJ",
@@ -1775,10 +1919,11 @@
             "categoria": "JUN_F",
             "ambiguousNameSplit": false,
             "uncertainYear": false,
-            "existingAtletaId": "LOCATELLI_ALESSIA"
+            "existingAtletaId": "LOCATELLI_ALESSIA",
+            "posizione": 2
           },
           {
-            "posizione": 5,
+            "posizioneOriginale": 5,
             "cognome": "VEZZOSI",
             "nome": "GLORIA",
             "codeSuffix": "DJ",
@@ -1786,10 +1931,11 @@
             "categoria": "JUN_F",
             "ambiguousNameSplit": false,
             "uncertainYear": false,
-            "existingAtletaId": "VEZZOSI_GLORIA"
+            "existingAtletaId": "VEZZOSI_GLORIA",
+            "posizione": 3
           },
           {
-            "posizione": 6,
+            "posizioneOriginale": 6,
             "cognome": "MINICHINO",
             "nome": "MELANIA",
             "codeSuffix": "DJ",
@@ -1797,10 +1943,11 @@
             "categoria": "JUN_F",
             "ambiguousNameSplit": false,
             "uncertainYear": false,
-            "existingAtletaId": "MINICHINO_MELANIA"
+            "existingAtletaId": "MINICHINO_MELANIA",
+            "posizione": 4
           },
           {
-            "posizione": 7,
+            "posizioneOriginale": 7,
             "cognome": "NOVOLODSKAIA",
             "nome": "ANGELINA",
             "codeSuffix": "REG",
@@ -1808,10 +1955,11 @@
             "categoria": "JUN_F",
             "ambiguousNameSplit": false,
             "uncertainYear": false,
-            "existingAtletaId": "NOVOLODSKAIA_ANGELINA"
+            "existingAtletaId": "NOVOLODSKAIA_ANGELINA",
+            "posizione": 5
           },
           {
-            "posizione": 8,
+            "posizioneOriginale": 8,
             "cognome": "ZUCCA",
             "nome": "PAOLA",
             "codeSuffix": "DJ",
@@ -1819,10 +1967,11 @@
             "categoria": "JUN_F",
             "ambiguousNameSplit": false,
             "uncertainYear": false,
-            "existingAtletaId": "ZUCCA_PAOLA"
+            "existingAtletaId": "ZUCCA_PAOLA",
+            "posizione": 6
           },
           {
-            "posizione": 10,
+            "posizioneOriginale": 10,
             "cognome": "DELLA VEDOVA",
             "nome": "MARTA",
             "codeSuffix": "DJ",
@@ -1830,10 +1979,11 @@
             "categoria": "JUN_F",
             "ambiguousNameSplit": false,
             "uncertainYear": false,
-            "existingAtletaId": "DELLA_VEDOVA_MARTA"
+            "existingAtletaId": "DELLA_VEDOVA_MARTA",
+            "posizione": 7
           },
           {
-            "posizione": 11,
+            "posizioneOriginale": 11,
             "cognome": "CAMONI",
             "nome": "NADIA",
             "codeSuffix": "DJ",
@@ -1841,10 +1991,11 @@
             "categoria": "JUN_F",
             "ambiguousNameSplit": false,
             "uncertainYear": false,
-            "existingAtletaId": "CAMONI_NADIA"
+            "existingAtletaId": "CAMONI_NADIA",
+            "posizione": 8
           },
           {
-            "posizione": 12,
+            "posizioneOriginale": 12,
             "cognome": "RICCI",
             "nome": "ELISA",
             "codeSuffix": "DJ",
@@ -1852,10 +2003,11 @@
             "categoria": "JUN_F",
             "ambiguousNameSplit": false,
             "uncertainYear": false,
-            "existingAtletaId": "RICCI_ELISA"
+            "existingAtletaId": "RICCI_ELISA",
+            "posizione": 9
           },
           {
-            "posizione": 13,
+            "posizioneOriginale": 13,
             "cognome": "RAPOSO",
             "nome": "MIA",
             "codeSuffix": "DJ",
@@ -1863,10 +2015,11 @@
             "categoria": "JUN_F",
             "ambiguousNameSplit": false,
             "uncertainYear": false,
-            "existingAtletaId": "RAPOSO_MIA"
+            "existingAtletaId": "RAPOSO_MIA",
+            "posizione": 10
           },
           {
-            "posizione": 14,
+            "posizioneOriginale": 14,
             "cognome": "CORTINOVIS",
             "nome": "ELENA",
             "codeSuffix": "DJ",
@@ -1874,7 +2027,8 @@
             "categoria": "JUN_F",
             "ambiguousNameSplit": false,
             "uncertainYear": false,
-            "existingAtletaId": "CORTINOVIS_ELENA"
+            "existingAtletaId": "CORTINOVIS_ELENA",
+            "posizione": 11
           }
         ]
       },
@@ -1882,7 +2036,7 @@
         "tabLabel": "DONNE ELITE",
         "rows": [
           {
-            "posizione": 1,
+            "posizioneOriginale": 1,
             "cognome": "CRESTANELLO",
             "nome": "LARA",
             "codeSuffix": "DE",
@@ -1890,10 +2044,11 @@
             "categoria": "ELI_F",
             "ambiguousNameSplit": false,
             "uncertainYear": false,
-            "existingAtletaId": "CRESTANELLO_LARA"
+            "existingAtletaId": "CRESTANELLO_LARA",
+            "posizione": 1
           },
           {
-            "posizione": 2,
+            "posizioneOriginale": 2,
             "cognome": "ROSSETTI",
             "nome": "SONIA",
             "codeSuffix": "DE",
@@ -1901,10 +2056,11 @@
             "categoria": "ELI_F",
             "ambiguousNameSplit": false,
             "uncertainYear": false,
-            "existingAtletaId": "ROSSETTI_SONIA"
+            "existingAtletaId": "ROSSETTI_SONIA",
+            "posizione": 2
           },
           {
-            "posizione": 3,
+            "posizioneOriginale": 3,
             "cognome": "ZANETTI",
             "nome": "EMANUELA",
             "codeSuffix": "DE",
@@ -1912,10 +2068,11 @@
             "categoria": "ELI_F",
             "ambiguousNameSplit": false,
             "uncertainYear": false,
-            "existingAtletaId": "ZANETTI_EMANUELA"
+            "existingAtletaId": "ZANETTI_EMANUELA",
+            "posizione": 3
           },
           {
-            "posizione": 4,
+            "posizioneOriginale": 4,
             "cognome": "VALTULINI",
             "nome": "ELISA",
             "codeSuffix": "DU",
@@ -1923,10 +2080,11 @@
             "categoria": "ELI_F",
             "ambiguousNameSplit": false,
             "uncertainYear": false,
-            "existingAtletaId": "VALTULINI_ELISA"
+            "existingAtletaId": "VALTULINI_ELISA",
+            "posizione": 4
           },
           {
-            "posizione": 5,
+            "posizioneOriginale": 5,
             "cognome": "ZAMBELLI",
             "nome": "GIULIA",
             "codeSuffix": "DU",
@@ -1934,10 +2092,11 @@
             "categoria": "ELI_F",
             "ambiguousNameSplit": false,
             "uncertainYear": false,
-            "existingAtletaId": "ZAMBELLI_GIULIA"
+            "existingAtletaId": "ZAMBELLI_GIULIA",
+            "posizione": 5
           },
           {
-            "posizione": 6,
+            "posizioneOriginale": 6,
             "cognome": "REZZONICO",
             "nome": "ALINE",
             "codeSuffix": "REG",
@@ -1945,10 +2104,11 @@
             "categoria": "ELI_F",
             "ambiguousNameSplit": false,
             "uncertainYear": false,
-            "existingAtletaId": "REZZONICO_ALINE"
+            "existingAtletaId": "REZZONICO_ALINE",
+            "posizione": 6
           },
           {
-            "posizione": 7,
+            "posizioneOriginale": 7,
             "cognome": "BELOTTI",
             "nome": "MISIA",
             "codeSuffix": "DU",
@@ -1956,10 +2116,11 @@
             "categoria": "ELI_F",
             "ambiguousNameSplit": false,
             "uncertainYear": false,
-            "existingAtletaId": "BELOTTI_MISIA"
+            "existingAtletaId": "BELOTTI_MISIA",
+            "posizione": 7
           },
           {
-            "posizione": 8,
+            "posizioneOriginale": 8,
             "cognome": "ZANGA",
             "nome": "MARTA",
             "codeSuffix": "DE",
@@ -1967,10 +2128,11 @@
             "categoria": "ELI_F",
             "ambiguousNameSplit": false,
             "uncertainYear": false,
-            "existingAtletaId": "ZANGA_MARTA"
+            "existingAtletaId": "ZANGA_MARTA",
+            "posizione": 8
           },
           {
-            "posizione": 9,
+            "posizioneOriginale": 9,
             "cognome": "DE LAURENTIIS",
             "nome": "ELENA",
             "codeSuffix": "DU",
@@ -1978,10 +2140,11 @@
             "categoria": "ELI_F",
             "ambiguousNameSplit": false,
             "uncertainYear": false,
-            "existingAtletaId": "DE_LAURENTIIS_ELENA"
+            "existingAtletaId": "DE_LAURENTIIS_ELENA",
+            "posizione": 9
           },
           {
-            "posizione": 10,
+            "posizioneOriginale": 10,
             "cognome": "GIANGRANDE",
             "nome": "GIORGIA",
             "codeSuffix": "DU",
@@ -1989,10 +2152,11 @@
             "categoria": "ELI_F",
             "ambiguousNameSplit": false,
             "uncertainYear": false,
-            "existingAtletaId": "GIANGRANDE_GIORGIA"
+            "existingAtletaId": "GIANGRANDE_GIORGIA",
+            "posizione": 10
           },
           {
-            "posizione": 11,
+            "posizioneOriginale": 11,
             "cognome": "BORDIGNON",
             "nome": "SILVIA",
             "codeSuffix": "DU",
@@ -2000,10 +2164,11 @@
             "categoria": "ELI_F",
             "ambiguousNameSplit": false,
             "uncertainYear": false,
-            "existingAtletaId": "BORDIGNON_SILVIA"
+            "existingAtletaId": "BORDIGNON_SILVIA",
+            "posizione": 11
           },
           {
-            "posizione": 12,
+            "posizioneOriginale": 12,
             "cognome": "RADAELLI",
             "nome": "ELVIRA",
             "codeSuffix": "DU",
@@ -2011,10 +2176,11 @@
             "categoria": "ELI_F",
             "ambiguousNameSplit": false,
             "uncertainYear": false,
-            "existingAtletaId": "RADAELLI_ELVIRA"
+            "existingAtletaId": "RADAELLI_ELVIRA",
+            "posizione": 12
           },
           {
-            "posizione": 13,
+            "posizioneOriginale": 13,
             "cognome": "BANI",
             "nome": "DESIREE",
             "codeSuffix": "DU",
@@ -2022,7 +2188,8 @@
             "categoria": "ELI_F",
             "ambiguousNameSplit": false,
             "uncertainYear": false,
-            "existingAtletaId": "BANI_DESIREE"
+            "existingAtletaId": "BANI_DESIREE",
+            "posizione": 13
           }
         ]
       }
@@ -2041,7 +2208,7 @@
         "tabLabel": "ESORDIENTI DONNE",
         "rows": [
           {
-            "posizione": 1,
+            "posizioneOriginale": 1,
             "cognome": "BROLLO",
             "nome": "VALENTINA",
             "codeSuffix": "ED",
@@ -2049,10 +2216,11 @@
             "categoria": "ES1_F",
             "ambiguousNameSplit": false,
             "uncertainYear": true,
-            "existingAtletaId": "BROLLO_VALENTINA"
+            "existingAtletaId": "BROLLO_VALENTINA",
+            "posizione": 1
           },
           {
-            "posizione": 2,
+            "posizioneOriginale": 2,
             "cognome": "BREDA",
             "nome": "ILARIA",
             "codeSuffix": "ED",
@@ -2060,10 +2228,11 @@
             "categoria": "ES1_F",
             "ambiguousNameSplit": false,
             "uncertainYear": true,
-            "existingAtletaId": "BREDA_ILARIA"
+            "existingAtletaId": "BREDA_ILARIA",
+            "posizione": 2
           },
           {
-            "posizione": 3,
+            "posizioneOriginale": 3,
             "cognome": "PASIN",
             "nome": "GAIA",
             "codeSuffix": "ED",
@@ -2071,10 +2240,11 @@
             "categoria": "ES1_F",
             "ambiguousNameSplit": false,
             "uncertainYear": true,
-            "existingAtletaId": "PASIN_GAIA"
+            "existingAtletaId": "PASIN_GAIA",
+            "posizione": 3
           },
           {
-            "posizione": 4,
+            "posizioneOriginale": 4,
             "cognome": "PLAINO",
             "nome": "MELISSA",
             "codeSuffix": "ED",
@@ -2082,10 +2252,11 @@
             "categoria": "ES1_F",
             "ambiguousNameSplit": false,
             "uncertainYear": true,
-            "existingAtletaId": "PLAINO_MELISSA"
+            "existingAtletaId": "PLAINO_MELISSA",
+            "posizione": 4
           },
           {
-            "posizione": 5,
+            "posizioneOriginale": 5,
             "cognome": "SBRIZZAI",
             "nome": "NOEMI",
             "codeSuffix": "ED",
@@ -2093,10 +2264,11 @@
             "categoria": "ES1_F",
             "ambiguousNameSplit": false,
             "uncertainYear": true,
-            "existingAtletaId": null
+            "existingAtletaId": null,
+            "posizione": 5
           },
           {
-            "posizione": 6,
+            "posizioneOriginale": 6,
             "cognome": "BANDIZIOL",
             "nome": "DILETTA",
             "codeSuffix": "ED",
@@ -2104,7 +2276,8 @@
             "categoria": "ES1_F",
             "ambiguousNameSplit": false,
             "uncertainYear": true,
-            "existingAtletaId": "BANDIZIOL_DILETTA"
+            "existingAtletaId": "BANDIZIOL_DILETTA",
+            "posizione": 6
           }
         ]
       },
@@ -2112,7 +2285,7 @@
         "tabLabel": "Esordienti 1 anno",
         "rows": [
           {
-            "posizione": 1,
+            "posizioneOriginale": 1,
             "cognome": "BRAIT",
             "nome": "EDOARDO",
             "codeSuffix": "ES",
@@ -2120,10 +2293,11 @@
             "categoria": "ES1_M",
             "ambiguousNameSplit": false,
             "uncertainYear": false,
-            "existingAtletaId": "BRAIT_EDOARDO"
+            "existingAtletaId": "BRAIT_EDOARDO",
+            "posizione": 1
           },
           {
-            "posizione": 2,
+            "posizioneOriginale": 2,
             "cognome": "BOTTEON",
             "nome": "ALESSANDRO",
             "codeSuffix": "ES",
@@ -2131,10 +2305,11 @@
             "categoria": "ES1_M",
             "ambiguousNameSplit": false,
             "uncertainYear": false,
-            "existingAtletaId": "BOTTEON_ALESSANDRO"
+            "existingAtletaId": "BOTTEON_ALESSANDRO",
+            "posizione": 2
           },
           {
-            "posizione": 3,
+            "posizioneOriginale": 3,
             "cognome": "PIGAT",
             "nome": "DAVIDE",
             "codeSuffix": "ES",
@@ -2142,10 +2317,11 @@
             "categoria": "ES1_M",
             "ambiguousNameSplit": false,
             "uncertainYear": false,
-            "existingAtletaId": "PIGAT_DAVIDE"
+            "existingAtletaId": "PIGAT_DAVIDE",
+            "posizione": 3
           },
           {
-            "posizione": 4,
+            "posizioneOriginale": 4,
             "cognome": "BERTON",
             "nome": "MATTIA",
             "codeSuffix": "ES",
@@ -2153,10 +2329,11 @@
             "categoria": "ES1_M",
             "ambiguousNameSplit": false,
             "uncertainYear": false,
-            "existingAtletaId": "BERTON_MATTIA"
+            "existingAtletaId": "BERTON_MATTIA",
+            "posizione": 4
           },
           {
-            "posizione": 5,
+            "posizioneOriginale": 5,
             "cognome": "BERTOLIN",
             "nome": "EROS",
             "codeSuffix": "ES",
@@ -2164,10 +2341,11 @@
             "categoria": "ES1_M",
             "ambiguousNameSplit": false,
             "uncertainYear": false,
-            "existingAtletaId": "BERTOLIN_EROS"
+            "existingAtletaId": "BERTOLIN_EROS",
+            "posizione": 5
           },
           {
-            "posizione": 6,
+            "posizioneOriginale": 6,
             "cognome": "COSTALONGA",
             "nome": "DIEGO",
             "codeSuffix": "ES",
@@ -2175,7 +2353,8 @@
             "categoria": "ES1_M",
             "ambiguousNameSplit": false,
             "uncertainYear": false,
-            "existingAtletaId": "COSTALONGA_DIEGO"
+            "existingAtletaId": "COSTALONGA_DIEGO",
+            "posizione": 6
           }
         ]
       },
@@ -2183,7 +2362,7 @@
         "tabLabel": "Esordienti 2 anno",
         "rows": [
           {
-            "posizione": 1,
+            "posizioneOriginale": 1,
             "cognome": "ZANCHETTIN",
             "nome": "ALEJANDRO",
             "codeSuffix": "ES",
@@ -2191,10 +2370,11 @@
             "categoria": "ES2_M",
             "ambiguousNameSplit": false,
             "uncertainYear": false,
-            "existingAtletaId": "ZANCHETTIN_ALEJANDRO"
+            "existingAtletaId": "ZANCHETTIN_ALEJANDRO",
+            "posizione": 1
           },
           {
-            "posizione": 2,
+            "posizioneOriginale": 2,
             "cognome": "QUAIA",
             "nome": "FILIPPO",
             "codeSuffix": "ES",
@@ -2202,10 +2382,11 @@
             "categoria": "ES2_M",
             "ambiguousNameSplit": false,
             "uncertainYear": false,
-            "existingAtletaId": "QUAIA_FILIPPO"
+            "existingAtletaId": "QUAIA_FILIPPO",
+            "posizione": 2
           },
           {
-            "posizione": 3,
+            "posizioneOriginale": 3,
             "cognome": "GUERRA",
             "nome": "NICOLO'",
             "codeSuffix": "ES",
@@ -2213,10 +2394,11 @@
             "categoria": "ES2_M",
             "ambiguousNameSplit": false,
             "uncertainYear": false,
-            "existingAtletaId": "GUERRA_NICOLO"
+            "existingAtletaId": "GUERRA_NICOLO",
+            "posizione": 3
           },
           {
-            "posizione": 4,
+            "posizioneOriginale": 4,
             "cognome": "BARAZZUOL",
             "nome": "FRANCESCO",
             "codeSuffix": "ES",
@@ -2224,10 +2406,11 @@
             "categoria": "ES2_M",
             "ambiguousNameSplit": false,
             "uncertainYear": false,
-            "existingAtletaId": "BARAZZUOL_FRANCESCO"
+            "existingAtletaId": "BARAZZUOL_FRANCESCO",
+            "posizione": 4
           },
           {
-            "posizione": 5,
+            "posizioneOriginale": 5,
             "cognome": "CARLET",
             "nome": "SEBASTIANO",
             "codeSuffix": "ES",
@@ -2235,10 +2418,11 @@
             "categoria": "ES2_M",
             "ambiguousNameSplit": false,
             "uncertainYear": false,
-            "existingAtletaId": "CARLET_SEBASTIANO"
+            "existingAtletaId": "CARLET_SEBASTIANO",
+            "posizione": 5
           },
           {
-            "posizione": 6,
+            "posizioneOriginale": 6,
             "cognome": "SANTAROSSA",
             "nome": "NOAH",
             "codeSuffix": "ES",
@@ -2246,7 +2430,8 @@
             "categoria": "ES2_M",
             "ambiguousNameSplit": false,
             "uncertainYear": false,
-            "existingAtletaId": null
+            "existingAtletaId": null,
+            "posizione": 6
           }
         ]
       },
@@ -2254,7 +2439,7 @@
         "tabLabel": "ALLIEVE DONNE",
         "rows": [
           {
-            "posizione": 1,
+            "posizioneOriginale": 1,
             "cognome": "ANZISI",
             "nome": "REBECCA",
             "codeSuffix": "DA",
@@ -2262,10 +2447,11 @@
             "categoria": "AL_F",
             "ambiguousNameSplit": false,
             "uncertainYear": false,
-            "existingAtletaId": "ANZISI_REBECCA"
+            "existingAtletaId": "ANZISI_REBECCA",
+            "posizione": 1
           },
           {
-            "posizione": 2,
+            "posizioneOriginale": 2,
             "cognome": "BARDIERU",
             "nome": "ELISA",
             "codeSuffix": "DA",
@@ -2273,10 +2459,11 @@
             "categoria": "AL_F",
             "ambiguousNameSplit": false,
             "uncertainYear": false,
-            "existingAtletaId": "BARDIERU_ELISA"
+            "existingAtletaId": "BARDIERU_ELISA",
+            "posizione": 2
           },
           {
-            "posizione": 3,
+            "posizioneOriginale": 3,
             "cognome": "BON",
             "nome": "GIULIA",
             "codeSuffix": "DA",
@@ -2284,10 +2471,11 @@
             "categoria": "AL_F",
             "ambiguousNameSplit": false,
             "uncertainYear": false,
-            "existingAtletaId": "BON_GIULIA"
+            "existingAtletaId": "BON_GIULIA",
+            "posizione": 3
           },
           {
-            "posizione": 4,
+            "posizioneOriginale": 4,
             "cognome": "VIEZZI",
             "nome": "ALICE",
             "codeSuffix": "DA",
@@ -2295,10 +2483,11 @@
             "categoria": "AL_F",
             "ambiguousNameSplit": false,
             "uncertainYear": false,
-            "existingAtletaId": "VIEZZI_ALICE"
+            "existingAtletaId": "VIEZZI_ALICE",
+            "posizione": 4
           },
           {
-            "posizione": 5,
+            "posizioneOriginale": 5,
             "cognome": "MOMESSO",
             "nome": "ANNA",
             "codeSuffix": "DA",
@@ -2306,10 +2495,11 @@
             "categoria": "AL_F",
             "ambiguousNameSplit": false,
             "uncertainYear": false,
-            "existingAtletaId": "MOMESSO_ANNA"
+            "existingAtletaId": "MOMESSO_ANNA",
+            "posizione": 5
           },
           {
-            "posizione": 6,
+            "posizioneOriginale": 6,
             "cognome": "ZOL",
             "nome": "SOFIA",
             "codeSuffix": "DA",
@@ -2317,7 +2507,8 @@
             "categoria": "AL_F",
             "ambiguousNameSplit": false,
             "uncertainYear": false,
-            "existingAtletaId": "ZOL_SOFIA"
+            "existingAtletaId": "ZOL_SOFIA",
+            "posizione": 6
           }
         ]
       },
@@ -2325,7 +2516,7 @@
         "tabLabel": "Allievi",
         "rows": [
           {
-            "posizione": 1,
+            "posizioneOriginale": 1,
             "cognome": "CASETTA",
             "nome": "MARCO",
             "codeSuffix": "AL",
@@ -2333,10 +2524,11 @@
             "categoria": "AL_M",
             "ambiguousNameSplit": false,
             "uncertainYear": false,
-            "existingAtletaId": "CASETTA_MARCO"
+            "existingAtletaId": "CASETTA_MARCO",
+            "posizione": 1
           },
           {
-            "posizione": 2,
+            "posizioneOriginale": 2,
             "cognome": "ATZORI",
             "nome": "DIEGO",
             "codeSuffix": "AL",
@@ -2344,10 +2536,11 @@
             "categoria": "AL_M",
             "ambiguousNameSplit": false,
             "uncertainYear": false,
-            "existingAtletaId": "ATZORI_DIEGO"
+            "existingAtletaId": "ATZORI_DIEGO",
+            "posizione": 2
           },
           {
-            "posizione": 3,
+            "posizioneOriginale": 3,
             "cognome": "NOSELLA",
             "nome": "TOMMASO",
             "codeSuffix": "AL",
@@ -2355,10 +2548,11 @@
             "categoria": "AL_M",
             "ambiguousNameSplit": false,
             "uncertainYear": false,
-            "existingAtletaId": "NOSELLA_TOMMASO"
+            "existingAtletaId": "NOSELLA_TOMMASO",
+            "posizione": 3
           },
           {
-            "posizione": 4,
+            "posizioneOriginale": 4,
             "cognome": "CAVALLI",
             "nome": "ALVISE",
             "codeSuffix": "AL",
@@ -2366,10 +2560,11 @@
             "categoria": "AL_M",
             "ambiguousNameSplit": false,
             "uncertainYear": false,
-            "existingAtletaId": "CAVALLI_ALVISE"
+            "existingAtletaId": "CAVALLI_ALVISE",
+            "posizione": 4
           },
           {
-            "posizione": 5,
+            "posizioneOriginale": 5,
             "cognome": "QUAIA",
             "nome": "NICOLA",
             "codeSuffix": "AL",
@@ -2377,10 +2572,11 @@
             "categoria": "AL_M",
             "ambiguousNameSplit": false,
             "uncertainYear": false,
-            "existingAtletaId": "QUAIA_NICOLA"
+            "existingAtletaId": "QUAIA_NICOLA",
+            "posizione": 5
           },
           {
-            "posizione": 6,
+            "posizioneOriginale": 6,
             "cognome": "BREDA JUSTYN",
             "nome": "MICHELE",
             "codeSuffix": "AL",
@@ -2388,7 +2584,8 @@
             "categoria": "AL_M",
             "ambiguousNameSplit": false,
             "uncertainYear": false,
-            "existingAtletaId": "BREDA_JUSTYN_MICHELE"
+            "existingAtletaId": "BREDA_JUSTYN_MICHELE",
+            "posizione": 6
           }
         ]
       }
@@ -2407,7 +2604,7 @@
         "tabLabel": "esordienti 1 anno",
         "rows": [
           {
-            "posizione": 1,
+            "posizioneOriginale": 1,
             "cognome": "MORICONI",
             "nome": "EDOARDO",
             "codeSuffix": "ES",
@@ -2415,10 +2612,11 @@
             "categoria": "ES1_M",
             "ambiguousNameSplit": false,
             "uncertainYear": false,
-            "existingAtletaId": "MORICONI_EDOARDO"
+            "existingAtletaId": "MORICONI_EDOARDO",
+            "posizione": 1
           },
           {
-            "posizione": 2,
+            "posizioneOriginale": 2,
             "cognome": "GALEOTTI",
             "nome": "ALESSIO",
             "codeSuffix": "ES",
@@ -2426,10 +2624,11 @@
             "categoria": "ES1_M",
             "ambiguousNameSplit": false,
             "uncertainYear": false,
-            "existingAtletaId": "GALEOTTI_ALESSIO"
+            "existingAtletaId": "GALEOTTI_ALESSIO",
+            "posizione": 2
           },
           {
-            "posizione": 3,
+            "posizioneOriginale": 3,
             "cognome": "ANTONGIOVANNI",
             "nome": "DIEGO",
             "codeSuffix": "ES",
@@ -2437,10 +2636,11 @@
             "categoria": "ES1_M",
             "ambiguousNameSplit": false,
             "uncertainYear": false,
-            "existingAtletaId": "ANTONGIOVANNI_DIEGO"
+            "existingAtletaId": "ANTONGIOVANNI_DIEGO",
+            "posizione": 3
           },
           {
-            "posizione": 4,
+            "posizioneOriginale": 4,
             "cognome": "BIANCHI",
             "nome": "MATTIA",
             "codeSuffix": "ES",
@@ -2448,10 +2648,11 @@
             "categoria": "ES1_M",
             "ambiguousNameSplit": false,
             "uncertainYear": false,
-            "existingAtletaId": "BIANCHI_MATTIA"
+            "existingAtletaId": "BIANCHI_MATTIA",
+            "posizione": 4
           },
           {
-            "posizione": 5,
+            "posizioneOriginale": 5,
             "cognome": "BERTI",
             "nome": "GIANMARIA",
             "codeSuffix": "ES",
@@ -2459,10 +2660,11 @@
             "categoria": "ES1_M",
             "ambiguousNameSplit": false,
             "uncertainYear": false,
-            "existingAtletaId": "BERTI_GIANMARIA"
+            "existingAtletaId": "BERTI_GIANMARIA",
+            "posizione": 5
           },
           {
-            "posizione": 6,
+            "posizioneOriginale": 6,
             "cognome": "GASSANI MATTEO",
             "nome": "GINO",
             "codeSuffix": "ES",
@@ -2470,7 +2672,8 @@
             "categoria": "ES1_M",
             "ambiguousNameSplit": false,
             "uncertainYear": false,
-            "existingAtletaId": "GASSANI_MATTEO_GINO"
+            "existingAtletaId": "GASSANI_MATTEO_GINO",
+            "posizione": 6
           }
         ]
       },
@@ -2478,7 +2681,7 @@
         "tabLabel": "esordienti 2 anno",
         "rows": [
           {
-            "posizione": 1,
+            "posizioneOriginale": 1,
             "cognome": "SANTINI",
             "nome": "SAMUELE",
             "codeSuffix": "ES",
@@ -2486,10 +2689,11 @@
             "categoria": "ES2_M",
             "ambiguousNameSplit": false,
             "uncertainYear": false,
-            "existingAtletaId": "SANTINI_SAMUELE"
+            "existingAtletaId": "SANTINI_SAMUELE",
+            "posizione": 1
           },
           {
-            "posizione": 2,
+            "posizioneOriginale": 2,
             "cognome": "DELLA POLLA",
             "nome": "DIEGO",
             "codeSuffix": "ES",
@@ -2497,10 +2701,11 @@
             "categoria": "ES2_M",
             "ambiguousNameSplit": false,
             "uncertainYear": false,
-            "existingAtletaId": "DELLA_POLLA_DIEGO"
+            "existingAtletaId": "DELLA_POLLA_DIEGO",
+            "posizione": 2
           },
           {
-            "posizione": 3,
+            "posizioneOriginale": 3,
             "cognome": "STEFANINI",
             "nome": "EDOARDO",
             "codeSuffix": "ES",
@@ -2508,10 +2713,11 @@
             "categoria": "ES2_M",
             "ambiguousNameSplit": false,
             "uncertainYear": false,
-            "existingAtletaId": "STEFANINI_EDOARDO"
+            "existingAtletaId": "STEFANINI_EDOARDO",
+            "posizione": 3
           },
           {
-            "posizione": 4,
+            "posizioneOriginale": 4,
             "cognome": "PUCCI",
             "nome": "LEONARDO",
             "codeSuffix": "ES",
@@ -2519,10 +2725,11 @@
             "categoria": "ES2_M",
             "ambiguousNameSplit": false,
             "uncertainYear": false,
-            "existingAtletaId": "PUCCI_LEONARDO"
+            "existingAtletaId": "PUCCI_LEONARDO",
+            "posizione": 4
           },
           {
-            "posizione": 5,
+            "posizioneOriginale": 5,
             "cognome": "TOGNETTI",
             "nome": "PIERCARLO",
             "codeSuffix": "ES",
@@ -2530,7 +2737,8 @@
             "categoria": "ES2_M",
             "ambiguousNameSplit": false,
             "uncertainYear": false,
-            "existingAtletaId": "TOGNETTI_PIERCARLO"
+            "existingAtletaId": "TOGNETTI_PIERCARLO",
+            "posizione": 5
           }
         ]
       },
@@ -2538,7 +2746,7 @@
         "tabLabel": "allievi",
         "rows": [
           {
-            "posizione": 1,
+            "posizioneOriginale": 1,
             "cognome": "GABBRIELLESCHI",
             "nome": "GIOELE",
             "codeSuffix": "AL",
@@ -2546,10 +2754,11 @@
             "categoria": "AL_M",
             "ambiguousNameSplit": false,
             "uncertainYear": false,
-            "existingAtletaId": "GABBRIELLESCHI_GIOELE"
+            "existingAtletaId": "GABBRIELLESCHI_GIOELE",
+            "posizione": 1
           },
           {
-            "posizione": 2,
+            "posizioneOriginale": 2,
             "cognome": "LUCHERINI",
             "nome": "CHRISTIAN",
             "codeSuffix": "AL",
@@ -2557,10 +2766,11 @@
             "categoria": "AL_M",
             "ambiguousNameSplit": false,
             "uncertainYear": false,
-            "existingAtletaId": "LUCHERINI_CHRISTIAN"
+            "existingAtletaId": "LUCHERINI_CHRISTIAN",
+            "posizione": 2
           },
           {
-            "posizione": 3,
+            "posizioneOriginale": 3,
             "cognome": "LEONETTI",
             "nome": "LEONARDO",
             "codeSuffix": "AL",
@@ -2568,10 +2778,11 @@
             "categoria": "AL_M",
             "ambiguousNameSplit": false,
             "uncertainYear": false,
-            "existingAtletaId": "LEONETTI_LEONARDO"
+            "existingAtletaId": "LEONETTI_LEONARDO",
+            "posizione": 3
           },
           {
-            "posizione": 4,
+            "posizioneOriginale": 4,
             "cognome": "GIRALDI",
             "nome": "DAVIDE",
             "codeSuffix": "AL",
@@ -2579,10 +2790,11 @@
             "categoria": "AL_M",
             "ambiguousNameSplit": false,
             "uncertainYear": false,
-            "existingAtletaId": "GIRALDI_DAVIDE"
+            "existingAtletaId": "GIRALDI_DAVIDE",
+            "posizione": 4
           },
           {
-            "posizione": 5,
+            "posizioneOriginale": 5,
             "cognome": "GASTASINI",
             "nome": "MATTIA",
             "codeSuffix": "AL",
@@ -2590,10 +2802,11 @@
             "categoria": "AL_M",
             "ambiguousNameSplit": false,
             "uncertainYear": false,
-            "existingAtletaId": "GASTASINI_MATTIA"
+            "existingAtletaId": "GASTASINI_MATTIA",
+            "posizione": 5
           },
           {
-            "posizione": 6,
+            "posizioneOriginale": 6,
             "cognome": "MARINI",
             "nome": "TOMMASO",
             "codeSuffix": "AL",
@@ -2601,10 +2814,11 @@
             "categoria": "AL_M",
             "ambiguousNameSplit": false,
             "uncertainYear": false,
-            "existingAtletaId": "MARINI_TOMMASO"
+            "existingAtletaId": "MARINI_TOMMASO",
+            "posizione": 6
           },
           {
-            "posizione": 7,
+            "posizioneOriginale": 7,
             "cognome": "DE STEFANO",
             "nome": "DIEGO",
             "codeSuffix": "AL",
@@ -2612,10 +2826,11 @@
             "categoria": "AL_M",
             "ambiguousNameSplit": false,
             "uncertainYear": false,
-            "existingAtletaId": "DE_STEFANO_DIEGO"
+            "existingAtletaId": "DE_STEFANO_DIEGO",
+            "posizione": 7
           },
           {
-            "posizione": 8,
+            "posizioneOriginale": 8,
             "cognome": "BRAVATA'",
             "nome": "FRANCESCO",
             "codeSuffix": "AL",
@@ -2623,10 +2838,11 @@
             "categoria": "AL_M",
             "ambiguousNameSplit": false,
             "uncertainYear": false,
-            "existingAtletaId": "BRAVATA_FRANCESCO"
+            "existingAtletaId": "BRAVATA_FRANCESCO",
+            "posizione": 8
           },
           {
-            "posizione": 9,
+            "posizioneOriginale": 9,
             "cognome": "DI STEFANO",
             "nome": "GIACOMO",
             "codeSuffix": "AL",
@@ -2634,10 +2850,11 @@
             "categoria": "AL_M",
             "ambiguousNameSplit": false,
             "uncertainYear": false,
-            "existingAtletaId": "DI_STEFANO_GIACOMO"
+            "existingAtletaId": "DI_STEFANO_GIACOMO",
+            "posizione": 9
           },
           {
-            "posizione": 10,
+            "posizioneOriginale": 10,
             "cognome": "SEBASTIANI",
             "nome": "FRANCESCO",
             "codeSuffix": "AL",
@@ -2645,10 +2862,11 @@
             "categoria": "AL_M",
             "ambiguousNameSplit": false,
             "uncertainYear": false,
-            "existingAtletaId": "SEBASTIANI_FRANCESCO"
+            "existingAtletaId": "SEBASTIANI_FRANCESCO",
+            "posizione": 10
           },
           {
-            "posizione": 11,
+            "posizioneOriginale": 11,
             "cognome": "GUASTINI",
             "nome": "SIMONE",
             "codeSuffix": "AL",
@@ -2656,10 +2874,11 @@
             "categoria": "AL_M",
             "ambiguousNameSplit": false,
             "uncertainYear": false,
-            "existingAtletaId": "GUASTINI_SIMONE"
+            "existingAtletaId": "GUASTINI_SIMONE",
+            "posizione": 11
           },
           {
-            "posizione": 12,
+            "posizioneOriginale": 12,
             "cognome": "MARZOCCHI",
             "nome": "LORENZO",
             "codeSuffix": "AL",
@@ -2667,7 +2886,8 @@
             "categoria": "AL_M",
             "ambiguousNameSplit": false,
             "uncertainYear": false,
-            "existingAtletaId": "MARZOCCHI_LORENZO"
+            "existingAtletaId": "MARZOCCHI_LORENZO",
+            "posizione": 12
           }
         ]
       }
@@ -2686,7 +2906,7 @@
         "tabLabel": "donne allieve",
         "rows": [
           {
-            "posizione": 1,
+            "posizioneOriginale": 1,
             "cognome": "FUCILLI ALESSIA",
             "nome": "LILIANA",
             "codeSuffix": "DA",
@@ -2694,10 +2914,11 @@
             "categoria": "AL_F",
             "ambiguousNameSplit": false,
             "uncertainYear": false,
-            "existingAtletaId": "FUCILLI_ALESSIA_LILIANA"
+            "existingAtletaId": "FUCILLI_ALESSIA_LILIANA",
+            "posizione": 1
           },
           {
-            "posizione": 2,
+            "posizioneOriginale": 2,
             "cognome": "FANTIN",
             "nome": "NICOLE",
             "codeSuffix": "DA",
@@ -2705,10 +2926,11 @@
             "categoria": "AL_F",
             "ambiguousNameSplit": false,
             "uncertainYear": false,
-            "existingAtletaId": "FANTIN_NICOLE"
+            "existingAtletaId": "FANTIN_NICOLE",
+            "posizione": 2
           },
           {
-            "posizione": 3,
+            "posizioneOriginale": 3,
             "cognome": "ZOCCOLAN",
             "nome": "MARTINA",
             "codeSuffix": "DA",
@@ -2716,10 +2938,11 @@
             "categoria": "AL_F",
             "ambiguousNameSplit": false,
             "uncertainYear": false,
-            "existingAtletaId": "ZOCCOLAN_MARTINA"
+            "existingAtletaId": "ZOCCOLAN_MARTINA",
+            "posizione": 3
           },
           {
-            "posizione": 4,
+            "posizioneOriginale": 4,
             "cognome": "DE MARCHIO'",
             "nome": "GIULIA",
             "codeSuffix": "DA",
@@ -2727,10 +2950,11 @@
             "categoria": "AL_F",
             "ambiguousNameSplit": false,
             "uncertainYear": false,
-            "existingAtletaId": "DE_MARCHIO_GIULIA"
+            "existingAtletaId": "DE_MARCHIO_GIULIA",
+            "posizione": 4
           },
           {
-            "posizione": 5,
+            "posizioneOriginale": 5,
             "cognome": "MUSAT",
             "nome": "DENISA",
             "codeSuffix": "DA",
@@ -2738,10 +2962,11 @@
             "categoria": "AL_F",
             "ambiguousNameSplit": false,
             "uncertainYear": false,
-            "existingAtletaId": "MUSAT_DENISA"
+            "existingAtletaId": "MUSAT_DENISA",
+            "posizione": 5
           },
           {
-            "posizione": 6,
+            "posizioneOriginale": 6,
             "cognome": "FAVERO",
             "nome": "ELEONORA",
             "codeSuffix": "DA",
@@ -2749,10 +2974,11 @@
             "categoria": "AL_F",
             "ambiguousNameSplit": false,
             "uncertainYear": false,
-            "existingAtletaId": "FAVERO_ELEONORA"
+            "existingAtletaId": "FAVERO_ELEONORA",
+            "posizione": 6
           },
           {
-            "posizione": 7,
+            "posizioneOriginale": 7,
             "cognome": "CAMILLO",
             "nome": "MARISOL",
             "codeSuffix": "DA",
@@ -2760,7 +2986,8 @@
             "categoria": "AL_F",
             "ambiguousNameSplit": false,
             "uncertainYear": false,
-            "existingAtletaId": "CAMILLO_MARISOL"
+            "existingAtletaId": "CAMILLO_MARISOL",
+            "posizione": 7
           }
         ]
       },
@@ -2768,7 +2995,7 @@
         "tabLabel": "donne esordienti",
         "rows": [
           {
-            "posizione": 1,
+            "posizioneOriginale": 1,
             "cognome": "CETTOLIN",
             "nome": "GIOIA",
             "codeSuffix": "ED",
@@ -2776,10 +3003,11 @@
             "categoria": "ES1_F",
             "ambiguousNameSplit": false,
             "uncertainYear": true,
-            "existingAtletaId": "CETTOLIN_GIOIA"
+            "existingAtletaId": "CETTOLIN_GIOIA",
+            "posizione": 1
           },
           {
-            "posizione": 2,
+            "posizioneOriginale": 2,
             "cognome": "VETTORELLO",
             "nome": "GAIA",
             "codeSuffix": "ED",
@@ -2787,10 +3015,11 @@
             "categoria": "ES1_F",
             "ambiguousNameSplit": false,
             "uncertainYear": true,
-            "existingAtletaId": "VETTORELLO_GAIA"
+            "existingAtletaId": "VETTORELLO_GAIA",
+            "posizione": 2
           },
           {
-            "posizione": 3,
+            "posizioneOriginale": 3,
             "cognome": "BANDIZIOL",
             "nome": "DILETTA",
             "codeSuffix": "ED",
@@ -2798,10 +3027,11 @@
             "categoria": "ES1_F",
             "ambiguousNameSplit": false,
             "uncertainYear": true,
-            "existingAtletaId": "BANDIZIOL_DILETTA"
+            "existingAtletaId": "BANDIZIOL_DILETTA",
+            "posizione": 3
           },
           {
-            "posizione": 4,
+            "posizioneOriginale": 4,
             "cognome": "D'APOLLONIO",
             "nome": "ALESSIA",
             "codeSuffix": "ED",
@@ -2809,10 +3039,11 @@
             "categoria": "ES1_F",
             "ambiguousNameSplit": false,
             "uncertainYear": true,
-            "existingAtletaId": "D_APOLLONIO_ALESSIA"
+            "existingAtletaId": "D_APOLLONIO_ALESSIA",
+            "posizione": 4
           },
           {
-            "posizione": 5,
+            "posizioneOriginale": 5,
             "cognome": "PIN",
             "nome": "MATILDE",
             "codeSuffix": "ED",
@@ -2820,7 +3051,8 @@
             "categoria": "ES1_F",
             "ambiguousNameSplit": false,
             "uncertainYear": true,
-            "existingAtletaId": "PIN_MATILDE"
+            "existingAtletaId": "PIN_MATILDE",
+            "posizione": 5
           }
         ]
       },
@@ -2828,7 +3060,7 @@
         "tabLabel": "esordienti 1 m",
         "rows": [
           {
-            "posizione": 1,
+            "posizioneOriginale": 1,
             "cognome": "BERTOLIN",
             "nome": "EROS",
             "codeSuffix": "ES",
@@ -2836,10 +3068,11 @@
             "categoria": "ES1_M",
             "ambiguousNameSplit": false,
             "uncertainYear": false,
-            "existingAtletaId": "BERTOLIN_EROS"
+            "existingAtletaId": "BERTOLIN_EROS",
+            "posizione": 1
           },
           {
-            "posizione": 2,
+            "posizioneOriginale": 2,
             "cognome": "FRESCHI",
             "nome": "ANDREA",
             "codeSuffix": "ES",
@@ -2847,10 +3080,11 @@
             "categoria": "ES1_M",
             "ambiguousNameSplit": false,
             "uncertainYear": false,
-            "existingAtletaId": "FRESCHI_ANDREA"
+            "existingAtletaId": "FRESCHI_ANDREA",
+            "posizione": 2
           },
           {
-            "posizione": 3,
+            "posizioneOriginale": 3,
             "cognome": "MARCHIOL",
             "nome": "ERIC",
             "codeSuffix": "ES",
@@ -2858,10 +3092,11 @@
             "categoria": "ES1_M",
             "ambiguousNameSplit": false,
             "uncertainYear": false,
-            "existingAtletaId": "MARCHIOL_ERIC"
+            "existingAtletaId": "MARCHIOL_ERIC",
+            "posizione": 3
           },
           {
-            "posizione": 4,
+            "posizioneOriginale": 4,
             "cognome": "BOTTEON",
             "nome": "ALESSANDRO",
             "codeSuffix": "ES",
@@ -2869,10 +3104,11 @@
             "categoria": "ES1_M",
             "ambiguousNameSplit": false,
             "uncertainYear": false,
-            "existingAtletaId": "BOTTEON_ALESSANDRO"
+            "existingAtletaId": "BOTTEON_ALESSANDRO",
+            "posizione": 4
           },
           {
-            "posizione": 5,
+            "posizioneOriginale": 5,
             "cognome": "PIGAT",
             "nome": "DAVIDE",
             "codeSuffix": "ES",
@@ -2880,10 +3116,11 @@
             "categoria": "ES1_M",
             "ambiguousNameSplit": false,
             "uncertainYear": false,
-            "existingAtletaId": "PIGAT_DAVIDE"
+            "existingAtletaId": "PIGAT_DAVIDE",
+            "posizione": 5
           },
           {
-            "posizione": 6,
+            "posizioneOriginale": 6,
             "cognome": "ARITON MATIAS",
             "nome": "ANDREI",
             "codeSuffix": "ES",
@@ -2891,10 +3128,11 @@
             "categoria": "ES1_M",
             "ambiguousNameSplit": false,
             "uncertainYear": false,
-            "existingAtletaId": "ARITON_MATIAS_ANDREI"
+            "existingAtletaId": "ARITON_MATIAS_ANDREI",
+            "posizione": 6
           },
           {
-            "posizione": 7,
+            "posizioneOriginale": 7,
             "cognome": "ANTONINI",
             "nome": "MATTEO",
             "codeSuffix": "ES",
@@ -2902,10 +3140,11 @@
             "categoria": "ES1_M",
             "ambiguousNameSplit": false,
             "uncertainYear": false,
-            "existingAtletaId": "ANTONINI_MATTEO"
+            "existingAtletaId": "ANTONINI_MATTEO",
+            "posizione": 7
           },
           {
-            "posizione": 8,
+            "posizioneOriginale": 8,
             "cognome": "BERTON",
             "nome": "MATTIA",
             "codeSuffix": "ES",
@@ -2913,10 +3152,11 @@
             "categoria": "ES1_M",
             "ambiguousNameSplit": false,
             "uncertainYear": false,
-            "existingAtletaId": "BERTON_MATTIA"
+            "existingAtletaId": "BERTON_MATTIA",
+            "posizione": 8
           },
           {
-            "posizione": 9,
+            "posizioneOriginale": 9,
             "cognome": "CIGOLOTTO",
             "nome": "GIOELE",
             "codeSuffix": "ES",
@@ -2924,10 +3164,11 @@
             "categoria": "ES1_M",
             "ambiguousNameSplit": false,
             "uncertainYear": false,
-            "existingAtletaId": "CIGOLOTTO_GIOELE"
+            "existingAtletaId": "CIGOLOTTO_GIOELE",
+            "posizione": 9
           },
           {
-            "posizione": 10,
+            "posizioneOriginale": 10,
             "cognome": "CASETTA",
             "nome": "PIETRO",
             "codeSuffix": "ES",
@@ -2935,7 +3176,8 @@
             "categoria": "ES1_M",
             "ambiguousNameSplit": false,
             "uncertainYear": false,
-            "existingAtletaId": "CASETTA_PIETRO"
+            "existingAtletaId": "CASETTA_PIETRO",
+            "posizione": 10
           }
         ]
       },
@@ -2943,7 +3185,7 @@
         "tabLabel": "esordienti 2°m",
         "rows": [
           {
-            "posizione": 1,
+            "posizioneOriginale": 1,
             "cognome": "CARLET",
             "nome": "SEBASTIANO",
             "codeSuffix": "ES",
@@ -2951,10 +3193,11 @@
             "categoria": "ES2_M",
             "ambiguousNameSplit": false,
             "uncertainYear": false,
-            "existingAtletaId": "CARLET_SEBASTIANO"
+            "existingAtletaId": "CARLET_SEBASTIANO",
+            "posizione": 1
           },
           {
-            "posizione": 2,
+            "posizioneOriginale": 2,
             "cognome": "BIT",
             "nome": "DANIELE",
             "codeSuffix": "ES",
@@ -2962,10 +3205,11 @@
             "categoria": "ES2_M",
             "ambiguousNameSplit": false,
             "uncertainYear": false,
-            "existingAtletaId": null
+            "existingAtletaId": null,
+            "posizione": 2
           },
           {
-            "posizione": 3,
+            "posizioneOriginale": 3,
             "cognome": "PESSOTTO",
             "nome": "ANDREA",
             "codeSuffix": "ES",
@@ -2973,10 +3217,11 @@
             "categoria": "ES2_M",
             "ambiguousNameSplit": false,
             "uncertainYear": false,
-            "existingAtletaId": "PESSOTTO_ANDREA"
+            "existingAtletaId": "PESSOTTO_ANDREA",
+            "posizione": 3
           },
           {
-            "posizione": 4,
+            "posizioneOriginale": 4,
             "cognome": "QUAIA",
             "nome": "FILIPPO",
             "codeSuffix": "ES",
@@ -2984,10 +3229,11 @@
             "categoria": "ES2_M",
             "ambiguousNameSplit": false,
             "uncertainYear": false,
-            "existingAtletaId": "QUAIA_FILIPPO"
+            "existingAtletaId": "QUAIA_FILIPPO",
+            "posizione": 4
           },
           {
-            "posizione": 5,
+            "posizioneOriginale": 5,
             "cognome": "BEMBO",
             "nome": "SANTIAGO",
             "codeSuffix": "ES",
@@ -2995,10 +3241,11 @@
             "categoria": "ES2_M",
             "ambiguousNameSplit": false,
             "uncertainYear": false,
-            "existingAtletaId": "BEMBO_SANTIAGO"
+            "existingAtletaId": "BEMBO_SANTIAGO",
+            "posizione": 5
           },
           {
-            "posizione": 6,
+            "posizioneOriginale": 6,
             "cognome": "CITRON",
             "nome": "SAMUELE",
             "codeSuffix": "ES",
@@ -3006,10 +3253,11 @@
             "categoria": "ES2_M",
             "ambiguousNameSplit": false,
             "uncertainYear": false,
-            "existingAtletaId": "CITRON_SAMUELE"
+            "existingAtletaId": "CITRON_SAMUELE",
+            "posizione": 6
           },
           {
-            "posizione": 7,
+            "posizioneOriginale": 7,
             "cognome": "CARLET",
             "nome": "MATTIA",
             "codeSuffix": "ES",
@@ -3017,10 +3265,11 @@
             "categoria": "ES2_M",
             "ambiguousNameSplit": false,
             "uncertainYear": false,
-            "existingAtletaId": "CARLET_MATTIA"
+            "existingAtletaId": "CARLET_MATTIA",
+            "posizione": 7
           },
           {
-            "posizione": 8,
+            "posizioneOriginale": 8,
             "cognome": "SANTAROSSA",
             "nome": "NOAH",
             "codeSuffix": "ES",
@@ -3028,10 +3277,11 @@
             "categoria": "ES2_M",
             "ambiguousNameSplit": false,
             "uncertainYear": false,
-            "existingAtletaId": null
+            "existingAtletaId": null,
+            "posizione": 8
           },
           {
-            "posizione": 9,
+            "posizioneOriginale": 9,
             "cognome": "NADAL",
             "nome": "GABRIELE",
             "codeSuffix": "ES",
@@ -3039,10 +3289,11 @@
             "categoria": "ES2_M",
             "ambiguousNameSplit": false,
             "uncertainYear": false,
-            "existingAtletaId": null
+            "existingAtletaId": null,
+            "posizione": 9
           },
           {
-            "posizione": 10,
+            "posizioneOriginale": 10,
             "cognome": "MIZZAU",
             "nome": "LUCIO",
             "codeSuffix": "ES",
@@ -3050,7 +3301,8 @@
             "categoria": "ES2_M",
             "ambiguousNameSplit": false,
             "uncertainYear": false,
-            "existingAtletaId": "MIZZAU_LUCIO"
+            "existingAtletaId": "MIZZAU_LUCIO",
+            "posizione": 10
           }
         ]
       },
@@ -3058,7 +3310,7 @@
         "tabLabel": "allievi",
         "rows": [
           {
-            "posizione": 1,
+            "posizioneOriginale": 1,
             "cognome": "ATZORI",
             "nome": "DIEGO",
             "codeSuffix": "AL",
@@ -3066,10 +3318,11 @@
             "categoria": "AL_M",
             "ambiguousNameSplit": false,
             "uncertainYear": false,
-            "existingAtletaId": "ATZORI_DIEGO"
+            "existingAtletaId": "ATZORI_DIEGO",
+            "posizione": 1
           },
           {
-            "posizione": 2,
+            "posizioneOriginale": 2,
             "cognome": "RODRIGUES DOS SANTOS VICENTE",
             "nome": "JUNIOR",
             "codeSuffix": "AL",
@@ -3077,10 +3330,11 @@
             "categoria": "AL_M",
             "ambiguousNameSplit": true,
             "uncertainYear": false,
-            "existingAtletaId": "RODRIGUES_DOS_SANTOS_VICENTE_JUNIOR"
+            "existingAtletaId": "RODRIGUES_DOS_SANTOS_VICENTE_JUNIOR",
+            "posizione": 2
           },
           {
-            "posizione": 3,
+            "posizioneOriginale": 3,
             "cognome": "QUAIA",
             "nome": "NICOLA",
             "codeSuffix": "AL",
@@ -3088,10 +3342,11 @@
             "categoria": "AL_M",
             "ambiguousNameSplit": false,
             "uncertainYear": false,
-            "existingAtletaId": "QUAIA_NICOLA"
+            "existingAtletaId": "QUAIA_NICOLA",
+            "posizione": 3
           },
           {
-            "posizione": 4,
+            "posizioneOriginale": 4,
             "cognome": "CASETTA",
             "nome": "MARCO",
             "codeSuffix": "AL",
@@ -3099,10 +3354,11 @@
             "categoria": "AL_M",
             "ambiguousNameSplit": false,
             "uncertainYear": false,
-            "existingAtletaId": "CASETTA_MARCO"
+            "existingAtletaId": "CASETTA_MARCO",
+            "posizione": 4
           },
           {
-            "posizione": 5,
+            "posizioneOriginale": 5,
             "cognome": "PALAMIN",
             "nome": "MARK",
             "codeSuffix": "AL",
@@ -3110,10 +3366,11 @@
             "categoria": "AL_M",
             "ambiguousNameSplit": false,
             "uncertainYear": false,
-            "existingAtletaId": "PALAMIN_MARK"
+            "existingAtletaId": "PALAMIN_MARK",
+            "posizione": 5
           },
           {
-            "posizione": 6,
+            "posizioneOriginale": 6,
             "cognome": "CARLET",
             "nome": "ALBERTO",
             "codeSuffix": "AL",
@@ -3121,10 +3378,11 @@
             "categoria": "AL_M",
             "ambiguousNameSplit": false,
             "uncertainYear": false,
-            "existingAtletaId": "CARLET_ALBERTO"
+            "existingAtletaId": "CARLET_ALBERTO",
+            "posizione": 6
           },
           {
-            "posizione": 8,
+            "posizioneOriginale": 8,
             "cognome": "ORO",
             "nome": "NOAH",
             "codeSuffix": "AL",
@@ -3132,10 +3390,11 @@
             "categoria": "AL_M",
             "ambiguousNameSplit": false,
             "uncertainYear": false,
-            "existingAtletaId": "ORO_NOAH"
+            "existingAtletaId": "ORO_NOAH",
+            "posizione": 7
           },
           {
-            "posizione": 9,
+            "posizioneOriginale": 9,
             "cognome": "GIACOMINI",
             "nome": "LEONARDO",
             "codeSuffix": "AL",
@@ -3143,10 +3402,11 @@
             "categoria": "AL_M",
             "ambiguousNameSplit": false,
             "uncertainYear": false,
-            "existingAtletaId": "GIACOMINI_LEONARDO"
+            "existingAtletaId": "GIACOMINI_LEONARDO",
+            "posizione": 8
           },
           {
-            "posizione": 10,
+            "posizioneOriginale": 10,
             "cognome": "GALASSO",
             "nome": "DENIS",
             "codeSuffix": "AL",
@@ -3154,7 +3414,8 @@
             "categoria": "AL_M",
             "ambiguousNameSplit": false,
             "uncertainYear": false,
-            "existingAtletaId": "GALASSO_DENIS"
+            "existingAtletaId": "GALASSO_DENIS",
+            "posizione": 9
           }
         ]
       }
@@ -3173,7 +3434,7 @@
         "tabLabel": "ARRIVO DONNE ESORDIENTI",
         "rows": [
           {
-            "posizione": 1,
+            "posizioneOriginale": 1,
             "cognome": "GUIDOLIN",
             "nome": "GIORGIA",
             "codeSuffix": "ED",
@@ -3181,10 +3442,11 @@
             "categoria": "ES1_F",
             "ambiguousNameSplit": false,
             "uncertainYear": true,
-            "existingAtletaId": "GUIDOLIN_GIORGIA"
+            "existingAtletaId": "GUIDOLIN_GIORGIA",
+            "posizione": 1
           },
           {
-            "posizione": 2,
+            "posizioneOriginale": 2,
             "cognome": "VETTORELLO",
             "nome": "GAIA",
             "codeSuffix": "ED",
@@ -3192,10 +3454,11 @@
             "categoria": "ES1_F",
             "ambiguousNameSplit": false,
             "uncertainYear": true,
-            "existingAtletaId": "VETTORELLO_GAIA"
+            "existingAtletaId": "VETTORELLO_GAIA",
+            "posizione": 2
           },
           {
-            "posizione": 3,
+            "posizioneOriginale": 3,
             "cognome": "CETTOLIN",
             "nome": "GIOIA",
             "codeSuffix": "ED",
@@ -3203,10 +3466,11 @@
             "categoria": "ES1_F",
             "ambiguousNameSplit": false,
             "uncertainYear": true,
-            "existingAtletaId": "CETTOLIN_GIOIA"
+            "existingAtletaId": "CETTOLIN_GIOIA",
+            "posizione": 3
           },
           {
-            "posizione": 4,
+            "posizioneOriginale": 4,
             "cognome": "TONELLOTTO",
             "nome": "GIADA",
             "codeSuffix": "ED",
@@ -3214,10 +3478,11 @@
             "categoria": "ES1_F",
             "ambiguousNameSplit": false,
             "uncertainYear": true,
-            "existingAtletaId": "TONELLOTTO_GIADA"
+            "existingAtletaId": "TONELLOTTO_GIADA",
+            "posizione": 4
           },
           {
-            "posizione": 5,
+            "posizioneOriginale": 5,
             "cognome": "PARETTA",
             "nome": "AURORA",
             "codeSuffix": "ED",
@@ -3225,10 +3490,11 @@
             "categoria": "ES1_F",
             "ambiguousNameSplit": false,
             "uncertainYear": true,
-            "existingAtletaId": "PARETTA_AURORA"
+            "existingAtletaId": "PARETTA_AURORA",
+            "posizione": 5
           },
           {
-            "posizione": 6,
+            "posizioneOriginale": 6,
             "cognome": "MOCELLIN",
             "nome": "GRETA",
             "codeSuffix": "ED",
@@ -3236,7 +3502,8 @@
             "categoria": "ES1_F",
             "ambiguousNameSplit": false,
             "uncertainYear": true,
-            "existingAtletaId": "MOCELLIN_GRETA"
+            "existingAtletaId": "MOCELLIN_GRETA",
+            "posizione": 6
           }
         ]
       },
@@ -3244,7 +3511,7 @@
         "tabLabel": "ARRIVO DONNE ALLIEVE",
         "rows": [
           {
-            "posizione": 1,
+            "posizioneOriginale": 1,
             "cognome": "TASCA",
             "nome": "NICOLE",
             "codeSuffix": "DA",
@@ -3252,10 +3519,11 @@
             "categoria": "AL_F",
             "ambiguousNameSplit": false,
             "uncertainYear": false,
-            "existingAtletaId": "TASCA_NICOLE"
+            "existingAtletaId": "TASCA_NICOLE",
+            "posizione": 1
           },
           {
-            "posizione": 2,
+            "posizioneOriginale": 2,
             "cognome": "MUSAT",
             "nome": "DENISA",
             "codeSuffix": "DA",
@@ -3263,10 +3531,11 @@
             "categoria": "AL_F",
             "ambiguousNameSplit": false,
             "uncertainYear": false,
-            "existingAtletaId": "MUSAT_DENISA"
+            "existingAtletaId": "MUSAT_DENISA",
+            "posizione": 2
           },
           {
-            "posizione": 3,
+            "posizioneOriginale": 3,
             "cognome": "BISCONTIN",
             "nome": "CHIARA",
             "codeSuffix": "DA",
@@ -3274,10 +3543,11 @@
             "categoria": "AL_F",
             "ambiguousNameSplit": false,
             "uncertainYear": false,
-            "existingAtletaId": "BISCONTIN_CHIARA"
+            "existingAtletaId": "BISCONTIN_CHIARA",
+            "posizione": 3
           },
           {
-            "posizione": 4,
+            "posizioneOriginale": 4,
             "cognome": "FAVERO",
             "nome": "ELEONORA",
             "codeSuffix": "DA",
@@ -3285,7 +3555,8 @@
             "categoria": "AL_F",
             "ambiguousNameSplit": false,
             "uncertainYear": false,
-            "existingAtletaId": "FAVERO_ELEONORA"
+            "existingAtletaId": "FAVERO_ELEONORA",
+            "posizione": 4
           }
         ]
       },
@@ -3293,7 +3564,7 @@
         "tabLabel": "ARRIVO ESORDIENTI",
         "rows": [
           {
-            "posizione": 1,
+            "posizioneOriginale": 1,
             "cognome": "MOSNA",
             "nome": "RICCARDO",
             "codeSuffix": "ES",
@@ -3301,10 +3572,11 @@
             "categoria": "ES1_M",
             "ambiguousNameSplit": false,
             "uncertainYear": true,
-            "existingAtletaId": "MOSNA_RICCARDO"
+            "existingAtletaId": "MOSNA_RICCARDO",
+            "posizione": 1
           },
           {
-            "posizione": 2,
+            "posizioneOriginale": 2,
             "cognome": "BEMBO",
             "nome": "SANTIAGO",
             "codeSuffix": "ES",
@@ -3312,10 +3584,11 @@
             "categoria": "ES1_M",
             "ambiguousNameSplit": false,
             "uncertainYear": true,
-            "existingAtletaId": "BEMBO_SANTIAGO"
+            "existingAtletaId": "BEMBO_SANTIAGO",
+            "posizione": 2
           },
           {
-            "posizione": 3,
+            "posizioneOriginale": 3,
             "cognome": "SALVATI GABRIELE",
             "nome": "GERARDO",
             "codeSuffix": "ES",
@@ -3323,10 +3596,11 @@
             "categoria": "ES1_M",
             "ambiguousNameSplit": false,
             "uncertainYear": true,
-            "existingAtletaId": "SALVATI_GABRIELE_GERARDO"
+            "existingAtletaId": "SALVATI_GABRIELE_GERARDO",
+            "posizione": 3
           },
           {
-            "posizione": 4,
+            "posizioneOriginale": 4,
             "cognome": "DE ROSSI",
             "nome": "GIACOMO",
             "codeSuffix": "ES",
@@ -3334,10 +3608,11 @@
             "categoria": "ES1_M",
             "ambiguousNameSplit": false,
             "uncertainYear": true,
-            "existingAtletaId": "DE_ROSSI_GIACOMO"
+            "existingAtletaId": "DE_ROSSI_GIACOMO",
+            "posizione": 4
           },
           {
-            "posizione": 5,
+            "posizioneOriginale": 5,
             "cognome": "BASSO",
             "nome": "FILIPPO",
             "codeSuffix": "ES",
@@ -3345,10 +3620,11 @@
             "categoria": "ES1_M",
             "ambiguousNameSplit": false,
             "uncertainYear": true,
-            "existingAtletaId": "BASSO_FILIPPO"
+            "existingAtletaId": "BASSO_FILIPPO",
+            "posizione": 5
           },
           {
-            "posizione": 6,
+            "posizioneOriginale": 6,
             "cognome": "BENFATTO",
             "nome": "FEDERICO",
             "codeSuffix": "ES",
@@ -3356,7 +3632,8 @@
             "categoria": "ES1_M",
             "ambiguousNameSplit": false,
             "uncertainYear": true,
-            "existingAtletaId": "BENFATTO_FEDERICO"
+            "existingAtletaId": "BENFATTO_FEDERICO",
+            "posizione": 6
           }
         ]
       },
@@ -3364,7 +3641,7 @@
         "tabLabel": "ARRIVO ALLIEVI",
         "rows": [
           {
-            "posizione": 1,
+            "posizioneOriginale": 1,
             "cognome": "BANDIERA",
             "nome": "CESARE",
             "codeSuffix": "AL",
@@ -3372,10 +3649,11 @@
             "categoria": "AL_M",
             "ambiguousNameSplit": false,
             "uncertainYear": false,
-            "existingAtletaId": "BANDIERA_CESARE"
+            "existingAtletaId": "BANDIERA_CESARE",
+            "posizione": 1
           },
           {
-            "posizione": 2,
+            "posizioneOriginale": 2,
             "cognome": "MENEGOTTO",
             "nome": "ELIA",
             "codeSuffix": "AL",
@@ -3383,10 +3661,11 @@
             "categoria": "AL_M",
             "ambiguousNameSplit": false,
             "uncertainYear": false,
-            "existingAtletaId": "MENEGOTTO_ELIA"
+            "existingAtletaId": "MENEGOTTO_ELIA",
+            "posizione": 2
           },
           {
-            "posizione": 3,
+            "posizioneOriginale": 3,
             "cognome": "CLEMENTE",
             "nome": "GIULIO",
             "codeSuffix": "AL",
@@ -3394,10 +3673,11 @@
             "categoria": "AL_M",
             "ambiguousNameSplit": false,
             "uncertainYear": false,
-            "existingAtletaId": "CLEMENTE_GIULIO"
+            "existingAtletaId": "CLEMENTE_GIULIO",
+            "posizione": 3
           },
           {
-            "posizione": 4,
+            "posizioneOriginale": 4,
             "cognome": "BERTON",
             "nome": "GIOVANNI",
             "codeSuffix": "AL",
@@ -3405,10 +3685,11 @@
             "categoria": "AL_M",
             "ambiguousNameSplit": false,
             "uncertainYear": false,
-            "existingAtletaId": "BERTON_GIOVANNI"
+            "existingAtletaId": "BERTON_GIOVANNI",
+            "posizione": 4
           },
           {
-            "posizione": 5,
+            "posizioneOriginale": 5,
             "cognome": "VIERO",
             "nome": "ALBERTO",
             "codeSuffix": "AL",
@@ -3416,10 +3697,11 @@
             "categoria": "AL_M",
             "ambiguousNameSplit": false,
             "uncertainYear": false,
-            "existingAtletaId": "VIERO_ALBERTO"
+            "existingAtletaId": "VIERO_ALBERTO",
+            "posizione": 5
           },
           {
-            "posizione": 6,
+            "posizioneOriginale": 6,
             "cognome": "CALLEGARO",
             "nome": "FILIPPO",
             "codeSuffix": "AL",
@@ -3427,7 +3709,8 @@
             "categoria": "AL_M",
             "ambiguousNameSplit": false,
             "uncertainYear": false,
-            "existingAtletaId": "CALLEGARO_FILIPPO"
+            "existingAtletaId": "CALLEGARO_FILIPPO",
+            "posizione": 6
           }
         ]
       }
@@ -3446,7 +3729,7 @@
         "tabLabel": "Esordienti primo anno",
         "rows": [
           {
-            "posizione": 1,
+            "posizioneOriginale": 1,
             "cognome": "ZAVATTERO",
             "nome": "EDOARDO",
             "codeSuffix": "ES",
@@ -3454,10 +3737,11 @@
             "categoria": "ES1_M",
             "ambiguousNameSplit": false,
             "uncertainYear": false,
-            "existingAtletaId": "ZAVATTERO_EDOARDO"
+            "existingAtletaId": "ZAVATTERO_EDOARDO",
+            "posizione": 1
           },
           {
-            "posizione": 2,
+            "posizioneOriginale": 2,
             "cognome": "BIANCHI",
             "nome": "MASSIMO",
             "codeSuffix": "ES",
@@ -3465,10 +3749,11 @@
             "categoria": "ES1_M",
             "ambiguousNameSplit": false,
             "uncertainYear": false,
-            "existingAtletaId": "BIANCHI_MASSIMO"
+            "existingAtletaId": "BIANCHI_MASSIMO",
+            "posizione": 2
           },
           {
-            "posizione": 3,
+            "posizioneOriginale": 3,
             "cognome": "ARCUDI",
             "nome": "FEDERICO",
             "codeSuffix": "ES",
@@ -3476,10 +3761,11 @@
             "categoria": "ES1_M",
             "ambiguousNameSplit": false,
             "uncertainYear": false,
-            "existingAtletaId": "ARCUDI_FEDERICO"
+            "existingAtletaId": "ARCUDI_FEDERICO",
+            "posizione": 3
           },
           {
-            "posizione": 4,
+            "posizioneOriginale": 4,
             "cognome": "BARBERO",
             "nome": "ALESSANDRO",
             "codeSuffix": "ES",
@@ -3487,10 +3773,11 @@
             "categoria": "ES1_M",
             "ambiguousNameSplit": false,
             "uncertainYear": false,
-            "existingAtletaId": "BARBERO_ALESSANDRO"
+            "existingAtletaId": "BARBERO_ALESSANDRO",
+            "posizione": 4
           },
           {
-            "posizione": 5,
+            "posizioneOriginale": 5,
             "cognome": "GIACOBBE",
             "nome": "EDOARDO",
             "codeSuffix": "ES",
@@ -3498,10 +3785,11 @@
             "categoria": "ES1_M",
             "ambiguousNameSplit": false,
             "uncertainYear": false,
-            "existingAtletaId": null
+            "existingAtletaId": null,
+            "posizione": 5
           },
           {
-            "posizione": 6,
+            "posizioneOriginale": 6,
             "cognome": "GROSSO",
             "nome": "MATTEO",
             "codeSuffix": "ES",
@@ -3509,7 +3797,8 @@
             "categoria": "ES1_M",
             "ambiguousNameSplit": false,
             "uncertainYear": false,
-            "existingAtletaId": "GROSSO_MATTEO"
+            "existingAtletaId": "GROSSO_MATTEO",
+            "posizione": 6
           }
         ]
       },
@@ -3517,7 +3806,7 @@
         "tabLabel": "Esordienti secondo anno",
         "rows": [
           {
-            "posizione": 1,
+            "posizioneOriginale": 1,
             "cognome": "AVIDANO",
             "nome": "DAVIDE",
             "codeSuffix": "ES",
@@ -3525,10 +3814,11 @@
             "categoria": "ES2_M",
             "ambiguousNameSplit": false,
             "uncertainYear": false,
-            "existingAtletaId": "AVIDANO_DAVIDE"
+            "existingAtletaId": "AVIDANO_DAVIDE",
+            "posizione": 1
           },
           {
-            "posizione": 2,
+            "posizioneOriginale": 2,
             "cognome": "REJNAUD",
             "nome": "MATTEO",
             "codeSuffix": "ES",
@@ -3536,10 +3826,11 @@
             "categoria": "ES2_M",
             "ambiguousNameSplit": false,
             "uncertainYear": false,
-            "existingAtletaId": "REJNAUD_MATTEO"
+            "existingAtletaId": "REJNAUD_MATTEO",
+            "posizione": 2
           },
           {
-            "posizione": 3,
+            "posizioneOriginale": 3,
             "cognome": "GROPPO",
             "nome": "LEONARDO",
             "codeSuffix": "ES",
@@ -3547,10 +3838,11 @@
             "categoria": "ES2_M",
             "ambiguousNameSplit": false,
             "uncertainYear": false,
-            "existingAtletaId": "GROPPO_LEONARDO"
+            "existingAtletaId": "GROPPO_LEONARDO",
+            "posizione": 3
           },
           {
-            "posizione": 4,
+            "posizioneOriginale": 4,
             "cognome": "BALBI",
             "nome": "ALESSANDRO",
             "codeSuffix": "ES",
@@ -3558,10 +3850,11 @@
             "categoria": "ES2_M",
             "ambiguousNameSplit": false,
             "uncertainYear": false,
-            "existingAtletaId": "BALBI_ALESSANDRO"
+            "existingAtletaId": "BALBI_ALESSANDRO",
+            "posizione": 4
           },
           {
-            "posizione": 5,
+            "posizioneOriginale": 5,
             "cognome": "MARCHISIO",
             "nome": "MATTIA",
             "codeSuffix": "ES",
@@ -3569,10 +3862,11 @@
             "categoria": "ES2_M",
             "ambiguousNameSplit": false,
             "uncertainYear": false,
-            "existingAtletaId": null
+            "existingAtletaId": null,
+            "posizione": 5
           },
           {
-            "posizione": 6,
+            "posizioneOriginale": 6,
             "cognome": "SORASIO",
             "nome": "STEFANO",
             "codeSuffix": "ES",
@@ -3580,7 +3874,8 @@
             "categoria": "ES2_M",
             "ambiguousNameSplit": false,
             "uncertainYear": false,
-            "existingAtletaId": "SORASIO_STEFANO"
+            "existingAtletaId": "SORASIO_STEFANO",
+            "posizione": 6
           }
         ]
       },
@@ -3588,7 +3883,7 @@
         "tabLabel": "Allievi",
         "rows": [
           {
-            "posizione": 1,
+            "posizioneOriginale": 1,
             "cognome": "PHILIPPOT",
             "nome": "JOEL",
             "codeSuffix": "AL",
@@ -3596,10 +3891,11 @@
             "categoria": "AL_M",
             "ambiguousNameSplit": false,
             "uncertainYear": false,
-            "existingAtletaId": "PHILIPPOT_JOEL"
+            "existingAtletaId": "PHILIPPOT_JOEL",
+            "posizione": 1
           },
           {
-            "posizione": 2,
+            "posizioneOriginale": 2,
             "cognome": "TREMBLAN",
             "nome": "RAPHAEL",
             "codeSuffix": "AL",
@@ -3607,10 +3903,11 @@
             "categoria": "AL_M",
             "ambiguousNameSplit": false,
             "uncertainYear": false,
-            "existingAtletaId": "TREMBLAN_RAPHAEL"
+            "existingAtletaId": "TREMBLAN_RAPHAEL",
+            "posizione": 2
           },
           {
-            "posizione": 3,
+            "posizioneOriginale": 3,
             "cognome": "TALIA LISANDRO",
             "nome": "LORENZO",
             "codeSuffix": "AL",
@@ -3618,10 +3915,11 @@
             "categoria": "AL_M",
             "ambiguousNameSplit": false,
             "uncertainYear": false,
-            "existingAtletaId": "TALIA_LISANDRO_LORENZO"
+            "existingAtletaId": "TALIA_LISANDRO_LORENZO",
+            "posizione": 3
           },
           {
-            "posizione": 4,
+            "posizioneOriginale": 4,
             "cognome": "PETTITI",
             "nome": "NICOLA",
             "codeSuffix": "AL",
@@ -3629,10 +3927,11 @@
             "categoria": "AL_M",
             "ambiguousNameSplit": false,
             "uncertainYear": false,
-            "existingAtletaId": "PETTITI_NICOLA"
+            "existingAtletaId": "PETTITI_NICOLA",
+            "posizione": 4
           },
           {
-            "posizione": 5,
+            "posizioneOriginale": 5,
             "cognome": "MAZZONI",
             "nome": "MIRCO",
             "codeSuffix": "AL",
@@ -3640,10 +3939,11 @@
             "categoria": "AL_M",
             "ambiguousNameSplit": false,
             "uncertainYear": false,
-            "existingAtletaId": "MAZZONI_MIRCO"
+            "existingAtletaId": "MAZZONI_MIRCO",
+            "posizione": 5
           },
           {
-            "posizione": 6,
+            "posizioneOriginale": 6,
             "cognome": "FERRARI",
             "nome": "LEONARDO",
             "codeSuffix": "AL",
@@ -3651,7 +3951,8 @@
             "categoria": "AL_M",
             "ambiguousNameSplit": false,
             "uncertainYear": false,
-            "existingAtletaId": "FERRARI_LEONARDO"
+            "existingAtletaId": "FERRARI_LEONARDO",
+            "posizione": 6
           }
         ]
       },
@@ -3659,7 +3960,7 @@
         "tabLabel": "Juniores",
         "rows": [
           {
-            "posizione": 1,
+            "posizioneOriginale": 1,
             "cognome": "COMETTO",
             "nome": "FILIPPO",
             "codeSuffix": "JU",
@@ -3667,10 +3968,11 @@
             "categoria": "JUN_M",
             "ambiguousNameSplit": false,
             "uncertainYear": false,
-            "existingAtletaId": "COMETTO_FILIPPO"
+            "existingAtletaId": "COMETTO_FILIPPO",
+            "posizione": 1
           },
           {
-            "posizione": 2,
+            "posizioneOriginale": 2,
             "cognome": "GALLO",
             "nome": "FILIPPO",
             "codeSuffix": "JU",
@@ -3678,10 +3980,11 @@
             "categoria": "JUN_M",
             "ambiguousNameSplit": false,
             "uncertainYear": false,
-            "existingAtletaId": "GALLO_FILIPPO"
+            "existingAtletaId": "GALLO_FILIPPO",
+            "posizione": 2
           },
           {
-            "posizione": 3,
+            "posizioneOriginale": 3,
             "cognome": "GALFRE'",
             "nome": "JACOPO",
             "codeSuffix": "JU",
@@ -3689,10 +3992,11 @@
             "categoria": "JUN_M",
             "ambiguousNameSplit": false,
             "uncertainYear": false,
-            "existingAtletaId": "GALFRE_JACOPO"
+            "existingAtletaId": "GALFRE_JACOPO",
+            "posizione": 3
           },
           {
-            "posizione": 4,
+            "posizioneOriginale": 4,
             "cognome": "BORRE",
             "nome": "FABIEN",
             "codeSuffix": "JU",
@@ -3700,10 +4004,11 @@
             "categoria": "JUN_M",
             "ambiguousNameSplit": false,
             "uncertainYear": false,
-            "existingAtletaId": "BORRE_FABIEN"
+            "existingAtletaId": "BORRE_FABIEN",
+            "posizione": 4
           },
           {
-            "posizione": 5,
+            "posizioneOriginale": 5,
             "cognome": "CUDA",
             "nome": "ISACCO",
             "codeSuffix": "JU",
@@ -3711,10 +4016,11 @@
             "categoria": "JUN_M",
             "ambiguousNameSplit": false,
             "uncertainYear": false,
-            "existingAtletaId": "CUDA_ISACCO"
+            "existingAtletaId": "CUDA_ISACCO",
+            "posizione": 5
           },
           {
-            "posizione": 6,
+            "posizioneOriginale": 6,
             "cognome": "CUDA",
             "nome": "GABRIELE",
             "codeSuffix": "JU",
@@ -3722,7 +4028,8 @@
             "categoria": "JUN_M",
             "ambiguousNameSplit": false,
             "uncertainYear": false,
-            "existingAtletaId": "CUDA_GABRIELE"
+            "existingAtletaId": "CUDA_GABRIELE",
+            "posizione": 6
           }
         ]
       }

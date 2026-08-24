@@ -248,7 +248,7 @@ async function loadKnownAthleteIds() {
     for (const tab of tabs) {
       const mapped = categoriaFromLabel(tab.label);
       if (!mapped) continue; // Giovanissimi o tab non riconosciuto
-      const rows = tab.rows.map(r => {
+      let rows = tab.rows.map(r => {
         const codeSuffix = (r.nomeCode.match(/-\s*([A-Z0-9]+)$/) || [])[1] || '';
         const fullName = r.nomeCode.replace(/\s*-\s*[A-Z0-9]+$/, '');
         const { cognome, nome, ambiguous } = splitNomeCognome(fullName);
@@ -258,17 +258,42 @@ async function loadKnownAthleteIds() {
         // che lo scraper FCI e questo script spezzano in punti diversi.
         const candidateId = normForId(fullName);
         const existingId = knownIds.has(candidateId) ? candidateId : null;
-        totalRows++;
-        if (existingId) matched++;
         if (ambiguous) ambiguousNames++;
         return {
-          posizione: r.posizione, cognome, nome, codeSuffix, team: r.team,
+          posizioneOriginale: r.posizione, cognome, nome, codeSuffix, team: r.team,
           categoria: `${mapped.cat}_${genere}`,
           ambiguousNameSplit: !!ambiguous,
           uncertainYear: mapped.uncertainYear,
           existingAtletaId: existingId,
         };
       });
+      // Alcuni tab NON separano i generi (nessun tab "Donne ___" distinto):
+      // uomini e donne condividono UNA classifica combinata con un'unica
+      // sequenza di posizioni (es. "Esordienti primo anno" con una sola
+      // ragazza mescolata al 4° posto tra i ragazzi). Stessa regola degli
+      // scraper FCI "ufficiali": ogni genere ha la propria classifica
+      // separata, rinumerata dall'ordine relativo con cui sono arrivati —
+      // non la posizione grezza nella lista mista. Senza questo, la ragazza
+      // finiva con una posizione arbitraria e i ragazzi dopo di lei
+      // restavano con "buchi" nella numerazione invece di scalare su.
+      const byCatGenere = new Map();
+      for (const row of rows) {
+        if (!byCatGenere.has(row.categoria)) byCatGenere.set(row.categoria, []);
+        byCatGenere.get(row.categoria).push(row);
+      }
+      rows = [];
+      for (const group of byCatGenere.values()) {
+        group.sort((a, b) => a.posizioneOriginale - b.posizioneOriginale);
+        group.forEach((row, i) => {
+          row.posizione = i + 1;
+          rows.push(row);
+        });
+      }
+      rows.sort((a, b) => a.posizioneOriginale - b.posizioneOriginale);
+      for (const row of rows) {
+        totalRows++;
+        if (row.existingAtletaId) matched++;
+      }
       mappedTabs.push({ tabLabel: tab.label, rows });
     }
 

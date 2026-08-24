@@ -118,7 +118,11 @@ async function login() {
         const garaId = `${nomeSlug}_${dataISO}_${cat}`;
 
         for (const row of rows) {
-          if (row.posizione > 5) continue; // solo i primi 5 (vedi TOP5_POINTS sopra)
+          // Tutti i classificati vengono registrati (non solo i primi 5): il
+          // punteggio 0 oltre il 5° è già garantito dalla regola server-side
+          // self-propagating su tipo='tipo_pista' (vedi server.js), quindi
+          // qui non serve più scartare le righe — solo mandarle con
+          // tipo:'tipo_pista' esplicito.
           planned++;
           const body = {
             posizione: row.posizione,
@@ -133,7 +137,7 @@ async function login() {
             campionato_regionale,
             campionato_italiano,
             regione: race.regione || '',
-            punti_override: TOP5_POINTS[row.posizione],
+            punti_override: TOP5_POINTS[row.posizione] || 0,
           };
           if (DRY_RUN) {
             console.log(`[DRY] ${garaId} — #${row.posizione} ${row.cognome} ${row.nome} (${row.team}) [${body.punti_override}pt]${row.existingAtletaId ? ' → ' + row.existingAtletaId : ' → NUOVO'}`);
