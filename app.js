@@ -13508,7 +13508,7 @@ async function renderAtleta(atleta_id, opts = {}) {
           </div>
         </div>
         <div class="athlete-stats-group" id="atleta-stats-estero" style="display:none">
-          <div style="font-size:.68rem;letter-spacing:.06em;color:var(--text-muted);margin-bottom:4px">EXTRA PCS</div>
+          <div style="font-size:.68rem;letter-spacing:.06em;color:var(--text-muted);margin-bottom:4px">ALTRI RISULTATI</div>
           <div class="athlete-stats-bar"></div>
         </div>
       </div>
@@ -13994,7 +13994,7 @@ async function _loadTeamPcsExtra(teamId, season, viewCat) {
     teamEsteroEl.innerHTML = `
       <div class="team-stats-row">
         <div class="team-stat">
-          <span class="team-stat-val" style="font-size:.68rem;letter-spacing:.06em;color:var(--text-muted)">EXTRA PCS</span>
+          <span class="team-stat-val" style="font-size:.68rem;letter-spacing:.06em;color:var(--text-muted)">ALTRI RISULTATI</span>
           <span class="team-stat-label"></span>
         </div>
         <div class="team-stat">
