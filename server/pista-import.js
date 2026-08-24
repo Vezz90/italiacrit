@@ -166,14 +166,59 @@ async function fetchAllListItems() {
   return all;
 }
 
-function loadExistingAthleteIndex() {
+// Stesso algoritmo di _normForId/_makeAtletaId in server.js: normalizza
+// accenti, minuscolo, ogni run di caratteri non alfanumerici (SPAZI INCLUSI)
+// diventa un solo underscore, poi maiuscolo. Il punto chiave: applicato
+// all'intero nome per esteso (senza prima spezzarlo in cognome/nome), il
+// risultato è IDENTICO indipendentemente da dove cade il confine
+// cognome/nome — "RODRIGUES" + "DOS SANTOS VICENTE JUNIOR" e "RODRIGUES DOS
+// SANTOS VICENTE" + "JUNIOR" producono la STESSA stringa unendo con "_".
+// Il vecchio confronto per {cognome,nome} separati falliva proprio per
+// questo: lo scraper FCI e questo script possono spezzare lo stesso nome
+// in punti diversi (in un caso il cognome era una sola parola, "RODRIGUES",
+// col resto nel campo nome) — confrontando l'ID intero il problema sparisce.
+function normForId(s) {
+  return String(s || '').normalize('NFD').replace(/[̀-ͯ]/g, '')
+    .toLowerCase().replace(/[^a-z0-9]+/g, '_').replace(/^_+|_+$/g, '').toUpperCase();
+}
+
+// L'universo delle gare che il sito conosce NON vive solo in
+// results_raw.json (i soli risultati già scrapati dalla FCI): un atleta ha
+// una pagina profilo anche se è solo nel roster squadra (extra_roster.json),
+// nel roster PCS live (Supabase), o aggiunto a mano (manual-athletes) — pur
+// senza ancora un risultato contato. Il primo giro di questo script
+// guardava solo results_raw.json e per questo segnava come "nuovi" atleti
+// che in realtà hanno già una pagina sul sito.
+async function loadKnownAthleteIds() {
+  const ids = new Set();
+  const addFromRoster = (rosterObj) => {
+    for (const bucket of Object.values(rosterObj || {})) {
+      for (const a of (bucket.atleti || [])) if (a.atleta_id) ids.add(a.atleta_id);
+    }
+  };
+
   const resultsRaw = JSON.parse(fs.readFileSync(path.join(__dirname, '..', 'data', 'results_raw.json'), 'utf8'));
-  const byName = new Map(); // "COGNOME|NOME" -> atleta_id (prende l'ultimo incontrato)
-  for (const r of resultsRaw) {
-    if (!r.cognome || !r.atleta_id) continue;
-    byName.set(`${r.cognome.toUpperCase()}|${(r.nome || '').toUpperCase()}`, r.atleta_id);
+  for (const r of resultsRaw) if (r.atleta_id) ids.add(r.atleta_id);
+
+  const athletes = JSON.parse(fs.readFileSync(path.join(__dirname, '..', 'data', 'athletes.json'), 'utf8'));
+  for (const id of Object.keys(athletes)) ids.add(id);
+
+  const extraRoster = JSON.parse(fs.readFileSync(path.join(__dirname, '..', 'data', 'extra_roster.json'), 'utf8'));
+  addFromRoster(extraRoster);
+
+  // Fonti live (Supabase, non nei file statici del checkout locale) — dal
+  // backend deployato, stesso posto da cui il sito stesso le legge.
+  for (const url of [
+    'https://italiacrit.onrender.com/api/data/pcs-extra-roster',
+    'https://italiacrit.onrender.com/api/data/manual-athletes',
+  ]) {
+    try {
+      const res = await fetch(url);
+      if (res.ok) addFromRoster(await res.json());
+    } catch (e) { console.warn(`Avviso: impossibile leggere ${url}: ${e.message}`); }
   }
-  return byName;
+
+  return ids;
 }
 
 (async () => {
@@ -182,7 +227,8 @@ function loadExistingAthleteIndex() {
   const candidates = list.filter(g => /Tipo: Tipo Pista/.test(g.livelloTipo));
   console.log(`${candidates.length} gare "Tipo Pista" su strada da esaminare in dettaglio.\n`);
 
-  const athleteIndex = loadExistingAthleteIndex();
+  const knownIds = await loadKnownAthleteIds();
+  console.log(`${knownIds.size} atleta_id noti al sito (risultati + roster team + PCS + manuali).\n`);
   const report = [];
   let totalRows = 0, matched = 0, ambiguousNames = 0;
 
@@ -199,9 +245,14 @@ function loadExistingAthleteIndex() {
       if (!mapped) continue; // Giovanissimi o tab non riconosciuto
       const rows = tab.rows.map(r => {
         const codeSuffix = (r.nomeCode.match(/-\s*([A-Z0-9]+)$/) || [])[1] || '';
-        const { cognome, nome, ambiguous } = splitNomeCognome(r.nomeCode.replace(/\s*-\s*[A-Z0-9]+$/, ''));
+        const fullName = r.nomeCode.replace(/\s*-\s*[A-Z0-9]+$/, '');
+        const { cognome, nome, ambiguous } = splitNomeCognome(fullName);
         const genere = genereFromCode(codeSuffix, tab.label);
-        const existingId = athleteIndex.get(`${cognome.toUpperCase()}|${nome.toUpperCase()}`) || null;
+        // Confronto sull'ID intero (vedi normForId sopra), non su {cognome,nome}
+        // separati: split-order-independent, risolve i falsi "nuovo" per nomi
+        // che lo scraper FCI e questo script spezzano in punti diversi.
+        const candidateId = normForId(fullName);
+        const existingId = knownIds.has(candidateId) ? candidateId : null;
         totalRows++;
         if (existingId) matched++;
         if (ambiguous) ambiguousNames++;

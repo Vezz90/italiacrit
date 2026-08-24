@@ -184,7 +184,7 @@
             "categoria": "AL_M",
             "ambiguousNameSplit": false,
             "uncertainYear": false,
-            "existingAtletaId": null
+            "existingAtletaId": "TALIA_LISANDRO_LORENZO"
           },
           {
             "posizione": 4,
@@ -266,7 +266,7 @@
             "categoria": "JUN_M",
             "ambiguousNameSplit": false,
             "uncertainYear": false,
-            "existingAtletaId": null
+            "existingAtletaId": "ROCCIA_MANUEL"
           },
           {
             "posizione": 5,
@@ -616,7 +616,7 @@
             "categoria": "AL_F",
             "ambiguousNameSplit": false,
             "uncertainYear": false,
-            "existingAtletaId": null
+            "existingAtletaId": "DE_FRANCESCHI_MARTINA"
           },
           {
             "posizione": 3,
@@ -692,7 +692,7 @@
             "categoria": "ES2_M",
             "ambiguousNameSplit": false,
             "uncertainYear": false,
-            "existingAtletaId": null
+            "existingAtletaId": "DE_ROS_LUIGI"
           },
           {
             "posizione": 3,
@@ -719,7 +719,7 @@
             "categoria": "AL_M",
             "ambiguousNameSplit": true,
             "uncertainYear": false,
-            "existingAtletaId": null
+            "existingAtletaId": "RODRIGUES_DOS_SANTOS_VICENTE_JUNIOR"
           },
           {
             "posizione": 2,
@@ -992,7 +992,7 @@
             "categoria": "AL_M",
             "ambiguousNameSplit": false,
             "uncertainYear": false,
-            "existingAtletaId": null
+            "existingAtletaId": "SOSA_COLON_GIOEL"
           },
           {
             "posizione": 2,
@@ -1211,7 +1211,7 @@
             "categoria": "ES2_M",
             "ambiguousNameSplit": false,
             "uncertainYear": false,
-            "existingAtletaId": null
+            "existingAtletaId": "DI_DOMENICO_MATTIA"
           },
           {
             "posizione": 2,
@@ -1540,7 +1540,7 @@
             "categoria": "JUN_M",
             "ambiguousNameSplit": false,
             "uncertainYear": false,
-            "existingAtletaId": null
+            "existingAtletaId": "BONINO_ALESSANDRO"
           },
           {
             "posizione": 8,
@@ -1786,7 +1786,7 @@
             "categoria": "JUN_F",
             "ambiguousNameSplit": false,
             "uncertainYear": false,
-            "existingAtletaId": null
+            "existingAtletaId": "VEZZOSI_GLORIA"
           },
           {
             "posizione": 6,
@@ -1967,7 +1967,7 @@
             "categoria": "ELI_F",
             "ambiguousNameSplit": false,
             "uncertainYear": false,
-            "existingAtletaId": null
+            "existingAtletaId": "ZANGA_MARTA"
           },
           {
             "posizione": 9,
@@ -1978,7 +1978,7 @@
             "categoria": "ELI_F",
             "ambiguousNameSplit": false,
             "uncertainYear": false,
-            "existingAtletaId": null
+            "existingAtletaId": "DE_LAURENTIIS_ELENA"
           },
           {
             "posizione": 10,
@@ -2011,7 +2011,7 @@
             "categoria": "ELI_F",
             "ambiguousNameSplit": false,
             "uncertainYear": false,
-            "existingAtletaId": null
+            "existingAtletaId": "RADAELLI_ELVIRA"
           },
           {
             "posizione": 13,
@@ -2262,7 +2262,7 @@
             "categoria": "AL_F",
             "ambiguousNameSplit": false,
             "uncertainYear": false,
-            "existingAtletaId": null
+            "existingAtletaId": "ANZISI_REBECCA"
           },
           {
             "posizione": 2,
@@ -2377,7 +2377,7 @@
             "categoria": "AL_M",
             "ambiguousNameSplit": false,
             "uncertainYear": false,
-            "existingAtletaId": null
+            "existingAtletaId": "QUAIA_NICOLA"
           },
           {
             "posizione": 6,
@@ -2388,7 +2388,7 @@
             "categoria": "AL_M",
             "ambiguousNameSplit": false,
             "uncertainYear": false,
-            "existingAtletaId": null
+            "existingAtletaId": "BREDA_JUSTYN_MICHELE"
           }
         ]
       }
@@ -2470,7 +2470,7 @@
             "categoria": "ES1_M",
             "ambiguousNameSplit": false,
             "uncertainYear": false,
-            "existingAtletaId": null
+            "existingAtletaId": "GASSANI_MATTEO_GINO"
           }
         ]
       },
@@ -2497,7 +2497,7 @@
             "categoria": "ES2_M",
             "ambiguousNameSplit": false,
             "uncertainYear": false,
-            "existingAtletaId": null
+            "existingAtletaId": "DELLA_POLLA_DIEGO"
           },
           {
             "posizione": 3,
@@ -2612,7 +2612,7 @@
             "categoria": "AL_M",
             "ambiguousNameSplit": false,
             "uncertainYear": false,
-            "existingAtletaId": null
+            "existingAtletaId": "DE_STEFANO_DIEGO"
           },
           {
             "posizione": 8,
@@ -2634,7 +2634,7 @@
             "categoria": "AL_M",
             "ambiguousNameSplit": false,
             "uncertainYear": false,
-            "existingAtletaId": null
+            "existingAtletaId": "DI_STEFANO_GIACOMO"
           },
           {
             "posizione": 10,
@@ -2738,7 +2738,7 @@
             "categoria": "AL_F",
             "ambiguousNameSplit": false,
             "uncertainYear": false,
-            "existingAtletaId": null
+            "existingAtletaId": "MUSAT_DENISA"
           },
           {
             "posizione": 6,
@@ -2891,7 +2891,7 @@
             "categoria": "ES1_M",
             "ambiguousNameSplit": false,
             "uncertainYear": false,
-            "existingAtletaId": null
+            "existingAtletaId": "ARITON_MATIAS_ANDREI"
           },
           {
             "posizione": 7,
@@ -3077,7 +3077,7 @@
             "categoria": "AL_M",
             "ambiguousNameSplit": true,
             "uncertainYear": false,
-            "existingAtletaId": null
+            "existingAtletaId": "RODRIGUES_DOS_SANTOS_VICENTE_JUNIOR"
           },
           {
             "posizione": 3,
@@ -3088,7 +3088,7 @@
             "categoria": "AL_M",
             "ambiguousNameSplit": false,
             "uncertainYear": false,
-            "existingAtletaId": null
+            "existingAtletaId": "QUAIA_NICOLA"
           },
           {
             "posizione": 4,
@@ -3263,7 +3263,7 @@
             "categoria": "AL_F",
             "ambiguousNameSplit": false,
             "uncertainYear": false,
-            "existingAtletaId": null
+            "existingAtletaId": "MUSAT_DENISA"
           },
           {
             "posizione": 3,
@@ -3323,7 +3323,7 @@
             "categoria": "ES1_M",
             "ambiguousNameSplit": false,
             "uncertainYear": true,
-            "existingAtletaId": null
+            "existingAtletaId": "SALVATI_GABRIELE_GERARDO"
           },
           {
             "posizione": 4,
@@ -3334,7 +3334,7 @@
             "categoria": "ES1_M",
             "ambiguousNameSplit": false,
             "uncertainYear": true,
-            "existingAtletaId": null
+            "existingAtletaId": "DE_ROSSI_GIACOMO"
           },
           {
             "posizione": 5,
@@ -3618,7 +3618,7 @@
             "categoria": "AL_M",
             "ambiguousNameSplit": false,
             "uncertainYear": false,
-            "existingAtletaId": null
+            "existingAtletaId": "TALIA_LISANDRO_LORENZO"
           },
           {
             "posizione": 4,
@@ -3722,7 +3722,7 @@
             "categoria": "JUN_M",
             "ambiguousNameSplit": false,
             "uncertainYear": false,
-            "existingAtletaId": null
+            "existingAtletaId": "CUDA_GABRIELE"
           }
         ]
       }
