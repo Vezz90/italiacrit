@@ -21158,6 +21158,7 @@ async function renderRisultati() {
         <option value="internazionale">Internazionali ×3</option>
         <option value="campionato_regionale">Campionati Regionali</option>
         <option value="campionato_italiano">Campionati Italiani</option>
+        <option value="tipo_pista">Tipo Pista</option>
       </select>`;
 
     setPage(`
