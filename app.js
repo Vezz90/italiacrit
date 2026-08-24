@@ -17237,7 +17237,7 @@ async function renderGara(gara_id) {
         <span class="race-meta-sep">|</span>
         <span>${esc(catLabel(cat))}</span>
         <span class="race-meta-sep">|</span>
-        <span style="text-transform:capitalize">${esc(tipo)}</span>
+        <span style="text-transform:capitalize">${esc(tipo === 'tipo_pista' ? 'tipo pista' : tipo)}</span>
         <span class="race-meta-sep">|</span>
         ${badgeMult(mult, tipo, results[0]?.campionato_regionale || calEntry?.campionato_regionale, results[0]?.campionato_italiano || calEntry?.campionato_italiano)}
         ${results[0]?.km ? `<span class="race-meta-sep">|</span><span>${esc(results[0].km)} Km</span>` : ''}
