@@ -800,9 +800,62 @@ async function _photoCreditFor(garaId) {
 const _garaAiCaptionCache = new Map(); // id → { text, ts }
 const GARA_AI_CAPTION_TTL = 12 * 60 * 60 * 1000;
 
-async function _buildGaraAiCaption(id, cal, resultsRaw) {
+// Le correzioni manuali (pannello admin: posizione/genere/categoria di un
+// singolo risultato, campi di una gara, gare escluse) vivono in Supabase e
+// NON sono nel JSON statico results_raw.json scrapato dalla FCI — il
+// frontend le applica sempre (vedi applyRisultatoCorrections/
+// applyGaraCorrections in app.js) prima di calcolare classifiche o
+// conteggi vittorie/podi. Qui replichiamo la stessa cosa lato server:
+// senza, un risultato corretto a mano (es. una vittoria assegnata dopo un
+// reclamo) restava invisibile al testo generato, facendo sballare il
+// conteggio "vittorie stagionali" mostrato all'utente.
+let _corrCacheTs = 0, _corrCache = null;
+const _CORR_TTL = 5 * 60 * 1000;
+async function _getResultCorrections() {
+  if (_corrCache && (Date.now() - _corrCacheTs) < _CORR_TTL) return _corrCache;
+  const [garaRes, risRes, excRes] = await Promise.all([
+    supabase.from('gara_overrides').select('gara_id, field, new_value').in('field', GARA_EDITABLE_FIELDS),
+    supabase.from('risultato_overrides').select('risultato_key, field, new_value').in('field', RISULTATO_EDITABLE_FIELDS),
+    supabase.from('gara_overrides').select('gara_id').eq('field', 'excluded').eq('new_value', 'true'),
+  ]);
+  const garaCorrections = {};
+  for (const r of (garaRes.data || [])) { (garaCorrections[r.gara_id] ||= {})[r.field] = r.new_value; }
+  const risultatoCorrections = {};
+  for (const r of (risRes.data || [])) { (risultatoCorrections[r.risultato_key] ||= {})[r.field] = r.new_value; }
+  const excludedIds = new Set((excRes.data || []).map(r => r.gara_id));
+  _corrCache = { garaCorrections, risultatoCorrections, excludedIds };
+  _corrCacheTs = Date.now();
+  return _corrCache;
+}
+const _CORR_FIELD_ALIASES = { nome: ['nome_gara', 'gara'], cat: ['categoria', 'cat'] };
+function _applyCorrectionsToRow(row, fields) {
+  for (const [field, value] of Object.entries(fields)) {
+    const targets = _CORR_FIELD_ALIASES[field] || [field];
+    for (const t of targets) if (t in row) row[t] = value;
+  }
+}
+// Ritorna una COPIA corretta/filtrata di resultsRaw — mai muta l'array
+// originale, che è condiviso e cachato 30min da readDataJsonFromGH tra
+// tutte le richieste (mutarlo corromperebbe silenziosamente altri endpoint).
+function _applyResultCorrections(resultsRaw, corr) {
+  const out = [];
+  for (const r0 of (resultsRaw || [])) {
+    if (corr.excludedIds.has(r0.gara_id)) continue;
+    const r = { ...r0 };
+    const gc = corr.garaCorrections[r.gara_id];
+    if (gc) _applyCorrectionsToRow(r, gc);
+    const rc = corr.risultatoCorrections[`${r.atleta_id}|${r.data}`];
+    if (rc) _applyCorrectionsToRow(r, rc);
+    out.push(r);
+  }
+  return out;
+}
+
+async function _buildGaraAiCaption(id, cal, resultsRawIn) {
   const ai = getAnthropic();
   if (!ai) return null;
+  const corr = await _getResultCorrections().catch(() => ({ garaCorrections: {}, risultatoCorrections: {}, excludedIds: new Set() }));
+  const resultsRaw = _applyResultCorrections(resultsRawIn, corr);
   const results = (resultsRaw || []).filter(r => r.gara_id === id).sort((a, b) => a.posizione - b.posizione);
   if (!results.length) return null;
   const winner = results[0];
@@ -824,21 +877,21 @@ async function _buildGaraAiCaption(id, cal, resultsRaw) {
   // gli passiamo come esempio (poche, per non sovraccaricare il prompt) e
   // sottostima vistosamente il totale reale (es. "prima vittoria" per un
   // atleta che ne ha già 11 in stagione).
+  // TUTTI i risultati stagionali del vincitore (non un campione curato):
+  // Claude deve poterli leggere e contare da sé, non fidarsi solo di un
+  // riassunto — con un campione ridotto capitava di sottostimare il totale
+  // vittorie/podi reale. Il conteggio ufficiale sotto (stagione_vincitore)
+  // resta comunque incluso come riferimento definitivo, calcolato dagli
+  // stessi dati corretti.
   let stagione_vincitore = null;
-  let vittorie_precedenti_vincitore = [];
-  let altri_piazzamenti_rilevanti_vincitore = [];
+  let tutti_i_risultati_stagione_vincitore = [];
   if (winner?.atleta_id) {
     const tally = _ogSeasonTally(resultsRaw || [], winner.atleta_id, winner.genere, raceDate);
     stagione_vincitore = { vittorie_totali_stagione_QUESTA_INCLUSA: tally.wins, podi_totali_stagione_QUESTO_INCLUSO: tally.podiums };
-    vittorie_precedenti_vincitore = (resultsRaw || [])
-      .filter(r => r.atleta_id === winner.atleta_id && r.gara_id !== id && Number(r.posizione) === 1 && (r.data || '') <= raceDate)
-      .sort((a, b) => (a.data < b.data ? 1 : -1))
-      .map(r => `${r.nome_gara || r.gara_id}${r.data ? ' (' + r.data + ')' : ''}`);
-    altri_piazzamenti_rilevanti_vincitore = (resultsRaw || [])
-      .filter(r => r.atleta_id === winner.atleta_id && r.gara_id !== id && (r.data || '') <= raceDate && Number(r.posizione) >= 2 && Number(r.posizione) <= 10)
-      .sort((a, b) => (a.data < b.data ? 1 : -1))
-      .slice(0, 5)
-      .map(r => `${r.posizione}° a "${r.nome_gara || r.gara_id}"${r.data ? ' (' + r.data + ')' : ''}`);
+    tutti_i_risultati_stagione_vincitore = (resultsRaw || [])
+      .filter(r => r.atleta_id === winner.atleta_id && (r.data || '') <= raceDate)
+      .sort((a, b) => (a.data < b.data ? -1 : a.data > b.data ? 1 : 0))
+      .map(r => ({ data: r.data || '', posizione: Number(r.posizione) || null, gara: r.nome_gara || r.gara_id, questa_gara: r.gara_id === id }));
   }
   const compagni_di_squadra_a_podio = winner
     ? results.filter(r => r.posizione > 1 && r.posizione <= 3 && r.team_id === winner.team_id)
@@ -868,8 +921,7 @@ async function _buildGaraAiCaption(id, cal, resultsRaw) {
     team_del_vincitore: winner?.team || '',
     compagni_di_squadra_a_podio,
     stagione_vincitore,
-    vittorie_precedenti_vincitore,
-    altri_piazzamenti_rilevanti_vincitore,
+    tutti_i_risultati_stagione_vincitore,
     stagione_team_del_vincitore,
   };
 
@@ -887,7 +939,7 @@ Struttura richiesta:
 3. Una riga vuota, poi "📊 Il Podio" seguito da un elenco puntato (emoji numeriche 1️⃣2️⃣3️⃣ ecc.) di posizione, nome, team e distacco.
 4. Una riga vuota, poi 8-10 hashtag pertinenti (nomi propri, nome gara senza spazi, #CiclismoDilettanti, #ItaliaCyclingStats ecc.).
 
-Regole importanti sui dati stagionali del vincitore (LEGGI CON ATTENZIONE, è la causa più comune di errore): il campo "stagione_vincitore.vittorie_totali_stagione_QUESTA_INCLUSA" è il conteggio UFFICIALE e definitivo delle vittorie in stagione, QUESTA gara già inclusa — è quello il numero da usare se scrivi "Nª vittoria stagionale" o "sale a quota N successi", MAI dedurre il numero dalla sola lista "vittorie_precedenti_vincitore" (che può essere accorciata) né presumere che sia la prima vittoria se il campo dice N>1. Se vittorie_totali_stagione_QUESTA_INCLUSA è 1, è davvero la prima vittoria stagionale. "vittorie_precedenti_vincitore" elenca (se presenti) i nomi delle gare vinte prima di questa: puoi citarne 1-2 per dare colore, ma il numero totale di vittorie menzionato nel testo deve sempre corrispondere al conteggio ufficiale sopra. "altri_piazzamenti_rilevanti_vincitore" sono piazzamenti (non vittorie) di contorno, citane al massimo 1 se utile.
+Regole importanti sui dati stagionali del vincitore (LEGGI CON ATTENZIONE, è la causa più comune di errore): "tutti_i_risultati_stagione_vincitore" è l'elenco COMPLETO di ogni risultato ottenuto dal vincitore in stagione fino ad oggi compreso (non un campione ridotto) — {data, posizione, gara, questa_gara}. Prima di scrivere qualunque numero di vittorie/podi, CONTA TU STESSO quante righe hanno posizione=1 (vittorie) e quante hanno posizione tra 1 e 3 (podi) in quell'elenco: il totale deve corrispondere esattamente al campo "stagione_vincitore" (vittorie_totali_stagione_QUESTA_INCLUSA / podi_totali_stagione_QUESTO_INCLUSO), che è il conteggio ufficiale di riferimento — se non corrispondono, fidati di "stagione_vincitore". NON limitarti a guardare solo le ultime 3-4 righe dell'elenco: scorrilo tutto. Se il conteggio è 1, è davvero la prima vittoria stagionale — non scrivere mai "prima vittoria" se è maggiore di 1. Per dare colore al racconto puoi citare 1-2 gare specifiche (nome/posizione) prese da "tutti_i_risultati_stagione_vincitore", ma il numero totale citato nel testo deve sempre essere quello ufficiale.
 
 Stesso principio per "stagione_team_del_vincitore": se utile, puoi accennare al buon momento stagionale del team (es. "Nª vittoria stagionale per il team" o "N° podio stagionale"), usando SOLO quei numeri ufficiali, senza inventare classifiche o piazzamenti del team non forniti. Non è obbligatorio menzionarlo se non aggiunge nulla al racconto.
 
