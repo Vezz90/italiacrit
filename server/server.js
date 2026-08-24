@@ -4049,7 +4049,7 @@ app.post('/api/admin/gara/:garaId/manual-result', requireAdmin, async (req, res)
     const garaId = req.params.garaId;
     const { posizione, cognome, nome, team, tempo, km, media,
             nome_gara, data, categoria, genere, tipo, moltiplicatore,
-            campionato_regionale, campionato_italiano, regione } = req.body || {};
+            campionato_regionale, campionato_italiano, regione, punti_override } = req.body || {};
     const cognomeU = String(cognome || '').trim().toUpperCase();
     const nomeU    = String(nome || '').trim().toUpperCase();
     const teamU    = String(team || '').trim().toUpperCase();
@@ -4062,6 +4062,11 @@ app.post('/api/admin/gara/:garaId/manual-result', requireAdmin, async (req, res)
     const pos      = parseInt(posizione, 10);
     const mult     = parseInt(moltiplicatore, 10) || 1;
     const puntiBase = _MANUAL_BASE_PTS[pos] || 0;
+    // Scala ridotta per formati minori (es. "tipo pista": pochi partecipanti,
+    // non rappresentativa come una gara normale — l'admin può forzare il
+    // punteggio EFFETTIVO invece di quello calcolato dalla tabella standard,
+    // senza toccare punti_base (resta lo storico "quanto varrebbe normalmente").
+    const puntiOverride = punti_override != null && punti_override !== '' ? Math.round(Number(punti_override)) : null;
     const atletaId = cognomeU ? _makeAtletaId(cognomeU, nomeU) : '';
 
     // Team: fuzzy-match su teams.json (rispettando il genere) così finisce nel
@@ -4111,7 +4116,7 @@ app.post('/api/admin/gara/:garaId/manual-result', requireAdmin, async (req, res)
       km: finalKm || '',
       media: media || '',
       punti_base: puntiBase,
-      punti_effettivi: puntiBase * mult,
+      punti_effettivi: puntiOverride != null ? puntiOverride : puntiBase * mult,
       edited_by: req.user.id,
     });
     res.json({ ok: true, row });
