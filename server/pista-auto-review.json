@@ -1,0 +1,34 @@
+[
+  {
+    "garaId": "33_TROFEO_PROLOCO_2026-07-16_ES1_M",
+    "posizione": 6,
+    "cognome": "REDAELLI",
+    "nome": "FRANCESCO",
+    "team": "SC PEDALE AGRATESE",
+    "categoria": "ES1_M",
+    "reason": "nuovo/non abbinato",
+    "garaNome": "33° TROFEO PROLOCO"
+  },
+  {
+    "garaId": "4_TROFEO_TECAM_2026-07-17_ELI_F",
+    "posizione": 12,
+    "cognome": "RADAELLI",
+    "nome": "ELVIRA",
+    "team": "ISOLMANT - PREMAC - VITTORIA",
+    "categoria": "ELI_F",
+    "reason": "team non combacia",
+    "teamNoto": "SCONOSCIUTO",
+    "garaNome": "4° TROFEO TECAM TIPO PISTA FEMMINILE"
+  },
+  {
+    "garaId": "NOTTURNA_DELL_ASSUNTA_2026-08-07_AL_M",
+    "posizione": 2,
+    "cognome": "RODRIGUES DOS SANTOS VICENTE",
+    "nome": "JUNIOR",
+    "team": "A.S.D. SACILESE",
+    "categoria": "AL_M",
+    "reason": "nome ambiguo (split incerto)",
+    "teamNoto": "A.S.D. SACILESE",
+    "garaNome": "NOTTURNA DELL'ASSUNTA"
+  }
+]

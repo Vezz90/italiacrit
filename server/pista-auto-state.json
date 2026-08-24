@@ -1,0 +1,158 @@
+{
+  "180140": {
+    "nome": "MEMORIAL GIOVANNI FINO E PAOLO MATTIO",
+    "data": "20 Agosto 2026",
+    "status": "imported",
+    "lastChecked": "2026-08-24T22:51:51.261Z",
+    "written": 24,
+    "review": []
+  },
+  "180259": {
+    "nome": "G.P. 43° FESTA DELLO SPORT 3° MEM. G. BERTOLDO- 9° TROFEO SMANIA - 6°MEM. FRANCO E DAVIDE FAVARETTO",
+    "data": "14 Agosto 2026",
+    "status": "imported",
+    "lastChecked": "2026-08-24T22:51:28.969Z",
+    "written": 22,
+    "review": []
+  },
+  "180449": {
+    "nome": "NOTTURNA DELL'ASSUNTA",
+    "data": "7 Agosto 2026",
+    "status": "imported",
+    "lastChecked": "2026-08-24T22:51:09.267Z",
+    "written": 40,
+    "review": [
+      {
+        "garaId": "NOTTURNA_DELL_ASSUNTA_2026-08-07_AL_M",
+        "posizione": 2,
+        "cognome": "RODRIGUES DOS SANTOS VICENTE",
+        "nome": "JUNIOR",
+        "team": "A.S.D. SACILESE",
+        "categoria": "AL_M",
+        "reason": "nome ambiguo (split incerto)",
+        "teamNoto": "A.S.D. SACILESE"
+      }
+    ]
+  },
+  "180551": {
+    "nome": "MEMORIAL PAOLA SCOPPOLINI E CARLO CROCETTI",
+    "data": "5 Agosto 2026",
+    "status": "pending",
+    "lastChecked": "2026-08-24T22:56:25.030Z"
+  },
+  "180610": {
+    "nome": "3° TROFEO ALF GROUP",
+    "data": "24 Luglio 2026",
+    "status": "imported",
+    "lastChecked": "2026-08-24T22:50:10.793Z",
+    "written": 30,
+    "review": []
+  },
+  "180671": {
+    "nome": "GP SAN GIOVANNI BATTISTA",
+    "data": "1 Agosto 2026",
+    "status": "pending",
+    "lastChecked": "2026-08-24T22:56:24.462Z"
+  },
+  "180803": {
+    "nome": "GARA SU PISTA",
+    "data": "14 Luglio 2026",
+    "status": "imported",
+    "lastChecked": "2026-08-24T22:48:14.722Z",
+    "written": 0,
+    "review": []
+  },
+  "180878": {
+    "nome": "16° TROFEO CASSA DI TRENTO",
+    "data": "10 Luglio 2026",
+    "status": "pending",
+    "lastChecked": "2026-08-24T22:55:47.737Z"
+  },
+  "180892": {
+    "nome": "5^ NOTTURNA CASTEL ROMANO",
+    "data": "26 Giugno 2026",
+    "status": "imported",
+    "lastChecked": "2026-08-24T22:48:12.433Z",
+    "written": 0,
+    "review": []
+  },
+  "181050": {
+    "nome": "9° SPRINT LUPI – VENETA COSTRUZIONI METALLICHE",
+    "data": "10 Luglio 2026",
+    "status": "pending",
+    "lastChecked": "2026-08-24T22:55:47.175Z"
+  },
+  "181247": {
+    "nome": "TROFEO DENTIS",
+    "data": "16 Luglio 2026",
+    "status": "imported",
+    "lastChecked": "2026-08-24T22:48:54.859Z",
+    "written": 44,
+    "review": []
+  },
+  "181395": {
+    "nome": "33° TROFEO PROLOCO",
+    "data": "16 Luglio 2026",
+    "status": "imported",
+    "lastChecked": "2026-08-24T22:49:09.593Z",
+    "written": 17,
+    "review": [
+      {
+        "garaId": "33_TROFEO_PROLOCO_2026-07-16_ES1_M",
+        "posizione": 6,
+        "cognome": "REDAELLI",
+        "nome": "FRANCESCO",
+        "team": "SC PEDALE AGRATESE",
+        "categoria": "ES1_M",
+        "reason": "nuovo/non abbinato"
+      }
+    ]
+  },
+  "181396": {
+    "nome": "4° TROFEO TECAM TIPO PISTA FEMMINILE",
+    "data": "17 Luglio 2026",
+    "status": "imported",
+    "lastChecked": "2026-08-24T22:56:23.219Z",
+    "written": 38,
+    "review": [
+      {
+        "garaId": "4_TROFEO_TECAM_2026-07-17_ELI_F",
+        "posizione": 12,
+        "cognome": "RADAELLI",
+        "nome": "ELVIRA",
+        "team": "ISOLMANT - PREMAC - VITTORIA",
+        "categoria": "ELI_F",
+        "reason": "team non combacia",
+        "teamNoto": "SCONOSCIUTO"
+      }
+    ]
+  },
+  "181480": {
+    "nome": "TROFEO ROSTI   GRAN PREMIO RH+",
+    "data": "25 Luglio 2026",
+    "status": "pending",
+    "lastChecked": "2026-08-24T22:56:23.893Z"
+  },
+  "182274": {
+    "nome": "MEMORIAL BENVENUTO CORRADI",
+    "data": "25 Luglio 2026",
+    "status": "imported",
+    "lastChecked": "2026-08-24T22:50:12.038Z",
+    "written": 0,
+    "review": []
+  },
+  "182611": {
+    "nome": "CICLISMO SOTTO LE STELLE - GARA TIPO PISTA",
+    "data": "8 Luglio 2026",
+    "status": "pending",
+    "lastChecked": "2026-08-24T22:55:46.604Z"
+  },
+  "182617": {
+    "nome": "46^ COPPA LA ROCCA - TROFEO F.LLI BAGAGLI",
+    "data": "28 Luglio 2026",
+    "status": "imported",
+    "lastChecked": "2026-08-24T22:50:32.277Z",
+    "written": 23,
+    "review": []
+  }
+}
