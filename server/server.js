@@ -8298,6 +8298,19 @@ function _ogLogoDataUri() {
   return _ogLogoUri;
 }
 
+// Logo xpix.it (stesso file usato lato client, vedi _getXpixLogo in app.js)
+// per l'attribuzione con logo vero — non solo testo — anche sulla grafica
+// generata server-side per Facebook.
+let _ogXpixLogoUri = null;
+function _ogXpixLogoDataUri() {
+  if (_ogXpixLogoUri !== null) return _ogXpixLogoUri;
+  try {
+    const p = path.join(FRONTEND_DIR, 'assets', 'xpix-logo.png');
+    _ogXpixLogoUri = 'data:image/png;base64,' + fs.readFileSync(p).toString('base64');
+  } catch { _ogXpixLogoUri = ''; }
+  return _ogXpixLogoUri;
+}
+
 // Immagine OG di fallback per una gara: logo ICS in alto + nome gara sotto.
 function buildGaraNameSvg(title, subtitle) {
   const esc = s => String(s || '').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');
@@ -8625,7 +8638,10 @@ function buildGaraResultOverlaySvg({ catLabel, title, subtitle, results = [], cr
   <line x1="${pad}" y1="${rowsBottom}" x2="${W - pad}" y2="${rowsBottom}" stroke="rgba(255,255,255,0.15)"/>
   ${logo ? `<image href="${logo}" x="${pad}" y="${H - 46}" width="72" height="24" preserveAspectRatio="xMidYMid meet"/>` : ''}
   <text x="${pad + (logo ? 84 : 0)}" y="${H - 28}" font-family="Arial,Helvetica,sans-serif" font-size="14" font-weight="700" fill="rgba(255,255,255,0.55)">italiacyclingstats.com</text>
-  ${credit ? `<text x="${W - pad}" y="${H - 28}" font-family="Arial,Helvetica,sans-serif" font-size="14" font-weight="700" fill="rgba(255,255,255,0.6)" text-anchor="end">📷 ${_ogEsc(credit)}</text>` : ''}
+  ${credit === 'xpix.it' && _ogXpixLogoDataUri()
+    ? `<image href="${_ogXpixLogoDataUri()}" x="${W - pad - 130}" y="${H - 44}" width="24" height="24" preserveAspectRatio="xMidYMid meet"/>
+       <text x="${W - pad}" y="${H - 28}" font-family="Arial,Helvetica,sans-serif" font-size="14" font-weight="700" fill="rgba(255,255,255,0.6)" text-anchor="end">xpix.it</text>`
+    : credit ? `<text x="${W - pad}" y="${H - 28}" font-family="Arial,Helvetica,sans-serif" font-size="14" font-weight="700" fill="rgba(255,255,255,0.6)" text-anchor="end">📷 ${_ogEsc(credit)}</text>` : ''}
 </svg>`;
 }
 

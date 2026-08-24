@@ -22118,6 +22118,19 @@ async function _getLogo() {
   });
 }
 
+// Logo xpix.it (badge tondo bianco, sfondo trasparente) da affiancare al
+// logo ICS nelle grafiche di condivisione quando la foto viene da lì.
+let _xpixLogoImg = null;
+async function _getXpixLogo() {
+  if (_xpixLogoImg) return _xpixLogoImg;
+  return new Promise(res => {
+    const img = new Image(); img.crossOrigin = 'anonymous';
+    img.onload = () => { _xpixLogoImg = img; res(img); };
+    img.onerror = () => res(null);
+    img.src = 'assets/xpix-logo.png?v=1';
+  });
+}
+
 // ── Helper tempo gara ─────────────────────────────────────────────────────
 // Calcola il tempo del vincitore da km e media (km/h) → "4h 19'18\""
 function _calcWinnerTime(km, media) {
@@ -22511,7 +22524,7 @@ function _drawGaraColumn(ctx, x, colW, topY, bottomY, slice, startIdx, winnerTim
 // Foto quasi a pieno schermo (scurita solo in basso, vedi _bgPhotoBottom),
 // categoria/nome vincitore/nome gara centrati sopra il degradé, logo ICS in
 // fondo — riferimento visivo indicato dall'utente (grafica di terzi).
-function _drawGaraWinner(ctx, W, H, d, logo) {
+function _drawGaraWinner(ctx, W, H, d, logo, xpixLogo) {
   const winner = (d.results || [])[0];
   if (!winner) return;
   const winnerName = `${winner.cognome || ''} ${winner.nome || ''}`.trim().toUpperCase();
@@ -22556,29 +22569,44 @@ function _drawGaraWinner(ctx, W, H, d, logo) {
     const lH = Math.round(H * 0.065), lW = Math.round(lH * logo.naturalWidth / logo.naturalHeight);
     ctx.drawImage(logo, W / 2 - lW / 2, H - Math.round(H * 0.045) - lH, lW, lH);
   }
-  _drawPhotoCredit(ctx, W, H, d);
+  _drawPhotoCredit(ctx, W, H, d, { xpixLogo });
   ctx.textAlign = 'left'; ctx.textBaseline = 'alphabetic';
 }
 
-// Credit foto (fotografo o fonte esterna) + richiamo xpix.it accanto al
-// nostro logo quando la foto viene da lì — evita di ripubblicare foto di
-// terzi (specie xpix.it) senza attribuzione. Condiviso tra la card
-// "Vincitore" (sotto il logo, centrato) e la card "Risultati" (nel footer,
-// accanto all'handle @italiacrit).
-function _drawPhotoCredit(ctx, W, H, d, { x, y, align = 'center' } = {}) {
+// Credit foto (fotografo o fonte esterna) — quando la foto viene da xpix.it,
+// disegna il loro logo vero (badge tondo, non solo testo) accanto al nostro
+// logo ICS, così l'attribuzione è visibile davvero e non solo scritta in
+// piccolo. Condiviso tra la card "Vincitore" (sotto il logo, centrato) e la
+// card "Risultati" (nel footer, accanto all'handle @italiacrit).
+function _drawPhotoCredit(ctx, W, H, d, { x, y, align = 'center', xpixLogo } = {}) {
   if (!d.photo_credit) return;
   const fs = Math.round(W * 0.022);
   ctx.font = `600 ${fs}px 'Inter Tight',sans-serif`;
+  const baseX = x != null ? x : W / 2;
+  const baseY = y != null ? y : H - Math.round(H * 0.015);
+
+  if (d.photo_source === 'xpix' && xpixLogo) {
+    const badgeH = Math.round(fs * 1.7);
+    const badgeW = Math.round(badgeH * xpixLogo.naturalWidth / xpixLogo.naturalHeight);
+    const gap = Math.round(fs * 0.4);
+    const label = 'xpix.it';
+    ctx.fillStyle = 'rgba(255,255,255,0.65)';
+    const textW = ctx.measureText(label).width;
+    const totalW = badgeW + gap + textW;
+    const startX = align === 'left' ? baseX : baseX - totalW / 2;
+    ctx.drawImage(xpixLogo, startX, baseY - badgeH * 0.8, badgeW, badgeH);
+    ctx.textAlign = 'left';
+    ctx.fillText(label, startX + badgeW + gap, baseY);
+    return;
+  }
   ctx.fillStyle = 'rgba(255,255,255,0.5)';
   ctx.textAlign = align;
-  const label = d.photo_source === 'xpix' ? `📷 xpix.it`
-    : d.photo_source === 'ic' ? `📷 ciclismo.info`
-    : `📷 Foto: ${d.photo_credit}`;
-  ctx.fillText(label, x != null ? x : W / 2, y != null ? y : H - Math.round(H * 0.015));
+  const label = d.photo_source === 'ic' ? `📷 ciclismo.info` : `📷 Foto: ${d.photo_credit}`;
+  ctx.fillText(label, baseX, baseY);
 }
 
 // ── GARA CARD v6 — UCI-inspired, no points, big names ────────
-function _drawGara(ctx, W, H, d, logo, avatarMap) {
+function _drawGara(ctx, W, H, d, logo, avatarMap, xpixLogo) {
   const { name, date, cat, mult, tipo, km, media, results, winnerTime } = d;
   const pad = Math.round(W * 0.048);
 
@@ -22659,7 +22687,7 @@ function _drawGara(ctx, W, H, d, logo, avatarMap) {
   ctx.fillText('@italiacrit', W - pad, footerY + Math.round(fB * 0.66)); ctx.textAlign = 'left';
   // Credit foto (fotografo o xpix.it/ciclismo.info), sinistra — stessa riga
   // dell'handle, così non serve spazio verticale extra.
-  _drawPhotoCredit(ctx, W, H, d, { x: ax + accW * 3 + Math.round(W * 0.014), y: footerY + Math.round(fB * 0.66), align: 'left' });
+  _drawPhotoCredit(ctx, W, H, d, { x: ax + accW * 3 + Math.round(W * 0.014), y: footerY + Math.round(fB * 0.66), align: 'left', xpixLogo });
 
   // ── Results list (1 colonna; 2 colonne su formati landscape con >5 atleti) ──
   const listTop = y;
@@ -23189,19 +23217,28 @@ async function _fetchGaraAvatars(results) {
 // Fetch+blob di un'immagine remota per disegnarla su canvas evitando
 // problemi CORS da cache del browser (stesso pattern usato per l'avatar
 // atleta e per le foto profilo in classifica gara).
-async function _fetchImgBlob(url) {
-  try {
-    const resp = await _fetchTimeout(url, { mode: 'cors', cache: 'no-store' });
-    if (!resp.ok) return null;
-    const blob = await resp.blob();
-    const blobUrl = URL.createObjectURL(blob);
-    return await new Promise(resolve => {
-      const i = new Image();
-      i.onload = () => { URL.revokeObjectURL(blobUrl); resolve(i); };
-      i.onerror = () => { URL.revokeObjectURL(blobUrl); resolve(null); };
-      i.src = blobUrl;
-    });
-  } catch { return null; }
+// Timeout più largo (15s, non 6s) + un ritentativo: su rete mobile lenta
+// (spesso il caso — foto condivise da bordo strada durante/dopo una gara) il
+// download della foto poteva scadere prima di completare, e senza retry si
+// ricadeva silenziosamente su uno sfondo generico senza foto, senza nessun
+// errore visibile — sembrava che "le immagini non si vedessero".
+async function _fetchImgBlob(url, retries = 1) {
+  for (let attempt = 0; attempt <= retries; attempt++) {
+    try {
+      const resp = await _fetchTimeout(url, { mode: 'cors', cache: 'no-store' }, 15000);
+      if (!resp.ok) continue;
+      const blob = await resp.blob();
+      const blobUrl = URL.createObjectURL(blob);
+      const img = await new Promise(resolve => {
+        const i = new Image();
+        i.onload = () => { URL.revokeObjectURL(blobUrl); resolve(i); };
+        i.onerror = () => { URL.revokeObjectURL(blobUrl); resolve(null); };
+        i.src = blobUrl;
+      });
+      if (img) return img;
+    } catch { /* prova ancora se resta un tentativo */ }
+  }
+  return null;
 }
 
 // ── Generatore canvas ──────────────────────────────────────
@@ -23220,16 +23257,21 @@ async function generateShareCanvas(type, payload, platKey) {
     // _shareGaraStyle sceglie tra "risultati" (podio+classifica) e
     // "vincitore" (solo il primo, stile annuncio) — libero per ogni formato.
     const isWinner = _shareGaraStyle === 'winner';
-    const [avatarMap, photoImg] = await Promise.all([
+    const [avatarMap, photoImg, xpixLogo] = await Promise.all([
       isWinner ? Promise.resolve(new Map()) : _fetchGaraAvatars(payload.results),
       payload.photo_url ? _fetchImgBlob(payload.photo_url) : Promise.resolve(null),
+      payload.photo_source === 'xpix' ? _getXpixLogo() : Promise.resolve(null),
     ]);
     window._shareHasPhoto = !!photoImg;
+    // Foto attesa ma non caricata (rete lenta/assente, tipico da mobile) —
+    // avviso visibile invece di ricadere silenziosamente su uno sfondo
+    // generico senza che sembri un errore del sito.
+    window._sharePhotoLoadFailed = !!(payload.photo_url && !photoImg);
     if (photoImg) {
       (isWinner ? _bgPhotoBottom : _bgPhoto)(ctx,p.w,p.h,photoImg,_shareImgAdjust);
     } else _bg(ctx,p.w,p.h);
-    if (isWinner) _drawGaraWinner(ctx,p.w,p.h,payload,logo);
-    else _drawGara(ctx,p.w,p.h,payload,logo,avatarMap);
+    if (isWinner) _drawGaraWinner(ctx,p.w,p.h,payload,logo,xpixLogo);
+    else _drawGara(ctx,p.w,p.h,payload,logo,avatarMap,xpixLogo);
   } else {
     _bg(ctx,p.w,p.h);
     const _headerClassData = type==='class' ? payload
@@ -23431,6 +23473,7 @@ async function _refreshPreview(){
     const canvas=await generateShareCanvas(_shareType,_sharePayload,_sharePlatKey);
     preview.src=canvas.toDataURL('image/png');
     loading.style.display='none'; preview.style.display='block';
+    if (window._sharePhotoLoadFailed) showToast('⚠️ Foto non caricata (connessione lenta) — la grafica è senza foto, riprova', 'error');
     _initShareDragHandlers();
     const adjustBox=document.getElementById('share-photo-adjust');
     if(adjustBox) adjustBox.style.display = window._shareHasPhoto ? 'block' : 'none';
