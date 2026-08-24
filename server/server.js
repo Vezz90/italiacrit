@@ -794,11 +794,10 @@ async function _photoCreditFor(garaId) {
 // Testo lungo "in stile Gazzetta" generato da Claude (titolo a effetto,
 // racconto della corsa con km/media/distacchi, podio, hashtag) — molto più
 // ricco della narrazione a template sopra, che resta come fallback se
-// l'AI non è configurata o fallisce. Cache in memoria per non rigenerare
-// (costo API) ogni volta che l'admin riapre la modale di condivisione sulla
-// stessa gara; ?regen=1 forza una rigenerazione (es. dopo una correzione dati).
-const _garaAiCaptionCache = new Map(); // id → { text, ts }
-const GARA_AI_CAPTION_TTL = 12 * 60 * 60 * 1000;
+// l'AI non è configurata o fallisce. Persistito su Postgres (tabella
+// gara_narratives, vedi sotto _generateAndStoreGaraNarrative) invece che in
+// una cache in memoria: sopravvive ai redeploy ed è la stessa copia usata
+// anche dalla pagina gara pubblica, non generata due volte separatamente.
 
 // Le correzioni manuali (pannello admin: posizione/genere/categoria di un
 // singolo risultato, campi di una gara, gare escluse) vivono in Supabase e
@@ -1004,19 +1003,17 @@ ${JSON.stringify(dataForPrompt, null, 2)}`
 app.get('/api/admin/gara-share-text/:id', requireAdmin, async (req, res) => {
   try {
     const id = req.params.id;
-    const [calRaw, resultsRaw] = await Promise.all([
-      readDataJsonFromGH('calendar.json'),
-      readDataJsonFromGH('results_raw.json'),
-    ]);
-    const cal = (calRaw || []).find(g => g.id === id)
-      || (calRaw || []).find(g => g.id === id.replace(/_[A-Z0-9]+_[MF]$/, ''));
+    const { cal, resultsRaw } = await _fetchCalAndResultsFor(id);
 
+    // Stessa tabella persistita usata dalla pagina gara pubblica (vedi
+    // _generateAndStoreGaraNarrative) — un'unica generazione serve sia il
+    // testo copiabile per i social sia il racconto sulla pagina, invece di
+    // due cache separate che pagavano due volte la stessa chiamata Claude.
     const forceRegen = req.query.regen === '1';
-    const cached = _garaAiCaptionCache.get(id);
-    let aiText = (!forceRegen && cached && (Date.now() - cached.ts < GARA_AI_CAPTION_TTL)) ? cached.text : null;
+    const stored = forceRegen ? null : await queries.getGaraNarrative(id).catch(() => null);
+    let aiText = stored?.text || null;
     if (!aiText) {
-      aiText = await _buildGaraAiCaption(id, cal, resultsRaw).catch(() => null);
-      if (aiText) _garaAiCaptionCache.set(id, { text: aiText, ts: Date.now() });
+      aiText = await _generateAndStoreGaraNarrative(id).catch(() => null);
     }
     if (aiText) {
       const credit = await _photoCreditFor(id).catch(() => null);
@@ -1044,20 +1041,120 @@ app.get('/api/admin/gara-share-text/:id', requireAdmin, async (req, res) => {
   } catch (e) { res.status(500).json({ error: e.message }); }
 });
 
-// Stessa narrazione dinamica di sopra, ma pubblica e strutturata (non testo
-// unico da incollare): mostrata sulla pagina della gara stessa, sopra la
-// classifica, visibile a tutti — non solo all'admin che copia il testo per FB.
+// Il testo AI (_buildGaraAiCaption) è pensato per un post social: titolo,
+// link al sito, racconto, podio, hashtag. Sulla pagina gara pubblica il link
+// al sito è ridondante (siamo già lì) e gli hashtag stonano in un paragrafo
+// di prosa — qui si tolgono entrambi, tenendo titolo/racconto/podio intatti.
+function _stripSocialExtrasForPage(text) {
+  const lines = (text || '').split('\n').filter(l => {
+    const t = l.trim();
+    if (t === SITE_URL) return false;
+    if (/^#\S+(\s+#\S+)*$/.test(t)) return false; // riga di soli hashtag
+    return true;
+  });
+  return lines.join('\n').replace(/\n{3,}/g, '\n\n').trim();
+}
+
+async function _fetchCalAndResultsFor(id) {
+  const [calRaw, resultsRaw] = await Promise.all([
+    readDataJsonFromGH('calendar.json'),
+    readDataJsonFromGH('results_raw.json'),
+  ]);
+  const cal = (calRaw || []).find(g => g.id === id)
+    || (calRaw || []).find(g => g.id === id.replace(/_[A-Z0-9]+_[MF]$/, ''));
+  return { cal, resultsRaw };
+}
+
+// Genera (Claude) e persiste (tabella gara_narratives) il racconto di una
+// gara — condiviso da: generazione lazy al primo visitatore della pagina
+// gara, sweep periodico (vedi _sweepGaraNarratives), backfill storico, e il
+// bottone admin "Rigenera" nella modale di condivisione social.
+async function _generateAndStoreGaraNarrative(id) {
+  const { cal, resultsRaw } = await _fetchCalAndResultsFor(id);
+  const text = await _buildGaraAiCaption(id, cal, resultsRaw);
+  if (text) await queries.upsertGaraNarrative(id, text);
+  return text;
+}
+
+// Fire-and-forget: non blocca la richiesta che l'ha innescata (chi visita la
+// pagina per primo vede il vecchio testo a template, chi la ricarica poco
+// dopo trova già il racconto AI pronto). Guard in memoria per evitare
+// generazioni duplicate in parallelo sulla stessa gara.
+const _narrativeGenInFlight = new Set();
+function _scheduleGaraNarrativeGeneration(id) {
+  if (_narrativeGenInFlight.has(id)) return;
+  _narrativeGenInFlight.add(id);
+  _generateAndStoreGaraNarrative(id)
+    .catch(e => console.warn('[gara-narrative] generazione fallita:', id, e.message))
+    .finally(() => _narrativeGenInFlight.delete(id));
+}
+
+// Ricontrolla periodicamente le gare recenti: i risultati possono ancora
+// cambiare nei giorni subito dopo la corsa (correzioni FCI, risultati PCS
+// esteri che arrivano in ritardo — vedi _mergeManualResultsIntoRaw), quindi
+// un racconto generato subito dopo la gara può restare indietro. Richiamata
+// da /api/cron/tick con un throttle proprio; genera/rigenera in un batch
+// piccolo per giro per non bruciare in un colpo solo il budget Claude.
+const GARA_NARRATIVE_RECENT_WINDOW_DAYS = 14;
+const GARA_NARRATIVE_REFRESH_MS = 12 * 60 * 60 * 1000;
+async function _sweepGaraNarratives() {
+  try {
+    const resultsRaw = await readDataJsonFromGH('results_raw.json');
+    if (!resultsRaw) return;
+    const today = new Date().toISOString().slice(0, 10);
+    const cutoffRecent = new Date(Date.now() - GARA_NARRATIVE_RECENT_WINDOW_DAYS * 86400000).toISOString().slice(0, 10);
+    const dateByGara = new Map();
+    for (const r of resultsRaw) {
+      if (!r.gara_id || !r.data || r.data > today) continue;
+      if (!dateByGara.has(r.gara_id)) dateByGara.set(r.gara_id, r.data);
+    }
+    const existing = await queries.getAllGaraNarrativeIds().catch(() => []);
+    const existingMap = new Map(existing.map(r => [r.gara_id, r.generated_at]));
+    const missing = [], staleRecent = [];
+    for (const [gid, date] of dateByGara) {
+      const gen = existingMap.get(gid);
+      if (!gen) { missing.push(gid); continue; }
+      if (date >= cutoffRecent && (Date.now() - new Date(gen).getTime()) > GARA_NARRATIVE_REFRESH_MS) {
+        staleRecent.push(gid);
+      }
+    }
+    const batch = [...missing, ...staleRecent].slice(0, 5);
+    for (const gid of batch) {
+      _scheduleGaraNarrativeGeneration(gid);
+      await new Promise(r => setTimeout(r, 1500));
+    }
+    if (batch.length) console.log(`[gara-narrative] sweep: ${missing.length} mancanti, ${staleRecent.length} recenti da rinfrescare — avviate ${batch.length}`);
+  } catch (e) { console.warn('[gara-narrative] sweep error:', e.message); }
+}
+
+// Rigenerazione forzata (admin) — usata dal backfill storico e disponibile
+// per correggere a mano una gara specifica dopo una correzione risultati.
+app.post('/api/admin/gara-narrative/:id/regenerate', requireAdmin, async (req, res) => {
+  try {
+    const text = await _generateAndStoreGaraNarrative(req.params.id);
+    if (!text) return res.status(503).json({ error: 'Generazione non disponibile (AI non configurata o nessun risultato per questa gara)' });
+    res.json({ ok: true, text });
+  } catch (e) { res.status(500).json({ error: e.message }); }
+});
+
+// Racconto AI (o, in sua assenza temporanea, la vecchia narrazione a
+// template) mostrato sulla pagina della gara stessa, tra foto e classifica,
+// visibile a tutti — non solo all'admin che copia il testo per i social.
 app.get('/api/gara-narrative/:id', async (req, res) => {
   try {
     const id = req.params.id;
-    const [calRaw, resultsRaw] = await Promise.all([
-      readDataJsonFromGH('calendar.json'),
-      readDataJsonFromGH('results_raw.json'),
-    ]);
-    const cal = (calRaw || []).find(g => g.id === id)
-      || (calRaw || []).find(g => g.id === id.replace(/_[A-Z0-9]+_[MF]$/, ''));
+    const stored = await queries.getGaraNarrative(id).catch(() => null);
+    if (stored?.text) {
+      return res.json({ text: _stripSocialExtrasForPage(stored.text), ai: true });
+    }
+    // Nessun racconto AI ancora pronto per questa gara: la genera in
+    // background per la prossima visita, intanto risponde subito con la
+    // vecchia narrazione a template così la pagina non resta mai vuota.
+    _scheduleGaraNarrativeGeneration(id);
+    const { cal, resultsRaw } = await _fetchCalAndResultsFor(id);
     const { top3, podiumLines } = _buildGaraNarrative(id, cal, resultsRaw);
-    res.json({ top3, podiumText: podiumLines.join(' ') });
+    const text = [top3, podiumLines.join(' ')].filter(Boolean).join('\n\n');
+    res.json({ text, top3, podiumText: podiumLines.join(' '), ai: false });
   } catch (e) { res.status(500).json({ error: e.message }); }
 });
 
@@ -2336,6 +2433,7 @@ let _lastCronSync = 0;
 let _lastScrapeTrigger = 0;
 let _lastLiveCheck = 0;
 let _lastMonthlyRecapCheck = 0;
+let _lastNarrativeSweep = 0;
 // Triggera il workflow scrape su GitHub Actions (indipendente dal cron GitHub
 // che è inaffidabile). Richiede GH_DISPATCH_TOKEN (PAT con scope actions:write).
 function triggerScrapeWorkflow() {
@@ -2460,6 +2558,13 @@ app.get('/api/cron/tick', (req, res) => {
   if (now - _lastMonthlyRecapCheck >= 10 * 60 * 1000) {
     _lastMonthlyRecapCheck = now;
     _checkMonthlyRecap();
+  }
+  // Racconti AI delle gare (pagina pubblica + testo social): genera quelli
+  // mancanti e rinfresca quelli recenti — vedi _sweepGaraNarratives. Max una
+  // volta ogni 30 min per non bruciare il budget Claude ad ogni tick.
+  if (now - _lastNarrativeSweep >= 30 * 60 * 1000) {
+    _lastNarrativeSweep = now;
+    _sweepGaraNarratives();
   }
 });
 

@@ -17269,19 +17269,21 @@ async function renderGara(gara_id) {
   `);
   if (document.getElementById('race-route-box')) window._loadRaceRouteMap(_calId);
 
-  // Racconto podio (stessa narrazione dinamica usata per il post FB) sopra
-  // la classifica, visibile a tutti — non solo nel testo copiabile admin.
+  // Racconto della gara (stesso testo generato per i post social, ripulito
+  // di link/hashtag) sopra la classifica, visibile a tutti — non solo nel
+  // testo copiabile admin. Finché l'AI non ha ancora generato il racconto
+  // per questa gara (prima visita), il backend risponde con la vecchia
+  // narrazione a template così il box non resta mai vuoto.
   if (results.length) {
     (async () => {
       try {
         const nb = document.getElementById('gara-narrative-box');
         if (!nb) return;
         const r = await apiCall(`/gara-narrative/${encodeURIComponent(primaryGaraId)}`);
-        if (!r?.podiumText) return;
+        if (!r?.text) return;
         nb.innerHTML = `<div class="card" style="margin-top:12px;padding:16px 20px;border-left:3px solid var(--red-hot)">
-          <div style="font-size:.7rem;font-weight:700;letter-spacing:.06em;color:var(--text-muted);text-transform:uppercase;margin-bottom:4px">${esc(name)} · ${esc(catLabel(cat) || '')}</div>
-          <div style="font-weight:700;margin-bottom:6px">${esc(r.top3 || '')}</div>
-          <div style="color:var(--text-secondary);font-size:.92rem;line-height:1.6">${esc(r.podiumText)}</div>
+          <div style="font-size:.7rem;font-weight:700;letter-spacing:.06em;color:var(--text-muted);text-transform:uppercase;margin-bottom:6px">${esc(name)} · ${esc(catLabel(cat) || '')}</div>
+          <div style="color:var(--text-secondary);font-size:.92rem;line-height:1.6;white-space:pre-line">${esc(r.text)}</div>
         </div>`;
       } catch {}
     })();

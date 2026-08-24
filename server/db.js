@@ -400,6 +400,16 @@ async function migrate() {
     // posizione purché siano corridori diversi.
     `ALTER TABLE manual_results DROP CONSTRAINT IF EXISTS manual_results_gara_id_posizione_key`,
     `ALTER TABLE manual_results ADD CONSTRAINT manual_results_gara_pos_atleta_key UNIQUE (gara_id, posizione, atleta_id)`,
+    // Testo narrativo generato da Claude per la pagina pubblica di una gara
+    // (tra foto e classifica) — persistito così non va rigenerato ad ogni
+    // visita e sopravvive ai redeploy. generated_at serve per capire quali
+    // gare vanno ricontrollate quando i risultati cambiano dopo la corsa
+    // (correzioni FCI, risultati PCS esteri che arrivano in ritardo).
+    `CREATE TABLE IF NOT EXISTS gara_narratives (
+      gara_id      TEXT PRIMARY KEY,
+      text         TEXT NOT NULL,
+      generated_at TIMESTAMPTZ NOT NULL DEFAULT NOW()
+    )`,
   ];
   for (const sql of migrations) {
     try { await run(sql); } catch (e) { console.warn('[migrate]', e.message); }
@@ -561,6 +571,21 @@ const queries = {
       `INSERT INTO manual_athletes (atleta_id, cognome, nome, team_id, team, categoria, genere, created_by, source)
        VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9) RETURNING *`,
       [atleta_id, cognome, nome, team_id || null, team || null, categoria || null, genere || 'M', created_by || null, source || 'team']
+    ),
+
+  // Testo narrativo AI per la pagina pubblica di una gara — vedi migrazione
+  // gara_narratives sopra.
+  getGaraNarrative: (gara_id) =>
+    one(`SELECT * FROM gara_narratives WHERE gara_id = $1`, [gara_id]),
+
+  getAllGaraNarrativeIds: () =>
+    all(`SELECT gara_id, generated_at FROM gara_narratives`),
+
+  upsertGaraNarrative: (gara_id, text) =>
+    run(
+      `INSERT INTO gara_narratives (gara_id, text, generated_at) VALUES ($1, $2, NOW())
+       ON CONFLICT (gara_id) DO UPDATE SET text = $2, generated_at = NOW()`,
+      [gara_id, text]
     ),
 
   // Family links
