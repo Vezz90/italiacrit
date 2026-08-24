@@ -6033,6 +6033,7 @@ app.get('/api/ic-photos', async (req, res) => {
 // Proxy immagini ciclismo.info: il sito è solo HTTP, il browser HTTPS le blocca
 // come mixed content. Scarica lato server e ri-serve via HTTPS.
 const _icImgCache = new Map(); // url → { buf, ct, ts }
+const _xpixImgCache = new Map(); // url → { buf, ct, ts }
 app.get('/api/ic-image', async (req, res) => {
   try {
     const target = req.query.url;
@@ -6060,6 +6061,49 @@ app.get('/api/ic-image', async (req, res) => {
           const ct = proxyRes.headers['content-type'] || 'image/jpeg';
           _icImgCache.set(target, { buf, ct, ts: Date.now() });
           if (_icImgCache.size > 500) _icImgCache.delete(_icImgCache.keys().next().value);
+          res.set('Content-Type', ct);
+          res.set('Cache-Control', 'public, max-age=86400');
+          res.send(buf);
+        });
+      }
+    );
+    proxyReq.on('error', () => res.status(502).send('errore proxy'));
+    proxyReq.on('timeout', () => { proxyReq.destroy(); res.status(504).send('timeout'); });
+    proxyReq.end();
+  } catch (e) { res.status(500).send(e.message); }
+});
+
+// Proxy immagini xpix.it: il loro storage (xpix.fsn1.your-objectstorage.com)
+// non manda alcun header CORS, quindi un fetch(mode:'cors') diretto dal
+// browser fallisce SEMPRE (non è un problema di rete lenta) — impediva alla
+// grafica di condivisione di usare la foto xpix come sfondo. Stesso
+// meccanismo già usato per ciclismo.info sopra.
+app.get('/api/xpix-image', async (req, res) => {
+  try {
+    const target = req.query.url;
+    if (!target || !/^https:\/\/xpix\.fsn1\.your-objectstorage\.com\//i.test(target)) {
+      return res.status(400).send('url non valido');
+    }
+    const cached = _xpixImgCache.get(target);
+    if (cached && (Date.now() - cached.ts) < 3600000) {
+      res.set('Content-Type', cached.ct);
+      res.set('Cache-Control', 'public, max-age=86400');
+      return res.send(cached.buf);
+    }
+    const https = require('https');
+    const u = new URL(target);
+    const proxyReq = https.request(
+      { hostname: u.hostname, path: u.pathname + u.search, method: 'GET',
+        headers: { 'User-Agent': 'Mozilla/5.0' }, timeout: 15000 },
+      proxyRes => {
+        if (proxyRes.statusCode !== 200) { res.status(502).send('fetch fallito'); proxyRes.resume(); return; }
+        const chunks = [];
+        proxyRes.on('data', c => chunks.push(c));
+        proxyRes.on('end', () => {
+          const buf = Buffer.concat(chunks);
+          const ct = proxyRes.headers['content-type'] || 'image/jpeg';
+          _xpixImgCache.set(target, { buf, ct, ts: Date.now() });
+          if (_xpixImgCache.size > 500) _xpixImgCache.delete(_xpixImgCache.keys().next().value);
           res.set('Content-Type', ct);
           res.set('Cache-Control', 'public, max-age=86400');
           res.send(buf);

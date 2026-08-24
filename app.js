@@ -29,10 +29,15 @@ function mediaUrl(photoUrl) {
 }
 
 // ciclismo.info è solo HTTP → su HTTPS il browser blocca le immagini (mixed content).
-// Le facciamo passare dal proxy del server che le ri-serve via HTTPS.
+// xpix.it invece è HTTPS ma il suo storage (xpix.fsn1.your-objectstorage.com)
+// non manda NESSUN header CORS — fetch(mode:'cors') fallisce sempre, non è un
+// problema di rete lenta (confermato: manca del tutto Access-Control-Allow-
+// Origin nella risposta). Entrambe passano dal proxy del server, che le
+// riserva dal nostro stesso dominio (CORS sotto il nostro controllo).
 function icProxy(url) {
   if (!url) return url;
   if (/ciclismo\.info\//i.test(url)) return `${API_BASE}/ic-image?url=${encodeURIComponent(url)}`;
+  if (/xpix\.fsn1\.your-objectstorage\.com\//i.test(url)) return `${API_BASE}/xpix-image?url=${encodeURIComponent(url)}`;
   return url;
 }
 
