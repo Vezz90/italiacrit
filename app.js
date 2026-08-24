@@ -16796,7 +16796,8 @@ async function renderGara(gara_id) {
     const _winnerSec = _winner ? _winnerSeconds(_winner.km, _winner.media) : 0;
     const _winnerMedia = _winner ? parseFloat(_winner.media) : null;
     return arr.map(r => {
-      const pts = r.punti_effettivi || (BASEPTS[r.posizione]||0) * mult;
+      // != null, non ||: vedi commento sopra su rows[0].punti_effettivi.
+      const pts = r.punti_effettivi != null ? r.punti_effettivi : (BASEPTS[r.posizione]||0) * mult;
       const pClass = posClass(r.posizione);
       const rkTag = r.rank_dopo_gara ? `<span class="ris-rank-pos">${r.rank_dopo_gara}° class.</span>` : '';
       // Colonna tempo: vincitore → tempo calcolato; stesso gap del precedente → S.T.; altri → gap pulito
