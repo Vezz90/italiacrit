@@ -43,7 +43,7 @@ function parseListPage(html) {
     const inner = m[2];
     const h3 = (inner.match(/<h3>([\s\S]*?)<\/h3>/) || [])[1] || '';
     const h4 = (inner.match(/<h4>([\s\S]*?)<\/h4>/) || [])[1] || '';
-    const spans = [...inner.matchAll(/<span[^>]*>([\s\S]*?)<\/span>/g)].map(x => x[1]);
+    const spans = [...inner.matchAll(/<span>([\s\S]*?)<\/span>/g)].map(x => x[1]);
     items.push({
       id,
       data: (inner.match(/<span class="calData">([^<]*)<\/span>/) || [])[1] || '',
@@ -61,19 +61,35 @@ function parseListPage(html) {
 // — categoria non tracciata dal sito.
 const SKIP_TAB_RE = /\bg[456]\b|giovaniss|dispari|pari\b/i;
 
-function mapTab(label) {
+// Solo la CATEGORIA (senza genere) dall'etichetta del tab: "1°/primo" e
+// "2°/secondo" sono entrambi usati sul portale per esordienti (non solo la
+// cifra), vanno riconosciuti entrambi — la versione precedente cercava solo
+// la cifra e mappava "Esordienti secondo anno" su ES1 per errore.
+function categoriaFromLabel(label) {
   const l = label.toLowerCase();
   if (SKIP_TAB_RE.test(l)) return null;
-  const isF = /donne|femmin|allieve\b/.test(l);
-  let cat = null;
-  if (/esordienti.*1|1.*anno.*esordi/.test(l)) cat = 'ES1';
-  else if (/esordienti.*2|2.*anno.*esordi/.test(l)) cat = 'ES2';
-  else if (/esordienti/.test(l)) cat = 'ES1'; // non specificato: nel dubbio 1° anno, verificare a mano
-  else if (/allie/.test(l)) cat = 'AL';
-  else if (/junior/.test(l)) cat = 'JUN';
-  else if (/elite|under\s*23|under23/.test(l)) cat = 'ELI';
-  if (!cat) return null;
-  return { categoria: `${cat}_${isF ? 'F' : 'M'}`, tabLabel: label };
+  if (/esordienti|esordiente/.test(l)) {
+    if (/\b2\b|second/.test(l)) return { cat: 'ES2', uncertainYear: false };
+    if (/\b1\b|prim/.test(l)) return { cat: 'ES1', uncertainYear: false };
+    return { cat: 'ES1', uncertainYear: true }; // anno non specificato nel tab: verificare a mano
+  }
+  if (/allie/.test(l)) return { cat: 'AL', uncertainYear: false };
+  if (/junior/.test(l)) return { cat: 'JUN', uncertainYear: false };
+  if (/elite|under\s*23|under23/.test(l)) return { cat: 'ELI', uncertainYear: false };
+  return null;
+}
+
+// Il genere NON è affidabile dalla sola etichetta del tab: alcune gare
+// mettono maschi e femmine nello STESSO tab categoria (visto nel report:
+// "Esordienti primo anno" con righe sia codice ES che codice ED insieme).
+// Il codice dopo il trattino nel nome è il segnale giusto — tutti i codici
+// femminili osservati contengono una 'D' (DA, DE, DJ, DU, ED), nessuno di
+// quelli maschili (AL, ES, JU, EL, UN) — eccetto REG, che è un livello di
+// licenza e non indica il genere: in quel caso ripiega sull'etichetta tab.
+function genereFromCode(code, tabLabel) {
+  if (code && code !== 'REG' && /D/.test(code)) return 'F';
+  if (/donne|femmin|allieve\b/i.test(tabLabel)) return 'F';
+  return 'M';
 }
 
 // Codice dopo il trattino nel nome ("NOME COGNOME - EL") non è affidabile per
@@ -163,7 +179,7 @@ function loadExistingAthleteIndex() {
 (async () => {
   console.log(`Elenco gare dal ${START} al ${END}…`);
   const list = await fetchAllListItems();
-  const candidates = list.filter(g => /^Tipo: Tipo Pista/.test(g.livelloTipo) || /Tipo: Tipo Pista/.test(g.livelloTipo));
+  const candidates = list.filter(g => /Tipo: Tipo Pista/.test(g.livelloTipo));
   console.log(`${candidates.length} gare "Tipo Pista" su strada da esaminare in dettaglio.\n`);
 
   const athleteIndex = loadExistingAthleteIndex();
@@ -179,18 +195,25 @@ function loadExistingAthleteIndex() {
 
     const mappedTabs = [];
     for (const tab of tabs) {
-      const mapped = mapTab(tab.label);
+      const mapped = categoriaFromLabel(tab.label);
       if (!mapped) continue; // Giovanissimi o tab non riconosciuto
       const rows = tab.rows.map(r => {
-        const { cognome, nome, ambiguous } = splitNomeCognome(r.nomeCode.replace(/\s*-\s*[A-Z0-9]+$/, ''));
         const codeSuffix = (r.nomeCode.match(/-\s*([A-Z0-9]+)$/) || [])[1] || '';
+        const { cognome, nome, ambiguous } = splitNomeCognome(r.nomeCode.replace(/\s*-\s*[A-Z0-9]+$/, ''));
+        const genere = genereFromCode(codeSuffix, tab.label);
         const existingId = athleteIndex.get(`${cognome.toUpperCase()}|${nome.toUpperCase()}`) || null;
         totalRows++;
         if (existingId) matched++;
         if (ambiguous) ambiguousNames++;
-        return { posizione: r.posizione, cognome, nome, codeSuffix, team: r.team, ambiguousNameSplit: !!ambiguous, existingAtletaId: existingId };
+        return {
+          posizione: r.posizione, cognome, nome, codeSuffix, team: r.team,
+          categoria: `${mapped.cat}_${genere}`,
+          ambiguousNameSplit: !!ambiguous,
+          uncertainYear: mapped.uncertainYear,
+          existingAtletaId: existingId,
+        };
       });
-      mappedTabs.push({ tabLabel: tab.label, categoria: mapped.categoria, rows });
+      mappedTabs.push({ tabLabel: tab.label, rows });
     }
 
     if (mappedTabs.length) {
@@ -205,9 +228,12 @@ function loadExistingAthleteIndex() {
   const outPath = path.join(__dirname, 'pista-import-report.json');
   fs.writeFileSync(outPath, JSON.stringify(report, null, 2));
 
+  const uncertainYearRows = report.reduce((s, race) => s + race.tabs.reduce((s2, t) => s2 + t.rows.filter(r => r.uncertainYear).length, 0), 0);
+
   console.log(`\n=== Riepilogo ===`);
   console.log(`Gare con almeno una categoria rilevante: ${report.length}/${candidates.length}`);
   console.log(`Righe risultato totali: ${totalRows}`);
+  console.log(`Anno esordienti non specificato nel tab (da verificare a mano): ${uncertainYearRows}`);
   console.log(`Già trovato un atleta_id esistente (stesso nome in results_raw.json): ${matched}`);
   console.log(`Nomi non ancora nel sito (nuovi, o da creare): ${totalRows - matched}`);
   console.log(`Split cognome/nome ambiguo (4+ parole, da rivedere a mano): ${ambiguousNames}`);

@@ -17,16 +17,34 @@ const fs = require('fs');
 
 const sleep = ms => new Promise(r => setTimeout(r, ms));
 
+// Un'operazione su una pagina/contesto CHIUSO (es. l'utente ha chiuso a mano
+// la finestra del browser mentre lo script girava incustodito) non lancia
+// sempre un errore rapido — con alcune versioni di Playwright una chiamata
+// come page.evaluate() può restare in attesa indefinita di una risposta CDP
+// che non arriverà mai, bloccando lo script per ore senza progredire e senza
+// errore visibile (successo proprio così: si è fermato in silenzio dopo la
+// chiusura della finestra). Ogni operazione che tocca la pagina passa quindi
+// da qui, con un timeout che la trasforma in un errore esplicito gestibile.
+async function withTimeout(promise, ms, label) {
+  let timer;
+  const timeout = new Promise((_, reject) => {
+    timer = setTimeout(() => reject(new Error(`timeout (${label})`)), ms);
+  });
+  try { return await Promise.race([promise, timeout]); }
+  finally { clearTimeout(timer); }
+}
+
 // Indicatori che la pagina sta mostrando una sfida anti-bot invece del
 // contenuto reale.
 async function isChallengePage(page) {
-  return page.evaluate(() => {
+  if (page.isClosed()) return false;
+  return withTimeout(page.evaluate(() => {
     if (document.querySelector('iframe[src*="challenges.cloudflare.com"]')) return true;
     if (document.querySelector('#challenge-running, .cf-turnstile, #cf-challenge-running')) return true;
     const bodyText = (document.body?.innerText || '').toLowerCase();
     if (/verify you are human|checking your browser|attendere\.\.\.|please wait while we/.test(bodyText)) return true;
     return false;
-  }).catch(() => false);
+  }), 8000, 'isChallengePage').catch(() => false);
 }
 
 /**
@@ -49,11 +67,22 @@ async function gotoPcsPage(page, url, opts = {}) {
     onLog = () => {},
   } = opts;
 
+  // Finestra chiusa a mano (es. dall'utente, per errore) mentre lo script
+  // gira incustodito: fallisce SUBITO ed esplicitamente invece di lasciare
+  // che page.goto()/page.evaluate() restino appesi in attesa di una
+  // risposta CDP che non arriverà mai — è quello che ha fatto fermare in
+  // silenzio un giro intero per ore senza errore visibile. closed:true dice
+  // al chiamante "serve un browser nuovo", non "corridore non trovato".
+  if (page.isClosed()) return { ok: false, notFound: false, timedOut: false, closed: true };
+
   try {
-    await page.goto(url, { waitUntil: 'domcontentloaded', timeout: 20000 });
+    await withTimeout(page.goto(url, { waitUntil: 'domcontentloaded', timeout: 20000 }), 25000, 'goto');
   } catch (e) {
-    return { ok: false, notFound: false, timedOut: false, error: e.message };
+    const closed = page.isClosed() || /closed/i.test(e.message || '');
+    return { ok: false, notFound: false, timedOut: false, closed, error: e.message };
   }
+
+  if (page.isClosed()) return { ok: false, notFound: false, timedOut: false, closed: true };
 
   if (page.url().includes('pagenotfound') || page.url().includes('404')) {
     return { ok: false, notFound: true, timedOut: false };
@@ -67,10 +96,15 @@ async function gotoPcsPage(page, url, opts = {}) {
   // lo rileva mai, quindi lo script pensava di aver trovato il profilo,
   // trovava foto/social/risultati vuoti e non tentava mai il fallback di
   // ricerca. Controlla anche il testo effettivo della pagina.
-  const softNotFound = await page.evaluate(() => {
-    const h1 = document.querySelector('h1')?.textContent?.trim().toLowerCase() || '';
-    return h1 === 'page not found' || document.title.trim().toLowerCase() === 'page not found';
-  }).catch(() => false);
+  let softNotFound = false;
+  try {
+    softNotFound = await withTimeout(page.evaluate(() => {
+      const h1 = document.querySelector('h1')?.textContent?.trim().toLowerCase() || '';
+      return h1 === 'page not found' || document.title.trim().toLowerCase() === 'page not found';
+    }), 8000, 'softNotFound check');
+  } catch (e) {
+    return { ok: false, notFound: false, timedOut: false, closed: page.isClosed(), error: e.message };
+  }
   if (softNotFound) {
     return { ok: false, notFound: true, timedOut: false };
   }
@@ -85,6 +119,7 @@ async function gotoPcsPage(page, url, opts = {}) {
     let cleared = false;
     while (Date.now() - start < challengeTimeoutMs) {
       await sleep(2000);
+      if (page.isClosed()) return { ok: false, notFound: false, timedOut: false, closed: true };
       const stillChallenge = await isChallengePage(page);
       if (!stillChallenge) { cleared = true; break; }
     }
@@ -99,7 +134,7 @@ async function gotoPcsPage(page, url, opts = {}) {
 
   // Attendi anche il contenuto reale (non solo l'assenza della sfida).
   try {
-    await page.waitForSelector(readySelector, { timeout: 8000 });
+    await withTimeout(page.waitForSelector(readySelector, { timeout: 8000 }), 10000, 'waitForSelector');
   } catch {
     // Non fatale: alcune pagine (profili senza risultati) potrebbero non avere
     // esattamente il selettore atteso — lascia decidere al chiamante.
@@ -169,4 +204,4 @@ async function launchPcsBrowser() {
   return { browser, context, page };
 }
 
-module.exports = { launchPcsBrowser, gotoPcsPage, humanDelay, isChallengePage, sleep };
+module.exports = { launchPcsBrowser, gotoPcsPage, humanDelay, isChallengePage, sleep, withTimeout };

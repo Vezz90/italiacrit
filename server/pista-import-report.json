@@ -1,0 +1,3731 @@
+[
+  {
+    "garaFciId": "181246",
+    "data": "14 Maggio 2026",
+    "nome": "MEMORIAL PINUCCIO CHIAVASSA",
+    "regione": "PIEMONTE",
+    "luogo": "SOMMARIVA PERNO (CN)",
+    "categorieAmmesse": "G4-G5-G6 ESORDIENTI ALLIEVI IUNIORES",
+    "km": "0:800",
+    "tabs": [
+      {
+        "tabLabel": "Esordienti primo anno",
+        "rows": [
+          {
+            "posizione": 1,
+            "cognome": "BARBERO",
+            "nome": "ALESSANDRO",
+            "codeSuffix": "ES",
+            "team": "CONTRABAND CYCLING TEAM ASD",
+            "categoria": "ES1_M",
+            "ambiguousNameSplit": false,
+            "uncertainYear": false,
+            "existingAtletaId": "BARBERO_ALESSANDRO"
+          },
+          {
+            "posizione": 2,
+            "cognome": "ARCUDI",
+            "nome": "FEDERICO",
+            "codeSuffix": "ES",
+            "team": "ARDENS CYCLING TEAM",
+            "categoria": "ES1_M",
+            "ambiguousNameSplit": false,
+            "uncertainYear": false,
+            "existingAtletaId": "ARCUDI_FEDERICO"
+          },
+          {
+            "posizione": 3,
+            "cognome": "GABBA",
+            "nome": "LUCA",
+            "codeSuffix": "ES",
+            "team": "CICLISTICA ROSTESE",
+            "categoria": "ES1_M",
+            "ambiguousNameSplit": false,
+            "uncertainYear": false,
+            "existingAtletaId": "GABBA_LUCA"
+          },
+          {
+            "posizione": 4,
+            "cognome": "RENZULLI",
+            "nome": "GIULIA",
+            "codeSuffix": "ED",
+            "team": "G.S. LUPI VALLE D'AOSTA",
+            "categoria": "ES1_F",
+            "ambiguousNameSplit": false,
+            "uncertainYear": false,
+            "existingAtletaId": "RENZULLI_GIULIA"
+          },
+          {
+            "posizione": 5,
+            "cognome": "BIOLATTO",
+            "nome": "SAMUELE",
+            "codeSuffix": "ES",
+            "team": "ARDENS CYCLING TEAM",
+            "categoria": "ES1_M",
+            "ambiguousNameSplit": false,
+            "uncertainYear": false,
+            "existingAtletaId": "BIOLATTO_SAMUELE"
+          },
+          {
+            "posizione": 6,
+            "cognome": "DONETTO",
+            "nome": "FILIPPO",
+            "codeSuffix": "ES",
+            "team": "ARDENS CYCLING TEAM",
+            "categoria": "ES1_M",
+            "ambiguousNameSplit": false,
+            "uncertainYear": false,
+            "existingAtletaId": "DONETTO_FILIPPO"
+          }
+        ]
+      },
+      {
+        "tabLabel": "Esordienti secondo anno",
+        "rows": [
+          {
+            "posizione": 1,
+            "cognome": "ALTARE",
+            "nome": "JACOPO",
+            "codeSuffix": "ES",
+            "team": "VIGOR - CYCLING TEAM",
+            "categoria": "ES2_M",
+            "ambiguousNameSplit": false,
+            "uncertainYear": false,
+            "existingAtletaId": "ALTARE_JACOPO"
+          },
+          {
+            "posizione": 2,
+            "cognome": "RACCA",
+            "nome": "ANDREA",
+            "codeSuffix": "ES",
+            "team": "ARDENS CYCLING TEAM",
+            "categoria": "ES2_M",
+            "ambiguousNameSplit": false,
+            "uncertainYear": false,
+            "existingAtletaId": "RACCA_ANDREA"
+          },
+          {
+            "posizione": 3,
+            "cognome": "CASTELLANI",
+            "nome": "LORENZO",
+            "codeSuffix": "ES",
+            "team": "CICLISTICA ROSTESE",
+            "categoria": "ES2_M",
+            "ambiguousNameSplit": false,
+            "uncertainYear": false,
+            "existingAtletaId": "CASTELLANI_LORENZO"
+          },
+          {
+            "posizione": 4,
+            "cognome": "CAZZADORE",
+            "nome": "PAOLO",
+            "codeSuffix": "ES",
+            "team": "CICLISTICA ROSTESE",
+            "categoria": "ES2_M",
+            "ambiguousNameSplit": false,
+            "uncertainYear": false,
+            "existingAtletaId": null
+          },
+          {
+            "posizione": 5,
+            "cognome": "AVIDANO",
+            "nome": "DAVIDE",
+            "codeSuffix": "ES",
+            "team": "VIGOR - CYCLING TEAM",
+            "categoria": "ES2_M",
+            "ambiguousNameSplit": false,
+            "uncertainYear": false,
+            "existingAtletaId": "AVIDANO_DAVIDE"
+          },
+          {
+            "posizione": 6,
+            "cognome": "MARCHISIO",
+            "nome": "MATTIA",
+            "codeSuffix": "ES",
+            "team": "ALBA BRA LANGHE ROERO",
+            "categoria": "ES2_M",
+            "ambiguousNameSplit": false,
+            "uncertainYear": false,
+            "existingAtletaId": null
+          }
+        ]
+      },
+      {
+        "tabLabel": "Allievi",
+        "rows": [
+          {
+            "posizione": 1,
+            "cognome": "PARTENGO",
+            "nome": "CARLO",
+            "codeSuffix": "AL",
+            "team": "ARDENS CYCLING TEAM",
+            "categoria": "AL_M",
+            "ambiguousNameSplit": false,
+            "uncertainYear": false,
+            "existingAtletaId": "PARTENGO_CARLO"
+          },
+          {
+            "posizione": 2,
+            "cognome": "PHILIPPOT",
+            "nome": "JOEL",
+            "codeSuffix": "AL",
+            "team": "G.S. LUPI VALLE D'AOSTA",
+            "categoria": "AL_M",
+            "ambiguousNameSplit": false,
+            "uncertainYear": false,
+            "existingAtletaId": "PHILIPPOT_JOEL"
+          },
+          {
+            "posizione": 3,
+            "cognome": "TALIA LISANDRO",
+            "nome": "LORENZO",
+            "codeSuffix": "AL",
+            "team": "CICLISTICA BORDIGHERA",
+            "categoria": "AL_M",
+            "ambiguousNameSplit": false,
+            "uncertainYear": false,
+            "existingAtletaId": null
+          },
+          {
+            "posizione": 4,
+            "cognome": "MAZZONI",
+            "nome": "MIRCO",
+            "codeSuffix": "AL",
+            "team": "ESPERIA PIASCO",
+            "categoria": "AL_M",
+            "ambiguousNameSplit": false,
+            "uncertainYear": false,
+            "existingAtletaId": "MAZZONI_MIRCO"
+          },
+          {
+            "posizione": 5,
+            "cognome": "PELLEGRINO",
+            "nome": "LORENZO",
+            "codeSuffix": "AL",
+            "team": "ARDENS CYCLING TEAM",
+            "categoria": "AL_M",
+            "ambiguousNameSplit": false,
+            "uncertainYear": false,
+            "existingAtletaId": "PELLEGRINO_LORENZO"
+          },
+          {
+            "posizione": 6,
+            "cognome": "GIVO",
+            "nome": "SIMONE",
+            "codeSuffix": "AL",
+            "team": "ARDENS CYCLING TEAM",
+            "categoria": "AL_M",
+            "ambiguousNameSplit": false,
+            "uncertainYear": false,
+            "existingAtletaId": null
+          }
+        ]
+      },
+      {
+        "tabLabel": "Juniores",
+        "rows": [
+          {
+            "posizione": 1,
+            "cognome": "BELMONDO",
+            "nome": "FRANCESCO",
+            "codeSuffix": "JU",
+            "team": "U.C. PIASCO",
+            "categoria": "JUN_M",
+            "ambiguousNameSplit": false,
+            "uncertainYear": false,
+            "existingAtletaId": "BELMONDO_FRANCESCO"
+          },
+          {
+            "posizione": 2,
+            "cognome": "COMETTO",
+            "nome": "FILIPPO",
+            "codeSuffix": "JU",
+            "team": "U.C. PIASCO",
+            "categoria": "JUN_M",
+            "ambiguousNameSplit": false,
+            "uncertainYear": false,
+            "existingAtletaId": "COMETTO_FILIPPO"
+          },
+          {
+            "posizione": 3,
+            "cognome": "GUGNINO",
+            "nome": "LUCA",
+            "codeSuffix": "JU",
+            "team": "U.C. PIASCO",
+            "categoria": "JUN_M",
+            "ambiguousNameSplit": false,
+            "uncertainYear": false,
+            "existingAtletaId": "GUGNINO_LUCA"
+          },
+          {
+            "posizione": 4,
+            "cognome": "ROCCIA",
+            "nome": "MANUEL",
+            "codeSuffix": "JU",
+            "team": "CASANO",
+            "categoria": "JUN_M",
+            "ambiguousNameSplit": false,
+            "uncertainYear": false,
+            "existingAtletaId": null
+          },
+          {
+            "posizione": 5,
+            "cognome": "GALLO",
+            "nome": "FILIPPO",
+            "codeSuffix": "JU",
+            "team": "U.C. PIASCO",
+            "categoria": "JUN_M",
+            "ambiguousNameSplit": false,
+            "uncertainYear": false,
+            "existingAtletaId": null
+          },
+          {
+            "posizione": 6,
+            "cognome": "GALFRE'",
+            "nome": "JACOPO",
+            "codeSuffix": "JU",
+            "team": "U.C. PIASCO",
+            "categoria": "JUN_M",
+            "ambiguousNameSplit": false,
+            "uncertainYear": false,
+            "existingAtletaId": "GALFRE_JACOPO"
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "garaFciId": "180256",
+    "data": "29 Maggio 2026",
+    "nome": "2* GRAN PREMIO MSTC - LA PALLADIANA",
+    "regione": "VENETO",
+    "luogo": "Vicenza (VI)",
+    "categorieAmmesse": "G4 M/F, G5 M/F, G6 M/F, ESORDIENTI M/F, ALLIEVI M/F, JUNIORES M/F",
+    "km": "1,5 km",
+    "tabs": [
+      {
+        "tabLabel": "ESORDIENTI",
+        "rows": [
+          {
+            "posizione": 1,
+            "cognome": "FORTUNA",
+            "nome": "SIMONE",
+            "codeSuffix": "ES",
+            "team": "MST CYCLING - SANDRIGO BIKE",
+            "categoria": "ES1_M",
+            "ambiguousNameSplit": false,
+            "uncertainYear": true,
+            "existingAtletaId": "FORTUNA_SIMONE"
+          },
+          {
+            "posizione": 2,
+            "cognome": "MUSSOLIN",
+            "nome": "ETTORE",
+            "codeSuffix": "ES",
+            "team": "A.S.D. U.S. F. COPPI MONTECCHIO P.",
+            "categoria": "ES1_M",
+            "ambiguousNameSplit": false,
+            "uncertainYear": true,
+            "existingAtletaId": "MUSSOLIN_ETTORE"
+          },
+          {
+            "posizione": 3,
+            "cognome": "VIRLAN",
+            "nome": "MATTEO",
+            "codeSuffix": "ES",
+            "team": "A.S.D. U.S. F. COPPI MONTECCHIO P.",
+            "categoria": "ES1_M",
+            "ambiguousNameSplit": false,
+            "uncertainYear": true,
+            "existingAtletaId": null
+          },
+          {
+            "posizione": 4,
+            "cognome": "TESTOLIN",
+            "nome": "MATTEO",
+            "codeSuffix": "ES",
+            "team": "A.S.D. U.S. F. COPPI MONTECCHIO P.",
+            "categoria": "ES1_M",
+            "ambiguousNameSplit": false,
+            "uncertainYear": true,
+            "existingAtletaId": "TESTOLIN_MATTEO"
+          },
+          {
+            "posizione": 5,
+            "cognome": "CARACAUSI",
+            "nome": "GIOELE",
+            "codeSuffix": "ES",
+            "team": "A.S.D. U.S. F. COPPI MONTECCHIO P.",
+            "categoria": "ES1_M",
+            "ambiguousNameSplit": false,
+            "uncertainYear": true,
+            "existingAtletaId": "CARACAUSI_GIOELE"
+          },
+          {
+            "posizione": 6,
+            "cognome": "BISCONTIN",
+            "nome": "LEONARDO",
+            "codeSuffix": "ES",
+            "team": "G.S. TAVO BONIN BIKE",
+            "categoria": "ES1_M",
+            "ambiguousNameSplit": false,
+            "uncertainYear": true,
+            "existingAtletaId": null
+          },
+          {
+            "posizione": 7,
+            "cognome": "MENEGHEL",
+            "nome": "ANDREAS",
+            "codeSuffix": "ES",
+            "team": "A.S.D. G.S. FONZASO",
+            "categoria": "ES1_M",
+            "ambiguousNameSplit": false,
+            "uncertainYear": true,
+            "existingAtletaId": null
+          },
+          {
+            "posizione": 8,
+            "cognome": "ZIROLDI",
+            "nome": "ROCCO",
+            "codeSuffix": "ES",
+            "team": "MST CYCLING - SANDRIGO BIKE",
+            "categoria": "ES1_M",
+            "ambiguousNameSplit": false,
+            "uncertainYear": true,
+            "existingAtletaId": null
+          },
+          {
+            "posizione": 9,
+            "cognome": "BASSO",
+            "nome": "FILIPPO",
+            "codeSuffix": "ES",
+            "team": "MST CYCLING - SANDRIGO BIKE",
+            "categoria": "ES1_M",
+            "ambiguousNameSplit": false,
+            "uncertainYear": true,
+            "existingAtletaId": "BASSO_FILIPPO"
+          },
+          {
+            "posizione": 10,
+            "cognome": "ANGONESE",
+            "nome": "ALESSANDRO",
+            "codeSuffix": "ES",
+            "team": "MST CYCLING - SANDRIGO BIKE",
+            "categoria": "ES1_M",
+            "ambiguousNameSplit": false,
+            "uncertainYear": true,
+            "existingAtletaId": null
+          },
+          {
+            "posizione": 11,
+            "cognome": "CUMAN MATTEO",
+            "nome": "ISAIA",
+            "codeSuffix": "ES",
+            "team": "MST CYCLING - SANDRIGO BIKE",
+            "categoria": "ES1_M",
+            "ambiguousNameSplit": false,
+            "uncertainYear": true,
+            "existingAtletaId": null
+          },
+          {
+            "posizione": 12,
+            "cognome": "TOSATO",
+            "nome": "MARCO",
+            "codeSuffix": "ES",
+            "team": "G.S. TAVO BONIN BIKE",
+            "categoria": "ES1_M",
+            "ambiguousNameSplit": false,
+            "uncertainYear": true,
+            "existingAtletaId": null
+          }
+        ]
+      },
+      {
+        "tabLabel": "ALLIEVI",
+        "rows": [
+          {
+            "posizione": 1,
+            "cognome": "STORTI",
+            "nome": "MICHELE",
+            "codeSuffix": "AL",
+            "team": "FAIZANE' CSZ SANDRIGO BIKE",
+            "categoria": "AL_M",
+            "ambiguousNameSplit": false,
+            "uncertainYear": false,
+            "existingAtletaId": "STORTI_MICHELE"
+          },
+          {
+            "posizione": 2,
+            "cognome": "BISOGNIN",
+            "nome": "GIOSUE'",
+            "codeSuffix": "AL",
+            "team": "ROTOGAL GUADENSE",
+            "categoria": "AL_M",
+            "ambiguousNameSplit": false,
+            "uncertainYear": false,
+            "existingAtletaId": null
+          },
+          {
+            "posizione": 3,
+            "cognome": "STOCCHIERO",
+            "nome": "LUCA",
+            "codeSuffix": "AL",
+            "team": "FAIZANE' CSZ SANDRIGO BIKE",
+            "categoria": "AL_M",
+            "ambiguousNameSplit": false,
+            "uncertainYear": false,
+            "existingAtletaId": null
+          },
+          {
+            "posizione": 4,
+            "cognome": "VIELMO",
+            "nome": "FEDERICO",
+            "codeSuffix": "AL",
+            "team": "FAIZANE' CSZ SANDRIGO BIKE",
+            "categoria": "AL_M",
+            "ambiguousNameSplit": false,
+            "uncertainYear": false,
+            "existingAtletaId": "VIELMO_FEDERICO"
+          },
+          {
+            "posizione": 5,
+            "cognome": "MARCANTE",
+            "nome": "LORENZO",
+            "codeSuffix": "AL",
+            "team": "ROTOGAL GUADENSE",
+            "categoria": "AL_M",
+            "ambiguousNameSplit": false,
+            "uncertainYear": false,
+            "existingAtletaId": null
+          },
+          {
+            "posizione": 6,
+            "cognome": "BIASIA",
+            "nome": "EDOARDO",
+            "codeSuffix": "AL",
+            "team": "FAIZANE' CSZ SANDRIGO BIKE",
+            "categoria": "AL_M",
+            "ambiguousNameSplit": false,
+            "uncertainYear": false,
+            "existingAtletaId": null
+          },
+          {
+            "posizione": 7,
+            "cognome": "ROMAN",
+            "nome": "ALESSANDRO",
+            "codeSuffix": "AL",
+            "team": "ROTOGAL GUADENSE",
+            "categoria": "AL_M",
+            "ambiguousNameSplit": false,
+            "uncertainYear": false,
+            "existingAtletaId": null
+          },
+          {
+            "posizione": 8,
+            "cognome": "GUIDOLIN",
+            "nome": "RICCARDO",
+            "codeSuffix": "AL",
+            "team": "CAMPANA IMBALL. MORBIATO TRENTINO",
+            "categoria": "AL_M",
+            "ambiguousNameSplit": false,
+            "uncertainYear": false,
+            "existingAtletaId": "GUIDOLIN_RICCARDO"
+          },
+          {
+            "posizione": 9,
+            "cognome": "FERRARI",
+            "nome": "NICCOLO'",
+            "codeSuffix": "AL",
+            "team": "CAMPANA IMBALL. MORBIATO TRENTINO",
+            "categoria": "AL_M",
+            "ambiguousNameSplit": false,
+            "uncertainYear": false,
+            "existingAtletaId": null
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "garaFciId": "180258",
+    "data": "12 Giugno 2026",
+    "nome": "15° TROFEO GRAFICA 78",
+    "regione": "VENETO",
+    "luogo": "San Vendemiano (TV)",
+    "categorieAmmesse": "ALLIEVI M/F- ESORDIENTI M/F",
+    "km": "0,900",
+    "tabs": [
+      {
+        "tabLabel": "DONNE ESORDIENTI",
+        "rows": [
+          {
+            "posizione": 1,
+            "cognome": "VETTORELLO",
+            "nome": "GAIA",
+            "codeSuffix": "ED",
+            "team": "U.C.CONSCIO PEDALE DEL SILE",
+            "categoria": "ES1_F",
+            "ambiguousNameSplit": false,
+            "uncertainYear": true,
+            "existingAtletaId": "VETTORELLO_GAIA"
+          },
+          {
+            "posizione": 2,
+            "cognome": "CETTOLIN",
+            "nome": "GIOIA",
+            "codeSuffix": "ED",
+            "team": "U.C.CONSCIO PEDALE DEL SILE",
+            "categoria": "ES1_F",
+            "ambiguousNameSplit": false,
+            "uncertainYear": true,
+            "existingAtletaId": "CETTOLIN_GIOIA"
+          },
+          {
+            "posizione": 3,
+            "cognome": "PIN",
+            "nome": "MATILDE",
+            "codeSuffix": "ED",
+            "team": "U.C.CONSCIO PEDALE DEL SILE",
+            "categoria": "ES1_F",
+            "ambiguousNameSplit": false,
+            "uncertainYear": true,
+            "existingAtletaId": "PIN_MATILDE"
+          }
+        ]
+      },
+      {
+        "tabLabel": "DONNE ALLIEVE",
+        "rows": [
+          {
+            "posizione": 1,
+            "cognome": "MIGLIORANZA",
+            "nome": "ELENA",
+            "codeSuffix": "DA",
+            "team": "ASD GS SORGENTE PRADIPOZZO",
+            "categoria": "AL_F",
+            "ambiguousNameSplit": false,
+            "uncertainYear": false,
+            "existingAtletaId": "MIGLIORANZA_ELENA"
+          },
+          {
+            "posizione": 2,
+            "cognome": "DE FRANCESCHI",
+            "nome": "MARTINA",
+            "codeSuffix": "DA",
+            "team": "U.C.CONSCIO PEDALE DEL SILE",
+            "categoria": "AL_F",
+            "ambiguousNameSplit": false,
+            "uncertainYear": false,
+            "existingAtletaId": null
+          },
+          {
+            "posizione": 3,
+            "cognome": "FANTIN",
+            "nome": "NICOLE",
+            "codeSuffix": "DA",
+            "team": "ASD GS SORGENTE PRADIPOZZO",
+            "categoria": "AL_F",
+            "ambiguousNameSplit": false,
+            "uncertainYear": false,
+            "existingAtletaId": null
+          }
+        ]
+      },
+      {
+        "tabLabel": "ESORDIENTI 1 ANNO",
+        "rows": [
+          {
+            "posizione": 1,
+            "cognome": "SPESSOTTO",
+            "nome": "GIACOMO",
+            "codeSuffix": "ES",
+            "team": "VC SAN VENDEMIANO",
+            "categoria": "ES1_M",
+            "ambiguousNameSplit": false,
+            "uncertainYear": false,
+            "existingAtletaId": "SPESSOTTO_GIACOMO"
+          },
+          {
+            "posizione": 2,
+            "cognome": "FRESCHI",
+            "nome": "ANDREA",
+            "codeSuffix": "ES",
+            "team": "A.S.D. SACILESE",
+            "categoria": "ES1_M",
+            "ambiguousNameSplit": false,
+            "uncertainYear": false,
+            "existingAtletaId": "FRESCHI_ANDREA"
+          },
+          {
+            "posizione": 3,
+            "cognome": "TOFFOLI",
+            "nome": "STEFANO",
+            "codeSuffix": "ES",
+            "team": "SOC. SPORT.SANFIORESE",
+            "categoria": "ES1_M",
+            "ambiguousNameSplit": false,
+            "uncertainYear": false,
+            "existingAtletaId": "TOFFOLI_STEFANO"
+          }
+        ]
+      },
+      {
+        "tabLabel": "ESORDIENTI 2 ANNO",
+        "rows": [
+          {
+            "posizione": 1,
+            "cognome": "DAL BO'",
+            "nome": "MATIAS",
+            "codeSuffix": "ES",
+            "team": "PEDALE MARENESE GINO BARTALI",
+            "categoria": "ES2_M",
+            "ambiguousNameSplit": false,
+            "uncertainYear": false,
+            "existingAtletaId": "DAL_BO_MATIAS"
+          },
+          {
+            "posizione": 2,
+            "cognome": "DE ROS",
+            "nome": "LUIGI",
+            "codeSuffix": "ES",
+            "team": "G.C.POSTIOMA",
+            "categoria": "ES2_M",
+            "ambiguousNameSplit": false,
+            "uncertainYear": false,
+            "existingAtletaId": null
+          },
+          {
+            "posizione": 3,
+            "cognome": "BEMBO",
+            "nome": "SANTIAGO",
+            "codeSuffix": "ES",
+            "team": "A.S.D. POSTUMIA 73 D.L. CICLISMO",
+            "categoria": "ES2_M",
+            "ambiguousNameSplit": false,
+            "uncertainYear": false,
+            "existingAtletaId": "BEMBO_SANTIAGO"
+          }
+        ]
+      },
+      {
+        "tabLabel": "ALLIEVI",
+        "rows": [
+          {
+            "posizione": 1,
+            "cognome": "RODRIGUES DOS SANTOS VICENTE",
+            "nome": "JUNIOR",
+            "codeSuffix": "AL",
+            "team": "A.S.D. SACILESE",
+            "categoria": "AL_M",
+            "ambiguousNameSplit": true,
+            "uncertainYear": false,
+            "existingAtletaId": null
+          },
+          {
+            "posizione": 2,
+            "cognome": "NOSELLA",
+            "nome": "TOMMASO",
+            "codeSuffix": "AL",
+            "team": "SOC. SPORT.SANFIORESE",
+            "categoria": "AL_M",
+            "ambiguousNameSplit": false,
+            "uncertainYear": false,
+            "existingAtletaId": "NOSELLA_TOMMASO"
+          },
+          {
+            "posizione": 3,
+            "cognome": "CARLET",
+            "nome": "ALBERTO",
+            "codeSuffix": "AL",
+            "team": "A.S.D. SACILESE",
+            "categoria": "AL_M",
+            "ambiguousNameSplit": false,
+            "uncertainYear": false,
+            "existingAtletaId": "CARLET_ALBERTO"
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "garaFciId": "181346",
+    "data": "12 Giugno 2026",
+    "nome": "TROFEO AMICI DEL CICLISMO DI CASALOLDO - 1° MEM. GIANCARLO PELLEGRI",
+    "regione": "LOMBARDIA",
+    "luogo": "CASALOLDO (MN)",
+    "categorieAmmesse": "G4 - G5 - G6 - ESO1 - ESO2 - ALLIEVI",
+    "km": "",
+    "tabs": [
+      {
+        "tabLabel": "Allievi",
+        "rows": [
+          {
+            "posizione": 1,
+            "cognome": "GRISI",
+            "nome": "LEONARDO",
+            "codeSuffix": "AL",
+            "team": "FDB SPORT CLUB",
+            "categoria": "AL_M",
+            "ambiguousNameSplit": false,
+            "uncertainYear": false,
+            "existingAtletaId": "GRISI_LEONARDO"
+          },
+          {
+            "posizione": 2,
+            "cognome": "DOLFINI",
+            "nome": "MATTIA",
+            "codeSuffix": "AL",
+            "team": "PROGETTO CICLISMO - RODENGO S. ASD",
+            "categoria": "AL_M",
+            "ambiguousNameSplit": false,
+            "uncertainYear": false,
+            "existingAtletaId": "DOLFINI_MATTIA"
+          },
+          {
+            "posizione": 3,
+            "cognome": "IAZZI",
+            "nome": "LORENZO",
+            "codeSuffix": "AL",
+            "team": "MADIGNANESE CICLISMO A.S.D",
+            "categoria": "AL_M",
+            "ambiguousNameSplit": false,
+            "uncertainYear": false,
+            "existingAtletaId": "IAZZI_LORENZO"
+          },
+          {
+            "posizione": 4,
+            "cognome": "COLOMBO",
+            "nome": "MANUEL",
+            "codeSuffix": "AL",
+            "team": "ALBA OROBIA - BIASSONO",
+            "categoria": "AL_M",
+            "ambiguousNameSplit": false,
+            "uncertainYear": false,
+            "existingAtletaId": "COLOMBO_MANUEL"
+          },
+          {
+            "posizione": 5,
+            "cognome": "FIORETTI",
+            "nome": "MATTIA",
+            "codeSuffix": "AL",
+            "team": "S. C. MINCIO-CHIESE A.S.D",
+            "categoria": "AL_M",
+            "ambiguousNameSplit": false,
+            "uncertainYear": false,
+            "existingAtletaId": "FIORETTI_MATTIA"
+          },
+          {
+            "posizione": 6,
+            "cognome": "SEQUANI",
+            "nome": "LEONARDO",
+            "codeSuffix": "AL",
+            "team": "A.S.D. US AUSONIA CSI PESCANTINA",
+            "categoria": "AL_M",
+            "ambiguousNameSplit": false,
+            "uncertainYear": false,
+            "existingAtletaId": "SEQUANI_LEONARDO"
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "garaFciId": "181395",
+    "data": "16 Luglio 2026",
+    "nome": "33° TROFEO PRO LOCO",
+    "regione": "LOMBARDIA",
+    "luogo": "GUIDIZZOLO (MN) (MN)",
+    "categorieAmmesse": "TIPO PISTA (PIU' CATEGORIE)  G4 - G5 - G6 - ESORDIENTI 1 - 2 ANNO - ALLIEVI",
+    "km": "1,00",
+    "tabs": [
+      {
+        "tabLabel": "esordienti 1° anno",
+        "rows": [
+          {
+            "posizione": 1,
+            "cognome": "SANSONI",
+            "nome": "ALESSIO",
+            "codeSuffix": "ES",
+            "team": "MAZZANO A.S.D.",
+            "categoria": "ES1_M",
+            "ambiguousNameSplit": false,
+            "uncertainYear": false,
+            "existingAtletaId": "SANSONI_ALESSIO"
+          },
+          {
+            "posizione": 2,
+            "cognome": "ZANARDINI",
+            "nome": "LEONARDO",
+            "codeSuffix": "ES",
+            "team": "MAZZANO A.S.D.",
+            "categoria": "ES1_M",
+            "ambiguousNameSplit": false,
+            "uncertainYear": false,
+            "existingAtletaId": "ZANARDINI_LEONARDO"
+          },
+          {
+            "posizione": 3,
+            "cognome": "MAI",
+            "nome": "LEONARDO",
+            "codeSuffix": "ES",
+            "team": "S. C. MINCIO-CHIESE A.S.D",
+            "categoria": "ES1_M",
+            "ambiguousNameSplit": false,
+            "uncertainYear": false,
+            "existingAtletaId": "MAI_LEONARDO"
+          },
+          {
+            "posizione": 4,
+            "cognome": "MERLETTI",
+            "nome": "DANIEL",
+            "codeSuffix": "ES",
+            "team": "MAZZANO A.S.D.",
+            "categoria": "ES1_M",
+            "ambiguousNameSplit": false,
+            "uncertainYear": false,
+            "existingAtletaId": "MERLETTI_DANIEL"
+          },
+          {
+            "posizione": 5,
+            "cognome": "RICCI",
+            "nome": "NICOLA",
+            "codeSuffix": "ES",
+            "team": "SAN GEO A.S.D.",
+            "categoria": "ES1_M",
+            "ambiguousNameSplit": false,
+            "uncertainYear": false,
+            "existingAtletaId": "RICCI_NICOLA"
+          },
+          {
+            "posizione": 6,
+            "cognome": "REDAELLI",
+            "nome": "FRANCESCO",
+            "codeSuffix": "ES",
+            "team": "SC PEDALE AGRATESE",
+            "categoria": "ES1_M",
+            "ambiguousNameSplit": false,
+            "uncertainYear": false,
+            "existingAtletaId": null
+          }
+        ]
+      },
+      {
+        "tabLabel": "esordienti 2° anno",
+        "rows": [
+          {
+            "posizione": 1,
+            "cognome": "ZUNICA",
+            "nome": "GIULIO",
+            "codeSuffix": "ES",
+            "team": "S. C. MINCIO-CHIESE A.S.D",
+            "categoria": "ES2_M",
+            "ambiguousNameSplit": false,
+            "uncertainYear": false,
+            "existingAtletaId": "ZUNICA_GIULIO"
+          },
+          {
+            "posizione": 2,
+            "cognome": "COLOMBO",
+            "nome": "MARCO",
+            "codeSuffix": "ES",
+            "team": "SAN GEO A.S.D.",
+            "categoria": "ES2_M",
+            "ambiguousNameSplit": false,
+            "uncertainYear": false,
+            "existingAtletaId": "COLOMBO_MARCO"
+          },
+          {
+            "posizione": 3,
+            "cognome": "DECO'",
+            "nome": "GABRIELE",
+            "codeSuffix": "ES",
+            "team": "S. C. MINCIO-CHIESE A.S.D",
+            "categoria": "ES2_M",
+            "ambiguousNameSplit": false,
+            "uncertainYear": false,
+            "existingAtletaId": "DECO_GABRIELE"
+          },
+          {
+            "posizione": 4,
+            "cognome": "GANARIN",
+            "nome": "LUCA",
+            "codeSuffix": "ES",
+            "team": "S. C. MINCIO-CHIESE A.S.D",
+            "categoria": "ES2_M",
+            "ambiguousNameSplit": false,
+            "uncertainYear": false,
+            "existingAtletaId": "GANARIN_LUCA"
+          },
+          {
+            "posizione": 5,
+            "cognome": "BALCONI",
+            "nome": "FEDERICO",
+            "codeSuffix": "ES",
+            "team": "MAZZANO A.S.D.",
+            "categoria": "ES2_M",
+            "ambiguousNameSplit": false,
+            "uncertainYear": false,
+            "existingAtletaId": "BALCONI_FEDERICO"
+          },
+          {
+            "posizione": 6,
+            "cognome": "GALLI",
+            "nome": "FEDERICO",
+            "codeSuffix": "ES",
+            "team": "SAN GEO A.S.D.",
+            "categoria": "ES2_M",
+            "ambiguousNameSplit": false,
+            "uncertainYear": false,
+            "existingAtletaId": "GALLI_FEDERICO"
+          }
+        ]
+      },
+      {
+        "tabLabel": "allievi",
+        "rows": [
+          {
+            "posizione": 1,
+            "cognome": "SOSA COLON",
+            "nome": "GIOEL",
+            "codeSuffix": "AL",
+            "team": "FERALPI MONTECLARENSE ASD",
+            "categoria": "AL_M",
+            "ambiguousNameSplit": false,
+            "uncertainYear": false,
+            "existingAtletaId": null
+          },
+          {
+            "posizione": 2,
+            "cognome": "RONDA",
+            "nome": "DANIELE",
+            "codeSuffix": "AL",
+            "team": "FERALPI MONTECLARENSE ASD",
+            "categoria": "AL_M",
+            "ambiguousNameSplit": false,
+            "uncertainYear": false,
+            "existingAtletaId": "RONDA_DANIELE"
+          },
+          {
+            "posizione": 3,
+            "cognome": "MONTESIN",
+            "nome": "GABRIELE",
+            "codeSuffix": "AL",
+            "team": "FERALPI MONTECLARENSE ASD",
+            "categoria": "AL_M",
+            "ambiguousNameSplit": false,
+            "uncertainYear": false,
+            "existingAtletaId": "MONTESIN_GABRIELE"
+          },
+          {
+            "posizione": 4,
+            "cognome": "DOLFINI",
+            "nome": "MATTIA",
+            "codeSuffix": "AL",
+            "team": "PROGETTO CICLISMO - RODENGO S. ASD",
+            "categoria": "AL_M",
+            "ambiguousNameSplit": false,
+            "uncertainYear": false,
+            "existingAtletaId": "DOLFINI_MATTIA"
+          },
+          {
+            "posizione": 5,
+            "cognome": "BUSCA",
+            "nome": "GIOVANNI",
+            "codeSuffix": "AL",
+            "team": "MAZZANO A.S.D.",
+            "categoria": "AL_M",
+            "ambiguousNameSplit": false,
+            "uncertainYear": false,
+            "existingAtletaId": "BUSCA_GIOVANNI"
+          },
+          {
+            "posizione": 6,
+            "cognome": "FIORETTI",
+            "nome": "MATTIA",
+            "codeSuffix": "AL",
+            "team": "S. C. MINCIO-CHIESE A.S.D",
+            "categoria": "AL_M",
+            "ambiguousNameSplit": false,
+            "uncertainYear": false,
+            "existingAtletaId": "FIORETTI_MATTIA"
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "garaFciId": "181247",
+    "data": "16 Luglio 2026",
+    "nome": "TROFEO DENTIS",
+    "regione": "PIEMONTE",
+    "luogo": "SANT'ALBANO STURA CN (CN)",
+    "categorieAmmesse": "G4-G5-G6 ESORDIENTI ALLIEVI JUNIORES M/F",
+    "km": "1",
+    "tabs": [
+      {
+        "tabLabel": "Esordienti primo anno",
+        "rows": [
+          {
+            "posizione": 1,
+            "cognome": "CHERCHI",
+            "nome": "GABRIELE",
+            "codeSuffix": "ES",
+            "team": "ALBA BRA LANGHE ROERO",
+            "categoria": "ES1_M",
+            "ambiguousNameSplit": false,
+            "uncertainYear": false,
+            "existingAtletaId": null
+          },
+          {
+            "posizione": 2,
+            "cognome": "DONETTO",
+            "nome": "FILIPPO",
+            "codeSuffix": "ES",
+            "team": "ARDENS CYCLING TEAM",
+            "categoria": "ES1_M",
+            "ambiguousNameSplit": false,
+            "uncertainYear": false,
+            "existingAtletaId": "DONETTO_FILIPPO"
+          },
+          {
+            "posizione": 3,
+            "cognome": "ARCUDI",
+            "nome": "FEDERICO",
+            "codeSuffix": "ES",
+            "team": "ARDENS CYCLING TEAM",
+            "categoria": "ES1_M",
+            "ambiguousNameSplit": false,
+            "uncertainYear": false,
+            "existingAtletaId": "ARCUDI_FEDERICO"
+          },
+          {
+            "posizione": 4,
+            "cognome": "RAMONDETTI",
+            "nome": "GIOELE",
+            "codeSuffix": "ES",
+            "team": "ALBA BRA LANGHE ROERO",
+            "categoria": "ES1_M",
+            "ambiguousNameSplit": false,
+            "uncertainYear": false,
+            "existingAtletaId": "RAMONDETTI_GIOELE"
+          },
+          {
+            "posizione": 5,
+            "cognome": "VALLONE",
+            "nome": "NICOLO'",
+            "codeSuffix": "ES",
+            "team": "QUILIANO BIKE SPEED WHEEL",
+            "categoria": "ES1_M",
+            "ambiguousNameSplit": false,
+            "uncertainYear": false,
+            "existingAtletaId": null
+          },
+          {
+            "posizione": 6,
+            "cognome": "GABBA",
+            "nome": "LUCA",
+            "codeSuffix": "ES",
+            "team": "CICLISTICA ROSTESE",
+            "categoria": "ES1_M",
+            "ambiguousNameSplit": false,
+            "uncertainYear": false,
+            "existingAtletaId": "GABBA_LUCA"
+          },
+          {
+            "posizione": 7,
+            "cognome": "BISTERZO",
+            "nome": "MANUEL",
+            "codeSuffix": "ES",
+            "team": "CICLISTICA ROSTESE",
+            "categoria": "ES1_M",
+            "ambiguousNameSplit": false,
+            "uncertainYear": false,
+            "existingAtletaId": "BISTERZO_MANUEL"
+          },
+          {
+            "posizione": 8,
+            "cognome": "BIOLATTO",
+            "nome": "SAMUELE",
+            "codeSuffix": "ES",
+            "team": "ARDENS CYCLING TEAM",
+            "categoria": "ES1_M",
+            "ambiguousNameSplit": false,
+            "uncertainYear": false,
+            "existingAtletaId": "BIOLATTO_SAMUELE"
+          },
+          {
+            "posizione": 9,
+            "cognome": "CORRENDO",
+            "nome": "FILIPPO",
+            "codeSuffix": "ES",
+            "team": "ESPERIA PIASCO",
+            "categoria": "ES1_M",
+            "ambiguousNameSplit": false,
+            "uncertainYear": false,
+            "existingAtletaId": "CORRENDO_FILIPPO"
+          },
+          {
+            "posizione": 10,
+            "cognome": "CASTELLINI",
+            "nome": "SIMONE",
+            "codeSuffix": "ES",
+            "team": "QUILIANO BIKE SPEED WHEEL",
+            "categoria": "ES1_M",
+            "ambiguousNameSplit": false,
+            "uncertainYear": false,
+            "existingAtletaId": null
+          },
+          {
+            "posizione": 11,
+            "cognome": "COLOMBINO",
+            "nome": "ESTER",
+            "codeSuffix": "ED",
+            "team": "QUILIANO BIKE SPEED WHEEL",
+            "categoria": "ES1_F",
+            "ambiguousNameSplit": false,
+            "uncertainYear": false,
+            "existingAtletaId": null
+          },
+          {
+            "posizione": 12,
+            "cognome": "GERBALDO",
+            "nome": "ALESSANDRO",
+            "codeSuffix": "ES",
+            "team": "ARDENS CYCLING TEAM",
+            "categoria": "ES1_M",
+            "ambiguousNameSplit": false,
+            "uncertainYear": false,
+            "existingAtletaId": null
+          }
+        ]
+      },
+      {
+        "tabLabel": "Esordienti secondo anno",
+        "rows": [
+          {
+            "posizione": 1,
+            "cognome": "DI DOMENICO",
+            "nome": "MATTIA",
+            "codeSuffix": "ES",
+            "team": "QUILIANO BIKE SPEED WHEEL",
+            "categoria": "ES2_M",
+            "ambiguousNameSplit": false,
+            "uncertainYear": false,
+            "existingAtletaId": null
+          },
+          {
+            "posizione": 2,
+            "cognome": "ALTARE",
+            "nome": "JACOPO",
+            "codeSuffix": "ES",
+            "team": "VIGOR - CYCLING TEAM",
+            "categoria": "ES2_M",
+            "ambiguousNameSplit": false,
+            "uncertainYear": false,
+            "existingAtletaId": "ALTARE_JACOPO"
+          },
+          {
+            "posizione": 3,
+            "cognome": "REJNAUD",
+            "nome": "MATTEO",
+            "codeSuffix": "ES",
+            "team": "ARDENS CYCLING TEAM",
+            "categoria": "ES2_M",
+            "ambiguousNameSplit": false,
+            "uncertainYear": false,
+            "existingAtletaId": "REJNAUD_MATTEO"
+          },
+          {
+            "posizione": 4,
+            "cognome": "AVIDANO",
+            "nome": "DAVIDE",
+            "codeSuffix": "ES",
+            "team": "VIGOR - CYCLING TEAM",
+            "categoria": "ES2_M",
+            "ambiguousNameSplit": false,
+            "uncertainYear": false,
+            "existingAtletaId": "AVIDANO_DAVIDE"
+          },
+          {
+            "posizione": 5,
+            "cognome": "CANU",
+            "nome": "EDOARDO",
+            "codeSuffix": "ES",
+            "team": "QUILIANO BIKE SPEED WHEEL",
+            "categoria": "ES2_M",
+            "ambiguousNameSplit": false,
+            "uncertainYear": false,
+            "existingAtletaId": "CANU_EDOARDO"
+          },
+          {
+            "posizione": 6,
+            "cognome": "SORASIO",
+            "nome": "STEFANO",
+            "codeSuffix": "ES",
+            "team": "ARDENS CYCLING TEAM",
+            "categoria": "ES2_M",
+            "ambiguousNameSplit": false,
+            "uncertainYear": false,
+            "existingAtletaId": "SORASIO_STEFANO"
+          },
+          {
+            "posizione": 7,
+            "cognome": "LICATA",
+            "nome": "LORENZO",
+            "codeSuffix": "ES",
+            "team": "ARDENS CYCLING TEAM",
+            "categoria": "ES2_M",
+            "ambiguousNameSplit": false,
+            "uncertainYear": false,
+            "existingAtletaId": null
+          },
+          {
+            "posizione": 8,
+            "cognome": "GROPPO",
+            "nome": "LEONARDO",
+            "codeSuffix": "ES",
+            "team": "ESPERIA PIASCO",
+            "categoria": "ES2_M",
+            "ambiguousNameSplit": false,
+            "uncertainYear": false,
+            "existingAtletaId": "GROPPO_LEONARDO"
+          },
+          {
+            "posizione": 9,
+            "cognome": "GUARNIERI",
+            "nome": "EMIL",
+            "codeSuffix": "ES",
+            "team": "CICLISTICA ROSTESE",
+            "categoria": "ES2_M",
+            "ambiguousNameSplit": false,
+            "uncertainYear": false,
+            "existingAtletaId": "GUARNIERI_EMIL"
+          },
+          {
+            "posizione": 10,
+            "cognome": "ADAMI",
+            "nome": "SEBASTIANO",
+            "codeSuffix": "ES",
+            "team": "ESPERIA PIASCO",
+            "categoria": "ES2_M",
+            "ambiguousNameSplit": false,
+            "uncertainYear": false,
+            "existingAtletaId": "ADAMI_SEBASTIANO"
+          },
+          {
+            "posizione": 11,
+            "cognome": "MARCHISIO",
+            "nome": "MATTIA",
+            "codeSuffix": "ES",
+            "team": "ALBA BRA LANGHE ROERO",
+            "categoria": "ES2_M",
+            "ambiguousNameSplit": false,
+            "uncertainYear": false,
+            "existingAtletaId": null
+          },
+          {
+            "posizione": 12,
+            "cognome": "SALICE",
+            "nome": "NICOLO'",
+            "codeSuffix": "ES",
+            "team": "G.S. LUPI VALLE D'AOSTA",
+            "categoria": "ES2_M",
+            "ambiguousNameSplit": false,
+            "uncertainYear": false,
+            "existingAtletaId": null
+          }
+        ]
+      },
+      {
+        "tabLabel": "Allievi",
+        "rows": [
+          {
+            "posizione": 1,
+            "cognome": "PHILIPPOT",
+            "nome": "JOEL",
+            "codeSuffix": "AL",
+            "team": "G.S. LUPI VALLE D'AOSTA",
+            "categoria": "AL_M",
+            "ambiguousNameSplit": false,
+            "uncertainYear": false,
+            "existingAtletaId": "PHILIPPOT_JOEL"
+          },
+          {
+            "posizione": 2,
+            "cognome": "DOTTA",
+            "nome": "LEONARDO",
+            "codeSuffix": "AL",
+            "team": "ARDENS CYCLING TEAM",
+            "categoria": "AL_M",
+            "ambiguousNameSplit": false,
+            "uncertainYear": false,
+            "existingAtletaId": "DOTTA_LEONARDO"
+          },
+          {
+            "posizione": 3,
+            "cognome": "MAZZONI",
+            "nome": "MIRCO",
+            "codeSuffix": "AL",
+            "team": "ESPERIA PIASCO",
+            "categoria": "AL_M",
+            "ambiguousNameSplit": false,
+            "uncertainYear": false,
+            "existingAtletaId": "MAZZONI_MIRCO"
+          },
+          {
+            "posizione": 4,
+            "cognome": "MOLLO LUDOVICO",
+            "nome": "MARIA",
+            "codeSuffix": "AL",
+            "team": "ESPERIA PIASCO",
+            "categoria": "AL_M",
+            "ambiguousNameSplit": false,
+            "uncertainYear": false,
+            "existingAtletaId": null
+          },
+          {
+            "posizione": 5,
+            "cognome": "PETTITI",
+            "nome": "NICOLA",
+            "codeSuffix": "AL",
+            "team": "ESPERIA PIASCO",
+            "categoria": "AL_M",
+            "ambiguousNameSplit": false,
+            "uncertainYear": false,
+            "existingAtletaId": "PETTITI_NICOLA"
+          },
+          {
+            "posizione": 6,
+            "cognome": "MURATORE ALESSIO",
+            "nome": "GABRIELE",
+            "codeSuffix": "AL",
+            "team": "ESPERIA PIASCO",
+            "categoria": "AL_M",
+            "ambiguousNameSplit": false,
+            "uncertainYear": false,
+            "existingAtletaId": null
+          },
+          {
+            "posizione": 7,
+            "cognome": "FERRARI",
+            "nome": "LEONARDO",
+            "codeSuffix": "AL",
+            "team": "VIGOR - CYCLING TEAM",
+            "categoria": "AL_M",
+            "ambiguousNameSplit": false,
+            "uncertainYear": false,
+            "existingAtletaId": null
+          },
+          {
+            "posizione": 8,
+            "cognome": "MELLANO",
+            "nome": "FRANCESCO",
+            "codeSuffix": "AL",
+            "team": "VIGOR - CYCLING TEAM",
+            "categoria": "AL_M",
+            "ambiguousNameSplit": false,
+            "uncertainYear": false,
+            "existingAtletaId": null
+          },
+          {
+            "posizione": 9,
+            "cognome": "BERTAGNI",
+            "nome": "BRYAN",
+            "codeSuffix": "AL",
+            "team": "CICLISTICA BORDIGHERA",
+            "categoria": "AL_M",
+            "ambiguousNameSplit": false,
+            "uncertainYear": false,
+            "existingAtletaId": null
+          },
+          {
+            "posizione": 10,
+            "cognome": "BIOLATTO",
+            "nome": "MATTIA",
+            "codeSuffix": "AL",
+            "team": "ARDENS CYCLING TEAM",
+            "categoria": "AL_M",
+            "ambiguousNameSplit": false,
+            "uncertainYear": false,
+            "existingAtletaId": null
+          },
+          {
+            "posizione": 11,
+            "cognome": "GIANGREGORIO",
+            "nome": "DAVIDE",
+            "codeSuffix": "AL",
+            "team": "CICLISTICA ROSTESE",
+            "categoria": "AL_M",
+            "ambiguousNameSplit": false,
+            "uncertainYear": false,
+            "existingAtletaId": null
+          }
+        ]
+      },
+      {
+        "tabLabel": "Juniores",
+        "rows": [
+          {
+            "posizione": 1,
+            "cognome": "MOLLO",
+            "nome": "GIANMARIA",
+            "codeSuffix": "JU",
+            "team": "U.C. PIASCO",
+            "categoria": "JUN_M",
+            "ambiguousNameSplit": false,
+            "uncertainYear": false,
+            "existingAtletaId": "MOLLO_GIANMARIA"
+          },
+          {
+            "posizione": 2,
+            "cognome": "COMETTO",
+            "nome": "FILIPPO",
+            "codeSuffix": "JU",
+            "team": "U.C. PIASCO",
+            "categoria": "JUN_M",
+            "ambiguousNameSplit": false,
+            "uncertainYear": false,
+            "existingAtletaId": "COMETTO_FILIPPO"
+          },
+          {
+            "posizione": 3,
+            "cognome": "BELMONDO",
+            "nome": "FRANCESCO",
+            "codeSuffix": "JU",
+            "team": "U.C. PIASCO",
+            "categoria": "JUN_M",
+            "ambiguousNameSplit": false,
+            "uncertainYear": false,
+            "existingAtletaId": "BELMONDO_FRANCESCO"
+          },
+          {
+            "posizione": 4,
+            "cognome": "GALLO",
+            "nome": "FILIPPO",
+            "codeSuffix": "JU",
+            "team": "U.C. PIASCO",
+            "categoria": "JUN_M",
+            "ambiguousNameSplit": false,
+            "uncertainYear": false,
+            "existingAtletaId": null
+          },
+          {
+            "posizione": 5,
+            "cognome": "FAVERO",
+            "nome": "LORENZO",
+            "codeSuffix": "JU",
+            "team": "CICLISTICA ROSTESE",
+            "categoria": "JUN_M",
+            "ambiguousNameSplit": false,
+            "uncertainYear": false,
+            "existingAtletaId": null
+          },
+          {
+            "posizione": 6,
+            "cognome": "GALFRE'",
+            "nome": "JACOPO",
+            "codeSuffix": "JU",
+            "team": "U.C. PIASCO",
+            "categoria": "JUN_M",
+            "ambiguousNameSplit": false,
+            "uncertainYear": false,
+            "existingAtletaId": "GALFRE_JACOPO"
+          },
+          {
+            "posizione": 7,
+            "cognome": "BONINO",
+            "nome": "ALESSANDRO",
+            "codeSuffix": "JU",
+            "team": "U.C. PIASCO",
+            "categoria": "JUN_M",
+            "ambiguousNameSplit": false,
+            "uncertainYear": false,
+            "existingAtletaId": null
+          },
+          {
+            "posizione": 8,
+            "cognome": "BARATTERO",
+            "nome": "FILIPPO",
+            "codeSuffix": "JU",
+            "team": "POOL CANTU' GB TEAM A.S.D.",
+            "categoria": "JUN_M",
+            "ambiguousNameSplit": false,
+            "uncertainYear": false,
+            "existingAtletaId": null
+          },
+          {
+            "posizione": 9,
+            "cognome": "TAMIETTI",
+            "nome": "GABRIELE",
+            "codeSuffix": "JU",
+            "team": "U.C. PIASCO",
+            "categoria": "JUN_M",
+            "ambiguousNameSplit": false,
+            "uncertainYear": false,
+            "existingAtletaId": null
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "garaFciId": "181396",
+    "data": "17 Luglio 2026",
+    "nome": "4° TROFEO TECAM",
+    "regione": "LOMBARDIA",
+    "luogo": "OLGIATE MOLGORA (LC)",
+    "categorieAmmesse": "MULTICATEGORIA TIPO PISTA Donne &#201;lite, Donne Juniores, Donne Allieve, Donne Esordienti",
+    "km": "",
+    "tabs": [
+      {
+        "tabLabel": "DONNE ESORDIENTI",
+        "rows": [
+          {
+            "posizione": 1,
+            "cognome": "SPINONI",
+            "nome": "MICHELLE",
+            "codeSuffix": "ED",
+            "team": "S.C. CESANO MADERNO",
+            "categoria": "ES1_F",
+            "ambiguousNameSplit": false,
+            "uncertainYear": true,
+            "existingAtletaId": "SPINONI_MICHELLE"
+          },
+          {
+            "posizione": 2,
+            "cognome": "TESTA",
+            "nome": "CAROLINA",
+            "codeSuffix": "ED",
+            "team": "SALUS CICLISTICA SEREGNO DE ROSA",
+            "categoria": "ES1_F",
+            "ambiguousNameSplit": false,
+            "uncertainYear": true,
+            "existingAtletaId": "TESTA_CAROLINA"
+          },
+          {
+            "posizione": 3,
+            "cognome": "SANNA",
+            "nome": "ELISA",
+            "codeSuffix": "ED",
+            "team": "S.C. CESANO MADERNO",
+            "categoria": "ES1_F",
+            "ambiguousNameSplit": false,
+            "uncertainYear": true,
+            "existingAtletaId": "SANNA_ELISA"
+          },
+          {
+            "posizione": 4,
+            "cognome": "CERONI",
+            "nome": "GIULIA",
+            "codeSuffix": "ED",
+            "team": "UNIONE CICLISTICA OSSANESGA",
+            "categoria": "ES1_F",
+            "ambiguousNameSplit": false,
+            "uncertainYear": true,
+            "existingAtletaId": "CERONI_GIULIA"
+          },
+          {
+            "posizione": 5,
+            "cognome": "STEFANONI",
+            "nome": "GIADA",
+            "codeSuffix": "ED",
+            "team": "SALUS CICLISTICA SEREGNO DE ROSA",
+            "categoria": "ES1_F",
+            "ambiguousNameSplit": false,
+            "uncertainYear": true,
+            "existingAtletaId": "STEFANONI_GIADA"
+          },
+          {
+            "posizione": 6,
+            "cognome": "LANFRANCHI",
+            "nome": "VITTORIA",
+            "codeSuffix": "ED",
+            "team": "UNIONE CICLISTICA OSSANESGA",
+            "categoria": "ES1_F",
+            "ambiguousNameSplit": false,
+            "uncertainYear": true,
+            "existingAtletaId": null
+          },
+          {
+            "posizione": 7,
+            "cognome": "PIETRELLA",
+            "nome": "ARIANNA",
+            "codeSuffix": "ED",
+            "team": "S.C. CESANO MADERNO",
+            "categoria": "ES1_F",
+            "ambiguousNameSplit": false,
+            "uncertainYear": true,
+            "existingAtletaId": null
+          },
+          {
+            "posizione": 8,
+            "cognome": "BREVIARIO",
+            "nome": "ILARIA",
+            "codeSuffix": "ED",
+            "team": "UNIONE CICLISTICA OSSANESGA",
+            "categoria": "ES1_F",
+            "ambiguousNameSplit": false,
+            "uncertainYear": true,
+            "existingAtletaId": null
+          },
+          {
+            "posizione": 9,
+            "cognome": "ANGHEL BEATRICE",
+            "nome": "IOANA",
+            "codeSuffix": "ED",
+            "team": "UNIONE CICLISTICA OSSANESGA",
+            "categoria": "ES1_F",
+            "ambiguousNameSplit": false,
+            "uncertainYear": true,
+            "existingAtletaId": null
+          },
+          {
+            "posizione": 10,
+            "cognome": "MOLTENI",
+            "nome": "ELISA",
+            "codeSuffix": "ED",
+            "team": "UC COSTAMASNAGA ASD",
+            "categoria": "ES1_F",
+            "ambiguousNameSplit": false,
+            "uncertainYear": true,
+            "existingAtletaId": null
+          }
+        ]
+      },
+      {
+        "tabLabel": "DONNE ALLIEVE",
+        "rows": [
+          {
+            "posizione": 1,
+            "cognome": "NAVAZIO",
+            "nome": "NICOLE",
+            "codeSuffix": "DA",
+            "team": "GS CICLI FIORIN ASD",
+            "categoria": "AL_F",
+            "ambiguousNameSplit": false,
+            "uncertainYear": false,
+            "existingAtletaId": "NAVAZIO_NICOLE"
+          },
+          {
+            "posizione": 2,
+            "cognome": "VENDITTO",
+            "nome": "ANNA",
+            "codeSuffix": "DA",
+            "team": "ASD PEDALE CASALESE ARMOFER",
+            "categoria": "AL_F",
+            "ambiguousNameSplit": false,
+            "uncertainYear": false,
+            "existingAtletaId": null
+          },
+          {
+            "posizione": 3,
+            "cognome": "CORNO",
+            "nome": "INGRID",
+            "codeSuffix": "DA",
+            "team": "S.C. CESANO MADERNO",
+            "categoria": "AL_F",
+            "ambiguousNameSplit": false,
+            "uncertainYear": false,
+            "existingAtletaId": null
+          },
+          {
+            "posizione": 4,
+            "cognome": "ROCCHETTI",
+            "nome": "LUCIA",
+            "codeSuffix": "DA",
+            "team": "UNIONE CICLISTICA OSSANESGA",
+            "categoria": "AL_F",
+            "ambiguousNameSplit": false,
+            "uncertainYear": false,
+            "existingAtletaId": null
+          },
+          {
+            "posizione": 5,
+            "cognome": "BRADU",
+            "nome": "TEODORA",
+            "codeSuffix": "DA",
+            "team": "UNIONE CICLISTICA OSSANESGA",
+            "categoria": "AL_F",
+            "ambiguousNameSplit": false,
+            "uncertainYear": false,
+            "existingAtletaId": null
+          }
+        ]
+      },
+      {
+        "tabLabel": "DONNE JUNIORES",
+        "rows": [
+          {
+            "posizione": 1,
+            "cognome": "PERUTA",
+            "nome": "SARA",
+            "codeSuffix": "DJ",
+            "team": "PETRUCCI GAUSS CYCLING TEAM",
+            "categoria": "JUN_F",
+            "ambiguousNameSplit": false,
+            "uncertainYear": false,
+            "existingAtletaId": "PERUTA_SARA"
+          },
+          {
+            "posizione": 2,
+            "cognome": "LOCATELLI",
+            "nome": "ALESSIA",
+            "codeSuffix": "DJ",
+            "team": "BIESSE - CARRERA - PREMAC",
+            "categoria": "JUN_F",
+            "ambiguousNameSplit": false,
+            "uncertainYear": false,
+            "existingAtletaId": "LOCATELLI_ALESSIA"
+          },
+          {
+            "posizione": 5,
+            "cognome": "VEZZOSI",
+            "nome": "GLORIA",
+            "codeSuffix": "DJ",
+            "team": "S.C.V. BIKE CADORAGO ASD",
+            "categoria": "JUN_F",
+            "ambiguousNameSplit": false,
+            "uncertainYear": false,
+            "existingAtletaId": null
+          },
+          {
+            "posizione": 6,
+            "cognome": "MINICHINO",
+            "nome": "MELANIA",
+            "codeSuffix": "DJ",
+            "team": "BIESSE - CARRERA - PREMAC",
+            "categoria": "JUN_F",
+            "ambiguousNameSplit": false,
+            "uncertainYear": false,
+            "existingAtletaId": "MINICHINO_MELANIA"
+          },
+          {
+            "posizione": 7,
+            "cognome": "NOVOLODSKAIA",
+            "nome": "ANGELINA",
+            "codeSuffix": "REG",
+            "team": "PETRUCCI GAUSS CYCLING TEAM",
+            "categoria": "JUN_F",
+            "ambiguousNameSplit": false,
+            "uncertainYear": false,
+            "existingAtletaId": "NOVOLODSKAIA_ANGELINA"
+          },
+          {
+            "posizione": 8,
+            "cognome": "ZUCCA",
+            "nome": "PAOLA",
+            "codeSuffix": "DJ",
+            "team": "S.C.V. BIKE CADORAGO ASD",
+            "categoria": "JUN_F",
+            "ambiguousNameSplit": false,
+            "uncertainYear": false,
+            "existingAtletaId": "ZUCCA_PAOLA"
+          },
+          {
+            "posizione": 10,
+            "cognome": "DELLA VEDOVA",
+            "nome": "MARTA",
+            "codeSuffix": "DJ",
+            "team": "S.C.V. BIKE CADORAGO ASD",
+            "categoria": "JUN_F",
+            "ambiguousNameSplit": false,
+            "uncertainYear": false,
+            "existingAtletaId": null
+          },
+          {
+            "posizione": 11,
+            "cognome": "CAMONI",
+            "nome": "NADIA",
+            "codeSuffix": "DJ",
+            "team": "ASS.CICLISTICA REMO CALZOLARI ASD",
+            "categoria": "JUN_F",
+            "ambiguousNameSplit": false,
+            "uncertainYear": false,
+            "existingAtletaId": null
+          },
+          {
+            "posizione": 12,
+            "cognome": "RICCI",
+            "nome": "ELISA",
+            "codeSuffix": "DJ",
+            "team": "BIESSE - CARRERA - PREMAC",
+            "categoria": "JUN_F",
+            "ambiguousNameSplit": false,
+            "uncertainYear": false,
+            "existingAtletaId": null
+          },
+          {
+            "posizione": 13,
+            "cognome": "RAPOSO",
+            "nome": "MIA",
+            "codeSuffix": "DJ",
+            "team": "ASS.CICLISTICA REMO CALZOLARI ASD",
+            "categoria": "JUN_F",
+            "ambiguousNameSplit": false,
+            "uncertainYear": false,
+            "existingAtletaId": null
+          },
+          {
+            "posizione": 14,
+            "cognome": "CORTINOVIS",
+            "nome": "ELENA",
+            "codeSuffix": "DJ",
+            "team": "ASS.CICLISTICA REMO CALZOLARI ASD",
+            "categoria": "JUN_F",
+            "ambiguousNameSplit": false,
+            "uncertainYear": false,
+            "existingAtletaId": null
+          }
+        ]
+      },
+      {
+        "tabLabel": "DONNE ELITE",
+        "rows": [
+          {
+            "posizione": 1,
+            "cognome": "CRESTANELLO",
+            "nome": "LARA",
+            "codeSuffix": "DE",
+            "team": "ISOLMANT - PREMAC - VITTORIA",
+            "categoria": "ELI_F",
+            "ambiguousNameSplit": false,
+            "uncertainYear": false,
+            "existingAtletaId": "CRESTANELLO_LARA"
+          },
+          {
+            "posizione": 2,
+            "cognome": "ROSSETTI",
+            "nome": "SONIA",
+            "codeSuffix": "DE",
+            "team": "VINI FANTINI - BEPINK",
+            "categoria": "ELI_F",
+            "ambiguousNameSplit": false,
+            "uncertainYear": false,
+            "existingAtletaId": "ROSSETTI_SONIA"
+          },
+          {
+            "posizione": 3,
+            "cognome": "ZANETTI",
+            "nome": "EMANUELA",
+            "codeSuffix": "DE",
+            "team": "ISOLMANT - PREMAC - VITTORIA",
+            "categoria": "ELI_F",
+            "ambiguousNameSplit": false,
+            "uncertainYear": false,
+            "existingAtletaId": "ZANETTI_EMANUELA"
+          },
+          {
+            "posizione": 4,
+            "cognome": "VALTULINI",
+            "nome": "ELISA",
+            "codeSuffix": "DU",
+            "team": "VINI FANTINI - BEPINK",
+            "categoria": "ELI_F",
+            "ambiguousNameSplit": false,
+            "uncertainYear": false,
+            "existingAtletaId": "VALTULINI_ELISA"
+          },
+          {
+            "posizione": 5,
+            "cognome": "ZAMBELLI",
+            "nome": "GIULIA",
+            "codeSuffix": "DU",
+            "team": "BIESSE - CARRERA - PREMAC",
+            "categoria": "ELI_F",
+            "ambiguousNameSplit": false,
+            "uncertainYear": false,
+            "existingAtletaId": "ZAMBELLI_GIULIA"
+          },
+          {
+            "posizione": 6,
+            "cognome": "REZZONICO",
+            "nome": "ALINE",
+            "codeSuffix": "REG",
+            "team": "BIESSE - CARRERA - PREMAC",
+            "categoria": "ELI_F",
+            "ambiguousNameSplit": false,
+            "uncertainYear": false,
+            "existingAtletaId": "REZZONICO_ALINE"
+          },
+          {
+            "posizione": 7,
+            "cognome": "BELOTTI",
+            "nome": "MISIA",
+            "codeSuffix": "DU",
+            "team": "VINI FANTINI - BEPINK",
+            "categoria": "ELI_F",
+            "ambiguousNameSplit": false,
+            "uncertainYear": false,
+            "existingAtletaId": "BELOTTI_MISIA"
+          },
+          {
+            "posizione": 8,
+            "cognome": "ZANGA",
+            "nome": "MARTA",
+            "codeSuffix": "DE",
+            "team": "BIESSE - CARRERA - PREMAC",
+            "categoria": "ELI_F",
+            "ambiguousNameSplit": false,
+            "uncertainYear": false,
+            "existingAtletaId": null
+          },
+          {
+            "posizione": 9,
+            "cognome": "DE LAURENTIIS",
+            "nome": "ELENA",
+            "codeSuffix": "DU",
+            "team": "VINI FANTINI - BEPINK",
+            "categoria": "ELI_F",
+            "ambiguousNameSplit": false,
+            "uncertainYear": false,
+            "existingAtletaId": null
+          },
+          {
+            "posizione": 10,
+            "cognome": "GIANGRANDE",
+            "nome": "GIORGIA",
+            "codeSuffix": "DU",
+            "team": "BIESSE - CARRERA - PREMAC",
+            "categoria": "ELI_F",
+            "ambiguousNameSplit": false,
+            "uncertainYear": false,
+            "existingAtletaId": "GIANGRANDE_GIORGIA"
+          },
+          {
+            "posizione": 11,
+            "cognome": "BORDIGNON",
+            "nome": "SILVIA",
+            "codeSuffix": "DU",
+            "team": "BIESSE - CARRERA - PREMAC",
+            "categoria": "ELI_F",
+            "ambiguousNameSplit": false,
+            "uncertainYear": false,
+            "existingAtletaId": "BORDIGNON_SILVIA"
+          },
+          {
+            "posizione": 12,
+            "cognome": "RADAELLI",
+            "nome": "ELVIRA",
+            "codeSuffix": "DU",
+            "team": "ISOLMANT - PREMAC - VITTORIA",
+            "categoria": "ELI_F",
+            "ambiguousNameSplit": false,
+            "uncertainYear": false,
+            "existingAtletaId": null
+          },
+          {
+            "posizione": 13,
+            "cognome": "BANI",
+            "nome": "DESIREE",
+            "codeSuffix": "DU",
+            "team": "PETRUCCI GAUSS CYCLING TEAM",
+            "categoria": "ELI_F",
+            "ambiguousNameSplit": false,
+            "uncertainYear": false,
+            "existingAtletaId": "BANI_DESIREE"
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "garaFciId": "180610",
+    "data": "24 Luglio 2026",
+    "nome": "3° TROFEO ALF GROUP",
+    "regione": "VENETO",
+    "luogo": "Francenigo di Gaiarine (TV)",
+    "categorieAmmesse": "GIOVANISSIMI G4/G5/G6\r\nESORDIENTI M/F\r\nALLIEVI M/F",
+    "km": "0,95",
+    "tabs": [
+      {
+        "tabLabel": "ESORDIENTI DONNE",
+        "rows": [
+          {
+            "posizione": 1,
+            "cognome": "BROLLO",
+            "nome": "VALENTINA",
+            "codeSuffix": "ED",
+            "team": "LIBERTAS CERESETTO",
+            "categoria": "ES1_F",
+            "ambiguousNameSplit": false,
+            "uncertainYear": true,
+            "existingAtletaId": "BROLLO_VALENTINA"
+          },
+          {
+            "posizione": 2,
+            "cognome": "BREDA",
+            "nome": "ILARIA",
+            "codeSuffix": "ED",
+            "team": "ASS.NE CICLISTICA DILETT. VALVASONE",
+            "categoria": "ES1_F",
+            "ambiguousNameSplit": false,
+            "uncertainYear": true,
+            "existingAtletaId": "BREDA_ILARIA"
+          },
+          {
+            "posizione": 3,
+            "cognome": "PASIN",
+            "nome": "GAIA",
+            "codeSuffix": "ED",
+            "team": "ASS.NE CICLISTICA DILETT. VALVASONE",
+            "categoria": "ES1_F",
+            "ambiguousNameSplit": false,
+            "uncertainYear": true,
+            "existingAtletaId": "PASIN_GAIA"
+          },
+          {
+            "posizione": 4,
+            "cognome": "PLAINO",
+            "nome": "MELISSA",
+            "codeSuffix": "ED",
+            "team": "LIBERTAS CERESETTO",
+            "categoria": "ES1_F",
+            "ambiguousNameSplit": false,
+            "uncertainYear": true,
+            "existingAtletaId": "PLAINO_MELISSA"
+          },
+          {
+            "posizione": 5,
+            "cognome": "SBRIZZAI",
+            "nome": "NOEMI",
+            "codeSuffix": "ED",
+            "team": "LIBERTAS CERESETTO",
+            "categoria": "ES1_F",
+            "ambiguousNameSplit": false,
+            "uncertainYear": true,
+            "existingAtletaId": null
+          },
+          {
+            "posizione": 6,
+            "cognome": "BANDIZIOL",
+            "nome": "DILETTA",
+            "codeSuffix": "ED",
+            "team": "B-TEAM CYCLING PROJECT",
+            "categoria": "ES1_F",
+            "ambiguousNameSplit": false,
+            "uncertainYear": true,
+            "existingAtletaId": "BANDIZIOL_DILETTA"
+          }
+        ]
+      },
+      {
+        "tabLabel": "Esordienti 1 anno",
+        "rows": [
+          {
+            "posizione": 1,
+            "cognome": "BRAIT",
+            "nome": "EDOARDO",
+            "codeSuffix": "ES",
+            "team": "A.S.D. SACILESE",
+            "categoria": "ES1_M",
+            "ambiguousNameSplit": false,
+            "uncertainYear": false,
+            "existingAtletaId": "BRAIT_EDOARDO"
+          },
+          {
+            "posizione": 2,
+            "cognome": "BOTTEON",
+            "nome": "ALESSANDRO",
+            "codeSuffix": "ES",
+            "team": "VC SAN VENDEMIANO",
+            "categoria": "ES1_M",
+            "ambiguousNameSplit": false,
+            "uncertainYear": false,
+            "existingAtletaId": "BOTTEON_ALESSANDRO"
+          },
+          {
+            "posizione": 3,
+            "cognome": "PIGAT",
+            "nome": "DAVIDE",
+            "codeSuffix": "ES",
+            "team": "GOTTARDO GIOCHI CANEVA",
+            "categoria": "ES1_M",
+            "ambiguousNameSplit": false,
+            "uncertainYear": false,
+            "existingAtletaId": "PIGAT_DAVIDE"
+          },
+          {
+            "posizione": 4,
+            "cognome": "BERTON",
+            "nome": "MATTIA",
+            "codeSuffix": "ES",
+            "team": "S. C. FONTANAFREDDA",
+            "categoria": "ES1_M",
+            "ambiguousNameSplit": false,
+            "uncertainYear": false,
+            "existingAtletaId": "BERTON_MATTIA"
+          },
+          {
+            "posizione": 5,
+            "cognome": "BERTOLIN",
+            "nome": "EROS",
+            "codeSuffix": "ES",
+            "team": "A.S.D. SACILESE",
+            "categoria": "ES1_M",
+            "ambiguousNameSplit": false,
+            "uncertainYear": false,
+            "existingAtletaId": "BERTOLIN_EROS"
+          },
+          {
+            "posizione": 6,
+            "cognome": "COSTALONGA",
+            "nome": "DIEGO",
+            "codeSuffix": "ES",
+            "team": "S. C. FONTANAFREDDA",
+            "categoria": "ES1_M",
+            "ambiguousNameSplit": false,
+            "uncertainYear": false,
+            "existingAtletaId": "COSTALONGA_DIEGO"
+          }
+        ]
+      },
+      {
+        "tabLabel": "Esordienti 2 anno",
+        "rows": [
+          {
+            "posizione": 1,
+            "cognome": "ZANCHETTIN",
+            "nome": "ALEJANDRO",
+            "codeSuffix": "ES",
+            "team": "A.S.D. SACILESE",
+            "categoria": "ES2_M",
+            "ambiguousNameSplit": false,
+            "uncertainYear": false,
+            "existingAtletaId": "ZANCHETTIN_ALEJANDRO"
+          },
+          {
+            "posizione": 2,
+            "cognome": "QUAIA",
+            "nome": "FILIPPO",
+            "codeSuffix": "ES",
+            "team": "GOTTARDO GIOCHI CANEVA",
+            "categoria": "ES2_M",
+            "ambiguousNameSplit": false,
+            "uncertainYear": false,
+            "existingAtletaId": "QUAIA_FILIPPO"
+          },
+          {
+            "posizione": 3,
+            "cognome": "GUERRA",
+            "nome": "NICOLO'",
+            "codeSuffix": "ES",
+            "team": "BANNIA ASS.SPORT.DILETT.",
+            "categoria": "ES2_M",
+            "ambiguousNameSplit": false,
+            "uncertainYear": false,
+            "existingAtletaId": "GUERRA_NICOLO"
+          },
+          {
+            "posizione": 4,
+            "cognome": "BARAZZUOL",
+            "nome": "FRANCESCO",
+            "codeSuffix": "ES",
+            "team": "SOC. SPORT.SANFIORESE",
+            "categoria": "ES2_M",
+            "ambiguousNameSplit": false,
+            "uncertainYear": false,
+            "existingAtletaId": "BARAZZUOL_FRANCESCO"
+          },
+          {
+            "posizione": 5,
+            "cognome": "CARLET",
+            "nome": "SEBASTIANO",
+            "codeSuffix": "ES",
+            "team": "GOTTARDO GIOCHI CANEVA",
+            "categoria": "ES2_M",
+            "ambiguousNameSplit": false,
+            "uncertainYear": false,
+            "existingAtletaId": "CARLET_SEBASTIANO"
+          },
+          {
+            "posizione": 6,
+            "cognome": "SANTAROSSA",
+            "nome": "NOAH",
+            "codeSuffix": "ES",
+            "team": "CICLO TEAM GORGAZZO",
+            "categoria": "ES2_M",
+            "ambiguousNameSplit": false,
+            "uncertainYear": false,
+            "existingAtletaId": null
+          }
+        ]
+      },
+      {
+        "tabLabel": "ALLIEVE DONNE",
+        "rows": [
+          {
+            "posizione": 1,
+            "cognome": "ANZISI",
+            "nome": "REBECCA",
+            "codeSuffix": "DA",
+            "team": "ASS.NE CICLISTICA DILETT. VALVASONE",
+            "categoria": "AL_F",
+            "ambiguousNameSplit": false,
+            "uncertainYear": false,
+            "existingAtletaId": null
+          },
+          {
+            "posizione": 2,
+            "cognome": "BARDIERU",
+            "nome": "ELISA",
+            "codeSuffix": "DA",
+            "team": "ASS.NE CICLISTICA DILETT. VALVASONE",
+            "categoria": "AL_F",
+            "ambiguousNameSplit": false,
+            "uncertainYear": false,
+            "existingAtletaId": null
+          },
+          {
+            "posizione": 3,
+            "cognome": "BON",
+            "nome": "GIULIA",
+            "codeSuffix": "DA",
+            "team": "LIBERTAS CERESETTO",
+            "categoria": "AL_F",
+            "ambiguousNameSplit": false,
+            "uncertainYear": false,
+            "existingAtletaId": "BON_GIULIA"
+          },
+          {
+            "posizione": 4,
+            "cognome": "VIEZZI",
+            "nome": "ALICE",
+            "codeSuffix": "DA",
+            "team": "ASS.NE CICLISTICA DILETT. VALVASONE",
+            "categoria": "AL_F",
+            "ambiguousNameSplit": false,
+            "uncertainYear": false,
+            "existingAtletaId": "VIEZZI_ALICE"
+          },
+          {
+            "posizione": 5,
+            "cognome": "MOMESSO",
+            "nome": "ANNA",
+            "codeSuffix": "DA",
+            "team": "ASS.NE CICLISTICA DILETT. VALVASONE",
+            "categoria": "AL_F",
+            "ambiguousNameSplit": false,
+            "uncertainYear": false,
+            "existingAtletaId": "MOMESSO_ANNA"
+          },
+          {
+            "posizione": 6,
+            "cognome": "ZOL",
+            "nome": "SOFIA",
+            "codeSuffix": "DA",
+            "team": "ASS.NE CICLISTICA DILETT. VALVASONE",
+            "categoria": "AL_F",
+            "ambiguousNameSplit": false,
+            "uncertainYear": false,
+            "existingAtletaId": null
+          }
+        ]
+      },
+      {
+        "tabLabel": "Allievi",
+        "rows": [
+          {
+            "posizione": 1,
+            "cognome": "CASETTA",
+            "nome": "MARCO",
+            "codeSuffix": "AL",
+            "team": "A.S.D. SACILESE",
+            "categoria": "AL_M",
+            "ambiguousNameSplit": false,
+            "uncertainYear": false,
+            "existingAtletaId": "CASETTA_MARCO"
+          },
+          {
+            "posizione": 2,
+            "cognome": "ATZORI",
+            "nome": "DIEGO",
+            "codeSuffix": "AL",
+            "team": "A.S.D. SACILESE",
+            "categoria": "AL_M",
+            "ambiguousNameSplit": false,
+            "uncertainYear": false,
+            "existingAtletaId": "ATZORI_DIEGO"
+          },
+          {
+            "posizione": 3,
+            "cognome": "NOSELLA",
+            "nome": "TOMMASO",
+            "codeSuffix": "AL",
+            "team": "SOC. SPORT.SANFIORESE",
+            "categoria": "AL_M",
+            "ambiguousNameSplit": false,
+            "uncertainYear": false,
+            "existingAtletaId": "NOSELLA_TOMMASO"
+          },
+          {
+            "posizione": 4,
+            "cognome": "CAVALLI",
+            "nome": "ALVISE",
+            "codeSuffix": "AL",
+            "team": "V.C. BASSANO 1892",
+            "categoria": "AL_M",
+            "ambiguousNameSplit": false,
+            "uncertainYear": false,
+            "existingAtletaId": "CAVALLI_ALVISE"
+          },
+          {
+            "posizione": 5,
+            "cognome": "QUAIA",
+            "nome": "NICOLA",
+            "codeSuffix": "AL",
+            "team": "A.S.D. SACILESE",
+            "categoria": "AL_M",
+            "ambiguousNameSplit": false,
+            "uncertainYear": false,
+            "existingAtletaId": null
+          },
+          {
+            "posizione": 6,
+            "cognome": "BREDA JUSTYN",
+            "nome": "MICHELE",
+            "codeSuffix": "AL",
+            "team": "A.S.D. SACILESE",
+            "categoria": "AL_M",
+            "ambiguousNameSplit": false,
+            "uncertainYear": false,
+            "existingAtletaId": null
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "garaFciId": "182617",
+    "data": "28 Luglio 2026",
+    "nome": "46^ COPPA LA ROCCA - TROFEO F.LLI BAGAGLI",
+    "regione": "TOSCANA",
+    "luogo": "CASCIANA TERME LARI fraz. PARLASCIO (PI)",
+    "categorieAmmesse": "ESORDIENTI 1^ ANNO/ ESORDIENTI 2^ ANNO/ALLIEVI",
+    "km": "1",
+    "tabs": [
+      {
+        "tabLabel": "esordienti 1 anno",
+        "rows": [
+          {
+            "posizione": 1,
+            "cognome": "MORICONI",
+            "nome": "EDOARDO",
+            "codeSuffix": "ES",
+            "team": "UC DONORATICO",
+            "categoria": "ES1_M",
+            "ambiguousNameSplit": false,
+            "uncertainYear": false,
+            "existingAtletaId": "MORICONI_EDOARDO"
+          },
+          {
+            "posizione": 2,
+            "cognome": "GALEOTTI",
+            "nome": "ALESSIO",
+            "codeSuffix": "ES",
+            "team": "UC DONORATICO",
+            "categoria": "ES1_M",
+            "ambiguousNameSplit": false,
+            "uncertainYear": false,
+            "existingAtletaId": "GALEOTTI_ALESSIO"
+          },
+          {
+            "posizione": 3,
+            "cognome": "ANTONGIOVANNI",
+            "nome": "DIEGO",
+            "codeSuffix": "ES",
+            "team": "UC EMPOLESE",
+            "categoria": "ES1_M",
+            "ambiguousNameSplit": false,
+            "uncertainYear": false,
+            "existingAtletaId": "ANTONGIOVANNI_DIEGO"
+          },
+          {
+            "posizione": 4,
+            "cognome": "BIANCHI",
+            "nome": "MATTIA",
+            "codeSuffix": "ES",
+            "team": "UC DONORATICO",
+            "categoria": "ES1_M",
+            "ambiguousNameSplit": false,
+            "uncertainYear": false,
+            "existingAtletaId": "BIANCHI_MATTIA"
+          },
+          {
+            "posizione": 5,
+            "cognome": "BERTI",
+            "nome": "GIANMARIA",
+            "codeSuffix": "ES",
+            "team": "GS BERTI MOBILI BENASSI",
+            "categoria": "ES1_M",
+            "ambiguousNameSplit": false,
+            "uncertainYear": false,
+            "existingAtletaId": "BERTI_GIANMARIA"
+          },
+          {
+            "posizione": 6,
+            "cognome": "GASSANI MATTEO",
+            "nome": "GINO",
+            "codeSuffix": "ES",
+            "team": "GS BERTI MOBILI BENASSI",
+            "categoria": "ES1_M",
+            "ambiguousNameSplit": false,
+            "uncertainYear": false,
+            "existingAtletaId": null
+          }
+        ]
+      },
+      {
+        "tabLabel": "esordienti 2 anno",
+        "rows": [
+          {
+            "posizione": 1,
+            "cognome": "SANTINI",
+            "nome": "SAMUELE",
+            "codeSuffix": "ES",
+            "team": "UC COLTANO GRUBE COSTRUZIONI",
+            "categoria": "ES2_M",
+            "ambiguousNameSplit": false,
+            "uncertainYear": false,
+            "existingAtletaId": "SANTINI_SAMUELE"
+          },
+          {
+            "posizione": 2,
+            "cognome": "DELLA POLLA",
+            "nome": "DIEGO",
+            "codeSuffix": "ES",
+            "team": "UC COLTANO GRUBE COSTRUZIONI",
+            "categoria": "ES2_M",
+            "ambiguousNameSplit": false,
+            "uncertainYear": false,
+            "existingAtletaId": null
+          },
+          {
+            "posizione": 3,
+            "cognome": "STEFANINI",
+            "nome": "EDOARDO",
+            "codeSuffix": "ES",
+            "team": "UC COLTANO GRUBE COSTRUZIONI",
+            "categoria": "ES2_M",
+            "ambiguousNameSplit": false,
+            "uncertainYear": false,
+            "existingAtletaId": "STEFANINI_EDOARDO"
+          },
+          {
+            "posizione": 4,
+            "cognome": "PUCCI",
+            "nome": "LEONARDO",
+            "codeSuffix": "ES",
+            "team": "GS BERTI MOBILI BENASSI",
+            "categoria": "ES2_M",
+            "ambiguousNameSplit": false,
+            "uncertainYear": false,
+            "existingAtletaId": "PUCCI_LEONARDO"
+          },
+          {
+            "posizione": 5,
+            "cognome": "TOGNETTI",
+            "nome": "PIERCARLO",
+            "codeSuffix": "ES",
+            "team": "UC EMPOLESE",
+            "categoria": "ES2_M",
+            "ambiguousNameSplit": false,
+            "uncertainYear": false,
+            "existingAtletaId": "TOGNETTI_PIERCARLO"
+          }
+        ]
+      },
+      {
+        "tabLabel": "allievi",
+        "rows": [
+          {
+            "posizione": 1,
+            "cognome": "GABBRIELLESCHI",
+            "nome": "GIOELE",
+            "codeSuffix": "AL",
+            "team": "AC F. BESSI CALENZANO DONORATICO",
+            "categoria": "AL_M",
+            "ambiguousNameSplit": false,
+            "uncertainYear": false,
+            "existingAtletaId": "GABBRIELLESCHI_GIOELE"
+          },
+          {
+            "posizione": 2,
+            "cognome": "LUCHERINI",
+            "nome": "CHRISTIAN",
+            "codeSuffix": "AL",
+            "team": "UC EMPOLESE",
+            "categoria": "AL_M",
+            "ambiguousNameSplit": false,
+            "uncertainYear": false,
+            "existingAtletaId": "LUCHERINI_CHRISTIAN"
+          },
+          {
+            "posizione": 3,
+            "cognome": "LEONETTI",
+            "nome": "LEONARDO",
+            "codeSuffix": "AL",
+            "team": "UC EMPOLESE",
+            "categoria": "AL_M",
+            "ambiguousNameSplit": false,
+            "uncertainYear": false,
+            "existingAtletaId": "LEONETTI_LEONARDO"
+          },
+          {
+            "posizione": 4,
+            "cognome": "GIRALDI",
+            "nome": "DAVIDE",
+            "codeSuffix": "AL",
+            "team": "GIUSFREDI",
+            "categoria": "AL_M",
+            "ambiguousNameSplit": false,
+            "uncertainYear": false,
+            "existingAtletaId": "GIRALDI_DAVIDE"
+          },
+          {
+            "posizione": 5,
+            "cognome": "GASTASINI",
+            "nome": "MATTIA",
+            "codeSuffix": "AL",
+            "team": "UC EMPOLESE",
+            "categoria": "AL_M",
+            "ambiguousNameSplit": false,
+            "uncertainYear": false,
+            "existingAtletaId": "GASTASINI_MATTIA"
+          },
+          {
+            "posizione": 6,
+            "cognome": "MARINI",
+            "nome": "TOMMASO",
+            "codeSuffix": "AL",
+            "team": "UC COLTANO GRUBE COSTRUZIONI",
+            "categoria": "AL_M",
+            "ambiguousNameSplit": false,
+            "uncertainYear": false,
+            "existingAtletaId": "MARINI_TOMMASO"
+          },
+          {
+            "posizione": 7,
+            "cognome": "DE STEFANO",
+            "nome": "DIEGO",
+            "codeSuffix": "AL",
+            "team": "GS BUTESE",
+            "categoria": "AL_M",
+            "ambiguousNameSplit": false,
+            "uncertainYear": false,
+            "existingAtletaId": null
+          },
+          {
+            "posizione": 8,
+            "cognome": "BRAVATA'",
+            "nome": "FRANCESCO",
+            "codeSuffix": "AL",
+            "team": "UC EMPOLESE",
+            "categoria": "AL_M",
+            "ambiguousNameSplit": false,
+            "uncertainYear": false,
+            "existingAtletaId": null
+          },
+          {
+            "posizione": 9,
+            "cognome": "DI STEFANO",
+            "nome": "GIACOMO",
+            "codeSuffix": "AL",
+            "team": "UC EMPOLESE",
+            "categoria": "AL_M",
+            "ambiguousNameSplit": false,
+            "uncertainYear": false,
+            "existingAtletaId": null
+          },
+          {
+            "posizione": 10,
+            "cognome": "SEBASTIANI",
+            "nome": "FRANCESCO",
+            "codeSuffix": "AL",
+            "team": "GIUSFREDI",
+            "categoria": "AL_M",
+            "ambiguousNameSplit": false,
+            "uncertainYear": false,
+            "existingAtletaId": "SEBASTIANI_FRANCESCO"
+          },
+          {
+            "posizione": 11,
+            "cognome": "GUASTINI",
+            "nome": "SIMONE",
+            "codeSuffix": "AL",
+            "team": "GIUSFREDI",
+            "categoria": "AL_M",
+            "ambiguousNameSplit": false,
+            "uncertainYear": false,
+            "existingAtletaId": "GUASTINI_SIMONE"
+          },
+          {
+            "posizione": 12,
+            "cognome": "MARZOCCHI",
+            "nome": "LORENZO",
+            "codeSuffix": "AL",
+            "team": "SAN MINIATO CICLISMO A.S.D.",
+            "categoria": "AL_M",
+            "ambiguousNameSplit": false,
+            "uncertainYear": false,
+            "existingAtletaId": "MARZOCCHI_LORENZO"
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "garaFciId": "180449",
+    "data": "7 Agosto 2026",
+    "nome": "NOTTURNA DELL'ASSUNTA",
+    "regione": "FRIULI V.G.",
+    "luogo": "VIGONOVO DI FONTANAFREDDA (PN)",
+    "categorieAmmesse": "Giovanissimi:\r\nG1 G2 G3 gimkana \r\nG4 G5 G6 scratch \r\nMPG - PG, Non Tesserati, \r\nEsordienti e Allievi",
+    "km": "",
+    "tabs": [
+      {
+        "tabLabel": "donne allieve",
+        "rows": [
+          {
+            "posizione": 1,
+            "cognome": "FUCILLI ALESSIA",
+            "nome": "LILIANA",
+            "codeSuffix": "DA",
+            "team": "CICLISTICA PIERIS",
+            "categoria": "AL_F",
+            "ambiguousNameSplit": false,
+            "uncertainYear": false,
+            "existingAtletaId": null
+          },
+          {
+            "posizione": 2,
+            "cognome": "FANTIN",
+            "nome": "NICOLE",
+            "codeSuffix": "DA",
+            "team": "ASD GS SORGENTE PRADIPOZZO",
+            "categoria": "AL_F",
+            "ambiguousNameSplit": false,
+            "uncertainYear": false,
+            "existingAtletaId": null
+          },
+          {
+            "posizione": 3,
+            "cognome": "ZOCCOLAN",
+            "nome": "MARTINA",
+            "codeSuffix": "DA",
+            "team": "CICLISTICA PIERIS",
+            "categoria": "AL_F",
+            "ambiguousNameSplit": false,
+            "uncertainYear": false,
+            "existingAtletaId": null
+          },
+          {
+            "posizione": 4,
+            "cognome": "DE MARCHIO'",
+            "nome": "GIULIA",
+            "codeSuffix": "DA",
+            "team": "ASD GS SORGENTE PRADIPOZZO",
+            "categoria": "AL_F",
+            "ambiguousNameSplit": false,
+            "uncertainYear": false,
+            "existingAtletaId": null
+          },
+          {
+            "posizione": 5,
+            "cognome": "MUSAT",
+            "nome": "DENISA",
+            "codeSuffix": "DA",
+            "team": "U.C.CONSCIO PEDALE DEL SILE",
+            "categoria": "AL_F",
+            "ambiguousNameSplit": false,
+            "uncertainYear": false,
+            "existingAtletaId": null
+          },
+          {
+            "posizione": 6,
+            "cognome": "FAVERO",
+            "nome": "ELEONORA",
+            "codeSuffix": "DA",
+            "team": "U.C.CONSCIO PEDALE DEL SILE",
+            "categoria": "AL_F",
+            "ambiguousNameSplit": false,
+            "uncertainYear": false,
+            "existingAtletaId": null
+          },
+          {
+            "posizione": 7,
+            "cognome": "CAMILLO",
+            "nome": "MARISOL",
+            "codeSuffix": "DA",
+            "team": "U.C.CONSCIO PEDALE DEL SILE",
+            "categoria": "AL_F",
+            "ambiguousNameSplit": false,
+            "uncertainYear": false,
+            "existingAtletaId": null
+          }
+        ]
+      },
+      {
+        "tabLabel": "donne esordienti",
+        "rows": [
+          {
+            "posizione": 1,
+            "cognome": "CETTOLIN",
+            "nome": "GIOIA",
+            "codeSuffix": "ED",
+            "team": "U.C.CONSCIO PEDALE DEL SILE",
+            "categoria": "ES1_F",
+            "ambiguousNameSplit": false,
+            "uncertainYear": true,
+            "existingAtletaId": "CETTOLIN_GIOIA"
+          },
+          {
+            "posizione": 2,
+            "cognome": "VETTORELLO",
+            "nome": "GAIA",
+            "codeSuffix": "ED",
+            "team": "U.C.CONSCIO PEDALE DEL SILE",
+            "categoria": "ES1_F",
+            "ambiguousNameSplit": false,
+            "uncertainYear": true,
+            "existingAtletaId": "VETTORELLO_GAIA"
+          },
+          {
+            "posizione": 3,
+            "cognome": "BANDIZIOL",
+            "nome": "DILETTA",
+            "codeSuffix": "ED",
+            "team": "B-TEAM CYCLING PROJECT",
+            "categoria": "ES1_F",
+            "ambiguousNameSplit": false,
+            "uncertainYear": true,
+            "existingAtletaId": "BANDIZIOL_DILETTA"
+          },
+          {
+            "posizione": 4,
+            "cognome": "D'APOLLONIO",
+            "nome": "ALESSIA",
+            "codeSuffix": "ED",
+            "team": "U.C.CONSCIO PEDALE DEL SILE",
+            "categoria": "ES1_F",
+            "ambiguousNameSplit": false,
+            "uncertainYear": true,
+            "existingAtletaId": "D_APOLLONIO_ALESSIA"
+          },
+          {
+            "posizione": 5,
+            "cognome": "PIN",
+            "nome": "MATILDE",
+            "codeSuffix": "ED",
+            "team": "U.C.CONSCIO PEDALE DEL SILE",
+            "categoria": "ES1_F",
+            "ambiguousNameSplit": false,
+            "uncertainYear": true,
+            "existingAtletaId": "PIN_MATILDE"
+          }
+        ]
+      },
+      {
+        "tabLabel": "esordienti 1 m",
+        "rows": [
+          {
+            "posizione": 1,
+            "cognome": "BERTOLIN",
+            "nome": "EROS",
+            "codeSuffix": "ES",
+            "team": "A.S.D. SACILESE",
+            "categoria": "ES1_M",
+            "ambiguousNameSplit": false,
+            "uncertainYear": false,
+            "existingAtletaId": "BERTOLIN_EROS"
+          },
+          {
+            "posizione": 2,
+            "cognome": "FRESCHI",
+            "nome": "ANDREA",
+            "codeSuffix": "ES",
+            "team": "A.S.D. SACILESE",
+            "categoria": "ES1_M",
+            "ambiguousNameSplit": false,
+            "uncertainYear": false,
+            "existingAtletaId": "FRESCHI_ANDREA"
+          },
+          {
+            "posizione": 3,
+            "cognome": "MARCHIOL",
+            "nome": "ERIC",
+            "codeSuffix": "ES",
+            "team": "LIBERTAS CERESETTO",
+            "categoria": "ES1_M",
+            "ambiguousNameSplit": false,
+            "uncertainYear": false,
+            "existingAtletaId": "MARCHIOL_ERIC"
+          },
+          {
+            "posizione": 4,
+            "cognome": "BOTTEON",
+            "nome": "ALESSANDRO",
+            "codeSuffix": "ES",
+            "team": "VC SAN VENDEMIANO",
+            "categoria": "ES1_M",
+            "ambiguousNameSplit": false,
+            "uncertainYear": false,
+            "existingAtletaId": "BOTTEON_ALESSANDRO"
+          },
+          {
+            "posizione": 5,
+            "cognome": "PIGAT",
+            "nome": "DAVIDE",
+            "codeSuffix": "ES",
+            "team": "GOTTARDO GIOCHI CANEVA",
+            "categoria": "ES1_M",
+            "ambiguousNameSplit": false,
+            "uncertainYear": false,
+            "existingAtletaId": "PIGAT_DAVIDE"
+          },
+          {
+            "posizione": 6,
+            "cognome": "ARITON MATIAS",
+            "nome": "ANDREI",
+            "codeSuffix": "ES",
+            "team": "A.S.D. POSTUMIA 73 D.L. CICLISMO",
+            "categoria": "ES1_M",
+            "ambiguousNameSplit": false,
+            "uncertainYear": false,
+            "existingAtletaId": null
+          },
+          {
+            "posizione": 7,
+            "cognome": "ANTONINI",
+            "nome": "MATTEO",
+            "codeSuffix": "ES",
+            "team": "A.S.D. POSTUMIA 73 D.L. CICLISMO",
+            "categoria": "ES1_M",
+            "ambiguousNameSplit": false,
+            "uncertainYear": false,
+            "existingAtletaId": "ANTONINI_MATTEO"
+          },
+          {
+            "posizione": 8,
+            "cognome": "BERTON",
+            "nome": "MATTIA",
+            "codeSuffix": "ES",
+            "team": "S. C. FONTANAFREDDA",
+            "categoria": "ES1_M",
+            "ambiguousNameSplit": false,
+            "uncertainYear": false,
+            "existingAtletaId": "BERTON_MATTIA"
+          },
+          {
+            "posizione": 9,
+            "cognome": "CIGOLOTTO",
+            "nome": "GIOELE",
+            "codeSuffix": "ES",
+            "team": "LIBERTAS CERESETTO",
+            "categoria": "ES1_M",
+            "ambiguousNameSplit": false,
+            "uncertainYear": false,
+            "existingAtletaId": "CIGOLOTTO_GIOELE"
+          },
+          {
+            "posizione": 10,
+            "cognome": "CASETTA",
+            "nome": "PIETRO",
+            "codeSuffix": "ES",
+            "team": "A.S.D. SACILESE",
+            "categoria": "ES1_M",
+            "ambiguousNameSplit": false,
+            "uncertainYear": false,
+            "existingAtletaId": "CASETTA_PIETRO"
+          }
+        ]
+      },
+      {
+        "tabLabel": "esordienti 2°m",
+        "rows": [
+          {
+            "posizione": 1,
+            "cognome": "CARLET",
+            "nome": "SEBASTIANO",
+            "codeSuffix": "ES",
+            "team": "GOTTARDO GIOCHI CANEVA",
+            "categoria": "ES2_M",
+            "ambiguousNameSplit": false,
+            "uncertainYear": false,
+            "existingAtletaId": "CARLET_SEBASTIANO"
+          },
+          {
+            "posizione": 2,
+            "cognome": "BIT",
+            "nome": "DANIELE",
+            "codeSuffix": "ES",
+            "team": "GOTTARDO GIOCHI CANEVA",
+            "categoria": "ES2_M",
+            "ambiguousNameSplit": false,
+            "uncertainYear": false,
+            "existingAtletaId": null
+          },
+          {
+            "posizione": 3,
+            "cognome": "PESSOTTO",
+            "nome": "ANDREA",
+            "codeSuffix": "ES",
+            "team": "TEAM BOSCO DI ORSAGO",
+            "categoria": "ES2_M",
+            "ambiguousNameSplit": false,
+            "uncertainYear": false,
+            "existingAtletaId": "PESSOTTO_ANDREA"
+          },
+          {
+            "posizione": 4,
+            "cognome": "QUAIA",
+            "nome": "FILIPPO",
+            "codeSuffix": "ES",
+            "team": "GOTTARDO GIOCHI CANEVA",
+            "categoria": "ES2_M",
+            "ambiguousNameSplit": false,
+            "uncertainYear": false,
+            "existingAtletaId": "QUAIA_FILIPPO"
+          },
+          {
+            "posizione": 5,
+            "cognome": "BEMBO",
+            "nome": "SANTIAGO",
+            "codeSuffix": "ES",
+            "team": "A.S.D. POSTUMIA 73 D.L. CICLISMO",
+            "categoria": "ES2_M",
+            "ambiguousNameSplit": false,
+            "uncertainYear": false,
+            "existingAtletaId": "BEMBO_SANTIAGO"
+          },
+          {
+            "posizione": 6,
+            "cognome": "CITRON",
+            "nome": "SAMUELE",
+            "codeSuffix": "ES",
+            "team": "TEAM BOSCO DI ORSAGO",
+            "categoria": "ES2_M",
+            "ambiguousNameSplit": false,
+            "uncertainYear": false,
+            "existingAtletaId": "CITRON_SAMUELE"
+          },
+          {
+            "posizione": 7,
+            "cognome": "CARLET",
+            "nome": "MATTIA",
+            "codeSuffix": "ES",
+            "team": "SOC. SPORT.SANFIORESE",
+            "categoria": "ES2_M",
+            "ambiguousNameSplit": false,
+            "uncertainYear": false,
+            "existingAtletaId": "CARLET_MATTIA"
+          },
+          {
+            "posizione": 8,
+            "cognome": "SANTAROSSA",
+            "nome": "NOAH",
+            "codeSuffix": "ES",
+            "team": "CICLO TEAM GORGAZZO",
+            "categoria": "ES2_M",
+            "ambiguousNameSplit": false,
+            "uncertainYear": false,
+            "existingAtletaId": null
+          },
+          {
+            "posizione": 9,
+            "cognome": "NADAL",
+            "nome": "GABRIELE",
+            "codeSuffix": "ES",
+            "team": "A.S.D. SACILESE",
+            "categoria": "ES2_M",
+            "ambiguousNameSplit": false,
+            "uncertainYear": false,
+            "existingAtletaId": null
+          },
+          {
+            "posizione": 10,
+            "cognome": "MIZZAU",
+            "nome": "LUCIO",
+            "codeSuffix": "ES",
+            "team": "LIBERTAS CERESETTO",
+            "categoria": "ES2_M",
+            "ambiguousNameSplit": false,
+            "uncertainYear": false,
+            "existingAtletaId": "MIZZAU_LUCIO"
+          }
+        ]
+      },
+      {
+        "tabLabel": "allievi",
+        "rows": [
+          {
+            "posizione": 1,
+            "cognome": "ATZORI",
+            "nome": "DIEGO",
+            "codeSuffix": "AL",
+            "team": "A.S.D. SACILESE",
+            "categoria": "AL_M",
+            "ambiguousNameSplit": false,
+            "uncertainYear": false,
+            "existingAtletaId": "ATZORI_DIEGO"
+          },
+          {
+            "posizione": 2,
+            "cognome": "RODRIGUES DOS SANTOS VICENTE",
+            "nome": "JUNIOR",
+            "codeSuffix": "AL",
+            "team": "A.S.D. SACILESE",
+            "categoria": "AL_M",
+            "ambiguousNameSplit": true,
+            "uncertainYear": false,
+            "existingAtletaId": null
+          },
+          {
+            "posizione": 3,
+            "cognome": "QUAIA",
+            "nome": "NICOLA",
+            "codeSuffix": "AL",
+            "team": "A.S.D. SACILESE",
+            "categoria": "AL_M",
+            "ambiguousNameSplit": false,
+            "uncertainYear": false,
+            "existingAtletaId": null
+          },
+          {
+            "posizione": 4,
+            "cognome": "CASETTA",
+            "nome": "MARCO",
+            "codeSuffix": "AL",
+            "team": "A.S.D. SACILESE",
+            "categoria": "AL_M",
+            "ambiguousNameSplit": false,
+            "uncertainYear": false,
+            "existingAtletaId": "CASETTA_MARCO"
+          },
+          {
+            "posizione": 5,
+            "cognome": "PALAMIN",
+            "nome": "MARK",
+            "codeSuffix": "AL",
+            "team": "CICLISTICA PIERIS",
+            "categoria": "AL_M",
+            "ambiguousNameSplit": false,
+            "uncertainYear": false,
+            "existingAtletaId": "PALAMIN_MARK"
+          },
+          {
+            "posizione": 6,
+            "cognome": "CARLET",
+            "nome": "ALBERTO",
+            "codeSuffix": "AL",
+            "team": "A.S.D. SACILESE",
+            "categoria": "AL_M",
+            "ambiguousNameSplit": false,
+            "uncertainYear": false,
+            "existingAtletaId": "CARLET_ALBERTO"
+          },
+          {
+            "posizione": 8,
+            "cognome": "ORO",
+            "nome": "NOAH",
+            "codeSuffix": "AL",
+            "team": "BANNIA ASS.SPORT.DILETT.",
+            "categoria": "AL_M",
+            "ambiguousNameSplit": false,
+            "uncertainYear": false,
+            "existingAtletaId": null
+          },
+          {
+            "posizione": 9,
+            "cognome": "GIACOMINI",
+            "nome": "LEONARDO",
+            "codeSuffix": "AL",
+            "team": "BANNIA ASS.SPORT.DILETT.",
+            "categoria": "AL_M",
+            "ambiguousNameSplit": false,
+            "uncertainYear": false,
+            "existingAtletaId": null
+          },
+          {
+            "posizione": 10,
+            "cognome": "GALASSO",
+            "nome": "DENIS",
+            "codeSuffix": "AL",
+            "team": "JAM'S BIKE TEAM BUJA",
+            "categoria": "AL_M",
+            "ambiguousNameSplit": false,
+            "uncertainYear": false,
+            "existingAtletaId": "GALASSO_DENIS"
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "garaFciId": "180259",
+    "data": "14 Agosto 2026",
+    "nome": "G.P. 43° FESTA DELLO SPORt 3° MEM. G. BERTOLDO- 9° Trofeo Smania - 6°MEM. Franco e Davide Favaretto",
+    "regione": "VENETO",
+    "luogo": "Scorzè (VE)",
+    "categorieAmmesse": "Tipo Pista\r\nCategorie: G4 - G5 - G 6 - Esordienti 1° e 2° anno e Allievi - Maschi e femmine per tutte le categorie",
+    "km": "",
+    "tabs": [
+      {
+        "tabLabel": "ARRIVO DONNE ESORDIENTI",
+        "rows": [
+          {
+            "posizione": 1,
+            "cognome": "GUIDOLIN",
+            "nome": "GIORGIA",
+            "codeSuffix": "ED",
+            "team": "U.C. GIORGIONE",
+            "categoria": "ES1_F",
+            "ambiguousNameSplit": false,
+            "uncertainYear": true,
+            "existingAtletaId": "GUIDOLIN_GIORGIA"
+          },
+          {
+            "posizione": 2,
+            "cognome": "VETTORELLO",
+            "nome": "GAIA",
+            "codeSuffix": "ED",
+            "team": "U.C.CONSCIO PEDALE DEL SILE",
+            "categoria": "ES1_F",
+            "ambiguousNameSplit": false,
+            "uncertainYear": true,
+            "existingAtletaId": "VETTORELLO_GAIA"
+          },
+          {
+            "posizione": 3,
+            "cognome": "CETTOLIN",
+            "nome": "GIOIA",
+            "codeSuffix": "ED",
+            "team": "U.C.CONSCIO PEDALE DEL SILE",
+            "categoria": "ES1_F",
+            "ambiguousNameSplit": false,
+            "uncertainYear": true,
+            "existingAtletaId": "CETTOLIN_GIOIA"
+          },
+          {
+            "posizione": 4,
+            "cognome": "TONELLOTTO",
+            "nome": "GIADA",
+            "codeSuffix": "ED",
+            "team": "BREGANZE MILLENIUM",
+            "categoria": "ES1_F",
+            "ambiguousNameSplit": false,
+            "uncertainYear": true,
+            "existingAtletaId": "TONELLOTTO_GIADA"
+          },
+          {
+            "posizione": 5,
+            "cognome": "PARETTA",
+            "nome": "AURORA",
+            "codeSuffix": "ED",
+            "team": "U.C. GIORGIONE",
+            "categoria": "ES1_F",
+            "ambiguousNameSplit": false,
+            "uncertainYear": true,
+            "existingAtletaId": "PARETTA_AURORA"
+          },
+          {
+            "posizione": 6,
+            "cognome": "MOCELLIN",
+            "nome": "GRETA",
+            "codeSuffix": "ED",
+            "team": "U.C. GIORGIONE",
+            "categoria": "ES1_F",
+            "ambiguousNameSplit": false,
+            "uncertainYear": true,
+            "existingAtletaId": "MOCELLIN_GRETA"
+          }
+        ]
+      },
+      {
+        "tabLabel": "ARRIVO DONNE ALLIEVE",
+        "rows": [
+          {
+            "posizione": 1,
+            "cognome": "TASCA",
+            "nome": "NICOLE",
+            "codeSuffix": "DA",
+            "team": "BREGANZE MILLENIUM",
+            "categoria": "AL_F",
+            "ambiguousNameSplit": false,
+            "uncertainYear": false,
+            "existingAtletaId": "TASCA_NICOLE"
+          },
+          {
+            "posizione": 2,
+            "cognome": "MUSAT",
+            "nome": "DENISA",
+            "codeSuffix": "DA",
+            "team": "U.C.CONSCIO PEDALE DEL SILE",
+            "categoria": "AL_F",
+            "ambiguousNameSplit": false,
+            "uncertainYear": false,
+            "existingAtletaId": null
+          },
+          {
+            "posizione": 3,
+            "cognome": "BISCONTIN",
+            "nome": "CHIARA",
+            "codeSuffix": "DA",
+            "team": "G.S. TAVO BONIN BIKE",
+            "categoria": "AL_F",
+            "ambiguousNameSplit": false,
+            "uncertainYear": false,
+            "existingAtletaId": "BISCONTIN_CHIARA"
+          },
+          {
+            "posizione": 4,
+            "cognome": "FAVERO",
+            "nome": "ELEONORA",
+            "codeSuffix": "DA",
+            "team": "U.C.CONSCIO PEDALE DEL SILE",
+            "categoria": "AL_F",
+            "ambiguousNameSplit": false,
+            "uncertainYear": false,
+            "existingAtletaId": null
+          }
+        ]
+      },
+      {
+        "tabLabel": "ARRIVO ESORDIENTI",
+        "rows": [
+          {
+            "posizione": 1,
+            "cognome": "MOSNA",
+            "nome": "RICCARDO",
+            "codeSuffix": "ES",
+            "team": "ASD VELOCE CLUB BORGO",
+            "categoria": "ES1_M",
+            "ambiguousNameSplit": false,
+            "uncertainYear": true,
+            "existingAtletaId": "MOSNA_RICCARDO"
+          },
+          {
+            "posizione": 2,
+            "cognome": "BEMBO",
+            "nome": "SANTIAGO",
+            "codeSuffix": "ES",
+            "team": "A.S.D. POSTUMIA 73 D.L. CICLISMO",
+            "categoria": "ES1_M",
+            "ambiguousNameSplit": false,
+            "uncertainYear": true,
+            "existingAtletaId": "BEMBO_SANTIAGO"
+          },
+          {
+            "posizione": 3,
+            "cognome": "SALVATI GABRIELE",
+            "nome": "GERARDO",
+            "codeSuffix": "ES",
+            "team": "ASD VELOCE CLUB BORGO",
+            "categoria": "ES1_M",
+            "ambiguousNameSplit": false,
+            "uncertainYear": true,
+            "existingAtletaId": null
+          },
+          {
+            "posizione": 4,
+            "cognome": "DE ROSSI",
+            "nome": "GIACOMO",
+            "codeSuffix": "ES",
+            "team": "UNIONE CICLISTICA MIRANO",
+            "categoria": "ES1_M",
+            "ambiguousNameSplit": false,
+            "uncertainYear": true,
+            "existingAtletaId": null
+          },
+          {
+            "posizione": 5,
+            "cognome": "BASSO",
+            "nome": "FILIPPO",
+            "codeSuffix": "ES",
+            "team": "MST CYCLING - SANDRIGO BIKE",
+            "categoria": "ES1_M",
+            "ambiguousNameSplit": false,
+            "uncertainYear": true,
+            "existingAtletaId": "BASSO_FILIPPO"
+          },
+          {
+            "posizione": 6,
+            "cognome": "BENFATTO",
+            "nome": "FEDERICO",
+            "codeSuffix": "ES",
+            "team": "GS FIUMICELLO 1971",
+            "categoria": "ES1_M",
+            "ambiguousNameSplit": false,
+            "uncertainYear": true,
+            "existingAtletaId": "BENFATTO_FEDERICO"
+          }
+        ]
+      },
+      {
+        "tabLabel": "ARRIVO ALLIEVI",
+        "rows": [
+          {
+            "posizione": 1,
+            "cognome": "BANDIERA",
+            "nome": "CESARE",
+            "codeSuffix": "AL",
+            "team": "IND. FORNITURE MORO-C&G CAPITAL",
+            "categoria": "AL_M",
+            "ambiguousNameSplit": false,
+            "uncertainYear": false,
+            "existingAtletaId": null
+          },
+          {
+            "posizione": 2,
+            "cognome": "MENEGOTTO",
+            "nome": "ELIA",
+            "codeSuffix": "AL",
+            "team": "IND. FORNITURE MORO-C&G CAPITAL",
+            "categoria": "AL_M",
+            "ambiguousNameSplit": false,
+            "uncertainYear": false,
+            "existingAtletaId": null
+          },
+          {
+            "posizione": 3,
+            "cognome": "CLEMENTE",
+            "nome": "GIULIO",
+            "codeSuffix": "AL",
+            "team": "GS FIUMICELLO 1971",
+            "categoria": "AL_M",
+            "ambiguousNameSplit": false,
+            "uncertainYear": false,
+            "existingAtletaId": "CLEMENTE_GIULIO"
+          },
+          {
+            "posizione": 4,
+            "cognome": "BERTON",
+            "nome": "GIOVANNI",
+            "codeSuffix": "AL",
+            "team": "C.S. LIBERTAS SCORZE'",
+            "categoria": "AL_M",
+            "ambiguousNameSplit": false,
+            "uncertainYear": false,
+            "existingAtletaId": "BERTON_GIOVANNI"
+          },
+          {
+            "posizione": 5,
+            "cognome": "VIERO",
+            "nome": "ALBERTO",
+            "codeSuffix": "AL",
+            "team": "ROTOGAL GUADENSE",
+            "categoria": "AL_M",
+            "ambiguousNameSplit": false,
+            "uncertainYear": false,
+            "existingAtletaId": "VIERO_ALBERTO"
+          },
+          {
+            "posizione": 6,
+            "cognome": "CALLEGARO",
+            "nome": "FILIPPO",
+            "codeSuffix": "AL",
+            "team": "UNIONE CICLISTICA MIRANO",
+            "categoria": "AL_M",
+            "ambiguousNameSplit": false,
+            "uncertainYear": false,
+            "existingAtletaId": null
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "garaFciId": "180140",
+    "data": "20 Agosto 2026",
+    "nome": "MEMORIAL GIOVANNI FINO E PAOLO MATTIO",
+    "regione": "PIEMONTE",
+    "luogo": "MANTA CN (CN)",
+    "categorieAmmesse": "ESORDIENTI ALLIEVI JUNIORES",
+    "km": "1,230",
+    "tabs": [
+      {
+        "tabLabel": "Esordienti primo anno",
+        "rows": [
+          {
+            "posizione": 1,
+            "cognome": "ZAVATTERO",
+            "nome": "EDOARDO",
+            "codeSuffix": "ES",
+            "team": "U&#192; CYCLING TEAM",
+            "categoria": "ES1_M",
+            "ambiguousNameSplit": false,
+            "uncertainYear": false,
+            "existingAtletaId": "ZAVATTERO_EDOARDO"
+          },
+          {
+            "posizione": 2,
+            "cognome": "BIANCHI",
+            "nome": "MASSIMO",
+            "codeSuffix": "ES",
+            "team": "I CINGHIALI EVO",
+            "categoria": "ES1_M",
+            "ambiguousNameSplit": false,
+            "uncertainYear": false,
+            "existingAtletaId": "BIANCHI_MASSIMO"
+          },
+          {
+            "posizione": 3,
+            "cognome": "ARCUDI",
+            "nome": "FEDERICO",
+            "codeSuffix": "ES",
+            "team": "ARDENS CYCLING TEAM",
+            "categoria": "ES1_M",
+            "ambiguousNameSplit": false,
+            "uncertainYear": false,
+            "existingAtletaId": "ARCUDI_FEDERICO"
+          },
+          {
+            "posizione": 4,
+            "cognome": "BARBERO",
+            "nome": "ALESSANDRO",
+            "codeSuffix": "ES",
+            "team": "CONTRABAND CYCLING TEAM ASD",
+            "categoria": "ES1_M",
+            "ambiguousNameSplit": false,
+            "uncertainYear": false,
+            "existingAtletaId": "BARBERO_ALESSANDRO"
+          },
+          {
+            "posizione": 5,
+            "cognome": "GIACOBBE",
+            "nome": "EDOARDO",
+            "codeSuffix": "ES",
+            "team": "U&#192; CYCLING TEAM",
+            "categoria": "ES1_M",
+            "ambiguousNameSplit": false,
+            "uncertainYear": false,
+            "existingAtletaId": null
+          },
+          {
+            "posizione": 6,
+            "cognome": "GROSSO",
+            "nome": "MATTEO",
+            "codeSuffix": "ES",
+            "team": "CICLISTICA BORDIGHERA",
+            "categoria": "ES1_M",
+            "ambiguousNameSplit": false,
+            "uncertainYear": false,
+            "existingAtletaId": "GROSSO_MATTEO"
+          }
+        ]
+      },
+      {
+        "tabLabel": "Esordienti secondo anno",
+        "rows": [
+          {
+            "posizione": 1,
+            "cognome": "AVIDANO",
+            "nome": "DAVIDE",
+            "codeSuffix": "ES",
+            "team": "VIGOR - CYCLING TEAM",
+            "categoria": "ES2_M",
+            "ambiguousNameSplit": false,
+            "uncertainYear": false,
+            "existingAtletaId": "AVIDANO_DAVIDE"
+          },
+          {
+            "posizione": 2,
+            "cognome": "REJNAUD",
+            "nome": "MATTEO",
+            "codeSuffix": "ES",
+            "team": "ARDENS CYCLING TEAM",
+            "categoria": "ES2_M",
+            "ambiguousNameSplit": false,
+            "uncertainYear": false,
+            "existingAtletaId": "REJNAUD_MATTEO"
+          },
+          {
+            "posizione": 3,
+            "cognome": "GROPPO",
+            "nome": "LEONARDO",
+            "codeSuffix": "ES",
+            "team": "ESPERIA PIASCO",
+            "categoria": "ES2_M",
+            "ambiguousNameSplit": false,
+            "uncertainYear": false,
+            "existingAtletaId": "GROPPO_LEONARDO"
+          },
+          {
+            "posizione": 4,
+            "cognome": "BALBI",
+            "nome": "ALESSANDRO",
+            "codeSuffix": "ES",
+            "team": "I CINGHIALI EVO",
+            "categoria": "ES2_M",
+            "ambiguousNameSplit": false,
+            "uncertainYear": false,
+            "existingAtletaId": "BALBI_ALESSANDRO"
+          },
+          {
+            "posizione": 5,
+            "cognome": "MARCHISIO",
+            "nome": "MATTIA",
+            "codeSuffix": "ES",
+            "team": "ALBA BRA LANGHE ROERO",
+            "categoria": "ES2_M",
+            "ambiguousNameSplit": false,
+            "uncertainYear": false,
+            "existingAtletaId": null
+          },
+          {
+            "posizione": 6,
+            "cognome": "SORASIO",
+            "nome": "STEFANO",
+            "codeSuffix": "ES",
+            "team": "ARDENS CYCLING TEAM",
+            "categoria": "ES2_M",
+            "ambiguousNameSplit": false,
+            "uncertainYear": false,
+            "existingAtletaId": "SORASIO_STEFANO"
+          }
+        ]
+      },
+      {
+        "tabLabel": "Allievi",
+        "rows": [
+          {
+            "posizione": 1,
+            "cognome": "PHILIPPOT",
+            "nome": "JOEL",
+            "codeSuffix": "AL",
+            "team": "G.S. LUPI VALLE D'AOSTA",
+            "categoria": "AL_M",
+            "ambiguousNameSplit": false,
+            "uncertainYear": false,
+            "existingAtletaId": "PHILIPPOT_JOEL"
+          },
+          {
+            "posizione": 2,
+            "cognome": "TREMBLAN",
+            "nome": "RAPHAEL",
+            "codeSuffix": "AL",
+            "team": "G.S. LUPI VALLE D'AOSTA",
+            "categoria": "AL_M",
+            "ambiguousNameSplit": false,
+            "uncertainYear": false,
+            "existingAtletaId": "TREMBLAN_RAPHAEL"
+          },
+          {
+            "posizione": 3,
+            "cognome": "TALIA LISANDRO",
+            "nome": "LORENZO",
+            "codeSuffix": "AL",
+            "team": "CICLISTICA BORDIGHERA",
+            "categoria": "AL_M",
+            "ambiguousNameSplit": false,
+            "uncertainYear": false,
+            "existingAtletaId": null
+          },
+          {
+            "posizione": 4,
+            "cognome": "PETTITI",
+            "nome": "NICOLA",
+            "codeSuffix": "AL",
+            "team": "ESPERIA PIASCO",
+            "categoria": "AL_M",
+            "ambiguousNameSplit": false,
+            "uncertainYear": false,
+            "existingAtletaId": "PETTITI_NICOLA"
+          },
+          {
+            "posizione": 5,
+            "cognome": "MAZZONI",
+            "nome": "MIRCO",
+            "codeSuffix": "AL",
+            "team": "ESPERIA PIASCO",
+            "categoria": "AL_M",
+            "ambiguousNameSplit": false,
+            "uncertainYear": false,
+            "existingAtletaId": "MAZZONI_MIRCO"
+          },
+          {
+            "posizione": 6,
+            "cognome": "FERRARI",
+            "nome": "LEONARDO",
+            "codeSuffix": "AL",
+            "team": "VIGOR - CYCLING TEAM",
+            "categoria": "AL_M",
+            "ambiguousNameSplit": false,
+            "uncertainYear": false,
+            "existingAtletaId": null
+          }
+        ]
+      },
+      {
+        "tabLabel": "Juniores",
+        "rows": [
+          {
+            "posizione": 1,
+            "cognome": "COMETTO",
+            "nome": "FILIPPO",
+            "codeSuffix": "JU",
+            "team": "U.C. PIASCO",
+            "categoria": "JUN_M",
+            "ambiguousNameSplit": false,
+            "uncertainYear": false,
+            "existingAtletaId": "COMETTO_FILIPPO"
+          },
+          {
+            "posizione": 2,
+            "cognome": "GALLO",
+            "nome": "FILIPPO",
+            "codeSuffix": "JU",
+            "team": "U.C. PIASCO",
+            "categoria": "JUN_M",
+            "ambiguousNameSplit": false,
+            "uncertainYear": false,
+            "existingAtletaId": null
+          },
+          {
+            "posizione": 3,
+            "cognome": "GALFRE'",
+            "nome": "JACOPO",
+            "codeSuffix": "JU",
+            "team": "U.C. PIASCO",
+            "categoria": "JUN_M",
+            "ambiguousNameSplit": false,
+            "uncertainYear": false,
+            "existingAtletaId": "GALFRE_JACOPO"
+          },
+          {
+            "posizione": 4,
+            "cognome": "BORRE",
+            "nome": "FABIEN",
+            "codeSuffix": "JU",
+            "team": "CICLI LUCCHINI",
+            "categoria": "JUN_M",
+            "ambiguousNameSplit": false,
+            "uncertainYear": false,
+            "existingAtletaId": null
+          },
+          {
+            "posizione": 5,
+            "cognome": "CUDA",
+            "nome": "ISACCO",
+            "codeSuffix": "JU",
+            "team": "U.C.A.B. 1925 BIELLA - SEMPERLUX",
+            "categoria": "JUN_M",
+            "ambiguousNameSplit": false,
+            "uncertainYear": false,
+            "existingAtletaId": null
+          },
+          {
+            "posizione": 6,
+            "cognome": "CUDA",
+            "nome": "GABRIELE",
+            "codeSuffix": "JU",
+            "team": "U.C.A.B. 1925 BIELLA - SEMPERLUX",
+            "categoria": "JUN_M",
+            "ambiguousNameSplit": false,
+            "uncertainYear": false,
+            "existingAtletaId": null
+          }
+        ]
+      }
+    ]
+  }
+]

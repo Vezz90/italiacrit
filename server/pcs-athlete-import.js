@@ -647,7 +647,7 @@ async function upsertResults(sb, rows) {
 (async () => {
   const { createClient } = require('@supabase/supabase-js');
   const ws = require('ws');
-  const { launchPcsBrowser, gotoPcsPage, humanDelay } = require('./pcs-browser');
+  const { launchPcsBrowser, gotoPcsPage, humanDelay, withTimeout } = require('./pcs-browser');
 
   const sb = createClient(SUPABASE_URL, SUPABASE_SECRET, { realtime: { transport: ws } });
 
@@ -731,12 +731,35 @@ async function upsertResults(sb, rows) {
   console.log(`Calendario: ${calMap.size} date di gara caricate\n`);
 
   // 4. Browser (visibile — necessario per superare eventuali sfide anti-bot)
-  const { browser, page } = await launchPcsBrowser();
+  let { browser, page } = await launchPcsBrowser();
   console.log('Pronto.\n');
 
   let donePhoto = 0, doneResults = 0, notFound = 0, challengeFails = 0, errors = 0, totalRows = 0;
+  let browserRelaunches = 0;
+  const MAX_RELAUNCHES = 20; // paracadute: non rilanciare all'infinito se PCS/rete è giù
+
+  // Se la finestra del browser viene chiusa (a mano, per errore, mentre lo
+  // script gira incustodito per ore), page/browser restano "morti": senza
+  // questo, ogni chiamata successiva rischiava di restare appesa in attesa
+  // di una risposta CDP che non arriva mai (vedi commento in pcs-browser.js
+  // su withTimeout) — qui invece si rileva, si rilancia un browser nuovo e
+  // si RIPROVA lo stesso atleta, invece di segnarlo per errore come "non
+  // trovato su PCS" o bloccare il giro per il resto della notte.
+  async function relaunchBrowser() {
+    browserRelaunches++;
+    process.stdout.write(`\n  🔄 finestra del browser chiusa/persa — rilancio (${browserRelaunches}/${MAX_RELAUNCHES})…\n`);
+    try { await browser.close(); } catch {}
+    const fresh = await launchPcsBrowser();
+    browser = fresh.browser;
+    page = fresh.page;
+  }
 
   for (let i = 0; i < toProcess.length; i++) {
+    if (page.isClosed() || browser.isConnected?.() === false) {
+      if (browserRelaunches >= MAX_RELAUNCHES) { console.log('\nTroppi rilanci del browser, mi fermo.'); break; }
+      await relaunchBrowser();
+    }
+
     const ath = toProcess[i];
     const atletaId = ath.atleta_id;
     const savedSlug = savedSlugs.get(atletaId);
@@ -760,11 +783,12 @@ async function upsertResults(sb, rows) {
         });
         if (nav2.ok) { slug = cand; nav = nav2; break; }
         nav = nav2;
+        if (nav2.closed) break;
       }
     }
-    if (nav.notFound) {
+    if (nav.notFound && !nav.closed) {
       process.stdout.write('cerco… ');
-      const found = await searchPcsRider(page, ath, gotoPcsPage);
+      const found = await withTimeout(searchPcsRider(page, ath, gotoPcsPage), 20000, 'searchPcsRider').catch(() => null);
       if (found && found !== slug) {
         slug = found;
         process.stdout.write(`trovato come "${slug}" … `);
@@ -774,6 +798,13 @@ async function upsertResults(sb, rows) {
       }
     }
 
+    if (nav.closed) {
+      // Non è "non trovato": è il browser che è sparito. Riprova lo stesso
+      // atleta al prossimo giro del for, dopo il rilancio in cima al loop.
+      if (browserRelaunches >= MAX_RELAUNCHES) { console.log('\nTroppi rilanci del browser, mi fermo.'); break; }
+      i--;
+      continue;
+    }
     if (nav.timedOut) {
       process.stdout.write('sfida non superata, riprovo al prossimo giro\n');
       challengeFails++;
@@ -787,7 +818,17 @@ async function upsertResults(sb, rows) {
       continue;
     }
 
-    const { photo, socials, results } = await extractProfileAndResults(page, SEASON);
+    let extracted;
+    try {
+      extracted = await withTimeout(extractProfileAndResults(page, SEASON), 25000, 'extractProfileAndResults');
+    } catch (e) {
+      process.stdout.write(`browser non risponde (${e.message}), riprovo\n`);
+      if (browserRelaunches >= MAX_RELAUNCHES) { console.log('\nTroppi rilanci del browser, mi fermo.'); break; }
+      await relaunchBrowser();
+      i--;
+      continue;
+    }
+    const { photo, socials, results } = extracted;
 
     const fields = { pcs_slug: slug };
     if (photo && !withPhoto.has(atletaId)) {
