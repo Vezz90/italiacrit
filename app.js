@@ -3668,6 +3668,19 @@ document.addEventListener('click', (e) => {
   }
 });
 
+// Deterrente al download facile delle foto gara caricate da noi (tasto
+// destro "Salva immagine", trascinamento sul desktop) — un listener globale
+// delegato invece di toccare ogni singolo punto dove compaiono (gallerie,
+// lightbox, hero gara, ecc.): qualunque <img> il cui src punti al nostro
+// storage foto (PHOTOS_BASE + "/photos/") viene protetta automaticamente,
+// anche nelle card aggiunte più avanti. NON è una protezione assoluta (uno
+// screenshot resta sempre possibile), ma il credit resta comunque impresso
+// nel file stesso (vedi _watermarkPhoto lato server) se qualcuno la scarica
+// comunque con altri mezzi.
+const _isProtectedPhotoImg = (el) => el?.tagName === 'IMG' && /\/photos\//.test(el.src || '');
+document.addEventListener('contextmenu', (e) => { if (_isProtectedPhotoImg(e.target)) e.preventDefault(); });
+document.addEventListener('dragstart', (e) => { if (_isProtectedPhotoImg(e.target)) e.preventDefault(); });
+
 // Avanti/indietro del browser con URL puliti (pushState non genera
 // hashchange, serve un listener dedicato).
 window.addEventListener('popstate', () => { route(); });

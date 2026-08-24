@@ -3159,6 +3159,13 @@ div[style*="grid-template-columns: repeat(auto-fit"] {
   font-weight: 500;
 }
 
+/* Deterrente al download facile delle foto gara caricate da noi — blocca il
+   menu "Salva immagine" da tieni-premuto su iOS/Safari, che il preventDefault
+   JS su contextmenu (desktop/Android) non copre. Vedi app.js per il resto. */
+img[src*="/photos/"] {
+  -webkit-touch-callout: none;
+}
+
 .race-photo-upload-btn {
   display: inline-flex;
   align-items: center;

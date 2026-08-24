@@ -272,14 +272,38 @@ const upload = multer({
   },
 });
 
-async function savePhoto(req, file) {
+// Marchia il credit direttamente nel file (angolo in basso a destra,
+// dimensione proporzionale alla larghezza della foto) — così anche scaricando
+// la foto (tasto destro, screenshot, salvataggio diretto dell'URL) il credit
+// resta impresso, non solo mostrato a schermo sopra l'immagine.
+async function _watermarkPhoto(buffer, text) {
+  if (!text) return buffer;
+  try {
+    const sharp = require('sharp');
+    const img = sharp(buffer);
+    const meta = await img.metadata();
+    const W = meta.width || 1200, H = meta.height || 800;
+    const fs2 = Math.max(14, Math.round(W * 0.022));
+    const pad = Math.round(fs2 * 0.9);
+    const label = `© ${text} · italiacyclingstats.com`;
+    const boxW = Math.min(W - pad, Math.round(label.length * fs2 * 0.56) + pad * 2);
+    const svg = `<svg width="${W}" height="${H}" xmlns="http://www.w3.org/2000/svg">
+      <rect x="${W - boxW - pad}" y="${H - fs2 - pad * 2}" width="${boxW}" height="${fs2 + pad}" rx="4" fill="rgba(0,0,0,0.45)"/>
+      <text x="${W - pad - boxW / 2}" y="${H - pad - fs2 * 0.28}" font-family="Arial,Helvetica,sans-serif" font-size="${fs2}" font-weight="600" fill="rgba(255,255,255,0.92)" text-anchor="middle">${_ogEsc(label)}</text>
+    </svg>`;
+    return await img.composite([{ input: Buffer.from(svg), left: 0, top: 0 }]).toBuffer();
+  } catch (e) { console.warn('[watermark] fallito, salvo la foto originale:', e.message); return buffer; }
+}
+
+async function savePhoto(req, file, watermarkText) {
   const ext      = path.extname(file.originalname).toLowerCase() || '.jpg';
   const filename = makeFilename(req, ext);
+  const buf = watermarkText ? await _watermarkPhoto(file.buffer, watermarkText) : file.buffer;
   if (supabase) {
-    const { error } = await supabase.storage.from('photos').upload(filename, file.buffer, { contentType: file.mimetype, upsert: true });
+    const { error } = await supabase.storage.from('photos').upload(filename, buf, { contentType: file.mimetype, upsert: true });
     if (error) throw new Error(error.message);
   } else {
-    fs.writeFileSync(path.join(UPLOADS_DIR, filename), file.buffer || fs.readFileSync(file.path));
+    fs.writeFileSync(path.join(UPLOADS_DIR, filename), buf || fs.readFileSync(file.path));
   }
   return filename;
 }
@@ -1793,8 +1817,10 @@ app.post('/api/race-photos/upload', requireAuth, upload.single('photo'), async (
     const { gara_id, caption, photographer, atleta_ids } = req.body;
     if (!gara_id) return res.status(400).json({ error: 'gara_id mancante' });
     if (!req.file) return res.status(400).json({ error: 'Nessun file ricevuto' });
-    const filename     = await savePhoto(req, req.file);
     const display_name = req.user.display_name || req.user.email;
+    // Marchiato nel file stesso (non solo mostrato sopra a schermo): anche
+    // scaricando la foto il credit resta impresso — vedi _watermarkPhoto.
+    const filename = await savePhoto(req, req.file, photographer || display_name);
     const status       = req.user.role === 'admin' ? 'approved' : 'pending';
     // Normalizza i tag corridori in CSV pulito di atleta_id
     const tags = String(atleta_ids || '').split(',').map(s => s.trim()).filter(Boolean);
