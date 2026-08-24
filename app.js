@@ -21372,10 +21372,11 @@ const SHARE_TAG = '#italiacrit #ciclismo';
 window._shareGaraData = null; window._shareAtletaData = null; window._shareTeamData = null;
 let _shareType, _sharePayload, _sharePlatKey = 'instagram';
 let _shareLogoImg = null;
-// Stile grafica gara: 'results' (podio+risultati in overlay, esistente) o
-// 'winner' (solo vincitore in grande, stile "annuncio") — scelta libera per
-// qualunque formato (Post/Instagram/Story), non un formato a sé.
-let _shareGaraStyle = 'results';
+// Stile grafica gara: 'winner' (solo vincitore in grande, stile "annuncio")
+// o 'results' (podio+risultati in overlay) — scelta libera per qualunque
+// formato (Post/Instagram/Story), non un formato a sé. "Vincitore" è quella
+// principale, mostrata per prima di default.
+let _shareGaraStyle = 'winner';
 // Regolazione manuale della foto di sfondo (zoom + spostamento), per
 // centrare a mano il soggetto quando il ritaglio automatico non va bene —
 // resettata ad ogni apertura della modale. offsetX/offsetY sono in pixel
@@ -23363,7 +23364,7 @@ const _SVGS = {
 // ── Modale principale ──────────────────────────────────────
 window.showShareModal = async function(type, payload) {
   _shareType=type; _sharePayload=payload; _sharePlatKey='post';
-  _shareGaraStyle='results'; _shareImgAdjust={scale:1,offsetX:0,offsetY:0};
+  _shareGaraStyle='winner'; _shareImgAdjust={scale:1,offsetX:0,offsetY:0};
   // "Riscalda" subito la generazione della grafica OG lato server (appena si
   // apre la modale, prima ancora che l'utente scelga Facebook): la prima
   // generazione può richiedere alcuni secondi (foto + composizione avatar),
@@ -23408,8 +23409,8 @@ window.showShareModal = async function(type, payload) {
       <div class="share-platforms">${platBtns}</div>
       ${type==='gara' ? `
       <div class="share-style-toggle" style="display:flex;gap:8px;margin-bottom:10px">
-        <button class="share-plat-btn active" id="sgs-results" onclick="window.setGaraStyle('results')" style="flex:1;padding:8px 6px">🏁 Risultati</button>
-        <button class="share-plat-btn" id="sgs-winner" onclick="window.setGaraStyle('winner')" style="flex:1;padding:8px 6px">🏆 Vincitore</button>
+        <button class="share-plat-btn active" id="sgs-winner" onclick="window.setGaraStyle('winner')" style="flex:1;padding:8px 6px">🏆 Vincitore</button>
+        <button class="share-plat-btn" id="sgs-results" onclick="window.setGaraStyle('results')" style="flex:1;padding:8px 6px">🏁 Risultati</button>
       </div>
       <div id="share-photo-adjust" style="display:none;margin-bottom:10px">
         <div style="font-size:.72rem;color:var(--text-muted);margin-bottom:4px">🖼 Trascina l'anteprima per spostare la foto · usa lo zoom per ingrandirla</div>
@@ -23534,12 +23535,31 @@ async function _refreshPreview(){
   }catch(e){loading.innerHTML='❌ Errore: '+e.message; console.error(e);}
 }
 
-window.downloadShareCard=async function(){
-  const canvas=await generateShareCanvas(_shareType,_sharePayload,_sharePlatKey);
+function _downloadCanvas(canvas, suffix){
   const a=document.createElement('a');
   const p=SHARE_PLATFORMS[_sharePlatKey];
-  a.download=`italiacrit-${_shareType}-${_sharePlatKey}-${p.w}x${p.h}.png`;
+  a.download=`italiacrit-${_shareType}-${suffix}-${p.w}x${p.h}.png`;
   a.href=canvas.toDataURL('image/png'); a.click();
+}
+
+// Scaricando dalla vista "Vincitore" (quella principale) escono ENTRAMBE le
+// grafiche in un colpo solo — quella del vincitore e quella dei risultati —
+// invece di dover cambiare vista e riscaricare a mano. Scaricando invece
+// dalla vista "Risultati" esce solo quella (nessun cambio di comportamento lì).
+window.downloadShareCard=async function(){
+  if(_shareType==='gara' && _shareGaraStyle==='winner'){
+    const winnerCanvas=await generateShareCanvas(_shareType,_sharePayload,_sharePlatKey);
+    _downloadCanvas(winnerCanvas,'winner');
+    _shareGaraStyle='results';
+    try{
+      const resultsCanvas=await generateShareCanvas(_shareType,_sharePayload,_sharePlatKey);
+      await new Promise(r=>setTimeout(r,300)); // due download troppo ravvicinati, alcuni browser ne bloccano uno
+      _downloadCanvas(resultsCanvas,'risultati');
+    } finally { _shareGaraStyle='winner'; } // ripristina lo stile visibile in anteprima
+    return;
+  }
+  const canvas=await generateShareCanvas(_shareType,_sharePayload,_sharePlatKey);
+  _downloadCanvas(canvas,_sharePlatKey);
 };
 
 window.nativeShare=async function(){
