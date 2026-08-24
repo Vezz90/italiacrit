@@ -1,0 +1,366 @@
+[
+  {
+    "id": 450,
+    "gara_id": "2_GRAN_PREMIO_MSTC_LA_PALLADIANA_2026-05-29_AL_M",
+    "posizione": 6,
+    "cognome": "BIASIA",
+    "nome": "EDOARDO"
+  },
+  {
+    "id": 451,
+    "gara_id": "2_GRAN_PREMIO_MSTC_LA_PALLADIANA_2026-05-29_AL_M",
+    "posizione": 7,
+    "cognome": "ROMAN",
+    "nome": "ALESSANDRO"
+  },
+  {
+    "id": 452,
+    "gara_id": "2_GRAN_PREMIO_MSTC_LA_PALLADIANA_2026-05-29_AL_M",
+    "posizione": 8,
+    "cognome": "GUIDOLIN",
+    "nome": "RICCARDO"
+  },
+  {
+    "id": 453,
+    "gara_id": "2_GRAN_PREMIO_MSTC_LA_PALLADIANA_2026-05-29_AL_M",
+    "posizione": 9,
+    "cognome": "FERRARI",
+    "nome": "NICCOLO'"
+  },
+  {
+    "id": 526,
+    "gara_id": "3_TROFEO_ALF_GROUP_2026-07-24_AL_F",
+    "posizione": 6,
+    "cognome": "ZOL",
+    "nome": "SOFIA"
+  },
+  {
+    "id": 532,
+    "gara_id": "3_TROFEO_ALF_GROUP_2026-07-24_AL_M",
+    "posizione": 6,
+    "cognome": "BREDA JUSTYN",
+    "nome": "MICHELE"
+  },
+  {
+    "id": 471,
+    "gara_id": "33_TROFEO_PRO_LOCO_2026-07-16_AL_M",
+    "posizione": 6,
+    "cognome": "FIORETTI",
+    "nome": "MATTIA"
+  },
+  {
+    "id": 513,
+    "gara_id": "4_TROFEO_TECAM_2026-07-17_ELI_F",
+    "posizione": 6,
+    "cognome": "REZZONICO",
+    "nome": "ALINE"
+  },
+  {
+    "id": 514,
+    "gara_id": "4_TROFEO_TECAM_2026-07-17_ELI_F",
+    "posizione": 7,
+    "cognome": "BELOTTI",
+    "nome": "MISIA"
+  },
+  {
+    "id": 515,
+    "gara_id": "4_TROFEO_TECAM_2026-07-17_ELI_F",
+    "posizione": 8,
+    "cognome": "ZANGA",
+    "nome": "MARTA"
+  },
+  {
+    "id": 516,
+    "gara_id": "4_TROFEO_TECAM_2026-07-17_ELI_F",
+    "posizione": 9,
+    "cognome": "DE LAURENTIIS",
+    "nome": "ELENA"
+  },
+  {
+    "id": 517,
+    "gara_id": "4_TROFEO_TECAM_2026-07-17_ELI_F",
+    "posizione": 10,
+    "cognome": "GIANGRANDE",
+    "nome": "GIORGIA"
+  },
+  {
+    "id": 518,
+    "gara_id": "4_TROFEO_TECAM_2026-07-17_ELI_F",
+    "posizione": 11,
+    "cognome": "BORDIGNON",
+    "nome": "SILVIA"
+  },
+  {
+    "id": 519,
+    "gara_id": "4_TROFEO_TECAM_2026-07-17_ELI_F",
+    "posizione": 12,
+    "cognome": "RADAELLI",
+    "nome": "ELVIRA"
+  },
+  {
+    "id": 520,
+    "gara_id": "4_TROFEO_TECAM_2026-07-17_ELI_F",
+    "posizione": 13,
+    "cognome": "BANI",
+    "nome": "DESIREE"
+  },
+  {
+    "id": 500,
+    "gara_id": "4_TROFEO_TECAM_2026-07-17_JUN_F",
+    "posizione": 6,
+    "cognome": "MINICHINO",
+    "nome": "MELANIA"
+  },
+  {
+    "id": 501,
+    "gara_id": "4_TROFEO_TECAM_2026-07-17_JUN_F",
+    "posizione": 7,
+    "cognome": "NOVOLODSKAIA",
+    "nome": "ANGELINA"
+  },
+  {
+    "id": 502,
+    "gara_id": "4_TROFEO_TECAM_2026-07-17_JUN_F",
+    "posizione": 8,
+    "cognome": "ZUCCA",
+    "nome": "PAOLA"
+  },
+  {
+    "id": 503,
+    "gara_id": "4_TROFEO_TECAM_2026-07-17_JUN_F",
+    "posizione": 10,
+    "cognome": "DELLA VEDOVA",
+    "nome": "MARTA"
+  },
+  {
+    "id": 504,
+    "gara_id": "4_TROFEO_TECAM_2026-07-17_JUN_F",
+    "posizione": 11,
+    "cognome": "CAMONI",
+    "nome": "NADIA"
+  },
+  {
+    "id": 505,
+    "gara_id": "4_TROFEO_TECAM_2026-07-17_JUN_F",
+    "posizione": 12,
+    "cognome": "RICCI",
+    "nome": "ELISA"
+  },
+  {
+    "id": 506,
+    "gara_id": "4_TROFEO_TECAM_2026-07-17_JUN_F",
+    "posizione": 13,
+    "cognome": "RAPOSO",
+    "nome": "MIA"
+  },
+  {
+    "id": 507,
+    "gara_id": "4_TROFEO_TECAM_2026-07-17_JUN_F",
+    "posizione": 14,
+    "cognome": "CORTINOVIS",
+    "nome": "ELENA"
+  },
+  {
+    "id": 538,
+    "gara_id": "46_COPPA_LA_ROCCA_TROFEO_F_LLI_BAGAGLI_2026-07-28_AL_M",
+    "posizione": 6,
+    "cognome": "MARINI",
+    "nome": "TOMMASO"
+  },
+  {
+    "id": 539,
+    "gara_id": "46_COPPA_LA_ROCCA_TROFEO_F_LLI_BAGAGLI_2026-07-28_AL_M",
+    "posizione": 7,
+    "cognome": "DE STEFANO",
+    "nome": "DIEGO"
+  },
+  {
+    "id": 540,
+    "gara_id": "46_COPPA_LA_ROCCA_TROFEO_F_LLI_BAGAGLI_2026-07-28_AL_M",
+    "posizione": 8,
+    "cognome": "BRAVATA'",
+    "nome": "FRANCESCO"
+  },
+  {
+    "id": 541,
+    "gara_id": "46_COPPA_LA_ROCCA_TROFEO_F_LLI_BAGAGLI_2026-07-28_AL_M",
+    "posizione": 9,
+    "cognome": "DI STEFANO",
+    "nome": "GIACOMO"
+  },
+  {
+    "id": 542,
+    "gara_id": "46_COPPA_LA_ROCCA_TROFEO_F_LLI_BAGAGLI_2026-07-28_AL_M",
+    "posizione": 10,
+    "cognome": "SEBASTIANI",
+    "nome": "FRANCESCO"
+  },
+  {
+    "id": 543,
+    "gara_id": "46_COPPA_LA_ROCCA_TROFEO_F_LLI_BAGAGLI_2026-07-28_AL_M",
+    "posizione": 11,
+    "cognome": "GUASTINI",
+    "nome": "SIMONE"
+  },
+  {
+    "id": 544,
+    "gara_id": "46_COPPA_LA_ROCCA_TROFEO_F_LLI_BAGAGLI_2026-07-28_AL_M",
+    "posizione": 12,
+    "cognome": "MARZOCCHI",
+    "nome": "LORENZO"
+  },
+  {
+    "id": 570,
+    "gara_id": "G_P_43_FESTA_DELLO_SPORT_3_MEM_G_BERTOLDO_9_TROFEO_SMANIA_6_MEM_FRANCO_E_DAVIDE_FAVARETTO_2026-08-14_AL_M",
+    "posizione": 6,
+    "cognome": "CALLEGARO",
+    "nome": "FILIPPO"
+  },
+  {
+    "id": 576,
+    "gara_id": "MEMORIAL_GIOVANNI_FINO_E_PAOLO_MATTIO_2026-08-20_AL_M",
+    "posizione": 6,
+    "cognome": "FERRARI",
+    "nome": "LEONARDO"
+  },
+  {
+    "id": 582,
+    "gara_id": "MEMORIAL_GIOVANNI_FINO_E_PAOLO_MATTIO_2026-08-20_JUN_M",
+    "posizione": 6,
+    "cognome": "CUDA",
+    "nome": "GABRIELE"
+  },
+  {
+    "id": 426,
+    "gara_id": "MEMORIAL_PINUCCIO_CHIAVASSA_2026-05-14_AL_M",
+    "posizione": 6,
+    "cognome": "GIVO",
+    "nome": "SIMONE"
+  },
+  {
+    "id": 432,
+    "gara_id": "MEMORIAL_PINUCCIO_CHIAVASSA_2026-05-14_JUN_M",
+    "posizione": 6,
+    "cognome": "GALFRE'",
+    "nome": "JACOPO"
+  },
+  {
+    "id": 550,
+    "gara_id": "NOTTURNA_DELL_ASSUNTA_2026-08-07_AL_F",
+    "posizione": 6,
+    "cognome": "FAVERO",
+    "nome": "ELEONORA"
+  },
+  {
+    "id": 551,
+    "gara_id": "NOTTURNA_DELL_ASSUNTA_2026-08-07_AL_F",
+    "posizione": 7,
+    "cognome": "CAMILLO",
+    "nome": "MARISOL"
+  },
+  {
+    "id": 557,
+    "gara_id": "NOTTURNA_DELL_ASSUNTA_2026-08-07_AL_M",
+    "posizione": 6,
+    "cognome": "CARLET",
+    "nome": "ALBERTO"
+  },
+  {
+    "id": 558,
+    "gara_id": "NOTTURNA_DELL_ASSUNTA_2026-08-07_AL_M",
+    "posizione": 8,
+    "cognome": "ORO",
+    "nome": "NOAH"
+  },
+  {
+    "id": 559,
+    "gara_id": "NOTTURNA_DELL_ASSUNTA_2026-08-07_AL_M",
+    "posizione": 9,
+    "cognome": "GIACOMINI",
+    "nome": "LEONARDO"
+  },
+  {
+    "id": 560,
+    "gara_id": "NOTTURNA_DELL_ASSUNTA_2026-08-07_AL_M",
+    "posizione": 10,
+    "cognome": "GALASSO",
+    "nome": "DENIS"
+  },
+  {
+    "id": 465,
+    "gara_id": "TROFEO_AMICI_DEL_CICLISMO_DI_CASALOLDO_1_MEM_GIANCARLO_PELLEGRI_2026-06-12_AL_M",
+    "posizione": 6,
+    "cognome": "SEQUANI",
+    "nome": "LEONARDO"
+  },
+  {
+    "id": 477,
+    "gara_id": "TROFEO_DENTIS_2026-07-16_AL_M",
+    "posizione": 6,
+    "cognome": "MURATORE ALESSIO",
+    "nome": "GABRIELE"
+  },
+  {
+    "id": 478,
+    "gara_id": "TROFEO_DENTIS_2026-07-16_AL_M",
+    "posizione": 7,
+    "cognome": "FERRARI",
+    "nome": "LEONARDO"
+  },
+  {
+    "id": 479,
+    "gara_id": "TROFEO_DENTIS_2026-07-16_AL_M",
+    "posizione": 8,
+    "cognome": "MELLANO",
+    "nome": "FRANCESCO"
+  },
+  {
+    "id": 480,
+    "gara_id": "TROFEO_DENTIS_2026-07-16_AL_M",
+    "posizione": 9,
+    "cognome": "BERTAGNI",
+    "nome": "BRYAN"
+  },
+  {
+    "id": 481,
+    "gara_id": "TROFEO_DENTIS_2026-07-16_AL_M",
+    "posizione": 10,
+    "cognome": "BIOLATTO",
+    "nome": "MATTIA"
+  },
+  {
+    "id": 482,
+    "gara_id": "TROFEO_DENTIS_2026-07-16_AL_M",
+    "posizione": 11,
+    "cognome": "GIANGREGORIO",
+    "nome": "DAVIDE"
+  },
+  {
+    "id": 488,
+    "gara_id": "TROFEO_DENTIS_2026-07-16_JUN_M",
+    "posizione": 6,
+    "cognome": "GALFRE'",
+    "nome": "JACOPO"
+  },
+  {
+    "id": 489,
+    "gara_id": "TROFEO_DENTIS_2026-07-16_JUN_M",
+    "posizione": 7,
+    "cognome": "BONINO",
+    "nome": "ALESSANDRO"
+  },
+  {
+    "id": 490,
+    "gara_id": "TROFEO_DENTIS_2026-07-16_JUN_M",
+    "posizione": 8,
+    "cognome": "BARATTERO",
+    "nome": "FILIPPO"
+  },
+  {
+    "id": 491,
+    "gara_id": "TROFEO_DENTIS_2026-07-16_JUN_M",
+    "posizione": 9,
+    "cognome": "TAMIETTI",
+    "nome": "GABRIELE"
+  }
+]
