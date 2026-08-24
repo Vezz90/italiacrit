@@ -22576,13 +22576,26 @@ function _drawGaraWinner(ctx, W, H, d, logo, xpixLogo) {
   ctx.fillText((d.cat || '').toUpperCase(), W / 2, y);
   ctx.letterSpacing = '0px';
 
-  // Logo ICS centrato in fondo — più grande di prima (era quasi invisibile
-  // rispetto al riferimento indicato dall'utente).
-  if (logo) {
-    const lH = Math.round(H * 0.065), lW = Math.round(lH * logo.naturalWidth / logo.naturalHeight);
-    ctx.drawImage(logo, W / 2 - lW / 2, H - Math.round(H * 0.045) - lH, lW, lH);
+  // Logo ICS centrato in fondo. Quando la foto viene da xpix.it, il loro
+  // logo compare in fila accanto al nostro, stessa altezza — non più un
+  // piccolo richiamo testuale a parte, come nel riferimento fornito
+  // dall'utente (due loghi affiancati, stesso peso visivo).
+  const lH = Math.round(H * 0.065);
+  const logoY = H - Math.round(H * 0.045) - lH;
+  if (xpixLogo && logo) {
+    const gap = Math.round(W * 0.022);
+    const xpixW = Math.round(lH * xpixLogo.naturalWidth / xpixLogo.naturalHeight);
+    const icsW = Math.round(lH * logo.naturalWidth / logo.naturalHeight);
+    const startX = W / 2 - (xpixW + gap + icsW) / 2;
+    ctx.drawImage(xpixLogo, startX, logoY, xpixW, lH);
+    ctx.drawImage(logo, startX + xpixW + gap, logoY, icsW, lH);
+  } else {
+    if (logo) {
+      const lW = Math.round(lH * logo.naturalWidth / logo.naturalHeight);
+      ctx.drawImage(logo, W / 2 - lW / 2, logoY, lW, lH);
+    }
+    _drawPhotoCredit(ctx, W, H, d, {});
   }
-  _drawPhotoCredit(ctx, W, H, d, { xpixLogo });
   ctx.textAlign = 'left'; ctx.textBaseline = 'alphabetic';
 }
 
