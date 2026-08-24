@@ -16754,7 +16754,10 @@ async function renderGara(gara_id) {
         || (rows[0].cognome || rows[0].nome ? `${rows[0].cognome} ${rows[0].nome}`.trim() : rows[0].team)
         || rows[0].team_id;
       const teamId = (teamRow && teamRow.team_id) || rows[0].team_id;
-      const pts = rows[0].punti_effettivi || (BASEPTS[pos] || 0) * mult;
+      // != null, non ||: uno 0 legittimo (es. posizione oltre il 5° in una
+      // gara "tipo pista") è falsy in JS e col vecchio || ricadeva sul
+      // calcolo standard invece di restare 0.
+      const pts = rows[0].punti_effettivi != null ? rows[0].punti_effettivi : (BASEPTS[pos] || 0) * mult;
       const tempoDisplay = pos === 1
         ? (_calcWinnerTime(rows[0].km, rows[0].media) || '—')
         : (rows[0].tempo && rows[0].tempo.trim() ? _fmtGap(rows[0].tempo) : 'S.T.');
