@@ -23423,7 +23423,10 @@ window.showShareModal = async function(type, payload) {
       <div id="share-fb-text-box" style="display:none;margin-bottom:12px">
         <div style="font-size:.72rem;color:var(--text-muted);margin-bottom:4px">Testo per il post — copialo e incollalo su Facebook insieme alla grafica</div>
         <textarea id="share-fb-text" readonly rows="6" style="width:100%;resize:vertical;font:inherit;font-size:.85rem;padding:8px;border-radius:8px;border:1px solid var(--border-subtle);background:var(--bg-elevated,rgba(255,255,255,0.04));color:var(--text-primary)"></textarea>
-        <button class="share-action-btn" style="margin-top:6px" onclick="window.copyFbShareText()" id="share-fb-copy-btn">📋 Copia testo</button>
+        <div style="display:flex;gap:6px;margin-top:6px">
+          <button class="share-action-btn" onclick="window.copyFbShareText()" id="share-fb-copy-btn">📋 Copia testo</button>
+          <button class="share-action-btn" onclick="window._showFbShareText(true)" id="share-fb-regen-btn">🔄 Rigenera</button>
+        </div>
       </div>
       <div class="share-size-label" id="share-size-lbl">Post Quadrato · 1080×1080 (1:1)</div>
       <div class="share-preview-wrap">
@@ -23617,17 +23620,21 @@ window.shareOnFacebook = function() {
 // genera lui), quindi qui mostriamo lo stesso tipo di narrazione dinamica
 // usata per i meta tag e l'admin la copia a mano sopra alla grafica.
 // Solo per l'admin e solo per le gare (unico tipo con questa narrazione).
-async function _showFbShareText() {
+async function _showFbShareText(regen) {
   const box = document.getElementById('share-fb-text-box');
   if (!box) return;
   if (authUser()?.role !== 'admin' || _shareType !== 'gara' || !_sharePayload?._id) { box.style.display = 'none'; return; }
   box.style.display = 'block';
   const ta = document.getElementById('share-fb-text');
-  ta.value = 'Generazione testo…';
+  const regenBtn = document.getElementById('share-fb-regen-btn');
+  ta.value = regen ? 'Rigenerazione testo…' : 'Generazione testo…';
+  if (regenBtn) regenBtn.disabled = true;
   try {
-    const { text } = await apiCall(`/admin/gara-share-text/${encodeURIComponent(_sharePayload._id)}`);
+    const qs = regen ? '?regen=1' : '';
+    const { text } = await apiCall(`/admin/gara-share-text/${encodeURIComponent(_sharePayload._id)}${qs}`);
     ta.value = text || '';
   } catch (e) { ta.value = ''; }
+  finally { if (regenBtn) regenBtn.disabled = false; }
 }
 window.copyFbShareText = async function() {
   const ta = document.getElementById('share-fb-text');

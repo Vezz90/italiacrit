@@ -791,6 +791,87 @@ async function _photoCreditFor(garaId) {
   return null;
 }
 
+// Testo lungo "in stile Gazzetta" generato da Claude (titolo a effetto,
+// racconto della corsa con km/media/distacchi, podio, hashtag) — molto più
+// ricco della narrazione a template sopra, che resta come fallback se
+// l'AI non è configurata o fallisce. Cache in memoria per non rigenerare
+// (costo API) ogni volta che l'admin riapre la modale di condivisione sulla
+// stessa gara; ?regen=1 forza una rigenerazione (es. dopo una correzione dati).
+const _garaAiCaptionCache = new Map(); // id → { text, ts }
+const GARA_AI_CAPTION_TTL = 12 * 60 * 60 * 1000;
+
+async function _buildGaraAiCaption(id, cal, resultsRaw) {
+  const ai = getAnthropic();
+  if (!ai) return null;
+  const results = (resultsRaw || []).filter(r => r.gara_id === id).sort((a, b) => a.posizione - b.posizione);
+  if (!results.length) return null;
+  const winner = results[0];
+  const raceName = cal?.nome || id.replace(/_\d{4}-\d{2}-\d{2}.*$/, '').replace(/_/g, ' ');
+  const raceDate = winner?.data || cal?.data || '';
+  const date = raceDate ? new Date(raceDate).toLocaleDateString('it-IT', { day: 'numeric', month: 'long', year: 'numeric' }) : '';
+  const luogo = cal?.luogo || cal?.regione || winner?.regione || '';
+
+  const podio = results.slice(0, 5).map(r => ({
+    posizione: r.posizione,
+    nome: (r.cognome || r.nome) ? `${r.cognome || ''} ${r.nome || ''}`.trim() : (r.team || ''),
+    team: r.team || '',
+    distacco: r.posizione === 1 ? null : (r.tempo || null),
+  }));
+
+  let altri_risultati_stagionali_vincitore = [];
+  if (winner?.atleta_id) {
+    altri_risultati_stagionali_vincitore = (resultsRaw || [])
+      .filter(r => r.atleta_id === winner.atleta_id && r.gara_id !== id && (r.data || '') <= raceDate && Number(r.posizione) <= 10)
+      .sort((a, b) => (a.data < b.data ? 1 : -1))
+      .slice(0, 4)
+      .map(r => `${r.posizione}° a "${r.nome_gara || r.gara_id}"${r.data ? ' (' + r.data + ')' : ''}`);
+  }
+  const compagni_di_squadra_a_podio = winner
+    ? results.filter(r => r.posizione > 1 && r.posizione <= 3 && r.team_id === winner.team_id)
+        .map(r => `${r.posizione}° ${r.cognome} ${r.nome}`)
+    : [];
+
+  const dataForPrompt = {
+    gara: raceName,
+    data: date,
+    luogo,
+    categoria: winner?.categoria || '',
+    genere: winner?.genere || '',
+    km_percorsi: winner?.km || null,
+    media_kmh: winner?.media || null,
+    podio,
+    team_del_vincitore: winner?.team || '',
+    compagni_di_squadra_a_podio,
+    altri_risultati_stagionali_vincitore,
+  };
+
+  try {
+    const msg = await ai.messages.create({
+      model: 'claude-sonnet-4-6',
+      max_tokens: 700,
+      messages: [{
+        role: 'user',
+        content: `Sei il social media manager di un sito italiano di statistiche di ciclismo amatoriale (italiacyclingstats.com). Scrivi un post per Facebook/Instagram in italiano su questo risultato di ciclismo su strada, con lo stile entusiasta e narrativo tipico della Gazzetta dello Sport.
+
+Struttura richiesta:
+1. Un titolo ad effetto con emoji (una riga, maiuscolo o quasi, tipo titolo di giornale sportivo).
+2. Uno o due paragrafi che raccontano la corsa: cita km percorsi e media km/h se presenti, i distacchi dei primi classificati se presenti, e se più corridori dello stesso team sono a podio celebra la doppietta/tripletta di squadra.
+3. Una riga vuota, poi "📊 Il Podio" seguito da un elenco puntato (emoji numeriche 1️⃣2️⃣3️⃣ ecc.) di posizione, nome, team e distacco.
+4. Una riga vuota, poi 8-10 hashtag pertinenti (nomi propri, nome gara senza spazi, #CiclismoDilettanti, #ItaliaCyclingStats ecc.).
+
+Regole importanti: NON inventare dettagli non forniti nei dati (niente percorso, meteo, tattiche, aneddoti inventati). Se non ci sono distacchi non menzionarli. Se "compagni_di_squadra_a_podio" è vuoto non parlare di doppiette di squadra. Se "altri_risultati_stagionali_vincitore" è vuoto non citare altre gare della stagione; se presente puoi citarne 1-2 per dare contesto alla stagione del vincitore, come fa un giornalista che riassume l'annata. Scrivi in italiano corretto e scorrevole, senza markdown (no **, no #titoli).
+
+Dati della gara (JSON):
+${JSON.stringify(dataForPrompt, null, 2)}`
+      }]
+    });
+    return msg.content[0].text.trim();
+  } catch (e) {
+    console.warn('[gara-share-text] Claude error:', e.message);
+    return null;
+  }
+}
+
 app.get('/api/admin/gara-share-text/:id', requireAdmin, async (req, res) => {
   try {
     const id = req.params.id;
@@ -800,6 +881,22 @@ app.get('/api/admin/gara-share-text/:id', requireAdmin, async (req, res) => {
     ]);
     const cal = (calRaw || []).find(g => g.id === id)
       || (calRaw || []).find(g => g.id === id.replace(/_[A-Z0-9]+_[MF]$/, ''));
+
+    const forceRegen = req.query.regen === '1';
+    const cached = _garaAiCaptionCache.get(id);
+    let aiText = (!forceRegen && cached && (Date.now() - cached.ts < GARA_AI_CAPTION_TTL)) ? cached.text : null;
+    if (!aiText) {
+      aiText = await _buildGaraAiCaption(id, cal, resultsRaw).catch(() => null);
+      if (aiText) _garaAiCaptionCache.set(id, { text: aiText, ts: Date.now() });
+    }
+    if (aiText) {
+      const credit = await _photoCreditFor(id).catch(() => null);
+      const text = credit ? `${aiText}\n\n📷 Foto: ${credit}` : aiText;
+      return res.json({ text, ai: true });
+    }
+
+    // Fallback: narrazione deterministica a template, senza chiamata AI
+    // (Claude non configurato, o la generazione è fallita).
     const { raceName, date, luogo, top3, podiumLines } = _buildGaraNarrative(id, cal, resultsRaw);
     const credit = await _photoCreditFor(id).catch(() => null);
     const lines = [
@@ -812,7 +909,7 @@ app.get('/api/admin/gara-share-text/:id', requireAdmin, async (req, res) => {
       credit ? '' : undefined,
       credit ? `📷 Foto: ${credit}` : undefined,
     ].filter(l => l !== undefined && l !== null);
-    res.json({ text: lines.join('\n').replace(/\n{3,}/g, '\n\n').trim() });
+    res.json({ text: lines.join('\n').replace(/\n{3,}/g, '\n\n').trim(), ai: false });
   } catch (e) { res.status(500).json({ error: e.message }); }
 });
 
