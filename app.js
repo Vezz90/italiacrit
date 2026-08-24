@@ -2494,10 +2494,15 @@ function badgeMult(m, tipo, isCR = false, isCI = false) {
   isCI = isCI || (tipo === 'campionato_italiano');
   const isNat = (m === 2 || tipo === 'nazionale');
   const isInt = (m === 3 || tipo === 'internazionale');
-  
+
   if (isCI) return `<span class="res-badge blue-badge">Campionato Italiano (x3)</span>`;
   if (isCR) return `<span class="res-badge orange-badge">Campionato Regionale (x2)</span>`;
-  
+  // Formati "tipo pista" (criterium in circuito chiuso, stile pista ma su
+  // strada): poca partecipazione, non rappresentativi come una gara
+  // normale — punteggio dimezzato rispetto allo standard, etichetta
+  // separata invece di "Reg.le (x1)" per non farli sembrare gare piene.
+  if (tipo === 'tipo_pista') return `<span class="res-badge gray-badge">Tip. Pist. (0,5)</span>`;
+
   const cls = isInt ? 'blue-badge' : (isNat ? 'orange-badge' : 'gray-badge');
   const label = isInt ? 'Int.le' : (isNat ? 'Naz.le' : 'Reg.le');
   return `<span class="res-badge ${cls}">${label} (x${m})</span>`;
@@ -20393,6 +20398,10 @@ function renderRegolamento() {
           <div style="display:flex;align-items:center;gap:16px;padding:14px 16px;background:var(--bg-elevated);border-radius:var(--r-md);">
             <span style="font-family:'Inter Tight',sans-serif;font-size:1.6rem;font-weight:900;color:var(--text-muted);">×1</span>
             <div><div style="font-weight:700;font-size:0.875rem;color:var(--text-primary)">Regionale</div><div style="font-size:0.78rem;color:var(--text-secondary)">Gare di livello regionale standard</div></div>
+          </div>
+          <div style="display:flex;align-items:center;gap:16px;padding:14px 16px;background:var(--bg-elevated);border-radius:var(--r-md);">
+            <span style="font-family:'Inter Tight',sans-serif;font-size:1.6rem;font-weight:900;color:var(--text-muted);">×0,5</span>
+            <div><div style="font-weight:700;font-size:0.875rem;color:var(--text-primary)">Tipo Pista</div><div style="font-size:0.78rem;color:var(--text-secondary)">Criterium in circuito chiuso stile pista su strada — punteggio dimezzato, valido solo per i primi 5 classificati: poca partecipazione, non rappresentative come una gara standard</div></div>
           </div>
           <div style="display:flex;align-items:center;gap:16px;padding:14px 16px;background:var(--bg-elevated);border-radius:var(--r-md);">
             <span style="font-family:'Inter Tight',sans-serif;font-size:1.6rem;font-weight:900;color:var(--text-secondary);">×2</span>

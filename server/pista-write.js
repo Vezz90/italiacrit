@@ -44,6 +44,13 @@ if (!DRY_RUN && (!ADMIN_EMAIL || !ADMIN_PASSWORD)) {
 // Solo queste categorie in questo giro — niente Esordienti (ES1_*/ES2_*).
 const ALLOWED_CATS = new Set(['AL_M', 'AL_F', 'JUN_M', 'JUN_F', 'ELI_M', 'ELI_F']);
 
+// "Tipo Pista" ha poca partecipazione e non è rappresentativa come una gara
+// normale (gli scalatori/specialisti di solito non ci sono, corrono quasi
+// solo velocisti) — su richiesta dell'utente: solo i primi 5, a punteggio
+// dimezzato rispetto alla tabella standard (15/12/10/8/6), arrotondato per
+// difetto dove serve (7,5 → 7) per non avere punteggi con la virgola.
+const TOP5_POINTS = { 1: 7, 2: 6, 3: 5, 4: 4, 5: 3 };
+
 const CAT_LABELS = {
   AL_M: 'Allievi', AL_F: 'Allieve',
   JUN_M: 'Juniores', JUN_F: 'Juniores',
@@ -111,6 +118,7 @@ async function login() {
         const garaId = `${nomeSlug}_${dataISO}_${cat}`;
 
         for (const row of rows) {
+          if (row.posizione > 5) continue; // solo i primi 5 (vedi TOP5_POINTS sopra)
           planned++;
           const body = {
             posizione: row.posizione,
@@ -121,13 +129,14 @@ async function login() {
             data: dataISO,
             categoria: CAT_LABELS[cat] || cat,
             genere,
-            tipo: 'regionale',
+            tipo: 'tipo_pista',
             campionato_regionale,
             campionato_italiano,
             regione: race.regione || '',
+            punti_override: TOP5_POINTS[row.posizione],
           };
           if (DRY_RUN) {
-            console.log(`[DRY] ${garaId} — #${row.posizione} ${row.cognome} ${row.nome} (${row.team})${row.existingAtletaId ? ' → ' + row.existingAtletaId : ' → NUOVO'}`);
+            console.log(`[DRY] ${garaId} — #${row.posizione} ${row.cognome} ${row.nome} (${row.team}) [${body.punti_override}pt]${row.existingAtletaId ? ' → ' + row.existingAtletaId : ' → NUOVO'}`);
             continue;
           }
           try {
