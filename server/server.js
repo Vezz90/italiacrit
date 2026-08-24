@@ -4069,6 +4069,24 @@ app.post('/api/admin/gara/:garaId/manual-result', requireAdmin, async (req, res)
     const puntiOverride = punti_override != null && punti_override !== '' ? Math.round(Number(punti_override)) : null;
     const atletaId = cognomeU ? _makeAtletaId(cognomeU, nomeU) : '';
 
+    // "Tipo pista": la regola (punteggio dimezzato, SOLO i primi 5, zero da
+    // qui in poi) deve valere per QUALSIASI riga aggiunta a questa gara —
+    // anche a mano dal pannello admin, che non passa punti_override e non
+    // sa nulla di questa eccezione. Se una gara ha già almeno una riga
+    // tipo_pista, si eredita per ogni nuova riga sulla stessa gara_id,
+    // indipendentemente da cosa arriva nel body: senza, aggiungere un 6°
+    // classificato dal pannello gli assegnava punti pieni da tabella
+    // standard invece di azzerarli.
+    let effectiveTipo = tipo || 'regionale';
+    if (effectiveTipo !== 'tipo_pista') {
+      const siblings = await queries.getManualResults(garaId).catch(() => []);
+      if (siblings.some(s => s.tipo === 'tipo_pista')) effectiveTipo = 'tipo_pista';
+    }
+    const TIPO_PISTA_POINTS = { 1: 7, 2: 6, 3: 5, 4: 4, 5: 3 };
+    const puntiEffettiviFinal = effectiveTipo === 'tipo_pista'
+      ? (TIPO_PISTA_POINTS[pos] || 0)
+      : (puntiOverride != null ? puntiOverride : puntiBase * mult);
+
     // Team: fuzzy-match su teams.json (rispettando il genere) così finisce nel
     // team reale invece di crearne uno doppione con una stringa leggermente diversa
     let finalTeamId = teamU ? _makeTeamId(teamU) : '';
@@ -4108,7 +4126,7 @@ app.post('/api/admin/gara/:garaId/manual-result', requireAdmin, async (req, res)
       data: data || '',
       categoria: categoria || '',
       genere: genere || '',
-      tipo: tipo || 'regionale',
+      tipo: effectiveTipo,
       moltiplicatore: mult,
       campionato_regionale: !!campionato_regionale,
       campionato_italiano: !!campionato_italiano,
@@ -4116,7 +4134,7 @@ app.post('/api/admin/gara/:garaId/manual-result', requireAdmin, async (req, res)
       km: finalKm || '',
       media: media || '',
       punti_base: puntiBase,
-      punti_effettivi: puntiOverride != null ? puntiOverride : puntiBase * mult,
+      punti_effettivi: puntiEffettiviFinal,
       edited_by: req.user.id,
     });
     res.json({ ok: true, row });

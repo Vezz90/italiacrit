@@ -1499,6 +1499,27 @@
       "cat": "ES1_M",
       "genere": "M",
       "row": {
+        "posizione": 1,
+        "cognome": "ZAVATTERO",
+        "nome": "EDOARDO",
+        "codeSuffix": "ES",
+        "team": "UÀ CYCLING TEAM",
+        "categoria": "ES1_M",
+        "ambiguousNameSplit": false,
+        "uncertainYear": false,
+        "existingAtletaId": "ZAVATTERO_EDOARDO"
+      },
+      "campionato_regionale": false,
+      "campionato_italiano": false
+    },
+    {
+      "garaId": "MEMORIAL_GIOVANNI_FINO_E_PAOLO_MATTIO_2026-08-20_ES1_M",
+      "race": "MEMORIAL GIOVANNI FINO E PAOLO MATTIO",
+      "regione": "PIEMONTE",
+      "dataISO": "2026-08-20",
+      "cat": "ES1_M",
+      "genere": "M",
+      "row": {
         "posizione": 2,
         "cognome": "BIANCHI",
         "nome": "MASSIMO",
@@ -1639,30 +1660,7 @@
       "campionato_italiano": false
     }
   ],
-  "teamMismatch": [
-    {
-      "garaId": "MEMORIAL_GIOVANNI_FINO_E_PAOLO_MATTIO_2026-08-20_ES1_M",
-      "race": "MEMORIAL GIOVANNI FINO E PAOLO MATTIO",
-      "regione": "PIEMONTE",
-      "dataISO": "2026-08-20",
-      "cat": "ES1_M",
-      "genere": "M",
-      "row": {
-        "posizione": 1,
-        "cognome": "ZAVATTERO",
-        "nome": "EDOARDO",
-        "codeSuffix": "ES",
-        "team": "U&#192; CYCLING TEAM",
-        "categoria": "ES1_M",
-        "ambiguousNameSplit": false,
-        "uncertainYear": false,
-        "existingAtletaId": "ZAVATTERO_EDOARDO"
-      },
-      "campionato_regionale": false,
-      "campionato_italiano": false,
-      "knownTeam": "UA' CYCLING TEAM"
-    }
-  ],
+  "teamMismatch": [],
   "newAthletes": [
     {
       "garaId": "MEMORIAL_PINUCCIO_CHIAVASSA_2026-05-14_ES2_M",
@@ -1781,7 +1779,7 @@
         "cognome": "GIACOBBE",
         "nome": "EDOARDO",
         "codeSuffix": "ES",
-        "team": "U&#192; CYCLING TEAM",
+        "team": "UÀ CYCLING TEAM",
         "categoria": "ES1_M",
         "ambiguousNameSplit": false,
         "uncertainYear": false,
