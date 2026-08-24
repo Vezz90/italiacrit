@@ -8782,7 +8782,7 @@ function buildGaraResultOverlaySvg({ catLabel, title, subtitle, results = [], cr
   <line x1="${pad}" y1="${rowsBottom}" x2="${W - pad}" y2="${rowsBottom}" stroke="rgba(255,255,255,0.15)"/>
   ${logo ? `<image href="${logo}" x="${pad}" y="${H - 46}" width="72" height="24" preserveAspectRatio="xMidYMid meet"/>` : ''}
   <text x="${pad + (logo ? 84 : 0)}" y="${H - 28}" font-family="Arial,Helvetica,sans-serif" font-size="14" font-weight="700" fill="rgba(255,255,255,0.55)">italiacyclingstats.com</text>
-  ${credit === 'xpix.it' && _ogXpixLogoDataUri()
+  ${/xpix/i.test(credit || '') && _ogXpixLogoDataUri()
     ? `<image href="${_ogXpixLogoDataUri()}" x="${W - pad - 130}" y="${H - 44}" width="24" height="24" preserveAspectRatio="xMidYMid meet"/>
        <text x="${W - pad}" y="${H - 28}" font-family="Arial,Helvetica,sans-serif" font-size="14" font-weight="700" fill="rgba(255,255,255,0.6)" text-anchor="end">xpix.it</text>`
     : credit ? `<text x="${W - pad}" y="${H - 28}" font-family="Arial,Helvetica,sans-serif" font-size="14" font-weight="700" fill="rgba(255,255,255,0.6)" text-anchor="end">📷 ${_ogEsc(credit)}</text>` : ''}

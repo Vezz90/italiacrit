@@ -22149,6 +22149,16 @@ async function _getLogo() {
   });
 }
 
+// Vero quando la foto è di xpix.it — sia per le foto prese in automatico
+// dall'album scrapato (photo_source==='xpix') sia per una foto CARICATA A
+// MANO il cui campo fotografo contiene "xpix" in qualunque forma (es. "Xpix
+// (Valerio Pagni)"): un admin scrive quel credit per attribuire la foto a
+// xpix.it anche quando non viene dall'album automatico, e deve comunque
+// mostrare il loro logo, non solo il testo.
+function _isXpixCredit(d) {
+  return d?.photo_source === 'xpix' || /xpix/i.test(d?.photo_credit || '');
+}
+
 // Logo xpix.it (badge tondo bianco, sfondo trasparente) da affiancare al
 // logo ICS nelle grafiche di condivisione quando la foto viene da lì.
 let _xpixLogoImg = null;
@@ -22629,7 +22639,7 @@ function _drawPhotoCredit(ctx, W, H, d, { x, y, align = 'center', xpixLogo } = {
   const baseX = x != null ? x : W / 2;
   const baseY = y != null ? y : H - Math.round(H * 0.015);
 
-  if (d.photo_source === 'xpix' && xpixLogo) {
+  if (_isXpixCredit(d) && xpixLogo) {
     const badgeH = Math.round(fs * 1.7);
     const badgeW = Math.round(badgeH * xpixLogo.naturalWidth / xpixLogo.naturalHeight);
     const gap = Math.round(fs * 0.4);
@@ -23304,7 +23314,7 @@ async function generateShareCanvas(type, payload, platKey) {
     const [avatarMap, photoImg, xpixLogo] = await Promise.all([
       isWinner ? Promise.resolve(new Map()) : _fetchGaraAvatars(payload.results),
       payload.photo_url ? _fetchImgBlob(payload.photo_url) : Promise.resolve(null),
-      payload.photo_source === 'xpix' ? _getXpixLogo() : Promise.resolve(null),
+      _isXpixCredit(payload) ? _getXpixLogo() : Promise.resolve(null),
     ]);
     window._shareHasPhoto = !!photoImg;
     // Foto attesa ma non caricata (rete lenta/assente, tipico da mobile) —
