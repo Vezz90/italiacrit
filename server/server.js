@@ -985,7 +985,16 @@ Dati della gara (JSON):
 ${JSON.stringify(dataForPrompt, null, 2)}`
       }]
     });
-    return msg.content[0].text.trim();
+    const text = msg.content[0].text.trim();
+    // Il link del sito va inserito subito dopo il titolo (prima riga), non
+    // lasciato scrivere a Claude: così chi legge il post lo vede sempre,
+    // nella stessa posizione, indipendentemente da come il modello formatta
+    // il resto — un'istruzione nel prompt rischierebbe di finire persa in
+    // fondo al testo o omessa. Link generico al sito (non alla gara
+    // specifica): l'obiettivo è portare traffico al sito in generale.
+    const lines = text.split('\n');
+    lines.splice(1, 0, '', SITE_URL);
+    return lines.join('\n').replace(/\n{3,}/g, '\n\n').trim();
   } catch (e) {
     console.warn('[gara-share-text] Claude error:', e.message);
     return null;
@@ -1021,6 +1030,8 @@ app.get('/api/admin/gara-share-text/:id', requireAdmin, async (req, res) => {
     const credit = await _photoCreditFor(id).catch(() => null);
     const lines = [
       raceName.toUpperCase(),
+      '',
+      SITE_URL,
       [date, luogo].filter(Boolean).join(' · '),
       '',
       top3,
