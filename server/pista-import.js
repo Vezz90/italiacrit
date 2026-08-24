@@ -20,12 +20,17 @@ const DELAY_MS = 400;
 
 const sleep = ms => new Promise(r => setTimeout(r, ms));
 
+// Decoder generico invece di una lista fissa di entità: una lista fissa
+// perde qualunque carattere accentato non previsto (es. &#192; = À, non
+// coperto prima) — capitato con un nome team ("Uà Cycling Team") scambiato
+// per un team diverso solo perché l'accento non veniva decodificato,
+// facendo fallire il confronto nome+team in pista-write-esordienti.js.
 function decodeEntities(s) {
   return String(s ?? '')
-    .replace(/&#176;/g, '°').replace(/&#39;/g, "'").replace(/&quot;/g, '"')
-    .replace(/&#224;/g, 'à').replace(/&#232;/g, 'è').replace(/&#233;/g, 'é')
-    .replace(/&#242;/g, 'ò').replace(/&#249;/g, 'ù').replace(/&#236;/g, 'ì')
-    .replace(/&#200;/g, 'È').replace(/&amp;/g, '&').trim();
+    .replace(/&#(\d+);/g, (_, n) => String.fromCharCode(parseInt(n, 10)))
+    .replace(/&#x([0-9a-f]+);/gi, (_, n) => String.fromCharCode(parseInt(n, 16)))
+    .replace(/&quot;/g, '"').replace(/&apos;/g, "'").replace(/&amp;/g, '&')
+    .trim();
 }
 
 function pageUrl(page) {

@@ -2489,6 +2489,15 @@ function badgeCat(code) {
   return `<span class="badge-cat badge-${cls}">${esc(label)}</span>`;
 }
 
+// Piccola etichetta accanto al NOME della gara nelle liste risultati (non
+// solo nella colonna moltiplicatore, spesso lontana o nascosta su mobile):
+// l'utente vuole che sia chiaro a colpo d'occhio, leggendo solo il nome
+// gara, che si tratta di un "tipo pista" e non di una gara normale.
+function tipoPistaTag(tipo) {
+  if (tipo !== 'tipo_pista') return '';
+  return ' <span class="res-badge gray-badge" style="font-size:.62rem;padding:1px 6px;margin-left:4px;white-space:nowrap;vertical-align:1px">Tipo Pista</span>';
+}
+
 function badgeMult(m, tipo, isCR = false, isCI = false) {
   isCR = isCR || (tipo === 'campionato_regionale');
   isCI = isCI || (tipo === 'campionato_italiano');
@@ -13320,7 +13329,7 @@ function _buildAtletaResultRows(rows) {
     return `<tr data-date="${esc(r.data||'')}">
       <td class="td-date">${fmtDateShort(r.data)}</td>
       <td class="td-pos ${pClass} ${r.posizione===1?'win':''}">${r.posizione}°</td>
-      <td class="td-race"><span style="display:inline-flex;align-items:center;gap:5px">${countryFlagImg('it')}<a href="#/gara/${esc(r.gara_id)}">${esc(r.nome_gara)}</a></span></td>
+      <td class="td-race"><span style="display:inline-flex;align-items:center;gap:5px">${countryFlagImg('it')}<a href="#/gara/${esc(r.gara_id)}">${esc(r.nome_gara)}</a>${tipoPistaTag(r.tipo)}</span></td>
       <td>${badgeMult(mult, r.tipo)}</td>
       <td style="text-align:right">${esc(r.km || '—')}</td>
       <td style="text-align:right">${esc(r.media || '—')}</td>
@@ -14336,7 +14345,7 @@ async function _loadAtletaPcsExtra(atletaId, season, icsRisultati, athlete) {
     insertChrono(r.data, `g:${r.gara_id}`, `
       <td class="td-date">${fmtDateShort(r.data)}</td>
       <td class="td-pos ${pClass}">${r.posizione}°</td>
-      <td class="td-race"><span style="display:inline-flex;align-items:center;gap:5px">${countryFlagImg('it')}<a href="#/gara/${esc(r.gara_id)}">${esc(r.nome_gara)}</a></span></td>
+      <td class="td-race"><span style="display:inline-flex;align-items:center;gap:5px">${countryFlagImg('it')}<a href="#/gara/${esc(r.gara_id)}">${esc(r.nome_gara)}</a>${tipoPistaTag(r.tipo)}</span></td>
       <td>${badgeMult(r.moltiplicatore || 1, r.tipo)}</td>
       <td style="text-align:right">${esc(r.km || '—')}</td>
       <td style="text-align:right">${esc(r.media || '—')}</td>
@@ -14959,7 +14968,7 @@ async function renderTeam(team_id, opts = {}) {
         <td class="td-date">${fmtDateShort(r.data)}</td>
         <td class="td-pos ${posClass(r.posizione)}">${r.posizione}°</td>
         <td class="td-race">
-          <span style="display:inline-flex;align-items:center;gap:5px">${countryFlagImg('it')}<a href="#/gara/${esc(r.gara_id)}">${esc(r.nome_gara)}</a></span>
+          <span style="display:inline-flex;align-items:center;gap:5px">${countryFlagImg('it')}<a href="#/gara/${esc(r.gara_id)}">${esc(r.nome_gara)}</a>${tipoPistaTag(r.tipo)}</span>
           <div class="td-team-mobile"><a href="#/atleta/${esc(r.atleta_id)}" style="color:var(--text-secondary)">${atletaLabel}</a></div>
         </td>
         <td class="td-hide-mobile" style="font-family:var(--font-heading);font-weight:700">
@@ -17231,7 +17240,7 @@ async function renderGara(gara_id) {
   });
   setPage(`
     <div class="race-header">
-      <div class="race-name-display">${esc(name)}</div>
+      <div class="race-name-display">${esc(name)}${tipoPistaTag(tipo)}</div>
       <div class="race-meta-row">
         <span>${fmtDate(data)}</span>
         <span class="race-meta-sep">|</span>
