@@ -818,18 +818,43 @@ async function _buildGaraAiCaption(id, cal, resultsRaw) {
     distacco: r.posizione === 1 ? null : (r.tempo || null),
   }));
 
-  let altri_risultati_stagionali_vincitore = [];
+  // Conteggio ufficiale vittorie/podi stagionali (stessa fonte usata dalla
+  // narrazione a template, _ogSeasonTally) — include QUESTA gara. Passato
+  // esplicito a Claude perché altrimenti tende a contare solo le gare che
+  // gli passiamo come esempio (poche, per non sovraccaricare il prompt) e
+  // sottostima vistosamente il totale reale (es. "prima vittoria" per un
+  // atleta che ne ha già 11 in stagione).
+  let stagione_vincitore = null;
+  let vittorie_precedenti_vincitore = [];
+  let altri_piazzamenti_rilevanti_vincitore = [];
   if (winner?.atleta_id) {
-    altri_risultati_stagionali_vincitore = (resultsRaw || [])
-      .filter(r => r.atleta_id === winner.atleta_id && r.gara_id !== id && (r.data || '') <= raceDate && Number(r.posizione) <= 10)
+    const tally = _ogSeasonTally(resultsRaw || [], winner.atleta_id, winner.genere, raceDate);
+    stagione_vincitore = { vittorie_totali_stagione_QUESTA_INCLUSA: tally.wins, podi_totali_stagione_QUESTO_INCLUSO: tally.podiums };
+    vittorie_precedenti_vincitore = (resultsRaw || [])
+      .filter(r => r.atleta_id === winner.atleta_id && r.gara_id !== id && Number(r.posizione) === 1 && (r.data || '') <= raceDate)
       .sort((a, b) => (a.data < b.data ? 1 : -1))
-      .slice(0, 4)
+      .map(r => `${r.nome_gara || r.gara_id}${r.data ? ' (' + r.data + ')' : ''}`);
+    altri_piazzamenti_rilevanti_vincitore = (resultsRaw || [])
+      .filter(r => r.atleta_id === winner.atleta_id && r.gara_id !== id && (r.data || '') <= raceDate && Number(r.posizione) >= 2 && Number(r.posizione) <= 10)
+      .sort((a, b) => (a.data < b.data ? 1 : -1))
+      .slice(0, 5)
       .map(r => `${r.posizione}° a "${r.nome_gara || r.gara_id}"${r.data ? ' (' + r.data + ')' : ''}`);
   }
   const compagni_di_squadra_a_podio = winner
     ? results.filter(r => r.posizione > 1 && r.posizione <= 3 && r.team_id === winner.team_id)
         .map(r => `${r.posizione}° ${r.cognome} ${r.nome}`)
     : [];
+
+  // Stesso conteggio ufficiale, ma per i risultati "a squadre" del team del
+  // vincitore (podi/vittorie ottenuti dai propri corridori in stagione,
+  // stessa fonte del profilo team) — utile per un accenno al buon momento
+  // del club, non solo dell'atleta.
+  let stagione_team_del_vincitore = null;
+  if (winner?.team_id) {
+    const teamWins = (resultsRaw || []).filter(r => r.team_id === winner.team_id && r.genere === winner.genere && (r.data || '') <= raceDate && Number(r.posizione) === 1).length;
+    const teamPodiums = (resultsRaw || []).filter(r => r.team_id === winner.team_id && r.genere === winner.genere && (r.data || '') <= raceDate && Number(r.posizione) >= 1 && Number(r.posizione) <= 3).length;
+    stagione_team_del_vincitore = { vittorie_totali_stagione_squadra_QUESTA_INCLUSA: teamWins, podi_totali_stagione_squadra_QUESTO_INCLUSO: teamPodiums };
+  }
 
   const dataForPrompt = {
     gara: raceName,
@@ -842,7 +867,10 @@ async function _buildGaraAiCaption(id, cal, resultsRaw) {
     podio,
     team_del_vincitore: winner?.team || '',
     compagni_di_squadra_a_podio,
-    altri_risultati_stagionali_vincitore,
+    stagione_vincitore,
+    vittorie_precedenti_vincitore,
+    altri_piazzamenti_rilevanti_vincitore,
+    stagione_team_del_vincitore,
   };
 
   try {
@@ -859,7 +887,11 @@ Struttura richiesta:
 3. Una riga vuota, poi "📊 Il Podio" seguito da un elenco puntato (emoji numeriche 1️⃣2️⃣3️⃣ ecc.) di posizione, nome, team e distacco.
 4. Una riga vuota, poi 8-10 hashtag pertinenti (nomi propri, nome gara senza spazi, #CiclismoDilettanti, #ItaliaCyclingStats ecc.).
 
-Regole importanti: NON inventare dettagli non forniti nei dati (niente percorso, meteo, tattiche, aneddoti inventati). Se non ci sono distacchi non menzionarli. Se "compagni_di_squadra_a_podio" è vuoto non parlare di doppiette di squadra. Se "altri_risultati_stagionali_vincitore" è vuoto non citare altre gare della stagione; se presente puoi citarne 1-2 per dare contesto alla stagione del vincitore, come fa un giornalista che riassume l'annata. Scrivi in italiano corretto e scorrevole, senza markdown (no **, no #titoli).
+Regole importanti sui dati stagionali del vincitore (LEGGI CON ATTENZIONE, è la causa più comune di errore): il campo "stagione_vincitore.vittorie_totali_stagione_QUESTA_INCLUSA" è il conteggio UFFICIALE e definitivo delle vittorie in stagione, QUESTA gara già inclusa — è quello il numero da usare se scrivi "Nª vittoria stagionale" o "sale a quota N successi", MAI dedurre il numero dalla sola lista "vittorie_precedenti_vincitore" (che può essere accorciata) né presumere che sia la prima vittoria se il campo dice N>1. Se vittorie_totali_stagione_QUESTA_INCLUSA è 1, è davvero la prima vittoria stagionale. "vittorie_precedenti_vincitore" elenca (se presenti) i nomi delle gare vinte prima di questa: puoi citarne 1-2 per dare colore, ma il numero totale di vittorie menzionato nel testo deve sempre corrispondere al conteggio ufficiale sopra. "altri_piazzamenti_rilevanti_vincitore" sono piazzamenti (non vittorie) di contorno, citane al massimo 1 se utile.
+
+Stesso principio per "stagione_team_del_vincitore": se utile, puoi accennare al buon momento stagionale del team (es. "Nª vittoria stagionale per il team" o "N° podio stagionale"), usando SOLO quei numeri ufficiali, senza inventare classifiche o piazzamenti del team non forniti. Non è obbligatorio menzionarlo se non aggiunge nulla al racconto.
+
+Altre regole: NON inventare dettagli non forniti nei dati (niente percorso, meteo, tattiche, aneddoti inventati). Se non ci sono distacchi non menzionarli. Se "compagni_di_squadra_a_podio" è vuoto non parlare di doppiette di squadra. Scrivi in italiano corretto e scorrevole, senza markdown (no **, no #titoli).
 
 Dati della gara (JSON):
 ${JSON.stringify(dataForPrompt, null, 2)}`
