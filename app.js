@@ -663,19 +663,6 @@ function updateNavLoginState() {
     if (drawerSectionMsg) drawerSectionMsg.style.display = '';
     startNotifPolling();
     startMsgPolling();
-    // Classifica Pista: ancora in lavorazione, visibile solo all'admin —
-    // stesso filtro già applicato ai dati in loadAll() (_mergeManualIntoRaw),
-    // qui nascondiamo anche la voce di menu così un utente normale non ci
-    // finisce per caso su una pagina che per lui sarebbe comunque vuota.
-    const navClassPista = document.getElementById('nav-class-pista');
-    const drawerClassPista = document.getElementById('drawer-class-pista');
-    if (user.role === 'admin') {
-      if (navClassPista) navClassPista.style.display = '';
-      if (drawerClassPista) drawerClassPista.style.display = '';
-    } else {
-      if (navClassPista) navClassPista.style.display = 'none';
-      if (drawerClassPista) drawerClassPista.style.display = 'none';
-    }
   } else {
     if (link)       { link.textContent = 'Login'; link.href = '#/login'; }
     if (drawerLink) { drawerLink.textContent = 'Login / Profilo'; drawerLink.href = '#/login'; }
@@ -685,8 +672,6 @@ function updateNavLoginState() {
     if (drawerMsg) drawerMsg.style.display = 'none';
     const drawerSectionMsg = document.getElementById('drawer-section-msg');
     if (drawerSectionMsg) drawerSectionMsg.style.display = 'none';
-    document.getElementById('nav-class-pista')?.style.setProperty('display', 'none');
-    document.getElementById('drawer-class-pista')?.style.setProperty('display', 'none');
     stopNotifPolling();
     stopMsgPolling();
   }
@@ -3843,43 +3828,11 @@ function route() {
     if (activeHub) applyHubFilters(activeHub);
     return renderClassifica();
   }
-  // Classifica Pista (velodromo) — stessa pagina/componente della classifica
-  // strada, riusa renderClassifica() con rankDisciplina='pista' a filtrare i
-  // dati. Ancora admin-only (vedi updateNavLoginState/_mergeManualIntoRaw):
-  // per un utente normale i risultati tipo='pista' non arrivano nemmeno nei
-  // dati caricati, quindi questa pagina risulterebbe comunque vuota.
-  const _mClassPistaCatViewSort = match('/classifica-pista/:cat/:view/:sort');
-  if (_mClassPistaCatViewSort) {
-    rankDisciplina = 'pista';
-    rankCat    = decodeURIComponent(_mClassPistaCatViewSort[1]);
-    rankGender = rankCat.endsWith('_F') ? 'F' : 'M';
-    rankView   = _mClassPistaCatViewSort[2] || 'atleti';
-    rankSort   = _mClassPistaCatViewSort[3] === 'vittorie' ? 'vittorie' : 'punti';
-    rankFilter = ''; rankRegion = ''; rankMonth = '';
-    return renderClassifica();
-  }
-  const _mClassPistaCatView = match('/classifica-pista/:cat/:view');
-  if (_mClassPistaCatView) {
-    rankDisciplina = 'pista';
-    rankCat    = decodeURIComponent(_mClassPistaCatView[1]);
-    rankGender = rankCat.endsWith('_F') ? 'F' : 'M';
-    rankView   = _mClassPistaCatView[2] || 'atleti';
-    rankFilter = ''; rankRegion = ''; rankMonth = ''; rankSort = 'punti';
-    return renderClassifica();
-  }
-  const _mClassPistaCat = match('/classifica-pista/:cat');
-  if (_mClassPistaCat) {
-    rankDisciplina = 'pista';
-    rankCat    = decodeURIComponent(_mClassPistaCat[1]);
-    rankGender = rankCat.endsWith('_F') ? 'F' : 'M';
-    rankView   = 'atleti';
-    rankFilter = ''; rankRegion = ''; rankMonth = ''; rankSort = 'punti';
-    return renderClassifica();
-  }
-  if (match('/classifica-pista')) {
-    rankDisciplina = 'pista';
-    return renderClassifica();
-  }
+  // Classifica Pista (velodromo): progetto messo in pausa (25/08) — troppo
+  // dispersivo/incompleto per andare online ora. rankDisciplina resta a
+  // 'strada' di default, il ramo 'pista' in renderClassifica/updateRankTable
+  // è codice morto finché non riprendiamo il progetto (nessuna rotta punta
+  // più a #/classifica-pista, nessun link nel menu).
   if (match('/albo')) return renderAlboDoro();
   if (match('/atleti')) return renderAtletiList();
   if (match('/team')) return renderTeamList();
@@ -3984,7 +3937,7 @@ function updateNavActive(hash) {
 
   const seg = (hash.replace(/^#\//, '').split('/')[0] || '');
 
-  const CLASS_SEGS   = ['classifica', 'classifica-pista', 'albo', 'atleti', 'team', 'atleta', 'gare', 'gara'];
+  const CLASS_SEGS   = ['classifica', 'albo', 'atleti', 'team', 'atleta', 'gare', 'gara'];
   const ANALISI_SEGS = ['statistiche', 'comparatore'];
   const ACCOUNT_SEGS = ['login', 'register', 'profilo'];
 
@@ -3997,7 +3950,6 @@ function updateNavActive(hash) {
   } else if (CLASS_SEGS.includes(seg)) {
     document.getElementById('nav-class-btn')?.classList.add('active');
     document.getElementById('nav-class')?.classList.toggle('active',  seg === 'classifica');
-    document.getElementById('nav-class-pista')?.classList.toggle('active', seg === 'classifica-pista');
     document.getElementById('nav-albo')?.classList.toggle('active',   seg === 'albo');
     document.getElementById('nav-atleti')?.classList.toggle('active', seg === 'atleti');
     document.getElementById('nav-team')?.classList.toggle('active',   seg === 'team');
