@@ -67,6 +67,18 @@ const CAT_LABELS = {
   ELI_M: 'Elite-Under23', ELI_F: 'Elite-Under23',
 };
 
+// Etichetta leggibile per evento, usata nel nome_gara mostrato sul sito
+// (invece del testo grezzo/abbreviato del tab Members). Le prove a squadre
+// contengono sempre "A Squadre": attiva la vista raggruppata per team già
+// usata per il cronometro a squadre (vedi renderGara, isSquadre in app.js).
+const EVENTO_LABELS = {
+  TEMPO_RACE: 'Tempo Race', CORSA_A_PUNTI: 'Corsa a Punti', ELIMINAZIONE: 'Eliminazione',
+  SCRATCH: 'Scratch', VELOCITA: 'Velocità', INSEGUIMENTO: 'Inseguimento',
+  KEIRIN: 'Keirin', OMNIUM: 'Omnium', MADISON: 'Madison/Americana', KM: 'Km da Fermo',
+  VELOCITA_SQUADRE: 'Velocità a Squadre', INSEGUIMENTO_SQUADRE: 'Inseguimento a Squadre',
+  SQUADRE: 'Prova a Squadre', CLASSIFICA_CATEGORIA: 'Classifica Finale',
+};
+
 const sleep = ms => new Promise(r => setTimeout(r, ms));
 
 function decodeEntities(s) {
@@ -144,7 +156,21 @@ function parseDetailPage(html) {
 
   const tabs = tabMarkers.map((t, i) => {
     const endIdx = i + 1 < tabMarkers.length ? tabMarkers[i + 1].idx : Infinity;
-    const myRows = rows.filter(r => r.idx > t.idx && r.idx < endIdx);
+    // Le prove a SQUADRE (Vel./Ins. Squadre) ripetono lo STESSO nome 3-4
+    // volte di fila per la stessa posizione (un problema del dato sorgente
+    // di Members, verificato sull'HTML grezzo — non un problema di questo
+    // regex): senza deduplicare, la rinumerazione per categoria più sotto
+    // conterebbe ogni ripetizione come un finisher diverso, spostando tutti
+    // quelli dopo. Tiene solo la prima occorrenza di ogni (posizione, nome,
+    // team) consecutiva.
+    const rawRows = rows.filter(r => r.idx > t.idx && r.idx < endIdx);
+    const myRows = [];
+    let lastKey = null;
+    for (const r of rawRows) {
+      const key = `${r.posizione}|${r.nomeCode}|${r.team}`;
+      if (key !== lastKey) myRows.push(r);
+      lastKey = key;
+    }
     return { label: t.label, rows: myRows };
   });
   return { header, tabs };
@@ -179,25 +205,33 @@ function categoriaFromCodeOrLabel(code, tabLabel) {
   return null;
 }
 
-// Prove a SQUADRE (Vel./Ins. Squadre, Team Sprint/Pursuit): verificato
-// sull'HTML grezzo di Members che il dato sorgente ripete lo stesso nome
-// 3-4 volte invece di elencare i reali componenti della squadra — non
-// affidabile né per punteggio individuale né per squadra. Sentinel diverso
-// da "sconosciuto" (null): va escluso SILENZIOSAMENTE, non in revisione.
-const ESCLUSA_SQUADRE = 'ESCLUSA_SQUADRE';
-
+// Prove a SQUADRE (Vel./Ins. Squadre, Team Sprint/Pursuit): Members elenca
+// per ogni team UN SOLO nome reale (ripetuto — vedi dedup sopra in
+// parseDetailPage), non l'intero equipaggio. Non le scartiamo più: quel
+// nome è comunque un vero corridore del team, scritto come riga normale
+// (stessa logica sicura/da rivedere di ogni altro evento) sotto un
+// gara_id/nome_gara che contiene "A Squadre" — attiva la vista raggruppata
+// per team già esistente sul sito (vedi renderGara, isSquadre) usata per il
+// cronometro a squadre: l'admin può poi aggiungere gli altri componenti a
+// mano con "aggiungi corridore alla stessa posizione", come già fa per
+// quelle gare.
 function eventoFromLabel(label) {
   const raw = label.trim();
   const l = raw.toLowerCase();
 
-  if (/squadr/.test(l)) return ESCLUSA_SQUADRE;
+  if (/squadr/.test(l)) {
+    if (/veloc|sprint/.test(l)) return 'VELOCITA_SQUADRE';
+    if (/ins|pursuit/.test(l)) return 'INSEGUIMENTO_SQUADRE';
+    return 'SQUADRE'; // squadre di tipo non specificato nell'etichetta
+  }
 
   // Sigle UCI a 2 lettere (Campionati Italiani/internazionali): genere+età
   // (ME/MJ/WE/WJ) + evento (PR/SP/EL/OM/K/SC/TS/TT/TP/IP/MD).
   const uciM = raw.match(/^(ME|MJ|WE|WJ)\s+(PR|SP|EL|OM|K|SC|TS|TT|TP|IP|MD)$/i);
   if (uciM) {
     const ev = uciM[2].toUpperCase();
-    if (ev === 'TS' || ev === 'TP') return ESCLUSA_SQUADRE;
+    if (ev === 'TS') return 'VELOCITA_SQUADRE';
+    if (ev === 'TP') return 'INSEGUIMENTO_SQUADRE';
     return { PR: 'CORSA_A_PUNTI', SP: 'VELOCITA', EL: 'ELIMINAZIONE', OM: 'OMNIUM', K: 'KEIRIN', SC: 'SCRATCH', TT: 'KM', IP: 'INSEGUIMENTO', MD: 'MADISON' }[ev] || null;
   }
   // Stessa cosa in inglese esteso ("MEN ELITE ELIMINATION", "WOMEN U23 POINTS RACE"...)
@@ -398,10 +432,6 @@ async function login() {
     for (const tab of tabs) {
       const evento = eventoFromLabel(tab.label);
 
-      // Prove a squadre: escluse SEMPRE e SILENZIOSAMENTE (vedi nota sopra
-      // ESCLUSA_SQUADRE) — mai in revisione, a prescindere dalle categorie.
-      if (evento === ESCLUSA_SQUADRE) continue;
-
       // Categoria/genere si risolve per RIGA (codice dopo il trattino nel
       // nome, con fallback sull'etichetta tab per REG) indipendentemente dal
       // tipo di prova — così un tab con evento non riconosciuto ma SOLO
@@ -486,7 +516,7 @@ async function login() {
 
           const body = {
             posizione: row.posizione, cognome: row.cognome, nome: row.nome, team: row.team,
-            nome_gara: `${header.nome || c.nome} — ${tab.label}`, data: dataISO,
+            nome_gara: `${header.nome || c.nome} — ${EVENTO_LABELS[evento] || tab.label}`, data: dataISO,
             categoria: CAT_LABELS[cat] || cat, genere: row.genere,
             tipo: 'pista', campionato_regionale: false, campionato_italiano: false, regione,
           };
