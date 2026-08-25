@@ -1680,7 +1680,17 @@ async function loadAll() {
   // l'atleta/team risulterebbe con il risultato duplicato. Il confronto è su
   // (atleta_id, data) e non sul gara_id esatto proprio per questo motivo.
   const _realManualKeys = new Set((resultsRaw || []).filter(r => r.atleta_id && r.data).map(r => `${r.atleta_id}|${r.data}`));
-  const activeManualResults = (manualResults || []).filter(r => !(r.atleta_id && r.data && _realManualKeys.has(`${r.atleta_id}|${r.data}`)));
+  let activeManualResults = (manualResults || []).filter(r => !(r.atleta_id && r.data && _realManualKeys.has(`${r.atleta_id}|${r.data}`)));
+
+  // tipo:'pista' (pista vera/velodromo) è ancora in lavorazione (classificatore
+  // eventi/import incompleto) — visibile ovunque (risultati, profili, future
+  // classifiche) SOLO per l'admin finché non è a posto, ma il database
+  // continua a popolarsi normalmente per tutti: filtro solo qui, un unico
+  // punto, non sul lato server, così quando sarà pronta basta togliere
+  // questo blocco per renderla pubblica senza toccare altro.
+  if (authUser()?.role !== 'admin') {
+    activeManualResults = activeManualResults.filter(r => r.tipo !== 'pista');
+  }
 
   // I risultati manuali vanno uniti PRIMA di processLoadedData: quella funzione
   // calcola anche il rank_dopo_gara (classifica) scorrendo resultsRaw una volta
