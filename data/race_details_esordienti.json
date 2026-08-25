@@ -3358,5 +3358,19 @@
     "location_str": "VIALE RIMEMBRANZA N.8, SAN MARTINO AL TAGLIAMENTO, Italia",
     "lat": 46.01892,
     "lng": 12.86383
+  },
+  "2_TROFEO_MASTANTUONI_SPORT_CITTA_DI_ROTONDI_GP_CICLISMO_OGGI_E_DOMANI_2026-09-27": {
+    "raceid": "180269",
+    "fci_url": "https://www.federciclismo.it/ricerca-gare/dettaglio-gara/?raceid=180269&site=strada_it",
+    "info": [
+      "2° TROFEO MASTANTUONI SPORT \"CITTÀ DI ROTONDI\" - \"GP CICLISMO OGGI E DOMANI\" Strada 2° TROFEO MASTANTUONI SPORT \"CITTÀ DI ROTONDI\" - \"GP CICLISMO OGGI E DOMANI\" ID Gara: 180269 | <br><b>Data:</b> 27/09/2026 INFORMAZIONI GENERALI Localita: ROTONDI <br><b>Provincia:</b> AV <br><b>Categoria:</b> (1.30) Esordienti 1°/2° anno <br><b>Categorie Ammesse:</b> Esordienti 1° e 2° anno (M/F) <br><b>Categoria Geografica:</b> Regionale <br><b>Specifica Gara:</b> Challenge Crescenzo D’Amore 2026 Giornata Azzurra <br><b>Tipo di Gara:</b> Criterium <br><b>Tipo di Programma:</b> STRADA REGIONALE <br><b>Direttore di Corsa:</b> GIORDANO ANTONIO <br><b>Approvazione:</b> In fase di approvazione ORGANIZZATORE <br><b>Nome:</b> TEAM CESARO ASSOCIAZIONE SPORTIVA DILETTANTISTICA <br><b>Indirizzo:</b> VIA VINCIGUERRA 20 <br><b>CAP:</b> 81041 Citta: BELLONA <br><b>Provincia:</b> CE <br><b>Telefono:</b> 3277313921 <br><b>Email:</b> CESAROAURELIO@HOTMAIL.IT ISCRIZIONI <br><b>Luogo:</b> KSPORT <br><b>Indirizzo:</b> , , <br><b>Telefono:</b> 3277313921 <br><b>Email:</b> cesaroaurelio@hotmail.it <br><b>Iscrizioni Dal - Al:</b> 12/09/2026 - RITROVO PROVE 1 - 2° TROFEO MASTANTUONI SPORT \"CITTÀ DI ROTONDI\" - \"GP CICLISMO OGGI E DOMANI\" <br><b>Tipo:</b> Corsa singola <br><b>Prova:</b> 1 <br><b>Data:</b> 27/09/2026 <br><b>Descrizione:</b> Partenza da Corso Girolamo del Balzo, SX via Benedetto Croce, DX via Giuseppe Di Vittorio, DX via Antonio Gramsci, SX Corso Girolamo del Balzo, DX via Liberta’, via Circumvallazione Nord, via San Lorenzo, Via F. De Santis, DX via Luciano Veccariello, SX via Giacomo Matteotti, DX Corso Girolamo del Balzo ARRIVO Circuito da 3,700 Km da ripetersi 8 volte <br><b>Luogo Ritrovo:</b> Rotondi <br><b>Indirizzo Ritrovo:</b> Piazza Vittorio Emanuele <br><b>Orario Ritrovo:</b> 07:30 <br><b>Luogo Partenza:</b> Corso Girolamo del Balzo - Rotondi <br><b>Orario Partenza:</b> 09:30 <br><b>Luogo Verifica:</b> Piazza Vittorio Emanuele - Rotondi dalle ore 7:30 alle 9:00 <br><b>Punto Incontro DS:</b> Piazza Vittorio Emanuele Ore 8:30 <br><b>Lunghezza KM:</b> 29,600 Servizi: Prova Challenge Crescenzo D'Amore 2026 Prova GP Ciclismo Oggi e Domani Giornata Azzurra AGGIUNGI QUESTA GARA AL CALENDARIO"
+    ],
+    "luogo_ritrovo": "Rotondi",
+    "indirizzo_ritrovo": "Piazza Vittorio Emanuele",
+    "orario_partenza": "09:30",
+    "km": "29,600 Servizi: Prova Challenge Crescenzo D'Amore 2026 Prova GP Ciclismo Oggi e Domani Giornata Azzurra AGGIUNGI QUESTA GARA AL CALENDARIO Home / Ricerca Gare / Dettaglio Gara / Dettaglio Gara 2° TROFEO MASTANTUONI SPORT \"CITTÀ DI ROTONDI\" - \"GP CICLISMO OGGI E DOMANI\" Strada 2° TROFEO MASTANTUONI SPORT \"CITTÀ DI ROTONDI\" - \"GP CICLISMO OGGI E DOMANI\" ID Gara: 180269 | Data: 27/09/2026 INFORMAZIONI GENERALI Localita: ROTONDI",
+    "location_str": "Piazza Vittorio Emanuele, Rotondi, Italia",
+    "lat": null,
+    "lng": null
   }
 }

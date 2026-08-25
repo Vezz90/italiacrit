@@ -17254,5 +17254,29 @@
     "regione": "FRIULI VENEZIA GIULIA",
     "categoria": "Donne Open",
     "luogo": "SAN DANIELE DEL FRIULI"
+  },
+  {
+    "id": "2_TROFEO_MASTANTUONI_SPORT_CITTA_DI_ROTONDI_GP_CICLISMO_OGGI_E_DOMANI_2026-09-27",
+    "nome": "2° TROFEO MASTANTUONI SPORT \"CITTÀ DI ROTONDI\" - \"GP CICLISMO OGGI E DOMANI\"",
+    "data": "2026-09-27",
+    "tipo": "regionale",
+    "moltiplicatore": 1,
+    "campionato_regionale": false,
+    "campionato_italiano": false,
+    "regione": "CAMPANIA",
+    "categoria": "Esordienti 1°/2° anno",
+    "luogo": "ROTONDI"
+  },
+  {
+    "id": "5_COPPA_ANTONIO_ZANON_DA_1_MEMORIAL_ANTONIO_ZANON_2026-09-27",
+    "nome": "5 COPPA ANTONIO ZANON - DA 1. Memorial Antonio Zanon",
+    "data": "2026-09-27",
+    "tipo": "regionale",
+    "moltiplicatore": 1,
+    "campionato_regionale": false,
+    "campionato_italiano": false,
+    "regione": "BOLZANO",
+    "categoria": "Donne Allieve",
+    "luogo": "BOLZANO/BOZEN"
   }
 ]
