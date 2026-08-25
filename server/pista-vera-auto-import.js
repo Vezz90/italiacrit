@@ -487,9 +487,23 @@ async function login() {
         byCat.get(key).push(row);
       }
 
+      // Rinumera SOLO se il tab mescola davvero più categorie diverse (es.
+      // un tab "Donne Esordienti/Allieve" unico, o un anno esordienti che si
+      // risolve su ES1 per alcuni e ES2 per altri): in quel caso la
+      // posizione grezza di Members è quella di un campo combinato e va
+      // ricalcolata per categoria. Se il tab ha UNA SOLA categoria reale, la
+      // posizione grezza va invece PRESERVATA così com'è — es. "Corsa Punti
+      // Under 23" che su Members parte da #3 (altri corridori di categorie
+      // diverse occupano le posizioni 1-2 nella gara reale): rinumerare da 1
+      // avrebbe dato ai primi tre U23 punteggio da 1°/2°/3° invece che da
+      // 3°/4°/5°, un bug reale trovato confrontando col sito dal vivo.
+      const realCatCount = [...byCat.keys()].filter(k => k !== '__IGNOTA__').length;
+      const shouldRenumber = realCatCount > 1;
+
       for (const [cat, catRows] of byCat) {
         catRows.sort((a, b) => a.posizioneOriginale - b.posizioneOriginale);
-        catRows.forEach((row, i) => { row.posizione = i + 1; });
+        if (shouldRenumber) catRows.forEach((row, i) => { row.posizione = i + 1; });
+        else catRows.forEach((row) => { row.posizione = row.posizioneOriginale; });
 
         if (cat === '__IGNOTA__') {
           for (const row of catRows) {
