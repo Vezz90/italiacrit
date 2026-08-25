@@ -672,7 +672,24 @@ async function upsertResults(sb, rows) {
       const phantoms = await getPhantomAthletes(sb, SEASON, fciAll);
       if (phantoms.has(SINGLE_ID)) athMap.set(SINGLE_ID, phantoms.get(SINGLE_ID));
     }
-    if (!athMap.size) { console.error(`Atleta ${SINGLE_ID} non trovato né nei ranking né tra i fantasma`); process.exit(1); }
+    if (!athMap.size) {
+      // Non nei ranking FCI né fantasma — prova nel roster (extra_roster.json
+      // + manual-athletes live), come nel giro normale (vedi rosterPcsSlugs sotto).
+      const addRoster = (obj) => {
+        for (const bucket of Object.values(obj || {})) {
+          const a = (bucket.atleti || []).find(x => x.atleta_id === SINGLE_ID && x.pcs_slug);
+          if (a) return { atleta_id: a.atleta_id, cognome: a.cognome || a.atleta_id, nome: a.nome || '', pcs_slug: a.pcs_slug };
+        }
+        return null;
+      };
+      let found = null;
+      try { found = addRoster(JSON.parse(fs.readFileSync(path.join(__dirname, '..', 'data', 'extra_roster.json'), 'utf8'))); } catch {}
+      for (const url of (found ? [] : ['https://italiacrit.onrender.com/api/data/pcs-extra-roster', 'https://italiacrit.onrender.com/api/data/manual-athletes'])) {
+        try { const r = await fetch(url); if (r.ok) { found = addRoster(await r.json()); if (found) break; } } catch {}
+      }
+      if (found) athMap.set(SINGLE_ID, found);
+    }
+    if (!athMap.size) { console.error(`Atleta ${SINGLE_ID} non trovato né nei ranking né tra i fantasma né nel roster`); process.exit(1); }
   } else if (IDS_FILE) {
     // Lista mirata (es. profili trovati a mano e confermati via pcs-link-found.py)
     const entries = JSON.parse(fs.readFileSync(IDS_FILE, 'utf8'));
@@ -699,6 +716,37 @@ async function upsertResults(sb, rows) {
     }
   }
 
+  // Atleti SOLO da roster (extra_roster.json + manual-athletes live): mai
+  // comparsi in una gara FCI né come "fantasma" in una gara del circuito
+  // (es. corridori di team esteri/development tesserati a un club italiano
+  // ma che corrono all'estero) — non venivano MAI inclusi nel giro, pur
+  // avendo spesso già il pcs_slug risolto quando il roster è stato caricato.
+  // Bug reale osservato: MAGAGNOTTI_ALESSIO, slug "alessio-magagnotti" già
+  // noto in extra_roster.json, zero righe in pcs_results — mai processato.
+  const rosterPcsSlugs = new Map(); // atleta_id -> pcs_slug (per saltare la ricerca per nome sotto)
+  {
+    const rosterSlugs = new Map(); // atleta_id -> {cognome, nome, pcs_slug}
+    const addRoster = (obj) => {
+      for (const bucket of Object.values(obj || {})) {
+        for (const a of (bucket.atleti || [])) {
+          if (a.atleta_id && a.pcs_slug && !rosterSlugs.has(a.atleta_id)) {
+            rosterSlugs.set(a.atleta_id, { atleta_id: a.atleta_id, cognome: a.cognome || a.atleta_id, nome: a.nome || '', pcs_slug: a.pcs_slug });
+          }
+        }
+      }
+    };
+    try { addRoster(JSON.parse(fs.readFileSync(path.join(__dirname, '..', 'data', 'extra_roster.json'), 'utf8'))); } catch {}
+    for (const url of ['https://italiacrit.onrender.com/api/data/pcs-extra-roster', 'https://italiacrit.onrender.com/api/data/manual-athletes']) {
+      try { const r = await fetch(url); if (r.ok) addRoster(await r.json()); } catch {}
+    }
+    let addedRoster = 0;
+    for (const [id, a] of rosterSlugs) {
+      if (!athMap.has(id)) { athMap.set(id, a); addedRoster++; }
+      rosterPcsSlugs.set(id, a.pcs_slug);
+    }
+    if (addedRoster) console.log(`+ ${addedRoster} atleti solo-roster con pcs_slug già noto (mai in una gara FCI)`);
+  }
+
   let athletes = [...athMap.values()];
 
   // 2. La foto (una volta salvata) non serve ricontrollarla: --skip-complete
@@ -711,6 +759,10 @@ async function upsertResults(sb, rows) {
   const withPhoto   = FORCE ? new Set() : await getExistingPhotoIds(sb);
   const withResults = (FORCE || !SKIP_COMPLETE) ? new Set() : await getAthletesWithResults(sb, SEASON);
   const savedSlugs   = await getSavedSlugs(sb);
+  for (const [id, slug] of rosterPcsSlugs) if (!savedSlugs.has(id)) savedSlugs.set(id, slug);
+  // Copre anche --atleta-id=X quando l'unico modo per trovarlo è stato il
+  // roster (vedi ramo SINGLE_ID sopra): l'oggetto atleta porta già pcs_slug.
+  for (const a of athletes) if (a.pcs_slug && !savedSlugs.has(a.atleta_id)) savedSlugs.set(a.atleta_id, a.pcs_slug);
 
   let toProcess = idsFileSlugs
     ? athletes // --ids-file: sono conferme manuali, si riprocessano sempre
