@@ -4202,6 +4202,25 @@ app.get('/api/pcs-results/gara-estera', async (req, res) => {
   const season = parseInt(req.query.season) || new Date().getFullYear();
   if (!raceSlug) return res.status(400).json({ error: 'race_slug mancante' });
   try {
+    // Elenco arrivo COMPLETO (tutti i finisher, non solo i nostri atleti) —
+    // vedi server/pcs-race-fullresults-import.js. Ancora in backfill: per le
+    // gare non ancora coperte ripiega sulla vecchia fonte (solo i nostri
+    // atleti coinvolti) invece di restituire una lista vuota.
+    const { data: full, error: eFull } = await supabase
+      .from('pcs_race_full_results')
+      .select('posizione, atleta_id, nome_completo, team, country, distacco')
+      .eq('pcs_race_slug', raceSlug)
+      .eq('season', season)
+      .order('posizione', { ascending: true, nullsFirst: false })
+      .limit(500);
+    if (eFull) throw eFull;
+    if (full && full.length) {
+      return res.json(full.map(r => ({
+        posizione: r.posizione, atleta_id: r.atleta_id, nome: r.nome_completo,
+        team: r.team, country: r.country, distacco: r.distacco,
+      })));
+    }
+
     const { data, error } = await supabase
       .from('pcs_results')
       .select('atleta_id, gara_name, data, posizione, distacco, country, pcs_url')
@@ -4210,7 +4229,7 @@ app.get('/api/pcs-results/gara-estera', async (req, res) => {
       .order('posizione', { ascending: true, nullsFirst: false })
       .limit(500);
     if (error) throw error;
-    res.json(data || []);
+    res.json((data || []).map(r => ({ ...r, nome: null, team: null })));
   } catch(e) { res.status(500).json({ error: e.message }); }
 });
 

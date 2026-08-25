@@ -14277,16 +14277,23 @@ async function showPcsRaceModal(raceSlug, season, raceName) {
         </tr></thead>
         <tbody>
           ${rows.map(r => {
-            const a = globalData?.athletes?.[r.atleta_id];
-            const label = a ? `${esc(a.cognome)} ${esc(a.nome)}` : esc(r.atleta_id);
+            // Corridore nostro (profilo noto): nome/team dal profilo, link
+            // cliccabile. Corridore mai tracciato (elenco arrivo completo,
+            // vedi pcs-race-fullresults-import.js): nome/team come testo
+            // grezzo dalla gara, niente link (nessun profilo da mostrare).
+            const a = r.atleta_id ? globalData?.athletes?.[r.atleta_id] : null;
+            const rawLabel = esc((a ? `${a.cognome} ${a.nome}` : r.nome) || r.atleta_id || '—');
+            const nameHtml = (a || r.atleta_id)
+              ? `<a href="#/atleta/${esc(r.atleta_id)}" onclick="document.getElementById('pcs-race-modal')?.remove()" style="color:var(--text-primary);font-weight:600">${rawLabel}</a>`
+              : `<span style="color:var(--text-primary);font-weight:600">${rawLabel}</span>`;
             const teamId = a?.team_id;
-            const teamNome = a?.team_attuale || '';
+            const teamNome = a?.team_attuale || r.team || '';
             const teamHtml = teamId
               ? `<a href="#/team/${esc(teamId)}" onclick="document.getElementById('pcs-race-modal')?.remove()" style="color:var(--text-muted)">${esc(teamNome)}</a>`
               : `<span style="color:var(--text-muted)">${esc(teamNome || '—')}</span>`;
             return `<tr style="border-top:1px solid var(--border-subtle)">
               <td class="td-pos ${posClass(r.posizione)}" style="padding:6px">${r.posizione ? r.posizione + '°' : '—'}</td>
-              <td style="padding:6px"><a href="#/atleta/${esc(r.atleta_id)}" onclick="document.getElementById('pcs-race-modal')?.remove()" style="color:var(--text-primary);font-weight:600">${label}</a></td>
+              <td style="padding:6px">${nameHtml}</td>
               <td style="padding:6px;font-size:.8rem">${teamHtml}</td>
               <td style="padding:6px;color:var(--text-muted)">${esc(r.distacco || '—')}</td>
             </tr>`;
