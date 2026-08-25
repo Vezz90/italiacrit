@@ -13431,10 +13431,10 @@ async function renderAtleta(atleta_id, opts = {}) {
   for (const g of calendar) calMap[g.id] = g;
 
   const risultati = (_hasYearData ? (aSel.risultati || []) : []).slice().sort((x,y) => (y.data||'').localeCompare(x.data||''));
-  // Pista (velodromo) è una classifica a sé — stessa esclusione già fatta
-  // per punti_totali (vedi _patchAthleteTeamForManualRow): non deve
-  // mischiarsi con vittorie/podi/tabella "strada", ha una sezione propria
-  // più sotto (RISULTATI PISTA) invece di comparire nella tabella principale.
+  // Pista (velodromo) resta nella STESSA tabella cronologica di quelli
+  // strada (il badge "Pista" li distingue) — solo punti/podi/vittorie/media
+  // mostrati in alto ("ITALIA") sono calcolati escludendola, stessa
+  // esclusione già fatta per punti_totali (vedi _patchAthleteTeamForManualRow).
   const risultatiPista  = risultati.filter(r => r.tipo === 'pista');
   const risultatiStrada = risultati.filter(r => r.tipo !== 'pista');
 
@@ -13571,8 +13571,10 @@ async function renderAtleta(atleta_id, opts = {}) {
   const sparkHtml   = sparkPoints.length ? buildSparkline(sparkPoints, risultatiStrada.slice(0,20).reverse()) : '';
   const cumulHtml   = buildCumulChart(risultatiStrada);
 
-  const tableRows = _buildAtletaResultRows(risultatiStrada);
-  const tableRowsPista = risultatiPista.length ? _buildAtletaResultRows(risultatiPista) : '';
+  // Tabella unica cronologica (strada + pista insieme, il badge "Pista"
+  // basta a distinguerle) — solo punti/podi/vittorie/media mostrati sopra
+  // restano separati (calcolati da risultatiStrada, vedi sopra).
+  const tableRows = _buildAtletaResultRows(risultati);
 
   window._shareAtletaData = {_id:atleta_id,cognome:displayCognome,nome:displayNome,cat:catLabel(displayCategoria),team:displayTeam,punti:a.punti_totali,pos:globalPos,p1:p1,p2:p2,p3:p3,p4_10:pout,gare:top10,photo_url:atletaOv.photo_url?`${MEDIA_BASE}${atletaOv.photo_url}`:null};
 
@@ -13714,17 +13716,6 @@ async function renderAtleta(atleta_id, opts = {}) {
         <tbody id="atleta-results-tbody">${tableRows || '<tr><td colspan="7" class="empty-state">Nessun risultato</td></tr>'}</tbody>
       </table>
     </div>
-    ${risultatiPista.length ? `
-    <div class="section-header" style="margin-top:28px">
-      <span class="section-title">🚴 RISULTATI PISTA ${esc(selYear)}</span>
-      <span class="section-line"></span>
-    </div>
-      <table class="results-table atleta-results">
-        <thead><tr>
-          <th>DATA</th><th>POS</th><th>GARA</th><th>MOLT</th><th style="text-align:right">KM</th><th style="text-align:right">MEDIA</th><th>PTS</th>
-        </tr></thead>
-        <tbody>${tableRowsPista}</tbody>
-      </table>` : ''}
   `);
 
   // Inject bottone messaggio in modo async (lookup non blocca il render)
@@ -14905,9 +14896,10 @@ async function renderTeam(team_id, opts = {}) {
     teamViewCat = teamCats[0] || '';
   }
 
-  // tipo:'pista' (velodromo) è una classifica a sé, esclusa qui come già
-  // fatto per punti_totali/classifica strada — vedi nota analoga in renderAtleta.
-  const catRisultatiRaw = (t.risultati||[]).filter(r => r.tipo !== 'pista' && (getRankingFileCode(r) || r.categoria) === teamViewCat);
+  // tipo:'pista' (velodromo) resta nella stessa tabella risultati (il badge
+  // "Pista" la distingue) — solo punti/podi (catPuntiTotali, p1/p2/p3/pout
+  // sotto) la escludono, stessa logica di renderAtleta.
+  const catRisultatiRaw = (t.risultati||[]).filter(r => (getRankingFileCode(r) || r.categoria) === teamViewCat);
   // Gare a squadre: più corridori possono condividere la stessa gara+posizione
   // (stesso risultato del team). Per il TEAM va contato UNA SOLA volta — non
   // una vittoria/podio/punteggio per ogni corridore che ne faceva parte —
@@ -14941,7 +14933,8 @@ async function renderTeam(team_id, opts = {}) {
     _seenTeamGaraPos.set(key, r);
     catRisultati.push(r);
   }
-  const catPuntiTotali = catRisultati.reduce((sum, r) => sum + (r.punti_effettivi||0), 0);
+  const catRisultatiStrada = catRisultati.filter(r => r.tipo !== 'pista');
+  const catPuntiTotali = catRisultatiStrada.reduce((sum, r) => sum + (r.punti_effettivi||0), 0);
 
   window.setTeamDetailCat = (cat) => {
     teamViewCat = cat;
@@ -14985,10 +14978,10 @@ async function renderTeam(team_id, opts = {}) {
   // Roster filtrato alla categoria/genere del tab selezionato (teamViewCat include il genere, es. JUN_M)
   const atletiListCat = atletiList.filter(a => a.cats.has(teamViewCat));
 
-  const p1 = catRisultati.filter(r=>r.posizione===1).length;
-  const p2 = catRisultati.filter(r=>r.posizione===2).length;
-  const p3 = catRisultati.filter(r=>r.posizione===3).length;
-  const pout = catRisultati.filter(r=>r.posizione>=4 && r.posizione<=10).length;
+  const p1 = catRisultatiStrada.filter(r=>r.posizione===1).length;
+  const p2 = catRisultatiStrada.filter(r=>r.posizione===2).length;
+  const p3 = catRisultatiStrada.filter(r=>r.posizione===3).length;
+  const pout = catRisultatiStrada.filter(r=>r.posizione>=4 && r.posizione<=10).length;
 
   // Stesso layout di CORRIDORI CHIAVE (team-performer-card) per coerenza.
   // Mostra solo gli atleti della categoria/genere selezionata (teamViewCat).
