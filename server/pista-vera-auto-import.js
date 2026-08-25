@@ -515,13 +515,19 @@ async function login() {
         const garaId = `${nomeSlug}_${dataISO}_${evento}_${cat}`;
         for (const row of catRows) {
           const knownTeam = row.existingAtletaId ? knownInfo.teamOf.get(row.existingAtletaId) : null;
-          const safe = row.existingAtletaId && !row.uncertainYear && !row.ambiguousNameSplit &&
+          // "Nome ambiguo (split incerto)" ha senso solo per un atleta NUOVO
+          // (rischio di creare un profilo con cognome/nome sbagliati): per
+          // chi è già abbinato (existingAtletaId trovato via normForId,
+          // indipendente da dove cade il confine cognome/nome) lo split non
+          // conta più nulla — è comunque lo stesso atleta. Bug reale
+          // osservato: "RESTREPO LOAIZA OSCAR IVAN" (4 parole) sempre
+          // escluso nonostante team e ID già confermati in 7+ gare diverse.
+          const safe = row.existingAtletaId && !row.uncertainYear &&
                        knownTeam && teamsMatch(knownTeam, row.team);
 
           if (!safe) {
             const reason = !row.existingAtletaId ? 'nuovo/non abbinato'
               : row.uncertainYear ? 'anno esordienti incerto'
-              : row.ambiguousNameSplit ? 'nome ambiguo (split incerto)'
               : !knownTeam ? 'team non noto sul sito'
               : 'team non combacia';
             raceReview.push({ garaId, posizione: row.posizione, cognome: row.cognome, nome: row.nome, team: row.team, categoria: cat, evento, reason, ...(knownTeam ? { teamNoto: knownTeam } : {}) });
