@@ -1790,7 +1790,9 @@ function _patchAthleteTeamForManualRow(gd, row) {
     if (!Array.isArray(ath.risultati)) ath.risultati = [];
     ath.risultati = ath.risultati.filter(x => x.gara_id !== row.gara_id); // rimuovi eventuale versione precedente
     ath.risultati.push(athEntry);
-    ath.punti_totali = (ath.risultati || []).reduce((s, x) => s + (x.punti_effettivi || 0), 0);
+    // tipo 'pista' (velodromo) ha una classifica a sé: non entra nel totale
+    // stagione mostrato in testa al profilo, che resta solo "strada".
+    ath.punti_totali = (ath.risultati || []).reduce((s, x) => s + (x.tipo === 'pista' ? 0 : (x.punti_effettivi || 0)), 0);
   }
 
   // Scheda team: stesso trattamento, così risultati/punti/roster restano coerenti
@@ -1828,6 +1830,7 @@ function _patchAthleteTeamForManualRow(gd, row) {
     // proprio punteggio personale (ath.punti_totali sopra, non toccato qui).
     const _seenGaraPos = new Set();
     team.punti_totali = (team.risultati || []).reduce((s, x) => {
+      if (x.tipo === 'pista') return s; // classifica pista separata
       const key = `${x.gara_id}|${x.posizione}`;
       if (_seenGaraPos.has(key)) return s;
       _seenGaraPos.add(key);
@@ -5627,6 +5630,7 @@ function siRivalryFinder(resultsRaw) {
 function computeTeamRanking(resSet, catCode, beforeDate) {
   const pts={}, meta={};
   for(const r of resSet) {
+    if(r.tipo==='pista') continue; // classifica pista separata, non entra qui
     if(getRankingFileCode(r)!==catCode||!r.team_id||!r.data) continue;
     if(beforeDate&&r.data>=beforeDate) continue;
     if(isSelectionTeamName(r.team)) continue; // niente selezioni regionali/nazionali nelle card team
@@ -8713,10 +8717,15 @@ async function updateRankTable() {
   
   if (rankView === 'atleti') {
     let ranking = [];
-    if (!isFiltered) {
-      ranking = await loadRanking(rankCat);
-    } else {
-      // Calcolo dinamico
+    {
+      // Calcolo SEMPRE dinamico da resultsRaw (che ha già i manual_results
+      // uniti — vedi _mergeManualIntoRaw in loadAll()), non solo quando un
+      // filtro regione/mese è attivo: il file statico rankings/{cat}.json è
+      // rigenerato solo al giro dello scraper Python, che non sa nulla dei
+      // risultati inseriti a mano (bug reale osservato: un punteggio tipo
+      // pista aggiunto a mano compariva sul profilo atleta ma non qui).
+      // tipo==='pista' escluso: quella è una classifica a parte (vera pista
+      // su velodromo), non deve sommarsi ai punti strada.
       const { resultsRaw } = globalData;
       const agg = {};
       // Precompute calendar mapping to resolve regions missing in resultsRaw
@@ -8725,8 +8734,9 @@ async function updateRankTable() {
 
       resultsRaw.forEach(r => {
         if (r.genere !== rankGender) return;
+        if (r.tipo === 'pista') return;
         // Check categoria
-        const rCat = getRankingFileCode(r); 
+        const rCat = getRankingFileCode(r);
         if (rCat !== rankCat) return;
 
         const calEntry = calMap[r.gara_id];
@@ -8736,15 +8746,15 @@ async function updateRankTable() {
         if (rankMonth && r.data && r.data.split('-')[1] !== rankMonth) return;
 
         if (!agg[r.atleta_id]) {
-          agg[r.atleta_id] = { 
-            atleta_id: r.atleta_id, cognome: r.cognome, nome: r.nome, 
-            team_id: r.team_id, team_nome: r.team, punti: 0, gare: 0, 
-            p1:0, p2:0, p3:0, pout:0 
+          agg[r.atleta_id] = {
+            atleta_id: r.atleta_id, cognome: r.cognome, nome: r.nome,
+            team_id: r.team_id, team_nome: r.team, punti: 0, gare: 0,
+            p1:0, p2:0, p3:0, pout:0, vittorie: 0
           };
         }
         agg[r.atleta_id].punti += (r.punti_effettivi || 0);
         agg[r.atleta_id].gare++;
-        if (r.posizione === 1) agg[r.atleta_id].p1++;
+        if (r.posizione === 1) { agg[r.atleta_id].p1++; agg[r.atleta_id].vittorie++; }
         else if (r.posizione === 2) agg[r.atleta_id].p2++;
         else if (r.posizione === 3) agg[r.atleta_id].p3++;
         else agg[r.atleta_id].pout++;
@@ -9082,15 +9092,10 @@ async function updateRankTable() {
 
   } else {
     // ── TEAM RANKING ───────────────────────────────────────────
+    // Calcolo SEMPRE dinamico (vedi nota identica nella vista Atleti sopra):
+    // il file statico non riflette i risultati inseriti a mano.
     let teamRanking = [];
-    if (!isFiltered) {
-      // Le squadre "selezione" (LOMBARDIA, LIGURIA, NAZIONALE ROMANIA...)
-      // non sono club reali e non hanno una pagina /team/ — non devono
-      // comparire in classifica (link altrimenti morto).
-      teamRanking = (await loadTeamRanking(rankCat)).filter(t => !isSelectionTeamName(t.team_nome));
-      teamRanking.forEach((t, i) => { t.pos = i + 1; });
-    } else {
-      // Calcolo dinamico team
+    {
       const { resultsRaw } = globalData;
       const agg = {};
       const calMap = {};
@@ -9098,6 +9103,7 @@ async function updateRankTable() {
 
       resultsRaw.forEach(r => {
         if (r.genere !== rankGender) return;
+        if (r.tipo === 'pista') return;
         const rCat = getRankingFileCode(r);
         if (rCat !== rankCat) return;
         if (isSelectionTeamName(r.team)) return; // niente selezioni in classifica team
@@ -9118,7 +9124,7 @@ async function updateRankTable() {
         else if (r.posizione === 3) agg[r.team_id].p3++;
         else agg[r.team_id].pout++;
       });
-      teamRanking = Object.values(agg).sort((a,b) => b.punti - a.punti);
+      teamRanking = Object.values(agg).filter(t => !isSelectionTeamName(t.team_nome)).sort((a,b) => b.punti - a.punti);
       teamRanking.forEach((t, i) => { t.pos = i+1; t.n_atleti = t.atleti.size; });
     }
 
