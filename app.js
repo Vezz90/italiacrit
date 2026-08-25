@@ -14043,10 +14043,16 @@ async function _loadTeamPcsExtra(teamId, season, viewCat) {
   // atleta. Inseriti nella tabella principale in ordine cronologico (per
   // data, non per posizione: non hanno un punteggio comparabile alle gare
   // del circuito).
+  // Stessa regola della pagina atleta: un risultato PCS scollegato nello
+  // stesso giorno di un risultato ICS reale del corridore è quasi certamente
+  // la STESSA gara che PCS non è riuscito ad agganciare, non una gara
+  // diversa — va scartato invece di comparire come doppione.
+  const icsAthDates = new Set((team.risultati || []).filter(r => r.atleta_id && r.data).map(r => `${r.atleta_id}|${r.data}`));
   const seasonExtra = pcsSeasonAll
     .filter(r => {
       if (r.gara_id) return false;
       if (!r.country) return false;
+      if (icsAthDates.has(`${r.atleta_id}|${r.data}`)) return false;
       if (viewCat) {
         const ath = globalData?.athletes?.[r.atleta_id];
         const athCode = ath ? getRankingFileCode(ath) : '';
@@ -14401,8 +14407,16 @@ async function _loadAtletaPcsExtra(atletaId, season, icsRisultati, athlete) {
   try {
     seasonRaw = await apiCall(`/pcs-results/atleta/${encodeURIComponent(atletaId)}?season=${season}`);
   } catch { /* ignora, procedi solo con garaExtra */ }
+  // Se l'atleta ha già un risultato REALE (FCI/manuale) nella stessa data,
+  // un risultato PCS scollegato (niente gara_id) nello stesso giorno è quasi
+  // certamente la STESSA gara che PCS non è riuscito ad agganciare (es. nome
+  // diverso — auto-generato dal comune del club invece del nome ufficiale,
+  // o inglese vs italiano per i campionati) — non due gare separate nello
+  // stesso giorno. Va scartato invece di mostrarlo come doppione scollegato:
+  // niente logica di traduzione/matching per nome, la data coincidente basta.
+  const icsDates = new Set((icsRisultati || []).map(r => r.data).filter(Boolean));
   const esteroExtra = Array.isArray(seasonRaw)
-    ? seasonRaw.filter(r => !r.gara_id && r.country)
+    ? seasonRaw.filter(r => !r.gara_id && r.country && !icsDates.has(r.data))
     : [];
 
   // Riepilogo podi "ESTERO" nell'header, accanto a quello "ITALIA" già
