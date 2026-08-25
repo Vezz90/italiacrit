@@ -2524,6 +2524,9 @@ function badgeMult(m, tipo, isCR = false, isCI = false) {
   // normale — punteggio dimezzato rispetto allo standard, etichetta
   // separata invece di "Reg.le (x1)" per non farli sembrare gare piene.
   if (tipo === 'tipo_pista') return `<span class="res-badge gray-badge">Tip. Pist. (0,5)</span>`;
+  // Pista vera (velodromo): classifica separata dalla strada, etichetta
+  // dedicata invece di "Reg.le (x1)" per non farla sembrare una gara strada.
+  if (tipo === 'pista') return `<span class="res-badge gray-badge">Pista</span>`;
 
   const cls = isInt ? 'blue-badge' : (isNat ? 'orange-badge' : 'gray-badge');
   const label = isInt ? 'Int.le' : (isNat ? 'Naz.le' : 'Reg.le');
@@ -13428,17 +13431,28 @@ async function renderAtleta(atleta_id, opts = {}) {
   for (const g of calendar) calMap[g.id] = g;
 
   const risultati = (_hasYearData ? (aSel.risultati || []) : []).slice().sort((x,y) => (y.data||'').localeCompare(x.data||''));
+  // Pista (velodromo) è una classifica a sé — stessa esclusione già fatta
+  // per punti_totali (vedi _patchAthleteTeamForManualRow): non deve
+  // mischiarsi con vittorie/podi/tabella "strada", ha una sezione propria
+  // più sotto (RISULTATI PISTA) invece di comparire nella tabella principale.
+  const risultatiPista  = risultati.filter(r => r.tipo === 'pista');
+  const risultatiStrada = risultati.filter(r => r.tipo !== 'pista');
 
   // Stats
-  const p1 = risultati.filter(r => r.posizione === 1).length;
-  const p2 = risultati.filter(r => r.posizione === 2).length;
-  const p3 = risultati.filter(r => r.posizione === 3).length;
-  const pout = risultati.filter(r => r.posizione >= 4 && r.posizione <= 10).length;
-  const top10 = risultati.length;
+  const p1 = risultatiStrada.filter(r => r.posizione === 1).length;
+  const p2 = risultatiStrada.filter(r => r.posizione === 2).length;
+  const p3 = risultatiStrada.filter(r => r.posizione === 3).length;
+  const pout = risultatiStrada.filter(r => r.posizione >= 4 && r.posizione <= 10).length;
+  const top10 = risultatiStrada.length;
   const media = top10 ? Math.round(a.punti_totali / top10) : 0;
 
+  const pp1 = risultatiPista.filter(r => r.posizione === 1).length;
+  const pp2 = risultatiPista.filter(r => r.posizione === 2).length;
+  const pp3 = risultatiPista.filter(r => r.posizione === 3).length;
+  const ppout = risultatiPista.filter(r => r.posizione >= 4 && r.posizione <= 10).length;
+
   // Sparkline
-  const sparkPoints = risultati.slice(0,20).reverse().map(r => r.punti_effettivi || 0);
+  const sparkPoints = risultatiStrada.slice(0,20).reverse().map(r => r.punti_effettivi || 0);
 
   // Recupero ranking asincrono per evitare crash
   const atletaOv = await getEntityOverrides('atleta', atleta_id);
@@ -13541,13 +13555,24 @@ async function renderAtleta(atleta_id, opts = {}) {
           <div style="font-size:.68rem;letter-spacing:.06em;color:var(--text-muted);margin-bottom:4px">ALTRI RISULTATI</div>
           <div class="athlete-stats-bar"></div>
         </div>
+        ${risultatiPista.length ? `
+        <div class="athlete-stats-group">
+          <div style="font-size:.68rem;letter-spacing:.06em;color:var(--text-muted);margin-bottom:4px">PISTA</div>
+          <div class="athlete-stats-bar">
+            <div class="athlete-stat"><span class="athlete-stat-val" style="color:var(--gold)">${pp1}</span><span class="athlete-stat-label">1° Posto</span></div>
+            <div class="athlete-stat"><span class="athlete-stat-val" style="color:var(--silver)">${pp2}</span><span class="athlete-stat-label">2° Posto</span></div>
+            <div class="athlete-stat"><span class="athlete-stat-val" style="color:var(--bronze)">${pp3}</span><span class="athlete-stat-label">3° Posto</span></div>
+            <div class="athlete-stat"><span class="athlete-stat-val" style="color:var(--text-muted)">${ppout}</span><span class="athlete-stat-label">4°-10° Posti</span></div>
+          </div>
+        </div>` : ''}
       </div>
     </div>`;
 
-  const sparkHtml   = sparkPoints.length ? buildSparkline(sparkPoints, risultati.slice(0,20).reverse()) : '';
-  const cumulHtml   = buildCumulChart(risultati);
+  const sparkHtml   = sparkPoints.length ? buildSparkline(sparkPoints, risultatiStrada.slice(0,20).reverse()) : '';
+  const cumulHtml   = buildCumulChart(risultatiStrada);
 
-  const tableRows = _buildAtletaResultRows(risultati);
+  const tableRows = _buildAtletaResultRows(risultatiStrada);
+  const tableRowsPista = risultatiPista.length ? _buildAtletaResultRows(risultatiPista) : '';
 
   window._shareAtletaData = {_id:atleta_id,cognome:displayCognome,nome:displayNome,cat:catLabel(displayCategoria),team:displayTeam,punti:a.punti_totali,pos:globalPos,p1:p1,p2:p2,p3:p3,p4_10:pout,gare:top10,photo_url:atletaOv.photo_url?`${MEDIA_BASE}${atletaOv.photo_url}`:null};
 
@@ -13689,6 +13714,17 @@ async function renderAtleta(atleta_id, opts = {}) {
         <tbody id="atleta-results-tbody">${tableRows || '<tr><td colspan="7" class="empty-state">Nessun risultato</td></tr>'}</tbody>
       </table>
     </div>
+    ${risultatiPista.length ? `
+    <div class="section-header" style="margin-top:28px">
+      <span class="section-title">🚴 RISULTATI PISTA ${esc(selYear)}</span>
+      <span class="section-line"></span>
+    </div>
+      <table class="results-table atleta-results">
+        <thead><tr>
+          <th>DATA</th><th>POS</th><th>GARA</th><th>MOLT</th><th style="text-align:right">KM</th><th style="text-align:right">MEDIA</th><th>PTS</th>
+        </tr></thead>
+        <tbody>${tableRowsPista}</tbody>
+      </table>` : ''}
   `);
 
   // Inject bottone messaggio in modo async (lookup non blocca il render)
@@ -14869,7 +14905,9 @@ async function renderTeam(team_id, opts = {}) {
     teamViewCat = teamCats[0] || '';
   }
 
-  const catRisultatiRaw = (t.risultati||[]).filter(r => (getRankingFileCode(r) || r.categoria) === teamViewCat);
+  // tipo:'pista' (velodromo) è una classifica a sé, esclusa qui come già
+  // fatto per punti_totali/classifica strada — vedi nota analoga in renderAtleta.
+  const catRisultatiRaw = (t.risultati||[]).filter(r => r.tipo !== 'pista' && (getRankingFileCode(r) || r.categoria) === teamViewCat);
   // Gare a squadre: più corridori possono condividere la stessa gara+posizione
   // (stesso risultato del team). Per il TEAM va contato UNA SOLA volta — non
   // una vittoria/podio/punteggio per ogni corridore che ne faceva parte —
@@ -14921,7 +14959,7 @@ async function renderTeam(team_id, opts = {}) {
   // puntiCat = punti nel tab selezionato; puntiTot = punti totali di tutte le categorie
   const atletiMap = {};
   (t.risultati||[]).forEach(r => {
-    if (!r.atleta_id) return;
+    if (!r.atleta_id || r.tipo === 'pista') return;
     if (!atletiMap[r.atleta_id]) {
       atletiMap[r.atleta_id] = { id: r.atleta_id, ...athletes[r.atleta_id], puntiCat: 0, puntiTot: 0, cats: new Set() };
     }
