@@ -14633,9 +14633,22 @@ async function renderGaraStorica(ciclismoGaraId) {
   try {
     const pcsRows = await apiCall(`/pcs-results/gara/${encodeURIComponent(garaKey)}`);
     const havePos = new Set(rows.map(r => r.posizione));
+    // Un corridore può già essere presente in ciclismo_results con una
+    // posizione DIVERSA da quella PCS (la numerazione di ciclismo.info ha
+    // spesso dei buchi, es. salta il 3° posto): senza questo controllo per
+    // atleta_id/nome, il gap-fill lo aggiungeva DUE VOLTE (una per ogni
+    // posizione riportata dalle due fonti) invece di riempire solo i buchi
+    // reali (corridori assenti da ciclismo_results).
+    const haveAtleta = new Set(rows.filter(r => r.atleta_id).map(r => r.atleta_id));
+    const haveNome = new Set(rows.map(r => String(r.nome_completo || '').toUpperCase().trim()).filter(Boolean));
     for (const p of (Array.isArray(pcsRows) ? pcsRows : [])) {
       if (!p.posizione || havePos.has(p.posizione)) continue;
+      if (p.atleta_id && haveAtleta.has(p.atleta_id)) continue;
+      const pNome = String(p.rider_name || p.gara_name || '').toUpperCase().trim();
+      if (pNome && haveNome.has(pNome)) continue;
       havePos.add(p.posizione);
+      if (p.atleta_id) haveAtleta.add(p.atleta_id);
+      if (pNome) haveNome.add(pNome);
       rows.push({
         posizione: p.posizione, atleta_id: p.atleta_id || null,
         nome_completo: (p.rider_name || p.gara_name || '').toUpperCase(), team: (p.team_name || '').toUpperCase(),
