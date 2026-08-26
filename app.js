@@ -14404,10 +14404,19 @@ async function _loadCiclismoStorico(atletaId, nativeSelYear, nativeCount) {
   // erano visibili (bug reale, corretto qui). Si toglie la pillola SOLO se
   // anche PCS conferma zero risultati per questo atleta in questo anno.
   if (!nativeCount) {
+    // Due tabelle diverse, DUE endpoint diversi: pcs_results (risultati PCS
+    // liberi/esteri, /pcs-results/atleta) e pcs_gara_results (risultati PCS
+    // abbinati a una gara del calendario ICS, /pcs-results/gare-atleta —
+    // es. "59 CIRCUITO DEL PORTO TROFEO ARVEDI 2026", posizione fuori dalla
+    // top10 ma presente). Controllarne solo uno ha già cancellato per
+    // sbaglio una pillola con risultati veri — vanno controllati ENTRAMBI.
     let hasPcsThisYear = false;
     try {
-      const pcsCheck = await apiCall(`/pcs-results/atleta/${encodeURIComponent(atletaId)}?season=${encodeURIComponent(nativeSelYear)}`);
-      hasPcsThisYear = Array.isArray(pcsCheck) && pcsCheck.length > 0;
+      const [pcsCheck, pcsGareCheck] = await Promise.all([
+        apiCall(`/pcs-results/atleta/${encodeURIComponent(atletaId)}?season=${encodeURIComponent(nativeSelYear)}`),
+        apiCall(`/pcs-results/gare-atleta/${encodeURIComponent(atletaId)}?season=${encodeURIComponent(nativeSelYear)}`),
+      ]);
+      hasPcsThisYear = (Array.isArray(pcsCheck) && pcsCheck.length > 0) || (Array.isArray(pcsGareCheck) && pcsGareCheck.length > 0);
     } catch { /* in dubbio, non toccare la pillola */ hasPcsThisYear = true; }
     if (!hasPcsThisYear) {
       yearRow.querySelectorAll('.year-pill').forEach(b => { if (b.dataset.year === String(nativeSelYear)) b.remove(); });
