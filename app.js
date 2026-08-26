@@ -3869,13 +3869,24 @@ function route() {
     risSearchQuery = ''; risQueryMonth = ''; risQueryRegion = ''; risQueryGenere = ''; risQueryTipo = '';
     risQueryCat = decodeURIComponent(_mRisCat[1]);
     if (activeHub) applyHubFilters(activeHub);
-    return (_risHistoricalYear ? renderRisultatiStorico(_risHistoricalYear) : renderRisultati());
+    // Un arrivo qui (link/menu/nav) è sempre un ingresso "fresco" alla pagina:
+    // renderRisultatiStorico() presuppone che il guscio HTML (#ris-cards, i
+    // filtri, la riga anni) sia GIÀ in pagina — lo costruisce solo
+    // renderRisultati(). Chiamarla direttamente da qui, con _risHistoricalYear
+    // rimasto impostato da una visita precedente, trovava #ris-cards
+    // inesistente e usciva subito senza disegnare nulla: click su "Risultati"
+    // dal menu che sembrava non fare niente (bug osservato dal vivo). Le
+    // annualità storiche restano raggiungibili SOLO tramite risSetYear() (le
+    // pillole anno), che gira quando la pagina è già costruita.
+    _risHistoricalYear = null;
+    return renderRisultati();
   }
   if (match('/risultati')) {
     // Reset generic filters, then re-apply hub context if active
     risSearchQuery = ''; risQueryCat = ''; risQueryMonth = ''; risQueryRegion = ''; risQueryGenere = ''; risQueryTipo = '';
     if (activeHub) applyHubFilters(activeHub);
-    return (_risHistoricalYear ? renderRisultatiStorico(_risHistoricalYear) : renderRisultati());
+    _risHistoricalYear = null;
+    return renderRisultati();
   }
   // Calendario filtrato per categoria con URL dedicato — pattern a 2 segmenti
   // (/calendario/cat/:cat), distinto da /calendario/:id (usato per evidenziare
@@ -4817,7 +4828,7 @@ function renderHubSubpage(hubCode, subpage) {
   activeHub._code = hubCode;
   applyHubFilters(hub);
   switch (subpage) {
-    case 'risultati':    return (_risHistoricalYear ? renderRisultatiStorico(_risHistoricalYear) : renderRisultati());
+    case 'risultati':    _risHistoricalYear = null; return renderRisultati();
     case 'classifica':   return renderClassifica();
     case 'atleti':       return renderAtletiList();
     case 'team':         return renderTeamList();
@@ -4853,9 +4864,18 @@ window.clearHubFilter = function() {
   teamGender = 'M'; teamCat = 'JUN_M'; teamSearch = '';
   risQueryGenere = ''; risQueryCat = ''; risQueryMonth = ''; risQueryRegion = ''; risQueryTipo = ''; risSearchQuery = '';
   calQGenere = ''; calQCat = ''; calQMonth = ''; calQSearch = ''; calQTipo = ''; calQRegione = '';
-  // Se su hub URL, vai alla classifica generale (senza riaprire la cinematic)
-  if ((window.location.hash || '').startsWith('#/hub/')) {
-    window.location.hash = '#/classifica';
+  // Se su hub URL, vai alla classifica generale (senza riaprire la cinematic).
+  // Il controllo va fatto su location.pathname, non su location.hash: dopo il
+  // passaggio agli URL puliti (history.replaceState in route()) l'hash resta
+  // SEMPRE vuoto e il path vero vive in location.pathname — controllare solo
+  // l'hash faceva sempre fallire questo if, e route() (ramo else) ricostruiva
+  // l'hash virtuale dal pathname invariato tramite _resolveVirtualHash(),
+  // rientrando SUBITO nello stesso hub appena azzerato: activeHub restava
+  // bloccato e "Esplora tutto il ciclismo"/cambio categoria non tornava mai
+  // indietro (bug osservato dal vivo).
+  const _onHubUrl = (window.location.hash || '').startsWith('#/hub/') || (window.location.pathname || '').startsWith('/hub/');
+  if (_onHubUrl) {
+    navTo('/classifica');
   } else {
     route();
   }
