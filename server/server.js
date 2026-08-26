@@ -4590,6 +4590,26 @@ app.get('/api/pcs-results/gare-atleta/:atletaId', async (req, res) => {
   } catch(e) { res.status(500).json({ error: e.message }); }
 });
 
+// Come /pcs-results/gare-atleta ma per gare storiche ciclismo.info: i
+// gara_id sintetici (CIC_<id>) non contengono l'anno nella stringa, quindi
+// il filtro %season%- di sopra non li trova mai. Qui il chiamante passa
+// direttamente la lista di CIC_id di quell'atleta per quell'anno (presa da
+// ciclismo_results lato client), niente filtro per stagione.
+app.get('/api/pcs-results/gare-atleta-ciclismo/:atletaId', async (req, res) => {
+  const garaIds = String(req.query.gara_ids || '').split(',').map(s => s.trim()).filter(Boolean);
+  if (!garaIds.length) return res.json([]);
+  try {
+    const { data, error } = await supabase
+      .from('pcs_gara_results')
+      .select('gara_id, posizione, distacco, pcs_race_slug, rider_name, team_name')
+      .eq('atleta_id', req.params.atletaId)
+      .in('gara_id', garaIds)
+      .limit(200);
+    if (error) throw error;
+    res.json(data || []);
+  } catch (e) { res.status(500).json({ error: e.message }); }
+});
+
 // Risultati da pcs_gara_results per un team (pos 11+ nelle gare circuito)
 app.get('/api/pcs-results/gare-team/:teamId', async (req, res) => {
   const season = parseInt(req.query.season) || new Date().getFullYear();

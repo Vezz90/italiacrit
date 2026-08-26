@@ -14624,6 +14624,27 @@ async function renderGaraStorica(ciclismoGaraId) {
   if (!rows.length) return renderNotFound();
   const mediaList = payload?.media || [];
 
+  // Risultati importati da PCS per questa gara (bottone "Importa PCS") —
+  // qui si riempiono i BUCHI nel podio (posizioni mancanti nel mezzo, es.
+  // 2°/3°/5°/6°/7°, per gare dove il backfill classifica-driven non ha
+  // scoperto tutti i corridori), non solo le posizioni oltre il massimo
+  // come fa _loadGaraPcsExt sulle gare native (lì il circuito ICS è sempre
+  // completo 1-10, qui può avere buchi in mezzo).
+  try {
+    const pcsRows = await apiCall(`/pcs-results/gara/${encodeURIComponent(garaKey)}`);
+    const havePos = new Set(rows.map(r => r.posizione));
+    for (const p of (Array.isArray(pcsRows) ? pcsRows : [])) {
+      if (!p.posizione || havePos.has(p.posizione)) continue;
+      havePos.add(p.posizione);
+      rows.push({
+        posizione: p.posizione, atleta_id: p.atleta_id || null,
+        nome_completo: p.rider_name || p.gara_name || '', team: p.team_name || '',
+        categoria: rows[0]?.categoria, data: rows[0]?.data,
+        regione: rows[0]?.regione, luogo: rows[0]?.luogo, nome_gara: rows[0]?.nome_gara,
+      });
+    }
+  } catch { /* nessun import PCS per questa gara, non bloccare */ }
+
   // Foto caricate dagli utenti per questa gara storica (stesso sistema
   // race_photos del 2026 — moderazione admin, tag corridori funzionante
   // per davvero, a differenza delle foto scaricate da ciclismo.info che
@@ -14648,9 +14669,20 @@ async function renderGaraStorica(ciclismoGaraId) {
         ? `<a href="#/atleta/${esc(r.atleta_id)}">${esc(r.nome_completo)}</a>`
         : esc(r.nome_completo || '');
       const teamLink = r.team ? esc(r.team) : '';
+      // Stessa impaginazione della tabella nativa: spazio riservato
+      // all'avatar/foto del corridore (rk-av-wrap, caricata dopo in batch)
+      // prima del nome — qui mancava del tutto.
       return `<tr>
         <td class="td-pos ${posClass(r.posizione)}">${r.posizione ? r.posizione + '°' : '—'}</td>
-        <td class="td-race">${nomeLink}${cats.length > 1 ? `<div class="td-team-mobile">${esc(String(r.categoria || '').replace(/_/g, ' '))}</div>` : ''}</td>
+        <td style="font-family:var(--font-heading);font-weight:700">
+          <div style="display:flex;align-items:center">
+            ${r.atleta_id ? `<span class="rk-av-wrap" data-aid="${esc(r.atleta_id)}"></span>` : ''}
+            <div>
+              ${nomeLink}
+              <div class="td-team-mobile">${teamLink}${cats.length > 1 ? ` · ${esc(String(r.categoria || '').replace(/_/g, ' '))}` : ''}</div>
+            </div>
+          </div>
+        </td>
         <td class="td-hide-mobile">${teamLink}</td>
         ${cats.length > 1 ? `<td class="td-hide-mobile">${esc(String(r.categoria || '').replace(/_/g, ' '))}</td>` : ''}
         <td class="td-hide-mobile">—</td>
@@ -14749,10 +14781,9 @@ async function renderGaraStorica(ciclismoGaraId) {
     <div style="font-size:.72rem;color:var(--text-muted);margin-top:12px">Dati storici — archivio in fase di validazione.</div>
   `);
 
-  // Risultati PCS extra (gare estere/professionistiche) — stesso meccanismo
-  // generico del 2026, agganciato al gara_id sintetico CIC_<id>.
-  window._lastGaraResults = rows.map(r => ({ ...r, cognome: (r.nome_completo || '').split(' ')[0] || '', nome: (r.nome_completo || '').split(' ').slice(1).join(' ') }));
-  _loadGaraPcsExt(garaKey, window._lastGaraResults).catch(() => {});
+  // (I risultati PCS sono già stati uniti a "rows" più sopra, per riempire
+  // eventuali buchi nel podio — niente chiamata separata a _loadGaraPcsExt,
+  // che qui duplicherebbe le righe già mostrate.)
 
   // Payload di condivisione — niente punti/tempo (dati che non abbiamo per
   // le gare storiche), stessa forma usata da renderGara (_mkShare).
@@ -14768,6 +14799,31 @@ async function renderGaraStorica(ciclismoGaraId) {
     })),
   };
   window._shareGaraData2 = null;
+
+  // Carica gli avatar/foto profilo nei rk-av-wrap appena aggiunti alla
+  // tabella (stesso pattern usato altrove — batch async, placeholder subito).
+  const _avSpans = [...document.querySelectorAll('#main-results-tbody .rk-av-wrap[data-aid]')];
+  if (_avSpans.length) {
+    const _ph = `<span class=rk-av-placeholder><svg width=20 height=20 viewBox='0 0 24 24' fill='none' stroke='currentColor' stroke-width='1.5'><circle cx='12' cy='8' r='4'/><path d='M4 20c0-4 3.6-7 8-7s8 3 8 7'/></svg></span>`;
+    _avSpans.forEach(s => { s.innerHTML = _ph; });
+    const batchSize = 8;
+    for (let i = 0; i < _avSpans.length; i += batchSize) {
+      await Promise.all(_avSpans.slice(i, i + batchSize).map(async span => {
+        if (!document.contains(span)) return;
+        const aid = span.dataset.aid;
+        const ov = await getEntityOverrides('atleta', aid).catch(() => ({}));
+        if (!document.contains(span)) return;
+        if (ov.photo_url) {
+          const img = document.createElement('img');
+          img.src = mediaUrl(ov.photo_url);
+          img.className = 'rk-av-img'; img.alt = '';
+          img.onerror = () => { span.innerHTML = _ph; };
+          span.innerHTML = '';
+          span.appendChild(img);
+        }
+      }));
+    }
+  }
 }
 
 function _resolveHistoricalTeamId(teamName) {
@@ -14784,10 +14840,29 @@ function _resolveHistoricalTeamId(teamName) {
   return null;
 }
 
-window.setAtletaCiclismoYear = (atletaId, anno) => {
+window.setAtletaCiclismoYear = async (atletaId, anno) => {
   const perAnno = window._ciclismoStoricoCache[atletaId];
   const rows = (perAnno && perAnno[anno] || []).slice().sort((a, b) => (b.data || '').localeCompare(a.data || ''));
   if (!rows.length) return;
+
+  // Risultati importati a mano da PCS per una di queste gare (bottone
+  // "Importa PCS" sulla pagina gara storica) — senza questo, un
+  // piazzamento aggiunto da PCS restava invisibile sul profilo
+  // dell'atleta anche se visibile sulla pagina della gara stessa (i
+  // gara_id sintetici CIC_<id> non contengono l'anno, quindi l'endpoint
+  // normale /pcs-results/gare-atleta, filtrato per stagione, non li trova).
+  try {
+    const garaIds = [...new Set(rows.map(r => _ciclismoGaraId(r.gara_ciclismo_url)).filter(Boolean).map(id => 'CIC_' + id))];
+    if (garaIds.length) {
+      const pcsRows = await apiCall(`/pcs-results/gare-atleta-ciclismo/${encodeURIComponent(atletaId)}?gara_ids=${encodeURIComponent(garaIds.join(','))}`);
+      const byGaraId = new Map(rows.map(r => ['CIC_' + _ciclismoGaraId(r.gara_ciclismo_url), r]));
+      for (const p of (Array.isArray(pcsRows) ? pcsRows : [])) {
+        const existing = byGaraId.get(p.gara_id);
+        if (existing && !existing.posizione && p.posizione) existing.posizione = p.posizione;
+        if (existing && !existing.team && p.team_name) existing.team = p.team_name;
+      }
+    }
+  } catch { /* nessun import PCS per queste gare, non bloccare */ }
 
   // Stato attivo sulle pillole STAGIONE
   document.querySelectorAll('#profile-year-row .year-pill').forEach(b => {
