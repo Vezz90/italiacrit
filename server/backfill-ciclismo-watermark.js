@@ -60,14 +60,30 @@ async function watermarkOne(storagePath) {
   return { ok: true };
 }
 
+// La REST API di Supabase tronca sempre a max_rows (1000) indipendentemente
+// dal filtro richiesto — paginato con l'header Range (stesso bug incontrato
+// più volte in questa sessione: qui aveva già fatto perdere 271 foto gara
+// su 1271 e la maggior parte delle foto profilo su 1603 righe totali).
+async function fetchAllPaginated(url) {
+  const rows = [];
+  const PAGE = 1000;
+  for (let from = 0; ; from += PAGE) {
+    const r = await fetch(url, { headers: { ...REST_HEADERS, Range: `${from}-${from + PAGE - 1}` } });
+    if (!r.ok && r.status !== 206) throw new Error(`fetch ${url} HTTP ${r.status}: ${await r.text()}`);
+    const page = await r.json();
+    if (!page.length) break;
+    rows.push(...page);
+    if (page.length < PAGE) break;
+  }
+  return rows;
+}
+
 async function main() {
   let done = 0, failed = 0, skipped = 0;
 
   // 1) Foto gara (ciclismo_gara_media)
   {
-    const r = await fetch(`${SUPABASE_URL}/rest/v1/ciclismo_gara_media?photo_url=not.is.null&select=id,photo_url&order=id`, { headers: REST_HEADERS });
-    if (!r.ok) throw new Error(`select gara_media HTTP ${r.status}: ${await r.text()}`);
-    const rows = await r.json();
+    const rows = await fetchAllPaginated(`${SUPABASE_URL}/rest/v1/ciclismo_gara_media?photo_url=not.is.null&select=id,photo_url&order=id`);
     console.log(`${rows.length} foto gara da marchiare`);
     for (const row of rows) {
       const sp = storagePathFromUrl(row.photo_url);
@@ -80,12 +96,9 @@ async function main() {
 
   // 2) Foto profilo atleta (entity_overrides, photo_credit='ciclismo.info')
   {
-    const r = await fetch(`${SUPABASE_URL}/rest/v1/entity_overrides?field=eq.photo_url&entity_type=eq.atleta&select=entity_id,new_value`, { headers: REST_HEADERS });
-    if (!r.ok) throw new Error(`select entity_overrides HTTP ${r.status}: ${await r.text()}`);
-    const photoRows = await r.json();
-    const r2 = await fetch(`${SUPABASE_URL}/rest/v1/entity_overrides?field=eq.photo_credit&entity_type=eq.atleta&new_value=eq.ciclismo.info&select=entity_id`, { headers: REST_HEADERS });
-    if (!r2.ok) throw new Error(`select credit HTTP ${r2.status}: ${await r2.text()}`);
-    const creditIds = new Set((await r2.json()).map(x => x.entity_id));
+    const photoRows = await fetchAllPaginated(`${SUPABASE_URL}/rest/v1/entity_overrides?field=eq.photo_url&entity_type=eq.atleta&select=entity_id,new_value`);
+    const creditRows = await fetchAllPaginated(`${SUPABASE_URL}/rest/v1/entity_overrides?field=eq.photo_credit&entity_type=eq.atleta&new_value=eq.ciclismo.info&select=entity_id`);
+    const creditIds = new Set(creditRows.map(x => x.entity_id));
     const athPhotos = photoRows.filter(p => creditIds.has(p.entity_id) && p.new_value);
     console.log(`${athPhotos.length} foto profilo atleta ciclismo.info da marchiare`);
     for (const row of athPhotos) {
