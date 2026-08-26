@@ -27,6 +27,28 @@ const ws = require('ws');
 const iconvLite = (() => { try { return require('iconv-lite'); } catch { return null; } })();
 const { fetchDecoded, parseClassificaPage, parseAthletePage, decodeEntities } = require('./ciclismo-info-test.js');
 
+// Stessa funzione di server.js (_watermarkPhoto) / ciclismo-gara-media.js —
+// credit impresso nel file, non solo mostrato a schermo.
+function _ogEsc(s) { return String(s || '').replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;'); }
+async function _watermarkPhoto(buffer, text) {
+  if (!text) return buffer;
+  try {
+    const sharp = require('sharp');
+    const img = sharp(buffer);
+    const meta = await img.metadata();
+    const W = meta.width || 1200, H = meta.height || 800;
+    const fs2 = Math.max(14, Math.round(W * 0.022));
+    const pad = Math.round(fs2 * 0.9);
+    const label = `© ${text} · italiacyclingstats.com`;
+    const boxW = Math.min(W - pad, Math.round(label.length * fs2 * 0.56) + pad * 2);
+    const svg = `<svg width="${W}" height="${H}" xmlns="http://www.w3.org/2000/svg">
+      <rect x="${W - boxW - pad}" y="${H - fs2 - pad * 2}" width="${boxW}" height="${fs2 + pad}" rx="4" fill="rgba(0,0,0,0.45)"/>
+      <text x="${W - pad - boxW / 2}" y="${H - pad - fs2 * 0.28}" font-family="Arial,Helvetica,sans-serif" font-size="${fs2}" font-weight="600" fill="rgba(255,255,255,0.92)" text-anchor="middle">${_ogEsc(label)}</text>
+    </svg>`;
+    return await img.composite([{ input: Buffer.from(svg), left: 0, top: 0 }]).toBuffer();
+  } catch (e) { console.warn('[watermark] fallito, salvo la foto originale:', e.message); return buffer; }
+}
+
 const SUPABASE_URL = 'https://aqqsstsbgpapzoxllosh.supabase.co';
 const SUPABASE_SECRET = process.env.SUPABASE_SECRET;
 if (!SUPABASE_SECRET) { console.error('Imposta SUPABASE_SECRET in server/.env.local'); process.exit(1); }
@@ -122,8 +144,9 @@ async function main() {
                 const buf = Buffer.from(await photoRes.arrayBuffer());
                 if (buf.length > 500) {
                   const storagePath = `atletas/ciclismo/${a.ciclismoId}.jpg`;
+                  const watermarked = await _watermarkPhoto(buf, 'ciclismo.info');
                   const { error: upErr } = await sb.storage.from('photos')
-                    .upload(storagePath, buf, { contentType: 'image/jpeg', upsert: true });
+                    .upload(storagePath, watermarked, { contentType: 'image/jpeg', upsert: true });
                   if (!upErr) {
                     photoUrl = `/photos/${storagePath}`;
                     await sb.from('entity_overrides').upsert([

@@ -29,6 +29,31 @@ const SUPABASE_URL = 'https://aqqsstsbgpapzoxllosh.supabase.co';
 const SUPABASE_SECRET = process.env.SUPABASE_SECRET;
 if (!SUPABASE_SECRET) { console.error('Imposta SUPABASE_SECRET in server/.env.local'); process.exit(1); }
 
+// Stessa funzione di server.js (_watermarkPhoto) — credit impresso
+// direttamente nel file (angolo in basso a destra), non solo mostrato a
+// schermo, così resta anche se qualcuno salva/scarica la foto direttamente.
+// Duplicata qui invece di importata da server.js perché questo è un
+// processo standalone separato, non l'app Express.
+function _ogEsc(s) { return String(s || '').replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;'); }
+async function _watermarkPhoto(buffer, text) {
+  if (!text) return buffer;
+  try {
+    const sharp = require('sharp');
+    const img = sharp(buffer);
+    const meta = await img.metadata();
+    const W = meta.width || 1200, H = meta.height || 800;
+    const fs2 = Math.max(14, Math.round(W * 0.022));
+    const pad = Math.round(fs2 * 0.9);
+    const label = `© ${text} · italiacyclingstats.com`;
+    const boxW = Math.min(W - pad, Math.round(label.length * fs2 * 0.56) + pad * 2);
+    const svg = `<svg width="${W}" height="${H}" xmlns="http://www.w3.org/2000/svg">
+      <rect x="${W - boxW - pad}" y="${H - fs2 - pad * 2}" width="${boxW}" height="${fs2 + pad}" rx="4" fill="rgba(0,0,0,0.45)"/>
+      <text x="${W - pad - boxW / 2}" y="${H - pad - fs2 * 0.28}" font-family="Arial,Helvetica,sans-serif" font-size="${fs2}" font-weight="600" fill="rgba(255,255,255,0.92)" text-anchor="middle">${_ogEsc(label)}</text>
+    </svg>`;
+    return await img.composite([{ input: Buffer.from(svg), left: 0, top: 0 }]).toBuffer();
+  } catch (e) { console.warn('[watermark] fallito, salvo la foto originale:', e.message); return buffer; }
+}
+
 const ONLY_ATLETA = (process.argv.find(a => a.startsWith('--atleta-id=')) || '').split('=')[1] || null;
 const DELAY_MS = 300;
 function sleep(ms) { return new Promise(r => setTimeout(r, ms)); }
@@ -118,7 +143,8 @@ async function main() {
             if (buf.length > 500) {
               const rawSlug = gara.gara_ciclismo_url.split('/').pop().replace(/\.htm$/, '');
               const storagePath = `gare/ciclismo/${gara.stagione}_${rawSlug}_${idx}.jpg`.replace(/[^a-zA-Z0-9/_.-]/g, '_');
-              const { error: upErr } = await sb.storage.from('photos').upload(storagePath, buf, { contentType: 'image/jpeg', upsert: true });
+              const watermarked = await _watermarkPhoto(buf, 'ciclismo.info');
+              const { error: upErr } = await sb.storage.from('photos').upload(storagePath, watermarked, { contentType: 'image/jpeg', upsert: true });
               if (!upErr) photoUrl = `/photos/${storagePath}`;
             }
           }
