@@ -4292,7 +4292,7 @@ app.get('/api/ciclismo-results/races', async (req, res) => {
   try {
     const { data, error } = await supabase
       .from('ciclismo_results')
-      .select('gara_ciclismo_url, nome_gara, data, categoria, regione, luogo')
+      .select('gara_ciclismo_url, nome_gara, data, categoria, regione, luogo, posizione, atleta_id, ciclismo_id, team')
       .eq('stagione', anno)
       .not('gara_ciclismo_url', 'is', null)
       .limit(20000);
@@ -4302,14 +4302,45 @@ app.get('/api/ciclismo-results/races', async (req, res) => {
       const gid = ciclismoGaraId(r.gara_ciclismo_url);
       if (!gid) continue;
       if (!byUrl.has(gid)) {
-        byUrl.set(gid, { id: gid, nome: r.nome_gara, data: r.data, regione: r.regione, luogo: r.luogo, categorie: new Set(), n_partecipanti: 0 });
+        byUrl.set(gid, { id: gid, nome: r.nome_gara, data: r.data, regione: r.regione, luogo: r.luogo, url: r.gara_ciclismo_url, byCategory: new Map(), n_partecipanti: 0 });
       }
       const ev = byUrl.get(gid);
-      ev.categorie.add(r.categoria);
       ev.n_partecipanti++;
+      if (!r.categoria) continue;
+      if (!ev.byCategory.has(r.categoria)) ev.byCategory.set(r.categoria, []);
+      if (r.posizione) ev.byCategory.get(r.categoria).push({ posizione: r.posizione, atleta_id: r.atleta_id, ciclismo_id: r.ciclismo_id, team: r.team });
     }
-    const races = [...byUrl.values()].map(ev => ({ ...ev, categorie: [...ev.categorie] }))
-      .sort((a, b) => (b.data || '').localeCompare(a.data || ''));
+    // Nomi atleta per il podio (join su ciclismo_athletes, come /team)
+    const allCiclismoIds = new Set();
+    for (const ev of byUrl.values()) for (const rows of ev.byCategory.values()) for (const r of rows) if (r.ciclismo_id) allCiclismoIds.add(r.ciclismo_id);
+    let nomeById = new Map();
+    if (allCiclismoIds.size) {
+      const { data: athData } = await supabase.from('ciclismo_athletes').select('ciclismo_id, nome_completo').in('ciclismo_id', [...allCiclismoIds]);
+      nomeById = new Map((athData || []).map(a => [a.ciclismo_id, a.nome_completo]));
+    }
+    const races = [...byUrl.values()].map(ev => {
+      const categorie = {};
+      for (const [cat, rows] of ev.byCategory) {
+        const top3 = rows.sort((a, b) => a.posizione - b.posizione).slice(0, 3)
+          .map(r => ({ posizione: r.posizione, atleta_id: r.atleta_id, nome_completo: nomeById.get(r.ciclismo_id) || r.ciclismo_id, team: r.team }));
+        categorie[cat] = top3;
+      }
+      return { id: ev.id, nome: ev.nome, data: ev.data, regione: ev.regione, luogo: ev.luogo, url: ev.url, n_partecipanti: ev.n_partecipanti, categorie };
+    }).sort((a, b) => (b.data || '').localeCompare(a.data || ''));
+
+    // Foto gara (una per evento, se disponibile) — stessa card visiva del
+    // 2026, che mostra sempre una foto quando c'è.
+    try {
+      const { data: mediaData } = await supabase
+        .from('ciclismo_gara_media')
+        .select('gara_ciclismo_url, photo_url')
+        .eq('stagione', anno)
+        .not('photo_url', 'is', null)
+        .limit(5000);
+      const photoByUrl = new Map();
+      for (const m of (mediaData || [])) if (!photoByUrl.has(m.gara_ciclismo_url)) photoByUrl.set(m.gara_ciclismo_url, m.photo_url);
+      for (const r of races) if (photoByUrl.has(r.url)) r.photo_url = photoByUrl.get(r.url);
+    } catch { /* foto opzionale */ }
     res.json({ races });
   } catch (e) { res.status(500).json({ error: e.message }); }
 });

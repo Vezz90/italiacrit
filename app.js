@@ -21762,33 +21762,38 @@ function _syncRisultatiUrl() {
 // arrivato da "Allievi Uomini" e ora seleziona "Donne"), quel filtro
 // invisibile azzerava i risultati senza spiegazione. La scelta esplicita
 // qui deve sempre vincere sul contesto ereditato.
+// Anni storici (ciclismo.info): i filtri restano SEMPRE visibili e attivi
+// (richiesta esplicita) — quando è selezionato un anno storico, ogni
+// setter richiama renderRisultatiStorico invece di renderRisultati.
+let _risHistoricalYear = null;
 window.risSetGenere = (v) => {
   // clearHubFilter() azzera anche risQueryGenere/risQueryCat (e richiama
   // route()) — va chiamata PRIMA di impostare il valore scelto qui, non
   // dopo, altrimenti lo sovrascriverebbe di nuovo a vuoto.
   if (activeHub && v && activeHub.gender !== v) window.clearHubFilter();
   risQueryGenere = v;
-  renderRisultati();
+  _risHistoricalYear ? renderRisultatiStorico(_risHistoricalYear) : renderRisultati();
 };
 window.risSetCat = (v) => {
   if (activeHub && v && activeHub.catCodes && !activeHub.catCodes.includes(v)) window.clearHubFilter();
   risQueryCat = v;
   _syncRisultatiUrl();
-  renderRisultati();
+  _risHistoricalYear ? renderRisultatiStorico(_risHistoricalYear) : renderRisultati();
 };
-window.risSetMonth  = (v) => { risQueryMonth = v; renderRisultati(); };
-window.risSetRegion = (v) => { risQueryRegion = v; renderRisultati(); };
-window.risSetTipo   = (v) => { risQueryTipo = v; renderRisultati(); };
+window.risSetMonth  = (v) => { risQueryMonth = v; _risHistoricalYear ? renderRisultatiStorico(_risHistoricalYear) : renderRisultati(); };
+window.risSetRegion = (v) => { risQueryRegion = v; _risHistoricalYear ? renderRisultatiStorico(_risHistoricalYear) : renderRisultati(); };
+window.risSetTipo   = (v) => { risQueryTipo = v; _risHistoricalYear ? renderRisultatiStorico(_risHistoricalYear) : renderRisultati(); };
 window.risSetSearch = (v) => {
   clearTimeout(_risSearchTimer);
-  _risSearchTimer = setTimeout(() => { risSearchQuery = v; renderRisultati(); }, 300);
+  _risSearchTimer = setTimeout(() => { risSearchQuery = v; _risHistoricalYear ? renderRisultatiStorico(_risHistoricalYear) : renderRisultati(); }, 300);
 };
-window.risLoadMore = () => { risVisibleCount += RIS_PAGE_STEP; renderRisultati(); };
+window.risLoadMore = () => { risVisibleCount += RIS_PAGE_STEP; _risHistoricalYear ? renderRisultatiStorico(_risHistoricalYear) : renderRisultati(); };
 
 // Anni storici (ciclismo.info, fino al 2007): il pulsante nativo resta
 // "reale" solo per la stagione caricata — ogni anno precedente mostra le
 // gare importate da ciclismo.info al posto dei dati nativi FCI (che non
-// coprono quegli anni).
+// coprono quegli anni). I filtri restano visibili e funzionanti su
+// entrambi (richiesta esplicita), applicati lato client per gli anni storici.
 window.risSetYear = (y) => {
   document.querySelectorAll('#ris-year-row .year-pill, #ris-year-row button').forEach(b => {
     const on = Number(b.dataset.year) === Number(y);
@@ -21796,37 +21801,104 @@ window.risSetYear = (y) => {
     b.style.color = on ? '#fff' : 'var(--text-secondary)';
   });
   if (Number(y) === Number(_loadedSeasonYear())) {
-    const nativeControls = document.getElementById('ris-native-controls');
-    if (nativeControls) nativeControls.style.display = '';
+    _risHistoricalYear = null;
     renderRisultati();
     return;
   }
+  _risHistoricalYear = y;
   renderRisultatiStorico(y);
 };
 
+window._risStoricoCache = window._risStoricoCache || {};
 async function renderRisultatiStorico(anno) {
-  const nativeControls = document.getElementById('ris-native-controls');
-  if (nativeControls) nativeControls.style.display = 'none';
+  // I filtri restano SEMPRE visibili (richiesta esplicita) — niente/tipo
+  // moltiplicatore/campionato non esiste per ciclismo.info, quindi "Tutti i
+  // tipi" resta l'unica scelta sensata lì, ma il resto (ricerca, mese,
+  // genere, regione, categoria) funziona per davvero, applicato qui lato
+  // client sull'elenco già scaricato.
   const cardsEl = document.getElementById('ris-cards');
   const countEl = document.getElementById('ris-count');
   if (!cardsEl) return;
-  cardsEl.innerHTML = '<div class="empty-state">Caricamento…</div>';
-  let payload;
-  try { payload = await apiCall(`/ciclismo-results/races?anno=${encodeURIComponent(anno)}`); }
-  catch { cardsEl.innerHTML = '<div class="empty-state">Errore di caricamento</div>'; return; }
-  const races = (payload?.races || []).sort((a, b) => (b.data || '').localeCompare(a.data || ''));
+
+  let allRaces = window._risStoricoCache[anno];
+  if (!allRaces) {
+    cardsEl.innerHTML = '<div class="empty-state">Caricamento…</div>';
+    let payload;
+    try { payload = await apiCall(`/ciclismo-results/races?anno=${encodeURIComponent(anno)}`); }
+    catch { cardsEl.innerHTML = '<div class="empty-state">Errore di caricamento</div>'; return; }
+    allRaces = payload?.races || [];
+    window._risStoricoCache[anno] = allRaces;
+  }
+
+  // Popola il filtro categoria con le categorie REALI di quest'anno (codici
+  // ciclismo.info, es. DONNE_ALLIEVE) — diverse dai codici nativi (AL_F).
+  const selCat = document.getElementById('ris-sel-cat');
+  if (selCat && selCat.dataset.histYear !== String(anno)) {
+    const catSet = new Set();
+    allRaces.forEach(r => Object.keys(r.categorie || {}).forEach(c => catSet.add(c)));
+    const cats = [...catSet].sort();
+    selCat.innerHTML = `<option value="">Tutte le categorie</option>` +
+      cats.map(c => `<option value="${esc(c)}"${c === risQueryCat ? ' selected' : ''}>${esc(String(c).replace(/_/g, ' '))}</option>`).join('');
+    selCat.dataset.histYear = String(anno);
+  }
+
+  let races = allRaces;
+  if (risSearchQuery) {
+    const q = risSearchQuery.toLowerCase();
+    races = races.filter(r => r.nome.toLowerCase().includes(q) || (r.regione || '').toLowerCase().includes(q));
+  }
+  if (risQueryMonth) races = races.filter(r => r.data && r.data.split('-')[1] === risQueryMonth);
+  if (risQueryRegion) races = races.filter(r => r.regione === risQueryRegion);
+  if (risQueryGenere) races = races.filter(r => Object.keys(r.categorie || {}).some(c => /^DONNE/i.test(c) === (risQueryGenere === 'F')));
+  if (risQueryCat) races = races.filter(r => r.categorie && r.categorie[risQueryCat]);
+
   if (countEl) countEl.textContent = `${races.length} gare`;
-  if (!races.length) { cardsEl.innerHTML = '<div class="empty-state">Nessuna gara trovata per questo anno</div>'; return; }
+  if (!races.length) { cardsEl.innerHTML = '<div class="empty-state">Nessuna gara trovata</div>'; return; }
+
+  const posColorHero = ['p1', 'p2', 'p3'];
   cardsEl.innerHTML = races.map(ev => {
-    const luogo = [ev.regione, ev.luogo].filter(Boolean).join(' · ');
-    const catBadges = ev.categorie.map(c => `<span class="badge-cat">${esc(String(c).replace(/_/g, ' '))}</span>`).join(' ');
-    return `<div class="ris-card" style="cursor:pointer;padding:16px 16px 16px 19px;background:var(--bg-card);border:1px solid var(--border-subtle);border-radius:8px;margin-bottom:10px" onclick="location.hash='#/gara/CIC_${esc(ev.id)}'">
-      <div style="display:flex;justify-content:space-between;align-items:flex-start;gap:12px;flex-wrap:wrap">
-        <div>
-          <div style="font-family:var(--font-heading);font-weight:700;font-size:.95rem">${esc(ev.nome)}</div>
-          <div style="font-size:.8rem;color:var(--text-muted);margin-top:2px">${fmtDateShort(ev.data)}${luogo ? ` · ${esc(luogo)}` : ''} · ${ev.n_partecipanti} partecipanti</div>
+    const catEntries = Object.entries(ev.categorie || {}).filter(([, top3]) => top3.length);
+
+    const catSections = catEntries.map(([catName, top3]) => {
+      const podioRows = top3.map((r, i) => {
+        const pClass = posColorHero[i] || 'pout';
+        const nomeLink = r.atleta_id ? `<a href="#/atleta/${esc(r.atleta_id)}">${esc(r.nome_completo)}</a>` : esc(r.nome_completo || '');
+        return `<div class="hero-podio-row ris-podio-row" style="animation-delay:${i * 60}ms">
+          <div class="hero-pos ${pClass}">${r.posizione}°</div>
+          <div class="ris-podio-info">
+            <div class="hero-name">${nomeLink}</div>
+            <div class="hero-team" style="color:var(--text-secondary)">${esc(r.team || '')}</div>
+          </div>
+        </div>`;
+      }).join('');
+      return `<div class="ris-cat-section">
+        <div class="ris-cat-label">${esc(String(catName).replace(/_/g, ' '))}</div>
+        ${podioRows}
+        <div class="ris-full-link">
+          <a href="#/gara/CIC_${esc(ev.id)}" class="btn-action full" style="font-size:0.75rem;text-align:center;flex:1">CLASSIFICA COMPLETA &rarr;</a>
         </div>
-        <div style="display:flex;gap:4px;flex-wrap:wrap">${catBadges}</div>
+      </div>`;
+    }).join(catEntries.length > 1 ? '<div class="ris-cat-divider"></div>' : '');
+
+    const winner = catEntries[0]?.[1]?.[0];
+    const second = catEntries[0]?.[1]?.[1];
+    const winLine = winner ? `Vince ${esc(winner.nome_completo)}${second ? ` davanti a ${esc(second.nome_completo)}` : ''}.` : '';
+
+    const photoEl = ev.photo_url
+      ? `<a href="#/gara/CIC_${esc(ev.id)}" class="ris-card-photo"><img src="${esc(mediaUrl(ev.photo_url))}" alt="Foto gara" loading="lazy"/><div class="ris-photo-credit">📷 ciclismo.info</div></a>`
+      : '';
+
+    return `<div class="hero-band ris-card">
+      ${photoEl ? `<div class="ris-card-media">${photoEl}</div>` : ''}
+      <div class="ris-card-body">
+        <div class="hero-race-name"><a href="#/gara/CIC_${esc(ev.id)}">${esc(ev.nome)}</a></div>
+        ${winLine ? `<div class="ris-race-narrative">${winLine}</div>` : ''}
+        <div class="hero-race-meta" style="margin-bottom:14px;">
+          <span>${fmtDateShort(ev.data)}</span>
+          ${ev.regione ? `<span class="ris-region-tag">${esc(ev.regione)}</span>` : ''}
+        </div>
+        <div class="hero-divider" style="margin-bottom:12px;"></div>
+        <div class="hero-podio">${catSections}</div>
       </div>
     </div>`;
   }).join('');
