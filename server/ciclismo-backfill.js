@@ -200,10 +200,25 @@ async function main() {
         if (matched) upsertPayload.atleta_id = atletaId;
         await sb.from('ciclismo_athletes').upsert(upsertPayload, { onConflict: 'ciclismo_id' });
 
+        // Atleta_id AUTORITATIVO per questo ciclismo_id: non basarsi solo su
+        // 'matched' (controlla SOLO gli atleti FCI nativi) — un ciclismo_id
+        // già collegato in precedenza da ciclismo-create-profiles.js (via
+        // manual_athletes, per un atleta mai in athletes.json) risulterebbe
+        // "non matched" qui e i risultati di QUESTA stagione (anche se
+        // scrapata in un secondo momento, es. anni più vecchi) restavano
+        // orfani per sempre — 22.184 righe già trovate così dal vivo (bug
+        // reale, Sensi Matteo). Si rilegge il valore vero appena scritto/
+        // preesistente invece di ri-derivarlo ogni volta dal solo match FCI.
+        let finalAtletaId = matched ? atletaId : null;
+        if (!finalAtletaId) {
+          const { data: freshAth } = await sb.from('ciclismo_athletes').select('atleta_id').eq('ciclismo_id', a.ciclismoId).maybeSingle();
+          finalAtletaId = (freshAth && freshAth.atleta_id) || null;
+        }
+
         // Upsert risultati di QUESTO anno
         const rows = scheda.piazzamenti.map(pl => ({
           ciclismo_id: a.ciclismoId,
-          atleta_id: matched ? atletaId : null,
+          atleta_id: finalAtletaId,
           stagione: String(anno),
           categoria: scheda.categoria,
           team: scheda.team,

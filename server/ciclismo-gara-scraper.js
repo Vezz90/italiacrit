@@ -139,9 +139,18 @@ async function main() {
         if (!existingAth) atletiNuovi++;
         await sb.from('ciclismo_athletes').upsert(athPayload, { onConflict: 'ciclismo_id' });
 
+        // Atleta_id AUTORITATIVO: 'matched' controlla solo italiacritIds/
+        // manualIds caricati UNA VOLTA all'avvio — un link fatto DOPO (da
+        // ciclismo-create-profiles.js o dal tool admin rimatch, mentre questo
+        // script gira) non risulterebbe "matched" qui pur essendo già
+        // collegato su ciclismo_athletes: si usa quel valore già letto sopra
+        // come fallback, stessa correzione fatta su ciclismo-backfill.js
+        // dopo il bug reale trovato dal vivo (22.184 righe orfane).
+        const finalAtletaId = matched ? atletaIdDerivato : ((existingAth && existingAth.atleta_id) || null);
+
         const { error: insErr } = await sb.from('ciclismo_results').upsert({
           ciclismo_id: row.ciclismoId,
-          atleta_id: matched ? atletaIdDerivato : null,
+          atleta_id: finalAtletaId,
           stagione: sample.stagione, categoria: sample.categoria, team: row.team,
           posizione: row.posizione, data: sample.data, regione: sample.regione, luogo: sample.luogo,
           nome_gara: sample.nome_gara, gara_ciclismo_url: url,
