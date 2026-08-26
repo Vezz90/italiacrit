@@ -3869,13 +3869,13 @@ function route() {
     risSearchQuery = ''; risQueryMonth = ''; risQueryRegion = ''; risQueryGenere = ''; risQueryTipo = '';
     risQueryCat = decodeURIComponent(_mRisCat[1]);
     if (activeHub) applyHubFilters(activeHub);
-    return renderRisultati();
+    return (_risHistoricalYear ? renderRisultatiStorico(_risHistoricalYear) : renderRisultati());
   }
   if (match('/risultati')) {
     // Reset generic filters, then re-apply hub context if active
     risSearchQuery = ''; risQueryCat = ''; risQueryMonth = ''; risQueryRegion = ''; risQueryGenere = ''; risQueryTipo = '';
     if (activeHub) applyHubFilters(activeHub);
-    return renderRisultati();
+    return (_risHistoricalYear ? renderRisultatiStorico(_risHistoricalYear) : renderRisultati());
   }
   // Calendario filtrato per categoria con URL dedicato — pattern a 2 segmenti
   // (/calendario/cat/:cat), distinto da /calendario/:id (usato per evidenziare
@@ -4817,7 +4817,7 @@ function renderHubSubpage(hubCode, subpage) {
   activeHub._code = hubCode;
   applyHubFilters(hub);
   switch (subpage) {
-    case 'risultati':    return renderRisultati();
+    case 'risultati':    return (_risHistoricalYear ? renderRisultatiStorico(_risHistoricalYear) : renderRisultati());
     case 'classifica':   return renderClassifica();
     case 'atleti':       return renderAtletiList();
     case 'team':         return renderTeamList();
@@ -22008,7 +22008,13 @@ window.risSetGenere = (v) => {
   _risHistoricalYear ? renderRisultatiStorico(_risHistoricalYear) : renderRisultati();
 };
 window.risSetCat = (v) => {
-  if (activeHub && v && activeHub.catCodes && !activeHub.catCodes.includes(v)) window.clearHubFilter();
+  // Sugli anni storici (ciclismo.info) il menu categoria usa i codici GREZZI
+  // della fonte (es. "JUNIORES"), non i codici nativi (es. "JUN_M") con cui
+  // è espresso activeHub.catCodes — vanno tradotti prima del confronto,
+  // altrimenti la select storica azzererebbe SEMPRE l'hub attivo in alto
+  // (mismatch garantito tra "JUNIORES" e "JUN_M").
+  const vNative = _risHistoricalYear ? CICLISMO_CAT_TO_NATIVE[v] : v;
+  if (activeHub && v && activeHub.catCodes && !activeHub.catCodes.includes(vNative)) window.clearHubFilter();
   risQueryCat = v;
   _syncRisultatiUrl();
   _risHistoricalYear ? renderRisultatiStorico(_risHistoricalYear) : renderRisultati();
