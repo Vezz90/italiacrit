@@ -14493,6 +14493,119 @@ function _renderCiclismoMedia(containerId, mediaList) {
     </div>`;
 }
 
+// Storico ciclismo.info per un TEAM — stesso pattern dell'atleta: pillole
+// anno aggiuntive nel selettore STAGIONE già esistente, che al click
+// mostrano il roster (chi ha corso per questa squadra quell'anno) e le
+// foto di quella stagione, nascondendo il contenuto nativo (sempre della
+// stagione corrente).
+window._ciclismoTeamStoricoCache = window._ciclismoTeamStoricoCache || {};
+window._ciclismoTeamMediaCache = window._ciclismoTeamMediaCache || {};
+
+async function _loadTeamCiclismoStorico(teamId, teamNome) {
+  const yearRow = document.getElementById('profile-year-row');
+  if (!yearRow || !teamNome) return;
+  let payload;
+  try { payload = await apiCall(`/ciclismo-results/team?team=${encodeURIComponent(teamNome)}`); }
+  catch { return; }
+  const risultati = payload?.risultati || [];
+  if (!risultati.length) return;
+
+  const perAnno = {};
+  for (const r of risultati) (perAnno[r.stagione] = perAnno[r.stagione] || []).push(r);
+  window._ciclismoTeamStoricoCache[teamId] = perAnno;
+
+  try {
+    const mediaPayload = await apiCall(`/ciclismo-media/team?team=${encodeURIComponent(teamNome)}`);
+    const mediaPerAnno = {};
+    for (const m of (mediaPayload?.media || [])) (mediaPerAnno[m.stagione] = mediaPerAnno[m.stagione] || []).push(m);
+    window._ciclismoTeamMediaCache[teamId] = mediaPerAnno;
+  } catch { window._ciclismoTeamMediaCache[teamId] = {}; }
+
+  const nativeYears = new Set([...yearRow.querySelectorAll('.year-pill')].map(b => b.dataset.year));
+  const ciclismoOnlyYears = Object.keys(perAnno).filter(y => !nativeYears.has(y)).sort((a, b) => b - a);
+  if (!ciclismoOnlyYears.length) return;
+
+  const pillsHtml = ciclismoOnlyYears.map(y => `<button class="year-pill" data-year="${esc(y)}" data-ciclismo="1" onclick="window.setTeamCiclismoYear('${esc(teamId)}','${esc(y)}')" style="padding:5px 13px;border-radius:14px;border:1px solid var(--border-subtle);cursor:pointer;font-size:.82rem;font-weight:700;background:var(--bg-elevated);color:var(--text-secondary)">${esc(y)}</button>`).join('');
+  yearRow.insertAdjacentHTML('beforeend', pillsHtml);
+}
+
+window.setTeamCiclismoYear = (teamId, anno) => {
+  const perAnno = window._ciclismoTeamStoricoCache[teamId];
+  const rows = (perAnno && perAnno[anno] || []).slice().sort((a, b) => (b.data || '').localeCompare(a.data || '') || (a.nome_completo || '').localeCompare(b.nome_completo || ''));
+  if (!rows.length) return;
+
+  document.querySelectorAll('#profile-year-row .year-pill').forEach(b => {
+    const on = b.dataset.year === String(anno);
+    b.style.background = on ? 'var(--accent,#e8001d)' : 'var(--bg-elevated)';
+    b.style.color = on ? '#fff' : 'var(--text-secondary)';
+  });
+
+  const nativo = document.getElementById('team-native-content');
+  if (nativo) nativo.style.display = 'none';
+  const seasonCompare = document.getElementById('season-compare-inject');
+  if (seasonCompare) seasonCompare.style.display = 'none';
+
+  // Roster di quell'anno: atleti distinti con almeno un risultato per questa
+  // squadra in quella stagione, ordinati per numero di piazzamenti.
+  const perAtleta = new Map();
+  for (const r of rows) {
+    const key = r.atleta_id || r.ciclismo_id;
+    if (!perAtleta.has(key)) perAtleta.set(key, { atleta_id: r.atleta_id, ciclismo_id: r.ciclismo_id, nome: r.nome_completo, rows: [] });
+    perAtleta.get(key).rows.push(r);
+  }
+  const roster = [...perAtleta.values()].sort((a, b) => b.rows.length - a.rows.length);
+
+  const posColor = p => p === 1 ? 'var(--gold)' : p === 2 ? 'var(--silver)' : p === 3 ? 'var(--bronze)' : 'var(--text-secondary)';
+  const rosterRows = roster.map(a => {
+    const best = a.rows.reduce((m, r) => (r.posizione && (!m || r.posizione < m)) ? r.posizione : m, null);
+    const nomeLink = a.atleta_id
+      ? `<a href="#/atleta/${esc(a.atleta_id)}">${esc(a.nome)}</a>`
+      : esc(a.nome);
+    return `<tr>
+      <td>${nomeLink}</td>
+      <td style="text-align:center">${a.rows.length}</td>
+      <td style="text-align:center;font-weight:800;color:${posColor(best)}">${best ? best + '°' : '—'}</td>
+    </tr>`;
+  }).join('');
+
+  const mediaList = (window._ciclismoTeamMediaCache[teamId] || {})[anno] || [];
+  const mediaCards = mediaList.map(m => `
+    <div class="profile-media-card profile-media-photo" style="cursor:zoom-in" onclick="openPhotoLightbox('${esc(mediaUrl(m.photo_url))}')">
+      <div class="profile-media-thumb">
+        <img src="${esc(mediaUrl(m.photo_url))}" alt="${esc(m.nome_gara)}" loading="lazy" onerror="this.style.display='none'" />
+        ${m.posizione ? `<div class="profile-media-badge" style="color:${posColor(m.posizione)}">${m.posizione === 1 ? '🥇 1°' : m.posizione === 2 ? '🥈 2°' : m.posizione === 3 ? '🥉 3°' : m.posizione + '°'}</div>` : ''}
+      </div>
+      <div class="profile-media-info">
+        <div class="profile-media-race">${esc(m.nome_gara)}</div>
+        <div class="profile-media-meta">${fmtDateShort(m.data)}${m.caption ? ` · ${esc(m.caption)}` : ''}</div>
+      </div>
+    </div>`).join('');
+
+  const el = document.getElementById('team-ciclismo-content');
+  if (!el) return;
+  el.innerHTML = `
+    <span style="display:none"></span>
+    <div class="section-header" style="margin-top:20px">
+      <span class="section-title">ROSTER ${esc(anno)} · ciclismo.info</span>
+      <span class="section-line"></span>
+    </div>
+    <div style="font-size:.72rem;color:var(--text-muted);margin-bottom:8px">Dati storici importati da ciclismo.info — progetto pilota, in fase di validazione.</div>
+    <table class="results-table" style="margin-bottom:20px">
+      <thead><tr><th>ATLETA</th><th style="text-align:center">GARE</th><th style="text-align:center">MIGLIOR RISULTATO</th></tr></thead>
+      <tbody>${rosterRows}</tbody>
+    </table>
+    ${mediaCards ? `
+    <div class="section-header" style="margin-top:20px">
+      <span class="section-title">MEDIA · ciclismo.info</span>
+      <span class="section-line"></span>
+    </div>
+    <div class="profile-media-section">
+      <div class="profile-media-sub-title">📸 FOTO</div>
+      <div class="profile-media-grid">${mediaCards}</div>
+    </div>` : ''}
+  `;
+};
+
 async function _loadAtletaPcsExtra(atletaId, season, icsRisultati, athlete) {
   const tbody = document.getElementById('atleta-results-tbody');
   if (!tbody) return;
@@ -15471,6 +15584,7 @@ async function renderTeam(team_id, opts = {}) {
       ${adminEditBtn('team', team_id)}
     </div>
 
+    <div id="team-native-content">
     ${catTabsHtml}
 
     <div class="section-header" style="margin-top:28px;align-items:center">
@@ -15524,12 +15638,15 @@ async function renderTeam(team_id, opts = {}) {
         <tbody id="team-results-tbody">${risultatiRows || '<tr><td colspan="9" class="empty-state">Nessun risultato</td></tr>'}</tbody>
       </table>
     </div>
+    </div>
+    <div id="team-ciclismo-content"></div>
   `);
 
   // Bottone messaggio team (async, non blocca il render)
   _injectMsgBtn('team-msg-btn', null, team_id, null);
   _injectFollowBtn('team-follow-btn', 'team', team_id);
   _loadTeamPcsExtra(team_id, selYear, teamViewCat);
+  _loadTeamCiclismoStorico(team_id, t.nome || team_id);
 
   // Foto atleti nella lista CORRIDORI CHIAVE + tabella risultati (batch async)
   const _perfSpans = [...document.querySelectorAll('.team-performers-list .rk-av-wrap[data-aid], .team-roster-list .rk-av-wrap[data-aid], .team-results .rk-av-wrap[data-aid]')];

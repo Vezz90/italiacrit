@@ -4232,6 +4232,31 @@ app.get('/api/ciclismo-media/atleta/:atletaId', async (req, res) => {
   } catch (e) { res.status(500).json({ error: e.message }); }
 });
 
+// Storico ciclismo.info per un TEAM: tutti i risultati dei corridori che
+// hanno gareggiato con quel nome squadra, con il nome atleta (join su
+// ciclismo_athletes) — usato per costruire il roster per anno lato frontend.
+app.get('/api/ciclismo-results/team', async (req, res) => {
+  const teamName = req.query.team;
+  if (!teamName) return res.status(400).json({ error: 'team mancante' });
+  try {
+    const { data, error } = await supabase
+      .from('ciclismo_results')
+      .select('stagione, categoria, team, posizione, data, nome_gara, ciclismo_id, atleta_id')
+      .ilike('team', teamName)
+      .order('data', { ascending: false })
+      .limit(2000);
+    if (error) throw error;
+    const ciclismoIds = [...new Set((data || []).map(r => r.ciclismo_id))];
+    let nomeById = new Map();
+    if (ciclismoIds.length) {
+      const { data: athData } = await supabase.from('ciclismo_athletes').select('ciclismo_id, nome_completo').in('ciclismo_id', ciclismoIds);
+      nomeById = new Map((athData || []).map(a => [a.ciclismo_id, a.nome_completo]));
+    }
+    const risultati = (data || []).map(r => ({ ...r, nome_completo: nomeById.get(r.ciclismo_id) || r.ciclismo_id }));
+    res.json({ risultati });
+  } catch (e) { res.status(500).json({ error: e.message }); }
+});
+
 app.get('/api/ciclismo-media/team', async (req, res) => {
   const teamName = req.query.team;
   if (!teamName) return res.status(400).json({ error: 'team mancante' });
