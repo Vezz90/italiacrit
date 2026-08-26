@@ -93,7 +93,7 @@ async function main() {
 
       // Partecipanti noti di questa gara/stagione, per attribuire ogni foto
       const { data: partecipanti } = await sb.from('ciclismo_results')
-        .select('ciclismo_id, atleta_id, team')
+        .select('ciclismo_id, atleta_id, team, posizione')
         .eq('gara_ciclismo_url', gara.gara_ciclismo_url).eq('stagione', gara.stagione);
       let candidati = [];
       if (partecipanti && partecipanti.length) {
@@ -132,6 +132,7 @@ async function main() {
           categoria: gara.categoria, nome_gara: gara.nome_gara, data: gara.data,
           caption: photo.caption, photo_url: photoUrl,
           ciclismo_id: best ? best.ciclismo_id : null, atleta_id: best ? best.atleta_id : null, team: best ? best.team : null,
+          posizione: best ? best.posizione : null,
         }, { onConflict: 'gara_ciclismo_url,stagione,foto_index' });
         if (insErr) errori++;
         console.log(`  foto ${idx}: ${photoUrl ? 'OK' : 'errore upload'} — ${best ? best.atleta_id || best.ciclismo_id : 'non attribuita'} — "${photo.caption.slice(0,60)}"`);

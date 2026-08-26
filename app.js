@@ -14423,26 +14423,32 @@ window.setAtletaCiclismoYear = (atletaId, anno) => {
   if (title) title.textContent = `RISULTATI ${anno} · ${categoria.replace(/_/g, ' ')}`;
   const note = document.getElementById('atleta-ciclismo-note');
   if (note) note.style.display = '';
+  // Il toggle Cronologico/Per Posizione funziona invariato anche qui:
+  // setAtletaResultsSort legge data-date + .td-pos dal DOM, non gli importa
+  // se le righe sono native o ciclismo.info.
   const sortBtns = document.getElementById('atleta-sort-btns');
-  if (sortBtns) sortBtns.style.display = 'none';
+  if (sortBtns) sortBtns.style.display = '';
+  document.querySelectorAll('.ath-sort-btn').forEach(b => b.classList.toggle('active-cat', b.dataset.sort === 'data'));
   const thead = document.getElementById('atleta-results-thead');
   if (thead) thead.innerHTML = `<tr><th>DATA</th><th>POS</th><th>GARA</th><th colspan="3">REGIONE / LOCALITÀ</th></tr>`;
 
   const posColor = p => p === 1 ? 'var(--gold)' : p === 2 ? 'var(--silver)' : p === 3 ? 'var(--bronze)' : 'var(--text-secondary)';
   const tbody = document.getElementById('atleta-results-tbody');
   if (tbody) tbody.innerHTML = rows.map(r => `
-    <tr>
+    <tr data-date="${esc(r.data || '')}">
       <td class="td-date">${r.data ? new Date(r.data).toLocaleDateString('it-IT') : ''}</td>
       <td class="td-pos" style="text-align:center;font-weight:800;color:${posColor(r.posizione)}">${r.posizione ? r.posizione + '°' : '—'}</td>
       <td class="td-race">${r.gara_ciclismo_url ? `<a href="${esc(r.gara_ciclismo_url)}" target="_blank" rel="noopener">${esc(r.nome_gara)}</a>` : esc(r.nome_gara)}</td>
       <td colspan="3" style="color:var(--text-muted)">${esc(r.regione || '')} · ${esc(r.luogo || '')}</td>
     </tr>`).join('');
 
-  // Nasconde il pannello MEDIA nativo (sempre riferito alla stagione
-  // corrente) mentre si guarda uno storico ciclismo.info — altrimenti
-  // restavano visibili insieme, confondendo le due annate.
+  // Nasconde i pannelli legati alla stagione NATIVA (sempre 2026, non
+  // all'anno storico selezionato) — altrimenti restavano visibili insieme,
+  // mostrando media/risultati PCS di un anno diverso da quello scelto.
   const nativoMedia = document.getElementById('atleta-media-nativo');
   if (nativoMedia) nativoMedia.style.display = 'none';
+  const esteroGroup = document.getElementById('atleta-stats-estero');
+  if (esteroGroup) esteroGroup.style.display = 'none';
 
   _renderCiclismoMedia('atleta-ciclismo-media', (window._ciclismoMediaCache[atletaId] || {})[anno] || []);
 };
@@ -14454,10 +14460,16 @@ function _renderCiclismoMedia(containerId, mediaList) {
   const el = document.getElementById(containerId);
   if (!el) return;
   if (!mediaList.length) { el.innerHTML = ''; return; }
+  // La posizione va sempre mostrata (anche se non è un podio): utile per chi
+  // volesse riconoscersi/taggarsi in una foto di gruppo pur non essendo il
+  // soggetto principale della didascalia.
+  const posLabel = p => { p = Number(p); if (!p) return ''; return p === 1 ? '🥇 1°' : p === 2 ? '🥈 2°' : p === 3 ? '🥉 3°' : `${p}°`; };
+  const posColor = p => { p = Number(p); return p === 1 ? 'var(--gold)' : p === 2 ? 'var(--silver)' : p === 3 ? 'var(--bronze)' : 'var(--text-muted)'; };
   const cards = mediaList.map(m => `
     <div class="profile-media-card profile-media-photo" style="cursor:zoom-in" onclick="openPhotoLightbox('${esc(mediaUrl(m.photo_url))}')">
       <div class="profile-media-thumb">
         <img src="${esc(mediaUrl(m.photo_url))}" alt="${esc(m.nome_gara)}" loading="lazy" onerror="this.style.display='none'" />
+        ${m.posizione ? `<div class="profile-media-badge" style="color:${posColor(m.posizione)}">${posLabel(m.posizione)}</div>` : ''}
       </div>
       <div class="profile-media-info">
         <div class="profile-media-race">${esc(m.nome_gara)}</div>

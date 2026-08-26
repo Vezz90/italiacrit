@@ -4222,7 +4222,7 @@ app.get('/api/ciclismo-media/atleta/:atletaId', async (req, res) => {
   try {
     const { data, error } = await supabase
       .from('ciclismo_gara_media')
-      .select('stagione, categoria, team, nome_gara, caption, photo_url, data, gara_ciclismo_url')
+      .select('stagione, categoria, team, nome_gara, caption, photo_url, data, gara_ciclismo_url, posizione')
       .eq('atleta_id', req.params.atletaId)
       .not('photo_url', 'is', null)
       .order('data', { ascending: false })
@@ -4238,7 +4238,7 @@ app.get('/api/ciclismo-media/team', async (req, res) => {
   try {
     const { data, error } = await supabase
       .from('ciclismo_gara_media')
-      .select('stagione, categoria, team, nome_gara, caption, photo_url, data, gara_ciclismo_url, atleta_id, ciclismo_id')
+      .select('stagione, categoria, team, nome_gara, caption, photo_url, data, gara_ciclismo_url, atleta_id, ciclismo_id, posizione')
       .ilike('team', teamName)
       .not('photo_url', 'is', null)
       .order('data', { ascending: false })
