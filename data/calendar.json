@@ -17278,5 +17278,29 @@
         "regione": "BOLZANO",
         "categoria": "Donne Allieve",
         "luogo": "BOLZANO/BOZEN"
+    },
+    {
+        "id": "GIRO_DI_CAMPANIA_2026-09-20",
+        "nome": "GIRO DI CAMPANIA",
+        "data": "2026-09-20",
+        "tipo": "internazionale",
+        "moltiplicatore": 3,
+        "campionato_regionale": false,
+        "campionato_italiano": false,
+        "regione": "CAMPANIA",
+        "categoria": "Classe 1 pro",
+        "luogo": "VARIE LOCALITà"
+    },
+    {
+        "id": "5_COPPA_ANTONIO_ZANON_1_MEMORIAL_ANTONIO_ZANON_DA_2026-09-27",
+        "nome": "5 COPPA ANTONIO ZANON -  1. MEMORIAL ANTONIO ZANON DA",
+        "data": "2026-09-27",
+        "tipo": "regionale",
+        "moltiplicatore": 1,
+        "campionato_regionale": false,
+        "campionato_italiano": false,
+        "regione": "BOLZANO",
+        "categoria": "Donne Allieve",
+        "luogo": "BOLZANO/BOZEN"
     }
 ]

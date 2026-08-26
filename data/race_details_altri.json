@@ -838,5 +838,19 @@
     "location_str": "PIAZZA IV NOVEMBRE, 14, A.S.D. UNIONE CICLISTI SANDANIELESI, Italia",
     "lat": null,
     "lng": null
+  },
+  "GIRO_DI_CAMPANIA_2026-09-20": {
+    "raceid": "182894",
+    "fci_url": "https://www.federciclismo.it/ricerca-gare/dettaglio-gara/?raceid=182894&site=strada_it",
+    "info": [
+      "GIRO DI CAMPANIA Strada GIRO DI CAMPANIA ID Gara: 182894 | <br><b>Data:</b> 20/09/2026 INFORMAZIONI GENERALI Localita: varie località <br><b>Provincia:</b> CE <br><b>Categoria:</b> (1.1) Classe 1 pro <br><b>Categoria Geografica:</b> Internazionale <br><b>Tipo di Gara:</b> In linea \\ strada <br><b>Tipo di Programma:</b> PROFESSIONISTI <br><b>Approvazione:</b> In fase di approvazione ORGANIZZATORE <br><b>Nome:</b> TERENZI SPORT EVENTI S.S.D. A R.L. <br><b>Indirizzo:</b> VIA PAOLO EMILIO 7 <br><b>CAP:</b> 00192 Citta: ROMA <br><b>Provincia:</b> RM <br><b>Telefono:</b> 3777075965 <br><b>Email:</b> terenzisporteventi@gmail.com ISCRIZIONI <br><b>Indirizzo:</b> , , AGGIUNGI QUESTA GARA AL CALENDARIO"
+    ],
+    "luogo_ritrovo": null,
+    "indirizzo_ritrovo": "VIA PAOLO EMILIO 7",
+    "orario_partenza": null,
+    "km": null,
+    "location_str": "VIA PAOLO EMILIO 7, Italia",
+    "lat": null,
+    "lng": null
   }
 }
