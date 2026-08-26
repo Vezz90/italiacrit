@@ -115,21 +115,25 @@ function parseGaraPage(html, sourceUrl) {
   return { garaId, titleText, ordineArrivo };
 }
 
-(async () => {
-  const url = process.argv[2];
-  if (!url) { console.error('Uso: node ciclismo-info-test.js <url-scheda-atleta|url-gara>'); process.exit(1); }
-  const html = await fetchDecoded(url);
-  if (/\/gara_/.test(url)) {
-    const data = parseGaraPage(html, url);
-    console.log(JSON.stringify(data, null, 2));
-    console.log(`\n${data.ordineArrivo.length} piazzamenti in ordine di arrivo estratti.`);
-  } else if (/\/classifica_/.test(url)) {
-    const data = parseClassificaPage(html);
-    console.log(JSON.stringify(data.classifica.slice(0, 5), null, 2));
-    console.log(`... (${data.classifica.length} atleti totali)`);
-  } else {
-    const data = parseAthletePage(html, url);
-    console.log(JSON.stringify(data, null, 2));
-    console.log(`\n${data.piazzamenti.length} piazzamenti estratti.`);
-  }
-})();
+module.exports = { fetchDecoded, decodeEntities, parseAthletePage, parseClassificaPage, parseGaraPage };
+
+if (require.main === module) {
+  (async () => {
+    const url = process.argv[2];
+    if (!url) { console.error('Uso: node ciclismo-info-test.js <url-scheda-atleta|url-gara|url-classifica>'); process.exit(1); }
+    const html = await fetchDecoded(url);
+    if (/\/gara_/.test(url)) {
+      const data = parseGaraPage(html, url);
+      console.log(JSON.stringify(data, null, 2));
+      console.log(`\n${data.ordineArrivo.length} piazzamenti in ordine di arrivo estratti.`);
+    } else if (/\/classifica_/.test(url)) {
+      const data = parseClassificaPage(html);
+      console.log(JSON.stringify(data.classifica.slice(0, 5), null, 2));
+      console.log(`... (${data.classifica.length} atleti totali)`);
+    } else {
+      const data = parseAthletePage(html, url);
+      console.log(JSON.stringify(data, null, 2));
+      console.log(`\n${data.piazzamenti.length} piazzamenti estratti.`);
+    }
+  })();
+}
