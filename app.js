@@ -14551,26 +14551,19 @@ window.setTeamCiclismoYear = (teamId, anno) => {
   const seasonCompare = document.getElementById('season-compare-inject');
   if (seasonCompare) seasonCompare.style.display = 'none';
 
-  // Roster di quell'anno: atleti distinti con almeno un risultato per questa
-  // squadra in quella stagione, ordinati per numero di piazzamenti.
-  const perAtleta = new Map();
-  for (const r of rows) {
-    const key = r.atleta_id || r.ciclismo_id;
-    if (!perAtleta.has(key)) perAtleta.set(key, { atleta_id: r.atleta_id, ciclismo_id: r.ciclismo_id, nome: r.nome_completo, rows: [] });
-    perAtleta.get(key).rows.push(r);
-  }
-  const roster = [...perAtleta.values()].sort((a, b) => b.rows.length - a.rows.length);
-
+  // Risultati gara-per-gara di quell'anno (stesso taglio della tabella
+  // nativa RISULTATI TEAM: una riga per piazzamento, non un riepilogo per
+  // atleta) — per coerenza visiva con il resto del sito.
   const posColor = p => p === 1 ? 'var(--gold)' : p === 2 ? 'var(--silver)' : p === 3 ? 'var(--bronze)' : 'var(--text-secondary)';
-  const rosterRows = roster.map(a => {
-    const best = a.rows.reduce((m, r) => (r.posizione && (!m || r.posizione < m)) ? r.posizione : m, null);
-    const nomeLink = a.atleta_id
-      ? `<a href="#/atleta/${esc(a.atleta_id)}">${esc(a.nome)}</a>`
-      : esc(a.nome);
+  const rosterRows = rows.map(r => {
+    const nomeLink = r.atleta_id
+      ? `<a href="#/atleta/${esc(r.atleta_id)}">${esc(r.nome_completo)}</a>`
+      : esc(r.nome_completo || '');
     return `<tr>
-      <td>${nomeLink}</td>
-      <td style="text-align:center">${a.rows.length}</td>
-      <td style="text-align:center;font-weight:800;color:${posColor(best)}">${best ? best + '°' : '—'}</td>
+      <td>${fmtDateShort(r.data)}</td>
+      <td style="font-weight:800;color:${posColor(r.posizione)}">${r.posizione ? r.posizione + '°' : '—'}</td>
+      <td>${esc(r.nome_gara || '')}</td>
+      <td class="td-hide-mobile">${nomeLink}</td>
     </tr>`;
   }).join('');
 
@@ -14592,14 +14585,16 @@ window.setTeamCiclismoYear = (teamId, anno) => {
   el.innerHTML = `
     <span style="display:none"></span>
     <div class="section-header" style="margin-top:20px">
-      <span class="section-title">ROSTER ${esc(anno)} · ciclismo.info</span>
+      <span class="section-title">RISULTATI TEAM ${esc(anno)} · ciclismo.info</span>
       <span class="section-line"></span>
     </div>
     <div style="font-size:.72rem;color:var(--text-muted);margin-bottom:8px">Dati storici importati da ciclismo.info — progetto pilota, in fase di validazione.</div>
-    <table class="results-table" style="margin-bottom:20px">
-      <thead><tr><th>ATLETA</th><th style="text-align:center">GARE</th><th style="text-align:center">MIGLIOR RISULTATO</th></tr></thead>
-      <tbody>${rosterRows}</tbody>
-    </table>
+    <div class="results-table-wrap">
+      <table class="results-table team-results" style="margin-bottom:20px">
+        <thead><tr><th>DATA</th><th>POS</th><th>GARA</th><th class="td-hide-mobile">ATLETA</th></tr></thead>
+        <tbody>${rosterRows || '<tr><td colspan="4" class="empty-state">Nessun risultato</td></tr>'}</tbody>
+      </table>
+    </div>
     ${mediaCards ? `
     <div class="section-header" style="margin-top:20px">
       <span class="section-title">MEDIA · ciclismo.info</span>
