@@ -778,6 +778,30 @@ async function upsertResults(sb, rows) {
       rosterPcsSlugs.set(id, a.pcs_slug);
     }
     if (addedRoster) console.log(`+ ${addedRoster} atleti solo-roster con pcs_slug già noto (mai in una gara FCI)`);
+
+    // Atleti importati da ciclismo.info (manual_athletes, source=ciclismo_info):
+    // spesso passano professionisti/continental DOPO l'ultima stagione
+    // ciclismo.info registrata (es. Nencini, Magli) — senza questo, quella
+    // continuità restava invisibile perché il ramo sopra include SOLO chi ha
+    // già un pcs_slug noto, e per loro non lo cerca mai nessuno. Qui li si
+    // aggiunge anche senza slug: la ricerca per nome più sotto (searchPcsRider)
+    // prova comunque a risolverli come fa già per i normali atleti FCI.
+    let addedCiclismo = 0;
+    try {
+      const r = await fetch('https://italiacrit.onrender.com/api/data/manual-athletes');
+      if (r.ok) {
+        const data = await r.json();
+        for (const bucket of Object.values(data || {})) {
+          for (const a of (bucket.atleti || [])) {
+            if (a.fonte === 'ciclismo_info' && a.atleta_id && !athMap.has(a.atleta_id)) {
+              athMap.set(a.atleta_id, { atleta_id: a.atleta_id, cognome: a.cognome || a.atleta_id, nome: a.nome || '' });
+              addedCiclismo++;
+            }
+          }
+        }
+      }
+    } catch {}
+    if (addedCiclismo) console.log(`+ ${addedCiclismo} atleti importati da ciclismo.info senza pcs_slug noto (ricerca per nome)`);
   }
 
   let athletes = [...athMap.values()];

@@ -4180,15 +4180,18 @@ app.get('/api/pcs-athlete/:id', async (req, res) => {
 });
 
 app.get('/api/pcs-results/atleta/:atletaId', async (req, res) => {
-  const season = parseInt(req.query.season) || new Date().getFullYear();
+  // Senza ?season, ritorna TUTTE le stagioni — usato dal widget "Top
+  // results/Teams" stile PCS, che aggrega l'intera carriera, non solo
+  // l'anno in corso (a differenza delle altre chiamate a questo endpoint).
   try {
-    const { data, error } = await supabase
+    let q = supabase
       .from('pcs_results')
-      .select('gara_name, data, posizione, distacco, pcs_race_slug, pcs_url, gara_id, country')
+      .select('gara_name, data, posizione, distacco, pcs_race_slug, pcs_url, gara_id, country, season')
       .eq('atleta_id', req.params.atletaId)
-      .eq('season', season)
       .order('data', { ascending: false })
       .limit(500);
+    if (req.query.season) q = q.eq('season', parseInt(req.query.season));
+    const { data, error } = await q;
     if (error) throw error;
     res.json(data || []);
   } catch(e) { res.status(500).json({ error: e.message }); }

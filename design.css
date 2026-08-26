@@ -12084,3 +12084,31 @@ main.page:has(.itc-dash) {
   .albo-season-year { width: 46px; font-size: 0.95rem; }
   .albo-pod-1 .albo-name { font-size: 1rem; }
 }
+
+/* ── Widget "Top results / Teams" (profilo atleta, stile PCS) ── */
+.pcs-widget-title {
+  font-family: 'Inter', system-ui, sans-serif;
+  font-size: 0.78rem;
+  font-weight: 700;
+  color: var(--text-primary);
+  margin-bottom: 8px;
+  padding-bottom: 6px;
+  border-bottom: 1px solid var(--border-subtle);
+}
+.pcs-top-result-row, .pcs-team-row {
+  display: flex;
+  align-items: baseline;
+  gap: 4px;
+  font-size: 0.82rem;
+  padding: 4px 0;
+  line-height: 1.4;
+}
+.pcs-top-result-pos { color: var(--accent); font-weight: 700; white-space: nowrap; }
+.pcs-top-result-name a, .pcs-team-name a { color: var(--text-primary); text-decoration: none; }
+.pcs-top-result-name a:hover, .pcs-team-name a:hover { text-decoration: underline; }
+.pcs-top-result-year { color: var(--text-muted); font-size: 0.76rem; }
+.pcs-team-year { color: var(--text-muted); font-weight: 700; width: 38px; flex-shrink: 0; }
+.pcs-team-cat { color: var(--text-muted); font-size: 0.76rem; }
+@media (max-width: 640px) {
+  .pcs-widget-grid { grid-template-columns: 1fr !important; gap: 20px !important; }
+}

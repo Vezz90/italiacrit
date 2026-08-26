@@ -13740,6 +13740,7 @@ async function renderAtleta(atleta_id, opts = {}) {
 
   setPage(`
     ${headerHtml}
+    <div id="atleta-pcs-widget"></div>
     ${profileYearRow('atleta', atleta_id, selYear)}
     <div id="season-compare-inject"></div>
     ${_badgeStripHtml}
@@ -13774,6 +13775,7 @@ async function renderAtleta(atleta_id, opts = {}) {
   _injectMsgBtn('atleta-msg-btn', atleta_id, null, null);
   _injectFollowBtn('atleta-follow-btn', 'atleta', atleta_id);
   _loadAtletaPcsExtra(atleta_id, selYear, risultati, a);
+  _loadAtletaTopResultsWidget(atleta_id, risultati, displayTeam, displayCategoria);
   _loadCiclismoStorico(atleta_id, selYear);
 
   // Confronto stagione precedente — iniettato quando la promise è pronta
@@ -14387,6 +14389,87 @@ function _ciclismoYearStats(rows) {
   const p3 = rows.filter(r => r.posizione === 3).length;
   const pout = rows.filter(r => r.posizione >= 4 && r.posizione <= 10).length;
   return { p1, p2, p3, pout };
+}
+
+// Widget "Top results / Teams" in stile PCS — carriera intera dell'atleta
+// (non solo l'anno selezionato), unendo risultati nativi ICS, ciclismo.info
+// e PCS. I punti usati per ordinare i "Top results" sono i punti reali
+// (BASEPTS per posizione × moltiplicatore) per i risultati nativi, ma solo
+// un'approssimazione per posizione per ciclismo.info/PCS (nessun
+// moltiplicatore/classificazione gara nota lì ancora — vedi nota nel
+// widget) — quando il backfill dei moltiplicatori sarà fatto, questa
+// funzione userà automaticamente valori più precisi.
+async function _loadAtletaTopResultsWidget(atletaId, nativeRisultati, currentTeam, currentCategoria) {
+  const el = document.getElementById('atleta-pcs-widget');
+  if (!el) return;
+
+  const [ciclismoPayload, pcsRows] = await Promise.all([
+    apiCall(`/ciclismo-results/atleta/${encodeURIComponent(atletaId)}`).catch(() => null),
+    apiCall(`/pcs-results/atleta/${encodeURIComponent(atletaId)}`).catch(() => []),
+  ]);
+  const ciclismoRows = ciclismoPayload?.risultati || [];
+  if (!ciclismoRows.length && !(Array.isArray(pcsRows) && pcsRows.length) && !(nativeRisultati || []).length) return;
+
+  const merged = [];
+  for (const r of (nativeRisultati || [])) {
+    if (!r.data || !r.posizione) continue;
+    merged.push({ data: r.data, anno: r.data.slice(0, 4), posizione: r.posizione, nome_gara: r.nome_gara, url: `#/gara/${r.gara_id}`, external: false, punti: r.punti_effettivi || 0, team: currentTeam, source: 'ics' });
+  }
+  for (const r of ciclismoRows) {
+    if (!r.data || !r.posizione) continue;
+    merged.push({ data: r.data, anno: r.stagione, posizione: r.posizione, nome_gara: r.nome_gara, url: r.gara_ciclismo_url, external: true, punti: BASEPTS[r.posizione] || 0, team: r.team, source: 'ciclismo' });
+  }
+  for (const r of (Array.isArray(pcsRows) ? pcsRows : [])) {
+    if (!r.data || !r.posizione) continue;
+    merged.push({ data: r.data, anno: String(r.season || r.data.slice(0, 4)), posizione: r.posizione, nome_gara: r.gara_name, url: r.pcs_url, external: true, punti: BASEPTS[r.posizione] || 0, team: null, source: 'pcs' });
+  }
+  if (!merged.length) return;
+
+  // Top 10 per punti (a parità, posizione migliore prima) — le vittorie
+  // (1°) si mostrano senza numero, come su PCS.
+  const top10 = merged.slice().sort((a, b) => b.punti - a.punti || a.posizione - b.posizione || (b.data || '').localeCompare(a.data || '')).slice(0, 10);
+  const topResultsHtml = top10.map(r => {
+    const isStage = /\bstage\b|\btappa\b/i.test(r.nome_gara || '');
+    const posLabel = r.posizione === 1 ? '' : `${r.posizione}${_ordSuffix(r.posizione)}${isStage ? ' stage' : ''} `;
+    const nomeHtml = r.url ? (r.external ? `<a href="${esc(r.url)}" target="_blank" rel="noopener">${esc(r.nome_gara)}</a>` : `<a href="${esc(r.url)}">${esc(r.nome_gara)}</a>`) : esc(r.nome_gara || '');
+    return `<div class="pcs-top-result-row"><span class="pcs-top-result-pos">${posLabel}</span><span class="pcs-top-result-name">${nomeHtml}</span> <span class="pcs-top-result-year">('${esc(String(r.anno).slice(-2))})</span></div>`;
+  }).join('');
+
+  // Teams per anno: ciclismo.info (per anno) + team nativo attuale — PCS non
+  // fornisce il nome squadra per riga, quindi le annate pro/continental
+  // note solo da PCS non compaiono qui finché non recuperiamo quel dato.
+  const teamsByYear = new Map();
+  for (const r of ciclismoRows) {
+    if (!r.stagione || !r.team) continue;
+    if (!teamsByYear.has(r.stagione)) teamsByYear.set(r.stagione, { team: r.team, categoria: r.categoria });
+  }
+  const nowYear = String(_loadedSeasonYear());
+  if (currentTeam) teamsByYear.set(nowYear, { team: currentTeam, categoria: currentCategoria });
+  const teamYears = [...teamsByYear.keys()].sort((a, b) => b - a);
+  const teamsHtml = teamYears.map(y => {
+    const { team, categoria } = teamsByYear.get(y);
+    const tid = y === nowYear ? null : _resolveHistoricalTeamId(team);
+    const teamHtml = tid ? `<a href="#/team/${esc(tid)}">${esc(team)}</a>` : esc(team || '');
+    const catShort = (categoria || '').replace(/_/g, ' ');
+    return `<div class="pcs-team-row"><span class="pcs-team-year">${esc(y)}</span><span class="pcs-team-name">${teamHtml}</span>${catShort ? ` <span class="pcs-team-cat">(${esc(catShort)})</span>` : ''}</div>`;
+  }).join('');
+
+  if (!topResultsHtml && !teamsHtml) return;
+  el.innerHTML = `
+    <div class="pcs-widget-grid" style="display:grid;grid-template-columns:1fr 1fr;gap:24px;margin:16px 0 8px">
+      <div>
+        <div class="pcs-widget-title">Top results</div>
+        ${topResultsHtml || '<div class="empty-state">Nessun risultato</div>'}
+      </div>
+      <div>
+        <div class="pcs-widget-title">Teams</div>
+        ${teamsHtml || '<div class="empty-state">Nessuna squadra</div>'}
+      </div>
+    </div>
+    <div style="font-size:.68rem;color:var(--text-muted);margin-bottom:8px">Ranking approssimato (moltiplicatore gara non ancora disponibile per ciclismo.info/PCS) — in fase di affinamento.</div>`;
+}
+function _ordSuffix(n) {
+  return n === 1 ? 'st' : n === 2 ? 'nd' : n === 3 ? 'rd' : 'th';
 }
 
 // Risolve il team_id italiacrit ATTUALE a partire da un nome squadra
