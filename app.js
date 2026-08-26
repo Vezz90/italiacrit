@@ -15176,6 +15176,18 @@ async function _loadAtletaPcsExtra(atletaId, season, icsRisultati, athlete) {
       <td style="text-align:right">—</td>
       <td class="td-pts">0</td>`);
   }
+
+  // Andamento piazzamenti: include anche i risultati PCS (garaExtra +
+  // esteroExtra) — un atleta che corre da professionista/continental ha
+  // spesso ZERO risultati nel circuito ICS ma decine su PCS (più dati =
+  // grafico migliore, non peggiore). Ricostruito qui perché la versione
+  // statica iniziale (cumulHtml) conosce solo i risultati ICS, disponibili
+  // subito, mentre PCS arriva sempre in un secondo momento via fetch async.
+  const chartWrap = document.getElementById('atleta-cumul-chart-wrap');
+  if (chartWrap) {
+    const combined = [...(icsRisultati || []), ...garaExtra, ...esteroExtra.map(r => ({ data: r.data, posizione: r.posizione, nome_gara: r.gara_name }))];
+    chartWrap.innerHTML = buildCumulChart(combined);
+  }
 }
 
 // ── Commenti gare ─────────────────────────────────────────────────────────────
@@ -22033,9 +22045,9 @@ async function renderRisultati() {
     const _risCurYear = Number(_loadedSeasonYear());
     const _risYearPills = [];
     for (let y = _risCurYear; y >= 2007; y--) _risYearPills.push(y);
-    const risYearPillsHtml = `<div id="ris-year-row" style="display:flex;gap:8px;flex-wrap:wrap;margin:12px 0 4px">
-      ${_risYearPills.map(y => `<button class="year-pill ${y === _risCurYear ? '' : ''}" data-year="${y}" onclick="window.risSetYear(${y})"
-        style="padding:5px 13px;border-radius:14px;border:1px solid var(--border-subtle);cursor:pointer;font-size:.82rem;font-weight:700;
+    const risYearPillsHtml = `<div id="ris-year-row" style="display:flex;gap:8px;overflow-x:auto;flex-wrap:nowrap;margin:12px 0 4px;padding-bottom:4px;scrollbar-width:thin">
+      ${_risYearPills.map(y => `<button class="year-pill" data-year="${y}" onclick="window.risSetYear(${y})"
+        style="flex:0 0 auto;padding:5px 13px;border-radius:14px;border:1px solid var(--border-subtle);cursor:pointer;font-size:.82rem;font-weight:700;
         background:${y === _risCurYear ? 'var(--accent,#e8001d)' : 'var(--bg-elevated)'};color:${y === _risCurYear ? '#fff' : 'var(--text-secondary)'}">${y}</button>`).join('')}
     </div>`;
 
