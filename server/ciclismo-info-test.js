@@ -31,12 +31,17 @@ function parseAthletePage(html, sourceUrl) {
   const ciclismoId = idMatch ? idMatch[1] : null;
 
   const titleMatch = html.match(/<title>([^<]*)<\/title>/);
-  // "NOME COGNOME - TEAM - Categoria X - Stagione Y"
-  const titleParts = titleMatch ? decodeEntities(titleMatch[1]).split(' - ') : [];
-  const nomeCompleto = titleParts[0] || null;
-  const team = titleParts[1] || null;
-  const categoria = (titleParts[2] || '').replace(/^Categoria\s*/i, '') || null;
-  const stagione = (titleParts[3] || '').replace(/^Stagione\s*/i, '') || null;
+  // "NOME COGNOME - TEAM (può contenere " - ") - Categoria X - Stagione Y"
+  // "Categoria"/"Stagione" sono ancore fisse in coda: il team va preso "greedy"
+  // fino a quell'ancora, non con un semplice split(' - ') che spezza gli
+  // sponsor multipli tipo "BIESSE - CARRERA - PREMAC" in pezzi separati.
+  const titleFull = titleMatch ? decodeEntities(titleMatch[1]) : '';
+  const titleRe = /^(.*?)\s-\s(.*)\s-\sCategoria\s(.*?)\s-\sStagione\s(\d{4})\s*$/i;
+  const tm = titleFull.match(titleRe);
+  const nomeCompleto = tm ? tm[1] : (titleFull.split(' - ')[0] || null);
+  const team = tm ? tm[2] : null;
+  const categoria = tm ? tm[3] : null;
+  const stagione = tm ? tm[4] : null;
 
   const birthYearMatch = html.match(/<b>([A-ZÀ-Ý' ]+)<\/b>\s*\(( \d{4})\)/) || html.match(/\(\s*(\d{4})\s*\)/);
   const birthDateMatch = html.match(/Nato(?:\s+a\s+[^<]*?)?\s+[Ii]l\s+(\d{1,2}\s+\w+\s+\d{4})/);
@@ -46,12 +51,34 @@ function parseAthletePage(html, sourceUrl) {
   const yearLinks = [...html.matchAll(/scheda_corridore_risultati_gare_(?:tb_)?\d+_[^_]*(?:_[^_]*)*?_(\d{4})\.htm/g)]
     .map(m => m[1]).filter((v, i, a) => a.indexOf(v) === i).sort();
 
+  // I piazzamenti sono raggruppati sotto intestazioni tipo "--- 9 Vittorie ---",
+  // "--- 3 Secondi Posti ---" ecc. — la posizione non è nella riga della gara
+  // ma va dedotta dall'intestazione del gruppo che la precede.
+  const ORDINALI = [
+    [/^Vittori/i, 1], [/^Second/i, 2], [/^Terz/i, 3], [/^Quart/i, 4], [/^Quint/i, 5],
+    [/^Sest/i, 6], [/^Settim/i, 7], [/^Ottav/i, 8], [/^Non/i, 9], [/^Decim/i, 10],
+  ];
+  const headerRe = /---\s*\d+\s+([A-Za-zàèéìòù]+)(?:\s+Post[oi])?\s*---/gi;
+  const headers = [];
+  let hm;
+  while ((hm = headerRe.exec(html))) {
+    const label = hm[1];
+    const found = ORDINALI.find(([re]) => re.test(label));
+    headers.push({ index: hm.index, posizione: found ? found[1] : null });
+  }
+  function posizioneAt(idx) {
+    let pos = null;
+    for (const h of headers) { if (h.index <= idx) pos = h.posizione; else break; }
+    return pos;
+  }
+
   // Piazzamenti: ogni blocco "data - regione ... luogo ... <a href=race>nome gara</a>"
   const rows = [];
   const rowRe = /<b>(\d{4}-\d{2}-\d{2})\s*-\s*([^<]*?)<\/b><\/font>\s*<font[^>]*><b>\s*-?\s*([^<]*?)<\/b><\/font><br>\s*<font[^>]*><b>(?:<a href="([^"]+)"[^>]*>)?\s*([^<]*?)(?:<\/a>)?\s*-\s*gara\s*(?:Linea\s*)?di\s*Km\.\s*([\d,]*)/g;
   let m;
   while ((m = rowRe.exec(html))) {
     rows.push({
+      posizione: posizioneAt(m.index),
       data: m[1],
       regione: decodeEntities(m[2]).trim(),
       luogo: decodeEntities(m[3]).trim(),

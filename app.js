@@ -13753,12 +13753,14 @@ async function renderAtleta(atleta_id, opts = {}) {
         <tbody id="atleta-results-tbody">${tableRows || '<tr><td colspan="7" class="empty-state">Nessun risultato</td></tr>'}</tbody>
       </table>
     </div>
+    <div id="ciclismo-storico-inject"></div>
   `);
 
   // Inject bottone messaggio in modo async (lookup non blocca il render)
   _injectMsgBtn('atleta-msg-btn', atleta_id, null, null);
   _injectFollowBtn('atleta-follow-btn', 'atleta', atleta_id);
   _loadAtletaPcsExtra(atleta_id, selYear, risultati, a);
+  _loadCiclismoStorico(atleta_id);
 
   // Confronto stagione precedente — iniettato quando la promise è pronta
   _prevAthPromise.then(prevA => {
@@ -14326,6 +14328,57 @@ async function showPcsRaceModal(raceSlug, season, raceName) {
 window.showPcsRaceModal = showPcsRaceModal;
 
 // ── PCS risultati extra atleta (circuito esteso + gare non in circuito) ───────
+// Storico importato da ciclismo.info (progetto pilota, non ancora esteso a
+// tutti gli atleti) — sezione separata sotto i risultati della stagione
+// corrente, raggruppata per anno con team-dell'anno e posizione.
+async function _loadCiclismoStorico(atletaId) {
+  const el = document.getElementById('ciclismo-storico-inject');
+  if (!el) return;
+  let payload;
+  try { payload = await apiCall(`/ciclismo-results/atleta/${encodeURIComponent(atletaId)}`); }
+  catch { return; }
+  const risultati = payload?.risultati || [];
+  if (!risultati.length) return;
+
+  const perAnno = {};
+  for (const r of risultati) {
+    (perAnno[r.stagione] = perAnno[r.stagione] || []).push(r);
+  }
+  const anni = Object.keys(perAnno).sort((a, b) => b - a);
+
+  const posColor = p => p === 1 ? 'var(--gold)' : p === 2 ? 'var(--silver)' : p === 3 ? 'var(--bronze)' : 'var(--text-secondary)';
+  const annoBlocks = anni.map(anno => {
+    const rows = perAnno[anno].sort((a, b) => (b.data || '').localeCompare(a.data || ''));
+    const team = rows[0]?.team || '';
+    const righe = rows.map(r => `
+      <tr>
+        <td>${esc(r.data ? new Date(r.data).toLocaleDateString('it-IT') : '')}</td>
+        <td style="text-align:center;font-weight:800;color:${posColor(r.posizione)}">${r.posizione ? r.posizione + '°' : '—'}</td>
+        <td>${r.gara_ciclismo_url ? `<a href="${esc(r.gara_ciclismo_url)}" target="_blank" rel="noopener">${esc(r.nome_gara)}</a>` : esc(r.nome_gara)}</td>
+        <td style="color:var(--text-muted)">${esc(r.regione || '')} · ${esc(r.luogo || '')}</td>
+      </tr>`).join('');
+    return `
+      <div style="margin-top:10px">
+        <div style="font-weight:800;font-size:.85rem;display:flex;align-items:center;gap:8px;margin-bottom:4px">
+          <span>${esc(anno)}</span>
+          <span style="font-weight:400;color:var(--text-muted);font-size:.78rem">${esc(team)}</span>
+        </div>
+        <table class="results-table" style="font-size:.8rem">
+          <tbody>${righe}</tbody>
+        </table>
+      </div>`;
+  }).join('');
+
+  el.innerHTML = `
+    <div class="section-header" style="margin-top:28px">
+      <span class="section-title">STORICO CICLISMO.INFO (${anni[anni.length - 1]}-${anni[0]})</span>
+      <span class="section-line"></span>
+    </div>
+    <div style="font-size:.72rem;color:var(--text-muted);margin-bottom:6px">Dati storici importati da ciclismo.info — progetto pilota, in fase di validazione.</div>
+    ${annoBlocks}
+  `;
+}
+
 async function _loadAtletaPcsExtra(atletaId, season, icsRisultati, athlete) {
   const tbody = document.getElementById('atleta-results-tbody');
   if (!tbody) return;

@@ -4194,6 +4194,27 @@ app.get('/api/pcs-results/atleta/:atletaId', async (req, res) => {
   } catch(e) { res.status(500).json({ error: e.message }); }
 });
 
+// Storico ciclismo.info per un atleta: tutte le stagioni/gare/posizioni/team
+// importate (vedi server/ciclismo-import-single.js), raggruppabile per anno
+// lato frontend.
+app.get('/api/ciclismo-results/atleta/:atletaId', async (req, res) => {
+  try {
+    const { data, error } = await supabase
+      .from('ciclismo_results')
+      .select('stagione, categoria, team, posizione, data, regione, luogo, nome_gara, gara_ciclismo_url, km')
+      .eq('atleta_id', req.params.atletaId)
+      .order('data', { ascending: false })
+      .limit(1000);
+    if (error) throw error;
+    const { data: athData } = await supabase
+      .from('ciclismo_athletes')
+      .select('data_nascita')
+      .eq('atleta_id', req.params.atletaId)
+      .maybeSingle();
+    res.json({ risultati: data || [], data_nascita: athData ? athData.data_nascita : null });
+  } catch (e) { res.status(500).json({ error: e.message }); }
+});
+
 // Tutti i risultati (dei NOSTRI atleti) per UNA gara estera specifica —
 // usato per il modale "risultati gara" al posto del link esterno a PCS: la
 // gara resta consultabile sul sito invece di mandare il traffico via.
