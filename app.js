@@ -14394,10 +14394,15 @@ async function _loadCiclismoStorico(atletaId, nativeSelYear, nativeCount) {
 
   // La stagione nativa caricata (di default, es. 2026) è SEMPRE mostrata come
   // pillola anche senza un solo risultato — se questo atleta non ha niente
-  // lì ma ha storico ciclismo.info, la pagina di default appariva vuota
-  // ("Nessun risultato" ovunque). Salta dritto all'ultimo anno CON dati
-  // invece di lasciare quel buco in mezzo.
-  if (!nativeCount) window.setAtletaCiclismoYear(atletaId, ciclismoOnlyYears[0]);
+  // lì ma ha storico ciclismo.info, restava comunque una pillola "morta" che,
+  // se ricliccata, riportava alla pagina vuota. La si TOGLIE del tutto
+  // invece di lasciarla lì (richiesta esplicita: niente anni vuoti nel
+  // mezzo, si salta a piè pari all'ultimo anno utile) e si salta dritti
+  // all'ultimo anno CON dati.
+  if (!nativeCount) {
+    yearRow.querySelectorAll('.year-pill').forEach(b => { if (b.dataset.year === String(nativeSelYear)) b.remove(); });
+    window.setAtletaCiclismoYear(atletaId, ciclismoOnlyYears[0]);
+  }
 }
 
 function _ciclismoYearStats(rows) {
@@ -14805,8 +14810,13 @@ async function _loadTeamCiclismoStorico(teamId, teamNome, nativeCount) {
   // Stessa logica del profilo atleta: se il team non ha nemmeno un atleta
   // nella stagione nativa caricata (es. Zalf nel 2026, dopo che i soli
   // atleti ciclismo.info sono stati esclusi dalla rosa attuale) ma ha
-  // storico, salta dritto all'ultimo anno CON dati invece della pagina vuota.
-  if (!nativeCount) window.setTeamCiclismoYear(teamId, ciclismoOnlyYears[0]);
+  // storico, si TOGLIE la pillola nativa morta (altrimenti riportava alla
+  // pagina vuota se ricliccata) e si salta dritto all'ultimo anno CON dati.
+  if (!nativeCount) {
+    const curNativeYear = String(_loadedSeasonYear());
+    yearRow.querySelectorAll('.year-pill').forEach(b => { if (b.dataset.year === curNativeYear) b.remove(); });
+    window.setTeamCiclismoYear(teamId, ciclismoOnlyYears[0]);
+  }
 }
 
 window._teamCiclismoCurCat = window._teamCiclismoCurCat || {};
