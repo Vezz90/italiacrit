@@ -4255,14 +4255,23 @@ app.get('/api/ciclismo-results/team', async (req, res) => {
   const teamName = req.query.team;
   if (!teamName) return res.status(400).json({ error: 'team mancante' });
   try {
-    const { data, error } = await supabase
-      .from('ciclismo_results')
-      .select('stagione, categoria, team, posizione, data, nome_gara, ciclismo_id, atleta_id')
-      .ilike('team', teamAnchorPattern(teamName))
-      .order('data', { ascending: false })
-      .limit(2000);
-    if (error) throw error;
-    const ciclismoIds = [...new Set((data || []).map(r => r.ciclismo_id))];
+    // Stesso bug del cap PostgREST a 1000 righe (vedi /ciclismo-results/races)
+    // — un team con più stagioni/categorie può facilmente superare 1000 righe.
+    const data = [];
+    const PAGE = 1000;
+    for (let from = 0; ; from += PAGE) {
+      const { data: page, error } = await supabase
+        .from('ciclismo_results')
+        .select('stagione, categoria, team, posizione, data, nome_gara, ciclismo_id, atleta_id')
+        .ilike('team', teamAnchorPattern(teamName))
+        .order('data', { ascending: false })
+        .range(from, from + PAGE - 1);
+      if (error) throw error;
+      if (!page || !page.length) break;
+      data.push(...page);
+      if (page.length < PAGE || data.length >= 5000) break;
+    }
+    const ciclismoIds = [...new Set(data.map(r => r.ciclismo_id))];
     let nomeById = new Map();
     if (ciclismoIds.length) {
       const { data: athData } = await supabase.from('ciclismo_athletes').select('ciclismo_id, nome_completo').in('ciclismo_id', ciclismoIds);
@@ -4290,15 +4299,27 @@ app.get('/api/ciclismo-results/races', async (req, res) => {
   const anno = req.query.anno;
   if (!anno) return res.status(400).json({ error: 'anno mancante' });
   try {
-    const { data, error } = await supabase
-      .from('ciclismo_results')
-      .select('gara_ciclismo_url, nome_gara, data, categoria, regione, luogo, posizione, atleta_id, ciclismo_id, team')
-      .eq('stagione', anno)
-      .not('gara_ciclismo_url', 'is', null)
-      .limit(20000);
-    if (error) throw error;
+    // PostgREST tronca sempre a max_rows (di solito 1000) indipendentemente
+    // da .limit() — un anno con più di 1000 risultati perdeva silenziosamente
+    // parte delle righe (bug reale osservato: 1°/3° posto di una gara
+    // mancanti dal podio, solo il 2° rientrava nella prima pagina). Pagina
+    // con .range() come già fatto altrove in questo file per lo stesso motivo.
+    const data = [];
+    const PAGE = 1000;
+    for (let from = 0; ; from += PAGE) {
+      const { data: page, error } = await supabase
+        .from('ciclismo_results')
+        .select('gara_ciclismo_url, nome_gara, data, categoria, regione, luogo, posizione, atleta_id, ciclismo_id, team')
+        .eq('stagione', anno)
+        .not('gara_ciclismo_url', 'is', null)
+        .range(from, from + PAGE - 1);
+      if (error) throw error;
+      if (!page || !page.length) break;
+      data.push(...page);
+      if (page.length < PAGE) break;
+    }
     const byUrl = new Map();
-    for (const r of (data || [])) {
+    for (const r of data) {
       const gid = ciclismoGaraId(r.gara_ciclismo_url);
       if (!gid) continue;
       if (!byUrl.has(gid)) {

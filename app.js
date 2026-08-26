@@ -14595,11 +14595,18 @@ async function renderGaraStorica(ciclismoGaraId) {
 
   const posColorMedia = p => p === 1 ? 'var(--gold)' : p === 2 ? 'var(--silver)' : p === 3 ? 'var(--bronze)' : 'var(--text-muted)';
   const posLabelMedia = p => { p = Number(p); if (!p) return ''; return p === 1 ? '🥇 1°' : p === 2 ? '🥈 2°' : p === 3 ? '🥉 3°' : `${p}°`; };
+  const [heroPhoto, ...restPhotos] = mediaList;
   const photosHtml = mediaList.length ? `
     <div class="comp-section" style="margin-top:16px">
-      <div class="comp-section-title" style="border:none;padding:0">Foto</div>
-      <div class="profile-media-grid">
-        ${mediaList.map(m => `
+      <div class="comp-section-title" style="border:none;padding:0">Foto${mediaList.length > 1 ? ` & Video` : ''}</div>
+      <div class="gara-hero-media" style="cursor:zoom-in;position:relative" onclick="openPhotoLightbox('${esc(mediaUrl(heroPhoto.photo_url))}')">
+        <img src="${esc(mediaUrl(heroPhoto.photo_url))}" alt="Foto gara" loading="lazy" style="width:100%;height:100%;object-fit:cover" onerror="this.style.display='none'" />
+        ${heroPhoto.posizione ? `<div class="profile-media-badge" style="position:absolute;top:10px;left:10px;color:${posColorMedia(heroPhoto.posizione)};background:rgba(0,0,0,.55);padding:3px 8px;border-radius:4px;font-weight:700">${posLabelMedia(heroPhoto.posizione)}</div>` : ''}
+        <div style="position:absolute;bottom:8px;right:10px;font-size:.68rem;color:#fff;background:rgba(0,0,0,.55);padding:2px 8px;border-radius:4px">📷 ciclismo.info</div>
+      </div>
+      ${restPhotos.length ? `
+      <div class="profile-media-grid" style="margin-top:8px">
+        ${restPhotos.map(m => `
           <div class="profile-media-card profile-media-photo" style="cursor:zoom-in" onclick="openPhotoLightbox('${esc(mediaUrl(m.photo_url))}')">
             <div class="profile-media-thumb">
               <img src="${esc(mediaUrl(m.photo_url))}" alt="Foto gara" loading="lazy" onerror="this.style.display='none'" />
@@ -14609,7 +14616,7 @@ async function renderGaraStorica(ciclismoGaraId) {
               <div class="profile-media-meta" style="opacity:.7">📷 ciclismo.info</div>
             </div>
           </div>`).join('')}
-      </div>
+      </div>` : ''}
     </div>` : '';
 
   setPage(`
