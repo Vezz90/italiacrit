@@ -13776,7 +13776,7 @@ async function renderAtleta(atleta_id, opts = {}) {
   _injectFollowBtn('atleta-follow-btn', 'atleta', atleta_id);
   _loadAtletaPcsExtra(atleta_id, selYear, risultati, a);
   _loadAtletaTopResultsWidget(atleta_id, risultati, displayTeam, displayCategoria, displayTeamId);
-  _loadCiclismoStorico(atleta_id, selYear);
+  _loadCiclismoStorico(atleta_id, selYear, risultati.length);
 
   // Confronto stagione precedente — iniettato quando la promise è pronta
   _prevAthPromise.then(prevA => {
@@ -14353,7 +14353,7 @@ window.showPcsRaceModal = showPcsRaceModal;
 window._ciclismoStoricoCache = window._ciclismoStoricoCache || {};
 window._ciclismoMediaCache = window._ciclismoMediaCache || {};
 
-async function _loadCiclismoStorico(atletaId, nativeSelYear) {
+async function _loadCiclismoStorico(atletaId, nativeSelYear, nativeCount) {
   const yearRow = document.getElementById('profile-year-row');
   if (!yearRow) return;
   let payload;
@@ -14381,6 +14381,13 @@ async function _loadCiclismoStorico(atletaId, nativeSelYear) {
 
   const pillsHtml = ciclismoOnlyYears.map(y => `<button class="year-pill" data-year="${esc(y)}" data-ciclismo="1" onclick="window.setAtletaCiclismoYear('${esc(atletaId)}','${esc(y)}')" style="padding:5px 13px;border-radius:14px;border:1px solid var(--border-subtle);cursor:pointer;font-size:.82rem;font-weight:700;background:var(--bg-elevated);color:var(--text-secondary)">${esc(y)}</button>`).join('');
   yearRow.insertAdjacentHTML('beforeend', pillsHtml);
+
+  // La stagione nativa caricata (di default, es. 2026) è SEMPRE mostrata come
+  // pillola anche senza un solo risultato — se questo atleta non ha niente
+  // lì ma ha storico ciclismo.info, la pagina di default appariva vuota
+  // ("Nessun risultato" ovunque). Salta dritto all'ultimo anno CON dati
+  // invece di lasciare quel buco in mezzo.
+  if (!nativeCount) window.setAtletaCiclismoYear(atletaId, ciclismoOnlyYears[0]);
 }
 
 function _ciclismoYearStats(rows) {
@@ -14410,7 +14417,6 @@ async function _loadAtletaTopResultsWidget(atletaId, nativeRisultati, currentTea
   const ciclismoRows = ciclismoPayload?.risultati || [];
   if (!ciclismoRows.length && !(Array.isArray(pcsRows) && pcsRows.length) && !(nativeRisultati || []).length) return;
 
-  const isChampionship = nome => /campionato\s+(italiano|regionale)/i.test(nome || '');
   const merged = [];
   for (const r of (nativeRisultati || [])) {
     if (!r.data || !r.posizione) continue;
@@ -14426,16 +14432,24 @@ async function _loadAtletaTopResultsWidget(atletaId, nativeRisultati, currentTea
   }
   if (!merged.length) return;
 
-  // Ordine di rilievo (NON punteggi — nessun numero mostrato/salvato): prima
-  // le vittorie, poi entro ogni fascia i piazzamenti a Campionato
-  // Italiano/Regionale contano di più, poi la posizione migliore.
-  const rankKey = r => (r.posizione === 1 ? 2 : 0) + (isChampionship(r.nome_gara) ? 1 : 0);
+  // Ordine di rilievo (NON punteggi — nessun numero salvato, solo una
+  // priorità di visualizzazione): 1) podio (entro il 3°) al Campionato
+  // Italiano, 2) vittorie "semplici", 3) podio al Campionato Regionale,
+  // 4) tutti gli altri piazzamenti — a parità, la posizione migliore vince.
+  const isCampIt = nome => /campionato\s+italiano/i.test(nome || '');
+  const isCampReg = nome => /campionato\s+regionale/i.test(nome || '');
+  const tier = r => {
+    if (isCampIt(r.nome_gara) && r.posizione <= 3) return 4;
+    if (r.posizione === 1) return 3;
+    if (isCampReg(r.nome_gara) && r.posizione <= 3) return 2;
+    return 1;
+  };
   const top10 = merged.slice()
-    .sort((a, b) => rankKey(b) - rankKey(a) || a.posizione - b.posizione || (b.data || '').localeCompare(a.data || ''))
+    .sort((a, b) => tier(b) - tier(a) || a.posizione - b.posizione || (b.data || '').localeCompare(a.data || ''))
     .slice(0, 10);
   const topResultsHtml = top10.map(r => {
     const isStage = /\bstage\b|\btappa\b/i.test(r.nome_gara || '');
-    const posLabel = r.posizione === 1 ? '' : `${r.posizione}${_ordSuffix(r.posizione)}${isStage ? ' stage' : ''} `;
+    const posLabel = `${r.posizione}${_ordSuffix(r.posizione)}${isStage ? ' stage' : ''} `;
     const nomeHtml = r.url ? (r.external ? `<a href="${esc(r.url)}" target="_blank" rel="noopener">${esc(r.nome_gara)}</a>` : `<a href="${esc(r.url)}">${esc(r.nome_gara)}</a>`) : esc(r.nome_gara || '');
     return `<div class="pcs-top-result-row"><span class="pcs-top-result-pos">${posLabel}</span><span class="pcs-top-result-name">${nomeHtml}</span> <span class="pcs-top-result-year">('${esc(String(r.anno).slice(-2))})</span></div>`;
   }).join('');
@@ -14628,6 +14642,7 @@ function _renderCiclismoMedia(containerId, mediaList) {
       <div class="profile-media-info">
         <div class="profile-media-race">${esc(m.nome_gara)}</div>
         <div class="profile-media-meta">${fmtDateShort(m.data)}${m.caption ? ` · ${esc(m.caption)}` : ''}</div>
+        <div class="profile-media-meta" style="opacity:.7">📷 ciclismo.info</div>
       </div>
     </div>`).join('');
   el.innerHTML = `
@@ -14664,7 +14679,7 @@ window._teamCiclismoRidersView = function(v) {
   document.getElementById('team-ciclismo-tab-roster')?.classList.toggle('active-cat', showRoster);
 };
 
-async function _loadTeamCiclismoStorico(teamId, teamNome) {
+async function _loadTeamCiclismoStorico(teamId, teamNome, nativeCount) {
   const yearRow = document.getElementById('profile-year-row');
   if (!yearRow || !teamNome) return;
   let payload;
@@ -14690,18 +14705,42 @@ async function _loadTeamCiclismoStorico(teamId, teamNome) {
 
   const pillsHtml = ciclismoOnlyYears.map(y => `<button class="year-pill" data-year="${esc(y)}" data-ciclismo="1" onclick="window.setTeamCiclismoYear('${esc(teamId)}','${esc(y)}')" style="padding:5px 13px;border-radius:14px;border:1px solid var(--border-subtle);cursor:pointer;font-size:.82rem;font-weight:700;background:var(--bg-elevated);color:var(--text-secondary)">${esc(y)}</button>`).join('');
   yearRow.insertAdjacentHTML('beforeend', pillsHtml);
+
+  // Stessa logica del profilo atleta: se il team non ha nemmeno un atleta
+  // nella stagione nativa caricata (es. Zalf nel 2026, dopo che i soli
+  // atleti ciclismo.info sono stati esclusi dalla rosa attuale) ma ha
+  // storico, salta dritto all'ultimo anno CON dati invece della pagina vuota.
+  if (!nativeCount) window.setTeamCiclismoYear(teamId, ciclismoOnlyYears[0]);
 }
 
-window.setTeamCiclismoYear = (teamId, anno) => {
+window._teamCiclismoCurCat = window._teamCiclismoCurCat || {};
+window.setTeamCiclismoYear = (teamId, anno, catOverride) => {
   const perAnno = window._ciclismoTeamStoricoCache[teamId];
-  const rows = (perAnno && perAnno[anno] || []).slice().sort((a, b) => (b.data || '').localeCompare(a.data || '') || (a.nome_completo || '').localeCompare(b.nome_completo || ''));
-  if (!rows.length) return;
+  const allRows = (perAnno && perAnno[anno] || []).slice().sort((a, b) => (b.data || '').localeCompare(a.data || '') || (a.nome_completo || '').localeCompare(b.nome_completo || ''));
+  if (!allRows.length) return;
 
   document.querySelectorAll('#profile-year-row .year-pill').forEach(b => {
     const on = b.dataset.year === String(anno);
     b.style.background = on ? 'var(--accent,#e8001d)' : 'var(--bg-elevated)';
     b.style.color = on ? '#fff' : 'var(--text-secondary)';
   });
+
+  // Un team può avere più categorie/sessi nella stessa stagione (es. Elite
+  // U23 uomini + donne, o Allievi+Juniores): mescolarli in un unico
+  // roster/risultati creava un elenco senza senso — si raggruppa per
+  // categoria (che su ciclismo.info include già il sesso, es.
+  // DONNE_ALLIEVE) con dei tab, come fa la pagina nativa per stagione 2026.
+  const cats = [...new Set(allRows.map(r => r.categoria).filter(Boolean))].sort();
+  const stateKey = teamId + '_' + anno;
+  let curCat = catOverride || window._teamCiclismoCurCat[stateKey] || cats[0] || '';
+  if (!cats.includes(curCat)) curCat = cats[0] || '';
+  window._teamCiclismoCurCat[stateKey] = curCat;
+  const rows = cats.length > 1 ? allRows.filter(r => r.categoria === curCat) : allRows;
+
+  const catTabsHtml = cats.length > 1 ? `
+    <div class="tab-group" role="tablist" style="display:flex;gap:6px;flex-wrap:wrap;margin-bottom:16px">
+      ${cats.map(c => `<button class="tab-btn ${c === curCat ? 'active-cat' : ''}" onclick="window.setTeamCiclismoYear('${esc(teamId)}','${esc(anno)}','${esc(c)}')">${esc(String(c).replace(/_/g, ' '))}</button>`).join('')}
+    </div>` : '';
 
   // Nasconde il contenuto nativo (sempre della stagione ATTUALE) — l'intero
   // blocco storico (stats, corridori chiave/roster, risultati) viene
@@ -14710,8 +14749,6 @@ window.setTeamCiclismoYear = (teamId, anno) => {
   // tabella risultati veniva davvero aggiornata in alcuni casi).
   const nativo = document.getElementById('team-native-content');
   if (nativo) nativo.style.display = 'none';
-  const nativeHeaderStats = document.getElementById('team-native-header-stats');
-  if (nativeHeaderStats) nativeHeaderStats.style.display = 'none';
   const seasonCompare = document.getElementById('season-compare-inject');
   if (seasonCompare) seasonCompare.style.display = 'none';
 
@@ -14782,19 +14819,26 @@ window.setTeamCiclismoYear = (teamId, anno) => {
     </div>`;
   }).join('') || '<div class="empty-state">Nessun atleta</div>';
 
-  // Stats: solo conteggi OSSERVATI (podi, gare, atleti) — niente punti stimati.
+  // Stats: solo conteggi OSSERVATI (podi, gare, atleti) — niente punti
+  // stimati. Aggiorna DIRETTAMENTE la barra stats nativa in alto (stesso
+  // slot visivo di sempre, come sul profilo atleta) invece di nasconderla e
+  // duplicarla più sotto — così cambia insieme al resto quando si passa da
+  // un anno all'altro.
   const p1 = rows.filter(r => r.posizione === 1).length;
   const p2 = rows.filter(r => r.posizione === 2).length;
   const p3 = rows.filter(r => r.posizione === 3).length;
   const pout = rows.filter(r => r.posizione >= 4 && r.posizione <= 10).length;
-  const statsRowHtml = `
-    <div class="team-stats-row">
-      <div class="team-stat"><span class="team-stat-val" style="color:var(--gold)">${p1}</span><span class="team-stat-label">1°</span></div>
-      <div class="team-stat"><span class="team-stat-val" style="color:var(--silver)">${p2}</span><span class="team-stat-label">2°</span></div>
-      <div class="team-stat"><span class="team-stat-val" style="color:var(--bronze)">${p3}</span><span class="team-stat-label">3°</span></div>
-      <div class="team-stat"><span class="team-stat-val" style="color:var(--text-muted)">${pout}</span><span class="team-stat-label">4-10</span></div>
-      <div class="team-stat"><span class="team-stat-val">${perAtleta.size}</span><span class="team-stat-label">Atleti</span></div>
-    </div>`;
+  const nativeHeaderStats = document.getElementById('team-native-header-stats');
+  if (nativeHeaderStats) {
+    nativeHeaderStats.innerHTML = `
+      <div class="team-stats-row">
+        <div class="team-stat"><span class="team-stat-val" style="color:var(--gold)">${p1}</span><span class="team-stat-label">1°</span></div>
+        <div class="team-stat"><span class="team-stat-val" style="color:var(--silver)">${p2}</span><span class="team-stat-label">2°</span></div>
+        <div class="team-stat"><span class="team-stat-val" style="color:var(--bronze)">${p3}</span><span class="team-stat-label">3°</span></div>
+        <div class="team-stat"><span class="team-stat-val" style="color:var(--text-muted)">${pout}</span><span class="team-stat-label">4-10</span></div>
+        <div class="team-stat"><span class="team-stat-val">${perAtleta.size}</span><span class="team-stat-label">Atleti</span></div>
+      </div>`;
+  }
 
   const mediaList = (window._ciclismoTeamMediaCache[teamId] || {})[anno] || [];
   const mediaCards = mediaList.map(m => `
@@ -14806,6 +14850,7 @@ window.setTeamCiclismoYear = (teamId, anno) => {
       <div class="profile-media-info">
         <div class="profile-media-race">${esc(m.nome_gara)}</div>
         <div class="profile-media-meta">${fmtDateShort(m.data)}${m.caption ? ` · ${esc(m.caption)}` : ''}</div>
+        <div class="profile-media-meta" style="opacity:.7">📷 ciclismo.info</div>
       </div>
     </div>`).join('');
 
@@ -14814,14 +14859,14 @@ window.setTeamCiclismoYear = (teamId, anno) => {
   el.innerHTML = `
     <span style="display:none"></span>
     <div style="font-size:.72rem;color:var(--text-muted);margin:12px 0 8px">Dati storici — archivio in fase di validazione.</div>
-    ${statsRowHtml}
+    ${catTabsHtml}
     <div class="section-header" style="margin-top:20px">
       <div style="display:flex;gap:8px">
         <button id="team-ciclismo-tab-chiave" class="tab-btn active-cat" onclick="window._teamCiclismoRidersView('chiave')">Corridori chiave</button>
         <button id="team-ciclismo-tab-roster" class="tab-btn" onclick="window._teamCiclismoRidersView('roster')">Roster completo</button>
       </div>
       <span class="section-line"></span>
-      <span class="section-subtitle" id="team-ciclismo-riders-sub">${esc(anno)}</span>
+      <span class="section-subtitle" id="team-ciclismo-riders-sub">${esc(String(curCat).replace(/_/g, ' '))}</span>
     </div>
     <div id="team-ciclismo-riders-chiave" class="team-performers-list" style="margin-bottom:28px">${topPerfHtml}</div>
     <div id="team-ciclismo-riders-roster" class="team-roster-list" style="margin-bottom:28px;display:none">${rosterCardsHtml}</div>
@@ -15888,7 +15933,7 @@ async function renderTeam(team_id, opts = {}) {
   _injectMsgBtn('team-msg-btn', null, team_id, null);
   _injectFollowBtn('team-follow-btn', 'team', team_id);
   _loadTeamPcsExtra(team_id, selYear, teamViewCat);
-  _loadTeamCiclismoStorico(team_id, t.nome || team_id);
+  _loadTeamCiclismoStorico(team_id, t.nome || team_id, (t.atleti || []).length);
 
   // Foto atleti nella lista CORRIDORI CHIAVE + tabella risultati (batch async)
   const _perfSpans = [...document.querySelectorAll('.team-performers-list .rk-av-wrap[data-aid], .team-roster-list .rk-av-wrap[data-aid], .team-results .rk-av-wrap[data-aid]')];
@@ -17741,7 +17786,7 @@ async function renderGara(gara_id) {
       _extEntries.forEach(({ entry: _extPhoto, badge: _yearBadge }, _extIdx) => {
         const _src = esc(icProxy(_extPhoto.url));
         const _isXpix = (_extPhoto.album_slug || _extPhoto.source === 'xpix');
-        const _srcLabel = _isXpix ? 'xpix.it' : 'Archivio storico';
+        const _srcLabel = _isXpix ? 'xpix.it' : 'ciclismo.info';
         const _photoSource = _isXpix ? 'xpix' : 'ic';
         const _xpixKey = _extPhoto.gara_id || primaryGaraId;
         const _isEs = /_ES[12]_[MF]$/.test(_xpixKey);
@@ -23327,7 +23372,7 @@ function _drawPhotoCredit(ctx, W, H, d, { x, y, align = 'center', xpixLogo } = {
   }
   ctx.fillStyle = 'rgba(255,255,255,0.5)';
   ctx.textAlign = align;
-  const label = d.photo_source === 'ic' ? `📷 Archivio storico` : `📷 Foto: ${d.photo_credit}`;
+  const label = d.photo_source === 'ic' ? `📷 ciclismo.info` : `📷 Foto: ${d.photo_credit}`;
   ctx.fillText(label, baseX, baseY);
 }
 

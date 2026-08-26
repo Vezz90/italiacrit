@@ -128,7 +128,7 @@ async function main() {
                     photoUrl = `/photos/${storagePath}`;
                     await sb.from('entity_overrides').upsert([
                       { entity_type: 'atleta', entity_id: atletaId, field: 'photo_url', new_value: photoUrl },
-                      { entity_type: 'atleta', entity_id: atletaId, field: 'photo_credit', new_value: 'Archivio storico' },
+                      { entity_type: 'atleta', entity_id: atletaId, field: 'photo_credit', new_value: 'ciclismo.info' },
                     ], { onConflict: 'entity_type,entity_id,field' });
                     totFoto++;
                   }

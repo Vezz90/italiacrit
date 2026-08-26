@@ -787,7 +787,7 @@ async function _photoCreditFor(garaId) {
   const aliases = [garaId, garaId.replace(/^\d+_/, ''), garaId.replace(/_[A-Z0-9]+_[MF]$/, '')];
   const [xpix, ic] = await Promise.all([readXpixPhotos(), readICPhotos()]);
   for (const alias of aliases) if (xpix[alias]) return 'xpix.it';
-  for (const alias of aliases) if (ic[alias]) return 'Archivio storico';
+  for (const alias of aliases) if (ic[alias]) return 'ciclismo.info';
   return null;
 }
 
@@ -9346,7 +9346,7 @@ async function _generateGaraPhotoBuffer(garaId, results, catLabel, title, subtit
     }
     const aliases = [garaId, garaId.replace(/^\d+_/, ''), garaId.replace(/_[A-Z0-9]+_[MF]$/, '')];
     const [xpix, ic] = await Promise.all([readXpixPhotos(), readICPhotos()]);
-    for (const [src, srcCredit] of [[xpix, 'xpix.it'], [ic, 'Archivio storico']]) {
+    for (const [src, srcCredit] of [[xpix, 'xpix.it'], [ic, 'ciclismo.info']]) {
       for (const alias of aliases) {
         const entry = src[alias];
         if (entry && (entry.url || entry.filename)) {
