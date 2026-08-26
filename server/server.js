@@ -4273,9 +4273,11 @@ app.get('/api/ciclismo-results/team', async (req, res) => {
     }
     const ciclismoIds = [...new Set(data.map(r => r.ciclismo_id))];
     let nomeById = new Map();
-    if (ciclismoIds.length) {
-      const { data: athData } = await supabase.from('ciclismo_athletes').select('ciclismo_id, nome_completo').in('ciclismo_id', ciclismoIds);
-      nomeById = new Map((athData || []).map(a => [a.ciclismo_id, a.nome_completo]));
+    for (let i = 0; i < ciclismoIds.length; i += 300) {
+      const chunk = ciclismoIds.slice(i, i + 300);
+      const { data: athData, error: athErr } = await supabase.from('ciclismo_athletes').select('ciclismo_id, nome_completo').in('ciclismo_id', chunk);
+      if (athErr) continue;
+      for (const a of (athData || [])) nomeById.set(a.ciclismo_id, a.nome_completo);
     }
     const risultati = (data || []).map(r => ({ ...r, nome_completo: nomeById.get(r.ciclismo_id) || r.ciclismo_id }));
     res.json({ risultati });
@@ -4331,13 +4333,21 @@ app.get('/api/ciclismo-results/races', async (req, res) => {
       if (!ev.byCategory.has(r.categoria)) ev.byCategory.set(r.categoria, []);
       if (r.posizione) ev.byCategory.get(r.categoria).push({ posizione: r.posizione, atleta_id: r.atleta_id, ciclismo_id: r.ciclismo_id, team: r.team });
     }
-    // Nomi atleta per il podio (join su ciclismo_athletes, come /team)
+    // Nomi atleta per il podio (join su ciclismo_athletes, come /team). Un
+    // anno intero può avere MIGLIAIA di ciclismo_id distinti — oltre a
+    // superare il cap PostgREST a 1000 righe (stesso bug già corretto sopra
+    // per i risultati), .in() con migliaia di id rischia anche di sforare i
+    // limiti di lunghezza URL. Si spezza in blocchi da 300.
     const allCiclismoIds = new Set();
     for (const ev of byUrl.values()) for (const rows of ev.byCategory.values()) for (const r of rows) if (r.ciclismo_id) allCiclismoIds.add(r.ciclismo_id);
     let nomeById = new Map();
-    if (allCiclismoIds.size) {
-      const { data: athData } = await supabase.from('ciclismo_athletes').select('ciclismo_id, nome_completo').in('ciclismo_id', [...allCiclismoIds]);
-      nomeById = new Map((athData || []).map(a => [a.ciclismo_id, a.nome_completo]));
+    const idsArr = [...allCiclismoIds];
+    const CHUNK = 300;
+    for (let i = 0; i < idsArr.length; i += CHUNK) {
+      const chunk = idsArr.slice(i, i + CHUNK);
+      const { data: athData, error: athErr } = await supabase.from('ciclismo_athletes').select('ciclismo_id, nome_completo').in('ciclismo_id', chunk);
+      if (athErr) continue;
+      for (const a of (athData || [])) nomeById.set(a.ciclismo_id, a.nome_completo);
     }
     const races = [...byUrl.values()].map(ev => {
       const categorie = {};
