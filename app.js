@@ -10949,7 +10949,7 @@ async function refreshMediaAndRerender(opts = {}) {
   if (videos) await refreshVideos();
   // Ri-renderizza la vista attuale con i dati aggiornati
   if (window._currentGaraId && (location.hash || '').includes('/gara/')) {
-    await renderGara(window._currentGaraId);
+    await _rerenderCurrentGaraPage();
   } else {
     route();
   }
@@ -14533,8 +14533,17 @@ async function _loadAtletaTopResultsWidget(atletaId, nativeRisultati, currentTea
     const y = String(r.stagione);
     if (!teamsByYear.has(y)) teamsByYear.set(y, { team: r.team, categoria: r.categoria });
   }
+  // La stagione corrente va aggiunta SOLO se l'atleta ha un risultato VERO
+  // quell'anno (nativo ICS o PCS) — currentTeam arriva dal roster attuale ed
+  // è presente anche per chi è solo iscritto/in squadra senza aver ancora
+  // corso: senza questo controllo compariva sempre una riga "fantasma" per
+  // l'anno in corso (stesso bug della pillola anno vuota già risolto sulla
+  // pagina atleta, ma non qui — osservato dal vivo su Sensi Matteo, fermo
+  // al 2019 ma con 2026 comunque in cima ai Teams).
   const nowYear = String(_loadedSeasonYear());
-  if (currentTeam) teamsByYear.set(nowYear, { team: currentTeam, categoria: currentCategoria });
+  const hasRealResultNowYear = (nativeRisultati || []).some(r => r.data && r.posizione)
+    || (Array.isArray(pcsRows) ? pcsRows : []).some(r => String(r.season || (r.data || '').slice(0, 4)) === nowYear && r.data && r.posizione);
+  if (currentTeam && hasRealResultNowYear) teamsByYear.set(nowYear, { team: currentTeam, categoria: currentCategoria });
   const teamYears = [...teamsByYear.keys()].sort((a, b) => b - a);
   const teamsHtml = teamYears.map(y => {
     const { team, categoria } = teamsByYear.get(y);
@@ -14635,8 +14644,22 @@ window.ciclismoRimatchGara = async (ciclismoGaraId) => {
   } catch (e) { showToast('Errore rimatch: ' + e.message, 'error'); }
 };
 
+// Ri-renderizza la pagina gara "corrente" dopo un'azione admin (elimina/
+// modifica video, tag corridori ecc.) — molti punti sparsi chiamavano sempre
+// renderGara() nativa, mai renderGaraStorica(): su una gara storica (CIC_)
+// quell'azione richiamava la pagina SBAGLIATA (o niente, dato che l'id non
+// combacia), un altro sintomo dello stesso bug delle funzioni "not a
+// function" viste sopra. Centralizzato qui un solo punto che sceglie giusto.
+function _rerenderCurrentGaraPage() {
+  const id = window._currentGaraId;
+  if (!id) return;
+  if (String(id).startsWith('CIC_')) return renderGaraStorica(id.slice(4));
+  return renderGara(id);
+}
+
 async function renderGaraStorica(ciclismoGaraId) {
   const garaKey = 'CIC_' + ciclismoGaraId;
+  window._currentGaraId = garaKey;
   let payload;
   try { payload = await apiCall(`/ciclismo-results/gara/${encodeURIComponent(ciclismoGaraId)}`); }
   catch { return renderNotFound(); }
@@ -14766,6 +14789,50 @@ async function renderGaraStorica(ciclismoGaraId) {
       </div>
     </div>` : '';
 
+  // Video (window.openVideoSubmit li salva sotto la chiave garaKey — CIC_<id>
+  // — vedi /api/videos/submit): mancava del tutto la sezione che li mostra
+  // qui, quindi un video caricato veniva salvato correttamente lato server
+  // ma restava invisibile per sempre, a qualunque refresh (bug osservato
+  // dal vivo: "ho caricato il video ma non si vede"). Versione più semplice
+  // di quella nativa (renderGara) — qui la chiave è sempre unica (garaKey),
+  // niente lookup multi-chiave per categoria/annata esordienti.
+  const garaVideos = (globalData?.videos && globalData.videos[garaKey]) || [];
+  const _vClickStorico = (v) => {
+    const k = videoKind(v.url);
+    const t = esc((v.title || '').replace(/'/g, "\\'"));
+    if (k === 'yt')   return `window.openVideoModal('${ytId(v.url)}','${t}')`;
+    if (k === 'fb')   return `window.openFacebookVideoModal('${esc(v.url)}','${t}')`;
+    if (k === 'file') return `window.openVideoFileModal('${esc(v.url)}','${t}')`;
+    return `window.open('${esc(v.url)}','_blank')`;
+  };
+  const _vThumbStorico = (v) => {
+    const k = videoKind(v.url);
+    if (k === 'yt') return `<img src="https://img.youtube.com/vi/${ytId(v.url)}/hqdefault.jpg" alt="${esc(v.title||'Video')}" loading="lazy"/>`;
+    if (k === 'fb') return fbThumbHtml(v.url);
+    if (k === 'file') return `<video src="${esc(v.url)}#t=0.1" muted preload="metadata" playsinline style="width:100%;height:100%;object-fit:cover;background:#000"></video>`;
+    return `<div style="width:100%;height:100%;display:flex;align-items:center;justify-content:center;background:#0f172a;font-size:2.4rem">🎬</div>`;
+  };
+  const videosHtml = garaVideos.length ? `
+    <div class="comp-section" style="margin-top:16px">
+      <div class="comp-section-title" style="border:none;padding:0">Video</div>
+      <div class="gara-videos-grid">
+        ${garaVideos.map((v, i) => `
+          <div class="gara-video-card" style="cursor:pointer;position:relative" onclick="${_vClickStorico(v)}">
+            <div class="gara-video-thumb">
+              ${_vThumbStorico(v)}
+              <div class="gara-media-play"><span>&#9658;</span></div>
+              ${v.is_live ? `<div style="position:absolute;top:6px;right:6px;background:#dc2626;color:#fff;font-size:.62rem;font-weight:800;letter-spacing:.04em;padding:2px 8px;border-radius:3px;z-index:3">🔴 DIRETTA</div>` : ''}
+              ${(_user?.role === 'admin') ? `<div style="position:absolute;top:4px;right:4px;display:flex;flex-direction:column;gap:3px;z-index:10">
+                <button onclick="event.stopPropagation();window.adminEditVideo('${esc(garaKey)}',${i},${!!v.is_live})" style="padding:3px 7px;font-size:0.68rem;color:#fff;border:none;border-radius:4px;cursor:pointer;white-space:nowrap;box-shadow:0 1px 4px rgba(0,0,0,.5);background:#2563eb">✏️</button>
+                <button onclick="event.stopPropagation();window.adminDeleteVideo('${esc(garaKey)}',${i})" style="padding:3px 7px;font-size:0.68rem;color:#fff;border:none;border-radius:4px;cursor:pointer;white-space:nowrap;box-shadow:0 1px 4px rgba(0,0,0,.5);background:#dc2626">🗑</button>
+              </div>` : ''}
+            </div>
+            ${v.title ? `<div class="gara-video-title" style="font-size:.78rem;margin-top:4px">${esc(v.title)}</div>` : ''}
+            ${v.channel ? `<div style="font-size:.7rem;color:var(--text-muted)">${esc(v.channel)}</div>` : ''}
+          </div>`).join('')}
+      </div>
+    </div>` : '';
+
   const uploadBtnHtml = _user
     ? `<button class="btn-share" onclick="window.openRacePhotoUpload('${esc(garaKey)}')"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="17 8 12 3 7 8"/><line x1="12" y1="3" x2="12" y2="15"/></svg> Carica foto</button>`
     : `<a href="#/login" class="btn-share">Accedi per caricare una foto</a>`;
@@ -14798,6 +14865,7 @@ async function renderGaraStorica(ciclismoGaraId) {
     </div>
     ${photosHtml}
     ${uploadedPhotosHtml}
+    ${videosHtml}
     <div class="section-header" style="margin-top:20px">
       <span class="section-title">ORDINE DI ARRIVO</span>
       <span class="section-line"></span>
@@ -16655,7 +16723,7 @@ window.adminVideoSetYear = async function(calId, idx) {
     await apiCall(`/admin/videos/${encodeURIComponent(calId)}/${idx}/set-year`, { method: 'POST', body: { target } });
     await refreshVideos();
     showToast('🏅 Annata video aggiornata');
-    if (window._currentGaraId) renderGara(window._currentGaraId);
+    if (window._currentGaraId) _rerenderCurrentGaraPage();
   } catch (e) { showToast('Errore: ' + e.message, 'error'); }
 };
 
@@ -16665,7 +16733,7 @@ window.adminPromoteVideo = async function(calId, idx, primaryKey) {
     await apiCall(`/admin/videos/${encodeURIComponent(calId)}/${idx}/promote`, { method: 'POST', body: { primary_key: primaryKey } });
     await refreshVideos();
     showToast('⭐ Video impostato come principale');
-    if (window._currentGaraId) renderGara(window._currentGaraId);
+    if (window._currentGaraId) _rerenderCurrentGaraPage();
   } catch (e) { showToast('Errore: ' + e.message, 'error'); }
 };
 
@@ -16835,7 +16903,7 @@ window._mrCloseModal = () => {
   window._mrDirty = false;
   window._mrForceAdd = false;
   window._mrAddedListPos = null;
-  if (shouldRefresh && window._currentGaraId) renderGara(window._currentGaraId);
+  if (shouldRefresh && window._currentGaraId) _rerenderCurrentGaraPage();
 };
 
 // Autocompletamento corridore: cerca fra gli atleti già nel sistema e, alla
@@ -16908,7 +16976,7 @@ window.submitManualResult = async (garaId) => {
       document.getElementById('modal-overlay')?.remove();
       showToast(window._mrEditing ? '✓ Risultato aggiornato' : '✓ Risultato aggiunto');
       window._mrDirty = false;
-      if (window._currentGaraId) renderGara(window._currentGaraId);
+      if (window._currentGaraId) _rerenderCurrentGaraPage();
     }
   } catch (e) {
     errEl.textContent = e.message; errEl.style.display = 'block';
@@ -17061,7 +17129,7 @@ window.submitManualResultBulk = async () => {
   }
   document.getElementById('modal-overlay')?.remove();
   showToast(fail ? `✓ ${ok} salvati, ${fail} falliti` : `✓ ${ok} risultati aggiunti`, fail ? 'error' : undefined);
-  if (window._currentGaraId) renderGara(window._currentGaraId);
+  if (window._currentGaraId) _rerenderCurrentGaraPage();
 };
 
 window.deleteManualResult = async (id, garaId) => {
@@ -17071,7 +17139,7 @@ window.deleteManualResult = async (id, garaId) => {
     if (globalData) globalData.resultsRaw = (globalData.resultsRaw || []).filter(r => r._manualId !== id);
     document.getElementById('modal-overlay')?.remove();
     showToast('🗑 Risultato rimosso');
-    if (window._currentGaraId) renderGara(window._currentGaraId);
+    if (window._currentGaraId) _rerenderCurrentGaraPage();
   } catch (e) { showToast('Errore: ' + e.message, 'error'); }
 };
 
@@ -17232,7 +17300,7 @@ window.adminDeleteVideo = async function(calId, idx) {
   if (!confirm('Eliminare questo video dalla gara?')) return;
   try {
     await apiCall(`/admin/videos/${encodeURIComponent(calId)}/${idx}`, { method: 'DELETE' });
-    if (window._currentGaraId) renderGara(window._currentGaraId);
+    if (window._currentGaraId) _rerenderCurrentGaraPage();
   } catch(e) { alert('Errore: ' + e.message); }
 };
 
@@ -17249,7 +17317,7 @@ window.adminEditVideo = async function(calId, idx, currentIsLive) {
       method: 'PATCH',
       body: { url: newUrl, ...(newTitle ? { title: newTitle } : {}), is_live: isLive },
     });
-    if (window._currentGaraId) renderGara(window._currentGaraId);
+    if (window._currentGaraId) _rerenderCurrentGaraPage();
   } catch(e) { alert('Errore: ' + e.message); }
 };
 
