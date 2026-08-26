@@ -13738,6 +13738,7 @@ async function renderAtleta(atleta_id, opts = {}) {
       ${adminEditBtn('atleta', atleta_id)}
     </div>
     ${buildProfileMedia(risultati, photosMap, globalData.videos, { atletaIds: [atleta_id], year: selYear })}
+    <div id="atleta-ciclismo-media"></div>
     <div class="section-header" style="margin-top:28px">
       <span class="section-title" id="atleta-results-title">RISULTATI ${esc(selYear)} · ${esc(catLabel(displayCategoria))}</span>
       <span class="section-line"></span>
@@ -14335,6 +14336,7 @@ window.showPcsRaceModal = showPcsRaceModal;
 // aggiorna sia il riepilogo in alto (podi) sia la tabella risultati, senza
 // ricaricare la pagina.
 window._ciclismoStoricoCache = window._ciclismoStoricoCache || {};
+window._ciclismoMediaCache = window._ciclismoMediaCache || {};
 
 async function _loadCiclismoStorico(atletaId, nativeSelYear) {
   const yearRow = document.getElementById('profile-year-row');
@@ -14348,6 +14350,15 @@ async function _loadCiclismoStorico(atletaId, nativeSelYear) {
   const perAnno = {};
   for (const r of risultati) (perAnno[r.stagione] = perAnno[r.stagione] || []).push(r);
   window._ciclismoStoricoCache[atletaId] = perAnno;
+
+  // Media (foto gara) — caricati insieme ai risultati così sono già pronti
+  // quando l'utente clicca su una pillola anno, senza un'altra attesa.
+  try {
+    const mediaPayload = await apiCall(`/ciclismo-media/atleta/${encodeURIComponent(atletaId)}`);
+    const mediaPerAnno = {};
+    for (const m of (mediaPayload?.media || [])) (mediaPerAnno[m.stagione] = mediaPerAnno[m.stagione] || []).push(m);
+    window._ciclismoMediaCache[atletaId] = mediaPerAnno;
+  } catch { window._ciclismoMediaCache[atletaId] = {}; }
 
   const nativeYears = new Set([...yearRow.querySelectorAll('.year-pill')].map(b => b.dataset.year));
   const ciclismoOnlyYears = Object.keys(perAnno).filter(y => !nativeYears.has(y)).sort((a, b) => b - a);
@@ -14426,7 +14437,37 @@ window.setAtletaCiclismoYear = (atletaId, anno) => {
       <td class="td-race">${r.gara_ciclismo_url ? `<a href="${esc(r.gara_ciclismo_url)}" target="_blank" rel="noopener">${esc(r.nome_gara)}</a>` : esc(r.nome_gara)}</td>
       <td colspan="3" style="color:var(--text-muted)">${esc(r.regione || '')} · ${esc(r.luogo || '')}</td>
     </tr>`).join('');
+
+  _renderCiclismoMedia('atleta-ciclismo-media', (window._ciclismoMediaCache[atletaId] || {})[anno] || []);
 };
+
+// Griglia foto storiche ciclismo.info per l'anno selezionato — stesso stile
+// visivo di buildProfileMedia (📸 FOTO) per coerenza, usato sia sul profilo
+// atleta sia sul profilo team.
+function _renderCiclismoMedia(containerId, mediaList) {
+  const el = document.getElementById(containerId);
+  if (!el) return;
+  if (!mediaList.length) { el.innerHTML = ''; return; }
+  const cards = mediaList.map(m => `
+    <div class="profile-media-card profile-media-photo" style="cursor:zoom-in" onclick="openPhotoLightbox('${esc(mediaUrl(m.photo_url))}')">
+      <div class="profile-media-thumb">
+        <img src="${esc(mediaUrl(m.photo_url))}" alt="${esc(m.nome_gara)}" loading="lazy" onerror="this.style.display='none'" />
+      </div>
+      <div class="profile-media-info">
+        <div class="profile-media-race">${esc(m.nome_gara)}</div>
+        <div class="profile-media-meta">${fmtDateShort(m.data)}${m.caption ? ` · ${esc(m.caption)}` : ''}</div>
+      </div>
+    </div>`).join('');
+  el.innerHTML = `
+    <div class="section-header" style="margin-top:20px">
+      <span class="section-title">MEDIA · ciclismo.info</span>
+      <span class="section-line"></span>
+    </div>
+    <div class="profile-media-section">
+      <div class="profile-media-sub-title">📸 FOTO</div>
+      <div class="profile-media-grid">${cards}</div>
+    </div>`;
+}
 
 async function _loadAtletaPcsExtra(atletaId, season, icsRisultati, athlete) {
   const tbody = document.getElementById('atleta-results-tbody');

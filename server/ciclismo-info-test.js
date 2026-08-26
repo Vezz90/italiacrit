@@ -117,6 +117,25 @@ function parseClassificaPage(html) {
   return { classifica };
 }
 
+// Foto della gara (se presente): un thumbnail+originale con una didascalia
+// libera che di solito nomina il vincitore/protagonista — testo grezzo non
+// strutturato in modo uniforme tra le due epoche di template (nel 2026 il
+// nome è avvolto in un <b> annidato, nel 2008 è prosa libera), quindi si
+// estrae solo il TESTO della didascalia: l'attribuzione all'atleta si fa a
+// valle confrontandolo con i partecipanti già noti di quella gara.
+function parseGaraPhoto(html) {
+  // Alcune gare hanno più di una foto pubblicata: match globale, non il primo
+  // soltanto — stessa struttura ripetuta per ogni foto (verificato: 1 o più
+  // blocchi identici "link originale + thumbnail + didascalia").
+  const re = /<a href="(\/immagini\/[^"]+_original\.jpg)"[^>]*>\s*<img[^>]*src="(\/immagini\/[^"]+_thumbnail\.jpg)"[^>]*>\s*<\/a>([\s\S]{0,600}?)<br\s*\/?>\s*<br\s*\/?>/gi;
+  const photos = [];
+  let m;
+  while ((m = re.exec(html))) {
+    photos.push({ original: m[1], thumbnail: m[2], caption: decodeEntities(m[3]).trim() });
+  }
+  return photos;
+}
+
 // Pagina GARA: tabella "ORDINE DI ARRIVO" — stesso template su entrambe le
 // epoche HTML viste finora (verificato 2008 e 2026), quindi un solo regex basta.
 function parseGaraPage(html, sourceUrl) {
@@ -142,7 +161,7 @@ function parseGaraPage(html, sourceUrl) {
   return { garaId, titleText, ordineArrivo };
 }
 
-module.exports = { fetchDecoded, decodeEntities, parseAthletePage, parseClassificaPage, parseGaraPage };
+module.exports = { fetchDecoded, decodeEntities, parseAthletePage, parseClassificaPage, parseGaraPage, parseGaraPhoto };
 
 if (require.main === module) {
   (async () => {

@@ -4215,6 +4215,39 @@ app.get('/api/ciclismo-results/atleta/:atletaId', async (req, res) => {
   } catch (e) { res.status(500).json({ error: e.message }); }
 });
 
+// Foto storiche ciclismo.info per un atleta o un team (vedi
+// server/ciclismo-gara-media.js) — raggruppabili per anno lato frontend
+// esattamente come /ciclismo-results/atleta.
+app.get('/api/ciclismo-media/atleta/:atletaId', async (req, res) => {
+  try {
+    const { data, error } = await supabase
+      .from('ciclismo_gara_media')
+      .select('stagione, categoria, team, nome_gara, caption, photo_url, data, gara_ciclismo_url')
+      .eq('atleta_id', req.params.atletaId)
+      .not('photo_url', 'is', null)
+      .order('data', { ascending: false })
+      .limit(500);
+    if (error) throw error;
+    res.json({ media: data || [] });
+  } catch (e) { res.status(500).json({ error: e.message }); }
+});
+
+app.get('/api/ciclismo-media/team', async (req, res) => {
+  const teamName = req.query.team;
+  if (!teamName) return res.status(400).json({ error: 'team mancante' });
+  try {
+    const { data, error } = await supabase
+      .from('ciclismo_gara_media')
+      .select('stagione, categoria, team, nome_gara, caption, photo_url, data, gara_ciclismo_url, atleta_id, ciclismo_id')
+      .ilike('team', teamName)
+      .not('photo_url', 'is', null)
+      .order('data', { ascending: false })
+      .limit(500);
+    if (error) throw error;
+    res.json({ media: data || [] });
+  } catch (e) { res.status(500).json({ error: e.message }); }
+});
+
 // Tutti i risultati (dei NOSTRI atleti) per UNA gara estera specifica —
 // usato per il modale "risultati gara" al posto del link esterno a PCS: la
 // gara resta consultabile sul sito invece di mandare il traffico via.
