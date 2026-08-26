@@ -14427,7 +14427,7 @@ window.setAtletaCiclismoYear = (atletaId, anno) => {
   // setAtletaResultsSort legge data-date + .td-pos dal DOM, non gli importa
   // se le righe sono native o ciclismo.info.
   const sortBtns = document.getElementById('atleta-sort-btns');
-  if (sortBtns) sortBtns.style.display = '';
+  if (sortBtns) sortBtns.style.display = 'flex';
   document.querySelectorAll('.ath-sort-btn').forEach(b => b.classList.toggle('active-cat', b.dataset.sort === 'data'));
   const thead = document.getElementById('atleta-results-thead');
   if (thead) thead.innerHTML = `<tr><th>DATA</th><th>POS</th><th>GARA</th><th colspan="3">REGIONE / LOCALITÀ</th></tr>`;
@@ -14449,6 +14449,11 @@ window.setAtletaCiclismoYear = (atletaId, anno) => {
   if (nativoMedia) nativoMedia.style.display = 'none';
   const esteroGroup = document.getElementById('atleta-stats-estero');
   if (esteroGroup) esteroGroup.style.display = 'none';
+  // Confronto "stagione precedente" (widget sempre riferito alla stagione
+  // nativa, es. 2026 vs 2025 nativo) — non ha senso mentre si guarda uno
+  // storico ciclismo.info, e restava visibile "vuoto"/fuori contesto.
+  const seasonCompare = document.getElementById('season-compare-inject');
+  if (seasonCompare) seasonCompare.style.display = 'none';
 
   _renderCiclismoMedia('atleta-ciclismo-media', (window._ciclismoMediaCache[atletaId] || {})[anno] || []);
 };
