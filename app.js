@@ -13555,6 +13555,7 @@ async function renderAtleta(atleta_id, opts = {}) {
             <span id="atleta-msg-btn"></span>
             <span id="atleta-follow-btn"></span>
           </div>
+          <div id="atleta-birthdate-full" style="font-size:.78rem;color:var(--text-muted);margin:-2px 0 6px"></div>
           <div class="athlete-pts-display" id="atleta-pts-display">
             <div class="athlete-pts-dot"></div>
             <div>
@@ -14360,6 +14361,10 @@ async function _loadCiclismoStorico(atletaId, nativeSelYear, nativeCount) {
   try { payload = await apiCall(`/ciclismo-results/atleta/${encodeURIComponent(atletaId)}`); }
   catch { return; }
   const risultati = payload?.risultati || [];
+  // Data di nascita completa (gg/mm/aaaa da ciclismo.info) sotto il nome,
+  // prima dei risultati — indipendente da quale anno è selezionato.
+  const bdEl = document.getElementById('atleta-birthdate-full');
+  if (bdEl && payload?.data_nascita) bdEl.textContent = payload.data_nascita;
   if (!risultati.length) return;
 
   const perAnno = {};
@@ -14432,15 +14437,16 @@ async function _loadAtletaTopResultsWidget(atletaId, nativeRisultati, currentTea
   }
   if (!merged.length) return;
 
-  // Dedup: la stessa gara può comparire sia tra i risultati nativi ICS sia
-  // tra quelli ciclismo.info per atleti già presenti in entrambe le fonti —
-  // senza questo la stessa gara appariva due volte in Top results. A parità
-  // di data+nome gara vince la fonte nativa (source 'ics'), poi la prima
-  // trovata.
+  // Dedup: la stessa gara può comparire in più fonti con nomi diversi (es.
+  // "64 GRAN PREMIO LA TORRE" su ICS/ciclismo.info vs "GP La Torre (NAT)" su
+  // PCS) — un dedup per data+nome non bastava, quindi si usa solo la DATA
+  // (un atleta correre due gare diverse lo stesso giorno è un caso raro,
+  // stesso approccio già usato altrove nel sito per PCS vs ICS). A parità
+  // vince la fonte nativa (source 'ics'), poi ciclismo.info, poi PCS.
   const sourceRank = { ics: 0, ciclismo: 1, pcs: 2 };
   const seen = new Map();
   for (const r of merged) {
-    const key = `${r.data}|${String(r.nome_gara || '').toUpperCase().trim()}`;
+    const key = r.data;
     const prev = seen.get(key);
     if (!prev || sourceRank[r.source] < sourceRank[prev.source]) seen.set(key, r);
   }
@@ -14578,7 +14584,7 @@ window.setAtletaCiclismoYear = (atletaId, anno) => {
   // Riepilogo podi
   const { p1, p2, p3, pout } = _ciclismoYearStats(rows);
   const label = document.getElementById('atleta-stats-italia-label');
-  if (label) label.textContent = 'CICLISMO.INFO';
+  if (label) label.textContent = 'ITALIA';
   const bar = document.getElementById('atleta-stats-italia-bar');
   if (bar) bar.innerHTML = `
     <div class="athlete-stat"><span class="athlete-stat-val" style="color:var(--gold)">${p1}</span><span class="athlete-stat-label">1° Posto</span></div>
