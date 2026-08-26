@@ -4370,7 +4370,21 @@ app.get('/api/ciclismo-results/gara/:ciclismoGaraId', async (req, res) => {
       nomeById = new Map((athData || []).map(a => [a.ciclismo_id, a.nome_completo]));
     }
     const risultati = rows.map(r => ({ ...r, nome_completo: nomeById.get(r.ciclismo_id) || r.ciclismo_id }));
-    res.json({ risultati });
+
+    // Foto della gara (stessa card "FOTO & VIDEO" del 2026) — join per url,
+    // stesso filtro-per-id-esatto delle righe risultati qui sopra.
+    let media = [];
+    try {
+      const { data: mediaRows } = await supabase
+        .from('ciclismo_gara_media')
+        .select('photo_url, caption, posizione, atleta_id, ciclismo_id, gara_ciclismo_url')
+        .ilike('gara_ciclismo_url', `%_${gid}_2%`)
+        .not('photo_url', 'is', null)
+        .limit(50);
+      media = (mediaRows || []).filter(m => ciclismoGaraId(m.gara_ciclismo_url) === gid);
+    } catch { /* foto opzionali */ }
+
+    res.json({ risultati, media });
   } catch (e) { res.status(500).json({ error: e.message }); }
 });
 

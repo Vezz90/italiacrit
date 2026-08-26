@@ -14565,10 +14565,10 @@ async function renderGaraStorica(ciclismoGaraId) {
   catch { return renderNotFound(); }
   const rows = payload?.risultati || [];
   if (!rows.length) return renderNotFound();
+  const mediaList = payload?.media || [];
 
   const first = rows[0];
   const cats = [...new Set(rows.map(r => r.categoria).filter(Boolean))];
-  const posColor = p => p === 1 ? 'var(--gold)' : p === 2 ? 'var(--silver)' : p === 3 ? 'var(--bronze)' : 'var(--text-secondary)';
   const luogo = [first.regione, first.luogo].filter(Boolean).join(' · ');
 
   setPageMeta(first.nome_gara, [luogo, fmtDateShort(first.data)].filter(Boolean).join(' · '));
@@ -14583,27 +14583,54 @@ async function renderGaraStorica(ciclismoGaraId) {
       const teamLink = r.team ? esc(r.team) : '';
       return `<tr>
         <td class="td-pos ${posClass(r.posizione)}">${r.posizione ? r.posizione + '°' : '—'}</td>
-        <td class="td-race">${nomeLink}</td>
+        <td class="td-race">${nomeLink}${cats.length > 1 ? `<div class="td-team-mobile">${esc(String(r.categoria || '').replace(/_/g, ' '))}</div>` : ''}</td>
         <td class="td-hide-mobile">${teamLink}</td>
         ${cats.length > 1 ? `<td class="td-hide-mobile">${esc(String(r.categoria || '').replace(/_/g, ' '))}</td>` : ''}
+        <td class="td-hide-mobile">—</td>
+        <td class="td-hide-mobile" style="text-align:right">—</td>
+        <td class="td-hide-mobile" style="text-align:right">—</td>
+        <td class="td-pts">—</td>
       </tr>`;
     }).join('');
 
+  const posColorMedia = p => p === 1 ? 'var(--gold)' : p === 2 ? 'var(--silver)' : p === 3 ? 'var(--bronze)' : 'var(--text-muted)';
+  const posLabelMedia = p => { p = Number(p); if (!p) return ''; return p === 1 ? '🥇 1°' : p === 2 ? '🥈 2°' : p === 3 ? '🥉 3°' : `${p}°`; };
+  const photosHtml = mediaList.length ? `
+    <div class="comp-section" style="margin-top:16px">
+      <div class="comp-section-title" style="border:none;padding:0">Foto</div>
+      <div class="profile-media-grid">
+        ${mediaList.map(m => `
+          <div class="profile-media-card profile-media-photo" style="cursor:zoom-in" onclick="openPhotoLightbox('${esc(mediaUrl(m.photo_url))}')">
+            <div class="profile-media-thumb">
+              <img src="${esc(mediaUrl(m.photo_url))}" alt="Foto gara" loading="lazy" onerror="this.style.display='none'" />
+              ${m.posizione ? `<div class="profile-media-badge" style="color:${posColorMedia(m.posizione)}">${posLabelMedia(m.posizione)}</div>` : ''}
+            </div>
+            <div class="profile-media-info">
+              <div class="profile-media-meta" style="opacity:.7">📷 ciclismo.info</div>
+            </div>
+          </div>`).join('')}
+      </div>
+    </div>` : '';
+
   setPage(`
-    <div class="section-header" style="margin-top:0">
-      <span class="section-title" style="font-size:1.3rem">${esc(first.nome_gara)}</span>
+    <div class="race-header">
+      <div class="race-name-display">${esc(first.nome_gara)}</div>
+      <div class="race-meta-row">
+        <span>${fmtDate(first.data)}</span>
+        ${cats.length === 1 ? `<span class="race-meta-sep">|</span><span>${esc(String(cats[0]).replace(/_/g, ' '))}</span>` : ''}
+        ${first.regione ? `<span class="race-meta-sep">|</span><span>${esc(first.regione)}</span>` : ''}
+        ${first.luogo ? `<span class="race-meta-sep">|</span><span>📍 ${esc(first.luogo)}</span>` : ''}
+      </div>
     </div>
-    <div style="color:var(--text-secondary);font-size:.9rem;margin-bottom:20px">
-      ${fmtDateShort(first.data)}${luogo ? ` · ${esc(luogo)}` : ''}${cats.length === 1 ? ` · ${esc(String(cats[0]).replace(/_/g, ' '))}` : ''}
-    </div>
-    <div class="section-header">
+    ${photosHtml}
+    <div class="section-header" style="margin-top:20px">
       <span class="section-title">ORDINE DI ARRIVO</span>
       <span class="section-line"></span>
     </div>
     <div class="results-table-wrap">
       <table class="results-table">
         <thead><tr>
-          <th>POS</th><th>ATLETA</th><th class="td-hide-mobile">TEAM</th>${cats.length > 1 ? '<th class="td-hide-mobile">CATEGORIA</th>' : ''}
+          <th>POS</th><th>ATLETA</th><th class="td-hide-mobile">TEAM</th>${cats.length > 1 ? '<th class="td-hide-mobile">CATEGORIA</th>' : ''}<th class="td-hide-mobile">TEMPO</th><th class="td-hide-mobile" style="text-align:right">KM</th><th class="td-hide-mobile" style="text-align:right">MEDIA</th><th class="td-pts">PTS</th>
         </tr></thead>
         <tbody>${rowsHtml}</tbody>
       </table>
