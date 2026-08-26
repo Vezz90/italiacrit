@@ -2278,7 +2278,14 @@ function processLoadedData({ calendar, resultsRaw, athletes, teams, meta, raceDe
           roster_only: true,
         };
       }
-      if (!isSenzaTeam && !teamAtleti.includes(aid)) teamAtleti.push(aid);
+      // Gli atleti importati da ciclismo.info portano il team dell'ULTIMA
+      // stagione in cui hanno gareggiato (spesso passata) — vanno nel
+      // proprio profilo/nella storia dell'anno giusto (vedi
+      // _loadTeamCiclismoStorico), ma non nel roster ATTUALE del team: senza
+      // questo filtro chiunque avesse mai corso per quella squadra restava
+      // per sempre nella rosa corrente, anche anni dopo aver cambiato team
+      // (bug osservato dal vivo sulla Zalf).
+      if (!isSenzaTeam && p.fonte !== 'ciclismo_info' && !teamAtleti.includes(aid)) teamAtleti.push(aid);
     }
     if (!isSenzaTeam) teamsMerged[tid].atleti = teamAtleti;
   }

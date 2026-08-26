@@ -1751,7 +1751,7 @@ app.get('/api/data/manual-athletes', async (req, res) => {
     for (const r of rows) {
       const tid = r.team_id || '_SENZA_TEAM_';
       if (!result[tid]) result[tid] = { nome: r.team || tid, atleti: [], senzaTeam: !r.team_id };
-      result[tid].atleti.push({ atleta_id: r.atleta_id, cognome: r.cognome, nome: r.nome, categoria: r.categoria || '', genere: r.genere || 'M' });
+      result[tid].atleti.push({ atleta_id: r.atleta_id, cognome: r.cognome, nome: r.nome, categoria: r.categoria || '', genere: r.genere || 'M', fonte: r.source || '' });
     }
     res.json(result);
   } catch (e) { res.status(500).json({ error: e.message }); }
