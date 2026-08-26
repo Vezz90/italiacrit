@@ -94,7 +94,10 @@ async function main() {
       const genere = /DONNE/i.test(catRaw) ? 'F' : 'M';
       const categoria = CAT_MAP[catRaw] || (genere === 'F' ? 'AL_F' : 'AL_M');
       const team = (lastResult && lastResult.team) || null;
-      const team_id = team ? (teamIdByName.get(team.trim().toUpperCase()) || null) : null;
+      const team_id = team
+        ? (teamIdByName.get(team.trim().toUpperCase())
+          || team.trim().toUpperCase().normalize('NFD').replace(/[̀-ͯ]/g, '').replace(/[^A-Z0-9]+/g, '_').replace(/^_+|_+$/g, ''))
+        : null;
 
       const { error: insErr } = await sb.from('manual_athletes').upsert({
         atleta_id: derivedId, cognome, nome, team_id, team, categoria, genere,

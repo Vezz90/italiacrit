@@ -2244,13 +2244,19 @@ function processLoadedData({ calendar, resultsRaw, athletes, teams, meta, raceDe
   for (const tid in (extraRoster || {})) {
     const entry = extraRoster[tid];
     if (!entry || !Array.isArray(entry.atleti)) continue;
-    // Crea il team se non esiste
-    if (!teamsMerged[tid]) {
+    // Bucket "senza team" (atleta manuale senza team_id): NON va trattato
+    // come una squadra reale — raggruppava per sbaglio centinaia di atleti
+    // di categorie/fonti diverse sotto un'unica pagina team fasulla e
+    // navigabile (bug osservato dal vivo). L'atleta resta comunque visibile
+    // col proprio profilo, solo senza team_id/team_attuale assegnato.
+    const isSenzaTeam = tid === '_SENZA_TEAM_' || entry.senzaTeam;
+    // Crea il team se non esiste (solo per bucket reali)
+    if (!isSenzaTeam && !teamsMerged[tid]) {
       teamsMerged[tid] = { id: tid, nome: entry.nome || tid, atleti: [], punti_totali: 0, risultati: [] };
     }
     // Se il team esiste già in ICS, usa il suo nome ufficiale
-    const teamNome = teamsMerged[tid].nome || entry.nome || tid;
-    const teamAtleti = Array.isArray(teamsMerged[tid].atleti) ? [...teamsMerged[tid].atleti] : [];
+    const teamNome = isSenzaTeam ? '' : (teamsMerged[tid].nome || entry.nome || tid);
+    const teamAtleti = (!isSenzaTeam && Array.isArray(teamsMerged[tid].atleti)) ? [...teamsMerged[tid].atleti] : [];
     for (const p of entry.atleti) {
       if (!p || (!p.cognome && !p.nome)) continue;
       // ID atleta: preferisci quello esplicito, altrimenti genera da cognome+nome
@@ -2264,7 +2270,7 @@ function processLoadedData({ calendar, resultsRaw, athletes, teams, meta, raceDe
           nome: (p.nome || '').toUpperCase(),
           cognome: (p.cognome || '').toUpperCase(),
           team_attuale: teamNome,
-          team_id: tid,
+          team_id: isSenzaTeam ? '' : tid,
           categoria: p.categoria || '',
           genere: p.genere || 'M',
           punti_totali: 0,
@@ -2272,9 +2278,9 @@ function processLoadedData({ calendar, resultsRaw, athletes, teams, meta, raceDe
           roster_only: true,
         };
       }
-      if (!teamAtleti.includes(aid)) teamAtleti.push(aid);
+      if (!isSenzaTeam && !teamAtleti.includes(aid)) teamAtleti.push(aid);
     }
-    teamsMerged[tid].atleti = teamAtleti;
+    if (!isSenzaTeam) teamsMerged[tid].atleti = teamAtleti;
   }
 
   // ── Team priority: il team con più risultati vince sulle nazionali/selezioni ──

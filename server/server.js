@@ -1750,7 +1750,7 @@ app.get('/api/data/manual-athletes', async (req, res) => {
     const result = {};
     for (const r of rows) {
       const tid = r.team_id || '_SENZA_TEAM_';
-      if (!result[tid]) result[tid] = { nome: r.team || tid, atleti: [] };
+      if (!result[tid]) result[tid] = { nome: r.team || tid, atleti: [], senzaTeam: !r.team_id };
       result[tid].atleti.push({ atleta_id: r.atleta_id, cognome: r.cognome, nome: r.nome, categoria: r.categoria || '', genere: r.genere || 'M' });
     }
     res.json(result);
@@ -4232,6 +4232,19 @@ app.get('/api/ciclismo-media/atleta/:atletaId', async (req, res) => {
   } catch (e) { res.status(500).json({ error: e.message }); }
 });
 
+// Il nome squadra su ciclismo.info varia da un anno all'altro (sponsor
+// aggiunti/rimossi: "MASTROMARCO FC NIBALI" oggi era "MASTROMARCO SENSI FC
+// NIBALI" nel 2020) — un match esatto (ilike senza wildcard) perdeva quasi
+// tutto lo storico. Si ancora sulla parola più lunga/distintiva del nome
+// registrato (di solito il vero nome del title sponsor) e si cerca quella
+// come sottostringa, in entrambe le direzioni non serve: la parola-fulcro
+// resta stabile anche quando il resto del nome cambia.
+function teamAnchorPattern(teamName) {
+  const words = String(teamName || '').split(/\s+/).filter(w => w.replace(/[^A-Za-z0-9]/g, '').length >= 4);
+  const anchor = words.sort((a, b) => b.length - a.length)[0] || teamName;
+  return `%${anchor}%`;
+}
+
 // Storico ciclismo.info per un TEAM: tutti i risultati dei corridori che
 // hanno gareggiato con quel nome squadra, con il nome atleta (join su
 // ciclismo_athletes) — usato per costruire il roster per anno lato frontend.
@@ -4242,7 +4255,7 @@ app.get('/api/ciclismo-results/team', async (req, res) => {
     const { data, error } = await supabase
       .from('ciclismo_results')
       .select('stagione, categoria, team, posizione, data, nome_gara, ciclismo_id, atleta_id')
-      .ilike('team', teamName)
+      .ilike('team', teamAnchorPattern(teamName))
       .order('data', { ascending: false })
       .limit(2000);
     if (error) throw error;
@@ -4264,7 +4277,7 @@ app.get('/api/ciclismo-media/team', async (req, res) => {
     const { data, error } = await supabase
       .from('ciclismo_gara_media')
       .select('stagione, categoria, team, nome_gara, caption, photo_url, data, gara_ciclismo_url, atleta_id, ciclismo_id, posizione')
-      .ilike('team', teamName)
+      .ilike('team', teamAnchorPattern(teamName))
       .not('photo_url', 'is', null)
       .order('data', { ascending: false })
       .limit(500);
