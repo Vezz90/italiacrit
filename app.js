@@ -13996,10 +13996,17 @@ async function _loadTeamPcsExtra(teamId, season, viewCat) {
   // data, non per posizione: non hanno un punteggio comparabile alle gare
   // del circuito).
   // Stessa regola della pagina atleta: un risultato PCS scollegato nello
-  // stesso giorno di un risultato ICS reale del corridore è quasi certamente
-  // la STESSA gara che PCS non è riuscito ad agganciare, non una gara
-  // diversa — va scartato invece di comparire come doppione.
+  // stesso giorno di un risultato ICS reale del corridore, O di un
+  // risultato PCS GIÀ agganciato a una gara del circuito (pcsGareRaw — es.
+  // Campionato Italiano Cronometro a Squadre), è quasi certamente la STESSA
+  // gara che PCS non è riuscito ad agganciare due volte — va scartato invece
+  // di comparire come doppione accanto a quello già agganciato. La data si
+  // estrae dal gara_id (che la contiene sempre, es. "..._2026-08-01_JUN_M").
   const icsAthDates = new Set((team.risultati || []).filter(r => r.atleta_id && r.data).map(r => `${r.atleta_id}|${r.data}`));
+  for (const r of (pcsGareRaw || [])) {
+    const d = (r.gara_id || '').match(/(\d{4}-\d{2}-\d{2})/)?.[1];
+    if (r.atleta_id && d) icsAthDates.add(`${r.atleta_id}|${d}`);
+  }
   const seasonExtra = pcsSeasonAll
     .filter(r => {
       if (r.gara_id) return false;
@@ -14366,14 +14373,22 @@ async function _loadAtletaPcsExtra(atletaId, season, icsRisultati, athlete) {
   try {
     seasonRaw = await apiCall(`/pcs-results/atleta/${encodeURIComponent(atletaId)}?season=${season}`);
   } catch { /* ignora, procedi solo con garaExtra */ }
-  // Se l'atleta ha già un risultato REALE (FCI/manuale) nella stessa data,
-  // un risultato PCS scollegato (niente gara_id) nello stesso giorno è quasi
-  // certamente la STESSA gara che PCS non è riuscito ad agganciare (es. nome
-  // diverso — auto-generato dal comune del club invece del nome ufficiale,
-  // o inglese vs italiano per i campionati) — non due gare separate nello
-  // stesso giorno. Va scartato invece di mostrarlo come doppione scollegato:
-  // niente logica di traduzione/matching per nome, la data coincidente basta.
-  const icsDates = new Set((icsRisultati || []).map(r => r.data).filter(Boolean));
+  // Se l'atleta ha già un risultato REALE (FCI/manuale, in icsRisultati) O
+  // già un risultato PCS AGGANCIATO a una gara del circuito (garaExtra,
+  // tabella pcs_gara_results — es. Campionato Italiano Cronometro a Squadre)
+  // nella STESSA data, un risultato PCS scollegato (niente gara_id) nello
+  // stesso giorno è quasi certamente la STESSA gara che PCS non è riuscito
+  // ad agganciare due volte (una pagina PCS diversa per lo stesso evento:
+  // nome auto-generato dal comune del club, inglese vs italiano per i
+  // campionati, ecc.) — non due gare separate nello stesso giorno. Va
+  // scartato invece di mostrarlo come doppione scollegato accanto a quello
+  // già agganciato — bug reale osservato su decine di atleti (Campionati
+  // Italiani Cronometro a Squadre, Secondo Trofeo Bike Service, ecc.):
+  // il controllo copriva solo icsRisultati, non garaExtra.
+  const icsDates = new Set([
+    ...(icsRisultati || []).map(r => r.data),
+    ...garaExtra.map(r => r.data),
+  ].filter(Boolean));
   const esteroExtra = Array.isArray(seasonRaw)
     ? seasonRaw.filter(r => !r.gara_id && r.country && !icsDates.has(r.data))
     : [];
