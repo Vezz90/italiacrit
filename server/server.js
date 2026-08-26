@@ -4214,7 +4214,43 @@ app.get('/api/ciclismo-results/atleta/:atletaId', async (req, res) => {
       .select('data_nascita')
       .eq('atleta_id', req.params.atletaId)
       .maybeSingle();
-    res.json({ risultati: data || [], data_nascita: athData ? athData.data_nascita : null });
+
+    // Corridori scoperti SOLO tramite "Importa PCS" su una gara storica
+    // (mai scrapati da ciclismo.info, zero righe proprie qui sopra): senza
+    // questo il loro piazzamento restava invisibile ovunque, pur essendo
+    // presente sulla pagina della gara stessa. Si aggiungono come righe
+    // sintetiche, prendendo i metadati della gara (nome/data/stagione/ecc.)
+    // da un'altra riga qualunque che condivide lo stesso id sintetico
+    // CIC_<id> (scoperta tramite un altro corridore della stessa gara).
+    const risultati = data || [];
+    try {
+      const { data: pcsRows } = await supabase
+        .from('pcs_gara_results')
+        .select('gara_id, posizione, team_name, rider_name')
+        .eq('atleta_id', req.params.atletaId)
+        .like('gara_id', 'CIC_%');
+      const haveGaraIds = new Set(risultati.map(r => 'CIC_' + ciclismoGaraId(r.gara_ciclismo_url)));
+      const missing = (pcsRows || []).filter(p => !haveGaraIds.has(p.gara_id));
+      if (missing.length) {
+        const gids = [...new Set(missing.map(p => p.gara_id.replace(/^CIC_/, '')))];
+        for (const gid of gids) {
+          const { data: sample } = await supabase
+            .from('ciclismo_results')
+            .select('gara_ciclismo_url, nome_gara, data, regione, luogo, stagione, categoria')
+            .ilike('gara_ciclismo_url', `%_${gid}_2%`)
+            .limit(1).maybeSingle();
+          if (!sample || ciclismoGaraId(sample.gara_ciclismo_url) !== gid) continue;
+          const p = missing.find(m => m.gara_id === 'CIC_' + gid);
+          risultati.push({
+            stagione: sample.stagione, categoria: sample.categoria, team: (p.team_name || '').toUpperCase(),
+            posizione: p.posizione, data: sample.data, regione: sample.regione, luogo: sample.luogo,
+            nome_gara: sample.nome_gara, gara_ciclismo_url: sample.gara_ciclismo_url, km: null,
+          });
+        }
+      }
+    } catch { /* opzionale, non bloccare la risposta principale */ }
+
+    res.json({ risultati, data_nascita: athData ? athData.data_nascita : null });
   } catch (e) { res.status(500).json({ error: e.message }); }
 });
 

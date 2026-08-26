@@ -14638,7 +14638,7 @@ async function renderGaraStorica(ciclismoGaraId) {
       havePos.add(p.posizione);
       rows.push({
         posizione: p.posizione, atleta_id: p.atleta_id || null,
-        nome_completo: p.rider_name || p.gara_name || '', team: p.team_name || '',
+        nome_completo: (p.rider_name || p.gara_name || '').toUpperCase(), team: (p.team_name || '').toUpperCase(),
         categoria: rows[0]?.categoria, data: rows[0]?.data,
         regione: rows[0]?.regione, luogo: rows[0]?.luogo, nome_gara: rows[0]?.nome_gara,
       });
