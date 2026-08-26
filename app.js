@@ -14482,6 +14482,7 @@ function _renderCiclismoMedia(containerId, mediaList) {
       </div>
     </div>`).join('');
   el.innerHTML = `
+    <span style="display:none"></span>
     <div class="section-header" style="margin-top:20px">
       <span class="section-title">MEDIA · ciclismo.info</span>
       <span class="section-line"></span>
