@@ -14538,20 +14538,13 @@ window.setAtletaCiclismoYear = (atletaId, anno) => {
       : '';
   }
 
-  // Punti stagione: calcolati con la stessa formula nativa (BASEPTS per
-  // posizione, moltiplicatore 1 di default) — niente CLASSIFICA GENERALE,
-  // quella richiede il calcolo su tutta la classifica di categoria/anno.
+  // Punti: NON si assegnano punteggi alle gare storiche ciclismo.info — il
+  // sito è partito quest'anno con un proprio sistema di classifica e
+  // mescolare punti stimati (senza un moltiplicatore reale noto) rischia di
+  // sporcare quel dato. Il blocco PUNTI STAGIONE resta nascosto per gli anni
+  // storici, si mostrano solo conteggi osservati (podi, gare).
   const ptsDisplay = document.getElementById('atleta-pts-display');
-  if (ptsDisplay) {
-    const puntiTot = rows.reduce((s, r) => s + (r.posizione ? (BASEPTS[r.posizione] || 0) : 0), 0);
-    const valEl = ptsDisplay.querySelector('.athlete-pts-value');
-    if (valEl) valEl.textContent = puntiTot;
-    // Nasconde solo il secondo blocco (CLASSIFICA GENERALE), non disponibile per gli anni storici.
-    const blocks = ptsDisplay.querySelectorAll(':scope > div');
-    if (blocks[2]) blocks[2].style.display = 'none';
-    if (blocks[3]) blocks[3].style.display = 'none';
-    ptsDisplay.style.display = '';
-  }
+  if (ptsDisplay) ptsDisplay.style.display = 'none';
 
   // Riepilogo podi
   const { p1, p2, p3, pout } = _ciclismoYearStats(rows);
@@ -14566,11 +14559,9 @@ window.setAtletaCiclismoYear = (atletaId, anno) => {
   `;
 
   // Titolo sezione + nota + tabella — STESSE colonne/classi della tabella
-  // nativa (DATA/POS/GARA/MOLT/KM/MEDIA/PTS), così setAtletaResultsSort e lo
-  // stile sono invariati: ciclismo.info non fornisce moltiplicatore/km/media
-  // per gara, quindi MOLT resta a x1 (default nativo quando assente) e
-  // KM/MEDIA restano "—", ma PTS è comunque calcolato con la stessa formula
-  // (BASEPTS per posizione, moltiplicatore 1) invece di essere lasciato vuoto.
+  // nativa (DATA/POS/GARA/MOLT/KM/MEDIA/PTS) per coerenza visiva, ma senza
+  // valori inventati: niente moltiplicatore/km/media/punti reali noti per
+  // ciclismo.info, quindi MOLT/KM/MEDIA/PTS restano "—" invece di stimarli.
   const title = document.getElementById('atleta-results-title');
   if (title) title.textContent = `RISULTATI ${anno} · ${categoria.replace(/_/g, ' ')}`;
   const note = document.getElementById('atleta-ciclismo-note');
@@ -14583,17 +14574,16 @@ window.setAtletaCiclismoYear = (atletaId, anno) => {
 
   const tbody = document.getElementById('atleta-results-tbody');
   if (tbody) tbody.innerHTML = rows.map(r => {
-    const punti = r.posizione ? (BASEPTS[r.posizione] || 0) : 0;
     const pClass = posClass(r.posizione);
     const luogo = [r.regione, r.luogo].filter(Boolean).join(' · ');
     return `<tr data-date="${esc(r.data || '')}">
       <td class="td-date">${fmtDateShort(r.data)}</td>
       <td class="td-pos ${pClass} ${r.posizione === 1 ? 'win' : ''}">${r.posizione ? r.posizione + '°' : '—'}</td>
       <td class="td-race"><span style="display:inline-flex;align-items:center;gap:5px">${countryFlagImg('it')}${r.gara_ciclismo_url ? `<a href="${esc(r.gara_ciclismo_url)}" target="_blank" rel="noopener">${esc(r.nome_gara)}</a>` : esc(r.nome_gara)}</span>${luogo ? `<div style="font-size:.68rem;color:var(--text-muted);margin-top:2px">${esc(luogo)}</div>` : ''}</td>
-      <td>${badgeMult(1)}</td>
+      <td style="text-align:center">—</td>
       <td style="text-align:right">—</td>
       <td style="text-align:right">—</td>
-      <td class="td-pts">${punti}</td>
+      <td class="td-pts">—</td>
     </tr>`;
   }).join('');
 
@@ -15824,6 +15814,7 @@ async function renderTeam(team_id, opts = {}) {
     </div>
 
     <div id="team-native-content">
+    <span style="display:none"></span>
     ${catTabsHtml}
 
     <div class="section-header" style="margin-top:28px;align-items:center">
