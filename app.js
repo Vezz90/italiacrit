@@ -14559,6 +14559,62 @@ function _ciclismoGaraHref(url) {
 // link esterno), stesso taglio visivo di una card RISULTATI ma con solo i
 // campi che ciclismo.info fornisce (niente km/media/moltiplicatore/PTS,
 // niente punti — vedi nota generale su ciclismo.info in questo file).
+// Admin: form rapido per aggiungere a mano un piazzamento mancante a una
+// gara storica ciclismo.info (vedi nota in ciclismo-backfill.js — un
+// corridore piazzato troppo in basso per entrare nella classifica
+// stagionale non veniva mai "scoperto" dal backfill, pur essendo presente
+// sulla pagina reale della gara).
+window.openCiclismoAddResult = (ciclismoGaraId) => {
+  const overlay = document.createElement('div');
+  overlay.id = 'modal-overlay';
+  overlay.style.cssText = 'position:fixed;inset:0;background:rgba(0,0,0,.6);z-index:9999;display:flex;align-items:center;justify-content:center;padding:16px';
+  const inpStyle = 'width:100%;box-sizing:border-box;padding:8px 10px;border:1px solid var(--border-subtle);border-radius:var(--r-sm);font-size:0.875rem;background:var(--bg-primary);color:var(--text-primary);margin-bottom:10px';
+  overlay.innerHTML = `
+    <div style="background:var(--bg-card);border-radius:var(--r-lg);padding:20px;width:100%;max-width:420px;box-shadow:0 8px 32px rgba(0,0,0,.3)">
+      <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:12px">
+        <strong style="font-size:1rem">Aggiungi risultato mancante</strong>
+        <button onclick="this.closest('[style*=fixed]').remove()" style="background:none;border:none;font-size:1.3rem;cursor:pointer;color:var(--text-muted)">✕</button>
+      </div>
+      <input type="number" id="car-pos" placeholder="Posizione (es. 6)" style="${inpStyle}" min="1"/>
+      <input type="text" id="car-nome" placeholder="Nome completo (es. MARIO ROSSI)" style="${inpStyle}"/>
+      <input type="text" id="car-team" placeholder="Team (opzionale)" style="${inpStyle}"/>
+      <div id="car-err" style="color:#EF4444;font-size:.8rem;margin-bottom:8px;display:none"></div>
+      <button id="car-submit" onclick="window._submitCiclismoAddResult('${esc(ciclismoGaraId)}')" style="width:100%;padding:10px;background:var(--red-hot);color:#fff;border:none;border-radius:var(--r-sm);font-weight:600;cursor:pointer">Salva</button>
+    </div>`;
+  document.body.appendChild(overlay);
+};
+window._submitCiclismoAddResult = async (ciclismoGaraId) => {
+  const pos = document.getElementById('car-pos')?.value;
+  const nome = document.getElementById('car-nome')?.value?.trim();
+  const team = document.getElementById('car-team')?.value?.trim();
+  const err = document.getElementById('car-err');
+  if (!pos || !nome) { if (err) { err.textContent = 'Posizione e nome sono obbligatori'; err.style.display = ''; } return; }
+  const btn = document.getElementById('car-submit');
+  if (btn) { btn.disabled = true; btn.textContent = 'Salvo…'; }
+  try {
+    await apiCall(`/admin/ciclismo-gara/${encodeURIComponent(ciclismoGaraId)}/add-result`, {
+      method: 'POST', body: { posizione: parseInt(pos, 10), nome_completo: nome, team },
+    });
+    document.getElementById('modal-overlay')?.remove();
+    showToast('Risultato aggiunto ✓');
+    renderGaraStorica(ciclismoGaraId);
+  } catch (e) {
+    if (err) { err.textContent = 'Errore: ' + e.message; err.style.display = ''; }
+    if (btn) { btn.disabled = false; btn.textContent = 'Salva'; }
+  }
+};
+
+// Admin: ritenta il collegamento profilo per i corridori di questa gara
+// ancora senza atleta_id (crea un profilo minimo se non esiste da nessuna
+// parte — stesso comportamento di ciclismo-create-profiles.js).
+window.ciclismoRimatchGara = async (ciclismoGaraId) => {
+  try {
+    const r = await apiCall(`/admin/ciclismo-gara/${encodeURIComponent(ciclismoGaraId)}/rimatch`, { method: 'POST', body: {} });
+    showToast(`Rimatch: ${r.updated}/${r.total} collegati${r.created ? ` (${r.created} profili nuovi)` : ''}`);
+    if (r.updated > 0) renderGaraStorica(ciclismoGaraId);
+  } catch (e) { showToast('Errore rimatch: ' + e.message, 'error'); }
+};
+
 async function renderGaraStorica(ciclismoGaraId) {
   const garaKey = 'CIC_' + ciclismoGaraId;
   let payload;
@@ -14648,6 +14704,16 @@ async function renderGaraStorica(ciclismoGaraId) {
   const uploadBtnHtml = _user
     ? `<button class="btn-share" onclick="window.openRacePhotoUpload('${esc(garaKey)}')"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="17 8 12 3 7 8"/><line x1="12" y1="3" x2="12" y2="15"/></svg> Carica foto</button>`
     : `<a href="#/login" class="btn-share">Accedi per caricare una foto</a>`;
+  const addVideoBtnHtml = _user
+    ? `<button class="btn-share" onclick="window.openVideoSubmit('${esc(garaKey)}','')"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polygon points="5 3 19 12 5 21 5 3"/></svg> Aggiungi Video</button>`
+    : '';
+  const _isAdmin = _user?.role === 'admin';
+  const adminBtnsHtml = _isAdmin ? `
+      ${adminEditBtn('gara', garaKey)}
+      <button id="pcs-import-btn" class="admin-edit-btn" style="background:#7c3aed" onclick="window.adminPcsImport('${esc(garaKey)}')">⬇ Importa PCS</button>
+      <button id="pcs-rematch-btn" class="admin-edit-btn" style="background:#059669" onclick="window.adminPcsRematch('${esc(garaKey)}')">↺ Rimatch Atleti PCS</button>
+      <button class="admin-edit-btn" style="background:#0891b2" onclick="window.openCiclismoAddResult('${esc(ciclismoGaraId)}')">➕ Aggiungi risultato mancante</button>
+      <button class="admin-edit-btn" style="background:#ea580c" onclick="window.ciclismoRimatchGara('${esc(ciclismoGaraId)}')">↺ Rimatch atleti mancanti</button>` : '';
 
   setPage(`
     <div class="race-header">
@@ -14662,6 +14728,8 @@ async function renderGaraStorica(ciclismoGaraId) {
     <div style="margin-top:12px;display:flex;gap:10px;align-items:center;flex-wrap:wrap">
       <button class="btn-share" onclick="window.triggerShareGara()"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="18" cy="5" r="3"/><circle cx="6" cy="12" r="3"/><circle cx="18" cy="19" r="3"/><line x1="8.59" y1="13.51" x2="15.42" y2="17.49"/><line x1="15.41" y1="6.51" x2="8.59" y2="10.49"/></svg> Condividi Risultati</button>
       ${uploadBtnHtml}
+      ${addVideoBtnHtml}
+      ${adminBtnsHtml}
     </div>
     ${photosHtml}
     ${uploadedPhotosHtml}
@@ -14674,11 +14742,17 @@ async function renderGaraStorica(ciclismoGaraId) {
         <thead><tr>
           <th>POS</th><th>ATLETA</th><th class="td-hide-mobile">TEAM</th>${cats.length > 1 ? '<th class="td-hide-mobile">CATEGORIA</th>' : ''}<th class="td-hide-mobile">TEMPO</th><th class="td-hide-mobile" style="text-align:right">KM</th><th class="td-hide-mobile" style="text-align:right">MEDIA</th><th class="td-pts">PTS</th>
         </tr></thead>
-        <tbody>${rowsHtml}</tbody>
+        <tbody id="main-results-tbody">${rowsHtml}</tbody>
       </table>
     </div>
+    <div id="gara-pcs-ext"></div>
     <div style="font-size:.72rem;color:var(--text-muted);margin-top:12px">Dati storici — archivio in fase di validazione.</div>
   `);
+
+  // Risultati PCS extra (gare estere/professionistiche) — stesso meccanismo
+  // generico del 2026, agganciato al gara_id sintetico CIC_<id>.
+  window._lastGaraResults = rows.map(r => ({ ...r, cognome: (r.nome_completo || '').split(' ')[0] || '', nome: (r.nome_completo || '').split(' ').slice(1).join(' ') }));
+  _loadGaraPcsExt(garaKey, window._lastGaraResults).catch(() => {});
 
   // Payload di condivisione — niente punti/tempo (dati che non abbiamo per
   // le gare storiche), stessa forma usata da renderGara (_mkShare).

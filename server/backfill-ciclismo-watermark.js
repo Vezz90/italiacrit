@@ -81,10 +81,13 @@ async function fetchAllPaginated(url) {
 async function main() {
   let done = 0, failed = 0, skipped = 0;
 
-  // 1) Foto gara (ciclismo_gara_media)
+  // 1) Foto gara (ciclismo_gara_media) — le prime 1000 (per id) sono già
+  // state marchiate dal run precedente (troncato dal cap PostgREST prima
+  // di questo fix): si saltano per non marchiarle due volte.
   {
-    const rows = await fetchAllPaginated(`${SUPABASE_URL}/rest/v1/ciclismo_gara_media?photo_url=not.is.null&select=id,photo_url&order=id`);
-    console.log(`${rows.length} foto gara da marchiare`);
+    const allRows = await fetchAllPaginated(`${SUPABASE_URL}/rest/v1/ciclismo_gara_media?photo_url=not.is.null&select=id,photo_url&order=id`);
+    const rows = allRows.slice(1000);
+    console.log(`${rows.length} foto gara da marchiare (${allRows.length} totali, 1000 già fatte nel run precedente)`);
     for (const row of rows) {
       const sp = storagePathFromUrl(row.photo_url);
       if (!sp) { skipped++; continue; }

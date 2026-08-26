@@ -4419,6 +4419,106 @@ app.get('/api/ciclismo-results/gara/:ciclismoGaraId', async (req, res) => {
   } catch (e) { res.status(500).json({ error: e.message }); }
 });
 
+function _ciclismoNormalizeToAtletaId(nomeCompleto) {
+  return String(nomeCompleto || '')
+    .toUpperCase()
+    .normalize('NFD').replace(/[̀-ͯ]/g, '')
+    .replace(/[^A-Z0-9]+/g, '_')
+    .replace(/^_+|_+$/g, '');
+}
+
+// Admin: aggiunge a mano un risultato mancante a una gara storica
+// ciclismo.info (es. una posizione mai scoperta perché il corridore non
+// è mai comparso nella classifica stagionale — vedi nota in
+// ciclismo-backfill.js: l'enumerazione passa dagli atleti in classifica,
+// non dalla pagina gara, quindi un piazzamento basso/isolato può restare
+// invisibile pur essendo presente sulla pagina reale della gara).
+app.post('/api/admin/ciclismo-gara/:ciclismoGaraId/add-result', requireAdmin, async (req, res) => {
+  const gid = req.params.ciclismoGaraId;
+  const { posizione, nome_completo, team, categoria } = req.body || {};
+  if (!posizione || !nome_completo) return res.status(400).json({ error: 'posizione e nome mancanti' });
+  try {
+    // Recupera i metadati della gara (nome/data/regione/luogo/url) da una riga esistente
+    const { data: sample } = await supabase
+      .from('ciclismo_results')
+      .select('gara_ciclismo_url, nome_gara, data, regione, luogo, stagione, categoria')
+      .ilike('gara_ciclismo_url', `%_${gid}_2%`)
+      .limit(1).maybeSingle();
+    if (!sample) return res.status(404).json({ error: 'Gara non trovata' });
+
+    const atletaId = _ciclismoNormalizeToAtletaId(nome_completo);
+    const athletes = (await readDataJsonFromGH('athletes.json')) || {};
+    const matchedAtletaId = athletes[atletaId] ? atletaId : null;
+
+    // ciclismo_id sintetico negativo per non collidere con id reali scrapati
+    // (numerici positivi) — questa riga non ha un profilo ciclismo.info
+    // proprio, è stata inserita a mano.
+    const manualCiclismoId = `manual_${gid}_${posizione}_${Date.now()}`;
+
+    const { error } = await supabase.from('ciclismo_results').upsert({
+      ciclismo_id: manualCiclismoId, atleta_id: matchedAtletaId,
+      stagione: sample.stagione, categoria: categoria || sample.categoria,
+      team: team || null, posizione: parseInt(posizione, 10),
+      data: sample.data, regione: sample.regione, luogo: sample.luogo,
+      nome_gara: sample.nome_gara, gara_ciclismo_url: sample.gara_ciclismo_url,
+    }, { onConflict: 'ciclismo_id,stagione,data,nome_gara' });
+    if (error) throw error;
+    res.json({ ok: true, atleta_id: matchedAtletaId });
+  } catch (e) { res.status(500).json({ error: e.message }); }
+});
+
+// Admin: ritenta il collegamento atleta_id per le righe di questa gara che
+// ne sono ancora prive (stessa logica di ciclismo-create-profiles.js, ma
+// scoped a UNA gara — utile dopo aver corretto/aggiunto risultati a mano).
+app.post('/api/admin/ciclismo-gara/:ciclismoGaraId/rimatch', requireAdmin, async (req, res) => {
+  const gid = req.params.ciclismoGaraId;
+  try {
+    const { data: rows, error } = await supabase
+      .from('ciclismo_results')
+      .select('ciclismo_id, atleta_id, gara_ciclismo_url')
+      .ilike('gara_ciclismo_url', `%_${gid}_2%`)
+      .is('atleta_id', null);
+    if (error) throw error;
+    const exact = (rows || []).filter(r => ciclismoGaraId(r.gara_ciclismo_url) === gid);
+    if (!exact.length) return res.json({ ok: true, updated: 0, total: 0 });
+
+    const ciclismoIds = [...new Set(exact.map(r => r.ciclismo_id))];
+    const { data: athRows } = await supabase.from('ciclismo_athletes').select('ciclismo_id, nome_completo, atleta_id').in('ciclismo_id', ciclismoIds);
+    const athletes = (await readDataJsonFromGH('athletes.json')) || {};
+
+    let updated = 0, created = 0;
+    for (const a of (athRows || [])) {
+      const derivedId = a.atleta_id || _ciclismoNormalizeToAtletaId(a.nome_completo);
+      if (!derivedId) continue;
+      let finalId = null;
+      if (athletes[derivedId]) {
+        finalId = derivedId; // atleta FCI nativo
+      } else {
+        const { data: manualExisting } = await supabase.from('manual_athletes').select('atleta_id').eq('atleta_id', derivedId).maybeSingle();
+        if (manualExisting) {
+          finalId = derivedId; // profilo ciclismo.info già creato per un'altra gara
+        } else {
+          // Mai visto da nessuna parte: crea un profilo minimo (stesso
+          // comportamento di ciclismo-create-profiles.js), così anche un
+          // piazzamento isolato scoperto a mano ottiene un profilo cliccabile.
+          const nomeParts = String(a.nome_completo || '').trim().split(/\s+/);
+          const cognome = nomeParts[0] || a.nome_completo;
+          const nome = nomeParts.slice(1).join(' ') || '-';
+          const { error: insErr } = await supabase.from('manual_athletes').upsert({
+            atleta_id: derivedId, cognome, nome, source: 'ciclismo_info',
+          }, { onConflict: 'atleta_id', ignoreDuplicates: true });
+          if (!insErr) { finalId = derivedId; created++; }
+        }
+      }
+      if (!finalId) continue;
+      await supabase.from('ciclismo_results').update({ atleta_id: finalId }).eq('ciclismo_id', a.ciclismo_id).is('atleta_id', null);
+      await supabase.from('ciclismo_athletes').update({ atleta_id: finalId }).eq('ciclismo_id', a.ciclismo_id).is('atleta_id', null);
+      updated++;
+    }
+    res.json({ ok: true, updated, created, total: exact.length });
+  } catch (e) { res.status(500).json({ error: e.message }); }
+});
+
 app.get('/api/ciclismo-media/team', async (req, res) => {
   const teamName = req.query.team;
   if (!teamName) return res.status(400).json({ error: 'team mancante' });
