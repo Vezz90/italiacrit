@@ -14386,6 +14386,8 @@ window.setAtletaCiclismoYear = (atletaId, anno) => {
   if (headerTop) {
     const teamPill = headerTop.querySelector('a[href^="#/team/"]');
     if (teamPill) teamPill.outerHTML = `<span style="font-family:var(--font-heading);font-size:.8rem;color:var(--text-secondary);border:1px solid var(--border-subtle);padding:2px 10px;border-radius:2px">${esc(team)}</span>`;
+    const catBadge = headerTop.querySelector('.badge-cat');
+    if (catBadge) catBadge.textContent = categoria.replace(/_/g, ' ');
   }
 
   // Punti stagione / classifica: non esistono per ciclismo.info -> nascondi
