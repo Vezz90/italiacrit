@@ -14560,12 +14560,23 @@ function _ciclismoGaraHref(url) {
 // campi che ciclismo.info fornisce (niente km/media/moltiplicatore/PTS,
 // niente punti — vedi nota generale su ciclismo.info in questo file).
 async function renderGaraStorica(ciclismoGaraId) {
+  const garaKey = 'CIC_' + ciclismoGaraId;
   let payload;
   try { payload = await apiCall(`/ciclismo-results/gara/${encodeURIComponent(ciclismoGaraId)}`); }
   catch { return renderNotFound(); }
   const rows = payload?.risultati || [];
   if (!rows.length) return renderNotFound();
   const mediaList = payload?.media || [];
+
+  // Foto caricate dagli utenti per questa gara storica (stesso sistema
+  // race_photos del 2026 — moderazione admin, tag corridori funzionante
+  // per davvero, a differenza delle foto scaricate da ciclismo.info che
+  // usano una tabella diversa e non hanno ancora il tag).
+  let uploadedPhotos = [];
+  try {
+    const upRes = await apiCall(`/race-photos/${encodeURIComponent(garaKey)}`);
+    uploadedPhotos = upRes?.photos || [];
+  } catch { /* nessuna foto caricata, non bloccare */ }
 
   const first = rows[0];
   const cats = [...new Set(rows.map(r => r.categoria).filter(Boolean))];
@@ -14619,6 +14630,25 @@ async function renderGaraStorica(ciclismoGaraId) {
       </div>` : ''}
     </div>` : '';
 
+  const _user = authUser();
+  const uploadedPhotosHtml = uploadedPhotos.length ? `
+    <div class="comp-section" style="margin-top:16px">
+      <div class="comp-section-title" style="border:none;padding:0">Foto caricate dagli utenti</div>
+      <div class="profile-media-grid">
+        ${uploadedPhotos.map(m => `
+          <div class="profile-media-card profile-media-photo" style="cursor:zoom-in" onclick="openPhotoLightbox('${PHOTOS_BASE}/photos/${esc(m.filename)}',{photoId:${m.id},garaId:'${esc(garaKey)}',current:'${esc(m.atleta_ids || '')}',credit:'${esc((m.photographer || '').replace(/'/g, ''))}'})">
+            <div class="profile-media-thumb">
+              <img src="${PHOTOS_BASE}/photos/${esc(m.filename)}" alt="Foto gara" loading="lazy" onerror="this.style.display='none'" />
+            </div>
+            ${m.photographer ? `<div class="profile-media-info"><div class="profile-media-meta" style="opacity:.7">📷 ${esc(m.photographer)}</div></div>` : ''}
+          </div>`).join('')}
+      </div>
+    </div>` : '';
+
+  const uploadBtnHtml = _user
+    ? `<button class="btn-share" onclick="window.openRacePhotoUpload('${esc(garaKey)}')"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="17 8 12 3 7 8"/><line x1="12" y1="3" x2="12" y2="15"/></svg> Carica foto</button>`
+    : `<a href="#/login" class="btn-share">Accedi per caricare una foto</a>`;
+
   setPage(`
     <div class="race-header">
       <div class="race-name-display">${esc(first.nome_gara)}</div>
@@ -14629,7 +14659,12 @@ async function renderGaraStorica(ciclismoGaraId) {
         ${first.luogo ? `<span class="race-meta-sep">|</span><span>📍 ${esc(first.luogo)}</span>` : ''}
       </div>
     </div>
+    <div style="margin-top:12px;display:flex;gap:10px;align-items:center;flex-wrap:wrap">
+      <button class="btn-share" onclick="window.triggerShareGara()"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="18" cy="5" r="3"/><circle cx="6" cy="12" r="3"/><circle cx="18" cy="19" r="3"/><line x1="8.59" y1="13.51" x2="15.42" y2="17.49"/><line x1="15.41" y1="6.51" x2="8.59" y2="10.49"/></svg> Condividi Risultati</button>
+      ${uploadBtnHtml}
+    </div>
     ${photosHtml}
+    ${uploadedPhotosHtml}
     <div class="section-header" style="margin-top:20px">
       <span class="section-title">ORDINE DI ARRIVO</span>
       <span class="section-line"></span>
@@ -14644,6 +14679,21 @@ async function renderGaraStorica(ciclismoGaraId) {
     </div>
     <div style="font-size:.72rem;color:var(--text-muted);margin-top:12px">Dati storici — archivio in fase di validazione.</div>
   `);
+
+  // Payload di condivisione — niente punti/tempo (dati che non abbiamo per
+  // le gare storiche), stessa forma usata da renderGara (_mkShare).
+  window._shareGaraData = {
+    _id: garaKey, name: first.nome_gara, date: fmtDate(first.data),
+    cat: cats.length === 1 ? String(cats[0]).replace(/_/g, ' ') : '',
+    mult: 1, tipo: '', region: first.regione || '', luogo: first.luogo || '',
+    photo_url: heroPhoto ? heroPhoto.photo_url : (uploadedPhotos[0] ? `/photos/${uploadedPhotos[0].filename}` : ''),
+    photo_credit: heroPhoto ? 'ciclismo.info' : (uploadedPhotos[0]?.photographer || ''),
+    results: rows.slice().sort((a, b) => (a.posizione || 999) - (b.posizione || 999)).slice(0, 10).map(r => ({
+      cognome: (r.nome_completo || '').split(' ')[0] || '', nome: (r.nome_completo || '').split(' ').slice(1).join(' '),
+      team: r.team, atleta_id: r.atleta_id, punti_effettivi: 0, tempo: '',
+    })),
+  };
+  window._shareGaraData2 = null;
 }
 
 function _resolveHistoricalTeamId(teamName) {
