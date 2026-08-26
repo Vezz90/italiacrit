@@ -69,6 +69,27 @@ function parseAthletePage(html, sourceUrl) {
   };
 }
 
+// Pagina CLASSIFICA (categoria+anno): elenco di TUTTI gli atleti che hanno
+// segnato punti quella stagione — molto più efficiente della singola gara
+// per l'enumerazione: 1 pagina per categoria+anno invece di migliaia di gare.
+function parseClassificaPage(html) {
+  const rowRe = /<td width="6%" align="right">\s*<font[^>]*><b>(\d+)&nbsp;&nbsp;<\/b><\/font><br>\s*<\/td>\s*<td width="29%">\s*<font[^>]*>\s*<a href="([^"]+)"[\s\S]*?<b>([^<]*?)<\/b><\/font><\/a>\s*<\/font><br>\s*<\/td>\s*<td width="32%">\s*<font[^>]*><b>([^<]*?)<\/b><\/font><br>\s*<\/td>\s*<td width="8%">\s*<font[^>]*><b>P\.\s*(\d+)<\/b><\/font><br>/g;
+  const classifica = [];
+  let m;
+  while ((m = rowRe.exec(html))) {
+    const idMatch = m[2].match(/scheda_corridore_risultati_gare_(?:tb_)?(\d+)_/);
+    classifica.push({
+      posizione: parseInt(m[1], 10),
+      ciclismoId: idMatch ? idMatch[1] : null,
+      nome: decodeEntities(m[3]).trim(),
+      team: decodeEntities(m[4]).trim(),
+      punti: parseInt(m[5], 10),
+      schedaUrl: m[2],
+    });
+  }
+  return { classifica };
+}
+
 // Pagina GARA: tabella "ORDINE DI ARRIVO" — stesso template su entrambe le
 // epoche HTML viste finora (verificato 2008 e 2026), quindi un solo regex basta.
 function parseGaraPage(html, sourceUrl) {
@@ -102,6 +123,10 @@ function parseGaraPage(html, sourceUrl) {
     const data = parseGaraPage(html, url);
     console.log(JSON.stringify(data, null, 2));
     console.log(`\n${data.ordineArrivo.length} piazzamenti in ordine di arrivo estratti.`);
+  } else if (/\/classifica_/.test(url)) {
+    const data = parseClassificaPage(html);
+    console.log(JSON.stringify(data.classifica.slice(0, 5), null, 2));
+    console.log(`... (${data.classifica.length} atleti totali)`);
   } else {
     const data = parseAthletePage(html, url);
     console.log(JSON.stringify(data, null, 2));
