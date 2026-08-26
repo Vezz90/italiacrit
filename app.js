@@ -14441,7 +14441,8 @@ async function _loadAtletaTopResultsWidget(atletaId, nativeRisultati, currentTea
   const teamsByYear = new Map();
   for (const r of ciclismoRows) {
     if (!r.stagione || !r.team) continue;
-    if (!teamsByYear.has(r.stagione)) teamsByYear.set(r.stagione, { team: r.team, categoria: r.categoria });
+    const y = String(r.stagione);
+    if (!teamsByYear.has(y)) teamsByYear.set(y, { team: r.team, categoria: r.categoria });
   }
   const nowYear = String(_loadedSeasonYear());
   if (currentTeam) teamsByYear.set(nowYear, { team: currentTeam, categoria: currentCategoria });
