@@ -155,15 +155,27 @@ async function main() {
           } catch { /* opzionale, non bloccare l'import */ }
         }
 
-        // Upsert atleta (nascita)
-        await sb.from('ciclismo_athletes').upsert({
+        // Upsert atleta (nascita). ATTENZIONE: 'matched' qui controlla SOLO
+        // contro gli atleti FCI nativi (italiacritIds) — un atleta collegato
+        // in un secondo momento da ciclismo-create-profiles.js (via
+        // manual_athletes, per uno unmatched-in-FCI) NON risulterebbe
+        // "matched" qui. Se questo stesso ciclismo_id viene ri-scrapato più
+        // avanti (perché compare anche in un'ALTRA stagione/categoria non
+        // ancora processata), un upsert incondizionato di atleta_id:null
+        // cancellerebbe silenziosamente quel collegamento già fatto — bug
+        // reale osservato dal vivo (Sensi Matteo). Si include atleta_id nel
+        // payload SOLO quando è effettivamente matched: altrimenti Postgres
+        // (ON CONFLICT DO UPDATE con colonne esplicite) lascia il valore
+        // esistente invariato invece di azzerarlo.
+        const upsertPayload = {
           ciclismo_id: a.ciclismoId,
-          atleta_id: matched ? atletaId : null,
           nome_completo: scheda.nomeCompleto,
           data_nascita: scheda.natoIl,
           photo_url: photoUrl,
           updated_at: new Date().toISOString(),
-        }, { onConflict: 'ciclismo_id' });
+        };
+        if (matched) upsertPayload.atleta_id = atletaId;
+        await sb.from('ciclismo_athletes').upsert(upsertPayload, { onConflict: 'ciclismo_id' });
 
         // Upsert risultati di QUESTO anno
         const rows = scheda.piazzamenti.map(pl => ({

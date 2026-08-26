@@ -3912,7 +3912,12 @@ function route() {
   const m_team = match('/team/:id');
   if (m_team) return renderTeam(m_team[1]);
   const m_gara = match('/gara/:id');
-  if (m_gara) return renderGara(m_gara[1]);
+  if (m_gara) {
+    // Gare storiche importate da ciclismo.info: id con prefisso CIC_, pagina
+    // interna dedicata (mai un link esterno) — vedi renderGaraStorica.
+    if (m_gara[1].startsWith('CIC_')) return renderGaraStorica(m_gara[1].slice(4));
+    return renderGara(m_gara[1]);
+  }
   // Link diretti condivisibili dalla pagina Media: aprono subito il player
   // giusto sopra la pagina Media (mai su youtube.com/facebook.com), invece di
   // dover passare dalla pagina gara. Vanno controllati PRIMA di /media/:id
@@ -14429,7 +14434,7 @@ async function _loadAtletaTopResultsWidget(atletaId, nativeRisultati, currentTea
   }
   for (const r of ciclismoRows) {
     if (!r.data || !r.posizione) continue;
-    merged.push({ data: r.data, anno: r.stagione, posizione: r.posizione, nome_gara: r.nome_gara, url: r.gara_ciclismo_url, external: true, team: r.team, source: 'ciclismo' });
+    merged.push({ data: r.data, anno: r.stagione, posizione: r.posizione, nome_gara: r.nome_gara, url: _ciclismoGaraHref(r.gara_ciclismo_url), external: false, team: r.team, source: 'ciclismo' });
   }
   for (const r of (Array.isArray(pcsRows) ? pcsRows : [])) {
     if (!r.data || !r.posizione) continue;
@@ -14513,6 +14518,75 @@ async function _loadAtletaTopResultsWidget(atletaId, nativeRisultati, currentTea
 // Prova prima l'id sintetico esatto (stessa normalizzazione usata da
 // ciclismo-create-profiles.js), poi una scansione per parola-fulcro
 // (stessa logica di teamAnchorPattern lato server) sui nomi registrati.
+// Id numerico interno di ciclismo.info dall'URL gara — stessa regex del
+// server (vedi ciclismoGaraId in server.js). Usato per costruire link
+// INTERNI (#/gara/CIC_<id>) invece di mandare l'utente su ciclismo.info.
+function _ciclismoGaraId(url) {
+  const m = String(url || '').match(/_(\d+)_(\d{4})_(\d{2})_(\d{2})_/);
+  return m ? m[1] : null;
+}
+function _ciclismoGaraHref(url) {
+  const gid = _ciclismoGaraId(url);
+  return gid ? `#/gara/CIC_${gid}` : null;
+}
+
+// Pagina gara storica ciclismo.info — completamente interna al sito (mai un
+// link esterno), stesso taglio visivo di una card RISULTATI ma con solo i
+// campi che ciclismo.info fornisce (niente km/media/moltiplicatore/PTS,
+// niente punti — vedi nota generale su ciclismo.info in questo file).
+async function renderGaraStorica(ciclismoGaraId) {
+  let payload;
+  try { payload = await apiCall(`/ciclismo-results/gara/${encodeURIComponent(ciclismoGaraId)}`); }
+  catch { return renderNotFound(); }
+  const rows = payload?.risultati || [];
+  if (!rows.length) return renderNotFound();
+
+  const first = rows[0];
+  const cats = [...new Set(rows.map(r => r.categoria).filter(Boolean))];
+  const posColor = p => p === 1 ? 'var(--gold)' : p === 2 ? 'var(--silver)' : p === 3 ? 'var(--bronze)' : 'var(--text-secondary)';
+  const luogo = [first.regione, first.luogo].filter(Boolean).join(' · ');
+
+  setPageMeta(first.nome_gara, [luogo, fmtDateShort(first.data)].filter(Boolean).join(' · '));
+
+  const rowsHtml = rows
+    .slice()
+    .sort((a, b) => (a.posizione || 999) - (b.posizione || 999) || (a.categoria || '').localeCompare(b.categoria || ''))
+    .map(r => {
+      const nomeLink = r.atleta_id
+        ? `<a href="#/atleta/${esc(r.atleta_id)}">${esc(r.nome_completo)}</a>`
+        : esc(r.nome_completo || '');
+      const teamLink = r.team ? esc(r.team) : '';
+      return `<tr>
+        <td class="td-pos ${posClass(r.posizione)}">${r.posizione ? r.posizione + '°' : '—'}</td>
+        <td class="td-race">${nomeLink}</td>
+        <td class="td-hide-mobile">${teamLink}</td>
+        ${cats.length > 1 ? `<td class="td-hide-mobile">${esc(String(r.categoria || '').replace(/_/g, ' '))}</td>` : ''}
+      </tr>`;
+    }).join('');
+
+  setPage(`
+    <div class="section-header" style="margin-top:0">
+      <span class="section-title" style="font-size:1.3rem">${esc(first.nome_gara)}</span>
+    </div>
+    <div style="color:var(--text-secondary);font-size:.9rem;margin-bottom:20px">
+      ${fmtDateShort(first.data)}${luogo ? ` · ${esc(luogo)}` : ''}${cats.length === 1 ? ` · ${esc(String(cats[0]).replace(/_/g, ' '))}` : ''}
+    </div>
+    <div class="section-header">
+      <span class="section-title">ORDINE DI ARRIVO</span>
+      <span class="section-line"></span>
+    </div>
+    <div class="results-table-wrap">
+      <table class="results-table">
+        <thead><tr>
+          <th>POS</th><th>ATLETA</th><th class="td-hide-mobile">TEAM</th>${cats.length > 1 ? '<th class="td-hide-mobile">CATEGORIA</th>' : ''}
+        </tr></thead>
+        <tbody>${rowsHtml}</tbody>
+      </table>
+    </div>
+    <div style="font-size:.72rem;color:var(--text-muted);margin-top:12px">Dati storici — archivio in fase di validazione.</div>
+  `);
+}
+
 function _resolveHistoricalTeamId(teamName) {
   if (!teamName || !globalData?.teams) return null;
   const norm = s => String(s || '').toUpperCase().normalize('NFD').replace(/[̀-ͯ]/g, '').replace(/[^A-Z0-9]+/g, '_').replace(/^_+|_+$/g, '');
@@ -14614,7 +14688,7 @@ window.setAtletaCiclismoYear = (atletaId, anno) => {
     return `<tr data-date="${esc(r.data || '')}">
       <td class="td-date">${fmtDateShort(r.data)}</td>
       <td class="td-pos ${pClass} ${r.posizione === 1 ? 'win' : ''}">${r.posizione ? r.posizione + '°' : '—'}</td>
-      <td class="td-race"><span style="display:inline-flex;align-items:center;gap:5px">${countryFlagImg('it')}${r.gara_ciclismo_url ? `<a href="${esc(r.gara_ciclismo_url)}" target="_blank" rel="noopener">${esc(r.nome_gara)}</a>` : esc(r.nome_gara)}</span>${luogo ? `<div style="font-size:.68rem;color:var(--text-muted);margin-top:2px">${esc(luogo)}</div>` : ''}</td>
+      <td class="td-race"><span style="display:inline-flex;align-items:center;gap:5px">${countryFlagImg('it')}${_ciclismoGaraHref(r.gara_ciclismo_url) ? `<a href="${esc(_ciclismoGaraHref(r.gara_ciclismo_url))}">${esc(r.nome_gara)}</a>` : esc(r.nome_gara)}</span>${luogo ? `<div style="font-size:.68rem;color:var(--text-muted);margin-top:2px">${esc(luogo)}</div>` : ''}</td>
       <td style="text-align:center">—</td>
       <td style="text-align:right">—</td>
       <td style="text-align:right">—</td>
@@ -21669,6 +21743,53 @@ window.risSetSearch = (v) => {
 };
 window.risLoadMore = () => { risVisibleCount += RIS_PAGE_STEP; renderRisultati(); };
 
+// Anni storici (ciclismo.info, fino al 2007): il pulsante nativo resta
+// "reale" solo per la stagione caricata — ogni anno precedente mostra le
+// gare importate da ciclismo.info al posto dei dati nativi FCI (che non
+// coprono quegli anni).
+window.risSetYear = (y) => {
+  document.querySelectorAll('#ris-year-row .year-pill, #ris-year-row button').forEach(b => {
+    const on = Number(b.dataset.year) === Number(y);
+    b.style.background = on ? 'var(--accent,#e8001d)' : 'var(--bg-elevated)';
+    b.style.color = on ? '#fff' : 'var(--text-secondary)';
+  });
+  if (Number(y) === Number(_loadedSeasonYear())) {
+    const nativeControls = document.getElementById('ris-native-controls');
+    if (nativeControls) nativeControls.style.display = '';
+    renderRisultati();
+    return;
+  }
+  renderRisultatiStorico(y);
+};
+
+async function renderRisultatiStorico(anno) {
+  const nativeControls = document.getElementById('ris-native-controls');
+  if (nativeControls) nativeControls.style.display = 'none';
+  const cardsEl = document.getElementById('ris-cards');
+  const countEl = document.getElementById('ris-count');
+  if (!cardsEl) return;
+  cardsEl.innerHTML = '<div class="empty-state">Caricamento…</div>';
+  let payload;
+  try { payload = await apiCall(`/ciclismo-results/races?anno=${encodeURIComponent(anno)}`); }
+  catch { cardsEl.innerHTML = '<div class="empty-state">Errore di caricamento</div>'; return; }
+  const races = (payload?.races || []).sort((a, b) => (b.data || '').localeCompare(a.data || ''));
+  if (countEl) countEl.textContent = `${races.length} gare`;
+  if (!races.length) { cardsEl.innerHTML = '<div class="empty-state">Nessuna gara trovata per questo anno</div>'; return; }
+  cardsEl.innerHTML = races.map(ev => {
+    const luogo = [ev.regione, ev.luogo].filter(Boolean).join(' · ');
+    const catBadges = ev.categorie.map(c => `<span class="badge-cat">${esc(String(c).replace(/_/g, ' '))}</span>`).join(' ');
+    return `<div class="ris-card" style="cursor:pointer;padding:16px 16px 16px 19px;background:var(--bg-card);border:1px solid var(--border-subtle);border-radius:8px;margin-bottom:10px" onclick="location.hash='#/gara/CIC_${esc(ev.id)}'">
+      <div style="display:flex;justify-content:space-between;align-items:flex-start;gap:12px;flex-wrap:wrap">
+        <div>
+          <div style="font-family:var(--font-heading);font-weight:700;font-size:.95rem">${esc(ev.nome)}</div>
+          <div style="font-size:.8rem;color:var(--text-muted);margin-top:2px">${fmtDateShort(ev.data)}${luogo ? ` · ${esc(luogo)}` : ''} · ${ev.n_partecipanti} partecipanti</div>
+        </div>
+        <div style="display:flex;gap:4px;flex-wrap:wrap">${catBadges}</div>
+      </div>
+    </div>`;
+  }).join('');
+}
+
 let _risPhotosMap = null;
 let _risPhotosByAtleta = null; // atleta_id → [photoObj,...] (foto taggate)
 let _risExtPhotosMap = null;   // SOLO album esterni (xpix/IC), non sovrascritti dalle foto caricate
@@ -21879,13 +22000,23 @@ async function renderRisultati() {
         <option value="tipo_pista">Tipo Pista</option>
       </select>`;
 
+    const _risCurYear = Number(_loadedSeasonYear());
+    const _risYearPills = [];
+    for (let y = _risCurYear; y >= 2007; y--) _risYearPills.push(y);
+    const risYearPillsHtml = `<div id="ris-year-row" style="display:flex;gap:8px;flex-wrap:wrap;margin:12px 0 4px">
+      ${_risYearPills.map(y => `<button class="year-pill ${y === _risCurYear ? '' : ''}" data-year="${y}" onclick="window.risSetYear(${y})"
+        style="padding:5px 13px;border-radius:14px;border:1px solid var(--border-subtle);cursor:pointer;font-size:.82rem;font-weight:700;
+        background:${y === _risCurYear ? 'var(--accent,#e8001d)' : 'var(--bg-elevated)'};color:${y === _risCurYear ? '#fff' : 'var(--text-secondary)'}">${y}</button>`).join('')}
+    </div>`;
+
     setPage(`
       <div class="content-wrapper">
         <div class="section-header">
           <h1 style="font-family:var(--font-display);font-size:var(--size-h1);margin-bottom:0">Risultati</h1>
           <span class="section-line"></span>
         </div>
-        <div class="calendar-controls">
+        ${risYearPillsHtml}
+        <div class="calendar-controls" id="ris-native-controls">
           <input type="text" id="ris-search-input" class="cal-filter-select" placeholder="Cerca gara o regione..."
             style="width:100%;box-sizing:border-box;padding:12px 16px;margin-bottom:12px;"
             oninput="window.risSetSearch(this.value)" autocomplete="off">

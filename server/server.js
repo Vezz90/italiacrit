@@ -4273,6 +4273,76 @@ app.get('/api/ciclismo-results/team', async (req, res) => {
   } catch (e) { res.status(500).json({ error: e.message }); }
 });
 
+// Estrae l'id numerico interno di ciclismo.info dall'URL della gara — sempre
+// subito prima della data (YYYY_MM_DD), es.
+// ".../gara_elite_under23_30124_2022_10_04_calvatone_..." -> "30124". Usato
+// come identificativo stabile per le pagine gara interne (#/gara/CIC_<id>),
+// così i link restano sul nostro sito invece di puntare a ciclismo.info.
+function ciclismoGaraId(url) {
+  const m = String(url || '').match(/_(\d+)_(\d{4})_(\d{2})_(\d{2})_/);
+  return m ? m[1] : null;
+}
+
+// Elenco gare ciclismo.info per una stagione — raggruppate per gara (stesso
+// gara_ciclismo_url), usato dalla pagina Risultati per gli anni storici
+// (fino al 2007) non coperti dai dati nativi FCI.
+app.get('/api/ciclismo-results/races', async (req, res) => {
+  const anno = req.query.anno;
+  if (!anno) return res.status(400).json({ error: 'anno mancante' });
+  try {
+    const { data, error } = await supabase
+      .from('ciclismo_results')
+      .select('gara_ciclismo_url, nome_gara, data, categoria, regione, luogo')
+      .eq('stagione', anno)
+      .not('gara_ciclismo_url', 'is', null)
+      .limit(20000);
+    if (error) throw error;
+    const byUrl = new Map();
+    for (const r of (data || [])) {
+      const gid = ciclismoGaraId(r.gara_ciclismo_url);
+      if (!gid) continue;
+      if (!byUrl.has(gid)) {
+        byUrl.set(gid, { id: gid, nome: r.nome_gara, data: r.data, regione: r.regione, luogo: r.luogo, categorie: new Set(), n_partecipanti: 0 });
+      }
+      const ev = byUrl.get(gid);
+      ev.categorie.add(r.categoria);
+      ev.n_partecipanti++;
+    }
+    const races = [...byUrl.values()].map(ev => ({ ...ev, categorie: [...ev.categorie] }))
+      .sort((a, b) => (b.data || '').localeCompare(a.data || ''));
+    res.json({ races });
+  } catch (e) { res.status(500).json({ error: e.message }); }
+});
+
+// Ordine di arrivo completo per UNA gara ciclismo.info (tutte le categorie
+// che condividono lo stesso id gara — es. Esordienti 1°/2° anno insieme,
+// come già fa la pagina gara nativa).
+app.get('/api/ciclismo-results/gara/:ciclismoGaraId', async (req, res) => {
+  const gid = req.params.ciclismoGaraId;
+  if (!gid) return res.status(400).json({ error: 'id mancante' });
+  try {
+    const { data, error } = await supabase
+      .from('ciclismo_results')
+      .select('posizione, atleta_id, ciclismo_id, team, categoria, nome_gara, data, regione, luogo, gara_ciclismo_url')
+      .ilike('gara_ciclismo_url', `%_${gid}_2%`)
+      .order('posizione', { ascending: true })
+      .limit(500);
+    if (error) throw error;
+    // Il match per sottostringa può prendere altre gare il cui id numerico è
+    // suffisso del nostro (es. "130124" contiene "30124") — filtro esatto sul
+    // gruppo catturato dalla stessa regex usata per costruire l'elenco.
+    const rows = (data || []).filter(r => ciclismoGaraId(r.gara_ciclismo_url) === gid);
+    const ciclismoIds = [...new Set(rows.map(r => r.ciclismo_id))];
+    let nomeById = new Map();
+    if (ciclismoIds.length) {
+      const { data: athData } = await supabase.from('ciclismo_athletes').select('ciclismo_id, nome_completo').in('ciclismo_id', ciclismoIds);
+      nomeById = new Map((athData || []).map(a => [a.ciclismo_id, a.nome_completo]));
+    }
+    const risultati = rows.map(r => ({ ...r, nome_completo: nomeById.get(r.ciclismo_id) || r.ciclismo_id }));
+    res.json({ risultati });
+  } catch (e) { res.status(500).json({ error: e.message }); }
+});
+
 app.get('/api/ciclismo-media/team', async (req, res) => {
   const teamName = req.query.team;
   if (!teamName) return res.status(400).json({ error: 'team mancante' });
