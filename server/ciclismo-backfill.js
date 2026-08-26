@@ -138,6 +138,23 @@ async function main() {
           } catch { /* foto opzionale, non bloccare l'import */ }
         }
 
+        // Anno di nascita (Classe YYYY sul profilo) — solo se non già impostato
+        // a mano (non sovrascrivere una correzione admin esistente).
+        const bYearMatch = String(scheda.natoIl || '').match(/(\d{4})\s*$/);
+        if (bYearMatch) {
+          try {
+            const { data: existingYear } = await sb.from('entity_overrides')
+              .select('new_value').eq('entity_type', 'atleta').eq('entity_id', atletaId)
+              .eq('field', 'anno_nascita').maybeSingle();
+            if (!existingYear || !existingYear.new_value) {
+              await sb.from('entity_overrides').upsert(
+                { entity_type: 'atleta', entity_id: atletaId, field: 'anno_nascita', new_value: bYearMatch[1] },
+                { onConflict: 'entity_type,entity_id,field' }
+              );
+            }
+          } catch { /* opzionale, non bloccare l'import */ }
+        }
+
         // Upsert atleta (nascita)
         await sb.from('ciclismo_athletes').upsert({
           ciclismo_id: a.ciclismoId,

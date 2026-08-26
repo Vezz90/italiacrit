@@ -13744,7 +13744,7 @@ async function renderAtleta(atleta_id, opts = {}) {
     ${profileYearRow('atleta', atleta_id, selYear)}
     <div id="season-compare-inject"></div>
     ${_badgeStripHtml}
-    ${cumulHtml}
+    <div id="atleta-cumul-chart-wrap">${cumulHtml}</div>
     <div style="margin: 8px 0 20px;display:flex;gap:10px;align-items:center;flex-wrap:wrap">
       <button class="btn-share" onclick="window.triggerShareAtleta()"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="18" cy="5" r="3"/><circle cx="6" cy="12" r="3"/><circle cx="18" cy="19" r="3"/><line x1="8.59" y1="13.51" x2="15.42" y2="17.49"/><line x1="15.41" y1="6.51" x2="8.59" y2="10.49"/></svg> Condividi Profilo</button>
       <button class="btn-share" onclick="window.openComparatore('${esc(atleta_id)}','atleta')">⚖ Compara</button>
@@ -14630,6 +14630,11 @@ window.setAtletaCiclismoYear = (atletaId, anno) => {
   if (seasonCompare) seasonCompare.style.display = 'none';
 
   _renderCiclismoMedia('atleta-ciclismo-media', (window._ciclismoMediaCache[atletaId] || {})[anno] || []);
+
+  // Andamento piazzamenti — stessa forma dei campi ICS (data/nome_gara/
+  // posizione), quindi buildCumulChart funziona invariata anche qui.
+  const chartWrap = document.getElementById('atleta-cumul-chart-wrap');
+  if (chartWrap) chartWrap.innerHTML = buildCumulChart(rows);
 };
 
 // Griglia foto storiche ciclismo.info per l'anno selezionato — stesso stile
@@ -15374,29 +15379,29 @@ window.hideSparkTip = () => {
   document.getElementById('sparkline-tooltip').style.display = 'none';
 };
 
+// Andamento PIAZZAMENTI (non punti) nel tempo — asse Y invertito, il 1°
+// posto sta in alto. Riusata sia per i risultati nativi ICS sia per gli
+// anni storici ciclismo.info (stessa forma dei campi: data/nome_gara/
+// posizione), aggiornata a ogni cambio anno.
 function buildCumulChart(risultati) {
   const sorted = [...risultati]
-    .filter(r => (r.punti_effettivi || 0) > 0)
+    .filter(r => (r.posizione || 0) > 0 && r.data)
     .sort((a, b) => (a.data || '').localeCompare(b.data || ''));
   if (sorted.length < 3) return '';
 
-  let cum = 0;
-  const pts = sorted.map(r => {
-    cum += r.punti_effettivi || 0;
-    return { date: (r.data || '').slice(5), nome: r.nome_gara || '', added: r.punti_effettivi || 0, cum, pos: r.posizione || 0 };
-  });
+  const pts = sorted.map(r => ({ date: (r.data || '').slice(5), nome: r.nome_gara || '', pos: r.posizione || 0 }));
 
-  const W = 800, H = 90, PL = 38, PR = 10, PT = 8, PB = 18;
-  const maxC = pts[pts.length - 1].cum;
+  const W = 800, H = 90, PL = 24, PR = 10, PT = 8, PB = 18;
+  const maxPos = Math.max(...pts.map(p => p.pos), 1);
   const n = pts.length;
   const xf = i => PL + (i / Math.max(n - 1, 1)) * (W - PL - PR);
-  const yf = v => PT + (1 - v / maxC) * (H - PT - PB);
+  const yf = v => PT + ((v - 1) / Math.max(maxPos - 1, 1)) * (H - PT - PB);
 
-  const linePts = pts.map((p, i) => `${xf(i).toFixed(1)},${yf(p.cum).toFixed(1)}`).join(' ');
-  const area = `M${xf(0).toFixed(1)},${yf(pts[0].cum).toFixed(1)} ${pts.slice(1).map((_, i) => `L${xf(i+1).toFixed(1)},${yf(pts[i+1].cum).toFixed(1)}`).join(' ')} L${xf(n-1).toFixed(1)},${H-PB} L${xf(0).toFixed(1)},${H-PB} Z`;
+  const linePts = pts.map((p, i) => `${xf(i).toFixed(1)},${yf(p.pos).toFixed(1)}`).join(' ');
+  const area = `M${xf(0).toFixed(1)},${yf(pts[0].pos).toFixed(1)} ${pts.slice(1).map((_, i) => `L${xf(i+1).toFixed(1)},${yf(pts[i+1].pos).toFixed(1)}`).join(' ')} L${xf(n-1).toFixed(1)},${H-PB} L${xf(0).toFixed(1)},${H-PB} Z`;
 
-  const yTicks = [maxC, Math.round(maxC / 2)].map(v =>
-    `<text x="${PL-4}" y="${yf(v).toFixed(1)}" font-size="8" fill="var(--text-muted)" text-anchor="end" dominant-baseline="middle">${v}</text>`
+  const yTicks = [1, maxPos].map(v =>
+    `<text x="${PL-4}" y="${yf(v).toFixed(1)}" font-size="8" fill="var(--text-muted)" text-anchor="end" dominant-baseline="middle">${v}°</text>`
   ).join('');
 
   const xIdxs = [...new Set([0, Math.floor(n / 2), n - 1])];
@@ -15404,18 +15409,19 @@ function buildCumulChart(risultati) {
     `<text x="${xf(i).toFixed(1)}" y="${H - 3}" font-size="8" fill="var(--text-muted)" text-anchor="middle">${pts[i].date}</text>`
   ).join('');
 
+  const dotColor = pos => pos === 1 ? 'var(--gold)' : pos === 2 ? 'var(--silver)' : pos === 3 ? 'var(--bronze)' : 'var(--red-hot)';
   const dots = pts.map((p, i) => {
-    const fill = p.pos === 1 ? 'var(--gold)' : 'var(--red-hot)';
-    const r = p.pos === 1 ? 5 : 3;
-    return `<circle cx="${xf(i).toFixed(1)}" cy="${yf(p.cum).toFixed(1)}" r="${r}"
+    const fill = dotColor(p.pos);
+    const r = p.pos <= 3 ? 5 : 3;
+    return `<circle cx="${xf(i).toFixed(1)}" cy="${yf(p.pos).toFixed(1)}" r="${r}"
       fill="${fill}" stroke="var(--bg-card)" stroke-width="1.5"
-      data-label="${esc(p.nome)} · +${p.added}pt → tot. ${p.cum}pt"
+      data-label="${esc(p.nome)} · ${p.pos}°"
       onmouseenter="showSparkTip(event,this)" onmouseleave="hideSparkTip()"
       style="cursor:pointer"/>`;
   }).join('');
 
   return `<div class="sparkline-wrap">
-    <div class="sparkline-title">PROGRESSIONE PUNTI — STAGIONE</div>
+    <div class="sparkline-title">ANDAMENTO PIAZZAMENTI — STAGIONE</div>
     <div style="position:relative">
       <svg viewBox="0 0 ${W} ${H}" style="width:100%;display:block;overflow:visible" preserveAspectRatio="none">
         <defs>
