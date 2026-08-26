@@ -15076,7 +15076,7 @@ window.setAtletaCiclismoYear = async (atletaId, anno) => {
   const seasonCompare = document.getElementById('season-compare-inject');
   if (seasonCompare) seasonCompare.style.display = 'none';
 
-  _renderCiclismoMedia('atleta-ciclismo-media', (window._ciclismoMediaCache[atletaId] || {})[anno] || []);
+  _renderCiclismoMedia('atleta-ciclismo-media', (window._ciclismoMediaCache[atletaId] || {})[anno] || [], rows);
 
   // Andamento piazzamenti — stessa forma dei campi ICS (data/nome_gara/
   // posizione), quindi buildCumulChart funziona invariata anche qui.
@@ -15087,10 +15087,30 @@ window.setAtletaCiclismoYear = async (atletaId, anno) => {
 // Griglia foto storiche ciclismo.info per l'anno selezionato — stesso stile
 // visivo di buildProfileMedia (📸 FOTO) per coerenza, usato sia sul profilo
 // atleta sia sul profilo team.
-function _renderCiclismoMedia(containerId, mediaList) {
+function _renderCiclismoMedia(containerId, mediaList, rows) {
   const el = document.getElementById(containerId);
   if (!el) return;
-  if (!mediaList.length) { el.innerHTML = ''; return; }
+
+  // Video aggiunti su una gara storica (window.openVideoSubmit, chiave
+  // "CIC_<id>") — mancavano del tutto qui: erano salvati lato server ma mai
+  // cercati su questa pagina, quindi restavano invisibili sul profilo
+  // dell'atleta anche se corretti (bug osservato dal vivo). Un video per
+  // gara: si ricava la chiave dallo stesso gara_ciclismo_url della riga
+  // risultato, stessa regex condivisa _ciclismoGaraId usata ovunque.
+  const videoCards = [];
+  const seenVKey = new Set();
+  for (const r of (rows || [])) {
+    const gid = _ciclismoGaraId(r.gara_ciclismo_url);
+    if (!gid) continue;
+    const key = 'CIC_' + gid;
+    if (seenVKey.has(key)) continue;
+    const vids = (globalData?.videos && globalData.videos[key]) || [];
+    if (!vids.length) continue;
+    seenVKey.add(key);
+    videoCards.push({ r, video: vids[0] });
+  }
+
+  if (!mediaList.length && !videoCards.length) { el.innerHTML = ''; return; }
   // La posizione va sempre mostrata (anche se non è un podio): utile per chi
   // volesse riconoscersi/taggarsi in una foto di gruppo pur non essendo il
   // soggetto principale della didascalia.
@@ -15108,16 +15128,46 @@ function _renderCiclismoMedia(containerId, mediaList) {
         <div class="profile-media-meta" style="opacity:.7">📷 ciclismo.info</div>
       </div>
     </div>`).join('');
+
+  const vidCardsHtml = videoCards.map(({ r, video: v }) => {
+    const k = videoKind(v.url);
+    const t = esc((v.title || '').replace(/'/g, "\\'"));
+    const click = k === 'yt' ? `window.openVideoModal('${ytId(v.url)}','${t}')`
+      : k === 'fb' ? `window.openFacebookVideoModal('${esc(v.url)}','${t}')`
+      : k === 'file' ? `window.openVideoFileModal('${esc(v.url)}','${t}')`
+      : `window.open('${esc(v.url)}','_blank')`;
+    const thumb = k === 'yt' ? `<img src="https://img.youtube.com/vi/${ytId(v.url)}/hqdefault.jpg" alt="${esc(v.title||'Video')}" loading="lazy"/>`
+      : k === 'fb' ? fbThumbHtml(v.url)
+      : k === 'file' ? `<video src="${esc(v.url)}#t=0.1" muted preload="metadata" playsinline style="width:100%;height:100%;object-fit:cover;background:#000"></video>`
+      : `<div style="width:100%;height:100%;display:flex;align-items:center;justify-content:center;background:#0f172a;font-size:2.4rem">🎬</div>`;
+    return `
+    <div class="profile-media-card profile-media-photo" style="cursor:pointer" onclick="${click}">
+      <div class="profile-media-thumb">
+        ${thumb}
+        <div class="gara-media-play"><span>&#9658;</span></div>
+        ${r.posizione ? `<div class="profile-media-badge" style="color:${posColor(r.posizione)}">${posLabel(r.posizione)}</div>` : ''}
+      </div>
+      <div class="profile-media-info">
+        <div class="profile-media-race">${esc(r.nome_gara)}</div>
+        <div class="profile-media-meta">${fmtDateShort(r.data)}${v.channel ? ` · ${esc(v.channel)}` : ''}</div>
+      </div>
+    </div>`;
+  }).join('');
+
   el.innerHTML = `
     <span style="display:none"></span>
     <div class="section-header" style="margin-top:20px">
       <span class="section-title">MEDIA</span>
       <span class="section-line"></span>
     </div>
-    <div class="profile-media-section">
+    ${cards ? `<div class="profile-media-section">
       <div class="profile-media-sub-title">📸 FOTO</div>
       <div class="profile-media-grid">${cards}</div>
-    </div>`;
+    </div>` : ''}
+    ${vidCardsHtml ? `<div class="profile-media-section" style="margin-top:12px">
+      <div class="profile-media-sub-title">🎬 VIDEO</div>
+      <div class="profile-media-grid">${vidCardsHtml}</div>
+    </div>` : ''}`;
 }
 
 // Storico ciclismo.info per un TEAM — stesso pattern dell'atleta: pillole
