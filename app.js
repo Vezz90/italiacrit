@@ -2511,6 +2511,18 @@ function tipoPistaTag(tipo) {
   return ' <span class="res-badge gray-badge" style="font-size:.62rem;padding:1px 6px;margin-left:4px;white-space:nowrap;vertical-align:1px">Tipo Pista</span>';
 }
 
+// Come tipoPistaTag, ma per i risultati PCS "extra" (gare estere non
+// abbinate al circuito) che sono in realtà prove A SQUADRE (cronometro a
+// squadre, "TTT"/"Team Time Trial" nel nome PCS, "ploegentijdrit" in
+// olandese) — stesso trattamento concettuale del nostro Campionato Italiano
+// Cronometro a Squadre: la posizione è del TEAM, non di un singolo, quindi
+// più corridori la condividono legittimamente. Va segnalato per non far
+// sembrare un errore/doppione quando più compagni hanno lo stesso piazzamento.
+function squadreExtraTag(nomeGara) {
+  if (!/\bTTT\b|team time trial|a squadre|ploegentijdrit|contre.la.montre.par.équipes/i.test(nomeGara || '')) return '';
+  return ' <span class="res-badge gray-badge" style="font-size:.62rem;padding:1px 6px;margin-left:4px;white-space:nowrap;vertical-align:1px">Squadre</span>';
+}
+
 function badgeMult(m, tipo, isCR = false, isCI = false) {
   isCR = isCR || (tipo === 'campionato_regionale');
   isCI = isCI || (tipo === 'campionato_italiano');
@@ -14150,7 +14162,7 @@ async function _loadTeamPcsExtra(teamId, season, viewCat) {
     if (tbody.querySelector(`tr[data-pcskey="${CSS.escape(pcsKey)}"]`)) continue;
     const pClass = posClass(r.posizione);
     const { cognome, nome } = getName(r.atleta_id);
-    const raceLink = `<a href="#/gara/${esc(r.gara_id)}">${esc(r.gara_name)}</a>`;
+    const raceLink = `<a href="#/gara/${esc(r.gara_id)}">${esc(r.gara_name)}</a>${squadreExtraTag(r.gara_name)}`;
     const tr = document.createElement('tr');
     tr.dataset.pos = String(r.posizione || 9999);
     tr.dataset.date = r.data || '';
@@ -14200,7 +14212,7 @@ async function _loadTeamPcsExtra(teamId, season, viewCat) {
     tr.innerHTML = `
       <td class="td-date">${fmtDateShort(r.data)}</td>
       <td class="td-pos ${pClass}">${r.posizione}°</td>
-      <td class="td-race"><span style="display:inline-flex;align-items:center;gap:5px">${countryFlagImg(r.country)}${raceHtml}</span>
+      <td class="td-race"><span style="display:inline-flex;align-items:center;gap:5px">${countryFlagImg(r.country)}${raceHtml}${squadreExtraTag(r.gara_name)}</span>
         <div class="td-team-mobile"><a href="#/atleta/${esc(r.atleta_id)}" style="color:var(--text-secondary)">${esc(cognome)} ${esc(nome)}</a></div>
       </td>
       <td class="td-hide-mobile" style="font-family:var(--font-heading);font-weight:700">
@@ -14449,7 +14461,7 @@ async function _loadAtletaPcsExtra(atletaId, season, icsRisultati, athlete) {
     insertChrono(r.data, `g:${r.gara_id}`, `
       <td class="td-date">${fmtDateShort(r.data)}</td>
       <td class="td-pos ${pClass}">${r.posizione}°</td>
-      <td class="td-race"><span style="display:inline-flex;align-items:center;gap:5px">${countryFlagImg('it')}<a href="#/gara/${esc(r.gara_id)}">${esc(r.nome_gara)}</a>${tipoPistaTag(r.tipo)}</span></td>
+      <td class="td-race"><span style="display:inline-flex;align-items:center;gap:5px">${countryFlagImg('it')}<a href="#/gara/${esc(r.gara_id)}">${esc(r.nome_gara)}</a>${tipoPistaTag(r.tipo)}${squadreExtraTag(r.nome_gara)}</span></td>
       <td>${badgeMult(r.moltiplicatore || 1, r.tipo)}</td>
       <td style="text-align:right">${esc(r.km || '—')}</td>
       <td style="text-align:right">${esc(r.media || '—')}</td>
@@ -14466,7 +14478,7 @@ async function _loadAtletaPcsExtra(atletaId, season, icsRisultati, athlete) {
     insertChrono(r.data, `e:${r.pcs_race_slug || r.gara_name}:${r.data}`, `
       <td class="td-date">${fmtDateShort(r.data)}</td>
       <td class="td-pos ${pClass}">${r.posizione}°</td>
-      <td class="td-race"><span style="display:inline-flex;align-items:center;gap:5px">${countryFlagImg(r.country)}${raceHtml}</span></td>
+      <td class="td-race"><span style="display:inline-flex;align-items:center;gap:5px">${countryFlagImg(r.country)}${raceHtml}${squadreExtraTag(r.gara_name)}</span></td>
       <td>—</td>
       <td style="text-align:right">—</td>
       <td style="text-align:right">—</td>
