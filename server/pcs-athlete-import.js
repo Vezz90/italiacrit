@@ -539,11 +539,26 @@ async function getExistingPhotoIds(sb) {
 }
 
 async function getSavedSlugs(sb) {
-  const { data } = await sb.from('entity_overrides')
-    .select('entity_id, new_value')
-    .eq('entity_type', 'atleta').eq('field', 'pcs_slug')
-    .not('new_value', 'is', null).limit(5000);
-  return new Map((data || []).map(r => [r.entity_id, r.new_value]));
+  // Paginato come getPhantomAthletes/getAthletesWithResults: PostgREST
+  // limita di default a 1000 righe per risposta indipendentemente dal
+  // .limit() richiesto — con oltre 2000 slug salvati un limit(5000) fisso
+  // ne perdeva la maggioranza per ordine di ritorno arbitrario, facendo
+  // ripartire da zero (guess del nome) proprio gli atleti già risolti in
+  // passato, incluso il caso concreto di uno slug corretto sovrascritto da
+  // un guess sbagliato al giro successivo.
+  const map = new Map();
+  const PAGE = 1000;
+  for (let from = 0; ; from += PAGE) {
+    const { data, error } = await sb.from('entity_overrides')
+      .select('entity_id, new_value')
+      .eq('entity_type', 'atleta').eq('field', 'pcs_slug')
+      .not('new_value', 'is', null).range(from, from + PAGE - 1);
+    if (error) throw error;
+    if (!data || !data.length) break;
+    for (const r of data) map.set(r.entity_id, r.new_value);
+    if (data.length < PAGE) break;
+  }
+  return map;
 }
 
 async function getAthletesWithResults(sb, season) {
