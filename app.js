@@ -14432,6 +14432,20 @@ async function _loadAtletaTopResultsWidget(atletaId, nativeRisultati, currentTea
   }
   if (!merged.length) return;
 
+  // Dedup: la stessa gara può comparire sia tra i risultati nativi ICS sia
+  // tra quelli ciclismo.info per atleti già presenti in entrambe le fonti —
+  // senza questo la stessa gara appariva due volte in Top results. A parità
+  // di data+nome gara vince la fonte nativa (source 'ics'), poi la prima
+  // trovata.
+  const sourceRank = { ics: 0, ciclismo: 1, pcs: 2 };
+  const seen = new Map();
+  for (const r of merged) {
+    const key = `${r.data}|${String(r.nome_gara || '').toUpperCase().trim()}`;
+    const prev = seen.get(key);
+    if (!prev || sourceRank[r.source] < sourceRank[prev.source]) seen.set(key, r);
+  }
+  const dedupedMerged = [...seen.values()];
+
   // Ordine di rilievo (NON punteggi — nessun numero salvato, solo una
   // priorità di visualizzazione): 1) podio (entro il 3°) al Campionato
   // Italiano, 2) vittorie "semplici", 3) podio al Campionato Regionale,
@@ -14444,12 +14458,12 @@ async function _loadAtletaTopResultsWidget(atletaId, nativeRisultati, currentTea
     if (isCampReg(r.nome_gara) && r.posizione <= 3) return 2;
     return 1;
   };
-  const top10 = merged.slice()
+  const top10 = dedupedMerged.slice()
     .sort((a, b) => tier(b) - tier(a) || a.posizione - b.posizione || (b.data || '').localeCompare(a.data || ''))
     .slice(0, 10);
   const topResultsHtml = top10.map(r => {
     const isStage = /\bstage\b|\btappa\b/i.test(r.nome_gara || '');
-    const posLabel = `${r.posizione}${_ordSuffix(r.posizione)}${isStage ? ' stage' : ''} `;
+    const posLabel = `${r.posizione}°${isStage ? ' tappa' : ''} `;
     const nomeHtml = r.url ? (r.external ? `<a href="${esc(r.url)}" target="_blank" rel="noopener">${esc(r.nome_gara)}</a>` : `<a href="${esc(r.url)}">${esc(r.nome_gara)}</a>`) : esc(r.nome_gara || '');
     return `<div class="pcs-top-result-row"><span class="pcs-top-result-pos">${posLabel}</span><span class="pcs-top-result-name">${nomeHtml}</span> <span class="pcs-top-result-year">('${esc(String(r.anno).slice(-2))})</span></div>`;
   }).join('');
@@ -14486,9 +14500,6 @@ async function _loadAtletaTopResultsWidget(atletaId, nativeRisultati, currentTea
         ${teamsHtml || '<div class="empty-state">Nessuna squadra</div>'}
       </div>
     </div>`;
-}
-function _ordSuffix(n) {
-  return n === 1 ? 'st' : n === 2 ? 'nd' : n === 3 ? 'rd' : 'th';
 }
 
 // Risolve il team_id italiacrit ATTUALE a partire da un nome squadra
