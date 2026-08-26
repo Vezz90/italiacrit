@@ -13782,15 +13782,11 @@ async function renderAtleta(atleta_id, opts = {}) {
   _injectFollowBtn('atleta-follow-btn', 'atleta', atleta_id);
   _loadAtletaPcsExtra(atleta_id, selYear, risultati, a);
   _loadAtletaTopResultsWidget(atleta_id, risultati, displayTeam, displayCategoria, displayTeamId);
-  // "nativeCount" qui NON deve essere il conteggio risultati dell'anno
-  // selezionato (un atleta REGISTRATO in FCI, come Nencini, può avere 0
-  // risultati nel circuito nazionale in un dato anno perché corre solo da
-  // professionista/continental — quei risultati arrivano da PCS, non da
-  // qui, e la pillola dell'anno nativo NON va comunque tolta). Il criterio
-  // giusto è se l'atleta esiste SOLO come profilo creato da ciclismo.info
-  // (roster_only, mai stato un vero atleta FCI) — bug reale osservato dal
-  // vivo su Nencini, la cui pillola 2026 (con risultati PCS veri) spariva.
-  _loadCiclismoStorico(atleta_id, selYear, a.roster_only ? 0 : 1);
+  // nativeCount = solo risultati ICS dell'anno caricato — _loadCiclismoStorico
+  // controlla ANCHE PCS prima di decidere se togliere la pillola nativa
+  // (un atleta come Nencini ha 0 risultati ICS nel 2026 ma corre da
+  // professionista, con risultati PCS veri: quella pillola non va tolta).
+  _loadCiclismoStorico(atleta_id, selYear, risultati.length);
 
   // Confronto stagione precedente — iniettato quando la promise è pronta
   _prevAthPromise.then(prevA => {
@@ -14401,15 +14397,22 @@ async function _loadCiclismoStorico(atletaId, nativeSelYear, nativeCount) {
   yearRow.insertAdjacentHTML('beforeend', pillsHtml);
 
   // La stagione nativa caricata (di default, es. 2026) è SEMPRE mostrata come
-  // pillola anche senza un solo risultato — se questo atleta non ha niente
-  // lì ma ha storico ciclismo.info, restava comunque una pillola "morta" che,
-  // se ricliccata, riportava alla pagina vuota. La si TOGLIE del tutto
-  // invece di lasciarla lì (richiesta esplicita: niente anni vuoti nel
-  // mezzo, si salta a piè pari all'ultimo anno utile) e si salta dritti
-  // all'ultimo anno CON dati.
+  // pillola anche senza un solo risultato ICS — ma un atleta che corre da
+  // professionista/continental (es. Nencini) ha risultati REALI nell'anno
+  // corrente solo su PCS, mai nel circuito ICS: togliere la pillola in
+  // quel caso cancellava per sbaglio l'unico posto dove quei risultati
+  // erano visibili (bug reale, corretto qui). Si toglie la pillola SOLO se
+  // anche PCS conferma zero risultati per questo atleta in questo anno.
   if (!nativeCount) {
-    yearRow.querySelectorAll('.year-pill').forEach(b => { if (b.dataset.year === String(nativeSelYear)) b.remove(); });
-    window.setAtletaCiclismoYear(atletaId, ciclismoOnlyYears[0]);
+    let hasPcsThisYear = false;
+    try {
+      const pcsCheck = await apiCall(`/pcs-results/atleta/${encodeURIComponent(atletaId)}?season=${encodeURIComponent(nativeSelYear)}`);
+      hasPcsThisYear = Array.isArray(pcsCheck) && pcsCheck.length > 0;
+    } catch { /* in dubbio, non toccare la pillola */ hasPcsThisYear = true; }
+    if (!hasPcsThisYear) {
+      yearRow.querySelectorAll('.year-pill').forEach(b => { if (b.dataset.year === String(nativeSelYear)) b.remove(); });
+      window.setAtletaCiclismoYear(atletaId, ciclismoOnlyYears[0]);
+    }
   }
 }
 
