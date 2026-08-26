@@ -13737,7 +13737,7 @@ async function renderAtleta(atleta_id, opts = {}) {
       <button class="watch-btn ${_watched ? 'watch-btn--active' : ''}" id="watch-btn-${esc(atleta_id)}" onclick="window.toggleWatch('${esc(atleta_id)}','${esc(displayCognome)}','${esc(displayNome)}')">${_watched ? '<span>★</span> Seguito' : '<span>☆</span> Segui'}</button>
       ${adminEditBtn('atleta', atleta_id)}
     </div>
-    ${buildProfileMedia(risultati, photosMap, globalData.videos, { atletaIds: [atleta_id], year: selYear })}
+    <div id="atleta-media-nativo">${buildProfileMedia(risultati, photosMap, globalData.videos, { atletaIds: [atleta_id], year: selYear })}</div>
     <div id="atleta-ciclismo-media"></div>
     <div class="section-header" style="margin-top:28px">
       <span class="section-title" id="atleta-results-title">RISULTATI ${esc(selYear)} · ${esc(catLabel(displayCategoria))}</span>
@@ -14437,6 +14437,12 @@ window.setAtletaCiclismoYear = (atletaId, anno) => {
       <td class="td-race">${r.gara_ciclismo_url ? `<a href="${esc(r.gara_ciclismo_url)}" target="_blank" rel="noopener">${esc(r.nome_gara)}</a>` : esc(r.nome_gara)}</td>
       <td colspan="3" style="color:var(--text-muted)">${esc(r.regione || '')} · ${esc(r.luogo || '')}</td>
     </tr>`).join('');
+
+  // Nasconde il pannello MEDIA nativo (sempre riferito alla stagione
+  // corrente) mentre si guarda uno storico ciclismo.info — altrimenti
+  // restavano visibili insieme, confondendo le due annate.
+  const nativoMedia = document.getElementById('atleta-media-nativo');
+  if (nativoMedia) nativoMedia.style.display = 'none';
 
   _renderCiclismoMedia('atleta-ciclismo-media', (window._ciclismoMediaCache[atletaId] || {})[anno] || []);
 };
