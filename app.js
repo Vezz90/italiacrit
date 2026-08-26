@@ -13737,7 +13737,7 @@ async function renderAtleta(atleta_id, opts = {}) {
       <button class="watch-btn ${_watched ? 'watch-btn--active' : ''}" id="watch-btn-${esc(atleta_id)}" onclick="window.toggleWatch('${esc(atleta_id)}','${esc(displayCognome)}','${esc(displayNome)}')">${_watched ? '<span>★</span> Seguito' : '<span>☆</span> Segui'}</button>
       ${adminEditBtn('atleta', atleta_id)}
     </div>
-    <div id="atleta-media-nativo">${buildProfileMedia(risultati, photosMap, globalData.videos, { atletaIds: [atleta_id], year: selYear })}</div>
+    <div id="atleta-media-nativo"><span style="display:none"></span>${buildProfileMedia(risultati, photosMap, globalData.videos, { atletaIds: [atleta_id], year: selYear })}</div>
     <div id="atleta-ciclismo-media"></div>
     <div class="section-header" style="margin-top:28px">
       <span class="section-title" id="atleta-results-title">RISULTATI ${esc(selYear)} · ${esc(catLabel(displayCategoria))}</span>
