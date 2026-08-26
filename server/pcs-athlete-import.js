@@ -211,9 +211,21 @@ function bestWordMatch(words, entries) {
   return best;
 }
 
-function matchGaraId(calMap, dateStr, pcsCat, pcsName) {
-  const entries = calMap.get(dateStr);
+// Genere dedotto dall'id/categoria di una entry di calendario (i nostri id
+// finiscono in _M/_F, es. "...ELI_F", oppure contengono "DONNE" nel nome
+// per le gare femminili storiche) — usato per scartare a priori un
+// candidato di sesso opposto rispetto all'atleta PCS in questione.
+function _entryGenere(e) {
+  if (/_F$/.test(e.id) || /\bDONNE\b/i.test(e.nome || '') || /\bDONNE\b/i.test(e.id)) return 'F';
+  if (/_M$/.test(e.id)) return 'M';
+  return null;
+}
+
+function matchGaraId(calMap, dateStr, pcsCat, pcsName, atletaGenere) {
+  let entries = calMap.get(dateStr);
   if (!entries?.length) return null;
+  if (atletaGenere) entries = entries.filter(e => { const g = _entryGenere(e); return !g || g === atletaGenere; });
+  if (!entries.length) return null;
   const nameStr = normalizeStr(pcsName || '');
   if (entries.length === 1) {
     // Anche con un solo candidato in quella data, richiedi un minimo di
@@ -674,8 +686,14 @@ async function upsertResults(sb, rows) {
   for (const cat of ATH_CATS) {
     const f = path.join(RANK_DIR, `${cat}.json`);
     if (!fs.existsSync(f)) { console.log(`Mancante: ${cat}.json`); continue; }
+    // genere dedotto dal suffisso del file ranking (_M/_F) — usato da
+    // matchGaraId per non agganciare per sbaglio un risultato PCS alla gara
+    // del sesso sbagliato quando quel giorno il calendario ha una sola gara
+    // in quella data (es. Milano-Sanremo maschile abbinata per errore a
+    // "MILANO_SANREMO_DONNE" per sola coincidenza di parole nel nome).
+    const genere = cat.endsWith('_F') ? 'F' : 'M';
     for (const a of JSON.parse(fs.readFileSync(f, 'utf8')))
-      if (a.atleta_id && !fciAll.has(a.atleta_id)) fciAll.set(a.atleta_id, a);
+      if (a.atleta_id && !fciAll.has(a.atleta_id)) fciAll.set(a.atleta_id, { ...a, genere });
   }
 
   const athMap = new Map();
@@ -940,7 +958,7 @@ async function upsertResults(sb, rows) {
         // (es. campionato francese abbinato al campionato italiano dello
         // stesso giorno), facendo risultare l'atleta come se avesse corso in
         // Italia. Abbina solo quando il paese è Italia o sconosciuto.
-        gara_id: (r.country && r.country !== 'it') ? null : matchGaraId(calMap, r.data, r.cat, r.gara_name),
+        gara_id: (r.country && r.country !== 'it') ? null : matchGaraId(calMap, r.data, r.cat, r.gara_name, ath.genere),
       }));
       try {
         await upsertResults(sb, rows);
