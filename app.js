@@ -14857,6 +14857,14 @@ async function renderGaraStorica(ciclismoGaraId) {
       }));
     }
   }
+
+  // Carica foto/Aggiungi Video: le funzioni window.openRacePhotoUpload/
+  // openVideoSubmit (e affini) erano definite SOLO dentro renderGara() —
+  // arrivando qui direttamente (link/menu, mai passando da una gara nativa
+  // 2026) i due tasti restavano "not a function" e non si aprivano affatto
+  // (bug osservato dal vivo). Estratte in _initGaraMediaModals(), condivisa
+  // da entrambe le pagine gara.
+  _initGaraMediaModals();
 }
 
 function _resolveHistoricalTeamId(teamName) {
@@ -17668,6 +17676,429 @@ window._loadRaceRouteMap = async (calId) => {
 };
 
 // ── GARA ──────────────────────────────────────────────────────
+function _initGaraMediaModals() {
+  // Face detection per centrare il volto nell'hero photo
+  (async () => {
+    const img = document.getElementById('gara-hero-img');
+    if (!img) return;
+    const detect = async () => {
+      if (!img.complete || img.naturalWidth === 0) return;
+      if ('FaceDetector' in window) {
+        try {
+          const faces = await new FaceDetector({ fastMode: true }).detect(img);
+          if (faces.length > 0) {
+            const f = faces[0].boundingBox;
+            const x = ((f.x + f.width / 2) / img.naturalWidth * 100).toFixed(1);
+            const y = ((f.y + f.height / 2) / img.naturalHeight * 100).toFixed(1);
+            img.style.objectPosition = `${x}% ${y}%`;
+          }
+        } catch { /* non supportato, rimane top center */ }
+      }
+    };
+    if (img.complete) detect(); else img.addEventListener('load', detect, { once: true });
+  })();
+
+  // Upload foto gara
+  window.openRacePhotoUpload = (garaId) => {
+    const user = authUser();
+    if (!user) return;
+    const overlay = document.createElement('div');
+    overlay.id = 'modal-overlay';
+    overlay.style.cssText = 'position:fixed;inset:0;background:rgba(0,0,0,.6);z-index:9999;display:flex;align-items:center;justify-content:center;padding:16px';
+    const isAdmin = user.role === 'admin';
+    const inpStyle = 'width:100%;box-sizing:border-box;padding:8px 10px;border:1px solid var(--border-subtle);border-radius:var(--r-sm);font-size:0.875rem;background:var(--bg-primary);color:var(--text-primary);margin-bottom:10px';
+    overlay.innerHTML = `
+      <div style="background:var(--bg-card);border-radius:var(--r-lg);padding:24px;width:100%;max-width:420px;box-shadow:0 8px 32px rgba(0,0,0,.2)">
+        <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:16px">
+          <strong style="font-size:1rem">Carica Foto Gara</strong>
+          <button onclick="this.closest('[style*=fixed]').remove()" style="background:none;border:none;font-size:1.3rem;cursor:pointer;color:var(--text-muted)">✕</button>
+        </div>
+        ${!isAdmin ? `<p style="font-size:0.8rem;color:var(--text-muted);margin:0 0 14px">La foto sarà visibile dopo approvazione dell'amministratore.</p>` : ''}
+        ${/_ES[12]_[MF]$/.test(garaId) ? `
+        <label style="display:block;font-size:0.8rem;color:var(--text-secondary);margin-bottom:4px">Categoria esordienti <span style="color:var(--red-hot)">*</span></label>
+        <select id="rp-esyear" style="${inpStyle}">
+          <option value="ES1">Esordienti 1° Anno</option>
+          <option value="ES2">Esordienti 2° Anno</option>
+          <option value="both">Entrambi gli anni</option>
+        </select>` : ''}
+        <input type="file" id="rp-file" accept="image/jpeg,image/png,image/webp" style="${inpStyle}"/>
+        <input type="text" id="rp-caption" placeholder="Didascalia (facoltativa)" style="${inpStyle}"/>
+        <input type="text" id="rp-photographer" placeholder="Credit fotografo (es. Mario Rossi)" style="${inpStyle}"/>
+        <label style="display:block;font-size:0.8rem;color:var(--text-secondary);margin-bottom:4px">Corridori nella foto <span style="color:var(--text-muted);font-weight:400">(per assegnarla ai loro profili)</span></label>
+        <div style="position:relative">
+          <input type="text" id="rp-rider-search" placeholder="Cerca un corridore…" autocomplete="off" style="${inpStyle}"/>
+          <div id="rp-rider-dd" style="display:none;position:absolute;left:0;right:0;top:calc(100% - 4px);background:var(--bg-card);border:1px solid var(--border-subtle);border-radius:var(--r-sm);max-height:210px;overflow:auto;z-index:5;box-shadow:0 6px 20px rgba(0,0,0,.25)"></div>
+        </div>
+        <div id="rp-rider-chips" style="display:flex;flex-wrap:wrap;gap:6px;margin-bottom:10px"></div>
+        <div id="rp-err" style="color:#EF4444;font-size:0.8rem;margin-bottom:8px;display:none"></div>
+        <button id="rp-submit" onclick="window.submitRacePhoto('${esc(garaId)}')" style="width:100%;padding:9px;background:var(--red-hot);color:#fff;border:none;border-radius:var(--r-sm);font-weight:600;cursor:pointer">Invia</button>
+      </div>`;
+    document.body.appendChild(overlay);
+
+    // Auto-compila la caption col vincitore della categoria selezionata
+    const _capInput = document.getElementById('rp-caption');
+    const _esSel = document.getElementById('rp-esyear');
+    const _fillCaption = () => {
+      // Determina il gara_id effettivo in base alla scelta annata
+      let targetGid = garaId;
+      if (_esSel && _esSel.value && _esSel.value !== 'both') {
+        const m = garaId.match(/^(.+)_ES[12]_([MF])$/);
+        if (m) targetGid = `${m[1]}_${_esSel.value}_${m[2]}`;
+      }
+      const winner = (globalData?.resultsRaw || [])
+        .filter(r => r.gara_id === targetGid)
+        .sort((a,b) => (a.posizione||99) - (b.posizione||99))[0];
+      const gname = winner?.nome_gara || window._shareGaraData?.name || '';
+      _capInput.value = winner
+        ? `${winner.cognome} ${winner.nome} - ${winner.team} | ${gname}`
+        : gname;
+    };
+    _fillCaption();
+    if (_esSel) _esSel.addEventListener('change', _fillCaption);
+
+    // ── Picker corridori (tag) ─────────────────────────────────────
+    window._rpTags = [];
+    window._rpRenderChips();
+    window._rpBindRiderSearch();
+  };
+
+  window._rpBindRiderSearch = () => {
+    const _riderInput = document.getElementById('rp-rider-search');
+    const _riderDd    = document.getElementById('rp-rider-dd');
+    if (!_riderInput || _riderInput._rpBound) return;
+    _riderInput._rpBound = true;
+    _riderInput.addEventListener('input', function () {
+      const ql = this.value.trim().toLowerCase();
+      if (!ql || !globalData) { _riderDd.style.display = 'none'; return; }
+      const chosen = new Set((window._rpTags || []).map(t => t.id));
+      const out = [];
+      for (const [id, a] of Object.entries(globalData.athletes)) {
+        if (chosen.has(id)) continue;
+        const name = `${a.cognome || ''} ${a.nome || ''}`.toLowerCase();
+        if (name.includes(ql)) out.push({ id, label: `${a.cognome || ''} ${a.nome || ''}`.trim(), sub: a.team_attuale || '' });
+        if (out.length >= 6) break;
+      }
+      _riderDd.innerHTML = out.length
+        ? out.map(o => `<div class="search-result-item" style="padding:7px 10px;cursor:pointer;border-bottom:1px solid var(--border-subtle)"
+              onclick="window._rpAddRider('${esc(o.id)}','${esc(o.label.replace(/'/g,'’'))}')">
+              <div style="font-size:.82rem;font-weight:600">${esc(o.label)}</div>
+              <div style="font-size:.7rem;color:var(--text-muted)">${esc(o.sub)}</div>
+            </div>`).join('')
+        : `<div style="padding:7px 10px;font-size:.78rem;color:var(--text-muted)">Nessun corridore</div>`;
+      _riderDd.style.display = 'block';
+    });
+    _riderInput.addEventListener('blur', () => setTimeout(() => { if (_riderDd) _riderDd.style.display = 'none'; }, 180));
+  };
+
+  window._rpAddRider = (id, label) => {
+    window._rpTags = window._rpTags || [];
+    if (!window._rpTags.some(t => t.id === id)) window._rpTags.push({ id, label });
+    const inp = document.getElementById('rp-rider-search');
+    if (inp) inp.value = '';
+    const dd = document.getElementById('rp-rider-dd');
+    if (dd) dd.style.display = 'none';
+    window._rpRenderChips();
+  };
+  window._rpRemoveRider = (id) => {
+    window._rpTags = (window._rpTags || []).filter(t => t.id !== id);
+    window._rpRenderChips();
+  };
+  window._rpRenderChips = () => {
+    const box = document.getElementById('rp-rider-chips');
+    if (!box) return;
+    const tags = window._rpTags || [];
+    box.innerHTML = tags.map(t => `
+      <span style="display:inline-flex;align-items:center;gap:5px;background:var(--bg-elevated);border:1px solid var(--border-subtle);border-radius:14px;padding:3px 6px 3px 10px;font-size:.75rem">
+        ${esc(t.label)}
+        <button onclick="window._rpRemoveRider('${esc(t.id)}')" style="background:none;border:none;color:var(--text-muted);cursor:pointer;font-size:.9rem;line-height:1;padding:0">✕</button>
+      </span>`).join('');
+  };
+
+  // ── AGGIUNGI VIDEO ──────────────────────────────────────────────────
+  window.openVideoSubmit = (garaId, calId) => {
+    const user = authUser();
+    if (!user) return;
+    const isAdmin = user.role === 'admin';
+    // Nome gara da _shareGaraData (già disponibile in renderGara) o da resultsRaw
+    const _gd = window._shareGaraData;
+    const _raceName = _gd?.name
+      || (globalData?.resultsRaw||[]).find(r => r.gara_id === garaId)?.nome_gara
+      || '';
+    const inpStyle = 'width:100%;box-sizing:border-box;padding:8px 10px;border:1px solid var(--border-subtle);border-radius:var(--r-sm);font-size:0.875rem;background:var(--bg-primary);color:var(--text-primary);margin-bottom:10px';
+    const overlay = document.createElement('div');
+    overlay.id = 'modal-overlay';
+    overlay.style.cssText = 'position:fixed;inset:0;background:rgba(0,0,0,.6);z-index:9999;display:flex;align-items:center;justify-content:center;padding:16px';
+    overlay.innerHTML = `
+      <div style="background:var(--bg-card);border-radius:var(--r-lg);padding:24px;width:100%;max-width:460px;box-shadow:0 8px 32px rgba(0,0,0,.3)">
+        <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:16px">
+          <strong style="font-size:1rem">Aggiungi Video</strong>
+          <button onclick="this.closest('[style*=fixed]').remove()" style="background:none;border:none;font-size:1.3rem;cursor:pointer;color:var(--text-muted)">✕</button>
+        </div>
+        ${!isAdmin ? '<p style="font-size:0.8rem;color:var(--text-muted);margin:0 0 14px">Il video sarà visibile dopo approvazione dell\'amministratore.</p>' : ''}
+
+        <div style="display:flex;gap:0;margin-bottom:16px;border-radius:var(--r-sm);overflow:hidden;border:1px solid var(--border-subtle)">
+          <button id="vtab-url" onclick="window._switchVideoTab('url')"
+            style="flex:1;padding:8px;border:none;cursor:pointer;font-size:0.82rem;font-weight:600;background:var(--red-hot);color:#fff">
+            🔗 URL YouTube
+          </button>
+          <button id="vtab-file" onclick="window._switchVideoTab('file')"
+            style="flex:1;padding:8px;border:none;cursor:pointer;font-size:0.82rem;font-weight:600;background:var(--bg-elevated);color:var(--text-secondary)">
+            📁 Carica File
+          </button>
+        </div>
+
+        <div id="vpanel-url">
+          <input type="url" id="vurl-input" placeholder="https://www.youtube.com/watch?v=... oppure link Facebook" style="${inpStyle}"/>
+          <div style="position:relative">
+            <input type="text" id="vurl-title" placeholder="Titolo" style="${inpStyle}" value="${esc(_raceName)}"/>
+            <span id="vurl-title-hint" style="position:absolute;right:8px;top:50%;transform:translateY(-70%);font-size:.7rem;color:var(--text-muted);pointer-events:none">auto</span>
+          </div>
+          <div style="position:relative">
+            <input type="text" id="vurl-channel" placeholder="Autore / Canale" style="${inpStyle}"/>
+            <span id="vurl-channel-hint" style="position:absolute;right:8px;top:50%;transform:translateY(-70%);font-size:.7rem;color:var(--text-muted);pointer-events:none">auto</span>
+          </div>
+          <div id="vurl-preview" style="margin-bottom:10px;display:none">
+            <img id="vurl-thumb" src="" style="width:100%;border-radius:var(--r-sm);aspect-ratio:16/9;object-fit:cover"/>
+          </div>
+        </div>
+
+        <div id="vpanel-file" style="display:none">
+          <input type="file" id="vfile-input" accept="video/mp4,video/quicktime,video/webm,video/x-msvideo" style="${inpStyle}"/>
+          <input type="text" id="vfile-title" placeholder="Titolo del video*" style="${inpStyle}" value="${esc(_raceName)}"/>
+          <input type="text" id="vfile-channel" placeholder="Autore / Canale (opzionale)" style="${inpStyle}"/>
+          <div id="vfile-progress" style="display:none;margin-bottom:10px">
+            <div style="background:var(--bg-elevated);border-radius:4px;height:6px;overflow:hidden">
+              <div id="vfile-bar" style="height:100%;background:var(--red-hot);width:0%;transition:width .2s"></div>
+            </div>
+            <span id="vfile-pct" style="font-size:0.75rem;color:var(--text-muted)">0%</span>
+          </div>
+        </div>
+
+        ${/_ES[12]_[MF]$/.test(garaId) ? `
+        <label style="display:block;font-size:0.8rem;color:var(--text-secondary);margin:4px 0 4px">Categoria esordienti nel video <span style="color:var(--red-hot)">*</span></label>
+        <select id="vp-esyear" style="${inpStyle}">
+          <option value="">— seleziona —</option>
+          <option value="ES1">Esordienti 1° Anno</option>
+          <option value="ES2">Esordienti 2° Anno</option>
+          <option value="both">Entrambi gli anni</option>
+        </select>` : ''}
+        <label style="display:block;font-size:0.8rem;color:var(--text-secondary);margin-bottom:4px">Corridori nel video <span style="color:var(--text-muted);font-weight:400">(per assegnarlo ai loro profili)</span></label>
+        <div style="position:relative">
+          <input type="text" id="rp-rider-search" placeholder="Cerca un corridore…" autocomplete="off" style="${inpStyle}"/>
+          <div id="rp-rider-dd" style="display:none;position:absolute;left:0;right:0;top:calc(100% - 4px);background:var(--bg-card);border:1px solid var(--border-subtle);border-radius:var(--r-sm);max-height:210px;overflow:auto;z-index:5;box-shadow:0 6px 20px rgba(0,0,0,.25)"></div>
+        </div>
+        <div id="rp-rider-chips" style="display:flex;flex-wrap:wrap;gap:6px;margin-bottom:10px"></div>
+        <label style="display:flex;align-items:center;gap:7px;font-size:0.82rem;color:var(--text-secondary);margin-bottom:10px;cursor:pointer">
+          <input type="checkbox" id="vp-islive" style="width:auto;margin:0"/> 🔴 È una diretta
+        </label>
+        <div id="vsubmit-err" style="color:#EF4444;font-size:0.8rem;margin-bottom:8px;display:none"></div>
+        <button id="vsubmit-btn" onclick="window._submitVideo('${esc(garaId)}','${esc(calId)}')"
+          style="width:100%;padding:9px;background:var(--red-hot);color:#fff;border:none;border-radius:var(--r-sm);font-weight:600;cursor:pointer">
+          Invia
+        </button>
+      </div>`;
+    document.body.appendChild(overlay);
+    // Picker corridori (riuso dello stesso usato per le foto)
+    window._rpTags = [];
+    if (window._rpRenderChips) window._rpRenderChips();
+    if (window._rpBindRiderSearch) window._rpBindRiderSearch();
+
+    // Segna i campi come "modificati manualmente" se l'utente digita
+    const titleEl   = document.getElementById('vurl-title');
+    const channelEl = document.getElementById('vurl-channel');
+    titleEl.addEventListener('input',   () => { titleEl._manual = true;   document.getElementById('vurl-title-hint').style.display   = 'none'; });
+    channelEl.addEventListener('input', () => { channelEl._manual = true; document.getElementById('vurl-channel-hint').style.display = 'none'; });
+
+    // URL input: preview thumbnail + fetch oEmbed per titolo e canale automatici
+    let _oembedTimer = null;
+    document.getElementById('vurl-input').addEventListener('input', function() {
+      const url = this.value.trim();
+      const _vid = ytId(url);
+      const preview = document.getElementById('vurl-preview');
+      const thumb   = document.getElementById('vurl-thumb');
+      if (_vid) { thumb.src = `https://img.youtube.com/vi/${_vid}/hqdefault.jpg`; preview.style.display = 'block'; }
+      else { preview.style.display = 'none'; }
+
+      // Fetch metadati (oEmbed YouTube o meta tag Facebook) con debounce 600ms
+      clearTimeout(_oembedTimer);
+      if (!url || !(_vid || isFacebookVideoUrl(url))) return;
+      _oembedTimer = setTimeout(async () => {
+        try {
+          if (_vid) {
+            const d = await fetch(`https://www.youtube.com/oembed?url=${encodeURIComponent(url)}&format=json`).then(r => r.json());
+            if (d.title   && !titleEl._manual)   { titleEl.value   = d.title;       document.getElementById('vurl-title-hint').style.display   = 'none'; }
+            if (d.author_name && !channelEl._manual) { channelEl.value = d.author_name; document.getElementById('vurl-channel-hint').style.display = 'none'; }
+          } else {
+            const d = await apiCall(`/fb-video-meta?url=${encodeURIComponent(url)}`);
+            if (d.title   && !titleEl._manual)   { titleEl.value   = d.title;   document.getElementById('vurl-title-hint').style.display   = 'none'; }
+            if (d.channel && !channelEl._manual) { channelEl.value = d.channel; document.getElementById('vurl-channel-hint').style.display = 'none'; }
+            if (d.thumbnail) { thumb.src = d.thumbnail; preview.style.display = 'block'; }
+            // Link "condividi" e dirette /watch/live/?v=... non si incorporano
+            // nel player pubblico: sostituisci con l'URL canonico risolto dal
+            // server, verificato dal vivo come l'unico che funziona davvero.
+            if (d.canonical_url) this.value = d.canonical_url;
+          }
+        } catch { /* metadati non disponibili, mantieni valori esistenti */ }
+      }, 600);
+    });
+  };
+
+  window._switchVideoTab = (tab) => {
+    const isUrl = tab === 'url';
+    document.getElementById('vpanel-url').style.display = isUrl ? '' : 'none';
+    document.getElementById('vpanel-file').style.display = isUrl ? 'none' : '';
+    document.getElementById('vtab-url').style.background = isUrl ? 'var(--red-hot)' : 'var(--bg-elevated)';
+    document.getElementById('vtab-url').style.color = isUrl ? '#fff' : 'var(--text-secondary)';
+    document.getElementById('vtab-file').style.background = isUrl ? 'var(--bg-elevated)' : 'var(--red-hot)';
+    document.getElementById('vtab-file').style.color = isUrl ? 'var(--text-secondary)' : '#fff';
+  };
+
+  window._submitVideo = async (garaId, calId) => {
+    const err = document.getElementById('vsubmit-err');
+    const btn = document.getElementById('vsubmit-btn');
+    err.style.display = 'none';
+    const isFileTab = document.getElementById('vpanel-file').style.display !== 'none';
+
+    // Annata esordienti (obbligatoria) → calcola le chiavi gara di destinazione.
+    // Il gara_id include nel nome "PRIMO_ANNO"/"SECONDO_ANNO": scambiare solo il
+    // suffisso _ES1_/_ES2_ (come faceva prima) produceva un gara_id inventato
+    // che non corrispondeva a nessuna pagina reale (es. "...PRIMO_ANNO..._ES2_F"),
+    // quindi il video "per entrambi gli anni" spariva per l'altra categoria.
+    // Va invece cercato il vero gara_id dell'altra annata tra i risultati che
+    // condividono lo stesso evento di calendario (stesso calId).
+    let targets = [garaId];
+    const esSel = document.getElementById('vp-esyear');
+    if (/_ES[12]_[MF]$/.test(garaId)) {
+      if (!esSel || !esSel.value) { err.textContent = 'Seleziona la categoria esordienti (1°, 2° o entrambi)'; err.style.display = 'block'; return; }
+      const myGender = garaId.match(/_ES[12]_([MF])$/)[1];
+      const findYear = (year) => {
+        const suffix = `_ES${year}_${myGender}`;
+        if (garaId.endsWith(suffix)) return garaId;
+        const hit = (globalData?.resultsRaw || []).find(r =>
+          r.gara_id.endsWith(suffix) && (globalData?.garaToCalId || {})[r.gara_id] === calId);
+        return hit ? hit.gara_id : null;
+      };
+      const es1 = findYear(1), es2 = findYear(2);
+      targets = esSel.value === 'both' ? [es1, es2].filter(Boolean)
+        : esSel.value === 'ES2' ? [es2].filter(Boolean) : [es1].filter(Boolean);
+      if (!targets.length) { err.textContent = 'Impossibile trovare l\'altra categoria esordienti per questa gara'; err.style.display = 'block'; return; }
+    }
+    const tagIds = (window._rpTags || []).map(t => t.id).join(',');
+    const user = authUser();
+
+    if (isFileTab) {
+      const file    = document.getElementById('vfile-input')?.files[0];
+      const title   = document.getElementById('vfile-title')?.value.trim();
+      const channel = document.getElementById('vfile-channel')?.value.trim();
+      if (!file) { err.textContent = 'Seleziona un file video'; err.style.display = 'block'; return; }
+      if (!title) { err.textContent = 'Inserisci un titolo'; err.style.display = 'block'; return; }
+      btn.disabled = true; btn.textContent = 'Caricamento…';
+      document.getElementById('vfile-progress').style.display = 'block';
+      const fd = new FormData();
+      fd.append('gara_id', targets[0]);
+      fd.append('cal_id', calId);
+      fd.append('title', title);
+      fd.append('channel', channel || '');
+      fd.append('atleta_ids', tagIds);
+      fd.append('video', file);
+      try {
+        const upData = await new Promise((resolve, reject) => {
+          const xhr = new XMLHttpRequest();
+          xhr.upload.onprogress = e => {
+            if (e.lengthComputable) {
+              const pct = Math.round(e.loaded/e.total*100);
+              document.getElementById('vfile-bar').style.width = pct + '%';
+              document.getElementById('vfile-pct').textContent = pct + '%';
+            }
+          };
+          xhr.onload = () => {
+            const d = JSON.parse(xhr.responseText);
+            if (xhr.status >= 400) reject(new Error(d.error || `HTTP ${xhr.status}`));
+            else resolve(d);
+          };
+          xhr.onerror = () => reject(new Error('Errore di rete'));
+          xhr.open('POST', `${API_BASE}/videos/upload-file`);
+          xhr.setRequestHeader('Authorization', `Bearer ${authToken()}`);
+          xhr.send(fd);
+        });
+        // Per "entrambi gli anni": registra lo stesso file (per URL) anche sull'altra annata
+        for (const t of targets.slice(1)) {
+          if (upData?.url) await apiCall('/videos/submit', { method: 'POST', body: { gara_id: t, cal_id: calId, url: upData.url, title, channel, atleta_ids: tagIds } });
+        }
+        document.getElementById('modal-overlay')?.remove();
+        showToast(user?.role === 'admin' ? '✓ Video pubblicato!' : '✓ Video inviato — in attesa di approvazione');
+        if (user?.role === 'admin') await refreshMediaAndRerender({ photos: false });
+      } catch(e) { err.textContent = e.message; err.style.display = 'block'; btn.disabled = false; btn.textContent = 'Invia'; }
+    } else {
+      const url     = document.getElementById('vurl-input')?.value.trim();
+      const title   = document.getElementById('vurl-title')?.value.trim();
+      const channel = document.getElementById('vurl-channel')?.value.trim();
+      if (!url) { err.textContent = 'Inserisci un URL YouTube o Facebook'; err.style.display = 'block'; return; }
+      const isLive = document.getElementById('vp-islive')?.checked || false;
+      btn.disabled = true; btn.textContent = 'Invio…';
+      try {
+        for (const t of targets) {
+          await apiCall('/videos/submit', { method: 'POST', body: { gara_id: t, cal_id: calId, url, title, channel, atleta_ids: tagIds, is_live: isLive } });
+        }
+        document.getElementById('modal-overlay')?.remove();
+        showToast(user?.role === 'admin' ? '✓ Video pubblicato!' : '✓ Video inviato — in attesa di approvazione');
+        if (user?.role === 'admin') await refreshMediaAndRerender({ photos: false });
+      } catch(e) { err.textContent = e.message; err.style.display = 'block'; btn.disabled = false; btn.textContent = 'Invia'; }
+    }
+  };
+
+  window.submitRacePhoto = async (garaId) => {
+    const file = document.getElementById('rp-file')?.files[0];
+    const caption = document.getElementById('rp-caption')?.value || '';
+    const photographer = document.getElementById('rp-photographer')?.value || '';
+    const errEl = document.getElementById('rp-err');
+    if (!file) { errEl.textContent='Seleziona un file'; errEl.style.display='block'; return; }
+
+    // Per esordienti: applica l'annata scelta al gara_id (e gestisci "entrambi")
+    let targets = [garaId];
+    const esSel = document.getElementById('rp-esyear');
+    if (esSel) {
+      const m = garaId.match(/^(.+)_ES[12]_([MF])$/);
+      if (m) {
+        const es1 = `${m[1]}_ES1_${m[2]}`, es2 = `${m[1]}_ES2_${m[2]}`;
+        targets = esSel.value === 'both' ? [es1, es2] : esSel.value === 'ES2' ? [es2] : [es1];
+      }
+    }
+
+    const _tagIds = (window._rpTags || []).map(t => t.id).join(',');
+
+    const btn = document.getElementById('rp-submit');
+    btn.disabled = true; btn.textContent = 'Invio…';
+    try {
+      const token = authToken();
+      let lastData = null;
+      for (const gid of targets) {
+        const fd = new FormData();
+        fd.append('gara_id', gid);
+        fd.append('caption', caption);
+        fd.append('photographer', photographer);
+        fd.append('atleta_ids', _tagIds);
+        fd.append('photo', file);
+        const res = await fetch(`${API_BASE}/race-photos/upload`, { method:'POST', headers:{ Authorization:`Bearer ${token}` }, body:fd });
+        const text = await res.text();
+        let data; try { data = JSON.parse(text); } catch { throw new Error(`Errore HTTP ${res.status}`); }
+        if (!res.ok) throw new Error(data.error || `Errore ${res.status}`);
+        lastData = data;
+      }
+      document.getElementById('modal-overlay')?.remove();
+      if (lastData?.status === 'approved') {
+        showToast(targets.length > 1 ? '✓ Foto pubblicata per entrambi gli anni!' : '✓ Foto pubblicata!');
+        await refreshMediaAndRerender({ videos: false });
+      } else {
+        showToast('✓ Foto inviata — in attesa di approvazione', 'info');
+      }
+    } catch(e) {
+      errEl.textContent = e.message; errEl.style.display = 'block';
+      btn.disabled = false; btn.textContent = 'Invia';
+    }
+  };
+}
+
 async function renderGara(gara_id) {
   if (!globalData) return;
   const { resultsRaw, calendar } = globalData;
@@ -18653,426 +19084,7 @@ async function renderGara(gara_id) {
     }
   };
 
-  // Face detection per centrare il volto nell'hero photo
-  (async () => {
-    const img = document.getElementById('gara-hero-img');
-    if (!img) return;
-    const detect = async () => {
-      if (!img.complete || img.naturalWidth === 0) return;
-      if ('FaceDetector' in window) {
-        try {
-          const faces = await new FaceDetector({ fastMode: true }).detect(img);
-          if (faces.length > 0) {
-            const f = faces[0].boundingBox;
-            const x = ((f.x + f.width / 2) / img.naturalWidth * 100).toFixed(1);
-            const y = ((f.y + f.height / 2) / img.naturalHeight * 100).toFixed(1);
-            img.style.objectPosition = `${x}% ${y}%`;
-          }
-        } catch { /* non supportato, rimane top center */ }
-      }
-    };
-    if (img.complete) detect(); else img.addEventListener('load', detect, { once: true });
-  })();
-
-  // Upload foto gara
-  window.openRacePhotoUpload = (garaId) => {
-    const user = authUser();
-    if (!user) return;
-    const overlay = document.createElement('div');
-    overlay.id = 'modal-overlay';
-    overlay.style.cssText = 'position:fixed;inset:0;background:rgba(0,0,0,.6);z-index:9999;display:flex;align-items:center;justify-content:center;padding:16px';
-    const isAdmin = user.role === 'admin';
-    const inpStyle = 'width:100%;box-sizing:border-box;padding:8px 10px;border:1px solid var(--border-subtle);border-radius:var(--r-sm);font-size:0.875rem;background:var(--bg-primary);color:var(--text-primary);margin-bottom:10px';
-    overlay.innerHTML = `
-      <div style="background:var(--bg-card);border-radius:var(--r-lg);padding:24px;width:100%;max-width:420px;box-shadow:0 8px 32px rgba(0,0,0,.2)">
-        <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:16px">
-          <strong style="font-size:1rem">Carica Foto Gara</strong>
-          <button onclick="this.closest('[style*=fixed]').remove()" style="background:none;border:none;font-size:1.3rem;cursor:pointer;color:var(--text-muted)">✕</button>
-        </div>
-        ${!isAdmin ? `<p style="font-size:0.8rem;color:var(--text-muted);margin:0 0 14px">La foto sarà visibile dopo approvazione dell'amministratore.</p>` : ''}
-        ${/_ES[12]_[MF]$/.test(garaId) ? `
-        <label style="display:block;font-size:0.8rem;color:var(--text-secondary);margin-bottom:4px">Categoria esordienti <span style="color:var(--red-hot)">*</span></label>
-        <select id="rp-esyear" style="${inpStyle}">
-          <option value="ES1">Esordienti 1° Anno</option>
-          <option value="ES2">Esordienti 2° Anno</option>
-          <option value="both">Entrambi gli anni</option>
-        </select>` : ''}
-        <input type="file" id="rp-file" accept="image/jpeg,image/png,image/webp" style="${inpStyle}"/>
-        <input type="text" id="rp-caption" placeholder="Didascalia (facoltativa)" style="${inpStyle}"/>
-        <input type="text" id="rp-photographer" placeholder="Credit fotografo (es. Mario Rossi)" style="${inpStyle}"/>
-        <label style="display:block;font-size:0.8rem;color:var(--text-secondary);margin-bottom:4px">Corridori nella foto <span style="color:var(--text-muted);font-weight:400">(per assegnarla ai loro profili)</span></label>
-        <div style="position:relative">
-          <input type="text" id="rp-rider-search" placeholder="Cerca un corridore…" autocomplete="off" style="${inpStyle}"/>
-          <div id="rp-rider-dd" style="display:none;position:absolute;left:0;right:0;top:calc(100% - 4px);background:var(--bg-card);border:1px solid var(--border-subtle);border-radius:var(--r-sm);max-height:210px;overflow:auto;z-index:5;box-shadow:0 6px 20px rgba(0,0,0,.25)"></div>
-        </div>
-        <div id="rp-rider-chips" style="display:flex;flex-wrap:wrap;gap:6px;margin-bottom:10px"></div>
-        <div id="rp-err" style="color:#EF4444;font-size:0.8rem;margin-bottom:8px;display:none"></div>
-        <button id="rp-submit" onclick="window.submitRacePhoto('${esc(garaId)}')" style="width:100%;padding:9px;background:var(--red-hot);color:#fff;border:none;border-radius:var(--r-sm);font-weight:600;cursor:pointer">Invia</button>
-      </div>`;
-    document.body.appendChild(overlay);
-
-    // Auto-compila la caption col vincitore della categoria selezionata
-    const _capInput = document.getElementById('rp-caption');
-    const _esSel = document.getElementById('rp-esyear');
-    const _fillCaption = () => {
-      // Determina il gara_id effettivo in base alla scelta annata
-      let targetGid = garaId;
-      if (_esSel && _esSel.value && _esSel.value !== 'both') {
-        const m = garaId.match(/^(.+)_ES[12]_([MF])$/);
-        if (m) targetGid = `${m[1]}_${_esSel.value}_${m[2]}`;
-      }
-      const winner = (globalData?.resultsRaw || [])
-        .filter(r => r.gara_id === targetGid)
-        .sort((a,b) => (a.posizione||99) - (b.posizione||99))[0];
-      const gname = winner?.nome_gara || window._shareGaraData?.name || '';
-      _capInput.value = winner
-        ? `${winner.cognome} ${winner.nome} - ${winner.team} | ${gname}`
-        : gname;
-    };
-    _fillCaption();
-    if (_esSel) _esSel.addEventListener('change', _fillCaption);
-
-    // ── Picker corridori (tag) ─────────────────────────────────────
-    window._rpTags = [];
-    window._rpRenderChips();
-    window._rpBindRiderSearch();
-  };
-
-  window._rpBindRiderSearch = () => {
-    const _riderInput = document.getElementById('rp-rider-search');
-    const _riderDd    = document.getElementById('rp-rider-dd');
-    if (!_riderInput || _riderInput._rpBound) return;
-    _riderInput._rpBound = true;
-    _riderInput.addEventListener('input', function () {
-      const ql = this.value.trim().toLowerCase();
-      if (!ql || !globalData) { _riderDd.style.display = 'none'; return; }
-      const chosen = new Set((window._rpTags || []).map(t => t.id));
-      const out = [];
-      for (const [id, a] of Object.entries(globalData.athletes)) {
-        if (chosen.has(id)) continue;
-        const name = `${a.cognome || ''} ${a.nome || ''}`.toLowerCase();
-        if (name.includes(ql)) out.push({ id, label: `${a.cognome || ''} ${a.nome || ''}`.trim(), sub: a.team_attuale || '' });
-        if (out.length >= 6) break;
-      }
-      _riderDd.innerHTML = out.length
-        ? out.map(o => `<div class="search-result-item" style="padding:7px 10px;cursor:pointer;border-bottom:1px solid var(--border-subtle)"
-              onclick="window._rpAddRider('${esc(o.id)}','${esc(o.label.replace(/'/g,'’'))}')">
-              <div style="font-size:.82rem;font-weight:600">${esc(o.label)}</div>
-              <div style="font-size:.7rem;color:var(--text-muted)">${esc(o.sub)}</div>
-            </div>`).join('')
-        : `<div style="padding:7px 10px;font-size:.78rem;color:var(--text-muted)">Nessun corridore</div>`;
-      _riderDd.style.display = 'block';
-    });
-    _riderInput.addEventListener('blur', () => setTimeout(() => { if (_riderDd) _riderDd.style.display = 'none'; }, 180));
-  };
-
-  window._rpAddRider = (id, label) => {
-    window._rpTags = window._rpTags || [];
-    if (!window._rpTags.some(t => t.id === id)) window._rpTags.push({ id, label });
-    const inp = document.getElementById('rp-rider-search');
-    if (inp) inp.value = '';
-    const dd = document.getElementById('rp-rider-dd');
-    if (dd) dd.style.display = 'none';
-    window._rpRenderChips();
-  };
-  window._rpRemoveRider = (id) => {
-    window._rpTags = (window._rpTags || []).filter(t => t.id !== id);
-    window._rpRenderChips();
-  };
-  window._rpRenderChips = () => {
-    const box = document.getElementById('rp-rider-chips');
-    if (!box) return;
-    const tags = window._rpTags || [];
-    box.innerHTML = tags.map(t => `
-      <span style="display:inline-flex;align-items:center;gap:5px;background:var(--bg-elevated);border:1px solid var(--border-subtle);border-radius:14px;padding:3px 6px 3px 10px;font-size:.75rem">
-        ${esc(t.label)}
-        <button onclick="window._rpRemoveRider('${esc(t.id)}')" style="background:none;border:none;color:var(--text-muted);cursor:pointer;font-size:.9rem;line-height:1;padding:0">✕</button>
-      </span>`).join('');
-  };
-
-  // ── AGGIUNGI VIDEO ──────────────────────────────────────────────────
-  window.openVideoSubmit = (garaId, calId) => {
-    const user = authUser();
-    if (!user) return;
-    const isAdmin = user.role === 'admin';
-    // Nome gara da _shareGaraData (già disponibile in renderGara) o da resultsRaw
-    const _gd = window._shareGaraData;
-    const _raceName = _gd?.name
-      || (globalData?.resultsRaw||[]).find(r => r.gara_id === garaId)?.nome_gara
-      || '';
-    const inpStyle = 'width:100%;box-sizing:border-box;padding:8px 10px;border:1px solid var(--border-subtle);border-radius:var(--r-sm);font-size:0.875rem;background:var(--bg-primary);color:var(--text-primary);margin-bottom:10px';
-    const overlay = document.createElement('div');
-    overlay.id = 'modal-overlay';
-    overlay.style.cssText = 'position:fixed;inset:0;background:rgba(0,0,0,.6);z-index:9999;display:flex;align-items:center;justify-content:center;padding:16px';
-    overlay.innerHTML = `
-      <div style="background:var(--bg-card);border-radius:var(--r-lg);padding:24px;width:100%;max-width:460px;box-shadow:0 8px 32px rgba(0,0,0,.3)">
-        <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:16px">
-          <strong style="font-size:1rem">Aggiungi Video</strong>
-          <button onclick="this.closest('[style*=fixed]').remove()" style="background:none;border:none;font-size:1.3rem;cursor:pointer;color:var(--text-muted)">✕</button>
-        </div>
-        ${!isAdmin ? '<p style="font-size:0.8rem;color:var(--text-muted);margin:0 0 14px">Il video sarà visibile dopo approvazione dell\'amministratore.</p>' : ''}
-
-        <div style="display:flex;gap:0;margin-bottom:16px;border-radius:var(--r-sm);overflow:hidden;border:1px solid var(--border-subtle)">
-          <button id="vtab-url" onclick="window._switchVideoTab('url')"
-            style="flex:1;padding:8px;border:none;cursor:pointer;font-size:0.82rem;font-weight:600;background:var(--red-hot);color:#fff">
-            🔗 URL YouTube
-          </button>
-          <button id="vtab-file" onclick="window._switchVideoTab('file')"
-            style="flex:1;padding:8px;border:none;cursor:pointer;font-size:0.82rem;font-weight:600;background:var(--bg-elevated);color:var(--text-secondary)">
-            📁 Carica File
-          </button>
-        </div>
-
-        <div id="vpanel-url">
-          <input type="url" id="vurl-input" placeholder="https://www.youtube.com/watch?v=... oppure link Facebook" style="${inpStyle}"/>
-          <div style="position:relative">
-            <input type="text" id="vurl-title" placeholder="Titolo" style="${inpStyle}" value="${esc(_raceName)}"/>
-            <span id="vurl-title-hint" style="position:absolute;right:8px;top:50%;transform:translateY(-70%);font-size:.7rem;color:var(--text-muted);pointer-events:none">auto</span>
-          </div>
-          <div style="position:relative">
-            <input type="text" id="vurl-channel" placeholder="Autore / Canale" style="${inpStyle}"/>
-            <span id="vurl-channel-hint" style="position:absolute;right:8px;top:50%;transform:translateY(-70%);font-size:.7rem;color:var(--text-muted);pointer-events:none">auto</span>
-          </div>
-          <div id="vurl-preview" style="margin-bottom:10px;display:none">
-            <img id="vurl-thumb" src="" style="width:100%;border-radius:var(--r-sm);aspect-ratio:16/9;object-fit:cover"/>
-          </div>
-        </div>
-
-        <div id="vpanel-file" style="display:none">
-          <input type="file" id="vfile-input" accept="video/mp4,video/quicktime,video/webm,video/x-msvideo" style="${inpStyle}"/>
-          <input type="text" id="vfile-title" placeholder="Titolo del video*" style="${inpStyle}" value="${esc(_raceName)}"/>
-          <input type="text" id="vfile-channel" placeholder="Autore / Canale (opzionale)" style="${inpStyle}"/>
-          <div id="vfile-progress" style="display:none;margin-bottom:10px">
-            <div style="background:var(--bg-elevated);border-radius:4px;height:6px;overflow:hidden">
-              <div id="vfile-bar" style="height:100%;background:var(--red-hot);width:0%;transition:width .2s"></div>
-            </div>
-            <span id="vfile-pct" style="font-size:0.75rem;color:var(--text-muted)">0%</span>
-          </div>
-        </div>
-
-        ${/_ES[12]_[MF]$/.test(garaId) ? `
-        <label style="display:block;font-size:0.8rem;color:var(--text-secondary);margin:4px 0 4px">Categoria esordienti nel video <span style="color:var(--red-hot)">*</span></label>
-        <select id="vp-esyear" style="${inpStyle}">
-          <option value="">— seleziona —</option>
-          <option value="ES1">Esordienti 1° Anno</option>
-          <option value="ES2">Esordienti 2° Anno</option>
-          <option value="both">Entrambi gli anni</option>
-        </select>` : ''}
-        <label style="display:block;font-size:0.8rem;color:var(--text-secondary);margin-bottom:4px">Corridori nel video <span style="color:var(--text-muted);font-weight:400">(per assegnarlo ai loro profili)</span></label>
-        <div style="position:relative">
-          <input type="text" id="rp-rider-search" placeholder="Cerca un corridore…" autocomplete="off" style="${inpStyle}"/>
-          <div id="rp-rider-dd" style="display:none;position:absolute;left:0;right:0;top:calc(100% - 4px);background:var(--bg-card);border:1px solid var(--border-subtle);border-radius:var(--r-sm);max-height:210px;overflow:auto;z-index:5;box-shadow:0 6px 20px rgba(0,0,0,.25)"></div>
-        </div>
-        <div id="rp-rider-chips" style="display:flex;flex-wrap:wrap;gap:6px;margin-bottom:10px"></div>
-        <label style="display:flex;align-items:center;gap:7px;font-size:0.82rem;color:var(--text-secondary);margin-bottom:10px;cursor:pointer">
-          <input type="checkbox" id="vp-islive" style="width:auto;margin:0"/> 🔴 È una diretta
-        </label>
-        <div id="vsubmit-err" style="color:#EF4444;font-size:0.8rem;margin-bottom:8px;display:none"></div>
-        <button id="vsubmit-btn" onclick="window._submitVideo('${esc(garaId)}','${esc(calId)}')"
-          style="width:100%;padding:9px;background:var(--red-hot);color:#fff;border:none;border-radius:var(--r-sm);font-weight:600;cursor:pointer">
-          Invia
-        </button>
-      </div>`;
-    document.body.appendChild(overlay);
-    // Picker corridori (riuso dello stesso usato per le foto)
-    window._rpTags = [];
-    if (window._rpRenderChips) window._rpRenderChips();
-    if (window._rpBindRiderSearch) window._rpBindRiderSearch();
-
-    // Segna i campi come "modificati manualmente" se l'utente digita
-    const titleEl   = document.getElementById('vurl-title');
-    const channelEl = document.getElementById('vurl-channel');
-    titleEl.addEventListener('input',   () => { titleEl._manual = true;   document.getElementById('vurl-title-hint').style.display   = 'none'; });
-    channelEl.addEventListener('input', () => { channelEl._manual = true; document.getElementById('vurl-channel-hint').style.display = 'none'; });
-
-    // URL input: preview thumbnail + fetch oEmbed per titolo e canale automatici
-    let _oembedTimer = null;
-    document.getElementById('vurl-input').addEventListener('input', function() {
-      const url = this.value.trim();
-      const _vid = ytId(url);
-      const preview = document.getElementById('vurl-preview');
-      const thumb   = document.getElementById('vurl-thumb');
-      if (_vid) { thumb.src = `https://img.youtube.com/vi/${_vid}/hqdefault.jpg`; preview.style.display = 'block'; }
-      else { preview.style.display = 'none'; }
-
-      // Fetch metadati (oEmbed YouTube o meta tag Facebook) con debounce 600ms
-      clearTimeout(_oembedTimer);
-      if (!url || !(_vid || isFacebookVideoUrl(url))) return;
-      _oembedTimer = setTimeout(async () => {
-        try {
-          if (_vid) {
-            const d = await fetch(`https://www.youtube.com/oembed?url=${encodeURIComponent(url)}&format=json`).then(r => r.json());
-            if (d.title   && !titleEl._manual)   { titleEl.value   = d.title;       document.getElementById('vurl-title-hint').style.display   = 'none'; }
-            if (d.author_name && !channelEl._manual) { channelEl.value = d.author_name; document.getElementById('vurl-channel-hint').style.display = 'none'; }
-          } else {
-            const d = await apiCall(`/fb-video-meta?url=${encodeURIComponent(url)}`);
-            if (d.title   && !titleEl._manual)   { titleEl.value   = d.title;   document.getElementById('vurl-title-hint').style.display   = 'none'; }
-            if (d.channel && !channelEl._manual) { channelEl.value = d.channel; document.getElementById('vurl-channel-hint').style.display = 'none'; }
-            if (d.thumbnail) { thumb.src = d.thumbnail; preview.style.display = 'block'; }
-            // Link "condividi" e dirette /watch/live/?v=... non si incorporano
-            // nel player pubblico: sostituisci con l'URL canonico risolto dal
-            // server, verificato dal vivo come l'unico che funziona davvero.
-            if (d.canonical_url) this.value = d.canonical_url;
-          }
-        } catch { /* metadati non disponibili, mantieni valori esistenti */ }
-      }, 600);
-    });
-  };
-
-  window._switchVideoTab = (tab) => {
-    const isUrl = tab === 'url';
-    document.getElementById('vpanel-url').style.display = isUrl ? '' : 'none';
-    document.getElementById('vpanel-file').style.display = isUrl ? 'none' : '';
-    document.getElementById('vtab-url').style.background = isUrl ? 'var(--red-hot)' : 'var(--bg-elevated)';
-    document.getElementById('vtab-url').style.color = isUrl ? '#fff' : 'var(--text-secondary)';
-    document.getElementById('vtab-file').style.background = isUrl ? 'var(--bg-elevated)' : 'var(--red-hot)';
-    document.getElementById('vtab-file').style.color = isUrl ? 'var(--text-secondary)' : '#fff';
-  };
-
-  window._submitVideo = async (garaId, calId) => {
-    const err = document.getElementById('vsubmit-err');
-    const btn = document.getElementById('vsubmit-btn');
-    err.style.display = 'none';
-    const isFileTab = document.getElementById('vpanel-file').style.display !== 'none';
-
-    // Annata esordienti (obbligatoria) → calcola le chiavi gara di destinazione.
-    // Il gara_id include nel nome "PRIMO_ANNO"/"SECONDO_ANNO": scambiare solo il
-    // suffisso _ES1_/_ES2_ (come faceva prima) produceva un gara_id inventato
-    // che non corrispondeva a nessuna pagina reale (es. "...PRIMO_ANNO..._ES2_F"),
-    // quindi il video "per entrambi gli anni" spariva per l'altra categoria.
-    // Va invece cercato il vero gara_id dell'altra annata tra i risultati che
-    // condividono lo stesso evento di calendario (stesso calId).
-    let targets = [garaId];
-    const esSel = document.getElementById('vp-esyear');
-    if (/_ES[12]_[MF]$/.test(garaId)) {
-      if (!esSel || !esSel.value) { err.textContent = 'Seleziona la categoria esordienti (1°, 2° o entrambi)'; err.style.display = 'block'; return; }
-      const myGender = garaId.match(/_ES[12]_([MF])$/)[1];
-      const findYear = (year) => {
-        const suffix = `_ES${year}_${myGender}`;
-        if (garaId.endsWith(suffix)) return garaId;
-        const hit = (globalData?.resultsRaw || []).find(r =>
-          r.gara_id.endsWith(suffix) && (globalData?.garaToCalId || {})[r.gara_id] === calId);
-        return hit ? hit.gara_id : null;
-      };
-      const es1 = findYear(1), es2 = findYear(2);
-      targets = esSel.value === 'both' ? [es1, es2].filter(Boolean)
-        : esSel.value === 'ES2' ? [es2].filter(Boolean) : [es1].filter(Boolean);
-      if (!targets.length) { err.textContent = 'Impossibile trovare l\'altra categoria esordienti per questa gara'; err.style.display = 'block'; return; }
-    }
-    const tagIds = (window._rpTags || []).map(t => t.id).join(',');
-    const user = authUser();
-
-    if (isFileTab) {
-      const file    = document.getElementById('vfile-input')?.files[0];
-      const title   = document.getElementById('vfile-title')?.value.trim();
-      const channel = document.getElementById('vfile-channel')?.value.trim();
-      if (!file) { err.textContent = 'Seleziona un file video'; err.style.display = 'block'; return; }
-      if (!title) { err.textContent = 'Inserisci un titolo'; err.style.display = 'block'; return; }
-      btn.disabled = true; btn.textContent = 'Caricamento…';
-      document.getElementById('vfile-progress').style.display = 'block';
-      const fd = new FormData();
-      fd.append('gara_id', targets[0]);
-      fd.append('cal_id', calId);
-      fd.append('title', title);
-      fd.append('channel', channel || '');
-      fd.append('atleta_ids', tagIds);
-      fd.append('video', file);
-      try {
-        const upData = await new Promise((resolve, reject) => {
-          const xhr = new XMLHttpRequest();
-          xhr.upload.onprogress = e => {
-            if (e.lengthComputable) {
-              const pct = Math.round(e.loaded/e.total*100);
-              document.getElementById('vfile-bar').style.width = pct + '%';
-              document.getElementById('vfile-pct').textContent = pct + '%';
-            }
-          };
-          xhr.onload = () => {
-            const d = JSON.parse(xhr.responseText);
-            if (xhr.status >= 400) reject(new Error(d.error || `HTTP ${xhr.status}`));
-            else resolve(d);
-          };
-          xhr.onerror = () => reject(new Error('Errore di rete'));
-          xhr.open('POST', `${API_BASE}/videos/upload-file`);
-          xhr.setRequestHeader('Authorization', `Bearer ${authToken()}`);
-          xhr.send(fd);
-        });
-        // Per "entrambi gli anni": registra lo stesso file (per URL) anche sull'altra annata
-        for (const t of targets.slice(1)) {
-          if (upData?.url) await apiCall('/videos/submit', { method: 'POST', body: { gara_id: t, cal_id: calId, url: upData.url, title, channel, atleta_ids: tagIds } });
-        }
-        document.getElementById('modal-overlay')?.remove();
-        showToast(user?.role === 'admin' ? '✓ Video pubblicato!' : '✓ Video inviato — in attesa di approvazione');
-        if (user?.role === 'admin') await refreshMediaAndRerender({ photos: false });
-      } catch(e) { err.textContent = e.message; err.style.display = 'block'; btn.disabled = false; btn.textContent = 'Invia'; }
-    } else {
-      const url     = document.getElementById('vurl-input')?.value.trim();
-      const title   = document.getElementById('vurl-title')?.value.trim();
-      const channel = document.getElementById('vurl-channel')?.value.trim();
-      if (!url) { err.textContent = 'Inserisci un URL YouTube o Facebook'; err.style.display = 'block'; return; }
-      const isLive = document.getElementById('vp-islive')?.checked || false;
-      btn.disabled = true; btn.textContent = 'Invio…';
-      try {
-        for (const t of targets) {
-          await apiCall('/videos/submit', { method: 'POST', body: { gara_id: t, cal_id: calId, url, title, channel, atleta_ids: tagIds, is_live: isLive } });
-        }
-        document.getElementById('modal-overlay')?.remove();
-        showToast(user?.role === 'admin' ? '✓ Video pubblicato!' : '✓ Video inviato — in attesa di approvazione');
-        if (user?.role === 'admin') await refreshMediaAndRerender({ photos: false });
-      } catch(e) { err.textContent = e.message; err.style.display = 'block'; btn.disabled = false; btn.textContent = 'Invia'; }
-    }
-  };
-
-  window.submitRacePhoto = async (garaId) => {
-    const file = document.getElementById('rp-file')?.files[0];
-    const caption = document.getElementById('rp-caption')?.value || '';
-    const photographer = document.getElementById('rp-photographer')?.value || '';
-    const errEl = document.getElementById('rp-err');
-    if (!file) { errEl.textContent='Seleziona un file'; errEl.style.display='block'; return; }
-
-    // Per esordienti: applica l'annata scelta al gara_id (e gestisci "entrambi")
-    let targets = [garaId];
-    const esSel = document.getElementById('rp-esyear');
-    if (esSel) {
-      const m = garaId.match(/^(.+)_ES[12]_([MF])$/);
-      if (m) {
-        const es1 = `${m[1]}_ES1_${m[2]}`, es2 = `${m[1]}_ES2_${m[2]}`;
-        targets = esSel.value === 'both' ? [es1, es2] : esSel.value === 'ES2' ? [es2] : [es1];
-      }
-    }
-
-    const _tagIds = (window._rpTags || []).map(t => t.id).join(',');
-
-    const btn = document.getElementById('rp-submit');
-    btn.disabled = true; btn.textContent = 'Invio…';
-    try {
-      const token = authToken();
-      let lastData = null;
-      for (const gid of targets) {
-        const fd = new FormData();
-        fd.append('gara_id', gid);
-        fd.append('caption', caption);
-        fd.append('photographer', photographer);
-        fd.append('atleta_ids', _tagIds);
-        fd.append('photo', file);
-        const res = await fetch(`${API_BASE}/race-photos/upload`, { method:'POST', headers:{ Authorization:`Bearer ${token}` }, body:fd });
-        const text = await res.text();
-        let data; try { data = JSON.parse(text); } catch { throw new Error(`Errore HTTP ${res.status}`); }
-        if (!res.ok) throw new Error(data.error || `Errore ${res.status}`);
-        lastData = data;
-      }
-      document.getElementById('modal-overlay')?.remove();
-      if (lastData?.status === 'approved') {
-        showToast(targets.length > 1 ? '✓ Foto pubblicata per entrambi gli anni!' : '✓ Foto pubblicata!');
-        await refreshMediaAndRerender({ videos: false });
-      } else {
-        showToast('✓ Foto inviata — in attesa di approvazione', 'info');
-      }
-    } catch(e) {
-      errEl.textContent = e.message; errEl.style.display = 'block';
-      btn.disabled = false; btn.textContent = 'Invia';
-    }
-  };
+  _initGaraMediaModals();
 
 }
 
