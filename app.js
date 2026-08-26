@@ -13333,11 +13333,11 @@ function _availableSeasonYears() {
 function profileYearRow(kind, id, selYear) {
   const years = _availableSeasonYears();
   const fn = kind === 'team' ? 'setTeamYear' : 'setAtletaYear';
-  return `<div class="profile-year-row" style="display:flex;gap:6px;flex-wrap:wrap;align-items:center;margin:14px 0 2px">
+  return `<div class="profile-year-row" id="profile-year-row" data-kind="${esc(kind)}" data-id="${esc(id)}" style="display:flex;gap:6px;flex-wrap:wrap;align-items:center;margin:14px 0 2px">
     <span style="font-size:.72rem;color:var(--text-muted);font-weight:700;letter-spacing:.04em;margin-right:4px">STAGIONE</span>
     ${years.map(y => {
       const on = String(y) === String(selYear);
-      return `<button onclick="window.${fn}('${esc(id)}','${y}')" style="padding:5px 13px;border-radius:14px;border:1px solid var(--border-subtle);cursor:pointer;font-size:.82rem;font-weight:700;background:${on ? 'var(--accent,#e8001d)' : 'var(--bg-elevated)'};color:${on ? '#fff' : 'var(--text-secondary)'}">${y}</button>`;
+      return `<button class="year-pill" data-year="${esc(y)}" onclick="window.${fn}('${esc(id)}','${y}')" style="padding:5px 13px;border-radius:14px;border:1px solid var(--border-subtle);cursor:pointer;font-size:.82rem;font-weight:700;background:${on ? 'var(--accent,#e8001d)' : 'var(--bg-elevated)'};color:${on ? '#fff' : 'var(--text-secondary)'}">${y}</button>`;
     }).join('')}
   </div>`;
 }
@@ -13527,7 +13527,7 @@ async function renderAtleta(atleta_id, opts = {}) {
 
   const headerHtml = `
     <div class="athlete-header">
-      <div class="athlete-header-top">
+      <div class="athlete-header-top" id="atleta-header-top">
         ${badgeCat(displayCategoria)}
         ${atletaOv.anno_nascita ? `<span class="badge-cat">Classe ${esc(atletaOv.anno_nascita)}</span>` : ''}
         ${a.genere === 'F' ? '<span class="badge-cat badge-genere-f">♀</span>' : ''}
@@ -13542,7 +13542,7 @@ async function renderAtleta(atleta_id, opts = {}) {
             <span id="atleta-msg-btn"></span>
             <span id="atleta-follow-btn"></span>
           </div>
-          <div class="athlete-pts-display">
+          <div class="athlete-pts-display" id="atleta-pts-display">
             <div class="athlete-pts-dot"></div>
             <div>
               <div class="athlete-pts-value">${a.punti_totali}</div>
@@ -13567,9 +13567,9 @@ async function renderAtleta(atleta_id, opts = {}) {
         </a>` : ''}
       </div>
       <div class="athlete-stats-groups" style="display:flex;gap:24px;flex-wrap:wrap;margin-top:8px">
-        <div class="athlete-stats-group">
-          <div style="font-size:.68rem;letter-spacing:.06em;color:var(--text-muted);margin-bottom:4px">ITALIA</div>
-          <div class="athlete-stats-bar">
+        <div class="athlete-stats-group" id="atleta-stats-italia-group">
+          <div style="font-size:.68rem;letter-spacing:.06em;color:var(--text-muted);margin-bottom:4px" id="atleta-stats-italia-label">ITALIA</div>
+          <div class="athlete-stats-bar" id="atleta-stats-italia-bar">
             <div class="athlete-stat">
               <span class="athlete-stat-val" style="color:var(--gold)">${p1}</span>
               <span class="athlete-stat-label">1° Posto</span>
@@ -13739,28 +13739,28 @@ async function renderAtleta(atleta_id, opts = {}) {
     </div>
     ${buildProfileMedia(risultati, photosMap, globalData.videos, { atletaIds: [atleta_id], year: selYear })}
     <div class="section-header" style="margin-top:28px">
-      <span class="section-title">RISULTATI ${esc(selYear)} · ${esc(catLabel(displayCategoria))}</span>
+      <span class="section-title" id="atleta-results-title">RISULTATI ${esc(selYear)} · ${esc(catLabel(displayCategoria))}</span>
       <span class="section-line"></span>
-      <div style="display:flex;gap:6px">
+      <div style="display:flex;gap:6px" id="atleta-sort-btns">
         <button class="tab-btn ath-sort-btn active-cat" data-sort="data" onclick="window.setAtletaResultsSort('data')">CRONOLOGICO</button>
         <button class="tab-btn ath-sort-btn" data-sort="pos" onclick="window.setAtletaResultsSort('pos')">PER POSIZIONE</button>
       </div>
     </div>
+    <div id="atleta-ciclismo-note" style="display:none;font-size:.72rem;color:var(--text-muted);margin:-4px 0 8px">Dati storici importati da ciclismo.info — progetto pilota, in fase di validazione.</div>
       <table class="results-table atleta-results">
-        <thead><tr>
+        <thead id="atleta-results-thead"><tr>
           <th>DATA</th><th>POS</th><th>GARA</th><th>MOLT</th><th style="text-align:right">KM</th><th style="text-align:right">MEDIA</th><th>PTS</th>
         </tr></thead>
         <tbody id="atleta-results-tbody">${tableRows || '<tr><td colspan="7" class="empty-state">Nessun risultato</td></tr>'}</tbody>
       </table>
     </div>
-    <div id="ciclismo-storico-inject"></div>
   `);
 
   // Inject bottone messaggio in modo async (lookup non blocca il render)
   _injectMsgBtn('atleta-msg-btn', atleta_id, null, null);
   _injectFollowBtn('atleta-follow-btn', 'atleta', atleta_id);
   _loadAtletaPcsExtra(atleta_id, selYear, risultati, a);
-  _loadCiclismoStorico(atleta_id);
+  _loadCiclismoStorico(atleta_id, selYear);
 
   // Confronto stagione precedente — iniettato quando la promise è pronta
   _prevAthPromise.then(prevA => {
@@ -14329,11 +14329,16 @@ window.showPcsRaceModal = showPcsRaceModal;
 
 // ── PCS risultati extra atleta (circuito esteso + gare non in circuito) ───────
 // Storico importato da ciclismo.info (progetto pilota, non ancora esteso a
-// tutti gli atleti) — sezione separata sotto i risultati della stagione
-// corrente, raggruppata per anno con team-dell'anno e posizione.
-async function _loadCiclismoStorico(atletaId) {
-  const el = document.getElementById('ciclismo-storico-inject');
-  if (!el) return;
+// tutti gli atleti) — integrato nel selettore STAGIONE già esistente in
+// stile PCS: le annate coperte solo da ciclismo.info (fuori dal circuito FCI
+// tracciato da italiacrit) diventano pillole aggiuntive: cliccandole si
+// aggiorna sia il riepilogo in alto (podi) sia la tabella risultati, senza
+// ricaricare la pagina.
+window._ciclismoStoricoCache = window._ciclismoStoricoCache || {};
+
+async function _loadCiclismoStorico(atletaId, nativeSelYear) {
+  const yearRow = document.getElementById('profile-year-row');
+  if (!yearRow) return;
   let payload;
   try { payload = await apiCall(`/ciclismo-results/atleta/${encodeURIComponent(atletaId)}`); }
   catch { return; }
@@ -14341,43 +14346,85 @@ async function _loadCiclismoStorico(atletaId) {
   if (!risultati.length) return;
 
   const perAnno = {};
-  for (const r of risultati) {
-    (perAnno[r.stagione] = perAnno[r.stagione] || []).push(r);
+  for (const r of risultati) (perAnno[r.stagione] = perAnno[r.stagione] || []).push(r);
+  window._ciclismoStoricoCache[atletaId] = perAnno;
+
+  const nativeYears = new Set([...yearRow.querySelectorAll('.year-pill')].map(b => b.dataset.year));
+  const ciclismoOnlyYears = Object.keys(perAnno).filter(y => !nativeYears.has(y)).sort((a, b) => b - a);
+  if (!ciclismoOnlyYears.length) return;
+
+  const pillsHtml = ciclismoOnlyYears.map(y => `<button class="year-pill" data-year="${esc(y)}" data-ciclismo="1" onclick="window.setAtletaCiclismoYear('${esc(atletaId)}','${esc(y)}')" style="padding:5px 13px;border-radius:14px;border:1px solid var(--border-subtle);cursor:pointer;font-size:.82rem;font-weight:700;background:var(--bg-elevated);color:var(--text-secondary)">${esc(y)}</button>`).join('');
+  yearRow.insertAdjacentHTML('beforeend', pillsHtml);
+}
+
+function _ciclismoYearStats(rows) {
+  const p1 = rows.filter(r => r.posizione === 1).length;
+  const p2 = rows.filter(r => r.posizione === 2).length;
+  const p3 = rows.filter(r => r.posizione === 3).length;
+  const pout = rows.filter(r => r.posizione >= 4 && r.posizione <= 10).length;
+  return { p1, p2, p3, pout };
+}
+
+window.setAtletaCiclismoYear = (atletaId, anno) => {
+  const perAnno = window._ciclismoStoricoCache[atletaId];
+  const rows = (perAnno && perAnno[anno] || []).slice().sort((a, b) => (b.data || '').localeCompare(a.data || ''));
+  if (!rows.length) return;
+
+  // Stato attivo sulle pillole STAGIONE
+  document.querySelectorAll('#profile-year-row .year-pill').forEach(b => {
+    const on = b.dataset.year === String(anno);
+    b.style.background = on ? 'var(--accent,#e8001d)' : 'var(--bg-elevated)';
+    b.style.color = on ? '#fff' : 'var(--text-secondary)';
+  });
+
+  const team = rows[0]?.team || '';
+  const categoria = rows[0]?.categoria || '';
+
+  // Header: pill team + categoria (best-effort, non link — il team storico
+  // non è detto esista come team_id italiacrit)
+  const headerTop = document.getElementById('atleta-header-top');
+  if (headerTop) {
+    const teamPill = headerTop.querySelector('a[href^="#/team/"]');
+    if (teamPill) teamPill.outerHTML = `<span style="font-family:var(--font-heading);font-size:.8rem;color:var(--text-secondary);border:1px solid var(--border-subtle);padding:2px 10px;border-radius:2px">${esc(team)}</span>`;
   }
-  const anni = Object.keys(perAnno).sort((a, b) => b - a);
+
+  // Punti stagione / classifica: non esistono per ciclismo.info -> nascondi
+  const ptsDisplay = document.getElementById('atleta-pts-display');
+  if (ptsDisplay) ptsDisplay.style.display = 'none';
+
+  // Riepilogo podi
+  const { p1, p2, p3, pout } = _ciclismoYearStats(rows);
+  const label = document.getElementById('atleta-stats-italia-label');
+  if (label) label.textContent = 'CICLISMO.INFO';
+  const bar = document.getElementById('atleta-stats-italia-bar');
+  if (bar) bar.innerHTML = `
+    <div class="athlete-stat"><span class="athlete-stat-val" style="color:var(--gold)">${p1}</span><span class="athlete-stat-label">1° Posto</span></div>
+    <div class="athlete-stat"><span class="athlete-stat-val" style="color:var(--silver)">${p2}</span><span class="athlete-stat-label">2° Posto</span></div>
+    <div class="athlete-stat"><span class="athlete-stat-val" style="color:var(--bronze)">${p3}</span><span class="athlete-stat-label">3° Posto</span></div>
+    <div class="athlete-stat"><span class="athlete-stat-val" style="color:var(--text-muted)">${pout}</span><span class="athlete-stat-label">4°-10° Posti</span></div>
+  `;
+
+  // Titolo sezione + nota + tabella (colonne MOLT/KM/MEDIA/PTS non si
+  // applicano ai dati ciclismo.info -> sostituite con Regione/Località)
+  const title = document.getElementById('atleta-results-title');
+  if (title) title.textContent = `RISULTATI ${anno} · ${categoria.replace(/_/g, ' ')}`;
+  const note = document.getElementById('atleta-ciclismo-note');
+  if (note) note.style.display = '';
+  const sortBtns = document.getElementById('atleta-sort-btns');
+  if (sortBtns) sortBtns.style.display = 'none';
+  const thead = document.getElementById('atleta-results-thead');
+  if (thead) thead.innerHTML = `<tr><th>DATA</th><th>POS</th><th>GARA</th><th colspan="3">REGIONE / LOCALITÀ</th></tr>`;
 
   const posColor = p => p === 1 ? 'var(--gold)' : p === 2 ? 'var(--silver)' : p === 3 ? 'var(--bronze)' : 'var(--text-secondary)';
-  const annoBlocks = anni.map(anno => {
-    const rows = perAnno[anno].sort((a, b) => (b.data || '').localeCompare(a.data || ''));
-    const team = rows[0]?.team || '';
-    const righe = rows.map(r => `
-      <tr>
-        <td>${esc(r.data ? new Date(r.data).toLocaleDateString('it-IT') : '')}</td>
-        <td style="text-align:center;font-weight:800;color:${posColor(r.posizione)}">${r.posizione ? r.posizione + '°' : '—'}</td>
-        <td>${r.gara_ciclismo_url ? `<a href="${esc(r.gara_ciclismo_url)}" target="_blank" rel="noopener">${esc(r.nome_gara)}</a>` : esc(r.nome_gara)}</td>
-        <td style="color:var(--text-muted)">${esc(r.regione || '')} · ${esc(r.luogo || '')}</td>
-      </tr>`).join('');
-    return `
-      <div style="margin-top:10px">
-        <div style="font-weight:800;font-size:.85rem;display:flex;align-items:center;gap:8px;margin-bottom:4px">
-          <span>${esc(anno)}</span>
-          <span style="font-weight:400;color:var(--text-muted);font-size:.78rem">${esc(team)}</span>
-        </div>
-        <table class="results-table" style="font-size:.8rem">
-          <tbody>${righe}</tbody>
-        </table>
-      </div>`;
-  }).join('');
-
-  el.innerHTML = `
-    <div class="section-header" style="margin-top:28px">
-      <span class="section-title">STORICO CICLISMO.INFO (${anni[anni.length - 1]}-${anni[0]})</span>
-      <span class="section-line"></span>
-    </div>
-    <div style="font-size:.72rem;color:var(--text-muted);margin-bottom:6px">Dati storici importati da ciclismo.info — progetto pilota, in fase di validazione.</div>
-    ${annoBlocks}
-  `;
-}
+  const tbody = document.getElementById('atleta-results-tbody');
+  if (tbody) tbody.innerHTML = rows.map(r => `
+    <tr>
+      <td class="td-date">${r.data ? new Date(r.data).toLocaleDateString('it-IT') : ''}</td>
+      <td class="td-pos" style="text-align:center;font-weight:800;color:${posColor(r.posizione)}">${r.posizione ? r.posizione + '°' : '—'}</td>
+      <td class="td-race">${r.gara_ciclismo_url ? `<a href="${esc(r.gara_ciclismo_url)}" target="_blank" rel="noopener">${esc(r.nome_gara)}</a>` : esc(r.nome_gara)}</td>
+      <td colspan="3" style="color:var(--text-muted)">${esc(r.regione || '')} · ${esc(r.luogo || '')}</td>
+    </tr>`).join('');
+};
 
 async function _loadAtletaPcsExtra(atletaId, season, icsRisultati, athlete) {
   const tbody = document.getElementById('atleta-results-tbody');
