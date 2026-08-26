@@ -22043,6 +22043,14 @@ window.risSetYear = (y) => {
 };
 
 window._risStoricoCache = window._risStoricoCache || {};
+// Mappa best-effort categorie ciclismo.info -> codici nativi (stessa di
+// server/ciclismo-create-profiles.js) — serve per applicare il filtro hub
+// del menu in alto (es. "Juniores") anche agli anni storici, che usano
+// le categorie grezze della fonte (JUNIORES) invece dei codici nativi (JUN_M).
+const CICLISMO_CAT_TO_NATIVE = {
+  ESORDIENTI1: 'ES1_M', ESORDIENTI2: 'ES2_M', ALLIEVI: 'AL_M', JUNIORES: 'JUN_M', ELITE_UNDER23: 'ELI_M',
+  DONNE_ESORDIENTI: 'AL_F', DONNE_ALLIEVE: 'AL_F', DONNE_JUNIORES: 'JUN_F',
+};
 async function renderRisultatiStorico(anno) {
   // I filtri restano SEMPRE visibili (richiesta esplicita) — niente/tipo
   // moltiplicatore/campionato non esiste per ciclismo.info, quindi "Tutti i
@@ -22084,12 +22092,27 @@ async function renderRisultatiStorico(anno) {
   if (risQueryRegion) races = races.filter(r => r.regione === risQueryRegion);
   if (risQueryGenere) races = races.filter(r => Object.keys(r.categorie || {}).some(c => /^DONNE/i.test(c) === (risQueryGenere === 'F')));
   if (risQueryCat) races = races.filter(r => r.categorie && r.categorie[risQueryCat]);
+  // Filtro hub (menu in alto, es. "Juniores") — mancava del tutto sugli
+  // anni storici: si vedevano sempre tutte le categorie mescolate anche
+  // con un hub selezionato. Le categorie qui sono i codici GREZZI di
+  // ciclismo.info, si mappano ai codici nativi per il confronto.
+  if (activeHub && activeHub.catCodes && activeHub.catCodes.length) {
+    races = races.filter(ev => Object.keys(ev.categorie || {}).some(c => activeHub.catCodes.includes(CICLISMO_CAT_TO_NATIVE[c])));
+  }
 
-  if (countEl) countEl.textContent = `${races.length} gare`;
-  if (!races.length) { cardsEl.innerHTML = '<div class="empty-state">Nessuna gara trovata</div>'; return; }
+  const filterSig = JSON.stringify([anno, risSearchQuery, risQueryMonth, risQueryRegion, risQueryGenere, risQueryCat, activeHub && activeHub.catCodes]);
+  if (filterSig !== window._risStoricoLastFilterSig) {
+    risVisibleCount = RIS_PAGE_INITIAL;
+    window._risStoricoLastFilterSig = filterSig;
+  }
+  const totalRaces = races.length;
+  const visibleRaces = races.slice(0, risVisibleCount);
+
+  if (countEl) countEl.textContent = totalRaces > visibleRaces.length ? `${visibleRaces.length} di ${totalRaces} gare` : `${totalRaces} gare`;
+  if (!totalRaces) { cardsEl.innerHTML = '<div class="empty-state">Nessuna gara trovata</div>'; return; }
 
   const posColorHero = ['p1', 'p2', 'p3'];
-  cardsEl.innerHTML = races.map(ev => {
+  cardsEl.innerHTML = visibleRaces.map(ev => {
     const catEntries = Object.entries(ev.categorie || {}).filter(([, top3]) => top3.length);
 
     const catSections = catEntries.map(([catName, top3]) => {
@@ -22135,6 +22158,14 @@ async function renderRisultatiStorico(anno) {
       </div>
     </div>`;
   }).join('');
+
+  if (totalRaces > visibleRaces.length) {
+    cardsEl.insertAdjacentHTML('beforeend',
+      `<button onclick="window.risLoadMore()" style="margin:28px auto;display:flex;align-items:center;justify-content:center;gap:8px;width:100%;max-width:360px;padding:16px 24px;background:var(--red-hot);color:#fff;border:none;border-radius:var(--r-md,10px);font-weight:800;font-size:1rem;letter-spacing:.02em;cursor:pointer;box-shadow:0 4px 14px rgba(255,107,0,0.35)">
+        VEDI DI PIÙ <span style="opacity:.85;font-weight:600">(${totalRaces - visibleRaces.length})</span>
+        <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="6 9 12 15 18 9"/></svg>
+      </button>`);
+  }
 }
 
 let _risPhotosMap = null;
