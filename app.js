@@ -13782,7 +13782,15 @@ async function renderAtleta(atleta_id, opts = {}) {
   _injectFollowBtn('atleta-follow-btn', 'atleta', atleta_id);
   _loadAtletaPcsExtra(atleta_id, selYear, risultati, a);
   _loadAtletaTopResultsWidget(atleta_id, risultati, displayTeam, displayCategoria, displayTeamId);
-  _loadCiclismoStorico(atleta_id, selYear, risultati.length);
+  // "nativeCount" qui NON deve essere il conteggio risultati dell'anno
+  // selezionato (un atleta REGISTRATO in FCI, come Nencini, può avere 0
+  // risultati nel circuito nazionale in un dato anno perché corre solo da
+  // professionista/continental — quei risultati arrivano da PCS, non da
+  // qui, e la pillola dell'anno nativo NON va comunque tolta). Il criterio
+  // giusto è se l'atleta esiste SOLO come profilo creato da ciclismo.info
+  // (roster_only, mai stato un vero atleta FCI) — bug reale osservato dal
+  // vivo su Nencini, la cui pillola 2026 (con risultati PCS veri) spariva.
+  _loadCiclismoStorico(atleta_id, selYear, a.roster_only ? 0 : 1);
 
   // Confronto stagione precedente — iniettato quando la promise è pronta
   _prevAthPromise.then(prevA => {
