@@ -97,17 +97,16 @@ function normalizeStr(s) {
   return String(s || '').toUpperCase().normalize('NFD').replace(/[̀-ͯ]/g, '').replace(/[^A-Z0-9\s]/g, ' ').replace(/\s+/g, ' ').trim();
 }
 
-// Trova il partecipante il cui nome ha più parole in comune con la didascalia.
-function matchPartecipante(caption, partecipanti) {
-  const capWords = new Set(normalizeStr(caption).split(' ').filter(w => w.length > 2));
-  let best = null, bestScore = 0;
-  for (const p of partecipanti) {
-    const nameWords = normalizeStr(p.nome_completo).split(' ').filter(w => w.length > 2);
-    if (!nameWords.length) continue;
-    const score = nameWords.reduce((s, w) => s + (capWords.has(w) ? 1 : 0), 0);
-    if (score >= 2 && score > bestScore) { bestScore = score; best = p; }
-  }
-  return best;
+// La foto pubblicata da ciclismo.info per una gara è (quasi) sempre quella
+// del vincitore, indipendentemente da chi altro viene nominato nella
+// didascalia — il testo può citare anche il battuto ("X precede Y"), quindi
+// abbinare per parole in comune con la didascalia rischiava di assegnare la
+// foto al 2° classificato invece che al 1° (bug reale osservato dal vivo:
+// gara CIC_6348, foto di Marco Amicabile vincitore assegnata ad Andrea
+// Guardini, arrivato 2° e solo citato come "battuto" nel testo). Si assegna
+// sempre al 1° classificato di questa categoria, punto.
+function matchPartecipante(_caption, partecipanti) {
+  return partecipanti.find(p => Number(p.posizione) === 1) || null;
 }
 
 async function main() {

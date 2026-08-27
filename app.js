@@ -14980,14 +14980,16 @@ async function renderGaraStorica(ciclismoGaraId) {
   window._currentGaraId = garaKey;
   // Un solo tentativo poteva mostrare "pagina non trovata" per una gara che
   // esiste davvero, se Supabase rispondeva 200 con dati vuoti per un
-  // sovraccarico temporaneo (osservato dal vivo mentre lo scraper storico
-  // gira in sottofondo) — un retry dopo una breve pausa distingue il caso
-  // reale (gara mai esistita) da un blip transitorio.
+  // rallentamento temporaneo (osservato dal vivo anche SENZA scraper attivi
+  // — la query di questa pagina può impiegare diversi secondi sul tier
+  // NANO) — due retry con pausa crescente (2s, 4s) invece di uno solo da
+  // 1.2s, insufficiente quando il rallentamento dura più di un paio di
+  // secondi (osservato dal vivo: 8s su un tentativo).
   let payload;
   try {
     payload = await apiCall(`/ciclismo-results/gara/${encodeURIComponent(ciclismoGaraId)}`);
-    if (!payload?.risultati?.length) {
-      await new Promise(r => setTimeout(r, 1200));
+    for (let wait = 2000; !payload?.risultati?.length && wait <= 4000; wait += 2000) {
+      await new Promise(r => setTimeout(r, wait));
       payload = await apiCall(`/ciclismo-results/gara/${encodeURIComponent(ciclismoGaraId)}`);
     }
   } catch { return renderNotFound(); }
