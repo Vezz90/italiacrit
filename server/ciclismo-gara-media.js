@@ -69,6 +69,18 @@ async function runPool(items, limit, worker) {
   });
   await Promise.all(runners);
 }
+// Vedi nota identica in ciclismo-gara-scraper.js: uno statement timeout
+// transitorio nella scansione iniziale non deve buttare via l'intero avvio.
+async function withRetry(fn, tries = 4) {
+  for (let i = 1; i <= tries; i++) {
+    try { return await fn(); }
+    catch (e) {
+      if (i === tries) throw e;
+      console.log(`(retry ${i}/${tries - 1} dopo errore: ${e.message})`);
+      await sleep(1500 * i);
+    }
+  }
+}
 
 function normalizeStr(s) {
   return String(s || '').toUpperCase().normalize('NFD').replace(/[̀-ͯ]/g, '').replace(/[^A-Z0-9\s]/g, ' ').replace(/\s+/g, ' ').trim();
@@ -98,7 +110,7 @@ async function main() {
   {
     const PAGE = 1000;
     for (let from = 0; ; from += PAGE) {
-      const { data: page, error } = await sb.from('ciclismo_gara_media').select('gara_ciclismo_url, stagione').range(from, from + PAGE - 1);
+      const { data: page, error } = await withRetry(() => sb.from('ciclismo_gara_media').select('gara_ciclismo_url, stagione').range(from, from + PAGE - 1));
       if (error) throw error;
       if (!page || !page.length) break;
       already.push(...page);
@@ -112,7 +124,7 @@ async function main() {
   if (ONLY_ATLETA) q = q.eq('atleta_id', ONLY_ATLETA);
   const PAGE = 1000;
   for (let from = 0; ; from += PAGE) {
-    const { data, error } = await q.range(from, from + PAGE - 1);
+    const { data, error } = await withRetry(() => q.range(from, from + PAGE - 1));
     if (error) throw error;
     if (!data || !data.length) break;
     for (const r of data) {

@@ -55,6 +55,20 @@ async function runPool(items, limit, worker) {
   });
   await Promise.all(runners);
 }
+// Le grosse scansioni iniziali ("già fatto") possono incappare in uno
+// statement timeout se il database è momentaneamente sotto carico (es. due
+// scraper riavviati insieme) — un errore fatale qui butta via l'intero
+// avvio invece di limitarsi a rifare quella singola pagina.
+async function withRetry(fn, tries = 4) {
+  for (let i = 1; i <= tries; i++) {
+    try { return await fn(); }
+    catch (e) {
+      if (i === tries) throw e;
+      console.log(`(retry ${i}/${tries - 1} dopo errore: ${e.message})`);
+      await sleep(1500 * i);
+    }
+  }
+}
 
 function normalizeToAtletaId(nomeCompleto) {
   return String(nomeCompleto || '')
@@ -82,7 +96,7 @@ async function main() {
   {
     const PAGE = 1000;
     for (let from = 0; ; from += PAGE) {
-      const { data, error } = await sb.from('manual_athletes').select('atleta_id').range(from, from + PAGE - 1);
+      const { data, error } = await withRetry(() => sb.from('manual_athletes').select('atleta_id').range(from, from + PAGE - 1));
       if (error) throw error;
       if (!data || !data.length) break;
       data.forEach(r => manualIds.add(r.atleta_id));
@@ -100,10 +114,10 @@ async function main() {
   {
     const PAGE = 1000;
     for (let from = 0; ; from += PAGE) {
-      const { data, error } = await sb.from('ciclismo_results')
+      const { data, error } = await withRetry(() => sb.from('ciclismo_results')
         .select('gara_ciclismo_url, stagione, nome_gara, categoria, data, regione, luogo')
         .not('gara_ciclismo_url', 'is', null)
-        .range(from, from + PAGE - 1);
+        .range(from, from + PAGE - 1));
       if (error) throw error;
       if (!data || !data.length) break;
       for (const r of data) if (!garaSet.has(r.gara_ciclismo_url)) garaSet.set(r.gara_ciclismo_url, r);
@@ -115,7 +129,7 @@ async function main() {
   if (!RESCAN) {
     const PAGE = 1000;
     for (let from = 0; ; from += PAGE) {
-      const { data, error } = await sb.from('ciclismo_gara_scan_state').select('gara_ciclismo_url').range(from, from + PAGE - 1);
+      const { data, error } = await withRetry(() => sb.from('ciclismo_gara_scan_state').select('gara_ciclismo_url').range(from, from + PAGE - 1));
       if (error) throw error;
       if (!data || !data.length) break;
       data.forEach(r => doneSet.add(r.gara_ciclismo_url));
