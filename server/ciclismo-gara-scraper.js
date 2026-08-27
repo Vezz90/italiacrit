@@ -36,7 +36,25 @@ if (!SUPABASE_SECRET) { console.error('Imposta SUPABASE_SECRET in server/.env.lo
 
 const RESCAN = process.argv.includes('--rescan');
 const DELAY_MS = 300;
+// Quante gare processare in parallelo — richiesto esplicitamente dall'utente
+// per accelerare (era rigorosamente 1 alla volta). Tenuto più basso di
+// quanto chiesto (50) perché ogni gara con posizioni nuove fa diverse
+// chiamate Supabase in sequenza per atleta (select+upsert atleta, eventuale
+// creazione manual_athletes, upsert risultato) — a 50 gare in parallelo si
+// rischiano centinaia di operazioni Supabase simultanee sullo stesso tier
+// NANO che ha già ceduto una volta sotto carico molto minore di questo.
+const CONCURRENCY = parseInt((process.argv.find(a => a.startsWith('--concurrency=')) || '').split('=')[1] || '8', 10);
 function sleep(ms) { return new Promise(r => setTimeout(r, ms)); }
+async function runPool(items, limit, worker) {
+  let idx = 0;
+  const runners = Array.from({ length: Math.min(limit, items.length) }, async () => {
+    while (idx < items.length) {
+      const i = idx++;
+      await worker(items[i], i);
+    }
+  });
+  await Promise.all(runners);
+}
 
 function normalizeToAtletaId(nomeCompleto) {
   return String(nomeCompleto || '')
@@ -110,7 +128,8 @@ async function main() {
 
   let checked = 0, gareConBuchi = 0, righeInserite = 0, atletiNuovi = 0, errori = 0;
 
-  for (const [url, sample] of todo) {
+  console.log(`Concorrenza: ${CONCURRENCY} gare in parallelo\n`);
+  await runPool(todo, CONCURRENCY, async ([url, sample]) => {
     checked++;
     try {
       const html = await fetchDecoded(url);
@@ -119,7 +138,7 @@ async function main() {
       if (!ordineArrivo.length) {
         await sb.from('ciclismo_gara_scan_state').upsert({ gara_ciclismo_url: url, status: 'no-data', trovati: 0, inseriti: 0 });
         await sleep(DELAY_MS);
-        continue;
+        return;
       }
 
       // Righe già presenti per QUESTA gara+stagione (per evitare doppioni per
@@ -213,7 +232,7 @@ async function main() {
     }
     if (checked % 100 === 0) console.log(`... ${checked}/${todo.length} | gare con buchi colmati: ${gareConBuchi} | righe inserite: ${righeInserite} | atleti nuovi: ${atletiNuovi} | errori: ${errori}`);
     await sleep(DELAY_MS);
-  }
+  });
 
   console.log(`\n=== FATTO ===`);
   console.log(`Gare controllate: ${checked} | con buchi colmati: ${gareConBuchi} | righe inserite: ${righeInserite} | atleti nuovi scoperti: ${atletiNuovi} | errori: ${errori}`);

@@ -56,7 +56,19 @@ async function _watermarkPhoto(buffer, text) {
 
 const ONLY_ATLETA = (process.argv.find(a => a.startsWith('--atleta-id=')) || '').split('=')[1] || null;
 const DELAY_MS = 300;
+// Vedi nota identica in ciclismo-gara-scraper.js sul perché non 50.
+const CONCURRENCY = parseInt((process.argv.find(a => a.startsWith('--concurrency=')) || '').split('=')[1] || '8', 10);
 function sleep(ms) { return new Promise(r => setTimeout(r, ms)); }
+async function runPool(items, limit, worker) {
+  let idx = 0;
+  const runners = Array.from({ length: Math.min(limit, items.length) }, async () => {
+    while (idx < items.length) {
+      const i = idx++;
+      await worker(items[i], i);
+    }
+  });
+  await Promise.all(runners);
+}
 
 function normalizeStr(s) {
   return String(s || '').toUpperCase().normalize('NFD').replace(/[̀-ͯ]/g, '').replace(/[^A-Z0-9\s]/g, ' ').replace(/\s+/g, ' ').trim();
@@ -113,7 +125,8 @@ async function main() {
   console.log(`Gare da controllare per foto: ${garaSet.size} (già fatte: ${doneSet.size})${ONLY_ATLETA ? ' — solo ' + ONLY_ATLETA : ''}\n`);
 
   let checked = 0, foundGare = 0, foundFoto = 0, matched = 0, errori = 0;
-  for (const [key, gara] of garaSet) {
+  console.log(`Concorrenza: ${CONCURRENCY} gare in parallelo\n`);
+  await runPool([...garaSet.entries()], CONCURRENCY, async ([key, gara]) => {
     checked++;
     console.log(`(${checked}/${garaSet.size}) ${gara.nome_gara} [${gara.stagione}] … `);
     try {
@@ -126,7 +139,7 @@ async function main() {
         }, { onConflict: 'gara_ciclismo_url,stagione,foto_index' });
         console.log('  nessuna foto');
         await sleep(DELAY_MS);
-        continue;
+        return;
       }
       foundGare++;
 
@@ -178,7 +191,7 @@ async function main() {
       }
     } catch (e) { errori++; console.log('  ERRORE:', e.message); }
     await sleep(DELAY_MS);
-  }
+  });
 
   console.log(`\n=== FATTO === gare controllate: ${checked} | gare con foto: ${foundGare} | foto totali: ${foundFoto} | attribuite ad atleta: ${matched} | errori: ${errori}`);
 }
