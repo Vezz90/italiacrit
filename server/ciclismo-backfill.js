@@ -110,7 +110,25 @@ async function main() {
   // Master list italiacrit per il matching
   const italiacritAthletes = JSON.parse(fs.readFileSync(path.join(__dirname, '..', 'data', 'athletes.json'), 'utf8'));
   const italiacritIds = new Set(Object.keys(italiacritAthletes));
-  console.log(`Atleti italiacrit di riferimento: ${italiacritIds.size}\n`);
+
+  // Atleti già tracciati dal circuito PCS (professionisti/nazionali/
+  // continentali, non solo FCI italiani) — vedi nota identica e più estesa
+  // in ciclismo-gara-scraper.js: senza questo controllo un corridore
+  // straniero con risultati giovanili in Italia (es. Pogačar junior) riceve
+  // un profilo manual_athletes duplicato con dati vecchi che sovrascrive
+  // quello reale.
+  const pcsIds = new Set();
+  for (const table of ['pcs_results', 'pcs_gara_results', 'pcs_race_full_results']) {
+    const PAGE = 1000;
+    for (let from = 0; ; from += PAGE) {
+      const { data, error } = await sb.from(table).select('atleta_id').range(from, from + PAGE - 1);
+      if (error) break;
+      if (!data || !data.length) break;
+      data.forEach(r => { if (r.atleta_id) pcsIds.add(r.atleta_id); });
+      if (data.length < PAGE) break;
+    }
+  }
+  console.log(`Atleti italiacrit di riferimento: ${italiacritIds.size} | Atleti PCS noti: ${pcsIds.size}\n`);
 
   // Per la creazione al volo del profilo di un atleta mai in FCI (vedi sotto)
   const teams = JSON.parse(fs.readFileSync(path.join(__dirname, '..', 'data', 'teams.json'), 'utf8'));
@@ -249,7 +267,7 @@ async function main() {
         // qualcuno non rieseguiva quello script a mano (bug osservato dal
         // vivo: Trippi Matteo, 35+ risultati già scoperti dal 2011 ma mai
         // collegato). Stessa logica/normalizzazione di quello script.
-        if (!finalAtletaId && atletaId) {
+        if (!finalAtletaId && atletaId && !pcsIds.has(atletaId)) {
           const { data: existingManual } = await sb.from('manual_athletes').select('atleta_id').eq('atleta_id', atletaId).maybeSingle();
           if (existingManual) {
             finalAtletaId = atletaId;

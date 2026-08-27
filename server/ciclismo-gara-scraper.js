@@ -118,7 +118,27 @@ async function main() {
       if (data.length < PAGE) break;
     }
   }
-  console.log(`Atleti italiacrit: ${italiacritIds.size} | Profili manuali già creati: ${manualIds.size}\n`);
+  // Atleti già tracciati dal circuito PCS (professionisti, nazionali,
+  // continentali — non solo italiani FCI) — senza questo controllo, un
+  // corridore straniero con risultati giovanili su ciclismo.info (es. un
+  // futuro campione che ha corso junior in Italia) veniva trattato come
+  // "mai visto" e riceveva un profilo manual_athletes duplicato con la sua
+  // squadra di anni fa, che finiva per sovrascrivere il profilo reale sulla
+  // scheda (bug reale trovato dal vivo: Pogačar mostrato con la squadra
+  // Juniores 2016 al posto della UAE Team Emirates 2026, e altri ~160 casi
+  // simili creati in questa sessione prima della correzione).
+  const pcsIds = new Set();
+  for (const table of ['pcs_results', 'pcs_gara_results', 'pcs_race_full_results']) {
+    const PAGE = 1000;
+    for (let from = 0; ; from += PAGE) {
+      const { data, error } = await withRetry(() => sb.from(table).select('atleta_id').range(from, from + PAGE - 1));
+      if (error) break; // tabella/colonna eventualmente diversa, non bloccare l'avvio
+      if (!data || !data.length) break;
+      data.forEach(r => { if (r.atleta_id) pcsIds.add(r.atleta_id); });
+      if (data.length < PAGE) break;
+    }
+  }
+  console.log(`Atleti italiacrit: ${italiacritIds.size} | Profili manuali già creati: ${manualIds.size} | Atleti PCS noti: ${pcsIds.size}\n`);
 
   const teams = JSON.parse(fs.readFileSync(path.join(__dirname, '..', 'data', 'teams.json'), 'utf8'));
   const teamIdByName = new Map(Object.values(teams).map(t => [String(t.nome || '').trim().toUpperCase(), t.id]));
@@ -208,8 +228,11 @@ async function main() {
         // Profilo mancante: crealo subito (stessa correzione fatta su
         // ciclismo-backfill.js) — altrimenti il corridore resta orfano, non
         // cliccabile e senza avatar sulla pagina gara finché qualcuno non
-        // rilancia ciclismo-create-profiles.js a mano.
-        if (!finalAtletaId) {
+        // rilancia ciclismo-create-profiles.js a mano. MA non per chi è già
+        // un atleta PCS noto (pro/nazionale/continentale) — vedi pcsIds
+        // sopra: creare qui un profilo manual_athletes sovrascriverebbe la
+        // sua identità reale con dati amatoriali vecchi.
+        if (!finalAtletaId && !pcsIds.has(atletaIdDerivato)) {
           const { data: existingManual } = await sb.from('manual_athletes').select('atleta_id').eq('atleta_id', atletaIdDerivato).maybeSingle();
           if (existingManual) {
             finalAtletaId = atletaIdDerivato;
