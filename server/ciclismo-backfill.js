@@ -278,7 +278,13 @@ async function main() {
           if (finalAtletaId) await sb.from('ciclismo_athletes').update({ atleta_id: finalAtletaId }).eq('ciclismo_id', a.ciclismoId);
         }
 
-        // Upsert risultati di QUESTO anno
+        // Upsert risultati di QUESTO anno. punti_stagione = punteggio
+        // classifica ciclismo.info (già letto dalla riga classifica, "P.
+        // NNN") — è un totale STAGIONALE, non per singola gara (la pagina
+        // gara non pubblica il contributo punti di ogni piazzamento), quindi
+        // viene ripetuto identico su ogni riga dell'atleta in quella
+        // stagione: comodo da leggere lato frontend senza una query/tabella
+        // separata, a costo di un po' di ridondanza.
         const rows = scheda.piazzamenti.map(pl => ({
           ciclismo_id: a.ciclismoId,
           atleta_id: finalAtletaId,
@@ -286,6 +292,7 @@ async function main() {
           categoria: scheda.categoria,
           team: scheda.team,
           posizione: pl.posizione,
+          punti_stagione: a.punti != null ? a.punti : null,
           data: pl.data,
           regione: pl.regione,
           luogo: pl.luogo,

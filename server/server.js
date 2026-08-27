@@ -4204,7 +4204,7 @@ app.get('/api/ciclismo-results/atleta/:atletaId', async (req, res) => {
   try {
     const { data, error } = await supabase
       .from('ciclismo_results')
-      .select('stagione, categoria, team, posizione, data, regione, luogo, nome_gara, gara_ciclismo_url, km')
+      .select('stagione, categoria, team, posizione, data, regione, luogo, nome_gara, gara_ciclismo_url, km, punti_stagione')
       .eq('atleta_id', req.params.atletaId)
       .order('data', { ascending: false })
       .limit(1000);
@@ -4298,7 +4298,7 @@ app.get('/api/ciclismo-results/team', async (req, res) => {
     for (let from = 0; ; from += PAGE) {
       const { data: page, error } = await supabase
         .from('ciclismo_results')
-        .select('stagione, categoria, team, posizione, data, nome_gara, ciclismo_id, atleta_id')
+        .select('stagione, categoria, team, posizione, data, nome_gara, ciclismo_id, atleta_id, punti_stagione')
         .ilike('team', teamAnchorPattern(teamName))
         .order('data', { ascending: false })
         .range(from, from + PAGE - 1);

@@ -15039,13 +15039,28 @@ window.setAtletaCiclismoYear = async (atletaId, anno) => {
       : '';
   }
 
-  // Punti: NON si assegnano punteggi alle gare storiche ciclismo.info — il
-  // sito è partito quest'anno con un proprio sistema di classifica e
-  // mescolare punti stimati (senza un moltiplicatore reale noto) rischia di
-  // sporcare quel dato. Il blocco PUNTI STAGIONE resta nascosto per gli anni
-  // storici, si mostrano solo conteggi osservati (podi, gare).
+  // Punti: non stimiamo NOI un punteggio (nessun moltiplicatore reale noto
+  // per le gare storiche), ma se lo scraper ha già catturato il punteggio
+  // di classifica REALE di quella stagione (punti_stagione, uguale su ogni
+  // riga dell'atleta di quell'anno) lo mostriamo così com'è — solo per gli
+  // anni ri-scrapati dopo l'introduzione di questo campo resta "—".
   const ptsDisplay = document.getElementById('atleta-pts-display');
-  if (ptsDisplay) ptsDisplay.style.display = 'none';
+  const puntiStagione = rows.find(r => r.punti_stagione != null)?.punti_stagione;
+  if (ptsDisplay) {
+    if (puntiStagione != null) {
+      ptsDisplay.style.display = '';
+      const ptsVal = ptsDisplay.querySelector('.athlete-pts-value');
+      const ptsLabel = ptsDisplay.querySelector('.athlete-pts-label');
+      if (ptsVal) ptsVal.textContent = puntiStagione;
+      if (ptsLabel) ptsLabel.textContent = 'PUNTI STAGIONE';
+      const secondDot = ptsDisplay.querySelector('.athlete-pts-dot[style*="margin-left"]');
+      const secondBlock = secondDot?.nextElementSibling;
+      if (secondDot) secondDot.style.display = 'none';
+      if (secondBlock) secondBlock.style.display = 'none';
+    } else {
+      ptsDisplay.style.display = 'none';
+    }
+  }
 
   // Riepilogo podi
   const { p1, p2, p3, pout } = _ciclismoYearStats(rows);
