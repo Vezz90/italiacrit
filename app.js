@@ -14798,7 +14798,7 @@ async function renderGaraStorica(ciclismoGaraId) {
     credit: m.photographer || '', photoId: m.id, atletaIds: m.atleta_ids || '',
   }));
   const scrapedForGrid = mediaList.map(m => ({
-    src: mediaUrl(m.photo_url), posizione: m.posizione, credit: '📷 ciclismo.info', photoId: null, atletaIds: '',
+    src: mediaUrl(m.photo_url), posizione: m.posizione, credit: '', photoId: null, atletaIds: '',
   }));
   const allPhotos = [...uploadedForGrid, ...scrapedForGrid];
   const [heroPhotoObj, ...restPhotoObjs] = allPhotos;
@@ -15150,7 +15150,6 @@ function _renderCiclismoMedia(containerId, mediaList, rows) {
       <div class="profile-media-info">
         <div class="profile-media-race">${esc(m.nome_gara)}</div>
         <div class="profile-media-meta">${fmtDateShort(m.data)}${m.caption ? ` · ${esc(m.caption)}` : ''}</div>
-        <div class="profile-media-meta" style="opacity:.7">📷 ciclismo.info</div>
       </div>
     </div>`).join('');
 
@@ -15402,7 +15401,6 @@ window.setTeamCiclismoYear = async (teamId, anno, catOverride) => {
       <div class="profile-media-info">
         <div class="profile-media-race">${esc(m.nome_gara)}</div>
         <div class="profile-media-meta">${fmtDateShort(m.data)}${m.caption ? ` · ${esc(m.caption)}` : ''}</div>
-        <div class="profile-media-meta" style="opacity:.7">📷 ciclismo.info</div>
       </div>
     </div>`).join('');
 
@@ -22366,7 +22364,7 @@ async function renderRisultatiStorico(anno) {
     const winLine = winner ? `Vince ${esc(winner.nome_completo)}${second ? ` davanti a ${esc(second.nome_completo)}` : ''}.` : '';
 
     const photoEl = ev.photo_url
-      ? `<a href="#/gara/CIC_${esc(ev.id)}" class="ris-card-photo"><img src="${esc(mediaUrl(ev.photo_url))}" alt="Foto gara" loading="lazy"/><div class="ris-photo-credit">📷 ciclismo.info</div></a>`
+      ? `<a href="#/gara/CIC_${esc(ev.id)}" class="ris-card-photo"><img src="${esc(mediaUrl(ev.photo_url))}" alt="Foto gara" loading="lazy"/></a>`
       : '';
 
     return `<div class="hero-band ris-card">
@@ -24127,9 +24125,10 @@ function _drawPhotoCredit(ctx, W, H, d, { x, y, align = 'center', xpixLogo } = {
     ctx.fillText(label, startX + badgeW + gap, baseY);
     return;
   }
+  if (d.photo_source === 'ic') return;
   ctx.fillStyle = 'rgba(255,255,255,0.5)';
   ctx.textAlign = align;
-  const label = d.photo_source === 'ic' ? `📷 ciclismo.info` : `📷 Foto: ${d.photo_credit}`;
+  const label = `📷 Foto: ${d.photo_credit}`;
   ctx.fillText(label, baseX, baseY);
 }
 

@@ -143,8 +143,7 @@ async function main() {
             if (buf.length > 500) {
               const rawSlug = gara.gara_ciclismo_url.split('/').pop().replace(/\.htm$/, '');
               const storagePath = `gare/ciclismo/${gara.stagione}_${rawSlug}_${idx}.jpg`.replace(/[^a-zA-Z0-9/_.-]/g, '_');
-              const watermarked = await _watermarkPhoto(buf, 'ciclismo.info');
-              const { error: upErr } = await sb.storage.from('photos').upload(storagePath, watermarked, { contentType: 'image/jpeg', upsert: true });
+              const { error: upErr } = await sb.storage.from('photos').upload(storagePath, buf, { contentType: 'image/jpeg', upsert: true });
               if (!upErr) photoUrl = `/photos/${storagePath}`;
             }
           }

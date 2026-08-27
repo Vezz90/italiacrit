@@ -173,9 +173,8 @@ async function main() {
                 const buf = Buffer.from(await photoRes.arrayBuffer());
                 if (buf.length > 500) {
                   const storagePath = `atletas/ciclismo/${a.ciclismoId}.jpg`;
-                  const watermarked = await _watermarkPhoto(buf, 'ciclismo.info');
                   const { error: upErr } = await sb.storage.from('photos')
-                    .upload(storagePath, watermarked, { contentType: 'image/jpeg', upsert: true });
+                    .upload(storagePath, buf, { contentType: 'image/jpeg', upsert: true });
                   if (!upErr) {
                     photoUrl = `/photos/${storagePath}`;
                     await sb.from('entity_overrides').upsert([
