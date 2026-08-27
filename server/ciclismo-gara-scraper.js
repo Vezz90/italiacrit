@@ -45,12 +45,27 @@ const DELAY_MS = 300;
 // NANO che ha già ceduto una volta sotto carico molto minore di questo.
 const CONCURRENCY = parseInt((process.argv.find(a => a.startsWith('--concurrency=')) || '').split('=')[1] || '8', 10);
 function sleep(ms) { return new Promise(r => setTimeout(r, ms)); }
+// Ogni elemento ha un tetto massimo di tempo: se il worker (che dentro fa
+// diverse chiamate Supabase in sequenza, oltre al fetch a ciclismo.info già
+// protetto da timeout) resta bloccato — es. una singola chiamata Supabase
+// che non risponde mai, capitato dal vivo — lo slot si libera comunque e
+// passa all'elemento successivo, invece di paralizzare l'intero pool. La
+// promise bloccata resta appesa in background (innocua, nessun modo di
+// annullarla davvero da qui) ma non impedisce più il progresso.
+const ITEM_TIMEOUT_MS = 45000;
 async function runPool(items, limit, worker) {
   let idx = 0;
   const runners = Array.from({ length: Math.min(limit, items.length) }, async () => {
     while (idx < items.length) {
       const i = idx++;
-      await worker(items[i], i);
+      try {
+        await Promise.race([
+          worker(items[i], i),
+          new Promise((_, rej) => setTimeout(() => rej(new Error('timeout elemento (bloccato oltre 45s)')), ITEM_TIMEOUT_MS)),
+        ]);
+      } catch (e) {
+        console.log(`(pool) elemento saltato per timeout/errore: ${e.message}`);
+      }
     }
   });
   await Promise.all(runners);

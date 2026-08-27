@@ -59,12 +59,23 @@ const DELAY_MS = 300;
 // Vedi nota identica in ciclismo-gara-scraper.js sul perché non 50.
 const CONCURRENCY = parseInt((process.argv.find(a => a.startsWith('--concurrency=')) || '').split('=')[1] || '8', 10);
 function sleep(ms) { return new Promise(r => setTimeout(r, ms)); }
+// Vedi nota identica in ciclismo-gara-scraper.js: uno slot bloccato su una
+// chiamata Supabase che non risponde mai si libera comunque dopo 45s
+// invece di paralizzare l'intero pool.
+const ITEM_TIMEOUT_MS = 45000;
 async function runPool(items, limit, worker) {
   let idx = 0;
   const runners = Array.from({ length: Math.min(limit, items.length) }, async () => {
     while (idx < items.length) {
       const i = idx++;
-      await worker(items[i], i);
+      try {
+        await Promise.race([
+          worker(items[i], i),
+          new Promise((_, rej) => setTimeout(() => rej(new Error('timeout elemento (bloccato oltre 45s)')), ITEM_TIMEOUT_MS)),
+        ]);
+      } catch (e) {
+        console.log(`(pool) elemento saltato per timeout/errore: ${e.message}`);
+      }
     }
   });
   await Promise.all(runners);
