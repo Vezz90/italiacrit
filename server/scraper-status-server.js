@@ -49,13 +49,20 @@ function readProgress(key, cfg) {
   try { text = fs.readFileSync(cfg.file, 'utf8'); }
   catch { return { ok: false, error: 'log non trovato (script fermo o mai avviato)' }; }
 
-  let last = null, m;
+  // Il MASSIMO visto nel file, non l'ultima riga — con più elementi in
+  // parallelo (--concurrency), uno più lento può finire e scrivere la sua
+  // riga di log DOPO uno più veloce partito più tardi, quindi l'ultima riga
+  // del file a volte mostra un numero più basso di uno già visto poco prima.
+  // Prendendo solo l'ultima riga, questo veniva letto come "riavvio" (il
+  // contatore torna indietro) e resettava lo storico ad ogni giro, dando una
+  // stima di velocità/tempo rimanente ballerina (osservato dal vivo).
+  let current = null, total = null, m;
   cfg.re.lastIndex = 0;
-  while ((m = cfg.re.exec(text))) last = m;
-  if (!last) return { ok: false, error: 'nessun progresso ancora nel log' };
-
-  const current = parseInt(last[1], 10);
-  const total = parseInt(last[2], 10);
+  while ((m = cfg.re.exec(text))) {
+    const n = parseInt(m[1], 10);
+    if (current === null || n > current) { current = n; total = parseInt(m[2], 10); }
+  }
+  if (current === null) return { ok: false, error: 'nessun progresso ancora nel log' };
   const done = /\n=== FATTO ===|\[exited with code 0\]/.test(text.slice(-400));
   const errored = /\[exited with code 1\]|ERRORE FATALE/.test(text.slice(-400)) && !done;
 
