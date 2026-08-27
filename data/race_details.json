@@ -10231,8 +10231,8 @@
     "orario_partenza": "13:30",
     "km": "130,00 Servizi: PER INFO CONTATTARE SIG. TIBERIO SOLDANI CEL 335 5414535 - MAIL: tiberiosoldani@virgilio.it SIG. ROSINI LUCIANO CEL 329 9620163 PRANZO PER ATLETI ED ACCOMPAGNATORI AGGIUNGI QUESTA GARA AL CALENDARIO Home / Ricerca Gare / Dettaglio Gara / Dettaglio Gara GIRO DELLE VALLI ARETINE JUNIORES-21° TR. BUTINTORO-13° TR. CAV UFF. MARIO GIACCHERINI Strada GIRO DELLE VALLI ARETINE JUNIORES-21° TR. BUTINTORO-13° TR. CAV UFF. MARIO GIACCHERINI ID Gara: 182804 | Data: 04/10/2026 INFORMAZIONI GENERALI Localita: AREZZO - LOC. RIGUTINO",
     "location_str": "Rigutino Ovest, 102 - Centro Aggregazione Sociale, Rigutino (Ar), Italia",
-    "lat": null,
-    "lng": null
+    "lat": 43.37509,
+    "lng": 11.86873
   },
   "GP_INDUSTRIA_ARTIGIANATO_2026-09-06": {
     "raceid": "180706",
@@ -10245,8 +10245,8 @@
     "orario_partenza": "11:30",
     "km": "196,5 AGGIUNGI QUESTA GARA AL CALENDARIO Home / Ricerca Gare / Dettaglio Gara / Dettaglio Gara GP INDUSTRIA & ARTIGIANATO Strada GP INDUSTRIA & ARTIGIANATO ID Gara: 180706 | Data: 06/09/2026 INFORMAZIONI GENERALI Localita: Larciano",
     "location_str": "Ready Center - Via Marconi 10, LARCIANO, Italia",
-    "lat": null,
-    "lng": null
+    "lat": 43.82504,
+    "lng": 10.85637
   },
   "3_TROFEO_LUCIANO_TOMIO_PROVA_VALIDA_CAMP_PROV_ESORDIENTI_1_2_ANNO_2026-09-20": {
     "raceid": "180154",
@@ -10259,8 +10259,8 @@
     "orario_partenza": "10:00",
     "km": "41 Servizi: PRONTO SOCCORSO PIU' VICINO: Ospedale di Rivoli Via Rivalta, 29 - 10098 - Rivoli (TO) Tel. 011.9551642 AGGIUNGI QUESTA GARA AL CALENDARIO Home / Ricerca Gare / Dettaglio Gara / Dettaglio Gara 3° TROFEO LUCIANO TOMIO - PROVA VALIDA CAMP. PROV. ESORDIENTI 1°/2° ANNO Strada 3° TROFEO LUCIANO TOMIO - PROVA VALIDA CAMP. PROV. ESORDIENTI 1°/2° ANNO ID Gara: 180154 | Data: 20/09/2026 INFORMAZIONI GENERALI Localita: CASELETTE TO",
     "location_str": "Piazza Clays, Caselette (TO), Italia",
-    "lat": null,
-    "lng": null
+    "lat": 45.10475,
+    "lng": 7.48082
   },
   "6_MEMORIAL_GUIDO_MESSINA_PROVA_VALIDA_CAMP_PROV_ALLIEVI_2026-09-20": {
     "raceid": "180157",
@@ -10273,7 +10273,7 @@
     "orario_partenza": "14:00",
     "km": "91 Servizi: PRONTO SOCCORSO PIU' VICINO: Ospedale di Rivoli Via Rivalta, 29 - 10098 - Rivoli (TO) Tel. 011.9551642 AGGIUNGI QUESTA GARA AL CALENDARIO Home / Ricerca Gare / Dettaglio Gara / Dettaglio Gara 6° MEMORIAL GUIDO MESSINA - PROVA VALIDA CAMP. PROV. ALLIEVI Strada 6° MEMORIAL GUIDO MESSINA - PROVA VALIDA CAMP. PROV. ALLIEVI ID Gara: 180157 | Data: 20/09/2026 INFORMAZIONI GENERALI Localita: CASELETTE TO",
     "location_str": "Piazza Clays, Caselette (TO), Italia",
-    "lat": null,
-    "lng": null
+    "lat": 45.10475,
+    "lng": 7.48082
   }
 }
