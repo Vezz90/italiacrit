@@ -41,6 +41,7 @@ const LOGS = {
 // Storico dei campioni (in memoria, si resetta se il dashboard riparte) per
 // calcolare una velocità media e stimare il tempo restante.
 const history = { risultati: [], dewatermark: [], foto: [] };
+const lastTotal = { risultati: null, dewatermark: null, foto: null };
 const MAX_HISTORY = 30;
 
 function readProgress(key, cfg) {
@@ -60,6 +61,14 @@ function readProgress(key, cfg) {
 
   const now = Date.now();
   const hist = history[key];
+  // Uno script rilanciato (log troncato, totale diverso o contatore tornato
+  // indietro) rende inutilizzabili i campioni precedenti — altrimenti la
+  // velocità restava "—" per minuti finché i vecchi campioni non uscivano
+  // dalla finestra, o peggio usciva un delta negativo (osservato dal vivo
+  // dopo il riavvio dei due scraper per il fix del timeout di rete).
+  const restarted = lastTotal[key] != null && (lastTotal[key] !== total || (hist.length && current < hist[hist.length - 1].n));
+  if (restarted) hist.length = 0;
+  lastTotal[key] = total;
   hist.push({ t: now, n: current });
   while (hist.length > MAX_HISTORY) hist.shift();
 
