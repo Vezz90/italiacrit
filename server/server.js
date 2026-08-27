@@ -4412,6 +4412,62 @@ app.get('/api/ciclismo-results/races', async (req, res) => {
   } catch (e) { res.status(500).json({ error: e.message }); }
 });
 
+// Classifica storica per un anno ciclismo.info — usa il punteggio REALE già
+// calcolato da ciclismo.info (punti_stagione, uguale su ogni riga
+// dell'atleta in quella stagione), non una stima nostra: le gare storiche
+// non hanno un moltiplicatore reale noto (regionale/nazionale/ecc.) per
+// applicare il nostro sistema di punteggio in modo affidabile.
+app.get('/api/ciclismo-results/classifica', async (req, res) => {
+  const anno = req.query.anno;
+  if (!anno) return res.status(400).json({ error: 'anno mancante' });
+  try {
+    const data = [];
+    const PAGE = 1000;
+    for (let from = 0; ; from += PAGE) {
+      const { data: page, error } = await supabase
+        .from('ciclismo_results')
+        .select('ciclismo_id, atleta_id, categoria, team, punti_stagione')
+        .eq('stagione', anno)
+        .not('punti_stagione', 'is', null)
+        .range(from, from + PAGE - 1);
+      if (error) throw error;
+      if (!page || !page.length) break;
+      data.push(...page);
+      if (page.length < PAGE) break;
+    }
+    // Dedup per ciclismo_id (punti_stagione è ripetuto su ogni riga dello
+    // stesso atleta) — tiene l'ultima riga vista, tutte identiche per punti.
+    const byAthlete = new Map();
+    for (const r of data) {
+      if (!r.ciclismo_id || !r.categoria) continue;
+      byAthlete.set(r.ciclismo_id, r);
+    }
+    const allCiclismoIds = [...byAthlete.keys()];
+    let nomeById = new Map();
+    const CHUNK = 300;
+    for (let i = 0; i < allCiclismoIds.length; i += CHUNK) {
+      const chunk = allCiclismoIds.slice(i, i + CHUNK);
+      const { data: athData, error: athErr } = await supabase.from('ciclismo_athletes').select('ciclismo_id, nome_completo').in('ciclismo_id', chunk);
+      if (athErr) continue;
+      for (const a of (athData || [])) nomeById.set(a.ciclismo_id, a.nome_completo);
+    }
+    const classifica = {};
+    for (const r of byAthlete.values()) {
+      if (!classifica[r.categoria]) classifica[r.categoria] = [];
+      classifica[r.categoria].push({
+        ciclismo_id: r.ciclismo_id, atleta_id: r.atleta_id,
+        nome_completo: nomeById.get(r.ciclismo_id) || r.ciclismo_id,
+        team: r.team, punti: r.punti_stagione,
+      });
+    }
+    for (const cat of Object.keys(classifica)) {
+      classifica[cat].sort((a, b) => b.punti - a.punti);
+      classifica[cat].forEach((r, i) => { r.pos = i + 1; });
+    }
+    res.json({ classifica });
+  } catch (e) { res.status(500).json({ error: e.message }); }
+});
+
 // Ordine di arrivo completo per UNA gara ciclismo.info (tutte le categorie
 // che condividono lo stesso id gara — es. Esordienti 1°/2° anno insieme,
 // come già fa la pagina gara nativa).

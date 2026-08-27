@@ -3824,6 +3824,7 @@ function route() {
     rankView   = _mClassCatViewSort[2] || 'atleti';
     rankSort   = _mClassCatViewSort[3] === 'vittorie' ? 'vittorie' : 'punti';
     rankFilter = ''; rankRegion = ''; rankMonth = '';
+    _classHistoricalYear = null;
     return renderClassifica();
   }
   const _mClassCatView = match('/classifica/:cat/:view');
@@ -3833,6 +3834,7 @@ function route() {
     rankGender = rankCat.endsWith('_F') ? 'F' : 'M';
     rankView   = _mClassCatView[2] || 'atleti';
     rankFilter = ''; rankRegion = ''; rankMonth = ''; rankSort = 'punti';
+    _classHistoricalYear = null;
     return renderClassifica();
   }
   const _mClassCat = match('/classifica/:cat');
@@ -3842,6 +3844,7 @@ function route() {
     rankGender = rankCat.endsWith('_F') ? 'F' : 'M';
     rankView   = 'atleti';
     rankFilter = ''; rankRegion = ''; rankMonth = ''; rankSort = 'punti';
+    _classHistoricalYear = null;
     return renderClassifica();
   }
   if (match('/classifica')) {
@@ -3851,6 +3854,7 @@ function route() {
     // Esordienti invece di restare sulla categoria che si stava guardando).
     rankDisciplina = 'strada';
     if (activeHub) applyHubFilters(activeHub);
+    _classHistoricalYear = null;
     return renderClassifica();
   }
   // Classifica Pista (velodromo): progetto messo in pausa (25/08) — troppo
@@ -8549,6 +8553,26 @@ let rankMonth  = '';
 let rankSort   = 'punti';  // 'punti' | 'momentum' | 'form'
 let rankDisciplina = 'strada'; // 'strada' | 'pista' — quale tipo di risultati conta in classifica
 
+// Anni storici (ciclismo.info, fino al 2007) sulla pagina Classifica —
+// stessa idea di Risultati: fila di anni in alto, poi si sceglie la
+// categoria sotto. Usa il punteggio REALE di ciclismo.info (vedi endpoint
+// /ciclismo-results/classifica), non una stima nostra.
+let _classHistoricalYear = null;
+window.classSetYear = (y) => {
+  document.querySelectorAll('#class-year-row .year-pill').forEach(b => {
+    const on = Number(b.dataset.year) === Number(y);
+    b.style.background = on ? 'var(--accent,#e8001d)' : 'var(--bg-elevated)';
+    b.style.color = on ? '#fff' : 'var(--text-secondary)';
+  });
+  if (Number(y) === Number(_loadedSeasonYear())) {
+    _classHistoricalYear = null;
+    renderClassifica();
+    return;
+  }
+  _classHistoricalYear = y;
+  renderClassificaStorica(y);
+};
+
 async function renderClassifica() {
   if ((rankGender === 'M' && rankCat.endsWith('_F')) ||
       (rankGender === 'F' && !rankCat.endsWith('_F'))) {
@@ -8616,12 +8640,23 @@ async function renderClassifica() {
     : '';
 
   const _rkIsPista = rankDisciplina === 'pista';
+
+  const _classCurYear = Number(_loadedSeasonYear());
+  const _classYearPills = [];
+  for (let y = _classCurYear; y >= 2007; y--) _classYearPills.push(y);
+  const classYearPillsHtml = _rkIsPista ? '' : `<div id="class-year-row" style="display:flex;gap:8px;overflow-x:auto;flex-wrap:nowrap;margin:12px 0 4px;padding-bottom:4px;scrollbar-width:thin">
+    ${_classYearPills.map(y => `<button class="year-pill" data-year="${y}" onclick="window.classSetYear(${y})"
+      style="flex:0 0 auto;padding:5px 13px;border-radius:14px;border:1px solid var(--border-subtle);cursor:pointer;font-size:.82rem;font-weight:700;
+      background:${y === _classCurYear ? 'var(--accent,#e8001d)' : 'var(--bg-elevated)'};color:${y === _classCurYear ? '#fff' : 'var(--text-secondary)'}">${y}</button>`).join('')}
+  </div>`;
+
   setPageMeta(`Classifica ${_rkIsPista ? 'Pista ' : ''}${catLabel(rankCat)}`, `Classifica ${_rkIsPista ? 'pista (velodromo)' : 'ufficiale'} ${catLabel(rankCat)} del ciclismo agonistico italiano, aggiornata gara dopo gara.`);
   setPage(`
     <div class="pg-header">
       <div class="pg-eyebrow">${_rkIsPista ? 'CLASSIFICA INDIPENDENTE — NON CONTA PER LA STRADA' : 'CLASSIFICA UFFICIALE'}</div>
       <h1 class="pg-title">${_rkIsPista ? 'PISTA' : 'CLASSIFICHE'}</h1>
     </div>
+    ${classYearPillsHtml}
     ${_rkIntelHtml}
 
     <div class="ranking-controls">
@@ -8672,6 +8707,104 @@ async function renderClassifica() {
   await updateRankTable();
 }
 
+// Classifica storica ciclismo.info (fila anni + categoria sotto, stessa
+// idea di Risultati storico) — usa il punteggio REALE già pubblicato da
+// ciclismo.info (endpoint /ciclismo-results/classifica), non una stima
+// nostra: le gare storiche non hanno un moltiplicatore reale noto.
+let _classStoricoCache = {};
+window._classStoricoLastFilterCat = {};
+async function renderClassificaStorica(anno) {
+  let bodyEl = document.getElementById('class-storico-body');
+  if (!bodyEl) {
+    const _classCurYear = Number(_loadedSeasonYear());
+    const _classYearPills = [];
+    for (let y = _classCurYear; y >= 2007; y--) _classYearPills.push(y);
+    const classYearPillsHtml = `<div id="class-year-row" style="display:flex;gap:8px;overflow-x:auto;flex-wrap:nowrap;margin:12px 0 4px;padding-bottom:4px;scrollbar-width:thin">
+      ${_classYearPills.map(y => `<button class="year-pill" data-year="${y}" onclick="window.classSetYear(${y})"
+        style="flex:0 0 auto;padding:5px 13px;border-radius:14px;border:1px solid var(--border-subtle);cursor:pointer;font-size:.82rem;font-weight:700;
+        background:${y === anno ? 'var(--accent,#e8001d)' : 'var(--bg-elevated)'};color:${y === anno ? '#fff' : 'var(--text-secondary)'}">${y}</button>`).join('')}
+    </div>`;
+    setPageMeta(`Classifica ${anno}`, `Classifica storica ${anno} del ciclismo agonistico italiano.`);
+    setPage(`
+      <div class="pg-header">
+        <div class="pg-eyebrow">CLASSIFICA STORICA</div>
+        <h1 class="pg-title">CLASSIFICHE</h1>
+      </div>
+      ${classYearPillsHtml}
+      <div class="ranking-controls">
+        <select class="cal-filter-select" id="class-sel-cat" onchange="window.classSetCat(this.value)" aria-label="Filtra per categoria" style="margin:12px 0"></select>
+        <span class="ranking-count" id="class-storico-count"></span>
+      </div>
+      <div class="ranking-table-wrap" id="class-storico-body"></div>
+    `);
+    bodyEl = document.getElementById('class-storico-body');
+  }
+
+  let payload = _classStoricoCache[anno];
+  if (!payload) {
+    bodyEl.innerHTML = '<div class="empty-state">Caricamento…</div>';
+    try { payload = await apiCall(`/ciclismo-results/classifica?anno=${encodeURIComponent(anno)}`); }
+    catch { bodyEl.innerHTML = '<div class="empty-state">Errore di caricamento</div>'; return; }
+    _classStoricoCache[anno] = payload;
+  }
+
+  const classifica = payload?.classifica || {};
+  const cats = Object.keys(classifica).sort();
+  if (!cats.length) { bodyEl.innerHTML = '<div class="empty-state">Nessuna classifica disponibile per questo anno</div>'; return; }
+  const selCat = document.getElementById('class-sel-cat');
+  let curCat = window._classStoricoLastFilterCat[anno] || cats[0];
+  if (!cats.includes(curCat)) curCat = cats[0];
+  window._classStoricoLastFilterCat[anno] = curCat;
+  if (selCat) selCat.innerHTML = cats.map(c => `<option value="${esc(c)}"${c === curCat ? ' selected' : ''}>${esc(String(c).replace(/_/g, ' '))}</option>`).join('');
+
+  const rows = classifica[curCat] || [];
+  const countEl = document.getElementById('class-storico-count');
+  if (countEl) countEl.textContent = `${rows.length} atleti`;
+
+  bodyEl.innerHTML = `
+    <table class="results-table">
+      <thead><tr><th>POS</th><th>ATLETA</th><th class="td-hide-mobile">TEAM</th><th>PUNTI</th></tr></thead>
+      <tbody>${rows.map(r => `
+        <tr>
+          <td class="td-pos ${posClass(r.pos)}">${r.pos}°</td>
+          <td style="font-family:var(--font-heading);font-weight:700">
+            <div style="display:flex;align-items:center">
+              ${r.atleta_id ? `<span class="rk-av-wrap" data-aid="${esc(r.atleta_id)}"><span class=rk-av-placeholder><svg width=20 height=20 viewBox='0 0 24 24' fill='none' stroke='currentColor' stroke-width='1.5'><circle cx='12' cy='8' r='4'/><path d='M4 20c0-4 3.6-7 8-7s8 3 8 7'/></svg></span></span>` : ''}
+              <div>
+                ${r.atleta_id ? `<a href="#/atleta/${esc(r.atleta_id)}">${esc(r.nome_completo)}</a>` : esc(r.nome_completo || '')}
+                <div class="td-team-mobile">${esc(r.team || '')}</div>
+              </div>
+            </div>
+          </td>
+          <td class="td-hide-mobile">${esc(r.team || '')}</td>
+          <td class="td-pts">${r.punti}</td>
+        </tr>`).join('')}</tbody>
+    </table>`;
+
+  const _avSpans = [...bodyEl.querySelectorAll('.rk-av-wrap[data-aid]')];
+  const batchSize = 8;
+  for (let i = 0; i < _avSpans.length; i += batchSize) {
+    await Promise.all(_avSpans.slice(i, i + batchSize).map(async span => {
+      if (!document.contains(span)) return;
+      const aid = span.dataset.aid;
+      const ov = await getEntityOverrides('atleta', aid).catch(() => ({}));
+      if (!document.contains(span)) return;
+      if (ov.photo_url) {
+        const img = document.createElement('img');
+        img.src = mediaUrl(ov.photo_url);
+        img.className = 'rk-av-img'; img.alt = '';
+        span.innerHTML = '';
+        span.appendChild(img);
+      }
+    }));
+  }
+}
+window.classSetCat = (c) => {
+  if (!_classHistoricalYear) return;
+  window._classStoricoLastFilterCat[_classHistoricalYear] = c;
+  renderClassificaStorica(_classHistoricalYear);
+};
+
 // ── ALBO D'ORO CLASSIFICHE (storicità) ────────────────────────────
 // Per la categoria selezionata, mostra il podio (primi 3) di ogni stagione
 // disponibile. Si arricchisce automaticamente con l'avanzare degli anni.
@@ -8691,14 +8824,57 @@ async function _seasonPodium(year, code, isTeam) {
   return sorted.slice(0, 3);
 }
 
-// Podio di ogni stagione disponibile per una categoria.
+// Mappa inversa di CICLISMO_CAT_TO_NATIVE (vedi Risultati/Classifica
+// storico) — un codice nativo può corrispondere a più categorie grezze
+// ciclismo.info (es. AL_F = Donne Esordienti + Donne Allieve, il sistema
+// italiacrit non le distingue per le donne). ELI_F/ES1_F/ES2_F non hanno
+// una categoria ciclismo.info dedicata nello scraper: restano senza
+// podio storico, stesso "Ancora nessun podio" già gestito.
+const NATIVE_TO_CICLISMO_CATS = {
+  ES1_M: ['ESORDIENTI1'], ES2_M: ['ESORDIENTI2'], AL_M: ['ALLIEVI'], JUN_M: ['JUNIORES'], ELI_M: ['ELITE_UNDER23'],
+  AL_F: ['DONNE_ESORDIENTI', 'DONNE_ALLIEVE'], JUN_F: ['DONNE_JUNIORES'],
+};
+
+// Podio STORICO ciclismo.info per una categoria/anno — usa il punteggio
+// reale già pubblicato da loro (stessa fonte di renderClassificaStorica),
+// solo ATLETI (non scrapiamo una classifica squadre separata).
+async function _seasonPodiumCiclismo(year, code) {
+  const rawCats = NATIVE_TO_CICLISMO_CATS[code];
+  if (!rawCats) return null;
+  let payload = _classStoricoCache[year];
+  if (!payload) {
+    try { payload = await apiCall(`/ciclismo-results/classifica?anno=${encodeURIComponent(year)}`); }
+    catch { return null; }
+    _classStoricoCache[year] = payload;
+  }
+  const classifica = payload?.classifica || {};
+  const merged = rawCats.flatMap(c => classifica[c] || []);
+  if (!merged.length) return null;
+  merged.sort((a, b) => b.punti - a.punti);
+  return merged.slice(0, 3).map(r => {
+    const parts = String(r.nome_completo || '').trim().split(/\s+/);
+    return { atleta_id: r.atleta_id, cognome: parts[0] || r.nome_completo, nome: parts.slice(1).join(' '), team_nome: r.team, punti: r.punti };
+  });
+}
+
+// Podio di ogni stagione disponibile per una categoria — anni nativi
+// (data/seasons/...) + anni storici ciclismo.info 2007-2025 (solo atleti).
 async function _alboDoroRows(code, isTeam) {
-  const years = _availableSeasonYears(); // ordine decrescente
+  const nativeYears = _availableSeasonYears(); // ordine decrescente
   const cur = String((_seasonsIndex && _seasonsIndex.current) || currentSeason || '');
-  const rows = await Promise.all(years.map(async y => ({
+  const nativeRows = await Promise.all(nativeYears.map(async y => ({
     year: y, isCur: String(y) === cur, podium: await _seasonPodium(y, code, isTeam),
   })));
-  return rows.filter(r => r.podium && r.podium.length);
+  let historicRows = [];
+  if (!isTeam) {
+    const earliestNative = Math.min(...nativeYears.map(Number).filter(Number.isFinite));
+    const histYears = [];
+    for (let y = (Number.isFinite(earliestNative) ? earliestNative - 1 : 2026); y >= 2007; y--) histYears.push(y);
+    historicRows = await Promise.all(histYears.map(async y => ({
+      year: y, isCur: false, podium: await _seasonPodiumCiclismo(y, code),
+    })));
+  }
+  return [...nativeRows, ...historicRows].filter(r => r.podium && r.podium.length);
 }
 
 // HTML della card Albo d'Oro (riutilizzata in classifica e nella pagina dedicata).
