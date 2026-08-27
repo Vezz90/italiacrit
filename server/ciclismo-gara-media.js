@@ -78,8 +78,22 @@ function matchPartecipante(caption, partecipanti) {
 async function main() {
   const sb = createClient(SUPABASE_URL, SUPABASE_SECRET, { realtime: { transport: ws } });
 
-  const { data: already } = await sb.from('ciclismo_gara_media').select('gara_ciclismo_url, stagione');
-  const doneSet = new Set((already || []).map(r => `${r.gara_ciclismo_url}|${r.stagione}`));
+  // Paginato: senza .range() PostgREST tronca sempre a 1000 righe (stesso
+  // bug già risolto altrove in questo repo) — con più di 1000 gare già
+  // controllate, doneSet ne vedeva solo 1000 e lo script ripartiva quasi
+  // da zero rifacendo tutto il lavoro già svolto (osservato dal vivo).
+  const already = [];
+  {
+    const PAGE = 1000;
+    for (let from = 0; ; from += PAGE) {
+      const { data: page, error } = await sb.from('ciclismo_gara_media').select('gara_ciclismo_url, stagione').range(from, from + PAGE - 1);
+      if (error) throw error;
+      if (!page || !page.length) break;
+      already.push(...page);
+      if (page.length < PAGE) break;
+    }
+  }
+  const doneSet = new Set(already.map(r => `${r.gara_ciclismo_url}|${r.stagione}`));
 
   const garaSet = new Map(); // key -> { gara_ciclismo_url, stagione, nome_gara, categoria, data }
   let q = sb.from('ciclismo_results').select('gara_ciclismo_url, stagione, nome_gara, categoria, data, atleta_id').not('gara_ciclismo_url', 'is', null);
