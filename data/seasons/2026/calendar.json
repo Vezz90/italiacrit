@@ -17302,5 +17302,17 @@
     "regione": "BOLZANO",
     "categoria": "Donne Allieve",
     "luogo": "BOLZANO/BOZEN"
+  },
+  {
+    "id": "GIRO_DELLE_VALLI_ARETINE_JUNIORES_21_TR_BUTINTORO_13_TR_CAV_UFF_MARIO_GIACCHERINI_2026-10-04",
+    "nome": "GIRO DELLE VALLI ARETINE JUNIORES-21° TR. BUTINTORO-13° TR. CAV UFF. MARIO GIACCHERINI",
+    "data": "2026-10-04",
+    "tipo": "regionale",
+    "moltiplicatore": 1,
+    "campionato_regionale": false,
+    "campionato_italiano": false,
+    "regione": "TOSCANA",
+    "categoria": "Juniores",
+    "luogo": "AREZZO - LOC. RIGUTINO"
   }
 ]
