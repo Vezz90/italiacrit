@@ -53,8 +53,32 @@ const SUPABASE_URL = 'https://aqqsstsbgpapzoxllosh.supabase.co';
 const SUPABASE_SECRET = process.env.SUPABASE_SECRET;
 if (!SUPABASE_SECRET) { console.error('Imposta SUPABASE_SECRET in server/.env.local'); process.exit(1); }
 
-const CATEGORIE = ['donne-esordienti', 'donne-allieve', 'donne-juniores', 'esordienti', 'allievi', 'juniores', 'elite-under23'];
+// 'esordienti' (dominio+slug) scarica SOLO la classifica generica — su
+// ciclismo.info gli Esordienti 1° Anno hanno una classifica separata
+// (classifica_esordienti_primo_anno_<anno>.htm, stesso dominio) che quella
+// generica NON include: senza questa voce nessun atleta 1° Anno veniva mai
+// scoperto (bug osservato dal vivo — mancavano anche dal filtro categoria).
+// Ogni voce: { domain, slug, label } — slug è la parte dopo "classifica_"
+// nell'URL, label identifica la combinazione anno+categoria nello stato di
+// avanzamento (ciclismo_backfill_state), domain resta il sottodominio reale.
+const CATEGORIE = [
+  { domain: 'donne-esordienti', slug: 'donne-esordienti', label: 'donne-esordienti' },
+  { domain: 'donne-allieve',    slug: 'donne-allieve',    label: 'donne-allieve' },
+  { domain: 'donne-juniores',   slug: 'donne-juniores',   label: 'donne-juniores' },
+  { domain: 'esordienti',       slug: 'esordienti',              label: 'esordienti' },
+  { domain: 'esordienti',       slug: 'esordienti_primo_anno',   label: 'esordienti-1anno' },
+  { domain: 'allievi',          slug: 'allievi',          label: 'allievi' },
+  { domain: 'juniores',         slug: 'juniores',         label: 'juniores' },
+  { domain: 'elite-under23',    slug: 'elite-under23',    label: 'elite-under23' },
+];
 const DELAY_MS = 300;
+
+// Stessa mappa di ciclismo-create-profiles.js — usata qui per creare al volo
+// il profilo di un atleta mai visto in FCI (vedi finalAtletaId più sotto).
+const CAT_MAP = {
+  ESORDIENTI1: 'ES1_M', ESORDIENTI2: 'ES2_M', ALLIEVI: 'AL_M', JUNIORES: 'JUN_M', ELITE_UNDER23: 'ELI_M',
+  DONNE_ESORDIENTI: 'AL_F', DONNE_ALLIEVE: 'AL_F', DONNE_JUNIORES: 'JUN_F',
+};
 
 function sleep(ms) { return new Promise(r => setTimeout(r, ms)); }
 
@@ -81,12 +105,16 @@ async function main() {
   const annoFine = parseInt(process.argv[3]) || new Date().getFullYear();
   const sb = createClient(SUPABASE_URL, SUPABASE_SECRET, { realtime: { transport: ws } });
 
-  console.log(`=== Backfill ciclismo.info: ${annoInizio}-${annoFine}, categorie: ${CATEGORIE.join(', ')} ===\n`);
+  console.log(`=== Backfill ciclismo.info: ${annoInizio}-${annoFine}, categorie: ${CATEGORIE.map(c => c.label).join(', ')} ===\n`);
 
   // Master list italiacrit per il matching
   const italiacritAthletes = JSON.parse(fs.readFileSync(path.join(__dirname, '..', 'data', 'athletes.json'), 'utf8'));
   const italiacritIds = new Set(Object.keys(italiacritAthletes));
   console.log(`Atleti italiacrit di riferimento: ${italiacritIds.size}\n`);
+
+  // Per la creazione al volo del profilo di un atleta mai in FCI (vedi sotto)
+  const teams = JSON.parse(fs.readFileSync(path.join(__dirname, '..', 'data', 'teams.json'), 'utf8'));
+  const teamIdByName = new Map(Object.values(teams).map(t => [String(t.nome || '').trim().toUpperCase(), t.id]));
 
   // Stato già completato (riprendibilità)
   const { data: doneRows } = await sb.from('ciclismo_backfill_state').select('id').eq('status', 'done');
@@ -96,15 +124,16 @@ async function main() {
   let totAtleti = 0, totRisultati = 0, totMatch = 0, totNuovi = 0, totFoto = 0, totErrori = 0;
 
   for (let anno = annoFine; anno >= annoInizio; anno--) {
-    for (const cat of CATEGORIE) {
-      const stateId = `${anno}_${cat}`;
+    for (const catObj of CATEGORIE) {
+      const { domain, slug, label } = catObj;
+      const stateId = `${anno}_${label}`;
       if (doneSet.has(stateId)) { console.log(`[skip] ${stateId} già fatto`); continue; }
 
-      const classUrl = `http://${cat}.ciclismo.info/classifica_${cat}_${anno}.htm`;
+      const classUrl = `http://${domain}.ciclismo.info/classifica_${slug}_${anno}.htm`;
       const { status, html } = await fetchDecodedSafe(classUrl);
       if (!html) {
         console.log(`[classifica] ${stateId}: HTTP ${status}, salto`);
-        await sb.from('ciclismo_backfill_state').upsert({ id: stateId, anno, categoria: cat, status: 'skip-404' });
+        await sb.from('ciclismo_backfill_state').upsert({ id: stateId, anno, categoria: label, status: 'skip-404' });
         await sleep(DELAY_MS);
         continue;
       }
@@ -115,7 +144,7 @@ async function main() {
       for (const a of classifica) {
         if (!a.ciclismoId) continue;
         totAtleti++;
-        const schedaUrl = `http://${cat}.ciclismo.info${a.schedaUrl}`;
+        const schedaUrl = `http://${domain}.ciclismo.info${a.schedaUrl}`;
         const { html: athHtml } = await fetchDecodedSafe(schedaUrl);
         await sleep(DELAY_MS);
         if (!athHtml) { totErrori++; continue; }
@@ -139,7 +168,7 @@ async function main() {
               .select('new_value').eq('entity_type', 'atleta').eq('entity_id', atletaId)
               .eq('field', 'photo_url').maybeSingle();
             if (!existing || !existing.new_value) {
-              const photoRes = await fetch(`http://${cat}.ciclismo.info${photoMatch[0]}`);
+              const photoRes = await fetch(`http://${domain}.ciclismo.info${photoMatch[0]}`);
               if (photoRes.ok) {
                 const buf = Buffer.from(await photoRes.arrayBuffer());
                 if (buf.length > 500) {
@@ -214,6 +243,41 @@ async function main() {
           const { data: freshAth } = await sb.from('ciclismo_athletes').select('atleta_id').eq('ciclismo_id', a.ciclismoId).maybeSingle();
           finalAtletaId = (freshAth && freshAth.atleta_id) || null;
         }
+        // Profilo mancante: crealo SUBITO invece di lasciare la riga orfana
+        // in attesa di un rilancio manuale di ciclismo-create-profiles.js —
+        // un atleta mai in FCI restava altrimenti NON CLICCABILE e senza
+        // l'avatar (disallineato dalla grafica) su ogni pagina finché
+        // qualcuno non rieseguiva quello script a mano (bug osservato dal
+        // vivo: Trippi Matteo, 35+ risultati già scoperti dal 2011 ma mai
+        // collegato). Stessa logica/normalizzazione di quello script.
+        if (!finalAtletaId && atletaId) {
+          const { data: existingManual } = await sb.from('manual_athletes').select('atleta_id').eq('atleta_id', atletaId).maybeSingle();
+          if (existingManual) {
+            finalAtletaId = atletaId;
+          } else {
+            const nomeParts = String(scheda.nomeCompleto || '').trim().split(/\s+/);
+            const cognome = nomeParts[0] || scheda.nomeCompleto;
+            const nomeP = nomeParts.slice(1).join(' ') || '-';
+            const catRaw = scheda.categoria || '';
+            const genere = /DONNE/i.test(catRaw) ? 'F' : 'M';
+            const categoria = CAT_MAP[catRaw] || (genere === 'F' ? 'AL_F' : 'AL_M');
+            const team = scheda.team || null;
+            const team_id = team
+              ? (teamIdByName.get(team.trim().toUpperCase())
+                || team.trim().toUpperCase().normalize('NFD').replace(/[̀-ͯ]/g, '').replace(/[^A-Z0-9]+/g, '_').replace(/^_+|_+$/g, ''))
+              : null;
+            const { error: profErr } = await sb.from('manual_athletes').upsert({
+              atleta_id: atletaId, cognome, nome: nomeP, team_id, team, categoria, genere,
+              created_by: null, source: 'ciclismo_info',
+            }, { onConflict: 'atleta_id', ignoreDuplicates: true });
+            if (!profErr) finalAtletaId = atletaId;
+          }
+          // Ricollega anche ciclismo_athletes.atleta_id (sopra non l'ha
+          // fatto perché 'matched' era false) — altrimenti al prossimo
+          // ri-scraping di questo ciclismo_id (altra stagione) il link
+          // andrebbe ri-derivato da zero invece di essere già autorevole.
+          if (finalAtletaId) await sb.from('ciclismo_athletes').update({ atleta_id: finalAtletaId }).eq('ciclismo_id', a.ciclismoId);
+        }
 
         // Upsert risultati di QUESTO anno
         const rows = scheda.piazzamenti.map(pl => ({
@@ -237,7 +301,7 @@ async function main() {
         }
       }
 
-      await sb.from('ciclismo_backfill_state').upsert({ id: stateId, anno, categoria: cat, status: 'done' });
+      await sb.from('ciclismo_backfill_state').upsert({ id: stateId, anno, categoria: label, status: 'done' });
       console.log(`  -> fatto ${stateId} | totali finora: atleti=${totAtleti} risultati=${totRisultati} match=${totMatch} nuovi=${totNuovi} foto=${totFoto} errori=${totErrori}`);
     }
   }

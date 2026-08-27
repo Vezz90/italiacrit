@@ -46,6 +46,12 @@ function normalizeToAtletaId(nomeCompleto) {
     .replace(/^_+|_+$/g, '');
 }
 
+// Stessa mappa di ciclismo-create-profiles.js / ciclismo-backfill.js.
+const CAT_MAP = {
+  ESORDIENTI1: 'ES1_M', ESORDIENTI2: 'ES2_M', ALLIEVI: 'AL_M', JUNIORES: 'JUN_M', ELITE_UNDER23: 'ELI_M',
+  DONNE_ESORDIENTI: 'AL_F', DONNE_ALLIEVE: 'AL_F', DONNE_JUNIORES: 'JUN_F',
+};
+
 async function main() {
   const sb = createClient(SUPABASE_URL, SUPABASE_SECRET, { realtime: { transport: ws } });
 
@@ -66,6 +72,9 @@ async function main() {
     }
   }
   console.log(`Atleti italiacrit: ${italiacritIds.size} | Profili manuali già creati: ${manualIds.size}\n`);
+
+  const teams = JSON.parse(fs.readFileSync(path.join(__dirname, '..', 'data', 'teams.json'), 'utf8'));
+  const teamIdByName = new Map(Object.values(teams).map(t => [String(t.nome || '').trim().toUpperCase(), t.id]));
 
   // Elenco gare già note (una riga campione per gara, per i metadati) —
   // stessa enumerazione paginata di ciclismo-gara-media.js.
@@ -146,7 +155,36 @@ async function main() {
         // collegato su ciclismo_athletes: si usa quel valore già letto sopra
         // come fallback, stessa correzione fatta su ciclismo-backfill.js
         // dopo il bug reale trovato dal vivo (22.184 righe orfane).
-        const finalAtletaId = matched ? atletaIdDerivato : ((existingAth && existingAth.atleta_id) || null);
+        let finalAtletaId = matched ? atletaIdDerivato : ((existingAth && existingAth.atleta_id) || null);
+
+        // Profilo mancante: crealo subito (stessa correzione fatta su
+        // ciclismo-backfill.js) — altrimenti il corridore resta orfano, non
+        // cliccabile e senza avatar sulla pagina gara finché qualcuno non
+        // rilancia ciclismo-create-profiles.js a mano.
+        if (!finalAtletaId) {
+          const { data: existingManual } = await sb.from('manual_athletes').select('atleta_id').eq('atleta_id', atletaIdDerivato).maybeSingle();
+          if (existingManual) {
+            finalAtletaId = atletaIdDerivato;
+          } else {
+            const nomeParts = String(nomeCompleto || '').trim().split(/\s+/);
+            const cognome = nomeParts[0] || nomeCompleto;
+            const nomeP = nomeParts.slice(1).join(' ') || '-';
+            const catRaw = sample.categoria || '';
+            const genere = /DONNE/i.test(catRaw) ? 'F' : 'M';
+            const categoria = CAT_MAP[catRaw] || (genere === 'F' ? 'AL_F' : 'AL_M');
+            const team = row.team || null;
+            const team_id = team
+              ? (teamIdByName.get(team.trim().toUpperCase())
+                || team.trim().toUpperCase().normalize('NFD').replace(/[̀-ͯ]/g, '').replace(/[^A-Z0-9]+/g, '_').replace(/^_+|_+$/g, ''))
+              : null;
+            const { error: profErr } = await sb.from('manual_athletes').upsert({
+              atleta_id: atletaIdDerivato, cognome, nome: nomeP, team_id, team, categoria, genere,
+              created_by: null, source: 'ciclismo_info',
+            }, { onConflict: 'atleta_id', ignoreDuplicates: true });
+            if (!profErr) finalAtletaId = atletaIdDerivato;
+          }
+          if (finalAtletaId) await sb.from('ciclismo_athletes').update({ atleta_id: finalAtletaId }).eq('ciclismo_id', row.ciclismoId);
+        }
 
         const { error: insErr } = await sb.from('ciclismo_results').upsert({
           ciclismo_id: row.ciclismoId,
