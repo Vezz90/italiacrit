@@ -8718,6 +8718,8 @@ async function renderClassifica() {
 // la pagina classifica di ciclismo.info non pubblica riga per riga).
 let _classStoricoCache = {};
 window._classStoricoLastFilterCat = {};
+let _classStoricoGender = 'M';
+let _classStoricoSearch = '';
 function _classYearRowHtml(anno) {
   const _classCurYear = Number(_loadedSeasonYear());
   const pills = [];
@@ -8756,30 +8758,61 @@ async function renderClassificaStorica(anno) {
   }
 
   const classifica = payload?.classifica || {};
-  const cats = Object.keys(classifica).sort();
+  const allCats = Object.keys(classifica).sort();
   const controlsEl = document.getElementById('class-storico-controls');
-  if (!cats.length) {
+  if (!allCats.length) {
     if (controlsEl) controlsEl.innerHTML = '';
     bodyEl.innerHTML = '<div class="empty-state">Nessuna classifica disponibile per questo anno</div>';
     return;
   }
+  // UOMINI/DONNE come sulla classifica nativa — le categorie femminili
+  // ciclismo.info iniziano sempre con "DONNE_".
+  const catsMale = allCats.filter(c => !/^DONNE/i.test(c));
+  const catsFemale = allCats.filter(c => /^DONNE/i.test(c));
+  if (_classStoricoGender === 'F' && !catsFemale.length) _classStoricoGender = 'M';
+  if (_classStoricoGender === 'M' && !catsMale.length) _classStoricoGender = 'F';
+  const cats = _classStoricoGender === 'F' ? catsFemale : catsMale;
+
   let curCat = window._classStoricoLastFilterCat[anno] || cats[0];
   if (!cats.includes(curCat)) curCat = cats[0];
   window._classStoricoLastFilterCat[anno] = curCat;
 
-  // Stesse tab-btn della classifica nativa, sulle categorie grezze REALI di
-  // quell'anno (non tutte le combinazioni esistono per ogni stagione).
+  // Stesse tab-btn/gender-tab della classifica nativa. Region/Mese/Vittorie/
+  // Team non sono replicabili sugli anni storici: la classifica di
+  // ciclismo.info non elenca la regione per atleta né un dettaglio vittorie
+  // riga per riga, e non scrapiamo una classifica squadre separata — solo
+  // ricerca atleta/team, che è puro filtro client-side sui dati che abbiamo.
   if (controlsEl) {
     controlsEl.innerHTML = `
+      ${catsMale.length && catsFemale.length ? `<div class="tab-group" role="tablist" aria-label="Seleziona genere">
+        <button class="tab-btn ${_classStoricoGender==='M'?'active-gender':''}" onclick="window.classSetGender('M')">UOMINI</button>
+        <button class="tab-btn ${_classStoricoGender==='F'?'active-gender':''}" onclick="window.classSetGender('F')">DONNE</button>
+      </div>` : ''}
       <div class="tab-group" role="tablist" aria-label="Seleziona categoria">
         ${cats.map(c => `<button class="tab-btn ${curCat === c ? 'active-cat' : ''}" onclick="window.classSetCat('${esc(c)}')">${esc(String(c).replace(/_/g, ' '))}</button>`).join('')}
+      </div>
+      <div class="ranking-filter-bar" style="margin-top:16px">
+        <input type="search" id="class-storico-search" placeholder="Cerca atleta o team…" value="${esc(_classStoricoSearch)}"
+          oninput="window.classSetSearch(this.value)" aria-label="Filtra classifica" />
       </div>
       <div class="ranking-filter-bar" style="border-top:1px solid var(--border-subtle); padding-top:12px">
         <span class="ranking-count" id="class-storico-count"></span>
       </div>`;
   }
 
-  const rows = classifica[curCat] || [];
+  await _renderClassStoricoTable(classifica[curCat] || []);
+}
+
+// Solo la tabella (non i controlli) — così la ricerca non ricostruisce
+// l'input mentre l'utente digita (perdeva il focus a ogni tasto premuto).
+async function _renderClassStoricoTable(baseRows) {
+  const bodyEl = document.getElementById('class-storico-body');
+  if (!bodyEl) return;
+  let rows = baseRows;
+  if (_classStoricoSearch) {
+    const q = _classStoricoSearch.toLowerCase();
+    rows = rows.filter(r => (r.nome_completo || '').toLowerCase().includes(q) || (r.team || '').toLowerCase().includes(q));
+  }
   const countEl = document.getElementById('class-storico-count');
   if (countEl) countEl.textContent = `${rows.length} atleti`;
 
@@ -8845,6 +8878,23 @@ window.classSetCat = (c) => {
   if (!_classHistoricalYear) return;
   window._classStoricoLastFilterCat[_classHistoricalYear] = c;
   renderClassificaStorica(_classHistoricalYear);
+};
+window.classSetGender = (g) => {
+  if (!_classHistoricalYear) return;
+  _classStoricoGender = g;
+  delete window._classStoricoLastFilterCat[_classHistoricalYear]; // ricalcola dalla nuova lista di genere
+  renderClassificaStorica(_classHistoricalYear);
+};
+let _classStoricoSearchTimer = null;
+window.classSetSearch = (v) => {
+  clearTimeout(_classStoricoSearchTimer);
+  _classStoricoSearchTimer = setTimeout(() => {
+    _classStoricoSearch = v;
+    if (!_classHistoricalYear) return;
+    const payload = _classStoricoCache[_classHistoricalYear];
+    const curCat = window._classStoricoLastFilterCat[_classHistoricalYear];
+    if (payload && curCat) _renderClassStoricoTable(payload.classifica?.[curCat] || []);
+  }, 250);
 };
 
 // ── ALBO D'ORO CLASSIFICHE (storicità) ────────────────────────────
