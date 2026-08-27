@@ -17314,5 +17314,41 @@
         "regione": "TOSCANA",
         "categoria": "Juniores",
         "luogo": "AREZZO - LOC. RIGUTINO"
+    },
+    {
+        "id": "GP_INDUSTRIA_ARTIGIANATO_2026-09-06",
+        "nome": "GP INDUSTRIA & ARTIGIANATO",
+        "data": "2026-09-06",
+        "tipo": "internazionale",
+        "moltiplicatore": 3,
+        "campionato_regionale": false,
+        "campionato_italiano": false,
+        "regione": "TOSCANA",
+        "categoria": "UCI ProSeries",
+        "luogo": "LARCIANO"
+    },
+    {
+        "id": "3_TROFEO_LUCIANO_TOMIO_PROVA_VALIDA_CAMP_PROV_ESORDIENTI_1_2_ANNO_2026-09-20",
+        "nome": "3° TROFEO LUCIANO TOMIO - PROVA VALIDA CAMP. PROV. ESORDIENTI 1°/2° ANNO",
+        "data": "2026-09-20",
+        "tipo": "regionale",
+        "moltiplicatore": 1,
+        "campionato_regionale": false,
+        "campionato_italiano": false,
+        "regione": "PIEMONTE",
+        "categoria": "Esordienti 1°/2° anno",
+        "luogo": "CASELETTE TO"
+    },
+    {
+        "id": "6_MEMORIAL_GUIDO_MESSINA_PROVA_VALIDA_CAMP_PROV_ALLIEVI_2026-09-20",
+        "nome": "6° MEMORIAL GUIDO MESSINA - PROVA VALIDA CAMP. PROV. ALLIEVI",
+        "data": "2026-09-20",
+        "tipo": "regionale",
+        "moltiplicatore": 1,
+        "campionato_regionale": false,
+        "campionato_italiano": false,
+        "regione": "PIEMONTE",
+        "categoria": "Allievi",
+        "luogo": "CASELETTE TO"
     }
 ]

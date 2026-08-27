@@ -1,4 +1,332 @@
 {
+  "UNEKEN_LONNEKE": {
+    "id": "UNEKEN_LONNEKE",
+    "nome": "LONNEKE",
+    "cognome": "UNEKEN",
+    "team_attuale": "VOLKERWESSELS CYCLING TEAM",
+    "team_id": "VOLKERWESSELS_CYCLING_TEAM",
+    "categoria": "ELI_F",
+    "genere": "F",
+    "punti_totali": 30,
+    "risultati": [
+      {
+        "gara_id": "GIRO_DI_TOSCANA_FEMMINILE_MEMORIAL_MICHELA_FANINI_PRIMA_TAPPA_CRONOMETRO_INDIVIDUALE_2026-08-27_ELI_F",
+        "nome_gara": "GIRO DI TOSCANA FEMMINILE MEMORIAL MICHELA FANINI PRIMA TAPPA CRONOMETRO INDIVIDUALE",
+        "data": "2026-08-27",
+        "posizione": 1,
+        "punti_effettivi": 30,
+        "team": "VOLKERWESSELS CYCLING TEAM",
+        "moltiplicatore": 2,
+        "tipo": "nazionale",
+        "regione": "TOSCANA",
+        "km": "2.030",
+        "media": "49.979"
+      }
+    ]
+  },
+  "SOUREN_SCARLET": {
+    "id": "SOUREN_SCARLET",
+    "nome": "SCARLET",
+    "cognome": "SOUREN",
+    "team_attuale": "VOLKERWESSELS CYCLING TEAM",
+    "team_id": "VOLKERWESSELS_CYCLING_TEAM",
+    "categoria": "ELI_F",
+    "genere": "F",
+    "punti_totali": 24,
+    "risultati": [
+      {
+        "gara_id": "GIRO_DI_TOSCANA_FEMMINILE_MEMORIAL_MICHELA_FANINI_PRIMA_TAPPA_CRONOMETRO_INDIVIDUALE_2026-08-27_ELI_F",
+        "nome_gara": "GIRO DI TOSCANA FEMMINILE MEMORIAL MICHELA FANINI PRIMA TAPPA CRONOMETRO INDIVIDUALE",
+        "data": "2026-08-27",
+        "posizione": 2,
+        "punti_effettivi": 24,
+        "team": "VOLKERWESSELS CYCLING TEAM",
+        "moltiplicatore": 2,
+        "tipo": "nazionale",
+        "regione": "TOSCANA",
+        "km": "2.030",
+        "media": "49.979"
+      }
+    ]
+  },
+  "KNIJNENBURG_ANNE": {
+    "id": "KNIJNENBURG_ANNE",
+    "nome": "ANNE",
+    "cognome": "KNIJNENBURG",
+    "team_attuale": "VOLKERWESSELS CYCLING TEAM",
+    "team_id": "VOLKERWESSELS_CYCLING_TEAM",
+    "categoria": "ELI_F",
+    "genere": "F",
+    "punti_totali": 20,
+    "risultati": [
+      {
+        "gara_id": "GIRO_DI_TOSCANA_FEMMINILE_MEMORIAL_MICHELA_FANINI_PRIMA_TAPPA_CRONOMETRO_INDIVIDUALE_2026-08-27_ELI_F",
+        "nome_gara": "GIRO DI TOSCANA FEMMINILE MEMORIAL MICHELA FANINI PRIMA TAPPA CRONOMETRO INDIVIDUALE",
+        "data": "2026-08-27",
+        "posizione": 3,
+        "punti_effettivi": 20,
+        "team": "VOLKERWESSELS CYCLING TEAM",
+        "moltiplicatore": 2,
+        "tipo": "nazionale",
+        "regione": "TOSCANA",
+        "km": "2.030",
+        "media": "49.979"
+      }
+    ]
+  },
+  "KLOESE_ROSE": {
+    "id": "KLOESE_ROSE",
+    "nome": "ROSE",
+    "cognome": "KLOESE",
+    "team_attuale": "CARBONBIKE GIORDANA SOFRE' BY GEN Z",
+    "team_id": "CARBONBIKE_GIORDANA_SOFRE_BY_GEN_Z",
+    "categoria": "ELI_F",
+    "genere": "F",
+    "punti_totali": 16,
+    "risultati": [
+      {
+        "gara_id": "GIRO_DI_TOSCANA_FEMMINILE_MEMORIAL_MICHELA_FANINI_PRIMA_TAPPA_CRONOMETRO_INDIVIDUALE_2026-08-27_ELI_F",
+        "nome_gara": "GIRO DI TOSCANA FEMMINILE MEMORIAL MICHELA FANINI PRIMA TAPPA CRONOMETRO INDIVIDUALE",
+        "data": "2026-08-27",
+        "posizione": 4,
+        "punti_effettivi": 16,
+        "team": "CARBONBIKE GIORDANA SOFRE' BY GEN Z",
+        "moltiplicatore": 2,
+        "tipo": "nazionale",
+        "regione": "TOSCANA",
+        "km": "2.030",
+        "media": "49.979"
+      }
+    ]
+  },
+  "SHARP_IZZY": {
+    "id": "SHARP_IZZY",
+    "nome": "IZZY",
+    "cognome": "SHARP",
+    "team_attuale": "HANDSLING ALBA DEVELOPMENT ROAD TEAM",
+    "team_id": "HANDSLING_ALBA_DEVELOPMENT_ROAD_TEAM",
+    "categoria": "ELI_F",
+    "genere": "F",
+    "punti_totali": 12,
+    "risultati": [
+      {
+        "gara_id": "GIRO_DI_TOSCANA_FEMMINILE_MEMORIAL_MICHELA_FANINI_PRIMA_TAPPA_CRONOMETRO_INDIVIDUALE_2026-08-27_ELI_F",
+        "nome_gara": "GIRO DI TOSCANA FEMMINILE MEMORIAL MICHELA FANINI PRIMA TAPPA CRONOMETRO INDIVIDUALE",
+        "data": "2026-08-27",
+        "posizione": 5,
+        "punti_effettivi": 12,
+        "team": "HANDSLING ALBA DEVELOPMENT ROAD TEAM",
+        "moltiplicatore": 2,
+        "tipo": "nazionale",
+        "regione": "TOSCANA",
+        "km": "2.030",
+        "media": "49.979"
+      }
+    ]
+  },
+  "ALONSO_SANDRA": {
+    "id": "ALONSO_SANDRA",
+    "nome": "SANDRA",
+    "cognome": "ALONSO",
+    "team_attuale": "ENEICAT - BE CALL",
+    "team_id": "ENEICAT_BE_CALL",
+    "categoria": "ELI_F",
+    "genere": "F",
+    "punti_totali": 10,
+    "risultati": [
+      {
+        "gara_id": "GIRO_DI_TOSCANA_FEMMINILE_MEMORIAL_MICHELA_FANINI_PRIMA_TAPPA_CRONOMETRO_INDIVIDUALE_2026-08-27_ELI_F",
+        "nome_gara": "GIRO DI TOSCANA FEMMINILE MEMORIAL MICHELA FANINI PRIMA TAPPA CRONOMETRO INDIVIDUALE",
+        "data": "2026-08-27",
+        "posizione": 6,
+        "punti_effettivi": 10,
+        "team": "ENEICAT - BE CALL",
+        "moltiplicatore": 2,
+        "tipo": "nazionale",
+        "regione": "TOSCANA",
+        "km": "2.030",
+        "media": "49.979"
+      }
+    ]
+  },
+  "CRESTANELLO_LARA": {
+    "id": "CRESTANELLO_LARA",
+    "nome": "LARA",
+    "cognome": "CRESTANELLO",
+    "team_attuale": "ISOLMANT - PREMAC - VITTORIA",
+    "team_id": "ISOLMANT_PREMAC_VITTORIA",
+    "categoria": "ELI_F",
+    "genere": "F",
+    "punti_totali": 78,
+    "risultati": [
+      {
+        "gara_id": "GIRO_DI_TOSCANA_FEMMINILE_MEMORIAL_MICHELA_FANINI_PRIMA_TAPPA_CRONOMETRO_INDIVIDUALE_2026-08-27_ELI_F",
+        "nome_gara": "GIRO DI TOSCANA FEMMINILE MEMORIAL MICHELA FANINI PRIMA TAPPA CRONOMETRO INDIVIDUALE",
+        "data": "2026-08-27",
+        "posizione": 7,
+        "punti_effettivi": 8,
+        "team": "ISOLMANT - PREMAC - VITTORIA",
+        "moltiplicatore": 2,
+        "tipo": "nazionale",
+        "regione": "TOSCANA",
+        "km": "2.030",
+        "media": "49.979"
+      },
+      {
+        "gara_id": "11_GIORNATA_ROSA_MEMORIAL_CHIARA_PIEROBON_2026-08-23_ELI_F",
+        "nome_gara": "11 GIORNATA ROSA MEMORIAL CHIARA PIEROBON",
+        "data": "2026-08-23",
+        "posizione": 3,
+        "punti_effettivi": 10,
+        "team": "ISOLMANT - PREMAC - VITTORIA",
+        "moltiplicatore": 1,
+        "tipo": "regionale",
+        "regione": "VENETO",
+        "km": "117.000",
+        "media": "42.580"
+      },
+      {
+        "gara_id": "INTERNAZIONALE_PORTO_SAN_GIORGIO_MEMORIAL_M_DE_ANGELIS_2026-06-13_ELI_F",
+        "nome_gara": "INTERNAZIONALE PORTO SAN GIORGIO MEMORIAL M DE ANGELIS",
+        "data": "2026-06-13",
+        "posizione": 3,
+        "punti_effettivi": 10,
+        "team": "ISOLMANT - PREMAC - VITTORIA",
+        "moltiplicatore": 1,
+        "tipo": "regionale",
+        "regione": "MARCHE",
+        "km": "105.000",
+        "media": "37.990"
+      },
+      {
+        "gara_id": "TROFEO_MEMORIAL_CONIUGI_ZAMBELLI_2026-05-24_ELI_F",
+        "nome_gara": "TROFEO MEMORIAL CONIUGI ZAMBELLI",
+        "data": "2026-05-24",
+        "posizione": 2,
+        "punti_effettivi": 12,
+        "team": "ISOLMANT - PREMAC - VITTORIA",
+        "moltiplicatore": 1,
+        "tipo": "regionale",
+        "regione": "LOMBARDIA",
+        "km": "83.622",
+        "media": "42.610"
+      },
+      {
+        "gara_id": "2_TROFEO_ROSA_MONTALTO_PROVA_VALIDA_CAMPIONATO_REGIONALE_2026-05-02_ELI_F",
+        "nome_gara": "2 TROFEO ROSA MONTALTO PROVA VALIDA CAMPIONATO REGIONALE",
+        "data": "2026-05-02",
+        "posizione": 3,
+        "punti_effettivi": 20,
+        "team": "ISOLMANT - PREMAC - VITTORIA",
+        "moltiplicatore": 2,
+        "tipo": "regionale",
+        "regione": "TOSCANA",
+        "km": "87.700",
+        "media": "35.861"
+      },
+      {
+        "gara_id": "2_TROFEO_CASSA_DI_RISPARMIO_DI_FOSSANO_2026-04-12_ELI_F",
+        "nome_gara": "2 TROFEO CASSA DI RISPARMIO DI FOSSANO",
+        "data": "2026-04-12",
+        "posizione": 2,
+        "punti_effettivi": 12,
+        "team": "ISOLMANT - PREMAC - VITTORIA",
+        "moltiplicatore": 1,
+        "tipo": "regionale",
+        "regione": "PIEMONTE",
+        "km": "94.000",
+        "media": "39.929"
+      },
+      {
+        "gara_id": "PASQUALANDO_2026-04-05_ELI_F",
+        "nome_gara": "PASQUALANDO",
+        "data": "2026-04-05",
+        "posizione": 5,
+        "punti_effettivi": 6,
+        "team": "ISOLMANT - PREMAC - VITTORIA",
+        "moltiplicatore": 1,
+        "tipo": "regionale",
+        "regione": "TOSCANA",
+        "km": "63.800",
+        "media": "41.102"
+      }
+    ]
+  },
+  "VANDERAERDEN_ANNA": {
+    "id": "VANDERAERDEN_ANNA",
+    "nome": "ANNA",
+    "cognome": "VANDERAERDEN",
+    "team_attuale": "FENIX-PREMIER TECH",
+    "team_id": "FENIX_PREMIER_TECH",
+    "categoria": "ELI_F",
+    "genere": "F",
+    "punti_totali": 6,
+    "risultati": [
+      {
+        "gara_id": "GIRO_DI_TOSCANA_FEMMINILE_MEMORIAL_MICHELA_FANINI_PRIMA_TAPPA_CRONOMETRO_INDIVIDUALE_2026-08-27_ELI_F",
+        "nome_gara": "GIRO DI TOSCANA FEMMINILE MEMORIAL MICHELA FANINI PRIMA TAPPA CRONOMETRO INDIVIDUALE",
+        "data": "2026-08-27",
+        "posizione": 8,
+        "punti_effettivi": 6,
+        "team": "FENIX-PREMIER TECH",
+        "moltiplicatore": 2,
+        "tipo": "nazionale",
+        "regione": "TOSCANA",
+        "km": "2.030",
+        "media": "49.979"
+      }
+    ]
+  },
+  "SARKISOV_ALYSSA": {
+    "id": "SARKISOV_ALYSSA",
+    "nome": "ALYSSA",
+    "cognome": "SARKISOV",
+    "team_attuale": "STATI UNITI",
+    "team_id": "STATI_UNITI",
+    "categoria": "ELI_F",
+    "genere": "F",
+    "punti_totali": 4,
+    "risultati": [
+      {
+        "gara_id": "GIRO_DI_TOSCANA_FEMMINILE_MEMORIAL_MICHELA_FANINI_PRIMA_TAPPA_CRONOMETRO_INDIVIDUALE_2026-08-27_ELI_F",
+        "nome_gara": "GIRO DI TOSCANA FEMMINILE MEMORIAL MICHELA FANINI PRIMA TAPPA CRONOMETRO INDIVIDUALE",
+        "data": "2026-08-27",
+        "posizione": 9,
+        "punti_effettivi": 4,
+        "team": "STATI UNITI",
+        "moltiplicatore": 2,
+        "tipo": "nazionale",
+        "regione": "TOSCANA",
+        "km": "2.030",
+        "media": "49.979"
+      }
+    ]
+  },
+  "SCAVONE_DINA": {
+    "id": "SCAVONE_DINA",
+    "nome": "DINA",
+    "cognome": "SCAVONE",
+    "team_attuale": "CARBONBIKE GIORDANA SOFRE' BY GEN Z",
+    "team_id": "CARBONBIKE_GIORDANA_SOFRE_BY_GEN_Z",
+    "categoria": "ELI_F",
+    "genere": "F",
+    "punti_totali": 2,
+    "risultati": [
+      {
+        "gara_id": "GIRO_DI_TOSCANA_FEMMINILE_MEMORIAL_MICHELA_FANINI_PRIMA_TAPPA_CRONOMETRO_INDIVIDUALE_2026-08-27_ELI_F",
+        "nome_gara": "GIRO DI TOSCANA FEMMINILE MEMORIAL MICHELA FANINI PRIMA TAPPA CRONOMETRO INDIVIDUALE",
+        "data": "2026-08-27",
+        "posizione": 10,
+        "punti_effettivi": 2,
+        "team": "CARBONBIKE GIORDANA SOFRE' BY GEN Z",
+        "moltiplicatore": 2,
+        "tipo": "nazionale",
+        "regione": "TOSCANA",
+        "km": "2.030",
+        "media": "49.979"
+      }
+    ]
+  },
   "BRUNO_ANDREA_ALFIO": {
     "id": "BRUNO_ANDREA_ALFIO",
     "nome": "ANDREA ALFIO",
@@ -4914,96 +5242,6 @@
         "regione": "TOSCANA",
         "km": "83.920",
         "media": "38.422"
-      }
-    ]
-  },
-  "CRESTANELLO_LARA": {
-    "id": "CRESTANELLO_LARA",
-    "nome": "LARA",
-    "cognome": "CRESTANELLO",
-    "team_attuale": "ISOLMANT - PREMAC - VITTORIA",
-    "team_id": "ISOLMANT_PREMAC_VITTORIA",
-    "categoria": "ELI_F",
-    "genere": "F",
-    "punti_totali": 70,
-    "risultati": [
-      {
-        "gara_id": "11_GIORNATA_ROSA_MEMORIAL_CHIARA_PIEROBON_2026-08-23_ELI_F",
-        "nome_gara": "11 GIORNATA ROSA MEMORIAL CHIARA PIEROBON",
-        "data": "2026-08-23",
-        "posizione": 3,
-        "punti_effettivi": 10,
-        "team": "ISOLMANT - PREMAC - VITTORIA",
-        "moltiplicatore": 1,
-        "tipo": "regionale",
-        "regione": "VENETO",
-        "km": "117.000",
-        "media": "42.580"
-      },
-      {
-        "gara_id": "INTERNAZIONALE_PORTO_SAN_GIORGIO_MEMORIAL_M_DE_ANGELIS_2026-06-13_ELI_F",
-        "nome_gara": "INTERNAZIONALE PORTO SAN GIORGIO MEMORIAL M DE ANGELIS",
-        "data": "2026-06-13",
-        "posizione": 3,
-        "punti_effettivi": 10,
-        "team": "ISOLMANT - PREMAC - VITTORIA",
-        "moltiplicatore": 1,
-        "tipo": "regionale",
-        "regione": "MARCHE",
-        "km": "105.000",
-        "media": "37.990"
-      },
-      {
-        "gara_id": "TROFEO_MEMORIAL_CONIUGI_ZAMBELLI_2026-05-24_ELI_F",
-        "nome_gara": "TROFEO MEMORIAL CONIUGI ZAMBELLI",
-        "data": "2026-05-24",
-        "posizione": 2,
-        "punti_effettivi": 12,
-        "team": "ISOLMANT - PREMAC - VITTORIA",
-        "moltiplicatore": 1,
-        "tipo": "regionale",
-        "regione": "LOMBARDIA",
-        "km": "83.622",
-        "media": "42.610"
-      },
-      {
-        "gara_id": "2_TROFEO_ROSA_MONTALTO_PROVA_VALIDA_CAMPIONATO_REGIONALE_2026-05-02_ELI_F",
-        "nome_gara": "2 TROFEO ROSA MONTALTO PROVA VALIDA CAMPIONATO REGIONALE",
-        "data": "2026-05-02",
-        "posizione": 3,
-        "punti_effettivi": 20,
-        "team": "ISOLMANT - PREMAC - VITTORIA",
-        "moltiplicatore": 2,
-        "tipo": "regionale",
-        "regione": "TOSCANA",
-        "km": "87.700",
-        "media": "35.861"
-      },
-      {
-        "gara_id": "2_TROFEO_CASSA_DI_RISPARMIO_DI_FOSSANO_2026-04-12_ELI_F",
-        "nome_gara": "2 TROFEO CASSA DI RISPARMIO DI FOSSANO",
-        "data": "2026-04-12",
-        "posizione": 2,
-        "punti_effettivi": 12,
-        "team": "ISOLMANT - PREMAC - VITTORIA",
-        "moltiplicatore": 1,
-        "tipo": "regionale",
-        "regione": "PIEMONTE",
-        "km": "94.000",
-        "media": "39.929"
-      },
-      {
-        "gara_id": "PASQUALANDO_2026-04-05_ELI_F",
-        "nome_gara": "PASQUALANDO",
-        "data": "2026-04-05",
-        "posizione": 5,
-        "punti_effettivi": 6,
-        "team": "ISOLMANT - PREMAC - VITTORIA",
-        "moltiplicatore": 1,
-        "tipo": "regionale",
-        "regione": "TOSCANA",
-        "km": "63.800",
-        "media": "41.102"
       }
     ]
   },

@@ -852,5 +852,19 @@
     "location_str": "VIA PAOLO EMILIO 7, Italia",
     "lat": 41.90936,
     "lng": 12.46325
+  },
+  "GP_INDUSTRIA_ARTIGIANATO_2026-09-06": {
+    "raceid": "180706",
+    "fci_url": "https://www.federciclismo.it/ricerca-gare/dettaglio-gara/?raceid=180706&site=strada_it",
+    "info": [
+      "GP INDUSTRIA & ARTIGIANATO Strada GP INDUSTRIA & ARTIGIANATO ID Gara: 180706 | <br><b>Data:</b> 06/09/2026 INFORMAZIONI GENERALI Localita: Larciano <br><b>Provincia:</b> PT <br><b>Categoria:</b> (1.Pro) UCI ProSeries <br><b>Categoria Geografica:</b> Internazionale <br><b>Tipo di Gara:</b> In linea \\ strada <br><b>Tipo di Programma:</b> PROFESSIONISTI <br><b>Direttore di Corsa:</b> ZINGONI FRANCESCO Vice <br><b>Direttore di Corsa:</b> FONTANA ENRICO <br><b>Approvazione:</b> Approvata ORGANIZZATORE <br><b>Nome:</b> UNIONE CICLISTICA LARCIANESE SSD A R.L <br><b>Indirizzo:</b> VIA ROMA 20 <br><b>CAP:</b> 51036 Citta: LARCIANO <br><b>Provincia:</b> PT <br><b>Telefono:</b> 3349394488 <br><b>Email:</b> info@ciclismolarcianese.it ISCRIZIONI <br><b>Luogo:</b> Bollettini di ingaggio <br><b>Indirizzo:</b> , , <br><b>Telefono:</b> 334 939 4488 <br><b>Email:</b> info@ciclismolarcianese.it Sito: www.ciclismolarcianese.it/ RITROVO PROVE 1 - GP INDUSTRIA & ARTIGIANATO <br><b>Tipo:</b> Corsa singola <br><b>Prova:</b> 1 <br><b>Data:</b> 06/09/2026 <br><b>Descrizione:</b> LARCIANO Via Costituzione (Partenza Ufficiosa) trasf 5,7 km Piazza Vittorio Veneto (Partenza Ufficiale) inizio \"Giro Monsummano T.\" 28,4 km: LARCIANO San Rocco, Biccimurri, Castelmartini, MONSUMMANO T. Pazzera, Cintolese, Monsummano T., SP22, SP436var1, Pazzera, LARCIANO Castelmartini, Le Baccane, LAMPORECCHIO Cerbaia, SP10, Lamp. centro, LARCIANO Piazza V. Veneto fine 1° giro; a seguire inizio \"Circuito Larciano\" 13,7 km: LARCIANO San Rocco, Biccimurri, Castelmartini, Le Baccane, LAMPORECCHIO Cerbaia, SP10, Lamp. centro, LARCIANO Piazza V. Veneto, da ripetersi 3 volte; a seguire inizio \"Circuito Fornello\" 27,3 km: LARCIANO San Rocco, Biccimurri, Castelmartini, Le Baccane, LAMPORECCHIO Cerbaia, SP10, SP39, Fornello, San Baronto, Lamp. centro, LARCIANO Piazza V. Veneto, da ripetersi 4 volte; a seguire “Giro Cecina” di 17,8 km LARCIANO San Rocco, Biccimurri, Cecina, SERRAVALLE P.se Case al Vento, LAMPORECCHIO Mungherino, San Baronto, Lamp. centro, LARCIANO Piazza V. Veneto (Arrivo) <br><b>Luogo Ritrovo:</b> LARCIANO <br><b>Indirizzo Ritrovo:</b> Ready Center - Via Marconi 10 <br><b>Orario Ritrovo:</b> 09:30 <br><b>Luogo Partenza:</b> Piazza Vittorio Veneto - LARCIANO <br><b>Orario Partenza:</b> 11:30 <br><b>Luogo Arrivo:</b> Piazza Vittorio Veneto - LARCIANO <br><b>Orario Arrivo:</b> 16:15 <br><b>Luogo Verifica:</b> sabato 05/09/2026 ore 15:00/16:45 c/o Ready Center - Via Marconi 10 LARCIANO (PT) <br><b>Punto Incontro DS:</b> sabato 05/09/2026 ore 17:00 c/o Ready Center - Via Marconi 10 LARCIANO (PT) <br><b>Lunghezza KM:</b> 196,5 AGGIUNGI QUESTA GARA AL CALENDARIO"
+    ],
+    "luogo_ritrovo": "LARCIANO",
+    "indirizzo_ritrovo": "Ready Center - Via Marconi 10",
+    "orario_partenza": "11:30",
+    "km": "196,5 AGGIUNGI QUESTA GARA AL CALENDARIO Home / Ricerca Gare / Dettaglio Gara / Dettaglio Gara GP INDUSTRIA & ARTIGIANATO Strada GP INDUSTRIA & ARTIGIANATO ID Gara: 180706 | Data: 06/09/2026 INFORMAZIONI GENERALI Localita: Larciano",
+    "location_str": "Ready Center - Via Marconi 10, LARCIANO, Italia",
+    "lat": null,
+    "lng": null
   }
 }
