@@ -14928,9 +14928,19 @@ function _rerenderCurrentGaraPage() {
 async function renderGaraStorica(ciclismoGaraId) {
   const garaKey = 'CIC_' + ciclismoGaraId;
   window._currentGaraId = garaKey;
+  // Un solo tentativo poteva mostrare "pagina non trovata" per una gara che
+  // esiste davvero, se Supabase rispondeva 200 con dati vuoti per un
+  // sovraccarico temporaneo (osservato dal vivo mentre lo scraper storico
+  // gira in sottofondo) — un retry dopo una breve pausa distingue il caso
+  // reale (gara mai esistita) da un blip transitorio.
   let payload;
-  try { payload = await apiCall(`/ciclismo-results/gara/${encodeURIComponent(ciclismoGaraId)}`); }
-  catch { return renderNotFound(); }
+  try {
+    payload = await apiCall(`/ciclismo-results/gara/${encodeURIComponent(ciclismoGaraId)}`);
+    if (!payload?.risultati?.length) {
+      await new Promise(r => setTimeout(r, 1200));
+      payload = await apiCall(`/ciclismo-results/gara/${encodeURIComponent(ciclismoGaraId)}`);
+    }
+  } catch { return renderNotFound(); }
   const rows = payload?.risultati || [];
   if (!rows.length) return renderNotFound();
   const mediaList = payload?.media || [];

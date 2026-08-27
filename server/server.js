@@ -4407,7 +4407,20 @@ app.get('/api/ciclismo-results/races', async (req, res) => {
     const races = [...byUrl.values()].map(ev => {
       const categorie = {};
       for (const [cat, rows] of ev.byCategory) {
-        const top3 = rows.sort((a, b) => a.posizione - b.posizione).slice(0, 3)
+        // Dedup per atleta (ciclismo_id) prima del taglio al podio — una
+        // risposta parziale/instabile di Supabase sotto carico (query che va
+        // in retry lato client, o righe rilette due volte dallo scraper di
+        // colmatura buchi) poteva far comparire lo stesso corridore due o
+        // tre volte come "1°" nel podio (bug osservato dal vivo).
+        const seenAthlete = new Set();
+        const dedupedRows = rows.filter(r => {
+          const key = r.ciclismo_id || r.atleta_id;
+          if (!key) return true;
+          if (seenAthlete.has(key)) return false;
+          seenAthlete.add(key);
+          return true;
+        });
+        const top3 = dedupedRows.sort((a, b) => a.posizione - b.posizione).slice(0, 3)
           .map(r => ({ posizione: r.posizione, atleta_id: r.atleta_id, nome_completo: nomeById.get(r.ciclismo_id) || r.ciclismo_id, team: r.team }));
         categorie[cat] = top3;
       }
