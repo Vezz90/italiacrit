@@ -10009,7 +10009,7 @@ init()
       setInterval(autoPodcastFeedsSync, SYNC_INTERVAL);
     }, 2 * 60 * 1000);
     app.listen(PORT, () => {
-      console.log(`[server] ItaliacritAuth in ascolto su http://localhost:${PORT}`);
+      console.log(`[server] ItaliacritAuth in ascolto su http://localhost:${PORT} (pool DB fresco)`);
     });
   })
   .catch(err => {
