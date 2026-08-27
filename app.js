@@ -14750,52 +14750,17 @@ async function renderGaraStorica(ciclismoGaraId) {
 
   const posColorMedia = p => p === 1 ? 'var(--gold)' : p === 2 ? 'var(--silver)' : p === 3 ? 'var(--bronze)' : 'var(--text-muted)';
   const posLabelMedia = p => { p = Number(p); if (!p) return ''; return p === 1 ? '🥇 1°' : p === 2 ? '🥈 2°' : p === 3 ? '🥉 3°' : `${p}°`; };
-  const [heroPhoto, ...restPhotos] = mediaList;
-  const photosHtml = mediaList.length ? `
-    <div class="comp-section" style="margin-top:16px">
-      <div class="comp-section-title" style="border:none;padding:0">Foto${mediaList.length > 1 ? ` & Video` : ''}</div>
-      <div class="gara-hero-media" style="cursor:zoom-in;position:relative" onclick="openPhotoLightbox('${esc(mediaUrl(heroPhoto.photo_url))}')">
-        <img src="${esc(mediaUrl(heroPhoto.photo_url))}" alt="Foto gara" loading="lazy" style="width:100%;height:100%;object-fit:cover" onerror="this.style.display='none'" />
-        ${heroPhoto.posizione ? `<div class="profile-media-badge" style="position:absolute;top:10px;left:10px;color:${posColorMedia(heroPhoto.posizione)};background:rgba(0,0,0,.55);padding:3px 8px;border-radius:4px;font-weight:700">${posLabelMedia(heroPhoto.posizione)}</div>` : ''}
-        <div style="position:absolute;bottom:8px;right:10px;font-size:.68rem;color:#fff;background:rgba(0,0,0,.55);padding:2px 8px;border-radius:4px">📷 ciclismo.info</div>
-      </div>
-      ${restPhotos.length ? `
-      <div class="profile-media-grid" style="margin-top:8px">
-        ${restPhotos.map(m => `
-          <div class="profile-media-card profile-media-photo" style="cursor:zoom-in" onclick="openPhotoLightbox('${esc(mediaUrl(m.photo_url))}')">
-            <div class="profile-media-thumb">
-              <img src="${esc(mediaUrl(m.photo_url))}" alt="Foto gara" loading="lazy" onerror="this.style.display='none'" />
-              ${m.posizione ? `<div class="profile-media-badge" style="color:${posColorMedia(m.posizione)}">${posLabelMedia(m.posizione)}</div>` : ''}
-            </div>
-            <div class="profile-media-info">
-              <div class="profile-media-meta" style="opacity:.7">📷 ciclismo.info</div>
-            </div>
-          </div>`).join('')}
-      </div>` : ''}
-    </div>` : '';
 
   const _user = authUser();
-  const uploadedPhotosHtml = uploadedPhotos.length ? `
-    <div class="comp-section" style="margin-top:16px">
-      <div class="comp-section-title" style="border:none;padding:0">Foto caricate dagli utenti</div>
-      <div class="profile-media-grid">
-        ${uploadedPhotos.map(m => `
-          <div class="profile-media-card profile-media-photo" style="cursor:zoom-in" onclick="openPhotoLightbox('${PHOTOS_BASE}/photos/${esc(m.filename)}',{photoId:${m.id},garaId:'${esc(garaKey)}',current:'${esc(m.atleta_ids || '')}',credit:'${esc((m.photographer || '').replace(/'/g, ''))}'})">
-            <div class="profile-media-thumb">
-              <img src="${PHOTOS_BASE}/photos/${esc(m.filename)}" alt="Foto gara" loading="lazy" onerror="this.style.display='none'" />
-            </div>
-            ${m.photographer ? `<div class="profile-media-info"><div class="profile-media-meta" style="opacity:.7">📷 ${esc(m.photographer)}</div></div>` : ''}
-          </div>`).join('')}
-      </div>
-    </div>` : '';
+  const _isAdmin = _user?.role === 'admin';
 
   // Video (window.openVideoSubmit li salva sotto la chiave garaKey — CIC_<id>
   // — vedi /api/videos/submit): mancava del tutto la sezione che li mostra
   // qui, quindi un video caricato veniva salvato correttamente lato server
   // ma restava invisibile per sempre, a qualunque refresh (bug osservato
-  // dal vivo: "ho caricato il video ma non si vede"). Versione più semplice
-  // di quella nativa (renderGara) — qui la chiave è sempre unica (garaKey),
-  // niente lookup multi-chiave per categoria/annata esordienti.
+  // dal vivo: "ho caricato il video ma non si vede"). Chiave sempre unica
+  // (garaKey), niente lookup multi-chiave per categoria/annata esordienti
+  // (quello serve solo alle gare native con più categorie sullo stesso id).
   const garaVideos = (globalData?.videos && globalData.videos[garaKey]) || [];
   const _vClickStorico = (v) => {
     const k = videoKind(v.url);
@@ -14812,34 +14777,98 @@ async function renderGaraStorica(ciclismoGaraId) {
     if (k === 'file') return `<video src="${esc(v.url)}#t=0.1" muted preload="metadata" playsinline style="width:100%;height:100%;object-fit:cover;background:#000"></video>`;
     return `<div style="width:100%;height:100%;display:flex;align-items:center;justify-content:center;background:#0f172a;font-size:2.4rem">🎬</div>`;
   };
-  const videosHtml = garaVideos.length ? `
-    <div class="comp-section" style="margin-top:16px">
-      <div class="comp-section-title" style="border:none;padding:0">Video</div>
+  const _vAdminBtns = (i) => _isAdmin ? `<div style="position:absolute;top:4px;right:4px;display:flex;flex-direction:column;gap:3px;z-index:10">
+    <button onclick="event.stopPropagation();window.adminEditVideo('${esc(garaKey)}',${i},${!!garaVideos[i]?.is_live})" style="padding:3px 7px;font-size:0.68rem;color:#fff;border:none;border-radius:4px;cursor:pointer;white-space:nowrap;box-shadow:0 1px 4px rgba(0,0,0,.5);background:#2563eb">✏️</button>
+    <button onclick="event.stopPropagation();window.adminDeleteVideo('${esc(garaKey)}',${i})" style="padding:3px 7px;font-size:0.68rem;color:#fff;border:none;border-radius:4px;cursor:pointer;white-space:nowrap;box-shadow:0 1px 4px rgba(0,0,0,.5);background:#dc2626">🗑</button>
+  </div>` : '';
+  const _buildVideoElStorico = (v, i, cls = 'gara-media-half gara-media-video') => `<div class="${cls}" onclick="${_vClickStorico(v)}">
+    ${_vThumbStorico(v)}
+    <div class="gara-media-play"><span>&#9658;</span></div>
+    ${v.is_live ? `<div style="position:absolute;top:6px;right:6px;background:#dc2626;color:#fff;font-size:.62rem;font-weight:800;letter-spacing:.04em;padding:2px 8px;border-radius:3px;z-index:3">🔴 DIRETTA</div>` : ''}
+    ${_vAdminBtns(i)}
+    ${v.title ? `<div class="gara-video-hero-caption">${esc(v.title)}</div>` : ''}
+  </div>`;
+
+  // Stessa impaginazione/logica della gara nativa (renderGara): un'unica
+  // sezione "Foto & Video" con hero foto+video affiancati (gara-hero-split)
+  // quando ci sono entrambi, extra sotto — prima erano tre sezioni separate
+  // con impaginazione diversa (richiesta esplicita di uniformarle).
+  const uploadedForGrid = uploadedPhotos.map(m => ({
+    src: `${PHOTOS_BASE}/photos/${m.filename}`, posizione: null,
+    credit: m.photographer || '', photoId: m.id, atletaIds: m.atleta_ids || '',
+  }));
+  const scrapedForGrid = mediaList.map(m => ({
+    src: mediaUrl(m.photo_url), posizione: m.posizione, credit: '📷 ciclismo.info', photoId: null, atletaIds: '',
+  }));
+  const allPhotos = [...uploadedForGrid, ...scrapedForGrid];
+  const [heroPhotoObj, ...restPhotoObjs] = allPhotos;
+  const _photoClick = p => p.photoId
+    ? `window.openPhotoLightbox('${esc(p.src)}',{photoId:${p.photoId},garaId:'${esc(garaKey)}',current:'${esc(p.atletaIds)}',credit:'${esc(p.credit.replace(/'/g, ''))}'})`
+    : `openPhotoLightbox('${esc(p.src)}')`;
+  const _heroPhotoEl = heroPhotoObj ? `<div class="gara-media-half gara-media-photo" style="cursor:zoom-in;position:relative" onclick="${_photoClick(heroPhotoObj)}">
+    <img id="gara-hero-img" src="${esc(heroPhotoObj.src)}" alt="Foto gara" loading="lazy" onerror="this.style.display='none'" />
+    <div class="gara-photo-hint">🔍 Clicca per la foto intera</div>
+    ${heroPhotoObj.posizione ? `<div class="profile-media-badge" style="position:absolute;top:10px;left:10px;color:${posColorMedia(heroPhotoObj.posizione)};background:rgba(0,0,0,.55);padding:3px 8px;border-radius:4px;font-weight:700">${posLabelMedia(heroPhotoObj.posizione)}</div>` : ''}
+    ${heroPhotoObj.credit ? `<div style="position:absolute;bottom:8px;right:10px;font-size:.68rem;color:#fff;background:rgba(0,0,0,.55);padding:2px 8px;border-radius:4px">${esc(heroPhotoObj.credit)}</div>` : ''}
+  </div>` : '';
+  const _heroVideoEl = garaVideos[0] ? _buildVideoElStorico(garaVideos[0], 0) : '';
+
+  let _heroMedia = '', _extraVideoStartIdx = 1;
+  if (_heroPhotoEl && _heroVideoEl) {
+    _heroMedia = `<div class="gara-hero-media gara-hero-split">${_heroPhotoEl}${_heroVideoEl}</div>`;
+  } else if (_heroPhotoEl) {
+    _heroMedia = `<div class="gara-hero-media">${_heroPhotoEl}</div>`;
+    _extraVideoStartIdx = 0;
+  } else if (_heroVideoEl && garaVideos.length >= 2) {
+    _heroMedia = `<div class="gara-hero-media gara-hero-split">${_heroVideoEl}${_buildVideoElStorico(garaVideos[1], 1)}</div>`;
+    _extraVideoStartIdx = 2;
+  } else if (_heroVideoEl) {
+    _heroMedia = `<div class="gara-hero-media">${_heroVideoEl}</div>`;
+  }
+
+  const _gallery = restPhotoObjs.length ? `<div class="race-gallery">${restPhotoObjs.map(p => `
+    <div class="race-gallery-item">
+      <img src="${esc(p.src)}" alt="Foto gara" loading="lazy" onclick="${_photoClick(p)}" style="cursor:zoom-in"/>
+      ${p.credit ? `<div class="race-gallery-caption">${esc(p.credit)}</div>` : ''}
+    </div>`).join('')}</div>` : '';
+
+  const extraVideos = garaVideos.slice(_extraVideoStartIdx);
+  const extraVideosHtml = extraVideos.length ? `
+    <div class="comp-section" style="margin-top:12px">
+      <div class="comp-section-title">Altri Video</div>
       <div class="gara-videos-grid">
-        ${garaVideos.map((v, i) => `
-          <div class="gara-video-card" style="cursor:pointer;position:relative" onclick="${_vClickStorico(v)}">
-            <div class="gara-video-thumb">
-              ${_vThumbStorico(v)}
-              <div class="gara-media-play"><span>&#9658;</span></div>
-              ${v.is_live ? `<div style="position:absolute;top:6px;right:6px;background:#dc2626;color:#fff;font-size:.62rem;font-weight:800;letter-spacing:.04em;padding:2px 8px;border-radius:3px;z-index:3">🔴 DIRETTA</div>` : ''}
-              ${(_user?.role === 'admin') ? `<div style="position:absolute;top:4px;right:4px;display:flex;flex-direction:column;gap:3px;z-index:10">
-                <button onclick="event.stopPropagation();window.adminEditVideo('${esc(garaKey)}',${i},${!!v.is_live})" style="padding:3px 7px;font-size:0.68rem;color:#fff;border:none;border-radius:4px;cursor:pointer;white-space:nowrap;box-shadow:0 1px 4px rgba(0,0,0,.5);background:#2563eb">✏️</button>
-                <button onclick="event.stopPropagation();window.adminDeleteVideo('${esc(garaKey)}',${i})" style="padding:3px 7px;font-size:0.68rem;color:#fff;border:none;border-radius:4px;cursor:pointer;white-space:nowrap;box-shadow:0 1px 4px rgba(0,0,0,.5);background:#dc2626">🗑</button>
-              </div>` : ''}
+        ${extraVideos.map((v, i) => {
+          const realIdx = _extraVideoStartIdx + i;
+          return `<div class="gara-video-card" style="cursor:pointer;position:relative" onclick="${_vClickStorico(v)}">
+            <div class="gara-video-thumb">${_vThumbStorico(v)}<div class="gara-video-play">&#9658;</div>
+              ${v.is_live ? `<div style="position:absolute;top:4px;right:4px;background:#dc2626;color:#fff;font-size:.58rem;font-weight:800;padding:1px 6px;border-radius:3px">🔴 LIVE</div>` : ''}
             </div>
-            ${v.title ? `<div class="gara-video-title" style="font-size:.78rem;margin-top:4px">${esc(v.title)}</div>` : ''}
-            ${v.channel ? `<div style="font-size:.7rem;color:var(--text-muted)">${esc(v.channel)}</div>` : ''}
-          </div>`).join('')}
+            <div class="gara-video-info">
+              <div class="gara-video-title">${esc(v.title)}</div>
+              <div class="gara-video-meta">${esc(v.channel || '')}</div>
+            </div>
+            ${_vAdminBtns(realIdx)}
+          </div>`;
+        }).join('')}
       </div>
     </div>` : '';
 
   const uploadBtnHtml = _user
-    ? `<button class="btn-share" onclick="window.openRacePhotoUpload('${esc(garaKey)}')"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="17 8 12 3 7 8"/><line x1="12" y1="3" x2="12" y2="15"/></svg> Carica foto</button>`
+    ? `<button class="race-photo-upload-btn" onclick="window.openRacePhotoUpload('${esc(garaKey)}')"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="17 8 12 3 7 8"/><line x1="12" y1="3" x2="12" y2="15"/></svg> Carica foto</button>`
     : `<a href="#/login" class="btn-share">Accedi per caricare una foto</a>`;
   const addVideoBtnHtml = _user
-    ? `<button class="btn-share" onclick="window.openVideoSubmit('${esc(garaKey)}','')"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polygon points="5 3 19 12 5 21 5 3"/></svg> Aggiungi Video</button>`
+    ? `<button class="race-photo-upload-btn" onclick="window.openVideoSubmit('${esc(garaKey)}','')"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polygon points="5 3 19 12 5 21 5 3"/></svg> Aggiungi Video</button>`
     : '';
-  const _isAdmin = _user?.role === 'admin';
+  const mediaSectionHtml = (_heroMedia || _gallery || extraVideosHtml || uploadBtnHtml || addVideoBtnHtml) ? `
+    <div class="comp-section" style="margin-top:16px">
+      <div style="display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:8px;margin-bottom:${_heroMedia ? '12px' : '0'}">
+        <div class="comp-section-title" style="margin-bottom:0;border:none;padding:0">Foto & Video</div>
+        <div style="display:flex;gap:6px;flex-wrap:wrap">${uploadBtnHtml}${addVideoBtnHtml}</div>
+      </div>
+      ${_heroMedia}
+      ${_gallery}
+      ${extraVideosHtml}
+    </div>` : '';
   const adminBtnsHtml = _isAdmin ? `
       ${adminEditBtn('gara', garaKey)}
       <button id="pcs-import-btn" class="admin-edit-btn" style="background:#7c3aed" onclick="window.adminPcsImport('${esc(garaKey)}')">⬇ Importa PCS</button>
@@ -14859,13 +14888,9 @@ async function renderGaraStorica(ciclismoGaraId) {
     </div>
     <div style="margin-top:12px;display:flex;gap:10px;align-items:center;flex-wrap:wrap">
       <button class="btn-share" onclick="window.triggerShareGara()"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="18" cy="5" r="3"/><circle cx="6" cy="12" r="3"/><circle cx="18" cy="19" r="3"/><line x1="8.59" y1="13.51" x2="15.42" y2="17.49"/><line x1="15.41" y1="6.51" x2="8.59" y2="10.49"/></svg> Condividi Risultati</button>
-      ${uploadBtnHtml}
-      ${addVideoBtnHtml}
       ${adminBtnsHtml}
     </div>
-    ${photosHtml}
-    ${uploadedPhotosHtml}
-    ${videosHtml}
+    ${mediaSectionHtml}
     <div class="section-header" style="margin-top:20px">
       <span class="section-title">ORDINE DI ARRIVO</span>
       <span class="section-line"></span>
@@ -14892,8 +14917,8 @@ async function renderGaraStorica(ciclismoGaraId) {
     _id: garaKey, name: first.nome_gara, date: fmtDate(first.data),
     cat: cats.length === 1 ? String(cats[0]).replace(/_/g, ' ') : '',
     mult: 1, tipo: '', region: first.regione || '', luogo: first.luogo || '',
-    photo_url: heroPhoto ? heroPhoto.photo_url : (uploadedPhotos[0] ? `/photos/${uploadedPhotos[0].filename}` : ''),
-    photo_credit: heroPhoto ? 'ciclismo.info' : (uploadedPhotos[0]?.photographer || ''),
+    photo_url: heroPhotoObj ? heroPhotoObj.src : '',
+    photo_credit: heroPhotoObj ? (heroPhotoObj.credit || '') : '',
     results: rows.slice().sort((a, b) => (a.posizione || 999) - (b.posizione || 999)).slice(0, 10).map(r => ({
       cognome: (r.nome_completo || '').split(' ')[0] || '', nome: (r.nome_completo || '').split(' ').slice(1).join(' '),
       team: r.team, atleta_id: r.atleta_id, punti_effettivi: 0, tempo: '',

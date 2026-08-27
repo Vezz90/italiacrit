@@ -1,4 +1,4 @@
-const CACHE_NAME = 'italiacrit-cache-v462';
+const CACHE_NAME = 'italiacrit-cache-v463';
 
 // File statici: messi in cache e serviti velocemente
 const STATIC_ASSETS = [
@@ -98,7 +98,17 @@ self.addEventListener('fetch', event => {
   // questi file statici) invece di andare davvero in rete, vanificando lo
   // scopo della strategia "network-first" — un deploy poteva restare invisibile
   // fino a 4 ore anche dopo aver svuotato la cache del service worker.
-  if (/\/(app\.js|index\.html|style\.css|design\.css)(\?|$)/.test(url) || url.endsWith('/')) {
+  // event.request.mode === 'navigate' copre QUALUNQUE apertura diretta di una
+  // pagina con URL pulito (es. /risultati, /atleta/XYZ da bookmark/link
+  // condiviso/refresh) — senza questo, quelle richieste non matchavano
+  // nessuna delle regex sopra (non finiscono per "/" né si chiamano
+  // index.html) e cadevano nella strategia cache-first generica più sotto:
+  // un utente che riapriva una pagina già visitata poteva restare bloccato
+  // sulla shell HTML vecchia (col vecchio app.js referenziato dentro)
+  // indefinitamente, anche con service worker e cache già aggiornati —
+  // causa più probabile del bug "vedo le novità solo su un browser mai
+  // usato prima, mai sul mio" osservato dal vivo.
+  if (event.request.mode === 'navigate' || /\/(app\.js|index\.html|style\.css|design\.css)(\?|$)/.test(url) || url.endsWith('/')) {
     event.respondWith(
       fetch(event.request, { cache: 'reload' })
         .then(networkResponse => {
