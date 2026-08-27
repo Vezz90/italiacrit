@@ -4163,17 +4163,36 @@ app.get('/api/pcs-athlete/:id', async (req, res) => {
   if (!supabase) return res.status(503).json({ error: 'Supabase non disponibile' });
   try {
     const aid = req.params.id;
-    const [profR, ovs, sample] = await Promise.all([
+    const [profR, ovs, sample, pcsPro] = await Promise.all([
       supabase.from('entity_overrides').select('new_value')
         .eq('entity_type', 'pcs_atleta').eq('field', 'profile').eq('entity_id', aid).maybeSingle(),
       supabase.from('entity_overrides').select('field, new_value')
         .eq('entity_type', 'atleta').in('field', ['team', 'team_id']).eq('entity_id', aid),
       supabase.from('pcs_gara_results').select('rider_name, team_name, gara_id')
         .eq('atleta_id', aid).limit(1).maybeSingle(),
+      // Circuito pro (Tour/Giro/Vuelta ecc., non solo gare italiane) — un
+      // corridore straniero che ha corso in Italia da giovane (es. Pogačar,
+      // Evenepoel) può avere risultati ciclismo.info storici ma nessuna
+      // gara pcs_gara_results né roster italiano: senza questo controllo la
+      // scheda dava 404 anche per i più grandi nomi del ciclismo mondiale.
+      supabase.from('pcs_results').select('season').eq('atleta_id', aid).order('season', { ascending: false }).limit(1).maybeSingle(),
     ]);
     const profMap = {}; if (profR.data?.new_value) { try { profMap[aid] = JSON.parse(profR.data.new_value); } catch {} }
     const ovMap = { [aid]: {} }; for (const o of (ovs.data || [])) ovMap[aid][o.field] = o.new_value;
     if (!profMap[aid] && !sample.data && !(ovs.data || []).length) {
+      if (pcsPro.data) {
+        // Nome derivato dall'id (COGNOME_NOME) in mancanza di meglio — pcs_results
+        // non salva il nome per riga, solo i risultati; team non disponibile
+        // da questa fonte (i grandi giri non hanno un roster italiano noto qui).
+        const parts = aid.split('_');
+        const nome = (parts.pop() || '').replace(/_/g, ' ');
+        const cognome = parts.join(' ');
+        return res.json({
+          atleta_id: aid, cognome, nome,
+          categoria: '', genere: ovMap[aid].genere || 'M',
+          team_id: ovMap[aid].team_id || null, team_nome: ovMap[aid].team || 'PROFESSIONISTA',
+        });
+      }
       // Nessuna traccia PCS: prova come atleta noto solo da ciclismo.info
       // (profilo creato automaticamente dagli scraper storici in manual_athletes,
       // mai apparso in una gara PCS/FCI con roster proprio) — senza questo
