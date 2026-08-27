@@ -23,7 +23,7 @@
 
 const { createClient } = require('@supabase/supabase-js');
 const ws = require('ws');
-const { fetchDecoded, parseGaraPhoto } = require('./ciclismo-info-test.js');
+const { fetchDecoded, fetchWithTimeout, parseGaraPhoto } = require('./ciclismo-info-test.js');
 
 const SUPABASE_URL = 'https://aqqsstsbgpapzoxllosh.supabase.co';
 const SUPABASE_SECRET = process.env.SUPABASE_SECRET;
@@ -164,7 +164,7 @@ async function main() {
         let photoUrl = null;
         try {
           const originalUrl = urlObj.origin + photo.original;
-          const photoRes = await fetch(originalUrl);
+          const photoRes = await fetchWithTimeout(originalUrl);
           if (photoRes.ok) {
             const buf = Buffer.from(await photoRes.arrayBuffer());
             if (buf.length > 500) {

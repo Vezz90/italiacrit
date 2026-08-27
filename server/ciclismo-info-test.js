@@ -7,13 +7,37 @@
 
 const iconv = (() => { try { return require('iconv-lite'); } catch { return null; } })();
 
-async function fetchDecoded(url) {
-  const res = await fetch(url, { headers: { 'User-Agent': 'Mozilla/5.0' } });
+// Timeout esplicito: senza, una richiesta a ciclismo.info che non risponde
+// mai (rete instabile, sito lento) resta appesa per sempre — con più
+// scraper in concorrenza, uno slot bloccato così ogni tanto finisce per
+// bloccarli TUTTI nel tempo, fermando lo script senza errori né crash
+// visibili (osservato dal vivo: processo vivo ma a CPU quasi zero).
+async function fetchDecoded(url, timeoutMs = 20000) {
+  const controller = new AbortController();
+  const t = setTimeout(() => controller.abort(), timeoutMs);
+  let res;
+  try {
+    res = await fetch(url, { headers: { 'User-Agent': 'Mozilla/5.0' }, signal: controller.signal });
+  } finally {
+    clearTimeout(t);
+  }
   const buf = Buffer.from(await res.arrayBuffer());
   // Pagine in ISO-8859-1/windows-1252 (dichiarato nel <meta charset>) — decodifica
   // esplicita, altrimenti lettere accentate italiane arrivano corrotte.
   if (iconv) return iconv.decode(buf, 'win1252');
   return buf.toString('latin1'); // fallback approssimato se iconv-lite non è installato
+}
+
+// Stesso timeout esplicito di fetchDecoded, ma per il download del file
+// immagine grezzo (usato dagli scraper foto) invece dell'HTML della pagina.
+async function fetchWithTimeout(url, timeoutMs = 20000) {
+  const controller = new AbortController();
+  const t = setTimeout(() => controller.abort(), timeoutMs);
+  try {
+    return await fetch(url, { signal: controller.signal });
+  } finally {
+    clearTimeout(t);
+  }
 }
 
 function decodeEntities(s) {
@@ -161,7 +185,7 @@ function parseGaraPage(html, sourceUrl) {
   return { garaId, titleText, ordineArrivo };
 }
 
-module.exports = { fetchDecoded, decodeEntities, parseAthletePage, parseClassificaPage, parseGaraPage, parseGaraPhoto };
+module.exports = { fetchDecoded, fetchWithTimeout, decodeEntities, parseAthletePage, parseClassificaPage, parseGaraPage, parseGaraPhoto };
 
 if (require.main === module) {
   (async () => {
