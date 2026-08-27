@@ -8710,34 +8710,41 @@ async function renderClassifica() {
 // Classifica storica ciclismo.info (fila anni + categoria sotto, stessa
 // idea di Risultati storico) — usa il punteggio REALE già pubblicato da
 // ciclismo.info (endpoint /ciclismo-results/classifica), non una stima
-// nostra: le gare storiche non hanno un moltiplicatore reale noto.
+// nostra: le gare storiche non hanno un moltiplicatore reale noto. La
+// tabella riusa ESATTAMENTE la stessa grafica della classifica 2026
+// (ranking-table/ranking-row/rk-av-wrap/rank-pts) — richiesta esplicita di
+// uniformità — omettendo solo le metriche che non hanno senso su una
+// stagione chiusa (variazione, momentum, badge dinamici, 1°/2°/3°/TOP10 che
+// la pagina classifica di ciclismo.info non pubblica riga per riga).
 let _classStoricoCache = {};
 window._classStoricoLastFilterCat = {};
+function _classYearRowHtml(anno) {
+  const _classCurYear = Number(_loadedSeasonYear());
+  const pills = [];
+  for (let y = _classCurYear; y >= 2007; y--) pills.push(y);
+  return `<div id="class-year-row" style="display:flex;gap:8px;overflow-x:auto;flex-wrap:nowrap;margin:12px 0 4px;padding-bottom:4px;scrollbar-width:thin">
+    ${pills.map(y => `<button class="year-pill" data-year="${y}" onclick="window.classSetYear(${y})"
+      style="flex:0 0 auto;padding:5px 13px;border-radius:14px;border:1px solid var(--border-subtle);cursor:pointer;font-size:.82rem;font-weight:700;
+      background:${y === anno ? 'var(--accent,#e8001d)' : 'var(--bg-elevated)'};color:${y === anno ? '#fff' : 'var(--text-secondary)'}">${y}</button>`).join('')}
+  </div>`;
+}
 async function renderClassificaStorica(anno) {
   let bodyEl = document.getElementById('class-storico-body');
   if (!bodyEl) {
-    const _classCurYear = Number(_loadedSeasonYear());
-    const _classYearPills = [];
-    for (let y = _classCurYear; y >= 2007; y--) _classYearPills.push(y);
-    const classYearPillsHtml = `<div id="class-year-row" style="display:flex;gap:8px;overflow-x:auto;flex-wrap:nowrap;margin:12px 0 4px;padding-bottom:4px;scrollbar-width:thin">
-      ${_classYearPills.map(y => `<button class="year-pill" data-year="${y}" onclick="window.classSetYear(${y})"
-        style="flex:0 0 auto;padding:5px 13px;border-radius:14px;border:1px solid var(--border-subtle);cursor:pointer;font-size:.82rem;font-weight:700;
-        background:${y === anno ? 'var(--accent,#e8001d)' : 'var(--bg-elevated)'};color:${y === anno ? '#fff' : 'var(--text-secondary)'}">${y}</button>`).join('')}
-    </div>`;
     setPageMeta(`Classifica ${anno}`, `Classifica storica ${anno} del ciclismo agonistico italiano.`);
     setPage(`
       <div class="pg-header">
-        <div class="pg-eyebrow">CLASSIFICA STORICA</div>
+        <div class="pg-eyebrow">CLASSIFICA UFFICIALE · ${anno}</div>
         <h1 class="pg-title">CLASSIFICHE</h1>
       </div>
-      ${classYearPillsHtml}
-      <div class="ranking-controls">
-        <select class="cal-filter-select" id="class-sel-cat" onchange="window.classSetCat(this.value)" aria-label="Filtra per categoria" style="margin:12px 0"></select>
-        <span class="ranking-count" id="class-storico-count"></span>
-      </div>
+      ${_classYearRowHtml(anno)}
+      <div class="ranking-controls" id="class-storico-controls"></div>
       <div class="ranking-table-wrap" id="class-storico-body"></div>
     `);
     bodyEl = document.getElementById('class-storico-body');
+  } else {
+    const yearRow = document.getElementById('class-year-row');
+    if (yearRow) yearRow.outerHTML = _classYearRowHtml(anno);
   }
 
   let payload = _classStoricoCache[anno];
@@ -8750,38 +8757,73 @@ async function renderClassificaStorica(anno) {
 
   const classifica = payload?.classifica || {};
   const cats = Object.keys(classifica).sort();
-  if (!cats.length) { bodyEl.innerHTML = '<div class="empty-state">Nessuna classifica disponibile per questo anno</div>'; return; }
-  const selCat = document.getElementById('class-sel-cat');
+  const controlsEl = document.getElementById('class-storico-controls');
+  if (!cats.length) {
+    if (controlsEl) controlsEl.innerHTML = '';
+    bodyEl.innerHTML = '<div class="empty-state">Nessuna classifica disponibile per questo anno</div>';
+    return;
+  }
   let curCat = window._classStoricoLastFilterCat[anno] || cats[0];
   if (!cats.includes(curCat)) curCat = cats[0];
   window._classStoricoLastFilterCat[anno] = curCat;
-  if (selCat) selCat.innerHTML = cats.map(c => `<option value="${esc(c)}"${c === curCat ? ' selected' : ''}>${esc(String(c).replace(/_/g, ' '))}</option>`).join('');
+
+  // Stesse tab-btn della classifica nativa, sulle categorie grezze REALI di
+  // quell'anno (non tutte le combinazioni esistono per ogni stagione).
+  if (controlsEl) {
+    controlsEl.innerHTML = `
+      <div class="tab-group" role="tablist" aria-label="Seleziona categoria">
+        ${cats.map(c => `<button class="tab-btn ${curCat === c ? 'active-cat' : ''}" onclick="window.classSetCat('${esc(c)}')">${esc(String(c).replace(/_/g, ' '))}</button>`).join('')}
+      </div>
+      <div class="ranking-filter-bar" style="border-top:1px solid var(--border-subtle); padding-top:12px">
+        <span class="ranking-count" id="class-storico-count"></span>
+      </div>`;
+  }
 
   const rows = classifica[curCat] || [];
   const countEl = document.getElementById('class-storico-count');
   if (countEl) countEl.textContent = `${rows.length} atleti`;
 
+  const leaderPts = rows[0]?.punti || 0;
+  const rowsHtml = rows.map((r, i) => {
+    const tier = r.pos === 1 ? 'rk-tier-1' : r.pos <= 3 ? 'rk-tier-top3' : r.pos <= 10 ? 'rk-tier-top10' : '';
+    const gap = r.pos === 1
+      ? `<span class="rk-leader-tag">LEADER</span>`
+      : `<span class="rk-gap-label">−${leaderPts - r.punti}</span>`;
+    return `<tr class="ranking-row ${tier}" style="animation-delay:${Math.min(i,20)*30}ms">
+      <td><span class="rank-num ${posClass(r.pos)}">${r.pos}</span></td>
+      <td>
+        <div class="rk-athlete-cell">
+          <div class="rk-athlete-name-row">
+            ${r.atleta_id ? `<span class="rk-av-wrap" data-aid="${esc(r.atleta_id)}"></span>` : ''}
+            <span class="rank-name">${r.atleta_id ? `<a href="#/atleta/${esc(r.atleta_id)}">${esc(r.nome_completo)}</a>` : esc(r.nome_completo || '')}</span>
+          </div>
+          <div class="td-team-mobile">${esc(r.team || '')}</div>
+        </div>
+      </td>
+      <td class="hide-mobile rk-team-cell">${esc(r.team || '')}</td>
+      <td class="r">
+        <div class="rk-pts-cell">
+          <span class="rank-pts">${r.punti}</span>
+          ${gap}
+        </div>
+      </td>
+    </tr>`;
+  }).join('');
+
   bodyEl.innerHTML = `
-    <table class="results-table">
-      <thead><tr><th>POS</th><th>ATLETA</th><th class="td-hide-mobile">TEAM</th><th>PUNTI</th></tr></thead>
-      <tbody>${rows.map(r => `
-        <tr>
-          <td class="td-pos ${posClass(r.pos)}">${r.pos}°</td>
-          <td style="font-family:var(--font-heading);font-weight:700">
-            <div style="display:flex;align-items:center">
-              ${r.atleta_id ? `<span class="rk-av-wrap" data-aid="${esc(r.atleta_id)}"><span class=rk-av-placeholder><svg width=20 height=20 viewBox='0 0 24 24' fill='none' stroke='currentColor' stroke-width='1.5'><circle cx='12' cy='8' r='4'/><path d='M4 20c0-4 3.6-7 8-7s8 3 8 7'/></svg></span></span>` : ''}
-              <div>
-                ${r.atleta_id ? `<a href="#/atleta/${esc(r.atleta_id)}">${esc(r.nome_completo)}</a>` : esc(r.nome_completo || '')}
-                <div class="td-team-mobile">${esc(r.team || '')}</div>
-              </div>
-            </div>
-          </td>
-          <td class="td-hide-mobile">${esc(r.team || '')}</td>
-          <td class="td-pts">${r.punti}</td>
-        </tr>`).join('')}</tbody>
+    <table class="ranking-table rk-table-narrative">
+      <thead><tr>
+        <th style="width:50px">POS</th>
+        <th>ATLETA</th>
+        <th class="hide-mobile">TEAM</th>
+        <th class="r">PUNTI</th>
+      </tr></thead>
+      <tbody>${rowsHtml || '<tr><td colspan="4" class="empty-state">Nessun dato</td></tr>'}</tbody>
     </table>`;
 
   const _avSpans = [...bodyEl.querySelectorAll('.rk-av-wrap[data-aid]')];
+  const _ph = `<span class=rk-av-placeholder><svg width=20 height=20 viewBox='0 0 24 24' fill='none' stroke='currentColor' stroke-width='1.5'><circle cx='12' cy='8' r='4'/><path d='M4 20c0-4 3.6-7 8-7s8 3 8 7'/></svg></span>`;
+  _avSpans.forEach(s => { s.innerHTML = _ph; });
   const batchSize = 8;
   for (let i = 0; i < _avSpans.length; i += batchSize) {
     await Promise.all(_avSpans.slice(i, i + batchSize).map(async span => {
