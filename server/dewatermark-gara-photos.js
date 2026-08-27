@@ -58,10 +58,19 @@ async function main() {
     byGara.get(key).push(r);
   }
 
+  // Ripresa da un'esecuzione interrotta: salta le prime N gare (stesso
+  // ordine di iterazione della query, senza ORDER BY esplicito — non
+  // garantito identico al 100% tra run, ma l'upload è idempotente
+  // (upsert sullo stesso storage path), quindi rifare qualche gara già
+  // fatta non è un problema, evita solo di ripartire sempre da zero.
+  const skipN = parseInt(process.argv[2] || '0', 10) || 0;
+  if (skipN) console.log(`Ripresa: salto le prime ${skipN} gare già processate in precedenza.\n`);
+
   let gareOk = 0, foteOk = 0, errori = 0;
   let i = 0;
   for (const [key, foto] of byGara) {
     i++;
+    if (i <= skipN) continue;
     const garaUrl = foto[0].gara_ciclismo_url;
     try {
       const html = await fetchDecoded(garaUrl);
