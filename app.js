@@ -8752,8 +8752,16 @@ async function renderClassificaStorica(anno) {
   let payload = _classStoricoCache[anno];
   if (!payload) {
     bodyEl.innerHTML = '<div class="empty-state">Caricamento…</div>';
-    try { payload = await apiCall(`/ciclismo-results/classifica?anno=${encodeURIComponent(anno)}`); }
-    catch { bodyEl.innerHTML = '<div class="empty-state">Errore di caricamento</div>'; return; }
+    // "Screenshot" statico pre-calcolato (vedi generate-ciclismo-snapshot.js)
+    // — stessa idea delle stagioni native, evita di rifare ad ogni visita
+    // le stesse query pesanti su dati che per gli anni storici non cambiano
+    // mai. Se manca (anno non ancora rigenerato dopo una correzione) si
+    // ripiega sulla query live, mai un errore secco per l'utente.
+    payload = await loadJson(`data/ciclismo-storico/${anno}/classifica.json`);
+    if (!payload) {
+      try { payload = await apiCall(`/ciclismo-results/classifica?anno=${encodeURIComponent(anno)}`); }
+      catch { bodyEl.innerHTML = '<div class="empty-state">Errore di caricamento</div>'; return; }
+    }
     _classStoricoCache[anno] = payload;
   }
 
@@ -8935,8 +8943,11 @@ async function _seasonPodiumCiclismo(year, code) {
   if (!rawCats) return null;
   let payload = _classStoricoCache[year];
   if (!payload) {
-    try { payload = await apiCall(`/ciclismo-results/classifica?anno=${encodeURIComponent(year)}`); }
-    catch { return null; }
+    payload = await loadJson(`data/ciclismo-storico/${year}/classifica.json`);
+    if (!payload) {
+      try { payload = await apiCall(`/ciclismo-results/classifica?anno=${encodeURIComponent(year)}`); }
+      catch { return null; }
+    }
     _classStoricoCache[year] = payload;
   }
   const classifica = payload?.classifica || {};
@@ -22597,9 +22608,13 @@ async function renderRisultatiStorico(anno) {
   let allRaces = window._risStoricoCache[anno];
   if (!allRaces) {
     cardsEl.innerHTML = '<div class="empty-state">Caricamento…</div>';
-    let payload;
-    try { payload = await apiCall(`/ciclismo-results/races?anno=${encodeURIComponent(anno)}`); }
-    catch { cardsEl.innerHTML = '<div class="empty-state">Errore di caricamento</div>'; return; }
+    // "Screenshot" statico pre-calcolato — vedi nota identica in
+    // renderClassificaStorica/generate-ciclismo-snapshot.js.
+    let payload = await loadJson(`data/ciclismo-storico/${anno}/races.json`);
+    if (!payload) {
+      try { payload = await apiCall(`/ciclismo-results/races?anno=${encodeURIComponent(anno)}`); }
+      catch { cardsEl.innerHTML = '<div class="empty-state">Errore di caricamento</div>'; return; }
+    }
     allRaces = payload?.races || [];
     window._risStoricoCache[anno] = allRaces;
   }
