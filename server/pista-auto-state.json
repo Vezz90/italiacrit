@@ -15,6 +15,12 @@
     "written": 22,
     "review": []
   },
+  "180261": {
+    "nome": "39° NOTTURNA    24° TROFEO COMBERLATO ARDUINO A.M.",
+    "data": "27 Agosto 2026",
+    "status": "pending",
+    "lastChecked": "2026-08-27T05:00:38.599Z"
+  },
   "180449": {
     "nome": "NOTTURNA DELL'ASSUNTA",
     "data": "7 Agosto 2026",
@@ -34,11 +40,17 @@
       }
     ]
   },
+  "180454": {
+    "nome": "45° TROFEO CITTA' DI PORDENONE - MEMORIAL DEMETRIO MORAS",
+    "data": "27 Agosto 2026",
+    "status": "pending",
+    "lastChecked": "2026-08-27T05:00:39.167Z"
+  },
   "180551": {
     "nome": "MEMORIAL PAOLA SCOPPOLINI E CARLO CROCETTI",
     "data": "5 Agosto 2026",
     "status": "pending",
-    "lastChecked": "2026-08-26T05:00:36.148Z"
+    "lastChecked": "2026-08-27T05:00:37.466Z"
   },
   "180610": {
     "nome": "3° TROFEO ALF GROUP",
@@ -52,7 +64,7 @@
     "nome": "GP SAN GIOVANNI BATTISTA",
     "data": "1 Agosto 2026",
     "status": "pending",
-    "lastChecked": "2026-08-25T05:00:35.377Z"
+    "lastChecked": "2026-08-27T05:00:36.899Z"
   },
   "180803": {
     "nome": "GARA SU PISTA",
@@ -66,7 +78,7 @@
     "nome": "16° TROFEO CASSA DI TRENTO",
     "data": "10 Luglio 2026",
     "status": "pending",
-    "lastChecked": "2026-08-26T05:00:35.015Z"
+    "lastChecked": "2026-08-27T05:00:35.766Z"
   },
   "180892": {
     "nome": "5^ NOTTURNA CASTEL ROMANO",
@@ -80,7 +92,7 @@
     "nome": "9° SPRINT LUPI – VENETA COSTRUZIONI METALLICHE",
     "data": "10 Luglio 2026",
     "status": "pending",
-    "lastChecked": "2026-08-26T05:00:34.446Z"
+    "lastChecked": "2026-08-27T05:00:35.198Z"
   },
   "181247": {
     "nome": "TROFEO DENTIS",
@@ -131,7 +143,7 @@
     "nome": "TROFEO ROSTI   GRAN PREMIO RH+",
     "data": "25 Luglio 2026",
     "status": "pending",
-    "lastChecked": "2026-08-26T05:00:35.583Z"
+    "lastChecked": "2026-08-27T05:00:36.333Z"
   },
   "182274": {
     "nome": "MEMORIAL BENVENUTO CORRADI",
@@ -145,7 +157,7 @@
     "nome": "CICLISMO SOTTO LE STELLE - GARA TIPO PISTA",
     "data": "8 Luglio 2026",
     "status": "pending",
-    "lastChecked": "2026-08-26T05:00:33.888Z"
+    "lastChecked": "2026-08-27T05:00:34.635Z"
   },
   "182617": {
     "nome": "46^ COPPA LA ROCCA - TROFEO F.LLI BAGAGLI",
@@ -154,5 +166,11 @@
     "lastChecked": "2026-08-24T22:50:32.277Z",
     "written": 23,
     "review": []
+  },
+  "182813": {
+    "nome": "5° RIDE FOR CHILDREN - GARA TIPO PISTA",
+    "data": "27 Agosto 2026",
+    "status": "pending",
+    "lastChecked": "2026-08-27T05:00:38.040Z"
   }
 }
