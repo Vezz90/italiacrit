@@ -14972,6 +14972,12 @@ async function renderGaraStorica(ciclismoGaraId) {
   const rows = payload?.risultati || [];
   if (!rows.length) return renderNotFound();
   const mediaList = payload?.media || [];
+  // Esposto per il tag picker di foto/video (vedi _rpBindRiderSearch): i
+  // partecipanti di una gara storica ciclismo.info non sono quasi mai in
+  // globalData.athletes (bulk della SOLA stagione nativa caricata), quindi
+  // la ricerca corridore da taggare non trovava nessuno — bug reale
+  // osservato dal vivo, foto caricate e "taggate" restavano senza tag.
+  window._currentGaraRows = rows;
 
   // Risultati importati da PCS per questa gara (bottone "Importa PCS") —
   // qui si riempiono i BUCHI nel podio (posizioni mancanti nel mezzo, es.
@@ -16978,6 +16984,18 @@ window.openPhotoPurchaseModal = function(src, photographerName, albumTitle, gara
 
 // Top-10 di una gara (per esordienti include ES1+ES2), per il pannello di tag.
 function _mediaTopTen(garaId) {
+  // Gara storica ciclismo.info (CIC_...): mai in globalData.resultsRaw (solo
+  // risultati nativi) — usa i partecipanti già caricati per quella gara
+  // (vedi window._currentGaraRows in renderGaraStorica).
+  if (String(garaId || '').startsWith('CIC_')) {
+    return (window._currentGaraRows || [])
+      .filter(r => r.atleta_id && Number(r.posizione) >= 1 && Number(r.posizione) <= 10)
+      .map(r => {
+        const parts = String(r.nome_completo || '').trim().split(/\s+/);
+        return { atleta_id: r.atleta_id, posizione: r.posizione, cognome: parts[0] || r.nome_completo, nome: parts.slice(1).join(' ') };
+      })
+      .sort((a, b) => Number(a.posizione) - Number(b.posizione));
+  }
   const raw = (globalData && globalData.resultsRaw) || [];
   const isEs = /_ES[12]_[MF]$/.test(garaId || '');
   const base = (garaId || '').replace(/_ES[12]_([MF])$/, '_ES_$1');
@@ -18271,6 +18289,21 @@ function _initGaraMediaModals() {
         if (name.includes(ql)) out.push({ id, label: `${a.cognome || ''} ${a.nome || ''}`.trim(), sub: a.team_attuale || '' });
         if (out.length >= 6) break;
       }
+      // Partecipanti della gara corrente, nativa o storica ciclismo.info
+      // (vedi window._currentGaraRows in renderGara/renderGaraStorica) — un
+      // corridore assente da globalData.athletes per qualsiasi motivo (mai
+      // in globalData per le gare storiche, o semplicemente non ancora nel
+      // ranking FCI di stagione per quelle native) risultava introvabile
+      // nella ricerca, quindi mai taggabile (bug osservato dal vivo: foto
+      // "taggate" salvate senza nessun tag).
+      if (out.length < 6) {
+        for (const r of (window._currentGaraRows || [])) {
+          if (out.length >= 6) break;
+          if (!r.atleta_id || chosen.has(r.atleta_id) || out.some(o => o.id === r.atleta_id)) continue;
+          const label = (r.nome_completo || `${r.cognome || ''} ${r.nome || ''}`).trim();
+          if (label.toLowerCase().includes(ql)) out.push({ id: r.atleta_id, label: label || r.atleta_id, sub: r.team || '' });
+        }
+      }
       _riderDd.innerHTML = out.length
         ? out.map(o => `<div class="search-result-item" style="padding:7px 10px;cursor:pointer;border-bottom:1px solid var(--border-subtle)"
               onclick="window._rpAddRider('${esc(o.id)}','${esc(o.label.replace(/'/g,'’'))}')">
@@ -18607,6 +18640,11 @@ async function renderGara(gara_id) {
 
   const calEntry = calendar.find(g => g.id === primaryGaraId) || calendar.find(g => g.id === gara_id);
   const results = resultsRaw.filter(r => r.gara_id === gara_id).sort((a,b) => a.posizione - b.posizione);
+  // Esposto per il tag picker di foto/video (vedi _rpBindRiderSearch) —
+  // un partecipante non ancora nel ranking FCI di stagione (registrazione
+  // recente, o comunque assente da globalData.athletes per qualsiasi
+  // motivo) risultava introvabile nella ricerca corridore da taggare.
+  window._currentGaraRows = results;
 
   if (!results.length && !calEntry) return renderNotFound();
 
