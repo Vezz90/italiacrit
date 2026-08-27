@@ -15257,7 +15257,7 @@ async function _loadTeamCiclismoStorico(teamId, teamNome, nativeCount) {
 }
 
 window._teamCiclismoCurCat = window._teamCiclismoCurCat || {};
-window.setTeamCiclismoYear = (teamId, anno, catOverride) => {
+window.setTeamCiclismoYear = async (teamId, anno, catOverride) => {
   const perAnno = window._ciclismoTeamStoricoCache[teamId];
   const allRows = (perAnno && perAnno[anno] || []).slice().sort((a, b) => (b.data || '').localeCompare(a.data || '') || (a.nome_completo || '').localeCompare(b.nome_completo || ''));
   if (!allRows.length) return;
@@ -15338,11 +15338,20 @@ window.setTeamCiclismoYear = (teamId, anno, catOverride) => {
   const rankAccents = ['var(--gold)', 'var(--silver)', 'var(--bronze)'];
   const topPerformers = [...perAtleta.values()].sort((a, b) => b.wins - a.wins || b.placements - a.placements || a.best - b.best);
   const bestBadge = p => p.best <= 10 ? `<span style="color:${posColor(p.best)};font-weight:800">${p.best}°</span>` : '—';
+  // Cerchio avatar SEMPRE presente (foto se c'è, sagoma placeholder se no) —
+  // come nel roster 2026: prima lo span mancava del tutto per gli atleti
+  // senza profilo E non veniva mai caricato per quelli con profilo (nessun
+  // batch-loader qui, a differenza della pagina gara storica), quindi i
+  // cerchi non comparivano mai (bug osservato dal vivo).
+  const _avPlaceholderSvg = `<svg width=20 height=20 viewBox='0 0 24 24' fill='none' stroke='currentColor' stroke-width='1.5'><circle cx='12' cy='8' r='4'/><path d='M4 20c0-4 3.6-7 8-7s8 3 8 7'/></svg>`;
+  const _avSpan = p => p.atleta_id
+    ? `<span class="rk-av-wrap" data-aid="${esc(p.atleta_id)}"><span class=rk-av-placeholder>${_avPlaceholderSvg}</span></span>`
+    : `<span class="rk-av-wrap"><span class=rk-av-placeholder>${_avPlaceholderSvg}</span></span>`;
   const topPerfHtml = topPerformers.length ? topPerformers.map((p, i) => {
     const nomeLink = p.atleta_id ? `<a href="#/atleta/${esc(p.atleta_id)}">${esc(p.nome)}</a>` : esc(p.nome || '');
     return `<div class="team-performer-card">
       <div class="team-perf-rank" style="color:${rankAccents[i] || 'var(--text-muted)'}">${i + 1}</div>
-      ${p.atleta_id ? `<span class="rk-av-wrap" data-aid="${esc(p.atleta_id)}"></span>` : ''}
+      ${_avSpan(p)}
       <div class="team-perf-info">
         <div class="team-perf-name">${nomeLink}</div>
         <div style="font-size:.72rem;color:var(--text-muted)">${p.wins ? `${p.wins} vitt.` : `${p.gare} gare`}</div>
@@ -15353,7 +15362,7 @@ window.setTeamCiclismoYear = (teamId, anno, catOverride) => {
   const rosterCardsHtml = topPerformers.map(p => {
     const nomeLink = p.atleta_id ? `<a href="#/atleta/${esc(p.atleta_id)}">${esc(p.nome)}</a>` : esc(p.nome || '');
     return `<div class="team-performer-card">
-      ${p.atleta_id ? `<span class="rk-av-wrap" data-aid="${esc(p.atleta_id)}"></span>` : ''}
+      ${_avSpan(p)}
       <div class="team-perf-info">
         <div class="team-perf-name">${nomeLink}</div>
         <div style="font-size:.72rem;color:var(--text-muted)">${p.gare} gare</div>
@@ -15433,6 +15442,28 @@ window.setTeamCiclismoYear = (teamId, anno, catOverride) => {
       <div class="profile-media-grid">${mediaCards}</div>
     </div>` : ''}
   `;
+
+  // Carica le vere foto profilo nei cerchi appena aggiunti (stesso pattern
+  // batch async usato in renderGaraStorica) — il placeholder è già visibile
+  // subito, questa parte lo sostituisce con la foto reale se esiste.
+  const _avSpans = [...el.querySelectorAll('.rk-av-wrap[data-aid]')];
+  const batchSize = 8;
+  for (let i = 0; i < _avSpans.length; i += batchSize) {
+    await Promise.all(_avSpans.slice(i, i + batchSize).map(async span => {
+      if (!document.contains(span)) return;
+      const aid = span.dataset.aid;
+      const ov = await getEntityOverrides('atleta', aid).catch(() => ({}));
+      if (!document.contains(span)) return;
+      if (ov.photo_url) {
+        const img = document.createElement('img');
+        img.src = mediaUrl(ov.photo_url);
+        img.className = 'rk-av-img'; img.alt = '';
+        img.onerror = () => {};
+        span.innerHTML = '';
+        span.appendChild(img);
+      }
+    }));
+  }
 };
 
 async function _loadAtletaPcsExtra(atletaId, season, icsRisultati, athlete) {
