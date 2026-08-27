@@ -8730,6 +8730,21 @@ function _classYearRowHtml(anno) {
       background:${y === anno ? 'var(--accent,#e8001d)' : 'var(--bg-elevated)'};color:${y === anno ? '#fff' : 'var(--text-secondary)'}">${y}</button>`).join('')}
   </div>`;
 }
+// Ordine ed etichetta dei codici categoria GREZZI di ciclismo.info (solo 8
+// in tutto l'archivio 2007-2025) — stesso ordine ES1→ES2→Allievi→Juniores→
+// Elite e stesso stile testuale ("Elite - U23", non "ELITE UNDER23") della
+// classifica nativa 2026 (vedi catLabel()).
+const _CICLISMO_CAT_ORDER = {
+  ESORDIENTI1: 0, ESORDIENTI2: 1, ALLIEVI: 2, JUNIORES: 3, ELITE_UNDER23: 4,
+  DONNE_ESORDIENTI: 0, DONNE_ALLIEVE: 1, DONNE_JUNIORES: 2,
+};
+const _CICLISMO_CAT_LABEL = {
+  ESORDIENTI1: 'Esordienti 1° Anno', ESORDIENTI2: 'Esordienti 2° Anno', ALLIEVI: 'Allievi',
+  JUNIORES: 'Juniores', ELITE_UNDER23: 'Elite - U23',
+  DONNE_ESORDIENTI: 'Donne Esordienti', DONNE_ALLIEVE: 'Donne Allieve', DONNE_JUNIORES: 'Donne Juniores',
+};
+function _ciclismoCatLabel(c) { return _CICLISMO_CAT_LABEL[c] || String(c).replace(/_/g, ' '); }
+
 async function renderClassificaStorica(anno) {
   let bodyEl = document.getElementById('class-storico-body');
   if (!bodyEl) {
@@ -8766,7 +8781,14 @@ async function renderClassificaStorica(anno) {
   }
 
   const classifica = payload?.classifica || {};
-  const allCats = Object.keys(classifica).sort();
+  // Stesso ordine ES1→ES2→Allievi→Juniores→Elite della classifica nativa
+  // (era invece alfabetico: "ALLIEVI" prima di "ELITE_UNDER23" prima di
+  // "ESORDIENTI1" — sbagliato) e stessa forma del testo (era il codice
+  // grezzo maiuscolo con "_"→spazio, es. "ELITE UNDER23" invece di
+  // "Elite - U23"). Le categorie non presenti in questa mappa (non
+  // dovrebbero essercene: solo 8 codici grezzi in tutto l'archivio 2007-2025)
+  // finiscono comunque in coda, non spariscono.
+  const allCats = Object.keys(classifica).sort((a, b) => (_CICLISMO_CAT_ORDER[a] ?? 99) - (_CICLISMO_CAT_ORDER[b] ?? 99));
   const controlsEl = document.getElementById('class-storico-controls');
   if (!allCats.length) {
     if (controlsEl) controlsEl.innerHTML = '';
@@ -8797,7 +8819,7 @@ async function renderClassificaStorica(anno) {
         <button class="tab-btn ${_classStoricoGender==='F'?'active-gender':''}" onclick="window.classSetGender('F')">DONNE</button>
       </div>` : ''}
       <div class="tab-group" role="tablist" aria-label="Seleziona categoria">
-        ${cats.map(c => `<button class="tab-btn ${curCat === c ? 'active-cat' : ''}" onclick="window.classSetCat('${esc(c)}')">${esc(String(c).replace(/_/g, ' '))}</button>`).join('')}
+        ${cats.map(c => `<button class="tab-btn ${curCat === c ? 'active-cat' : ''}" onclick="window.classSetCat('${esc(c)}')">${esc(_ciclismoCatLabel(c))}</button>`).join('')}
       </div>
       <div class="ranking-filter-bar" style="margin-top:16px">
         <input type="search" id="class-storico-search" placeholder="Cerca atleta o team…" value="${esc(_classStoricoSearch)}"
