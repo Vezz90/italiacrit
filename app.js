@@ -14823,7 +14823,10 @@ async function _loadAtletaTopResultsWidget(atletaId, nativeRisultati, currentTea
   // categoria FCI, quindi qui resta vuota.
   for (const t of teamHistoryRows) {
     const y = String(t.season);
-    if (!t.team || teamsByYear.has(y)) continue;
+    // PCS pubblica anche i contratti futuri già firmati (es. un trasferimento
+    // annunciato per l'anno prossimo) — su un sito fermo alla stagione
+    // corrente sembrerebbero un errore di battitura, non un dato vero.
+    if (!t.team || teamsByYear.has(y) || Number(y) > Number(nowYear)) continue;
     teamsByYear.set(y, { team: t.team, categoria: '', pcs: true });
   }
   const teamYears = [...teamsByYear.keys()].sort((a, b) => b - a);

@@ -4177,8 +4177,11 @@ app.get('/api/pcs-athlete/:id', async (req, res) => {
       // scheda dava 404 anche per i più grandi nomi del ciclismo mondiale.
       supabase.from('pcs_results').select('season').eq('atleta_id', aid).order('season', { ascending: false }).limit(1).maybeSingle(),
       // Squadra più recente nota da PCS (pcs-athlete-import.js) — sostituisce
-      // il generico "PROFESSIONISTA" quando disponibile.
-      supabase.from('pcs_team_history').select('team, season').eq('atleta_id', aid).order('season', { ascending: false }).limit(1).maybeSingle(),
+      // il generico "PROFESSIONISTA" quando disponibile. Limitata all'anno
+      // corrente: PCS pubblica anche i contratti futuri già firmati, che
+      // qui sembrerebbero solo un errore di battitura sulla data.
+      supabase.from('pcs_team_history').select('team, season').eq('atleta_id', aid)
+        .lte('season', new Date().getFullYear()).order('season', { ascending: false }).limit(1).maybeSingle(),
     ]);
     const profMap = {}; if (profR.data?.new_value) { try { profMap[aid] = JSON.parse(profR.data.new_value); } catch {} }
     const ovMap = { [aid]: {} }; for (const o of (ovs.data || [])) ovMap[aid][o.field] = o.new_value;
