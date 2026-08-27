@@ -14733,12 +14733,14 @@ async function _loadAtletaTopResultsWidget(atletaId, nativeRisultati, currentTea
   const el = document.getElementById('atleta-pcs-widget');
   if (!el) return;
 
-  const [ciclismoPayload, pcsRows] = await Promise.all([
+  const [ciclismoPayload, pcsRows, pcsTeamHistory] = await Promise.all([
     apiCall(`/ciclismo-results/atleta/${encodeURIComponent(atletaId)}`).catch(() => null),
     apiCall(`/pcs-results/atleta/${encodeURIComponent(atletaId)}`).catch(() => []),
+    apiCall(`/pcs-team-history/${encodeURIComponent(atletaId)}`).catch(() => []),
   ]);
   const ciclismoRows = ciclismoPayload?.risultati || [];
-  if (!ciclismoRows.length && !(Array.isArray(pcsRows) && pcsRows.length) && !(nativeRisultati || []).length) return;
+  const teamHistoryRows = Array.isArray(pcsTeamHistory) ? pcsTeamHistory : [];
+  if (!ciclismoRows.length && !(Array.isArray(pcsRows) && pcsRows.length) && !(nativeRisultati || []).length && !teamHistoryRows.length) return;
 
   const merged = [];
   for (const r of (nativeRisultati || [])) {
@@ -14792,9 +14794,13 @@ async function _loadAtletaTopResultsWidget(atletaId, nativeRisultati, currentTea
     return `<div class="pcs-top-result-row"><span class="pcs-top-result-pos">${posLabel}</span><span class="pcs-top-result-name">${nomeHtml}</span> <span class="pcs-top-result-year">('${esc(String(r.anno).slice(-2))})</span></div>`;
   }).join('');
 
-  // Teams per anno: ciclismo.info (per anno) + team nativo attuale — PCS non
-  // fornisce il nome squadra per riga, quindi le annate pro/continental
-  // note solo da PCS non compaiono qui finché non recuperiamo quel dato.
+  // Teams per anno — priorità delle fonti: ciclismo.info (dato reale già
+  // registrato per l'anno) > ICS nativo (stagione attuale) > PCS storia
+  // squadra (solo per riempire i buchi che le altre due non coprono, es. gli
+  // anni da professionista puro senza nessun risultato/roster italiano —
+  // vedi pcs-athlete-import.js/pcs_team_history). Non sovrascrive mai un
+  // anno già noto da ciclismo.info: quella resta sempre la fonte di verità
+  // per i suoi anni.
   const teamsByYear = new Map();
   for (const r of ciclismoRows) {
     if (!r.stagione || !r.team) continue;
@@ -14812,10 +14818,18 @@ async function _loadAtletaTopResultsWidget(atletaId, nativeRisultati, currentTea
   const hasRealResultNowYear = (nativeRisultati || []).some(r => r.data && r.posizione)
     || (Array.isArray(pcsRows) ? pcsRows : []).some(r => String(r.season || (r.data || '').slice(0, 4)) === nowYear && r.data && r.posizione);
   if (currentTeam && hasRealResultNowYear) teamsByYear.set(nowYear, { team: currentTeam, categoria: currentCategoria });
+  // Ultima spiaggia: gli anni che ciclismo.info/ICS non coprono affatto
+  // (tipicamente la carriera da professionista) — PCS non conosce la
+  // categoria FCI, quindi qui resta vuota.
+  for (const t of teamHistoryRows) {
+    const y = String(t.season);
+    if (!t.team || teamsByYear.has(y)) continue;
+    teamsByYear.set(y, { team: t.team, categoria: '', pcs: true });
+  }
   const teamYears = [...teamsByYear.keys()].sort((a, b) => b - a);
   const teamsHtml = teamYears.map(y => {
-    const { team, categoria } = teamsByYear.get(y);
-    const tid = y === nowYear ? (currentTeamId || _resolveHistoricalTeamId(team)) : _resolveHistoricalTeamId(team);
+    const { team, categoria, pcs } = teamsByYear.get(y);
+    const tid = y === nowYear ? (currentTeamId || _resolveHistoricalTeamId(team)) : (pcs ? null : _resolveHistoricalTeamId(team));
     const teamHtml = tid ? `<a href="#/team/${esc(tid)}">${esc(team)}</a>` : esc(team || '');
     const catShort = (categoria || '').replace(/_/g, ' ');
     return `<div class="pcs-team-row"><span class="pcs-team-year">${esc(y)}</span><span class="pcs-team-name">${teamHtml}</span>${catShort ? ` <span class="pcs-team-cat">(${esc(catShort)})</span>` : ''}</div>`;

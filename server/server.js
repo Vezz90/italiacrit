@@ -4163,7 +4163,7 @@ app.get('/api/pcs-athlete/:id', async (req, res) => {
   if (!supabase) return res.status(503).json({ error: 'Supabase non disponibile' });
   try {
     const aid = req.params.id;
-    const [profR, ovs, sample, pcsPro] = await Promise.all([
+    const [profR, ovs, sample, pcsPro, pcsTeamHist] = await Promise.all([
       supabase.from('entity_overrides').select('new_value')
         .eq('entity_type', 'pcs_atleta').eq('field', 'profile').eq('entity_id', aid).maybeSingle(),
       supabase.from('entity_overrides').select('field, new_value')
@@ -4176,6 +4176,9 @@ app.get('/api/pcs-athlete/:id', async (req, res) => {
       // gara pcs_gara_results né roster italiano: senza questo controllo la
       // scheda dava 404 anche per i più grandi nomi del ciclismo mondiale.
       supabase.from('pcs_results').select('season').eq('atleta_id', aid).order('season', { ascending: false }).limit(1).maybeSingle(),
+      // Squadra più recente nota da PCS (pcs-athlete-import.js) — sostituisce
+      // il generico "PROFESSIONISTA" quando disponibile.
+      supabase.from('pcs_team_history').select('team, season').eq('atleta_id', aid).order('season', { ascending: false }).limit(1).maybeSingle(),
     ]);
     const profMap = {}; if (profR.data?.new_value) { try { profMap[aid] = JSON.parse(profR.data.new_value); } catch {} }
     const ovMap = { [aid]: {} }; for (const o of (ovs.data || [])) ovMap[aid][o.field] = o.new_value;
@@ -4190,7 +4193,7 @@ app.get('/api/pcs-athlete/:id', async (req, res) => {
         return res.json({
           atleta_id: aid, cognome, nome,
           categoria: '', genere: ovMap[aid].genere || 'M',
-          team_id: ovMap[aid].team_id || null, team_nome: ovMap[aid].team || 'PROFESSIONISTA',
+          team_id: ovMap[aid].team_id || null, team_nome: ovMap[aid].team || pcsTeamHist.data?.team || 'PROFESSIONISTA',
         });
       }
       // Nessuna traccia PCS: prova come atleta noto solo da ciclismo.info
@@ -4214,6 +4217,18 @@ app.get('/api/pcs-athlete/:id', async (req, res) => {
     }
     const a = _resolvePcsAthlete(aid, sample.data, profMap, ovMap, _buildTeamIndex());
     res.json({ atleta_id: aid, ...a });
+  } catch (e) { res.status(500).json({ error: e.message }); }
+});
+
+// Storia squadra-per-anno da PCS (vedi pcs-athlete-import.js) — un
+// professionista puro (mai in un roster italiano) non ha altra fonte per
+// sapere con chi corresse in una stagione passata.
+app.get('/api/pcs-team-history/:atletaId', async (req, res) => {
+  try {
+    const { data, error } = await supabase.from('pcs_team_history')
+      .select('season, team, team_pcs_slug').eq('atleta_id', req.params.atletaId).order('season', { ascending: false });
+    if (error) throw error;
+    res.json(data || []);
   } catch (e) { res.status(500).json({ error: e.message }); }
 });
 
