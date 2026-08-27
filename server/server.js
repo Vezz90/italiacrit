@@ -4173,7 +4173,26 @@ app.get('/api/pcs-athlete/:id', async (req, res) => {
     ]);
     const profMap = {}; if (profR.data?.new_value) { try { profMap[aid] = JSON.parse(profR.data.new_value); } catch {} }
     const ovMap = { [aid]: {} }; for (const o of (ovs.data || [])) ovMap[aid][o.field] = o.new_value;
-    if (!profMap[aid] && !sample.data && !(ovs.data || []).length) return res.status(404).json({ error: 'Atleta PCS non trovato' });
+    if (!profMap[aid] && !sample.data && !(ovs.data || []).length) {
+      // Nessuna traccia PCS: prova come atleta noto solo da ciclismo.info
+      // (profilo creato automaticamente dagli scraper storici in manual_athletes,
+      // mai apparso in una gara PCS/FCI con roster proprio) — senza questo
+      // fallback la scheda dava 404 anche se l'atleta è cliccabile ovunque
+      // sul sito (classifica storica, roster team, gare storiche).
+      const { data: manual } = await supabase.from('manual_athletes').select('*').eq('atleta_id', aid).maybeSingle();
+      if (manual) {
+        return res.json({
+          atleta_id: aid,
+          cognome: manual.cognome || '',
+          nome: manual.nome || '',
+          categoria: manual.categoria || '',
+          genere: manual.genere || 'M',
+          team_id: manual.team_id || null,
+          team_nome: manual.team || 'SCONOSCIUTO',
+        });
+      }
+      return res.status(404).json({ error: 'Atleta PCS non trovato' });
+    }
     const a = _resolvePcsAthlete(aid, sample.data, profMap, ovMap, _buildTeamIndex());
     res.json({ atleta_id: aid, ...a });
   } catch (e) { res.status(500).json({ error: e.message }); }
