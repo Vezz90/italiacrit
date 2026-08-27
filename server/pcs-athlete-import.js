@@ -803,7 +803,13 @@ async function upsertTeamHistory(sb, atletaId, teamHistory) {
   // Bug reale osservato: MAGAGNOTTI_ALESSIO, slug "alessio-magagnotti" già
   // noto in extra_roster.json, zero righe in pcs_results — mai processato.
   const rosterPcsSlugs = new Map(); // atleta_id -> pcs_slug (per saltare la ricerca per nome sotto)
-  {
+  // Bug reale trovato dal vivo: questo blocco girava SEMPRE, anche in
+  // modalità --atleta-id/--ids-file — un run mirato su UN solo atleta si
+  // ritrovava comunque ~17.000 atleti ciclismo.info aggiunti alla coda
+  // (avrebbe scrapato PCS per giorni invece che per un atleta). In modalità
+  // mirata il roster va saltato: l'atleta richiesto è già in athMap dal
+  // ramo sopra, qui servirebbe solo ad aggiungerne altri non richiesti.
+  if (!SINGLE_ID && !IDS_FILE) {
     const rosterSlugs = new Map(); // atleta_id -> {cognome, nome, pcs_slug}
     const addRoster = (obj) => {
       for (const bucket of Object.values(obj || {})) {
