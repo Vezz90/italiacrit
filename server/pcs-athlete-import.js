@@ -273,6 +273,26 @@ async function extractProfileAndResults(page, season) {
     return { fullName: h1 ? h1.textContent.trim() : null };
   }).catch(() => ({ fullName: null }));
 
+  // Storia squadra-per-anno: la pagina rider/{slug}/{anno} mostra SEMPRE
+  // l'elenco completo della carriera (un link team/{slug}-{anno} per ogni
+  // stagione, dentro un contenitore con classe "name"), non solo quella
+  // dell'anno richiesto nell'URL — un solo caricamento basta per tutta la
+  // carriera. Non salvata da nessun'altra tabella esistente (pcs_results
+  // non ha colonna team): serve a ricostruire la storia di un
+  // professionista puro senza nessun risultato/roster italiano che la porti
+  // già (es. Pogačar, Vingegaard — mai su un team italiano).
+  const teamHistory = await page.evaluate(() => {
+    const out = [];
+    for (const a of document.querySelectorAll('a[href]')) {
+      if ((a.parentElement?.className || '').trim() !== 'name') continue;
+      const href = (a.getAttribute('href') || '').replace(/^\/+/, '');
+      const m = href.match(/^team\/([a-z0-9-]+)-(\d{4})$/);
+      if (!m) continue;
+      out.push({ season: parseInt(m[2], 10), name: a.textContent.trim(), slug: href });
+    }
+    return out;
+  }).catch(() => []);
+
   // Foto
   const imgSrc = await page.evaluate(() => {
     const img = [...document.querySelectorAll('img')]
@@ -490,7 +510,7 @@ async function extractProfileAndResults(page, season) {
     return rows;
   }, season).catch(() => []);
 
-  return { fullName: info.fullName, photo, socials, results };
+  return { fullName: info.fullName, photo, socials, results, teamHistory };
 }
 
 async function searchPcsRider(page, ath, gotoPcsPage) {
@@ -669,6 +689,15 @@ async function upsertResults(sb, rows) {
   if (error) throw error;
 }
 
+async function upsertTeamHistory(sb, atletaId, teamHistory) {
+  if (!teamHistory?.length) return;
+  const rows = teamHistory.map(t => ({
+    atleta_id: atletaId, season: t.season, team: t.name, team_pcs_slug: t.slug, updated_at: new Date().toISOString(),
+  }));
+  const { error } = await sb.from('pcs_team_history').upsert(rows, { onConflict: 'atleta_id,season' });
+  if (error) throw error;
+}
+
 // ─── Main ──────────────────────────────────────────────────────────────────
 
 (async () => {
@@ -721,6 +750,23 @@ async function upsertResults(sb, rows) {
         try { const r = await fetch(url); if (r.ok) { found = addRoster(await r.json()); if (found) break; } } catch {}
       }
       if (found) athMap.set(SINGLE_ID, found);
+    }
+    if (!athMap.size) {
+      // Atleta importato da ciclismo.info senza pcs_slug ancora noto (stesso
+      // caso gestito nel giro normale più sotto, "addedCiclismo") — qui la
+      // modalità --atleta-id lo saltava perché il ramo sopra richiede un
+      // pcs_slug già confermato: si prova comunque, la ricerca per nome più
+      // sotto (searchPcsRider) risolve lo slug da sola.
+      try {
+        const r = await fetch('https://italiacrit.onrender.com/api/data/manual-athletes');
+        if (r.ok) {
+          const data = await r.json();
+          for (const bucket of Object.values(data || {})) {
+            const a = (bucket.atleti || []).find(x => x.atleta_id === SINGLE_ID);
+            if (a) { athMap.set(SINGLE_ID, { atleta_id: a.atleta_id, cognome: a.cognome || a.atleta_id, nome: a.nome || '' }); break; }
+          }
+        }
+      } catch {}
     }
     if (!athMap.size) { console.error(`Atleta ${SINGLE_ID} non trovato né nei ranking né tra i fantasma né nel roster`); process.exit(1); }
   } else if (IDS_FILE) {
@@ -937,7 +983,7 @@ async function upsertResults(sb, rows) {
       i--;
       continue;
     }
-    const { photo, socials, results } = extracted;
+    const { photo, socials, results, teamHistory } = extracted;
 
     const fields = { pcs_slug: slug };
     if (photo && !withPhoto.has(atletaId)) {
@@ -962,6 +1008,13 @@ async function upsertResults(sb, rows) {
       errors++;
     }
     savedSlugs.set(atletaId, slug);
+
+    try {
+      await upsertTeamHistory(sb, atletaId, teamHistory);
+    } catch (e) {
+      process.stdout.write(`ERRORE DB team: ${e.message} `);
+      errors++;
+    }
 
     if (results.length) {
       const rows = results.map(r => ({
@@ -1001,6 +1054,7 @@ async function upsertResults(sb, rows) {
       fields.strava_url    ? 'ST' : '',
       fields.facebook_url  ? 'FB' : '',
       results.length        ? `${results.length} ris.` : '',
+      teamHistory?.length    ? `${teamHistory.length} squadre storiche` : '',
     ].filter(Boolean).join(' ') || '—';
     process.stdout.write(`✓ ${tags}\n`);
 
