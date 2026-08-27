@@ -20,7 +20,7 @@ const PORT = 4545;
 const LOGS = {
   risultati: {
     label: 'Risultati (colmatura buchi)',
-    file: 'C:\\Users\\vezza\\AppData\\Local\\Temp\\claude\\C--Users-vezza--gemini-antigravity-scratch-gpx-viewer\\05519ddc-787f-45f0-99c4-8aa81465dda1\\tasks\\bwmqegtca.output',
+    file: path.join(__dirname, 'gara_scraper_resume.log'),
     // Righe tipo: (2822/17348) 62 COPPA SAN SABINO [2013]: +4 posizioni recuperate
     re: /\((\d+)\/(\d+)\)/g,
   },
