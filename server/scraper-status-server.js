@@ -24,24 +24,24 @@ const LOGS = {
     // Righe tipo: (2822/17348) 62 COPPA SAN SABINO [2013]: +4 posizioni recuperate
     re: /\((\d+)\/(\d+)\)/g,
   },
-  dewatermark: {
-    label: 'Dewatermark foto',
-    file: path.join(__dirname, 'dewatermark_resume.log'),
-    // Righe tipo: ... 3875/5242 gare | foto rifatte: 923 | errori: 2
+  rematch: {
+    label: 'Ri-abbinamento foto al vincitore',
+    file: path.join(__dirname, 'rematch_gara_photos.log'),
+    // Righe tipo: ... 8600/9309 gare | cambiate: 3683 | già corrette: 4856 | ...
     re: /\.\.\.\s*(\d+)\/(\d+) gare/g,
   },
-  foto: {
-    label: 'Foto gara (nuove)',
-    file: path.join(__dirname, 'gara_media_resume.log'),
-    // Righe tipo: (604/30477) 23 TROFEO P AVOGARO [2017] …
+  pcsStorico: {
+    label: 'Profili PCS storici (2007-2025)',
+    file: path.join(__dirname, 'pcs_storico_full.log'),
+    // Righe tipo: (123/16214) COGNOME Nome [slug] … ✓ ...
     re: /\((\d+)\/(\d+)\)/g,
   },
 };
 
 // Storico dei campioni (in memoria, si resetta se il dashboard riparte) per
 // calcolare una velocità media e stimare il tempo restante.
-const history = { risultati: [], dewatermark: [], foto: [] };
-const lastTotal = { risultati: null, dewatermark: null, foto: null };
+const history = { risultati: [], rematch: [], pcsStorico: [] };
+const lastTotal = { risultati: null, rematch: null, pcsStorico: null };
 const MAX_HISTORY = 30;
 
 function readProgress(key, cfg) {
@@ -63,7 +63,7 @@ function readProgress(key, cfg) {
     if (current === null || n > current) { current = n; total = parseInt(m[2], 10); }
   }
   if (current === null) return { ok: false, error: 'nessun progresso ancora nel log' };
-  const done = /\n=== FATTO ===|\[exited with code 0\]/.test(text.slice(-400));
+  const done = /\n=== FATTO ===|\n=== Completato ===|\[exited with code 0\]/.test(text.slice(-400));
   const errored = /\[exited with code 1\]|ERRORE FATALE/.test(text.slice(-400)) && !done;
 
   const now = Date.now();
