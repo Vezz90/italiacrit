@@ -303,11 +303,21 @@ async function loadAtletiStorici(sb) {
     rows.push(...data);
     if (data.length < PAGE) break;
   }
-  // Anno più recente noto per ciascun atleta_id
+  // Anno più recente noto per ciascun atleta_id, E tutti gli anni noti da
+  // ciclismo.info (non solo il più recente) — servono entrambi: il primo
+  // per scegliere la pagina PCS iniziale, il secondo perché ciclismo.info
+  // pubblica solo i primi arrivati (i piazzamenti oltre un certo limite
+  // restano invisibili anche per un anno "coperto") — PCS spesso ha
+  // l'ordine d'arrivo più completo per la STESSA gara/anno. Senza questo,
+  // gli anni già coperti da ciclismo.info non venivano MAI controllati su
+  // PCS, perdendo quei piazzamenti più bassi (segnalato dall'utente).
   const lastYearByAtleta = new Map();
+  const yearsByAtleta = new Map();
   for (const r of rows) {
     const y = parseInt(r.stagione, 10);
     if (!lastYearByAtleta.has(r.atleta_id) || y > lastYearByAtleta.get(r.atleta_id)) lastYearByAtleta.set(r.atleta_id, y);
+    if (!yearsByAtleta.has(r.atleta_id)) yearsByAtleta.set(r.atleta_id, new Set());
+    yearsByAtleta.get(r.atleta_id).add(y);
   }
 
   // Nome completo: da manual_athletes (cognome/nome separati, più preciso)
@@ -339,7 +349,7 @@ async function loadAtletiStorici(sb) {
       const full = String(nomeCompletoByAtleta.get(atletaId) || '').trim().split(/\s+/);
       cognome = full[0] || atletaId; nome = full.slice(1).join(' ') || cognome;
     }
-    out.push({ atleta_id: atletaId, cognome, nome, lastYear });
+    out.push({ atleta_id: atletaId, cognome, nome, lastYear, ciclismoYears: [...(yearsByAtleta.get(atletaId) || [])] });
   }
   // Dal più vecchio al più recente (2007 → oggi), richiesta esplicita
   // dell'utente. Un atleta con più anni di ciclismo.info viene comunque
@@ -468,16 +478,21 @@ async function loadAtletiStorici(sb) {
       try { await upsertResults(sb, rows); doneResults++; totalResultRows += rows.length; } catch (e) { process.stdout.write(`ERRORE DB risultati: ${e.message} `); errors++; }
     }
 
-    // Anni PRO non ancora coperti: dalla storia squadra appena letta,
-    // qualunque stagione dopo l'ultimo anno ciclismo.info fino a oggi in
-    // cui l'atleta aveva davvero una squadra (non un buco di carriera) —
-    // richiesta esplicita dell'utente: non solo l'anno della pagina
-    // visitata, anche tutti gli altri già coperti da una squadra nota.
-    // Una visita di pagina in più per anno (i risultati riga-per-riga non
-    // sono nella storia squadra, solo lì).
+    // Ogni altro anno da controllare su PCS, oltre a quello della pagina
+    // già visitata: sia gli anni PRO successivi all'ultimo noto su
+    // ciclismo.info (storia squadra), SIA gli anni GIÀ coperti da
+    // ciclismo.info — ciclismo.info pubblica solo i primi arrivati, un
+    // piazzamento più basso (es. 20°) resta invisibile anche per un anno
+    // "coperto"; PCS spesso ha l'ordine d'arrivo più completo per la stessa
+    // gara. Prima si guardavano solo gli anni dopo l'ultimo noto, perdendo
+    // sistematicamente questi piazzamenti bassi per tutta la carriera
+    // amatoriale (richiesta esplicita dell'utente dopo averlo notato).
     const currentYear = new Date().getFullYear();
-    const extraYears = [...new Set((teamHistory || []).map(t => t.season))]
-      .filter(y => y > ath.lastYear && y <= currentYear && y !== season)
+    const extraYears = [...new Set([
+      ...(teamHistory || []).map(t => t.season),
+      ...(ath.ciclismoYears || []),
+    ])]
+      .filter(y => y <= currentYear && y !== season)
       .sort((a, b) => a - b);
     let extraYearsDone = 0;
     for (const y of extraYears) {

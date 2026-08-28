@@ -135,6 +135,12 @@ async function upsertResults(sb, rows) {
 }
 
 async function findGaps(sb) {
+  // thByAtleta = ogni anno che PCS "dovrebbe" avere per l'atleta: sia dalla
+  // storia squadra, SIA dagli anni già coperti da ciclismo.info — che
+  // pubblica solo i primi arrivati, quindi anche un anno "coperto" può
+  // nascondere un piazzamento più basso visibile solo su PCS (richiesta
+  // esplicita dell'utente, stessa correzione fatta in
+  // pcs-athlete-import-storico.js).
   const thByAtleta = new Map(), resByAtleta = new Map(), slugByAtleta = new Map();
   const PAGE = 1000;
   for (let from = 0; ; from += PAGE) {
@@ -142,6 +148,17 @@ async function findGaps(sb) {
     if (error) throw error;
     if (!data || !data.length) break;
     for (const r of data) { if (!thByAtleta.has(r.atleta_id)) thByAtleta.set(r.atleta_id, new Set()); thByAtleta.get(r.atleta_id).add(r.season); }
+    if (data.length < PAGE) break;
+  }
+  for (let from = 0; ; from += PAGE) {
+    const { data, error } = await sb.from('ciclismo_results').select('atleta_id, stagione').not('atleta_id', 'is', null).range(from, from + PAGE - 1);
+    if (error) throw error;
+    if (!data || !data.length) break;
+    for (const r of data) {
+      const y = parseInt(r.stagione, 10);
+      if (!thByAtleta.has(r.atleta_id)) thByAtleta.set(r.atleta_id, new Set());
+      thByAtleta.get(r.atleta_id).add(y);
+    }
     if (data.length < PAGE) break;
   }
   for (let from = 0; ; from += PAGE) {
