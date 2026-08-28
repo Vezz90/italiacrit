@@ -62,7 +62,10 @@ async function main() {
   for (const y of sorted) counts.set(y, (counts.get(y) || 0) + 1);
 
   let idx = 0;
-  const breakdown = [...counts.entries()].sort((a, b) => b[0] - a[0]).map(([year, count]) => {
+  // Ascendente (2007 prima) — deve rispecchiare l'ordine ESATTO con cui
+  // pcs-athlete-import-storico.js processa la lista adesso, altrimenti gli
+  // indici qui calcolati non corrispondono più a nessun anno reale.
+  const breakdown = [...counts.entries()].sort((a, b) => a[0] - b[0]).map(([year, count]) => {
     const startIndex = idx + 1;
     idx += count;
     return { year, count, startIndex, endIndex: idx };
