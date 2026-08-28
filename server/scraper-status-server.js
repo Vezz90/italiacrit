@@ -102,9 +102,33 @@ function fmtEta(mins) {
   return `${h}h ${m}min`;
 }
 
+// Avanzamento per anno dello scraper PCS storico (dal 2025 a scendere fino
+// al 2007, vedi pcs-athlete-import-storico.js) — il log dà solo un indice
+// globale (123/16619), non l'anno di chi si sta processando ora. Il file
+// pcs_storico_year_breakdown.json (generato a parte con
+// pcs-storico-year-breakdown.js, rilancialo per aggiornarlo) elenca quanti
+// atleti hanno ciascun anno come "ultimo noto" e a quale intervallo di
+// indici corrispondono, nell'ordine in cui lo scraper li visita davvero.
+// Il totale calcolato lì può differire leggermente da quello nel log (il
+// database continua a crescere mentre entrambi girano) — riscalato in
+// proporzione così le barre restano sensate anche con un po' di deriva.
+function readYearBreakdown(current, liveTotal) {
+  let raw;
+  try { raw = JSON.parse(fs.readFileSync(path.join(__dirname, 'pcs_storico_year_breakdown.json'), 'utf8')); }
+  catch { return null; }
+  if (!raw?.breakdown?.length) return null;
+  const scale = (liveTotal && raw.totalAtleti) ? liveTotal / raw.totalAtleti : 1;
+  const currentUnscaled = scale ? current / scale : current;
+  return raw.breakdown.map(b => {
+    const doneInBucket = Math.max(0, Math.min(b.count, Math.round(currentUnscaled - b.startIndex + 1)));
+    return { year: b.year, count: b.count, done: doneInBucket, pct: b.count ? Math.round((doneInBucket / b.count) * 1000) / 10 : 0 };
+  });
+}
+
 function buildStatus() {
   const out = {};
   for (const [key, cfg] of Object.entries(LOGS)) out[key] = { label: cfg.label, ...readProgress(key, cfg) };
+  if (out.pcsStorico?.ok) out.pcsStorico.byYear = readYearBreakdown(out.pcsStorico.current, out.pcsStorico.total);
   return out;
 }
 
@@ -146,6 +170,13 @@ const PAGE = `<!doctype html>
   .status-tag.done { background: rgba(34,197,94,0.15); color: #4ade80; }
   .status-tag.error { background: rgba(239,68,68,0.15); color: #f87171; }
   .empty { color: #8a8f98; font-size: .88rem; }
+  .years { display: flex; flex-direction: column; gap: 5px; margin-top: 16px; padding-top: 14px; border-top: 1px solid #232734; }
+  .year-row { display: grid; grid-template-columns: 44px 1fr 70px; align-items: center; gap: 10px; font-size: .74rem; }
+  .year-row .yr { color: #a8adba; font-variant-numeric: tabular-nums; }
+  .year-row .ybar-track { height: 6px; border-radius: 4px; background: #1f2330; overflow: hidden; }
+  .year-row .ybar-fill { height: 100%; border-radius: 4px; background: linear-gradient(90deg,#ff6b00,#ff9a3c); transition: width .4s ease; }
+  .year-row .ybar-fill.done { background: linear-gradient(90deg,#22c55e,#4ade80); }
+  .year-row .ycount { color: #6b7280; text-align: right; font-variant-numeric: tabular-nums; }
   footer { text-align: center; color: #5a5f6b; font-size: .75rem; margin-top: 28px; }
 </style>
 </head>
@@ -172,6 +203,18 @@ function render(data) {
     }
     const tag = s.done ? '<span class="status-tag done">Finito</span>' : s.errored ? '<span class="status-tag error">Fermo</span>' : '<span class="status-tag running">In corso</span>';
     const barClass = s.done ? 'done' : s.errored ? 'error' : '';
+    const yearsHtml = (s.byYear && s.byYear.length) ? (
+      '<div class="years">' +
+      s.byYear.map(y => {
+        const yDone = y.pct >= 100;
+        return '<div class="year-row">' +
+          '<div class="yr">' + y.year + '</div>' +
+          '<div class="ybar-track"><div class="ybar-fill' + (yDone ? ' done' : '') + '" style="width:' + y.pct + '%"></div></div>' +
+          '<div class="ycount">' + y.done.toLocaleString('it-IT') + ' / ' + y.count.toLocaleString('it-IT') + '</div>' +
+        '</div>';
+      }).join('') +
+      '</div>'
+    ) : '';
     return '<div class="card">' +
       '<div class="card-head"><div class="card-title">' + s.label + ' ' + tag + '</div><div class="card-pct">' + s.pct + '%</div></div>' +
       '<div class="bar-track"><div class="bar-fill ' + barClass + '" style="width:' + s.pct + '%"></div></div>' +
@@ -180,6 +223,7 @@ function render(data) {
         '<span>Velocità: <b>' + (s.ratePerMin ? s.ratePerMin.toFixed(1) : '—') + '</b> /min</span>' +
         '<span>Stima rimanente: <b>' + fmtEta(s.etaMin) + '</b></span>' +
       '</div>' +
+      yearsHtml +
     '</div>';
   }).join('');
 }
