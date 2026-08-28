@@ -15418,6 +15418,30 @@ window.setAtletaCiclismoYear = async (atletaId, anno) => {
     }
   } catch { /* nessun import PCS per queste gare, non bloccare */ }
 
+  // Risultati PCS AGGIUNTIVI per questo stesso anno — ciclismo.info
+  // pubblica solo i primi arrivati, quindi un piazzamento più basso (es.
+  // 20°) può comparire SOLO su PCS anche per un anno già "coperto" da
+  // ciclismo.info (richiesta esplicita dell'utente, segnalato su Jure
+  // Kocjan 2007). Già in cache lato client (window._pcsStoricoCache, vedi
+  // _loadCiclismoStorico) — nessuna chiamata di rete in più qui. Una gara
+  // già presente da ciclismo.info (stessa data) non viene duplicata: si
+  // aggiungono solo le gare che ciclismo.info non ha affatto per quest'anno.
+  const pcsExtra = (window._pcsStoricoCache[atletaId] || {})[anno] || [];
+  if (pcsExtra.length) {
+    const haveDates = new Set(rows.map(r => r.data));
+    for (const r of pcsExtra) {
+      if (!r.data || haveDates.has(r.data)) continue;
+      haveDates.add(r.data);
+      rows.push({
+        data: r.data, posizione: r.posizione, nome_gara: r.gara_name,
+        gara_ciclismo_url: null, regione: null, luogo: null,
+        team: rows[0]?.team, categoria: rows[0]?.categoria, stagione: anno,
+        punti_stagione: null, _pcsUrl: r.pcs_url, _country: r.country,
+      });
+    }
+    rows.sort((a, b) => (b.data || '').localeCompare(a.data || ''));
+  }
+
   // Stato attivo sulle pillole STAGIONE
   document.querySelectorAll('#profile-year-row .year-pill').forEach(b => {
     const on = b.dataset.year === String(anno);
@@ -15512,10 +15536,16 @@ window.setAtletaCiclismoYear = async (atletaId, anno) => {
   if (tbody) tbody.innerHTML = rows.map(r => {
     const pClass = posClass(r.posizione);
     const luogo = [r.regione, r.luogo].filter(Boolean).join(' · ');
+    // Riga aggiuntiva da PCS (nessun equivalente ciclismo.info per questa
+    // gara/anno, vedi merge sopra): link esterno a procyclingstats.com e
+    // bandiera del paese reale della gara, non sempre l'Italia.
+    const pcsLink = r._pcsUrl ? `https://www.procyclingstats.com/${r._pcsUrl}` : null;
+    const raceLink = pcsLink ? `<a href="${esc(pcsLink)}" target="_blank" rel="noopener">${esc(r.nome_gara)}</a>`
+      : (_ciclismoGaraHref(r.gara_ciclismo_url, r.nome_gara, r.stagione) ? `<a href="${esc(_ciclismoGaraHref(r.gara_ciclismo_url, r.nome_gara, r.stagione))}">${esc(r.nome_gara)}</a>` : esc(r.nome_gara));
     return `<tr data-date="${esc(r.data || '')}">
       <td class="td-date">${fmtDateShort(r.data)}</td>
       <td class="td-pos ${pClass} ${r.posizione === 1 ? 'win' : ''}">${r.posizione ? r.posizione + '°' : '—'}</td>
-      <td class="td-race"><span style="display:inline-flex;align-items:center;gap:5px">${countryFlagImg('it')}${_ciclismoGaraHref(r.gara_ciclismo_url, r.nome_gara, r.stagione) ? `<a href="${esc(_ciclismoGaraHref(r.gara_ciclismo_url, r.nome_gara, r.stagione))}">${esc(r.nome_gara)}</a>` : esc(r.nome_gara)}</span>${luogo ? `<div style="font-size:.68rem;color:var(--text-muted);margin-top:2px">${esc(luogo)}</div>` : ''}</td>
+      <td class="td-race"><span style="display:inline-flex;align-items:center;gap:5px">${countryFlagImg(r._country || 'it')}${raceLink}</span>${luogo ? `<div style="font-size:.68rem;color:var(--text-muted);margin-top:2px">${esc(luogo)}</div>` : ''}</td>
       <td style="text-align:center">—</td>
       <td style="text-align:right">—</td>
       <td style="text-align:right">—</td>
