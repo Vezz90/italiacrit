@@ -1,4 +1,4 @@
-const CACHE_NAME = 'italiacrit-cache-v479';
+const CACHE_NAME = 'italiacrit-cache-v480';
 
 // File statici: messi in cache e serviti velocemente
 const STATIC_ASSETS = [

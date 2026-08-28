@@ -22392,6 +22392,27 @@ function doSearch(q, dropdown) {
       .map(p => ({ type: 'media', id: p.id, display: p.display_name, sub: p.bio || 'Fotografo' }));
     if (mediaResults.length) renderDropdown([...results, ...mediaResults]);
   });
+
+  // Arricchisci con atleti "storici" (ciclismo.info, 2007-2025) — non sono
+  // MAI nel roster nativo (athletes.json = solo stagione in corso), quindi
+  // senza questa chiamata chi ha gareggiato solo negli anni storici non
+  // saltava fuori in ricerca, nemmeno scrivendone il nome per intero (bug
+  // segnalato dall'utente cercando un atleta storico omonimo di uno nativo).
+  // Async e non bloccante come i fotografi sopra; niente de-duplica con gli
+  // atleti nativi già trovati (stesso nome ma persona diversa è normale qui,
+  // proprio il caso — Rinaldi Luca 1990 vs 2004 — che ha fatto scoprire il
+  // bug delle omonimie unite per errore).
+  if (q.trim().length >= 2) {
+    fetch(`${API_BASE}/search-storico?q=${encodeURIComponent(q.trim())}`).then(r => r.json()).then(d => {
+      const storicoResults = (d.results || []).map(a => {
+        const [cognome, ...restoNome] = (a.nome_completo || '').trim().split(/\s+/);
+        const nome = restoNome.join(' ');
+        const bits = [a.team, a.anni, a.anno_nascita ? `classe ${a.anno_nascita}` : ''].filter(Boolean);
+        return { type: 'atleta', id: a.atleta_id, display: `${cognome||''} ${nome||''}`.trim(), sub: bits.join(' · ') };
+      });
+      if (storicoResults.length) renderDropdown([...results, ...storicoResults]);
+    }).catch(() => {});
+  }
 }
 
 window.goTo = (hash) => { window.location.hash = hash; };

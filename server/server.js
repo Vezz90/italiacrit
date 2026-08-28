@@ -7222,6 +7222,72 @@ app.get('/api/media/profiles', async (req, res) => {
   catch (e) { res.status(500).json({ error: e.message }); }
 });
 
+// Ricerca atleti "storici" (ciclismo.info, stagioni 2007-2025) — la barra di
+// ricerca del sito cercava finora SOLO in athletes.json (roster nativo della
+// stagione 2026 in corso), quindi chiunque avesse gareggiato solo negli anni
+// storici non saltava mai fuori, nemmeno scrivendone il nome per intero
+// (bug segnalato dall'utente: cercando "Rinaldi Luca 1990" niente risultati,
+// pur essendo un atleta reale con carriera 2008-2010 nel database). Include
+// l'anno di nascita quando noto: è lo stesso dato che ha permesso di scoprire
+// e separare gli omonimi (es. i due "Rinaldi Luca" — uno nato nel 1990, uno
+// nel 2004), quindi mostrarlo in ricerca aiuta a scegliere la persona giusta
+// invece di aprire un profilo a caso con lo stesso nome.
+app.get('/api/search-storico', async (req, res) => {
+  try {
+    const q = (req.query.q || '').trim();
+    if (q.length < 2) return res.json({ results: [] });
+
+    const tokens = q.toLowerCase().split(/\s+/).filter(Boolean).slice(0, 4);
+    let query = supabase.from('ciclismo_athletes').select('ciclismo_id, atleta_id, nome_completo, data_nascita').limit(200);
+    for (const t of tokens) query = query.ilike('nome_completo', `%${t}%`);
+    const { data: rows, error } = await query;
+    if (error) throw error;
+
+    // Un atleta_id per riga finale: prendi la prima data_nascita nota nel
+    // gruppo (dopo la separazione degli omonimi, ogni atleta_id è una sola
+    // persona, ma può avere più ciclismo_id per via delle iscrizioni ripetute
+    // negli anni).
+    const byAtletaId = new Map();
+    for (const r of rows || []) {
+      let e = byAtletaId.get(r.atleta_id);
+      if (!e) { e = { atleta_id: r.atleta_id, nome_completo: r.nome_completo, ciclismoIds: [], data_nascita: null }; byAtletaId.set(r.atleta_id, e); }
+      e.ciclismoIds.push(r.ciclismo_id);
+      if (!e.data_nascita && r.data_nascita) e.data_nascita = r.data_nascita;
+    }
+    const atletaIds = [...byAtletaId.keys()].slice(0, 12);
+    if (!atletaIds.length) return res.json({ results: [] });
+
+    const { data: results, error: e2 } = await supabase.from('ciclismo_results')
+      .select('atleta_id, stagione, team')
+      .in('atleta_id', atletaIds);
+    if (e2) throw e2;
+
+    const meta = new Map();
+    for (const r of results || []) {
+      let m = meta.get(r.atleta_id);
+      if (!m) { m = { firstYear: r.stagione, lastYear: r.stagione, lastTeam: r.team, lastTeamYear: r.stagione }; meta.set(r.atleta_id, m); }
+      if (r.stagione < m.firstYear) m.firstYear = r.stagione;
+      if (r.stagione > m.lastYear) m.lastYear = r.stagione;
+      if (r.stagione >= m.lastTeamYear) { m.lastTeam = r.team; m.lastTeamYear = r.stagione; }
+    }
+
+    const out = atletaIds.map(id => {
+      const e = byAtletaId.get(id);
+      const m = meta.get(id) || {};
+      const parts = (e.nome_completo || '').trim().split(/\s+/);
+      const anno = e.data_nascita ? (String(e.data_nascita).match(/(\d{4})/) || [])[1] : null;
+      return {
+        atleta_id: id,
+        nome_completo: e.nome_completo,
+        team: m.lastTeam || '',
+        anni: m.firstYear && m.lastYear ? `${m.firstYear}-${m.lastYear}` : '',
+        anno_nascita: anno || null,
+      };
+    });
+    res.json({ results: out });
+  } catch (e) { res.status(500).json({ error: e.message }); }
+});
+
 // Lista profili media scrapati e liberi (per utenti media che vogliono rivendicarli)
 app.get('/api/media/profiles/unclaimed', requireAuth, async (req, res) => {
   try {
