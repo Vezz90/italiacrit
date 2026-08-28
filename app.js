@@ -14683,6 +14683,12 @@ window.showPcsRaceModal = showPcsRaceModal;
 // ricaricare la pagina.
 window._ciclismoStoricoCache = window._ciclismoStoricoCache || {};
 window._ciclismoMediaCache = window._ciclismoMediaCache || {};
+// Anni coperti SOLO da PCS (carriera da professionista dopo l'ultimo anno
+// ciclismo.info, o comunque non coperti né da ciclismo.info né dalla
+// stagione nativa — vedi pcs-athlete-import-storico.js) — stesso
+// meccanismo delle pillole ciclismo.info sopra, dati diversi.
+window._pcsStoricoCache = window._pcsStoricoCache || {};
+window._pcsTeamHistCache = window._pcsTeamHistCache || {};
 
 async function _loadCiclismoStorico(atletaId, nativeSelYear, nativeCount) {
   const yearRow = document.getElementById('profile-year-row');
@@ -14712,10 +14718,38 @@ async function _loadCiclismoStorico(atletaId, nativeSelYear, nativeCount) {
 
   const nativeYears = new Set([...yearRow.querySelectorAll('.year-pill')].map(b => b.dataset.year));
   const ciclismoOnlyYears = Object.keys(perAnno).filter(y => !nativeYears.has(y)).sort((a, b) => b - a);
-  if (!ciclismoOnlyYears.length) return;
 
   const pillsHtml = ciclismoOnlyYears.map(y => `<button class="year-pill" data-year="${esc(y)}" data-ciclismo="1" onclick="window.setAtletaCiclismoYear('${esc(atletaId)}','${esc(y)}')" style="padding:5px 13px;border-radius:14px;border:1px solid var(--border-subtle);cursor:pointer;font-size:.82rem;font-weight:700;background:var(--bg-elevated);color:var(--text-secondary)">${esc(y)}</button>`).join('');
   yearRow.insertAdjacentHTML('beforeend', pillsHtml);
+
+  // Anni SOLO PCS (carriera pro non coperta né dalla stagione nativa né da
+  // ciclismo.info — vedi pcs-athlete-import-storico.js) — stesse pillole,
+  // altro gestore (window.setAtletaPcsYear).
+  try {
+    const [pcsRows, teamHistRows] = await Promise.all([
+      apiCall(`/pcs-results/atleta/${encodeURIComponent(atletaId)}`).catch(() => []),
+      apiCall(`/pcs-team-history/${encodeURIComponent(atletaId)}`).catch(() => []),
+    ]);
+    const pcsPerAnno = {};
+    for (const r of (Array.isArray(pcsRows) ? pcsRows : [])) {
+      const y = String(r.season || (r.data || '').slice(0, 4));
+      if (!y) continue;
+      (pcsPerAnno[y] = pcsPerAnno[y] || []).push(r);
+    }
+    window._pcsStoricoCache[atletaId] = pcsPerAnno;
+    const teamByYear = {};
+    for (const t of (Array.isArray(teamHistRows) ? teamHistRows : [])) teamByYear[String(t.season)] = t.team;
+    window._pcsTeamHistCache[atletaId] = teamByYear;
+
+    const coveredYears = new Set([...nativeYears, ...ciclismoOnlyYears]);
+    const pcsOnlyYears = Object.keys(pcsPerAnno).filter(y => !coveredYears.has(y)).sort((a, b) => b - a);
+    if (pcsOnlyYears.length) {
+      const pcsPillsHtml = pcsOnlyYears.map(y => `<button class="year-pill" data-year="${esc(y)}" data-pcs="1" onclick="window.setAtletaPcsYear('${esc(atletaId)}','${esc(y)}')" style="padding:5px 13px;border-radius:14px;border:1px solid var(--border-subtle);cursor:pointer;font-size:.82rem;font-weight:700;background:var(--bg-elevated);color:var(--text-secondary)">${esc(y)}</button>`).join('');
+      yearRow.insertAdjacentHTML('beforeend', pcsPillsHtml);
+    }
+  } catch { /* niente storia PCS per questo atleta, non bloccare */ }
+
+  if (!ciclismoOnlyYears.length) return;
 
   // La stagione nativa caricata (di default, es. 2026) è SEMPRE mostrata come
   // pillola anche senza un solo risultato ICS — ma un atleta che corre da
@@ -15458,6 +15492,90 @@ window.setAtletaCiclismoYear = async (atletaId, anno) => {
   // posizione), quindi buildCumulChart funziona invariata anche qui.
   const chartWrap = document.getElementById('atleta-cumul-chart-wrap');
   if (chartWrap) chartWrap.innerHTML = buildCumulChart(rows);
+};
+
+// Stesso meccanismo di setAtletaCiclismoYear ma per un anno coperto SOLO da
+// PCS (carriera da professionista, es. dopo l'ultimo anno ciclismo.info —
+// vedi pcs-athlete-import-storico.js): niente categoria FCI, niente punti
+// nostri, gare che linkano a procyclingstats.com invece di una pagina
+// interna (non abbiamo la pagina gara per queste).
+window.setAtletaPcsYear = (atletaId, anno) => {
+  const perAnno = window._pcsStoricoCache[atletaId];
+  const rows = (perAnno && perAnno[anno] || []).slice()
+    .map(r => ({ ...r, nome_gara: r.gara_name }))
+    .sort((a, b) => (b.data || '').localeCompare(a.data || ''));
+  if (!rows.length) return;
+
+  document.querySelectorAll('#profile-year-row .year-pill').forEach(b => {
+    const on = b.dataset.year === String(anno);
+    b.style.background = on ? 'var(--accent,#e8001d)' : 'var(--bg-elevated)';
+    b.style.color = on ? '#fff' : 'var(--text-secondary)';
+  });
+
+  const team = (window._pcsTeamHistCache[atletaId] || {})[anno] || '';
+  const resolvedTeamId = null; // squadre estere/pro, mai un team_id italiacrit noto
+  const headerTop = document.getElementById('atleta-header-top');
+  if (headerTop) {
+    const pillWrap = document.getElementById('atleta-team-pill-wrap');
+    if (pillWrap) pillWrap.innerHTML = team ? `<span style="font-family:var(--font-heading);font-size:.8rem;color:var(--text-secondary);border:1px solid var(--border-subtle);padding:2px 10px;border-radius:2px">${esc(team)}</span>` : '';
+    const catBadge = headerTop.querySelector('.badge-cat');
+    if (catBadge) catBadge.textContent = 'Professionista';
+  }
+  const photoWrap = document.getElementById('atleta-team-photo-wrap');
+  if (photoWrap) photoWrap.innerHTML = '';
+
+  const ptsDisplay = document.getElementById('atleta-pts-display');
+  if (ptsDisplay) ptsDisplay.style.display = 'none';
+
+  const { p1, p2, p3, pout } = _ciclismoYearStats(rows);
+  const label = document.getElementById('atleta-stats-italia-label');
+  if (label) label.textContent = 'STAGIONE';
+  const bar = document.getElementById('atleta-stats-italia-bar');
+  if (bar) bar.innerHTML = `
+    <div class="athlete-stat"><span class="athlete-stat-val" style="color:var(--gold)">${p1}</span><span class="athlete-stat-label">1° Posto</span></div>
+    <div class="athlete-stat"><span class="athlete-stat-val" style="color:var(--silver)">${p2}</span><span class="athlete-stat-label">2° Posto</span></div>
+    <div class="athlete-stat"><span class="athlete-stat-val" style="color:var(--bronze)">${p3}</span><span class="athlete-stat-label">3° Posto</span></div>
+    <div class="athlete-stat"><span class="athlete-stat-val" style="color:var(--text-muted)">${pout}</span><span class="athlete-stat-label">4°-10° Posti</span></div>
+  `;
+
+  const title = document.getElementById('atleta-results-title');
+  if (title) title.textContent = `RISULTATI ${anno} · Professionista (PCS)`;
+  const note = document.getElementById('atleta-ciclismo-note');
+  if (note) note.style.display = '';
+  const sortBtns = document.getElementById('atleta-sort-btns');
+  if (sortBtns) sortBtns.style.display = 'flex';
+  document.querySelectorAll('.ath-sort-btn').forEach(b => b.classList.toggle('active-cat', b.dataset.sort === 'data'));
+  const thead = document.getElementById('atleta-results-thead');
+  if (thead) thead.innerHTML = `<tr><th>DATA</th><th>POS</th><th>GARA</th><th>MOLT</th><th style="text-align:right">KM</th><th style="text-align:right">MEDIA</th><th>PTS</th></tr>`;
+
+  const tbody = document.getElementById('atleta-results-tbody');
+  if (tbody) tbody.innerHTML = rows.map(r => {
+    const pClass = posClass(r.posizione);
+    const link = r.pcs_url ? `https://www.procyclingstats.com/${r.pcs_url}` : null;
+    return `<tr data-date="${esc(r.data || '')}">
+      <td class="td-date">${fmtDateShort(r.data)}</td>
+      <td class="td-pos ${pClass} ${r.posizione === 1 ? 'win' : ''}">${r.posizione ? r.posizione + '°' : '—'}</td>
+      <td class="td-race"><span style="display:inline-flex;align-items:center;gap:5px">${countryFlagImg(r.country || '')}${link ? `<a href="${esc(link)}" target="_blank" rel="noopener">${esc(r.nome_gara)}</a>` : esc(r.nome_gara)}</span></td>
+      <td style="text-align:center">—</td>
+      <td style="text-align:right">—</td>
+      <td style="text-align:right">—</td>
+      <td class="td-pts">—</td>
+    </tr>`;
+  }).join('');
+
+  const nativoMedia = document.getElementById('atleta-media-nativo');
+  if (nativoMedia) nativoMedia.style.display = 'none';
+  const esteroGroup = document.getElementById('atleta-stats-estero');
+  if (esteroGroup) esteroGroup.style.display = 'none';
+  const seasonCompare = document.getElementById('season-compare-inject');
+  if (seasonCompare) seasonCompare.style.display = 'none';
+  // Nessuna foto/video interna per le gare PCS pure (mai una pagina gara
+  // nostra per queste).
+  const ciclismoMediaEl = document.getElementById('atleta-ciclismo-media');
+  if (ciclismoMediaEl) ciclismoMediaEl.innerHTML = '';
+
+  const chartWrapPcs = document.getElementById('atleta-cumul-chart-wrap');
+  if (chartWrapPcs) chartWrapPcs.innerHTML = buildCumulChart(rows);
 };
 
 // Griglia foto storiche ciclismo.info per l'anno selezionato — stesso stile
