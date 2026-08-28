@@ -291,12 +291,17 @@ async function upsertResults(sb, rows) {
 // visto su ciclismo.info (dove la sua carriera potrebbe essere continuata
 // da professionista subito dopo).
 async function loadAtletiStorici(sb) {
+  // .order('id') su tutte le pagine — senza, PostgREST non garantisce una
+  // paginazione stabile mentre altri scraper scrivono sulla stessa tabella
+  // in parallelo (righe saltate silenziosamente, successo dal vivo su
+  // pcs-storico-fill-gaps.js: segnalato dall'utente).
   const rows = [];
   const PAGE = 1000;
   for (let from = 0; ; from += PAGE) {
     const { data, error } = await sb.from('ciclismo_results')
       .select('atleta_id, ciclismo_id, stagione')
       .not('atleta_id', 'is', null)
+      .order('id')
       .range(from, from + PAGE - 1);
     if (error) throw error;
     if (!data || !data.length) break;
@@ -325,7 +330,7 @@ async function loadAtletiStorici(sb) {
   // atleta_id (nome_completo unico, split alla bell'e meglio).
   const manualByAtleta = new Map();
   for (let from = 0; ; from += PAGE) {
-    const { data, error } = await sb.from('manual_athletes').select('atleta_id, cognome, nome').range(from, from + PAGE - 1);
+    const { data, error } = await sb.from('manual_athletes').select('atleta_id, cognome, nome').order('atleta_id').range(from, from + PAGE - 1);
     if (error) throw error;
     if (!data || !data.length) break;
     for (const a of data) manualByAtleta.set(a.atleta_id, a);
@@ -333,7 +338,7 @@ async function loadAtletiStorici(sb) {
   }
   const nomeCompletoByAtleta = new Map();
   for (let from = 0; ; from += PAGE) {
-    const { data, error } = await sb.from('ciclismo_athletes').select('atleta_id, nome_completo').not('atleta_id', 'is', null).range(from, from + PAGE - 1);
+    const { data, error } = await sb.from('ciclismo_athletes').select('atleta_id, nome_completo').not('atleta_id', 'is', null).order('ciclismo_id').range(from, from + PAGE - 1);
     if (error) throw error;
     if (!data || !data.length) break;
     for (const a of data) if (!nomeCompletoByAtleta.has(a.atleta_id)) nomeCompletoByAtleta.set(a.atleta_id, a.nome_completo);
@@ -376,8 +381,23 @@ async function loadAtletiStorici(sb) {
   if (SINGLE_ID) athletes = athletes.filter(a => a.atleta_id === SINGLE_ID);
 
   if (SKIP_COMPLETE) {
-    const { data: doneOv } = await sb.from('entity_overrides').select('entity_id').eq('entity_type', 'atleta').eq('field', 'pcs_slug').not('new_value', 'is', null);
-    const done = new Set((doneOv || []).map(r => r.entity_id));
+    // Paginata — senza, il limite di default di PostgREST (1000 righe)
+    // troncava silenziosamente l'elenco dei già fatti ben oltre le prime
+    // 1000 persone completate: lo scraper ri-processava da capo migliaia
+    // di atleti già a posto, pensando fossero ancora da fare (bug reale,
+    // trovato dal vivo mentre si indagava un problema simile in
+    // pcs-storico-fill-gaps.js).
+    const done = new Set();
+    const PAGE = 1000;
+    for (let from = 0; ; from += PAGE) {
+      const { data, error } = await sb.from('entity_overrides').select('entity_id')
+        .eq('entity_type', 'atleta').eq('field', 'pcs_slug').not('new_value', 'is', null)
+        .order('id').range(from, from + PAGE - 1);
+      if (error) break;
+      if (!data || !data.length) break;
+      for (const r of data) done.add(r.entity_id);
+      if (data.length < PAGE) break;
+    }
     athletes = athletes.filter(a => !done.has(a.atleta_id));
     console.log(`Dopo --skip-complete: ${athletes.length} da processare\n`);
   }

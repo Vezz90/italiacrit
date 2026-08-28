@@ -63,11 +63,18 @@ function rankOf(cat) { return CAT_RANK[(cat || '').toUpperCase()] ?? 3; }
 // l'anno di nascita implicito di un cluster quando manca data_nascita reale).
 const TYPICAL_AGE_AT_RANK = { 1: 13, 2: 15, 3: 17, 4: 20 };
 
-async function fetchAll(sb, table, select, extra) {
+// orderCol: colonna stabile per paginare — senza, PostgREST non garantisce
+// pagine stabili se la tabella viene modificata da altri script MENTRE la si
+// scansiona (righe saltate silenziosamente, successo dal vivo su un altro
+// script gemello — segnalato dall'utente). Va indicata per ogni tabella che
+// viene letta mentre qualche scraper può starci scrivendo sopra.
+async function fetchAll(sb, table, select, extra, orderCol) {
   const rows = [];
   const PAGE = 1000;
   for (let from = 0; ; from += PAGE) {
-    let q = sb.from(table).select(select).range(from, from + PAGE - 1);
+    let q = sb.from(table).select(select);
+    if (orderCol) q = q.order(orderCol);
+    q = q.range(from, from + PAGE - 1);
     if (extra) q = extra(q);
     const { data, error } = await q;
     if (error) throw error;
@@ -88,7 +95,7 @@ async function main() {
   const sb = createClient(SUPABASE_URL, SUPABASE_SECRET, { realtime: { transport: ws } });
 
   console.log('Carico ciclismo_athletes…');
-  const athletes = await fetchAll(sb, 'ciclismo_athletes', 'ciclismo_id, nome_completo, atleta_id, data_nascita');
+  const athletes = await fetchAll(sb, 'ciclismo_athletes', 'ciclismo_id, nome_completo, atleta_id, data_nascita', null, 'ciclismo_id');
 
   const byAtletaId = new Map();
   const dobByCiclismoId = new Map();
@@ -104,7 +111,7 @@ async function main() {
   console.log('Carico ciclismo_results per quei ciclismo_id…');
   const relevantCiclismoIds = new Set(sharedAtletaIds.flatMap(id => byAtletaId.get(id)));
   const results = await fetchAll(sb, 'ciclismo_results', 'ciclismo_id, atleta_id, stagione, categoria',
-    q => q.in('atleta_id', sharedAtletaIds));
+    q => q.in('atleta_id', sharedAtletaIds), 'id');
 
   const perId = new Map(); // ciclismo_id -> {firstYear, lastYear, minRank, maxRank, nGare}
   for (const r of results) {

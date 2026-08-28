@@ -48,6 +48,7 @@ async function main() {
     const { data, error } = await sb.from('ciclismo_athletes')
       .select('ciclismo_id, atleta_id, nome_completo, data_nascita')
       .not('atleta_id', 'is', null)
+      .order('ciclismo_id')
       .range(from, from + PAGE - 1);
     if (error) throw error;
     if (!data || !data.length) break;

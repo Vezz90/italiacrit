@@ -141,17 +141,24 @@ async function findGaps(sb) {
   // nascondere un piazzamento più basso visibile solo su PCS (richiesta
   // esplicita dell'utente, stessa correzione fatta in
   // pcs-athlete-import-storico.js).
+  // .order() esplicito su TUTTE le pagine qui sotto — senza, PostgREST non
+  // garantisce una paginazione stabile su una tabella modificata da altri
+  // scraper MENTRE la si sta scansionando (successo dal vivo: i risultati
+  // 2025 di Ginestra Lorenzo, scritti giorni prima, sono stati saltati
+  // perché scritti prima della sessione MA la tabella intera continuava a
+  // crescere altrove durante la scansione a pagine, spostando i confini
+  // delle pagine già "viste" — segnalato dall'utente).
   const thByAtleta = new Map(), resByAtleta = new Map(), slugByAtleta = new Map();
   const PAGE = 1000;
   for (let from = 0; ; from += PAGE) {
-    const { data, error } = await sb.from('pcs_team_history').select('atleta_id, season').range(from, from + PAGE - 1);
+    const { data, error } = await sb.from('pcs_team_history').select('atleta_id, season').order('atleta_id').order('season').range(from, from + PAGE - 1);
     if (error) throw error;
     if (!data || !data.length) break;
     for (const r of data) { if (!thByAtleta.has(r.atleta_id)) thByAtleta.set(r.atleta_id, new Set()); thByAtleta.get(r.atleta_id).add(r.season); }
     if (data.length < PAGE) break;
   }
   for (let from = 0; ; from += PAGE) {
-    const { data, error } = await sb.from('ciclismo_results').select('atleta_id, stagione').not('atleta_id', 'is', null).range(from, from + PAGE - 1);
+    const { data, error } = await sb.from('ciclismo_results').select('atleta_id, stagione').not('atleta_id', 'is', null).order('id').range(from, from + PAGE - 1);
     if (error) throw error;
     if (!data || !data.length) break;
     for (const r of data) {
@@ -162,7 +169,7 @@ async function findGaps(sb) {
     if (data.length < PAGE) break;
   }
   for (let from = 0; ; from += PAGE) {
-    const { data, error } = await sb.from('pcs_results').select('atleta_id, season').range(from, from + PAGE - 1);
+    const { data, error } = await sb.from('pcs_results').select('atleta_id, season').order('id').range(from, from + PAGE - 1);
     if (error) throw error;
     if (!data || !data.length) break;
     for (const r of data) { if (!resByAtleta.has(r.atleta_id)) resByAtleta.set(r.atleta_id, new Set()); resByAtleta.get(r.atleta_id).add(r.season); }
@@ -170,7 +177,7 @@ async function findGaps(sb) {
   }
   for (let from = 0; ; from += PAGE) {
     const { data, error } = await sb.from('entity_overrides').select('entity_id, new_value')
-      .eq('entity_type', 'atleta').eq('field', 'pcs_slug').range(from, from + PAGE - 1);
+      .eq('entity_type', 'atleta').eq('field', 'pcs_slug').order('id').range(from, from + PAGE - 1);
     if (error) throw error;
     if (!data || !data.length) break;
     for (const r of data) slugByAtleta.set(r.entity_id, r.new_value);

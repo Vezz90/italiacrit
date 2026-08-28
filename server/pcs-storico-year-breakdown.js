@@ -32,11 +32,15 @@ if (!SUPABASE_SECRET) { console.error('Imposta SUPABASE_SECRET in server/.env.lo
 async function main() {
   const sb = createClient(SUPABASE_URL, SUPABASE_SECRET, { realtime: { transport: ws } });
 
+  // .order('id') su tutte le pagine qui sotto — senza, PostgREST non
+  // garantisce una paginazione stabile mentre altri scraper scrivono sulla
+  // stessa tabella in parallelo (righe saltate silenziosamente, successo
+  // dal vivo: segnalato dall'utente su pcs-storico-fill-gaps.js).
   const rows = [];
   const PAGE = 1000;
   for (let from = 0; ; from += PAGE) {
     const { data, error } = await sb.from('ciclismo_results')
-      .select('atleta_id, stagione').not('atleta_id', 'is', null).range(from, from + PAGE - 1);
+      .select('atleta_id, stagione').not('atleta_id', 'is', null).order('id').range(from, from + PAGE - 1);
     if (error) throw error;
     if (!data || !data.length) break;
     rows.push(...data);
@@ -51,10 +55,19 @@ async function main() {
 
   // Stesso filtro --skip-complete usato dallo scraper in corso: senza,
   // gli indici qui calcolati non corrisponderebbero a quelli del log reale
-  // (che gira sulla lista GIÀ filtrata, non su tutti gli atleti).
-  const { data: doneOv } = await sb.from('entity_overrides').select('entity_id')
-    .eq('entity_type', 'atleta').eq('field', 'pcs_slug').not('new_value', 'is', null);
-  const done = new Set((doneOv || []).map(r => r.entity_id));
+  // (che gira sulla lista GIÀ filtrata, non su tutti gli atleti). Va
+  // paginata anche questa — ormai ben oltre le 1000 righe (bloccate dal
+  // limite di default PostgREST se lette in un colpo solo, come prima).
+  const done = new Set();
+  for (let from = 0; ; from += PAGE) {
+    const { data, error } = await sb.from('entity_overrides').select('entity_id')
+      .eq('entity_type', 'atleta').eq('field', 'pcs_slug').not('new_value', 'is', null)
+      .order('id').range(from, from + PAGE - 1);
+    if (error) throw error;
+    if (!data || !data.length) break;
+    for (const r of data) done.add(r.entity_id);
+    if (data.length < PAGE) break;
+  }
   for (const id of done) lastYearByAtleta.delete(id);
 
   const sorted = [...lastYearByAtleta.values()].sort((a, b) => b - a);
