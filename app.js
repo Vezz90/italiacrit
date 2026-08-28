@@ -3929,8 +3929,14 @@ function route() {
   const m_gara = match('/gara/:id');
   if (m_gara) {
     // Gare storiche importate da ciclismo.info: id con prefisso CIC_, pagina
-    // interna dedicata (mai un link esterno) — vedi renderGaraStorica.
-    if (m_gara[1].startsWith('CIC_')) return renderGaraStorica(m_gara[1].slice(4));
+    // interna dedicata (mai un link esterno) — vedi renderGaraStorica. Un
+    // eventuale suffisso leggibile dopo l'id (es. "CIC_1620-trofeo-sintofarm-
+    // 2008", vedi _ciclismoGaraHref) è puramente cosmetico/SEO: si legge solo
+    // la parte numerica iniziale, il resto viene ignorato dal router.
+    if (m_gara[1].startsWith('CIC_')) {
+      const numId = (m_gara[1].slice(4).match(/^\d+/) || [])[0];
+      return renderGaraStorica(numId || m_gara[1].slice(4));
+    }
     return renderGara(m_gara[1]);
   }
   // Link diretti condivisibili dalla pagina Media: aprono subito il player
@@ -14834,7 +14840,7 @@ async function _loadAtletaTopResultsWidget(atletaId, nativeRisultati, currentTea
   }
   for (const r of ciclismoRows) {
     if (!r.data || !r.posizione) continue;
-    merged.push({ data: r.data, anno: r.stagione, posizione: r.posizione, nome_gara: r.nome_gara, url: _ciclismoGaraHref(r.gara_ciclismo_url), external: false, team: r.team, source: 'ciclismo' });
+    merged.push({ data: r.data, anno: r.stagione, posizione: r.posizione, nome_gara: r.nome_gara, url: _ciclismoGaraHref(r.gara_ciclismo_url, r.nome_gara, r.stagione), external: false, team: r.team, source: 'ciclismo' });
   }
   for (const r of (Array.isArray(pcsRows) ? pcsRows : [])) {
     if (!r.data || !r.posizione) continue;
@@ -14949,9 +14955,35 @@ function _ciclismoGaraId(url) {
   const m = String(url || '').match(/_(\d+)_(\d{4})_(\d{2})_(\d{2})_/);
   return m ? m[1] : null;
 }
-function _ciclismoGaraHref(url) {
+// Slug leggibile (nome+anno) da appendere all'id numerico opaco — le gare
+// storiche importate da ciclismo.info avevano solo link tipo "CIC_1620": non
+// dicono nulla a chi li apre/condivide né a un motore di ricerca, a
+// differenza delle gare native 2026 il cui id INCORPORA già nome e data.
+// Il router legge comunque solo la parte numerica dopo "CIC_" (vedi sotto),
+// quindi questo suffisso è puramente cosmetico/SEO: non serve toccare
+// l'endpoint né lo schema id esistente altrove nel sito.
+function _slugify(s) {
+  return String(s || '')
+    .toLowerCase()
+    .normalize('NFD').replace(/[̀-ͯ]/g, '')
+    .replace(/[^a-z0-9]+/g, '-')
+    .replace(/^-+|-+$/g, '')
+    .slice(0, 70);
+}
+function _ciclismoGaraSlug(url, nomeGara, stagione) {
+  let base = nomeGara || '';
+  let yr = stagione || '';
+  if (!base || !yr) {
+    const m = String(url || '').match(/_(\d+)_(\d{4})_(\d{2})_(\d{2})_(.+)\.htm$/i);
+    if (m) { if (!yr) yr = m[2]; if (!base) base = m[5].replace(/_/g, ' '); }
+  }
+  return _slugify(`${base} ${yr}`.trim());
+}
+function _ciclismoGaraHref(url, nomeGara, stagione) {
   const gid = _ciclismoGaraId(url);
-  return gid ? `#/gara/CIC_${gid}` : null;
+  if (!gid) return null;
+  const slug = _ciclismoGaraSlug(url, nomeGara, stagione);
+  return `#/gara/CIC_${gid}${slug ? '-' + slug : ''}`;
 }
 
 // Pagina gara storica ciclismo.info — completamente interna al sito (mai un
@@ -15483,7 +15515,7 @@ window.setAtletaCiclismoYear = async (atletaId, anno) => {
     return `<tr data-date="${esc(r.data || '')}">
       <td class="td-date">${fmtDateShort(r.data)}</td>
       <td class="td-pos ${pClass} ${r.posizione === 1 ? 'win' : ''}">${r.posizione ? r.posizione + '°' : '—'}</td>
-      <td class="td-race"><span style="display:inline-flex;align-items:center;gap:5px">${countryFlagImg('it')}${_ciclismoGaraHref(r.gara_ciclismo_url) ? `<a href="${esc(_ciclismoGaraHref(r.gara_ciclismo_url))}">${esc(r.nome_gara)}</a>` : esc(r.nome_gara)}</span>${luogo ? `<div style="font-size:.68rem;color:var(--text-muted);margin-top:2px">${esc(luogo)}</div>` : ''}</td>
+      <td class="td-race"><span style="display:inline-flex;align-items:center;gap:5px">${countryFlagImg('it')}${_ciclismoGaraHref(r.gara_ciclismo_url, r.nome_gara, r.stagione) ? `<a href="${esc(_ciclismoGaraHref(r.gara_ciclismo_url, r.nome_gara, r.stagione))}">${esc(r.nome_gara)}</a>` : esc(r.nome_gara)}</span>${luogo ? `<div style="font-size:.68rem;color:var(--text-muted);margin-top:2px">${esc(luogo)}</div>` : ''}</td>
       <td style="text-align:center">—</td>
       <td style="text-align:right">—</td>
       <td style="text-align:right">—</td>
@@ -22889,6 +22921,9 @@ async function renderRisultatiStorico(anno) {
 
   const posColorHero = ['p1', 'p2', 'p3'];
   cardsEl.innerHTML = visibleRaces.map(ev => {
+    // Suffisso leggibile (nome+anno) sul link CIC_<id>, altrimenti opaco —
+    // vedi _ciclismoGaraSlug.
+    const evHref = `#/gara/CIC_${esc(ev.id)}${(() => { const s = _slugify(`${ev.nome || ''} ${(ev.data||'').slice(0,4)}`); return s ? '-' + s : ''; })()}`;
     const catEntries = Object.entries(ev.categorie || {}).filter(([, top3]) => top3.length);
 
     const catSections = catEntries.map(([catName, top3]) => {
@@ -22907,7 +22942,7 @@ async function renderRisultatiStorico(anno) {
         <div class="ris-cat-label">${esc(String(catName).replace(/_/g, ' '))}</div>
         ${podioRows}
         <div class="ris-full-link">
-          <a href="#/gara/CIC_${esc(ev.id)}" class="btn-action full" style="font-size:0.75rem;text-align:center;flex:1">CLASSIFICA COMPLETA &rarr;</a>
+          <a href="${evHref}" class="btn-action full" style="font-size:0.75rem;text-align:center;flex:1">CLASSIFICA COMPLETA &rarr;</a>
         </div>
       </div>`;
     }).join(catEntries.length > 1 ? '<div class="ris-cat-divider"></div>' : '');
@@ -22917,13 +22952,13 @@ async function renderRisultatiStorico(anno) {
     const winLine = winner ? `Vince ${esc(winner.nome_completo)}${second ? ` davanti a ${esc(second.nome_completo)}` : ''}.` : '';
 
     const photoEl = ev.photo_url
-      ? `<a href="#/gara/CIC_${esc(ev.id)}" class="ris-card-photo"><img src="${esc(mediaUrl(ev.photo_url))}" alt="Foto gara" loading="lazy"/></a>`
+      ? `<a href="${evHref}" class="ris-card-photo"><img src="${esc(mediaUrl(ev.photo_url))}" alt="Foto gara" loading="lazy"/></a>`
       : '';
 
     return `<div class="hero-band ris-card">
       ${photoEl ? `<div class="ris-card-media">${photoEl}</div>` : ''}
       <div class="ris-card-body">
-        <div class="hero-race-name"><a href="#/gara/CIC_${esc(ev.id)}">${esc(ev.nome)}</a></div>
+        <div class="hero-race-name"><a href="${evHref}">${esc(ev.nome)}</a></div>
         ${winLine ? `<div class="ris-race-narrative">${winLine}</div>` : ''}
         <div class="hero-race-meta" style="margin-bottom:14px;">
           <span>${fmtDateShort(ev.data)}</span>
