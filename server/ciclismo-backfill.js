@@ -26,6 +26,7 @@ const { createClient } = require('@supabase/supabase-js');
 const ws = require('ws');
 const iconvLite = (() => { try { return require('iconv-lite'); } catch { return null; } })();
 const { fetchDecoded, parseClassificaPage, parseAthletePage, decodeEntities } = require('./ciclismo-info-test.js');
+const { checkAndSplitAtleta } = require('./namesake-guard.js');
 
 // Stessa funzione di server.js (_watermarkPhoto) / ciclismo-gara-media.js —
 // credit impresso nel file, non solo mostrato a schermo.
@@ -323,6 +324,12 @@ async function main() {
           if (error) { totErrori++; }
           else totRisultati += rows.length;
         }
+
+        // Proprio ora abbiamo scritto la data_nascita di questo ciclismo_id
+        // (sopra) e i suoi risultati (appena sopra): è il momento in cui può
+        // emergere un'omonimia come RINALDI_LUCA — due persone diverse unite
+        // sotto lo stesso atleta_id. Controllo scoped, mai bloccante.
+        if (finalAtletaId) await checkAndSplitAtleta(sb, finalAtletaId).catch(e => console.warn('  [namesake-guard]', e.message));
       }
 
       await sb.from('ciclismo_backfill_state').upsert({ id: stateId, anno, categoria: label, status: 'done' });

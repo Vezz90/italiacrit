@@ -18,6 +18,7 @@
 })();
 const { createClient } = require('@supabase/supabase-js');
 const { fetchDecoded, parseAthletePage } = require('./ciclismo-info-test.js');
+const { checkAndSplitAtleta } = require('./namesake-guard.js');
 
 const SUPABASE_URL = 'https://aqqsstsbgpapzoxllosh.supabase.co';
 const SUPABASE_SECRET = process.env.SUPABASE_SECRET;
@@ -89,6 +90,10 @@ async function main() {
     updated_at: new Date().toISOString(),
   }, { onConflict: 'ciclismo_id' });
   if (errAth) console.error('Errore upsert ciclismo_athletes:', errAth.message);
+
+  // Data di nascita appena scoperta: se atletaId era già condiviso da un
+  // altro ciclismo_id con una carriera incompatibile, separali subito.
+  await checkAndSplitAtleta(sb, atletaId).catch(e => console.warn('[namesake-guard]', e.message));
 
   console.log(`\nFATTO. Totale risultati importati: ${totRisultati}. Data di nascita: ${natoIl}`);
 }
