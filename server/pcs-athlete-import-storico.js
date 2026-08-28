@@ -160,7 +160,18 @@ async function extractProfileAndResults(page, season) {
     return out;
   }).catch(() => []);
 
-  const results = await page.evaluate((season) => {
+  const results = await extractResultsOnly(page, season);
+
+  return { photo, socials, birthYear, teamHistory, results };
+}
+
+// Solo la tabella risultati della pagina rider/{slug}/{anno} corrente —
+// estratta a parte per essere riusabile sulle visite AGGIUNTIVE alle altre
+// stagioni professionistiche (la storia squadra dà tutti gli anni in un
+// colpo solo, ma i risultati riga-per-riga sono solo quelli della singola
+// pagina/anno visitato, serve una visita per anno).
+async function extractResultsOnly(page, season) {
+  return page.evaluate((season) => {
     const rows = [];
     const tables = [...document.querySelectorAll('table')];
     for (const table of tables) {
@@ -243,8 +254,6 @@ async function extractProfileAndResults(page, season) {
     }
     return rows;
   }, season).catch(() => []);
-
-  return { photo, socials, birthYear, teamHistory, results };
 }
 
 async function uploadPhoto(sb, slug, buf) {
@@ -426,14 +435,9 @@ async function loadAtletiStorici(sb) {
 
     const fields = { pcs_slug: slug };
     if (photo) {
-      // Solo se manca — un atleta già scoperto da ciclismo-backfill.js ha
-      // già una foto (con credito), PCS serve a riempire i buchi, non a
-      // sostituire quello che c'è già.
-      const { data: existingPhoto } = await sb.from('entity_overrides').select('new_value')
-        .eq('entity_type', 'atleta').eq('entity_id', ath.atleta_id).eq('field', 'photo_url').maybeSingle();
-      if (!existingPhoto || !existingPhoto.new_value) {
-        try { fields.photo_url = await uploadPhoto(sb, slug, photo); donePhoto++; } catch (e) { process.stdout.write(`ERRORE foto: ${e.message} `); errors++; }
-      }
+      // Sostituisce SEMPRE l'eventuale foto ciclismo.info già presente —
+      // richiesta esplicita dell'utente: quella PCS è di qualità migliore.
+      try { fields.photo_url = await uploadPhoto(sb, slug, photo); donePhoto++; } catch (e) { process.stdout.write(`ERRORE foto: ${e.message} `); errors++; }
     }
     if (socials?.instagram) fields.instagram_url = socials.instagram;
     if (socials?.twitter)   fields.twitter_url   = socials.twitter;
@@ -451,15 +455,47 @@ async function loadAtletiStorici(sb) {
 
     try { await upsertTeamHistory(sb, ath.atleta_id, teamHistory); if (teamHistory?.length) doneTeamHist++; } catch (e) { process.stdout.write(`ERRORE DB team: ${e.message} `); errors++; }
 
+    let totalResultRows = 0;
     if (results.length) {
       const rows = results.map(r => ({ atleta_id: ath.atleta_id, pcs_slug: slug, season, gara_name: r.gara_name, data: r.data, posizione: r.posizione, distacco: r.distacco, pcs_race_slug: r.pcs_race_slug, pcs_url: r.pcs_url, country: r.country, gara_id: null }));
-      try { await upsertResults(sb, rows); doneResults++; } catch (e) { process.stdout.write(`ERRORE DB risultati: ${e.message} `); errors++; }
+      try { await upsertResults(sb, rows); doneResults++; totalResultRows += rows.length; } catch (e) { process.stdout.write(`ERRORE DB risultati: ${e.message} `); errors++; }
+    }
+
+    // Anni PRO non ancora coperti: dalla storia squadra appena letta,
+    // qualunque stagione dopo l'ultimo anno ciclismo.info fino a oggi in
+    // cui l'atleta aveva davvero una squadra (non un buco di carriera) —
+    // richiesta esplicita dell'utente: non solo l'anno della pagina
+    // visitata, anche tutti gli altri già coperti da una squadra nota.
+    // Una visita di pagina in più per anno (i risultati riga-per-riga non
+    // sono nella storia squadra, solo lì).
+    const currentYear = new Date().getFullYear();
+    const extraYears = [...new Set((teamHistory || []).map(t => t.season))]
+      .filter(y => y > ath.lastYear && y <= currentYear && y !== season)
+      .sort((a, b) => a - b);
+    let extraYearsDone = 0;
+    for (const y of extraYears) {
+      await humanDelay(i);
+      if (page.isClosed() || browser.isConnected?.() === false) {
+        if (browserRelaunches >= MAX_RELAUNCHES) break;
+        await relaunchBrowser();
+      }
+      const navY = await gotoPcsPage(page, `https://www.procyclingstats.com/rider/${slug}/${y}`, { onLog: msg => process.stdout.write('\n' + msg) });
+      if (!navY.ok) continue;
+      let yearResults;
+      try { yearResults = await withTimeout(extractResultsOnly(page, y), 20000, 'extractResultsOnly'); }
+      catch { continue; }
+      if (yearResults.length) {
+        const rowsY = yearResults.map(r => ({ atleta_id: ath.atleta_id, pcs_slug: slug, season: y, gara_name: r.gara_name, data: r.data, posizione: r.posizione, distacco: r.distacco, pcs_race_slug: r.pcs_race_slug, pcs_url: r.pcs_url, country: r.country, gara_id: null }));
+        try { await upsertResults(sb, rowsY); totalResultRows += rowsY.length; extraYearsDone++; } catch (e) { process.stdout.write(`ERRORE DB risultati ${y}: ${e.message} `); errors++; }
+      }
     }
 
     const tags = [
       fields.photo_url ? '📷' : '', fields.instagram_url ? 'IG' : '', fields.twitter_url ? 'TW' : '',
       fields.strava_url ? 'ST' : '', fields.facebook_url ? 'FB' : '', birthYear ? '🎂' : '',
-      teamHistory?.length ? `${teamHistory.length} squadre` : '', results.length ? `${results.length} ris.` : '',
+      teamHistory?.length ? `${teamHistory.length} squadre` : '',
+      extraYearsDone ? `+${extraYearsDone} anni extra` : '',
+      totalResultRows ? `${totalResultRows} ris. totali` : '',
     ].filter(Boolean).join(' ') || '—';
     process.stdout.write(`✓ ${tags}\n`);
 
