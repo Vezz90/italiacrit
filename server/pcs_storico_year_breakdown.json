@@ -1,0 +1,126 @@
+{
+  "totalAtleti": 15961,
+  "generatedAt": "2026-08-28T12:21:11.207Z",
+  "breakdown": [
+    {
+      "year": 2026,
+      "count": 1771,
+      "startIndex": 1,
+      "endIndex": 1771
+    },
+    {
+      "year": 2025,
+      "count": 822,
+      "startIndex": 1772,
+      "endIndex": 2593
+    },
+    {
+      "year": 2024,
+      "count": 773,
+      "startIndex": 2594,
+      "endIndex": 3366
+    },
+    {
+      "year": 2023,
+      "count": 660,
+      "startIndex": 3367,
+      "endIndex": 4026
+    },
+    {
+      "year": 2022,
+      "count": 744,
+      "startIndex": 4027,
+      "endIndex": 4770
+    },
+    {
+      "year": 2021,
+      "count": 614,
+      "startIndex": 4771,
+      "endIndex": 5384
+    },
+    {
+      "year": 2020,
+      "count": 268,
+      "startIndex": 5385,
+      "endIndex": 5652
+    },
+    {
+      "year": 2019,
+      "count": 869,
+      "startIndex": 5653,
+      "endIndex": 6521
+    },
+    {
+      "year": 2018,
+      "count": 806,
+      "startIndex": 6522,
+      "endIndex": 7327
+    },
+    {
+      "year": 2017,
+      "count": 871,
+      "startIndex": 7328,
+      "endIndex": 8198
+    },
+    {
+      "year": 2016,
+      "count": 749,
+      "startIndex": 8199,
+      "endIndex": 8947
+    },
+    {
+      "year": 2015,
+      "count": 855,
+      "startIndex": 8948,
+      "endIndex": 9802
+    },
+    {
+      "year": 2014,
+      "count": 870,
+      "startIndex": 9803,
+      "endIndex": 10672
+    },
+    {
+      "year": 2013,
+      "count": 913,
+      "startIndex": 10673,
+      "endIndex": 11585
+    },
+    {
+      "year": 2012,
+      "count": 871,
+      "startIndex": 11586,
+      "endIndex": 12456
+    },
+    {
+      "year": 2011,
+      "count": 1018,
+      "startIndex": 12457,
+      "endIndex": 13474
+    },
+    {
+      "year": 2010,
+      "count": 949,
+      "startIndex": 13475,
+      "endIndex": 14423
+    },
+    {
+      "year": 2009,
+      "count": 482,
+      "startIndex": 14424,
+      "endIndex": 14905
+    },
+    {
+      "year": 2008,
+      "count": 506,
+      "startIndex": 14906,
+      "endIndex": 15411
+    },
+    {
+      "year": 2007,
+      "count": 550,
+      "startIndex": 15412,
+      "endIndex": 15961
+    }
+  ]
+}
