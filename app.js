@@ -14743,9 +14743,15 @@ async function _loadCiclismoStorico(atletaId, nativeSelYear, nativeCount) {
 
     const coveredYears = new Set([...nativeYears, ...ciclismoOnlyYears]);
     const pcsOnlyYears = Object.keys(pcsPerAnno).filter(y => !coveredYears.has(y)).sort((a, b) => b - a);
-    if (pcsOnlyYears.length) {
+    // Riferimento fresco: durante l'attesa qui sopra la pagina può essersi
+    // ri-renderizzata (altri pezzi async di renderAtleta), lasciando lo
+    // "yearRow" catturato all'inizio della funzione staccato dal DOM
+    // visibile — le pillole venivano scritte lì dentro senza errori ma
+    // restavano invisibili (bug osservato dal vivo: mai comparse).
+    const freshYearRow = document.getElementById('profile-year-row');
+    if (pcsOnlyYears.length && freshYearRow) {
       const pcsPillsHtml = pcsOnlyYears.map(y => `<button class="year-pill" data-year="${esc(y)}" data-pcs="1" onclick="window.setAtletaPcsYear('${esc(atletaId)}','${esc(y)}')" style="padding:5px 13px;border-radius:14px;border:1px solid var(--border-subtle);cursor:pointer;font-size:.82rem;font-weight:700;background:var(--bg-elevated);color:var(--text-secondary)">${esc(y)}</button>`).join('');
-      yearRow.insertAdjacentHTML('beforeend', pcsPillsHtml);
+      freshYearRow.insertAdjacentHTML('beforeend', pcsPillsHtml);
     }
   } catch { /* niente storia PCS per questo atleta, non bloccare */ }
 
