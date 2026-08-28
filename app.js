@@ -14707,53 +14707,55 @@ async function _loadCiclismoStorico(atletaId, nativeSelYear, nativeCount) {
   for (const r of risultati) (perAnno[r.stagione] = perAnno[r.stagione] || []).push(r);
   window._ciclismoStoricoCache[atletaId] = perAnno;
 
-  // Media (foto gara) — caricati insieme ai risultati così sono già pronti
-  // quando l'utente clicca su una pillola anno, senza un'altra attesa.
-  try {
-    const mediaPayload = await apiCall(`/ciclismo-media/atleta/${encodeURIComponent(atletaId)}`);
-    const mediaPerAnno = {};
-    for (const m of (mediaPayload?.media || [])) (mediaPerAnno[m.stagione] = mediaPerAnno[m.stagione] || []).push(m);
-    window._ciclismoMediaCache[atletaId] = mediaPerAnno;
-  } catch { window._ciclismoMediaCache[atletaId] = {}; }
-
+  // Media (foto gara) + storia PCS insieme — un solo giro di attese, poi le
+  // pillole ciclismo.info e PCS vengono unite e ordinate INSIEME per anno
+  // (non due gruppi separati in coda): altrimenti un atleta con anni misti
+  // (es. Pogačar: ciclismo.info 2012-2018, PCS 2019-2025) mostrava le
+  // pillole fuori ordine cronologico — bug osservato dal vivo, "2025"
+  // comparsa dopo "2012" invece che prima.
   const nativeYears = new Set([...yearRow.querySelectorAll('.year-pill')].map(b => b.dataset.year));
-  const ciclismoOnlyYears = Object.keys(perAnno).filter(y => !nativeYears.has(y)).sort((a, b) => b - a);
+  const ciclismoOnlyYears = Object.keys(perAnno).filter(y => !nativeYears.has(y));
 
-  const pillsHtml = ciclismoOnlyYears.map(y => `<button class="year-pill" data-year="${esc(y)}" data-ciclismo="1" onclick="window.setAtletaCiclismoYear('${esc(atletaId)}','${esc(y)}')" style="padding:5px 13px;border-radius:14px;border:1px solid var(--border-subtle);cursor:pointer;font-size:.82rem;font-weight:700;background:var(--bg-elevated);color:var(--text-secondary)">${esc(y)}</button>`).join('');
-  yearRow.insertAdjacentHTML('beforeend', pillsHtml);
-
-  // Anni SOLO PCS (carriera pro non coperta né dalla stagione nativa né da
-  // ciclismo.info — vedi pcs-athlete-import-storico.js) — stesse pillole,
-  // altro gestore (window.setAtletaPcsYear).
-  try {
-    const [pcsRows, teamHistRows] = await Promise.all([
+  let mediaPerAnno = {}, pcsPerAnno = {}, teamByYear = {}, pcsOnlyYears = [];
+  const [mediaResult, pcsResult] = await Promise.allSettled([
+    apiCall(`/ciclismo-media/atleta/${encodeURIComponent(atletaId)}`),
+    Promise.all([
       apiCall(`/pcs-results/atleta/${encodeURIComponent(atletaId)}`).catch(() => []),
       apiCall(`/pcs-team-history/${encodeURIComponent(atletaId)}`).catch(() => []),
-    ]);
-    const pcsPerAnno = {};
+    ]),
+  ]);
+  if (mediaResult.status === 'fulfilled') {
+    for (const m of (mediaResult.value?.media || [])) (mediaPerAnno[m.stagione] = mediaPerAnno[m.stagione] || []).push(m);
+  }
+  window._ciclismoMediaCache[atletaId] = mediaPerAnno;
+  if (pcsResult.status === 'fulfilled') {
+    const [pcsRows, teamHistRows] = pcsResult.value;
     for (const r of (Array.isArray(pcsRows) ? pcsRows : [])) {
       const y = String(r.season || (r.data || '').slice(0, 4));
       if (!y) continue;
       (pcsPerAnno[y] = pcsPerAnno[y] || []).push(r);
     }
-    window._pcsStoricoCache[atletaId] = pcsPerAnno;
-    const teamByYear = {};
     for (const t of (Array.isArray(teamHistRows) ? teamHistRows : [])) teamByYear[String(t.season)] = t.team;
-    window._pcsTeamHistCache[atletaId] = teamByYear;
-
     const coveredYears = new Set([...nativeYears, ...ciclismoOnlyYears]);
-    const pcsOnlyYears = Object.keys(pcsPerAnno).filter(y => !coveredYears.has(y)).sort((a, b) => b - a);
-    // Riferimento fresco: durante l'attesa qui sopra la pagina può essersi
-    // ri-renderizzata (altri pezzi async di renderAtleta), lasciando lo
-    // "yearRow" catturato all'inizio della funzione staccato dal DOM
-    // visibile — le pillole venivano scritte lì dentro senza errori ma
-    // restavano invisibili (bug osservato dal vivo: mai comparse).
-    const freshYearRow = document.getElementById('profile-year-row');
-    if (pcsOnlyYears.length && freshYearRow) {
-      const pcsPillsHtml = pcsOnlyYears.map(y => `<button class="year-pill" data-year="${esc(y)}" data-pcs="1" onclick="window.setAtletaPcsYear('${esc(atletaId)}','${esc(y)}')" style="padding:5px 13px;border-radius:14px;border:1px solid var(--border-subtle);cursor:pointer;font-size:.82rem;font-weight:700;background:var(--bg-elevated);color:var(--text-secondary)">${esc(y)}</button>`).join('');
-      freshYearRow.insertAdjacentHTML('beforeend', pcsPillsHtml);
-    }
-  } catch { /* niente storia PCS per questo atleta, non bloccare */ }
+    pcsOnlyYears = Object.keys(pcsPerAnno).filter(y => !coveredYears.has(y));
+  }
+  window._pcsStoricoCache[atletaId] = pcsPerAnno;
+  window._pcsTeamHistCache[atletaId] = teamByYear;
+
+  // Riferimento fresco: dopo le attese qui sopra la pagina può essersi
+  // ri-renderizzata (altri pezzi async di renderAtleta), lasciando lo
+  // "yearRow" catturato a inizio funzione staccato dal DOM visibile — le
+  // pillole venivano scritte lì dentro senza errori ma restavano invisibili
+  // (bug osservato dal vivo: le pillole PCS non comparivano mai).
+  const freshYearRow = document.getElementById('profile-year-row') || yearRow;
+  const allExtraYears = [...new Set([...ciclismoOnlyYears, ...pcsOnlyYears])].sort((a, b) => b - a);
+  const pillsHtml = allExtraYears.map(y => {
+    const isPcs = !ciclismoOnlyYears.includes(y);
+    const attr = isPcs ? 'data-pcs="1"' : 'data-ciclismo="1"';
+    const handler = isPcs ? 'setAtletaPcsYear' : 'setAtletaCiclismoYear';
+    return `<button class="year-pill" data-year="${esc(y)}" ${attr} onclick="window.${handler}('${esc(atletaId)}','${esc(y)}')" style="padding:5px 13px;border-radius:14px;border:1px solid var(--border-subtle);cursor:pointer;font-size:.82rem;font-weight:700;background:var(--bg-elevated);color:var(--text-secondary)">${esc(y)}</button>`;
+  }).join('');
+  freshYearRow.insertAdjacentHTML('beforeend', pillsHtml);
 
   if (!ciclismoOnlyYears.length) return;
 
