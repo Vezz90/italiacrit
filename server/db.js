@@ -745,12 +745,36 @@ const queries = {
       [gara_id, user_id, display_name, filename, caption, photographer, status, atleta_ids || '']
     ),
 
+  // stagione: race_photos non ha una colonna "anno" propria — per le gare
+  // NATIVE l'anno si legge dal gara_id stesso (data incorporata), ma per le
+  // gare STORICHE ciclismo.info il gara_id è un identificativo sintetico
+  // "CIC_<numero>" senza data. Senza questa colonna, il frontend (che
+  // filtra le foto per anno leggendo una data dal gara_id) non trovava mai
+  // un anno per queste foto e le mostrava sotto QUALSIASI stagione, di
+  // fatto sempre quella caricata di default (bug reale: una foto caricata
+  // per una gara del 2008 appariva sotto il 2026). Recuperata qui con un
+  // JOIN sulla stessa gara in ciclismo_results (stesso numero incorporato
+  // nell'URL originale), niente da cambiare lato frontend oltre a leggerla.
   getApprovedRacePhotos: (gara_id) =>
-    all(`SELECT * FROM race_photos WHERE gara_id = $1 AND status = 'approved' ORDER BY created_at DESC`,
+    all(`SELECT rp.*, cr.stagione AS ciclismo_stagione FROM race_photos rp
+         LEFT JOIN LATERAL (
+           SELECT stagione FROM ciclismo_results
+           WHERE rp.gara_id LIKE 'CIC\\_%' ESCAPE '\\'
+             AND gara_ciclismo_url ~ ('_' || substring(rp.gara_id from 5) || '_[0-9]{4}_[0-9]{2}_[0-9]{2}_')
+           LIMIT 1
+         ) cr ON true
+         WHERE rp.gara_id = $1 AND rp.status = 'approved' ORDER BY rp.created_at DESC`,
         [gara_id]),
 
   getAllApprovedRacePhotos: () =>
-    all(`SELECT * FROM race_photos WHERE status = 'approved' ORDER BY created_at DESC`),
+    all(`SELECT rp.*, cr.stagione AS ciclismo_stagione FROM race_photos rp
+         LEFT JOIN LATERAL (
+           SELECT stagione FROM ciclismo_results
+           WHERE rp.gara_id LIKE 'CIC\\_%' ESCAPE '\\'
+             AND gara_ciclismo_url ~ ('_' || substring(rp.gara_id from 5) || '_[0-9]{4}_[0-9]{2}_[0-9]{2}_')
+           LIMIT 1
+         ) cr ON true
+         WHERE rp.status = 'approved' ORDER BY rp.created_at DESC`),
 
   getPendingRacePhotos: () =>
     all(`SELECT rp.*, u.email FROM race_photos rp

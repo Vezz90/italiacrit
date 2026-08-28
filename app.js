@@ -13395,12 +13395,22 @@ function buildProfileMedia(risultati, photosMap, videos, opts = {}) {
   const taggedIds = opts.atletaIds || [];
   // Filtro per anno (storicità): mostra solo i media della stagione selezionata.
   const _yfilter = opts.year ? String(opts.year) : null;
-  const _yearOf = (gid) => { const m = String(gid || '').match(/_(\d{4})-\d{2}-\d{2}/); return m ? m[1] : null; };
+  // Le gare storiche ciclismo.info hanno un gara_id sintetico "CIC_<numero>"
+  // senza data incorporata: senza ciclismo_stagione (aggiunta lato server via
+  // JOIN su ciclismo_results) l'anno non si leggeva mai e la foto restava
+  // visibile sotto QUALSIASI stagione invece di essere filtrata correttamente
+  // (bug reale: foto di una gara del 2008 mostrata sotto il 2026).
+  const _yearOf = (p) => {
+    if (p && typeof p === 'object' && p.ciclismo_stagione) return String(p.ciclismo_stagione);
+    const gid = (p && typeof p === 'object') ? p.gara_id : p;
+    const m = String(gid || '').match(/_(\d{4})-\d{2}-\d{2}/);
+    return m ? m[1] : null;
+  };
   if (taggedIds.length && _risPhotosByAtleta) {
     const seenTag = new Set(winPhotos.map(w => w.photo && w.photo.id).filter(Boolean));
     for (const aid of taggedIds) {
       for (const p of (_risPhotosByAtleta[aid] || [])) {
-        if (_yfilter && _yearOf(p.gara_id) && _yearOf(p.gara_id) !== _yfilter) continue;
+        if (_yfilter && _yearOf(p) && _yearOf(p) !== _yfilter) continue;
         if (p.id && seenTag.has(p.id)) continue;
         if (p.id) seenTag.add(p.id);
         const rr = (globalData && globalData.resultsRaw || []).find(x => x.gara_id === p.gara_id && x.atleta_id === aid)
@@ -22404,13 +22414,22 @@ function doSearch(q, dropdown) {
   // bug delle omonimie unite per errore).
   if (q.trim().length >= 2) {
     fetch(`${API_BASE}/search-storico?q=${encodeURIComponent(q.trim())}`).then(r => r.json()).then(d => {
-      const storicoResults = (d.results || []).map(a => {
+      // Stesso atleta_id può già essere nei risultati nativi (roster stagione
+      // in corso): arricchisci quella riga invece di mostrarla due volte —
+      // altrimenti "Vezzani" compariva due volte in ricerca, una senza e una
+      // con classe/anni, stessa persona, stesso click (bug segnalato
+      // dall'utente cercando il proprio nome).
+      const merged = [...results];
+      for (const a of (d.results || [])) {
         const [cognome, ...restoNome] = (a.nome_completo || '').trim().split(/\s+/);
         const nome = restoNome.join(' ');
         const bits = [a.team, a.anni, a.anno_nascita ? `classe ${a.anno_nascita}` : ''].filter(Boolean);
-        return { type: 'atleta', id: a.atleta_id, display: `${cognome||''} ${nome||''}`.trim(), sub: bits.join(' · ') };
-      });
-      if (storicoResults.length) renderDropdown([...results, ...storicoResults]);
+        const sub = bits.join(' · ');
+        const already = merged.find(r => r.type === 'atleta' && r.id === a.atleta_id);
+        if (already) { if (sub) already.sub = sub; }
+        else merged.push({ type: 'atleta', id: a.atleta_id, display: `${cognome||''} ${nome||''}`.trim(), sub });
+      }
+      if (merged.length !== results.length || d.results?.length) renderDropdown(merged);
     }).catch(() => {});
   }
 }
