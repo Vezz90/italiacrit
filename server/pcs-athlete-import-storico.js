@@ -341,6 +341,15 @@ async function loadAtletiStorici(sb) {
     }
     out.push({ atleta_id: atletaId, cognome, nome, lastYear });
   }
+  // Dal più recente al più vecchio (2025 → 2007): se lo scraping si ferma a
+  // metà (è già successo — 3+ ore, poi log fermo), gli atleti già coperti
+  // sono quelli con la carriera più recente/rilevante, non un campione
+  // casuale. Un atleta con più anni di ciclismo.info viene comunque coperto
+  // per intero in un solo passaggio (usa lastYear come pagina di partenza,
+  // poi visita anche gli anni precedenti via la cronologia squadre — vedi
+  // sotto), quindi ordinare per lastYear non lascia buchi: sposta solo QUALE
+  // persona viene coperta prima.
+  out.sort((a, b) => b.lastYear - a.lastYear);
   return out;
 }
 
