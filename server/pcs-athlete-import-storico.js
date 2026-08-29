@@ -427,6 +427,19 @@ async function loadAtletiStorici(sb) {
       for (const r of data) done.add(r.entity_id);
       if (data.length < PAGE) break;
     }
+    // "non trovato su PCS" confermato in un giro precedente — mai un
+    // pcs_slug (quindi non finisce nel Set sopra), ma un esito comunque
+    // definitivo: senza escluderlo pure lui, ogni riavvio lo ritentava da
+    // capo fin dal 2007 (segnalato dall'utente dopo un riavvio del browser).
+    for (let from = 0; ; from += PAGE) {
+      const { data, error } = await withRetry(() => sb.from('entity_overrides').select('entity_id')
+        .eq('entity_type', 'atleta').eq('field', 'pcs_not_found')
+        .order('id').range(from, from + PAGE - 1));
+      if (error) throw error;
+      if (!data || !data.length) break;
+      for (const r of data) done.add(r.entity_id);
+      if (data.length < PAGE) break;
+    }
     athletes = athletes.filter(a => !done.has(a.atleta_id));
     console.log(`Dopo --skip-complete: ${athletes.length} da processare\n`);
   }
@@ -532,7 +545,21 @@ async function loadAtletiStorici(sb) {
       i--; continue;
     }
     if (nav.timedOut) { process.stdout.write('sfida non superata, riprovo al prossimo giro\n'); challengeFails++; await humanDelay(i); continue; }
-    if (!nav.ok) { process.stdout.write('non trovato su PCS\n'); notFound++; await humanDelay(i); continue; }
+    if (!nav.ok) {
+      process.stdout.write('non trovato su PCS\n'); notFound++;
+      // Marcatore persistente: senza, chi risulta "non trovato" (mai un
+      // pcs_slug, quindi --skip-complete non lo salta MAI) veniva ritentato
+      // da capo ad ogni riavvio, fin dal 2007 — segnalato dall'utente dopo
+      // un riavvio ("perché è ripartito dal 2007 se eravamo al 2010?").
+      // Non blocca comunque: se in futuro PCS aprisse un profilo per questa
+      // persona, --fix-empty-teamhistory (o un nuovo flag dedicato) può
+      // sempre ripartire da questo elenco a parte.
+      await sb.from('entity_overrides').upsert(
+        { entity_type: 'atleta', entity_id: ath.atleta_id, field: 'pcs_not_found', new_value: '1', edited_by: null },
+        { onConflict: 'entity_type,entity_id,field' }
+      ).catch(() => {});
+      await humanDelay(i); continue;
+    }
 
     let extracted;
     try {
