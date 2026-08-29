@@ -14921,18 +14921,35 @@ async function _loadAtletaTopResultsWidget(atletaId, nativeRisultati, currentTea
   // stesso grande giro si raggruppano insieme, la Classifica Generale resta
   // un gruppo a sé (è un traguardo diverso dalla singola tappa) — le corse
   // in linea (senza "— Stage/Tappa N") restano invariate.
-  const _raceGroupKey = nome => String(nome || '')
-    .replace(/\s*[—-]\s*(Stage|Tappa)\s*\d+.*$/i, ' — Tappe')
-    .replace(/\s*\([12]?\.?(?:UWT|HC|Pro|Ncup|\d)\)\s*/gi, ' ')
-    .replace(/\s*\((?:WC|CC|NC)\)\s*/g, ' ')
-    .replace(/\s+\d+k\b/gi, '')
-    .replace(/\s+/g, ' ')
-    .trim();
+  // Varianti note dello stesso nome usate in anni/scrape diversi (es. PCS ha
+  // rinominato "Ronde van Vlaanderen" in "... - Tour des Flandres" nel
+  // tempo) — senza normalizzarle restano gruppi separati, sprecando posti
+  // nella top 12 e spingendo fuori altre vittorie reali (segnalato
+  // dall'utente: Strade Bianche spariva del tutto per colpa di questo +
+  // del confronto case-sensitive sotto).
+  const RACE_ALIASES = [
+    [/ronde van vlaanderen.*|tour of flanders.*/i, 'Ronde van Vlaanderen'],
+  ];
+  const _raceGroupKey = nome => {
+    let clean = String(nome || '')
+      .replace(/\s*[—-]\s*(Stage|Tappa)\s*\d+.*$/i, ' — Tappe')
+      .replace(/\s*\([12]?\.?(?:UWT|HC|Pro|Ncup|\d)\)\s*/gi, ' ')
+      .replace(/\s*\((?:WC|CC|NC)\)\s*/g, ' ')
+      .replace(/\s+\d+k\b/gi, '')
+      .replace(/\s+/g, ' ')
+      .trim();
+    for (const [re, canon] of RACE_ALIASES) if (re.test(clean)) { clean = canon; break; }
+    return clean;
+  };
   const groups = new Map();
   for (const r of dedupedMerged) {
-    const key = _raceGroupKey(r.nome_gara);
+    // Chiave di raggruppamento case-insensitive ("La Vuelta Ciclista" vs
+    // "La Vuelta ciclista" restavano gruppi diversi solo per la maiuscola)
+    // — il testo mostrato resta invece quello con la maiuscola originale.
+    const display = _raceGroupKey(r.nome_gara);
+    const key = display.toLowerCase();
     let g = groups.get(key);
-    if (!g) { g = { key, rows: [] }; groups.set(key, g); }
+    if (!g) { g = { key: display, rows: [] }; groups.set(key, g); }
     g.rows.push(r);
   }
   for (const g of groups.values()) {
@@ -14948,7 +14965,7 @@ async function _loadAtletaTopResultsWidget(atletaId, nativeRisultati, currentTea
   }
   const top10 = [...groups.values()]
     .sort((a, b) => tier(b.best) - tier(a.best) || a.best.posizione - b.best.posizione || (b.best.data || '').localeCompare(a.best.data || ''))
-    .slice(0, 12);
+    .slice(0, 15);
   const topResultsHtml = top10.map(g => {
     const r = g.best;
     const isStage = isStageOrTappa(r.nome_gara);
