@@ -13686,9 +13686,21 @@ window._switchGaraTab = (tab) => {
   }
 };
 
+// Contatore globale di richieste — vedi guardia sotto: renderGara/renderGaraStorica
+// possono chiamare _injectRaceAlboDoro due volte a distanza di pochi ms sulla
+// STESSA gara (doppio render, causa non ancora isolata). Sono due fetch
+// indipendenti in corsa: se quella più lenta finisce per ultima con un
+// risultato peggiore (rete, timeout parziale) sovrascriveva quella buona —
+// bug intermittente segnalato dall'utente ("Firenze Empoli non ha lo
+// storico", ma l'endpoint aveva i dati). La guardia fa vincere sempre
+// l'ULTIMA chiamata avviata, non l'ultima che finisce.
+let _alboDoroReqSeq = 0;
 async function _injectRaceAlboDoro(garaId, opts = {}) {
   const el = document.getElementById('race-albo-doro');
   if (!el) return;
+  const _myReq = ++_alboDoroReqSeq;
+  el.dataset.reqId = String(_myReq);
+  const _stillCurrent = () => el.dataset.reqId === String(_myReq);
   await loadSeasonsIndex();
   const years = _availableSeasonYears();
   const isHistoricPage = String(garaId).startsWith('CIC_');
@@ -13751,6 +13763,8 @@ async function _injectRaceAlboDoro(garaId, opts = {}) {
       }
     } catch { /* storico opzionale, non bloccare l'albo nativo */ }
   }
+
+  if (!_stillCurrent()) return; // una chiamata più recente ha già preso il sopravvento
 
   editions.sort((a, b) => String(b.year).localeCompare(String(a.year)) || (b.data || '').localeCompare(a.data || ''));
   // Il tab "Albo d'oro" in cima (vedi _switchGaraTab) esiste sempre nel

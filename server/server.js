@@ -4560,7 +4560,31 @@ app.get('/api/ciclismo-results/albo-doro', async (req, res) => {
       .lte('posizione', 3)
       .order('stagione', { ascending: false });
     if (error) throw error;
-    const rowsArr = rows || [];
+    let rowsArr = rows || [];
+
+    // Fallback: nessuna edizione collegata trovata (ciclismo.info non genera
+    // il blocco "edizioni correlate" per tutte le gare — capita spesso sulle
+    // gare regionali/di categoria minore, es. "Piccola San Geo" — segnalato
+    // dall'utente). Senza questo, quelle gare restavano SENZA storico anche
+    // quando lo abbiamo davvero nel nostro DB. Riusa il vecchio confronto per
+    // sottostringa del nome (meno preciso del collegamento per ID, ma meglio
+    // di niente quando l'unica alternativa è nessun albo d'oro).
+    if (wantedIds.length <= 1 && q.length >= 3) {
+      const { data: broadRows } = await supabase.from('ciclismo_results')
+        .select('stagione, nome_gara, data, posizione, gara_ciclismo_url, atleta_id, ciclismo_id, team')
+        .ilike('nome_gara', `%${q}%`)
+        .lte('posizione', 3)
+        .order('stagione', { ascending: false })
+        .limit(3000);
+      const seen = new Set(rowsArr.map(r => `${r.gara_ciclismo_url}|${r.stagione}|${r.ciclismo_id}`));
+      for (const r of (broadRows || [])) {
+        const k = `${r.gara_ciclismo_url}|${r.stagione}|${r.ciclismo_id}`;
+        if (seen.has(k)) continue;
+        seen.add(k);
+        rowsArr.push(r);
+      }
+    }
+
     const ids = [...new Set(rowsArr.map(r => r.ciclismo_id).filter(Boolean))];
     let nomeById = new Map();
     if (ids.length) {
