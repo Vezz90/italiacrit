@@ -14857,7 +14857,14 @@ async function _loadAtletaTopResultsWidget(atletaId, nativeRisultati, currentTea
   const sourceRank = { ics: 0, ciclismo: 1, pcs: 2 };
   const seen = new Map();
   for (const r of merged) {
-    const key = r.data;
+    // La Classifica Generale di una corsa a tappe è quasi sempre annunciata
+    // lo STESSO giorno dell'ultima tappa — un dedup per sola data scartava
+    // in silenzio una delle due (bug reale trovato dal vivo su Pogačar: 5
+    // vittorie GC al Tour de France nel database, ma solo 3 arrivavano al
+    // widget perché 2 condividevano la data con la tappa finale ed erano
+    // state sovrascritte). La Classifica Generale non va MAI confusa con
+    // un'altra riga della stessa data, quindi ha una chiave a sé.
+    const key = /classifica generale/i.test(r.nome_gara || '') ? `${r.data}|GC|${r.nome_gara}` : r.data;
     const prev = seen.get(key);
     if (!prev || sourceRank[r.source] < sourceRank[prev.source]) seen.set(key, r);
   }
