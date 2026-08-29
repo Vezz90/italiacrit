@@ -12113,3 +12113,8 @@ main.page:has(.itc-dash) {
 @media (max-width: 640px) {
   .pcs-widget-grid { grid-template-columns: 1fr !important; gap: 20px !important; }
 }
+/* Tab "Albo d'oro" visibile subito nella pagina gara, con un mini-spinner
+   finché i dati non arrivano — prima restava invisibile fino a fine
+   caricamento, dando l'impressione che la funzione non ci fosse o fosse
+   bloccata (segnalato dall'utente: "un'eternità"). */
+@keyframes spin { to { transform: rotate(360deg); } }

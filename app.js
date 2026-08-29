@@ -13790,10 +13790,13 @@ async function _injectRaceAlboDoro(garaId, opts = {}) {
 
   editions.sort((a, b) => String(b.year).localeCompare(String(a.year)) || (b.data || '').localeCompare(a.data || ''));
   // Il tab "Albo d'oro" in cima (vedi _switchGaraTab) esiste sempre nel
-  // markup ma va nascosto quando non c'è nulla da collegare (una sola
-  // edizione) — senza questa riga l'utente vedrebbe un tab cliccabile
-  // che porta a un pannello vuoto.
+  // markup, visibile subito con uno spinner (vedi renderGara/renderGaraStorica)
+  // invece di restare invisibile fino a fine caricamento — va nascosto SOLO
+  // quando risulta non esserci nulla da collegare (una sola edizione).
   const tabBtn = document.getElementById('tab-albo');
+  const spin = document.getElementById('tab-albo-spin');
+  if (spin) spin.remove();
+  if (tabBtn) tabBtn.style.opacity = '';
   if (editions.length <= 1) {
     el.innerHTML = '';
     if (tabBtn) tabBtn.style.display = 'none';
@@ -15666,7 +15669,7 @@ async function renderGaraStorica(ciclismoGaraId) {
     </div>
     <div class="tab-group" role="tablist" aria-label="Risultati o albo d'oro" style="display:flex;flex-wrap:wrap;gap:8px;margin:14px 0 2px">
       <button id="tab-risultati" class="tab-btn active-cat" onclick="window._switchGaraTab('risultati')">📋 Risultati</button>
-      <button id="tab-albo" class="tab-btn" style="display:none" onclick="window._switchGaraTab('albo')">🏆 Albo d'oro</button>
+      <button id="tab-albo" class="tab-btn" style="opacity:.55" onclick="window._switchGaraTab('albo')">🏆 Albo d'oro <span id="tab-albo-spin" style="display:inline-block;width:9px;height:9px;border:1.5px solid currentColor;border-top-color:transparent;border-radius:50%;margin-left:4px;vertical-align:middle;animation:spin .8s linear infinite"></span></button>
     </div>
     <div id="gara-results-panel">
       ${mediaSectionHtml}
@@ -15684,7 +15687,7 @@ async function renderGaraStorica(ciclismoGaraId) {
       </div>
       <div id="gara-pcs-ext"></div>
     </div>
-    <div id="race-albo-doro" style="margin-top:8px;display:none"></div>
+    <div id="race-albo-doro" style="margin-top:8px;display:none"><div style="padding:20px;color:var(--text-muted);font-size:.86rem">Caricamento…</div></div>
     <div style="font-size:.72rem;color:var(--text-muted);margin-top:12px">Dati storici — archivio in fase di validazione.</div>
   `);
   _injectRaceAlboDoro(garaKey, { nomeGara: first.nome_gara });
@@ -19937,7 +19940,7 @@ async function renderGara(gara_id) {
     ${_catTabsHtml}
     <div class="tab-group" role="tablist" aria-label="Risultati o albo d'oro" style="display:flex;flex-wrap:wrap;gap:8px;margin:14px 0 2px">
       <button id="tab-risultati" class="tab-btn active-cat" onclick="window._switchGaraTab('risultati')">📋 Risultati</button>
-      <button id="tab-albo" class="tab-btn" style="display:none" onclick="window._switchGaraTab('albo')">🏆 Albo d'oro</button>
+      <button id="tab-albo" class="tab-btn" style="opacity:.55" onclick="window._switchGaraTab('albo')">🏆 Albo d'oro <span id="tab-albo-spin" style="display:inline-block;width:9px;height:9px;border:1.5px solid currentColor;border-top-color:transparent;border-radius:50%;margin-left:4px;vertical-align:middle;animation:spin .8s linear infinite"></span></button>
     </div>
     <div id="gara-results-panel">
       ${racePhotosHtml}
@@ -19955,7 +19958,7 @@ async function renderGara(gara_id) {
       </div>
       <div id="gara-pcs-ext"></div>
     </div>
-    <div id="race-albo-doro" style="margin-top:8px;display:none"></div>
+    <div id="race-albo-doro" style="margin-top:8px;display:none"><div style="padding:20px;color:var(--text-muted);font-size:.86rem">Caricamento…</div></div>
     ${detailsHtml}
     <div id="gara-comments-section" style="margin-top:28px"></div>
   `);
