@@ -14906,14 +14906,21 @@ async function _loadAtletaTopResultsWidget(atletaId, nativeRisultati, currentTea
     return 3; // altre vittorie senza classe riconosciuta (es. ciclismo.info)
   };
   // Raggruppa vittorie ripetute della STESSA gara (es. 5 Tour de France
-  // vinti su anni diversi) in una riga sola con "×5" — richiesta esplicita
-  // dell'utente: prima ogni vittoria occupava un posto separato tra i
-  // primi 10, affollando la lista con la stessa impresa ripetuta invece di
-  // lasciare spazio a risultati diversi. Le tappe di uno stesso grande giro
-  // si raggruppano insieme ("Tour de France — Tappe ×N"), la Classifica
-  // Generale resta un gruppo a sé (è un traguardo diverso dalla singola
-  // tappa) — le corse in linea (senza "— Stage/Tappa N") restano invariate.
-  const _raceGroupKey = nome => String(nome || '').replace(/\s*[—-]\s*(Stage|Tappa)\s*\d+.*$/i, ' — Tappe').trim();
+  // vinti su anni diversi) in una riga sola — stile "palmarès" (PCS: "5x GC
+  // Tour de France ('26, '25, '24, '21, '20)"), richiesto esplicitamente
+  // dall'utente con screenshot di riferimento: conteggio DAVANTI al nome,
+  // etichetta corta "GC"/"stage" invece della descrizione estesa, elenco di
+  // TUTTI gli anni tra parentesi (non solo il più recente). Le tappe di uno
+  // stesso grande giro si raggruppano insieme, la Classifica Generale resta
+  // un gruppo a sé (è un traguardo diverso dalla singola tappa) — le corse
+  // in linea (senza "— Stage/Tappa N") restano invariate.
+  const _raceGroupKey = nome => String(nome || '')
+    .replace(/\s*[—-]\s*(Stage|Tappa)\s*\d+.*$/i, ' — Tappe')
+    .replace(/\s*\([12]?\.?(?:UWT|HC|Pro|Ncup|\d)\)\s*/gi, ' ')
+    .replace(/\s*\((?:WC|CC|NC)\)\s*/g, ' ')
+    .replace(/\s+\d+k\b/gi, '')
+    .replace(/\s+/g, ' ')
+    .trim();
   const groups = new Map();
   for (const r of dedupedMerged) {
     const key = _raceGroupKey(r.nome_gara);
@@ -14924,24 +14931,27 @@ async function _loadAtletaTopResultsWidget(atletaId, nativeRisultati, currentTea
   for (const g of groups.values()) {
     g.rows.sort((a, b) => tier(b) - tier(a) || a.posizione - b.posizione || (b.data || '').localeCompare(a.data || ''));
     g.best = g.rows[0];
-    // Il conteggio "×N" deve riflettere quante volte è stata ripetuta la
-    // STESSA impresa (es. quante vittorie), non ogni partecipazione alla
-    // gara — altrimenti "Tour de France — Tappe" mostrava ×143 contando
-    // anche gli arrivi fuori podio nelle tappe corse senza vincerle (bug
-    // reale trovato dal vivo su Pogačar appena pubblicato). Conta solo le
-    // righe che eguagliano il livello (tier) e la posizione del migliore.
-    g.count = g.rows.filter(r => r.posizione === g.best.posizione && tier(r) === tier(g.best)).length;
+    // Solo le righe che eguagliano il livello (tier) e la posizione del
+    // migliore contano come "ripetizione della stessa impresa" — altrimenti
+    // un gruppo tappe contava anche gli arrivi fuori podio (bug reale
+    // trovato dal vivo su Pogačar: "Tour de France — Tappe ×143").
+    g.matching = g.rows.filter(r => r.posizione === g.best.posizione && tier(r) === tier(g.best));
+    g.count = g.matching.length;
+    g.years = [...new Set(g.matching.map(r => String(r.anno)))].sort((a, b) => b.localeCompare(a));
   }
   const top10 = [...groups.values()]
     .sort((a, b) => tier(b.best) - tier(a.best) || a.best.posizione - b.best.posizione || (b.best.data || '').localeCompare(a.best.data || ''))
-    .slice(0, 10);
+    .slice(0, 12);
   const topResultsHtml = top10.map(g => {
     const r = g.best;
-    const isStage = /\bstage\b|\btappa\b/i.test(r.nome_gara || '');
-    const posLabel = `${r.posizione}°${isStage ? ' tappa' : ''} `;
+    const isStage = isStageOrTappa(r.nome_gara);
+    const isGcWin = isGC(r.nome_gara);
+    const label = isGcWin ? 'GC ' : (isStage ? 'stage ' : '');
+    const icon = isWorldsOrOlympics(r.nome_gara) ? '🌈 ' : (isGcWin ? '🏆 ' : '');
+    const countPrefix = g.count > 1 ? `<span class="pcs-top-result-count">${g.count}×</span> ` : '';
     const nomeHtml = r.url ? (r.external ? `<a href="${esc(r.url)}" target="_blank" rel="noopener">${esc(g.key)}</a>` : `<a href="${esc(r.url)}">${esc(g.key)}</a>`) : esc(g.key || '');
-    const countBadge = g.count > 1 ? ` <span class="pcs-top-result-count">×${g.count}</span>` : '';
-    return `<div class="pcs-top-result-row"><span class="pcs-top-result-pos">${posLabel}</span><span class="pcs-top-result-name">${nomeHtml}${countBadge}</span> <span class="pcs-top-result-year">('${esc(String(r.anno).slice(-2))})</span></div>`;
+    const yearsLabel = g.years.map(y => `'${esc(y.slice(-2))}`).join(', ');
+    return `<div class="pcs-top-result-row">${countPrefix}<span class="pcs-top-result-name">${icon}${label}${nomeHtml}</span> <span class="pcs-top-result-year">(${yearsLabel})</span></div>`;
   }).join('');
 
   // Teams per anno — priorità delle fonti: ciclismo.info (dato reale già
